@@ -149,11 +149,14 @@ lwupdate (FILE *stream, int c, struct line_wrap_data **wrapper_cookie)
       len = stream->__bufp - buf;
       nl = memchr (buf, '\n', len);
 
+      if (d->point_col < 0)
+	d->point_col = 0;
+
       if (!nl)
 	{
 	  /* The buffer ends in a partial line.  */
 
-	  if (d->point_col + len + (c != EOF && c != '\n') <= d->rmargin)
+	  if (d->point_col + len + (c != EOF && c != '\n') < d->rmargin)
 	    {
 	      /* The remaining buffer text is a partial line and fits
 		 within the maximum line width.  Advance point for the
@@ -166,7 +169,7 @@ lwupdate (FILE *stream, int c, struct line_wrap_data **wrapper_cookie)
 	       the end of the buffer.  */
 	    nl = stream->__bufp;
 	}
-      else if (d->point_col + (nl - buf) <= d->rmargin)
+      else if (d->point_col + (nl - buf) < d->rmargin)
 	{
 	  /* The buffer contains a full line that fits within the maximum
 	     line width.  Reset point and scan the next line.  */
@@ -176,7 +179,7 @@ lwupdate (FILE *stream, int c, struct line_wrap_data **wrapper_cookie)
 	}
 
       /* This line is too long.  */
-      r = d->rmargin;
+      r = d->rmargin - 1;
 
       if (d->wmargin < 0)
 	{
@@ -265,8 +268,10 @@ lwupdate (FILE *stream, int c, struct line_wrap_data **wrapper_cookie)
 	       the next word.  */
 	    *stream->__bufp++ = '\n';
 
-	  /* Reset the counter of what has been output this line.  */
-	  d->point_col = 0;
+	  /* Reset the counter of what has been output this line.  If wmargin
+	     is 0, we want to avoid the lmargin getting added, so we set
+	     point_col to a magic value of -1 in that case.  */
+	  d->point_col = d->wmargin ? d->wmargin : -1;
 
 	  /* Add blanks up to the wrap margin column.  */
 	  for (i = 0; i < d->wmargin; ++i)
@@ -387,8 +392,31 @@ __line_wrap_update (FILE *stream)
   if (line_wrapped (stream))
     {
       struct line_wrap_data *d = stream->__cookie, *wc = 0;
+
+      if (stream->__linebuf_active)
+	/* This is an active line-buffered stream, so its put-limit is set to
+	   the beginning of the buffer in order to force a __flshfp call on
+	   each putc (see below).  We undo this hack here (by setting the
+	   limit to the end of the buffer) to simplify the interface with the
+	   output-room function.  */
+	stream->__put_limit = stream->__buffer + stream->__bufsize;
+
       lwupdate (stream, EOF, &wc);
+
+      if (stream->__linebuf)
+	{
+	  /* This is a line-buffered stream, and it is now ready to do some
+	     output.  We call this an "active line-buffered stream".  We set
+	     the put_limit to the beginning of the buffer, so the next `putc'
+	     call will force a call to flshfp.  Setting the linebuf_active
+	     flag tells the code above (on the next call) to undo this
+	     hackery.  */
+	  stream->__put_limit = stream->__buffer;
+	  stream->__linebuf_active = 1;
+	}
+
       ensure_wrapped (stream, &wc);
+
       return d;
     }
   else
@@ -476,7 +504,7 @@ inline size_t
 line_wrap_point (FILE *stream)
 {
   struct line_wrap_data *d = __line_wrap_update (stream);
-  return d ? d->point_col : -1;
+  return d ? (d->point_col >= 0 ? d->point_col : 0) : -1;
 }
 
 #ifdef TEST
