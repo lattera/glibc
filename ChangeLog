@@ -1,3 +1,9 @@
+2005-01-06  Roland McGrath  <roland@redhat.com>
+
+	[BZ #633]
+	* sysdeps/unix/sysv/linux/futimes.c (__futimes): Catch errno values
+	indicating file-name lookup errors, and return ENOSYS or EBADF instead.
+
 2005-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/elf-init.c (__libc_csu_fini): Don't do anything here.
