@@ -24,12 +24,8 @@ ssize_t
 __recvfrom_chk (int fd, void *buf, size_t n, size_t buflen, int flags,
 		__SOCKADDR_ARG addr, socklen_t *addr_len)
 {
-  /* In case N is greater than BUFLEN, we read BUFLEN+1 bytes.
-     This might overflow the buffer but the damage is reduced to just
-     one byte.  And the program will terminate right away.  */
-  ssize_t nrecv = __recvfrom (fd, buf, MIN (n, buflen + 1), flags,
-			      addr, addr_len);
-  if (nrecv > 0 && (size_t) nrecv > buflen)
+  if (n > buflen)
     __chk_fail ();
-  return nrecv;
+
+  return __recvfrom (fd, buf, n, flags, addr, addr_len);
 }
