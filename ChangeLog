@@ -1,3 +1,38 @@
+2002-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (open_verify): Correct __lseek parameters.
+	Patch by Simon Hildrew <simon@hildrew.net> [PR libc/3354].
+
+2002-04-23  H.J. Lu  <hjl@gnu.org>
+
+	* include/math.h (isfinite): Fix a typo.
+
+2002-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/bug-ungetwc2.c (test_locale): Use the de_DE.UTF-8 locale
+	which is created by the test suite.
+
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/iso-2002-kr.c (MAX_NEEDED_FROM): Set to 4.
+	(BODY for FROM_LOOP): Fix comparisons between inptr and inend.
+
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/johab.c (BODY for FROM_LOOP): Change type of i, m, f,
+	to avoid gcc warning.
+
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/iso-2022-jp.c (EMIT_SHIFT_TO_INIT): Fix modification mask
+	of data->__statep->__count.
+
+2002-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/euc-jisx0213.c (BODY for TO_LOOP): Really ignore Unicode
+	tag characters.
+	* iconvdata/shift_jisx0213.c (BODY for TO_LOOP): Likewise.
+
 2002-04-24  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/alpha/syscall.S: Don't use .frame, ENTRY will have it;
@@ -30,9 +65,9 @@
 
 2002-04-22  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/ldconfig.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/ldconfig.h: New file.
 
-	* sysdeps/unix/sysv/linux/x86_64/dl-cache.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/dl-cache.h: New file.
 
 	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Use %rdi as temp
 	register instead of destroying %rbx.

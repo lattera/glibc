@@ -352,9 +352,8 @@ static const struct
     else								      \
       {									      \
 	unsigned int s1, s2;						      \
-									      \
-	ch = ucs4_to_jisx0213 (ch);					      \
-	if (ch == 0)							      \
+	uint32_t jch = ucs4_to_jisx0213 (ch);				      \
+	if (jch == 0)							      \
 	  {								      \
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
@@ -363,8 +362,8 @@ static const struct
 	  }								      \
 									      \
 	/* Convert it to shifted representation.  */			      \
-	s1 = ch >> 8;							      \
-	s2 = ch & 0x7f;							      \
+	s1 = jch >> 8;							      \
+	s2 = jch & 0x7f;							      \
 	s1 -= 0x21;							      \
 	s2 -= 0x21;							      \
 	if (s1 >= 0x5e)							      \
@@ -390,12 +389,12 @@ static const struct
 	else								      \
 	  s2 += 0x41;							      \
 									      \
-	if (ch & 0x0080)						      \
+	if (jch & 0x0080)						      \
 	  {								      \
 	    /* A possible match in comp_table_data.  We have to buffer it.  */\
 									      \
 	    /* We know it's a JISX 0213 plane 1 character.  */		      \
-	    assert ((ch & 0x8000) == 0);				      \
+	    assert ((jch & 0x8000) == 0);				      \
 									      \
 	    *statep = ((s1 << 8) | s2) << 3;				      \
 	    inptr += 4;							      \

@@ -6,7 +6,7 @@
 #include <locale.h>
 #include <wchar.h>
 
-const char test_locale[] = "en_US.UTF-8";
+const char test_locale[] = "de_DE.UTF-8";
 const wchar_t write_wchars[] = {L'A', 0x00C4, L'B', L'\0'};
                                 /* `0x00C4' is A with diaeresis. */
 size_t last_pos = 2;            /* Which character is last one to read. */
@@ -55,6 +55,7 @@ do_test (void)
   /* Output to the file. */
   if ((fp = fdopen (fd, "w")) == NULL)
     {
+      setlocale (LC_ALL, "C");
       fprintf (stderr, "Cannot make `%s' file.\n", fname);
       exit (EXIT_FAILURE);
     }
@@ -64,7 +65,10 @@ do_test (void)
   /* Read from the file. */
   fp = fopen (fname, "r");
   if (fp == NULL)
-    error (EXIT_FAILURE, errno, "cannot open %s", fname);
+    {
+      setlocale (LC_ALL, "C");
+      error (EXIT_FAILURE, errno, "cannot open %s", fname);
+    }
 
   printf ("%s is opened.\n", fname);
 

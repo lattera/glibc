@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-KR.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -40,7 +40,7 @@
 #define FROM_LOOP		from_iso2022kr_loop
 #define TO_LOOP			to_iso2022kr_loop
 #define MIN_NEEDED_FROM		1
-#define MAX_NEEDED_FROM		3
+#define MAX_NEEDED_FROM		4
 #define MIN_NEEDED_TO		4
 #define MAX_NEEDED_TO		4
 #define PREPARE_LOOP \
@@ -139,12 +139,11 @@ enum
 	   switching is done using the SI and SO bytes.  But we have to	      \
 	   recognize `Esc $ ) C' since this is a kind of flag for this	      \
 	   encoding.  We simply ignore it.  */				      \
-	if (__builtin_expect (inptr + 1 > inend, 0)			      \
+	if (__builtin_expect (inptr + 2 > inend, 0)			      \
 	    || (inptr[1] == '$'						      \
-		&& (__builtin_expect (inptr + 2 > inend, 0)		      \
+		&& (__builtin_expect (inptr + 3 > inend, 0)		      \
 		    || (inptr[2] == ')'					      \
-			&& __builtin_expect (inptr + 3 > inend, 0)))))	      \
-									      \
+			&& __builtin_expect (inptr + 4 > inend, 0)))))	      \
 	  {								      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \

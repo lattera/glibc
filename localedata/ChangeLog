@@ -1,3 +1,8 @@
+2002-04-19  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/ISO-IR-209: Fix the Unicode values for LETTER H WITH CARON.
+	* charmaps/MAC-SAMI: Likewise.
+
 2002-04-15  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/EUC-JISX0213: New file.

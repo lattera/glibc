@@ -215,15 +215,15 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    if (__builtin_expect (ch <= 0xd3, 1))			      \
 	      {								      \
 		/* Hangul */						      \
-		uint_fast32_t i, m, f;					      \
+		int_fast32_t i, m, f;					      \
 									      \
 		i = init[(idx & 0x7c00) >> 10];				      \
 		m = mid[(idx & 0x03e0) >> 5];				      \
 		f = final[idx & 0x001f];				      \
 									      \
-		if (__builtin_expect (i, 0) == -1			      \
-		    || __builtin_expect (m, 0) == -1			      \
-		    || __builtin_expect (f, 0) == -1)			      \
+		if (__builtin_expect (i == -1, 0)			      \
+		    || __builtin_expect (m == -1, 0)			      \
+		    || __builtin_expect (f == -1, 0))			      \
 		  {							      \
 		    /* This is illegal.  */				      \
 		    if (! ignore_errors_p ())				      \
@@ -243,7 +243,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  ch = init_to_ucs[i - 1];				      \
 		else if (i == 0 && m > 0 && f == 0)			      \
 		  ch = 0x314e + m;	/* 0x314f + m - 1 */		      \
-		else if (__builtin_expect (i | m, 0) == 0		      \
+		else if (__builtin_expect ((i | m) == 0, 1)		      \
 			 && __builtin_expect (f > 0, 1))		      \
 		  ch = final_to_ucs[f - 1];	/* round trip?? */	      \
 		else							      \

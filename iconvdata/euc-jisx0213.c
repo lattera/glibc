@@ -366,8 +366,8 @@ static const struct
       }									      \
     else								      \
       {									      \
-	ch = ucs4_to_jisx0213 (ch);					      \
-	if (ch == 0)							      \
+	uint32_t jch = ucs4_to_jisx0213 (ch);				      \
+	if (jch == 0)							      \
 	  {								      \
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
@@ -375,19 +375,19 @@ static const struct
 	    STANDARD_ERR_HANDLER (4);					      \
 	  }								      \
 									      \
-	if (ch & 0x0080)						      \
+	if (jch & 0x0080)						      \
 	  {								      \
 	    /* A possible match in comp_table_data.  We have to buffer it.  */\
 									      \
 	    /* We know it's a JISX 0213 plane 1 character.  */		      \
-	    assert ((ch & 0x8000) == 0);				      \
+	    assert ((jch & 0x8000) == 0);				      \
 									      \
-	    *statep = (ch | 0x8080) << 3;				      \
+	    *statep = (jch | 0x8080) << 3;				      \
 	    inptr += 4;							      \
 	    continue;							      \
 	  }								      \
 									      \
-	if (ch & 0x8000)						      \
+	if (jch & 0x8000)						      \
 	  {								      \
 	    /* JISX 0213 plane 2.  */					      \
 	    if (__builtin_expect (outptr + 2 >= outend, 0))		      \
@@ -406,8 +406,8 @@ static const struct
 		break;							      \
 	      }								      \
 	  }								      \
-	*outptr++ = (ch >> 8) | 0x80;					      \
-	*outptr++ = (ch & 0xff) | 0x80;					      \
+	*outptr++ = (jch >> 8) | 0x80;					      \
+	*outptr++ = (jch & 0xff) | 0x80;				      \
       }									      \
 									      \
     inptr += 4;								      \

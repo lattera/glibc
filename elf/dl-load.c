@@ -863,7 +863,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   else
     {
       phdr = alloca (maplength);
-      __lseek (fd, SEEK_SET, header->e_phoff);
+      __lseek (fd, header->e_phoff, SEEK_SET);
       if (__libc_read (fd, (void *) phdr, maplength) != maplength)
 	{
 	  errstring = N_("cannot read file data");
@@ -1416,7 +1416,7 @@ open_verify (const char *name, struct filebuf *fbp)
       else
 	{
 	  phdr = alloca (maplength);
-	  __lseek (fd, SEEK_SET, ehdr->e_phoff);
+	  __lseek (fd, ehdr->e_phoff, SEEK_SET);
 	  if (__libc_read (fd, (void *) phdr, maplength) != maplength)
 	    {
 	    read_error:
@@ -1434,7 +1434,7 @@ open_verify (const char *name, struct filebuf *fbp)
 	      abi_note = (void *) (fbp->buf + ph->p_offset);
 	    else
 	      {
-		__lseek (fd, SEEK_SET, ph->p_offset);
+		__lseek (fd, ph->p_offset, SEEK_SET);
 		if (__libc_read (fd, (void *) abi_note_buf, 32) != 32)
 		  goto read_error;
 

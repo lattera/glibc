@@ -29,8 +29,8 @@ extern int __isnanl_internal (long double __value)
 # undef isfinite
 # ifdef __NO_LONG_DOUBLE_MATH
 #  define isfinite(x) \
-     (sizeof (x) == (sizeof (float)					      \
-		     ? INTUSE(__finitef) (x) : INTUSE(__finite) (x)))
+     (sizeof (x) == sizeof (float)					      \
+      ? INTUSE(__finitef) (x) : INTUSE(__finite) (x))
 # else
 #  define isfinite(x) \
      (sizeof (x) == sizeof (float)					      \
