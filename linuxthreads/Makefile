@@ -137,7 +137,10 @@ $(objpfx)defs.h: $(objpfx)pt-initfini.s
 	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
 		$(AWK) -f ../csu/defs.awk > $@
 
-$(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
+$(objpfx)crti.o: $(objpfx)crti.S $(objpfx)defs.h
+	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
+
+$(objpfx)crtn.o: $(objpfx)crtn.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
 generated += crti.S crtn.S defs.h pt-initfini.s
