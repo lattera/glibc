@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,18 +24,18 @@
 
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
-|* 								   *|
+|*								   *|
 |* LOOKUP_TYPE   - the return type of the function		   *|
-|* 								   *|
+|*								   *|
 |* GETFUNC_NAME  - name of the non-reentrant getXXXent function	   *|
-|* 								   *|
+|*								   *|
 |* BUFLEN	 - size of static buffer			   *|
-|* 								   *|
+|*								   *|
 |* Optionally the following vars can be defined:		   *|
-|* 								   *|
+|*								   *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
 |*		   the global `h_errno' variable.		   *|
-|* 								   *|
+|*								   *|
 \*******************************************************************/
 
 /* To make the real sources a bit prettier.  */
@@ -121,8 +121,7 @@ GETFUNC_NAME (void)
 static void __attribute__ ((unused))
 free_mem (void)
 {
-  if (buffer != NULL)
-    free (buffer);
+  free (buffer);
 }
 
 text_set_element (__libc_subfreeres, free_mem);

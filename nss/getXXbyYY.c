@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,26 +26,26 @@
 
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
-|* 								   *|
+|*								   *|
 |* LOOKUP_TYPE   - the return type of the function		   *|
-|* 								   *|
+|*								   *|
 |* FUNCTION_NAME - name of the non-reentrant function		   *|
-|* 								   *|
+|*								   *|
 |* DATABASE_NAME - name of the database the function accesses	   *|
 |*		   (e.g., host, services, ...)			   *|
-|* 								   *|
+|*								   *|
 |* ADD_PARAMS    - additional parameter, can vary in number	   *|
-|* 								   *|
+|*								   *|
 |* ADD_VARIABLES - names of additional parameter		   *|
-|* 								   *|
+|*								   *|
 |* BUFLEN	 - length of buffer allocated for the non	   *|
 |*		   reentrant version				   *|
-|* 								   *|
+|*								   *|
 |* Optionally the following vars can be defined:		   *|
-|* 								   *|
+|*								   *|
 |* NEED_H_ERRNO  - an extra parameter will be passed to point to   *|
 |*		   the global `h_errno' variable.		   *|
-|* 								   *|
+|*								   *|
 \*******************************************************************/
 
 /* To make the real sources a bit prettier.  */
@@ -164,8 +164,7 @@ done:
 static void __attribute__ ((unused))
 free_mem (void)
 {
-  if (buffer != NULL)
-    free (buffer);
+  free (buffer);
 }
 
 text_set_element (__libc_subfreeres, free_mem);

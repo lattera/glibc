@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,8 +60,7 @@ static void
 __attribute__ ((unused))
 free_mem (void)
 {
-  if (getmntent_buffer != NULL)
-    free (getmntent_buffer);
+  free (getmntent_buffer);
 }
 
 text_set_element (__libc_subfreeres, free_mem);

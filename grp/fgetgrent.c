@@ -89,8 +89,7 @@ fgetgrent (FILE *stream)
 static void __attribute__ ((unused))
 free_mem (void)
 {
-  if (buffer != NULL)
-    free (buffer);
+  free (buffer);
 }
 
 text_set_element (__libc_subfreeres, free_mem);
