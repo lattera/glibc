@@ -43,13 +43,13 @@
 
 #endif
 
-/* ARM 6 needs slightly different handling */
-#ifdef __arm6__
+/* APCS-32 doesn't preserve the condition codes across function call. */
+#ifdef __APCS_32__
 #define LOADREGS(cond, base, reglist...)\
 	ldm##cond	base,reglist
 #define RETINSTR(instr, regs...)\
 	instr	regs
-#else  /* arm 3 */
+#else  /* APCS-26 */
 #define LOADREGS(cond, base, reglist...)\
 	ldm##cond	base,reglist^
 #define RETINSTR(instr, regs...)\
