@@ -103,11 +103,11 @@
      (__extension__							      \
       ({ union { __extension__ unsigned long long int __ll;		      \
 		 unsigned long int __l[2]; } __w, __r;			      \
-	 __w.__ll = (x);						      \
-         if (__builtin_constant_p (__w.__ll))				      \
-	   __r.__ll = __bswap_constant_64 (__w.__ll);			      \
+         if (__builtin_constant_p (x))					      \
+	   __r.__ll = __bswap_constant_64 (x);				      \
 	 else								      \
 	   {								      \
+	     __w.__ll = (x);						      \
 	     __r.__l[0] = __bswap_32 (__w.__l[1]);			      \
 	     __r.__l[1] = __bswap_32 (__w.__l[0]);			      \
 	   }								      \

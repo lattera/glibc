@@ -1,5 +1,8 @@
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/bits/byteswap.h (__bswap_64): Apply
+	__builtin_constant_p to macro parameter.
+
 	* sysdeps/generic/sigpause.c: Define all functions as weak.
 	* sysdeps/posix/sigpause.c: Likewise.
 
