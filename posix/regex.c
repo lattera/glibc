@@ -2725,7 +2725,10 @@ regex_compile (pattern, size, syntax, bufp)
 			    if (c1 == 1)
 			      range_start = extra[idx];
 			    while (c1-- > 0)
-			      SET_LIST_BIT (extra[idx++]);
+			      {
+				SET_LIST_BIT (extra[idx]);
+				++idx;
+			      }
 			  }
 #endif
 			had_char_class = false;

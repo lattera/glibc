@@ -1,3 +1,19 @@
+2000-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h (ELF_MIPS_GNU_GOT1_OK): New.
+	(ELF_MACHINE_BEFORE_RTLD_RELOC): Handle newer linkers.
+	(elf_machine_runtime_link_map): Likewise.
+	(elf_machine_runtime_setup): Likewise.
+	Handle dynamic linker's local got entries.
+	Patches by Ralf Baechle <ralf@gnu.org>.
+
+2000-10-09  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/mips/dl-machine.h (_dl_runtime_resolve): Define $sp as
+	the frame pointer.  Allocate stack space for $a0 for
+	__dl_runtime_resolve().  Do not save $sp in $s0 as it's
+	callee-saved anyway.
+
 2000-10-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update for changes in

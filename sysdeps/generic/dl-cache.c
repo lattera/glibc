@@ -184,7 +184,8 @@ _dl_load_cache_lookup (const char *name)
 	}
       else if (file && cachesize > sizeof *cache_new)
 	{
-	  cache = cache_new = (struct cache_file_new *) file;
+	  cache_new = file;
+	  cache = file;
 	  if (memcmp (cache_new->magic, CACHEMAGIC_NEW,
 		      sizeof CACHEMAGIC_NEW - 1)
 	      || memcmp (cache_new->version, CACHE_VERSION,
