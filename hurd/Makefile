@@ -68,12 +68,15 @@ distribute += hurdmalloc.h
 include ../mach/Machrules
 include ../Rules
 
-# XXX sunrpc doesn't build yet for Hurd, but one of its headers is
+# XXX sunrpc doesn't build yet for Hurd, but its headers are
 # crucial nontheless.  So sysdeps/mach/hurd/Makefile elides sunrpc
-# from $(subdirs), and this rule arranges for the header in question
+# from $(subdirs), and this rule arranges for the headers in question
 # to get installed.
-install-headers-nosubdir: $(includedir)/rpc/netdb.h
-$(includedir)/rpc/netdb.h: $(..)sunrpc/rpc/netdb.h
+sunrpc-headers = netdb.h pmap_prot.h xdr.h types.h auth.h \
+	rpc_msg.h auth_unix.h
+installed-sunrpc-headers = $(addprefix $(includedir)/rpc/,$(sunrpc-headers))
+install-headers-nosubdir: $(installed-sunrpc-headers)
+$(installed-sunrpc-headers): $(includedir)/%: $(..)sunrpc/%
 	$(do-install)
 
 
