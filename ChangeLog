@@ -1,5 +1,8 @@
 2002-10-25  Roland McGrath  <roland@redhat.com>
 
+	* math/math.h (M_LOG2El): Correct the value.
+	From Stephen L Moshier <steve@moshier.net>.
+
 	* sysdeps/unix/sysv/linux/init-first.c (init): Remove [! SHARED]
 	conditional from __libc_multiple_libcs access.  Remove kludge for weak
 	symbol access with old compilers we no longer support.

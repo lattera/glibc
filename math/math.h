@@ -335,7 +335,7 @@ extern int matherr (struct exception *__exc);
    GNU extension.  Provide enough digits for the 128-bit IEEE quad.  */
 #ifdef __USE_GNU
 # define M_El		2.7182818284590452353602874713526625L  /* e */
-# define M_LOG2El	1.4426950408889634073599246810018922L  /* log_2 e */
+# define M_LOG2El	1.4426950408889634073599246810018921L  /* log_2 e */
 # define M_LOG10El	0.4342944819032518276511289189166051L  /* log_10 e */
 # define M_LN2l		0.6931471805599453094172321214581766L  /* log_e 2 */
 # define M_LN10l	2.3025850929940456840179914546843642L  /* log_e 10 */
