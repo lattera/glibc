@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -104,7 +104,7 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 
 #define lll_mutex_trylock(futex) \
   ({ unsigned char ret;							      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
 		       : "=a" (ret), "=m" (futex)			      \
 		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_LOCKED), "m" (futex),\
 			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
