@@ -472,11 +472,25 @@ extern _IO_wint_t _IO_getwc (_IO_FILE *__fp) __THROW;
 extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp) __THROW;
 extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
 # if __GNUC__ >= 2
+/* While compiling glibc we have to handle compatibility with very old
+   versions.  */
+#  if defined _LIBC && defined SHARED
+#   include <shlib-compat.h>
+#   if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+#    define _IO_fwide_maybe_incompatible \
+  (__builtin_expect (&_IO_stdin_used == NULL, 0))
+extern const int _IO_stdin_used;
+weak_extern (_IO_stdin_used);
+#   endif
+#  endif
+#  ifndef _IO_fwide_maybe_incompatible
+#   define _IO_fwide_maybe_incompatible (0)
+#  endif
 /* A special optimized version of the function above.  It optimizes the
    case of initializing an unoriented byte stream.  */
 #  define _IO_fwide(__fp, __mode) \
   ({ int __result = (__mode);						      \
-     if (__result < 0)							      \
+     if (__result < 0 && ! _IO_fwide_maybe_incompatible)		      \
        {								      \
 	 if ((__fp)->_mode == 0)					      \
 	   /* We know that all we have to do is to set the flag.  */	      \

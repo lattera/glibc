@@ -26,11 +26,6 @@
 #include "libioP.h"
 #include "stdio.h"
 
-#ifdef SHARED
-extern void *_IO_stdin_used;
-weak_extern (_IO_stdin_used);
-#endif
-
 #include <shlib-compat.h>
 
 FILE*

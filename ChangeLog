@@ -1,3 +1,12 @@
+2000-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/libio.h (_IO_fwide_maybe_incompatible): For glibc 2.0
+	compatibility check for old stream and call _IO_wide in doubt.
+	(_IO_fwide): Use _IO_fwide_maybe_incompatible macro.
+	* libio/iofwide.c (_IO_fwide): If compatibility with glibc 2.0 is
+	needed tst for such an old structure and don't do anything.
+	* libio/freopen.c: Remove declaration of _IO_stdin_used.
+
 2000-09-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/powerpc/Makefile [$(subdir) = elf]: Modify
@@ -8,19 +17,19 @@
 
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
-        * soft-fp/Makefile (distribute): Add op-8.h and testit.c.
+	* soft-fp/Makefile (distribute): Add op-8.h and testit.c.
 
-        * soft-fp/Makefile (distribute): Add the math functions, too.
+	* soft-fp/Makefile (distribute): Add the math functions, too.
 
-        * soft-fp/Makefile (distribute): Add ChangeLog, Banner, and configure.
+	* soft-fp/Makefile (distribute): Add ChangeLog, Banner, and configure.
 
 2000-03-03  Geoff Keating  <geoffk@cygnus.com>
 
-        * soft-fp/soft-fp.h (_FP_ROUND_ZERO): Cast 0 to void before using it
-        as a statement.
+	* soft-fp/soft-fp.h (_FP_ROUND_ZERO): Cast 0 to void before using it
+	as a statement.
 
-        * soft-fp/sysdeps/powerpc/Makefile (routines): New file.
-        * soft-fp/sysdeps/powerpc/q_*: New files.
+	* soft-fp/sysdeps/powerpc/Makefile (routines): New file.
+	* soft-fp/sysdeps/powerpc/q_*: New files.
 
 2000-09-05  Ulrich Drepper  <drepper@redhat.com>
 
