@@ -104,7 +104,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
       if (resultbuf == NULL)
 	{
 	  *h_errnop = NETDB_INTERNAL;
-	  return -1;
+	  goto out_close;
 	}
 
       /* Set up the data structure, including pointers.  */
@@ -140,7 +140,10 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 	  if (resultbuf->canon != NULL
 	      && resultbuf->canon[ai_resp->canonlen - 1] != '\0')
 	    /* We cannot use the database.  */
-	    goto out_close;
+	    {
+	      free (resultbuf);
+	      goto out_close;
+	    }
 
 	  retval = 0;
 	  *result = resultbuf;
@@ -173,6 +176,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 	  mapped = NO_MAPPING;
 	}
 
+      *result = NULL;
       free (resultbuf);
 
       goto retry;
