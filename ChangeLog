@@ -1,7 +1,20 @@
 1999-12-28  Ulrich Drepper  <drepper@cygnus.com>
 
-	* iconvdata/iso-2022-kr.c: Optimize recognition of escape
-	sequences a bit.
+	* iconvdata/Makefile (modules): Add ISO-2022-CN.
+	Add link rules for this module.
+	(distribute): Add iso-2022-cn.c and cns11643l2.h.
+	* iconvdata/cns11643l2.h: New file.
+	* iconvdata/iso-2022-cn.c: New file.
+	* iconvdata/gconv-modules: Add entries for ISO-2022-CN module.
+
+	* iconvdata/cns11643l1.h (cns11643l1_to_ucs4): Make string argument
+	unsigned.
+	(ucs4_to_cns11643l1): Likewise.
+	* iconvdata/euc-tw.c: Correct parameter passed to cns11643l1_to_ucs4.
+
+	* iconvdata/iso-2022-kr.c: Remove unnecessary test from conversion
+	loop to UCS4.
+	Optimize recognition of escape sequences a bit.
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove oldgetrlimit
 	and oldsetrlimit definitions.

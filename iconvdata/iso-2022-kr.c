@@ -166,11 +166,6 @@ enum
 									      \
     if (set == ASCII_set)						      \
       {									      \
-	if (ch >= 0x80)							      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
 	/* Almost done, just advance the input pointer.  */		      \
 	++inptr;							      \
       }									      \

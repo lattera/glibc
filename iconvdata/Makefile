@@ -44,7 +44,8 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
 	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI	 \
-	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK
+	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK	 \
+	   ISO-2022-CN
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -73,6 +74,8 @@ $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
 			 $(objpfx)libCNS.so $(objpfx)libKSC.so
 LDFLAGS-ISO-2022-KR.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)ISO-2022-KR.so: $(objpfx)libKSC.so
+LDFLAGS-ISO-2022-CN.so = -Wl,-rpath,'$$ORIGIN'
+$(objpfx)ISO-2022-CN.so: $(objpfx)libGB.so $(objpfx)libCNS.so
 
 LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
 LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
@@ -112,7 +115,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      koi8-r.c ksc5601.c ksc5601.h latin-greek.c latin-greek-1.c    \
 	      macintosh.c mac-is.c mac-uk.c nats-dano.c nats-sefi.c sjis.c  \
 	      t.61.c uhc.c sami-ws2.c iso-ir-197.c tis-620.c koi8-u.c	    \
-	      isiri-3342.c gbgbk.c
+	      isiri-3342.c gbgbk.c iso-2022-cn.c cns11643l2.h
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

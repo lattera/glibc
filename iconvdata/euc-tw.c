@@ -97,7 +97,7 @@
 	else								      \
 	  {								      \
 	    /* This is code set 1: CNS 11643, plane 1.  */		      \
-	    const char *endp = inptr;					      \
+	    const unsigned char *endp = inptr;				      \
 									      \
 	    ch = cns11643l1_to_ucs4 (&endp,				      \
 				     NEED_LENGTH_TEST ? inend - inptr : 2,    \

@@ -26,7 +26,8 @@ extern const uint16_t __cns11643l1_to_ucs4_tab[];
 
 
 static inline uint32_t
-cns11643l1_to_ucs4 (const char **s, size_t avail, unsigned char offset)
+cns11643l1_to_ucs4 (const unsigned char **s, size_t avail,
+		    unsigned char offset)
 {
   unsigned char ch = *(*s);
   unsigned char ch2;
@@ -70,7 +71,7 @@ extern const char __cns11643l1_from_ucs4_tab14[][2];
 
 
 static inline size_t
-ucs4_to_cns11643l1 (uint32_t wch, char *s, size_t avail)
+ucs4_to_cns11643l1 (uint32_t wch, unsigned char *s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   char buf[2];

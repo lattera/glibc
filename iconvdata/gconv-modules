@@ -977,6 +977,11 @@ module	ISO-2022-KR//		INTERNAL		ISO-2022-KR	1
 module	INTERNAL		ISO-2022-KR//		ISO-2022-KR	1
 
 #	from			to			module		cost
+alias	CSISO2022CN//		ISO-2022-CN//
+module	ISO-2022-CN//		INTERNAL		ISO-2022-CN	1
+module	INTERNAL		ISO-2022-CN//		ISO-2022-CN	1
+
+#	from			to			module		cost
 alias	MAC//			MACINTOSH//
 alias	CSMACINTOSH//		MACINTOSH//
 module	MACINTOSH//		INTERNAL		MACINTOSH	1
