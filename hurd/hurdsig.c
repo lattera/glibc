@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -677,6 +677,15 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       (signo != SIGKILL && _hurd_stopped))
     {
       mark_pending ();
+      /* If there was a call to resume above in SIGCONT processing
+	 and we've left a thread suspended, now's the time to
+	 set it going. */
+      if (act == handle && ss_suspended)
+	{
+	  err = __thread_resume (ss->thread);
+	  assert_perror (err);
+	  ss_suspended = 0;
+	}
       act = ignore;
     }
 
