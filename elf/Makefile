@@ -49,6 +49,7 @@ extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
 generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
+endif
 
 include ../Rules
 
