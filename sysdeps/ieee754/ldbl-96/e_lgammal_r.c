@@ -18,9 +18,9 @@
  *
  * Method:
  *   1. Argument Reduction for 0 < x <= 8
- * 	Since gamma(1+s)=s*gamma(s), for x in [0,8], we may
- * 	reduce x to a number in [1.5,2.5] by
- * 		lgamma(1+s) = log(s) + lgamma(s)
+ *	Since gamma(1+s)=s*gamma(s), for x in [0,8], we may
+ *	reduce x to a number in [1.5,2.5] by
+ *		lgamma(1+s) = log(s) + lgamma(s)
  *	for example,
  *		lgamma(7.3) = log(6.3) + lgamma(6.3)
  *			    = log(6.3*5.3) + lgamma(5.3)
@@ -50,13 +50,13 @@
  *	Let z = 1/x, then we approximation
  *		f(z) = lgamma(x) - (x-0.5)(log(x)-1)
  *	by
- *	  			    3       5             11
+ *				    3       5             11
  *		w = w0 + w1*z + w2*z  + w3*z  + ... + w6*z
  *
  *   4. For negative x, since (G is gamma function)
  *		-x*G(-x)*G(x) = pi/sin(pi*x),
- * 	we have
- * 		G(x) = pi/(sin(pi*x)*(-x)*G(-x))
+ *	we have
+ *		G(x) = pi/(sin(pi*x)*(-x)*G(-x))
  *	since G(-x) is positive, sign(G(x)) = sign(sin(pi*x)) for x<0
  *	Hence, for x<0, signgam = sign(sin(pi*x)) and
  *		lgamma(x) = log(|Gamma(x)|)
@@ -69,7 +69,7 @@
  *		lgamma(1)=lgamma(2)=0
  *		lgamma(x) ~ -log(x) for tiny x
  *		lgamma(0) = lgamma(inf) = inf
- *	 	lgamma(-integer) = +-inf
+ *		lgamma(-integer) = +-inf
  *
  */
 
@@ -84,7 +84,7 @@ static long double
   half = 0.5L,
   one = 1.0L,
   pi = 3.14159265358979323846264L,
-  two63 = 9.223372036854775808e18L,  
+  two63 = 9.223372036854775808e18L,
 
   /* lgam(1+x) = 0.5 x + x a(x)/b(x)
      -0.268402099609375 <= x <= 0
@@ -304,8 +304,6 @@ __ieee754_lgammal_r (x, signgamp)
     }
   if (se & 0x8000)
     {
-      if (x == __floorl(x))
-	return x / zero;
       t = sin_pi (x);
       if (t == zero)
 	return one / fabsl (t);	/* -integer */
