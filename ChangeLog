@@ -1,3 +1,7 @@
+2000-05-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (modules-names): Strip before using it.
+
 2000-05-30  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/truncate64.c: New file.
