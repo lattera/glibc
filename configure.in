@@ -497,6 +497,23 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_ld_no_whole_archive)dnl
 
+AC_CACHE_CHECK(for gcc -fno-exceptions, libc_cv_gcc_no_exceptions, [dnl
+cat > conftest.c <<\EOF
+_start () {}
+int __eh_pc;
+__throw () {}
+EOF
+dnl No \ in command here because it ends up inside ''.
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS
+			    -nostdlib -nostartfiles -fno-exceptions
+			    -o conftest conftest.c]); then
+  libc_cv_gcc_no_exceptions=yes
+else
+  libc_cv_gcc_no_exceptions=no
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_gcc_no_exceptions)dnl
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

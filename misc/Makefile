@@ -71,3 +71,6 @@ $(objpfx)libbsd-compat.a: $(objpfx)bsd-compat.o
 	ln $< $@
 
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
+
+
+CFLAGS-init-misc.c = -fkeep-inline-functions

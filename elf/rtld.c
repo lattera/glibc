@@ -486,20 +486,6 @@ of this helper program; chances are you did not intend to run this program.\n",
     _dl_debug_state ();
   }
 
-  if (_dl_rtld_map.l_info[DT_INIT])
-    {
-      /* Call the initializer for the compatibility version of the
-	 dynamic linker.  There is no additional initialization
-	 required for the ABI-compliant dynamic linker.  */
-
-      (*(void (*) (int, char **, char**))
-       (_dl_rtld_map.l_addr + _dl_rtld_map.l_info[DT_INIT]->d_un.d_ptr))
-	(0, NULL, NULL);
-
-      /* Clear the field so a future dlopen won't run it again.  */
-      _dl_rtld_map.l_info[DT_INIT] = NULL;
-    }
-
   /* We finished the intialization and will start up.  */
   _dl_starting_up = 1;
 

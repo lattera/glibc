@@ -333,6 +333,15 @@ $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
 endif
 endif
 
+# Some files must not be compiled with the exception handler mechanism
+# enabled (introduced in gcc-2.8).  Use $(no-exceptions) in the
+# appropriate CFLAGS definition.
+ifeq ($(have-no-exceptions),yes)
+no-exceptions = -fno-exceptions
+else
+no-exceptions =
+endif
+
 # Figure out the source filenames in this directory.
 
 override sources	:= $(addsuffix .c,$(filter-out $(elided-routines),\
@@ -475,8 +484,7 @@ define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 	    $(patsubst $(objpfx)%,%,$(o-objects))) $(subdirs-stamp-o); \
-	topdir=`cd $(..).; pwd`; \
-	$$$$topdir/autolock.sh \
+	$$(..)./autolock.sh \
 	  $$(common-objpfx)$$(patsubst %,$$(libtype$o),c).lck \
 	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef

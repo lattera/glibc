@@ -55,7 +55,7 @@ struct gmonparam _gmonparam = { GMON_PROF_OFF };
 static int	s_scale;
 #define		SCALE_1_TO_1	0x10000L
 
-#define ERR(s) write(2, s, sizeof(s))
+#define ERR(s) write(2, s, sizeof(s) - 1)
 
 /*
  * Discover the tick frequency of the machine if something goes wrong,
@@ -65,7 +65,7 @@ static int
 DEFUN_VOID(hertz)
 {
   struct itimerval tim;
-    
+
   tim.it_interval.tv_sec = 0;
   tim.it_interval.tv_usec = 1;
   tim.it_value.tv_sec = 0;

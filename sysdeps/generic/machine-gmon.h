@@ -46,6 +46,6 @@ static inline void mcount_internal (frompc, selfpc)
 #define MCOUNT \
 void _mcount (void)							      \
 {									      \
-  mcount_internal ((u_long) __builtin_return_address (0),		      \
-		   (u_long) __builtin_return_address (1));		      \
+  mcount_internal ((u_long) __builtin_return_address (1),		      \
+		   (u_long) __builtin_return_address (0));		      \
 }

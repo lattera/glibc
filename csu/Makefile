@@ -80,7 +80,7 @@ define initfini
 -rm -f $(objpfx)crtcommon.tmp
 (echo 'cat > crtcommon.tmp <<\EOF_common'; \
  $(CC) $< $(CPPFLAGS) $(CFLAGS) \
-       -fPIC -finhibit-size-directive -g0 -S -o -; \
+       -fPIC -finhibit-size-directive $(no-exceptions) -g0 -S -o -; \
  echo 'EOF_common') | (cd $(@D); $(SHELL))
 cat $(objpfx)crtcommon.tmp >> $(objpfx)crti.s-new
 cat $(objpfx)crtcommon.tmp >> $(objpfx)crtn.s-new

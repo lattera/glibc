@@ -43,6 +43,15 @@ __BEGIN_DECLS
 #endif
 #endif /* Use misc.  */
 
+/* Define some more compatibility macros to be backward compatible with
+   BSD systems which did not managed to hide these kernel macros.  */
+#ifdef	__USE_BSD
+#define	FAPPEND		O_APPEND
+#define	FASYNC		O_ASYNC
+#define	FFSYNC		O_FSYNC
+#define	FNONBLOCK	O_NONBLOCK
+#define	FNDELAY		O_NDELAY
+#endif /* Use BSD.  */
 
 /* Do the file control operation described by CMD on FD.
    The remaining arguments are interpreted depending on CMD.  */

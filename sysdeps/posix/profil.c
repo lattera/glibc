@@ -37,7 +37,13 @@ static u_int pc_scale;
 static inline void
 profil_count (void *pc)
 {
-  size_t i = ((pc - pc_offset - (void *) 0) / 2) * pc_scale / 65536;
+  size_t i = (pc - pc_offset - (void *) 0) / 2;
+
+  if (sizeof (unsigned long long int) > sizeof (size_t))
+    i = (unsigned long long int) i * pc_scale / 65536;
+  else
+    i = i / 65536 * pc_scale + i % 65536 * pc_scale / 65536;
+
   if (i < nsamples)
     ++samples[i];
 }
@@ -65,11 +71,11 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
       if (samples == NULL)
 	/* Wasn't turned on.  */
 	return 0;
-      samples = NULL;
 
-      if (sigaction (SIGPROF, &oact, NULL) < 0)
+      if (setitimer (ITIMER_PROF, &otimer, NULL) < 0)
 	return -1;
-      return setitimer (ITIMER_PROF, &otimer, NULL);
+      samples = NULL;
+      return sigaction (SIGPROF, &oact, NULL);
     }
 
   samples = sample_buffer;

@@ -25,7 +25,12 @@ char *__progname = (char *) "";
 weak_alias (__progname_full, program_invocation_name)
 weak_alias (__progname, program_invocation_short_name)
 
-void
+
+static void __init_misc (int argc, char **argv, char **envp)
+  __attribute__ ((unused));
+
+
+static void
 __init_misc (int argc, char **argv, char **envp)
 {
   if (argv && argv[0])

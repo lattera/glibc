@@ -1,3 +1,42 @@
+Tue Aug 27 17:45:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Add some test for correct version of GNU Make.
+
+	* io/fcntl.h: Undo change from Mon Aug 26 22:22:17 1996.
+	* sysdeps/unix/sysv/linux/fcntlbits.h: Place macros here instead.
+
+	* sysdeps/generic/dl-sysdep.c: Initialize break address to
+	avoid overwriting last page (OK, Roland).
+
+Tue Aug 27 16:20:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/resolv.h: Update from BIND-4.9.5-T3A.
+	* resolv/arpa/nameser.h: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+
+Tue Aug 27 15:47:04 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-error.c (catch): Define errstring element not as const.
+	(_dl_catch_error): ERRSTRING argument is not const pointer.
+	Initialize *ERRSTRING and *OBJNAME separately.
+	* elf/link.h: Change prototype for `_dl_catch_error'.
+
+	* elf/dl-load.c (_dl_map_object): Use separate variable for
+	copied NAME to avoid `const' warning.
+
+	* elf/dlerror.c: Make `last_errstring' variable not const pointer.
+
+	* elf/rtld.c: Implement reading of /etc/ld.so.preload.  This
+	provides preloading even for SUID binaries.
+	Add some more casts to avoid signed<->unsigned warnings.
+
+Tue Aug 27 15:40:28 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* posix/sys/types.h: Define loff_t.
+	* sysdeps/unix/sysv/linux/gnu/types.h: Define __loff_t.
+
 Mon Aug 26 22:22:17 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/fcntl.h: Add definition for BSD F* macros.
@@ -14,11 +53,6 @@ Mon Aug 26 22:22:17 1996  Ulrich Drepper  <drepper@cygnus.com>
 Mon Aug 26 17:16:48 1996  Richard Henderson  <rth@tamu.edu>
 
 	* sysdeps/alpha/dl-machine.h: Clear startup flag.
-
-Fri Aug 16 21:17:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
-
-	* Makerules (o-iterator-doit): Simplify reference to autolock
-	script.
 
 Fri Aug 16 21:17:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -48,6 +82,19 @@ Sun Aug 25 18:25:52 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	(profil_count): Use 64 bit arithmethic to avoid overflow.
 
 	* sysdeps/generic/machine-gmon.h (MCOUNT): Fix argument order.
+
+Mon Aug 26 16:31:33 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Tolerate NEW
+	being null; in that case don't touch the timer at all (but do
+	return something in OLD if necessary).
+
+Mon Aug 26 13:35:16 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/init-first.c (__libc_multiple_libcs): New
+ 	variable.
+	* sysdeps/i386/init-first.c: Likewise.
+	* sysdeps/stub/init-first.c: Likewise.
 
 Mon Aug 26 02:01:37 1996  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -229,8 +229,12 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 		      free (file_name);
 		      return NULL;
 		    }
-		  file_namep = &buf[file_namep - file_name];
+		  file_namep = &buf[file_namep - file_name + size / 2];
 		  file_name = buf;
+		  /* Move current contents up to the end of the buffer.
+		     This is guaranteed to be non-overlapping.  */
+		  memcpy (file_namep, file_namep - size / 2,
+			  file_name + size - file_namep);
 		}
 	    }
 	  file_namep -= d->d_namlen;
