@@ -28,15 +28,13 @@ routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
-				  version profile) \
-		  fpu_control
+				  version profile)
 # But they are absent from the shared libc, because that code is in ld.so.
-elide-routines.os = $(dl-routines) dl-support enbl-secure fpu_control
+elide-routines.os = $(dl-routines) dl-support enbl-secure
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
-rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal \
-		   fpu_control
+rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
