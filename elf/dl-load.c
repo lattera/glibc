@@ -161,7 +161,9 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
     {
       size_t len = 1;
 
-      if (((strncmp (&sf[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+      /* $ORIGIN is not expanded for SUID/GUID programs.  */
+      if (((!__libc_enable_secure
+	    && strncmp (&sf[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
 	   || (strncmp (&sf[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
 	  && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
 	++cnt;
@@ -209,7 +211,8 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
 	  const char *repl;
 	  size_t len;
 
-	  if (((strncmp (&s[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+	  if (((!__libc_enable_secure
+		&& strncmp (&s[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
 	       || (strncmp (&s[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
 	      && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
 	    {

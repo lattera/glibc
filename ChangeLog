@@ -1,5 +1,8 @@
 1999-05-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-load.c (expand_dynamic_string_token): Don't expand
+	$ORIGIN for SUID binaries.
+
 	* sysdeps/unix/sysv/linux/arm/Dist: Add sigrestorer.S.
 
 1999-05-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
