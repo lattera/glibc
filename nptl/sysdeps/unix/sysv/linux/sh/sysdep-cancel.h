@@ -109,7 +109,7 @@
 	bsrf r0; \
 	 nop; \
      0: bra 2f; \
-	 nop; \
+	 mov r0,r2; \
 	.align 2; \
      1: .long __local_enable_asynccancel - 0b; \
      2:
@@ -117,7 +117,7 @@
 # define CDISABLE \
 	mov.l 1f,r0; \
 	bsrf r0; \
-	 nop; \
+	 mov r2,r4; \
      0: bra 2f; \
 	 nop; \
 	.align 2; \
