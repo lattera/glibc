@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -95,9 +95,9 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* On sparc the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
+/* On sparc and ARM the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
    syscalls were introduced in 2.3.35.  */
-#if __LINUX_KERNEL_VERSION >= 131875 && defined __sparc__
+#if __LINUX_KERNEL_VERSION >= 131875 && (defined __sparc__ || defined __arm__)
 # define __ASSUME_TRUNCATE64_SYSCALL	1
 # define __ASSUME_MMAP2_SYSCALL		1
 # define __ASSUME_STAT64_SYSCALL	1

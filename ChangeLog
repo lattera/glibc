@@ -1,3 +1,15 @@
+2000-01-03  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_MMAP2_SYSCALL,
+	__ASSUME_TRUNCATE64_SYSCALL, __ASSUME_STAT64_SYSCALL): Define on
+	ARM for kernels >= 2.3.35.
+
+2000-01-03  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/mmap.S: Remove mmap64 alias.
+	Optimise error handling a little.
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: New file.
+
 2000-01-03  Andreas Jaeger  <aj@suse.de>
 
 	* include/resolv.h: Remove declarations for __ns_name_ntop and
