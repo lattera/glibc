@@ -133,6 +133,25 @@ __libc_sigaction (sig, act, oact)
 #endif
 }
 
+#ifndef SIGCANCEL
 weak_alias (__libc_sigaction, __sigaction)
 libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction)
+#else
+int
+__sigaction (sig, act, oact)
+     int sig;
+     const struct sigaction *act;
+     struct sigaction *oact;
+{
+  if (sig == SIGCANCEL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  return __libc_sigaction (sig, act, oact);
+}
+libc_hidden_weak (__sigaction)
+weak_alias (__sigaction, sigaction)
+#endif
