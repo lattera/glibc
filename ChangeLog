@@ -1,5 +1,12 @@
 2003-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/clock_nanosleep.c (clock_nanosleep): nanosleep
+	takes care of enabling cancellation.
+
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Make aio_suspend
+	cancelable.  It's not correct to disable cancellation.  Instead of
+	a cleanup handler.
+
 	* sysdeps/unix/sysv/linux/sigtimedwait.c: If SIGCANCEL is defined
 	and part of the incoming set, create a temporary set without this
 	signal.

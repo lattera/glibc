@@ -212,7 +212,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
-	tst-cancel16 \
+	tst-cancel16 tst-cancel17 \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
@@ -243,7 +243,7 @@ ifeq ($(have-forced-unwind),yes)
 tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
 	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15\
-	 tst-cancelx16 \
+	 tst-cancelx16 tst-cancelx17 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
 endif
 ifeq ($(build-shared),yes)
@@ -363,6 +363,7 @@ CFLAGS-tst-cancelx13.c += -fexceptions
 CFLAGS-tst-cancelx14.c += -fexceptions
 CFLAGS-tst-cancelx15.c += -fexceptions
 CFLAGS-tst-cancelx16.c += -fexceptions
+CFLAGS-tst-cancelx17.c += -fexceptions
 CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx2.c += -fexceptions
@@ -385,8 +386,12 @@ $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.so
+$(objpfx)tst-cancel17: $(common-objpfx)rt/librt.so
+$(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.so
 else
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
+$(objpfx)tst-cancel17: $(common-objpfx)rt/librt.a
+$(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.a
 endif
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/

@@ -35,7 +35,52 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
+#include <bits/libc-lock.h>
 #include "aio_misc.h"
+
+
+struct clparam
+{
+  const struct aiocb *const *list;
+  struct waitlist *waitlist;
+  struct requestlist **requestlist;
+  pthread_cond_t *cond;
+  int nent;
+};
+
+
+static void
+cleanup (void *arg)
+{
+  const struct clparam *param = (const struct clparam *) arg;
+
+  /* Now remove the entry in the waiting list for all requests
+     which didn't terminate.  */
+  int cnt = param->nent;
+  while (cnt-- > 0)
+    if (param->list[cnt] != NULL
+	&& param->list[cnt]->__error_code == EINPROGRESS)
+      {
+	struct waitlist **listp;
+
+	assert (param->requestlist[cnt] != NULL);
+
+	/* There is the chance that we cannot find our entry anymore. This
+	   could happen if the request terminated and restarted again.  */
+	listp = &param->requestlist[cnt]->waiting;
+	while (*listp != NULL && *listp != &param->waitlist[cnt])
+	  listp = &(*listp)->next;
+
+	if (*listp != NULL)
+	  *listp = (*listp)->next;
+      }
+
+  /* Release the conditional variable.  */
+  (void) pthread_cond_destroy (param->cond);
+
+  /* Release the mutex.  */
+  pthread_mutex_unlock (&__aio_requests_mutex);
+}
 
 
 int
@@ -87,12 +132,16 @@ aio_suspend (list, nent, timeout)
   /* Only if none of the entries is NULL or finished to be wait.  */
   if (cnt == nent && any)
     {
-      int oldstate;
+      struct clparam clparam =
+	{
+	  .list = list,
+	  .waitlist = waitlist,
+	  .requestlist = requestlist,
+	  .cond = &cond,
+	  .nent = nent
+	};
 
-      /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
-	 points we must be careful.  We added entries to the waiting lists
-	 which we must remove.  So defer cancelation for now.  */
-      pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
+      __libc_cleanup_region_start (1, cleanup, &clparam);
 
       if (timeout == NULL)
 	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
@@ -116,8 +165,7 @@ aio_suspend (list, nent, timeout)
 					   &abstime);
 	}
 
-      /* Now it's time to restore the cancellation state.  */
-      pthread_setcancelstate (oldstate, NULL);
+      __libc_cleanup_region_end (0);
     }
 
   /* Now remove the entry in the waiting list for all requests

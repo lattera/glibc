@@ -94,15 +94,5 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
     /* Not supported.  */
     return ENOTSUP;
 
-  if (SINGLE_THREAD_P)
-    return __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
-
-  /* More than one thread running, enable cancellation.  */
-  int oldstate = LIBC_CANCEL_ASYNC ();
-
-  int result = __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
-
-  LIBC_CANCEL_RESET (oldstate);
-
-  return result;
+  return __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
 }
