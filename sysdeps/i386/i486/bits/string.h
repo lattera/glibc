@@ -463,6 +463,8 @@ memchr (__const void *__s, int __c, size_t __n)
 
 #define _HAVE_STRING_ARCH_memrchr 1
 #ifndef _FORCE_INLINES
+__STRING_INLINE void *__memrchr (__const void *__s, int __c, size_t __n);
+
 __STRING_INLINE void *
 __memrchr (__const void *__s, int __c, size_t __n)
 {
@@ -729,11 +731,9 @@ __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
      "leal	4(%1),%1\n\t"
      "decl	%3\n\t"
      "jnz	1b"
-     : "=&r" (__d0), "=r" (__tmp), "=&r" (__src), "=&r" (__d1),
-       "=m" ( *(struct { __extension__ char __x[__srclen]; } *)__dest)
-     : "1" (__tmp), "2" (__src), "3" (__srclen / 4),
-       "m" ( *(struct { __extension__ char __x[__srclen]; } *)__src)
-     : "cc");
+     : "=&r" (__d0), "=r" (__tmp), "=&r" (__src), "=&r" (__d1)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 4)
+     : "memory", "cc");
   return __tmp;
 }
 
@@ -1535,10 +1535,8 @@ __strcspn_cg (__const char *__s, __const char __reject[], size_t __reject_len)
      "jne	1b\n"
      "2:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "0" (__s), "d" (__reject), "g" (__reject_len),
-       "m" ( *(struct { char __x[0xfffffff]; } *)__s),
-       "m" ( *(struct { __extension__ char __x[__reject_len]; } *)__reject)
-     : "cc");
+     : "0" (__s), "d" (__reject), "g" (__reject_len)
+     : "memory", "cc");
   return (__res - 1) - __s;
 }
 
@@ -1657,6 +1655,7 @@ __strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
      "2:"
      : "=S" (__res), "=&d" (__d0), "=&c" (__d1), "=&D" (__d2)
      : "0" (__s), "1" (__accept), "g" (__accept_len),
+       /* Since we do not know how large the memory we access it, use a really large amount.  */
        "m" ( *(struct { char __x[0xfffffff]; } *)__s),
        "m" ( *(struct { __extension__ char __x[__accept_len]; } *)__accept)
      : "cc");
@@ -1755,10 +1754,8 @@ __strpbrk_cg (__const char *__s, __const char __accept[], size_t __accept_len)
      "xorl	%0,%0\n"
      "3:"
      : "=S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "0" (__s), "d" (__accept), "g" (__accept_len),
-       "m" ( *(struct { char __x[0xfffffff]; } *)__s),
-       "m" ( *(struct { __extension__ char __x[__accept_len]; } *)__accept)
-     : "cc");
+     : "0" (__s), "d" (__accept), "g" (__accept_len)
+     : "memory", "cc");
   return __res;
 }
 
@@ -1865,11 +1862,8 @@ __strstr_cg (__const char *__haystack, __const char __needle[],
      "xorl	%%eax,%%eax\n"
      "2:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
-     : "g" (__needle_len), "1" (__haystack), "d" (__needle),
-       /* Since we do not know how large the memory we access it, use a really large amount.  */
-       "m" ( *(struct { char __x[0xfffffff]; } *)__haystack),
-       "m" ( *(struct { __extension__ char __x[__needle_len]; } *)__needle)
-     : "cc");
+     : "g" (__needle_len), "1" (__haystack), "d" (__needle)
+     : "memory", "cc");
   return __res;
 }
 
