@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger.
 
@@ -139,6 +139,7 @@ static struct platform {
   {"Sable",	IOSYS_CPUDEP},
   {"Miata",	IOSYS_CIA},
   {"Tsunami",	IOSYS_TSUNAMI},
+  {"Nautilus",	IOSYS_TSUNAMI},
   {"Rawhide",	IOSYS_MCPCIA},
   {"Ruffian",	IOSYS_CIA},
   {"Takara",	IOSYS_CIA},
