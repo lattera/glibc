@@ -1,3 +1,8 @@
+2003-11-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mntent_r.c (decode_name): Be compatible with util-linux and
+	recognize \134 as well.
+
 2003-10-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/fraiseexcpt.c: Don't include <asm/fpu.h>.
@@ -10,9 +15,9 @@
 
 	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h: Don't include
 	<asm/elf.h>.
-	(ELF_NGREG): New.
+	(ELF_NGREG): New #define.
 	(ELF_NFPREG): Likewise.
-	(elf_greg_t): Likewise.
+	(elf_greg_t): New type.
 	(elf_gregset_t): Likewise.
 	(elf_fpreg_t): Likewise.
 	(elf_fpregset_t): Likewise.
@@ -22,7 +27,7 @@
 	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Include
 	<sys/ucontext.h>.
 	(__ptrace_request): Add PTRACE_GETREGS and PTRACE_SETREGS.
-	(pt_all_user_regs): New.
+	(pt_all_user_regs): New type.
 
 2003-10-10  Simon Josefsson  <jas@extundo.com>
 

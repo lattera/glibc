@@ -102,6 +102,12 @@ decode_name (char *buf)
 	*wp++ = '\\';
 	rp += 1;
       }
+    else if (rp[0] == '\\' && rp[1] == '1' && rp[2] == '3' && rp[3] == '4')
+      {
+	/* \134 is also \\.  */
+	*wp++ = '\\';
+	rp += 3;
+      }
     else
       *wp++ = *rp;
   while (*rp++ != '\0');
