@@ -4,7 +4,7 @@ if test -z "$inhibit_glue"; then
 # Find out what this system calls `sys_siglist'.
 echo $ac_n "checking for sys_siglist""... $ac_c" 1>&6
 echo "configure:7: checking for sys_siglist" >&5
-if eval "test \"\${ac_cv_check_symbol_sys_siglist+set}\" = set"; then
+if eval "test \"`echo '$''{'ac_cv_check_symbol_sys_siglist'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
@@ -37,7 +37,7 @@ fi
 echo "$ac_t""$ac_cv_check_symbol_sys_siglist" 1>&6
 echo $ac_n "checking for _sys_siglist""... $ac_c" 1>&6
 echo "configure:40: checking for _sys_siglist" >&5
-if eval "test \"\${ac_cv_check_symbol__sys_siglist+set}\" = set"; then
+if eval "test \"`echo '$''{'ac_cv_check_symbol__sys_siglist'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
@@ -73,7 +73,7 @@ echo "$ac_t""$ac_cv_check_symbol__sys_siglist" 1>&6
 # classification.  This is used by sysdeps/unix/common/glue-ctype.c.
 echo $ac_n "checking ctype array name for glue""... $ac_c" 1>&6
 echo "configure:76: checking ctype array name for glue" >&5
-if eval "test \"\${libc_cv_ctype_glue+set}\" = set"; then
+if eval "test \"`echo '$''{'libc_cv_ctype_glue'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   for ctype in _ctype_ __ctype_ __ctype _ctype__ _ctype _locp; do
