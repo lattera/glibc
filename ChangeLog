@@ -1,3 +1,7 @@
+2001-04-02  Andreas Schwab  <schwab@suse.de>
+
+	* resolv/res_data.c (res_isourserver): Fix cast.
+
 2001-04-02  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/dl-machine.h (RTLD_START): Don't use multi-line
