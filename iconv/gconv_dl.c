@@ -26,9 +26,7 @@
 #include <bits/libc-lock.h>
 #include <sys/param.h>
 
-#include <ldsodefs.h>
 #include <gconv_int.h>
-
 
 /* This is a tuning parameter.  If a transformation module is not used
    anymore it gets not immediately unloaded.  Instead we wait a certain
@@ -39,12 +37,9 @@
    before unloading.  */
 #define TRIES_BEFORE_UNLOAD	2
 
-
 /* Array of loaded objects.  This is shared by all threads so we have
    to use semaphores to access it.  */
 static void *loaded;
-
-
 
 /* Comparison function for searching `loaded_object' tree.  */
 static int
@@ -57,70 +52,6 @@ known_compare (const void *p1, const void *p2)
 
   return (intptr_t) s1->handle - (intptr_t) s2->handle;
 }
-
-
-static void
-do_open (void *a)
-{
-  struct __gconv_loaded_object *args = (struct __gconv_loaded_object *) a;
-  /* Open and relocate the shared object.  */
-  args->handle = _dl_open (args->name, RTLD_LAZY, NULL);
-}
-
-
-static int
-internal_function
-dlerror_run (void (*operate) (void *), void *args)
-{
-  char *last_errstring = NULL;
-  int result;
-
-  (void) _dl_catch_error (&last_errstring, operate, args);
-
-  result = last_errstring != NULL;
-  if (result)
-    free (last_errstring);
-
-  return result;
-}
-
-
-struct get_sym_args
-{
-  /* Arguments to get_sym.  */
-  struct link_map *map;
-  const char *name;
-
-  /* Return values of get_sym.  */
-  ElfW(Addr) loadbase;
-  const ElfW(Sym) *ref;
-};
-
-static void
-get_sym (void *a)
-{
-  struct get_sym_args *args = (struct get_sym_args *) a;
-  args->ref = NULL;
-  args->loadbase = _dl_lookup_symbol (args->name, &args->ref,
-				      args->map->l_local_scope,
-				      args->map->l_name, 0);
-}
-
-
-void *
-internal_function
-__gconv_find_func (void *handle, const char *name)
-{
-  struct get_sym_args args;
-
-  args.map = handle;
-  args.name = name;
-
-  return (dlerror_run (get_sym, &args) ? NULL
-	  : (void *) (args.loadbase + args.ref->st_value));
-}
-
-
 
 /* Open the gconv database if necessary.  A non-negative return value
    means success.  */
@@ -170,9 +101,10 @@ __gconv_find_shlib (const char *name)
     {
       if (found->counter < -TRIES_BEFORE_UNLOAD)
 	{
-	  if (dlerror_run (do_open, found) == 0)
+	  found->handle = __libc_dlopen (found->name);
+	  if (found->handle != NULL)
 	    {
-	      found->fct = __gconv_find_func (found->handle, "gconv");
+	      found->fct = __libc_dlsym (found->handle, "gconv");
 	      if (found->fct == NULL)
 		{
 		  /* Argh, no conversion function.  There is something
@@ -182,10 +114,8 @@ __gconv_find_shlib (const char *name)
 		}
 	      else
 		{
-		  found->init_fct = __gconv_find_func (found->handle,
-						       "gconv_init");
-		  found->end_fct = __gconv_find_func (found->handle,
-						      "gconv_end");
+		  found->init_fct = __libc_dlsym (found->handle, "gconv_init");
+		  found->end_fct = __libc_dlsym (found->handle, "gconv_end");
 
 		  /* We have succeeded in loading the shared object.  */
 		  found->counter = 1;
@@ -224,11 +154,8 @@ do_release_shlib (const void *nodep, VISIT value, int level)
     {
       if (--obj->counter < -TRIES_BEFORE_UNLOAD && obj->handle != NULL)
 	{
-	  /* Unload the shared object.  We don't use the trick to
-	     catch errors since in the case an error is signalled
-	     something is really wrong.  */
-	  _dl_close (obj->handle);
-
+	  /* Unload the shared object.  */
+	  __libc_dlclose (obj->handle);
 	  obj->handle = NULL;
 	}
     }
@@ -258,11 +185,9 @@ do_release_all (void *nodep)
 {
   struct __gconv_loaded_object *obj = (struct __gconv_loaded_object *) nodep;
 
-  /* Unload the shared object.  We don't use the trick to
-     catch errors since in the case an error is signalled
-     something is really wrong.  */
+  /* Unload the shared object.  */
   if (obj->handle != NULL)
-    _dl_close (obj->handle);
+    __libc_dlclose (obj->handle);
 
   free (obj);
 }

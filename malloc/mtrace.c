@@ -28,7 +28,7 @@
 #include <bits/libc-lock.h>
 #endif
 
-#include <ldsodefs.h>
+#include <dlfcn.h>
 
 #include <stdio.h>
 #include <string.h>

@@ -127,7 +127,7 @@ dl_open_worker (void *a)
       /* If the substitution failed don't try to load.  */
       if (*new_file == '\0')
 	_dl_signal_error (0, "dlopen",
-			  "empty dynamics string token substitution");
+			  "empty dynamic string token substitution");
 
       /* Now we have a new file name.  */
       file = new_file;

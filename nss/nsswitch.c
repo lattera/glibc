@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ldsodefs.h>		/* We need some help from ld.so.  */
 
 #if !defined DO_STATIC_NSS || defined PIC
 # include <gnu/lib-names.h>
@@ -245,60 +244,6 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
 }
 
 
-#if !defined DO_STATIC_NSS || defined PIC
-static int
-nss_dlerror_run (void (*operate) (void *), void *args)
-{
-  char *last_errstring = NULL;
-  int result;
-
-  (void) _dl_catch_error (&last_errstring, operate, args);
-
-  result = last_errstring != NULL;
-  if (result)
-    free (last_errstring);
-
-  return result;
-}
-
-
-struct do_open_args
-{
-  /* Argument to do_open.  */
-  char *shlib_name;
-  service_user *ni;
-};
-
-struct get_sym_args
-{
-  /* Arguments to get_sym.  */
-  struct link_map *map;
-  char *name;
-
-  /* Return values of get_sym.  */
-  ElfW(Addr) loadbase;
-  const ElfW(Sym) *ref;
-};
-
-static void
-do_open (void *a)
-{
-  struct do_open_args *args = (struct do_open_args *) a;
-  /* Open and relocate the shared object.  */
-  args->ni->library->lib_handle = _dl_open (args->shlib_name, RTLD_LAZY, NULL);
-}
-
-static void
-get_sym (void *a)
-{
-  struct get_sym_args *args = (struct get_sym_args *) a;
-  args->ref = NULL;
-  args->loadbase = _dl_lookup_symbol (args->name, &args->ref,
-				      args->map->l_local_scope,
-				      args->map->l_name, 0);
-}
-#endif
-
 /* Comparison function for searching NI->known tree.  */
 static int
 known_compare (const void *p1, const void *p2)
@@ -376,18 +321,17 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 	      size_t shlen = (7 + strlen (ni->library->name) + 3
 			      + strlen (__nss_shlib_revision) + 1);
 	      int saved_errno = errno;
-	      struct do_open_args args;
-	      args.shlib_name = __alloca (shlen);
-	      args.ni = ni;
+	      char shlib_name[shlen];
 
 	      /* Construct shared object name.  */
-	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (args.shlib_name,
+	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (shlib_name,
 						      "libnss_"),
 					    ni->library->name),
 				  ".so"),
 			__nss_shlib_revision);
 
-	      if (nss_dlerror_run (do_open, &args) != 0)
+	      ni->library->lib_handle = __libc_dlopen (shlib_name);
+	      if (ni->library->lib_handle == NULL)
 		{
 		  /* Failed to load the library.  */
 		  ni->library->lib_handle = (void *) -1l;
@@ -400,22 +344,19 @@ __nss_lookup_function (service_user *ni, const char *fct_name)
 	    result = NULL;
 	  else
 	    {
-	      /* Get the desired function.  Again,  GNU ld.so magic ahead.  */
+	      /* Get the desired function.  */
 	      size_t namlen = (5 + strlen (ni->library->name) + 1
 			       + strlen (fct_name) + 1);
-	      struct get_sym_args args;
-	      args.name = __alloca (namlen);
-	      args.map = ni->library->lib_handle;
+	      char name[namlen];
 
 	      /* Construct the function name.  */
-	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (args.name, "_nss_"),
+	      __stpcpy (__stpcpy (__stpcpy (__stpcpy (name, "_nss_"),
 					    ni->library->name),
 				  "_"),
 			fct_name);
 
 	      /* Look up the symbol.  */
-	      result = (nss_dlerror_run (get_sym, &args) ? NULL
-			: (void *) (args.loadbase + args.ref->st_value));
+	      result = __libc_dlsym (ni->library->lib_handle, name);
 	    }
 #else
 	  /* We can't get function address dynamically in static linking. */
@@ -796,7 +737,7 @@ free_mem (void)
     {
       service_library *oldl = library;
 
-      _dl_close (library->lib_handle);
+      __libc_dlclose (library->lib_handle);
 
       library = library->next;
       free (oldl);

@@ -1,5 +1,39 @@
 1999-06-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/libm-ieee754/e_gamma_r.c: Initialize *signgamp for NaN
+	returns.
+	* sysdeps/libm-ieee754/e_gammaf_r.c: Likewise.
+	* sysdeps/libm-ieee754/e_gammal_r.c: Likewise.
+	Reported by John Reiser <jreiser@BitWagon.com> [PR libc/1185].
+
+	* elf/dl-dst.h: Fix typo.
+	* elf/dl-open.c: Likewise.
+
+1999-06-26  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* elf/dl-libc.c: New file, provides three functions:
+	__libc_dlopen, __libc_dlclose, __libc_dlsym.
+	* include/dlfcn.h: Prototype them.  Prototype _dl_addr.
+	* elf/Makefile (routines): Add dl-libc.c.
+	* elf/dl-profstub.c (_dl_mcount_wrapper): Change type of
+	argument to void *.
+	* elf/ldsodefs.h: Change proto and use of _dl_mcount_wrapper to match.
+
+	* iconv/gconv.c: Include dlfcn.h.
+	* iconv/gconv_db.c: Likewise.
+	* malloc/mtrace.c: Likewise.  Don't include ldsodefs.h.
+
+	* iconv/gconv_int.h (struct __gconv_loaded_object): Change
+	`handle' to a void *.
+	(__gconv_find_func): Delete prototype.
+
+	* iconv/gconv_dl.c: Don't include ldsodefs.h.  Remove
+	dlerror_run and related functions and structs.  Use
+	__libc_dlopen, __libc_dlsym, __libc_dlclose.
+	* nss/nsswitch.c: Likewise.
+
+1999-06-28  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/gethostid.c: Test for gethostbyname_r
 	function correctly.
 

@@ -33,7 +33,7 @@
 extern size_t _dl_dst_count (const char *name, int is_path);
 
 
-/* Guess from the number of DSTs the length of the restul string.  */
+/* Guess from the number of DSTs the length of the result string.  */
 #define DL_DST_REQUIRED(l, name, len, cnt) \
   ({									      \
     size_t origin_len;							      \

@@ -22,7 +22,7 @@
 #include <assert.h>
 #include <gconv.h>
 #include <sys/param.h>
-
+#include <dlfcn.h>
 #include <ldsodefs.h>
 
 int

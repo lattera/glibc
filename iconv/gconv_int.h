@@ -51,7 +51,7 @@ struct __gconv_loaded_object
   int counter;
 
   /* The handle for the shared object.  */
-  struct link_map *handle;
+  void *handle;
 
   /* Pointer to the functions the module defines.  */
   __gconv_fct fct;
@@ -133,10 +133,6 @@ extern int __gconv_close_transform (struct __gconv_step *__steps,
 /* Load shared object named by NAME.  If already loaded increment reference
    count.  */
 extern struct __gconv_loaded_object *__gconv_find_shlib (const char *__name)
-     internal_function;
-
-/* Find function named NAME in shared object referenced by HANDLE.  */
-void *__gconv_find_func (void *handle, const char *name)
      internal_function;
 
 /* Release shared object.  If no further reference is available unload

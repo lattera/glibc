@@ -25,6 +25,7 @@
 #include <sys/param.h>
 #include <bits/libc-lock.h>
 
+#include <dlfcn.h>
 #include <ldsodefs.h>
 #include <gconv_int.h>
 

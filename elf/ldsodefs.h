@@ -407,7 +407,7 @@ extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
 /* This function is simply a wrapper around the _dl_mcount function
    which does not require a FROMPC parameter since this is the
    calling function.  */
-extern void _dl_mcount_wrapper (ElfW(Addr) selfpc);
+extern void _dl_mcount_wrapper (void *selfpc);
 
 
 /* Show the members of the auxiliary array passed up from the kernel.  */
@@ -432,7 +432,7 @@ extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
    helps do it.  */
 #define _CALL_DL_FCT(fctp, args) \
   ({ if (_dl_profile_map != NULL)					      \
-       _dl_mcount_wrapper ((ElfW(Addr)) fctp);				      \
+       _dl_mcount_wrapper (fctp);					      \
      (*fctp) args;							      \
   })
 
