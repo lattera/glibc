@@ -1,5 +1,11 @@
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/Makefile (tests): Add tst-strptime.
+	* time/tst-strptime.c: New file.
+	* time/strptime.c: Correct bugs in weekday and yearday computation.
+
+1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
+
 	* time/strptime.c (strptime_internal): Set tm_wday and tm_yday in
 	any of tm_year, tm_mon, or tm_mday was changed and the value
 	itself wasn't specified.

@@ -206,21 +206,23 @@ day_of_the_week (struct tm *tm)
   /* We know that January 1st 1970 was a Thursday (= 4).  Compute the
      the difference between this data in the one on TM and so determine
      the weekday.  */
-  int corr_year = tm->tm_mon >= 2 ? tm->tm_year : tm->tm_year - 1;
+  int corr_year = 1900 + tm->tm_year - (tm->tm_mon < 2);
   int wday = (-473
-	      + (365 * (tm->tm_year - 1970))
+	      + (365 * (tm->tm_year - 70))
 	      + (corr_year / 4)
 	      - ((corr_year / 4) / 25) + ((corr_year / 4) % 25 < 0)
 	      + (((corr_year / 4) / 25) / 4)
 	      + __mon_yday[0][tm->tm_mon]
-	      + tm->tm_mday);
-  tm->tm_wday = wday;
+	      + tm->tm_mday - 1);
+  tm->tm_wday = wday % 7;
 }
 
+/* Compute the day of the year.  */
 static void
 day_of_the_year (struct tm *tm)
 {
-  tm->tm_yday = __mon_yday[__isleap (tm->tm_year)][tm->tm_mon] + tm->tm_mday;
+  tm->tm_yday = (__mon_yday[__isleap (1900 + tm->tm_year)][tm->tm_mon]
+		 + (tm->tm_mday - 1));
 }
 
 static char *
