@@ -1,6 +1,8 @@
-2000-12-31  H.J. Lu  <hjl@gnu.org>
+2000-12-31  Ulrich Drepper  <drepper@redhat.com>
 
-	* manager.c (pthread_allocate_stack): Fix a typo.
+	* manager.c (pthread_alloca_stack): Remove MAP_FIXED from mmap calls.
+	(pthread_free): Always unmap the stack.  It's safe now that we don't
+	use MAP_FIXED to allocate stacks.
 
 2000-12-31  Ulrich Drepper  <drepper@redhat.com>
 

@@ -376,7 +376,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       map_addr = (caddr_t)((char *)(new_thread + 1) - stacksize / 2);
       res_addr = mmap(map_addr, stacksize / 2,
 		      PROT_READ | PROT_WRITE | PROT_EXEC,
-		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
       if (res_addr != map_addr)
 	{
 	  /* Bad luck, this segment is already mapped. */
@@ -388,7 +388,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       map_addr = (caddr_t)new_thread_bottom;
       res_addr = mmap(map_addr, stacksize/2,
 		      PROT_READ | PROT_WRITE | PROT_EXEC,
-		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
       if (res_addr != map_addr)
 	{
 	  if (res_addr != MAP_FAILED)
@@ -449,7 +449,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       map_addr = new_thread_bottom - guardsize;
       res_addr = mmap(map_addr, stacksize + guardsize,
 		      PROT_READ | PROT_WRITE | PROT_EXEC,
-		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
       if (res_addr != map_addr)
 	{
 	  /* Bad luck, this segment is already mapped. */
@@ -721,16 +721,8 @@ static void pthread_free(pthread_descr th)
       guardaddr -= stacksize;
       stacksize *= 2;
 #endif
-#if FLOATING_STACKS
-      /* Can unmap safely.  */
+      /* Unmap the stack.  */
       munmap(guardaddr, stacksize + guardsize);
-#else
-      /* Only remap to PROT_NONE, so that the region is reserved in
-         case we map the stack again later.  Avoid collision with
-         other mmap()s, in particular by malloc().  */
-      mmap(guardaddr, stacksize + guardsize, PROT_NONE,
-	   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
-#endif
     }
 }
 
