@@ -247,11 +247,11 @@ sparc-sun-solaris2.@var{n}
 sparc-sun-sunos4.@var{n}
 @end smallexample
 
-Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486}, or
-@samp{i586}.  All of those configurations produce a library that can run
-on any of these processors.  The library will be optimized for the
-specified processor, but will not use instructions not available on all
-of them.
+Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486},
+@samp{i586}, or @samp{i686}..  All of those configurations produce a
+library that can run on any of these processors.  The library will be
+optimized for the specified processor, but will not use instructions not
+available on all of them.
 
 While no other configurations are supported, there are handy aliases for
 these few.  (These aliases work in other GNU software as well.)
@@ -329,8 +329,9 @@ But what they do is fairly straightforward, and only requires that you
 define a few variables in the right places.
 
 The library sources are divided into subdirectories, grouped by topic.
+
 The @file{string} subdirectory has all the string-manipulation
-functions, @file{stdio} has all the standard I/O functions, etc.
+functions, @file{math} has all the mathematical functions, etc.
 
 Each subdirectory contains a simple makefile, called @file{Makefile},
 which defines a few @code{make} variables and then includes the global
@@ -370,7 +371,9 @@ run all the test programs.  If a test program needs input, put the test
 data in a file called @file{@var{test-program}.input}; it will be given to
 the test program on its standard input.  If a test program wants to be
 run with arguments, put the arguments (all on a single line) in a file
-called @file{@var{test-program}.args}.@refill
+called @file{@var{test-program}.args}.  Test programs should exit with
+zero status when the test passes, and nonzero status when the test
+indicates a bug in the library or error in building.
 
 @item others
 The names of ``other'' programs associated with this section of the
@@ -459,17 +462,22 @@ So the final list is @file{unix/bsd/vax unix/bsd unix/inet unix posix}.
 and @file{stub}.  These two are always implicitly appended to the list
 of subdirectories (in that order), so you needn't put them in an
 @file{Implies} file, and you should not create any subdirectories under
-them.  @file{generic} is for things that can be implemented in
-machine-independent C, using only other machine-independent functions in
-the C library.  @file{stub} is for @dfn{stub} versions of functions
-which cannot be implemented on a particular machine or operating system.
-The stub functions always return an error, and set @code{errno} to
-@code{ENOSYS} (Function not implemented).  @xref{Error Reporting}.
+them intended to be new specific categories.  @file{generic} is for
+things that can be implemented in machine-independent C, using only
+other machine-independent functions in the C library.  @file{stub} is
+for @dfn{stub} versions of functions which cannot be implemented on a
+particular machine or operating system.  The stub functions always
+return an error, and set @code{errno} to @code{ENOSYS} (Function not
+implemented).  @xref{Error Reporting}.
 
 A source file is known to be system-dependent by its having a version in
-@file{generic} or @file{stub}; every system-dependent function should
-have either a generic or stub implementation (there is no point in
-having both).
+@file{generic} or @file{stub}; every generally-available function whose
+implementation is system-dependent in should have either a generic or
+stub implementation (there is no point in having both).  Some rare functions
+are only useful on specific systems and aren't defined at all on others;
+these do not appear anywhere in the system-independent source code or makefiles
+(including the @file{generic} and @file{stub} directories), only in the
+system-dependent @file{Makefile} in the specific system's subdirectory.
 
 If you come across a file that is in one of the main source directories
 (@file{string}, @file{stdio}, etc.), and you want to write a machine- or

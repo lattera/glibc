@@ -1,3 +1,11 @@
+Fri May 24 17:30:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* login/pututline_r.c: Use struct assignment instead of memcpy.
+
+	* login/getutline_r.c: Use strncmp instead of comparing two pointers
+	that will only be equal if you are overwriting the data and screwing
+	yourself anyway.
+
 Fri May 24 02:31:36 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/speed.c: Add new speed value 460800.

@@ -53,7 +53,8 @@ getutline_r (const struct utmp *line, struct utmp **utmp,
       /* Update position pointer.  */
       utmp_data->loc_utmp += sizeof (struct utmp);
     }
-  while (line->ut_line != utmp_data->ubuf.ut_line);
+  while (strncmp (line->ut_line, utmp_data->ubuf.ut_line,
+		  sizeof line->ut_line));
 
   *utmp = &utmp_data->ubuf;
 

@@ -44,9 +44,9 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
       struct utmp_data *data_tmp = alloca (sizeof (utmp_data));
       struct utmp *dummy;
 
-      memcpy (data_tmp, utmp_data, sizeof (utmp_data));
+      *data_tmp = *utmp_data;
       utmp_data = data_tmp;
-      
+
       if (getutid_r (utmp_ptr, &dummy, utmp_data) < 0)
 	{
 	  if (errno != ESRCH)
@@ -66,7 +66,7 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
 
   /* XXX An alternative solution would be to call an SUID root program
      which write the new value.  */
-  
+
   /* Try to lock the file.  */
   if (flock (utmp_data->ut_fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
     {
@@ -76,7 +76,7 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
       /* This time we ignore the error.  */
       (void) flock (utmp_data->ut_fd, LOCK_EX | LOCK_NB);
     }
-  
+
   /* Write the new data.  */
   if (write (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
       != sizeof (struct utmp))

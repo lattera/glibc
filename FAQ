@@ -1,8 +1,8 @@
 		Frequently Asked Question on GNU C Library
 
-As every FAQ this one also tries to answer the questions the user
-might when using the pacakge.  Please make sure you read this before
-sending questions/bug reports to the maintainers.
+As every FAQ this one also tries to answer questions the user might have
+when using the pacakge.  Please make sure you read this before sending
+questions or bug reports to the maintainers.
 
 The GNU C Library is very complex.  The building process exploits the
 features available in tools generally available.  But many things can
@@ -11,17 +11,17 @@ understand because it has to be portable but on the other hand must be
 fast.  But you need not understand the details to use GNU C Library.
 This will only be necessary if you intend to contribute or change it.
 
-If you have any question which you think might be worth answered in
-this document let me know.
+If you have any questions you think should be answered in this document,
+please let me know.
 
 						  --drepper@cygnus.com
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q1]	``What systems the GNU C Library runs on?''
+[Q1]	``What systems does the GNU C Library run on?''
 
-[Q2]	``What compiler do I need to translate GNU libc?''
+[Q2]	``What compiler do I need to build GNU libc?''
 
-[Q3]	``When starting make I get only errors messages.
+[Q3]	``When starting make I get only error messages.
 	  What's wrong?''
 
 [Q4]	``After I changed configure.in I get `Autoconf version X.Y.
@@ -39,7 +39,7 @@ this document let me know.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q1]	``What systems the GNU C Library runs on?''
+[Q1]	``What systems does the GNU C Library run on?''
 
 [A1] {UD} This is difficult to answer.  The file `README' lists the
 architectures GNU libc is known to run *at some time*.  This does not
@@ -57,12 +57,11 @@ some success reports first.
 If you have a system not listed above (or in the `README' file) and
 you are really interested in porting it, contact
 
-	Roland McGrath		<roland@gnu.ai.mit.edu>
-or	Ulrich Drepper		<drepper@cygnus.com>
+	<bug-glibc@prep.ai.mit.edu>
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q2]	``What compiler do I need to translate GNU libc?''
+[Q2]	``What compiler do I need to build GNU libc?''
 
 [A2] {UD} It is (almost) impossible to compile GNU C Library using a
 different compiler than GNU CC.  A lot of extensions of GNU CC are
@@ -111,6 +110,9 @@ will not get a really ISO C compliant C library.  Generally speaking
 you should use the GNU binutils if they provide at least the same
 functionality as your system's tools.
 
+Always get the newest release of GNU binutils available.
+Older releases are known to have bugs that affect building the GNU C library.
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q6]	``Do I need some more things to compile GNU C Library?''
@@ -125,7 +127,7 @@ functionality as your system's tools.
 * plenty of time (approx 1h for i386-linux on i586@133 or 2.5h or
   i486@66).
 
-  If you have some more interested measurements let me know.
+  If you are interested in some more measurements let me know.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -146,7 +148,7 @@ symbols:
    is linked against libm, too.)
 
 Generally, you should make sure you find a real program which produces
-errors while linking.
+errors while linking before deciding there is a problem.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -154,21 +156,19 @@ errors while linking.
 	  the old Linux based GNU libc.  Why isn't it like this?''
 
 [A8] {DMT} Not every extension in Linux libc's history was well
-thought.  In fact it had a lot of problems with standard compliance
-and cleanliness.  With the introduction of a new version number these
-errors now can be corrected.  The following list shows a list of the
-know source code incompatibilities.
+thought-out.  In fact it had a lot of problems with standards compliance
+and with cleanliness.  With the introduction of a new version number these
+errors now can be corrected.  Here is a list of the known source code
+incompatibilities:
 
-* _GNU_SOURCE: glibc does not automatically define _GNU_SOURCE.  Thus,
-  if a program depends on GNU extensions, it is necessary
-  to compile it with C compiler option -D_GNU_SOURCE.  This difference
-  normally mainfests itself in the form of missing prototypes and/or
-  data type definitions.  Thus, if you get such errors, the first thing you
-  should do is grep the header files in /usr/include and /usr/include/sys
-  to check whether the functions are really missing or whether it is
-  just necessary to add a define of _GNU_SOURCE.  Similar comments apply
-  to _BSD_SOURCE, _POSIX_SOURCE, _SVID_SOURCE etc (see
-  /usr/include/features.h).
+* _GNU_SOURCE: glibc does not automatically define _GNU_SOURCE.  Thus, if a
+  program depends on GNU extensions, it is necessary to compile it with C
+  compiler option -D_GNU_SOURCE, or better, to put `#define _GNU_SOURCE' at
+  the beginning of your source files, before any C library header files are
+  included.  This difference normally mainfests itself in the form of
+  missing prototypes and/or data type definitions.  Thus, if you get such
+  errors, the first thing you should do is try defining _GNU_SOURCE and see
+  if that makes the problem go away.
 
 * reboot(): GNU libc sanitizes the interface of reboot() to be more
   compatible with the interface used on other OSes.  In particular,
@@ -194,16 +194,12 @@ know source code incompatibilities.
 
        syscall name:	wrapper name:	declaring header file:
        -------------	-------------	----------------------
-       bdflush		bdflush		<unistd.h>
+       bdflush		bdflush		???
        create_module	create_module	<sys/module.h>
        delete_module	delete_module	<sys/module.h>
        get_kernel_syms	get_kernel_syms	<sys/module.h>
        init_module	init_module	<sys/module.h>
-       syslog		ksyslog_ctl	<unistd.h>
-
-  To get the Linux-specific declarations in <unistd.h>, you'll need
-  to define C pre-processor macro _LINUX_SOURCE during compilation.
-
+       syslog		ksyslog_ctl	???
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -212,6 +208,8 @@ Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 
+Amended by:
+{RM} Roland McGrath <roland@gnu.ai.mit.edu>
 
 Local Variables:
  mode:text
