@@ -106,7 +106,7 @@ CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions
 
 vpath initfini.c $(full_config_sysdirs)
 
-$(objpfx)initfini.s: initfini.c
+$(objpfx)initfini.s: initfini.c $(before-compile)
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
 		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
 

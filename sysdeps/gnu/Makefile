@@ -1,4 +1,5 @@
-# Copyright (C) 1996,97,98,99,2001,02 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2003
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,9 +35,10 @@ ifeq ($(subdir),stdio-common)
 vpath errlist.c $(full_config_sysdirs)
 ifeq ($(versioning),yes)
 $(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
-			   $(common-objpfx)Versions.v.i
+			   $(common-objpfx)Versions.v.i $(before-compile)
 else
-$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk
+$(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
+			   $(before-compile)
 endif
 	$(AWK) -v maxerr=`\
 	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DNOT_IN_libc -DEMIT_ERR_MAX $< -o - \
@@ -47,6 +49,7 @@ endif
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@T
 	mv -f $@T $@
+generated += errlist-compat.c
 
 # This will force the generation above to happy if need be.
 $(foreach o,.d $(object-suffixes),$(objpfx)errlist$o):$(objpfx)errlist-compat.c
