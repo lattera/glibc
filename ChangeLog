@@ -1,3 +1,12 @@
+2004-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (peek_token_bracket): Check remaining
+	string length before re_string_peek_byte (x, 1).
+	(parse_bracket_symbol): Likewise.
+	* posix/regex_internal.h (re_string_is_single_byte_char): Return
+	true at last byte in the string.
+	* posix/bug-regex22.c (main): Add new test.
+
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c: Move __libc_enable_secure into

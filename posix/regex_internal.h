@@ -408,7 +408,7 @@ static unsigned char re_string_fetch_byte_case (re_string_t *pstr)
 #define re_string_first_byte(pstr, idx) \
   ((idx) == (pstr)->valid_len || (pstr)->wcs[idx] != WEOF)
 #define re_string_is_single_byte_char(pstr, idx) \
-  ((pstr)->wcs[idx] != WEOF && ((pstr)->valid_len == (idx) \
+  ((pstr)->wcs[idx] != WEOF && ((pstr)->valid_len == (idx) + 1 \
 				|| (pstr)->wcs[(idx) + 1] != WEOF))
 #define re_string_eoi(pstr) ((pstr)->stop <= (pstr)->cur_idx)
 #define re_string_cur_idx(pstr) ((pstr)->cur_idx)

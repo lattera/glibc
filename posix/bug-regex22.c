@@ -97,6 +97,16 @@ main (void)
 
   memset (&re, 0, sizeof (re));
   re.translate = trans;
+  s = re_compile_pattern ("[[:DIGIT:]]", 11, &re);
+  if (s == NULL)
+    {
+      printf ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: %s\n",
+	      s);
+      result = 1;
+    }
+
+  memset (&re, 0, sizeof (re));
+  re.translate = trans;
   s = re_compile_pattern ("[[:DIGIT:]]", 2, &re);
   if (s == NULL)
     {

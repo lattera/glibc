@@ -1881,7 +1881,8 @@ peek_token_bracket (token, input, syntax)
     }
 #endif /* RE_ENABLE_I18N */
 
-  if (c == '\\' && (syntax & RE_BACKSLASH_ESCAPE_IN_LISTS))
+  if (c == '\\' && (syntax & RE_BACKSLASH_ESCAPE_IN_LISTS)
+      && re_string_cur_idx (input) + 1 < re_string_length (input))
     {
       /* In this case, '\' escape a character.  */
       unsigned char c2;
@@ -1895,7 +1896,10 @@ peek_token_bracket (token, input, syntax)
     {
       unsigned char c2;
       int token_len;
-      c2 = re_string_peek_byte (input, 1);
+      if (re_string_cur_idx (input) + 1 < re_string_length (input))
+	c2 = re_string_peek_byte (input, 1);
+      else
+	c2 = 0;
       token->opr.c = c2;
       token_len = 2;
       switch (c2)
@@ -3268,14 +3272,18 @@ parse_bracket_symbol (elem, regexp, token)
 {
   unsigned char ch, delim = token->opr.c;
   int i = 0;
+  if (re_string_eoi(regexp))
+    return REG_EBRACK;
   for (;; ++i)
     {
-      if (re_string_eoi(regexp) || i >= BRACKET_NAME_BUF_SIZE)
+      if (i >= BRACKET_NAME_BUF_SIZE)
 	return REG_EBRACK;
       if (token->type == OP_OPEN_CHAR_CLASS)
 	ch = re_string_fetch_byte_case (regexp);
       else
 	ch = re_string_fetch_byte (regexp);
+      if (re_string_eoi(regexp))
+	return REG_EBRACK;
       if (ch == delim && re_string_peek_byte (regexp, 0) == ']')
 	break;
       elem->opr.name[i] = ch;
