@@ -1,6 +1,6 @@
 /* Read block from given position in file without changing file pointer.
    POSIX version.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,6 +21,8 @@
 
 #include <errno.h>
 #include <unistd.h>
+
+/* Note: This implementation of pread64 is not multithread-safe.  */
 
 ssize_t
 __libc_pread64 (int fd, void *buf, size_t nbyte, off64_t offset)

@@ -25,8 +25,11 @@
 
 __BEGIN_DECLS
 
-/* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
-   descriptor OUT_FD.  */
+/* Send up to COUNT bytes from file associated with IN_FD starting at
+   *OFFSET to descriptor OUT_FD.  Set *OFFSET to the IN_FD's file position
+   following the read bytes.  If OFFSET is a null pointer, use the normal
+   file position instead.  Return the number of written bytes, or -1 in
+   case of error.  */
 #ifndef __USE_FILE_OFFSET64
 extern ssize_t sendfile (int __out_fd, int __in_fd, off_t *__offset,
 			 size_t __count) __THROW;

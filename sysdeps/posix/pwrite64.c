@@ -22,6 +22,8 @@
 #include <errno.h>
 #include <unistd.h>
 
+/* Note: This implementation of pwrite64 is not multithread-safe.  */
+
 ssize_t
 __libc_pwrite64 (int fd, const void *buf, size_t nbyte, off64_t offset)
 {

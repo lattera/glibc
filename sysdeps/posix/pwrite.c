@@ -1,6 +1,6 @@
 /* Write block to given position in file without changing file pointer.
    POSIX version.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,6 +21,8 @@
 
 #include <errno.h>
 #include <unistd.h>
+
+/* Note: This implementation of pwrite is not multithread-safe.  */
 
 ssize_t
 __libc_pwrite (int fd, const void *buf, size_t nbyte, off_t offset)

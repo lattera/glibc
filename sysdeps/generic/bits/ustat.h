@@ -24,8 +24,8 @@
 
 struct ustat
   {
-    __daddr_t f_tfree;
-    __ino_t f_tinode;
+    __daddr_t f_tfree;		/* Number of free blocks.  */
+    __ino_t f_tinode;		/* Number of free inodes.  */
     char f_fname[6];
     char f_fpack[6];
   };
