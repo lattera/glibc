@@ -1,3 +1,7 @@
+2001-02-12  Andreas Jaeger  <aj@suse.de>
+
+	* manual/arith.texi (Parsing of Integers): Fix some wordings.
+
 2001-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/getsysstat.c: Change return value of get_phys_pages
