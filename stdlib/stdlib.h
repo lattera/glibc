@@ -596,7 +596,7 @@ __BEGIN_NAMESPACE_STD
 /* Re-allocate the previously allocated block
    in PTR, making the new block SIZE bytes long.  */
 extern void *realloc (void *__ptr, size_t __size)
-     __THROW __attribute_malloc__ __wur;
+     __THROW __attribute_malloc__ __attribute_warn_unused_result__;
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 __END_NAMESPACE_STD

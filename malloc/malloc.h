@@ -1,5 +1,5 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996,97,99,2000,2002,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000,2002-2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,17 +117,18 @@ extern "C" {
 #endif
 
 /* Allocate SIZE bytes of memory.  */
-extern __malloc_ptr_t malloc __MALLOC_P ((size_t __size)) __attribute_malloc__;
+extern __malloc_ptr_t malloc __MALLOC_P ((size_t __size))
+       __attribute_malloc__ __wur;
 
 /* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
 extern __malloc_ptr_t calloc __MALLOC_P ((size_t __nmemb, size_t __size))
-       __attribute_malloc__;
+       __attribute_malloc__ __wur;
 
 /* Re-allocate the previously allocated block in __ptr, making the new
    block SIZE bytes long.  */
 extern __malloc_ptr_t realloc __MALLOC_P ((__malloc_ptr_t __ptr,
 					   size_t __size))
-       __attribute_malloc__;
+       __attribute_malloc__ __attribute_warn_unused_result__;
 
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free __MALLOC_P ((__malloc_ptr_t __ptr));
@@ -136,15 +137,17 @@ extern void free __MALLOC_P ((__malloc_ptr_t __ptr));
 extern void cfree __MALLOC_P ((__malloc_ptr_t __ptr));
 
 /* Allocate SIZE bytes allocated to ALIGNMENT bytes.  */
-extern __malloc_ptr_t memalign __MALLOC_P ((size_t __alignment, size_t __size));
+extern __malloc_ptr_t memalign __MALLOC_P ((size_t __alignment, size_t __size))
+       __attribute_malloc__ __wur;
 
 /* Allocate SIZE bytes on a page boundary.  */
-extern __malloc_ptr_t valloc __MALLOC_P ((size_t __size)) __attribute_malloc__;
+extern __malloc_ptr_t valloc __MALLOC_P ((size_t __size))
+       __attribute_malloc__ __wur;
 
 /* Equivalent to valloc(minimum-page-that-holds(n)), that is, round up
    __size to nearest pagesize. */
 extern __malloc_ptr_t  pvalloc __MALLOC_P ((size_t __size))
-       __attribute_malloc__;
+       __attribute_malloc__ __wur;
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2001, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2001, 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -257,9 +257,16 @@
 
 /* If fortification mode, we warn about unused results of certain
    function calls which can lead to problems.  */
-#if __GNUC_PREREQ (3,4) && __USE_FORTIFY_LEVEL > 0
-# define __wur __attribute__ ((__warn_unused_result__))
+#if __GNUC_PREREQ (3,4)
+# define __attribute_warn_unused_result__ \
+   __attribute__ ((__warn_unused_result__))
+# if __USE_FORTIFY_LEVEL > 0
+#  define __wur __attribute_warn_unused_result__
+# endif
 #else
+# define __attribute_warn_unused_result__ /* empty */
+#endif
+#ifndef __wur
 # define __wur /* Ignore */
 #endif
 

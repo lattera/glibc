@@ -1,5 +1,11 @@
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/sys/cdefs.h (__attribute_warn_unused_result__): Define.
+	* stdlib/stdlib.h: Make realloc with
+	__attribute_warn_unused_result__ instead of __wur.
+	* malloc/malloc.h: Add __wur and __attribute_warn_unused_result__
+	markers as in <stdlib.h>.
+
 	* libio/stdio.h: Remove __wur from rename and remove.
 	* posix/unistd.h: Remove __wur from dup2.
 
