@@ -91,7 +91,6 @@ tests           += wordexp-test tst-exec tst-spawn
 endif
 others		:= getconf
 install-bin	:= getconf
-gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
 before-compile	:= testcases.h ptestcases.h
 
