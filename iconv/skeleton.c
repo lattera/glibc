@@ -523,6 +523,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			    /* Run the conversion loop.  */
 			    nstatus = GEN_unaligned (FROM_LOOP) (step, data,
 								 inptrp, inend,
+								 &outbuf,
 								 (unsigned char *) outerr,
 								 lirreversiblep
 								 EXTRA_LOOP_ARGS);
@@ -530,6 +531,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			    /* Run the conversion loop.  */
 			    nstatus = GEN_unaligned (TO_LOOP) (step, data,
 							       inptrp, inend,
+							       &outbuf,
 							       (unsigned char *) outerr,
 							       lirreversiblep
 							       EXTRA_LOOP_ARGS);

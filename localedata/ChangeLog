@@ -1,3 +1,7 @@
+2000-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/GB18030: Add back entries which got lost in last change.
+
 2000-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/GB18030: Update once more.

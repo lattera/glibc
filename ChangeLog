@@ -1,3 +1,8 @@
+2000-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c: Fix last patch, add missing parameter to
+	unaligned function call.
+
 2000-09-10  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/programs/ld-collate.c (collate_read): Fix typo in handling
