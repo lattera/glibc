@@ -1,3 +1,12 @@
+1999-11-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/grantpt.c (grantpt): Add support for devfs.
+
+	* sysdeps/unix/sysv/linux/getpt.c (__getpt): Check for devfs.
+	Patch by German Jose Gomez Garcia <german@pinon.ccu.uniovi.es>.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (DEVFS_SUPER_MAGIC): Added.
+
 1999-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/gnu/netinet/tcp.h: Add TCP_CORK definition.

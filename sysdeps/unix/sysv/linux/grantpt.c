@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@
 
 /* Constant that identifies the `devpts' filesystem.  */
 #define DEVPTS_SUPER_MAGIC	0x1cd1
+
+/* Constant that identifies the `devfs' filesystem.  */
+#define DEVFS_SUPER_MAGIC	0x1373
 
 /* Prototype for function that changes ownership and access permission
    for slave pseudo terminals that do not live on a `devpts'
@@ -54,7 +57,7 @@ grantpt (int fd)
 
   /* If the slave pseudo terminal lives on a `devpts' filesystem, the
      ownership and access permission are already set.  */
-  if (fsbuf.f_type == DEVPTS_SUPER_MAGIC)
+  if (fsbuf.f_type == DEVPTS_SUPER_MAGIC || fsbuf.f_type == DEVFS_SUPER_MAGIC)
     return 0;
 
   return __unix_grantpt (fd);

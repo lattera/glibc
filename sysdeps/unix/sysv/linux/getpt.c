@@ -27,6 +27,9 @@
 /* Constant that identifies the `devpts' filesystem.  */
 #define DEVPTS_SUPER_MAGIC	0x1cd1
 
+/* Constant that identifies the `devfs' filesystem.  */
+#define DEVFS_SUPER_MAGIC	0x1373
+
 /* Path to the master pseudo terminal cloning device.  */
 #define _PATH_DEVPTMX _PATH_DEV "ptmx"
 /* Directory containing the UNIX98 pseudo terminals.  */
@@ -50,10 +53,13 @@ __getpt (void)
 	  struct statfs fsbuf;
 	  static int devpts_mounted;
 
-	  /* Check that the /dev/pts filesystem is mounted.  */
+	  /* Check that the /dev/pts filesystem is mounted
+	     or if /dev is a devfs filesystem (this implies /dev/pts).  */
 	  if (devpts_mounted
 	      || (__statfs (_PATH_DEVPTS, &fsbuf) == 0
-		  && fsbuf.f_type == DEVPTS_SUPER_MAGIC))
+		  && fsbuf.f_type == DEVPTS_SUPER_MAGIC)
+	      || (__statfs (_PATH_DEV, &fsbuf) == 0	
+		  && fsbuf.f_type == DEVFS_SUPER_MAGIC))
 	    {
 	      /* Everything is ok.  */
 	      devpts_mounted = 1;
