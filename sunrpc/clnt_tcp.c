@@ -59,6 +59,8 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #include <sys/socket.h>
 #include <rpc/pmap_clnt.h>
 
+extern u_long _create_xid (void);
+
 #define MCALL_MSG_SIZE 24
 
 struct ct_data
@@ -115,7 +117,6 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
 {
   CLIENT *h;
   struct ct_data *ct = (struct ct_data *) mem_alloc (sizeof (*ct));
-  struct timeval now;
   struct rpc_msg call_msg;
 
   h = (CLIENT *) mem_alloc (sizeof (*h));
@@ -185,8 +186,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
   /*
    * Initialize call message
    */
-  (void) __gettimeofday (&now, (struct timezone *) 0);
-  call_msg.rm_xid = __getpid () ^ now.tv_sec ^ now.tv_usec;
+  call_msg.rm_xid = _create_xid ();
   call_msg.rm_direction = CALL;
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = prog;

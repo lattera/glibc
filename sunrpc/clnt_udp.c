@@ -50,6 +50,7 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/pmap_clnt.h>
 
 extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
+extern u_long _create_xid (void);
 
 /*
  * UDP bases client side rpc operations
@@ -109,18 +110,12 @@ struct cu_data
  * sent and received.
  */
 CLIENT *
-clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
-     struct sockaddr_in *raddr;
-     u_long program;
-     u_long version;
-     struct timeval wait;
-     int *sockp;
-     u_int sendsz;
-     u_int recvsz;
+clntudp_bufcreate (struct sockaddr_in *raddr, u_long program, u_long version,
+		   struct timeval wait, int *sockp, u_int sendsz,
+		   u_int recvsz)
 {
   CLIENT *cl;
   struct cu_data *cu = NULL;
-  struct timeval now;
   struct rpc_msg call_msg;
 
   cl = (CLIENT *) mem_alloc (sizeof (CLIENT));
@@ -143,7 +138,6 @@ clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
     }
   cu->cu_outbuf = &cu->cu_inbuf[recvsz];
 
-  (void) __gettimeofday (&now, (struct timezone *) 0);
   if (raddr->sin_port == 0)
     {
       u_short port;
@@ -163,7 +157,7 @@ clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
   cu->cu_total.tv_usec = -1;
   cu->cu_sendsz = sendsz;
   cu->cu_recvsz = recvsz;
-  call_msg.rm_xid = __getpid () ^ now.tv_sec ^ now.tv_usec;
+  call_msg.rm_xid = _create_xid ();
   call_msg.rm_direction = CALL;
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = program;

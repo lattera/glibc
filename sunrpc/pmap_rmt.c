@@ -56,6 +56,8 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 #include <arpa/inet.h>
 #define MAX_BROADCAST_SIZE 1400
 
+extern u_long _create_xid (void);
+
 static struct timeval timeout = {3, 0};
 
 /*
@@ -112,9 +114,7 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
  * written for XDR_ENCODE direction only
  */
 bool_t
-xdr_rmtcall_args (xdrs, cap)
-     XDR *xdrs;
-     struct rmtcallargs *cap;
+xdr_rmtcall_args (XDR *xdrs, struct rmtcallargs *cap)
 {
   u_int lenposition, argposition, position;
 
@@ -237,6 +237,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   AUTH *unix_auth = authunix_create_default ();
   XDR xdr_stream;
   XDR *xdrs = &xdr_stream;
+  struct timeval t;
   int outlen, inlen, nets;
   socklen_t fromlen;
   int sock;
@@ -252,7 +253,6 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   struct rmtcallargs a;
   struct rmtcallres r;
   struct rpc_msg msg;
-  struct timeval t;
   char outbuf[MAX_BROADCAST_SIZE], inbuf[UDPMSGSIZE];
 
   /*
@@ -281,8 +281,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   baddr.sin_port = htons (PMAPPORT);
   baddr.sin_addr.s_addr = htonl (INADDR_ANY);
 /*      baddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY); */
-  (void) __gettimeofday (&t, (struct timezone *) 0);
-  msg.rm_xid = xid = __getpid () ^ t.tv_sec ^ t.tv_usec;
+  msg.rm_xid = xid = _create_xid ();
   t.tv_usec = 0;
   msg.rm_direction = CALL;
   msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;

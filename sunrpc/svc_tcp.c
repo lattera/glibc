@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #include <string.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
+#include <sys/poll.h>
 #include <errno.h>
 #include <stdlib.h>
 
@@ -284,66 +285,42 @@ svctcp_destroy (SVCXPRT *xprt)
   mem_free ((caddr_t) xprt, sizeof (SVCXPRT));
 }
 
-/*
- * All read operations timeout after 35 seconds.
- * A timeout is fatal for the connection.
- */
-static struct timeval wait_per_try = {35, 0};
 
 /*
  * reads data from the tcp connection.
  * any error is fatal and the connection is closed.
  * (And a read of zero bytes is a half closed stream => error.)
- *
- * Note: we have to be careful here not to allow ourselves to become
- * blocked too long in this routine.  While we're waiting for data from one
- * client, another client may be trying to connect.  To avoid this situation,
- * some code from svc_run() is transplanted here: the select() loop checks
- * all RPC descriptors including the one we want and calls svc_getreqset2()
- * to handle new requests if any are detected.
  */
 static int
 readtcp (char *xprtptr, char *buf, int len)
 {
   SVCXPRT *xprt = (SVCXPRT *)xprtptr;
   int sock = xprt->xp_sock;
-#ifdef FD_SETSIZE
-  fd_set readfds;
-#else
-  int mask = 1 << sock;
-  int readfds;
-#endif /* def FD_SETSIZE */
-  while (1)
+  int milliseconds = 35 * 1000;
+  struct pollfd pollfd;
+
+  do
     {
-      struct timeval timeout = wait_per_try;
-      readfds = svc_fdset;
-#ifdef FD_SETSIZE
-      FD_SET (sock, &readfds);
-#else
-      readfds |= (1 << sock);
-#endif /* def FD_SETSIZE */
-      if (__select (_rpc_dtablesize (), &readfds, (fd_set *) NULL,
-		    (fd_set *) NULL, &timeout) <= 0)
+      pollfd.fd = sock;
+      pollfd.events = POLLIN;
+      switch (__poll (&pollfd, 1, milliseconds))
 	{
+	case -1:
 	  if (errno == EINTR)
 	    continue;
+	  /*FALLTHROUGH*/
+	case 0:
 	  goto fatal_err;
-	}
-
-#ifdef FD_SETSIZE
-      if (FD_ISSET (sock, &readfds))
-#else
-      if (readfds == mask)
-#endif /* def FD_SETSIZE */
-	break;
-
-      svc_getreqset (&readfds);
+	default:
+	  break;
+	  }
     }
+  while ((pollfd.revents & POLLIN) == 0);
 
   if ((len = __read (sock, buf, len)) > 0)
     return len;
 
-fatal_err:
+ fatal_err:
   ((struct tcp_conn *) (xprt->xp_p1))->strm_stat = XPRT_DIED;
   return -1;
 }
@@ -362,12 +339,11 @@ writetcp (char *xprtptr, char * buf, int len)
     {
       if ((i = __write (xprt->xp_sock, buf, cnt)) < 0)
 	{
-	  ((struct tcp_conn *) (xprt->xp_p1))->strm_stat =
-	    XPRT_DIED;
-	  return (-1);
+	  ((struct tcp_conn *) (xprt->xp_p1))->strm_stat = XPRT_DIED;
+	  return -1;
 	}
     }
-  return (len);
+  return len;
 }
 
 static enum xprt_stat
@@ -377,19 +353,16 @@ svctcp_stat (SVCXPRT *xprt)
   (struct tcp_conn *) (xprt->xp_p1);
 
   if (cd->strm_stat == XPRT_DIED)
-    return (XPRT_DIED);
+    return XPRT_DIED;
   if (!xdrrec_eof (&(cd->xdrs)))
-    return (XPRT_MOREREQS);
-  return (XPRT_IDLE);
+    return XPRT_MOREREQS;
+  return XPRT_IDLE;
 }
 
 static bool_t
-svctcp_recv (xprt, msg)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
+svctcp_recv (SVCXPRT *xprt, struct rpc_msg *msg)
 {
-  struct tcp_conn *cd =
-  (struct tcp_conn *) (xprt->xp_p1);
+  struct tcp_conn *cd = (struct tcp_conn *) (xprt->xp_p1);
   XDR *xdrs = &(cd->xdrs);
 
   xdrs->x_op = XDR_DECODE;
@@ -397,42 +370,32 @@ svctcp_recv (xprt, msg)
   if (xdr_callmsg (xdrs, msg))
     {
       cd->x_id = msg->rm_xid;
-      return (TRUE);
+      return TRUE;
     }
   cd->strm_stat = XPRT_DIED;	/* XXXX */
-  return (FALSE);
+  return FALSE;
 }
 
 static bool_t
-svctcp_getargs (xprt, xdr_args, args_ptr)
-     SVCXPRT *xprt;
-     xdrproc_t xdr_args;
-     caddr_t args_ptr;
+svctcp_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
-
-  return ((*xdr_args) (&(((struct tcp_conn *) (xprt->xp_p1))->xdrs), args_ptr));
+  return ((*xdr_args) (&(((struct tcp_conn *)
+			  (xprt->xp_p1))->xdrs), args_ptr));
 }
 
 static bool_t
-svctcp_freeargs (xprt, xdr_args, args_ptr)
-     SVCXPRT *xprt;
-     xdrproc_t xdr_args;
-     caddr_t args_ptr;
+svctcp_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
-  XDR *xdrs =
-  &(((struct tcp_conn *) (xprt->xp_p1))->xdrs);
+  XDR *xdrs = &(((struct tcp_conn *) (xprt->xp_p1))->xdrs);
 
   xdrs->x_op = XDR_FREE;
   return ((*xdr_args) (xdrs, args_ptr));
 }
 
 static bool_t
-svctcp_reply (xprt, msg)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
+svctcp_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 {
-  struct tcp_conn *cd =
-  (struct tcp_conn *) (xprt->xp_p1);
+  struct tcp_conn *cd = (struct tcp_conn *) (xprt->xp_p1);
   XDR *xdrs = &(cd->xdrs);
   bool_t stat;
 
@@ -440,5 +403,5 @@ svctcp_reply (xprt, msg)
   msg->rm_xid = cd->x_id;
   stat = xdr_replymsg (xdrs, msg);
   (void) xdrrec_endofrecord (xdrs, TRUE);
-  return (stat);
+  return stat;
 }

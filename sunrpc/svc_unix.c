@@ -43,6 +43,7 @@
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
+#include <sys/poll.h>
 #include <errno.h>
 #include <stdlib.h>
 
@@ -352,12 +353,6 @@ __msgwrite (int sock, void *buf, size_t cnt)
 }
 
 /*
- * All read operations timeout after 35 seconds.
- * A timeout is fatal for the connection.
- */
-static struct timeval wait_per_try = {35, 0};
-
-/*
  * reads data from the unix connection.
  * any error is fatal and the connection is closed.
  * (And a read of zero bytes is a half closed stream => error.)
@@ -367,38 +362,26 @@ readunix (char *xprtptr, char *buf, int len)
 {
   SVCXPRT *xprt = (SVCXPRT *) xprtptr;
   int sock = xprt->xp_sock;
-#ifdef FD_SETSIZE
-  fd_set readfds;
-#else
-  int mask = 1 << sock;
-  int readfds;
-#endif /* def FD_SETSIZE */
-  while (1)
+  int milliseconds = 35 * 1000;
+  struct pollfd pollfd;
+
+  do
     {
-      struct timeval timeout = wait_per_try;
-      readfds = svc_fdset;
-#ifdef FD_SETSIZE
-      FD_SET (sock, &readfds);
-#else
-      readfds |= (1 << sock);
-#endif /* def FD_SETSIZE */
-      if (__select (_rpc_dtablesize (), &readfds, (fd_set *) NULL,
-		    (fd_set *) NULL, &timeout) <= 0)
+      pollfd.fd = sock;
+      pollfd.events = POLLIN;
+      switch (__poll (&pollfd, 1, milliseconds))
 	{
+	case -1:
 	  if (errno == EINTR)
 	    continue;
+	  /*FALLTHROUGH*/
+	case 0:
 	  goto fatal_err;
+	default:
+	  break;
 	}
-
-#ifdef FD_SETSIZE
-      if (FD_ISSET (sock, &readfds))
-#else
-      if (readfds == mask)
-#endif /* def FD_SETSIZE */
-	break;
-
-      svc_getreqset (&readfds);
     }
+  while ((pollfd.revents & POLLIN) == 0);
 
   if ((len = __msgread (sock, buf, len)) > 0)
     return len;
@@ -471,10 +454,7 @@ svcunix_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 }
 
 static bool_t
-svcunix_freeargs (xprt, xdr_args, args_ptr)
-     SVCXPRT *xprt;
-     xdrproc_t xdr_args;
-     caddr_t args_ptr;
+svcunix_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
   XDR *xdrs = &(((struct unix_conn *) (xprt->xp_p1))->xdrs);
 
@@ -483,9 +463,7 @@ svcunix_freeargs (xprt, xdr_args, args_ptr)
 }
 
 static bool_t
-svcunix_reply (xprt, msg)
-     SVCXPRT *xprt;
-     struct rpc_msg *msg;
+svcunix_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 {
   struct unix_conn *cd = (struct unix_conn *) (xprt->xp_p1);
   XDR *xdrs = &(cd->xdrs);

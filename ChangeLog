@@ -1,3 +1,30 @@
+1998-11-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/Makefile (CFLAGS-ftw.c): Removed.
+
+1998-11-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* io/Makefile (tests): Make sure that the test program has an
+	explicit directory part.
+
+1998-11-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* configure.in: Fix last change.
+
+1998-11-18  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/Makefile (routines): Add create_xid.
+
+	* sunrpc/clnt_tcp.c: Use non-guessable xid.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/create_xid.c: New, create non-guessable xid.
+
+	* sunrpc/svc_tcp.c: Remove patch from 1998-06-15, use poll instead
+	of select.
+	* sunrpc/svc_unix.c: Use poll instead of select.
+
 1998-11-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Make Unix98 compliant

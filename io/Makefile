@@ -60,9 +60,8 @@ distribute	:= ftwtest-sh
 include ../Rules
 
 CFLAGS-fts.c = -Wno-uninitialized
-CFLAGS-ftw.c = -Wno-uninitialized
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)ftwtest
-	$(SHELL) -e ftwtest-sh $(common-objpfx) $<
+	$(SHELL) -e ftwtest-sh $(common-objpfx) $(<D)/$(<F)
 endif
