@@ -1,3 +1,30 @@
+2004-03-19  Petter Reinholdtsen  <pere@hungry.com>
+
+	* localedata/locales/af_ZA: Make sure yesexpr and noexpr regex
+	start with '^'.
+	* localedata/locales/ar_TN: Likewise.
+	* localedata/locales/ar_YE: Likewise.
+	* localedata/locales/bn_BD: Likewise.
+	* localedata/locales/br_FR: Likewise.
+	* localedata/locales/ca_ES: Likewise.
+	* localedata/locales/cy_GB: Likewise.
+	* localedata/locales/gd_GB: Likewise.
+	* localedata/locales/gv_GB: Likewise.
+	* localedata/locales/hy_AM: Likewise.
+	* localedata/locales/id_ID: Likewise.
+	* localedata/locales/ka_GE: Likewise.
+	* localedata/locales/kw_GB: Likewise.
+	* localedata/locales/lg_UG: Likewise.
+	* localedata/locales/mk_MK: Likewise.
+	* localedata/locales/oc_FR: Likewise.
+	* localedata/locales/ru_UA: Likewise.
+	* localedata/locales/sk_SK: Likewise.
+	* localedata/locales/sr_YU: Likewise.
+	* localedata/locales/sr_YU@cyrillic: Likewise.
+	* localedata/locales/uk_UA: Likewise.
+	* localedata/locales/ur_PK: Likewise.
+	* localedata/locales/wa_BE: Likewise.
+
 2004-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/locales/fa_IR: Fix yesexpr and noexpr.
