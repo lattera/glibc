@@ -61,6 +61,11 @@ Version 2.1
 * Tim Waugh provided an implementation of the POSIX.2 wordexp function family.
 
 * Mark Kettenis provided a Hesiod NSS module.
+
+* The ELF dynamic loader knows how to process dynamic string tokens ($ORIGIN
+  and $PLATFORM) in RPATHs and similar strings (Ulrich Drepper).
+
+* rcmd can now handle netgroups (Dick Streefland).
 
 Version 2.0.5
 
