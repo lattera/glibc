@@ -1,6 +1,6 @@
 1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
 
-	* localedata/locales/ca_ES: New file.
+	* locales/ca_ES: New file.
 	Contributed by Joan Carles Soler <Joan.Soler@uv.es>.
 
 	* SUPPORTED: Add ca_ES.
