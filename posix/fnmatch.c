@@ -157,7 +157,9 @@ internal_fnmatch (const char *pattern, const char *string,
 	    return FNM_NOMATCH;
 	  else if (*n == '/' && (flags & FNM_FILE_NAME))
 	    return FNM_NOMATCH;
-	  else if (*n == '.' && no_leading_period)
+	  else if (*n == '.' && no_leading_period
+		   && (n == string
+		       || (n[-1] == '/' && (flags & FNM_FILE_NAME))))
 	    return FNM_NOMATCH;
 	  break;
 
@@ -175,7 +177,9 @@ internal_fnmatch (const char *pattern, const char *string,
 	  break;
 
 	case '*':
-	  if (*n == '.' && no_leading_period)
+	  if (*n == '.' && no_leading_period
+	      && (n == string
+		  || (n[-1] == '/' && (flags & FNM_FILE_NAME))))
 	    return FNM_NOMATCH;
 
 	  for (c = *p++; c == '?' || c == '*'; c = *p++)
@@ -212,11 +216,17 @@ internal_fnmatch (const char *pattern, const char *string,
 
 	      if (c == '[')
 		{
+		  int flags2 = ((flags & FNM_FILE_NAME)
+				? flags : (flags & ~FNM_PERIOD));
+
 		  for (--p; n < endp; ++n)
 		    if (internal_fnmatch (p, n,
-					  (n == string) && no_leading_period,
-					  ((flags & FNM_FILE_NAME)
-					   ? flags : (flags & ~FNM_PERIOD)))
+					  (no_leading_period
+					   && (n == string
+					       || (n[-1] == '/'
+						   && (flags
+						       & FNM_FILE_NAME)))),
+					  flags2)
 			== 0)
 		      return 0;
 		}
@@ -231,18 +241,21 @@ internal_fnmatch (const char *pattern, const char *string,
 		}
 	      else
 		{
+		  int flags2 = ((flags & FNM_FILE_NAME)
+				? flags : (flags & ~FNM_PERIOD));
+
 		  if (c == '\\' && !(flags & FNM_NOESCAPE))
 		    c = *p;
 		  c = FOLD (c);
 		  for (--p; n < endp; ++n)
 		    if (FOLD ((unsigned char) *n) == c
 			&& (internal_fnmatch (p, n,
-					      ((n == string)
-					       && no_leading_period),
-					      ((flags & FNM_FILE_NAME)
-					       ? flags
-					       : (flags & ~FNM_PERIOD)))
-			    == 0))
+					      (no_leading_period
+					       && (n == string
+						   || (n[-1] == '/'
+						       && (flags
+							   & FNM_FILE_NAME)))),
+					      flags2) == 0))
 		      return 0;
 		}
 	    }
@@ -263,7 +276,10 @@ internal_fnmatch (const char *pattern, const char *string,
 	    if (*n == '\0')
 	      return FNM_NOMATCH;
 
-	    if (*n == '.' && no_leading_period)
+	    if (*n == '.' && no_leading_period && (n == string
+						   || (n[-1] == '/'
+						       && (flags
+							   & FNM_FILE_NAME))))
 	      return FNM_NOMATCH;
 
 	    if (*n == '/' && (flags & FNM_FILE_NAME))
@@ -297,7 +313,7 @@ internal_fnmatch (const char *pattern, const char *string,
 # if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
 		    wctype_t wt;
 # endif
-		    char *startp = p;
+		    const char *startp = p;
 
 		    for (;;)
 		      {

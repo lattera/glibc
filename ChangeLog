@@ -1,3 +1,10 @@
+1999-04-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/fnmatch.c (internal_fnmatch): Finish incomplete
+	no_leading_period change.
+
+	* posix/testfnm.c: More test cases.
+
 1999-04-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/dirent.h: Remove __getdirentries declaration, add __getdents
