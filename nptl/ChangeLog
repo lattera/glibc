@@ -1,3 +1,8 @@
+2002-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Add missing #endif.
+	Patch by Marijn Ros <marijn@mad.scientist.com>.
+
 2002-12-22  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (omit-deps): Add $(unix-syscalls:%=ptw-%).
