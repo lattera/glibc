@@ -1,5 +1,8 @@
 1999-10-04  Ulrich Drepper  <drepper@cygnus.com>
 
+	* malloc/memprof.sh: Various small cleanups.  Add short options.
+	Write error messages to stderr.
+
 	* malloc/Makefile ($(objpfx)memprof): Fix typo in rule.
 
 	* malloc/memprof.sh: Take options to control memprofstat.

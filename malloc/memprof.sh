@@ -23,29 +23,42 @@ memprofstat=@BINDIR@/memprofstat
 
 # Print usage message.
 do_usage() {
-  echo $"Try \`memprof --help' for more information."
+  echo >&2 $"Try \`memprof --help' for more information."
   exit 1
 }
 
+# Message for missing argument.
+do_missing_arg() {
+  echo >&2 $"memprof: option \`$1' requires an argument"
+  do_usage
+}
+
+# Print help message
 do_help() {
   echo $"Usage: memprof [OPTION]... PROGRAM [PROGRAMOPTION...]
 Profile memory usage of PROGRAM.
 
-      --help              print this help and exit
-      --version           print version information and exit
-      --progname          name of the program file to profile
-      --png=FILE          generate PNG graphic and store it in FILE
-      --data=FILE         generate binary data file and store it in FILE
-      --unbuffered        don't buffer output
-      --buffer=SIZE       collect SIZE entries before writing them out
-      --no-timer          don't collect additional information though timer
+   -n,--progname=NAME     Name of the program file to profile
+   -p,--png=FILE          Generate PNG graphic and store it in FILE
+   -d,--data=FILE         Generate binary data file and store it in FILE
+   -u,--unbuffered        Don't buffer output
+   -b,--buffer=SIZE       Collect SIZE entries before writing them out
+      --no-timer          Don't collect additional information though timer
 
-   The following options only apply when generating graphical output:
-      --time-based        make graph linear in time
-      --total             also draw graph of total memory use
-      --title=STRING      use STRING as title of the graph
-      --x-size=SIZE       make graphic SIZE pixels wide
-      --y-size=SIZE       make graphic SIZE pixels high
+   -?,--help              Print this help and exit
+      --usage             Give a short usage message
+   -V,--version           Print version information and exit
+
+ The following options only apply when generating graphical output:
+   -t,--time-based        Make graph linear in time
+   -T,--total             Also draw graph of total memory use
+      --title=STRING      Use STRING as title of the graph
+   -x,--x-size=SIZE       Make graphic SIZE pixels wide
+   -y,--y-size=SIZE       Make graphic SIZE pixels high
+
+Mandatory arguments to long options are also mandatory for any corresponding
+short options.
+
 Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
   exit 0
 }
@@ -62,15 +75,22 @@ Written by Ulrich Drepper."
 # Process arguments.  But stop as soon as the program name is found.
 while test $# -gt 0; do
   case "$1" in
-  --v | --ve | --ver | --vers | --versi | --versio | --version)
+  -V | --v | --ve | --ver | --vers | --versi | --versio | --version)
     do_version
     ;;
-  --h | --he | --hel | --help)
+  -\? | --h | --he | --hel | --help)
     do_help
     ;;
-  --pr | --pro | --prog | --progn | --progna | --prognam | --progname)
+  --us | --usa | --usag | --usage)
+    echo $"Syntax: memprof [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]
+            [--buffer=SIZE] [--no-timer] [--time-based] [--total]
+            [--title=STRING] [--x-size=SIZE] [--y-size=SIZE]
+            PROGRAM [PROGRAMOPTION]..."
+    exit 0
+    ;;
+  -n | --pr | --pro | --prog | --progn | --progna | --prognam | --progname)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     progname="$1"
@@ -78,9 +98,9 @@ while test $# -gt 0; do
   --pr=* | --pro=* | --prog=* | --progn=* | --progna=* | --prognam=* | --progname=*)
     progname=${1##*=}
     ;;
-  --pn | --png)
+  -p | --pn | --png)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     png="$1"
@@ -88,9 +108,9 @@ while test $# -gt 0; do
   --pn=* | --png=*)
     png=${1##*=}
     ;;
-  --d | --da | --dat | --data)
+  -d | --d | --da | --dat | --data)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     data="$1"
@@ -98,12 +118,12 @@ while test $# -gt 0; do
   --d=* | --da=* | --dat=* | --data=*)
     data=${1##*=}
     ;;
-  --u | --un | --unb | --unbu | --unbuf | --unbuff | --unbuffe | --unbuffer | --unbuffere | --unbuffered)
+  -u | --un | --unb | --unbu | --unbuf | --unbuff | --unbuffe | --unbuffer | --unbuffere | --unbuffered)
     buffer=1
     ;;
-  --b | --bu | --buf | --buff | --buffe | --buffer)
+  -b | --b | --bu | --buf | --buff | --buffe | --buffer)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     buffer="$1"
@@ -114,15 +134,15 @@ while test $# -gt 0; do
   --n | --no | --no- | --no-t | --no-ti | --no-tim | --no-time | --no-timer)
     notimer=yes
     ;;
-  --tim | --time | --time- | --time-b | --time-ba | --time-bas | --time-base | --time-based)
+  -t | --tim | --time | --time- | --time-b | --time-ba | --time-bas | --time-base | --time-based)
     memprofstat_args="$memprofstat_args -t"
     ;;
-  --to | --tot | --tota | --total)
+  -T | --to | --tot | --tota | --total)
     memprofstat_args="$memprofstat_args -T"
     ;;
   --tit | --titl | --title)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     memprofstat_args="$memprofstat_args -s $1"
@@ -130,9 +150,9 @@ while test $# -gt 0; do
   --tit=* | --titl=* | --title=*)
     memprofstat_args="$memprofstat_args -s ${1##*=}"
     ;;
-  --x | --x- | --x-s | --x-si | --x-siz | --x-size)
+  -x | --x | --x- | --x-s | --x-si | --x-siz | --x-size)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     memprofstat_args="$memprofstat_args -x $1"
@@ -140,9 +160,9 @@ while test $# -gt 0; do
   --x=* | --x-=* | --x-s=* | --x-si=* | --x-siz=* | --x-size=*)
     memprofstat_args="$memprofstat_args -x ${1##*=}"
     ;;
-  --y | --y- | --y-s | --y-si | --y-siz | --y-size)
+  -y | --y | --y- | --y-s | --y-si | --y-siz | --y-size)
     if test $# -eq 1; then
-      usage
+      do_missing_arg $1
     fi
     shift
     memprofstat_args="$memprofstat_args -y $1"
@@ -150,14 +170,18 @@ while test $# -gt 0; do
   --y=* | --y-=* | --y-s=* | --y-si=* | --y-siz=* | --y-size=*)
     memprofstat_args="$memprofstat_args -y ${1##*=}"
     ;;
-  --p | --p=* | --t | --t=* | --ti | --ti=*)
+  --p | --p=* | --t | --t=* | --ti | --ti=* | --u)
     echo >&2 $"memprof: option \`${1##*=}' is ambiguous"
-    usage
+    do_usage
     ;;
   --)
     # Stop processing arguments.
     shift
     break
+    ;;
+  --*)
+    echo >&2 $"memprof: unrecognized option \`$1'"
+    do_usage
     ;;
   *)
     # Unknown option.  This means the rest is the program name and parameters.
@@ -168,8 +192,9 @@ while test $# -gt 0; do
 done
 
 # See whether any arguments are left.
-if test $# -le 0; then
-  usage
+if test $# -eq 0; then
+  echo >&2 $"No program name given"
+  do_usage
 fi
 
 # This will be in the environment.
@@ -182,7 +207,11 @@ elif test -n "$png"; then
   datafile=$(mktemp ${TMPDIR:-/tmp}/memprof.XXXXXX 2> /dev/null)
   if test $? -ne 0; then
     # Lame, but if there is no `mktemp' program the user cannot expect more.
-    datafile=${TMPDIR:-/tmp}/memprof.$$
+    if test "$RANDOM" != "$RANDOM"; then
+      datafile=${TMPDIR:-/tmp}/memprof.$RANDOM
+    else
+      datafile=${TMPDIR:-/tmp}/memprof.$$
+    fi
   fi
 fi
 if test -n "$datafile"; then
