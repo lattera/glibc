@@ -144,32 +144,57 @@ do_test (size_t align1, size_t align2, size_t len, size_t n, int max_char)
 static void
 do_random_tests (void)
 {
-  size_t i, j, n, align1, align2, len, size;
+  size_t i, j, n, align1, align2, len, size, mode;
   unsigned char *p1 = buf1 + page_size - 512;
   unsigned char *p2 = buf2 + page_size - 512;
   unsigned char *res;
 
   for (n = 0; n < ITERATIONS; n++)
     {
-      align1 = random () & 31;
-      if (random () & 1)
-	align2 = random () & 31;
-      else
-	align2 = align1 + (random () & 24);
-      len = random () & 511;
-      j = align1;
-      if (align2 > j)
-	j = align2;
-      if (random () & 1)
+      mode = random ();
+      if (mode & 1)
 	{
-	  size = random () & 511;
-	  if (size + align2 > 512)
-	    size = 512 - align2 - (random() & 31);
+	  size = random () & 255;
+	  align1 = 512 - size - (random () & 15);
+	  if (mode & 2)
+	    align2 = align1 - (random () & 24);
+	  else
+	    align2 = align1 - (random () & 31);
+	  if (mode & 4)
+	    {
+	      j = align1;
+	      align1 = align2;
+	      align2 = j;
+	    }
+	  if (mode & 8)
+	    len = size - (random () & 31);
+	  else
+	    len = 512;
+	  if (len >= 512)
+	    len = random () & 511;
 	}
       else
-	size = 512 - align2;
-      if (len + j >= 511)
-	len = 510 - j - (random () & 7);
+	{
+	  align1 = random () & 31;
+	  if (mode & 2)
+	    align2 = random () & 31;
+	  else
+	    align2 = align1 + (random () & 24);
+	  len = random () & 511;
+	  j = align1;
+	  if (align2 > j)
+	    j = align2;
+	  if (mode & 4)
+	    {
+	      size = random () & 511;
+	      if (size + j > 512)
+		size = 512 - j - (random() & 31);
+	    }
+	  else
+	    size = 512 - j;
+	  if ((mode & 8) && len + j >= 512)
+	    len = 512 - j - (random () & 7);
+	}
       j = len + align1 + 64;
       if (j > 512)
 	j = 512;

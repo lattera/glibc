@@ -1,3 +1,11 @@
+2002-12-07  Kenneth W. Chen <kenneth.w.chen@intel.com>.
+
+	* sysdeps/ia64/strncpy.S (strncpy): Clear ar.ec.  Fix .recovery4.
+
+2002-12-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/test-strncpy.c (do_random_tests): Improve test coverage.
+
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (timeout_handler): Allow expected signal to be

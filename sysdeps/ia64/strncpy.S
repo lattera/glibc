@@ -63,6 +63,8 @@ ENTRY(strncpy)
 	mov	saved_pr = pr           // save the predicate registers
 	.save ar.lc, saved_lc
 	mov 	saved_lc = ar.lc	// save the loop counter
+	mov	ar.ec = 0		// ec is not guaranteed to
+					// be zero upon function entry
 	.body
 	cmp.geu p6, p5 = 24, in2
 (p6)	br.cond.spnt .short_len
@@ -221,7 +223,9 @@ ENTRY(strncpy)
 	ld8	r[MEMLAT] = [tmp]
 	br.cond.sptk .back3
 .recovery4:
+	cmp.eq	p5, p6 = len, r0
 	add	tmp = -MEMLAT * 8, src ;;
-	ld8	r[MEMLAT - 1] = [tmp]
+(p6)	ld8	r[MEMLAT - 1] = [tmp]
+(p5)	mov	r[MEMLAT - 1] = r0
 	br.cond.sptk .back4
 END(strncpy)
