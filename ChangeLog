@@ -1,3 +1,11 @@
+2002-09-06  Roland McGrath  <roland@redhat.com>
+
+	* posix/sys/utsname.h (_UTSNAME_SYSNAME_LENGTH): New macro, defined
+	to _UTSNAME_LENGTH if not already defined by <bits/utsname.h>.
+	(_UTSNAME_RELEASE_LENGTH, _UTSNAME_VERSION_LENGTH): Likewise.
+	(_UTSNAME_MACHINE_LENGTH): Likewise.
+	(struct utsname): Use new macros instead of _UTSNAME_LENGTH.
+
 2002-09-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/errno.h: Use errno definition with __thread for now only
