@@ -60,7 +60,7 @@
 #else
 # define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY##_data;
 
-# define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY)
+# define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY##_data)
 # define __libc_tsd_get(KEY)		(__libc_tsd_##KEY##_data)
 # define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
 #endif

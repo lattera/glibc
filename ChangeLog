@@ -1,5 +1,9 @@
 2002-10-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/libc-tsd.h [!(USE_TLS && HAVE___THREAD)]
+	(__libc_tsd_address): Use correct variable name.
+	Patch by sStefan Jones <tefan.jones@multigig.com>.
+
 	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Add missing ;;.
 	Reported by edwardsg@sgi.com [PR libc/4678].
 
