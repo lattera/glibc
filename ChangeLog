@@ -1,7 +1,20 @@
+2001-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Always use C
+	locale to parse /proc/loadavg.
+
+2001-12-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-conflict.c: Include sys/param.h.
+	(RESOLVE_CONFLICT_FIND_MAP): Cast r_offset to ElfW(Addr).
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Avoid
+	warning.
+	(TRAMPOLINE_TEMPLATE, RTLD_START): Don't use multi-line string
+	literals to avoid warnings.
+
 2001-12-31  Andreas Jaeger  <aj@suse.de>
 
-	* configure.in: Don't check for gsed since we do not use it
-	anywhere.
+	* configure.in: Don't check for gsed since we do not use it anywhere.
 
 2001-12-25  Dmitry V. Levin  <ldv@alt-linux.org>
 

@@ -18,9 +18,10 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <unistd.h>
 #include <fcntl.h>
+#include <locale.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /* Put the 1 minute, 5 minute and 15 minute load averages
    into the first NELEM elements of LOADAVG.
@@ -53,8 +54,8 @@ getloadavg (double loadavg[], int nelem)
       for (i = 0; i < nelem; ++i)
 	{
 	  char *endp;
-	  loadavg[i] = strtod (p, &endp);
-	  if (!endp || endp == p)
+	  loadavg[i] = __strtod_l (p, &endp, &_nl_C_locobj);
+	  if (endp == NULL || endp == p)
 	    /* This should not happen.  The format of /proc/loadavg
 	       must have changed.  Don't return with what we have,
 	       signal an error.  */
