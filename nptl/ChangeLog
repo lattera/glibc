@@ -1,5 +1,15 @@
 2003-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
+	(lll_futex_timed_wait): Use int for futex value parameter.
+	(lll_futex_wake): Likewise.
+	(lll_futex_requeue): Likewise.
+
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_lock_wait):
+	Replace one memory operation with one register operation.
+
+	* tst-join4.c (do_test): Fix error message.
+
 	* tst-rwlock6.c (do_test): Use correct format specifier.
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S

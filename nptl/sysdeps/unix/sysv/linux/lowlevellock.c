@@ -27,13 +27,15 @@
 void
 __lll_lock_wait (int *futex, int val)
 {
+  /* In the loop we are going to add 2 instead of 1 which is what
+     the caller did.  Account for that.  */
+  --val;
   do
     {
-      lll_futex_wait (futex, val + 1);
-      val = atomic_exchange_and_add (futex, 1);
+      lll_futex_wait (futex, val + 2);
+      val = atomic_exchange_and_add (futex, 2);
     }
   while (val != 0);
-  *futex = 2;
 }
 hidden_proto (__lll_lock_wait)
 

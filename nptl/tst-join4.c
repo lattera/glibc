@@ -84,7 +84,7 @@ do_test (void)
 
   if (pthread_detach (th[0]) != 0)
     {
-      puts ("could detach 1st thread");
+      puts ("could not detach 1st thread");
       exit (1);
     }
 

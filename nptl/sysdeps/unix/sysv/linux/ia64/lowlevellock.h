@@ -54,7 +54,7 @@
   ({									      \
      register long int __o0 asm ("out0") = (long int) (futex);		      \
      register long int __o1 asm ("out1") = FUTEX_WAIT;			      \
-     register long int __o2 asm ("out2") = (long int) (val);		      \
+     register int __o2 asm ("out2") = (int) (val);			      \
      register long int __o3 asm ("out3") = (long int) (timespec);	      \
      register long int __r8 asm ("r8");					      \
      register long int __r10 asm ("r10");				      \
@@ -74,7 +74,7 @@
   ({									      \
      register long int __o0 asm ("out0") = (long int) (futex);		      \
      register long int __o1 asm ("out1") = FUTEX_WAKE;			      \
-     register long int __o2 asm ("out2") = (long int) (nr);		      \
+     register int __o2 asm ("out2") = (int) (nr);			      \
      register long int __r8 asm ("r8");					      \
      register long int __r10 asm ("r10");				      \
      register long int __r15 asm ("r15") = SYS_futex;			      \
@@ -93,8 +93,8 @@
   ({									      \
      register long int __o0 asm ("out0") = (long int) (futex);		      \
      register long int __o1 asm ("out1") = FUTEX_REQUEUE;		      \
-     register long int __o2 asm ("out2") = (long int) (nr_wake);	      \
-     register long int __o3 asm ("out3") = (long int) (nr_move);	      \
+     register int __o2 asm ("out2") = (int) (nr_wake);			      \
+     register int __o3 asm ("out3") = (int) (nr_move);			      \
      register long int __o4 asm ("out4") = (long int) (mutex);		      \
      register long int __r8 asm ("r8");					      \
      register long int __r10 asm ("r10");				      \
