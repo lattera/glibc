@@ -6842,15 +6842,10 @@ rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
 echo "${ECHO_T}$have_selinux" >&6
   fi
 
-  if test x$with_selinux = xauto ; then
+  if test x$with_selinux = xyes ; then
     if test x$have_selinux = xno ; then
-      { echo "$as_me:$LINENO: WARNING: Sufficiently new SELinux library not found" >&5
-echo "$as_me: WARNING: Sufficiently new SELinux library not found" >&2;}
-    fi
-  else
-    if test x$have_selinux = xno ; then
-      { { echo "$as_me:$LINENO: error: SELinux explicitly required, and SELinux library not found" >&5
-echo "$as_me: error: SELinux explicitly required, and SELinux library not found" >&2;}
+      { { echo "$as_me:$LINENO: error: SELinux explicitly required, but sufficiently recent SELinux library not found" >&5
+echo "$as_me: error: SELinux explicitly required, but sufficiently recent SELinux library not found" >&2;}
    { (exit 1); exit 1; }; }
     fi
   fi

@@ -1,5 +1,5 @@
 /* Header file for mounting/unmount Linux filesystems.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,8 @@ enum
 };
 
 /* Flags that can be altered by MS_REMOUNT  */
-#define MS_RMT_MASK (MS_RDONLY | MS_MANDLOCK)
+#define MS_RMT_MASK (MS_RDONLY|MS_SYNCHRONOUS|MS_MANDLOCK|MS_NOATIME \
+		     |MS_NODIRATIME)
 
 
 /* Magic mount flag number. Has to be or-ed to the flag values.  */
@@ -82,6 +83,14 @@ enum
 #define BLKFLSBUF  _IO(0x12, 97) /* Flush buffer cache.  */
 #define BLKRASET   _IO(0x12, 98) /* Set read ahead for block device.  */
 #define BLKRAGET   _IO(0x12, 99) /* Get current read ahead setting.  */
+#define BLKFRASET  _IO(0x12,100) /* Set filesystem read-ahead.  */
+#define BLKFRAGET  _IO(0x12,101) /* Get filesystem read-ahead.  */
+#define BLKSECTSET _IO(0x12,102) /* Set max sectors per request.  */
+#define BLKSECTGET _IO(0x12,103) /* Get max sectors per request.  */
+#define BLKSSZGET  _IO(0x12,104) /* Get block device sector size.  */
+#define BLKBSZGET  _IOR(0x12,112,size_t)
+#define BLKBSZSET  _IOW(0x12,113,size_t)
+#define BLKGETSIZE64 _IOR(0x12,114,size_t) /* return device size.  */
 
 
 /* Possible value for FLAGS parameter of `umount2'.  */

@@ -1,3 +1,8 @@
+2004-09-23  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Sync MS_RMT_MASK flag
+	and BLK* ioctls with linux kernel headers.
+
 2004-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/bits/dlfcn.h: Add RTLD_DEEPBIND.
