@@ -2550,6 +2550,12 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 	  sl_str += sl_str_diff;
 	  err = get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node,
 				bkref_str_idx);
+
+	  /* Reload buf and bkref_str, since the preceding call might
+	     have reallocated the buffer.  */
+	  buf = (char *) re_string_get_buffer (mctx->input);
+	  bkref_str = buf + bkref_str_idx;
+
 	  if (err == REG_NOMATCH)
 	    continue;
 	  if (BE (err != REG_NOERROR, 0))
@@ -2567,8 +2573,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 	  sl_str_off = sl_str - sub_top->str_idx;
 	  /* The matched string by the sub expression match with the substring
 	     at the back reference?  */
-	  if (sl_str_off > 0
-	      && memcmp (bkref_str++, buf + sl_str - 1, 1) != 0)
+	  if (sl_str_off > 0 && *bkref_str++ != buf[sl_str - 1])
 	    break; /* We don't need to search this sub expression any more.  */
 	  if (mctx->state_log[sl_str] == NULL)
 	    continue;

@@ -519,6 +519,8 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 			mbstate_t cur_state;
 			wchar_t wc2;
 
+			/* XXX Don't use mbrtowc, we know which conversion
+			   to use (UTF-8 -> UCS4).  */
 			memset (&cur_state, 0, sizeof (cur_state));
 			if (mbrtowc (&wc2, p, raw + offset - p, &cur_state)
 			    == raw + offset - p)

@@ -1,4 +1,9 @@
-2003-11-14 David Mosberger   <davidm@hpl.hp.com>
+2003-11-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regexec.c (get_subexp): Adter calling get_subexp_seb
+	reload buf and bkref_str.  Little optimization by avoiding memcmp.
+
+2003-11-14  David Mosberger   <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h
 	(GAS_ALIGN_BREAKS_UNWIND_INFO): Define this macro to indicate
