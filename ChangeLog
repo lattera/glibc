@@ -1,3 +1,10 @@
+2000-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/Makefile (distribute): Add defaultmod1.c and defaultmod2.c.
+	(test): Add default.
+	(modules-names): Add defaultmod1 and defaultmod2.
+	Add rules to build test objects.
+
 2000-09-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* wctype/wctype.h: Always include <bits/types.h>.

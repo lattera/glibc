@@ -20,7 +20,8 @@ subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
-distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c
+distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
+		   defaultmod1.c defaultmod2.c
 
 extra-libs-others := libdl
 
@@ -33,9 +34,9 @@ endif
 libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest tst-dladdr
+tests = glrefmain failtest tst-dladdr default
 endif
-modules-names = glreflib1 glreflib2 failtestmod
+modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2
 extra-objs += $(modules-names:=.os) eval.os
 generated := $(modules-names:=.so)
 
@@ -56,3 +57,9 @@ $(objpfx)failtest.out: $(objpfx)failtestmod.so
 
 $(objpfx)tst-dladdr: $(libdl)
 $(objpfx)tst-dladdr.out: $(objpfx)glreflib1.so
+
+LDFLAGS-default = -rdynamic
+$(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
+$(objpfx)defaultmod1.so: $(libdl)
+LDFLAGS-defaultmod2.so = -Bsymbolic
+$(objpfx)defaultmod2.so: $(libdl)
