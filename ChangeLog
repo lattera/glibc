@@ -57,8 +57,11 @@ Fri Jun  7 16:48:13 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* posix/Makefile (headers): Add schedbits.h.
 
 	* math/Makefile (elided-routines): Add long double routines.
-
+	
 Fri Jun  7 11:02:22 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getpriority.c (getpriority): Use new interface
+	to __proc_getprocinfo.
 
 	* login/login.c (tty_name): New function.
 	(login): Use it.
