@@ -73,8 +73,9 @@ else
 all-dist = $(distribute)
 endif
 
-sources += $(filter %.c %.s %.S,$(all-dist))
-headers += $(filter %.h,$(all-dist))
+# sources and headers must be simply expanded variables
+sources := $(sources) $(filter %.c %.s %.S,$(all-dist))
+headers := $(headers) $(filter %.h,$(all-dist))
 all-dist := $(filter-out %.h %.c %.s %.S,$(all-dist))
 
 sources += $(foreach lib,$(extra-libs),$($(lib)-routines:=.c))

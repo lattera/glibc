@@ -823,7 +823,8 @@ distinfo: $(common-objpfx)distinfo-$(subdir)
 
 define distinfo-vars
 rm -f $@.new
-$(foreach var,subdir subdir-dirs sources elided-routines sysdep_routines \
+echo > $@.new 'subdir := $(subdir)'
+$(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests extra-libs $(extra-libs:%=%-routines) \
 	      versioned \

@@ -1,3 +1,22 @@
+Tue Jun 25 09:55:47 1996  David Mosberger-Tang  <davidm@AZStarNet.com>
+
+	* catgets/gencat.c (write_out): Use %Zu to print variables of type
+ 	size_t.
+	* resolv/res_debug.c (__p_rr): Print size_t variable as %lu and
+	cast it to (unsigned long) to make it work both on 32 and 64
+	bit architectures.
+
+Sat Jun 22 13:05:25 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/Makefile (distribute): Add `programs/' prefix to all
+	files in that directory.
+
+	* Makerules (distinfo-vars): Assign subdir directly so that `ifdef
+	subdir' works.
+
+	* MakeTAGS (sources, headers): Make them simply expanded variables
+	so that all-dist is expanded before it is changed.
+
 Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Make-dist (dist): Don't depend on crypt tar file.  Remove that rule.

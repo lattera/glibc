@@ -689,8 +689,9 @@ __p_rr(cp, msg, file)
 	putc('\n', file);
 #endif
 	if (cp - cp1 != dlen) {
-		fprintf(file, ";; packet size error (found %d, dlen was %d)\n",
-			cp - cp1, dlen);
+		fprintf(file,
+			";; packet size error (found %lu, dlen was %d)\n",
+			(unsigned long) (cp - cp1), dlen);
 		cp = NULL;
 	}
 	return (cp);

@@ -22,12 +22,13 @@
 subdir	:= locale
 
 headers		= locale.h langinfo.h
-distribute	= localeinfo.h categories.def \
-		  $(localedef-modules:=.c) $(locale-modules:=.c) \
-		  $(lib-modules:=.c) config.h simple-hash.h iso-4217.def \
-		  charmap-kw.gperf charmap-kw.h locfile-token.h \
-		  locfile-kw.gperf locfile-kw.h linereader.h \
-		  locales.h locfile.h stringtrans.h weight.h charset.h
+distribute	= localeinfo.h categories.def iso-4217.def weight.h \
+		  $(addprefix programs/, \
+			      $(localedef-modules:=.c) $(locale-modules:=.c) \
+			      $(lib-modules:=.c) config.h simple-hash.h \
+			      charmap-kw.gperf charmap-kw.h locfile-token.h \
+			      locfile-kw.gperf locfile-kw.h linereader.h \
+			      locales.h locfile.h stringtrans.h charset.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  mb_cur_max codeset_name
 categories	= ctype messages monetary numeric time collate
