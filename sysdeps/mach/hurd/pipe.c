@@ -48,7 +48,8 @@ DEFUN(__pipe, (fds), int fds[2])
   /* Create two local domain sockets and connect them together.  */
 
   err = __socket_create (server, SOCK_STREAM, 0, &sock1);
-  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
+  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED
+      || err == MIG_BAD_ID || err == EOPNOTSUPP)
     {
       /* On the first use of the socket server during the operation,
 	 allow for the old server port dying.  */
