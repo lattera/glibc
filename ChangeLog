@@ -1,5 +1,7 @@
 1998-05-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makeconfig (rpath-link): Find libc.so.6 in $(common-objdir).
+
 	* malloc/thread-m.h: Use __mutex_init function in mutex_init macro
 	for Hurd.  Patch by Mark Kettenis.
 

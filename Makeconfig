@@ -413,14 +413,11 @@ else
 default-rpath = $(libdir)
 endif
 # This is how to find at build-time things that will be installed there.
-rpath-link = $(common-objdir):$(mathobjdir):$(elfobjdir):$(nssobjdir):$(nisobjdir):$(dbobjdir):$(rtobjdir):$(resolvobjdir)
-mathobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)math)
+rpath-dirs = math elf nss nis db2 rt resolv
+rpath-link = \
+$(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
-nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
-nisobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nis)
 dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db2)
-rtobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)rt)
-resolvobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)resolv)
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
@@ -463,7 +460,6 @@ ifeq ($(elf),yes)
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
-db-objpfx = $(common-objpfx)db/
 
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
@@ -657,6 +653,8 @@ endif
 ifndef BUILD_CC
 BUILD_CC = $(CC)
 endif
+
+move-if-change = $(SHELL) $(..)scripts/move-if-change
 
 
 ifeq (yes, $(build-shared))
@@ -746,7 +744,7 @@ ifneq (,$(findstring linuxthreads,$(add-ons)))
 shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so
 static-thread-library = $(common-objpfx)linuxthreads/libpthread.a
 have-thread-library = yes
-rpath-link := $(rpath-link):$(common-objpfx)linuxthreads
+rpath-dirs += linuxthreads
 endif
 
 ifndef avoid-generated
