@@ -531,7 +531,7 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 
 				idx += 1 + extra[idx];
 				/* Adjust for the alignment.  */
-				idx = (idx + 3) & ~4;
+				idx = (idx + 3) & ~3;
 
 				wextra = (int32_t *) &extra[idx + 4];
 # endif

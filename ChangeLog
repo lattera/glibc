@@ -1,5 +1,23 @@
 2001-08-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Fix computation of alignment.
+
+2001-08-09  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex.c (wcs_regex_compile): Use appropriate string
+	to compare with collating element.
+	Fix the padding for the alignment.
+
+2001-08-09  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* locale/programs/ld-collate.c (collate_output): Exclude
+	characters from elem_table.
+	Reduce if clause to write collating elements correctly.
+	* posix/Makefile (tests): Add bug-regex5.
+	* posix/bug-regex5.c: New file.
+
+2001-08-09  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/lc-time.c (_nl_parse_alt_digit): New function.
 	* locale/localeinfo.h: Add prototype for it.
 	* time/strptime.c (get_alt_number): Use _nl_parse_alt_digit to get

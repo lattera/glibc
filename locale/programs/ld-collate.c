@@ -2449,7 +2449,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   runp = collate->start;
   while (runp != NULL)
     {
-      if (runp->mbs != NULL && runp->weights != NULL)
+      if (runp->mbs != NULL && runp->weights != NULL && !runp->is_character)
 	{
 	  /* Compute the hash value of the name.  */
 	  uint32_t namelen = strlen (runp->name);
@@ -2469,37 +2469,36 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		    idx -= elem_size;
 		}
 	      while (elem_table[idx * 2] != 0);
-
-	      /* This is the spot where we will insert the value.  */
-	      elem_table[idx * 2] = hash;
-	      elem_table[idx * 2 + 1] = obstack_object_size (&extrapool);
-
-	      /* The the string itself including length.  */
-	      obstack_1grow (&extrapool, namelen);
-	      obstack_grow (&extrapool, runp->name, namelen);
-
-	      /* And the multibyte representation.  */
-	      obstack_1grow (&extrapool, runp->nmbs);
-	      obstack_grow (&extrapool, runp->mbs, runp->nmbs);
-
-	      /* And align again to 32 bits.  */
-	      if ((1 + namelen + 1 + runp->nmbs) % sizeof (int32_t) != 0)
-		obstack_grow (&extrapool, "\0\0",
-			      (sizeof (int32_t)
-			       - ((1 + namelen + 1 + runp->nmbs)
-				  % sizeof (int32_t))));
-
-	      /* Now some 32-bit values: multibyte collation sequence,
-		 wide char string (including length), and wide char
-		 collation sequence.  */
-	      obstack_int32_grow (&extrapool, runp->mbseqorder);
-
-	      obstack_int32_grow (&extrapool, runp->nwcs);
-	      obstack_grow (&extrapool, runp->wcs,
-			    runp->nwcs * sizeof (uint32_t));
-
-	      obstack_int32_grow (&extrapool, runp->wcseqorder);
 	    }
+	  /* This is the spot where we will insert the value.  */
+ 	  elem_table[idx * 2] = hash;
+	  elem_table[idx * 2 + 1] = obstack_object_size (&extrapool);
+
+	  /* The the string itself including length.  */
+	  obstack_1grow (&extrapool, namelen);
+	  obstack_grow (&extrapool, runp->name, namelen);
+
+	  /* And the multibyte representation.  */
+	  obstack_1grow (&extrapool, runp->nmbs);
+	  obstack_grow (&extrapool, runp->mbs, runp->nmbs);
+
+	  /* And align again to 32 bits.  */
+	  if ((1 + namelen + 1 + runp->nmbs) % sizeof (int32_t) != 0)
+	    obstack_grow (&extrapool, "\0\0",
+			  (sizeof (int32_t)
+			   - ((1 + namelen + 1 + runp->nmbs)
+			      % sizeof (int32_t))));
+
+	  /* Now some 32-bit values: multibyte collation sequence,
+	     wide char string (including length), and wide char
+	     collation sequence.  */
+	  obstack_int32_grow (&extrapool, runp->mbseqorder);
+
+	  obstack_int32_grow (&extrapool, runp->nwcs);
+	  obstack_grow (&extrapool, runp->wcs,
+			runp->nwcs * sizeof (uint32_t));
+
+	  obstack_int32_grow (&extrapool, runp->wcseqorder);
 	}
 
       runp = runp->next;
