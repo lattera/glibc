@@ -1,3 +1,12 @@
+2002-09-09  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* elf/elf.h: Add powerpc64 specific elf relocation and dynamic types.
+
+2002-09-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-error.c (_dl_signal_cerror): Don't print anything if only
+	LD_DEBUG=statistics or LD_TRACE_PRELINKING.
+
 2002-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/stratcliff.c: Some more strncpy tests.
