@@ -20,6 +20,10 @@
 /* Ho hum, since xstat == xstat64 we must get rid of the prototype or gcc
    will complain since they don't strictly match.  */
 #define __fxstat64 __fxstat64_disable
+#define __fxstat64_internal __fxstat64_internal_disable
+/* To avoid the optimizations of using _internal functions define
+   NOT_IN_libc.  */
+#define NOT_IN_libc	1
 
 #include <errno.h>
 #include <stddef.h>
@@ -32,6 +36,7 @@
 extern int __syscall_fstat (int, struct stat *__unbounded);
 
 #undef __fxstat
+#undef __fxstat64_internal
 
 /* Get information about the file FD in BUF.  */
 int

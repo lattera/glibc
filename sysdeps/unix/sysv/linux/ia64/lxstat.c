@@ -20,6 +20,10 @@
 /* Ho hum, since xstat == xstat64 we must get rid of the prototype or gcc
    will complain since they don't strictly match.  */
 #define __lxstat64 __lxstat64_disable
+#define __lxstat64_internal __lxstat64_internal_disable
+/* To avoid the optimizations of using _internal functions define
+   NOT_IN_libc.  */     
+#define NOT_IN_libc	1
 
 #include <errno.h>
 #include <stddef.h>
@@ -30,6 +34,7 @@
 #include <bp-checks.h>
 
 #undef __lxstat
+#undef __lxstat64_internal
 
 extern int __syscall_lstat (const char *__unbounded, struct stat *__unbounded);
 
@@ -43,5 +48,5 @@ __lxstat (int vers, const char *name, struct stat *buf)
 INTDEF(__lxstat)
 weak_alias (__lxstat, _lxstat);
 #undef __lxstat64
-INTDEF(__lxstat64)
 strong_alias (__lxstat, __lxstat64);
+INTDEF(__lxstat64)

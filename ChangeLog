@@ -1,3 +1,9 @@
+2002-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/fxstat.c: Fix a few issues with the
+	_internal symbol handling.
+	* sysdeps/unix/sysv/linux/ia64/lxstat.c: Likewise.
+
 2002-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/fpu/s_finite.S: Define _internal aliases.
