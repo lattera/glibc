@@ -1,3 +1,11 @@
+2001-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* crypt/md5.c (md5_process_bytes): Correct handling of alignment.
+	Patch by Eric Sharkey <sharkey@netrics.com>.
+
+	* crypt/md5test.c (main): Add test for multiple calls to
+	__md5_process_bytes to itererate over input string.
+
 2001-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nis_findserv.c (__nis_findfastest_with_timeout): Mostly the code

@@ -1,6 +1,6 @@
 /* Functions to compute MD5 message digest of files or memory blocks.
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -217,17 +217,12 @@ md5_process_bytes (buffer, len, ctx)
      size_t len;
      struct md5_ctx *ctx;
 {
-  //const void aligned_buffer = buffer;
-
   /* When we already have some bits in our internal buffer concatenate
      both inputs first.  */
   if (ctx->buflen != 0)
     {
       size_t left_over = ctx->buflen;
       size_t add = 128 - left_over > len ? len : 128 - left_over;
-
-      /* Only put full words in the buffer.  */
-      add -= add % __alignof__ (md5_uint32);
 
       memcpy (&ctx->buffer[left_over], buffer, add);
       ctx->buflen += add;
@@ -247,11 +242,30 @@ md5_process_bytes (buffer, len, ctx)
     }
 
   /* Process available complete blocks.  */
-  if (len > 64)
+  if (len >= 64)
     {
-      md5_process_block (buffer, len & ~63, ctx);
-      buffer = (const char *) buffer + (len & ~63);
-      len &= 63;
+#if !_STRING_ARCH_unaligned
+/* To check alignment gcc has an appropriate operator.  Other
+   compilers don't.  */
+# if __GNUC__ >= 2
+#  define UNALIGNED_P(p) (((md5_uintptr) p) % __alignof__ (md5_uint32) != 0)
+# else
+#  define UNALIGNED_P(p) (((md5_uintptr) p) % sizeof (md5_uint32) != 0)
+# endif
+      if (UNALIGNED_P (buffer))
+	while (len > 64)
+	  {
+	    md5_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
+	    buffer = (const char *) buffer + 64;
+	    len -= 64;
+	  }
+      else
+#endif
+	{
+	  md5_process_block (buffer, len & ~63, ctx);
+	  buffer = (const char *) buffer + (len & ~63);
+	  len &= 63;
+	}
     }
 
   /* Move remaining bytes in internal buffer.  */
