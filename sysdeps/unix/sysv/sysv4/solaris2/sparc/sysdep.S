@@ -21,13 +21,23 @@ Cambridge, MA 02139, USA.  */
 
 ENTRY(syscall_error)
 	/* If it was a syscall that got interrupted, but can
-	   be restarted, drop ERESTART in.  */
+	   be restarted, drop EINTR in.  */
 	cmp %o0, ERESTART
 	be,a notint
 	mov EINTR, %o0
 
-	/* Store it in errno... */
-notint:	sethi %hi(C_SYMBOL_NAME(errno)), %g1
+notint:
+#ifdef EWOULDBLOCK_sys
+	/* We translate the system's EWOULDBLOCK error into EAGAIN.
+	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
+	   EWOULDBLOCK_sys is the original number.  */
+	cmp %o0, EWOULDBLOCK_sys
+	be,a notblock
+	mov EAGAIN, %o0
+#endif
+
+notblock:/* Store it in errno... */
+	sethi %hi(C_SYMBOL_NAME(errno)), %g1
 	st %o0, [%g1 + %lo(C_SYMBOL_NAME(errno))]
 
 	/* And just kick back a -1.  */
