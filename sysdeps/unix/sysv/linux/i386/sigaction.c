@@ -55,7 +55,7 @@ static void restore (void) asm ("__restore");
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
-__sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
+__libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
 #if __ASSUME_REALTIME_SIGNALS == 0
   struct old_kernel_sigaction k_newact, k_oldact;
@@ -146,7 +146,8 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 #endif
 }
 
-weak_alias (__sigaction, sigaction)
+strong_alias (__libc_sigaction, __sigaction)
+weak_alias (__libc_sigaction, sigaction)
 
 /* NOTE: Please think twice before making any changes to the bits of
    code below.  GDB needs some intimate knowledge about it to

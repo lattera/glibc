@@ -1,3 +1,33 @@
+2000-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/signal.h: Declare __libc_sigaction.
+	* sysdeps/unix/sysv/linux/Versions: Export __libc_sigaction.
+	* sysdeps/unix/sysv/linux/sigaction.c: Add __libc_sigaction alias.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
+
+	* configure.in: Fix CLAGS-memprofstat.c definition after
+	2000-06-19 change.
+	Patch by Bradford W. Johnson <bradford@math.umn.edu>.
+
+2000-07-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Pass 0
+	instead of NULL to elf_machine_fixup_plt t argument.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c (__mmap64): Add
+	cast.
+
+2000-07-06  Andreas Jaeger  <aj@suse.de>
+
+	* crypt/Makefile (LDLIBS-cert): Removed.
+	(LDLIBS-md5c-test): Removed.
+	($(objpfx)cert): Renamed from cert.out to fix dependencies.
+	($(objpfx)md5c-test): Likewise for md5c-test.out.
+
 2000-07-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): The type

@@ -107,7 +107,7 @@ static inline int __pthread_trylock (struct _pthread_fastlock * lock)
 #endif
 #if !defined HAS_COMPARE_AND_SWAP
   {
-    return (testandset(&lock->__spinlock) : EBUSY : 0)
+    return (testandset(&lock->__spinlock) ? EBUSY : 0);
   }
 #endif
 

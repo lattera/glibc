@@ -1,5 +1,5 @@
 /* POSIX.1 sigaction call for Linux/SPARC64.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx) and
    		  Jakub Jelinek (jj@ultra.linux.cz).
@@ -31,7 +31,8 @@
 static void __rt_sigreturn_stub (void);
 
 int
-__sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
+__libc_sigaction (int sig, __const struct sigaction *act,
+		  struct sigaction *oact)
 {
   int ret;
   struct kernel_sigaction kact, koact;
@@ -61,7 +62,8 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
   return ret;
 }
 
-weak_alias (__sigaction, sigaction);
+strong_alias (__libc_sigaction, __sigaction);
+weak_alias (__libc_sigaction, sigaction);
 
 static void
 __rt_sigreturn_stub (void)

@@ -85,6 +85,9 @@ libpthread {
 
     # The error functions.
     __errno_location; __h_errno_location;
+
+    # Must be preemptible
+    __sigaction;
   }
   GLIBC_2.1 {
     # Functions with changed interface.

@@ -1,5 +1,10 @@
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* Version: Export __sigaction.
+	* signals.c: Define __sigaction alias.  Use __libc_sigaction instead
+	of __sigaction.
+	* pthread.c: Use __libc_sigaction instead of __sigaction.
+
 	* condvar.c: Implement pthread_condattr_getpshared and
 	pthread_condattr_setpshared.
 	* mutex.c: Implement pthread_mutexattr_getpshared and

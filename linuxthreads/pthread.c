@@ -379,15 +379,15 @@ static void pthread_initialize(void)
   sa.sa_handler = pthread_handle_sigrestart;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
-  __sigaction(__pthread_sig_restart, &sa, NULL);
+  __libc_sigaction(__pthread_sig_restart, &sa, NULL);
   sa.sa_handler = pthread_handle_sigcancel;
   // sa.sa_flags = 0;
-  __sigaction(__pthread_sig_cancel, &sa, NULL);
+  __libc_sigaction(__pthread_sig_cancel, &sa, NULL);
   if (__pthread_sig_debug > 0) {
     sa.sa_handler = pthread_handle_sigdebug;
     sigemptyset(&sa.sa_mask);
     // sa.sa_flags = 0;
-    __sigaction(__pthread_sig_debug, &sa, NULL);
+    __libc_sigaction(__pthread_sig_debug, &sa, NULL);
   }
   /* Initially, block __pthread_sig_restart. Will be unblocked on demand. */
   sigemptyset(&mask);
@@ -768,10 +768,10 @@ void __pthread_kill_other_threads_np(void)
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sa.sa_handler = SIG_DFL;
-  __sigaction(__pthread_sig_restart, &sa, NULL);
-  __sigaction(__pthread_sig_cancel, &sa, NULL);
+  __libc_sigaction(__pthread_sig_restart, &sa, NULL);
+  __libc_sigaction(__pthread_sig_cancel, &sa, NULL);
   if (__pthread_sig_debug > 0)
-    __sigaction(__pthread_sig_debug, &sa, NULL);
+    __libc_sigaction(__pthread_sig_debug, &sa, NULL);
 }
 weak_alias (__pthread_kill_other_threads_np, pthread_kill_other_threads_np)
 

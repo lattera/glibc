@@ -131,7 +131,7 @@ static void pthread_sighandler_rt(int signo, struct siginfo *si,
 
 /* The wrapper around sigaction.  Install our own signal handler
    around the signal. */
-int sigaction(int sig, const struct sigaction * act,
+int __sigaction(int sig, const struct sigaction * act,
               struct sigaction * oact)
 {
   struct sigaction newact;
@@ -159,7 +159,7 @@ int sigaction(int sig, const struct sigaction * act,
     }
   else
     newactp = NULL;
-  if (__sigaction(sig, newactp, oact) == -1)
+  if (__libc_sigaction(sig, newactp, oact) == -1)
     return -1;
   if (sig > 0 && sig < NSIG)
     {
@@ -172,6 +172,7 @@ int sigaction(int sig, const struct sigaction * act,
     }
   return 0;
 }
+strong_alias(__sigaction, sigaction)
 
 /* A signal handler that does nothing */
 static void pthread_null_sighandler(int sig) { }
