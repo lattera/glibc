@@ -739,7 +739,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 #endif
 
   /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, l_type);
+  l = _dl_new_object (realname, name, l_type, loader != NULL);
   if (! l)
     lose (ENOMEM, "cannot create shared object descriptor");
   l->l_opencount = 1;
@@ -1290,7 +1290,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
-	      || (l = _dl_new_object (name_copy, name, type)) == NULL)
+	      || (l = _dl_new_object (name_copy, name, type,
+				      loader != NULL)) == NULL)
 	    _dl_signal_error (ENOMEM, name,
 			      "cannot create shared object descriptor");
 	  /* We use an opencount of 0 as a sign for the faked entry.  */

@@ -166,7 +166,7 @@ extern void _dl_sysdep_output (int fd, const char *string, ...);
    descriptor for this.  All arguments are `const char *'; args until
    a null pointer are concatenated to form the message to print.  If
    NEW_LINE is nonzero it is assumed that the message starts on a new
-   line.*/
+   line.  */
 extern void _dl_debug_message (int new_line, const char *string, ...);
 
 /* OS-dependent function to write a message on the standard output.
@@ -356,9 +356,11 @@ extern struct link_map **_dl_object_relocation_scope (struct link_map *map)
 
 
 /* Allocate a `struct link_map' for a new object being loaded,
-   and enter it into the _dl_loaded list.  */
+   and enter it into the _dl_loaded list.  If find origin is nonzero
+   determine the origin of the file.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
-					int type) internal_function;
+					int type, int find_origin)
+     internal_function;
 
 /* Relocate the given object (if it hasn't already been).
    SCOPE is passed to _dl_lookup_symbol in symbol lookups.

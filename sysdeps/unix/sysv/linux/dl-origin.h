@@ -30,15 +30,15 @@ get_origin (void)
   char *result;
 
   if (readlink ("/proc/self/exe", linkval, PATH_MAX) != -1
-      && result[0] != '[')
+      && linkval[0] != '[')
     {
       /* We can use this value.  */
       char *last_slash = strrchr (linkval, '/');
-      result = (char *) malloc (linkval - last_slash + 1);
+      result = (char *) malloc (last_slash - linkval + 1);
       if (result == NULL)
 	result = (char *) -1;
       else
-	*((char *) __mempcpy (result, linkval, linkval - last_slash)) = '\0';
+	*((char *) __mempcpy (result, linkval, last_slash - linkval)) = '\0';
     }
   else
     {

@@ -33,7 +33,7 @@ struct link_map *_dl_default_scope[5];
 
 struct link_map *
 internal_function
-_dl_new_object (char *realname, const char *libname, int type)
+_dl_new_object (char *realname, const char *libname, int type, int find_origin)
 {
   struct link_map *new = malloc (sizeof *new);
   struct libname_list *newname = malloc (sizeof *newname);
@@ -62,9 +62,8 @@ _dl_new_object (char *realname, const char *libname, int type)
       l->l_next = new;
     }
 
-  /* The REALNAME is "" for the main link map.  This name must be determined
-     specially.  */
-  if (realname[0] == '\0')
+  /* Don't try to find the origin for the main map.  */
+  if (! find_origin)
     new->l_origin = NULL;
   else
     {

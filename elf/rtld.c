@@ -420,7 +420,7 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      main_map = _dl_new_object ((char *) "", "", lt_executable);
+      main_map = _dl_new_object ((char *) "", "", lt_executable, 0);
       if (main_map == NULL)
 	_dl_sysdep_fatal ("cannot allocate memory for link map\n", NULL);
       main_map->l_phdr = phdr;

@@ -12,13 +12,17 @@
 	(_dl_map_object_from_fd): Define static is EXTERNAL_MAP_FROM_FD is
 	not defined.
 	Check EI_OSABI and EI_ABIVERSION fields in header.
+	Call _dl_new_object with extra argument.
 	(_dl_map_object): Call decompose_path with correct argument.
 	Call expand_dynamic_string_token instead of local_strdup to also
 	expand DST.
+	Call _dl_new_object with extra argument.
 	* elf/dl-object.c (_dl_new_object): Determine l_origin for all maps
-	but the main one.
+	but the main one if new argument is nonzero.
+	* elf/ldsodefs.h: Adjust for _dl_new_object change.
 	* elf/dl-support.c: Define _dl_origin_path.
 	* elf/rtld.c: Likewise.  Set _dl_origin_path based on LD_ORIGIN_PATH.
+	(dl_main): Call _dl_new_object with extra argument.
 
 	* elf/dl-close (_dl_close): Free l_name and l_origin.
 
