@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  MIPS version.
-   Copyright (C) 1992, 1993, 1995, 1997, 2000, 2002, 2003, 2004
+   Copyright (C) 1992, 1993, 1995, 1997, 2000, 2002, 2003, 2004, 2005
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,7 +18,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _SETJMP_H
+#ifndef _MIPS_BITS_SETJMP_H
+#define _MIPS_BITS_SETJMP_H 1
+
+#if !defined(_SETJMP_H) && !defined(_PTHREAD_H)
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
@@ -79,3 +82,5 @@ typedef struct
    containing a local variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(jmpbuf, address) \
   ((void *) (address) < (jmpbuf)[0].__sp)
+
+#endif /* _MIPS_BITS_SETJMP_H */
