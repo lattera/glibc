@@ -1,3 +1,7 @@
+Wed Apr 22 11:06:09 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/bits/setjmp.h (_JMPBUF_UNWINDS): Added.
+
 1998-04-21 21:49  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* misc/sys/cdefs.h: New macro __REDIRECT to support changing the
