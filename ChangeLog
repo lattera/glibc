@@ -1,3 +1,7 @@
+2001-02-26  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/Makefile (tests): Fix typo in last patch.
+
 2001-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* intl/Makefile (plural.c): Reorder rules so that they work if
