@@ -454,23 +454,23 @@ and @code{mon_grouping} applies to monetary quantities.  Use either
 groups.
 @cindex grouping of digits
 
-Each string is made up of decimal numbers separated by semicolons.
-Successive numbers (from left to right) give the sizes of successive
-groups (from right to left, starting at the decimal point).  The last
-number in the string is used over and over for all the remaining groups.
+Each member of these strings is to be interpreted as an integer value of
+type @code{char}.  Successive numbers (from left to right) give the
+sizes of successive groups (from right to left, starting at the decimal
+point.)  The last member is either @code{0}, in which case the previous
+member is used over and over again for all the remaining groups, or
+@code{CHAR_MAX}, in which case there is no more grouping---or, put
+another way, any remaining digits form one large group without
+separators.
 
-If the last integer is @code{-1}, it means that there is no more
-grouping---or, put another way, any remaining digits form one large
-group without separators.
-
-For example, if @code{grouping} is @code{"4;3;2"}, the correct grouping
-for the number @code{123456787654321} is @samp{12}, @samp{34},
+For example, if @code{grouping} is @code{"\04\03\02"}, the correct
+grouping for the number @code{123456787654321} is @samp{12}, @samp{34},
 @samp{56}, @samp{78}, @samp{765}, @samp{4321}.  This uses a group of 4
 digits at the end, preceded by a group of 3 digits, preceded by groups
 of 2 digits (as many as needed).  With a separator of @samp{,}, the
 number would be printed as @samp{12,34,56,78,765,4321}.
 
-A value of @code{"3"} indicates repeated groups of three digits, as
+A value of @code{"\03"} indicates repeated groups of three digits, as
 normally used in the U.S.
 
 In the standard @samp{C} locale, both @code{grouping} and
@@ -538,56 +538,50 @@ variable.
 
 @item char p_cs_precedes
 @itemx char n_cs_precedes
-These members are @code{1} if the @code{currency_symbol} string should
-precede the value of a monetary amount, or @code{0} if the string should
-follow the value.  The @code{p_cs_precedes} member applies to positive
-amounts (or zero), and the @code{n_cs_precedes} member applies to
-negative amounts.
+@itemx char int_p_cs_precedes
+@itemx char int_n_cs_precedes
+These members are @code{1} if the @code{currency_symbol} or
+@code{int_curr_symbol} strings should precede the value of a monetary
+amount, or @code{0} if the strings should follow the value.  The
+@code{p_cs_precedes} and @code{int_p_cs_precedes} members apply to
+positive amounts (or zero), and the @code{n_cs_precedes} and
+@code{int_n_cs_precedes} members apply to negative amounts.
 
-In the standard @samp{C} locale, both of these members have a value of
+In the standard @samp{C} locale, all of these members have a value of
 @code{CHAR_MAX}, meaning ``unspecified''.  The ISO standard doesn't say
 what to do when you find this value.  We recommend printing the
 currency symbol before the amount, which is right for most countries.
 In other words, treat all nonzero values alike in these members.
 
-The POSIX standard says that these two members apply to the
-@code{int_curr_symbol} as well as the @code{currency_symbol}.  The ISO
-C standard seems to imply that they should apply only to the
-@code{currency_symbol}---so the @code{int_curr_symbol} should always
-precede the amount.
-
-We can only guess which of these (if either) matches the usual
-conventions for printing international currency symbols.  Our guess is
-that they should always precede the amount.  If we find out a reliable
-answer, we will put it here.
+The members with the @code{int_} prefix apply to the
+@code{int_curr_symbol} while the other two apply to
+@code{currency_symbol}.
 
 @item char p_sep_by_space
 @itemx char n_sep_by_space
+@itemx char int_p_sep_by_space
+@itemx char int_n_sep_by_space
 These members are @code{1} if a space should appear between the
-@code{currency_symbol} string and the amount, or @code{0} if no space
-should appear.  The @code{p_sep_by_space} member applies to positive
-amounts (or zero), and the @code{n_sep_by_space} member applies to
-negative amounts.
+@code{currency_symbol} or @code{int_curr_symbol} strings and the
+amount, or @code{0} if no space should appear.  The
+@code{p_sep_by_space} and @code{int_p_sep_by_space} members apply to
+positive amounts (or zero), and the @code{n_sep_by_space} and
+@code{int_n_sep_by_space} members apply to negative amounts.
 
-In the standard @samp{C} locale, both of these members have a value of
+In the standard @samp{C} locale, all of these members have a value of
 @code{CHAR_MAX}, meaning ``unspecified''.  The ISO standard doesn't say
 what you should do when you find this value; we suggest you treat it as
 1 (print a space).  In other words, treat all nonzero values alike in
 these members.
 
-These members apply only to @code{currency_symbol}.  When you use
-@code{int_curr_symbol}, you never print an additional space, because
-@code{int_curr_symbol} itself contains the appropriate separator.
-
-The POSIX standard says that these two members apply to the
-@code{int_curr_symbol} as well as the @code{currency_symbol}.  However, an
-example in the @w{ISO C} standard clearly implies that they should apply
-only to the @code{currency_symbol}---that the @code{int_curr_symbol}
-contains any appropriate separator, so you should never print an
-additional space.
-
-Based on what we know now, we recommend you ignore these members when
-printing international currency symbols, and print no extra space.
+The members with the @code{int_} prefix apply to the
+@code{int_curr_symbol} while the other two apply to
+@code{currency_symbol}.  There is one specialty with the
+@code{int_curr_symbol}, though.  Since all legal values contain a space
+at the end the string one either printf this space (if the currency
+symbol must appear in front and must be separated) or one has to avoid
+printing this character at all (especially when at the end of the
+string).
 @end table
 
 @node Sign of Money Amount, , Currency Symbol, The Lame Way to Locale Data
@@ -614,6 +608,8 @@ unreasonable.)
 
 @item char p_sign_posn
 @itemx char n_sign_posn
+@itemx char int_p_sign_posn
+@itemx char int_n_sign_posn
 These members are small integers that indicate how to
 position the sign for nonnegative and negative monetary quantities,
 respectively.  (The string used by the sign is what was specified with
@@ -644,13 +640,11 @@ Print the sign string right after the currency symbol.
 The ISO standard doesn't say what you should do when the value is
 @code{CHAR_MAX}.  We recommend you print the sign after the currency
 symbol.
-@end table
 
-It is not clear whether you should let these members apply to the
-international currency format or not.  POSIX says you should, but
-intuition plus the examples in the @w{ISO C} standard suggest you should
-not.  We hope that someone who knows the conventions for formatting
-monetary quantities well will tell us what we should recommend.
+The members with the @code{int_} prefix apply to the
+@code{int_curr_symbol} while the other two apply to
+@code{currency_symbol}.
+@end table
 
 @node The Elegant and Fast Way, , The Lame Way to Locale Data, Locale Information
 @subsection Pinpoint Access to Locale Data
