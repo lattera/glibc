@@ -1,3 +1,9 @@
+Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.c [_AMIGA]: Don't include <pwd.h>.
+	(glob): Remove bogus & in call to globfree.
+	[_AMIGA]: Use AmigaDOS file name conventions.
+
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* posix/glob/SMakefile, posix/glob/SCOPTIONS, posix/glob/Makefile.ami:
