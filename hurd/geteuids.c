@@ -61,3 +61,9 @@ geteuids (int n, uid_t *uidset)
 
   return nuids;
 }
+
+/* XXX Remove this alias when we bump the libc soname.  */
+
+#if defined PIC && DO_VERSIONING
+weak_alias (geteuids, __getuids)
+#endif

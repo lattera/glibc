@@ -66,6 +66,13 @@ distribute = hurdstartup.h hurdfault.h hurdhost.h \
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc
 distribute += hurdmalloc.h
+
+# Binary compatibility for libc.so.0.2[GLIBC_2.0].
+ifeq ($(versioning),yes)
+routines += compat-20
+endif
+
+shared-only-routines = compat-20
 
 include ../mach/Machrules
 include ../Rules

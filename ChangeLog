@@ -1,9 +1,18 @@
-1998-12-03  Mark Kettenis  <kettenis@phys.uva.nl>
+1998-12-04  Mark Kettenis  <kettenis@phys.uva.nl>
 
-	* hurd/Versions [GLIBC_2.1]: Add _hurd_proc_init.
-
-	* hurd/Versions: Move geteuids and seteuids from GLIBC_2.0 to
-	GLIBC_2.1.
+	Provide backwards binary compatibility for the Hurd.
+	* hurd/geteuids.c [PIC && DO_VERSIONING]: Make __getuids a weak
+	alias for geteuids.
+	* hurd/Versions [GLIBC_2.0]: Add __getuids,
+	__hurd_file_name_lookup and _hurd_umask.
+	[GLIBC_2.1]: Add _hurd_proc_init.
+	* hurd/Makefile [versioning] (routines): Add compat-20.
+	(shared-only-routines): Likewise.
+	* hurd/hurdinit.c (_hurd_new_proc_init): Renamed from
+	_hurd_proc_init.  Use it as the default _hurd_proc_init version
+	for GLIBC_2.1.
+	* hurd/compat-20.c: New file.
+	* mach/Versions [GLIBC_2.0]: Add __vm_allocate.
 
 1998-12-02  Ulrich Drepper  <drepper@cygnus.com>
 

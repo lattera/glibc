@@ -118,8 +118,8 @@ DEFINE_HOOK (_hurd_proc_subinit, (void));
    Call _hurdsig_init to set up signal processing.  */
 
 void
-_hurd_proc_init (char **argv,
-		 const int *intarray, size_t intarraysize)
+_hurd_new_proc_init (char **argv,
+		     const int *intarray, size_t intarraysize)
 {
   mach_port_t oldmsg;
   struct hurd_userlink ulink;
@@ -160,6 +160,17 @@ _hurd_proc_init (char **argv,
        our parent (presumably a debugger) that the exec has completed.  */
     __msg_sig_post (_hurd_msgport, SIGTRAP, 0, __mach_task_self ());
 }
+
+/* XXX Remove this versioning stuff and rename __new_hurd_proc_init
+   above back to _hurd_proc_init when we bump the libc soname.  */
+
+#if defined PIC && DO_VERSIONING
+default_symbol_version (_hurd_new_proc_init, _hurd_proc_init, GLIBC_2.1);
+#else
+# ifdef weak_alias
+weak_alias (_hurd_new_proc_init, _hurd_proc_init)
+# endif
+#endif
 
 /* Called when we get a message telling us to change our proc server port.  */
 

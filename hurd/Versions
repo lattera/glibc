@@ -1,5 +1,13 @@
 libc {
   GLIBC_2.0 {
+    # These few symbols are here only for binary compatibility
+    # with the pre-versioning libc.so.0.2 ABI.  Their replacements
+    # are in the GLIBC_2.1 version set.  When the soname changes,
+    # these can be removed.
+    __getuids;
+    __hurd_file_name_lookup;
+    _hurd_proc_init; _hurd_umask;
+
     # necessary for the Hurd brk implementation
     _end;
 
@@ -49,7 +57,6 @@ libc {
     _hurd_port_get;
     _hurd_port_locked_get;
     _hurd_ports_use;
-    _hurd_proc_init;
     _hurd_thread_sigstate;
 
     # functions in normal name space
@@ -91,6 +98,9 @@ libc {
     vpprintf;
   }
   GLIBC_2.1 {
+    # "quasi-internal" functions
+    _hurd_proc_init;
+
     # g*
     geteuids;
 

@@ -1,5 +1,10 @@
 libc {
   GLIBC_2.0 {
+    # This symbol is here only for binary compatibility with the
+    # pre-versioning libc.so.0.2 ABI.  When the soname changes,
+    # it can be removed.
+    __vm_allocate;
+
     # variables used in Mach-specific macros
     __mach_task_self_;
     __vm_page_size;
