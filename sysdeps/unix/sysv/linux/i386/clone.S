@@ -27,13 +27,19 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+	     pid_t *tid, struct user_desc *tls); */
 
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define FUNC	PARMS
 #define STACK	FUNC+4
 #define FLAGS	STACK+PTR_SIZE
 #define ARG	FLAGS+4
+#define TID	ARG+PTR_SIZE
+#define TLS	TID+PTR_SIZE
+
+#define __NR_clone 120
+#define SYS_clone 120
 
         .text
 ENTRY (BP_SYM (__clone))
@@ -55,30 +61,34 @@ ENTRY (BP_SYM (__clone))
 #endif
 
 	/* Insert the argument onto the new stack.  */
-	subl	$8,%ecx
+	subl	$12,%ecx
 	movl	ARG(%esp),%eax		/* no negative argument counts */
-	movl	%eax,4(%ecx)
+	movl	%eax,8(%ecx)
 
 	/* Save the function pointer as the zeroth argument.
 	   It will be popped off in the child in the ebx frobbing below.  */
 	movl	FUNC(%esp),%eax
-	movl	%eax,0(%ecx)
+	movl	%eax,4(%ecx)
 
 	/* Do the system call */
 	pushl	%ebx
-	movl	FLAGS+4(%esp),%ebx
+	pushl	%esi
+	movl	TLS+8(%esp),%esi
+	movl	TID+8(%esp),%edx
+	movl	FLAGS+8(%esp),%ebx
 	movl	$SYS_ify(clone),%eax
 	int	$0x80
+	popl	%esi
 	popl	%ebx
 
 	test	%eax,%eax
 	jl	SYSCALL_ERROR_LABEL
-	jz	thread_start
+	jz	L(thread_start)
 
 L(pseudo_end):
 	ret
 
-thread_start:
+L(thread_start):
 	subl	%ebp,%ebp	/* terminate the stack frame */
 	call	*%ebx
 #ifdef PIC
@@ -87,8 +97,9 @@ L(here):
 	popl	%ebx
 	addl	$_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ebx
 #endif
-	pushl	%eax
-	call	HIDDEN_JUMPTARGET (_exit)
+	movl	%eax, %ebx
+	movl	$SYS_ify(exit), %eax
+	int	$0x80
 
 PSEUDO_END (BP_SYM (__clone))
 
