@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ installed-posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
 					 $(addprefix $(zonedir)/, \
 						     $(posixrules-file)))
 
-ifndef cross-compiling
+ifeq ($(cross-compiling),no)
 # Don't try to install the zoneinfo files since we can't run zic.
 install-others = $(addprefix $(zonedir)/,$(zonenames)) \
 		 $(installed-localtime-file) $(installed-posixrules-file)
@@ -124,3 +124,7 @@ tz-cc = $(COMPILE.c) $(+gcc-nowarn) \
 	     -DTZDEFAULT='"$(localtime-file)"' \
 	     -DTZDEFRULES='"$(posixrules-file)"' \
 	     $< $(OUTPUT_OPTION)
+
+CFLAGS-zdump.c = -Wno-strict-prototypes
+CFLAGS-zic.c = -Wno-strict-prototypes
+CFLAGS-ialloc.c = -Wno-strict-prototypes

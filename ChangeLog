@@ -1,3 +1,7 @@
+Sun Jan 28 19:42:04 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/Makefile: Fix check for cross compiling.
+
 Thu Jan 25 21:10:39 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* db/Makefile (subdir-dirs): Renamed from dbdirs.
