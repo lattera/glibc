@@ -27,11 +27,11 @@ ENTRY(__syscall_error)
 #ifdef __PIC__
 	.set noreorder
 	.set	noat
-	move	$1, $31
-	bltzal	$0, 0f
+	move	AT, ra
+	bltzal	zero, 0f
 	nop
-0:	.cpload	$31
-	move	$31, $1
+0:	.cpload	ra
+	move	ra, AT
 	.set	at
 	.set	reorder
 #endif
@@ -51,9 +51,6 @@ ENTRY(__syscall_error)
 	li	v0, EAGAIN
 skip:
 #endif
-	/* Store it in the "real" variable ... */
-	sw v0, errno
-
 	/* Find our per-thread errno address  */
 	jal	__errno_location
 
@@ -75,11 +72,11 @@ ENTRY(__syscall_error)
 #ifdef __PIC__
 	.set	noreorder
 	.set	noat
-	move	$1, $31
-	bltzal	$0, 0f
+	move	AT, ra
+	bltzal	zero, 0f
 	nop
-0:	.cpload	$31
-	move	$31, $1
+0:	.cpload	ra
+	move	ra, AT
 	.set	at
 	.set	reorder
 #endif
