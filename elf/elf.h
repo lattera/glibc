@@ -1874,6 +1874,40 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_IA64_LTOFF22X		0x86	/* LTOFF22, relaxable.  */
 #define R_IA64_LDXMOV		0x87	/* Use of LTOFF22X.  */
 
+/* SH specific declarations */
+
+/* SH relocs.  */
+#define	R_SH_NONE		0
+#define	R_SH_DIR32		1
+#define	R_SH_REL32		2
+#define	R_SH_DIR8WPN		3
+#define	R_SH_IND12W		4
+#define	R_SH_DIR8WPL		5
+#define	R_SH_DIR8WPZ		6
+#define	R_SH_DIR8BP		7
+#define	R_SH_DIR8W		8
+#define	R_SH_DIR8L		9
+#define	R_SH_SWITCH16		25
+#define	R_SH_SWITCH32		26
+#define	R_SH_USES		27
+#define	R_SH_COUNT		28
+#define	R_SH_ALIGN		29
+#define	R_SH_CODE		30
+#define	R_SH_DATA		31
+#define	R_SH_LABEL		32
+#define	R_SH_SWITCH8		33
+#define	R_SH_GNU_VTINHERIT	34
+#define	R_SH_GNU_VTENTRY	35
+#define	R_SH_GOT32		160
+#define	R_SH_PLT32		161
+#define	R_SH_COPY		162
+#define	R_SH_GLOB_DAT		163
+#define	R_SH_JMP_SLOT		164
+#define	R_SH_RELATIVE		165
+#define	R_SH_GOTOFF		166
+#define	R_SH_GOTPC		167
+/* Keep this the last entry.  */
+
 __END_DECLS
 
 #endif	/* elf.h */

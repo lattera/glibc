@@ -27,12 +27,14 @@ mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
 mips.*-.*-.*		libm=6
 arm.*-.*-.*		libm=6
 ia64-.*-.*		libm=6			GLIBC_2.2
+sh.*-.*-.*		libm=6			GLIBC_2.1
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
 # Working mips versions were never released between 2.0 and 2.2.
 mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
 ia64-.*-.*		libc=6			GLIBC_2.2
+sh.*-.*-.*              libc=6                  GLIBC_2.1
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -54,6 +56,7 @@ sparc64-.*-linux.*	ld=ld-linux.so.2
 sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 arm.*-.*-linux.*	ld=ld-linux.so.2
+sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.1
 ia64-.*-linux.*		ld=ld-linux-ia64.so.1	GLIBC_2.2
 mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 # We use the ELF ABI standard name for the default.

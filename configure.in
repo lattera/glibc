@@ -277,6 +277,8 @@ mips*)		base_machine=mips
 		IP22) machine=mips/mips3 ;;
 		*)    machine=mips/$machine ;;
 		esac ;;
+sh3*)		base_machine=sh machine=sh/sh3 ;;
+sh4*)		base_machine=sh machine=sh/sh4 ;;
 sparc | sparcv[67])
 		base_machine=sparc machine=sparc/sparc32 ;;
 sparcv8 | supersparc | hypersparc)
