@@ -1,6 +1,8 @@
 #ifndef	_LOCALE_H
 #include <locale/locale.h>
 
+libc_hidden_proto (setlocale)
+
 /* This has to be changed whenever a new locale is defined.  */
 #define __LC_LAST	13
 
@@ -11,5 +13,8 @@ extern struct __locale_struct _nl_C_locobj attribute_hidden;
 
 /* Now define the internal interfaces.  */
 extern struct lconv *__localeconv (void);
+
+/* Fetch the name of the current locale set in the given category.  */
+extern const char *__current_locale_name (int category) attribute_hidden;
 
 #endif

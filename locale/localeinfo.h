@@ -138,18 +138,8 @@ enum
 #define _ISCTYPE(c, desc) \
   (((((const uint32_t *) (desc)) - 8)[(c) >> 5] >> ((c) & 0x1f)) & 1)
 
-
-/* For each category declare the variable for the current locale data.  */
-/* XXX _nl_current_LC_CTYPE and _nl_current_LC_COLLATE were exported
-   but where are they used?  */
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data *_nl_current_##category attribute_hidden;
-#include "categories.def"
-#undef	DEFINE_CATEGORY
-
 extern const char *const _nl_category_names[__LC_LAST] attribute_hidden;
 extern const size_t _nl_category_name_sizes[__LC_LAST] attribute_hidden;
-extern struct locale_data * *const _nl_current[__LC_LAST] attribute_hidden;
 
 /* Name of the standard locales.  */
 extern const char _nl_C_name[] attribute_hidden;
@@ -158,9 +148,25 @@ extern const char _nl_POSIX_name[] attribute_hidden;
 /* The standard codeset.  */
 extern const char _nl_C_codeset[] attribute_hidden;
 
+/* Name of current locale for each individual category.
+   Each is malloc'd unless it is _nl_C_name.  */
+extern const char *_nl_current_names[] attribute_hidden;
+
+#ifndef SHARED
+
+/* For each category declare the variable for the current locale data.  */
+/* XXX _nl_current_LC_CTYPE and _nl_current_LC_COLLATE were exported
+   but where are they used?  */
+#define DEFINE_CATEGORY(category, category_name, items, a) \
+extern struct locale_data *_nl_current_##category attribute_hidden;
+#include "categories.def"
+#undef	DEFINE_CATEGORY
+extern struct locale_data * *const _nl_current[__LC_LAST] attribute_hidden;
+
 /* Return a pointer to the current `struct locale_data' for CATEGORY.  */
-#define _NL_CURRENT_DATA(category)	\
-  ((const struct locale_data *) _nl_current_##category)
+#define _NL_CURRENT_DATA(category)	_nl_current_##category
+/* Hackety hack, don't talk back.  */
+#define _nl_current_category		(*_nl_current[category])
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
@@ -178,6 +184,43 @@ extern const char _nl_C_codeset[] attribute_hidden;
 #define _NL_CURRENT_DEFINE(category) \
   extern struct locale_data _nl_C_##category attribute_hidden; \
   struct locale_data *_nl_current_##category = &_nl_C_##category
+
+#else
+
+/* All categories are always loaded in the shared library, so there is no
+   point in having lots of separate symbols for linking.  */
+
+# include <bits/libc-tsd.h>
+
+__libc_tsd_define (extern, LOCALE)
+
+extern struct __locale_struct _nl_global_locale attribute_hidden;
+
+# define _NL_CURRENT_LOCALE \
+  ((__locale_t) __libc_tsd_get (LOCALE))
+
+/* Return a pointer to the current `struct locale_data' for CATEGORY.  */
+# define _NL_CURRENT_DATA(category) \
+  (_NL_CURRENT_LOCALE->__locales[category])
+
+/* Extract the current CATEGORY locale's string for ITEM.  */
+# define _NL_CURRENT(category, item) \
+  (_NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].string)
+
+/* Extract the current CATEGORY locale's string for ITEM.  */
+# define _NL_CURRENT_WSTR(category, item) \
+  ((wchar_t *) _NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].wstr)
+
+/* Extract the current CATEGORY locale's word for ITEM.  */
+# define _NL_CURRENT_WORD(category, item) \
+  (_NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].word)
+
+/* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
+# define _NL_CURRENT_DEFINE(category) \
+  /* No per-category variable here. */
+
+#endif
+
 
 /* Load the locale data for CATEGORY from the file specified by *NAME.
    If *NAME is "", use environment variables as specified by POSIX,

@@ -26,9 +26,6 @@
 #include "localeinfo.h"
 
 
-/* Constant data defined in setlocale.c.  */
-extern struct locale_data *const _nl_C[] attribute_hidden;
-
 /* Use this when we come along an error.  */
 #define ERROR_RETURN							      \
   do {									      \
@@ -65,12 +62,8 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   if (base != NULL)
     result = *base;
   else
-    {
-      /* Fill with pointers to C locale data.  */
-      for (cnt = 0; cnt < __LC_LAST; ++cnt)
-	if (cnt != LC_ALL)
-	  result.__locales[cnt] = _nl_C[cnt];
-    }
+    /* Fill with pointers to C locale data.  */
+    result = _nl_C_locobj;
 
   /* If no category is to be set we return BASE if available or a
      dataset using the C locale data.  */
@@ -184,3 +177,4 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 
   return result_ptr;
 }
+weak_alias (__newlocale, newlocale)

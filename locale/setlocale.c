@@ -27,6 +27,8 @@
 
 #include "localeinfo.h"
 
+#ifndef SHARED
+
 /* For each category declare two external variables (with weak references):
      extern const struct locale_data *_nl_current_CATEGORY;
    This points to the current locale's in-core data for CATEGORY.
@@ -35,6 +37,8 @@
    Both are weak references; if &_nl_current_CATEGORY is zero,
    then nothing is using the locale data.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
+weak_extern (_nl_current_##category)					      \
+weak_extern (_nl_C_##category)						      \
 extern struct locale_data *_nl_current_##category;			      \
 extern struct locale_data _nl_C_##category;
 #include "categories.def"
@@ -62,6 +66,19 @@ struct locale_data *const _nl_C[] attribute_hidden =
 #include "categories.def"
 #undef	DEFINE_CATEGORY
   };
+
+# define CATEGORY_USED(category)	(_nl_current[category] != NULL)
+
+#else
+
+/* The shared library always loads all the categories,
+   and the current global settings are kept in _nl_global_locale.  */
+
+# define _nl_C		(_nl_C_locobj.__locales)
+
+# define CATEGORY_USED(category)	(1)
+
+#endif
 
 
 /* Define an array of category names (also the environment variable names),
@@ -102,18 +119,6 @@ static void (*const _nl_category_postload[]) (void) =
     [category] = postload,
 #include "categories.def"
 #undef	DEFINE_CATEGORY
-  };
-
-
-/* Name of current locale for each individual category.
-   Each is malloc'd unless it is nl_C_name.  */
-static const char *_nl_current_names[] =
-  {
-#define DEFINE_CATEGORY(category, category_name, items, a) \
-    [category] = _nl_C_name,
-#include "categories.def"
-#undef	DEFINE_CATEGORY
-    [LC_ALL] = _nl_C_name		/* For LC_ALL.  */
   };
 
 
@@ -200,19 +205,23 @@ setname (int category, const char *name)
   _nl_current_names[category] = name;
 }
 
-
 /* Put DATA in *_nl_current[CATEGORY].  */
 static inline void
 setdata (int category, struct locale_data *data)
 {
-  if (_nl_current[category] != NULL)
+  if (CATEGORY_USED (category))
     {
+#ifdef SHARED
+      _nl_global_locale.__locales[category] = data;
+#endif
+#ifndef SHARED
+# warning when uselocale exists it will need the line above too
       *_nl_current[category] = data;
+#endif
       if (_nl_category_postload[category])
 	(*_nl_category_postload[category]) ();
     }
 }
-
 
 char *
 setlocale (int category, const char *locale)
@@ -371,7 +380,7 @@ setlocale (int category, const char *locale)
       /* Protect global data.  */
       __libc_lock_lock (__libc_setlocale_lock);
 
-      if (_nl_current[category] != NULL)
+      if (CATEGORY_USED (category))
 	{
 	  /* Only actually load the data if anything will use it.  */
 	  newdata = _nl_find_locale (locale_path, locale_path_len, category,
@@ -409,7 +418,7 @@ setlocale (int category, const char *locale)
 	}
       else
 	{
-	  if (_nl_current[category] != NULL)
+	  if (CATEGORY_USED (category))
 	    setdata (category, newdata);
 
 	  setname (category, newname[0]);
@@ -429,6 +438,7 @@ setlocale (int category, const char *locale)
       return (char *) newname[0];
     }
 }
+libc_hidden_def (setlocale)
 
 static void __attribute__ ((unused))
 free_mem (void)
@@ -438,7 +448,7 @@ free_mem (void)
   for (category = 0; category < __LC_LAST; ++category)
     if (category != LC_ALL)
       {
-	struct locale_data *here = *_nl_current[category];
+	struct locale_data *here = _NL_CURRENT_DATA (category);
 	struct loaded_l10nfile *runp = _nl_locale_file_list[category];
 
 	/* If this category is already "C" don't do anything.  */

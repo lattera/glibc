@@ -61,3 +61,4 @@ __duplocale (__locale_t dataset)
 
   return result;
 }
+weak_alias (__duplocale, duplocale)

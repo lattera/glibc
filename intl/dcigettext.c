@@ -1059,7 +1059,7 @@ guess_category_value (category, categoryname)
      `LC_xxx', and `LANG'.  On some systems this can be done by the
      `setlocale' function itself.  */
 #ifdef _LIBC
-  retval = setlocale (category, NULL);
+  retval = __current_locale_name (category);
 #else
   retval = _nl_locale_name (category, categoryname);
 #endif

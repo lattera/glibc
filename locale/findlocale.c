@@ -30,8 +30,12 @@
 #include "../iconv/gconv_charset.h"
 
 
+#ifndef SHARED
 /* Constant data defined in setlocale.c.  */
 extern struct locale_data *const _nl_C[] attribute_hidden;
+#else
+# define _nl_C		(_nl_C_locobj.__locales)
+#endif
 
 
 /* For each category we keep a list of records for the locale files

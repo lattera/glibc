@@ -37,12 +37,12 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      3level.h charmap-dir.h locarchive.c)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  nl_langinfo_l mb_cur_max \
-		  newlocale duplocale freelocale
+		  newlocale duplocale freelocale uselocale
 tests		= tst-C-locale
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name \
-		  xlocale
+		  xlocale localename
 others		= localedef locale
 #others-static	= localedef locale
 install-bin	= localedef locale

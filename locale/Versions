@@ -46,9 +46,16 @@ libc {
     # missing function from the experimental locale implementation
     __nl_langinfo_l;
   }
+  GLIBC_2.3 {
+    # the new "experimental" interface is now public
+    newlocale; duplocale; freelocale; uselocale;
+  }
   GLIBC_PRIVATE {
     # global variables
     __collate_element_hash; __collate_element_strings;
     __collate_symbol_classes; __collate_symbol_hash; __collate_symbol_strings;
+
+    # this internal name is used by libpthread
+    __uselocale;
   }
 }

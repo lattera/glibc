@@ -1,5 +1,53 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* locale/setlocale.c (_nl_current_names): Variable moved ...
+	* locale/localename.c (_nl_current_names): ... here, new file.
+	Make it global, with attribute_hidden.
+	* locale/localeinfo.h: Declare it.
+	* locale/Makefile (aux): Add localename.
+	* locale/localename.c (__current_locale_name): New function.
+	* include/locale.h (__current_locale_name): Declare it.
+	* intl/dcigettext.c (guess_category_value): Use that instead of
+	calling setlocale.
+
+	* locale/locale.h [__USE_GNU] (locale_t): New type alias of __locale_t.
+	[__USE_GNU] (newlocale, duplocale, freelocale, uselocale): New decls.
+	[__USE_GNU] (LC_GLOBAL_LOCALE): New macro.
+	* locale/newlocale.c: Add alias to __ name.
+	* locale/duplocale.c: Likewise.
+	* locale/freelocale.c: Likewise.
+	* locale/uselocale.c: New file.
+	* locale/Makefile (routines): Add it.
+	* locale/Versions (libc: GLIBC_2.3): New set.
+	Add newlocale, duplocale, freelocale, uselocale.
+	(libc: GLIBC_PRIVATE): Add __uselocale.
+
+	* locale/localeinfo.h [SHARED]
+	(_NL_CURRENT_LOCALE): New macro, defined to fetch a tsd value.
+	(_NL_CURRENT_DATA): Define using that.
+	(_NL_CURRENT, _NL_CURRENT_WSTR, _NL_CURRENT_WORD): Define using that.
+	(_NL_CURRENT_DEFINE): Define to empty.
+	[! SHARED]: Decls of _nl_current_CATEGORY and _nl_current
+	conditionalized on this.
+	* locale/xlocale.c (NL_C_INTIIALIZER): New macro,
+	taking initializer of _nl_C_locobj.
+	[SHARED] (_nl_global_locale): New variable, using that initializer.
+	(_nl_C_locobj): Use new macro for initialzier.
+	* locale/setlocale.c [! SHARED] (_nl_current): Conditionalize on this.
+	[! SHARED] (CATEGORY_USED): New macro.
+	[SHARED] (CATEGORY_USED, _nl_C): New macros.
+	(setdata, setlocale): Use that macro instead of examining _nl_current.
+	(setdata): Set the slot in _nl_global_locale.
+	Conditionalize setting of _nl_current on [! SHARED].
+	* locale/findlocale.c [SHARED] (_nl_C): Define as a macro instead of
+	declaration as an extern.
+	* locale/newlocale.c (__newlocale): Use _nl_C_locobj instead of _nl_C.
+
+	* include/locale.h: Use libc_hidden_proto for setlocale.
+	* locale/setlocale.c: Add libc_hidden_def.
+
+	* locale/setlocale.c (free_mem): Use _NL_CURRENT_DATA.
+
 	* include/search.h: Use libc_hidden_proto for hsearch_r, lfind.
 	* misc/hsearch_r.c: Add libc_hidden_def.
 	* misc/lsearch.c: Likewise.
