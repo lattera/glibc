@@ -18,38 +18,67 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
+# nscd does not run on any kernel lower than 2.2.0 because of threading
+# problems, so we require that in first place.
+case $(uname -r) in
+    2.[2-9].*)
+	# this is okay
+	;;
+    [3-9]*)
+	# these are of course also okay
+	;;
+    *)
+	#this is not
+	exit 0
+	;;
+esac
+
+RETVAL=0
+
 # See how we were called.
 case "$1" in
     start)
 	secure=""
-	for table in passwd group hosts
-	do
-		if egrep '^'$table':.*nisplus' /etc/nsswitch.conf >/dev/null
-		then
-			/usr/sbin/nscd_nischeck $table ||
-				secure="$secure -S $table,yes"
-		fi
-	done
+#	for table in passwd group
+#	do
+#		if egrep '^'$table':.*nisplus' /etc/nsswitch.conf >/dev/null
+#		then
+#			/usr/lib/nscd_nischeck $table ||
+#				secure="$secure -S $table,yes"
+#		fi
+#	done
         echo -n "Starting Name Switch Cache Daemon: "
 	daemon nscd $secure
+	RETVAL=$?
         echo
-        touch /var/lock/subsys/nscd
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/nscd
 	;;
     stop)
 	echo -n "Stopping Name Switch Cache Daemon: "
 	/usr/sbin/nscd -K
-        rm -f /var/lock/subsys/nscd
-        echo nscd
+	RETVAL=$?
+	if [ $RETVAL -eq 0 ]; then
+		rm -f /var/lock/subsys/nscd
+        	echo nscd
+	else
+		echo
+	fi
 	;;
   status)
         status nscd
+	RETVAL=$?
         ;;
   restart)
         $0 stop
         $0 start
+	RETVAL=$?
+	;;
+  reload)
+  	killproc -HUP nscd
+	RETVAL=$?
         ;;
     *)
 	echo "Usage: $0 {start|stop|status|restart}"
 	;;
 esac
-exit 0
+exit $RETVAL

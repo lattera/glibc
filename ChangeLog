@@ -1,5 +1,8 @@
 1999-08-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/nscd.init: Test for kernel version and make LSB compliant.
+	Patch by Christian Gafton.
+
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Define O_DSYNC and
 	O_RSYNC.  Patch by Christian Gafton.
 
