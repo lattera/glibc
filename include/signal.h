@@ -4,6 +4,14 @@
 #else
 # include <signal/signal.h>
 
+libc_hidden_proto (raise)
+libc_hidden_proto (sigemptyset)
+libc_hidden_proto (sigfillset)
+libc_hidden_proto (sigismember)
+libc_hidden_proto (__sigpause)
+libc_hidden_proto (__libc_current_sigrtmin)
+libc_hidden_proto (__libc_current_sigrtmax)
+
 /* Now define the internal interfaces.  */
 extern __sighandler_t __bsd_signal (int __sig, __sighandler_t __handler);
 extern int __kill (__pid_t __pid, int __sig);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ __sigpause (sig_or_mask, is_sig)
   return -1;
 }
 stub_warning (__sigpause)
-
+libc_hidden_def (__sigpause)
 
 int
 __default_sigpause (int mask)
