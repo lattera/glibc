@@ -73,6 +73,9 @@ static int stat_n_heaps;
 /* Mapped memory in non-main arenas (reliable only for NO_THREADS). */
 static unsigned long arena_mem;
 
+/* Already initialized? */
+int __malloc_initialized = -1;
+
 /**************************************************************************/
 
 #if USE_ARENAS
@@ -212,6 +215,8 @@ ptmalloc_lock_all __MALLOC_P((void))
 {
   mstate ar_ptr;
 
+  if(__malloc_initialized < 1)
+    return;
   (void)mutex_lock(&list_lock);
   for(ar_ptr = &main_arena;;) {
     (void)mutex_lock(&ar_ptr->mutex);
@@ -232,6 +237,8 @@ ptmalloc_unlock_all __MALLOC_P((void))
 {
   mstate ar_ptr;
 
+  if(__malloc_initialized < 1)
+    return;
   tsd_setspecific(arena_key, save_arena);
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
@@ -255,6 +262,8 @@ ptmalloc_unlock_all2 __MALLOC_P((void))
 {
   mstate ar_ptr;
 
+  if(__malloc_initialized < 1)
+    return;
 #if defined _LIBC || defined MALLOC_HOOKS
   tsd_setspecific(arena_key, save_arena);
   __malloc_hook = save_malloc_hook;
@@ -275,9 +284,6 @@ ptmalloc_unlock_all2 __MALLOC_P((void))
 #endif
 
 #endif /* !defined NO_THREADS */
-
-/* Already initialized? */
-int __malloc_initialized = -1;
 
 /* Initialization routine. */
 #ifdef _LIBC
