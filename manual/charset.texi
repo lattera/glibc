@@ -177,9 +177,9 @@ code like
 @smallexample
 @{
   int c;
-  ...
+  @dots{}
   while ((c = getc (fp)) < 0)
-    ...
+    @dots{}
 @}
 @end smallexample
 
@@ -190,9 +190,9 @@ are used:
 @smallexample
 @{
   wint_t c;
-  ...
+  @dots{}
   while ((c = wgetc (fp)) != WEOF)
-    ...
+    @dots{}
 @}
 @end smallexample
 
@@ -437,7 +437,7 @@ problem:
   while (! feof (fp))
     @{
       fread (&buf[len], 1, MB_CUR_MAX - len, fp);
-      /* @r{... process} buf */
+      /* @r{@dots{} process} buf */
       len -= used;
     @}
 @}
@@ -491,7 +491,7 @@ clearing the whole variable with code such as follows:
   mbstate_t state;
   memset (&state, '\0', sizeof (state));
   /* @r{from now on @var{state} can be used.}  */
-  ...
+  @dots{}
 @}
 @end smallexample
 
@@ -523,7 +523,7 @@ Code using @code{mbsinit} often looks similar to this:
   mbstate_t state;
   memset (&state, '\0', sizeof (state));
   /* @r{Use @var{state}.}  */
-  ...
+  @dots{}
   if (! mbsinit (&state))
     @{
       /* @r{Emit code to return to initial state.}  */
@@ -531,7 +531,7 @@ Code using @code{mbsinit} often looks similar to this:
       const wchar_t *srcp = empty;
       wcsrtombs (outbuf, &srcp, outbuflen, &state);
     @}
-  ...
+  @dots{}
 @}
 @end smallexample
 
@@ -911,7 +911,7 @@ this solution is unsuitable, there is a very slow but more accurate
 solution.
 
 @smallexample
-  ...
+  @dots{}
   if (len < MB_CUR_LEN)
     @{
       mbstate_t temp_state;
@@ -925,7 +925,7 @@ solution.
           return NULL;
         @}
     @}
-  ...
+  @dots{}
 @end smallexample
 
 Here we perform the conversion that might overflow the buffer so that
@@ -2395,7 +2395,7 @@ The @code{int __internal_use} element is mostly used together with
 if (!data->__internal_use
      && data->__invocation_counter == 0)
   /* @r{Emit prolog.}  */
-  ...
+  @dots{}
 @end smallexample
 
 This element must never be modified.
@@ -2708,7 +2708,7 @@ gconv (struct __gconv_step *step, struct __gconv_step_data *data,
 @{
   struct __gconv_step *next_step = step + 1;
   struct __gconv_step_data *next_data = data + 1;
-  ...
+  @dots{}
 @end smallexample
 
 The @code{next_step} pointer references the next step information and

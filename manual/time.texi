@@ -1435,7 +1435,7 @@ character, not the number of bytes.
 Also the format string @var{template} is a wide character string.  Since
 all characters needed to specify the format string are in the basic
 character set it is portably possible to write format strings in the C
-source code using the @code{L"..."} notation.  The parameter
+source code using the @code{L"@dots{}"} notation.  The parameter
 @var{brokentime} has the same meaning as in the @code{strftime} call.
 
 The @code{wcsftime} function supports the same flags, modifiers, and

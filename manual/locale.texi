@@ -1201,7 +1201,7 @@ least also in the IBM AIX library.
 This function would normally be used like this:
 
 @smallexample
-  ...
+  @dots{}
   /* @r{Use a safe default.}  */
   _Bool doit = false;
 

@@ -467,7 +467,7 @@ Here's an example that uses both, for different args:
 
 
 @smallexample
-...
+@dots{}
 case ARGP_KEY_ARG:
   if (@var{state}->arg_num == 0)
     /* First argument */

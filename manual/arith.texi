@@ -755,9 +755,9 @@ is a simple example of the way to use @code{fetestexcept}:
   feclearexcept (FE_ALL_EXCEPT);
   f = compute ();
   raised = fetestexcept (FE_OVERFLOW | FE_INVALID);
-  if (raised & FE_OVERFLOW) @{ /* ... */ @}
-  if (raised & FE_INVALID) @{ /* ... */ @}
-  /* ... */
+  if (raised & FE_OVERFLOW) @{ /* @dots{} */ @}
+  if (raised & FE_INVALID) @{ /* @dots{} */ @}
+  /* @dots{} */
 @}
 @end smallexample
 
@@ -2396,8 +2396,8 @@ or to the largest representable value if the floating-point format
 doesn't support infinities.  You can prepend a @code{"+"} or @code{"-"}
 to specify the sign.  Case is ignored when scanning these strings.
 
-The strings @code{"nan"} and @code{"nan(@var{chars...})"} are converted
-to NaN.  Again, case is ignored.  If @var{chars...} are provided, they
+The strings @code{"nan"} and @code{"nan(@var{chars@dots{}})"} are converted
+to NaN.  Again, case is ignored.  If @var{chars@dots{}} are provided, they
 are used in some unspecified fashion to select a particular
 representation of NaN (there can be several).
 

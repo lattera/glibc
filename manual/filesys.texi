@@ -453,7 +453,7 @@ Code to call @code{readdir_r} could look like this:
   @} u;
 
   if (readdir_r (dir, &u.d, &res) == 0)
-    ...
+    @dots{}
 @end smallexample
 @end deftypefun
 
@@ -1501,7 +1501,7 @@ modify the attributes of a file.
                                  and what their values mean.
 * Reading Attributes::          How to read the attributes of a file.
 * Testing File Type::           Distinguishing ordinary files,
-                                 directories, links...
+                                 directories, links@dots{}
 * File Owner::                  How ownership for new files is determined,
 			         and how to change it.
 * Permission Bits::             How information about a file's access

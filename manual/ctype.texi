@@ -625,7 +625,7 @@ is_in_class (int c, const char *class)
     return isalpha (c);
   if (strcmp (class, "cntrl") == 0)
     return iscntrl (c);
-  ...
+  @dots{}
   return 0;
 @}
 @end smallexample

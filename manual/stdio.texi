@@ -497,7 +497,7 @@ sometimes not possible):
 @smallexample
 FILE *fp;
 @{
-   ...
+   @dots{}
    flockfile (fp);
    fputs ("This is test number ", fp);
    fprintf (fp, "%d\n", test);
@@ -2450,7 +2450,7 @@ For example:
 
 @smallexample
 #define myprintf(a, b, c, d, e, rest...) \
-            printf (mytemplate , ## rest...)
+            printf (mytemplate , ## rest)
 @end smallexample
 
 @noindent
@@ -5295,7 +5295,7 @@ the following in the environment before calling the @code{fmtmsg} function
 the first time:
 
 @smallexample
-MSGVERB=@var{keyword}[:@var{keyword}[:...]]
+MSGVERB=@var{keyword}[:@var{keyword}[:@dots{}]]
 @end smallexample
 
 Valid @var{keyword}s are @code{label}, @code{severity}, @code{text},
@@ -5314,7 +5314,7 @@ described above are available.  Any other numeric value would make
 If the user puts @code{SEV_LEVEL} with a format like
 
 @smallexample
-SEV_LEVEL=[@var{description}[:@var{description}[:...]]]
+SEV_LEVEL=[@var{description}[:@var{description}[:@dots{}]]]
 @end smallexample
 
 @noindent

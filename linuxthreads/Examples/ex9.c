@@ -32,7 +32,8 @@ static pthread_barrier_t barrier;
 int
 main (void)
 {
-  pthread_t th;
+  pthread_t th; 
+  pthread_t thread_list[NUM_THREADS]; 
   int i;
 
   if (pthread_barrier_init (&barrier, NULL, NUM_THREADS + 1) != 0)
@@ -40,12 +41,17 @@ main (void)
 
   for (i = 0; i < NUM_THREADS; i++)
     {
-      if (pthread_create (&th, NULL, thread, NULL) != 0)
+      if (pthread_create (&thread_list[i], NULL, thread, NULL) != 0)
 	error (EXIT_FAILURE, 0, "cannot create thread");
     }
 
   (void) thread (NULL);
-  /* notreached */
+
+  for (i = 0; i < NUM_THREADS; i++)
+    {
+      pthread_join(thread_list[i], NULL);
+    }
+
   return 0;
 }
 
@@ -87,7 +93,7 @@ thread (void *arg)
     printf ("%04d: last serial thread %lu terminating process\n", 
 	    ++linecount, (unsigned long) self);
     funlockfile (stdout);
-    exit (0);
+    return;
   }
 
   pthread_exit(NULL);

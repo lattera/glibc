@@ -546,7 +546,7 @@ any one time is equal to the number of CPUs, you can easily extrapolate
 the information.
 
 The functions described in this section are all defined by the POSIX.1
-and POSIX.1b standards (the @code{sched...} functions are POSIX.1b).
+and POSIX.1b standards (the @code{sched@dots{}} functions are POSIX.1b).
 However, POSIX does not define any semantics for the values that these
 functions get and set.  In this chapter, the semantics are based on the
 Linux kernel's implementation of the POSIX standard.  As you will see,
@@ -656,7 +656,7 @@ the high priority process group.  All the priority in the world won't
 stop an interrupt handler from running and delivering a signal to the
 process if you hit Control-C.
 
-Some systems use absolute priority as a means of allocating a fixed 
+Some systems use absolute priority as a means of allocating a fixed
 percentage of CPU time to a process.  To do this, a super high priority
 privileged process constantly monitors the process' CPU usage and raises
 its absolute priority when the process isn't getting its entitled share

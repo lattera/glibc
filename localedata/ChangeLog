@@ -1,5 +1,8 @@
 2002-06-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/mt_MT: Add locale-specific collation info.
+	Patch by Ramon Casha <ramon.casha@linux.org.mt> [PR libc/3701].
+
 	* locales/en_AU: Add am/pm support.
 	Patch partly by maffew@cat.org.au [PR libc/3911].
 

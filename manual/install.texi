@@ -45,7 +45,7 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 GNU libc can be compiled in the source directory, but we strongly advise
 building it in a separate build directory.  For example, if you have
  unpacked
-the glibc sources in @file{/src/gnu/glibc-2.2.0}, create a directory
+the glibc sources in @file{/src/gnu/glibc-2.3}, create a directory
 @file{/src/gnu/glibc-build} to put the object files in.  This allows
 removing the whole build directory in case an error occurs, which is the
 safest way to get a fresh start and should always be done.
@@ -54,7 +54,7 @@ From your object directory, run the shell script @file{configure} located
 at the top level of the source tree.  In the scenario above, you'd type
 
 @smallexample
-$ ../glibc-2.2.0/configure @var{args...}
+$ ../glibc-2.3/configure @var{args@dots{}}
 @end smallexample
 
 Please note that even if you're building in a separate build directory,
@@ -64,9 +64,9 @@ directory, especially some files in the manual subdirectory.
 @noindent
 @code{configure} takes many options, but you can get away with knowing
 only two: @samp{--prefix} and @samp{--enable-add-ons}.  The
-@code{--prefix} option tells @code{configure} where you want glibc 
+@code{--prefix} option tells @code{configure} where you want glibc
 installed. This defaults to @file{/usr/local}.  The
-@samp{--enable-add-ons} option tells @code{configure} to use all the 
+@samp{--enable-add-ons} option tells @code{configure} to use all the
 add-on bundles it finds in the source directory.  Since important
 functionality is provided in add-ons, you should always specify this
 option.

@@ -657,7 +657,7 @@ Example:
 #include <sys/syscall.h>
 #include <errno.h>
 
-...
+@dots{}
 
 int rc;
 
@@ -677,7 +677,7 @@ following preferable code:
 #include <sys/stat.h>
 #include <errno.h>
 
-...
+@dots{}
 
 int rc;
 

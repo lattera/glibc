@@ -751,7 +751,7 @@ End with a line saying just "end".
 >call mcheck(0)
 >continue
 >end
-(gdb) ...
+(gdb) @dots{}
 @end smallexample
 
 This will however only work if no initialization function of any object
@@ -1003,7 +1003,7 @@ my_free_hook (void *ptr, const void *caller)
 
 main ()
 @{
-  ...
+  @dots{}
 @}
 @end smallexample
 

@@ -1,3 +1,8 @@
+2002-06-19  Steven Munroe  <sjmunroe@vnet.ibm.com>
+
+	* Examples/ex9.c (main):  Use list of children and join them.
+	(thread): Do not call exit.
+
 2002-06-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* spinlock.c (wait_node_alloc): We cannot use compare-and-exchange.
