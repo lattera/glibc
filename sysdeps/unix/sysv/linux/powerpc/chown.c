@@ -21,7 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include <sys/syscall.h>
+#include <sysdep.h>
 #include <stdlib.h>
 
 /*
@@ -31,7 +31,7 @@
   This file emulates chown() under the old kernels.
 */
 
-extern int __syscall_chown (const char *__file,
+extern int __syscall_chown (const char *__file __unbounded,
 			    uid_t __owner, gid_t __group);
 
 int
@@ -46,14 +46,14 @@ __chown (const char *file, uid_t owner, gid_t group)
    static int libc_old_chown = 0 /* -1=old linux, 1=new linux, 0=unknown */;
 
    if (libc_old_chown == 1)
-     return __syscall_chown (file, owner, group);
+     return INLINE_SYSCALL (chown, 3, __ptrvalue (file), owner, group);
 
    old_errno = errno;
 
 #ifdef __NR_lchown
    if (libc_old_chown == 0)
      {
-       err = __syscall_chown (file, owner, group);
+       err = INLINE_SYSCALL (chown, 3, __ptrvalue (file), owner, group);
        if (err != -1 || errno != ENOSYS)
 	 {
 	   libc_old_chown = 1;

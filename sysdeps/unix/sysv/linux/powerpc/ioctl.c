@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <sysdep.h>
 
 /* The user-visible size of struct termios has changed.  Catch ioctl calls
    using the new-style struct termios, and translate them to old-style.  */
@@ -32,10 +33,10 @@ __ioctl (int fd, unsigned long int request, ...)
   void *arg;
   va_list ap;
   int result;
-	
+
   va_start (ap, request);
   arg = va_arg (ap, void *);
-	
+
   switch (request)
     {
     case TCGETS:
@@ -55,7 +56,7 @@ __ioctl (int fd, unsigned long int request, ...)
       break;
 
     default:
-      result = __syscall_ioctl (fd, request, arg);
+      result = INLINE_SYSCALL (ioctl, 3, fd, request, arg);
       break;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,6 +22,14 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
+#ifdef __NR_pwrite64            /* Newer kernels renamed but it's the same.  */
+# ifdef __NR_pwrite
+#  error "__NR_pwrite and __NR_pwrite64 both defined???"
+# endif
+# define __NR_pwrite __NR_pwrite64
+#endif
 
 #ifdef __NR_pwrite
 
@@ -42,7 +50,7 @@ __libc_pwrite (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = __syscall_pwrite (fd, buf, count, (off64_t) offset);
+  result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pwrite (fd, buf, count, offset);

@@ -32,7 +32,7 @@
 # ifdef __NR_pwrite
 #  error "__NR_pwrite and __NR_pwrite64 both defined???"
 # endif
-# define __NR_pwrite __NR_pread64
+# define __NR_pwrite __NR_pwrite64
 #endif
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0

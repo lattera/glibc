@@ -1,3 +1,58 @@
+2002-11-04  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Use INLINE_SYSCALL macro.
+	* sysdeps/unix/sysv/linux/powerpc/ftruncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ioctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/tcgetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/truncate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list (s_ioctl,
+	s_chown, s_ftruncate64, s_mmap2, s_pread64, s_pwrite64, s_truncate64,
+	sys_fstat, sys_lstat, sys_mknod, sys_readv, sys_stat, sys_writev):
+	Remove these, no longer used.
+
+2002-11-04  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list (s_ipc,
+	s_llseek, s_readahead, s_execve, s_fcntl, s_fcntl64, s_fstat64,
+	s_getcwd, s_getdents, s_getdents64, s_getpmsg, s_getpriority,
+	s_getrlimit, s_lstat64, s_poll, s_ptrace, s_putpmsg, s_reboot,
+	s_setrlimit, s_sigaction, s_sigpending, s_sigprocmask, s_sigsuspend,
+	s_stat64, s_sysctl, s_ugetrlimit, s_ustat, s_vfork): Remove now unused
+	syscall stubs.
+
+	* sysdeps/unix/sysv/linux/pwrite.c: Fix typo.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pread.c: Handle both __NR_pread64
+	and __NR_pread.
+	* sysdeps/unix/sysv/linux/powerpc/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Handle both __NR_pwrite64
+	and __NR_pwrite.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+
+2002-11-03  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): New member
+	`_dl_tls_static_used'.
+	* sysdeps/generic/libc-tls.c (_dl_tls_static_used): New variable.
+	(__libc_setup_tls): Initialize it.  Let the initial value of
+	_dl_tls_static_size indicate some surplus space in the computed value.
+	* elf/dl-open.c (_dl_tls_static_size): New variable.
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Initialize
+	_dl_tls_static_used.  Add some surplus space into _dl_tls_static_size.
+	* elf/dl-reloc.c [USE_TLS] (allocate_static_tls): New function.
+	(CHECK_STATIC_TLS): Use it.
+	* elf/dl-close.c (_dl_close): Adjust _dl_tls_static_used when the
+	closed objects occupied a trailing contiguous chunk of static TLS area.
+
+2002-10-18  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/ISO_5428: Use Greek characters introduced in Unicode 3.0.
+
 2002-11-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fexecve.c: New file.

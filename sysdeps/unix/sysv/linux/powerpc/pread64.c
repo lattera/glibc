@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,6 +22,14 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
+
+#ifdef __NR_pread64             /* Newer kernels renamed but it's the same.  */
+# ifdef __NR_pread
+#  error "__NR_pread and __NR_pread64 both defined???"
+# endif
+# define __NR_pread __NR_pread64
+#endif
 
 #ifdef __NR_pread
 
@@ -42,7 +50,7 @@ __libc_pread64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = __syscall_pread (fd, buf, count, offset);
+  result = INLINE_SYSCALL (pread, 4, fd, CHECK_N (buf, count), count, offset);
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pread64 (fd, buf, count, offset);
