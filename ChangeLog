@@ -1,3 +1,8 @@
+1999-05-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/set-host.c (_hurd_set_host_config): Use mode 0644, not 0600.
+	Do proper error return.
+
 1999-05-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* malloc/malloc.h: Add __THROW for __MALLOC_P to synch with usage
