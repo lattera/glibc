@@ -1,3 +1,8 @@
+1999-07-13  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-runtime.c (fixup, profile_fixup): Call alloca to prevent
+	inlining.  Fixes PR libc/1198.
+
 1999-07-14  Andreas Schwab  <schwab@suse.de>
 
 	* Makerules (common-generated): Don't prepend $(common-objpfx).

@@ -57,6 +57,12 @@ fixup (
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
   ElfW(Addr) value;
 
+  /* The use of `alloca' here looks ridiculous but it helps.  The goal is
+     to prevent the function from being inlined and thus optimized out.
+     There is no official way to do this so we use this trick.  gcc never
+     inlines functions which use `alloca'.  */
+  alloca (sizeof (int));
+
   /* Sanity check that we're really looking at a PLT relocation.  */
   assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
 
@@ -109,6 +115,12 @@ profile_fixup (
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
   ElfW(Addr) *resultp;
   ElfW(Addr) value;
+
+  /* The use of `alloca' here looks ridiculous but it helps.  The goal is
+     to prevent the function from being inlined, and thus optimized out.
+     There is no official way to do this so we use this trick.  gcc never
+     inlines functions which use `alloca'.  */
+  alloca (sizeof (int));
 
   /* This is the address in the array where we store the result of previous
      relocations.  */
