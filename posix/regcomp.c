@@ -90,6 +90,8 @@ static reg_errcode_t duplicate_node_closure (re_dfa_t *dfa, int top_org_node,
 					     unsigned int constraint);
 static reg_errcode_t duplicate_node (int *new_idx, re_dfa_t *dfa, int org_idx,
 				     unsigned int constraint);
+static int search_duplicated_node (re_dfa_t *dfa, int org_node,
+				   unsigned int constraint);
 static reg_errcode_t calc_eclosure (re_dfa_t *dfa);
 static reg_errcode_t calc_eclosure_iter (re_node_set *new_set, re_dfa_t *dfa,
 					 int node, int root);
@@ -865,6 +867,8 @@ free_workarea_compile (preg)
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   free_bin_tree (dfa->str_tree);
   dfa->str_tree = NULL;
+  re_free (dfa->org_indices);
+  dfa->org_indices = NULL;
 }
 
 /* Create initial states for all contexts.  */
@@ -959,10 +963,11 @@ analyze (dfa)
 
   /* Allocate arrays.  */
   dfa->nexts = re_malloc (int, dfa->nodes_alloc);
+  dfa->org_indices = re_malloc (int, dfa->nodes_alloc);
   dfa->edests = re_malloc (re_node_set, dfa->nodes_alloc);
   dfa->eclosures = re_malloc (re_node_set, dfa->nodes_alloc);
   dfa->inveclosures = re_malloc (re_node_set, dfa->nodes_alloc);
-  if (BE (dfa->nexts == NULL || dfa->edests == NULL
+  if (BE (dfa->nexts == NULL || dfa->org_indices == NULL || dfa->edests == NULL
 	  || dfa->eclosures == NULL || dfa->inveclosures == NULL, 0))
     return REG_ESPACE;
   /* Initialize them.  */
@@ -1261,20 +1266,33 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
       else /* dfa->edests[org_node].nelem == 2 */
 	{
 	  /* In case of the node can epsilon-transit, and it has two
-	     destinations.  */
+	     destinations. E.g. '|', '*', '+', '?'.   */
 	  org_dest = dfa->edests[org_node].elems[0];
 	  re_node_set_empty (dfa->edests + clone_node);
-	  err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
-	  if (BE (err != REG_NOERROR, 0))
-	    return err;
-	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
-	  if (BE (ret < 0, 0))
-	    return REG_ESPACE;
-
-	  err = duplicate_node_closure (dfa, org_dest, clone_dest, root_node,
-					constraint);
-	  if (BE (err != REG_NOERROR, 0))
-	    return err;
+	  /* Search for a duplicated node which satisfies the constraint.  */
+	  clone_dest = search_duplicated_node (dfa, org_dest, constraint);
+	  if (clone_dest == -1)
+	    {
+	      /* There are no such a duplicated node, create a new one.  */
+	      err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
+	      if (BE (err != REG_NOERROR, 0))
+		return err;
+	      ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+	      if (BE (ret < 0, 0))
+		return REG_ESPACE;
+	      err = duplicate_node_closure (dfa, org_dest, clone_dest,
+					    root_node, constraint);
+	      if (BE (err != REG_NOERROR, 0))
+		return err;
+	    }
+	  else
+	    {
+	      /* There are a duplicated node which satisfy the constraint,
+		 use it to avoid infinite loop.  */
+	      ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+	      if (BE (ret < 0, 0))
+		return REG_ESPACE;
+	    }
 
 	  org_dest = dfa->edests[org_node].elems[1];
 	  err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
@@ -1288,6 +1306,25 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
       clone_node = clone_dest;
     }
   return REG_NOERROR;
+}
+
+/* Search for a node which is duplicated from the node ORG_NODE, and
+   satisfies the constraint CONSTRAINT.  */
+
+static int
+search_duplicated_node (dfa, org_node, constraint)
+     re_dfa_t *dfa;
+     int org_node;
+     unsigned int constraint;
+{
+  int idx;
+  for (idx = dfa->nodes_len - 1; dfa->nodes[idx].duplicated && idx > 0; --idx)
+    {
+      if (org_node == dfa->org_indices[idx]
+	  && constraint == dfa->nodes[idx].constraint)
+	return idx; /* Found.  */
+    }
+  return -1; /* Not found.  */
 }
 
 /* Duplicate the node whose index is ORG_IDX and set the constraint CONSTRAINT.
@@ -1315,6 +1352,8 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
   re_node_set_init_empty (dfa->eclosures + dup_idx);
   re_node_set_init_empty (dfa->inveclosures + dup_idx);
 
+  /* Store the index of the original node.  */
+  dfa->org_indices[dup_idx] = org_idx;
   *new_idx = dup_idx;
   return REG_NOERROR;
 }

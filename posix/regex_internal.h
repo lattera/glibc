@@ -508,6 +508,7 @@ struct re_dfa_t
   int nodes_len;
   bin_tree_t *str_tree;
   int *nexts;
+  int *org_indices;
   re_node_set *edests;
   re_node_set *eclosures;
   re_node_set *inveclosures;

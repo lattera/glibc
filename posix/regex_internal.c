@@ -986,19 +986,22 @@ re_dfa_add_node (dfa, token, mode)
 	dfa->nodes = new_array;
       if (mode)
 	{
-	  int *new_nexts;
+	  int *new_nexts, *new_indices;
 	  re_node_set *new_edests, *new_eclosures, *new_inveclosures;
 
 	  new_nexts = re_realloc (dfa->nexts, int, dfa->nodes_alloc);
+	  new_indices = re_realloc (dfa->org_indices, int, dfa->nodes_alloc);
 	  new_edests = re_realloc (dfa->edests, re_node_set, dfa->nodes_alloc);
 	  new_eclosures = re_realloc (dfa->eclosures, re_node_set,
 				      dfa->nodes_alloc);
 	  new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
 					 dfa->nodes_alloc);
-	  if (BE (new_nexts == NULL || new_edests == NULL
-		  || new_eclosures == NULL || new_inveclosures == NULL, 0))
+	  if (BE (new_nexts == NULL || new_indices == NULL
+		  || new_edests == NULL || new_eclosures == NULL
+		  || new_inveclosures == NULL, 0))
 	    return -1;
 	  dfa->nexts = new_nexts;
+	  dfa->org_indices = new_indices;
 	  dfa->edests = new_edests;
 	  dfa->eclosures = new_eclosures;
 	  dfa->inveclosures = new_inveclosures;

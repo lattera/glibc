@@ -1,3 +1,17 @@
+2002-12-17  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (free_workarea_compile): Free the new member
+	ORG_INDICES.
+	(analyze): Initialize ORG_INDICES.
+	(duplicate_node_closure): Search for a existing node, which is
+	duplicated from the node ORG_DEST and satisfies the constraint
+	CONSTRAINT.  And use it to avoid inifimite loop.
+	(search_duplicated_node): New function.
+	(duplicate_node): Store the index of the original node.
+	* posix/regex_internal.c (re_dfa_add_node): Realloc ORG_INDICES
+	if needed.
+	* posix/regex_internal.h (re_dfa_t): Add new members.
+
 2002-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/tst-fdopen.c: Undefine assert before redefining it.
