@@ -1,3 +1,11 @@
+1998-08-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Obey --with-headers,
+	document it.
+
+	* sysdeps/unix/sysv/linux/alpha/configure.in: New file, contains
+	test for recent Linux 2.1.100+ headers.
+
 1998-08-21  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/nss_compat/compat-initgroups.c: Optimize NIS query.

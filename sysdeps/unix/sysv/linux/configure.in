@@ -10,6 +10,10 @@ test $stdio = default && stdio=libio
 inhibit_glue=yes
 
 define([LIBC_LINUX_VERSION],[2.0.10])dnl
+if test -n "$sysheaders"; then
+  OLD_CFLAGS=$CFLAGS
+  CFLAGS="$CFLAGS $SYSINCLUDES"
+fi
 define([libc_cv_linuxVER], [libc_cv_linux]patsubst(LIBC_LINUX_VERSION,[\.]))dnl
 AC_CACHE_CHECK(installed Linux kernel header files, libc_cv_linuxVER, [dnl
 AC_TRY_COMPILE([#include <linux/version.h>],
@@ -27,9 +31,12 @@ The kernel header files are found usually in /usr/include/asm and
 /usr/include/linux; make sure these directories use files from
 Linux LIBC_LINUX_VERSION or later.  This check uses <linux/version.h>, so
 make sure that file was built correctly when installing the kernel header
-files.])
+files.  To use kernel headers not from /usr/include/linux, use the
+configure option --with-headers.])
 fi
-
+if test -n "$sysheaders"; then
+  CFLAGS=$OLD_CFLAGS
+fi
 # The Linux filesystem standard prescribes where to place "essential"
 # files.  I.e., when the installation prefix is "/usr" we have to place
 # shared library objects and the configuration files on the root partition
