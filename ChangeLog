@@ -1,5 +1,7 @@
 2000-05-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Add test for .protected.
+	* config.make.in: Add have-protected variable.
 	* elf/Makefile (tests): Add $(tests-vis-$(have-protected)).
 	(tests-vis-yes): Add vismain.
 	(modules-names): Add $(modules-vis-$(have-protected)).

@@ -35,6 +35,7 @@ defines = @DEFINES@
 sysincludes = @SYSINCLUDES@
 
 elf = @elf@
+have-protected = @libc_cv_asm_protected_directive@
 have-initfini = @libc_cv_have_initfini@
 need-nopic-initfini = @nopic_initfini@
 with-cvs = @with_cvs@
