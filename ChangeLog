@@ -1,5 +1,9 @@
 1999-08-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add execve
+	syscall.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
 	* misc/libgen.h: Don't take basename macro as taking arguments.
 
 	* sysdeps/arm/bits/huge_val.h: Use hexadecimal floating-point constants
