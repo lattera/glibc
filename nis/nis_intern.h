@@ -42,22 +42,42 @@ struct dir_binding
 };
 typedef struct dir_binding dir_binding;
 
+struct nis_cb
+  {
+    nis_server *serv;
+    SVCXPRT *xprt;
+    int sock;
+    int nomore;
+    nis_error result;
+    int (*callback) (const_nis_name, const nis_object *, const void *);
+    const void *userdata;
+  };
+typedef struct nis_cb nis_cb;
+
 extern unsigned long inetstr2int __P ((const char *str));
 extern long __nis_findfastest __P ((dir_binding *bind));
 extern nis_error __do_niscall2 __P ((const nis_server *serv, u_int serv_len,
 				     u_long prog, xdrproc_t xargs, caddr_t req,
 				     xdrproc_t xres, caddr_t resp,
-				     u_long flags));
+				     u_long flags, nis_cb *cb));
 extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
 				    xdrproc_t xargs, caddr_t req,
 				    xdrproc_t xres, caddr_t resp,
-				    u_long flags));
+				    u_long flags, nis_cb *cb));
 extern AUTH *authdes_pk_create __P ((const char *, const netobj *, u_int,
 				     struct sockaddr *, des_block *));
 
 /* NIS+ cache */
 extern directory_obj *__cache_search __P ((const_nis_name name));
 extern nis_error __cache_add __P ((fd_result *));
+
+/* NIS+ callback */
+extern nis_error __nis_do_callback __P ((struct dir_binding *bptr,
+					 netobj *cookie, struct nis_cb *cb));
+extern struct nis_cb *__nis_create_callback
+      __P ((int (*callback)(const_nis_name, const nis_object *, const void *),
+	    const void *userdata, u_long flags));
+extern nis_error __nis_destroy_callback __P ((struct nis_cb *cb));
 
 __END_DECLS
 

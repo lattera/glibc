@@ -59,7 +59,8 @@ nis_add (const_nis_name name, const nis_object *obj)
   if ((status = __do_niscall (req.ns_object.ns_object_val[0].zo_domain,
 			      NIS_ADD, (xdrproc_t) xdr_ns_request,
 			      (caddr_t) &req, (xdrproc_t) xdr_nis_result,
-			      (caddr_t) res, MASTER_ONLY)) != RPC_SUCCESS)
+			      (caddr_t) res, MASTER_ONLY,
+			      NULL)) != RPC_SUCCESS)
     res->status = status;
 
   req.ns_object.ns_object_val[0].zo_name = p1;

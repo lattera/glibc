@@ -89,6 +89,10 @@ GLIBC_2.0 {
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;
 
+    # Exception handling support functions from libgcc
+    __register_frame; __register_frame_table; __deregister_frame;
+    __frame_state_for;
+
     # variables in normal name space
     argp_err_exit_status; argp_program_bug_address; argp_program_version;
     argp_program_version_hook;

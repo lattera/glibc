@@ -21,11 +21,15 @@ endif
 # so that's at least 8192 entries.  Since libc only uses about 1200 entries,
 # we want to use -fpic, because this generates fewer relocs.
 ifeq (yes,$(build-shared))
-CFLAGS-.os = -fpic -fno-common
+pic-ccflag = -fpic
 endif
 
 # The initfini generation code doesn't work in the presence of -fPIC, so
 # we use -fpic instead which is much better.
 ifeq ($(subdir),csu)
 CFLAGS-initfini.s = -g0 -fpic
+endif
+
+ifeq ($(subdir),string)
+CFLAGS-memcmp.c += -Wno-uninitialized
 endif

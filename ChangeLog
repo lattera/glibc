@@ -1,3 +1,173 @@
+1997-09-25 00:23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-profile.c: Correct implementation.
+
+	* io/ftwtest-sh: Don't depend on TMPDIR == /tmp.
+
+	* locale/setlocale.c: Rewrite a bit for more clarity.
+
+	* math/Makefile (libm-calls): Add w_exp2.
+	* math/math_private.h: Add prototypes for __ieee754_exp2{,f,l}.
+	* sysdeps/libm-i387/s_exp2.S: Change name to __ieee754_exp2.
+	* sysdeps/libm-i387/s_exp2f.S: Likewise.
+	* sysdeps/libm-i387/s_exp2l.S: Likewise.
+	* sysdeps/libm-ieee754/k_standard.c: Add error cases for exp2.
+
+	* string/bits/string2.h (__strcpy_small): Optimize.
+	(__stpcpy_small): Likewise.
+	(strncpy): Use variable for dest argument since it's used more than
+	once.
+	(strncat): Likewise.
+	(strcmp): Add optimization for this function.
+	* sysdeps/i386/i486/string.h (strlen): Correctly use __builtin_strlen.
+	(__strcpy_small): Optimize.
+	(__stpcpy_small): Likewise.
+	(__stpcpy_c): Correctly use __mempcpy_* macros.
+	(__mempcpy_by2, __mempcpy_by4, __mempcpy_byn): Return pointer to
+	byte following last copied.
+	(strncat): Use variable for dest argument since it's used more than
+	once.
+	(strcmp): Add optimization for this function.
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE): Use
+	.text and .previous to select correct section.
+
+1997-09-23 19:56  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* configure.in: Add `--disable-versioning' option to suppress the
+	use of symbol versions even if binutils claims to support it.
+
+1997-09-24 20:10  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* csu/Makefile (before-compile): Don't try to build abi-tags.h if
+	not using ELF.
+
+1997-09-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/sofini.c [HAVE_DWARF2_UNWIND_INFO]: Supply termination for
+	the frame unwind info section.
+
+	* elf/soinit.c [HAVE_DWARF2_UNWIND_INFO]: Register and unregister
+	the frame unwind info.
+
+	* config.h.in (HAVE_DWARF2_UNWIND_INFO): Add #undef.
+
+	* configure.in: Check whether gcc supports DWARF2 unwind info.
+
+	* libc.map: Export frame handling tables.
+
+1997-09-10 06:56  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/kernel_termios.h:
+	Use the size of the kernel's termios structure for ioctls.
+
+	* sysdeps/powerpc/dl-machine.h: Prepare for library profiling.
+
+	* sysdeps/powerpc/bits/mathinline.h: Add slightly slower versions
+	of the C9X FP comparison macros. Delete 'fabs' and 'sqrt' inline
+	routines, because gcc has them as internals.
+
+	* sysdeps/powerpc/Makefile (pic-ccflags): Define this instead of
+	CFLAGS-.os.
+
+	* sysdeps/powerpc/bzero.S: New file.
+	* sysdeps/powerpc/strcat.c: New file.
+	* sysdeps/powerpc/strcpy.S: New file.
+	* sysdeps/powerpc/stpcpy.S: New file.
+
+	* math/Makefile: Add atest_exp2, test-reduce.
+	* math/atest_exp2.c: New file.
+	* math/test-reduce.c: New file.
+	* sysdeps/libm-ieee754/Dist: New file.
+	* sysdeps/libm-ieee754/s_exp2.c: New file.
+	* sysdeps/libm-ieee754/s_exp2f.c: New file.
+	* sysdeps/libm-ieee754/t_exp2.h: New file.
+	* sysdeps/libm-ieee754/t_exp2f.h: New file.
+	* math/libm-test.c (exp2_test): Add some more tests.
+
+	* Rules: Use empty.os instead of empty.o, since it gets linked into
+	libc.so...
+	* configure.in: Add --disable-static to disable building .a files.
+	* config.make.in: Substitute the new variable.
+	* Makeconfig: Don't build .o files if not building .a files.
+
+	* elf/dl-runtime.c (fixup): Factor out call to elf_machine_relplt.
+	(profile_fixup): Likewise.
+
+1997-09-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/globtest.c (main): Change to directory passed as first
+	argument.
+
+	* posix/globtest.sh: Don't cd before running the program, instead
+	pass testdir as argument, so that $common_objpfx remains valid.
+
+1997-09-23 18:01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_call.c (__do_niscall2): Fix multiple Server support.
+
+	* nis/nis_findserver.c: Save latest working sockaddr_in.
+
+1997-09-17 22:07  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Automatically determine whether as and ld are the
+	GNU versions.
+	(options):  --with-gnu-{as,ld,binutils} replaced by
+	single option --with-binutils=PATH specifying a -B option to gcc.
+	* aclocal.m4: Two new macros defined, LIBC_PROG_FOO_GNU and
+	LIBC_PROG_BINUTILS.
+
+	* configure.in: Allow the user to force configuration for
+	unsupported platforms with an undocumented option.
+
+1997-09-22 16:55  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/get_myaddr.c (get_myaddress): Avoid loopback interfaces,
+	return loopback address only if there is no other interface.
+
+	* nis/Makefile: Add nis_callback libnsl-routines.
+
+	* nis/nis_add.c: Use new __do_niscall* interface.
+	* nis/nis_cache.c: Likewise.
+	* nis/nis_checkpoint.c: Likewise.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_mkdir.c: Likewise.
+	* nis/nis_modify.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_remove.c: Likewise.
+	* nis/nis_rmdir.c: Likewise.
+	* nis/nis_server.c: Likewise.
+	* nis/nis_util.c: Likewise.
+
+	* nis/rpcsvc/nis.h: Make C++ safe.
+
+	* nis/nss_nisplus/nisplus-publickey.c (getsecretkey): Fix use
+	of variables.
+
+	* nis/nis_findserv.c: Make thread safe.
+
+	* nis/nis_call.c: Add support for callback, Fix use of variables.
+	* nis/nis_table.c: Add support for callback, FOLLOW_PATH and
+	ALL_RESULTS.
+	* nis/nis_callback.c: New, callback functions.
+	* nis/nis_intern.h: Add callback declarations.
+
+1997-09-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h: Fix logic in preprocessor directive.
+	(__strsep_1c, __strsep_g): Don't declare __retval as pointing to
+	const, to save a cast and a possible warning.
+
+1997-09-22 04:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/atomicity.h (exchange_and_add): Really address
+	memory in xadd not %1.
+
+1997-09-21 13:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/maint.texi (Supported Configurations): Add SPARC64 to
+	list of supported platforms.
+
 1997-09-21 03:19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/libio.h: More libstdc++ cleanups.  Define _IO_USE_DTOA if

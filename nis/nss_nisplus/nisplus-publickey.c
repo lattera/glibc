@@ -162,8 +162,8 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 
   len = ENTRY_LEN (res->objects.objects_val, 4);
   memcpy (buf, ENTRY_VAL (res->objects.objects_val,4), len);
-  skey[len] = 0;
-  cptr = strchr (skey, ':');
+  buf[len] = '\0';
+  cptr = strchr (buf, ':');
   if (cptr)
     cptr[0] = '\0';
   nis_freeresult (res);

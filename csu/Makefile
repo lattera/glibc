@@ -32,7 +32,9 @@ csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) \
 	     $(csu-dummies)
+ifeq ($(elf),yes)
 before-compile = $(objpfx)abi-tag.h
+endif
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \

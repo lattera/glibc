@@ -199,6 +199,53 @@ _dl_runtime_resolve:
 	bctr
 0:
 	.size	 _dl_runtime_resolve,0b-_dl_runtime_resolve
+
+	.align 2
+	.globl _dl_prof_resolve
+	.type _dl_prof_resolve,@function
+_dl_prof_resolve:
+ # We need to save the registers used to pass parameters, and register 0,
+ # which is used by _mcount; the registers are saved in a stack frame.
+	stwu 1,-48(1)
+        stw 0,12(1)
+	stw 3,16(1)
+	stw 4,20(1)
+ # The code that calls this has put parameters for `fixup' in r12 and r11.
+	mr 3,12
+	stw 5,24(1)
+	mr 4,11
+	stw 6,28(1)
+	mflr 5
+ # We also need to save some of the condition register fields.
+	stw 7,32(1)
+	stw 5,52(1)
+	stw 8,36(1)
+	mfcr 0
+	stw 9,40(1)
+	stw 10,44(1)
+	stw 0,8(1)
+	bl profile_fixup@local
+ # 'fixup' returns the address we want to branch to.
+	mtctr 3
+ # Put the registers back...
+	lwz 0,52(1)
+	lwz 10,44(1)
+	lwz 9,40(1)
+	mtlr 0
+	lwz 8,36(1)
+	lwz 0,8(1)
+	lwz 7,32(1)
+	lwz 6,28(1)
+	mtcrf 0xFF,0
+	lwz 5,24(1)
+	lwz 4,20(1)
+	lwz 3,16(1)
+        lwz 0,12(1)
+ # ...unwind the stack frame, and jump to the PLT entry we updated.
+	addi 1,1,48
+	bctr
+0:
+	.size	 _dl_prof_resolve,0b-_dl_prof_resolve
  # Undo '.section text'.
 	.previous
 ");
@@ -409,8 +456,14 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
       Elf32_Word num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
 				    / sizeof (Elf32_Rela));
       Elf32_Word rel_offset_words = PLT_DATA_START_WORDS (num_plt_entries);
-      extern void _dl_runtime_resolve (void);
       Elf32_Word size_modified;
+      extern void _dl_runtime_resolve (void);
+      extern void _dl_prof_resolve (void);
+      Elf32_Word dlrr;
+
+      dlrr = (Elf32_Word)(char *)(profile
+				  ? _dl_prof_resolve
+				  : _dl_runtime_resolve);
 
       if (lazy)
 	for (i = 0; i < num_plt_entries; i++)
@@ -433,8 +486,7 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
       /* Multiply index of entry by 3 (in r11).  */
       plt[0] = OPCODE_SLWI (12, 11, 1);
       plt[1] = OPCODE_ADD (11, 12, 11);
-      if ((Elf32_Word) (char *) _dl_runtime_resolve <= 0x01fffffc ||
-	  (Elf32_Word) (char *) _dl_runtime_resolve >= 0xfe000000)
+      if (dlrr <= 0x01fffffc || dlrr >= 0xfe000000)
 	{
 	  /* Load address of link map in r12.  */
 	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) map);
@@ -442,15 +494,13 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 					   + 0x8000) >> 16));
 
 	  /* Call _dl_runtime_resolve.  */
-	  plt[4] = OPCODE_BA ((Elf32_Word) (char *) _dl_runtime_resolve);
+	  plt[4] = OPCODE_BA (dlrr);
 	}
       else
 	{
 	  /* Get address of _dl_runtime_resolve in CTR.  */
-	  plt[2] = OPCODE_LI (12, (Elf32_Word) (char *) _dl_runtime_resolve);
-	  plt[3] = OPCODE_ADDIS (12, 12, ((((Elf32_Word) (char *)
-					    _dl_runtime_resolve)
-					   + 0x8000) >> 16));
+	  plt[2] = OPCODE_LI (12, dlrr);
+	  plt[3] = OPCODE_ADDIS (12, 12, (dlrr + 0x8000) >> 16);
 	  plt[4] = OPCODE_MTCTR (12);
 
 	  /* Load address of link map in r12.  */
@@ -501,7 +551,6 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 static inline void
 elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
 {
-  assert (ELF32_R_TYPE (reloc->r_info) == R_PPC_JMP_SLOT);
   /* elf_machine_runtime_setup handles this. */
 }
 
@@ -513,7 +562,7 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
    LOADADDR is the load address of the object; INFO is an array indexed
    by DT_* of the .dynamic section info.  */
 
-static inline void
+static void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
@@ -709,4 +758,4 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 #define ELF_MACHINE_NO_REL 1
 
-#endif
+#endif /* RESOLVE */

@@ -98,8 +98,7 @@ __bind_next (dir_binding *bind)
   if (bind->server_used >= bind->server_len)
     bind->server_used = 0;
 
-  for (j = bind->current_ep + 1;
-       j < bind->server_val[bind->server_used].ep.ep_len; ++j)
+  for (j = 0; j < bind->server_val[bind->server_used].ep.ep_len; ++j)
     if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].family,
 		"inet") == 0)
       if (strcmp (bind->server_val[bind->server_used].ep.ep_val[j].proto,
@@ -280,7 +279,7 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags)
 nis_error
 __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
-	       u_long flags)
+	       u_long flags, nis_cb *cb)
 {
   enum clnt_stat result;
   nis_error retcode;
@@ -315,63 +314,83 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 	{
 	  switch (prog)
 	    {
+	    case NIS_IBLIST:
+	      if ((((nis_result *)resp)->status == NIS_CBRESULTS) &&
+		  (cb != NULL))
+		{
+		  __nis_do_callback(dbp, &((nis_result *)resp)->cookie, cb);
+		  break;
+		}
+	      /* Yes, this is correct. If we doesn't have to start
+		 a callback, look if we have to search another server */
 	    case NIS_LOOKUP:
 	    case NIS_ADD:
 	    case NIS_MODIFY:
 	    case NIS_REMOVE:
-	    case NIS_IBLIST:
 	    case NIS_IBADD:
 	    case NIS_IBMODIFY:
 	    case NIS_IBREMOVE:
 	    case NIS_IBFIRST:
 	    case NIS_IBNEXT:
-	      if ((((nis_result *)xres)->status == NIS_NOTFOUND) ||
-		  (((nis_result *)xres)->status == NIS_NOSUCHNAME) ||
-		  (((nis_result *)xres)->status == NIS_NOT_ME))
+	      if ((((nis_result *)resp)->status == NIS_NOTFOUND) ||
+		  (((nis_result *)resp)->status == NIS_NOSUCHNAME) ||
+		  (((nis_result *)resp)->status == NIS_NOT_ME))
 		{
 		  if (__bind_next (dbp) == NIS_SUCCESS)
-		    while (__bind_connect (dbp) != NIS_SUCCESS)
-		      {
-			if (__bind_next (dbp) != NIS_SUCCESS)
-			  {
-			    __bind_destroy (dbp);
-			    return NIS_SUCCESS;
-			  }
-		      }
+		    {
+		      while (__bind_connect (dbp) != NIS_SUCCESS)
+			{
+			  if (__bind_next (dbp) != NIS_SUCCESS)
+			    {
+			      __bind_destroy (dbp);
+			      return NIS_SUCCESS;
+			    }
+			}
+		    }
+		  else
+		    break; /* No more servers to search in */
 		  goto again;
 		}
 	    case NIS_FINDDIRECTORY:
-	      if ((((fd_result *)xres)->status == NIS_NOTFOUND) ||
-		  (((fd_result *)xres)->status == NIS_NOSUCHNAME) ||
-		  (((fd_result *)xres)->status == NIS_NOT_ME))
+	      if ((((fd_result *)resp)->status == NIS_NOTFOUND) ||
+		  (((fd_result *)resp)->status == NIS_NOSUCHNAME) ||
+		  (((fd_result *)resp)->status == NIS_NOT_ME))
 		{
 		  if (__bind_next (dbp) == NIS_SUCCESS)
-		    while (__bind_connect (dbp) != NIS_SUCCESS)
-		      {
-			if (__bind_next (dbp) != NIS_SUCCESS)
-			  {
-			    __bind_destroy (dbp);
-			    return NIS_SUCCESS;
-			  }
-		      }
+		    {
+		      while (__bind_connect (dbp) != NIS_SUCCESS)
+			{
+			  if (__bind_next (dbp) != NIS_SUCCESS)
+			    {
+			      __bind_destroy (dbp);
+			      return NIS_SUCCESS;
+			    }
+			}
+		    }
+		  else
+		    break; /* No more servers to search in */
 		  goto again;
 		}
 	      break;
 	    case NIS_DUMPLOG: /* log_result */
 	    case NIS_DUMP:
-	      if ((((log_result *)xres)->lr_status == NIS_NOTFOUND) ||
-		  (((log_result *)xres)->lr_status == NIS_NOSUCHNAME) ||
-		  (((log_result *)xres)->lr_status == NIS_NOT_ME))
+	      if ((((log_result *)resp)->lr_status == NIS_NOTFOUND) ||
+		  (((log_result *)resp)->lr_status == NIS_NOSUCHNAME) ||
+		  (((log_result *)resp)->lr_status == NIS_NOT_ME))
 		{
 		  if (__bind_next (dbp) == NIS_SUCCESS)
-		    while (__bind_connect (dbp) != NIS_SUCCESS)
-		      {
-			if (__bind_next (dbp) != NIS_SUCCESS)
-			  {
-			    __bind_destroy (dbp);
-			    return NIS_SUCCESS;
-			  }
-		      }
+		    {
+		      while (__bind_connect (dbp) != NIS_SUCCESS)
+			{
+			  if (__bind_next (dbp) != NIS_SUCCESS)
+			    {
+			      __bind_destroy (dbp);
+			      return NIS_SUCCESS;
+			    }
+			}
+		    }
+		  else
+		    break; /* No more servers to search in */
 		  goto again;
 		}
 	      break;
@@ -523,7 +542,8 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 
 nis_error
 __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
-	      caddr_t req, xdrproc_t xres, caddr_t resp, u_long flags)
+	      caddr_t req, xdrproc_t xres, caddr_t resp, u_long flags,
+	      nis_cb *cb)
 {
   nis_error retcode;
   directory_obj *dir = NULL;
@@ -561,7 +581,7 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 
 
   retcode = __do_niscall2 (server, server_len, prog, xargs, req, xres, resp,
-			   flags);
+			   flags, cb);
 
   nis_free_directory (dir);
 

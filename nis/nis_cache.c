@@ -143,7 +143,7 @@ __cache_refresh (nis_name name)
   if (cache_clnt == NULL)
     result = NIS_FAIL;
   else if (clnt_call (cache_clnt, NIS_CACHE_REFRESH_ENTRY,
-		      (xdrproc_t) xdr_wrapstring, (caddr_t) name,
+		      (xdrproc_t) xdr_wrapstring, (caddr_t) &name,
 		      (xdrproc_t) xdr_void, &clnt_res, TIMEOUT)
 	   != RPC_SUCCESS)
     {

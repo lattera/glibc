@@ -81,7 +81,7 @@ $(common-objpfx)dummy.c:
 	echo 'void __dummy__ (void) { }' > $@
 $(common-objpfx)empty.c:
 	cp -f /dev/null $@
-common-generated := $(common-generated) dummy.o dummy.c empty.c empty.o
+common-generated := $(common-generated) dummy.o dummy.c empty.c empty.os
 
 # This makes all the auxiliary and test programs.
 
@@ -166,7 +166,10 @@ endif
 ifdef static-only-routines
 # These routines are to be omitted from the shared library object,
 # so we replace the PIC objects for them with the empty object file.
-$(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.o
+$(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
 	rm -f $@
 	ln $< $@
+
+$(common-objpfx)empty.os: $(common-objpfx)empty.c $(before-compile)
+	$(compile-command.c)
 endif

@@ -30,6 +30,7 @@
 #include <sys/gmon.h>
 #include <sys/gmon_out.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/stat.h>
 #include <atomicity.h>
 
@@ -97,7 +98,7 @@
 					?? ?? ?? ??	<- ToPC#CGN
 	0038+(2*CN+2)*A+(CN-1)*4+K	?? ?? ?? ??	<- Count#CGN
 
-   We put (for now? no basic block information in the file since this would
+   We put (for now?) no basic block information in the file since this would
    introduce rase conditions among all the processes who want to write them.
 
    `K' is the number of count entries which is computed as
@@ -140,10 +141,10 @@ static uint32_t narcs;
    currently in the mmaped file.  At no point of time this has to be the
    same as NARCS.  If it is equal all entries from the file are in our
    lists.  */
-static uint32_t *narcsp;
+static volatile uint32_t *narcsp;
 
 /* Description of the currently profiled object.  */
-static long int state;
+static long int state = GMON_PROF_OFF;
 
 static volatile uint16_t *kcount;
 static size_t kcountsize;
@@ -260,13 +261,24 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
   fd = __open (filename, O_RDWR | O_CREAT, 0666);
   if (fd == -1)
-    /* We cannot write the profiling data so don't do anthing.  */
-    return;
+    {
+      /* We cannot write the profiling data so don't do anthing.  */
+      char buf[400];
+      _dl_sysdep_message (filename, ": cannot open file: ",
+			  _strerror_internal (errno, buf, sizeof buf),
+			  "\n", NULL);
+      return;
+    }
 
   if (fstat (fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
       /* Not stat'able or not a regular file => don't use it.  */
-      close (fd);
+      char buf[400];
+      int errnum = errno;
+      __close (fd);
+      _dl_sysdep_message (filename, ": cannot stat file: ",
+			  _strerror_internal (errnum, buf, sizeof buf),
+			  "\n", NULL);
       return;
     }
 
@@ -286,9 +298,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	cannot_create:
 	  errnum = errno;
 	  __close (fd);
-	  _dl_sysdep_error (filename, ": cannot create file: ",
-			    _strerror_internal (errnum, buf, sizeof buf),
-			    "\n", NULL);
+	  _dl_sysdep_message (filename, ": cannot create file: ",
+			      _strerror_internal (errnum, buf, sizeof buf),
+			      "\n", NULL);
 	  return;
 	}
 
@@ -304,9 +316,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       if (addr != NULL)
 	__munmap ((void *) addr, expected_size);
 
-      _dl_sysdep_error (filename,
-			": file is no correct profile data file for `",
-			_dl_profile, "'\n", NULL);
+      _dl_sysdep_message (filename,
+			  ": file is no correct profile data file for `",
+			  _dl_profile, "'\n", NULL);
       return;
     }
 
@@ -317,9 +329,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       char buf[400];
       int errnum = errno;
       __close (fd);
-      _dl_sysdep_error (filename, ": cannot map file: ",
-			_strerror_internal (errnum, buf, sizeof buf),
-			"\n", NULL);
+      _dl_sysdep_message (filename, ": cannot map file: ",
+			  _strerror_internal (errnum, buf, sizeof buf),
+			  "\n", NULL);
       return;
     }
 
@@ -332,10 +344,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 			 + sizeof (struct gmon_hist_hdr));
 
   /* Compute pointer to array of the arc information.  */
-  data = (struct here_cg_arc_record *) ((char *) kcount + kcountsize
-					+ 2 * sizeof (uint32_t));
-  narcsp = (uint32_t *) (hist + sizeof (uint32_t)
-			 + sizeof (struct gmon_hist_hdr) + sizeof (uint32_t));
+  narcsp = (uint32_t *) ((char *) kcount + kcountsize + sizeof (uint32_t));
+  data = (struct here_cg_arc_record *) ((char *) narcsp + sizeof (uint32_t));
 
   if (st.st_size == 0)
     {
@@ -346,8 +356,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       memcpy (hist + sizeof (uint32_t), &hist_hdr,
 	      sizeof (struct gmon_hist_hdr));
 
-      *(uint32_t *) (hist + sizeof (uint32_t) + sizeof (struct gmon_hist_hdr)
-		     + kcountsize) = GMON_TAG_CG_ARC;
+      narcsp[-1] = GMON_TAG_CG_ARC;
     }
   else
     {
@@ -356,18 +365,16 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	  || *(uint32_t *) hist != GMON_TAG_TIME_HIST
 	  || memcmp (hist + sizeof (uint32_t), &hist_hdr,
 		     sizeof (struct gmon_hist_hdr)) != 0
-	  || (*(uint32_t *) (hist + sizeof (uint32_t)
-			    + sizeof (struct gmon_hist_hdr) + kcountsize)
-	      != GMON_TAG_CG_ARC))
+	  || narcsp[-1] != GMON_TAG_CG_ARC)
 	goto wrong_format;
     }
 
   /* Allocate memory for the froms data and the pointer to the tos records.  */
   tos = (uint16_t *) calloc (tossize + fromssize, 1);
-  if (froms == NULL)
+  if (tos == NULL)
     {
       __munmap ((void *) addr, expected_size);
-      _dl_sysdep_fatal ("Out of memory while initializing profiler", NULL);
+      _dl_sysdep_fatal ("Out of memory while initializing profiler\n", NULL);
       /* NOTREACHED */
     }
 
@@ -381,13 +388,12 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 
      Loading the entries in reverse order should help to get the most
      frequently used entries at the front of the list.  */
-  for (idx = narcs = *narcsp; idx > 0; )
+  for (idx = narcs = MIN (*narcsp, fromlimit); idx > 0; )
     {
       size_t to_index;
       size_t newfromidx;
       --idx;
-      to_index = ((data[idx].self_pc - lowpc)
-		  / (hashfraction * sizeof (*tos)));
+      to_index = (data[idx].self_pc / (hashfraction * sizeof (*tos)));
       newfromidx = fromidx++;
       froms[newfromidx].here = &data[idx];
       froms[newfromidx].link = tos[to_index];
@@ -458,18 +464,18 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	  fromp = &froms[fromp->link];
 	while (fromp->link != 0 && fromp->here->from_pc != frompc);
 
-      if (fromp->link == 0)
+      if (fromp->here->from_pc != frompc)
 	{
 	  topcindex = &fromp->link;
 
 	check_new_or_add:
 	  /* Our entry is not among the entries we read so far from the
 	     data file.  Now see whether we have to update the list.  */
-	  while (narcs != *narcsp)
+	  while (narcs != *narcsp && narcs < fromlimit)
 	    {
 	      size_t to_index;
 	      size_t newfromidx;
-	      to_index = ((data[narcs].self_pc - lowpc)
+	      to_index = (data[narcs].self_pc
 			  / (hashfraction * sizeof (*tos)));
 	      newfromidx = fromidx++;
 	      froms[newfromidx].here = &data[narcs];
@@ -481,22 +487,22 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	  /* If we still have no entry stop searching and insert.  */
 	  if (*topcindex == 0)
 	    {
-	      fromidx = 1 + exchange_and_add (narcsp, 1);
-	      ++narcs;
+	      size_t newarc = 1 + exchange_and_add (narcsp, 1);
 
 	      /* In rare cases it could happen that all entries in FROMS are
 		 occupied.  So we cannot count this anymore.  */
-	      if (fromidx >= fromlimit)
+	      if (newarc >= fromlimit)
 		goto done;
 
-	      *topcindex = fromindex;
-	      fromp = &froms[fromindex];
+	      fromp = &froms[*topcindex = fromidx++];
 
-	      fromp = &froms[fromp->link];
-
+	      fromp->here = &data[newarc];
+	      data[newarc].from_pc = frompc;
+	      data[newarc].self_pc = selfpc;
+	      data[newarc].count = 0;
 	      fromp->link = 0;
-	      fromp->here->from_pc = frompc;
-	      fromp->here->count = 0;
+
+	      narcs++;
 
 	      break;
 	    }

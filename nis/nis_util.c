@@ -31,15 +31,15 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
   fd_args.dir_name = strdup (name);
   fd_args.requester = nis_local_host();
   fd_res = calloc (1, sizeof (fd_result));
-      
-  if ((status = __do_niscall2 (dir->do_servers.do_servers_val, 
-			       dir->do_servers.do_servers_len, 
+
+  if ((status = __do_niscall2 (dir->do_servers.do_servers_val,
+			       dir->do_servers.do_servers_len,
 			       NIS_FINDDIRECTORY, (xdrproc_t) xdr_fd_args,
 			       (caddr_t) &fd_args, (xdrproc_t) xdr_fd_result,
-			       (caddr_t) fd_res, 
-			       NO_AUTHINFO|USE_DGRAM)) != NIS_SUCCESS)
+			       (caddr_t) fd_res,
+			       NO_AUTHINFO|USE_DGRAM, NULL)) != NIS_SUCCESS)
     fd_res->status = status;
-      
+
   return fd_res;
 }
 
@@ -59,15 +59,15 @@ __nis_hash (const void *keyarg, register size_t len)
   register const u_char *key;
   register size_t loop;
   register u_int32_t h;
-  
+
 #define HASHC   h = *key++ + 65599 * h
-  
+
   h = 0;
   key = keyarg;
-  if (len > 0) 
+  if (len > 0)
     {
       loop = (len + 8 - 1) >> 3;
-      switch (len & (8 - 1)) 
+      switch (len & (8 - 1))
 	{
 	case 0:
 	  do {
@@ -98,4 +98,3 @@ __nis_hash (const void *keyarg, register size_t len)
     }
   return (h);
 }
-

@@ -272,6 +272,7 @@ i@var{x}86-@var{anything}-gnu
 i@var{x}86-@var{anything}-linux
 m68k-@var{anything}-linux
 powerpc-@var{anything}-linux
+sparc64-@var{anything}-linux
 @end smallexample
 
 Former releases of this library (version 1.09.1 and perhaps earlier

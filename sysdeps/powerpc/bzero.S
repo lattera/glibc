@@ -1,4 +1,4 @@
-/* Operating system support for run-time dynamic linker.  Linux/PPC version.
+/* Optimized bzero `implementation' for PowerPC.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,27 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <sysdep.h>
 
-/* The PowerPC's auxiliary argument block gets aligned to a 16-byte
-   boundary.  This is history and impossible to change compatibly.  */
-
-#define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
-  do {								\
-    void **_tmp;						\
-    (argc) = *(long *) cookie;					\
-    (argv) = (char **) cookie + 1;				\
-    (envp) = (argv) + (argc) + 1;				\
-    for (_tmp = (void **) (envp); *_tmp; ++_tmp)		\
-      continue;							\
-    if (*_tmp == 0 && ((size_t)_tmp & 0xf) != 0)		\
-      {								\
-	size_t _test = (size_t)_tmp;				\
-	_test = _test + 0xf & ~0xf;				\
-	if (*(long *)_test == AT_PHDR)				\
-	  _tmp = (void **)_test;				\
-      }								\
-    (auxp) = (void *) _tmp;					\
-  } while (0)
-
-
-#include <sysdeps/unix/sysv/linux/dl-sysdep.c>
+ENTRY(__bzero)
+	mr	%r5,%r4
+	li	%r4,0
+	b	memset@local
+END(__bzero)
+weak_alias (__bzero, bzero)

@@ -30,7 +30,7 @@ nis_mkdir (const_nis_name dir, const nis_server *server)
     {
       if (__do_niscall (dir, NIS_MKDIR, (xdrproc_t) xdr_nis_name,
 			(caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-			(caddr_t) &res, 0) != RPC_SUCCESS)
+			(caddr_t) &res, 0, NULL) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
   else
@@ -38,7 +38,7 @@ nis_mkdir (const_nis_name dir, const nis_server *server)
       if (__do_niscall2 (server, 1, NIS_MKDIR,
 			 (xdrproc_t) xdr_nis_name,
 			 (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-			 (caddr_t) &res, 0) != RPC_SUCCESS)
+			 (caddr_t) &res, 0, NULL) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
 

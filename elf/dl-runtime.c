@@ -130,6 +130,8 @@ fixup (
   struct link_map **scope = _dl_object_relocation_scope (l);
 
   {
+    const struct r_found_version *here_version;
+
     /* This macro is used as a callback from the elf_machine_relplt code.  */
 #define RESOLVE(ref, version, flags) \
   ((version) != NULL && (version)->hash != 0				      \
@@ -147,13 +149,13 @@ fixup (
 				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
 	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
 
-	elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			    &l->l_versions[ndx],
-			    (void *) rel_addr);
+	here_version = &l->l_versions[ndx];
       }
     else
-      elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			  NULL, (void *) rel_addr);
+      here_version = NULL;
+
+    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
+			here_version, (void *) rel_addr);
   }
 
   *_dl_global_scope_end = NULL;
@@ -194,6 +196,8 @@ profile_fixup (
   struct link_map **scope = _dl_object_relocation_scope (l);
 
   {
+    const struct r_found_version *here_version;
+
     /* This macro is used as a callback from the elf_machine_relplt code.  */
 #define RESOLVE(ref, version, flags) \
   ((version) != NULL && (version)->hash != 0				      \
@@ -211,19 +215,20 @@ profile_fixup (
 				l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
 	ElfW(Half) ndx = version[ELFW(R_SYM) (reloc->r_info)];
 
-	elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			    &l->l_versions[ndx], (void *) &result);
+	here_version = &l->l_versions[ndx];
       }
     else
-      elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
-			  NULL, (void *) &result);
+      here_version = NULL;
+
+    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)],
+			here_version, (void *) &result);
   }
 
   *_dl_global_scope_end = NULL;
-  (*mcount_fct) (retaddr, result);
+  (*mcount_fct) (retaddr, ELF_FIXUP_RETURN_VALUE (l, result));
 
   /* Return the address that was written by the relocation.  */
-  return ELF_FIXUP_RETURN_VALUE(l, result);
+  return ELF_FIXUP_RETURN_VALUE (l, result);
 }
 #endif
 

@@ -39,4 +39,16 @@ struct __kernel_termios
 #define _HAVE_C_ISPEED 1
 #define _HAVE_C_OSPEED 1
 
+/* We have the kernel termios structure, so we can presume this code knows
+   what it's doing...  */
+
+#undef  TCGETS
+#undef  TCSETS
+#undef  TCSETSW
+#undef  TCSETSF
+#define TCGETS	_IOR ('t', 19, struct __kernel_termios)
+#define TCSETS	_IOW ('t', 20, struct __kernel_termios)
+#define TCSETSW	_IOW ('t', 21, struct __kernel_termios)
+#define TCSETSF	_IOW ('t', 22, struct __kernel_termios)
+
 #endif /* kernel_termios.h */

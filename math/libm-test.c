@@ -1114,6 +1114,9 @@ exp2_test (void)
   check_isinfp ("exp2 (+inf) == +inf", FUNC(exp2) (plus_infty));
   check ("exp2 (-inf) == 0", FUNC(exp2) (minus_infty), 0);
   check ("exp2 (10) == 1024", FUNC(exp2) (10), 1024);
+  check ("exp2 (-1) == 0.5", FUNC(exp2) (-1), 0.5);
+  check_isinfp ("exp2 (1e6) == +inf", FUNC(exp2) (1e6));
+  check ("exp2 (-1e6) == 0", FUNC(exp2) (-1e6), 0);
 }
 
 

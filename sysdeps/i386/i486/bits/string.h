@@ -344,7 +344,7 @@ memchr (__const void *__s, int __c, size_t __n)
 #define _HAVE_STRING_ARCH_strlen 1
 #define strlen(str) \
   (__extension__ (__builtin_constant_p (str)				      \
-		  ? sizeof (str) - 1					      \
+		  ? __builtin_strlen (str)				      \
 		  : __strlen_g (str)))
 __STRING_INLINE size_t
 __strlen_g (__const char *__str)
@@ -374,52 +374,51 @@ __strlen_g (__const char *__str)
 		  : __strcpy_g (dest, src)))
 
 # define __strcpy_small(dest, src, srclen) \
-  (__extension__ ({ char *__retval = (dest);				      \
-		    char *__cp = __retval;				      \
+  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*__dest = '\0';					      \
 			break;						      \
 		      case 2:						      \
-			*((__uint16_t *) __cp) =			      \
+			*((__uint16_t *) __dest) =			      \
 			  __STRING_SMALL_GET16 (src, 0);		      \
 			break;						      \
 		      case 3:						      \
-			*((__uint16_t *) __cp)++ =			      \
+			*((__uint16_t *) __dest) =			      \
 			  __STRING_SMALL_GET16 (src, 0);		      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*(__dest + 2) = '\0';				      \
 			break;						      \
 		      case 4:						      \
-			*((__uint32_t *) __cp) =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
 			break;						      \
 		      case 5:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*(__dest + 4) = '\0';				      \
 			break;						      \
 		      case 6:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((__uint16_t *) __cp) =			      \
+			*((__uint16_t *) (__dest + 4)) =		      \
 			  __STRING_SMALL_GET16 (src, 4);		      \
 			break;						      \
 		      case 7:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((__uint16_t *) __cp)++ =			      \
+			*((__uint16_t *) (__dest + 4)) =		      \
 			  __STRING_SMALL_GET16 (src, 4);		      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*(__dest + 6) = '\0';				      \
 			break;						      \
 		      case 8:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((__uint32_t *) __cp) =			      \
+			*((__uint32_t *) (__dest + 4)) =		      \
 			  __STRING_SMALL_GET32 (src, 4);		      \
 			break;						      \
 		      }							      \
-		    __retval; }))
+		    (char *) __dest; }))
 
 __STRING_INLINE char *
 __strcpy_g (char *__dest, __const char *__src)
@@ -453,64 +452,65 @@ __strcpy_g (char *__dest, __const char *__src)
 		  : __stpcpy_g (dest, src)))
 # define __stpcpy_c(dest, src, srclen) \
   ((srclen) % 4 == 0							      \
-   ? __mempcpy_by4 (dest, src, srclen)					      \
+   ? __mempcpy_by4 (dest, src, srclen) - 1				      \
    : ((srclen) % 2 == 0							      \
-      ? __mempcpy_by2 (dest, src, srclen)				      \
-      : __mempcpy_byn (dest, src, srclen)))
+      ? __mempcpy_by2 (dest, src, srclen) - 1				      \
+      : __mempcpy_byn (dest, src, srclen) - 1))
 
 /* In glibc itself we use this symbol for namespace reasons.  */
 # define stpcpy(dest, src) __stpcpy (dest, src)
 
 # define __stpcpy_small(dest, src, srclen) \
-  (__extension__ ({ char *__cp = (dest);				      \
+  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*__dest = '\0';					      \
 			break;						      \
 		      case 2:						      \
-			*((__uint16_t *) __cp) =			      \
+			*((__uint16_t *) __dest) =			      \
 			  __STRING_SMALL_GET16 (src, 0);		      \
-			++__cp;						      \
+			++__dest;					      \
 			break;						      \
 		      case 3:						      \
-			*((__uint16_t *) __cp)++ =			      \
+			*((__uint16_t *) __dest)++ =			      \
 			  __STRING_SMALL_GET16 (src, 0);		      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*__dest = '\0';					      \
 			break;						      \
 		      case 4:						      \
-			*((__uint32_t *) __cp) =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			__cp += 3;					      \
+			__dest += 3;					      \
 			break;						      \
 		      case 5:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest)++ =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned char *) __cp) = '\0';		      \
+			*__dest = '\0';					      \
 			break;						      \
 		      case 6:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((__uint16_t *) __cp) =			      \
+			*((__uint16_t *) (__dest + 4)) =		      \
 			  __STRING_SMALL_GET16 (src, 4);		      \
-			++__cp;						      \
+			__dest += 5;					      \
 			break;						      \
 		      case 7:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((__uint16_t *) __cp)++ =			      \
+			*((__uint16_t *) (__dest + 4)) =		      \
 			  __STRING_SMALL_GET16 (src, 4);		      \
-			*((unsigned char *) __cp) = '\0';		      \
+			__dest += 6;					      \
+			*__dest = '\0';					      \
 			break;						      \
 		      case 8:						      \
-			*((__uint32_t *) __cp)++ =			      \
+			*((__uint32_t *) __dest) =			      \
 			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((__uint32_t *) __cp) =			      \
+			*((__uint32_t *) (__dest + 4)) =		      \
 			  __STRING_SMALL_GET32 (src, 4);		      \
-			__cp += 3;					      \
+			__dest += 7;					      \
 			break;						      \
 		      }							      \
-		    __cp; }))
+		    (char *) __dest; }))
 
 __STRING_INLINE char *
 __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
@@ -528,7 +528,7 @@ __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
      : "=r" (__dummy1), "=r" (__tmp), "=r" (__src), "=r" (__dummy2)
      : "1" (__tmp), "2" (__src), "3" (__srclen / 4)
      : "memory", "cc");
-  return __tmp - 1;
+  return __tmp;
 }
 
 __STRING_INLINE char *
@@ -552,7 +552,7 @@ __mempcpy_by2 (char *__dest, __const char *__src, size_t __srclen)
      : "=q" (__dummy1), "=r" (__tmp), "=r" (__src), "=r" (__dummy2)
      : "1" (__tmp), "2" (__src), "3" (__srclen / 2)
      : "memory", "cc");
-  return __tmp + 1;
+  return __tmp + 2;
 }
 
 __STRING_INLINE char *
@@ -573,7 +573,7 @@ __mempcpy_byn (char *__dest, __const char *__src, size_t __srclen)
      : "=D" (__tmp)
      : "c" (__srclen), "0" (__tmp),"S" (__src)
      : "cx", "di", "si", "memory", "cc");
-  return __tmp - 1;
+  return __tmp;
 }
 
 __STRING_INLINE char *
@@ -760,11 +760,12 @@ __strcat_g (char *__dest, __const char *__src)
 /* Append no more than N characters from SRC onto DEST.  */
 #define _HAVE_STRING_ARCH_strncat 1
 #define strncat(dest, src, n) \
-  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
-		  ? (strlen (src) < ((size_t) (n))			      \
-		     ? strcat (dest, src)				      \
-		     : (memcpy (strchr (dest, '\0'), src, n), dest))	      \
-		  : __strncat_g (dest, src, n)))
+  (__extension__ ({ char *__dest = (dest);				      \
+		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
+		    ? (strlen (src) < ((size_t) (n))			      \
+		       ? strcat (__dest, src)				      \
+		       : (memcpy (strchr (__dest, '\0'), src, n), __dest))    \
+		    : __strncat_g (__dest, src, n); }))
 
 __STRING_INLINE char *
 __strncat_g (char *__dest, __const char __src[], size_t __n)
@@ -797,8 +798,52 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
 
 /* Compare S1 and S2.  */
 #define _HAVE_STRING_ARCH_strcmp 1
+#define strcmp(s1, s2) \
+  (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
+		  && (sizeof (s1)[0] != 1 || strlen (s1) >= 4)		      \
+		  && (sizeof (s2)[0] != 1 || strlen (s2) >= 4)		      \
+		  ? memcmp (s1, s2, (strlen (s1) < strlen (s2)		      \
+				     ? strlen (s1) : strlen (s2)) + 1)	      \
+		  : (__builtin_constant_p (s1) && sizeof (s1)[0] == 1	      \
+		     && sizeof (s2)[0] == 1 && strlen (s1) < 4		      \
+		     ? __strcmp_cg (s1, s2, strlen (s1))		      \
+		     : (__builtin_constant_p (s2) && sizeof (s1)[0] == 1      \
+			&& sizeof (s2)[0] == 1 && strlen (s2) < 4	      \
+			? __strcmp_gc (s1, s2, strlen (s2))		      \
+			: __strcmp_gg (s1, s2)))))
+
+#define __strcmp_cg(s1, s2, l1) \
+  (__extension__ ({ __const unsigned char *__s2 = (unsigned char *) (s2);     \
+		    register int __result = (unsigned char) (s1)[0] - __s2[0];\
+		    if (l1 > 0 && __result == 0)			      \
+		      {							      \
+			__result = (unsigned char) (s1)[1] - __s2[1];	      \
+			if (l1 > 1 && __result == 0)			      \
+			  {						      \
+			    __result = (unsigned char) (s1)[2] - __s2[2];     \
+			    if (l1 > 2 && __result == 0)		      \
+			      __result = (unsigned char) (s1)[3] - __s2[3];   \
+			  }						      \
+		      }							      \
+		    __result; }))
+
+#define __strcmp_gc(s1, s2, l2) \
+  (__extension__ ({ __const unsigned char *__s1 = (unsigned char *) (s1);     \
+		    register int __result = __s1[0] - (unsigned char) (s2)[0];\
+		    if (l2 > 0 && __result == 0)			      \
+		      {							      \
+			__result = __s1[1] - (unsigned char) (s2)[1];	      \
+			if (l2 > 1 && __result == 0)			      \
+			  {						      \
+			    __result = __s1[2] - (unsigned char) (s2)[2];     \
+			    if (l2 > 2 && __result == 0)		      \
+			      __result = __s1[3] - (unsigned char) (s2)[3];   \
+			  }						      \
+		      }							      \
+		    __result; }))
+
 __STRING_INLINE int
-strcmp (__const char *__s1, __const char *__s2)
+__strcmp_gg (__const char *__s1, __const char *__s2)
 {
   register int __res;
   __asm__ __volatile__

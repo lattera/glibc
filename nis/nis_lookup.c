@@ -63,7 +63,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 			     (xdrproc_t) xdr_ns_request,
 			     (caddr_t) & req,
 			     (xdrproc_t) xdr_nis_result,
-			     (caddr_t) res, flags);
+			     (caddr_t) res, flags, NULL);
       if (status != NIS_SUCCESS)
 	res->status = status;
 

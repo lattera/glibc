@@ -17,6 +17,13 @@ run_hooks (void (*const list[]) (void))
     (**list) ();
 }
 
+#ifdef HAVE_DWARF2_UNWIND_INFO
+static const char __EH_FRAME_BEGIN__[]
+     __attribute__ ((section (".eh_frame")))
+     = { };
+extern void __register_frame (const void *);
+extern void __deregister_frame (const void *);
+#endif
 
 /* This function will be called from _init in init-first.c.  */
 void
@@ -24,6 +31,9 @@ __libc_global_ctors (void)
 {
   /* Call constructor functions.  */
   run_hooks (__CTOR_LIST__);
+#ifdef HAVE_DWARF2_UNWIND_INFO
+  __register_frame (__EH_FRAME_BEGIN__);
+#endif
 }
 
 
@@ -35,4 +45,7 @@ _fini (void)
 {
   /* Call destructor functions.  */
   run_hooks (__DTOR_LIST__);
+#ifdef HAVE_DWARF2_UNWIND_INFO
+  __deregister_frame (__EH_FRAME_BEGIN__);
+#endif
 }

@@ -90,3 +90,31 @@ AC_MSG_RESULT($ac_cv_prog_cc_cross)
 AC_SUBST(cross_linkable)
 cross_compiling=$ac_cv_prog_cc_cross
 ])
+
+AC_DEFUN(LIBC_PROG_FOO_GNU,
+[# Most GNU programs take a -v and spit out some text including
+# the word 'GNU'.  Some try to read stdin, so give them /dev/null.
+if $1 -v </dev/null 2>&1 | grep -q GNU; then
+  $2
+else
+  $3
+fi])
+
+AC_DEFUN(LIBC_PROG_BINUTILS,
+[# Was a --with-binutils option given?
+if test -n "$path_binutils"; then
+    # Make absolute; ensure a single trailing slash.
+    path_binutils=`(cd $path_binutils; pwd) | sed 's%/*$%/%'`
+    CC="$CC -B$with_binutils"
+fi
+AS=`$CC -print-file-name=as`
+LD=`$CC -print-file-name=ld`
+
+# Determine whether we are using GNU binutils.
+AC_CACHE_CHECK(whether $AS is GNU as, libc_cv_prog_as_gnu,
+[LIBC_PROG_FOO_GNU($AS, libc_cv_prog_as_gnu=yes, libc_cv_prog_as_gnu=no)])
+gnu_as=$libc_cv_prog_as_gnu
+
+AC_CACHE_CHECK(whether $LD is GNU ld, libc_cv_prog_ld_gnu,
+[LIBC_PROG_FOO_GNU($LD, libc_cv_prog_ld_gnu=yes, libc_cv_prog_ld_gnu=no)])
+gnu_ld=$libc_cv_prog_ld_gnu])

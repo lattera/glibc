@@ -6,7 +6,7 @@
 
 #include <machine/asm.h>
 
-ENTRY(__exp2f)
+ENTRY(__ieee754_exp2f)
 	flds	4(%esp)
 /* I added the following ugly construct because exp(+-Inf) resulted
    in NaN.  The ugliness results from the bright minds at Intel.
@@ -34,5 +34,4 @@ ENTRY(__exp2f)
 	fstp	%st
 	fldz				/* Set result to 0.  */
 2:	ret
-END (__exp2f)
-weak_alias (__exp2f, exp2f)
+END (__ieee754_exp2f)

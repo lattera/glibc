@@ -51,7 +51,7 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_removemember nis_creategroup nis_destroygroup\
 		  nis_print_group_entry nis_domain_of nis_domain_of_r\
 		  nis_modify nis_remove nis_add nis_defaults lckcache\
-		  nis_findserv
+		  nis_findserv nis_callback
 libnsl-map	= libnsl.map
 
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd) nisplus-parser

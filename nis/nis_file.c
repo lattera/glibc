@@ -91,8 +91,6 @@ nis_write_obj (const char *name, const nis_object *obj)
     return FALSE;
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
-  /* XXX The following cast is bad!  Shouldn't the XDR functions take
-     pointers to const objects?  */
   if (!xdr_nis_object (&xdrs, (nis_object *) obj))
     return FALSE;
 

@@ -37,6 +37,7 @@ have-ksh = @libc_cv_have_ksh@
 # Configuration options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@
+build-static = @static@
 build-shared = @shared@
 build-profile = @profile@
 build-omitfp = @omitfp@

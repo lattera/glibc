@@ -32,34 +32,22 @@ __sgn1 (double __x)
 {
   return __x >= 0.0 ? 1.0 : -1.0;
 }
-
-/* We'd want to use this if it was implemented in hardware, but
-   how can we tell? */
-#if 0
-__MATH_INLINE double sqrt (double __x);
-__MATH_INLINE double
-sqrt (double __x)
-{
-  register double __value;
-  __asm
-    ("fsqrt %0,%1"
-     : "=f" (__value) : "f" (__x));
-
-  return __value;
-}
-#endif
-
-__MATH_INLINE double fabs (double __x);
-__MATH_INLINE double
-fabs (double __x)
-{
-  register double __value;
-  __asm
-    ("fabs %0,%1"
-     : "=f" (__value) : "f" (__x));
-
-  return __value;
-}
-
 #endif /* __NO_MATH_INLINES && __OPTIMZE__ */
+
+#if __USE_ISOC9X
+# define __unordered_cmp(x, y) \
+  (__extension__							      \
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
+      unsigned __r;							      \
+      __asm__("fcmpu 7,%1,%2 ; mfcr %0" : "=r" (__r) : "f" (__x), "f"(__y));  \
+      __r; }))
+
+# define isgreater(x, y) (__unordered_cmp (x, y) >> 2 & 1)
+# define isgreaterequal(x, y) ((__unordered_cmp (x, y) & 6) != 0)
+# define isless(x, y) (__unordered_cmp (x, y) >> 3 & 1)
+# define islessequal(x, y) ((__unordered_cmp (x, y) & 0xA) != 0)
+# define islessgreater(x, y) ((__unordered_cmp (x, y) & 0xC) != 0)
+# define isunordered(x, y) (__unordered_cmp (x, y) & 1)
+#endif /* __USE_ISOC9X */
+
 #endif /* __GNUC__  */

@@ -13,7 +13,7 @@ testprogram=$2
 
 
 # First create our scenario:
-tmp=${TMPDIR:-/tmp}
+tmp=`echo ${TMPDIR:-/tmp} | sed 's|\(.\)/*$|\1|'`
 tmpdir=$tmp/ftwtest.d
 
 [ -f ${objpfx}elf/ld.so ] && ldso=${objpfx}elf/ld.so
@@ -46,18 +46,18 @@ LD_LIBRARY_PATH=$objpfx $ldso $testprogram $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "/tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
-base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
 EOF
 rm $testout
 
@@ -65,18 +65,18 @@ LD_LIBRARY_PATH=$objpfx $ldso $testprogram --depth $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "/tmp/", file = "ftwtest.d", flag = FTW_DP, level = 0
-base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_DP, level = 1
-base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_DP, level = 1
-base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
-base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_DP, level = 2
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_DP, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/", file = "ftwtest.d", flag = FTW_DP, level = 0
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_DP, level = 1
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_DP, level = 1
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_DP, level = 2
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_DP, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
 EOF
 rm $testout
 
@@ -84,20 +84,20 @@ LD_LIBRARY_PATH=$objpfx $ldso $testprogram --phys $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "/tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
-base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SL, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "link@2", flag = FTW_SL, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "link@3", flag = FTW_SL, level = 5
+base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SL, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "link@2", flag = FTW_SL, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "link@3", flag = FTW_SL, level = 5
 EOF
 rm $testout
 
@@ -108,18 +108,18 @@ LD_LIBRARY_PATH=$objpfx $ldso $testprogram --chdir $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "/tmp/", file = "ftwtest.d", flag = FTW_D, cwd = /tmp, level = 0
-base = "/tmp/ftwtest.d/", file = "bar", flag = FTW_D, cwd = /tmp/ftwtest.d, level = 1
-base = "/tmp/ftwtest.d/", file = "baz", flag = FTW_F, cwd = /tmp/ftwtest.d, level = 1
-base = "/tmp/ftwtest.d/", file = "foo", flag = FTW_D, cwd = /tmp/ftwtest.d, level = 1
-base = "/tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, cwd = /tmp/ftwtest.d/bar, level = 2
-base = "/tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, cwd = /tmp/ftwtest.d/foo, level = 2
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = /tmp/ftwtest.d/foo/lvl1, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = /tmp/ftwtest.d/foo/lvl1, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = /tmp/ftwtest.d/foo/lvl1, level = 3
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = /tmp/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = /tmp/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "/tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = /tmp/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
+base = "$tmp/", file = "ftwtest.d", flag = FTW_D, cwd = $tmp, level = 0
+base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, cwd = $tmp/ftwtest.d, level = 1
+base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, cwd = $tmp/ftwtest.d, level = 1
+base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, cwd = $tmp/ftwtest.d, level = 1
+base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, cwd = $tmp/ftwtest.d/bar, level = 2
+base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, cwd = $tmp/ftwtest.d/foo, level = 2
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmp/ftwtest.d/foo/lvl1, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmp/ftwtest.d/foo/lvl1, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmp/ftwtest.d/foo/lvl1, level = 3
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmp/ftwtest.d/foo/lvl1/lvl2, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmp/ftwtest.d/foo/lvl1/lvl2, level = 4
+base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmp/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
 EOF
 rm $testout
 

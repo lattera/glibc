@@ -51,7 +51,7 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     s_floor s_frexp s_ilogb s_ldexp s_log1p s_logb 		\
 	     s_modf s_nextafter s_rint s_scalbn s_significand		\
 	     s_sin s_tan s_tanh w_acos w_acosh w_asin			\
-	     w_atan2 w_atanh w_cosh w_drem w_exp w_fmod w_gamma		\
+	     w_atan2 w_atanh w_cosh w_drem w_exp w_exp2 w_fmod w_gamma	\
 	     w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r			\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
 	     s_signbit s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc	\
@@ -78,7 +78,7 @@ distribute += $(long-c-yes:=.c)
 # Rules for the test suite.
 tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 	test-ifloat test-idouble test-matherr test-fenv \
-	atest-exp atest-sincos
+	atest-exp atest-sincos atest-exp2 # test-reduce
 # We do the `long double' tests only if this data type is available and
 # distrinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
@@ -93,8 +93,10 @@ LDLIBS-test-float = math/libm
 LDLIBS-test-double = math/libm
 LDLIBS-test-ldouble = math/libm
 LDLIBS-test-matherr = math/libm
+LDLIBS-test-reduce = math/libm
 LDLIBS-atest-exp = math/libm
 LDLIBS-atest-sincos = math/libm
+LDLIBS-atest-exp2 = math/libm
 
 distribute += libm-test.c
 

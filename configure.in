@@ -36,16 +36,9 @@ dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH(fp, dnl
 [  --with-fp		  if using floating-point hardware [default=yes]],
 	    with_fp=$withval, with_fp=yes)
-AC_ARG_WITH(gnu-binutils, dnl
-  --with-gnu-binutils	  if using GNU binutils (as and ld),
-	    gnu_binutils=$withval, gnu_binutils=no)
-AC_ARG_WITH(gnu-ld, dnl
-  --with-gnu-ld		  if using GNU ld (in the binutils package),
-	    gnu_ld=$withval, gnu_ld=no)
-AC_ARG_WITH(gnu-as, dnl
-  --with-gnu-as		  if using GNU as (in the binutils package),
-	    gnu_as=$withval, gnu_as=no)
-test $gnu_binutils = yes && gnu_as=yes gnu_ld=yes
+AC_ARG_WITH(binutils, dnl
+  --with-binutils=PATH	  specify location of binutils (as and ld)
+	    path_binutils=$withval, path_binutils='')
 AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,
 	    elf=$withval, elf=no)
@@ -64,8 +57,11 @@ AC_ARG_ENABLE(sanity-checks, dnl
 			  except in special situations) [default=yes]],
               enable_sanity=$enableval, enable_sanity=yes)
 
-dnl Arguments to enable or disable building the shared, profiled, and
-dnl -fomit-frame-pointer libraries.
+dnl Arguments to enable or disable building the static, shared, profiled,
+dnl and -fomit-frame-pointer libraries.
+AC_ARG_ENABLE(static, dnl
+[  --enable-static         build static library [default=yes]],
+	      static=$enableval, static=yes)
 AC_ARG_ENABLE(shared, dnl
 [  --enable-shared         build shared library [default=yes if GNU ld & ELF]],
 	      shared=$enableval, shared=default)
@@ -78,6 +74,10 @@ AC_ARG_ENABLE(omitfp, dnl
 AC_ARG_ENABLE(bounded, dnl
 [  --enable-bounded        build with runtime bounds checking [default=no]],
 	      bounded=$enableval, bounded=no)
+AC_ARG_ENABLE(versioning, dnl
+[  --disable-versioning    do not include versioning information in the
+                          library objects [default=yes if supported]],
+             enable_versioning=$enableval, enable_versioning=yes)
 
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
@@ -120,19 +120,25 @@ esac
 ### I put this here to prevent those annoying emails from people who cannot
 ### read and try to compile glibc on unsupported platforms.  --drepper
 ###
-case "$host_os" in
-linux* | gnu*)
-  ;;
-*)
-  echo "*** The GNU C library is currently not available for this platform."
-  echo "*** So far nobody cared to port it and if there is no volunteer it"
-  echo "*** might never happen.  So, if you have interest to see glibc on"
-  echo "*** this platform visit"
-  echo "***	http://www.gnu.ai.mit.edu/software/libc/porting.html"
-  echo "*** and join the group of porters"
-  exit 1
-  ;;
-esac
+### By using the undocumented --enable-hacker-mode option for configure
+### one can skip this test to make the configuration not fail for unsupported
+### platforms.
+###
+if test -z "$enable_hacker_mode"; then
+  case "$host_os" in
+  linux* | gnu*)
+    ;;
+  *)
+    echo "*** The GNU C library is currently not available for this platform."
+    echo "*** So far nobody cared to port it and if there is no volunteer it"
+    echo "*** might never happen.  So, if you have interest to see glibc on"
+    echo "*** this platform visit"
+    echo "***	http://www.gnu.ai.mit.edu/software/libc/porting.html"
+    echo "*** and join the group of porters"
+    exit 1
+    ;;
+  esac
+fi
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
@@ -401,6 +407,7 @@ if test $host != $build; then
 fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
+LIBC_PROG_BINUTILS
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 
@@ -568,7 +575,8 @@ else
 fi
 rm -f conftest*])
 if test $libc_cv_asm_symver_directive = yes &&
-   test $libc_cv_ld_version_script_option = yes; then
+   test $libc_cv_ld_version_script_option = yes &&
+   test $enable_versioning = yes; then
   VERSIONING=yes
   AC_DEFINE(DO_VERSIONING)
 else
@@ -749,6 +757,39 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_gcc_no_exceptions)dnl
 
+AC_CACHE_CHECK(for DWARF2 unwind info support, libc_cv_gcc_dwarf2_unwind_info,
+[cat > conftest.c <<EOF
+#line __oline__ "configure"
+static char __EH_FRAME_BEGIN__[];
+_start ()
+{
+  __register_frame (__EH_FRAME_BEGIN__);
+  __deregister_frame (__EH_FRAME_BEGIN__);
+}
+int __eh_pc;
+__throw () {}
+/* FIXME: this is fragile.  */
+malloc () {}
+strcmp () {}
+strlen () {}
+memcpy () {}
+memset () {}
+free () {}
+abort () {}
+EOF
+dnl No \ in command here because it ends up inside ''.
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS
+			    -nostdlib -nostartfiles
+			    -o conftest conftest.c -lgcc >&AC_FD_CC]); then
+  libc_cv_gcc_dwarf2_unwind_info=yes
+else
+  libc_cv_gcc_dwarf2_unwind_info=no
+fi
+rm -f conftest*])
+if test $libc_cv_gcc_dwarf2_unwind_info = yes; then
+  AC_DEFINE(HAVE_DWARF2_UNWIND_INFO)
+fi
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 
@@ -876,6 +917,7 @@ if test $elf = yes; then
   AC_DEFINE(HAVE_ELF)
 fi
 
+AC_SUBST(static)
 AC_SUBST(shared)
 if test $shared = default; then
   if test $gnu_ld = yes; then

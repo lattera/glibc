@@ -361,7 +361,7 @@ setlocale (int category, const char *locale)
   else
     {
       struct locale_data *newdata = NULL;
-      const char *newname = locale;
+      const char *newname[1] = { locale };
 
       /* Protect global data.  */
       __libc_lock_lock (__libc_setlocale_lock);
@@ -370,7 +370,7 @@ setlocale (int category, const char *locale)
 	{
 	  /* Only actually load the data if anything will use it.  */
 	  newdata = _nl_find_locale (locale_path, locale_path_len, category,
-				     &newname);
+				     &newname[0]);
 	  if (newdata == NULL)
 	    goto abort_single;
 
@@ -381,19 +381,19 @@ setlocale (int category, const char *locale)
 	}
 
       /* Create new composite name.  */
-      composite = new_composite_name (category, &newname);
+      composite = new_composite_name (category, newname);
       if (composite == NULL)
 	{
 	  /* Say that we don't have any data loaded.  */
 	abort_single:
-	  newname = NULL;
+	  newname[0] = NULL;
 	}
       else
 	{
 	  if (_nl_current[category] != NULL)
 	    setdata (category, newdata);
 
-	  setname (category, newname);
+	  setname (category, newname[0]);
 	  setname (LC_ALL, composite);
 	}
 
@@ -403,6 +403,6 @@ setlocale (int category, const char *locale)
       /* Free the resources (the locale path variable.  */
       free (locale_path);
 
-      return (char *) newname;
+      return (char *) newname[0];
     }
 }

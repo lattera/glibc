@@ -80,6 +80,9 @@ static double zero = 0.0;	/* used as const */
  *	40-- gamma(finite) overflow
  *	41-- gamma(-integer)
  *	42-- pow(NaN,0.0)
+ *	43-- +0**neg
+ *	44-- exp2 overflow
+ *	45-- exp2 underflow
  */
 
 
@@ -865,7 +868,38 @@ static double zero = 0.0;	/* used as const */
 		}
 		break;
 
-		/* #### Last used is 43/143/243 ### */
+	    case 44:
+	    case 144:
+	    case 244:
+		/* exp(finite) overflow */
+		exc.type = OVERFLOW;
+		exc.name = type < 100 ? "exp2" : (type < 200
+						 ? "exp2f" : "exp2l");
+		if (_LIB_VERSION == _SVID_)
+		  exc.retval = HUGE;
+		else
+		  exc.retval = HUGE_VAL;
+		if (_LIB_VERSION == _POSIX_)
+		  __set_errno (ERANGE);
+		else if (!matherr(&exc)) {
+			__set_errno (ERANGE);
+		}
+		break;
+	    case 45:
+	    case 145:
+	    case 245:
+		/* exp(finite) underflow */
+		exc.type = UNDERFLOW;
+		exc.name = type < 100 ? "exp2" : (type < 200
+						 ? "exp2f" : "exp2l");
+		exc.retval = zero;
+		if (_LIB_VERSION == _POSIX_)
+		  __set_errno (ERANGE);
+		else if (!matherr(&exc)) {
+			__set_errno (ERANGE);
+		}
+		break;
+		/* #### Last used is 44/144/244 ### */
 	}
 	return exc.retval;
 }

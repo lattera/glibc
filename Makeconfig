@@ -533,9 +533,12 @@ endif
 # The compilation rules use $(CPPFLAGS-${SUFFIX}) and $(CFLAGS-${SUFFIX})
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
-object-suffixes := .o
 all-object-suffixes := .o .os .op .og .ob
+object-suffixes :=
+ifeq (yes,$(build-static))
 libtype.o := lib%.a
+object-suffixes += .o
+endif
 ifeq (yes,$(build-shared))
 # Under --enable-shared, we will build a shared library of PIC objects.
 # The PIC object files are named foo.os.

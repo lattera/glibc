@@ -20,10 +20,9 @@ echo 1_2 > $testdir/dir1/file1_2
 
 # Run some tests.
 result=0
-here=`pwd`
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1'
@@ -33,8 +32,8 @@ cat <<"EOF" | cmp - $testout || result=1
 not NULL
 EOF
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*/*") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
@@ -42,40 +41,40 @@ cat <<"EOF" | cmp - $testout || result=1
 not NULL
 EOF
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*/1") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 NULL
 EOF
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*/*1_1") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
 not NULL
 EOF
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*/file1_1") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
 not NULL
 EOF
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*-/*") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*-/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 NULL
 EOF
 
-(cd $testdir &&
- LD_LIBRARY_PATH=$common_objpfx $common_objpfx/posix/globtest "*-") |
+LD_LIBRARY_PATH=$common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*-" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH

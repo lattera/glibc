@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <glob.h>
+#include <unistd.h>
 
 int
 main (int argc, char *argv[])
@@ -26,7 +27,11 @@ main (int argc, char *argv[])
   int glob_flags = GLOB_NOSORT;
   glob_t filenames;
 
-  i = glob (argv[1], glob_flags, NULL, &filenames);
+  if (argc != 3)
+    exit (1);
+  if (chdir (argv[1]))
+    exit (1);
+  i = glob (argv[2], glob_flags, NULL, &filenames);
 
   if (i == GLOB_NOSPACE)
     puts ("GLOB_NOSPACE");

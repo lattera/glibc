@@ -1,4 +1,4 @@
-/* @(#)get_myaddress.c	2.1 88/07/29 4.0 RPCSRC */
+/* @(#)get_myaddress.c 2.1 88/07/29 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -38,13 +38,11 @@ static char sccsid[] = "@(#)get_myaddress.c 1.4 87/08/11 Copyr 1984 Sun Micro";
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
-#include <unistd.h>
 #include <rpc/types.h>
 #include <rpc/pmap_prot.h>
 #include <sys/socket.h>
 #include <stdio.h>
-#undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
-#include <sys/param.h>		/* Ultrix needs before net/if --roland@gnu */
+#include <unistd.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
 /* Order of following two #includes reversed by roland@gnu */
@@ -53,6 +51,9 @@ static char sccsid[] = "@(#)get_myaddress.c 1.4 87/08/11 Copyr 1984 Sun Micro";
 
 /*
  * don't use gethostbyname, which would invoke yellow pages
+ *
+ * Avoid loopback interfaces.  We return information from a loopback
+ * interface only if there are no other possible interfaces.
  */
 void
 get_myaddress (struct sockaddr_in *addr)
@@ -61,7 +62,7 @@ get_myaddress (struct sockaddr_in *addr)
   char buf[BUFSIZ];
   struct ifconf ifc;
   struct ifreq ifreq, *ifr;
-  int len;
+  int len, loopback = 0;
 
   if ((s = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
@@ -75,23 +76,32 @@ get_myaddress (struct sockaddr_in *addr)
       perror (_("get_myaddress: ioctl (get interface configuration)"));
       exit (1);
     }
+
+ again:
   ifr = ifc.ifc_req;
   for (len = ifc.ifc_len; len; len -= sizeof ifreq)
     {
       ifreq = *ifr;
       if (ioctl (s, SIOCGIFFLAGS, (char *) &ifreq) < 0)
 	{
-	  perror ("get_myaddress: ioctl");
-	  exit (1);
+          perror ("get_myaddress: ioctl");
+          exit (1);
 	}
-      if ((ifreq.ifr_flags & IFF_UP) &&
-	  ifr->ifr_addr.sa_family == AF_INET)
+      if ((ifreq.ifr_flags & IFF_UP) && (ifr->ifr_addr.sa_family == AF_INET)
+	  && (!(ifreq.ifr_flags & IFF_LOOPBACK) ||
+	      (loopback == 1 && (ifreq.ifr_flags & IFF_LOOPBACK))))
 	{
 	  *addr = *((struct sockaddr_in *) &ifr->ifr_addr);
 	  addr->sin_port = htons (PMAPPORT);
-	  break;
+	  close (s);
+	  return;
 	}
       ifr++;
     }
-  (void) close (s);
+  if (loopback == 0)
+    {
+      loopback = 1;
+      goto again;
+    }
+  close (s);
 }

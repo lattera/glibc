@@ -121,6 +121,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    and then redirect to the address it returns.  */
 #ifndef PROF
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
+	.text
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 	.align 16
@@ -153,9 +154,11 @@ _dl_runtime_profile:
 	xchgl %eax, (%esp)	# Get %eax contents end store function address.
 	ret $8			# Jump to function address.
 	.size _dl_runtime_profile, .-_dl_runtime_profile
+	.previous
 ");
 #else
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
+	.text
 	.globl _dl_runtime_resolve
 	.globl _dl_runtime_profile
 	.type _dl_runtime_resolve, @function
@@ -179,6 +182,7 @@ _dl_runtime_profile:
 	ret $8			# Jump to function address.
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 	.size _dl_runtime_profile, .-_dl_runtime_profile
+	.previous
 ");
 #endif
 /* The PLT uses Elf32_Rel relocs.  */

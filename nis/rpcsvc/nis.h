@@ -28,10 +28,14 @@
  * Mountain View, California  94043
  */
 
-#ifndef _NIS_H_RPCGEN
-#define _NIS_H_RPCGEN
+#ifndef _RPCSVC_NIS_H
+#define _RPCSVC_NIS_H 1
 
+#include <features.h>
 #include <rpc/rpc.h>
+#include <rpcsvc/nis_tags.h>
+
+__BEGIN_DECLS
 
 /*
  *	nis.h
@@ -48,8 +52,7 @@
  *	       Makefile target nis.h)
  *
  */
-#include <rpcsvc/nis_tags.h>
-#include <rpc/xdr.h>
+
 #pragma ident	"@(#)nis_object.x	1.7	92/07/14 SMI"
 
 #ifndef __nis_object_h
@@ -77,24 +80,10 @@ struct nis_attr {
 	} zattr_val;
 };
 typedef struct nis_attr nis_attr;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_attr(XDR *, nis_attr*);
-#elif __STDC__
-extern  bool_t xdr_nis_attr(XDR *, nis_attr*);
-#else /* Old Style C */
-bool_t xdr_nis_attr();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_attr __P ((XDR *, nis_attr*));
 
 typedef char *nis_name;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_name(XDR *, nis_name*);
-#elif __STDC__
-extern  bool_t xdr_nis_name(XDR *, nis_name*);
-#else /* Old Style C */
-bool_t xdr_nis_name();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_name __P ((XDR *, nis_name*));
 
 enum zotypes {
 	BOGUS_OBJ = 0,
@@ -107,14 +96,7 @@ enum zotypes {
 	PRIVATE_OBJ = 7,
 };
 typedef enum zotypes zotypes;
-#ifdef __cplusplus
-extern "C" bool_t xdr_zotypes(XDR *, zotypes*);
-#elif __STDC__
-extern  bool_t xdr_zotypes(XDR *, zotypes*);
-#else /* Old Style C */
-bool_t xdr_zotypes();
-#endif /* Old Style C */
-
+extern  bool_t xdr_zotypes __P ((XDR *, zotypes*));
 
 enum nstype {
 	UNKNOWN = 0,
@@ -128,28 +110,14 @@ enum nstype {
 	CDS = 8,
 };
 typedef enum nstype nstype;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nstype(XDR *, nstype*);
-#elif __STDC__
-extern  bool_t xdr_nstype(XDR *, nstype*);
-#else /* Old Style C */
-bool_t xdr_nstype();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nstype __P ((XDR *, nstype*));
 
 struct oar_mask {
 	u_long oa_rights;
 	zotypes oa_otype;
 };
 typedef struct oar_mask oar_mask;
-#ifdef __cplusplus
-extern "C" bool_t xdr_oar_mask(XDR *, oar_mask*);
-#elif __STDC__
-extern  bool_t xdr_oar_mask(XDR *, oar_mask*);
-#else /* Old Style C */
-bool_t xdr_oar_mask();
-#endif /* Old Style C */
-
+extern  bool_t xdr_oar_mask __P ((XDR *, oar_mask*));
 
 struct endpoint {
 	char *uaddr;
@@ -157,14 +125,7 @@ struct endpoint {
 	char *proto;
 };
 typedef struct endpoint endpoint;
-#ifdef __cplusplus
-extern "C" bool_t xdr_endpoint(XDR *, endpoint*);
-#elif __STDC__
-extern  bool_t xdr_endpoint(XDR *, endpoint*);
-#else /* Old Style C */
-bool_t xdr_endpoint();
-#endif /* Old Style C */
-
+extern  bool_t xdr_endpoint __P ((XDR *, endpoint*));
 
 struct nis_server {
 	nis_name name;
@@ -176,14 +137,7 @@ struct nis_server {
 	netobj pkey;
 };
 typedef struct nis_server nis_server;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_server(XDR *, nis_server*);
-#elif __STDC__
-extern  bool_t xdr_nis_server(XDR *, nis_server*);
-#else /* Old Style C */
-bool_t xdr_nis_server();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_server __P ((XDR *, nis_server*));
 
 struct directory_obj {
 	nis_name do_name;
@@ -199,13 +153,7 @@ struct directory_obj {
 	} do_armask;
 };
 typedef struct directory_obj directory_obj;
-#ifdef __cplusplus
-extern "C" bool_t xdr_directory_obj(XDR *, directory_obj*);
-#elif __STDC__
-extern  bool_t xdr_directory_obj(XDR *, directory_obj*);
-#else /* Old Style C */
-bool_t xdr_directory_obj();
-#endif /* Old Style C */
+extern  bool_t xdr_directory_obj __P ((XDR *, directory_obj*));
 
 #define EN_BINARY 1
 #define EN_CRYPT 2
@@ -221,14 +169,7 @@ struct entry_col {
 	} ec_value;
 };
 typedef struct entry_col entry_col;
-#ifdef __cplusplus
-extern "C" bool_t xdr_entry_col(XDR *, entry_col*);
-#elif __STDC__
-extern  bool_t xdr_entry_col(XDR *, entry_col*);
-#else /* Old Style C */
-bool_t xdr_entry_col();
-#endif /* Old Style C */
-
+extern  bool_t xdr_entry_col __P ((XDR *, entry_col*));
 
 struct entry_obj {
 	char *en_type;
@@ -238,14 +179,7 @@ struct entry_obj {
 	} en_cols;
 };
 typedef struct entry_obj entry_obj;
-#ifdef __cplusplus
-extern "C" bool_t xdr_entry_obj(XDR *, entry_obj*);
-#elif __STDC__
-extern  bool_t xdr_entry_obj(XDR *, entry_obj*);
-#else /* Old Style C */
-bool_t xdr_entry_obj();
-#endif /* Old Style C */
-
+extern  bool_t xdr_entry_obj __P ((XDR *, entry_obj*));
 
 struct group_obj {
 	u_long gr_flags;
@@ -255,14 +189,7 @@ struct group_obj {
 	} gr_members;
 };
 typedef struct group_obj group_obj;
-#ifdef __cplusplus
-extern "C" bool_t xdr_group_obj(XDR *, group_obj*);
-#elif __STDC__
-extern  bool_t xdr_group_obj(XDR *, group_obj*);
-#else /* Old Style C */
-bool_t xdr_group_obj();
-#endif /* Old Style C */
-
+extern  bool_t xdr_group_obj __P ((XDR *, group_obj*));
 
 struct link_obj {
 	zotypes li_rtype;
@@ -273,13 +200,7 @@ struct link_obj {
 	nis_name li_name;
 };
 typedef struct link_obj link_obj;
-#ifdef __cplusplus
-extern "C" bool_t xdr_link_obj(XDR *, link_obj*);
-#elif __STDC__
-extern  bool_t xdr_link_obj(XDR *, link_obj*);
-#else /* Old Style C */
-bool_t xdr_link_obj();
-#endif /* Old Style C */
+extern  bool_t xdr_link_obj __P ((XDR *, link_obj*));
 
 #define TA_BINARY 1
 #define TA_CRYPT 2
@@ -295,14 +216,7 @@ struct table_col {
 	u_long tc_rights;
 };
 typedef struct table_col table_col;
-#ifdef __cplusplus
-extern "C" bool_t xdr_table_col(XDR *, table_col*);
-#elif __STDC__
-extern  bool_t xdr_table_col(XDR *, table_col*);
-#else /* Old Style C */
-bool_t xdr_table_col();
-#endif /* Old Style C */
-
+extern  bool_t xdr_table_col __P ((XDR *, table_col*));
 
 struct table_obj {
 	char *ta_type;
@@ -315,14 +229,7 @@ struct table_obj {
 	char *ta_path;
 };
 typedef struct table_obj table_obj;
-#ifdef __cplusplus
-extern "C" bool_t xdr_table_obj(XDR *, table_obj*);
-#elif __STDC__
-extern  bool_t xdr_table_obj(XDR *, table_obj*);
-#else /* Old Style C */
-bool_t xdr_table_obj();
-#endif /* Old Style C */
-
+extern  bool_t xdr_table_obj __P ((XDR *, table_obj*));
 
 struct objdata {
 	zotypes zo_type;
@@ -339,28 +246,14 @@ struct objdata {
 	} objdata_u;
 };
 typedef struct objdata objdata;
-#ifdef __cplusplus
-extern "C" bool_t xdr_objdata(XDR *, objdata*);
-#elif __STDC__
-extern  bool_t xdr_objdata(XDR *, objdata*);
-#else /* Old Style C */
-bool_t xdr_objdata();
-#endif /* Old Style C */
-
+extern  bool_t xdr_objdata __P ((XDR *, objdata*));
 
 struct nis_oid {
 	u_long ctime;
 	u_long mtime;
 };
 typedef struct nis_oid nis_oid;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_oid(XDR *, nis_oid*);
-#elif __STDC__
-extern  bool_t xdr_nis_oid(XDR *, nis_oid*);
-#else /* Old Style C */
-bool_t xdr_nis_oid();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_oid __P ((XDR *, nis_oid*));
 
 struct nis_object {
 	nis_oid zo_oid;
@@ -373,17 +266,9 @@ struct nis_object {
 	objdata zo_data;
 };
 typedef struct nis_object nis_object;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_object(XDR *, nis_object*);
-#elif __STDC__
-extern  bool_t xdr_nis_object(XDR *, nis_object*);
-#else /* Old Style C */
-bool_t xdr_nis_object();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_object __P ((XDR *, nis_object*));
 
 #endif /* if __nis_object_h */
-
 
 enum nis_error {
 	NIS_SUCCESS = 0,
@@ -436,14 +321,7 @@ enum nis_error {
 	NIS_DUMPLATER = 47,
 };
 typedef enum nis_error nis_error;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_error(XDR *, nis_error*);
-#elif __STDC__
-extern  bool_t xdr_nis_error(XDR *, nis_error*);
-#else /* Old Style C */
-bool_t xdr_nis_error();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_error __P ((XDR *, nis_error*));
 
 struct nis_result {
 	nis_error status;
@@ -458,14 +336,7 @@ struct nis_result {
 	u_long cticks;
 };
 typedef struct nis_result nis_result;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_result(XDR *, nis_result*);
-#elif __STDC__
-extern  bool_t xdr_nis_result(XDR *, nis_result*);
-#else /* Old Style C */
-bool_t xdr_nis_result();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_result __P ((XDR *, nis_result*));
 
 struct ns_request {
 	nis_name ns_name;
@@ -475,14 +346,7 @@ struct ns_request {
 	} ns_object;
 };
 typedef struct ns_request ns_request;
-#ifdef __cplusplus
-extern "C" bool_t xdr_ns_request(XDR *, ns_request*);
-#elif __STDC__
-extern  bool_t xdr_ns_request(XDR *, ns_request*);
-#else /* Old Style C */
-bool_t xdr_ns_request();
-#endif /* Old Style C */
-
+extern  bool_t xdr_ns_request __P ((XDR *, ns_request*));
 
 struct ib_request {
 	nis_name ibr_name;
@@ -503,28 +367,14 @@ struct ib_request {
 	netobj ibr_cookie;
 };
 typedef struct ib_request ib_request;
-#ifdef __cplusplus
-extern "C" bool_t xdr_ib_request(XDR *, ib_request*);
-#elif __STDC__
-extern  bool_t xdr_ib_request(XDR *, ib_request*);
-#else /* Old Style C */
-bool_t xdr_ib_request();
-#endif /* Old Style C */
-
+extern  bool_t xdr_ib_request __P ((XDR *, ib_request*));
 
 struct ping_args {
 	nis_name dir;
 	u_long stamp;
 };
 typedef struct ping_args ping_args;
-#ifdef __cplusplus
-extern "C" bool_t xdr_ping_args(XDR *, ping_args*);
-#elif __STDC__
-extern  bool_t xdr_ping_args(XDR *, ping_args*);
-#else /* Old Style C */
-bool_t xdr_ping_args();
-#endif /* Old Style C */
-
+extern  bool_t xdr_ping_args __P ((XDR *, ping_args*));
 
 enum log_entry_t {
 	LOG_NOP = 0,
@@ -538,14 +388,7 @@ enum log_entry_t {
 	UPD_STAMP = 8,
 };
 typedef enum log_entry_t log_entry_t;
-#ifdef __cplusplus
-extern "C" bool_t xdr_log_entry_t(XDR *, log_entry_t*);
-#elif __STDC__
-extern  bool_t xdr_log_entry_t(XDR *, log_entry_t*);
-#else /* Old Style C */
-bool_t xdr_log_entry_t();
-#endif /* Old Style C */
-
+extern  bool_t xdr_log_entry_t __P ((XDR *, log_entry_t*));
 
 struct log_entry {
 	u_long le_time;
@@ -559,14 +402,7 @@ struct log_entry {
 	nis_object le_object;
 };
 typedef struct log_entry log_entry;
-#ifdef __cplusplus
-extern "C" bool_t xdr_log_entry(XDR *, log_entry*);
-#elif __STDC__
-extern  bool_t xdr_log_entry(XDR *, log_entry*);
-#else /* Old Style C */
-bool_t xdr_log_entry();
-#endif /* Old Style C */
-
+extern  bool_t xdr_log_entry __P ((XDR *, log_entry*));
 
 struct log_result {
 	nis_error lr_status;
@@ -577,14 +413,7 @@ struct log_result {
 	} lr_entries;
 };
 typedef struct log_result log_result;
-#ifdef __cplusplus
-extern "C" bool_t xdr_log_result(XDR *, log_result*);
-#elif __STDC__
-extern  bool_t xdr_log_result(XDR *, log_result*);
-#else /* Old Style C */
-bool_t xdr_log_result();
-#endif /* Old Style C */
-
+extern  bool_t xdr_log_result __P ((XDR *, log_result*));
 
 struct cp_result {
 	nis_error cp_status;
@@ -592,28 +421,14 @@ struct cp_result {
 	u_long cp_dticks;
 };
 typedef struct cp_result cp_result;
-#ifdef __cplusplus
-extern "C" bool_t xdr_cp_result(XDR *, cp_result*);
-#elif __STDC__
-extern  bool_t xdr_cp_result(XDR *, cp_result*);
-#else /* Old Style C */
-bool_t xdr_cp_result();
-#endif /* Old Style C */
-
+extern  bool_t xdr_cp_result __P ((XDR *, cp_result*));
 
 struct nis_tag {
 	u_long tag_type;
 	char *tag_val;
 };
 typedef struct nis_tag nis_tag;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_tag(XDR *, nis_tag*);
-#elif __STDC__
-extern  bool_t xdr_nis_tag(XDR *, nis_tag*);
-#else /* Old Style C */
-bool_t xdr_nis_tag();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_tag __P ((XDR *, nis_tag*));
 
 struct nis_taglist {
 	struct {
@@ -622,14 +437,7 @@ struct nis_taglist {
 	} tags;
 };
 typedef struct nis_taglist nis_taglist;
-#ifdef __cplusplus
-extern "C" bool_t xdr_nis_taglist(XDR *, nis_taglist*);
-#elif __STDC__
-extern  bool_t xdr_nis_taglist(XDR *, nis_taglist*);
-#else /* Old Style C */
-bool_t xdr_nis_taglist();
-#endif /* Old Style C */
-
+extern  bool_t xdr_nis_taglist __P ((XDR *, nis_taglist*));
 
 struct dump_args {
 	nis_name da_dir;
@@ -640,28 +448,14 @@ struct dump_args {
 	} da_cbhost;
 };
 typedef struct dump_args dump_args;
-#ifdef __cplusplus
-extern "C" bool_t xdr_dump_args(XDR *, dump_args*);
-#elif __STDC__
-extern  bool_t xdr_dump_args(XDR *, dump_args*);
-#else /* Old Style C */
-bool_t xdr_dump_args();
-#endif /* Old Style C */
-
+extern  bool_t xdr_dump_args __P ((XDR *, dump_args*));
 
 struct fd_args {
 	nis_name dir_name;
 	nis_name requester;
 };
 typedef struct fd_args fd_args;
-#ifdef __cplusplus
-extern "C" bool_t xdr_fd_args(XDR *, fd_args*);
-#elif __STDC__
-extern  bool_t xdr_fd_args(XDR *, fd_args*);
-#else /* Old Style C */
-bool_t xdr_fd_args();
-#endif /* Old Style C */
-
+extern  bool_t xdr_fd_args __P ((XDR *, fd_args*));
 
 struct fd_result {
 	nis_error status;
@@ -676,13 +470,7 @@ struct fd_result {
 	} signature;
 };
 typedef struct fd_result fd_result;
-#ifdef __cplusplus
-extern "C" bool_t xdr_fd_result(XDR *, fd_result*);
-#elif __STDC__
-extern  bool_t xdr_fd_result(XDR *, fd_result*);
-#else /* Old Style C */
-bool_t xdr_fd_result();
-#endif /* Old Style C */
+extern  bool_t xdr_fd_result __P ((XDR *, fd_result*));
 
 /*
  * Generic "hash" datastructures, used by all types of hashed data.
@@ -762,14 +550,10 @@ typedef enum name_pos name_pos;
 #define ENTRY_VAL(obj, col) (obj)->EN_data.en_cols.en_cols_val[col].ec_value.ec_value_val
 #define ENTRY_LEN(obj, col) (obj)->EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len
 
-#ifdef __cplusplus
-}
-#endif
 
 /* Prototypes, and extern declarations for the NIS library functions. */
 #include <rpcsvc/nislib.h>
-#endif /* __NIS_RPCGEN_H */
-/* EDIT_START */
+#endif
 
 /*
  * nis_3.h
@@ -784,229 +568,79 @@ typedef enum name_pos name_pos;
  */
 #ifndef __nis_3_h
 #define __nis_3_h
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define NIS_PROG ((u_long)100300)
-extern struct rpcgen_table nis_prog_3_table[];
-extern int nis_prog_3_nproc;
 #define NIS_VERSION ((u_long)3)
 
-#ifdef __cplusplus
 #define NIS_LOOKUP ((u_long)1)
-extern "C" nis_result * nis_lookup_3(ns_request *, CLIENT *);
-extern "C" nis_result * nis_lookup_3_svc(ns_request *, struct svc_req *);
+extern  nis_result * nis_lookup_3 __P ((ns_request *, CLIENT *));
+extern  nis_result * nis_lookup_3_svc __P ((ns_request *, struct svc_req *));
 #define NIS_ADD ((u_long)2)
-extern "C" nis_result * nis_add_3(ns_request *, CLIENT *);
-extern "C" nis_result * nis_add_3_svc(ns_request *, struct svc_req *);
+extern  nis_result * nis_add_3 __P ((ns_request *, CLIENT *));
+extern  nis_result * nis_add_3_svc __P ((ns_request *, struct svc_req *));
 #define NIS_MODIFY ((u_long)3)
-extern "C" nis_result * nis_modify_3(ns_request *, CLIENT *);
-extern "C" nis_result * nis_modify_3_svc(ns_request *, struct svc_req *);
+extern  nis_result * nis_modify_3 __P ((ns_request *, CLIENT *));
+extern  nis_result * nis_modify_3_svc __P ((ns_request *, struct svc_req *));
 #define NIS_REMOVE ((u_long)4)
-extern "C" nis_result * nis_remove_3(ns_request *, CLIENT *);
-extern "C" nis_result * nis_remove_3_svc(ns_request *, struct svc_req *);
+extern  nis_result * nis_remove_3 __P ((ns_request *, CLIENT *));
+extern  nis_result * nis_remove_3_svc __P ((ns_request *, struct svc_req *));
 #define NIS_IBLIST ((u_long)5)
-extern "C" nis_result * nis_iblist_3(ib_request *, CLIENT *);
-extern "C" nis_result * nis_iblist_3_svc(ib_request *, struct svc_req *);
+extern  nis_result * nis_iblist_3 __P ((ib_request *, CLIENT *));
+extern  nis_result * nis_iblist_3_svc __P ((ib_request *, struct svc_req *));
 #define NIS_IBADD ((u_long)6)
-extern "C" nis_result * nis_ibadd_3(ib_request *, CLIENT *);
-extern "C" nis_result * nis_ibadd_3_svc(ib_request *, struct svc_req *);
+extern  nis_result * nis_ibadd_3 __P ((ib_request *, CLIENT *));
+extern  nis_result * nis_ibadd_3_svc __P ((ib_request *, struct svc_req *));
 #define NIS_IBMODIFY ((u_long)7)
-extern "C" nis_result * nis_ibmodify_3(ib_request *, CLIENT *);
-extern "C" nis_result * nis_ibmodify_3_svc(ib_request *, struct svc_req *);
+extern  nis_result * nis_ibmodify_3 __P ((ib_request *, CLIENT *));
+extern  nis_result * nis_ibmodify_3_svc __P ((ib_request *, struct svc_req *));
 #define NIS_IBREMOVE ((u_long)8)
-extern "C" nis_result * nis_ibremove_3(ib_request *, CLIENT *);
-extern "C" nis_result * nis_ibremove_3_svc(ib_request *, struct svc_req *);
+extern  nis_result * nis_ibremove_3 __P ((ib_request *, CLIENT *));
+extern  nis_result * nis_ibremove_3_svc __P ((ib_request *, struct svc_req *));
 #define NIS_IBFIRST ((u_long)9)
-extern "C" nis_result * nis_ibfirst_3(ib_request *, CLIENT *);
-extern "C" nis_result * nis_ibfirst_3_svc(ib_request *, struct svc_req *);
+extern  nis_result * nis_ibfirst_3 __P ((ib_request *, CLIENT *));
+extern  nis_result * nis_ibfirst_3_svc __P ((ib_request *, struct svc_req *));
 #define NIS_IBNEXT ((u_long)10)
-extern "C" nis_result * nis_ibnext_3(ib_request *, CLIENT *);
-extern "C" nis_result * nis_ibnext_3_svc(ib_request *, struct svc_req *);
+extern  nis_result * nis_ibnext_3 __P ((ib_request *, CLIENT *));
+extern  nis_result * nis_ibnext_3_svc __P ((ib_request *, struct svc_req *));
 #define NIS_FINDDIRECTORY ((u_long)12)
-extern "C" fd_result * nis_finddirectory_3(fd_args *, CLIENT *);
-extern "C" fd_result * nis_finddirectory_3_svc(fd_args *, struct svc_req *);
+extern  fd_result * nis_finddirectory_3 __P ((fd_args *, CLIENT *));
+extern  fd_result * nis_finddirectory_3_svc __P ((fd_args *,
+						  struct svc_req *));
 #define NIS_STATUS ((u_long)14)
-extern "C" nis_taglist * nis_status_3(nis_taglist *, CLIENT *);
-extern "C" nis_taglist * nis_status_3_svc(nis_taglist *, struct svc_req *);
+extern  nis_taglist * nis_status_3 __P ((nis_taglist *, CLIENT *));
+extern  nis_taglist * nis_status_3_svc __P ((nis_taglist *, struct svc_req *));
 #define NIS_DUMPLOG ((u_long)15)
-extern "C" log_result * nis_dumplog_3(dump_args *, CLIENT *);
-extern "C" log_result * nis_dumplog_3_svc(dump_args *, struct svc_req *);
+extern  log_result * nis_dumplog_3 __P ((dump_args *, CLIENT *));
+extern  log_result * nis_dumplog_3_svc __P ((dump_args *, struct svc_req *));
 #define NIS_DUMP ((u_long)16)
-extern "C" log_result * nis_dump_3(dump_args *, CLIENT *);
-extern "C" log_result * nis_dump_3_svc(dump_args *, struct svc_req *);
+extern  log_result * nis_dump_3 __P ((dump_args *, CLIENT *));
+extern  log_result * nis_dump_3_svc __P ((dump_args *, struct svc_req *));
 #define NIS_CALLBACK ((u_long)17)
-extern "C" bool_t * nis_callback_3(netobj *, CLIENT *);
-extern "C" bool_t * nis_callback_3_svc(netobj *, struct svc_req *);
+extern  bool_t * nis_callback_3 __P ((netobj *, CLIENT *));
+extern  bool_t * nis_callback_3_svc __P ((netobj *, struct svc_req *));
 #define NIS_CPTIME ((u_long)18)
-extern "C" u_long * nis_cptime_3(nis_name *, CLIENT *);
-extern "C" u_long * nis_cptime_3_svc(nis_name *, struct svc_req *);
+extern  u_long * nis_cptime_3 __P ((nis_name *, CLIENT *));
+extern  u_long * nis_cptime_3_svc __P ((nis_name *, struct svc_req *));
 #define NIS_CHECKPOINT ((u_long)19)
-extern "C" cp_result * nis_checkpoint_3(nis_name *, CLIENT *);
-extern "C" cp_result * nis_checkpoint_3_svc(nis_name *, struct svc_req *);
+extern  cp_result * nis_checkpoint_3 __P ((nis_name *, CLIENT *));
+extern  cp_result * nis_checkpoint_3_svc __P ((nis_name *, struct svc_req *));
 #define NIS_PING ((u_long)20)
-extern "C" void * nis_ping_3(ping_args *, CLIENT *);
-extern "C" void * nis_ping_3_svc(ping_args *, struct svc_req *);
+extern  void * nis_ping_3 __P ((ping_args *, CLIENT *));
+extern  void * nis_ping_3_svc __P ((ping_args *, struct svc_req *));
 #define NIS_SERVSTATE ((u_long)21)
-extern "C" nis_taglist * nis_servstate_3(nis_taglist *, CLIENT *);
-extern "C" nis_taglist * nis_servstate_3_svc(nis_taglist *, struct svc_req *);
+extern  nis_taglist * nis_servstate_3 __P ((nis_taglist *, CLIENT *));
+extern  nis_taglist * nis_servstate_3_svc __P ((nis_taglist *,
+						struct svc_req *));
 #define NIS_MKDIR ((u_long)22)
-extern "C" nis_error * nis_mkdir_3(nis_name *, CLIENT *);
-extern "C" nis_error * nis_mkdir_3_svc(nis_name *, struct svc_req *);
+extern  nis_error * nis_mkdir_3 __P ((nis_name *, CLIENT *));
+extern  nis_error * nis_mkdir_3_svc __P ((nis_name *, struct svc_req *));
 #define NIS_RMDIR ((u_long)23)
-extern "C" nis_error * nis_rmdir_3(nis_name *, CLIENT *);
-extern "C" nis_error * nis_rmdir_3_svc(nis_name *, struct svc_req *);
+extern  nis_error * nis_rmdir_3 __P ((nis_name *, CLIENT *));
+extern  nis_error * nis_rmdir_3_svc __P ((nis_name *, struct svc_req *));
 #define NIS_UPDKEYS ((u_long)24)
-extern "C" nis_error * nis_updkeys_3(nis_name *, CLIENT *);
-extern "C" nis_error * nis_updkeys_3_svc(nis_name *, struct svc_req *);
+extern  nis_error * nis_updkeys_3 __P ((nis_name *, CLIENT *));
+extern  nis_error * nis_updkeys_3_svc __P ((nis_name *, struct svc_req *));
 
-#elif __STDC__
-#define NIS_LOOKUP ((u_long)1)
-extern  nis_result * nis_lookup_3(ns_request *, CLIENT *);
-extern  nis_result * nis_lookup_3_svc(ns_request *, struct svc_req *);
-#define NIS_ADD ((u_long)2)
-extern  nis_result * nis_add_3(ns_request *, CLIENT *);
-extern  nis_result * nis_add_3_svc(ns_request *, struct svc_req *);
-#define NIS_MODIFY ((u_long)3)
-extern  nis_result * nis_modify_3(ns_request *, CLIENT *);
-extern  nis_result * nis_modify_3_svc(ns_request *, struct svc_req *);
-#define NIS_REMOVE ((u_long)4)
-extern  nis_result * nis_remove_3(ns_request *, CLIENT *);
-extern  nis_result * nis_remove_3_svc(ns_request *, struct svc_req *);
-#define NIS_IBLIST ((u_long)5)
-extern  nis_result * nis_iblist_3(ib_request *, CLIENT *);
-extern  nis_result * nis_iblist_3_svc(ib_request *, struct svc_req *);
-#define NIS_IBADD ((u_long)6)
-extern  nis_result * nis_ibadd_3(ib_request *, CLIENT *);
-extern  nis_result * nis_ibadd_3_svc(ib_request *, struct svc_req *);
-#define NIS_IBMODIFY ((u_long)7)
-extern  nis_result * nis_ibmodify_3(ib_request *, CLIENT *);
-extern  nis_result * nis_ibmodify_3_svc(ib_request *, struct svc_req *);
-#define NIS_IBREMOVE ((u_long)8)
-extern  nis_result * nis_ibremove_3(ib_request *, CLIENT *);
-extern  nis_result * nis_ibremove_3_svc(ib_request *, struct svc_req *);
-#define NIS_IBFIRST ((u_long)9)
-extern  nis_result * nis_ibfirst_3(ib_request *, CLIENT *);
-extern  nis_result * nis_ibfirst_3_svc(ib_request *, struct svc_req *);
-#define NIS_IBNEXT ((u_long)10)
-extern  nis_result * nis_ibnext_3(ib_request *, CLIENT *);
-extern  nis_result * nis_ibnext_3_svc(ib_request *, struct svc_req *);
-#define NIS_FINDDIRECTORY ((u_long)12)
-extern  fd_result * nis_finddirectory_3(fd_args *, CLIENT *);
-extern  fd_result * nis_finddirectory_3_svc(fd_args *, struct svc_req *);
-#define NIS_STATUS ((u_long)14)
-extern  nis_taglist * nis_status_3(nis_taglist *, CLIENT *);
-extern  nis_taglist * nis_status_3_svc(nis_taglist *, struct svc_req *);
-#define NIS_DUMPLOG ((u_long)15)
-extern  log_result * nis_dumplog_3(dump_args *, CLIENT *);
-extern  log_result * nis_dumplog_3_svc(dump_args *, struct svc_req *);
-#define NIS_DUMP ((u_long)16)
-extern  log_result * nis_dump_3(dump_args *, CLIENT *);
-extern  log_result * nis_dump_3_svc(dump_args *, struct svc_req *);
-#define NIS_CALLBACK ((u_long)17)
-extern  bool_t * nis_callback_3(netobj *, CLIENT *);
-extern  bool_t * nis_callback_3_svc(netobj *, struct svc_req *);
-#define NIS_CPTIME ((u_long)18)
-extern  u_long * nis_cptime_3(nis_name *, CLIENT *);
-extern  u_long * nis_cptime_3_svc(nis_name *, struct svc_req *);
-#define NIS_CHECKPOINT ((u_long)19)
-extern  cp_result * nis_checkpoint_3(nis_name *, CLIENT *);
-extern  cp_result * nis_checkpoint_3_svc(nis_name *, struct svc_req *);
-#define NIS_PING ((u_long)20)
-extern  void * nis_ping_3(ping_args *, CLIENT *);
-extern  void * nis_ping_3_svc(ping_args *, struct svc_req *);
-#define NIS_SERVSTATE ((u_long)21)
-extern  nis_taglist * nis_servstate_3(nis_taglist *, CLIENT *);
-extern  nis_taglist * nis_servstate_3_svc(nis_taglist *, struct svc_req *);
-#define NIS_MKDIR ((u_long)22)
-extern  nis_error * nis_mkdir_3(nis_name *, CLIENT *);
-extern  nis_error * nis_mkdir_3_svc(nis_name *, struct svc_req *);
-#define NIS_RMDIR ((u_long)23)
-extern  nis_error * nis_rmdir_3(nis_name *, CLIENT *);
-extern  nis_error * nis_rmdir_3_svc(nis_name *, struct svc_req *);
-#define NIS_UPDKEYS ((u_long)24)
-extern  nis_error * nis_updkeys_3(nis_name *, CLIENT *);
-extern  nis_error * nis_updkeys_3_svc(nis_name *, struct svc_req *);
-
-#else /* Old Style C */
-#define NIS_LOOKUP ((u_long)1)
-extern  nis_result * nis_lookup_3();
-extern  nis_result * nis_lookup_3_svc();
-#define NIS_ADD ((u_long)2)
-extern  nis_result * nis_add_3();
-extern  nis_result * nis_add_3_svc();
-#define NIS_MODIFY ((u_long)3)
-extern  nis_result * nis_modify_3();
-extern  nis_result * nis_modify_3_svc();
-#define NIS_REMOVE ((u_long)4)
-extern  nis_result * nis_remove_3();
-extern  nis_result * nis_remove_3_svc();
-#define NIS_IBLIST ((u_long)5)
-extern  nis_result * nis_iblist_3();
-extern  nis_result * nis_iblist_3_svc();
-#define NIS_IBADD ((u_long)6)
-extern  nis_result * nis_ibadd_3();
-extern  nis_result * nis_ibadd_3_svc();
-#define NIS_IBMODIFY ((u_long)7)
-extern  nis_result * nis_ibmodify_3();
-extern  nis_result * nis_ibmodify_3_svc();
-#define NIS_IBREMOVE ((u_long)8)
-extern  nis_result * nis_ibremove_3();
-extern  nis_result * nis_ibremove_3_svc();
-#define NIS_IBFIRST ((u_long)9)
-extern  nis_result * nis_ibfirst_3();
-extern  nis_result * nis_ibfirst_3_svc();
-#define NIS_IBNEXT ((u_long)10)
-extern  nis_result * nis_ibnext_3();
-extern  nis_result * nis_ibnext_3_svc();
-#define NIS_FINDDIRECTORY ((u_long)12)
-extern  fd_result * nis_finddirectory_3();
-extern  fd_result * nis_finddirectory_3_svc();
-#define NIS_STATUS ((u_long)14)
-extern  nis_taglist * nis_status_3();
-extern  nis_taglist * nis_status_3_svc();
-#define NIS_DUMPLOG ((u_long)15)
-extern  log_result * nis_dumplog_3();
-extern  log_result * nis_dumplog_3_svc();
-#define NIS_DUMP ((u_long)16)
-extern  log_result * nis_dump_3();
-extern  log_result * nis_dump_3_svc();
-#define NIS_CALLBACK ((u_long)17)
-extern  bool_t * nis_callback_3();
-extern  bool_t * nis_callback_3_svc();
-#define NIS_CPTIME ((u_long)18)
-extern  u_long * nis_cptime_3();
-extern  u_long * nis_cptime_3_svc();
-#define NIS_CHECKPOINT ((u_long)19)
-extern  cp_result * nis_checkpoint_3();
-extern  cp_result * nis_checkpoint_3_svc();
-#define NIS_PING ((u_long)20)
-extern  void * nis_ping_3();
-extern  void * nis_ping_3_svc();
-#define NIS_SERVSTATE ((u_long)21)
-extern  nis_taglist * nis_servstate_3();
-extern  nis_taglist * nis_servstate_3_svc();
-#define NIS_MKDIR ((u_long)22)
-extern  nis_error * nis_mkdir_3();
-extern  nis_error * nis_mkdir_3_svc();
-#define NIS_RMDIR ((u_long)23)
-extern  nis_error * nis_rmdir_3();
-extern  nis_error * nis_rmdir_3_svc();
-#define NIS_UPDKEYS ((u_long)24)
-extern  nis_error * nis_updkeys_3();
-extern  nis_error * nis_updkeys_3_svc();
-#endif /* Old Style C */
-struct rpcgen_table {
-#if defined __cplusplus || __STDC__
-	char	*(*proc)(void);
-#else
-	char	*(*proc)();
-#endif
-	xdrproc_t	xdr_arg;
-	unsigned	len_arg;
-	xdrproc_t	xdr_res;
-	unsigned	len_res;
-};
+__END_DECLS
 
 #endif /* !_NIS_H_RPCGEN */
