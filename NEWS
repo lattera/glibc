@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  22 June 1996
+GNU C Library NEWS -- history of user-visible changes.  24 June 1996
 
 Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -46,6 +46,15 @@ Version 2.0
   Sun, and modified by JT Conklin with i387 support and by Ian Taylor with
   `float' functions.  The math functions now reside in a separate library,
   so programs using them will need to use `-lm' their linking commands.
+
+* Ulrich Drepper has contributed support for an `/etc/nsswitch.conf'
+  mechanism similar to that found in Solaris 2.  This is now used for the
+  group, passwd, hosts, networks, services, protocols, and rpc databases.
+  The `nsswitch.conf' file controls what services are used for each
+  individual database.  This works by loading shared libraries with names
+  specified in `nsswitch.conf', so service modules can be changed or added at
+  any time without even relinking any program.  A future release of the
+  separate NYS package will provide NIS/YP and NIS+ modules for this interface.
 
 * The new functions `strtoq' and `strtouq' parse integer values from
   strings, like `strtol' and `strtoul', but they return `long long int' and

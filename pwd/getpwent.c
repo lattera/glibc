@@ -1,5 +1,6 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,55 +14,17 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
-#include <stddef.h>
-#include <stdio.h>
 #include <pwd.h>
 
-static FILE *stream = NULL;
 
-/* Rewind the stream.  */
-void
-DEFUN_VOID(setpwent)
-{
-  if (stream != NULL)
-    rewind(stream);
-}
+#define LOOKUP_TYPE	struct passwd
+#define SETFUNC_NAME	setpwent
+#define	GETFUNC_NAME	getpwent
+#define	ENDFUNC_NAME	endpwent
+#define DATABASE_NAME	passwd
+#define BUFLEN		1024
 
-
-/* Close the stream.  */
-void
-DEFUN_VOID(endpwent)
-{
-  if (stream != NULL)
-    {
-      (void) fclose(stream);
-      stream = NULL;
-    }
-}
-
-
-/* Return one entry from the password file.  */
-struct passwd *
-DEFUN_VOID(getpwent)
-{
-  static PTR info = NULL;
-  if (info == NULL)
-    {
-      info = __pwdalloc();
-      if (info == NULL)
-	return(NULL);
-    }
-
-  if (stream == NULL)
-    {
-      stream = __pwdopen();
-      if (stream == NULL)
-	return(NULL);
-    }
-
-  return(__pwdread(stream, info));
-}
+#include "../nss/getXXent.c"

@@ -67,11 +67,12 @@
 #endif
 #include <sys/cdefs.h>
 
-#define	_PATH_HEQUIV	"/etc/hosts.equiv"
-#define	_PATH_HOSTS	"/etc/hosts"
-#define	_PATH_NETWORKS	"/etc/networks"
-#define	_PATH_PROTOCOLS	"/etc/protocols"
-#define	_PATH_SERVICES	"/etc/services"
+#define	_PATH_HEQUIV		"/etc/hosts.equiv"
+#define	_PATH_HOSTS		"/etc/hosts"
+#define	_PATH_NETWORKS		"/etc/networks"
+#define	_PATH_NSSWITCH_CONF	"/etc/nsswitch.conf"
+#define	_PATH_PROTOCOLS		"/etc/protocols"
+#define	_PATH_SERVICES		"/etc/services"
 
 extern int h_errno;
 

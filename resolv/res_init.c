@@ -76,8 +76,6 @@ static char rcsid[] = "$Id$";
 # include "../conf/portability.h"
 #endif
 
-#include "res_hconf.h"
-
 /*-------------------------------------- info about "sortlist" --------------
  * Marc Majka		1994/04/16
  * Allan Nathanson	1994/10/29 (BIND 4.9.3.x)
@@ -421,8 +419,6 @@ res_init()
 	if ((cp = getenv("RES_OPTIONS")) != NULL)
 		res_setoptions(cp, "env");
 	_res.options |= RES_INIT;
-
-	_res_hconf_init ();
 	return (0);
 }
 

@@ -1,3 +1,153 @@
+Tue Jun 25 02:59:11 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* malloc/malloc.h: Declare malloc_object_allocated_size, malloc_walk.
+	* malloc/Makefile (dist-routines): Add malloc-size, malloc-walk.
+	* malloc/malloc-size.c: New file.
+	* malloc/malloc-walk.c: New file.
+
+	* malloc/malloc-find.c (malloc_find_object_address): Return null if
+	PTR is outside the heap.
+
+	* elf/dl-load.c (_dl_map_object): If the requested name matches the
+ 	soname of a loaded object, use that object.
+
+Mon Jun 24 19:57:01 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makefile (subdirs): Add nss.
+
+	* inet/Makefile (routines): Add getrpcent, getrpcbyname,
+	getrpcbynumber, getrpcent_r, getrpcbyname_r, getrpcbynumber_r.
+	* inet/getrpcbynumber_r.c: New file.
+	* inet/getrpcbynumber.c: New file.
+	* inet/getrpcbyname.c: New file.
+	* inet/getrpcbyname_r.c: New file.
+	* inet/getrpcent_r.c: New file.
+	* inet/getrpcent.c: New file.
+	* nss/rpc-lookup.c: New file.
+	* nss/nss_files/files-rpc.c: New file.
+	* nss/Makefile (routines): Add rpc-lookup.
+	(libnss_files-routines): Add files-rpc.
+	* sunrpc/Makefile (routines): Remove getrpcent.
+	* sunrpc/getrpcent.c: File removed.
+
+	* nss/getXXent_r.c (REENTRANT_GETNAME): Clear NO_MORE when NIP is
+	non-null on entry.
+
+	* Makeconfig (rpath-link): Add $(nssobjdir).
+	(nssobjdir): New variable.
+
+	* Makerules: Move shared library building before objects rules, so
+	versions are known before extra-lib.mk gets included.
+	* extra-lib.mk (lib-noranlib): Depend on the shared object too.
+
+	* pwd/getpwuid.c: Rewritten using nss.
+	* pwd/getpwnam.c: Likewise.
+	* pwd/getpwent.c: Likewise.
+	* grp/getgrnam.c: Likewise.
+	* grp/getgrgid.c: Likewise.
+	* grp/getgrent.c: Likewise.
+	* pwd/Makefile (routines): Add getpwent_r, getpwnam_r, getpwuid_r.
+	* pwd/getpwent_r.c: New file.
+	* pwd/getpwnam_r.c: New file.
+	* pwd/getpwuid_r.c: New file.
+	* grp/Makefile (routines): Add getgrent_r, getgrgid_r, getgrnam_r.
+	* grp/getgrnam_r.c: New file.
+	* grp/getgrgid_r.c: New file.
+	* grp/getgrent_r.c: New file.
+	* grp/Makefile (routines): Remove grpopen, grpread.
+	* pwd/Makefile (routines): Remove pwdopen, pwdread.
+	* grp/grpopen.c, grp/grpread.c, pwd/pwdopen.c, pwd/pwdread.c: Removed.
+
+	* pwd/fgetpwent.c: Rewritten using files-parse.c.
+	* grp/fgetgrent.c: Likewise.
+
+	* nss/Makefile (routines): Add grp-lookup and pwd-lookup.
+	* nss/pwd-lookup.c, nss/grp-lookup.c: New files.
+	* nss/nss_files/files-grp.c: New file.
+	* nss/nss_files/files-pwd.c: New file.
+
+	* nss/Makefile (subdir-dirs): New variable; use it in vpath.
+
+	* nss/nss_files/files-parse.c: New file.
+	* nss/nss_files/files-XXX.c: New file.
+	* nss/nss_files/files-hosts.c, nss/nss_files/files-proto.c,
+	nss/nss_files/files-service.c, nss/nss_files/files-network.c:
+	Rewritten using them.
+
+	* nss/Makefile (libnss_files-routines): Remove files-host.
+	Add files-hosts, files-grp, files-pwd.
+
+	* nss/nss_dns/dns-network.c: Don't include <pthread.h>.
+
+Mon Jun 24 22:39:12 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	A .plt entry now loads the .rela.plt offset directly rather
+	than making us calculate it.
+
+Sun Jun 23 15:24:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/Makefile ($(installed-localtime-file) rule): Do
+	$(make-target-directory) first.
+
+	* resolv.h: Fix wrapper for resolv/resolv.h.
+
+	* configure.in (ld --no-whole-archive check): Use AC_TRY_COMMAND.
+	Compile dummy file and pass -nostdlib -nostartfiles so as not to
+	require installed libraries.
+
+	* shlib-versions (*-*-*): Set libresolv=2, libnss_files=1,
+	libnss_dns=1.
+
+Sun Jun 23 19:42:05 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/netdb.h (_PATH_NSSWITCH_CONF): New macro.
+
+	* inet/herrno.c: New file.
+
+	* resolv/res_init.c: Remove res_hconf calls.
+
+	* nss/Makefile, nss/XXX-lookup.c, nss/file-lookup.c,
+	nss/getXXbyYY.c, nss/getXXbyYY_r.c, nss/getXXent.c,
+	nss/getXXent_r.c, nss/host-lookup.c, nss/network-lookup.c,
+	nss/nsswitch.c, nss/nsswitch.h, nss/proto-lookup.c,
+	nss/service-lookup.c: New files.  Implementation of name
+	service switch, following the approach in Solaris.
+	Interface specification and general structure inspired by Peter
+	Eriksson <pen@lysator.liu.se>.
+	* nss/nss_files/files-host.c, nss/nss_files/files-network.c,
+	nss/nss_files/files-proto.c, nss/nss_files/files-service.c:
+	Implementation of libnss_files.so module for file based databases
+	in NSS service.
+	* nss/nss_dns/dns-host.c, nss/nss_dns/dns-network.c: Implementation
+        if libnss_dns.so module for DNS name lookup in NSS service.
+
+	* inet/getproto.c, inet/getprtent.c, inet/getprtname.c,
+	inet/getservent.c, inet/getsrvbynm.c, inet/getsrvbypt.c:
+	Changed to serve as interface to NSS.
+	* inet/gethstbyad.c, inet/gethstbyad_r.c, inet/gethstbynm.c,
+	inet/gethstbynm2.c, inet/gethstbynm2_r.c, inet/gethstbynm_r.c,
+	inet/gethstent.c, inet/gethstent_r.c, inet/getnetbynm.c,
+	inet/getnetbynm_r.c, inet/getnetbypt.c, inet/getnetbypt_r.c,
+	inet/getnetent.c, inet/getnetent_r.c, inet/getproto_r.c,
+	inet/getprtent_r.c, inet/getprtname_r.c, inet/getservent_r.c,
+	inet/getsrvbynm_r.c, inet/getsrvbypt_r.c: New files.  Implement
+	interfaces to NSS, including reentrant functions.
+
+	* resolv/getnetbyaddr.c, resolv/getnetbyname.c, resolv/getnetent.c,
+	resolv/sethostent.c: Removed:  Obsoleted by NSS.
+
+	* resolv/mapv4v6addr.h, resolv/mapv4v6hostent.h: Extracted from
+	gethnamaddr.c.  These private functions are now used in more
+	than one file.
+
+	* resolv/inet_pton.c, resolv/gethnamaddr.c: Updated to bind-4.9.4-T5B.
+
+Sat Jun 22 16:49:47 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rpm/Makefile ($(config)): Make sure the word list in the for
+	loop is syntactically non-empty.
+
 Sat Jun 22 21:29:52 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Version 1.92 test release.

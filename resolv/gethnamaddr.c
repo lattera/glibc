@@ -65,15 +65,11 @@ static char rcsid[] = "$Id$";
 #include <arpa/nameser.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <ctype.h>
 #include <errno.h>
 #include <syslog.h>
-
-#include "res_hconf.h"
 
 #ifndef LOG_AUTH
 # define LOG_AUTH 0
@@ -98,7 +94,6 @@ static char rcsid[] = "$Id$";
 
 #define	MAXALIASES	35
 #define	MAXADDRS	35
-#define	MAXADDRBUFSIZE	8192
 
 static const char AskedForGot[] =
 			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
@@ -108,7 +103,7 @@ static struct hostent *gethostbyname_ipv4 __P((const char *));
 
 static struct hostent host;
 static char *host_aliases[MAXALIASES];
-static char hostbuf[MAXADDRBUFSIZE];
+static char hostbuf[8*1024];
 static u_char host_addr[16];	/* IPv4 or IPv6 */
 static FILE *hostf = NULL;
 static int stayopen = 0;
@@ -435,7 +430,7 @@ gethostbyname2(name, af)
 	querybuf buf;
 	register const char *cp;
 	char *bp;
-	int i, n, size, type, len;
+	int n, size, type, len;
 	extern struct hostent *_gethtbyname2();
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
@@ -506,55 +501,13 @@ gethostbyname2(name, af)
 				break;
 		}
 
-	h_errno = HOST_NOT_FOUND;
-	for (i = 0; i < _res_hconf.num_services; ++i) {
-		struct hostent * hp;
-		char * cp = (char *) name;
-
-		if (_res_hconf.num_trimdomains > 0) {
-			size_t name_len = strlen(name);
-
-			cp = malloc(name_len + 1);
-			memcpy(cp, name, name_len + 1);
-			_res_hconf_trim_domain(cp);
-		}
-
-		hp = NULL;
-		switch (_res_hconf.service[i]) {
-		      case SERVICE_BIND:
-			if ((n = res_search(cp, C_IN, type,
-					    buf.buf, sizeof(buf))) < 0)
-			{
-				dprintf("res_search failed (%d)\n", n);
-				break;
-			}
-			hp = getanswer(&buf, n, cp, type);
-			break;
-
-		      case SERVICE_HOSTS:
-			hp = _gethtbyname2(cp, af);
-			break;
-#ifdef HAVE_NYS
-		      case SERVICE_NIS:
-			hp = _getnishost(cp, "hosts.byname");
-			break;
-#endif
-		      default:
-			break;
-		}
-		if (cp != name)
-			free(cp);
-		if (hp) {
-			if ((_res_hconf.flags & HCONF_FLAG_REORDER)
-			    && hp->h_addr_list[0] && hp->h_addr_list[1])
-				_res_hconf_reorder_addrs(hp);
-			_res_hconf_trim_domains(hp);
-			return hp;
-		}
+	if ((n = res_search(name, C_IN, type, buf.buf, sizeof(buf))) < 0) {
+		dprintf("res_search failed (%d)\n", n);
+		if (errno == ECONNREFUSED)
+			return (_gethtbyname2(name, af));
+		return (NULL);
 	}
-	if (h_errno == NETDB_SUCCESS)
-		h_errno = HOST_NOT_FOUND;
-	return NULL;
+	return (getanswer(&buf, n, name, type));
 }
 
 struct hostent *
@@ -569,11 +522,12 @@ gethostbyaddr(addr, len, af)
 	querybuf buf;
 	register struct hostent *hp;
 	char qbuf[MAXDNAME+1], *qp;
+#ifdef SUNSECURITY
 	register struct hostent *rhp;
 	char **haddr;
 	u_long old_options;
 	char hname2[MAXDNAME+1];
-	int i, old_num_trimdomains;
+#endif /*SUNSECURITY*/
 	extern struct hostent *_gethtbyaddr();
 
 	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
@@ -606,130 +560,79 @@ gethostbyaddr(addr, len, af)
 		h_errno = NETDB_INTERNAL;
 		return (NULL);
 	}
-
-	h_errno = NETDB_SUCCESS;
-	for (i = 0; i < _res_hconf.num_services; ++i) {
-		hp = NULL;
-		switch (_res_hconf.service[i]) {
-		case SERVICE_BIND:
-			switch (af) {
-			case AF_INET:
-				(void) sprintf(qbuf,
-					       "%u.%u.%u.%u.in-addr.arpa",
-					       (uaddr[3] & 0xff),
-					       (uaddr[2] & 0xff),
-					       (uaddr[1] & 0xff),
-					       (uaddr[0] & 0xff));
-				break;
-			case AF_INET6:
-				qp = qbuf;
-				for (n = IN6ADDRSZ - 1; n >= 0; n--) {
-					qp += SPRINTF((qp, "%x.%x.",
-						       uaddr[n] & 0xf,
-						       (uaddr[n] >> 4) & 0xf));
-				}
-				strcpy(qp, "ip6.int");
-				break;
-			default:
-				abort();
-			}
-			n = res_query(qbuf, C_IN, T_PTR,
-				      (u_char *)buf.buf, sizeof buf.buf);
-			if (n < 0) {
-				dprintf("res_query failed (%d)\n", n);
-				break;
-			}
-			hp = getanswer(&buf, n, qbuf, T_PTR);
-			if (!hp)
-				break;	/* h_errno was set by getanswer() */
-			if (af == AF_INET
-			    && (_res_hconf.flags & HCONF_FLAG_SPOOF)) {
-				/*
-				 * Turn off search as the name should
-				 * be absolute, 'localhost' should be
-				 * matched by defnames
-				 */
-				strncpy(hname2, hp->h_name, MAXDNAME);
-				hname2[MAXDNAME] = '\0';
-				old_options = _res.options;
-				/*
-				 * Also turn off domain trimming to prevent it
-				 * from causing the name comparison to fail.
-				 */
-				old_num_trimdomains =
-					_res_hconf.num_trimdomains;
-				_res.options &= ~RES_DNSRCH;
-				_res.options |= RES_DEFNAMES;
-				rhp = gethostbyname(hname2);
-				_res.options = old_options;
-				/* There must be an A record and
-				   the names must match.  */
-				if (!rhp || strcmp(hname2, rhp->h_name)) {
-					syslog(LOG_NOTICE|LOG_AUTH,
-					       "gethostbyaddr: No A record for"
-					       " %s (verifying [%s])",
-					       hname2,
-					       inet_ntoa(*((struct in_addr *)
-							   addr)));
-					h_errno = HOST_NOT_FOUND;
-					break;
-				}
-				for (haddr = rhp->h_addr_list; *haddr; haddr++)
-					if (!memcmp(*haddr, addr, INADDRSZ))
-						break;
-				if (!*haddr) {
-					syslog(LOG_NOTICE|LOG_AUTH,
-					       "gethostbyaddr: A record of %s"
-					       " != PTR record [%s]",
-					       hname2,
-					       inet_ntoa(*((struct in_addr *)
-							   addr)));
-					h_errno = HOST_NOT_FOUND;
-					break;
-				}
-			}
-			hp->h_addrtype = af;
-			hp->h_length = len;
-			bcopy(addr, host_addr, len);
-			h_addr_ptrs[0] = (char *)host_addr;
-			h_addr_ptrs[1] = NULL;
-			if (af == AF_INET && (_res.options & RES_USE_INET6)) {
-				map_v4v6_address((char*)host_addr,
-						 (char*)host_addr);
-				hp->h_addrtype = AF_INET6;
-				hp->h_length = IN6ADDRSZ;
-			}
-			h_errno = NETDB_SUCCESS;
-			break;
-
-		case SERVICE_HOSTS:
-			hp = _gethtbyaddr(addr, len, af);
-			break;
-
-#ifdef HAVE_NYS
-		case SERVICE_NIS:
-			if (af == AF_INET) {
-				sprintf(qbuf, "%u.%u.%u.%u",
-					(unsigned)addr[0] & 0xff,
-					(unsigned)addr[1] & 0xff,
-					(unsigned)addr[2] & 0xff,
-					(unsigned)addr[3] & 0xff);
-				hp = _getnishost(qbuf, "hosts.byaddr");
-			}
-			break;
-#endif
-
-		default:
-			break;
+	switch (af) {
+	case AF_INET:
+		(void) sprintf(qbuf, "%u.%u.%u.%u.in-addr.arpa",
+			       (uaddr[3] & 0xff),
+			       (uaddr[2] & 0xff),
+			       (uaddr[1] & 0xff),
+			       (uaddr[0] & 0xff));
+		break;
+	case AF_INET6:
+		qp = qbuf;
+		for (n = IN6ADDRSZ - 1; n >= 0; n--) {
+			qp += SPRINTF((qp, "%x.%x.",
+				       uaddr[n] & 0xf,
+				       (uaddr[n] >> 4) & 0xf));
 		}
-		if (hp) {
-			_res_hconf_trim_domains(hp);
-			return hp;
-		}
+		strcpy(qp, "ip6.int");
+		break;
+	default:
+		abort();
 	}
-	if (h_errno == NETDB_SUCCESS)
+	n = res_query(qbuf, C_IN, T_PTR, (u_char *)buf.buf, sizeof buf.buf);
+	if (n < 0) {
+		dprintf("res_query failed (%d)\n", n);
+		if (errno == ECONNREFUSED)
+			return (_gethtbyaddr(addr, len, af));
+		return (NULL);
+	}
+	if (!(hp = getanswer(&buf, n, qbuf, T_PTR)))
+		return (NULL);	/* h_errno was set by getanswer() */
+#ifdef SUNSECURITY
+	if (af == AF_INET) {
+	    /*
+	     * turn off search as the name should be absolute,
+	     * 'localhost' should be matched by defnames
+	     */
+	    strncpy(hname2, hp->h_name, MAXDNAME);
+	    hname2[MAXDNAME] = '\0';
+	    old_options = _res.options;
+	    _res.options &= ~RES_DNSRCH;
+	    _res.options |= RES_DEFNAMES;
+	    if (!(rhp = gethostbyname(hname2))) {
+		syslog(LOG_NOTICE|LOG_AUTH,
+		       "gethostbyaddr: No A record for %s (verifying [%s])",
+		       hname2, inet_ntoa(*((struct in_addr *)addr)));
+		_res.options = old_options;
 		h_errno = HOST_NOT_FOUND;
-	return NULL;
+		return (NULL);
+	    }
+	    _res.options = old_options;
+	    for (haddr = rhp->h_addr_list; *haddr; haddr++)
+		if (!memcmp(*haddr, addr, INADDRSZ))
+			break;
+	    if (!*haddr) {
+		syslog(LOG_NOTICE|LOG_AUTH,
+		       "gethostbyaddr: A record of %s != PTR record [%s]",
+		       hname2, inet_ntoa(*((struct in_addr *)addr)));
+		h_errno = HOST_NOT_FOUND;
+		return (NULL);
+	    }
+	}
+#endif /*SUNSECURITY*/
+	hp->h_addrtype = af;
+	hp->h_length = len;
+	bcopy(addr, host_addr, len);
+	h_addr_ptrs[0] = (char *)host_addr;
+	h_addr_ptrs[1] = NULL;
+	if (af == AF_INET && (_res.options & RES_USE_INET6)) {
+		map_v4v6_address((char*)host_addr, (char*)host_addr);
+		hp->h_addrtype = AF_INET6;
+		hp->h_length = IN6ADDRSZ;
+	}
+	h_errno = NETDB_SUCCESS;
+	return (hp);
 }
 
 void
@@ -824,44 +727,6 @@ _gethtent()
 	return (&host);
 }
 
-struct hstorage {
-	char	*name;				/* canonical name */
-	char **	alp;				/* address list pointer */
-	char *	abp;				/* address buffer pointer */
-	char *	addr_list[MAXADDRS + 1];	/* address list storage */
-	char	addr_buf[MAXADDRBUFSIZE];	/* addresses storage */
-};
-
-static void
-append_addr (struct hstorage * hs, struct hostent *p)
-{
-	if (hs->alp < hs->addr_list + MAXADDRS
-	    && hs->abp + p->h_length < hs->addr_buf + MAXADDRBUFSIZE)
-	{
-		hs->alp[0] = hs->abp;
-		hs->alp[1] = 0;
-		memcpy(hs->abp, p->h_addr_list[0], p->h_length);
-		hs->abp += p->h_length;
-		++hs->alp;
-	}
-}
-
-/*
- * Lookup IP address and aliases for host NAME.  If multiaddress mode
- * is enabled, the entire /etc/hosts file is searched and the union of
- * all addresses found for NAME is returned (this may be slow with
- * large /etc/hosts files, but is convenient for smallish sites that
- * don't want to go through the complexity of running named locally).
- * If multiaddress mode is enabled, the address returned in
- * h_addr_list[0] is one that is on the same net as one of the host's
- * local addresses (if such an address exists).  For compatibility
- * with the BIND version of gethostbyname(), the alias field is empty
- * unless the name being looked up is an alias itself.  In the latter
- * case, the name field contains the canonical name and the alias
- * field the name that is being looked up.  A difference from the BIND
- * version is that this is true even if the alias applies only to one
- * of the interfaces on the target host.o
- */
 struct hostent *
 _gethtbyname(name)
 	const char *name;
@@ -886,163 +751,14 @@ _gethtbyname2(name, af)
 	register char **cp;
 
 	_sethtent(0);
-
-	if (_res_hconf.flags & HCONF_FLAG_MULTI) {
-		/*
-		 * More statics; not pretty, but it would require
-		 * interface changes to make these functions
-		 * reentrant.
-		 */
-		static char *aliases[2] = {0};
-		static struct hstorage self = {0}, target = {0};
-		static size_t self_name_size = 0; /* Allocated in self.name. */
-		static struct hostent ht;
-		int found;
-
-		if (aliases[0])
-			free (aliases[0]);	/* Malloced in a prev call.  */
-		aliases[0] = aliases[1] = 0;
-
-		/* Get current host name in a large enough buffer.  */
-		do {
-			   errno = 0;
-
-			   if (self.name)
-			   {
-				   self_name_size += self_name_size;
-				   self.name =
-					   realloc (self.name, self_name_size);
-			   } else {
-				   self_name_size = 128; /* Initial guess */
-				   self.name = malloc (self_name_size);
-			   }
-
-			   if (! self.name)
-			   {
-				   errno = ENOMEM;
-				   return 0;
-			   }
-		   } while ((gethostname(self.name, self_name_size) == 0
-			     && !memchr (self.name, '\0', self_name_size))
-			    || errno == ENAMETOOLONG);
-		
-		if (errno)
-			/* gethostname failed, abort.  */
-		{
-			free (self.name);
-			self.name = 0;
-		}
-
-		self.alp = self.addr_list;
-		self.abp = self.addr_buf;
-
-		if (target.name)
-			free (target.name);
-		target.name = strdup (name);
-
-		target.alp = target.addr_list;
-		target.abp = target.addr_buf;
-
-		_sethtent(0);
-		while ((p = _gethtent()) != 0) {
-			found = 1;
-
-			if (p->h_addrtype != af)
-				continue;
-			if (strcasecmp(p->h_name, name) != 0) {
-				found = 0;
-				for (cp = p->h_aliases; *cp; ++cp)
-					if (strcasecmp(*cp, name) == 0) {
-						found = 1;
-						if (!aliases[0]) {
-							aliases[0] =
-							  target.name;
-							target.name =
-							  strdup (p->h_name);
-						}
-						break;
-					}
-			}
-			if (found) {
-				/* they better be all the same type and length! */
-				ht.h_addrtype = p->h_addrtype;
-				ht.h_length = p->h_length;
-				append_addr(&target, p);
-				/*
-				 * If the current hostentry is for the target host, we don't
-				 * check for the local host name.  This nicely optimizes the
-				 * case where NAME is a local name since address ordering
-				 * doesn't matter in that case.
-				 */
-				continue;
-			}
-			found = 1;
-			if (strcasecmp(p->h_name, self.name) != 0) {
-				found = 0;
-				for (cp = p->h_aliases; *cp; ++cp)
-					if (strcasecmp(*cp, self.name) == 0) {
-						found = 1;
-						break;
-					}
-			}
-			if (found) {
-				append_addr(&self, p);
-			}
-		}
-		_endhtent();
-
-		if (target.alp == target.addr_list)
-			return NULL;		/* found nothing */
-
-		ht.h_aliases   = aliases;
-		ht.h_name      = target.name;
-		ht.h_addr_list = target.addr_list;
-		/*
-		 * XXX (davidm) Isn't this subsumed by REORDER???
-		 *
-		 * Finding the `best' address is necessarily address
-		 * specific.  For now, we do IPv4 addresses only.
-		 */
-		if (af == AF_INET) {
-			u_int32_t a1, a2, diff, mindiff = ~0;
-			int i, j, bestaddr = 0;
-
-			for (i = 0; self.addr_list[i]; ++i) {
-				for (j = 0; target.addr_list[j]; ++j) {
-					memcpy(&a1, self.addr_list[i], 4);
-					memcpy(&a2, target.addr_list[j], 4);
-					a1 = ntohl(a1);
-					a2 = ntohl(a2);
-					diff = a1 ^ a2;
-					if (diff < mindiff) {
-						bestaddr = j;
-						mindiff = diff;
-					}
-				}
-			}
-			if (bestaddr > 0) {
-				char * tmp;
-
-				tmp = target.addr_list[0];
-				target.addr_list[0] = target.addr_list[bestaddr];
-				target.addr_list[bestaddr] = tmp;
-			}
-		} else if (af == AF_INET6) {
-			/* XXX To do!!! */
-		}
-		ht.h_addr_list = target.addr_list;
-		return &ht;
-	} else {
-		_sethtent(0);
-		while (p = _gethtent()) {
-			if (p->h_addrtype != af)
-				continue;
-			if (strcasecmp(p->h_name, name) == 0)
-				break;
-			for (cp = p->h_aliases; *cp != 0; cp++)
-				if (strcasecmp(*cp, name) == 0)
-					goto found;
-		}
+	while (p = _gethtent()) {
+		if (p->h_addrtype != af)
+			continue;
+		if (strcasecmp(p->h_name, name) == 0)
+			break;
+		for (cp = p->h_aliases; *cp != 0; cp++)
+			if (strcasecmp(*cp, name) == 0)
+				goto found;
 	}
  found:
 	_endhtent();
@@ -1191,47 +907,7 @@ ht_gethostbyaddr(addr, len, af)
 struct hostent *
 gethostent()
 {
-	struct hostent * hp;
-	int i;
-
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1) {
-		h_errno = NETDB_INTERNAL;
-		return (NULL);
-	}
-
-	/*
-	 * This doesn't look quite right.  Shouldn't we read one
-	 * service until it returns 0, then move on to the next
-	 * service?  If so, it requires adding some state and
-	 * initializing that state in sethostent().
-	 * (davidm@azstarnet.com)
-	 */
-	for (i = 0; i < _res_hconf.num_services; ++i) {
-		hp = NULL;
-		switch (_res_hconf.service[i]) {
-		      case SERVICE_HOSTS:
-			hp = _gethtent ();
-			break;
-
-#ifdef HAVE_NYS
-		      case SERVICE_NIS:
-			hp = _getnishost (NULL, "hosts.byname");
-			break;
-#endif
-
-		      case SERVICE_BIND:
-		      default:
-			break;
-		}
-		if (hp) {
-			if ((_res_hconf.flags & HCONF_FLAG_REORDER)
-			    && hp->h_addr_list[0] && hp->h_addr_list[1])
-				_res_hconf_reorder_addrs (hp);
-			return hp;
-		}
-	}
-	h_errno = HOST_NOT_FOUND;
-	return NULL;
+	return (_gethtent());
 }
 
 void

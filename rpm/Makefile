@@ -64,11 +64,13 @@ $(config): template $(distinfo) Makefile
 	rm -f $@.new
 	(sed -e 's%@VERSION@%$(version)%g' $<; \
 	 ($(foreach var,$(instvars),\
-	  for f in $(install-$(var)); do \
+	  list='$(install-$(var))'; \
+	  for f in $$list; do \
 	    echo $(filter-out /,$($(var)dir)/)$$f; \
 	  done;\
 	 )) | sort; \
-	 (for f in $(install-sysconf); do \
+	 (list='$(install-sysconf)'; \
+	  for f in $$list; do \
 	    echo %config $$f; \
 	  done) | sort) > $@.new
 	mv -f $@.new $@

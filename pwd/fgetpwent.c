@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +16,50 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <limits.h>
-#include <stddef.h>
 #include <stdio.h>
-#include <string.h>
 #include <pwd.h>
+
+/* Define a line parsing function using the common code
+   used in the nss_files module.  */
+
+#define STRUCTURE	passwd
+#define ENTNAME		pwent
+struct pwent_data {};
+
+#include "../nss/nss_files/files-parse.c"
+LINE_PARSER
+(
+ STRING_FIELD (result->pw_name, ISCOLON);
+ STRING_FIELD (result->pw_passwd, ISCOLON);
+ INT_FIELD (result->pw_uid, ISCOLON, 10,);
+ INT_FIELD (result->pw_gid, ISCOLON, 10,);
+ STRING_FIELD (result->pw_gecos, ISCOLON);
+ STRING_FIELD (result->pw_dir, ISCOLON);
+ result->pw_shell = line;
+)
+
 
 /* Read one entry from the given stream.  */
 struct passwd *
-DEFUN(fgetpwent, (stream), FILE *stream)
+fgetpwent (FILE *stream)
 {
-  static PTR info = NULL;
-  if (info == NULL)
-    {
-      info = __pwdalloc();
-      if (info == NULL)
-	return(NULL);
-    }
+  static char buffer[BUFSIZ];
+  static struct passwd result;
+  char *p;
 
-  return(__pwdread(stream, info));
+  do
+    {
+      p = fgets (buffer, sizeof buffer, stream);
+      if (p == NULL)
+	return NULL;
+
+      /* Skip leading blanks.  */
+      while (isspace (*p))
+	++p;
+    } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
+	     /* Parse the line.  If it is invalid, loop to
+		get the next line of the file to parse.  */
+	     ! parse_line (p, &result, (void *) buffer, sizeof buffer));
+
+  return &result;
 }

@@ -30,3 +30,13 @@ alpha-*-linux*		libc=6
 # So far the -lutil interface is the same on all platforms, except for the
 # `struct utmp' format, which depends on libc.
 *-*-*			libutil=1
+
+# Version number 2 is used on other systems for the BIND 4.9.4 resolver
+# interface.
+*-*-*			libresolv=2
+
+# Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
+# in nss/nsswitch.h, which determines the library names used for service
+# names given in /etc/nsswitch.conf.
+*-*-*			libnss_files=1
+*-*-*			libnss_dns=1

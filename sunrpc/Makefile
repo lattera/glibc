@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
 	    clnt_gen clnt_perr clnt_raw clnt_simp clnt_tcp \
-	    clnt_udp rpc_dtable get_myaddr getrpcent getrpcport \
+	    clnt_udp rpc_dtable get_myaddr getrpcport \
 	    pmap_clnt pm_getmaps pm_getport pmap_prot \
 	    pmap_prot2 pmap_rmt rpc_prot rpc_common rpc_cmsg \
 	    svc svc_auth svc_authux svc_raw svc_run svc_simple \

@@ -1,1 +1,1 @@
-#include <inet/resolv.h>
+#include <resolv/resolv.h>

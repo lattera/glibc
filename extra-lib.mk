@@ -27,6 +27,9 @@ alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
 
 ifeq (,$($(lib)-no-lib-dep))
 lib-noranlib: $(alltypes-$(lib))
+ifeq (yes,$(build-shared))
+lib-noranlib: $(objpfx)$(lib).so$($(lib).so-version)
+endif
 else
 others: $(alltypes-$(lib))
 endif

@@ -1,4 +1,4 @@
-# Copyright (C) 1991 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #
 subdir	:= pwd
 
-routines := pwdopen pwdread fgetpwent getpw getpwent getpwnam getpwuid putpwent
+routines := fgetpwent getpw putpwent \
+	    getpwent getpwnam getpwuid \
+	    getpwent_r getpwnam_r getpwuid_r
 
 include ../Rules

@@ -475,10 +475,11 @@ fi
 
 AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
 cat > conftest.c <<\EOF
-main () { exit (0); }
+_start () {}
 EOF
-if ${CC-cc} $CFLAGS -Wl,--no-whole-archive \
-	    -o conftest conftest.c 2>/dev/null; then
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS \
+			    -nostdlib -nostartfiles -Wl,--no-whole-archive \
+			    -o conftest conftest.c]); then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,9 +25,16 @@ headers	:= netinet/in.h $(wildcard arpa/*.h protocols/*.h)
 
 routines := ntohl ntohs htonl htons		\
 	    inet_lnaof inet_mkadr	\
-	    inet_netof inet_ntoa inet_net	\
-	    getproto getprtent getprtname	\
-	    getsrvbynm getsrvbypt getservent	\
+	    inet_netof inet_ntoa inet_net herrno \
+	    gethstbyad gethstbyad_r gethstbynm gethstbynm2 gethstbynm2_r \
+	    gethstbynm_r gethstent gethstent_r \
+	    getnetbypt getnetbypt_r getnetbynm getnetent getnetent_r \
+	    getnetbynm_r \
+	    getproto getproto_r getprtent getprtent_r getprtname getprtname_r \
+	    getsrvbynm getsrvbynm_r getsrvbypt getsrvbypt_r getservent \
+	    getservent_r	\
+	    getrpcent getrpcbyname getrpcbynumber \
+	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
 	    rcmd rexec ruserpass
 
 # No warnings about losing BSD code.
