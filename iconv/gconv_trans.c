@@ -41,7 +41,6 @@ __gconv_transliterate (struct __gconv_step *step,
 {
   /* Find out about the locale's transliteration.  */
   uint_fast32_t size;
-  uint_fast32_t layers;
   uint32_t *from_idx;
   uint32_t *from_tbl;
   uint32_t *to_idx;
@@ -57,12 +56,11 @@ __gconv_transliterate (struct __gconv_step *step,
 
   /* If there is no transliteration information in the locale don't do
      anything and return the error.  */
-  size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_HASH_SIZE);
+  size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_TAB_SIZE);
   if (size == 0)
     goto no_rules;
 
   /* Get the rest of the values.  */
-  layers = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_HASH_LAYERS);
   from_idx = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_IDX);
   from_tbl = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_FROM_TBL);
   to_idx = (uint32_t *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_TO_IDX);
@@ -148,9 +146,9 @@ __gconv_transliterate (struct __gconv_step *step,
 	return __GCONV_INCOMPLETE_INPUT;
 
       if (winbuf + cnt >= winbufend || from_tbl[idx + cnt] < winbuf[cnt])
-	low = idx;
+	low = med + 1;
       else
-	high = idx;
+	high = med;
     }
 
  no_rules:

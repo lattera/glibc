@@ -173,13 +173,11 @@ struct locale_ctype_t
   unsigned char *width;
   uint32_t mb_cur_max;
   const char *codeset_name;
-  uint32_t translit_hash_size;
-  uint32_t translit_hash_layers;
   uint32_t *translit_from_idx;
   uint32_t *translit_from_tbl;
   uint32_t *translit_to_idx;
   uint32_t *translit_to_tbl;
-  size_t translit_idx_size;
+  uint32_t translit_idx_size;
   size_t translit_from_tbl_size;
   size_t translit_to_tbl_size;
 
@@ -866,7 +864,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  {
 #define CTYPE_EMPTY(name) \
 	  case name:							      \
-	    iov[2 + elem + offset].iov_base = "";			      \
+	    iov[2 + elem + offset].iov_base = (void *) "";		      \
 	    iov[2 + elem + offset].iov_len = 0;				      \
 	    idx[elem + 1] = idx[elem];					      \
 	    break
@@ -911,14 +909,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		      ctype->names, (ctype->plane_size * ctype->plane_cnt
 				     * sizeof (uint32_t)));
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_SIZE,
-		      &ctype->translit_hash_size, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_LAYERS,
-		      &ctype->translit_hash_layers, sizeof (uint32_t));
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TAB_SIZE,
+		      &ctype->translit_idx_size, sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_IDX,
 		      ctype->translit_from_idx,
-		      ctype->translit_idx_size);
+		      ctype->translit_idx_size * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_TBL,
 		      ctype->translit_from_tbl,
@@ -926,7 +922,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_IDX,
 		      ctype->translit_to_idx,
-		      ctype->translit_idx_size);
+		      ctype->translit_idx_size * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_TBL,
 		      ctype->translit_to_tbl, ctype->translit_to_tbl_size);
@@ -3664,7 +3660,7 @@ Computing table size for character classes might take a while..."),
 	}
 
       /* Store the information about the length.  */
-      ctype->translit_idx_size = number * sizeof (uint32_t);
+      ctype->translit_idx_size = number;
       ctype->translit_from_tbl_size = from_len * sizeof (uint32_t);
       ctype->translit_to_tbl_size = to_len * sizeof (uint32_t);
     }

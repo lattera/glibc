@@ -1,5 +1,21 @@
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_trans.c: Correct a few bugs in the search loop.  Remove
+	remainders of hash table.
+	* locale/categories.def: Remove remainders of transliteration
+	hash table.
+	* locale/langinfo.h: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.  Fix code to write out
+	transliteration tables.
+
+	* locale/gen-translit.pl: New file.
+	* locale/C-translit.h.in: New file.
+	* locale/C-ctype.c: Include C-translit.h.  Initialize transliteration
+	data pointers with data from this file.
+	* locale/Makefile (distribute): Add C-translit.h.in, C-translit.h,
+	and gen-translit.pl.
+	Add rule to generate C-translit.h.
+
 	* stdio-common/vfscanf.c: Handle input -- with format %f correctly
 	(it's no input error).
 	* stdio-common/tstscanf.c: Add test case for format %f with input --.

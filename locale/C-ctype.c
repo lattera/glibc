@@ -20,6 +20,8 @@
 #include "localeinfo.h"
 #include <endian.h>
 
+#include "C-translit.h"
+
 /* This table's entries are taken from POSIX.2 Table 2-6
    ``LC_CTYPE Category Definition in the POSIX Locale''.
 
@@ -420,12 +422,11 @@ const struct locale_data _nl_C_LC_CTYPE =
     { word: L'7' },
     { word: L'8' },
     { word: L'9' },
-    { word: 0 },
-    { word: 0 },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
-    { string: NULL },
+    { word: NTRANSLIT },
+    { wstr: translit_from_idx },
+    { wstr: (uint32_t *) translit_from_tbl },
+    { wstr: translit_to_idx },
+    { wstr: (uint32_t *) translit_to_tbl },
     { word: 1 },
     { wstr: (uint32_t *) L"?" },
     { word: 0 },

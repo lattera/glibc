@@ -25,6 +25,7 @@ headers		= locale.h langinfo.h xlocale.h
 distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 		  iso-4217.def weight.h weightwc.h strlen-hash.h elem-hash.h \
 		  indigits.h indigitswc.h outdigits.h outdigitswc.h \
+		  C-translit.h.in C-translit.h gen-translit.pl \
 		  $(addprefix programs/, \
 			      locale.c localedef.c \
 			      $(localedef-modules:=.c) $(locale-modules:=.c) \
@@ -72,6 +73,13 @@ programs/%-kw.h: programs/%-kw.gperf
 $(objpfx)localedef: $(localedef-modules:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
+
+C-translit.h: C-translit.h.in gen-translit.pl
+	$(PERL) gen-translit.pl < $< > $@.tmp
+	$(move-if-change) $@.tmp $@
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
+endif
 
 localepath = "$(localedir):$(i18ndir)"
 
