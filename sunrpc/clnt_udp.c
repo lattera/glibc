@@ -287,9 +287,10 @@ send_again:
 	mask = 1 << cu->cu_sock;
 #endif /* def FD_SETSIZE */
 	for (;;) {
+		struct timeval timeout = cu->cu_wait;
 		readfds = mask;
 		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL,
-			       (int *)NULL, &(cu->cu_wait))) {
+			       (int *)NULL, &timeout)) {
 
 		case 0:
 			time_waited.tv_sec += cu->cu_wait.tv_sec;

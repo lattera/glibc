@@ -20,6 +20,7 @@
 #include <unistd.h>
 
 extern void __libc_init (int, char **, char **);
+extern void __getopt_clean_environment (void);
 extern void __libc_global_ctors (void);
 
 int __libc_multiple_libcs = 1;
@@ -33,6 +34,9 @@ init (int *data)
 
   __environ = envp;
   __libc_init (argc, argv, envp);
+
+  /* This is a hack to make the special getopt in GNU libc working.  */
+  __getopt_clean_environment ();
 }
 
 #ifdef PIC

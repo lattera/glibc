@@ -85,7 +85,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 headers := errno.h sys/errno.h errnos.h limits.h values.h	\
 	   features.h gnu-versions.h libc-lock.h xopen_lim.h
 aux	 = sysdep $(libc-init) version
-before-compile = $(objpfx)version-info.h
+before-compile += $(objpfx)version-info.h
 
 echo-headers: subdir_echo-headers
 
@@ -94,7 +94,6 @@ install-others = $(inst_includedir)/gnu/stubs.h
 install-bin = glibcbug
 
 ifeq (yes,$(build-shared))
-before-compile += $(objpfx)gnu/lib-names.h
 install-others += $(inst_includedir)/gnu/lib-names.h
 endif
 
@@ -115,10 +114,11 @@ include Makerules
 install: subdir_install
 
 # Create linkfs for shared libraries using the `ldconfig' program is possible.
+# Ignore the error if we cannot update /etc/ld.so.cache.
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 install:
-	test ! -x $(common-objpfx)elf/ldconfig || \
+	-test ! -x $(common-objpfx)elf/ldconfig || \
 	  $(common-objpfx)elf/ldconfig -d $(inst_slibdir) $(inst_libdir)
 endif
 endif

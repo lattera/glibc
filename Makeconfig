@@ -582,7 +582,8 @@ $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	 (libs='$(all-sonames)';\
 	  for l in $$libs; do \
 	    upname=`echo $$l | sed 's/[.]so.*//' | \
-		    tr '[:lower:]-' '[:upper:]_'`; \
+		    tr 'abcdefghijklmnopqrstuvwxyz-' \
+		       'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'`; \
 	    echo "#define	$${upname}_SO	\"$$l\""; \
 	  done;) | sort; \
 	 echo; \

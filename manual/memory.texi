@@ -905,9 +905,9 @@ struct obstack string_obstack;
 char *
 copystring (char *string)
 @{
-  char *s = (char *) obstack_alloc (&string_obstack,
-                                    strlen (string) + 1);
-  memcpy (s, string, strlen (string));
+  size_t len = strlen (string) + 1;
+  char *s = (char *) obstack_alloc (&string_obstack, len);
+  memcpy (s, string, len);
   return s;
 @}
 @end smallexample

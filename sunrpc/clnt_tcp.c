@@ -417,9 +417,10 @@ readtcp(ct, buf, len)
 
 #endif /* def FD_SETSIZE */
 	while (TRUE) {
+		struct timeval timeout = ct->ct_wait;
 		readfds = mask;
 		switch (select(_rpc_dtablesize(), &readfds, (int*)NULL, (int*)NULL,
-			       &(ct->ct_wait))) {
+			       &timeout)) {
 		case 0:
 			ct->ct_error.re_status = RPC_TIMEDOUT;
 			return (-1);

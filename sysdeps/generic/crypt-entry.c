@@ -1,5 +1,5 @@
 /* Wrapper around MD5 sum replacement for crypt function.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -48,7 +48,7 @@ crypt_r (key, salt, data)
     return md5_crypt_r (key, salt, (char *) data, sizeof (struct crypt_data));
 
   /* We don't have DES encryption.  */
-  __set_errno (ENOSYS);
+  __set_errno (EOPNOTSUPP);
   return NULL;
 }
 
@@ -63,6 +63,6 @@ crypt (key, salt)
     return md5_crypt (key, salt);
 
   /* We don't have DES encryption.  */
-  __set_errno (ENOSYS);
+  __set_errno (EOPNOTSUPP);
   return NULL;
 }

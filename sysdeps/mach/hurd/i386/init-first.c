@@ -1,21 +1,21 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <hurd.h>
 #include <stdio.h>
@@ -27,12 +27,16 @@ Cambridge, MA 02139, USA.  */
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
+extern void __getopt_clean_environment (void);
 extern void __libc_global_ctors (void);
 
 int __libc_multiple_libcs = 1;
 
 int __libc_argc;
 char **__libc_argv;
+
+/* We often need the PID.  Cache this value.  */
+pid_t __libc_pid;
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
@@ -99,6 +103,10 @@ init1 (int argc, char *arg0, ...)
 		d->intarray, d->intarraysize);
 
   __libc_init (argc, argv, __environ);
+
+  /* This is a hack to make the special getopt in GNU libc working.  */
+  __getopt_clean_environment ();
+
 #ifdef PIC
   __libc_global_ctors ();
 #endif

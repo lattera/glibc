@@ -244,7 +244,7 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	struct rmtcallargs a;
 	struct rmtcallres r;
 	struct rpc_msg msg;
-	struct timeval t;
+	struct timeval t, t1;
 	char outbuf[MAX_BROADCAST_SIZE], inbuf[UDPMSGSIZE];
 
 	/*
@@ -324,8 +324,9 @@ clnt_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 		msg.acpted_rply.ar_results.where = (caddr_t)&r;
                 msg.acpted_rply.ar_results.proc = xdr_rmtcallres;
 		readfds = mask;
+		t1 = t;
 		switch (select(_rpc_dtablesize(), &readfds, (int *)NULL,
-			       (int *)NULL, &t)) {
+			       (int *)NULL, &t1)) {
 
 		case 0:  /* timed out */
 			stat = RPC_TIMEDOUT;

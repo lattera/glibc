@@ -31,6 +31,7 @@
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
+extern size_t _dl_pagesize;
 extern void _end;
 extern void _start (void);
 
@@ -74,6 +75,9 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       case AT_PHNUM:
 	phnum = av->a_un.a_val;
+	break;
+      case AT_PAGESZ:
+	_dl_pagesize = av->a_un.a_val;
 	break;
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;

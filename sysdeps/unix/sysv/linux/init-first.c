@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <fpu_control.h>
 #include <linux/personality.h>
 #include <init-first.h>
+#include <sys/types.h>
 
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
@@ -41,11 +42,15 @@ int __libc_multiple_libcs = 1;
 int __libc_argc;
 char **__libc_argv;
 
+/* We often need the PID.  Cache this value.  */
+pid_t __libc_pid;
+
 
 static void
 init (int argc, char **argv, char **envp)
 {
   extern int __personality (int);
+  extern void __getopt_clean_environment (void);
 
   /* We must not call `personality' twice.  */
   if (!__libc_multiple_libcs)
@@ -67,6 +72,9 @@ init (int argc, char **argv, char **envp)
   __environ = envp;
 
   __libc_init (argc, argv, envp);
+
+  /* This is a hack to make the special getopt in GNU libc working.  */
+  __getopt_clean_environment ();
 
 #ifdef PIC
   __libc_global_ctors ();

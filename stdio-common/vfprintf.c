@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -880,7 +880,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Initialize local variables.  */
   done = 0;
   grouping = (const char *) -1;
+#ifdef __va_copy
+  /* This macro will be available soon in gcc's <stdarg.h>.  Me need it
+     since on some systems `va_list' is not an integral type.  */
+  __va_copy (ap_save, ap);
+#else
   ap_save = ap;
+#endif
   nspecs_done = 0;
 
   /* Find the first format specifier.  */
@@ -1203,12 +1209,12 @@ do_positional:
 
     /* Now we know all the types and the order.  Fill in the argument
        values.  */
-    for (cnt = 0, ap = ap_save; cnt < nargs; ++cnt)
+    for (cnt = 0; cnt < nargs; ++cnt)
       switch (args_type[cnt])
 	{
 #define T(tag, mem, type)						      \
 	case tag:							      \
-	  args_value[cnt].mem = va_arg (ap, type);			      \
+	  args_value[cnt].mem = va_arg (ap_save, type);			      \
 	  break
 
 	T (PA_CHAR, pa_char, int); /* Promoted.  */
@@ -1226,7 +1232,7 @@ do_positional:
 #undef T
 	default:
 	  if ((args_type[cnt] & PA_FLAG_PTR) != 0)
-	    args_value[cnt].pa_pointer = va_arg (ap, void *);
+	    args_value[cnt].pa_pointer = va_arg (ap_save, void *);
 	  else
 	    args_value[cnt].pa_long_double = 0.0;
 	  break;

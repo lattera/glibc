@@ -79,6 +79,11 @@ extern int atoi __P ((__const char *__nptr));
 /* Convert a string to a long integer.  */
 extern long int atol __P ((__const char *__nptr));
 
+#if defined (__GNUC__) && defined (__USE_MISC)
+/* These functions will part of the standard C library in ISO C 9X.  */
+extern long long int atoll __P ((__const char *__nptr));
+#endif
+
 /* Convert a string to a floating-point number.  */
 extern double strtod __P ((__const char *__nptr, char **__endptr));
 
@@ -105,6 +110,8 @@ extern unsigned long long int strtouq __P ((__const char *__nptr,
 #endif /* GCC and use BSD.  */
 
 #if defined (__GNUC__) && defined (__USE_MISC)
+/* These functions will part of the standard C library in ISO C 9X.  */
+
 /* Convert a string to a quadword integer.  */
 extern long long int strtoll __P ((__const char *__nptr, char **__endptr,
 				   int __base));
@@ -182,6 +189,11 @@ extern __inline int atoi (__const char *__nptr)
 { return (int) strtol (__nptr, (char **) NULL, 10); }
 extern __inline long int atol (__const char *__nptr)
 { return strtol (__nptr, (char **) NULL, 10); }
+
+#ifdef __USE_MISC
+extern __inline long long int atoll (__const char *__nptr)
+{ return strtoll (__nptr, (char **) NULL, 10); }
+#endif
 #endif /* Optimizing GCC >=2.  */
 
 

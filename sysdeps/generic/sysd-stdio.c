@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -155,7 +156,7 @@ __stdio_open (filename, m, cookieptr)
   if (fd < 0)
     return -1;
 
-  *cookieptr = (PTR) fd;
+  *cookieptr = (void *) fd;
   return 0;
 }
 

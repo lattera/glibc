@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Douglas C. Schmidt (schmidt@ics.uci.edu).
 
@@ -17,7 +17,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -77,16 +76,18 @@ typedef struct
       stack size is needed (actually O(1) in this case)!  */
 
 void
-DEFUN(_quicksort, (pbase, total_elems, size, cmp),
-      PTR CONST pbase AND size_t total_elems AND size_t size AND
-      int EXFUN((*cmp), (CONST PTR, CONST PTR)))
+_quicksort (pbase, total_elems, size, cmp)
+     void *const pbase;
+     size_t total_elems;
+     size_t size;
+     int (*cmp) __P ((const void *, const void *));
 {
   register char *base_ptr = (char *) pbase;
 
   /* Allocating SIZE bytes for a pivot buffer facilitates a better
      algorithm below since we can do comparisons directly on the pivot. */
   char *pivot_buffer = (char *) __alloca (size);
-  CONST size_t max_thresh = MAX_THRESH * size;
+  const size_t max_thresh = MAX_THRESH * size;
 
   if (total_elems == 0)
     /* Avoid lossage with unsigned arithmetic below.  */
@@ -114,16 +115,16 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 
 	  char *mid = lo + size * ((hi - lo) / size >> 1);
 
-	  if ((*cmp)((PTR) mid, (PTR) lo) < 0)
-	    SWAP(mid, lo, size);
-	  if ((*cmp)((PTR) hi, (PTR) mid) < 0)
-	    SWAP(mid, hi, size);
+	  if ((*cmp) ((void *) mid, (void *) lo) < 0)
+	    SWAP (mid, lo, size);
+	  if ((*cmp) ((void *) hi, (void *) mid) < 0)
+	    SWAP (mid, hi, size);
 	  else
 	    goto jump_over;
-	  if ((*cmp)((PTR) mid, (PTR) lo) < 0)
-	    SWAP(mid, lo, size);
+	  if ((*cmp) ((void *) mid, (void *) lo) < 0)
+	    SWAP (mid, lo, size);
 	jump_over:;
-	  memcpy(pivot, mid, size);
+	  memcpy (pivot, mid, size);
 	  pivot = pivot_buffer;
 
 	  left_ptr  = lo + size;
@@ -134,15 +135,15 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 	     that this algorithm runs much faster than others. */
 	  do
 	    {
-	      while ((*cmp)((PTR) left_ptr, (PTR) pivot) < 0)
+	      while ((*cmp) ((void *) left_ptr, (void *) pivot) < 0)
 		left_ptr += size;
 
-	      while ((*cmp)((PTR) pivot, (PTR) right_ptr) < 0)
+	      while ((*cmp) ((void *) pivot, (void *) right_ptr) < 0)
 		right_ptr -= size;
 
 	      if (left_ptr < right_ptr)
 		{
-		  SWAP(left_ptr, right_ptr, size);
+		  SWAP (left_ptr, right_ptr, size);
 		  left_ptr += size;
 		  right_ptr -= size;
 		}
@@ -164,7 +165,7 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
             {
               if ((size_t) (hi - left_ptr) <= max_thresh)
 		/* Ignore both small partitions. */
-                POP(lo, hi);
+                POP (lo, hi);
               else
 		/* Ignore small left partition. */
                 lo = left_ptr;
@@ -175,13 +176,13 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
           else if ((right_ptr - lo) > (hi - left_ptr))
             {
 	      /* Push larger left partition indices. */
-              PUSH(lo, right_ptr);
+              PUSH (lo, right_ptr);
               lo = left_ptr;
             }
           else
             {
 	      /* Push larger right partition indices. */
-              PUSH(left_ptr, hi);
+              PUSH (left_ptr, hi);
               hi = right_ptr;
             }
         }
@@ -196,7 +197,7 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
   {
-    char *CONST end_ptr = &base_ptr[size * (total_elems - 1)];
+    char *const end_ptr = &base_ptr[size * (total_elems - 1)];
     char *tmp_ptr = base_ptr;
     char *thresh = min(end_ptr, base_ptr + max_thresh);
     register char *run_ptr;
@@ -206,11 +207,11 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
        and the operation speeds up insertion sort's inner loop. */
 
     for (run_ptr = tmp_ptr + size; run_ptr <= thresh; run_ptr += size)
-      if ((*cmp)((PTR) run_ptr, (PTR) tmp_ptr) < 0)
+      if ((*cmp) ((void *) run_ptr, (void *) tmp_ptr) < 0)
         tmp_ptr = run_ptr;
 
     if (tmp_ptr != base_ptr)
-      SWAP(tmp_ptr, base_ptr, size);
+      SWAP (tmp_ptr, base_ptr, size);
 
     /* Insertion sort, running from left-hand-side up to right-hand-side.  */
 
@@ -218,7 +219,7 @@ DEFUN(_quicksort, (pbase, total_elems, size, cmp),
     while ((run_ptr += size) <= end_ptr)
       {
 	tmp_ptr = run_ptr - size;
-	while ((*cmp)((PTR) run_ptr, (PTR) tmp_ptr) < 0)
+	while ((*cmp) ((void *) run_ptr, (void *) tmp_ptr) < 0)
 	  tmp_ptr -= size;
 
 	tmp_ptr += size;

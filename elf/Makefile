@@ -56,7 +56,7 @@ install-bin	= ldd
 endif
 
 ifeq (yes,$(has-ldconfig))
-extra-objs	= ldconfig.o
+extra-objs	+= ldconfig.o
 install-rootsbin = ldconfig
 
 $(objpfx)ldconfig: $(objpfx)ldconfig.o

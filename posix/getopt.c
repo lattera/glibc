@@ -253,37 +253,39 @@ static int last_nonopt;
 /* Bash 2.0 gives us an environment variable containing flags
    indicating ARGV elements that should not be considered arguments.  */
 
-static char *nonoption_flags;
+char *__getopt_nonoption_flags;
 static int nonoption_flags_max_len;
 static int nonoption_flags_len;
 
 static int original_argc;
 static char *const *original_argv;
 
+extern pid_t __libc_pid;
+
 /* Make sure the environment variable bash 2.0 puts in the environment
    is valid for the getopt call we must make sure that the ARGV passed
    to getopt is that one passed to the process.  */
-static void store_args (int argc, char *const *argv) __attribute__ ((unused));
 static void
-store_args (int argc, char *const *argv)
+__attribute__ ((unused))
+store_args_and_env (int argc, char *const *argv)
 {
   /* XXX This is no good solution.  We should rather copy the args so
      that we can compare them later.  But we must not use malloc(3).  */
   original_argc = argc;
   original_argv = argv;
 }
-text_set_element (__libc_subinit, store_args);
+text_set_element (__libc_subinit, store_args_and_env);
 
 # define SWAP_FLAGS(ch1, ch2) \
   if (nonoption_flags_len > 0)						      \
     {									      \
-      char __tmp = nonoption_flags[ch1];				      \
-      nonoption_flags[ch1] = nonoption_flags[ch2];			      \
-      nonoption_flags[ch2] = __tmp;					      \
+      char __tmp = __getopt_nonoption_flags[ch1];			      \
+      __getopt_nonoption_flags[ch1] = __getopt_nonoption_flags[ch2];	      \
+      __getopt_nonoption_flags[ch2] = __tmp;				      \
     }
-#else
+#else	/* !_LIBC */
 # define SWAP_FLAGS(ch1, ch2)
-#endif
+#endif	/* _LIBC */
 
 /* Exchange two adjacent subsequences of ARGV.
    One subsequence is elements [first_nonopt,last_nonopt)
@@ -313,10 +315,10 @@ exchange (argv)
      but it consists of two parts that need to be swapped next.  */
 
 #ifdef _LIBC
-  /* First make sure the handling of the `nonoption_flags' string can
-     work normally.  Our top argument must be in the range of the
-     string.  */
-  if (nonoption_flags_len != 0 && top >= nonoption_flags_max_len)
+  /* First make sure the handling of the `__getopt_nonoption_flags'
+     string can work normally.  Our top argument must be in the range
+     of the string.  */
+  if (nonoption_flags_len > 0 && top >= nonoption_flags_max_len)
     {
       /* We must extend the array.  The user plays games with us and
 	 presents new arguments.  */
@@ -325,11 +327,11 @@ exchange (argv)
 	nonoption_flags_len = nonoption_flags_max_len = 0;
       else
 	{
-	  memcpy (new_str, nonoption_flags, nonoption_flags_max_len);
+	  memcpy (new_str, __getopt_nonoption_flags, nonoption_flags_max_len);
 	  memset (&new_str[nonoption_flags_max_len], '\0',
 		  top + 1 - nonoption_flags_max_len);
 	  nonoption_flags_max_len = top + 1;
-	  nonoption_flags = new_str;
+	  __getopt_nonoption_flags = new_str;
 	}
     }
 #endif
@@ -420,36 +422,29 @@ _getopt_initialize (argc, argv, optstring)
   if (posixly_correct == NULL
       && argc == original_argc && argv == original_argv)
     {
-      /* Bash 2.0 puts a special variable in the environment for each
-	 command it runs, specifying which ARGV elements are the results of
-	 file name wildcard expansion and therefore should not be
-	 considered as options.  */
-
       if (nonoption_flags_max_len == 0)
 	{
-	  char var[100];
-	  const char *orig_str;
-	  sprintf (var, "_%d_GNU_nonoption_argv_flags_", getpid ());
-	  orig_str = getenv (var);
-	  if (orig_str == NULL || orig_str[0] == '\0')
+	  if (__getopt_nonoption_flags == NULL
+	      || __getopt_nonoption_flags[0] == '\0')
 	    nonoption_flags_max_len = -1;
 	  else
 	    {
+	      const char *orig_str = __getopt_nonoption_flags;
 	      int len = nonoption_flags_max_len = strlen (orig_str);
 	      if (nonoption_flags_max_len < argc)
 		nonoption_flags_max_len = argc;
-	      nonoption_flags = (char *) malloc (nonoption_flags_max_len);
-	      if (nonoption_flags == NULL)
+	      __getopt_nonoption_flags =
+		(char *) malloc (nonoption_flags_max_len);
+	      if (__getopt_nonoption_flags == NULL)
 		nonoption_flags_max_len = -1;
 	      else
 		{
-		  memcpy (nonoption_flags, orig_str, len);
-		  memset (&nonoption_flags[len], '\0',
+		  memcpy (__getopt_nonoption_flags, orig_str, len);
+		  memset (&__getopt_nonoption_flags[len], '\0',
 			  nonoption_flags_max_len - len);
 		}
 	    }
 	}
-
       nonoption_flags_len = nonoption_flags_max_len;
     }
   else
@@ -540,7 +535,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 #ifdef _LIBC
 #define NONOPTION_P (argv[optind][0] != '-' || argv[optind][1] == '\0'	      \
 		     || (optind < nonoption_flags_len			      \
-			 && nonoption_flags[optind] == '1'))
+			 && __getopt_nonoption_flags[optind] == '1'))
 #else
 #define NONOPTION_P (argv[optind][0] != '-' || argv[optind][1] == '\0')
 #endif

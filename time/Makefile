@@ -37,9 +37,11 @@ routines	:= offtime asctime clock ctime ctime_r difftime	\
 others	:= ap zdump zic
 tests	:= test_time clocktest
 
-tzfiles := africa antarctica asia australasia europe northamerica \
-	   southamerica etcetera factory systemv backward \
+tzbases := africa antarctica asia australasia europe northamerica \
+	   southamerica etcetera factory systemv \
 	   solar87 solar88 solar89
+tzlinks := backward
+tzfiles := $(tzbases) $(tzlinks)
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
 distribute += $(tzfiles) leapseconds pacificnew simplebackw
@@ -96,11 +98,21 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 # Kludge alert: we use an implicit rule (in what we are generating here)
 # because that is the only way to tell Make that the one command builds all
 # the files.
+# The extra kludge for the $(tzlinks) files is necessary since running zic
+# this file requires all other files to exist.  Blech!
 	(echo 'define $*-zones'						    ;\
 	 awk '$$1 == "Zone" { print $$2 } $$1 == "Link" { print $$3 }' $^   ;\
 	 echo 'endef'							    ;\
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		    ;\
 	 echo 'ifdef $*-zones'						    ;\
+	 if test x$(findstring $*, $(tzlinks)) != x; then		     \
+	   echo '$$(addprefix $$(inst_datadir)/zone%/right/,$$($*-zones)) \';\
+	   echo '$$(addprefix $$(inst_datadir)/zone%/posix/,$$($*-zones)) \';\
+	   echo '$$(addprefix $$(inst_datadir)/zone%/,$$($*-zones)): \'	    ;\
+	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_datadir)/zone%/right/,$$($$t-zones))) \' ;\
+	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_datadir)/zone%/posix/,$$($$t-zones))) \' ;\
+	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_datadir)/zone%/,$$($$t-zones)))' ;\
+	 fi								    ;\
 	 echo '$$(addprefix $$(inst_datadir)/zone%/right/,$$($*-zones)): \' ;\
 	 echo '$< $$(objpfx)zic leapseconds yearistype'			    ;\
 	 echo '	$$(tzcompile)'						    ;\

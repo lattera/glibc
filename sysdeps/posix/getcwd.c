@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -330,8 +330,9 @@ __getcwd (buf, size)
 	    {
 	      if (buf != NULL)
 		{
+		  (void) __closedir (dirstream);
 		  __set_errno (ERANGE);
-		  return NULL;
+		  goto lose;
 		}
 	      else
 		{
@@ -342,7 +343,7 @@ __getcwd (buf, size)
 		      (void) __closedir (dirstream);
 		      free (path);
 		      __set_errno (ENOMEM);/* closedir might have changed it.*/
-		      return NULL;
+		      goto lose;
 		    }
 		  pathp = &buf[pathp - path + size / 2];
 		  path = buf;

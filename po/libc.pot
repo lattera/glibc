@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.0\n"
-"POT-Creation-Date: 1997-01-26 15:14+0100\n"
+"Project-Id-Version: libc 2.0.1\n"
+"POT-Creation-Date: 1997-02-04 16:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,47 +178,47 @@ msgstr ""
 msgid "%s: error in state machine"
 msgstr ""
 
-#: posix/getopt.c:733
+#: posix/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:736
+#: posix/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr ""
 
-#: posix/getopt.c:657
+#: posix/getopt.c:712
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:628
+#: posix/getopt.c:683
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:674 posix/getopt.c:847
+#: posix/getopt.c:729 posix/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr ""
 
-#: posix/getopt.c:652
+#: posix/getopt.c:707
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:831
+#: posix/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: posix/getopt.c:813
+#: posix/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr ""
 
-#: posix/getopt.c:766 posix/getopt.c:896
+#: posix/getopt.c:821 posix/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr ""
@@ -233,12 +233,12 @@ msgstr ""
 msgid "%s: premature end of file"
 msgstr ""
 
-#: posix/getopt.c:707
+#: posix/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr ""
 
-#: posix/getopt.c:703
+#: posix/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr ""

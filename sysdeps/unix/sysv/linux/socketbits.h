@@ -23,6 +23,7 @@
 #include <features.h>
 
 #define	__need_size_t
+#define __need_NULL
 #include <stddef.h>
 
 
@@ -134,13 +135,19 @@ struct cmsghdr
     /* XXX Should be type `size_t' according to POSIX.1g.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
+#if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
     unsigned char __cmsg_data[0]; /* Ancillary data.  */
+#endif
   };
 
 /* Ancillary data object manipulation macros.  */
-#define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
+#if !defined __STRICT_ANSI__ && defined __GNUC__ && __GNUC__ >= 2
+# define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
+#else
+# define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))
+#endif
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
-#define CMSG_FIRSTHDR(mhdr) (mhdr) \
+#define CMSG_FIRSTHDR(mhdr) \
   ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)			      \
    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
 

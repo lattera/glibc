@@ -38,6 +38,11 @@ _IO_vsnprintf (string, maxlen, format, args)
   _IO_lock_t lock;
   sf._sbf._f._lock = &lock;
 #endif
+
+  /* We need to handle the special case where MAXLEN is 0.  */
+  if (maxlen == 0)
+    return 0;
+
   _IO_init ((_IO_FILE *) &sf, 0);
   _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE *) &sf, string, maxlen - 1, string);

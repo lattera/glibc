@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ routines :=								      \
 	pathconf sysconf fpathconf					      \
 	glob fnmatch regex						      \
 	confstr								      \
-	getopt getopt1							      \
+	getopt getopt1 getopt_init					      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
 	sched_primin sched_rr_gi					      \
 	getaddrinfo

@@ -305,9 +305,10 @@ readtcp(xprt, buf, len)
 	int readfds;
 #endif /* def FD_SETSIZE */
 	do {
+		struct timeval timeout = wait_per_try;
 		readfds = mask;
 		if (select(_rpc_dtablesize(), &readfds, (int*)NULL, (int*)NULL,
-			   &wait_per_try) <= 0) {
+			   &timeout) <= 0) {
 			if (errno == EINTR) {
 				continue;
 			}

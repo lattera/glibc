@@ -79,17 +79,20 @@ case $# in
   *) file="./$1" ;;
   esac
   if test ! -f "$file"; then
-    echo "${file}:" $"no such file"
+    echo "ldd: ${file}:" $"no such file"
     exit 1
-  else
+  elif test -r "$file"; then
     test -x "$file" ||
-      echo $"warning: you do not have execution permission for" "\`$file'"
-    if ${RTLD} --verify "$file"; then
-      LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} ${RELOCS} "$file" || exit 1
-    else
-      echo $"	not a dynamic executable"
-      exit 1
-    fi
+    echo $"ldd: warning: you do not have execution permission for" "\`$file'"
+      if ${RTLD} --verify "$file"; then
+	LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} ${RELOCS} "$file" || exit 1
+      else
+	echo $"	not a dynamic executable"
+	exit 1
+      fi
+  else
+    echo $"ldd: error: you do not have read permission for" "\`$file'"
+    exit 1
   fi
   exit ;;
 *)
@@ -102,17 +105,20 @@ case $# in
     *) file="./$file" ;;
     esac
     if test ! -f "$file"; then
-      echo "${file}:" $"no such file"
+      echo "ldd: ${file}:" $"no such file"
       result=1
-    else
-      test -x "$file" ||
-	echo $"warning: you do not have execution permission for" "\`$file'"
+    elif test -r "$file"; then
+      test -x "$file" || echo $"\
+ldd: warning: you do not have execution permission for" "\`$file'"
       if ${RTLD} --verify "$file"; then
 	LD_TRACE_LOADED_OBJECTS=1 ${RTLD} ${RELOCS} "$file" || result=1
       else
 	echo $"	not a dynamic executable"
 	result=1
       fi
+    else
+      echo $"ldd: error: you do not have read permission for" "\`$file'"
+      result=1
     fi
   done
 esac

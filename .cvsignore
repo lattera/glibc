@@ -4,7 +4,7 @@
 TODO COPYING* AUTHORS copyr-* copying.*
 glibc-*
 
-configparms 
+configparms
 
 sun[43]* i[345]86* hp300*
 
@@ -13,3 +13,7 @@ ieeetest hppa-sysdeps regex
 gpl2lgpl.sed
 distinfo
 distinfo
+
+crypt
+linuxthreads
+localedata

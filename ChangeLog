@@ -1,3 +1,170 @@
+1997-02-09 02:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.2.
+
+	* posix/Makefile (routines): Add getopt_init.
+	* posix/getopt.c: Don't get environment variable with nonoption
+	flags here.  Depend on __getopt_nonoption_flags variable filled
+	somewhere else.  This is necessary since the variable must be
+	removed even when getopt isn't used in case exec(2) gets called.
+	* posix/getopt_init.c: New file.  Initialize __getopt_nonoption_flags
+	and remove environment variable.
+	* sysdeps/i386/init-first.c: Call __getopt_clean_environment.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/stub/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Recognize
+	AT_PAGESZ entry in auxiliary vector and store value in _dl_pagesize.
+
+	* sysdeps/generic/crypt-entry.h: Return EOPNOTSUPP when DES
+	encryption is wanted.
+
+	* libio/vsnprintf.c: If MAXLEN is 0 return 0.
+	* stdio/vsnprintf.c: Likewise.
+	Reported by Philip Blundell <pjb27@cam.ac.uk>.
+
+1997-02-07 17:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/sysd-stdio.c: Include <errno.h>.
+	Change PTR to void *.
+	* sysdeps/posix/vdprintf.c: Change PTR to void *.
+	Reported by Brian Oxley <boxley%dev.cm.ssb.com@clipper.ssb.com>.
+
+1997-02-07 17:41  Philip Blundell <pjb27@cam.ac.uk>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Fix typo.
+
+1997-02-06 13:49  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rellns-sh: No need to check for existance of first parameter.
+
+1997-02-06 14:50  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/getcwd.c (__getcwd): Fix resource leaks.  Reported
+	by David Holland <dholland@eecs.harvard.edu>.
+
+1997-02-06 14:38  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sunrpc/clnt_tcp.c (readtcp): Pass copy of timeout value to
+	select, in case it is modified by the latter.
+	* sunrpc/clnt_udp.c (clntudp_call): Likewise.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/svc_tcp.c (readtcp): Likewise.
+
+	* sunrpc/svc_authux.c (_svcauth_unix): Fix type of area_gids
+	array.
+
+	* sunrpc/authuxprot.c (xdr_authunix_parms): Check size of uid_t
+	and gid_t.
+
+	* sunrpc/auth_unix.c (authunix_validate): Fix type of second
+	argument.
+
+1997-02-06 14:29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile (extra-objs): Don't zap previous value.
+	* Makefile (before-compile): Likewise.  Don't add gnu/lib-names.h
+	twice.
+
+1997-02-06 14:19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/brk.c: Add workaround for
+	braindamage (sigh!).
+
+1997-02-06 17:10  Jim Meyering  <meyering@asic.sc.ti.com>
+
+	* manual/memory.texi: Correct `copystring' example for obstacks.
+
+1997-02-06 14:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Don't use [:lower:] and [:upper:] in tr since old
+	GNU tr don't grok it.
+
+1997-02-03 21:13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/socketbits.h [__GNUC__<2] (struct cmsghdr):
+	Don't use GNU C extensions.
+	(CMSG_DATA): Use portable definition.
+
+1997-02-05 05:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldd.bash.in: Add test for read permission and print appropriate
+	message.  Change warning and error messages to print "ldd: " at start.
+	* elf/ldd.sh.in: Likewise.
+
+	* stdlib/Makefile (routines): Add atoll.
+	* stdlib/atoll.c: New file.
+	* stdlib/stdlib.h: Add prototype and optimization for atoll.
+
+	* stdlib/a64l.c: Update copyright.
+	* stdlib/abs.c: Likewise.
+	* stdlib/atof.c: Likewise.
+	* stdlib/atoi.c: Likewise.
+	* stdlib/atol.c: Likewise.
+	* stdlib/bsearch.c: Likewise.
+	* stdlib/exit.c: Likewise.
+	* stdlib/fpioconst.c: Likewise.
+	* stdlib/fpioconst.h: Likewise.
+	* stdlib/jrand48.c: Likewise.
+	* stdlib/jrand48_r.c: Likewise.
+	* stdlib/labs.c: Likewise.
+	* stdlib/lcong48.c: Likewise.
+	* stdlib/lcong48_r.c: Likewise.
+	* stdlib/llabs.c: Likewise.
+	* stdlib/lrand48.c: Likewise.
+	* stdlib/lrand48_r.c: Likewise.
+	* stdlib/mblen.c: Likewise.
+	* stdlib/mbstowcs.c: Likewise.
+	* stdlib/mbtowc.c: Likewise.
+	* stdlib/mp_clz_tab.c: Likewise.
+	* stdlib/mrand48.c: Likewise.
+	* stdlib/mrand48_r.c: Likewise.
+	* stdlib/msort.c: Likewise.
+	* stdlib/nrand48.c: Likewise.
+	* stdlib/nrand48_r.c: Likewise.
+	* stdlib/qsort.c: Likewise.
+	* stdlib/rpmatch.c: Likewise.
+	* stdlib/seed48.c: Likewise.
+	* stdlib/seed48_r.c: Likewise.
+	* stdlib/srand48.c: Likewise.
+	* stdlib/srand48_r.c: Likewise.
+	* stdlib/strtod.c: Likewise.
+	* stdlib/wcstombs.c: Likewise.
+	* stdlib/wctomb.c: Likewise.
+
+1997-02-05 05:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/mp_clz_tab.c (__clz_tab): Follow change in GMP and define
+	as const.
+
+1997-02-04 23:57  Fila Kolodny  <fila@ibi.com>
+
+	* sysdeps/unix/sysv/linux/socketbits.h: Define __need_NULL before
+	including <stddef.h>.
+
+1997-02-03 20:01  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* time/Makefile (tzbases, tzlinks): New.
+	(tzfiles): Changed to $(tzbases) $(tzlinks).
+	($(tzfiles:%=$(objpfx)z.%): Make $(tzlinks) depend on $(tzbases).
+
+1997-02-02 12:13  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* Makefile (install): Ignore error from ldconfig.
+
+	* time/zic.c (mkdirs): Double check the error return of mkdir ().
+
+1997-02-04 22:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c: Prepare to use __va_copy for architectures
+	like PPC where va_list is no integral type.
+
+1997-02-04 15:27  Roma Ekzhanov  <ekzhanov@paragraph.com>
+
+	* posix/getopt.c (exchange): Don't allocate nonoption_flags array
+	if nonoption_flags_len == -1.
+
 1997-02-04 02:08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Version 2.0.1 net release.
