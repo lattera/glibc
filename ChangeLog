@@ -1,3 +1,12 @@
+2003-04-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/atomic.h
+	[__powerpc64] (__arch_compare_and_exchange_val_64_acq): Define.
+	[! __powerpc64] (__arch_compare_and_exchange_val_64_acq): Defined
+	as abort stub.
+	(__arch_compare_and_exchange_val_32_acq): Define.
+	(atomic_compare_and_exchange_val_acq): Define.
+
 2003-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/atomic.h: Pretty printing.

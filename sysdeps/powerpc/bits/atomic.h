@@ -109,7 +109,24 @@ typedef uintmax_t uatomic_max_t;
   __tmp != 0;								      \
 })
 
-# define __arch_atomic_exchange_64(mem, value)				      \
+#define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  ({									      \
+      __typeof (*(mem)) __tmp;						      \
+      __typeof (mem)  __memp = (mem);					      \
+      __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		        "1:	ldarx	%0,0,%1\n"			      \
+		        "	cmpd	%0,%2\n"			      \
+		        "	bne	2f\n"				      \
+		        "	stdcx.	%3,0,%1\n"			      \
+		        "	bne-	1b\n"				      \
+		        "2:	" __ARCH_ACQ_INSTR			      \
+		        : "=&r" (__tmp)					      \
+		        : "b" (__memp), "r" (oldval), "r" (newval)	      \
+		        : "cr0", "memory");				      \
+      __tmp;								      \
+  })
+
+# define __arch_atomic_exchange_64(mem, value) \
     ({									      \
       __typeof (*mem) __val;						      \
       __asm __volatile (__ARCH_REL_INSTR "\n"				      \
@@ -122,7 +139,7 @@ typedef uintmax_t uatomic_max_t;
       __val;								      \
     })
 
-# define __arch_atomic_exchange_and_add_64(mem, value)			      \
+# define __arch_atomic_exchange_and_add_64(mem, value) \
     ({									      \
       __typeof (*mem) __val, __tmp;					      \
       __asm __volatile ("1:	ldarx	%0,0,%3\n"			      \
@@ -170,15 +187,37 @@ typedef uintmax_t uatomic_max_t;
 # define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (abort (), 0)
 
+# define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
+  (abort (), 0)
+
 # define __arch_atomic_exchange_64(mem, value) \
     ({ abort (); (*mem) = (value); })
+
 # define __arch_atomic_exchange_and_add_64(mem, value) \
     ({ abort (); (*mem) = (value); })
+
 # define __arch_atomic_decrement_if_positive_64(mem) \
     ({ abort (); (*mem)--; })
 #endif
 
-#define __arch_atomic_exchange_32(mem, value)				      \
+#define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
+  ({									      \
+      __typeof (*(mem)) __tmp;						      \
+      __typeof (mem)  __memp = (mem);					      \
+      __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		        "1:	lwarx	%0,0,%1\n"			      \
+		        "	cmpw	%0,%2\n"			      \
+		        "	bne	2f\n"				      \
+		        "	stwcx.	%3,0,%1\n"			      \
+		        "	bne-	1b\n"				      \
+		        "2:	" __ARCH_ACQ_INSTR			      \
+		        : "=&r" (__tmp)					      \
+		        : "b" (__memp), "r" (oldval), "r" (newval)	      \
+		        : "cr0", "memory");				      \
+      __tmp;								      \
+  })
+
+#define __arch_atomic_exchange_32(mem, value) \
   ({									      \
     __typeof (*mem) __val;						      \
     __asm __volatile (__ARCH_REL_INSTR "\n"				      \
@@ -191,7 +230,7 @@ typedef uintmax_t uatomic_max_t;
     __val;								      \
   })
 
-#define __arch_atomic_exchange_and_add_32(mem, value)			      \
+#define __arch_atomic_exchange_and_add_32(mem, value) \
   ({									      \
     __typeof (*mem) __val, __tmp;					      \
     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
@@ -204,7 +243,7 @@ typedef uintmax_t uatomic_max_t;
     __val;								      \
   })
 
-#define __arch_atomic_decrement_if_positive_32(mem)			      \
+#define __arch_atomic_decrement_if_positive_32(mem) \
   ({ int __val, __tmp;							      \
      __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
 		       "	cmpwi	0,%0,0\n"			      \
@@ -220,25 +259,37 @@ typedef uintmax_t uatomic_max_t;
   })
 
 
-#define atomic_exchange(mem, value)					      \
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
   ({									      \
     __typeof (*(mem)) __result;						      \
     if (sizeof (*mem) == 4)						      \
-      __result = __arch_atomic_exchange_32 ((mem), (value));		      \
+      __result = __arch_compare_and_exchange_val_32_acq(mem, newval, oldval); \
     else if (sizeof (*mem) == 8)					      \
-      __result = __arch_atomic_exchange_64 ((mem), (value));		      \
+      __result = __arch_compare_and_exchange_val_64_acq(mem, newval, oldval); \
     else 								      \
        abort ();							      \
     __result;								      \
   })
 
-#define atomic_exchange_and_add(mem, value)				      \
+#define atomic_exchange(mem, value) \
   ({									      \
     __typeof (*(mem)) __result;						      \
     if (sizeof (*mem) == 4)						      \
-      __result = __arch_atomic_exchange_and_add_32 ((mem), (value));	      \
+      __result = __arch_atomic_exchange_32 (mem, value);		      \
     else if (sizeof (*mem) == 8)					      \
-      __result = __arch_atomic_exchange_and_add_64 ((mem), (value));	      \
+      __result = __arch_atomic_exchange_64 (mem, value);		      \
+    else 								      \
+       abort ();							      \
+    __result;								      \
+  })
+
+#define atomic_exchange_and_add(mem, value) \
+  ({									      \
+    __typeof (*(mem)) __result;						      \
+    if (sizeof (*mem) == 4)						      \
+      __result = __arch_atomic_exchange_and_add_32 (mem, value);	      \
+    else if (sizeof (*mem) == 8)					      \
+      __result = __arch_atomic_exchange_and_add_64 (mem, value);	      \
     else 								      \
        abort ();							      \
     __result;								      \
@@ -246,7 +297,7 @@ typedef uintmax_t uatomic_max_t;
 
 
 /* Decrement *MEM if it is > 0, and return the old value.  */
-#define atomic_decrement_if_positive(mem)				      \
+#define atomic_decrement_if_positive(mem) \
   ({ __typeof (*(mem)) __result;					      \
     if (sizeof (*mem) == 4)						      \
       __result = __arch_atomic_decrement_if_positive_32 (mem);		      \
