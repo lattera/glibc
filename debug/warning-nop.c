@@ -19,7 +19,8 @@
 
 #include <sys/cdefs.h>
 
-void __nop (void)
+static void
+nop (void)
 {
 }
 
@@ -27,7 +28,8 @@ void __nop (void)
 
 #undef __warndecl
 #define __warndecl(name, msg) \
-  strong_alias (__nop, name) link_warning (name, msg)
+  extern void name (void) __attribute__ ((alias ("nop"))) attribute_hidden; \
+  link_warning (name, msg)
 
 #undef	__USE_FORTIFY_LEVEL
 #define __USE_FORTIFY_LEVEL 99
