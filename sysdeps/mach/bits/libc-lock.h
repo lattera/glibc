@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Mach cthreads version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,6 +62,19 @@ typedef cthread_key_t __libc_key_t;
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME) __mutex_unlock (&(NAME))
 
+
+/* XXX for now */
+#define __libc_rwlock_define		__libc_lock_define
+#define __libc_rwlock_define_initialized __libc_lock_define_initialized
+#define __libc_rwlock_init		__libc_lock_init
+#define __libc_rwlock_fini		__libc_lock_fini
+#define __libc_rwlock_rdlock		__libc_lock_lock
+#define __libc_rwlock_wrlock		__libc_lock_lock
+#define __libc_rwlock_tryrdlock		__libc_lock_trylock
+#define __libc_rwlock_trywrlock		__libc_lock_trylock
+#define __libc_rwlock_unlock		__libc_lock_unlock
+
+
 /* Start a critical region with a cleanup function */
 #define __libc_cleanup_region_start(FCT, ARG)				    \
 {									    \
@@ -74,6 +87,12 @@ typedef cthread_key_t __libc_key_t;
   if (DOIT)								    \
     (*__save_FCT)(__save_ARG);						    \
 }
+
+/* Sometimes we have to exit the block in the middle.  */
+#define __libc_cleanup_end(DOIT)					    \
+  if (DOIT)								    \
+    (*__save_FCT)(__save_ARG);						    \
+
 
 /* Use mutexes as once control variables. */
 

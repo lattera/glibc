@@ -1,4 +1,23 @@
+2000-02-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/sigstack.c (sigstack): Remove `const' from
+	argument type, for 2000-02-22 change in signal/signal.h declaration.
+
 2000-03-09  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/getdents64.c (__getdirentries64): Renamed
+	to getdirentries64 (no __), since the Linux implementation
+	has no __ name, and there is no declaration for the __ name.
+
+	* sysdeps/mach/bits/libc-lock.h (__libc_cleanup_end): New macro.
+
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Tighten up
+	sed regexp so as not to break directory names including /../ within.
+
+	* sysdeps/unix/bsd/bits/waitflags.h: File removed.
+	The sysdeps/generic file is right for BSD.  This file was in fact the
+	Hurd file, but the only difference was the WNOREAP flag that was never
+	actually implemented or used anywhere.
 
 	* configure.in (PERL, INSTALL_INFO): Don't AC_SUBST these,
 	since AC_PATH_PROG already does it for us.

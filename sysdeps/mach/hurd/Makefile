@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+# Copyright (C) 1993,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ $(common-objpfx)errnos.d: $(mach-errnos-deps)
 	$(mach-errno-h) | \
 	$(CC) $(CPPFLAGS) -M -x c - | \
 	sed $(sed-remove-objpfx) -e 's,- *:,mach-errnos-deps :=,' \
-	    -e 's,\.\./,$(..),g' > $@t
+	    -e 's, \.\./, $(..),g' > $@t
 	mv -f $@t $@
 
 $(hurd)/bits/errno.h: $(common-objpfx)stamp-errnos ;
