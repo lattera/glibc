@@ -1,3 +1,10 @@
+2004-05-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* configure.in (libc_cv_libgcc_s_suffix): New check.
+	(libc_cv_as_needed): Use -lgcc_s$libc_cv_libgcc_s_suffix.
+	* config.make.in (libgcc_s_suffix): Set.
+	* Makeconfig (libgcc_eh): Use -lgcc_s$(libgcc_s_suffix).
+
 2004-05-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* signal/signal.h: Use BSD sigpause only if BSD behavior is preferred.

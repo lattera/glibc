@@ -47,6 +47,7 @@ have-initfini = @libc_cv_have_initfini@
 have-z-relro = @libc_cv_z_relro@
 have-Bgroup = @libc_cv_Bgroup@
 have-as-needed = @libc_cv_as_needed@
+libgcc_s_suffix = @libc_cv_libgcc_s_suffix@
 need-nopic-initfini = @nopic_initfini@
 with-fp = @with_fp@
 with-cvs = @with_cvs@

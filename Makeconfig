@@ -520,7 +520,7 @@ ifndef gnulib
 ifneq ($(have-as-needed),yes)
  libgcc_eh := -lgcc_eh
 else
- libgcc_eh := -Wl,--as-needed -lgcc_s -Wl,--no-as-needed
+ libgcc_eh := -Wl,--as-needed -lgcc_s$(libgcc_s_suffix) -Wl,--no-as-needed
 endif
 ifneq ($(have-cc-with-libunwind),yes)
  gnulib := -lgcc $(libgcc_eh)
