@@ -1,3 +1,31 @@
+1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtol.c: Moved to ...
+	* sysdeps/generic/strtol.c: ...here.
+	* stdlib/strtoul.c: Moved to ...
+	* sysdeps/generic/strtoul.c: ...here.
+	* stdlib/strtoll.c: Moved to ...
+	* sysdeps/generic/strtoll.c: ...here.
+	* stdlib/strtoull.c: Moved to ...
+	* sysdeps/generic/strtoull.c: ...here.
+	* stdlib/strtol_l.c: Moved to ...
+	* sysdeps/generic/strtol_l.c: ...here.
+	* stdlib/strtoul_l.c: Moved to ...
+	* sysdeps/generic/strtoul_l.c: ...here.
+	* stdlib/strtoll_l.c: Moved to ...
+	* sysdeps/generic/strtoll_l.c: ...here.
+	* stdlib/strtoull_l.c: Moved to ...
+	* sysdeps/generic/strtoull_l.c: ...here.
+
+	* sysdeps/wordexp-64/strtol.c: New file.
+	* sysdeps/wordexp-64/strtoul.c: New file.
+	* sysdeps/wordexp-64/strtoll.c: New file.
+	* sysdeps/wordexp-64/strtoull.c: New file.
+	* sysdeps/wordexp-64/strtol_l.c: New file.
+	* sysdeps/wordexp-64/strtoul_l.c: New file.
+	* sysdeps/wordexp-64/strtoll_l.c: New file.
+	* sysdeps/wordexp-64/strtoull_l.c: New file.
+
 1999-05-24  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/bits/wordsize.h: New file.
