@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -395,11 +395,13 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
   if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
-      _dl_debug_printf ("binding file %s to %s: %s symbol `%s'",
+      _dl_debug_printf ("binding file %s [%lu] to %s [%lu]: %s symbol `%s'",
 			(reference_name[0]
 			 ? reference_name
 			 : (rtld_progname ?: "<main program>")),
+			undef_map->l_ns,
 			value->m->l_name[0] ? value->m->l_name : rtld_progname,
+			value->m->l_ns,
 			protected ? "protected" : "normal", undef_name);
       if (version)
 	_dl_debug_printf_c (" [%s]\n", version->name);
