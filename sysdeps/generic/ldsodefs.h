@@ -395,8 +395,9 @@ struct rtld_global
   /* Syscall handling improvements.  This is very specific to x86.  */
   EXTERN uintptr_t _dl_sysinfo;
 
-  /* Address of the unwind info for the vsyscall page.  */
-  EXTERN uintptr_t _dl_sysinfo_eh_frame;
+  /* The vsyscall page is a virtual DSO pre-mapped by the kernel.
+     This points to its ELF header.  */
+  EXTERN const ElfW(Ehdr) *_dl_sysinfo_dso;
 #endif
 
 #ifdef SHARED

@@ -1,3 +1,16 @@
+2003-04-22  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (AT_SYSINFO_EHDR): New macro, replaces AT_SYSINFO_EH_FRAME.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Remove
+	dl_sysinfo_eh_frame member, add dl_sysinfo_dso member instead.
+	* elf/dl-support.c: Update defn.
+	* sysdeps/generic/libc-start.c: Don't call __register_frame_info_bases.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start) [NEED_DL_SYSINFO]:
+	Set GL(dl_sysinfo_dso) from AT_SYSINFO_EHDR.
+	(_dl_show_auxv): Grok AT_SYSINFO_EHDR, not AT_SYSINFO_EH_FRAME.
+	* elf/rtld.c (dl_main) [NEED_DL_SYSINFO]: If GL(dl_sysinfo_dso) is
+	set, set up a link_map for the preloaded, prelinked object.
+
 2003-05-03  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/gnu/Makefile (generated): Append errlist-compat.c here, ...

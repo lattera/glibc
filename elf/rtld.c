@@ -1069,6 +1069,48 @@ of this helper program; chances are you did not intend to run this program.\n\
       assert (i == npreloads);
     }
 
+#ifdef NEED_DL_SYSINFO
+  if (GL(dl_sysinfo_dso) != NULL)
+    {
+      /* We have a prelinked DSO preloaded by the system.  */
+      GL(dl_sysinfo) = GL(dl_sysinfo_dso)->e_entry;
+
+      /* Do an abridged version of the work _dl_map_object_from_fd would do
+	 to map in the object.  It's already mapped and prelinked (and
+	 better be, since it's read-only and so we couldn't relocate it).
+	 We just want our data structures to describe it as if we had just
+	 mapped and relocated it normally.  */
+      struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL);
+      if (__builtin_expect (l != NULL, 1))
+	{
+	  l->l_phdr = ((const void *) GL(dl_sysinfo_dso)
+		       + GL(dl_sysinfo_dso)->e_phoff);
+	  l->l_phnum = GL(dl_sysinfo_dso)->e_phnum;
+	  for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
+	    {
+	      const ElfW(Phdr) *const ph = &l->l_phdr[i];
+	      if (ph->p_type == PT_DYNAMIC)
+		{
+		  l->l_ld = (void *) ph->p_vaddr;
+		  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
+		  break;
+		}
+	      if (ph->p_type == PT_LOAD)
+		assert ((void *) ph->p_vaddr == GL(dl_sysinfo_dso));
+	    }
+	  elf_get_dynamic_info (l);
+	  _dl_setup_hash (l);
+	  l->l_relocated = 1;
+
+	  /* Now that we have the info handy, use the DSO image's soname
+	     so this object can be looked up by name.  */
+	  if (l->l_info[DT_SONAME] != NULL)
+	    l->l_libname->name = ((char *) D_PTR (l, l_info[DT_STRTAB])
+				  + l->l_info[DT_SONAME]->d_un.d_val);
+	}
+    }
+#endif
+
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */

@@ -127,8 +127,8 @@ size_t _dl_phnum;
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
 uintptr_t _dl_sysinfo = DL_SYSINFO_DEFAULT;
-/* Address of the unwind info for the vsyscall page.  */
-uintptr_t _dl_sysinfo_eh_frame;
+/* Address of the ELF headers in the vsyscall page.  */
+const ElfW(Ehdr) *_dl_sysinfo_dso;
 #endif
 
 /* During the program run we must not modify the global data of
