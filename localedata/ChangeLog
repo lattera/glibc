@@ -1,3 +1,8 @@
+2004-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/cy_GB: Fix d_t_fmt ("a viz" -> "mis").
+	Reported by Alan Cox <alan@redhat.com>.
+
 2004-08-07  Petter Reinholdtsen  <pere@hungry.com>
 
 	* Makefile (test-input): Add tr_TR.UTF-8 sorting test.  Test case
