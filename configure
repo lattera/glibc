@@ -10,6 +10,7 @@
 # collected together into a single shared add-on package.
 
 cpu_frags=`(cd $srcdir/$libc_add_on; echo sysdeps/*/preconfigure)`
+test x"$cpu_frags" = x'sysdeps/*/preconfigure' ||
 for frag in $cpu_frags; do
   echo "$as_me:$LINENO: result: ports add-on running preconfigure fragment $frag" >&5
 echo "${ECHO_T}ports add-on running preconfigure fragment $frag" >&6

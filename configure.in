@@ -11,6 +11,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # collected together into a single shared add-on package.
 
 cpu_frags=`(cd $srcdir/$libc_add_on; echo sysdeps/*/preconfigure)`
+test x"$cpu_frags" = x'sysdeps/*/preconfigure' ||
 for frag in $cpu_frags; do
   AC_MSG_RESULT(ports add-on running preconfigure fragment $frag)
   . $srcdir/$libc_add_on/$frag
