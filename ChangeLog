@@ -1,5 +1,9 @@
 2001-02-10  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h (_HAVE_SA_LEN): Define.
+
+2001-02-10  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/gettimeofday.c: Include <stddef.h>.
 
 2001-02-10  Andreas Jaeger  <aj@suse.de>
