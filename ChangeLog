@@ -1,5 +1,8 @@
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/res_send.c (res_send): Recompute timeout for poll for
+	each jump to `wait'.
+
 	* inet/netinet/in.h (IN6ADDR_ANY_INIT): Add correct number of
 	braces to avoid warnings.
 	(IN6ADDR_LOOPBACK_INIT): Likewise.

@@ -521,6 +521,8 @@ read_len:
 			struct pollfd pfd[1];
 			struct sockaddr_in from;
 			socklen_t fromlen;
+			time_t curtime;
+			time_t endtime;
 
 			if ((s < 0) || vc) {
 				if (vc)
@@ -617,12 +619,17 @@ read_len:
 			/*
 			 * Wait for reply
 			 */
-			timeout = (_res.retrans << try) * 1000;
+			curtime = time (NULL);
 			if (try > 0)
-				timeout /= _res.nscount;
-			if (timeout <= 0)
-				timeout = 1000;
+				endtime = (_res.retrans << try) / _res.nscount;
+			else {
+				endtime = _res.retrans;
+				if (endtime <= 0)
+					endtime = 1;
+			}
+			endtime += curtime;
     wait:
+			timeout = MAX (endtime - curtime, 0) * 1000;
 #if 0
 			if (s < 0 || s >= FD_SETSIZE) {
 				Perror(stderr, "s out-of-bounds", EMFILE);
@@ -634,8 +641,10 @@ read_len:
 			pfd[0].events = POLLIN;
 			n = __poll(pfd, 1, timeout);
 			if (n < 0) {
-				if (errno == EINTR)
+				if (errno == EINTR) {
+					curtime = time (NULL);
 					goto wait;
+				}
 				Perror(stderr, "poll", errno);
 				res_close_internal();
 				goto next_ns;
@@ -682,6 +691,7 @@ read_len:
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; old answer:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
+				curtime = time (NULL);
 				goto wait;
 			}
 #if CHECK_SRVR_ADDR
@@ -696,6 +706,7 @@ read_len:
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; not our server:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
+				curtime = time (NULL);
 				goto wait;
 			}
 #endif
@@ -711,6 +722,7 @@ read_len:
 					(_res.pfcode & RES_PRF_REPLY),
 					(stdout, ";; wrong query name:\n"),
 					ans, (resplen>anssiz)?anssiz:resplen);
+				curtime = time (NULL);
 				goto wait;
 			}
 			if (anhp->rcode == SERVFAIL ||
