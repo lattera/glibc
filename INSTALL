@@ -31,9 +31,8 @@ below.
 Configuring and compiling GNU Libc
 ==================================
 
-   GNU Libc cannot be compiled in the source directory.  You must
-create a separate directory for the object files.  This directory
-should be outside the source tree.  For example, if you have unpacked
+   GNU Libc can be compiled in the source directory but we'd advise to
+build in a separate build directory.  For example, if you have unpacked
 the glibc sources in `/src/gnu/glibc-2.1.0', create a directory
 `/src/gnu/glibc-build' to put the object files in.
 
@@ -226,9 +225,9 @@ file to coexist with new programs.  For more information see the files
 permissions on a pseudoterminal so it can be used by the calling
 process.  This means programs like `xterm' and `screen' do not have to
 be setuid to get a pty.  (There may be other reasons why they need
-privileges.)  If you are using a 2.1 Linux kernel with the `devptsfs'
-or `devfs' filesystems providing pty slaves, you don't need this
-program; otherwise you do.  The source for `pt_chown' is in
+privileges.)  If you are using a 2.1 or newer Linux kernel with the
+`devptsfs' or `devfs' filesystems providing pty slaves, you don't need
+this program; otherwise you do.  The source for `pt_chown' is in
 `login/programs/pt_chown.c'.
 
 Recommended Tools for Compilation
