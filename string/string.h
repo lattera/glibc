@@ -179,8 +179,6 @@ extern char *strstr (__const char *__haystack, __const char *__needle)
 
 #ifdef __USE_GNU
 /* Similar to `strstr' but this function ignores the case of both strings.  */
-extern char *__strcasestr (__const char *__haystack, __const char *__needle)
-     __THROW __attribute_pure__;
 extern char *strcasestr (__const char *__haystack, __const char *__needle)
      __THROW __attribute_pure__;
 #endif
@@ -273,8 +271,6 @@ __extension__ extern int ffsll (long long int __ll)
 # endif
 
 /* Compare S1 and S2, ignoring case.  */
-extern int __strcasecmp (__const char *__s1, __const char *__s2)
-     __THROW __attribute_pure__;
 extern int strcasecmp (__const char *__s1, __const char *__s2)
      __THROW __attribute_pure__;
 
