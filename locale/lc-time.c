@@ -69,11 +69,8 @@ _nl_init_era_entries (void)
 					      _NL_TIME_ERA_NUM_ENTRIES);
       if (new_num_eras == 0)
 	{
-	  if (eras != NULL)
-	    {
-	      free (eras);
-	      eras = NULL;
-	    }
+	  free (eras);
+	  eras = NULL;
 	}
       else
 	{
