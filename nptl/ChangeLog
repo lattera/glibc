@@ -1,5 +1,8 @@
 2003-03-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_create.c (start_thread): Don't use setjmp inside
+	__builtin_expect to work around gcc bug.
+
 	* sysdeps/unix/sysv/linux/timer_delete.c (timer_delete): Even if
 	timer_delete syscall fails, but not with ENOSYS, set
 	__no_posix_timers.

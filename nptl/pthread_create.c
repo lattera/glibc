@@ -221,7 +221,8 @@ start_thread (void *arg)
 
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
-  if (__builtin_expect (setjmp (pd->cancelbuf) == 0, 1))
+  int not_first_call = setjmp (pd->cancelbuf);
+  if (__builtin_expect (! not_first_call, 1))
     {
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT

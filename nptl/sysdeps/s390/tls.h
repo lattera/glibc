@@ -43,9 +43,9 @@ typedef struct
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
   int multiple_threads;
-#ifdef NEED_DL_SYSINFO
+# ifdef NEED_DL_SYSINFO
   uintptr_t sysinfo;
-#endif
+# endif
 } tcbhead_t;
 
 # ifndef __s390x__
