@@ -154,11 +154,11 @@ omit-deps += crti
 CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
 
-include ../Rules
-
 ifeq ($(build-static),yes)
 tests-static += tst-locale1
 endif
+
+include ../Rules
 
 # What we install as libc.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
@@ -202,6 +202,7 @@ $(addprefix $(objpfx), \
     $(tests) $(test-srcs))): $(objpfx)libpthread.so \
 			     $(objpfx)libpthread_nonshared.a
 $(objpfx)tst-unload: $(common-objpfx)dlfcn/libdl.so
+$(addprefix $(objpfx),$(tests-static)): $(objpfx)libpthread.a
 else
 $(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 endif
