@@ -1,0 +1,62 @@
+/* Tests for gets.
+   Copyright (C) 2001 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <stdio.h>
+#include <string.h>
+
+int
+main (void)
+{
+  char buf[100];
+  int result = 0;
+
+  if (gets (buf) != buf)
+    {
+      printf ("gets: read error: %m\n");
+      result = 1;
+    }
+  else if (strchr (buf, '\n') != NULL)
+    {
+      printf ("newline not stripped: \"%s\"\n", buf);
+      result = 1;
+    }
+  else if (strcmp (buf, "foo") != 0)
+    {
+      printf ("read mismatch: expected \"%s\", got \"%s\"\n", "foo", buf);
+      result = 1;
+    }
+
+  if (gets (buf) != buf)
+    {
+      printf ("gets: read error: %m\n");
+      result = 1;
+    }
+  else if (strchr (buf, '\n') != NULL)
+    {
+      printf ("newline not stripped: \"%s\"\n", buf);
+      result = 1;
+    }
+  else if (strcmp (buf, "bar") != 0)
+    {
+      printf ("read mismatch: expected \"%s\", got \"%s\"\n", "bar", buf);
+      result = 1;
+    }
+
+  return result;
+}
