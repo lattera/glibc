@@ -35,6 +35,11 @@ do_test (void)
       exit (1);
     }
 
+  /* XXX Remove if default value is clear.  */
+  pthread_attr_setinheritsched (&a, PTHREAD_INHERIT_SCHED);
+  pthread_attr_setschedpolicy (&a, SCHED_OTHER);
+  pthread_attr_setscope (&a, PTHREAD_SCOPE_SYSTEM);
+
   for (i = 0; i < 10000; ++i)
     {
       long int r = random ();
@@ -60,6 +65,81 @@ do_test (void)
 	    {
 	      printf ("\
 detach state changed to %d by invalid setdetachstate call\n", s);
+	      exit (1);
+	    }
+	}
+
+      if (r != PTHREAD_INHERIT_SCHED && r != PTHREAD_EXPLICIT_SCHED)
+	{
+	  int e = pthread_attr_setinheritsched (&a, r);
+
+	  if (e == 0)
+	    {
+	      printf ("attr_setinheritsched with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+
+	  int s;
+	  if (pthread_attr_getinheritsched (&a, &s) != 0)
+	    {
+	      puts ("attr_getinheritsched failed");
+	      exit (1);
+	    }
+
+	  if (s != PTHREAD_INHERIT_SCHED)
+	    {
+	      printf ("\
+inheritsched changed to %d by invalid setinheritsched call\n", s);
+	      exit (1);
+	    }
+	}
+
+      if (r != SCHED_OTHER && r != SCHED_RR && r != SCHED_FIFO)
+	{
+	  int e = pthread_attr_setschedpolicy (&a, r);
+
+	  if (e == 0)
+	    {
+	      printf ("attr_setschedpolicy with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+
+	  int s;
+	  if (pthread_attr_getschedpolicy (&a, &s) != 0)
+	    {
+	      puts ("attr_getschedpolicy failed");
+	      exit (1);
+	    }
+
+	  if (s != SCHED_OTHER)
+	    {
+	      printf ("\
+schedpolicy changed to %d by invalid setschedpolicy call\n", s);
+	      exit (1);
+	    }
+	}
+
+      if (r != PTHREAD_SCOPE_SYSTEM && r != PTHREAD_SCOPE_PROCESS)
+	{
+	  int e = pthread_attr_setscope (&a, r);
+
+	  if (e == 0)
+	    {
+	      printf ("attr_setscope with value %ld succeeded\n", r);
+	      exit (1);
+	    }
+
+	  int s;
+	  if (pthread_attr_getscope (&a, &s) != 0)
+	    {
+	      puts ("attr_getscope failed");
+	      exit (1);
+	    }
+
+	  if (s != PTHREAD_SCOPE_SYSTEM)
+	    {
+	      printf ("\
+contentionscope changed to %d by invalid setscope call\n", s);
 	      exit (1);
 	    }
 	}

@@ -1,3 +1,8 @@
+2003-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-cleanup3.
+	* tst-cleanup3.c: New file.
+
 2003-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-attr1 and tst-attr2.
