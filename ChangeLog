@@ -1,5 +1,8 @@
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable): Remove some duplication.
+
 	* nscd/nscd.c (options): Mark S option as hidden.
 	(parse_opt): When S option is used, print warning message.
 	* nscd/grpcache.c (adgrptbyX): Don't handle secure mode.

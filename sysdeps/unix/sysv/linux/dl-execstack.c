@@ -45,25 +45,24 @@ _dl_make_stack_executable (void **stack_endp)
       || __builtin_expect (*stack_endp != __libc_stack_end, 0))
     return EPERM;
 
-#if _STACK_GROWS_DOWN
   /* Newer Linux kernels support a flag to make our job easy.  */
-# ifdef PROT_GROWSDOWN
-#  if __ASSUME_PROT_GROWSUPDOWN == 0
-  static bool no_growsdown;
-  if (! no_growsdown)
-#  endif
+#if defined  PROT_GROWSDOWN || defined PROT_GROWSUP
+# if __ASSUME_PROT_GROWSUPDOWN == 0
+  static bool no_growsupdown;
+  if (! no_growsupdown)
+# endif
     {
       if (__builtin_expect (__mprotect ((void *) page, GLRO(dl_pagesize),
 					__stack_prot) == 0, 1))
 	goto return_success;
-#  if __ASSUME_PROT_GROWSUPDOWN == 0
+# if __ASSUME_PROT_GROWSUPDOWN == 0
       if (errno == EINVAL)
-	no_growsdown = true;
+	no_growsupdown = true;
       else
-#  endif
+# endif
 	return errno;
     }
-# endif
+#endif
 
   /* There is always a hole in the address space below the bottom of the
      stack.  So when we make an mprotect call that starts below the bottom
@@ -72,8 +71,10 @@ _dl_make_stack_executable (void **stack_endp)
      We start with a random guess at how deep the stack might have gotten
      so as to have extended the GROWSDOWN mapping to lower pages.  */
 
-# if __ASSUME_PROT_GROWSUPDOWN == 0
+#if __ASSUME_PROT_GROWSUPDOWN == 0
   size_t size = GLRO(dl_pagesize) * 8;
+
+# if _STACK_GROWS_DOWN
   page = page + GLRO(dl_pagesize) - size;
   while (1)
     {
@@ -97,41 +98,11 @@ _dl_make_stack_executable (void **stack_endp)
 	  page += size;
 	}
     }
-# endif
 
-#elif _STACK_GROWS_UP
-  /* Newer Linux kernels support a flag to make our job easy.  */
-# ifdef PROT_GROWSUP
-#  if __ASSUME_PROT_GROWSUPDOWN == 0
-  static bool no_growsup;
-  if (! no_growsup)
-#  endif
-    {
-      if (__mprotect ((void *) page, GLRO(dl_pagesize),
-		      PROT_READ|PROT_WRITE|PROT_EXEC|PROT_GROWSUP) == 0)
-	goto return_success;
-#  if __ASSUME_PROT_GROWSUPDOWN == 0
-      if (errno == EINVAL)
-	no_growsup = true;
-      else
-#  endif
-	return errno;
-    }
-# endif
-
-  /* There is always a hole in the address space above the top of the
-     stack.  So when we make an mprotect call that spans past the top
-     of the stack, it will include the hole and fail with ENOMEM.
-
-     We start with a random guess at how deep the stack might have gotten
-     so as to have extended the GROWSUP mapping to higher pages.  */
-
-# if __ASSUME_PROT_GROWSUPDOWN == 0
-  size_t size = GLRO(dl_pagesize) * 8;
+# elif _STACK_GROWS_UP
   while (1)
     {
-      if (__mprotect ((void *) page, size,
-		      PROT_READ|PROT_WRITE|PROT_EXEC) == 0)
+      if (__mprotect ((void *) page, size, __stack_prot & ~PROT_GROWSUP) == 0)
 	/* We got this chunk changed; loop to do another chunk below.  */
 	page += size;
       else
@@ -149,10 +120,10 @@ _dl_make_stack_executable (void **stack_endp)
 	  size /= 2;
 	}
     }
-# endif
 
-#else
-# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+# else
+#  error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+# endif
 #endif
 
  return_success:
