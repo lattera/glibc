@@ -200,7 +200,7 @@ $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	mv -f $@T $@
 
 $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
-	sed -n 's@^$(common-objpfx)\([^(]*\)(\(.*.os\))$$@\1 \2@p' $< | \
+	sed -n 's@^$(common-objpfx)\([^(]*\)(\([^)]*\.os\))$$@\1 \2@p' $< | \
 	while read lib file; do \
 	  case $$lib in \
 	  libc_pic.a) \
