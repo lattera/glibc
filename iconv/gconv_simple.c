@@ -773,7 +773,6 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
-      /* XXX unaligned.  */						      \
       *((uint32_t *) outptr)++ = *inptr++;				      \
   }
 #define LOOP_NEED_FLAGS
@@ -797,7 +796,6 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    /* XXX unaligned.  */						      \
     if (__builtin_expect (*((uint32_t *) inptr), 0) > 0x7f)		      \
       {									      \
 	STANDARD_ERR_HANDLER (4);					      \
@@ -1147,7 +1145,27 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
-  *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
+  {									      \
+    uint16_t u1 = *((uint16_t *) inptr);				      \
+									      \
+    if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
+      {									      \
+	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
+	   them.  (Catching this here is not security relevant.)  */	      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 2;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
+									      \
+    *((uint32_t *) outptr)++ = u1;					      \
+    inptr += 2;								      \
+  }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -1168,12 +1186,34 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (__builtin_expect (*((uint32_t *) inptr), 0) >= 0x10000)		      \
+    uint32_t val = *((uint32_t *) inptr);				      \
+									      \
+    if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
+    else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
+      {									      \
+	/* Surrogate characters in UCS-4 input are not valid.		      \
+	   We must catch this, because the UCS-2 output might be	      \
+	   interpreted as UTF-16 by other programs.  If we let		      \
+	   surrogates pass through, attackers could make a security	      \
+	   hole exploit by synthesizing any desired plane 1-16		      \
+	   character.  */						      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 4;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
     else 								      \
-      *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;		      \
+      {									      \
+	*((uint16_t *) outptr)++ = val;					      \
+	inptr += 4;							      \
+      }									      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
@@ -1195,8 +1235,27 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
-  *((uint32_t *) outptr)++ = bswap_16 (*(uint16_t *) inptr);		      \
-  inptr += 2;
+  {									      \
+    uint16_t u1 = bswap_16 (*((uint16_t *) inptr));			      \
+									      \
+    if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
+      {									      \
+	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
+	   them.  (Catching this here is not security relevant.)  */	      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 2;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
+									      \
+    *((uint32_t *) outptr)++ = u1;					      \
+    inptr += 2;								      \
+  }
+#define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -1222,8 +1281,28 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       {									      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
-    *((uint16_t *) outptr)++ = bswap_16 (val);				      \
-    inptr += 4;								      \
+    else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
+      {									      \
+	/* Surrogate characters in UCS-4 input are not valid.		      \
+	   We must catch this, because the UCS-2 output might be	      \
+	   interpreted as UTF-16 by other programs.  If we let		      \
+	   surrogates pass through, attackers could make a security	      \
+	   hole exploit by synthesizing any desired plane 1-16		      \
+	   character.  */						      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 4;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
+    else 								      \
+      {									      \
+	*((uint16_t *) outptr)++ = bswap_16 (val);			      \
+	inptr += 4;							      \
+      }									      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>

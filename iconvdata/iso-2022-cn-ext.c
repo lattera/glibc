@@ -24,6 +24,7 @@
 #include <string.h>
 #include "gb2312.h"
 #include "iso-ir-165.h"
+#include "cns11643.h"
 #include "cns11643l1.h"
 #include "cns11643l2.h"
 
@@ -80,41 +81,41 @@ enum
   ISO_IR_165_set,
   SO_mask = 7,
 
-  GB7589_set = 8,
-  GB13131_set = 16,
-  CNS11643_2_set = 24,
-  SS2_mask = 24,
+  GB7589_set = 1 << 3,
+  GB13131_set = 2 << 3,
+  CNS11643_2_set = 3 << 3,
+  SS2_mask = 3 << 3,
 
-  GB7590_set = 0,
-  GB13132_set = 32,
-  CNS11643_3_set = 64,
-  CNS11643_4_set = 96,
-  CNS11643_5_set = 128,
-  CNS11643_6_set = 160,
-  CNS11643_7_set = 192,
-  SS3_mask = 224,
+  GB7590_set = 1 << 5,
+  GB13132_set = 2 << 5,
+  CNS11643_3_set = 3 << 5,
+  CNS11643_4_set = 4 << 5,
+  CNS11643_5_set = 5 << 5,
+  CNS11643_6_set = 6 << 5,
+  CNS11643_7_set = 7 << 5,
+  SS3_mask = 7 << 5,
 
 #define CURRENT_MASK (SO_mask | SS2_mask | SS3_mask)
 
-  GB2312_ann = 256,
-  GB12345_ann = 512,
-  CNS11643_1_ann = 768,
-  ISO_IR_165_ann = 1024,
-  SO_ann = 1792,
+  GB2312_ann = 1 << 8,
+  GB12345_ann = 2 << 8,
+  CNS11643_1_ann = 3 << 8,
+  ISO_IR_165_ann = 4 << 8,
+  SO_ann = 7 << 8,
 
-  GB7589_ann = 2048,
-  GB13131_ann = 4096,
-  CNS11643_2_ann = 6144,
-  SS2_ann = 6144,
+  GB7589_ann = 1 << 11,
+  GB13131_ann = 2 << 11,
+  CNS11643_2_ann = 3 << 11,
+  SS2_ann = 3 << 11,
 
-  GB7590_ann = 8192,
-  GB13132_ann = 16384,
-  CNS11643_3_ann = 24576,
-  CNS11643_4_ann = 32768,
-  CNS11643_5_ann = 40960,
-  CNS11643_6_ann = 49152,
-  CNS11643_7_ann = 57344,
-  SS3_ann = 57344
+  GB7590_ann = 1 << 13,
+  GB13132_ann = 2 << 13,
+  CNS11643_3_ann = 3 << 13,
+  CNS11643_4_ann = 4 << 13,
+  CNS11643_5_ann = 5 << 13,
+  CNS11643_6_ann = 6 << 13,
+  CNS11643_7_ann = 7 << 13,
+  SS3_ann = 7 << 13
 };
 
 
@@ -190,16 +191,16 @@ enum
 	   - the initial byte of the SS2 sequence.			      \
 	   - the initial byte of the SS3 sequence.			      \
 	*/								      \
-	if (inptr + 1 > inend						      \
+	if (inptr + 2 > inend						      \
 	    || (inptr[1] == '$'						      \
-		&& (inptr + 2 > inend					      \
-		    || (inptr[2] == ')' && inptr + 3 > inend)		      \
-		    || (inptr[2] == '*' && inptr + 3 > inend)		      \
-		    || (inptr[2] == '+' && inptr + 3 > inend)))		      \
-	    || (inptr[1] == SS2_1 && inptr + 3 > inend)			      \
-	    || (inptr[1] == SS3_1 && inptr + 3 > inend))		      \
+		&& (inptr + 3 > inend					      \
+		    || (inptr[2] == ')' && inptr + 4 > inend)		      \
+		    || (inptr[2] == '*' && inptr + 4 > inend)		      \
+		    || (inptr[2] == '+' && inptr + 4 > inend)))		      \
+	    || (inptr[1] == SS2_1 && inptr + 4 > inend)			      \
+	    || (inptr[1] == SS3_1 && inptr + 4 > inend))		      \
 	  {								      \
-	    result = __GCONV_EMPTY_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 	if (inptr[1] == '$'						      \
@@ -285,17 +286,12 @@ enum
 	continue;							      \
       }									      \
 									      \
-    if (ch == ESC && (inend - inptr == 1 || inptr[1] == SS2_1))		      \
+    if (ch == ESC && inptr[1] == SS2_1)					      \
       {									      \
 	/* This is a character from CNS 11643 plane 2.			      \
 	   XXX We could test here whether the use of this character	      \
 	   set was announced.						      \
 	   XXX Current GB7589 and GB13131 are not supported.  */	      \
-	if (inend - inptr < 4)						      \
-	  {								      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
-	    break;							      \
-	  }								      \
 	inptr += 2;							      \
 	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
@@ -306,35 +302,53 @@ enum
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
+	    inptr += 2;							      \
 	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
       }									      \
-    /* Note that we can assume here that at least bytes are available if      \
+    /* Note that we can assume here that at least 4 bytes are available if    \
        the first byte is ESC since otherwise the first if would have been     \
        true.  */							      \
     else if (ch == ESC && inptr[1] == SS3_1)				      \
       {									      \
 	/* This is a character from CNS 11643 plane 3 or higher.	      \
-	   XXX Current GB7590 and GB13132 are not supported.  */	      \
-	if (inend - inptr < 4)						      \
+	   XXX Currently GB7590 and GB13132 are not supported.  */	      \
+	char buf[3];							      \
+	const char *tmp = buf;						      \
+									      \
+	buf[1] = inptr[2];						      \
+	buf[2] = inptr[3];						      \
+	switch (ann & SS3_ann)						      \
 	  {								      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
+	  case CNS11643_3_ann:						      \
+	    /* CNS 11643 plane 3 is part of the old CNS 11643 plane 14.  */   \
+	    if (buf[1] < 0x62 || (buf[1] == 0x62 && buf[2] <= 0x45))	      \
+	      {								      \
+		buf[0] = 0x2e;						      \
+		ch = cns11643_to_ucs4 (&tmp, 3, 0);			      \
+	      }								      \
+	    else							      \
+	      ch = __UNKNOWN_10646_CHAR;				      \
+	    break;							      \
+	  default:							      \
+	    /* XXX Currently planes 4 to 7 are not supported.  */	      \
+	    ch = __UNKNOWN_10646_CHAR;					      \
 	    break;							      \
 	  }								      \
-	inptr += 2;							      \
-	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
-		inptr -= 2;						      \
 		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
+	    inptr += 4;							      \
 	    ++*irreversible;						      \
 	    continue;							      \
 	  }								      \
+	assert (tmp == buf + 3);					      \
+	inptr += 4;							      \
       }									      \
     else if (set == ASCII_set)						      \
       {									      \
@@ -361,7 +375,7 @@ enum
 									      \
 	if (ch == 0)							      \
 	  {								      \
-	    result = __GCONV_EMPTY_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 	else if (ch == __UNKNOWN_10646_CHAR)				      \
@@ -427,16 +441,16 @@ enum
 	char buf[2];							      \
 	int used;							      \
 									      \
-	if (set == GB2312_set || ((ann & CNS11643_1_ann) == 0		      \
-				  && (ann & ISO_IR_165_ann) == 0))	      \
+	if (set == GB2312_set || ((ann & SO_ann) != CNS11643_1_ann	      \
+				  && (ann & SO_ann) != ISO_IR_165_ann))	      \
 	  {								      \
 	    written = ucs4_to_gb2312 (ch, buf, 2);			      \
 	    used = GB2312_set;						      \
 	  }								      \
-	else if (set == ISO_IR_165_set || (ann & ISO_IR_165_set) != 0)	      \
+	else if (set == ISO_IR_165_set || (ann & SO_ann) == ISO_IR_165_set)   \
 	  {								      \
-	    written = ucs4_to_gb2312 (ch, buf, 2);			      \
-	    used = GB2312_set;						      \
+	    written = ucs4_to_isoir165 (ch, buf, 2);			      \
+	    used = ISO_IR_165_set;					      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -454,29 +468,66 @@ enum
 	      used = CNS11643_2_set;					      \
 	    else							      \
 	      {								      \
-		/* Well, see whether we have to change the SO set.  */	      \
-		if (set != GB2312_set)					      \
-		  {							      \
-		    written = ucs4_to_gb2312 (ch, buf, 2);		      \
-		    if (written != __UNKNOWN_10646_CHAR)		      \
-		      used = GB2312_set;				      \
-		  }							      \
-		if (written == __UNKNOWN_10646_CHAR && set != ISO_IR_165_set) \
-		  {							      \
-		    written = ucs4_to_isoir165 (ch, buf, 2);		      \
-		    if (written != __UNKNOWN_10646_CHAR)		      \
-		      used = ISO_IR_165_set;				      \
-		  }							      \
-		if (written == __UNKNOWN_10646_CHAR && set != CNS11643_1_set) \
-		  {							      \
-		    written = ucs4_to_cns11643l1 (ch, buf, 2);		      \
-		    if (written != __UNKNOWN_10646_CHAR)		      \
-		      used = CNS11643_1_set;				      \
-		  }							      \
+		char tmpbuf[3];						      \
 									      \
-		if (written == __UNKNOWN_10646_CHAR)			      \
+		switch (0)						      \
 		  {							      \
+		  default:						      \
+		    /* Well, see whether we have to change the SO set.  */    \
+									      \
+		    if (used != GB2312_set)				      \
+		      {							      \
+			written = ucs4_to_gb2312 (ch, buf, 2);		      \
+			if (written != __UNKNOWN_10646_CHAR)		      \
+			  {						      \
+			    used = GB2312_set;				      \
+			    break;					      \
+			  }						      \
+		      }							      \
+									      \
+		    if (used != ISO_IR_165_set)				      \
+		      {							      \
+			written = ucs4_to_isoir165 (ch, buf, 2);	      \
+			if (written != __UNKNOWN_10646_CHAR)		      \
+			  {						      \
+			    used = ISO_IR_165_set;			      \
+			    break;					      \
+			  }						      \
+		      }							      \
+									      \
+		    if (used != CNS11643_1_set)				      \
+		      {							      \
+			written = ucs4_to_cns11643l1 (ch, buf, 2);	      \
+			if (written != __UNKNOWN_10646_CHAR)		      \
+			  {						      \
+			    used = CNS11643_1_set;			      \
+			    break;					      \
+			  }						      \
+		      }							      \
+									      \
+		    written = ucs4_to_cns11643 (ch, tmpbuf, 3);		      \
+		    if (written == 3 && tmpbuf[0] != 1 && tmpbuf[0] != 2)     \
+		      {							      \
+			buf[0] = tmpbuf[1];				      \
+			buf[1] = tmpbuf[2];				      \
+			written = 2;					      \
+			/* CNS 11643 plane 3 is part of the old CNS 11643     \
+			   plane 14.					      \
+			   XXX Currently planes 4 to 7 are not supported.  */ \
+			if (tmpbuf[0] == 14				      \
+			    && (tmpbuf[1] < 0x62			      \
+				|| (tmpbuf[1] == 0x62 && tmpbuf[2] <= 0x45))) \
+			  {						      \
+			    used = CNS11643_3_set;			      \
+			    break;					      \
+			  }						      \
+		      }							      \
+									      \
 		    /* Even this does not work.  Error.  */		      \
+		    used = ASCII_set;					      \
+		  }							      \
+		if (used == ASCII_set)					      \
+		  {							      \
 		    STANDARD_ERR_HANDLER (4);				      \
 		  }							      \
 	      }								      \
@@ -488,7 +539,7 @@ enum
 	  {								      \
 	    /* First see whether we announced that we use this		      \
 	       character set.  */					      \
-	    if ((ann & (2 << used)) == 0)				      \
+	    if ((used & SO_mask) != 0 && (ann & SO_ann) != (used << 8))	      \
 	      {								      \
 		const char *escseq;					      \
 									      \
@@ -499,18 +550,39 @@ enum
 		  }							      \
 									      \
 		assert (used >= 1 && used <= 4);			      \
-		escseq = "\e$)A\e$)G\e$*H\e$)E" + (used - 1) * 4;	      \
-		*outptr++ = *escseq++;					      \
-		*outptr++ = *escseq++;					      \
+		escseq = ")A\0\0)G)E" + (used - 1) * 2;			      \
+		*outptr++ = ESC;					      \
+		*outptr++ = '$';					      \
 		*outptr++ = *escseq++;					      \
 		*outptr++ = *escseq++;					      \
 									      \
-		if (used == GB2312_set)					      \
-		  ann = (ann & CNS11643_2_ann) | GB2312_ann;		      \
-		else if (used == CNS11643_1_set)			      \
-		  ann = (ann & CNS11643_2_ann) | CNS11643_1_ann;	      \
-		else							      \
-		  ann |= CNS11643_2_ann;				      \
+		ann = (ann & ~SO_ann) | (used << 8);			      \
+	      }								      \
+	    else if ((used & SS2_mask) != 0 && (ann & SS2_ann) != (used << 8))\
+	      {								      \
+		const char *escseq;					      \
+									      \
+		assert (used == CNS11643_2_set); /* XXX */		      \
+		escseq = "*H";						      \
+		*outptr++ = ESC;					      \
+		*outptr++ = '$';					      \
+		*outptr++ = *escseq++;					      \
+		*outptr++ = *escseq++;					      \
+									      \
+		ann = (ann & ~SS2_ann) | (used << 8);			      \
+	      }								      \
+	    else if ((used & SS3_mask) != 0 && (ann & SS3_ann) != (used << 8))\
+	      {								      \
+		const char *escseq;					      \
+									      \
+		assert ((used >> 5) >= 3 && (used >> 5) <= 7);		      \
+		escseq = "+I+J+K+L+M" + ((used >> 5) - 3) * 2;		      \
+		*outptr++ = ESC;					      \
+		*outptr++ = '$';					      \
+		*outptr++ = *escseq++;					      \
+		*outptr++ = *escseq++;					      \
+									      \
+		ann = (ann & ~SS3_ann) | (used << 8);			      \
 	      }								      \
 									      \
 	    if (used == CNS11643_2_set)					      \
@@ -522,6 +594,16 @@ enum
 		  }							      \
 		*outptr++ = SS2_0;					      \
 		*outptr++ = SS2_1;					      \
+	      }								      \
+	    else if (used >= CNS11643_3_set && used <= CNS11643_7_set)	      \
+	      {								      \
+		if (outptr + 2 > outend)				      \
+		  {							      \
+		    result = __GCONV_FULL_OUTPUT;			      \
+		    break;						      \
+		  }							      \
+		*outptr++ = SS3_0;					      \
+		*outptr++ = SS3_1;					      \
 	      }								      \
 	    else							      \
 	      {								      \
@@ -555,6 +637,7 @@ enum
 									      \
 	*outptr++ = buf[0];						      \
 	*outptr++ = buf[1];						      \
+	set = used;							      \
       }									      \
 									      \
     /* Now that we wrote the output increment the input pointer.  */	      \

@@ -109,32 +109,32 @@ gconv_init (struct __gconv_step *step)
   enum variant var = illegal_var;
   int result;
 
-  if (__strcasecmp (step->__from_name, "UTF-16") == 0)
+  if (__strcasecmp (step->__from_name, "UTF-16//") == 0)
     {
       dir = from_utf16;
       var = UTF_16;
     }
-  else if (__strcasecmp (step->__to_name, "UTF-16") == 0)
+  else if (__strcasecmp (step->__to_name, "UTF-16//") == 0)
     {
       dir = to_utf16;
       var = UTF_16;
     }
-  else if (__strcasecmp (step->__from_name, "UTF-16BE") == 0)
+  else if (__strcasecmp (step->__from_name, "UTF-16BE//") == 0)
     {
       dir = from_utf16;
       var = UTF_16BE;
     }
-  else if (__strcasecmp (step->__to_name, "UTF-16BE") == 0)
+  else if (__strcasecmp (step->__to_name, "UTF-16BE//") == 0)
     {
       dir = to_utf16;
       var = UTF_16BE;
     }
-  else if (__strcasecmp (step->__from_name, "UTF-16LE") == 0)
+  else if (__strcasecmp (step->__from_name, "UTF-16LE//") == 0)
     {
       dir = from_utf16;
       var = UTF_16LE;
     }
-  else if (__strcasecmp (step->__to_name, "UTF-16LE") == 0)
+  else if (__strcasecmp (step->__to_name, "UTF-16LE//") == 0)
     {
       dir = to_utf16;
       var = UTF_16LE;
@@ -195,6 +195,22 @@ gconv_end (struct __gconv_step *data)
 #define BODY \
   {									      \
     uint32_t c = get32 (inptr);						      \
+									      \
+    if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \
+      {									      \
+	/* Surrogate characters in UCS-4 input are not valid.		      \
+	   We must catch this.  If we let surrogates pass through,	      \
+	   attackers could make a security hole exploit by		      \
+	   synthesizing any desired plane 1-16 character.  */		      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 4;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
 									      \
     if (swap)								      \
       {									      \

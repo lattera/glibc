@@ -216,7 +216,7 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-  if (ferror (stdin) || ferror (stdout))
+  if (ferror (stdin) || fflush (stdout) || ferror (stdout))
     {
       fprintf (stderr, "I/O error\n");
       exit (1);

@@ -20,8 +20,11 @@
 
 #include <stdint.h>
 
+/* Table for CNS 11643, plane 1 to UCS4 conversion.  */
+extern const uint16_t __cns11643l1_to_ucs4_tab[];
 /* Table for CNS 11643, plane 2 to UCS4 conversion.  */
 extern const uint16_t __cns11643l2_to_ucs4_tab[];
+/* Table for CNS 11643, plane 14 to UCS4 conversion.  */
 extern const uint16_t __cns11643l14_to_ucs4_tab[];
 
 

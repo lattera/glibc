@@ -29,7 +29,7 @@
 #endif
 
 #include <dlfcn.h>
-
+#include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -268,6 +268,13 @@ mtrace ()
       mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "w");
       if (mallstream != NULL)
 	{
+	  /* Make sure we close the file descriptor on exec.  */
+	  int flags = __fcntl (fileno (mallstream), F_GETFD, 0);
+	  if (flags >= 0)
+	    {
+	      flags |= FD_CLOEXEC;
+	      __fcntl (fileno (mallstream), F_SETFD, flags);
+	    }
 	  /* Be sure it doesn't malloc its buffer!  */
 	  setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
 	  fprintf (mallstream, "= Start\n");

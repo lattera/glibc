@@ -141,15 +141,15 @@ enum
 	     line; we can simply ignore them				      \
 	   - the initial byte of the SS2 sequence.			      \
 	*/								      \
-	if (__builtin_expect (inptr + 1 > inend, 0)			      \
+	if (__builtin_expect (inptr + 2 > inend, 0)			      \
 	    || (inptr[1] == '$'						      \
-		&& (__builtin_expect (inptr + 2 > inend, 0)		      \
+		&& (__builtin_expect (inptr + 3 > inend, 0)		      \
 		    || (inptr[2] == ')'					      \
-			&& __builtin_expect (inptr + 3 > inend, 0))	      \
+			&& __builtin_expect (inptr + 4 > inend, 0))	      \
 		    || (inptr[2] == '*'					      \
-			&& __builtin_expect (inptr + 3 > inend, 0))))	      \
+			&& __builtin_expect (inptr + 4 > inend, 0))))	      \
 	    || (inptr[1] == SS2_1					      \
-		&& __builtin_expect (inptr + 3 > inend, 0)))		      \
+		&& __builtin_expect (inptr + 4 > inend, 0)))		      \
 	  {								      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
@@ -313,14 +313,14 @@ enum
 	    else							      \
 	      {								      \
 		/* Well, see whether we have to change the SO set.  */	      \
-		if (set == GB2312_set)					      \
+		if (used == GB2312_set)					      \
 		  written = ucs4_to_cns11643l1 (ch, buf, 2);		      \
 		else							      \
 		  written = ucs4_to_gb2312 (ch, buf, 2);		      \
 									      \
 		if (__builtin_expect (written, 0) != __UNKNOWN_10646_CHAR)    \
 		  /* Oh well, then switch SO.  */			      \
-		  used = GB2312_set + CNS11643_1_set - set;		      \
+		  used = GB2312_set + CNS11643_1_set - used;		      \
 		else							      \
 		  {							      \
 		    /* Even this does not work.  Error.  */		      \
@@ -335,7 +335,7 @@ enum
 	  {								      \
 	    /* First see whether we announced that we use this		      \
 	       character set.  */					      \
-	    if ((ann & (2 << used)) == 0)				      \
+	    if ((ann & (16 << (used >> 3))) == 0)			      \
 	      {								      \
 		const char *escseq;					      \
 									      \
@@ -345,10 +345,10 @@ enum
 		    break;						      \
 		  }							      \
 									      \
-		assert (used >= 1 && used <= 3);			      \
-		escseq = "\e$)A\e$)G\e$*H" + (used - 1) * 4;		      \
-		*outptr++ = *escseq++;					      \
-		*outptr++ = *escseq++;					      \
+		assert ((used >> 3) >= 1 && (used >> 3) <= 3);		      \
+		escseq = ")A)G*H" + ((used >> 3) - 1) * 2;		      \
+		*outptr++ = ESC;					      \
+		*outptr++ = '$';					      \
 		*outptr++ = *escseq++;					      \
 		*outptr++ = *escseq++;					      \
 									      \
@@ -402,6 +402,7 @@ enum
 									      \
 	*outptr++ = buf[0];						      \
 	*outptr++ = buf[1];						      \
+	set = used;							      \
       }									      \
 									      \
     /* Now that we wrote the output increment the input pointer.  */	      \

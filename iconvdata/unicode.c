@@ -154,6 +154,23 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	STANDARD_ERR_HANDLER (4);					      \
       }									      \
+    else if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \
+      {									      \
+	/* Surrogate characters in UCS-4 input are not valid.		      \
+	   We must catch this, because the UCS-2 output might be	      \
+	   interpreted as UTF-16 by other programs.  If we let		      \
+	   surrogates pass through, attackers could make a security	      \
+	   hole exploit by synthesizing any desired plane 1-16		      \
+	   character.  */						      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 4;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
     else								      \
       {									      \
 	put16 (outptr, c);						      \
@@ -179,11 +196,26 @@ gconv_end (struct __gconv_step *data)
     if (swap)								      \
       u1 = bswap_16 (u1);						      \
 									      \
+    if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
+      {									      \
+	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
+	   them.  (Catching this here is not security relevant.)  */	      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	inptr += 2;							      \
+	++*irreversible;						      \
+	continue;							      \
+      }									      \
+									      \
     put32 (outptr, u1);							      \
 									      \
     inptr += 2;								      \
     outptr += 4;							      \
   }
+#define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS \
 	, int swap
 #include <iconv/loop.c>

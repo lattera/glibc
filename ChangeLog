@@ -1,3 +1,55 @@
+2000-09-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.1.94.
+
+	* malloc/mtrace.c (mtrace): Mark stream as close on exec.
+
+2000-09-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/utf-16.c (BODY for TO_LOOP): Reject UCS-4 input in the
+	range 0xD800..0xDFFF.
+	* iconvdata/unicode.c (BODY for TO_LOOP): Likewise.
+	(BODY for FROM_LOOP): Likewise.
+	* iconv/gconv_simple.c (ucs2_internal_loop): Likewise.
+	(internal_ucs2_loop): Likewise.
+	(ucs2reverse_internal_loop): Likewise.
+	(internal_ucs2reverse_loop): Likewise.
+
+2000-09-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/utf-16.c (gconv_init): Add missing slashes to encoding
+	names.
+
+2000-09-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/tst-table-from.c (main): Fix test for error on stdout.
+	* iconvdata/tst-table-to.c (main): Likewise.
+
+2000-09-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/iso-ir-165.c (__isoir165_from_tab): Renamed from
+	__isoir165_tab.
+	* iconvdata/cns11643.h (__cns11643l1_to_ucs4_tab): New declaration.
+	* iconvdata/iso-2022-cn-ext.c: Include "cns11643.h".
+	(GB7590_set, GB13132_set, CNS11643_3_set, CNS11643_4_set,
+	CNS11643_5_set, CNS11643_6_set, CNS11643_7_set): Change enum values.
+	(BODY for FROM_LOOP): Fix buffer overrun. Treat CNS11643 plane 3.
+	Return __GCONV_INCOMPLETE_INPUT instead of __GCONV_EMPTY_INPUT.
+	(BODY for TO_LOOP): Fix usage of `set' vs. `used'.  Fix typo that
+	caused GB2312 to be used instead of ISO-IR-165. Treat CNS11643
+	plane 3.  Fix shift sequences. Output announcement for SS2 and SS3
+	encodings when needed.  When outputting an announcement, don't clear
+	most other announcements.
+
+2000-09-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/iso-2022-cn.c (BODY for FROM_LOOP): Fix buffer overrun.
+	(BODY for TO_LOOP): Fix usage of `set' vs. `used'.
+
+2000-09-14  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/Versions: Add bind_textdomain_codeset.
+
 2000-09-16  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/mips/dl-machine.h (_RTLD_PROLOGUE): Reformat.  Declare
