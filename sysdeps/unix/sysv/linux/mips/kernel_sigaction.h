@@ -4,10 +4,7 @@
 
 #define HAVE_SA_RESTORER
 
-/* Linux/MIPS still uses the old sigaction structure in the kernel.  */
-#define old_kernel_sigaction kernel_sigaction
-
-struct kernel_sigaction {
+struct old_kernel_sigaction {
 	unsigned int	sa_flags;
 	__sighandler_t	k_sa_handler;
 	unsigned long	sa_mask;
@@ -22,4 +19,13 @@ struct kernel_sigaction {
 	 */
 	int		pad1[1]; /* reserved */
 #endif
+};
+
+/* This is the sigaction structure from the Linux 2.1.68 kernel.  */
+struct kernel_sigaction {
+	unsigned int	sa_flags;
+	__sighandler_t	k_sa_handler;
+	sigset_t	sa_mask;
+	void		(*sa_restorer)(void);
+	int		s_resv[1]; /* reserved */
 };
