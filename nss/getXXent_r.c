@@ -123,7 +123,7 @@ extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
 /* Set up NIP to run through the services.  If ALL is zero, use NIP's
    current location if it's not nil.  Return nonzero if there are no
    services (left).  */
-static enum nss_status
+static int
 setup (void **fctp, const char *func_name, int all)
 {
   int no_more;
