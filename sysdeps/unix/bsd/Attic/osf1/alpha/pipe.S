@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,3 +26,5 @@ SYSCALL__ (pipe, 1)
 	/* Go out with a clean status.  */
 	mov zero, r0
 	ret
+
+weak_alias (__pipe, pipe)

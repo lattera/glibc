@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -116,3 +116,5 @@ DEFUN(__waitpid, (pid, stat_loc, options),
      any PID.  */
   return infop.__pid;
 }
+
+weak_alias (__waitpid, waitpid)

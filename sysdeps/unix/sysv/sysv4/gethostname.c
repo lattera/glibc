@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,3 +29,5 @@ DEFUN(__gethostname, (name, namelen), char *name AND size_t namelen)
 {
   return __sysinfo (SI_HOSTNAME, name, namelen);
 }
+
+weak_alias (__gethostname, gethostname)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,3 +40,5 @@ myerror:
 	addl %esp, $(NGROUPS_MAX * 4) /* Pop the local array.  */
 	jb syscall_error	/* Check for error from the system call.  */
 	ret			/* Return its value.  */
+
+weak_alias (__getgroups, getgroups)

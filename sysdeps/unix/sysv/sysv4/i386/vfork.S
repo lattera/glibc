@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/i386/__vfork.S>
+#include <sysdeps/unix/bsd/i386/vfork.S>

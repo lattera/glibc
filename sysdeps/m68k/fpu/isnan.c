@@ -1,2 +1,4 @@
 #define	FUNC	__isnan
-#include <__isinf.c>
+#include <isinf.c>
+
+weak_alias (__isnan, isnan)

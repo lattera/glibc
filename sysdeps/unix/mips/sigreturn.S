@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,3 +25,5 @@ Cambridge, MA 02139, USA.  */
 ENTRY(__sigreturn)
 	li v0, SYS_sigreturn
 	syscall
+
+weak_alias (__sigreturn, sigreturn)

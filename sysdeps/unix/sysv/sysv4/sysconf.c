@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -177,3 +177,5 @@ DEFUN(__sysconf, (name), int name)
 #endif
     }
 }
+
+weak_alias (__sysconf, sysconf)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,3 +20,5 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (wait3, 3)
 	ret
+
+weak_alias (__wait3, wait3)

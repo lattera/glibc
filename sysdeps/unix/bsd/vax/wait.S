@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,3 +23,5 @@ SYSCALL__ (wait, 1)
 	beq 1f
 	movl r1, (r2)
 1:	ret
+
+weak_alias (__wait, wait)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,10 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 
-__CONSTVALUE int
+int
 DEFUN(FUNC, (x), double x)
 {
   return __m81_u(FUNC)(x);
 }
+
+weak_alias (__isinf, isinf)

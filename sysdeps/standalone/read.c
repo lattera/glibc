@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
 
@@ -83,3 +83,5 @@ DEFUN(__read, (fd, buf, nbytes),
   *buffer = data;
   return 1;
 }
+
+weak_alias (__read, read)

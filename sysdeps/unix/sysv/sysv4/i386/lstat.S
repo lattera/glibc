@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,5 @@ ENTRY (__lstat)
 	DO_CALL (lxstat, 3)	/* Do the syscall.   */
 	jb syscall_error	/* Check for error.  */
 	ret			/* Return success.  */
+
+weak_alias (__lstat, lstat)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,3 +20,5 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (pathconf, 2)
 	ret
+
+weak_alias (__pathconf, pathconf)

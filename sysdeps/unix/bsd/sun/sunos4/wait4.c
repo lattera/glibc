@@ -2,7 +2,7 @@
    SunOS 4.1) on top of SunOS's wait4 system call, which has semantics
    different from those documented.  Go Sun!
 
-Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -46,3 +46,5 @@ DEFUN(__wait4, (pid, stat_loc, options, usage),
 
   return __wait4_syscall (pid, stat_loc, options, usage);
 }
+
+weak_alias (__wait4, wait4)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
    Contributed by Ian Lance Taylor (ian@airs.com).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,4 +58,4 @@ DEFUN(__sysconf, (name), int name)
 
 #define __sysconf __default_sysconf
 
-#include <sysdeps/posix/__sysconf.c>
+#include <sysdeps/posix/sysconf.c>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Return the base 2 signed integral exponent of X.  */
 
-__CONSTVALUE double
+double
 DEFUN(__logb, (x), double x)
 {
   if (__isnan (x))
@@ -39,6 +39,8 @@ DEFUN(__logb, (x), double x)
   return x;
 }
 
+weak_alias (__logb, logb)
+
 #else
-#include <sysdeps/ieee754/__logb.c>
+#include <sysdeps/ieee754/logb.c>
 #endif

@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/sun/sunos4/__wait4.c>
+#include <sysdeps/unix/bsd/sun/sunos4/wait4.c>

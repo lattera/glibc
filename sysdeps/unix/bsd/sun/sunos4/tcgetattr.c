@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,3 +29,5 @@ DEFUN(__tcgetattr, (fd, termios_p),
 {
   return __ioctl (fd, TCGETS, termios_p);
 }
+
+weak_alias (__tcgetattr, tcgetattr)

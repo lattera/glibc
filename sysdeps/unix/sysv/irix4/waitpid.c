@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/bsd4.4/__waitpid.c>
+#include <sysdeps/unix/bsd/bsd4.4/waitpid.c>

@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/hp/m68k/__wait.S>
+#include <sysdeps/unix/bsd/hp/m68k/wait.S>

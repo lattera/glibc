@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/bsd4.4/__setsid.S>
+#include <sysdeps/unix/bsd/bsd4.4/setsid.S>

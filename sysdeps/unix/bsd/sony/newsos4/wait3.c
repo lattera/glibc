@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/bsd4.4/__wait3.c>
+#include <sysdeps/unix/bsd/bsd4.4/wait3.c>

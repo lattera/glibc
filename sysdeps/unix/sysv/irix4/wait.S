@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@cs.widener.edu).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,3 +38,5 @@ noerror:
 	nop
 noarg:
 	ret
+
+weak_alias (__wait, wait)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,3 +31,5 @@ DEFUN(__getrusage, (who, usage),
 {
   return __syssgi (SGI_RUSAGE, who, usage);
 }
+
+weak_alias (__getrusage, getrusage)
