@@ -1,3 +1,23 @@
+Mon Dec 25 20:56:39 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/bind.c: Translate EEXIST from dir_link into
+	EADDRINUSE.  If translated node doesn't grok ifsock protocol,
+	return EADDRINUSE.
+
+	* sysdeps/mach/hurd/connect.c: Make address arg
+	`const struct sockaddr_un *'.
+	The redecl is kosher and avoids another variable for AF_LOCAL case.
+	* sysdeps/mach/hurd/sendto.c: Likewise.
+	* sysdeps/mach/hurd/bind.c: Likewise.
+
+	* socket/sys/socket.h (__SOCKADDR_ARG): Enable transparent_union
+ 	code for GCC >= 2.7; use __transparent_union__ for name safety;
+ 	add several sockaddr flavors.
+	(__SOCKADDR_ALLTYPES, __SOCKADDR_ONETYPE): New macros used in
+	constructing the transparent union declarations.
+	(__CONST_SOCKADDR_ARG): New type (or macro if not GCC 2.7).
+	(bind, connect, sendto): Make the sockaddr argument use that.
+
 Fri Dec 22 00:57:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/setgid.c: In root case, store into NEWAUX, not

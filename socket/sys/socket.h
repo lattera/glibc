@@ -115,25 +115,38 @@ struct sockaddr
 
 /* This is the type we use for generic socket address arguments.
 
-   NOTE: Since this functionality is volatile, I'm disabling the use of it for
-   now.
-
-   With GCC 2.6 and later, the funky union causes redeclarations or uses with
+   With GCC 2.7 and later, the funky union causes redeclarations or uses with
    any of the listed types to be allowed without complaint.  */
 #if	(!defined (__GNUC__) || __GNUC__ < 2 || \
-	 /*(__GNUC__ == 2 && __GNUC_MINOR__ < 6)*/ 1)
-#define	__SOCKADDR_ARG	struct sockaddr *
+	 (__GNUC__ == 2 && __GNUC_MINOR__ < 7))
+#define	__SOCKADDR_ARG		struct sockaddr *
+#define	__CONST_SOCKADDR_ARG	__const struct sockaddr *
 #else
-/* Bring these names into being at top-level scope, in case they have not been
-   defined yet.  Add more `struct sockaddr_AF' types here as necessary.  */
-struct sockaddr_in;
-struct sockaddr_un;
-struct sockaddr_ns;
-typedef union { struct sockaddr *__sa;
-		struct sockaddr_in *__sa_in;
-		struct sockaddr_un *__sa_un;
-		struct sockaddr_ns *__sa_ns;
-	      } __SOCKADDR_ARG __attribute__ ((transparent_union));
+/* Add more `struct sockaddr_AF' types here as necessary.
+   These are all the ones I found on NetBSD and Linux.  */
+#define __SOCKADDR_ALLTYPES \
+  __SOCKADDR_ONETYPE (sockaddr) \
+  __SOCKADDR_ONETYPE (sockaddr_at) \
+  __SOCKADDR_ONETYPE (sockaddr_ax25) \
+  __SOCKADDR_ONETYPE (sockaddr_dl) \
+  __SOCKADDR_ONETYPE (sockaddr_eon) \
+  __SOCKADDR_ONETYPE (sockaddr_in) \
+  __SOCKADDR_ONETYPE (sockaddr_in6) \
+  __SOCKADDR_ONETYPE (sockaddr_inarp) \
+  __SOCKADDR_ONETYPE (sockaddr_ipx) \
+  __SOCKADDR_ONETYPE (sockaddr_iso) \
+  __SOCKADDR_ONETYPE (sockaddr_ns) \
+  __SOCKADDR_ONETYPE (sockaddr_un) \
+  __SOCKADDR_ONETYPE (sockaddr_x25)
+
+#define __SOCKADDR_ONETYPE(type) struct type *__##type##__;
+typedef union { __SOCKADDR_ALLTYPES
+	      } __SOCKADDR_ARG __attribute__ ((__transparent_union__));
+#undef __SOCKADDR_ONETYPE
+#define __SOCKADDR_ONETYPE(type) __const struct type *__##type##__;
+typedef union { __SOCKADDR_ALLTYPES
+	      } __CONST_SOCKADDR_ARG __attribute__ ((__transparent_union__));
+#undef __SOCKADDR_ONETYPE
 #endif
 
 
@@ -151,7 +164,7 @@ extern int socketpair __P ((int __domain, enum __socket_type __type,
 			    int __protocol, int __fds[2]));
 
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
-extern int bind __P ((int __fd, __SOCKADDR_ARG __addr, size_t __len));
+extern int bind __P ((int __fd, __CONST_SOCKADDR_ARG __addr, size_t __len));
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
 extern int getsockname __P ((int __fd, __SOCKADDR_ARG __addr,
@@ -161,7 +174,8 @@ extern int getsockname __P ((int __fd, __SOCKADDR_ARG __addr,
    For connectionless socket types, just set the default address to send to
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
-extern int connect __P ((int __fd, __SOCKADDR_ARG __addr, size_t __len));
+extern int connect __P ((int __fd,
+			 __CONST_SOCKADDR_ARG __addr, size_t __len));
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
@@ -192,7 +206,7 @@ extern int recv __P ((int __fd, __ptr_t __buf, size_t __n, int __flags));
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 extern int sendto __P ((int __fd, __ptr_t __buf, size_t __n, int __flags,
-			__SOCKADDR_ARG __addr, size_t __addr_len));
+			__CONST_SOCKADDR_ARG __addr, size_t __addr_len));
 
 /* Read N bytes into BUF through socket FD.
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of

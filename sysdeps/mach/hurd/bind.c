@@ -32,23 +32,22 @@ Cambridge, MA 02139, USA.  */
 /* Give the socket FD the local address ADDR (which is LEN bytes long).  */
 int
 DEFUN(bind, (fd, addr, len),
-      int fd AND struct sockaddr *addr AND size_t len)
+      int fd AND const struct sockaddr_un *addr AND size_t len)
 {
   addr_port_t aport;
   error_t err;
 
-  if (addr->sa_family == AF_LOCAL)
+  if (addr->sun_family == AF_LOCAL)
     {
       /* For the local domain, we must create a node in the filesystem
 	 using the ifsock translator and then fetch the address from it.  */
-      struct sockaddr_un *unaddr = (struct sockaddr_un *) addr;
       file_t dir, node;
       char name[len - offsetof (struct sockaddr_un, sun_path)], *n;
-      strncpy (name, unaddr->sun_path, sizeof name);
+      strncpy (name, addr->sun_path, sizeof name);
       dir = __file_name_split (name, &n);
       if (dir == MACH_PORT_NULL)
 	return -1;
-      
+
       /* Create a new, unlinked node in the target directory.  */
       err = __dir_mkfile (dir, O_CREAT, 0666 & ~_hurd_umask, &node);
 
@@ -56,15 +55,19 @@ DEFUN(bind, (fd, addr, len),
 	{
 	  file_t ifsock;
 	  /* Set the node's translator to make it a local-domain socket.  */
-	  err = __file_set_translator (node, 
+	  err = __file_set_translator (node,
 				       FS_TRANS_EXCL | FS_TRANS_SET,
 				       FS_TRANS_EXCL | FS_TRANS_SET, 0,
 				       _HURD_IFSOCK, sizeof _HURD_IFSOCK,
 				       MACH_PORT_NULL,
 				       MACH_MSG_TYPE_COPY_SEND);
 	  if (! err)
-	    /* Link the node, now a socket, into the target directory.  */
-	    err = __dir_link (dir, node, n);
+	    {
+	      /* Link the node, now a socket, into the target directory.  */
+	      err = __dir_link (dir, node, n);
+	      if (err == EEXIST)
+		err = EADDRINUSE;
+	    }
 	  __mach_port_deallocate (__mach_task_self (), node);
 	  if (! err)
 	    {
@@ -78,8 +81,16 @@ DEFUN(bind, (fd, addr, len),
 		}
 	    }
 	  if (! err)
-	    /* Get the address port.  */
-	    err = __ifsock_getsockaddr (ifsock, &aport);
+	    {
+	      /* Get the address port.  */
+	      err = __ifsock_getsockaddr (ifsock, &aport);
+	      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+		/* We are not talking to /hurd/ifsock.  Probably someone
+		   came in after we linked our node, unlinked it, and
+		   replaced it with a different node, before we did our
+		   lookup.  Treat it as if our link had failed with EEXIST.  */
+		err = EADDRINUSE;
+	    }
 	  __mach_port_deallocate (__mach_task_self (), ifsock);
 	}
       __mach_port_deallocate (__mach_task_self (), dir);
@@ -94,7 +105,7 @@ DEFUN(bind, (fd, addr, len),
 			({
 			  if (err)
 			    err = __socket_create_address (port,
-							   addr->sa_family,
+							   addr->sun_family,
 							   (char *) addr, len,
 							   &aport);
 			  if (! err)

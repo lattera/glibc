@@ -31,17 +31,16 @@ Cambridge, MA 02139, USA.  */
    Return 0 on success, -1 for errors.  */
 int
 DEFUN(connect, (fd, addr, len),
-      int fd AND struct sockaddr *addr AND size_t len)
+      int fd AND const struct sockaddr_un *addr AND size_t len)
 {
   error_t err;
   addr_port_t aport;
-  
-  if (addr->sa_family == AF_LOCAL)
+
+  if (addr->sun_family == AF_LOCAL)
     {
       /* For the local domain, we must look up the name as a file and talk
 	 to it with the ifsock protocol.  */
-      struct sockaddr_un *unaddr = (struct sockaddr_un *) addr;
-      file_t file = __file_name_lookup (unaddr->sun_path, 0, 0);
+      file_t file = __file_name_lookup (addr->sun_path, 0, 0);
       if (file == MACH_PORT_NULL)
 	return -1;
       err = __ifsock_getsockaddr (file, &aport);
@@ -54,12 +53,12 @@ DEFUN(connect, (fd, addr, len),
     }
   else
     err = EIEIO;
-    
+
   err = HURD_DPORT_USE (fd,
 			({
 			  if (err)
 			    err = __socket_create_address (port,
-							   addr->sa_family,
+							   addr->sun_family,
 							   (char *) addr, len,
 							   &aport);
 			  if (! err)

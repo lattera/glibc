@@ -30,18 +30,17 @@ Cambridge, MA 02139, USA.  */
 int
 DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
       int fd AND PTR buf AND size_t n AND int flags AND
-      struct sockaddr *addr AND size_t addr_len)
+      const struct sockaddr_un *addr AND size_t addr_len)
 {
   addr_port_t aport;
   error_t err;
   int wrote;
-  
-  if (addr->sa_family == AF_LOCAL)
+
+  if (addr->sun_family == AF_LOCAL)
     {
       /* For the local domain, we must look up the name as a file and talk
 	 to it with the ifsock protocol.  */
-      struct sockaddr_un *unaddr = (struct sockaddr_un *) addr;
-      file_t file = __file_name_lookup (unaddr->sun_path, 0, 0);
+      file_t file = __file_name_lookup (addr->sun_path, 0, 0);
       if (file == MACH_PORT_NULL)
 	return -1;
       err = __ifsock_getsockaddr (file, &aport);
@@ -60,7 +59,7 @@ DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
 			({
 			  if (err)
 			    err = __socket_create_address (port,
-							   addr->sa_family,
+							   addr->sun_family,
 							   (char *) addr,
 							   addr_len,
 							   &aport);
