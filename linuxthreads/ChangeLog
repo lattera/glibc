@@ -1,3 +1,9 @@
+2002-01-09  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: Assume only
+	ret follows pseudo, and thus avoid branch-to-branch in cancel
+	case.  Use SYSCALL_ERROR_LABEL.
+
 2003-01-11  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/vfork.S: New file.

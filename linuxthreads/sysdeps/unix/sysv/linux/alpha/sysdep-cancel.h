@@ -33,6 +33,9 @@
 #  define PSEUDO_PROF
 # endif
 
+/* ??? Assumes that nothing comes between PSEUDO and PSEUDO_END
+   besides "ret".  */
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)			\
 	.globl name;						\
@@ -47,7 +50,7 @@ __LABEL(name)							\
 	bne	t0, $pseudo_cancel;				\
 	lda	v0, SYS_ify(syscall_name);			\
 	call_pal PAL_callsys;					\
-	bne	a3, $syscall_error;				\
+	bne	a3, SYSCALL_ERROR_LABEL;			\
 __LABEL($pseudo_ret)						\
 	.subsection 2;						\
 __LABEL($pseudo_cancel)						\
@@ -59,13 +62,17 @@ __LABEL($pseudo_cancel)						\
 	lda	v0, SYS_ify(syscall_name);			\
 	call_pal PAL_callsys;					\
 	stq	v0, 8(sp);					\
-	stq	a3, 16(sp);					\
+	bne	a3, $multi_error;				\
 	CDISABLE;						\
 	ldq	ra, 0(sp);					\
 	ldq	v0, 8(sp);					\
-	ldq	a3, 16(sp);					\
 	addq	sp, 64, sp;					\
-	beq	a3, $pseudo_ret;				\
+	ret;							\
+__LABEL($multi_error)						\
+	CDISABLE;						\
+	ldq	ra, 0(sp);					\
+	ldq	v0, 8(sp);					\
+	addq	sp, 64, sp;					\
 __LABEL($syscall_error)						\
 	SYSCALL_ERROR_HANDLER;					\
 	END(name);						\
