@@ -17,7 +17,7 @@
 # Cambridge, MA 02139, USA.
 
 ifeq ($(subdir),gnulib)
-routines = mul umul $(divrem) alloca
+routines = dotmul umul $(divrem) alloca
 endif	# gnulib
 
 # We distribute these files, even though they are generated,
