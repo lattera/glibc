@@ -200,6 +200,7 @@ _nss_files_get##name##_r (proto,					      \
 		      bufferend = (__stpcpy (bufferend,			      \
 					     tmp_result_buf.h_aliases[cnt])   \
 				   + 1);				      \
+		      ++cnt;						      \
 		    }							      \
 									      \
 		  if (cnt < newaliases)					      \

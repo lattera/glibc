@@ -737,15 +737,15 @@ static void pthread_exited(pid_t pid)
       /* If we have to signal this event do it now.  */
       if (th->p_report_events)
 	{
-	  /* See whether TD_DEATH is in any of the mask.  */
+	  /* See whether TD_REAP is in any of the mask.  */
 	  int idx = __td_eventword (TD_REAP);
 	  uint32_t mask = __td_eventmask (TD_REAP);
 
 	  if ((mask & (__pthread_threads_events.event_bits[idx]
 		       | th->p_eventbuf.eventmask.event_bits[idx])) != 0)
 	    {
-	      /* Yep, we have to signal the death.  */
-	      th->p_eventbuf.eventnum = TD_DEATH;
+	      /* Yep, we have to signal the reapage.  */
+	      th->p_eventbuf.eventnum = TD_REAP;
 	      th->p_eventbuf.eventdata = th;
 	      __pthread_last_event = th;
 

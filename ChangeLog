@@ -1,3 +1,21 @@
+2000-09-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/sys/time.h (gettimeofday): Move restrict for tz parameter
+	to the typedefs of __timezone_ptr_t.
+	Reported by MATSUMURA Hiromitsu <coji2@mb.infoweb.ne.jp>.
+
+2000-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Increment counter in
+	the loop.
+
+2000-09-01  H.J. Lu  <hjl@gnu.org>
+
+	* Makeconfig (built-program-cmd): Don't use the dynamic linker
+	to run a binary if it is in $(tests-static).
+
+	* Rules (binaries-static): Add $(tests-static).
+
 2000-09-02  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Fixes for fcntl64.

@@ -1,3 +1,8 @@
+2000-09-03  Mark Kettenis  <kettenis@gnu.org>
+
+	* manager.c (pthread_exited): Correctly report event as TD_REAP
+	instead of TD_DEATH.  Fix comments.
+
 2000-09-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* spinlock.h (testandset): Add cast to avoid warning.

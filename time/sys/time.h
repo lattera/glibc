@@ -55,9 +55,9 @@ struct timezone
   };
 
 #if defined __USE_GNU || defined __USE_BSD
-typedef struct timezone *__timezone_ptr_t;
+typedef struct timezone *__restrict __timezone_ptr_t;
 #else
-typedef void *__timezone_ptr_t;
+typedef void *__restrict __timezone_ptr_t;
 #endif
 
 /* Get the current time of day and timezone information,
@@ -66,7 +66,7 @@ typedef void *__timezone_ptr_t;
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
 extern int gettimeofday (struct timeval *__restrict __tv,
-			 __timezone_ptr_t __restrict __tz) __THROW;
+			 __timezone_ptr_t __tz) __THROW;
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
