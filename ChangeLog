@@ -1,3 +1,11 @@
+2002-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/asia: Update from tzdata2002d.
+	* timezone/australasia: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone-tab: Likewise.
+
 2002-10-15  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_deallocate_tls) [TLS_TCB_AT_TP]:
