@@ -1,5 +1,9 @@
 2000-10-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Make FNM_LEADING_DIR behave as GNU tar
+	expects it.  Patch by Colin Watson <riva.ucam.org>.
+	* posix/tst-fnmatch.input: Add test cases for FNM_LEADING_DIR.
+
 	* elf/dl-open.c (add_to_global): New function.  Split out from
 	dl_open_worker.
 	(dl_open_worker): Call add_to_global not only for new objects, also for

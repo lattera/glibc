@@ -99,25 +99,18 @@ FCT (pattern, string, no_leading_period, flags)
 	  if (c == L('\0'))
 	    /* The wildcard(s) is/are the last element of the pattern.
 	       If the name is a file name and contains another slash
-	       this does mean it cannot match.  If the FNM_LEADING_DIR
-	       flag is set and exactly one slash is following, we have
-	       a match.  */
+	       this means it cannot match, unless the FNM_LEADING_DIR
+	       flag is set.  */
 	    {
 	      int result = (flags & FNM_FILE_NAME) == 0 ? 0 : FNM_NOMATCH;
 
 	      if (flags & FNM_FILE_NAME)
 		{
-		  const CHAR *slashp = STRCHR (n, L('/'));
-
 		  if (flags & FNM_LEADING_DIR)
-		    {
-		      if (slashp != NULL
-			  && STRCHR (slashp + 1, L('/')) == NULL)
-			result = 0;
-		    }
+		    result = 0;
 		  else
 		    {
-		      if (slashp == NULL)
+		      if (STRCHR (n, L('/')) == NULL)
 			result = 0;
 		    }
 		}

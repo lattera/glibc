@@ -459,3 +459,26 @@ de_DE.ISO-8859-1 "á"			"[[=ä=]b]"	       0
 de_DE.ISO-8859-1 "ä"			"[[=ä=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=ä=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=ä=]b]"	       NOMATCH
+
+# Test of GNU extensions.
+C		 "x"			"x"		       0       PATHNAME|LEADING_DIR
+C		 "x/y"			"x"		       0       PATHNAME|LEADING_DIR
+C		 "x/y/z"		"x"		       0       PATHNAME|LEADING_DIR
+C		 "x"			"*"		       0       PATHNAME|LEADING_DIR
+C		 "x/y"			"*"		       0       PATHNAME|LEADING_DIR
+C		 "x/y/z"		"*"		       0       PATHNAME|LEADING_DIR
+C		 "x"			"*x"		       0       PATHNAME|LEADING_DIR
+C		 "x/y"			"*x"		       0       PATHNAME|LEADING_DIR
+C		 "x/y/z"		"*x"		       0       PATHNAME|LEADING_DIR
+C		 "x"			"x*"		       0       PATHNAME|LEADING_DIR
+C		 "x/y"			"x*"		       0       PATHNAME|LEADING_DIR
+C		 "x/y/z"		"x*"		       0       PATHNAME|LEADING_DIR
+C		 "x"			"a"		       NOMATCH PATHNAME|LEADING_DIR
+C		 "x/y"			"a"		       NOMATCH PATHNAME|LEADING_DIR
+C		 "x/y/z"		"a"		       NOMATCH PATHNAME|LEADING_DIR
+C		 "x"			"x/y"		       NOMATCH PATHNAME|LEADING_DIR
+C		 "x/y"			"x/y"		       0       PATHNAME|LEADING_DIR
+C		 "x/y/z"		"x/y"		       0       PATHNAME|LEADING_DIR
+C		 "x"			"x?y"		       NOMATCH PATHNAME|LEADING_DIR
+C		 "x/y"			"x?y"		       NOMATCH PATHNAME|LEADING_DIR
+C		 "x/y/z"		"x?y"		       NOMATCH PATHNAME|LEADING_DIR
