@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
@@ -43,8 +43,8 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 static void
 register_dump (int fd, struct sigcontext *ctx)
 {
-  char regs[32][8];
-  struct iovec iov[38];
+  char regs[38][8];
+  struct iovec iov[38 * 2 + 10];
   size_t nr = 0;
   int i;
 
@@ -58,7 +58,7 @@ register_dump (int fd, struct sigcontext *ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  for (i = 0; i < 31; i++)
+  for (i = 0; i < 32; i++)
     hexvalue (ctx->sc_regs[i], regs[i], 8);
   hexvalue (ctx->sc_pc, regs[32], 8);
   hexvalue (ctx->sc_cause, regs[33], 8);
