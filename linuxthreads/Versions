@@ -46,6 +46,7 @@ libpthread {
     __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
     __write;
     _IO_flockfile; _IO_ftrylockfile; _IO_funlockfile;
+    vfork; __fork;
 
     # POSIX.1c extensions to libc.
     flockfile; funlockfile; ftrylockfile;
@@ -115,5 +116,6 @@ libpthread {
   }
   GLIBC_2.1.2 {
     __pthread_kill_other_threads_np;
+    __vfork;
   }
 }

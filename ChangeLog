@@ -1,3 +1,14 @@
+1999-09-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/getaddrinfo.c: Little optimization.
+
+1999-09-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Rename strong name for
+	fork from __syscall_fork to __libc_fork.
+	* posix/Versions: Add __libc_fork and __vfork to version
+	GLIBC_2.1.2.
+
 1999-08-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* io/ftwtest-sh: Set LC_ALL and LANG to fix locale

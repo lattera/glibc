@@ -73,11 +73,11 @@ static inline void pthread_call_handlers(struct handler_list * list)
   for (/*nothing*/; list != NULL; list = list->next) (list->handler)();
 }
 
-extern int __fork(void);
+extern int __libc_fork(void);
 
-int fork(void)
+pid_t __fork(void)
 {
-  int pid;
+  pid_t pid;
   struct handler_list * prepare, * child, * parent;
 
   pthread_mutex_lock(&pthread_atfork_lock);
@@ -86,7 +86,7 @@ int fork(void)
   parent = pthread_atfork_parent;
   pthread_mutex_unlock(&pthread_atfork_lock);
   pthread_call_handlers(prepare);
-  pid = __fork();
+  pid = __libc_fork();
   if (pid == 0) {
     __pthread_reset_main_thread();
     __fresetlockfiles();
@@ -96,3 +96,11 @@ int fork(void)
   }
   return pid;
 }
+
+weak_alias (__fork, fork);
+
+pid_t __vfork(void)
+{
+  return __fork();
+}
+weak_alias (__vfork, vfork);

@@ -238,8 +238,7 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
       return -EAI_MEMORY;					\
     rc = __gethostbyname2_r (name, _family, &th, tmpbuf,	\
          tmpbuflen, &h, &herrno);				\
-  } while ((rc != 0) &&						\
-    (herrno == NETDB_INTERNAL) && (errno == ERANGE));		\
+  } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
   if ((rc != 0) && (herrno == NETDB_INTERNAL))			\
     {								\
       __set_h_errno (herrno);					\

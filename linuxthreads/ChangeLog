@@ -1,3 +1,10 @@
+1999-09-03  Andreas Schwab  <schwab@suse.de>
+
+	* ptfork.c (__fork): Renamed from fork and use __libc_fork.  Add
+	fork as weak alias.
+	(__vfork): New function, alias vfork.
+	* Versions: Export __fork, vfork, and __vfork in libpthread.
+
 1999-08-23  Andreas Schwab  <schwab@suse.de>
 
 	* signals.c (pthread_sighandler): Add SIGCONTEXT_EXTRA_ARGS to

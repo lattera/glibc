@@ -84,4 +84,8 @@ libc {
     # w*
     waitid; wordexp; wordfree;
   }
+  GLIBC_2.1.2 {
+    # functions used in other libraries
+    __libc_fork; __vfork;
+  }
 }
