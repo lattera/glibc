@@ -38,7 +38,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
      results for the fields we do not fill in.  */
   memset (infop, '\0', sizeof (td_thrinfo_t));
 
-  infop->ti_tid = pds.tid;
+  infop->ti_tid = th->th_unique;
   infop->ti_tls = (char *) pds.specific;
   infop->ti_pri = (pds.schedpolicy == SCHED_OTHER
 		   ? 0 : pds.schedparam.sched_priority);
@@ -53,7 +53,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
     infop->ti_state = TD_THR_UNKNOWN;
 
   /* Initialization which are the same in both cases.  */
-  infop->ti_lid = ps_getpid (th->th_ta_p->ph);
+  infop->ti_lid = ps_getpid (th->th_ta_p->ph); /* pds.tid should match */
   infop->ti_ta_p = th->th_ta_p;
   infop->ti_startfunc = pds.start_routine;
   memcpy (&infop->ti_events, &pds.eventbuf.eventmask,
