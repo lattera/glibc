@@ -1,5 +1,9 @@
 2001-01-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/generic/strtol.c: Include <locale.h>
+	* stdlib/strtod.c: Likewise
+	* stdlib/strfmon.c: Likewise.
+
 	* include/bits/locale.h: New file.
 
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
