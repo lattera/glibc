@@ -22,7 +22,7 @@
 #define _JIS0208_H	1
 
 #include <gconv.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 /* Conversion table.  */
 extern const uint16_t jis0208_to_ucs[];

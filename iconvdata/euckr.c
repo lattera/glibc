@@ -26,18 +26,8 @@
 #include <ksc5601.h>
 
 /* Direction of the transformation.  */
-enum direction
-{
-  illegal,
-  to_euckr,
-  from_euckr
-};
-
-struct euckr_data
-{
-  enum direction dir;
-};
-
+static int to_euckr_object;
+static int from_euckr_object;
 
 
 static inline void
@@ -66,36 +56,21 @@ int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct euckr_data *new_data;
-  enum direction dir;
-  int result;
-
   if (strcasestr (step->from_name, "EUC-KR") != NULL)
-    dir = from_euckr;
+    step->data = &from_euckr_object;
   else if (strcasestr (step->to_name, "EUC-KR") != NULL)
-    dir = to_euckr;
+    step->data = &to_euckr_object;
   else
-    dir = illegal;
+    return GCONV_NOCONV;
 
-  result = GCONV_NOCONV;
-  if (dir != illegal
-      && ((new_data
-	   = (struct euckr_data *) malloc (sizeof (struct euckr_data)))
-	  != NULL))
-    {
-      new_data->dir = dir;
-      step->data = new_data;
-      result = GCONV_OK;
-    }
-
-  return result;
+  return GCONV_OK;
 }
 
 
 void
 gconv_end (struct gconv_step *data)
 {
-  free (data->data);
+  /* Nothing to do.  */
 }
 
 
@@ -132,15 +107,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct euckr_data *) step->data)->dir;
-
       do_write = 0;
 
       do
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_euckr)
+	  if (step->data == &from_euckr_object)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -281,7 +254,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_euckr
+	      result = (*inbufsize > (step->data == &from_euckr_object
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

@@ -25,7 +25,7 @@
 #define KSC5601_SYMBOL  986
 
 #include <gconv.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 /* Conversion table.  */
 extern const uint16_t ksc5601_hangul_to_ucs[KSC5601_HANGUL];

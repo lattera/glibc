@@ -22,7 +22,7 @@
 #define _JIS0212_H	1
 
 #include <gconv.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 
 /* Struct for table with indeces in mapping table.  */

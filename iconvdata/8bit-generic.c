@@ -19,57 +19,32 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gconv.h>
-#include <stdlib.h>
 #include <string.h>
 
-/* Direction of the transformation.  */
-enum direction
-{
-  illegal,
-  to_8bit,
-  from_8bit
-};
-
-struct s_8bit_data
-{
-  enum direction dir;
-};
+/* We use three objects to describe the operation mode.  */
+static int from_8bit_object;
+static int to_8bit_object;
 
 
 int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct s_8bit_data *new_data;
-  enum direction dir;
-  int result;
-
   if (strcasestr (step->from_name, NAME) != NULL)
-    dir = from_8bit;
+    step->data = &from_8bit_object;
   else if (strcasestr (step->to_name, NAME) != NULL)
-    dir = to_8bit;
+    step->data = &to_8bit_object;
   else
-    dir = illegal;
+    return GCONV_NOCONV;
 
-  result = GCONV_NOCONV;
-  if (dir != illegal
-      && ((new_data
-	   = (struct s_8bit_data *) malloc (sizeof (struct s_8bit_data)))
-	  != NULL))
-    {
-      new_data->dir = dir;
-      step->data = new_data;
-      result = GCONV_OK;
-    }
-
-  return result;
+  return GCONV_OK;
 }
 
 
 void
 gconv_end (struct gconv_step *data)
 {
-  free (data->data);
+  /* Nothing to do.  */
 }
 
 
@@ -106,15 +81,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct s_8bit_data *) step->data)->dir;
-
       do_write = 0;
 
       do
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_8bit)
+	  if (step->data == &from_8bit_object)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -191,7 +164,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_8bit
+	      result = (*inbufsize > (step->data == &from_8bit_object
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

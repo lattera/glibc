@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gconv.h>
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -8412,53 +8412,29 @@ static const char from_ucs4_tab13[][2] =
 
 
 /* Direction of the transformation.  */
-enum direction
-{
-  illegal,
-  to_big5,
-  from_big5
-};
-
-struct big5_data
-{
-  enum direction dir;
-};
+static int to_big5_object;
+static int from_big5_object;
 
 
 int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct big5_data *new_data;
-  enum direction dir;
-  int result;
-
   if (strcasestr (step->from_name, "BIG5") != NULL)
-    dir = from_big5;
+    step->data = &from_big5_object;
   else if (strcasestr (step->to_name, "BIG5") != NULL)
-    dir = to_big5;
+    step->data = &to_big5_object;
   else
-    dir = illegal;
+    return GCONV_NOCONV;
 
-  result = GCONV_NOCONV;
-  if (dir != illegal
-      && ((new_data
-	   = (struct big5_data *) malloc (sizeof (struct big5_data)))
-	  != NULL))
-    {
-      new_data->dir = dir;
-      step->data = new_data;
-      result = GCONV_OK;
-    }
-
-  return result;
+  return GCONV_OK;
 }
 
 
 void
 gconv_end (struct gconv_step *data)
 {
-  free (data->data);
+  /* Nothing to do.  */
 }
 
 
@@ -8492,15 +8468,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct big5_data *) step->data)->dir;
-
       do_write = 0;
 
       do
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_big5)
+	  if (step->data == &from_big5_object)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -8686,7 +8660,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_big5
+	      result = (*inbufsize > (step->data == &from_big5_object
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

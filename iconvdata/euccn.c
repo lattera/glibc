@@ -20,59 +20,34 @@
 
 #include <gconv.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 #include <gb2312.h>
 
 /* Direction of the transformation.  */
-enum direction
-{
-  illegal,
-  to_euccn,
-  from_euccn
-};
-
-struct euccn_data
-{
-  enum direction dir;
-};
+static int to_euccn_object;
+static int from_euccn_object;
 
 
 int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct euccn_data *new_data;
-  enum direction dir;
-  int result;
-
   if (strcasestr (step->from_name, "EUC-CN") != NULL)
-    dir = from_euccn;
+    step->data = &from_euccn_object;
   else if (strcasestr (step->to_name, "EUC-CN") != NULL)
-    dir = to_euccn;
+    step->data = &to_euccn_object;
   else
-    dir = illegal;
+    return GCONV_NOCONV;
 
-  result = GCONV_NOCONV;
-  if (dir != illegal
-      && ((new_data
-	   = (struct euccn_data *) malloc (sizeof (struct euccn_data)))
-	  != NULL))
-    {
-      new_data->dir = dir;
-      step->data = new_data;
-      result = GCONV_OK;
-    }
-
-  return result;
+  return GCONV_OK;
 }
 
 
 void
 gconv_end (struct gconv_step *data)
 {
-  free (data->data);
+  /* Nothing to do.  */
 }
 
 
@@ -109,15 +84,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct euccn_data *) step->data)->dir;
-
       do_write = 0;
 
       do
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_euccn)
+	  if (step->data == &from_euccn_object)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -267,7 +240,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_euccn
+	      result = (*inbufsize > (step->data == &from_euccn_object
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

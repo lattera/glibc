@@ -19,7 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gconv.h>
-#include <stdlib.h>
 #include <string.h>
 
 /* Data taken from the WG15 tables.  */
@@ -373,53 +372,29 @@ static const char from_ucs4[][2] =
 };
 
 /* Direction of the transformation.  */
-enum direction
-{
-  illegal,
-  to_iso6937,
-  from_iso6937
-};
-
-struct iso6937_data
-{
-  enum direction dir;
-};
+static int to_iso6937_object;
+static int from_iso6937_object;
 
 
 int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct iso6937_data *new_data;
-  enum direction dir;
-  int result;
-
   if (strcasestr (step->from_name, "ISO_6937") != NULL)
-    dir = from_iso6937;
+    step->data = &from_iso6937_object;
   else if (strcasestr (step->to_name, "ISO_6937") != NULL)
-    dir = to_iso6937;
+    step->data = &to_iso6937_object;
   else
-    dir = illegal;
+    return GCONV_NOCONV;
 
-  result = GCONV_NOCONV;
-  if (dir != illegal
-      && ((new_data
-	   = (struct iso6937_data *) malloc (sizeof (struct iso6937_data)))
-	  != NULL))
-    {
-      new_data->dir = dir;
-      step->data = new_data;
-      result = GCONV_OK;
-    }
-
-  return result;
+  return GCONV_OK;
 }
 
 
 void
 gconv_end (struct gconv_step *data)
 {
-  free (data->data);
+  /* Nothign to do.  */
 }
 
 
@@ -456,15 +431,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct iso6937_data *) step->data)->dir;
-
       do_write = 0;
 
       do
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_iso6937)
+	  if (step->data == &from_iso6937_object)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -648,7 +621,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_iso6937
+	      result = (*inbufsize > (step->data == &from_iso6937_object
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

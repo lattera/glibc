@@ -19,24 +19,15 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gconv.h>
-#include <inttypes.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <wchar.h>
 #include <ksc5601.h>
 
 /* Direction of the transformation.  */
-enum direction
-{
-  illegal,
-  to_uhc,
-  from_uhc
-};
+static int to_uhc_object;
+static int from_uhc_object;
 
-struct uhc_data
-{
-  enum direction dir;
-};
 
 /*
 egrep \
@@ -2626,35 +2617,21 @@ int
 gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
-  struct uhc_data *new_data;
-  enum direction dir;
-  int result;
-
   if (strcasestr (step->from_name, "UHC") != NULL)
-    dir = from_uhc;
+    step->data = &from_uhc_object;
   else if (strcasestr (step->to_name, "UHC") != NULL)
-    dir = to_uhc;
+    step->data = &to_uhc_object;
   else
-    dir = illegal;
+    return GCONV_NOCONV;
 
-  result = GCONV_NOCONV;
-  if (dir != illegal
-      && ((new_data
-	   = (struct uhc_data *) malloc (sizeof (struct uhc_data))) != NULL))
-    {
-      new_data->dir = dir;
-      step->data = new_data;
-      result = GCONV_OK;
-    }
-
-  return result;
+  return GCONV_OK;
 }
 
 
 void
 gconv_end (struct gconv_step *data)
 {
-  free (data->data);
+  /* Nothing to do.  */
 }
 
 
@@ -2691,15 +2668,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct uhc_data *) step->data)->dir;
-
       do_write = 0;
 
       do
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_uhc)
+	  if (step->data == &from_uhc_object)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -2869,7 +2844,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_uhc
+	      result = (*inbufsize > (step->data == &from_uhc_object
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

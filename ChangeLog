@@ -1,3 +1,23 @@
+1998-04-13 17:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/8bit-gap.c: Simplify step data handling.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/euccn.c: Likewise.
+	* iconvdata/eucjp.c: Likewise.
+	* iconvdata/euckr.c: Likewise.
+	* iconvdata/euctw.c: Likewise.
+	* iconvdata/iso6937.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/jis0208.h: Likewise.
+	* iconvdata/jis0212.c: Likewise.
+	* iconvdata/jis0212.h: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/ksc5601.h: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+
 1998-04-13 16:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/texinfo.texi: Updated from last version.
