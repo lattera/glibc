@@ -76,14 +76,15 @@ mpn-sysdep := $(addsuffix .c,$(mpn-routines)) \
 
 mpn-try := $(addprefix $(gmp-srcdir)/mpn/*/,$(mpn-sysdep))
 mpn-found := $(wildcard $(mpn-try))
-mpn-found := $(filter-out $(patsubst %.S,%.s,$(filter %.s,$(mpn-found))),\
-			  $(mpn-found))
 
 include mpn-copy.mk
 %.mk: gen-%; sh $< > $@
 
 mpn-copy-1 := $(patsubst $(gmp-srcdir)/mpn/%,$(sysdep_dir)/%,$(mpn-found))
 mpn-copy-sysdep := $(mpn-copy-sysdep) $(mpn-copy-1)
+mpn-copy-sysdep := $(filter $(addsuffix %,\
+		     $(wildcard $(sort $(dir $(mpn-copy-sysdep))))), \
+		    $(mpn-copy-sysdep))
 $(mpn-copy-1): $(sysdep_dir)/%: $(ignore gmp2glibc.sed) $(gmp-srcdir)/mpn/%
 	$(gmp2glibc)
 
@@ -97,11 +98,12 @@ chmod a-w $@-tmp
 mv -f $@-tmp $@
 endef
 
-mpn-copy = $(filter-out $(mpn-sysdep),$(mpn-headers) mp_clz_tab.c)
+mpn-copy = $(filter-out $(mpn-sysdep),$(mpn-headers))# mp_clz_tab.c)
 $(mpn-copy): %: $(ignore gmp2glibc.sed) $(gmp-srcdir)/%; $(gmp2glibc)
 
 .PHONY: copy-mpn clean-mpn
 copy-mpn: $(mpn-stuff)
+	test ! -d CVS || cvs commit -m'Updated from $(gmp-srcdir)' $+
 clean-mpn:
 	rm -f $(mpn-stuff)
 

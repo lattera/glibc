@@ -8,10 +8,14 @@ mc68000 m68k/m68000
 mc68020 m68k/m68020
 mc88100 m88k/m88100
 mc88110 m88k/m88110
-r3000 mips
-r4000 mips/mips64
-hppa1_0 hppa/hppa1.0
+mips2 mips
+mips3 mips/mips3
+hppa1_0 hppa
 hppa1_1 hppa/hppa1.1
+ev4 alpha
+ev5 alpha/alphaev5
+power rs6000
+am29000 a29k
 '
 
 set $translations

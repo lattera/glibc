@@ -1,3 +1,13 @@
+Sun Oct 15 21:04:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdlib/Makefile (mpn-found): Don't omit %.s.
+	(mpn-copy-sysdep): Omit files in nonexistent directories.
+	(copy-mpn): Commit files to CVS.
+	* stdlib/gen-mpn-copy (translations): Update translations for GMP
+	1.906.7.
+
+	* configure.in (machine): Translate alpha* to alpha/&, hppa* to hppa/&.
+
 Sat Oct 14 02:52:36 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* malloc/malloc.c (_malloc_internal): Performance fix.  Move
@@ -37,6 +47,17 @@ Sat Oct 14 02:52:36 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
         call handler for i586.
 
 	* sysdeps/unix/sysv/linux/sys/param.h: Add copyright and clean up.
+
+Thu Oct 12 15:45:32 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurd.h (file_name_lookup_under): Declare it.
+	* hurd/Makefile (headers): Add hurd/lookup.h.
+
+	* hurd/hurdinit.c (_hurd_ports_use): New function.
+	* hurd/hurd.h (_hurd_ports_use): Declare it.
+	(hurd_invoke_translator, hurd_file_name_lookup, hurd_file_name_split,
+	hurd_file_name_lookup_retry): Remove these decls.
+	* hurd/Makefile (routines): Remove invoke-trans.
 
 Wed Oct 11 00:00:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
