@@ -25,9 +25,6 @@
 #ifndef SUFF
 #define SUFF
 #endif
-#ifndef huge_val
-#define huge_val HUGE_VAL
-#endif
 #ifndef float_type
 #define float_type double
 #endif
@@ -40,85 +37,79 @@ __complex__ float_type
 s(__cexp) (__complex__ float_type x)
 {
   __complex__ float_type retval;
+  unsigned long ix_cond;
 
-  if (m81(__finite) (__real__ x))
+  ix_cond = __m81_test (__imag__ x);
+
+  if ((ix_cond & (__M81_COND_NAN|__M81_COND_INF)) == 0)
     {
-      if (m81(__finite) (__imag__ x))
-	{
-	  float_type exp_val = m81(__ieee754_exp) (__real__ x);
+      /* Imaginary part is finite.  */
+      float_type exp_val = m81(__ieee754_exp) (__real__ x);
 
-	  __real__ retval = __imag__ retval = exp_val;
-	  if (m81(__finite) (exp_val))
-	    {
-	      float_type sin_ix, cos_ix;
-	      __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
-		     : "f" (__imag__ x));
-	      __real__ retval *= cos_ix;
-	      __imag__ retval *= sin_ix;
-	    }
+      __real__ retval = __imag__ retval = exp_val;
+      if (m81(__finite) (exp_val))
+	{
+	  float_type sin_ix, cos_ix;
+	  __asm ("fsincos%.x %2,%1:%0" : "=f" (sin_ix), "=f" (cos_ix)
+		 : "f" (__imag__ x));
+	  __real__ retval *= cos_ix;
+	  if (ix_cond & __M81_COND_ZERO)
+	    __imag__ retval = __imag__ x;
 	  else
-	    goto fix_sign;
-	}
-      else
-	/* If the imaginary part is +-inf or NaN and the real part is
-	   not +-inf the result is NaN + iNaN.  */
-	__real__ retval = __imag__ retval = 0.0/0.0;
-    }
-  else if (m81(__isinf) (__real__ x))
-    {
-      if (m81(__finite) (__imag__ x))
-	{
-	  float_type value = m81(__signbit) (__real__ x) ? 0.0 : huge_val;
-
-	  if (__imag__ x == 0.0)
-	    {
-	      __real__ retval = value;
-	      __imag__ retval = __imag__ x;
-	    }
-	  else
-	    {
-	      float_type remainder, pi_2;
-	      int quadrant;
-	      __real__ retval = value;
-	      __imag__ retval = value;
-
-	    fix_sign:
-	      __asm ("fmovecr %#0,%0\n\tfscale%.w %#-1,%0" : "=f" (pi_2));
-	      __asm ("fmod%.x %2,%0\n\tfmove%.l %/fpsr,%1"
-		     : "=f" (remainder), "=dm" (quadrant)
-		     : "f" (pi_2), "0" (__imag__ x));
-	      quadrant = (quadrant >> 16) & 0x83;
-	      if (quadrant & 0x80)
-		quadrant ^= 0x83;
-	      switch (quadrant)
-		{
-		default:
-		  break;
-		case 1:
-		  __real__ retval = -__real__ retval;
-		  break;
-		case 2:
-		  __real__ retval = -__real__ retval;
-		case 3:
-		  __imag__ retval = -__imag__ retval;
-		  break;
-		}
-	    }
-	}
-      else if (m81(__signbit) (__real__ x) == 0)
-	{
-	  __real__ retval = huge_val;
-	  __imag__ retval = 0.0/0.0;
+	    __imag__ retval *= sin_ix;
 	}
       else
 	{
-	  __real__ retval = 0.0;
-	  __imag__ retval = s(__copysign) (0.0, __imag__ x);
+	  /* Compute the sign of the result.  */
+	  float_type remainder, pi_2;
+	  int quadrant;
+
+	  __asm ("fmovecr %#0,%0\n\tfscale%.w %#-1,%0" : "=f" (pi_2));
+	  __asm ("fmod%.x %2,%0\n\tfmove%.l %/fpsr,%1"
+		 : "=f" (remainder), "=dm" (quadrant)
+		 : "f" (pi_2), "0" (__imag__ x));
+	  quadrant = (quadrant >> 16) & 0x83;
+	  if (quadrant & 0x80)
+	    quadrant ^= 0x83;
+	  switch (quadrant)
+	    {
+	    default:
+	      break;
+	    case 1:
+	      __real__ retval = -__real__ retval;
+	      break;
+	    case 2:
+	      __real__ retval = -__real__ retval;
+	    case 3:
+	      __imag__ retval = -__imag__ retval;
+	      break;
+	    }
+	  if (ix_cond & __M81_COND_ZERO && !m81(__isnan) (exp_val))
+	    __imag__ retval = __imag__ x;
 	}
     }
   else
-    /* If the real part is NaN the result is NaN + iNaN.  */
-    __real__ retval = __imag__ retval = 0.0/0.0;
+    {
+      unsigned long rx_cond = __m81_test (__real__ x);
+
+      if (rx_cond & __M81_COND_INF)
+	{
+	  /* Real part is infinite.  */
+	  if (rx_cond & __M81_COND_NEG)
+	    {
+	      __real__ retval = __imag__ retval = 0.0;
+	      if (ix_cond & __M81_COND_NEG)
+		__imag__ retval = -__imag__ retval;
+	    }
+	  else
+	    {
+	      __real__ retval = __real__ x;
+	      __imag__ retval = __imag__ x - __imag__ x;
+	    }
+	}
+      else
+	__real__ retval = __imag__ retval = __imag__ x - __imag__ x;
+    }
 
   return retval;
 }
