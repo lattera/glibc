@@ -103,7 +103,7 @@ struct _fpstate
   /* FPU environment matching the 64-bit FXSAVE layout.  */
   __uint16_t		cwd;
   __uint16_t		swd;
-  __uint16_t		twd;
+  __uint16_t		ftw;
   __uint16_t		fop;
   __uint64_t		rip;
   __uint64_t		rdp;

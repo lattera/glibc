@@ -1,5 +1,5 @@
 /* Dump registers.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,7 +68,7 @@ static void
 register_dump (int fd, struct sigcontext *ctx)
 {
   char regs[29][16];
-  char fpregs[32][8];
+  char fpregs[30][8];
   char xmmregs[16][32];
   struct iovec iov[147];
   size_t nr = 0;
@@ -181,13 +181,11 @@ register_dump (int fd, struct sigcontext *ctx)
     {
 
       /* Generate output for the FPU control/status registers.  */
-      hexvalue (ctx->fpstate->cw, fpregs[0], 8);
-      hexvalue (ctx->fpstate->sw, fpregs[1], 8);
-      hexvalue (ctx->fpstate->tag, fpregs[2], 8);
-      hexvalue (ctx->fpstate->ipoff, fpregs[3], 8);
-      hexvalue (ctx->fpstate->cssel, fpregs[4], 4);
-      hexvalue (ctx->fpstate->dataoff, fpregs[5], 8);
-      hexvalue (ctx->fpstate->datasel, fpregs[6], 4);
+      hexvalue (ctx->fpstate->cwd, fpregs[0], 8);
+      hexvalue (ctx->fpstate->swd, fpregs[1], 8);
+      hexvalue (ctx->fpstate->twd, fpregs[2], 8);
+      hexvalue (ctx->fpstate->rip, fpregs[3], 8);
+      hexvalue (ctx->fpstate->rdp, fpregs[4], 8);
 
       ADD_STRING ("\n\n FPUCW: ");
       ADD_MEM (fpregs[0], 8);
@@ -195,58 +193,54 @@ register_dump (int fd, struct sigcontext *ctx)
       ADD_MEM (fpregs[1], 8);
       ADD_STRING ("   TAG: ");
       ADD_MEM (fpregs[2], 8);
-      ADD_STRING ("\n IPOFF: ");
+      ADD_STRING ("\n RIP: ");
       ADD_MEM (fpregs[3], 8);
-      ADD_STRING ("   CSSEL: ");
-      ADD_MEM (fpregs[4], 4);
-      ADD_STRING ("   DATAOFF: ");
-      ADD_MEM (fpregs[5], 8);
-      ADD_STRING ("   DATASEL: ");
-      ADD_MEM (fpregs[6], 4);
+      ADD_STRING ("   RDP: ");
+      ADD_MEM (fpregs[4], 8);
 
       /* Now the real FPU registers.  */
-      hexvalue (ctx->fpstate->_st[0].exponent, fpregs[7], 8);
+      hexvalue (ctx->fpstate->_st[0].exponent, fpregs[5], 8);
       hexvalue (ctx->fpstate->_st[0].significand[3] << 16
-		| ctx->fpstate->_st[0].significand[2], fpregs[8], 8);
+		| ctx->fpstate->_st[0].significand[2], fpregs[6], 8);
       hexvalue (ctx->fpstate->_st[0].significand[1] << 16
-		| ctx->fpstate->_st[0].significand[0], fpregs[9], 8);
-      hexvalue (ctx->fpstate->_st[1].exponent, fpregs[10], 8);
+		| ctx->fpstate->_st[0].significand[0], fpregs[7], 8);
+      hexvalue (ctx->fpstate->_st[1].exponent, fpregs[8], 8);
       hexvalue (ctx->fpstate->_st[1].significand[3] << 16
-		| ctx->fpstate->_st[1].significand[2], fpregs[11], 8);
+		| ctx->fpstate->_st[1].significand[2], fpregs[9], 8);
       hexvalue (ctx->fpstate->_st[1].significand[1] << 16
-		| ctx->fpstate->_st[1].significand[0], fpregs[12], 8);
-      hexvalue (ctx->fpstate->_st[2].exponent, fpregs[13], 8);
+		| ctx->fpstate->_st[1].significand[0], fpregs[10], 8);
+      hexvalue (ctx->fpstate->_st[2].exponent, fpregs[11], 8);
       hexvalue (ctx->fpstate->_st[2].significand[3] << 16
-		| ctx->fpstate->_st[2].significand[2], fpregs[14], 8);
+		| ctx->fpstate->_st[2].significand[2], fpregs[12], 8);
       hexvalue (ctx->fpstate->_st[2].significand[1] << 16
-		| ctx->fpstate->_st[2].significand[0], fpregs[15], 8);
-      hexvalue (ctx->fpstate->_st[3].exponent, fpregs[16], 8);
+		| ctx->fpstate->_st[2].significand[0], fpregs[13], 8);
+      hexvalue (ctx->fpstate->_st[3].exponent, fpregs[14], 8);
       hexvalue (ctx->fpstate->_st[3].significand[3] << 16
-		| ctx->fpstate->_st[3].significand[2], fpregs[17], 8);
+		| ctx->fpstate->_st[3].significand[2], fpregs[15], 8);
       hexvalue (ctx->fpstate->_st[3].significand[1] << 16
-		| ctx->fpstate->_st[3].significand[0], fpregs[18], 8);
-      hexvalue (ctx->fpstate->_st[4].exponent, fpregs[19], 8);
+		| ctx->fpstate->_st[3].significand[0], fpregs[16], 8);
+      hexvalue (ctx->fpstate->_st[4].exponent, fpregs[17], 8);
       hexvalue (ctx->fpstate->_st[4].significand[3] << 16
-		| ctx->fpstate->_st[4].significand[2], fpregs[20], 8);
+		| ctx->fpstate->_st[4].significand[2], fpregs[18], 8);
       hexvalue (ctx->fpstate->_st[4].significand[1] << 16
-		| ctx->fpstate->_st[4].significand[0], fpregs[21], 8);
-      hexvalue (ctx->fpstate->_st[5].exponent, fpregs[22], 8);
+		| ctx->fpstate->_st[4].significand[0], fpregs[19], 8);
+      hexvalue (ctx->fpstate->_st[5].exponent, fpregs[20], 8);
       hexvalue (ctx->fpstate->_st[5].significand[3] << 16
-		| ctx->fpstate->_st[5].significand[2], fpregs[23], 8);
+		| ctx->fpstate->_st[5].significand[2], fpregs[21], 8);
       hexvalue (ctx->fpstate->_st[5].significand[1] << 16
-		| ctx->fpstate->_st[5].significand[0], fpregs[24], 8);
-      hexvalue (ctx->fpstate->_st[6].exponent, fpregs[25], 8);
+		| ctx->fpstate->_st[5].significand[0], fpregs[22], 8);
+      hexvalue (ctx->fpstate->_st[6].exponent, fpregs[23], 8);
       hexvalue (ctx->fpstate->_st[6].significand[3] << 16
-		| ctx->fpstate->_st[6].significand[2], fpregs[26], 8);
+		| ctx->fpstate->_st[6].significand[2], fpregs[24], 8);
       hexvalue (ctx->fpstate->_st[6].significand[1] << 16
-		| ctx->fpstate->_st[6].significand[0], fpregs[27], 8);
-      hexvalue (ctx->fpstate->_st[7].exponent, fpregs[28], 8);
+		| ctx->fpstate->_st[6].significand[0], fpregs[25], 8);
+      hexvalue (ctx->fpstate->_st[7].exponent, fpregs[26], 8);
       hexvalue (ctx->fpstate->_st[7].significand[3] << 16
-		| ctx->fpstate->_st[7].significand[2], fpregs[29], 8);
+		| ctx->fpstate->_st[7].significand[2], fpregs[27], 8);
       hexvalue (ctx->fpstate->_st[7].significand[1] << 16
-		| ctx->fpstate->_st[7].significand[0], fpregs[30], 8);
+		| ctx->fpstate->_st[7].significand[0], fpregs[28], 8);
 
-      hexvalue (ctx->fpstate->mxcsr, fpregs[31], 4);
+      hexvalue (ctx->fpstate->mxcsr, fpregs[29], 4);
 
       for (i = 0; i < 16; i++)
 	hexvalue (ctx->fpstate->_xmm[i].element[3] << 24
@@ -256,48 +250,48 @@ register_dump (int fd, struct sigcontext *ctx)
 
 
       ADD_STRING ("\n\n ST(0) ");
-      ADD_MEM (fpregs[7], 4);
+      ADD_MEM (fpregs[5], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[8], 8);
-      ADD_MEM (fpregs[9], 8);
+      ADD_MEM (fpregs[6], 8);
+      ADD_MEM (fpregs[7], 8);
       ADD_STRING ("   ST(1) ");
-      ADD_MEM (fpregs[10], 4);
+      ADD_MEM (fpregs[8], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[11], 8);
-      ADD_MEM (fpregs[12], 8);
+      ADD_MEM (fpregs[9], 8);
+      ADD_MEM (fpregs[10], 8);
       ADD_STRING ("\n ST(2) ");
-      ADD_MEM (fpregs[13], 4);
+      ADD_MEM (fpregs[11], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[14], 8);
-      ADD_MEM (fpregs[15], 8);
+      ADD_MEM (fpregs[12], 8);
+      ADD_MEM (fpregs[13], 8);
       ADD_STRING ("   ST(3) ");
-      ADD_MEM (fpregs[16], 4);
+      ADD_MEM (fpregs[14], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[17], 8);
-      ADD_MEM (fpregs[18], 8);
+      ADD_MEM (fpregs[15], 8);
+      ADD_MEM (fpregs[16], 8);
       ADD_STRING ("\n ST(4) ");
-      ADD_MEM (fpregs[19], 4);
+      ADD_MEM (fpregs[17], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[20], 8);
-      ADD_MEM (fpregs[21], 8);
+      ADD_MEM (fpregs[18], 8);
+      ADD_MEM (fpregs[19], 8);
       ADD_STRING ("   ST(5) ");
-      ADD_MEM (fpregs[22], 4);
+      ADD_MEM (fpregs[20], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[23], 8);
-      ADD_MEM (fpregs[24], 8);
+      ADD_MEM (fpregs[21], 8);
+      ADD_MEM (fpregs[22], 8);
       ADD_STRING ("\n ST(6) ");
-      ADD_MEM (fpregs[25], 4);
+      ADD_MEM (fpregs[23], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[26], 8);
-      ADD_MEM (fpregs[27], 8);
+      ADD_MEM (fpregs[24], 8);
+      ADD_MEM (fpregs[25], 8);
       ADD_STRING ("   ST(7) ");
-      ADD_MEM (fpregs[28], 4);
+      ADD_MEM (fpregs[27], 4);
       ADD_STRING (" ");
-      ADD_MEM (fpregs[29], 8);
-      ADD_MEM (fpregs[30], 8);
+      ADD_MEM (fpregs[27], 8);
+      ADD_MEM (fpregs[28], 8);
 
       ADD_STRING ("\n mxcsr: ");
-      ADD_MEM (fpregs[31], 4);
+      ADD_MEM (fpregs[29], 4);
 
       ADD_STRING ("\n XMM0: ");
       ADD_MEM (xmmregs[0], 32);

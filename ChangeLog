@@ -1,5 +1,14 @@
 2002-03-22  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
+	_fpstate): Rename fwd to ftw.
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h (struct user_fpregs_struct): Likewise.
+
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
+	Follow sigcontext changes.
+
+2002-03-22  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/mips/bits/nan.h: New file.  Copy from generic one with
 	changes for NaNs on MIPS.
 	Patch by Hartvig Ekner <hartvige@mips.com>.
