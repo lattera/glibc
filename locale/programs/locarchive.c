@@ -417,69 +417,74 @@ open_archive (struct locarhandle *ah, bool readonly)
     memcpy (archivefname, output_prefix, prefix_len);
   strcpy (archivefname + prefix_len, ARCHIVE_NAME);
 
- again:
-  /* Open the archive.  We must have exclusive write access.  */
-  fd = open64 (archivefname, readonly ? O_RDONLY : O_RDWR);
-  if (fd == -1)
+  while (1)
     {
-      /* Maybe the file does not yet exist.  */
-      if (errno == ENOENT)
+      /* Open the archive.  We must have exclusive write access.  */
+      fd = open64 (archivefname, readonly ? O_RDONLY : O_RDWR);
+      if (fd == -1)
 	{
-	  if (readonly)
+	  /* Maybe the file does not yet exist.  */
+	  if (errno == ENOENT)
 	    {
-	      static const struct locarhead nullhead =
+	      if (readonly)
 		{
-		  .namehash_used = 0,
-		  .namehash_offset = 0,
-		  .namehash_size = 0
-		};
+		  static const struct locarhead nullhead =
+		    {
+		      .namehash_used = 0,
+		      .namehash_offset = 0,
+		      .namehash_size = 0
+		    };
 
-	      ah->addr = (void *) &nullhead;
-	      ah->fd = -1;
+		  ah->addr = (void *) &nullhead;
+		  ah->fd = -1;
+		}
+	      else
+		create_archive (archivefname, ah);
+
+	      return;
 	    }
 	  else
-	    create_archive (archivefname, ah);
-
-	  return;
+	    error (EXIT_FAILURE, errno, _("cannot open locale archive \"%s\""),
+		   archivefname);
 	}
-      else
-	error (EXIT_FAILURE, errno, _("cannot open locale archive \"%s\""),
+
+      if (fstat64 (fd, &st) < 0)
+	error (EXIT_FAILURE, errno, _("cannot stat locale archive \"%s\""),
 	       archivefname);
-    }
 
-  if (fstat64 (fd, &st) < 0)
-    error (EXIT_FAILURE, errno, _("cannot stat locale archive \"%s\""),
-	   archivefname);
-
-  if (!readonly && lockf64 (fd, F_LOCK, sizeof (struct locarhead)) == -1)
-    {
-      close (fd);
-
-      if (retry++ < max_locarchive_open_retry)
+      if (!readonly && lockf64 (fd, F_LOCK, sizeof (struct locarhead)) == -1)
 	{
-	  struct timespec req;
+	  close (fd);
 
-	  /* Wait for a bit.  */
-	  req.tv_sec = 0;
-	  req.tv_nsec = 1000000 * (random () % 500 + 1);
-	  (void) nanosleep (&req, NULL);
+	  if (retry++ < max_locarchive_open_retry)
+	    {
+	      struct timespec req;
 
-	  goto again;
+	      /* Wait for a bit.  */
+	      req.tv_sec = 0;
+	      req.tv_nsec = 1000000 * (random () % 500 + 1);
+	      (void) nanosleep (&req, NULL);
+
+	      continue;
+	    }
+
+	  error (EXIT_FAILURE, errno, _("cannot lock locale archive \"%s\""),
+		 archivefname);
 	}
 
-      error (EXIT_FAILURE, errno, _("cannot lock locale archive \"%s\""),
-	     archivefname);
-    }
+      /* One more check.  Maybe another process replaced the archive file
+	 with a new, larger one since we opened the file.  */
+      if (stat64 (archivefname, &st2) == -1
+	  || st.st_dev != st2.st_dev
+	  || st.st_ino != st2.st_ino)
+	{
+	  (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
+	  close (fd);
+	  continue;
+	}
 
-  /* One more check.  Maybe another process replaced the archive file
-     with a new, larger one since we opened the file.  */
-  if (stat64 (archivefname, &st2) == -1
-      || st.st_dev != st2.st_dev
-      || st.st_ino != st2.st_ino)
-    {
-      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
-      close (fd);
-      goto again;
+      /* Leave the loop.  */
+      break;
     }
 
   /* Read the header.  */
