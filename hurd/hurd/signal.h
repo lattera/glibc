@@ -273,6 +273,18 @@ extern void _hurd_longjmp_thread_state (void *state, jmp_buf env, int value);
 
 extern void _hurd_siginfo_handler (int);
 
+/* Replacement for mach_msg used in RPCs to provide Hurd interruption
+   semantics.  Args are all the same as for mach_msg.  intr-rpc.h arranges
+   for this version to be used automatically by the RPC stubs the library
+   builds in place of the normal mach_msg. */
+error_t _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
+				 mach_msg_option_t option,
+				 mach_msg_size_t send_size,
+				 mach_msg_size_t rcv_size,
+				 mach_port_t rcv_name,
+				 mach_msg_timeout_t timeout,
+				 mach_port_t notify);
+
 
 /* Milliseconds to wait for an interruptible RPC to return after
    `interrupt_operation'.  */
