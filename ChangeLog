@@ -1,3 +1,34 @@
+Fri Aug 16 01:24:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/ruserpass.c (userpass): Allocate buffer for .netrc file
+	name dynamically.  Reported by Alan Cox.
+	Uncomment warnings and mark as translatable.
+
+	* time/strftime (strftime): Add implementation for %s and %z
+	format.  Change behaviour for unknown format character: now
+	simply print it.  This matches the behaviour of printf.
+	Reported by Jim Meyering.
+	* manual/time.texi: Document all formats and flags of strftime.
+
+Thu Aug 15 18:02:51 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Loaded object has type lt_executable,
+	not lt_library.
+
+	* misc/sys/select.h: Define fd_set using typedef, not #define.
+	Proposed by David Mosberger-Tang.
+
+Thu Aug 15 12:48:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/header.pot: Use real description line.
+
+Thu Aug 15 04:42:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): When started with --verify prevent
+	any warning.  Just exit with an error.
+	* elf/ldd.sh.in: Don't run given object directly.  This fails for
+	libraries.  Instead use $RTLD again.
+
 Thu Aug 15 02:08:59 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/nss.texi: New file.  Document NSS.
@@ -192,6 +223,10 @@ Sun Aug 11 16:19:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 	script and mark it to substitute.
 
 	* string/Makefile: Add -fno-builtin for tst-strlen.c, too.
+
+	* sysdeps/generic/sbrk.c (__sbrk):  Get kernel brk address
+	always only if in static libc or if statically linked program
+	uses libc.so.
 
 Sun Aug 11 01:12:38 1996  Richard Henderson  <rth@tamu.edu>
 
