@@ -2469,8 +2469,10 @@ build_trtable (preg, state, fl_search)
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   int i, j, k, ch;
+  int dests_node_malloced = 0, dest_states_malloced = 0;
   int ndests; /* Number of the destination states from `state'.  */
-  re_dfastate_t **trtable, **dest_states, **dest_states_word, **dest_states_nl;
+  re_dfastate_t **trtable;
+  re_dfastate_t **dest_states = NULL, **dest_states_word, **dest_states_nl;
   re_node_set follows, *dests_node;
   bitset *dests_ch;
   bitset acceptable;
@@ -2479,34 +2481,76 @@ build_trtable (preg, state, fl_search)
      from `state'.  `dests_node[i]' represents the nodes which i-th
      destination state contains, and `dests_ch[i]' represents the
      characters which i-th destination state accepts.  */
-  dests_node = re_malloc (re_node_set, SBC_MAX);
-  dests_ch = re_malloc (bitset, SBC_MAX);
+#ifdef _LIBC
+  if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX))
+    dests_node = (re_node_set *)
+		 alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
+  else
+#endif
+    {
+      dests_node = (re_node_set *)
+		   malloc ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX);
+      if (BE (dests_node == NULL, 0))
+	return NULL;
+      dests_node_malloced = 1;
+    }
+  dests_ch = (bitset *) (dests_node + SBC_MAX);
 
   /* Initialize transiton table.  */
   trtable = (re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
-  if (BE (dests_node == NULL || dests_ch == NULL || trtable == NULL, 0))
-    return NULL;
+  if (BE (trtable == NULL, 0))
+    {
+      if (dests_node_malloced)
+	free (dests_node);
+      return NULL;
+    }
 
   /* At first, group all nodes belonging to `state' into several
      destinations.  */
   ndests = group_nodes_into_DFAstates (preg, state, dests_node, dests_ch);
   if (BE (ndests <= 0, 0))
     {
-      re_free (dests_node);
-      re_free (dests_ch);
+      if (dests_node_malloced)
+	free (dests_node);
       /* Return NULL in case of an error, trtable otherwise.  */
-      return (ndests < 0) ? NULL : trtable;
+      if (ndests == 0)
+	return trtable;
+      free (trtable);
+      return NULL;
     }
 
-  dest_states = re_malloc (re_dfastate_t *, ndests);
-  dest_states_word = re_malloc (re_dfastate_t *, ndests);
-  dest_states_nl = re_malloc (re_dfastate_t *, ndests);
-  bitset_empty (acceptable);
-
   err = re_node_set_alloc (&follows, ndests + 1);
-  if (BE (dest_states == NULL || dest_states_word == NULL
-          || dest_states_nl == NULL || err != REG_NOERROR, 0))
-    return NULL;
+  if (BE (err != REG_NOERROR, 0))
+    goto out_free;
+
+#ifdef _LIBC
+  if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset)) * SBC_MAX
+			 + ndests * 3 * sizeof (re_dfastate_t *)))
+    dest_states = (re_dfastate_t **)
+		  alloca (ndests * 3 * sizeof (re_dfastate_t *));
+  else
+#endif
+    {
+      dest_states = (re_dfastate_t **)
+		    malloc (ndests * 3 * sizeof (re_dfastate_t *));
+      if (BE (dest_states == NULL, 0))
+	{
+out_free:
+	  if (dest_states_malloced)
+	    free (dest_states);
+	  re_node_set_free (&follows);
+	  for (i = 0; i < ndests; ++i)
+	    re_node_set_free (dests_node + i);
+	  free (trtable);
+	  if (dests_node_malloced)
+	    free (dests_node);
+	  return NULL;
+	}
+      dest_states_malloced = 1;
+    }
+  dest_states_word = dest_states + ndests;
+  dest_states_nl = dest_states_word + ndests;
+  bitset_empty (acceptable);
 
   /* Then build the states for all destinations.  */
   for (i = 0; i < ndests; ++i)
@@ -2521,7 +2565,7 @@ build_trtable (preg, state, fl_search)
             {
               err = re_node_set_merge (&follows, dfa->eclosures + next_node);
               if (BE (err != REG_NOERROR, 0))
-                return NULL;
+		goto out_free;
             }
         }
       /* If search flag is set, merge the initial state.  */
@@ -2541,12 +2585,12 @@ build_trtable (preg, state, fl_search)
               err = re_node_set_merge (&follows,
                                        dfa->init_state->entrance_nodes);
               if (BE (err != REG_NOERROR, 0))
-                return NULL;
+                goto out_free;
             }
         }
       dest_states[i] = re_acquire_state_context (&err, dfa, &follows, 0);
       if (BE (dest_states[i] == NULL && err != REG_NOERROR, 0))
-        return NULL;
+        goto out_free;
       /* If the new state has context constraint,
          build appropriate states for these contexts.  */
       if (dest_states[i]->has_constraint)
@@ -2554,11 +2598,11 @@ build_trtable (preg, state, fl_search)
           dest_states_word[i] = re_acquire_state_context (&err, dfa, &follows,
                                                           CONTEXT_WORD);
           if (BE (dest_states_word[i] == NULL && err != REG_NOERROR, 0))
-            return NULL;
+            goto out_free;
           dest_states_nl[i] = re_acquire_state_context (&err, dfa, &follows,
                                                         CONTEXT_NEWLINE);
           if (BE (dest_states_nl[i] == NULL && err != REG_NOERROR, 0))
-            return NULL;
+            goto out_free;
         }
       else
         {
@@ -2615,16 +2659,15 @@ build_trtable (preg, state, fl_search)
           }
     }
 
-  re_free (dest_states_nl);
-  re_free (dest_states_word);
-  re_free (dest_states);
+  if (dest_states_malloced)
+    free (dest_states);
 
   re_node_set_free (&follows);
   for (i = 0; i < ndests; ++i)
     re_node_set_free (dests_node + i);
 
-  re_free (dests_ch);
-  re_free (dests_node);
+  if (dests_node_malloced)
+    free (dests_node);
 
   return trtable;
 }

@@ -536,6 +536,9 @@ small_tables_done:
     }
   }
 
+  __data->current_saltbits = 0;
+  __data->current_salt[0] = 0;
+  __data->current_salt[1] = 0;
   __data->initialized++;
 }
 

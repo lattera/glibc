@@ -418,15 +418,11 @@ prevent conflicts between simultaneously running threads the result is
 not stored in statically allocated memory.  Instead the argument
 @var{entry} points to a place to store the result.
 
-The return value is @code{0} in case the next entry was read
-successfully.  In this case a pointer to the result is returned in
-*@var{result}.  It is not required that *@var{result} is the same as
-@var{entry}.  If something goes wrong while executing @code{readdir_r}
-the function returns a value indicating the error (as described for
-@code{readdir}).
-
-If there are no more directory entries, @code{readdir_r}'s return value is
-@code{0}, and *@var{result} is set to @code{NULL}.
+Normally @code{readdir_r} returns zero and sets @code{*@var{result}}
+to @var{entry}.  If there are no more entries in the directory or an
+error is detected, @code{readdir_r} sets @code{*@var{result}} to a
+null pointer and returns a nonzero error code, also stored in
+@code{errno}, as described for @code{readdir}.
 
 @strong{Portability Note:} On some systems @code{readdir_r} may not
 return a NUL terminated string for the file name, even when there is no

@@ -1,5 +1,22 @@
 2002-11-02  Roland McGrath  <roland@redhat.com>
 
+	* manual/filesys.texi (Reading/Closing Directory): Rewrite readdir_r
+	description to be clearer and to say that *RESULT is set to ENTRY.
+
+2002-10-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (build_trtable): Alloca or malloc dests_node and
+	dests_ch arrays together.  Alloca or malloc dest_states,
+	dest_states_word and dest_states_nl arrays together.  Free memory on
+	error exit.
+
+2002-10-29  Daniel Jacobowitz  <drow@mvista.com>
+
+	* crypt/crypt_util.c (__init_des_r): Initialize current_salt
+	and current_saltbits.
+
+2002-11-02  Roland McGrath  <roland@redhat.com>
+
 	* stdio-common/reg-printf.c: Include <stdlib.h>.
 
 2002-11-02  H.J. Lu  <hjl@gnu.org>
