@@ -2689,11 +2689,19 @@ uhc_from_ucs4 (uint32_t ch, unsigned char *cp)
 				 +  (ch < 0xa1				      \
 				     ? (ch - 0x81) * 178		      \
 				     : 5696 + (ch - 0xa1) * 84)];	      \
+									      \
+	    if (ch == 0)						      \
+	      {								      \
+		/* This is an illegal character.  */			      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+									      \
+	    inptr += 2;							      \
 	  }								      \
 	else								      \
 	  {								      \
-	    ch = ksc5601_to_ucs4 ((ch * 256 + ch2) & 0x7f7f);		      \
-									      \
+	    ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);
 	    if (ch == UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal.  */						      \
@@ -2701,15 +2709,6 @@ uhc_from_ucs4 (uint32_t ch, unsigned char *cp)
 		break;							      \
 	      }								      \
 	  }								      \
-									      \
-	if (ch == 0)							      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	inptr += 2;							      \
       }									      \
 									      \
     *((uint32_t *) outptr)++ = ch;					      \

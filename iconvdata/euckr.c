@@ -88,27 +88,20 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       {									      \
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
-	int ch2;							      \
-									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	ch = ksc5601_to_ucs4 (&inptr,					      \
+			      NEED_LENGTH_TEST ? inptr - inbufend : 2, x080); \
+	if (NEED_LENGTH_TEST && ch == 0)				      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	ch2 = inptr[1];							      \
-									      \
-	if (ch2 < 0xa1 || ch2 >= 0xfe					      \
-	    || ((ch = ksc5601_to_ucs4 ((uint16_t) (ch * 256 + ch2) & 0x7f7f)) \
-		== UNKNOWN_10646_CHAR))					      \
+	if (ch == UNKNOWN_10646_CHAR))					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    result = GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
-									      \
-	inptr += 2;							      \
       }									      \
 									      \
     *((uint32_t *) outptr)++ = ch;					      \

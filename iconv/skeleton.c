@@ -70,6 +70,7 @@
 
      PREPARE_LOOP	optional code preparing the conversion loop.  Can
 			contain variable definitions.
+     END_LOOP		also optional, may be used to store information
 
      EXTRA_LOOP_ARGS	optional macro specifying extra arguments passed
 			to loop function.
@@ -144,10 +145,20 @@ gconv_init (struct gconv_step *step)
   else
     return GCONV_NOCONV;
 
-  step->min_needed_from = MIN_NEEDED_FROM;
-  step->max_needed_from = MAX_NEEDED_FROM;
-  step->min_needed_to = MIN_NEEDED_TO;
-  step->max_needed_to = MAX_NEEDED_TO;
+  if (step->data == &from_object)
+    {
+      step->min_needed_from = MIN_NEEDED_FROM;
+      step->max_needed_from = MAX_NEEDED_FROM;
+      step->min_needed_to = MIN_NEEDED_TO;
+      step->max_needed_to = MAX_NEEDED_TO;
+    }
+  else
+    {
+      step->min_needed_from = MIN_NEEDED_TO;
+      step->max_needed_from = MAX_NEEDED_TO;
+      step->min_needed_to = MIN_NEEDED_FROM;
+      step->max_needed_to = MAX_NEEDED_FROM;
+    }
 
 #ifdef RESET_STATE
   step->stateful = 1;
@@ -334,6 +345,10 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 
       /* Remember how many characters we converted.  */
       *written += converted;
+
+#ifdef END_LOOP
+      END_LOOP
+#endif
     }
 
   return status;
@@ -354,3 +369,5 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 #undef RESET_STATE
 #undef RESET_INPUT_BUFFER
 #undef FUNCTION_NAME
+#undef PREPARE_LOOP
+#undef END_LOOP

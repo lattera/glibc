@@ -1,3 +1,27 @@
+1998-04-25 18:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Use gap method for iso8859-5, iso8859-7,
+	iso8859-8 and iso8859-10.
+	* iconvdata/iso8859-5.c: Change to use gap method.
+	* iconvdata/iso8859-7.c: Likewise.
+	* iconvdata/iso8859-8.c: Likewise.
+	* iconvdata/iso8859-10.c: Likewise.
+
+	* iconvdata/Makefile: Add rules for ISO-2022-JP module.
+	* iconv/skeleton.c: Allow END_LOOP do be defined and use it at the
+	end of the loop.
+	* iconvdata/iso-2022-jp.c: New file.
+
+	* iconvdata/ksc5601.c: Don't use uint16_t to represent byte sequence.
+	* iconvdata/ksc5601.h: Unify function interfaces.
+	* iconvdata/euckr.c: Adapt for changed ksc5601.h interface.
+	* iconvdata/uhc.c: Likewise.
+
+	* iconvdata/gb2312.h: Use correct types.
+
+	* iconvdata/iso646.c (gconv_open): Correctly initialize the character
+	size elements of data.
+
 1998-04-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/tst-svc.expect: Adapt for change in .input.

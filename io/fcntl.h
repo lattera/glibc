@@ -61,8 +61,12 @@ extern int __open64 __P ((__const char *__file, int __oflag, ...));
 #ifndef __USE_FILE_OFFSET64
 extern int open __P ((__const char *__file, int __oflag, ...));
 #else
-extern int open __P ((__const char *__file, int __oflag, ...))
-     __asm__ ("open64");
+# ifdef __REDIRECT
+extern int __REDIRECT (open, __P ((__const char *__file, int __oflag, ...)),
+		       open64);
+# else
+#  define open open64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int open64 __P ((__const char *__file, int __oflag, ...));
@@ -74,8 +78,12 @@ extern int open64 __P ((__const char *__file, int __oflag, ...));
 #ifndef __USE_FILE_OFFSET64
 extern int creat __P ((__const char *__file, __mode_t __mode));
 #else
-extern int creat __P ((__const char *__file, __mode_t __mode))
-     __asm__ ("creat64");
+# ifdef __REDIRECT
+extern int __REDIRECT (creat, __P ((__const char *__file, __mode_t __mode)),
+		       creat64);
+# else
+#  define creat creat64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int creat64 __P ((__const char *__file, __mode_t __mode));
@@ -99,8 +107,12 @@ extern int creat64 __P ((__const char *__file, __mode_t __mode));
 # ifndef __USE_FILE_OFFSET64
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 # else
-extern int lockf __P ((int __fd, int __cmd, __off64_t __len))
-     __asm__ ("lockf64");
+# ifdef __REDIRECT
+extern int __REDIRECT (lockf, __P ((int __fd, int __cmd, __off64_t __len)),
+		       lockf64);
+# else
+#  define lockf lockf64
+# endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));

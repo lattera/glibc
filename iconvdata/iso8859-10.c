@@ -20,9 +20,9 @@
 
 /* Get the conversion table.  */
 #include <stdint.h>
-#include <iso8859-10.h>
+#define TABLES <iso8859-10.h>
 
 #define CHARSET_NAME	"ISO-8859-10//"
 #define HAS_HOLES	0	/* All 256 character are defined.  */
 
-#include <8bit-generic.c>
+#include <8bit-gap.c>

@@ -29,7 +29,7 @@ extern const uint16_t __gb2312_to_ucs[];
 
 
 static inline uint32_t
-gb2312_to_ucs4 (const char **s, size_t avail, unsigned char offset)
+gb2312_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
   unsigned char ch = *(*s);
   unsigned char ch2;
@@ -66,7 +66,7 @@ extern const char __gb2312_from_ucs4_tab8[][2];
 extern const char __gb2312_from_ucs4_tab9[][2];
 
 static inline size_t
-ucs4_to_gb2312 (uint32_t wch, char *s, size_t avail)
+ucs4_to_gb2312 (uint32_t wch, unsigned char **s, size_t avail)
 {
   unsigned int ch = (unsigned int) wch;
   char buf[2];
@@ -212,11 +212,16 @@ ucs4_to_gb2312 (uint32_t wch, char *s, size_t avail)
       return UNKNOWN_10646_CHAR;
     }
 
-  if (cp[1] != '\0' && avail < 2)
+  if (cp[0] == '\0')
+    return UNKNOWN_10646_CHAR;
+
+  assert (cp[1] != '\0');
+
+  if (avail < 2)
     return 0;
 
-  s[0] = cp[0];
-  s[1] = cp[1];
+  *(*s)++ = cp[0];
+  *(*s)++ = cp[1];
 
   return 2;
 }

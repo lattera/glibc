@@ -152,10 +152,20 @@ gconv_init (struct gconv_step *step)
       new_data->var = var;
       step->data = new_data;
 
-      step->min_needed_from = MIN_NEEDED_FROM;
-      step->max_needed_from = MIN_NEEDED_FROM;
-      step->min_needed_to = MIN_NEEDED_TO;
-      step->max_needed_to = MIN_NEEDED_TO;
+      if (var == from_iso646)
+	{
+	  step->min_needed_from = MIN_NEEDED_FROM;
+	  step->max_needed_from = MIN_NEEDED_FROM;
+	  step->min_needed_to = MIN_NEEDED_TO;
+	  step->max_needed_to = MIN_NEEDED_TO;
+	}
+      else
+	{
+	  step->min_needed_from = MIN_NEEDED_TO;
+	  step->max_needed_from = MIN_NEEDED_TO;
+	  step->min_needed_to = MIN_NEEDED_FROM;
+	  step->max_needed_to = MIN_NEEDED_FROM;
+	}
 
       step->stateful = 0;
 
@@ -408,7 +418,7 @@ gconv_end (struct gconv_step *data)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    unsigned char ch = '\0';						      \
+    unsigned char ch;							      \
     int failure = GCONV_OK;						      \
 									      \
     ch = *((uint32_t *) inptr);						      \

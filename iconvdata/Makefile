@@ -38,7 +38,7 @@ modules += KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861 IBM862	 \
 	   IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880 IBM918	 \
 	   IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254 CP1255	 \
-	   CP1256 CP1257
+	   CP1256 CP1257 ISO-2022-JP
 endif
 modules.so := $(addsuffix .so, $(modules))
 
@@ -142,6 +142,7 @@ BIG5-routines := big5
 EUC-JP-routines := eucjp
 EUC-CN-routines := euccn
 EUC-TW-routines := euctw
+ISO-2022-JP-routines := iso-2022-jp
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
@@ -159,6 +160,10 @@ LDFLAGS-EUC-CN.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)EUC-CN.so: $(objpfx)libGB.so
 LDFLAGS-EUC-TW.so = -Wl,-rpath,$(gconvdir)
 $(objpfx)EUC-TW.so: $(objpfx)libCNS.so
+
+LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,$(gconvdir)
+$(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
+			 $(objpfx)libCNS.so
 
 LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
 LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
@@ -188,7 +193,7 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c ibm1026.c	    \
 	      ibm1047.c cp1250.c cp1251.c cp1252.c cp1253.c cp1254.c	    \
 	      cp1255.c cp1256.c cp1257.c cp874.c cp874.h cp737.c cp737.h    \
-	      cp775.c cp775.h
+	      cp775.c cp775.h iso-2022-jp.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -226,9 +231,8 @@ $(make-target-directory)
   echo "};" ) > $@.new && rm -f $@ && mv $@.new $@
 endef
 
-sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-5.h \
-			 iso8859-6.h iso8859-7.h iso8859-8.h iso8859-9.h \
-			 iso8859-10.h koi-8.h hp-roman8.h ebcdic-at-de.h \
+sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-6.h \
+			 iso8859-9.h koi-8.h hp-roman8.h ebcdic-at-de.h \
 			 ebcdic-at-de-a.h ebcdic-ca-fr.h ebcdic-dk-no.h  \
 			 ebcdic-dk-no-a.h ebcdic-es.h ebcdic-es-a.h	 \
 			 ebcdic-es-s.h ebcdic-fi-se.h ebcdic-fi-se-a.h	 \
@@ -236,7 +240,7 @@ sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-5.h \
 			 ebcdic-pt.h ebcdic-uk.h ebcdic-us.h ibm037.h	 \
 			 ibm038.h ibm274.h ibm275.h ibm423.h ibm424.h	 \
 			 ibm500.h ibm870.h ibm871.h ibm891.h ibm903.h	 \
-			 ibm904.h ibm905.h ibm1047.h
+			 ibm904.h ibm905.h ibm1047.h iso8859-7jp.h
 
 define generate-8bit-gap-table
 $(make-target-directory)
@@ -260,7 +264,9 @@ perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  ibm863.h ibm864.h ibm865.h ibm868.h ibm869.h	 \
 			  ibm875.h ibm880.h ibm918.h ibm1004.h ibm1026.h \
 			  cp1250.h cp1251.h cp1252.h cp1253.h cp1254.h	 \
-			  cp1255.h cp1256.h cp1257.h
+			  cp1255.h cp1256.h cp1257.h iso8859-5.h	 \
+			  iso8859-7.h iso8859-8.h iso8859-10.h		 \
+			  iso8859-7jp.h
 
 # The headers must be generated before the compilation.
 before-compile = $(addprefix $(objpfx),$(sed-generated-headers)) \
@@ -274,17 +280,9 @@ $(objpfx)iso8859-3.h: ../localedata/charmaps/ISO-8859-3 Makefile
 	$(generate-8bit-table)
 $(objpfx)iso8859-4.h: ../localedata/charmaps/ISO-8859-4 Makefile
 	$(generate-8bit-table)
-$(objpfx)iso8859-5.h: ../localedata/charmaps/ISO-8859-5 Makefile
-	$(generate-8bit-table)
 $(objpfx)iso8859-6.h: ../localedata/charmaps/ISO-8859-6 Makefile
 	$(generate-8bit-table)
-$(objpfx)iso8859-7.h: ../localedata/charmaps/ISO-8859-7 Makefile
-	$(generate-8bit-table)
-$(objpfx)iso8859-8.h: ../localedata/charmaps/ISO-8859-8 Makefile
-	$(generate-8bit-table)
 $(objpfx)iso8859-9.h: ../localedata/charmaps/ISO-8859-9 Makefile
-	$(generate-8bit-table)
-$(objpfx)iso8859-10.h: ../localedata/charmaps/ISO-8859-10 Makefile
 	$(generate-8bit-table)
 
 $(objpfx)koi-8.h: ../localedata/charmaps/KOI-8 Makefile
@@ -352,7 +350,30 @@ $(objpfx)ibm905.h: ../localedata/charmaps/IBM905 Makefile
 $(objpfx)ibm1047.h: ../localedata/charmaps/IBM1047 Makefile
 	$(generate-8bit-table)
 
+$(objpfx)iso8859-7jp.h: ../localedata/charmaps/ISO-8859-7 Makefile
+	$(make-target-directory)
+	( echo "static const uint32_t iso88597_to_ucs4[96] = {"; \
+	  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\([A-F].\)[[:space:]]*<U\(....\)>.*/  [0x\1-0xA0] = 0x\2,/p' -e d $^ | sort -u; \
+	  echo "};"; \
+	  echo "static struct gap from_idx[] = {"; \
+	  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\([A-F].\)[[:space:]]*<U\(....\)>.*/0x\2 0x\1/p' -e d $^ | sort -u | $(PERL) gap.pl; \
+	  echo "  { start: 0xffff, end: 0xffff, idx:     0 }"; \
+	  echo "};"; \
+	  echo "static const char iso88597_from_ucs4[] = {"; \
+	  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\([A-F].\)[[:space:]]*<U\(....\)>.*/0x\2 0x\1/p' -e d $^ | sort -u | $(PERL) gaptab.pl; \
+	  echo "};" ) > $@.new && rm -f $@ && mv $@.new $@
+
+
 ifneq ($(PERL),no)
+$(objpfx)iso8859-5.h: ../localedata/charmaps/ISO-8859-5 Makefile
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-7.h: ../localedata/charmaps/ISO-8859-7 Makefile
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-8.h: ../localedata/charmaps/ISO-8859-8 Makefile
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-10.h: ../localedata/charmaps/ISO-8859-10 Makefile
+	$(generate-8bit-gap-table)
+
 $(objpfx)koi8-r.h: ../localedata/charmaps/KOI8-R Makefile
 	$(generate-8bit-gap-table)
 $(objpfx)latin-greek.h: ../localedata/charmaps/LATIN-GREEK Makefile

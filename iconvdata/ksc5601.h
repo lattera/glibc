@@ -27,46 +27,62 @@
 #include <gconv.h>
 #include <stdint.h>
 
+/* Structure to map from UCS to KSC.  This structure should be packed
+   on all platforms.  */
+struct map
+{
+  uint16_t ucs;
+  char val[2];
+};
+
 /* Conversion table.  */
 extern const uint16_t __ksc5601_hangul_to_ucs[KSC5601_HANGUL];
 extern const uint16_t __ksc5601_sym_to_ucs[];
-extern const uint16_t __ksc5601_sym_from_ucs[KSC5601_SYMBOL][2];
+extern const struct map __ksc5601_sym_from_ucs[KSC5601_SYMBOL];
 extern const uint16_t __ksc5601_hanja_to_ucs[KSC5601_HANJA];
-extern const uint16_t __ksc5601_hanja_from_ucs[KSC5601_HANJA][2];
+extern const struct map __ksc5601_hanja_from_ucs[KSC5601_HANJA];
 
 
 static inline uint32_t
-ksc5601_to_ucs4 (uint16_t s)
+ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
-  unsigned char ch = s / 256;
+  unsigned char ch = *(*s);
   unsigned char ch2;
   int idx;
 
   /* row 94(0x7e) and row 41(0x49) are user-defined area in KS C 5601 */
 
-  if (ch <= 0x20 || ch >= 0x7e || ch == 0x49)
+  if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) >= 0x7e
+      || (ch - offset) == 0x49)
     return UNKNOWN_10646_CHAR;
 
-  ch2 = s % 256;
-  if (ch2 <= 0x20 || ch2 >= 0x7f)
+  if (avail < 2)
+    return 0;
+
+  ch2 = (*s)[1];
+  if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
     return UNKNOWN_10646_CHAR;
 
-  idx = (ch - 0x21) * 94 + (ch2 - 0x21);
+  idx = (ch - offset - 0x21) * 94 + (ch2 - offset - 0x21);
 
   /* 1410 = 15 * 94 , 3760 = 40 * 94
      Hangul in KS C 5601 : row 16 - row 40 */
 
+  (*s) += 2;
+
   if (idx >= 1410 && idx < 3760)
-    return __ksc5601_hangul_to_ucs[idx-1410];
+    return (__ksc5601_hangul_to_ucs[idx - 1410]
+	    ?: ((*s) -= 2, UNKNOWN_10646_CHAR));
   else if (idx > 3854)
     /* Hanja : row 42 - row 93 : 3854 = 94 * (42-1) */
-   return __ksc5601_hanja_to_ucs[idx-3854];
+   return (__ksc5601_hanja_to_ucs[idx - 3854]
+	   ?: ((*s) -= 2, UNKNOWN_10646_CHAR));
   else
-    return __ksc5601_sym_to_ucs[idx] ?: UNKNOWN_10646_CHAR;
+    return __ksc5601_sym_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
 }
 
 static inline size_t
-ucs4_to_ksc5601_hangul (uint32_t wch, uint16_t *s)
+ucs4_to_ksc5601_hangul (uint32_t wch, unsigned char **s, size-t avail)
 {
   int l = 0;
   int m;
@@ -75,23 +91,30 @@ ucs4_to_ksc5601_hangul (uint32_t wch, uint16_t *s)
 
   while (l <= u)
     {
-      try = (uint32_t) __ksc5601_hangul_to_ucs[m=(l+u)/2];
+      m = (l + u) / 2;
+      try = (uint32_t) __ksc5601_hangul_to_ucs[m];
       if (try > wch)
 	u = m - 1;
       else if (try < wch)
 	l= m + 1;
       else
 	{
-	  *s = (uint16_t) ((m / 94) * 256  + m % 94 + 0x3021) ;
+	  if (avail < 2)
+	    return 0;
+
+	  *(*s)++ = (m / 94) + 0x30;
+	  *(*s)++ = (m % 94) + 0x21;
+
 	  return 2;
 	}
     }
-  return  0;
+
+  return  UNKNOWN_10646_CHAR;
 }
 
 
 static inline size_t
-ucs4_to_ksc5601_hanja (uint32_t wch, uint16_t *s)
+ucs4_to_ksc5601_hanja (uint32_t wch, unsigned char **s, size_t avail)
 {
   int l = 0;
   int m;
@@ -101,22 +124,28 @@ ucs4_to_ksc5601_hanja (uint32_t wch, uint16_t *s)
   while (l <= u)
     {
       m = (l + u) / 2;
-      try = (uint32_t) __ksc5601_hanja_from_ucs[m][0];
+      try = (uint32_t) __ksc5601_hanja_from_ucs[m].ucs;
       if (try > wch)
 	u=m-1;
       else if (try < wch)
 	l = m + 1;
       else
 	{
-	  *s = __ksc5601_hanja_from_ucs[m][1];
+	  if (avail < 2)
+	    return 0;
+
+	  *(*s)++ = __ksc5601_hanja_from_ucs[m].val[0];
+	  *(*s)++ = __ksc5601_hanja_from_ucs[m].val[1];
+
 	  return 2;
 	}
     }
-  return 0;
+
+  return UNKNOWN_10646_CHAR;
 }
 
 static inline  size_t
-ucs4_to_ksc5601_sym (uint32_t wch, uint16_t *s)
+ucs4_to_ksc5601_sym (uint32_t wch, unsigned char **s, size_t avail)
 {
   int l = 0;
   int m;
@@ -126,32 +155,37 @@ ucs4_to_ksc5601_sym (uint32_t wch, uint16_t *s)
   while (l <= u)
     {
       m = (l + u) / 2;
-      try = __ksc5601_sym_from_ucs[m][0];
+      try = __ksc5601_sym_from_ucs[m].ucs;
       if (try > wch)
 	u = m - 1;
       else if (try < wch)
 	l = m + 1;
       else
 	{
-	  *s = __ksc5601_sym_from_ucs[m][1];
+	  if (avail < 2)
+	    return 0;
+
+	  *(*s)++ = __ksc5601_sym_from_ucs[m].val[0];
+	  *(*s)++ = __ksc5601_sym_from_ucs[m].val[1];
+
 	  return 2;
 	}
     }
-  return 0;
+
+  return UNKNOWN_10646_CHAR;
 }
 
 
 static inline size_t
-ucs4_to_ksc5601 (uint32_t ch, uint16_t *s)
+ucs4_to_ksc5601 (uint32_t wch, unsigned char **s, size_t avail)
 {
-  *s = (uint16_t) UNKNOWN_10646_CHAR;  /* FIXIT */
-
-  if (ch >= 0xac00 && ch <= 0xd7a3)
-    return ucs4_to_ksc5601_hangul (ch, s);
-  else if (ch >= 0x4e00 && ch <= 0x9fff || ch >= 0xf900 && ch <= 0xfa0b)
-    return ucs4_to_ksc5601_hanja (ch, s);
+  if (wch >= 0xac00 && wch <= 0xd7a3)
+    return ucs4_to_ksc5601_hangul (wch, (uint16_t *) s);
+  else if ((wch >= 0x4e00 && wch <= 0x9fff)
+	   || (wch >= 0xf900 && wch <= 0xfa0b))
+    return ucs4_to_ksc5601_hanja (wch, s, avail);
   else
-    return ucs4_to_ksc5601_sym (ch, s);
+    return ucs4_to_ksc5601_sym (wch, s, avail);
 }
 
 #endif /* ksc5601.h */
