@@ -1,3 +1,12 @@
+1998-03-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (process_envvars): Also recognize LD_LIBRARY_PATH,
+	LD_PRELOAD, and LD_VERBOSE.
+	(dl_main): Use global variables set by process_envvars instead of
+	calling getenv.
+	* elf/dl-load.c (_dl_init_paths): Don't call getenv to get
+	LD_LIBRARY_PATH value, this comes with the parameter.
+
 1998-03-08 22:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (dl_main): Delay initialization of path structure if

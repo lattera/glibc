@@ -333,11 +333,6 @@ _dl_init_paths (const char *llp)
   /* Number of elements in the library path.  */
   size_t nllp;
 
-  /* If the user has not specified a library path consider the environment
-     variable.  */
-  if (llp == NULL)
-    llp = getenv ("LD_LIBRARY_PATH");
-
   /* First determine how many elements the LD_LIBRARY_PATH contents has.  */
   if (llp != NULL && *llp != '\0')
     {

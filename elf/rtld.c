@@ -261,7 +261,11 @@ match_version (const char *string, struct link_map *map)
   return 0;
 }
 
-unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
+static unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
+static const char *library_path;	/* The library search path.  */
+static const char *preloadlist;		/* The list preloaded objects.  */
+static int version_info;		/* Nonzero if information about
+					   versions has to be printed.  */
 
 static void
 dl_main (const ElfW(Phdr) *phdr,
@@ -274,7 +278,6 @@ dl_main (const ElfW(Phdr) *phdr,
   enum mode mode;
   struct link_map **preloads;
   unsigned int npreloads;
-  const char *preloadlist;
   size_t file_size;
   char *file;
   int has_interp = 0;
@@ -302,9 +305,6 @@ dl_main (const ElfW(Phdr) *phdr,
 	 pay attention to its PT_INTERP command (we are the interpreter
 	 ourselves).  This is an easy way to test a new ld.so before
 	 installing it.  */
-
-      /* Overwrites LD_LIBRARY_PATH if given.  */
-      const char *library_path = NULL;
 
       /* Note the place where the dynamic linker actually came from.  */
       _dl_rtld_map.l_name = _dl_argv[0];
@@ -472,7 +472,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   if (*user_entry != (ElfW(Addr)) &ENTRY_POINT)
     /* Initialize the data structures for the search paths for shared
        objects.  */
-    _dl_init_paths (NULL);
+    _dl_init_paths (library_path);
 
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  Note that at this point the global chain of link maps contains
@@ -491,7 +491,6 @@ of this helper program; chances are you did not intend to run this program.\n",
   preloads = NULL;
   npreloads = 0;
 
-  preloadlist = getenv ("LD_PRELOAD");
   if (preloadlist)
     {
       /* The LD_PRELOAD environment variable gives list of libraries
@@ -732,7 +731,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    }
 
 #define VERNEEDTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
-	  if (*(getenv ("LD_VERBOSE") ?: "") != '\0')
+	  if (version_info)
 	    {
 	      /* Print more information.  This means here, print information
 		 about the versions needed.  */
@@ -1006,6 +1005,26 @@ process_envvars (enum mode *modep, int *lazyp)
       if (result < 0)
 	continue;
 
+      /* The library search path.  */
+      result = strncmp (&envline[3], "LIBRARY_PATH=", 13);
+      if (result == 0)
+	{
+	  library_path = &envline[16];
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* List of objects to be preloaded.  */
+      result = strncmp (&envline[3], "PRELOAD=", 8);
+      if (result == 0)
+	{
+	  preloadlist = &envline[11];
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
       /* Which shared object shall be profiled.  */
       result = strncmp (&envline[3], "PROFILE=", 8);
       if (result == 0)
@@ -1046,6 +1065,16 @@ process_envvars (enum mode *modep, int *lazyp)
       if (result == 0)
 	{
 	  mode = trace;
+	  continue;
+	}
+      if (result < 0)
+	continue;
+
+      /* Print information about versions.  */
+      result = strncmp (&envline[3], "VERBOSE=", 8);
+      if (result == 0)
+	{
+	  version_info = envline[11] != '\0';
 	  continue;
 	}
       if (result < 0)
