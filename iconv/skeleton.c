@@ -297,34 +297,39 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       unsigned char *outbuf = data->__outbuf;
       unsigned char *outend = data->__outbufend;
       unsigned char *outstart;
+      /* This variable is used to count the number of characters we
+	 actually converted.  */
+      size_t converted = 0;
 #if defined _STRING_ARCH_unaligned \
     || MIN_NEEDED_FROM == 1 || MAX_NEEDED_FROM % MIN_NEEDED_FROM != 0 \
     || MIN_NEEDED_TO == 1 || MAX_NEEDED_TO % MIN_NEEDED_TO != 0
 # define unaligned 0
 #else
+      int unaligned;
+# define GEN_unaligned(name) GEN_unaligned2 (name)
+# define GEN_unaligned2(name) name##_unaligned
+#endif
+
+#ifdef PREPARE_LOOP
+      PREPARE_LOOP
+#endif
+
+#if !defined _STRING_ARCH_unaligned \
+    && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
+    && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
       /* The following assumes that encodings, which have a variable length
 	 what might unalign a buffer even though it is a aligned in the
 	 beginning, either don't have the minimal number of bytes as a divisor
 	 of the maximum length or have a minimum length of 1.  This is true
 	 for all known and supported encodings.  */
-      int unaligned = ((FROM_DIRECTION
-			&& ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
-			    || (data->__is_last
-				&& (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
-		       || (!FROM_DIRECTION
-			   && ((data->__is_last
-				&& (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
-			       || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
-# define GEN_unaligned(name) GEN_unaligned2 (name)
-# define GEN_unaligned2(name) name##_unaligned
-#endif
-
-      /* This variable is used to count the number of characters we
-	 actually converted.  */
-      size_t converted = 0;
-
-#ifdef PREPARE_LOOP
-      PREPARE_LOOP
+      unaligned = ((FROM_DIRECTION
+		    && ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
+			|| (data->__is_last
+			    && (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
+		   || (!FROM_DIRECTION
+		       && ((data->__is_last
+			    && (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
+			   || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
 #endif
 
       do

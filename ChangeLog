@@ -1,3 +1,9 @@
+2000-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c (FUNCTION_NAME): Reorder initialization of
+	unaligned so that it compiles for system which need unaligned
+	access handling.
+
 2000-04-04  Andreas Schwab  <schwab@suse.de>
 
 	* elf/cache.c (print_entry): Only look at the type field when
