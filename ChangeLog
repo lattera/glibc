@@ -1,3 +1,10 @@
+2001-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Add check for bison.
+	* config.make.in: Define BISON variable.
+	* intl/Makefile: Use BISON instead of YACC when generating plural.c.
+	Rename YFLAGS to BISONFLAGS.
+
 2001-02-05  Andreas Jaeger  <aj@suse.de>
 
 	* io/test-lfs.c (do_test): Test lseek64 return value, call

@@ -81,6 +81,7 @@ MAKEINFO = @MAKEINFO@
 AS = $(CC) -c
 MIG = @MIG@
 PWD_P = @PWD_P@
+BISON = @BISON@
 
 # Installation tools.
 INSTALL = @INSTALL@

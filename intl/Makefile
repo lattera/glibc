@@ -1,4 +1,4 @@
-# Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,10 +38,14 @@ install-others = $(inst_msgcatdir)/locale.alias
 generated = msgs.h mtrace-tst-gettext tst-gettext.mtrace
 generated-dirs := domaindir localedir
 
+include ../Makeconfig
+
+ifneq (no,$(BISON))
 plural.c: plural.y
-	$(YACC) $(YFLAGS) $@ $^
+	$(BISON) $(BISONFLAGS) $@ $^
+endif
 ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'$(YACC) $(YFLAGS) $@ $^' $@
+	test ! -d CVS || cvs $(CVSOPTS) commit -m'$(BISON) $(BISONFLAGS) $@ $^' $@
 endif
 $(objpfx)plural.o: plural.c
 
@@ -77,7 +81,7 @@ $(objpfx)tst-translit.out: $(objpfx)tst-gettext.out
 
 CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir)"'
-YFLAGS = --name-prefix=__gettext --output
+BISONFLAGS = --yacc --name-prefix=__gettext --output
 
 $(inst_msgcatdir)/locale.alias: locale.alias $(+force)
 	$(do-install)
