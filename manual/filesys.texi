@@ -2852,7 +2852,7 @@ String constants are normally in read-only storage, so your program
 would crash when @code{mktemp} or @code{mkstemp} tried to modify the
 string.
 
-@comment unistd.h
+@comment stdlib.h
 @comment Unix
 @deftypefun {char *} mktemp (char *@var{template})
 The @code{mktemp} function generates a unique file name by modifying
@@ -2870,7 +2870,7 @@ the file in any case should use the @code{O_EXCL} flag.  Using
 @code{mkstemp} is a safe way to avoid this problem.
 @end deftypefun
 
-@comment unistd.h
+@comment stdlib.h
 @comment BSD
 @deftypefun int mkstemp (char *@var{template})
 The @code{mkstemp} function generates a unique file name just as
@@ -2878,9 +2878,9 @@ The @code{mkstemp} function generates a unique file name just as
 (@pxref{Opening and Closing Files}).  If successful, it modifies
 @var{template} in place and returns a file descriptor open on that file
 for reading and writing.  If @code{mkstemp} cannot create a
-uniquely-named file, it makes @var{template} an empty string and returns
-@code{-1}.  If @var{template} does not end with @samp{XXXXXX},
-@code{mkstemp} returns @code{-1} and does not modify @var{template}.
+uniquely-named file, it returns @code{-1}.  If @var{template} does not
+end with @samp{XXXXXX}, @code{mkstemp} returns @code{-1} and does not
+modify @var{template}.
 
 The file is opened using mode @code{0600}.  If the file is meant to be
 used by other users the mode must explicitly changed.

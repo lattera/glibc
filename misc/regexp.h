@@ -142,21 +142,21 @@ compile (char *__restrict instring, char *__restrict expbuf,
       if (__current_size + 1 >= __input_size)
 	{
 	  size_t __new_size = __input_size ? 2 * __input_size : 128;
-	  char *__new_room = alloca (__new_size);
+	  char *__new_room = (char *) alloca (__new_size);
 	  /* See whether we can use the old buffer.  */
 	  if (__new_room + __new_size == __input_buffer)
 	    {
 	      __input_size += __new_size;
-	      __input_buffer = memcpy (__new_room, __input_buffer,
-				       __current_size);
+	      __input_buffer = (char *) memcpy (__new_room, __input_buffer,
+					       __current_size);
 	    }
 	  else if (__input_buffer + __input_size == __new_room)
 	    __input_size += __new_size;
 	  else
 	    {
 	      __input_size = __new_size;
-	      __input_buffer = memcpy (__new_room, __input_buffer,
-				       __current_size);
+	      __input_buffer = (char *) memcpy (__new_room, __input_buffer,
+						__current_size);
 	    }
 	}
       __input_buffer[__current_size++] = __ch;

@@ -1,4 +1,22 @@
+1999-03-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* malloc/obstack.h (obstack_free): Explicitly convert __obj to
+	char * to avoid C++ warning.
+	Patch by yasushi@cs.washington.edu [PR libc/1035].
+
+1999-03-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/filesys.texi (Temporary Files): mktemp and mkstemp are
+	declared in stdlib.h, correct return value of mkstemp.
+	Reported by Andries Brouwer <Andries.Brouwer@cwi.nl>.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHDRD_FC*): New defines
+	from Linux 2.2.5.
+
 1999-03-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/regexp.h (compile): Cast some pointers to (char *) to avoid 
+	C++ warning.
 
 	* ctype/ctype.h (tolower, toupper): Add __THROW declaration to
 	inline functions.  Closes PR libc/1049.
