@@ -1,5 +1,8 @@
 1999-10-14  Andreas Jaeger  <aj@suse.de>
 
+	* resolv/inet_addr.c (inet_aton): Fix last patch.  The little
+	endian version works for both endiannesses.
+
 	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Optimize for zero
 	seconds.
 

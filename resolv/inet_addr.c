@@ -107,11 +107,7 @@ inet_aton(cp, addr)
 	  uint8_t bytes[4];
 	  uint32_t word;
 	} res;
-#if BYTE_ORDER == LITTLE_ENDIAN
 	register uint8_t *pp = res.bytes;
-#else
-	register uint8_t *pp = &res.bytes[4];
-#endif
 	int digit;
 
 #ifdef _LIBC
@@ -172,17 +168,10 @@ inet_aton(cp, addr)
 			 *	a.b.c	(with c treated as 16 bits)
 			 *	a.b	(with b treated as 24 bits)
 			 */
-			if ((BYTE_ORDER == LITTLE_ENDIAN
-			     && pp >= res.bytes + 3)
-			    || (BYTE_ORDER == BIG_ENDIAN
-				&& pp == res.bytes)
+			if (pp >> res.bytes + 3
 			    || val > 0xff)
 				goto ret_0;
-#if BYTE_ORDER == LITTLE_ENDIAN
 			*pp++ = val;
-#else
-			*--pp = val;
-#endif
 			c = *++cp;
 		} else
 			break;
@@ -201,8 +190,7 @@ inet_aton(cp, addr)
 
 	/* Check whether the last part is in its limits depending on
 	   the number of parts in total.  */
-	if ((BYTE_ORDER == LITTLE_ENDIAN && val > max[pp - res.bytes])
-	    || (BYTE_ORDER == BIG_ENDIAN && val > max[res.bytes - pp]))
+	if (val > max[pp - res.bytes])
 	  goto ret_0;
 
 	if (addr)
