@@ -1,3 +1,25 @@
+1998-10-29 14:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* spinlock.h (__pthread_trylock): Define inline.
+	(__pthread_lock): Add extra parameter to declaration.  Declare
+	using internal_function.
+	(__pthread_unlock): Declare using internal_function.
+	* spinlock.c (__pthread_lock): Add new parameter.  Use it instead
+	of local variable self.  Avoid recomputing self.  Define using
+	internal_function.
+	(__pthread_trylock): Remove.
+	(__pthread_unlock): Define using internal_function.
+	* cancel.c: Adjust for __pthread_lock interface change.  Use already
+	computed self value is possible.
+	* condvar.c: Likewise.
+	* join.c: Likewise.
+	* manager.c: Likewise.
+	* mutex.c: Likewise.
+	* pthread.c: Likewise.
+	* rwlock.c: Likewise.
+	* semaphore.c: Likewise.
+	* signals.c: Likewise.
+
 1998-10-27 13:46  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/pthread/pthread.h (struct _pthread_cleanup_buffer): Prepend

@@ -1,5 +1,8 @@
 1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* malloc/mtrace.c (tr_where): Replace snprintf call by mempcpy and
+	_fitoa.
+
 	* sysdeps/unix/sysv/linux/ttyname_r.c (ttyname_r): Try reading
 	/prof/self/fd/FD first.
 	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Likewise.

@@ -32,14 +32,11 @@
 
 #include <stdio.h>
 #include <string.h>
-
-#ifndef	__GNU_LIBRARY__
-extern char *getenv ();
-#else
 #include <stdlib.h>
-#endif
 
-#if defined _LIBC && defined USE_IN_LIBIO
+#include <stdio-common/_itoa.h>
+
+#ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
 # define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
 #endif
@@ -99,14 +96,19 @@ tr_where (caller)
 	  char *buf = (char *) "";
 	  if (info.dli_sname && info.dli_sname[0])
 	    {
-	      size_t len = strlen (info.dli_sname) + 22;
-	      buf = alloca (len);
-	      if (caller >= (const __ptr_t) info.dli_saddr)
-		snprintf (buf, len, "(%s+0x%x)", info.dli_sname,
-			  caller - (const __ptr_t) info.dli_saddr);
-	      else
-		snprintf (buf, len, "(%s-0x%x)", info.dli_sname,
-			  (const __ptr_t) info.dli_saddr - caller);
+	      size_t len = strlen (info.dli_sname);
+	      buf = alloca (len + 6 + 2 * sizeof (void *));
+
+	      buf[0] = '(';
+	      __stpcpy (_fitoa (caller >= (const __ptr_t) info.dli_saddr
+				? caller - (const __ptr_t) info.dli_saddr
+				: (const __ptr_t) info.dli_saddr - caller,
+				__stpcpy (__mempcpy (buf + 1, info.dli_sname,
+						     len),
+					  caller >= (__ptr_t) info.dli_saddr
+					  ? "+0x" : "-0x"),
+				16, 0),
+			")");
 	    }
 
 	  fprintf (mallstream, "@ %s%s%s[%p] ",
