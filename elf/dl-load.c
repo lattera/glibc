@@ -942,6 +942,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 #ifdef USE_TLS
 	case PT_TLS:
 	  l->l_tls_blocksize = ph->p_memsz;
+	  l->l_tls_align = ph->p_align;
 	  l->l_tls_initimage_size = ph->p_filesz;
 	  /* Since we don't know the load address yet only store the
 	     offset.  We will adjust it later.  */
@@ -951,15 +952,19 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	   It is created as a circular list so that we can easily
 	   append to it.  */
 	  if (GL(dl_initimage_list) == NULL)
-	    GL(dl_initimage_list) = l->l_tls_nextimage = l;
+	    GL(dl_initimage_list) = l->l_tls_nextimage = l->l_tls_previmage
+	      = l;
 	  else
 	    {
-	      l->l_tls_nextimage = GL(dl_initimage_list);
+	      l->l_tls_nextimage = GL(dl_initimage_list)->l_tls_nextimage;
+	      l->l_tls_nextimage->l_tls_previmage = l;
+	      l->l_tls_previmage = GL(dl_initimage_list);
+	      l->l_tls_previmage->l_tls_nextimage = l;
 	      GL(dl_initimage_list) = l;
 	    }
 
 	  /* Assign the next available module ID.  */
-	  l->l_tls_modid = ++GL(dl_tls_module_cnt);
+	  l->l_tls_modid = _dl_next_tls_modid ();
 	  break;
 #endif
 	}
