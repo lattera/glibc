@@ -129,4 +129,7 @@
 /* Thread process-shared synchronization is supported.  */
 #define _POSIX_THREAD_PROCESS_SHARED	200112L
 
+/* The monotonic clock might be available.  */
+#define _POSIX_MONOTONIC_CLOCK	0
+
 #endif /* posix_opt.h */

@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,5 +89,8 @@
 
 /* The `spawn' function family is supported.  */
 #define _POSIX_SPAWN	200112L
+
+/* The monotonic clock might be available.  */
+#define _POSIX_MONOTONIC_CLOCK	0
 
 #endif /* bits/posix_opt.h */

@@ -2,7 +2,7 @@
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
 	_POSIX_MONOTONIC_CLOCK.
-	* linuxthreads/sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
 
 2003-03-01  Roland McGrath  <roland@redhat.com>
 
