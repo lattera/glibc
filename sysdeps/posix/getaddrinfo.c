@@ -53,6 +53,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/utsname.h>
 #include <net/if.h>
 #include <nsswitch.h>
+#include <not-cancel.h>
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
@@ -894,11 +895,342 @@ static struct gaih gaih[] =
     { PF_UNSPEC, NULL }
   };
 
+struct sort_result
+{
+  struct addrinfo *dest_addr;
+  struct sockaddr_storage source_addr;
+  bool got_source_addr;
+};
+
+
+static int
+get_scope (const struct sockaddr_storage *ss)
+{
+  int scope;
+  if (ss->ss_family == PF_INET6)
+    {
+      const struct sockaddr_in6 *in6 = (const struct sockaddr_in6 *) ss;
+
+      if (! IN6_IS_ADDR_MULTICAST (&in6->sin6_addr))
+	{
+	  if (IN6_IS_ADDR_LINKLOCAL (&in6->sin6_addr))
+	    scope = 2;
+	  else if (IN6_IS_ADDR_SITELOCAL (&in6->sin6_addr))
+	    scope = 5;
+	  else
+	    /* XXX Is this the correct default behavior?  */
+	    scope = 14;
+	}
+      else
+	scope = in6->sin6_addr.s6_addr[1] & 0xf;
+    }
+  else if (ss->ss_family == PF_INET)
+    {
+      const struct sockaddr_in *in = (const struct sockaddr_in *) ss;
+      const uint8_t *addr = (const uint8_t *) &in->sin_addr;
+
+      /* RFC 3484 specifies how to map IPv6 addresses to scopes.
+	 169.254/16 and 127/8 are link-local.  */
+      if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
+	scope = 2;
+      else if (addr[0] == 10 || (addr[0] == 172 && addr[1] == 16)
+	       || (addr[0] == 192 && addr[1] == 168))
+	scope = 5;
+      else
+	scope = 14;
+    }
+  else
+    /* XXX What is a good default?  */
+    scope = 15;
+
+  return scope;
+}
+
+
+/* XXX The system administrator should be able to install other
+   tables.  We need to make this configurable.  The problem is that
+   the kernel is also involved since it needs the same table.  */
+static const struct prefixlist
+{
+  struct in6_addr prefix;
+  unsigned int bits;
+  int val;
+} default_labels[] =
+  {
+    /* See RFC 3484 for the details.  */
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0001 } } },
+      128, 0 },
+    { { .in6_u = { .u6_addr16 = { 0x2002, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+      16, 2 },
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+      96, 3 },
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0xffff, 0x0000, 0x0000 } } },
+      96, 4 },
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+      0, 1 }
+  };
+
+
+static const struct prefixlist default_precedence[] =
+  {
+    /* See RFC 3484 for the details.  */
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0001 } } },
+      128, 50 },
+    { { .in6_u = { .u6_addr16 = { 0x2002, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+      16, 30 },
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+      96, 20 },
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0xffff, 0x0000, 0x0000 } } },
+      96, 10 },
+    { { .in6_u = { .u6_addr16 = { 0x0000, 0x0000, 0x0000, 0x0000,
+				  0x0000, 0x0000, 0x0000, 0x0000 } } },
+      0, 40 }
+  };
+
+
+static int
+match_prefix (const struct sockaddr_storage *ss, const struct prefixlist *list,
+	      int default_val)
+{
+  int idx;
+  struct sockaddr_in6 in6_mem;
+  const struct sockaddr_in6 *in6;
+
+  if (ss->ss_family == PF_INET6)
+    in6 = (const struct sockaddr_in6 *) ss;
+  else if (ss->ss_family == PF_INET)
+    {
+      const struct sockaddr_in *in = (const struct sockaddr_in *) ss;
+
+      /* Convert to IPv6 address.  */
+      in6_mem.sin6_family = PF_INET6;
+      in6_mem.sin6_port = in->sin_port;
+      in6_mem.sin6_flowinfo = 0;
+      if (in->sin_addr.s_addr == htonl (0x7f000001))
+	in6_mem.sin6_addr = (struct in6_addr) IN6ADDR_LOOPBACK_INIT;
+      else
+	{
+	  /* Construct a V4-to-6 mapped address.  */
+	  memset (&in6_mem.sin6_addr, '\0', sizeof (in6_mem.sin6_addr));
+	  in6_mem.sin6_addr.s6_addr16[5] = 0xffff;
+	  in6_mem.sin6_addr.s6_addr32[3] = in->sin_addr.s_addr;
+	  in6_mem.sin6_scope_id = 0;
+	}
+
+      in6 = &in6_mem;
+    }
+  else
+    return default_val;
+
+  for (idx = 0; ; ++idx)
+    {
+      unsigned int bits = list[idx].bits;
+      uint8_t *mask = list[idx].prefix.s6_addr;
+      uint8_t *val = in6->sin6_addr.s6_addr;
+
+      while (bits > 8)
+	{
+	  if (*mask != *val)
+	    break;
+
+	  ++mask;
+	  ++val;
+	  bits -= 8;
+	}
+
+      if (bits < 8)
+	{
+	  if ((*mask & (0xff >> bits)) == (*val & (0xff >> bits)))
+	    /* Match!  */
+	    break;
+	}
+    }
+
+  return list[idx].val;
+}
+
+
+static int
+get_label (const struct sockaddr_storage *ss)
+{
+  /* XXX What is a good default value?  */
+  return match_prefix (ss, default_labels, INT_MAX);
+}
+
+
+static int
+get_precedence (const struct sockaddr_storage *ss)
+{
+  /* XXX What is a good default value?  */
+  return match_prefix (ss, default_precedence, 0);
+}
+
+
+static int
+rfc3484_sort (const void *p1, const void *p2)
+{
+  const struct sort_result *a1 = (const struct sort_result *) p1;
+  const struct sort_result *a2 = (const struct sort_result *) p2;
+
+  /* Rule 1: Avoid unusable destinations.
+     We have the got_source_addr flag set if the destination is reachable.  */
+  if (a1->got_source_addr && ! a2->got_source_addr)
+    return -1;
+  if (! a1->got_source_addr && a2->got_source_addr)
+    return 1;
+
+
+  /* Rule 2: Prefer matching scope.  Only interesting if both
+     destination addresses are IPv6.  */
+  int a1_dst_scope
+    = get_scope ((struct sockaddr_storage *) a1->dest_addr->ai_addr);
+
+  int a2_dst_scope
+    = get_scope ((struct sockaddr_storage *) a2->dest_addr->ai_addr);
+
+  if (a1->got_source_addr)
+    {
+      int a1_src_scope = get_scope (&a1->source_addr);
+      int a2_src_scope = get_scope (&a2->source_addr);
+
+      if (a1_dst_scope == a1_src_scope && a2_dst_scope != a2_src_scope)
+	return -1;
+      if (a1_dst_scope != a1_src_scope && a2_dst_scope == a2_src_scope)
+	return 1;
+    }
+
+
+  /* Rule 3: Avoid deprecated addresses.
+     That's something only the kernel could decide.  */
+
+  /* Rule 4: Prefer home addresses.
+     Another thing only the kernel can decide.  */
+
+  /* Rule 5: Prefer matching label.  */
+  if (a1->got_source_addr)
+    {
+      int a1_dst_label
+	= get_label ((struct sockaddr_storage *) a1->dest_addr->ai_addr);
+      int a1_src_label = get_label (&a1->source_addr);
+
+      int a2_dst_label
+	= get_label ((struct sockaddr_storage *) a2->dest_addr->ai_addr);
+      int a2_src_label = get_label (&a2->source_addr);
+
+      if (a1_dst_label == a1_src_label && a2_dst_label != a2_src_label)
+	return -1;
+      if (a1_dst_label != a1_src_label && a2_dst_label == a2_src_label)
+	return 1;
+    }
+
+
+  /* Rule 6: Prefer higher precedence.  */
+  int a1_prec
+    = get_precedence ((struct sockaddr_storage *) a1->dest_addr->ai_addr);
+  int a2_prec
+    = get_precedence ((struct sockaddr_storage *) a2->dest_addr->ai_addr);
+
+  if (a1_prec > a2_prec)
+    return -1;
+  if (a1_prec < a2_prec)
+    return 1;
+
+
+  /* Rule 7: Prefer native transport.
+     XXX How to recognize tunnels?  */
+
+
+  /* Rule 8: Prefer smaller scope.  */
+  if (a1_dst_scope < a2_dst_scope)
+    return -1;
+  if (a1_dst_scope > a2_dst_scope)
+    return 1;
+
+
+  /* Rule 9: Use longest matching prefix.  */
+  if (a1->got_source_addr
+      && a1->dest_addr->ai_family == a2->dest_addr->ai_family)
+    {
+      int bit1 = 0;
+      int bit2 = 0;
+
+      if (a1->dest_addr->ai_family == PF_INET)
+	{
+	  assert (a1->source_addr.ss_family == PF_INET);
+	  assert (a2->source_addr.ss_family == PF_INET);
+
+	  struct sockaddr_in *in1_dst;
+	  struct sockaddr_in *in1_src;
+	  struct sockaddr_in *in2_dst;
+	  struct sockaddr_in *in2_src;
+
+	  in1_dst = (struct sockaddr_in *) a1->dest_addr->ai_addr;
+	  in1_src = (struct sockaddr_in *) &a1->source_addr;
+	  in2_dst = (struct sockaddr_in *) a2->dest_addr->ai_addr;
+	  in2_src = (struct sockaddr_in *) &a2->source_addr;
+
+	  bit1 = ffs (in1_dst->sin_addr.s_addr ^ in1_src->sin_addr.s_addr);
+	  bit2 = ffs (in2_dst->sin_addr.s_addr ^ in2_src->sin_addr.s_addr);
+	}
+      else if (a1->dest_addr->ai_family == PF_INET6)
+	{
+	  assert (a1->source_addr.ss_family == PF_INET6);
+	  assert (a2->source_addr.ss_family == PF_INET6);
+
+	  struct sockaddr_in6 *in1_dst;
+	  struct sockaddr_in6 *in1_src;
+	  struct sockaddr_in6 *in2_dst;
+	  struct sockaddr_in6 *in2_src;
+
+	  in1_dst = (struct sockaddr_in6 *) a1->dest_addr->ai_addr;
+	  in1_src = (struct sockaddr_in6 *) &a1->source_addr;
+	  in2_dst = (struct sockaddr_in6 *) a2->dest_addr->ai_addr;
+	  in2_src = (struct sockaddr_in6 *) &a2->source_addr;
+
+	  int i;
+	  for (i = 0; i < 4; ++i)
+	    if (in1_dst->sin6_addr.s6_addr32[i]
+		!= in1_src->sin6_addr.s6_addr32[i]
+		|| (in2_dst->sin6_addr.s6_addr32[i]
+		    != in2_src->sin6_addr.s6_addr32[i]))
+	      break;
+
+	  if (i < 4)
+	    {
+	      bit1 = ffs (in1_dst->sin6_addr.s6_addr32[i]
+			  ^ in1_src->sin6_addr.s6_addr32[i]);
+	      bit2 = ffs (in2_dst->sin6_addr.s6_addr32[i]
+			  ^ in2_src->sin6_addr.s6_addr32[i]);
+	    }
+	}
+
+      if (bit1 > bit2)
+	return -1;
+      if (bit1 < bit2)
+	return 1;
+    }
+
+
+  /* Rule 10: Otherwise, leave the order unchanged.  */
+  return 0;
+}
+
+
 int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
 {
   int i = 0, j = 0, last_i = 0;
+  int nresults = 0;
   struct addrinfo *p = NULL, **end;
   struct gaih *g = gaih, *pg = NULL;
   struct gaih_service gaih_service, *pservice;
@@ -1000,7 +1332,11 @@ getaddrinfo (const char *name, const char *service,
 		  return -(i & GAIH_EAI);
 		}
 	      if (end)
-		while(*end) end = &((*end)->ai_next);
+		while (*end)
+		  {
+		    end = &((*end)->ai_next);
+		    ++nresults;
+		  }
 	    }
 	}
       ++g;
@@ -1008,6 +1344,46 @@ getaddrinfo (const char *name, const char *service,
 
   if (j == 0)
     return EAI_FAMILY;
+
+  if (nresults > 1)
+    {
+      /* Sort results according to RFC 3484.  */
+      struct sort_result results[nresults];
+      struct addrinfo *q;
+
+      for (i = 0, q = p; q != NULL; ++i, q = q->ai_next)
+	{
+	  results[i].dest_addr = q;
+	  results[i].got_source_addr = false;
+
+	  /* We overwrite the type with SOCK_DGRAM since we do not
+	     want connect() to connect to the other side.  If we
+	     cannot determine the source address remember this
+	     fact.  */
+	  int fd = __socket (q->ai_family, SOCK_DGRAM, IPPROTO_IP);
+	  if (fd != -1)
+	    {
+	      socklen_t sl = sizeof (results[i].source_addr);
+	      if (__connect (fd, q->ai_addr, q->ai_addrlen) == 0
+		  && __getsockname (fd,
+				    (struct sockaddr *) &results[i].source_addr,
+				    &sl) == 0)
+		results[i].got_source_addr = true;
+
+	      close_not_cancel_no_status (fd);
+	    }
+	}
+
+      /* We got all the source addresses we can get, now sort using
+	 the information.  */
+      qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+
+      /* Queue the results up as they come out of sorting.  */
+      q = p = results[0].dest_addr;
+      for (i = 1; i < nresults; ++i)
+	q = q->ai_next = results[i].dest_addr;
+      q->ai_next = NULL;
+    }
 
   if (p)
     {

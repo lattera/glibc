@@ -1,3 +1,8 @@
+2003-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Add support for destination address
+	selection according to RFC 3484.
+
 2003-11-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex_internal.h: Add forward declaration of re_dfa_t.
