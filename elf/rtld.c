@@ -115,6 +115,7 @@ static struct libname_list _dl_rtld_libname2;
 static hp_timing_t rtld_total_time;
 static hp_timing_t relocate_time;
 static hp_timing_t load_time;
+static hp_timing_t start_time;
 #endif
 
 /* Additional definitions needed by TLS initialization.  */
@@ -122,8 +123,22 @@ static hp_timing_t load_time;
 TLS_INIT_HELPER
 #endif
 
-static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
-				   hp_timing_t start_time);
+/* Before ld.so is relocated we must not access variables which need
+   relocations.  This means variables which are exported.  Variables
+   declared as static are fine.  If we can mark a variable hidden this
+   is fine, too.  The latter is impotant here.  We can avoid setting
+   up a temporary link map for ld.so if we can mark _rtld_global as
+   hidden.  */
+#ifdef HAVE_HIDDEN
+# define DONT_USE_BOOTSTRAP_MAP	1
+#endif
+
+#ifdef DONT_USE_BOOTSTRAP_MAP
+static ElfW(Addr) _dl_start_final (void *arg);
+#else
+static ElfW(Addr) _dl_start_final (void *arg,
+				   struct link_map *bootstrap_map_p);
+#endif
 
 #ifdef RTLD_START
 RTLD_START
@@ -134,8 +149,11 @@ RTLD_START
 static ElfW(Addr) __attribute_used__ internal_function
 _dl_start (void *arg)
 {
+#ifdef DONT_USE_BOOTSTRAP_MAP
+# define bootstrap_map GL(dl_rtld_map)
+#else
   struct link_map bootstrap_map;
-  hp_timing_t start_time;
+#endif
 #if !defined HAVE_BUILTIN_MEMSET || defined USE_TLS
   size_t cnt;
 #endif
@@ -160,14 +178,18 @@ _dl_start (void *arg)
   /* Partly clean the `bootstrap_map' structure up.  Don't use
      `memset' since it might not be built in or inlined and we cannot
      make function calls at this point.  Use '__builtin_memset' if we
-     know it is available.  */
-#ifdef HAVE_BUILTIN_MEMSET
+     know it is available.  We do not have to clear the memory if we
+     do not have to use the temporary bootstrap_map.  Global variables
+     are initialized to zero by default.  */
+#ifndef DONT_USE_BOOTSTRAP_MAP
+# ifdef HAVE_BUILTIN_MEMSET
   __builtin_memset (bootstrap_map.l_info, '\0', sizeof (bootstrap_map.l_info));
-#else
+# else
   for (cnt = 0;
        cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
        ++cnt)
     bootstrap_map.l_info[cnt] = 0;
+# endif
 #endif
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
@@ -178,7 +200,7 @@ _dl_start (void *arg)
   elf_get_dynamic_info (&bootstrap_map);
 
 #if USE_TLS
-# ifndef HAVE___THREAD
+# if !defined HAVE___THREAD && !defined DONT_USE_BOOTSTRAP_MAP
   /* Signal that we have not found TLS data so far.  */
   bootstrap_map.l_tls_modid = 0;
 # endif
@@ -306,7 +328,11 @@ _dl_start (void *arg)
      function, that way the compiler cannot put accesses to the GOT
      before ELF_DYNAMIC_RELOCATE.  */
   {
-    ElfW(Addr) entry = _dl_start_final (arg, &bootstrap_map, start_time);
+#ifdef DONT_USE_BOOTSTRAP_MAP
+    ElfW(Addr) entry = _dl_start_final (arg);
+#else
+    ElfW(Addr) entry = _dl_start_final (arg, &bootstrap_map);
+#endif
 
 #ifndef ELF_MACHINE_START_ADDRESS
 # define ELF_MACHINE_START_ADDRESS(map, start) (start)
@@ -326,9 +352,13 @@ _dl_start (void *arg)
 		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
 #endif
 
+#ifdef DONT_USE_BOOTSTRAP_MAP
 static ElfW(Addr)
-_dl_start_final (void *arg, struct link_map *bootstrap_map_p,
-		 hp_timing_t start_time)
+_dl_start_final (void *arg)
+#else
+static ElfW(Addr)
+_dl_start_final (void *arg, struct link_map *bootstrap_map_p)
+#endif
 {
   /* The use of `alloca' here looks ridiculous but it helps.  The goal
      is to avoid the function from being inlined.  There is no official
@@ -349,17 +379,19 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
     }
 
   /* Transfer data about ourselves to the permanent link_map structure.  */
+#ifndef DONT_USE_BOOTSTRAP_MAP
   GL(dl_rtld_map).l_addr = bootstrap_map_p->l_addr;
   GL(dl_rtld_map).l_ld = bootstrap_map_p->l_ld;
-  GL(dl_rtld_map).l_opencount = 1;
   memcpy (GL(dl_rtld_map).l_info, bootstrap_map_p->l_info,
 	  sizeof GL(dl_rtld_map).l_info);
-  _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_mach = bootstrap_map_p->l_mach;
+#endif
+  _dl_setup_hash (&GL(dl_rtld_map));
+  GL(dl_rtld_map).l_opencount = 1;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   /* Copy the TLS related data if necessary.  */
-#if USE_TLS
+#if USE_TLS && !defined DONT_USE_BOOTSTRAP_MAP
 # ifdef HAVE___THREAD
   assert (bootstrap_map_p->l_tls_modid != 0);
 # else
