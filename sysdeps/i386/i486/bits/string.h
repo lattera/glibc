@@ -1,5 +1,6 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,8 +51,8 @@
 #define _HAVE_STRING_ARCH_memcpy 1
 #define memcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (n)				      \
-		  ? __memcpy_c (dest, src, n)				      \
-		  : __memcpy_g (dest, src, n)))
+		  ? __memcpy_c ((dest), (src), (n))			      \
+		  : __memcpy_g ((dest), (src), (n))))
 #define __memcpy_c(dest, src, n) \
   ((n) == 0								      \
    ? (dest)								      \
@@ -202,15 +203,15 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 #define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
 		  ? ((n) == 1						      \
-		     ? __memset_c1 (s, c)				      \
-		     : __memset_gc (s, c, n))				      \
+		     ? __memset_c1 ((s), (c))				      \
+		     : __memset_gc ((s), (c), (n)))			      \
 		  : (__builtin_constant_p (c)				      \
 		     ? (__builtin_constant_p (n)			      \
-			? __memset_ccn (s, c, n)			      \
-			: memset (s, c, n))				      \
+			? __memset_ccn ((s), (c), (n))			      \
+			: memset ((s), (c), (n)))			      \
 		     : (__builtin_constant_p (n)			      \
-			? __memset_gcn (s, c, n)			      \
-			: memset (s, c, n)))))
+			? __memset_gcn ((s), (c), (n))			      \
+			: memset ((s), (c), (n))))))
 
 #define __memset_c1(s, c) ({ void *__s = (s);				      \
 			     *((unsigned char *) __s) = (unsigned char) (c);  \
@@ -500,7 +501,7 @@ __memrchr (__const void *__s, int __c, size_t __n)
   return __res + 1;
 }
 # ifdef __USE_GNU
-#  define memrchr(s, c, n) __memrchr (s, c, n)
+#  define memrchr(s, c, n) __memrchr ((s), (c), (n))
 # endif
 #endif
 
@@ -565,11 +566,11 @@ __strlen_g (__const char *__str)
 #define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
-		     ? __strcpy_a_small (dest, src, strlen (src) + 1)	      \
-		     : (char *) memcpy ((char *) dest,			      \
-					(__const char *) src,		      \
+		     ? __strcpy_a_small ((dest), (src), strlen (src) + 1)     \
+		     : (char *) memcpy ((char *) (dest),		      \
+					(__const char *) (src),		      \
 					strlen (src) + 1))		      \
-		  : __strcpy_g (dest, src)))
+		  : __strcpy_g ((dest), (src))))
 
 #define __strcpy_a_small(dest, src, srclen) \
   (__extension__ ({ char *__dest = (dest);				      \
@@ -651,9 +652,9 @@ __strcpy_g (char *__dest, __const char *__src)
 # define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (strlen (src) + 1 <= 8				      \
-		     ? __stpcpy_a_small (dest, src, strlen (src) + 1)	      \
-		     : __stpcpy_c (dest, src, strlen (src) + 1))	      \
-		  : __stpcpy_g (dest, src)))
+		     ? __stpcpy_a_small ((dest), (src), strlen (src) + 1)     \
+		     : __stpcpy_c ((dest), (src), strlen (src) + 1))	      \
+		  : __stpcpy_g ((dest), (src))))
 # define __stpcpy_c(dest, src, srclen) \
   ((srclen) % 4 == 0							      \
    ? __mempcpy_by4 (dest, src, srclen) - 1				      \
@@ -662,7 +663,7 @@ __strcpy_g (char *__dest, __const char *__src)
       : __mempcpy_byn (dest, src, srclen) - 1))
 
 /* In glibc itself we use this symbol for namespace reasons.  */
-# define stpcpy(dest, src) __stpcpy (dest, src)
+# define stpcpy(dest, src) __stpcpy ((dest), (src))
 
 # define __stpcpy_a_small(dest, src, srclen) \
   (__extension__ ({ union {						      \
@@ -825,10 +826,10 @@ __stpcpy_g (char *__dest, __const char *__src)
 #define strncpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? ((strlen (src) + 1 >= ((size_t) (n))		      \
-		      ? (char *) memcpy ((char *) dest,			      \
-					 (__const char *) src, n)	      \
-		      : __strncpy_cg (dest, src, strlen (src) + 1, n)))	      \
-		  : __strncpy_gg (dest, src, n)))
+		      ? (char *) memcpy ((char *) (dest),		      \
+					 (__const char *) (src), n)	      \
+		      : __strncpy_cg ((dest), (src), strlen (src) + 1, n)))   \
+		  : __strncpy_gg ((dest), (src), n)))
 #define __strncpy_cg(dest, src, srclen, n) \
   (((srclen) % 4 == 0)							      \
    ? __strncpy_by4 (dest, src, srclen, n)				      \
@@ -956,8 +957,8 @@ __strncpy_gg (char *__dest, __const char *__src, size_t __n)
 #define _HAVE_STRING_ARCH_strcat 1
 #define strcat(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
-		  ? __strcat_c (dest, src, strlen (src) + 1)		      \
-		  : __strcat_g (dest, src)))
+		  ? __strcat_c ((dest), (src), strlen (src) + 1)	      \
+		  : __strcat_g ((dest), (src))))
 
 __STRING_INLINE char *__strcat_c (char *__dest, __const char __src[],
 				  size_t __srclen);
@@ -1027,11 +1028,11 @@ __strcat_g (char *__dest, __const char *__src)
   (__extension__ ({ char *__dest = (dest);				      \
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
 		    ? (strlen (src) < ((size_t) (n))			      \
-		       ? strcat (__dest, src)				      \
-		       : (*((char *)__mempcpy (strchr (__dest, '\0'),	      \
-					       (__const char *) src, n)) = 0, \
-			   __dest))					      \
-		    : __strncat_g (__dest, src, n); }))
+		       ? strcat (__dest, (src))				      \
+		       : (*(char *)__mempcpy (strchr (__dest, '\0'),	      \
+					       (__const char *) (src),	      \
+					      (n)) = 0, __dest))	      \
+		    : __strncat_g (__dest, (src), (n)); }))
 
 __STRING_INLINE char *__strncat_g (char *__dest, __const char __src[],
 				   size_t __n);
@@ -1091,7 +1092,7 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
 		  && (sizeof ((s1)[0]) != 1 || strlen (s1) >= 4)	      \
 		  && (sizeof ((s2)[0]) != 1 || strlen (s2) >= 4)	      \
-		  ? memcmp ((__const char *) s1, (__const char *) s2,	      \
+		  ? memcmp ((__const char *) (s1), (__const char *) (s2),     \
 			    (strlen (s1) < strlen (s2)			      \
 			     ? strlen (s1) : strlen (s2)) + 1)		      \
 		  : (__builtin_constant_p (s1) && sizeof ((s1)[0]) == 1	      \
@@ -1112,7 +1113,7 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
 			   : __strcmp_gc ((__const unsigned char *) (s1),     \
 					  (__const unsigned char *) (s2),     \
 					  strlen (s2)))			      \
-			: __strcmp_gg (s1, s2)))))
+			: __strcmp_gg ((s1), (s2))))))
 
 #define __strcmp_cc(s1, s2, l) \
   (__extension__ ({ register int __result = (s1)[0] - (s2)[0];		      \
@@ -1193,10 +1194,10 @@ __strcmp_gg (__const char *__s1, __const char *__s2)
 #define _HAVE_STRING_ARCH_strncmp 1
 #define strncmp(s1, s2, n) \
   (__extension__ (__builtin_constant_p (s1) && strlen (s1) < ((size_t) (n))   \
-		  ? strcmp (s1, s2)					      \
+		  ? strcmp ((s1), (s2))					      \
 		  : (__builtin_constant_p (s2) && strlen (s2) < ((size_t) (n))\
-		     ? strcmp (s1, s2)					      \
-		     : __strncmp_g (s1, s2, n))))
+		     ? strcmp ((s1), (s2))				      \
+		     : __strncmp_g ((s1), (s2), (n)))))
 
 __STRING_INLINE int __strncmp_g (__const char *__s1, __const char *__s2,
 				 size_t __n);
@@ -1239,9 +1240,9 @@ __strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
 #define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? ((c) == '\0'					      \
-		     ? (char *) __rawmemchr (s, c)			      \
-		     : __strchr_c (s, ((c) & 0xff) << 8))		      \
-		  : __strchr_g (s, c)))
+		     ? (char *) __rawmemchr ((s), (c))			      \
+		     : __strchr_c ((s), ((c) & 0xff) << 8))		      \
+		  : __strchr_g ((s), (c))))
 
 __STRING_INLINE char *__strchr_c (__const char *__s, int __c);
 
@@ -1298,9 +1299,9 @@ __strchr_g (__const char *__s, int __c)
 #define __strchrnul(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? ((c) == '\0'					      \
-		     ? (char *) __rawmemchr (s, c)			      \
-		     : __strchrnul_c (s, ((c) & 0xff) << 8))		      \
-		  : __strchrnul_g (s, c)))
+		     ? (char *) __rawmemchr ((s), c)			      \
+		     : __strchrnul_c ((s), ((c) & 0xff) << 8))		      \
+		  : __strchrnul_g ((s), c)))
 
 __STRING_INLINE char *__strchrnul_c (__const char *__s, int __c);
 
@@ -1351,7 +1352,7 @@ __strchrnul_g (__const char *__s, int __c)
   return __res;
 }
 #ifdef __USE_GNU
-# define strchrnul(s, c) __strchrnul (s, c)
+# define strchrnul(s, c) __strchrnul ((s), (c))
 #endif
 
 
@@ -1360,8 +1361,8 @@ __strchrnul_g (__const char *__s, int __c)
 # define _HAVE_STRING_ARCH_index 1
 # define index(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
-		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
-		  : __strchr_g (s, c)))
+		  ? __strchr_c ((s), ((c) & 0xff) << 8)			      \
+		  : __strchr_g ((s), (c))))
 #endif
 
 
@@ -1369,8 +1370,8 @@ __strchrnul_g (__const char *__s, int __c)
 #define _HAVE_STRING_ARCH_strrchr 1
 #define strrchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
-		  ? __strrchr_c (s, ((c) & 0xff) << 8)			      \
-		  : __strrchr_g (s, c)))
+		  ? __strrchr_c ((s), ((c) & 0xff) << 8)		      \
+		  : __strrchr_g ((s), (c))))
 
 #ifdef __i686__
 __STRING_INLINE char *__strrchr_c (__const char *__s, int __c);
@@ -1474,8 +1475,8 @@ __strrchr_g (__const char *__s, int __c)
 # define _HAVE_STRING_ARCH_rindex 1
 # define rindex(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
-		  ? __strrchr_c (s, ((c) & 0xff) << 8)			      \
-		  : __strrchr_g (s, c)))
+		  ? __strrchr_c ((s), ((c) & 0xff) << 8)		      \
+		  : __strrchr_g ((s), (c))))
 #endif
 
 
@@ -1487,9 +1488,9 @@ __strrchr_g (__const char *__s, int __c)
 		  ? ((reject)[0] == '\0'				      \
 		     ? strlen (s)					      \
 		     : ((reject)[1] == '\0'				      \
-			? __strcspn_c1 (s, (((reject)[0] << 8) & 0xff00))     \
-			: __strcspn_cg (s, reject, strlen (reject))))	      \
-		  : __strcspn_g (s, reject)))
+			? __strcspn_c1 ((s), (((reject)[0] << 8) & 0xff00))   \
+			: __strcspn_cg ((s), (reject), strlen (reject))))     \
+		  : __strcspn_g ((s), (reject))))
 
 __STRING_INLINE size_t __strcspn_c1 (__const char *__s, int __reject);
 
@@ -1608,9 +1609,9 @@ __strcspn_g (__const char *__s, __const char *__reject)
 		  ? ((accept)[0] == '\0'				      \
 		     ? ((void) (s), 0)					      \
 		     : ((accept)[1] == '\0'				      \
-			? __strspn_c1 (s, (((accept)[0] << 8 ) & 0xff00))     \
-			: __strspn_cg (s, accept, strlen (accept))))	      \
-		  : __strspn_g (s, accept)))
+			? __strspn_c1 ((s), (((accept)[0] << 8 ) & 0xff00))   \
+			: __strspn_cg ((s), (accept), strlen (accept))))      \
+		  : __strspn_g ((s), (accept))))
 
 #ifndef _FORCE_INLINES
 __STRING_INLINE size_t __strspn_c1 (__const char *__s, int __accept);
@@ -1727,9 +1728,9 @@ __strspn_g (__const char *__s, __const char *__accept)
 		  ? ((accept)[0] == '\0'				      \
 		     ? ((void) (s), NULL)				      \
 		     : ((accept)[1] == '\0'				      \
-			? strchr (s, (accept)[0])			      \
-			: __strpbrk_cg (s, accept, strlen (accept))))	      \
-		  : __strpbrk_g (s, accept)))
+			? strchr ((s), (accept)[0])			      \
+			: __strpbrk_cg ((s), (accept), strlen (accept))))     \
+		  : __strpbrk_g ((s), (accept))))
 
 __STRING_INLINE char *__strpbrk_cg (__const char *__s, __const char __accept[],
 				    size_t __accept_len);
@@ -1832,11 +1833,12 @@ __strpbrk_g (__const char *__s, __const char *__accept)
 #define strstr(haystack, needle) \
   (__extension__ (__builtin_constant_p (needle) && sizeof ((needle)[0]) == 1  \
 		  ? ((needle)[0] == '\0'				      \
-		     ? haystack						      \
+		     ? (haystack)					      \
 		     : ((needle)[1] == '\0'				      \
-			? strchr (haystack, (needle)[0])		      \
-			: __strstr_cg (haystack, needle, strlen (needle))))   \
-		  : __strstr_g (haystack, needle)))
+			? strchr ((haystack), (needle)[0])		      \
+			: __strstr_cg ((haystack), (needle),		      \
+				       strlen (needle))))		      \
+		  : __strstr_g ((haystack), (needle))))
 
 /* Please note that this function need not handle NEEDLEs with a
    length shorter than two.  */
