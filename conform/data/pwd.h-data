@@ -17,7 +17,7 @@ function int getpwnam_r (const char*, struct passwd*, char*, size_t, struct pass
 function int getpwuid_r (uid_t, struct passwd*, char*, size_t, struct passwd**)
 function void endpwent (void)
 function {struct passwd*} getpwent (void)
-funciton void setpwent (void)
+function void setpwent (void)
 
 allow pw_*
 allow *_t

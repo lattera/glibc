@@ -54,6 +54,7 @@ $CFLAGS{"XOPEN2K"} = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 
 # Some headers need a bit more attention.
 $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+$mustprepend{'sched.h'} = "#include <sys/types.h>\n";
 $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 
 # Make a hash table from this information.
@@ -341,7 +342,47 @@ while ($#headers >= 0) {
       close (TESTFILE);
 
       compiletest ($fnamebase, "Testing for type of member $member",
-		   "Member \"$member\" does not have the correct type.", $res);
+		   "Member \"$member\" does not have the correct type.",
+		   $res, 0);
+    } elsif (/^optional-element *({([^}]*)}|([^{ ]*)) *({([^}]*)}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
+      my($struct) = "$2$3";
+      my($type) = "$5$6";
+      my($member) = "$7";
+      my($rest) = "$8";
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $member;
+
+      # Generate a program to test for the availability of this member.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "$struct a;\n";
+      print TESTFILE "$struct b;\n";
+      print TESTFILE "extern void xyzzy (__typeof__ (&b.$member), __typeof__ (&a.$member), unsigned);\n";
+      print TESTFILE "void foobarbaz (void) {\n";
+      print TESTFILE "  xyzzy (&a.$member, &b.$member, sizeof (a.$member));\n";
+      print TESTFILE "}\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Testing for member $member",
+			  "NOT AVAILABLE.", $res, 1);
+
+      if ($res == 0 || $missing != 0) {
+	# Test the types of the members.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	print TESTFILE "$struct a;\n";
+	print TESTFILE "extern $type b$rest;\n";
+	print TESTFILE "extern __typeof__ (a.$member) b;\n";
+	close (TESTFILE);
+
+	compiletest ($fnamebase, "Testing for type of member $member",
+		     "Member \"$member\" does not have the correct type.",
+		     $res, 0);
+      }
     } elsif (/^optional-constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_]*)/) {
       my($const) = $1;
       my($op) = $2;

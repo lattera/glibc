@@ -39,7 +39,7 @@ macro IN6ADDR_LOOPBACK_INIT
 
 type {struct ipv6_mreq}
 
-element {struct ipv6_mreq} {struct int6_addr} ipv6mr_multiaddr
+element {struct ipv6_mreq} {struct in6_addr} ipv6mr_multiaddr
 element {struct ipv6_mreq} {unsigned int} ipv6mr_interface
 
 macro IPPROTO_IP

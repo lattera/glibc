@@ -1,14 +1,14 @@
 #ifndef ISO
 type {struct sched_param}
 element {struct sched_param} int sched_priority
-element {struct sched_param} int sched_ss_low_priority
-element {struct sched_param} {struct timespec} sched_ss_repl_period
-element {struct sched_param} {struct timespec} sched_ss_init_budget
-element {struct sched_param} int sched_ss_max_repl
+optional-element {struct sched_param} int sched_ss_low_priority
+optional-element {struct sched_param} {struct timespec} sched_ss_repl_period
+optional-element {struct sched_param} {struct timespec} sched_ss_init_budget
+optional-element {struct sched_param} int sched_ss_max_repl
 
 constant SCHED_FIFO
 constant SCHED_RR
-constant SCHED_SPORADIC
+optional-constant SCHED_SPORADIC
 constant SCHED_OTHER
 
 function int sched_get_priority_max (int)

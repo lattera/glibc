@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -107,7 +107,7 @@ extern struct passwd *getpwnam (__const char *__name) __THROW;
    other reentrant functions so the chances are good this is what the
    POSIX people would choose.  */
 
-# if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+# if defined __USE_SVID || defined __USE_MISC
 extern int getpwent_r (struct passwd *__restrict __resultbuf,
 		       char *__restrict __buffer, size_t __buflen,
 		       struct passwd **__restrict __result) __THROW;
