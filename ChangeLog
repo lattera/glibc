@@ -1,3 +1,13 @@
+2005-02-12  Simon Josefsson  <jas@extundo.com >
+
+	* iconvme.h: New file, extracted from toutf8.c but improved.
+	* iconvme.c: New file.
+	* toutf8.c: Include stringprep.h first, to make the compiler check
+	that stringprep.h is standalone.  Improve comments.  Replace
+	#include of errno.h and sys/param.h with iconvme.h.  Don't define
+	ICONV_CONST.
+	(stringprep_convert): Rewrite to use iconvme.h.
+
 2005-02-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Set *h_errnop to
