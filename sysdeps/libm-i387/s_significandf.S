@@ -10,7 +10,7 @@ RCSID("$NetBSD: s_significandf.S,v 1.3 1995/05/09 00:24:07 jtc Exp $")
 ENTRY(__significandf)
 	flds	4(%esp)
 	fxtract
-	fstpl	%st(1)
+	fstp	%st(1)
 	ret
 END (__significandf)
 weak_alias (__significandf, significandf)

@@ -11,7 +11,7 @@ ENTRY(__ilogb)
 	fldl	4(%esp)
 	fxtract
 	pushl	%eax
-	fstpl	%st
+	fstp	%st
 
 	fistpl	(%esp)
 	fwait

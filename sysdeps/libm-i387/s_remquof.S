@@ -13,7 +13,7 @@ ENTRY(__remquof)
 	fstsw	%ax
 	sahf
 	jp	1b
-	fstpl	%st(1)
+	fstp	%st(1)
 	/* Compute the congruent of the quotient.  */
 	movl	%eax, %ecx
 	shrl	$8, %eax

@@ -1,12 +1,27 @@
-1998-10-30  Geoff Keating  <geoffk@ozemail.com.au> 
- 
-	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Really correct  
-	_llseek. 
- 
-1998-10-30  Geoff Keating  <geoffk@ozemail.com.au> 
- 
-	* math/libm-test.c: Loosen deltas for sin(0.9)^2+cos(0.9)^2. 
- 
+1998-10-30 11:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_fmod.S: Remove invalid operand size suffix.
+	* sysdeps/libm-i387/e_fmodf.S: Likewise.
+	* sysdeps/libm-i387/e_fmodl.S: Likewise.
+	* sysdeps/libm-i387/s_ilogb.S: Likewise.
+	* sysdeps/libm-i387/s_ilogbf.S: Likewise.
+	* sysdeps/libm-i387/s_logb.S: Likewise.
+	* sysdeps/libm-i387/s_logbf.S: Likewise.
+	* sysdeps/libm-i387/s_remquo.S: Likewise.
+	* sysdeps/libm-i387/s_remquof.S: Likewise.
+	* sysdeps/libm-i387/s_remquol.S: Likewise.
+	* sysdeps/libm-i387/s_significand.S: Likewise.
+	* sysdeps/libm-i387/s_significandf.S: Likewise.
+
+1998-10-30  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Really correct
+	_llseek.
+
+1998-10-30  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* math/libm-test.c: Loosen deltas for sin(0.9)^2+cos(0.9)^2.
+
 1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfprintf.c (vfprintf): Fix the remaining premature
