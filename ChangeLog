@@ -1,3 +1,8 @@
+Fri Nov 13 11:57:21 1998  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INLINE_SYSCALL): Remove
+	d0 from clobber list.
+
 1998-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/netinet/in.h: Add a few more IPPROTO_* macros.
