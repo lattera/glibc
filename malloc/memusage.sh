@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -20,6 +20,7 @@
 
 memusageso=@SLIBDIR@/libmemusage.so
 memusagestat=@BINDIR@/memusagestat
+TEXTDOMAIN=libc
 
 # Print usage message.
 do_usage() {
@@ -66,10 +67,12 @@ Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
 
 do_version() {
   echo 'memusage (GNU libc) @VERSION@'
-  echo $"Copyright (C) 2003 Free Software Foundation, Inc.
+  printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-Written by Ulrich Drepper."
+" "2004"
+  printf $"Written by %s.
+" "Ulrich Drepper"
   exit 0
 }
 
