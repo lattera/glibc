@@ -99,11 +99,10 @@ __i686.get_pc_thunk.reg:						      \
 #   define SYSCALL_ERROR_HANDLER					      \
 0:SETUP_PIC_REG (cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
+  movl errno@gotntpoff(%ecx), %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
-  movl %gs:0, %eax;							      \
-  subl errno@gottpoff(%ecx), %eax;					      \
-  movl %edx, (%eax);							      \
+  movl %edx, %gs:0(%ecx);						      \
   orl $-1, %eax;							      \
   jmp L(pseudo_end);
 #  else
@@ -127,7 +126,7 @@ __i686.get_pc_thunk.reg:						      \
 #  endif
 # else
 #  define SYSCALL_ERROR_HANDLER						      \
-0:define SETUP_PIC_REG(cx);						      \
+0:SETUP_PIC_REG(cx);						      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
