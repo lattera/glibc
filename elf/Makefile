@@ -188,7 +188,7 @@ $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 	| $(AWK) -f gen-trusted-dirs.awk > ${@:st=T};
 	$(move-if-change) ${@:st=T} ${@:st=h}
 	touch $@
-CPPFLAGS-dl-load.c = -I$(objpfx).
+CPPFLAGS-dl-load.c = -I$(objpfx). -I$(csu-objpfx).
 
 ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)

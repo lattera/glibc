@@ -30,6 +30,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "dynamic-link.h"
+#include <abi-tag.h>
+#include <dl-osinfo.h>
 
 #include <dl-dst.h>
 
@@ -110,6 +112,8 @@ struct filebuf
 };
 
 size_t _dl_pagesize;
+
+unsigned int _dl_osversion;
 
 int _dl_clktck;
 
@@ -1061,12 +1065,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_FILES, 0))
     _dl_debug_printf ("  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n"
 		      "    entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
-		      sizeof (void *) * 2, (unsigned long int) l->l_ld,
-		      sizeof (void *) * 2, (unsigned long int) l->l_addr,
-		      sizeof (void *) * 2, maplength,
-		      sizeof (void *) * 2, (unsigned long int) l->l_entry,
-		      sizeof (void *) * 2, (unsigned long int) l->l_phdr,
-		      sizeof (void *) * 2, l->l_phnum);
+		      (int) sizeof (void *) * 2, (unsigned long int) l->l_ld,
+		      (int) sizeof (void *) * 2, (unsigned long int) l->l_addr,
+		      (int) sizeof (void *) * 2, maplength,
+		      (int) sizeof (void *) * 2, (unsigned long int) l->l_entry,
+		      (int) sizeof (void *) * 2, (unsigned long int) l->l_phdr,
+		      (int) sizeof (void *) * 2, l->l_phnum);
 
   elf_get_dynamic_info (l);
 
@@ -1213,6 +1217,10 @@ open_verify (const char *name, struct filebuf *fbp)
     [EI_OSABI] = ELFOSABI_SYSV,
     [EI_ABIVERSION] = 0
   };
+  static const struct {
+    ElfW(Word) vendorlen, datalen, type;
+    char vendor [4];
+  } expected_note = { 4, 16, 1, "GNU" };
   int fd;
 
   /* Open the file.  We always open files read-only.  */
@@ -1220,6 +1228,10 @@ open_verify (const char *name, struct filebuf *fbp)
   if (fd != -1)
     {
       ElfW(Ehdr) *ehdr;
+      ElfW(Phdr) *phdr, *ph;
+      ElfW(Word) *abi_note, abi_note_buf[8];
+      unsigned int osversion;
+      size_t maplength;
 
       /* We successfully openened the file.  Now verify it is a file
 	 we can use.  */
@@ -1287,12 +1299,7 @@ open_verify (const char *name, struct filebuf *fbp)
 	lose (0, fd, name, NULL, NULL,
 	      N_("ELF file version does not match current one"));
       if (! __builtin_expect (elf_machine_matches_host (ehdr), 1))
-	{
-	close_and_out:
-	  __close (fd);
-	  __set_errno (ENOENT);
-	  fd = -1;
-	}
+	goto close_and_out;
       else if (__builtin_expect (ehdr->e_phentsize, sizeof (ElfW(Phdr)))
 	       != sizeof (ElfW(Phdr)))
 	lose (0, fd, name, NULL, NULL,
@@ -1301,6 +1308,50 @@ open_verify (const char *name, struct filebuf *fbp)
 	       && __builtin_expect (ehdr->e_type, ET_EXEC) != ET_EXEC)
 	lose (0, fd, name, NULL, NULL,
 	      N_("only ET_DYN and ET_EXEC can be loaded"));
+
+      maplength = ehdr->e_phnum * sizeof (ElfW(Phdr));
+      if (ehdr->e_phoff + maplength <= fbp->len)
+	phdr = (void *) (fbp->buf + ehdr->e_phoff);
+      else
+	{
+	  phdr = alloca (maplength);
+	  __lseek (fd, SEEK_SET, ehdr->e_phoff);
+	  if (__libc_read (fd, (void *) phdr, maplength) != maplength)
+	    lose (errno, fd, name, NULL, NULL, N_("cannot read file data"));
+	}
+
+      /* Check .note.ABI-tag if present.  */
+      for (ph = phdr; ph < &phdr[ehdr->e_phnum]; ++ph)
+	if (ph->p_type == PT_NOTE && ph->p_filesz == 32 && ph->p_align >= 4)
+	  {
+	    if (ph->p_offset + 32 <= fbp->len)
+	      abi_note = (void *) (fbp->buf + ph->p_offset);
+	    else
+	      {
+		__lseek (fd, SEEK_SET, ph->p_offset);
+		if (__libc_read (fd, (void *) abi_note_buf, 32) != 32)
+		  lose (errno, fd, name, NULL, NULL,
+			N_("cannot read file data"));
+		abi_note = abi_note_buf;
+	      }
+
+	    if (memcmp (abi_note, &expected_note, sizeof (expected_note)))
+	      continue;
+
+	    osversion = (abi_note [5] & 0xff) * 65536
+			+ (abi_note [6] & 0xff) * 256
+			+ (abi_note [7] & 0xff);
+	    if (abi_note [4] != __ABI_TAG_OS
+		|| (_dl_osversion && _dl_osversion < osversion))
+	      {
+	      close_and_out:
+		__close (fd);
+		__set_errno (ENOENT);
+		fd = -1;
+	      }
+
+	    break;
+	  }
     }
 
   return fd;

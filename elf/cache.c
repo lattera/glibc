@@ -39,6 +39,7 @@ struct cache_entry
   char *lib;			/* Library name.  */
   char *path;			/* Path to find library.  */
   int flags;			/* Flags to indicate kind of library.  */
+  unsigned int osversion;	/* Required OS version.  */
   uint64_t hwcap;		/* Important hardware capabilities.  */
   int bits_hwcap;		/* Number of bits set in hwcap.  */
   struct cache_entry *next;	/* Next entry in list.  */
@@ -52,7 +53,8 @@ static const char *flag_descr[] =
 
 /* Print a single entry.  */
 static void
-print_entry (const char *lib, int flag, uint64_t hwcap, const char *key)
+print_entry (const char *lib, int flag, unsigned int osversion,
+	     uint64_t hwcap, const char *key)
 {
   printf ("\t%s (", lib);
   switch (flag & FLAG_TYPE_MASK)
@@ -61,7 +63,7 @@ print_entry (const char *lib, int flag, uint64_t hwcap, const char *key)
     case FLAG_ELF:
     case FLAG_ELF_LIBC5:
     case FLAG_ELF_LIBC6:
-      fputs (flag_descr [flag & FLAG_TYPE_MASK], stdout);
+      fputs (flag_descr[flag & FLAG_TYPE_MASK], stdout);
       break;
     default:
       fputs ("unknown", stdout);
@@ -85,6 +87,23 @@ print_entry (const char *lib, int flag, uint64_t hwcap, const char *key)
     }
   if (hwcap != 0)
     printf (", hwcap: 0x%" PRIx64, hwcap);
+  if (osversion != 0)
+    {
+      static const char *const abi_tag_os[] =
+      {
+	[0] = "Linux",
+	[1] = "Hurd",
+	[2] = "Solaris",
+	[3] = "Unknown OS"
+      };
+      unsigned int os = osversion >> 24;
+
+      printf (", OS ABI: %s %d.%d.%d",
+	      abi_tag_os[os > 3 ? 3 : os],
+	      (osversion >> 16) & 0xff,
+	      (osversion >> 8) & 0xff,
+	      osversion & 0xff);
+    }
   printf (") => %s\n", key);
 }
 
@@ -139,7 +158,8 @@ print_cache (const char *cache_name)
   else
     {
       size_t offset = ALIGN_CACHE (sizeof (struct cache_file)
-				   + cache->nlibs * sizeof (struct file_entry));
+				   + (cache->nlibs
+				      * sizeof (struct file_entry)));
       /* This is where the strings start.  */
       cache_data = (const char *) &cache->libs[cache->nlibs];
 
@@ -150,9 +170,10 @@ print_cache (const char *cache_name)
 
 	  cache_new = (struct cache_file_new *) ((void *)cache + offset);
 
-	  if (!memcmp (cache_new->magic, CACHEMAGIC_NEW, sizeof CACHEMAGIC_NEW - 1)
-	      && !memcmp (cache_new->version, CACHE_VERSION,
-			  sizeof CACHE_VERSION - 1))
+	  if (memcmp (cache_new->magic, CACHEMAGIC_NEW,
+		      sizeof CACHEMAGIC_NEW - 1) == 0
+	      && memcmp (cache_new->version, CACHE_VERSION,
+			 sizeof CACHE_VERSION - 1) == 0)
 	    {
 	      cache_data = (const char *) cache_new;
 	      format = 1;
@@ -167,17 +188,19 @@ print_cache (const char *cache_name)
       /* Print everything.  */
       for (i = 0; i < cache->nlibs; i++)
 	print_entry (cache_data + cache->libs[i].key,
-		     cache->libs[i].flags, 0,
+		     cache->libs[i].flags, 0, 0,
 		     cache_data + cache->libs[i].value);
     }
   else if (format == 1)
     {
-      printf (_("%d libs found in cache `%s'\n"), cache_new->nlibs, cache_name);
+      printf (_("%d libs found in cache `%s'\n"),
+	      cache_new->nlibs, cache_name);
 
       /* Print everything.  */
       for (i = 0; i < cache_new->nlibs; i++)
 	print_entry (cache_data + cache_new->libs[i].key,
 		     cache_new->libs[i].flags,
+		     cache_new->libs[i].osversion,
 		     cache_new->libs[i].hwcap,
 		     cache_data + cache_new->libs[i].value);
     }
@@ -216,6 +239,10 @@ int compare (const struct cache_entry *e1, const struct cache_entry *e2)
       else if (e2->hwcap > e1->hwcap)
 	return 1;
       else if (e2->hwcap < e1->hwcap)
+	return -1;
+      if (e2->osversion > e1->osversion)
+	return 1;
+      if (e2->osversion < e1->osversion)
 	return -1;
     }
   return res;
@@ -280,12 +307,15 @@ save_cache (const char *cache_name)
       /* And the list of all entries in the new format.  */
       file_entries_new_size = sizeof (struct cache_file_new)
 	+ cache_entry_count * sizeof (struct file_entry_new);
-      file_entries_new = (struct cache_file_new *) xmalloc (file_entries_new_size);
+      file_entries_new =
+	(struct cache_file_new *) xmalloc (file_entries_new_size);
 
       /* Fill in the header.  */
       memset (file_entries_new, 0, sizeof (struct cache_file_new));
-      memcpy (file_entries_new->magic, CACHEMAGIC_NEW, sizeof CACHEMAGIC_NEW - 1);
-      memcpy (file_entries_new->version, CACHE_VERSION, sizeof CACHE_VERSION - 1);
+      memcpy (file_entries_new->magic, CACHEMAGIC_NEW,
+	      sizeof CACHEMAGIC_NEW - 1);
+      memcpy (file_entries_new->version, CACHE_VERSION,
+	      sizeof CACHE_VERSION - 1);
 
       file_entries_new->nlibs = cache_entry_count;
       file_entries_new->len_strings = total_strlen;
@@ -319,9 +349,9 @@ save_cache (const char *cache_name)
 	     always begins at the beginning of the the new cache
 	     struct.  */
 	  file_entries_new->libs[idx_new].flags = entry->flags;
+	  file_entries_new->libs[idx_new].osversion = entry->osversion;
 	  file_entries_new->libs[idx_new].hwcap = entry->hwcap;
 	  file_entries_new->libs[idx_new].key = str_offset;
-	  file_entries_new->libs[idx_new].__unused = 0;
 	}
       len = strlen (entry->lib);
       str = stpcpy (str, entry->lib);
@@ -363,7 +393,8 @@ save_cache (const char *cache_name)
   /* Write contents.  */
   if (opt_format != 2)
     {
-      if (write (fd, file_entries, file_entries_size) != (ssize_t)file_entries_size)
+      if (write (fd, file_entries, file_entries_size)
+	  != (ssize_t)file_entries_size)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
     }
   if (opt_format != 0)
@@ -371,7 +402,7 @@ save_cache (const char *cache_name)
       /* Align cache.  */
       if (opt_format != 2)
 	{
-	  char zero [pad];
+	  char zero[pad];
 	  if (write (fd, zero, pad) != (ssize_t)pad)
 	    error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
 	}
@@ -414,7 +445,7 @@ save_cache (const char *cache_name)
 /* Add one library to the cache.  */
 void
 add_to_cache (const char *path, const char *lib, int flags,
-	      uint64_t hwcap)
+	      unsigned int osversion, uint64_t hwcap)
 {
   struct cache_entry *new_entry, *ptr, *prev;
   char *full_path;
@@ -430,6 +461,7 @@ add_to_cache (const char *path, const char *lib, int flags,
   new_entry->lib = xstrdup (lib);
   new_entry->path = full_path;
   new_entry->flags = flags;
+  new_entry->osversion = osversion;
   new_entry->hwcap = hwcap;
   new_entry->bits_hwcap = 0;
 

@@ -1,7 +1,7 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,31 +20,6 @@
 
 #ifndef _DL_LIBRECON_H
 #define _DL_LIBRECON_H	1
-
-#define DISTINGUISH_LIB_VERSIONS \
-  do									      \
-    {									      \
-      /* We have to find out whether the binary is linked against	      \
-	 libc 5 or glibc.  We do this by looking at all the DT_NEEDED	      \
-	 entries.  If one is libc.so.5 this is a libc 5 linked binary.  */    \
-      if (_dl_loaded->l_info[DT_NEEDED])				      \
-	{								      \
-	  /* We have dependencies.  */					      \
-	  const ElfW(Dyn) *d;						      \
-	  const char *strtab;						      \
-									      \
-	  strtab = (const char *) D_PTR (_dl_loaded, l_info[DT_STRTAB]);      \
-									      \
-	  for (d = _dl_loaded->l_ld; d->d_tag != DT_NULL; ++d)		      \
-	    if (d->d_tag == DT_NEEDED					      \
-		&& strcmp (strtab + d->d_un.d_val, "libc.so.5") == 0)	      \
-	      break;							      \
-									      \
-	  /* We print a `5' or `6' depending on the outcome.  */	      \
-	  _dl_printf (d->d_tag != DT_NULL ? "5\n" : "6\n");		      \
-	}								      \
-    }									      \
-  while (0)
 
 /* Recognizing extra environment variables.  */
 #define EXTRA_LD_ENVVARS \
@@ -69,16 +44,6 @@
 	if (osversion)							      \
 	  _dl_osversion = osversion;					      \
 	break;								      \
-      }									      \
-									      \
-  case 15:								      \
-    if (memcmp (&envline[3], "LIBRARY_VERSION", 15) == 0)		      \
-      {									      \
-	_dl_correct_cache_id = envline[19] == '5' ? 2 : 3;		      \
-	break;								      \
       }
-
-/* Extra unsecure variables.  */
-#define EXTRA_UNSECURE_ENVVARS "LD_AOUT_LIBRARY_PATH", "LD_AOUT_PRELOAD"
 
 #endif /* dl-librecon.h */

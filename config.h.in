@@ -93,6 +93,9 @@
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
 
+/* Override abi-tags ABI version if necessary.  */
+#undef  __ABI_TAG_VERSION
+
 /* An extension in gcc 2.96 and up allows the subtraction of two
    local labels.  */
 #undef	HAVE_SUBTRACT_LOCAL_LABELS

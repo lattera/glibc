@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -20,27 +20,28 @@
 
 
 int process_elf32_file (const char *file_name, const char *lib, int *flag,
-			char **soname, void *file_contents,
-			size_t file_length);
+			unsigned int *osversion, char **soname,
+			void *file_contents, size_t file_length);
 int process_elf64_file (const char *file_name, const char *lib, int *flag,
-			char **soname, void *file_contents,
-			size_t file_length);
+			unsigned int *osversion, char **soname,
+			void *file_contents, size_t file_length);
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  char **soname, void *file_contents, size_t file_length)
+		  unsigned int *osversion, char **soname, void *file_contents,
+		  size_t file_length)
 {
   ElfW(Ehdr) *elf_header = (ElfW(Ehdr) *) file_contents;
   int ret;
 
   if (elf_header->e_ident [EI_CLASS] == ELFCLASS32)
-    return process_elf32_file (file_name, lib, flag, soname, file_contents,
-			       file_length);
+    return process_elf32_file (file_name, lib, flag, osversion, soname,
+			       file_contents, file_length);
   else
     {
-      ret = process_elf64_file (file_name, lib, flag, soname, file_contents,
-				file_length);
+      ret = process_elf64_file (file_name, lib, flag, osversion, soname,
+				file_contents, file_length);
       /* Sparc 64bit libraries are always libc.so.6+.  */
       if (!ret)
 	*flag = FLAG_SPARC_LIB64|FLAG_ELF_LIBC6;

@@ -168,12 +168,17 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	$(make-target-directory)
 	rm -f $@.new
 	sed -e 's/#.*$$//' -e '/^[	]*$$/d' $< | \
-	while read conf tag; do \
+	while read conf tagos tagver; do \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		     : "$$conf"` != 0 || continue; \
-	  echo "$$tag" | \
-	  sed -e 's/[^0-9xXa-fA-F]/ /g' -e 's/ *$$//' \
-	      -e 's/ /,/g' -e 's/^ */#define ABI_TAG /' > $@.new; \
+	  ( echo "$$tagos" | \
+	    sed -e 's/[^0-9xXa-fA-F 	]//' \
+		-e 's/^/#define __ABI_TAG_OS /'; \
+	    echo "#ifndef __ABI_TAG_VERSION"; \
+	    echo "$$tagver" | \
+	    sed -e 's/[^0-9xXa-fA-F]/ /g' -e 's/ *$$//' \
+	      -e 's/ /,/g' -e 's/^/# define __ABI_TAG_VERSION /'; \
+	    echo "#endif" ) > $@.new; \
 	done
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi

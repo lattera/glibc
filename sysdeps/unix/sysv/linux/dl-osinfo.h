@@ -102,5 +102,7 @@ dl_fatal (const char *str)
 	if (version < __LINUX_KERNEL_VERSION)				      \
 	  /* Not sufficent.  */						      \
 	  FATAL ("FATAL: kernel too old\n");				      \
+									      \
+	_dl_osversion = version;					      \
       }									      \
   } while (0)

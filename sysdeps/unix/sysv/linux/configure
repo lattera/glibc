@@ -87,6 +87,7 @@ if test -n "$minimum_kernel"; then
   echo $ac_n "checking for kernel header at least $minimum_kernel""... $ac_c" 1>&6
 echo "configure:89: checking for kernel header at least $minimum_kernel" >&5
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
+  abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat > conftest.$ac_ext <<EOF
 #line 92 "configure"
 #include "confdefs.h"
@@ -109,6 +110,10 @@ rm -f conftest*
   if test "$libc_minimum_kernel" = ok; then
     cat >> confdefs.h <<EOF
 #define __LINUX_KERNEL_VERSION $decnum
+EOF
+
+    cat >> confdefs.h <<EOF
+#define __ABI_TAG_VERSION $abinum
 EOF
 
   else

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -41,7 +41,8 @@ do								\
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  char **soname, void *file_contents, size_t file_length)
+		  unsigned int *osversion, char **soname, void *file_contents,
+		  size_t file_length)
 {
   int i;
   unsigned int j;
@@ -56,6 +57,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   char *dynamic_strings;  
 
   elf_header = (ElfW(Ehdr) *) file_contents;
+  *osversion = 0;
 
   if (elf_header->e_ident [EI_CLASS] != ElfW (CLASS))
     {
@@ -110,6 +112,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	  dynamic_addr = segment->p_offset;
 	  dynamic_size = segment->p_filesz;
 	  break;
+
 	case PT_INTERP:
 	  program_interpreter = (char *) (file_contents + segment->p_offset);
 	  check_ptr (program_interpreter);
@@ -123,6 +126,21 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 		break;
 	      }
 	  break;
+
+	case PT_NOTE:
+	  if (!*osversion && segment->p_filesz == 32 && segment->p_align >= 4)
+	    {
+	      ElfW(Word) *abi_note = (ElfW(Word) *) (file_contents
+						     + segment->p_offset);
+	      if (abi_note [0] == 4 && abi_note [1] == 16 && abi_note [2] == 1
+		  && memcmp (abi_note + 3, "GNU", 4) == 0)
+		*osversion = (abi_note [4] << 24) |
+			     ((abi_note [5] & 0xff) << 16) |
+			     ((abi_note [6] & 0xff) << 8) |
+			     (abi_note [7] & 0xff);
+	    }
+	  break;
+
 	default:
 	  break;
 	}

@@ -74,6 +74,7 @@ if test -n "$minimum_kernel"; then
   AC_MSG_CHECKING(for kernel header at least $minimum_kernel)
 changequote(,)dnl
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
+  abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
 changequote([,])dnl
   AC_EGREP_CPP([eat flaming death], [#include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -82,6 +83,7 @@ eat flaming death
   AC_MSG_RESULT($libc_minimum_kernel)
   if test "$libc_minimum_kernel" = ok; then
     AC_DEFINE_UNQUOTED(__LINUX_KERNEL_VERSION, $decnum)
+    AC_DEFINE_UNQUOTED(__ABI_TAG_VERSION, $abinum)
   else
     AC_MSG_ERROR([*** The available kernel headers are older than the requested
 *** compatible kernel version])

@@ -39,17 +39,17 @@ extern void init_cache (void);
 extern void save_cache (const char *cache_name);
 
 extern void add_to_cache (const char *path, const char *lib, int flags,
-			  uint64_t hwcap);
+			  unsigned int osversion, uint64_t hwcap);
 
 /* Declared in readlib.c.  */
 extern int process_file (const char *real_file_name, const char *file_name,
-			 const char *lib, int *flag, char **soname,
-			 int is_link);
+			 const char *lib, int *flag, unsigned int *osversion,
+			 char **soname, int is_link);
 
 /* Declared in readelflib.c.  */
 extern int process_elf_file (const char *file_name, const char *lib, int *flag,
-			     char **soname, void *file_contents,
-			     size_t file_length);
+			     unsigned int *osversion, char **soname,
+			     void *file_contents, size_t file_length);
 
 /* Declared in chroot_canon.c.  */
 extern char *chroot_canon (const char *chroot, const char *name);

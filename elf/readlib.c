@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -48,18 +48,18 @@ struct known_names
   int flag;
 };
 
-static struct known_names interpreters [] =
+static struct known_names interpreters[] =
 {
-  {"/lib/" LD_SO, FLAG_ELF_LIBC6},
+  { "/lib/" LD_SO, FLAG_ELF_LIBC6 },
 #ifdef SYSDEP_KNOWN_INTERPRETER_NAMES
   SYSDEP_KNOWN_INTERPRETER_NAMES
 #endif
 };
 
-static struct known_names known_libs [] =
+static struct known_names known_libs[] =
 {
-  {LIBC_SO, FLAG_ELF_LIBC6},
-  {LIBM_SO, FLAG_ELF_LIBC6},
+  { LIBC_SO, FLAG_ELF_LIBC6 },
+  { LIBM_SO, FLAG_ELF_LIBC6 },
 #ifdef SYSDEP_KNOWN_LIBRARY_NAMES
   SYSDEP_KNOWN_LIBRARY_NAMES
 #endif
@@ -70,13 +70,13 @@ static struct known_names known_libs [] =
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_file (const char *real_file_name, const char *file_name,
-	      const char *lib, int *flag, char **soname, int is_link)
+	      const char *lib, int *flag, unsigned int *osversion,
+	      char **soname, int is_link)
 {
   FILE *file;
   struct stat64 statbuf;
   void *file_contents;
   int ret;
-
   ElfW(Ehdr) *elf_header;
   struct exec *aout_header;
 
@@ -142,10 +142,7 @@ process_file (const char *real_file_name, const char *file_name,
     }
 
   elf_header = (ElfW(Ehdr) *) file_contents;
-  if (elf_header->e_ident [EI_MAG0] != ELFMAG0
-      || elf_header->e_ident [EI_MAG1] != ELFMAG1
-      || elf_header->e_ident [EI_MAG2] != ELFMAG2
-      || elf_header->e_ident [EI_MAG3] != ELFMAG3)
+  if (memcmp (elf_header->e_ident, ELFMAG, SELFMAG) != 0)
     {
       /* The file is neither ELF nor aout.  Check if it's a linker script,
 	 like libc.so - otherwise complain.  */
@@ -161,8 +158,8 @@ process_file (const char *real_file_name, const char *file_name,
       goto done;
     }
 
-  if (process_elf_file (file_name, lib, flag, soname, file_contents,
-			statbuf.st_size))
+  if (process_elf_file (file_name, lib, flag, osversion, soname,
+			file_contents, statbuf.st_size))
     ret = 1;
 
  done:

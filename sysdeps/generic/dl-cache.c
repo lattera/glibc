@@ -228,6 +228,8 @@ _dl_load_cache_lookup (const char *name)
 
       /* Only accept hwcap if it's for the right platform.  */
 #define HWCAP_CHECK							       \
+      if (_dl_osversion	&& cache_new->libs[middle].osversion > _dl_osversion)  \
+	continue;							       \
       if (_DL_PLATFORMS_COUNT && platform != -1				       \
 	  && (cache_new->libs[middle].hwcap & _DL_HWCAP_PLATFORM) != 0	       \
 	  && (cache_new->libs[middle].hwcap & _DL_HWCAP_PLATFORM) != platform) \

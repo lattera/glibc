@@ -1,3 +1,52 @@
+2001-03-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* csu/Makefile (abi-tag.h): Define OS and version separately, allow
+	version to be overriden from config.h.
+	* csu/abi-note.S: Use OS and version separately, include config.h.
+	* elf/dl-load.c (_dl_osversion): New.
+	(_dl_map_object_from_fd): Kill some warnings.
+	(open_verify): Check .note.ABI-tag of the library if present.
+	* elf/Makefile (CPPFLAGS-dl-load.c): Add -I$(csu-objpfx).
+	* elf/cache.c (struct cache_entry): Add osversion.
+	(print_entry): Print osversion.
+	(print_cache): Pass osversion to it.
+	(compare): Sort according to osversion.
+	(save_cache): Set osversion.
+	(add_to_cache): Add osversion argument.
+	* sysdeps/generic/ldconfig.h (add_to_cache, process_file,
+	process_elf_file): Add osversion argument.
+	* elf/readlib.c (process_file): Likewise.
+	* sysdeps/generic/readelflib.c (process_elf_file): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/readelflib.c (process_elf_file,
+	process_elf32_file, process_elf64_file): Likewise.
+	* sysdeps/unix/sysv/linux/i386/readelflib.c (process_elf_file,
+	process_elf32_file, process_elf64_file): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/readelflib.c (process_elf_file,
+	process_elf32_file, process_elf64_file): Likewise.
+	* elf/ldconfig.c (manual_link): Pass it.
+	(search_dir): Issue diagnostic if two libs with the same soname in
+	the same directory have different .note.ABI-tag.  Record osversion in
+	dlib_entry and use it from there.
+	(struct lib_entry): Remove.
+	(struct dlib_entry): Add osversion.
+	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Check
+	osversion.
+	* sysdeps/generic/dl-cache.h (struct file_entry_new): Replace __unused
+	field with osversion.
+	* sysdeps/generic/ldsodefs.h (_dl_osversion): Declare.
+	* sysdeps/unix/sysv/linux/init-first.c: Include ldsodefs.h.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Save kernel
+	version in _dl_osversion.
+	* sysdeps/unix/sysv/linux/configure.in: Define __ABI_TAG_VERSION.
+	* Makerules (build-shlib-helper, build-module-helper): New.
+	(build-shlib, build-module-helper): Make sure .note.ABI-tag comes
+	early.
+	* config.h.in (__ABI_TAG_VERSION): Add.
+	* elf/dl-minimal.c (__strtoul_internal): Set endptr on return.
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h (EXTRA_LD_ENVVARS):
+	Handle LD_ASSUME_KERNEL.
+	* sysdeps/unix/sysv/linux/dl-librecon.h: New.
+
 2001-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/antarctica: Update from tzdata2001a.

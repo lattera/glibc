@@ -173,6 +173,9 @@ extern char **_dl_argv;
 /* Cached value of `getpagesize ()'.  */
 extern size_t _dl_pagesize;
 
+/* OS version.  */
+extern unsigned int _dl_osversion;
+
 /* File descriptor referring to the zero-fill device.  */
 extern int _dl_zerofd;
 

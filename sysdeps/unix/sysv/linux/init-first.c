@@ -29,6 +29,7 @@
 #include <libc-internal.h>
 
 #ifndef SHARED
+# include <ldsodefs.h>
 # include "dl-osinfo.h"
 #endif
 

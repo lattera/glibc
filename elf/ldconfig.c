@@ -48,19 +48,11 @@
 
 #define PACKAGE _libc_intl_domainname
 
-struct lib_entry
-  {
-    int flags;
-    uint64_t hwcap;
-    char *lib;
-    char *path;
-  };
-
 static const struct
 {
   const char *name;
   int flag;
-} lib_types [] =
+} lib_types[] =
 {
   {"libc4", FLAG_LIBC4},
   {"libc5", FLAG_ELF_LIBC5},
@@ -316,7 +308,7 @@ add_dir (const char *line)
       *equal_sign = '\0';
       ++equal_sign;
       entry->flag = FLAG_ANY;
-      for (i = 0; i < sizeof (lib_types) / sizeof (lib_types [0]); ++i)
+      for (i = 0; i < sizeof (lib_types) / sizeof (lib_types[0]); ++i)
 	if (strcmp (equal_sign, lib_types[i].name) == 0)
 	  {
 	    entry->flag = lib_types[i].flag;
@@ -334,7 +326,7 @@ add_dir (const char *line)
   i = strlen (entry->path) - 1;
   while (entry->path[i] == '/' && i > 0)
     {
-      entry->path [i] = '\0';
+      entry->path[i] = '\0';
       --i;
     }
 
@@ -460,6 +452,7 @@ manual_link (char *library)
   char *soname;
   struct stat64 stat_buf;
   int flag;
+  unsigned int osversion;
 
   /* Prepare arguments for create_links call.  Split library name in
      directory and filename first.  Since path is allocated, we've got
@@ -524,7 +517,8 @@ manual_link (char *library)
       free (path);
       return;
     }
-  if (process_file (real_library, library, libname, &flag, &soname, 0))
+  if (process_file (real_library, library, libname, &flag, &osversion,
+		    &soname, 0))
     {
       error (0, 0, _("No link created since soname could not be found for %s"),
 	     library);
@@ -568,6 +562,7 @@ struct dlib_entry
   char *soname;
   int flag;
   int is_link;
+  unsigned int osversion;
   struct dlib_entry *next;
 };
 
@@ -585,6 +580,7 @@ search_dir (const struct dir_entry *entry)
   struct stat64 stat_buf;
   int is_link;
   uint64_t hwcap = path_hwcap (entry->path);
+  unsigned int osversion;
 
   file_name_len = PATH_MAX;
   file_name = alloca (file_name_len);
@@ -700,7 +696,7 @@ search_dir (const struct dir_entry *entry)
 	real_name = real_file_name;
 
       if (process_file (real_name, file_name, direntry->d_name, &flag,
-			&soname, is_link))
+			&osversion, &soname, is_link))
 	{
 	  if (real_name != real_file_name)
 	    free (real_name);
@@ -762,6 +758,11 @@ search_dir (const struct dir_entry *entry)
 			error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
 			       dlib_ptr->name, direntry->d_name, entry->path);
 		    }
+		  /* OS version should be the same - sanity check.  */
+		  if (dlib_ptr->osversion != osversion)
+		    error (0, 0, _("libraries %s and %s in directory %s have same\n"
+				   "soname but different minimal supported OS version."),
+			   dlib_ptr->name, direntry->d_name, entry->path);
 		  free (dlib_ptr->name);
 		  dlib_ptr->name = xstrdup (direntry->d_name);
 		  dlib_ptr->is_link = is_link;
@@ -778,6 +779,7 @@ search_dir (const struct dir_entry *entry)
 	  dlib_ptr = (struct dlib_entry *)xmalloc (sizeof (struct dlib_entry));
 	  dlib_ptr->name = xstrdup (direntry->d_name);
 	  dlib_ptr->flag = flag;
+	  dlib_ptr->osversion = osversion;
 	  dlib_ptr->soname = soname;
 	  dlib_ptr->is_link = is_link;
 	  /* Add at head of list.  */
@@ -797,7 +799,8 @@ search_dir (const struct dir_entry *entry)
 	create_links (dir_name, entry->path, dlib_ptr->name,
 		      dlib_ptr->soname);
       if (opt_build_cache)
-	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag, hwcap);
+	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag,
+		      dlib_ptr->osversion, hwcap);
     }
 
   /* Free all resources.  */
@@ -909,7 +912,7 @@ main (int argc, char **argv)
     {
       int i;
       for (i = remaining; i < argc; ++i)
-	add_dir (argv [i]);
+	add_dir (argv[i]);
     }
 
   if (opt_chroot)
@@ -990,7 +993,7 @@ main (int argc, char **argv)
       int i;
 
       for (i = remaining; i < argc; ++i)
-	manual_link (argv [i]);
+	manual_link (argv[i]);
 
       exit (0);
     }

@@ -252,6 +252,8 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
 	  || (result == ULONG_MAX / 10 && digval > ULONG_MAX % 10))
 	{
 	  errno = ERANGE;
+	  if (endptr != NULL)
+	    *endptr = (char *) nptr;
 	  return ULONG_MAX;
 	}
       result *= base;
@@ -259,5 +261,7 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
       ++nptr;
     }
 
+  if (endptr != NULL)
+    *endptr = (char *) nptr;
   return result * sign;
 }

@@ -76,7 +76,7 @@ struct file_entry_new
 {
   int32_t flags;		/* This is 1 for an ELF library.  */
   uint32_t key, value;		/* String table indices.  */
-  uint32_t __unused;		/* Align next field always on 8 byte boundary.	*/
+  uint32_t osversion;		/* Required OS version.	 */
   uint64_t hwcap;		/* Hwcap entry.	 */
 };
 

@@ -1,5 +1,5 @@
 /* Special .init and .fini section support.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -54,6 +54,7 @@ offset	length	contents
    identify the earliest release of that OS that supports this ABI.
    See abi-tags (top level) for details. */
 
+#include <config.h>
 #include <abi-tag.h>		/* OS-specific ABI tag value */
 	
 /* The linker (GNU ld 2.8 and later) recognizes an allocated section whose
@@ -67,5 +68,6 @@ offset	length	contents
 	.long  1		/* note type */
 0:	.asciz "GNU"		/* vendor name */
 1:	.align 4		
-2:	.long ABI_TAG		/* note data: the ABI tag */
+2:	.long __ABI_TAG_OS	/* note data: the ABI tag */
+	.long __ABI_TAG_VERSION
 3:	.align 4		/* pad out section */
