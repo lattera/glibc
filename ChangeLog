@@ -1,3 +1,13 @@
+2000-02-17  H.J. Lu  <hjl@gnu.org>
+
+	* sunrpc/rpc/svc.h (SVCXPRT): Add a "xp_pad" field at the end.
+
+	* sunrpc/svc_udp.c (svcudp_bufcreate): Turn on IP_PKTINFO if
+	available.
+	(svcudp_recv): Set up message with the new "xp_pad" field for
+	IP_PKTINFO.
+	(svcudp_reply): Support IP_PKTINFO if available.
+
 2000-03-01  Andreas Jaeger  <aj@suse.de>
 
 	* time/getdate.c (check_mday): Fix check for february.

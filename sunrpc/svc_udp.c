@@ -47,6 +47,10 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <libintl.h>
 
+#ifdef IP_PKTINFO
+#include <sys/uio.h>
+#endif
+
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
 # define fputs(s, f) _IO_fputs (s, f)
@@ -114,6 +118,7 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   struct svcudp_data *su;
   struct sockaddr_in addr;
   socklen_t len = sizeof (struct sockaddr_in);
+  int pad; 
 
   if (sock == RPC_ANYSOCK)
     {
@@ -163,6 +168,27 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   xprt->xp_ops = &svcudp_op;
   xprt->xp_port = ntohs (addr.sin_port);
   xprt->xp_sock = sock;
+
+#ifdef IP_PKTINFO
+  if ((sizeof (struct iovec) + sizeof (struct msghdr)
+       + sizeof(struct cmsghdr) + sizeof (struct in_pktinfo))
+      > sizeof (xprt->xp_pad))
+    {
+      (void) fputs (_("svcudp_create: xp_pad is too small for IP_PKTINFO\n"),
+		    stderr);
+      return NULL;
+    }
+  pad = 1;
+  if (setsockopt (sock, SOL_IP, IP_PKTINFO, (void *) &pad,
+		  sizeof (pad)) == 0)
+    /* Set the padding to all 1s. */
+    pad = 0xff;
+  else
+#endif
+    /* Clear the padding. */
+    pad = 0;
+  memset (&xprt->xp_pad [0], pad, sizeof (xprt->xp_pad));
+
   xprt_register (xprt);
   return xprt;
 }
@@ -195,11 +221,41 @@ svcudp_recv (xprt, msg)
   u_long replylen;
   socklen_t len;
 
+  /* It is very tricky when you have IP aliases. We want to make sure
+     that we are sending the packet from the IP address where the
+     incoming packet is addressed to. H.J. */
+#ifdef IP_PKTINFO
+  struct iovec *iovp;
+  struct msghdr *mesgp;
+#endif
+
 again:
   /* FIXME -- should xp_addrlen be a size_t?  */
   len = (socklen_t) sizeof(struct sockaddr_in);
-  rlen = recvfrom (xprt->xp_sock, rpc_buffer (xprt), (int) su->su_iosz, 0,
-		   (struct sockaddr *) &(xprt->xp_raddr), &len);
+#ifdef IP_PKTINFO
+  iovp = (struct iovec *) &xprt->xp_pad [0];
+  mesgp = (struct msghdr *) &xprt->xp_pad [sizeof (struct iovec)];
+  if (mesgp->msg_iovlen)
+    {
+      iovp->iov_base = rpc_buffer (xprt);
+      iovp->iov_len = su->su_iosz;
+      mesgp->msg_iov = iovp;
+      mesgp->msg_iovlen = 1;
+      mesgp->msg_name = &(xprt->xp_raddr);
+      mesgp->msg_namelen = len;
+      mesgp->msg_control = &xprt->xp_pad [sizeof (struct iovec)
+					  + sizeof (struct msghdr)];
+      mesgp->msg_controllen = sizeof(struct cmsghdr)
+			      + sizeof (struct in_pktinfo);
+      rlen = recvmsg (xprt->xp_sock, mesgp, 0);
+      if (rlen >= 0)
+	len = mesgp->msg_namelen;
+    }
+  else
+#endif
+    rlen = recvfrom (xprt->xp_sock, rpc_buffer (xprt),
+		     (int) su->su_iosz, 0,
+		     (struct sockaddr *) &(xprt->xp_raddr), &len);
   xprt->xp_addrlen = len;
   if (rlen == -1 && errno == EINTR)
     goto again;
@@ -214,8 +270,17 @@ again:
     {
       if (cache_get (xprt, msg, &reply, &replylen))
 	{
-	  (void) sendto (xprt->xp_sock, reply, (int) replylen, 0,
-		         (struct sockaddr *) &xprt->xp_raddr, len);
+#ifdef IP_PKTINFO
+	  if (mesgp->msg_iovlen)
+	    {
+	      iovp->iov_base = reply;
+	      iovp->iov_len = replylen;
+	      (void) sendmsg (xprt->xp_sock, mesgp, 0);
+	    }
+	  else
+#endif
+	    (void) sendto (xprt->xp_sock, reply, (int) replylen, 0,
+			   (struct sockaddr *) &xprt->xp_raddr, len);
 	  return TRUE;
 	}
     }
@@ -229,8 +294,12 @@ svcudp_reply (xprt, msg)
 {
   struct svcudp_data *su = su_data (xprt);
   XDR *xdrs = &(su->su_xdrs);
-  int slen;
+  int slen, sent;
   bool_t stat = FALSE;
+#ifdef IP_PKTINFO
+  struct iovec *iovp;
+  struct msghdr *mesgp;
+#endif
 
   xdrs->x_op = XDR_ENCODE;
   XDR_SETPOS (xdrs, 0);
@@ -238,9 +307,21 @@ svcudp_reply (xprt, msg)
   if (xdr_replymsg (xdrs, msg))
     {
       slen = (int) XDR_GETPOS (xdrs);
-      if (sendto (xprt->xp_sock, rpc_buffer (xprt), slen, 0,
-		  (struct sockaddr *) &(xprt->xp_raddr), xprt->xp_addrlen)
-	  == slen)
+#ifdef IP_PKTINFO
+      mesgp = (struct msghdr *) &xprt->xp_pad [sizeof (struct iovec)];
+      if (mesgp->msg_iovlen)
+	{
+	  iovp = (struct iovec *) &xprt->xp_pad [0];
+	  iovp->iov_base = rpc_buffer (xprt);
+	  iovp->iov_len = slen;
+	  sent = sendmsg (xprt->xp_sock, mesgp, 0);
+	}
+      else
+#endif
+	sent = sendto (xprt->xp_sock, rpc_buffer (xprt), slen, 0,
+		       (struct sockaddr *) &(xprt->xp_raddr),
+		       xprt->xp_addrlen);
+      if (sent == slen)
 	{
 	  stat = TRUE;
 	  if (su->su_cache && slen >= 0)
