@@ -25,6 +25,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <ldsodefs.h>
 
 #include <kernel-features.h>
 
@@ -84,16 +85,16 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       if (act)
 	{
 	  kact.k_sa_handler = act->sa_handler;
+	  kact.sa_flags = act->sa_flags;
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
 
-# if __ASSUME_VSYSCALL == 0
-	  kact.sa_flags = act->sa_flags | SA_RESTORER;
+	  if (GL(dl_sysinfo_dso) == NULL)
+	    {
+	      kact.sa_flags |= SA_RESTORER;
 
-	  kact.sa_restorer = ((act->sa_flags & SA_SIGINFO)
-			      ? &restore_rt : &restore);
-# else
-	  kact.sa_flags = act->sa_flags;
-# endif
+	      kact.sa_restorer = ((act->sa_flags & SA_SIGINFO)
+				  ? &restore_rt : &restore);
+	    }
 	}
 
       /* XXX The size argument hopefully will have to be changed to the
@@ -159,7 +160,6 @@ libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction)
 #endif
 
-#if __ASSUME_VSYSCALL == 0
 /* NOTE: Please think twice before making any changes to the bits of
    code below.  GDB needs some intimate knowledge about it to
    recognize them as signal trampolines, and make backtraces through
@@ -168,8 +168,8 @@ weak_alias (__libc_sigaction, sigaction)
    If you ever feel the need to make any changes, please notify the
    appropriate GDB maintainer.  */
 
-# define RESTORE(name, syscall) RESTORE2 (name, syscall)
-# define RESTORE2(name, syscall) \
+#define RESTORE(name, syscall) RESTORE2 (name, syscall)
+#define RESTORE2(name, syscall) \
 asm						\
   (						\
    ".text\n"					\
@@ -179,14 +179,14 @@ asm						\
    "	int  $0x80"				\
    );
 
-# ifdef __NR_rt_sigaction
+#ifdef __NR_rt_sigaction
 /* The return code for realtime-signals.  */
 RESTORE (restore_rt, __NR_rt_sigreturn)
-# endif
+#endif
 
 /* For the boring old signals.  */
-# undef RESTORE2
-# define RESTORE2(name, syscall) \
+#undef RESTORE2
+#define RESTORE2(name, syscall) \
 asm						\
   (						\
    ".text\n"					\
@@ -198,4 +198,3 @@ asm						\
    );
 
 RESTORE (restore, __NR_sigreturn)
-#endif

@@ -1,3 +1,10 @@
+2003-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Remove __ASSUME_VSYSCALL.
+	There might always be processes which have no vDSO.
+	* sysdeps/generic/dl-sysdep.c: Remove __ASSUME_VSYSCALL uses.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+
 2003-12-11  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/generic/dl-fptr.c (COMPARE_AND_SWAP): Pass new and old
