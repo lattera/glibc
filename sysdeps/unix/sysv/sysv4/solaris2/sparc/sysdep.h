@@ -33,8 +33,6 @@ Cambridge, MA 02139, USA.  */
   mov SYS_ify(syscall_name), %g1;				   	      \
   ta 8;									      \
   bcs C_SYMBOL_NAME(syscall_error);					      \
-  nop;									      \
-  retl;									      \
   nop
 
 #define	ret		retl; nop
