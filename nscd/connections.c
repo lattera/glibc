@@ -484,7 +484,6 @@ nscd_run (void *p)
 	      prune_cache (&dbs[my_number], time(NULL));
 	      now = time (NULL);
 	      next_prune = now + CACHE_PRUNE_INTERVAL;
-	      atomic_increment (&nready);
 	      goto try_get;
 	    }
 	}

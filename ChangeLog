@@ -1,4 +1,19 @@
+2004-08-26  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/mips/pread.c: Include sgidefs.h only if
+	NO_SGIDEFS_H isn't defined.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/pread.c: Define NO_SGIDEFS_H and
+	_MIPS_SIM.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Likewise.
+
 2004-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (nscd_run): atomic_increment was not missing.
 
 	* sysdeps/gnu/Makefile (libdl-sysdep_routines): Don't add eval.
 	Patch by Greg Schafer.
