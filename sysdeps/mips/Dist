@@ -1,6 +1,4 @@
 setjmp_aux.c
-rtld-ldscript.in
-rtld-parms
 regdef.h
 sgidefs.h
 fpregdef.h
