@@ -28,7 +28,7 @@
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
-static inline void __attribute__ ((unused))
+static inline void __attribute__ ((unused, always_inline))
 elf_get_dynamic_info (struct link_map *l)
 {
   ElfW(Dyn) *dyn = l->l_ld;
