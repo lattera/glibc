@@ -47,7 +47,7 @@ script_execute (const char *file, char *const argv[])
       }
 
     /* Execute the shell.  */
-    execv (new_argv[0], new_argv);
+    __execve (new_argv[0], new_argv, __environ);
   }
 }
 
@@ -69,7 +69,7 @@ execvp (file, argv)
   if (strchr (file, '/') != NULL)
     {
       /* Don't search when it contains a slash.  */
-      execv (file, argv);
+      __execve (file, argv, __environ);
 
       if (errno == ENOEXEC)
 	script_execute (file, argv);
@@ -93,30 +93,32 @@ execvp (file, argv)
 	}
 
       len = strlen (file) + 1;
-      name = __alloca (strlen (path) + len);
+      name = __alloca (strlen (path) + len + 1);
+      /* Copy the file name at the top.  */
+      name = (char *) memcpy (name - len, file, len);
+      /* And add the slash.  */
+      *--name = '/';
+
       p = path;
       do
 	{
+	  char *startp;
+
 	  path = p;
 	  p = __strchrnul (path, ':');
 
 	  if (p == path)
 	    /* Two adjacent colons, or a colon at the beginning or the end
 	       of `PATH' means to search the current directory.  */
-	    (void) memcpy (name, file, len);
+	    startp = name + 1;
 	  else
-	    {
-	      /* Construct the pathname to try.  */
-	      char *tmp = __mempcpy (name, path, p - path);
-	      *tmp++ = '/';
-	      memcpy (tmp, file, len);
-	    }
+	    startp = (char *) memcpy (name - (p - path), path, p - path);
 
 	  /* Try to execute this name.  If it works, execv will not return.  */
-	  execv (name, argv);
+	  __execve (startp, argv, __environ);
 
 	  if (errno == ENOEXEC)
-	    script_execute (name, argv);
+	    script_execute (startp, argv);
 
 	  switch (errno)
 	    {

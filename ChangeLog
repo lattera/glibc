@@ -1,5 +1,8 @@
 1999-08-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/execvp.c (execvp): Allocate array name of correct size.
+	Optimize inner loop.  Use execve directly, not execv.
+
 	* elf/elf.h: Corrected SHT_ values from new draft.
 
 1999-08-20  Andreas Schwab  <schwab@suse.de>
