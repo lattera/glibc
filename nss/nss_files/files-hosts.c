@@ -280,7 +280,7 @@ HOST_DB_LOOKUP (hostbyname2, ,,
 
 DB_LOOKUP (hostbyaddr, ,,
 	   {
-	     if (result->h_length == len
+	     if (result->h_length == (int) len
 		 && ! memcmp (addr, result->h_addr_list[0], len))
 	       break;
 	   }, const void *addr, socklen_t len, int af)

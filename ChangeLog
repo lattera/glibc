@@ -1,6 +1,7 @@
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
 	* posix/fnmatch_loop.c: Add casts for signedness.
+	* nss/nss_files/files-hosts.c: Likewise.
 	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
 	* gmon/gmon.c (write_call_graph): Use u_long for FROM_LEN.
 	* nscd/nscd_getgr_r.c (nscd_getgr_r): Use nscd_ssize_t for CNT.
