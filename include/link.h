@@ -200,9 +200,13 @@ struct link_map
        need not be the same as l_addr.  */
     ElfW(Addr) l_map_start, l_map_end;
 
+    /* Default array for 'l_scope'.  */
+    struct r_scope_elem *l_scope_mem[4];
+    /* Size of array allocated for 'l_scope'.  */
+    size_t l_scope_max;
     /* This is an array defining the lookup scope for this link map.
        There are at most three different scope lists.  */
-    struct r_scope_elem *l_scope[4];
+    struct r_scope_elem **l_scope;
 
     /* A similar array, this time only with the local scope.  This is
        used occasionally.  */
