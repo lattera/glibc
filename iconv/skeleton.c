@@ -297,7 +297,9 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       unsigned char *outbuf = data->__outbuf;
       unsigned char *outend = data->__outbufend;
       unsigned char *outstart;
-#ifdef _STRING_ARCH_unaligned
+#if defined _STRING_ARCH_unaligned \
+    || MIN_NEEDED_FROM == 1 || MAX_NEEDED_FROM % MIN_NEEDED_FROM != 0 \
+    || MIN_NEEDED_TO == 1 || MAX_NEEDED_TO % MIN_NEEDED_TO != 0
 # define unaligned 0
 #else
       /* The following assumes that encodings, which have a variable length
@@ -308,19 +310,13 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       int unaligned;
 
       unaligned = ((FROM_DIRECTION
-		    && ((MIN_NEEDED_FROM > 1
-			 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0
-			 && (uintptr_t) inptr % MIN_NEEDED_FROM != 0)
-			|| (MIN_NEEDED_TO > 1
-			    && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+		    && ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
+			|| (data->__is_last
 			    && (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
 		   || (!FROM_DIRECTION
-		       && ((MIN_NEEDED_FROM > 1
-			    && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0
+		       && ((data->__is_last
 			    && (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
-			   || (MIN_NEEDED_TO > 1
-			       && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
-			       && (uintptr_t) inptr % MIN_NEEDED_TO != 0))));
+			   || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
 # define GEN_unaligned(name) GEN_unaligned2 (name)
 # define GEN_unaligned2(name) name##_unaligned
 #endif

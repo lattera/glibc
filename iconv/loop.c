@@ -268,7 +268,9 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 
 /* Include the file a second time to define the function to define the
    function to handle unaligned access.  */
-#if !defined _STRING_ARCH_unaligned && !defined DEFINE_UNALIGNED
+#if !defined DEFINE_UNALIGNED && !defined _STRING_ARCH_unaligned \
+    && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
+    && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
 # define DEFINE_UNALIGNED
 # include "loop.c"
 # undef DEFINE_UNALIGNED

@@ -1,3 +1,9 @@
+2000-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c: Avoid compiling unaligned versions in some
+	with size of dynamic sectionmore cases.
+	* iconv/loop.c: Likewise.
+
 2000-03-29  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/loop.c (put16): Remove __const. Fix access index.
