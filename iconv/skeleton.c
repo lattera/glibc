@@ -67,6 +67,12 @@
 			to cover only those characters up to the error.
 
      FUNCTION_NAME	if not set the conversion function is named `gconv'.
+
+     PREPARE_LOOP	optional code preparing the conversion loop.  Can
+			contain variable definitions.
+
+     EXTRA_LOOP_ARGS	optional macro specifying extra arguments passed
+			to loop function.
  */
 
 #include <assert.h>
@@ -161,6 +167,13 @@ gconv_init (struct gconv_step *step)
 #endif
 
 
+/* If no arguments have to passed to the loop function define the macro
+   as empty.  */
+#ifndef EXTRA_LOOP_ARGS
+# define EXTRA_LOOP_ARGS
+#endif
+
+
 /* This is the actual conversion function.  */
 #ifndef FUNCTION_NAME
 # define FUNCTION_NAME	gconv
@@ -210,6 +223,10 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
       char *outend = data->outbufend;
       char *outptr;
 
+#ifdef PREPARE_LOOP
+      PREPARE_LOOP
+#endif
+
       do
 	{
 	  /* Remember the start value for this round.  */
@@ -229,14 +246,16 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 				(const unsigned char *) inbufend,
 				(unsigned char **) &outbuf,
 				(unsigned char *) outend,
-				data->statep, step->data, &converted);
+				data->statep, step->data, &converted
+				EXTRA_LOOP_ARGS);
 	  else
 	    /* Run the conversion loop.  */
 	    status = TO_LOOP ((const unsigned char **) inbuf,
 			      (const unsigned char *) inbufend,
 			      (unsigned char **) &outbuf,
 			      (unsigned char *) outend,
-			      data->statep, step->data, &converted);
+			      data->statep, step->data, &converted
+			      EXTRA_LOOP_ARGS);
 
 	  /* If this is the last step leave the loop, there is nothgin
              we can do.  */
@@ -284,7 +303,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 					     (unsigned char **) &outbuf,
 					     (unsigned char *) outerr,
 					     data->statep, step->data,
-					     &converted);
+					     &converted EXTRA_LOOP_ARGS);
 		      else
 			/* Run the conversion loop.  */
 			nstatus = TO_LOOP ((const unsigned char **) inbuf,
@@ -292,7 +311,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 					   (unsigned char **) &outbuf,
 					   (unsigned char *) outerr,
 					   data->statep, step->data,
-					   &converted);
+					   &converted EXTRA_LOOP_ARGS);
 
 		      /* We must run out of output buffer space in this
 			 rerun.  */

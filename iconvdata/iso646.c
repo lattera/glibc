@@ -32,8 +32,22 @@
    proofs to be necessary.  */
 
 #include <gconv.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
+
+/* Definitions used in the body of the `gconv' function.  */
+#define FROM_LOOP		from_ascii
+#define TO_LOOP			to_ascii
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		1
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		dir == from_iso646
+#define PREPARE_LOOP \
+  enum direction dir = ((struct iso646_data *) step->data)->dir;	      \
+  enum variant var = ((struct iso646_data *) step->data)->var;
+#define EXTRA_LOOP_ARGS		, var
+
 
 /* Direction of the transformation.  */
 enum direction
@@ -66,22 +80,22 @@ gconv_init (struct gconv_step *step)
   enum variant var;
   int result;
 
-  if (strcasestr (step->from_name, "ANSI_X3.4-1968") != NULL)
+  if (__strcasestr (step->from_name, "ANSI_X3.4-1968") != NULL)
     {
       dir = from_iso646;
       var = US;
     }
-  else if (strcasestr (step->from_name, "BS_4730") != NULL)
+  else if (__strcasestr (step->from_name, "BS_4730") != NULL)
     {
       dir = from_iso646;
       var = GB;
     }
-  else if (strcasestr (step->to_name, "ANSI_X3.4-1968") != NULL)
+  else if (__strcasestr (step->to_name, "ANSI_X3.4-1968") != NULL)
     {
       dir = to_iso646;
       var = US;
     }
-  else if (strcasestr (step->to_name, "BS_4730") != NULL)
+  else if (__strcasestr (step->to_name, "BS_4730") != NULL)
     {
       dir = to_iso646;
       var = GB;
@@ -104,6 +118,13 @@ gconv_init (struct gconv_step *step)
       result = GCONV_OK;
     }
 
+  step->min_needed_from = MIN_NEEDED_FROM;
+  step->max_needed_from = MIN_NEEDED_FROM;
+  step->min_needed_to = MIN_NEEDED_TO;
+  step->max_needed_to = MIN_NEEDED_TO;
+
+  step->stateful = 0;
+
   return result;
 }
 
@@ -115,194 +136,113 @@ gconv_end (struct gconv_step *data)
 }
 
 
-int
-gconv (struct gconv_step *step, struct gconv_step_data *data,
-       const char *inbuf, size_t *inbufsize, size_t *written, int do_flush)
-{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
-  size_t do_write;
-  int result;
+/* First define the conversion function from ASCII to UCS4.  */
+#define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define LOOPFCT			FROM_LOOP
+#define BODY \
+  {									      \
+    uint32_t ch;							      \
+    int failure = GCONV_OK;						      \
+									      \
+    switch (*inptr)							      \
+      {									      \
+      case '\x23':							      \
+	if (var == GB)							      \
+	  ch = 0xa3;							      \
+	else								      \
+	  ch = 0x23;							      \
+	break;								      \
+      case '\x7e':							      \
+	if (var == GB)							      \
+	  ch = 0x203e;							      \
+	else								      \
+	  ch = 0x7e;							      \
+	break;								      \
+      default:								      \
+	ch = *inptr;							      \
+	break;								      \
+      case '\x80' ... '\xff':						      \
+	/* Illegal character.  */					      \
+	failure = GCONV_ILLEGAL_INPUT;					      \
+	ch = '\0';	/* OK, gcc, here I initialize the variable.  */	      \
+	break;								      \
+      }									      \
+									      \
+    /* Hopefully gcc can recognize that the following `if' is only true	      \
+       when we reach the default case in the `switch' statement.  */	      \
+    if (failure == GCONV_ILLEGAL_INPUT)					      \
+      {									      \
+	/* Exit the loop with an error.  */				      \
+	result = failure;						      \
+	break;								      \
+      }									      \
+    *((uint32_t *) outptr)++ = ch;					      \
+    ++inptr;								      \
+  }
+#define EXTRA_LOOP_DECLS	, enum variant var
+#include <iconv/loop.c>
 
-  /* If the function is called with no input this means we have to reset
-     to the initial state.  The possibly partly converted input is
-     dropped.  */
-  if (do_flush)
-    {
-      do_write = 0;
 
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	result = GCONV_OK;
-      else
-	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
+/* Next, define the other direction.  */
+#define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+#define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
+#define LOOPFCT			TO_LOOP
+#define BODY \
+  {									      \
+    unsigned char ch;							      \
+    int failure = GCONV_OK;						      \
+									      \
+    do									      \
+      {									      \
+	switch (*((uint32_t *) inptr))					      \
+	  {								      \
+	  case 0x23:							      \
+	    if (var == GB)						      \
+	      break;							      \
+	    ch = 0x23;							      \
+	    continue;							      \
+	  case 0x7e:							      \
+	    if (var == GB)						      \
+	      break;							      \
+	    ch = 0x7e;							      \
+	    continue;							      \
+	  case 0xa3:							      \
+	    if (var != GB)						      \
+	      break;							      \
+	    ch = 0x23;							      \
+	    continue;							      \
+	  case 0x203e:							      \
+	    if (var != GB)						      \
+	      break;							      \
+	    ch = 0x7e;							      \
+	    continue;							      \
+	  default:							      \
+	    if (*((uint32_t *) inptr) > 0x7f)				      \
+	      break;							      \
+	    ch = (unsigned char) *((uint32_t *) inptr);			      \
+	    continue;							      \
+	  }								      \
+	/* When we come to this place we saw an illegal character.  */	      \
+	failure = GCONV_ILLEGAL_INPUT;					      \
+	ch = '\0';	/* OK, gcc, here I initialize the variable.  */	      \
+      }									      \
+    while (0);								      \
+									      \
+    /* Hopefully gcc can recognize that the following `if' is only true	      \
+       when we fall through the `switch' statement.  */			      \
+    if (failure == GCONV_ILLEGAL_INPUT)					      \
+      {									      \
+	/* Exit the loop with an error.  */				      \
+	result = failure;						      \
+	break;								      \
+      }									      \
+    *outptr++ = ch;							      \
+    inptr += 4;								      \
+  }
+#define EXTRA_LOOP_DECLS	, enum variant var
+#include <iconv/loop.c>
 
-	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
 
-	  /* Clear output buffer.  */
-	  data->outbufavail = 0;
-	}
-    }
-  else
-    {
-      enum direction dir = ((struct iso646_data *) step->data)->dir;
-      enum variant var = ((struct iso646_data *) step->data)->var;
-
-      do_write = 0;
-
-      do
-	{
-	  result = GCONV_OK;
-
-	  if (dir == from_iso646)
-	    {
-	      size_t inchars = *inbufsize;
-	      size_t outwchars = data->outbufavail;
-	      char *outbuf = data->outbuf;
-	      size_t cnt = 0;
-
-	      while (cnt < inchars
-		     && (outwchars + sizeof (wchar_t) <= data->outbufsize))
-		{
-		  switch ((unsigned char) inbuf[cnt])
-		    {
-		    case '\x23':
-		      if (var == GB)
-			*((wchar_t *) (outbuf + outwchars)) = 0xa3;
-		      else
-			*((wchar_t *) (outbuf + outwchars)) = 0x23;
-		      break;
-		    case '\x75':
-		      if (var == GB)
-			*((wchar_t *) (outbuf + outwchars)) = 0x203e;
-		      else
-			*((wchar_t *) (outbuf + outwchars)) = 0x75;
-		      break;
-		    default:
-		      *((wchar_t *) (outbuf + outwchars)) =
-			(unsigned char) inbuf[cnt];
-		    case '\x80' ... '\xff':
-		      /* Illegal character.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      goto out_from;
-		    }
-		  ++do_write;
-		  outwchars += sizeof (wchar_t);
-		  ++cnt;
-		}
-	    out_from:
-	      *inbufsize -= cnt;
-	      inbuf += cnt;
-	      data->outbufavail = outwchars;
-	    }
-	  else
-	    {
-	      size_t inwchars = *inbufsize;
-	      size_t outchars = data->outbufavail;
-	      unsigned char *outbuf = data->outbuf;
-	      size_t cnt = 0;
-
-	      while (inwchars >= cnt + sizeof (wchar_t)
-		     && outchars < data->outbufsize)
-		{
-		  switch (*((wchar_t *) (inbuf + cnt)))
-		    {
-		    case 0x23:
-		      if (var == GB)
-			goto out_to;
-		      outbuf[outchars] = 0x23;
-		      break;
-		    case 0x75:
-		      if (var == GB)
-			goto out_to;
-		      outbuf[outchars] = 0x75;
-		      break;
-		    case 0xa3:
-		      if (var != GB)
-			goto out_to;
-		      outbuf[outchars] = 0x23;
-		      break;
-		    case 0x203e:
-		      if (var != GB)
-			goto out_to;
-		      outbuf[outchars] = 0x75;
-		      break;
-		    default:
-		      if (*((wchar_t *) (inbuf + cnt)) > 0x7f)
-			goto out_to;
-		      outbuf[outchars] =
-			(unsigned char) *((wchar_t *) (inbuf + cnt));
-		      break;
-		    }
-
-		  ++do_write;
-		  ++outchars;
-		  cnt += sizeof (wchar_t);
-		}
-	    out_to:
-	      *inbufsize -= cnt;
-	      inbuf += cnt;
-	      data->outbufavail = outchars;
-
-	      if (outchars < data->outbufsize)
-		{
-		  /* If there is still room in the output buffer something
-		     is wrong with the input.  */
-		  if (inwchars >= cnt + sizeof (wchar_t))
-		    {
-		      /* An error occurred.  */
-		      result = GCONV_ILLEGAL_INPUT;
-		      break;
-		    }
-		  if (inwchars != cnt)
-		    {
-		      /* There are some unprocessed bytes at the end of the
-			 input buffer.  */
-		      result = GCONV_INCOMPLETE_INPUT;
-		      break;
-		    }
-		}
-	    }
-
-	  if (result != GCONV_OK)
-	    break;
-
-	  if (data->is_last)
-	    {
-	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_iso646
-				      ? 0 : sizeof (wchar_t) - 1)
-			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
-	      break;
-	    }
-
-	  /* Status so far.  */
-	  result = GCONV_EMPTY_INPUT;
-
-	  if (data->outbufavail > 0)
-	    {
-	      /* Call the functions below in the chain.  */
-	      size_t newavail = data->outbufavail;
-
-	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
-			       written, 0);
-
-	      /* Correct the output buffer.  */
-	      if (newavail != data->outbufavail && newavail > 0)
-		memmove (data->outbuf,
-			 &data->outbuf[data->outbufavail - newavail],
-			 newavail);
-	      data->outbufavail = newavail;
-	    }
-	}
-      while (*inbufsize > 0 && result == GCONV_EMPTY_INPUT);
-    }
-
-  if (written != NULL && data->is_last)
-    *written += do_write;
-
-  return result;
-}
+/* Now define the toplevel functions.  */
+#include <iconv/skeleton.c>

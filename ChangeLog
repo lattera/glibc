@@ -1,3 +1,16 @@
+1998-04-21 20:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/loop.c: Allow EXTRA_LOOP_DECLS be defined and use it in
+	function declaration.
+	* iconv/skeleton.c: Allow PREPARE_LOOP and EXTRA_LOOP_ARGS be defined
+	and use them in conversion function.
+	* iconvdata/Makefile (modules): Re-add ISO6446.
+	* iconvdata/TEST: Add tests for ASCII variants.
+	* iconvdata/iso646.c: Rewrite to use loop.c and skeleton.c.
+	* iconvdata/testdata/ANSI_X3.4-1968: New file.
+	* iconvdata/testdata/BS_4730: New file.
+	* iconvdata/testdata/BS_4730..UTF8: New file.
+
 1998-04-21 19:05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.h (struct gconv_step): Add element stateful.

@@ -43,6 +43,8 @@
 
      BODY		this is supposed to expand to the body of the loop.
 			The user must provide this.
+
+     EXTRA_LOOP_DECLS	Extra arguments passed from converion loop call.
 */
 
 #include <gconv.h>
@@ -106,11 +108,18 @@
 #endif
 
 
+/* If no arguments have to passed to the loop function define the macro
+   as empty.  */
+#ifndef EXTRA_LOOP_DECLS
+# define EXTRA_LOOP_DECLS
+#endif
+
+
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
 LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	 unsigned char **outptrp, unsigned char *outend, mbstate_t *state,
-	 void *data, size_t *converted)
+	 void *data, size_t *converted EXTRA_LOOP_DECLS)
 {
   int result = GCONV_OK;
   const unsigned char *inptr = *inptrp;
@@ -222,3 +231,4 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 #undef COUNT_CONVERTED
 #undef BODY
 #undef LOOPFCT
+#undef EXTRA_LOOP_DECLS
