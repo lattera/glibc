@@ -929,10 +929,10 @@ This section provides details about the precise syntax of conversion
 specifications that can appear in a @code{printf} template
 string.
 
-Characters in the template string that are not part of a
-conversion specification are printed as-is to the output stream.
-Multibyte character sequences (@pxref{Extended Characters}) are permitted in
-a template string.
+Characters in the template string that are not part of a conversion
+specification are printed as-is to the output stream.  Multibyte
+character sequences (@pxref{Character Set Handling}) are permitted in a
+template string.
 
 The conversion specifications in a @code{printf} template string have
 the general form:

@@ -1,6 +1,7 @@
-/* Definition of `sockaddr_union'.  Generic/4.2 BSD version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+/* Additional non standardized wide character classification functions.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,24 +18,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/socket.h> instead.
- */
+#include <stdint.h>
+#define __NO_WCTYPE	1
+#include <wctype.h>
 
-#ifndef _BITS_SOCKUNION_H
-#define _BITS_SOCKUNION_H	1
+#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#include "cname-lookup.h"
 
-#include <netinet/in.h>
-#include <sys/un.h>
 
-/* Union of all sockaddr types (required by IPv6 Basic API).  */
-union sockaddr_union
-  {
-    struct sockaddr sa;
-    struct sockaddr_in sin;
-    struct sockaddr_in6 sin6;
-    struct sockaddr_un sun;
-    char __maxsize[128];
-  };
+int
+(__iswblank_l) (wint_t wc, __locale_t locale)
+{
+  const unsigned int *class32_b;
+  size_t idx;
 
-#endif	/* bits/sockunion.h */
+  idx = cname_lookup (wc, locale);
+  if (idx == ~((size_t) 0))
+    return 0;
+
+  class32_b = (uint32_t *)
+    locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS32)].string;
+
+  return class32_b[idx] & _ISwblank;
+}

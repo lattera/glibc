@@ -3,7 +3,7 @@
 @include memory.texi
 @include ctype.texi
 @include string.texi
-@include mbyte.texi
+@include charset.texi
 @include locale.texi
 @include message.texi
 @include search.texi
@@ -27,6 +27,7 @@
 @include users.texi
 @include sysinfo.texi
 @include conf.texi
+@include ../crypt/crypt.texi
 @include ../linuxthreads/linuxthreads.texi
 @include lang.texi
 @include header.texi

@@ -855,7 +855,7 @@ long long int} and @code{unsigned long long int}, respectively.
 @item WCHAR_MAX
 
 This is the maximum value that can be represented by a @code{wchar_t}.
-@xref{Wide Char Intro}.
+@xref{Extended Char Intro}.
 @end vtable
 
 The header file @file{limits.h} also defines some additional constants

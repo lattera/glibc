@@ -19,7 +19,7 @@
 @c sold 0.06/1.09, print run out 21may96
 @set EDITION 0.08 DRAFT
 @set VERSION 2.1 Beta
-@set UPDATED 17 Dec 1998
+@set UPDATED 11 Jan 1999
 @set ISBN 1-882114-53-1
 
 @ifinfo
@@ -28,7 +28,7 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993, '94, '95, '96, '97, '98 Free Software Foundation, Inc.
+Copyright (C) 1993, '94, '95, '96, '97, '98, '99 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice

@@ -1,4 +1,4 @@
-@node String and Array Utilities, Extended Characters, Character Handling, Top
+@node String and Array Utilities, Character Set Handling, Character Handling, Top
 @c %MENU% Utilities for copying and comparing strings and arrays
 @chapter String and Array Utilities
 

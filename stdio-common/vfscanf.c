@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -772,7 +772,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		size_t cnt = 0;
 		NEXT_WIDE_CHAR (first);
 
-		if (iswspace (val))
+		if (__iswspace (val))
 		  {
 		    /* XXX We would have to push back the whole wide char
 		       with possibly many bytes.  But since scanf does

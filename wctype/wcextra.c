@@ -1,5 +1,5 @@
 /* Additional non standardized wide character classification functions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,18 +18,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdint.h>
 #define __NO_WCTYPE	1
 #include <wctype.h>
 
-int
-iswblank (wint_t wc)
-{
-  return __iswctype (wc, _ISwblank);
-}
-
+#include "cname-lookup.h"
 
 int
-(__iswblank_l) (wint_t wc, __locale_t locale)
+(iswblank) (wint_t wc)
 {
-  return __iswctype_l (wc, _ISwblank, locale);
+  size_t idx;
+
+  idx = cname_lookup (wc);
+  if (idx == ~((size_t) 0))
+    return 0;
+
+  return __ctype32_b[idx] & _ISwblank;
 }

@@ -1,5 +1,5 @@
 /* Skeleton for a conversion module.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -119,7 +119,7 @@ static int to_object;
    character set we we can define RESET_INPUT_BUFFER is necessary.  */
 #if !defined RESET_INPUT_BUFFER && !defined SAVE_RESET_STATE
 # if MIN_NEEDED_FROM == MAX_NEEDED_FROM && MIN_NEEDED_TO == MAX_NEEDED_TO
-/* We have to used these `if's here since the compiler cannot know that
+/* We have to use these `if's here since the compiler cannot know that
    (outbuf - outerr) is always divisible by MIN_NEEDED_TO.  */
 #  define RESET_INPUT_BUFFER \
   if (MIN_NEEDED_FROM % MIN_NEEDED_TO == 0)				      \
@@ -144,26 +144,25 @@ gconv_init (struct gconv_step *step)
 {
   /* Determine which direction.  */
   if (__strcasecmp (step->from_name, CHARSET_NAME) == 0)
-    step->data = &from_object;
-  else if (__strcasecmp (step->to_name, CHARSET_NAME) == 0)
-    step->data = &to_object;
-  else
-    return GCONV_NOCONV;
-
-  if (step->data == &from_object)
     {
+      step->data = &from_object;
+
       step->min_needed_from = MIN_NEEDED_FROM;
       step->max_needed_from = MAX_NEEDED_FROM;
       step->min_needed_to = MIN_NEEDED_TO;
       step->max_needed_to = MAX_NEEDED_TO;
     }
-  else
+  else if (__strcasecmp (step->to_name, CHARSET_NAME) == 0)
     {
+      step->data = &to_object;
+
       step->min_needed_from = MIN_NEEDED_TO;
       step->max_needed_from = MAX_NEEDED_TO;
       step->min_needed_to = MIN_NEEDED_FROM;
       step->max_needed_to = MAX_NEEDED_FROM;
     }
+  else
+    return GCONV_NOCONV;
 
 #ifdef RESET_STATE
   step->stateful = 1;
@@ -210,22 +209,17 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
      dropped.  */
   if (do_flush)
     {
-      /* Call the steps down the chain if there are any.  */
-      if (data->is_last)
-	status = GCONV_OK;
-      else
-	{
+      status = GCONV_OK;
+
 #ifdef EMIT_SHIFT_TO_INIT
-	  status = GCONV_OK;
-
-	  EMIT_SHIFT_TO_INIT;
-
-	  if (status == GCONV_OK)
+      /* Emit the escape sequence to reset the state.  */
+      EMIT_SHIFT_TO_INIT;
 #endif
-	    /* Give the modules below the same chance.  */
-	    status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
-					written, 1));
-	}
+      /* Call the steps down the chain if there are any but only if we
+         successfully emitted the escape sequence.  */
+      if (status == GCONV_OK && ! data->is_last)
+	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
+				    written, 1));
     }
   else
     {
@@ -271,7 +265,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 			      data->statep, step->data, &converted
 			      EXTRA_LOOP_ARGS);
 
-	  /* If this is the last step leave the loop, there is nothgin
+	  /* If this is the last step leave the loop, there is nothing
              we can do.  */
 	  if (data->is_last)
 	    {

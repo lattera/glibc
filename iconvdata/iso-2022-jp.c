@@ -1,5 +1,5 @@
 /* Conversion module for ISO-2022-JP.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -149,14 +149,14 @@ gconv_init (struct gconv_step *step)
 	      step->min_needed_from = MIN_NEEDED_FROM;
 	      step->max_needed_from = MAX_NEEDED_FROM;
 	      step->min_needed_to = MIN_NEEDED_TO;
-	      step->max_needed_to = MIN_NEEDED_TO;
+	      step->max_needed_to = MAX_NEEDED_TO;
 	    }
 	  else
 	    {
 	      step->min_needed_from = MIN_NEEDED_TO;
 	      step->max_needed_from = MAX_NEEDED_TO;
 	      step->min_needed_to = MIN_NEEDED_FROM;
-	      step->max_needed_to = MIN_NEEDED_FROM + 2;
+	      step->max_needed_to = MAX_NEEDED_FROM + 2;
 	    }
 
 	  /* Yes, this is a stateful encoding.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,7 +69,7 @@ typedef void (*gconv_end_fct) __PMT ((struct gconv_step *));
 struct gconv_step
 {
   struct gconv_loaded_object *shlib_handle;
-  const char *modname;
+  __const char *modname;
 
   int counter;
 
@@ -104,7 +104,7 @@ struct gconv_step_data
   int is_last;
 
   /* Counter for number of invocations of the module function for this
-     desriptor.  */
+     descriptor.  */
   int invocation_counter;
 
   /* Flag whether this is an internal use of the module (in the mb*towc*

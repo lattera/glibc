@@ -1,5 +1,5 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,6 @@ __BEGIN_DECLS
    AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct sockaddr',
    `struct msghdr', and `struct linger' types.  */
 #include <bits/socket.h>
-
-/* Get the definition of `sockaddr_union'.  */
-#include <bits/sockunion.h>
 
 #ifdef __USE_BSD
 /* This is the 4.3 BSD `struct sockaddr' format, which is used as wire

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
 
@@ -114,13 +114,12 @@ main (int argc, char ** argv)
       check_tzvars (pt->name, pt->daylight, pt->timezone, pt->tzname);
     }
 
-#if 0
-  /* From a port of Scott Harrington <seh4@ix.netcom.com> to the timezone
+  /* From a post of Scott Harrington <seh4@ix.netcom.com> to the timezone
      mailing list.  */
   {
     struct tm tmBuf = {0, 0, 0, 10, 3, 98, 0, 0, -1};
     char buf[200];
-    putenv ("TZ=GB");
+    putenv ("TZ=Europe/London");
     t = mktime (&tmBuf);
     snprintf (buf, sizeof (buf), "TZ=%s %ld %d %d %d %d %d %d %d %d %d",
 	      getenv ("TZ"), t,
@@ -129,8 +128,8 @@ main (int argc, char ** argv)
 	      tmBuf.tm_wday, tmBuf.tm_yday, tmBuf.tm_isdst);
     fputs (buf, stdout);
     puts (" should be");
-    puts ("TZ=GB 892162800 0 0 0 10 3 98 5 99 1");
-    failed |= strcmp (buf, "TZ=GB 892162800 0 0 0 10 3 98 5 99 1") != 0;
+    puts ("TZ=Europe/London 892162800 0 0 0 10 3 98 5 99 1");
+    failed |= strcmp (buf, "TZ=Europe/London 892162800 0 0 0 10 3 98 5 99 1") != 0;
   }
 
   printf("\n");
@@ -150,7 +149,6 @@ main (int argc, char ** argv)
     puts ("TZ=GMT 892166400 0 0 0 10 3 98 5 99 0");
     failed |= strcmp (buf, "TZ=GMT 892166400 0 0 0 10 3 98 5 99 0") != 0;
   }
-#endif
 
   return failed ? EXIT_FAILURE : EXIT_SUCCESS;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -166,6 +166,56 @@ extern wctype_t wctype __P ((__const char *__property));
 extern int __iswctype __P ((wint_t __wc, wctype_t __desc));
 extern int iswctype __P ((wint_t __wc, wctype_t __desc));
 
+#if __GNUC__ >= 2 && defined __OPTIMIZE__
+/* The tables are always organized in a way which allows direct access
+   for single byte characters.  */
+extern unsigned int *__ctype32_b;
+
+# define iswalnum(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwalnum) : iswalnum (wc))
+# define iswalpha(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwalpha) : iswalpha (wc))
+# define iswcntrl(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwcntrl) : iswcntrl (wc))
+# define iswdigit(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwdigit) : iswdigit (wc))
+# define iswlower(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwlower) : iswlower (wc))
+# define iswgraph(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwgraph) : iswgraph (wc))
+# define iswprint(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwprint) : iswprint (wc))
+# define iswpunct(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwpunct) : iswpunct (wc))
+# define iswspace(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwspace) : iswspace (wc))
+# define iswupper(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwupper) : iswupper (wc))
+# define iswxdigit(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwxdigit) : iswxdigit (wc))
+
+# ifdef __USE_GNU
+#  define iswblank(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & _ISwblank) : iswblank (wc))
+# endif
+
+# define iswctype(wc, desc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (int) (__ctype32_b[wc] & desc) : iswctype (wc, desc))
+
+#endif	/* gcc && optimizing */
 
 /*
  * Wide-character case-mapping functions: 7.15.3.1.
@@ -184,33 +234,20 @@ extern wint_t towupper __P ((wint_t __wc));
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t __towctrans __P ((wint_t __wc, wctrans_t __desc));
 
-
-# ifndef __NO_WCTYPE
-#  define iswalnum(wc)	__iswctype ((wc), _ISwalnum)
-#  define iswalpha(wc)	__iswctype ((wc), _ISwalpha)
-#  define iswcntrl(wc)	__iswctype ((wc), _ISwcntrl)
-#  define iswdigit(wc)	__iswctype ((wc), _ISwdigit)
-#  define iswlower(wc)	__iswctype ((wc), _ISwlower)
-#  define iswgraph(wc)	__iswctype ((wc), _ISwgraph)
-#  define iswprint(wc)	__iswctype ((wc), _ISwprint)
-#  define iswpunct(wc)	__iswctype ((wc), _ISwpunct)
-#  define iswspace(wc)	__iswctype ((wc), _ISwspace)
-#  define iswupper(wc)	__iswctype ((wc), _ISwupper)
-#  define iswxdigit(wc)	__iswctype ((wc), _ISwxdigit)
-
-#  ifdef __USE_GNU
-#   define iswblank(wc)	__iswctype ((wc), _ISwblank)
-#  endif
-
-
-/* Pointer to conversion tables.  */
+#if __GNUC__ >= 2 && defined __OPTIMIZE__
+/* The tables are always organized in a way which allows direct access
+   for single byte characters.  */
 extern __const __int32_t *__ctype_tolower; /* Case conversions.  */
 extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 
-#  define towlower(wc)	__towctrans ((wc), __ctype_tolower)
-#  define towupper(wc)	__towctrans ((wc), __ctype_toupper)
+# define towlower(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (wint_t) __ctype_tolower[wc] : towlower (wc))
+# define towuppert(wc) \
+  (__builtin_constant_p (wc) && (wc) >= L'\0' && (wc) <= L'\xff'	      \
+   ? (wint_t) __ctype_toupper[wc] : towupper (wc))
 
-# endif /* Not __NO_WCTYPE.  */
+#endif	/* gcc && optimizing */
 
 __END_DECLS
 
@@ -316,29 +353,6 @@ extern wint_t __towupper_l __P ((wint_t __wc, __locale_t __locale));
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t __towctrans_l __P ((wint_t __wc, wctrans_t __desc,
 				  __locale_t __locale));
-
-
-#  ifndef __NO_WCTYPE
-#   define __iswalnum_l(wc, loc) __iswctype_l ((wc), _ISwalnum, (loc))
-#   define __iswalpha_l(wc, loc) __iswctype_l ((wc), _ISwalpha, (loc))
-#   define __iswcntrl_l(wc, loc) __iswctype_l ((wc), _ISwcntrl, (loc))
-#   define __iswdigit_l(wc, loc) __iswctype_l ((wc), _ISwdigit, (loc))
-#   define __iswlower_l(wc, loc) __iswctype_l ((wc), _ISwlower, (loc))
-#   define __iswgraph_l(wc, loc) __iswctype_l ((wc), _ISwgraph, (loc))
-#   define __iswprint_l(wc, loc) __iswctype_l ((wc), _ISwprint, (loc))
-#   define __iswpunct_l(wc, loc) __iswctype_l ((wc), _ISwpunct, (loc))
-#   define __iswspace_l(wc, loc) __iswctype_l ((wc), _ISwspace, (loc))
-#   define __iswupper_l(wc, loc) __iswctype_l ((wc), _ISwupper, (loc))
-#   define __iswxdigit_l(wc, loc) __iswctype_l ((wc), _ISwxdigit, (loc))
-
-#   define __iswblank_l(wc, loc) __iswctype_l ((wc), _ISwblank, (loc))
-
-#   define __towlower_l(wc, loc) __towctrans_l ((wc), (loc)->__ctype_tolower, \
-						(loc))
-#   define __towupper_l(wc, loc) __towctrans_l ((wc), (loc)->__ctype_toupper, \
-						(loc))
-
-#  endif /* Not __NO_WCTYPE.  */
 
 # endif /* Use GNU.  */
 

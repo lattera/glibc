@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,10 +19,10 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <math.h>
+#include <xlocale.h>
 
 #ifndef __NO_LONG_DOUBLE_MATH
 
-#include <xlocale.h>
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 
 extern long double ____strtold_l_internal (const char *, char **, int,

@@ -6,7 +6,7 @@
 * Character Handling::           Character testing and conversion functions.
 * String and Array Utilities::   Utilities for copying and comparing strings
                                    and arrays.
-* Extended Characters::          Support for extended character sets.
+* Character Set Handling::       Support for extended character sets.
 * Locales::                      The country and language can affect the
                                    behavior of library functions.
 * Message Translation::          How to make the program speak the user's
@@ -15,7 +15,7 @@
 * Pattern Matching::             Matching shell ``globs'' and regular
                                    expressions.
 * I/O Overview::                 Introduction to the I/O facilities.
-* I/O on Streams::               Hign-level, portable I/O facilities.
+* I/O on Streams::               High-level, portable I/O facilities.
 * Low-Level I/O::                Low-level, less portable I/O.
 * File System Interface::        Functions for manipulating files.
 * Pipes and FIFOs::              A simple interprocess communication
@@ -45,6 +45,7 @@
 
 Add-ons
 
+* Cryptographic Functions::      DES encryption and password handling.
 * POSIX Threads::                The standard threads library.
 
 Appendices
@@ -176,10 +177,15 @@ Variable Size Automatic
 
 Character Handling
 
-* Classification of Characters::   Testing whether characters are
-			            letters, digits, punctuation, etc.
+* Classification of Characters::       Testing whether characters are
+			                letters, digits, punctuation, etc.
 
-* Case Conversion::                Case mapping, and the like.
+* Case Conversion::                    Case mapping, and the like.
+* Classification of Wide Characters::  Character class determination for
+                                        wide characters.
+* Using Wide Char Classes::            Notes on using the wide character
+                                        classes.
+* Wide Character Case Conversion::     Mapping of wide characters.
 
 String and Array Utilities
 
@@ -203,19 +209,40 @@ Argz and Envz Vectors
 * Argz Functions::              Operations on argz vectors.
 * Envz Functions::              Additional operations on environment vectors.
 
-Extended Characters
+Character Set Handling
 
-* Extended Char Intro::         Multibyte codes versus wide characters.
-* Locales and Extended Chars::  The locale selects the character codes.
-* Multibyte Char Intro::        How multibyte codes are represented.
-* Wide Char Intro::             How wide characters are represented.
-* Wide String Conversion::      Converting wide strings to multibyte code
-                                 and vice versa.
-* Length of Char::              how many bytes make up one multibyte char.
-* Converting One Char::         Converting a string character by character.
-* Example of Conversion::       Example showing why converting
-				 one character at a time may be useful.
-* Shift State::                 Multibyte codes with "shift characters".
+* Extended Char Intro::              Introduction to Extended Characters.
+* Charset Function Overview::        Overview about Character Handling
+                                      Functions.
+* Restartable multibyte conversion:: Restartable multibyte conversion
+                                      Functions.
+* Non-reentrant Conversion::         Non-reentrant Conversion Function.
+* Generic Charset Conversion::       Generic Charset Conversion.
+
+Restartable multibyte conversion
+
+* Selecting the Conversion::     Selecting the conversion and its properties.
+* Keeping the state::            Representing the state of the conversion.
+* Converting a Character::       Converting Single Characters.
+* Converting Strings::           Converting Multibyte and Wide Character
+                                  Strings.
+* Multibyte Conversion Example:: A Complete Multibyte Conversion Example.
+
+Non-reentrant Conversion
+
+* Non-reentrant Character Conversion::  Non-reentrant Conversion of Single
+                                         Characters.
+* Non-reentrant String Conversion::     Non-reentrant Conversion of Strings.
+* Shift State::                         States in Non-reentrant Functions.
+
+Generic Charset Conversion
+
+* Generic Conversion Interface::    Generic Character Set Conversion Interface.
+* iconv Examples::                  A complete @code{iconv} example.
+* Other iconv Implementations::     Some Details about other @code{iconv}
+                                     Implementations.
+* glibc iconv Implementation::      The @code{iconv} Implementation in the GNU C
+                                     library.
 
 Locales
 
@@ -751,6 +778,8 @@ Date and Time
 
 * Processor Time::              Measures processor time used by a program.
 * Calendar Time::               Manipulation of ``real'' dates and times.
+* Precision Time::              Manipulation and monitoring of high accuracy
+                                  time.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
 * Resource Usage::		Measuring various resources used.
@@ -1093,6 +1122,13 @@ Sysconf
 * Constants for Sysconf::     The list of parameters @code{sysconf} can read.
 * Examples of Sysconf::       How to use @code{sysconf} and the parameter
 				 macros properly together.
+
+Cryptographic Functions
+
+* Legal Problems::              This software can get you locked up, or worse.
+* getpass::                     Prompting the user for a password.
+* crypt::                       A one-way function for UNIX passwords.
+* DES Encryption::              Routines for DES encryption.
 
 POSIX Threads
 

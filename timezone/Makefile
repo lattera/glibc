@@ -1,4 +1,4 @@
-# Copyright (C) 1998 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -180,7 +180,8 @@ $(objpfx)test-tz.out: $(addprefix $(testdata)/, America/New_York Etc/UTC UTC)
 $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 				       Europe/Berlin Universal \
 				       Australia/Melbourne \
-				       America/Sao_Paulo Asia/Tokyo GB)
+				       America/Sao_Paulo Asia/Tokyo \
+				       Europe/London)
 
 test-tz-ENV = TZDIR=$(testdata)
 tst-timezone-ENV = TZDIR=$(testdata)
@@ -206,7 +207,7 @@ $(testdata)/America/Sao_Paulo: southamerica $(objpfx)zic $(leapseconds) \
 	$(build-testdata)
 $(testdata)/Asia/Tokyo: asia $(objpfx)zic $(leapseconds) yearistype
 	$(build-testdata)
-$(testdata)/GB: europe $(objpfx)zic $(leapseconds) yearistype
+$(testdata)/Europe/London: europe $(objpfx)zic $(leapseconds) yearistype
 	$(build-testdata)
 
 

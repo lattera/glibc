@@ -1,3 +1,79 @@
+1999-01-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ctype/Versions [GLIBC_2.0]: Export __ctype32_b.
+	* include/wctype.h: Declare __iswctype.
+	* stdio-common/vfscanf.c (__vfscanf): Use __iswspace instead of
+	iswspace.
+	* wctype/Makefile (routines): Add wcextra_l.
+	* wctype/wcextra.c (iswblank): Implement function here and don't use
+	__iswctype.
+	(__iswblank_l):  Move definition to...
+	* wctype/wcextra_l.c: ...here.  New file.
+	* wctype/wcfuncs.c: Really implement functions and don't call
+	__iswctype or __towctrans.
+	* wctype/wctype.h: Change isw* and tow* macros.  Don't call
+	__iswctype or __towctrans.  Instead optimize constant argument case.
+
+	* iconv/gconv.h: Fix typos.
+
+	* iconv/skeleton.c: Fix typos.  Optimize init function a bit.
+	Correctly emit escape sequence to return to initial state in
+	conversion function.
+
+	* iconvdata/iso-2022-jp.c (gconv_init): Correctly initialize
+	max_needed_to element.
+
+	* manual/mbyte.texi: Removed.  This is now described in charset.texi.
+	* manual/charset.texi: New file.
+	* manual/Makefile (chapters): Replace mbyte by charset.
+	* manual/ctype.texi: Document wide character functions.
+	* manual/intro.texi: Fix reference to mbyte chapter.
+	* manual/lang.texi: Likewise.
+	* manual/locale.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Fix @node line for new charset chapter.
+	* manual/libc.texinfo (UPDATED): Updated.  Also update copyright years.
+	* manual/memory.texi (savestring): Optimize code to give a good
+	example.
+
+	* manual/filesys.texi: Fix wording.  Patches by Jim Meyering.
+
+	* nscd/nscd_getgr_r.c: Include stdint.h to get uintptr_t definition.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_gethst_r.c: Likewise.
+
+	* stdlib/stdtold_l.c: Always include xlocale.h.
+
+1999-01-11  Geoffrey Keating  <geoffk@ozemail.com.au>
+
+	* stdlib/fpioconst.h (LDBL_MAX_10_EXP_LOG): Define to be same as
+	DBL_MAX_10_EXP_LOG if there is no long double.
+	(_fpioconst_pow10): Always use size as LDBL_MAX_10_EXP_LOG to match
+	printf_fp.c.
+
+1999-01-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* timezone/Makefile ($(testdata)/GB): Changed to ...
+	($(testdata)/Europe/London): ... for tst-timezone test.
+	($(objpfx)tst-timezone.out): Change GB to Europe/London.
+
+	* timezone/tst-timezone.c (main): Enable DST switching test,
+	change GB to Europe/London.
+
+1999-01-10  Philip Blundell  <philb@gnu.org>
+
+	* socket/Makefile (headers): Remove bits/sockunion.h.
+
+1999-01-09  Philip Blundell  <philb@gnu.org>
+
+	* socket/sys/socket.h: Don't include <bits/sockunion.h>.
+	* sysdeps/generic/bits/sockunion.h: Deleted.
+	* sysdeps/unix/sysv/linux/bits/sockunion.h: Likewise.
+
+1999-01-08  H.J. Lu  <hjl@gnu.org>
+
+	* io/fts.c (fts_close): Don't access memory after having it freed.
+
 1998-01-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* manual/Makefile (stamp-summary): Remove space after -t option

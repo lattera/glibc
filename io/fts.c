@@ -231,6 +231,7 @@ fts_close(sp)
 {
 	register FTSENT *freep, *p;
 	int saved_errno;
+	int retval = 0;
 
 	/*
 	 * This still works if we haven't read anything -- the dummy structure
@@ -259,15 +260,16 @@ fts_close(sp)
 		(void)__close(sp->fts_rfd);
 	}
 
-	/* Free up the stream pointer. */
-	free(sp);
-
 	/* Set errno and return. */
 	if (!ISSET(FTS_NOCHDIR) && saved_errno) {
 		__set_errno (saved_errno);
-		return (-1);
+		retval = -1;
 	}
-	return (0);
+
+	/* Free up the stream pointer. */
+	free (sp);
+
+	return retval;
 }
 
 /*

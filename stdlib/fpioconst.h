@@ -1,5 +1,5 @@
 /* Header file for constants used in floating point <-> decimal conversions.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,11 @@
    XXX These should be defined in <float.h>.  For the time being, we have the
    IEEE754 values here.  */
 
-#define LDBL_MAX_10_EXP_LOG	12 /* = floor(log_2(LDBL_MAX_10_EXP)) */
+#ifndef __NO_LONG_DOUBLE_MATH
+# define LDBL_MAX_10_EXP_LOG	12 /* = floor(log_2(LDBL_MAX_10_EXP)) */
+#else
+# define LDBL_MAX_10_EXP_LOG	8 /* = floor(log_2(LDBL_MAX_10_EXP)) */
+#endif
 #define DBL_MAX_10_EXP_LOG	8 /* = floor(log_2(DBL_MAX_10_EXP)) */
 #define FLT_MAX_10_EXP_LOG	5 /* = floor(log_2(FLT_MAX_10_EXP)) */
 
@@ -47,11 +51,7 @@ struct mp_power
     int p_expo;			/* Exponent of the number 10^(2^i).  */
     int m_expo;			/* Exponent of the number 10^-(2^i-1).  */
   };
-#ifndef __NO_LONG_DOUBLE_MATH
 extern const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1];
-#else
-extern const struct mp_power _fpioconst_pow10[DBL_MAX_10_EXP_LOG + 1];
-#endif
 
 /* The constants in the array `_fpioconst_pow10' have an offset.  */
 #if BITS_PER_MP_LIMB == 32

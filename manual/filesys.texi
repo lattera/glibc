@@ -2696,8 +2696,8 @@ this file, you must remove the old file explicitly first.
 
 If you need to use a temporary file in your program, you can use the
 @code{tmpfile} function to open it.  Or you can use the @code{tmpnam}
-(better: @code{tmpnam_r}) function make a name for a temporary file and
-then open it in the usual way with @code{fopen}.
+(better: @code{tmpnam_r}) function to make a name for a temporary file and
+then you can open it in the usual way with @code{fopen}.
 
 The @code{tempnam} function is like @code{tmpnam} but lets you choose
 what directory temporary files will go in, and something about what

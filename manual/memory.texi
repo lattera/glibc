@@ -230,9 +230,8 @@ char *
 savestring (const char *ptr, size_t len)
 @{
   register char *value = (char *) xmalloc (len + 1);
-  memcpy (value, ptr, len);
   value[len] = '\0';
-  return value;
+  return (char *) memcpy (value, ptr, len);
 @}
 @end group
 @end smallexample

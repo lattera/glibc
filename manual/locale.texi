@@ -1,4 +1,4 @@
-@node Locales, Message Translation, Extended Characters, Top
+@node Locales, Message Translation, Character Set Handling, Top
 @c %MENU% The country and language can affect the behavior of library functions
 @chapter Locales and Internationalization
 
@@ -42,7 +42,7 @@ following:
 @itemize @bullet
 @item
 What multibyte character sequences are valid, and how they are
-interpreted (@pxref{Extended Characters}).
+interpreted (@pxref{Character Set Handling}).
 
 @item
 Classification of which characters in the local character set are
@@ -140,7 +140,7 @@ and @code{strxfrm}); see @ref{Collation Functions}.
 @item LC_CTYPE
 This category applies to classification and conversion of characters,
 and to multibyte and wide characters;
-see @ref{Character Handling}, and @ref{Extended Characters}.
+see @ref{Character Handling}, and @ref{Character Set Handling}.
 
 @comment locale.h
 @comment ISO

@@ -652,7 +652,7 @@ and shell file name patterns, and for expanding words as the shell does.
 and CPU time, as well as functions for setting alarms and timers.
 
 @item
-@ref{Extended Characters}, contains information about manipulating
+@ref{Character Set Handling}, contains information about manipulating
 characters and strings using character sets larger than will fit in
 the usual @code{char} data type.
 
