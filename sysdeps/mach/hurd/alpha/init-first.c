@@ -89,7 +89,7 @@ static void
 init1 (intptr_t *data)
 {
   int argc = (intptr_t) *data;
-  char **argv = &data[1];
+  char **argv = (char **) &data[1];
   char **envp = &argv[argc + 1];
   struct hurd_startup_data *d;
 
@@ -136,7 +136,7 @@ init1 (intptr_t *data)
 
 
 static inline void
-init (int *data)
+init (intptr_t *data)
 {
   int argc = *data;
   char **argv = (void *) (data + 1);
@@ -255,7 +255,7 @@ first_init (void)
    stack set up just as the user will see it, so it can switch stacks.  */
 
 void
-_dl_init_first (int argc, ...)
+_dl_init_first (intptr_t argc, ...)
 {
   first_init ();
 
@@ -283,7 +283,7 @@ strong_alias (posixland_init, __libc_init_first);
 
 
 void
-_hurd_stack_setup (volatile int argc, ...)
+_hurd_stack_setup (volatile intptr_t argc, ...)
 {
   first_init ();
 
