@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -273,6 +273,8 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
   int have_wday, want_xday;
   int have_yday;
   int have_mon, have_mday;
+  int have_uweek, have_wweek;
+  int week_no;
   size_t num_eras;
   struct era_entry *era;
 
@@ -281,8 +283,10 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
   want_century = 0;
   want_era = 0;
   era = NULL;
+  week_no = 0;
 
-  have_wday = want_xday = have_yday = have_mon = have_mday = 0;
+  have_wday = want_xday = have_yday = have_mon = have_mday = have_uweek = 0;
+  have_wweek = 0;
 
   while (*fmt != '\0')
     {
@@ -639,8 +643,16 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	  while (*rp >= '0' && *rp <= '9');
 	  break;
 	case 'U':
-	case 'V':
+	  get_number (0, 53, 2);
+	  week_no = val;
+	  have_uweek = 1;
+	  break;
 	case 'W':
+	  get_number (0, 53, 2);
+	  week_no = val;
+	  have_wweek = 1;
+	  break;
+	case 'V':
 	  get_number (0, 53, 2);
 	  /* XXX This cannot determine any field in TM without some
 	     information.  */
@@ -902,8 +914,16 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
 	      tm->tm_sec = val;
 	      break;
 	    case 'U':
-	    case 'V':
+	      get_alt_number (0, 53, 2);
+	      week_no = val;
+	      have_uweek = 1;
+	      break;
 	    case 'W':
+	      get_alt_number (0, 53, 2);
+	      week_no = val;
+	      have_wweek = 1;
+	      break;
+	    case 'V':
 	      get_alt_number (0, 53, 2);
 	      /* XXX This cannot determine any field in TM without
 		 further information.  */
@@ -975,6 +995,42 @@ strptime_internal (rp, fmt, tm, decided, era_cnt)
     }
   if (want_xday && !have_yday)
     day_of_the_year (tm);
+  if ((have_uweek || have_wweek) && have_wday)
+    {
+      int save_wday = tm->tm_wday;
+      int save_mday = tm->tm_mday;
+      int save_mon = tm->tm_mon;
+      int w_offset = have_uweek ? 0 : 1;
+
+      tm->tm_mday = 1;
+      tm->tm_mon = 0;
+      day_of_the_week (tm);
+      if (have_mday)
+	tm->tm_mday = save_mday;
+      if (have_mon)
+	tm->tm_mon = save_mon;
+
+      if (!have_yday)
+	tm->tm_yday = ((7 - (tm->tm_wday - w_offset)) % 7
+		       + (week_no - 1) *7
+		       + save_wday - w_offset);
+
+      if (!have_mday || !have_mon)
+	{
+	  int t_mon = 0;
+	  while (__mon_yday[__isleap(1900 + tm->tm_year)][t_mon]
+		 <= tm->tm_yday)
+	    t_mon++;
+	  if (!have_mon)
+	    tm->tm_mon = t_mon - 1;
+	  if (!have_mday)
+	      tm->tm_mday =
+		(tm->tm_yday
+		 - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1);
+	}
+
+      tm->tm_wday = save_wday;
+    }
 
   return (char *) rp;
 }

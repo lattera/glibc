@@ -1,5 +1,8 @@
 2001-08-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/strptime.c (strptime_internal): Add handling of year +
+	%U/%W week + week day.
+
 	* stdio-common/vfscanf.c: Fix reading of wide chars and strings if
 	not COMPILE_WSCANF.
 
