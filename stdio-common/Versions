@@ -48,5 +48,5 @@ libc {
   }
   GLIBC_PRIVATE {
     # global variables
-    _itoa_lower_digits; _itoa_upper_digits;
+    _itoa_lower_digits;
 }

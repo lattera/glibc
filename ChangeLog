@@ -1,3 +1,109 @@
+2004-05-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/bsd/bits/fcntl.h (F_SETOWN, F_GETOWN): Define if
+	__USE_BSD or __USE_UNIX98.
+	* sysdeps/unix/bsd/ultrix4/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/common/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* sysdeps/unix/sysv/aix/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* sysdeps/unix/sysv/irix4/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/cris/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	*sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	Likewise.
+	* sysdeps/generic/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* sysdeps/mach/hurd/bits/fcntl.h (F_SETOWN, F_GETOWN): Likewise.
+	* io/sys/stat.h (S_ISSOCK, S_IFSOCK): Likewise.
+
+2004-05-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/Versions (libc): Remove __libc_wait, __libc_waitpid,
+	__libc_pause, __libc_nanosleep, __libc_pread, __libc_pread64,
+	__libc_pwrite64, __waitid and __pselect @@GLIBC_PRIVATE.
+	* stdlib/Versions (libc): Remove __on_exit@@GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/Versions (libc): Remove
+	__libc_sigaction@@GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/x86_64/Versions (libc): Remove
+	__modify_ldt@@GLIBC_PRIVATE.
+	* socket/Versions (libc): Remove __libc_accept, __libc_send,
+	__libc_recvfrom, __libc_recvmsg, __libc_sendmsg, __libc_recv,
+	__libc_sendto and __libc_connect @@GLIBC_PRIVATE.
+	* stdio-common/Versions (libc): Remove
+	_itoa_upper_digits@@GLIBC_PRIVATE.
+	* resolv/Versions (libresolv): Remove __ns_samename@@GLIBC_PRIVATE.
+	* misc/Versions (libc): Remove __libc_fsync, __libc_msync,
+	__libc_readv and __libc_writev @@GLIBC_PRIVATE.
+	* termios/Versions (libc): Remove __libc_tcdrain@@GLIBC_PRIVATE.
+	* io/Versions (libc): Remove __libc_open, __libc_close, __libc_read,
+	__libc_write, __libc_lseek, __libc_fcntl, __libc_open64 and
+	__libc_lseek64 @@GLIBC_PRIVATE.
+
+2004-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (open_verify): Move e_phentsize check after e_type
+	check.
+
+2004-04-29  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.c: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.c: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lround.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: New file.
+
+	* math/test-misc.c [LDBL_MANT_DIG == 106](main): Correct LDBL_MAX
+	mantissa for AIX long double format.
+	* misc/qefgcvt.c [LDBL_MANT_DIG == 106] (NDIGIT_MAX): Define for AIX
+	long double format.
+	* misc/qefgcvt_r.c [LDBL_MANT_DIG == 106] (NDIGIT_MAX): Likewise.
+	* stdlib/fpioconst.c [!__NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__>1024]
+	(_fpioconst_pow10): AIX long double format has same exponent range as
+	double.
+	* stdlib/fpioconst.h [!__NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__>1024]
+	(LDBL_MAX_10_EXP_LOG): AIX long double format has same exponent range
+	as double.
+
+2004-04-23  Art Haas  <ahaas@airmail.net>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add 'defined'.
+
 2004-04-28  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/unix/sysv/linux/mq_getattr.c: Include <stddef.h>.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995-2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -116,7 +116,7 @@ __BEGIN_DECLS
 # ifdef __S_IFLNK
 #  define S_IFLNK	__S_IFLNK
 # endif
-# if (defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN2K) \
+# if (defined __USE_BSD || defined __USE_MISC || defined __USE_UNIX98) \
      && defined __S_IFSOCK
 #  define S_IFSOCK	__S_IFSOCK
 # endif
@@ -137,13 +137,13 @@ __BEGIN_DECLS
 # define S_ISLNK(mode)	 __S_ISTYPE((mode), __S_IFLNK)
 #endif
 
-#ifdef	__USE_BSD
-# ifndef __S_IFLNK
-#  define S_ISLNK(mode)  0
-# endif
-# ifdef __S_IFSOCK
-#  define S_ISSOCK(mode) __S_ISTYPE((mode), __S_IFSOCK)
-# endif
+#if defined __USE_BSD && !defined __S_IFLNK
+# define S_ISLNK(mode)  0
+#endif
+
+#if (defined __USE_BSD || defined __USE_UNIX98) \
+    && defined __S_IFSOCK
+# define S_ISSOCK(mode) __S_ISTYPE((mode), __S_IFSOCK)
 #endif
 
 /* These are from POSIX.1b.  If the objects are not implemented using separate

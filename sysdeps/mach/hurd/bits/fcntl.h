@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for GNU.
-   Copyright (C) 1993,94,96,97,98,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,96,97,98,99,2000,01,04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -153,7 +153,7 @@
 #define	F_SETFD		2	/* Set file descriptor flags.  */
 #define	F_GETFL		3	/* Get file status flags.  */
 #define	F_SETFL		4	/* Set file status flags.  */
-#if defined __USE_BSD || defined __USE_XOPEN2K
+#if defined __USE_BSD || defined __USE_UNIX98
 # define F_GETOWN	5	/* Get owner (receiver of SIGIO).  */
 # define F_SETOWN	6	/* Set owner (receiver of SIGIO).  */
 #endif

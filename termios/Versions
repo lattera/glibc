@@ -11,9 +11,4 @@ libc {
     # t*
     tcgetsid;
   }
-  GLIBC_PRIVATE {
-    # functions which have an additional interface since they are
-    # are cancelable.
-    __libc_tcdrain;
-  }
 }

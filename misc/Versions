@@ -130,10 +130,4 @@ libc {
   GLIBC_2.3.3 {
     remap_file_pages;
   }
-  GLIBC_PRIVATE {
-    # functions which have an additional interface since they are
-    # cancelable.
-    __libc_fsync; __libc_msync;
-    __libc_readv; __libc_writev;
-  }
 }

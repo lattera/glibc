@@ -1,5 +1,5 @@
-/* Round a double value to a long long in the current rounding mode.
-   Copyright (C) 1997, 2004 Free Software Foundation, Inc.
+/* Round double to long int.  PowerPC64 version.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,27 +17,23 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Kludge to avoid decls that will confuse strong_alias below.  */
-#define __lrint XXX__lrint
-#define __lrintl XXX__lrintl
-#define lrint XXXlrint
-#define lrintl XXXlrintl
+#include <sysdep.h>
 
-#include "math.h"
+/* long long int[r3] __llrint (double x[fp1])  */
+ENTRY (__llrint)	
+	fctid	fp13,fp1
+	stfd	fp13,-16(r1)
+	nop	/* Insure the following load is in a different dispatch group */
+	nop	/* to avoid pipe stall on POWER4&5.  */
+	nop
+	ld	r3,-16(r1)	
+	blr
+	END (__llrint)
 
-#undef __lrint
-#undef __lrintl
-#undef lrint
-#undef lrintl
-
-long long int
-__llrint (double x)
-{
-  return (long long int) __rint (x);
-}
 strong_alias (__llrint, __lrint)
 weak_alias (__llrint, llrint)
 weak_alias (__lrint, lrint)
+
 #ifdef NO_LONG_DOUBLE
 strong_alias (__llrint, __llrintl)
 weak_alias (__llrint, llrintl)

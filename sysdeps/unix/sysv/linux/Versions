@@ -116,9 +116,6 @@ libc {
     sched_getaffinity; sched_setaffinity;
   }
   GLIBC_PRIVATE {
-    # needed by libpthread.
-    __libc_sigaction;
-
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
   }

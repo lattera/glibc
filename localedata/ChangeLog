@@ -1,3 +1,12 @@
+2004-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/wal_ET: New file.  Contributed by Daniel Yacob.
+
+2004-05-02  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/sid_ET: Correct lang_ab and source information.
+	Patch from Daniel Yacob.
+
 2004-04-17  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/et_EE: Change default charset for et_EE locale from

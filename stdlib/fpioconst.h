@@ -34,7 +34,7 @@
    XXX These should be defined in <float.h>.  For the time being, we have the
    IEEE754 values here.  */
 
-#ifndef __NO_LONG_DOUBLE_MATH
+#if !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
 # define LDBL_MAX_10_EXP_LOG	12 /* = floor(log_2(LDBL_MAX_10_EXP)) */
 #else
 # define LDBL_MAX_10_EXP_LOG	8 /* = floor(log_2(LDBL_MAX_10_EXP)) */

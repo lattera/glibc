@@ -33,6 +33,8 @@
 # define NDIGIT_MAX 17
 #elif LDBL_MANT_DIG == 113
 # define NDIGIT_MAX 36
+#elif LDBL_MANT_DIG == 106
+# define NDIGIT_MAX 34
 #elif LDBL_MANT_DIG == 56
 # define NDIGIT_MAX 18
 #else

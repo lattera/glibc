@@ -54,6 +54,10 @@ main (void)
 
 #  if LDBL_MANT_DIG == 64
     m = 0xf.fffffffffffffffp-4L;
+#  elif LDBL_MANT_DIG == 106
+    /* This has to match the mantissa of LDBL_MAX which actually does have a
+       missing bit in the middle.  */
+    m = 0x1.fffffffffffff7ffffffffffff8p-1L;
 #  elif LDBL_MANT_DIG == 113
     m = 0x1.ffffffffffffffffffffffffffffp-1L;
 #  else

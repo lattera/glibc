@@ -98,8 +98,5 @@ libc {
     # functions which have an additional interface since they are
     # are cancelable.
     __libc_system;
-
-    # functions used in other libraries.
-    __on_exit;
   }
 }

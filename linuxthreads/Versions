@@ -34,6 +34,8 @@ libc {
     __libc_sigpause; __libc_sigsuspend; __libc_sigwait; __libc_sigwaitinfo;
     __libc_waitid; __libc___xpg_sigpause; __librt_enable_asynccancel;
     __librt_disable_asynccancel; __librt_multiple_threads;
+
+    __libc_sigaction; __on_exit;
   }
 }
 

@@ -278,7 +278,7 @@ const mp_limb_t __tens[] =
   0x26b2716ed595d80full, 0x1d153624adc666b0ull, 0x63ff540e3c42d35aull,
   0x65f9ef17cc5573c0ull, 0x80dcc7f755bc28f2ull, 0x5fdcefcef46eeddcull,
   0x00000000000553f7ull,
-#ifndef __NO_LONG_DOUBLE_MATH
+#if!defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
 # define TENS_P9_IDX	(TENS_P8_IDX + TENS_P8_SIZE)
 # define TENS_P9_SIZE	28
   [TENS_P9_IDX] = 0x0000000000000000ull, 0x0000000000000000ull,
@@ -449,7 +449,7 @@ const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1] =
   { TENS_P6_IDX, TENS_P6_SIZE,		213,	 210 },
   { TENS_P7_IDX, TENS_P7_SIZE,		426,	 422 },
   { TENS_P8_IDX, TENS_P8_SIZE,  	851,	 848 },
-#ifndef __NO_LONG_DOUBLE_MATH
+#if !defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024
   { TENS_P9_IDX, TENS_P9_SIZE,	 	1701,	1698 },
   { TENS_P10_IDX, TENS_P10_SIZE,	3402,	3399 },
   { TENS_P11_IDX, TENS_P11_SIZE,	6804,	6800 },

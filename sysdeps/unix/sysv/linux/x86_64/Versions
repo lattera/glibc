@@ -6,7 +6,4 @@ libc {
 
     modify_ldt;
   }
-  GLIBC_PRIVATE {
-    __modify_ldt;
-  }
 }

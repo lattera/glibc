@@ -1520,16 +1520,16 @@ open_verify (const char *name, struct filebuf *fbp)
 	}
       if (! __builtin_expect (elf_machine_matches_host (ehdr), 1))
 	goto close_and_out;
-      else if (__builtin_expect (ehdr->e_phentsize, sizeof (ElfW(Phdr)))
-	       != sizeof (ElfW(Phdr)))
-	{
-	  errstring = N_("ELF file's phentsize not the expected size");
-	  goto call_lose;
-	}
       else if (__builtin_expect (ehdr->e_type, ET_DYN) != ET_DYN
 	       && __builtin_expect (ehdr->e_type, ET_EXEC) != ET_EXEC)
 	{
 	  errstring = N_("only ET_DYN and ET_EXEC can be loaded");
+	  goto call_lose;
+	}
+      else if (__builtin_expect (ehdr->e_phentsize, sizeof (ElfW(Phdr)))
+	       != sizeof (ElfW(Phdr)))
+	{
+	  errstring = N_("ELF file's phentsize not the expected size");
 	  goto call_lose;
 	}
 
