@@ -1,5 +1,8 @@
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-address.c (INT_STR_ELEM): Correct test for
+	unknown character.
+
 	* locale/programs/ld-collate.c: Correct handling of different
 	collation sections.
 	* locale/programs/localedef.c (add_to_readlist): Take locale pointer

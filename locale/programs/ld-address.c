@@ -520,7 +520,8 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 	  if (address->cat != NULL)					      \
 	    lr_error (ldfile, _("\
 %s: field `%s' declared more than once"), "LC_ADDRESS", #cat);		      \
-	  else if (!ignore_content && arg->val.str.startmb == NULL)	      \
+	  else if (!ignore_content && arg->tok == tok_string		      \
+		   && arg->val.str.startmb == NULL)			      \
 	    {								      \
 	      lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_ADDRESS", #cat);		      \
