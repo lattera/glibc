@@ -35,6 +35,7 @@ powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
 # Configuration		WORDSIZE[32|64]		Alternate configuration
 # -------------		----------		-----------------------
 x86_64-.*-.*		WORDSIZE32		i686-@VENDOR@-@OS@
+i.86-.*-.*		WORDSIZE64		x86_64-@VENDOR@-@OS@
 s390x-.*-.*		WORDSIZE32		s390-@VENDOR@-@OS@
 s390-.*-.*		WORDSIZE64		s390x-@VENDOR@-@OS@
 powerpc64-.*-.*		WORDSIZE32		powerpc-@VENDOR@-@OS@

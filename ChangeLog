@@ -1,5 +1,22 @@
 2005-02-11  Roland McGrath  <roland@redhat.com>
 
+	[BZ #715]
+	* Makefile (installed-stubs): New variable.
+	Set to $(inst_includedir)/gnu/stubs.h if $(biarch) is no,
+	or to $(inst_includedir)/gnu/stubs-$(biarch).h if otherwise.
+	[$(biarch) != no] (install-others-nosubdir): Add $(installed-stubs).
+	($(inst_includedir)/gnu/stubs.h): Use $(installed-stubs) for this
+	rule's target.
+	($(inst_includedir)/gnu/stubs.h): New target, install from ...
+	* include/stubs-biarch.h: New file.
+
+	* shlib-versions (i.86-.*-.*): Add WORDSIZE64 line mapping to x86_64.
+
+	* Makeconfig ($(common-objpfx)soversions.mk): Depend on Makeconfig.
+	Emit defn for variable `biarch'.
+
+	* include/stub-tag.h: Update comment.
+
 	* scripts/soversions.awk: Fix default version set handling.
 
 2005-02-10  Roland McGrath  <roland@redhat.com>

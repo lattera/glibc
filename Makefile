@@ -157,13 +157,25 @@ others: $(common-objpfx)testrun.sh
 
 subdir-stubs := $(foreach dir,$(subdirs),$(common-objpfx)$(dir)/stubs)
 
+ifeq ($(biarch),no)
+installed-stubs = $(inst_includedir)/gnu/stubs.h
+else
+installed-stubs = $(inst_includedir)/gnu/stubs-$(biarch).h
+
+$(inst_includedir)/gnu/stubs.h: include/stubs-biarch.h $(+force)
+	$(INSTALL_DATA) $< $@
+
+install-others-nosubdir: $(installed-stubs)
+endif
+
+
 # Since stubs.h is never needed when building the library, we simplify the
 # hairy installation process by producing it in place only as the last part
 # of the top-level `make install'.  It depends on subdir_install, which
 # iterates over all the subdirs; subdir_install in each subdir depends on
 # the subdir's stubs file.  Having more direct dependencies would result in
 # extra iterations over the list for subdirs and many recursive makes.
-$(inst_includedir)/gnu/stubs.h: include/stubs-prologue.h subdir_install
+$(installed-stubs): include/stubs-prologue.h subdir_install
 	$(make-target-directory)
 	@rm -f $(objpfx)stubs.h
 	(sed '/^@/d' $<; LC_ALL=C sort $(subdir-stubs)) > $(objpfx)stubs.h
