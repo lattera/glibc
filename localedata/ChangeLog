@@ -1,3 +1,9 @@
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* tests-mbwc/tst_wcscmp.c (tst_wcscmp): Take the sign of ret.
+	* tests-mbwc/dat_wcscmp.c (tst_wcscmp_loc): Don't expect precise
+	return values.  Only the sign matters.
+
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ar_SA: Last non <Uxxxx> entries removed.

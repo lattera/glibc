@@ -202,6 +202,7 @@ cat <<EOF |
   #ISO-2022-KR
   #ISO-2022-CN
   #ISO-2022-CN-EXT
+  #UTF-7
   #
 EOF
 while read charset charmap; do

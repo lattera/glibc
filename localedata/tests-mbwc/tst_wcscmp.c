@@ -23,6 +23,7 @@ tst_wcscmp (FILE * fp, int debug_flg)
       ws1 = TST_INPUT (wcscmp).ws1;
       ws2 = TST_INPUT (wcscmp).ws2;
       ret = wcscmp (ws1, ws2);
+      ret = (ret > 0 ? 1 : ret < 0 ? -1 : 0);
 
       if (debug_flg)
 	{
