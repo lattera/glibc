@@ -532,7 +532,7 @@ do {                                                                          \
 */
 
 #ifndef HAVE_MREMAP
-#define HAVE_MREMAP defined(__linux__) && !defined(__arm__)
+#define HAVE_MREMAP defined(__linux__)
 #endif
 
 /* Define USE_ARENAS to enable support for multiple `arenas'.  These
