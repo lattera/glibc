@@ -7,8 +7,24 @@
 	and rename to __yperr2nss_tab.  Change YPERR_COUNT into variable
 	__yperr2nss_count.
 	* nis/nss-nis.c: New file.
+	* nis/nss-nisplus.h: Move niserr2nss_tab definition into separate file
+	and rename to __niserr2nss_tab.  Change NISERR_COUNT into variable
+	__niserr2nss_count.
+	* nis/nss-nisplus.c: New file.
 	* nis/Makefile (libnss_compat-routines): Add nss-nis.
 	(libnss_nis-routines): Likewise.
+	(libnss_nisplus-routines): Add nss-nisplus.
+
+	* nss_nisplus/nisplus-alias.c: Remove unnecessary initializations.
+	* nss_nisplus/nisplus-ethers.c: Likewise.
+	* nss_nisplus/nisplus-grp.c: Likewise.
+	* nss_nisplus/nisplus-hosts.c: Likewise.
+	* nss_nisplus/nisplus-network.c: Likewise.
+	* nss_nisplus/nisplus-proto.c: Likewise.
+	* nss_nisplus/nisplus-pwd.c: Likewise.
+	* nss_nisplus/nisplus-rpc.c: Likewise.
+	* nss_nisplus/nisplus-service.c: Likewise.
+	* nss_nisplus/nisplus-spwd.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Some more
 	optimizations.  Patch by Jakub Jelinek <jakub@redhat.com>.

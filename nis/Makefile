@@ -62,7 +62,8 @@ libnss_nis-routines	:= $(addprefix nis-,$(databases)) nis-initgroups \
 			   nss-nis
 libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
 
-libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser
+libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser \
+			   nss-nisplus
 libnss_nisplus-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 include ../Rules
