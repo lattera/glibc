@@ -1,7 +1,8 @@
 1999-11-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Correct alias for ISO-8859-10.  This
-	standard was issued in 1992.  Reported by Bruno Haible <haible@ilog.fr>.
+	standard was issued in 1992.
+	Reported by Bruno Haible <haible@ilog.fr>.
 
 1999-11-29  Thorsten Kukuk  <kukuk@suse.de>
 

@@ -1,12 +1,17 @@
+1999-11-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/ISO-8859-10: Correct alias.  This charset was issued in
+	1992.  Reported by Bruno Haible <haible@ilog.fr>.
+
 1999-11-27  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
 
-     * locales/ja_JP: Add JIS X 0201 kana and JIS X 0212 definitions.
-     * charmaps/EUC-JP: Likewise.
-     * repertoiremaps/mnemonic.ja: Likewise.
+	* locales/ja_JP: Add JIS X 0201 kana and JIS X 0212 definitions.
+	* charmaps/EUC-JP: Likewise.
+	* repertoiremaps/mnemonic.ja: Likewise.
 
-     * locales/ja_JP: Add extra CLASS and MAP definisions.
+	* locales/ja_JP: Add extra CLASS and MAP definisions.
 
-     * charmaps/EUC-JP: Add WIDTH definitions.
+	* charmaps/EUC-JP: Add WIDTH definitions.
 
 1999-11-25  Ulrich Drepper  <drepper@cygnus.com>
 
