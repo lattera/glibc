@@ -1,3 +1,9 @@
+2005-02-28  Roland McGrath  <roland@redhat.com>
+
+	* debug/warning-nop.c (__nop): Rename to nop, make it static.
+	(__warndecl): Use alias attribute directly, instead of strong_alias
+	macro.  Add attribute_hidden.
+
 2005-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/bits/unistd.h: Avoid calling __*_chk variants if we can
@@ -55,10 +61,12 @@
 
 	* Makerules (libc.so): Add AS_NEEDED line for dynamic linker.
 
+	[BZ #719]
 	* elf/Makefile: Run tst-tls9-static again.
 
 2005-02-22  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #719]
 	* sysdeps/generic/libc-tls.c (static_dtv): Size the same as the
 	slotinfo array.
 	(__libc_setup_tls): Initialize length of DTV based on array length.
@@ -93,6 +101,7 @@
 
 2005-02-22  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #769]
 	* nscd/nscd-client.h: Include sys/uio.h.
 	(__readall, __readvall, writeall): New prototypes.
 	* nscd/connections.c (writeall): New function.
@@ -197,25 +206,30 @@
 
 2005-02-21  Alan Modra <amodra@bigpond.net.au>
 
+	[BZ #719]
 	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Assert that dtv
 	array index is within bounds.
 
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #719]
 	* elf/dl-load.c: Do not allow PT_TLS in modules loaded in statically
 	linked code.
 	* sysdeps/generic/dl-tls.c [!SHARED]: Don't build _dl_next_tls_modid.
 	* elf/Makefile: Remove rules to build and run tst-tls9-static.
 
+	[BZ #719]
 	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Avoid using
 	THREAD_DTV multiple times, this minimally reduces code size on
 	some archs.
 
 2005-02-21  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #768]
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Set *h_errnop to
 	NETDB_INTERNAL if buffer is too small.
 
+	[BZ #768]
 	* nscd/hstcache.c (INCR): Remove.
 	(addhstbyX): Double buflen in each iteration rather than add INCR.
 	* nscd/grpcache.c: Likewise.
@@ -269,6 +283,7 @@
 
 2005-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #767]
 	* posix/unistd.h: symlink and readlink are unconditionally
 	available in the 2001 spec.
 
