@@ -137,7 +137,11 @@ endif
 
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.
-tests: $(objpfx)annexc.out $(objpfx)bug-regex2-mem
+tests: $(objpfx)annexc.out
+ifeq (no,$(cross-compiling))
+tests:$(objpfx)bug-regex2-mem
+endif
+
 $(objpfx)annexc.out: $(objpfx)annexc
 	-$(dir $<)$(notdir $<) '$(CC)' \
 			       '-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $@

@@ -1,3 +1,13 @@
+2001-02-12  Andreas Jaeger  <aj@suse.de>
+
+	* posix/Makefile (tests): Don't run bug-regex2 when
+	cross-compiling.
+
+	* libio/Makefile (tests): Don't run test-freopen when
+	cross-compiling.
+
+	* manual/stdio.texi (Streams and I18N): Fix typos.
+
 2001-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Adjust for errors in y0l.

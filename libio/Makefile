@@ -97,7 +97,9 @@ distribute := iolibio.h libioP.h strfile.h Banner test-freopen.sh
 
 include ../Rules
 
+ifeq (no,$(cross-compiling))
 tests: $(objpfx)test-freopen.out
+endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' 	\
