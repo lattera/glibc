@@ -46,7 +46,8 @@ extern int process_file (const char *file_name, const char *lib, int *flag,
 
 /* Declared in readelflib.c.  */
 extern int process_elf_file (const char *file_name, const char *lib, int *flag,
-			     char **soname, void *file_contents);
+			     char **soname, void *file_contents,
+			     size_t file_length);
 
 
 /* Declared in ldconfig.c.  */

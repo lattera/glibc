@@ -35,6 +35,7 @@
 
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <gnu/lib-names.h>
 
 #include "ldconfig.h"
 
@@ -49,23 +50,26 @@ struct known_names
 
 static struct known_names interpreters [] =
 {
-  {"/lib/ld-linux.so.2", FLAG_ELF_LIBC6},
+  {"/lib/" LD_LINUX_SO, FLAG_ELF_LIBC6},
   {"/lib/ld-linux.so.1", FLAG_ELF_LIBC5}
 };
 
 static struct known_names known_libs [] =
 {
-  {"libc.so.6", FLAG_ELF_LIBC6},
+  /* Old names:  */
   {"libc.so.5", FLAG_ELF_LIBC5},
-  {"libm.so.6", FLAG_ELF_LIBC6},
-  {"libm.so.5", FLAG_ELF_LIBC5}
+  {"libm.so.5", FLAG_ELF_LIBC5},
+  /* Current names:  */
+  {LIBC_SO, FLAG_ELF_LIBC6},
+  {LIBM_SO, FLAG_ELF_LIBC6}
 };
 
 
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
-process_file (const char *file_name, const char *lib, int *flag, char **soname, int is_link)
+process_file (const char *file_name, const char *lib, int *flag,
+	      char **soname, int is_link)
 {
   FILE *file;
   struct stat statbuf;
@@ -156,7 +160,8 @@ process_file (const char *file_name, const char *lib, int *flag, char **soname, 
       goto done;
     }
 
-  if (process_elf_file (file_name, lib, flag, soname, file_contents))
+  if (process_elf_file (file_name, lib, flag, soname, file_contents,
+			statbuf.st_size))
     ret = 1;
 
  done:

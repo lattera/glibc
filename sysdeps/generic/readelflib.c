@@ -23,10 +23,24 @@
    which need to handle both 32bit and 64bit ELF libraries,  this file is
    included twice for each arch size.  */
 
+/* check_ptr checks that a pointer is in the mmaped file and doesn't
+   point outside it.  */
+#define check_ptr(ptr)						\
+do								\
+  {								\
+    if ((void *)(ptr) < file_contents				\
+	|| (void *)(ptr) > (file_contents+file_length))		\
+      {								\
+	error (0, 0, _("file %s is truncated\n"), file_name);	\
+	return 1;						\
+      }								\
+  }								\
+ while (0);
+ 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
-process_elf_file (const char *file_name, const char *lib, int *flag, char **soname,
-		  void *file_contents)
+process_elf_file (const char *file_name, const char *lib, int *flag,
+		  char **soname, void *file_contents, size_t file_length)
 {
   int i;
   unsigned int j;
@@ -65,6 +79,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag, char **sona
   
   /* Get information from elf program header.  */
   elf_pheader = (ElfW(Phdr) *) (elf_header->e_phoff + file_contents);
+  check_ptr (elf_pheader);
 
   /* The library is an elf library, now search for soname and
      libc5/libc6.  */
@@ -77,6 +92,8 @@ process_elf_file (const char *file_name, const char *lib, int *flag, char **sona
   for (i = 0, segment = elf_pheader;
        i < elf_header->e_phnum; i++, segment++)
     {
+      check_ptr (segment);
+
       switch (segment->p_type)
 	{
 	case PT_LOAD:
@@ -94,6 +111,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag, char **sona
 	  break;
 	case PT_INTERP:
 	  program_interpreter = (char *) (file_contents + segment->p_offset);
+	  check_ptr (program_interpreter);
 
 	  /* Check if this is enough to classify the binary.  */
 	  for (j = 0; j < sizeof (interpreters) / sizeof (interpreters [0]);
@@ -120,15 +138,18 @@ process_elf_file (const char *file_name, const char *lib, int *flag, char **sona
     return 1;
   
   dynamic_segment = (ElfW(Dyn) *) (file_contents + dynamic_addr);
+  check_ptr (dynamic_segment);
 
   /* Find the string table.  */
   dynamic_strings = NULL;
   for (dyn_entry = dynamic_segment; dyn_entry->d_tag != DT_NULL;
        ++dyn_entry)
     {
+      check_ptr (dyn_entry);
       if (dyn_entry->d_tag == DT_STRTAB)
 	{
 	  dynamic_strings = (char *) (file_contents + dyn_entry->d_un.d_val - loadaddr);
+	  check_ptr (dynamic_strings);
 	  break;
 	}
     }
@@ -143,6 +164,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag, char **sona
       if (dyn_entry->d_tag == DT_NEEDED || dyn_entry->d_tag == DT_SONAME)
 	{
 	  char *name = dynamic_strings + dyn_entry->d_un.d_val;
+	  check_ptr (name);
 
 	  if (dyn_entry->d_tag == DT_NEEDED)
 	    {

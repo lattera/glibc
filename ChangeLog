@@ -1,3 +1,21 @@
+2000-05-26  Andreas Jaeger  <aj@suse.de>
+
+	* elf/ldconfig.h: Update parameter list for process_elf_file.
+
+	* sysdeps/unix/sysv/linux/sparc/readelflib.c (process_elf_file):
+	Add parameter file_length and pass it ot process_elf*file.
+
+	* sysdeps/generic/readelflib.c (check_ptr): New.
+	(process_elf_file): Use check_ptr to check all accesses to the
+	mmapped file. Add parameter file_length.
+
+	* elf/readlib.c (known_libs): Use <gnu/lib-names.h> to specify
+	library names.
+
+	* sunrpc/xdr_intXX_t.c (xdr_uint8_t): Fix conversion.
+	Closes PR libc/1573, reported by Bradley White
+	<bww@laurelnetworks.com>.
+
 2000-05-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Define expm1 inline only if
