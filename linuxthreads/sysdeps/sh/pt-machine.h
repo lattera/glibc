@@ -44,3 +44,13 @@ testandset (int *spinlock)
    of the stack, just something somewhere in the current frame.  */
 #define CURRENT_STACK_FRAME  stack_pointer
 register char * stack_pointer __asm__ ("r15");
+
+/* Return the thread descriptor for the current thread.  */
+struct _pthread_descr_struct;
+#define THREAD_SELF \
+  ({ struct _pthread_descr_struct *self; \
+      __asm__("stc gbr,%0" : "=r" (self)); self;})
+
+/* Initialize the thread-unique value.  */
+#define INIT_THREAD_SELF(descr, nr) \
+  ({ __asm__("ldc %0,gbr" : : "r" (descr));})

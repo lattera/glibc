@@ -53,15 +53,15 @@ static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("mov.l .L1,r0
-	mov.l .L3,r2
-	add r12,r2
-	mov.l @(r0,r12),r0
-	bra .L2
-	 sub r0,r2
-	.align 2
-	.L1: .long _dl_start@GOT
-	.L3: .long _dl_start@GOTOFF
+  asm ("mov.l .L1,r0\n\
+	mov.l .L3,r2\n\
+	add r12,r2\n\
+	mov.l @(r0,r12),r0\n\
+	bra .L2\n\
+	 sub r0,r2\n\
+	.align 2\n\
+	.L1: .long _dl_start@GOT\n\
+	.L3: .long _dl_start@GOTOFF\n\
 	.L2: mov r2,%0"
        : "=r" (addr) : : "r0", "r1", "r2");
   return addr;
@@ -114,13 +114,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 #ifdef SHARED
 #define FUN_ADDR	"\
-	mov.l 1f,r2
-	mova 1f,r0
-        bra 2f
-	 add r0,r2		! Get GOT address in r2
-0:	.align 2
-1:	.long _GLOBAL_OFFSET_TABLE_
-2:	mov.l 3f,r0
+	mov.l 1f,r2\n\
+	mova 1f,r0\n\
+        bra 2f\n\
+	 add r0,r2		! Get GOT address in r2\n\
+0:	.align 2\n\
+1:	.long _GLOBAL_OFFSET_TABLE_\n\
+2:	mov.l 3f,r0\n\
 	add r2,r0"
 #define GOTJMP(x)	#x "@GOTOFF"
 #else
@@ -131,27 +131,27 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 #ifdef HAVE_FPU
 #define FGR_SAVE	"\
-	sts.l	fpscr, @-r15
-	mov	#8,r3
-	swap.w	r3, r3
-	lds	r3, fpscr
-	fmov.s	fr11, @-r15
-	fmov.s	fr10, @-r15
-	fmov.s	fr9, @-r15
-	fmov.s	fr8, @-r15
-	fmov.s	fr7, @-r15
-	fmov.s	fr6, @-r15
-	fmov.s	fr5, @-r15
+	sts.l	fpscr, @-r15\n\
+	mov	#8,r3\n\
+	swap.w	r3, r3\n\
+	lds	r3, fpscr\n\
+	fmov.s	fr11, @-r15\n\
+	fmov.s	fr10, @-r15\n\
+	fmov.s	fr9, @-r15\n\
+	fmov.s	fr8, @-r15\n\
+	fmov.s	fr7, @-r15\n\
+	fmov.s	fr6, @-r15\n\
+	fmov.s	fr5, @-r15\n\
 	fmov.s	fr4, @-r15"
 #define FGR_LOAD	"\
-	fmov.s	@r15+, fr4
-	fmov.s	@r15+, fr5
-	fmov.s	@r15+, fr6
-	fmov.s	@r15+, fr7
-	fmov.s	@r15+, fr8
-	fmov.s	@r15+, fr9
-	fmov.s	@r15+, fr10
-	fmov.s	@r15+, fr11
+	fmov.s	@r15+, fr4\n\
+	fmov.s	@r15+, fr5\n\
+	fmov.s	@r15+, fr6\n\
+	fmov.s	@r15+, fr7\n\
+	fmov.s	@r15+, fr8\n\
+	fmov.s	@r15+, fr9\n\
+	fmov.s	@r15+, fr10\n\
+	fmov.s	@r15+, fr11\n\
 	lds.l	@r15+, fpscr"
 #else
 #define FGR_SAVE	""
@@ -160,140 +160,140 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 #ifndef PROF
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text
-	.globl _dl_runtime_resolve
-	.type _dl_runtime_resolve, @function
-	.align 5
-_dl_runtime_resolve:
-	mov.l r2,@-r15
-	mov.l r3,@-r15
-	mov.l r4,@-r15
-	mov.l r5,@-r15
-	mov.l r6,@-r15
-	mov.l r7,@-r15
-	mov.l r12,@-r15
-	movt r3			! Save T flag.
-	mov.l r3,@-r15
-	" FGR_SAVE "
-	sts.l pr,@-r15
-	tst r0,r0
-	bt 1f
-	mov r0,r2
-1:
-	mov r0,r4		! PLT type
-	mov r2,r5		! link map address
-	" FUN_ADDR "
-	jsr @r0			! Call resolver.
-	 mov r1,r6		! reloc offset
-	lds.l @r15+,pr		! Get register content back.
-	" FGR_LOAD "
-	mov.l @r15+,r3
-	shal r3			! Lode T flag.
-	mov.l @r15+,r12
-	mov.l @r15+,r7
-	mov.l @r15+,r6
-	mov.l @r15+,r5
-	mov.l @r15+,r4
-	mov.l @r15+,r3
-	jmp @r0			! Jump to function address.
-	 mov.l @r15+,r2
-	.align 2
-3:
-	.long " GOTJMP (fixup) "
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-
-	.globl _dl_runtime_profile
-	.type _dl_runtime_profile, @function
-	.align 5
-_dl_runtime_profile:
-	mov.l r2,@-r15
-	mov.l r3,@-r15
-	mov.l r4,@-r15
-	mov.l r5,@-r15
-	mov.l r6,@-r15
-	mov.l r7,@-r15
-	mov.l r12,@-r15
-	movt r3			! Save T flag.
-	mov.l r3,@-r15
-	" FGR_SAVE "
-	sts.l pr,@-r15
-	tst r0,r0
-	bt 1f
-	mov r0,r2
-1:
-	mov r0,r4		! PLT type
-	mov r2,r5		! link map address
-	sts pr,r7		! return address
-	" FUN_ADDR "
-	jsr @r0			! Call resolver.
-	 mov r1,r6		! reloc offset
-	lds.l @r15+,pr		! Get register content back.
-	" FGR_LOAD "
-	mov.l @r15+,r3
-	shal r3			! Lode T flag.
-	mov.l @r15+,r12
-	mov.l @r15+,r7
-	mov.l @r15+,r6
-	mov.l @r15+,r5
-	mov.l @r15+,r4
-	mov.l @r15+,r3
-	jmp @r0			! Jump to function address.
-	 mov.l @r15+,r2
-	.align 2
-3:
-	.long " GOTJMP (profile_fixup) "
-	.size _dl_runtime_profile, .-_dl_runtime_profile
-	.previous
+	.text\n\
+	.globl _dl_runtime_resolve\n\
+	.type _dl_runtime_resolve, @function\n\
+	.align 5\n\
+_dl_runtime_resolve:\n\
+	mov.l r2,@-r15\n\
+	mov.l r3,@-r15\n\
+	mov.l r4,@-r15\n\
+	mov.l r5,@-r15\n\
+	mov.l r6,@-r15\n\
+	mov.l r7,@-r15\n\
+	mov.l r12,@-r15\n\
+	movt r3			! Save T flag.\n\
+	mov.l r3,@-r15\n\
+	" FGR_SAVE "\n\
+	sts.l pr,@-r15\n\
+	tst r0,r0\n\
+	bt 1f\n\
+	mov r0,r2\n\
+1:\n\
+	mov r0,r4		! PLT type\n\
+	mov r2,r5		! link map address\n\
+	" FUN_ADDR "\n\
+	jsr @r0			! Call resolver.\n\
+	 mov r1,r6		! reloc offset\n\
+	lds.l @r15+,pr		! Get register content back.\n\
+	" FGR_LOAD "\n\
+	mov.l @r15+,r3\n\
+	shal r3			! Lode T flag.\n\
+	mov.l @r15+,r12\n\
+	mov.l @r15+,r7\n\
+	mov.l @r15+,r6\n\
+	mov.l @r15+,r5\n\
+	mov.l @r15+,r4\n\
+	mov.l @r15+,r3\n\
+	jmp @r0			! Jump to function address.\n\
+	 mov.l @r15+,r2\n\
+	.align 2\n\
+3:\n\
+	.long " GOTJMP (fixup) "\n\
+	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
+\n\
+	.globl _dl_runtime_profile\n\
+	.type _dl_runtime_profile, @function\n\
+	.align 5\n\
+_dl_runtime_profile:\n\
+	mov.l r2,@-r15\n\
+	mov.l r3,@-r15\n\
+	mov.l r4,@-r15\n\
+	mov.l r5,@-r15\n\
+	mov.l r6,@-r15\n\
+	mov.l r7,@-r15\n\
+	mov.l r12,@-r15\n\
+	movt r3			! Save T flag.\n\
+	mov.l r3,@-r15\n\
+	" FGR_SAVE "\n\
+	sts.l pr,@-r15\n\
+	tst r0,r0\n\
+	bt 1f\n\
+	mov r0,r2\n\
+1:\n\
+	mov r0,r4		! PLT type\n\
+	mov r2,r5		! link map address\n\
+	sts pr,r7		! return address\n\
+	" FUN_ADDR "\n\
+	jsr @r0			! Call resolver.\n\
+	 mov r1,r6		! reloc offset\n\
+	lds.l @r15+,pr		! Get register content back.\n\
+	" FGR_LOAD "\n\
+	mov.l @r15+,r3\n\
+	shal r3			! Lode T flag.\n\
+	mov.l @r15+,r12\n\
+	mov.l @r15+,r7\n\
+	mov.l @r15+,r6\n\
+	mov.l @r15+,r5\n\
+	mov.l @r15+,r4\n\
+	mov.l @r15+,r3\n\
+	jmp @r0			! Jump to function address.\n\
+	 mov.l @r15+,r2\n\
+	.align 2\n\
+3:\n\
+	.long " GOTJMP (profile_fixup) "\n\
+	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
+	.previous\n\
 ");
 #else
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text
-	.globl _dl_runtime_resolve
-	.globl _dl_runtime_profile
-	.type _dl_runtime_resolve, @function
-	.type _dl_runtime_profile, @function
-	.align 5
-_dl_runtime_resolve:
-_dl_runtime_profile:
-	mov.l r2,@-r15
-	mov.l r3,@-r15
-	mov.l r4,@-r15
-	mov.l r5,@-r15
-	mov.l r6,@-r15
-	mov.l r7,@-r15
-	mov.l r12,@-r15
-	movt r3			! Save T flag.
-	mov.l r3,@-r15
-	" FGR_SAVE "
-	sts.l pr,@-r15
-	tst r0,r0
-	bt 1f
-	mov r0,r2
-1:
-	mov r0,r4		! PLT type
-	mov r2,r5		! link map address
-	sts pr,r7		! return address
-	" FUN_ADDR "
-	jsr @r0			! Call resolver.
-	 mov r1,r6		! reloc offset
-	lds.l @r15+,pr		! Get register content back.
-	" FGR_LOAD "
-	mov.l @r15+,r3
-	shal r3			! Lode T flag.
-	mov.l @r15+,r12
-	mov.l @r15+,r7
-	mov.l @r15+,r6
-	mov.l @r15+,r5
-	mov.l @r15+,r4
-	mov.l @r15+,r3
-	jmp @r0			! Jump to function address.
-	 mov.l @r15+,r2
-	.align 2
-3:
-	.long " GOTJMP (fixup) "
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-	.size _dl_runtime_profile, .-_dl_runtime_profile
-	.previous
+	.text\n\
+	.globl _dl_runtime_resolve\n\
+	.globl _dl_runtime_profile\n\
+	.type _dl_runtime_resolve, @function\n\
+	.type _dl_runtime_profile, @function\n\
+	.align 5\n\
+_dl_runtime_resolve:\n\
+_dl_runtime_profile:\n\
+	mov.l r2,@-r15\n\
+	mov.l r3,@-r15\n\
+	mov.l r4,@-r15\n\
+	mov.l r5,@-r15\n\
+	mov.l r6,@-r15\n\
+	mov.l r7,@-r15\n\
+	mov.l r12,@-r15\n\
+	movt r3			! Save T flag.\n\
+	mov.l r3,@-r15\n\
+	" FGR_SAVE "\n\
+	sts.l pr,@-r15\n\
+	tst r0,r0\n\
+	bt 1f\n\
+	mov r0,r2\n\
+1:\n\
+	mov r0,r4		! PLT type\n\
+	mov r2,r5		! link map address\n\
+	sts pr,r7		! return address\n\
+	" FUN_ADDR "\n\
+	jsr @r0			! Call resolver.\n\
+	 mov r1,r6		! reloc offset\n\
+	lds.l @r15+,pr		! Get register content back.\n\
+	" FGR_LOAD "\n\
+	mov.l @r15+,r3\n\
+	shal r3			! Lode T flag.\n\
+	mov.l @r15+,r12\n\
+	mov.l @r15+,r7\n\
+	mov.l @r15+,r6\n\
+	mov.l @r15+,r5\n\
+	mov.l @r15+,r4\n\
+	mov.l @r15+,r3\n\
+	jmp @r0			! Jump to function address.\n\
+	 mov.l @r15+,r2\n\
+	.align 2\n\
+3:\n\
+	.long " GOTJMP (fixup) "\n\
+	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
+	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
+	.previous\n\
 ");
 #endif
 
@@ -446,6 +446,29 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		 Elf32_Addr *const reloc_addr)
 {
+  Elf32_Addr value;
+
+#define COPY_UNALIGNED_WORD(sw, tw, align) \
+  { \
+    void *__s = &(sw), *__t = &(tw); \
+    switch ((align)) \
+    { \
+    case 0: \
+      *(unsigned long *) __t = *(unsigned long *) __s; \
+      break; \
+    case 2: \
+      *((unsigned short *) __t)++ = *((unsigned short *) __s)++; \
+      *((unsigned short *) __t) = *((unsigned short *) __s); \
+      break; \
+    default: \
+      *((unsigned char *) __t)++ = *((unsigned char *) __s)++; \
+      *((unsigned char *) __t)++ = *((unsigned char *) __s)++; \
+      *((unsigned char *) __t)++ = *((unsigned char *) __s)++; \
+      *((unsigned char *) __t) = *((unsigned char *) __s); \
+      break; \
+    } \
+  }
+
   if (ELF32_R_TYPE (reloc->r_info) == R_SH_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP
@@ -453,15 +476,20 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #endif
 	{
 	  if (reloc->r_addend)
-	    *reloc_addr = map->l_addr + reloc->r_addend;
+	    value = map->l_addr + reloc->r_addend;
 	  else
-	    *reloc_addr += map->l_addr;
+	    {
+	      COPY_UNALIGNED_WORD (*reloc_addr, value, (int) reloc_addr & 3);
+	      value += map->l_addr;
+	    }
+	  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
 	}
     }
   else if (ELF32_R_TYPE (reloc->r_info) != R_SH_NONE)
     {
       const Elf32_Sym *const refsym = sym;
-      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+
+      value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
       if (sym)
 	value += sym->st_value;
       value += reloc->r_addend;
@@ -489,6 +517,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 	case R_SH_GLOB_DAT:
 	case R_SH_JMP_SLOT:
+	  /* These addresses are always aligned.  */
 	  *reloc_addr = value;
 	  break;
 	case R_SH_DIR32:
@@ -509,17 +538,20 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 used while loading those libraries.  */
 	      value -= map->l_addr + refsym->st_value + reloc->r_addend;
 #endif
-	    *reloc_addr = value;
+	    COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
 	    break;
 	  }
 	case R_SH_REL32:
-	  *reloc_addr = (value - (Elf32_Addr) reloc_addr);
+	  value = (value - (Elf32_Addr) reloc_addr);
+	  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
 	  break;
 	default:
 	  _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 0);
 	  break;
 	}
     }
+
+#undef COPY_UNALIGNED_WORD
 }
 
 static inline void

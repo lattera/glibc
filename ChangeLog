@@ -1,3 +1,10 @@
+2001-07-26  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_load_address): Don't use
+	multi-line strings.
+	(FUN_ADDR, FGR_SAVE, ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
+	(elf_machine_rela): Handle unaligned relocation.
+
 2001-06-07  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/ia64/dl-symaddr.c (_dl_symbol_address): Update call to

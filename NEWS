@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-6-18
+GNU C Library NEWS -- history of user-visible changes.  2001-7-25
 Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -16,6 +16,18 @@ Version 2.2.4
 
 * Speed of regex for single-byte locales is back to previous levels.
   Patch by Isamu Hasegawa.
+
+* Alpha, SPARC, and IA-64 now also using floating stacks
+
+* Startup time of internatioanlized applications greatly improved through
+  iconv cache.  Use iconvconfig to generate the cache file.
+  Contributed by Ulrich Drepper.
+
+* The IA-64 specific part of ld.so was rewritten to eliminate some pretty
+  severe performance problems.  Patch by David Mosberger.
+
+* The Hurd port got a lot more functionality like AIO, various stdio
+  extensions, etc.  Mainly done by Roland McGrath.
 
 Version 2.2.3
 
