@@ -1,3 +1,8 @@
+2001-02-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* spinlock.c (__pthread_lock): Force lock->__status to be read from
+	memory on every spin.
+
 2001-02-10  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (extra-objs): New.

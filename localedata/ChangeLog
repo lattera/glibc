@@ -1,3 +1,8 @@
+2001-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/th_TH: Remove name_ms entry.
+	Patch by Theppitak Karoonboonyanan <thep@links.nectec.or.th>.
+
 2001-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/th_TH: Update era information and some of the new

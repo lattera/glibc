@@ -42,6 +42,7 @@
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
+# define fopen(f, n) _IO_fopen64 (f, n)
 # define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
 #endif
 
@@ -268,7 +269,7 @@ mtrace ()
 #endif
   if (mallfile != NULL || mallwatch != NULL)
     {
-      mallstream = fopen64 (mallfile != NULL ? mallfile : "/dev/null", "w");
+      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "w");
       if (mallstream != NULL)
 	{
 	  /* Make sure we close the file descriptor on exec.  */

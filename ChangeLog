@@ -1,3 +1,13 @@
+2001-02-18  Mark Kettenis  <kettenis@gnu.org>
+
+	* malloc/mtrace.c [USE_IN_LIBIO]: Define fopen as _IO_fopen64.
+	(mtrace): Revert 2001-02-13 patch: use fopen instead of fopen64.
+
+2001-02-17  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Use clone2 and don't use
+	scratch registers across the system call.
+
 2001-02-19  Andreas Jaeger  <aj@suse.de>
 
 	* malloc/Makefile (tests): Run mtrace only when perl is available.

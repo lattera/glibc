@@ -950,7 +950,6 @@ name_gen    "<U0E04><U0E38><U0E13>"
 name_miss   "<U0E19><U0E32><U0E07><U0E2A><U0E32><U0E27>"
 name_mr     "<U0E19><U0E32><U0E22>"
 name_mrs    "<U0E19><U0E32><U0E07>"
-name_ms     "<U0E04><U0E38><U0E13>"
 END LC_NAME
 
 LC_ADDRESS
