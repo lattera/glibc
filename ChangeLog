@@ -1,3 +1,12 @@
+2002-06-02  Roland McGrath  <roland@frob.com>
+
+	* include/link.h: Include <tls.h> to make sure USE_TLS is defined.
+
+2002-06-01  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/alpha/init-first.c: New file, modified from
+	i386/init-first.c by Andrew M. Miklic <miklic@attglobal.net>.
+
 2002-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/resolv.h (struct __res_state): Remove unused nstimes.
