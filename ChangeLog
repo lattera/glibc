@@ -1,5 +1,13 @@
 2001-03-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
+	* sysdeps/s390/bits/string.h: New unified 31/64 bit string.h.
+	* sysdeps/s390/s390-32/bits/string.h: Remove.
+	* sysdeps/s390/s390-64/bits/string.h: Remove.
+	* sysdeps/s390/s390-32/strcmp.S: New file.
+	* sysdeps/s390/s390-64/strcmp.S: New file.
+
+2001-03-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
 	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Fix typo.
 	* sysdeps/unix/sysv/linux/s390/s390-64/sys/ucontext.h: Likewise.
 
