@@ -28,10 +28,11 @@
 #include <string.h>
 #include <wchar.h>
 #include <sys/param.h>
+#include <gconv_int.h>
 
 #define BUILTIN_ALIAS(s1, s2) /* nothing */
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
-			       MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
+			       MinF, MaxF, MinT, MaxT) \
   extern int Fct (struct __gconv_step *, struct __gconv_step_data *,	      \
 		  __const unsigned char **, __const unsigned char *,	      \
 		  unsigned char **, size_t *, int, int);
@@ -41,6 +42,18 @@
 #ifndef EILSEQ
 # define EILSEQ EINVAL
 #endif
+
+
+/* Specialized conversion function for a single byte to INTERNAL, recognizing
+   only ASCII characters.  */
+wint_t
+__gconv_btwoc_ascii (struct __gconv_step *step, unsigned char c)
+{
+  if (c < 0x80)
+    return c;
+  else
+    return WEOF;
+}
 
 
 /* Transform from the internal, UCS4-like format, to UCS4.  The

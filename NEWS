@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2002-11-5
+GNU C Library NEWS -- history of user-visible changes.  2002-12-2
 Copyright (C) 1992-2001, 2002 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -17,6 +17,9 @@ Version 2.3.2
   This normally expands to lib, but on some 64-bit platforms to lib64 instead.
 
 * fexecve is implemented on Linux.
+
+* the btowc() function should work 2+ times faster due to specialized
+  callbacks in the iconv modules.  Implemented by Bruno Haible.
 
 Version 2.3
 

@@ -117,6 +117,13 @@
     put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x8e || (c >= 0x90 && c <= 0x9f))				      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>
 

@@ -90,7 +90,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       }									      \
     else								      \
       {									      \
-	/* Two-byte character.  First test whether the next character	      \
+	/* Two-byte character.  First test whether the next byte	      \
 	   is also available.  */					      \
 	ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0x80);		      \
 	if (__builtin_expect (ch == 0, 0))				      \
@@ -108,6 +108,13 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c <= 0x9f)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

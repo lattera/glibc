@@ -112,6 +112,13 @@
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

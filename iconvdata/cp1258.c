@@ -480,6 +480,22 @@ static const struct
   }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *statep
+#define ONEBYTE_BODY \
+  {									      \
+    uint32_t ch;							      \
+									      \
+    if (c < 0x80)							      \
+      ch = c;								      \
+    else								      \
+      {									      \
+	ch = to_ucs4[c - 0x80];						      \
+	if (ch == L'\0')						      \
+	  return WEOF;							      \
+      }									      \
+    if (ch >= 0x0041 && ch <= 0x01b0)					      \
+      return WEOF;							      \
+    return ch;								      \
+  }
 #include <iconv/loop.c>
 
 

@@ -276,6 +276,13 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c <= 0x7f)							      \
+      return (c == 0x5c ? 0x20a9 : c);					      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

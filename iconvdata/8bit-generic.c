@@ -47,6 +47,15 @@
     ++inptr;								      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    uint32_t ch = to_ucs4[c];						      \
+									      \
+    if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && c != '\0')	      \
+      return WEOF;							      \
+    else								      \
+      return ch;							      \
+  }
 #include <iconv/loop.c>
 
 

@@ -201,7 +201,11 @@ find_module (const char *directory, const char *filename,
       result->__init_fct = result->__shlib_handle->init_fct;
       result->__end_fct = result->__shlib_handle->end_fct;
 
+      /* These settings can be overridden by the init function.  */
+      result->__btowc_fct = NULL;
       result->__data = NULL;
+
+      /* Call the init function.  */
       if (result->__init_fct != NULL)
 	status = DL_CALL_FCT (result->__init_fct, (result));
     }

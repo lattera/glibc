@@ -16817,7 +16817,7 @@ static struct
 									      \
     if (ch >= 0x81 && ch <= 0xfe)					      \
       {									      \
-	/* Two-byte character.  First test whether the next character	      \
+	/* Two-byte character.  First test whether the next byte	      \
 	   is also available.  */					      \
 	uint32_t ch2;							      \
 	int idx;							      \
@@ -16852,6 +16852,13 @@ static struct
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c <= 0x80)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

@@ -36,6 +36,10 @@
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   *((uint32_t *) outptr)++ = *inptr++;
+#define ONEBYTE_BODY \
+  {									      \
+    return c;								      \
+  }
 #include <iconv/loop.c>
 
 

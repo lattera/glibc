@@ -230,6 +230,13 @@
   }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *statep
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

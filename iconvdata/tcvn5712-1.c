@@ -474,6 +474,20 @@ static const struct
     ++inptr;								      \
   }
 #define EXTRA_LOOP_DECLS	, int *statep
+#define ONEBYTE_BODY \
+  {									      \
+    uint32_t ch;							      \
+									      \
+    if (c < 0x18)							      \
+      ch = map_from_tcvn_low[c];					      \
+    else if (c >= 0x80)							      \
+      ch = map_from_tcvn_high[c - 0x80];				      \
+    else								      \
+      ch = c;								      \
+    if (ch >= 0x0041 && ch <= 0x01b0)					      \
+      return WEOF;							      \
+    return ch;								      \
+  }
 #include <iconv/loop.c>
 
 

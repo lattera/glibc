@@ -1,5 +1,5 @@
 /* Tables for conversion from and to IBM943.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -29,12 +29,6 @@ struct gap
   uint16_t start;
   uint16_t end;
   int32_t idx;
-};
-
-static const struct gap __ibm943sb_to_ucs4_idx[] =
-{
-  { start: 0x0000, end: 0x00df, idx:     0 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
 };
 
 static const uint16_t __ibm943sb_to_ucs4[] =

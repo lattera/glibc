@@ -402,7 +402,7 @@ static const char from_ucs4[][2] =
 									      \
     if (__builtin_expect (ch >= 0xc1, 0) && ch <= 0xcf)			      \
       {									      \
-	/* Composed character.  First test whether the next character	      \
+	/* Composed character.  First test whether the next byte	      \
 	   is also available.  */					      \
 	int ch2;							      \
 									      \
@@ -449,6 +449,13 @@ static const char from_ucs4[][2] =
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    uint32_t ch = to_ucs4[c];						      \
+    if (ch == 0 && c != '\0')						      \
+      return WEOF;							      \
+    return ch;								      \
+  }
 #include <iconv/loop.c>
 
 

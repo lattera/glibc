@@ -71,6 +71,17 @@ static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =
     ++inptr;								      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c <= 0xa0)							      \
+      /* Upto and including 0xa0 the ARMSCII-8 corresponds to Unicode.  */    \
+      return c;								      \
+    else if (c >= 0xa2 && c <= 0xfe)					      \
+      /* Use the table.  */						      \
+      return map_from_armscii_8[c - 0xa2];				      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

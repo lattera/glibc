@@ -54,7 +54,7 @@
       else								      \
 	{								      \
 	  /* Two or more byte character.  First test whether the	      \
-	     next character is also available.  */			      \
+	     next byte is also available.  */				      \
 	  const unsigned char *endp;					      \
 									      \
 	  if (__builtin_expect (inptr + 1 >= inend, 0))			      \
@@ -88,6 +88,13 @@
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

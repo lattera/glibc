@@ -25772,6 +25772,13 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
     *((uint32_t *) outptr)++ = ch;					      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

@@ -1,3 +1,72 @@
+2002-11-30  Bruno Haible  <bruno@clisp.org>
+
+	* iconv/gconv.h (__gconv_btowc_fct): New typedef.
+	(struct __gconv_step): New field __btowc_fct.
+	* wcsmbs/btowc.c (__btowc): Use the __btowc_fct shortcut if possible.
+	* iconv/gconv_int.h (__BUILTIN_TRANSFORM): Renamed from
+	__BUILTIN_TRANS.
+	(__gconv_btwoc_ascii): New declaration.
+	* iconv/gconv_simple.c (BUILTIN_TRANSFORMATION): Add BtowcFct argument.
+	(__gconv_btwoc_ascii): New function.
+	* iconv/gconv_builtin.h: Add BtowcFct argument to all
+	BUILTIN_TRANSFORMATION invocations.
+	* iconv/gconv_conf.c (BUILTIN_TRANSFORMATION): Add BtowcFct argument.
+	* iconv/iconvconfig.c (BUILTIN_TRANSFORMATION): Likewise.
+	* iconv/gconv_builtin.c (map): New field btowc_fct.
+	(BUILTIN_TRANSFORMATION): Add BtowcFct argument. Use it to initialize
+	btowc_fct field.
+	(__gconv_get_builtin_trans): Initialize __btowc_fct field.
+	* iconv/gconv_cache.c (find_module): Initialize __btowc_fct field.
+	* iconv/gconv_db.c (gen_steps, increment_counter): Likewise.
+	* wcsmbs/wcsmbsload.c (to_wc, to_mb): Likewise.
+	* iconv/skeleton.c: Document STORE_REST and FROM_ONEBYTE.
+	(gconv_init): Initialize __btowc_fct field.
+	Undefine EXTRA_LOOP_ARGS and FROM_ONEBYTE at the end.
+	* iconv/loop.c: Document ONEBYTE_BODY.
+	(gconv_btowc, FROM_ONEBYTE): Define if ONEBYTE_BODY is defined.
+	Undefine ONEBYTE_BODY at the end.
+	* iconvdata/8bit-generic.c (ONEBYTE_BODY): New macro.
+	* iconvdata/8bit-gap.c (NONNUL): New macro.
+	(BODY for FROM_LOOP): Use it.
+	(ONEBYTE_BODY): New macro.
+	* iconvdata/isiri-3342.c (HAS_HOLES): Set to 1.
+	(NONNUL): New macro.
+	* iconvdata/ansi_x3.110.c (ONEBYTE_BODY): New macro.
+	* iconvdata/armscii-8.c (ONEBYTE_BODY): New macro.
+	* iconvdata/cp1255.c (ONEBYTE_BODY): New macro.
+	* iconvdata/cp1258.c (ONEBYTE_BODY): New macro.
+	* iconvdata/tcvn5712-1.c (ONEBYTE_BODY): New macro.
+	* iconvdata/big5.c (ONEBYTE_BODY): New macro.
+	* iconvdata/big5hkscs.c (ONEBYTE_BODY): New macro.
+	* iconvdata/euc-cn.c (ONEBYTE_BODY): New macro.
+	* iconvdata/euc-jp.c (ONEBYTE_BODY): New macro.
+	* iconvdata/euc-jisx0213.c (ONEBYTE_BODY): New macro.
+	* iconvdata/euc-kr.c (ONEBYTE_BODY): New macro.
+	* iconvdata/euc-tw.c (ONEBYTE_BODY): New macro.
+	* iconvdata/gbk.c (ONEBYTE_BODY): New macro.
+	* iconvdata/gb18030.c (ONEBYTE_BODY): New macro.
+	* iconvdata/ibm932.c: Include <stdbool.h>.
+	(TRUE, FALSE): Remove macros.
+	(BODY for FROM_LOOP): Remove unused variable rp1.
+	(ONEBYTE_BODY): New macro.
+	(BODY for TO_LOOP): Use bool.
+	* iconvdata/ibm932.h (__ibm932sb_to_ucs4_idx): Remove array.
+	* iconvdata/ibm943.c: Include <stdbool.h>.
+	(TRUE, FALSE): Remove macros.
+	(BODY for FROM_LOOP): Remove unused variable rp1.
+	(ONEBYTE_BODY): New macro.
+	(BODY for TO_LOOP): Use bool.
+	* iconvdata/ibm943.h (__ibm943sb_to_ucs4_idx): Remove array.
+	* iconvdata/iso8859-1.c (ONEBYTE_BODY): New macro.
+	* iconvdata/iso_6937-2.c (ONEBYTE_BODY): New macro.
+	* iconvdata/iso_6937.c (ONEBYTE_BODY): New macro.
+	* iconvdata/johab.c (ONEBYTE_BODY): New macro.
+	* iconvdata/sjis.c (ONEBYTE_BODY): New macro.
+	* iconvdata/shift_jisx0213.c (ONEBYTE_BODY): New macro.
+	* iconvdata/t.61.c (ONEBYTE_BODY): New macro.
+	* iconvdata/uhc.c (ONEBYTE_BODY): New macro.
+	* iconvdata/gbbig5.c: Tweak comment.
+
 2002-12-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fi.po: Update from translation team.

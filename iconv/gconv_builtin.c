@@ -1,5 +1,5 @@
 /* Table for builtin transformation mapping.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -31,6 +31,7 @@ static struct builtin_map
 {
   const char *name;
   __gconv_fct fct;
+  __gconv_btowc_fct btowc_fct;
 
   int min_needed_from;
   int max_needed_from;
@@ -39,11 +40,12 @@ static struct builtin_map
 
 } map[] =
 {
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
-			       MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
+			       MinF, MaxF, MinT, MaxT) \
   {									      \
     .name = Name,							      \
     .fct = Fct,								      \
+    .btowc_fct = BtowcFct,						      \
 									      \
     .min_needed_from = MinF,						      \
     .max_needed_from = MaxF,						      \
@@ -69,6 +71,7 @@ __gconv_get_builtin_trans (const char *name, struct __gconv_step *step)
   assert (cnt < sizeof (map) / sizeof (map[0]));
 
   step->__fct = map[cnt].fct;
+  step->__btowc_fct = map[cnt].btowc_fct;
   step->__init_fct = NULL;
   step->__end_fct = NULL;
   step->__shlib_handle = NULL;

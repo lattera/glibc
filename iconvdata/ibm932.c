@@ -20,12 +20,8 @@
 
 #include <dlfcn.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "ibm932.h"
-
-#ifndef TRUE
-#define TRUE  1
-#define FALSE 0
-#endif
 
 #define FROM	0
 #define TO	1
@@ -50,38 +46,24 @@
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    const struct gap *rp1 = __ibm932sb_to_ucs4_idx;			      \
     const struct gap *rp2 = __ibm932db_to_ucs4_idx;			      \
     uint32_t ch = *inptr;						      \
     uint32_t res;							      \
 									      \
-    if (__builtin_expect (ch >= 0xffff, 0))				      \
-      {									      \
-	rp1 = NULL;							      \
-	rp2 = NULL;							      \
-      }									      \
-    else if (__builtin_expect (ch, 0) == 0x80				      \
-	     || __builtin_expect (ch, 0) == 0xa0			      \
-	     || __builtin_expect (ch, 0) == 0xfd			      \
-	     || __builtin_expect (ch, 0) == 0xfe			      \
-	     || __builtin_expect (ch, 0) == 0xff)			      \
+    if (__builtin_expect (ch == 0x80, 0)				      \
+	|| __builtin_expect (ch == 0xa0, 0)				      \
+	|| __builtin_expect (ch == 0xfd, 0)				      \
+	|| __builtin_expect (ch == 0xfe, 0)				      \
+	|| __builtin_expect (ch == 0xff, 0))				      \
       {									      \
 	/* This is an illegal character.  */				      \
 	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
-    else								      \
-      {									      \
-	while (ch > rp1->end)						      \
-	  ++rp1;							      \
-      }									      \
 									      \
     /* Use the IBM932 table for single byte.  */			      \
-    if (__builtin_expect (rp1 == NULL, 0)				      \
-	|| __builtin_expect (ch < rp1->start, 0)			      \
-	|| (res = __ibm932sb_to_ucs4[ch + rp1->idx],			      \
-	__builtin_expect (res, '\1') == 0 && ch != 0))			      \
+    res = __ibm932sb_to_ucs4[ch];					      \
+    if (__builtin_expect (res == 0, 0) && ch != 0)			      \
       {									      \
-									      \
 	/* Use the IBM932 table for double byte.  */			      \
 	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
 	  {								      \
@@ -128,6 +110,25 @@
       }									      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c == 0x80 || c == 0xa0 || c >= 0xfd)				      \
+      return WEOF;							      \
+    uint32_t res = __ibm932sb_to_ucs4[c];				      \
+    if (res == 0 && c != 0)						      \
+      return WEOF;							      \
+    if (res == 0x1c)							      \
+      res = 0x1a;							      \
+    else if (res == 0x7f)						      \
+      res = 0x1c;							      \
+    else if (res == 0xa5)						      \
+      res = 0x5c;							      \
+    else if (res == 0x203e)						      \
+      res = 0x7e;							      \
+    else if (res == 0x1a)						      \
+      res = 0x7f;							      \
+    return res;								      \
+  }
 #include <iconv/loop.c>
 
 /* Next, define the other direction.  */
@@ -140,7 +141,7 @@
     const struct gap *rp = __ucs4_to_ibm932sb_idx;			      \
     unsigned char sc;							      \
     uint32_t ch = get32 (inptr);					      \
-    uint16_t found = TRUE;						      \
+    bool found = true;							      \
     uint32_t i;								      \
     uint32_t low;							      \
     uint32_t high;							      \
@@ -163,7 +164,7 @@
       {									      \
 									      \
 	/* Use the UCS4 table for double byte.  */			      \
-	found = FALSE;							      \
+	found = false;							      \
 	low = 0;							      \
 	high = (sizeof (__ucs4_to_ibm932db) >> 1)			      \
 		/ sizeof (__ucs4_to_ibm932db[0][FROM]);			      \
@@ -178,7 +179,7 @@
 	    else 							      \
 	      {								      \
 		pccode = __ucs4_to_ibm932db[i][TO];			      \
-		found = TRUE;						      \
+		found = true;						      \
 		break;							      \
 	      }								      \
 	  }								      \

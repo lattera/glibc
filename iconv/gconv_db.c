@@ -268,6 +268,9 @@ gen_steps (struct derivation_step *best, const char *toset,
 	      result[step_cnt].__init_fct = shlib_handle->init_fct;
 	      result[step_cnt].__end_fct = shlib_handle->end_fct;
 
+	      /* These settings can be overridden by the init function.  */
+	      result[step_cnt].__btowc_fct = NULL;
+
 	      /* Call the init function.  */
 	      if (result[step_cnt].__init_fct != NULL)
 		{
@@ -353,8 +356,12 @@ increment_counter (struct __gconv_step *steps, size_t nsteps)
 	      step->__fct = step->__shlib_handle->fct;
 	      step->__init_fct = step->__shlib_handle->init_fct;
 	      step->__end_fct = step->__shlib_handle->end_fct;
+
+	      /* These settings can be overridden by the init function.  */
+	      step->__btowc_fct = NULL;
 	    }
 
+	  /* Call the init function.  */
 	  if (step->__init_fct != NULL)
 	    DL_CALL_FCT (step->__init_fct, (step));
 	}

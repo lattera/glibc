@@ -201,8 +201,8 @@ static struct
   {
 #define BUILTIN_ALIAS(alias, real) \
     { .from = alias, .to = real },
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
-			       MinT, MaxT)
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
+			       MinF, MaxF, MinT, MaxT)
 #include <gconv_builtin.h>
   };
 #undef BUILTIN_ALIAS
@@ -218,11 +218,13 @@ static struct
 } builtin_trans[] =
   {
 #define BUILTIN_ALIAS(alias, real)
-#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, MinF, MaxF, \
-			       MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, BtowcFct, \
+			       MinF, MaxF, MinT, MaxT) \
     { .from = From, .to = To, .module = Name, .cost = Cost },
 #include <gconv_builtin.h>
   };
+#undef BUILTIN_ALIAS
+#undef BUILTIN_TRANSFORMATION
 #define nbuiltin_trans (sizeof (builtin_trans) / sizeof (builtin_trans[0]))
 
 

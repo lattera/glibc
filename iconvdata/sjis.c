@@ -4409,6 +4409,20 @@ static const char from_ucs4_extra[0x100][2] =
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      {									      \
+	if (c == 0x5c)							      \
+	  return 0xa5;							      \
+	if (c == 0x7e)							      \
+	  return 0x203e;						      \
+	return c;							      \
+      }									      \
+    if (c >= 0xa1 && c <= 0xdf)						      \
+      return 0xfec0 + c;						      \
+    return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

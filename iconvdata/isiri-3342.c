@@ -1,5 +1,5 @@
 /* Conversion from and to ISIRI-3342.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -24,6 +24,9 @@
 #define TABLES <isiri-3342.h>
 
 #define CHARSET_NAME	"ISIRI-3342//"
-#define HAS_HOLES	(*inptr > 0x80)	/* 0x80 really maps to 0x0000.  */
+#define HAS_HOLES	1
+
+/* 0x80 really maps to 0x0000.  */
+#define NONNUL(c)	((c) != '\0' && (c) != 0x80)
 
 #include <8bit-gap.c>

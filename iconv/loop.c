@@ -43,6 +43,9 @@
 
      INIT_PARAMS	code to define and initialize variables from params.
      UPDATE_PARAMS	code to store result in params.
+
+     ONEBYTE_BODY	body of the specialized conversion function for a
+			single byte from the current character set to INTERNAL.
 */
 
 #include <assert.h>
@@ -453,6 +456,15 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 #endif
 
 
+#ifdef ONEBYTE_BODY
+/* Define the shortcut function for btowc.  */
+static wint_t
+gconv_btowc (struct __gconv_step *step, unsigned char c)
+  ONEBYTE_BODY
+# define FROM_ONEBYTE gconv_btowc
+#endif
+
+
 /* We remove the macro definitions so that we can include this file again
    for the definition of another function.  */
 #undef MIN_NEEDED_INPUT
@@ -465,6 +477,7 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 #undef EXTRA_LOOP_DECLS
 #undef INIT_PARAMS
 #undef UPDATE_PARAMS
+#undef ONEBYTE_BODY
 #undef UNPACK_BYTES
 #undef LOOP_NEED_STATE
 #undef LOOP_NEED_FLAGS

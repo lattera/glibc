@@ -101,6 +101,26 @@
      EXTRA_LOOP_ARGS	optional macro specifying extra arguments passed
 			to loop function.
 
+     STORE_REST		optional, needed only when MAX_NEEDED_FROM > 4.
+			This macro stores the seen but unconverted input bytes
+			in the state.
+
+     FROM_ONEBYTE	optional.  If defined, should be the name of a
+			specialized conversion function for a single byte
+			from the current character set to INTERNAL.  This
+			function has prototype
+			   wint_t
+			   FROM_ONEBYTE (struct __gconv_step *, unsigned char);
+			and does a special conversion:
+			- The input is a single byte.
+			- The output is a single uint32_t.
+			- The state before the conversion is the initial state;
+			  the state after the conversion is irrelevant.
+			- No transliteration.
+			- __invocation_counter = 0.
+			- __internal_use = 1.
+			- do_flush = 0.
+
    Modules can use mbstate_t to store conversion state as follows:
 
    * Bits 2..0 of '__count' contain the number of lookahead input bytes
@@ -315,6 +335,10 @@ gconv_init (struct __gconv_step *step)
       step->__max_needed_from = FROM_LOOP_MAX_NEEDED_FROM;
       step->__min_needed_to = FROM_LOOP_MIN_NEEDED_TO;
       step->__max_needed_to = FROM_LOOP_MAX_NEEDED_TO;
+
+#ifdef FROM_ONEBYTE
+      step->__btowc_fct = FROM_ONEBYTE;
+#endif
     }
   else if (__builtin_expect (strcmp (step->__to_name, CHARSET_NAME), 0) == 0)
     {
@@ -796,10 +820,12 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #undef EMIT_SHIFT_TO_INIT
 #undef FROM_LOOP
 #undef TO_LOOP
+#undef ONE_DIRECTION
 #undef SAVE_RESET_STATE
 #undef RESET_INPUT_BUFFER
 #undef FUNCTION_NAME
 #undef PREPARE_LOOP
 #undef END_LOOP
-#undef ONE_DIRECTION
+#undef EXTRA_LOOP_ARGS
 #undef STORE_REST
+#undef FROM_ONEBYTE

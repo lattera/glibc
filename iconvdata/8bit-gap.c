@@ -32,6 +32,10 @@ struct gap
 /* Now we can include the tables.  */
 #include TABLES
 
+#ifndef NONNUL
+# define NONNUL(c)	((c) != '\0')
+#endif
+
 
 #define FROM_LOOP		from_gap
 #define TO_LOOP			to_gap
@@ -49,7 +53,7 @@ struct gap
   {									      \
     uint32_t ch = to_ucs4[*inptr];					      \
 									      \
-    if (HAS_HOLES && __builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0') \
+    if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && NONNUL (*inptr))    \
       {									      \
 	/* This is an illegal character.  */				      \
 	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
@@ -63,6 +67,15 @@ struct gap
     ++inptr;								      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    uint32_t ch = to_ucs4[c];						      \
+									      \
+    if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && NONNUL (c))	      \
+      return WEOF;							      \
+    else								      \
+      return ch;							      \
+  }
 #include <iconv/loop.c>
 
 

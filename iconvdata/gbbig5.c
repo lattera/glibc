@@ -4802,7 +4802,7 @@ const char __from_big5_to_gb2312 [13973][2] =
     else if (ch >= 0xa1 && ch <= 0xf7)					      \
       {									      \
 	/* Two-byte character.  First test whether the		      	      \
-	   next character is also available.  */			      \
+	   next byte is also available.  */				      \
 	const char *cp;							      \
 	int idx;							      \
 									      \
@@ -4891,7 +4891,7 @@ const char __from_big5_to_gb2312 [13973][2] =
     else if (ch >= 0xa1 && ch <= 0xf9)					      \
       {									      \
 	/* Two byte character.  First test whether the			      \
-	   next character is also available.  */			      \
+	   next byte is also available.  */				      \
 	const char *cp;							      \
 	int idx;							      \
 									      \

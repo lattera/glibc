@@ -13154,7 +13154,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
       else								      \
 	{								      \
 	  /* Two or more byte character.  First test whether the	      \
-	     next character is also available.  */			      \
+	     next byte is also available.  */				      \
 	  uint32_t ch2;							      \
 	  int idx;							      \
 									      \
@@ -13195,6 +13195,13 @@ static const char __gbk_from_ucs4_tab12[][2] =
     outptr += 4;							      \
   }
 #define LOOP_NEED_FLAGS
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      return c;								      \
+    else								      \
+      return WEOF;							      \
+  }
 #include <iconv/loop.c>
 
 

@@ -37,6 +37,7 @@ static struct __gconv_step to_wc =
   .__from_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
   .__to_name = (char *) "INTERNAL",
   .__fct = __gconv_transform_ascii_internal,
+  .__btowc_fct = __gconv_btwoc_ascii,
   .__init_fct = NULL,
   .__end_fct = NULL,
   .__min_needed_from = 1,
@@ -55,6 +56,7 @@ static struct __gconv_step to_mb =
   .__from_name = (char *) "INTERNAL",
   .__to_name = (char *) "ANSI_X3.4-1968//TRANSLIT",
   .__fct = __gconv_transform_internal_ascii,
+  .__btowc_fct = NULL,
   .__init_fct = NULL,
   .__end_fct = NULL,
   .__min_needed_from = 4,
@@ -225,7 +227,8 @@ __wcsmbs_clone_conv (struct gconv_fcts *copy)
   /* Copy the data.  */
   *copy = *orig;
 
-  /* Now increment the usage counters.  */
+  /* Now increment the usage counters.
+     Note: This assumes copy->towc_nsteps == 1 and copy->tomb_nsteps == 1.  */
   if (copy->towc->__shlib_handle != NULL)
     ++copy->towc->__counter;
   if (copy->tomb->__shlib_handle != NULL)

@@ -321,6 +321,15 @@ static const struct { unsigned int idx; unsigned int len; } comp_table[8] = {
   }
 #define LOOP_NEED_FLAGS
 #define EXTRA_LOOP_DECLS	, int *statep
+#define ONEBYTE_BODY \
+  {									      \
+    if (c < 0x80)							      \
+      return c;								      \
+    uint32_t ch = to_ucs4[c - 0x80];					      \
+    if (ch == L'\0' || (ch >= 0x05d0 && ch <= 0x05f2))			      \
+      return WEOF;							      \
+    return ch;								      \
+  }
 #include <iconv/loop.c>
 
 

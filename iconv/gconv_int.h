@@ -264,7 +264,7 @@ extern int __gconv_transliterate (struct __gconv_step *step,
 
 /* Builtin transformations.  */
 #ifdef _LIBC
-# define __BUILTIN_TRANS(Name) \
+# define __BUILTIN_TRANSFORM(Name) \
   extern int Name (struct __gconv_step *step,				      \
 		   struct __gconv_step_data *data,			      \
 		   const unsigned char **inbuf,				      \
@@ -272,21 +272,25 @@ extern int __gconv_transliterate (struct __gconv_step *step,
 		   unsigned char **outbufstart, size_t *irreversible,	      \
 		   int do_flush, int consume_incomplete)
 
-__BUILTIN_TRANS (__gconv_transform_ascii_internal);
-__BUILTIN_TRANS (__gconv_transform_internal_ascii);
-__BUILTIN_TRANS (__gconv_transform_utf8_internal);
-__BUILTIN_TRANS (__gconv_transform_internal_utf8);
-__BUILTIN_TRANS (__gconv_transform_ucs2_internal);
-__BUILTIN_TRANS (__gconv_transform_internal_ucs2);
-__BUILTIN_TRANS (__gconv_transform_ucs2reverse_internal);
-__BUILTIN_TRANS (__gconv_transform_internal_ucs2reverse);
-__BUILTIN_TRANS (__gconv_transform_internal_ucs4);
-__BUILTIN_TRANS (__gconv_transform_ucs4_internal);
-__BUILTIN_TRANS (__gconv_transform_internal_ucs4le);
-__BUILTIN_TRANS (__gconv_transform_ucs4le_internal);
-__BUILTIN_TRANS (__gconv_transform_internal_utf16);
-__BUILTIN_TRANS (__gconv_transform_utf16_internal);
-# undef __BUITLIN_TRANS
+__BUILTIN_TRANSFORM (__gconv_transform_ascii_internal);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_ascii);
+__BUILTIN_TRANSFORM (__gconv_transform_utf8_internal);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_utf8);
+__BUILTIN_TRANSFORM (__gconv_transform_ucs2_internal);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_ucs2);
+__BUILTIN_TRANSFORM (__gconv_transform_ucs2reverse_internal);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_ucs2reverse);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_ucs4);
+__BUILTIN_TRANSFORM (__gconv_transform_ucs4_internal);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_ucs4le);
+__BUILTIN_TRANSFORM (__gconv_transform_ucs4le_internal);
+__BUILTIN_TRANSFORM (__gconv_transform_internal_utf16);
+__BUILTIN_TRANSFORM (__gconv_transform_utf16_internal);
+# undef __BUITLIN_TRANSFORM
+
+/* Specialized conversion function for a single byte to INTERNAL, recognizing
+   only ASCII characters.  */
+extern wint_t __gconv_btwoc_ascii (struct __gconv_step *step, unsigned char c);
 
 #endif
 
