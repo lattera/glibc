@@ -1,5 +1,5 @@
 *.d *.o *.so *.po *.go *.bo stamp.* *.stamp *.ustamp *.udeps
-*.gz *.Z *.tar *.tgz
+*.gz *.Z *.tar *.tgz *.bz2
 =*
 TODO AUTHORS copyr-* copying.*
 glibc-*

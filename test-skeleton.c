@@ -50,7 +50,7 @@ static struct option options[] =
 };
 
 /* PID of the test itself.  */
-static int pid;
+static pid_t pid;
 
 /* Directory to place temporary files in.  */
 static const char *test_dir;
@@ -157,6 +157,7 @@ main (int argc, char *argv[])
   int direct = 0;	/* Directly call the test function?  */
   int status;
   int opt;
+  pid_t termpid;
 
 #ifdef STDOUT_UNBUFFERED
   setbuf (stdout, NULL);
@@ -250,9 +251,16 @@ main (int argc, char *argv[])
   signal (SIGALRM, timeout_handler);
 
   /* Wait for the regular termination.  */
-  if (waitpid (pid, &status, 0) != pid)
+  termpid = waitpid (pid, &status, 0);
+  if (termpid == -1)
     {
-      perror ("Oops, wrong test program terminated");
+      printf ("Waiting for test program failed: %m\n");
+      exit (1);
+    }
+  if (termpid != pid)
+    {
+      printf ("Oops, wrong test program terminated: expected %ld, got %ld\n",
+	      (long int) pid, (long int) termpid);
       exit (1);
     }
 
