@@ -135,6 +135,9 @@ extern int sprintf __P ((char*, __const char* format, ...));
 extern int sscanf __P ((__const char* string, __const char* format, ...));
 extern FILE* tmpfile __P ((void));
 extern char* tmpnam __P ((char*));
+#ifdef	__USE_SVID
+extern char *tempnam __P ((__const char *__dir, __const char *__pfx));
+#endif
 extern char *__stdio_gen_tempname __P ((__const char *dir, __const char *pfx,
 					int dir_search, size_t *lenptr,
 					FILE **streamptr));

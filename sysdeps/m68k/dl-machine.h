@@ -255,8 +255,8 @@ _dl_start_user:
 	| Push back the modified argument count.
 	move.l %d1, -(%sp)
 0:	| Push _dl_default_scope[2] as argument in _dl_init_next call below.
-	move.l ([_dl_default_scope@GOT, %a5]), %d2
-0:	move.l (%d2, 8), -(%sp)
+	move.l ([_dl_default_scope@GOT, %a5], 8), %d2
+0:	move.l %d2, -(%sp)
 	| Call _dl_init_next to return the address of an initializer
 	| function to run.
 	bsr.l _dl_init_next@PLTPC

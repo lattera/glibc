@@ -1,4 +1,23 @@
+Mon Jun 17 17:53:21 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/brk.c (___brk_addr): Define as weak alias for
+	_hurd_brk.
+
+	* libio/stdio.h [__USE_SVID]: Declare tempnam.
+
+Fri Jun 14 19:28:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add swapon with two
+	parameters.
+
+Wed Jun 12 20:40:51 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (RTLD_START): Fix access to
+	_dl_default_scope.
+
 Sun Jun 16 03:22:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/stub/elfclass.h: New file.
 
 	* Make-dist (subdir): Make empty value really empty.
 
