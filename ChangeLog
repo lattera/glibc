@@ -1,3 +1,8 @@
+Fri Apr 14 15:53:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/malloc.c (register_heapinfo) [__GNUC__]: Use __inline__
+ 	in place of inline.
+
 Thu Apr 13 09:45:01 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makefile (distribute): Add ChangeLog.[0-9].
