@@ -841,8 +841,20 @@ glob (pattern, flags, errfunc, pglob)
       glob_t dirs;
       register int i;
 
+      if ((flags & GLOB_ALTDIRFUNC) != 0)
+	{
+	  /* Use the alternative access functions also in the recursive
+	     call.  */
+	  dirs.gl_opendir = pglob->gl_opendir;
+	  dirs.gl_readdir = pglob->gl_readdir;
+	  dirs.gl_closedir = pglob->gl_closedir;
+	  dirs.gl_stat = pglob->gl_stat;
+	  dirs.gl_lstat = pglob->gl_lstat;
+	}
+
       status = glob (dirname,
-		     ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE))
+		     ((flags & (GLOB_ERR | GLOB_NOCHECK | GLOB_NOESCAPE
+				| GLOB_ALTDIRFUNC))
 		      | GLOB_NOSORT | GLOB_ONLYDIR),
 		     errfunc, &dirs);
       if (status != 0)

@@ -22,7 +22,7 @@
 int
 fetestexcept (int excepts)
 {
-  int tmp;
+  fenv_t tmp;
 
   __fenv_stfsr (tmp);
 

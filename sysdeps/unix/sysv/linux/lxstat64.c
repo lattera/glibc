@@ -45,7 +45,7 @@ int
 __lxstat64 (int vers, const char *name, struct stat64 *buf)
 {
 #ifdef __ASSUME_STAT64_SYSCALL
-  return INLINE_SYSCALL (lstat64, 2, name, &buf);
+  return INLINE_SYSCALL (lstat64, 2, name, buf);
 #else
   struct kernel_stat kbuf;
   int result;
@@ -53,7 +53,7 @@ __lxstat64 (int vers, const char *name, struct stat64 *buf)
   if (! have_no_stat64)
     {
       int saved_errno = errno;
-      result = INLINE_SYSCALL (lstat64, 2, name, &kbuf);
+      result = INLINE_SYSCALL (lstat64, 2, name, buf);
 
       if (result != -1 || errno != ENOSYS)
 	return result;

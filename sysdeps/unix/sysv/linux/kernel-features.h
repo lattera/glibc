@@ -94,3 +94,11 @@
 #if __LINUX_KERNEL_VERSION >= 131874 && defined __i386__
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
+
+/* On sparc the truncate64/ftruncate64/mmap2/stat64/lstat64/fstat64
+   syscalls were introduced in 2.3.35.  */
+#if __LINUX_KERNEL_VERSION >= 131875 && defined __sparc__
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_MMAP2_SYSCALL		1
+# define __ASSUME_STAT64_SYSCALL	1
+#endif

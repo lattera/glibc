@@ -45,7 +45,7 @@ int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
 {
 #if __ASSUME_STAT64_SYSCALL > 0
-  return INLINE_SYSCALL (fstat64, 2, fd, &buf);
+  return INLINE_SYSCALL (fstat64, 2, fd, buf);
 #else
   int result;
   struct kernel_stat kbuf;
@@ -53,7 +53,7 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
   if (! have_no_stat64)
     {
       int saved_errno = errno;
-      result = INLINE_SYSCALL (fstat64, 2, fd, &buf);
+      result = INLINE_SYSCALL (fstat64, 2, fd, buf);
 
       if (result != -1 || errno != ENOSYS)
 	return result;

@@ -1,0 +1,55 @@
+escape_char  /
+comment_char  %
+
+% English language locale for Zimbabwe
+% Source: RAP
+% Email: Schalk W. Cronje <schalkc@ntaba.co.za>
+% Tel: +27 83  2797047
+% Fax: +27 838 2797047
+% Language: en
+% Territory: ZW
+% Revision: 1.0
+% Date: 1999-12-23
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_ZA"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_ZA"
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol         "<Z><W><D><SP>"
+currency_symbol         "<Z><DO>"
+mon_decimal_point       "<.>"
+mon_thousands_sep       "<,>"
+mon_grouping            3;3
+positive_sign           ""
+negative_sign           "<->"
+int_frac_digits         2
+frac_digits             2
+p_cs_precedes           1
+p_sep_by_space          0
+n_cs_precedes           1
+n_sep_by_space          0
+p_sign_posn             1
+n_sign_posn             1
+END LC_MONETARY
+
+LC_NUMERIC
+copy "en_ZA"
+END LC_NUMERIC
+
+LC_TIME
+copy "en_ZA"
+END LC_TIME
+
+LC_MESSAGES
+copy "en_ZA"
+END LC_MESSAGES

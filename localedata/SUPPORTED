@@ -1,6 +1,7 @@
 # This file names the currently supported and somewhat tested locales.
 # If you have any additions please use the glibcbug script to send an
 # appropriate message.
+af_ZA ISO-8859-1
 ca_ES ISO-8859-1
 cs_CZ ISO-8859-2
 da_DK ISO-8859-1
@@ -11,11 +12,13 @@ de_DE ISO-8859-1
 de_LU ISO-8859-1
 el_GR ISO-8859-7
 en_AU ISO-8859-1
+en_BW ISO-8859-1
 en_CA ISO-8859-1
 en_DK ISO-8859-1
 en_GB ISO-8859-1
 en_IE ISO-8859-1
 en_US ISO-8859-1
+en_ZW ISO-8859-1
 es_ES ISO-8859-1
 et_EE ISO-8859-1
 eu_ES ISO-8859-1

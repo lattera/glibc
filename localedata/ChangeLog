@@ -1,5 +1,7 @@
 1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* SUPPORTED: Add af_ZA, en_BW, and en_ZW.
+
 	* locale/en_BW: New file.
 	* locale/en_ZW: New file.
 	Contributed by Schalk W. Cronjé <schalkc@ntaba.co.za>.

@@ -20,3 +20,5 @@ struct kernel_stat
 
 #define _HAVE___UNUSED1
 #define _HAVE___UNUSED2
+
+#define XSTAT_IS_XSTAT64 1

@@ -1,3 +1,69 @@
+1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-monetary.c (monetary_finish): Add cast to
+	prevent warning.
+
+	* locale/programs/ld-collate.c: Implement writing out multibyte
+	collation data.
+
+	* locale/setlocale.c (setlocale): Allow setting LC_COLLATE again.
+	* locale/localeinfo.h: Declare variables only for currently implemented
+	collate functionality.  Remove FORWARD_CHAR and ELLIPSIS_CHAR.
+	* locale/lc-collate.c: Define variables only for currently implemented
+	functionality.
+	* locale/langinfo.h: Define symbols only for currently implemented
+	functionality.
+	* locale/categories.def: Define elements for currently implemented
+	functionality.
+	* locale/C-collate.c: Comment out definitions of arrays with symbol
+	name definitions etc.
+	(_nl_C_LC_COLLATE): Update for currently defined information.
+
+	* intl/libintl.h: Remove dcgettext macro definition.
+	* intl/gettextP.h: Declare _nl_msg_cat_cntr.
+
+	* locale/iso-4217.def: Add NAD.  Remove a few obsolete entries.
+
+	* sysdeps/generic/glob.c (glob): Pass alternate file access functions
+	also in recursive call.  Patch by Joe Orton <joe@orton.demon.co.uk>.
+
+1999-12-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/fpu/ftestexcept.c (fetestexcept): Use proper type
+	for __fenv_stfsr argument.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
+	truncate64, ftruncate64, fstat64, lstat64, stat64 and mmap2.
+	Remove ugetrlimit.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h
+	(XSTAT_IS_XSTAT64): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Add
+	__libc_lseek64, __libc_pread, __libc_pread64, __libc_pwrite
+	and __libc_pwrite64.
+	Remove oldgetrlimit and oldsetrlimit.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/lxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat64.c: New file.
+
+	* sysdeps/unix/sysv/linux/fxstat64.c (__fxstat64): Pass the buf
+	pointer to the syscall, not address of that pointer.
+	* sysdeps/unix/sysv/linux/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c (__xstat64): Likewise.
+	(__syscall_stat64): Provide proper prototype.
+
+	* sysdeps/unix/sysv/linux/ftruncate64.c (ftruncate64): Share
+	has_no_truncate64 between truncate64 and ftruncate64.
+	* sysdeps/unix/sysv/linux/truncate64.c (truncate64): Likewise.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_TRUNCATE64_SYSCALL, __ASSUME_MMAP2_SYSCALL,
+	__ASSUME_STAT64_SYSCALL): Define on Sparc for kernels >= 2.3.35.
+
+1999-12-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add __libc_lseek64,
+	__libc_pread, __libc_pread64, __libc_pwrite and __libc_pwrite64.
+
 1999-12-21  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
 
 	* locale/lc-time.c: Extend structure era_entry.

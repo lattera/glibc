@@ -1,5 +1,6 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,40 +17,39 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sys/types.h>
 #include <errno.h>
 #include <unistd.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <sys/mman.h>
+
 #include "kernel-features.h"
 
-#ifdef __NR_ftruncate64
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-/* The variable is shared between all wrappers around *truncate64 calls.  */
-extern int have_no_truncate64;
+#ifdef __NR_mmap2
+extern int __syscall_mmap2(__ptr_t, size_t, int, int, int, off_t);
+#ifndef __ASSUME_MMAP2_SYSCALL
+static int have_no_mmap2;
+#endif
 #endif
 
-extern int __syscall_ftruncate64 (int fd, int high_length, int low_length);
-
-
-/* Truncate the file FD refers to to LENGTH bytes.  */
-int
-ftruncate64 (fd, length)
-     int fd;
-     off64_t length;
+__ptr_t
+__mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-  if (! have_no_truncate64)
+#ifdef __NR_mmap2
+  if (
+#ifndef __ASSUME_MMAP2_SYSCALL
+      ! have_no_mmap2 &&
 #endif
+      ! (offset & 4095))
     {
-      unsigned int low = length & 0xffffffff;
-      unsigned int high = length >> 32;
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
-      int result = INLINE_SYSCALL (ftruncate64, 3, fd, low, high);
+      /* This will be always 12, no matter what page size is.  */
+      int result = INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags,
+				   fd, (off_t) (offset >> 12));
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)
@@ -58,21 +58,17 @@ ftruncate64 (fd, length)
 
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       __set_errno (saved_errno);
-      have_no_truncate64 = 1;
+      have_no_mmap2 = 1;
 #endif
     }
-
-#ifndef __ASSUME_TRUNCATE64_SYSCALL
-  if ((off_t) length != length)
+#endif
+  if (offset != (off_t) offset || (offset + len) != (off_t) (offset + len))
     {
       __set_errno (EINVAL);
-      return -1;
+      return MAP_FAILED;
     }
-  return __ftruncate (fd, (off_t) length);
-#endif
+
+  return __mmap (addr, len, prot, flags, fd, (off_t) offset);
 }
 
-#else
-/* Use the generic implementation.  */
-# include <sysdeps/generic/ftruncate64.c>
-#endif
+weak_alias (__mmap64, mmap64)

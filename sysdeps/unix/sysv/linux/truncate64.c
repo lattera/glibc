@@ -26,7 +26,10 @@
 #include "kernel-features.h"
 
 #ifdef __NR_truncate64
-static int have_no_truncate64;
+#ifndef __ASSUME_TRUNCATE64_SYSCALL
+/* The variable is shared between all wrappers around *truncate64 calls.  */
+int have_no_truncate64;
+#endif
 
 extern int __syscall_truncate64 (int fd, int high_length, int low_length);
 
