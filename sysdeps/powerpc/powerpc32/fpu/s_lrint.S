@@ -1,5 +1,5 @@
-/* Round double value to long int.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Round double to long int.  PowerPC32 version.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,34 +17,25 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <math.h>
+#include <sysdep.h>
 
-/* I think that what this routine is supposed to do is round a value
-   to the nearest integer, with values exactly on the boundary rounded
-   away from zero.  */
-/* This routine relies on (long int)x, when x is out of range of a long int,
-   clipping to MAX_LONG or MIN_LONG.  */
+/* long int[r3] __lrint (double x[fp1])  */
+ENTRY (__lrint)	
+	fctiw	fp13,fp1
+	stfd	fp13,-8(r1)
+	nop	/* Insure the following load is in a different dispatch group */
+	nop	/* to avoid pipe stall on POWER4&5.  */
+	nop
+	lwz	r3,-4(r1)	
+	blr
+	END (__lrint)
 
-long int
-__lround (double x)
-{
-  double xrf;
-  long int xr;
-  xr = (long int) x;
-  xrf = (double) xr;
-  if (x >= 0.0)
-    if (x - xrf >= 0.5 && x - xrf < 1.0 && x+1 > 0)
-      return x+1;
-    else
-      return x;
-  else
-    if (xrf - x >= 0.5 && xrf - x < 1.0 && x-1 < 0)
-      return x-1;
-    else
-      return x;
-}
-weak_alias (__lround, lround)
+weak_alias (__lrint, lrint)
+
+strong_alias (__lrint, __lrintf)
+weak_alias (__lrint, lrintf)
+
 #ifdef NO_LONG_DOUBLE
-strong_alias (__lround, __lroundl)
-weak_alias (__lround, lroundl)
+strong_alias (__lrint, __lrintl)
+weak_alias (__lrint, lrintl)
 #endif

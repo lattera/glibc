@@ -1,0 +1,94 @@
+/* truncf function.  PowerPC32 version.
+   Copyright (C) 2004 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sysdep.h>
+
+	.section	.rodata
+	.align 3
+	.type	TWO23.0,@object
+	.size	TWO23.0,8
+TWO23.0:
+	.long 0x41600000
+	.long 0
+	.type	NEGZERO.0,@object
+	.size	NEGZERO.0,8
+NEGZERO.0:
+	.long 0x80000000
+	.long 0
+
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 3
+.LC0:	/* 2**23 */
+	.long 0x41600000
+	.long 0
+.LC1:	/* -0.0 */
+	.long 0x80000000
+	.long 0
+
+/* float [fp1] truncf (float x [fp1])
+   IEEE 1003.1 trunc function.  IEEE specifies "trunc to the integer
+   value, in floating format, nearest to but no larger in magnitude 
+   then the argument."
+   We set "round toward Zero" mode and trunc by adding +-2**23 then
+   subtracting +-2**23.  */
+
+ENTRY (__truncf)
+	mffs	fp11		/* Save current FPU rounding mode.  */
+#ifdef SHARED
+	mflr	r11
+	bl	_GLOBAL_OFFSET_TABLE_@local-4
+	mflr	r10
+	lwz	r9,.LC0@got(10)
+	mtlr	r11
+	lfd	fp13,0(r9)
+#else
+	lis	r9,.LC0@ha
+	lfd	fp13,.LC0@l(r9)
+#endif
+	fabs	fp0,fp1
+	fsubs	fp12,fp13,fp13	/* generate 0.0  */
+	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO23)  */
+	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
+	bnllr-	cr7
+	mtfsfi	7,1		/* Set rounding toward 0 mode.  */
+	ble-	cr6,.L4
+	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
+	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
+.L9:	
+	mtfsf	0x01,fp11	/* restore previous truncing mode.  */
+	blr
+.L4:
+	bge-	cr6,.L9		/* if (x < 0.0)  */
+	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
+	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
+	fcmpu	cr5,fp1,fp12	/* if (x > 0.0)  */
+	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	bnelr+	cr5
+#ifdef SHARED
+	lwz	r9,.LC1@got(10)
+	lfd	fp1,0(r9)
+#else
+	lis	r9,.LC1@ha
+	lfd	fp1,.LC1@l(r9)
+#endif
+	blr
+	END (__truncf)
+
+weak_alias (__truncf, truncf)
+

@@ -1,3 +1,22 @@
+2004-06-11  Dwayne Grant McConnell  <dgm69@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/s_lround.c: Removed.
+	* sysdeps/powerpc/fpu/s_lroundf.c: Removed.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.c: Removed.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_lroundf.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: New file.
+
 2004-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/net/if.h: Handle if_nameindex and if_freenameindex with
