@@ -31,14 +31,36 @@ __strcpy_chk (dest, src, destlen)
 {
   reg_char c;
   char *s = (char *) src;
-  const ptrdiff_t off = dest - s - 1;
+  const ptrdiff_t off = dest - s;
+
+  while (__builtin_expect (destlen >= 4, 0))
+    {
+      c = s[0];
+      s[off] = c;
+      if (c == '\0')
+        return dest;
+      c = s[1];
+      s[off + 1] = c;
+      if (c == '\0')
+        return dest;
+      c = s[2];
+      s[off + 2] = c;
+      if (c == '\0')
+        return dest;
+      c = s[3];
+      s[off + 3] = c;
+      if (c == '\0')
+        return dest;
+      destlen -= 4;
+      s += 4;
+    }
 
   do
     {
       if (__builtin_expect (destlen-- == 0, 0))
-	__chk_fail ();
-      c = *s++;
-      s[off] = c;
+        __chk_fail ();
+      c = *s;
+      *(s++ + off) = c;
     }
   while (c != '\0');
 
