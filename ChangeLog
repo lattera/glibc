@@ -1,3 +1,12 @@
+2003-03-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/bits/atomic.h: New file.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h: New file.
+	* sysdeps/sparc/sparc64/bits/atomic.h: New file.
+	* sysdeps/sparc/sparc32/atomicity.h: Removed.
+	* sysdeps/sparc/sparc32/sparcv9/atomicity.h: Removed.
+	* sysdeps/sparc/sparc64/atomicity.h: Removed.
+
 2003-03-30  Roland McGrath  <roland@redhat.com>
 
 	* scripts/abilist.awk: Grok .opd foo plus .text .foo as "foo F" alone.
