@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #define SIGCONTEXT __siginfo_t *
+#define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(__ctx)	((void *) ((__ctx)->si_regs.pc))
 #define ADVANCE_STACK_FRAME(__next) \
 	((void *)&(((struct reg_window *) (__next))->ins[6]))

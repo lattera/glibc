@@ -33,6 +33,7 @@ struct __rt_signal_frame {
 #define STACK_BIAS 2047
 #endif
 #define SIGCONTEXT struct __rt_signal_frame *
+#define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(__ctx)	((void *) ((__ctx)->sf_regs.tpc))
 #define ADVANCE_STACK_FRAME(__next) \
 	((void *) &((struct reg_window *) (((unsigned long int) (__next))     \

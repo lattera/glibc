@@ -88,7 +88,7 @@ static void pthread_sighandler(int signo, SIGCONTEXT ctx)
   in_sighandler = THREAD_GETMEM(self, p_in_sighandler);
   if (in_sighandler == NULL)
     THREAD_SETMEM(self, p_in_sighandler, CURRENT_STACK_FRAME);
-  sighandler[signo](signo, ctx);
+  sighandler[signo](signo, SIGCONTEXT_EXTRA_ARGS ctx);
   if (in_sighandler == NULL)
     THREAD_SETMEM(self, p_in_sighandler, NULL);
 }

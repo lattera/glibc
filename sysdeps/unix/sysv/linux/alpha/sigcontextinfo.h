@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #define SIGCONTEXT struct sigcontext
+#define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(ctx)	((void *) (ctx).sc_pc)
 #define GET_FRAME(ctx)	((void *) (ctx).sc_regs[15])
 #define GET_STACK(ctx)	((void *) (ctx).sc_regs[30])

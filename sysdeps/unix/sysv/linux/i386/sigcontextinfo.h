@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #define SIGCONTEXT struct sigcontext
+#define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(ctx)	((void *) ctx.eip)
 #define GET_FRAME(ctx)	((void *) ctx.ebp)
 #define GET_STACK(ctx)	((void *) ctx.esp_at_signal)
