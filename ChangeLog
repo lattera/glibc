@@ -1,4 +1,9 @@
-2003-08-27  Phil Knirsch <pknirsch@redhat.com>
+2003-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* signal/signal.h: sighold, sigrelse, sigignore, sigset were
+	available in XPG4.2.
+
+2003-08-27  Phil Knirsch  <pknirsch@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/svc.c (svc_getreqset): Fix fds_bits reading on 64-bit
