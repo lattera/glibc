@@ -1157,7 +1157,7 @@ typedef struct
     /* Push the info, starting with the registers.  */			\
     DEBUG_PRINT1 ("\n");						\
 									\
-    if (!RE_NO_POSIX_BACKTRACKING & bufp->syntax)			\
+    if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
       for (this_reg = lowest_active_reg; this_reg <= highest_active_reg; \
 	   this_reg++)							\
 	{								\
@@ -1279,7 +1279,7 @@ typedef struct
   low_reg = (unsigned) POP_FAILURE_INT ();				\
   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\
 									\
-  if (!RE_NO_POSIX_BACKTRACKING & bufp->syntax)				\
+  if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
     for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
       {									\
 	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\
@@ -1293,6 +1293,16 @@ typedef struct
 	regstart[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
 	DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);	\
       }									\
+  else									\
+    {									\
+      for (this_reg = highest_active_reg; this_reg > high_reg; this_reg--) \
+	{								\
+	  reg_info[this_reg].word = 0;					\
+	  regend[this_reg] = 0;						\
+	  regstart[this_reg] = 0;					\
+	}								\
+      highest_active_reg = high_reg;					\
+    }									\
 									\
   set_regs_matched_done = 0;						\
   DEBUG_STATEMENT (nfailure_points_popped++);				\
@@ -3263,9 +3273,10 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
     return -1;
     
   /* Fix up RANGE if it might eventually take us outside
-     the virtual concatenation of STRING1 and STRING2.  */
-  if (endpos < -1)
-    range = -1 - startpos;
+     the virtual concatenation of STRING1 and STRING2.
+     Make sure we won't move STARTPOS below 0 or above TOTAL_SIZE.  */ 
+  if (endpos < 0)
+    range = 0 - startpos;
   else if (endpos > total_size)
     range = total_size - startpos;
 

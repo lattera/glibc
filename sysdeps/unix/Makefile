@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -197,8 +197,9 @@ endif
 $(common-objpfx)ioctls: $(sysdep_dir)/unix/snarf-ioctls \
 			$(sysincludedir)/sys/ioctl.h $(ioctl-includes)
 	$(dir $<)$(notdir $<) $(filter-out $<,$^) \
-	| fgrep -xv "`$(dir $<)$(notdir $<) $(termbits.h) \
-					    $(..)termios/sys/ttydefaults.h \
+	| fgrep -xv "`($(dir $<)$(notdir $<) $(termbits.h) \
+					     $(..)termios/sys/ttydefaults.h; \
+		      echo NULL) \
 		     | sort | uniq`" \
 	| sort | uniq | tr '\012' ' ' > $@-tmp
 	mv $@-tmp $@

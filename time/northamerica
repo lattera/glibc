@@ -1,4 +1,4 @@
-# @(#)northamerica	7.16
+# @(#)northamerica	7.17
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -464,21 +464,23 @@ Rule	Winn	1916	only	-	Sep	17	0:00	0	S
 Rule	Winn	1918	only	-	Apr	14	2:00	1:00	D
 Rule	Winn	1918	only	-	Oct	31	2:00	0	S
 Rule	Winn	1937	only	-	May	16	2:00	1:00	D
-Rule	Winn	1937	only	-	Sep	23	2:00	0	S
+Rule	Winn	1937	only	-	Sep	26	2:00	0	S
 Rule	Winn	1942	only	-	Feb	 9	2:00	1:00	D
 Rule	Winn	1945	only	-	Sep	lastSun	2:00	0	S
 Rule	Winn	1946	only	-	May	12	2:00	1:00	D
 Rule	Winn	1946	only	-	Oct	13	2:00	0	S
 Rule	Winn	1947	1949	-	Apr	lastSun	2:00	1:00	D
-Rule	Winn	1947	1958	-	Sep	lastSun	2:00	0	S
-Rule	Winn	1948	only	-	May	 1	2:00	1:00	D
-Rule	Winn	1948	1960	-	Apr	lastSun	2:00	1:00	D
+Rule	Winn	1947	1949	-	Sep	lastSun	2:00	0	S
+Rule	Winn	1950	only	-	May	 1	2:00	1:00	D
+Rule	Winn	1950	only	-	Sep	30	2:00	0	S
+Rule	Winn	1951	1960	-	Apr	lastSun	2:00	1:00	D
+Rule	Winn	1951	1958	-	Sep	lastSun	2:00	0	S
 Rule	Winn	1959	only	-	Oct	lastSun	2:00	0	S
 Rule	Winn	1960	only	-	Sep	lastSun	2:00	0	S
 Rule	Winn	1963	only	-	Apr	lastSun	2:00	1:00	D
-Rule	Winn	1963	only	-	Sep	lastSun	2:00	0	S
+Rule	Winn	1963	only	-	Sep	22	2:00	0	S
 Rule	Winn	1966	1986	-	Apr	lastSun	2:00	1:00	D
-Rule	Winn	1966	max	-	Sep	lastSun	2:00	0	S
+Rule	Winn	1966	max	-	Oct	lastSun	2:00	0	S
 Rule	Winn	1987	max	-	Apr	Sun>=1	2:00	1:00	D
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Winnipeg	-6:28:36 -	LMT	1887 Jul 16

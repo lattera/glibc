@@ -267,7 +267,7 @@ endif
 
 # Command for linking programs with the C library.
 ifndef +link
-+link = $(CC) -nostdlib -nostartfiles $(LDFLAGS) -o $@ \
++link = $(CC) -nostdlib -nostartfiles $(config-LDFLAGS) $(LDFLAGS) -o $@ \
 	$(addprefix $(csu-objpfx),start.o $(+preinit)) \
 	$(^:$(common-objpfx)libc.a=$(link-libc)) \
 	$(addprefix $(csu-objpfx),$(+postinit))

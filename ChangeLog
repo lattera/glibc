@@ -1,5 +1,17 @@
 Wed Oct  4 00:21:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/Makefile ($(common-objpfx)ioctls): Remove NULL from
+	the list.
+
+	* time/northamerica: Corrections to Canada data from ADO 95i.
+
+	* sysdeps/unix/sysv/linux/Makefile (headers): Don't append to this
+	unconditionally.  In socket subdir, append sys/socketcall.h; in
+	time subdir, append sys/timex.h.
+	(config-LDFLAGS): New variable.
+	* sysdeps/unix/sysv/linux/Dist: New file.
+	* Makeconfig (+link): Pass $(config-LDFLAGS) before $(LDFLAGS).
+
 	* sysdeps/generic/stpncpy.c: Don't increment DEST when zero-filling.
 
 	* elf/dlopen.c (dlopen): Don't pass USER_ENTRY arg to _dl_map_object.
