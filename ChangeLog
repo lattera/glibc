@@ -230,7 +230,7 @@
 	New functions.  Test these functions.
 	(main): Call above new functions.
 
-1997-03-22 04:53  Ulgmon_out_readrich Drepper  <drepper@cygnus.com>
+1997-03-22 04:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Net release 2.0.2.
 
