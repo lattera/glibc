@@ -68,6 +68,6 @@
 #define SIGPWR	SIGINFO
 #define SIGIOT	SIGABRT
 
-#define	_NSIG		32	/* Biggest signal number + 1.  */
+#define	_NSIG		64	/* Biggest signal number + 1.  */
 
 #endif	/* <signal.h> included.  */
