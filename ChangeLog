@@ -1,5 +1,9 @@
 2004-03-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/ioperm.c (_iopl): Match EPERM error
+	the x86 code produces in case of mission permissions.
+	Patch by Bernd Schmidt <bernds@redhat.com>.
+
 	* resolv/netdb.h: Define AI_IDN_ALLOW_UNASSIGNED,
 	AI_IDN_USE_STD3_ASCII_RULES, NI_IDN_ALLOW_UNASSIGNED, and
 	NI_IDN_USE_STD3_ASCII_RULES.

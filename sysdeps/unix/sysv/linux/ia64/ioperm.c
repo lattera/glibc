@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -137,7 +137,13 @@ _iopl (unsigned int level)
       return -1;
     }
   if (level)
-    return _ioperm (0, MAX_PORT, 1);
+    {
+      int retval = _ioperm (0, MAX_PORT, 1);
+      /* Match the documented error returns of the x86 version.  */
+      if (retval < 0 && errno == EACCES)
+	__set_errno (EPERM);
+      return retval;
+    }
   return 0;
 }
 
