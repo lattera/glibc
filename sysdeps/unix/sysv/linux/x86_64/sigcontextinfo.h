@@ -16,11 +16,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define SIGCONTEXT struct sigcontext
+#define SIGCONTEXT struct ucontext
 #define SIGCONTEXT_EXTRA_ARGS
-#define GET_PC(ctx)	((void *) ctx.rip)
-#define GET_FRAME(ctx)	((void *) ctx.rbp)
-#define GET_STACK(ctx)	((void *) ctx.rsp)
+#define GET_PC(ctx)	((void *) (ctx).uc_mcontext.gregs[REG_RIP])
+#define GET_FRAME(ctx)	((void *) (ctx).uc_mcontext.gregs[REG_RBP])
+#define GET_STACK(ctx)	((void *) (ctx).uc_mcontext.gregs[REG_RSP])
 
 #define CALL_SIGHANDLER(handler, signo, ctx) \
   (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
