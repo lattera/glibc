@@ -1,3 +1,8 @@
+2003-09-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (fcntl): Remove.
+	* sysdeps/unix/sysv/linux/x86_64/fcntl.c: Remove.
+
 2003-09-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr): Fill in c_ispeed

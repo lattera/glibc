@@ -73,7 +73,6 @@ uselib		EXTRA	uselib		i:s	uselib
 wait4		-	wait4		i:iWiP	__wait4		wait4
 
 chown		-	chown		i:sii	__libc_chown	__chown chown
-fcntl		-	fcntl		Ci:iiF	__libc_fcntl	__fcntl fcntl
 
 setxattr	-	setxattr	i:sspii	setxattr
 lsetxattr	-	lsetxattr	i:sspii	lsetxattr
