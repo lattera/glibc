@@ -1,5 +1,7 @@
 2001-11-29  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/Versions: Add arch_prctl.
+
 	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add arch_prctl
 	call.
 

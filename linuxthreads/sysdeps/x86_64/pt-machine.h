@@ -18,6 +18,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stddef.h>	/* For offsetof.  */
+#include <stdlib.h>	/* For abort().  */
+#include <asm/prctl.h>
+
+
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
@@ -59,3 +64,147 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 			: "memory");
   return ret;
 }
+
+
+/* Return the thread descriptor for the current thread.
+
+   The contained asm must *not* be marked volatile since otherwise
+   assignments like
+	pthread_descr self = thread_self();
+   do not get optimized away.  */
+#define THREAD_SELF \
+({									      \
+  register pthread_descr __self;					      \
+  __asm__ ("movq %%gs:%c1,%0" : "=r" (__self)				      \
+	   : "i" (offsetof (struct _pthread_descr_struct,		      \
+			    p_header.data.self)));			      \
+  __self;								      \
+})
+
+/* Prototype for the system call.  */
+extern int __arch_prctl (int __code, unsigned long __addr);
+
+/* Initialize the thread-unique value.  */
+#define INIT_THREAD_SELF(descr, nr) \
+{									      \
+  if (__arch_prctl (ARCH_SET_GS, descr) != 0)				      \
+    abort ();								      \
+}
+
+/* Read member of the thread descriptor directly.  */
+#define THREAD_GETMEM(descr, member) \
+({									      \
+  __typeof__ (descr->member) __value;					      \
+  if (sizeof (__value) == 1)						      \
+    __asm__ __volatile__ ("movb %%gs:%P2,%b0"				      \
+			  : "=q" (__value)				      \
+			  : "0" (0),					      \
+			    "i" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %%gs:%P1,%0"				      \
+			  : "=r" (__value)				      \
+			  : "i" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else									      \
+    {									      \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
+	abort ();							      \
+									      \
+      __asm__ __volatile__ ("movq %%gs:%P1,%0"				      \
+			    : "=r" (__value)				      \
+			    : "i" (offsetof (struct _pthread_descr_struct,    \
+					     member)));			      \
+    }									      \
+  __value;								      \
+})
+
+/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
+#define THREAD_GETMEM_NC(descr, member) \
+({									      \
+  __typeof__ (descr->member) __value;					      \
+  if (sizeof (__value) == 1)						      \
+    __asm__ __volatile__ ("movb %%gs:(%2),%b0"				      \
+			  : "=q" (__value)				      \
+			  : "0" (0),					      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %%gs:(%1),%0"				      \
+			  : "=r" (__value)				      \
+			  : "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else									      \
+    {									      \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
+	abort ();							      \
+									      \
+      __asm__ __volatile__ ("movq %%gs:(%1),%0"				      \
+			    : "=r" (__value)				      \
+			    : "r" (offsetof (struct _pthread_descr_struct,    \
+					     member)));			      \
+    }									      \
+  __value;								      \
+})
+
+/* Set member of the thread descriptor directly.  */
+#define THREAD_SETMEM(descr, member, value) \
+({									      \
+  __typeof__ (descr->member) __value = (value);				      \
+  if (sizeof (__value) == 1)						      \
+    __asm__ __volatile__ ("movb %0,%%gs:%P1" :				      \
+			  : "q" (__value),				      \
+			    "i" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %0,%%gs:%P1" :				      \
+			  : "r" (__value),				      \
+			    "i" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else									      \
+    {									      \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
+	abort ();							      \
+									      \
+      __asm__ __volatile__ ("movq %0,%%gs:%P1" :			      \
+			    : "r" (__value),				      \
+			      "i" (offsetof (struct _pthread_descr_struct,    \
+					     member)));			      \
+    }									      \
+})
+
+/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
+#define THREAD_SETMEM_NC(descr, member, value) \
+({									      \
+  __typeof__ (descr->member) __value = (value);				      \
+  if (sizeof (__value) == 1)						      \
+    __asm__ __volatile__ ("movb %0,%%gs:(%1)" :				      \
+			  : "q" (__value),				      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else if (sizeof (__value) == 4)					      \
+    __asm__ __volatile__ ("movl %0,%%gs:(%1)" :				      \
+			  : "r" (__value),				      \
+			    "r" (offsetof (struct _pthread_descr_struct,      \
+					   member)));			      \
+  else									      \
+    {									      \
+      if (sizeof (__value) != 8)					      \
+	/* There should not be any value with a size other than 1, 4 or 8.  */\
+	abort ();							      \
+									      \
+      __asm__ __volatile__ ("movq %0,%%gs:(%1)"	:			      \
+			    : "r" (__value),				      \
+			      "r" (offsetof (struct _pthread_descr_struct,    \
+					     member)));			      \
+    }									      \
+})
+
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS	1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE	32*1024*1024

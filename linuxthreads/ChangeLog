@@ -1,3 +1,16 @@
+2001-11-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/pt-machine.h: Use %gs as thread specific
+	register.
+	(THREAD_SELF): New.
+	(INIT_THREAD_SELF): New.
+	(THREAD_GETMEM): New.
+	(THREAD_GETMEM_NC): 
+	(THREAD_SETMEM): New.
+	(THREAD_SETMEM_NC): New.
+	(FLOATING_STACKS): Define.
+	(ARCH_STACK_MAX_SIZE): Define.
+
 2001-11-28  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	Bugfix to pthread_key_delete. It was iterating over the thread

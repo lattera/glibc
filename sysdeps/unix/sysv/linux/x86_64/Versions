@@ -1,5 +1,7 @@
 libc {
   GLIBC_2.2.5 {
+    arch_prctl; __arch_prctl;
+
     ioperm; iopl;
 
     __modify_ldt; modify_ldt;
