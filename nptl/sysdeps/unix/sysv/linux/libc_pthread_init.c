@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -27,7 +27,7 @@
 #include <bits/libc-lock.h>
 
 
-static struct fork_handler pthread_child_handler;
+struct fork_handler __pthread_child_handler attribute_hidden;
 
 
 void
@@ -40,10 +40,10 @@ __libc_pthread_init (ptr, reclaim, functions)
   __fork_generation_pointer = ptr;
 
   /* Called by a child after fork.  */
-  pthread_child_handler.handler = reclaim;
+  __pthread_child_handler.handler = reclaim;
 
   /* The fork handler needed by libpthread.  */
-  list_add_tail (&pthread_child_handler.list, &__fork_child_list);
+  list_add_tail (&__pthread_child_handler.list, &__fork_child_list);
 
 #ifdef SHARED
   /* We copy the content of the variable pointed to by the FUNCTIONS

@@ -23,8 +23,7 @@
 
 /* int  __clone2(int (*fn) (void *arg), void *child_stack_base, 	*/
 /* 	         size_t child_stack_size, int flags, void *arg,		*/
-/*	         pid_t *child_tid, pid_t *parent_tid,			*/
-/*	         struct user_desc *tls) */
+/*	         pid_t *child_tid, pid_t *parent_tid, void *tls) */
 
 ENTRY(__clone2)
 	alloc r2=ar.pfs,8,2,6,0

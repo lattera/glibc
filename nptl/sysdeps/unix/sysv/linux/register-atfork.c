@@ -22,6 +22,10 @@
 #include "fork.h"
 
 
+/* Defined in libc_pthread_init.c.  */
+extern struct fork_handler __pthread_child_handler attribute_hidden;
+
+
 int
 __register_atfork (prepare, parent, child, dso_handle)
      void (*prepare) (void);
@@ -114,7 +118,9 @@ libc_freeres_fn (free_mem)
     {
       list_del (runp);
 
-      free (list_entry (runp, struct fork_handler, list));
+      void *p = list_entry (runp, struct fork_handler, list);
+      if (p != (void *) &__pthread_child_handler)
+	free (p);
     }
 
   /* Release the lock.  */

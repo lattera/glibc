@@ -1,3 +1,11 @@
+2003-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c
+	(__pthread_child_handler): Renamed from pthread_child_handler,
+	exported, and marked hidden.  Change all users.
+	* sysdeps/unix/sysv/linux/register-atfork.c (free_mem): Do not
+	free __pthread_child_handler from child list.
+
 2003-03-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* atomic.h (atomic_exchange_and_add): Return newval, not oldval.

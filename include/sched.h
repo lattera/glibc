@@ -15,11 +15,8 @@ extern int __sched_get_priority_min (int __algorithm);
 extern int __sched_rr_get_interval (__pid_t __pid, struct timespec *__t);
 
 /* These are Linux specific.  */
-struct user_desc;
 extern int __clone (int (*__fn) (void *__arg), void *__child_stack,
 		    int __flags, void *__arg, ...);
 extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
-		     size_t __child_stack_size, int __flags, void *__arg,
-		     __pid_t *__child_tid, __pid_t *__parent_tid,
-		     struct user_desc *__tls);
+		     size_t __child_stack_size, int __flags, void *__arg, ...);
 #endif
