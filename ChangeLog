@@ -1,3 +1,11 @@
+2003-09-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-execstack.c (_dl_make_stack_executable):
+	Don't check for zero __libc_stack_end, it should be initialized.
+	[_STACK_GROWS_DOWN] [PROT_GROWSDOWN]: Try using PROT_GROWSDOWN flag
+	and fall back if it fails with EINVAL.
+	[_STACK_GROWS_UP] [PROT_GROWSUP]: Likewise for PROT_GROWSUP.
+
 2003-09-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.c: Include
