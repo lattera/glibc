@@ -1,3 +1,14 @@
+Thu Nov 23 18:26:52 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* configure.in (--enable-libio): Set $stdio based on $enableval,
+	not always to libio.
+
+Thu Nov 23 18:06:48 1995  Richard Stallman  <rms@gnu.ai.mit.edu>
+
+	* malloc/malloc.c (_malloc_internal): Can't use
+	get_contiguous_space when the heap info table
+	will be growing.  Account for new contiguous space in _heaplimit.
+
 Wed Nov 22 12:37:39 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.S (_errno): Define as alias
