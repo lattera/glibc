@@ -1,3 +1,11 @@
+2002-01-07  Stephen L Moshier <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-96/s_erfl.c (erfcl): Fix K&R header.
+
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c (sin_pi): Fix typo in test
+	for x < 0.25 and restore original range reduction method.
+	(__ieee754_lgammal_r): Make sure signgam is set before returning.
+
 2002-01-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/fileops.c (_IO_file_underflow_mmap): New function.

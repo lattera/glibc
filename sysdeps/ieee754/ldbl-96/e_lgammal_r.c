@@ -84,6 +84,7 @@ static long double
   half = 0.5L,
   one = 1.0L,
   pi = 3.14159265358979323846264L,
+  two63 = 9.223372036854775808e18L,  
 
   /* lgam(1+x) = 0.5 x + x a(x)/b(x)
      -0.268402099609375 <= x <= 0
@@ -206,8 +207,7 @@ sin_pi (x)
 
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
-
-  i1 = (ix << 16) | (i0 >> 16);
+  ix = (ix << 16) | (i0 >> 16);
   if (ix < 0x3ffd8000) /* 0.25 */
     return __sinl (pi * x);
   y = -x;			/* x is assume negative */
@@ -219,13 +219,25 @@ sin_pi (x)
   z = __floorl (y);
   if (z != y)
     {				/* inexact anyway */
-      y *= half;
-      y = 2.0 * (y - __floorl (y));	/* y = |x| mod 2.0 */
-      n = (int) (y * 4.0);
+      y  *= 0.5;
+      y = 2.0*(y - __floorl(y));		/* y = |x| mod 2.0 */
+      n = (int) (y*4.0);
     }
   else
     {
-      return (zero + zero);
+      if (ix >= 0x403f8000)  /* 2^64 */
+	{
+	  y = zero; n = 0;                 /* y must be even */
+	}
+      else
+	{
+	if (ix < 0x403e8000)  /* 2^63 */
+	  z = y + two63;	/* exact */
+	GET_LDOUBLE_WORDS (se, i0, i1, z);
+	n = i1 & 1;
+	y  = n;
+	n <<= 2;
+      }
     }
 
   switch (n)
@@ -267,6 +279,7 @@ __ieee754_lgammal_r (x, signgamp)
   int i, ix;
   u_int32_t se, i0, i1;
 
+  *signgamp = 1;
   GET_LDOUBLE_WORDS (se, i0, i1, x);
   ix = se & 0x7fff;
 
@@ -276,7 +289,6 @@ __ieee754_lgammal_r (x, signgamp)
   ix = (ix << 16) | (i0 >> 16);
 
   /* purge off +-inf, NaN, +-0, and negative arguments */
-  *signgamp = 1;
   if (ix >= 0x7fff0000)
     return x * x;
 
