@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 98, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,96,98,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,7 +97,7 @@
 #define	_POSIX_STREAM_MAX	8
 
 /* Maximum length of a timezone name (element of `tzname').  */
-#define	_POSIX_TZNAME_MAX	3
+#define	_POSIX_TZNAME_MAX	6
 
 /* Maximum number of connections that can be queued on a socket.  */
 #define	_POSIX_QLIMIT		1
