@@ -1,8 +1,9 @@
 escape_char /
 comment_char %
+repertoiremap mnemonic.ds
 %
 % Slovak Language Locale for Slovak
-% Source: 
+% Source:
 % Address: Narcisov<a'> 56, SK-821 01 Bratislava, Slovak Republic
 % Contact: Stanislav Meduna
 % Email:   stano@eunet.sk
@@ -18,7 +19,7 @@ comment_char %
 % Charset: ISO-8859-2
 % Distribution and use is free, also for commercial purposes.
 
-% 1997-05-14: Odvodené z cs_CZ locale Vladimíra Michla. 
+% 1997-05-14: Odvodené z cs_CZ locale Vladimíra Michla.
 %             Collate algoritmy prevzaté bezo zmien (norma bola rovnaká),
 %             vysvetlenie pozri cs_CZ
 
@@ -46,7 +47,7 @@ END LC_COLLATE
 %% ekvivalenty yes/no
 %% -------------------------
 
-LC_MESSAGES 
+LC_MESSAGES
 
 yesexpr		"<<(><a><A><a'><A'><y><Y><)/>><.><*>"
 noexpr  	"<<(><n><N><)/>><.><*>"

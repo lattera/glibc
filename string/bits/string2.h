@@ -428,7 +428,7 @@ __STRING2_COPY_TYPE (8);
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
 		  && (!__string2_1bptr_p (s1) || strlen (s1) >= 4)	      \
 		  && (!__string2_1bptr_p (s2) || strlen (s2) >= 4)	      \
-		  ? memcmp ((__const char *) s1, (__const char *) s2,	      \
+		  ? memcmp ((__const char *) (s1), (__const char *) (s2),     \
 			    (strlen (s1) < strlen (s2)			      \
 			     ? strlen (s1) : strlen (s2)) + 1)		      \
 		  : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)      \

@@ -1,5 +1,5 @@
 /* Declarations for System V style searching functions.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,7 @@ extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
 extern int hcreate __P ((size_t __nel));
 
 /* Destroy current internal hashing table.  */
+extern void __hdestroy __P ((void));
 extern void hdestroy __P ((void));
 
 #ifdef __USE_GNU

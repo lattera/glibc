@@ -29,12 +29,12 @@
 
 char **
 __backtrace_symbols (array, size)
-     const void **array;
+     void *const *array;
      int size;
 {
   int cnt;
   size_t total = 0;
-  const char **result;
+  char **result;
 
   /* We can compute the text size needed for the symbols since we print
      them all as "[%<addr>]".  */

@@ -31,8 +31,8 @@ extern int backtrace __P ((void **__array, int __size));
 
 /* Return names of functions from the backtrace list in ARRAY in a newly
    malloc()ed memory block.  */
-extern char **__backtrace_symbols __P ((__const void **__array, int __size));
-extern char **backtrace_symbols __P ((__const void **__array, int __size));
+extern char **__backtrace_symbols __P ((void *__const *__array, int __size));
+extern char **backtrace_symbols __P ((void *__const *__array, int __size));
 
 __END_DECLS
 

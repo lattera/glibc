@@ -1,3 +1,32 @@
+1998-06-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/elf/backtracesyms.c: Make array elements
+	constant.
+	* sysdeps/generic/backtracesyms.c: Likewise.  Fix type of RESULT.
+	* debug/execinfo.h: Update declaration.
+
+1998-06-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/elf/backtracesyms.c: Make array elements constant.
+	* sysdeps/generic/backtracesyms.c: Likewise.  Fix type of RESULT.
+	* debug/execinfo.h: Update declaration.
+
+1998-06-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/llio.texi: Fix spelling.
+	* manual/sysinfo.texi: Fix spelling.
+
+1998-06-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/hsearch.c (__hdestroy): Renamed from hdestroy, create weak
+	alias for old name.  Put this on __libc_subfreeres.
+	* misc/search.h: Declare it.
+
+1998-06-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h (strcmp): Add missing parens around macro
+	parameters.
+
 1998-06-12 23:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/arith.texi: Fix problem with @math and texinfo.tex.

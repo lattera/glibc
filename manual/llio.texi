@@ -166,9 +166,6 @@ which can be used to access the file named by @var{filename}.  The only
 the difference is that on 32 bits systems the file is opened in the
 large file mode.  I.e., file length and file offsets can exceed 31 bits.
 
-To use this file descriptor one must not use the normal operations but
-instead the counterparts named @code{*64}, e.g., @code{read64}.
-
 When the sources are translated with @code{_FILE_OFFSET_BITS == 64} this
 function is actually available under the name @code{open}.  I.e., the
 new, extended API using 64 bit file sizes and offsets transparently
@@ -300,7 +297,7 @@ by the user to perform this operation.
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{truncate} function is in fact @code{truncate64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes.
+@math{2^63} bytes in length.
 
 The return value is zero is everything went ok.  Otherwise the return
 value is @math{-1} and the global variable @var{errno} is set to:
@@ -326,11 +323,11 @@ it is only of marginally additional utility.  See below.
 @comment Unix98
 @deftypefun int truncate64 (const char *@var{name}, off64_t @var{length})
 This function is similar to the @code{truncate} function.  The
-difference is that the @var{length} argument is even on 32 bits machines
-64 bits wide which allows to handle file with a size up to @math{2^63}
+difference is that the @var{length} argument is 64 bits wide even on 32
+bits machines which allows to handle file with a size up to @math{2^63}
 bytes.
 
-When the sources are defined using @code{_FILE_OFFSET_BITS == 64} on a
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
 @code{truncate} and so transparently replaces the 32 bits interface.
 @end deftypefun
@@ -355,7 +352,7 @@ memory segments if these are implemented by the system.
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{ftruncate} function is in fact @code{ftruncate64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes.
+@math{2^63} bytes in length.
 
 On success the function returns zero.  Otherwise it returns @math{-1}
 and set @var{errno} to one of these values:
@@ -373,11 +370,11 @@ The file is on a read-only file system.
 @comment Unix98
 @deftypefun int ftruncate64 (int @var{id}, off64_t @var{length})
 This function is similar to the @code{ftruncate} function.  The
-difference is that the @var{length} argument is even on 32 bits machines
-64 bits wide which allows to handle file with a size up to @math{2^63}
+difference is that the @var{length} argument is 64 bits wide even on 32
+bits machines which allows to handle file with a size up to @math{2^63}
 bytes.
 
-When the sources are defined using @code{_FILE_OFFSET_BITS == 64} on a
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
 @code{ftruncate} and so transparently replaces the 32 bits interface.
 @end deftypefun
@@ -506,7 +503,7 @@ not effected by the operation.  The value is the same as before the call.
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{pread} function is in fact @code{pread64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes.
+@math{2^63} bytes in length.
 
 The return value of @code{pread} describes the number of bytes read.
 In the error case it returns @math{-1} like @code{read} does and the
@@ -530,12 +527,12 @@ version 2.
 This function is similar to the @code{pread} function.  The difference
 is that the @var{offset} parameter is of type @code{off64_t} instead of
 @code{off_t} which makes it possible on 32 bits machines to address
-files larger then @math{2^31} bytes and up to @math{2^63} bytes.  The
+files larger than @math{2^31} bytes and up to @math{2^63} bytes.  The
 file descriptor @code{filedes} must be opened using @code{open64} since
 otherwise the large offsets possible with @code{off64_t} will lead to
 errors with a descriptor in small file mode.
 
-When the sources are defined using @code{_FILE_OFFSET_BITS == 64} on a
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
 @code{pread} and so transparently replaces the 32 bits interface.
 @end deftypefun
@@ -662,7 +659,7 @@ not effected by the operation.  The value is the same as before the call.
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{pwrite} function is in fact @code{pwrite64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes.
+@math{2^63} bytes in length.
 
 The return value of @code{pwrite} describes the number of written bytes.
 In the error case it returns @math{-1} like @code{write} does and the
@@ -686,12 +683,12 @@ version 2.
 This function is similar to the @code{pwrite} function.  The difference
 is that the @var{offset} parameter is of type @code{off64_t} instead of
 @code{off_t} which makes it possible on 32 bits machines to address
-files larger then @math{2^31} bytes and up to @math{2^63} bytes.  The
+files larger than @math{2^31} bytes and up to @math{2^63} bytes.  The
 file descriptor @code{filedes} must be opened using @code{open64} since
 otherwise the large offsets possible with @code{off64_t} will lead to
 errors with a descriptor in small file mode.
 
-When the sources are defined using @code{_FILE_OFFSET_BITS == 64} on a
+When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
 @code{pwrite} and so transparently replaces the 32 bits interface.
 @end deftypefun
@@ -784,7 +781,7 @@ only for pipes and FIFOs, but in the GNU system, you always get
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{lseek} function is in fact @code{lseek64} and the type
 @code{off_t} has 64 bits which makes it possible to handle files up to
-@math{2^63} bytes.
+@math{2^63} bytes in length.
 
 This function is a cancelation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
@@ -806,12 +803,12 @@ descriptors.
 This function is similar to the @code{lseek} function.  The difference
 is that the @var{offset} parameter is of type @code{off64_t} instead of
 @code{off_t} which makes it possible on 32 bits machines to address
-files larger then @math{2^31} bytes and up to @math{2^63} bytes.  The
+files larger than @math{2^31} bytes and up to @math{2^63} bytes.  The
 file descriptor @code{filedes} must be opened using @code{open64} since
 otherwise the large offsets possible with @code{off64_t} will lead to
 errors with a descriptor in small file mode.
 
-When the sources are defined using @code{_FILE_OFFSET_BITS == 64} on a
+When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
 @code{lseek} and so transparently replaces the 32 bits interface.
 @end deftypefun
@@ -877,7 +874,7 @@ is transparently replaced by @code{off64_t}.
 @comment Unix98
 @deftp {Data Type} off64_t
 This type is used similar to @code{off_t}.  The difference is that even
-on 32 bits machines, where the @code{off_t} type would 32 bits,
+on 32 bits machines, where the @code{off_t} type would have 32 bits,
 @code{off64_t} has 64 bits and so is able to address files up to
 @math{2^63} bytes in length.
 
@@ -1396,18 +1393,18 @@ No synchronization is possible since the system does not implement this.
 The POSIX.1b standard defines a new set of I/O operations which can
 reduce the time an application spends waiting at I/O significantly.  The
 new functions allow a program to initiate one or more I/O operations and
-then immediately resume the normal word while the I/O operations are
+then immediately resume the normal work while the I/O operations are
 executed in parallel.  The functionality is available if the
 @file{unistd.h} file defines the symbol @code{_POSIX_ASYNCHRONOUS_IO}.
 
 These functions are part of the library with realtime functions named
 @file{librt}.  They are not actually part of the @file{libc} binary.
 The implementation of these functions can be done using support in the
-kernel )if available) or using a implementation based on threads at
-userlevel.  In the later case it might be necessary to link applications
-linked with @file{librt} also with the thread library @file{libthread}.
+kernel (if available) or using an implementation based on threads at
+userlevel.  In the latter case it might be necessary to link applications
+with the thread library @file{libthread} in addition to @file{librt}.
 
-All AIO operations operate on files which previously were opened.  There
+All AIO operations operate on files which were opened previously.  There
 might be arbitrary many operations for one file running.  The
 asynchronous I/O operations are controlled using a data structure named
 @code{struct aiocb} (@dfn{AIO control block}).  It is defined in
@@ -1440,14 +1437,14 @@ descriptor.
 
 @item volatile void *aio_buf
 This is a pointer to the buffer with the data to be written or the place
-where the ead data is stored.
+where the read data is stored.
 
 @item size_t aio_nbytes
 This element specifies the length of the buffer pointed to by @code{aio_buf}.
 
 @item int aio_reqprio
-If for the platform @code{_POSIX_PRIORITIZED_IO} and
-@code{_POSIX_PRIORITY_SCHEDULING} is defined the AIO requests are
+If the platform has defined @code{_POSIX_PRIORITIZED_IO} and
+@code{_POSIX_PRIORITY_SCHEDULING} the AIO requests are
 processed based on the current scheduling priority.  The
 @code{aio_reqprio} element can then be used to lower the priority of the
 AIO operation.
@@ -1458,13 +1455,13 @@ operation terminated.  If the @code{sigev_notify} element is
 @code{SIGEV_NONE} no notification is send.  If it is @code{SIGEV_SIGNAL}
 the signal determined by @code{sigev_signo} is send.  Otherwise
 @code{sigev_notify} must be @code{SIGEV_THREAD} in which case a thread
-which starts executing the function pointeed to by
+is created which starts executing the function pointed to by
 @code{sigev_notify_function}.
 
 @item int aio_lio_opcode
 This element is only used by the @code{lio_listio} and
-@code{[lio_listio64} functions.  Since these functions allow to start an
-arbitrary number of operations at once and since each operationcan be
+@code{lio_listio64} functions.  Since these functions allow to start an
+arbitrary number of operations at once and since each operation can be
 input or output (or nothing) the information must be stored in the
 control block.  The possible values are:
 
@@ -1568,14 +1565,13 @@ aiocb64} since the LFS replaces transparently the old interface.
 @comment POSIX.1b
 @deftypefun int aio_read (struct aiocb *@var{aiocbp})
 This function initiates an asynchronous read operation.  The function
-call immediately returns after the operation was enqueued or if before
-this happens an error was encoutered.
+call immediately returns after the operation was enqueued or when an
+error was encoutered.
 
 The first @code{aiocbp->aio_nbytes} bytes of the file for which
-@code{aiocbp->aio_fildes} is an descriptor are written to the buffer
-starting at @code{aiocbp->aio_buf}.  @code{aiocbp->aio_fildes} is an
-descriptor.  Reading starts at the absolute position
-@code{aiocbp->aio_offset} in the file.
+@code{aiocbp->aio_fildes} is a descriptor are written to the buffer
+starting at @code{aiocbp->aio_buf}.  Reading starts at the absolute
+position @code{aiocbp->aio_offset} in the file.
 
 If prioritized I/O is supported by the platform the
 @code{aiocbp->aio_reqprio} value is used to adjust the priority before
@@ -1607,7 +1603,7 @@ request and so this error might also be signaled asynchrously.
 
 In the case @code{aio_read} returns zero the current status of the
 request can be queried using @code{aio_error} and @code{aio_return}
-questions.  As long as the value returned by @code{aio_error} is
+functions.  As long as the value returned by @code{aio_error} is
 @code{EINPROGRESS} the operation has not yet completed.  If
 @code{aio_error} returns zero the operation successfully terminated,
 otherwise the value is to be interpreted as an error code.  If the
@@ -1635,7 +1631,7 @@ replaces the normal implementation.
 @comment Unix98
 @deftypefun int aio_read64 (struct aiocb *@var{aiocbp})
 This function is similar to the @code{aio_read} function.  The only
-difference is that only @w{32 bits} machines the file descriptor should
+difference is that on @w{32 bits} machines the file descriptor should
 be opened in the large file mode.  Internally @code{aio_read64} uses
 functionality equivalent to @code{lseek64} (@pxref{File Position
 Primitive}) to position the file descriptor correctly for the reading,
@@ -1691,7 +1687,7 @@ request and so this error might also be signaled asynchrously.
 
 In the case @code{aio_write} returns zero the current status of the
 request can be queried using @code{aio_error} and @code{aio_return}
-questions.  As long as the value returned by @code{aio_error} is
+functions.  As long as the value returned by @code{aio_error} is
 @code{EINPROGRESS} the operation has not yet completed.  If
 @code{aio_error} returns zero the operation successfully terminated,
 otherwise the value is to be interpreted as an error code.  If the
@@ -2159,7 +2155,7 @@ function.
 This member specifies the maximal number of threads which must be used
 at any one time.
 @item int aio_num
-This number provides an esitmate on the maximal number of simultaneously
+This number provides an estimate on the maximal number of simultaneously
 enqueued requests.
 @item int aio_locks
 @c What?
@@ -2186,7 +2182,9 @@ type @code{struct aioinit} must be initialized.  Then a reference to
 this variable is passed as the parameter to @code{aio_init} which itself
 may or may not pay attention to the hints.
 
-The function has no return value and no error cases are defined.
+The function has no return value and no error cases are defined.  It is
+a extension which follows a proposal from the SGI implementation in
+@w{Irix 6}.  It is not covered by POSIX.1b or Unix98.
 @end deftypefun
 
 @node Control Operations

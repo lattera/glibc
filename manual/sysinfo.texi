@@ -187,7 +187,7 @@ possibility.
 The Unix concept of @emph{Everything is a file} is based on the
 possibility to @dfn{mount} filesystems or other things into the
 filesystem.  For some programs it is desirable and necessary to access
-the information whether and if yes, where a certain filesystem is
+the information whether and, if yes, where a certain filesystem is
 mounted or simply to get lists of all the available filesystems.  The
 GNU libc provides some functions to retrieve this information portably.
 
@@ -195,8 +195,8 @@ Traditionally Unix systems have a file named @file{/etc/fstab} which
 describes all possibly mounted filesystems.  The @code{mount} program
 uses this file to mount at startup time of the system all the necessary
 filesystems.  The information about all the filesystems actually mounted
-is normally kept in a file named @file{/etc/mtab}.  Both files shared
-the same synteax and it is crucial that this syntax is followed all the
+is normally kept in a file named @file{/etc/mtab}.  Both files share
+the same syntax and it is crucial that this syntax is followed all the
 time.  Therefore it is best to never directly write the files.  The
 functions described in this section can do this and they also provide
 the functionality to convert the external textual representation to the
@@ -208,11 +208,11 @@ internal representation.
 @vindex _PATH_MOUNTED
 The filenames given above should never be used directly.  The portable
 way to handle these file is to use the macros @code{_PATH_FSTAB},
-defined in @file{fsab.h} and @code{_PATH_MNTTAB}, defined in
+defined in @file{fstab.h} and @code{_PATH_MNTTAB}, defined in
 @file{mntent.h}, respectively.  There are also two alternate macro names
 @code{FSTAB} and @code{_PATH_MOUNTED} defined but both names are
-depricated and kept only for backward compatibility.  The two former
-names always should be used.
+deprecated and kept only for backward compatibility.  The two former
+names should always be used.
 
 The internal representation for entries of the file is @w{@code{struct
 fstab}}, defined in @file{fstab.h}.
@@ -237,7 +237,7 @@ elements of this structure.
 
 @item char *fs_file
 This desribes the mount point on the local system.  I.e., accessing any
-file in this filesystem has implicitly or explicitily this string as a
+file in this filesystem has this string implicitly or explicitly as a
 prefix.
 
 @item char *fs_vfstype
@@ -251,11 +251,11 @@ more than one option, separated from the others by a comma.  Each option
 consists of a name and an optional value part, introduced by an @code{=}
 character.
 
-If the value of this element must be processed it best should happen
+If the value of this element must be processed it should best happen
 using the @code{getsubopt} function; see @ref{Suboptions}.
 
 @item const char *fs_type
-This name os poorly chosen.  This element points to a string (possibly
+This name is poorly chosen.  This element points to a string (possibly
 in the @code{fs_mntops} string) which describes the modes with which the
 filesystem is mounted.  @file{fstab} defines five macros to describe the
 possible values:
@@ -267,15 +267,15 @@ The filesystems gets mounted with read and write enabled.
 The filesystems gets mounted with read and write enabled.  Write access
 is restricted by quotas.
 @item FSTAB_RO
-The filesystem get mounted read-only.
+The filesystem gets mounted read-only.
 @item FSTAB_SW
-This is no real filesystem, it is a swap device.
+This is not a real filesystem, it is a swap device.
 @item FSTAB_XX
 This entry from the @file{fstab} file is totally ignored.
 @end vtable
 
 Testing for equality with these value must happen using @code{strcmp}
-since these are all strings.  Comparing the pointer probably always will
+since these are all strings.  Comparing the pointer will probably always
 fail.
 
 @item int fs_freq
@@ -283,7 +283,7 @@ This element describes the dump frequency in days.
 
 @item int fs_passno
 This element describes the pass number on parallel dumps.  It is closely
-related to the actual @code{dump} program used on Unix systems.
+related to the @code{dump} utility used on Unix systems.
 @end table
 @end deftp
 
@@ -310,7 +310,7 @@ file.
 @comment BSD
 @deftypefun void endfsent (void)
 This function makes sure that all resources acquired by a prior call to
-@code{setfsent} (explicit or implicitly by calling @code{getfsent}) are
+@code{setfsent} (explicitly or implicitly by calling @code{getfsent}) are
 freed.
 @end deftypefun
 
@@ -325,7 +325,7 @@ opened.
 The function returns a pointer to an variable of type @code{struct
 fstab}.  This variable is shared by all threads and therefore this
 function is not thread-safe.  If an error occurred @code{getfsent}
-return a @code{NULL} pointer.
+returns a @code{NULL} pointer.
 @end deftypefun
 
 @comment fstab.h
@@ -342,7 +342,7 @@ the file will be opened.
 The function returns a pointer to an variable of type @code{struct
 fstab}.  This variable is shared by all threads and therefore this
 function is not thread-safe.  If an error occurred @code{getfsent}
-return a @code{NULL} pointer.
+returns a @code{NULL} pointer.
 @end deftypefun
 
 @comment fstab.h
@@ -359,10 +359,10 @@ the file will be opened.
 The function returns a pointer to an variable of type @code{struct
 fstab}.  This variable is shared by all threads and therefore this
 function is not thread-safe.  If an error occurred @code{getfsent}
-return a @code{NULL} pointer.
+returns a @code{NULL} pointer.
 @end deftypefun
 
-To access the @file{matb} file there is a different set of functions and
+To access the @file{mtab} file there is a different set of functions and
 also a different structure to describe the results.
 
 
@@ -422,7 +422,7 @@ Expands to @code{"defaults"}.  This option should be used alone since it
 indicates all values for the custumizable values are chosen to be the
 default.
 @item MNTOPT_RO
-Expand to @code{"ro"}.  See the the @code{FSTAB_RO} value, it means the
+Expands to @code{"ro"}.  See the the @code{FSTAB_RO} value, it means the
 filesystem is mounted read-only.
 @item MNTOPT_RW
 Expand to @code{"rw"}.  See the the @code{FSTAB_RW} value, it means the
@@ -433,7 +433,7 @@ Change Persona}) is respected when a program from the filesystem is
 started.
 @item MNTOPT_NOSUID
 Expands to @code{"nosuid"}.  This is the opposite of @code{MNTOPT_SUID},
-the SUID bit is for all files from the filesystem ignored.
+the SUID bit for all files from the filesystem is ignored.
 @item MNTOPT_NOAUTO
 Expands to @code{"noauto"}.  At startup time the @code{mount} program
 will ignore this entry if it is started with the @code{-a} option to
@@ -456,8 +456,8 @@ which is uninteresting for all programs beside @code{dump}.
 For accessing the @file{mtab} file there is again a set of three
 functions to access all entries in a row.  Unlike the functions to
 handle @file{fstab} these functions do not access a fixed file and there
-even is a thread safe variant of the get-function.  Beside this the GNU
-libc contains function to alter the file and test for specific options.
+is even a thread safe variant of the get function.  Beside this the GNU
+libc contains functions to alter the file and test for specific options.
 
 @comment mntent.h
 @comment BSD
@@ -481,8 +481,8 @@ This function takes for the @var{stream} parameter a file handle which
 previously was returned from the @code{setmntent} call.
 @code{endmntent} closes the stream and frees all resources.
 
-The return value is @code{1} unless an error occurred in which case it
-is @code{0}.
+The return value is @math{1} unless an error occurred in which case it
+is @math{0}.
 @end deftypefun
 
 @comment mntent.h
@@ -499,7 +499,7 @@ is @code{NULL}.
 
 This function is not thread-safe since all calls to this function return
 a pointer to the same static variable.  @code{getmntent_r} should be
-used in situations where multiple threads access use the file.
+used in situations where multiple threads access the file.
 @end deftypefun
 
 @comment mntent.h
@@ -513,7 +513,7 @@ pointed to by the @var{result} parameter.  Additional information (e.g.,
 the strings pointed to by the elements of the result) are kept in the
 buffer of size @var{bufsize} pointed to by @var{buffer}.
 
-The function return in error cases a @code{NULL} pointer.  Errors could be:
+The function returns a @code{NULL} pointer in error cases.  Errors could be:
 @itemize @bullet
 @item
 error while reading the file,
@@ -527,10 +527,10 @@ end of file reached,
 @comment mntent.h
 @comment BSD
 @deftypefun int addmntent (FILE *@var{stream}, const struct mntent *@var{mnt})
-The @code{addmntent} function allows to add new entry to the file
+The @code{addmntent} function allows to add a new entry to the file
 previously opened with @code{setmntent}.  The new entries are always
 appended.  I.e., even if the position of the file descriptor is not at
-the end of the file this function does not overwrite an existing
+the end of the file this function does not overwrite an existing entry
 following the current position.
 
 The implication of this is that to remove an entry from a file one has
@@ -538,8 +538,8 @@ to create a new file while leaving out the entry to be removed and after
 closing the file remove the old one and rename the new file to the
 chosen name.
 
-This function returns @code{0} in case the operation was successful.
-Otherwise the return value is @code{1} and @code{errno} is set
+This function returns @math{0} in case the operation was successful.
+Otherwise the return value is @math{1} and @code{errno} is set
 appropriately.
 @end deftypefun
 
@@ -550,7 +550,7 @@ This function can be used to check whether the string pointed to by the
 @code{mnt_opts} element of the variable pointed to by @var{mnt} contains
 the option @var{opt}.  If this is true a pointer to the beginning of the
 option in the @code{mnt_opts} element is returned.  If no such option
-exist the function returns @code{NULL}.
+exists the function returns @code{NULL}.
 
 This function is useful to test whether a specific option is present but
 when all options have to be processed one is better off with using the
