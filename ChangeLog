@@ -1,5 +1,9 @@
 1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/alpha/fpu/s_floor.c (__floor): Don't depend on inlining,
+	duplicate the code.
+	* sysdeps/alpha/fpu/s_floorf.c (__floorf): Likewise.
+
 	* sysdeps/i386/Versions: Exports functions from libgcc sinc ethis
 	is what was done in glibc 2.0.
 	* sysdeps/m68k/Versions: Likewise.  New file.

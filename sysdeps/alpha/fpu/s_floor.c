@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson.
 
@@ -29,7 +29,20 @@
 double
 __floor (double x)
 {
-  return __i_floor(x);
+  if (x != 0 && fabs (x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
+    {
+      double __tmp1;
+      __asm (
+#ifdef _IEEE_FP_INEXACT
+	     "cvttq/svim %2,%1\n\t"
+#else
+	     "cvttq/svm %2,%1\n\t"
+#endif
+	     "cvtqt/m %1,%0\n\t"
+	     : "=f"(x), "=&f"(__tmp1)
+	     : "f"(x));
+    }
+  return x;
 }
 
 weak_alias (__floor, floor)
