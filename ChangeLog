@@ -1,5 +1,7 @@
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/cs.po: Update from translation team.
+
 	* sysdeps/generic/updwtmp.c: Remove daemon support.
 
 	* login/Makefile (routines): Remove utmp_daemon.
