@@ -91,7 +91,7 @@
    semantics, but it's the best we can do).
 
    Example:
-   int __REDIRECT(setpgrp, __P((__pid_t pid, __pid_t pgrp)), setpgid); */
+   int __REDIRECT(setpgrp, (__pid_t pid, __pid_t pgrp), setpgid); */
 
 #if defined __GNUC__ && __GNUC__ >= 2
 

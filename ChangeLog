@@ -1,5 +1,7 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/sys/cdefs.h: Remove one more __P.
+
 	* sysvipc/sys/shm.h: Move __getpagesize declaration inside extern C.
 	Reported by HJ Lu.
 
