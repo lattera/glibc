@@ -132,8 +132,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
       return errno;
     }
 # define resbuf (*resbuf)
+# define result *result
 # include "digits_dots.c"
 # undef resbuf
+# undef result
 #endif
 
 #ifdef USE_NSCD
