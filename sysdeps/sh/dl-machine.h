@@ -323,15 +323,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   else
     {
       const Elf32_Sym *const refsym = sym;
-#ifndef RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
 
-      value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-#else
-
-      value = RESOLVE (&sym, version, r_type);
-      value += sym->st_value;
-#endif
+      value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
       value += reloc->r_addend;
 
       switch (r_type)

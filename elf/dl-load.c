@@ -36,6 +36,7 @@
 #include <dl-osinfo.h>
 #include <stackinfo.h>
 #include <caller.h>
+#include <sysdep.h>
 
 #include <dl-dst.h>
 
@@ -1372,6 +1373,10 @@ cannot allocate TLS data structures for initial thread");
       else
 #endif
 	__stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
+
+#ifdef check_consistency
+      check_consistency ();
+#endif
 
       errval = (*GL(dl_make_stack_executable_hook)) (stack_endp);
       if (errval)

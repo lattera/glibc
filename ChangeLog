@@ -1,3 +1,13 @@
+2005-02-08  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Remove code using
+	RESOLVE.
+
+2005-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Makre sure registers are
+	set correctly.
+
 2005-01-07  Richard Henderson  <rth@redhat.com>
 
 	* math/math_private.h (__copysign): Define as builtin for gcc 4.
@@ -25,6 +35,8 @@
 2005-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/iconv_prog.c (main): Provide more help in case on an error.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (check_consistency): Define.
 
 2005-02-07  Jakub Jelinek  <jakub@redhat.com>
 
