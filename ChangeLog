@@ -1,3 +1,7 @@
+2004-04-01  Roland McGrath  <roland@redhat.com>
+
+	* elf/tst-execstack.c (do_test): Make F static.
+
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Use
