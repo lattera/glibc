@@ -93,4 +93,7 @@
 /* We have a POSIX shell.  */
 #define _POSIX_SHELL	1
 
+/* The `spawn' function family is supported.  */
+#define _POSIX_SPAWN	200912L
+
 #endif /* bits/posix_opt.h */

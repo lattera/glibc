@@ -134,4 +134,7 @@
 /* We support spinlocks.  */
 #define _POSIX_SPIN_LOCKS	200912L
 
+/* The `spawn' function family is supported.  */
+#define _POSIX_SPAWN	200912L
+
 #endif /* posix_opt.h */
