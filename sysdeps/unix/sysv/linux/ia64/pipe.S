@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@hpl.hp.com>
 
@@ -28,7 +28,7 @@ ENTRY(__pipe)
        cmp.ne p6,p0=-1,r10
        ;;
 (p6)   st4 [r2]=r8,4
-       mov ret0=0
+(p6)   mov ret0=0
        ;;
 (p6)   st4 [r2]=r9
 (p6)   ret
