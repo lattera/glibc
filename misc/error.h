@@ -1,7 +1,6 @@
 /* Declaration for error-reporting function
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   Copyright (C) 1995, 1996, 1997, 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -38,17 +37,17 @@
 extern "C" {
 #endif
 
-#if defined (__STDC__) && __STDC__
+#if defined __STDC__ && __STDC__
 
 /* Print a message with `fprintf (stderr, FORMAT, ...)';
    if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
    If STATUS is nonzero, terminate the program with `exit (STATUS)'.  */
 
-extern void error (int status, int errnum, const char *format, ...)
+extern void error (int __status, int __errnum, const char *__format, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
 
-extern void error_at_line (int status, int errnum, const char *fname,
-			   unsigned int lineno, const char *format, ...)
+extern void error_at_line (int __status, int __errnum, const char *__fname,
+			   unsigned int __lineno, const char *__format, ...)
      __attribute__ ((__format__ (__printf__, 5, 6)));
 
 /* If NULL, error will flush stdout, then print on stderr the program

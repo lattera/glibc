@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -91,6 +91,8 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 # define fflush(s) INTUSE(_IO_fflush) (s)
 # undef putc
 # define putc(c, fp) INTUSE(_IO_putc) (c, fp)
+
+# include <bits/libc-lock.h>
 
 #else /* not _LIBC */
 
@@ -255,6 +257,14 @@ error (status, errnum, message, va_alist)
   va_list args;
 #endif
 
+#if defined _LIBC && defined __libc_ptf_call
+  /* We do not want this call to be cut short by a thread
+     cancellation.  Therefore disable cancellation for now.  */
+  int state = PTHREAD_CANCEL_ENABLE;
+  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
+		   0);
+#endif
+
   fflush (stdout);
 #ifdef _LIBC
   _IO_flockfile (stderr);
@@ -288,6 +298,9 @@ error (status, errnum, message, va_alist)
 
 #ifdef _LIBC
   _IO_funlockfile (stderr);
+# ifdef __libc_ptf_call
+  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+# endif
 #endif
 }
 
@@ -327,6 +340,14 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
       old_file_name = file_name;
       old_line_number = line_number;
     }
+
+#if defined _LIBC && defined __libc_ptf_call
+  /* We do not want this call to be cut short by a thread
+     cancellation.  Therefore disable cancellation for now.  */
+  int state = PTHREAD_CANCEL_ENABLE;
+  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
+		   0);
+#endif
 
   fflush (stdout);
 #ifdef _LIBC
@@ -371,6 +392,9 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
 #ifdef _LIBC
   _IO_funlockfile (stderr);
+# ifdef __libc_ptf_call
+  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+# endif
 #endif
 }
 
