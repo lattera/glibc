@@ -84,7 +84,14 @@ const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
 int _dl_lazy;
+/* XXX I know about at least one case where we depend on the old weak
+   behavior (it has to do with librt).  Until we get DSO groups implemented
+   we have to make this the default.  Bummer. --drepper  */
+#if 0
 int _dl_dynamic_weak;
+#else
+int _dl_dynamic_weak = 1;
+#endif
 int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;

@@ -43,7 +43,14 @@ int _dl_debug_versions;
 int _dl_debug_reloc;
 int _dl_debug_files;
 int _dl_lazy;
+/* XXX I know about at least one case where we depend on the old weak
+   behavior (it has to do with librt).  Until we get DSO groups implemented
+   we have to make this the default.  Bummer. --drepper  */
+#if 0
 int _dl_dynamic_weak;
+#else
+int _dl_dynamic_weak = 1;
+#endif
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;

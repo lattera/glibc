@@ -1,5 +1,8 @@
 2000-09-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (_dl_dynamic_weak): Set to 1 by default for now.
+	* elf/dl-support.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Correct position of
 	st_blocks member in stat and stat64 structs.
 	Patch by Bill Nottingham <notting@redhat.com>.
@@ -13,8 +16,7 @@
 	Patches by Joseph S. Myers <jsm28@cam.ac.uk>.
 
 	* include/limits.h: Define LLONG_MIN, LLONG_MAX, ULLONG_MAX if
-	necessary.  Move includes of POSIX and Unix limits files to the
-	end.
+	necessary.  Move includes of POSIX and Unix limits files to the end.
 	* stdlib/Makefile (tests): Add tst-limits.
 	* stdlib/tst-limits.h: New file.
 
