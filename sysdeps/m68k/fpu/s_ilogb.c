@@ -19,10 +19,20 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 
+#ifndef FUNC
+#define FUNC ilogb
+#endif
+#ifndef float_type
+#define float_type double
+#endif
+
+#define __CONCATX(a,b) __CONCAT(a,b)
+
 int
-DEFUN(__ilogb, (x), double x)
+DEFUN(__CONCATX(__,FUNC), (x), float_type x)
 {
-  return __m81_u(__ilogb)(x);
+  return __m81_u(__CONCATX(__,FUNC))(x);
 }
 
-weak_alias (__ilogb, ilogb)
+#define weak_aliasx(a,b) weak_alias(a,b)
+weak_aliasx (__CONCATX(__,FUNC), FUNC)

@@ -1,4 +1,85 @@
+Tue Jun  4 22:03:02 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h: Define long double versions of
+	the inline functions.
+
+	* sysdeps/m68k/fpu/e_asinl.c, sysdeps/m68k/fpu/e_atanl.c,
+	sysdeps/m68k/fpu/e_acosl.c, sysdeps/m68k/fpu/e_expl.c,
+	sysdeps/m68k/fpu/e_fmodl.c, sysdeps/m68k/fpu/e_log10l.c,
+	sysdeps/m68k/fpu/e_logl.c, sysdeps/m68k/fpu/e_powl.c,
+	sysdeps/m68k/fpu/e_remainderl.c, sysdeps/m68k/fpu/e_scalbl.c,
+	sysdeps/m68k/fpu/e_sinhl.c, sysdeps/m68k/fpu/e_sqrtl.c,
+	sysdeps/m68k/fpu/k_cosl.c, sysdeps/m68k/fpu/k_sinl.c,
+	sysdeps/m68k/fpu/k_tanl.c, sysdeps/m68k/fpu/s_atanl.c,
+	sysdeps/m68k/fpu/s_ceill.c, sysdeps/m68k/fpu/s_cosl.c,
+	sysdeps/m68k/fpu/s_expm1l.c, sysdeps/m68k/fpu/s_fabsl.c,
+	sysdeps/m68k/fpu/s_finitel.c, sysdeps/m68k/fpu/s_floorl.c,
+	sysdeps/m68k/fpu/s_frexpl.c, sysdeps/m68k/fpu/s_ilogbl.c,
+	sysdeps/m68k/fpu/s_isinfl.c, sysdeps/m68k/fpu/s_isnanl.c,
+	sysdeps/m68k/fpu/s_ldexpl.c, sysdeps/m68k/fpu/s_log1pl.c,
+	sysdeps/m68k/fpu/s_logbl.c, sysdeps/m68k/fpu/s_modfl.c,
+	sysdeps/m68k/fpu/s_rintl.c, sysdeps/m68k/fpu/s_scalbnl.c,
+	sysdeps/m68k/fpu/s_significandl.c, sysdeps/m68k/fpu/s_sinl.c,
+	sysdeps/m68k/fpu/s_tanhl.c, sysdeps/m68k/fpu/s_tanl.c: New files.
+
+	* sysdeps/m68k/fpu/e_acos.c, sysdeps/m68k/fpu/e_fmod.c,
+ 	sysdeps/m68k/fpu/k_cos.c, sysdeps/m68k/fpu/k_sin.c,
+ 	sysdeps/m68k/fpu/k_tan.c, sysdeps/m68k/fpu/s_atan.c,
+ 	sysdeps/m68k/fpu/s_frexp.c, sysdeps/m68k/fpu/s_ilogb.c,
+ 	sysdeps/m68k/fpu/s_isinf.c, sysdeps/m68k/fpu/s_ldexp.c,
+ 	sysdeps/m68k/fpu/s_modf.c: Define generic functions using FUNC and
+ 	float_type with appropriate defaults.
+
+	* sysdeps/m68k/fpu/e_acosf.c, sysdeps/m68k/fpu/e_fmodf.c,
+	sysdeps/m68k/fpu/k_cosf.c, sysdeps/m68k/fpu/k_sinf.c,
+	sysdeps/m68k/fpu/k_tanf.c, sysdeps/m68k/fpu/s_atanf.c,
+	sysdeps/m68k/fpu/s_frexpf.c, sysdeps/m68k/fpu/s_ilogbf.c,
+	sysdeps/m68k/fpu/s_isinff.c, sysdeps/m68k/fpu/s_ldexpf.c,
+	sysdeps/m68k/fpu/s_modff.c: Include the corresponding double
+	versions with appropriate definitions to get float functions,
+	instead of defining them directly.
+
+	* sysdeps/m68k/fpu/acos.c: File removed.
+	* sysdeps/m68k/fpu/asin.c: File removed.
+	* sysdeps/m68k/fpu/atan.c: File removed.
+	* sysdeps/m68k/fpu/atan2.c: File removed.
+	* sysdeps/m68k/fpu/atanh.c: File removed.
+	* sysdeps/m68k/fpu/ceil.c: File removed.
+	* sysdeps/m68k/fpu/cos.c: File removed.
+	* sysdeps/m68k/fpu/cosh.c: File removed.
+	* sysdeps/m68k/fpu/drem.c: File removed.
+	* sysdeps/m68k/fpu/exp.c: File removed.
+	* sysdeps/m68k/fpu/expm1.c: File removed.
+	* sysdeps/m68k/fpu/fabs.c: File removed.
+	* sysdeps/m68k/fpu/fl.h: File removed.
+	* sysdeps/m68k/fpu/floor.c: File removed.
+	* sysdeps/m68k/fpu/fmod.c: File removed.
+	* sysdeps/m68k/fpu/frexp.c: File removed.
+	* sysdeps/m68k/fpu/isinf.c: File removed.
+	* sysdeps/m68k/fpu/isinfl.c: File removed.
+	* sysdeps/m68k/fpu/isnan.c: File removed.
+	* sysdeps/m68k/fpu/isnanl.c: File removed.
+	* sysdeps/m68k/fpu/ldexp.c: File removed.
+	* sysdeps/m68k/fpu/log.c: File removed.
+	* sysdeps/m68k/fpu/log10.c: File removed.
+	* sysdeps/m68k/fpu/log1p.c: File removed.
+	* sysdeps/m68k/fpu/logb.c: File removed.
+	* sysdeps/m68k/fpu/pow.c: File removed.
+	* sysdeps/m68k/fpu/rint.c: File removed.
+	* sysdeps/m68k/fpu/sin.c: File removed.
+	* sysdeps/m68k/fpu/sinh.c: File removed.
+	* sysdeps/m68k/fpu/sqrt.c: File removed.
+	* sysdeps/m68k/fpu/tan.c: File removed.
+	* sysdeps/m68k/fpu/tanh.c: File removed.
+
 Thu Jun  6 00:02:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add select (the syscall name
+	is _newselect).
+	* sysdeps/unix/sysv/linux/select.S: File removed.
+
+	* sysdeps/unix/sysv/linux/m68k/select.S: File removed; obsolete with
+	current kernels, generic linux version is fine.
 
 	* locale/Makefile: Add vpath for %.gperf to programs.
 

@@ -22,11 +22,14 @@ Cambridge, MA 02139, USA.  */
 #ifndef FUNC
 #define FUNC isinf
 #endif
+#ifndef float_type
+#define float_type double
+#endif
 
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 int
-DEFUN(__CONCATX(__,FUNC), (x), double x)
+DEFUN(__CONCATX(__,FUNC), (x), float_type x)
 {
   return __m81_u(__CONCATX(__,FUNC))(x);
 }

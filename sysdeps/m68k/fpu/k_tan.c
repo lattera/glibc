@@ -19,11 +19,21 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 
-double
-DEFUN(__kernel_tan, (x, y, iy), double x AND double y AND int iy)
+#ifndef FUNC
+#define FUNC tan
+#endif
+#ifndef float_type
+#define float_type double
+#endif
+
+#define __CONCATX(a,b) __CONCAT(a,b)
+
+float_type
+DEFUN(__CONCATX(__kernel_,FUNC), (x, y, iy),
+      float_type x AND float_type y AND int iy)
 {
   if (iy == 1)
-    return __tan (x + y);
+    return __CONCATX(__,FUNC) (x + y);
   else
-    return -1.0 / __tan (x + y);
+    return ((float_type) -1.0) / __CONCATX(__,FUNC) (x + y);
 }

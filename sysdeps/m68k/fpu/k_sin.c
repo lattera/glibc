@@ -19,8 +19,18 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 
-double
-DEFUN(__kernel_sin, (x, y, iy), double x AND double y AND int iy)
+#ifndef FUNC
+#define FUNC sin
+#endif
+#ifndef float_type
+#define float_type double
+#endif
+
+#define __CONCATX(a,b) __CONCAT(a,b)
+
+float_type
+DEFUN(__CONCATX(__kernel_,FUNC), (x, y, iy),
+      float_type x AND float_type y AND int iy)
 {
-  return __sin (x + y);
+  return __CONCATX(__,FUNC) (x + y);
 }

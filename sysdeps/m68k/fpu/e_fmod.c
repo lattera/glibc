@@ -22,9 +22,12 @@ Cambridge, MA 02139, USA.  */
 #ifndef FUNC
 #define FUNC __ieee754_fmod
 #endif
+#ifndef float_type
+#define float_type double
+#endif
 
-double
-DEFUN(FUNC, (x, y), double x AND double y)
+float_type
+DEFUN(FUNC, (x, y), float_type x AND float_type y)
 {
   return __m81_u(FUNC)(x, y);
 }

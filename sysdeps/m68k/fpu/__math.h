@@ -54,6 +54,14 @@ Cambridge, MA 02139, USA.  */
     __asm("f" __STRING(op) "%.x %1, %0" : "=f" (__result) : "f" (__mathop_x));\
     return __result;							      \
   }
+
+#define __inline_mathopl(func, op)					      \
+  __m81_defun (long double, func, (long double __mathop_x))		      \
+  {									      \
+    long double __result;						      \
+    __asm("f" __STRING(op) "%.x %1, %0" : "=f" (__result) : "f" (__mathop_x));\
+    return __result;							      \
+  }
   
 /* ieee style elementary functions */
 __inline_mathop(__ieee754_acos, acos)
@@ -76,6 +84,17 @@ __inline_mathopf(__ieee754_log10f, log10)
 __inline_mathopf(__ieee754_logf, logn)
 __inline_mathopf(__ieee754_sqrtf, sqrt)
 __inline_mathopf(__ieee754_atanhf, atan)
+
+/* ieee style elementary long double functions */
+__inline_mathopl(__ieee754_acosl, acos)
+__inline_mathopl(__ieee754_asinl, asin)
+__inline_mathopl(__ieee754_coshl, cosh)
+__inline_mathopl(__ieee754_sinhl, sinh)
+__inline_mathopl(__ieee754_expl, etox)
+__inline_mathopl(__ieee754_log10l, log10)
+__inline_mathopl(__ieee754_logl, logn)
+__inline_mathopl(__ieee754_sqrtl, sqrt)
+__inline_mathopl(__ieee754_atanhl, atan)
 
 __inline_mathop(__atan, atan)
 __inline_mathop(__cos, cos)
@@ -104,6 +123,20 @@ __inline_mathopf(__expm1f, etoxm1)
 __inline_mathopf(__log1pf, lognp1)
 __inline_mathopf(__logbf, log2)
 __inline_mathopf(__significandf, getman)
+
+__inline_mathopl(__atanl, atan)
+__inline_mathopl(__cosl, cos)
+__inline_mathopl(__sinl, sin)
+__inline_mathopl(__tanl, tan)
+__inline_mathopl(__tanhl, tanh)
+__inline_mathopl(__fabsl, abs)
+__inline_mathopl(__sqrtl, sqrt)
+
+__inline_mathopl(__rintl, int)
+__inline_mathopl(__expm1l, etoxm1)
+__inline_mathopl(__log1pl, lognp1)
+__inline_mathopl(__logbl, log2)
+__inline_mathopl(__significandl, getman)
 
 __m81_defun (double, __ieee754_remainder, (double __x, double __y))
 {
@@ -427,6 +460,119 @@ __m81_defun (float, __scalbnf, (float __x, int __n))
   return __result;
 }
 
+__m81_defun (long double, __ieee754_remainderl, (long double __x,
+						 long double __y))
+{
+  long double __result;
+  __asm ("frem%.x %1, %0" : "=f" (__result) : "f" (__y), "0" (__x));
+  return __result;
+}
+
+__m81_defun (long double, __ldexpl, (long double __x, int __e))
+{
+  long double __result;
+  long double __float_e = (long double) __e;
+  __asm ("fscale%.x %1, %0" : "=f" (__result) : "f" (__float_e), "0" (__x));
+  return __result;
+}
+
+__m81_defun (long double, __ieee754_fmodl, (long double __x, long double __y))
+{
+  long double __result;
+  __asm("fmod%.x %1, %0" : "=f" (__result) : "f" (__y), "0" (__x));
+  return __result;
+}
+
+__m81_inline long double
+__m81_u(__frexpl)(long double __value, int *__expptr)
+{
+  long double __mantissa, __exponent;
+  __asm("fgetexp%.x %1, %0" : "=f" (__exponent) : "f" (__value));
+  __asm("fgetman%.x %1, %0" : "=f" (__mantissa) : "f" (__value));
+  *__expptr = (int) __exponent;
+  return __mantissa;
+}
+
+__m81_defun (long double, __floorl, (long double __x))
+{
+  long double __result;
+  unsigned long int __ctrl_reg;
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));
+  /* Set rounding towards negative infinity.  */
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */ 
+		      : "dmi" ((__ctrl_reg & ~0x10) | 0x20));
+  /* Convert X to an integer, using -Inf rounding.  */
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));
+  /* Restore the previous rounding mode.  */
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */
+		      : "dmi" (__ctrl_reg));
+  return __result;
+}
+
+__m81_defun (long double, __ieee754_powl, (long double __x, long double __y))
+{
+  long double __result;
+  if (__x == 0.0l)
+    {
+      if (__y <= 0.0l)
+	__result = 0.0l / 0.0l;
+      else
+	__result = 0.0l;
+    }
+  else if (__y == 0.0l || __x == 1.0l)
+    __result = 1.0;
+  else if (__y == 1.0l)
+    __result = __x;
+  else if (__y == 2.0l)
+    __result = __x * __x;
+  else if (__x == 10.0l)
+    __asm("ftentox%.x %1, %0" : "=f" (__result) : "f" (__y));
+  else if (__x == 2.0l)
+    __asm("ftwotox%.x %1, %0" : "=f" (__result) : "f" (__y));
+  else if (__x < 0.0l)
+    {
+      long double __temp = __m81_u(__rintl)(__y);
+      if (__y == __temp)
+	{
+	  int i = (int) __y;
+	  __result
+	    = __m81_u(__ieee754_expl)(__y * __m81_u(__ieee754_logl)(-__x));
+	  if (i & 1)
+	    __result = -__result;
+	}
+      else
+	__result = 0.0l / 0.0l;
+    }
+  else
+    __result = __m81_u(__ieee754_expl)(__y * __m81_u(__ieee754_logl)(__x));
+  return __result;
+}
+
+__m81_defun (long double, __ceill, (long double __x))
+{
+  long double __result;
+  unsigned long int __ctrl_reg;
+  __asm __volatile__ ("fmove%.l %!, %0" : "=dm" (__ctrl_reg));
+  /* Set rounding towards positive infinity.  */
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */
+		      : "dmi" (__ctrl_reg | 0x30));
+  /* Convert X to an integer, using +Inf rounding.  */
+  __asm __volatile__ ("fint%.x %1, %0" : "=f" (__result) : "f" (__x));
+  /* Restore the previous rounding mode.  */
+  __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */
+		      : "dmi" (__ctrl_reg));
+  return __result;
+}
+
+__m81_inline long double
+__m81_u(__modfl)(long double __value, long double *__iptr)
+{
+  long double __modf_int;
+  __asm ("fintrz%.x %1, %0" : "=f" (__modf_int) : "f" (__value));
+  *__iptr = __modf_int;
+  return __value - __modf_int;
+}
+
 __m81_defun (int, __isinfl, (long double __value))
 {
   /* There is no branch-condition for infinity,
@@ -442,6 +588,38 @@ __m81_defun (int, __isnanl, (long double __value))
   char __result;
   __asm("ftst%.x %1\n"
 	"fsun %0" : "=dm" (__result) : "f" (__value));
+  return __result;
+}
+
+__m81_defun (int, __finitel, (long double __value))
+{
+  /* There is no branch-condition for infinity, so we must extract and
+     examine the condition codes manually.  */
+  unsigned long int __fpsr;
+  __asm ("ftst%.x %1\n"
+	 "fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));
+  return (__fpsr & (3 << 24)) == 0;
+}
+
+__m81_defun (int, __ilogbl, (long double __x))
+{
+  long double __result;
+  __asm("fgetexp%.x %1, %0" : "=f" (__result) : "f" (__x));
+  return (int) __result;
+}
+
+__m81_defun (long double, __ieee754_scalbl, (long double __x, long double __n))
+{
+  long double __result;
+  __asm ("fscale%.x %1, %0" : "=f" (__result) : "f" (__n), "0" (__x));
+  return __result;
+}
+
+__m81_defun (long double, __scalbnl, (long double __x, int __n))
+{
+  long double __result;
+  long double __float_n = (long double) __n;
+  __asm ("fscale%.x %1, %0" : "=f" (__result) : "f" (__float_n), "0" (__x));
   return __result;
 }
 

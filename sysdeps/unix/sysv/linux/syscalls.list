@@ -40,6 +40,7 @@ sched_yield	-	sched_yield	0	__sched_yield	sched_yield
 sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_priority_max
 sched_primin	-	sched_get_priority_min	1	__sched_get_priority_min	sched_get_priority_min
 sched_rr_gi	-	sched_rr_get_interval	2	__sched_rr_get_interval	sched_rr_get_interval
+select		-	_newselect	5	__select	select
 setfsgid	-	setfsgid	1	setfsgid
 setfsuid	-	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid

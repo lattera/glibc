@@ -19,8 +19,17 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 
-double
-DEFUN(__kernel_cos, (x, y), double x AND double y)
+#ifndef FUNC
+#define FUNC cos
+#endif
+#ifndef float_type
+#define float_type double
+#endif
+
+#define __CONCATX(a,b) __CONCAT(a,b)
+
+float_type
+DEFUN(__CONCATX(__kernel_,FUNC), (x, y), float_type x AND float_type y)
 {
-  return __cos (x + y);
+  return __CONCATX(__,FUNC) (x + y);
 }
