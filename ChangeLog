@@ -5,6 +5,15 @@
 
 2000-07-03  Greg McGary  <greg@mcgary.org>
 
+	* libio/libio.h (_IO_FILE): Revert type of _chain to _IO_FILE*.
+	* libio/libioP.h (_IO_ITER): Revert to type _IO_FILE*.
+	(FILEBUF_LITERAL): Add cast for CHAIN init.
+	* libio/genops.c (_IO_un_link, _IO_link_in, _IO_iter_begin): Add casts.
+	(_IO_flush_all, _IO_flush_all_linebuffered, _IO_unbuffer_write):
+	Revert type of `fp' to _IO_FILE*.
+	(_IO_iter_file): Remove cast.
+	(_IO_iter_next): Elide intermediate member reference.
+
 	* sysdeps/powerpc/strchr.S:  Check bounds.
 	Wrap extern symbols in BP_SYM ().
 

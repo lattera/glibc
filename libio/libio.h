@@ -252,8 +252,6 @@ struct _IO_wide_data
   struct _IO_jump_t *_wide_vtable;
 };
 
-struct _IO_FILE_plus;
-
 struct _IO_FILE {
   int _flags;		/* High-order word is _IO_MAGIC; rest is flags. */
 #define _IO_file_flags _flags
@@ -275,7 +273,7 @@ struct _IO_FILE {
 
   struct _IO_marker *_markers;
 
-  struct _IO_FILE_plus *_chain;
+  struct _IO_FILE *_chain;
 
   int _fileno;
   int _blksize;
@@ -311,6 +309,8 @@ struct _IO_FILE_complete
 #ifndef __cplusplus
 typedef struct _IO_FILE _IO_FILE;
 #endif
+
+struct _IO_FILE_plus;
 
 extern struct _IO_FILE_plus _IO_2_1_stdin_;
 extern struct _IO_FILE_plus _IO_2_1_stdout_;
