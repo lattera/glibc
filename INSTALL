@@ -17,13 +17,7 @@ should get them both.
    Support for POSIX threads is maintained by someone else, so it's in a
 separate package.  It is only available for Linux systems, but this will
 change in the future.  Get it from the same place you got the main
-bundle; the file is `glibc-linuxthreads-VERSION.tar.gz'.  Support for
-the `crypt' function is distributed separately because of United States
-export restrictions.  If you are outside the US or Canada, you must get
-`crypt' support from a site outside the US, such as `ftp.gwdg.de'.
-`ftp.gwdg.de' has the crypt distribution in `pub/linux/glibc'.  (Most
-non-US mirrors of `ftp.gnu.org' will have it too.)  The file you need
-is `glibc-crypt-VERSION.tar.gz'.
+bundle; the file is `glibc-linuxthreads-VERSION.tar.gz'.
 
    You will need recent versions of several GNU tools: definitely GCC
 and GNU Make, and possibly others.  *Note Tools for Compilation::,
@@ -91,7 +85,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      finds.  If you do not wish to use some add-on package that you
      have present in your source tree, give this option a list of the
      add-ons that you _do_ want used, like this:
-     `--enable-add-ons=crypt,linuxthreads'
+     `--enable-add-ons=linuxthreads'
 
 `--with-binutils=DIRECTORY'
      Use the binutils (assembler and linker) in `DIRECTORY', not the

@@ -1,3 +1,7 @@
+2000-03-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/install.texi: Remove references to crypt add-on.
+
 2000-03-25  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/setrlimit.c (setrlimit): Go into a critical
