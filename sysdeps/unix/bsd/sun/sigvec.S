@@ -18,18 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-ENTRY(___wait3)
-	movel 8(ap), r1
-	movel 12(ap), r0
-	/* Set all condition codes to tell the kernel this is wait3.  */
-	bispsw $15
-	chmk $SYS_wait
-	bcs error
+/* __sigvec is defined by sigtramp.c.  */
 
-	movl 4(ap), r2
-	beq 1f
-	movl r1, (r2)
-1:	ret
-
-.globl	syscall_error
-error:	jmp syscall_error
+PSEUDO (__raw_sigvec, sigvec, 3)
+	ret
