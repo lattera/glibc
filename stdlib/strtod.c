@@ -911,9 +911,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	    {
 	      if (num[0] >= d1)
 		{
-		  /* The nominator of the number occupies fewer bits than
+		  /* The numerator of the number occupies fewer bits than
 		     the denominator but the one limb is bigger than the
-		     high limb of the nominator.  */
+		     high limb of the numerator.  */
 		  n1 = 0;
 		  n0 = num[0];
 		}

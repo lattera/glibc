@@ -1,3 +1,29 @@
+Fri Dec 15 04:41:22 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* stdio-common/Makefile (tests): Add bug10.
+	* stdio-common/bug10.c: New file.  From HJ Lu.
+
+	* stdio-common/tstdiomisc.c: Make more test-suite like: exit
+	status tells about successful run.
+
+	* stdio-common/vfscanf.c [!USE_IN_LIBIO]: Use `flags' to check
+	format correctness.
+	Correct handling of trailing white spaces in format + EOF.
+
+Fri Dec 15 01:31:56 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* stdio-common/Makefile (tests): Add bug8 and bug9.
+	* stdio-common/bug8.c, stdio-common/bug9.c: New tests.
+
+	* stdio-common/vfscanf.c: Fix bug in dynamic buffer handling.
+
+	* stdlib/strtod.c: Correct spelling: nominator -> numerator.
+	Thanks to Jim Meyering.
+
+Sat Nov 25 06:05:12 1995  H.J. Lu  <hjl@nynexst.com>
+
+	* stdio-common/vfscanf.c: Always check width !=0.
+	Correctly handle %%.
 Thu Dec 14 02:28:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob_in_dir): Cast result of opendir to __ptr_t,
