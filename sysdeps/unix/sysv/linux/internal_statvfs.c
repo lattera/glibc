@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -26,7 +26,18 @@
   buf->f_bavail = fsbuf.f_bavail;
   buf->f_files = fsbuf.f_files;
   buf->f_ffree = fsbuf.f_ffree;
-  buf->f_fsid = fsbuf.f_fsid;
+  if (sizeof (buf->f_fsid) == sizeof (fsbuf.f_fsid))
+    buf->f_fsid = (fsbuf.f_fsid.__val[0]
+		   | ((unsigned long int) fsbuf.f_fsid.__val[1]
+		      << (8 * (sizeof (buf->f_fsid)
+			       - sizeof (fsbuf.f_fsid.__val[0])))));
+  else
+    /* We cannot help here.  The statvfs element is not large enough to
+       contain both words of the statfs f_fsid field.  */
+    buf->f_fsid = fsbuf.f_fsid.__val[0];
+#ifdef _STATVFSBUF_F_UNUSED
+  buf->__f_unused = 0;
+#endif
   buf->f_namemax = fsbuf.f_namelen;
   memset (buf->__f_spare, '\0', 6 * sizeof (int));
 

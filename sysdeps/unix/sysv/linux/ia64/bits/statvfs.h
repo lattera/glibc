@@ -42,12 +42,10 @@ struct statvfs
     __fsfilcnt64_t f_favail;
 #endif
     unsigned long int f_fsid;
-    int __f_unused;
     unsigned long int f_flag;
     unsigned long int f_namemax;
     int __f_spare[6];
   };
-#define _STATVFSBUF_F_UNUSED
 
 #ifdef __USE_LARGEFILE64
 struct statvfs64
@@ -61,7 +59,6 @@ struct statvfs64
     __fsfilcnt64_t f_ffree;
     __fsfilcnt64_t f_favail;
     unsigned long int f_fsid;
-    int __f_unused;
     unsigned long int f_flag;
     unsigned long int f_namemax;
     int __f_spare[6];
