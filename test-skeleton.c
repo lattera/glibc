@@ -128,12 +128,13 @@ __attribute__ ((noreturn))
 timeout_handler (int sig __attribute__ ((unused)))
 {
   int killed;
+  int status;
 
   /* Send signal.  */
   kill (pid, SIGKILL);
 
   /* Wait for it to terminate.  */
-  killed = waitpid (pid, NULL, WNOHANG);
+  killed = waitpid (pid, &status, WNOHANG|WUNTRACED);
   if (killed != 0 && killed != pid)
     {
       perror ("Failed to killed test process");
@@ -144,7 +145,17 @@ timeout_handler (int sig __attribute__ ((unused)))
   CLEANUP_HANDLER;
 #endif
 
-  fputs ("Timed out: killed the child process\n", stderr);
+  if (WIFSIGNALED (status) && WTERMSIG (status) == SIGKILL)
+    fputs ("Timed out: killed the child process\n", stderr);
+  else if (WIFSTOPPED (status))
+    fprintf (stderr, "Timed out: the child process was %s\n",
+	     strsignal (WSTOPSIG (status)));
+  else if (WIFSIGNALED (status))
+    fprintf (stderr, "Timed out: the child process got signal %s\n",
+	     strsignal (WTERMSIG (status)));
+  else
+    fprintf (stderr, "Timed out: killed the child process but it exited %d\n",
+	     WEXITSTATUS (status));
 
   /* Exit with an error.  */
   exit (1);
@@ -232,6 +243,10 @@ main (int argc, char *argv[])
       core_limit.rlim_max = 0;
       setrlimit (RLIMIT_CORE, &core_limit);
 #endif
+
+      /* We put the test process in its own pgrp so that if it bogusly
+	 generates any job control signals, they won't hit the whole build.  */
+      setpgid (0, 0);
 
       /* Execute the test function and exit with the return value.   */
       exit (TEST_FUNCTION);
