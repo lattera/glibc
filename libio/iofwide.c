@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -100,20 +100,18 @@ _IO_fwide (fp, mode)
   /* Normalize the value.  */
   mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
 
-  if (mode == 0)
-    /* The caller simply wants to know about the current orientation.  */
-    return fp->_mode;
-
 #if defined SHARED && defined _LIBC \
     && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
   if (__builtin_expect (&_IO_stdin_used == NULL, 0)
-      && (fp == _IO_stdin ||  fp == _IO_stdout || fp == _IO_stderr))
+      && (fp == _IO_stdin || fp == _IO_stdout || fp == _IO_stderr))
     /* This is for a stream in the glibc 2.0 format.  */
     return -1;
 #endif
 
-  if (fp->_mode != 0)
-    /* The orientation already has been determined.  */
+  /* The orientation already has been determined.  */
+  if (fp->_mode != 0
+      /* Or the caller simply wants to know about the current orientation.  */
+      || mode == 0)
     return fp->_mode;
 
   /* Set the orientation appropriately.  */
