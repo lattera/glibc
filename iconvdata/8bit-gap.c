@@ -48,7 +48,7 @@ struct gap
   {									      \
     uint32_t ch = to_ucs4[*inptr];					      \
 									      \
-    if (HAS_HOLES && ch == L'\0' && *inptr != '\0')			      \
+    if (HAS_HOLES && __builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0') \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \
@@ -80,7 +80,7 @@ struct gap
     uint32_t ch = get32 (inptr);					      \
     unsigned char res;							      \
 									      \
-    if (ch >= 0xffff)							      \
+    if (__builtin_expect (ch, 0) >= 0xffff)				      \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \
@@ -95,7 +95,7 @@ struct gap
       }									      \
     while (ch > rp->end)						      \
       ++rp;								      \
-    if (ch < rp->start)							      \
+    if (__builtin_expect (ch < rp->start, 0))				      \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \
@@ -110,7 +110,7 @@ struct gap
       }									      \
 									      \
     res = from_ucs4[ch + rp->idx];					      \
-    if (ch != 0 && res == '\0')						      \
+    if (__builtin_expect (res, '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \

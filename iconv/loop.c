@@ -232,14 +232,17 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 	  /* `if' cases for MIN_NEEDED_OUTPUT ==/!= 1 is made to help the
 	     compiler generating better code.  It will optimized away
 	     since MIN_NEEDED_OUTPUT is always a constant.  */
-	  if ((MIN_NEEDED_OUTPUT != 1 && outptr + MIN_NEEDED_OUTPUT > outend)
-	      || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
+	  if ((MIN_NEEDED_OUTPUT != 1
+	       && __builtin_expect (outptr + MIN_NEEDED_OUTPUT > outend, 0))
+	      || (MIN_NEEDED_OUTPUT == 1
+		  && __builtin_expect (outptr >= outend, 0)))
 	    {
 	      /* Overflow in the output buffer.  */
 	      result = __GCONV_FULL_OUTPUT;
 	      break;
 	    }
-	  if (MIN_NEEDED_INPUT > 1 && inptr + MIN_NEEDED_INPUT > inend)
+	  if (MIN_NEEDED_INPUT > 1
+	      && __builtin_expect (inptr + MIN_NEEDED_INPUT > inend, 0))
 	    {
 	      /* We don't have enough input for another complete input
 		 character.  */
@@ -356,7 +359,7 @@ SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
      bytes from the state and at least one more, or the character is still
      incomplete, or we have some other error (like illegal input character,
      no space in output buffer).  */
-  if (inptr != bytebuf)
+  if (__builtin_expect (inptr != bytebuf, 1))
     {
       /* We found a new character.  */
       assert (inptr - bytebuf > (state->__count & 7));

@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -239,7 +239,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	       status = DL_CALL_FCT (result[step_cnt].__init_fct,
 				      (&result[step_cnt]));
 
-	       if (status != __GCONV_OK)
+	       if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
 		 {
 		   failed = 1;
 		   /* Make sure we unload this modules.  */
@@ -251,7 +251,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  current = current->last;
 	}
 
-      if (failed != 0)
+      if (__builtin_expect (failed, 0) != 0)
 	{
 	  /* Something went wrong while initializing the modules.  */
 	  while (++step_cnt < *nsteps)
@@ -670,7 +670,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
       toset_expand = found != NULL ? (*found)->toname : NULL;
     }
 
-  if ((flags & GCONV_AVOID_NOCONV)
+  if (__builtin_expect (flags & GCONV_AVOID_NOCONV, 0)
       /* We are not supposed to create a pseudo transformation (means
 	 copying) when the input and output character set are the same.  */
       && (strcmp (toset, fromset) == 0

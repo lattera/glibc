@@ -34,7 +34,7 @@
   {									      \
     uint32_t ch = to_ucs4[*inptr];					      \
 									      \
-    if (HAS_HOLES && ch == L'\0' && *inptr != '\0')			      \
+    if (HAS_HOLES && __builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0') \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \
@@ -61,8 +61,8 @@
   {									      \
     uint32_t ch = get32 (inptr);					      \
 									      \
-    if (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0])		      \
-	|| (ch != 0 && from_ucs4[ch] == '\0'))				      \
+    if (__builtin_expect (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]), 0)\
+	|| (__builtin_expect (from_ucs4[ch], '\1') == '\0' && ch != 0))	      \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \

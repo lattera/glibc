@@ -8450,7 +8450,8 @@ static const char from_ucs4_tab13[][2] =
 	/* See whether the second byte is in the correct range.  */	      \
 	if (ch2 >= 0x40 && ch2 <= 0x7e)					      \
 	  idx += ch2 - 0x40;						      \
-	else if (ch2 >= 0xa1 && ch2 <= 0xfe)				      \
+	else if (__builtin_expect (ch2, 0xa1) >= 0xa1			      \
+		 && __builtin_expect (ch2, 0xa1) <= 0xfe)		      \
 	  idx += 0x3f + (ch2 - 0xa1);					      \
 	else								      \
 	  {								      \
@@ -8470,7 +8471,7 @@ static const char from_ucs4_tab13[][2] =
 	ch = big5_to_ucs[idx];						      \
 									      \
 	/* Is this character defined?  */				      \
-	if (ch == 0 && *inptr != '\0')					      \
+	if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -8506,7 +8507,8 @@ static const char from_ucs4_tab13[][2] =
     char buf[2];							      \
     const char *cp;							      \
 									      \
-    if (ch >= sizeof (from_ucs4_tab1) / sizeof (from_ucs4_tab1[0]))	      \
+    if (__builtin_expect (ch, 0)					      \
+	>= sizeof (from_ucs4_tab1) / sizeof (from_ucs4_tab1[0]))	      \
       switch (ch)							      \
 	{								      \
         case 0x2c7 ... 0x2d9:						      \
@@ -8578,7 +8580,7 @@ static const char from_ucs4_tab13[][2] =
     else								      \
       cp = from_ucs4_tab1[ch];						      \
 									      \
-    if (cp[0] == '\0' && ch != 0)					      \
+    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
 	if (! ignore_errors_p ())					      \
@@ -8592,7 +8594,8 @@ static const char from_ucs4_tab13[][2] =
     else								      \
       {									      \
 	/* See whether there is enough room for the second byte we write.  */ \
-	if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
+	if (NEED_LENGTH_TEST && __builtin_expect (cp[1], '\1') != '\0'	      \
+	    && __builtin_expect (outptr + 1 >= outend, 0))		      \
 	  {								      \
 	    /* We have not enough room.  */				      \
 	    result = __GCONV_FULL_OUTPUT;				      \

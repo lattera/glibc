@@ -1,8 +1,15 @@
 2000-06-05  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconv/gconv_dl.c: Add __builtin_expect in many places.
-	* iconv/skeleton.c: Add more __builtin_expect.
-	* iconv/gconv_simple.c: Add __builtin_expect in many places.
+	* iconvdata/big5hkscs.c: Add __builtin_expect in many places.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconv/loop.c: Likewise.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/skeleton.c: Likewise.
 
 	* iconv/gconv.h (__GCONV_IS_LAST, __GCONV_IGNORE_ERRORS): Define.
 	(struct __gconv_step_data): Rename __is_last to __flags.
