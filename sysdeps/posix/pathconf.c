@@ -22,6 +22,8 @@
 #include <limits.h>
 #include <fcntl.h>
 #include <sys/statfs.h>
+#include <sys/statvfs.h>
+
 
 /* Get file-specific information about PATH.  */
 long int
@@ -162,7 +164,6 @@ __pathconf (const char *path, int name)
       /* We let platforms with larger file sizes overwrite this value.  */
       return 32;
 #endif
-
 
     case _PC_REC_INCR_XFER_SIZE:
       /* XXX It is not entirely clear what the limit is supposed to do.

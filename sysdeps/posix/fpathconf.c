@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/statfs.h>
+#include <sys/statvfs.h>
 
 
 /* Get file-specific information about descriptor FD.  */

@@ -6,6 +6,7 @@
 	* sysdeps/unix/sysv/linux/fstatvfs64.c: Rename to __fstatvfs64 and
 	make old name weak alias.
 	* sysdeps/generic/fstatvfs64.c: Likewise.
+	* include/sys/statvfs.h: New file.
 
 	* sysdeps/generic/bits/confname.h: Define _PC_REC_INCR_XFER_SIZE,
 	_PC_REC_MAX_XFER_SIZE, _PC_REC_MIN_XFER_SIZE, and
