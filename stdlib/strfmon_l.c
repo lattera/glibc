@@ -543,20 +543,14 @@ __vstrfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format,
 	 the numeric representation is too long.  */
       s[maxsize - 1] = '\0';
 
+      memset (&info, '\0', sizeof (info));
       info.prec = right_prec;
       info.width = left_prec + (right_prec ? (right_prec + 1) : 0);
       info.spec = 'f';
       info.is_long_double = is_long_double;
-      info.is_short = 0;
-      info.is_long = 0;
-      info.alt = 0;
-      info.space = 0;
-      info.left = 0;
-      info.showsign = 0;
       info.group = group;
       info.pad = pad;
       info.extra = 1;		/* This means use values from LC_MONETARY.  */
-      info.wide = 0;
 
       ptr = &fpnum;
       done = __printf_fp ((FILE *) &f, &info, &ptr);
