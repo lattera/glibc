@@ -1,3 +1,8 @@
+2000-06-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/link.h: Remove libc internal declarations.
+	* include/link.h: Move them here.
+
 2000-06-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/getsysstats.c: New file.
