@@ -1,3 +1,7 @@
+1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/Makefile: Update.
+
 1999-02-03  Jeff Bailey  <jbailey@nisa.net>
 
 	* sysdeps/unix/make_errlist.c: Add i18n and copyright to
