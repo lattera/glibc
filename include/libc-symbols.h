@@ -263,7 +263,7 @@
 #  define declare_symbol_1_paste_1(a,b)	a##b
 # else /* Not __ASSEMBLER__.  */
 #  define declare_symbol_1(symbol, type, size) \
-    asm (".type " __SYMBOL_PREFIX #symbol \
+    asm (".type " __SYMBOL_PREFIX #symbol ", " \
 	 declare_symbol_1_stringify (ASM_TYPE_DIRECTIVE_PREFIX) #type \
 	 "\n\t.size " __SYMBOL_PREFIX #symbol ", " #size);
 #  define declare_symbol_1_stringify(x) declare_symbol_1_stringify_1 (x)
