@@ -1,3 +1,14 @@
+2001-03-21  Alan Modra  <alan@one.net.au>
+
+	* sysdeps/hppa/dl-machine.h (RTLD_START): Set up dp with DT_PLTGOT
+	value from application so that constructors in non-PIC libs work.
+
+2000-12-13  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/hppa/dl-machine.h (RTLD_START): _dl_init now returns a
+	function pointer, hence load the jump address and gp from the
+	function pointer before jumping.
+
 2001-04-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/send.c (__send): Return ssize_t.
