@@ -505,7 +505,7 @@ link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
 link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F:%-bp=%)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
-gnulib := -lgcc
+gnulib := -lgcc -lgcc_eh
 endif
 ifeq ($(elf),yes)
 +preinit = $(addprefix $(csu-objpfx),crti.o)

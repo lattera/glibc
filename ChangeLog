@@ -1,3 +1,7 @@
+2003-06-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig (gnulib): Add -lgcc_eh once again.
+
 2003-06-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* test-skeleton.c (main): Use TEMP_FAILURE_RETRY with waitpid.
