@@ -568,7 +568,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   for (cnt = 0; decimal[cnt] != '\0'; ++cnt)
     if (cp[cnt] != decimal[cnt])
       break;
-  if (decimal[cnt] == '\0' && cp[1] >= '0' && cp[1] <= '9')
+  if (decimal[cnt] == '\0' && cp[cnt] >= '0' && cp[cnt] <= '9')
     {
       /* We accept it.  This funny construct is here only to indent
 	 the code directly.  */

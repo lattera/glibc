@@ -1,5 +1,8 @@
 2003-03-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/strtod.c (INTERNAL): Recognize first digit after decimal
+	point correctly [PR libc/4993].
+
 	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Avoid
 	netlink_open calls if netlink is known to not be available.
 
