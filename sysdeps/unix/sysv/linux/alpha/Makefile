@@ -2,6 +2,10 @@ ifeq ($(subdir),posix)
 sysdep_routines += oldglob
 endif
 
+ifeq ($(subdir),stdlib)
+gen-as-const-headers += ucontext-offsets.sym
+endif
+
 ifeq ($(subdir),misc)
 sysdep_headers += alpha/ptrace.h alpha/regdef.h sys/io.h
 
