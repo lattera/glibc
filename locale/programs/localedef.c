@@ -203,7 +203,7 @@ main (int argc, char *argv[])
      beginning every time.  */
   do
     {
-      int cat;
+      int cat = 0;
 
       for (act_add_locdef = copy_list; act_add_locdef != NULL;
 	   act_add_locdef = act_add_locdef->next)
