@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
 "POT-Creation-Date: 2003-02-22 15:34-0800\n"
-"PO-Revision-Date: 2003-06-03 10:16+0800\n"
+"PO-Revision-Date: 2003-06-06 15:10+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -1376,7 +1376,7 @@ msgstr "严格遵循 POSIX"
 
 #: locale/programs/localedef.c:135
 msgid "Suppress warnings and information messages"
-msgstr ""
+msgstr "关闭警告和信息消息"
 
 #: locale/programs/localedef.c:136
 msgid "Print more messages"
@@ -1392,7 +1392,7 @@ msgstr "不要将新数据添加到归档文件中"
 
 #: locale/programs/localedef.c:141
 msgid "Add locales named by parameters to archive"
-msgstr ""
+msgstr "将由参数命名的区域添加到归档文件中"
 
 #: locale/programs/localedef.c:142
 msgid "Replace existing archive content"
@@ -1400,7 +1400,7 @@ msgstr "替换现有的归档文件内容"
 
 #: locale/programs/localedef.c:144
 msgid "Remove locales named by parameters from archive"
-msgstr ""
+msgstr "从归档文件中删除由参数命名的区域"
 
 #: locale/programs/localedef.c:145
 msgid "List content of archive"
@@ -1593,12 +1593,12 @@ msgstr "无法为范畴“%2$s”打开输出文件“%1$s”"
 #: locale/programs/locfile.c:649
 #, c-format
 msgid "failure while writing data for category `%s'"
-msgstr ""
+msgstr "为范畴“%s”写入数据失败"
 
 #: locale/programs/locfile.c:745
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
-msgstr ""
+msgstr "无法为范畴“%2$s”创建输出文件“%1$s”"
 
 #: locale/programs/locfile.h:59
 msgid "expect string argument for `copy'"
@@ -1669,15 +1669,15 @@ msgstr "另一个测试字符串。"
 
 #: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:84
 msgid "NAME"
-msgstr ""
+msgstr "名称"
 
 #: catgets/gencat.c:112
 msgid "Create C header file NAME containing symbol definitions"
-msgstr ""
+msgstr "创建含有符号定义的给定名称的 C 头文件"
 
 #: catgets/gencat.c:114
 msgid "Do not use existing catalog, force new output file"
-msgstr ""
+msgstr "不使用现有的分类，强制创建新输出文件"
 
 #: catgets/gencat.c:115
 msgid "Write output to file NAME"
@@ -1758,7 +1758,7 @@ msgstr "未终止的消息"
 
 #: catgets/gencat.c:1241
 msgid "while opening old catalog file"
-msgstr ""
+msgstr "在打开旧分类文件时"
 
 #: catgets/gencat.c:1332
 msgid "conversion modules not available"
@@ -2231,7 +2231,7 @@ msgstr "无法在传输端点关闭以后发送"
 #: stdio-common/../sysdeps/gnu/errlist.c:668
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
 msgid "Too many references: cannot splice"
-msgstr ""
+msgstr "过多的引用：无法接合"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
@@ -2507,7 +2507,7 @@ msgstr "被中断的系统调用应该重新启动"
 #: stdio-common/../sysdeps/gnu/errlist.c:1101
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
 msgid "Channel number out of range"
-msgstr ""
+msgstr "通道编号超出范围"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1109
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
@@ -2532,7 +2532,7 @@ msgstr "连接数超出范围"
 #: stdio-common/../sysdeps/gnu/errlist.c:1141
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
 msgid "Protocol driver not attached"
-msgstr ""
+msgstr "未加载协议驱动程序"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1149
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
@@ -2546,7 +2546,7 @@ msgstr "级别 2 己关闭"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1165
 msgid "Invalid exchange"
-msgstr ""
+msgstr "无效的交换"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1173
 msgid "Invalid request descriptor"
@@ -2554,11 +2554,11 @@ msgstr "无效的请求描述符"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1181
 msgid "Exchange full"
-msgstr ""
+msgstr "交换满"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1189
 msgid "No anode"
-msgstr ""
+msgstr "没有 anode"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1197
 msgid "Invalid request code"
@@ -2734,7 +2734,7 @@ msgstr "结果太大"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:75
 msgid "Deadlock situation detected/avoided"
-msgstr ""
+msgstr "探测到/已避免死锁"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:76
 msgid "No record locks available"
@@ -2758,7 +2758,7 @@ msgstr "内存表已满"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:83
 msgid "Anode table overflow"
-msgstr ""
+msgstr "Anode 表溢出"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:84
 msgid "Bad request code"
@@ -2822,7 +2822,7 @@ msgstr "不可应用的操作"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:120
 msgid "Number of symbolic links encountered during path name traversal exceeds MAXSYMLINKS"
-msgstr ""
+msgstr "路径遍历中遇到的符号连接的数量超过了 MAXSYMLINKS"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:121
 msgid "Error 91"
@@ -2946,7 +2946,7 @@ msgstr "是一个有名文件"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:171
 msgid "Reserved for future use"
-msgstr ""
+msgstr "保留用于未来"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:172
 msgid "Error 142"
@@ -3159,7 +3159,7 @@ msgstr "%s：关闭 %s 错误：%s\n"
 
 #: timezone/zic.c:901
 msgid "expected continuation line not found"
-msgstr ""
+msgstr "找不到应该出现的续行"
 
 #: timezone/zic.c:957
 msgid "wrong number of fields on Rule line"
@@ -3214,7 +3214,7 @@ msgstr ""
 
 #: timezone/zic.c:1132
 msgid "invalid leaping year"
-msgstr ""
+msgstr "无效的闰年"
 
 #: timezone/zic.c:1147 timezone/zic.c:1250
 msgid "invalid month name"
@@ -3222,7 +3222,7 @@ msgstr "无效的月名称"
 
 #: timezone/zic.c:1160 timezone/zic.c:1372 timezone/zic.c:1386
 msgid "invalid day of month"
-msgstr ""
+msgstr "无效的日"
 
 #: timezone/zic.c:1165
 msgid "time before zero"
@@ -3400,7 +3400,7 @@ msgstr "没有与主机名关联的地址"
 
 #: posix/../sysdeps/posix/gai_strerror.c:38
 msgid "Name or service not known"
-msgstr ""
+msgstr "未知的名称或服务"
 
 #: posix/../sysdeps/posix/gai_strerror.c:39
 msgid "Servname not supported for ai_socktype"
@@ -3731,7 +3731,7 @@ msgstr "要使用的服务配置"
 #: nss/getent.c:136 nss/getent.c:308
 #, c-format
 msgid "Enumeration not supported on %s\n"
-msgstr ""
+msgstr "%s 不支持枚举\n"
 
 #: nss/getent.c:732
 msgid "getent - get entries from administrative database."
@@ -3837,11 +3837,11 @@ msgstr "错误的拥有者"
 
 #: inet/rcmd.c:562
 msgid "writeable by other than owner"
-msgstr ""
+msgstr "可由除所有者之外的人写入"
 
 #: inet/rcmd.c:564
 msgid "hard linked somewhere"
-msgstr ""
+msgstr "某处的硬连接"
 
 #: inet/ruserpass.c:170 inet/ruserpass.c:193
 msgid "out of memory"
@@ -3964,27 +3964,27 @@ msgstr "认证成功"
 
 #: sunrpc/clnt_perr.c:360
 msgid "Invalid client credential"
-msgstr ""
+msgstr "无效的客户证书"
 
 #: sunrpc/clnt_perr.c:364
 msgid "Server rejected credential"
-msgstr ""
+msgstr "服务器拒绝证书"
 
 #: sunrpc/clnt_perr.c:368
 msgid "Invalid client verifier"
-msgstr ""
+msgstr "无效的客户校验"
 
 #: sunrpc/clnt_perr.c:372
 msgid "Server rejected verifier"
-msgstr ""
+msgstr "服务器拒绝校验"
 
 #: sunrpc/clnt_perr.c:376
 msgid "Client credential too weak"
-msgstr ""
+msgstr "客户证书太弱"
 
 #: sunrpc/clnt_perr.c:380
 msgid "Invalid server verifier"
-msgstr ""
+msgstr "无效的服务器校验"
 
 #: sunrpc/clnt_perr.c:384
 msgid "Failed (unspecified error)"
@@ -3992,7 +3992,7 @@ msgstr "失败 (未指明的错误)"
 
 #: sunrpc/clnt_raw.c:117
 msgid "clnt_raw.c - Fatal header serialization error."
-msgstr ""
+msgstr "clnt_raw.c - 致命的头编序错误。"
 
 #: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
@@ -4016,7 +4016,7 @@ msgstr ""
 
 #: sunrpc/pmap_clnt.c:72
 msgid "__get_myaddress: ioctl (get interface configuration)"
-msgstr ""
+msgstr "__get_myaddress：ioctl (获取界面配置)"
 
 #: sunrpc/pmap_clnt.c:137
 msgid "Cannot register service"
@@ -4261,7 +4261,7 @@ msgstr ""
 #: sunrpc/svc_simple.c:87
 #, c-format
 msgid "can't reassign procedure number %ld\n"
-msgstr ""
+msgstr "无法重新指定进程编号 %ld\n"
 
 #: sunrpc/svc_simple.c:96
 msgid "couldn't create an rpc server\n"
@@ -4284,7 +4284,7 @@ msgstr ""
 #: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
-msgstr ""
+msgstr "从未注册的程序 %d\n"
 
 #: sunrpc/svc_tcp.c:155
 msgid "svc_tcp.c - tcp socket creation problem"
@@ -4336,11 +4336,11 @@ msgstr ""
 
 #: sunrpc/svc_udp.c:528
 msgid "cache_set: victim not found"
-msgstr ""
+msgstr "cache_set：找不到 victim"
 
 #: sunrpc/svc_udp.c:539
 msgid "cache_set: victim alloc failed"
-msgstr ""
+msgstr "cache_set：分配 victim 失败"
 
 #: sunrpc/svc_udp.c:545
 msgid "cache_set: could not allocate new rpc_buffer"
@@ -4480,7 +4480,7 @@ msgstr "连接指向非法名称"
 
 #: nis/nis_error.c:55
 msgid "Partial success"
-msgstr ""
+msgstr "部分成功"
 
 #: nis/nis_error.c:56
 msgid "Too many attributes"
@@ -4492,7 +4492,7 @@ msgstr "RPC 子系统中出错"
 
 #: nis/nis_error.c:58
 msgid "Missing or malformed attribute"
-msgstr ""
+msgstr "遗漏或畸形的属性"
 
 #: nis/nis_error.c:59
 msgid "Named object is not searchable"
@@ -4520,7 +4520,7 @@ msgstr "修改操作失败"
 
 #: nis/nis_error.c:65
 msgid "Query illegal for named table"
-msgstr ""
+msgstr "对命名表来说查询非法"
 
 #: nis/nis_error.c:66
 msgid "Attempt to remove a non-empty table"
@@ -4532,7 +4532,7 @@ msgstr "访问 NIS+ 冷启动文件出错。NIS+ 安装了吗？"
 
 #: nis/nis_error.c:68
 msgid "Full resync required for directory"
-msgstr ""
+msgstr "需要对目录进行完全的重新同步"
 
 #: nis/nis_error.c:69
 msgid "NIS+ operation failed"
@@ -4581,7 +4581,7 @@ msgstr ""
 
 #: nis/nis_print.c:112
 msgid "NO OBJECT\n"
-msgstr ""
+msgstr "无对象\n"
 
 #: nis/nis_print.c:115
 msgid "DIRECTORY\n"
@@ -4593,19 +4593,19 @@ msgstr "组\n"
 
 #: nis/nis_print.c:121
 msgid "TABLE\n"
-msgstr ""
+msgstr "表\n"
 
 #: nis/nis_print.c:124
 msgid "ENTRY\n"
-msgstr ""
+msgstr "条目\n"
 
 #: nis/nis_print.c:127
 msgid "LINK\n"
-msgstr ""
+msgstr "连接\n"
 
 #: nis/nis_print.c:130
 msgid "PRIVATE\n"
-msgstr ""
+msgstr "私有\n"
 
 #: nis/nis_print.c:133
 msgid "(Unknown object)\n"
@@ -4614,7 +4614,7 @@ msgstr "(未知对象)\n"
 #: nis/nis_print.c:166
 #, c-format
 msgid "Name : `%s'\n"
-msgstr ""
+msgstr "名称 ：“%s”\n"
 
 #: nis/nis_print.c:167
 #, c-format
@@ -4818,7 +4818,7 @@ msgstr "状态     ：%s\n"
 #: nis/nis_print.c:366
 #, c-format
 msgid "Number of objects : %u\n"
-msgstr ""
+msgstr "对象的数量 ：%u\n"
 
 #: nis/nis_print.c:370
 #, c-format
@@ -4832,27 +4832,27 @@ msgstr ""
 
 #: nis/nis_print_group_entry.c:123
 msgid "    Explicit members:\n"
-msgstr ""
+msgstr "    显式成员：\n"
 
 #: nis/nis_print_group_entry.c:128
 msgid "    No explicit members\n"
-msgstr ""
+msgstr "    无显式成员\n"
 
 #: nis/nis_print_group_entry.c:131
 msgid "    Implicit members:\n"
-msgstr ""
+msgstr "    隐含成员：\n"
 
 #: nis/nis_print_group_entry.c:136
 msgid "    No implicit members\n"
-msgstr ""
+msgstr "    无隐含成员\n"
 
 #: nis/nis_print_group_entry.c:139
 msgid "    Recursive members:\n"
-msgstr ""
+msgstr "    递归成员：\n"
 
 #: nis/nis_print_group_entry.c:144
 msgid "    No recursive members\n"
-msgstr ""
+msgstr "    无递归成员\n"
 
 #: nis/nis_print_group_entry.c:147 nis/nis_print_group_entry.c:163
 msgid "    Explicit nonmembers:\n"
@@ -4915,7 +4915,7 @@ msgstr "netname2user：uid 不应为 0"
 #: nis/ypclnt.c:174
 #, c-format
 msgid "YPBINDPROC_DOMAIN: %s\n"
-msgstr ""
+msgstr "YPBINDPROC_DOMAIN：%s\n"
 
 #: nis/ypclnt.c:789
 msgid "Request arguments bad"
@@ -5065,7 +5065,7 @@ msgstr "接受连接时：%s"
 #: nscd/connections.c:482
 #, c-format
 msgid "short read while reading request: %s"
-msgstr ""
+msgstr "读取请求时没有读入足够的数据：%s"
 
 #: nscd/connections.c:518
 #, c-format
@@ -5075,7 +5075,7 @@ msgstr "请求中的键过长：%d"
 #: nscd/connections.c:532
 #, c-format
 msgid "short read while reading request key: %s"
-msgstr ""
+msgstr "读入请求键的时候没有读入足够的数据：%s"
 
 #: nscd/connections.c:591 nscd/connections.c:592 nscd/connections.c:611
 #: nscd/connections.c:624 nscd/connections.c:630 nscd/connections.c:637
@@ -5740,7 +5740,7 @@ msgstr "无法打开配置文件 %s"
 
 #: elf/ldconfig.c:1024
 msgid "Can't chdir to /"
-msgstr ""
+msgstr "无法改变目录到 /"
 
 #: elf/ldconfig.c:1066
 #, c-format

@@ -1,5 +1,14 @@
 2003-06-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/zh_CN.po: Update from translation team.
+
+2003-06-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_V6ONLY, IPV6_JOIN_ANYCAST,
+	IPV6_LEAVE_ANYCAST, IPV6_IPSEC_POLICY, IPV6_XFRM_POLICY): Define.
+
+2003-06-10  Ulrich Drepper  <drepper@redhat.com>
+
 	* inet/Makefile (aux): Add check_fd.
 	* include/ifaddrs.h: Add prototype for __check_fd.
 	* sysdeps/generic/check_fd.c: New file.
