@@ -184,7 +184,7 @@ to use for all purposes except as overridden by the variables above.
 @vindex LANGUAGE
 When developing the message translation functions it was felt that the
 functionality provided by the variables above is not sufficient.  For
-example, it should be possible to specify more than one locale name.  
+example, it should be possible to specify more than one locale name.
 Take a Swedish user who better speaks German than English, and a program
 whose messages are output in English by default.  It should be possible
 to specify that the first choice of language is Swedish, the second
@@ -878,8 +878,8 @@ appropriate category, @code{nl_langinfo} returns the information from the
 @code{"C"} locale.  It is therefore possible to use this function as
 shown in the example below.
 
-If the argument @var{item} is not valid, the global variable @var{errno}
-is set to @code{EINVAL} and a @code{NULL} pointer is returned.
+If the argument @var{item} is not valid, a pointer to an empty string is
+returned.
 @end deftypefun
 
 An example of @code{nl_langinfo} usage is a function which has to
