@@ -242,6 +242,6 @@ do_symbol_version(OLD (REENTRANT_NAME), REENTRANT_NAME, GLIBC_2.0);
 do_default_symbol_version(INTERNAL (REENTRANT_NAME), REENTRANT_NAME,
 			  GLIBC_2.1.2);
 #else
-#define do_weak_alias(n1, n2) weak_alias (n1, (n2))
+#define do_weak_alias(n1, n2) weak_alias (n1, n2)
 do_weak_alias (INTERNAL (REENTRANT_NAME), REENTRANT_NAME)
 #endif

@@ -694,12 +694,28 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
+AC_MSG_CHECKING(whether .text pseudo-op must be used)
+AC_CACHE_VAL(libc_cv_dot_text, [dnl
+cat > conftest.s <<EOF
+.text
+EOF
+libc_cv_dot_text=
+if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  libc_cv_dot_text=.text
+fi
+rm -f conftest*])
+if test -z "$libc_cv_dot_text"; then
+  AC_MSG_RESULT(no)
+else
+  AC_MSG_RESULT(yes)
+fi
+
 AC_CACHE_CHECK(for assembler global-symbol directive,
 	       libc_cv_asm_global_directive, [dnl
 libc_cv_asm_global_directive=UNKNOWN
 for ac_globl in .globl .global .EXPORT; do
   cat > conftest.s <<EOF
-	.text
+	${libc_cv_dot_text}
 	${ac_globl} foo
 foo:
 EOF
@@ -717,7 +733,7 @@ fi
 
 AC_CACHE_CHECK(for .set assembler directive, libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<EOF
-.text
+${libc_cv_dot_text}
 foo:
 .set glibc_conftest_frobozz,foo
 $libc_cv_asm_global_directive glibc_conftest_frobozz
@@ -741,7 +757,7 @@ fi
 
 AC_CACHE_CHECK(for .symver assembler directive, libc_cv_asm_symver_directive,
 [cat > conftest.s <<EOF
-.text
+${libc_cv_dot_text}
 _sym:
 .symver _sym,sym@VERS
 EOF
@@ -754,7 +770,7 @@ rm -f conftest*])
 AC_CACHE_CHECK(for ld --version-script, libc_cv_ld_version_script_option, [dnl
 if test $libc_cv_asm_symver_directive = yes; then
   cat > conftest.s <<EOF
-.text
+${libc_cv_dot_text}
 _sym:
 .symver _sym,sym@VERS
 EOF
@@ -839,7 +855,7 @@ if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
 		 [AC_TRY_COMPILE(, [asm (".section .init");
 				    asm (".section .fini");
-				    asm (".text");],
+				    asm ("${libc_cv_dot_text}");],
 				 libc_cv_have_initfini=yes,
 				 libc_cv_have_initfini=no)])
   AC_SUBST(libc_cv_have_initfini)dnl
@@ -899,7 +915,7 @@ fi
 AC_CACHE_CHECK(for assembler .weak directive, libc_cv_asm_weak_directive,
 		 [dnl
 cat > conftest.s <<EOF
-.text
+${libc_cv_dot_text}
 ${libc_cv_asm_global_directive} foo
 foo:
 .weak foo
@@ -917,7 +933,7 @@ if test $libc_cv_asm_weak_directive = no; then
 		 libc_cv_asm_weakext_directive,
 		 [dnl
 cat > conftest.s <<EOF
-.text
+${libc_cv_dot_text}
 ${libc_cv_asm_global_directive} foo
 foo:
 .weakext bar foo

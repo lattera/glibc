@@ -1,5 +1,5 @@
-/* Floating-point absolute value.  PowerPC version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copy a sign bit between floating-point values.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,34 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* This has been coded in assembler because GCC makes such a mess of it
+   when it's coded in C.  */
+
 #include <sysdep.h>
 
-ENTRY(__fabs)
-/* double [f1] fabs (double [f1] x); */
-	fabs %f1,%f1
+ENTRY(__copysign)
+/* double [f1] copysign (double [f1] x, double [f2] y);
+   copysign(x,y) returns a value with the magnitude of x and
+   with the sign bit of y.  */
+	stwu	1,-16(1)
+	stfd	2,8(1)
+	lwz	3,8(1)
+	cmpwi   3,0
+	addi    1,1,16
+	blt     0f
+	fabs    1,1
 	blr
-END(__fabs)
+0:	fnabs   1,1
+	blr
+	END (__copysign)
 
-weak_alias(__fabs,fabs)
+weak_alias(__copysign,copysign)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
-strong_alias(__fabs,__fabsf)
-weak_alias(__fabs,fabsf)
+weak_alias(__copysign,copysignf)
+strong_alias(__copysign,__copysignf)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias(__fabs,__fabsl)
-weak_alias(__fabs,fabsl)
+weak_alias(__copysign,copysignl)
+strong_alias(__copysign,__copysignl)
 #endif

@@ -1,5 +1,5 @@
-/* Copy a sign bit between floating-point values.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Floating-point maximum.  PowerPC version.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,34 +17,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This has been coded in assembler because GCC makes such a mess of it
-   when it's coded in C.  */
-
 #include <sysdep.h>
 
-ENTRY(__copysign)
-/* double [f1] copysign (double [f1] x, double [f2] y);
-   copysign(x,y) returns a value with the magnitude of x and
-   with the sign bit of y.  */
-	stwu	%r1,-16(%r1)
-	stfd	%f2,8(%r1)
-	lwz	%r3,8(%r1)
-	cmpwi   %r3,0
-	addi    %r1,%r1,16
-	blt     0f
-	fabs    %f1,%f1
+ENTRY(__fmax)
+/* double [f1] fmax (double [f1] x, double [f2] y); */
+	fcmpu	0,1,2
+	blt	0,0f		/* if x < y, neither x nor y can be NaN... */
+	bnulr+	0
+/* x and y are unordered, so one of x or y must be a NaN... */
+	fcmpu	1,2,2
+	bunlr	1
+0:	fmr	1,2
 	blr
-0:	fnabs   %f1,%f1
-	blr
-	END (__copysign)
+END(__fmax)
 
-weak_alias(__copysign,copysign)
+weak_alias(__fmax,fmax)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
-weak_alias(__copysign,copysignf)
-strong_alias(__copysign,__copysignf)
+strong_alias(__fmax,__fmaxf)
+weak_alias(__fmax,fmaxf)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias(__copysign,copysignl)
-strong_alias(__copysign,__copysignl)
+weak_alias(__fmax,__fmaxl)
+weak_alias(__fmax,fmaxl)
 #endif
