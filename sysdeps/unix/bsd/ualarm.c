@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,10 +24,10 @@
    off every INTERVAL microseconds thereafter.
 
    Returns the number of microseconds remaining before the alarm.  */
-unsigned int
+useconds_t
 ualarm (value, interval)
-     unsigned int value;
-     unsigned int interval;
+     useconds_t value;
+     useconds_t interval;
 {
   struct itimerval timer, otimer;
 

@@ -81,8 +81,8 @@ typedef struct
 typedef int __daddr_t;			/* The type of a disk address.  */
 typedef char *__caddr_t;
 typedef long int __time_t;
+typedef unsigned int __useconds_t;
 typedef long int __suseconds_t;
-typedef int __useconds_t;
 typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 
 typedef long int __clock_t;

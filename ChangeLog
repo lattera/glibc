@@ -1,5 +1,23 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Make __useconds_t
+	unsigned.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+
+	* sysdeps/generic/bits/types.h: Make __useconds_t unsigned.
+
+	* sysdeps/generic/ualarm.c (ualarm): Change return value and
+	parameter type to useconds_t.
+	* sysdeps/unix/bsd/ualarm.c: Likewise.
+
+	* sysdeps/generic/usleep.c (usleep): Change parameter type to
+	useconds_t.
+	* sysdeps/unix/sysv/linux/usleep.c: Likewise.
+	* sysdeps/mach/usleep.c: Likewise.
+
 	* locale/weight.h: Include <errno.h>.
 
 	* posix/sys/types.h: Define type useconds_t if not done already.
