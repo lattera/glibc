@@ -1,3 +1,8 @@
+1999-03-29  Paul Eggert  <eggert@twinsun.com>
+
+	* libio/iopopen.c (_IO_new_proc_open): Don't modify proc_file_chain
+	while in child process.
+
 1999-03-29  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/sparc32/sparcv8/Makefile: New file.
