@@ -53,8 +53,8 @@ __libc_pwrite64 (fd, buf, count, offset)
   if (SINGLE_THREAD_P)
     {
      /* First try the syscall.  */
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-      result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count, 0,
+#if (defined _ABIN32 && _MIPS_SIM == _ABIN32) || (defined _ABI64 && _MIPS_SIM == _ABI64)
+      result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count,
 			       offset);
 #else
      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
@@ -73,9 +73,8 @@ __libc_pwrite64 (fd, buf, count, offset)
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   /* First try the syscall.  */
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-  result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count, 0,
-			   offset);
+#if (defined _ABIN32 && _MIPS_SIM == _ABIN32) || (defined _ABI64 && _MIPS_SIM == _ABI64)
+  result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
 #else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
