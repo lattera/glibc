@@ -1,3 +1,7 @@
+1999-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/Versions: Add __register_frame_info_table.
+
 1998-12-29  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sunrpc/Versions: Include _authenticate, it's defined in a user
