@@ -1,5 +1,5 @@
 /* Special hack used to build link-time libc.so object for linking libpthread.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <tls.h>
+#include <resolv.h>
 
 #if ! USE___THREAD
 
 /* Special hack used to build link-time libc.so object for linking libpthread.
    See Makefile comments near libc_pic_lite.os rule for what this is for.  */
 
-# include <resolv.h>
 # undef _res
 
 int _errno;
@@ -32,3 +32,10 @@ int _h_errno;
 struct __res_state _res;
 
 #endif
+
+int
+__res_maybe_init (res_state resp, int preinit)
+{
+  return -1;
+}
+libc_hidden_def (__res_maybe_init)

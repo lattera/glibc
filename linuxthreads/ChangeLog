@@ -1,3 +1,8 @@
+2004-08-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* libc-tsd.c: Move resolv.h include before the #if.
+	(__res_maybe_init): New function.  Add libc_hidden_def.
+
 2004-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* linuxthreads.texi (Cleanup Handlers): Fix typo.
