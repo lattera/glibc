@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1996-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1996-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This library is free software; you can redistribute it and/or
@@ -60,6 +60,10 @@
 # define mbsinit __mbsinit
 # define mbsrtowcs __mbsrtowcs
 #endif
+
+/* We often have to test for FNM_FILE_NAME and FNM_PERIOD being both set.  */
+#define NO_LEADING_PERIOD(flags) \
+  ((flags & (FNM_FILE_NAME | FNM_PERIOD)) == (FNM_FILE_NAME | FNM_PERIOD))
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself.  This code is part of the GNU C
@@ -153,6 +157,9 @@ extern char *getenv ();
 extern int errno;
 # endif
 
+/* Global variable.  */
+static int posixly_correct;
+
 /* This function doesn't exist on most systems.  */
 
 # if !defined HAVE___STRCHRNUL && !defined _LIBC
@@ -195,15 +202,18 @@ __wcschrnul (s, c)
 # endif
 # define CHAR	char
 # define UCHAR	unsigned char
+# define INT	int
 # define FCT	internal_fnmatch
+# define EXT	ext_match
+# define END	end_pattern
 # define L(CS)	CS
 # ifdef _LIBC
 #  define BTOWC(C)	__btowc (C)
 # else
 #  define BTOWC(C)	btowc (C)
 # endif
-# define STRCHR(S, C)	strchr (S, C)
-# define STRCHRNUL(S, C) __strchrnul (S, C)
+# define MEMPCPY(D, S, N) __mempcpy (D, S, N)
+# define MEMCHR(S, C, N) memchr (S, C, N)
 # define STRCOLL(S1, S2) strcoll (S1, S2)
 # include "fnmatch_loop.c"
 
@@ -217,11 +227,14 @@ __wcschrnul (s, c)
 #  endif
 #  define CHAR	wchar_t
 #  define UCHAR	wint_t
+#  define INT	wint_t
 #  define FCT	internal_fnwmatch
+#  define EXT	ext_wmatch
+# define END	end_wpattern
 #  define L(CS)	L##CS
 #  define BTOWC(C)	(C)
-#  define STRCHR(S, C)	wcschr (S, C)
-#  define STRCHRNUL(S, C) __wcschrnul (S, C)
+#  define MEMPCPY(D, S, N) __wmempcpy (D, S, N)
+#  define MEMCHR(S, C, N) wmemchr (S, C, N)
 #  define STRCOLL(S1, S2) wcscoll (S1, S2)
 #  define WIDE_CHAR_VERSION 1
 
@@ -303,42 +316,43 @@ fnmatch (pattern, string, flags)
      int flags;
 {
 # if HANDLE_MULTIBYTE
-  mbstate_t ps;
-  size_t n;
-  wchar_t *wpattern;
-  wchar_t *wstring;
+  if (__builtin_expect (MB_CUR_MAX, 1) != 1)
+    {
+      mbstate_t ps;
+      size_t n;
+      wchar_t *wpattern;
+      wchar_t *wstring;
 
-  if (MB_CUR_MAX == 1)
-    /* This is an optimization for 8-bit character set.  */
-    return internal_fnmatch (pattern, string, flags & FNM_PERIOD, flags);
+      /* Convert the strings into wide characters.  */
+      memset (&ps, '\0', sizeof (ps));
+      n = mbsrtowcs (NULL, &pattern, 0, &ps);
+      if (__builtin_expect (n, 0) == (size_t) -1)
+	/* Something wrong.
+	   XXX Do we have to set `errno' to something which mbsrtows hasn't
+	   already done?  */
+	return -1;
+      wpattern = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
+      assert (mbsinit (&ps));
+      (void) mbsrtowcs (wpattern, &pattern, n + 1, &ps);
 
-  /* Convert the strings into wide characters.  */
-  memset (&ps, '\0', sizeof (ps));
-  n = mbsrtowcs (NULL, &pattern, 0, &ps);
-  if (n == (size_t) -1)
-    /* Something wrong.
-       XXX Do we have to set `errno' to something which mbsrtows hasn't
-       already done?  */
-    return -1;
-  wpattern = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
-  assert (mbsinit (&ps));
-  (void) mbsrtowcs (wpattern, &pattern, n + 1, &ps);
+      assert (mbsinit (&ps));
+      n = mbsrtowcs (NULL, &string, 0, &ps);
+      if (__builtin_expect (n, 0) == (size_t) -1)
+	/* Something wrong.
+	   XXX Do we have to set `errno' to something which mbsrtows hasn't
+	   already done?  */
+	return -1;
+      wstring = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
+      assert (mbsinit (&ps));
+      (void) mbsrtowcs (wstring, &string, n + 1, &ps);
 
-  assert (mbsinit (&ps));
-  n = mbsrtowcs (NULL, &string, 0, &ps);
-  if (n == (size_t) -1)
-    /* Something wrong.
-       XXX Do we have to set `errno' to something which mbsrtows hasn't
-       already done?  */
-    return -1;
-  wstring = (wchar_t *) alloca ((n + 1) * sizeof (wchar_t));
-  assert (mbsinit (&ps));
-  (void) mbsrtowcs (wstring, &string, n + 1, &ps);
-
-  return internal_fnwmatch (wpattern, wstring, flags & FNM_PERIOD, flags);
-# else
-  return internal_fnmatch (pattern, string, flags & FNM_PERIOD, flags);
+      return internal_fnwmatch (wpattern, wstring, wstring + n,
+				flags & FNM_PERIOD, flags);
+    }
 # endif  /* mbstate_t and mbsrtowcs or _LIBC.  */
+
+  return internal_fnmatch (pattern, string, string + strlen (string),
+			   flags & FNM_PERIOD, flags);
 }
 
 #endif	/* _LIBC or not __GNU_LIBRARY__.  */

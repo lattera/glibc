@@ -19,13 +19,19 @@
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 static int FCT (const CHAR *pattern, const CHAR *string,
-		int no_leading_period, int flags) internal_function;
+		const CHAR *string_end, int no_leading_period, int flags)
+     internal_function;
+static int EXT (INT opt, const CHAR *pattern, const CHAR *string,
+		const CHAR *string_end, int no_leading_period, int flags)
+     internal_function;
+static const CHAR *END (const CHAR *patternp) internal_function;
 
 static int
 internal_function
-FCT (pattern, string, no_leading_period, flags)
+FCT (pattern, string, string_end, no_leading_period, flags)
      const CHAR *pattern;
      const CHAR *string;
+     const CHAR *string_end;
      int no_leading_period;
      int flags;
 {
@@ -43,18 +49,27 @@ FCT (pattern, string, no_leading_period, flags)
 
   while ((c = *p++) != L('\0'))
     {
+      int new_no_leading_period = 0;
       c = FOLD (c);
 
       switch (c)
 	{
 	case L('?'):
-	  if (*n == L('\0'))
+	  if (__builtin_expect (flags & FNM_EXTMATCH, 0) && *p == '(')
+	    {
+	      int res;
+
+	      res = EXT (c, p, n, string_end, no_leading_period,
+			 flags);
+	      if (res != -1)
+		return res;
+	    }
+
+	  if (n == string_end)
 	    return FNM_NOMATCH;
 	  else if (*n == L('/') && (flags & FNM_FILE_NAME))
 	    return FNM_NOMATCH;
-	  else if (*n == L('.') && no_leading_period
-		   && (n == string
-		       || (n[-1] == L('/') && (flags & FNM_FILE_NAME))))
+	  else if (*n == L('.') && no_leading_period)
 	    return FNM_NOMATCH;
 	  break;
 
@@ -67,26 +82,47 @@ FCT (pattern, string, no_leading_period, flags)
 		return FNM_NOMATCH;
 	      c = FOLD (c);
 	    }
-	  if (FOLD ((UCHAR) *n) != c)
+	  if (n == string_end || FOLD ((UCHAR) *n) != c)
 	    return FNM_NOMATCH;
 	  break;
 
 	case L('*'):
-	  if (*n == L('.') && no_leading_period
-	      && (n == string
-		  || (n[-1] == L('/') && (flags & FNM_FILE_NAME))))
+	  if (__builtin_expect (flags & FNM_EXTMATCH, 0) && *p == '(')
+	    {
+	      int res;
+
+	      res = EXT (c, p, n, string_end, no_leading_period,
+			 flags);
+	      if (res != -1)
+		return res;
+	    }
+
+	  if (n != string_end && *n == L('.') && no_leading_period)
 	    return FNM_NOMATCH;
 
 	  for (c = *p++; c == L('?') || c == L('*'); c = *p++)
 	    {
-	      if (*n == L('/') && (flags & FNM_FILE_NAME))
-		/* A slash does not match a wildcard under FNM_FILE_NAME.  */
-		return FNM_NOMATCH;
-	      else if (c == L('?'))
+	      if (*p == L('(') && (flags & FNM_EXTMATCH) != 0)
+		{
+		  const CHAR *endp = END (p);
+		  if (endp != p)
+		    {
+		      /* This is a pattern.  Skip over it.  */
+		      p = endp;
+		      continue;
+		    }
+		}
+
+	      if (c == L('?'))
 		{
 		  /* A ? needs to match one character.  */
-		  if (*n == L('\0'))
+		  if (n == string_end)
 		    /* There isn't another character; no match.  */
+		    return FNM_NOMATCH;
+		  else if (*n == L('/')
+			   && __builtin_expect (flags & FNM_FILE_NAME, 0))
+		    /* A slash does not match a wildcard under
+		       FNM_FILE_NAME.  */
 		    return FNM_NOMATCH;
 		  else
 		    /* One character of the string is consumed in matching
@@ -110,7 +146,7 @@ FCT (pattern, string, no_leading_period, flags)
 		    result = 0;
 		  else
 		    {
-		      if (STRCHR (n, L('/')) == NULL)
+		      if (MEMCHR (n, L('/'), string_end - n) == NULL)
 			result = 0;
 		    }
 		}
@@ -121,44 +157,47 @@ FCT (pattern, string, no_leading_period, flags)
 	    {
 	      const CHAR *endp;
 
-	      endp = STRCHRNUL (n, (flags & FNM_FILE_NAME) ? L('/') : L('\0'));
+	      endp = MEMCHR (n, (flags & FNM_FILE_NAME) ? L('/') : L('\0'),
+			     string_end - n);
+	      if (endp == NULL)
+		endp = string_end;
 
-	      if (c == L('['))
+	      if (c == L('[')
+		  || (__builtin_expect (flags & FNM_EXTMATCH, 0) != 0
+		      /* XXX Do we have to add '!'?  */
+		      && (c == L('@') || c == L('+')) && *p == L('(')))
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));
+		  int no_leading_period2 = no_leading_period;
 
-		  for (--p; n < endp; ++n)
-		    if (FCT (p, n, (no_leading_period
-				    && (n == string
-					|| (n[-1] == L('/')
-					    && (flags & FNM_FILE_NAME)))),
-			     flags2) == 0)
+		  for (--p; n < endp; ++n, no_leading_period2 = 0)
+		    if (FCT (p, n, string_end, no_leading_period2, flags2)
+			== 0)
 		      return 0;
 		}
 	      else if (c == L('/') && (flags & FNM_FILE_NAME))
 		{
-		  while (*n != L('\0') && *n != L('/'))
+		  while (n < string_end && *n != L('/'))
 		    ++n;
-		  if (*n == L('/')
-		      && (FCT (p, n + 1, flags & FNM_PERIOD, flags) == 0))
+		  if (n < string_end && *n == L('/')
+		      && (FCT (p, n + 1, string_end, flags & FNM_PERIOD, flags)
+			  == 0))
 		    return 0;
 		}
 	      else
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));
+		  int no_leading_period2 = no_leading_period;
 
 		  if (c == L('\\') && !(flags & FNM_NOESCAPE))
 		    c = *p;
 		  c = FOLD (c);
-		  for (--p; n < endp; ++n)
+		  for (--p; n < endp; ++n, no_leading_period2 = 0)
 		    if (FOLD ((UCHAR) *n) == c
-			&& (FCT (p, n, (no_leading_period
-					&& (n == string
-					    || (n[-1] == L('/')
-						&& (flags & FNM_FILE_NAME)))),
-				 flags2) == 0))
+			&& (FCT (p, n, string_end, no_leading_period2, flags2)
+			    == 0))
 		      return 0;
 		}
 	    }
@@ -168,20 +207,18 @@ FCT (pattern, string, no_leading_period, flags)
 
 	case L('['):
 	  {
-	    static int posixly_correct;
 	    /* Nonzero if the sense of the character class is inverted.  */
 	    register int not;
 	    CHAR cold;
+	    UCHAR fn;
 
 	    if (posixly_correct == 0)
 	      posixly_correct = getenv ("POSIXLY_CORRECT") != NULL ? 1 : -1;
 
-	    if (*n == L('\0'))
+	    if (n == string_end)
 	      return FNM_NOMATCH;
 
-	    if (*n == L('.') && no_leading_period
-		&& (n == string
-		    || (n[-1] == L('/') && (flags & FNM_FILE_NAME))))
+	    if (*n == L('.') && no_leading_period)
 	      return FNM_NOMATCH;
 
 	    if (*n == L('/') && (flags & FNM_FILE_NAME))
@@ -192,11 +229,11 @@ FCT (pattern, string, no_leading_period, flags)
 	    if (not)
 	      ++p;
 
+	    fn = FOLD ((UCHAR) *n);
+
 	    c = *p++;
 	    for (;;)
 	      {
-		UCHAR fn = FOLD ((UCHAR) *n);
-
 		if (!(flags & FNM_NOESCAPE) && c == L('\\'))
 		  {
 		    if (*p == L('\0'))
@@ -878,30 +915,275 @@ FCT (pattern, string, no_leading_period, flags)
 	  }
 	  break;
 
+	case L('+'):
+	case L('@'):
+	case L('!'):
+	  if (__builtin_expect (flags & FNM_EXTMATCH, 0) && *p == '(')
+	    {
+	      int res;
+
+	      res = EXT (c, p, n, string_end, no_leading_period, flags);
+	      if (res != -1)
+		return res;
+	    }
+	  goto normal_match;
+
+	case L('/'):
+	  if (NO_LEADING_PERIOD (flags))
+	    {
+	      if (n == string_end || c != *n)
+		return FNM_NOMATCH;
+
+	      new_no_leading_period = 1;
+	      break;
+	    }
+	  /* FALLTHROUGH */
 	default:
-	  if (c != FOLD ((UCHAR) *n))
+	normal_match:
+	  if (n == string_end || c != FOLD ((UCHAR) *n))
 	    return FNM_NOMATCH;
 	}
 
+      no_leading_period = new_no_leading_period;
       ++n;
     }
 
-  if (*n == '\0')
+  if (n == string_end)
     return 0;
 
-  if ((flags & FNM_LEADING_DIR) && *n == L('/'))
+  if ((flags & FNM_LEADING_DIR) && n != string_end && *n == L('/'))
     /* The FNM_LEADING_DIR flag says that "foo*" matches "foobar/frobozz".  */
     return 0;
 
   return FNM_NOMATCH;
 }
 
+
+static const CHAR *
+internal_function
+END (const CHAR *pattern)
+{
+  const CHAR *p = pattern;
+
+  while (1)
+    if (*++p == L('\0'))
+      /* This is an invalid pattern.  */
+      return pattern;
+    else if (*p == L('['))
+      {
+	/* Handle brackets special.  */
+	if (posixly_correct == 0)
+	  posixly_correct = getenv ("POSIXLY_CORRECT") != NULL ? 1 : -1;
+
+	/* Skip the not sign.  We have to recognize it because of a possibly
+	   following ']'.  */
+	if (*++p == L('!') || (posixly_correct < 0 && *p == L('^')))
+	  ++p;
+	/* A leading ']' is recognized as such.  */
+	if (*p == L(']'))
+	  ++p;
+	/* Skip over all characters of the list.  */
+	while (*p != L(']'))
+	  if (*p++ == L('\0'))
+	    /* This is no valid pattern.  */
+	    return pattern;
+      }
+    else if ((*p == L('?') || *p == L('*') || *p == L('+') || *p == L('@')
+	      || *p == L('!')) && p[1] == L('('))
+      p = END (p + 1);
+    else if (*p == L(')'))
+      break;
+
+  return p + 1;
+}
+
+
+static int
+internal_function
+EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
+     int no_leading_period, int flags)
+{
+  const CHAR *startp;
+  int level;
+  struct patternlist
+  {
+    struct patternlist *next;
+    CHAR str[0];
+  } *list = NULL;
+  struct patternlist **lastp = &list;
+  const CHAR *p;
+  const CHAR *rs;
+
+  /* Parse the pattern.  Store the individual parts in the list.  */
+  level = 0;
+  for (startp = p = pattern + 1; level >= 0; ++p)
+    if (*p == L('\0'))
+      /* This is an invalid pattern.  */
+      return -1;
+    else if (*p == L('['))
+      {
+	/* Handle brackets special.  */
+	if (posixly_correct == 0)
+	  posixly_correct = getenv ("POSIXLY_CORRECT") != NULL ? 1 : -1;
+
+	/* Skip the not sign.  We have to recognize it because of a possibly
+	   following ']'.  */
+	if (*++p == L('!') || (posixly_correct < 0 && *p == L('^')))
+	  ++p;
+	/* A leading ']' is recognized as such.  */
+	if (*p == L(']'))
+	  ++p;
+	/* Skip over all characters of the list.  */
+	while (*p != L(']'))
+	  if (*p++ == L('\0'))
+	    /* This is no valid pattern.  */
+	    return -1;
+      }
+    else if ((*p == L('?') || *p == L('*') || *p == L('+') || *p == L('@')
+	      || *p == L('!')) && p[1] == L('('))
+      /* Remember the nesting level.  */
+      ++level;
+    else if (*p == L(')'))
+      {
+	if (level-- == 0)
+	  {
+	    /* This means we found the end of the pattern.  */
+#define NEW_PATTERN \
+	    struct patternlist *newp = alloca (sizeof (struct patternlist)    \
+					       + ((p - startp + 1)	      \
+						  * sizeof (CHAR)));	      \
+	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L('\0');    \
+	    newp->next = NULL;						      \
+	    *lastp = newp;						      \
+	    lastp = &newp->next
+	    NEW_PATTERN;
+	  }
+      }
+    else if (*p == L('|'))
+      {
+	if (level == 0)
+	  {
+	    NEW_PATTERN;
+	    startp = p + 1;
+	  }
+      }
+  assert (list != NULL);
+  assert (p[-1] == L(')'));
+
+  switch (opt)
+    {
+    case L('*'):
+      if (FCT (p, string, string_end, no_leading_period, flags) == 0)
+	return 0;
+      /* FALLTHROUGH */
+
+    case L('+'):
+      do
+	{
+	  for (rs = string; rs <= string_end; ++rs)
+	    /* First match the prefix with the current pattern with the
+	       current pattern.  */
+	    if (FCT (list->str, string, rs, no_leading_period,
+		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0
+		/* This was successful.  Now match the rest with the rest
+		   of the pattern.  */
+		&& (FCT (p, rs, string_end,
+			 rs == string
+			 ? no_leading_period
+			 : rs[-1] == '/' && NO_LEADING_PERIOD (flags) ? 1 : 0,
+			 flags & FNM_FILE_NAME
+			 ? flags : flags & ~FNM_PERIOD) == 0
+		    /* This didn't work.  Try the whole pattern.  */
+		    || (rs != string
+			&& FCT (pattern - 1, rs, string_end,
+				rs == string
+				? no_leading_period
+				: (rs[-1] == '/' && NO_LEADING_PERIOD (flags)
+				   ? 1 : 0),
+				flags & FNM_FILE_NAME
+				? flags : flags & ~FNM_PERIOD) == 0)))
+	      /* It worked.  Signal success.  */
+	      return 0;
+	}
+      while ((list = list->next) != NULL);
+
+      /* None of the patterns lead to a match.  */
+      return FNM_NOMATCH;
+
+    case L('?'):
+      if (FCT (p, string, string_end, no_leading_period, flags) == 0)
+	return 0;
+      /* FALLTHROUGH */
+
+    case L('@'):
+      do
+	{
+	  for (rs = string; rs <= string_end; ++rs)
+	    /* First match the prefix with the current pattern with the
+	       current pattern.  */
+	    if (FCT (list->str, string, rs, no_leading_period,
+		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0
+		/* This was successful.  Now match the rest of the strings
+		   with the rest of the pattern.  */
+		&& (FCT (p, rs, string_end,
+			 rs == string
+			 ? no_leading_period
+			 : (rs[-1] == '/' && NO_LEADING_PERIOD (flags)
+			    ? 1 : 0),
+			 flags & FNM_FILE_NAME
+			 ? flags : flags & ~FNM_PERIOD) == 0))
+	      /* It worked.  Signal success.  */
+	      return 0;
+	}
+      while ((list = list->next) != NULL);
+
+      /* None of the patterns lead to a match.  */
+      return FNM_NOMATCH;
+
+    case L('!'):
+      for (rs = string; rs <= string_end; ++rs)
+	{
+	  struct patternlist *runp;
+
+	  for (runp = list; runp != NULL; runp = runp->next)
+	    if (FCT (runp->str, string, rs,  no_leading_period,
+		     flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD) == 0)
+	      break;
+
+	  /* If none of the patterns matched see whether the rest does.  */
+	  if (runp == NULL
+	      && (FCT (p, rs, string_end,
+		       rs == string
+		       ? no_leading_period
+		       : rs[-1] == '/' && NO_LEADING_PERIOD (flags) ? 1 : 0,
+		       flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD)
+		  == 0))
+	    /* This is successful.  */
+	    return 0;
+	}
+
+      /* None of the patterns together with the rest of the pattern
+	 lead to a match.  */
+      return FNM_NOMATCH;
+
+    default:
+      assert (! "Invalid extended matching operator");
+      break;
+    }
+
+  return -1;
+}
+
+
 #undef FOLD
 #undef CHAR
 #undef UCHAR
+#undef INT
 #undef FCT
-#undef STRCHR
-#undef STRCHRNUL
+#undef EXT
+#undef END
+#undef MEMPCPY
+#undef MEMCHR
 #undef STRCOLL
 #undef L
 #undef BTOWC

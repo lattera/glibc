@@ -54,6 +54,9 @@ struct {
   { "a/b", "*a*", FNM_PATHNAME|FNM_LEADING_DIR, 0 },
   { "ab/c", "*a?", FNM_PATHNAME|FNM_LEADING_DIR, 0 },
   { "ab/c", "a?", FNM_PATHNAME|FNM_LEADING_DIR, 0 },
+  { "a/b", "?*/?", FNM_PATHNAME, 0 },
+  { "/b", "*/?", FNM_PATHNAME, 0 },
+  { "/b", "**/?", FNM_PATHNAME, 0 },
 };
 
 int

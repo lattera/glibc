@@ -348,7 +348,7 @@ C		 "\\/\\$"		"\\/\\$"	       0       NOESCAPE
 
 # B.6 033(C)
 C		 ".asd"			".*"		       0       PERIOD
-C		 "/.asd"			"*"		       0       PERIOD
+C		 "/.asd"		"*"		       0       PERIOD
 C		 "/as/.df"		"*/?*f"		       0       PERIOD
 C		 "..asd"		".[!a-z]*"	       0       PERIOD
 
@@ -369,6 +369,17 @@ C		 "/."			"/?"		       NOMATCH PATHNAME|PERIOD
 C		 "/."			"/[!a-z]"	       NOMATCH PATHNAME|PERIOD
 C		 "/a./.b."		"/*/*"		       NOMATCH PATHNAME|PERIOD
 C		 "/a./.b."		"/??/???"	       NOMATCH PATHNAME|PERIOD
+
+# Some home-grown tests.
+C		"foobar"		"foo*[abc]z"	       NOMATCH
+C		"foobaz"		"foo*[abc][xyz]"       0
+C		"foobaz"		"foo?*[abc][xyz]"      0
+C		"foobaz"		"foo?*[abc][x/yz]"     0
+C		"foobaz"		"foo?*[abc]/[xyz]"     NOMATCH PATHNAME
+C		"a"			"a/"                   NOMATCH PATHNAME
+C		"a/"			"a"		       NOMATCH PATHNAME
+C		"//a"			"/a"		       NOMATCH PATHNAME
+C		"/a"			"//a"		       NOMATCH PATHNAME
 
 # Following are tests outside the scope of IEEE 2003.2 since they are using
 # locales other than the C locale.  The main focus of the tests is on the
@@ -578,3 +589,128 @@ C		 "x/y/z"		"x/y"		       0       PATHNAME|LEADING_DIR
 C		 "x"			"x?y"		       NOMATCH PATHNAME|LEADING_DIR
 C		 "x/y"			"x?y"		       NOMATCH PATHNAME|LEADING_DIR
 C		 "x/y/z"		"x?y"		       NOMATCH PATHNAME|LEADING_DIR
+
+# ksh style matching.
+C		"abcd"			"?@(a|b)*@(c)d"	       0       EXTMATCH
+C		"/dev/udp/129.22.8.102/45" "/dev/@(tcp|udp)/*/*" 0     PATHNAME|EXTMATCH
+C		"12"			"[1-9]*([0-9])"        0       EXTMATCH
+C		"12abc"			"[1-9]*([0-9])"        NOMATCH EXTMATCH
+C		"1"			"[1-9]*([0-9])"	       0       EXTMATCH
+C		"07"			"+([0-7])"	       0       EXTMATCH
+C		"0377"			"+([0-7])"	       0       EXTMATCH
+C		"09"			"+([0-7])"	       NOMATCH EXTMATCH
+C		"paragraph"		"para@(chute|graph)"   0       EXTMATCH
+C		"paramour"		"para@(chute|graph)"   NOMATCH EXTMATCH
+C		"para991"		"para?([345]|99)1"     0       EXTMATCH
+C		"para381"		"para?([345]|99)1"     NOMATCH EXTMATCH
+C		"paragraph"		"para*([0-9])"	       NOMATCH EXTMATCH
+C		"para"			"para*([0-9])"	       0       EXTMATCH
+C		"para13829383746592"	"para*([0-9])"	       0       EXTMATCH
+C		"paragraph"		"para+([0-9])"	       NOMATCH EXTMATCH
+C		"para"			"para+([0-9])"	       NOMATCH EXTMATCH
+C		"para987346523"		"para+([0-9])"	       0       EXTMATCH
+C		"paragraph"		"para!(*.[0-9])"       0       EXTMATCH
+C		"para.38"		"para!(*.[0-9])"       0       EXTMATCH
+C		"para.graph"		"para!(*.[0-9])"       0       EXTMATCH
+C		"para39"		"para!(*.[0-9])"       0       EXTMATCH
+C		""			"*(0|1|3|5|7|9)"       0       EXTMATCH
+C		"137577991"		"*(0|1|3|5|7|9)"       0       EXTMATCH
+C		"2468"			"*(0|1|3|5|7|9)"       NOMATCH EXTMATCH
+C		"1358"			"*(0|1|3|5|7|9)"       NOMATCH EXTMATCH
+C		"file.c"		"*.c?(c)"	       0       EXTMATCH
+C		"file.C"		"*.c?(c)"	       NOMATCH EXTMATCH
+C		"file.cc"		"*.c?(c)"	       0       EXTMATCH
+C		"file.ccc"		"*.c?(c)"	       NOMATCH EXTMATCH
+C		"parse.y"		"!(*.c|*.h|Makefile.in|config*|README)" 0 EXTMATCH
+C		"shell.c"		"!(*.c|*.h|Makefile.in|config*|README)" NOMATCH EXTMATCH
+C		"Makefile"		"!(*.c|*.h|Makefile.in|config*|README)" 0 EXTMATCH
+C		"VMS.FILE;1"		"*\;[1-9]*([0-9])"     0       EXTMATCH
+C		"VMS.FILE;0"		"*\;[1-9]*([0-9])"     NOMATCH EXTMATCH
+C		"VMS.FILE;"		"*\;[1-9]*([0-9])"     NOMATCH EXTMATCH
+C		"VMS.FILE;139"		"*\;[1-9]*([0-9])"     0       EXTMATCH
+C		"VMS.FILE;1N"		"*\;[1-9]*([0-9])"     NOMATCH EXTMATCH
+C		"abcfefg"		"ab**(e|f)"	       0       EXTMATCH
+C		"abcfefg"		"ab**(e|f)g"	       0       EXTMATCH
+C		"ab"			"ab*+(e|f)"	       NOMATCH EXTMATCH
+C		"abef"			"ab***ef"	       0       EXTMATCH
+C		"abef"			"ab**"		       0       EXTMATCH
+C		"fofo"			"*(f*(o))"	       0       EXTMATCH
+C		"ffo"			"*(f*(o))"	       0       EXTMATCH
+C		"foooofo"		"*(f*(o))"	       0       EXTMATCH
+C		"foooofof"		"*(f*(o))"	       0       EXTMATCH
+C		"fooofoofofooo"		"*(f*(o))"	       0       EXTMATCH
+C		"foooofof"		"*(f+(o))"	       NOMATCH EXTMATCH
+C		"xfoooofof"		"*(f*(o))"	       NOMATCH EXTMATCH
+C		"foooofofx"		"*(f*(o))"	       NOMATCH EXTMATCH
+C		"ofxoofxo"		"*(*(of*(o)x)o)"       0       EXTMATCH
+C		"ofooofoofofooo"	"*(f*(o))"	       NOMATCH EXTMATCH
+C		"foooxfooxfoxfooox"	"*(f*(o)x)"	       0       EXTMATCH
+C		"foooxfooxofoxfooox"	"*(f*(o)x)"	       NOMATCH EXTMATCH
+C		"foooxfooxfxfooox"	"*(f*(o)x)"	       0       EXTMATCH
+C		"ofxoofxo"		"*(*(of*(o)x)o)"       0       EXTMATCH
+C		"ofoooxoofxo"		"*(*(of*(o)x)o)"       0       EXTMATCH
+C		"ofoooxoofxoofoooxoofxo" "*(*(of*(o)x)o)"      0       EXTMATCH
+C		"ofoooxoofxoofoooxoofxoo" "*(*(of*(o)x)o)"     0       EXTMATCH
+C		"ofoooxoofxoofoooxoofxofo" "*(*(of*(o)x)o)"    NOMATCH EXTMATCH
+C		"ofoooxoofxoofoooxoofxooofxofxo" "*(*(of*(o)x)o)" 0    EXTMATCH
+C		"aac"			"*(@(a))a@(c)"	       0       EXTMATCH
+C		"ac"			"*(@(a))a@(c)"	       0       EXTMATCH
+C		"c"			"*(@(a))a@(c)"	       NOMATCH EXTMATCH
+C		"aaac"			"*(@(a))a@(c)"	       0       EXTMATCH
+C		"baaac"			"*(@(a))a@(c)"	       NOMATCH EXTMATCH
+C		"abcd"			"?@(a|b)*@(c)d"	       0       EXTMATCH
+C		"abcd"			"@(ab|a*@(b))*(c)d"    0       EXTMATCH
+C		"acd"			"@(ab|a*(b))*(c)d"     0       EXTMATCH
+C		"abbcd"			"@(ab|a*(b))*(c)d"     0       EXTMATCH
+C		"effgz"			"@(b+(c)d|e*(f)g?|?(h)i@(j|k))" 0 EXTMATCH
+C		"efgz"			"@(b+(c)d|e*(f)g?|?(h)i@(j|k))" 0 EXTMATCH
+C		"egz"			"@(b+(c)d|e*(f)g?|?(h)i@(j|k))" 0 EXTMATCH
+C		"egzefffgzbcdij"	"*(b+(c)d|e*(f)g?|?(h)i@(j|k))" 0 EXTMATCH
+C		"egz"			"@(b+(c)d|e+(f)g?|?(h)i@(j|k))" NOMATCH EXTMATCH
+C		"ofoofo"		"*(of+(o))"	       0       EXTMATCH
+C		"oxfoxoxfox"		"*(oxf+(ox))"	       0       EXTMATCH
+C		"oxfoxfox"		"*(oxf+(ox))"	       NOMATCH EXTMATCH
+C		"ofoofo"		"*(of+(o)|f)"	       0       EXTMATCH
+C		"foofoofo"		"@(foo|f|fo)*(f|of+(o))" 0     EXTMATCH
+C		"oofooofo"		"*(of|oof+(o))"	       0       EXTMATCH
+C		"fffooofoooooffoofffooofff" "*(*(f)*(o))"      0       EXTMATCH
+C		"fofoofoofofoo"		"*(fo|foo)"	       0       EXTMATCH
+C		"foo"			"!(x)"		       0       EXTMATCH
+C		"foo"			"!(x)*"		       0       EXTMATCH
+C		"foo"			"!(foo)"	       NOMATCH EXTMATCH
+C		"foo"			"!(foo)*"	       0       EXTMATCH
+C		"foobar"		"!(foo)"	       0       EXTMATCH
+C		"foobar"		"!(foo)*"	       0       EXTMATCH
+C		"moo.cow"		"!(*.*).!(*.*)"	       0       EXTMATCH
+C		"mad.moo.cow"		"!(*.*).!(*.*)"	       NOMATCH EXTMATCH
+C		"mucca.pazza"		"mu!(*(c))?.pa!(*(z))?" NOMATCH EXTMATCH
+C		"fff"			"!(f)"		       0       EXTMATCH
+C		"fff"			"*(!(f))"	       0       EXTMATCH
+C		"fff"			"+(!(f))"	       0       EXTMATCH
+C		"ooo"			"!(f)"		       0       EXTMATCH
+C		"ooo"			"*(!(f))"	       0       EXTMATCH
+C		"ooo"			"+(!(f))"	       0       EXTMATCH
+C		"foo"			"!(f)"		       0       EXTMATCH
+C		"foo"			"*(!(f))"	       0       EXTMATCH
+C		"foo"			"+(!(f))"	       0       EXTMATCH
+C		"f"			"!(f)"		       NOMATCH EXTMATCH
+C		"f"			"*(!(f))"	       NOMATCH EXTMATCH
+C		"f"			"+(!(f))"	       NOMATCH EXTMATCH
+C		"foot"			"@(!(z*)|*x)"	       0       EXTMATCH
+C		"zoot"			"@(!(z*)|*x)"	       NOMATCH EXTMATCH
+C		"foox"			"@(!(z*)|*x)"	       0       EXTMATCH
+C		"zoox"			"@(!(z*)|*x)"	       0       EXTMATCH
+C		"foo"			"*(!(foo))	       0       EXTMATCH
+C		"foob"			"!(foo)b*"	       NOMATCH EXTMATCH
+C		"foobb"			"!(foo)b*"	       0       EXTMATCH
+C		"["			"*([a[])"	       0       EXTMATCH
+C		"]"			"*([]a[])"	       0       EXTMATCH
+C		"a"			"*([]a[])"	       0       EXTMATCH
+C		"b"			"*([!]a[])"	       0       EXTMATCH
+C		"["			"*([!]a[]|[[])"	       0       EXTMATCH
+C		"]"			"*([!]a[]|[]])"	       0       EXTMATCH
+C		"["			"!([!]a[])"	       0       EXTMATCH
+C		"]"			"!([!]a[])"	       0       EXTMATCH
+C		")"			"*([)])"	       0       EXTMATCH
+C		"*"			"*([*(])"	       0       EXTMATCH
+C		"abcd"			"*!(|a)cd"	       NOMATCH EXTMATCH

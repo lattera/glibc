@@ -1,3 +1,17 @@
+2001-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/fnmatch.h (FNM_EXTMATCH): Define.
+	* posix/fnmatch.c (NO_LEADING_PERIOD): Define.
+	(posixly_correct): Move global variable here.
+	(INT, EXT, END): Name new functions defined in fnmatch_loop.c.
+	(fnmatch): Pretty printing.
+	* posix/fnmatch_loop.c: Add code to handle FNM_EXTMATCH.
+	* posix/tst-fnmatch.c: Recognize EXTMATCH flag.
+	* posix/tst-fnmatch.input: Add tests for extended matching.
+
+	* posix/testfnm.c: Add test for patterns with multiple ** before /.
+	* posix/fnmatch_loop.c: Fix problem with the test above.
+
 2001-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Remove

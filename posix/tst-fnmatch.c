@@ -1,5 +1,5 @@
 /* Tests for fnmatch function.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -263,6 +263,12 @@ convert_flags (const char *str)
 	  result |= FNM_CASEFOLD;
 	  len = 8;
 	}
+      else if (strncasecmp (str, "EXTMATCH", 8) == 0
+	       && (str[8] == '|' || str[8] == '\0'))
+	{
+	  result |= FNM_EXTMATCH;
+	  len = 8;
+	}
       else
 	return -1;
 
@@ -313,6 +319,13 @@ flag_output (int flags)
       if (! first)
 	*cp++ = '|';
       cp = stpcpy (cp, "FNM_CASEFOLD");
+      first = 0;
+    }
+  if (flags & FNM_EXTMATCH)
+    {
+      if (! first)
+	*cp++ = '|';
+      cp = stpcpy (cp, "FNM_EXTMATCH");
       first = 0;
     }
   if (cp == buf)
