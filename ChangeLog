@@ -1,5 +1,14 @@
 2001-10-28  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h (ALIGNARG,
+	ASM_TYPE_DIRECTIVE, ASM_SIZE_DIRECTIVE, CALL_MCOUNT, ENTRY, EALIGN,
+	DO_CALL, JUMPTARGET, PSEUDO, PSEUDO_RET, PSEUDO_END, L, C_TEXT):
+	Move all these assembly-related definitions to ...
+	* sysdeps/powerpc/elf/sysdep.h: ... this new file.
+
+	* sysdeps/mach/powerpc/machine-lock.h: Assembly code rewritten
+	by Peter Bruin <pjbruin@dds.nl>.
+
 	* hurd/hurdselect.c (_hurd_select): Check SELECT_RETURNED bit when
 	packing results for a `poll' call.
 

@@ -38,8 +38,12 @@ typedef __volatile long int __spin_lock_t;
 _EXTERN_INLINE void
 __spin_unlock (__spin_lock_t *__lock)
 {
-  __asm__ __volatile__ ("sync ; stwcx. %1,0,%0"
-			: : "r" (__lock), "r" (0) : "cr0");
+  long int __locked;
+  __asm__ __volatile__ ("\
+0:	lwarx	%0,0,%1
+	stwcx.	%2,0,%1
+	bne-	0b
+" : "=&r" (__locked) : "r" (__lock), "r" (0) : "cr0");
 }
 
 /* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
@@ -48,13 +52,12 @@ _EXTERN_INLINE int
 __spin_try_lock (register __spin_lock_t *__lock)
 {
   long int __rtn;
-
   __asm__ __volatile__ ("\
 0:	lwarx	%0,0,%1
 	stwcx.	%2,0,%1
 	bne-	0b
-" : "=&r"(__rtn) : "r"(__lock), "r"(1) : "cr0");
-  return ~__rtn;
+" : "=&r" (__rtn) : "r" (__lock), "r" (1) : "cr0");
+  return !__rtn;
 }
 
 /* Return nonzero if LOCK is locked.  */
@@ -67,7 +70,7 @@ __spin_lock_locked (__spin_lock_t *__lock)
 0:	lwarx	%0,0,%1
 	stwcx.	%0,0,%1
 	bne-	0b
-" : "=&r"(__rtn) : "r"(__lock) : "cr0");
+" : "=&r" (__rtn) : "r" (__lock) : "cr0");
   return __rtn;
 }
 
