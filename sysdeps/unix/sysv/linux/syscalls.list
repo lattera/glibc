@@ -23,18 +23,18 @@ klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
 madvise		-	madvise		i:pii	posix_madvise	madvise
 mincore		-	mincore		i:iip	mincore
-mlock		EXTRA	mlock		i:pi	__mlock	mlock
+mlock		EXTRA	mlock		i:bn	__mlock	mlock
 mlockall	EXTRA	mlockall	i:i	__mlockall	mlockall
-mmap		-	mmap		p:piiiii	__mmap		mmap
+mmap		-	mmap		P:aniiii	__mmap		mmap
 mount		EXTRA	mount		i:sssip	__mount	mount
-mremap		EXTRA	mremap		p:piii	__mremap	mremap
-munlock		EXTRA	munlock		i:pi	__munlock	munlock
+mremap		EXTRA	mremap		P:aini	__mremap	mremap
+munlock		EXTRA	munlock		i:ai	__munlock	munlock
 munlockall	EXTRA	munlockall	i:	__munlockall	munlockall
 nanosleep	-	nanosleep	i:pp	__libc_nanosleep	__nanosleep nanosleep
 nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
 pause		-	pause		i:	__libc_pause	pause
 personality	init-first personality	i:i	__personality	personality
-pipe		-	pipe		i:p	__pipe		pipe
+pipe		-	pipe		i:f	__pipe		pipe
 prctl		EXTRA	prctl		i:iiiii	prctl
 query_module	EXTRA	query_module	i:sipip	query_module
 quotactl	EXTRA	quotactl	i:isip	quotactl

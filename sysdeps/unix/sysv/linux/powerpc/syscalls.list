@@ -22,12 +22,12 @@ getresgid	-	getresgid	i:ppp	getresgid
 getresuid	-	getresuid	i:ppp	getresuid
 s_getrlimit	getrlimit getrlimit	i:ip	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
-s_mmap2		mmap64	mmap2		p:piiiii __syscall_mmap2
+s_mmap2		mmap64	mmap2		P:aniiii __syscall_mmap2
 s_poll		poll	poll		i:pii	__syscall_poll
-s_pread64	pread64	pread		i:ipiii	__syscall_pread
+s_pread64	pread64	pread		i:ibnii	__syscall_pread
 s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace
 s_putpmsg	putpmsg	putpmsg		i:ippii	__syscall_putpmsg
-s_pwrite64	pwrite64 pwrite		i:ipiii	__syscall_pwrite
+s_pwrite64	pwrite64 pwrite		i:ibnii	__syscall_pwrite
 s_reboot	reboot	reboot		i:iii	__syscall_reboot
 s_setrlimit	setrlimit setrlimit	i:ip	__syscall_setrlimit
 s_sigaction	sigaction sigaction	i:ipp	__syscall_sigaction

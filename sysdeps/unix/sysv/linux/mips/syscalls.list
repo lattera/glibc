@@ -21,18 +21,18 @@ bind		-	bind		i:ipi	__bind		bind
 connect		-	connect		i:ipi	__libc_connect	__connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
-getsockopt	-	getsockopt	i:iiipp	__getsockopt	getsockopt
+getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
-recv		-	recv		i:ipii	__libc_recv	__recv recv
-recvfrom	-	recvfrom	i:ipiipp __libc_recvfrom __recvfrom recvfrom
+recv		-	recv		i:ibni	__libc_recv	__recv recv
+recvfrom	-	recvfrom	i:ibnibN __libc_recvfrom __recvfrom recvfrom
 recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	__recvmsg recvmsg
-send		-	send		i:ipii	__libc_send	__send send
+send		-	send		i:ibni	__libc_send	__send send
 sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	__sendmsg sendmsg
-sendto		-	sendto		i:ipiipi __libc_sendto	__sendto sendto
-setsockopt	-	setsockopt	i:iiipi	__setsockopt	setsockopt
+sendto		-	sendto		i:ibnibn __libc_sendto	__sendto sendto
+setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
-socketpair	-	socketpair	i:iiip	__socketpair	socketpair
+socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 
 #
 # These are defined locally because the caller is also defined in this dir.
@@ -61,10 +61,10 @@ getresuid	-	getresuid	i:ppp	getresuid
 s_ipc		msgget	ipc		i:iiiip	__syscall_ipc
 s_lstat64	lxstat64 lstat64	i:sp	__syscall_lstat64
 s_poll		poll	poll		i:pii	__syscall_poll
-s_pread64	pread64	pread		i:ipiiii __syscall_pread
+s_pread64	pread64	pread		i:ibniii __syscall_pread
 s_putpmsg	putpmsg	putpmsg		i:ippii	__syscall_putpmsg
 s_ptrace	ptrace	ptrace		i:iipp	__syscall_ptrace
-s_pwrite64	pwrite64 pwrite		i:ipiiii __syscall_pwrite
+s_pwrite64	pwrite64 pwrite		i:ibniii __syscall_pwrite
 s_reboot	reboot	reboot		i:iii	__syscall_reboot
 s_setrlimit	setrlimit setrlimit	i:ip	__syscall_setrlimit
 s_sigpending	sigpending sigpending	i:p	__syscall_sigpending

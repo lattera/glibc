@@ -1,3 +1,20 @@
+2000-07-05  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/generic/bp-checks.h: New file.
+	* sysdeps/generic/bp-thunks.h: Replace generic thunk definitions
+	with list of #include files.
+	* sysdeps/unix/make-syscalls.sh: Handle new arg signature
+	keyletters a, b, B, f, n, N, P, v, V.  Fixup some indentation.
+	Don't generate BP thunk if `V' appears in signature.
+	Generate thunks with complete bounds checks.
+	* sysdeps/unix/syscalls.list: Refine signatures using new keyletters.
+	* sysdeps/unix/inet/syscalls.list: Likewise.
+	* sysdeps/unix/mman/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Likewise.
+
 2000-07-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Cache

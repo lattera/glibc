@@ -10,7 +10,7 @@ close		-	close		i:i	__libc_close	__close close
 dup		-	dup		i:i	__dup		dup
 dup2		-	dup2		i:ii	__dup2		dup2
 fchdir		-	fchdir		i:i	__fchdir	fchdir
-fcntl		-	fcntl		i:iip	__libc_fcntl	__fcntl fcntl
+fcntl		-	fcntl		i:iiV	__libc_fcntl	__fcntl fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
 fsync		-	fsync		i:i	__libc_fsync	fsync
 getdomain	-	getdomainname	i:si	getdomainname
@@ -21,15 +21,15 @@ getpid		-	getpid		i:	__getpid	getpid
 getpriority	-	getpriority	i:ii	getpriority
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 getuid		-	getuid		i:	__getuid	getuid
-ioctl		-	ioctl		i:iip	__ioctl		ioctl
+ioctl		-	ioctl		i:iiV	__ioctl		ioctl
 kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link
 lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
 mkdir		-	mkdir		i:si	__mkdir		mkdir
-open		-	open		i:sii	__libc_open	__open open
+open		-	open		i:siv	__libc_open	__open open
 profil		-	profil		i:piii	profil
 ptrace		-	ptrace		i:iiii	ptrace
-read		-	read		i:ipi	__libc_read	__read read
+read		-	read		i:ibn	__libc_read	__read read
 readlink	-	readlink	i:spi	__readlink	readlink
 readv		-	readv		i:ipi	__readv		readv
 reboot		-	reboot		i:i	reboot
@@ -61,5 +61,5 @@ umask		-	umask		i:i	__umask		umask
 uname		-	uname		i:p	uname
 unlink		-	unlink		i:s	__unlink	unlink
 utimes		-	utimes		i:sp	__utimes	utimes
-write		-	write		i:ipi	__libc_write	__write write
+write		-	write		i:ibn	__libc_write	__write write
 writev		-	writev		i:ipi	__writev	writev

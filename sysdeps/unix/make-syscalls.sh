@@ -3,6 +3,37 @@
 # Usage: make-syscalls.sh ../sysdeps/unix/common
 # Expects $sysdirs in environment.
 
+##############################################################################
+
+# Syscall Signature Key Letters for BP Thunks:
+#
+# a: unchecked address (e.g., 1st arg to mmap)
+# b: non-NULL buffer (e.g., 2nd arg to read)
+# B: optionally-NULL buffer (e.g., 4th arg to getsockopt)
+# f: buffer of 2 ints (e.g., 4th arg to socketpair)
+# i: scalar (any signedness & size: int, long, long long, enum, whatever)
+# n: scalar buffer length (e.g., 3rd arg to read)
+# N: pointer to value/return scalar buffer length (e.g., 6th arg to recvfrom)
+# p: pointer to typed object (e.g., any non-void* arg)
+# P: pointer return value (e.g., return value from mmap)
+# s: string (e.g., 1st arg to open)
+# v: vararg scalar (e.g., optional 3rd arg to open)
+# V: vararg pointer (e.g., 3rd arg to fcntl & ioctl)
+
+ptrlet='[abBfNpPs]'
+argdig='[1-9]'
+fixarg='[^vV]'$argdig	# fixed args (declare extern)
+strarg=s$argdig		# string arg (check with CHECK_STRING)
+twoarg=f$argdig		# fd pair arg (check with CHECK_N (..., 2)
+objarg=p$argdig		# object arg (check with CHECK_1)
+ptrarg=$ptrlet$argdig	# pointer arg (toss bounds)
+rtnarg='P'$argdig	# pointer return value (add bounds)
+bufarg='[bB]'$argdig	# buffer arg (check with CHECK_N)
+intarg='[inv]'$argdig	# scalar arg
+borarg='[iv]'$argdig	# boring arg (just pass it through)
+
+##############################################################################
+
 thisdir=$1; shift
 
 echo ''
@@ -40,11 +71,12 @@ done`
 test -n "$calls" || exit 0
 
 # Emit rules to compile the syscalls remaining in $calls.
-echo "$calls" | while read file srcfile caller syscall args strong weak; do
+echo "$calls" |
+while read file srcfile caller syscall args strong weak; do
 
-# Figure out if $syscall is defined with a number in syscall.h.
-callnum=-
-eval `{ echo "#include <sysdep.h>";
+  # Figure out if $syscall is defined with a number in syscall.h.
+  callnum=-
+  eval `{ echo "#include <sysdep.h>";
 	echo "callnum=SYS_ify ($syscall)"; } |
 	  $asm_CPP - |sed -n -e "/^callnum=.*$syscall/d" \
 			     -e "/^\(callnum=\)[ 	]*\(.*\)/s//\1'\2'/p"`
@@ -66,7 +98,9 @@ eval `{ echo "#include <sysdep.h>";
 
   # Make sure only the first syscall rule is used, if multiple dirs
   # define the same syscall.
- echo "#### CALL=$file NUMBER=$callnum ARGS=$args SOURCE=$srcfile"
+  echo ''
+  echo "#### CALL=$file NUMBER=$callnum ARGS=$args SOURCE=$srcfile"
+
  case x$srcfile"$callnum" in
  x*-) ;; ### Do nothing for undefined callnum
  x-*)
@@ -156,23 +190,102 @@ shared-only-routines += $file
  esac
 
   case x"$callnum",$srcfile,$args in
-  x-,-,*) ;;
-  x*,-,*[sp]* | x*,*.[sS],*[sp]*)
-    echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
-    echo "bp-thunks += $file";
-    echo "\
-\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto.d
-	(echo '#include <bp-thunks.h>'; \\
-	 echo 'BP_THUNK_`echo $args |tr : _` ($strong)'; \\"
+  x-,-,* | x*,*.[sS],*V*) ;;
+  x*,-,*$ptrlet* | x*,*.[sS],*$ptrlet*)
 
-    for name in $weak; do
-      case $name in
-	*@*) ;;
-	*) echo "	 echo 'BP_ALIAS ($strong, $name)'; \\" ;;
+    # find the name without leading underscores
+    set `echo $strong $weak |tr -s ' \t' '\12' |sed '/^_/d'`
+    callname=$1
+
+    # convert signature string to individual numbered arg names
+    # e.g., i:ipbN -> i0 i1 p2 b3 N4
+    set `echo $args |
+	sed -e 's/^\(.\):\(.*\)/\2 \10/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \11/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \12/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \13/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \14/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \15/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \16/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \17/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \18/' \
+	    -e 's/^\([^ ]\)\(.*\)/\2 \19/'`
+    rtn=$1; shift
+    args=$*
+    arglist=`echo $* |sed 's/ /, /g'`
+
+    # The best way to understand what's going on here is to examine
+    # the output in BUILDDIR/sysd-syscalls.
+
+    # generate makefile envelope & rule head
+    echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
+    echo "bp-thunks += $file"
+    echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto.d"
+
+    # generate macro head & thunk prologue
+    echo "\
+	(echo '#define $callname($arglist) r0, $rtn; \\'; \\
+	 echo '`echo $args | \
+		    sed -e 's/\('$fixarg'\)/extern \1, \1v;/g' \
+			-e 's/\(v'$argdig'\)/extern int \1v;/g'` \\'; \\
+	 echo '__typeof (r0) BP_SYM ($strong) (`echo $args | \
+		    sed -e 's/ /, /g' \
+			-e 's/\('$ptrarg'\)/__typeof (\1v) *__bounded \1a/g' \
+			-e 's/\('$intarg'\)/__typeof (\1v) \1a/g'`) { \\'; \\
+	 echo '  extern __typeof (r0) ($callname) (`echo $args | \
+		    sed -e 's/ /, /g' \
+			-e 's/\('$ptrarg'\)/__typeof (\1v) *__unbounded/g' \
+			-e 's/\('$intarg'\)/__typeof (\1v)/g'`); \\'; \\"
+
+    # generate thunk bounds checks
+    for arg; do
+      next=$2; shift
+      case $arg in
+      B$argdig) echo "	 echo '  __ptrvalue (${arg}a) && \\'; \\" ;;
+      esac
+      case $arg in
+      n$argdig) len=$arg ;; ### save for possible use with return value.
+      $strarg) echo "	 echo '  CHECK_STRING (${arg}a); \\'; \\" ;;
+      $objarg) echo "	 echo '  CHECK_1 (${arg}a); \\'; \\" ;;
+      $twoarg) echo "	 echo '  CHECK_N (${arg}a, 2); \\'; \\" ;;
+      $bufarg)
+	case $next in
+	n$argdig) echo "	 echo '  CHECK_N (${arg}a, ${next}a); \\'; \\" ;;
+	N$argdig) echo "	 echo '  CHECK_N (${arg}a, *CHECK_1 (${next}a)); \\'; \\" ;;
+	*) echo "### BP Thunk Error: Expected length after buffer ###" ;;
+	esac ;;
       esac
     done
 
-    echo '	) | $(COMPILE.c) -x c -o $@ -'
+    # generate thunk epilogue
+    funcall="($callname) (`echo $args | \
+		    sed -e 's/ /, /g' \
+			-e 's/\('$ptrarg'\)/__ptrvalue (\1a)/g' \
+			-e 's/\('$intarg'\)/\1a/g'`)"
+    case $rtn in
+    P*) echo "	 echo '{ __typeof ($rtn) *__bounded rtn; \\'; \\
+	 echo '  __ptrlow (rtn) = __ptrvalue (rtn) = $funcall; \\'; \\
+	 echo '  __ptrhigh (rtn) = __ptrlow (rtn) + ${len}a; return rtn; } \\'; \\" ;;
+    *) echo "	 echo '  return $funcall; \\'; \\" ;;
+    esac
+    echo "	 echo '} \\'; \\"
+
+    # generate thunk aliases
+    for name in $weak; do
+      case $name in
+	*@*) ;;
+	*) echo "	 echo 'weak_alias (BP_SYM ($strong), BP_SYM ($name)) \\'; \\" ;;
+      esac
+    done
+    # wrap up
+    echo "\
+	 echo ''; \\
+	 echo '#include <bp-thunks.h>'; \\
+	) | \$(COMPILE.c) -x c -o \$@ -"
+### Use this for debugging intermediate output:
+### echo '	) >$(@:.ob=.c)
+###	$(subst -c,-E,$(COMPILE.c)) -o $(@:.ob=.ib) $(@:.ob=.c)
+###	$(COMPILE.c) -x cpp-output -o $@ $(@:.ob=.ib)'
     echo endif
     ;;
   esac
