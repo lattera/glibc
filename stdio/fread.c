@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -95,8 +95,11 @@ DEFUN(fread, (p, size, nmemb, stream),
 	    if (count > 0)
 	      {
 		to_read -= count;
-		stream->__offset += count;
-		stream->__target += count;
+		if (stream->__offset != -1)
+		  {
+		    stream->__offset += count;
+		    stream->__target += count;
+		  }
 		ptr += count;
 	      }
 	    else if (count == 0)

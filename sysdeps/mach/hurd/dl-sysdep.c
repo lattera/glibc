@@ -517,7 +517,7 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  (mach_port_t) fd, (vm_offset_t) offset,
 		  flags & (MAP_COPY|MAP_PRIVATE),
 		  vmprot, VM_PROT_ALL,
-		  (flags & MAP_INHERIT) ? VM_INHERIT_COPY : VM_INHERIT_NONE);
+		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
   return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
 }
 

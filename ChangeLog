@@ -1,3 +1,15 @@
+Mon Dec 18 13:40:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/fread.c: Don't increment __offset when it's -1.
+
+	* elf/rtld.c (dl_main): Prepend tab to "statically linked".  Exit
+	0 in that case.
+
+	* misc/err.c (vwarnx, vwarn): Fix major brainos.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (mmap): Fix setting of
+	inheritance.
+
 Sun Dec 17 15:56:35 1995  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* misc/getpass.c (getpass): Don't barf if getline returns a null BUF.

@@ -301,22 +301,18 @@ of this helper program; chances are you did not intend to run this program.\n",
 	     after relocation.  */
 
 	  if (! _dl_loaded->l_info[DT_NEEDED])
-	    {
-	      _dl_sysdep_message (_dl_loaded->l_name, ": statically linked\n",
-				  NULL);
-	      _exit (1);
-	    }
-
-	  for (l = _dl_loaded->l_next; l; l = l->l_next)
-	    {
-	      char buf[20], *bp;
-	      buf[sizeof buf - 1] = '\0';
-	      bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
-	      while (&buf[sizeof buf - 1] - bp < sizeof l->l_addr * 2)
-		*--bp = '0';
-	      _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
-				  " (0x", bp, ")\n", NULL);
-	    }
+	    _dl_sysdep_message ("\t", "statically linked\n", NULL);
+	  else
+	    for (l = _dl_loaded->l_next; l; l = l->l_next)
+	      {
+		char buf[20], *bp;
+		buf[sizeof buf - 1] = '\0';
+		bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
+		while (&buf[sizeof buf - 1] - bp < sizeof l->l_addr * 2)
+		  *--bp = '0';
+		_dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
+				    " (0x", bp, ")\n", NULL);
+	      }
 
 	  _exit (0);
 	}

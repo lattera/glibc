@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 #include <stdarg.h>
 #include <err.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 #include <stdio.h>
 
 extern char *__progname;
@@ -33,18 +35,28 @@ extern char *__progname;
 }
 
 void
-vwarn (const char *format, __gnuc_va_list ap)
-{
-  fprintf (stderr, format, ap);
-}
-
-void
 vwarnx (const char *format, __gnuc_va_list ap)
 {
   if (__progname)
     fprintf (stderr, "%s: ", __progname);
-  fprintf (stderr, format, ap);
+  if (format)
+    vfprintf (stderr, format, ap);
   putc ('\n', stderr);
+}
+
+void
+vwarn (const char *format, __gnuc_va_list ap)
+{
+  int error = errno;
+
+  if (__progname)
+    fprintf (stderr, "%s: ", __progname);
+  if (format)
+    {
+      vfprintf (stderr, format, ap);
+      fputs (": ", stderr);
+    }
+  fprintf (stderr, "%s\n", strerror (error));
 }
 
 
