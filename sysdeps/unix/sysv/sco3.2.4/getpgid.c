@@ -1,1 +1,1 @@
-#include <sysdeps/unix/sysv/sysv4/__getpgrp.c>
+#include <sysdeps/unix/sysv/sysv4/getpgid.c>
