@@ -107,9 +107,10 @@ _hurd_alloc_fd (int *fd, int first_fd)
 	    {
 	      /* We managed to allocate a new table.  Now install it.  */
 	      errno = save;
-	      first_fd = _hurd_dtablesize;
+	      if (first_fd < _hurd_dtablesize)
+		first_fd = _hurd_dtablesize;
 	      /* Initialize the new slots.  */
-	      for (i = first_fd; i < size; ++i)
+	      for (i = _hurd_dtablesize; i < size; ++i)
 		new[i] = NULL;
 	      _hurd_dtablesize = size;
 	      _hurd_dtable = new;
