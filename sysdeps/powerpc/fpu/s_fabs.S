@@ -21,7 +21,7 @@
 
 ENTRY(__fabs)
 /* double [f1] fabs (double [f1] x); */
-	fabs f1,f1
+	fabs fp1,fp1
 	blr
 END(__fabs)
 

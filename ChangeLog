@@ -1,3 +1,8 @@
+1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/memprof.c (GETSP): Define for PowerPC.
+	(GETTIME): Fix generic version.
+
 1999-10-10  Philip Blundell  <philb@gnu.org>
 
 	* sunrpc/xdr_float.c (LSW): Depend on __FLOAT_WORD_ORDER not

@@ -83,6 +83,9 @@ static uintptr_t start_sp;
 #ifdef __sparc__
 # define GETSP() ({ register uintptr_t stack_ptr asm ("%sp"); stack_ptr; })
 #endif
+#ifdef __powerpc__
+# define GETSP() ({ register uintptr_t stack_ptr asm ("%r1"); stack_ptr; })
+#endif
 
 #ifdef __i386__
 # define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
@@ -93,7 +96,7 @@ static uintptr_t start_sp;
     struct timeval tval;						      \
     uint64_t usecs;							      \
     gettimeofday (&tval, NULL);						      \
-    usecs = (uint64_t) tval.tv_usec + (uint64_t) tval_usec * 1000000;	      \
+    usecs = (uint64_t) tval.tv_usec + (uint64_t) tval.tv_usec * 1000000;      \
     low = usecs & 0xffffffff;						      \
     high = usecs >> 32;							      \
   }
