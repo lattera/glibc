@@ -25,8 +25,8 @@ const struct locale_data _nl_C_LC_MESSAGES =
   NULL, 0, /* no file mapped */
   4,
   {
-    { string: "[yY][[:alpha:]]" },
-    { string: "[nN][[:alpha:]]" },
+    { string: "[yY][[:alpha:]]*" },
+    { string: "[nN][[:alpha:]]*" },
     { string: "" },
     { string: "" }
   }

@@ -7,6 +7,11 @@ Sat Jul 20 07:15:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	($(libdir)/libc.so): Remove dep on libcrypt.so$(libcrypt.so-version).
 	* Makefile (subdirs): Remove crypt.
 
+Fri Jul 19 15:45:20 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-messages.c (_nl_C_LC_MESSAGES): Add missing Kleene
+	operator to yesexpr and noexpr string.
+
 Fri Jul 19 15:10:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sunrpc/xdr_mem.c (xdrmem_putlong): Don't cast LP to int32 (the
