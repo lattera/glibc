@@ -155,14 +155,8 @@ sigcancel_handler (int sig __attribute ((unused)))
 
 	  /* Make sure asynchronous cancellation is still enabled.  */
 	  if ((newval & CANCELTYPE_BITMASK) != 0)
-	    {
-	      /* The thread is exiting now.  */
-	      atomic_bit_set (&self->cancelhandling, EXITING_BIT);
-
-	      /* Run the registered destructors and terminate the
-		 thread.  */
-	      __do_cancel ();
-	    }
+	    /* Run the registered destructors and terminate the thread.  */
+	    __do_cancel ();
 
 	  break;
 	}
