@@ -36,6 +36,7 @@ struct _condvar_cleanup_buffer
   int oldtype;
   pthread_cond_t *cond;
   pthread_mutex_t *mutex;
+  unsigned int bc_seq;
 };
 
 int
@@ -85,6 +86,8 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   unsigned long long int val;
   unsigned long long int seq;
   val = seq = cond->__data.__wakeup_seq;
+  /* Remember the broadcast counter.  */
+  cbuffer.bc_seq = cond->__data.__broadcast_seq;
 
   /* The futex syscall operates on a 32-bit word.  That is fine, we
      just use the low 32 bits of the sequence counter.  */
@@ -139,7 +142,12 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	}
       /* Did we already time out?  */
       if (__builtin_expect (rt.tv_sec < 0, 0))
-	goto timeout;
+	{
+	  if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
+	    goto bc_out;
+
+	  goto timeout;
+	}
 
       /* Prepare to wait.  Release the condvar futex.  */
       lll_mutex_unlock (cond->__data.__lock);
@@ -156,6 +164,10 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
       /* We are going to look at shared data again, so get the lock.  */
       lll_mutex_lock(cond->__data.__lock);
+
+      /* If a broadcast happened, we are done.  */
+      if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
+	goto bc_out;
 
       /* Check whether we are eligible for wakeup.  */
       val = cond->__data.__wakeup_seq;
@@ -178,6 +190,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   /* Another thread woken up.  */
   ++cond->__data.__woken_seq;
 
+ bc_out:
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);
 

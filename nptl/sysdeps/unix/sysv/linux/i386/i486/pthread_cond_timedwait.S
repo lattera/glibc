@@ -83,15 +83,17 @@ __pthread_cond_timedwait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
-#define FRAME_SIZE 20
+#define FRAME_SIZE 24
 	subl	$FRAME_SIZE, %esp
 .Lsubl:
 
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
+	movl	broadcast_seq(%ebx), %eax
 	movl	%edi, 12(%esp)
 	movl	%edx, 16(%esp)
+	movl	%eax, 20(%esp)
 
 	/* Get the current time.  */
 8:	movl	%ebx, %edx
@@ -139,7 +141,8 @@ __pthread_cond_timedwait:
 	addl	$1000000000, %edx
 	subl	$1, %ecx
 12:	testl	%ecx, %ecx
-	js	13f
+	movl	$-ETIMEDOUT, %esi
+	js	6f
 
 	/* Store relative timeout.  */
 21:	movl	%ecx, 4(%esp)
@@ -184,7 +187,11 @@ __pthread_cond_timedwait:
 #endif
 	jnz	5f
 
-6:	movl	woken_seq(%ebx), %eax
+6:	movl	broadcast_seq(%ebx), %eax
+	cmpl	20(%esp), %eax
+	jne	23f
+
+	movl	woken_seq(%ebx), %eax
 	movl	woken_seq+4(%ebx), %ecx
 
 	movl	wakeup_seq(%ebx), %edi
@@ -203,16 +210,19 @@ __pthread_cond_timedwait:
 15:	cmpl	$-ETIMEDOUT, %esi
 	jne	8b
 
-13:	addl	$1, wakeup_seq(%ebx)
+	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
 	movl	$ETIMEDOUT, %esi
 	jmp	14f
+
+23:	xorl	%esi, %esi
+	jmp	24f
 
 9:	xorl	%esi, %esi
 14:	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
-	LOCK
+24:	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else
@@ -332,7 +342,8 @@ __pthread_cond_timedwait:
 	addl	$1000000000, %edx
 	subl	$1, %ecx
 20:	testl	%ecx, %ecx
-	js	13b
+	movl	$-ETIMEDOUT, %esi
+	js	6b
 	jmp	21b
 #endif
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
@@ -372,13 +383,17 @@ __condvar_tw_cleanup:
 #endif
 	call	__lll_mutex_lock_wait
 
-1:	addl	$1, wakeup_seq(%ebx)
+1:	movl	broadcast_seq(%ebx), %eax
+	cmpl	12(%esp), %eax
+	jne	3f
+
+	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
 
 	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
-	LOCK
+3:	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -38,6 +38,7 @@ __pthread_cond_init (cond, cond_attr)
   cond->__data.__woken_seq = 0;
   cond->__data.__mutex = (icond_attr == NULL || (icond_attr->value & 1) == 0
 			  ? NULL : (void *) ~0l);
+  cond->__data.__broadcast_seq = 0;
 
   return 0;
 }

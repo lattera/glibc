@@ -61,11 +61,15 @@ __condvar_cleanup:
 	subq	$cond_lock, %rdi
 #endif
 
-1:	incq	wakeup_seq(%rdi)
+1:	movl	broadcast_seq(%rdi), %edx
+	cmpl	4(%r8), %edx
+	jne	3f
+
+	incq	wakeup_seq(%rdi)
 
 	incq	woken_seq(%rdi)
 
-	LOCK
+3:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
@@ -99,19 +103,22 @@ __pthread_cond_wait:
 .LSTARTCODE:
 	pushq	%r12
 .Lpush_r12:
-	subq	$64, %rsp
+#define FRAME_SIZE 64
+	subq	$FRAME_SIZE, %rsp
 .Lsubq:
 	/* Stack frame:
 
 	   rsp + 64
 	            +--------------------------+
 	   rsp + 32 | cleanup buffer           |
-	            +--------------------------+
+		    +--------------------------+
 	   rsp + 24 | old wake_seq value       |
 	            +--------------------------+
 	   rsp + 16 | mutex pointer            |
 	            +--------------------------+
 	   rsp +  8 | condvar pointer          |
+	            +--------------------------+
+	   rsp +  4 | old broadcast_seq value  |
 	            +--------------------------+
 	   rsp +  0 | old cancellation mode    |
 	            +--------------------------+
@@ -161,7 +168,9 @@ __pthread_cond_wait:
 	/* Get and store current wakeup_seq value.  */
 	movq	8(%rsp), %rdi
 	movq	wakeup_seq(%rdi), %r12
+	movl	broadcast_seq(%rdi), %edx
 	movq	%r12, 24(%rsp)
+	movl	%edx, 4(%rsp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -198,9 +207,14 @@ __pthread_cond_wait:
 #endif
 	jnz	5f
 
-6:	movq	woken_seq(%rdi), %rax
+6:	movl	broadcast_seq(%rdi), %edx
+
+	movq	woken_seq(%rdi), %rax
 
 	movq	wakeup_seq(%rdi), %r12
+
+	cmpl	4(%rsp), %edx
+	jne	16f
 
 	cmpq	24(%rsp), %r12
 	jbe	8b
@@ -210,7 +224,8 @@ __pthread_cond_wait:
 
 	incq	woken_seq(%rdi)
 
-	LOCK
+	/* Unlock */
+16:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
@@ -224,7 +239,7 @@ __pthread_cond_wait:
 
 	movq	16(%rsp), %rdi
 	callq	__pthread_mutex_cond_lock
-14:	addq	$64, %rsp
+14:	addq	$FRAME_SIZE, %rsp
 .Laddq:
 
 	popq	%r12
@@ -242,7 +257,7 @@ __pthread_cond_wait:
 	callq	__lll_mutex_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 3:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
@@ -343,7 +358,7 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.uleb128 2
 	.byte	0x40+.Lsubq-.Lpush_r12		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 80
+	.uleb128 16+FRAME_SIZE
 	.byte	2				# DW_CFA_advance_loc1
 	.byte	.Laddq-.Lsubq
 	.byte	14				# DW_CFA_def_cfa_offset

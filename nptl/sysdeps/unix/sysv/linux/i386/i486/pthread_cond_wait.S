@@ -80,15 +80,17 @@ __pthread_cond_wait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
-#define FRAME_SIZE 12
+#define FRAME_SIZE 16
 	subl	$FRAME_SIZE, %esp
 .Lsubl:
 
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
+	movl	broadcast_seq(%ebx), %eax
 	movl	%edi, 4(%esp)
 	movl	%edx, 8(%esp)
+	movl	%eax, 12(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -127,7 +129,11 @@ __pthread_cond_wait:
 #endif
 	jnz	5f
 
-6:	movl	woken_seq(%ebx), %eax
+6:	movl	broadcast_seq(%ebx), %eax
+	cmpl	12(%esp), %eax
+	jne	16f
+
+	movl	woken_seq(%ebx), %eax
 	movl	woken_seq+4(%ebx), %ecx
 
 	movl	wakeup_seq(%ebx), %edi
@@ -146,7 +152,8 @@ __pthread_cond_wait:
 9:	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
-	LOCK
+	/* Unlock */
+16:	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else
@@ -264,13 +271,17 @@ __condvar_w_cleanup:
 #endif
 	call	__lll_mutex_lock_wait
 
-1:	addl	$1, wakeup_seq(%ebx)
+1:	movl	broadcast_seq(%ebx), %eax
+	cmpl	12(%esp), %eax
+	jne	3f
+
+	addl	$1, wakeup_seq(%ebx)
 	adcl	$0, wakeup_seq+4(%ebx)
 
 	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
-	LOCK
+3:	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else

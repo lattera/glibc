@@ -194,7 +194,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-spin1 tst-spin2 tst-spin3 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
-	tst-cond14 tst-cond15 \
+	tst-cond14 tst-cond15 tst-cond17 tst-cond18 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 \
@@ -576,3 +576,8 @@ tst-exec4-ARGS = $(built-program-cmd)
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
+
+# The tests here better do not run in parallel
+ifneq ($(filter %tests,$(MAKECMDGOALS)),)
+.NOTPARALLEL:
+endif

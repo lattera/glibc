@@ -23,16 +23,30 @@ struct pthread_cond_t {
 
      sequence number of last woken thread.
 
+   uint32_t broadcast_seq;
+
+}
+
+
+struct cv_data {
+
+   pthread_cond_t *cv;
+
+   uint32_t bc_seq
+
 }
 
 
 
-cleanup_handler(cv)
+cleanup_handler(cv_data)
 {
+  cv = cv_data->cv;
   lll_lock(cv->lock);
 
-  ++cv->wakeup_seq;
-  ++cv->woken_seq;
+  if (cv_data->bc_seq == cv->broadcast_seq) {
+    ++cv->wakeup_seq;
+    ++cv->woken_seq;
+  }
 
   /* make sure no signal gets lost.  */
   FUTEX_WAKE(cv->wakeup_seq, ALL);
@@ -50,18 +64,23 @@ cond_timedwait(cv, mutex, timeout):
 
    ++cv->total_seq;
    val = seq =  cv->wakeup_seq;
+   cv_data.bc = cv->broadcast_seq;
+   cv_data.cv = cv;
 
    while (1) {
 
      lll_unlock(cv->lock);
 
-     enable_async
+     enable_async(&cv_data);
 
      ret = FUTEX_WAIT(cv->wakeup_seq, val, timeout);
 
      restore_async
 
      lll_lock(cv->lock);
+
+     if (bc != cv->broadcast_seq)
+       goto bc_out;
 
      val = cv->wakeup_seq;
 
@@ -78,6 +97,7 @@ cond_timedwait(cv, mutex, timeout):
 
    ++cv->woken_seq;
 
+ bc_out:
    lll_unlock(cv->lock);
 
    cleanup_pop
@@ -105,6 +125,8 @@ cond_broadcast(cv)
 
    if (cv->total_seq > cv->wakeup_seq) {
      cv->wakeup_seq = cv->total_seq;
+     cv->woken_seq = cv->total_seq;
+     ++cv->broadcast_seq;
      FUTEX_WAKE(cv->wakeup_seq, ALL);
    }
 

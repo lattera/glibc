@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -74,6 +74,9 @@ __pthread_cond_broadcast:
 	   woken up.  */
 3:	movl	%ecx, (%ebx)
 	movl	%eax, 4(%ebx)
+	movl	%ecx, woken_seq-wakeup_seq(%ebx)
+	movl	%eax, woken_seq-wakeup_seq+4(%ebx)
+	addl	$1, broadcast_seq-wakeup_seq(%ebx)
 
 	/* Get the address of the mutex used.  */
 	movl	dep_mutex-wakeup_seq(%ebx), %edi

@@ -51,7 +51,8 @@ __pthread_cond_timedwait:
 .Lpush_r13:
 	pushq	%r14
 .Lpush_r14:
-	subq	$80, %rsp
+#define FRAME_SIZE 80
+	subq	$FRAME_SIZE, %rsp
 .Lsubq:
 	/* Stack frame:
 
@@ -66,6 +67,8 @@ __pthread_cond_timedwait:
 	   rsp + 16 | mutex pointer            |
 	            +--------------------------+
 	   rsp +  8 | condvar pointer          |
+	            +--------------------------+
+	   rsp +  4 | old broadcast_seq value  |
 	            +--------------------------+
 	   rsp +  0 | old cancellation mode    |
 	            +--------------------------+
@@ -116,7 +119,9 @@ __pthread_cond_timedwait:
 	/* Get and store current wakeup_seq value.  */
 	movq	8(%rsp), %rdi
 	movq	wakeup_seq(%rdi), %r12
+	movl	broadcast_seq(%rdi), %edx
 	movq	%r12, 40(%rsp)
+	movl	%edx, 4(%rsp)
 
 	/* Get the current time.  */
 8:
@@ -160,7 +165,8 @@ __pthread_cond_timedwait:
 	decq	%rcx
 12:	testq	%rcx, %rcx
 	movq	8(%rsp), %rdi
-	js	13f
+	movq	$-ETIMEDOUT, %r14
+	js	6f
 
 	/* Store relative timeout.  */
 21:	movq	%rcx, 24(%rsp)
@@ -201,9 +207,14 @@ __pthread_cond_timedwait:
 #endif
 	jne	5f
 
-6:	movq	woken_seq(%rdi), %rax
+6:	movl	broadcast_seq(%rdi), %edx
+
+	movq	woken_seq(%rdi), %rax
 
 	movq	wakeup_seq(%rdi), %r12
+
+	cmpl	4(%rsp), %edx
+	jne	23f
 
 	cmpq	40(%rsp), %r12
 	jbe	15f
@@ -218,10 +229,13 @@ __pthread_cond_timedwait:
 	movq	$ETIMEDOUT, %r14
 	jmp	14f
 
+23:	xorq	%r14, %r14
+	jmp	24f
+
 9:	xorq	%r14, %r14
 14:	incq	woken_seq(%rdi)
 
-	LOCK
+24:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
@@ -239,7 +253,7 @@ __pthread_cond_timedwait:
 	testq	%rax, %rax
 	cmoveq	%r14, %rax
 
-18:	addq	$80, %rsp
+18:	addq	$FRAME_SIZE, %rsp
 .Laddq:
 	popq	%r14
 .Lpop_r14:
@@ -259,7 +273,7 @@ __pthread_cond_timedwait:
 	callq	__lll_mutex_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 3:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
@@ -278,7 +292,7 @@ __pthread_cond_timedwait:
 #endif
 	jmp	6b
 
-	/* Unlock after loop requires waekup.  */
+	/* Unlock after loop requires wakeup.  */
 10:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
@@ -325,7 +339,8 @@ __pthread_cond_timedwait:
 	decq	%rcx
 20:	testq	%rcx, %rcx
 	movq	8(%rsp), %rdi
-	js	13b
+	movq	$-ETIMEDOUT, %r14
+	js	6b
 	jmp	21b
 #endif
 .LENDCODE:
@@ -394,7 +409,7 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.uleb128 4
 	.byte	0x40+.Lsubq-.Lpush_r14		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 112
+	.uleb128 32+FRAME_SIZE
 	.byte	3				# DW_CFA_advance_loc2
 	.2byte	.Laddq-.Lsubq
 	.byte	14				# DW_CFA_def_cfa_offset
@@ -413,7 +428,7 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 	.byte	0xcc				# DW_CFA_restore %r12
 	.byte	0x40+.LSbl1-.Lpop_r12		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 112
+	.uleb128 32+FRAME_SIZE
 	.byte	0x8c				# DW_CFA_offset %r12
 	.uleb128 2
 	.byte	0x8d				# DW_CFA_offset %r13

@@ -32,6 +32,7 @@ struct _condvar_cleanup_buffer
   int oldtype;
   pthread_cond_t *cond;
   pthread_mutex_t *mutex;
+  unsigned int bc_seq;
 };
 
 
@@ -45,10 +46,13 @@ __condvar_cleanup (void *arg)
   /* We are going to modify shared data.  */
   lll_mutex_lock (cbuffer->cond->__data.__lock);
 
-  /* This thread is not waiting anymore.  Adjust the sequence counters
-     appropriately.  */
-  ++cbuffer->cond->__data.__wakeup_seq;
-  ++cbuffer->cond->__data.__woken_seq;
+  if (cbuffer->bc_seq == cbuffer->cond->__data.__broadcast_seq)
+    {
+      /* This thread is not waiting anymore.  Adjust the sequence counters
+	 appropriately.  */
+      ++cbuffer->cond->__data.__wakeup_seq;
+      ++cbuffer->cond->__data.__woken_seq;
+    }
 
   /* We are done.  */
   lll_mutex_unlock (cbuffer->cond->__data.__lock);
@@ -111,6 +115,8 @@ __pthread_cond_wait (cond, mutex)
   unsigned long long int val;
   unsigned long long int seq;
   val = seq = cond->__data.__wakeup_seq;
+  /* Remember the broadcast counter.  */
+  cbuffer.bc_seq = cond->__data.__broadcast_seq;
 
   /* The futex syscall operates on a 32-bit word.  That is fine, we
      just use the low 32 bits of the sequence counter.  */
@@ -137,6 +143,10 @@ __pthread_cond_wait (cond, mutex)
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
 
+      /* If a broadcast happened, we are done.  */
+      if (cbuffer.bc_seq != cond->__data.__broadcast_seq)
+	goto bc_out;
+
       /* We are going to look at shared data again, so get the lock.  */
       lll_mutex_lock (cond->__data.__lock);
 
@@ -148,6 +158,7 @@ __pthread_cond_wait (cond, mutex)
   /* Another thread woken up.  */
   ++cond->__data.__woken_seq;
 
+ bc_out:
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);
 

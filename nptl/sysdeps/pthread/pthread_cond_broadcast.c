@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -40,6 +40,9 @@ __pthread_cond_broadcast (cond)
     {
       /* Yes.  Mark them all as woken.  */
       cond->__data.__wakeup_seq = cond->__data.__total_seq;
+      cond->__data.__woken_seq = cond->__data.__total_seq;
+      /* Signal that a broadcast happened.  */
+      ++cond->__data.__broadcast_seq;
 
       /* We are done.  */
       lll_mutex_unlock (cond->__data.__lock);

@@ -1,3 +1,48 @@
+2004-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (.NOTPARALLEL): Only serialize make check/xcheck, not
+	compilation.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Avoid returning -ETIMEDOUT.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h
+	(pthread_cond_t): Add __data.__broadcast_seq field.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(FRAME_SIZE): Define.
+	(__pthread_cond_timedwait): Use it.  Store/check broadcast_seq.
+	Comment typo fixes.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S (FRAME_SIZE):
+	Define.
+	(__pthread_cond_wait): Use it.  Store/check broadcast_seq.  Comment
+	typo fixes.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Increment broadcast_seq.  Comment typo
+	fixes.
+
+2004-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym: Add broadcast_seq entry.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_cond_t):
+	Add __broadcast_seq field.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Mark
+	all waiters as woken with woken_seq and bump broadcast counter.
+	* sysdeps/pthread/pthread_cond_broadcast.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Use new
+	__broadcast_seq field.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/pthread/pthread_cond_wait.c: Likewise.
+	* sysdeps/pthread/pthread_cond_timedwait.c: Likewise.
+	* pthread_cond_init.c: Initialize __broadcast_seq field.
+	* Makefile (tests): Add tst-cond17 and tst-cond18.
+	Add .NOTPARALLEL goal.
+	* tst-cond16.c: New file.  From Jakub.
+	* tst-cond17.c: New file.  From Jakub.
+	* tst-cond18.c: New file.  From Jakub.
+
 2004-05-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Correct some

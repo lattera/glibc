@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -63,6 +63,8 @@ __pthread_cond_broadcast:
 	/* Cause all currently waiting threads to recognize they are
 	   woken up.  */
 	movq	%rcx, (%rdi)
+	movq	%rcx, woken_seq-wakeup_seq(%rdi)
+	incl	broadcast_seq-wakeup_seq(%rdi)
 
 	/* Get the address of the mutex used.  */
 	movq	dep_mutex-wakeup_seq(%rdi), %r8
@@ -110,12 +112,12 @@ __pthread_cond_broadcast:
 #endif
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 5:	addq	$cond_lock-wakeup_seq, %rdi
 	callq	__lll_mutex_unlock_wake
 	jmp	6b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 7:	addq	$cond_lock-wakeup_seq, %rdi
 	callq	__lll_mutex_unlock_wake
 	subq	$cond_lock-wakeup_seq, %rdi
