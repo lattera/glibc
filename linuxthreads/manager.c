@@ -193,7 +193,7 @@ static int pthread_start_thread(void *arg)
     __sched_setscheduler(THREAD_GETMEM(self, p_pid),
 			 THREAD_GETMEM(self, p_start_args.schedpolicy),
                          &self->p_start_args.schedparam);
-else if (__pthread_manager_thread.p_priority > 0)
+  else if (__pthread_manager_thread.p_priority > 0)
     /* Default scheduling required, but thread manager runs in realtime
        scheduling: switch new thread to SCHED_OTHER policy */
     {

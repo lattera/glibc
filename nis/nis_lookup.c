@@ -127,7 +127,10 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			nis_freeresult (res);
 			res = calloc (1, sizeof (nis_result));
 			if (res == NULL)
-			  return NULL;
+			  {
+			    __nisbind_destroy (&bptr);
+			    return NULL;
+			  }
 
 			link_first_try = 1; /* Try at first the old binding */
 			goto again;

@@ -1,3 +1,8 @@
+1999-05-18  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nis_lookup.c (nis_lookup): If we run out of memory, close
+	RPC connection.
+
 1999-05-18  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/sparc/sparc64/rawmemchr.S: New file.
