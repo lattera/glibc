@@ -65,9 +65,11 @@ void internal_function __pthread_unlock(struct _pthread_fastlock * lock)
 
 again:
   oldstatus = lock->__status;
-  if (oldstatus == 1) {
-    /* No threads are waiting for this lock */
-    if (! compare_and_swap(&lock->__status, 1, 0, &lock->__spinlock))
+  if (oldstatus == 0 || oldstatus == 1) {
+    /* No threads are waiting for this lock.  Please note that we also
+       enter this case if the lock is not taken at all.  If this wouldn't
+       be done here we would crash further down.  */
+    if (! compare_and_swap(&lock->__status, oldstatus, 0, &lock->__spinlock))
       goto again;
     return;
   }

@@ -1,5 +1,8 @@
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* spinlock.c (__pthread_unlock): Don"t crash if called for an
+	untaken mutex.  Reported by Ruslan V. Brushkoff <rus@Snif.Te.Net.UA>.
+
 	* Examples/ex6.c: Unbuffer stdout and reduce sleep time to reduce
 	overall runtime.
 
