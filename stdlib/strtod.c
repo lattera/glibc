@@ -309,16 +309,21 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
       if (cnt == MAX_DIG_PER_LIMB)
 	{
 	  if (*nsize == 0)
-	    n[0] = low;
+	    {
+	      n[0] = low;
+	      *nsize = 1;
+	    }
 	  else
 	    {
 	      mp_limb_t cy;
 	      cy = __mpn_mul_1 (n, n, *nsize, MAX_FAC_PER_LIMB);
 	      cy += __mpn_add_1 (n, n, *nsize, low);
 	      if (cy != 0)
-		n[*nsize] = cy;
+		{
+		  n[*nsize] = cy;
+		  ++(*nsize);
+		}
 	    }
-	  ++(*nsize);
 	  cnt = 0;
 	  low = 0;
 	}

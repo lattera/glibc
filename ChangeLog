@@ -1,5 +1,8 @@
 1998-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/strtod.c (str_to_mpn): Fix extending of n array which
+	only should happen for cy != 0.
+
 	* sysdeps/unix/sysv/linux/alpha/glob.c: Include sys/types.h before
 	glob.h.
 
