@@ -93,7 +93,7 @@ static const char *const dirent_maybe[] =
 /* <errno.h>.  */
 static const char *const errno_syms[] =
 {
-  "E2BIG", "EACCESS", "EAGAIN", "EBADF", "EBADMSG", "EBUSY", "ECANCELED",
+  "E2BIG", "EACCES", "EAGAIN", "EBADF", "EBADMSG", "EBUSY", "ECANCELED",
   "ECHILD", "EDEADLK", "EDOM", "EEXIST", "EFAULT", "EFBIG", "EINPROGRESS",
   "EINTR", "EINVAL", "EIO", "EISDIR", "EMFILE", "EMLINK", "EMSGSIZE",
   "ENAMETOOLONG", "ENFILE", "ENODEV", "ENOENT", "ENOEXEC", "ENOLCK",
@@ -316,7 +316,7 @@ static const char *const setjmp_maybe[] =
 static const char *const signal_syms[] =
 {
   "SA_NOCLDSTOP", "SA_SIGINFO", "SIGABRT", "SIGALRM", "SIGBUS", "SIGCHLD",
-  "SIGCONT", "SIGEV_NONE", "SIGEV_SIGNAL", "SIGEV_SIGNAL", "SIGEV_THREAD",
+  "SIGCONT", "SIGEV_NONE", "SIGEV_SIGNAL", "SIGEV_THREAD",
   "SIGFPE", "SIGHUP", "SIGILL", "SIGINT", "SIGKILL", "SIGPIPE", "SIGQUIT",
   "SIGRTMAX", "SIGRTMIN", "SIGSEGV", "SIGSTOP", "SIGTERM", "SIGTSTP",
   "SIGTTIN", "SIGTTOU", "SIGUSR1", "SIGUSR2", "SIG_BLOCK", "SIG_DFL",
@@ -397,8 +397,8 @@ static const char *const string_maybe[] =
 static const char *const mman_syms[] =
 {
   "MAP_FAILED", "MAP_FIXED", "MAP_PRIVATE", "MAP_SHARED", "MCL_CURRENT",
-  "MCL_FUTURE", "MS_ASYNC", "MS_INVALIDATE", "MS_ASYNC", "MS_INVALIDATE",
-  "MS_SYNC", "PROT_EXEC", "PROT_NONE", "PROT_READ", "PROT_WRITE"
+  "MCL_FUTURE", "MS_ASYNC", "MS_INVALIDATE", "MS_SYNC", "PROT_EXEC",
+  "PROT_NONE", "PROT_READ", "PROT_WRITE"
 };
 static const char *const mman_maybe[] =
 {

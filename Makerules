@@ -278,11 +278,11 @@ endif
 
 # Generate version maps.
 ifeq ($(versioning),yes)
+ifndef no_deps
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
 generated += $(version-maps)
 
-ifndef avoid-generated
 $(common-objpfx)sysd-versions: $(..)Versions.def $(..)scripts/versions.awk \
 			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
 			       $(wildcard $(+sysdep_dirs:%=%/Versions))

@@ -179,7 +179,7 @@ foo:=$(shell echo +sysdep-distfiles='$(+sysdep-distfiles)'>&2)
 foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
 +sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies syscalls.list\
-				           configure configure.in,\
+				           configure configure.in Versions,\
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)
 

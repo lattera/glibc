@@ -15,8 +15,12 @@ libc {
     __sched_getparam; __sched_getscheduler; __sched_setscheduler;
     __sched_yield; __fork; __getpid; __wait;
 
+    # global variables
+    __environ; _environ;
+
     # variables in normal name space
-    optarg; opterr; optind; optopt; re_max_failures; re_syntax_options;
+    environ; optarg; opterr; optind; optopt;
+    re_max_failures; re_syntax_options;
 
     # a*
     alarm;

@@ -6,6 +6,9 @@ libc {
     # functions used in other libraries
     __clone;
 
+    # helper functions
+    __errno_location;
+
     # b*
     bdflush;
 

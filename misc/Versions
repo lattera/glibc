@@ -23,6 +23,9 @@ libc {
     # a*
     acct; addmntent; advance;
 
+    # b*
+    brk;
+
     # c*
     chflags; chroot; closelog;
 
@@ -70,7 +73,7 @@ libc {
     readv; remque; revoke;
 
     # s*
-    select; setdomainname; setfsent; sethostent; sethostid; sethostname;
+    sbrk; select; setdomainname; setfsent; sethostent; sethostid; sethostname;
     setlogmask; setmntent; setregid; setreuid; setttyent; setusershell; sstk;
     stty; sync; syscall; syslog;
 

@@ -1,3 +1,29 @@
+1998-07-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Make-dist (+sysdep-tsrcs): Add Versions.
+
+1998-07-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/Versions: Remove __log1p, __atan2, __fe_dfl_env,
+	__fe_enabled_env, __fe_nonieee_env and __fe_nomask_env.
+	* sysdeps/powerpc/Versions: New file.
+	* csu/Versions: Remove brk, sbrk, environ, __environ, _environ
+	and __errno_location.
+	* misc/Versions: Add brk and sbrk.
+	* posix/Versions: Add environ, __environ and _environ.
+	* sysdeps/unix/sysv/linux/Versions: Add __errno_location.
+
+1998-07-10 11:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules [no_defs]: Avoid dependency for loading sysd-versions.
+	Patch by Zack Weinberg.
+
+1998-07-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/annexc.c (errno_maybe): EACCESS->EACCES.
+	(signal_maybe): Remove duplicate entry SIGEV_SIGNAL.
+	(mman_maybe): Remove duplicates MS_ASYNC, MS_INVALIDATE.
+
 1998-07-09  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/bits/fcntl.h: Fix typo.
@@ -29,7 +55,7 @@
 	* posix/unistd.h: Define *_t types also for __USE_XOPEN.
 	* posix/sys/wait.h: Define pid_t for __USE_XOPEN.
 	* pwd/pwd.h: Define gid_t and pid_t also for __USE_XOPEN.
-	* signal/signal.h: Define pid_t also fir __USE_XOPEN.
+	* signal/signal.h: Define pid_t also for __USE_XOPEN.
 	* sysdeps/unix/sysv/linux/bits/fcntl.h: Define _RSYNC and O_DSYNC also
 	for __USE_POSIX199309.
 	* sysdeps/unix/sysv/linux/bits/termios.h: Define the various B*
