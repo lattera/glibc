@@ -1,21 +1,21 @@
 /* The proper definitions for SVR4's sigaction.
-Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Structure describing the action to be taken when a signal arrives.  */
 struct sigaction
@@ -40,7 +40,7 @@ struct sigaction
 #define	SA_RESTART	0x4	/* Don't restart syscall on signal return.  */
 #define SA_SIGINFO	0x8	/* Provide additional info to the handler.  */
 #define SA_NODEFER	0x10	/* Don't automatically block the signal when
- 				   its handler is being executed.  */
+				   its handler is being executed.  */
 #define SA_NOCLDWAIT	0x10000	/* Don't save zombie processes.  */
 #endif
 #define	SA_NOCLDSTOP	0x20000	/* Don't send SIGCHLD when children stop.  */

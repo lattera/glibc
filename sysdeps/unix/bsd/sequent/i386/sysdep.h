@@ -1,21 +1,21 @@
 /* System call interface code for Sequent Symmetry running Dynix version 3.
-Copyright (C) 1993, 1995 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <sysdeps/unix/i386/sysdep.h>
 
@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Get the symbols for system call interrupts.  */
 #include <machine/trap.h>
-  
+
 /* Use the BSD versions of system calls, by setting the high 16 bits
    of the syscall number (see /usr/include/syscall.h).  */
 #define SYS_HANDLER (SYS_bsd << 16)
@@ -71,7 +71,7 @@ Cambridge, MA 02139, USA.  */
 #define ARGS_4	ARGS_3
 #define ARGS_5	ARGS_3
 #define ARGS_6	ARGS_3
-  
+
 /* Dynix reverses %ecx and %edx relative to most i386 Unices. */
 
 #undef	r1
