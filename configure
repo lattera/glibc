@@ -3425,6 +3425,7 @@ libc_link_sources=
 # They also can set these variables.
 use_ldconfig=no
 ldd_rewrite_script=no
+libc_cv_sysconfdir=$sysconfdir
 
 # Iterate over all the sysdep directories we will use, running their
 # configure fragments, and looking for a uname implementation.
@@ -3461,7 +3462,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:3465: checking OS release for uname" >&5
+echo "configure:3466: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3483,7 +3484,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:3487: checking OS version for uname" >&5
+echo "configure:3488: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3505,7 +3506,7 @@ else
 fi
 
 echo $ac_n "checking stdio selection""... $ac_c" 1>&6
-echo "configure:3509: checking stdio selection" >&5
+echo "configure:3510: checking stdio selection" >&5
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -3519,7 +3520,7 @@ echo "$ac_t""$stdio" 1>&6
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
 echo $ac_n "checking for old glibc 2.0.x headers""... $ac_c" 1>&6
-echo "configure:3523: checking for old glibc 2.0.x headers" >&5
+echo "configure:3524: checking for old glibc 2.0.x headers" >&5
 if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
 then
   old_glibc_headers=yes
@@ -3531,6 +3532,7 @@ if test ${old_glibc_headers} = yes; then
   echo "configure: warning: *** During \"make install\" old headers from glibc 2.0.x will" 1>&2
   echo "configure: warning: *** be removed." 1>&2
 fi
+
 
 
 
@@ -3573,7 +3575,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:3577: checking whether -fPIC is default" >&5
+echo "configure:3579: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3813,6 +3815,7 @@ s%@stdio@%$stdio%g
 s%@old_glibc_headers@%$old_glibc_headers%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_localedir@%$libc_cv_localedir%g
+s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g
 s%@use_ldconfig@%$use_ldconfig%g
 s%@ldd_rewrite_script@%$ldd_rewrite_script%g

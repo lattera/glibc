@@ -1,3 +1,12 @@
+2001-07-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Revert patch from
+	2001-07-05 for sysconfdir handling.
+	* config.make.in (sysconfdir): Likewise.
+	* configure.in: Likewise.
+
+	* configure.in: Always assign libc_cv_sysconfdir.
+
 2001-07-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules [AIX] (build-shlib-helper): Precede linker options
