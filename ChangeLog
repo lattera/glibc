@@ -16,6 +16,9 @@
 	* db2/mp/mp_fget.c: Likewise.
 	* db2/mp/mp_fput.c: Likewise.
 	* db2/mp/mp_region.c: Likewise.
+	* stdlib/strtol.c: Likewise.
+	* string/strcoll.c: Likewise.
+	* string/strxfrm.c: Likewise.
 
 1998-09-07 09:58  Ulrich Drepper  <drepper@cygnus.com>
 
