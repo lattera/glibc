@@ -59,7 +59,7 @@ __sparc64.get_pic.l7:							\
 	.previous;							\
 	save	%sp, -192, %sp;						\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc.get_pic.l7;					\
+	call	__sparc64.get_pic.l7;					\
 	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
 	ldx	[%l7 + errno], %l0;					\
 	st	%i0, [%l0];						\
@@ -133,7 +133,7 @@ __sparc64.get_pic.l7:							\
 
 #endif	/* __ASSEMBLER__ */
 
-/* This is the offset from the %sp to the backing store above the 
+/* This is the offset from the %sp to the backing store above the
    register windows.  So if you poke stack memory directly you add this.  */
 #define STACK_BIAS	2047
 
