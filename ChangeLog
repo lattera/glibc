@@ -1,5 +1,8 @@
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Addn __signbitf and
+	__signbit inlines.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Use
 	__sigprocmask not sigprocmask.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.

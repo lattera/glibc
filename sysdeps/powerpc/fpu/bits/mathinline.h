@@ -18,6 +18,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _MATH_H
+# error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+#endif
+
+#ifdef __cplusplus
+# define __MATH_INLINE __inline
+#else
+# define __MATH_INLINE extern __inline
+#endif  /* __cplusplus */
+
 #if defined __GNUC__ && !defined _SOFT_FLOAT
 
 #ifdef __USE_ISOC99
@@ -45,15 +55,27 @@
 #  define isunordered(x, y) (__unordered_cmp (x, y) & 1)
 
 # endif /* __GNUC_PREREQ (2,97) */
+
+/* The gcc, version 2.7 or below, has problems with all this inlining
+   code.  So disable it for this version of the compiler.  */
+# if __GNUC_PREREQ (2, 8)
+/* Test for negative number.  Used in the signbit() macro.  */
+__MATH_INLINE int
+__signbitf (float __x) __THROW
+{
+  __extension__ union { float __f; int __i; } __u = { __f: __x };
+  return __u.__i < 0;
+}
+__MATH_INLINE int
+__signbit (double __x) __THROW
+{
+  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
+  return __u.__i[0] < 0;
+}
+# endif
 #endif /* __USE_ISOC99 */
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
-
-#ifdef __cplusplus
-# define __MATH_INLINE __inline
-#else
-# define __MATH_INLINE extern __inline
-#endif  /* __cplusplus */
 
 #ifdef __USE_ISOC99
 
@@ -63,7 +85,7 @@ __MATH_INLINE long int
 lrint (double __x) __THROW
 {
   union {
-    double __d;   
+    double __d;
     int __ll[2];
   } __u;
   __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
