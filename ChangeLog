@@ -1,3 +1,8 @@
+2002-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/Versions [libc]: Add getunwind for
+	GLIBC_2.2.6.
+
 2002-04-14  Bruno Haible  <bruno@clisp.org>
 
 	* posix/regex.c (re_max_failures): Add back symbol for binary

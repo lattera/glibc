@@ -19,4 +19,7 @@ libc {
     # w*
     wordexp;
   }
+  GLIBC_2.2.6 {
+    getunwind;
+  }
 }
