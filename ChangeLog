@@ -1,8 +1,31 @@
+Mon May  6 09:51:05 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* stdio/linewrap.c: New file.
+	* stdio/Makefile (routines): Add linewrap.
+	* stdio/stdio.h [__USE_GNU]: Declare line_wrap_stream,
+	line_unwrap_stream.
+
+Mon May  6 14:53:26 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (week): Add third parameter telling how
+	many days must be in new year so that it is called week 1.
+	(Following ISO 8601).
+	Correct computation for %U and %V formats when day was first
+	day of the week.
+	(strftime): Implement %V format according to Spec1170.
+
 Mon May  6 17:01:09 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 
 	* hurd/hurd/signal.h (_hurd_intr_rpc_mach_msg): New declaration.
 
 Sat May  4 05:44:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/hurd/sigpreempt.h (struct hurd_signal_preempter): Change
+	prototype of `preempter' elt to use struct hurd_signal_detail.
+
+	* hurd/hurd/signal.h (struct hurd_signal_detail): New type.
+	(struct hurd_sigstate): Make `pending_data' member an array of that.
+	Use the new type in several decls.
 
 	* locale/setlocale.c (_nl_C_name): Variable removed.
 	* locale/C_name.c: New file.
