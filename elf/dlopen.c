@@ -30,7 +30,7 @@ dlopen (const char *file, dl_open_mode mode)
     {
       Elf32_Addr init;
 
-      new = _dl_map_object (_dl_loaded, file, NULL);
+      new = _dl_map_object (_dl_loaded, file);
 
       /* Map in any dependencies.  */
       for (l = new; l; l = l->l_next)
@@ -43,7 +43,7 @@ dlopen (const char *file, dl_open_mode mode)
 		const Elf32_Dyn *d;
 		for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
 		  if (d->d_tag == DT_NEEDED)
-		    _dl_map_object (l, strtab + d->d_un.d_val, NULL);
+		    _dl_map_object (l, strtab + d->d_un.d_val);
 	      }
 	    l->l_deps_loaded = 1;
 	  }

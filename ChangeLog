@@ -1,3 +1,9 @@
+Wed Oct  4 00:21:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/stpncpy.c: Don't increment DEST when zero-filling.
+
+	* elf/dlopen.c (dlopen): Don't pass USER_ENTRY arg to _dl_map_object.
+
 Sat Sep 30 11:47:05 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): If started by

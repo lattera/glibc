@@ -79,9 +79,8 @@ DEFUN(__stpncpy, (dest, src, n), char *dest AND CONST char *src AND size_t n)
   while (c != '\0');
 
  zero_fill:
-  do
-    *++dest = '\0';
-  while (--n > 0);
+  while (n-- > 0)
+    dest[n] = '\0';
 
   return dest;
 }
