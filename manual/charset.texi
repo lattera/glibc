@@ -1821,12 +1821,12 @@ file2wcs (int fd, const char *charset, wchar_t *outbuf, size_t avail)
   int result = 0;
   iconv_t cd;
 
-  cd = iconv_open ("UCS-4", charset);
+  cd = iconv_open ("WCHAR_T", charset);
   if (cd == (iconv_t) -1)
     @{
       /* @r{Something went wrong.}  */
       if (errno == EINVAL)
-        error (0, 0, "conversion from '%s' to 'UCS-4' not available",
+        error (0, 0, "conversion from '%s' to wchar_t not available",
                charset);
       else
         perror ("iconv_open");

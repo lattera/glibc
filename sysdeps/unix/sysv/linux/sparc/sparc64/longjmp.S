@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001 Free Software Foundation, Inc.
    Contributed by Richard Henderson (rth@tamu.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 
 /* void longjmp (sigjmp_buf env, int val) */
 
-ENTRY(longjmp)
+ENTRY(__libc_siglongjmp)
 
 	/* Modify the context with the value we want to return.  */
 	movre	%o1, 1, %o1
@@ -41,10 +41,10 @@ ENTRY(longjmp)
 	/* And bamf back to where we belong!  */
 	ta	0x6f
 
-END(longjmp)
+END(__libc_siglongjmp)
 
-strong_alias(longjmp, __longjmp)
-strong_alias(longjmp, __libc_longjmp)
-strong_alias(longjmp, __libc_siglongjmp)
-weak_alias(longjmp, _longjmp)
-weak_alias(longjmp, siglongjmp)
+strong_alias(__libc_siglongjmp, __longjmp)
+strong_alias(__libc_siglongjmp, __libc_longjmp)
+weak_alias(__libc_siglongjmp, longjmp)
+weak_alias(__libc_siglongjmp, _longjmp)
+weak_alias(__libc_siglongjmp, siglongjmp)

@@ -22,6 +22,10 @@
 
 #include <bits/types.h>  /* For __fsblkcnt_t and __fsfilcnt_t.  */
 
+#if __WORDSIZE == 32
+#define _STATVFSBUF_F_UNUSED
+#endif
+
 struct statvfs
   {
     unsigned long int f_bsize;
@@ -42,6 +46,9 @@ struct statvfs
     __fsfilcnt64_t f_favail;
 #endif
     unsigned long int f_fsid;
+#ifdef _STATVFSBUF_F_UNUSED
+    int __f_unused;
+#endif
     unsigned long int f_flag;
     unsigned long int f_namemax;
     int __f_spare[6];
@@ -59,6 +66,9 @@ struct statvfs64
     __fsfilcnt64_t f_ffree;
     __fsfilcnt64_t f_favail;
     unsigned long int f_fsid;
+#ifdef _STATVFSBUF_F_UNUSED
+    int __f_unused;
+#endif
     unsigned long int f_flag;
     unsigned long int f_namemax;
     int __f_spare[6];

@@ -1,4 +1,4 @@
-/* System-dependent timing definitions.  Linux/SPARCv9 version.
+/* System-dependent timing definitions.  Linux/SPARC version.
    Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

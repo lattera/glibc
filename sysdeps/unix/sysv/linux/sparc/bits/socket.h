@@ -1,4 +1,4 @@
-/* System-specific socket constants and types.  Linux/SPARC64 version.
+/* System-specific socket constants and types.  Linux/SPARC version.
    Copyright (C) 1991,1992,1994-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -212,11 +212,17 @@ struct msghdr
     socklen_t msg_namelen;	/* Length of address data.  */
 
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
+#if __WORDSIZE == 32
+    int msg_iovlen;		/* Number of elements in the vector.  */
+
+    void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
+    socklen_t msg_controllen;	/* Ancillary data buffer length.  */
+#else
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
     void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
     size_t msg_controllen;	/* Ancillary data buffer length.  */
-
+#endif
     int msg_flags;		/* Flags on received message.  */
   };
 

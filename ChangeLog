@@ -1,3 +1,24 @@
+2001-04-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/time.h: Move to...
+	* sysdeps/unix/sysv/linux/sparc/bits/time.h: ...here.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/bits/time.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/socket.h: Move to...
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: ...here.  Adjust
+	struct msghdr for __WORDSIZE == 32.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/statvfs.h: Move to...
+	* sysdeps/unix/sysv/linux/sparc/bits/statvfs.h: ...here. Adjust
+	for __WORDSIZE == 32.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/siginfo.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/get_clockfreq.c: New
+	file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S (__libc_siglongjmp):
+	Rename from longjmp, make longjmp weak alias to it.
+
+2001-04-24  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: New file.
+
 2001-04-25  Matthew Wilcox  <willy@ldl.fc.hp.com>
 
 	* sysdeps/hppa/stackinfo.h: New file.
