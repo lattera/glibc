@@ -410,8 +410,7 @@ glob (pattern, flags, errfunc, pglob)
 
   if (flags & GLOB_MARK)
     {
-      /* Append slashes to directory names.  glob_in_dir has already
-	 allocated the extra character for us.  */
+      /* Append slashes to directory names.  */
       int i;
       struct stat st;
       for (i = oldcount; i < pglob->gl_pathc; ++i)
