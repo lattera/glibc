@@ -43,7 +43,7 @@ versioned_symbol (libc, __sched_getaffinity_new, sched_getaffinity,
 		  GLIBC_2_3_4);
 
 
-# if SHLIB_COMPAT(libc, 2_3_3, 2_3_4)
+# if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 int
 attribute_compat_text_section
 __sched_getaffinity_old (pid_t pid, cpu_set_t *cpuset)

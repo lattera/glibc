@@ -87,7 +87,7 @@ versioned_symbol (libpthread, __pthread_setaffinity_new,
 		  pthread_setaffinity_np, GLIBC_2_3_4);
 
 
-#if SHLIB_COMPAT(libpthread, 2_3_3, 2_3_4)
+#if SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_3_4)
 int
 __pthread_setaffinity_old (pthread_t th, cpu_set_t *cpuset)
 {
