@@ -1,3 +1,12 @@
+Fri Sep 13 01:21:36 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/generic/schedbits.h (struct sched_param): Renamed from
+	struct sched_params.
+	* sysdeps/stub/sched_setp.c (__sched_setparam): struct
+	sched_params -> struct sched_param.
+	* sysdeps/stub/sched_getp.c (__sched_getparam): Likewise.
+	* sysdeps/stub/sched_sets.c (__sched_setscheduler): Likewise.
+
 Thu Sep 12 23:58:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): Fix

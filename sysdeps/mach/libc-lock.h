@@ -59,16 +59,15 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
 /* Start a critical region with a cleanup function */
 #define __libc_cleanup_region_start(FCT, ARG)				    \
 {									    \
-  (typeof FCT) __save_FCT = FCT;					    \
-  (typeof ARG) __save_ARG = ARG;					    \
+  typeof (FCT) __save_FCT = FCT;					    \
+  typeof (ARG) __save_ARG = ARG;					    \
   /* close brace is in __libc_cleanup_region_end below. */
 
 /* End a critical region started with __libc_cleanup_region_start. */
 #define __libc_cleanup_region_end(DOIT)					    \
   if (DOIT)								    \
-    (* __save_FCT)(__save_ARG);						    \
+    (*__save_FCT)(__save_ARG);						    \
 }
 
-      
 
 #endif	/* libc-lock.h */

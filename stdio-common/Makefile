@@ -32,11 +32,8 @@ routines	:=							      \
 	perror psignal							      \
 	tmpfile tmpnam tempnam tempname					      \
 	getline getw putw						      \
-	remove rename
-
-ifneq (,$(filter %REENTRANT, $(defines)))
-routines += lockfile
-endif
+	remove rename							      \
+	lockfile
 
 aux	:= errlist siglist
 distribute := _itoa.h printf-parse.h

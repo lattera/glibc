@@ -152,14 +152,9 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 # define is_longlong is_long_double
 #endif
 
-
-#ifdef _LIBC_REENTRANT
 extern void __flockfile (FILE *);
 weak_extern (__flockfile);
 extern void __funlockfile (FILE *);
-weak_extern (__funlockfile);
-#endif
-
 
 /* Global variables.  */
 static const char null[] = "(null)";
@@ -1312,10 +1307,7 @@ do_positional:
 
 all_done:
   /* Unlock the stream.  */
-#ifdef USE_IN_LIBIO
-  /* (stdio has no locking yet.) */
   __libc_cleanup_region_end (1);
-#endif
 
   return done;
 }
