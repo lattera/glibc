@@ -216,6 +216,7 @@ endef
 
 modules-names = testobj1 testobj2 testobj3
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+generated += $(test-modules)
 
 $(objpfx)testobj2.so: $(objpfx)testobj1.so
 LDLIBS-testobj2.so = $(objpfx)testobj1.so

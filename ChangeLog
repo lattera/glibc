@@ -1,5 +1,7 @@
 1999-01-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Makefile (test-modules): Add test-modules.
+
 	* stdlib/canonicalize.c (canonicalize): Update write pointer after
 	realloc.  Minor optimizations.
 
