@@ -1,3 +1,19 @@
+1998-08-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (sh-ldd-rewrite): Remove expression to remove
+	BASH-ONLY marked region.
+	* elf/ldd.bash.in: Remove special BASH-ONLY markers.
+
+1998-02-20 17:54  H.J. Lu  <hjl@gnu.org>
+
+	* libio/oldfileops.c (_IO_file_seekoff): Don't adjust pointers if
+	_IO_SYSSEEK fails.
+
+	* libio/iolibio.h (_IO_pos_BAD): Define of type _IO_fpos64_t.
+
+	* libio/oldfileops.c (FILEBUF_LITERAL): Also initialize new _offset
+	element.
+
 1998-08-21  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* elf/ldd.bash.in (TEXTDOMAIN, TEXTDOMAINDIR): Surround setting these

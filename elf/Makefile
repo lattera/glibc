@@ -166,8 +166,7 @@ $(inst_slibdir)/$(rtld-installed-name): \
 
 common-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
 		     -e 's%@VERSION@%$(version)%g'
-sh-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%/bin/sh%g' \
-		 -e 's/\$$"/"/g;/^\#\#\#BASH-ONLY/,/\#\#\#END-BASH-ONLY/d'
+sh-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%/bin/sh%g;s/\$$"/"/g'
 bash-ldd-rewrite = $(common-ldd-rewrite) -e 's%@BASH@%$(BASH)%g' \
 		   -e 's%@TEXTDOMAINDIR@%$(localedir)%g'
 

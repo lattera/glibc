@@ -583,10 +583,12 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
   _IO_unsave_markers (fp);
   result = _IO_SYSSEEK (fp, offset, dir);
   if (result != EOF)
-    _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-  fp->_old_offset = result;
-  _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
-  _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
+    {
+      _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
+      fp->_old_offset = result;
+      _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
+      _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
+    }
   return result;
 }
 
