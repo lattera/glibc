@@ -25,6 +25,9 @@ Cambridge, MA 02139, USA.  */
 #include <sys/wait.h>
 #include <unistd.h>
 
+extern pid_t EXFUN(__wait4_syscall,
+		   (pid_t pid, union wait *stat_loc, int options, PTR usage));
+
 pid_t
 DEFUN(__wait4, (pid, stat_loc, options, usage),
       pid_t pid AND union wait *stat_loc AND int options AND PTR usage)
@@ -40,5 +43,5 @@ DEFUN(__wait4, (pid, stat_loc, options, usage),
       break;
     }
 
-  return __wait4_syscall (pid, stat_loc, option, usage);
+  return __wait4_syscall (pid, stat_loc, options, usage);
 }
