@@ -100,7 +100,7 @@ typedef union
     __extension__ unsigned long long int __wakeup_seq;
     __extension__ unsigned long long int __woken_seq;
     void *__mutex;
-    int __nwaiters;
+    unsigned int __nwaiters;
     unsigned int __broadcast_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];

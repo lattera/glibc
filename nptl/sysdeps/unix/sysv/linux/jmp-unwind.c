@@ -19,8 +19,7 @@
 
 #include <setjmp.h>
 #include <stddef.h>
-#include <pthread-functions.h>
-#include <pthreaddef.h>
+#include <pthreadP.h>
 
 extern void __pthread_cleanup_upto (__jmp_buf env, char *targetframe);
 #pragma weak __pthread_cleanup_upto

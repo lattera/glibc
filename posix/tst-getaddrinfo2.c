@@ -2,6 +2,8 @@
 #include <errno.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 
 static int
@@ -47,7 +49,7 @@ do_test (void)
       if (err)
         {
           printf ("FAIL getaddrinfo IPv4 socktype 0,513: "
-                  "fam %d alen %d addr 0x%08X addr/fam %d "
+                  "fam %d alen %d addr %p addr/fam %d "
                   "addr/port %d H[%d]\n",
                   pai->ai_family, pai->ai_addrlen, psin,
                   psin ? psin->sin_family : 0,

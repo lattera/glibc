@@ -58,6 +58,14 @@ do_test (void)
 #if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
 # define N 10
 
+# if _POSIX_THREAD_CPUTIME == 0
+  if (sysconf (_SC_THREAD_CPUTIME) < 0)
+    {
+      puts ("_POSIX_THREAD_CPUTIME option not available");
+      return 0;
+    }
+# endif
+
   if (pthread_barrier_init (&b2, NULL, 2) != 0
       || pthread_barrier_init (&bN, NULL, N + 1) != 0)
     {

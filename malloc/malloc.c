@@ -257,6 +257,10 @@
 
 #include <malloc-machine.h>
 
+#ifdef _LIBC
+#include <stdio-common/_itoa.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

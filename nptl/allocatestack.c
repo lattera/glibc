@@ -772,8 +772,8 @@ __reclaim_stacks (void)
 
 #if HP_TIMING_AVAIL
 /* Find a thread given the thread ID.  */
-struct pthread *
 attribute_hidden
+struct pthread *
 __find_thread_by_id (pid_t tid)
 {
   struct pthread *result = NULL;

@@ -1,7 +1,9 @@
 2004-10-06  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/s390/jmpbuf-unwind.h: Include bits/wordsize.h.
-	(JMPBUF_CFA_UNWINDS_ADJ): Subtract 96 resp. 160 bytes from CFA.
+	* posix/tst-getaddrinfo2.c: Include stdlib.h and string.h.
+	(do_test): Use %p instead of 0x%08X to print a pointer.
+
+	* malloc/malloc.c: Include stdio-common/_itoa.h.
 
 2004-10-05  Ulrich Drepper  <drepper@redhat.com>
 
