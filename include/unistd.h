@@ -58,6 +58,7 @@ extern long int __pathconf (__const char *__path, int __name);
 extern long int __fpathconf (int __fd, int __name);
 extern long int __sysconf (int __name);
 extern __pid_t __getpid (void);
+extern __pid_t __getpid_internal (void);
 extern __pid_t __getppid (void);
 extern __pid_t __setsid (void);
 extern __uid_t __getuid (void);
@@ -65,6 +66,7 @@ extern __uid_t __geteuid (void);
 extern __gid_t __getgid (void);
 extern __gid_t __getegid (void);
 extern int __getgroups (int __size, __gid_t __list[]);
+extern __pid_t __getpgid_internal (__pid_t __pid);
 extern int __group_member (__gid_t __gid);
 extern int __setuid (__uid_t __uid);
 extern int __setreuid (__uid_t __ruid, __uid_t __euid);
@@ -90,6 +92,7 @@ extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
 extern __pid_t __fork (void);
 extern __pid_t __fork_internal (void) attribute_hidden;
 extern int __getpagesize (void) __attribute__ ((__const__));
+extern int __getpagesize_internal (void) __attribute__ ((__const__));
 extern int __ftruncate (int __fd, __off_t __length);
 extern int __ftruncate64 (int __fd, __off64_t __length);
 extern void *__sbrk (intptr_t __delta);
@@ -115,6 +118,9 @@ extern void __libc_check_standard_fds (void);
 # define __close(fd) INTUSE(__close) (fd)
 # define __dup2(fd, fd2) INTUSE(__dup2) (fd, fd2)
 # define __fork() INTUSE(__fork) ()
+# define __getpagesize() INTUSE(__getpagesize) ()
+# define __getpgid(pid) INTUSE(__getpgid) (pid)
+# define __getpid() INTUSE(__getpid) ()
 #endif
 
 #endif
