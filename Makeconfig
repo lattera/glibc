@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-2000,01,02 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -731,15 +731,24 @@ endif
 
 ifeq (yes, $(build-shared))
 
-# Commands to put in a pipeline to preprocess a file with # comments
-# %ifdef et al based on config.h settings or other %include'd files.
-define preprocess-versions
-sed '/^[ 	]*#/d;s/^[ 	]*%/#/' \
-| $(CC) -E -undef -I$(common-objdir) -I$(..)include \
-		  -include $(common-objpfx)config.h \
-		  -DASSEMBLER -x assembler-with-cpp - \
-| sed '/^[ 	]*#/d;/^[ 	]*$$/d'
-endef
+# This is a pair of implicit rules to preprocess a file with # comments,
+# %ifdef et al, based on config.h settings or other %include'd files.
+# We use chained rules instead of a pipeline here so that we can properly
+# check the exit status of cpp rather than using its bad output when there
+# is a preprocessing error.  Another rule should depend on the output file
+# `FOO.v', and along with that `FOO.v.i' should be given dependencies
+# listing both its input files, and any header files that it may reference
+# (but no commands).
+%.v.i: $(common-objpfx)config.h
+	sed '/^[ 	]*#/d;s/^[ 	]*%/#/' $(filter-out FORCE %.h,$^) \
+	| $(CC) -E -undef -I$(common-objdir) -I$(..)include \
+		   -include $(common-objpfx)config.h \
+		   -DASSEMBLER -x assembler-with-cpp - \
+		   > $@T
+	mv -f $@T $@
+%.v: %.v.i
+	sed '/^[ 	]*#/d;/^[ 	]*$$/d' $< > $@T
+	mv -f $@T $@
 
 # Process the shlib-versions file, which tells us what shared library
 # version numbers to use when we install shared objects on this system.
@@ -747,28 +756,26 @@ endef
 ifeq ($(sysd-sorted-done),t)
 -include $(common-objpfx)soversions.mk
 ifndef avoid-generated
-$(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
-			      $(wildcard $(patsubst %, $(..)%/shlib-versions,\
-						       $(add-ons) \
-						       $(subdirs))) \
-			      $(common-objpfx)config.make
-	cat $(filter-out $(..)Makeconfig $(common-objpfx)config.make,$^) \
-	| $(preprocess-versions) \
-	| while read conf version setname; do \
-	    test -n "$$version" && \
-	    test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
-		       : "$$conf"` != 0 || continue; \
-	    if test "x$$version" = xDEFAULT; then \
-	      default_setname="$$setname"; \
-	    else \
-	      lib=`echo $$version | sed 's/=.*$$//'`; \
-	      if eval test -z "\$${versioned_$${lib}}"; then \
-		eval versioned_$${lib}=yes; \
-		number=`echo $$version | sed "s/^.*=//"`; \
-		echo $$lib $$number $${setname:-$${default_setname}}; \
-	      fi; \
+$(common-objpfx)shlib-versions.v.i: \
+	$(..)shlib-versions $(wildcard $(patsubst %, $(..)%/shlib-versions,\
+						     $(add-ons) \
+						     $(subdirs)))
+$(common-objpfx)soversions.i: $(common-objpfx)shlib-versions.v
+	while read conf version setname; do \
+	  test -n "$$version" && \
+	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
+		     : "$$conf"` != 0 || continue; \
+	  if test "x$$version" = xDEFAULT; then \
+	    default_setname="$$setname"; \
+	  else \
+	    lib=`echo $$version | sed 's/=.*$$//'`; \
+	    if eval test -z "\$${versioned_$${lib}}"; then \
+	      eval versioned_$${lib}=yes; \
+	      number=`echo $$version | sed "s/^.*=//"`; \
+	      echo $$lib $$number $${setname:-$${default_setname}}; \
 	    fi; \
-	  done > $@T; exit 0
+	  fi; \
+	done < $< > $@T; exit 0
 	mv -f $@T $@
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
 	(while read lib number setname; do \
@@ -784,7 +791,8 @@ $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
 endif
 endif
 
-postclean-generated += soversions.mk
+postclean-generated += soversions.mk soversions.i \
+		       shlib-versions.v shlib-versions.v.i
 
 # Generate the header containing the names of all shared libraries.
 # We use a stamp file to avoid uncessary recompilations.
