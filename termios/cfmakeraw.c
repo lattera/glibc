@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,6 @@ DEFUN(cfmakeraw, (termios_p), struct termios *t)
   t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
   t->c_cflag &= ~(CSIZE|PARENB);
   t->c_cflag |= CS8;
-  t->c_cc[VMIN] = 0;
-  /* t->c_cc[VTIME] = ?; */
+  t->c_cc[VMIN] = 1;		/* read returns when one char is available.  */
+  t->c_cc[VTIME] = 0;
 }

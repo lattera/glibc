@@ -178,7 +178,7 @@ CODE facilitynames[] = {
 #elif !defined (_BSD_VA_LIST_)
 /* In GNU we don't have a <machine/ansi.h> and it would be too painful to
    emulate one.  */
-#define __need_va_list
+#define __need___va_list
 #include <stdarg.h>
 #define _BSD_VA_LIST_ __gnuc_va_list
 #endif

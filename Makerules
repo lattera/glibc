@@ -302,7 +302,7 @@ override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 # $(o-iterator-doit) to produce some desired rule using $o for the object
 # suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
 # is produced for each object suffix in use.
-o-iterator = $(patsubst %,$(..)o-iterator.mk,$(object-suffixes))
+o-iterator = $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-left))
 
 # The makefile may define $(extra-libs) with `libfoo libbar'
 # to build libfoo.a et al from the modules listed in $(libfoo-routines).
@@ -599,7 +599,7 @@ define o-iterator-doit
 $(libdir)/$o: $(libdir)/$o$($o-version); $$(make-link)
 endef
 object-suffixes-left := $(versioned)
-include $(..)o-iterator.mk
+include $(o-iterator)
 
 # Make symlinks in the build directory, because the versioned names might
 # be referenced by a DT_NEEDED in another library.
@@ -607,20 +607,20 @@ define o-iterator-doit
 $(objpfx)$o$($o-version): $(objpfx)$o; $$(make-link)
 endef
 object-suffixes-left := $(versioned)
-include $(..)o-iterator.mk
+include $(o-iterator)
 
 
 define o-iterator-doit
 $(libdir)/$o$($o-version): $(libdir)/$(o:.so=)-$(version).so; $$(make-link)
 endef
 object-suffixes-left := $(versioned)
-include $(..)o-iterator.mk
+include $(o-iterator)
 
 define o-iterator-doit
 $(libdir)/$(o:.so=)-$(version).so: $(objpfx)$o; $$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
-include $(..)o-iterator.mk
+include $(o-iterator)
 endif
 
 define do-install-so

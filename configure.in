@@ -304,9 +304,6 @@ AC_CHECK_TOOL(CC, gcc)
 AC_PROG_CPP
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
-AC_CHECK_TOOL(OBJDUMP, objdump)
-AC_CHECK_TOOL(OBJCOPY, objcopy)
-AC_PROG_AWK
 
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
