@@ -1,3 +1,10 @@
+2002-10-20  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/configure.in: Don't check
+	/lib/modules/`uname -r`/build/include for kernel headers if
+	cross compiling.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+
 2002-10-25  Roland McGrath  <roland@redhat.com>
 
 	* math/math.h (M_LOG2El): Correct the value.
