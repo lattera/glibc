@@ -1,5 +1,8 @@
 2004-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/finddomain.c (_nl_find_domain): Protect calls to
+	_nl_make_l10nflist.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): If determinination of
 	source address fails, initialized source_addr_len field so that
 	duplicate address recognition does not copy junk.
