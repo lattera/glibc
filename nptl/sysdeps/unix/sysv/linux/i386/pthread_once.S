@@ -147,8 +147,8 @@ clear_once_control:
 	pushl	%esi
 	pushl	%ebx
 
-	movl	12(%esp), %eax
-	movl	$0, (%eax)
+	movl	12(%esp), %ebx
+	movl	$0, (%ebx)
 
 	xorl	%esi, %esi
 	movl	$0x7fffffff, %edx

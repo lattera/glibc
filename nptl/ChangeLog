@@ -2,8 +2,9 @@
 
 	* sysdeps/unix/sysv/linux/i386/pthread_once.S (clear_once_control): Fix
 	clearing of control variable.
-	* Makefile (tests): Add tst-once3.
+	* Makefile (tests): Add tst-once3 and tst-once4.
 	* tst-once3.c: New file.
+	* tst-once4.c: New file.
 
 2003-02-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 

@@ -130,7 +130,7 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 \
-	tst-once1 tst-once2 tst-once3 \
+	tst-once1 tst-once2 tst-once3 tst-once4 \
 	tst-key1 tst-key2 tst-key3 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 \
 	tst-barrier1 tst-barrier2 tst-barrier3 \
