@@ -1,5 +1,7 @@
 2001-01-23  Andreas Jaeger  <aj@suse.de>
 
+	* stdlib/Makefile ($(objpfx)isomac.out): Also pass sysincludes to isomac.
+
 	* elf/dl-load.c (_dl_init_paths): Don't use strdupa in function
 	arguments.  Reported by Jiri Kubicek <kubicek@bitsmart.com>,
 	closes PR libc/2039.

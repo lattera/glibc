@@ -135,7 +135,8 @@ test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 tests: $(objpfx)isomac.out $(objpfx)tst-fmtmsg.out
 
 $(objpfx)isomac.out: $(objpfx)isomac
-	$(dir $<)$(notdir $<) '$(CC)' '-I../include -I.. $(+sysdep-includes)' > $<.out
+	$(dir $<)$(notdir $<) '$(CC)'  \
+	'-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $<.out
 
 $(objpfx)isomac: isomac.c
 	$(native-compile)
