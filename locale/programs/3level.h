@@ -66,8 +66,11 @@ struct TABLE
 static inline void
 CONCAT(TABLE,_init) (struct TABLE *t)
 {
+  t->level1 = NULL;
   t->level1_alloc = t->level1_size = 0;
+  t->level2 = NULL;
   t->level2_alloc = t->level2_size = 0;
+  t->level3 = NULL;
   t->level3_alloc = t->level3_size = 0;
 }
 
@@ -116,10 +119,8 @@ CONCAT(TABLE,_add) (struct TABLE *t, uint32_t wc, ELEMENT value)
 	  size_t alloc = 2 * t->level1_alloc;
 	  if (alloc <= index1)
 	    alloc = index1 + 1;
-	  t->level1 = (t->level1_alloc > 0
-		       ? (uint32_t *) xrealloc ((char *) t->level1,
-						alloc * sizeof (uint32_t))
-		       : (uint32_t *) xmalloc (alloc * sizeof (uint32_t)));
+	  t->level1 = (uint32_t *) xrealloc ((char *) t->level1,
+					     alloc * sizeof (uint32_t));
 	  t->level1_alloc = alloc;
 	}
       while (index1 >= t->level1_size)
@@ -131,10 +132,8 @@ CONCAT(TABLE,_add) (struct TABLE *t, uint32_t wc, ELEMENT value)
       if (t->level2_size == t->level2_alloc)
 	{
 	  size_t alloc = 2 * t->level2_alloc + 1;
-	  t->level2 = (t->level2_alloc > 0
-		       ? (uint32_t *) xrealloc ((char *) t->level2,
-						(alloc << t->q) * sizeof (uint32_t))
-		       : (uint32_t *) xmalloc ((alloc << t->q) * sizeof (uint32_t)));
+	  t->level2 = (uint32_t *) xrealloc ((char *) t->level2,
+					     (alloc << t->q) * sizeof (uint32_t));
 	  t->level2_alloc = alloc;
 	}
       i1 = t->level2_size << t->q;
@@ -151,10 +150,8 @@ CONCAT(TABLE,_add) (struct TABLE *t, uint32_t wc, ELEMENT value)
       if (t->level3_size == t->level3_alloc)
 	{
 	  size_t alloc = 2 * t->level3_alloc + 1;
-	  t->level3 = (t->level3_alloc > 0
-		       ? (ELEMENT *) xrealloc ((char *) t->level3,
-					       (alloc << t->p) * sizeof (ELEMENT))
-		       : (ELEMENT *) xmalloc ((alloc << t->p) * sizeof (ELEMENT)));
+	  t->level3 = (ELEMENT *) xrealloc ((char *) t->level3,
+					    (alloc << t->p) * sizeof (ELEMENT));
 	  t->level3_alloc = alloc;
 	}
       i1 = t->level3_size << t->p;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <bits/setjmp.h>
 #define ENV(base,reg) [%base + (reg * 4)]
 #define ST_FLUSH_WINDOWS 3
-#define RW_FP [%fp + 0x38]
+#define RW_FP [%fp + 0x48]
 
 ENTRY(__longjmp)
 	/* Store our arguments in global registers so we can still
