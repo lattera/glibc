@@ -175,20 +175,22 @@ tests-reverse += tst-cancel5
 
 include ../Rules
 
-# What we install as libc.so for programs to link against is in fact a
+# What we install as libpthread.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
-# The libc.so object is not complete since some functions are only defined
-# in libc_nonshared.a.
+# The libpthread.so object is not complete since some functions are only
+# defined in libpthread_nonshared.a.
 # We need to use absolute paths since otherwise local copies (if they exist)
 # of the files are taken by the linker.
 install: $(inst_libdir)/libpthread.so
-$(inst_libdir)/libpthread.so: $(objpfx)libpthread.so$(libpthread.so-version) \
+$(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
+			      $(objpfx)libpthread.so$(libpthread.so-version) \
 			      $(inst_libdir)/$(patsubst %,$(libtype.oS),\
 							$(libprefix)pthread) \
 			      $(+force)
 	(echo '/* GNU ld script';\
 	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.  */';\
+	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libpthread.so$(libpthread.so-version)' \
 	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)pthread)'\
 	      ')' \
@@ -200,7 +202,7 @@ $(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
 
 CFLAGS-tst-unload.c += -DPREFIX=\"$(objpfx)\"
 
-extra-B-pthread.so = -B$(common-objpfx)linuxthreads/
+extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(objpfx)crti.o
 $(objpfx)libpthread.so: +preinit += $(objpfx)crti.o
 
