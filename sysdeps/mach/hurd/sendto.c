@@ -22,6 +22,8 @@ Cambridge, MA 02139, USA.  */
 #include <hurd.h>
 #include <hurd/socket.h>
 #include <hurd/fd.h>
+#include <sys/un.h>
+#include <hurd/ifsock.h>
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
@@ -33,15 +35,35 @@ DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
   addr_port_t aport;
   error_t err;
   int wrote;
+  
+  if (addr->sa_family == AF_LOCAL)
+    {
+      /* For the local domain, we must look up the name as a file and talk
+	 to it with the ifsock protocol.  */
+      struct sockaddr_un *unaddr = (struct sockaddr_un *) addr;
+      file_t file = __file_name_lookup (unaddr->sun_path, 0, 0);
+      if (file == MACH_PORT_NULL)
+	return -1;
+      err = __ifsock_getsockaddr (file, &aport);
+      __mach_port_deallocate (__mach_task_self (), file);
+      if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+	/* The file did not grok the ifsock protocol.  */
+	err = ENOTSOCK;
+      if (err)
+	return __hurd_fail (err);
+    }
+  else
+    err = EIEIO;
 
   /* Get an address port for the desired destination address.  */
   err = HURD_DPORT_USE (fd,
 			({
-			  err = __socket_create_address (port,
-							 addr->sa_family,
-							 (char *) addr,
-							 addr_len,
-							 &aport, 1);
+			  if (err)
+			    err = __socket_create_address (port,
+							   addr->sa_family,
+							   (char *) addr,
+							   addr_len,
+							   &aport, 1);
 			  if (! err)
 			    {
 			      /* Send the data.  */

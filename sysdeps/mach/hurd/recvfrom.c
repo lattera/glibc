@@ -56,6 +56,14 @@ DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
     int type;
 
     err = __socket_whatis_address (addrport, &type, &buf, &buflen);
+    if (err == EOPNOTSUPP)
+      /* If the protocol server can't tell us the address, just return a
+	 zero-length one.  */
+      {
+	buf = (char *)addr;
+	buflen = 0;
+	err = 0;
+      }
     __mach_port_deallocate (__mach_task_self (), addrport);
     if (err)
       return __hurd_dfail (fd, err);
@@ -68,7 +76,8 @@ DEFUN(recvfrom, (fd, buf, n, flags, addr, addr_len),
 	__vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
       }
 
-    addr->sa_family = type;
+    if (buflen > 0)
+      addr->sa_family = type;
   }
 
   /* Toss control data; we don't care.  */

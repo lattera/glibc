@@ -45,7 +45,17 @@ DEFUN(accept, (fd, addr, addr_len),
     return __hurd_dfail (fd, err);
 
   if (addr != NULL)
-    err = __socket_whatis_address (aport, &type, &buf, &buflen);
+    {
+      err = __socket_whatis_address (aport, &type, &buf, &buflen);
+      if (err == EOPNOTSUPP)
+	/* If the protocol server can't tell us the address, just return a
+	   zero-length one.  */
+	{
+	  buf = (char *)addr;
+	  buflen = 0;
+	  err = 0;
+	}
+    }
   __mach_port_deallocate (__mach_task_self (), aport);
 
   if (err)
@@ -64,7 +74,8 @@ DEFUN(accept, (fd, addr, addr_len),
 	  __vm_deallocate (__mach_task_self (), (vm_address_t) buf, buflen);
 	}
 
-      addr->sa_family = type;
+      if (buflen > 0)
+	addr->sa_family = type;
     }
 
   return _hurd_intern_fd (new, O_IGNORE_CTTY, 1);
