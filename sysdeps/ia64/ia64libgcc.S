@@ -102,7 +102,7 @@ ENTRY(___divsf3)
 	br.ret.sptk rp
 	;;
 END(___divsf3)
-	.symver	___divsf3, __divsf3@GLIBC2.2
+	.symver	___divsf3, __divsf3@GLIBC_2.2
 
 /* __divdi3
    Compute a 64-bit integer quotient.

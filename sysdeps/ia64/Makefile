@@ -16,7 +16,6 @@ sysdep_routines += ia64libgcc
 shared-only-routines += ia64libgcc
 endif
 endif
-endif
 
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-symaddr dl-fptr
