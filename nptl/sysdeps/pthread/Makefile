@@ -19,6 +19,9 @@
 
 ifeq ($(subdir),csu)
 CFLAGS-libc-start.c += -I../nptl
+routines += unwind-resume
+shared-only-routines += unwind-resume
+CFLAGS-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 endif
 
 ifeq ($(subdir),nptl)
@@ -26,9 +29,11 @@ libpthread-sysdep_routines += errno-loc
 endif
 
 ifeq ($(subdir),rt)
-librt-sysdep_routines += timer_routines librt-cancellation
+librt-sysdep_routines += timer_routines librt-cancellation rt-unwind-resume
+librt-shared-only-routines += rt-unwind-resume
 CPPFLAGS-timer_routines.c = -I../nptl
 CFLAGS-librt-cancellation.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-rt-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)

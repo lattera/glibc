@@ -1,3 +1,22 @@
+2003-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* descr.h (struct _pthread_descr_struct): Provide p_res member
+	even if USE_TLS && HAVE___THREAD.
+	* sysdeps/pthread/res-state.c (__res_state): Return __resp
+	if USE___THREAD.
+	* manager.c: Include resolv.h.
+	(pthread_start_thread): Initialize __resp.
+	* libc-tls-loc.c (__res_state): Return __resp.
+	* Makefile (tests): Add tst-_res1.
+	(modules-names, extra-objs, test-extras, test-modules): Add support
+	for test modules.
+	($(objpfx)tst-_res1mod2.so): Depend on $(objpfx)tst-_res1mod1.so.
+	($(objpfx)tst-_res1): Depend on $(objpfx)tst-_res1mod2.so and
+	-lpthread.
+	* tst-_res1.c: New test.
+	* tst-_res1mod1.c: New test.
+	* tst-_res1mod2.c: New test.
+
 2003-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h: Define __libc_cleanup_push and

@@ -1,5 +1,20 @@
 2003-07-22  Jakub Jelinek  <jakub@redhat.com>
 
+	* include/stdio.h (__libc_fatal): Add libc_hidden_proto.
+	* include/dlfcn.h (__libc_dlopen_mode, __libc_dlsym, __libc_dlclose):
+	Likewise.
+	* elf/dl-libc.c (__libc_dlopen_mode, __libc_dlsym, __libc_dlclose):
+	Add libc_hidden_def.
+	* sysdeps/generic/libc_fatal.c (__libc_fatal): Likewise.
+	* sysdeps/posix/libc_fatal.c (__libc_fatal): Likewise.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (__libc_fatal): Likewise.
+	* elf/Versions (libc): Export __libc_dlopen_mode@@GLIBC_PRIVATE,
+	__libc_dlsym@@GLIBC_PRIVATE and __libc_dlclose@@GLIBC_PRIVATE.
+	* libio/Versions (libc): Export __libc_fatal@@GLIBC_PRIVATE.
+	* sysdeps/generic/unwind-dw2.c: Readd #ifs removed during last
+	change.
+	* sysdeps/generic/unwind.inc: Removed.
+
 	* include/resolv.h (__resp): Declare.  Define to __libc_resp
 	if in libc.so.
 	(_res): If USE___THREAD, define to (*__resp).

@@ -129,6 +129,9 @@ hidden_proto (__pthread_unwind)
 hidden_proto (__pthread_unwind_next)
 hidden_proto (__pthread_register_cancel)
 hidden_proto (__pthread_unregister_cancel)
+# ifdef SHARED
+extern void attribute_hidden pthread_cancel_init (void);
+# endif
 #endif
 
 

@@ -14,6 +14,9 @@ extern void *__dlvsym (void *__handle, __const char *__name,
 extern void *__libc_dlopen_mode  (__const char *__name, int __mode);
 extern void *__libc_dlsym   (void *__map, __const char *__name);
 extern int   __libc_dlclose (void *__map);
+libc_hidden_proto (__libc_dlopen_mode)
+libc_hidden_proto (__libc_dlsym)
+libc_hidden_proto (__libc_dlclose)
 
 /* Locate shared object containing the given address.  */
 #ifdef ElfW

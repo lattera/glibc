@@ -108,6 +108,7 @@ libc_hidden_proto (fwrite_unlocked)
 libc_hidden_proto (fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
 libc_hidden_proto (open_memstream)
+libc_hidden_proto (__libc_fatal)
 
 # endif
 

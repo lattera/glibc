@@ -118,9 +118,9 @@ libpthread-routines = init events version \
 		      pthread_kill_other_threads \
 		      pthread_getaffinity pthread_setaffinity \
 		      pthread_attr_getaffinity pthread_attr_setaffinity \
-		      cleanup_routine
+		      cleanup_routine unwind-forcedunwind
 
-libpthread-shared-only-routines = version pt-allocrtsig
+libpthread-shared-only-routines = version pt-allocrtsig unwind-forcedunwind
 libpthread-static-only-routines = pthread_atfork
 
 libpthread-nonshared = pthread_atfork
@@ -135,6 +135,7 @@ CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 CFLAGS-init.c = -fexceptions -fasynchronous-unwind-tables
 # The unwind code itself,
 CFLAGS-unwind.c = -fexceptions
+CFLAGS-unwind-forcedunwind.c = -fexceptions -fasynchronous-unwind-tables
 
 # The following three functions must be async-cancel safe.
 CFLAGS-pthread_cancel.c = -fexceptions -fasynchronous-unwind-tables

@@ -57,3 +57,4 @@ __libc_fatal (message)
     /* Try for ever and ever.  */
     ABORT_INSTRUCTION;
 }
+libc_hidden_def (__libc_fatal)

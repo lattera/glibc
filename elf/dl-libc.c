@@ -173,6 +173,7 @@ __libc_dlopen_mode (const char *name, int mode)
   return (void *) args.map;
 #endif
 }
+libc_hidden_def (__libc_dlopen_mode)
 
 void *
 __libc_dlsym (void *map, const char *name)
@@ -188,6 +189,7 @@ __libc_dlsym (void *map, const char *name)
   return (dlerror_run (do_dlsym, &args) ? NULL
 	  : (void *) (DL_SYMBOL_ADDRESS (args.loadbase, args.ref)));
 }
+libc_hidden_def (__libc_dlsym)
 
 int
 __libc_dlclose (void *map)
@@ -198,6 +200,7 @@ __libc_dlclose (void *map)
 #endif
   return dlerror_run (do_dlclose, map);
 }
+libc_hidden_def (__libc_dlclose)
 
 
 libc_freeres_fn (free_mem)

@@ -56,3 +56,4 @@ __libc_fatal (message)
 
   abort ();
 }
+libc_hidden_def (__libc_fatal)

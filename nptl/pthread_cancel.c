@@ -36,6 +36,9 @@ pthread_cancel (th)
     /* Not a valid thread handle.  */
     return ESRCH;
 
+#ifdef SHARED
+  pthread_cancel_init ();
+#endif
   int result = 0;
   int oldval;
   int newval;

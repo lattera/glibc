@@ -22,6 +22,7 @@ libc {
     _dl_open; _dl_close; _dl_addr;
     _dl_sym; _dl_vsym;
     _dl_open_hook;
+    __libc_dlopen_mode; __libc_dlsym; __libc_dlclose;
   }
 }
 

@@ -48,8 +48,8 @@ int *__libc_multiple_threads_ptr attribute_hidden;
 
 
 static int
-do_clone (struct pthread *pd, struct pthread_attr *attr, int clone_flags,
-	  int (*fct) (void *), STACK_VARIABLES_PARMS)
+do_clone (struct pthread *pd, const struct pthread_attr *attr,
+	  int clone_flags, int (*fct) (void *), STACK_VARIABLES_PARMS)
 {
 #ifdef PREPARE_CREATE
   PREPARE_CREATE;
@@ -121,7 +121,7 @@ do_clone (struct pthread *pd, struct pthread_attr *attr, int clone_flags,
 
 
 static int
-create_thread (struct pthread *pd, struct pthread_attr *attr,
+create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	       STACK_VARIABLES_PARMS)
 {
 #ifdef TLS_TCB_AT_TP

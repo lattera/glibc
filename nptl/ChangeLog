@@ -1,5 +1,23 @@
 2003-07-22  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/unwind-resume.c: New file.
+	* sysdeps/pthread/Makefile (routines, shared-only-routines): Add
+	unwind-resume in csu subdir.
+	(CFLAGS-unwind-resume.c, CFLAGS-rt-unwind-resume.c): Compile with
+	exceptions.
+	(librt-sysdep_routines, librt-shared-only-routines): Add
+	rt-unwind-resume.
+	* sysdeps/pthread/rt-unwind-resume.c: New file.
+	* unwind-forcedunwind.c: New file.
+	* Makefile (libpthread-routines): Add unwind-forcedunwind.
+	(libpthread-shared-only-routines): Likewise.
+	(CFLAGS-unwind-forcedunwind.c): Compile with exceptions.
+	* pthreadP.h (pthread_cancel_init): New prototype.
+	* pthread_cancel.c (pthread_cancel): Call pthread_cancel_init.
+
+	* sysdeps/pthread/createthread.c (do_thread, create_thread): Make
+	attr argument const struct pthread_attr *.
+
 	* res.c (__res_state): Return __resp.
 	* descr.h: Include resolv.h.
 	(struct pthread): Add res field.

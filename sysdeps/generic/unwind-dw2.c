@@ -72,8 +72,10 @@ struct _Unwind_Context
   _Unwind_Word args_size;
 };
 
+#ifndef _LIBC
 /* Byte size of every register managed by these routines.  */
 static unsigned char dwarf_reg_size_table[DWARF_FRAME_REGISTERS];
+#endif
 
 
 /* The result of interpreting the frame unwind info for a frame.
@@ -321,7 +323,7 @@ extract_cie_info (struct dwarf_cie *cie, struct _Unwind_Context *context,
   return ret ? ret : p;
 }
 
-
+#ifndef _LIBC
 /* Decode a DW_OP stack program.  Return the top of stack.  Push INITIAL
    onto the stack to start.  */
 
@@ -721,7 +723,7 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
     abort ();
   return stack[stack_elt];
 }
-
+#endif
 
 /* Decode DWARF 2 call frame information. Takes pointers the
    instruction sequence to decode, current register information and
@@ -1059,6 +1061,8 @@ __frame_state_for (void *pc_target, struct frame_state *state_in)
   return state_in;
 }
 
+#ifndef _LIBC
+
 static void
 uw_update_context_1 (struct _Unwind_Context *context, _Unwind_FrameState *fs)
 {
@@ -1282,4 +1286,5 @@ uw_identify_context (struct _Unwind_Context *context)
 
 #include "unwind.inc"
 
+#endif /* _LIBC */
 #endif /* !USING_SJLJ_EXCEPTIONS */
