@@ -1,5 +1,5 @@
 /* Handle locking of password file.
-   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,98,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -121,7 +121,7 @@ __lckpwdf (void)
      restore the old signal behaviour.  */
   memset (&new_act, '\0', sizeof (struct sigaction));
   new_act.sa_handler = noop_handler;
-  sigfillset (&new_act.sa_mask);
+  __sigfillset (&new_act.sa_mask);
   new_act.sa_flags = 0ul;
 
   /* Install new action handler for alarm and save old.  */
@@ -130,7 +130,7 @@ __lckpwdf (void)
     RETURN_CLOSE_FD (-1);
 
   /* Now make sure the alarm signal is not blocked.  */
-  sigemptyset (&new_set);
+  __sigemptyset (&new_set);
   __sigaddset (&new_set, SIGALRM);
   if (__sigprocmask (SIG_UNBLOCK, &new_set, &saved_set) < 0)
     RETURN_RESTORE_HANDLER (-1);

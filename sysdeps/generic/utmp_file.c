@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -57,7 +57,7 @@ static void timeout_handler (int signum) {};
                                                                         \
   /* Establish signal handler.  */                                      \
   action.sa_handler = timeout_handler;                                  \
-  sigemptyset (&action.sa_mask);                                        \
+  __sigemptyset (&action.sa_mask);                                      \
   action.sa_flags = 0;                                                  \
   __sigaction (SIGALRM, &action, &old_action);                          \
                                                                         \

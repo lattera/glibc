@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Mostly POSIX.1 version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 
   act.sa_handler = (sighandler_t) &profil_counter;
   act.sa_flags = SA_RESTART;
-  sigfillset (&act.sa_mask);
+  __sigfillset (&act.sa_mask);
   if (__sigaction (SIGPROF, &act, &oact) < 0)
     return -1;
 

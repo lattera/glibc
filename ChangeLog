@@ -1,3 +1,28 @@
+2002-08-03  Roland McGrath  <roland@redhat.com>
+
+	* include/stdlib.h: Use libc_hidden_proto for qsort.
+	* stdlib/msort.c: Add libc_hidden_def.
+
+	* include/utime.h: Use libc_hidden_proto for utime.
+	* sysdeps/generic/utime.c: Add libc_hidden_def.
+	* sysdeps/unix/utime.c: Likewise.
+
+	* sysdeps/generic/utmp_file.c (LOCK_FILE): sigemptyset -> __sigemptyset
+	* sysdeps/posix/profil.c (__profil): sigfillset -> __sigfillset
+	* sysdeps/posix/sprofil.c (__sprofil): Likewise.
+	* shadow/lckpwdf.c (__lckpwdf): Likewise (both).
+	* sysdeps/posix/spawni.c (__spawni): sigismember -> __sigismember
+
+	* include/signal.h: Use libc_hidden_proto for raise, sigemptyset,
+	sigfillset, sigismember, __sigpause, __libc_current_sigrtmin,
+	and __libc_current_sigrtmax.
+	* signal/sigismem.c: Add libc_hidden_def.
+	* signal/sigfillset.c: Likewise.
+	* signal/sigempty.c: Likewise.
+	* sysdeps/generic/sigpause.c (__sigpause): Likewise.
+	* sysdeps/posix/sigpause.c (__sigpause): Likewise.
+	* sysdeps/unix/bsd/osf/alpha/sigpause.S: Likewise.
+
 2002-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/string.h: Use libc_hidden_proto for __strcasecmp_l,

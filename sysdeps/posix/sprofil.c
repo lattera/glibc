@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
    This file is part of the GNU C Library.
 
@@ -340,7 +340,7 @@ __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
   else
     act.sa_handler = (sighandler_t) &profil_counter_ushort;
   act.sa_flags = SA_RESTART;
-  sigfillset (&act.sa_mask);
+  __sigfillset (&act.sa_mask);
   if (__sigaction (SIGPROF, &act, &prof_info.saved_action) < 0)
     return -1;
 
