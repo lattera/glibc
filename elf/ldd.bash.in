@@ -114,7 +114,8 @@ case $# in
     exit 1
   elif test -r "$file"; then
     test -x "$file" ||
-    echo 'ldd:' $"warning: you do not have execution permission for" "\`$file'"
+    echo 'ldd:' $"\
+warning: you do not have execution permission for" "\`$file'" >&2
     verify_out=`${RTLD} --verify "$file"`
     case $? in
     0)
@@ -135,7 +136,7 @@ case $# in
       ;;
     esac
   else
-    echo 'ldd:' $"error: you do not have read permission for" "\`$file'"
+    echo 'ldd:' $"error: you do not have read permission for" "\`$file'" >&2
     exit 1
   fi
   exit
@@ -155,7 +156,7 @@ case $# in
       result=1
     elif test -r "$file"; then
       test -x "$file" || echo 'ldd:' $"\
-warning: you do not have execution permission for" "\`$file'"
+warning: you do not have execution permission for" "\`$file'" >&2
       verify_out=`${RTLD} --verify "$file"`
       case $? in
       0)
@@ -177,7 +178,7 @@ warning: you do not have execution permission for" "\`$file'"
 	;;
       esac
     else
-      echo 'ldd:' $"error: you do not have read permission for" "\`$file'"
+      echo 'ldd:' $"error: you do not have read permission for" "\`$file'" >&2
       result=1
     fi
   done

@@ -34,9 +34,7 @@ static int makesymlink __P ((const char *src, const char *dest));
 static int makesymlinks __P ((const char *file));
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   switch (argc)
     {
@@ -162,7 +160,7 @@ makesymlink (src, dest)
       fprintf (stderr, "%s: invalid destination: %s\n", dest, error);
       return -1;
     }
-       
+
 #ifdef S_ISLNK
   if (symlink (src, dest) == 0)
 #else

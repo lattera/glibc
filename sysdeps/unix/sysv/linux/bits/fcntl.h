@@ -74,6 +74,11 @@
 # define F_GETOWN	9	/* Set owner of socket (receiver of SIGIO).  */
 #endif
 
+#ifdef __USE_GNU
+# define F_SETSIG	10	/* Set number of signal to be sent.  */
+# define F_GETSIG	11	/* Get number of signal to be sent.  */
+#endif
+
 /* For F_[GET|SET]FL.  */
 #define FD_CLOEXEC	1	/* actually anything with low bit set goes */
 

@@ -112,7 +112,8 @@ Try \`ldd --help' for more information."
   else
     if test -r "$file"; then
       test -x "$file" ||
-	echo "ldd: warning: you do not have execution permission for \`$file'"
+	echo "\
+ldd: warning: you do not have execution permission for \`$file'" >&2
       verify_out=`${RTLD} --verify "$file"`
       case $? in
       0)
@@ -132,7 +133,7 @@ Try \`ldd --help' for more information."
 	;;
       esac
     else
-      echo "ldd: error: you do not have read permission for \`$file'"
+      echo "ldd: error: you do not have read permission for \`$file'" >&2
       exit 1
     fi
   fi
@@ -155,7 +156,7 @@ Try \`ldd --help' for more information."
     else
       if test -r "$file"; then
 	test -x "$file" || echo "\
-ldd: warning: you do not have execution permission for \`$file'"
+ldd: warning: you do not have execution permission for \`$file'" >&2
 	verify_out=`${RTLD} --verify "$file"`
 	case $? in
 	0)
@@ -175,7 +176,7 @@ ldd: warning: you do not have execution permission for \`$file'"
 	  ;;
 	esac
       else
-	echo "ldd: error: you do not have read permission for \`$file'"
+	echo "ldd: error: you do not have read permission for \`$file'" >&2
 	result=1
       fi
     fi

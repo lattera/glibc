@@ -253,7 +253,9 @@ extern char *alloca ();
 # define readdir(str) __readdir (str)
 # define getpwnam_r(name, bufp, buf, len, res) \
    __getpwnam_r (name, bufp, buf, len, res)
-# define __stat(fname, buf) __xstat (_STAT_VER, fname, buf)
+# ifndef __stat
+#  define __stat(fname, buf) __xstat (_STAT_VER, fname, buf)
+# endif
 #endif
 
 #if !(defined STDC_HEADERS || defined __GNU_LIBRARY__)
@@ -291,7 +293,7 @@ inline
 const char *next_brace_sub __P ((const char *begin));
 static int glob_in_dir __P ((const char *pattern, const char *directory,
 			     int flags,
-			     int (*errfunc) __P ((const char *, int)),
+			     int (*errfunc) (const char *, int),
 			     glob_t *pglob));
 static int prefix_array __P ((const char *prefix, char **array, size_t n));
 static int collated_compare __P ((const __ptr_t, const __ptr_t));

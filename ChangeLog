@@ -1,3 +1,66 @@
+1998-08-20 16:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldd.sh.in: Redirect warnings and error messages to stderr.
+	* elf/ldd.bash.in: Likewise.
+
+	* elf/sln.c: Avoid warning for no main prototype.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Remove O_READ and
+	O_WRITE.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Add F_SETSIG and
+	F_GETSIG.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+
+1998-08-20  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/fpu/ieee754.h: Move to...
+	* sysdeps/arm/ieee754.h: ... here.
+
+	* sysdeps/arm/__longjmp.S: Put return value in correct register.
+	Don't set the condition flags unnecessarily.
+	* sysdeps/arm/fpu/__longjmp.S: Likewise.  Restore floating point
+	registers correctly.
+
+	* sysdeps/arm/dl-machine.h: Fix problems with profiling code
+	(patch from Scott Bambrough).
+
+	* sysdeps/arm/sysdep.h (CALL_MCOUNT): Add missing semicolons.
+
+	* csu/initfini.c (_init): Don't check whether __gmon_start__ is
+	NULL, just call it unconditionally.
+	(__gmon_start__): Provide stub version as a weak symbol.
+
+1998-07-30  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/init-first.h: New file (from patch
+	by Scott Bambrough)
+
+	* sysdeps/unix/sysv/linux/arm/errlist.c: New file; ARM tools don't
+	like `@' in .type directives.
+
+	* sysdeps/arm/bsd-setjmp.S: Use PLT for procedure call.
+	* sysdeps/arm/bsd-_setjmp.S: Likewise.
+
+	* sysdeps/arm/dl-machine.h: Set __libc_stack_end.
+
+1998-08-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (F_SETOWN): Correct value.
+	(F_GETOWN): Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/siginfo.h (SI_SIGIO): Add it (from
+	Linux 2.1.117).
+
+1998-08-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c [_LIBC]: Define __stat only if not
+	already defined.
+
 1998-08-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/features.h: Define __USE_EXTERN_INLINES for recent
@@ -18,35 +81,35 @@
 	* sysdeps/generic/bits/glob.c [_LIBC]: Define __stat using __xstat
 	to allow compilation without optimization.
 
-1998-08-14  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
- 
-	* nis/nss_compat/compat-grp.c: Set errno to ENOENT if we have no 
-	more entries. 
-	* nis/nss_compat/compat-initgroups.c: Likewise. 
-	* nis/nss_compat/compat-pwd.c: Likewise. 
-	* nis/nss_compat/compat-spwd.c: Likewise. 
-	* nis/nss_nis/nis-alias.c: Likewise. 
-	* nis/nss_nis/nis-ethers.c: Likewise. 
-	* nis/nss_nis/nis-grp.c: Likewise. 
-	* nis/nss_nis/nis-hosts.c: Likewise. 
-	* nis/nss_nis/nis-initgroups.c: Likewise. 
-	* nis/nss_nis/nis-network.c: Likewise. 
-	* nis/nss_nis/nis-proto.c: Likewise. 
-	* nis/nss_nis/nis-pwd.c: Likewise. 
-	* nis/nss_nis/nis-rpc.c: Likewise. 
-	* nis/nss_nis/nis-service.c: Likewise. 
-	* nis/nss_nis/nis-spwd.c: Likewise. 
- 
-	* nis/rpcsvc/yp.h: Generate new without 1024 byte limits. 
- 
-	* nis/ypclnt.c: Try binding dir only first time, could be to old. 
- 
-	* nis/yp_xdr.c: Remove 1024 byte limit. 
-	* nis/ypupdate_xdr.c: Likewise. 
- 
-	* nis/nss_nis/nis-publickey.c: Make sure, nobody could send 
-	wrong data. 
- 
+1998-08-14  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: Set errno to ENOENT if we have no
+	more entries.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+
+	* nis/rpcsvc/yp.h: Generate new without 1024 byte limits.
+
+	* nis/ypclnt.c: Try binding dir only first time, could be to old.
+
+	* nis/yp_xdr.c: Remove 1024 byte limit.
+	* nis/ypupdate_xdr.c: Likewise.
+
+	* nis/nss_nis/nis-publickey.c: Make sure, nobody could send
+	wrong data.
+
 1998-08-18  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Rules (binaries-static, binaries-shared static pattern rules):

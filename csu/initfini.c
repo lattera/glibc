@@ -73,8 +73,7 @@ _init (void)
      would come first, and not be profiled.  */
   extern void __gmon_start__ (void) __attribute__ ((weak)); /*weak_extern (__gmon_start__);*/
 
-  if (__gmon_start__)
-    __gmon_start__ ();
+  __gmon_start__ ();
 
   asm ("ALIGN");
   asm("END_INIT");
@@ -84,6 +83,16 @@ _init (void)
   SECTION(".init");
 }
 asm ("END_INIT");
+
+/* This version of __gmon_start__ is used if no other is found.  By providing
+   a default function we avoid the need to test whether the pointer is NULL,
+   which can be painful on some machines.  */
+
+void __attribute__ ((weak))
+__gmon_start__ (void)
+{
+  /* do nothing */
+}
 
 /* End of the _init epilog, beginning of the _fini prolog. */
 asm ("\n/*@_init_EPILOG_ENDS*/");

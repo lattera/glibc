@@ -25,9 +25,9 @@
 /* __longjmp(jmpbuf, val) */
 
 ENTRY (__longjmp)
-	movs	r2, r0
+	mov	ip, r0
 	movs	r0, r1		/* get the return value in place */
-	moveq	r1, #1		/* can't let setjmp() return zero! */
+	moveq	r0, #1		/* can't let setjmp() return zero! */
 
-	LOADREGS(ia, r2, {v1-v6, sl, fp, sp, pc})
+	LOADREGS(ia, ip, {v1-v6, sl, fp, sp, pc})
 END (__longjmp)

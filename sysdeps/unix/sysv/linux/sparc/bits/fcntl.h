@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/SPARC.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,6 @@
 #define _FCNTLBITS_H	1
 
 #include <sys/types.h>
-
-/* In GNU, read and write are bits (unlike BSD). */
-#ifdef __USE_GNU
-# define O_READ		O_RDONLY /* Open for reading. */
-# define O_WRITE	O_WRONLY /* Open for writing. */
-#endif
 
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
@@ -60,6 +54,11 @@
 #define F_GETLK		7	/* Get record locking info.  */
 #define F_SETLK		8	/* Set record locking info (non-blocking).  */
 #define F_SETLKW	9	/* Set record locking info (blocking).  */
+
+#ifdef __USE_GNU
+# define F_SETSIG	10	/* Set number of signal to be sent.  */
+# define F_GETSIG	11	/* Get number of signal to be sent.  */
+#endif
 
 /* XXX missing */
 #define F_GETLK64	7	/* Get record locking info.  */
