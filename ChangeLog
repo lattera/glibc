@@ -1,3 +1,8 @@
+2003-03-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/bits/atomic.h [! __powerpc64__]
+	(__arch_atomic_decrement_if_positive_64): Fix bogus definition.
+
 2003-03-28  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/mips/sysdep.S: Include sys/asm.h.
