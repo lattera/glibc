@@ -43,6 +43,8 @@ __btowc (c)
   /* Tell where we want the result.  */
   data.outbuf = (char *) buf;
   data.outbufend = data.outbuf + sizeof (wchar_t);
+  data.invocation_counter = 0;
+  data.internal_use = 1;
   data.is_last = 1;
   data.statep = &data.__state;
 

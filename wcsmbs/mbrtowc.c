@@ -45,6 +45,8 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   /* Tell where we want the result.  */
   data.outbuf = outbuf;
   data.outbufend = outbuf + sizeof (wchar_t);
+  data.invocation_counter = 0;
+  data.internal_use = 1;
   data.is_last = 1;
   data.statep = ps ?: &state;
 

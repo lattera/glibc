@@ -46,6 +46,8 @@ __mbsrtowcs (dst, src, len, ps)
   int status;
 
   /* Tell where we want the result.  */
+  data.invocation_counter = 0;
+  data.internal_use = 1;
   data.is_last = 1;
   data.statep = ps ?: &state;
 

@@ -38,6 +38,8 @@ wctob (c)
   /* Tell where we want the result.  */
   data.outbuf = buf;
   data.outbufend = buf + MB_LEN_MAX;
+  data.invocation_counter = 0;
+  data.internal_use = 1;
   data.is_last = 1;
   data.statep = &data.__state;
 

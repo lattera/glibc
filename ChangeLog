@@ -1,7 +1,17 @@
 1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/loop.c: Let user add code to use and set paramaters.
+
+	* iconvdata/iso-2022-kr.c: Correct to-loop.
+
 	* iconvdata/iso-2022-kr.c (PREPARE_LOOP): Use correct variable to
 	point to output buffer.
+
+	* iconvdata/ksc5601.h (ksc5601_to_ucs4): Use correct value to find
+	hanja.
+
+	* iconvdata/TESTS: Add ISO-2022-KR test.
+	* iconvdata/testdata/ISO-2022-KR: New file.
 
 1998-05-15 21:07  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -9,6 +19,14 @@
 	and internal_use.
 	* iconv/gconv_open.c (__gconv_open): Initialize invocation_counter
 	and internal_use.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowcs.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
 	* iconv/skeleton.c: Increment invocation_counter.
 	* iconvdata/iso-2022-kr.c: When used in iconv() emit designator
 	sequence first.

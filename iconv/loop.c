@@ -44,7 +44,10 @@
      BODY		this is supposed to expand to the body of the loop.
 			The user must provide this.
 
-     EXTRA_LOOP_DECLS	Extra arguments passed from converion loop call.
+     EXTRA_LOOP_DECLS	extra arguments passed from converion loop call.
+
+     INIT_PARAMS	code to define and initialize variables from params.
+     UPDATE_PARAMS	code to store result in params.
 */
 
 #include <gconv.h>
@@ -134,6 +137,10 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
   size_t min_out_rounds = (outend - outptr) / MAX_NEEDED_OUTPUT;
   size_t min_rounds = MIN (min_in_rounds, min_out_rounds);
 
+#ifdef INIT_PARAMS
+  INIT_PARAMS;
+#endif
+
 #undef NEED_LENGTH_TEST
 #define NEED_LENGTH_TEST	0
   while (min_rounds-- > 0)
@@ -195,7 +202,7 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	  /* Here comes the body the user provides.  It can stop with
 	     RESULT set to GCONV_INCOMPLETE_INPUT (if the size of the
 	     input characters vary in size), GCONV_ILLEGAL_INPUT, or
-	     GCONV_FULL_OUTPUT (if the output characters vary in size.  */
+	     GCONV_FULL_OUTPUT (if the output characters vary in size).  */
 	  BODY
 
 	  /* If necessary count the successful conversion.  */
@@ -216,6 +223,9 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
   /* Update the pointers pointed to by the parameters.  */
   *inptrp = inptr;
   *outptrp = outptr;
+#ifdef UPDATE_PARAMS
+  UPDATE_PARAMS;
+#endif
 
   return result;
 }
@@ -232,3 +242,5 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 #undef BODY
 #undef LOOPFCT
 #undef EXTRA_LOOP_DECLS
+#undef INIT_PARAMS
+#undef UPDATE_PARAMS

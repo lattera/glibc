@@ -73,7 +73,7 @@ ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   if (idx >= 1410 && idx < 3760)
     return (__ksc5601_hangul_to_ucs[idx - 1410]
 	    ?: ((*s) -= 2, UNKNOWN_10646_CHAR));
-  else if (idx > 3854)
+  else if (idx >= 3854)
     /* Hanja : row 42 - row 93 : 3854 = 94 * (42-1) */
    return (__ksc5601_hanja_to_ucs[idx - 3854]
 	   ?: ((*s) -= 2, UNKNOWN_10646_CHAR));

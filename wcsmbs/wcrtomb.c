@@ -45,6 +45,8 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   /* Tell where we want the result.  */
   data.outbuf = s;
   data.outbufend = s + MB_CUR_MAX;
+  data.invocation_counter = 0;
+  data.internal_use = 1;
   data.is_last = 1;
   data.statep = ps ?: &state;
 
