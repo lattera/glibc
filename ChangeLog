@@ -1,5 +1,6 @@
 2004-05-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #150]
 	* sysdeps/generic/strtol_l.c (DEF): Use ".gnu.linkonce.r."
 	instead of ".gnu.linkonce.ro." as the prefix for linkonce
 	read-only section name.
