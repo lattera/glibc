@@ -406,7 +406,7 @@ ifndef +link-bounded
 	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),b$(static-start-installed-name)) \
 	      $(+preinit) $(+prector) \
-	      $(filter-out $(addprefix $(csu-objpfx),start.o \
+	      $(filter-out $(addprefix $(csu-objpfx),start.ob \
 						     $(start-installed-name))\
 			   $(+preinit) $(link-extra-libs-bounded) \
 			   $(common-objpfx)libc% $(+postinit),$^) \
