@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Linux/SPARC version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <signal.h>
 
 void
-profil_counter (int signo, __siginfo_t si)
+profil_counter (int signo, __siginfo_t *si)
 {
-  profil_count ((void *) si.si_regs.pc);
+  profil_count ((void *) si->si_regs.pc);
 }

@@ -1,3 +1,13 @@
+1999-02-03  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S: Set branch
+	prediction correctly.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/profil-counter.h: Signal
+	takes a pointer to __sigcontext_t.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Do a nop after retl.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: Remove fork.S.
+
 1999-02-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* manual/time.texi (General Time String Parsing): Fix typos.  Fix

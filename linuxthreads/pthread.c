@@ -309,7 +309,12 @@ int __pthread_initialize_manager(void)
   __pthread_manager_thread.p_pid = pid;
   /* Make gdb aware of new thread manager */
   if (__pthread_threads_debug && __pthread_sig_debug > 0)
-    raise(__pthread_sig_cancel);
+    {
+      raise(__pthread_sig_debug);
+      /* We suspend ourself and gdb will wake us up when it is
+	 ready to handle us. */
+      suspend(thread_self());
+    }
   /* Synchronize debugging of the thread manager */
   request.req_kind = REQ_DEBUG;
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));

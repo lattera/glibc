@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
 
@@ -20,15 +20,15 @@
 #include <sysdep.h>
 
 ENTRY (__libc_pipe)
-        mov	%o0, %o2            /* Save PIPEDES. */
+	mov	%o0, %o2		/* Save PIPEDES. */
 	LOADSYSCALL(pipe)
 	ta	0x6d
-	bcc,pn	%xcc, 2f
+	bcc,pt	%xcc, 2f
 	 nop
 	SYSCALL_ERROR_HANDLER
 
-2:	st	%o0, [%o2]           /* PIPEDES[0] = %o0; */
-        st	%o1, [%o2 + 4]       /* PIPEDES[1] = %o1; */
+2:	st	%o0, [%o2]		/* PIPEDES[0] = %o0; */
+	st	%o1, [%o2 + 4]		/* PIPEDES[1] = %o1; */
 	retl
 	 clr	%o0
 PSEUDO_END (__libc_pipe)

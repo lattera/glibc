@@ -1,3 +1,14 @@
+1999-02-03  H.J. Lu  <hjl@gnu.org>
+
+	* manager.c (__pthread_manager): Do block __pthread_sig_debug.
+	Don't restart the thread which sent REQ_DEBUG.
+	(pthread_start_thread): Check if __pthread_sig_debug > 0
+	before debugging.
+
+	* pthread.c (__pthread_initialize_manager): Suspend ourself
+	after sending __pthread_sig_debug to gdb instead of
+	__pthread_sig_cancel.
+
 1999-01-24  H.J. Lu  <hjl@gnu.org>
 
 	* manager.c (__pthread_manager): Delete __pthread_sig_debug

@@ -104,8 +104,6 @@ int __pthread_manager(void *arg)
   /* Block all signals except __pthread_sig_cancel and SIGTRAP */
   sigfillset(&mask);
   sigdelset(&mask, __pthread_sig_cancel); /* for thread termination */
-  if (__pthread_sig_debug > 0)
-    sigdelset(&mask, __pthread_sig_debug); /* for debugging purposes */
   sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
   sigprocmask(SIG_SETMASK, &mask, NULL);
   /* Raise our priority to match that of main thread */
@@ -162,10 +160,10 @@ int __pthread_manager(void *arg)
         sem_post(request.req_args.post);
         break;
       case REQ_DEBUG:
-        /* Make gdb aware of new thread */
+	/* Make gdb aware of new thread and gdb will restart the
+	   new thread when it is ready to handle the new thread. */
 	if (__pthread_threads_debug && __pthread_sig_debug > 0)
 	  raise(__pthread_sig_debug);
-        restart(request.req_thread);
         break;
       }
     }
@@ -195,7 +193,7 @@ static int pthread_start_thread(void *arg)
 			 THREAD_GETMEM(self, p_start_args.schedpolicy),
                          &self->p_start_args.schedparam);
   /* Make gdb aware of new thread */
-  if (__pthread_threads_debug) {
+  if (__pthread_threads_debug && __pthread_sig_debug > 0) {
     request.req_thread = self;
     request.req_kind = REQ_DEBUG;
     __libc_write(__pthread_manager_request,
