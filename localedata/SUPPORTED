@@ -2,7 +2,22 @@
 # If you have any additions please use the glibcbug script to send an
 # appropriate message.
 af_ZA ISO-8859-1
+ar_AE ISO-8859-6
+ar_BH ISO-8859-6
+ar_DZ ISO-8859-6
+ar_EG ISO-8859-6
+ar_JO ISO-8859-6
+ar_KW ISO-8859-6
+ar_LB ISO-8859-6
+ar_LY ISO-8859-6
+ar_MA ISO-8859-6
+ar_OM ISO-8859-6
+ar_QA ISO-8859-6
 ar_SA ISO-8859-6
+ar_SD ISO-8859-6
+ar_SY ISO-8859-6
+ar_TN ISO-8859-6
+ar_YE ISO-8859-6
 bg_BG CP1251
 ca_ES ISO-8859-1
 ca_ES@euro ISO-8859-15
