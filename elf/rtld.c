@@ -1759,7 +1759,8 @@ cannot allocate TLS data structures for initial thread");
 	prelinked = true;
 
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-	_dl_printf ("\nprelink checking: %s\n", prelinked ? "ok" : "failed");
+	_dl_debug_printf ("\nprelink checking: %s\n",
+			  prelinked ? "ok" : "failed");
     }
 
 

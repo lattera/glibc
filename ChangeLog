@@ -1,3 +1,8 @@
+2004-10-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Use _dl_debug_printf instead of _dl_printf
+	for prelink message.
+
 2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Include dl-sysdep.h.
