@@ -1,3 +1,8 @@
+2000-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/shm.h (struct shmid_ds): Correct names of
+	with size of dynamic sectionelements.
+
 2000-03-29  Geoff Clare  <gwc@unisoft.com>
 
 	* stdlib/strfmon.c: Corrected problems with the code that
