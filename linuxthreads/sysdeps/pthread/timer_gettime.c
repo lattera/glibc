@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -54,7 +54,13 @@ timer_gettime (timerid, value)
       if (armed)
 	{
 	  clock_gettime (clock, &now);
-	  timespec_sub (&value->it_value, &expiry, &now);
+	  if (timespec_compare (&now, &expiry) < 0)
+	    timespec_sub (&value->it_value, &expiry, &now);
+	  else
+	    {
+	      value->it_value.tv_sec = 0;
+	      value->it_value.tv_nsec = 0;
+	    }
 	}
       else
 	{

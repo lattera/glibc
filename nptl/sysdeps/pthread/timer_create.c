@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -91,9 +91,6 @@ timer_create (clock_id, evp, timerid)
   switch (__builtin_expect (newtimer->event.sigev_notify, SIGEV_SIGNAL))
     {
     case SIGEV_NONE:
-      /* This is a strange choice!  */
-      break;
-
     case SIGEV_SIGNAL:
       /* We have a global thread for delivering timed signals.
 	 If it is not running, try to start it up.  */

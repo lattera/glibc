@@ -41,6 +41,9 @@ typedef struct
   void *self;		/* Pointer to the thread descriptor.  */
   int multiple_threads;
 } tcbhead_t;
+
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif
 
 

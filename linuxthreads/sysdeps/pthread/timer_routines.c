@@ -1,5 +1,5 @@
 /* Helper code for POSIX timer implementation on LinuxThreads.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -318,7 +318,6 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
   switch (__builtin_expect (timer->event.sigev_notify, SIGEV_SIGNAL))
     {
     case SIGEV_NONE:
-      assert (! "timer_create should never have created such a timer");
       break;
 
     case SIGEV_SIGNAL:
@@ -517,10 +516,15 @@ thread_attr_compare (const pthread_attr_t *left, const pthread_attr_t *right)
 {
   return (left->__detachstate == right->__detachstate
 	  && left->__schedpolicy == right->__schedpolicy
+	  && left->__guardsize == right->__guardsize
 	  && (left->__schedparam.sched_priority
 	      == right->__schedparam.sched_priority)
 	  && left->__inheritsched == right->__inheritsched
-	  && left->__scope == right->__scope);
+	  && left->__scope == right->__scope
+	  && left->__stacksize == right->__stacksize
+	  && left->__stackaddr_set == right->__stackaddr_set
+	  && (left->__stackaddr_set
+	      || left->__stackaddr == right->__stackaddr));
 }
 
 

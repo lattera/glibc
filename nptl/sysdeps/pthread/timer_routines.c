@@ -1,5 +1,5 @@
 /* Helper code for POSIX timer implementation on NPTL.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -319,7 +319,6 @@ thread_expire_timer (struct thread_node *self, struct timer_node *timer)
   switch (__builtin_expect (timer->event.sigev_notify, SIGEV_SIGNAL))
     {
     case SIGEV_NONE:
-      assert (! "timer_create should never have created such a timer");
       break;
 
     case SIGEV_SIGNAL:
@@ -522,7 +521,15 @@ thread_attr_compare (const pthread_attr_t *left, const pthread_attr_t *right)
   return (ileft->flags == iright->flags
 	  && ileft->schedpolicy == iright->schedpolicy
 	  && (ileft->schedparam.sched_priority
-	      == iright->schedparam.sched_priority));
+	      == iright->schedparam.sched_priority)
+	  && ileft->guardsize == iright->guardsize
+	  && ileft->stackaddr == iright->stackaddr
+	  && ileft->stacksize == iright->stacksize
+	  && ((ileft->cpuset == NULL && iright->cpuset == NULL)
+	      || (ileft->cpuset != NULL && iright->cpuset != NULL
+		  && ileft->cpusetsize == iright->cpusetsize
+		  && memcmp (ileft->cpuset, iright->cpuset,
+			     ileft->cpusetsize) == 0)));
 }
 
 

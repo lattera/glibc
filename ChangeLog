@@ -1,3 +1,12 @@
+2004-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/Makefile (tests): Add tst-mqueue8.
+	* rt/tst-mqueue8.c: New test.
+
+	* sysdeps/unix/sysv/linux/s390/Makefile (librt-routines): Add
+	rt-sysdep.
+	* sysdeps/unix/sysv/linux/s390/rt-sysdep.S: New file.
+
 2004-03-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/wordsize-64/fxstat.c (__fxstat): Don't

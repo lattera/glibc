@@ -57,8 +57,8 @@
 
    sem_wait() and sem_timedwait() are checked in tst-cancel1[2345] tests.
 
-   POSIX message queues aren't implemented yet.  This affects
-     mq_receive()    mq_send()   mq_timedreceive()  mq_timedsend()
+   mq_send(), mq_timedsend(), mq_receive() and mq_timedreceive() are checked
+   in tst-mqueue8{,x} tests.
 
    aio_suspend() is tested in tst-cancel17.
 

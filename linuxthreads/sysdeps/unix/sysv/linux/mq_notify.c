@@ -23,6 +23,7 @@
 #include <mqueue.h>
 #include <pthread.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
