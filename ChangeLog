@@ -1,3 +1,11 @@
+Sun Jul 21 01:44:39 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* locale/programs/locfile.c (write_locale_data): Deal with missing
+	UIO_MAXIOV.
+
+	* sysdeps/mach/hurd/socket.c (socket): Make TYPE an int.
+	* sysdeps/mach/hurd/socketpair.c (socketpair): Likewise.
+
 Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/select.c (__select): Don't poll on the last

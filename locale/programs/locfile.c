@@ -931,7 +931,7 @@ void
 write_locale_data (const char *output_path, const char *category,
 		   size_t n_elem, struct iovec *vec)
 {
-  size_t cnt, step;
+  size_t cnt, step, maxiov;
   int fd;
   char *fname;
 
@@ -959,11 +959,19 @@ write_locale_data (const char *output_path, const char *category,
     }
   free (fname);
 
+#ifdef UIO_MAXIOV
+  maxiov = UIO_MAXIOV;
+#else
+  maxiov = sysconf (_SC_UIO_MAXIOV);
+#endif
+
   /* Write the data using writev.  But we must take care for the
      limitation of the implementation.  */
   for (cnt = 0; cnt < n_elem; cnt += step)
     {
-      step = MIN (UIO_MAXIOV, n_elem - cnt);
+      step = n_elem - cnt;
+      if (maxiov > 0)
+	step = MIN (maxiov, step);
 
       if (writev (fd, &vec[cnt], step) < 0)
 	{

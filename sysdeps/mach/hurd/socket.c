@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    Returns a file descriptor for the new socket, or -1 for errors.  */
 int
 DEFUN(socket, (domain, type, protocol),
-      int domain AND enum __socket_type type AND int protocol)
+      int domain AND int type AND int protocol)
 {
   error_t err;
   socket_t sock, server;
