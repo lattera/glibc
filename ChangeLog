@@ -1,3 +1,7 @@
+2001-06-18  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurd/fd.h (_hurd_fd_error_signal): Change return type to int.
+
 2001-06-20  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/settimeofday.c: Include time.h.
