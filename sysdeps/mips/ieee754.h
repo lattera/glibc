@@ -182,7 +182,6 @@ union ieee854_long_double
 	unsigned int negative:1;
 #endif				/* Little endian.  */
       } ieee_nan;
-#endif
   };
 
 #define IEEE854_LONG_DOUBLE_BIAS 0x3fff /* Added to exponent.  */
