@@ -20,5 +20,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (waitpid, 3)
 	ret
+	.end __waitpid
 
 weak_alias (__waitpid, waitpid)

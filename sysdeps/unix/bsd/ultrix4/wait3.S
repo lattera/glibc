@@ -20,5 +20,6 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (wait3, 3)
 	ret
+	.end __wait3
 
 weak_alias (__wait3, wait3)

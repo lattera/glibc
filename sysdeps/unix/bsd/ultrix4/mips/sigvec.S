@@ -22,3 +22,4 @@ Cambridge, MA 02139, USA.  */
 
 PSEUDO (__raw_sigvec, sigvec, 3)
 	ret
+	.end __raw_sigvec

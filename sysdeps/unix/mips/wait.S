@@ -40,5 +40,6 @@ noerror:
 	nop
 noarg:
 	ret
+	.end __wait
 
 weak_alias (__wait, wait)

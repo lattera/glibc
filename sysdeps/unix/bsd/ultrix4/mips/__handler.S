@@ -111,3 +111,4 @@ ENTRY (__handler)
 	/* Do a sigreturn syscall; this doesn't return.  */
 	la v0, __sigreturn
 	jal ra, v0
+	.end __handler

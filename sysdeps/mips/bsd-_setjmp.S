@@ -25,4 +25,5 @@ Cambridge, MA 02139, USA.  */
 
 ENTRY (setjmp)
 	j C_SYMBOL_NAME (__sigsetjmp)
-	li a1, zero		/* Pass a second argument of zero.  */
+	li a1, $0		/* Pass a second argument of zero.  */
+	.end setjmp

@@ -39,3 +39,4 @@ skip:
 	/* And just kick back a -1.  */
 	j ra
 	li v0, -1
+	.end syscall_error

@@ -23,3 +23,4 @@ Cambridge, MA 02139, USA.  */
 
 SYSCALL__ (getsysinfo, 5)
 	ret
+	.end __getsysinfo

@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 .sdata
 ENTRY(__curbrk)
 	.word __end
-
+	.end __curbrk
 .text
 .set noreorder
 .set noat
@@ -63,5 +63,6 @@ error:	j syscall_error
 	nop
 	nop
 	nop
+	.end __brk
 
 weak_alias (__brk, brk)
