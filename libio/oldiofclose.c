@@ -24,7 +24,7 @@
    General Public License.  */
 
 #include <shlib-compat.h>
-#if SHLIB_COMPAT (libc, GLIBC_2_0)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2.1)
 
 #define _IO_USE_OLD_IO_FILE
 #include "libioP.h"
@@ -46,7 +46,7 @@ _IO_old_fclose (fp)
   if (fp->_vtable_offset == 0)
     return _IO_new_fclose (fp);
 
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (fp->_IO_file_flags & _IO_IS_FILEBUF)
     status = _IO_old_file_close_it (fp);
