@@ -1,3 +1,8 @@
+2003-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf) <_SC_MONOTONIC_CLOCK>:
+	Return -1 instead of 0 if clock_getres failed.
+
 2003-03-27  Roland McGrath  <roland@redhat.com>
 
 	* scripts/abilist.awk: If variable `parse_names' is set, grok the file
