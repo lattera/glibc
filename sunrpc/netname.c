@@ -82,6 +82,7 @@ host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
       p = dot_in_host;
       if (p)
 	{
+	  ++p;
 	  strncpy (domainname, p, MAXHOSTNAMELEN);
 	  domainname[MAXHOSTNAMELEN] = '\0';
 	}

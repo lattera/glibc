@@ -74,8 +74,6 @@ extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
 				    xdrproc_t xargs, caddr_t req,
 				    xdrproc_t xres, caddr_t resp,
 				    u_long flags, nis_cb *cb));
-extern AUTH *authdes_pk_create __P ((const char *, const netobj *, u_int,
-				     struct sockaddr *, des_block *));
 
 /* NIS+ callback */
 extern nis_error __nis_do_callback __P ((struct dir_binding *bptr,

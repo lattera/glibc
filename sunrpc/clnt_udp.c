@@ -439,6 +439,12 @@ clntudp_control (CLIENT *cl, int request, char *info)
 
   switch (request)
     {
+    case CLSET_FD_CLOSE:
+      cu->cu_closeit = TRUE;
+      break;
+    case CLSET_FD_NCLOSE:
+      cu->cu_closeit = FALSE;
+      break;
     case CLSET_TIMEOUT:
       cu->cu_total = *(struct timeval *) info;
       break;
@@ -454,6 +460,54 @@ clntudp_control (CLIENT *cl, int request, char *info)
     case CLGET_SERVER_ADDR:
       *(struct sockaddr_in *) info = cu->cu_raddr;
       break;
+    case CLGET_FD:
+      *(int *)info = cu->cu_sock;
+      break;
+    case CLGET_XID:
+      /*
+       * use the knowledge that xid is the
+       * first element in the call structure *.
+       * This will get the xid of the PREVIOUS call
+       */
+      *(u_long *)info = ntohl(*(u_long *)cu->cu_outbuf);
+      break;
+    case CLSET_XID:
+      /* This will set the xid of the NEXT call */
+      *(u_long *)cu->cu_outbuf =  htonl(*(u_long *)info - 1);
+      /* decrement by 1 as clntudp_call() increments once */
+    case CLGET_VERS:
+      /*
+       * This RELIES on the information that, in the call body,
+       * the version number field is the fifth field from the
+       * begining of the RPC header. MUST be changed if the
+       * call_struct is changed
+       */
+      *(u_long *)info = ntohl(*(u_long *)(cu->cu_outbuf +
+					  4 * BYTES_PER_XDR_UNIT));
+      break;
+    case CLSET_VERS:
+      *(u_long *)(cu->cu_outbuf + 4 * BYTES_PER_XDR_UNIT)
+	= htonl(*(u_long *)info);
+      break;
+    case CLGET_PROG:
+      /*
+       * This RELIES on the information that, in the call body,
+       * the program number field is the  field from the
+       * begining of the RPC header. MUST be changed if the
+       * call_struct is changed
+       */
+      *(u_long *)info = ntohl(*(u_long *)(cu->cu_outbuf +
+					  3 * BYTES_PER_XDR_UNIT));
+      break;
+    case CLSET_PROG:
+      *(u_long *)(cu->cu_outbuf + 3 * BYTES_PER_XDR_UNIT)
+	= htonl(*(u_long *)info);
+      break;
+    /* The following are only possible with TI-RPC */
+    case CLGET_SVC_ADDR:
+    case CLSET_SVC_ADDR:
+    case CLSET_PUSH_TIMOD:
+    case CLSET_POP_TIMOD:
     default:
       return FALSE;
     }

@@ -60,9 +60,9 @@ struct cu_data
  * Calls the pmap service remotely to do the lookup.
  * Returns 0 if no map exists.
  */
-static u_short
-__pmap_getport (struct sockaddr_in *address, u_long program,
-		u_long version, u_int protocol)
+u_short
+__pmap_getnisport (struct sockaddr_in *address, u_long program,
+		   u_long version, u_int protocol)
 {
   const struct timeval timeout = {1, 0};
   const struct timeval tottimeout = {1, 0};
@@ -144,8 +144,9 @@ __nis_findfastest (dir_binding * bind)
 	      inetstr2int (bind->server_val[i].ep.ep_val[j].uaddr);
 	    if (sin.sin_addr.s_addr == 0)
 	      continue;
-	    sin.sin_port = htons (__pmap_getport (&sin, NIS_PROG,
-						  NIS_VERSION, IPPROTO_UDP));
+	    sin.sin_port = htons (__pmap_getnisport (&sin, NIS_PROG,
+						     NIS_VERSION,
+						     IPPROTO_UDP));
 	    if (sin.sin_port == 0)
 	      continue;
 
@@ -184,6 +185,7 @@ __nis_findfastest (dir_binding * bind)
       free (pings);
       return -1;
     }
+  auth_destroy (clnt->cl_auth);
   clnt->cl_auth = authunix_create_default ();
   cu = (struct cu_data *) clnt->cl_private;
   clnt_control (clnt, CLSET_TIMEOUT, (char *) &TIMEOUT00);

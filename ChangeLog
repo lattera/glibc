@@ -1,3 +1,33 @@
+1998-06-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_call.c: Make directory search faster.
+
+	* nis/nis_callback.c: Insert public key of user in callback data.
+
+	* nis/nis_clone_obj.c: Make size from type u_long, not u_int.
+
+	* nis/nis_creategroup.c: Check for NULL pointer, fill in more fields.
+
+	* nis/nis_findserv.c: Rename __pmap_getport to __pmap_getnisport.
+
+	* nis/nis_intern.h: Remove duplicated prototype.
+
+1998-06-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/auth_des.c: Move prototypes from here ...
+	* sunrpc/rpc/auth.h: ... to here.
+
+	* sunrpc/clnt_tcp.c: Add more control flags.
+	* sunrpc/clnt_udp.c: Likewise.
+
+	* sunrpc/netname.c (host2netname): Remove prefixing dot from
+	domainname.
+
+	* sunrpc/rpc/clnt.h: Document, which control flags are not
+	implementable.
+
+	* sunrpc/svcauth_des.c: Use key_decryptsession_pk to avoid deadlock.
+
 1998-05-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/loadlocale.c (_nl_load_locale): Don't allow too small

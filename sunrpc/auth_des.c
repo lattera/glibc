@@ -62,10 +62,6 @@ extern bool_t xdr_authdes_verf (XDR *, struct authdes_verf *);
 /*
  * DES authenticator operations vector
  */
-AUTH *authdes_create (const char *, u_int, struct sockaddr *,
-		      des_block *);
-AUTH *authdes_pk_create (const char *, netobj *, u_int,
-			 struct sockaddr *, des_block *);
 static void authdes_nextverf (AUTH *);
 static bool_t authdes_marshal (AUTH *, XDR *);
 static bool_t authdes_validate (AUTH *, struct opaque_auth *);
@@ -111,7 +107,7 @@ struct ad_private
  */
 AUTH *
 authdes_create (const char *servername, u_int window,
-		struct sockaddr *syncaddr, des_block * ckey)
+		struct sockaddr *syncaddr, des_block *ckey)
   /* servername - network name of server */
   /* window     - time to live */
   /* syncaddr   - optional addr of host to sync with */
@@ -129,8 +125,8 @@ authdes_create (const char *servername, u_int window,
 }
 
 AUTH *
-authdes_pk_create (const char *servername, netobj * pkey, u_int window,
-		   struct sockaddr * syncaddr, des_block * ckey)
+authdes_pk_create (const char *servername, netobj *pkey, u_int window,
+		   struct sockaddr *syncaddr, des_block *ckey)
 {
   AUTH *auth;
   struct ad_private *ad;

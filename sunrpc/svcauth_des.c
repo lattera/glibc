@@ -174,9 +174,19 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
    */
   if (cred->adc_namekind == ADN_FULLNAME)
     {
+      netobj pkey;
+      char pkey_data[1024];
+
       sessionkey = &cred->adc_fullname.key;
-      if (key_decryptsession (cred->adc_fullname.name,
-			      sessionkey) < 0)
+      if (!getpublickey (cred->adc_fullname.name, pkey_data))
+	{
+	  debug("getpublickey");
+	  return AUTH_BADCRED;
+	}
+      pkey.n_bytes = pkey_data;
+      pkey.n_len = strlen (pkey_data) + 1;
+      if (key_decryptsession_pk (cred->adc_fullname.name, &pkey,
+				 sessionkey) < 0)
 	{
 	  debug ("decryptsessionkey");
 	  return AUTH_BADCRED;	/* key not found */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -29,12 +29,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <rpc/key_prot.h>
 #include <rpcsvc/nis.h>
 #include <bits/libc-lock.h>
 
 #include "nis_intern.h"
-
-extern void get_myaddress (struct sockaddr_in *addr);
 
 /* Sorry, we are not able to make this threadsafe. Stupid. But some
    functions doesn't send us a nis_result obj, so we don't have a
@@ -64,6 +63,53 @@ static nis_cb *data;
 
 __libc_lock_define_initialized (static, callback)
 
+
+static char *
+__nis_getpkey(const char *sname)
+{
+  char buf[(strlen (sname) + 1) * 2 + 40];
+  char pkey[HEXKEYBYTES + 1];
+  char *cp, *domain;
+  nis_result *res;
+  u_int len = 0;
+
+  domain = strchr (sname, '.');
+  if (domain == NULL)
+    return NULL;
+
+  /* Remove prefixing dot */
+  ++domain;
+
+  cp = stpcpy (buf, "[cname=");
+  cp = stpcpy (cp, sname);
+  cp = stpcpy (cp, ",auth_type=DES],cred.org_dir.");
+  cp = stpcpy (cp, domain);
+
+  res = nis_list (buf, USE_DGRAM|NO_AUTHINFO|FOLLOW_LINKS|FOLLOW_PATH,
+		  NULL, NULL);
+
+  if (res == NULL)
+    return NULL;
+
+  if (res->status != NIS_SUCCESS)
+    {
+      nis_freeresult (res);
+      return NULL;
+    }
+
+  len = ENTRY_LEN(NIS_RES_OBJECT(res), 3);
+  strncpy (pkey, ENTRY_VAL(NIS_RES_OBJECT(res), 3), len);
+  pkey[len] = '\0';
+  cp = strchr (pkey, ':');
+  if (cp != NULL)
+    *cp = '\0';
+
+  nis_freeresult (res);
+
+  return strdup (pkey);
+}
+
+
 static bool_t xdr_cback_data (XDR *, cback_data *);
 
 static void
@@ -82,12 +128,11 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
   switch (rqstp->rq_proc)
     {
     case NULLPROC:
-      (void) svc_sendreply (transp, (xdrproc_t) xdr_void, (char *) NULL);
+      svc_sendreply (transp, (xdrproc_t) xdr_void, (char *) NULL);
       return;
 
     case CBPROC_RECEIVE:
       {
-	char name[NIS_MAXNAMELEN + 1];
 	u_long i;
 
 	xdr_argument = (xdrproc_t) xdr_cback_data;
@@ -101,13 +146,18 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
 	bool_result = FALSE;
 	for (i = 0; i < argument.cbproc_receive_1_arg.entries.entries_len; ++i)
 	  {
-	    snprintf (name, NIS_MAXNAMELEN, "%s.%s",
-	      argument.cbproc_receive_1_arg.entries.entries_val[i]->zo_name,
-	    argument.cbproc_receive_1_arg.entries.entries_val[i]->zo_domain);
+#define cbproc_entry(a) argument.cbproc_receive_1_arg.entries.entries_val[a]
+	    char name[strlen (cbproc_entry(i)->zo_name) +
+		      strlen (cbproc_entry(i)->zo_domain) + 3];
+	    char *cp;
 
-	    if ((data->callback)
-		(name, argument.cbproc_receive_1_arg.entries.entries_val[i],
-		 data->userdata))
+	    cp = stpcpy (name, cbproc_entry(i)->zo_name);
+	    *cp++ = '.';
+	    cp = stpcpy (cp, cbproc_entry(i)->zo_domain);
+
+	    fprintf (stderr, "name=%s\n", name);
+
+	    if ((data->callback) (name, cbproc_entry(i), data->userdata))
 	      {
 		bool_result = TRUE;
 		data->nomore = 1;
@@ -273,17 +323,32 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
       syslog (LOG_ERR, "NIS+: out of memory allocating callback");
       return (NULL);
     }
-  cb->serv->name = strdup (nis_local_host ());
+  cb->serv->name = strdup (nis_local_principal ());
   cb->serv->ep.ep_val = (endpoint *) calloc (2, sizeof (endpoint));
   cb->serv->ep.ep_len = 1;
   cb->serv->ep.ep_val[0].family = strdup ("inet");
   cb->callback = callback;
   cb->userdata = userdata;
 
-  /* XXX Sometimes, we should add the public key of the user here ! */
-  cb->serv->key_type = NIS_PK_NONE;
-  cb->serv->pkey.n_bytes = NULL;
-  cb->serv->pkey.n_len = 0;
+  if ((flags & NO_AUTHINFO) && key_secretkey_is_set ())
+    {
+      cb->serv->key_type = NIS_PK_NONE;
+      cb->serv->pkey.n_bytes = NULL;
+      cb->serv->pkey.n_len = 0;
+    }
+  else
+    {
+      if ((cb->serv->pkey.n_bytes = __nis_getpkey (cb->serv->name)) == NULL)
+	{
+	  cb->serv->pkey.n_len = 0;
+	  cb->serv->key_type = NIS_PK_NONE;
+	}
+      else
+	{
+	  cb->serv->key_type = NIS_PK_DH;
+	  cb->serv->pkey.n_len = strlen(cb->serv->pkey.n_bytes);
+	}
+    }
 
   if (flags & USE_DGRAM)
     {

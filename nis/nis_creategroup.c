@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -45,16 +45,23 @@ nis_creategroup (const_nis_name group, u_long flags)
 	return NIS_BADNAME;
 
       obj = calloc (1, sizeof (nis_object));
+      if (obj == NULL)
+	return NIS_NOMEMORY;
+
+      obj->zo_name = strdup (leafbuf);
       obj->zo_owner = strdup (__nis_default_owner (NULL));
       obj->zo_group = strdup (__nis_default_group (NULL));
+      obj->zo_domain = strdup (domainbuf);
       obj->zo_access = __nis_default_access (NULL, 0);
-      obj->zo_ttl = __nis_default_ttl (0);
+      obj->zo_ttl = 60 * 60;
       obj->zo_data.zo_type = NIS_GROUP_OBJ;
       obj->zo_data.objdata_u.gr_data.gr_flags = flags;
       obj->zo_data.objdata_u.gr_data.gr_members.gr_members_len = 0;
       obj->zo_data.objdata_u.gr_data.gr_members.gr_members_val = NULL;
 
       res = nis_add (buf, obj);
+      if (res == NULL)
+	return NIS_NOMEMORY;
       status = res->status;
       nis_freeresult (res);
       nis_free_object (obj);

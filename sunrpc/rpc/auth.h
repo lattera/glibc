@@ -166,6 +166,9 @@ extern AUTH *authnone_create __P ((void));
 extern AUTH *authdes_create __P ((const char *__servername, u_int __window,
 				  struct sockaddr *__syncaddr,
 				  des_block *__ckey));
+extern AUTH *authdes_pk_create __P ((const char *, netobj *, u_int,
+				     struct sockaddr *, des_block *));
+
 
 #define AUTH_NONE	0		/* no authentication */
 #define	AUTH_NULL	0		/* backward compatibility */

@@ -211,23 +211,27 @@ struct CLIENT {
 
 /*
  * control operations that apply to all transports
+ *
+ * Note: options marked XXX are no-ops in this implementation of RPC.
+ * The are present in TI-RPC but can't be implemented here since they
+ * depend on the presence of STREAMS/TLI, which we don't have.
  */
-#define CLSET_TIMEOUT		1	/* set timeout (timeval) */
-#define CLGET_TIMEOUT		2	/* get timeout (timeval) */
-#define CLGET_SERVER_ADDR	3	/* get server's address (sockaddr) */
-#define CLGET_FD                6       /* get connections file descriptor */
-#define CLGET_SVC_ADDR          7       /* get server's address (netbuf) */
-#define CLSET_FD_CLOSE          8       /* close fd while clnt_destroy */
-#define CLSET_FD_NCLOSE         9       /* Do not close fd while clnt_destroy*/
-#define CLGET_XID               10      /* Get xid */
-#define CLSET_XID               11      /* Set xid */
-#define CLGET_VERS              12      /* Get version number */
-#define CLSET_VERS              13      /* Set version number */
-#define CLGET_PROG              14      /* Get program number */
-#define CLSET_PROG              15      /* Set program number */
-#define CLSET_SVC_ADDR          16      /* get server's address (netbuf) */
-#define CLSET_PUSH_TIMOD        17      /* push timod if not already present */
-#define CLSET_POP_TIMOD         18      /* pop timod */
+#define CLSET_TIMEOUT        1    /* set timeout (timeval) */
+#define CLGET_TIMEOUT        2    /* get timeout (timeval) */
+#define CLGET_SERVER_ADDR    3    /* get server's address (sockaddr) */
+#define CLGET_FD             6    /* get connections file descriptor */
+#define CLGET_SVC_ADDR       7    /* get server's address (netbuf)      XXX */
+#define CLSET_FD_CLOSE       8    /* close fd while clnt_destroy */
+#define CLSET_FD_NCLOSE      9    /* Do not close fd while clnt_destroy*/
+#define CLGET_XID            10   /* Get xid */
+#define CLSET_XID            11   /* Set xid */
+#define CLGET_VERS           12   /* Get version number */
+#define CLSET_VERS           13   /* Set version number */
+#define CLGET_PROG           14   /* Get program number */
+#define CLSET_PROG           15   /* Set program number */
+#define CLSET_SVC_ADDR       16   /* get server's address (netbuf)      XXX */
+#define CLSET_PUSH_TIMOD     17   /* push timod if not already present  XXX */
+#define CLSET_POP_TIMOD      18   /* pop timod                          XXX */
 /*
  * Connectionless only control operations
  */

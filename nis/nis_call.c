@@ -31,6 +31,9 @@
 static struct timeval RPCTIMEOUT = {10, 0};
 static struct timeval UDPTIMEOUT = {5, 0};
 
+extern u_short __pmap_getnisport (struct sockaddr_in *address, u_long program,
+				  u_long version, u_int protocol);
+
 unsigned long
 inetstr2int (const char *str)
 {
@@ -134,6 +137,11 @@ __bind_connect (dir_binding *dbp)
   if (dbp->addr.sin_addr.s_addr == 0)
     return NIS_FAIL;
 
+  /* Check, if the host is online and rpc.nisd is running. Much faster
+     then the clnt*_create functions: */
+  if (__pmap_getnisport (&dbp->addr, NIS_PROG, NIS_VERSION, IPPROTO_UDP) == 0)
+    return NIS_RPCERROR;
+
   dbp->socket = RPC_ANYSOCK;
   if (dbp->use_udp)
     dbp->clnt = clntudp_create (&dbp->addr, NIS_PROG, NIS_VERSION,
@@ -152,7 +160,7 @@ __bind_connect (dir_binding *dbp)
 
   if (dbp->use_auth)
     {
-      if (serv->key_type == NIS_PK_DH)
+      if (serv->key_type == NIS_PK_DH && key_secretkey_is_set ())
 	{
 	  char netname[MAXNETNAMELEN+1];
 	  char *p;
@@ -220,6 +228,7 @@ __bind_create (const nis_server *serv_val, u_int serv_len, u_long flags,
   else
     dbp->master_only = FALSE;
 
+  /* We try the first server */
   dbp->trys = 1;
 
   for (i = 0; i < serv_len; ++i)
@@ -317,7 +326,6 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 
       if (result != RPC_SUCCESS)
 	{
-	  clnt_perror (dbp->clnt, "__do_niscall2: clnt_call");
 	  __bind_destroy (dbp);
 	  retcode = NIS_RPCERROR;
 	}
@@ -424,31 +432,8 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 {
   fd_result *fd_res;
   XDR xdrs;
-  char domain [strlen (name) + 3];
 
-  nis_domain_of_r (name, domain, sizeof (domain));
-  if (strncmp (domain, "org_dir.", 8) == 0)
-    {
-      char tmp[strlen (name) + 3];
-
-      nis_domain_of_r (domain, tmp, sizeof (tmp));
-      strcpy (domain, tmp);
-    }
-  else
-    if (strncmp (domain, "groups_dir.", 11) == 0)
-      {
-	char tmp[strlen (name) + 3];
-
-	nis_domain_of_r (domain, tmp, sizeof (tmp));
-	strcpy (domain, tmp);
-      }
-    else
-      {
-	/* We have no grous_dir or org_dir, so try the complete name */
-	strcpy (domain, name);
-      }
-
-  switch (nis_dir_cmp (domain, dir->do_name))
+  switch (nis_dir_cmp (name, dir->do_name))
     {
     case SAME_NAME:
       *status = NIS_SUCCESS;
@@ -469,9 +454,9 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	*status = fd_res->status;
 	if (fd_res->status != NIS_SUCCESS)
 	  {
-	    nis_free_directory (dir);
+	    /* Try the current directory obj, maybe it works */
 	    __free_fdresult (fd_res);
-	    return NULL;
+	    return dir;
 	  }
 	obj = calloc(1, sizeof(directory_obj));
 	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
@@ -498,8 +483,12 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
       {
 	directory_obj *obj;
 	char leaf [strlen (name) + 3];
+	char domain [strlen (name) + 3];
 	char ndomain [strlen (name) + 3];
 	char *cp;
+	u_int run = 0;
+
+	strcpy (domain, name);
 
 	do
 	  {
@@ -511,8 +500,16 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	    nis_leaf_of_r (domain, leaf, sizeof (leaf));
 	    nis_domain_of_r (domain, ndomain, sizeof (ndomain));
 	    strcpy (domain, ndomain);
+	    ++run;
 	  }
 	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
+
+	if (run == 1)
+	  {
+	    /* We have found the directory above. Use it. */
+	    return dir;
+	  }
+
 	cp = strchr (leaf, '\0');
 	*cp++ = '.';
 	strcpy (cp, domain);
@@ -521,9 +518,9 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
 	*status = fd_res->status;
 	if (fd_res->status != NIS_SUCCESS)
 	  {
-	    nis_free_directory (dir);
+	    /* Try the current directory object, maybe it works */
 	    __free_fdresult (fd_res);
-	    return NULL;
+	    return dir;
 	  }
 	obj = calloc(1, sizeof(directory_obj));
 	xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
@@ -550,6 +547,46 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags,
   return NULL;
 }
 
+/* We try to query the current server for the searched object,
+   maybe he know about it ? */
+static directory_obj *
+first_shoot (const_nis_name name, directory_obj *dir, u_long flags)
+{
+  directory_obj *obj;
+  fd_result *fd_res;
+  XDR xdrs;
+  char domain [strlen (name) + 3];
+
+  if (nis_dir_cmp (name, dir->do_name) == SAME_NAME)
+    return dir;
+
+  nis_domain_of_r (name, domain, sizeof (domain));
+
+  if (nis_dir_cmp (domain, dir->do_name) == SAME_NAME)
+    return dir;
+
+  fd_res = __nis_finddirectory (dir, domain);
+  if (fd_res->status != NIS_SUCCESS)
+    {
+      __free_fdresult (fd_res);
+      return NULL;
+    }
+  obj = calloc(1, sizeof(directory_obj));
+  if (obj == NULL)
+    return NULL;
+  xdrmem_create(&xdrs, fd_res->dir_data.dir_data_val,
+		fd_res->dir_data.dir_data_len, XDR_DECODE);
+  xdr_directory_obj(&xdrs, obj);
+  xdr_destroy(&xdrs);
+  __free_fdresult (fd_res);
+  if (obj != NULL)
+    {
+      nis_free_directory (dir);
+      return obj;
+    }
+  return NULL;
+}
+
 nis_error
 __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 	      caddr_t req, xdrproc_t xres, caddr_t resp, u_long flags,
@@ -572,6 +609,8 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
   if (dir == NULL)
     {
       nis_error status;
+      directory_obj *obj;
+
       dir = readColdStartFile ();
       if (dir == NULL) /* No /var/nis/NIS_COLD_START->no NIS+ installed */
 	{
@@ -579,12 +618,19 @@ __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
 	  return NIS_UNAVAIL;
 	}
 
-      dir = rec_dirsearch (name, dir, flags, &status);
-      if (dir == NULL)
+      /* Try at first, if servers in "dir" know our object */
+      obj = first_shoot (name, dir, flags);
+      if (obj == NULL)
 	{
-	  __set_errno (saved_errno);
-	  return status;
+	  dir = rec_dirsearch (name, dir, flags, &status);
+	  if (dir == NULL)
+	    {
+	      __set_errno (saved_errno);
+	      return status;
+	    }
 	}
+      else
+	dir = obj;
     }
 
   if (flags & MASTER_ONLY)

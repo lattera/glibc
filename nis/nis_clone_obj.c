@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -25,7 +25,7 @@ nis_object *
 nis_clone_object (const nis_object *src, nis_object *dest)
 {
   unsigned char *addr;
-  unsigned int size;
+  unsigned long size;
   XDR xdrs;
   nis_object *res;
 
