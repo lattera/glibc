@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -131,7 +131,7 @@ __nis_findfastest (dir_binding *bind)
 #else
   const struct timeval TIMEOUT50 = {5, 0};
   const struct timeval TIMEOUT00 = {0, 0};
-  struct findserv_req **pings;
+  struct findserv_req *pings;
   struct sockaddr_in sin, saved_sin;
   int found = -1;
   u_int32_t xid_seed, xid_lookup;
@@ -145,8 +145,11 @@ __nis_findfastest (dir_binding *bind)
   pings_max = bind->server_len * 2;	/* Reserve a little bit more memory
 					   for multihomed hosts */
   pings_count = 0;
-  pings = malloc (sizeof (struct findserv_req *) * pings_max);
+  pings = malloc (sizeof (struct findserv_req) * pings_max);
   xid_seed = (u_int32_t) (time (NULL) ^ getpid ());
+
+  if (__builtin_expect (pings == NULL, 0))
+    return -1;
 
   memset (&sin, '\0', sizeof (sin));
   sin.sin_family = AF_INET;
@@ -169,17 +172,24 @@ __nis_findfastest (dir_binding *bind)
 
 	    if (pings_count >= pings_max)
 	      {
+		struct findserv_req *new_pings;
+
 		pings_max += 10;
-		pings = realloc (pings, sizeof (struct findserv_req) *
-				 pings_max);
+		new_pings = realloc (pings, sizeof (struct findserv_req) *
+				     pings_max);
+		if (__builtin_expect (new_pings == NULL, 0))
+		  {
+		    free (pings);
+		    return -1;
+		  }
+		pings = new_pings;
 	      }
-	    pings[pings_count] = calloc (1, sizeof (struct findserv_req));
-	    memcpy ((char *) &pings[pings_count]->sin, (char *) &sin,
+	    memcpy ((char *) &pings[pings_count].sin, (char *) &sin,
 		    sizeof (sin));
 	    memcpy ((char *)&saved_sin, (char *)&sin, sizeof(sin));
-	    pings[pings_count]->xid = xid_seed;
-	    pings[pings_count]->server_nr = i;
-	    pings[pings_count]->server_ep = j;
+	    pings[pings_count].xid = xid_seed;
+	    pings[pings_count].server_nr = i;
+	    pings[pings_count].server_ep = j;
 	    ++xid_seed;
 	    ++pings_count;
 	  }
@@ -197,8 +207,6 @@ __nis_findfastest (dir_binding *bind)
   if (clnt == NULL)
     {
       close (sock);
-      for (i = 0; i < pings_count; ++i)
-	free (pings[i]);
       free (pings);
       return -1;
     }
@@ -212,8 +220,8 @@ __nis_findfastest (dir_binding *bind)
   for (i = 0; i < pings_count; ++i)
     {
       /* clntudp_call() will increment, subtract one */
-      *((u_int32_t *) (cu->cu_outbuf)) = pings[i]->xid - 1;
-      memcpy ((char *) &cu->cu_raddr, (char *) &pings[i]->sin,
+      *((u_int32_t *) (cu->cu_outbuf)) = pings[i].xid - 1;
+      memcpy ((char *) &cu->cu_raddr, (char *) &pings[i].sin,
 	      sizeof (struct sockaddr_in));
       /* Transmit to NULLPROC, return immediately. */
       clnt_call (clnt, NULLPROC, (xdrproc_t) xdr_void, (caddr_t) foo,
@@ -228,10 +236,10 @@ __nis_findfastest (dir_binding *bind)
   xid_lookup = *((u_int32_t *) (cu->cu_inbuf));
   for (i = 0; i < pings_count; i++)
     {
-      if (pings[i]->xid == xid_lookup)
+      if (pings[i].xid == xid_lookup)
 	{
-	  bind->server_used = pings[i]->server_nr;
-	  bind->current_ep = pings[i]->server_ep;
+	  bind->server_used = pings[i].server_nr;
+	  bind->current_ep = pings[i].server_ep;
 	  found = 1;
 	}
     }
@@ -240,8 +248,6 @@ __nis_findfastest (dir_binding *bind)
   clnt_destroy (clnt);
   close (sock);
 
-  for (i = 0; i < pings_count; ++i)
-    free (pings[i]);
   free (pings);
 
   return found;

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -39,7 +39,7 @@ nis_getservlist (const_nis_name dir)
       serv =
 	malloc (sizeof (nis_server *) *
 		(NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len + 1));
-      if (serv == NULL)
+      if (__builtin_expect (serv == NULL, 0))
 	return NULL;
 
       for (i = 0; i < NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len;
@@ -48,10 +48,13 @@ nis_getservlist (const_nis_name dir)
 	  server =
 	    &NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_val[i];
 	  serv[i] = calloc (1, sizeof (nis_server));
+	  if (__builtin_expect (serv[i] == NULL, 0))
+	    return NULL;
+
 	  if (server->name != NULL)
 	    {
 	      serv[i]->name = strdup (server->name);
-	      if (serv[i]->name == NULL)
+	      if (__builtin_expect (serv[i]->name == NULL, 0))
 		return NULL;
 	    }
 
@@ -62,7 +65,7 @@ nis_getservlist (const_nis_name dir)
 
               serv[i]->ep.ep_val =
 		malloc (server->ep.ep_len * sizeof (endpoint));
-	      if (serv[i]->ep.ep_val == NULL)
+	      if (__builtin_expect (serv[i]->ep.ep_val == NULL, 0))
 		return NULL;
 
               for (j = 0; j < serv[i]->ep.ep_len; ++j)
@@ -90,9 +93,8 @@ nis_getservlist (const_nis_name dir)
           serv[i]->pkey.n_len = server->pkey.n_len;
           if (server->pkey.n_len > 0)
             {
-              serv[i]->pkey.n_bytes =
-                malloc (server->pkey.n_len);
-              if (serv[i]->pkey.n_bytes == NULL)
+              serv[i]->pkey.n_bytes = malloc (server->pkey.n_len);
+              if (__builtin_expect (serv[i]->pkey.n_bytes == NULL, 0))
                 return NULL;
               memcpy (serv[i]->pkey.n_bytes, server->pkey.n_bytes,
                       server->pkey.n_len);
@@ -105,7 +107,7 @@ nis_getservlist (const_nis_name dir)
   else
     {
       serv = malloc (sizeof (nis_server *));
-      if (serv != NULL)
+      if (__builtin_expect (serv != NULL, 0))
 	serv[0] = NULL;
     }
 

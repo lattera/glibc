@@ -81,7 +81,7 @@ __yp_bind (const char *domain, dom_binding **ypdb)
     {
       is_new = 1;
       ysd = (dom_binding *) calloc (1, sizeof *ysd);
-      if (ysd == NULL)
+      if (__builtin_expect (ysd == NULL, 0))
 	return YPERR_RESRC;
     }
 
@@ -448,7 +448,7 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
 
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
-  if (*outval == NULL)
+  if (__builtin_expect (*outval == NULL, 0))
     return YPERR_RESRC;
   memcpy (*outval, resp.val.valdat_val, *outvallen);
   (*outval)[*outvallen] = '\0';
@@ -488,13 +488,13 @@ yp_first (const char *indomain, const char *inmap, char **outkey,
 
   *outkeylen = resp.key.keydat_len;
   *outkey = malloc (*outkeylen + 1);
-  if (*outkey == NULL)
+  if (__builtin_expect (*outkey == NULL, 0))
     return YPERR_RESRC;
   memcpy (*outkey, resp.key.keydat_val, *outkeylen);
   (*outkey)[*outkeylen] = '\0';
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
-  if (*outval == NULL)
+  if (__builtin_expect (*outval == NULL, 0))
     return YPERR_RESRC;
   memcpy (*outval, resp.val.valdat_val, *outvallen);
   (*outval)[*outvallen] = '\0';
@@ -538,13 +538,13 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
 
   *outkeylen = resp.key.keydat_len;
   *outkey = malloc (*outkeylen + 1);
-  if (*outkey == NULL)
+  if (__builtin_expect (*outkey == NULL, 0))
     return YPERR_RESRC;
   memcpy (*outkey, resp.key.keydat_val, *outkeylen);
   (*outkey)[*outkeylen] = '\0';
   *outvallen = resp.val.valdat_len;
   *outval = malloc (*outvallen + 1);
-  if (*outval == NULL)
+  if (__builtin_expect (*outval == NULL, 0))
     return YPERR_RESRC;
   memcpy (*outval, resp.val.valdat_val, *outvallen);
   (*outval)[*outvallen] = '\0';

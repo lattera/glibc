@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -126,7 +126,7 @@ nis_getnames (const_nis_name name)
 
   count = 1;
   getnames = malloc ((count + 1) * sizeof (char *));
-  if (getnames == NULL)
+  if (__builtin_expect (getnames == NULL, 0))
       return NULL;
 
   /* Do we have a fully qualified NIS+ name ? If yes, give it back */
@@ -165,12 +165,12 @@ nis_getnames (const_nis_name name)
 		{
 		  count += 5;
 		  getnames = realloc (getnames, (count + 1) * sizeof (char *));
-		  if (getnames == NULL)
+		  if (__builtin_expect (getnames == NULL, 0))
 		    return NULL;
 		}
 	      tmp = malloc (strlen (cptr) + strlen (local_domain) +
 			    strlen (name) + 2);
-	      if (tmp == NULL)
+	      if (__builtin_expect (tmp == NULL, 0))
 		return NULL;
 
 	      getnames[pos] = tmp;
@@ -200,7 +200,7 @@ nis_getnames (const_nis_name name)
 	      char *p;
 
 	      tmp = malloc (cplen + strlen (local_domain) + strlen (name) + 2);
-	      if (tmp == NULL)
+	      if (__builtin_expect (tmp == NULL, 0))
 		return NULL;
 
 	      p = __stpcpy (tmp, name);
@@ -216,7 +216,7 @@ nis_getnames (const_nis_name name)
 	      char *p;
 
 	      tmp = malloc (cplen + strlen (name) + 2);
-	      if (tmp == NULL)
+	      if (__builtin_expect (tmp == NULL, 0))
 		return NULL;
 
 	      p = __stpcpy (tmp, name);
@@ -228,7 +228,7 @@ nis_getnames (const_nis_name name)
 	    {
 	      count += 5;
 	      getnames = realloc (getnames, (count + 1) * sizeof (char *));
-	      if (getnames == NULL)
+	      if (__builtin_expect (getnames == NULL, 0))
 		return NULL;
 	    }
 	  getnames[pos] = tmp;

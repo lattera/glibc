@@ -1,5 +1,13 @@
 2000-04-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nis_findserv.c (__nis_findfastest): Improve memory handling.
+	* nis/nis_print_group_entry.c (nis_print_group_entry): Use alloca
+	instead of malloc.
+	* nis/nis_subr.c: Use __builtin_expect.
+	* nis/ypclnt.c: Likewise.
+	* nis/nis_getservlist.c: Likewise.
+	* nis/nis_creategroup.c: Likewise.
+
 	* nis/nis_callback.c (__nis_create_callback): Check result of
 	memory allocation.  Fix memory leaks.  Use __builtin_expect.
 	(__nis_destroy_callback): Fix memory leaks.

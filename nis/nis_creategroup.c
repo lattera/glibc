@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -47,7 +47,7 @@ nis_creategroup (const_nis_name group, unsigned int flags)
 	return NIS_BADNAME;
 
       obj = malloc (sizeof (nis_object));
-      if (obj == NULL)
+      if (__builtin_expect (obj == NULL, 0))
 	return NIS_NOMEMORY;
 
       obj->zo_oid.ctime = obj->zo_oid.mtime = time (NULL);
