@@ -1,4 +1,4 @@
-1999-04-15 Scott Bambrough  <scottb@netwinder.org>
+1999-04-15  Scott Bambrough  <scottb@netwinder.org>
 
 	* sysdeps/unix/sysv/linux/arm/sigaction.c: Fix typo in preventing
 	compilation of file.
@@ -88,7 +88,7 @@
 	* locale/programs/locfile.c (locfile_read): Fix typo.
 	Patch by Kaoru Fukui <k_fukui@highway.ne.jp>.
 
-1999-04-14 Scott Bambrough  <scottb@netwinder.org>
+1999-04-14  Scott Bambrough  <scottb@netwinder.org>
 
 	* sysdeps/unix/sysv/linux/arm/socket.S: Socket calls could not be
 	restarted after being interrupted by a signal.  The parameters on
@@ -464,12 +464,12 @@
 	* sysdeps/mach/hurd/Makefile: Only install libc_p.a linker script
 	if we build the profiled library.
 
-Fri Mar 26 10:27:38 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+1999-03-26  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* math/Makefile (gmp-objs): Add inlines.  Reported by Andreas
- 	Jaeger <aj@arthur.rhein-neckar.de>
+	Jaeger <aj@arthur.rhein-neckar.de>
 
-Thu Mar 25 23:57:57 1999  Roland McGrath  <roland@yaumatei.ai.mit.edu>
+1999-03-25  Roland McGrath  <roland@yaumatei.ai.mit.edu>
 
 	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = csu]
 	(CFLAGS-initfini.s): New variable, add -DWEAK_GMON_START.
@@ -503,11 +503,11 @@ Thu Mar 25 23:57:57 1999  Roland McGrath  <roland@yaumatei.ai.mit.edu>
 	$(inst_slibdir)/$(rtld-installed-name), ldso_install): Disable
 	targets if not building shared libraries.
 
-Mon Mar 22 15:48:06 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+1999-03-22  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* configure.in: Also look in $PATH when searching for
- 	install-info.  Remove autoconf bug workaround and require autoconf
- 	2.13.
+	install-info.  Remove autoconf bug workaround and require autoconf
+	2.13.
 
 1999-03-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
@@ -520,11 +520,11 @@ Mon Mar 22 15:48:06 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 	available.
 
 	* localedata/Makefile: The shells scripts implementing the test
- 	require the dynamic linker which is not available with
- 	--disable-shared.  Skip the test if --disable-shared is given.
+	require the dynamic linker which is not available with
+	--disable-shared.  Skip the test if --disable-shared is given.
 
 	* linuxthreads/Makefile: Link test against static libpthread if no
- 	shared lib is available.
+	shared lib is available.
 
 	* iconvdata/Makefile (tests): Run iconv-test only if we're
 	building shared libraries.
@@ -589,7 +589,7 @@ Mon Mar 22 15:48:06 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 1999-03-18  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sunrpc/clnt_unix.c: Fix creation of parameters for
- 	sendmsg/recvmsg on non intel platforms.
+	sendmsg/recvmsg on non intel platforms.
 	* sunrpc/svc_unix.c: Likewise.
 
 1999-03-18  Philip Blundell  <philb@gnu.org>
