@@ -173,11 +173,11 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   {
     union locale_data_value *ctypes = result_ptr->__locales[LC_CTYPE]->values;
     result_ptr->__ctype_b = (const unsigned short int *)
-      (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_CLASS)].string);
+      ctypes[_NL_ITEM_INDEX (_NL_CTYPE_CLASS)].string + 128;
     result_ptr->__ctype_tolower = (const int *)
-      (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER)].string);
+      ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER)].string + 128;
     result_ptr->__ctype_toupper = (const int *)
-      (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER)].string);
+      ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER)].string + 128;
   }
 
   return result_ptr;

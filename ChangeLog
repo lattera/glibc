@@ -1,5 +1,9 @@
 2001-04-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/tst-C-locale.c (run_test): Add tests for locale objects.
+	* locale/newlocale.c (__newlocale): Correct setting __ctype_b,
+	__ctype_tolower, and __ctype_toupper elements.
+
 	* ctype/ctype_l.c: Fix definitions of __tolower_l and __toupper_l.
 	Reported by Konstantin Osipov <rabid@spylog.ru>.
 
