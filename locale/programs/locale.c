@@ -1,5 +1,5 @@
 /* Implementation of the locale program according to POSIX 9945-2.
-   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -376,11 +376,11 @@ write_locales (void)
 
 	  cp = buf;
 	  /* Ignore leading white space.  */
-	  while (isspace (cp[0]))
+	  while (isspace (cp[0]) && cp[0] != '\n')
 	    ++cp;
 
 	  /* A leading '#' signals a comment line.  */
-	  if (cp[0] != '\0' && cp[0] != '#')
+	  if (cp[0] != '\0' && cp[0] != '#' && cp[0] != '\n')
 	    {
 	      alias = cp++;
 	      while (cp[0] != '\0' && !isspace (cp[0]))

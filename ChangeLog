@@ -1,3 +1,10 @@
+2000-02-08  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/locale.c (write_locales): Fix handling of
+	whitespace lines.
+	Fixes PR libc/1588, reported by Miroslav Holcak
+	<miroslav.holcak@vitkovice.cz>.
+
 2000-02-07  Thorsten Kukuk  <kukuk@suse.de>
 
 	* config.make.in: Add infodir.
