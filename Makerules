@@ -1181,10 +1181,10 @@ endif
 
 # Generating headers for assembly constants.
 $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk %.sym
-	$(AWK) -f $^ \
+	$(AWK) -f $< $(filter %.sym,$^) \
 	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
 		-MD -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
-	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^@]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
+	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
 	sed $(sed-remove-objpfx) \
 	    -e 's@  *\([^ 	\/][^ 	\]*\)@ $$(..)\1@g' \
 	    -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g' \
