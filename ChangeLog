@@ -1,5 +1,9 @@
 2000-02-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/sys/wait.h: Handle definitions duplicated in stdlib.h
+	correctly.
+	* stdlib/stdlib.h: Handle definition of wait macros correctly.
+
 	* posix/sys/wait.h: Add missing #endif.
 
 	* stdlib/stdlib.h (setstate): Don't mark argument as const (yet).

@@ -34,61 +34,61 @@ typedef __pid_t pid_t;
 # define __pid_t_defined
 #endif
 
+/* These macros could also be defined int <stdlib.h>.  */
+#ifndef _STDLIB_H
 /* This will define the `W*' macros for the flag
    bits to `waitpid', `wait3', and `wait4'.  */
-#include <bits/waitflags.h>
+# include <bits/waitflags.h>
 
-#ifdef	__USE_BSD
+# ifdef	__USE_BSD
 
 /* Lots of hair to allow traditional BSD use of `union wait'
    as well as POSIX.1 use of `int' for the status word.  */
 
-# if defined __GNUC__ && !defined __cplusplus
-#  define __WAIT_INT(status)						      \
+#  if defined __GNUC__ && !defined __cplusplus
+#   define __WAIT_INT(status)						      \
   (__extension__ ({ union { __typeof(status) __in; int __i; } __u;	      \
 		    __u.__in = (status); __u.__i; }))
-# else
-#  define __WAIT_INT(status)	(*(int *) &(status))
-# endif
+#  else
+#   define __WAIT_INT(status)	(*(int *) &(status))
+#  endif
 
 /* This is the type of the argument to `wait'.  The funky union
    causes redeclarations with ether `int *' or `union wait *' to be
    allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
    the actual function definitions.  */
 
-# if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
-#  define __WAIT_STATUS		void *
-#  define __WAIT_STATUS_DEFN	void *
-# else
+#  if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
+#   define __WAIT_STATUS		void *
+#   define __WAIT_STATUS_DEFN	void *
+#  else
 /* This works in GCC 2.6.1 and later.  */
 typedef union
   {
     union wait *__uptr;
     int *__iptr;
   } __WAIT_STATUS __attribute__ ((__transparent_union__));
+#   define __WAIT_STATUS_DEFN	int *
+#  endif
+
+# else /* Don't use BSD.  */
+
+#  define __WAIT_INT(status)	(status)
+#  define __WAIT_STATUS		int *
 #  define __WAIT_STATUS_DEFN	int *
-# endif
 
-#else /* Don't use BSD.  */
-
-# define __WAIT_INT(status)	(status)
-# define __WAIT_STATUS		int *
-# define __WAIT_STATUS_DEFN	int *
-
-#endif /* Use BSD.  */
+# endif /* Use BSD.  */
 
 /* This will define all the `__W*' macros.  */
-#include <bits/waitstatus.h>
+# include <bits/waitstatus.h>
 
-/* These macros could also be defined int <stdlib.h>.  */
-#ifndef WEXITSTATUS
 # define WEXITSTATUS(status)	__WEXITSTATUS(__WAIT_INT(status))
 # define WTERMSIG(status)	__WTERMSIG(__WAIT_INT(status))
 # define WSTOPSIG(status)	__WSTOPSIG(__WAIT_INT(status))
 # define WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
 # define WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
 # define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
-#endif
+#endif	/* <stdlib.h> not included.  */
 
 #ifdef	__USE_BSD
 # define WCOREFLAG		__WCOREFLAG
