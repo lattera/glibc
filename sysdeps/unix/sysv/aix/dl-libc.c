@@ -36,6 +36,6 @@ __libc_dlsym (void *map, const char *name)
 int
 __libc_dlclose (void *map)
 {
-  _dl_close (__map);
+  _dl_close (map);
   return 0;
 }
