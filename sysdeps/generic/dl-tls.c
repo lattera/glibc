@@ -112,21 +112,17 @@ _dl_determine_tlsoffset (struct link_map *firstp)
     }
   while ((runp = runp->l_tls_nextimage) != firstp);
 
+#if 0
   /* The thread descriptor (pointed to by the thread pointer) has its
      own alignment requirement.  Adjust the static TLS size
      and TLS offsets appropriately.  */
+  // XXX How to deal with this.  We cannot simply add zero bytes
+  // XXX after the first (closest to the TCB) TLS block since this
+  // XXX would invalidate the offsets the linker creates for the LE
+  // XXX model.
   if (offset % TLS_TCB_ALIGN != 0)
-    {
-      size_t add = TLS_TCB_ALIGN - offset % TLS_TCB_ALIGN;
-
-      /* XXX If the offset stored is negative we must subtract here.  */
-      offset += add;
-
-      runp = firstp;
-      do
-	runp->l_tls_offset += add;
-      while ((runp = runp->l_tls_nextimage) != firstp);
-    }
+    abort ();
+#endif
 
   GL(dl_tls_static_size) = offset + TLS_TCB_SIZE;
 # elif TLS_DTV_AT_TP

@@ -730,8 +730,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
 	GL(dl_loaded)->l_tls_align = ph->p_align;
 	GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
-	GL(dl_loaded)->l_tls_initimage = (void *) (GL(dl_loaded)->l_addr
-						   + ph->p_offset);
+	GL(dl_loaded)->l_tls_initimage = (void *) ph->p_vaddr;
 	/* This is the first element of the initialization image list.
 	   We create the list as circular since we have to append at
 	   the end.  */

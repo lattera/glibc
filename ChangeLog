@@ -1,7 +1,16 @@
 2002-02-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (tests): Add tst-tls1.
+	* elf/tst-tls1.c: New file.
+
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Don't handle
+	alignment of TCB for now.
+
+	* elf/rtld.c (dl_main): Use p_vaddr as address of TLS
+	initialization image for the application itself.
+
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls): Correctly terminate
-	loop to initial TLS block.
+	loop to initialize TLS block.
 
 2002-02-08  Richard Henderson  <rth@twiddle.net>
 

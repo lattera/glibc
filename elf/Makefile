@@ -117,7 +117,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
-	restest2 next dblload dblunload reldep5 reldep6
+	restest2 next dblload dblunload reldep5 reldep6 tst-tls1
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
