@@ -1,3 +1,11 @@
+1998-05-22 10:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/Makefile (distribute): Add xopen-msg.h.
+	(generated): Add de.msg and de.cat.
+	(tests): Add do-gencat-test.
+	(do-gencat-test): New goal.  Run gencat on a generated msg file.
+	* catgets/xopen-msg.h: New file.
+
 1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/open_catalog.c (__open_catalog): Use byteswap.h

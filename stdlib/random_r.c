@@ -105,9 +105,17 @@
 
 #define	MAX_TYPES	5	/* Max number of types above.  */
 
-static const int degrees[MAX_TYPES] = { DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 };
-static const int seps[MAX_TYPES] = { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
+struct random_poly_info
+{
+  char seps[MAX_TYPES - 1];
+  char degrees[MAX_TYPES - 1];
+};
 
+static const struct random_poly_info random_poly_info =
+{
+  { SEP_1, SEP_2, SEP_3, SEP_4 },
+  { DEG_1, DEG_2, DEG_3, DEG_4 },
+};
 
 
 
@@ -120,37 +128,73 @@ static const int seps[MAX_TYPES] = { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 };
    introduced by the L.C.R.N.G.  Note that the initialization of randtbl[]
    for default usage relies on values produced by this routine.  */
 int
-__srandom_r (x, buf)
-     unsigned int x;
+__srandom_r (seed, buf)
+     unsigned int seed;
      struct random_data *buf;
 {
-  if (buf == NULL || buf->rand_type < TYPE_0 || buf->rand_type > TYPE_4)
-    return -1;
+  int type;
+  int32_t *state;
+
+  if (buf == NULL)
+    goto fail;
+  type = buf->rand_type;
+  if ((unsigned)type >= MAX_TYPES)
+    goto fail;
 
   /* We must make sure the seed is not 0.  Take arbitrarily 1 in this case.  */
-  buf->state[0] = x ? x : 1;
-  if (buf->rand_type != TYPE_0)
+  state = buf->state;
+  if (seed == 0)
+    seed = 1;
+  state[0] = seed;
+  if (type == TYPE_0)
+    goto done;
+
     {
-      long int i;
-      for (i = 1; i < buf->rand_deg; ++i)
+      int degree;
+      long int word;
+      int jc;
+      int32_t *dst;
+      int kc;
+      int separation;
+
+      degree = buf->rand_deg;
+      jc = degree - 1;
+      dst = state;
+      word = seed;
+      while (--jc >= 0)
 	{
+	  long int hi;
+	  long int lo;
+
 	  /* This does:
 	       state[i] = (16807 * state[i - 1]) % 2147483647;
 	     but avoids overflowing 31 bits.  */
-	  long int hi = buf->state[i - 1] / 127773;
-	  long int lo = buf->state[i - 1] % 127773;
-	  long int test = 16807 * lo - 2836 * hi;
-	  buf->state[i] = test + (test < 0 ? 2147483647 : 0);
+	  ++dst;
+	  hi = word / 127773;
+	  lo = word % 127773;
+	  word = 16807 * lo - 2836 * hi;
+	  if (word < 0)
+	    word += 2147483647;
+	  *dst = word;
 	}
-      buf->fptr = &buf->state[buf->rand_sep];
-      buf->rptr = &buf->state[0];
-      for (i = 0; i < 10 * buf->rand_deg; ++i)
+      state = buf->state;
+      degree = buf->rand_deg;
+      separation = buf->rand_sep;
+      buf->fptr = &state[separation];
+      buf->rptr = &state[0];
+      kc = 10 * degree;
+      while (--kc >= 0)
 	{
 	  int32_t discard;
 	  (void) __random_r (buf, &discard);
 	}
     }
+    goto done;
 
+ fail:
+  return -1;
+
+ done:
   return 0;
 }
 
@@ -174,57 +218,54 @@ __initstate_r (seed, arg_state, n, buf)
      size_t n;
      struct random_data *buf;
 {
-  if (buf == NULL)
-    return -1;
+  int type;
+  int degree;
+  int separation;
+  int32_t *state;
+  int mess;
+  const struct random_poly_info *rpi;
 
-  if (n < BREAK_1)
+  if (buf == NULL)
+    goto fail;
+
+  if (n >= BREAK_3)
+    type = n < BREAK_4 ? TYPE_3 : TYPE_4;
+  else if (n < BREAK_1)
     {
       if (n < BREAK_0)
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-      buf->rand_type = TYPE_0;
-      buf->rand_deg = DEG_0;
-      buf->rand_sep = SEP_0;
-    }
-  else if (n < BREAK_2)
-    {
-      buf->rand_type = TYPE_1;
-      buf->rand_deg = DEG_1;
-      buf->rand_sep = SEP_1;
-    }
-  else if (n < BREAK_3)
-    {
-      buf->rand_type = TYPE_2;
-      buf->rand_deg = DEG_2;
-      buf->rand_sep = SEP_2;
-    }
-  else if (n < BREAK_4)
-    {
-      buf->rand_type = TYPE_3;
-      buf->rand_deg = DEG_3;
-      buf->rand_sep = SEP_3;
+	goto fail;
+      type = TYPE_0;
     }
   else
-    {
-      buf->rand_type = TYPE_4;
-      buf->rand_deg = DEG_4;
-      buf->rand_sep = SEP_4;
-    }
+    type = n < BREAK_2 ? TYPE_1 : TYPE_2;
 
-  buf->state = &((int32_t *) arg_state)[1];	/* First location.  */
+  state = &((int32_t *) arg_state)[1];	/* First location.  */
+  buf->state = state;
+  mess = TYPE_0;
+  if (type == TYPE_0)
+    goto skip_to_here;
+
+  rpi = &random_poly_info;
+  degree = rpi->degrees[type - 1];
+  separation = rpi->seps[type - 1];
+
   /* Must set END_PTR before srandom.  */
-  buf->end_ptr = &buf->state[buf->rand_deg];
+  buf->end_ptr = &state[degree];
+
+  buf->rand_deg = degree;
+  buf->rand_sep = separation;
+
+  mess = (buf->rptr - state) * MAX_TYPES + type;
+
+ skip_to_here:
+  state[-1] = mess;
 
   __srandom_r (seed, buf);
 
-  if (buf->rand_type == TYPE_0)
-    buf->state[-1] = buf->rand_type;
-  else
-    buf->state[-1] = (MAX_TYPES * (buf->rptr - buf->state)) + buf->rand_type;
-
   return 0;
+
+ fail:
+  return -1;
 }
 
 weak_alias (__initstate_r, initstate_r)
@@ -242,45 +283,60 @@ __setstate_r (arg_state, buf)
      void *arg_state;
      struct random_data *buf;
 {
-  int32_t *new_state = (int32_t *) arg_state;
-  int type = new_state[0] % MAX_TYPES;
-  int rear = new_state[0] / MAX_TYPES;
+  int32_t *new_state;
+  int type;
+  int rear;
+  int32_t *old_state;
+  int32_t *ns1;
+  int degree;
+  int separation;
+  int mess;
+  int old_type;
+  int new_mess;
+  int *old_rptr;
+  const struct random_poly_info *rpi;
 
   if (buf == NULL)
     return -1;
 
-  if (buf->rand_type == TYPE_0)
-    buf->state[-1] = buf->rand_type;
-  else
-    buf->state[-1] = (MAX_TYPES * (buf->rptr - buf->state)) + buf->rand_type;
+  old_type = buf->rand_type;
+  old_state = buf->state;
+  old_rptr = buf->rptr;
+  mess = old_type;
+  if (old_type != TYPE_0)
+    mess += (old_rptr - old_state) * MAX_TYPES;
+  old_state[-1] = mess;
 
-  switch (type)
-    {
-    case TYPE_0:
-    case TYPE_1:
-    case TYPE_2:
-    case TYPE_3:
-    case TYPE_4:
-      buf->rand_type = type;
-      buf->rand_deg = degrees[type];
-      buf->rand_sep = seps[type];
-      break;
-    default:
-      /* State info munged.  */
-      __set_errno (EINVAL);
-      return -1;
-    }
+  new_state = (int32_t *) arg_state;
+  new_mess = new_state[0];
+  type = new_mess % MAX_TYPES;
+  rear = new_mess / MAX_TYPES;
 
-  buf->state = &new_state[1];
-  if (buf->rand_type != TYPE_0)
+  rpi = &random_poly_info;
+  degree = rpi->degrees[type - 1];
+  separation = rpi->seps[type - 1];
+  if (rear >= degree)
+    goto fail;
+
+  ns1 = &new_state[1];
+  if (type != TYPE_0)
     {
-      buf->rptr = &buf->state[rear];
-      buf->fptr = &buf->state[(rear + buf->rand_sep) % buf->rand_deg];
+      int t;
+
+      t = rear + separation;
+      if (t >= degree)
+	t -= degree;
+      buf->rptr = &ns1[rear];
+      buf->fptr = &ns1[t];
+      buf->rand_deg = degree;
+      buf->rand_sep = separation;
+      buf->end_ptr = &ns1[degree];
     }
-  /* Set end_ptr too.  */
-  buf->end_ptr = &buf->state[buf->rand_deg];
 
   return 0;
+
+ fail:
+  return -1;
 }
 
 weak_alias (__setstate_r, setstate_r)
@@ -292,41 +348,84 @@ weak_alias (__setstate_r, setstate_r)
    the one at the front pointer.  Then both pointers are advanced to the next
    location cyclically in the table.  The value returned is the sum generated,
    reduced to 31 bits by throwing away the "least random" low bit.
-   Note: The code takes advantage of the fact that both the front and
-   rear pointers can't wrap on the same call by not testing the rear
-   pointer if the front one has wrapped.  Returns a 31-bit random number.  */
+   Returns a 31-bit random number.  */
 
 int
 __random_r (buf, result)
      struct random_data *buf;
      int32_t *result;
 {
-  if (buf == NULL || result == NULL)
-    return -1;
+  int32_t *res_ptr;
+  int rand_type;
 
-  if (buf->rand_type == TYPE_0)
-    {
-      buf->state[0] = ((buf->state[0] * 1103515245) + 12345) & 0x7fffffff;
-      *result = buf->state[0];
-    }
-  else
-    {
-      *buf->fptr += *buf->rptr;
-      /* Chucking least random bit.  */
-      *result = (*buf->fptr >> 1) & 0x7fffffff;
-      ++buf->fptr;
-      if (buf->fptr >= buf->end_ptr)
-	{
-	  buf->fptr = buf->state;
-	  ++buf->rptr;
-	}
-      else
-	{
-	  ++buf->rptr;
-	  if (buf->rptr >= buf->end_ptr)
-	    buf->rptr = buf->state;
-	}
-    }
+  res_ptr = result;
+  rand_type = buf->rand_type;
+  if (buf == NULL || res_ptr == NULL)
+    goto fail;
+
+  if (rand_type == TYPE_0)
+    goto old_style;
+
+  {
+    int32_t *fp0;
+    int32_t *rp0;
+    int32_t sum;
+    int32_t fval;
+    int32_t rval;
+    int32_t rez;
+    int32_t *fp1;
+    int32_t *rp1;
+    int32_t *end;
+    int32_t *begin;
+
+    /* 0 */
+    fp0 = buf->fptr;
+    rp0 = buf->rptr;
+
+    /* 1 */
+    fval = *fp0;
+    rval = *rp0;
+    fp1 = fp0 + 1;
+
+    /* 2 */
+    sum = fval + rval;
+    rp1 = rp0 + 1;
+
+    /* 3 */
+    rez = (sum >> 1) & 0x7FFFFFFF;
+    *fp0 = sum;
+    end = buf->end_ptr;
+
+    /* 4 */
+    *res_ptr = rez;
+    begin = buf->state;
+    if (fp1 == end)
+      fp1 = begin;
+    if (rp1 == end)
+      rp1 = begin;
+
+    /* 5 */
+    buf->fptr = fp1;
+    buf->rptr = rp1;
+  }
+  goto done;
+
+ old_style:
+  {
+    int32_t *state;
+    int32_t rez;
+
+    state = buf->state;
+    rez = ((*state * 1103515245) + 12345) & 0x7FFFFFFF;
+    *res_ptr = rez;
+    *state = rez;
+  }
+  goto done;
+
+ fail:
+  return -1;
+
+ done:
   return 0;
 }
 

@@ -22,7 +22,7 @@
 subdir	:= catgets
 
 headers		= nl_types.h
-distribute	= catgetsinfo.h config.h
+distribute	= catgetsinfo.h config.h xopen-msg.sed
 routines	= catgets open_catalog
 others		= gencat
 install-bin	= gencat
@@ -40,3 +40,16 @@ $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 
 CPPFLAGS := -DNLSPATH='"$(localedir)/%L/%N:$(localedir)/%L/LC_MESSAGES/%N:$(localedir)/%l/%N:$(localedir)/%l/LC_MESSAGES/%N:"' \
 	    -DHAVE_CONFIG_H $(CPPFLAGS)
+
+generated = de.msg de.cat
+
+.PHONY: do-gencat-test
+tests: do-gencat-test
+# This test just checks whether the program produces any error or not.
+# The result is not tested.
+do-gencat-test: $(objpfx)de.msg $(objpfx)gencat
+	$(built-program-cmd) $(objpfx)de.cat $(objpfx)de.msg
+
+# Generate a non-simple input file.
+$(objpfx)de.msg: $(..)/po/de.po
+	sed -f xopen-msg.sed $< > $@
