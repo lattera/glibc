@@ -377,11 +377,9 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 /* ARM never uses Elf32_Rela relocations for the dynamic linker.
    Prelinked libraries may use Elf32_Rela though.  */
-#ifdef RTLD_BOOTSTRAP
-#define ELF_MACHINE_NO_RELA 1
-#endif
-
-extern char **_dl_argv;
+# ifdef RTLD_BOOTSTRAP
+#  define ELF_MACHINE_NO_RELA 1
+# endif
 
 /* Deal with an out-of-range PC24 reloc.  */
 static Elf32_Addr
@@ -426,15 +424,15 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 
   if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
     {
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
-#endif
+# endif
 	*reloc_addr += map->l_addr;
     }
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
   else if (__builtin_expect (r_type == R_ARM_NONE, 0))
     return;
-#endif
+# endif
   else
     {
       const Elf32_Sym *const refsym = sym;
@@ -457,7 +455,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
 	      _dl_error_printf ("\
 %s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				_dl_argv[0] ?: "<program name unknown>",
+				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
@@ -465,26 +463,26 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_ARM_GLOB_DAT:
 	case R_ARM_JUMP_SLOT:
-#ifdef RTLD_BOOTSTRAP
+# ifdef RTLD_BOOTSTRAP
 	  /* Fix weak undefined references.  */
 	  if (sym != NULL && sym->st_value == 0)
 	    *reloc_addr = 0;
 	  else
-#endif
+# endif
 	    *reloc_addr = value;
 	  break;
 	case R_ARM_ABS32:
 	  {
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	   /* This is defined in rtld.c, but nowhere in the static
 	      libc.a; make the reference weak so static programs can
 	      still link.  This declaration cannot be done when
 	      compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP) because
 	      rtld.c contains the common defn for _dl_rtld_map, which
 	      is incompatible with a weak decl in the same file.  */
-# ifndef SHARED
+#  ifndef SHARED
 	    weak_extern (_dl_rtld_map);
-# endif
+#  endif
 	    if (map == &_dl_rtld_map)
 	      /* Undo the relocation done here during bootstrapping.
 		 Now we will relocate it anew, possibly using a
@@ -492,7 +490,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 rather than the dynamic linker's built-in definitions
 		 used while loading those libraries.  */
 	      value -= map->l_addr + refsym->st_value;
-#endif
+# endif
 	    *reloc_addr += value;
 	    break;
 	  }
@@ -529,7 +527,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     }
 }
 
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
@@ -539,10 +537,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
   if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
     *reloc_addr = map->l_addr + reloc->r_addend;
-#ifndef RTLD_BOOTSTRAP
   else if (__builtin_expect (r_type == R_ARM_NONE, 0))
     return;
-#endif
   else
     {
       const Elf32_Sym *const refsym = sym;
@@ -585,7 +581,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
 }
-#endif
+# endif
 
 static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
@@ -594,14 +590,14 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
   *reloc_addr += l_addr;
 }
 
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   Elf32_Addr *const reloc_addr)
 {
   *reloc_addr = l_addr + reloc->r_addend;
 }
-#endif
+# endif
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
