@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+/* This code wants to be run through m4.  */
+
 #include <sysdeps/unix/sysdep.h>
+
+#define	POUND(foo)	(@@@Hash-Here@@@)foo
 
 #ifdef	__STDC__
 #define	ENTRY(name)							      \
@@ -32,26 +36,22 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__STDC__
 #define	PSEUDO(name, syscall_name)					      \
-  .set sysno, SYS_##syscall_name;					      \
-  .set zero, 0;								      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
-  pea sysno;								      \
-  trap zero;								      \
-  bcs error								      \
+  pea SYS_##syscall_name;						      \
+  trap POUND(0);							      \
+  bcs error
 #else
 #define	PSEUDO(name, syscall_name)					      \
-  .set sysno, SYS_/**/syscall_name;					      \
-  .set zero, 0;								      \
   .even;								      \
   .globl syscall_error;							      \
   error: jmp syscall_error;						      \
   ENTRY (name)								      \
-  pea sysno;								      \
-  trap zero;								      \
-  bcs error								      \
+  pea SYS_/**/syscall_name;						      \
+  trap POUND(0);							      \
+  bcs error
 #endif
 
 #define	ret	rts
