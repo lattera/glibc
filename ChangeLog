@@ -1,5 +1,9 @@
 2003-06-04  Richard Henderson  <rth@redhat.com>
 
+        * sysdeps/unix/sysv/linux/alpha/syscalls.list (semtimedop): New.
+        Annotate some parameters.
+        * sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_semtimedop): New.
+
         * sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Fix typo in conversion.
 
         * include/libc-symbols.h (symbol_set_declare): Use arrays
