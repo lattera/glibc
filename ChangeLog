@@ -1,3 +1,11 @@
+2002-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/elf/configure.in: Unconditionally define
+	PI_STATIC_AND_HIDDEN.
+	* elf/rtld.c (DONT_USE_BOOTSTRAP_MAP): Define only if
+	PI_STATIC_AND_HIDDEN is defined as well.
+	* config.h.in: Add PI_STATIC_AND_HIDDEN entry.
+
 2002-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/bzero.S: Define __bzero as well.
@@ -37,6 +45,7 @@
 	* elf/dl-load.c: Likewise.
 	* iconv/iconvconfig.c: Likewise.
 	* iconv/iconv_prog.c (process_block): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
 
 	* sysdeps/unix/sysv/linux/ia64/Makefile: Define _ASM_IA64_CURRENT_H
 	macro to calm down the compiler.

@@ -37,3 +37,8 @@ EOF
 
 fi
 fi
+
+cat >> confdefs.h <<\EOF
+#define PI_STATIC_AND_HIDDEN 1
+EOF
+

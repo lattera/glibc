@@ -129,7 +129,7 @@ TLS_INIT_HELPER
    is fine, too.  The latter is impotant here.  We can avoid setting
    up a temporary link map for ld.so if we can mark _rtld_global as
    hidden.  */
-#ifdef HAVE_HIDDEN
+#if defined PI_STATIC_AND_HIDDEN && defined HAVE_HIDDEN
 # define DONT_USE_BOOTSTRAP_MAP	1
 #endif
 
@@ -1215,7 +1215,7 @@ cannot allocate TLS data structures for initial thread");
 	}
 
       if (__builtin_expect (mode, trace) != trace)
-	for (i = 1; i < _dl_argc; ++i)
+	for (i = 1; i < (unsigned int) _dl_argc; ++i)
 	  {
 	    const ElfW(Sym) *ref = NULL;
 	    ElfW(Addr) loadbase;

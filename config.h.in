@@ -135,6 +135,10 @@
    sections.  */
 #undef	HAVE_INITFINI_ARRAY
 
+/* Define if the access to static and hidden variables is position independent
+   and does not need relocations.  */
+#undef	PI_STATIC_AND_HIDDEN
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */
