@@ -112,15 +112,19 @@ vpath %.c ../locale/programs
 endif
 endif
 
+tests = tst-tls1 tst-tls2
+ifeq (yes,$(build-static))
+tests-static = tst-tls1-static tst-tls2-static
+tests += $(tests-static)
+endif
 ifeq (yes,$(build-shared))
-tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
-	reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
-	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
-	neededtest3 neededtest4 unload2 lateglobal initfirst global \
-	restest2 next dblload dblunload reldep5 reldep6 reldep7 tst-tls1 \
-	tst-tls2 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
-	circleload1
+tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
+	 constload1 order $(tests-vis-$(have-protected)) noload filter unload \
+	 reldep reldep2 reldep3 reldep4 $(tests-nodelete-$(have-z-nodelete)) \
+	 $(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
+	 neededtest3 neededtest4 unload2 lateglobal initfirst global \
+	 restest2 next dblload dblunload reldep5 reldep6 reldep7 circleload1 \
+	 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -462,6 +466,10 @@ $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
 
 $(objpfx)reldep7: $(libdl)
 $(objpfx)reldep7.out: $(objpfx)reldep7mod1.so $(objpfx)reldep7mod2.so
+
+# The tst-*-static tests are the same tst-* programs, but linked statically.
+$(tests-static:%=$(objpfx)%.o): $(objpfx)tst-%-static.o: $(objpfx)tst-%.o
+	ln -f $< $@
 
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
 
