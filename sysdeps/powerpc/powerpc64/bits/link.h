@@ -26,18 +26,18 @@
 /* Registers for entry into PLT on PPC32.  */
 typedef struct La_ppc32_regs
 {
-  uint64_t lr_reg[8];
+  uint32_t lr_reg[8];
   double lr_fp[8];
   uint32_t lr_vreg[12][4];
-  uint64_t lr_r1;
-  uint64_t lr_lr;
+  uint32_t lr_r1;
+  uint32_t lr_lr;
 } La_ppc32_regs;
 
 /* Return values for calls from PLT on PPC32.  */
 typedef struct La_ppc32_retval
 {
-  uint64_t lrv_r3;
-  uint64_t lrv_r4;
+  uint32_t lrv_r3;
+  uint32_t lrv_r4;
   double lrv_fp[8];
   uint32_t lrv_v2[4];
 } La_ppc32_retval;

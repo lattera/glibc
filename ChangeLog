@@ -1,8 +1,14 @@
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_machine_runtime_setup):
+	If profile != 0 does not anymore mean GLRO(dl_profile) != NULL.
 	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_prof_resolve):
 	Extend _dl_prof_resolve to add pass extra parameters to
 	_dl_profile_fixup and set up structure with register content.
+	* sysdeps/powerpc/powerpc32/bits/link.h: Fix types of some fields in
+	the register and result structures.
+	* sysdeps/powerpc/powerpc64/bits/link.h: Fix types of some fields
+	in the 32-bit register and result structures.
 
 	* sysdeps/powerpc/powerpc64/dl-trampoline.S: Use register names.
 
