@@ -32,7 +32,7 @@ static const char md5_salt_prefix[] = "$1$";
 /* Prototypes for the MD5 encryption replacement functions.  */
 extern char *md5_crypt_r (const char *key, const char *salt, char *buffer,
 			  int buflen);
-extern char *md5_crpyt (const char *key, const char *salt);
+extern char *md5_crypt (const char *key, const char *salt);
 
 
 /* We recognize an intended call of the MD5 crypt replacement function

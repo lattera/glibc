@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-main()
+int
+main(int argc, char *argv[])
 {
     int point, x, y;
 
@@ -21,4 +22,4 @@ main()
     if (point != 1 || x != 1234 || y != 9876)
       abort ();
   return 0;
-} 
+}

@@ -68,21 +68,18 @@ ENTRY (strchr)
 	andl $3, %edi		/* mask alignment bits */
 
 	jz L11			/* alignment is 0 => start loop */
+
+	movb %dl, %cl		/* 0 is needed below */
 	jp L0			/* exactly two bits set */
 
-	movb (%eax), %cl	/* load single byte */
-	cmpb (%eax), %dl	/* is byte == C? */
+	xorb (%eax), %cl	/* is byte the one we are looking for? */
+	jz L2			/* yes => return pointer */
 
-	je L2			/* aligned => return pointer */
-
-	cmpb $0, %cl		/* is byte NUL? */
+	xorb %dl, %cl		/* load single byte and test for NUL */
 	je L3			/* yes => return NULL */
 
-	incl %eax		/* increment pointer */
-	xorl $3, %edi		/* was alignment == 3? */
-
-L0:	movb (%eax), %cl	/* load single byte */
-	je L11			/* yes => start loop */
+	movb 1(%eax), %cl	/* load single byte */
+	incl %eax
 
 	cmpb %cl, %dl		/* is byte == C? */
 	je L2			/* aligned => return pointer */
@@ -90,8 +87,12 @@ L0:	movb (%eax), %cl	/* load single byte */
 	cmpb $0, %cl		/* is byte NUL? */
 	je L3			/* yes => return NULL */
 
-	movb 1(%eax), %cl	/* load single byte */
-	incl %eax		/* increment pointer */
+	incl %eax
+	decl %edi
+
+	jne L11
+
+L0:	movb (%eax), %cl	/* load single byte */
 
 	cmpb %cl, %dl		/* is byte == C? */
 	je L2			/* aligned => return pointer */

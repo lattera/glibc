@@ -3,12 +3,12 @@
 #include <stdio.h>
 
 int
-main ()
+main (int argc, char *argv[])
 {
   int lose = 0;
   char filename[] = "/tmp/foo";
   FILE *fp;
- 
+
   fp = fopen (filename, "w+");
   fprintf (fp, "Hello world!\n");
   fflush (fp);

@@ -369,10 +369,12 @@ ifneq (yes,$(build-shared))
 built-program-cmd = $(built-program-file)
 else
 comma = ,
+sysdep-library-path = \
+$(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
+				       $(filter -Wl$(comma)-rpath-link=%,\
+						$(sysdep-LDFLAGS)))))
 define built-program-cmd
-LD_LIBRARY_PATH=$(rpath-link)$(patsubst -Wl$(comma)-rpath-link=%,:%,\
-					 $(filter -Wl$(comma)-rpath-link=%,\
-						  $(sysdep-LDFLAGS))) \
+LD_LIBRARY_PATH=$(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 $(elf-objpfx)$(rtld-installed-name) $(built-program-file)
 endef
 endif

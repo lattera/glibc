@@ -72,7 +72,7 @@ $(AR) cr$(verbose) $@ $<
 endef
 $(common-objpfx)dummy.c:
 	rm -f $@
-	echo 'void __dummy__ () { }' > $@
+	echo 'void __dummy__ (void) { }' > $@
 $(common-objpfx)empty.c:
 	cp -f /dev/null $@
 common-generated := $(common-generated) dummy.o dummy.c empty.c empty.o

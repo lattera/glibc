@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-main()
+int
+main(int argc, char *argv[])
 {
     char buf[100];
     int point, x, y;
@@ -23,4 +24,4 @@ main()
     puts (status ? "Test failed" : "Test passed");
 
     return status;
-} 
+}

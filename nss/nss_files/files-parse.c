@@ -219,6 +219,7 @@ parse_list (char *line, struct parser_data *data, int datalen)
   return list;
 }
 
+#endif	/* TRAILING_LIST_MEMBER */
 #endif	/* EXTERN_PARSER */
 
 
@@ -234,7 +235,6 @@ parse_list (char *line, struct parser_data *data, int datalen)
     break;								      \
 }
 
-#endif
 
 /* This is defined by db-*.c to include "../nss_db/db-XXX.c" instead.  */
 #ifndef GENERIC

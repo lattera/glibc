@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -98,7 +98,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
       }
     else
       {
-	printf("ftell returns %u; should be %u.\n", where, replace_from);
+	printf("ftell returns %lu; should be %u.\n", where, replace_from);
 	lose = 1;
       }
   }

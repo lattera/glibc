@@ -23,7 +23,11 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 
 
-weak_extern (_DYNAMIC)
+extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
+				    void (*dl_main) (const ElfW(Phdr) *phdr,
+						     ElfW(Word) phnum,
+						     ElfW(Addr) *user_entry));
+weak_extern (_dl_sysdep_start)
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
@@ -141,7 +145,7 @@ _dl_open (const char *file, int mode)
     (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
 						__environ);
 
-  if (_DYNAMIC == NULL)
+  if (_dl_sysdep_start == NULL)
     /* We must be the static _dl_open in libc.a.  A static program that
        has loaded a dynamic object now has competition.  */
     __libc_multiple_libcs = 1;

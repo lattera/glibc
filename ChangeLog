@@ -1,3 +1,138 @@
+Wed Oct  9 00:30:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getnetgrent_r.c: Correct netgroup implementation.  A
+	specification of a netgroup can also name another netgroup.
+	* nss/nss_files/files-netgrp.c: Likewise.
+	* inet/netgroup.h: Add fields to hold additional information.
+
+Tue Oct  8 21:51:14 1996  Arnold D. Robbins  <arnold@skeeve.atl.ga.us>
+
+	* posix/getopt.c: Implement POSIX -W option handling.  When the
+	option string contains "W;" -W foo is handled like --foo.
+
+Tue Oct  8 12:27:26 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: Define _ERRNO_H before
+	inclusing <errnos.h> so we really get error symbols defined.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+
+	* sunrpc/auth_unix.c (authunix_create_default): Don't use fixed
+	size array for getgroups call.  Instead get maximal number via
+	sysconf.  But discard list to NGRPS elements before calling XDR
+	function since Sun's code cannot handle longer lists.
+	Based on a patch by Thorsten Kukuk <kukuk@weber.uni-paderborn.de>.
+
+	* sysdeps/stub/e_j0l.c: Define y0l as well.
+	* sysdeps/stub/e_j1l.c: Define y1l as well.
+	* sysdeps/stub/e_jnl.c: Define ynl as well.
+
+	* posix/unistd.h: Correct prototype for execlp.
+
+	* sysdeps/unix/sysv/linux/posix_opt.h: Define _POSIX_NO_TRUNC.
+
+Mon Oct  7 22:18:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (sysdep-library-path): New variable.
+	(built-program-cmd): Use it here to properly build a colon
+	separated library path.
+
+Mon Oct  7 22:11:55 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* crypt/md5-crypt.c (md5_crypt_r): Add missing parens around &
+	within comparison.  Fix comments.
+	(md5_crypt): Fix comment.
+
+Tue Oct  8 05:10:49 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/errnos.h: Only include <linux/errnos.h>
+	when _ERRNO_H is defined.
+	[!_ERRNO_H && __need_Emath]: Define value for EDOM and ERANGE.
+	Should there ever be a Linux port where the numeric values are
+	not 33 and 34 this file must change.
+
+Mon Oct  7 13:54:04 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iofgets.c (_IO_fgets): Use _IO_flockfile instead of
+	__flockfile.
+
+Mon Oct  7 11:01:45 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* string/tst-strlen.c (main): Provide prototype.
+	* malloc/mallocbug.c: Likewise.
+	* io/test-utime.c: Likewise.
+
+	* sysdeps/generic/crypt-entry.c: Correct typo.
+
+Mon Oct  7 13:42:20 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-open.c (_dl_open): Check against _dl_sysdep_start to
+	test for libc.a.  Checking _DYNAMIC is of no worth here.
+	Suggested by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
+
+	* nss/nss_files/files-parse.c: Define LOOKUP_NAME even if
+ 	EXTERN_PARSER is defined.
+
+Sat Oct  5 17:05:36 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* Rules (dep-dummy-lib): Correct prototype for __dummy__.
+
+	* crypt/md5-crypt.c: Fix typos in comments.
+
+	* gmon/gmon.c: Provide prototypes.
+	* db/makedb.c: Likewise.
+	* locale/programs/xmalloc.c: Likewise.
+	* stdio-common/bug11.c (main): Likewise.
+	* stdio-common/bug7.c (main): Likewise.
+	* stdio-common/bug8.c (main): Likewise.
+	* stdio-common/bug9.c (main): Likewise.
+	* stdio-common/scanf1.c (main): Likewise.
+	* stdio-common/scanf2.c (main): Likewise.
+	* stdio-common/scanf5.c (main): Likewise.
+	* stdio-common/scanf6.c (main): Likewise.
+	* stdio-common/scanf7.c (main): Likewise.
+	* stdio-common/scanf8.c (main): Likewise.
+	* stdio-common/temptest.c (main): Likewise.
+	* stdio-common/test-fwrite.c (main): Likewise.
+	* stdio-common/tst-printf.c: Likewise.
+	* stdio-common/tstdiomisc.c: Likewise.
+	* stdio-common/tstgetln.c (main): Likewise.
+	* stdlib/testmb.c (main): Likewise.
+
+	* stdio-common/scanf4.c (main): Correct prototype, remove unused
+	variable n.
+
+	* stdio-common/scanf3.c (main): Correct prototype, change
+	declaration of s to reduce warnings.
+	* stdio-common/bug10.c (main): Likewise.
+
+	* stdio-common/tfformat.c: Provide prototype, remove unused
+	reference to dump_stats, add braces in sprint_doubles.
+	* stdio-common/tiformat.c: Likewise.
+
+	* stdio-common/test_rdwr.c (main): Parameter `where' is long in
+	printf call.
+
+Mon Oct  7 14:04:26 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/unix/sysv/linux/sys/soundcard.h: Fix typo.
+
+	* shadow/putspent.c: Don't write colon after flag field.
+
+	* sysdeps/unix/sysv/linux/net/if_ppp.h: New file.  Wrapper around
+	kernel header.
+	* sysdeps/unix/sysv/linux/net/ppp-comp.h: Likewise.
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h: Likewise.
+	* sysdeps/unix/sysv/linux/Dist: Mention new files.
+
+Mon Oct  7 00:58:19 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i586/strchr.S: Correct handling of first bytes to
+	get pointer aligned.  Reported by Matthias Urlichs <smurf@noris.de>.
+
+	* sysdeps/posix/euidaccess.c [_LIBC]: Avoid calling get?id functions
+	by using __libc_enable_secure variable.
+
 Tue Oct  8 13:58:31 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* hurd/ports-get.c (_hurd_ports_get): If the requested port is
@@ -32,7 +167,7 @@ Sun Oct  6 02:05:52 1996  Ulrich Drepper  <drepper@cygnus.com>
 	values to make `long double' functions available.
 	(distribute): Add $(long-m-yes:=.c).
 
-	* sysdeps/libm-i387/s_ceill.S: Correct loading of return value.
+	* sysdeps/libm-i387/s_copysignl.S: Correct loading of return value.
 	Use long double instruction.
 
 	* sysdeps/libm-ieee754/e_atanhl.c (huge): Correct constant.

@@ -137,8 +137,12 @@ euidaccess (path, mode)
   int granted;
 
 #ifdef	_LIBC
-  uid_t uid = getuid (), euid = geteuid ();
-  gid_t gid = getgid (), egid = getegid ();
+  uid_t euid;
+  gid_t egid;
+
+  if (! __libc_enable_secure)
+    /* If we are not set-uid or set-gid, access does the same.  */
+    return access (path, mode);
 #else
   if (have_ids == 0)
     {
@@ -148,11 +152,11 @@ euidaccess (path, mode)
       euid = geteuid ();
       egid = getegid ();
     }
-#endif
 
   if (uid == euid && gid == egid)
     /* If we are not set-uid or set-gid, access does the same.  */
     return access (path, mode);
+#endif
 
   if (stat (path, &stats))
     return -1;
@@ -164,6 +168,12 @@ euidaccess (path, mode)
 
   if (mode == F_OK)
     return 0;			/* The file exists. */
+
+#ifdef	_LIBC
+  /* Now we need the IDs.  */
+  euid = geteuid ();
+  egid = getegid ();
+#endif
 
   /* The super-user can read and write any file, and execute any file
      that anyone can execute. */

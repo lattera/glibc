@@ -60,4 +60,7 @@ Boston, MA 02111-1307, USA.  */
    using the value _POSIX_VDISABLE.  */
 #define	_POSIX_VDISABLE	'\0'
 
+/* Filenames are not silently truncated.  */
+#define	_POSIX_NO_TRUNC	1
+
 #endif /* posix_opt.h */

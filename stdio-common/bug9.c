@@ -2,7 +2,7 @@
 #include <string.h>
 
 int
-main()
+main(int argc, char *argv[])
 {
   char buf[100];
   int a, b;

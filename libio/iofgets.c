@@ -37,7 +37,7 @@ _IO_fgets (buf, n, fp)
   if (n <= 0)
     return NULL;
   __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  __flockfile (fp);
+  _IO_flockfile (fp);
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
   if (count == 0 || (fp->_IO_file_flags & _IO_ERR_SEEN))
     result = NULL;

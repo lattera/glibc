@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #ifdef	BSD
 #include </usr/include/stdio.h>
 #define EXIT_SUCCESS 0
@@ -28,9 +27,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <float.h>
 
+void rfg1 (void);
+void rfg2 (void);
+
 
 void
-DEFUN(fmtchk, (fmt), CONST char *fmt)
+fmtchk (const char *fmt)
 {
   (void) fputs(fmt, stdout);
   (void) printf(":\t`");
@@ -39,7 +41,7 @@ DEFUN(fmtchk, (fmt), CONST char *fmt)
 }
 
 void
-DEFUN(fmtst1chk, (fmt), CONST char *fmt)
+fmtst1chk (const char *fmt)
 {
   (void) fputs(fmt, stdout);
   (void) printf(":\t`");
@@ -48,7 +50,7 @@ DEFUN(fmtst1chk, (fmt), CONST char *fmt)
 }
 
 void
-DEFUN(fmtst2chk, (fmt), CONST char *fmt)
+fmtst2chk (const char *fmt)
 {
   (void) fputs(fmt, stdout);
   (void) printf(":\t`");
@@ -80,7 +82,7 @@ DEFUN(fmtst2chk, (fmt), CONST char *fmt)
  */
 
 void
-DEFUN_VOID(fp_test)
+fp_test (void)
 {
   int i, j, k, l;
   char buf[7];
@@ -125,7 +127,7 @@ DEFUN_VOID(fp_test)
 }
 
 int
-DEFUN_VOID(main)
+main (int argc, char *argv[])
 {
   static char shortstr[] = "Hi, Z.";
   static char longstr[] = "Good morning, Doctor Chandra.  This is Hal.  \
@@ -247,7 +249,8 @@ I am ready for my first lesson today.";
   }
 }
 
-rfg1 ()
+void
+rfg1 (void)
 {
   char buf[100];
 
@@ -272,7 +275,8 @@ rfg1 ()
   return 0;
 }
 
-rfg2 ()
+void
+rfg2 (void)
 {
   int prec;
   char buf[100];

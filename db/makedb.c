@@ -52,6 +52,7 @@ static void usage __P ((int status)) __attribute__ ((noreturn));
 static int process_input __P ((FILE *input, const char *inname, DB *output,
 			       int to_lowercase, int be_quiet));
 static int print_database __P ((DB *db));
+int main __P ((int argc, char *argv[]));
 
 
 int

@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 int
-main ()
+main (int argc, char *argv[])
 {
   char *buf = NULL;
   size_t size = 0;

@@ -58,6 +58,11 @@ static int	s_scale;
 
 #define ERR(s) write(2, s, sizeof(s) - 1)
 
+void moncontrol __P ((int mode));
+static void write_hist __P ((int fd));
+static void write_call_graph __P ((int fd));
+static void write_bb_counts __P ((int fd));
+
 /*
  * Control profiling
  *	profiling is what mcount checks to see if

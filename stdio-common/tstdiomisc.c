@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int
-t1 ()
+t1 (void)
 {
   int n = -1;
   sscanf ("abc  ", "abc %n", &n);
@@ -11,7 +11,7 @@ t1 ()
 }
 
 int
-t2 ()
+t2 (void)
 {
   int result = 0;
   int n;
@@ -36,7 +36,7 @@ t2 ()
 }
 
 int
-main ()
+main (int argc, char *argv[])
 {
   int result = 0;
 

@@ -193,7 +193,31 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
     ++cp;
 
   if (*cp != '(')
-    return first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+    {
+      /* We have a list of other netgroups.  */
+      char *name = cp;
+
+      while (*cp != '\0' && ! isspace (*cp))
+	++cp;
+
+      if (name != cp)
+	{
+	  /* It is another netgroup name.  */
+	  int last = *cp == '\0';
+
+	  result->type = group_val;
+	  result->val.group = name;
+	  *cp = '\0';
+	  if (! last)
+	    ++cp;
+	  *cursor = cp;
+	  first = 0;
+
+	  return NSS_STATUS_SUCCESS;
+	}
+
+      return first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+    }
 
   /* Match host name.  */
   host = ++cp;
@@ -225,15 +249,17 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
   else
     {
       memcpy (buffer, host, cp - host);
+      result->type = triple_val;
 
       buffer[(user - host) - 1] = '\0';
-      result->host = *host == ',' ? NULL : buffer;
+      result->val.triple.host = *host == ',' ? NULL : buffer;
 
       buffer[(domain - host) - 1] = '\0';
-      result->user = *user == ',' ? NULL : buffer + (user - host);
+      result->val.triple.user = *user == ',' ? NULL : buffer + (user - host);
 
       buffer[(cp - host) - 1] = '\0';
-      result->domain = *domain == ')' ? NULL : buffer + (domain - host);
+      result->val.triple.domain =
+	*domain == ')' ? NULL : buffer + (domain - host);
 
       status = NSS_STATUS_SUCCESS;
 

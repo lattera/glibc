@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
    and invokes a function in the right context after its all over.  */
 
 #include <sysdep.h>
+#define _ERRNO_H	1
 #include <errnos.h>
 
 /* int clone (int (*fn) (), void *child_stack, int flags, int nargs, ...) */

@@ -66,10 +66,8 @@ putspent (const struct spwd *p, FILE *stream)
 	  && putc (':', stream) == EOF))
     ++errors;
 
-  if ((p->sp_flag != ~0ul
-       && fprintf (stream, "%ld:", p->sp_flag) < 0)
-      || (p->sp_flag == ~0ul
-	  && putc (':', stream) == EOF))
+  if (p->sp_flag != ~0ul
+      && fprintf (stream, "%ld", p->sp_flag) < 0)
     ++errors;
 
   if (putc ('\n', stream) == EOF)

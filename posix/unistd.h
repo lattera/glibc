@@ -334,7 +334,7 @@ extern int execvp __P ((__const char *__file, char *__const __argv[]));
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a
    NULL pointer and environment from `environ'.  */
-extern int execlp __P ((__const char *__file, ...));
+extern int execlp __P ((__const char *__file, __const char *__arg, ...));
 
 
 #ifdef __USE_MISC

@@ -1,12 +1,12 @@
 #include <stdio.h>
-int main(int arc, char *argv)
+
+int
+main(int arc, char *argv)
 {
   int n, res;
   unsigned int val;
-  char *s;
+  char s[] = "111";
   int result = 0;
-
-  s = "111";
 
   n = 0;
   res = sscanf(s, "%u %n", &val, &n);
@@ -23,4 +23,3 @@ int main(int arc, char *argv)
 
   return result;
 }
-

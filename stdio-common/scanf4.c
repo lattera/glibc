@@ -1,8 +1,9 @@
 #include <stdio.h>
 
-int main(int arc, char *argv)
+int
+main(int arc, char *argv[])
 {
-  int n, res;
+  int res;
   unsigned int val;
 
   FILE *fp = fopen ("/dev/null", "r");

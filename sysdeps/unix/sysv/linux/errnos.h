@@ -17,6 +17,10 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
+#ifdef _ERRNO_H
+
+#undef EDOM
+#undef ERANGE
 #include <linux/errno.h>
 
 #ifndef __ASSEMBLER__
@@ -35,5 +39,14 @@ extern int *__errno_location __P ((void)) __attribute__ ((__const__));
 
 #define __set_errno(val) errno = (val)
 
-#endif
-#endif
+#endif /* __USE_REENTRANT && (!_LIBC || _LIBC_REENTRANT) */
+#endif /* !__ASSEMBLER */
+#endif /* _ERRNO_H */
+
+#if !defined (_ERRNO_H) && defined (__need_Emath)
+/* This is ugly but the kernel header is not clean enough.  We must
+   define only the values EDOM and ERANGE in case __need_Emath is
+   defined.  The value is the same for all Linux ports.  */
+#define EDOM	33	/* Math argument out of domain of function.  */
+#define ERANGE	34	/* Math result not representable.  */
+#endif /* !_ERRNO_H && __need_Emath */

@@ -2,7 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-main ()
+int
+main (int argc, char *argv[])
 {
   int ret;
   char buf [1024] = "Ooops";

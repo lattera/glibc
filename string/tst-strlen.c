@@ -2,7 +2,7 @@
 #include <string.h>
 
 int
-main()
+main(int argc, char *argv[])
 {
   static const lens[16] = { 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4 };
   char buf[24];

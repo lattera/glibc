@@ -2,7 +2,7 @@
 #include <string.h>
 
 int
-main ()
+main (int argc, char *argv[])
 {
   FILE *f = tmpfile ();
   char obuf[99999], ibuf[sizeof obuf];
@@ -23,7 +23,7 @@ main ()
 
   memset (obuf, 'z', sizeof obuf);
   memset (ibuf, 'y', sizeof ibuf);
-  
+
   if (fwrite (obuf, sizeof obuf, 1, f) != 1)
     {
       perror ("fwrite");

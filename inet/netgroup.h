@@ -22,9 +22,20 @@ Boston, MA 02111-1307, USA.  */
 
 struct __netgrent
 {
-  const char *host;
-  const char *user;
-  const char *domain;
+  enum { triple_val, group_val } type;
+
+  union
+  {
+    struct
+    {
+      const char *host;
+      const char *user;
+      const char *domain;
+    }
+    triple;
+
+    const char *group;
+  } val;
 };
 
 #endif /* netgroup.h */

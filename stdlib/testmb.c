@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int
-main ()
+main (int argc, char *argv[])
 {
   wchar_t w[10];
   char c[10];

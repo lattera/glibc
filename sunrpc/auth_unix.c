@@ -43,7 +43,10 @@ static char sccsid[] = "@(#)auth_unix.c 1.19 87/08/11 Copyr 1984 Sun Micro";
  *
  */
 
+#include <limits.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/params.h>
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
@@ -171,16 +174,21 @@ authunix_create_default()
 	char machname[MAX_MACHINE_NAME + 1];
 	register int uid;
 	register int gid;
-	int gids[NGRPS];
+	int max_nr_groups = sysconf (_SC_NGROUP_MAX);
+	gid_t gids[max_nr_groups];
 
 	if (gethostname(machname, MAX_MACHINE_NAME) == -1)
 		abort();
 	machname[MAX_MACHINE_NAME] = 0;
 	uid = geteuid();
 	gid = getegid();
-	if ((len = getgroups(NGRPS, gids)) < 0)
+
+	if ((len = getgroups(max_nr_groups, gids)) < 0)
 		abort();
-	return (authunix_create(machname, uid, gid, len, gids));
+	/* This braindamaged Sun code forces us here to truncate the
+	   list of groups to NGRPS members since the code in
+	   authuxprot.c transforms a fixed array.  Grrr.  */
+	return (authunix_create(machname, uid, gid, MIN (NGRPS, len), gids));
 }
 
 /*
