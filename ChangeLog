@@ -1,3 +1,8 @@
+2004-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Use the official
+	not cancelable interfaces.
+
 2004-02-24  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* posix/regex_internal.c (build_wcs_upper_buffer): Enclose
