@@ -29,6 +29,7 @@
 #define __NR_futex		221
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -60,6 +61,17 @@
 									      \
     __ret = INTERNAL_SYSCALL (futex, __err, 4,				      \
 			      (futexp), FUTEX_WAKE, (nr), 0);		      \
+    INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
+  })
+
+#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex) \
+  ({									      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
+    long int __ret;							      \
+									      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 5,				      \
+			      (futexp), FUTEX_REQUEUE, (nr_wake), (nr_move),  \
+			      (mutex));					      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err)? -__ret: 0;			      \
   })
 
@@ -100,6 +112,15 @@ extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
       __lll_lock_wait (__futex, __val);					      \
   })
 
+#define lll_mutex_cond_lock(lock) \
+  (void) ({								      \
+    int *__futex = &(lock);						      \
+    int __val = atomic_exchange_and_add (__futex, 2);			      \
+    __asm __volatile (__lll_acq_instr ::: "memory");			      \
+    if (__builtin_expect (__val != 0, 0))				      \
+      __lll_lock_wait (__futex, __val);					      \
+  })
+
 extern int __lll_timedlock_wait
 	(int *futex, int val, const struct timespec *) attribute_hidden;
 
@@ -118,6 +139,13 @@ extern int __lll_timedlock_wait
     int __val = atomic_exchange_rel (__futex, 0);			      \
     if (__builtin_expect (__val > 1, 0))				      \
       lll_futex_wake (__futex, 1);					      \
+  }))
+
+#define lll_mutex_unlock_force(lock) \
+  ((void) ({								      \
+    int *__futex = &(lock);						      \
+    *__futex = 0;							      \
+    lll_futex_wake (__futex, 1);					      \
   }))
 
 #define lll_mutex_islocked(futex) \

@@ -1,5 +1,9 @@
 2003-05-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
+	(__lll_mutex_unlock_force): New function
+	(lll_mutex_unlock_force): Use __lll_mutex_unlock_force.
+
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
 	(__lll_mutex_unlock_force): New function.
 	(lll_mutex_unlock_force): Use __lll_mutex_unlock_force.
