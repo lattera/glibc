@@ -40,7 +40,7 @@ vpath %.c ../locale/programs
 iconv_prog-modules = iconv_charmap charmap charmap-dir linereader \
 		     dummy-repertoire simple-hash xstrdup xmalloc
 iconvconfig-modules = strtab xmalloc
-extra-objs	   = $(iconv_prog-modules:=.o)
+extra-objs	   = $(iconv_prog-modules:=.o) $(iconvconfig-modules:=.o)
 CFLAGS-iconv_prog.c = -I../locale/programs
 CFLAGS-iconv_charmap.c = -I../locale/programs
 CFLAGS-dummy-repertoire.c = -I../locale/programs
