@@ -311,11 +311,11 @@ static inline void set_segment(
 
   /* Now, reload all segment registers so the limit takes effect. */
 
-  asm volatile( "movw %%ds,%0 ; movw %0,%%ds
-		 movw %%es,%0 ; movw %0,%%es
-		 movw %%fs,%0 ; movw %0,%%fs
-		 movw %%gs,%0 ; movw %0,%%gs
-		 movw %%ss,%0 ; movw %0,%%ss"
+  asm volatile( "movw %%ds,%0 ; movw %0,%%ds\n"
+		"movw %%es,%0 ; movw %0,%%es\n"
+		"movw %%fs,%0 ; movw %0,%%fs\n"
+		"movw %%gs,%0 ; movw %0,%%gs\n"
+		"movw %%ss,%0 ; movw %0,%%ss"
 		   : "=r" (tmp_segment)
 		   : "0"  (tmp_segment)
 	      );

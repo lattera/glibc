@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
    On-Line Applications Research Corporation.
@@ -157,10 +157,10 @@ struct i80960ca_ctltbl {
 
 #define clear_intr( xint ) \
  { register unsigned32 _xint=(xint); \
-   asm volatile( "loop_til_cleared:
-                    clrbit %0,sf0,sf0 ; \
-                    bbs    %0,sf0,loop_til_cleared" \
-                  : "=d" (_xint) : "0" (_xint) ); \
+   asm volatile( "loop_til_cleared:" \
+                 "  clrbit %0,sf0,sf0 ;" \
+                 "  bbs    %0,sf0,loop_til_cleared" \
+                 : "=d" (_xint) : "0" (_xint) ); \
  }
 
 #define reload_ctl_group( group ) \
