@@ -55,3 +55,15 @@
 #define __NR_osf_shmat		209
 #define __NR_osf_getsysinfo	256
 #define __NR_osf_setsysinfo	257
+
+/*
+ * In order to get the hidden arguments for rt_sigaction set up
+ * properly, we need to call the assembly version.  Detect this in the
+ * INLINE_SYSCALL macro, and fail to expand inline in that case.
+ */
+
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)	\
+	(__NR_##name == __NR_rt_sigaction	\
+	 ? __syscall_##name(args)		\
+	 : INLINE_SYSCALL1(name, nr, args))
