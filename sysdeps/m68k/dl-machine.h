@@ -223,7 +223,16 @@ static inline void
 elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  *reloc_addr = value + reloc->r_addend;
+  *reloc_addr = value;
+}
+
+/* Return the final value of a plt relocation.  On the m68k the JMP_SLOT
+   relocation ignores the addend.  */
+static inline Elf32_Addr
+elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
+		       Elf32_Addr value)
+{
+  return value;
 }
 
 #endif /* !dl_machine_h */
@@ -272,7 +281,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 	case R_68K_GLOB_DAT:
 	case R_68K_JMP_SLOT:
-	  *reloc_addr = value + reloc->r_addend;
+	  *reloc_addr = value;
 	  break;
 	case R_68K_8:
 	  *(char *) reloc_addr = value + reloc->r_addend;
