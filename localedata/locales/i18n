@@ -290,7 +290,7 @@ space /
 % TABLE 50 CJK SYMBOLS AND PUNCTUATION, HIRAGANA/
   <U3000>
 %
-cntrl   <U0000>..<U001F>;<U007F>..<U009F>
+cntrl   <U0001>..<U001F>;<U007F>..<U009F>
 %
 punct /
    <U0021>..<U002F>;<U003A>..<U0040>;<U005B>..<U0060>;<U007B>..<U007E>;/
