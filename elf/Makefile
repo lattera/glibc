@@ -168,6 +168,7 @@ CFLAGS-dl-load.c += -Wno-uninitialized
 # rule to build a shared library.
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
+ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
 	$(do-install-program)
 
@@ -178,6 +179,7 @@ $(inst_slibdir)/$(rtld-installed-name): \
 # Special target called by parent to install just the dynamic linker.
 .PHONY: ldso_install
 ldso_install: $(inst_slibdir)/$(rtld-installed-name)
+endif
 
 
 common-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \

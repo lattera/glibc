@@ -612,8 +612,9 @@ functions together with glibc.
 
 The functions are available, as an add-on (see question 1.11).  People in the US
 may get it from the same place they got GNU libc from.  People outside the
-US should get the code from ftp://ftp.ifi.uio.no/pub/gnu, or another archive
-site outside the USA.  The README explains how to install the sources.
+US should get the code from ftp.funet.fi [128.214.248.6] in the directory
+pub/gnu/funet, or another archive site outside the USA.  The README explains
+how to install the sources.
 
 If you already have the crypt code on your system the reason for the failure
 is probably that you did not link with -lcrypt.  The crypto functions are in

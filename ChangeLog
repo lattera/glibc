@@ -1,3 +1,9 @@
+1999-03-22  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/Makefile ($(inst_slibdir)/$(rtld-version-installed-name),
+	$(inst_slibdir)/$(rtld-installed-name), ldso_install): Disable
+	targets if not building shared libraries.
+
 Mon Mar 22 15:48:06 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* configure.in: Also look in $PATH when searching for
