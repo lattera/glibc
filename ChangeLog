@@ -1,3 +1,14 @@
+2000-06-20  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/ia64/sys/io.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: New file.
+
+2000-05-05  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: New file.
+
 2000-06-16  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/xstat.c: New file.
