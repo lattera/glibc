@@ -76,13 +76,30 @@
 #else
 /* Store (- %eax) into errno through the GOT.  */
 #ifdef _LIBC_REENTRANT
-#define SYSCALL_ERROR_HANDLER						      \
-0:pushl %ebx;								      \
+
+# ifndef HAVE_HIDDEN
+#  define SETUP_PIC_REG \
   call 1f;								      \
   .subsection 1;							      \
 1:movl (%esp), %ebx;							      \
   ret;									      \
+  .previous
+# else
+#  define SETUP_PIC_REG \
+  .section .gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits;	      \
+  .globl __i686.get_pc_thunk.bx;					      \
+  .hidden __i686.get_pc_thunk.bx;					      \
+  .type __i686.get_pc_thunk.bx,@function;				      \
+__i686.get_pc_thunk.bx:							      \
+  movl (%esp), %ebx;							      \
+  ret;									      \
   .previous;								      \
+  call __i686.get_pc_thunk.bx
+# endif
+
+#define SYSCALL_ERROR_HANDLER						      \
+0:pushl %ebx;								      \
+  SETUP_PIC_REG;							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
@@ -98,12 +115,29 @@
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
 #else
-#define SYSCALL_ERROR_HANDLER						      \
-0:call 1f;								      \
+
+# ifndef HAVE_HIDDEN
+#  define SETUP_PIC_REG \
+  call 1f;								      \
   .subsection 1;							      \
 1:movl (%esp), %ecx;							      \
   ret;									      \
+  .previous
+# else
+#  define SETUP_PIC_REG \
+  .section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits;	      \
+  .globl __i686.get_pc_thunk.cx;					      \
+  .hidden __i686.get_pc_thunk.cx;					      \
+  .type __i686.get_pc_thunk.cx,@function;				      \
+__i686.get_pc_thunk.cx:							      \
+  movl (%esp), %ecx;							      \
+  ret;									      \
   .previous;								      \
+  call __i686.get_pc_thunk.cx
+# endif
+
+#define SYSCALL_ERROR_HANDLER						      \
+0:define SETUP_PIC_REG;							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \

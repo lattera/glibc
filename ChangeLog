@@ -1,3 +1,27 @@
+2002-05-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==misc] (sysdep_routines):
+	Add readahead.
+	* sysdeps/unix/sysv/linux/readahead.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add sendfile64 syscall.
+	* sysdeps/unix/sysv/linux/Versions: Export readahead and sendfile64.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add readahead syscall.
+	Add sendfile64 alias to sendfile syscall.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add s_readahead
+	syscall.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Use __i686.get_pc_thunk.XX
+	special section for PIC register loading.
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h: Likewise.
+
+	* config.h.in: Define HAVE_HIDDEN.
+	* configure.in: Also define HAVE_HIDDEN if HAVE_PROTECTED is defined.
+
+	* elf/elf.h: Correct Alpha TLS relocations according to last spec.
+
 2002-05-28  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/alpha/setfpucw.c: New file.

@@ -1795,23 +1795,19 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ALPHA_JMP_SLOT	26	/* Create PLT entry */
 #define R_ALPHA_RELATIVE	27	/* Adjust by program base */
 #define R_ALPHA_TLS_GD_HI	28
-#define R_ALPHA_TLS_GD_LO	29
-#define R_ALPHA_TLS_GD_16	30
-#define R_ALPHA_TLS_LDM_HI	31
-#define R_ALPHA_TLS_LDM_LO	32
-#define R_ALPHA_TLS_LDM_16	33
-#define R_ALPHA_TLS_LDO_HI	34
-#define R_ALPHA_TLS_LDO_LO	35
-#define R_ALPHA_TLS_LDO_16	36
-#define R_ALPHA_TLS_IE_HI	37
-#define R_ALPHA_TLS_IE_LO	38
-#define R_ALPHA_TLS_IE_16	39
-#define R_ALPHA_TLS_LE_HI	40
-#define R_ALPHA_TLS_LE_LO	41
-#define R_ALPHA_TLS_LE_16	42
-#define R_ALPHA_DTPMOD32	43
-#define R_ALPHA_DTPOFF32	44
-#define R_ALPHA_TPOFF32		45
+#define R_ALPHA_TLSGD		29
+#define R_ALPHA_TLS_LDM		30
+#define R_ALPHA_DTPMOD64	31
+#define R_ALPHA_GOTDTPREL	32
+#define R_ALPHA_DTPREL64	33
+#define R_ALPHA_DTPRELHI	34
+#define R_ALPHA_DTPRELLO	35
+#define R_ALPHA_DTPREL16	36
+#define R_ALPHA_GOTTPREL	37
+#define R_ALPHA_TPREL64		38
+#define R_ALPHA_TPRELHI		39
+#define R_ALPHA_TPRELLO		40
+#define R_ALPHA_TPREL16		41
 /* Keep this the last entry.  */
 #define R_ALPHA_NUM		46
 

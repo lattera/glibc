@@ -90,6 +90,12 @@ libc {
     # p*
     pivot_root;
   }
+  GLIBC_2.3 {
+    # r*
+    readahead;
+    # s*
+    sendfile64;
+  }
   GLIBC_PRIVATE {
     # needed by libpthread.
     __libc_sigaction;

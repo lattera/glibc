@@ -988,6 +988,7 @@ EOF
   rm -f conftest*])
   AC_SUBST(libc_cv_asm_protected_directive)
   AC_DEFINE(HAVE_PROTECTED)
+  AC_DEFINE(HAVE_HIDDEN)
 
   if test $libc_cv_asm_protected_directive = yes; then
     AC_CACHE_CHECK(whether __attribute__((visibility())) is supported,
