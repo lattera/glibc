@@ -49,6 +49,9 @@ union semun
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
 
+#include <bp-checks.h>
+#include <bp-semctl.h>		/* definition of CHECK_SEMCTL needs union semum */
+
 extern int __syscall_semctl (int, int, int, void *);
 
 /* Return identifier for array of NSEMS semaphores associated with
@@ -69,7 +72,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
   va_end (ap);
 
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64, &arg);
+  return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64,
+			 CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
 #else
   switch (cmd) {
     case SEM_STAT:
@@ -77,7 +81,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
     case IPC_SET:
       break;
     default:
-      return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd, &arg);
+      return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd,
+			     CHECK_SEMCTL (&arg, semid, cmd));
   }
 
   {
@@ -87,7 +92,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
     /* Unfortunately there is no way how to find out for sure whether
        we should use old or new semctl.  */
-    result = INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64, &arg);
+    result = INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64,
+			     CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
     if (result != -1 || errno != EINVAL)
       return result;
 
@@ -106,7 +112,8 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (semctl, 4, semid, semnum, cmd, &arg);
+    result = INLINE_SYSCALL (semctl, 4, semid, semnum, cmd,
+			     CHECK_SEMCTL (&arg, semid, cmd));
     if (result != -1 && cmd != IPC_SET)
       {
 	memset(buf, 0, sizeof(*buf));

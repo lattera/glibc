@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,8 +48,8 @@ struct shmid_ds
     long int shm_lpid;			/* pid of last shmop */
     unsigned short int shm_nattch;	/* number of current attaches */
     unsigned short int __shm_npages;	/* size of segment (pages) */
-    unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
-    struct vm_area_struct *__attaches;	/* descriptors for attaches */
+    unsigned long int *__unbounded __shm_pages;	/* array of ptrs to frames -> SHMMAX */
+    struct vm_area_struct *__unbounded __attaches; /* descriptors for attaches */
   };
 
 #ifdef __USE_MISC

@@ -24,19 +24,20 @@
 #include <sysdep.h>
 #include <string.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
 struct __old_msqid_ds
 {
   struct __old_ipc_perm msg_perm;	/* structure describing operation permission */
-  struct msg *__msg_first;		/* pointer to first message on queue */
-  struct msg *__msg_last;		/* pointer to last message on queue */
+  struct msg *__unbounded __msg_first;	/* pointer to first message on queue */
+  struct msg *__unbounded __msg_last;	/* pointer to last message on queue */
   __time_t msg_stime;			/* time of last msgsnd command */
   __time_t msg_rtime;			/* time of last msgrcv command */
   __time_t msg_ctime;			/* time of last change */
-  struct wait_queue *__wwait;		/* ??? */
-  struct wait_queue *__rwait;		/* ??? */
+  struct wait_queue *__unbounded __wwait; /* ??? */
+  struct wait_queue *__unbounded __rwait; /* ??? */
   unsigned short int __msg_cbytes;	/* current number of bytes on queue */
   unsigned short int msg_qnum;		/* number of messages currently on queue */
   unsigned short int msg_qbytes;	/* max number of bytes allowed on queue */
@@ -57,7 +58,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
      of time.  However, msg_qnum and msg_qbytes changed size at
      the same time the size of uid changed elsewhere.  */
 #if __ASSUME_32BITUIDS > 0
-  return INLINE_SYSCALL (msgctl, 3, msqid, cmd | __IPC_64, buf);
+  return INLINE_SYSCALL (msgctl, 3, msqid, cmd | __IPC_64, CHECK_1 (buf));
 #else
   switch (cmd) {
     case MSG_STAT:
@@ -65,7 +66,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
     case IPC_SET:
       break;
     default:
-      return INLINE_SYSCALL (msgctl, 3, msqid, cmd, buf);
+      return INLINE_SYSCALL (msgctl, 3, msqid, cmd, CHECK_1 (buf));
   }
 
   {
@@ -74,7 +75,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 
     /* Unfortunately there is no way how to find out for sure whether
        we should use old or new msgctl.  */
-    result = INLINE_SYSCALL (msgctl, 3, msqid, cmd | __IPC_64, buf);
+    result = INLINE_SYSCALL (msgctl, 3, msqid, cmd | __IPC_64, CHECK_1 (buf));
     if (result != -1 || errno != EINVAL)
       return result;
 
@@ -93,7 +94,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (msgctl, 3, msqid, cmd, &old);
+    result = INLINE_SYSCALL (msgctl, 3, msqid, cmd, __ptrvalue (&old));
     if (result != -1 && cmd != IPC_SET)
       {
 	memset(buf, 0, sizeof(*buf));
@@ -120,4 +121,3 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 
 #include <shlib-compat.h>
 versioned_symbol (libc, __new_msgctl, msgctl, GLIBC_2_2);
-
