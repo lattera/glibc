@@ -517,20 +517,16 @@ tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;
 {
-  if (! compute_change (&tz_rules[0], 1900 + tm->tm_year))
+  if (! compute_change (&tz_rules[0], 1900 + tm->tm_year)
+      || ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
   /* We have to distinguish between northern and southern hemisphere.
-     For the later the daylight saving time ends in the next year.  */
-  if (tz_rules[0].change < tz_rules[1].change)
-    {
-      if (! compute_change (&tz_rules[1], 1900 + tm->tm_year))
-	return 0;
-    }
-  else
-    {
-      if (! compute_change (&tz_rules[1], 1900 + tm->tm_year + 1))
-	return 0;
-    }
+     For the later the daylight saving time ends in the next year.
+     It is easier to detect this after first computing the time for the
+     wrong year since now we simply can compare the times to switch.  */
+  if (tz_rules[0].change < tz_rules[1].change
+      && ! compute_change (&tz_rules[1], 1900 + tm->tm_year + 1))
+    return 0;
 
   __daylight = tz_rules[0].offset != tz_rules[1].offset;
   __timezone = -tz_rules[0].offset;
