@@ -8,6 +8,7 @@
 	* iconv/iconvconfig.c: Include <sys/cdefs.h> and use
 	__attribute_malloc__ for older GCC versions.
 	* iconv/strtab.c: Likewise.
+	Add prototypes to avoid warnings.
 
 2001-07-22  Roland McGrath  <roland@frob.com>
 
