@@ -65,6 +65,16 @@ DEFINE_HOOK (_hurd_preinit_hook, (void));
 static void
 posixland_init (int argc, char **argv, char **envp)
 {
+  __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
+
+  /* Make sure we don't initialize twice.  */
+  if (!__libc_multiple_libcs)
+    {
+      /* Set the FPU control word to the proper default value.  */
+      __setfpucw (__fpu_control);
+    }
+
+  /* Save the command-line arguments.  */
   __libc_argc = argc;
   __libc_argv = argv;
   __environ = envp;

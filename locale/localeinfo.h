@@ -78,11 +78,7 @@ struct locale_data
   {
     const uint32_t *wstr;
     const char *string;
-    /* The values we store here are always uint32_t in fact.  But it's
-       safer for the union to use a type that matches pointers so that
-       casting one of the pointer values to uint32_t produces the right
-       value for big-endian 64-bit platforms.  */
-    uintptr_t word;
+    unsigned int word;		/* Note endian issues vs 64-bit pointers.  */
   }
   values __flexarr;	/* Items, usually pointers into `filedata'.  */
 };

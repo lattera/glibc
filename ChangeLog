@@ -1,4 +1,11 @@
+2002-11-21  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): Set
+	__libc_multiple_libcs here.  Call __setfpucw.
+
 2002-11-21  Roland McGrath  <roland@redhat.com>
+
+	* locale/localeinfo.h (struct locale_data): Revert last change.
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list (s_exit_group): Add it.
 	From Ian Wienand <ianw@gelato.unsw.edu.au>.
