@@ -7,6 +7,11 @@
 
 2000-04-14  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Initialize
+	symidx correctly.
+
+	* sysdeps/mips/add_n.S: Use __PIC__, add .end directive.
+
 	* stdlib/stdlib.h: Fix typo in comment.
 
 	* shlib-versions (mips.*-.*-linux.*): Support only GLIBC 2.0 and
