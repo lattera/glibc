@@ -132,14 +132,14 @@ typedef struct __dirstream DIR;
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern DIR *opendir (__const char *__name);
+extern DIR *opendir (__const char *__name) __nonnull ((1));
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int closedir (DIR *__dirp);
+extern int closedir (DIR *__dirp) __nonnull ((1));
 
 /* Read a directory entry from DIRP.  Return a pointer to a `struct
    dirent' describing the entry, or NULL for EOF or error.  The
@@ -152,17 +152,18 @@ extern int closedir (DIR *__dirp);
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 #ifndef __USE_FILE_OFFSET64
-extern struct dirent *readdir (DIR *__dirp);
+extern struct dirent *readdir (DIR *__dirp) __nonnull ((1));
 #else
 # ifdef __REDIRECT
-extern struct dirent *__REDIRECT (readdir, (DIR *__dirp), readdir64);
+extern struct dirent *__REDIRECT (readdir, (DIR *__dirp), readdir64)
+     __nonnull ((1));
 # else
 #  define readdir readdir64
 # endif
 #endif
 
 #ifdef __USE_LARGEFILE64
-extern struct dirent64 *readdir64 (DIR *__dirp);
+extern struct dirent64 *readdir64 (DIR *__dirp) __nonnull ((1));
 #endif
 
 #if defined __USE_POSIX || defined __USE_MISC
@@ -174,14 +175,15 @@ extern struct dirent64 *readdir64 (DIR *__dirp);
 # ifndef __USE_FILE_OFFSET64
 extern int readdir_r (DIR *__restrict __dirp,
 		      struct dirent *__restrict __entry,
-		      struct dirent **__restrict __result);
+		      struct dirent **__restrict __result)
+     __nonnull ((1, 2, 3));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (readdir_r,
 		       (DIR *__restrict __dirp,
 			struct dirent *__restrict __entry,
 			struct dirent **__restrict __result),
-		       readdir64_r);
+		       readdir64_r) __nonnull ((1, 2, 3));
 #  else
 #   define readdir_r readdir64_r
 #  endif
@@ -190,27 +192,28 @@ extern int __REDIRECT (readdir_r,
 # ifdef __USE_LARGEFILE64
 extern int readdir64_r (DIR *__restrict __dirp,
 			struct dirent64 *__restrict __entry,
-			struct dirent64 **__restrict __result);
+			struct dirent64 **__restrict __result)
+     __nonnull ((1, 2, 3));
 # endif
 #endif	/* POSIX or misc */
 
 /* Rewind DIRP to the beginning of the directory.  */
-extern void rewinddir (DIR *__dirp) __THROW;
+extern void rewinddir (DIR *__dirp) __THROW __nonnull ((1));
 
 #if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
 # include <bits/types.h>
 
 /* Seek to position POS on DIRP.  */
-extern void seekdir (DIR *__dirp, long int __pos) __THROW;
+extern void seekdir (DIR *__dirp, long int __pos) __THROW __nonnull ((1));
 
 /* Return the current position of DIRP.  */
-extern long int telldir (DIR *__dirp) __THROW;
+extern long int telldir (DIR *__dirp) __THROW __nonnull ((1));
 #endif
 
 #if defined __USE_BSD || defined __USE_MISC
 
 /* Return the file descriptor used by DIRP.  */
-extern int dirfd (DIR *__dirp) __THROW;
+extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 
 # if defined __OPTIMIZE__ && defined _DIR_dirfd
 #  define dirfd(dirp)	_DIR_dirfd (dirp)
@@ -239,7 +242,8 @@ extern int dirfd (DIR *__dirp) __THROW;
 extern int scandir (__const char *__restrict __dir,
 		    struct dirent ***__restrict __namelist,
 		    int (*__selector) (__const struct dirent *),
-		    int (*__cmp) (__const void *, __const void *));
+		    int (*__cmp) (__const void *, __const void *))
+     __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (scandir,
@@ -247,7 +251,7 @@ extern int __REDIRECT (scandir,
 			struct dirent ***__restrict __namelist,
 			int (*__selector) (__const struct dirent *),
 			int (*__cmp) (__const void *, __const void *)),
-		       scandir64);
+		       scandir64) __nonnull ((1, 2));
 #  else
 #   define scandir scandir64
 #  endif
@@ -259,18 +263,19 @@ extern int __REDIRECT (scandir,
 extern int scandir64 (__const char *__restrict __dir,
 		      struct dirent64 ***__restrict __namelist,
 		      int (*__selector) (__const struct dirent64 *),
-		      int (*__cmp) (__const void *, __const void *));
+		      int (*__cmp) (__const void *, __const void *))
+     __nonnull ((1, 2));
 # endif
 
 /* Function to compare two `struct dirent's alphabetically.  */
 # ifndef __USE_FILE_OFFSET64
 extern int alphasort (__const void *__e1, __const void *__e2)
-     __THROW __attribute_pure__;
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT_NTH (alphasort,
 			   (__const void *__e1, __const void *__e2),
-			   alphasort64) __attribute_pure__;
+			   alphasort64) __attribute_pure__ __nonnull ((1, 2));
 #  else
 #   define alphasort alphasort64
 #  endif
@@ -278,19 +283,20 @@ extern int __REDIRECT_NTH (alphasort,
 
 # if defined __USE_GNU && defined __USE_LARGEFILE64
 extern int alphasort64 (__const void *__e1, __const void *__e2)
-     __THROW __attribute_pure__;
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 # endif
 
 # ifdef __USE_GNU
 /* Function to compare two `struct dirent's by name & version.  */
 #  ifndef __USE_FILE_OFFSET64
 extern int versionsort (__const void *__e1, __const void *__e2)
-     __THROW __attribute_pure__;
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 #  else
 #   ifdef __REDIRECT
 extern int __REDIRECT_NTH (versionsort,
 			   (__const void *__e1, __const void *__e2),
-			   versionsort64) __attribute_pure__;
+			   versionsort64)
+     __attribute_pure__ __nonnull ((1, 2));
 #   else
 #    define versionsort versionsort64
 #   endif
@@ -298,7 +304,7 @@ extern int __REDIRECT_NTH (versionsort,
 
 #  ifdef __USE_LARGEFILE64
 extern int versionsort64 (__const void *__e1, __const void *__e2)
-     __THROW __attribute_pure__;
+     __THROW __attribute_pure__ __nonnull ((1, 2));
 #  endif
 # endif
 
@@ -309,14 +315,15 @@ extern int versionsort64 (__const void *__e1, __const void *__e2)
 # ifndef __USE_FILE_OFFSET64
 extern __ssize_t getdirentries (int __fd, char *__restrict __buf,
 				size_t __nbytes,
-				__off_t *__restrict __basep) __THROW;
+				__off_t *__restrict __basep)
+     __THROW __nonnull ((2, 4));
 # else
 #  ifdef __REDIRECT
 extern __ssize_t __REDIRECT_NTH (getdirentries,
 				 (int __fd, char *__restrict __buf,
 				  size_t __nbytes,
 				  __off64_t *__restrict __basep),
-				 getdirentries64);
+				 getdirentries64) __nonnull ((2, 4));
 #  else
 #   define getdirentries getdirentries64
 #  endif
@@ -325,7 +332,8 @@ extern __ssize_t __REDIRECT_NTH (getdirentries,
 # ifdef __USE_LARGEFILE64
 extern __ssize_t getdirentries64 (int __fd, char *__restrict __buf,
 				  size_t __nbytes,
-				  __off64_t *__restrict __basep) __THROW;
+				  __off64_t *__restrict __basep)
+     __THROW __nonnull ((2, 4));
 # endif
 
 #endif /* Use BSD or misc.  */

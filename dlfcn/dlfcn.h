@@ -54,16 +54,16 @@ __BEGIN_DECLS
 
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
-extern void *dlopen (__const char *__file, int __mode) __THROW;
+extern void *dlopen (__const char *__file, int __mode) __THROW __nonnull ((1));
 
 /* Unmap and close a shared object opened by `dlopen'.
    The handle cannot be used again after calling `dlclose'.  */
-extern int dlclose (void *__handle) __THROW;
+extern int dlclose (void *__handle) __THROW __nonnull ((1));
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME.  */
 extern void *dlsym (void *__restrict __handle,
-		    __const char *__restrict __name) __THROW;
+		    __const char *__restrict __name) __THROW __nonnull ((2));
 
 #ifdef __USE_GNU
 /* Like `dlopen', but request object to be allocated in a new namespace.  */
@@ -73,7 +73,8 @@ extern void *dlmopen (Lmid_t __nsid, __const char *__file, int __mode) __THROW;
    of the symbol called NAME with VERSION.  */
 extern void *dlvsym (void *__restrict __handle,
 		     __const char *__restrict __name,
-		     __const char *__restrict __version) __THROW;
+		     __const char *__restrict __version)
+     __THROW __nonnull ((2, 3));
 #endif
 
 /* When any of the above functions fails, call this function
@@ -95,11 +96,12 @@ typedef struct
 
 /* Fill in *INFO with the following information about ADDRESS.
    Returns 0 iff no shared object's segments contain that address.  */
-extern int dladdr (__const void *__address, Dl_info *__info) __THROW;
+extern int dladdr (__const void *__address, Dl_info *__info)
+     __THROW __nonnull ((2));
 
 /* Same as `dladdr', but additionally sets *EXTRA_INFO according to FLAGS.  */
 extern int dladdr1 (__const void *__address, Dl_info *__info,
-		    void **__extra_info, int __flags) __THROW;
+		    void **__extra_info, int __flags) __THROW __nonnull ((2));
 
 /* These are the possible values for the FLAGS argument to `dladdr1'.
    This indicates what extra information is stored at *EXTRA_INFO.
@@ -120,7 +122,8 @@ enum
    On success, returns zero.  On failure, returns -1 and records an error
    message to be fetched with `dlerror'.  */
 extern int dlinfo (void *__restrict __handle,
-		   int __request, void *__restrict __arg);
+		   int __request, void *__restrict __arg)
+     __THROW __nonnull ((1, 3));
 
 /* These are the possible values for the REQUEST argument to `dlinfo'.  */
 enum
