@@ -67,15 +67,18 @@ extern void *dlvsym (void *__restrict __handle,
 extern char *dlerror (void) __THROW;
 
 #ifdef __USE_GNU
+/* Structure containing information about object searched using
+   `dladdr'.  */
+typedef struct
+{
+  __const char *dli_fname;	/* File name of defining object.  */
+  void *dli_fbase;		/* Load address of that object.  */
+  __const char *dli_sname;	/* Name of nearest symbol.  */
+  void *dli_saddr;		/* Exact value of nearest symbol.  */
+} Dl_info;
+
 /* Fill in *INFO with the following information about ADDRESS.
    Returns 0 iff no shared object's segments contain that address.  */
-typedef struct
-  {
-    __const char *dli_fname;	/* File name of defining object.  */
-    void *dli_fbase;		/* Load address of that object.  */
-    __const char *dli_sname;	/* Name of nearest symbol.  */
-    void *dli_saddr;		/* Exact value of nearest symbol.  */
-  } Dl_info;
 extern int dladdr (const void *__address, Dl_info *__info) __THROW;
 #endif
 

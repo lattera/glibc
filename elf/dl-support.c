@@ -42,6 +42,7 @@ int _dl_debug_versions;
 int _dl_debug_reloc;
 int _dl_debug_files;
 int _dl_lazy;
+int _dl_dynamic_weak;
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;
@@ -106,6 +107,8 @@ non_dynamic_init (void)
   _dl_init_paths (getenv ("LD_LIBRARY_PATH"));
 
   _dl_lazy = *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+
+  _dl_dynamic_weak = *(getenv ("LD_DYNAMIC_WEAK") ?: "") == '\0';
 
 #ifdef DL_PLATFORM_INIT
   DL_PLATFORM_INIT;

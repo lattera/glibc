@@ -157,19 +157,23 @@ FCT (const char *undef_name, struct link_map *undef_map,
 	found_it:
 	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
+	    case STB_WEAK:
+	      /* Weak definition.  Use this value if we don't find another.  */
+	      if (__builtin_expect (_dl_dynamic_weak, 0))
+		{
+		  if (! result->s)
+		    {
+		      result->s = sym;
+		      result->m = map;
+		    }
+		  break;
+		}
+	      /* FALLTHROUGH */
 	    case STB_GLOBAL:
 	      /* Global definition.  Just what we need.  */
 	      result->s = sym;
 	      result->m = map;
 	      return 1;
-	    case STB_WEAK:
-	      /* Weak definition.  Use this value if we don't find another.  */
-	      if (! result->s)
-		{
-		  result->s = sym;
-		  result->m = map;
-		}
-	      break;
 	    default:
 	      /* Local symbols are ignored.  */
 	      break;

@@ -87,6 +87,7 @@ const char *_dl_profile;
 const char *_dl_profile_output;
 struct link_map *_dl_profile_map;
 int _dl_lazy;
+int _dl_dynamic_weak;
 int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;
@@ -1393,6 +1394,13 @@ process_envvars (enum mode *modep, int *lazyp)
 	  break;
 
 	case 12:
+	  /* The library search path.  */
+	  if (memcmp (&envline[3], "LIBRARY_PATH", 12) == 0)
+	    {
+	      library_path = &envline[16];
+	      break;
+	    }
+
 	  /* Where to place the profiling data file.  */
 	  if (memcmp (&envline[3], "DEBUG_OUTPUT", 12) == 0)
 	    {
@@ -1400,9 +1408,8 @@ process_envvars (enum mode *modep, int *lazyp)
 	      break;
 	    }
 
-	  /* The library search path.  */
-	  if (memcmp (&envline[3], "LIBRARY_PATH", 12) == 0)
-	    library_path = &envline[16];
+	  if (memcmp (&envline[3], "DYNAMIC_WEAK", 12) == 0)
+	    _dl_dynamic_weak = 1;
 	  break;
 
 	case 14:

@@ -189,6 +189,9 @@ extern int _dl_debug_fd;
 /* Names of shared object for which the RPATH should be ignored.  */
 extern const char *_dl_inhibit_rpath;
 
+/* Nonzero if references should be treated as weak during runtime linking.  */
+extern int _dl_dynamic_weak;
+
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 
