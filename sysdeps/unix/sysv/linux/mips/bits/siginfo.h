@@ -1,5 +1,6 @@
 /* siginfo_t, sigevent and constants.  Linux/MIPS version.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +23,8 @@
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
 
+#include <bits/wordsize.h>
+
 #if (!defined __have_sigval_t \
      && (defined _SIGNAL_H || defined __need_siginfo_t \
 	 || defined __need_sigevent_t))
@@ -39,8 +42,13 @@ typedef union sigval
      && (defined _SIGNAL_H || defined __need_siginfo_t))
 # define __have_siginfo_t	1
 
-# define __SI_MAX_SIZE     128
-# define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 3)
+# define __SI_MAX_SIZE		128
+# if __WORDSIZE == 64
+#  define __SI_PAD_SIZE		((__SI_MAX_SIZE / sizeof (int)) - 4)
+# else
+#  define __SI_PAD_SIZE		((__SI_MAX_SIZE / sizeof (int)) - 3)
+# endif
+
 
 typedef struct siginfo
   {
@@ -48,6 +56,8 @@ typedef struct siginfo
     int si_code;		/* Signal code.  */
     int si_errno;		/* If non-zero, an errno value associated with
 				   this signal, as defined in <errno.h>.  */
+    int __pad0[__SI_MAX_SIZE / sizeof (int) - __SI_PAD_SIZE - 3];
+				/* Explicit padding.  */
 
     union
       {
@@ -121,9 +131,9 @@ enum
 {
   SI_ASYNCNL = -60,		/* Sent by asynch name lookup completion.  */
 # define SI_ASYNCNL	SI_ASYNCNL
-  SI_TKILL = -6,		/* Sent by tkill. */
+  SI_TKILL = -6,		/* Sent by tkill.  */
 # define SI_TKILL	SI_TKILL
-  SI_SIGIO,			/* Sent by queued SIGIO. */
+  SI_SIGIO,			/* Sent by queued SIGIO.  */
 # define SI_SIGIO	SI_SIGIO
   SI_MESGQ,			/* Sent by real time mesq state change.  */
 # define SI_MESGQ	SI_MESGQ
@@ -149,7 +159,7 @@ enum
 # define ILL_ILLOPN	ILL_ILLOPN
   ILL_ILLADR,			/* Illegal addressing mode.  */
 # define ILL_ILLADR	ILL_ILLADR
-  ILL_ILLTRP,			/* Illegal trap. */
+  ILL_ILLTRP,			/* Illegal trap.  */
 # define ILL_ILLTRP	ILL_ILLTRP
   ILL_PRVOPC,			/* Privileged opcode.  */
 # define ILL_PRVOPC	ILL_PRVOPC
