@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,8 @@
    __USE_ISOC9X		Define ISO C 9X things.
    __USE_POSIX		Define IEEE Std 1003.1 things.
    __USE_POSIX2		Define IEEE Std 1003.2 things.
-   __USE_POSIX199309	Define IEEE Std 1003.1b things.
+   __USE_POSIX199309	Define IEEE Std 1003.1, and .1b things.
+   __USE_POSIX199506	Define IEEE Std 1003.1, .1b, .1c and .1i things.
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
@@ -81,6 +82,7 @@
 #undef	__USE_POSIX
 #undef	__USE_POSIX2
 #undef	__USE_POSIX199309
+#undef	__USE_POSIX199506
 #undef	__USE_XOPEN
 #undef	__USE_XOPEN_EXTENDED
 #undef	__USE_UNIX98
@@ -171,6 +173,10 @@
 
 #if (_POSIX_C_SOURCE - 0) >= 199309L
 # define __USE_POSIX199309	1
+#endif
+
+#if (_POSIX_C_SOURCE - 0) >= 199506L
+# define __USE_POSIX199506	1
 #endif
 
 #ifdef	_XOPEN_SOURCE

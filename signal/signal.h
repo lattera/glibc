@@ -179,12 +179,14 @@ typedef __sighandler_t sig_t;
 
 #ifdef __USE_POSIX
 
+# ifdef __USE_POSIX199309
 /* We need `struct timespec' later on.  */
 #  define __need_timespec
 #  include <time.h>
 
 /* Get the `siginfo_t' type plus the needed symbols.  */
 #  include <bits/siginfo.h>
+# endif
 
 /* Clear all signals from SET.  */
 extern int sigemptyset __P ((sigset_t *__set));
@@ -201,7 +203,7 @@ extern int sigdelset __P ((sigset_t *__set, int __signo));
 /* Return 1 if SIGNO is in SET, 0 if not.  */
 extern int sigismember __P ((__const sigset_t *__set, int __signo));
 
-#  ifdef __USE_GNU
+# ifdef __USE_GNU
 /* Return non-empty value is SET is not empty.  */
 extern int sigisemptyset __P ((__const sigset_t *__set));
 
@@ -212,11 +214,11 @@ extern int sigandset __P ((sigset_t *__set, __const sigset_t *__left,
 /* Build new signal set by combining the two inputs set using logical OR.  */
 extern int sigorset __P ((sigset_t *__set, __const sigset_t *__left,
 			  __const sigset_t *__right));
-#  endif /* GNU */
+# endif /* GNU */
 
 /* Get the system-specific definitions of `struct sigaction'
    and the `SA_*' and `SIG_*'. constants.  */
-#  include <bits/sigaction.h>
+# include <bits/sigaction.h>
 
 /* Get and/or change the set of blocked signals.  */
 extern int sigprocmask __P ((int __how,
@@ -239,6 +241,7 @@ extern int sigpending __P ((sigset_t *__set));
 /* Select any of pending signals from SET or wait for any to arrive.  */
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
+# ifdef __USE_POSIX199309
 /* Select any of pending signals from SET and place information in INFO.  */
 extern int sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
 
@@ -251,6 +254,7 @@ extern int sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
    signal.  */
 extern int sigqueue __P ((__pid_t __pid, int __sig,
 			  __const union sigval __val));
+# endif	/* Use POSIX 199306.  */
 
 #endif /* Use POSIX.  */
 
@@ -333,7 +337,7 @@ extern int sigignore __P ((int __sig));
 extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
 #endif /* use Unix98 */
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199506
 /* Some of the functions for handling signals in threaded programs must
    be defined here.  */
 # include <bits/sigthread.h>

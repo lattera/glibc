@@ -89,12 +89,14 @@
 #define F_EXLCK		16	/* or 3 */
 #define F_SHLCK		32	/* or 4 */
 
-/* operations for bsd flock(), also used by the kernel implementation */
-#define LOCK_SH		1	/* shared lock */
-#define LOCK_EX		2	/* exclusive lock */
-#define LOCK_NB		4	/* or'd with one of the above to prevent
+/* Operations for bsd flock(), also used by the kernel implementation */
+#ifdef __USE_BSD
+# define LOCK_SH	1	/* shared lock */
+# define LOCK_EX	2	/* exclusive lock */
+# define LOCK_NB	4	/* or'd with one of the above to prevent
 				   blocking */
-#define LOCK_UN		8	/* remove lock */
+# define LOCK_UN	8	/* remove lock */
+#endif
 
 /* We don't need to support __USE_FILE_OFFSET64.  */
 struct flock

@@ -99,8 +99,13 @@ typedef unsigned long int __fd_mask;
 /* fd_set for select and pselect.  */
 typedef struct
   {
-    /* XPG4.2 requires this member name.  */
+    /* XPG4.2 requires this member name.  Otherwise avoid the name
+       from the user namespace.  */
+#ifdef __USE_XOPEN
     __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
+#else
+    __fd_mask __fds_bits[__FD_SETSIZE / __NFDBITS];
+#endif
   } __fd_set;
 
 
@@ -139,6 +144,8 @@ typedef int __intptr_t;
 
 
 /* Now add the thread types.  */
-#include <bits/pthreadtypes.h>
+#if defined __USE_POSIX199506 || defined __USE_UNIX98
+# include <bits/pthreadtypes.h>
+#endif
 
 #endif /* bits/types.h */

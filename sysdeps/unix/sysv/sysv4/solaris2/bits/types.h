@@ -90,8 +90,13 @@ typedef int __key_t;		     /* Type of an IPC key */
 
 typedef struct
   {
-    /* XPG4.2 requires this member name.  */
+    /* XPG4.2 requires this member name.  Otherwise avoid the name
+       from the user namespace.  */
+#ifdef __USE_XOPEN
     unsigned long int fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
+#else
+    unsigned long int __fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
+#endif
   } __fd_set;
 
 typedef unsigned long int __fd_mask;

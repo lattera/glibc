@@ -80,7 +80,7 @@ typedef __time_t time_t;
 
 
 #if !defined __timespec_defined && \
-    ((defined _TIME_H && defined __USE_POSIX) || defined __need_timespec)
+    ((defined _TIME_H && defined __USE_POSIX199309) || defined __need_timespec)
 # define __timespec_defined	1
 
 /* POSIX.4 structure for a time value.  This is like a `struct timeval' but

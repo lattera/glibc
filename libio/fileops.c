@@ -567,7 +567,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 	      _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
 	      {
 		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-		return offset;
+		goto resync;
 	      }
 	    }
 #ifdef TODO
@@ -579,7 +579,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 		if (ignore (to_skip) != to_skip)
 		  goto dumb;
 		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-		return offset;
+		goto resync;
 	      }
 #endif
 	}
@@ -590,7 +590,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 	    _IO_switch_to_backup_area (fp);
 	  gbump (fp->_IO_read_end + rel_offset - fp->_IO_read_ptr);
 	  _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-	  return offset;
+	  goto resync;
 	}
 #endif
     }
@@ -646,6 +646,16 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
     }
   return result;
+
+resync:
+  /* We need to do it since it is possible that the file offset in
+     the kernel may be changed behind our back. It may happen when
+     we fopen a file and then do a fork. One process may access the
+     the file and the kernel file offset will be changed. */
+  if (fp->_offset >= 0)
+    _IO_SYSSEEK (fp, fp->_offset, 0);
+
+  return offset;
 }
 
 _IO_ssize_t

@@ -34,6 +34,7 @@ rewind (fp)
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   _IO_rewind (fp);
+  _IO_clearerr (fp);
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
 }

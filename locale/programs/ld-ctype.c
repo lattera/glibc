@@ -313,6 +313,8 @@ character %s'%s' in class `%s' must not be in class `%s'"),
   /* ... and now test <SP> as a special case.  */
   space_value = charset_find_value (&charset->char_table, "SP", 2);
   if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE)
+    space_value = charset_find_value (&charset->char_table, "space", 5);
+  if ((wchar_t) space_value == ILLEGAL_CHAR_VALUE)
     {
       if (!be_quiet)
 	error (0, 0, _("character <SP> not defined in character map"));

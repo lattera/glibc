@@ -1011,18 +1011,18 @@ __strsep_g (char **__s, __const char *__reject)
 #endif
 
 /* We need the memory allocation functions for inline strdup().
-   Referring to stdlib.h (even minimally) is not allowed if
-   __STRICT_ANSI__. */
-#ifndef __STRICT_ANSI__
+   Referring to stdlib.h (even minimally) is not allowed 
+   in any of the tight standards compliant modes.  */
+#if defined __USE_MISC || defined __USE_GNU
 
-#if !defined _HAVE_STRING_ARCH_strdup || !defined _HAVE_STRING_ARCH_strndup
-# define __need_malloc_and_calloc
-# include <stdlib.h>
-#endif
+# if !defined _HAVE_STRING_ARCH_strdup || !defined _HAVE_STRING_ARCH_strndup
+#  define __need_malloc_and_calloc
+#  include <stdlib.h>
+# endif
 
-#ifndef _HAVE_STRING_ARCH_strdup
+# ifndef _HAVE_STRING_ARCH_strdup
 
-# define __strdup(s) \
+#  define __strdup(s) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
 		  ? (((__const char *) (s))[0] == '\0'			      \
 		     ? (char *) calloc (1, 1)				      \
@@ -1033,14 +1033,14 @@ __strsep_g (char **__s, __const char *__reject)
 			  __retval; }))					      \
 		  : __strdup (s)))
 
-# if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-#  define strdup(s) __strdup (s)
+#  if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#   define strdup(s) __strdup (s)
+#  endif
 # endif
-#endif
 
-#ifndef _HAVE_STRING_ARCH_strndup
+# ifndef _HAVE_STRING_ARCH_strndup
 
-# define __strndup(s, n) \
+#  define __strndup(s, n) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
 		  ? (((__const char *) (s))[0] == '\0'			      \
 		     ? (char *) calloc (1, 1)				      \
@@ -1059,12 +1059,12 @@ __strsep_g (char **__s, __const char *__reject)
 			  __retval; }))					      \
 		  : __strndup ((s), (n))))
 
-# ifdef __GNU_SOURCE
-#  define strndup(s, n) __strndup ((s), (n))
+#  ifdef __GNU_SOURCE
+#   define strndup(s, n) __strndup ((s), (n))
+#  endif
 # endif
-#endif
 
-#endif /* Strict ANSI */
+#endif /* Use misc. or use GNU.  */
 
 #undef __STRING_INLINE
 

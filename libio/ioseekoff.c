@@ -24,6 +24,13 @@
    General Public License.  */
 
 #include <libioP.h>
+#include <errno.h> 
+#ifndef errno 
+extern int errno; 
+#endif 
+#ifndef __set_errno 
+# define __set_errno(Val) errno = (Val)  
+#endif 
 
 _IO_fpos64_t
 _IO_seekoff (fp, offset, dir, mode)
@@ -34,12 +41,17 @@ _IO_seekoff (fp, offset, dir, mode)
 {
   _IO_fpos64_t retval;
 
+  if (dir != _IO_seek_cur && dir != _IO_seek_set && dir != _IO_seek_end) 
+    { 
+      __set_errno (EINVAL); 
+      return EOF; 
+    }
+
   /* If we have a backup buffer, get rid of it, since the __seekoff
      callback may not know to do the right thing about it.
      This may be over-kill, but it'll do for now. TODO */
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-
 
   if (mode != 0 && _IO_have_backup (fp))
     {

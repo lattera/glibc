@@ -1,3 +1,85 @@
+1998-10-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/features.h: Define __USE_POSIS199506 is _POSIX_C_SOURCE is
+	greater or equal than 199506L.
+
+	* sysdeps/generic/bits/types.h (__fd_set): Define element as fds_bits
+	only is __USE_XOPEN.  Otherwise use __fds_bits.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* locale/programs/charmap.c (parse_charmap): Accept tok_string
+	for <code_set_name>.
+
+1998-10-25  H.J. Lu  <hjl@gnu.org>
+
+	* locale/programs/ld-ctype.c (ctype_finish): Also check
+	<space>.
+
+1998-10-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Include bits/sigthread.h only if __USE_POSIX199506.
+
+	* sysdeps/unix/sysv/linux/bits/types.h: Include pthreadtypes.h only
+	if __USE_POSIX199506 or __USE_UNIX98.
+
+1998-10-24 22:34 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* string/bits/string2.h: Inline strdup+friends only if
+	__USE_MISC || __USE_GNU (prevents namespace pollution).
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (LOCK_SH,
+	LOCK_EX, LOCK_NB, LOCK_UN): Protect with __USE_BSD.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (LOCK_SH, LOCK_EX,
+	LOCK_NB, LOCK_UN): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h (LOCK_SH, LOCK_EX,
+	LOCK_NB, LOCK_UN): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (LOCK_SH, LOCK_EX,
+	LOCK_NB, LOCK_UN): Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h (LOCK_SH, LOCK_EX,
+	LOCK_NB, LOCK_UN): Likewise.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* libio/ioseekoff.c (_IO_seekoff): Check the valid dir value.
+
+	* libio/rewind.c (rewind): Clear the error.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* grp/grp.h (getgrent_r, getgrgid_r, getgrnam_r): Add "__" to
+	"buffer".
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h (timeval): Protect
+	with __need_timeval.
+	* sysdeps/unix/sysv/linux/mips/bits/time.h (timeval): Likewise.
+	* sysdeps/unix/sysv/linux/bits/time.h (timeval): Likewise.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* signal/signal.h (timespec, siginfo_t, sigwaitinfo, sigtimedwait,
+	sigqueue): Protect with __USE_POSIX199309.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* time/time.h (timespec): Protect with __USE_POSIX199309 instead of
+	__USE_POSIX.
+
+1998-10-24  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (_IO_new_file_seekoff): Always resync with
+	the kernel file offset.
+	* libio/oldfileops.c (_IO_old_file_seekoff): Likewise.
+
 1998-10-24  H.J. Lu  <hjl@gnu.org>
 
 	* time/tzfile.c (__tzfile_default): Set num_types to 2.

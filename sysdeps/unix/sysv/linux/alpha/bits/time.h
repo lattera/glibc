@@ -42,10 +42,11 @@
 # endif	/* bits/time.h */
 #endif /* !__need_timeval */
 
-
-#ifndef _STRUCT_TIMEVAL
-# define _STRUCT_TIMEVAL	1
-# include <bits/types.h>
+#ifdef __need_timeval 
+# undef __need_timeval
+# ifndef _STRUCT_TIMEVAL
+#  define _STRUCT_TIMEVAL	1
+#  include <bits/types.h>
 
 /* A time value that is accurate to the nearest
    microsecond but also has a range of years.  */
@@ -54,4 +55,5 @@ struct timeval
     __time_t tv_sec;		/* Seconds.  */
     __time_t tv_usec;		/* Microseconds.  */
   };
-#endif	/* struct timeval */
+# endif	/* struct timeval */
+#endif	/* need timeval */

@@ -99,25 +99,25 @@ extern struct group *getgrnam __P ((__const char *__name));
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern int getgrent_r __P ((struct group *__resultbuf, char *buffer,
+extern int getgrent_r __P ((struct group *__resultbuf, char *__buffer,
 			    size_t __buflen, struct group **__result));
 # endif
 
 /* Search for an entry with a matching group ID.  */
 extern int getgrgid_r __P ((__gid_t __gid, struct group *__resultbuf,
-			    char *buffer, size_t __buflen,
+			    char *__buffer, size_t __buflen,
 			    struct group **__result));
 
 /* Search for an entry with a matching group name.  */
 extern int getgrnam_r __P ((__const char *__name, struct group *__resultbuf,
-			    char *buffer, size_t __buflen,
+			    char *__buffer, size_t __buflen,
 			    struct group **__result));
 
 # ifdef	__USE_SVID
 /* Read a group entry from STREAM.  This function is not standardized
    an probably never will.  */
 extern int fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
-			     char *buffer, size_t __buflen,
+			     char *__buffer, size_t __buflen,
 			     struct group **__result));
 # endif
 

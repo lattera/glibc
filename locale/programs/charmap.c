@@ -290,7 +290,7 @@ parse_charmap (const char *filename)
 	  switch (nowtok)
 	    {
 	    case tok_code_set_name:
-	      if (arg->tok != tok_ident)
+	      if (arg->tok != tok_ident && arg->tok != tok_string)
 		{
 		badarg:
 		  lr_error (cmfile, _("syntax error in prolog: %s"),
