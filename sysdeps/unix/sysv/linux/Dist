@@ -74,7 +74,5 @@ sys/user.h
 sys/vt.h
 xstatconv.c
 getdents64.c
-getresuid.c
-getresgid.c
 umount.S
 umount2.S

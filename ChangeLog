@@ -1,3 +1,17 @@
+2000-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/init-first.h: Not needed anymore.
+	* sysdeps/unix/sysv/linux/arm/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/init-first.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Dist: Remove getresuid and getresgid.
+	* Makefile (distribute): Add abi-versions.awk and
+	firstversions.awk.
+	Patches by Torsten Duwe <duwe@caldera.de>.
+
 2000-04-05  Andreas Schwab  <schwab@suse.de>
 
 	* nss/Makefile ($(objpfx)makedb): Move $(libdl) after db-open.o.
