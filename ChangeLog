@@ -1,3 +1,7 @@
+2001-04-17  Andreas Jaeger  <aj@suse.de>
+
+	* configure.in: Move test for critical programs up.
+
 2001-04-16  Stephen L Moshier  <moshier@mediaone.net>
 
 	* sysdeps/ieee754/flt-32/e_asinf.c (pio2_hi, pio2_lo, pio4_hi):
