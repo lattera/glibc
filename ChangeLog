@@ -1,3 +1,7 @@
+2002-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (distribute): Filter out xmalloc.c.
+
 2002-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/fileops.c (_IO_file_underflow_mmap): Don't define as static.
@@ -39,7 +43,7 @@
 
 2002-01-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* manial/syslog.texi (openlog): Describe possible problems with
+	* manual/syslog.texi (openlog): Describe possible problems with
 	first parameter.
 	Patch by Christopher Allen Wing <wingc@engin.umich.edu>.
 

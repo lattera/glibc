@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -47,8 +47,9 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 endif
 
 distribute := nscd.h nscd-client.h dbg_log.h \
-	      $(nscd-modules:=.c) nscd_nischeck.c TODO nscd.conf nscd.init \
-	      nscd_proto.h nscd-types.h
+	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
+	      nscd_nischeck.c TODO nscd.conf nscd.init nscd_proto.h \
+	      nscd-types.h
 
 include ../Rules
 
