@@ -114,8 +114,21 @@ extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      weak_function
 #endif
      ;
+extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute __attribute ((__noreturn__))
+#ifndef SHARED
+     weak_function
+#endif
+     ;
+extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute;
+extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute;
 #if defined NOT_IN_libc && defined IS_IN_libpthread
 hidden_proto (__pthread_unwind)
+hidden_proto (__pthread_unwind_next)
+hidden_proto (__pthread_register_cancel)
+hidden_proto (__pthread_unregister_cancel)
 #endif
 
 

@@ -115,6 +115,6 @@ sem_wait:
 	LOCK
 	orl	$0x10, %fs:CANCELHANDLING
 	movq	%fs:CLEANUP_JMP_BUF, %rdi
-	jmp	__pthread_unwind
+	jmp	HIDDEN_JUMPTARGET (__pthread_unwind)
 	cfi_endproc
 	.size	sem_wait,.-sem_wait

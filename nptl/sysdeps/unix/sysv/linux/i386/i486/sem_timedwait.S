@@ -187,6 +187,6 @@ sem_timedwait:
 	LOCK
 	orl	$0x10, %gs:CANCELHANDLING
 	movl	%gs:CLEANUP_JMP_BUF, %eax
-	jmp	__pthread_unwind
+	jmp	HIDDEN_JUMPTARGET (__pthread_unwind)
 	cfi_endproc
 	.size	sem_timedwait,.-sem_timedwait

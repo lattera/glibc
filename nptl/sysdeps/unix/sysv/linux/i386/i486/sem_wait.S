@@ -123,7 +123,7 @@ __new_sem_wait:
 	LOCK
 	orl	$0x10, %gs:CANCELHANDLING
 	movl	%gs:CLEANUP_JMP_BUF, %eax
-	jmp	__pthread_unwind
+	jmp	HIDDEN_JUMPTARGET (__pthread_unwind)
 	cfi_endproc
 	.size	__new_sem_wait,.-__new_sem_wait
 	versioned_symbol(libpthread, __new_sem_wait, sem_wait, GLIBC_2_1)

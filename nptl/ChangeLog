@@ -1,3 +1,21 @@
+2003-07-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthreadP.h (__pthread_unwind_next, __pthread_register_cancel,
+	__pthread_unregister_cancel): Add prototypes and hidden_proto.
+	* unwind.c (__pthread_unwind_next): Add hidden_def.
+	* cleanup.c (__pthread_register_cancel, __pthread_unregister_cancel):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_wait.S (__new_sem_wait):
+	Use HIDDEN_JUMPTARGET to jump to __pthread_unwind.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S (sem_wait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S (__pthread_once): Use
+	HIDDEN_JUMPTARGET to call __pthread_register_cancel,
+	__pthread_unregister_cancel and __pthread_unwind_next.
+
 2003-07-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (PSEUDO): Use

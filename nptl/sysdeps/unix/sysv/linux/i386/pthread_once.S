@@ -112,14 +112,14 @@ __pthread_once:
 	jne	7f
 
 	leal	8(%esp), %eax
-	call	__pthread_register_cancel
+	call	HIDDEN_JUMPTARGET(__pthread_register_cancel)
 
 	/* Call the user-provided initialization function.  */
 	call	*24+UNWINDBUFSIZE(%esp)
 
 	/* Pop the cleanup handler.  */
 	leal	8(%esp), %eax
-	call	__pthread_unregister_cancel
+	call	HIDDEN_JUMPTARGET(__pthread_unregister_cancel)
 	addl	$UNWINDBUFSIZE+8, %esp
 	cfi_adjust_cfa_offset (-UNWINDBUFSIZE-8)
 
@@ -156,7 +156,7 @@ __pthread_once:
 	ENTER_KERNEL
 
 	leal	8(%esp), %eax
-	call	__pthread_unwind_next		/* Note: no @PLT.  */
+	call	HIDDEN_JUMPTARGET (__pthread_unwind_next)
 	/* NOTREACHED */
 	hlt
 	cfi_endproc

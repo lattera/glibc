@@ -122,3 +122,4 @@ __pthread_unwind_next (__pthread_unwind_buf_t *buf)
 
   __pthread_unwind ((__pthread_unwind_buf_t *) ibuf->priv.data.prev);
 }
+hidden_def (__pthread_unwind_next)
