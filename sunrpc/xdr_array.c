@@ -45,6 +45,7 @@ static char sccsid[] = "@(#)xdr_array.c 1.10 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 #include <libintl.h>
+#include <limits.h>
 
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
@@ -81,7 +82,11 @@ xdr_array (xdrs, addrp, sizep, maxsize, elsize, elproc)
       return FALSE;
     }
   c = *sizep;
-  if ((c > maxsize) && (xdrs->x_op != XDR_FREE))
+  /*
+   * XXX: Let the overflow possibly happen with XDR_FREE because mem_free()
+   * doesn't actually use its second argument anyway.
+   */
+  if ((c > maxsize || c > UINT_MAX / elsize) && (xdrs->x_op != XDR_FREE))
     {
       return FALSE;
     }
