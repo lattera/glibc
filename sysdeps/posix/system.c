@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ __libc_system (const char *line)
   if (line == NULL)
     /* Check that we have a command processor available.  It might
        not be available after a chroot(), for example.  */
-    return __libc_system ("exit 0");
+    return __libc_system ("exit 0") == 0;
 
   sa.sa_handler = SIG_IGN;
   sa.sa_flags = 0;

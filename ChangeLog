@@ -1,5 +1,7 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/system.c: Correct return value for LINE == NULL.
+
 	* signal/Versions [GLIBC_2.1.3] (libc): Export __sigsuspend.
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c (__mmap64): Fix
