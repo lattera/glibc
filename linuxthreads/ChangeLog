@@ -1,3 +1,10 @@
+2003-03-31  Alexandre Oliva  <aoliva@redhat.com>
+
+	* alloca_cutoff.c: Include internals.h.
+	* sysdeps/pthread/errno-loc.c: Include linuxthreads/internals.h.
+	* sysdeps/pthread/herrno-loc.c: Likewise.
+	* sysdeps/pthread/res-state.c: Likewise.
+
 2003-03-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/typesizes.h: New file.

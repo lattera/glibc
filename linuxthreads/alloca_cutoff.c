@@ -1,5 +1,5 @@
 /* Determine whether block of given size can be allocated on the stack or not.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <alloca.h>
 #include <stdlib.h>
 #include <sys/param.h>
+#include "internals.h"
 #include <sysdep-cancel.h>
 
 int
