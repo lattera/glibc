@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -38,7 +39,7 @@ struct cache_entry
   char *lib;			/* Library name.  */
   char *path;			/* Path to find library.  */
   int flags;			/* Flags to indicate kind of library.  */
-  unsigned long int hwcap;	/* Important hardware capabilities.  */
+  uint64_t hwcap;		/* Important hardware capabilities.  */
   int bits_hwcap;		/* Number of bits set in hwcap.  */
   struct cache_entry *next;	/* Next entry in list.  */
 };
@@ -51,7 +52,7 @@ static const char *flag_descr[] =
 
 /* Print a single entry.  */
 static void
-print_entry (const char *lib, int flag, unsigned long int hwcap, const char *key)
+print_entry (const char *lib, int flag, uint64_t hwcap, const char *key)
 {
   printf ("\t%s (", lib);
   switch (flag & FLAG_TYPE_MASK)
@@ -83,7 +84,7 @@ print_entry (const char *lib, int flag, unsigned long int hwcap, const char *key
       break;
     }
   if (hwcap != 0)
-    printf (", hwcap: 0x%lx", hwcap);
+    printf (", hwcap: 0x%Lx", hwcap);
   printf (") => %s\n", key);
 }
 
@@ -411,7 +412,7 @@ save_cache (const char *cache_name)
 /* Add one library to the cache.  */
 void
 add_to_cache (const char *path, const char *lib, int flags,
-	      unsigned long int hwcap)
+	      uint64_t hwcap)
 {
   struct cache_entry *new_entry, *ptr, *prev;
   char *full_path;
@@ -431,8 +432,8 @@ add_to_cache (const char *path, const char *lib, int flags,
   new_entry->bits_hwcap = 0;
 
   /* Count the number of bits set in the masked value.  */
-  for (i = 0; (~((1UL << i) - 1) & hwcap) != 0; ++i)
-    if ((hwcap & (1UL << i)) != 0)
+  for (i = 0; (~((1ULL << i) - 1) & hwcap) != 0; ++i)
+    if ((hwcap & (1ULL << i)) != 0)
       ++new_entry->bits_hwcap;
 
 
