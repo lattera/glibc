@@ -1,5 +1,7 @@
 Wed May  8 20:04:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* extract-dynsym: New file.
+	* Makefile (distribute): Add it.
 	* Rules (subdir_install): Depend on $(common-objpfx)sor-$(subdir).
 	[! libc.so-version]: Clear static-only-routines.
 	($(common-objpfx)sor-$(subdir)): New target.
