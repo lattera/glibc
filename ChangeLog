@@ -1,3 +1,7 @@
+2001-03-10  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Revert last patch.
+
 2001-03-09  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/s390/dl-machine.h (elf_machine_matches_host): Handle
