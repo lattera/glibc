@@ -37,8 +37,8 @@ extern char **backtrace_symbols (void *__const *__array, int __size)
 /* This function is similar to backtrace_symbols() but it writes the result
    immediately to a file and can therefore also be used in situations where
    malloc() is not usable anymore.  */
-extern void backtrace_symbols_fd (void *__const *__array, int __size,
-				  int __fd) __THROW __nonnull ((1));
+extern void backtrace_symbols_fd (void *__const *__array, int __size, int __fd)
+     __THROW __nonnull ((1));
 
 __END_DECLS
 

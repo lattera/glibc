@@ -1,3 +1,13 @@
+2004-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/nscd_setup_thread.c (setup_thread):
+	Do nothing if __NR_set_tid_address is not defined.  [BZ #390]
+
+2004-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Use gethostbyname3_r NSS function
+	in case it is available.
+
 2004-09-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/nscd.c (parse_opt): Write arg string instead of (void *)

@@ -289,11 +289,12 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   int herrno;								      \
   struct hostent th;							      \
   struct hostent *h;							      \
+  char *localcanon = NULL;						      \
   no_data = 0;								      \
   while (1) {								      \
     rc = 0;								      \
     status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,		      \
-           tmpbuflen, &rc, &herrno));					      \
+			  tmpbuflen, &rc, &herrno, NULL, &localcanon));	      \
     if (rc != ERANGE || herrno != NETDB_INTERNAL)			      \
       break;								      \
     tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
@@ -342,16 +343,19 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 	  pat = &((*pat)->next);					      \
 	}								      \
 									      \
+      if (localcanon !=	NULL)						      \
+	canon = strdupa (localcanon);					      \
+									      \
       if (_family == AF_INET6 && i > 0)					      \
 	got_ipv6 = true;						      \
     }									      \
  }
 
 
-typedef enum nss_status (*nss_gethostbyname2_r)
+typedef enum nss_status (*nss_gethostbyname3_r)
   (const char *name, int af, struct hostent *host,
    char *buffer, size_t buflen, int *errnop,
-   int *h_errnop);
+   int *h_errnop, int32_t *ttlp, char **canonp);
 typedef enum nss_status (*nss_getcanonname_r)
   (const char *name, char *buffer, size_t buflen, char **result,
    int *errnop, int *h_errnop);
@@ -771,8 +775,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  while (!no_more)
 	    {
-	      nss_gethostbyname2_r fct
-		= __nss_lookup_function (nip, "gethostbyname2_r");
+	      nss_gethostbyname3_r fct
+		= __nss_lookup_function (nip, "gethostbyname3_r");
+	      if (fct == NULL)
+		/* We are cheating here.  The gethostbyname2_r function does
+		   not have the same interface as gethostbyname3_r but the
+		   extra arguments the latter takes are added at the end.
+		   So the gethostbyname2_r code will just ignore them.  */
+		fct = __nss_lookup_function (nip, "gethostbyname2_r");
 
 	      if (fct != NULL)
 		{
@@ -805,7 +815,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  if (inet6_status == NSS_STATUS_SUCCESS
 		      || status == NSS_STATUS_SUCCESS)
 		    {
-		      if ((req->ai_flags & AI_CANONNAME) != 0)
+		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)
 			{
 			  /* If we need the canonical name, get it
 			     from the same service as the result.  */

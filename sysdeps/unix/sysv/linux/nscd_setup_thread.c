@@ -27,6 +27,7 @@
 void
 setup_thread (struct database_dyn *db)
 {
+#ifdef __NR_set_tid_address
   /* Only supported when NPTL is used.  */
   char buf[100];
   if (confstr (_CS_GNU_LIBPTHREAD_VERSION, buf, sizeof (buf)) >= sizeof (buf)
@@ -44,4 +45,5 @@ setup_thread (struct database_dyn *db)
        So, set the field to a nonzero value which indicates that nscd
        is certainly running and clients can skip the test.  */
     db->head->nscd_certainly_running = 1;
+#endif
 }
