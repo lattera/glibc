@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #define	SYS_brk	17
 #endif
 
-#ifndef	__GNU_STAB__
+#ifndef	HAVE_GNU_LD
 #define	__end	_end
 #endif
 
@@ -37,7 +37,7 @@ ENTRY (__brk)
 	cmpl sp@(4), d0
 	ble 0f
 	movel d0, sp@(4)
-0:	pea @POUND(SYS_brk)
+0:	pea SYS_brk
 	trap POUND(0)
 	bcs 1f
 	movel sp@(4), ___curbrk
