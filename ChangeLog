@@ -1,5 +1,14 @@
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/string.h: Add libc_hidden_builtin_proto for memcmp.
+	* sysdeps/generic/memcmp.c: Add libc_hidden_builtin_def.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/i386/i686/memcmp.S: Likewise.
+	* sysdeps/ia64/memcmp.S: Likewise.
+	* sysdeps/sparc/sparc64/memcmp.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Include <string.h>.
+
 	* time/difftime.c (__difftime): New renamed.  Make old name alias.
 	Use __difftime in recursive call.
 

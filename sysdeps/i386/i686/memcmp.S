@@ -391,3 +391,4 @@ END (BP_SYM (memcmp))
 
 #undef bcmp
 weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))
+libc_hidden_builtin_def (BP_SYM (memcmp))

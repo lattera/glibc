@@ -1,6 +1,6 @@
 /* Optimized version of the standard memcmp() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -88,7 +88,7 @@ ENTRY(memcmp)
 	;;
 	cmp.ne	p6, p0 = value1, value2
 (p6)	br.cond.spnt .done
-	br.cloop.dptk .l1	
+	br.cloop.dptk .l1
 .dest_aligned:
 	and	sh1 = 7, src 		// sh1 = src % 8
 	and	tmp = -8, len   	// tmp = len & -OPSIZ
@@ -109,7 +109,7 @@ ENTRY(memcmp)
 
 // We enter this loop with p6 cleared by the above comparison
 
-.l2:					
+.l2:
 (p[0])		ld8	r[0] = [asrc], 8		// r[0] = w1
 (p[0])		ld8	q[0] = [dest], 8
 (p[MEMLAT])	shr.u	tmp1[0] = r[1 + MEMLAT], sh1	// tmp1 = w0 >> sh1
@@ -162,3 +162,4 @@ ENTRY(memcmp)
 END(memcmp)
 
 weak_alias (memcmp, bcmp)
+libc_hidden_builtin_def (BP_SYM (memcmp))

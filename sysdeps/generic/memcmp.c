@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1993,1995,1997,1998,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995,1997,1998,2003,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -381,7 +382,7 @@ memcmp (s1, s2, len)
 
   return 0;
 }
-
+libc_hidden_builtin_def(memcmp)
 #ifdef weak_alias
 # undef bcmp
 weak_alias (memcmp, bcmp)

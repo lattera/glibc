@@ -83,6 +83,7 @@ libc_hidden_proto (__strxfrm_l)
 
 libc_hidden_builtin_proto (memchr)
 libc_hidden_builtin_proto (memcpy)
+libc_hidden_builtin_proto (memcmp)
 libc_hidden_builtin_proto (memmove)
 libc_hidden_builtin_proto (memset)
 libc_hidden_builtin_proto (strcat)

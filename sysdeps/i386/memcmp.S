@@ -1,5 +1,5 @@
 /* Compare two memory blocks for differences in the first COUNT bytes.
-   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,3 +73,4 @@ END (BP_SYM (memcmp))
 
 #undef bcmp
 weak_alias (BP_SYM (memcmp), BP_SYM (bcmp))
+libc_hidden_builtin_def (BP_SYM (memcmp))
