@@ -1,3 +1,8 @@
+2004-06-14  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/div_libc.h (_ITOFS): Use "sp" not "$sp".
+	(_ITOFT, _FTOIT, _ITOFT2): Likewise.
+
 2004-06-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/s390/s390-32/backtrace.c (init): Guard with #ifdef SHARED.

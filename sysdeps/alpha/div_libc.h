@@ -120,8 +120,8 @@ DIVBYZERO:
 #ifdef __alpha_fix__
 	itofs	\gr, \fr
 #else
-	stl	\gr, \slot($sp)
-	lds	\fr, \slot($sp)
+	stl	\gr, \slot(sp)
+	lds	\fr, \slot(sp)
 #endif
 .endm
 
@@ -129,8 +129,8 @@ DIVBYZERO:
 #ifdef __alpha_fix__
 	itoft	\gr, \fr
 #else
-	stq	\gr, \slot($sp)
-	ldt	\fr, \slot($sp)
+	stq	\gr, \slot(sp)
+	ldt	\fr, \slot(sp)
 #endif
 .endm
 
@@ -138,8 +138,8 @@ DIVBYZERO:
 #ifdef __alpha_fix__
 	ftoit	\fr, \gr
 #else
-	stt	\fr, \slot($sp)
-	ldq	\gr, \slot($sp)
+	stt	\fr, \slot(sp)
+	ldq	\gr, \slot(sp)
 #endif
 .endm
 
@@ -150,9 +150,9 @@ DIVBYZERO:
 	itoft	\gr1, \fr1
 	itoft	\gr2, \fr2
 #else
-	stq	\gr1, \slot1($sp)
-	stq	\gr2, \slot2($sp)
-	ldt	\fr1, \slot1($sp)
-	ldt	\fr2, \slot2($sp)
+	stq	\gr1, \slot1(sp)
+	stq	\gr2, \slot2(sp)
+	ldt	\fr1, \slot1(sp)
+	ldt	\fr2, \slot2(sp)
 #endif
 .endm
