@@ -51,12 +51,13 @@ if_nameindex (void)
 stub_warning (if_nameindex)
 #include <stub-tag.h>
 
-
+#if 0
 void
 internal_function
 __protocol_available (int *have_inet, int *have_inet6)
 {
-  /* By default we assume that IPv4 is avaialble, IPv6 not.  */
+  /* By default we assume that IPv4 is available, IPv6 not.  */
   *have_inet = 1;
   *have_inet6 = 0;
 }
+#endif

@@ -243,7 +243,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
 #endif
 }
 
-
+#if 0
 void
 internal_function
 __protocol_available (int *have_inet, int *have_inet6)
@@ -316,3 +316,4 @@ __protocol_available (int *have_inet, int *have_inet6)
 
   __close (fd);
 }
+#endif

@@ -156,7 +156,7 @@ if_freenameindex (struct if_nameindex *ifn)
   free (ifn);
 }
 
-
+#if 0
 void
 internal_function
 __protocol_available (int *have_inet, int *have_inet6)
@@ -164,3 +164,4 @@ __protocol_available (int *have_inet, int *have_inet6)
   *have_inet = _hurd_socket_server (PF_INET, 0) != MACH_PORT_NULL;
   *have_inet6 = _hurd_socket_server (PF_INET6, 0) != MACH_PORT_NULL;
 }
+#endif
