@@ -62,7 +62,7 @@ do_prepare (int argc, char *argv[])
 }
 
 
-int
+static int
 test_file (const void *buf, size_t size, int fd, const char *msg)
 {
   struct stat st;
@@ -100,7 +100,7 @@ test_file (const void *buf, size_t size, int fd, const char *msg)
 }
 
 
-int
+static int
 do_wait (struct aiocb **cbp, size_t nent, int allowed_err)
 {
   int go_on;
