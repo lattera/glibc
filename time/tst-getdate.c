@@ -32,7 +32,7 @@ static const struct
 {
   {"21:01:10 1999-1-31", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
   {"21:01:10 1999-2-28", 0, {10, 1, 21, 28, 1, 99, 0, 0, 0}},
-  {"16:30:46 2000-2-29", 0, {46, 31,16, 29, 1, 100, 0, 0, 0}}
+  {"16:30:46 2000-2-29", 0, {46, 30,16, 29, 1, 100, 0, 0, 0}}
 };
 
 void
@@ -103,8 +103,10 @@ main (void)
 		  tm->tm_year+1900, tm->tm_mon, tm->tm_mday,
 		  tm->tm_hour, tm->tm_min, tm->tm_sec);
 	  printf ("but should be: %d-%d-%d %d:%d:%d\n",
-		  tests[i].tm.tm_year+1900, tests[i].tm.tm_mon, tests[i].tm.tm_mday,
+		  tests[i].tm.tm_year+1900, tests[i].tm.tm_mon,
+		  tests[i].tm.tm_mday,
 		  tests[i].tm.tm_hour, tests[i].tm.tm_min, tests[i].tm.tm_sec);
+	  ++errors;
 	}
       
 	       
