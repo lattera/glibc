@@ -398,7 +398,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
   startp = strchr (data->dirbuf, '\0');
   /* There always must be a directory name.  */
   assert (startp != data->dirbuf);
-  if (startp != data->dirbuf + 1)
+  if (startp[-1] != '/')
     *startp++ = '/';
   data->ftw.base = startp - data->dirbuf;
 

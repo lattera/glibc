@@ -1,3 +1,10 @@
+2001-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/ftw.c (ftw_dir): Add slash after directory name if there
+	wasn't any.  Reported by loris <loris@iol.it>.
+	* io/Makefile (tests): Add bug-ftw2.
+	* io/bug-ftw2.c: New file.
+
 2001-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/jrand48_r.c (__jrand48_r): Correct constructing of

@@ -56,7 +56,7 @@ static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
 others		:= pwd
 test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
-		   tst-fcntl bug-ftw1
+		   tst-fcntl bug-ftw1 bug-ftw2
 
 distribute	:= ftwtest-sh
 

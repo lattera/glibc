@@ -31,7 +31,7 @@ __jrand48_r (xsubi, buffer, result)
 
   /* Store the result.  */
   if (sizeof (unsigned short int) == 2)
-    *result = (xsubi[2] << 16) | xsubi[1];
+    *result = ((xsubi[2] << 16) | xsubi[1]) & 0xffffffffl;
   else
     *result = xsubi[2] & 0xffffffffl;
 
