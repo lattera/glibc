@@ -113,7 +113,7 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFF32_CFLAGS:
 #ifdef __ILP32_OFF32_CFLAGS
 # if _POSIX_V6_ILP32_OFF32 == -1
-#  error __ILP32_OFF32_CFLAGS shouldn't be defined
+#  error __ILP32_OFF32_CFLAGS should not be defined
 # elif !defined _POSIX_V6_ILP32_OFF32
       if (__sysconf (_SC_V6_ILP32_OFF32) < 0)
         break;
@@ -127,7 +127,7 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFFBIG_CFLAGS:
 #ifdef __ILP32_OFFBIG_CFLAGS
 # if _POSIX_V6_ILP32_OFFBIG == -1
-#  error __ILP32_OFFBIG_CFLAGS shouldn't be defined
+#  error __ILP32_OFFBIG_CFLAGS should not be defined
 # elif !defined _POSIX_V6_ILP32_OFFBIG
       if (__sysconf (_SC_V6_ILP32_OFFBIG) < 0)
         break;
@@ -141,7 +141,7 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_LP64_OFF64_CFLAGS:
 #ifdef __LP64_OFF64_CFLAGS
 # if _POSIX_V6_LP64_OFF64 == -1
-#  error __LP64_OFF64_CFLAGS shouldn't be defined
+#  error __LP64_OFF64_CFLAGS should not be defined
 # elif !defined _POSIX_V6_LP64_OFF64
       if (__sysconf (_SC_V6_LP64_OFF64) < 0)
         break;
@@ -155,7 +155,7 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFF32_LDFLAGS:
 #ifdef __ILP32_OFF32_LDFLAGS
 # if _POSIX_V6_ILP32_OFF32 == -1
-#  error __ILP32_OFF32_LDFLAGS shouldn't be defined
+#  error __ILP32_OFF32_LDFLAGS should not be defined
 # elif !defined _POSIX_V6_ILP32_OFF32
       if (__sysconf (_SC_V6_ILP32_OFF32) < 0)
         break;
@@ -169,7 +169,7 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_ILP32_OFFBIG_LDFLAGS:
 #ifdef __ILP32_OFFBIG_LDFLAGS
 # if _POSIX_V6_ILP32_OFFBIG == -1
-#  error __ILP32_OFFBIG_LDFLAGS shouldn't be defined
+#  error __ILP32_OFFBIG_LDFLAGS should not be defined
 # elif !defined _POSIX_V6_ILP32_OFFBIG
       if (__sysconf (_SC_V6_ILP32_OFFBIG) < 0)
         break;
@@ -183,7 +183,7 @@ confstr (name, buf, len)
     case _CS_POSIX_V6_LP64_OFF64_LDFLAGS:
 #ifdef __LP64_OFF64_LDFLAGS
 # if _POSIX_V6_LP64_OFF64 == -1
-#  error __LP64_OFF64_LDFLAGS shouldn't be defined
+#  error __LP64_OFF64_LDFLAGS should not be defined
 # elif !defined _POSIX_V6_LP64_OFF64
       if (__sysconf (_SC_V6_LP64_OFF64) < 0)
         break;
