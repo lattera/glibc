@@ -57,7 +57,7 @@ can get the crypt distribution via anonymous FTP from ftp.ifi.uio.no
 [129.240.64.21], or another archive site outside the USA.  Archive
 maintainers are encouraged to copy this distribution to their archives
 outside the USA.  Please get it from ftp.ifi.uio.no; transferring this
-distribution from prep.ai.mit.edu (or any other site in the USA) to a
+distribution from ftp.gnu.org (or any other site in the USA) to a
 site outside the USA is in violation of US export laws.
 
 Beside the separate crypt tar file there are some more add-ons which can be

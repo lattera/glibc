@@ -67,16 +67,21 @@ nscd_open_socket (void)
 {
   struct sockaddr_un addr;
   int sock;
+  int saved_errno = errno;
 
   sock = socket (PF_UNIX, SOCK_STREAM, 0);
   if (sock < 0)
-    return -1;
+    {
+      __set_errno (saved_errno);
+      return -1;
+    }
 
   addr.sun_family = AF_UNIX;
   strcpy (addr.sun_path, _PATH_NSCDSOCKET);
   if (connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
       close (sock);
+      __set_errno (saved_errno);
       return -1;
     }
 

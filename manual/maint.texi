@@ -307,7 +307,7 @@ Since no one has volunteered to test and fix the above configurations,
 these are not supported at the moment.  It's expected that these don't
 work anymore.  Porting the library is not hard.  If you are interested
 in doing a port, please contact the glibc maintainers by sending
-electronic mail to @email{bug-glibc@@prep.ai.mit.edu}.
+electronic mail to @email{bug-glibc@@gnu.org}.
 
 Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486},
 @samp{i586}, or @samp{i686}.  All of those configurations produce a
@@ -369,8 +369,7 @@ conform to the ISO and POSIX standards (@pxref{Standards and
 Portability}), that is definitely a bug.  Report it!@refill
 
 Send bug reports to the Internet address
-@email{bug-glibc@@prep.ai.mit.edu} or the UUCP path
-@email{mit-eddie!prep.ai.mit.edu!bug-glibc}.  If you have other problems
+@email{bug-glibc@@gnu.org}.  If you have other problems
 with installation or use, please report those as well.@refill
 
 If you are not sure how a function should behave, and this manual
@@ -378,8 +377,7 @@ doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
 errors or omissions in this manual, please report them to the Internet
-address @email{bug-glibc-manual@@prep.ai.mit.edu} or the UUCP path
-@email{mit-eddie!prep.ai.mit.edu!bug-glibc-manual}.
+address @email{bug-glibc-manual@@prep.ai.mit.edu}.
 
 @node Source Layout
 @appendixsec Adding New Functions

@@ -212,51 +212,65 @@ _IO_str_seekoff (fp, offset, dir, mode)
      int dir;
      int mode;
 {
-  _IO_ssize_t cur_size = _IO_str_count (fp);
-  _IO_fpos64_t new_pos = EOF;
+  _IO_fpos64_t new_pos;
 
   if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
     mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);
 
-  /* Move the get pointer, if requested. */
-  if (mode & _IOS_INPUT)
+  if (mode == 0)
     {
-      switch (dir)
-	{
-	case _IO_seek_end:
-	  offset += cur_size;
-	  break;
-	case _IO_seek_cur:
-	  offset += fp->_IO_read_ptr - fp->_IO_read_base;
-	  break;
-	default: /* case _IO_seek_set: */
-	  break;
-	}
-      if (offset < 0 || (_IO_ssize_t) offset > cur_size)
-	return EOF;
-      fp->_IO_read_ptr = fp->_IO_read_base + offset;
-      fp->_IO_read_end = fp->_IO_read_base + cur_size;
-      new_pos = offset;
+      /* Don't move any pointers. But there is no clear indication what
+	 mode FP is in. Let's guess. */
+      if (fp->_IO_file_flags & _IO_NO_WRITES)
+        new_pos = fp->_IO_read_ptr - fp->_IO_read_base;
+      else
+        new_pos = fp->_IO_write_ptr - fp->_IO_write_base;
     }
-
-  /* Move the put pointer, if requested. */
-  if (mode & _IOS_OUTPUT)
+  else
     {
-      switch (dir)
+      _IO_ssize_t cur_size = _IO_str_count(fp);
+      new_pos = EOF;
+
+      /* Move the get pointer, if requested. */
+      if (mode & _IOS_INPUT)
 	{
-	case _IO_seek_end:
-	  offset += cur_size;
-	  break;
-	case _IO_seek_cur:
-	  offset += fp->_IO_write_ptr - fp->_IO_write_base;
-	  break;
-	default: /* case _IO_seek_set: */
-	  break;
+	  switch (dir)
+	    {
+	    case _IO_seek_end:
+	      offset += cur_size;
+	      break;
+	    case _IO_seek_cur:
+	      offset += fp->_IO_read_ptr - fp->_IO_read_base;
+	      break;
+	    default: /* case _IO_seek_set: */
+	      break;
+	    }
+	  if (offset < 0 || (_IO_ssize_t) offset > cur_size)
+	    return EOF;
+	  fp->_IO_read_ptr = fp->_IO_read_base + offset;
+	  fp->_IO_read_end = fp->_IO_read_base + cur_size;
+	  new_pos = offset;
 	}
-      if (offset < 0 || (_IO_ssize_t) offset > cur_size)
-	return EOF;
-      fp->_IO_write_ptr = fp->_IO_write_base + offset;
-      new_pos = offset;
+
+      /* Move the put pointer, if requested. */
+      if (mode & _IOS_OUTPUT)
+	{
+	  switch (dir)
+	    {
+	    case _IO_seek_end:
+	      offset += cur_size;
+	      break;
+	    case _IO_seek_cur:
+	      offset += fp->_IO_write_ptr - fp->_IO_write_base;
+	      break;
+	    default: /* case _IO_seek_set: */
+	      break;
+	    }
+	  if (offset < 0 || (_IO_ssize_t) offset > cur_size)
+	    return EOF;
+	  fp->_IO_write_ptr = fp->_IO_write_base + offset;
+	  new_pos = offset;
+	}
     }
   return new_pos;
 }

@@ -282,11 +282,17 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	  case PATHCONF:
 	    if (argc < 3)
 	      usage ();
+	    errno = 0;
 	    value = pathconf (argv[2], c->call_name);
 	    if (value == -1)
-	      error (3, errno, "pathconf: %s", argv[2]);
-
-	    printf ("%ld\n", value);
+	      {
+		if (errno)
+		  error (3, errno, "pathconf: %s", argv[2]);
+		else
+		  puts (_("undefined"));
+	      }
+	    else
+	      printf ("%ld\n", value);
 	    exit (0);
 
 	  case SYSCONF:

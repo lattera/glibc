@@ -120,7 +120,7 @@ these directories.  If a new version of an add-on is available it is normally
 required for the corresponding snapshot so always pay attention for these.
 
 Note that we provide GNU gzip compressed files only.  You can ftp gzip
-from prep.ai.mit.edu in directory pub/gnu.
+from ftp.gnu.org in directory pub/gnu.
 
 In some cases the dates for diffs and snapshots do not match like in the
 example above.  The full release is for 970921 but the patch is for
@@ -167,7 +167,7 @@ developers.  No questions about installation problems or other simple topics
 are wanted nor will they be answered.
 
 Do *not* send any questions about the snapshots or patches specific to the
-snapshots to bug-glibc@prep.ai.mit.edu.  Nobody there will have any idea what
+snapshots to bug-glibc@gnu.org.  Nobody there will have any idea what
 you are talking about and it will just cause confusion.
 
 

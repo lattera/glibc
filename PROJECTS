@@ -1,9 +1,9 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: January 1998
+Status: March 1998
 
 If you have time and talent to take over any of the jobs below please
-contact <bug-glibc@prep.ai.mit.edu>
+contact <bug-glibc@gnu.org>.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,8 +33,8 @@ contact <bug-glibc@prep.ai.mit.edu>
      users can immediately benefit from this.
 
      Take a look at the matrix in
-	ftp://prep.ai.mit.edu/pub/gnu/ABOUT-NLS
-     for the current status (of course better use a mirror of prep).
+	ftp://ftp.gnu.org/pub/gnu/ABOUT-NLS
+     for the current status (of course better use a mirror of ftp.gnu.org).
 
 
 [ 6] Write `long double' versions of the math functions.  This should be

@@ -43,7 +43,6 @@ __pathconf (const char *path, int name)
 #ifdef	LINK_MAX
       return LINK_MAX;
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -51,7 +50,6 @@ __pathconf (const char *path, int name)
 #ifdef	MAX_CANON
       return MAX_CANON;
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -59,7 +57,6 @@ __pathconf (const char *path, int name)
 #ifdef	MAX_INPUT
       return MAX_INPUT;
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -67,14 +64,21 @@ __pathconf (const char *path, int name)
 #ifdef	NAME_MAX
       {
 	struct statfs buf;
+	int save_errno = errno;
 
 	if (__statfs (path, &buf) < 0)
-	  return errno == ENOSYS ? NAME_MAX : -1;
+	  {
+	    if (errno == ENOSYS)
+	      {
+		errno = save_errno;
+		return NAME_MAX;
+	      }
+	    return -1;
+	  }
 	else
 	  return buf.f_namelen;
       }
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -82,7 +86,6 @@ __pathconf (const char *path, int name)
 #ifdef	PATH_MAX
       return PATH_MAX;
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -90,7 +93,6 @@ __pathconf (const char *path, int name)
 #ifdef	PIPE_BUF
       return PIPE_BUF;
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
 
@@ -140,13 +142,9 @@ __pathconf (const char *path, int name)
 #ifdef	SOCK_MAXBUF
       return SOCK_MAXBUF;
 #else
-      __set_errno (ENOSYS);
       return -1;
 #endif
     }
-
-  __set_errno (ENOSYS);
-  return -1;
 }
 
 weak_alias (__pathconf, pathconf)

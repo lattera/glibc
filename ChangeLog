@@ -1,3 +1,42 @@
+1998-03-04 16:12  H.J. Lu  <hjl@gnu.org>
+
+	* libio/strops.c (_IO_str_seekoff): Handle MODE == 0.
+
+1998-03-04 16:19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/nscd_getgr_r.c: Follow nscd_getpw_r.c change.
+
+1998-03-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/nscd_getpw_r.c (nscd_open_socket): Safe and reset errno so
+	that a failure to connect to nscd doesn't change errno.
+
+1998-03-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/maint.texi (Reporting Bugs): Change
+	bug-glibc@prep.ai.mit.edu to bug-glibc@gnu.org.
+
+	* locale/iso-4217.def: Likewise
+
+1998-03-04 12:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/texinfo.tex: Updated.
+
+1998-03-03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/fpathconf.c: Don't modify errno for an undefined
+	value.
+	* sysdeps/posix/pathconf.c: Likewise.
+	* posix/getconf.c: Print `undefined' if pathconf returns -1
+	without setting errno.
+
+1998-03-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Fix cut&paste
+	problem.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: New file.
+	Patches by Elliot Lee <sopwith@cuc.edu>.
+
 1998-03-04 09:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/link.h (struct link_map): Add new field l_reloc_result.

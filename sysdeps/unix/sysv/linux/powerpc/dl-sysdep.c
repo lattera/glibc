@@ -42,8 +42,8 @@
 	   vector will have to be laid out to allow for this	\
 	   test :-(.  */					\
 	if (((ElfW(auxv_t) *)_test)->a_type <= AT_PHDR)		\
+	  (auxp) = (ElfW(auxv_t) *) _tmp;			\
       }								\
-    (auxp) = (ElfW(auxv_t) *) _tmp;				\
   } while (0)
 
 
