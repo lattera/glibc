@@ -1,3 +1,11 @@
+1998-03-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/link.h: Fix typos.
+	Reported by Andreas Jaeger.
+
+	* nscd/nscd_getpw_r.c (__nscd_getpw_r): Remove false comment.
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Likewise.
+
 1998-03-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp-help.c: Remove last bits of using gettext instead of
@@ -25,8 +33,8 @@
 	For LD_DEBUG=libs also set _dl_debug_impcalls.
 	* sysdeps/generic/dl-cache.c: Include unistd.h.
 	* sysdeps/generic/libc-start.c: New file.
-	* sysdeps/i386/elf/start.S: Don't call main directly, call
 	* sysdeps/unix/sysv/linux/libc-start.c: New file.
+	* sysdeps/i386/elf/start.S: Don't call main directly, call
 	__libc_start_main instead.
 
 	* elf/Makefile ($(objpfx)ld.so): Add $(load-map-file) as dependency.
@@ -71,9 +79,9 @@
 
 1998-03-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* nis/nis_call.c (do_ypcall, yp_all): Safe and reset errno.
+	* nis/nis_call.c (__do_niscall): Safe and reset errno.
 
-	* nis/ypclnt.c (__yp_bind): Safe and reset errno.
+	* nis/ypclnt.c (do_ypcall, yp_all): Safe and reset errno.
 
 1998-03-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 

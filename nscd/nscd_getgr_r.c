@@ -101,7 +101,6 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 
   if (sock == -1)
     {
-      /* Returning two signals that contacting the daemon failed.  */
       __nss_not_use_nscd_group = 1;
       return 1;
     }

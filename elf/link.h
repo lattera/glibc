@@ -231,7 +231,7 @@ typedef void (*receiver_fct) (int, const char *, const char *);
    user interface to run-time dynamic linking.  */
 
 
-/* Parameters passed to te dynamic linker.  */
+/* Parameters passed to the dynamic linker.  */
 extern char **_dl_argv;
 
 /* Cached value of `getpagesize ()'.  */
@@ -245,7 +245,7 @@ extern const char *_dl_profile;
 /* Map of shared object to be profiled.  */
 extern struct link_map *_dl_profile_map;
 
-/* If nonzero the appropriate debug information if printed.  */
+/* If nonzero the appropriate debug information is printed.  */
 extern int _dl_debug_libs;
 extern int _dl_debug_impcalls;
 
