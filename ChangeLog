@@ -1,3 +1,9 @@
+2002-08-26  Christoph Hellwig  <hch@lst.de>
+
+	* sysdeps/unix/sysv/linux/sys/personality.h: Remark origin, fix
+	formating braindamage, add missing PER_HPUX and PER_OSF1 values.
+
+
 2002-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/Dist: Add _mcount.S and bits/link.h.
