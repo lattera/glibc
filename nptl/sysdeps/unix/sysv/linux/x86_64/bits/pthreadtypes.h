@@ -23,7 +23,7 @@
 #define __SIZEOF_PTHREAD_ATTR_T 56
 #define __SIZEOF_PTHREAD_MUTEX_T 40
 #define __SIZEOF_PTHREAD_MUTEXATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 64
+#define __SIZEOF_PTHREAD_COND_T 48
 #define __SIZEOF_PTHREAD_CONDATTR_T 4
 #define __SIZEOF_PTHREAD_RWLOCK_T 56
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
@@ -112,7 +112,8 @@ typedef union
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
     pthread_t __writer;
-    unsigned long int __unused;
+    unsigned long int __pad1;
+    unsigned long int __pad2;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;
