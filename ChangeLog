@@ -1,3 +1,34 @@
+2000-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/assert-perr.c: Include <stdlib.h> for abort prototype.
+	* libio/ftello.c: Likewise.
+	* libio/ftello64.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* sysdeps/generic/memrchr.c: Likewise.
+	* sysdeps/posix/libc_fatal.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+	* misc/fstab.c: Include <string.h> for strcmp prototype.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	Patch by Kurt Roeckx <Q@ping.be>.
+
+	* nss/Makefile (libnss_db-dbs): Renamed from libnss_db-routines.
+	Remove db-open.  Change all uses.
+	(libnss_db-routines): Define as $(libnss_db-dbs) db-open.
+
+2000-04-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/msgctl.c (__syscall_msgctl): Declare.
+	* sysdeps/unix/sysv/linux/alpha/semctl.c (__syscall_semctl): Declare.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c (__syscall_shmctl): Declare.
+	* sysdeps/unix/sysv/linux/alpha/getrusage.S: Surround uses of $f28
+	with .set noat/at to shut up warnings.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (__fstatfs64): Add alias.
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (init_iosys): Allow
+	compilation if __NR_pciconfig_iobase is not defined.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (__fstatfs64):
+	Add alias.
+
 2000-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/sysinfo.texi: Fix typo.

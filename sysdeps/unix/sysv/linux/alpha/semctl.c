@@ -49,6 +49,7 @@ union semun
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
 
+extern int __syscall_semctl (int, int, int, void *);
 
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */

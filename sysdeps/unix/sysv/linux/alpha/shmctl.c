@@ -52,6 +52,8 @@ struct __old_shminfo
   int shmall;
 };
 
+extern int __syscall_shmctl (int, int, void *);
+
 /* Provide operations to control over shared memory segments.  */
 int __new_shmctl (int, int, struct shmid_ds *);
 

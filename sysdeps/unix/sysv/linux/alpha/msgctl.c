@@ -44,6 +44,8 @@ struct __old_msqid_ds
   __ipc_pid_t msg_lrpid;		/* pid of last msgrcv() */
 };
 
+extern int __syscall_msgctl (int, int, void *);
+
 /* Allows to control internal state and destruction of message queue
    objects.  */
 int __new_msgctl (int, int, struct msqid_ds *);

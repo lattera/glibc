@@ -64,11 +64,11 @@ vpath %.c $(subdir-dirs)
 libnss_files-routines	:= $(addprefix files-,$(databases))
 distribute		+= files-XXX.c files-parse.c
 
-libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
+libnss_db-dbs		:= $(addprefix db-,$(filter-out hosts network key,\
 							$(databases))) \
-			   db-open
+libnss_db-routines	:= $(libnss_db-dbs) db-open
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
-					$(addsuffix .c,$(libnss_db-routines)))
+					$(addsuffix .c,$(libnss_db-dbs)))
 distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h dummy-db.h)
 
 
@@ -85,7 +85,7 @@ include ../Rules
 
 $(objpfx)libnss_db.so: $(objpfx)libnss_files.so $(libdl)
 
-$(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
+$(libnss_db-dbs:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	@rm -f $@.new
 	(echo '#define EXTERN_PARSER';\
 	 echo '#define GENERIC "../nss_db/db-XXX.c"';\

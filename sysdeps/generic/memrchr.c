@@ -1,5 +1,5 @@
 /* memrchr -- find the last occurrence of a byte in a memory block
-   Copyright (C) 1991, 1993, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1991, 93, 96, 97, 99, 2000 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -20,6 +20,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+#include <stdlib.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
