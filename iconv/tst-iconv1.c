@@ -29,15 +29,11 @@ main (void)
   inbuf = utf8;
   inbytes = 4;
   outbuf = (char *) ucs4;
-#ifdef OK
-  outbytes = 5 * sizeof (wchar_t);    /* Ok. */
-#else
   outbytes = 4 * sizeof (wchar_t);    /* "Argument list too long" error. */
-#endif
   n = iconv (cd, &inbuf, &inbytes, &outbuf, &outbytes);
   if (n == (size_t) -1)
     {
-      perror ("iconv");
+      printf ("iconv: %m\n");
       iconv_close (cd);
       return 1;
     }
