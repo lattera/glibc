@@ -96,16 +96,6 @@ elf_machine_matches_host (ElfW(Half) e_machine)
     }
 }
 
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-+   first element of the GOT.  This must be inlined in a function which
-+   uses global data.  */
-+static inline ElfW(Addr)
-+elf_machine_dynamic (void)
-+{
-+  register ElfW(Addr) gp asm ("$28");
-+  return * (ElfW(Addr) *) (gp - 0x7ff0);
-+}
-+
 static inline ElfW(Addr) *
 elf_mips_got_from_gpreg (ElfW(Addr) gpreg)
 {
