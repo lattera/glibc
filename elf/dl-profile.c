@@ -507,7 +507,7 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 	  /* If we still have no entry stop searching and insert.  */
 	  if (*topcindex == 0)
 	    {
-	      uint_fast32_t newarc = 1 + exchange_and_add (narcsp, 1);
+	      uint_fast32_t newarc = exchange_and_add (narcsp, 1);
 
 	      /* In rare cases it could happen that all entries in FROMS are
 		 occupied.  So we cannot count this anymore.  */

@@ -1,5 +1,5 @@
 /* Networks file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,10 +34,40 @@ LINE_PARSER
 ("#",
  {
    char *addr;
+   char *cp;
+   int n = 1;
 
    STRING_FIELD (result->n_name, isspace, 1);
 
    STRING_FIELD (addr, isspace, 1);
+   /* 'inet_network' does not add zeroes at the end if the network number
+      does not four byte values.  We add them outselves if necessary.  */
+   cp = strchr (addr, '.');
+   if (cp != NULL)
+     {
+       ++n;
+       cp = strchr (cp + 1, '.');
+       if (cp != NULL)
+	 {
+	   ++n;
+	   cp = strchr (cp + 1, '.');
+	   if (cp != NULL)
+	     ++n;
+	 }
+     }
+   if (n < 4)
+     {
+       char *newp = (char *) alloca (strlen (addr) + (4 - n) * 2 + 1);
+       cp = stpcpy (newp, addr);
+       do
+	 {
+	   *cp++ = '.';
+	   *cp++ = '0';
+	 }
+       while (++n < 4);
+       *cp = '\0';
+       addr = newp;
+     }
    result->n_net = inet_network (addr);
    result->n_addrtype = AF_INET;
 

@@ -264,19 +264,13 @@ main (int argc, char *argv[])
   if (profdata == NULL)
     {
       char *newp;
+      const char *soname;
+      size_t soname_len;
 
-      if (shobj_handle->soname == NULL)
-	{
-	  unload_shobj (shobj_handle);
-
-	  error (EXIT_FAILURE, 0, _("\
-no filename for profiling data given and shared object `%s' has no soname"),
-		 shobj);
-	}
-
-      newp = (char *) alloca (strlen (shobj_handle->soname)
-			      + sizeof ".profile");
-      stpcpy (stpcpy (newp, shobj_handle->soname), ".profile");
+      soname = shobj_handle->soname ?: basename (shobj);
+      soname_len = strlen (soname);
+      newp = (char *) alloca (soname_len + sizeof ".profile");
+      stpcpy (mempcpy (newp, soname, soname_len), ".profile");
       profdata = newp;
     }
 
@@ -394,11 +388,11 @@ load_shobj (const char *name)
       char *load_name = (char *) alloca (strlen (name) + 3);
       stpcpy (stpcpy (load_name, "./"), name);
 
-      map = (struct link_map *) dlopen (load_name, RTLD_LAZY);
+      map = (struct link_map *) dlopen (load_name, RTLD_LAZY | __RTLD_SPROF);
     }
   if (map == NULL)
     {
-      map = (struct link_map *) dlopen (name, RTLD_LAZY);
+      map = (struct link_map *) dlopen (name, RTLD_LAZY | __RTLD_SPROF);
       if (map == NULL)
 	{
 	  error (0, errno, _("failed to load shared object `%s'"), name);

@@ -47,6 +47,6 @@ typedef struct {
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((int) (address) < (jmpbuf)->__gregs[__JB_GPR15])
+  ((void *) (address) < (void *) (jmpbuf)->__gregs[__JB_GPR15])
 
 #endif /* __S390_SETJMP_H__ */

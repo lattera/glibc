@@ -50,10 +50,21 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 /* Short description of parameters.  */
 static const char args_doc[] = N_("database [key ...]");
 
+/* Supported options. */
+static const struct argp_option args_options[] =
+  {
+    { "service", 's', "CONFIG", 0, N_("Service configuration to be used") },
+    { NULL, 0, NULL, 0, NULL },
+  };
+
+/* Prototype for option handler.  */
+static error_t parse_option (int key, char *arg, struct argp_state *state);
+
 /* Data structure to communicate with argp functions.  */
-static struct argp argp = {
-  NULL, NULL, args_doc, NULL,
-};
+static struct argp argp =
+  {
+    args_options, parse_option, args_doc, NULL,
+  };
 
 /* Print the version information.  */
 static void
@@ -76,11 +87,9 @@ print_aliases (struct aliasent *alias)
 
   printf ("%s: ", alias->alias_name);
   for  (i = strlen (alias->alias_name); i < 14; ++i)
-    fputs (" ", stdout);
+    fputs_unlocked (" ", stdout);
 
-  for (i = 0;
-       i < alias->alias_members_len;
-       ++i)
+  for (i = 0; i < alias->alias_members_len; ++i)
     printf ("%s%s",
 	    alias->alias_members [i],
 	    i + 1 == alias->alias_members_len ? "\n" : ", ");
@@ -93,10 +102,10 @@ aliases_keys (int number, char *key[])
   int i;
   struct aliasent *alias;
 
-  if (!number)
+  if (number == 0)
     {
       setaliasent ();
-      while ((alias = getaliasent()) != NULL)
+      while ((alias = getaliasent ()) != NULL)
 	print_aliases (alias);
       endaliasent ();
       return result;
@@ -122,7 +131,7 @@ ethers_keys (int number, char *key[])
   int result = 0;
   int i;
 
-  if (!number)
+  if (number == 0)
     {
       fprintf (stderr, _("Enumeration not supported on %s\n"), "ethers");
       return 3;
@@ -134,7 +143,7 @@ ethers_keys (int number, char *key[])
       char buffer [1024], *p;
 
       ethp = ether_aton (key[i]);
-      if (ethp)
+      if (ethp != NULL)
 	{
 	  if (ether_ntohost (buffer, ethp))
 	    {
@@ -167,16 +176,16 @@ print_group (struct group *grp)
 
   printf ("%s:%s:%ld:", grp->gr_name ? grp->gr_name : "",
 	  grp->gr_passwd ? grp->gr_passwd : "",
-	  (unsigned long)grp->gr_gid);
+	  (unsigned long int) grp->gr_gid);
 
   while (grp->gr_mem[i] != NULL)
     {
-      fputs (grp->gr_mem[i], stdout);
+      fputs_unlocked (grp->gr_mem[i], stdout);
       ++i;
       if (grp->gr_mem[i] != NULL)
-	fputs (",", stdout);
+	putchar_unlocked (',');
     }
-  fputs ("\n", stdout);
+  putchar_unlocked ('\n');
 }
 
 static int
@@ -186,10 +195,10 @@ group_keys (int number, char *key[])
   int i;
   struct group *grp;
 
-  if (!number)
+  if (number == 0)
     {
       setgrent ();
-      while ((grp = getgrent()) != NULL)
+      while ((grp = getgrent ()) != NULL)
 	print_group (grp);
       endgrent ();
       return result;
@@ -220,20 +229,16 @@ print_hosts (struct hostent *host)
   const char *ip = inet_ntop (host->h_addrtype, host->h_addr_list[0],
 			      buf, sizeof (buf));
 
-  fputs (ip, stdout);
-  for (i = strlen (ip); i < 15; ++i)
-    fputs (" ", stdout);
-  fputs (" ", stdout);
-  fputs (host->h_name, stdout);
+  printf ("%-15s %s", ip, host->h_name);
 
   i = 0;
   while (host->h_aliases[i] != NULL)
     {
-      fputs (" ", stdout);
-      fputs (host->h_aliases[i], stdout);
+      putchar_unlocked (' ');
+      fputs_unlocked (host->h_aliases[i], stdout);
       ++i;
     }
-  fputs ("\n", stdout);
+  putchar_unlocked ('\n');
 }
 
 static int
@@ -243,10 +248,10 @@ hosts_keys (int number, char *key[])
   int i;
   struct hostent *host;
 
-  if (!number)
+  if (number == 0)
     {
       sethostent (0);
-      while ((host = gethostent()) != NULL)
+      while ((host = gethostent ()) != NULL)
 	print_hosts (host);
       endhostent ();
       return result;
@@ -285,9 +290,9 @@ static int
 netgroup_keys (int number, char *key[])
 {
   int result = 0;
-  int i, j;
+  int i;
 
-  if (!number)
+  if (number == 0)
     {
       fprintf (stderr, _("Enumeration not supported on %s\n"), "netgroup");
       return 3;
@@ -301,13 +306,11 @@ netgroup_keys (int number, char *key[])
 	{
 	  char *p[3];
 
-	  fputs (key[i], stdout);
-	  for (j = strlen (key[i]); j < 21; ++j)
-	    fputs (" ", stdout);
+	  printf ("%-21s", key[i]);
 
 	  while (getnetgrent (p, p + 1, p + 2))
 	    printf (" (%s, %s, %s)", p[0] ?: " ", p[1] ?: "", p[2] ?: "");
-	  fputs ("\n", stdout);
+	  putchar_unlocked ('\n');
 	}
     }
 
@@ -322,21 +325,18 @@ print_networks (struct netent *net)
   struct in_addr ip;
   ip.s_addr = htonl (net->n_net);
 
-  printf ("%s ", net->n_name);
-  for  (i = strlen (net->n_name); i < 21; ++i)
-    fputs (" ", stdout);
-  fputs (inet_ntoa (ip), stdout);
+  printf ("%-21s %s", net->n_name, inet_ntoa (ip));
 
   i = 0;
   while (net->n_aliases[i] != NULL)
     {
-      fputs (" ", stdout);
-      fputs (net->n_aliases[i], stdout);
+      putchar_unlocked (' ');
+      fputs_unlocked (net->n_aliases[i], stdout);
       ++i;
       if (net->n_aliases[i] != NULL)
-	fputs (",", stdout);
+	putchar_unlocked (',');
     }
-  fputs ("\n", stdout);
+  putchar_unlocked ('\n');
 }
 
 static int
@@ -346,10 +346,10 @@ networks_keys (int number, char *key[])
   int i;
   struct netent *net;
 
-  if (!number)
+  if (number == 0)
     {
       setnetent (0);
-      while ((net = getnetent()) != NULL)
+      while ((net = getnetent ()) != NULL)
 	print_networks (net);
       endnetent ();
       return result;
@@ -378,8 +378,8 @@ print_passwd (struct passwd *pwd)
   printf ("%s:%s:%ld:%ld:%s:%s:%s\n",
 	  pwd->pw_name ? pwd->pw_name : "",
 	  pwd->pw_passwd ? pwd->pw_passwd : "",
-	  (unsigned long)pwd->pw_uid,
-	  (unsigned long)pwd->pw_gid,
+	  (unsigned long int) pwd->pw_uid,
+	  (unsigned long int) pwd->pw_gid,
 	  pwd->pw_gecos ? pwd->pw_gecos : "",
 	  pwd->pw_dir ? pwd->pw_dir : "",
 	  pwd->pw_shell ? pwd->pw_shell : "");
@@ -392,10 +392,10 @@ passwd_keys (int number, char *key[])
   int i;
   struct passwd *pwd;
 
-  if (!number)
+  if (number == 0)
     {
       setpwent ();
-      while ((pwd = getpwent()) != NULL)
+      while ((pwd = getpwent ()) != NULL)
 	print_passwd (pwd);
       endpwent ();
       return result;
@@ -423,19 +423,16 @@ print_protocols (struct protoent *proto)
 {
   unsigned int i;
 
-  fputs (proto->p_name, stdout);
-  for (i = strlen (proto->p_name); i < 21; ++i)
-    fputs (" ", stdout);
-  printf (" %d", proto->p_proto);
+  printf ("%-21s %d", proto->p_name, proto->p_proto);
 
   i = 0;
   while (proto->p_aliases[i] != NULL)
     {
-      fputs (" ", stdout);
-      fputs (proto->p_aliases[i], stdout);
+      putchar_unlocked (' ');
+      fputs_unlocked (proto->p_aliases[i], stdout);
       ++i;
     }
-  fputs ("\n", stdout);
+  putchar_unlocked ('\n');
 }
 
 static int
@@ -445,10 +442,10 @@ protocols_keys (int number, char *key[])
   int i;
   struct protoent *proto;
 
-  if (!number)
+  if (number == 0)
     {
       setprotoent (0);
-      while ((proto = getprotoent()) != NULL)
+      while ((proto = getprotoent ()) != NULL)
 	print_protocols (proto);
       endprotoent ();
       return result;
@@ -476,14 +473,12 @@ print_rpc (struct rpcent *rpc)
 {
   int i;
 
-  fputs (rpc->r_name, stdout);
-  for  (i = strlen (rpc->r_name); i < 15; ++i)
-    fputs (" ", stdout);
-  printf (" %d%s", rpc->r_number, rpc->r_aliases[0] ? " " : "");
+  printf ("%-15s %d%s",
+	  rpc->r_name, rpc->r_number, rpc->r_aliases[0] ? " " : "");
 
   for (i = 0; rpc->r_aliases[i]; ++i)
     printf (" %s", rpc->r_aliases[i]);
-  fputs ("\n", stdout);
+  putchar_unlocked ('\n');
 }
 
 static int
@@ -493,10 +488,10 @@ rpc_keys (int number, char *key[])
   int i;
   struct rpcent *rpc;
 
-  if (!number)
+  if (number == 0)
     {
       setrpcent (0);
-      while ((rpc = getrpcent()) != NULL)
+      while ((rpc = getrpcent ()) != NULL)
 	print_rpc (rpc);
       endrpcent ();
       return result;
@@ -524,19 +519,16 @@ print_services (struct servent *serv)
 {
   unsigned int i;
 
-  fputs (serv->s_name, stdout);
-  for (i = strlen (serv->s_name); i < 21; ++i)
-    fputs (" ", stdout);
-  printf (" %d/%s", ntohs (serv->s_port), serv->s_proto);
+  printf ("%-21s %d/%s", serv->s_name, ntohs (serv->s_port), serv->s_proto);
 
   i = 0;
   while (serv->s_aliases[i] != NULL)
     {
-      fputs (" ", stdout);
-      fputs (serv->s_aliases[i], stdout);
+      putchar_unlocked (' ');
+      fputs_unlocked (serv->s_aliases[i], stdout);
       ++i;
     }
-  fputs ("\n", stdout);
+  putchar_unlocked ('\n');
 }
 
 static int
@@ -549,7 +541,7 @@ services_keys (int number, char *key[])
   if (!number)
     {
       setservent (0);
-      while ((serv = getservent()) != NULL)
+      while ((serv = getservent ()) != NULL)
 	print_services (serv);
       endservent ();
       return result;
@@ -620,10 +612,10 @@ print_shadow (struct spwd *sp)
 	  sp->sp_namp ? sp->sp_namp : "",
 	  sp->sp_pwdp ? sp->sp_pwdp : "");
 
-#define SHADOW_FIELD(n)		\
-  if (sp->n == -1)		\
-    fputs (":", stdout);	\
-  else				\
+#define SHADOW_FIELD(n) \
+  if (sp->n == -1)							      \
+    putchar_unlocked (':');						      \
+  else									      \
     printf ("%ld:", sp->n)
 
   SHADOW_FIELD (sp_lstchg);
@@ -633,7 +625,7 @@ print_shadow (struct spwd *sp)
   SHADOW_FIELD (sp_inact);
   SHADOW_FIELD (sp_expire);
   if (sp->sp_flag == ~0ul)
-    fputs ("\n", stdout);
+    putchar_unlocked ('\n');
   else
     printf ("%lu\n", sp->sp_flag);
 }
@@ -644,12 +636,12 @@ shadow_keys (int number, char *key[])
   int result = 0;
   int i;
 
-  if (!number)
+  if (number == 0)
     {
       struct spwd *sp;
 
       setspent ();
-      while ((sp = getspent()) != NULL)
+      while ((sp = getspent ()) != NULL)
 	print_shadow (sp);
       endpwent ();
       return result;
@@ -689,8 +681,27 @@ D(rpc)
 D(services)
 D(shadow)
 #undef D
-    { NULL, NULL }  
+    { NULL, NULL }
   };
+
+/* Handle arguments found by argp. */
+static error_t
+parse_option (int key, char *arg, struct argp_state *state)
+{
+  int i;
+  switch (key)
+    {
+    case 's':
+      for (i = 0; databases[i].name; ++i)
+	__nss_configure_lookup (databases[i].name, arg);
+      break;
+
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+
+  return 0;
+}
 
 /* build doc */
 static inline void
@@ -707,7 +718,7 @@ build_doc (void)
     len += strlen (databases[i].name) + 1;
 
   doc = (char *) malloc (len);
-  if (!doc)
+  if (doc == NULL)
     doc = short_doc;
   else
     {
@@ -719,9 +730,9 @@ build_doc (void)
       for (i = 0, j = 0; databases[i].name; ++i)
 	{
 	  len = strlen (databases[i].name);
-	  if (i)
+	  if (i != 0)
 	    {
-	      if (j + len > 60)
+	      if (j + len > 72)
 		{
 		  j = 0;
 		  *p++ = '\n';
@@ -730,8 +741,7 @@ build_doc (void)
 		*p++ = ' ';
 	    }
 
-	  memcpy (p, databases[i].name, len);
-	  p += len;
+	  p = mempcpy (p, databases[i].name, len);
 	  j += len + 1;
 	}
     }
@@ -764,11 +774,11 @@ main (int argc, char *argv[])
     }
 
   for (i = 0; databases[i].name; ++i)
-    if (argv[1][0] == databases[i].name[0]
-	&& !strcmp (argv[1], databases[i].name))
-      return databases[i].func (argc - 2, &argv[2]);
+    if (argv[remaining][0] == databases[i].name[0]
+	&& !strcmp (argv[remaining], databases[i].name))
+      return databases[i].func (argc - remaining - 1, &argv[remaining + 1]);
 
-  fprintf (stderr, _("Unknown database: %s\n"), argv[1]);
+  fprintf (stderr, _("Unknown database: %s\n"), argv[remaining]);
   argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
   return 1;
 }

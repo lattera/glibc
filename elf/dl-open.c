@@ -225,6 +225,10 @@ dl_open_worker (void *a)
       return;
     }
 
+  if (__builtin_expect (mode & __RTLD_SPROF, 0))
+    /* This happens only if we load a DSO for 'sprof'.  */
+    return;
+
   /* It was already open.  */
   if (new->l_searchlist.r_list != NULL)
     {

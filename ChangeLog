@@ -1,3 +1,56 @@
+2001-09-20  H.J. Lu  <hjl@gnu.org>
+
+	* include/dlfcn.h (__RTLD_SPROF): New definiton.
+	* elf/dl-open.c (dl_open_worker): Return immediately after loading
+	for __RTLD_SPROF.
+	* elf/sprof.c (main): Default to the filename if soname doesn't exist.
+	(load_shobj): Call dlopen with `RTLD_LAZY | __RTLD_SPROF.
+
+2001-09-20  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-profile.c (_dl_mcount): Use old *narcsp value for newarc,
+	don't add 1.
+
+2001-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c: Accept -s parameter to overwrite rules in
+	nsswitch.conf.  Patch by Nalin Dahyabhai <nalin@redhat.com>.
+
+	* nss/nss_files/files-network.c (LINE_PARSER): Pad addr string
+	with as many ".0" as necessary to form a complete address
+	inet_network understands.
+
+	* nss/getent.c: Various cleanups.  Use simpler and fewer function
+	calls.
+
+2001-09-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/bits/setjmp.h: Correct pointer comparison in
+	_JMPBUF_UNWINDS.
+	* sysdeps/s390/s390-64/bits/setjmp.h: Likewise.
+
+2001-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add rules to build and distribute IBM1160 and
+	IBM1161.
+	* iconvdata/gconv-modules: Add entries for IBM1160 and IBM1161.
+	* iconvdata/ibm1160.c: New file.
+	* iconvdata/ibm1160.h: New file.
+	* iconvdata/ibm1161.c: New file.
+	* iconvdata/ibm1161.h: New file.
+
+2001-09-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_load_address): Compute the
+	difference between base address and first PT_LOAD's virtual address,
+	not the base address.
+
+2001-09-11  Tom Rix  <trix@redhat.com>
+
+	* sysdeps/unix/sysv/aix/init-first.c (init):  Use USE_NONONPTION_FLAG
+	ifdef for __getopt_clean_environment.
+	* sysdeps/unix/sysv/aix/libc-start.c: Add real implementation.
+
 2001-09-22  Andreas Jaeger  <aj@suse.de>
 
 	* elf/reldep4.c (main): Add proper prototype to fix warning.
@@ -8,11 +61,9 @@
 
 2001-09-21  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/Dist: New.
-
-	* sysdeps/x86_64/Dist: New.
-
-	* sysdeps/x86_64/soft-fp/Dist: New.
+	* sysdeps/unix/sysv/linux/x86_64/Dist: New file.
+	* sysdeps/x86_64/Dist: New file.
+	* sysdeps/x86_64/soft-fp/Dist: New file.
 
 	* sysdeps/gnu/Dist: Remove eval.c.
 

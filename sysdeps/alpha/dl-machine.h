@@ -70,16 +70,20 @@ elf_machine_load_address (void)
   Elf64_Addr dot;
   long int zero_disp;
 
-  asm("br %0, 1f\n\t"
-      ".weak __load_address_undefined\n\t"
-      "br $0, __load_address_undefined\n"
-      "1:"
+  asm("br %0, 1f\n"
+      "0:\n\t"
+      "br $0, 2f\n"
+      "1:\n\t"
+      ".data\n"
+      "2:\n\t"
+      ".quad 0b\n\t"
+      ".previous"
       : "=r"(dot));
 
-  zero_disp = *(int *)dot;
+  zero_disp = *(int *) dot;
   zero_disp = (zero_disp << 43) >> 41;
 
-  return dot + 4 + zero_disp;
+  return dot - *(Elf64_Addr *) (dot + 4 + zero_disp);
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
