@@ -1,3 +1,8 @@
+1999-12-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c (insert_value): If this is the
+	first symbol the cursor can be the same as the next pointer.
+
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c (ctype_output): Correct sizes of mapping

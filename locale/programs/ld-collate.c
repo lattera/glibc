@@ -457,7 +457,8 @@ insert_value (struct linereader *ldfile, struct token *arg,
     return;
 
   /* Test whether this element is not already in the list.  */
-  if (elem->next != NULL || elem->next == collate->cursor)
+  if (elem->next != NULL || (collate->cursor != NULL
+			     && elem->next == collate->cursor))
     {
       lr_error (ldfile, _("order for `%.*s' already defined at %s:%Z"),
 		arg->val.str.lenmb, arg->val.str.startmb,

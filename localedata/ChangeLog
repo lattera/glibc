@@ -1,5 +1,10 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* tests/test6.c: New file.
+	* tests/test6.cm: New file.
+	* tests/test6.def: New file.
+	* tests/test6.mne: New file.
+
 	* repertoiremaps/mnemonic.ds: Add U066A, UFE80, UFE81, UFE83,
 	UFE85, and UFE8B.
 	* charmaps/IBM864: Add mapping for /x25, /xc1, /xc2, /xc3, /xc4,
