@@ -1,3 +1,9 @@
+1998-04-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	(DL_FIND_ARG_COMPONENTS): Always initialize auxv.
+	Patch by Mark Hatle <fray@kernel.crashing.org>.
+
 1998-04-12 22:47  Philip Blundell  <Philip.Blundell@pobox.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_APPLETALK): Correct

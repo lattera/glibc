@@ -30,7 +30,7 @@
     for (_tmp = (envp); *_tmp; ++_tmp)				\
       continue;							\
     /* The following '++' is important!  */			\
-    ++_tmp;							\
+    (auxp) = ++_tmp;						\
     if (*_tmp == 0)						\
       {								\
 	size_t _test = (size_t)_tmp;				\
