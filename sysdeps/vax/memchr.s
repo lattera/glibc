@@ -36,7 +36,7 @@
 #endif /* LIBC_SCCS and not lint */
 
 /*
- * Find the first occurence of c in the memory at cp (length n).
+ * Find the first occurrence of c in the memory at cp (length n).
  * Return pointer to match or null pointer.
  *
  * This code optimises the usual case (0 < n < 65535).

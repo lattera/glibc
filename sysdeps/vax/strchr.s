@@ -36,7 +36,7 @@
 #endif /* LIBC_SCCS and not lint */
 
 /*
- * Find the first occurence of c in the string cp.
+ * Find the first occurrence of c in the string cp.
  * Return pointer to match or null pointer.
  *
  * char *
@@ -58,7 +58,7 @@ ENTRY(strchr, 0)
  */
 	movab	tbl,r3		/* r3 = base of table */
 	bbss	$0,(r3),Lreent	/* ensure not reentering */
-	movab	(r3)[r2],r5	
+	movab	(r3)[r2],r5
 	incb	(r5)		/* mark both '\0' and c */
 0:
 	scanc	r4,(r1),(r3),$1	/* look for c or '\0' */

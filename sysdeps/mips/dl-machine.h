@@ -14,9 +14,9 @@
    Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, write to the Free Software Foundation, Inc.,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #define ELF_MACHINE_NAME "MIPS"
 
@@ -27,12 +27,12 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-/* DT_MIPS macro ranslate a processor specific dynamic tag to the index
+/* Translate a processor specific dynamic tag to the index
    in l_info array.  */
 #define DT_MIPS(x) (DT_MIPS_##x - DT_LOPROC + DT_NUM)
 
 #if 1
-/* XXX If FLAGS has the MAP_ALIGN bit, we need 64k alignement. */
+/* XXX If FLAGS has the MAP_ALIGN bit, we need 64k alignment. */
 #ifndef MAP_ALIGN
 #define MAP_ALIGN 0x1000
 #endif

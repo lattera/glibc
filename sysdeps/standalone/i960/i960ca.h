@@ -1,29 +1,28 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
-     On-Line Applications Research Corporation.
- 
-This file is part of the GNU C Library.
- 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
- 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
- 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   On-Line Applications Research Corporation.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* i960ca.h
  *
- *  This file contains macros which are used to access i80960CA 
+ *  This file contains macros which are used to access i80960CA
  *  registers which are not addressable by C.  The functions
- *  in this file sould be useful to the developer of target 
+ *  in this file should be useful to the developer of target
  *  specific code.
  */
 
@@ -37,22 +36,22 @@ typedef unsigned int    unsigned32;
 /*
  *  Intel i80960CA Processor Control Block
  */
- 
+
 struct i80960ca_prcb {
-  unsigned32          *fault_tbl;     /* fault table base address     */ 
+  unsigned32          *fault_tbl;     /* fault table base address     */
   struct i80960ca_ctltbl
                       *control_tbl;   /* control table base address   */
   unsigned32           initial_ac;    /* AC register initial value    */
-  unsigned32           fault_config;  /* fault configuration word     */ 
+  unsigned32           fault_config;  /* fault configuration word     */
   void                *intr_tbl;      /* interrupt table base address */
-  void                *sys_proc_tbl;  /* system procedure table       */ 
-                                      /*   base address               */ 
-  unsigned32           reserved;      /* reserved                     */ 
-  unsigned32          *intr_stack;    /* interrupt stack pointer      */ 
-  unsigned32           ins_cache_cfg; /* instruction cache            */ 
-                                      /*   configuration word         */ 
-  unsigned32           reg_cache_cfg; /* register cache               */ 
-                                      /*   configuration word         */ 
+  void                *sys_proc_tbl;  /* system procedure table       */
+                                      /*   base address               */
+  unsigned32           reserved;      /* reserved                     */
+  unsigned32          *intr_stack;    /* interrupt stack pointer      */
+  unsigned32           ins_cache_cfg; /* instruction cache            */
+                                      /*   configuration word         */
+  unsigned32           reg_cache_cfg; /* register cache               */
+                                      /*   configuration word         */
 };
 
 /*
@@ -128,7 +127,7 @@ struct i80960ca_ctltbl {
                   : "0"  (_addr), "1"  (_mask) ); \
    (prev) = _mask; \
  }
-   
+
 #define delay( microseconds ) \
   { register unsigned32 _delay=(microseconds); \
     register unsigned32 _tmp; \
@@ -185,22 +184,22 @@ struct i80960ca_ctltbl {
                   : "0"  (_cmd), "1"  (_next), "2"  (_prcb) ); \
  }
 
-static inline unsigned32 pend_intrs() 
-{ register unsigned32 _intr=0; 
-  asm volatile( "mov sf0,%0" : "=d" (_intr) : "0" (_intr) ); 
-  return ( _intr ); 
+static inline unsigned32 pend_intrs()
+{ register unsigned32 _intr=0;
+  asm volatile( "mov sf0,%0" : "=d" (_intr) : "0" (_intr) );
+  return ( _intr );
 }
 
-static inline unsigned32 mask_intrs() 
+static inline unsigned32 mask_intrs()
 { register unsigned32 _intr=0;
-  asm volatile( "mov sf1,%0" : "=d" (_intr) : "0" (_intr) ); 
+  asm volatile( "mov sf1,%0" : "=d" (_intr) : "0" (_intr) );
   return( _intr );
 }
 
-static inline unsigned32 get_fp() 
-{ register unsigned32 _fp=0; 
-  asm volatile( "mov fp,%0" : "=d" (_fp) : "0" (_fp) ); 
-  return ( _fp ); 
+static inline unsigned32 get_fp()
+{ register unsigned32 _fp=0;
+  asm volatile( "mov fp,%0" : "=d" (_fp) : "0" (_fp) );
+  return ( _fp );
 }
 
 #endif

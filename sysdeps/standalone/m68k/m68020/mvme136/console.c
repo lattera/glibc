@@ -1,34 +1,32 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
-     On-Line Applications Research Corporation.
- 
-This file is part of the GNU C Library.
- 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
- 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
- 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   On-Line Applications Research Corporation.
 
-#include <ansidecl.h>
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
 #include <standalone.h>
 #include "m68020.h"
 
 /* Console IO routines for a Motorola MVME135/MVME136 board.
-   
+
 They currently use the B port.  It should be possible to
 use the A port by filling in the reset of the chip structure,
 adding an ifdef for PORTA/PORTB, and switching the addresses,
-and maybe the macroes based on the macro. */
+and maybe the macros based on the macro. */
 
 /* M68681 DUART chip register structures and constants */
 
@@ -69,14 +67,15 @@ XON/XOFF flow control.  */
 #define XOFF            0x13            /* control-S */
 
 int
-DEFUN( _Console_Putc, (ch), char ch )
+_Console_Putc (ch)
+     char ch;
 {
   while ( ! (RD_M68681->srb & TXRDYB) ) ;
   while ( RD_M68681->srb & RXRDYB )        /* must be an XOFF */
-    if ( RD_M68681->rbb == XOFF ) 
+    if ( RD_M68681->rbb == XOFF )
       do {
         while ( ! (RD_M68681->srb & RXRDYB) ) ;
-      } while ( RD_M68681->rbb != XON ); 
+      } while ( RD_M68681->rbb != XON );
 
   WR_M68681->tbb = ch;
   return( 0 );
@@ -87,10 +86,11 @@ DEFUN( _Console_Putc, (ch), char ch )
 This routine reads a character from the UART and returns it. */
 
 int
-DEFUN( _Console_Getc, (poll), int poll )
+_Console_Getc (poll)
+     int poll;
 {
   if ( poll ) {
-    if ( !(RD_M68681->srb & RXRDYB) ) 
+    if ( !(RD_M68681->srb & RXRDYB) )
       return -1;
     else
       return RD_M68681->rbb;

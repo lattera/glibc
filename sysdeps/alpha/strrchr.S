@@ -17,7 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Return the address of the last occurrance of a given character
+/* Return the address of the last occurrence of a given character
    within a null-terminated string, or null if it is not found.
 
    This is generally scheduled for the EV5 (got to look out for my own

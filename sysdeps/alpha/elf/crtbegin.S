@@ -55,7 +55,7 @@ __DTOR_LIST__:
 	jsr     $26,__do_global_dtors_aux
 
 	/* Must match the alignment we got from crti.o else we get
-	  zero-filled holes in our _fini function and thense SIGILL.  */
+	  zero-filled holes in our _fini function and then SIGILL.  */
 	.align 3
 
 /*

@@ -53,14 +53,14 @@ ENTRY(strncmp, 0)
 	movl	4(ap),r1	# r1 = s1
 	movq	8(ap),r3	# r3 = s2; r4 = n
 1:
-	clrl	r5		# calculate min bytes to next page boundry
+	clrl	r5		# calculate min bytes to next page boundary
 	subb3	r1,$255,r5	# r5 = (bytes - 1) to end of page for s1
 	subb3	r3,$255,r0	# r0 = (bytes - 1) to end of page for s2
 	cmpb	r0,r5		# r5 = min(r0, r5);
 	bgtru	2f
 	movb	r0,r5
 2:
-	incl	r5		# r5 = min bytes to next page boundry
+	incl	r5		# r5 = min bytes to next page boundary
 	cmpl	r4,r5		# r5 = min(n, r5);
 	bgeq	3f
 	movl	r4,r5
