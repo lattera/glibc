@@ -52,6 +52,14 @@
       out_char (*_s++);							      \
   } while (0)
 
+#define out_nstring(String, N)						      \
+  do {									      \
+    int _n = (N);							      \
+    const char *_s = (String);						      \
+    while (_n-- > 0)							      \
+      out_char (*_s++);							      \
+  } while (0)
+
 #define to_digit(Ch) ((Ch) - '0')
 
 
@@ -136,9 +144,11 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       const char *other_sign_string;
       int done;
       const char *currency_symbol;
+      size_t currency_symbol_len;
       int width;
       char *startp;
       const void *ptr;
+      char space_char;
 
       /* Process all character which do not introduce a format
 	 specification.  */
@@ -294,6 +304,8 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	{
 	case 'i':		/* Use international currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
+	  currency_symbol_len = 3;
+	  space_char = currency_symbol[3];
 	  if (right_prec == -1)
 	    {
 	      if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == CHAR_MAX)
@@ -304,6 +316,8 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	  break;
 	case 'n':		/* Use national currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, CURRENCY_SYMBOL);
+	  currency_symbol_len = strlen (currency_symbol);
+	  space_char = ' ';
 	  if (right_prec == -1)
 	    {
 	      if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == CHAR_MAX)
@@ -424,14 +438,14 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	     preceding the value */
 	  if (cs_precedes)
 	    {
-	      left_bytes += strlen (currency_symbol);
+	      left_bytes += currency_symbol_len;
 	      if (sep_by_space != 0)
 		++left_bytes;
 	    }
 
 	  if (other_cs_precedes)
 	    {
-	      other_left_bytes += strlen (currency_symbol);
+	      other_left_bytes += currency_symbol_len;
 	      if (other_sep_by_space != 0)
 		++other_left_bytes;
 	    }
@@ -491,7 +505,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	      if (sign_posn == 4)
 		{
 		  if (sep_by_space == 2)
-		    out_char (' ');
+		    out_char (space_char);
 		  out_string (sign_string);
 		  if (sep_by_space == 1)
 		    /* POSIX.2 and SUS are not clear on this case, but C99
@@ -500,7 +514,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 		}
 	      else
 		if (sep_by_space == 1)
-		  out_char (' ');
+		  out_char (space_char);
 	    }
 	}
       else
@@ -580,8 +594,8 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 		  || (sign_posn == 2 && sep_by_space == 1)
 		  || (sign_posn == 1 && sep_by_space == 1)
 		  || (sign_posn == 0 && sep_by_space == 1))
-		out_char (' ');
-	      out_string (currency_symbol);
+		out_char (space_char);
+	      out_nstring (currency_symbol, currency_symbol_len);
 	      if (sign_posn == 4)
 		{
 		  if (sep_by_space == 2)
