@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include "version.h"
+#include <tls.h>
 #include <gnu/libc-version.h>
 
 static const char __libc_release[] = RELEASE;
@@ -32,6 +33,9 @@ Compiled by GNU CC version "__VERSION__".\n"
 #include "version-info.h"
 #ifdef GLIBC_OLDEST_ABI
 "The oldest ABI supported: " GLIBC_OLDEST_ABI ".\n"
+#endif
+#ifdef USE_TLS
+"Thread-local storage support included.\n"
 #endif
 "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
 
