@@ -99,8 +99,8 @@ double: 1
 float: 4
 idouble: 1
 ifloat: 4
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 Test "Imaginary part of: cacosh (-2 - 3 i) == -1.9833870299165354323470769028940395 + 2.1414491111159960199416055713254211 i":
 double: 1
 float: 4

@@ -1,3 +1,8 @@
+2001-04-17  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update for new atan2 tests.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
 2001-04-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128/e_logl.c (__ieee754_logl): Make sure
