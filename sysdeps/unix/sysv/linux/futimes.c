@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <sysdep.h>
+#include <string.h>
 #include <utime.h>
 #include <sys/time.h>
 #include <stdio-common/_itoa.h>
