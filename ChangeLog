@@ -6,6 +6,8 @@
 	mbstate_t.
 	* iconvdata/iso-2022-jp.c: Likewise.
 	* iconvdata/iso-2022-kr.c: Likewise.
+	* wcsmbs/mbsinit.c: Likewise.
+	* stdlib/mblen.c: Likewise.
 
 2000-04-06  Ulrich Drepper  <drepper@redhat.com>
 
