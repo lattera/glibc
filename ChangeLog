@@ -1,3 +1,67 @@
+1997-08-29 21:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/auth_des.c: New file.  Copied from former secure_rpc add-on.
+	* sunrpc/authdes_prot.c: New file.  Likewise.
+	* sunrpc/des.h: New file.  Likewise.
+	* sunrpc/des_crypt.c: New file.  Likewise.
+	* sunrpc/des_soft.c: New file.  Likewise.
+	* sunrpc/key_call.c: New file.  Likewise.
+	* sunrpc/key_prot.c: New file.  Likewise.
+	* sunrpc/netname.c: New file.  Likewise.
+	* sunrpc/openchild.c: New file.  Likewise.
+	* sunrpc/rtime.c: New file.  Likewise.
+	* sunrpc/svc_auth.c: New file.  Likewise.
+	* sunrpc/svcauth_des.c: New file.  Likewise.
+	* sunrpc/xcrypt.c: New file.  Likewise.
+	* sunrpc/rpc/auth.h: New file.  Likewise.
+	* sunrpc/rpc/auth_des.h: New file.  Likewise.
+	* sunrpc/rpc/des_crypt.h: New file.  Likewise.
+	* sunrpc/rpc/key_prot.h: New file.  Likewise.
+	* sunrpc/rpcsvc/key_prot.x: New file.  Likewise.
+	* sysdeps/generic/svc_auth.h: Removed.
+	* sysdeps/generic/rpc/auth.h: Removed.
+	* sysdeps/generic/rpc/auth_des.h: Removed.
+	* sysdeps/stub/des_impl.c: New file.  Stub version for DES.
+	* sunrpc/Makefile (rpcsvc): Add keyprot.x.
+	(headers): Add des_crypt.h and key_prot.h.
+	(routines): Add auth_des, authdes_prot, des_crypt, des_impl, des_soft,
+	key_call, key_prot, netname, openchild, rtime, svcauth_des, xcrypt.
+	(distribute): Add des.h.
+
+	* db2/Makefile: Add all headers and other files to distribute.
+	(others): Add db_printlog.
+
+	* sysdeps/mach/hurd/Dist: Add net/* headers.
+	* sysdeps/mach/hurd/mips/Dist: New file.
+	* sysdeps/powerpc/Dist: Add fe_nomask.c and t_sqrt.c.
+	* sysdeps/sparc/Dist: Add sys/trap.h.
+	* sysdeps/sparc/sparc32/Dist: Remove sys/trap.h.
+	* sysdeps/sparc/sparc32/sparcv8/Dist: New file.
+	* sysdeps/unix/sysv/linux/mips/Dist: Add sgidefs.h.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add sys/trap.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Dist: Remove sys/trap.h.
+
+	Add previously missing assembler files for PPC.
+	* sysdeps/powerpc/add_n.s: New file.
+	* sysdeps/powerpc/addmul_1.s: New file.
+	* sysdeps/powerpc/lshift.s: New file.
+	* sysdeps/powerpc/memset.s: New file.
+	* sysdeps/powerpc/mul_1.s: New file.
+	* sysdeps/powerpc/rshift.s: New file.
+	* sysdeps/powerpc/strchr.s: New file.
+	* sysdeps/powerpc/strcmp.s: New file.
+	* sysdeps/powerpc/sub_n.s: New file.
+	* sysdeps/powerpc/submul_1.s: New file.
+
+1997-08-28 18:42  Thorsten Kukuk  <kukuk@uni-paderborn.de>
+
+	* nis/nis_server.c: Rewritten to fix a lot of bugs.
+
+1997-08-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* md5-crypt/Makefile (LDFLAGS-md5crypt.so, libmd5crypt-map): New
+	variables.
+
 1997-08-29 02:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (version-info.h): Use ISO form for the date.
@@ -35,7 +99,7 @@
 1997-08-28 17:30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/catgets.c (catopen): Correctly determine length of string
-	in NLSPATH evironment variable.  Patch by HJ Lu <hjl@gnu.ai.mit.edu>.
+	in NLSPATH environment variable.  Patch by HJ Lu <hjl@gnu.ai.mit.edu>.
 
 1997-08-27 23:19  Richard Henderson  <rth@cygnus.com>
 

@@ -30,6 +30,24 @@ subdir-dirs = btree common db db185 dbm hash lock log mp mutex os txn \
 	progs/db_dump progs/db_dump185 progs/db_load progs/db_printlog \
 	progs/db_recover progs/db_stat clib
 
+headers = db.h db_185.h
+
+distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
+	     db/db.src db185/db185_int.src hash/hash.src log/log.src \
+	     txn/txn.src \
+	     $(addprefix include/,btree.h btree_auto.h btree_ext.h \
+				  clib_ext.h common_ext.h cxx_int.h \
+				  db.h.src db_185.h.src db_am.h db_auto.h \
+				  db_cxx.h db_dispatch.h db_ext.h \
+				  db_int.h.src db_page.h db_shash.h db_swap.h \
+				  hash.h hash_auto.h hash_ext.h lock.h \
+				  lock_ext.h log.h log_auto.h log_ext.h \
+				  mp.h mp_ext.h mutex_ext.h os_ext.h queue.h \
+				  shqueue.h txn.h txn_auto.h txn_ext.h) \
+	     $(addprefix mutex/,x86.gcc uts4.cc.s sparc.gcc parisc.hp \
+				parisc.gcc alpha.gcc alpha.dec README \
+				68020.gcc)
+
 vpath %.c $(subdir-dirs)
 
 extra-libs := libdb
@@ -52,9 +70,9 @@ libdb-routines := bt_close bt_compare bt_conv bt_cursor bt_delete \
 	txn_rec dbm db185
 
 others		:= makedb db_dump185 db_archive db_checkpoint db_deadlock \
-		db_dump db_load db_recover db_stat
+		db_dump db_load db_recover db_stat db_printlog
 install-bin	:= makedb db_dump185 db_archive db_checkpoint db_deadlock \
-		db_dump db_load db_recover db_stat
+		db_dump db_load db_recover db_stat db_printlog
 
 include ../Rules
 

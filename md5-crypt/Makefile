@@ -63,6 +63,11 @@ libmd5crypt: $(foreach o,$(object-suffixes), \
 		    $(addprefix $(objpfx),$(patsubst %,$(libtype$o),md5crypt)))
 ifeq ($(build-shared),yes)
 libmd5crypt: $(objpfx)libmd5crypt.so
+# Use the same soname as the real libcrypt, so that it can be used as a
+# drop in replacement.
+LDFLAGS-md5crypt.so = -Wl,-soname=lib$(libprefix)crypt.so$(libcrypt.so-version)
+# We also use the same version script.
+libmd5crypt-map := libcrypt.map
 endif
 
 define o-iterator-doit

@@ -33,7 +33,6 @@ static char sccsid[] = "@(#)svc_auth.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 
 /*
  * svc_auth.c, Server-side rpc authenticator interface.
- * *WITHOUT* DES authentication.
  *
  * Copyright (C) 1984, Sun Microsystems, Inc.
  */
@@ -63,6 +62,8 @@ extern enum auth_stat _svcauth_unix (struct svc_req *, struct rpc_msg *);
 				/* unix style (uid, gids) */
 extern enum auth_stat _svcauth_short (struct svc_req *, struct rpc_msg *);
 				/* short hand unix style */
+extern enum auth_stat _svcauth_des (struct svc_req *, struct rpc_msg *);
+				/* des style */
 
 static const struct
   {
@@ -72,9 +73,10 @@ svcauthsw[] =
 {
   { _svcauth_null },		/* AUTH_NULL */
   { _svcauth_unix },		/* AUTH_UNIX */
-  { _svcauth_short }		/* AUTH_SHORT */
+  { _svcauth_short },		/* AUTH_SHORT */
+  { _svcauth_des }		/* AUTH_DES */
 };
-#define	AUTH_MAX	2	/* HIGHEST AUTH NUMBER */
+#define	AUTH_MAX	3	/* HIGHEST AUTH NUMBER */
 
 
 /*

@@ -47,10 +47,11 @@ subdir	:= sunrpc
 
 rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
-	 rusers.x spray.x nfs_prot.x rquota.x
+	 rusers.x spray.x nfs_prot.x rquota.x key_prot.x
 headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
-			   svc_auth.h types.h xdr.h auth_des.h) \
+			   svc_auth.h types.h xdr.h auth_des.h \
+			   des_crypt.h key_prot.h) \
 	  $(rpcsvc:%=rpcsvc/%)
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) \
@@ -64,7 +65,9 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    pmap_prot2 pmap_rmt rpc_prot rpc_common rpc_cmsg \
 	    svc svc_auth svc_authux svc_raw svc_run svc_simple \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
-	    xdr_rec xdr_ref xdr_stdio publickey xdr_sizeof
+	    xdr_rec xdr_ref xdr_stdio publickey xdr_sizeof \
+	    auth_des authdes_prot des_crypt des_impl des_soft \
+	    key_call key_prot netname openchild rtime svcauth_des xcrypt
 
 others := rpcinfo
 install-bin := rpcgen
@@ -73,7 +76,7 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o
 # These headers are part of rpcgen.
-distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h \
+distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h des.h \
 	      $(rpcgen-objs:.o=.c) etc.rpc
 extra-objs = $(rpcgen-objs)
 

@@ -5,4 +5,3 @@ pipe.S
 fork.S
 kernel_stat.h
 init-first.h
-sys/trap.h

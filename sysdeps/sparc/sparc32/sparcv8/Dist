@@ -1,0 +1,6 @@
+urem.S
+umul.S
+udiv.S
+sdiv.S
+rem.S
+dotmul.S

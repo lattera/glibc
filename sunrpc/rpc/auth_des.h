@@ -1,0 +1,104 @@
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#ifndef _RPC_AUTH_DES_H
+
+#define _RPC_AUTH_DES_H	1
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
+
+/* There are two kinds of "names": fullnames and nicknames */
+enum authdes_namekind
+  {
+    ADN_FULLNAME,
+    ADN_NICKNAME
+  };
+
+/* A fullname contains the network name of the client,
+   a conversation key and the window */
+struct authdes_fullname
+  {
+    char *name;			/* network name of client, up to MAXNETNAMELEN */
+    des_block key;		/* conversation key */
+    u_long window;		/* associated window */
+  };
+
+/* A credential */
+struct authdes_cred
+  {
+    enum authdes_namekind adc_namekind;
+    struct authdes_fullname adc_fullname;
+    u_long adc_nickname;
+  };
+
+/* A des authentication verifier */
+struct authdes_verf
+  {
+    union
+      {
+	struct timeval adv_ctime;	/* clear time */
+	des_block adv_xtime;	/* crypt time */
+      }
+    adv_time_u;
+    u_long adv_int_u;
+  };
+
+/* des authentication verifier: client variety
+
+   adv_timestamp is the current time.
+   adv_winverf is the credential window + 1.
+   Both are encrypted using the conversation key. */
+#define adv_timestamp  adv_time_u.adv_ctime
+#define adv_xtimestamp adv_time_u.adv_xtime
+#define adv_winverf    adv_int_u
+
+/* des authentication verifier: server variety
+
+   adv_timeverf is the client's timestamp + client's window
+   adv_nickname is the server's nickname for the client.
+   adv_timeverf is encrypted using the conversation key. */
+#define adv_timeverf   adv_time_u.adv_ctime
+#define adv_xtimeverf  adv_time_u.adv_xtime
+#define adv_nickname   adv_int_u
+
+/* Map a des credential into a unix cred. */
+extern int authdes_getucred __P ((__const struct authdes_cred * __adc,
+				  uid_t * __uid, gid_t * __gid,
+				  short *__grouplen, gid_t * __groups));
+
+/* Get the public key for NAME and place it in KEY.  NAME can only be
+   up to MAXNETNAMELEN bytes long and the destination buffer KEY should
+   have HEXKEYBATES + 1 bytes long to fit all characters from the key.  */
+extern int getpublickey __P ((__const char *__name, char *__key));
+
+/* Get the secret key for NAME and place it in KEY.  PASSWD is used to
+   decrypt the encrypted key stored in the database.  NAME can only be
+   up to MAXNETNAMELEN bytes long and the destination buffer KEY
+   should have HEXKEYBATES + 1 bytes long to fit all characters from
+   the key.  */
+extern int getsecretkey __P ((__const char *__name, char *__key,
+			      __const char *__passwd));
+
+extern int rtime __P ((struct sockaddr_in *__addrp,  struct timeval *__timep,
+		       struct timeval *__timeout));
+
+__END_DECLS
+
+
+#endif /* rpc/auth_des.h */
