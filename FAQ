@@ -102,6 +102,8 @@ please let me know.
 2.28.	Why is extracting files via tar so slow?
 2.29.	Compiling programs I get parse errors in libio.h (e.g. "parse error
 	before `_IO_seekoff'").  How should I fix this?
+2.30.	After upgrading to glibc 2.1, libraries that were compiled against
+	glibc 2.0.x don't work anymore.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -1101,6 +1103,12 @@ libc5 or from a compiler directory.  To check which _G_config.h file the
 compiler uses, compile your program with `gcc -E ...|grep G_config.h' and
 remove that file.  Your compiler should pick up the file that has been
 installed by glibc 2.1 in your include directory.
+
+
+2.30.	After upgrading to glibc 2.1, libraries that were compiled against
+	glibc 2.0.x don't work anymore.
+
+{AJ} See question 2.27.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

@@ -1,3 +1,8 @@
+1999-03-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/ru_RU (mon): Fix March and May month name translations.
+	Reported by Vadim V. Zhytnikov <vvzhy@td.lpi.ac.ru>.
+
 1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (test-input): Prepare for cs_CZ test.

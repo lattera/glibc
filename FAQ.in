@@ -845,7 +845,7 @@ passwd_compat: nis
 group_compat: nis
 shadow_compat: nis
 
-??	What needs to be recompiled when upgrading from glibc 2.0 to glibc
+??libs	What needs to be recompiled when upgrading from glibc 2.0 to glibc
 	2.1?
 
 {AJ,CG} If you just upgrade the glibc from 2.0.x (x <= 7) to 2.1, binaries
@@ -906,6 +906,11 @@ libc5 or from a compiler directory.  To check which _G_config.h file the
 compiler uses, compile your program with `gcc -E ...|grep G_config.h' and
 remove that file.  Your compiler should pick up the file that has been
 installed by glibc 2.1 in your include directory.
+
+??	After upgrading to glibc 2.1, libraries that were compiled against
+	glibc 2.0.x don't work anymore.
+
+{AJ} See ?libs.
 
 
 ? Source and binary incompatibilities, and what to do about them
