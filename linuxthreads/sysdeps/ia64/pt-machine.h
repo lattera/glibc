@@ -64,12 +64,14 @@ register struct _pthread_descr_struct *__thread_self __asm__("r13");
 
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
-#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM(descr, member) \
+  ((void) sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) \
+  ((void) sizeof (descr), THREAD_SELF->member)
 #define THREAD_SETMEM(descr, member, value) \
-  (sizeof (descr), THREAD_SELF->member = (value))
+  ((void) sizeof (descr), THREAD_SELF->member = (value))
 #define THREAD_SETMEM_NC(descr, member, value) \
-  (sizeof (descr), THREAD_SELF->member = (value))
+  ((void) sizeof (descr), THREAD_SELF->member = (value))
 
 
 /* Memory barrier */

@@ -65,12 +65,14 @@ register struct _pthread_descr_struct *__thread_self __asm__("%g7");
 #define INIT_THREAD_SELF(descr, nr)  (__thread_self = (descr))
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
-#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM(descr, member) \
+  ((void) sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) \
+  ((void) sizeof (descr), THREAD_SELF->member)
 #define THREAD_SETMEM(descr, member, value) \
-  (sizeof (descr), THREAD_SELF->member = (value))
+  ((void) sizeof (descr), THREAD_SELF->member = (value))
 #define THREAD_SETMEM_NC(descr, member, value) \
-  (sizeof (descr), THREAD_SELF->member = (value))
+  ((void) sizeof (descr), THREAD_SELF->member = (value))
 
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS 1

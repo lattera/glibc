@@ -68,12 +68,14 @@ struct _pthread_descr_struct;
   ({ __asm__ __volatile__("ldc %0,gbr" : : "r" (descr));})
 
 /* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) (sizeof (descr), THREAD_SELF->member)
-#define THREAD_GETMEM_NC(descr, member) (sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM(descr, member) \
+  ((void) sizeof (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) \
+  ((void) sizeof (descr), THREAD_SELF->member)
 #define THREAD_SETMEM(descr, member, value) \
-  (sizeof (descr), THREAD_SELF->member = (value))
+  ((void) sizeof (descr), THREAD_SELF->member = (value))
 #define THREAD_SETMEM_NC(descr, member, value) \
-  (sizeof (descr), THREAD_SELF->member = (value))
+  ((void) sizeof (descr), THREAD_SELF->member = (value))
 #endif /* __ASSEMBLER__ */
 
 #endif /* pt-machine.h */
