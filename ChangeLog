@@ -1,3 +1,13 @@
+2003-09-10  Chris Demetriou  <cgd@broadcom.com>
+
+	* sysdeps/unix/sysv/linux/mips/pread64.c (__libc_pread64): Fix
+	syscall invocation.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c (__libc_pread): Likewise.
+	Also, only assert off_t size is 4 for N32 and O32, and clean up
+	white space.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c (__libc_pwrite): Likewise.
+
 2003-09-10  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tcgetattr.c (__tcgetattr):

@@ -51,33 +51,33 @@ __libc_pwrite (fd, buf, count, offset)
 {
   ssize_t result;
 
+#if (defined _ABI64 && _MIPS_SIM != _ABI64)
+  assert (sizeof (offset) == 4);
+#endif
+
   if (SINGLE_THREAD_P)
     {
       /* First try the syscall.  */
-     assert (sizeof (offset) == 4);
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-     result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count, 0,
-			      offset);
+#if (defined _ABIN32 && _MIPS_SIM == _ABIN32) || (defined _ABI64 && _MIPS_SIM == _ABI64)
+      result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count,
+			       offset);
 #else
-     result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
-			      __LONG_LONG_PAIR (offset >> 31, offset));
+      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+			       __LONG_LONG_PAIR (offset >> 31, offset));
 #endif
 # if __ASSUME_PWRITE_SYSCALL == 0
-     if (result == -1 && errno == ENOSYS)
-       /* No system call available.  Use the emulation.  */
-       result = __emulate_pwrite (fd, buf, count, offset);
+      if (result == -1 && errno == ENOSYS)
+        /* No system call available.  Use the emulation.  */
+        result = __emulate_pwrite (fd, buf, count, offset);
 # endif
-
       return result;
     }
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
   /* First try the syscall.  */
-  assert (sizeof (offset) == 4);
-#if defined _ABI64 && _MIPS_SIM == _ABI64
-  result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count, 0,
-			   offset);
+#if (defined _ABIN32 && _MIPS_SIM == _ABIN32) || (defined _ABI64 && _MIPS_SIM == _ABI64)
+  result = INLINE_SYSCALL (pwrite, 4, fd, CHECK_N (buf, count), count, offset);
 #else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR (offset >> 31, offset));
