@@ -52,3 +52,4 @@ wctomb (char *s, wchar_t wchar)
 
   return __wcrtomb (s, wchar, &__no_r_state);
 }
+libc_hidden_def (wctomb)

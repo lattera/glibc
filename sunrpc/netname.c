@@ -55,6 +55,7 @@ user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
     netname[i - 1] = '\0';
   return 1;
 }
+libc_hidden_def (user2netname)
 
 int
 host2netname (char netname[MAXNETNAMELEN + 1], const char *host,

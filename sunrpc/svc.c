@@ -194,7 +194,7 @@ pmap_it:
 
   return TRUE;
 }
-INTDEF (svc_register)
+libc_hidden_def (svc_register)
 
 /* Remove a service program from the callout list. */
 void
@@ -216,7 +216,7 @@ svc_unregister (rpcprog_t prog, rpcvers_t vers)
   /* now unregister the information with the local binder service */
   pmap_unset (prog, vers);
 }
-INTDEF (svc_unregister)
+libc_hidden_def (svc_unregister)
 
 /* ******************* REPLY GENERATION ROUTINES  ************ */
 
@@ -289,6 +289,7 @@ svcerr_auth (SVCXPRT *xprt, enum auth_stat why)
   rply.rjcted_rply.rj_why = why;
   SVC_REPLY (xprt, &rply);
 }
+libc_hidden_def (svcerr_auth)
 
 /* Auth too weak error reply */
 void
@@ -309,6 +310,7 @@ svcerr_noprog (register SVCXPRT *xprt)
   rply.acpted_rply.ar_stat = PROG_UNAVAIL;
   SVC_REPLY (xprt, &rply);
 }
+libc_hidden_def (svcerr_noprog)
 
 /* Program version mismatch error reply */
 void
@@ -325,6 +327,7 @@ svcerr_progvers (register SVCXPRT *xprt, rpcvers_t low_vers,
   rply.acpted_rply.ar_vers.high = high_vers;
   SVC_REPLY (xprt, &rply);
 }
+libc_hidden_def (svcerr_progvers)
 
 /* ******************* SERVER INPUT STUFF ******************* */
 

@@ -98,8 +98,8 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
 	}
     }
   (void) pmap_unset ((u_long) prognum, (u_long) versnum);
-  if (!INTUSE(svc_register) (transp, (u_long) prognum, (u_long) versnum,
-			     universal, IPPROTO_UDP))
+  if (!svc_register (transp, (u_long) prognum, (u_long) versnum,
+		     universal, IPPROTO_UDP))
     {
       (void) __asprintf (&buf, _("couldn't register prog %ld vers %ld\n"),
 			 prognum, versnum);

@@ -99,6 +99,8 @@ int iruserok_af (const void *raddr, int superuser, const char *ruser,
 int iruserok (u_int32_t raddr, int superuser, const char *ruser,
 	      const char *luser);
 
+libc_hidden_proto (iruserok_af)
+
 static char ahostbuf[NI_MAXHOST];
 
 int
@@ -662,6 +664,8 @@ iruserok_af (raddr, superuser, ruser, luser, af)
   }
   return ruserok_sa ((struct sockaddr *)&ra, ralen, superuser, ruser, luser);
 }
+libc_hidden_def (iruserok_af)
+
 int
 iruserok (raddr, superuser, ruser, luser)
      u_int32_t raddr;

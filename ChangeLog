@@ -1,5 +1,27 @@
 2002-08-05  Roland McGrath  <roland@redhat.com>
 
+	* include/stdlib.h: Use libc_hidden_proto for wctomb.
+	* stdlib/wctomb.c: Add libc_hidden_def.
+
+	* include/netdb.h: Use libc_hidden_proto for innetgr, rcmd_af,
+	rexec_af, rresvport_af, ruserok_af, iruserok_af, ruserpass, hstrerror.
+	* resolv/herror.c: Likewise.
+	* inet/rcmd.c: Add libc_hidden_def.
+	* inet/ruserpass.c: Likewise.
+	* inet/getnetgrent_r.c: Likewise.
+
+	* include/rpc/auth.h: Use libc_hidden_proto for getnetname,
+	netname2user, host2netname, user2netname.
+	* sunrpc/netname.c: Add libc_hidden_def.
+
+	* include/rpc/svc.h: Use libc_hidden_proto for svc_register,
+	svc_unregister, remove *_internal decls.  Use libc_hidden_proto
+	for svcerr_auth, svcerr_noprog, svcerr_progvers.
+	* sunrpc/svc.c (svc_register, svc_unregister): Change INTDEF to
+	libc_hidden_def.
+	(svcerr_auth, svcerr_noprog, svcerr_progvers): Add libc_hidden_def.
+	* sunrpc/svc_simple.c (registerrpc): Nix INTUSE for svc_register.
+
 	* sysdeps/posix/system.c (do_system): New function, guts broken out of
 	__libc_system.
 	(__libc_system): Call it, putting just the line == NULL test here.
@@ -26,15 +48,6 @@
 	ether_aton_r.
 	* inet/ether_aton_r.c: Add libc_hidden_def.
 	* inet/ether_ntoa_r.c: Likewise.
-
-	* include/rpc/auth.h: Use libc_hidden_proto for getnetname,
-	netname2user, host2netname.
-	* sunrpc/netname.c: Add libc_hidden_def.
-
-	* include/netdb.h: Use libc_hidden_proto for innetgr, rcmd_af,
-	rexec_af, rresvport_af, ruserok_af.
-	* inet/rcmd.c: Add libc_hidden_def.
-	* inet/getnetgrent_r.c: Likewise.
 
 	* include/rpc/svc.h: Use libc_hidden_proto for xprt_register,
 	xprt_unregister.

@@ -286,6 +286,7 @@ bad:
 	(void) fclose(cfile);
 	return (-1);
 }
+libc_hidden_def (ruserpass)
 
 static int
 token()

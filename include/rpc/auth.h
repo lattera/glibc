@@ -4,6 +4,7 @@
 libc_hidden_proto (getnetname)
 libc_hidden_proto (netname2user)
 libc_hidden_proto (host2netname)
+libc_hidden_proto (user2netname)
 
 /* Now define the internal interfaces.  */
 struct key_netstarg;

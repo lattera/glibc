@@ -21,6 +21,7 @@ __set_h_errno (int __err)
 #  define __set_h_errno(x) (h_errno = (x))
 # endif	/* _LIBC_REENTRANT */
 
+libc_hidden_proto (hstrerror)
 libc_hidden_proto (innetgr)
 libc_hidden_proto (rcmd_af)
 libc_hidden_proto (rexec_af)
@@ -166,6 +167,7 @@ extern int __getnetgrent_r (char **__restrict __hostp,
 
 extern int ruserpass (const char *host, const char **aname,
 		      const char **apass);
+libc_hidden_proto (ruserpass)
 
 
 /* The following declarations and definitions have been removed from
