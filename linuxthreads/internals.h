@@ -287,6 +287,9 @@ extern volatile td_thr_events_t __pthread_threads_events;
 /* Pointer to descriptor of thread with last event.  */
 extern volatile pthread_descr __pthread_last_event;
 
+/* Flag which tells whether we are executing on SMP kernel. */
+extern int __pthread_smp_kernel;
+
 /* Return the handle corresponding to a thread id */
 
 static inline pthread_handle thread_handle(pthread_t id)

@@ -63,7 +63,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 
   /* Check whether the mutex is locked and owned by this thread.  */
   if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP  
-      && mutex->__m_kind != PTHREAD_MUTEX_FAST_NP
+      && mutex->__m_kind != PTHREAD_MUTEX_ADAPTIVE_NP
       && mutex->__m_owner != self)
     return EINVAL;
 
@@ -124,7 +124,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
 
   /* Check whether the mutex is locked and owned by this thread.  */
   if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP  
-      && mutex->__m_kind != PTHREAD_MUTEX_FAST_NP
+      && mutex->__m_kind != PTHREAD_MUTEX_ADAPTIVE_NP
       && mutex->__m_owner != self)
     return EINVAL;
 

@@ -25,8 +25,9 @@
 /* Fast locks (not abstract because mutexes and conditions aren't abstract). */
 struct _pthread_fastlock
 {
-  long int __status;            /* "Free" or "taken" or head of waiting list */
-  int __spinlock;               /* For compare-and-swap emulation */
+  long int __status;   /* "Free" or "taken" or head of waiting list */
+  int __spinlock;      /* Used by compare_and_swap emulation. Also,
+			  adaptive SMP lock stores spin count here. */
 };
 
 #ifndef _PTHREAD_DESCR_DEFINED

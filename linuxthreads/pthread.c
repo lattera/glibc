@@ -150,7 +150,7 @@ pthread_descr __pthread_main_thread = &__pthread_initial_thread;
 /* Limit between the stack of the initial thread (above) and the
    stacks of other threads (below). Aligned on a STACK_SIZE boundary. */
 
-char *__pthread_initial_thread_bos = NULL;
+char *__pthread_initial_thread_bos;
 
 /* File descriptor for sending requests to the thread manager. */
 /* Initially -1, meaning that the thread manager is not running. */
@@ -163,13 +163,17 @@ int __pthread_manager_reader;
 
 /* Limits of the thread manager stack */
 
-char *__pthread_manager_thread_bos = NULL;
-char *__pthread_manager_thread_tos = NULL;
+char *__pthread_manager_thread_bos;
+char *__pthread_manager_thread_tos;
 
 /* For process-wide exit() */
 
-int __pthread_exit_requested = 0;
-int __pthread_exit_code = 0;
+int __pthread_exit_requested;
+int __pthread_exit_code;
+
+/* Nozero if the machine has more than one processor.  */
+int __pthread_smp_kernel;
+
 
 #if !__ASSUME_REALTIME_SIGNALS
 /* Pointers that select new or old suspend/resume functions
@@ -212,7 +216,7 @@ static int current_rtmin = -1;
 static int current_rtmax = -1;
 int __pthread_sig_restart = SIGUSR1;
 int __pthread_sig_cancel = SIGUSR2;
-int __pthread_sig_debug = 0;
+int __pthread_sig_debug;
 #else
 static int current_rtmin;
 static int current_rtmax;
@@ -224,7 +228,7 @@ int __pthread_sig_debug = __SIGRTMIN + 2;
 #else
 int __pthread_sig_restart = SIGUSR1;
 int __pthread_sig_cancel = SIGUSR2;
-int __pthread_sig_debug = 0;
+int __pthread_sig_debug;
 #endif
 
 static int rtsigs_initialized;
@@ -399,6 +403,8 @@ static void pthread_initialize(void)
     __cxa_atexit((void (*) (void *)) pthread_exit_process, NULL, __dso_handle);
   else
     __on_exit (pthread_exit_process, NULL);
+  /* How many processors.  */
+  __pthread_smp_kernel = sysconf (_SC_NPROCESSORS_ONLN) > 1;
 }
 
 void __pthread_initialize(void)

@@ -38,7 +38,7 @@ strong_alias (__pthread_mutex_init, pthread_mutex_init)
 
 int __pthread_mutex_destroy(pthread_mutex_t * mutex)
 {
-  if (mutex->__m_lock.__status != 0) return EBUSY;
+  if ((mutex->__m_lock.__status & 1) != 0) return EBUSY;
   return 0;
 }
 strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
@@ -49,7 +49,7 @@ int __pthread_mutex_trylock(pthread_mutex_t * mutex)
   int retcode;
 
   switch(mutex->__m_kind) {
-  case PTHREAD_MUTEX_FAST_NP:
+  case PTHREAD_MUTEX_ADAPTIVE_NP:
     retcode = __pthread_trylock(&mutex->__m_lock);
     return retcode;
   case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -84,7 +84,7 @@ int __pthread_mutex_lock(pthread_mutex_t * mutex)
   pthread_descr self;
 
   switch(mutex->__m_kind) {
-  case PTHREAD_MUTEX_FAST_NP:
+  case PTHREAD_MUTEX_ADAPTIVE_NP:
     __pthread_lock(&mutex->__m_lock, NULL);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -122,7 +122,7 @@ int __pthread_mutex_timedlock (pthread_mutex_t *mutex,
     return EINVAL;
 
   switch(mutex->__m_kind) {
-  case PTHREAD_MUTEX_FAST_NP:
+  case PTHREAD_MUTEX_ADAPTIVE_NP:
     __pthread_lock(&mutex->__m_lock, NULL);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -158,7 +158,7 @@ strong_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)
 int __pthread_mutex_unlock(pthread_mutex_t * mutex)
 {
   switch (mutex->__m_kind) {
-  case PTHREAD_MUTEX_FAST_NP:
+  case PTHREAD_MUTEX_ADAPTIVE_NP:
     __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -170,7 +170,7 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
     __pthread_unlock(&mutex->__m_lock);
     return 0;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
-    if (mutex->__m_owner != thread_self() || mutex->__m_lock.__status == 0)
+    if (mutex->__m_owner != thread_self() || (mutex->__m_lock.__status & 1) == 0)
       return EPERM;
     mutex->__m_owner = NULL;
     __pthread_alt_unlock(&mutex->__m_lock);
@@ -199,7 +199,7 @@ strong_alias (__pthread_mutexattr_destroy, pthread_mutexattr_destroy)
 
 int __pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind)
 {
-  if (kind != PTHREAD_MUTEX_FAST_NP
+  if (kind != PTHREAD_MUTEX_ADAPTIVE_NP
       && kind != PTHREAD_MUTEX_RECURSIVE_NP
       && kind != PTHREAD_MUTEX_ERRORCHECK_NP
       && kind != PTHREAD_MUTEX_TIMED_NP)

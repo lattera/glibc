@@ -24,12 +24,20 @@
 #include "spinlock.h"
 #include "restart.h"
 
-/* The status field of a spinlock has the following meaning:
-     0: spinlock is free
-     1: spinlock is taken, no thread is waiting on it
-  ADDR: psinlock is taken, ADDR is address of thread descriptor for
-        first waiting thread, other waiting threads are linked via
-        their p_nextlock field.
+/* The status field of a spinlock is a pointer whose least significant
+   bit is a locked flag.
+
+   Thus the field values have the following meanings:
+
+   status == 0:       spinlock is free
+   status == 1:       spinlock is taken; no thread is waiting on it
+
+   (status & 1) == 1: spinlock is taken and (status & ~1L) is a
+                      pointer to the first waiting thread; other
+		      waiting threads are linked via the p_nextlock 
+		      field.
+   (status & 1) == 0: same as above, but spinlock is not taken.
+
    The waiting list is not sorted by priority order.
    Actually, we always insert at top of list (sole insertion mode
    that can be performed without locking).
@@ -38,29 +46,70 @@
    This is safe because there are no concurrent __pthread_unlock
    operations -- only the thread that locked the mutex can unlock it. */
 
+
 void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 				      pthread_descr self)
 {
+#if defined HAS_COMPARE_AND_SWAP
   long oldstatus, newstatus;
-  int spurious_wakeup_count = 0;
+  int successful_seizure, spurious_wakeup_count = 0;
+  int spin_count = 0;
+#endif
+
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP
+  {
+    __pthread_acquire(&lock->__spinlock);
+    return 0;
+  }
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
+again:
+
+  /* On SMP, try spinning to get the lock. */
+
+  if (__pthread_smp_kernel) {
+    int max_count = lock->__spinlock * 2 + 10;
+
+    for (spin_count = 0; spin_count < max_count; spin_count++) {
+      if (((oldstatus = lock->__status) & 1) == 0) {
+	if(__compare_and_swap(&lock->__status, oldstatus, oldstatus | 1))
+	{
+	  if (spin_count)
+	    lock->__spinlock += (spin_count - lock->__spinlock) / 8;
+	  return;
+	}
+      }
+    }
+
+    lock->__spinlock += (spin_count - lock->__spinlock) / 8;
+  }
+
+  /* No luck, try once more or suspend. */
 
   do {
     oldstatus = lock->__status;
-    if (oldstatus == 0) {
-      newstatus = 1;
+    successful_seizure = 0;
+
+    if ((oldstatus & 1) == 0) {
+      newstatus = oldstatus | 1;
+      successful_seizure = 1;
     } else {
       if (self == NULL)
 	self = thread_self();
-      newstatus = (long) self;
+      newstatus = (long) self | 1;
     }
+
     if (self != NULL) {
-      THREAD_SETMEM(self, p_nextlock, (pthread_descr) oldstatus);
+      THREAD_SETMEM(self, p_nextlock, (pthread_descr) (oldstatus & ~1L));
       /* Make sure the store in p_nextlock completes before performing
          the compare-and-swap */
       MEMORY_BARRIER();
     }
-  } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
-                             &lock->__spinlock));
+  } while(! __compare_and_swap(&lock->__status, oldstatus, newstatus));
 
   /* Suspend with guard against spurious wakeup.
      This can happen in pthread_cond_timedwait_relative, when the thread
@@ -68,7 +117,7 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
      locks the queue to remove itself. At that point it may still be on the
      queue, and may be resumed by a condition signal. */
 
-  if (oldstatus != 0) {
+  if (!successful_seizure) {
     for (;;) {
       suspend(self);
       if (self->p_nextlock != NULL) {
@@ -78,37 +127,50 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
       }
       break;
     }
+    goto again;
   }
 
   /* Put back any resumes we caught that don't belong to us. */
   while (spurious_wakeup_count--)
     restart(self);
+#endif
 }
 
 int __pthread_unlock(struct _pthread_fastlock * lock)
 {
+#if defined HAS_COMPARE_AND_SWAP
   long oldstatus;
   pthread_descr thr, * ptr, * maxptr;
   int maxprio;
+#endif
 
-again:
-  oldstatus = lock->__status;
-  if (oldstatus == 0 || oldstatus == 1) {
-    /* No threads are waiting for this lock.  Please note that we also
-       enter this case if the lock is not taken at all.  If this wouldn't
-       be done here we would crash further down.  */
-    if (! compare_and_swap_with_release_semantics (&lock->__status,
-						   oldstatus, 0,
-						   &lock->__spinlock))
-      goto again;
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP
+  {
+    lock->__spinlock = 0;
+    WRITE_MEMORY_BARRIER();
     return 0;
   }
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
+again:
+  oldstatus = lock->__status;
+
+  while ((oldstatus = lock->__status) == 1) {
+    if (__compare_and_swap_with_release_semantics(&lock->__status, 
+	oldstatus, 0))
+      return 0;
+  }
+
   /* Find thread in waiting queue with maximal priority */
   ptr = (pthread_descr *) &lock->__status;
-  thr = (pthread_descr) oldstatus;
+  thr = (pthread_descr) (oldstatus & ~1L);
   maxprio = 0;
   maxptr = ptr;
-  while (thr != (pthread_descr) 1) {
+  while (thr != 0) {
     if (thr->p_priority >= maxprio) {
       maxptr = ptr;
       maxprio = thr->p_priority;
@@ -128,16 +190,25 @@ again:
   /* Remove max prio thread from waiting list. */
   if (maxptr == (pthread_descr *) &lock->__status) {
     /* If max prio thread is at head, remove it with compare-and-swap
-       to guard against concurrent lock operation */
-    thr = (pthread_descr) oldstatus;
-    if (! compare_and_swap_with_release_semantics
-	    (&lock->__status, oldstatus, (long)(thr->p_nextlock),
-	     &lock->__spinlock))
+       to guard against concurrent lock operation. This removal
+       also has the side effect of marking the lock as released
+       because the new status comes from thr->p_nextlock whose
+       least significant bit is clear. */
+    thr = (pthread_descr) (oldstatus & ~1L);
+    if (! __compare_and_swap_with_release_semantics
+	    (&lock->__status, oldstatus, (long)(thr->p_nextlock)))
       goto again;
   } else {
-    /* No risk of concurrent access, remove max prio thread normally */
+    /* No risk of concurrent access, remove max prio thread normally.
+       But in this case we must also flip the least significant bit
+       of the status to mark the lock as released. */
     thr = *maxptr;
     *maxptr = thr->p_nextlock;
+
+    do {
+      oldstatus = lock->__status;
+    } while (!__compare_and_swap_with_release_semantics(&lock->__status,
+	     oldstatus, oldstatus & ~1L));
   }
   /* Prevent reordering of store to *maxptr above and store to thr->p_nextlock
      below */
@@ -147,6 +218,7 @@ again:
   restart(thr);
 
   return 0;
+#endif
 }
 
 /*

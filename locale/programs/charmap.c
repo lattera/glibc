@@ -159,7 +159,8 @@ charmap_read (const char *filename)
 				== 1)
 			    || fscanf (fp, "%% alias %as", &name) == 1)
 			  {
-			    if (strcasecmp (name, filename) == 0)
+			    if (filename != NULL
+				&& strcasecmp (name, filename) == 0)
 			      break;
 
 			    free (name);
