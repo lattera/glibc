@@ -1109,8 +1109,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec > 0)						      \
 	      {								      \
 		/* The string `s2' might not be NUL terminated.  */	      \
-		string = (char *) alloca (prec + 1);			      \
-		len = __wcsrtombs (string, &s2, prec + 1, &mbstate);	      \
+		string = (char *) alloca (prec);			      \
+		len = __wcsrtombs (string, &s2, prec, &mbstate);	      \
 	      }								      \
 	    else							      \
 	      {								      \

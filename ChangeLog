@@ -1,3 +1,9 @@
+1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (process_string_arg): Correct last patch
+	and write correct number of bytes in case of %ls with precision.
+	Reported by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
+
 1999-08-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/nscd.init: Test for kernel version and make LSB compliant.
