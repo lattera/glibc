@@ -1,5 +1,12 @@
 2001-05-26  H.J. Lu <hjl@gnu.org>
 
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Change sigsuspend
+	to s_sigsuspend. Add s_mmap2.
+
+	* sysdeps/mips/atomicity.h: New file.
+
+	* sysdeps/unix/sysv/linux/mips/getsysstats.c: New file.
+
 	* sysdeps/unix/sysv/linux/mips/bits/ipc.h (ipc_perm): Put
 	back __key.
 
