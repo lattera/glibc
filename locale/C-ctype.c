@@ -343,9 +343,9 @@ const char _nl_C_LC_CTYPE_width[256] =
 const struct locale_data _nl_C_LC_CTYPE =
 {
   _nl_C_name,
-  NULL, 0, 0, /* no file mapped */
+  NULL, 0, 0,	/* no file mapped */
   UNDELETABLE,
-  0,
+  1,		/* Enable transliteration by default.  */
   NULL,
   66,
   {

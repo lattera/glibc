@@ -35,6 +35,7 @@
 # include <langinfo.h>
 # include <locale/localeinfo.h>
 # include <wcsmbs/wcsmbsload.h>
+# include <iconv/gconv_int.h>
 #endif
 
 
@@ -73,6 +74,12 @@ struct _IO_codecvt __libio_codecvt =
   .__codecvt_do_always_noconv = do_always_noconv,
   .__codecvt_do_length = do_length,
   .__codecvt_do_max_length = do_max_length
+};
+
+
+static struct __gconv_trans_data libio_translit =
+{
+  .__trans_fct = __gconv_transliterate
 };
 
 
@@ -134,7 +141,7 @@ _IO_fwide (fp, mode)
 	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
 
 	/* XXX For now no transliteration.  */
-	cc->__cd_out.__cd.__data[0].__trans = NULL;
+	cc->__cd_out.__cd.__data[0].__trans = &libio_translit;
       }
 #else
 # error "somehow determine this from LC_CTYPE"

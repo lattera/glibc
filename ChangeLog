@@ -1,3 +1,10 @@
+2000-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iofwide.c: Enable transliteration for conversion from wchar_t
+	by default.
+	* locale/C-ctype.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+
 2000-07-26  Greg McGary  <greg@mcgary.org>
 
 	* Makeconfig (+link-bounded, link-libc-bounded,

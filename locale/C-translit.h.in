@@ -1,4 +1,4 @@
-/* Transliteration for the C locale.
+/* Transliteration for the C locale.  -*-C-*-
    Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
