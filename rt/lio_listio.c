@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -42,6 +42,7 @@ lio_listio (mode, list, nent, sig)
      int nent;
      struct sigevent *sig;
 {
+  struct sigevent defsigev;
   struct requestlist *requests[nent];
   int cnt;
   volatile int total = 0;
@@ -54,6 +55,12 @@ lio_listio (mode, list, nent, sig)
       return -1;
     }
 
+  if (sig == NULL)
+    {
+      defsigev.sigev_notify = SIGEV_NONE;
+      sig = &defsigev;
+    }
+
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);
 
@@ -62,6 +69,7 @@ lio_listio (mode, list, nent, sig)
   for (cnt = 0; cnt < nent; ++cnt)
     if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
       {
+	list[cnt]->aio_sigevent.sigev_notify = SIGEV_NONE;
 	requests[cnt] =  __aio_enqueue_request ((aiocb_union *) list[cnt],
 						list[cnt]->aio_lio_opcode);
 

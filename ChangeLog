@@ -1,5 +1,10 @@
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* rt/lio_listio.c (lio_listio): Always disable individual
+	notification.
+	* rt/Makefile: Add rules to build and run tst-aio2.
+	* rt/tst-aio2.c: New file.
+
 	* rt/lio_listio.c (lio_listio): Handle case of SIG == NULL correctly.
 	Reported by Kevin Beard <beardk@gatwick.Geco-Prakla.slb.com>.
 
