@@ -1,3 +1,9 @@
+1999-03-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/tst-timezone.c (tests): Add more cases.
+	(check_tzvars): Mark errors clearer.
+	(main): Likewise.
+
 1999-03-30 20:59 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* login/programs/pt_chown.c: Drop privileges if invoked with

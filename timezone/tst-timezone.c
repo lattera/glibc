@@ -35,13 +35,17 @@ struct test_times
 
 static const struct test_times tests[] =
 {
+  { "Europe/Amsterdam", 1, -3600, { "CET", "CEST" }},
   { "Europe/Berlin", 1, -3600, { "CET", "CEST" }},
+  { "Europe/London", 1, 0, { "GMT", "BST" }},
   { "Universal", 0, 0, {"UTC", "UTC" }},
   { "Australia/Melbourne", 1, -36000, { "EST", "EST" }},
   { "America/Sao_Paulo", 1, 10800, {"EST", "EDT" }},
   { "America/Chicago", 1, 21600, {"CST", "CDT" }},
+  { "America/Indianapolis", 1, 18000, {"EST", "EDT" }},
   { "America/Los_Angeles", 1, 28800, {"PST", "PDT" }},
   { "Asia/Tokyo", 0, -32400, {"JST", "JST" }},
+  { "Pacific/Auckland", 1, -43200, { "NZST", "NZDT" }},
   { NULL, 0, 0 }
 };
 
@@ -63,20 +67,20 @@ check_tzvars (const char *name, int dayl, int timez, const char *const tznam[])
 
   if (daylight != dayl)
     {
-      printf ("Timezone: %s, daylight is: %d but should be: %d\n",
+      printf ("*** Timezone: %s, daylight is: %d but should be: %d\n",
 	      name, daylight, dayl);
       ++failed;
     }
   if (timezone != timez)
     {
-      printf ("Timezone: %s, timezone is: %ld but should be: %d\n",
+      printf ("*** Timezone: %s, timezone is: %ld but should be: %d\n",
 	      name, timezone, timez);
       ++failed;
     }
   for (i = 0; i <= 1; ++i)
     if (strcmp (tzname[i], tznam[i]) != 0)
       {
-	printf ("Timezone: %s, tzname[%d] is: %s but should be: %s\n",
+	printf ("*** Timezone: %s, tzname[%d] is: %s but should be: %s\n",
 		name, i, tzname[i], tznam[i]);
 	++failed;
       }
@@ -129,7 +133,11 @@ main (int argc, char ** argv)
     fputs (buf, stdout);
     puts (" should be");
     puts ("TZ=Europe/London 892162800 0 0 0 10 3 98 5 99 1");
-    failed |= strcmp (buf, "TZ=Europe/London 892162800 0 0 0 10 3 98 5 99 1") != 0;
+    if (strcmp (buf, "TZ=Europe/London 892162800 0 0 0 10 3 98 5 99 1") != 0)
+      {
+	failed = 1;
+	fputs (" FAILED ***", stdout);
+      }
   }
 
   printf("\n");
@@ -147,7 +155,11 @@ main (int argc, char ** argv)
     fputs (buf, stdout);
     puts (" should be");
     puts ("TZ=GMT 892166400 0 0 0 10 3 98 5 99 0");
-    failed |= strcmp (buf, "TZ=GMT 892166400 0 0 0 10 3 98 5 99 0") != 0;
+    if (strcmp (buf, "TZ=GMT 892166400 0 0 0 10 3 98 5 99 0") != 0)
+      {
+	failed = 1;
+	fputs (" FAILED ***", stdout);
+      }
   }
 
   return failed ? EXIT_FAILURE : EXIT_SUCCESS;
