@@ -1,3 +1,13 @@
+1999-08-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/libc.texinfo: Update version and date.
+
+	* manual/locale.texi (Formatting Numbers): Fix @node pointers.
+
+	* manual/filesys.texi (Working with Directory Trees): Add missing @code.
+	(File System Interface): Correct entry.
+	(Permission Bits): Add missing commata after @xref.
+
 1999-08-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* timezone/tst-timezone.c (main): Don't pass const strings to
