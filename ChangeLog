@@ -1,5 +1,11 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/generic/ldconfig.h (FLAG_MIPS64_LIBN32,
+	FLAG_MIPS64_LIBN64): Define.
+	* elf/cache.c (print_entry): Handle mips64 n32 and n64.
+
+2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
+
 	* sysdeps/mips/memcpy.S: Map t0-3 to a4-7 on new abis.
 	* sysdeps/mips/memset.S: Likewise.
 	* sysdeps/mips/sys/regdef.h: Alias a4-7 or t0-3 to $8-11

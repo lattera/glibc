@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -86,6 +87,11 @@ print_entry (const char *lib, int flag, unsigned int osversion,
     case FLAG_POWERPC_LIB64:
       fputs(",64bit", stdout);
       break;
+    case FLAG_MIPS64_LIBN32:
+      fputs(",N32", stdout);
+      break;
+    case FLAG_MIPS64_LIBN64:
+      fputs(",64bit", stdout);
     case 0:
       break;
     default:

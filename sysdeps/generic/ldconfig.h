@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -32,6 +32,8 @@
 #define FLAG_X8664_LIB64	0x0300
 #define FLAG_S390_LIB64		0x0400
 #define FLAG_POWERPC_LIB64	0x0500
+#define FLAG_MIPS64_LIBN32	0x0600
+#define FLAG_MIPS64_LIBN64	0x0700
 
 /* Declared in cache.c.  */
 extern void print_cache (const char *cache_name);
