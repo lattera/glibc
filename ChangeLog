@@ -1,3 +1,8 @@
+2000-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/scsi/sg.h (sg_io_hdr_t): Remove duplicate
+	dxfer_direction.
+
 2000-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/locale.h (struct lconv): Add new elements from ISO C99.

@@ -46,7 +46,6 @@ typedef struct sg_io_hdr
   int dxfer_direction;        /* [i] data transfer direction  */
   unsigned char cmd_len;      /* [i] SCSI command length ( <= 16 bytes) */
   unsigned char mx_sb_len;    /* [i] max length to write to sbp */
-  int dxfer_direction;        /* [i] data transfer direction  */
   unsigned short int iovec_count; /* [i] 0 implies no scatter gather */
   unsigned int dxfer_len;     /* [i] byte count of data transfer */
   void * dxferp;              /* [i], [*io] points to data transfer memory
