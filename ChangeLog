@@ -1,5 +1,8 @@
 2000-05-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/findlocale.c (_nl_find_locale): Add new parameter to
+	calls of _nl_make_l10nflist.
+
 	* libio/stdio.h: Make fseeko and ftello prototypes available is
 	__USE_LARGEFILE.  Patch by Paul Eggert <eggert@twinsun.com>.
 
