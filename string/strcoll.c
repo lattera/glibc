@@ -172,32 +172,35 @@ STRCOLL (s1, s2, l)
 	  /* We have to increment the index counters.  */
 	  if ((forward && ++s1idx >= s1run->data[pass].number)
 	      || (!forward && --s1idx < 0))
-	    if (forward)
-	      {
-		s1run = s1run->next;
-		s1idx = 0;
-	      }
-	    else
-	      {
-		s1run = s1run->prev;
-		if (s1run != NULL)
-		  s1idx = s1run->data[pass].number - 1;
-	      }
+	    {
+	      if (forward)
+		{
+		  s1run = s1run->next;
+		  s1idx = 0;
+		}
+	      else
+		{
+		  s1run = s1run->prev;
+		  if (s1run != NULL)
+		    s1idx = s1run->data[pass].number - 1;
+		}
+	    }
 
 	  if ((forward && ++s2idx >= s2run->data[pass].number)
 	      || (!forward && --s2idx < 0))
-	    if (forward)
-	      {
-		s2run = s2run->next;
-		s2idx = 0;
-	      }
-	    else
-	      {
-		s2run = s2run->prev;
-		if (s2run != NULL)
-		  s2idx = s2run->data[pass].number - 1;
-	      }
-
+	    {
+	      if (forward)
+		{
+		  s2run = s2run->next;
+		  s2idx = 0;
+		}
+	      else
+		{
+		  s2run = s2run->prev;
+		  if (s2run != NULL)
+		    s2idx = s2run->data[pass].number - 1;
+		}
+	    }
 	}
 
       if (s1run != s2run)

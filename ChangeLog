@@ -19,6 +19,8 @@
 	* stdlib/strtol.c: Likewise.
 	* string/strcoll.c: Likewise.
 	* string/strxfrm.c: Likewise.
+	* argp/argp-help.c: Likewise.
+	* argp/argp-parse.c: Likewise.
 
 1998-09-07 09:58  Ulrich Drepper  <drepper@cygnus.com>
 

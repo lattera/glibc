@@ -404,12 +404,14 @@ noconv:
      hexadecimal digits.  This is no error case.  We return 0 and
      ENDPTR points to the `x`.  */
   if (endptr != NULL)
-    if (save - nptr >= 2 && TOUPPER (save[-1]) == L_('X')
-	&& save[-2] == L_('0'))
-      *endptr = (STRING_TYPE *) &save[-1];
-    else
-      /*  There was no number to convert.  */
-      *endptr = (STRING_TYPE *) nptr;
+    {
+      if (save - nptr >= 2 && TOUPPER (save[-1]) == L_('X')
+	  && save[-2] == L_('0'))
+	*endptr = (STRING_TYPE *) &save[-1];
+      else
+	/*  There was no number to convert.  */
+	*endptr = (STRING_TYPE *) nptr;
+    }
 
   return 0L;
 }

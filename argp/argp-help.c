@@ -800,63 +800,65 @@ hol_append (struct hol *hol, struct hol *more)
 
   /* Merge entries.  */
   if (more->num_entries > 0)
-    if (hol->num_entries == 0)
-      {
-	hol->num_entries = more->num_entries;
-	hol->entries = more->entries;
-	hol->short_options = more->short_options;
-	more->num_entries = 0;	/* Mark MORE's fields as invalid.  */
-      }
-    else
-      /* Append the entries in MORE to those in HOL, taking care to only add
-	 non-shadowed SHORT_OPTIONS values.  */
-      {
-	unsigned left;
-	char *so, *more_so;
-	struct hol_entry *e;
-	unsigned num_entries = hol->num_entries + more->num_entries;
-	struct hol_entry *entries =
-	  malloc (num_entries * sizeof (struct hol_entry));
-	unsigned hol_so_len = strlen (hol->short_options);
-	char *short_options =
-	  malloc (hol_so_len + strlen (more->short_options) + 1);
+    {
+      if (hol->num_entries == 0)
+	{
+	  hol->num_entries = more->num_entries;
+	  hol->entries = more->entries;
+	  hol->short_options = more->short_options;
+	  more->num_entries = 0;	/* Mark MORE's fields as invalid.  */
+	}
+      else
+	/* Append the entries in MORE to those in HOL, taking care to only add
+	   non-shadowed SHORT_OPTIONS values.  */
+	{
+	  unsigned left;
+	  char *so, *more_so;
+	  struct hol_entry *e;
+	  unsigned num_entries = hol->num_entries + more->num_entries;
+	  struct hol_entry *entries =
+	    malloc (num_entries * sizeof (struct hol_entry));
+	  unsigned hol_so_len = strlen (hol->short_options);
+	  char *short_options =
+	    malloc (hol_so_len + strlen (more->short_options) + 1);
 
-	__mempcpy (__mempcpy (entries, hol->entries,
-			      hol->num_entries * sizeof (struct hol_entry)),
-		   more->entries,
-		   more->num_entries * sizeof (struct hol_entry));
+	  __mempcpy (__mempcpy (entries, hol->entries,
+				hol->num_entries * sizeof (struct hol_entry)),
+		     more->entries,
+		     more->num_entries * sizeof (struct hol_entry));
 
-	__mempcpy (short_options, hol->short_options, hol_so_len);
+	  __mempcpy (short_options, hol->short_options, hol_so_len);
 
 	/* Fix up the short options pointers from HOL.  */
-	for (e = entries, left = hol->num_entries; left > 0; e++, left--)
-	  e->short_options += (short_options - hol->short_options);
+	  for (e = entries, left = hol->num_entries; left > 0; e++, left--)
+	    e->short_options += (short_options - hol->short_options);
 
 	/* Now add the short options from MORE, fixing up its entries too.  */
-	so = short_options + hol_so_len;
-	more_so = more->short_options;
-	for (left = more->num_entries; left > 0; e++, left--)
-	  {
-	    int opts_left;
-	    const struct argp_option *opt;
+	  so = short_options + hol_so_len;
+	  more_so = more->short_options;
+	  for (left = more->num_entries; left > 0; e++, left--)
+	    {
+	      int opts_left;
+	      const struct argp_option *opt;
 
-	    e->short_options = so;
+	      e->short_options = so;
 
-	    for (opts_left = e->num, opt = e->opt; opts_left; opt++, opts_left--)
-	      {
-		int ch = *more_so;
-		if (oshort (opt) && ch == opt->key)
-		  /* The next short option in MORE_SO, CH, is from OPT.  */
-		  {
-		    if (! find_char (ch, short_options,
-				     short_options + hol_so_len))
-		      /* The short option CH isn't shadowed by HOL's options,
-			 so add it to the sum.  */
-		      *so++ = ch;
-		    more_so++;
-		  }
-	      }
-	  }
+	      for (opts_left = e->num, opt = e->opt; opts_left; opt++, opts_left--)
+		{
+		  int ch = *more_so;
+		  if (oshort (opt) && ch == opt->key)
+		    /* The next short option in MORE_SO, CH, is from OPT.  */
+		    {
+		      if (! find_char (ch, short_options,
+				       short_options + hol_so_len))
+			/* The short option CH isn't shadowed by HOL's options,
+			   so add it to the sum.  */
+			*so++ = ch;
+		      more_so++;
+		    }
+		}
+	    }
+	}
 
 	*so = '\0';
 
@@ -900,10 +902,14 @@ arg (const struct argp_option *real, const char *req_fmt, const char *opt_fmt,
      const char *domain, argp_fmtstream_t stream)
 {
   if (real->arg)
-    if (real->flags & OPTION_ARG_OPTIONAL)
-      __argp_fmtstream_printf (stream, opt_fmt, dgettext (domain, real->arg));
-    else
-      __argp_fmtstream_printf (stream, req_fmt, dgettext (domain, real->arg));
+    {
+      if (real->flags & OPTION_ARG_OPTIONAL)
+	__argp_fmtstream_printf (stream, opt_fmt,
+				 dgettext (domain, real->arg));
+      else
+	__argp_fmtstream_printf (stream, req_fmt,
+				 dgettext (domain, real->arg));
+    }
 }
 
 /* Helper functions for hol_entry_help.  */
@@ -1245,16 +1251,18 @@ usage_long_opt (const struct argp_option *opt,
     arg = real->arg;
 
   if (! (flags & OPTION_NO_USAGE))
-    if (arg)
-      {
-	arg = dgettext (domain, arg);
-	if (flags & OPTION_ARG_OPTIONAL)
-	  __argp_fmtstream_printf (stream, " [--%s[=%s]]", opt->name, arg);
-	else
-	  __argp_fmtstream_printf (stream, " [--%s=%s]", opt->name, arg);
-      }
-    else
-      __argp_fmtstream_printf (stream, " [--%s]", opt->name);
+    {
+      if (arg)
+	{
+	  arg = dgettext (domain, arg);
+	  if (flags & OPTION_ARG_OPTIONAL)
+	    __argp_fmtstream_printf (stream, " [--%s[=%s]]", opt->name, arg);
+	  else
+	    __argp_fmtstream_printf (stream, " [--%s=%s]", opt->name, arg);
+	}
+      else
+	__argp_fmtstream_printf (stream, " [--%s]", opt->name);
+    }
 
   return 0;
 }
@@ -1385,16 +1393,18 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
       advance = !argp_args_usage ((child++)->argp, state, levels, advance, stream);
 
   if (advance && multiple)
-    /* Need to increment our level.  */
-    if (*nl)
-      /* There's more we can do here.  */
-      {
-	(*our_level)++;
-	advance = 0;		/* Our parent shouldn't advance also. */
-      }
-    else if (*our_level > 0)
-      /* We had multiple levels, but used them up; reset to zero.  */
-      *our_level = 0;
+    {
+      /* Need to increment our level.  */
+      if (*nl)
+	/* There's more we can do here.  */
+	{
+	  (*our_level)++;
+	  advance = 0;		/* Our parent shouldn't advance also. */
+	}
+      else if (*our_level > 0)
+	/* We had multiple levels, but used them up; reset to zero.  */
+	*our_level = 0;
+    }
 
   return !advance;
 }

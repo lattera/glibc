@@ -250,17 +250,19 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 	  /* We have to increment the index counters.  */
 	  if ((forward && ++idx >= run->data[pass].number)
 	      || (!forward && --idx < 0))
-	    if (forward)
-	      {
-		run = run->next;
-		idx = 0;
-	      }
-	    else
-	      {
-		run = run->prev;
-		if (run != NULL)
-		  idx = run->data[pass].number - 1;
-	      }
+	    {
+	      if (forward)
+		{
+		  run = run->next;
+		  idx = 0;
+		}
+	      else
+		{
+		  run = run->prev;
+		  if (run != NULL)
+		    idx = run->data[pass].number - 1;
+		}
+	    }
 	}
 
       /* Write marker for end of word.  */
