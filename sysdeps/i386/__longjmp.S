@@ -25,11 +25,11 @@ ENTRY (__longjmp)
 	movl 4(%esp), %ecx	/* User's jmp_buf in %ecx.  */
 	movl 8(%esp), %eax	/* Second argument is return value.  */
      	/* Restore registers.  */
-	movl JB_BX(%ecx), %ebx
-	movl JB_SI(%ecx), %esi
-	movl JB_DI(%ecx), %edi
-	movl JB_BP(%ecx), %ebp
-	movl JB_SP(%ecx), %esp
+	movl (JB_BX*4)(%ecx), %ebx
+	movl (JB_SI*4)(%ecx), %esi
+	movl (JB_DI*4)(%ecx), %edi
+	movl (JB_BP*4)(%ecx), %ebp
+	movl (JB_SP*4)(%ecx), %esp
 	/* Jump to saved PC.  */
-     	movl JB_PC(%ecx), %ecx
+     	movl (JB_PC*4)(%ecx), %ecx
      	jmp *%ecx

@@ -65,7 +65,7 @@ elf_machine_load_address (void)
    This will be the first relocation in the text of the dynamic linker;
    we skip it to avoid trying to modify read-only text in this early stage.  */
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
-  ++(const Elf32_Rel *) (dynamic_info)[DT_REL]->d_un.d_ptr;
+  ++(const Elf32_Rel *) (dynamic_info)[DT_REL]->d_un.d_ptr; \
   (dynamic_info)[DT_RELSZ]->d_un.d_val -= sizeof (Elf32_Rel);
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).

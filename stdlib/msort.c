@@ -1,5 +1,5 @@
 /* msort -- an alternative to qsort, with an identical interface.
-   Copyright (C) 1992 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
 
 This file is part of the GNU C Library.
@@ -22,11 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MEMCPY(dst, src, s)			\
-  ((s) == sizeof (int)				\
-   ? (*(int *) (dst) = *(int *) (src), (dst))	\
-   : memcpy (dst, src, s))
+#include <memcopy.h>
 
 static void
 DEFUN(msort_with_tmp, (b, n, s, cmp, t),
@@ -49,22 +45,38 @@ DEFUN(msort_with_tmp, (b, n, s, cmp, t),
 
   tmp = t;
 
-  while (n1 > 0 && n2 > 0)
-    {
-      if ((*cmp) (b1, b2) <= 0)
-	{
-	  MEMCPY (tmp, b1, s);
-	  b1 += s;
-	  --n1;
-	}
-      else
-	{
-	  MEMCPY (tmp, b2, s);
-	  b2 += s;
-	  --n2;
-	}
-      tmp += s;
-    }
+  if (s == OPSIZ && (b1 - b2) % OPSIZ == 0)
+    /* We are operating on aligned words.  Use direct word stores.  */
+    while (n1 > 0 && n2 > 0)
+      {
+	if ((*cmp) (b1, b2) <= 0)
+	  {
+	    --n1;
+	    *((op_t *) tmp)++ = *((op_t *) b1)++;
+	  }
+	else
+	  {
+	    --n2;
+	    *((op_t *) tmp)++ = *((op_t *) b2)++;
+	  }
+      }
+  else
+    while (n1 > 0 && n2 > 0)
+      {
+	if ((*cmp) (b1, b2) <= 0)
+	  {
+	    memcpy (tmp, b1, s);
+	    b1 += s;
+	    --n1;
+	  }
+	else
+	  {
+	    memcpy (tmp, b2, s);
+	    b2 += s;
+	    --n2;
+	  }
+	tmp += s;
+      }
   if (n1 > 0)
     memcpy (tmp, b1, n1 * s);
   memcpy (b, t, (n - n2) * s);

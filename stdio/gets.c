@@ -21,7 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <string.h>
 
-link_warning ("the `gets' function is unreliable and should not be used.")
+link_warning (gets,
+	      "the `gets' function is unreliable and should not be used.")
 
 /* Read a newline-terminated string from stdin into S,
    removing the trailing newline.  Return S or NULL.  */

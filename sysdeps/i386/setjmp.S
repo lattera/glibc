@@ -24,13 +24,26 @@ Cambridge, MA 02139, USA.  */
 ENTRY (__sigsetjmp)
 	movl 4(%esp), %eax	/* User's jmp_buf in %eax.  */
      	/* Save registers.  */
-	movl %ebx, JB_BX(%eax)
-	movl %esi, JB_SI(%eax)
-	movl %edi, JB_DI(%eax)
-	movl %ebp, JB_BP(%eax)
+	movl %ebx, (JB_BX*4)(%eax)
+	movl %esi, (JB_SI*4)(%eax)
+	movl %edi, (JB_DI*4)(%eax)
+	movl %ebp, (JB_BP*4)(%eax)
 	leal 4(%esp), %ecx	/* Save SP as it will be after we return.  */
-     	movl %ecx, JB_SP(%eax)
+     	movl %ecx, (JB_SP*4)(%eax)
 	movl 0(%esp), %ecx	/* Save PC we are returning to now.  */
-     	movl %ecx, JB_PC(%eax)
-	xorl %eax, %eax		/* Return zero.  */
-	ret
+     	movl %ecx, (JB_PC*4)(%eax)
+
+	/* Make a tail call to __sigjmp_save; it takes the same args.  */
+#ifdef	PIC
+	/* We cannot use the PLT, because it requires that %ebx be set, but
+           we can't save and restore our caller's value.  Instead, we do an
+           indirect jump through the GOT, using for the temporary register
+           %ecx, which is call-clobbered.  */
+	call here
+here:	popl %ecx
+	addl $_GLOBAL_OFFSET_TABLE_+[.-here], %ecx
+	movl C_SYMBOL_NAME(__sigjmp_save@GOT)(%ecx), %ecx
+	jmp *%ecx
+#else
+	jmp __sigjmp_save
+#endif

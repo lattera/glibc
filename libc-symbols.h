@@ -155,27 +155,27 @@ Cambridge, MA 02139, USA.  */
 
 
 
-/* When the file using this macro is linked in, the linker
-   will emit a warning message MSG.  */
+/* When a reference to SYMBOL is encountered, the linker will emit a
+   warning message MSG.  */
 #ifdef HAVE_GNU_LD
 #ifdef HAVE_ELF
-#define link_warning(msg)			\
-  static const char __evoke_link_warning__[]	\
-    __attribute__ ((section (".gnu.warning"))) = msg;
+#define link_warning(symbol, msg)			\
+  static const char __evoke_link_warning_##symbol[]	\
+    __attribute__ ((section (".gnu.warning." #symbol))) = msg;
 #else
-#define link_warning(msg)		\
+#define link_warning(symbol, msg)		\
   asm(".stabs \"" msg "\",30,0,0,0\n"	\
-      ".stabs \"__evoke_link_warning__\",1,0,0,0\n"\
-      ".stabs \"__evoke_link_warning__\",2,0,0,0\n");
+      ".stabs \"" __SYMBOL_PREFIX #symbol "\",1,0,0,0\n");
 #endif
 #else
 /* We will never be heard; they will all die horribly.  */
-#define link_warning(msg)
+#define link_warning(symbol, msg)
 #endif
 
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \
-  link_warning ("warning: " #name " is not implemented and will always fail")
+  link_warning (name, \
+		"warning: " #name " is not implemented and will always fail")
 
 /*
 

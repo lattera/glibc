@@ -1,3 +1,22 @@
+Fri Sep  1 16:16:12 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* libc-symbols.h (link_warning): Take new first arg SYMBOL; ask
+	for a warning on references to that specific symbol, not the
+	entire containing object file.
+	(stub_warning): Pass symbol name to link_warning.
+	* stdio/gets.c: Pass function name in link_warning invocation.
+
+	* hurd/intr-msg.c: Treat apparent EINTR return from msg trap like
+	MACH_SEND_INTERRUPTED.  That indicates interrupt_operation was
+	sent, but failed.
+
+	* stdlib/msort.c: Include memcopy.h.
+	(msort_with_tmp): If operating on aligned op_t words, use direct word
+	fetches and stores.
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC): Add
+	missing backslash.
+
 Thu Aug 31 13:23:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/i386/brk.S [PIC]: Set __curbrk through the GOT.

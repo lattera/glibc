@@ -77,6 +77,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	goto interrupted;
 
     case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
+    case EINTR:			/* Server not cooperating with interrupt.  */
       if (ss->intr_port != MACH_PORT_NULL)
 	/* If this signal was for us and it should interrupt calls, the
 	   signal thread will have cleared SS->intr_port.
