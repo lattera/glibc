@@ -1,7 +1,7 @@
 /* Iterate through the elements of an argz block.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Miles Bader <miles@gnu.ai.mit.edu>
+   Written by Miles Bader <miles@gnu.org>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,7 +22,7 @@
 #include <string.h>
 
 char *
-__argz_next (char *argz, size_t argz_len, const char *entry)
+__argz_next (const char *argz, size_t argz_len, const char *entry)
 {
   if (entry)
     {

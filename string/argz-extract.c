@@ -1,7 +1,7 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Miles Bader <miles@gnu.ai.mit.edu>
+   Written by Miles Bader <miles@gnu.org>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -23,7 +23,7 @@
 /* Puts pointers to each string in ARGZ, plus a terminating 0 element, into
    ARGV, which must be large enough to hold them all.  */
 void
-__argz_extract (char *argz, size_t len, char **argv)
+__argz_extract (const char *argz, size_t len, char **argv)
 {
   while (len > 0)
     {

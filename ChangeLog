@@ -1,3 +1,8 @@
+1998-09-04  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* string/argz.h (argz_extract, argz_next): Use `const' for ARGZ param.
+	* string/argz-next.c, string/argz-extract.c: Fix defns.
+
 1998-09-03  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* mach/Makefile: Use -include for mach-syscalls.mk to silence warning.

@@ -1,6 +1,6 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-   Written by Miles Bader <miles@gnu.ai.mit.edu>
+   Copyright (C) 1995, 96, 97, 98 Free Software Foundation, Inc.
+   Written by Miles Bader <miles@gnu.org>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -60,8 +60,10 @@ extern size_t argz_count __P ((__const char *__argz, size_t __len));
 
 /* Puts pointers to each string in ARGZ into ARGV, which must be large enough
    to hold them all.  */
-extern void __argz_extract __P ((char *__argz, size_t __len, char **__argv));
-extern void argz_extract __P ((char *__argz, size_t __len, char **__argv));
+extern void __argz_extract __P ((__const char *__argz, size_t __len,
+				 char **__argv));
+extern void argz_extract __P ((__const char *__argz, size_t __len,
+			       char **__argv));
 
 /* Make '\0' separated arg vector ARGZ printable by converting all the '\0's
    except the last into the character SEP.  */
@@ -128,14 +130,14 @@ extern error_t argz_replace (char **__argz, size_t *__argz_len,
     for (entry = argz; entry; entry = argz_next (argz, argz_len, entry))
       ...;
 */
-extern char *__argz_next __P ((char *argz, size_t __argz_len,
+extern char *__argz_next __P ((__const char *argz, size_t __argz_len,
 			       __const char *entry));
-extern char *argz_next __P ((char *argz, size_t __argz_len,
+extern char *argz_next __P ((__const char *argz, size_t __argz_len,
 			     __const char *entry));
 
 #ifdef __USE_EXTERN_INLINES
 extern inline char *
-__argz_next (char *__argz, size_t __argz_len, __const char *__entry)
+__argz_next (__const char *__argz, size_t __argz_len, __const char *__entry)
 {
   if (__entry)
     {
@@ -148,7 +150,7 @@ __argz_next (char *__argz, size_t __argz_len, __const char *__entry)
     return __argz_len > 0 ? __argz : 0;
 }
 extern inline char *
-argz_next (char *__argz, size_t __argz_len, __const char *__entry)
+argz_next (__const char *__argz, size_t __argz_len, __const char *__entry)
 {
   return __argz_next (__argz, __argz_len, __entry);
 }
