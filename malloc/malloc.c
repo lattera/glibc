@@ -4247,7 +4247,12 @@ mem2chunk_check(mem) Void_t* mem;
    necessary. */
 
 static int
+#if __STD_C
+top_check(void)
+#else
+static int
 top_check()
+#endif
 {
   mchunkptr t = top(&main_arena);
   char* brk, * new_brk;

@@ -1,8 +1,22 @@
+1997-05-07 13:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (lib): Put back dependency on lib-noranlib.
+	($(subdirs-stamps)): Remove dependency on stamp.* again.
+
+1998-05-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Use long long int also for
+	test in __pow2 implementation.
+
 1998-04-16 07:42  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* Makeconfig [!build-static]: Link `static' binaries with libc_pic.a.
 	Still need *FLAGS-.o because we still sometimes build .o files.
 	* db2/Makefile: Don't build libndbm.a if !build-static.
+
+1998-05-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* malloc/malloc.c (top_check): Add void as parameter to silent gcc.
 
 1998-04-16 07:42  Geoff Keating  <geoffk@ozemail.com.au>
 

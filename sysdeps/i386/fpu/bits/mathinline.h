@@ -231,7 +231,7 @@ __inline_mathcode (__sgn, __x, \
 __inline_mathcode (__pow2, __x, \
   register long double __value;						      \
   register long double __exponent;					      \
-  long int __p = (long int) __x;					      \
+  long long int __p = (long long int) __x;				      \
   if (__x == (long double) __p)						      \
     {									      \
       __asm __volatile__						      \

@@ -491,7 +491,7 @@ CREATE_ARFLAGS := cru$(verbose)
 # This makes all the object files in the parent library archive.
 
 .PHONY: lib lib-noranlib
-lib: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
+lib: lib-noranlib $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 lib-noranlib: libobjs
 
 # For object-suffix $o, the list of objects with that suffix.
@@ -543,8 +543,7 @@ endef
 subdirs-stamps := $(foreach d,$(subdirs),$(common-objpfx)$d/stamp%)
 subdirs-stamp-o = $(subst %,$o,$(subdirs-stamps))
 ifndef subdir
-$(subdirs-stamps): $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o) \
-		   subdir_lib;
+$(subdirs-stamps): subdir_lib;
 endif
 object-suffixes-left = $(object-suffixes-for-libc)
 include $(o-iterator)
