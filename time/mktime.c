@@ -217,9 +217,9 @@ do_normalization (tmptr)
 #define BAD_STRUCT_TM ((time_t) -1)
 
 time_t
-_mktime_internal (timeptr, producer)
+__mktime_internal (timeptr, producer)
      struct tm *timeptr;
-     struct tm *(*producer) __P ((const time_t *));
+     struct tm *(*producer) __P ((const time_t *, struct tm *));
 {
   struct tm our_tm;		/* our working space */
   struct tm *me = &our_tm;	/* a pointer to the above */
@@ -276,6 +276,7 @@ _mktime_internal (timeptr, producer)
 
   {
     struct tm *guess_tm;
+    struct tm guess_struct;
     time_t guess = 0;
     time_t distance = 0;
     time_t last_distance = 0;
@@ -288,7 +289,7 @@ _mktime_internal (timeptr, producer)
 
 	times_through_search++;     
       
-	guess_tm = (*producer) (&guess);
+	guess_tm = (*producer) (&guess, &guess_struct);
       
 #ifdef DEBUG
 	if (debugging_enabled)
@@ -399,6 +400,26 @@ _mktime_internal (timeptr, producer)
   return result;
 }
 
+#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
+#ifdef _LIBC
+#define localtime_r __localtime_r
+#else
+/* Approximate localtime_r as best we can in its absence.  */
+#define localtime_r my_localtime_r /* Avoid clash with system localtime_r.  */
+static struct tm *
+localtime_r (t, tp)
+     const time_t *t;
+     struct tm *tp;
+{ 
+  struct tm *l = localtime (t);
+  if (! l)
+    return NULL;
+  *tp = *l;
+  return tp;
+}
+#endif /* ! _LIBC */
+#endif /* ! HAVE_LOCALTIME_R && ! defined (localtime_r) */
+
 time_t
 #ifdef DEBUG			/* make it work even if the system's
 				   libc has it's own mktime routine */
@@ -408,7 +429,7 @@ mktime (timeptr)
 #endif
      struct tm *timeptr;
 {
-  return _mktime_internal (timeptr, localtime);
+  return __mktime_internal (timeptr, localtime_r);
 }
 
 #ifdef weak_alias

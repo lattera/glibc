@@ -29,7 +29,7 @@ __fpathconf (int fd, int name)
   error_t err;
   long int value;
 
-  if (err = HURD_DPORT_USE (fd, __file_pathconf (port, name, &value)))
+  if (err = HURD_DPORT_USE (fd, __io_pathconf (port, name, &value)))
     return __hurd_dfail (fd, err), -1L;
 
   return value;

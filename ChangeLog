@@ -1,4 +1,52 @@
+Mon Sep 18 12:39:22 1995  Paul Eggert  <eggert@twinsun.com>
+
+	* mktime.c (localtime_r): Add substitute if the system doesn't
+	provide one.
+
+Mon Sep 18 14:39:20 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* time/gmtime.c (gmtime_r): Define as weak alias.
+	* time/localtime.c (localtime_r): Define as weak alias.
+	* time/time.h [__USE_REENTRANT] (gmtime_r, localtime_r): Declare them.
+
+	* errno.h: Only define _ERRNO_H #ifndef __need_Emath.
+	#undef __need_Emath after including errnos.h.
+	[_ERRNO_H]: Protect decls with this.
+
+Sun Sep 17 08:22:12 1995  Paul Eggert  <eggert@twinsun.com>
+
+	Fix mktime so that it does not write over localtime's returned value.
+	* localtime.c (__localtime_r): New function, with extra arg
+	specifying where to store result.
+	(localtime): Use it.
+	(_tmbuf): New var.
+	* gmtime.c (__gmtime_r, gmtime, _tmbuf): Likewise.
+	* mktime.c (__mktime_internal):	Conversion function is now
+	__localtime_r style, not localtime style.
+	(mktime): Pass __localtime_r, not localtime.
+	* timegm.c (timegm): Pass __gmtime_r, not gmtime.
+	* offtime.c (__offtime): New arg specifying where to store result.
+	* time.h (__mktime_internal, __offtime): Adjust decls accordingly.
+	(__gmtime_r, __localtime_r): New decls.
+
+	* time/localtime.c: <stddef.h>, <ctype.h>, <stdio.h>,
+	<stdlib.h>, <string.h>: Remove includes.
+	<errno.h>: Add include.
+
+	* time/mktime.c, time/time.h, time/timegm.c (__mktime_internal):
+	Renamed from _mktime_internal to avoid namespace pollution.
+
+	* time/gmtime.c: Clear tm_isdst.
+
 Mon Sep 18 01:58:40 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/efgcvt_r.c (ecvt_r, fcvt_r): Last arg is size_t, not int.
+	* stdlib/stdlib.h (ecvt_r, fcvt_r): Fix type of last arg: make it
+	size_t.
+
+	* sysdeps/mach/hurd/fpathconf.c: Call __io_pathconf instead of
+	__file_pathconf.
+	* sysdeps/mach/hurd/pathconf.c: Likewise.
 
 	* Makefile (subdirs): Add sysvipc.
 

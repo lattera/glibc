@@ -23,5 +23,5 @@ timegm (tmp)
      struct tm *const tmp;
 {
   tmp->tm_isdst = 0;
-  return _mktime_internal (tmp, gmtime);
+  return __mktime_internal (tmp, __gmtime_r);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,14 +22,21 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_ERRNO_H
 
+/* The includer defined __need_Emath if he wants only the definitions
+   of EDOM and ERANGE, and not everything else.  */
+#ifndef	__need_Emath
 #define	_ERRNO_H	1
 #include <features.h>
+#endif
 
 __BEGIN_DECLS
 
-/* Get the error number constants.  */
+/* Get the error number constants from the system-specific file.
+   This file will test __need_Emath and _ERRNO_H.  */
 #include <errnos.h>
+#undef	__need_Emath
 
+#ifdef	_ERRNO_H
 /* Declare the `errno' variable.  */
 extern int errno;
 
@@ -41,5 +48,6 @@ extern char *program_invocation_name, *program_invocation_short_name;
 #endif
 
 __END_DECLS
+#endif
 
 #endif /* errno.h	*/

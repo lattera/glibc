@@ -29,7 +29,7 @@ fcvt_r (value, ndigit, decpt, sign, buf, len)
      double value;
      int ndigit, *decpt, *sign;
      char *buf;
-     int len;
+     size_t len;
 {
   int n, i;
 
@@ -64,7 +64,7 @@ ecvt_r (value, ndigit, decpt, sign, buf, len)
      double value;
      int ndigit, *decpt, *sign;
      char *buf;
-     int len;
+     size_t len;
 {
   ndigit -= (int) floor (log10 (value));
   if (ndigit < 0)

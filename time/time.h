@@ -111,8 +111,9 @@ extern time_t mktime __P ((struct tm *__tp));
 /* Subroutine of `mktime'.  Return the `time_t' representation of TP and
    normalize TP, given that a `struct tm *' maps to a `time_t' as performed
    by FUNC.  */
-extern time_t _mktime_internal __P ((struct tm *__tp,
-				     struct tm *(*__func) (const time_t *)));
+extern time_t __mktime_internal __P ((struct tm *__tp,
+				      struct tm *(*__func) (const time_t *,
+							    struct tm *)));
 
 
 /* Format TP into S according to FORMAT.
@@ -130,10 +131,28 @@ extern struct tm *gmtime __P ((__const time_t *__timer));
    of *TIMER in the local timezone.  */
 extern struct tm *localtime __P ((__const time_t *__timer));
 
-/* Return the `struct tm' representation of *TIMER,
-   offset OFFSET seconds east of Universal Coordinated Time.  */
-extern struct tm *__offtime __P ((__const time_t *__timer,
-				  long int __offset));
+#ifdef	__USE_REENTRANT
+/* Return the `struct tm' representation of *TIMER in UTC,
+   using *TP to store the result.  */
+extern struct tm *__gmtime_r __P ((__const time_t *__timer,
+				   struct tm *__tp));
+extern struct tm *gmtime_r __P ((__const time_t *__timer,
+				 struct tm *__tp));
+
+/* Return the `struct tm' representation of *TIMER in local time,
+   using *TP to store the result.  */
+extern struct tm *__localtime_r __P ((__const time_t *__timer,
+				      struct tm *__tp));
+extern struct tm *localtime_r __P ((__const time_t *__timer,
+				    struct tm *__tp));
+#endif
+
+/* Compute the `struct tm' representation of *T,
+   offset OFFSET seconds east of UTC,
+   and store year, yday, mon, mday, wday, hour, min, sec into *TP.  */
+extern void __offtime __P ((__const time_t *__timer,
+			    long int __offset,
+			    struct tm *__TP));
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */

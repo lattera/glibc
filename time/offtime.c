@@ -26,18 +26,16 @@ extern CONST unsigned short int __mon_lengths[2][12];
 #define	SECS_PER_HOUR	(60 * 60)
 #define	SECS_PER_DAY	(SECS_PER_HOUR * 24)
 
-/* Returns the `struct tm' representation of *T,
-   offset OFFSET seconds east of UCT.	*/
-struct tm *
-DEFUN(__offtime, (t, offset), CONST time_t *t AND long int offset)
+/* Compute the `struct tm' representation of *T,
+   offset OFFSET seconds east of UTC,
+   and store year, yday, mon, mday, wday, hour, min, sec into *TP.  */
+void
+DEFUN(__offtime, (t, offset, tp),
+      CONST time_t *t AND long int offset AND struct tm *tp)
 {
-  static struct tm tbuf;
   register long int days, rem;
   register int y;
   register CONST unsigned short int *ip;
-
-  if (t == NULL)
-    return NULL;
 
   days = *t / SECS_PER_DAY;
   rem = *t % SECS_PER_DAY;
@@ -52,14 +50,14 @@ DEFUN(__offtime, (t, offset), CONST time_t *t AND long int offset)
       rem -= SECS_PER_DAY;
       ++days;
     }
-  tbuf.tm_hour = rem / SECS_PER_HOUR;
+  tp->tm_hour = rem / SECS_PER_HOUR;
   rem %= SECS_PER_HOUR;
-  tbuf.tm_min = rem / 60;
-  tbuf.tm_sec = rem % 60;
+  tp->tm_min = rem / 60;
+  tp->tm_sec = rem % 60;
   /* January 1, 1970 was a Thursday.  */
-  tbuf.tm_wday = (4 + days) % 7;
-  if (tbuf.tm_wday < 0)
-    tbuf.tm_wday += 7;
+  tp->tm_wday = (4 + days) % 7;
+  if (tp->tm_wday < 0)
+    tp->tm_wday += 7;
   y = 1970;
   while (days >= (rem = __isleap(y) ? 366 : 365))
     {
@@ -71,14 +69,12 @@ DEFUN(__offtime, (t, offset), CONST time_t *t AND long int offset)
       --y;
       days += __isleap(y) ? 366 : 365;
     }
-  tbuf.tm_year = y - 1900;
-  tbuf.tm_yday = days;
+  tp->tm_year = y - 1900;
+  tp->tm_yday = days;
   ip = __mon_lengths[__isleap(y)];
   for (y = 0; days >= ip[y]; ++y)
     days -= ip[y];
-  tbuf.tm_mon = y;
-  tbuf.tm_mday = days + 1;
-  tbuf.tm_isdst = -1;
-
-  return &tbuf;
+  tp->tm_mon = y;
+  tp->tm_mday = days + 1;
+  tp->tm_isdst = -1;
 }

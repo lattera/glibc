@@ -409,9 +409,9 @@ char *gcvt __P ((double __value, int __ndigit, char *__buf));
 /* Reentrant version of the functions above which provide their own
    buffers.  */
 int ecvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
-		 char *__buf, int *__len));
+		 char *__buf, size_t __len));
 int fcvt_r __P ((double __value, int __ndigit, int *__decpt, int *sign,
-		 char *__buf, int *__len));
+		 char *__buf, size_t __len));
 #endif
 
 
