@@ -27,7 +27,9 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #ifdef __GNU_LIBRARY__
 /* It is best not to declare this and cast its result on foreign operating
    systems with potentially hostile include files.  */
-extern __ptr_t __sbrk __P ((int increment));
+
+#include <stddef.h>
+extern __ptr_t __sbrk __P ((ptrdiff_t increment));
 #endif
 
 #ifndef NULL

@@ -1,5 +1,5 @@
 /* Set thread_state for sighandler, and sigcontext to recover.  Alpha version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -160,6 +160,12 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 calls we retry need only wait to receive the reply message.  */
       args->option &= ~MACH_SEND_MSG;
 
+      /* Limit the time to receive the reply message, in case the server
+	 claimed that `interrupt_operation' succeeded but in fact the RPC
+	 is hung.  */
+      args->option |= MACH_RCV_TIMEOUT;
+      args->timeout = _hurd_interrupted_rpc_timeout;
+
       state->basic.pc = (long int) &&rpc_wait_trampoline;
       /* After doing the message receive, the trampoline code will need to
 	 update the v0 ($0) value to be restored by sigreturn.  To simplify
@@ -244,43 +250,4 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
   /* NOTREACHED */
   return NULL;
-}
-
-/* STATE describes a thread that had intr_port set (meaning it was inside
-   HURD_EINTR_RPC), after it has been thread_abort'd.  If it looks to have
-   just completed a mach_msg_trap system call that returned
-   MACH_RCV_INTERRUPTED, return nonzero and set *PORT to the receive right
-   being waited on.  */
-int
-_hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
-			    mach_port_t *port)
-{
-  if (state->basic.r0 == MACH_RCV_INTERRUPTED)
-    {
-      const unsigned int *pc = (void *) state->basic.pc;
-      struct mach_msg_trap_args *args = (void *) &state->basic.r16;
-
-      if (_hurdsig_catch_fault (SIGSEGV))
-	{
-	  assert (_hurdsig_fault_sigcode == (long int) (pc - 1) ||
-		  _hurdsig_fault_sigcode == (long int) &args->rcv_name);
-	  /* We got a fault trying to read the PC or stack.  */
-	  return 0;
-	}
-      else
-	{
-	  if (pc[-1] == ((alpha_instruction) { pal_format:
-						 { opcode: op_pal,
-						   function: op_chmk } }).bits)
-	    {
-	      /* We did just return from a mach_msg_trap system call
-		 doing a message receive that was interrupted.
-		 Examine the parameters to find the receive right.  */
-	      *port = args->rcv_name;
-	      return 1;
-	    }
-	}
-    }
-
-  return 0;
 }

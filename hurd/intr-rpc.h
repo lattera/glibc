@@ -1,5 +1,5 @@
 /* Special MiG definitions for interruptible RPC stubs.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Cause user stubs for interruptible RPCs to import a special header to
-   modify their behavior.  */
+/* This file is imported by the MiG-generated user stubs for interruptible
+   RPCs.  We modify them to use our own function in place of mach_msg.  */
 
-#define INTR_INTERFACE	   uimport "intr-rpc.h";
+#include <hurd/signal.h>
+
+#define	__mach_msg	_hurd_intr_rpc_mach_msg

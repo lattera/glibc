@@ -125,6 +125,7 @@ fmh();				/* XXX */
   _hurd_startup (start_argptr, &go);
 
   LOSE;
+  abort ();
 }
 
 int
@@ -137,7 +138,6 @@ _dl_sysdep_open_zero_fill (void)
 void
 _dl_sysdep_fatal (const char *msg, ...)
 {
-  extern __typeof (__io_write) __hurd_intr_rpc_io_write;
   va_list ap;
 
   va_start (ap, msg);
@@ -147,8 +147,7 @@ _dl_sysdep_fatal (const char *msg, ...)
       mach_msg_type_number_t nwrote;
       do
 	{
-	  if (__hurd_intr_rpc_io_write (_hurd_init_dtable[2],
-					msg, len, -1, &nwrote))
+	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
 	    break;
 	  len -= nwrote;
 	  msg += nwrote;
@@ -169,8 +168,6 @@ _dl_sysdep_fatal (const char *msg, ...)
 int
 open (const char *file_name, int mode, ...)
 {
-  extern __typeof (__dir_lookup) __hurd_intr_rpc_dir_lookup;
-  extern __typeof (__io_reauthenticate) __hurd_intr_rpc_io_reauthenticate;
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
   file_t startdir, newpt, fileport;
@@ -187,7 +184,7 @@ open (const char *file_name, int mode, ...)
   while (file_name[0] == '/')
     file_name++;
 
-  if (errno = __hurd_intr_rpc_dir_lookup (startdir, file_name, mode, 0,
+  if (errno = __dir_lookup (startdir, file_name, mode, 0,
 					  &doretry, retryname, &fileport))
     return -1;
 
@@ -207,7 +204,7 @@ open (const char *file_name, int mode, ...)
 	case FS_RETRY_REAUTH:
 	  {
 	    mach_port_t ref = __mach_reply_port ();
-	    errno = __hurd_intr_rpc_io_reauthenticate
+	    errno = __io_reauthenticate
 	      (fileport, ref, MACH_MSG_TYPE_MAKE_SEND);
 	    if (! errno)
 	      errno = __auth_user_authenticate
@@ -236,14 +233,12 @@ open (const char *file_name, int mode, ...)
 	  if (retryname[0] == '\0')
 	    {
 	      mach_port_t memobj_rd, memobj_wr;
-	      extern __typeof (__io_map) __hurd_intr_rpc_io_map;
 
 	      dealloc_dir = 1;
 
 	    opened:
 	      /* We have the file open.  Now map it.  */
-	      errno = __hurd_intr_rpc_io_map (fileport,
-					      &memobj_rd, &memobj_wr);
+	      errno = __io_map (fileport, &memobj_rd, &memobj_wr);
 	      if (dealloc_dir)
 		__mach_port_deallocate (__mach_task_self (), fileport);
 	      if (errno)
@@ -359,7 +354,7 @@ open (const char *file_name, int mode, ...)
 			if (! err)
 			  {
 			    mach_port_t ref = __mach_reply_port ();
-			    err = __hurd_intr_rpc_io_reauthenticate
+			    err = __io_reauthenticate
 			      (unauth, ref, MACH_MSG_TYPE_MAKE_SEND);
 			    if (! err)
 			      err = __auth_user_authenticate
@@ -404,8 +399,8 @@ open (const char *file_name, int mode, ...)
 	  return -1;
 	}
 
-      errno = __hurd_intr_rpc_dir_lookup (startdir, file_name, mode, 0,
-					  &doretry, retryname, &fileport);
+      errno = __dir_lookup (startdir, file_name, mode, 0,
+			    &doretry, retryname, &fileport);
     }
 }
 
@@ -445,9 +440,8 @@ mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 void
 _exit (int status)
 {
-  extern __typeof (__proc_mark_exit) __hurd_intr_rpc_proc_mark_exit;
-  __hurd_intr_rpc_proc_mark_exit (_dl_hurd_data->portarray[INIT_PORT_PROC],
-				  W_EXITCODE (status, 0));
+  __proc_mark_exit (_dl_hurd_data->portarray[INIT_PORT_PROC],
+		    W_EXITCODE (status, 0));
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
 }
@@ -513,11 +507,21 @@ longjmp (jmp_buf env, int val) { __longjmp (env[0].__jmpbuf, val); }
 weak_symbol (longjmp)
 
 
-/* Stub out this function that is called by interruptible RPC stubs.  It
-   should never get called during initial dynamic linking, because we use
-   only the raw MiG stub functions __hurd_intr_rpc_*.  Since this defn is
+/* This function is called by interruptible RPC stubs.  For initial
+   dynamic linking, just use the normal mach_msg.  Since this defn is
    weak, the real defn in libc.so will override it if we are linked into
    the user program (-ldl).  */
-struct hurd_sigstate *
-_hurd_thread_sigstate (thread_t thread) { thread = thread; abort (); }
-weak_symbol (_hurd_thread_sigstate)
+
+error_t
+_hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
+			 mach_msg_option_t option,
+			 mach_msg_size_t send_size,
+			 mach_msg_size_t rcv_size,
+			 mach_port_t rcv_name,
+			 mach_msg_timeout_t timeout,
+			 mach_port_t notify)
+{
+  return __mach_msg (msg, option, send_size, rcv_size, rcv_name,
+		     timeout, notify);
+}
+weak_symbol (_hurd_intr_rpc_mach_msg)

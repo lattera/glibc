@@ -41,6 +41,9 @@ thread_t _hurd_sigthread;
 
 /* Linked-list of per-thread signal state.  */
 struct hurd_sigstate *_hurd_sigstates;
+
+/* Timeout for RPC's after interrupt_operation. */
+mach_msg_timeout_t _hurd_interrupted_rpc_timeout = 3000;
 
 static void
 default_sigaction (struct sigaction actions[NSIG])
@@ -76,9 +79,6 @@ _hurd_thread_sigstate (thread_t thread)
       __sigemptyset (&ss->pending);
       memset (&ss->sigaltstack, 0, sizeof (ss->sigaltstack));
       ss->suspended = 0;
-#ifdef noteven
-      __condition_init (&ss->arrived);
-#endif
       ss->intr_port = MACH_PORT_NULL;
       ss->context = NULL;
 
@@ -225,16 +225,17 @@ abort_thread (struct hurd_sigstate *ss, struct machine_thread_all_state *state,
 }
 
 /* Find the location of the MiG reply port cell in use by the thread whose
-   state is described by THREAD_STATE.  Make sure that this location can be
-   set without faulting, or else return NULL.  */
+   state is described by THREAD_STATE.  If SIGTHREAD is nonzero, make sure
+   that this location can be set without faulting, or else return NULL.  */
 
 static mach_port_t *
-interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
+interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
+				 int sigthread)
 {
   mach_port_t *portloc = (mach_port_t *) __hurd_threadvar_location_from_sp
     (_HURD_THREADVAR_MIG_REPLY, (void *) thread_state->basic.SP);
 
-  if (_hurdsig_catch_fault (SIGSEGV))
+  if (sigthread && _hurdsig_catch_fault (SIGSEGV))
     {
       assert (_hurdsig_fault_sigcode == (long int) portloc);
       /* Faulted trying to read the stack.  */
@@ -244,7 +245,8 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
   /* Fault now if this pointer is bogus.  */
   *(volatile mach_port_t *) portloc = *portloc;
 
-  _hurdsig_end_catch_fault ();
+  if (sigthread)
+    _hurdsig_end_catch_fault ();
 
   return portloc;
 }
@@ -266,12 +268,14 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state)
    be applied back to the thread if it might ever run again, else zero.  */
 
 static mach_port_t
-abort_rpcs (struct hurd_sigstate *ss, int signo,
-	    struct machine_thread_all_state *state, int *state_change,
-	    mach_port_t *reply_port, mach_msg_type_name_t reply_port_type,
-	    int untraced)
+_hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread, 
+		     struct machine_thread_all_state *state, int *state_change,
+		     mach_port_t *reply_port,
+		     mach_msg_type_name_t reply_port_type,
+		     int untraced)
 {
-  mach_port_t msging_port;
+  extern const void _hurd_intr_rpc_msg_do_trap, _hurd_intr_rpc_msg_in_trap;
+  mach_port_t rcv_port = MACH_PORT_NULL;
   mach_port_t intr_port;
 
   *state_change = 0;
@@ -285,70 +289,68 @@ abort_rpcs (struct hurd_sigstate *ss, int signo,
      receive completes immediately or aborts.  */
   abort_thread (ss, state, reply_port, reply_port_type, untraced);
 
-  if (_hurdsig_rcv_interrupted_p (state, &msging_port))
+  if (state->basic.PC < (natural_t) &_hurd_intr_rpc_msg_in_trap)
     {
-      error_t err;
-
-      /* The RPC request message was sent and the thread was waiting for
-	 the reply message; now the message receive has been aborted, so
-	 the mach_msg_call will return MACH_RCV_INTERRUPTED.  We must tell
-	 the server to interrupt the pending operation.  The thread must
-	 wait for the reply message before running the signal handler (to
-	 guarantee that the operation has finished being interrupted), so
-	 our nonzero return tells the trampoline code to finish the message
-	 receive operation before running the handler.  */
-
-      err = __interrupt_operation (intr_port);
-
-      if (err)
-	{
-	  mach_port_t *reply;
-
-	  /* The interrupt didn't work.
-	     Destroy the receive right the thread is blocked on.  */
-	  __mach_port_destroy (__mach_task_self (), msging_port);
-
-	  /* The system call return value register now contains
-	     MACH_RCV_INTERRUPTED; when mach_msg resumes, it will retry the
-	     call.  Since we have just destroyed the receive right, the
-	     retry will fail with MACH_RCV_INVALID_NAME.  Instead, just
-	     change the return value here to EINTR so mach_msg will not
-	     retry and the EINTR error code will propagate up.  */
-	  state->basic.SYSRETURN = EINTR;
-	  *state_change = 1;
-
-	  /* If that was the thread's MiG reply port (which I think should
-	     always be the case), clear the reply port cell so it won't be
-	     reused.  */
-	  reply = interrupted_reply_port_location (state);
-	  if (reply != NULL && *reply == msging_port)
-	    *reply = MACH_PORT_NULL;
-	}
-
-      /* All threads whose RPCs were interrupted by the interrupt_operation
-	 call above will retry their RPCs unless we clear SS->intr_port.
-	 So we clear it for the thread taking a signal when SA_RESTART is
-	 clear, so that its call returns EINTR.  */
-      if (!(ss->actions[signo].sa_flags & SA_RESTART))
-	ss->intr_port = MACH_PORT_NULL;
-
-      return err ? MACH_PORT_NULL : msging_port;
+      /* The thread is about to do the RPC, but hasn't yet entered
+	 mach_msg.  Mutate the thread's state so it knows not to try
+	 the RPC.  */
+      MACHINE_THREAD_STATE_SET_PC (&state->basic,
+				   &_hurd_intr_rpc_msg_in_trap);
+      state->basic.SYSRETURN = MACH_SEND_INTERRUPTED;
+      *state_change = 1;
     }
+  else if (state->basic.PC == (natural_t) &_hurd_intr_rpc_msg_in_trap &&
+	   /* The thread was blocked in the system call.  After thread_abort,
+	      the return value register indicates what state the RPC was in
+	      when interrupted.  */
+	   state->basic.SYSRETURN == MACH_RCV_INTERRUPTED)
+      {
+	/* The RPC request message was sent and the thread was waiting for
+	   the reply message; now the message receive has been aborted, so
+	   the mach_msg call will return MACH_RCV_INTERRUPTED.  We must tell
+	   the server to interrupt the pending operation.  The thread must
+	   wait for the reply message before running the signal handler (to
+	   guarantee that the operation has finished being interrupted), so
+	   our nonzero return tells the trampoline code to finish the message
+	   receive operation before running the handler.  */
 
-  /* One of the following is true:
+	mach_port_t *reply = interrupted_reply_port_location (state,
+							      sigthread);
+	error_t err = __interrupt_operation (intr_port);
 
-     1. The RPC has not yet been sent.  The thread will start its operation
-     after the signal has been handled.
+	if (err)
+	  {
+	    if (reply)
+	      {
+		/* The interrupt didn't work.
+		   Destroy the receive right the thread is blocked on.  */
+		__mach_port_destroy (__mach_task_self (), *reply);
+		*reply = MACH_PORT_NULL;
+	      }
 
-     2. The RPC has finished, but not yet cleared SS->intr_port.
-     The thread will clear SS->intr_port after running the handler.
+	    /* The system call return value register now contains
+	       MACH_RCV_INTERRUPTED; when mach_msg resumes, it will retry the
+	       call.  Since we have just destroyed the receive right, the
+	       retry will fail with MACH_RCV_INVALID_NAME.  Instead, just
+	       change the return value here to EINTR so mach_msg will not
+	       retry and the EINTR error code will propagate up.  */
+	    state->basic.SYSRETURN = EINTR;
+	    *state_change = 1;
+	  }
+	else if (reply)
+	  rcv_port = *reply;
 
-     3. The RPC request message was being sent was aborted.  The mach_msg
-     system call will return MACH_SEND_INTERRUPTED, and HURD_EINTR_RPC will
-     notice the interruption (either retrying the RPC or returning EINTR).  */
+	/* All threads whose RPCs were interrupted by the interrupt_operation
+	   call above will retry their RPCs unless we clear SS->intr_port.
+	   So we clear it for the thread taking a signal when SA_RESTART is
+	   clear, so that its call returns EINTR.  */
+	if (! signo || !(ss->actions[signo].sa_flags & SA_RESTART))
+	  ss->intr_port = MACH_PORT_NULL;
+      }
 
-  return MACH_PORT_NULL;
+  return rcv_port;
 }
+
 
 /* Abort the RPCs being run by all threads but this one;
    all other threads should be suspended.  If LIVE is nonzero, those
@@ -387,8 +389,9 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
 	/* Abort any operation in progress with interrupt_operation.
 	   Record the reply port the thread is waiting on.
 	   We will wait for all the replies below.  */
-	reply_ports[nthreads++] = abort_rpcs (ss, signo, state, &state_changed,
-					      NULL, 0, 0);
+	reply_ports[nthreads++] = _hurdsig_abort_rpcs (ss, signo, 1,
+						       state, &state_changed,
+						       NULL, 0, 0);
 	if (state_changed && live)
 	  /* Aborting the RPC needed to change this thread's state,
 	     and it might ever run again.  So write back its state.  */
@@ -403,11 +406,18 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
       {
 	error_t err;
 	mach_msg_header_t head;
-	err = __mach_msg (&head, MACH_RCV_MSG, 0, sizeof head,
+	err = __mach_msg (&head, MACH_RCV_MSG|MACH_RCV_TIMEOUT, 0, sizeof head,
 			  reply_ports[nthreads],
-			  MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-	if (err != MACH_RCV_TOO_LARGE)
-	  assert_perror (err);
+			  _hurd_interrupted_rpc_timeout, MACH_PORT_NULL);
+	switch (err)
+	  {
+	  case MACH_RCV_TIMED_OUT:
+	  case MACH_RCV_TOO_LARGE:
+	    break;
+
+	  default:
+	    assert_perror (err);
+	  }
       }
 }
 
@@ -745,7 +755,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    
 	    if (! machine_get_basic_state (ss->thread, &thread_state))
 	      goto sigbomb;
-	    loc = interrupted_reply_port_location (&thread_state);
+	    loc = interrupted_reply_port_location (&thread_state, 1);
 	    if (loc && *loc != MACH_PORT_NULL)
 	      /* This is the reply port for the context which called
 		 sigreturn.  Since we are abandoning that context entirely
@@ -759,11 +769,11 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  }
 	else
 	  {
-	    wait_for_reply = (abort_rpcs (ss, signo,
-					  &thread_state, &state_changed,
-					  &reply_port, reply_port_type,
-					  untraced)
-			      != MACH_PORT_NULL);
+	    wait_for_reply
+	      = (_hurdsig_abort_rpcs (ss, signo, 1, 
+				      &thread_state, &state_changed,
+				      &reply_port, reply_port_type, untraced)
+		 != MACH_PORT_NULL);
 
 	    if (ss->critical_section)
 	      {
@@ -790,7 +800,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	{
 	  /* Fetch the thread variable for the MiG reply port,
 	     and set it to MACH_PORT_NULL.  */
-	  mach_port_t *loc = interrupted_reply_port_location (&thread_state);
+	  mach_port_t *loc = interrupted_reply_port_location (&thread_state,
+							      1);
 	  if (loc)
 	    {
 	      scp->sc_reply_port = *loc;

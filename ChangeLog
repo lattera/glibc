@@ -1,3 +1,49 @@
+Mon Aug 14 16:51:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/thread-cancel.c: New file.
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler): In
+ 	rpc_wait case, frob mach_msg args to set timeout on receive.
+	(_hurdsig_rcv_interrupted_p): Function removed.
+	* sysdeps/mach/hurd/alpha/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/hppa/trampoline.c: Likewise.
+	* sysdeps/mach/hurd/mips/trampoline.c: Likewise.
+	* hurd/intr-msg.c: New file.
+	* hurd/hurd/signal.h (struct hurd_sigstate): New member `cancel'.
+	(_hurdsig_rcv_interrupted_p): Declaration removed.
+	(HURD_EINTR_RPC): Macro removed.
+	(_hurd_longjmp_thread_state, _hurd_interrupted_rpc_timeout): Declare
+	these.
+	* hurd/intr-rpc.h: New file.
+	* hurd/intr-rpc.defs: Just import intr-rpc.h.
+	* hurd/hurdsig.c (_hurd_interrupted_rpc_timeout): New variable.
+	(interrupted_reply_port_location): Take new flag arg; only catch
+	faults if it's set.
+	(abort_rpcs): Rename to _hurdsig_abort_rpcs; take same new flag arg.
+	No longer use _hurdsig_rcv_interrupted_p; instead compare PC to
+ 	&_hurd_intr_rpc_msg_in_trap.  If before it, mutate state to simulate
+ 	MACH_SEND_INTERRUPTED return; on it, interrupt the operation.  All
+ 	callers changed.
+	* hurd/hurd.h (hurd_thread_cancel, hurd_check_cancel): Declare these.
+	* hurd/Makefile (distribute): Remove intr-rpc.awk.
+	(sig): Add thread-cancel.
+	(transform-user-stub, transform-user-stub-output): Variables removed.
+	* sysdeps/mach/hurd/dl-sysdep.c: Change all RPCs from
+ 	`__hurd_intr_rpc_*' to `__*'.
+	(_hurd_intr_rpc_mach_msg): New function.
+	(_hurd_thread_sigstate): Function removed.
+	* sysdeps/mach/hurd/ioctl.c: Use _hurd_intr_rpc_mach_msg function,
+ 	instead of __mach_msg inside HURD_EINTR_RPC macro.
+
+	* sysdeps/generic/morecore.c [__GNU_LIBRARY__]: Declare `__sbrk'
+ 	to take ptrdiff_t arg.
+
+	* sysdeps/mach/hurd/fork.c: Remove _hurd_longjmp_thread_state decl.
+
+	* sysdeps/mach/hurd/kill.c (kill_pid): Don't make `inline'.
+
+	* libc-symbols.h [GCC >= 2.7] (strong_alias, weak_symbol,
+ 	weak_alias): Use `extern' storage class.
+
 Wed Aug  9 14:25:35 1995  Miles Bader  <miles@geech.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/setuid.c (__setuid): Switch the port-type and

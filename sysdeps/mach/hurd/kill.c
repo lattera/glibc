@@ -37,8 +37,6 @@ __kill (pid_t pid, int sig)
 
   inline void kill_pid (pid_t pid) /* Kill one PID.  */
     {
-
-
       /* SIGKILL is not delivered as a normal signal.
 	 Sending SIGKILL to a process means to terminate its task.  */
       if (sig == SIGKILL)

@@ -150,6 +150,12 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 calls we retry need only wait to receive the reply message.  */
       args->option &= ~MACH_SEND_MSG;
 
+      /* Limit the time to receive the reply message, in case the server
+	 claimed that `interrupt_operation' succeeded but in fact the RPC
+	 is hung.  */
+      args->option |= MACH_RCV_TIMEOUT;
+      args->timeout = _hurd_interrupted_rpc_timeout;
+
       state->basic.pc = (int) &&rpc_wait_trampoline;
       state->basic.r29 = (int) sigsp; /* $29 is the stack pointer register.  */
       /* After doing the message receive, the trampoline code will need to
@@ -226,35 +232,4 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   asm volatile (".set reorder; .set at; .set macro");
 
   return NULL;
-}
-
-/* STATE describes a thread that had intr_port set (meaning it was inside
-   HURD_EINTR_RPC), after it has been thread_abort'd.  It it looks to have
-   just completed a mach_msg_trap system call that returned
-   MACH_RCV_INTERRUPTED, return nonzero and set *PORT to the receive right
-   being waited on.  */
-int
-_hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
-			    mach_port_t *port)
-{
-  const unsigned int *const pc = (void *) state->basic.pc;
-
-  if (_hurdsig_catch_fault (SIGSEGV))
-    assert (_hurdsig_fault_sigcode == (long int) pc);
-  else
-    {
-      if (state->basic.r2 == MACH_RCV_INTERRUPTED &&
-	  pc[-1] == 0xc)	/* syscall */
-	{
-	  /* We did just return from a mach_msg_trap system call
-	     doing a message receive that was interrupted.
-	     Examine the parameters to find the receive right.  */
-	  struct mach_msg_trap_args *args = (void *) &state->basic.r4;
-
-	  *port = args->rcv_name;
-	  return 1;
-	}
-    }
-
-  return 0;
 }

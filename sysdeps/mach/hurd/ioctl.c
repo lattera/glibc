@@ -79,11 +79,11 @@ DEFUN(__ioctl, (fd, request),
       m->msgh_id = msgid;
       m->msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_COPY_SEND,
 				     MACH_MSG_TYPE_MAKE_SEND_ONCE);
-      err = HURD_EINTR_RPC (ioport, __mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
-						m->msgh_size, sizeof (msg),
-						m->msgh_local_port,
-						MACH_MSG_TIMEOUT_NONE,
-						MACH_PORT_NULL));
+      err = _hurd_intr_rpc_mach_msg (m, MACH_SEND_MSG|MACH_RCV_MSG,
+				     m->msgh_size, sizeof (msg),
+				     m->msgh_local_port,
+				     MACH_MSG_TIMEOUT_NONE,
+				     MACH_PORT_NULL);
       switch (err)
 	{
 	case MACH_MSG_SUCCESS:

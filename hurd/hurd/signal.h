@@ -84,6 +84,8 @@ struct hurd_sigstate
        <hurd/userlink.h> for details.  This member is only used by the
        thread itself, and always inside a critical section.  */
     struct hurd_userlink *active_resources;
+
+    volatile int cancel;	/* Flag set by hurd_thread_cancel.  */
   };
 
 /* Linked list of states of all threads whose state has been asked for.  */
@@ -253,20 +255,14 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
 extern void _hurd_msgport_receive (void);
 
-/* STATE describes a thread that had intr_port set (meaning it was inside
-   HURD_EINTR_RPC), after it has been thread_abort'd.  It it looks to have
-   just completed a mach_msg_trap system call that returned
-   MACH_RCV_INTERRUPTED, return nonzero and set *PORT to the receive right
-   being waited on.  */
-
-extern int _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
-				       mach_port_t *port);
-
 /* Set up STATE with a thread state that, when resumed, is
    like `longjmp (_hurd_sigthread_fault_env, 1)'.  */
 
 extern void _hurd_initialize_fault_recovery_state (void *state);
 
+/* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
+
+extern void _hurd_longjmp_thread_state (void *state, jmp_buf env, int value);
 
 /* Function run for SIGINFO when its action is SIG_DFL and the current
    process is the session leader.  */
@@ -274,50 +270,10 @@ extern void _hurd_initialize_fault_recovery_state (void *state);
 extern void _hurd_siginfo_handler (int);
 
 
-/* Perform interruptible RPC CALL on PORT.
-   The call should use 
-   The args in CALL should be constant or local variable refs.
-   They may be evaluated many times, and must not change.
-   PORT must not be deallocated before this RPC is finished.  */
-#define	HURD_EINTR_RPC(port, call)					      \
-  ({									      \
-    __label__ __do_call;	/* Give this label block scope.  */	      \
-    error_t __err;							      \
-    struct hurd_sigstate *__ss = _hurd_self_sigstate ();		      \
-    __do_call:								      \
-    /* Tell the signal thread that we are doing an interruptible RPC on	      \
-       this port.  If we get a signal and should return EINTR, the signal     \
-       thread will set this variable to MACH_PORT_NULL.  The RPC might	      \
-       return EINTR when some other thread gets a signal, in which case we    \
-       want to restart our call.  */					      \
-    __ss->intr_port = (port);						      \
-    /* A signal may arrive here, after intr_port is set, but before the	      \
-       mach_msg system call.  The signal handler might do an interruptible    \
-       RPC, and clobber intr_port; then it would not be set properly when     \
-       we actually did send the RPC, and a later signal wouldn't interrupt    \
-       that RPC.  So, _hurd_setup_sighandler saves intr_port in the	      \
-       sigcontext, and sigreturn restores it.  */			      \
-    switch (__err = (call))						      \
-      {									      \
-      case EINTR:		/* RPC went out and was interrupted.  */      \
-      case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */		      \
-	if (__ss->intr_port != MACH_PORT_NULL)				      \
-	  /* If this signal was for us and it should interrupt calls, the     \
-             signal thread will have cleared SS->intr_port.  Since it's not   \
-             cleared, the signal was for another thread, or SA_RESTART is     \
-             set.  Restart the interrupted call.  */			      \
-	  goto __do_call;						      \
-	/* FALLTHROUGH */						      \
-      case MACH_RCV_PORT_DIED:						      \
-	/* Server didn't respond to interrupt_operation,		      \
-	   so the signal thread destroyed the reply port.  */		      \
-	__err = EINTR;							      \
-	break;								      \
-      default:			/* Quiet -Wswitch-enum.  */		      \
-      }									      \
-    __ss->intr_port = MACH_PORT_NULL;					      \
-    __err;								      \
-  })									      \
+/* Milliseconds to wait for an interruptible RPC to return after
+   `interrupt_operation'.  */
+
+extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
 
 
 /* Mask of signals that cannot be caught, blocked, or ignored.  */

@@ -286,6 +286,16 @@ extern task_t __pid2task (pid_t pid), pid2task (pid_t pid);
 extern thread_t hurd_thread_self (void);
 
 
+/* Cancel pending operations on THREAD.  If it is doing an interruptible RPC,
+   that RPC will now return EINTR; otherwise, the "cancelled" flag will be
+   set, causing the next `hurd_check_cancel' call to return nonzero or the
+   next interruptible RPC to return EINTR (whichever is called first).  */
+extern error_t hurd_thread_cancel (thread_t thread);
+
+/* Test and clear the calling thread's "cancelled" flag.  */
+extern int hurd_check_cancel (void);
+
+
 /* Return the io server port for file descriptor FD.
    This adds a Mach user reference to the returned port.
    On error, sets `errno' and returns MACH_PORT_NULL.  */

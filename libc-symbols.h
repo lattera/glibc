@@ -141,15 +141,15 @@ Cambridge, MA 02139, USA.  */
    are better clued in to what we are doing.  */
 #undef	strong_alias
 #define strong_alias(name, aliasname) \
-  __typeof (name) aliasname __attribute__ ((alias (#name)));
+  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 
 #ifdef HAVE_WEAK_SYMBOLS
 #undef	weak_symbol
 #define weak_symbol(name) \
-  __typeof (name) name __attribute__ ((weak));
+  extern __typeof (name) name __attribute__ ((weak));
 #undef	weak_alias
 #define weak_alias(name, aliasname) \
-  __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 #endif	/* HAVE_WEAK_SYMBOLS.  */
 #endif	/* Not ASSEMBLER, and GCC 2.7 or later.  */
 

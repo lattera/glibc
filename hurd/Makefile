@@ -28,7 +28,7 @@ headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h userlink.h \
 		            resource.h threadvar.h)
 
-distribute := hurdstartup.h hurdfault.h intr-rpc.awk intr-rpc.defs STATUS
+distribute := hurdstartup.h hurdfault.h intr-rpc.defs STATUS
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser
@@ -53,7 +53,7 @@ routines = hurdstartup hurdinit \
 	   $(sig) $(dtable) hurdinline port-cleanup
 sig	= hurdsig hurdfault faultexc siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
-	  thread-self
+	  thread-self thread-cancel
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
@@ -88,24 +88,12 @@ include ../mach/Machrules
 include ../Rules
 
 # intr-rpc.defs defines the INTR_INTERFACE macro to make the generated RPC
-# stubs send-interruptible, and to prefix them with `hurd_intr_rpc_'.
+# stubs import <hurd/signal.h> and #define __mach_msg to
+# _hurd_intr_rpc_mach_msg.
 user-MIGFLAGS += -imacros intr-rpc.defs
-
-# Run each generated user stub through intr-rpc.awk, which will detect
-# stubs __hurd_intr_rpc_% and generate the user-callable function for the
-# stub: this is a wrapper which calls __hurd_intr_rpc_% inside
-# HURD_EINTR_RPC.
-define transform-user-stub
-gawk -v call=$${call} -f $(word 2,$^) \
-	$(objpfx)tmp_$${call}.c > $(objpfx)tmpi_$${call}.c; \
-rm -f $(objpfx)tmp_$${call}.c;
-endef
-transform-user-stub-output = tmpi
 
 $(foreach if,$(user-interfaces),$($(if)-calls:%=$(objpfx)RPC_%.o))): \
 	hurd/signal.h
-
-$(user-interfaces:%=$(objpfx)%.ustamp): intr-rpc.awk
 
 $(objpfx)fault%.c $(objpfx)fault%.h: $(mach-srcdir)/mach/%.defs
 	$(MIG) $(MIGFLAGS) -prefix _hurdsig_fault_ \

@@ -27,9 +27,6 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 #include "hurdmalloc.h"		/* XXX */
 
-extern void _hurd_longjmp_thread_state (struct machine_thread_state *,
-					jmp_buf env, int value);
-
 
 /* Things that want to be locked while forking.  */
 struct
