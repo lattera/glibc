@@ -1,3 +1,10 @@
+2001-03-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c: Pretty printing.
+
+	* elf/dl-object.c (_dl_new_object): Don't add the loader's scope
+	twice.
+
 2001-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Don't handle
@@ -5,7 +12,7 @@
 
 	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Fix typo.
 
-	* elf/dl-misc.c (_dl_debug_vdprintf): Fix type visible on 64-bit
+	* elf/dl-misc.c (_dl_debug_vdprintf): Fix typo visible on 64-bit
 	machines.
 
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.h (C_TEXT): Define.

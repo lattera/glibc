@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,9 +73,10 @@ _dl_new_object (char *realname, const char *libname, int type,
     {
       while (loader->l_loader != NULL)
 	loader = loader->l_loader;
-      new->l_scope[idx] = &loader->l_searchlist;
+      if (idx == 0 || &loader->l_searchlist != new->l_scope[0])
+	new->l_scope[idx] = &loader->l_searchlist;
     }
-  else
+  else if (idx == 0 || &new->l_searchlist != new->l_scope[0])
     new->l_scope[idx] = &new->l_searchlist;
 
   new->l_local_scope[0] = &new->l_searchlist;

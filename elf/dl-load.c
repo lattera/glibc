@@ -1105,7 +1105,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   /* If this object has DT_SYMBOLIC set modify now its scope.  We don't
      have to do this for the main map.  */
   if (__builtin_expect (l->l_info[DT_SYMBOLIC] != NULL, 0)
-	   && &l->l_searchlist != l->l_scope[0])
+      && &l->l_searchlist != l->l_scope[0])
     {
       /* Create an appropriate searchlist.  It contains only this map.
 
