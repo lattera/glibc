@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ define autoconf-it
 autoconf $(ACFLAGS) $< > $@.new
 chmod a-w,a+x $@.new
 mv -f $@.new $@
-test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
+test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef
 
 configure: configure.in aclocal.m4; $(autoconf-it)
