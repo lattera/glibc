@@ -104,16 +104,12 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   __use_tzfile = 0;
 
-  if (transitions != NULL)
-    free ((void *) transitions);
-  transitions = NULL;
-
   if (file == NULL)
     /* No user specification; use the site-wide default.  */
     file = TZDEFAULT;
   else if (*file == '\0')
     /* User specified the empty string; use UTC with no leap seconds.  */
-    return;
+    goto ret_free_transitions;
   else
     {
       /* We must not allow to read an arbitrary file in a setuid
@@ -127,7 +123,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 	      || strstr (file, "../") != NULL))
 	/* This test is certainly a bit too restrictive but it should
 	   catch all critical cases.  */
-	return;
+	goto ret_free_transitions;
     }
 
   if (*file != '/')
@@ -156,14 +152,14 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
      disabled.  */
   f = fopen (file, "rc");
   if (f == NULL)
-    return;
+    goto ret_free_transitions;
 
   /* Get information about the file.  */
   struct stat64 st;
   if (fstat64 (fileno (f), &st) != 0)
     {
       fclose (f);
-      return;
+      goto ret_free_transitions;
     }
   if (was_using_tzfile && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev)
     {
@@ -172,6 +168,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       __use_tzfile = 1;
       return;
     }
+
+  free ((void *) transitions);
+  transitions = NULL;
 
   /* Remember the inode and device number.  */
   tzfile_dev = st.st_dev;
@@ -381,6 +380,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
  lose:
   fclose (f);
+ ret_free_transitions:
+  free ((void *) transitions);
+  transitions = NULL;
 }
 
 /* The user specified a hand-made timezone, but not its DST rules.

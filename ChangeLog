@@ -1,3 +1,16 @@
+2004-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzset.c (tzset_internal): Add new parameter which is
+	nonzero if called through tzset.  Use TZDEFAULT name including
+	name comparison if the new parameter is zero.  This means implicit
+	tzset calls will not cause files to be opened and read by tzfile.c
+	all the time.
+
+2004-08-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Free transitions only if it will
+	not be reused.
+
 2004-08-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/mpa.c: Include <sys/param.h>.
