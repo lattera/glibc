@@ -47,8 +47,8 @@
 #ifndef PSEUDO_END
 #define PSEUDO_END(sym)
 #endif
-#ifndef PSEUDO_END_NOENTRY
-#define PSEUDO_END_NOENTRY(sym)
+#ifndef PSEUDO_END_NOERRNO
+#define PSEUDO_END_NOERRNO(sym)	PSEUDO_END(sym)
 #endif
 
 /* Wrappers around system calls should normally inline the system call code.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ extern int __syscall_getgroups32 (int, __kernel_gid32_t *__unbounded);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
    uids.  */
-extern int __libc_missing_32bit_uids;
+extern int __libc_missing_32bit_uids attribute_hidden;
 # endif
 #endif /* __NR_getgroups32 */
 
@@ -64,7 +64,7 @@ __getgroups (int n, gid_t *groups)
 	  int saved_errno = errno;
 
 	  result = INLINE_SYSCALL (getgroups32, 2, n, CHECK_N (groups, n));
-	  if (result == 0 || errno != ENOSYS)
+	  if (result != -1 || errno != ENOSYS)
 	    return result;
 
 	  __set_errno (saved_errno);
