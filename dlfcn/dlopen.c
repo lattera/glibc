@@ -20,6 +20,17 @@
 #include <dlfcn.h>
 #include <stddef.h>
 
+#if !defined SHARED && defined IS_IN_libdl
+
+void *
+dlopen (const char *file, int mode)
+{
+  return __dlopen (file, mode, RETURN_ADDRESS (0));
+}
+static_link_warning (dlopen)
+
+#else
+
 struct dlopen_args
 {
   /* The arguments for dlopen_doit.  */
@@ -33,11 +44,11 @@ struct dlopen_args
 
 
 /* Non-shared code has no support for multiple namespaces.  */
-#ifdef SHARED
-# define NS __LM_ID_CALLER
-#else
-# define NS LM_ID_BASE
-#endif
+# ifdef SHARED
+#  define NS __LM_ID_CALLER
+# else
+#  define NS LM_ID_BASE
+# endif
 
 
 static void
@@ -50,17 +61,34 @@ dlopen_doit (void *a)
 }
 
 
-extern void *__dlopen_check (const char *file, int mode);
 void *
-__dlopen_check (const char *file, int mode)
+__dlopen (const char *file, int mode DL_CALLER_DECL)
 {
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlopen (file, mode, DL_CALLER);
+# endif
+
   struct dlopen_args args;
   args.file = file;
   args.mode = mode;
-  args.caller = RETURN_ADDRESS (0);
+  args.caller = DL_CALLER;
 
+# ifdef SHARED
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
+# else
+  if (_dlerror_run (dlopen_doit, &args))
+    return NULL;
+
+  __libc_register_dl_open_hook ((struct link_map *) args.new);
+  __libc_register_dlfcn_hook ((struct link_map *) args.new);
+
+  return args.new;
+# endif
 }
-#include <shlib-compat.h>
+# ifdef SHARED
+#  include <shlib-compat.h>
+strong_alias (__dlopen, __dlopen_check)
 versioned_symbol (libdl, __dlopen_check, dlopen, GLIBC_2_1);
-static_link_warning (dlopen)
+# endif
+#endif

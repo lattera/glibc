@@ -22,6 +22,17 @@
 
 #include <ldsodefs.h>
 
+#if !defined SHARED && defined IS_IN_libdl
+
+void *
+weak_function
+dlvsym (void *handle, const char *name, const char *version_str)
+{
+  return __dlvsym (handle, name, version_str, RETURN_ADDRESS (0));
+}
+
+#else
+
 struct dlvsym_args
 {
   /* The arguments to dlvsym_doit.  */
@@ -44,13 +55,18 @@ dlvsym_doit (void *a)
 }
 
 void *
-__dlvsym (void *handle, const char *name, const char *version_str)
+__dlvsym (void *handle, const char *name, const char *version_str
+	  DL_CALLER_DECL)
 {
-  struct dlvsym_args args;
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlvsym (handle, name, version_str, DL_CALLER);
+# endif
 
+  struct dlvsym_args args;
   args.handle = handle;
   args.name = name;
-  args.who = RETURN_ADDRESS (0);
+  args.who = DL_CALLER;
   args.version = version_str;
 
   /* Protect against concurrent loads and unloads.  */
@@ -62,4 +78,7 @@ __dlvsym (void *handle, const char *name, const char *version_str)
 
   return result;
 }
+# ifdef SHARED
 weak_alias (__dlvsym, dlvsym)
+# endif
+#endif

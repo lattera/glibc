@@ -22,6 +22,16 @@
 #include <ldsodefs.h>
 #include <libintl.h>
 
+#if !defined SHARED && defined IS_IN_libdl
+
+int
+dlinfo (void *handle, int request, void *arg)
+{
+  return __dlinfo (handle, request, arg, RETURN_ADDRESS (0));
+}
+
+#else
+
 struct dlinfo_args
 {
   ElfW(Addr) caller;
@@ -36,7 +46,7 @@ dlinfo_doit (void *argsblock)
   struct dlinfo_args *const args = argsblock;
   struct link_map *l = args->handle;
 
-#if 0
+# if 0
   if (args->handle == RTLD_SELF)
     {
       Lmid_t nsid;
@@ -53,7 +63,7 @@ dlinfo_doit (void *argsblock)
 	GLRO(dl_signal_error) (0, NULL, NULL, N_("\
 RTLD_SELF used in code not dynamically loaded"));
     }
-#endif
+# endif
 
   switch (args->request)
     {
@@ -84,9 +94,19 @@ RTLD_SELF used in code not dynamically loaded"));
 }
 
 int
-dlinfo (void *handle, int request, void *arg)
+__dlinfo (void *handle, int request, void *arg DL_CALLER_DECL)
 {
-  struct dlinfo_args args = { (ElfW(Addr)) RETURN_ADDRESS (0),
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlinfo (handle, request, arg,
+				DL_CALLER);
+# endif
+
+  struct dlinfo_args args = { (ElfW(Addr)) DL_CALLER,
 			      handle, request, arg };
   return _dlerror_run (&dlinfo_doit, &args) ? -1 : 0;
 }
+# ifdef SHARED
+strong_alias (__dlinfo, dlinfo)
+# endif
+#endif

@@ -25,6 +25,16 @@
 #include <bits/libc-lock.h>
 #include <ldsodefs.h>
 
+#if !defined SHARED && defined IS_IN_libdl
+
+char *
+dlerror (void)
+{
+  return __dlerror ();
+}
+
+#else
+
 /* Type for storing results of dynamic loading actions.  */
 struct dl_action_result
   {
@@ -46,10 +56,15 @@ static void free_key_mem (void *mem);
 
 
 char *
-dlerror (void)
+__dlerror (void)
 {
   char *buf = NULL;
   struct dl_action_result *result;
+
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlerror ();
+# endif
 
   /* If we have not yet initialized the buffer do it now.  */
   __libc_once (once, init);
@@ -99,6 +114,9 @@ dlerror (void)
 
   return buf;
 }
+# ifdef SHARED
+strong_alias (__dlerror, dlerror)
+# endif
 
 int
 internal_function
@@ -185,3 +203,35 @@ free_key_mem (void *mem)
   free (mem);
   __libc_setspecific (key, NULL);
 }
+
+# ifdef SHARED
+
+struct dlfcn_hook *_dlfcn_hook __attribute__((nocommon));
+libdl_hidden_data_def (_dlfcn_hook)
+
+# else
+
+static struct dlfcn_hook _dlfcn_hooks =
+  {
+    .dlopen = __dlopen,
+    .dlclose = __dlclose,
+    .dlsym = __dlsym,
+    .dlvsym = __dlvsym,
+    .dlerror = __dlerror,
+    .dladdr = __dladdr,
+    .dladdr1 = __dladdr1,
+    .dlinfo = __dlinfo,
+    .dlmopen = __dlmopen
+  };
+
+void
+__libc_register_dlfcn_hook (struct link_map *map)
+{
+  struct dlfcn_hook **hook;
+
+  hook = (struct dlfcn_hook **) __libc_dlsym_private (map, "_dlfcn_hook");
+  if (hook != NULL)
+    *hook = &_dlfcn_hooks;
+}
+# endif
+#endif

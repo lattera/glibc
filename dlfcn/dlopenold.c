@@ -67,6 +67,9 @@ __dlopen_nocheck (const char *file, int mode)
     mode |= RTLD_LAZY;
   args.mode = mode;
 
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlopen (file, mode, RETURN_ADDRESS (0));
+
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
 }
 compat_symbol (libdl, __dlopen_nocheck, dlopen, GLIBC_2_0);

@@ -1,3 +1,47 @@
+2004-10-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-libc.c (__libc_dlsym_private, __libc_register_dl_open_hook):
+	New functions.
+	(__libc_dlopen_mode): Call __libc_register_dl_open_hook and
+	__libc_register_dlfcn_hook.
+	* dlfcn/Makefile (routines, elide-routines.os): Set.
+	Add rules to build and test tststatic2.
+	* dlfcn/tststatic2.c: New test.
+	* dlfcn/modstatic2.c: New test module.
+	* dlfcn/dladdr.c: Call _dlfcn_hook from libdl.so if not NULL.
+	Define __ prefixed routine in libc.a and in libdl.a just call it.
+	* dlfcn/dladdr1.c: Likewise.
+	* dlfcn/dlclose.c: Likewise.
+	* dlfcn/dlerror.c: Likewise.
+	* dlfcn/dlinfo.c: Likewise.
+	* dlfcn/dlmopen.c: Likewise.
+	* dlfcn/dlopen.c: Likewise.
+	* dlfcn/dlopenold.c: Likewise.
+	* dlfcn/dlsym.c: Likewise.
+	* dlfcn/dlvsym.c: Likewise.
+	* dlfcn/sdladdr.c: New file.
+	* dlfcn/sdladdr1.c: New file.
+	* dlfcn/sdlclose.c: New file.
+	* dlfcn/sdlerror.c: New file.
+	* dlfcn/sdlinfo.c: New file.
+	* dlfcn/sdlopen.c: New file.
+	* dlfcn/sdlsym.c: New file.
+	* dlfcn/sdlvsym.c: New file.
+	* dlfcn/Versions (libdl): Export _dlfcn_hook@GLIBC_PRIVATE.
+	* include/dlfcn.h (DL_CALLER_DECL, DL_CALLER RETURN_ADDRESS): Define.
+	(struct dlfcn_hook): New type.
+	(_dlfcn_hook): New extern decl.
+	(__dlopen, __dlclose, __dlsym, __dlerror, __dladdr, __dladdr1,
+	__dlinfo, __dlmopen, __libc_dlsym_private,
+	__libc_register_dl_open_hook, __libc_register_dlfcn_hook): New
+	prototypes.
+	(__dlvsym): Use DL_CALLER_DECL.
+	* include/libc-symbols.h: Define libdl_hidden_proto and friends.
+
+	* malloc/arena.c (_dl_open_hook): Extern decl.
+	(ptmalloc_init): Don't call _dl_addr when dlopened from statically
+	linked programs but don't use brk for them either.
+
 2004-10-18  Roland McGrath  <roland@redhat.com>
 
 	* dlfcn/bug-dlsym1.c (main): Remove bogus setenv call.

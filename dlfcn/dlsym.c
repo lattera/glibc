@@ -22,6 +22,16 @@
 
 #include <ldsodefs.h>
 
+#if !defined SHARED && defined IS_IN_libdl
+
+void *
+dlsym (void *handle, const char *name)
+{
+  return __dlsym (handle, name, RETURN_ADDRESS (0));
+}
+
+#else
+
 struct dlsym_args
 {
   /* The arguments to dlsym_doit.  */
@@ -43,10 +53,15 @@ dlsym_doit (void *a)
 
 
 void *
-dlsym (void *handle, const char *name)
+__dlsym (void *handle, const char *name DL_CALLER_DECL)
 {
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlsym (handle, name, DL_CALLER);
+# endif
+
   struct dlsym_args args;
-  args.who = RETURN_ADDRESS (0);
+  args.who = DL_CALLER;
   args.handle = handle;
   args.name = name;
 
@@ -59,3 +74,7 @@ dlsym (void *handle, const char *name)
 
   return result;
 }
+# ifdef SHARED
+strong_alias (__dlsym, dlsym)
+# endif
+#endif

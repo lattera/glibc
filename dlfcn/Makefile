@@ -21,9 +21,11 @@ headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
 		   dlmopen
+routines	:= $(patsubst %,s%,$(libdl-routines))
+elide-routines.os := $(routines)
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
-		   modcxaatexit.c modstatic.c \
+		   modcxaatexit.c modstatic.c modstatic2.c \
 		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c
 
 extra-libs-others := libdl
@@ -51,10 +53,11 @@ glreflib2.so-no-z-defs = yes
 errmsg1mod.so-no-z-defs = yes
 
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
-tests += tststatic
-tests-static += tststatic
-modules-names += modstatic
+tests += tststatic tststatic2
+tests-static += tststatic tststatic2
+modules-names += modstatic modstatic2
 tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
+tststatic2-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 endif
 
 extra-objs += $(modules-names:=.os)
@@ -106,7 +109,12 @@ $(objpfx)modatexit.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 $(objpfx)tststatic: $(objpfx)libdl.a
 $(objpfx)tststatic.out: $(objpfx)tststatic $(objpfx)modstatic.so
 
-$(objpfx)modstatic.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+$(objpfx)tststatic2: $(objpfx)libdl.a
+$(objpfx)tststatic2.out: $(objpfx)tststatic2 $(objpfx)modstatic.so \
+			 $(objpfx)modstatic2.so
+
+$(objpfx)modstatic2.so: $(libdl) $(common-objpfx)libc.so \
+			$(common-objpfx)libc_nonshared.a
 
 $(objpfx)bug-dlopen1: $(libdl)
 

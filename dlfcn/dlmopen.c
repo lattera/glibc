@@ -23,6 +23,17 @@
 #include <stddef.h>
 #include <ldsodefs.h>
 
+#if !defined SHARED && defined IS_IN_libdl
+
+void *
+dlmopen (Lmid_t nsid, const char *file, int mode)
+{
+  return __dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
+}
+static_link_warning (dlmopen)
+
+#else
+
 struct dlmopen_args
 {
   /* Namespace ID.  */
@@ -43,11 +54,11 @@ dlmopen_doit (void *a)
 
   /* Non-shared code has no support for multiple namespaces.  */
   if (args->nsid != LM_ID_BASE)
-#ifdef SHARED
+# ifdef SHARED
     /* If trying to open the link map for the main executable the namespace
        must be the main one.  */
     if (args->file == NULL)
-#endif
+# endif
       GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid namespace"));
 
   args->new = _dl_open (args->file ?: "", args->mode | __RTLD_DLOPEN,
@@ -56,14 +67,32 @@ dlmopen_doit (void *a)
 
 
 void *
-dlmopen (Lmid_t nsid, const char *file, int mode)
+__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
 {
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
+# endif
+
   struct dlmopen_args args;
   args.nsid = nsid;
   args.file = file;
   args.mode = mode;
-  args.caller = RETURN_ADDRESS (0);
+  args.caller = DL_CALLER;
 
+# ifdef SHARED
   return _dlerror_run (dlmopen_doit, &args) ? NULL : args.new;
+# else
+  if (_dlerror_run (dlmopen_doit, &args))
+    return NULL;
+
+  __libc_register_dl_open_hook ((struct link_map *) args.new);
+  __libc_register_dlfcn_hook ((struct link_map *) args.new);
+
+  return args.new;
+# endif
 }
-static_link_warning (dlmopen)
+# ifdef SHARED
+strong_alias (__dlmopen, dlmopen)
+# endif
+#endif

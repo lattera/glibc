@@ -11,4 +11,7 @@ libdl {
   GLIBC_2.3.4 {
     dlmopen;
   }
+  GLIBC_PRIVATE {
+    _dlfcn_hook;
+  }
 }

@@ -11,8 +11,6 @@
 #define __LM_ID_CALLER	-2
 
 /* Now define the internal interfaces.  */
-extern void *__dlvsym (void *__handle, __const char *__name,
-		       __const char *__version);
 
 #define __libc_dlopen(name) __libc_dlopen_mode (name, RTLD_LAZY)
 extern void *__libc_dlopen_mode  (__const char *__name, int __mode);
@@ -75,5 +73,63 @@ extern int _dl_catch_error (const char **objname, const char **errstring,
    ARGS is passed as argument to OPERATE.  */
 extern int _dlerror_run (void (*operate) (void *), void *args)
      internal_function;
+
+#ifdef SHARED
+# define DL_CALLER_DECL /* Nothing */
+# define DL_CALLER RETURN_ADDRESS (0)
+#else
+# define DL_CALLER_DECL , void *dl_caller
+# define DL_CALLER dl_caller
+#endif
+
+struct dlfcn_hook
+{
+  void *(*dlopen) (const char *file, int mode, void *dl_caller);
+  int (*dlclose) (void *handle);
+  void *(*dlsym) (void *handle, const char *name, void *dl_caller);
+  void *(*dlvsym) (void *handle, const char *name, const char *version,
+		   void *dl_caller);
+  char *(*dlerror) (void);
+  int (*dladdr) (const void *address, Dl_info *info);
+  int (*dladdr1) (const void *address, Dl_info *info,
+		  void **extra_info, int flags);
+  int (*dlinfo) (void *handle, int request, void *arg, void *dl_caller);
+  void *(*dlmopen) (Lmid_t nsid, const char *file, int mode, void *dl_caller);
+  void *pad[4];
+};
+
+extern struct dlfcn_hook *_dlfcn_hook;
+libdl_hidden_proto (_dlfcn_hook)
+
+extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
+     attribute_hidden;
+extern void *__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
+     attribute_hidden;
+extern int __dlclose (void *handle)
+     attribute_hidden;
+extern void *__dlsym (void *handle, const char *name DL_CALLER_DECL)
+     attribute_hidden;
+extern void *__dlvsym (void *handle, const char *name, const char *version
+		       DL_CALLER_DECL)
+     attribute_hidden;
+extern char *__dlerror (void)
+     attribute_hidden;
+extern int __dladdr (const void *address, Dl_info *info)
+     attribute_hidden;
+extern int __dladdr1 (const void *address, Dl_info *info,
+		      void **extra_info, int flags)
+     attribute_hidden;
+extern int __dlinfo (void *handle, int request, void *arg DL_CALLER_DECL)
+     attribute_hidden;
+
+#ifndef SHARED
+struct link_map;
+extern void * __libc_dlsym_private (struct link_map *map, const char *name)
+     attribute_hidden;
+extern void __libc_register_dl_open_hook (struct link_map *map)
+     attribute_hidden;
+extern void __libc_register_dlfcn_hook (struct link_map *map)
+     attribute_hidden;
+#endif
 
 #endif
