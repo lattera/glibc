@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -25,6 +25,7 @@
 #include <grp.h>
 #include <pthread.h>
 #include <pwd.h>
+#include <resolv.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -241,7 +242,12 @@ invalidate_cache (char *key)
   else if (strcmp (key, "group") == 0)
     number = grpdb;
   else if (__builtin_expect (strcmp (key, "hosts"), 0) == 0)
-    number = hstdb;
+    {
+      number = hstdb;
+
+      /* Re-initialize the resolver.  resolv.conf might have changed.  */
+      res_init ();
+    }
   else
     return;
 

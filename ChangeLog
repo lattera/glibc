@@ -1,5 +1,8 @@
 2004-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (invalidate_cache): If the host cache has to
+	be invalidated, re-read resolv.conf.
+
 	* resolv/resolv.h (RES_NOIP6DOTINT): Define.
 	* resolv/res_init.c (res_setoptions): Handle no-ip6-dotint option.
 	* resolv/gethnamaddr.c (gethostbyaddr): Don't lookup with .ip6.int
