@@ -1,4 +1,4 @@
-sysdep-CFLAGS += -mv8 -mtune=ultrasparc
+sysdep-CFLAGS += -mv8 -mtune=ultrasparc -Wa,-Av9a
 
 ifeq ($(subst gnulib,string,$(subdir)),string)
 ASFLAGS-.o += -Wa,-Av9a

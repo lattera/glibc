@@ -152,7 +152,7 @@ typedef unsigned long int uintmax_t;
 
 /* Values to test for integral types holding `void *' pointer.  */
 # define INTPTR_MIN		(-9223372036854775807L-1)
-# define INTPTR_MAX		(9223372036854775807L
+# define INTPTR_MAX		(9223372036854775807L)
 # define UINTPTR_MAX		(18446744073709551615UL)
 
 

@@ -63,11 +63,11 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   long int readval;
 
-  __asm__ __volatile__ ("cas	[%4], %2, %0"
+  __asm__ __volatile__ ("casx	[%4], %2, %0"
 			: "=r"(readval), "=m"(*p)
 			: "r"(oldval), "m"(*p), "r"(p), "0"(newval));
 
-  return readval == newval;
+  return readval == oldval;
 }
 
 /* Access to data in the thread descriptor is easy.  */

@@ -1,3 +1,15 @@
+1999-05-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/wordsize-64/stdint.h (INTPTR_MAX): Add missing ).
+
+1999-05-17  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/atomicity.h: New file.
+	* sysdeps/sparc/sparc32/sparcv9/atomicity.h: New file.
+	* sysdeps/sparc/sparc64/atomicity.h: New file.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile: Add -Wa,-Av9a to
+	sysdep-CFLAGS.
+
 1999-05-18  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/alpha/memchr.S: Zap high byte of length.  Reschedule.
