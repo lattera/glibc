@@ -40,6 +40,9 @@ extern time_t __mktime_internal __P ((struct tm *__tp,
 extern struct tm *__localtime_r __P ((__const time_t *__timer,
 				      struct tm *__tp));
 
+extern struct tm *__gmtime_r __P ((__const time_t *__restrict __timer,
+				   struct tm *__restrict __tp));
+
 /* Compute the `struct tm' representation of *T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.

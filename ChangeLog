@@ -1,3 +1,8 @@
+1999-10-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/time.h: Move __gmtime_r declaration to ...
+	* include/time.h: ...here.
+
 1999-10-05  Andreas Jaeger  <aj@suse.de>
 
 	* manual/message.texi (The message catalog files): Fix description
