@@ -1,3 +1,7 @@
+2002-02-25  Bruno Haible  <bruno@clisp.org>
+
+	* MakeTAGS (extract): Use --sort-by-file instead of --sort-output.
+
 2002-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iofdopen.c (_IO_new_fdopen): Call _IO_setb to deallocate
