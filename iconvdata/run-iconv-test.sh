@@ -57,9 +57,9 @@ while read from to subset targets; do
   PROG=`eval echo $ICONV`
 
   for t in $targets; do
-    echo $ac_n "test data: $from -> $to $ac_c"
+    echo $ac_n "test data: $from -> $t $ac_c"
     $PROG -f $from -t $t testdata/$from > $temp1 ||
-      { echo "*** conversion from $from to $t failed"; failed=1; continue; }
+      { echo "FAILED"; failed=1; continue; }
     echo $ac_n "OK$ac_c"
     if test -s testdata/$from..$t; then
       cmp $temp1 testdata/$from..$t > /dev/null 2>&1 ||
@@ -68,10 +68,10 @@ while read from to subset targets; do
     fi
     echo $ac_n " -> $from $ac_c"
     $PROG -f $t -t $to -o $temp2 $temp1 ||
-      { echo "*** conversion from $t to $to failed"; failed=1; continue; }
+      { echo "FAILED"; failed=1; continue; }
     echo $ac_n "OK$ac_c"
     test -s $temp1 && cmp testdata/$from $temp2 > /dev/null 2>&1 ||
-      { echo "*** $from -> t -> $to conversion failed"; failed=1; continue; }
+      { echo "/FAILED"; failed=1; continue; }
     echo "/OK"
     rm -f $temp1 $temp2
 
@@ -79,7 +79,7 @@ while read from to subset targets; do
     # of the coded character set we test we convert the test to this
     # coded character set.  Otherwise we convert to all the TARGETS.
     if test $subset = Y; then
-      echo $ac_n "   suntzu: $from -> $to $ac_c"
+      echo $ac_n "   suntzu: $from -> $t -> $to $ac_c"
       $PROG -f $from -t $t testdata/suntzus |
       $PROG -f $t -t $to > $temp1 ||
 	{ echo "FAILED"; failed=1;
@@ -89,13 +89,13 @@ while read from to subset targets; do
 	{ echo "/FAILED";
 	  failed=1; continue; }
     else
-      echo $ac_n "; suntzu: $from -> ASCII $ac_c"
+      echo $ac_n "   suntzu: $from -> ASCII -> $to $ac_c"
       $PROG -f ASCII -t $to testdata/suntzus |
       $PROG -f $to -t ASCII > $temp1 ||
         { echo "FAILED";
 	  failed=1; continue; }
       echo $ac_n "OK$ac_c"
-	cmp testdata/suntzus $temp1 ||
+      cmp testdata/suntzus $temp1 ||
         { echo "/FAILED";
 	  failed=1; continue; }
     fi

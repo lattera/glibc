@@ -1,3 +1,11 @@
+1999-12-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/alpha/pt-machine.h: Move stack_pointer definition to the
+	beginning.
+
+	* manager.c (__pthread_start): Add one more cast to prevent
+	warning on 64bit machines.
+
 1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_handle_create): Set p_pid of new thread

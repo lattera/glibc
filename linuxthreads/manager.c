@@ -98,7 +98,7 @@ static void pthread_kill_all_threads(int sig, int main_thread_also);
 
 int __pthread_manager(void *arg)
 {
-  int reqfd = (int)arg;
+  int reqfd = (int) (long int) arg;
   struct pollfd ufd;
   sigset_t mask;
   int n;

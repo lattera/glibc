@@ -26,6 +26,12 @@
 #include <asm/pal.h>
 
 
+/* Get some notion of the current stack.  Need not be exactly the top
+   of the stack, just something somewhere in the current frame.  */
+#define CURRENT_STACK_FRAME  stack_pointer
+register char *stack_pointer __asm__("$30");
+
+
 /* Spinlock implementation; required.  */
 PT_EI long int
 testandset (int *spinlock)
@@ -58,12 +64,6 @@ testandset (int *spinlock)
 /* Begin allocating thread stacks at this address.  Default is to allocate
    them just below the initial program stack.  */
 #define THREAD_STACK_START_ADDRESS  0x40000000000
-
-
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
-register char *stack_pointer __asm__("$30");
 
 
 /* Return the thread descriptor for the current thread.  */
