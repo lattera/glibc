@@ -80,7 +80,9 @@ xdrmem_create (xdrs, addr, size, op)
 {
 
   xdrs->x_op = op;
-  xdrs->x_ops = &xdrmem_ops;
+  /* We have to add the const since the `struct xdr_ops' in `struct XDR'
+     is not `const'.  */
+  xdrs->x_ops = (struct xdr_ops *) &xdrmem_ops;
   xdrs->x_private = xdrs->x_base = addr;
   xdrs->x_handy = size;
 }

@@ -82,7 +82,9 @@ xdrstdio_create (xdrs, file, op)
 {
 
   xdrs->x_op = op;
-  xdrs->x_ops = &xdrstdio_ops;
+  /* We have to add the const since the `struct xdr_ops' in `struct XDR'
+     is not `const'.  */
+  xdrs->x_ops = (struct xdr_ops *) &xdrstdio_ops;
   xdrs->x_private = (caddr_t) file;
   xdrs->x_handy = 0;
   xdrs->x_base = 0;

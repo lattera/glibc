@@ -51,7 +51,7 @@ generated = mtrace
 
 # The Perl script will print addresses and to do this nicely we must know
 # whether we are on a 32 or 64 bit machine.
-ifneq ($strip($(findstring wordsize-32,$(config-sysdirs))),)
+ifneq ($(findstring wordsize-32,$(config-sysdirs)),)
 address-width=10
 else
 address-width=18

@@ -169,7 +169,9 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
   /*
    * now the rest ...
    */
-  xdrs->x_ops = &xdrrec_ops;
+  /* We have to add the const since the `struct xdr_ops' in `struct XDR'
+     is not `const'.  */
+  xdrs->x_ops = (struct xdr_ops *) &xdrrec_ops;
   xdrs->x_private = (caddr_t) rstrm;
   rstrm->tcp_handle = tcp_handle;
   rstrm->readit = readit;

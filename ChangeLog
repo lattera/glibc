@@ -1,3 +1,28 @@
+1998-06-05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/xdr_rec.c (xdrrec_create): Add cast for *_ops array since
+	we cannot declare the struct element as const.
+	* sunrpc/xdr_mem.c (xdrmem_create): Likewise.
+	* sunrpc/xdr_stdio.c (xdrstdio_create): Likewise.
+
+1998-06-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile: Include ../Makeconfig earlier.
+	(MAKEINFO, TEXI2DVI): Use defaults if ../Makeconfig does not
+	exist.
+	(dir-add.texinfo): Remove useless $(SHELL).
+
+1998-06-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (others): Build programs from install-bin.
+	* configure.in: Modify config.make only if is was just created and
+	move that command to second argument of AC_OUTPUT.  Add command to
+	set config_vars in config.status.
+
+1998-06-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/Makefile (address-width): Fix conditional.
+
 1998-06-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* libc.map: Add fattach, fdetach, getmsg, getpmsg, makecontext,

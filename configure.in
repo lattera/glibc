@@ -1170,5 +1170,8 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, ,
-          [echo '$config_vars' >> config.make; test -d bits || mkdir bits])
+AC_OUTPUT(config.make glibcbug ${config_makefile} ${config_uname}, [
+case $CONFIG_FILES in *config.make*)
+echo "$config_vars" >> config.make;;
+esac
+test -d bits || mkdir bits], [config_vars='$config_vars'])

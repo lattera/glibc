@@ -28,14 +28,17 @@ INSTALL_INFO = install-info
 all: dvi
 dvi: libc.dvi
 
-ifneq ($(strip $(MAKEINFO)),)
-all: info
-info: libc.info dir-add.info
-endif
-
 # Get glibc's configuration info.
 ifneq (,$(wildcard ../Makeconfig))
 include ../Makeconfig
+else
+MAKEINFO = makeinfo
+TEXI2DVI = texi2dvi
+endif
+
+ifneq ($(strip $(MAKEINFO)),)
+all: info
+info: libc.info dir-add.info
 endif
 
 # Set chapters and chapters-incl[12].
@@ -91,10 +94,10 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # access to the documentation of the function, variables, and other
 # definitions.
 dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
-	$(SHELL) -c '(echo "@dircategory GNU C library functions";	\
+	(echo "@dircategory GNU C library functions";			\
 	 echo "@direntry";						\
 	 $(AWK) -f $^;							\
-	 echo "@end direntry";)' > $@.new
+	 echo "@end direntry") > $@.new
 	mv -f $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.

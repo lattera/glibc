@@ -79,6 +79,10 @@ endif
 
 include Makerules
 
+ifeq ($(build-programs),yes)
+others: $(addprefix $(objpfx),$(install-bin))
+endif
+
 # Install from subdirectories too.
 install: subdir_install
 
