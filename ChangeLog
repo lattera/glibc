@@ -1,3 +1,7 @@
+1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/time.h: Avoid unneccesary #ifdef.
+
 1999-02-15  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* stdio-common/_itoa.c (_itoa): Correct parameters to

@@ -36,11 +36,6 @@ __BEGIN_DECLS
 # define __need_size_t
 # define __need_NULL
 # include <stddef.h>
-#endif /* <time.h> included.  */
-
-
-
-#ifdef	_TIME_H
 
 /* This defines CLOCKS_PER_SEC, which is the number of processor clock
    ticks per second.  */
