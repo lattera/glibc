@@ -1,7 +1,7 @@
 #include <sysdep.h>
 #include <tls.h>
 
-SELF			offsetof (tcbhead_t, self)
+TID			offsetof (struct pthread, tid)
 CLEANUP			offsetof (struct pthread, cleanup)
 CLEANUP_PREV		offsetof (struct _pthread_cleanup_buffer, __prev)
 MUTEX_FUTEX		offsetof (pthread_mutex_t, __data.__lock)

@@ -52,8 +52,8 @@ __pthread_rwlock_rdlock:
 	testl	%esi, %esi
 	jne	1f
 
-2:	movq	WRITER(%rdi), %rax
-	testq	%rax, %rax
+2:	movl	WRITER(%rdi), %eax
+	testl	%eax, %eax
 	jne	14f
 	cmpl	$0, WRITERS_QUEUED(%rdi)
 	je	5f
@@ -119,7 +119,7 @@ __pthread_rwlock_rdlock:
 #endif
 	jmp	2b
 
-14:	cmpq	%fs:SELF, %rax
+14:	cmpl	%fs:TID, %eax
 	jne	3b
 	/* Deadlock detected.  */
 	movq	$EDEADLK, %rdx

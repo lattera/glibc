@@ -32,7 +32,7 @@ __pthread_rwlock_trywrlock (rwlock)
 
   if (rwlock->__data.__writer == 0 && rwlock->__data.__nr_readers == 0)
     {
-      rwlock->__data.__writer = (pthread_t) THREAD_ID;
+      rwlock->__data.__writer = THREAD_GETMEM (THREAD_SELF, tid);
       result = 0;
     }
 

@@ -1,7 +1,7 @@
 #include <sysdep.h>
 #include <tls.h>
 
-SELF			offsetof (tcbhead_t, self)
+TID			offsetof (struct pthread, tid)
 MULTIPLE_THREADS_OFFSET	offsetof (tcbhead_t, multiple_threads)
 SYSINFO_OFFSET		offsetof (tcbhead_t, sysinfo)
 CLEANUP			offsetof (struct pthread, cleanup)

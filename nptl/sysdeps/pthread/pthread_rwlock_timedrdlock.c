@@ -58,9 +58,8 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 
       /* Make sure we are not holding the rwlock as a writer.  This is
 	 a deadlock situation we recognize and report.  */
-      if (rwlock->__data.__writer != 0
-	  && __builtin_expect (rwlock->__data.__writer
-			       == (pthread_t) THREAD_ID, 0))
+      if (__builtin_expect (rwlock->__data.__writer
+			    == THREAD_GETMEM (THREAD_SELF, tid), 0))
 	{
 	  result = EDEADLK;
 	  break;

@@ -61,8 +61,8 @@ pthread_rwlock_timedwrlock:
 	testl	%esi, %esi
 	jne	1f
 
-2:	movq	WRITER(%r12), %rax
-	testq	%rax, %rax
+2:	movl	WRITER(%r12), %eax
+	testl	%eax, %eax
 	jne	14f
 	cmpl	$0, NR_READERS(%r12)
 	je	5f
@@ -137,8 +137,8 @@ pthread_rwlock_timedwrlock:
 
 
 5:	xorq	%rdx, %rdx
-	movq	%fs:SELF, %rax
-	movq	%rax, WRITER(%r12)
+	movl	%fs:TID, %eax
+	movl	%eax, WRITER(%r12)
 9:	LOCK
 #if MUTEX == 0
 	decl	(%r12)
@@ -162,7 +162,7 @@ pthread_rwlock_timedwrlock:
 	callq	__lll_mutex_lock_wait
 	jmp	2b
 
-14:	cmpq	%fs:SELF, %rax
+14:	cmpl	%fs:TID, %eax
 	jne	3b
 20:	movq	$EDEADLK, %rdx
 	jmp	9b

@@ -112,9 +112,10 @@ typedef union
     unsigned int __writer_wakeup;
     unsigned int __nr_readers_queued;
     unsigned int __nr_writers_queued;
-    pthread_t __writer;
-    unsigned long int __pad1;
+    int __writer;
+    int __pad1;
     unsigned long int __pad2;
+    unsigned long int __pad3;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;

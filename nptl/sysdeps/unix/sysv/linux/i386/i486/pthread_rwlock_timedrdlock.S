@@ -165,7 +165,7 @@ pthread_rwlock_timedrdlock:
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-14:	cmpl	%gs:SELF, %eax
+14:	cmpl	%gs:TID, %eax
 	jne	3b
 	movl	$EDEADLK, %ecx
 	jmp	9b

@@ -115,7 +115,7 @@ typedef union
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned int __flags;
-    pthread_t __writer;
+    int __writer;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;

@@ -1,3 +1,35 @@
+2003-06-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_rwlock_t):
+	Change type of __writer element to int.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/i386/tcb-offsets.sym: Replace SELF entry with TID entry.
+	* sysdeps/x86_64/tcb-offsets.sym: Likewise.
+	* pthread_rwlock_trywrlock.c: Store TID not self pointer in __writer.
+	Compare with TID to determine deadlocks.
+	* sysdeps/pthread/pthread_rwlock_rdlock.c: Likewise.
+	* sysdeps/pthread/pthread_rwlock_timedrdlock.c: Likewise.
+	* sysdeps/pthread/pthread_rwlock_timedwrlock.: Likewise.
+	* sysdeps/pthread/pthread_rwlock_wrlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: Likewise.
+	* Makefile (tests): Add tst-rwlock12.
+	* tst-rwlock12.c: New file.
+
 2003-06-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_lock_wait,
