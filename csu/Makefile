@@ -1,6 +1,6 @@
 # Makefile for csu code for GNU C library.
 
-# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ have-initfini = yes
 
 endif
 
-ifeq (yes,$(have-initfini))
+ifeq ($(have-initfini),yes)
 
 CPPFLAGS += -DHAVE_INITFINI
 
@@ -67,27 +67,29 @@ crtstuff = crti crtn
 
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
-generated += $(crtstuff:=.s)
+generated += $(crtstuff:=.S) initfini.s align.h end.h
 omit-deps += $(crtstuff)
 
-# Compile initfini.c to assembly code, which contains embedded shell
-# commands that produce crti.s-new and crtn.s-new when run.  We need to
-# disable emission of .size directives and debugging information, since
-# they will get confused by the splitting of the output we do.
-$(objpfx)cr%i.s $(objpfx)cr%n.s: initfini.c; $(initfini)
+# Special rules for the building of crti.o and crtn.o
+$(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
+	$(CC) -c -fPIC -g0 -I$(..) -I$(common-objpfx) -DASSEMBLER $< -o $@
 
-define initfini
--rm -f $(objpfx)crtcommon.tmp
-(echo 'cat > crtcommon.tmp <<\EOF_common'; \
- $(CC) $< $(CPPFLAGS) $(CFLAGS) \
-       -fPIC -finhibit-size-directive $(no-exceptions) -g0 -S -o -; \
- echo 'EOF_common') | (cd $(@D); $(SHELL))
-cat $(objpfx)crtcommon.tmp >> $(objpfx)crti.s-new
-cat $(objpfx)crtcommon.tmp >> $(objpfx)crtn.s-new
-rm -f $(objpfx)crtcommon.tmp
-mv -f $(objpfx)crti.s-new $(subst crtn,crti,$@)
-mv -f $(objpfx)crtn.s-new $(subst crti,crtn,$@)
-endef
+$(objpfx)initfini.s: initfini.c
+	$(CC) -S -fPIC -finhibit-size-directive $(no-exceptions) $< -o $@
+
+$(objpfx)crti.S: $(objpfx)initfini.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+
+$(objpfx)crtn.S: $(objpfx)initfini.s
+	sed -n -e '1,/@HEADER_ENDS/p' \
+	       -e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \
+	       -e '/@TRAILER_BEGINS/,$$p' $< > $@
+
+$(objpfx)defs.h: $(objpfx)initfini.s
+	sed -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
+		awk -f defs.awk > $@
 
 endif
 

@@ -1,5 +1,5 @@
 /* Special .init and .fini section support.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -26,68 +26,40 @@
    write to the Free Software Foundation, 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This file is compiled into assembly code which is then surrounded by the
-   lines `cat > crtcommon.tmp <<\EOF_common' and `EOF_common' and thus
-   becomes a shell script which creates three files of assembly code.
+/* This file is compiled into assembly code which is then munged by a sed
+   script into two files: crti.s and crtn.s.
 
-   * The first file is crti.s-new; this puts a function prologue at the
-   beginning of the .init and .fini sections and defines global symbols for
+   * crti.s puts a function prologue at the beginning of the
+   .init and .fini sections and defines global symbols for
    those addresses, so they can be called as functions.
 
-   * The second file is crtn.s-new; this puts the corresponding function
-   epilogues in the .init and .fini sections.
-
-   * The third file is crtcommon.tmp, which is whatever miscellaneous cruft
-   the compiler generated at the end; it should be appended to both crti.s-new
-   and crtn.s-new.  */
+   * crtn.s puts the corresponding function epilogues
+   in the .init and .fini sections. */
 
 #include <stdlib.h>
 
+/* We use embedded asm for .section unconditionally, as this makes it
+   easier to insert the necessary directives into crtn.S. */
+#define SECTION(x) asm (".section \"" x "\"");
 
-#ifdef HAVE_ELF
-/* These declarations make the functions go in the right sections when
-   we define them below.  GCC syntax does not allow the attribute
-   specifications to be in the function definitions themselves.  */
-void _init (void) __attribute__ ((section (".init")));
-void _fini (void) __attribute__ ((section (".fini")));
+/* Embed an #include to pull in the alignment and .end directives. */
+asm ("\n#include \"defs.h\"");
 
-#define SECTION(x)		/* Put nothing extra before the defn.  */
+/* The initial common code ends here. */
+asm ("\n/*@HEADER_ENDS*/");
 
-#else
-/* Some non-ELF systems support .init and .fini sections,
-   but the __attribute__ syntax only works for ELF.  */
-#define SECTION(x) asm (".section " x);
-#endif
-
-/* End the here document containing the initial common code.
-   Then move the output file crtcommon.tmp to crti.s-new and crtn.s-new.  */
-asm ("\nEOF_common\n\
-rm -f crti.s-new crtn.s-new\n\
-mv crtcommon.tmp crti.s-new\n\
-cp crti.s-new crtn.s-new");
-
-/* Extract a `.end' if one is produced by the compiler.  */
-asm ("fgrep .end >/dev/null 2>&1 <<\\EOF.end && need_end=yes");
+/* To determine whether we need .end and .align: */
+asm ("\n/*@TESTS_BEGIN*/");
 void
-useless_function (void)
-{
-  return;
-}
-asm ("\nEOF.end\n");
-
-/* Find out how much alignment is produced by the compiler.  */
-asm ("align=`awk '$1==\".align\" { if ($2>max) max=$2; } END { print max; }' \
-<<\\EOF.align");
-void
-useless_function2 (void (*foo) (void))
+dummy (void (*foo) (void))
 {
   if (foo)
     (*foo) ();
 }
-asm ("\nEOF.align\n`\n");
+asm ("\n/*@TESTS_END*/");
 
-/* Append the .init prologue to crti.s-new.  */
-asm ("cat >> crti.s-new <<\\EOF.crti.init");
+/* The beginning of _init:  */
+asm ("\n/*@_init_PROLOG_BEGINS*/");
 
 SECTION (".init")
 void
@@ -99,38 +71,32 @@ _init (void)
      gcrt1.o to reference a symbol which would be defined by some library
      module which has a constructor; but then user code's constructors
      would come first, and not be profiled.  */
-  extern void __gmon_start__ (void); weak_extern (__gmon_start__)
+  extern void __gmon_start__ (void) __attribute__ ((weak)); /*weak_extern (__gmon_start__);*/
+
   if (__gmon_start__)
     __gmon_start__ ();
 
-  /* End the here document containing the .init prologue code.
-     Then fetch the .section directive just written and append that
-     to crtn.s-new, followed by the function epilogue.  */
-  asm ("\n\
-EOF.crti.init\n\
-	test -n \"$align\" && echo .align $align >> crti.s-new\n\
-	test -n \"$need_end\" && echo .end _init >> crti.s-new\n\
-	fgrep .init crti.s-new >>crtn.s-new\n\
-	fgrep -v .end >> crtn.s-new <<\\EOF.crtn.init");
+  asm("END_INIT");
+  /* Now the epilog. */
+  asm ("\n/*@_init_PROLOG_ENDS*/");
+  asm ("\n/*@_init_EPILOG_BEGINS*/");
+  SECTION(".init");
+  asm ("ALIGN");
 }
+asm ("END_INIT");
 
-/* End the here document containing the .init epilogue code.
-   Then append the .fini prologue to crti.s-new.  */
-asm ("\nEOF.crtn.init\
-\n\
-cat >> crti.s-new <<\\EOF.crti.fini");
+/* End of the _init epilog, beginning of the _fini prolog. */
+asm ("\n/*@_init_EPILOG_ENDS*/");
+asm ("\n/*@_fini_PROLOG_BEGINS*/");
 
 SECTION (".fini")
 void
 _fini (void)
 {
-  /* End the here document containing the .fini prologue code.
-     Then fetch the .section directive just written and append that
-     to crtn.s-new, followed by the function epilogue.  */
-  asm ("\nEOF.crti.fini\n\
-test -n \"$align\" && echo .align $align >> crti.s-new\n\
-test -n \"$need_end\" && echo .end _fini >> crti.s-new\n\
-cat > /dev/null <<\\EOF.fini.skip");
+
+  /* End of the _fini prolog. */
+  asm ("END_FINI");
+  asm ("\n/*@_fini_PROLOG_ENDS*/");
 
   {
     /* Let GCC know that _fini is not a leaf function by having a dummy
@@ -140,14 +106,17 @@ cat > /dev/null <<\\EOF.fini.skip");
     i_am_not_a_leaf ();
   }
 
-  asm ("\nEOF.fini.skip\
-\n\
-	fgrep .fini crti.s-new >>crtn.s-new\n\
-	fgrep -v .end >> crtn.s-new <<\\EOF.crtn.fini");
+  /* Beginning of the _fini epilog. */
+  asm ("\n/*@_fini_EPILOG_BEGINS*/");
+  SECTION (".fini");
+  asm ("ALIGN");
 }
+asm ("END_FINI");
 
-/* End the here document containing the .fini epilogue code.
-   Finally, put the remainder of the generated assembly into crtcommon.tmp.  */
-asm ("\nEOF.crtn.fini\
-\n\
-cat > crtcommon.tmp <<\\EOF_common");
+/* End of the _fini epilog.  Any further generated assembly (e.g. .ident)
+   is shared between both crt files. */
+asm ("\n/*@_fini_EPILOG_ENDS*/");
+asm ("\n/*@TRAILER_BEGINS*/");
+asm ("ALIGN");
+
+/* End of file. */

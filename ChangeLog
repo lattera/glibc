@@ -1,3 +1,10 @@
+1997-04-18 02:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/initfini.c: Rewrite by Zack Weinberg
+	<zack@rabi.phys.columbia.edu>.
+	* csu/Makefile: Add rules for rewrite.
+	* csu/defs.awk: Helper script to generate derived header.
+
 1997-04-17 16:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/libgen.h: Change prototype for of basename to XPG variant.
