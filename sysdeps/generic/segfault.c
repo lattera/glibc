@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdio-common/_itoa.h>
 
 /* This file defines macros to access the content of the sigcontext element
    passed up by the signal handler.  */
