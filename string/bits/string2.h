@@ -22,7 +22,7 @@
 # error "Never use <bits/string2.h> directly; include <string.h> instead."
 #endif
 
-#ifndef __NO_STRING_INLINES
+#if !defined __NO_STRING_INLINES && !__BOUNDED_POINTERS__
 
 /* Unlike the definitions in the header <bits/string.h> the
    definitions contained here are not optimized down to assembler

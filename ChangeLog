@@ -1,5 +1,7 @@
 2000-06-26  Greg McGary  <greg@mcgary.org>
 
+	* string/bits/string2.h: Inhibit inlines if __BOUNDED_POINTERS__.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add missing signatures.
 	Remove clock_* and timer_* entries.
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Replace
