@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-extern int __syscall_execve (const char *file, char **argv, char **envp);
+extern int __syscall_execve (const char *file, char * const argv[],
+			     char * const envp[]);
 extern void __pthread_kill_other_threads_np __P ((void));
 weak_extern (__pthread_kill_other_threads_np)
 

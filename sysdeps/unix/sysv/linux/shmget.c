@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, August 1995.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#define __LIBC_IPC_INTERNAL
 #include <errno.h>
 #include <sys/shm.h>
 #include <stdlib.h>		/* for definition of NULL */

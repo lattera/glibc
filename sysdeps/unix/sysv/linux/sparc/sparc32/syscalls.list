@@ -8,12 +8,14 @@ s_setfsuid	setfsuid setfsuid	1	__syscall_setfsuid
 s_setgid	setgid	setgid		1	__syscall_setgid
 s_setgroups	setgroups setgroups	2	__syscall_setgroups
 s_setregid	setregid setregid	2	__syscall_setregid
-s_setresgid	setresgid setresgid	3	__syscall_setresgid
-s_setresuid	setresuid setresuid	3	__syscall_setresuid
 s_setreuid	setreuid setreuid	2	__syscall_setreuid
 s_setrlimit	setrlimit setrlimit	3	__syscall_setrlimit
 s_ipc		msgget	ipc		5	__syscall_ipc
 s_setuid	setuid	setuid		1	__syscall_setuid
+setresuid	EXTRA	setresuid32	3	__setresuid	setresuid
+setresgid	EXTRA	setresgid32	3	__setresgid	setresgid
+getresuid	EXTRA	getresuid32	3	getresuid
+getresgid	EXTRA	getresgid32	3	getresgid
 
 # System calls with wrappers.
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
@@ -52,3 +54,25 @@ sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_readv	readv	readv		3	__syscall_readv
 sys_stat	xstat	stat		2	__syscall_stat
 sys_writev	writev	writev		3	__syscall_writev
+s_chown		chown	chown		3	__syscall_chown
+s_chown32	chown	chown32		3	__syscall_chown32
+s_fchown	fchown	fchown		3	__syscall_fchown
+s_fchown32	fchown	fchown32	3	__syscall_fchown32
+s_lchown	lchown	lchown		3	__syscall_lchown
+s_lchown32	lchown	lchown32	3	__syscall_lchown32
+s_getgid	getgid	getgid		0	__syscall_getgid
+s_getgid32	getgid	getgid32	0	__syscall_getgid32
+s_getuid	getuid	getuid		0	__syscall_getuid
+s_getuid32	getuid	getuid32	0	__syscall_getuid32
+s_getgroups32	getgroups getgroups32	2	__syscall_getgroups32
+s_setgroups32	setgroups setgroups32	2	__syscall_setgroups32
+s_setfsgid32	setfsgid setfsgid32	1	__syscall_setfsgid32
+s_setfsuid32	setfsuid setfsuid32	1	__syscall_setfsuid32
+s_setregid32	setregid setregid32	2	__syscall_setregid32
+s_setreuid32	setreuid setreuid32	2	__syscall_setreuid32
+s_getegid	getegid	getegid		0	__syscall_getegid
+s_geteuid	geteuid	geteuid		0	__syscall_geteuid
+s_getegid32	getegid	getegid32	0	__syscall_getegid32
+s_geteuid32	geteuid	geteuid32	0	__syscall_geteuid32
+s_setgid32	setgid	setgid32	1	__syscall_setgid32
+s_setuid32	setuid	setuid32	1	__syscall_setuid32

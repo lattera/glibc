@@ -53,7 +53,7 @@ setfsgid	EXTRA	setfsgid	1	setfsgid
 setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid
 setresuid	EXTRA	setresuid	3	__setresuid	setresuid
-setresgid	EXTRA	setresgid	3	setresgid
+setresgid	EXTRA	setresgid	3	__setresgid	setresgid
 sigaltstack	-	sigaltstack	2	__sigaltstack	sigaltstack
 sysinfo		EXTRA	sysinfo		1	sysinfo
 swapon		-	swapon		2	__swapon	swapon

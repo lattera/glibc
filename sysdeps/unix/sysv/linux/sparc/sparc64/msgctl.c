@@ -17,37 +17,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_IPC_INTERNAL
 #include <errno.h>
 #include <sys/msg.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-
-/* Kludge to work around Linux' restriction of only up to five
-   arguments to a system call.  */
-struct ipc_kludge
-  {
-    void *msgp;
-    long int msgtyp;
-  };
-
+/* Allows to control internal state and destruction of message queue
+   objects.  */
 
 int
-msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
+msgctl (msqid, cmd, buf)
      int msqid;
-     void *msgp;
-     size_t msgsz;
-     long int msgtyp;
-     int msgflg;
+     int cmd;
+     struct msqid_ds *buf;
 {
-  /* The problem here is that Linux' calling convention only allows up to
-     fives parameters to a system call.  */
-  struct ipc_kludge tmp;
-
-  tmp.msgp = msgp;
-  tmp.msgtyp = msgtyp;
-
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_msgctl, msqid, cmd, 0, buf);
 }

@@ -66,7 +66,7 @@
 #endif
 
 /* When did the `setresuid' sysall became available?  */
-#if __LINUX_KERNEL_VERSION >= 131584
+#if __LINUX_KERNEL_VERSION >= 131584 && !defined __sparc__
 # define __ASSUME_SETRESUID_SYSCALL	1
 #endif
 
@@ -106,4 +106,7 @@
 /* Linux 2.3.39 introduced 32bit UID/GIDs.  */
 #if __LINUX_KERNEL_VERSION >= 131879
 # define __ASSUME_32BITUIDS		1
+# ifdef __sparc__
+#  define __ASSUME_SETRESUID_SYSCALL	1
+# endif
 #endif

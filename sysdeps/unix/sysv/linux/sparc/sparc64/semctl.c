@@ -1,5 +1,6 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,39 +18,37 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <stdarg.h>
+#include <sys/sem.h>
+
+#include <sysdep.h>
 #include <sys/syscall.h>
-#include <sys/types.h>
-#include <unistd.h>
 
-#include "kernel-features.h"
+/* Define a `union semun' suitable for Linux here.  */
+union semun
+{
+  int val;			/* value for SETVAL */
+  struct semid_ds *buf;		/* buffer for IPC_STAT & IPC_SET */
+  unsigned short int *array;	/* array for GETALL & SETALL */
+  struct seminfo *__buf;	/* buffer for IPC_INFO */
+};
 
-#if defined __NR_setresuid32 || __ASSUME_SETRESUID_SYSCALL > 0
 
-extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
+/* Return identifier for array of NSEMS semaphores associated with
+   KEY.  */
 
 int
-seteuid (uid_t uid)
+semctl (int semid, int semnum, int cmd, ...)
 {
-  int result;
+  union semun arg;
+  va_list ap;
 
-  if (uid == (uid_t) ~0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+  va_start (ap, cmd);
 
-  /* First try the syscall.  */
-  result = __setresuid (-1, uid, -1);
-# if __ASSUME_SETRESUID_SYSCALL == 0
-  if (result == -1 && errno == ENOSYS)
-    /* No system call available.  Use emulation.  This may not work
-       since `setreuid' also sets the saved user ID when UID is not
-       equal to the real user ID, making it impossible to switch back.  */
-    result = __setreuid (-1, uid);
-# endif
+  /* Get the argument.  */
+  arg = va_arg (ap, union semun);
 
-  return result;
+  va_end (ap);
+
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
 }
-#else
-# include <sysdeps/unix/bsd/seteuid.c>
-#endif

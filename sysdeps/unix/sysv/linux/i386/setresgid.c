@@ -62,9 +62,9 @@ setresgid (gid_t rgid, gid_t egid, gid_t sgid)
     }
 #  endif /* __NR_setresgid32 */
 
-  if ((rgid != (gid_t) -1 && rgid != (gid_t) (__kernel_gid_t) rgid)
-      || (egid != (gid_t) -1 && egid != (gid_t) (__kernel_gid_t) egid)
-      || (sgid != (gid_t) -1 && sgid != (gid_t) (__kernel_gid_t) sgid))
+  if (((rgid + 1) > (gid_t) ((__kernel_gid_t) -1U))
+      || ((egid + 1) > (gid_t) ((__kernel_gid_t) -1U))
+      || ((sgid + 1) > (gid_t) ((__kernel_gid_t) -1U)))
     {
       __set_errno (EINVAL);
       return -1;

@@ -44,7 +44,7 @@ extern int __libc_missing_32bit_uids;
 int
 __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
-# if __ASSUME_32BITUIDS > 0  
+# if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (setresuid32, 3, ruid, euid, suid);
 # else
 #  ifdef __NR_setresuid32
@@ -62,9 +62,9 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
     }
 #  endif /* __NR_setresuid32 */
 
-  if ((ruid != (uid_t) -1 && ruid != (uid_t) (__kernel_uid_t) ruid)
-      || (euid != (uid_t) -1 && euid != (uid_t) (__kernel_uid_t) euid)
-      || (suid != (uid_t) -1 && suid != (uid_t) (__kernel_uid_t) suid))
+  if (((ruid + 1) > (uid_t) ((__kernel_uid_t) -1U))
+      || ((euid + 1) > (uid_t) ((__kernel_uid_t) -1U))
+      || ((suid + 1) > (uid_t) ((__kernel_uid_t) -1U)))
     {
       __set_errno (EINVAL);
       return -1;

@@ -31,7 +31,7 @@
 int __have_no_truncate64;
 #endif
 
-extern int __syscall_truncate64 (int fd, int high_length, int low_length);
+extern int __syscall_truncate64 (const char *path, int high_length, int low_length);
 
 
 /* Truncate the file FD refers to to LENGTH bytes.  */

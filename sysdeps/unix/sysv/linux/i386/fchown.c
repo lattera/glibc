@@ -59,8 +59,8 @@ __fchown (int fd, uid_t owner, gid_t group)
     }
 # endif /* __NR_fchown32 */
 
-  if ( (owner != (uid_t) ((__kernel_uid_t) owner)) ||
-       (group != (gid_t) ((__kernel_gid_t) group)) )
+  if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
+      || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
     {
       __set_errno (EINVAL);
       return -1;

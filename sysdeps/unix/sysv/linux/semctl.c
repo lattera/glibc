@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -17,12 +17,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#define __LIBC_IPC_INTERNAL
 #include <errno.h>
 #include <stdarg.h>
 #include <sys/sem.h>
 
 #include <sysdep.h>
+#include <string.h>
 #include <sys/syscall.h>
+
+#include "kernel-features.h"
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun
@@ -36,9 +40,11 @@ union semun
 
 /* Return identifier for array of NSEMS semaphores associated with
    KEY.  */
+int __old_semctl (int semid, int semnum, int cmd, ...);
+int __new_semctl (int semid, int semnum, int cmd, ...);
 
 int
-semctl (int semid, int semnum, int cmd, ...)
+__old_semctl (int semid, int semnum, int cmd, ...)
 {
   union semun arg;
   va_list ap;
@@ -52,3 +58,81 @@ semctl (int semid, int semnum, int cmd, ...)
 
   return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
 }
+
+int
+__new_semctl (int semid, int semnum, int cmd, ...)
+{
+  union semun arg;
+  va_list ap;
+
+  va_start (ap, cmd);
+
+  /* Get the argument.  */
+  arg = va_arg (ap, union semun);
+
+  va_end (ap);
+
+#if __ASSUME_32BITUIDS > 0
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64, &arg);
+#else
+  switch (cmd) {
+    case SEM_STAT:
+    case IPC_STAT:
+    case IPC_SET:
+      break;
+    default:
+      return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
+  }
+
+  {
+    int save_errno = errno, result;
+    struct __old_semid_ds old;
+    struct semid_ds *buf;
+
+    /* Unfortunately there is no way how to find out for sure whether
+       we should use old or new semctl.  */
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd | __IPC_64, &arg);
+    if (result != -1 || errno != EINVAL)
+      return result;
+
+    __set_errno(save_errno);
+    buf = arg.buf;
+    arg.buf = (struct semid_ds *)&old;
+    if (cmd == IPC_SET)
+      {
+	old.sem_perm.uid = buf->sem_perm.uid;
+	old.sem_perm.gid = buf->sem_perm.gid;
+	old.sem_perm.mode = buf->sem_perm.mode;
+	if (old.sem_perm.uid != buf->sem_perm.uid ||
+	    old.sem_perm.gid != buf->sem_perm.gid)
+	  {
+	    __set_errno (EINVAL);
+	    return -1;
+	  }
+      }
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
+    if (result != -1 && cmd != IPC_SET)
+      {
+	memset(buf, 0, sizeof(*buf));
+	buf->sem_perm.__key = old.sem_perm.__key;
+	buf->sem_perm.uid = old.sem_perm.uid;
+	buf->sem_perm.gid = old.sem_perm.gid;
+	buf->sem_perm.cuid = old.sem_perm.cuid;
+	buf->sem_perm.cgid = old.sem_perm.cgid;
+	buf->sem_perm.mode = old.sem_perm.mode;
+	buf->sem_perm.__seq = old.sem_perm.__seq;
+	buf->sem_otime = old.sem_otime;
+	buf->sem_ctime = old.sem_ctime;
+	buf->sem_nsems = old.sem_nsems;
+      }
+    return result;
+  }
+#endif
+}
+
+#if defined PIC && DO_VERSIONING
+default_symbol_version (__new_semctl, semctl, GLIBC_2.2);
+symbol_version (__old_semctl, semctl, GLIBC_2.0);
+#else
+weak_alias (__new_semctl, semctl);
+#endif

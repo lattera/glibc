@@ -59,8 +59,8 @@ __setregid (gid_t rgid, gid_t egid)
       __libc_missing_32bit_uids = 1;
     }
 # endif /* __NR_setregid32 */
-  if ((rgid != (gid_t) -1 && rgid != (gid_t) (__kernel_gid_t) rgid)
-      || (egid != (gid_t) -1 && egid != (gid_t) (__kernel_gid_t) egid))
+  if (((rgid + 1) > (gid_t) ((__kernel_gid_t) -1U))
+      || ((egid + 1) > (gid_t) ((__kernel_gid_t) -1U)))
     {
       __set_errno (EINVAL);
       return -1;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #endif
 
 #include <bits/types.h>
+#include <bits/wordsize.h>
 
 /* Mode bits for `msgget', `semget', and `shmget'.  */
 #define IPC_CREAT	01000		/* Create key if key does not exist. */
@@ -36,44 +37,52 @@
 /* Special key values.  */
 #define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
 
+#define __IPC_64	0x100
+
 
 /* Data structure used to pass permission information to IPC operations.  */
 struct ipc_perm
   {
     __key_t __key;			/* Key.  */
-    unsigned int uid;			/* Owner's user ID.  */
-    unsigned int gid;			/* Owner's group ID.  */
-    unsigned int cuid;			/* Creator's user ID.  */
-    unsigned int cgid;			/* Creator's group ID.  */
-    unsigned int mode;			/* Read/write permission.  */
-    unsigned short int __seq;		/* Sequence number.  */
+    __uid_t uid;			/* Owner's user ID.  */
+    __gid_t gid;			/* Owner's group ID.  */
+    __uid_t cuid;			/* Creator's user ID.  */
+    __gid_t cgid;			/* Creator's group ID.  */
+#if __WORDSIZE == 32
     unsigned short int __pad1;
-    unsigned long int __unused1;
-    unsigned long int __unused2;
+    unsigned short int mode;		/* Read/write permission.  */
+    unsigned short int __pad2;
+#else
+    unsigned int mode;			/* Read/write permission.  */
+    unsigned short int __pad1;
+#endif
+    unsigned short int __seq;		/* Sequence number.  */
+    unsigned long long int __unused1;
+    unsigned long long int __unused2;
   };
 
 #ifdef __LIBC_IPC_INTERNAL
-
 struct __old_ipc_perm
   {
     __key_t __key;			/* Key.  */
-    unsigned int uid;			/* Owner's user ID.  */
-    unsigned int gid;			/* Owner's group ID.  */
-    unsigned int cuid;			/* Creator's user ID.  */
-    unsigned int cgid;			/* Creator's group ID.  */
-    unsigned int mode;			/* Read/write permission.  */
+    unsigned short int uid;		/* Owner's user ID.  */
+    unsigned short int gid;		/* Owner's group ID.  */
+    unsigned short int cuid;		/* Creator's user ID.  */
+    unsigned short int cgid;		/* Creator's group ID.  */
+    unsigned short int mode;		/* Read/write permission.  */
     unsigned short int __seq;		/* Sequence number.  */
   };
 
 __BEGIN_DECLS
 
 /* The actual system call: all functions are multiplexed by this.  */
-extern int __ipc (int __call, int __first, int __second, int __third,
-		  void *__ptr);
+extern int __syscall_ipc (int __call, int __first, int __second,
+			  int __third, void *__ptr);
 
 __END_DECLS
 
-/* The codes for the functions to use the multiplexer `__ipc'.  */
+
+/* The codes for the functions to use the multiplexer `__syscall_ipc'.  */
 #define IPCOP_semop	 1
 #define IPCOP_semget	 2
 #define IPCOP_semctl	 3
@@ -86,4 +95,4 @@ __END_DECLS
 #define IPCOP_shmget	23
 #define IPCOP_shmctl	24
 
-#endif
+#endif /* __LIBC_IPC_INTERNAL */

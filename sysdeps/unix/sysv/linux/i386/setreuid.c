@@ -59,8 +59,8 @@ __setreuid (uid_t ruid, uid_t euid)
       __libc_missing_32bit_uids = 1;
     }
 # endif /* __NR_setreuid32 */
-  if ((ruid != (uid_t) -1 && ruid != (uid_t) (__kernel_uid_t) ruid)
-      || (euid != (uid_t) -1 && euid != (uid_t) (__kernel_uid_t) euid))
+  if (((ruid + 1) > (uid_t) ((__kernel_uid_t) -1U))
+      || ((euid + 1) > (uid_t) ((__kernel_uid_t) -1U)))
     {
       __set_errno (EINVAL);
       return -1;

@@ -82,4 +82,8 @@ libc {
     # u*
     umount2;
   }
+  GLIBC_2.2 {
+    # ipc ctl interface change.
+    semctl; shmctl; msgctl;
+  }
 }

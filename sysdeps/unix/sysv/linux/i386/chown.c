@@ -38,7 +38,7 @@
 */
 
 extern int __syscall_chown (const char *__file,
-			    uid_t __owner, gid_t __group);
+			    __kernel_uid_t __owner, __kernel_gid_t __group);
 #if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
 /* Running under Linux > 2.1.80.  */
 
@@ -76,6 +76,13 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 	  __libc_missing_32bit_uids = 1;
 	}
 #  endif /* __NR_chown32 */
+      if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
+	  || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
+	{
+	  __set_errno (EINVAL);
+	  return -1;
+	}
+
       result = INLINE_SYSCALL (chown, 3, file, owner, group);
 
       if (result >= 0 || errno != ENOSYS)
@@ -105,6 +112,13 @@ __real_chown (const char *file, uid_t owner, gid_t group)
       __libc_missing_32bit_uids = 1;
     }
 #  endif /* __NR_chown32 */
+  if (((owner + 1) > (uid_t) ((__kernel_uid_t) -1U))
+      || ((group + 1) > (gid_t) ((__kernel_gid_t) -1U)))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   return INLINE_SYSCALL (chown, 3, file, owner, group);
 # endif
 }
