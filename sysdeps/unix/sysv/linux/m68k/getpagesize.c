@@ -28,8 +28,13 @@
 int
 __getpagesize ()
 {
+  extern size_t _dl_pagesize;
 #ifdef __NR_getpagesize
   int result;
+#endif
+
+  if (_dl_pagesize != 0)
+    return _dl_pagesize;
 
   result = INLINE_SYSCALL (getpagesize, 0);
   /* The only possible error is ENOSYS.  */
@@ -37,7 +42,7 @@ __getpagesize ()
     return result;
 #endif
 
-  return EXEC_PAGESIZE;
+  return 4096;
 }
 
 weak_alias (__getpagesize, getpagesize)
