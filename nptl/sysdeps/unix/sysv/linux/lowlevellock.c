@@ -80,8 +80,11 @@ hidden_proto (__lll_timedlock_wait)
 int
 lll_unlock_wake_cb (int *futex)
 {
-  if (__lll_add (futex, 1) + 1 != 0)
-    lll_futex_wake (futex, 1);
+  if (__lll_add (futex, -1) - 1 != 0)
+    {
+      *futex = 0;
+      lll_futex_wake (futex, 1);
+    }
 
   return 0;
 }
@@ -93,7 +96,7 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 {
   int tid;
 
-  if (abstime == NULL || abstime->tv_nsec >= 1000000000)
+  if (abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
   /* Repeat until thread terminated.  */

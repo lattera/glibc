@@ -226,7 +226,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
             __asm __volatile ("cmpl $0, __libc_multiple_threads(%%rip)\n\t"   \
 			      "je 0f\n\t"				      \
 			      "lock\n"					      \
-			      "0:\incl %0\n\t"			      \
+			      "0:\tincl %0\n\t"			      \
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleaq %0, %%rdi\n\t"			      \
