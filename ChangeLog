@@ -1,5 +1,8 @@
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/euc-jp.c: Map characters in C1 area to itself.
+	* iconvdata/euc-kr.c: Likewise.
+
 	* stdio-common/vfprintf.c (process_string_arg): Check result of
 	wcrtomb call and bail out if it failed.
 

@@ -27,7 +27,7 @@
 static inline void
 euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 {
-  if (ch > 0x7f)
+  if (ch > 0x9f)
     {
       if (__builtin_expect (ucs4_to_ksc5601 (ch, cp, 2), 0)
 	  != __UNKNOWN_10646_CHAR)
@@ -75,12 +75,12 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	 ch = (uint32_t) inchar;					      \
     */									      \
 									      \
-    if (ch <= 0x7f)							      \
+    if (ch <= 0x9f)							      \
       /* Plain ASCII.  */						      \
       ++inptr;								      \
     /* 0xfe(->0x7e : row 94) and 0xc9(->0x59 : row 41) are		      \
        user-defined areas.  */						      \
-    else if (__builtin_expect (ch, 0xa1) <= 0xa0			      \
+    else if (__builtin_expect (ch, 0xa1) == 0xa0			      \
 	     || __builtin_expect (ch, 0xa1) > 0xfe			      \
 	     || __builtin_expect (ch, 0xa1) == 0xc9)			      \
       {									      \

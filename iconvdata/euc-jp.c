@@ -45,10 +45,9 @@
   {									      \
     uint32_t ch = *inptr;						      \
 									      \
-    if (ch <= 0x7f)							      \
+    if (ch < 0x8e || (ch >= 0x90 && ch <= 0x9f))			      \
       ++inptr;								      \
-    else if ((__builtin_expect (ch, 0xa1) <= 0xa0 && ch != 0x8e && ch != 0x8f)\
-	     || __builtin_expect (ch, 0xfe) > 0xfe)			      \
+    else if (ch == 0xff)						      \
       {									      \
 	/* This is illegal.  */						      \
 	if (! ignore_errors_p ())					      \
@@ -168,8 +167,8 @@
   {									      \
     uint32_t ch = get32 (inptr);					      \
 									      \
-    if (ch <= 0x7f)							      \
-      /* It's plain ASCII.  */						      \
+    if (ch < 0x8e || (ch >= 0x90 && ch <= 0x9f))			      \
+      /* It's plain ASCII or C1.  */					      \
       *outptr++ = ch;							      \
     else if (ch == 0xa5)						      \
       /* YEN sign => backslash  */					      \
