@@ -1,3 +1,9 @@
+2003-06-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Remove
+	hand-written CFI generation code.  Since ENTRY/END also initiated
+	CFI frames this caused two CFI sets to be generated.
+
 2003-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* cleanup_routine.c: New file.
