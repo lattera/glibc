@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1997.
 
@@ -29,7 +29,7 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
   tmp = __ieee_get_fp_control();
 
   /* Set all the bits that were called for.  */
-  tmp = tmp & ~FE_ALL_EXCEPT | *flagp & excepts & FE_ALL_EXCEPT;
+  tmp = (tmp & ~FE_ALL_EXCEPT) | (*flagp & excepts & FE_ALL_EXCEPT);
 
   /* And store it back.  */
   __ieee_set_fp_control(tmp);

@@ -1,5 +1,17 @@
 1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
  
+	* sysdeps/alpha/fpu/fsetexcptflg.c: Avoid -Wparentheses warning. 
+ 
+	* sysdeps/libm-ieee754/s_expm1.c (__expm1): Avoid -Wparentheses 
+	warning. 
+	* sysdeps/libm-ieee754/s_log1p.c (__log1p): Likewise. 
+	* sysdeps/libm-ieee754/e_logf.c (__ieee754_logf): Likewise. 
+	* sysdeps/libm-ieee754/s_expm1f.c (__expm1f): Likewise. 
+	* sysdeps/libm-ieee754/e_log.c (__ieee754_log): Likewise. 
+	* sysdeps/libm-ieee754/s_log1pf.c (__log1pf): Likewise. 
+
+1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
 	* sunrpc/svc_udp.c (svcudp_bufcreate): Declare len as socklen_t. 
 	(svcudp_recv): Likewise. 
  
