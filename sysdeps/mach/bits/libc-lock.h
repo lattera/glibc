@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Mach cthreads version.
-   Copyright (C) 1996,97,98,2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ typedef cthread_key_t __libc_key_t;
 /* Start a critical region with a cleanup function */
 #define __libc_cleanup_region_start(FCT, ARG)				    \
 {									    \
-  typeof (FCT) __save_FCT = FCT;					    \
+  typeof (***(FCT)) *__save_FCT = FCT;					    \
   typeof (ARG) __save_ARG = ARG;					    \
   /* close brace is in __libc_cleanup_region_end below. */
 
