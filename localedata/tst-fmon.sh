@@ -44,16 +44,17 @@ errcode=0
 while IFS="	" read locale format value expect; do
     case "$locale" in '#'*) continue ;; esac
     if [ -n "$format" ]; then
+	expect=`echo "$expect" | sed 's/^\"\(.*\)\"$/\1/'`
 	if LOCPATH=${common_objpfx}localedata \
 	   GCONV_PATH=${common_objpfx}/iconvdata \
 	   ${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
 	   "$locale" "$format" "$value" "$expect" ; then
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
-		 "Value: \"${value}\" Expect: \"${expect}\"  passed"
+		 "Value: \"${value}\" Expected: \"${expect}\"  passed"
 	else
 	    errcode=$?
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
-		 "Value: \"${value}\" Expect: \"${expect}\"    failed"
+		 "Value: \"${value}\" Expected: \"${expect}\"    failed"
 	fi
     fi
 done < $datafile

@@ -58,8 +58,8 @@ main (int argc, char *argv[])
   if (strcmp (s, argv[4]) != 0)
     {
       printf ("\
-locale: \"%s\", format: \"%s\", expected: \"%s\", got: \"%s\" => %s\n",
-	      argv[1], argv[2], argv[4], s,
+Locale: \"%s\" Format: \"%s\" Value: \"%s\" Recieved: \"%s\" Expected: \"%s\" => %s\n",
+	      argv[1], argv[2], argv[3], s, argv[4],
 	      strcmp (s, argv[4]) != 0 ? "false" : "correct");
       exit (EXIT_FAILURE);
     }

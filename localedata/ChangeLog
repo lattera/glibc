@@ -1,3 +1,35 @@
+2003-11-30  Petter Reinholdtsen  <pere@hungry.com>
+
+	* tst-fmon.sh: Allow quotes around the result string, to make it
+	easier to see important whitespace.
+	* tst-fmon.data: Likewise.
+
+	* tst-fmon.sh: Clean up output, unify capitalization and output order.
+	* tst-fmon.c: Likewise.
+
+	* tst-fmon.data: Add test for international currency formatting.
+	* tst-fmon-locales/tstfmon_n01y12: Add definitions for int_* fields.
+	* tst-fmon-locales/tstfmon_n02n40: Likewise.
+	* tst-fmon-locales/tstfmon_n10y31: Likewise.
+	* tst-fmon-locales/tstfmon_n11y41: Likewise.
+	* tst-fmon-locales/tstfmon_n12y11: Likewise.
+	* tst-fmon-locales/tstfmon_n20n32: Likewise.
+	* tst-fmon-locales/tstfmon_n30y20: Likewise.
+	* tst-fmon-locales/tstfmon_n41n00: Likewise.
+	* tst-fmon-locales/tstfmon_y01y10: Likewise.
+	* tst-fmon-locales/tstfmon_y02n22: Likewise.
+	* tst-fmon-locales/tstfmon_y22n42: Likewise.
+	* tst-fmon-locales/tstfmon_y30y21: Likewise.
+	* tst-fmon-locales/tstfmon_y32n31: Likewise.
+	* tst-fmon-locales/tstfmon_y40y00: Likewise.
+	* tst-fmon-locales/tstfmon_y42n21: Likewise.
+
+	* locales/en_US: Correct spacing for international
+	currency formatting, now that strfmon() works better.
+
+	* locales/ja_JP: Correct currency position and
+	spacing now that strfmon() work better.
+
 2003-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/af_ZA: Add ISO 3166 information.

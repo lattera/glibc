@@ -14894,8 +14894,10 @@ p_cs_precedes		1
 p_sep_by_space		0
 n_cs_precedes		1
 n_sep_by_space		0
-p_sign_posn		1
+p_sign_posn		4
 n_sign_posn		4
+int_p_sep_by_space	2
+int_n_sep_by_space	2
 END LC_MONETARY
 
 

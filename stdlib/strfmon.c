@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -128,6 +128,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	__long_double_t ldbl;
       }
       fpnum;
+      int int_format;
       int print_curr_symbol;
       int left_prec;
       int left_pad;
@@ -172,6 +173,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	}
 
       /* Defaults for formatting.  */
+      int_format = 0;			/* Use international curr. symbol */
       print_curr_symbol = 1;		/* Print the currency symbol.  */
       left_prec = -1;			/* No left precision specified.  */
       right_prec = -1;			/* No right precision specified.  */
@@ -232,13 +234,6 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	    }
 	  break;
 	}
-
-      /* If not specified by the format string now find the values for
-	 the format specification.  */
-      if (p_sign_posn == -1)
-	p_sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
-      if (n_sign_posn == -1)
-	n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
 
       if (isdigit (*fmt))
 	{
@@ -305,36 +300,47 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	}
 
       /* Handle format specifier.  */
+      char int_symbol[4];
       switch (*fmt++)
 	{
-	case 'i':		/* Use international currency symbol.  */
-	  currency_symbol = _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
+	case 'i': {		/* Use international currency symbol.  */
+	  const char *int_curr_symbol;
+
+	  int_curr_symbol = _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
+	  strncpy(int_symbol, int_curr_symbol, 3);
+	  int_symbol[3] = '\0';
+
 	  currency_symbol_len = 3;
-	  space_char = currency_symbol[3];
-	  if (right_prec == -1)
-	    {
-	      if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == CHAR_MAX)
-		right_prec = 2;
-	      else
-		right_prec = *_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS);
-	    }
+	  currency_symbol = &int_symbol[0];
+	  space_char = int_curr_symbol[3];
+	  int_format = 1;
 	  break;
+	}
 	case 'n':		/* Use national currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, CURRENCY_SYMBOL);
 	  currency_symbol_len = strlen (currency_symbol);
 	  space_char = ' ';
-	  if (right_prec == -1)
-	    {
-	      if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == CHAR_MAX)
-		right_prec = 2;
-	      else
-		right_prec = *_NL_CURRENT (LC_MONETARY, FRAC_DIGITS);
-	    }
+	  int_format = 0;
 	  break;
 	default:		/* Any unrecognized format is an error.  */
 	  __set_errno (EINVAL);
 	  va_end (ap);
 	  return -1;
+	}
+
+      /* If not specified by the format string now find the values for
+	 the format specification.  */
+      if (p_sign_posn == -1)
+	p_sign_posn = *_NL_CURRENT (LC_MONETARY, int_format ? INT_P_SIGN_POSN : P_SIGN_POSN);
+      if (n_sign_posn == -1)
+	n_sign_posn = *_NL_CURRENT (LC_MONETARY, int_format ? INT_N_SIGN_POSN : N_SIGN_POSN);
+
+      if (right_prec == -1)
+	{
+	  right_prec = *_NL_CURRENT (LC_MONETARY, int_format ? INT_FRAC_DIGITS : FRAC_DIGITS);
+
+	  if (right_prec == CHAR_MAX)
+	    right_prec = 2;
 	}
 
       /* If we have to print the digits grouped determine how many
@@ -369,27 +375,27 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	     negative sign we use a '-'.  */
 	  if (*sign_string == '\0')
 	    sign_string = (const char *) "-";
-	  cs_precedes = *_NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
-	  sep_by_space = *_NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
+	  cs_precedes = *_NL_CURRENT (LC_MONETARY, int_format ? INT_N_CS_PRECEDES : N_CS_PRECEDES);
+	  sep_by_space = *_NL_CURRENT (LC_MONETARY, int_format ? INT_N_SEP_BY_SPACE : N_SEP_BY_SPACE);
 	  sign_posn = n_sign_posn;
 
 	  other_sign_string = _NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
-	  other_cs_precedes = *_NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
-	  other_sep_by_space = *_NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
+	  other_cs_precedes = *_NL_CURRENT (LC_MONETARY, int_format ? INT_P_CS_PRECEDES : P_CS_PRECEDES);
+	  other_sep_by_space = *_NL_CURRENT (LC_MONETARY, int_format ? INT_P_SEP_BY_SPACE : P_SEP_BY_SPACE);
 	  other_sign_posn = p_sign_posn;
 	}
       else
 	{
 	  sign_string = _NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
-	  cs_precedes = *_NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
-	  sep_by_space = *_NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
+	  cs_precedes = *_NL_CURRENT (LC_MONETARY, int_format ? INT_P_CS_PRECEDES : P_CS_PRECEDES);
+	  sep_by_space = *_NL_CURRENT (LC_MONETARY, int_format ? INT_P_SEP_BY_SPACE : P_SEP_BY_SPACE);
 	  sign_posn = p_sign_posn;
 
 	  other_sign_string = _NL_CURRENT (LC_MONETARY, NEGATIVE_SIGN);
 	  if (*other_sign_string == '\0')
 	    other_sign_string = (const char *) "-";
-	  other_cs_precedes = *_NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
-	  other_sep_by_space = *_NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
+	  other_cs_precedes = *_NL_CURRENT (LC_MONETARY, int_format ? INT_N_CS_PRECEDES : N_CS_PRECEDES);
+	  other_sep_by_space = *_NL_CURRENT (LC_MONETARY, int_format ? INT_N_SEP_BY_SPACE : N_SEP_BY_SPACE);
 	  other_sign_posn = n_sign_posn;
 	}
 

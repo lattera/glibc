@@ -1,5 +1,5 @@
 # Test data for test-strfmon, which checks it's implementation in glibc
-# Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 2000, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 #
@@ -28,6 +28,8 @@
 # #2    format string which is fed into strfmon
 # #3    double value that is used for formatting
 # #4    the expected result (may contain trailing spaces!)
+#       This field might be enclosed with "" to make it easier to see
+#       the white space
 #
 # First the implementation without any locale-dependent data
 # - no currency symbol is printed, formatting is somewhat standard
@@ -236,3 +238,113 @@ tstfmon_y42n21		%11n	123.45		  $ +123.45
 tstfmon_y42n21		%11n	-123.45		  123.45 $-
 tstfmon_y42n21		%^=*#5n	123.45		$ +**123.45
 tstfmon_y42n21		%^=*#5n	-123.45		   **123.45 $-
+#
+# check all int_cs_precedes/int_sign_posn/int_sep_by_space
+# combinations using special test locales.  The six characters after
+# the "_" indicate these three values for positive and then negative
+# quantities.
+#
+tstfmon_n01y12		%i	123.45		"123.45 USC"
+tstfmon_n01y12		%i	-123.45		"- USC123.45"
+tstfmon_n01y12		%13i	123.45		"   123.45 USC"
+tstfmon_n01y12		%13i	-123.45		"  - USC123.45"
+tstfmon_n01y12		%^=*#5i	123.45		"     **123.45 USC"
+tstfmon_n01y12		%^=*#5i	-123.45		"- USC**123.45"
+#
+tstfmon_n02n40		%i	123.45		"123.45USC"
+tstfmon_n02n40		%i	-123.45		"123.45USC-"
+tstfmon_n02n40		%13i	123.45		"    123.45USC"
+tstfmon_n02n40		%13i	-123.45		"   123.45USC-"
+tstfmon_n02n40		%^=*#5i	123.45		"**123.45USC"
+tstfmon_n02n40		%^=*#5i	-123.45		"**123.45USC-"
+#
+tstfmon_n10y31		%i	123.45		"+123.45USC"
+tstfmon_n10y31		%i	-123.45		"-USC 123.45"
+tstfmon_n10y31		%13i	123.45		"   +123.45USC"
+tstfmon_n10y31		%13i	-123.45		"  -USC 123.45"
+tstfmon_n10y31		%^=*#5i	123.45		"    +**123.45USC"
+tstfmon_n10y31		%^=*#5i	-123.45		"-USC **123.45"
+#
+tstfmon_n11y41		%i	123.45		"+123.45 USC"
+tstfmon_n11y41		%i	-123.45		"USC- 123.45"
+tstfmon_n11y41		%13i	123.45		"  +123.45 USC"
+tstfmon_n11y41		%13i	-123.45		"  USC- 123.45"
+tstfmon_n11y41		%^=*#5i	123.45		"    +**123.45 USC"
+tstfmon_n11y41		%^=*#5i	-123.45		"USC- **123.45"
+#
+tstfmon_n12y11		%i	123.45		"+123.45USC"
+tstfmon_n12y11		%i	-123.45		"-USC 123.45"
+tstfmon_n12y11		%13i	123.45		"   +123.45USC"
+tstfmon_n12y11		%13i	-123.45		"  -USC 123.45"
+tstfmon_n12y11		%^=*#5i	123.45		"    +**123.45USC"
+tstfmon_n12y11		%^=*#5i	-123.45		"-USC **123.45"
+#
+tstfmon_n20n32		%i	123.45		"123.45USC+"
+tstfmon_n20n32		%i	-123.45		"123.45- USC"
+tstfmon_n20n32		%13i	123.45		"   123.45USC+"
+tstfmon_n20n32		%13i	-123.45		"  123.45- USC"
+tstfmon_n20n32		%^=*#5i	123.45		"**123.45USC+"
+tstfmon_n20n32		%^=*#5i	-123.45		"**123.45- USC"
+#
+tstfmon_n30y20		%i	123.45		"123.45+USC"
+tstfmon_n30y20		%i	-123.45		"USC123.45-"
+tstfmon_n30y20		%13i	123.45		"   123.45+USC"
+tstfmon_n30y20		%13i	-123.45		"   USC123.45-"
+tstfmon_n30y20		%^=*#5i	123.45		"   **123.45+USC"
+tstfmon_n30y20		%^=*#5i	-123.45		"USC**123.45-"
+#
+tstfmon_n41n00		%i	123.45		"123.45 USC+"
+tstfmon_n41n00		%i	-123.45		"(123.45USC)"
+tstfmon_n41n00		%13i	123.45		"  123.45 USC+"
+tstfmon_n41n00		%13i	-123.45		"  (123.45USC)"
+tstfmon_n41n00		%^=*#5i	123.45		" **123.45 USC+"
+tstfmon_n41n00		%^=*#5i	-123.45		"(**123.45USC)"
+#
+tstfmon_y01y10		%i	123.45		"USC 123.45"
+tstfmon_y01y10		%i	-123.45		"-USC123.45"
+tstfmon_y01y10		%13i	123.45		"   USC 123.45"
+tstfmon_y01y10		%13i	-123.45		"   -USC123.45"
+tstfmon_y01y10		%^=*#5i	123.45		"USC **123.45"
+tstfmon_y01y10		%^=*#5i	-123.45		"-USC**123.45"
+#
+tstfmon_y02n22		%i	123.45		"USC123.45"
+tstfmon_y02n22		%i	-123.45		"123.45USC O/D"
+tstfmon_y02n22		%12i	123.45		"   USC123.45"
+tstfmon_y02n22		%12i	-123.45		"123.45USC O/D"
+tstfmon_y02n22		%^=*#5i	123.45		"USC**123.45"
+tstfmon_y02n22		%^=*#5i	-123.45		"   **123.45USC O/D"
+#
+tstfmon_y22n42		%i	123.45		"USC123.45+"
+tstfmon_y22n42		%i	-123.45		"123.45USC -"
+tstfmon_y22n42		%13i	123.45		"   USC123.45+"
+tstfmon_y22n42		%13i	-123.45		"  123.45USC -"
+tstfmon_y22n42		%^=*#5i	123.45		"USC**123.45+"
+tstfmon_y22n42		%^=*#5i	-123.45		"   **123.45USC -"
+#
+tstfmon_y30y21		%i	123.45		"+USC123.45"
+tstfmon_y30y21		%i	-123.45		"USC 123.45-"
+tstfmon_y30y21		%13i	123.45		"   +USC123.45"
+tstfmon_y30y21		%13i	-123.45		"  USC 123.45-"
+tstfmon_y30y21		%^=*#5i	123.45		"+USC**123.45"
+tstfmon_y30y21		%^=*#5i	-123.45		"USC **123.45-"
+#
+tstfmon_y32n31		%i	123.45		"+ USC123.45"
+tstfmon_y32n31		%i	-123.45		"123.45 -USC"
+tstfmon_y32n31		%13i	123.45		"  + USC123.45"
+tstfmon_y32n31		%13i	-123.45		"  123.45 -USC"
+tstfmon_y32n31		%^=*#5i	123.45		"+ USC**123.45"
+tstfmon_y32n31		%^=*#5i	-123.45		"     **123.45 -USC"
+#
+tstfmon_y40y00		%i	123.45		"USC+123.45"
+tstfmon_y40y00		%i	-123.45		"(USC123.45)"
+tstfmon_y40y00		%13i	123.45		"   USC+123.45"
+tstfmon_y40y00		%13i	-123.45		"  (USC123.45)"
+tstfmon_y40y00		%^=*#5i	123.45		"USC+**123.45"
+tstfmon_y40y00		%^=*#5i	-123.45		"(USC**123.45)"
+#
+tstfmon_y42n21		%i	123.45		"USC +123.45"
+tstfmon_y42n21		%i	-123.45		"123.45 USC-"
+tstfmon_y42n21		%13i	123.45		"  USC +123.45"
+tstfmon_y42n21		%13i	-123.45		"  123.45 USC-"
+tstfmon_y42n21		%^=*#5i	123.45		"USC +**123.45"
+tstfmon_y42n21		%^=*#5i	-123.45		"     **123.45 USC-"

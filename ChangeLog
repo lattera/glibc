@@ -1,3 +1,10 @@
+2003-11-30  Petter Reinholdtsen  <pere@hungry.com>
+
+	* stdlib/strfmon.c: Correct formatting of international currency
+	values.  The international currency formatting should prefer the
+	int_* values if they are set for a locale, and use the domestic
+	values if the int_* values are unset.
+
 2003-12-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/Makefile (distribute): Add BOOST.tests.
