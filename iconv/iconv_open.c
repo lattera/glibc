@@ -1,5 +1,5 @@
 /* Get descriptor for character set conversion.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,48 +18,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <ctype.h>
 #include <errno.h>
 #include <iconv.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <gconv_int.h>
-
-
-static inline void
-strip (char *wp, const char *s)
-{
-  int slash_count = 0;
-
-  while (*s != '\0')
-    {
-      if (isalnum (*s) || *s == '_' || *s == '-' || *s == '.')
-	*wp++ = toupper (*s);
-      else if (*s == '/')
-	{
-	  if (++slash_count == 3)
-	    break;
-	  *wp++ = '/';
-	}
-      ++s;
-    }
-
-  while (slash_count++ < 2)
-    *wp++ = '/';
-
-  *wp = '\0';
-}
-
-
-static char *
-upstr (char *dst, const char *str)
-{
-  char *cp = dst;
-  while ((*cp++ = toupper (*str++)) != '\0')
-    /* nothing */;
-  return dst;
-}
+#include "gconv_charset.h"
 
 
 iconv_t
