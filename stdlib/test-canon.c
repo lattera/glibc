@@ -28,6 +28,9 @@
 #include <unistd.h>
 #include <sys/param.h>
 
+#ifndef PATH_MAX
+# define PATH_MAX 4096
+#endif
 static char	cwd[PATH_MAX];
 static size_t	cwd_len;
 

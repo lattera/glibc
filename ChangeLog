@@ -6,6 +6,10 @@
 	* sysvipc/ftok.c: Likewise.
 	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
 
+	* stdlib/test-canon.c: Define PATH_MAX if the system does not.
+	* string/stratcliff.c: Use MAP_ANON instead of MAP_ANONYMOUS.
+	Patch by UCHIYAMA Yasushi <uch@nop.or.jp>.
+
 1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
  
 	* sysdeps/alpha/fpu/fsetexcptflg.c: Avoid -Wparentheses warning. 

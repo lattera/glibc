@@ -43,9 +43,9 @@ main (int argc, char *argv[])
   int result = 0;
 
   adr = (char *) mmap (NULL, 3 * size, PROT_READ|PROT_WRITE,
-		       MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+		       MAP_PRIVATE|MAP_ANON, -1, 0);
   dest = (char *) mmap (NULL, 3*size, PROT_READ|PROT_WRITE,
-			MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+			MAP_PRIVATE|MAP_ANON, -1, 0);
   if (adr == MAP_FAILED || dest == MAP_FAILED)
     {
       if (errno == ENOSYS)
