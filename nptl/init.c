@@ -56,15 +56,9 @@
 #endif
 
 
-/* Default stack size.  */
-size_t __default_stacksize attribute_hidden;
-
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
 size_t __static_tls_align_m1;
-
-/* Flag whether the machine is SMP or not.  */
-int __is_smp attribute_hidden;
 
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;

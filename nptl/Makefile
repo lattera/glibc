@@ -30,7 +30,7 @@ install-lib-ldscripts := libpthread.so
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation
 shared-only-routines = forward
 
-libpthread-routines = init events version \
+libpthread-routines = init vars events version \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_self pthread_equal pthread_yield \

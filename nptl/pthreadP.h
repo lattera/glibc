@@ -278,7 +278,14 @@ extern int *__libc_multiple_threads_ptr attribute_hidden;
 #endif
 
 /* Find a thread given its TID.  */
-extern struct pthread *__find_thread_by_id (pid_t tid) attribute_hidden;
+extern struct pthread *__find_thread_by_id (pid_t tid) attribute_hidden
+#ifdef SHARED
+;
+#else
+weak_function;
+#define __find_thread_by_id(tid) \
+  (__find_thread_by_id ? (__find_thread_by_id) (tid) : (struct pthread *) NULL)
+#endif
 
 extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
@@ -449,5 +456,11 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 extern void __nptl_deallocate_tsd (void) attribute_hidden;
 
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
+
+#ifdef SHARED
+# define PTHREAD_STATIC_FN_REQUIRE(name)
+#else
+# define PTHREAD_STATIC_FN_REQUIRE(name) __asm (".globl " #name);
+#endif
 
 #endif	/* pthreadP.h */

@@ -55,11 +55,6 @@ unsigned int __nptl_nthreads = 1;
 #include "createthread.c"
 
 
-/* Table of the key information.  */
-struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
-  __attribute__ ((nocommon));
-hidden_data_def (__pthread_keys)
-
 struct pthread *
 internal_function
 __find_in_stack_list (pd)
@@ -513,3 +508,14 @@ compat_symbol (libpthread, __pthread_create_2_0, pthread_create,
 /* Information for libthread_db.  */
 
 #include "../nptl_db/db_info.c"
+
+/* If pthread_create is present, libgcc_eh.a and libsupc++.a expects some other POSIX thread
+   functions to be present as well.  */
+PTHREAD_STATIC_FN_REQUIRE (pthread_mutex_lock)
+PTHREAD_STATIC_FN_REQUIRE (pthread_mutex_unlock)
+
+PTHREAD_STATIC_FN_REQUIRE (pthread_once)
+
+PTHREAD_STATIC_FN_REQUIRE (pthread_key_create)
+PTHREAD_STATIC_FN_REQUIRE (pthread_setspecific)
+PTHREAD_STATIC_FN_REQUIRE (pthread_getspecific)

@@ -1,3 +1,18 @@
+2004-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (libpthread-routines): Add vars.
+	* sysdeps/pthread/createthread.c (__pthread_multiple_threads): Remove.
+	* init.c (__default_stacksize, __is_smp): Remove.
+	* vars.c: New file.
+	* pthreadP.h (__find_thread_by_id): If !SHARED, add weak_function
+	and define a wrapper macro.
+	(PTHREAD_STATIC_FN_REQUIRE): Define.
+	* allocatestack.c (__find_thread_by_id): Undefine.
+	* pthread_create (__pthread_keys): Remove.
+	(pthread_mutex_lock, pthread_mutex_unlock, pthread_once,
+	pthread_key_create, pthread_setspecific, pthread_getspecific): Add
+	PTHREAD_STATIC_FN_REQUIRE.
+
 2004-11-18  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/tls.h (DB_THREAD_SELF): Set the correct bias

@@ -42,8 +42,6 @@
 
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
-/* Variable set to a nonzero value if more than one thread runs or ran.  */
-int __pthread_multiple_threads attribute_hidden;
 /* Pointer to the corresponding variable in libc.  */
 int *__libc_multiple_threads_ptr attribute_hidden;
 #endif
