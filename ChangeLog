@@ -1,5 +1,8 @@
 2003-08-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/bits/string2.h (__STRING2_COPY_TYPE): Add attribute to
+	the type, not to name.
+
 	* stdio-common/test-vfprintf.c (main): Don't write temporary file
 	into source directory.
 
