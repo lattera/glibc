@@ -1,3 +1,18 @@
+2001-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/tst-svc.input: Add two more test cases.
+	* string/tst-svc.expect: Modify to reflect new test cases.
+
+2001-02-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_local, gaih_inet): Replace all
+	tp->name tests with tp->name[0] tests.
+
+2001-01-29  Ben Collins  <bcollins@debian.org>
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_gethostton_r):
+	Fix check for name == NULL.
+
 2001-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile: Add rules to build and run initfirst test.
