@@ -1,3 +1,7 @@
+2004-09-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-cancel4.c (tf_waitid): Use WEXITED flag bit if available.
+
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h (pthread_once): Remove __THROW since
