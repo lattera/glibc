@@ -1,5 +1,7 @@
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/clock_nanosleep.c (CPUCLOCK_P): Fix definition.
+
 	* include/features.h (__USE_XOPEN2K): Define also for
 	_POSIX_C_SOURCE>=200112L.
 
