@@ -1,5 +1,11 @@
 2003-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/ftwtest-sh: Add test for case of symlink to nonexisting file
+	given as start file.
+
+	* io/ftw.c (ftw_startup): Use correct name in check for symlink
+	without existing target.  Patch by Jim Meyering.
+
 	* Makerules (build-shlib-helper): Don't use -z defs linker option
 	if no-z-defs is defined either.
 

@@ -1,3 +1,15 @@
+2003-01-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO): Setup
+	backchain in pseudo_cancel.  Minor code improvements.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO):
+	Likewise.
+
+2003-01-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: New file.
+
 2002-01-12  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: New file.

@@ -182,6 +182,17 @@ base = "ftwtest.d/./foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $
 EOF
 rm $testout
 
+curwd=`/bin/pwd 2>/dev/null || /usr/bin/pwd`
+cd "$tmp"
+LD_LIBRARY_PATH=$objpfx $ldso $testprogram --chdir ftwtest.d/foo/lvl1/link@1 |
+    sort > $testout
+cd "$curwd"
+
+cat <<EOF | diff -u $testout - || exit 1
+base = "ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 0
+EOF
+rm $testout
+
 LD_LIBRARY_PATH=$objpfx $ldso $testprogram --early-exit $tmpdir |
     sort > $testout
 

@@ -594,7 +594,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	{
 	  if (!(flags & FTW_PHYS)
 	      && errno == ENOENT
-	      && LXSTAT (_STAT_VER, dir, &st) == 0
+	      && LXSTAT (_STAT_VER, name, &st) == 0
 	      && S_ISLNK (st.st_mode))
 	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				   &data.ftw);
