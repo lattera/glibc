@@ -1,3 +1,7 @@
+2000-06-23  Andreas Jaeger  <aj@suse.de>
+
+	* config.h.in: Don't use regparm with bounded pointers.
+
 2000-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/grouping.h: Correctly handle multibyte thousands
