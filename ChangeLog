@@ -1,3 +1,9 @@
+2002-03-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/bits/nan.h: New file.  Copy from generic one with
+	changes for NaNs on MIPS.
+	Patch by Hartvig Ekner <hartvige@mips.com>.
+
 2002-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/grpcache.c (addgrbyname): Improve buffer allocate with alloca.
