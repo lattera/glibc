@@ -1,3 +1,7 @@
+2001-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/string.h: Replace const in attribute list with __const__.
+
 2001-04-16  Roland McGrath  <roland@frob.com>
 
 	* grp/initgroups.c (initgroups) [NGROUPS_MAX != 0]: Always use sysconf
