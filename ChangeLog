@@ -1,5 +1,9 @@
 2000-09-26  Andreas Jaeger  <aj@suse.de>
 
+	* include/langinfo.h (__nl_langinfo_l): Add prototype.
+
+2000-09-26  Andreas Jaeger  <aj@suse.de>
+
 	* misc/mkstemp64.c: New file.
 	* misc/Makefile (routines): Add mkstemp64.
 	* stdlib/stdlib.h: Add prototype and redirection magic.
