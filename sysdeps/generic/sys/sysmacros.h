@@ -24,14 +24,8 @@
 
    The problem here is that compilers other than GCC probably don't
    have the `long long' type and so `dev_t' is actually an array.  */
-#if defined __GNUC__ && __GNUC__ >= 2
-# define major(dev) ((int)(((dev) >> 8) & 0xff))
-# define minor(dev) ((int)((dev) & 0xff))
-# define makedev(major, minor) (((major) << 8) | (minor))
-#else
-# define major(dev) (((dev).__val[0] >> 8) & 0xff)
-# define minor(dev) ((dev).__val[0] & 0xff)
-# define makedev(major, minor) { (((major) << 8) | (minor)), 0 }
-#endif
+#define major(dev) ((int)(((unsigned int) (dev) >> 8) & 0xff))
+#define minor(dev) ((int)((dev) & 0xff))
+#define makedev(major, minor) (((major) << 8) | (minor))
 
 #endif /* sys/sysmacros.h */

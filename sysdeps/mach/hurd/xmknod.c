@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,7 @@
 #include <fcntl.h>
 #include "stdio-common/_itoa.h"
 #include <string.h>
-
-/* Temporary hack; this belongs in a header file, probably types.h. */
-#define major(x) ((int)(((unsigned int) (x) >> 8) & 0xff))
-#define minor(x) ((int)((x) & 0xff))
+#include <sys/types.h>
 
 
 /* Create a device file named FILE_NAME, with permission and special bits MODE

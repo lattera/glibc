@@ -2,6 +2,15 @@
 
 	* version.h (VERSION): Bump to 2.0.111.
 
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Pretty print.
+	* sysdeps/unix/sysv/linux/Dist: Remove sys/sysmacros.h.
+	* sysdeps/unix/sysv/linux/Makefile: Remove sys/sysmacros.h.
+	* posix/Makefile (headers): Add sys/sysmacros.h.
+	* posix/sys/types.h: Include sys/sysmacros.h for __USE_BSD.
+	* sysdeps/generic/sys/sysmacros.h: New file.
+	* sysdeps/mach/hurd/xmknod.c: Include sys/types.h and remove minor and
+	major definition.
+
 	* elf/dl-close.c: Rewrite the way adding to the global scope works
 	to handle error cases better than the last change.
 	The l_global flag is now only set when the object is actually
