@@ -1,5 +1,7 @@
 1999-08-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/categories.def: Use __YESSTR amd __NOSTR in definition.
+
 	* manual/argp.texi: Fixing language and typos.
 	* manual/conf.texi: Likewise.
 	* manual/contrib.texi: Likewise.

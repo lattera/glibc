@@ -169,8 +169,8 @@ DEFINE_CATEGORY
 (
  LC_MESSAGES, "LC_MESSAGES",
  (
-  DEFINE_ELEMENT (YESEXPR, "yesexpr", std, string)
-  DEFINE_ELEMENT (NOEXPR,  "noexpr",  std, string)
-  DEFINE_ELEMENT (YESSTR,  "yesstr",  opt, string)
-  DEFINE_ELEMENT (NOSTR,   "nostr",   opt, string)
+  DEFINE_ELEMENT (YESEXPR,  "yesexpr", std, string)
+  DEFINE_ELEMENT (NOEXPR,   "noexpr",  std, string)
+  DEFINE_ELEMENT (__YESSTR, "yesstr",  opt, string)
+  DEFINE_ELEMENT (__NOSTR,  "nostr",   opt, string)
   ), NO_POSTLOAD, NULL, messages_check, NULL)
