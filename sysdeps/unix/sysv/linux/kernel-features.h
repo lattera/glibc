@@ -214,6 +214,11 @@
 # define __ASSUME_SET_THREAD_AREA_SYSCALL	1
 #endif
 
+/* The vfork syscall on x86 was definitely available in 2.4.  */
+#if __LINUX_KERNEL_VERSION >= 132097 && defined __i386__
+# define __ASSUME_VFORK_SYSCALL		1
+#endif
+
 /* There are an infinite number of PA-RISC kernel versions numbered
    2.4.0.  But they've not really been released as such.  We require
    and expect the final version here.  */

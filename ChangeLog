@@ -70,6 +70,13 @@
 
 2002-10-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_VFORK_SYSCALL):
+	Define for 2.4+ kernels.
+
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Optimize for kernels which
+	are known to have the vfork syscall.  Don't confuse the CPUs
+	branch prediction unit by jumping to the return address.
+
 	* sysdeps/unix/sysv/linux/alpha/fpathconf.c (__fpathconf): Add
 	support for reiserfs and xfs.
 
