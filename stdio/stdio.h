@@ -631,11 +631,11 @@ extern void perror __P ((__const char *__s));
 
 #ifdef	__USE_BSD
 extern int sys_nerr;
-extern char *sys_errlist[];
+extern const char *const sys_errlist[];
 #endif
 #ifdef	__USE_GNU
 extern int _sys_nerr;
-extern char *_sys_errlist[];
+extern const char *const _sys_errlist[];
 #endif
 
 

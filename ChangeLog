@@ -1,5 +1,7 @@
 Wed Oct 25 14:23:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* stdio/stdio.h (sys_errlist, _sys_errlist): Declare const.
+
 	* sysdeps/unix/sysv/linux/stat.c: New file.
 	* sysdeps/unix/sysv/linux/fstat.c: New file.
 	* sysdeps/unix/sysv/linux/lstat.c: New file.

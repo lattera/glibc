@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <string.h>
 #include <hurd.h>
-#include <hurd/exec.h>
+#include <hurd/exec_startup.h>
 #include <sysdep.h>
 #include <hurd/threadvar.h>
 #include <unistd.h>
@@ -90,12 +90,16 @@ _hurd_startup (void **argptr, void (*main) (int *data))
       argslen = envlen = 0;
       data.dtablesize = data.portarraysize = data.intarraysize = 0;
 
-      err = __exec_startup (in_bootstrap,
-			    &data.stack_base, &data.stack_size,
-			    &data.flags, &args, &argslen, &env, &envlen,
-			    &data.dtable, &data.dtablesize,
-			    &data.portarray, &data.portarraysize,
-			    &data.intarray, &data.intarraysize);
+      err = __exec_startup_get_info (in_bootstrap,
+				     &data.user_entry,
+				     &data.phdr, &data.phdrsz,
+				     &data.stack_base, &data.stack_size,
+				     &data.flags,
+				     &args, &argslen,
+				     &env, &envlen,
+				     &data.dtable, &data.dtablesize,
+				     &data.portarray, &data.portarraysize,
+				     &data.intarray, &data.intarraysize);
       __mach_port_deallocate (__mach_task_self (), in_bootstrap);
     }
 
@@ -184,24 +188,6 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 	*d = data;
 	_hurd_init_dtable = d->dtable;
 	_hurd_init_dtablesize = d->dtablesize;
-
-    /* XXX hardcoded kludge until exec_startup changes */
-	{
-	  extern void _start();
-	  vm_address_t page = 0;
-	  vm_size_t size = 0;
-	  if (__vm_read (__mach_task_self (),
-			 0x08000000, __vm_page_size, &page, &size) == 0)
-	    {
-	      const Elf32_Ehdr *ehdr = (const void *) 0x08000000;
-	      d->phdr = 0x08000000 + ehdr->e_phoff;
-	      d->phdrsz = ehdr->e_phnum * ehdr->e_phentsize;
-	      d->user_entry = ehdr->e_entry;
-	      __vm_deallocate (__mach_task_self (), page, size);
-	    }
-	  else
-	    d->user_entry = (Elf32_Addr) &_start;
-	}
       }
 
     (*main) (argcptr);
