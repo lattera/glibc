@@ -25,14 +25,14 @@ struct sigcontext
   {
     /* These first members are machine-independent.  */
 
-    int sc_onstack;		/* Nonzero if running on sigstack.  */
+    long int sc_onstack;	/* Nonzero if running on sigstack.  */
     sigset_t sc_mask;		/* Blocked signals to restore.  */
 
     /* MiG reply port this thread is using.  */
-    unsigned int sc_reply_port;
+    unsigned long int sc_reply_port;
 
     /* Port this thread is doing an interruptible RPC on.  */
-    unsigned int sc_intr_port;
+    unsigned long int sc_intr_port;
 
     /* Error code associated with this signal (interpreted as `error_t').  */
     int sc_error;
@@ -41,16 +41,25 @@ struct sigcontext
        structure is written to be laid out identically to:
        {
          struct alpha_thread_state basic;
+         struct alpha_exc_state exc;
          struct alpha_float_state fpu;
        }
        trampoline.c knows this, so it must be changed if this changes.  */
 
-#define sc_alpha_thread_state sc_gs /* Beginning of correspondence.  */
+#define sc_alpha_thread_state sc_regs /* Beginning of correspondence.  */
     long int sc_regs[31];	/* General registers $0..$30.  */
     long int sc_pc;		/* Program counter.  */
-    long int sc_ps;		/* Processor status.  */
 
-    /* struct alpha_float_state */
+    /* struct mips_exc_state */
+#define sc_alpha_exc_state sc_badvaddr
+    unsigned long int sc_badvaddr;
+    unsigned int sc_cause;	/* Machine-level trap code.  */
+#define SC_CAUSE_SET_SSTEP	1
+    int sc_used_fpa;		/* Nonzero if FPU was used.  */
+
+    /* struct alpha_float_state
+       This is only filled in if sc_used_fpa is nonzero.  */
 #define sc_alpha_float_state sc_fpregs
-    long int sc_fpregs[32];	/* Floating point registers $f0..$f31.  */
+    double sc_fpregs[31];	/* Floating point registers $f0..$f30.  */
+    long int sc_fpcsr;		/* Floating point control/status register.  */
   };

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,14 @@ Cambridge, MA 02139, USA.  */
 
 #define LOSE asm volatile ("call_pal 0") /* halt */
 
-/* XXX SNARF_ARGS */
+#define START_MACHDEP \
+  asm ("_start:	mov	$30, $16\n" /* Put initial SP in a0.  */
+       "	br	$27, 1f\n" /* Load GP from PC.  */
+       "1:	ldgp	$29, 0($27)\n"
+       "	jmp	$26, _start0");	/* Jump to _start0; don't return.  */
+#define START_ARGS	char **sp
+#define SNARF_ARGS(argc, argv, envp) \
+  (envp = &(argv = &sp[1])[(argc = *(int *) sp) + 1])
 
 #define CALL_WITH_SP(fn, sp) \
   ({ register long int __fn = fn, __sp = (long int) sp; \
