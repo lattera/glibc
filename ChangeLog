@@ -4,6 +4,8 @@
 
 2003-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/bug14.c: Use official name for the locale.
+
 	* stdio-common/vfprintf.c [USE_IN_LIBIO]: Use _IO_cleanup_region_start
 	instead of __libc_cleanup_region_start and _IO_cleanup_region_end
 	instead of __libc_cleanup_region_end.

@@ -11,7 +11,7 @@ static const char string[] = "\
 int
 main (void)
 {
-  if (setlocale (LC_ALL, "de_DE.utf8") == NULL)
+  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
     {
       puts ("cannot set locale");
       exit (1);

@@ -1,5 +1,8 @@
 2003-01-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-cleanup2.
+	* tst-cleanup2.c: New file.
+
 	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_region_start):
 	Interpret first parameter correctly.
 
