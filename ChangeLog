@@ -17,6 +17,8 @@
 	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: New file.
 	* sysdeps/unix/sysv/linux/ia64/bits/socket.h: New file.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/socket.h: New file.
+	* inet/rcmd.c (rcmd_af): __ss_family is now ss_family.
+	(rresvport_af): Likewise.
 
 	* conform/data/sys/shm.h-data: SHMLBA is not required to by a constant.
 	* conform/conformtest.pl: Implement handling of symbol.

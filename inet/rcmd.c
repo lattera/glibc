@@ -235,7 +235,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 			goto bad;
 		}
 		s3 = accept(s2, (struct sockaddr *)&from, &len);
-		switch (from.__ss_family) {
+		switch (from.ss_family) {
 		case AF_INET:
 			rport = ntohs(((struct sockaddr_in *)&from)->sin_port);
 			break;
@@ -335,7 +335,7 @@ rresvport_af(alport, family)
 #ifdef SALEN
 	ss.__ss_len = len;
 #endif
-	ss.__ss_family = family;
+	ss.ss_family = family;
 
 	for (;;) {
 		*sport = htons((uint16_t) *alport);
