@@ -1,3 +1,10 @@
+2003-03-28  Roland McGrath  <roland@redhat.com>
+
+	* scripts/abilist.awk: When given -v combine=1, do parse_names and
+	emit a single output stream with lib name in stanza header lines.
+
+	* scripts/abilist.awk: Emit A for all *ABS* regardless of type.
+
 2003-03-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/bits/atomic.h [! __powerpc64__]

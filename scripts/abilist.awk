@@ -2,10 +2,10 @@
 # into a simple format that should not change when the ABI is not changing.
 
 BEGIN {
-  if (parse_names)
-    defout = "/dev/stderr";
-  else
-    defout = "/dev/stdout";
+  if (combine_fullname)
+    combine = 1;
+  if (combine)
+    parse_names = 1;
 }
 
 # Per-file header.
@@ -43,6 +43,7 @@ $2 == "g" || $2 == "w" && NF == 7 {
 
   if (version == "GLIBC_PRIVATE") next;
 
+  desc = "";
   if (type == "D" && $4 == ".tbss") {
     type = "T";
   }
@@ -50,7 +51,7 @@ $2 == "g" || $2 == "w" && NF == 7 {
     type = "O";
     size = "";
   }
-  else if (type == "DO" && $4 == "*ABS*") {
+  else if ($4 == "*ABS*") {
     type = "A";
     size = "";
   }
@@ -62,17 +63,16 @@ $2 == "g" || $2 == "w" && NF == 7 {
     size = "";
   }
   else {
-    print symbol, version, weak, "?", type, $4, $5 > defout;
-    next;
+    desc = symbol " " version " " weak " ? " type " " $4 " " $5;
   }
   if (size == " 0x") {
-    print symbol, version, weak, "?", type, $4, $5 > defout;
-    next;
+    desc = symbol " " version " " weak " ? " type " " $4 " " $5;
   }
 
   # Disabled -- weakness should not matter to shared library ABIs any more.
   #if (weak == "w") type = tolower(type);
-  desc = " " symbol " " type size;
+  if (desc == "")
+    desc = " " symbol " " type size;
 
   if (version in versions) {
     versions[version] = versions[version] "\n" desc;
@@ -87,11 +87,11 @@ $2 == "g" || $2 == "w" && NF == 7 {
 NF == 0 || /DYNAMIC SYMBOL TABLE/ || /file format/ { next }
 
 {
-  print "Don't grok this line:", $0 > defout
+  print "Don't grok this line:", $0
 }
 
 function emit(tofile) {
-  nverlist = 0;
+  nverslist = 0;
   for (version in versions) {
     if (nverslist == 0) {
       verslist = version;
@@ -119,6 +119,9 @@ function emit(tofile) {
     ++nverslist;
   }
 
+  if (combine)
+    tofile = 0;
+
   if (tofile) {
     out = prefix soname ".symlist";
     if (soname in outfiles)
@@ -137,8 +140,15 @@ function emit(tofile) {
       close(out);
       outpipe = "sort >> " out;
     }
-    else
+    else {
+      if (combine_fullname)
+	print prefix soname, version, sofullname;
+      else if (combine)
+	print prefix soname, version;
+      else
+	print version;
       outpipe = "sort";
+    }
     print versions[version] | outpipe;
     close(outpipe);
 
