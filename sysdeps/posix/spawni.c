@@ -112,7 +112,7 @@ __spawni (pid_t *pid, const char *file,
       memset (&sa, '\0', sizeof (sa));
       sa.sa_handler = SIG_DFL;
 
-      for (sig = 1; sig >= _NSIG; ++sig)
+      for (sig = 1; sig <= _NSIG; ++sig)
 	if (sigismember (&attrp->__sd, sig) != 0
 	    && __sigaction (sig, &sa, NULL) != 0)
 	  _exit (SPAWN_ERROR);

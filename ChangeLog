@@ -1,3 +1,16 @@
+2001-07-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/spawni.c: Fix typo when iterating over signal numbers.
+
+2001-07-16  Andreas Schwab  <schwab@suse.de>
+
+	* math/libm-test.inc (check_float_internal): Fix sign bit test of
+	infinities.
+
+2001-07-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/e_expl.c (__ieee754_expl): Make it PIC friendly.
+
 2001-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/obstack.c: Define __attribute__ for non-gcc compilers.

@@ -460,8 +460,8 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
   else if (isinf (computed) && isinf (expected))
     {
       /* Test for sign of infinities.  */
-      if (((exceptions & IGNORE_ZERO_INF_SIGN) == 0)
-	  && (isinf (computed) != isinf (expected)))
+      if ((exceptions & IGNORE_ZERO_INF_SIGN) == 0
+	  && signbit (computed) != signbit (expected))
 	{
 	  ok = 0;
 	  printf ("infinity has wrong sign.\n");
@@ -482,9 +482,9 @@ check_float_internal (const char *test_name, FLOAT computed, FLOAT expected,
 	ulp = diff / FUNC(ldexp) (1.0, FUNC(ilogb) (expected) - MANT_DIG);
       set_max_error (ulp, curr_max_error);
       print_diff = 1;
-      if (((exceptions & IGNORE_ZERO_INF_SIGN) == 0)
-	  && (computed == 0.0 && expected == 0.0
-	      && signbit(computed) != signbit (expected)))
+      if ((exceptions & IGNORE_ZERO_INF_SIGN) == 0
+	  && computed == 0.0 && expected == 0.0
+	  && signbit(computed) != signbit (expected))
 	ok = 0;
       else if (ulp == 0.0 || (ulp <= max_ulp && !ignore_max_ulp))
 	ok = 1;

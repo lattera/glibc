@@ -24,8 +24,8 @@
 
 #include <math_private.h>
 
-static long double __attribute__ ((unused)) c0 = 1.44268798828125L;
-static long double __attribute__ ((unused)) c1 = 7.05260771340735992468e-6L;
+static long double c0 = 1.44268798828125L;
+static long double c1 = 7.05260771340735992468e-6L;
 
 long double
 __ieee754_expl (long double x)
@@ -48,7 +48,7 @@ __ieee754_expl (long double x)
        "fld %%st(1)\n\t"        /* 2  x               */
        "frndint\n\t"            /* 2  xi              */
        "fld %%st(1)\n\t"        /* 3  i               */
-       "fldt c0\n\t"            /* 4  c0              */
+       "fldt %2\n\t"            /* 4  c0              */
        "fld %%st(2)\n\t"        /* 5  xi              */
        "fmul %%st(1),%%st\n\t"  /* 5  c0 xi           */
        "fsubp %%st,%%st(2)\n\t" /* 4  f = c0 xi  - i  */
@@ -56,7 +56,7 @@ __ieee754_expl (long double x)
        "fsub %%st(3),%%st\n\t"  /* 5  xf = x - xi     */
        "fmulp %%st,%%st(1)\n\t" /* 4  c0 xf           */
        "faddp %%st,%%st(1)\n\t" /* 3  f = f + c0 xf   */
-       "fldt c1\n\t"            /* 4                  */
+       "fldt %3\n\t"            /* 4                  */
        "fmul %%st(4),%%st\n\t"  /* 4  c1 * x          */
        "faddp %%st,%%st(1)\n\t" /* 3  f = f + c1 * x  */
        "f2xm1\n\t"		/* 3 2^(fract(x * log2(e))) - 1 */
@@ -72,6 +72,6 @@ __ieee754_expl (long double x)
        "fstp	%%st\n\t"
        "fldz\n\t"		/* Set result to 0.  */
        "2:\t\n"
-       : "=t" (res) : "0" (x) : "ax", "dx");
+       : "=t" (res) : "0" (x), "m" (c0), "m" (c1) : "ax", "dx");
   return res;
 }
