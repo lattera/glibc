@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -237,6 +237,11 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
+      if (result == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);
@@ -294,6 +299,11 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
+      if (result == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);

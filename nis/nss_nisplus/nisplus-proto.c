@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -296,21 +296,30 @@ _nss_nisplus_getprotobyname_r (const char *name, struct protoent *proto,
       sprintf (buf, "[name=%s],%s", name, tablename_val);
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
-      /* If we do not find it, try it as original name. But if the
-         database is correct, we should find it in the first case, too */
-      if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-	  || strcmp (result->objects.objects_val->EN_data.en_type,
-		     "protocols_tbl") != 0
-	  || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
-	sprintf (buf, "[cname=%s],%s", name, tablename_val);
-      else
-	sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
-		 tablename_val);
+      if (result != NULL)
+	{
+	  /* If we do not find it, try it as original name. But if the
+	     database is correct, we should find it in the first case, too */
+	  if ((result->status != NIS_SUCCESS
+	       && result->status != NIS_S_SUCCESS)
+	      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	      || strcmp (result->objects.objects_val->EN_data.en_type,
+			 "protocols_tbl") != 0
+	      || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
+	    sprintf (buf, "[cname=%s],%s", name, tablename_val);
+	  else
+	    sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
+		     tablename_val);
 
-      nis_freeresult (result);
-      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+	  nis_freeresult (result);
+	  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+	}
 
+      if (result == NULL)
+	{
+	  __set_errno (ENOMEM);
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);
@@ -365,6 +374,11 @@ _nss_nisplus_getprotobynumber_r (const int number, struct protoent *proto,
 
     result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
+    if (result == NULL)
+      {
+	__set_errno (ENOMEM);
+	return NSS_STATUS_TRYAGAIN;
+      }
     if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
       {
 	enum nss_status status = niserr2nss (result->status);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -319,21 +319,31 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
       sprintf (buf, "[name=%s],%s", name, tablename_val);
       result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
-      /* If we do not find it, try it as original name. But if the
-	 database is correct, we should find it in the first case, too */
-      if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-	  || strcmp (result->objects.objects_val[0].EN_data.en_type,
-		     "networks_tbl") != 0
-	  || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
-	sprintf (buf, "[cname=%s],%s", name, tablename_val);
-      else
-	sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
-		 tablename_val);
+      if (result != NULL)
+	{
+	  /* If we do not find it, try it as original name. But if the
+	     database is correct, we should find it in the first case, too */
+	  if ((result->status != NIS_SUCCESS
+	       && result->status != NIS_S_SUCCESS)
+	      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	      || strcmp (result->objects.objects_val[0].EN_data.en_type,
+			 "networks_tbl") != 0
+	      || (result->objects.objects_val[0].EN_data.en_cols.en_cols_len
+		  < 3))
+	    sprintf (buf, "[cname=%s],%s", name, tablename_val);
+	  else
+	    sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
+		     tablename_val);
 
-      nis_freeresult (result);
-      result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+	  nis_freeresult (result);
+	  result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+	}
 
+      if (result == NULL)
+	{
+	  __set_errno (ENOMEM);
+	  return NSS_STATUS_TRYAGAIN;
+	}
       retval = niserr2nss (result->status);
       if (retval != NSS_STATUS_SUCCESS)
 	{
@@ -402,6 +412,11 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
 	sprintf (buf, "[addr=%s],%s", buf2, tablename_val);
 	result = nis_list (buf, EXPAND_NAME, NULL, NULL);
 
+	if (result == NULL)
+	  {
+	    __set_errno (ENOMEM);
+	    return NSS_STATUS_TRYAGAIN;
+	  }
 	retval = niserr2nss (result->status);
 	if (retval != NSS_STATUS_SUCCESS)
 	  {

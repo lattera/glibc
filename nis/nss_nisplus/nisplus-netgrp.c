@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -153,7 +153,12 @@ _nss_nisplus_setnetgrent (const char *group, struct __netgrent *dummy)
 
   data = nis_list (buf, EXPAND_NAME, NULL, NULL);
 
-  if (niserr2nss (data->status) != NSS_STATUS_SUCCESS)
+  if (data == NULL)
+    {
+      __set_errno (ENOMEM);
+      status = NSS_STATUS_TRYAGAIN;
+    }
+  else if (niserr2nss (data->status) != NSS_STATUS_SUCCESS)
     {
       status = niserr2nss (data->status);
       nis_freeresult (data);

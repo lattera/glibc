@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -192,6 +192,11 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
+      if (result == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);

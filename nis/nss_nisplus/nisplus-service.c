@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -305,22 +305,31 @@ _nss_nisplus_getservbyname_r (const char *name, const char *protocol,
 	       tablename_val);
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
-      /* If we do not find it, try it as original name. But if the
-         database is correct, we should find it in the first case, too */
-      if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
-	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
-	  || strcmp (result->objects.objects_val->EN_data.en_type,
-		     "services_tbl") != 0
-	  || result->objects.objects_val->EN_data.en_cols.en_cols_len < 4)
-	sprintf (buf, "[cname=%s,proto=%s],%s", name, protocol,
-		 tablename_val);
-      else
-	sprintf (buf, "[cname=%s,proto=%s],%s",
-		 NISENTRYVAL (0, 0, result), protocol, tablename_val);
+      if (result != NULL)
+	{
+	  /* If we do not find it, try it as original name. But if the
+	     database is correct, we should find it in the first case, too */
+	  if ((result->status != NIS_SUCCESS
+	       && result->status != NIS_S_SUCCESS)
+	      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	      || strcmp (result->objects.objects_val->EN_data.en_type,
+			 "services_tbl") != 0
+	      || result->objects.objects_val->EN_data.en_cols.en_cols_len < 4)
+	    sprintf (buf, "[cname=%s,proto=%s],%s", name, protocol,
+		     tablename_val);
+	  else
+	    sprintf (buf, "[cname=%s,proto=%s],%s",
+		     NISENTRYVAL (0, 0, result), protocol, tablename_val);
 
-      nis_freeresult (result);
-      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+	  nis_freeresult (result);
+	  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+	}
 
+      if (result == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);
@@ -382,6 +391,11 @@ _nss_nisplus_getservbyport_r (const int number, const char *protocol,
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
+      if (result == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
 	  enum nss_status status = niserr2nss (result->status);

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -74,6 +74,11 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
   res = nis_list (buf, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
 		  NULL, NULL);
 
+  if (res == NULL)
+    {
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
   retval = niserr2nss (res->status);
 
   if (retval != NSS_STATUS_SUCCESS)
@@ -152,6 +157,11 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
   res = nis_list (buf, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
 		  NULL, NULL);
 
+  if (res == NULL)
+    {
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
   retval = niserr2nss (res->status);
 
   if (retval != NSS_STATUS_SUCCESS)
@@ -269,6 +279,11 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   /* XXX but we cant, for now. XXX */
   res = nis_list (sname, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
 		  NULL, NULL);
+  if (res == NULL)
+    {
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
   switch (res->status)
     {
     case NIS_SUCCESS:
@@ -337,6 +352,11 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   /* XXX but we cant, for now. XXX */
   res = nis_list (sname, USE_DGRAM+NO_AUTHINFO+FOLLOW_LINKS+FOLLOW_PATH,
 		  NULL, NULL);
+  if (res == NULL)
+    {
+      *errnop = ENOMEM;
+      return NSS_STATUS_TRYAGAIN;
+    }
   switch(res->status)
     {
     case NIS_NOTFOUND:

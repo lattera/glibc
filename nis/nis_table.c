@@ -176,8 +176,8 @@ nis_list (const_nis_name name, unsigned int flags,
       return res;
     }
 
-  if ((flags & EXPAND_NAME) &&
-      ibreq->ibr_name[strlen (ibreq->ibr_name) - 1] != '.')
+  if ((flags & EXPAND_NAME)
+      && ibreq->ibr_name[strlen (ibreq->ibr_name) - 1] != '.')
     {
       names = nis_getnames (ibreq->ibr_name);
       free (ibreq->ibr_name);
@@ -189,6 +189,12 @@ nis_list (const_nis_name name, unsigned int flags,
 	  return res;
 	}
       ibreq->ibr_name = strdup (names[name_nr]);
+      if (ibreq->ibr_name == NULL)
+	{
+	  nis_free_request (ibreq);
+	  NIS_RES_STATUS (res) = NIS_NOMEMORY;
+	  return res;
+	}
     }
   else
     {
@@ -269,6 +275,12 @@ nis_list (const_nis_name name, unsigned int flags,
 		++count_links;
 		ibreq->ibr_name =
 		  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
+		if (ibreq->ibr_name == NULL)
+		  {
+		    nis_free_request (ibreq);
+		    NIS_RES_STATUS (res) = NIS_NOMEMORY;
+		    return res;
+		  }
 		if (NIS_RES_OBJECT (res)->LI_data.li_attrs.li_attrs_len)
 		  if (ibreq->ibr_srch.ibr_srch_len == 0)
 		    {
@@ -309,6 +321,12 @@ nis_list (const_nis_name name, unsigned int flags,
 		if (ibreq->ibr_name == NULL || ibreq->ibr_name[0] == '\0')
 		  {
 		    ibreq->ibr_name = strdup ("");
+		    if (ibreq->ibr_name == NULL)
+		      {
+			nis_free_request (ibreq);
+			NIS_RES_STATUS (res) = NIS_NOMEMORY;
+			return res;
+		      }
 		    ++done;
 		  }
 		else
@@ -318,8 +336,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		    res = calloc (1, sizeof (nis_result));
 		    if (res == NULL || ibreq->ibr_name == NULL)
 		      {
-			if (res)
-			  free (res);
+			free (res);
 			nis_free_request (ibreq);
 			if (have_tablepath)
 			  free (tablepath);
@@ -364,6 +381,12 @@ nis_list (const_nis_name name, unsigned int flags,
 		      }
 		    else
 		      ibreq->ibr_name = strdup (ibreq->ibr_name);
+		    if (ibreq->ibr_name == NULL)
+		      {
+			nis_free_request (ibreq);
+			NIS_RES_STATUS (res) = NIS_NOMEMORY;
+			return res;
+		      }
 		  }
 	      }
 	    break;
@@ -394,9 +417,10 @@ nis_list (const_nis_name name, unsigned int flags,
 	    if (!first_try)
 	      {
 		/* Try the next domainname if we don't follow a link.  */
+		free (ibreq->ibr_name);
+		ibreq->ibr_name = NULL;
 		if (count_links)
 		  {
-		    free (ibreq->ibr_name);
 		    NIS_RES_STATUS (res) = NIS_LINKNAMEERROR;
 		    ++done;
 		    break;
@@ -407,7 +431,13 @@ nis_list (const_nis_name name, unsigned int flags,
 		    ++done;
 		    break;
 		  }
-		ibreq->ibr_name = names[name_nr];
+		ibreq->ibr_name = strdup (names[name_nr]);
+		if (ibreq->ibr_name == NULL)
+		  {
+		    nis_free_request (ibreq);
+		    NIS_RES_STATUS (res) = NIS_NOMEMORY;
+		    return res;
+		  }
 		first_try = 1; /* Try old binding at first */
 		goto again;
 	      }

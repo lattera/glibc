@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -167,11 +167,19 @@ internal_setaliasent (void)
 
   next_entry = 0;
   result = nis_list (tablename_val, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
-  status = niserr2nss (result->status);
-  if (status != NSS_STATUS_SUCCESS)
+  if (result == NULL)
     {
-      nis_freeresult (result);
-      result = NULL;
+      status = NSS_STATUS_TRYAGAIN;
+      __set_errno (ENOMEM);
+    }
+  else
+    {
+      status = niserr2nss (result->status);
+      if (status != NSS_STATUS_SUCCESS)
+	{
+	  nis_freeresult (result);
+	  result = NULL;
+	}
     }
   return status;
 }
@@ -280,6 +288,11 @@ _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
 
       result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
+      if (result == NULL)
+	{
+	  *errnop = ENOMEM;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	return niserr2nss (result->status);
 
