@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -43,6 +43,8 @@ _IO_vasprintf (result_ptr, format, args)
   _IO_lock_t lock;
 #endif
   int ret;
+  _IO_size_t needed;
+  _IO_size_t allocated;
   string = (char *) malloc (init_string_size);
   if (string == NULL)
     return -1;
@@ -58,9 +60,24 @@ _IO_vasprintf (result_ptr, format, args)
   ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
   if (ret < 0)
     return ret;
-  *result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base,
-				  (sf._sbf._f._IO_write_ptr
-				   - sf._sbf._f._IO_write_base) +1);
+  /* Only use realloc if the size we need is of the same order of
+     magnitude then the memory we allocated.  */
+  needed = sf._sbf._f._IO_write_ptr - sf._sbf._f._IO_write_base + 1;
+  allocated = sf._sbf._f._IO_write_end - sf._sbf._f._IO_write_base;
+  if ((allocated << 1) <= needed)
+    *result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base, needed);
+  else
+    {
+      *result_ptr = (char *) malloc (needed);
+      if (*result_ptr != NULL)
+	{
+	  memcpy (*result_ptr, sf._sbf._f._IO_buf_base, needed);
+	  free (sf._sbf._f._IO_buf_base);
+	}
+      else
+	/* We have no choice, use the buffer we already have.  */
+	*result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base, needed);
+    }
   if (*result_ptr == NULL)
     *result_ptr = sf._sbf._f._IO_buf_base;
   (*result_ptr)[sf._sbf._f._IO_write_ptr-sf._sbf._f._IO_write_base] = '\0';
