@@ -41,6 +41,7 @@ have-z-nodelete = @libc_cv_z_nodelete@
 have-z-nodlopen = @libc_cv_z_nodlopen@
 have-z-initfirst = @libc_cv_z_initfirst@
 have-initfini = @libc_cv_have_initfini@
+have-Bgroup = @libc_cv_Bgroup@
 need-nopic-initfini = @nopic_initfini@
 with-cvs = @with_cvs@
 old-glibc-headers = @old_glibc_headers@

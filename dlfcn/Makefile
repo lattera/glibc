@@ -79,3 +79,8 @@ $(objpfx)tstcxaatexit: $(libdl)
 $(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
 
 $(objpfx)modatexit.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(objpfx)libdl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a

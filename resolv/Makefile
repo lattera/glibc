@@ -76,12 +76,14 @@ CPPFLAGS += -Dgethostbyname=res_gethostbyname \
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
-$(objpfx)libresolv.so: $(common-objpfx)libc.so
+$(objpfx)libresolv.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 
 # The DNS NSS modules needs the resolver.
-$(objpfx)libnss_dns.so: $(objpfx)libresolv.so $(common-objpfx)libc.so
+$(objpfx)libnss_dns.so: $(objpfx)libresolv.so $(common-objpfx)libc.so \
+			$(common-objpfx)libc_nonshared.a
 
 # The asynchronous name lookup code needs the thread library.
-$(objpfx)libanl.so: $(common-objpfx)libc.so $(shared-thread-library)
+$(objpfx)libanl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
+		    $(shared-thread-library)
 
 $(objpfx)ga_test: $(objpfx)libanl.so $(shared-thread-library)

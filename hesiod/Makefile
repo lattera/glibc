@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -43,4 +43,5 @@ include ../Rules
 # the file service.
 $(objpfx)libnss_hesiod.so: $(common-objpfx)resolv/libresolv.so \
                            $(common-objpfx)nss/libnss_files.so \
-                           $(common-objpfx)libc.so
+                           $(common-objpfx)libc.so \
+			   $(common-objpfx)libc_nonshared.a

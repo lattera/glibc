@@ -727,13 +727,15 @@ extern int setlogin (__const char *__name) __THROW;
 #endif
 
 
-#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_UNIX98)
-
+#if defined __USE_BSD || defined __USE_XOPEN2K
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
 extern int gethostname (char *__name, size_t __len) __THROW;
+#endif
 
+
+#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_UNIX98)
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
 extern int sethostname (__const char *__name, size_t __len) __THROW;
@@ -784,7 +786,6 @@ extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
    redirects stdin, stdout, and stderr to /dev/null.  */
 extern int daemon (int __nochdir, int __noclose) __THROW;
-
 #endif /* Use BSD || X/Open.  */
 
 

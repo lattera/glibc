@@ -1,9 +1,34 @@
+2001-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules (build-shlib): Remove unnecessary slashes introduced in
+	last change.
+
+	* configure.in: Test for -Bgroup option of linker.
+	* config.make.in: Define have-Bgroup.
+
+	* conform/data/unistd.h-data: Require gethostname.
+	* posix/unistd.h: Make gethostname prototype available for
+	__USE_XOPEN2K.
+
+	* crypt/Makefile: When generating DSO link with libc_nonshared.a.
+	* debug/Makefile: Likewise.
+	* dlfcn/Makefile: Likewise.
+	* hesiod/Makefile: Likewise.
+	* iconvdata/extra-module.mk: Likewise.
+	* locale/Makefile: Likewise.
+	* login/Makefile: Likewise.
+	* math/Makefile: Likewise.
+	* nis/Makefile: Likewise.
+	* nss/Makefile: Likewise.
+	* resolv/Makefile: Likewise.
+	* rt/Makefile: Likewise.
+
 2001-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/Makefile (tests): Remove left-over comment.
 
-	* posix/unistd.h: Change type of second parameter back to size_t
-	as per upcoming XPG6.
+	* posix/unistd.h (gethostname): Change type of second parameter
+	back to size_t as per upcoming XPG6.
 	* sysdeps/unix/sysv/aix/gethostname.c: Change type of second
 	parameter back to size_t as per upcoming XPG6.
 	* sysdeps/unix/sysv/sysv4/gethostname.c: Likewise.

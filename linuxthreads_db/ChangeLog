@@ -1,3 +1,7 @@
+2001-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: When generating DSO link with libc_nonshared.a.
+
 2000-08-01  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (distribute): Add missing files.

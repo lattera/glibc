@@ -992,6 +992,20 @@ EOF
   fi
   rm -f conftest*])
   AC_SUBST(libc_cv_z_initfirst)
+
+  AC_CACHE_CHECK(for -Bgroup option,
+		 libc_cv_Bgroup, [dnl
+  cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c -Wl,-Bgroup -nostdlib 1>&AC_FD_CC])
+  then
+    libc_cv_Bgroup=yes
+  else
+    libc_cv_Bgroup=no
+  fi
+  rm -f conftest*])
+  AC_SUBST(libc_cv_Bgroup)
 fi
 
 if test $elf != yes; then

@@ -1,3 +1,7 @@
+2001-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: When generating DSO link with libc_nonshared.a.
+
 2001-02-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* signals.c (pthread_sighandler): Use CALL_SIGHANDLER.
