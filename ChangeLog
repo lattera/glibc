@@ -1,3 +1,7 @@
+2001-01-27  Andreas Jaeger  <aj@suse.de>
+
+	* misc/efgcvt_r.c: Include <float.h>.
+
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/data/stdlib.h-data: Account for XPG6 changes.
