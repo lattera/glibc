@@ -345,7 +345,8 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
     _dl_debug_message ("\tbinding file ", reference_name, " to ",
 		       current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
-		       ": symbol `", undef_name, "'\n", NULL);
+		       ": symbol `", undef_name, "' [", version->name,
+		       "]\n", NULL);
 
   *ref = current_value.s;
   return current_value.m->l_addr;
@@ -398,7 +399,8 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
     _dl_debug_message ("\tbinding file ", reference_name, " to ",
 		       current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
-		       ": symbol `", undef_name, "'\n", NULL);
+		       ": symbol `", undef_name, "' [", version->name,
+		       "]\n", NULL);
 
   *ref = current_value.s;
   return current_value.m->l_addr;

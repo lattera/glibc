@@ -1,8 +1,14 @@
+1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-lookup.c (_dl_lookup_versioned_symbol): Print version
+	symbol in debug message.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+
 1998-03-10 19:43  Matthias Urlichs <urlichs@noris.de>
 
-	* sysdeps/unix/readdir_r.c: zero out *result on EOF.
+	* sysdeps/unix/readdir_r.c: Zero out *result on EOF.
 	* sysdeps/unix/sysv/linux/readdir64_r.c: Likewise.
-	* manual/filesys/texi: document this.
+	* manual/filesys/texi: Document this.
 
 1998-03-10 10:49  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -11,7 +17,7 @@
 1998-03-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/posix/mkstemp.c (mkstemp): Open temporary file mode
-	0600. Reported by Greg Alexander <galexand@sietch.bloomington.in.us>.
+	0600.  Reported by Greg Alexander <galexand@sietch.bloomington.in.us>.
 
 1998-03-10 00:10  Ulrich Drepper  <drepper@cygnus.com>
 
