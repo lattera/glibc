@@ -4,3 +4,4 @@ s_getgroups	getgroups getgroups	2	__syscall_getgroups
 s_llseek	llseek	_llseek		5	__sys_llseek
 s_setgroups	setgroups setgroups	2	__syscall_setgroups
 vm86		-	vm86		1	__vm86		vm86
+syscall		-	syscall		5	syscall
