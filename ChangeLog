@@ -1,3 +1,9 @@
+2000-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/dl-machine.c: Add volatile to PPC_DCBST, PPC_SYNC,
+	and PPC_ICBI asm for broken compilers.
+	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+
 2000-09-09  Andreas Jaeger  <aj@suse.de>
 
 	* manual/message.texi (Advanced gettext functions): Fix typo.
