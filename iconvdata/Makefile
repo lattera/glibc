@@ -86,7 +86,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      ansi_x3.110.c asmo_449.c baltic.c big5.c cp737.c cp737.h	    \
 	      cp775.c cp775.h cp874.c cp874.h cns11643.c cns11643.h	    \
 	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \
-	      cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c cp1258.h	    \
+	      cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c		    \
 	      csn_369103.c cwi.c dec-mcs.c ebcdic-at-de.c ebcdic-at-de-a.c  \
 	      ebcdic-ca-fr.c ebcdic-dk-no.c ebcdic-dk-no-a.c ebcdic-es.c    \
 	      ebcdic-es-a.c ebcdic-es-s.c ebcdic-fr.c ebcdic-fi-se.c	    \
@@ -151,7 +151,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			inis-cyrillic iso_2033 iso_5427 iso_5427-ext	   \
 			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
-			iso-ir-197
+			iso-ir-197 cp1258
 
 gen-special-modules := iso8859-7jp
 

@@ -1,5 +1,7 @@
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/CP1258: New file.
+
 	* charmaps/CP1257: Add some marks.
 	* charmaps/CP1256: Update from Unicode page.
 	* charmaps/CP1255: Lots of punctuation character changes.
@@ -39,7 +41,7 @@
 	(test-input-data): New variable.
 	(distribute): Use it.
 	(do-collate-test): Use it.
-	* hr_HR.in: New file.
+	* locales/hr_HR.in: New file.
 
 1998-12-16  Ulrich Drepper  <drepper@cygnus.com>
 

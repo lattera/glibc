@@ -1,3 +1,9 @@
+1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile (distribute): Remove cp1258.h.
+	(gen-8bit-gap-modules): Add cp1258.
+	* iconvdata/cp1258.h: Removed.
+
 1999-03-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/tst-timezone.c (tests): Add more cases.
