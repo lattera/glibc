@@ -25,7 +25,7 @@ headers		= iconv.h gconv.h
 routines	= iconv_open iconv iconv_close \
 		  gconv_open gconv gconv_close gconv_db gconv_conf \
 		  gconv_dl gconv_builtin gconv_simple
-distribute	= gconv_builtin.h
+distribute	= gconv_builtin.h gconv_int.h
 
 others		= iconv_prog
 

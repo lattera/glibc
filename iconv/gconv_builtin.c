@@ -18,8 +18,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <gconv.h>
 #include <string.h>
+
+#include <gconv_int.h>
 
 #include <assert.h>
 
@@ -48,6 +49,7 @@ static struct builtin_map
 
 
 void
+internal_function
 __gconv_get_builtin_trans (const char *name, struct gconv_step *step)
 {
   size_t cnt;

@@ -23,7 +23,6 @@
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
-#include <gconv.h>
 #include <iconv.h>
 #include <locale.h>
 #include <search.h>
@@ -32,6 +31,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <gconv_int.h>
 
 /* Get libc version number.  */
 #include "../version.h"

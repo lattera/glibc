@@ -1,5 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,11 +19,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <gconv.h>
 #include <stdlib.h>
+
+#include <gconv_int.h>
 
 
 int
+internal_function
 __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 {
   struct gconv_step *steps;

@@ -1,3 +1,25 @@
+1998-04-03 15:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_int.h: New file.  Internal header.
+	* iconv/Makefile (distribute): Add gconv_int.h.
+	* iconv/gconv.h: Remove definition which are now in gconv_int.h.
+	* iconv/gconv_builtin.c: Adopt for gconv_int.h introduction.
+	* iconv/gconv_close.c: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* iconv/iconv.c: Likewise.
+	* iconv/iconv_close.c: Likewise.
+	* iconv/iconv_open.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+
+1998-04-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/ksc5601.c: Correct Perl scripts and make them omit the
+	missing braces.
+
 1998-04-03  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/nis_table.c (nis_list): Fix FOLLOW_PATH and ALL_RESULTS flags.

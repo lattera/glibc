@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <gconv.h>
+#include <gconv_int.h>
 
 
 static inline void

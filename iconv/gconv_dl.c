@@ -19,7 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dlfcn.h>
-#include <gconv.h>
 #include <inttypes.h>
 #include <search.h>
 #include <stdlib.h>
@@ -27,6 +26,8 @@
 #include <bits/libc-lock.h>
 #include <elf/ldsodefs.h>
 #include <sys/param.h>
+
+#include <gconv_int.h>
 
 
 /* This is a tuning parameter.  If a transformation module is not used
@@ -112,6 +113,7 @@ struct get_sym_args
 };
 
 static void
+internal_function
 get_sym (void *a)
 {
   struct get_sym_args *args = (struct get_sym_args *) a;
@@ -123,6 +125,7 @@ get_sym (void *a)
 
 
 void *
+internal_function
 __gconv_find_func (void *handle, const char *name)
 {
   struct get_sym_args args;
@@ -139,6 +142,7 @@ __gconv_find_func (void *handle, const char *name)
 /* Open the gconv database if necessary.  A non-negative return value
    means success.  */
 void *
+internal_function
 __gconv_find_shlib (const char *name)
 {
   void *result = NULL;
@@ -234,6 +238,7 @@ do_release_shlib (const void *nodep, VISIT value, int level)
 
 /* Notify system that a shared object is not longer needed.  */
 int
+internal_function
 __gconv_release_shlib (void *handle)
 {
   /* Acquire the lock.  */

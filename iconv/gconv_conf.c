@@ -20,13 +20,14 @@
 
 #include <ctype.h>
 #include <errno.h>
-#include <gconv.h>
 #include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
+
+#include <gconv_int.h>
 
 
 /* This is the default path where we look for module lists.  */
@@ -369,6 +370,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 /* Read all configuration files found in the user-specified and the default
    path.  */
 void
+internal_function
 __gconv_read_conf (void)
 {
   const char *user_path = __secure_getenv ("GCONV_PATH");

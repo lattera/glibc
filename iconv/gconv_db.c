@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,11 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <gconv.h>
 #include <search.h>
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
+
+#include <gconv_int.h>
 
 
 /* Simple data structure for alias mapping.  We have two names, `from'
@@ -93,6 +94,7 @@ static void *known_derivations;
 
 /* Look up whether given transformation was already requested before.  */
 static int
+internal_function
 derivation_lookup (const char *fromset, const char *toset,
 		   struct gconv_step **handle, size_t *nsteps)
 {
@@ -114,6 +116,7 @@ derivation_lookup (const char *fromset, const char *toset,
 
 /* Add new derivation to list of known ones.  */
 static void
+internal_function
 add_derivation (const char *fromset, const char *toset,
 		struct gconv_step *handle, size_t nsteps)
 {
@@ -142,6 +145,7 @@ add_derivation (const char *fromset, const char *toset,
 }
 
 static void
+internal_function
 free_derivation (void *p)
 {
   struct known_derivation *deriv = (struct known_derivation *) p;
@@ -479,6 +483,7 @@ find_derivation (const char *toset, const char *toset_expand,
 
 
 int
+internal_function
 __gconv_find_transform (const char *toset, const char *fromset,
 			struct gconv_step **handle, size_t *nsteps)
 {
@@ -523,6 +528,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
 
 /* Release the entries of the modules list.  */
 int
+internal_function
 __gconv_close_transform (struct gconv_step *steps, size_t nsteps)
 {
   int result = GCONV_OK;
