@@ -1,5 +1,9 @@
 1998-11-04  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/mktime.c (__mktime_internal): Correct last change.  We must
+	stop searching for the right isdst value before stepping to the
+	initial value.
+
 	* malloc/malloc.c: Make sure calloc really returned zeroed memory.
 	Patch by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
 

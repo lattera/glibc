@@ -350,43 +350,31 @@ __mktime_internal (tp, convert, offset)
 
   /* If we have a match, check whether tm.tm_isdst has the requested
      value, if any.  */
-  if (dt == 0 && isdst >= 0 && isdst != tm.tm_isdst)
+  if (dt == 0 && 0 <= isdst && 0 <= tm.tm_isdst)
     {
       int dst_diff = (isdst != 0) - (tm.tm_isdst != 0);
       if (dst_diff)
 	{
-	  /* Move three hours in the direction indicated by the disagreement,
+	  /* Move two hours in the direction indicated by the disagreement,
 	     probe some more, and switch to a new time if found.
 	     The largest known fallback due to daylight savings is two hours:
-	     once, in Newfoundland, 1988-10-30 02:00 -> 00:00.
-	     But some programs (e.g. testsuites) probe for larger differences
-	     between DST and normal time so switch by three hours.  No
-	     normal program does this so we do not account for more than
-	     three hours difference.  */
-	  time_t ot = t - 3 * 60 * 60 * dst_diff;
-	  struct tm otm;
-	  struct tm tmptm;
-
-	  otm.tm_isdst = -1;
-
+	     once, in Newfoundland, 1988-10-30 02:00 -> 00:00.  */
+	  time_t ot = t - 2 * 60 * 60 * dst_diff;
 	  while (--remaining_probes != 0)
 	    {
-	      if (! (dt = ydhms_tm_diff (year, yday, hour, min, sec,
-					 ranged_convert (convert, &ot,
-							 &tmptm)))
-		  || tmptm.tm_isdst != isdst)
-		break;
-
-	      otm = tmptm;
-	      ot += dt;
-	      if (ot == t)
+	      struct tm otm;
+	      dt = ydhms_tm_diff (year, yday, hour, min, sec,
+				  ranged_convert (convert, &ot, &otm));
+	      if (dt == 0
+		  || (ot + dt == t
+		      && dst_diff == (isdst != 0) - (tm.tm_isdst != 0)))
+		{
+		  t = ot;
+		  tm = otm;
+		  break;
+		}
+	      if ((ot += dt) == t)
 		break;  /* Avoid a redundant probe.  */
-	    }
-
-	  if (otm.tm_isdst != -1)
-	    {
-	      t = ot;
-	      tm = otm;
 	    }
 	}
     }
