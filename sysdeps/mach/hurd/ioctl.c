@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,8 @@
 #include <string.h>
 #include <hurd/ioctl.h>
 #include <mach/mig_support.h>
+
+#include <hurd/ioctls.defs>
 
 #define typesize(type)	(1 << (type))
 
@@ -144,17 +146,7 @@ __ioctl (int fd, unsigned long int request, ...)
 
   /* Compute the Mach message ID for the RPC from the group and command
      parts of the ioctl request.  */
-  msgid = 100000 + ((_IOC_GROUP (request) - 'f') * 4000); /* Base subsystem */
-  /* Because of MiG's poorly chosen algorithm of adding 100 to a request
-     msgid to produce the reply msgid, we cannot just add the command part
-     of the ioctl request to the subsystem base msgid.  For ioctl requests
-     past 99, we must skip blocks of 100 msgids to allow for the reply
-     msgids corresponding to the earlier requests.  */
-  if (_IOC_COMMAND (request) >= 100)
-    msgid += 100;
-  if (_IOC_COMMAND (request) >= 200)
-    msgid += 100;
-  msgid += _IOC_COMMAND (request);
+  msgid = IOC_MSGID (request);
 
   if (_IOC_INOUT (request) & IOC_IN)
     {
