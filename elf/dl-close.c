@@ -144,6 +144,7 @@ _dl_close (struct link_map *map)
 	  /* We will unlink the first object only if this is a statically
 	     linked program.  */
 	  assert (imap->l_prev != NULL);
+	  imap->l_prev->l_next = imap->l_next;
 #else
 	  if (imap->l_prev != NULL)
 	    imap->l_prev->l_next = imap->l_next;
