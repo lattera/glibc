@@ -48,7 +48,8 @@ int __libc_missing_rt_sigs;
 
 /* Using the hidden attribute here does not change the code but it
    helps to avoid warnings.  */
-#if defined HAVE_HIDDEN && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+#if defined HAVE_HIDDEN && defined HAVE_VISIBILITY_ATTRIBUTE \
+    && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
 # ifdef __NR_rt_sigaction
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 # endif
