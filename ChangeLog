@@ -1,3 +1,73 @@
+2004-03-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Merge from gnulib.  We now assume C89 or better.
+	* posix/getopt1.c (const): Remove.
+	* posix/getopt.c (const): Likewise.
+	* posix/getopt1.c (getopt_long, _getopt_long_r, getopt_long_only,
+	_getopt_long_only_r, main): Use prototypes, not old-style definitions.
+	* posix/getopt.c (exchange, _getopt_initialize, _getopt_internal_r,
+	_getopt_internal, getopt, main): Likewise.
+	* posix/getopt.h (getopt, getopt_long, getopt_long_only): Likewise.
+	* posix/getopt.c [!defined VMS || !HAVE_STRING_H]:
+	Include <string.h> regardless.  No need for <strings.h>.
+	[!defined _LIBC]: Include "gettext.h" rather than rolling it ourselves.
+	(_): Define to gettext always.
+	(my_index): Remove: all uses changed to strchr.
+	(strlen): Remove declaration.
+	* posix/getopt.h (struct option.name): Always const char *.
+
+2004-03-08  Marcus Brinkmann  <marcus@gnu.org>
+
+	* posix/getopt.h (_getopt_internal): Move to ...
+	* posix/getopt_int.h: ... here.  New file.
+	* include/getopt_int.h: New file.
+	* include/getopt.h: Remove libc_hidden_proto for getopt_long
+	and getopt_long_only.
+	* posix/getopt1.c: Include "getopt_int.h".  Remove
+	libc_hidden_def for getopt_long and getopt_long_only.
+	(_getopt_long_r, _getopt_long_only_r): New functions.
+	* posix/getopt.c: Include "getopt_int.h".
+	(__getopt_initialized): Variable removed.
+	(nextchar, ordering, posixly_correct, first_nonopt, last_nonopt):
+	Static variables removed.
+	(nonoption_flags_max_len, nonoption_flags_len) [_LIBC &&
+	USE_NONOPTION_FLAGS]: Static variables removed.
+	(getopt_data): New static variable.
+	(SWAP_FLAGS): Use d->__nonoption_flags_len instead
+	nonoption_flags_len.
+	(exchange): Add new argument D of type struct getopt_data *.
+	Replace optind with d->optind, optarg with d->optarg, opterr with
+	d->opterr, optopt with d->optopt, nextchar with d->__nextchar,
+	first_nonopt with d->__first_nonopt, last_nonopt with
+	d->__last_nonopt, d->ordering with d->__ordering,
+	d->posixly_correct with d->__posixly_correct (which is now an
+	int instead a string, so fix users), nonoption_flags_len
+	with d->__nonoption_flags_len, nonoption_flags_max_len with
+	d->__nonoption_flags_max_len.
+	(_getopt_initialize): Likewise.
+	(_getopt_internal): Rename to ...
+	(_getopt_internal_r): ... this.  Also add new argument D of type
+	struct getopt_data * and use of members of D rather than global or
+	static variables as described for exchange() above.  Add new argument
+	to invocations of _getopt_initialize and exchange.
+	(_getopt_internal): Reimplement in terms of _getopt_internal_r.
+	* argp/argp-parse.c: Include <getopt_int.h>.
+	[_LIBC]: Do not include <bits/libc-lock.h>.
+	[!_LIBC && HAVE_CTHREADS_H]: Do not include <cthreads.h>.
+	[!_LIBC] (_argp_hang): Make static.
+	(getopt_lock, LOCK_GETOPT, UNLOCK_GETOPT): Remove.
+	(_argp_unlock_xxx): Remove.
+	(parser_init): Do not use LOCK_GETOPT.
+	(parser_finalize): Do not use UNLOCK_GETOPT.
+	(struct parser): New member OPT_DATA.
+	(parser_init): Initialize parser->opt_data.  Use
+	parser->opt_data.opterr instead of opterr.
+	(parser_parse_opt): Use parser->opt_data.optarg instead optarg.
+	(parser_parse_next): Likewise.  Use parser->opt_data.optind
+	instead optind.  Use parser->opt_data.optopt instead of optopt.
+	Call _getopt_long_only_r and _getopt_long_r instead of
+	getopt_long_only and getopt_long, and pass the extra argument.
+
 2004-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_db.c: Don't define lock as static.  Rename to
