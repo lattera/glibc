@@ -1,5 +1,8 @@
 2003-07-22  Andreas Jaeger  <aj@suse.de>
 
+	* elf/readlib.c (process_file): Check that file is a shared
+	object.
+
 	* elf/sofini.c (__FRAME_END__): Use attribute used so that gcc
 	will not optimize it away.
 	(__DTOR_END__): Likewise.
