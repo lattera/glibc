@@ -1095,16 +1095,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  size_t cnt = 0;
 		  NEXT_WIDE_CHAR (first);
-		  if (val > 255 || wp[val] == not_in)
+		  if (val <= 255 && wp[val] == not_in)
 		    {
-		      /* XXX We have a problem here.  We read a wide
-			 character and this possibly took several
-			 bytes.  But we can only push back one single
-			 character.  To be sure we don't create wrong
-			 input we push it back only in case it is
-			 representable within one byte.  */
-		      if (val < 0x80)
-			ungetc (val, s);
+		      ungetc (val, s);
 		      break;
 		    }
 		  STRING_ADD_CHAR (wstr, val, wchar_t);
