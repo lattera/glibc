@@ -1473,6 +1473,7 @@ memset () {}
 free () {}
 abort () {}
 __bzero () {}
+dl_iterate_phdr () {}
 EOF
 dnl No \ in command here because it ends up inside ''.
 if AC_TRY_COMMAND([${CC-cc} $CFLAGS -DCHECK__register_frame_info
