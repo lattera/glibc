@@ -1,3 +1,8 @@
+2002-09-04  Roland McGrath  <roland@redhat.com>
+
+	* resolv/nss_dns/dns-network.c (MAXPACKET): Increase minimum value
+	from 1024 to 65536, to avoid buffer overrun.
+
 2002-09-03  Gerhard Tonn  <ton@de.ibm.com>
 
 	* sysdeps/s390/s390/fpu/libm-test-ulps: Regenerate.
