@@ -204,8 +204,11 @@ tr_reallochook (ptr, size, caller)
   else if (ptr == NULL)
     fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
   else
-    fprintf (mallstream, "< %p\n> %p %#lx\n", ptr, hdr,
-	     (unsigned long int) size);
+    {
+      fprintf (mallstream, "< %p\n", ptr);
+      tr_where (caller);
+      fprintf (mallstream, "> %p %#lx\n", hdr, (unsigned long int) size);
+    }
 
   if (hdr == mallwatch)
     tr_break ();

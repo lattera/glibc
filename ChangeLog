@@ -1,5 +1,8 @@
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* malloc/mtrace.c (tr_reallochook): Produce better output for real
+	reallocation case.
+
 	* signal/sigsetops.c: Make sure __USE_EXTERN_INLINES is defined.
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add missing
