@@ -1,3 +1,18 @@
+2003-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/bits/atomic.h: Add __builtin_expect where appropriate.
+	* sysdeps/ia64/pthread_spin_unlock.c (pthread_spin_unlock): Use
+	__sync_lock_release_si.
+	Patch by Jakub Jelinek.
+
+	* sysdeps/unix/sysv/linux/lowlevellock.c (__lll_timedlock_wait):
+	Fix timeout handling.
+	(__lll_timedwait_tid): Likewise.
+	(lll_unlock_wake_cb): Wake up other waiters if necessary.
+	Patch by Jakub Jelinek.
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Pretty printing.
+
 2003-03-17  Roland McGrath  <roland@redhat.com>
 
 	PowerPC port contributed by Paul Mackerras <paulus@samba.org>.
