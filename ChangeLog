@@ -16,6 +16,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/aix/aix-stat.h: New file.
 	* sysdeps/unix/sysv/linux/powerpc/aix/aix-termios.h: New file.
 
+	* sysdeps/unix/sysv/linux/powerpc/aix/tcgetattr.c: New file.
 	* sysdeps/unix/sysv/linux/powerpc/aix/tcsetattr.c: New file.
 
 2000-05-05  Jes Sorensen  <jes@linuxcare.com>

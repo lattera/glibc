@@ -93,7 +93,7 @@ tcsetattr (fd, optional_actions, linuxtermios_p)
   if (linuxtermios_p->c_oflag & TABDLY)
     {
 #define offset 2
-#if TAB0 >> offset != AIX_TAB1 || TAB1 >> offset != AIX_TAB3
+#if TAB1 >> offset != AIX_TAB1 || TAB3 >> offset != AIX_TAB3
 # error "Check the offset"
 #endif
       aixtermios.c_oflag |= (linuxtermios_p->c_oflag >> offset) & AIX_TABDLY;
@@ -110,7 +110,7 @@ tcsetattr (fd, optional_actions, linuxtermios_p)
   if (linuxtermios_p->c_cflag & CSIZE)
     {
 #define offset 4
-#if LINUX_CSIZE >> offset != AIX_CSIZE
+#if CSIZE >> offset != AIX_CSIZE
 # error "Check the offset"
 #endif
       aixtermios.c_cflag |= (linuxtermios_p->c_cflag >> offset) & AIX_CSIZE;
