@@ -3,7 +3,6 @@
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_TGKILL):
 	Define appropriately for x86_64.
 	(__ASSUME_UTIMES): Likewise.
-	(__ASSUME_FADVISE64_64_SYSCALL): Likewise.
 	(__ASSUME_CLONE_THREAD_FLAGS): Likewise.
 
 	* sysdeps/x86_64/fpu/s_ceill.S: New file.
