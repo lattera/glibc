@@ -1,3 +1,11 @@
+2001-04-05  David S. Miller  <davem@redhat.com>
+
+	* elf/elf.h (HWCAP_SPARC_ULTRA3): Define it.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h: Add it to
+	capability flags table and HWCAP_IMPORTANT, increase
+	_DL_HWCAP_COUNT to 6.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Likewise.
+
 2001-04-04  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/makecontext.c (__makecontext): Fix

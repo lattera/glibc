@@ -27,9 +27,9 @@
    is still ok with the given array size.  */
 static const char sparc64_cap_flags[][7] =
   {
-    "flush", "stbar", "swap", "muldiv", "v9"
+    "flush", "stbar", "swap", "muldiv", "v9", "ultra3"
   };
-#define _DL_HWCAP_COUNT 5
+#define _DL_HWCAP_COUNT 6
 
 static inline int
 __attribute__ ((unused))
@@ -69,7 +69,7 @@ _dl_string_hwcap (const char *str)
   return -1;
 };
 
-#define HWCAP_IMPORTANT (0)
+#define HWCAP_IMPORTANT (HWCAP_SPARC_ULTRA3)
 
 /* There are no different platforms defined.  */
 #define _dl_platform_string(idx) ""

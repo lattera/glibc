@@ -1117,6 +1117,7 @@ typedef struct
 #define HWCAP_SPARC_SWAP	4
 #define HWCAP_SPARC_MULDIV	8
 #define HWCAP_SPARC_V9		16	/* The cpu is v9, so v8plus is ok.  */
+#define HWCAP_SPARC_ULTRA3	32
 
 /* MIPS R3000 specific definitions.  */
 

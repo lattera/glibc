@@ -1596,10 +1596,54 @@ int main (void) { puts (gnu_get_libc_version ()); return 0; }
 This interface can also obviously be used to perform tests at runtime if
 this should be necessary.
 
+??	Context switching with setcontext() does not work from within
+	signal handlers.
+
+{DMT} The Linux implementations (IA-64, S390 so far) of setcontext()
+supports synchronous context switches only.  There are several reasons for
+this:
+
+ o UNIX provides no other (portable) way of effecting a synchronous
+   context switch (also known as co-routine switch).  Some versions
+   support this via setjmp()/longjmp() but this does not work
+   universally.
+
+ o As defined by the UNIX '98 standard, the only way setcontext()
+   could trigger an asychronous context switch is if this function
+   were invoked on the ucontext_t pointer passed as the third argument
+   to a signal handler.  But according to draft 5, XPG6, XBD 2.4.3,
+   setcontext() is not among the set of routines that may be called
+   from a signal handler.
+
+ o If setcontext() were to be used for asynchronous context switches,
+   all kinds of synchronization and re-entrancy issues could arise and
+   these problems have already been solved by real multi-threading
+   libraries (e.g., POSIX threads or Linux threads).
+
+ o Synchronous context switching can be implemented entirely in
+   user-level and less state needs to be saved/restored than for an
+   asynchronous context switch.  It is therefore useful to distinguish
+   between the two types of context switches.  Indeed, some
+   application vendors are known to use setcontext() to implement
+   co-routines on top of normal (heavier-weight) pre-emptable threads.
+
+It should be noted that if someone was dead-bent on using setcontext()
+on the third arg of a signal handler, then IA-64 Linux could support
+this via a special version of sigaction() which arranges that all
+signal handlers start executing in a shim function which takes care of
+saving the preserved registers before calling the real signal handler
+and restoring them afterwards.  In other words, we could provide a
+compatibility layer which would support setcontext() for asynchronous
+context switches.  However, given the arguments above, I don't think
+that makes sense.  setcontext() provides a decent co-routine interface
+and we should just discourage any asynchronous use (which just calls
+for trouble at any rate).
+
+
 
 Answers were given by:
-{UD} Ulrich Drepper, <drepper@cygnus.com>
-{DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
+{UD} Ulrich Drepper, <drepper@redhat.com>
+{DMT} David Mosberger-Tang, <davidm@hpl.hp.com>
 {RM} Roland McGrath, <roland@gnu.org>
 {AJ} Andreas Jaeger, <aj@suse.de>
 {EY} Eric Youngdale, <eric@andante.jic.com>
@@ -1607,10 +1651,10 @@ Answers were given by:
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
 {TK} Thorsten Kukuk, <kukuk@suse.de>
-{GK} Geoffrey Keating, <geoffk@ozemail.com.au>
+{GK} Geoffrey Keating, <geoffk@redhat.com>
 {HJ} H.J. Lu, <hjl@gnu.org>
 {CG} Cristian Gafton, <gafton@redhat.com>
-{AO} Alexandre Oliva, <oliva@lsd.ic.unicamp.br>
+{AO} Alexandre Oliva, <aoliva@redhat.com>
 {BH} Bruno Haible, <haible@clisp.cons.org>
 
 Local Variables:
