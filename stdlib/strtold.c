@@ -3,7 +3,11 @@
 
 #define	FLOAT		long double
 #define	FLT		LDBL
-#define	STRTOF		strtold
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define STRTOF		__strtold_l
+#else
+# define STRTOF		strtold
+#endif
 #define	MPN2FLOAT	__mpn_construct_long_double
 #define	FLOAT_HUGE_VAL	HUGE_VALL
 #define SET_MANTISSA(flt, mant) \

@@ -102,19 +102,26 @@ elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline void
-elf_machine_runtime_setup (struct link_map *l)
+static inline int
+elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   extern void _dl_runtime_resolve (Elf32_Word);
-  /* The GOT entries for functions in the PLT have not yet been filled
-     in.  Their initial contents will arrange when called to push an
-     offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
-     and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-  Elf32_Addr *got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
-  got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
-  /* This function will get called to fix up the GOT entry indicated by
-     the offset on the stack, and then jump to the resolved address.  */
-  got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+
+  if (lazy) 
+    {
+      /* The GOT entries for functions in the PLT have not yet been filled
+         in.  Their initial contents will arrange when called to push an
+         offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
+         and then jump to _GLOBAL_OFFSET_TABLE[2].  */
+      Elf32_Addr *got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
+
+      /* This function will get called to fix up the GOT entry indicated by
+         the offset on the stack, and then jump to the resolved address.  */
+      got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+    }
+
+  return lazy;
 }
 
 

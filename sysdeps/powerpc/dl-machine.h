@@ -390,7 +390,7 @@ static ElfW(Addr) _dl_preferred_address = 1
 	 calls `fixup', in dl-runtime.c, via the glue in the macro
 	 ELF_MACHINE_RUNTIME_TRAMPOLINE, which resets the PLT entry to
 	 be one of the above two types. These entries are set up here.  */
-static inline void
+static inline int
 elf_machine_runtime_setup (struct link_map *map, int lazy)
 {
   if (map->l_info[DT_JMPREL])
@@ -489,6 +489,8 @@ elf_machine_runtime_setup (struct link_map *map, int lazy)
 	PPC_ICBI (plt + i);
       PPC_ISYNC;
     }
+
+  return lazy;
 }
 
 static inline void

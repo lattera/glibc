@@ -68,10 +68,6 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
     ELF_DYNAMIC_RELOCATE (l, lazy);
   }
 
-  /* Set up the PLT so its unrelocated entries will jump to
-     _dl_runtime_resolve (dl-runtime.c), which will relocate them.  */
-  elf_machine_runtime_setup (l, lazy);
-
   /* Mark the object so we know ths work has been done.  */
   l->l_relocated = 1;
 

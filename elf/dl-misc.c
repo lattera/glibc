@@ -1,5 +1,5 @@
-/* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Miscellaneous support functions for dynamic linker
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +17,60 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <hurd.h>
-#include <link.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <sys/wait.h>
 #include <assert.h>
-#include <sysdep.h>
-#include <mach/mig_support.h>
-#include "hurdstartup.h"
-#include <mach/host_info.h>
-#include "../stdio-common/_itoa.h"
-#include <hurd/auth.h>
-#include <hurd/term.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdarg.h>
-#include <ctype.h>
+#include <string.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
+
+#ifndef MAP_ANON
+/* This is the only dl-sysdep.c function that is actually needed at run-time
+   by _dl_map_object.  */
+
+int
+_dl_sysdep_open_zero_fill (void)
+{
+  return __open ("/dev/zero", O_RDONLY);
+}
+#endif
+
+/* Read the whole contents of FILE into new mmap'd space with given
+   protections.  *SIZEP gets the size of the file.  */
+
+void *
+_dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
+{
+  void *result;
+  struct stat st;
+  int fd = __open (file, O_RDONLY);
+  if (fd < 0)
+    return NULL;
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
+    result = NULL;
+  else
+    {
+      /* Map a copy of the file contents.  */
+      result = __mmap (0, st.st_size, prot,
+#ifdef MAP_COPY
+                       MAP_COPY
+#else
+                       MAP_PRIVATE
+#endif
+#ifdef MAP_FILE
+                       | MAP_FILE
+#endif
+                       , fd, 0);
+      if (result == (void *) -1)
+        result = NULL;
+      else
+        *sizep = st.st_size;
+    }
+  __close (fd);
+  return result;
+}
+
 
 void
 _dl_sysdep_fatal (const char *msg, ...)
@@ -45,14 +81,7 @@ _dl_sysdep_fatal (const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
+      __write (STDERR_FILENO, msg, len);
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);
@@ -70,14 +99,7 @@ _dl_sysdep_error (const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
+      __write (STDERR_FILENO, msg, len);
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);
@@ -93,14 +115,7 @@ _dl_sysdep_message (const char *msg, ...)
   do
     {
       size_t len = strlen (msg);
-      mach_msg_type_number_t nwrote;
-      do
-	{
-	  if (__io_write (_hurd_init_dtable[1], msg, len, -1, &nwrote))
-	    break;
-	  len -= nwrote;
-	  msg += nwrote;
-	} while (nwrote > 0);
+      __write (STDOUT_FILENO, msg, len);
       msg = va_arg (ap, const char *);
     } while (msg);
   va_end (ap);

@@ -64,30 +64,62 @@ extern int errno;
 #endif
 
 /* Determine the name.  */
-#if UNSIGNED
-# ifdef USE_WIDE_CHAR
-#  ifdef QUAD
-#   define strtol wcstoull
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# if UNSIGNED
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol __wcstoull_l
+#   else
+#    define strtol __wcstoul_l
+#   endif
 #  else
-#   define strtol wcstoul
+#   ifdef QUAD
+#    define strtol __strtoull_l
+#   else
+#    define strtol __strtoul_l
+#   endif
 #  endif
 # else
-#  ifdef QUAD
-#   define strtol strtoull
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol __wcstoll_l
+#   else
+#    define strtol __wcstol_l
+#   endif
 #  else
-#   define strtol strtoul
+#   ifdef QUAD
+#    define strtol __strtoll_l
+#   else
+#    define strtol __strtol_l
+#   endif
 #  endif
 # endif
 #else
-# ifdef USE_WIDE_CHAR
-#  ifdef QUAD
-#   define strtol wcstoll
+# if UNSIGNED
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol wcstoull
+#   else
+#    define strtol wcstoul
+#   endif
 #  else
-#   define strtol wcstol
+#   ifdef QUAD
+#    define strtol strtoull
+#   else
+#    define strtol strtoul
+#   endif
 #  endif
 # else
-#  ifdef QUAD
-#   define strtol strtoll
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol wcstoll
+#   else
+#    define strtol wcstol
+#   endif
+#  else
+#   ifdef QUAD
+#    define strtol strtoll
+#   endif
 #  endif
 # endif
 #endif
@@ -119,22 +151,51 @@ extern int errno;
 #endif
 #endif
 
+
+/* We use this code also for the extended locale handling where the
+   function gets as an additional argument the locale which has to be
+   used.  To access the values we have to redefine the _NL_CURRENT
+   macro.  */
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# undef _NL_CURRENT
+# define _NL_CURRENT(category, item) \
+  (current->values[_NL_ITEM_INDEX (item)].string)
+# define LOCALE_PARAM , loc
+# define LOCALE_PARAM_DECL __locale_t loc;
+#else
+# define LOCALE_PARAM
+# define LOCALE_PARAM_DECL
+#endif
+
+
 #ifdef USE_WIDE_CHAR
 # include <wchar.h>
 # include <wctype.h>
 # define L_(Ch) L##Ch
 # define UCHAR_TYPE wint_t
 # define STRING_TYPE wchar_t
-# define ISSPACE(Ch) iswspace (Ch)
-# define ISALPHA(Ch) iswalpha (Ch)
-# define TOUPPER(Ch) towupper (Ch)
-#else
-# define L_(Ch) Ch
-# define UCHAR_TYPE unsigned char
-# define STRING_TYPE char
-# define ISSPACE(Ch) isspace (Ch)
-# define ISALPHA(Ch) isalpha (Ch)
-# define TOUPPER(Ch) toupper (Ch)
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define ISSPACE(Ch) __iswspace_l ((Ch), loc)
+#  define ISALPHA(Ch) __iswalpha_l ((Ch), loc)
+#  define TOUPPER(Ch) __towupper_l ((Ch), loc)
+# else
+#  define ISSPACE(Ch) iswspace (Ch)
+#  define ISALPHA(Ch) iswalpha (Ch)
+#  define TOUPPER(Ch) towupper (Ch)
+# endif
+# else
+#  define L_(Ch) Ch
+#  define UCHAR_TYPE unsigned char
+#  define STRING_TYPE char
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define ISSPACE(Ch) __isspace_l ((Ch), loc)
+#  define ISALPHA(Ch) __isalpha_l ((Ch), loc)
+#  define TOUPPER(Ch) __toupper_l ((Ch), loc)
+# else
+#  define ISSPACE(Ch) isspace (Ch)
+#  define ISALPHA(Ch) isalpha (Ch)
+#  define TOUPPER(Ch) toupper (Ch)
+# endif
 #endif
 
 #ifdef __STDC__
@@ -151,6 +212,7 @@ extern int errno;
 #endif
 
 
+
 /* Convert NPTR to an `unsigned long int' or `long int' in base BASE.
    If BASE is 0 the base is determined by the presence of a leading
    zero, indicating octal or a leading "0x" or "0X", indicating hexadecimal.
@@ -159,11 +221,12 @@ extern int errno;
    one converted is stored in *ENDPTR.  */
 
 INT
-INTERNAL (strtol) (nptr, endptr, base, group)
+INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
      int group;
+     LOCALE_PARAM_DECL
 {
   int negative;
   register unsigned LONG int cutoff;
@@ -175,6 +238,9 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   int overflow;
 
 #ifdef USE_NUMBER_GROUPING
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  struct locale_data *current = loc->__locales[LC_NUMERIC];
+# endif
   /* The thousands character of the current locale.  */
   wchar_t thousands;
   /* The numeric grouping specification of the current locale,
@@ -362,10 +428,11 @@ INT
 #ifdef weak_function
 weak_function
 #endif
-strtol (nptr, endptr, base)
+strtol (nptr, endptr, base LOCALE_PARAM)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
+     LOCALE_PARAM_DECL
 {
-  return INTERNAL (strtol) (nptr, endptr, base, 0);
+  return INTERNAL (strtol) (nptr, endptr, base, 0 LOCALE_PARAM);
 }

@@ -31,10 +31,12 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs \
 	    mbsnrtowcs wcsnrtombs \
 	    wcstol wcstoul wcstoll wcstoull wcstod wcstold wcstof \
+	    wcstol_l wcstoul_l wcstoll_l wcstoull_l \
+	    wcstod_l wcstold_l wcstof_l \
 	    wcscoll wcsxfrm \
 	    wcwidth wcswidth \
 	    wcscoll_l wcsxfrm_l \
-	    wcscasecmp wcsncase
+	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l
 
 include ../Rules
 
@@ -48,3 +50,10 @@ CFLAGS-wcstoull.c = -I../stdlib
 CFLAGS-wcstod.c = -I../stdlib
 CFLAGS-wcstold.c = -I../stdlib
 CFLAGS-wcstof.c = -I../stdlib
+CFLAGS-wcstol_l.c = -I../stdlib
+CFLAGS-wcstoul_l.c = -I../stdlib
+CFLAGS-wcstoll_l.c = -I../stdlib
+CFLAGS-wcstoull_l.c = -I../stdlib
+CFLAGS-wcstod_l.c = -I../stdlib
+CFLAGS-wcstold_l.c = -I../stdlib
+CFLAGS-wcstof_l.c = -I../stdlib

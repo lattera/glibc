@@ -23,7 +23,11 @@
 
 #define	FLOAT		long double
 #define	FLT		LDBL
-#define	STRTOF		wcstold
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define STRTOF		__wcstold_l
+#else
+# define STRTOF		wcstold
+#endif
 #define	MPN2FLOAT	__mpn_construct_long_double
 #define	FLOAT_HUGE_VAL	HUGE_VALL
 #define	USE_WIDE_CHAR	1

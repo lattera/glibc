@@ -321,7 +321,7 @@ res_querydomain(name, domain, class, type, answer, anslen)
 	u_char *answer;		/* buffer to put answer */
 	int anslen;		/* size of answer */
 {
-	char nbuf[MAXDNAME];
+	char nbuf[MAXDNAME * 2 + 2];
 	const char *longname = nbuf;
 	int n;
 

@@ -24,14 +24,14 @@ subdir	:= string
 headers	:= string.h strings.h memory.h endian.h bytesex.h \
 	   argz.h envz.h
 
-routines	:= strcat strchr strcmp strcoll strcpy strcspn strverscmp	\
-		   strdup strndup	\
+routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
+		   strverscmp strdup strndup				\
 		   strerror _strerror strerror_r strlen strnlen		\
 		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\
 		   strtok_r strxfrm memchr memcmp memmove memset	\
 		   bcopy bzero ffs stpcpy stpncpy			\
-		   strcasecmp strncase					\
+		   strcasecmp strncase strcasecmp_l strncase_l		\
 		   memccpy memcpy wordcopy strsep			\
 		   swab strfry memfrob memmem				\
 		   $(addprefix argz-,append count create ctsep next	\

@@ -128,6 +128,53 @@ extern unsigned long long int strtoull __P ((__const char *__restrict __nptr,
 #endif /* ISO C 9X or GCC and use MISC.  */
 
 
+#ifdef __USE_GNU
+/* The concept of one static locale per category is not very well
+   thought out.  Many applications will need to process its data using
+   information from several different locales.  Another application is
+   the implementation of the internationalization handling in the
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
+   argument.
+
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
+
+/* Structure for reentrant locale using functions.  This is an
+   (almost) opaque type for the user level programs.  */
+# include <xlocale.h>
+
+/* Special versions of the functions above which take the locale to
+   use as an additional parameter.  */
+extern long int __strtol_l __P ((__const char *__restrict __nptr,
+				 char **__restrict __endptr, int __base,
+				 __locale_t __loc));
+
+extern unsigned long int __strtoul_l __P ((__const char *__restrict __nptr,
+					   char **__restrict __endptr,
+					   int __base, __locale_t __loc));
+
+extern long long int __strtoll_l __P ((__const char *__restrict __nptr,
+				       char **__restrict __endptr, int __base,
+				       __locale_t __loc));
+
+extern unsigned long long int __strtoull_l __P ((__const char *__restrict
+						 __nptr,
+						 char **__restrict __endptr,
+						 int __base,
+						 __locale_t __loc));
+
+extern double __strtod_l __P ((__const char *__restrict __nptr,
+			       char **__restrict __endptr, __locale_t __loc));
+
+extern float __strtof_l __P ((__const char *__restrict __nptr,
+			      char **__restrict __endptr, __locale_t __loc));
+
+extern __long_double_t __strtold_l __P ((__const char *__restrict __nptr,
+					 char **__restrict __endptr,
+					 __locale_t __loc));
+#endif /* GNU */
+
 
 /* The internal entry points for `strtoX' take an extra flag argument
    saying whether or not to parse locale-dependent number grouping.  */

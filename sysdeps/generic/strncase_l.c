@@ -1,5 +1,6 @@
-/* Support for dynamic linking code in static libc.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Compare at most N characters of two strings without taking care for
+   the case using given locale.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +18,5 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* This file defines some things that for the dynamic linker are defined in
-   rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
-
-extern char *__progname;
-char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
-
-/* This defines the default search path for libraries.
-   For the dynamic linker it is set by -rpath when linking.  */
-const char *_dl_rpath = DEFAULT_RPATH;
+#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#include <sysdeps/generic/strncase.c>

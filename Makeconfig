@@ -83,6 +83,14 @@ export sysdep_dir := $(sysdep_dir)
 # Get the values defined by options to `configure'.
 include $(common-objpfx)config.make
 
+# We have a special subdir for each binary format.
+# For now, only ELF is fully supported.
+ifeq ($(elf),yes)
+binfmt-subdir = elf
+else
+binfmt-subdir =
+endif
+
 # Complete path to sysdep dirs.
 full-config-sysdirs := $(filter /%, $(config-sysdirs)) \
 		       $(addprefix $(..), $(filter-out /%, $(config-sysdirs)))

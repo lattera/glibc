@@ -25,9 +25,17 @@
 # define FLOAT		double
 # define FLT		DBL
 # ifdef USE_WIDE_CHAR
-#  define STRTOF	wcstod
+#  ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#   define STRTOF	__wcstod_l
+#  else
+#   define STRTOF	wcstod
+#  endif
 # else
-#  define STRTOF	strtod
+#  ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#   define STRTOF	__strtod_l
+#  else
+#   define STRTOF	strtod
+#  endif
 # endif
 # define MPN2FLOAT	__mpn_construct_double
 # define FLOAT_HUGE_VAL	HUGE_VAL
@@ -39,30 +47,6 @@
        u.ieee.mantissa0 = ((mant) >> 32) & 0xfffff;			      \
        u.ieee.mantissa1 = (mant) & 0xffffffff;				      \
   } while (0)
-#endif
-
-#ifdef USE_WIDE_CHAR
-# include <wctype.h>
-# include <wchar.h>
-# define STRING_TYPE wchar_t
-# define CHAR_TYPE wint_t
-# define L_(Ch) L##Ch
-# define ISSPACE(Ch) iswspace (Ch)
-# define ISDIGIT(Ch) iswdigit (Ch)
-# define ISXDIGIT(Ch) iswxdigit (Ch)
-# define TOLOWER(Ch) towlower (Ch)
-# define STRNCASECMP(S1, S2, N) __wcsncasecmp ((S1), (S2), (N))
-# define STRTOULL(S, E, B) wcstoull ((S), (E), (B))
-#else
-# define STRING_TYPE char
-# define CHAR_TYPE char
-# define L_(Ch) Ch
-# define ISSPACE(Ch) isspace (Ch)
-# define ISDIGIT(Ch) isdigit (Ch)
-# define ISXDIGIT(Ch) isxdigit (Ch)
-# define TOLOWER(Ch) tolower (Ch)
-# define STRNCASECMP(S1, S2, N) __strncasecmp ((S1), (S2), (N))
-# define STRTOULL(S, E, B) strtoull ((S), (E), (B))
 #endif
 /* End of configuration part.  */
 
@@ -86,6 +70,65 @@
 
 #define NDEBUG 1
 #include <assert.h>
+
+
+/* We use this code also for the extended locale handling where the
+   function gets as an additional argument the locale which has to be
+   used.  To access the values we have to redefine the _NL_CURRENT
+   macro.  */
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# undef _NL_CURRENT
+# define _NL_CURRENT(category, item) \
+  (current->values[_NL_ITEM_INDEX (item)].string)
+# define LOCALE_PARAM , loc
+# define LOCALE_PARAM_DECL __locale_t loc;
+#else
+# define LOCALE_PARAM
+# define LOCALE_PARAM_DECL
+#endif
+
+
+#ifdef USE_WIDE_CHAR
+# include <wctype.h>
+# include <wchar.h>
+# define STRING_TYPE wchar_t
+# define CHAR_TYPE wint_t
+# define L_(Ch) L##Ch
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define ISSPACE(Ch) __iswspace_l ((Ch), loc)
+#  define ISDIGIT(Ch) __iswdigit_l ((Ch), loc)
+#  define ISXDIGIT(Ch) __iswxdigit_l ((Ch), loc)
+#  define TOLOWER(Ch) __towlower_l ((Ch), loc)
+#  define STRNCASECMP(S1, S2, N) __wcsncasecmp_l ((S1), (S2), (N), loc)
+#  define STRTOULL(S, E, B) __wcstoull_l ((S), (E), (B), loc)
+# else
+#  define ISSPACE(Ch) iswspace (Ch)
+#  define ISDIGIT(Ch) iswdigit (Ch)
+#  define ISXDIGIT(Ch) iswxdigit (Ch)
+#  define TOLOWER(Ch) towlower (Ch)
+#  define STRNCASECMP(S1, S2, N) __wcsncasecmp ((S1), (S2), (N))
+#  define STRTOULL(S, E, B) wcstoull ((S), (E), (B))
+# endif
+#else
+# define STRING_TYPE char
+# define CHAR_TYPE char
+# define L_(Ch) Ch
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define ISSPACE(Ch) __isspace_l ((Ch), loc)
+#  define ISDIGIT(Ch) __isdigit_l ((Ch), loc)
+#  define ISXDIGIT(Ch) __isxdigit_l ((Ch), loc)
+#  define TOLOWER(Ch) __tolower_l ((Ch), loc)
+#  define STRNCASECMP(S1, S2, N) __strncasecmp_l ((S1), (S2), (N), loc)
+#  define STRTOULL(S, E, B) __strtoull_l ((S), (E), (B), loc)
+# else
+#  define ISSPACE(Ch) isspace (Ch)
+#  define ISDIGIT(Ch) isdigit (Ch)
+#  define ISXDIGIT(Ch) isxdigit (Ch)
+#  define TOLOWER(Ch) tolower (Ch)
+#  define STRNCASECMP(S1, S2, N) __strncasecmp ((S1), (S2), (N))
+#  define STRTOULL(S, E, B) strtoull ((S), (E), (B))
+# endif
+#endif
 
 
 /* Constants we need from float.h; select the set for the FLOAT precision.  */
@@ -354,10 +397,11 @@ __mpn_lshift_1 (mp_limb_t *ptr, mp_size_t size, unsigned int count,
    return 0.0.  If the number is too big to be represented, set `errno' to
    ERANGE and return HUGE_VAL with the appropriate sign.  */
 FLOAT
-INTERNAL (STRTOF) (nptr, endptr, group)
+INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int group;
+     LOCALE_PARAM_DECL
 {
   int negative;			/* The sign of the number.  */
   MPN_VAR (num);		/* MP representation of the number.  */
@@ -399,6 +443,10 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
+
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  struct locale_data *current = loc->__locales[LC_NUMERIC];
+#endif
 
   if (group)
     {
@@ -1352,9 +1400,10 @@ FLOAT
 #ifdef weak_function
 weak_function
 #endif
-STRTOF (nptr, endptr)
+STRTOF (nptr, endptr LOCALE_PARAM)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
+     LOCALE_PARAM_DECL
 {
-  return INTERNAL (STRTOF) (nptr, endptr, 0);
+  return INTERNAL (STRTOF) (nptr, endptr, 0 LOCALE_PARAM);
 }

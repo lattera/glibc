@@ -3,7 +3,11 @@
 
 #define	FLOAT		float
 #define	FLT		FLT
-#define	STRTOF		strtof
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define STRTOF		__strtof_l
+#else
+# define STRTOF		strtof
+#endif
 #define	MPN2FLOAT	__mpn_construct_float
 #define	FLOAT_HUGE_VAL	HUGE_VALF
 #define SET_MANTISSA(flt, mant) \

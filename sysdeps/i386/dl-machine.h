@@ -86,7 +86,7 @@ static ElfW(Addr) fixup (struct link_map *l, ElfW(Word) reloc_offset)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline void __attribute__ ((unused))
+static inline int
 elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   Elf32_Addr *got;
@@ -105,9 +105,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
       got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
+  return lazy;
+}
 
-  /* This code is used in dl-runtime.c to call the `fixup' function
-     and then redirect to the address it returns.  */
+/* This code is used in dl-runtime.c to call the `fixup' function
+   and then redirect to the address it returns.  */
 #ifndef PROF
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.globl _dl_runtime_resolve
@@ -149,7 +151,6 @@ _dl_runtime_resolve:
 #endif
 /* The PLT uses Elf32_Rel relocs.  */
 #define elf_machine_relplt elf_machine_rel
-}
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */

@@ -24,21 +24,25 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+
 __BEGIN_DECLS
 
 /* Standard well-defined IP protocols.  */
 enum
   {
-    IPPROTO_IP = 0,	/* Dummy protocol for TCP.  */
-    IPPROTO_ICMP = 1,	/* Internet Control Message Protocol.  */
-    IPPROTO_IGMP = 2,	/* Internet Group Management Protocol. */
-    IPPROTO_TCP = 6,	/* Transmission Control Protocol.  */
-    IPPROTO_EGP = 8,	/* Exterior Gateway Protocol.  */
-    IPPROTO_PUP = 12,	/* PUP protocol.  */
-    IPPROTO_UDP = 17,	/* User Datagram Protocol.  */
-    IPPROTO_IDP = 22,	/* XNS IDP protocol.  */
+    IPPROTO_IP = 0,	 /* Dummy protocol for TCP.  */
+    IPPROTO_ICMP = 1,	 /* Internet Control Message Protocol.  */
+    IPPROTO_IGMP = 2,	 /* Internet Group Management Protocol. */
+    IPPROTO_IPIP = 4,	 /* IPIP tunnels (older KA9Q tunnels use 94).  */
+    IPPROTO_TCP = 6,	 /* Transmission Control Protocol.  */
+    IPPROTO_EGP = 8,	 /* Exterior Gateway Protocol.  */
+    IPPROTO_PUP = 12,	 /* PUP protocol.  */
+    IPPROTO_UDP = 17,	 /* User Datagram Protocol.  */
+    IPPROTO_IDP = 22,	 /* XNS IDP protocol.  */
+    IPPROTO_IPV6 = 41,   /* IPv6-in-IPv4 tunnelling.  */
+    IPPROTO_ICMPV6 = 58, /* ICMPv6.  */
 
-    IPPROTO_RAW = 255,	/* Raw IP packets.  */
+    IPPROTO_RAW = 255,	 /* Raw IP packets.  */
     IPPROTO_MAX
   };
 
@@ -81,12 +85,6 @@ enum
     /* Ports greater this value are reserved for (non-privileged) servers.  */
     IPPORT_USERRESERVED = 5000
   };
-
-
-/* Link numbers.  */
-#define	IMPLINK_IP		155
-#define	IMPLINK_LOWEXPER	156
-#define	IMPLINK_HIGHEXPER	158
 
 
 /* Internet address.  */
@@ -165,8 +163,6 @@ extern const struct in6_addr in6addr_loopback;   /* ::1 */
 #define INET_ADDRSTRLEN 16
 #define INET6_ADDRSTRLEN 46
 
-
-
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <sockaddrcom.h>
 
@@ -179,10 +175,10 @@ struct sockaddr_in
     struct in_addr sin_addr;		/* Internet address.  */
 
     /* Pad to size of `struct sockaddr'.  */
-    unsigned char sin_zero[sizeof(struct sockaddr) -
+    unsigned char sin_zero[sizeof (struct sockaddr) -
 			   __SOCKADDR_COMMON_SIZE -
-			   sizeof(unsigned short int) -
-			   sizeof(struct in_addr)];
+			   sizeof (unsigned short int) -
+			   sizeof (struct in_addr)];
   };
 
 /* Ditto, for IPv6.  */
@@ -204,38 +200,8 @@ struct ipv6_mreq
     int		ipv6mr_ifindex;
   };
 
-/* Options for use with `getsockopt' and `setsockopt' at the IP level.
-   The first word in the comment at the right is the data type used;
-   "bool" means a boolean value stored in an `int'.  */
-#define	IP_OPTIONS	1	/* ip_opts; IP per-packet options.  */
-#define	IP_HDRINCL	2	/* int; Header is included with data.  */
-#define	IP_TOS		3	/* int; IP type of service and precedence.  */
-#define	IP_TTL		4	/* int; IP time to live.  */
-#define	IP_RECVOPTS	5	/* bool; Receive all IP options w/datagram.  */
-#define	IP_RECVRETOPTS	6	/* bool; Receive IP options for response.  */
-#define	IP_RECVDSTADDR	7	/* bool; Receive IP dst addr w/datagram.  */
-#define	IP_RETOPTS	8	/* ip_opts; Set/get IP per-packet options.  */
-#define IP_MULTICAST_IF 9	/* in_addr; set/get IP multicast i/f */
-#define IP_MULTICAST_TTL 10	/* u_char; set/get IP multicast ttl */
-#define IP_MULTICAST_LOOP 11	/* i_char; set/get IP multicast loopback */
-#define IP_ADD_MEMBERSHIP 12	/* ip_mreq; add an IP group membership */
-#define IP_DROP_MEMBERSHIP 13	/* ip_mreq; drop an IP group membership */
-
-/* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
-   The `ip_dst' field is used for the first-hop gateway when using a
-   source route (this gets put into the header proper).  */
-struct ip_opts
-  {
-    struct in_addr ip_dst;	/* First hop; zero without source route.  */
-    char ip_opts[40];		/* Actually variable in size.  */
-  };
-
-/* Structure used for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP. */
-struct ip_mreq
-{
-  struct in_addr imr_multiaddr;	/* IP multicast address of group */
-  struct in_addr imr_interface;	/* local IP address of interface */
-};
+/* Get system-specific definitions.  */
+#include <netinet/inbits.h>
 
 /* Functions to convert between host and network byte order.
 
@@ -260,51 +226,41 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 #define	htons(x)	(x)
 #endif
 
-/* IPV6 socket options.  */
-#define IPV6_ADDRFORM		1
-#define IPV6_RXINFO		2
-#define IPV6_RXHOPOPTS		3
-#define IPV6_RXDSTOPTS		4
-#define IPV6_RXSRCRT		5
-#define IPV6_PKTOPTIONS		6
-#define IPV6_CHECKSUM		7
-#define IPV6_HOPLIMIT		8
-
-#define IPV6_TXINFO		IPV6_RXINFO
-#define SCM_SRCINFO		IPV6_TXINFO
-#define SCM_SRCRT		IPV6_RXSRCRT
-
-#define IPV6_UNICAST_HOPS	16
-#define IPV6_MULTICAST_IF	17
-#define IPV6_MULTICAST_HOPS	18
-#define IPV6_MULTICAST_LOOP	19
-#define IPV6_ADD_MEMBERSHIP	20
-#define IPV6_DROP_MEMBERSHIP	21
-
 #define IN6_IS_ADDR_UNSPECIFIED(a) \
-        ((((u_int32_t *)(a))[0] == 0) && ((u_int32_t *)(a))[1] == 0) && \
-         (((u_int32_t *)(a))[2] == 0) && ((u_int32_t *)(a))[3] == 0))
+        ((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
+         (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == 0))
 
 #define IN6_IS_ADDR_LOOPBACK(a) \
-        ((((u_int32_t *)(a))[0] == 0) && ((u_int32_t *)(a))[1] == 0) && \
-         (((u_int32_t *)(a))[2] == 0) && ((u_int32_t *)(a))[3] == htonl(1)))
+        ((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
+         (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == htonl (1)))
 
-#define IN6_IS_ADDR_MULTICAST(a) (((u_int8_t *)(a))[0] == 0xff)
+#define IN6_IS_ADDR_MULTICAST(a) (((u_int8_t *) (a))[0] == 0xff)
 
 #define IN6_IS_ADDR_LINKLOCAL(a) \
-        ((((u_int32_t *)(a))[0] & htonl(0xffc00000)) == htonl(0xfe800000))
+        ((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfe800000))
 
 #define IN6_IS_ADDR_SITELOCAL(a) \
-        ((((u_int32_t *)(a))[0] & htonl(0xffc00000)) == htonl(0xfec00000))
+        ((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfec00000))
 
 #define IN6_IS_ADDR_V4MAPPED(a) \
-        ((((u_int32_t *)(a))[0] == 0) && (((u_int32_t *)(a))[1] == 0) && \
-         (((u_int32_t *)(a))[2] == htonl(0xffff)))
+        ((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
+         (((u_int32_t *) (a))[2] == htonl (0xffff)))
 
 #define IN6_IS_ADDR_V4COMPAT(a) \
-        ((((u_int32_t *)(a))[0] == 0) && (((u_int32_t *)(a))[1] == 0) && \
-         (((u_int32_t *)(a))[2] == 0) && (ntohl(((u_int32_t *)(a))[3]) > 1))
+        ((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
+         (((u_int32_t *) (a))[2] == 0) && (ntohl (((u_int32_t *) (a))[3]) > 1))
 
+
+/* Bind socket to a privileged IP port.  */
+extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
+
+
+/* IPv6 packet information.  */
+struct in6_pktinfo
+  {
+    struct in6_addr ipi6_addr;    /* src/dst IPv6 address */
+    int             ipi6_ifindex; /* send/recv interface index */
+  };
 
 __END_DECLS
 

@@ -233,6 +233,16 @@ extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
 			     size_t __n));
 #endif /* Use BSD or X/Open Unix.  */
 
+#ifdef	__USE_GNU
+/* Again versions of a few functions which use the given locale instead
+   of the global one.  */
+extern int __strcasecmp_l __P ((__const char *__s1, __const char *__s2,
+				__locale_t __loc));
+
+extern int __strncasecmp_l __P ((__const char *__s1, __const char *__s2,
+				 size_t __n, __locale_t __loc));
+#endif
+
 #ifdef	__USE_BSD
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */

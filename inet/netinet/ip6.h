@@ -22,17 +22,18 @@
 #include <netinet/in.h>
 #include <endian.h>
 
-struct ipv6hdr {
-#if (__BYTE_ORDER == __LITTLE_ENDIAN)
+struct ipv6hdr
+{
+#if __BYTE_ORDER == __LITTLE_ENDIAN
   u_int8_t ipv6_version:4;
   u_int8_t ipv6_priority:4; /* going away? */
   u_int32_t ipv6_flowid:24;
-#elif (__BYTE_ORDER == __BIG_ENDIAN)
+#elif __BYTE_ORDER == __BIG_ENDIAN
   u_int32_t ipv6_flowid:24;
   u_int8_t ipv6_priority:4; /* going away? */
   u_int8_t ipv6_version:4;
 #else
-#error  Unknown endianness
+# error  Unknown endianness
 #endif
   u_int16_t ipv6_len;
   u_int8_t ipv6_nextheader;

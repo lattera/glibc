@@ -93,6 +93,16 @@ extern int __wcsncasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
                                size_t __n));
 extern int wcsncasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
                              size_t __n));
+
+/* Similar to the two functions above but take the information from
+   the provided locale and not the global locale.  */
+# include <xlocale.h>
+
+extern int __wcscasecmp_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
+				__locale_t __loc));
+
+extern int __wcsncasecmp_l __P ((__const wchar_t *__s1, __const wchar_t *__s2,
+				 size_t __n, __locale_t __loc));
 #endif
 
 /* Compare S1 and S2, both interpreted as appropriate to the
@@ -107,7 +117,6 @@ extern size_t wcsxfrm __P ((wchar_t *__restrict __s1,
 #ifdef __USE_GNU
 /* Similar to the two functions above but take the information from
    the provided locale and not the global locale.  */
-# include <xlocale.h>
 
 /* Compare S1 and S2, both interpreted as appropriate to the
    LC_COLLATE category of the given locale.  */
@@ -315,6 +324,55 @@ extern unsigned long long int wcstoull __P ((__const wchar_t *
 					     wchar_t **__restrict __endptr,
 					     int __base));
 #endif /* ISO C 9X or GCC and GNU.  */
+
+#ifdef __USE_GNU
+/* The concept of one static locale per category is not very well
+   thought out.  Many applications will need to process its data using
+   information from several different locales.  Another application is
+   the implementation of the internationalization handling in the
+   upcoming ISO C++ standard library.  To support this another set of
+   the functions using locale data exist which have an additional
+   argument.
+
+   Attention: all these functions are *not* standardized in any form.
+   This is a proof-of-concept implementation.  */
+
+/* Structure for reentrant locale using functions.  This is an
+   (almost) opaque type for the user level programs.  */
+# include <xlocale.h>
+
+/* Special versions of the functions above which take the locale to
+   use as an additional parameter.  */
+extern long int __wcstol_l __P ((__const wchar_t *__restrict __nptr,
+				 wchar_t **__restrict __endptr, int __base,
+				 __locale_t __loc));
+
+extern unsigned long int __wcstoul_l __P ((__const wchar_t *__restrict __nptr,
+					   wchar_t **__restrict __endptr,
+					   int __base, __locale_t __loc));
+
+extern long long int __wcstoll_l __P ((__const wchar_t *__restrict __nptr,
+				       wchar_t **__restrict __endptr,
+				       int __base, __locale_t __loc));
+
+extern unsigned long long int __wcstoull_l __P ((__const wchar_t *__restrict
+						 __nptr,
+						 wchar_t **__restrict __endptr,
+						 int __base,
+						 __locale_t __loc));
+
+extern double __wcstod_l __P ((__const wchar_t *__restrict __nptr,
+			       wchar_t **__restrict __endptr,
+			       __locale_t __loc));
+
+extern float __wcstof_l __P ((__const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr,
+			      __locale_t __loc));
+
+extern __long_double_t __wcstold_l __P ((__const wchar_t *__restrict __nptr,
+					 wchar_t **__restrict __endptr,
+					 __locale_t __loc));
+#endif /* GNU */
 
 
 /* The internal entry points for `wcstoX' take an extra flag argument

@@ -1,8 +1,127 @@
+1997-05-24 03:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/Makefile (routines): Add strtol_l, strtoul_l, strtoll_l,
+	strtoull_l, strtof_l, strtod_l, and strtold_l.
+	* stdlib/stdlib.h: Add prototypes for new functions.
+	* stdlib/strtod.c: Change for compiling as strtoX_l.
+	* stdlib/strtol.c: Likewise.
+	* stdlib/strtof.c: Likewise.
+	* stdlib/strtold.c: Likewise.
+	* stdlib/strtod_l.c: New file.
+	* stdlib/strtof_l.c: New file.
+	* stdlib/strtold_l.c: New file.
+	* stdlib/strtol_l.c: New file.
+	* stdlib/strtoul_l.c: New file.
+	* stdlib/strtoll_l.c: New file.
+	* stdlib/strtoull_l.c: New file.
+	* string/Makefile (routines): Add strcasecmp_l and strncase_l.
+	* string/string.h: Add prototypes for new functions.
+	* sysdeps/generic/strcasecmp.c: Change for compiling as strcasecmp_l.
+	* sysdeps/generic/strncase.c: Change for compiling as strncasecmp_l.
+	* sysdeps/generic/strcasecmp_l.c: New file.
+	* sysdeps/generic/strncase_l.c: New file.
+	* wcsmbs/Makefile (routines): Add wcstol_l, wcstoul_l, wcstoll_l,
+	wcstoull_l, wcstod_l, wcstold_l, wcstof_l, wcscasecmp_l, and
+	wcsncase_l.
+	* wcsmbs/wchar.h: Add prototypes for new functions.
+	* wcsmbs/wcscasecmp.c: Change for compiling as wcscasecmp_l.
+	* wcsmbs/wcsncase.c: Change for compiling as wcsncasecmp_l.
+	* wcsmbs/wcscasecmp_l.c: New file.
+	* wcsmbs/wcsncase_l.c: New file.
+	* wcsmbs/wcstof.c: Change for compiling as wcstof_l.c
+	* wcsmbs/wcstold.c: Change for compiling as wcstold_l.c
+	* wcsmcs/wcstod_l.c: New file.
+	* wcsmcs/wcstof_l.c: New file.
+	* wcsmcs/wcstold_l.c: New file.
+	* wcsmcs/wcstol_l.c: New file.
+	* wcsmcs/wcstoul_l.c: New file.
+	* wcsmcs/wcstoll_l.c: New file.
+	* wcsmcs/wcstoull_l.c: New file.
+
+	* Makeconfig (binfmt-subdir): New variable.  Set to `elf' if
+	$(elf) is defined.  More to come later when other binary formats
+	are supported.
+	* Makefile (subdirs): Remove elf.  Add $(binfmt-subdir).
+	Suggested by Philip Blundell.
+
+	* stdlib/Makefile (headers): Add fmtmsg.h.
+	(routines): Add fmtmsg.
+	* stdlib/fmtmsg.c: New file.
+	* stdlib/fmtmsg.h: New file.
+	* manual/stdio.texi: Add description of fmtmsg and addseverity.
+	* manual/examples/fmtmsgexpl.c: Example program for fmtmsg
+	documentation.
+
+1997-05-23 15:26  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* resolv/res_query.c (res_querydomain): Avoid potential buffer
+	overrun.  Reported by Dan A. Dickey <ddickey@transition.com>.
+
+1997-05-22 18:36  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* elf/dl-support.c (_dl_sysdep_open_zero_fill,
+	_dl_sysdep_read_whole_file): Moved functions to ...
+	* elf/dl-misc.c: This new file.
+	* sysdeps/generic/dl-sysdepio.c: Delete file and move functions...
+	* elf/dl-misc.c: ... here.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_open_zero_fill,
+	_dl_sysdep_read_whole_file): Delete functions; they now come from
+	elf/dl-misc.c (dl-support.c had contained identical versions).
+	* sysdeps/mach/hurd/dl-sysdepio.c: Delete file; move functions...
+	* sysdeps/mach/hurd/dl-sysdep.c: ... here, but mark them weak so
+	that the regular ones in dl-misc work once we've initialized.
+	* elf/Makefile (dl-routines): Remove dl-sysdepio.c.  Add dl-misc.c.
+
+1997-05-22 21:55  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* inet/Makefile (headers): Add netinet/inbits.h.
+	* inet/netinet/in.h: New file.
+	* sysdeps/generic/netinet/inbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/inbits.h: Likewise.
+	* sysdeps/generic/netinet/ip6.h: Move to...
+	* inet/netinet/ip6.h: ... here.
+	* sysdeps/generic/netinet/icmp6.h: Move to...
+	* inet/netinet/icmp6.h: ... here.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Remove.
+	* sysdeps/generic/netinet/in.h: Remove.
+
+1997-05-22 05:40  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): If we are
+	not looking at the new thread-safe .plt, don't be lazy about relocs.
+	(_dl_runtime_resolve): Fix up arithmetic for new .plt layout.
+	(elf_alpha_fix_plt): Insert wmb as appropriate to ensure safety.
+	* elf/dynamic-link.h (ELF_DYNAMIC_RELOCATE): Let
+	elf_machine_runtime_setup() decide if we can actually be lazy.
+	* elf/rtld.c (_dl_start): So don't call it.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_runtime_setup): Return lazy.
+	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/sparc/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/stub/dl-machine.h (elf_machine_runtime_setup): Update
+	skeleton definition.
+
+1997-05-22 18:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h (logb): Remove second value placed on
+	stack by fxtract.
+
+1997-05-22 13:07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/rpcsvc/rusers.x: Provide and correct prototypes,
+	add cast to (xdrproc_t) where necessary to prevent warnings.
+
+1997-05-22 12:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Remove I/O functions.
+
 1997-05-22 04:09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/clnt_perr.c (clnt_sperrno): Change type of variable i
 	to size_t to prevent warning.
-	* sunrpc/rpcinfo.c (get_inet_address): Use UNADDR_NONE and INADDR_ANY
+	* sunrpc/rpcinfo.c (get_inet_address): Use INADDR_NONE and INADDR_ANY
 	instead of numeric values.
 	Various cleanups.
 	* sunrpc/xdr_mem.c: Use `const char *' instead of `const caddr_t'
@@ -1484,7 +1603,7 @@
 
 1997-04-03 13:37  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/libm-ieee754/s_cexp.c: Fix type: string_alias ->
+	* sysdeps/libm-ieee754/s_cexp.c: Fix typo: string_alias ->
 	strong_alias.
 	Reported by sun <asun@zoology.washington.edu>.
 
@@ -3975,7 +4094,7 @@
 	* locale/programs/ld-time.c (time_finish): t_fmt_ampm is optional.
 	Use default value instead of printing a warning.
 
-	* nss/XXX-lookup.c: Add misssing explanation.
+	* nss/XXX-lookup.c: Add missing explanation.
 
 1997-02-19 19:14  Andreas Jaeger  <aj@arthur.pfalz.de>
 

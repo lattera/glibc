@@ -28,17 +28,17 @@
 #define ICMPV6_FILTER_BLOCKOTHERS	3
 #define ICMPV6_FILTER_PASSONLY		4
 
-struct icmpv6_filter 
+struct icmpv6_filter
   {
     u_int32_t data[8];
   };
 
-struct icmpv6hdr 
+struct icmpv6hdr
   {
     u_int8_t icmpv6_type;   /* type field */
     u_int8_t icmpv6_code;   /* code field */
     u_int16_t icmpv6_cksum;  /* checksum field */
-    union 
+    union
       {
 	u_int32_t un_data32[1]; /* type-specific field */
 	u_int16_t un_data16[2]; /* type-specific field */
@@ -81,17 +81,17 @@ struct icmpv6hdr
 #include <asm/bitops.h>
 
 #define ICMPV6_FILTER_WILLPASS(type, filterp) \
-	(test_bit(type, filterp) == 0)
+	(test_bit (type, filterp) == 0)
 
 #define ICMPV6_FILTER_WILLBLOCK(type, filterp) \
-	test_bit(type, filterp)
+	test_bit (type, filterp)
 
 #define ICMPV6_FILTER_SETPASS(type, filterp) \
-	clear_bit(type & 0x1f, &((filterp)->data[type >> 5]))
+	clear_bit (type & 0x1f, &((filterp)->data[type >> 5]))
 
 #define ICMPV6_FILTER_SETBLOCK(type, filterp) \
-	set_bit(type & 0x1f, &((filterp)->data[type >> 5]))
-#else 
+	set_bit (type & 0x1f, &((filterp)->data[type >> 5]))
+#else
 #define ICMPV6_FILTER_WILLPASS(type, filterp) \
 	((((filterp)->data[(type) >> 5]) & (1 << ((type) & 31))) == 0)
 
@@ -106,10 +106,10 @@ struct icmpv6hdr
 #endif
 
 #define ICMPV6_FILTER_SETPASSALL(filterp) \
-	memset(filterp, 0, sizeof(struct icmpv6_filter));
+	memset (filterp, 0, sizeof (struct icmpv6_filter));
 
 #define ICMPV6_FILTER_SETBLOCKALL(filterp) \
-	memset(filterp, 0xFF, sizeof(struct icmpv6_filter));
+	memset (filterp, 0xFF, sizeof (struct icmpv6_filter));
 
 #define ND6_ROUTER_SOLICITATION		133
 #define ND6_ROUTER_ADVERTISEMENT	134
@@ -117,7 +117,7 @@ struct icmpv6hdr
 #define ND6_NEIGHBOR_ADVERTISEMENT	136
 #define ND6_REDIRECT			137
 
-enum nd6_option 
+enum nd6_option
   {
     ND6_OPT_SOURCE_LINKADDR=1,
     ND6_OPT_TARGET_LINKADDR=2,
@@ -137,7 +137,7 @@ struct nd6_router_solicit      /* router solicitation */
 #define rsol_cksum		rsol_hdr.icmpv6_cksum
 #define rsol_reserved		rsol_hdr.icmpv6_data32[0]
 
-struct nd6_router_advert 
+struct nd6_router_advert
   {
     struct icmpv6hdr	radv_hdr;
     u_int32_t		radv_reachable;	 /* reachable time	*/

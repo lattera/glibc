@@ -29,6 +29,7 @@ representing a communications channel to a file, device, or process.
 * Stream Buffering::            How to control buffering of streams.
 * Other Kinds of Streams::      Streams that do not necessarily correspond
                                  to an open file.
+* Formatted Messages::          Print strictly formatted messages.
 @end menu
 
 @node Streams
@@ -3815,3 +3816,311 @@ wait until the rest of the manual is more done and polished.
 @end ignore
 
 @c ??? This section could use an example.
+
+
+@node Formatted Messages
+@section Formatted Messages
+@cindex formatted messages
+
+On systems which are based on System V messages of programs (especially
+the system tools) are printed in a strict form using the @code{fmtmsg}
+function.  The uniformity sometimes helps the user to interpret messages
+and the strictness tests of the @code{fmtmsg} function ensures that the
+programmer follows some minimal requirements.
+
+@menu
+* Printing Formatted Messages::   The @code{fmtmsg} function.
+* Adding Severity Classes::       Add more severity classes.
+* Example::                       How to use @code{fmtmsg} and @code{addseverity}.
+@end menu
+
+
+@node Printing Formatted Messages
+@subsection Printing Formatted Messages
+
+Messages can be printed to standard error and/or to the console.  To
+select the destination the programmer can use the following to values,
+bitwise OR combined if wanted, for the @var{classification} parameter of
+@code{fmtmsg}:
+
+@vtable @code
+@item MM_PRINT
+Display the message in standard error.
+@item MM_CONSOLE
+Display the message on the system console.
+@end vtable
+
+The errorneous piece of the system can be signal by exactly one of the
+following values which also is bitwise ORed with the
+@var{classification} parameter to @code{fmtmsg}:
+
+@vtable @code
+@item MM_HARD
+The source of the condition is some hardware.
+@item MM_SOFT
+The source of the condition is some software.
+@item MM_FIRM
+The source of the condition is some firmware.
+@end vtable
+
+A third component of the @var{classification} parameter to @code{fmtmsg}
+can describe the part of the system which detects the problem.  This is
+done by using exactly one of the following values:
+
+@vtable @code
+@item MM_APPL
+The errorneous condition is detected by the application.
+@item MM_UTIL
+The errorneous condition is detected by a utility.
+@item MM_OPSYS
+The errorneous condition is detected by the operating system.
+@end vtable
+
+A last component of @var{classification} can signal the results of this
+message.  Exactly one of the following values can be used:
+
+@vtable @code
+@item MM_RECOVER
+It is a recoverable error.
+@item MM_NRECOV
+It is a non-recoverable error.
+@end vtable
+
+@comment fmtmsg.h
+@comment XPG
+@deftypefun int fmtmsg (long int @var{classification}, const char *@var{label}, int @var{severity}, const char *@var{text}, const char *@var{action}, const char *@var{tag})
+Display a message described by its parameters on the device(s) specified
+in the @var{classification} parameter.  The @var{label} parameter
+identifies the source of the message.  The string should consist of two
+colon separated parts where the first part has not more than 10 and the
+second part not more the 14 characters.  The @var{text} parameter
+descries the condition of the error, the @var{action} parameter possible
+steps to recover from the error and the @var{tag} parameter is a
+reference to the online documentation where more information can be
+found.  It should contain the @var{label} value and a unique
+identification number.
+
+Each of the parameters can be of a special value which means this value
+is to be omitted.  The symbolic names for these values are:
+
+@vtable @code
+@item MM_NULLLBL
+Ignore @var{label} parameter.
+@item MM_NULLSEV
+Ignore @var{severity} parameter.
+@item MM_NULLMC
+Ignore @var{classification} parameter.  This implies that nothing is
+actually printed.
+@item MM_NULLTXT
+Ignore @var{text} parameter.
+@item MM_NULLACT
+Ignore @var{action} parameter.
+@item MM_NULLTAG
+Ignore @var{tag} parameter.
+@end vtable
+
+There is another way certain fields can be omitted from the output the
+standard error.  This is described below in the description of
+environment variables influencing the behaviour.
+
+The @var{severity} parameter can have one of the values in the following
+table:
+@cindex severity class
+
+@vtable @code
+@item MM_NOSEV
+Nothing is printed, this value is the same as @code{MM_NULLSEV}.
+@item MM_HALT
+This value is printed as @code{HALT}.
+@item MM_ERROR
+This value is printed as @code{ERROR}.
+@item MM_WARNING
+This value is printed as @code{WARNING}.
+@item MM_INFO
+This value is printed as @code{INFO}.
+@end vtable
+
+The numeric value of these five macros are between @code{0} and
+@code{4}.  Using the environment variable @code{SEV_LEVEL} or using the
+@code{addseverity} function one can add more severity levels with their
+corresponding string to print.  This is described below
+(@pxref{Adding Severity Classes}).
+
+@noindent
+If no parameter is ignored the output looks like this:
+
+@smallexample
+@var{label}: @var{severity-string}: @var{text}
+TO FIX: @var{action} @var{tag}
+@end smallexample
+
+The colons, new line characters and the @code{TO FIX} string are
+inserted if necessary, i.e., if the corresponding parameter is not
+ignored.
+
+This function is specified in the X/Open Portability Guide.  It is also
+available on all system derived from System V.
+
+The function return the value @code{MM_OK} if no error occurred.  If
+only the printing to standard error failed, it returns @code{MM_NOMSG}.
+If printing to the console fails, it returns @code{MM_NOCON}.  If
+nothing is printed @code{MM_NOTOK} is returned.  Among situation where
+all outputs fail this last value is also returned if a parameter value
+is incorrect.
+@end deftypefun
+
+There are two environment variables which influence the behaviour of
+@code{fmtmsg}.  The first is @code{MSGVERB}.  It is used to control the
+output actually happening on standard error (@emph{not} the console
+output).  Each of the five fields can explicitely be enabled.  To do
+this the user has to put the @code{MSGVERB} variable with a format like
+following in the environment before calling the @code{fmtmsg} function
+the first time:
+
+@smallexample
+MSGVERB=@var{keyword}[:@var{keyword}[:...]]
+@end smallexample
+
+Valid @var{keyword}s are @code{label}, @code{severity}, @code{text},
+@code{action}, and @code{tag}.  If the environment variable is not given
+or is the empty string, a not supported keyword is given or the value is
+somehow else invalid, no part of the message is masked out.
+
+The second environment variable which influences the behaviour of
+@code{fmtmsg} is @code{SEV_LEVEL}.  This variable and the change in the
+behaviour of @code{fmtmsg} is not specified in the X/Open Portability
+Guide.  It is available in System V systems, though.  It can be used to
+introduce no severity levels.  By default, only the five severity levels
+described above are available.  Any other numeric value would make
+@code{fmtmsg} print nothing.
+
+If the user puts @code{SEV_LEVEL} with a format like
+
+@smallexample
+SEV_LEVEL=[@var{description}[:@var{description}[:...]]]
+@end smallexample
+
+@noindent
+in the environment of the process before the first call to
+@code{fmtmsg}, where @var{description} has a value of the form
+
+@smallexample
+@var{severity-keyword},@var{level},@var{printstring}
+@end smallexample
+
+The @var{severity-keyword} part is not used by @code{fmtmsg} but it has
+to be present.  The @var{level} part is a string representation of a
+number.  The numeric value must be a number greater than 4.  This value
+must be used in the @var{severity} parameter of @code{fmtmsg} to select
+this class.  It is not possible to overwrite any of the predefined
+classes.  The @var{printstring} is the string printed when a message of
+this class is processed by @code{fmtmsg} (see above, @code{fmtsmg} does
+not print the numeric value but instead the string representation).
+
+
+@node Adding Severity Classes
+@subsection Adding Severity Classes
+@cindex severity class
+
+There is another possibility to introduce severity classes beside using
+the environment variable @code{SEV_LEVEL}.  This simplifies the task of
+introducing new classes in a running program.  One could use the
+@code{setenv} or @code{putenv} function to set the environment variable,
+but this toilsome.
+
+@deftypefun int addseverity (int @var{severity}, const char *@var{string})
+This function allows to introduce new severity classes which can be
+addressed by the @var{severity} parameter of the @code{fmtmsg} function.
+The @var{severity} parameter of @code{addseverity} must match the value
+for the parameter with the same name of @code{fmtmsg} and @var{string}
+is the string printed in the actual messages instead of the numeric
+value.
+
+If @var{string} is @code{NULL} the severity class with the numeric value
+according to @var{severity} is removed.
+
+The return value is @code{MM_OK} if the task was successfully performed.
+If the return value is @code{MM_NOTOK} something went wrong.  This could
+mean that no more memory is available or a class is not available when
+it has to be removed.
+
+This function is not specified in the X/Open Portability Guide although
+the @code{fmtsmg} is.  It is available on System V systems.
+@end deftypefun
+
+
+@node Example
+@subsection How to use @code{fmtmsg} and @code{addseverity}
+
+Here is a simple example program to illustrate the use of the both
+functions described in this section.
+
+@smallexample
+@include fmtmsgexpl.c.texi
+@end smallexample
+
+The second call to @code{fmtmsg} illustrates a use of this function how
+it usually happens on System V systems which heavily use this function.
+It might be worth a thought to follow the scheme used in System V
+systems so we give a short explanation here.  The value of the
+@var{label} field (@code{UX:cat}) says that the error occured in the
+Unix program @code{cat}.  The explanation of the error follows and the
+value for the @var{action} parameter is @code{"refer to manual"}.  One
+could me more specific here, if needed.  The @var{tag} field contains,
+as proposed above, the value of the string given for the @var{label}
+parameter, and additionally a unique ID (@code{001} in this case).  For
+a GNU environment this string could contain a reference to the
+corresponding node in the Info page for the program.
+
+@noindent
+Running this program without specifying the @code{MSGVERB} and
+@code{SEV_LEVEL} function produces the following output:
+
+@smallexample
+UX:cat: NOTE2: invalid syntax
+TO FIX: refer to manual UX:cat:001
+@end smallexample
+
+We see the different fields of the message and how the extra glue (the
+colons and the @code{TO FIX} string) are printed.  But only one of the
+three calls to @code{fmtmsg} produced output.  The first call does not
+print anything because the @var{label} parameter is not in the correct
+form.  As specified in @ref{Printing Formatted Messages} the string must
+contain two fields, separated by a colon.  The third @code{fmtmsg} call
+produced no output since the class with the numeric value @code{6} is
+not defined.  Although a class with numeric value @code{5} is also not
+defined by default, the call the @code{addseverity} introduces it and
+the second call to @code{fmtmsg} produces the above outout.
+
+When we change the environment of the program to contain
+@code{SEV_LEVEL=XXX,6,NOTE} when running it we get a different result:
+
+@smallexample
+UX:cat: NOTE2: invalid syntax
+TO FIX: refer to manual UX:cat:001
+label:foo: NOTE: text
+TO FIX: action tag
+@end smallexample
+
+Now the third call the @code{fmtmsg} produced some output and we see how
+the string @code{NOTE} from the environment variable appears in the
+message.
+
+Now we can reduce the output by specifying in which fields we are
+interested in.  If we additionally set the environment variable
+@code{MSGVERB} to the value @code{severity:label:action} we get the
+following output:
+
+@smallexample
+UX:cat: NOTE2
+TO FIX: refer to manual
+label:foo: NOTE
+TO FIX: action
+@end smallexample
+
+@noindent
+I.e., the output produced by the @var{text} and the @var{tag} parameters
+to @code{fmtmsg} vanished.  Please also note the now there is no colon
+after the @code{NOTE} and @code{NOTE2} strings in the output.  This is
+not necessary since there is no more output on this line since the text
+is missing.

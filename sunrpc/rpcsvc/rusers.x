@@ -112,7 +112,8 @@ program RUSERSPROG {
 %       int uta_cnt;
 %};
 %typedef struct utmparr utmparr;
-%int xdr_utmparr(XDR *xdrs, struct utmparr *objp);
+%
+%extern bool_t xdr_utmparr __P ((XDR *xdrs, struct utmparr *objp));
 %
 %struct utmpidle {
 %	struct ru_utmp ui_utmp;
@@ -124,7 +125,7 @@ program RUSERSPROG {
 %	int uia_cnt;
 %};
 %
-%int xdr_utmpidlearr(XDR *xdrs, struct utmpidlearr *objp);
+%extern bool_t xdr_utmpidlearr __P ((XDR *xdrs, struct utmpidlearr *objp));
 %
 %#ifdef	__cplusplus
 %}
@@ -133,6 +134,8 @@ program RUSERSPROG {
 
 
 #ifdef	RPC_XDR
+%bool_t xdr_utmp (XDR *xdrs, struct ru_utmp *objp);
+%
 %bool_t
 %xdr_utmp(xdrs, objp)
 %	XDR *xdrs;
@@ -161,13 +164,15 @@ program RUSERSPROG {
 %	return (TRUE);
 %}
 %
+%bool_t xdr_utmpptr(XDR *xdrs, struct ru_utmp **objpp);
+%
 %bool_t
 %xdr_utmpptr(xdrs, objpp)
 %	XDR *xdrs;
 %	struct ru_utmp **objpp;
 %{
 %	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct ru_utmp),
-%			   xdr_utmp)) {
+%			   (xdrproc_t) xdr_utmp)) {
 %		return (FALSE);
 %	}
 %	return (TRUE);
@@ -179,11 +184,14 @@ program RUSERSPROG {
 %	struct utmparr *objp;
 %{
 %	if (!xdr_array(xdrs, (char **)&objp->uta_arr, (u_int *)&objp->uta_cnt,
-%		       MAXUSERS, sizeof(struct ru_utmp *), xdr_utmpptr)) {
+%		       MAXUSERS, sizeof(struct ru_utmp *),
+%		       (xdrproc_t) xdr_utmpptr)) {
 %		return (FALSE);
 %	}
 %	return (TRUE);
 %}
+%
+%bool_t xdr_utmpidle(XDR *xdrs, struct utmpidle *objp);
 %
 %bool_t
 %xdr_utmpidle(xdrs, objp)
@@ -199,13 +207,15 @@ program RUSERSPROG {
 %	return (TRUE);
 %}
 %
+%bool_t xdr_utmpidleptr(XDR *xdrs, struct utmpidle **objp);
+%
 %bool_t
 %xdr_utmpidleptr(xdrs, objpp)
 %	XDR *xdrs;
 %	struct utmpidle **objpp;
 %{
 %	if (!xdr_reference(xdrs, (char **) objpp, sizeof (struct utmpidle),
-%			   xdr_utmpidle)) {
+%			   (xdrproc_t) xdr_utmpidle)) {
 %		return (FALSE);
 %	}
 %	return (TRUE);
@@ -217,7 +227,8 @@ program RUSERSPROG {
 %	struct utmpidlearr *objp;
 %{
 %	if (!xdr_array(xdrs, (char **)&objp->uia_arr, (u_int *)&objp->uia_cnt,
-%		       MAXUSERS, sizeof(struct utmpidle *), xdr_utmpidleptr)) {
+%		       MAXUSERS, sizeof(struct utmpidle *),
+%		       (xdrproc_t) xdr_utmpidleptr)) {
 %		return (FALSE);
 %	}
 %	return (TRUE);

@@ -97,8 +97,11 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 
 /* This can't just be an inline function because GCC is too dumb
    to inline functions containing inlines themselves.  */
-#define ELF_DYNAMIC_RELOCATE(map, lazy) \
-  do { ELF_DYNAMIC_DO_REL ((map), (lazy)); \
-       ELF_DYNAMIC_DO_RELA ((map), (lazy)); } while (0)
+#define ELF_DYNAMIC_RELOCATE(map, lazy)				\
+  do {								\
+    int edr_lazy = elf_machine_runtime_setup((map), (lazy));	\
+    ELF_DYNAMIC_DO_REL ((map), edr_lazy);			\
+    ELF_DYNAMIC_DO_RELA ((map), edr_lazy);			\
+  } while (0)
 
 #endif

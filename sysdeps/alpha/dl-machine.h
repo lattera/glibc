@@ -86,7 +86,7 @@ elf_machine_load_address (void)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline void
+static inline int
 elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   Elf64_Addr plt;
@@ -104,7 +104,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 
       /* Identify this shared object */
       *(Elf64_Addr *)(plt + 24) = (Elf64_Addr) l;
+
+      /* If the first instruction of the plt entry is not
+	 "br $28, plt0", we cannot do lazy relocation.  */
+      lazy = (*(unsigned *)(plt + 32) == 0xc39ffff7);
     }
+
+  return lazy;
 }
 
 /* This code is used in dl-runtime.c to call the `fixup' function
@@ -145,9 +151,11 @@ _dl_runtime_resolve:
 	.prologue 1
 	/* Set up the arguments for _dl_runtime_resolve. */
 	/* $16 = link_map out of plt0 */
+	/* $17 = offset of reloc entry = ($28 - $27 - 20) /12 * 24 */
+	subq	$28, $27, $17
 	ldq	$16, 8($27)
-	/* $17 = offset of reloc entry */
-	mov	$28, $17
+	subq	$17, 20, $17
+	addq	$17, $17, $17
 	/* Do the fixup */
 	bsr	$26, fixup..ng
 	/* Move the destination address into position.  */
@@ -290,14 +298,18 @@ elf_alpha_fix_plt(struct link_map *l,
       lo = (short)hi;
       hi = (hi - lo) >> 16;
 
-      /* Emit "ldah $27,H($27)" */
-      plte[0] = 0x277b0000 | (hi & 0xffff);
-
       /* Emit "lda $27,L($27)" */
       plte[1] = 0x237b0000 | (lo & 0xffff);
 
       /* Emit "br $31,function" */
       plte[2] = 0xc3e00000 | (edisp & 0x1fffff);
+
+      /* Think about thread-safety -- the previous instructions must be
+	 committed to memory before the first is overwritten.  */
+      __asm__ __volatile__("wmb" : : : "memory");
+
+      /* Emit "ldah $27,H($27)" */
+      plte[0] = 0x277b0000 | (hi & 0xffff);
     }
   else
     {
@@ -310,14 +322,18 @@ elf_alpha_fix_plt(struct link_map *l,
       lo = (short)hi;
       hi = (hi - lo) >> 16;
 
-      /* Emit "ldah $27,H($27)" */
-      plte[0] = 0x277b0000 | (hi & 0xffff);
-
       /* Emit "ldq $27,L($27)" */
       plte[1] = 0xa77b0000 | (lo & 0xffff);
 
       /* Emit "jmp $31,($27)" */
       plte[2] = 0x6bfb0000;
+
+      /* Think about thread-safety -- the previous instructions must be
+	 committed to memory before the first is overwritten.  */
+      __asm__ __volatile__("wmb" : : : "memory");
+
+      /* Emit "ldah $27,H($27)" */
+      plte[0] = 0x277b0000 | (hi & 0xffff);
     }
 
   /* At this point, if we've been doing runtime resolution, Icache is dirty.

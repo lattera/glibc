@@ -183,7 +183,7 @@ elf_machine_got_rel (struct link_map *map)
 /* Set up the loaded object described by L so its stub function
    will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline void
+static inline int
 elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   ElfW(Addr) *got;
@@ -213,6 +213,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 
   /* Relocate global offset table.  */
   elf_machine_got_rel (l);
+
+  return lazy;
 }
 
 /* Get link_map for this object.  */

@@ -21,7 +21,7 @@
 #
 subdir	:= stdlib
 
-headers	:= stdlib.h alloca.h monetary.h inttypes.h
+headers	:= stdlib.h alloca.h monetary.h inttypes.h fmtmsg.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \
@@ -39,10 +39,12 @@ routines	:=							      \
 	srand48_r seed48_r lcong48_r					      \
 	drand48-iter							      \
 	strtol strtoul strtoll strtoull					      \
+	strtol_l strtoul_l strtoll_l strtoull_l				      \
 	strtof strtod strtold						      \
+	strtof_l strtod_l strtold_l					      \
 	system canonicalize						      \
 	a64l l64a							      \
-	rpmatch strfmon strfmon_l getsubopt xpg_basename
+	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg
 
 distribute	:= exit.h grouping.h abort-instr.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
