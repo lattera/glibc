@@ -1,3 +1,7 @@
+2002-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tst-printf.sh: Adjust for last change in tst-printf.c.
+
 2002-03-13  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c (sYSMALLOc): Don't change brk if mmap failed.

@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing of printf.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -103,7 +103,7 @@ something really insane: 1.00000000000000000000000000000000000000000000000000000
 | 100000.0000|  1.0000e+05|       1e+05|
 | 123456.0000|  1.2346e+05|   1.235e+05|
 snprintf ("%30s", "foo") == 30, "                   "
-snprintf ("%.999999u", 10)
+snprintf ("%.999999u", 10) == 999999
 
 Formatted output test
 prefix  6d      6o      6x      6X      6u
@@ -214,7 +214,7 @@ something really insane: 1.00000000000000000000000000000000000000000000000000000
 | 100000.0000|  1.0000e+05|       1e+05|
 | 123456.0000|  1.2346e+05|   1.235e+05|
 snprintf ("%30s", "foo") == 30, "                   "
-snprintf ("%.999999u", 10)
+snprintf ("%.999999u", 10) == 999999
 
 Formatted output test
 prefix  6d      6o      6x      6X      6u
