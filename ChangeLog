@@ -1,3 +1,10 @@
+2005-01-19  Roland McGrath  <roland@redhat.com>
+
+	[BZ #681]
+	* sunrpc/openchild.c (_openchild): Use NULL instead of 0 for trailing
+	argument to execlp.
+	Reported by Marcus Meissner <meissner@suse.de>.
+
 2005-01-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* hurd/sigunwind.c (_hurdsig_longjmp_from_handler): Fix a typo
