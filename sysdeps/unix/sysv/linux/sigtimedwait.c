@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <string.h>
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>

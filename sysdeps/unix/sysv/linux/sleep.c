@@ -40,7 +40,8 @@ cl (void *arg)
 unsigned int
 __sleep (unsigned int seconds)
 {
-  const unsigned int max = ((unsigned long int) (~((time_t) 0))) >> 1;
+  const unsigned int max
+    = (unsigned int) (((unsigned long int) (~((time_t) 0))) >> 1);
   struct timespec ts;
   sigset_t set, oset;
   unsigned int result;

@@ -160,6 +160,7 @@ CFLAGS-forward.c = -fexceptions
 CFLAGS-pthread_testcancel.c = -fexceptions
 CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_once.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c = -fexceptions -fasynchronous-unwind-tables

@@ -1,3 +1,14 @@
+2003-07-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (CFLAGS-pthread_once.c): Add -fexceptions
+	-fasynchronous-unwind-tables.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
+	(PSEUDO): Add cfi directives.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO):
+	Likewise.
+
 2003-07-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthreadP.h (__pthread_unwind_next, __pthread_register_cancel,

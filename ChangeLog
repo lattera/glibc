@@ -1,5 +1,13 @@
 2003-07-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sigwait.c: Include string.h.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Cast value to unsigned
+	int before assigning to max to avoid warnings.
+
+2003-07-11  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S (__socket): Add
 	cfi directives.
 	* sysdeps/unix/sysv/linux/s390/s390-32/socket.S (__socket): Likewise.

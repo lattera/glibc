@@ -20,6 +20,7 @@
 #include <signal.h>
 #define __need_NULL
 #include <stddef.h>
+#include <string.h>
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>

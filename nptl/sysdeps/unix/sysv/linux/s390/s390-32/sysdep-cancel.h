@@ -29,10 +29,16 @@
 # define PSEUDO(name, syscall_name, args)				      \
 	.text;								      \
 L(pseudo_cancel):							      \
+	cfi_startproc;							      \
 	STM_##args							      \
 	stm	%r12,%r15,48(%r15);					      \
+	cfi_offset (%r15, -36);						      \
+	cfi_offset (%r14, -40);						      \
+	cfi_offset (%r13, -44);						      \
+	cfi_offset (%r12, -48);						      \
 	lr	%r14,%r15;						      \
 	ahi	%r15,-96;						      \
+	cfi_adjust_cfa_offset (96);					      \
 	st	%r14,0(%r15);						      \
 	basr    %r13,0;							      \
 0:	l	%r1,1f-0b(%r13);					      \
@@ -46,6 +52,7 @@ L(pseudo_cancel):							      \
 	bas	%r14,0(%r1,%r13);					      \
 	lr	%r2,%r12;						      \
 	lm	%r12,%r15,48+96(%r15);					      \
+	cfi_endproc;							      \
 	j	L(pseudo_check);					      \
 1:	.long	CENABLE-0b;						      \
 2:	.long	CDISABLE-0b;						      \

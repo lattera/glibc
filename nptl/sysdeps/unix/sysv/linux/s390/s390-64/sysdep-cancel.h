@@ -29,10 +29,15 @@
 # define PSEUDO(name, syscall_name, args)				      \
 	.text;								      \
 L(pseudo_cancel):							      \
+	cfi_startproc;							      \
 	STM_##args							      \
 	stmg	%r13,%r15,104(%r15);					      \
+	cfi_offset (%r15,-40);						      \
+	cfi_offset (%r14,-48);						      \
+	cfi_offset (%r13,-56);						      \
 	lgr	%r14,%r15;						      \
 	aghi	%r15,-160;						      \
+	cfi_adjust_cfa_offset (160);					      \
 	stg	%r14,0(%r15);						      \
 	brasl	%r14,CENABLE;						      \
 	lgr	%r0,%r2;						      \
@@ -43,6 +48,7 @@ L(pseudo_cancel):							      \
 	brasl	%r14,CDISABLE;						      \
 	lgr	%r2,%r13;						      \
 	lmg	%r13,%r15,104+160(%r15);				      \
+	cfi_endproc;							      \
 	j	L(pseudo_check);					      \
 ENTRY(name)								      \
 	SINGLE_THREAD_P							      \
