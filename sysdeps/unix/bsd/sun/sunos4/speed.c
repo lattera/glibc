@@ -47,14 +47,14 @@ static CONST speed_t speeds[] =
 speed_t
 DEFUN(cfgetospeed, (termios_p), CONST struct termios *termios_p)
 {
-  return speeds[termios_p->c_cflag & CBAUD];
+  return termios_p->c_cflag & CBAUD;
 }
 
 /* Return the input baud rate stored in *TERMIOS_P.  */
 speed_t
 DEFUN(cfgetispeed, (termios_p), CONST struct termios *termios_p)
 {
-  return speeds[(termios_p->c_cflag & CIBAUD) >> IBSHIFT];
+  return (termios_p->c_cflag & CIBAUD) >> IBSHIFT;
 }
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
@@ -70,8 +70,12 @@ DEFUN(cfsetospeed, (termios_p, speed),
       return -1;
     }
 
+  /* This allows either B1200 or 1200 to work.	XXX
+     Do we really want to try to support this, given that
+     fetching the speed must return one or the other?  */
+
   for (i = 0; i < sizeof (speeds) / sizeof (speeds[0]); ++i)
-    if (speeds[i] == speed)
+    if (i == speed || speeds[i] == speed)
       {
 	termios_p->c_cflag &= ~CBAUD;
 	termios_p->c_cflag |= i;
@@ -95,8 +99,9 @@ DEFUN(cfsetispeed, (termios_p, speed),
       return -1;
     }
 
+  /* See comment in cfsetospeed (above).  */
   for (i = 0; i < sizeof (speeds) / sizeof (speeds[0]); ++i)
-    if (speeds[i] == speed)
+    if (i == speed || speeds[i] == speed)
       {
 	termios_p->c_cflag &= ~CIBAUD;
 	termios_p->c_cflag |= i << IBSHIFT;
