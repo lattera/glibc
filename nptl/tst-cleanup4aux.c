@@ -44,7 +44,7 @@ fn3 (void)
   _pthread_cleanup_push (&b, clh, (void *) 4l);
 
   fn0 ();
-        
+
   _pthread_cleanup_pop (&b, 1);
 }
 
@@ -68,7 +68,7 @@ fn5 (void)
   _pthread_cleanup_push (&b, clh, (void *) 6l);
 
   fn4 ();
-        
+
   _pthread_cleanup_pop (&b, 1);
 }
 
@@ -92,7 +92,7 @@ fn7 (void)
   _pthread_cleanup_push (&b, clh, (void *) 8l);
 
   fn6 ();
-        
+
   _pthread_cleanup_pop (&b, 1);
 }
 
@@ -116,6 +116,6 @@ fn9 (void)
   _pthread_cleanup_push (&b, clh, (void *) 10l);
 
   fn8 ();
-        
+
   _pthread_cleanup_pop (&b, 1);
 }

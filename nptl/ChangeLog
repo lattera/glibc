@@ -1,3 +1,7 @@
+2003-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add magic to clean up correctly.
+
 2003-11-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* unwind.c (FRAME_LEFT): Define.

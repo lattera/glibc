@@ -262,7 +262,7 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod
-extra-objs += $(addsuffix .os,$(strip $(modules-names)))
+extra-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
@@ -521,7 +521,9 @@ $(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)/
 	ln -f $< $@
 endif
 
-generated += crti.S crtn.S defs.h pt-initfini.s
+generated += crti.S crtn.S defs.h pt-initfini.s  libpthread_nonshared.a \
+	     multidir.mk tst-atfork2.mtrace tst-cancel-wrappers.out \
+	     tst-tls6.out
 
 generated += $(objpfx)tst-atfork2.mtrace \
 	     $(addsuffix .so,$(strip $(modules-names)))
