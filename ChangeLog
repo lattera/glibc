@@ -1,5 +1,17 @@
 2004-02-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/libm-test.inc (lround_test): Add new test.
+	(llround_test): Likewise.
+	(lrint_test): Likewise.
+	(llrint_test): Likewise.
+	* sysdeps/ieee754/dbl-64/s_lround.c (__lround): Fix special case
+	with result taking up 20 bits.
+	* sysdeps/ieee754/dbl-64/s_lrint.c (__lrint): Likewise.
+	* sysdeps/ieee754/dbl-64/s_llrint.c (__llrint): Likewise..
+	* sysdeps/ieee754/ldbl-96/s_lroundl.c (__lroundl): Fix special
+	case with result taking up 31 bits.
+	* sysdeps/ieee754/ldbl-96/s_lrintl.c (__lrintl): Likewise.
+
 	* po/nl.po: Update from translation team.
 
 2004-01-30  Andreas Schwab  <schwab@suse.de>

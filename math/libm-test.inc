@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -3101,6 +3101,11 @@ lrint_test (void)
   TEST_f_l (lrint, 8388600.3L, 8388600);
   TEST_f_l (lrint, -8388600.3L, -8388600);
 
+  TEST_f_l (lrint, 1071930.0008, 1071930);
+#ifndef TEST_FLOAT
+  TEST_f_l (lrint, 1073741824.01, 1073741824);
+#endif
+
   END (lrint);
 }
 
@@ -3124,6 +3129,8 @@ llrint_test (void)
 
   TEST_f_L (llrint, 8388600.3L, 8388600);
   TEST_f_L (llrint, -8388600.3L, -8388600);
+
+  TEST_f_l (llrint, 1071930.0008, 1071930);
 
   /* Test boundary conditions.  */
   /* 0x1FFFFF */
@@ -3311,7 +3318,9 @@ lround_test (void)
   TEST_f_l (lround, -1.5, -2);
   TEST_f_l (lround, 22514.5, 22515);
   TEST_f_l (lround, -22514.5, -22515);
+  TEST_f_l (lround, 1071930.0008, 1071930);
 #ifndef TEST_FLOAT
+  TEST_f_l (lround, 1073741824.01, 1073741824);
   TEST_f_l (lround, 2097152.5, 2097153);
   TEST_f_l (lround, -2097152.5, -2097153);
 #endif
@@ -3336,6 +3345,7 @@ llround_test (void)
   TEST_f_L (llround, -1.5, -2);
   TEST_f_L (llround, 22514.5, 22515);
   TEST_f_L (llround, -22514.5, -22515);
+  TEST_f_l (llround, 1071930.0008, 1071930);
 #ifndef TEST_FLOAT
   TEST_f_L (llround, 2097152.5, 2097153);
   TEST_f_L (llround, -2097152.5, -2097153);
@@ -3357,7 +3367,7 @@ llround_test (void)
   /* 0x10000000000000 */
   TEST_f_L (llround, 4503599627370496.0, 4503599627370496LL);
   /* 0x10000080000000 */
-  TEST_f_L (llrint, 4503601774854144.0, 4503601774854144LL);
+  TEST_f_L (llround, 4503601774854144.0, 4503601774854144LL);
   /* 0x20000000000000 */
   TEST_f_L (llround, 9007199254740992.0, 9007199254740992LL);
   /* 0x80000000000000 */
