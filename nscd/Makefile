@@ -55,7 +55,7 @@ include ../Rules
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(nscd-modules:=.c)
-lib := nscd
+lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)

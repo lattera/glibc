@@ -6,7 +6,7 @@
 # to be included in that library.  A sysdep Makefile can add to
 # $(lib)-sysdep_routines to include additional modules.
 
-override lib := $(firstword $(extra-libs-left))
+lib := $(firstword $(extra-libs-left))
 extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 
 object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
@@ -79,12 +79,10 @@ endif
 
 endif
 
-cpp-srcs-left = $(lib)-routines
-ifneq (,$($(lib)-routines))
-cpp-srcs-left = $($(lib)-routines)
-include $(patsubst %,$(..)cppflags-iterator.mk,$($(lib)-routines))
+# This will define `libof-ROUTINE := LIB' for each of the routines.
+cpp-srcs-left := $($(lib)-routines) $($(lib)-sysdep_routines)
+ifneq (,$(cpp-srcs-left))
+include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 endif
-ifneq (,$($(lib)-sysdep_routines))
-cpp-srcs-left = $($(lib)-sysdep_routines)
-include $(patsubst %,$(..)cppflags-iterator.mk,$($(lib)-sysdep_routines))
-endif
+
+CPPFLAGS-$(lib) := -DNOT_IN_libc=1 -DIS_IN_$(lib)=1

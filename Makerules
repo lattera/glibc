@@ -1057,9 +1057,12 @@ xcheck: xtests
 all-nonlib = $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) $(others))
 ifneq (,$(all-nonlib))
 cpp-srcs-left = $(all-nonlib:=.c)
-lib := tests
+lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(all-nonlib))
 endif
+
+# The include magic above causes those files to use this variable for flags.
+CPPFLAGS-nonlib = -DNOT_IN_libc=1
 
 .PHONY: TAGS
 TAGS: $(objpfx)distinfo $(..)MakeTAGS

@@ -632,8 +632,10 @@ libio-include = -I$(..)libio
 # it causes cpp to stop predefining __ASSEMBLER__.
 CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
-	   $(CPPFLAGS-$(suffix $@)) $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) \
-	   $(CPPFLAGS-$(patsubst %$(suffix $@),%,$(@F)))
+	   $(CPPFLAGS-$(suffix $@)) \
+	   $(foreach L,$(libof-$(basename $(@F))) $(libof-$<) $(libof-$(@F)),\
+		     $(CPPFLAGS-$L)) \
+	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 override CFLAGS	= -std=gnu99 \
 		  $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))

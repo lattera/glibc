@@ -132,7 +132,7 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
 cpp-srcs-left := $(rpcgen-objs:.o=.c)
-lib := rpcgen
+lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
 # Tell rpcgen where to find the C preprocessor.

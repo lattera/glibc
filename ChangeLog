@@ -1,3 +1,34 @@
+2002-10-16  Roland McGrath  <roland@redhat.com>
+
+	* cppflags-iterator.mk (CPPFLAGS-$(cpp-src)): Variable removed.
+	instead of += to append, to be sure $(lib) gets expanded at defn time.
+	(libof-$(cpp-src)): New variable, define this instead.
+	* extra-lib.mk (cpp-srcs-left): Reduce duplication in include setup.
+	(lib): Don't use override.
+	(CPPFLAGS-$(lib)): New variable, put -D's here.
+	* Makeconfig (CPPFLAGS): Use basename fn for CPPFLAGS-basename.
+	Also add $(CPPFLAGS-LIB) before the file-specific flags, for each
+	LIB found by $(libof-*) for basename, target, or source.
+	* Makerules (CPPFLAGS-nonlib): New variable.
+	* nscd/Makefile (lib): Set to nonlib when using cppflags-iterator.mk.
+	* locale/Makefile (lib): Likewise.
+	* sunrpc/Makefile (lib): Likewise.
+
+	* sysdeps/unix/sysv/linux/fpathconf.c (LINUX_LINK_MAX): Move macro ...
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h (LINUX_LINK_MAX): ... here.
+	* sysdeps/unix/sysv/linux/pathconf.h: New file.
+	(statfs_link_max): New function, guts from fpathconf.c.
+	* sysdeps/unix/sysv/linux/fpathconf.c: Rewritten using that.
+	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c (__pathconf): Rewritten
+	to use the linux/pathconf.c code by #include rather than duplication.
+	* sysdeps/unix/sysv/linux/alpha/fpathconf.c (__pathconf): Likewise.
+
+2002-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Use __libc_errno only for libc itself.
+
 2002-10-16  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/_mcount.S: Fix off-by-1 error in argument access.

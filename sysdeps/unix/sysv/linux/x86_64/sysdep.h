@@ -93,9 +93,14 @@
   orq $-1, %rax;				\
   jmp L(pseudo_end);
 #elif USE___THREAD
+# ifndef NOT_IN_libc
+#  define SYSCALL_ERROR_ERRNO __libc_errno
+# else
+#  define SYSCALL_ERROR_ERRNO errno
+# endif
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
-  movq __libc_errno@GOTTPOFF(%rip), %rcx;	\
+  movq SYSCALL_ERROR_ERRNO@GOTTPOFF(%rip), %rcx;\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
   movl %edx, %fs:(%rcx);			\
