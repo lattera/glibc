@@ -362,3 +362,8 @@
     || (__LINUX_KERNEL_VERSION > 132427 && defined __i386__)
 # define __ASSUME_UTIMES	1
 #endif
+
+/* The CLONE_STOPPED flag was introduced in the 2.6.0-test1 series.  */
+#if __LINUX_KERNEL_VERSION >= 132609
+# define __ASSUME_CLONE_STOPPED	1
+#endif
