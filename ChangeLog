@@ -1,5 +1,8 @@
 2003-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* csu/Makefile ($(objpfx)version-info.h): Fix sed script to handle
+	banners.
+
 	* nis/nis_table.c (nis_list): Always strdup string used with
 	ibreq->ibr_name.  Add several NULL pointer checks.
 
