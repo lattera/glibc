@@ -1,3 +1,8 @@
+2002-12-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/test-utime (main): If stnow.st[am]time is wrong, print it and
+	not st.st[am]time.
+
 2002-04-30  Bruno Haible  <bruno@clisp.org>
 
 	* intl/loadmsgcat.c (_nl_init_domain_conv): Don't append //TRANSLIT to
