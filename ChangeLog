@@ -1,3 +1,13 @@
+1998-04-28 16:32  Philip Blundell  <philb@gnu.org>
+
+	* manual/stdio.texi (Variable Arguments Output): Correct variable
+	name.  Patch from Ewan Mellor <em@nexus.co.uk>
+
+1998-04-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/dcgettext.c: Remove unneeded definition of
+	internal_function.
+
 1998-04-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* iconvdata/Makefile ($(objpfx)iconv-test.out): Use this as target
