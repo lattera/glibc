@@ -1,7 +1,4 @@
 dl-machine.c
 dl-start.S
-fenv_const.c
-fenv_libc.h
 ppc-mcount.S
 fe_nomask.c
-t_sqrt.c

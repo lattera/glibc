@@ -131,7 +131,7 @@ LDLIBS-atest-exp = math/libm
 LDLIBS-atest-sincos = math/libm
 LDLIBS-atest-exp2 = math/libm
 
-distribute += libm-test.inc gen-libm-test.pl
+distribute += libm-test.inc gen-libm-test.pl README.libm-test
 
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode

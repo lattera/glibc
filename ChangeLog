@@ -1,3 +1,16 @@
+2000-01-26  Andreas Jaeger  <aj@suse.de>
+
+	* Make-dist (+sysdep-tscrs): Add libm-test-ulps.
+
+2000-01-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/Makefile (distribute): Remove nonexisting files.
+	* sysdeps/powerpc/Dist: Move FPU specific files to...
+	* sysdeps/powerpc/fpu/Dist: ...here.  New file.
+	* nss/Makefile: Distribute files for new libdb interface.
+	* math/Makefile (distribute): Add README.libm-test.
+	Patch by Andreas Jaeger.
+
 2000-01-26  David McCann  <david.mccann@alcatel.at>
 
 	* libio/libioP.h [!_G_HAVE_MMAP]: Define ALLOC_WBUF.

@@ -69,7 +69,7 @@ libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
 			   db-open
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
-distribute		+= db-XXX.c nss_db.h dummy-db.h
+distribute		+= $(addprefix nss_db/, db-XXX.c nss_db.h dummy-db.h)
 
 
 $(objpfx)makedb: $(libdl) $(objpfx)db-open.o

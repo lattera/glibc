@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 1995-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -30,8 +30,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      $(lib-modules:=.c) config.h simple-hash.h \
 			      charmap-kw.gperf charmap-kw.h locfile-token.h \
 			      locfile-kw.gperf locfile-kw.h linereader.h \
-			      locales.h locfile.h stringtrans.h charmap.h \
-			      repertoire.h)
+			      locfile.h charmap.h repertoire.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  mb_cur_max codeset_name \
 		  newlocale duplocale freelocale
