@@ -1213,6 +1213,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      int from_level;
 	      int to_level;
+	      int level;
 #ifdef COMPILE_WSCANF
 	      const wchar_t *wcdigits[10];
 #else
@@ -1229,99 +1230,196 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 					   _NL_CTYPE_INDIGITS_MB_LEN) - 1;
 #endif
 
-	      /* In this round we get the pointer to the digit strings
-		 and also perform the first round of comparisons.  */
-	      for (n = 0; n < 10; ++n)
+	      /* Read the number into workspace.  */
+	      while (c != EOF && width != 0)
 		{
-		  /* Get the string for the digits with value N.  */
+		  /* In this round we get the pointer to the digit strings
+		     and also perform the first round of comparisons.  */
+		  for (n = 0; n < 10; ++n)
+		    {
+		      /* Get the string for the digits with value N.  */
 #ifdef COMPILE_WSCANF
-		  wcdigits[n] = (const wchar_t *)
-		    _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
-		  if (c == *wcdigits[n])
-		    break;
+		      wcdigits[n] = (const wchar_t *)
+			_NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
+		      wcdigits[n] += from_level;
 
-		  /* Advance the pointer to the next string.  */
-		  ++wcdigits[n];
-#else
-		  size_t dlen;
-		  size_t dcnt;
-
-		  mbdigits[n] = _NL_CURRENT (LC_CTYPE,
-					     _NL_CTYPE_INDIGITS0_MB + n);
-		  dlen = strlen (mbdigits[n]);
-
-		  dcnt = 0;
-		  do
-		    {
-		      if (c != mbdigits[n][dcnt])
-			break;
-		      c = inchar ();
-		    }
-		  while (--dcnt > 0);
-
-		  if (dcnt == 0)
-		    /* We found it.  */
-		    break;
-
-		  /* Advance the pointer to the next string.  */
-		  mbdigits[n] += dlen + 1;
-#endif
-		}
-
-	      if (n == 10)
-		{
-		  /* Have not yet found the digit.  */
-		  while (++from_level <= to_level)
-		    {
-		      /* Search all ten digits of this level.  */
-		      for (n = 0; n < 10; ++n)
+		      if (c == *wcdigits[n])
 			{
-#ifdef COMPILE_WSCANF
-			  if (c == *wcdigits[n])
-			    break;
-
-			  /* Advance the pointer to the next string.  */
-			  ++wcdigits[n];
-#else
-			  size_t dlen = strlen (mbdigits[n]);
-			  size_t dcnt;
-
-			  dcnt = 0;
-			  do
-			    {
-			      if (c != mbdigits[n][dcnt])
-				break;
-			      c = inchar ();
-			    }
-			  while (--dcnt > 0);
-
-			  if (dcnt == 0)
-			    /* We found it.  */
-			    break;
-
-			  /* Advance the pointer to the next string.  */
-			  mbdigits[n] += dlen + 1;
-#endif
+			  to_level = from_level;
+			  break;
 			}
 
-		      if (n < 10)
-			/* Found it.  */
-			break;
+		      /* Advance the pointer to the next string.  */
+		      ++wcdigits[n];
+#else
+		      const char *cmpp;
+		      int avail = width > 0 ? width : INT_MAX;
 
-		      /* Next level.  */
-		      ++from_level;
+		      mbdigits[n] = _NL_CURRENT (LC_CTYPE,
+						 _NL_CTYPE_INDIGITS0_MB + n);
+
+		      for (level = 0; level < from_level; level++)
+			mbdigits[n] = strchr (mbdigits[n], '\0') + 1;
+
+		      cmpp = mbdigits[n];
+		      while (*cmpp == c && avail > 0)
+			{
+			  if (*++cmpp == '\0')
+			    break;
+			  else
+			    {
+			      if ((c = inchar ()) == EOF)
+				break;
+			      --avail;
+			    }
+			}
+
+		      if (*cmpp == '\0')
+			{
+			  if (width > 0)
+			    width = avail;
+			  to_level = from_level;
+			  break;
+			}
+
+		      /* We are pushing all read characters back.  */
+		      if (cmpp > mbdigits[n])
+			{
+			  ungetc (c, s);
+			  while (--cmpp > mbdigits[n])
+			    ungetc (*cmpp, s);
+			  c = *cmpp;
+			}
+
+		      /* Advance the pointer to the next string.  */
+		      mbdigits[n] = strchr (mbdigits[n], '\0') + 1;
+#endif
 		    }
-		}
 
-	      if (n == 10)
-		{
-		  /* Haven't found anything.  Push the last character back
-		     and return an error.  */
-		  ungetc (c, s);
-		  input_error ();
-		}
+		  if (n == 10)
+		    {
+		      /* Have not yet found the digit.  */
+		      for (level = from_level + 1; level <= to_level; ++level)
+			{
+			  /* Search all ten digits of this level.  */
+			  for (n = 0; n < 10; ++n)
+			    {
+#ifdef COMPILE_WSCANF
+			      if (c == *wcdigits[n])
+				break;
 
-	      ADDW (L_('0') + n);
+			      /* Advance the pointer to the next string.  */
+			      ++wcdigits[n];
+#else
+			      const char *cmpp;
+			      int avail = width > 0 ? width : INT_MAX;
+
+			      cmpp = mbdigits[n];
+			      while (*cmpp == c && avail > 0)
+				{
+				  if (*++cmpp == '\0')
+				    break;
+				  else
+				    {
+				      if ((c = inchar ()) == EOF)
+					break;
+				      --avail;
+				    }
+				}
+
+			      if (*cmpp == '\0')
+				{
+				  if (width > 0)
+				    width = avail;
+				  break;
+				}
+
+			      /* We are pushing all read characters back.  */
+			      if (cmpp > mbdigits[n])
+				{
+				  ungetc (c, s);
+				  while (--cmpp > mbdigits[n])
+				    ungetc (*cmpp, s);
+				  c = *cmpp;
+				}
+
+			      /* Advance the pointer to the next string.  */
+			      mbdigits[n] = strchr (mbdigits[n], '\0') + 1;
+#endif
+			    }
+
+			  if (n < 10)
+			    {
+			      /* Found it.  */
+			      from_level = level;
+			      to_level = level;
+			      break;
+			    }
+			}
+		    }
+
+		  if (n < 10)
+		    c = L_('0') + n;
+		  else if ((flags & GROUP)
+#ifdef COMPILE_WSCANF
+			   && thousands != L'\0'
+#else
+			   && thousands != NULL
+#endif
+			   )
+		    {
+		      /* Try matching against the thousands separator.  */
+#ifdef COMPILE_WSCANF
+		      if (c != thousands)
+			  break;
+#else
+		      const char *cmpp = thousands;
+		      int avail = width > 0 ? width : INT_MAX;
+
+		      while (*cmpp == c && avail > 0)
+			{
+			  ADDW (c);
+			  if (*++cmpp == '\0')
+			    break;
+			  else
+			    {
+			      if ((c = inchar ()) == EOF)
+				break;
+			      --avail;
+			    }
+			}
+
+		      if (*cmpp != '\0')
+			{
+			  /* We are pushing all read characters back.  */
+			  if (cmpp > thousands)
+			    {
+			      wpsize -= cmpp - thousands;
+			      ungetc (c, s);
+			      while (--cmpp > thousands)
+				ungetc (*cmpp, s);
+			      c = *cmpp;
+			    }
+			  break;
+			}
+
+		      if (width > 0)
+			width = avail;
+
+		      /* The last thousands character will be added back by
+			 the ADDW below.  */
+			--wpsize;
+#endif
+		    }
+		  else
+		    break;
+
+		  ADDW (c);
+		  if (width > 0)
+		    --width;
+
+		  c = inchar ();
+		}
 	    }
 	  else
 	    /* Read the number into workspace.  */
@@ -1351,20 +1449,24 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			int avail = width > 0 ? width : INT_MAX;
 
 			while (*cmpp == c && avail > 0)
-			  if (*++cmpp == '\0')
-			    break;
-			  else
-			    {
-			      if (inchar () == EOF)
-				break;
-			      --avail;
-			    }
+			  {
+			    ADDW (c);
+			    if (*++cmpp == '\0')
+			      break;
+			    else
+			      {
+				if ((c = inchar ()) == EOF)
+				  break;
+				--avail;
+			      }
+			  }
 
 			if (*cmpp != '\0')
 			  {
-			    /* We are pushing all read character back.  */
+			    /* We are pushing all read characters back.  */
 			    if (cmpp > thousands)
 			      {
+				wpsize -= cmpp - thousands;
 				ungetc (c, s);
 				while (--cmpp > thousands)
 				  ungetc (*cmpp, s);
@@ -1372,9 +1474,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			      }
 			    break;
 			  }
+
 			if (width > 0)
-			  /* +1 because we substract below.  */
-			  width = avail + 1;
+			  width = avail;
+
+			/* The last thousands character will be added back by
+			   the ADDW below.  */
+			--wpsize;
 #endif
 		      }
 		    else
@@ -1527,8 +1633,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      conv_error ();
 		    }
 		  if (width > 0)
-		    /* +1 because we substract below.  */
-		    width = avail + 1;
+		    width = avail;
 #endif
 		}
 	      if (width > 0)
@@ -1689,8 +1794,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      for (cmpp = decimal; *cmpp != '\0'; ++cmpp)
 			ADDW (*cmpp);
 		      if (width > 0)
-			/* +1 because we substract below.  */
-			width = avail + 1;
+			width = avail;
 		      got_dot = 1;
 		    }
 		  else
@@ -1727,8 +1831,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  for (cmpp = thousands; *cmpp != '\0'; ++cmpp)
 			    ADDW (*cmpp);
 			  if (width > 0)
-			    /* +1 because we substract below.  */
-			    width = avail + 1;
+			    width = avail;
 			}
 		      else
 			{

@@ -1,3 +1,17 @@
+2000-07-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/indigits.h (indigit_value): Correct.
+	* locale/indigitswc.h (indigitwc_value): Correct.
+	* stdio-common/vfscanf.c (__vfscanf): Fix I18N number
+	conversion, add GROUP checking for it, fix GROUP number
+	conversion with strlen(thousands) > 1.
+	Honour width correctly in the presence of floating
+	decimal points and thousands separators.
+	* stdio-common/tst-sscanf.c: New test.
+	* stdio-common/Makefile: Add it to tests.
+	* sysdeps/generic/strtol.c (strtol): Fix conversion if there are
+	thousands separators and group argument is non-zero.
+
 2000-07-25  Bruno Haible  <haible@clisp.cons.org>
 
 	* locale/Versions: Enumerate __*_l functions individually. __wctrans_l
@@ -62,7 +76,7 @@
 	* sysdeps/unix/sysv/linux/bits/socket.h: Rename MSG_URG TO
 	MSG_CONFIRM following kernel 2.4.0 (MSG_URG was never used).
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
-        Reported by Andi Kleen <ak@suse.de>.
+	Reported by Andi Kleen <ak@suse.de>.
 
 	* rt/tst-aio64.c: Add tests for aio_fsync64 and aio_cancel64.
 	(do_wait): Test requests with aio_return64.

@@ -256,6 +256,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   wchar_t thousands = L'\0';
 # else
   const char *thousands = NULL;
+  size_t thousands_len = 0;
 # endif
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
@@ -338,18 +339,25 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   save = s;
 
 #ifdef USE_NUMBER_GROUPING
-  if (group)
+  if (base != 10)
+    grouping = NULL;
+
+  if (grouping)
     {
+# ifndef USE_WIDE_CHAR
+      thousands_len = strlen (thousands);
+# endif
+
       /* Find the end of the digit string and check its grouping.  */
       end = s;
       if (
 # ifdef USE_WIDE_CHAR
 	  *s != thousands
 # else
-	  ({ for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+	  ({ for (cnt = 0; cnt < thousands_len; ++cnt)
 	       if (thousands[cnt] != end[cnt])
 		 break;
-	     thousands[cnt] != '\0'; })
+	     cnt < thousands_len; })
 # endif
 	  )
 	{
@@ -358,10 +366,10 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 # ifdef USE_WIDE_CHAR
 		&& c != thousands
 # else
-		&& ({ for (cnt = 0; thousands[cnt] != '\0'; ++cnt)
+		&& ({ for (cnt = 0; cnt < thousands_len; ++cnt)
 		      if (thousands[cnt] != end[cnt])
 			break;
-		      thousands[cnt] != '\0'; })
+		      cnt < thousands_len; })
 # endif
 		&& (!ISALPHA (c)
 		    || (int) (TOUPPER (c) - L_('A') + 10) >= base))
@@ -391,6 +399,28 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	    break;
 	  if (c >= L_('0') && c <= L_('9'))
 	    c -= L_('0');
+#ifdef USE_NUMBER_GROUPING
+# ifdef USE_WIDE_CHAR
+	  else if (grouping && c == thousands)
+	    continue;
+# else
+	  else if (thousands_len)
+	    {
+	      for (cnt = 0; cnt < thousands_len; ++cnt)
+		if (thousands[cnt] != s[cnt])
+		  break;
+	      if (cnt == thousands_len)
+		{
+		  s += thousands_len - 1;
+		  continue;
+		}
+	      if (ISALPHA (c))
+		c = TOUPPER (c) - L_('A') + 10;
+	      else
+		break;
+	    }
+# endif
+#endif
 	  else if (ISALPHA (c))
 	    c = TOUPPER (c) - L_('A') + 10;
 	  else
@@ -417,6 +447,28 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
 	  break;
 	if (c >= L_('0') && c <= L_('9'))
 	  c -= L_('0');
+#ifdef USE_NUMBER_GROUPING
+# ifdef USE_WIDE_CHAR
+	else if (grouping && c == thousands)
+	  continue;
+# else
+	else if (thousands_len)
+	  {
+	    for (cnt = 0; cnt < thousands_len; ++cnt)
+	      if (thousands[cnt] != s[cnt])
+		break;
+	    if (cnt == thousands_len)
+	      {
+		s += thousands_len - 1;
+		continue;
+	      }
+	    if (ISALPHA (c))
+	      c = TOUPPER (c) - L_('A') + 10;
+	    else
+	      break;
+	  }
+# endif
+#endif
 	else if (ISALPHA (c))
 	  c = TOUPPER (c) - L_('A') + 10;
 	else

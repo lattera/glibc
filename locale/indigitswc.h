@@ -48,6 +48,7 @@ indigitwc_value (wchar_t wc, int *decided)
     {
       /* Get the string for the digits with value N.  */
       wcdigits[n] = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
+      wcdigits[n] += from_level;
 
       if (wc == *wcdigits[n])
 	{
@@ -78,9 +79,6 @@ indigitwc_value (wchar_t wc, int *decided)
 	  /* Advance the pointer to the next string.  */
 	  ++wcdigits[n];
 	}
-
-      /* Next level.  */
-      ++from_level;
     }
 
   /* If we reach this point no matching digit was found.  */

@@ -32,6 +32,7 @@ indigit_value (const char **s, size_t *len, int *decided)
   int from_level;
   int to_level;
   const char *mbdigits[10];
+  int i;
   int n;
 
   if (*decided != -1)
@@ -53,11 +54,12 @@ indigit_value (const char **s, size_t *len, int *decided)
       mbdigits[n] = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_MB + n);
       dlen = strlen (mbdigits[n]);
 
-      if (dlen <= len && memcmp (*s, mbdigits[n], dlen) == 0)
+      if (from_level == 0 && dlen <= *len
+	  && memcmp (*s, mbdigits[n], dlen) == 0)
 	{
 	  /* Found it.  */
 	  *s += dlen;
-	  len -= dlen;
+	  *len -= dlen;
 	  if (*decided == -1)
 	    *decided = 0;
 	  return n;
@@ -68,18 +70,19 @@ indigit_value (const char **s, size_t *len, int *decided)
     }
 
   /* Now perform the remaining tests.  */
-  while (++from_level <= to_level)
+  for (i = 1; i <= to_level; ++i)
     {
       /* Search all ten digits of this level.  */
       for (n = 0; n < 10; ++n)
 	{
 	  size_t dlen = strlen (mbdigits[n]);
 
-	  if (dlen <= len && memcmp (*s, mbdigits[n], dlen) == 0)
+	  if (i >= from_level && dlen <= *len
+	      && memcmp (*s, mbdigits[n], dlen) == 0)
 	    {
 	      /* Found it.  */
 	      *s += dlen;
-	      len -= dlen;
+	      *len -= dlen;
 	      if (*decided == -1)
 		*decided = from_level;
 	      return n;
@@ -88,9 +91,6 @@ indigit_value (const char **s, size_t *len, int *decided)
 	  /* Advance the pointer to the next string.  */
 	  mbdigits[n] += dlen + 1;
 	}
-
-      /* Next level.  */
-      ++from_level;
     }
 
   /* If we reach this point no matching digit was found.  */
