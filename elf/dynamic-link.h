@@ -83,60 +83,75 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 #ifdef ELF_MACHINE_PLTREL_OVERLAP
 #define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, lazy) \
   do {									      \
-    ElfW(Addr) r_addr, r_size, p_addr, p_size;				      \
+    struct { ElfW(Addr) start, size;  int lazy; } ranges[3];		      \
+    int ranges_index;							      \
+									      \
+    ranges[0].lazy = ranges[2].lazy = 0;				      \
+    ranges[1].lazy = 1;							      \
+    ranges[0].size = ranges[1].size = ranges[2].size = 0;		      \
+									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
-        r_addr = (map)->l_info[DT_##RELOC]->d_un.d_ptr;			      \
-        r_size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;		      \
-        if ((map)->l_info[DT_PLTREL] &&					      \
-            (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
-	  {								      \
-	    p_addr = (map)->l_info[DT_JMPREL]->d_un.d_ptr;		      \
-	    p_size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;		      \
-	    if (r_addr <= p_addr && r_addr+r_size > p_addr)		      \
-	      {								      \
-		ElfW(Addr) r2_addr, r2_size;				      \
-		r2_addr = p_addr + p_size;				      \
-		if (r2_addr < r_addr + r_size)				      \
-		  {							      \
-		    r2_size = r_addr + r_size - r2_addr;		      \
-		    elf_dynamic_do_##reloc ((map), r2_addr, r2_size, 0);      \
-		  }							      \
-		r_size = p_addr - r_addr;				      \
-	      }								      \
-	  }								      \
-									      \
-	elf_dynamic_do_##reloc ((map), r_addr, r_size, 0);		      \
-	if (p_addr)							      \
-	  elf_dynamic_do_##reloc ((map), p_addr, p_size, (lazy));	      \
+	ranges[0].start = (map)->l_info[DT_##RELOC]->d_un.d_ptr;	      \
+	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
-    else if ((map)->l_info[DT_PLTREL] &&				      \
-	     (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)	      \
+									      \
+     if ((lazy)								      \
+	&& (map)->l_info[DT_PLTREL]					      \
+	&& (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
       {									      \
-	p_addr = (map)->l_info[DT_JMPREL]->d_un.d_ptr;			      \
-	p_size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;		      \
-									      \
-	elf_dynamic_do_##reloc ((map), p_addr, p_size, (lazy));		      \
+	ranges[1].start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;		      \
+	ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	ranges[2].start = ranges[1].start + ranges[1].size;		      \
+	ranges[2].size = ranges[0].start + ranges[0].size - ranges[2].start;  \
+	ranges[0].size = ranges[1].start - ranges[0].start;		      \
       }									      \
+									      \
+    for (ranges_index = 0; ranges_index < 3; ++ranges_index)		      \
+      elf_dynamic_do_##reloc ((map),					      \
+			      ranges[ranges_index].start,		      \
+			      ranges[ranges_index].size,		      \
+			      ranges[ranges_index].lazy);		      \
   } while (0)
 #else
 #define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, lazy) \
   do {									      \
+    struct { ElfW(Addr) start, size;  int lazy; } ranges[2];		      \
+    int ranges_index;							      \
+    ranges[0].lazy = 0;							      \
+    ranges[1].lazy = 1;							      \
+    ranges[0].size = ranges[1].size = 0;				      \
+    ranges[0].start = 0;						      \
+									      \
     if ((map)->l_info[DT_##RELOC])					      \
       {									      \
-	ElfW(Addr) r_addr, r_size;					      \
-        r_addr = (map)->l_info[DT_##RELOC]->d_un.d_ptr;			      \
-        r_size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;		      \
-	elf_dynamic_do_##reloc ((map), r_addr, r_size, 0);		      \
+        ranges[0].start = (map)->l_info[DT_##RELOC]->d_un.d_ptr;	      \
+        ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
     if ((map)->l_info[DT_PLTREL] &&					      \
 	(map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
       {									      \
-	ElfW(Addr) p_addr, p_size;					      \
-	p_addr = (map)->l_info[DT_JMPREL]->d_un.d_ptr;			      \
-	p_size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;		      \
-	elf_dynamic_do_##reloc ((map), p_addr, p_size, (lazy));		      \
+	ElfW(Addr) start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;	      \
+									      \
+	if (lazy							      \
+	    /* This test does not only detect whether the relocation	      \
+	       sections are in the right order, it also checks whether	      \
+	       there is a DT_REL/DT_RELA section.  */			      \
+	    || ranges[0].start + ranges[0].size != start)		      \
+	  {								      \
+	    ranges[1].start = start;					      \
+	    ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+	  }								      \
+	else								      \
+	  /* Combine processing the sections.  */			      \
+	  ranges[0].size += (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
       }									      \
+									      \
+    for (ranges_index = 0; ranges_index < 2; ++ranges_index)		      \
+      elf_dynamic_do_##reloc ((map),					      \
+			      ranges[ranges_index].start,		      \
+			      ranges[ranges_index].size,		      \
+			      ranges[ranges_index].lazy);		      \
   } while (0)
 #endif
 

@@ -28,3 +28,8 @@ endif
 ifeq ($(subdir),string)
 CFLAGS-memcmp.c += -Wno-uninitialized
 endif
+
+ifeq ($(subdir),elf)
+dl-routines += dl-machine
+rtld-routines += dl-machine dl-start
+endif

@@ -82,7 +82,7 @@ allow this three-argument form, so to be portable it is best to write
 * Parsing Program Arguments::   Ways to parse program options and arguments.
 @end menu
 
-@node Argument Syntax
+@node Argument Syntax, Parsing Program Arguments, , Program Arguments
 @subsection Program Argument Syntax Conventions
 @cindex program argument syntax
 @cindex syntax, for program arguments
@@ -154,7 +154,7 @@ accept an argument that is itself optional.
 Eventually, the GNU system will provide completion for long option names
 in the shell.
 
-@node Parsing Program Arguments
+@node Parsing Program Arguments, , Argument Syntax, Program Arguments
 @subsection Parsing Program Arguments
 
 @cindex program arguments, parsing
@@ -188,7 +188,7 @@ it does more of the dirty work for you.
 
 @node Suboptions, Suboptions Example, Argp, Parsing Program Arguments
 @c This is a @section so that it's at the same level as getopt and argp
-@section Parsing of Suboptions
+@subsubsection Parsing of Suboptions
 
 Having a single level of options is sometimes not enough.  There might
 be too many options which have to be available or a set of options is

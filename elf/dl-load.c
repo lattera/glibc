@@ -848,6 +848,11 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	__mprotect ((caddr_t) (l->l_addr + c->mapend),
 		    loadcmds[nloadcmds - 1].allocend - c->mapend,
 		    0);
+
+	/* Remember which part of the address space this object uses.  */
+	l->l_map_start = c->mapstart + l->l_addr;
+	l->l_map_end = l->l_map_start + maplength;
+
 	goto postmap;
       }
     else
@@ -856,6 +861,10 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	   fixed.  */
 	ELF_FIXED_ADDRESS (loader, c->mapstart);
       }
+
+    /* Remember which part of the address space this object uses.  */
+    l->l_map_start = c->mapstart + l->l_addr;
+    l->l_map_end = l->l_map_start + maplength;
 
     while (c < &loadcmds[nloadcmds])
       {

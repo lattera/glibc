@@ -165,6 +165,10 @@ _dl_start (void *arg)
 			    _dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
     }
 
+/* Don't bother trying to work out how ld.so is mapped in memory.  */
+  _dl_rtld_map.l_map_start = ~0;
+  _dl_rtld_map.l_map_end = ~0;
+
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
@@ -432,6 +436,11 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 information for the program.  */
     }
 
+  /* It is not safe to load stuff after the main program.  */
+  main_map->l_map_end = ~0;
+  /* Perhaps the executable has no PT_LOAD header entries at all.  */
+  main_map->l_map_start = ~0;
+
   /* Scan the program header table for the dynamic section.  */
   for (ph = phdr; ph < &phdr[phent]; ++ph)
     switch (ph->p_type)
@@ -473,6 +482,15 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
 
 	has_interp = 1;
+	break;
+      case PT_LOAD:
+	/* Remember where the main program starts in memory.  */
+	{
+	  ElfW(Addr) mapstart;
+	  mapstart = main_map->l_addr + (ph->p_vaddr & ~(ph->p_align - 1));
+	  if (main_map->l_map_start > mapstart)
+	    main_map->l_map_start = mapstart;
+	}
 	break;
       }
   if (! _dl_rtld_map.l_libname && _dl_rtld_map.l_name)

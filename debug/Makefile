@@ -44,8 +44,7 @@ include ../Rules
 
 $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 		    $(common-objpfx)config.make
-	sed -e 's|@VERSION@|$(version)|' -e 's|@SLIB@|$(slibdir)|' \
-	    -e 's|@SOVER@|$(libSegFault.so-version)|' $< > $@.new
+	sed -e 's|@VERSION@|$(version)|' -e 's|@SLIB@|$(slibdir)|' $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
 

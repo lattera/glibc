@@ -1,6 +1,36 @@
+1998-08-09  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/Makefile [subdir=elf]: Add new files split out of
+	dl-machine.h.
+	* sysdeps/powerpc/dl-machine.c: New file.
+	* sysdeps/powerpc/dl-machine.h: Move much stuff into separate
+	files.  Revise ELF_PREFERRED_ADDRESS to take account of
+	the new mapping information (fixes bug involving huge bloated
+	web browser).  Set ELF_MACHINE_PLTREL_OVERLAP.
+	* sysdeps/powerpc/dl-start.S: New file.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Initialise l_map_start,
+	l_map_end.
+	* elf/do-rel.h: Call elf_machine_rel only once (to save space).
+	* elf/dynamic-link.h: Allow PLT relocs to be in the middle of the
+	others.  Call elf_dynamic_do_##reloc only once (to save even more
+	space).
+	* elf/link.h: Add new members l_map_start and l_map_end to keep
+	track of the memory map.
+	* elf/rtld.c (_dl_start): Initialise l_map_start for ld.so and
+	the executable.
+
+1998-09-01 11:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/Makefile (catchsegv): We need not rewrite SOVER anymore.
+	Reported by Andreas Jaeger.
+
+	* posix/glob.h: Use __size_t instead of size_t in definitions and
+	make sure this is defined.
+
 1998-09-01 10:34  Ulrich Drepper  <drepper@cygnus.com>
 
-	* manual/locale.texi: Almost compelte rewrite.  Document more functions
+	* manual/locale.texi: Almost complete rewrite.  Document more functions
 	and functionality.
 	* manual/arith.texi: Correct reference.
 	* manual/string.texi: Pretty printing.

@@ -164,6 +164,10 @@ struct link_map
 
     /* String specifying the path where this object was found.  */
     const char *l_origin;
+
+    /* Start and finish of memory map for this object.  l_map_start
+       need not be the same as l_addr.  */
+    ElfW(Addr) l_map_start, l_map_end;
   };
 
 #endif /* link.h */
