@@ -56,7 +56,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nextmod1.c nextmod2.c pathoptobj.c tst-pathopt.sh \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
 		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c \
-		   testobj.h
+		   testobj.h vismod.h
 
 include ../Makeconfig
 

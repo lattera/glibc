@@ -1,3 +1,32 @@
+2000-12-17  Andreas Jaeger  <aj@suse.de>
+
+	* elf/vismain.c: Move prototypes for functions in vismod*.c to
+	vismod.h.
+	* elf/vismod.h: New file.
+	* elf/Makefile (distribute): Add vismod.h.
+	* elf/vismod1.c: Include vismod.h.
+	* elf/vismod2.c: Likewise.
+	* elf/vismod3.c: Likewise.
+
+	* elf/constload3.c: Add prototype declarations to shut up gcc.
+	* elf/failobj.c: Likewise.
+	* elf/nodelmod3.c: Likewise.
+	* elf/filtmod1.c: Likewise.
+	* elf/filtmod2.c: Likewise.
+	* elf/reldepmod1.c: Likewise.
+	* elf/reldepmod2.c: Likewise.
+	* elf/reldepmod3.c: Likewise.
+	* elf/reldepmod4.c: Likewise.
+	* elf/unload2dep.c: Likewise.
+	* elf/unload2mod.c: Likewise.
+	* elf/ltglobmod1.c: Likewise.
+	* elf/pathoptobj.c: Likewise.
+
+	* locale/programs/ld-collate.c (collate_finish): Don't use labels
+	at end of compound statement.
+	* locale/programs/locale.c (show_info): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Likewise.
+
 2000-12-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* catgets/gencat.c (read_input_file): Avoid calling obstack_free
