@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,13 +28,24 @@ __utimes (file, tvp)
      const char *file;
      struct timeval tvp[2];
 {
+  struct timeval timevals[2];
   error_t err;
-  file_t f = __file_name_lookup (file, 0, 0);
-  if (f == MACH_PORT_NULL)
+  file_t port;
+
+  if (tvp == NULL)
+    {
+      /* Setting the number of microseconds to `-1' tells the
+         underlying filesystems to use the current time.  */
+      timevals[1].tv_usec = timevals[0].tv_usec = (time_t)-1;
+      tvp = timevals;
+    }
+
+  port = __file_name_lookup (file, 0, 0);
+  if (port == MACH_PORT_NULL)
     return -1;
-  err = __file_utimes (f,
+  err = __file_utimes (port,
 		       *(time_value_t *) &tvp[0], *(time_value_t *) &tvp[1]);
-  __mach_port_deallocate (__mach_task_self (), f);
+  __mach_port_deallocate (__mach_task_self (), port);
   if (err)
     return __hurd_fail (err);
   return 0;
