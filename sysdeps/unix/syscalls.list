@@ -49,6 +49,7 @@ sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_stat	xstat	stat		2	__syscall_stat
 umask		-	umask		1	__umask		umask
+uname		-	uname		1	uname
 unlink		-	unlink		1	__unlink	unlink
 write		-	write		3	__write		write
 writev		-	writev		3	writev

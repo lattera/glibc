@@ -1,3 +1,7 @@
 # On Linux, the default is to use libio instead of stdio.
 
 test $stdio = default && stdio=libio
+
+# Don't bother trying to generate any glue code to be compatible with the
+# existing system library, because we are the only system library.
+inhibit_glue=yes

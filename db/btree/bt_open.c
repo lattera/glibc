@@ -200,7 +200,7 @@ __bt_open(fname, flags, mode, openinfo, dflags)
 		default:
 			goto einval;
 		}
-		
+
 		if ((t->bt_fd = open(fname, flags, mode)) < 0)
 			goto err;
 
@@ -388,18 +388,30 @@ tmp()
 {
 	sigset_t set, oset;
 	int fd;
-	char *envtmp;
-	char path[MAXPATHLEN];
+	const char *envtmp;
+	char *path;
+	static const char fmt[] = "%s/bt.XXXXXX";
+	size_t n;
 
 	envtmp = getenv("TMPDIR");
-	(void)snprintf(path,
-	    sizeof(path), "%s/bt.XXXXXX", envtmp ? envtmp : "/tmp");
+	if (!envtmp)
+	  envtmp = "/tmp";
+	n = strlen (envtmp) + sizeof fmt;
+#ifdef	__GNUC__
+	path = __builtin_alloca(n);
+#else
+	path = malloc(n);
+#endif
+	(void)snprintf(path, n, fmt, envtmp ? envtmp : "/tmp");
 
 	(void)sigfillset(&set);
 	(void)sigprocmask(SIG_BLOCK, &set, &oset);
 	if ((fd = mkstemp(path)) != -1)
 		(void)unlink(path);
 	(void)sigprocmask(SIG_SETMASK, &oset, NULL);
+#ifndef	__GNUC__
+	free(path);
+#endif
 	return(fd);
 }
 

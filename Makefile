@@ -42,7 +42,7 @@ configure: configure.in; $(autoconf-it)
 include Makeconfig
 
 ifndef avoid-generated
-include $(objpfx)sysd-dirs
+-include $(objpfx)sysd-dirs
 define \n
 
 

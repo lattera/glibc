@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.
 
@@ -295,5 +295,8 @@ strtol (nptr, endptr, base)
 }
 
 #ifdef weak_symbol
-weak_symbol (strtol)
+/* We need this indirection when `strtol' is defined as a macro
+   for one of the other names.  */
+#define weak1(x) weak_symbol(x)
+weak1 (strtol)
 #endif

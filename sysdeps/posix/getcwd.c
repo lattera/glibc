@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -167,7 +167,7 @@ extern char *alloca ();
 #endif
 #endif
 
-#ifndef	STDC_HEADERS
+#if !defined (STDC_HEADERS) && !defined (__GNU_LIBRARY__)
 #undef	size_t
 #define	size_t	unsigned int
 #endif

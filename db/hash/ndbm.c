@@ -47,6 +47,7 @@ static char sccsid[] = "@(#)ndbm.c	8.4 (Berkeley) 7/21/94";
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <ndbm.h>
 #include "hash.h"
@@ -61,8 +62,16 @@ dbm_open(file, flags, mode)
 	const char *file;
 	int flags, mode;
 {
+  	DBM *db;
 	HASHINFO info;
-	char path[MAXPATHLEN];
+	const size_t len = strlen(file) + sizeof (DBM_SUFFIX);
+#ifdef __GNUC__
+	char path[len];
+#else
+	char *path = malloc(len);
+	if (path == NULL)
+		return NULL;
+#endif
 
 	info.bsize = 4096;
 	info.ffactor = 40;
@@ -72,7 +81,11 @@ dbm_open(file, flags, mode)
 	info.lorder = 0;
 	(void)strcpy(path, file);
 	(void)strcat(path, DBM_SUFFIX);
-	return ((DBM *)__hash_open(path, flags, mode, &info, 0));
+	db = (DBM *)__hash_open(path, flags, mode, &info, 0);
+#ifndef	__GNUC__
+	free(path);
+#endif
+	return db;
 }
 
 extern void
@@ -180,7 +193,7 @@ dbm_error(db)
 	HTAB *hp;
 
 	hp = (HTAB *)db->internal;
-	return (hp->errno);
+	return (hp->errnum);
 }
 
 extern int
@@ -190,7 +203,7 @@ dbm_clearerr(db)
 	HTAB *hp;
 
 	hp = (HTAB *)db->internal;
-	hp->errno = 0;
+	hp->errnum = 0;
 	return (0);
 }
 

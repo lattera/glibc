@@ -419,8 +419,11 @@ for dir in $sysnames; do
     . $sysdep_dir/$dir/configure
   fi
   if test -z "$uname"; then
-    { test -r $sysdep_dir/$dir/uname.c || test -r $sysdep_dir/$dir/uname.S; } \
-    && uname=$dir
+    if test -r $sysdep_dir/$dir/uname.c ||
+       test -r $sysdep_dir/$dir/uname.S ||
+       { test -r $sysdep_dir/$dir/syscalls.list &&
+	 grep '^uname[ 	]' $sysdep_dir/$dir/syscalls.list >/dev/null; }; then
+      uname=$dir
   fi
 done
 

@@ -71,28 +71,28 @@ typedef struct hashhdr {		/* Disk resident portion */
 	int		dsize;		/* Directory Size */
 	int		ssize;		/* Segment Size */
 	int		sshift;		/* Segment shift */
-	int		ovfl_point;	/* Where overflow pages are being 
+	int		ovfl_point;	/* Where overflow pages are being
 					 * allocated */
 	int		last_freed;	/* Last overflow page freed */
 	int		max_bucket;	/* ID of Maximum bucket in use */
 	int		high_mask;	/* Mask to modulo into entire table */
-	int		low_mask;	/* Mask to modulo into lower half of 
+	int		low_mask;	/* Mask to modulo into lower half of
 					 * table */
 	int		ffactor;	/* Fill factor */
 	int		nkeys;		/* Number of keys in hash table */
 	int		hdrpages;	/* Size of table header */
 	int		h_charkey;	/* value of hash(CHARKEY) */
-#define NCACHED	32			/* number of bit maps and spare 
+#define NCACHED	32			/* number of bit maps and spare
 					 * points */
 	int		spares[NCACHED];/* spare pages for overflow */
-	u_int16_t	bitmaps[NCACHED];	/* address of overflow page 
+	u_int16_t	bitmaps[NCACHED];	/* address of overflow page
 						 * bitmaps */
 } HASHHDR;
 
 typedef struct htab	 {		/* Memory resident data structure */
 	HASHHDR 	hdr;		/* Header */
 	int		nsegs;		/* Number of allocated segments */
-	int		exsegs;		/* Number of extra allocated 
+	int		exsegs;		/* Number of extra allocated
 					 * segments */
 	u_int32_t			/* Hash function */
 	    (*hash)__P((const void *, size_t));
@@ -103,16 +103,16 @@ typedef struct htab	 {		/* Memory resident data structure */
 	BUFHEAD 	*cpage;		/* Current page */
 	int		cbucket;	/* Current bucket */
 	int		cndx;		/* Index of next item on cpage */
-	int		errno;		/* Error Number -- for DBM 
+	int		errnum;		/* Error Number -- for DBM
 					 * compatability */
-	int		new_file;	/* Indicates if fd is backing store 
+	int		new_file;	/* Indicates if fd is backing store
 					 * or no */
-	int		save_file;	/* Indicates whether we need to flush 
+	int		save_file;	/* Indicates whether we need to flush
 					 * file at
 					 * exit */
 	u_int32_t	*mapp[NCACHED];	/* Pointers to page maps */
 	int		nmaps;		/* Initial number of bitmaps */
-	int		nbufs;		/* Number of buffers left to 
+	int		nbufs;		/* Number of buffers left to
 					 * allocate */
 	BUFHEAD 	bufhead;	/* Header of buffer lru list */
 	SEGMENT 	*dir;		/* Hash Bucket directory */
@@ -194,7 +194,7 @@ typedef struct htab	 {		/* Memory resident data structure */
  *		so it starts on this page and continues on the next.
  *		The format of the page is:
  *		    KEY_OFF PARTIAL_KEY OVFL_PAGENO OVFLPAGE
- *		
+ *
  *		    KEY_OFF -- offset of the beginning of the key
  *		    PARTIAL_KEY -- 1
  *		    OVFL_PAGENO - page number of the next overflow page
@@ -229,7 +229,7 @@ typedef struct htab	 {		/* Memory resident data structure */
  *		    OVFL_PAGENO - page number of the next overflow page
  *		    OVFLPAGE -- 0
  *
- * FULL_KEY_DATA 
+ * FULL_KEY_DATA
  *		This must be the first key/data pair on the page.
  *		There are two cases:
  *

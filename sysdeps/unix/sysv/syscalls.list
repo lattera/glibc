@@ -11,5 +11,4 @@ stime		-	stime		1	stime
 time		-	time		1	time
 times		-	times		1	__times	times
 ulimit		-	ulimit		2	ulimit
-uname		-	uname		1	uname
 utime		-	utime		2	utime
