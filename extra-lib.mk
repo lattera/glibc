@@ -10,6 +10,8 @@ extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 
 object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
 
+ifneq (,$(object-suffixes-$(lib)))
+
 # Make sure these are simply-expanded variables before we append to them,
 # since we want the expressions we append to be expanded right now.
 install-lib := $(install-lib)
@@ -38,3 +40,5 @@ $(common-objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
 endef
 object-suffixes-left = $(object-suffixes-$(lib))
 include $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-$(lib)))
+
+endif

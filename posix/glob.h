@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -65,7 +65,9 @@ extern "C"
 #define	GLOB_NOMATCH	3	/* No matches found.  */
 
 /* Structure describing a globbing run.  */
+#ifndef _AMIGA			/* Buggy compiler.   */
 struct stat;
+#endif
 typedef struct
   {
     int gl_pathc;		/* Count of paths matched by the pattern.  */
