@@ -129,6 +129,7 @@ struct ifreq
 	int ifru_mtu;
 	struct ifmap ifru_map;
 	char ifru_slave[IFNAMSIZ];	/* Just fits the size */
+	char ifru_newname[IFNAMSIZ];
 	__caddr_t ifru_data;
       } ifr_ifru;
   };
@@ -147,6 +148,7 @@ struct ifreq
 #define ifr_ifindex	ifr_ifru.ifru_ivalue    /* interface index      */
 #define ifr_bandwidth	ifr_ifru.ifru_ivalue	/* link bandwidth	*/
 #define ifr_qlen	ifr_ifru.ifru_ivalue	/* queue length		*/
+#define ifr_newname	ifr_ifru.ifru_newname	/* New name		*/
 #define _IOT_ifreq	_IOT(_IOTS(struct ifreq),1,0,0,0,0) /* not right */
 
 

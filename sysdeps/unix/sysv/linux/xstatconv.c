@@ -168,7 +168,7 @@ xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 # endif
 	  {
 	    buf->st_ino = kbuf->st_ino;
-	    if (sizeof (buf->st_ino) != sizeof (kbuf->__st_ino)
+	    if (sizeof (buf->st_ino) != sizeof (kbuf->st_ino)
 		&& buf->st_ino != kbuf->st_ino)
 	      {
 		__set_errno (EOVERFLOW);
@@ -176,8 +176,8 @@ xstat32_conv (int vers, struct stat64 *kbuf, struct stat *buf)
 	      }
 	  }
 #else
-	buf->st_ino = kbuf->__st_ino;
-	if (sizeof (buf->st_ino) != sizeof (kbuf->__st_ino)
+	buf->st_ino = kbuf->st_ino;
+	if (sizeof (buf->st_ino) != sizeof (kbuf->st_ino)
 	    && buf->st_ino != kbuf->st_ino)
 	  {
 	    __set_errno (EOVERFLOW);

@@ -835,9 +835,12 @@ __printf_fp (FILE *fp,
 	    type = 'f';
 	    intdig_max = expsign == 0 ? exponent + 1 : 0;
 	    fracdig_max = dig_max - intdig_max;
-	    /* We need space for the significant digits and perhaps for
-	       leading zeros when < 1.0.  Pessimistic guess: dig_max.  */
-	    chars_needed = dig_max + dig_max + 1;
+	    /* We need space for the significant digits and perhaps
+	       for leading zeros when < 1.0.  The number of leading
+	       zeros can be as many as would be required for
+	       exponential notation with a negative two-digit
+	       exponent, which is 4.  */
+	    chars_needed = dig_max + 1 + 4;
 	  }
 	fracdig_min = info->alt ? fracdig_max : 0;
 	significant = 0;		/* We count significant digits.	 */

@@ -1,3 +1,45 @@
+2000-08-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c: Fix chars_needed computation.
+	Patch by Greg McGary <greg@mcgary.org>.
+
+2000-08-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object): Don't crash if both loader and
+	_dl_loaded are NULL.
+
+2000-08-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* manual/arith.texi (feholdexcept): Returns 0 on success.
+
+2000-08-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/gnu/net/if.h (struct ifreq): Add ifru_newname.
+	(ifr_newname): New.
+	Reported by Andi Kleen <ak@suse.de>.
+
+2000-08-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/fedisblxcpt.c: New file.
+	* sysdeps/alpha/fpu/feenablxcpt.c: New file.
+	* sysdeps/alpha/fpu/fegetexcept.c: New file.
+
+2000-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/xstatconv.c (xstat32_conv): Test sizes
+	of buf->st_ino and kbuf->st_ino, not __st_ino.
+	If _HAVE_STAT64___ST_INO is not defined, don't use __st_ino at all.
+	* sysdeps/unix/sysv/linux/getdents64.c: Change path in #include
+	directive so that only linux/getdents.c is used, not some
+	architecture specific one.
+
+2000-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/fegetexcept.c (fegetexcept): Return currently
+	enabled, not disabled exceptions.
+	* sysdeps/i386/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/i386/fpu/feenablxcpt.c (feenableexcept): Likewise.
+
 2000-08-17  Greg McGary  <greg@mcgary.org>
 
 	* Makeconfig (link-extra-libs-bounded): Strip `-bp' suffix
@@ -10,7 +52,8 @@
 	* linuxthreads/Makefile (libpthread, librt): Remove variables.
 	(librt-tests): Add variable.  (tests): Use it.
 	[build-shared, build-static]
-	($(addprefix $(objpfx),$(tests)), $(addprefix $(objpfx),$(librt-tests))):
+	($(addprefix $(objpfx),$(tests)),
+	$(addprefix $(objpfx),$(librt-tests))):
 	Consolidate individual dependencies.
 	[build-bounded]
 	($(tests:%=$(objpfx)%-bp), $(librt-tests:%=$(objpfx)%-bp)):
@@ -91,7 +134,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/oldgetrlimit64.c: New file.
 	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
 
-	* include/link.h: Undo last patches.  Hurd now had stat64.
+	* include/link.h: Undo last patches.  Hurd now has stat64.
 	* elf/Makefile: Likewise.
 	* elf/dl-load.c: Likewise.
 	* elf/dl-misc.c: Likewise.

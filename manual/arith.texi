@@ -1018,8 +1018,8 @@ non-zero value otherwise.
 Store the current floating-point environment in the object pointed to by
 @var{envp}.  Then clear all exception flags, and set the FPU to trap no
 exceptions.  Not all FPUs support trapping no exceptions; if
-@code{feholdexcept} cannot set this mode, it returns zero.  If it
-succeeds, it returns a nonzero value.
+@code{feholdexcept} cannot set this mode, it returns nonzero value.  If it
+succeeds, it returns zero.
 @end deftypefun
 
 The functions which restore the floating-point environment can take two
