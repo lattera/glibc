@@ -32,10 +32,12 @@ below.
 Configuring and compiling GNU Libc
 ==================================
 
-   GNU Libc can be compiled in the source directory but we'd advise to
-build in a separate build directory.  For example, if you have unpacked
-the glibc sources in `/src/gnu/glibc-2.1.0', create a directory
-`/src/gnu/glibc-build' to put the object files in.
+   GNU Libc can be compiled in the source directory but we strongly
+advise to build in a separate build directory.  For example, if you
+have unpacked the glibc sources in `/src/gnu/glibc-2.1.0', create a
+directory `/src/gnu/glibc-build' to put the object files in.  This
+allows to remove the whole build directory in case an error occurs
+which is the safest way to get a clean way and should always be done.
 
    From your object directory, run the shell script `configure' found
 at the top level of the source tree.  In the scenario above, you'd type

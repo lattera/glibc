@@ -144,8 +144,7 @@ Binutils 2.9.1.0.16 or later is also required.
 * When compiling for Linux, the header files of the Linux kernel must
   be available to the compiler as <linux/*.h> and <asm/*.h>.
 
-* lots of disk space (~170MB for i?86-linux; more for RISC platforms,
-  as much as 400MB).
+* lots of disk space (~400MB for i?86-linux; more for RISC platforms).
 
 * plenty of time.  Compiling just the shared and static libraries for
   i?86-linux takes approximately 1h on an AMD-K6@225MHz w/ 96MB of RAM,
