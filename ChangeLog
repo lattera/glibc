@@ -1,7 +1,7 @@
 2000-11-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (CMSG_ALIGN): Cast result
-	of unary ~ to size_t.
+	of unary ~ to size_t.Update.
 
 	* stdlib/strtod.c: Make gcc shut up about SWAP use.
 
