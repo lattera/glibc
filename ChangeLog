@@ -1,3 +1,8 @@
+2000-10-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close): Optimize a bit by optimizing out the
+	nsearchlist variable.
+
 2000-10-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-lookup.c (add_dependency): Fix test to check whether

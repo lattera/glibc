@@ -51,7 +51,6 @@ _dl_close (void *_map)
   } *reldeps = NULL;
   struct link_map **list;
   struct link_map *map = _map;
-  unsigned int nsearchlist;
   unsigned int i;
   unsigned int *new_opencount;
 
@@ -91,18 +90,17 @@ _dl_close (void *_map)
     }
 
   list = map->l_initfini;
-  nsearchlist = map->l_searchlist.r_nlist;
 
   /* Compute the new l_opencount values.  */
-  new_opencount = (unsigned int *) alloca (nsearchlist
+  new_opencount = (unsigned int *) alloca (map->l_searchlist.r_nlist
 					   * sizeof (unsigned int));
-  for (i = 0; i < nsearchlist; ++i)
+  for (i = 0; list[i] != NULL; ++i)
     {
       list[i]->l_idx = i;
       new_opencount[i] = list[i]->l_opencount;
     }
   --new_opencount[0];
-  for (i = 1; i < nsearchlist; ++i)
+  for (i = 1; list[i] != NULL; ++i)
     if (! (list[i]->l_flags_1 & DF_1_NODELETE)
 	/* Decrement counter.  */
 	&& --new_opencount[i] == 0
@@ -117,14 +115,14 @@ _dl_close (void *_map)
 	for (j = 1; j < list[i]->l_searchlist.r_nlist; ++j)
 	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE))
 	    {
-	      assert (dep_list[j]->l_idx < nsearchlist);
+	      assert (dep_list[j]->l_idx < map->l_searchlist.r_nlist);
 	      --new_opencount[dep_list[j]->l_idx];
 	    }
       }
   assert (new_opencount[0] == 0);
 
   /* Call all termination functions at once.  */
-  for (i = 0; i < nsearchlist; ++i)
+  for (i = 0; list[i] != NULL; ++i)
     {
       struct link_map *imap = list[i];
       if (new_opencount[i] == 0 && imap->l_type == lt_loaded
@@ -170,7 +168,7 @@ _dl_close (void *_map)
 
   /* Check each element of the search list to see if all references to
      it are gone.  */
-  for (i = 0; i < nsearchlist; ++i)
+  for (i = 0; list[i] != NULL; ++i)
     {
       struct link_map *imap = list[i];
       if (imap->l_opencount == 0 && imap->l_type == lt_loaded)
