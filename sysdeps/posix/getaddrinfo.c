@@ -677,13 +677,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    int herrno;
 	    struct hostent th;
 	    size_t tmpbuflen = 512;
-	    char *tmpbuf;
+	    char *tmpbuf = NULL;
 
 	    do
 	      {
-		tmpbuflen *= 2;
-		tmpbuf = __alloca (tmpbuflen);
-
+		tmpbuf = extend_alloca (tmpbuf, tmpbuflen, tmpbuflen * 2);
 		rc = __gethostbyaddr_r (at2->addr,
 					((at2->family == AF_INET6)
 					 ? sizeof(struct in6_addr)
@@ -692,7 +690,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 					&h, &herrno);
 
 	      }
-	    while (rc == errno && herrno == NETDB_INTERNAL);
+	    while (rc == ERANGE && herrno == NETDB_INTERNAL);
 
 	    if (rc != 0 && herrno == NETDB_INTERNAL)
 	      {
