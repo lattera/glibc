@@ -1,5 +1,19 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/sys/asm.h: Formatting changes.
+	(PTR, PTRSIZE, PTRLOG): Adjust for all 3 ABIs.
+	(CPADD): Define for all of them.
+	(SETUP_GP, SETUP_GPX, SETUP_GPX_L, SAVE_GP, SETUP_GP64,
+	SETUP_GPX64, SETUP_GPX64_L, RESTORE_GP64, USE_ALT_CP,
+	NARGSAVE): Define per ABI spec.
+	(END): Don't redefine.
+	(LONG_SLL, LONG_SLLV, LONG_SRL, LONG_SRLV, LONG_SRA,
+	LONG_SRAV): Remove duplicate definitions.
+	(PTR_ADD, PTR_ADDI, PTR_ADDU, PTR_ADDIU, PTR_SUB, PTR_SUBI,
+	PTR_SUBU, PTR_SUBIU, PTR_L, PTR_S, PTR_SLL, PTR_SLLV, PTR_SRL,
+	PTR_SRLV, PTR_SRA, PTR_SRAV, PTR_SCALESHIFT): Define for n32.
+	(PTR_LA): Define for all 3 ABIs.
+
 	* sysdeps/mips/dl-machine.h: Include sys/asm.h.
 	(elf_machine_matches_host): Prevent linking of o32 and n32
 	together.
