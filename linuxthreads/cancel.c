@@ -64,7 +64,7 @@ int pthread_cancel(pthread_t thread)
 
   th = handle->h_descr;
 
-  if (th->p_canceled) {
+  if (th->p_cancelstate == PTHREAD_CANCEL_DISABLE || th->p_canceled) {
     __pthread_unlock(&handle->h_lock);
     return 0;
   }
