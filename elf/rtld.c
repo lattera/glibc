@@ -300,6 +300,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	     functions we call below for output may no longer work properly
 	     after relocation.  */
 
+	  int i;
+
 	  if (! _dl_loaded->l_info[DT_NEEDED])
 	    _dl_sysdep_message ("\t", "statically linked\n", NULL);
 	  else
@@ -313,6 +315,25 @@ of this helper program; chances are you did not intend to run this program.\n",
 		_dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
 				    " (0x", bp, ")\n", NULL);
 	      }
+
+	  for (i = 1; i < _dl_argc; ++i)
+	    {
+	      const Elf32_Sym *ref = NULL;
+	      Elf32_Addr loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
+						       _dl_loaded, "argument",
+						       1);
+	      char buf[20], *bp;
+	      buf[sizeof buf - 1] = '\0';
+	      bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
+	      while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
+		*--bp = '0';
+	      _dl_sysdep_message (_dl_argv[i], " found at 0x", bp, NULL);
+	      buf[sizeof buf - 1] = '\0';
+	      bp = _itoa (loadbase, &buf[sizeof buf - 1], 16, 0);
+	      while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
+		*--bp = '0';
+	      _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
+	    }
 
 	  _exit (0);
 	}

@@ -59,6 +59,7 @@ cp crti.s-new crtn.s-new");
 
 /* Append the .init prologue to crti.s-new.  */
 asm ("cat >> crti.s-new <<\\EOF.crti.init");
+
 SECTION (".init")
 void
 _init (void)
@@ -69,10 +70,13 @@ _init (void)
      gcrt1.o to reference a symbol which would be defined by some library
      module which has a constructor; but then user code's constructors
      would come first, and not be profiled.  */
-  extern void __gmon_start__ (void) __attribute__ ((weak));
+  extern volatile void __gmon_start__ (void) __attribute__ ((weak));
+  /* This volatile variable is necessary to avoid GCC optimizing
+     out the test.  */
+  register volatile void (*g) (void) = &__gmon_start__;
   weak_symbol (__gmon_start__)
-  if (&__gmon_start__)
-    __gmon_start__ ();
+  if (g)
+    (*g) ();
 
   /* End the here document containing the .init prologue code.
      Then fetch the .section directive just written and append that

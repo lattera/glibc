@@ -57,6 +57,8 @@ getttynam(tty)
 	return (t);
 }
 
+static char *skip __P((char *)), *value __P((char *));
+
 struct ttyent *
 getttyent()
 {
@@ -65,7 +67,6 @@ getttyent()
 	register char *p;
 #define	MAXLINELENGTH	100
 	static char line[MAXLINELENGTH];
-	static char *skip(), *value();
 
 	if (!tf && !setttyent())
 		return (NULL);
