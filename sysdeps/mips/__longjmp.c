@@ -45,15 +45,9 @@ __longjmp (env, val_arg)
   asm volatile ("l.d $f28, %0" : : "m" (env[0].__fpregs[4]));
   asm volatile ("l.d $f30, %0" : : "m" (env[0].__fpregs[5]));
 
-  /* Restore the stack pointer.  */
-  asm volatile ("lw $29, %0" : : "m" (env[0].__sp));
-
   /* Get and reconstruct the floating point csr.  */
   asm volatile ("lw $2, %0" : : "m" (env[0].__fpc_csr));
   asm volatile ("ctc1 $2, $31");
-
-  /* Get the FP.  */
-  asm volatile ("lw $30, %0" : : "m" (env[0].__fp));
 
   /* Get the GP. */
   asm volatile ("lw $gp, %0" : : "m" (env[0].__gp));
@@ -71,7 +65,13 @@ __longjmp (env, val_arg)
   /* Get the PC.  */
   asm volatile ("lw $25, %0" : : "m" (env[0].__pc));
 
-  /* Give setjmp 1 if given a 0, or what they gave us if non-zero.  */
+  /* Restore the stack pointer and the FP.  They have to be restored
+     last and in a single asm as gcc, depending on options used, may
+     use either of them to access env.  */
+  asm volatile ("lw $29, %0\n\t"
+		"lw $30, %1\n\t" : : "m" (env[0].__sp), "m" (env[0].__fp));
+
+/* Give setjmp 1 if given a 0, or what they gave us if non-zero.  */
   if (val == 0)
     asm volatile ("li $2, 1");
   else
