@@ -23,25 +23,44 @@
 
 typedef size_t (*proto_t) (const char *, const char *);
 size_t simple_strspn (const char *, const char *);
+size_t stupid_strspn (const char *, const char *);
 
+IMPL (stupid_strspn, 0)
 IMPL (simple_strspn, 0)
 IMPL (strspn, 1)
 
 size_t
-simple_strspn (const char *s, const char *rej)
+simple_strspn (const char *s, const char *acc)
 {
   const char *r, *str = s;
   char c;
 
   while ((c = *s++) != '\0')
     {
-      for (r = rej; *r != '\0'; ++r)
+      for (r = acc; *r != '\0'; ++r)
 	if (*r == c)
 	  break;
       if (*r == '\0')
 	return s - str - 1;
     }
   return s - str - 1;
+}
+
+size_t
+stupid_strspn (const char *s, const char *acc)
+{
+  size_t ns = strlen (s), nacc = strlen (acc);
+  size_t i, j;
+
+  for (i = 0; i < ns; ++i)
+    {
+      for (j = 0; j < nacc; ++j)
+	if (s[i] == acc[j])
+	  break;
+      if (j == nacc)
+	return i;
+    }
+  return i;
 }
 
 static void
@@ -115,7 +134,7 @@ do_test (size_t align, size_t pos, size_t len)
 static void
 do_random_tests (void)
 {
-  size_t i, j, n, align, pos, len;
+  size_t i, j, n, align, pos, alen, len;
   unsigned char *p = buf1 + page_size - 512;
   unsigned char *acc;
 
@@ -123,17 +142,20 @@ do_random_tests (void)
     {
       align = random () & 15;
       if (random () & 1)
-	len = random () & 63;
+	alen = random () & 63;
       else
-	len = random () & 15;
-      if (!len)
+	alen = random () & 15;
+      if (!alen)
 	pos = 0;
       else
 	pos = random () & 511;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
-      acc = buf2 + page_size - len - 1 - (random () & 7);
-      for (i = 0; i < len; ++i)
+      len = random () & 511;
+      if (len + align >= 512)
+	len = 511 - align - (random () & 7);
+      acc = buf2 + page_size - alen - 1 - (random () & 7);
+      for (i = 0; i < alen; ++i)
 	{
 	  acc[i] = random () & 255;
 	  if (!acc[i])
@@ -142,35 +164,32 @@ do_random_tests (void)
 	    acc[i] = 1 + (random () & 127);
 	}
       acc[i] = '\0';
-      j = pos + align + 64;
+      j = (pos > len ? pos : len) + align + 64;
       if (j > 512)
 	j = 512;
 
       for (i = 0; i < j; i++)
 	{
-	  if (i == pos + align)
+	  if (i == len + align)
+	    p[i] = '\0';
+	  else if (i == pos + align)
 	    {
-	      if ((random () & 7) == 0)
+	      p[i] = random () & 255;
+	      if (strchr (acc, p[i]))
 		p[i] = '\0';
-	      else
-		{
-		  p[i] = random () & 255;
-		  if (strchr (acc, p[i]))
-		    p[i] = '\0';
-		}
 	    }
 	  else if (i < align || i > pos + align)
 	    p[i] = random () & 255;
 	  else
-	    p[i] = acc [random () % len];
+	    p[i] = acc [random () % alen];
 	}
 
       FOR_EACH_IMPL (impl, 1)
-	if (CALL (impl, p + align, acc) != pos)
+	if (CALL (impl, p + align, acc) != (pos < len ? pos : len))
 	  {
-	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %p, %zd) %zd != %zd",
-		   n, impl->name, align, acc, len,
-		   CALL (impl, p + align, acc), pos);
+	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %p, %zd, %zd, %zd) %zd != %zd",
+		   n, impl->name, align, acc, alen, pos, len,
+		   CALL (impl, p + align, acc), (pos < len ? pos : len));
 	    ret = 1;
 	  }
     }

@@ -22,13 +22,13 @@ typedef struct
 {
   const char *name;
   void (*fn) (void);
-  int test;
+  long test;
 } impl_t;
 extern impl_t __start_impls[], __stop_impls[];
 
 #define IMPL(name, test) \
-  impl_t tst_ ## name				\
-  __attribute__ ((section ("impls"))) 		\
+  impl_t tst_ ## name							\
+  __attribute__ ((section ("impls"), aligned (sizeof (void *))))	\
     = { #name, (void (*) (void))name, test };
 
 #ifdef TEST_MAIN

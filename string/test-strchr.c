@@ -23,7 +23,9 @@
 
 typedef char *(*proto_t) (const char *, int);
 char *simple_strchr (const char *, int);
+char *stupid_strchr (const char *, int);
 
+IMPL (stupid_strchr, 0)
 IMPL (simple_strchr, 0)
 IMPL (strchr, 1)
 
@@ -34,6 +36,17 @@ simple_strchr (const char *s, int c)
     if (*s == '\0')
       return NULL;  
   return (char *) s;
+}
+
+char *
+stupid_strchr (const char *s, int c)
+{
+  size_t n = strlen (s) + 1;
+
+  while (n--)
+    if (*s++ == (char) c)
+      return (char *) s - 1;
+  return NULL;
 }
 
 static void
@@ -115,15 +128,18 @@ do_random_tests (void)
     {
       align = random () & 15;
       pos = random () & 511;
+      seek_char = random () & 255;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
       len = random () & 511;
-      if (pos >= len)
-	len = pos + (random () & 7);
+      if ((pos == len && seek_char)
+	  || (pos > len && (random () & 1)))
+	len = pos + 1 + (random () & 7);
       if (len + align >= 512)
         len = 511 - align - (random () & 7);
-      seek_char = random () & 255;
-      j = len + align + 64;
+      if (pos == len && seek_char)
+	len = pos + 1;
+      j = (pos > len ? pos : len) + align + 64;
       if (j > 512)
         j = 512;
 

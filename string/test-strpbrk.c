@@ -26,7 +26,9 @@
 
 typedef char *(*proto_t) (const char *, const char *);
 char *simple_strpbrk (const char *, const char *);
+char *stupid_strpbrk (const char *, const char *);
 
+IMPL (stupid_strpbrk, 0)
 IMPL (simple_strpbrk, 0)
 IMPL (strpbrk, 1)
 
@@ -40,6 +42,19 @@ simple_strpbrk (const char *s, const char *rej)
     for (r = rej; *r != '\0'; ++r)
       if (*r == c)
 	return (char *) s - 1;
+  return NULL;
+}
+
+char *
+stupid_strpbrk (const char *s, const char *rej)
+{
+  size_t ns = strlen (s), nrej = strlen (rej);
+  size_t i, j;
+
+  for (i = 0; i < ns; ++i)
+    for (j = 0; j < nrej; ++j)
+      if (s[i] == rej[j])
+	return (char *) s + i;
   return NULL;
 }
 #endif
@@ -127,7 +142,7 @@ do_test (size_t align, size_t pos, size_t len)
 static void
 do_random_tests (void)
 {
-  size_t i, j, n, align, pos, len;
+  size_t i, j, n, align, pos, len, rlen;
   RES_TYPE result;
   int c;
   unsigned char *p = buf1 + page_size - 512;
@@ -139,12 +154,17 @@ do_random_tests (void)
       pos = random () & 511;
       if (pos + align >= 511)
 	pos = 510 - align - (random () & 7);
+      len = random () & 511;
+      if (pos >= len && (random () & 1))
+	len = pos + 1 + (random () & 7);
+      if (len + align >= 512)
+	len = 511 - align - (random () & 7);
       if (random () & 1)
-	len = random () & 63;
+	rlen = random () & 63;
       else
-	len = random () & 15;
-      rej = buf2 + page_size - len - 1 - (random () & 7);
-      for (i = 0; i < len; ++i)
+	rlen = random () & 15;
+      rej = buf2 + page_size - rlen - 1 - (random () & 7);
+      for (i = 0; i < rlen; ++i)
 	{
 	  rej[i] = random () & 255;
 	  if (!rej[i])
@@ -156,14 +176,16 @@ do_random_tests (void)
       for (c = 1; c <= 255; ++c)
 	if (strchr (rej, c) == NULL)
 	  break;
-      j = pos + align + 64;
+      j = (pos > len ? pos : len) + align + 64;
       if (j > 512)
 	j = 512;
 
       for (i = 0; i < j; i++)
 	{
-	  if (i == pos + align)
-	    p[i] = rej[random () % (len + 1)];
+	  if (i == len + align)
+	    p[i] = '\0';
+	  else if (i == pos + align)
+	    p[i] = rej[random () % (rlen + 1)];
 	  else if (i < align || i > pos + align)
 	    p[i] = random () & 255;
 	  else
@@ -178,13 +200,13 @@ do_random_tests (void)
 	    }
 	}
 
-      result = STRPBRK_RESULT (p + align, pos);
+      result = STRPBRK_RESULT (p + align, pos < len ? pos : len);
 
       FOR_EACH_IMPL (impl, 1)
 	if (CALL (impl, p + align, rej) != result)
 	  {
-	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %p, %zd, %zd) %p != %p",
-		   n, impl->name, align, rej, len, pos,
+	    error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %p, %zd, %zd, %zd) %p != %p",
+		   n, impl->name, align, rej, rlen, pos, len,
 		   (void *) CALL (impl, p + align, rej), (void *) result);
 	    ret = 1;
 	  }

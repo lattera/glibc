@@ -1,3 +1,22 @@
+2002-11-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/test-strchr.c (stupid_strchr): New function.
+	(do_random_tests): Make sure the string is zero terminated.
+	* string/test-strpbrk.c (stupid_strpbrk): New function.
+	(do_random_tests): Make sure the string is zero terminated.
+	* string/test-strcmp.c (stupid_strcmp): New function.
+	(do_random_tests): Make sure the strings are zero terminated.
+	* string/test-strspn.c (stupid_strspn): New function.
+	(simple_strspn): Rename rej argument to acc.
+	(do_random_tests): Make sure the string is zero terminated.
+	* string/test-strcspn.c (stupid_strcspn): New function.
+	* string/test-strncpy.c (stupid_strncpy): New function.
+	* string/test-stpncpy.c (stupid_stpncpy): New function.
+	* string/test-strncmp.c (stupid_strncmp): New function.
+	(do_random_tests): Make sure the strings are zero terminated.
+	* string/test-string.h (impl_t): Change test into long.
+	(IMPL): Add __attribute__((aligned (sizeof (void *)))).
+
 2002-11-08  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ia64/elf/configure.in: Add TLS check.
@@ -10,9 +29,6 @@
 	place of _IO_new_do_write.
 	[_LIBC] (_IO_do_write): Define as macro for _IO_new_do_write and
 	#undef before versioned_symbol use.
-
-	* string/test-string.h (test_init): Fill BUF1 and BUF2 with nonzero
-	characters.
 
 2002-11-07  Richard Henderson  <rth@redhat.com>
 
