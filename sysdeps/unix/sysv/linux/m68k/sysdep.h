@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Andreas Schwab, <schwab@issan.informatik.uni-dortmund.de>,
    December 1995.
@@ -171,7 +171,7 @@ SYSCALL_ERROR_LABEL:							      \
        asm volatile ("trap #0"				\
 		     : "=d" (_d0)			\
 		     : "0" (_d0) ASM_ARGS_##nr		\
-		     : "d0");				\
+		     : "d0" : "memory");		\
        _sys_result = _d0;				\
      }							\
      if (_sys_result >= (unsigned int) -4095)		\
