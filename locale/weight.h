@@ -68,6 +68,8 @@ findidx (const unsigned char **cpp)
 
 	  /* Up to the next entry.  */
 	  cp += nhere;
+	  if ((1 + nhere) % __alignof__ (int32_t) != 0)
+	    cp += __alignof__ (int32_t) - (1 + nhere) % __alignof__ (int32_t);
 	}
       else
 	{
@@ -86,6 +88,9 @@ findidx (const unsigned char **cpp)
 		{
 		  /* Cannot be in this range.  */
 		  cp += 2 * nhere;
+		  if ((1 + 2 * nhere) % __alignof__ (int32_t) != 0)
+		    cp += (__alignof__ (int32_t)
+			   - (1 + 2 * nhere) % __alignof__ (int32_t));
 		  continue;
 		}
 
@@ -98,6 +103,9 @@ findidx (const unsigned char **cpp)
 		{
 		  /* Cannot be in this range.  */
 		  cp += 2 * nhere;
+		  if ((1 + 2 * nhere) % __alignof__ (int32_t) != 0)
+		    cp += (__alignof__ (int32_t)
+			   - (1 + 2 * nhere) % __alignof__ (int32_t));
 		  continue;
 		}
 

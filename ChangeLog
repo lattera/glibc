@@ -5,6 +5,8 @@
 	characters.
 	(collate_output): Correct various problems with alignment in the
 	output file.
+	* locale/weight.h: Adjust for last change in ld-collate.c of adding
+	alignment padding.
 
 	* stdlib/strfmon.c: Don't report an error if final NUL is at the
 	end of the buffer.  Set errno correctly if floating-point number
