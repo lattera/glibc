@@ -49,7 +49,8 @@ routines	:=							      \
 	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
 
-distribute	:= exit.h grouping.h abort-instr.h isomac.c
+distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh
+test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
 		   test-canon test-canon2 tst-strtoll tst-environ	  \
 		   tst-xpg-basename tst-random tst-bsearch tst-limits
@@ -130,10 +131,13 @@ endif
 test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
 # Run a test on the header files we use.
-tests: $(objpfx)isomac.out
+tests: $(objpfx)isomac.out $(objpfx)tst-fmtmsg.out
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)' '-I../include -I.. $(+sysdep-includes)' > $<.out
 
 $(objpfx)isomac: isomac.c
 	$(native-compile)
+
+$(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)stdlib/

@@ -1,5 +1,13 @@
 2000-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/fmtmsg.c (fmtmsg): Change output format slightly to make
+	it look better and bring it closer to SysV behavior.
+	* stdlib/Makefile (distribute): Add tst-fmtmsg.sh.
+	(test-srcs): Add tst-fmtmsg.
+	(tests): Add $(objpfx)tst-fmtmsg.out.  Add rule to generate it.
+	* stdlib/tst-fmtmsg.sh: New file.
+	* stdlib/tst-fmtmsg.c: New file.
+
 	* iconvdata/Makefile (modules): Add VISCII.
 	(gen-8bit-modules): Add viscii.
 	* iconvdata/viscii.c: New file.

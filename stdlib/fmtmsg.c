@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -145,15 +145,15 @@ fmtmsg (long int classification, const char *label, int severity,
 
       if (fprintf (stderr, "%s%s%s%s%s%s%s%s%s%s\n",
 		   do_label ? label : "",
-		   do_label && (do_severity | do_text) ? ": " : "",
+		   do_label && (do_severity | do_text | do_action | do_tag)
+		   ? ": " : "",
 		   do_severity ? severity_rec->string : "",
-		   do_severity && do_text ? ": " : "",
+		   do_severity && (do_text | do_action | do_tag) ? ": " : "",
 		   do_text ? text : "",
-		   (do_label | do_severity | do_text) && (do_action | do_tag)
-		   ? "\n" : "",
+		   do_text && (do_action | do_tag) ? "\n" : "",
 		   do_action ? "TO FIX: " : "",
 		   do_action ? action : "",
-		   do_action && do_tag ? " " : "",
+		   do_action && do_tag ? "  " : "",
 		   do_tag ? tag : "") == EOF)
 	/* Oh, oh.  An error occurred during the output.  */
 	result = MM_NOMSG;
@@ -169,15 +169,15 @@ fmtmsg (long int classification, const char *label, int severity,
 
       syslog (LOG_ERR, "%s%s%s%s%s%s%s%s%s%s\n",
 	      do_label ? label : "",
-	      do_label && (do_severity | do_text) ? ": " : "",
+	      do_label && (do_severity | do_text | do_action | do_tag)
+	      ? ": " : "",
 	      do_severity ? severity_rec->string : "",
-	      do_severity && do_text ? ": " : "",
+	      do_severity && (do_text | do_action | do_tag) ? ": " : "",
 	      do_text ? text : "",
-	      (do_label | do_severity | do_text) && (do_action | do_tag)
-	      ? "\n" : "",
+	      do_text && (do_action | do_tag) ? "\n" : "",
 	      do_action ? "TO FIX: " : "",
 	      do_action ? action : "",
-	      do_action && do_tag ? " " : "",
+	      do_action && do_tag ? "  " : "",
 	      do_tag ? tag : "");
     }
 
