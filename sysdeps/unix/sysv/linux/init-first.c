@@ -93,11 +93,7 @@ __libc_init_first (void)
 }
 
 #else
-void
-__libc_init_first (int argc, char **argv, char **envp)
-{
-  init (argc, argv, envp);
-}
+SYSDEP_CALL_INIT(__libc_init_first, init);
 #endif
 
 

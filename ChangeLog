@@ -1,5 +1,19 @@
 1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/strftime.c (my_strftime): Delay use of *tp values until
+	latest possible point to allow partly initialized structures
+	(e.g., from strptime).
+
+	* sysdeps/unix/sysv/linux/init-first.c [!PIC]: Define __libc_init_first
+	using init-first.h.
+
+1998-04-30 18:20  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-load.c (_dl_init_paths): Don't check the dynamic
+	loader if PIC is not defined.
+
+1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
+
 	* iconvdata/Makefile (modules): Add CSN_369103, CWI, DEC-MCS,
 	ECMA-CYRILLIC, GOST_19768-74, GREEK-CCITT, GREEK7, GREEK7-OLD, INIS,
 	INIS-8, INIS-CYRILLIC, ISO_6937-2, ISO_2033, ISO_5427, ISO_5427-EXT,
