@@ -1,3 +1,7 @@
+2000-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* semaphore.h (SEM_FAILED): Use 0 not NULL.
+
 2000-02-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c (pthread_cond_timedwait_relative_old): Tight loop with
