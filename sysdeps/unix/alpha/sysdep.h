@@ -97,7 +97,9 @@ name/**/:					\
 3:
 #endif
 
-#define ret	ret	zero,(ra),1
+#undef END
+#define END(sym)	.end sym
+
 #define r0	v0
 #define r1	a4
 
