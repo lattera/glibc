@@ -1,5 +1,9 @@
 2001-08-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/getopt_init.c (__getopt_clean_environment): Avoid making
+	the strncmp calls most of the time by testing for '_' as the first
+	character of the name.
+
 	* elf/dl-open.c (add_to_global): Remove stale comment.
 
 	* elf/dl-load.c (fillin_rpath): In SUID binaries, don't mark

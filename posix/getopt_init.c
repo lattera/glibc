@@ -1,5 +1,5 @@
 /* Perform additional initialization for getopt functions in GNU libc.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -45,7 +45,7 @@ __getopt_clean_environment (char **env)
      of file name wildcard expansion and therefore should not be
      considered as options.  */
   static const char envvar_tail[] = "_GNU_nonoption_argv_flags_=";
-  char var[100];
+  char var[50];
   char *cp, **ep;
   size_t len;
 
@@ -54,11 +54,13 @@ __getopt_clean_environment (char **env)
   cp = memcpy (&var[sizeof (var) - sizeof (envvar_tail)], envvar_tail,
 	       sizeof (envvar_tail));
   cp = _itoa_word (__getpid (), cp, 10, 0);
-  *--cp = '_';
+  /* Note: we omit adding the leading '_' since we explicitly test for
+     it before calling strncmp.  */
   len = (var + sizeof (var) - 1) - cp;
 
   for (ep = env; *ep != NULL; ++ep)
-    if (!strncmp (*ep, cp, len))
+    if ((*ep)[0] == '_'
+	&& __builtin_expect (strncmp (*ep + 1, cp, len) == 0, 0))
       {
 	/* Found it.  Store this pointer and move later ones back.  */
 	char **dp = ep;
