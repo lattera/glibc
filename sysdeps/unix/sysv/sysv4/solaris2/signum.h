@@ -1,4 +1,4 @@
-/* Signal number definitions.  SVR4 version.
+/* Signal number definitions.  Solaris 2 version.
 Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -60,7 +60,14 @@ Cambridge, MA 02139, USA.  */
 #define	SIGPROF		29	/* Profiling alarm clock (4.2 BSD).  */
 #define	SIGXCPU		30	/* CPU limit exceeded (4.2 BSD).  */
 #define	SIGXFSZ		31	/* File size limit exceeded (4.2 BSD).  */
+/* The following signals are new in Solaris 2.  */
+#define	SIGWAITING	32	/* Process's lwps are blocked.  */
+#define	SIGLWP		33	/* Special signal used by thread library.  */
+#define	SIGFREEZE	34	/* Special signal used by CPR.  */
+#define	SIGTHAW		35	/* Special signal used by CPR.  */
+#define	_SIGRTMIN	36	/* First (highest-priority) realtime signal. */
+#define	_SIGRTMAX	43	/* Last (lowest-priority) realtime signal.  */
 
 #endif	/* <signal.h> included.  */
 
-#define	_NSIG		32	/* Biggest signal number + 1.  */
+#define	_NSIG		44	/* Biggest signal number + 1.  */

@@ -1,5 +1,5 @@
 /* The proper definitions for SVR4's sigaction.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,14 @@ Cambridge, MA 02139, USA.  */
 /* Structure describing the action to be taken when a signal arrives.  */
 struct sigaction
   {
+    /* Special flags.  */
+    int sa_flags;
+
     /* Signal handler.  */
     __sighandler_t sa_handler;
 
     /* Additional set of signals to be blocked.  */
     __sigset_t sa_mask;
-
-    /* Special flags.  */
-    int sa_flags;
 
     /* Padding.  */
     int sa_resv[2];
@@ -41,7 +41,7 @@ struct sigaction
 #define SA_SIGINFO	0x8	/* Provide additional info to the handler.  */
 #define SA_NODEFER	0x10	/* Don't automatically block the signal when
  				   its handler is being executed.  */
-#define SA_NOSCLDWAIT	0x10000	/* Don't create zombie processes.  */
+#define SA_NOCLDWAIT	0x10000	/* Don't save zombie processes.  */
 #endif
 #define	SA_NOCLDSTOP	0x20000	/* Don't send SIGCHLD when children stop.  */
 
