@@ -1,5 +1,7 @@
 1998-12-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.109.
+
 	* mach/Versions: Add mach_msg_send and mach_msg_receive.
 	Patch by UCHIYAMA Yasushi <uch@nop.or.jp>.
 
