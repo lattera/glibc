@@ -125,7 +125,6 @@ _dl_nothread_init_static_tls (struct link_map *map)
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
   dtv_t *dtv = THREAD_DTV ();
-  _dl_printf("modid=%u, counter=%u\n", map->l_tls_modid, dtv[-1].counter);
   assert (map->l_tls_modid <= dtv[-1].counter);
   dtv[map->l_tls_modid].pointer.val = dest;
   dtv[map->l_tls_modid].pointer.is_static = true;

@@ -1,9 +1,16 @@
-GNU C Library NEWS -- history of user-visible changes.  2004-12-19
-Copyright (C) 1992-2002,2003,2004 Free Software Foundation, Inc.
+GNU C Library NEWS -- history of user-visible changes.  2005-2-21
+Copyright (C) 1992-2004, 2005 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
+
+Version 2.4
+
+* More overflow detection functions.
+
+* New iconv converters for IBM1025, IBM1122, IBM1137, IBM1153,
+  IBM1154, IBM1155, IBM1156, IBM1157, and IBM1158 contributed by Jiro Sekiba.
 
 Version 2.3.4
 

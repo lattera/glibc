@@ -1,7 +1,6 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1997-2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-#
 
 # The GNU C Library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -1572,3 +1571,73 @@ module	INTERNAL		PT154//			PT154		1
 alias	STRK1048-2002//		RK1048//
 module	RK1048//		INTERNAL		RK1048		1
 module	INTERNAL		RK1048//		RK1048		1
+
+#	from			to			module		cost
+alias	IBM-1025//		IBM1025//
+alias	CP1025//		IBM1025//
+alias	CSIBM1025//		IBM1025//
+module	IBM1025//		INTERNAL		IBM1025		1
+module	INTERNAL		IBM1025//		IBM1025		1
+
+#	from			to			module		cost
+alias	IBM-1122//		IBM1122//
+alias	CP1122//		IBM1122//
+alias	CSIBM1122//		IBM1122//
+module	IBM1122//		INTERNAL		IBM1122		1
+module	INTERNAL		IBM1122//		IBM1122		1
+
+#	from			to			module		cost
+alias	IBM-1137//		IBM1137//
+alias	CP1137//		IBM1137//
+alias	CSIBM1137//		IBM1137//
+module	IBM1137//		INTERNAL		IBM1137		1
+module	INTERNAL		IBM1137//		IBM1137		1
+
+#	from			to			module		cost
+alias	IBM-1153//		IBM1153//
+alias	CP1153//		IBM1153//
+alias	CSIBM1153//		IBM1153//
+module	IBM1153//		INTERNAL		IBM1153		1
+module	INTERNAL		IBM1153//		IBM1153		1
+
+#	from			to			module		cost
+alias	IBM-1154//		IBM1154//
+alias	CP1154//		IBM1154//
+alias	CSIBM1154//		IBM1154//
+module	IBM1154//		INTERNAL		IBM1154		1
+module	INTERNAL		IBM1154//		IBM1154		1
+
+#	from			to			module		cost
+alias	IBM-1155//		IBM1155//
+alias	CP1155//		IBM1155//
+alias	CSIBM1155//		IBM1155//
+module	IBM1155//		INTERNAL		IBM1155		1
+module	INTERNAL		IBM1155//		IBM1155		1
+
+#	from			to			module		cost
+alias	IBM-1155//		IBM1155//
+alias	CP1155//		IBM1155//
+alias	CSIBM1155//		IBM1155//
+module	IBM1155//		INTERNAL		IBM1155		1
+module	INTERNAL		IBM1155//		IBM1155		1
+
+#	from			to			module		cost
+alias	IBM-1156//		IBM1156//
+alias	CP1156//		IBM1156//
+alias	CSIBM1156//		IBM1156//
+module	IBM1156//		INTERNAL		IBM1156		1
+module	INTERNAL		IBM1156//		IBM1156		1
+
+#	from			to			module		cost
+alias	IBM-1157//		IBM1157//
+alias	CP1157//		IBM1157//
+alias	CSIBM1157//		IBM1157//
+module	IBM1157//		INTERNAL		IBM1157		1
+module	INTERNAL		IBM1157//		IBM1157		1
+
+#	from			to			module		cost
+alias	IBM-1158//		IBM1158//
+alias	CP1158//		IBM1158//
+alias	CSIBM1158//		IBM1158//
+module	IBM1158//		INTERNAL		IBM1158		1
+module	INTERNAL		IBM1158//		IBM1158		1

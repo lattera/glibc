@@ -1,4 +1,4 @@
-# Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1997-2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,9 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
-	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS PT154 RK1048
+	   ISO-2022-JP-3 TSCII IBM866NAV CP932 EUC-JP-MS PT154 RK1048	 \
+	   IBM1025 IBM1122 IBM1137 IBM1153 IBM1154 IBM1155 IBM1156	 \
+	   IBM1157 IBM1158
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -172,7 +174,10 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
 	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
 	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c		    \
-	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c pt154.c rk1048.c
+	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c pt154.c rk1048.c \
+	      ibm1025.c ibm1025.h ibm1122.c ibm1122.h ibm1137.c ibm1137.h   \
+	      ibm1153.c ibm1153.h ibm1154.c ibm1154.h ibm1155.c ibm1155.h   \
+	      ibm1156.c ibm1156.h ibm1157.c ibm1157.h ibm1158.c ibm1158.h
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

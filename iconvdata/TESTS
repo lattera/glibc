@@ -1,5 +1,5 @@
 # Available tests for iconv(1) (and therefore iconv(3)) in GNU libc.
-# Copyright (C) 1998-2002 Free Software Foundation, Inc.
+# Copyright (C) 1998-2002, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -119,3 +119,12 @@ EUC-JISX0213		EUC-JISX0213		Y	UTF8
 SHIFT_JISX0213		SHIFT_JISX0213		Y	UTF8
 ISO-2022-JP-3		ISO-2022-JP-3		N	UTF8
 TSCII			TSCII			Y	UTF8
+IBM1025			IBM1025			N	UTF8
+IBM1122			IBM1122			N	UTF8
+IBM1137			IBM1137			N	UTF8
+IBM1153			IBM1153			N	UTF8
+IBM1154			IBM1154			N	UTF8
+IBM1155			IBM1155			N	UTF8
+IBM1156			IBM1156			N	UTF8
+IBM1157			IBM1157			N	UTF8
+IBM1158			IBM1158			N	UTF8
