@@ -1075,6 +1075,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
       }
   assert (list != NULL);
   assert (p[-1] == L(')'));
+#undef NEW_PATTERN
 
   switch (opt)
     {
