@@ -1,5 +1,5 @@
 /* Internal header for proving correct grouping in strings of numbers.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,6 +52,11 @@ correctly_grouped_prefix (const STRING_TYPE *begin, const STRING_TYPE *end,
       /* Check first group.  */
       while (cp >= begin && (wchar_t) *cp != thousands)
 	--cp;
+
+      /* We allow the representation to contain no grouping at all even if
+	 the locale specifies we can have grouping.  */
+      if (cp < begin)
+	return end;
 
       if (end - cp == (int) *gp + 1)
 	{

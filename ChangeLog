@@ -1,5 +1,8 @@
 1998-04-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/grouping.h: Accept ungrouped numbers even if locale
+	defines grouping.
+
 	* intl/hash-string.h: Don't include values.h.
 
 	* inet/Makefile (tests): Add tst-ether_aton.
