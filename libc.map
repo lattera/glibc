@@ -530,12 +530,6 @@ GLIBC_2.1 {
     argp_error; argp_failure; argp_help; argp_parse; argp_state_help;
     argp_usage;
 
-    # These probably shouldn't be exported, they are internal.
-    # argp_fmtstream_free; argp_fmtstream_point; argp_fmtstream_printf;
-    # argp_fmtstream_putc; argp_fmtstream_puts; argp_fmtstream_set_lmargin;
-    # argp_fmtstream_set_rmargin; argp_fmtstream_set_wmargin;
-    # argp_fmtstream_write; argp_make_fmtstream;
-
     authdes_create; authdes_getucred; authdes_pk_create;
 
     # b*
