@@ -460,6 +460,9 @@ de_DE.ISO-8859-1 "ä"			"[[=ä=]b]"	       0
 de_DE.ISO-8859-1 "b"			"[[=ä=]b]"	       0
 de_DE.ISO-8859-1 "c"			"[[=ä=]b]"	       NOMATCH
 
+de_DE.ISO-8859-1 "aa"			"[[.a.]]a"	       0
+de_DE.ISO-8859-1 "ba"			"[[.a.]]a"	       NOMATCH
+
 
 # And with a multibyte character set.
 de_DE.UTF-8	 "a"			"[a-z]"		       0
@@ -548,6 +551,9 @@ de_DE.UTF-8	 "Ã¡"			"[[=Ã¤=]b]"	       0
 de_DE.UTF-8	 "Ã¤"			"[[=Ã¤=]b]"	       0
 de_DE.UTF-8	 "b"			"[[=Ã¤=]b]"	       0
 de_DE.UTF-8	 "c"			"[[=Ã¤=]b]"	       NOMATCH
+
+de_DE.UTF-8	 "aa"			"[[.a.]]a"	       0
+de_DE.UTF-8	 "ba"			"[[.a.]]a"	       NOMATCH
 
 
 # Test of GNU extensions.

@@ -670,6 +670,7 @@ while ($#headers >= 0) {
 
       # Generate a program to test for the availability of this type.
       open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
       print TESTFILE "#include <$h>\n";
       if ($maybe_opaque == 1) {
 	print TESTFILE "$type *a;\n";

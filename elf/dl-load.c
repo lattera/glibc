@@ -117,6 +117,9 @@ int _dl_clktck;
 extern const char *_dl_platform;
 extern size_t _dl_platformlen;
 
+/* The object to be initialized first.  */
+struct link_map *_dl_initfirst;
+
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
 static struct r_search_path_struct env_path_list;
 
@@ -1149,6 +1152,10 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       /* Now add the new entry.  */
       l->l_scope[0] = &l->l_symbolic_searchlist;
     }
+
+  /* Remember whether this object must be initialized first.  */
+  if (l->l_flags_1 & DF_1_INITFIRST)
+    _dl_initfirst = l;
 
   /* Finally the file information.  */
   l->l_dev = st.st_dev;

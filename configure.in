@@ -973,6 +973,20 @@ EOF
   fi
   rm -f conftest*])
   AC_SUBST(libc_cv_z_nodlopen)
+
+  AC_CACHE_CHECK(for -z initfirst option,
+		 libc_cv_z_initfirst, [dnl
+  cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c -Wl,--enable-new-dtags,-z,initfirst 1>&AC_FD_CC])
+  then
+    libc_cv_z_initfirst=yes
+  else
+    libc_cv_z_initfirst=no
+  fi
+  rm -f conftest*])
+  AC_SUBST(libc_cv_z_initfirst)
 fi
 
 if test $elf != yes; then

@@ -1,7 +1,24 @@
+2001-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules (build-shlib): Add $(extra-B-$(@F:lib%.so=%).so).
+	* configure.in: Test for -z initfirst linker option.
+	* config.make.in: Add have-z-initfirst.
+	* elf/dl-init.c (_dl_init): Split out actual initialization code in
+	new function call_init.  If _dl_initfirst is non-NULL initialize first.
+	* elf/dl-load.c (_dl_map_from_fd): If DF_1_INITFIRST flag is set
+	remember object in _dl_initfirst.
+	* elf/soinit.c: Remove special support for calling
+	__pthread_initialize_minimal.
+
+	* conform/conformtest.pl: Add missing $prepend in type test.
+
 2001-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (SHT_CHECKSUM): New definition.
 
 	* posix/fnmatch_loop.c: Remove incorrect reverse condition in
 	[. .] matching.  Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
+	* posix/tst-fnmatch.input: Add tests for [. .] in locales.
 
 2001-01-31  Mark Kettenis  <kettenis@gnu.org>
 

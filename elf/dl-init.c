@@ -1,5 +1,5 @@
 /* Return the next shared object initializer function not yet run.
-   Copyright (C) 1995, 1996, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,63 @@ typedef void (*init_t) (int, char **, char **);
 /* Flag, nonzero during startup phase.  */
 extern int _dl_starting_up;
 
+/* The object to be initialized first.  */
+extern struct link_map *_dl_initfirst;
+
+
+static void
+call_init (struct link_map *l, int argc, char **argv, char **env)
+{
+  if (l->l_init_called)
+    /* This object is all done.  */
+    return;
+
+  /* Avoid handling this constructor again in case we have a circular
+     dependency.  */
+  l->l_init_called = 1;
+
+  /* Check for object which constructors we do not run here.  */
+  if (l->l_name[0] == '\0' && l->l_type == lt_executable)
+    return;
+
+  /* Are there any constructors?  */
+  if (l->l_info[DT_INIT] == NULL && l->l_info[DT_INIT_ARRAY] == NULL)
+    return;
+
+  /* Print a debug message if wanted.  */
+  if (__builtin_expect (_dl_debug_impcalls, 0))
+    _dl_debug_message (1, "\ncalling init: ",
+		       l->l_name[0] ? l->l_name : _dl_argv[0], "\n\n", NULL);
+
+  /* Now run the local constructors.  There are two forms of them:
+     - the one named by DT_INIT
+     - the others in the DT_INIT_ARRAY.
+  */
+  if (l->l_info[DT_INIT] != NULL)
+    {
+      init_t init = (init_t) DL_DT_INIT_ADDRESS
+	(l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr);
+
+      /* Call the function.  */
+      init (argc, argv, env);
+    }
+
+  /* Next see whether there is an array with initialization functions.  */
+  if (l->l_info[DT_INIT_ARRAY] != NULL)
+    {
+      unsigned int j;
+      unsigned int jm;
+      ElfW(Addr) *addrs;
+
+      jm = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
+
+      addrs = (ElfW(Addr) *) (l->l_info[DT_INIT_ARRAY]->d_un.d_ptr
+			      + l->l_addr);
+      for (j = 0; j < jm; ++j)
+	((init_t) addrs[j]) (argc, argv, env);
+    }
+}
+
 
 void
 internal_function
@@ -35,6 +92,12 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAY];
   struct r_debug *r;
   unsigned int i;
+
+  if (_dl_initfirst != NULL)
+    {
+      call_init (_dl_initfirst, argc, argv, env);
+      _dl_initfirst = NULL;
+    }
 
   /* Don't do anything if there is no preinit array.  */
   if (preinit_array != NULL
@@ -73,60 +136,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 
   i = main_map->l_searchlist.r_nlist;
   while (i-- > 0)
-    {
-      struct link_map *l = main_map->l_initfini[i];
-      init_t init;
-
-      if (l->l_init_called)
-	/* This object is all done.  */
-	continue;
-
-      /* Avoid handling this constructor again in case we have a circular
-	 dependency.  */
-      l->l_init_called = 1;
-
-      /* Check for object which constructors we do not run here.  */
-      if (l->l_name[0] == '\0' && l->l_type == lt_executable)
-	continue;
-
-      /* Are there any constructors?  */
-      if (l->l_info[DT_INIT] == NULL && l->l_info[DT_INIT_ARRAY] == NULL)
-	continue;
-
-      /* Print a debug message if wanted.  */
-      if (__builtin_expect (_dl_debug_impcalls, 0))
-	_dl_debug_message (1, "\ncalling init: ",
-			   l->l_name[0] ? l->l_name : _dl_argv[0],
-			   "\n\n", NULL);
-
-      /* Now run the local constructors.  There are two forms of them:
-	 - the one named by DT_INIT
-	 - the others in the DT_INIT_ARRAY.
-      */
-      if (l->l_info[DT_INIT] != NULL)
-	{
-	  init = (init_t) DL_DT_INIT_ADDRESS
-	    (l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr);
-
-	  /* Call the function.  */
-	  init (argc, argv, env);
-	}
-
-      /* Next see whether there is an array with initialization functions.  */
-      if (l->l_info[DT_INIT_ARRAY] != NULL)
-	{
-	  unsigned int j;
-	  unsigned int jm;
-	  ElfW(Addr) *addrs;
-
-	  jm = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
-
-	  addrs = (ElfW(Addr) *) (l->l_info[DT_INIT_ARRAY]->d_un.d_ptr
-				  + l->l_addr);
-	  for (j = 0; j < jm; ++j)
-	    ((init_t) addrs[j]) (argc, argv, env);
-	}
-    }
+    call_init (main_map->l_initfini[i], argc, argv, env);
 
   /* Notify the debugger all new objects are now ready to go.  */
   r->r_state = RT_CONSISTENT;
