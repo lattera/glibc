@@ -29,7 +29,7 @@ libdl-routines	:= dlopen dlclose dlsym dlerror
 libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
 
 rtld-routines	:= rtld $(addprefix dl-,minimal load lookup object reloc \
-				        runtime sysdep error init fini)
+				        deps runtime sysdep error init fini)
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h \
 		  soinit.c sofini.c ldd.sh.in linux-compat.c
 

@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* The MODE argument to `dlopen' contains one of the following: */
 #define RTLD_LAZY	0x001	/* Lazy function call binding.  */
 #define RTLD_NOW	0x002	/* Immediate function call binding.  */
+#define	RTLD_BINDING_MASK 0x3	/* Mask of binding time value.  */
 
 /* If the following bit is set in the MODE argument to `dlopen',
    the symbols of the loaded object and its dependencies are made

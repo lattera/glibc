@@ -33,7 +33,8 @@ dlsym (void *handle, const char *name)
   int lose;
   void doit (void)
     {
-      loadbase = _dl_lookup_symbol (name, &ref, map, map->l_name, 0);
+      struct link_map *scope[2] = { map, NULL };
+      loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
     }
 
   /* Confine the symbol scope to just this map.  */

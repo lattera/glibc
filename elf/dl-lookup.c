@@ -29,77 +29,84 @@ Cambridge, MA 02139, USA.  */
 
 Elf32_Addr
 _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
-		   struct link_map *symbol_scope,
+		   struct link_map *symbol_scope[2],
 		   const char *reference_name,
 		   Elf32_Addr reloc_addr,
 		   int noplt)
 {
   unsigned long int hash = elf_hash (undef_name);
-  struct link_map *map;
   struct
     {
       Elf32_Addr a;
       const Elf32_Sym *s;
     } weak_value = { 0, NULL };
+  size_t i;
+  struct link_map **scope, *map;
 
   /* Search the relevant loaded objects for a definition.  */
-  for (map = symbol_scope; map; map = map->l_next)
-    {
-      const Elf32_Sym *symtab;
-      const char *strtab;
-      Elf32_Word symidx;
-
-      symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-      strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-
-      /* Search the appropriate hash bucket in this object's symbol table
-	 for a definition for the same symbol name.  */
-      for (symidx = map->l_buckets[hash % map->l_nbuckets];
-	   symidx != STN_UNDEF;
-	   symidx = map->l_chain[symidx])
+  for (scope = symbol_scope; scope < &symbol_scope[2]; ++scope)
+    if (*scope)
+      for (i = 0; i < (*scope)->l_nsearchlist; ++i)
 	{
-	  const Elf32_Sym *sym = &symtab[symidx];
+	  const Elf32_Sym *symtab;
+	  const char *strtab;
+	  Elf32_Word symidx;
 
-	  if (sym->st_value == 0 || /* No value.  */
-	      reloc_addr == map->l_addr + sym->st_value || /* Self ref.  */
-	      (noplt && sym->st_shndx == SHN_UNDEF)) /* Unwanted PLT entry.  */
-	    continue;
+	  map = (*scope)->l_searchlist[i];
 
-	  switch (ELF32_ST_TYPE (sym->st_info))
+	  symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+	  strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+
+	  /* Search the appropriate hash bucket in this object's symbol table
+	     for a definition for the same symbol name.  */
+	  for (symidx = map->l_buckets[hash % map->l_nbuckets];
+	       symidx != STN_UNDEF;
+	       symidx = map->l_chain[symidx])
 	    {
-	    case STT_NOTYPE:
-	    case STT_FUNC:
-	    case STT_OBJECT:
-	      break;
-	    default:
-	      /* Not a code/data definition.  */
-	      continue;
-	    }
+	      const Elf32_Sym *sym = &symtab[symidx];
 
-	  if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
-	    /* Not the symbol we are looking for.  */
-	    continue;
+	      if (sym->st_value == 0 || /* No value.  */
+		  /* Cannot resolve to the location being filled in.  */
+		  reloc_addr == map->l_addr + sym->st_value ||
+		  (noplt && sym->st_shndx == SHN_UNDEF)) /* Reject PLT.  */
+		continue;
 
-	  switch (ELF32_ST_BIND (sym->st_info))
-	    {
-	    case STB_GLOBAL:
-	      /* Global definition.  Just what we need.  */
-	      *ref = sym;
-	      return map->l_addr;
-	    case STB_WEAK:
-	      /* Weak definition.  Use this value if we don't find another.  */
-	      if (! weak_value.s)
+	      switch (ELF32_ST_TYPE (sym->st_info))
 		{
-		  weak_value.s = sym;
-		  weak_value.a = map->l_addr;
+		case STT_NOTYPE:
+		case STT_FUNC:
+		case STT_OBJECT:
+		  break;
+		default:
+		  /* Not a code/data definition.  */
+		  continue;
 		}
-	      break;
-	    default:
-	      /* Local symbols are ignored.  */
-	      break;
+
+	      if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
+		/* Not the symbol we are looking for.  */
+		continue;
+
+	      switch (ELF32_ST_BIND (sym->st_info))
+		{
+		case STB_GLOBAL:
+		  /* Global definition.  Just what we need.  */
+		  *ref = sym;
+		  return map->l_addr;
+		case STB_WEAK:
+		  /* Weak definition.  Use this value if we don't find
+		     another.  */
+		  if (! weak_value.s)
+		    {
+		      weak_value.s = sym;
+		      weak_value.a = map->l_addr;
+		    }
+		  break;
+		default:
+		  /* Local symbols are ignored.  */
+		  break;
+		}
 	    }
 	}
-    }
 
   if (weak_value.s == NULL && ELF32_ST_BIND ((*ref)->st_info) != STB_WEAK)
     {

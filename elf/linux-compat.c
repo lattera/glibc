@@ -1,5 +1,5 @@
 /* Initializer for Linux-compatible dynamic linker `/lib/ld-linux.so.1'.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,8 +33,9 @@ void
 _init (void)
 {
   const Elf32_Sym *ref = NULL;
-  Elf32_Addr loadbase = _dl_lookup_symbol ("atexit", &ref, _dl_loaded,
+  struct link_map *scope[2] = { _dl_loaded, NULL };
+  Elf32_Addr loadbase = _dl_lookup_symbol ("atexit", &ref, scope,
 					   "<ld-linux.so.1 initialization>",
-					   1);
+					   0, 1);
   (*(__typeof (atexit) *) (loadbase + ref->st_value)) (&_dl_fini);
 }

@@ -70,8 +70,9 @@ fixup (
   Elf32_Addr resolve (const Elf32_Sym **ref,
 		      Elf32_Addr reloc_addr, int noplt)
     {
-      return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, _dl_loaded,
-				l->l_name, reloc_addr, noplt);
+      struct link_map *scope[2] = { _dl_loaded, NULL };
+      return _dl_lookup_symbol (strtab + (*ref)->st_name, ref,
+				scope, l->l_name, reloc_addr, noplt);
     }
 
   /* Perform the specified relocation.  */

@@ -54,11 +54,10 @@ _dl_relocate_object (struct link_map *l, int lazy)
     }
 
   {
-    struct link_map *real_next, *scope;
+    struct link_map *scope[2];
 
     const char *strtab
       = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
-
 
     Elf32_Addr resolve (const Elf32_Sym **ref,
 			Elf32_Addr reloc_addr, int noplt)
@@ -67,16 +66,16 @@ _dl_relocate_object (struct link_map *l, int lazy)
 				  l->l_name, reloc_addr, noplt);
       }
 
-    real_next = l->l_next;
     if (l->l_info[DT_SYMBOLIC])
       {
-	if (l->l_prev)
-	  l->l_prev->l_next = real_next;
-	l->l_next = _dl_loaded;
-	scope = l;
+	scope[0] = l;
+	scope[1] = _dl_loaded;
       }
     else
-      scope = _dl_loaded;
+      {
+	scope[0] = _dl_loaded;
+	scope[1] = l;
+      }
 
     if (l->l_type == lt_interpreter)
       /* We cannot be lazy when relocating the dynamic linker itself.  It
@@ -87,11 +86,6 @@ _dl_relocate_object (struct link_map *l, int lazy)
       lazy = 0;
 
     ELF_DYNAMIC_RELOCATE (l, lazy, resolve);
-
-    /* Restore list frobnication done above for DT_SYMBOLIC.  */
-    l->l_next = real_next;
-    if (l->l_prev)
-      l->l_prev->l_next = l;
   }
 
   /* Set up the PLT so its unrelocated entries will

@@ -90,6 +90,12 @@ struct link_map
     Elf32_Word l_phnum;		/* Number of program header entries.  */
     Elf32_Addr l_entry;		/* Entry point location.  */
 
+    /* Array of DT_NEEDED dependencies and their dependencies, in
+       dependency order for symbol lookup.  This is null before the
+       dependencies have been loaded.  */
+    struct link_map **l_searchlist;
+    unsigned int l_nsearchlist;
+
     /* Symbol hash table.  */
     Elf32_Word l_nbuckets;
     const Elf32_Word *l_buckets, *l_chain;
@@ -102,7 +108,6 @@ struct link_map
 	lt_library,		/* Library needed by main executable.  */
 	lt_loaded,		/* Extra run-time loaded shared object.  */
       } l_type:2;
-    unsigned int l_deps_loaded:1; /* Nonzero if DT_NEEDED items loaded.  */
     unsigned int l_relocated:1;	/* Nonzero if object's relocations done.  */
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
     unsigned int l_init_running:1; /* Nonzero while DT_INIT function runs.  */
@@ -176,22 +181,36 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
 extern struct link_map *_dl_map_object_from_fd (const char *name,
 						int fd, char *realname);
 
+/* Call _dl_map_object on the dependencies of MAP, and
+   set up MAP->l_searchlist.  */
+extern void _dl_map_object_deps (struct link_map *map);
+
 /* Cache the locations of MAP's hash table.  */
 extern void _dl_setup_hash (struct link_map *map);
+
+
+/* Open the shared object NAME, relocate it, and run its initializer if it
+   hasn't already been run.  LOADER's DT_RPATH is used in searching for
+   NAME.  MODE is as for `dlopen' (see <dlfcn.h>).  If the object is
+   already opened, returns its existing map.  */
+extern struct link_map *_dl_open (struct link_map *loader,
+				  const char *name, int mode);
+
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    referred to by UNDEF.  *SYM is the symbol table entry containing the
    reference; it is replaced with the defining symbol, and the base load
-   address of the defining object is returned.  SYMBOL_SCOPE is the head of
-   the chain used for searching.  REFERENCE_NAME should name the object
-   containing the reference; it is used in error messages.  RELOC_ADDR is
-   the address being fixed up and the chosen symbol cannot be one with this
-   value.  If NOPLT is nonzero, then the reference must not be resolved to
-   a PLT entry.  */
+   address of the defining object is returned.  Each of SYMBOL_SCOPE[0] and
+   SYMBOL_SCOPE[1] that is not null and their dependencies are searched to
+   resolve the name.  REFERENCE_NAME should name the object containing the
+   reference; it is used in error messages.  RELOC_ADDR is the address
+   being fixed up and the chosen symbol cannot be one with this value.  If
+   NOPLT is nonzero, then the reference must not be resolved to a PLT
+   entry.  */
 extern Elf32_Addr _dl_lookup_symbol (const char *undef,
 				     const Elf32_Sym **sym,
-				     struct link_map *symbol_scope,
+				     struct link_map *symbol_scope[2],
 				     const char *reference_name,
 				     Elf32_Addr reloc_addr,
 				     int noplt);

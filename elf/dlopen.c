@@ -24,38 +24,11 @@ Cambridge, MA 02139, USA.  */
 void *
 dlopen (const char *file, int mode)
 {
-  struct link_map *new, *l;
+  struct link_map *new;
 
   void doit (void)
     {
-      Elf32_Addr init;
-
-      new = _dl_map_object (_dl_loaded, file);
-
-      /* Map in any dependencies.  */
-      for (l = new; l; l = l->l_next)
-	if (! l->l_deps_loaded)
-	  {
-	    if (l->l_info[DT_NEEDED])
-	      {
-		const char *strtab
-		  = (void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr;
-		const Elf32_Dyn *d;
-		for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
-		  if (d->d_tag == DT_NEEDED)
-		    _dl_map_object (l, strtab + d->d_un.d_val);
-	      }
-	    l->l_deps_loaded = 1;
-	  }
-
-      /* Relocate the objects loaded.  */
-      for (l = new; l; l = l->l_next)
-	if (! l->l_relocated)
-	  _dl_relocate_object (l, mode == RTLD_LAZY);
-
-      /* Run the initializer functions of new objects.  */
-      while (init = _dl_init_next ())
-	(*(void (*) (void)) init) ();
+      new = _dl_open (_dl_loaded, file, mode);
     }
 
   return _dlerror_run (doit) ? NULL : new;

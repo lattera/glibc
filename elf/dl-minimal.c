@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -84,10 +84,17 @@ free (void *ptr)
 }
 weak_symbol (free)
 
-/* This is never called.  */
+/* This is only called with the most recent block returned by malloc.  */
 void *
 realloc (void *ptr, size_t n)
-{ ptr += n; abort (); }
+{
+  void *new;
+  assert (ptr == alloc_last_block);
+  alloc_ptr = alloc_last_block;
+  new = malloc (n);
+  assert (new == ptr);
+  return new;
+}
 weak_symbol (realloc)
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */

@@ -1,9 +1,40 @@
+Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/linux-compat.c (_init): Pass reloc_addr arg to _dl_lookup_symbol.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Use l_searchlist.
+
+	* elf/dl-deps.c: New file.
+	* elf/Makefile (rtld-routines): Add dl-deps.
+	* elf/link.h: Declare _dl_map_object_deps, _dl_open.
+	* elf/rtld.c (dl_main): Use _dl_map_object_deps.
+	* elf/dlopen.c: Use _dl_open.
+
+	* elf/rtld.c (dl_main): Remove BEFORE_RTLD variable and list
+	frobnication based on its value.  Detach RTLD_MAP from the chain if
+	its l_opencount is zero after loading deps.
+
+	* elf/dlfcn.h (RTLD_BINDING_MASK): New macro.
+
+	* elf/link.h (struct link_map): Replace l_deps_loaded flag member with
+	`struct link_map **l_searchlist' and `unsigned int l_nsearchlist'.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Make SYMBOL_SCOPE arg an array
+	of two link_map ptrs.  Search the maps in the l_searchlist of each
+	elt that is not null.
+	* elf/dl-reloc.c (_dl_relocate_object): Pass proper SCOPE array.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+
+	* elf/dl-minimal.c (realloc): Support realloc of the block most
+	recently returned by the minimal malloc.
+
 Tue Jun  4 00:16:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/gnu/errlist.awk: Produce N_("..."), not _N("...").
 
 	* intl: Updated from gettext-0.10.13.
-	* intl/localealias.c intl/dcgettext.c [_LIBC]: Define HAVE_ALLOCA.
+	* intl/localealias.c, intl/dcgettext.c [_LIBC]: Define HAVE_ALLOCA.
 
 	* signal/siggetmask.c: New file.  Wrapper around sigblock with
 	link_warning about obsolescence.
@@ -37,18 +68,6 @@ Mon Jun  3 15:58:22 1996  Michael I. Bushnell, p/BSG  <mib@gnu.ai.mit.edu>
 	* hurd/hurdsig.c (_hurd_internal_post_signal): When turning the action
  	for a HANDLE signal to IGNORE because the signal is blocked, clean
  	up any pending suspension left over from a call to resume.
-
-Mon Jun  3 01:29:53 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
-
-	* elf/link.h (struct link_map): Replace l_deps_loaded flag member with
-	`struct link_map **l_searchlist'.
-	* elf/dl-lookup.c (_dl_lookup_symbol): Make SYMBOL_SCOPE arg an array
-	of two link_map ptrs.  Search the maps in the l_searchlist of each
-	of the two elts that is non-null.
-	* elf/dl-reloc.c (_dl_relocate_object): Pass proper SCOPE array.
-	* elf/dl-runtime.c: Likewise.
-	* elf/dlsym.c: Likewise.
-	* elf/rtld.c (dl_main): Likewise.
 
 Mon Jun  3 00:30:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 

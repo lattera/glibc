@@ -124,7 +124,7 @@ dl_main (const Elf32_Phdr *phdr,
 	 Elf32_Addr *user_entry)
 {
   const Elf32_Phdr *ph;
-  struct link_map *l, *last, *before_rtld;
+  struct link_map *l;
   const char *interpreter_name;
   int lazy;
   int list_only = 0;
@@ -250,44 +250,19 @@ of this helper program; chances are you did not intend to run this program.\n",
   l->l_next = &rtld_map;
   rtld_map.l_prev = l;
 
-  /* Now process all the DT_NEEDED entries and map in the objects.
-     Each new link_map will go on the end of the chain, so we will
-     come across it later in the loop to map in its dependencies.  */
-  before_rtld = NULL;
-  for (l = _dl_loaded; l; l = l->l_next)
-    {
-      if (l->l_info[DT_NEEDED])
-	{
-	  const char *strtab
-	    = (void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr;
-	  const Elf32_Dyn *d;
-	  last = l;
-	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
-	    if (d->d_tag == DT_NEEDED)
-	      {
-		struct link_map *new;
-		new = _dl_map_object (l, strtab + d->d_un.d_val);
-		if (!before_rtld && new == &rtld_map)
-		  before_rtld = last;
-		last = new;
-	      }
-	}
-      l->l_deps_loaded = 1;
-    }
+  /* Load all the libraries specified by DT_NEEDED entries.  */
+  _dl_map_object_deps (l);
 
-  /* If any DT_NEEDED entry referred to the interpreter object itself,
-     reorder the list so it appears after its dependent.  If not,
-     remove it from the maps we will use for symbol resolution.  */
-  rtld_map.l_prev->l_next = rtld_map.l_next;
-  if (rtld_map.l_next)
-    rtld_map.l_next->l_prev = rtld_map.l_prev;
-  if (before_rtld)
+  /* XXX if kept, move it so l_next list is in dep order because
+     it will determine gdb's search order.
+     Perhaps do this always, so later dlopen by name finds it?
+     XXX But then gdb always considers it present.  */
+  if (rtld_map.l_opencount == 0)
     {
-      rtld_map.l_prev = before_rtld;
-      rtld_map.l_next = before_rtld->l_next;
-      before_rtld->l_next = &rtld_map;
-      if (rtld_map.l_next)
-	rtld_map.l_next->l_prev = &rtld_map;
+      /* No DT_NEEDED entry referred to the interpreter object itself,
+	 so remove it from the list of visible objects.  */
+      rtld_map.l_prev->l_next = rtld_map.l_next;
+      rtld_map.l_next->l_prev = rtld_map.l_prev;
     }
 
   if (list_only)
@@ -316,9 +291,9 @@ of this helper program; chances are you did not intend to run this program.\n",
       for (i = 1; i < _dl_argc; ++i)
 	{
 	  const Elf32_Sym *ref = NULL;
-	  Elf32_Addr loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
-						   _dl_loaded, "argument",
-						   0, 0);
+	  struct link_map *scope[2] ={ _dl_loaded, NULL };
+	  Elf32_Addr loadbase
+	    = _dl_lookup_symbol (_dl_argv[i], &ref, scope, "argument", 0, 0);
 	  char buf[20], *bp;
 	  buf[sizeof buf - 1] = '\0';
 	  bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
