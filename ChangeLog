@@ -1,5 +1,9 @@
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
+	* elf/tst-tls1-static.c: New file.
+	* elf/tst-tls2-static.c: New file.
+	* elf/Makefile ($(tests-static):%=$(objfpx)%.o): Remove rule.
+
 	Make uselocale support static linking.
 	* locale/xlocale.c: Revert changes putting _nl_global_locale here.
 	This file again just defines _nl_C_locobj.

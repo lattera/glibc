@@ -467,10 +467,6 @@ $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
 $(objpfx)reldep7: $(libdl)
 $(objpfx)reldep7.out: $(objpfx)reldep7mod1.so $(objpfx)reldep7mod2.so
 
-# The tst-*-static tests are the same tst-* programs, but linked statically.
-$(tests-static:%=$(objpfx)%.o): $(objpfx)tst-%-static.o: $(objpfx)tst-%.o
-	ln -f $< $@
-
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
 
 $(objpfx)tst-tls4: $(libdl)
