@@ -260,23 +260,28 @@ _dl_show_auxv (void)
 
       assert (AT_NULL == 0);
       assert (AT_IGNORE == 1);
+
+      if (av->a_type == AT_HWCAP)
+	{
+	  /* This is handled special.  */
+	  if (_dl_procinfo (av->a_un.a_val) == 0)
+	    continue;
+	}
+
       if (idx < sizeof (auxvars) / sizeof (auxvars[0]))
 	{
-	  if (av->a_type != AT_HWCAP || _dl_procinfo (av->a_un.a_val) < 0)
-	    {
-	      const char *val = av->a_un.a_ptr;
+	  const char *val = av->a_un.a_ptr;
 
-	      if (__builtin_expect (auxvars[idx].form, dec) == dec)
-		val = _itoa ((unsigned long int) av->a_un.a_val,
-			     buf + sizeof buf - 1, 10, 0);
-	      else if (__builtin_expect (auxvars[idx].form, hex) == hex)
-		val = _itoa ((unsigned long int) av->a_un.a_val,
-			     buf + sizeof buf - 1, 16, 0);
+	  if (__builtin_expect (auxvars[idx].form, dec) == dec)
+	    val = _itoa ((unsigned long int) av->a_un.a_val,
+			 buf + sizeof buf - 1, 10, 0);
+	  else if (__builtin_expect (auxvars[idx].form, hex) == hex)
+	    val = _itoa ((unsigned long int) av->a_un.a_val,
+			 buf + sizeof buf - 1, 16, 0);
 
-	      _dl_printf ("%s%s\n", auxvars[idx].label, val);
+	  _dl_printf ("%s%s\n", auxvars[idx].label, val);
 
-	      continue;
-	    }
+	  continue;
 	}
 
       /* Unknown value: print a generic line.  */

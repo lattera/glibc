@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation functions.  PowerPC64 version.
-   Copyright (C) 1995,96,97,98,99,2000,01, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,22 +27,20 @@ void
 _dl_reloc_overflow (struct link_map *map,
 		   const char *name,
 		   Elf64_Addr *const reloc_addr,
-		   const Elf64_Sym *sym,
 		   const Elf64_Sym *refsym)
 {
   char buffer[128];
   char *t;
-  const Elf64_Sym *errsym = sym ?: refsym;
   t = stpcpy (buffer, name);
   t = stpcpy (t, " reloc at 0x");
   _itoa_word ((unsigned long) reloc_addr, t, 16, 0);
-  if (errsym)
+  if (refsym)
     {
       const char *strtab;
 
       strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
       t = stpcpy (t, " for symbol `");
-      t = stpcpy (t, strtab + errsym->st_name);
+      t = stpcpy (t, strtab + refsym->st_name);
       t = stpcpy (t, "'");
     }
   t = stpcpy (t, " out of range");

@@ -347,7 +347,6 @@ extern void __process_machine_rela (struct link_map *map,
 extern void _dl_reloc_overflow (struct link_map *map,
 				const char *name,
 				Elf32_Addr *const reloc_addr,
-				const Elf32_Sym *sym,
 				const Elf32_Sym *refsym) attribute_hidden;
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).

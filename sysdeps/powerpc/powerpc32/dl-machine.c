@@ -372,22 +372,20 @@ void
 _dl_reloc_overflow (struct link_map *map,
 		    const char *name,
 		    Elf32_Addr *const reloc_addr,
-		    const Elf32_Sym *sym,
 		    const Elf32_Sym *refsym)
 {
   char buffer[128];
   char *t;
-  const Elf32_Sym *errsym = sym ?: refsym;
   t = stpcpy (buffer, name);
   t = stpcpy (t, " relocation at 0x00000000");
   _itoa_word ((unsigned) reloc_addr, t, 16, 0);
-  if (errsym)
+  if (refsym)
     {
       const char *strtab;
 
       strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
       t = stpcpy (t, " for symbol `");
-      t = stpcpy (t, strtab + errsym->st_name);
+      t = stpcpy (t, strtab + refsym->st_name);
       t = stpcpy (t, "'");
     }
   t = stpcpy (t, " out of range");
@@ -424,19 +422,19 @@ __process_machine_rela (struct link_map *map,
 
     case R_PPC_ADDR24:
       if (__builtin_expect (finaladdr > 0x01fffffc && finaladdr < 0xfe000000, 0))
-	_dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr, refsym);
       *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
-	_dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, refsym);
       *(Elf32_Half*) reloc_addr = finaladdr;
       break;
 
     case R_PPC_UADDR16:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
-	_dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_UADDR16", reloc_addr, refsym);
       ((char *) reloc_addr)[0] = finaladdr >> 8;
       ((char *) reloc_addr)[1] = finaladdr;
       break;
@@ -457,7 +455,7 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_ADDR14_BRTAKEN:
     case R_PPC_ADDR14_BRNTAKEN:
       if (__builtin_expect (finaladdr > 0x7fff && finaladdr < 0xffff8000, 0))
-	_dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr, sym, refsym);
+	_dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr, refsym);
       *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
 	*reloc_addr = ((*reloc_addr & 0xffdfffff)
@@ -469,7 +467,7 @@ __process_machine_rela (struct link_map *map,
       {
 	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
 	if (delta << 6 >> 6 != delta)
-	  _dl_reloc_overflow (map,  "R_PPC_REL24", reloc_addr, sym, refsym);
+	  _dl_reloc_overflow (map,  "R_PPC_REL24", reloc_addr, refsym);
 	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;
@@ -568,7 +566,7 @@ __process_machine_rela (struct link_map *map,
     inline void do_reloc16 (const char *r_name, Elf32_Addr value)
       {
 	if (__builtin_expect (value > 0x7fff && value < 0xffff8000, 0))
-	  _dl_reloc_overflow (map, r_name, reloc_addr, sym, refsym);
+	  _dl_reloc_overflow (map, r_name, reloc_addr, refsym);
 	*(Elf32_Half *) reloc_addr = value;
       }
     inline void do_reloc16_LO (const char *r_name, Elf32_Addr value)

@@ -1,3 +1,14 @@
+2003-05-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.c (_dl_reloc_overflow):
+	Remove sym argument, always use refsym.
+	(__process_machine_rela): Adjust callers.
+	* sysdeps/powerpc/powerpc64/dl-machine.c (_dl_reloc_overflow):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (_dl_reloc_overflow):
+	Adjust prototype.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Likewise.
+
 2003-05-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Fix typo
