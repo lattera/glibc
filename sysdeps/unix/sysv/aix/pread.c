@@ -25,3 +25,4 @@ __pread (int fd, void *buf, size_t len, off_t off)
 {
   return kpread (fd, buf, len, off);
 }
+weak_alias (__pread, pread)
