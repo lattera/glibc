@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,6 @@ Cambridge, MA 02139, USA.  */
   #error This file uses GNU C extensions; you must compile with GCC.
 #endif
 
-__NORETURN
 void
 DEFUN(__longjmp, (env, val_arg), CONST __jmp_buf env AND int val_arg)
 {
