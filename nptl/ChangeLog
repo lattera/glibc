@@ -1,3 +1,8 @@
+2004-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/pt-longjmp.c: Moved to...
+	* sysdeps/pthread/pt-longjmp.c: ...here.  New file.
+
 2004-01-29  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* Makefile (libpthread-routines): Add pt-cleanup.
