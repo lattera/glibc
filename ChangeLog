@@ -64,6 +64,11 @@
 
 	* sysdeps/mips/elf/start.S: Rewritten for __libc_start_main.
 
+2000-01-31  Andreas Jaeger  <aj@suse.de>
+
+	* inet/inet_net.c (inet_network): Synch with bind 8.2.2.  Fixes PR
+	libc/1567.
+
 2000-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/fpu/feholdexcpt.c: Correct return value according to
@@ -109,6 +114,7 @@
 	* sysdeps/unix/sysv/linux/sparc/sysdep.h: New file.
 
 2000-01-29  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/loadlocale.c (_nl_load_locale): Optimize a bit.  Pretty
 	print.  Add checks for _POSIX_MMAPPED_FILES where necessary.
 	(_nl_unload_locale): If locale data was mmapped use munmap.
