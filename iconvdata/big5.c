@@ -8475,7 +8475,7 @@ static const char from_ucs4_tab13[][2] =
     else								      \
       ++inptr;								      \
 									      \
-    putr32 (outptr, ch);						      \
+    put32 (outptr, ch);							      \
     outptr += 4;							      \
   }
 #include <iconv/loop.c>
