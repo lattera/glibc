@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ struct stat
     __blkcnt_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
     int __pad2;
 #endif
-    unsigned int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     unsigned int st_flags;
     unsigned int st_gen;
     int __pad3;
@@ -76,7 +76,7 @@ struct stat64
     __time_t st_mtime;		/* Time of last modification.  */
     __time_t st_ctime;		/* Time of last status change.  */
     __blkcnt64_t st_blocks;	/* Nr. 512-byte blocks allocated.  */
-    unsigned int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     unsigned int st_flags;
     unsigned int st_gen;
     int __pad3;

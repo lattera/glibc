@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,7 @@ struct stat
     long int __reserved1;
     __time_t st_ctime;		/* Time of last status change.  */
     long int __reserved2;
-    long int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal block size for I/O.  */
 #ifndef __USE_FILE_OFFSET64
     __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.  */
 #else
@@ -104,7 +104,7 @@ struct stat64
     long int __reserved1;
     __time_t st_ctime;		/* Time of last status change.  */
     long int __reserved2;
-    long int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.  */
     char st_fstype[16];		/* Filesystem type name */
     long int st_pad4[8];
