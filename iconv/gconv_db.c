@@ -27,6 +27,7 @@
 
 #include <dlfcn.h>
 #include <gconv_int.h>
+#include <gconv_charset.h>
 
 
 /* Simple data structure for alias mapping.  We have two names, `from'
