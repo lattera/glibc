@@ -1,5 +1,7 @@
 2002-03-04  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/readelflib.c: New.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Add defines for
 	x86-64.
 
