@@ -1022,7 +1022,7 @@ exceptions.  Not all FPUs support trapping no exceptions; if
 succeeds, it returns zero.
 @end deftypefun
 
-The functions which restore the floating-point environment can take two
+The functions which restore the floating-point environment can take these
 kinds of arguments:
 
 @itemize @bullet
@@ -1034,7 +1034,8 @@ call to @code{fegetenv} or @code{feholdexcept}.
 The special macro @code{FE_DFL_ENV} which represents the floating-point
 environment as it was available at program start.
 @item
-Implementation defined macros with names starting with @code{FE_}.
+Implementation defined macros with names starting with @code{FE_} and
+having type @code{fenv_t *}.
 
 @vindex FE_NOMASK_ENV
 If possible, the GNU C Library defines a macro @code{FE_NOMASK_ENV}

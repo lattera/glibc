@@ -1,3 +1,8 @@
+2000-08-25  Andreas Jaeger  <aj@suse.de>
+
+	* manual/arith.texi (Control Functions): Clarify possible
+	arguments.  Closes PR libc/1856.
+
 2000-08-24  H.J. Lu  <hjl@gnu.org>
 
 	* stdio-common/Makefile (tests): Don't do it for cross compiling.
