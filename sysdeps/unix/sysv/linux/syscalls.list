@@ -25,7 +25,7 @@ iopl		-	iopl		i:i	iopl
 klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
 madvise		-	madvise		i:pii	posix_madvise	madvise
-mincore		-	mincore		3	mincore
+mincore		-	mincore		i:iip	mincore
 mlock		EXTRA	mlock		i:pi	__mlock	mlock
 mlockall	EXTRA	mlockall	i:i	__mlockall	mlockall
 mmap		-	mmap		p:piiiii	__mmap		mmap

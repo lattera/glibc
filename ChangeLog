@@ -1,5 +1,8 @@
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add parameter information
+	for mincore syscall.
+
 	* misc/sys/cdefs.h: Define __bounded and __unbounded if
 	__BOUNDED_POINTERS__ is not defined.
 
@@ -29,7 +32,7 @@
 
 2000-06-07  Greg McGary  <greg@mcgary.org>
 
-	* Makeconfig (CPPFLAGS-.ob): pass -fbounded-pointers for all files
+	* Makeconfig (CPPFLAGS-.ob): Pass -fbounded-pointers for all files
 	*.[cS].
 	(CFLAGS-.ob): Don't optimize sibling calls.
 	(bppfx): New variable.
