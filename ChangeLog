@@ -1,3 +1,8 @@
+2002-12-04  Roland McGrath  <roland@redhat.com>
+
+	* locale/localeinfo.h [NL_CURRENT_INDIRECT]: Use attribute_tls_model_ie
+	on _nl_current_LC_* variables.
+
 2002-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* dirent/bug-readdir1.c (main): Don't call closedir, just close on
