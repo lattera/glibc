@@ -1657,9 +1657,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      ++f;
 	    }
 
-	  tw = (char *) f;
 	  while ((fc = *f++) != '\0' && fc != ']')
-	    if (fc == '-' && *f != '\0' && *f != ']' && f - 2 != tw
+	    if (fc == '-' && *f != '\0' && *f != ']'
 		&& (unsigned char) f[-2] <= (unsigned char) *f)
 	      {
 		/* Add all characters from the one before the '-'

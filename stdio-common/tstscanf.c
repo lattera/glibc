@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,13 @@ main (int argc, char **argv)
   int result = 0;
 
   if (sscanf ("0", "%d", &x) != 1)
+    {
+      fputs ("test failed!\n", stdout);
+      result = 1;
+    }
+
+  if (sscanf ("08905x", "%9[0-9]", buf) != 1
+      || strcmp (buf, "08905") != 0)
     {
       fputs ("test failed!\n", stdout);
       result = 1;

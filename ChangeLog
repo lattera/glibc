@@ -1,3 +1,10 @@
+2000-05-22  Jakub Jelinek <jakub@redhat.com>
+
+	* stdio-common/vfscanf.c (__vfscanf): Remove bogus check if '-' is
+	not the second character in the range.
+	* stdio-common/tstscanf.c (main): Add testcase for the above.
+	Reported by jik@kamens.brookline.ma.us.
+
 2000-05-21  H.J. Lu  <hjl@gnu.org>
 
 	* elf/do-lookup.h (do_lookup_versioned): Replace reloc_type parameter
