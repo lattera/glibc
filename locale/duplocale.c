@@ -1,5 +1,5 @@
 /* Duplicate handle for selection of locales.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -50,6 +50,11 @@ __duplocale (__locale_t dataset)
 	      ++result->__locales[cnt]->usage_count;
 	  }
     }
+
+  /* Update the special members.  */
+  result->__ctype_b = dataset->__ctype_b;
+  result->__ctype_tolower = dataset->__ctype_tolower;
+  result->__ctype_toupper = dataset->__ctype_toupper;
 
   /* It's done.  */
   __libc_lock_unlock (__libc_setlocale_lock);

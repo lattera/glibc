@@ -1,3 +1,8 @@
+2001-08-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build and run tst-xlocale2.
+	* tst-xlocale2.c: New file.
+
 2001-08-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build and run tst-xlocale1.

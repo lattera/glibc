@@ -1,5 +1,8 @@
 2001-08-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/duplocale.c (__duplocale): Also initialize the special
+	__ctype_* elements.
+
 	* conform/data/netdb.h-data: Adjust gai_strerror return type.
 
 2001-08-17  Andreas Jaeger  <aj@suse.de>
