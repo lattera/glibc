@@ -24,9 +24,9 @@
 	lll_mutex_cond_lock.
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
-	* sysdeps/unix/sysv/linux/i386/bits/pthread_types.h (pthread_cond_t):
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
 	Add __mutex field.
-	* sysdeps/unix/sysv/linux/ia64/bits/pthread_types.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
 
 	* sysdeps/i386/tcb-offsets.sym: Define MUTEX_FUTEX.
