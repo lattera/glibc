@@ -1,5 +1,8 @@
 2002-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Use ENTER_KERNEL
+	macro instead of using int $0x80 directly.
+
 	* sysdeps/pthread/bits/stdio-lock.h: New file.
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevelmutex.S: New file.
 	* sysdeps/unix/sysv/linux/i386/i586/libc-lowlevelmutex.S: New file.

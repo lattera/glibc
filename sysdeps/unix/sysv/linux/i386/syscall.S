@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ ENTRY (syscall)
 	PUSHARGS_5		/* Save register contents.  */
 	_DOARGS_5(36)		/* Load arguments.  */
 	movl 16(%esp), %eax	/* Load syscall number into %eax.  */
-	int $0x80		/* Do the system call.  */
+	ENTER_KERNEL		/* Do the system call.  */
 	POPARGS_5		/* Restore register contents.  */
 	cmpl $-4095, %eax	/* Check %eax for error.  */
 	jae SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */

@@ -159,6 +159,11 @@ __i686.get_pc_thunk.reg:						      \
 # endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 
+
+/* The original calling convention for system calls on Linux/i386 is
+   to use int $0x80.  */
+#define ENTER_KERNEL int $0x80
+
 /* Linux takes system call arguments in registers:
 
 	syscall number	%eax	     call-clobbered
@@ -208,7 +213,7 @@ __i686.get_pc_thunk.reg:						      \
     PUSHARGS_##args							      \
     DOARGS_##args							      \
     movl $SYS_ify (syscall_name), %eax;					      \
-    int $0x80								      \
+    ENTER_KERNEL							      \
     POPARGS_##args
 
 #define PUSHARGS_0	/* No arguments to push.  */
@@ -254,6 +259,10 @@ __i686.get_pc_thunk.reg:						      \
 #define _POPARGS_5	_POPARGS_4; popl %edi
 
 #else	/* !__ASSEMBLER__ */
+
+/* The original calling convention for system calls on Linux/i386 is
+   to use int $0x80.  */
+#define ENTER_KERNEL "int $0x80"
 
 /* We need some help from the assembler to generate optimal code.  We
    define some macros here which later will be used.  */
@@ -315,7 +324,7 @@ asm (".L__X'%ebx = 1\n\t"
     asm volatile (							      \
     LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
-    "int $0x80\n\t"							      \
+    ENTER_KERNEL "\n\t"						      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \

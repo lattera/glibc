@@ -57,7 +57,7 @@ ENTRY (__socket)
 	lea 4(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
-	int $0x80
+	ENTER_KERNEL
 
 	/* Restore registers.  */
 	movl %edx, %ebx
@@ -89,7 +89,7 @@ L(pseudo_end):
 	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
-	int $0x80
+	ENTER_KERNEL
 
 	/* Restore registers.  */
 	movl %edx, %ebx

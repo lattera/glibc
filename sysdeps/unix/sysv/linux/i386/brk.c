@@ -1,5 +1,5 @@
 /* brk system call for Linux/i386.
-   Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,10 +36,10 @@ __brk (void *addr)
 {
   void *__unbounded newbrk, *__unbounded scratch;
 
-  asm ("movl %%ebx, %1\n"	/* Save %ebx in scratch register.  */
-       "movl %3, %%ebx\n"	/* Put ADDR in %ebx to be syscall arg.  */
-       "int $0x80 # %2\n"	/* Perform the system call.  */
-       "movl %1, %%ebx\n"	/* Restore %ebx from scratch register.  */
+  asm ("movl %%ebx, %1\n\t"	/* Save %ebx in scratch register.  */
+       "movl %3, %%ebx\n\t"	/* Put ADDR in %ebx to be syscall arg.  */
+       ENTER_KERNEL "\n\t"	/* Perform the system call.  */
+       "movl %1, %%ebx"		/* Restore %ebx from scratch register.  */
        : "=a" (newbrk), "=r" (scratch)
        : "0" (SYS_ify (brk)), "g" (__ptrvalue (addr)));
 

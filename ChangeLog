@@ -1,3 +1,14 @@
+2002-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define ENTER_KERNEL macro.
+	Use it instead of directly int $0x80.
+	* sysdeps/unix/sysv/linux/i386/brk.c: Use ENTER_KERNEL.
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/syscall.S: Likewise.
+
 2002-12-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (mALLOPt): Make sure malloc is initialized.

@@ -41,7 +41,7 @@
     PUSHARGS_##args							      \
     DOCARGS_##args							      \
     movl $SYS_ify (syscall_name), %eax;					      \
-    int $0x80								      \
+    ENTER_KERNEL							      \
     POPARGS_##args;							      \
     POPCARGS_##args							      \
     cmpl $-4095, %eax;							      \
