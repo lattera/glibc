@@ -18,44 +18,40 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/*
- * The 32-bit exchange_bool is different on powerpc64 because the subf
- * does signed 64-bit arthmatic while the lwarx is 32-bit unsigned
- * (a load word and zero (high 32) form) load.
- * In powerpc64 register values are 64-bit by default,  including oldval.
- * Net we need to extend sign word the result of lwarx to 64-bit so the
- * 64-bit subtract from gives the expected result and sets the condition
- * correctly.
- */
+/* The 32-bit exchange_bool is different on powerpc64 because the subf
+   does signed 64-bit arthmatic while the lwarx is 32-bit unsigned
+   (a load word and zero (high 32) form) load.
+   In powerpc64 register values are 64-bit by default,  including oldval.
+   The value in old val unknown sign extension, lwarx loads the 32-bit
+   value as unsigned.  So we explicitly clear the high 32 bits in oldval.  */
 # define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
 ({									      \
-  unsigned int __tmp;							      \
-  __asm __volatile (							      \
-		    "1:	lwarx	%0,0,%1\n"				      \
-		    "	extsw	%0,%0\n"				      \
-		    "	subf.	%0,%2,%0\n"				      \
+  unsigned int __tmp, __tmp2;						      \
+  __asm __volatile ("   clrldi  %1,%1,32\n"				      \
+		    "1:	lwarx	%0,0,%2\n"				      \
+		    "	subf.	%0,%1,%0\n"				      \
 		    "	bne	2f\n"					      \
-		    "	stwcx.	%3,0,%1\n"				      \
+		    "	stwcx.	%4,0,%2\n"				      \
 		    "	bne-	1b\n"					      \
 		    "2:	" __ARCH_ACQ_INSTR				      \
-		    : "=&r" (__tmp)					      \
-		    : "b" (mem), "r" (oldval), "r" (newval)		      \
+		    : "=&r" (__tmp), "=r" (__tmp2)			      \
+		    : "b" (mem), "1" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
   __tmp != 0;								      \
 })
 
 # define __arch_compare_and_exchange_bool_32_rel(mem, newval, oldval) \
 ({									      \
-  unsigned int __tmp;							      \
+  unsigned int __tmp, __tmp2;						      \
   __asm __volatile (__ARCH_REL_INSTR "\n"				      \
-		    "1:	lwarx	%0,0,%1\n"				      \
-		    "	extsw	%0,%0\n"				      \
-		    "	subf.	%0,%2,%0\n"				      \
+		    "   clrldi  %1,%1,32\n"				      \
+		    "1:	lwarx	%0,0,%2\n"				      \
+		    "	subf.	%0,%1,%0\n"				      \
 		    "	bne	2f\n"					      \
-		    "	stwcx.	%3,0,%1\n"				      \
+		    "	stwcx.	%4,0,%2\n"				      \
 		    "	bne-	1b\n"					      \
 		    "2:	"						      \
-		    : "=&r" (__tmp)					      \
+		    : "=&r" (__tmp), "=r" (__tmp2)			      \
 		    : "b" (mem), "r" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
   __tmp != 0;								      \
