@@ -12,6 +12,7 @@
 	lowlevelrwlock.sym.
 	* sysdeps/unix/sysv/linux/lowlevelrwlock.sym: New file.
 	* sysdeps/unix/sysv/linux/i386/lowlevelrwlock.h: Removed.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrwlock.h: Removed.
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_trylock): Fix
 	register loading.
