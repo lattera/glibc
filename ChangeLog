@@ -1,3 +1,7 @@
+2000-01-05  Andreas Schwab  <schwab@suse.de>
+
+	* iconv/iconv_prog.c (process_block): Add cast to avoid warning.
+
 2000-01-05  Andreas Jaeger  <aj@suse.de>
 
 	* intl/locale.alias: Add lithunian entry.
@@ -7,6 +11,7 @@
 
 	* locale/programs/stringtrans.c: Removed.
 	* locale/programs/stringtrans.h: Removed.
+	* locale/programs/linereader.c: Remove #include of stringtrans.h.
 
 	* locale/findlocale.c (_nl_find_locale): Don't try using mmap is
 	_POSIX_MAPPED_FILES is not defined.
