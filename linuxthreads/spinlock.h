@@ -12,20 +12,6 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        */
 /* GNU Library General Public License for more details.                 */
 
-/* Internal locks */
-
-extern void __pthread_lock(struct _pthread_fastlock * lock);
-extern int __pthread_trylock(struct _pthread_fastlock * lock);
-extern void __pthread_unlock(struct _pthread_fastlock * lock);
-
-static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
-{
-  lock->__status = 0;
-  lock->__spinlock = 0;
-}
-
-#define LOCK_INITIALIZER {0, 0}
-
 #if defined(TEST_FOR_COMPARE_AND_SWAP)
 
 extern int __pthread_has_cas;
@@ -35,7 +21,7 @@ extern int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
 static inline int compare_and_swap(long * ptr, long oldval, long newval,
                                    int * spinlock)
 {
-  if (__pthread_has_cas)
+  if (__builtin_expect (__pthread_has_cas, 1))
     return __compare_and_swap(ptr, oldval, newval);
   else
     return __pthread_compare_and_swap(ptr, oldval, newval, spinlock);
@@ -61,3 +47,28 @@ static inline int compare_and_swap(long * ptr, long oldval, long newval,
 }
 
 #endif
+
+/* Internal locks */
+
+extern void internal_function __pthread_lock(struct _pthread_fastlock * lock,
+					     pthread_descr self);
+extern void internal_function __pthread_unlock(struct _pthread_fastlock *lock);
+
+static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
+{
+  lock->__status = 0;
+  lock->__spinlock = 0;
+}
+
+static inline int __pthread_trylock (struct _pthread_fastlock * lock)
+{
+  long oldstatus;
+
+  do {
+    oldstatus = lock->__status;
+    if (oldstatus != 0) return EBUSY;
+  } while(! compare_and_swap(&lock->__status, 0, 1, &lock->__spinlock));
+  return 0;
+}
+
+#define LOCK_INITIALIZER {0, 0}
