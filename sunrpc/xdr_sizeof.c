@@ -71,13 +71,13 @@ x_setpostn (XDR *xdrs, u_int len)
 }
 
 static int32_t *
-x_inline (XDR *xdrs, int len)
+x_inline (XDR *xdrs, u_int len)
 {
   if (len == 0)
     return NULL;
   if (xdrs->x_op != XDR_ENCODE)
     return NULL;
-  if (len < (int) (long int) xdrs->x_base)
+  if (len < (u_int) (long int) xdrs->x_base)
     {
       /* x_private was already allocated */
       xdrs->x_handy += len;
@@ -159,5 +159,5 @@ xdr_sizeof (xdrproc_t func, void *data)
   stat = func (&x, data);
   if (x.x_private)
     free (x.x_private);
-  return stat == TRUE ? (unsigned) x.x_handy : 0;
+  return stat == TRUE ? x.x_handy : 0;
 }

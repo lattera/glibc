@@ -1,3 +1,18 @@
+2002-12-13  Paul Eggert  <eggert@twinsun.com>
+
+	* sunrpc/rpc/xdr.h (struct XDR.xdr_ops.x_inline): 2nd arg
+	is now u_int, not int.
+	(struct XDR.x_handy): Now u_int, not int.
+	* sunrpc/xdr_mem.c: Include <limits.h>.
+	(xdrmem_getlong, xdrmem_putlong, xdrmem_getbytes, xdrmem_putbytes,
+	xdrmem_inline, xdrmem_getint32, xdrmem_putint32):
+	x_handy is now unsigned, not signed.
+	Do not decrement x_handy if no change is made.
+	(xdrmem_setpos): Check for int overflow.
+	* sunrpc/xdr_sizeof.c (x_inline): 2nd arg is now unsigned.
+	(xdr_sizeof): Remove cast that is now unnecessary, now that
+	x_handy is unsigned.
+
 2002-12-15  Art Haas  <ahaas@airmail.net>
 
 	* iconv/gconv_conf.c: Convert GCC extension initializer syntax to C99.

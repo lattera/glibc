@@ -126,7 +126,7 @@ struct XDR
 	/* returns bytes off from beginning */
 	bool_t (*x_setpostn) (XDR *__xdrs, u_int __pos);
 	/* lets you reposition the stream */
-	int32_t *(*x_inline) (XDR *__xdrs, int __len);
+	int32_t *(*x_inline) (XDR *__xdrs, u_int __len);
 	/* buf quick ptr to buffered data */
 	void (*x_destroy) (XDR *__xdrs);
 	/* free privates of this xdr_stream */
@@ -139,7 +139,7 @@ struct XDR
     caddr_t x_public;		/* users' data */
     caddr_t x_private;		/* pointer to private data */
     caddr_t x_base;		/* private used for position info */
-    int x_handy;		/* extra private word */
+    u_int x_handy;		/* extra private word */
   };
 
 /*
