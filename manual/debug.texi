@@ -1,0 +1,110 @@
+@node Debugging Support
+@c @node Debugging Support, , Cryptographic Functions, Top
+@c %MENU% Functions to help debugging applications.
+@chapter Debugging support
+
+Applications often get debugged using dedicated debugger programs.  But
+sometimes this is not possible and it is in any case useful to provide
+the developer at the time the problems are experienced with as much
+information as possible.  For this reason there exist a few functions
+which a program can use to help the developer more easily locate the
+problem.
+
+
+@menu
+* Backtraces::                Obtaining and printing a back trace of the
+                               current stack.
+@end menu
+
+
+@node Backtraces, , , Debugging Support
+@section Backtraces
+
+@cindex backtrace
+@cindex backtrace_symbols
+@cindex backtrace_fd
+A @dfn{backtrace} is a list of the function calls that are currently
+active in a thread.  The usual way to inspect a backtrace of a program
+is to use an external debugger such as gdb.  However, sometimes it is
+useful to obtain a backtrace programatically from within a program,
+e.g., for the purposes of logging or diagnostics.
+
+The header file @file{execinfo.h} declares three functions that obtain
+and manipulate backtraces of the current thread.
+@pindex execinfo.h
+
+@comment execinfo.h
+@comment GNU
+@deftypefun int backtrace (void **@var{buffer}, int @var{size})
+The @code{backtrace} function obtains a backtrace for the current
+thread, as a list of pointers, and places the information into
+@var{buffer}.  The argument @var{size} should be the number of
+@w{@code{void *}} elements fitting into @var{buffer}.  The return value
+is the actual number of entries of @var{buffer} that are obtained, and
+is at most @var{size}.
+
+The pointers placed in @var{buffer} are actually return addresses
+obtained by inspecting the stack, one return address per stack frame.
+
+Note that certain compiler optimisations may interfere with obtaining a
+valid backtrace.  Function inlining causes the inlined function to not
+have a stack frame; tail call optimisation replaces one stack frame with
+another; frame pointer elimination will stop @code{backtrace} from
+interpreting the stack contents correctly.
+@end deftypefun
+
+@comment execinfo.h
+@comment GNU
+@deftypefun {char **} backtrace_symbols (void *const *@var{buffer}, int @var{size})
+The @code{backtrace_symbols} function translates the information
+obtained from the @code{backtrace} function into an array of strings.
+The argument @var{buffer} should be a pointer to an array of addresses
+obtained via the @code{backtrace} function, and @var{size} is the number
+of entries in that array (the return value of @code{backtrace}).
+
+The return value is a pointer to an array of strings, which has
+@var{size} entries just like the array @var{buffer}.  Each string
+contains a printable representation of the corresponding element of
+@var{buffer}.  It includes the function name (if this can be
+determined), an offset into the function, and the actual return address
+(in hexidecimal).
+
+Currently, the function name and offset can currently only be obtained
+on systems that use the ELF binary format for programs and libraries.
+On other systems, only the hexidecimal return address will be present.
+Also, you may need to pass additional flags to the linker
+(@code{-rdynamic} on systems using GNU ld) to make the function names
+available to the program.
+
+The return value of @code{backtrace_symbols} is a pointer obtained via
+the @code{malloc} function, and it is the responsibility of the caller
+to @code{free} that pointer.  Note that only the return value need be
+freed, but not the individual strings.
+
+The return value is @code{NULL} if sufficient memory for the strings
+cannot be obtained.
+@end deftypefun
+
+@comment execinfo.h
+@comment GNU
+@deftypefun void backtrace_symbols_fd (void *const *@var{buffer}, int @var{size}, int @var{fd})
+The @code{backtrace_symbols_fd} function performs the same translation
+as the function @code{backtrace_symbols} function.  Instead of returning
+the strings to the caller, it writes the strings to the file descriptor
+@var{fd}, one per line.  It does not use the @code{malloc} function, and
+can therefore be used in situations where that function might fail.
+@end deftypefun
+
+The following program illustrates the use of these functions.  Note that
+the array to contain the return addresses returned by @code{backtrace}
+is allocated on the stack.  Therefore code like this can be used in
+situations where the memory handling via @code{malloc} does not work
+anymore (in which case the @code{backtrace_symbols} has to be replaced
+by a @code{backtrace_symbols_fd} call as well).  The number of return
+addresses is normally not very large.  Even complicated programs rather
+seldom have a nesting level of more than, say, 50 and with 200 possible
+entries probably all programs should be covered.
+
+@smallexample
+@include execinfo.c.texi
+@end smallexample

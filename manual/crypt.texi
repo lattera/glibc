@@ -1,6 +1,6 @@
 @c This node must have no pointers.
 @node Cryptographic Functions
-@c @node Cryptographic Functions, , System Configuration, Top
+@c @node Cryptographic Functions, Debugging Support, System Configuration, Top
 @chapter DES Encryption and Password Handling
 @c %MENU% DES encryption and password handling
 
@@ -31,7 +31,7 @@ It also provides support for Secure RPC, and some library functions that
 can be used to perform normal DES encryption.
 
 The add-on is not included in the main distribution of the GNU C library
-because some governments, most notably those of France, Russia, 
+because some governments, most notably those of France, Russia,
 and the US, have very restrictive rules governing the distribution and
 use of encryption software.  The first section below tries to describe some
 of those rules.
@@ -213,7 +213,7 @@ The Data Encryption Standard is described in the US Government Federal
 Information Processing Standards (FIPS) 46-3 published by the National
 Institute of Standards and Technology.  The DES has been very thoroughly
 analysed since it was developed in the late 1970s, and no new
-significant flaws have been found.  
+significant flaws have been found.
 
 However, the DES uses only a 56-bit key (plus 8 parity bits), and a
 machine has been built in 1998 which can search through all possible
@@ -269,13 +269,13 @@ stored in a @code{char}, but there are no parity bits in @var{block}.
 
 These are reentrant versions of @code{setkey} and @code{encrypt}.  The
 only difference is the extra parameter, which stores the expanded
-version of @var{key}.  Before calling @code{setkey_r} the first time, 
+version of @var{key}.  Before calling @code{setkey_r} the first time,
 @code{data->initialised} must be cleared to zero.
 @end deftypefun
 
 The @code{setkey_r} and @code{encrypt_r} functions are GNU extensions.
 @code{setkey}, @code{encrypt}, @code{setkey_r}, and @code{encrypt_r} are
-defined in @file{crypt.h}.  
+defined in @file{crypt.h}.
 
 If the @code{crypt} add-on is not used to build the library, programs
 that use these four functions will crash when the functions are called.
