@@ -27,7 +27,7 @@ TST_STRXFRM tst_strxfrm_loc [] = {
   {
     { Tstrxfrm, TST_LOC_de },
     {
-      { /*inp*/ { "цƒдь", "цƒдь",	    17, 17 },  /* #01 */
+      { /*inp*/ { "\xf6\xc4\xe4\xfc", "\xf6\xc4\xe4\xfc", 17, 17 },  /* #01 */
 	/*exp*/ { 1,0,0,0,			   },
       },
       { /*inp*/ { "aA", "Aa",	    10, 10 },  /* #02 */
@@ -74,11 +74,13 @@ TST_STRXFRM tst_strxfrm_loc [] = {
       { /*inp*/ { "B", "a",		     7,	 7 },  /* #06 */
 	/*exp*/ { 1,0,0,0,			   },
       },
+#ifdef NO_WAIVER
       {
 	/* <WAIVER> */
 	/*inp*/ { "abc", "\244\241\244\242",  13,  9 },	 /* #07 */
 	/*exp*/ { 1,EINVAL,0,0,		       },
       },
+#endif
       { is_last: 1 }
     }
   },
@@ -100,9 +102,12 @@ TST_STRXFRM tst_strxfrm_loc [] = {
 	/*inp*/ { "\244\242\216\261",  "\216\261\244\242",   5,	 5 },
 	/*exp*/ { 1,0,0,0,		       },
       },
-      { /*inp*/ { "AAA", "\216\217",	 5,  5 },  /* #04 */ /* <WAIVER> */
+#ifdef NO_WAIVER
+      {
+	/*inp*/ { "AAA", "\216\217",	 5,  5 },  /* #04 */ /* <WAIVER> */
 	/*exp*/ { 1,EINVAL,0,0,		       },
       },
+#endif
       { is_last: 1 }
     }
   },

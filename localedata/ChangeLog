@@ -1,3 +1,16 @@
+2000-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-fmon.data: Until we know what is correct, but the spaces
+	after DEM back in.
+
+	* tests-mbwc/dat_mbstowcs.c: Fix various bugs.  Comment out
+	unresolved issues.
+	* tests-mbwc/dat_mbtowc.c: Likewise.
+	* tests-mbwc/dat_strcoll.c: Likewise.
+	* tests-mbwc/dat_strfmon.c: Likewise.
+	* tests-mbwc/dat_strxfrm.c: Likewise.
+	* tests-mbwc/tst_mbtowc.c: Likewise.
+
 2000-06-29  Andreas Jaeger  <aj@suse.de>
 
 	* sort-test.sh: Set LC_ALL to full locale name.
@@ -5,7 +18,7 @@
 	* Makefile (do-tst-ctype): Don't depend on do-tst-mbswcs.sh
 	anymore.
 	(LOCALES): New.
-	($(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite)))): 
+	($(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite)))):
 	Depend on locale files
 	(LOCALE_FILES): New.
 	(ALL_LC_FILES): New.

@@ -49,6 +49,10 @@ tst_mbtowc (FILE * fp, int debug_flg)
 
 	wp = (wchar_t *) ((w_flg == 0) ? NULL : &wc);
 
+	/* XXX Clear the internal state.  We should probably have
+	   a flag for this.  */
+	mbtowc (NULL, NULL, 0);
+
 	TST_CLEAR_ERRNO;
 	ret = mbtowc (wp, s_in, n);
 	TST_SAVE_ERRNO;

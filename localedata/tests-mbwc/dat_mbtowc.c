@@ -69,9 +69,9 @@ TST_MBTOWC tst_mbtowc_loc [] = {
       { /*----------------- #01 -----------------*/
 	{
 	  {
-	    { 1, 1, "üהצ",	    1	       },
-	    { 1, 1, "üהצ",	    2	       },
-	    { 1, 1, "üהצ",	    MB_LEN_MAX },
+	    { 1, 1, "\xfc\xe4\xf6",	    1	       },
+	    { 1, 1, "\xfc\xe4\xf6",	    2	       },
+	    { 1, 1, "\xfc\xe4\xf6",	    MB_LEN_MAX },
 	  }
 	},
 	{
@@ -101,9 +101,9 @@ TST_MBTOWC tst_mbtowc_loc [] = {
       { /*----------------- #03 -----------------*/
 	{
 	  {
-	    { 1, 1, "",	    MB_LEN_MAX },
-	    { 0, 1, "üהצ",	    1	       },
-	    { 0, 1, "üהצ",	    2	       },
+	    { 1, 1, "",			    MB_LEN_MAX },
+	    { 0, 1, "\xfc\xe4\xf6",	    1	       },
+	    { 0, 1, "\xfc\xe4\xf6",	    2	       },
 	  }
 	},
 	{
@@ -117,9 +117,9 @@ TST_MBTOWC tst_mbtowc_loc [] = {
       { /*----------------- #04 -----------------*/
 	{
 	  {
-	    { 0, 1, "üהצ",	    MB_LEN_MAX },
-	    { 0, 1, "\177",	    MB_LEN_MAX },
-	    { 0, 1, "",	    MB_LEN_MAX },
+	    { 0, 1, "\xfc\xe4\xf6",	    MB_LEN_MAX },
+	    { 0, 1, "\177",		    MB_LEN_MAX },
+	    { 0, 1, "",	 		   MB_LEN_MAX },
 	  }
 	},
 	{
@@ -133,9 +133,9 @@ TST_MBTOWC tst_mbtowc_loc [] = {
       { /*----------------- #05 -----------------*/
 	{
 	  {
-	    { 0, 1, "üהצ",	    MB_LEN_MAX },
-	    { 0, 1, "\177",	    MB_LEN_MAX },
-	    { 0, 0, (char)NULL, MB_LEN_MAX },
+	    { 0, 1, "\xfc\xe4\xf6",	MB_LEN_MAX },
+	    { 0, 1, "\177",	   	MB_LEN_MAX },
+	    { 0, 0, (char)NULL, 	MB_LEN_MAX },
 	  }
 	},
 	{
@@ -248,9 +248,14 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	},
 	{
 	  {
+#ifdef SHOJI_IS_RIGHT
 	    { 1, EILSEQ,  1, -1,   0x0000 },
-	    { 0,	  0,  1,  2,   0x3042 },
-	    { 0,	  0,  1,  2,   0x3042 },
+#else
+	    /* XXX EILSEQ was introduced in ISO C99.  */
+	    { 0, 0,	  1, -1,   0x0000 },
+#endif
+	    { 0, 0,       1,  2,   0x3042 },
+	    { 0, 0,       1,  2,   0x3042 },
 	  }
 	}
       },
@@ -265,8 +270,13 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	{
 	  {
 	    { 0,	  0,  1, +1,   0x007F },
+#ifdef SHOJI_IS_RIGHT
 	    { 1, EILSEQ,  1, -1,   0x0000 },
 	    { 1, EILSEQ,  1, -1,   0x0000 },
+#else
+	    { 0, 0,  1, -1,   0x0000 },
+	    { 0, 0,  1, -1,   0x0000 },
+#endif
 	  }
 	}
       },
@@ -281,7 +291,12 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	{
 	  {
 	    { 0,	  0,  1,  0,   0x0000 },
+#ifdef SHOJI_IS_RIGHT
 	    { 1, EILSEQ,  1, -1,   0x0000 },
+#else
+	    /* XXX EILSEQ was introduced in ISO C99.  */
+	    { 0, 0,       1, -1,   0x0000 },
+#endif
 	    { 0,	  0,  1,  2,   0x0000 },
 	  }
 	}
