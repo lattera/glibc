@@ -24,37 +24,36 @@ Cambridge, MA 02139, USA.  */
 /* Structure describing file characteristics.  */
 struct stat
   {
-    short int st_dev;
+    unsigned long st_dev;	/* Device.  */
     long st_filler1[3];
-    __ino_t st_ino;		/* File serial number.		*/
-    unsigned long int st_mode;	/* File mode.  */
-    /* This is unsigned long instead of __nlink_t, since SVR4 has
-       a long nlink_t, not a short one.  */
-    unsigned long int st_nlink;	/* Link count.  */
-    __uid_t st_uid;		/* User ID of the file's owner.	*/
-    __gid_t st_gid;		/* Group ID of the file's group.*/
-    unsigned long int st_rdev;	/* Device number, if device.  */
+    unsigned long st_ino;		/* File serial number.		*/
+    unsigned long st_mode;	/* File mode.  */
+    unsigned long st_nlink;	/* Link count.  */
+    long st_uid;		/* User ID of the file's owner.	*/
+    long st_gid;		/* Group ID of the file's group.*/
+    unsigned long st_rdev;	/* Device number, if device.  */
     long st_filler2[2];
 
-    __off_t st_size;		/* Size of file, in bytes.  */
+    long st_size;		/* Size of file, in bytes.  */
     /* SVR4 added this extra long to allow for expansion of off_t.  */ 
     long st_filler3;
 
-    __time_t st_atime;		/* Time of last access.  */
-    unsigned long int st_atime_usec;
-    __time_t st_mtime;		/* Time of last modification.  */
-    unsigned long int st_mtime_usec;
-    __time_t st_ctime;		/* Time of last status change.  */
-    unsigned long int st_ctime_usec;
+    long st_atime;		/* Time of last access.  */
+    unsigned long st_atime_usec;
+    long st_mtime;		/* Time of last modification.  */
+    unsigned long st_mtime_usec;
+    long st_ctime;		/* Time of last status change.  */
+    unsigned long st_ctime_usec;
 
     long st_blksize;		/* Optimal block size for I/O.  */
 #define	_STATBUF_ST_BLKSIZE	/* Tell code we have this member.  */
 
     long st_blocks;		/* Number of 512-byte blocks allocated.  */
+    char st_fstype[16];		/* The type of this filesystem.  */
     int st_aclcnt;
-    unsigned long int st_level;
-    unsigned long int st_flags;
-    unsigned long int st_cmwlevel;
+    unsigned long st_level;
+    unsigned long st_flags;
+    unsigned long st_cmwlevel;
     long st_filler4[4];
   };
 
