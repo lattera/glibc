@@ -1,5 +1,4 @@
 clone.S
-dl-procinfo.c
 olddirent.h
 oldgetrlimit64.c
 setresuid.c

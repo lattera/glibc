@@ -66,7 +66,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   reldep6mod4.c reldep6mod3.c reldep6mod2.c reldep6mod1.c \
 		   reldep6mod0.c \
 		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
-		   unwind-dw2-fde.h dwarf2.h
+		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c
 
 include ../Makeconfig
 
