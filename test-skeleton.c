@@ -333,5 +333,16 @@ main (int argc, char *argv[])
     }
 
   /* Simply exit with the return value of the test.  */
+#ifndef EXPECTED_STATUS
   return WEXITSTATUS (status);
+#else
+  if (WEXITSTATUS (status) != EXPECTED_STATUS)
+    {
+      fprintf (stderr, "Expected status %d, got %d\n",
+	       EXPECTED_STATUS, WEXITSTATUS (status));
+      exit (1);
+    }
+
+  return 0;
+#endif
 }

@@ -1,5 +1,8 @@
 2003-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* test-skeleton.c (main): If EXPECTED_STATUS is defined check that
+	returned status from child matches.
+
 	* Makeconfig (gnulib): Add -lgcc_eh once again.
 
 2003-06-06  Ulrich Drepper  <drepper@redhat.com>
