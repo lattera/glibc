@@ -17,16 +17,28 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <sys/types.h>
 #include <sys/ptrace.h>
-#include <sys/syscall.h>
+#include <stdarg.h>
+
+extern int __syscall_ptrace (int, pid_t, void *, void *);
 
 int
-ptrace (int request, int pid, int addr, int data)
+ptrace (enum __ptrace_request request, ...)
 {
-  long int ret;
-  long int res;
+  int res, ret;
+  va_list ap;
+  pid_t pid;
+  void *addr, *data;
+
+  va_start (ap, request);
+  pid = va_arg (ap, pid_t);
+  addr = va_arg (ap, void *);
+  data = va_arg (ap, void *);
+  va_end (ap);
+
   if (request > 0 && request < 4)
-    (long int *) data = &ret;
+    data = &ret;
 
   res = __syscall_ptrace (request, pid, addr, data);
 
@@ -35,9 +47,9 @@ ptrace (int request, int pid, int addr, int data)
       if (request > 0 && request < 4)
 	{
 	  errno = 0;
-	  return (ret);
+	  return ret;
 	}
-      return (int) res;
+      return res;
     }
 
   errno = -res;

@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,8 @@ headers := sys/stat.h statbuf.h \
 routines :=							      \
 	utime							      \
 	mkfifo							      \
-	stat fstat lstat					      \
+	stat fstat lstat mknod					      \
+	xstat fxstat lxstat xmknod				      \
 	umask chmod fchmod mkdir				      \
 	open close read write lseek access euidaccess		      \
 	fcntl flock lockf					      \

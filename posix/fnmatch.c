@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,6 +17,11 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+/* Enable GNU extensions in fnmatch.h.  */
+#ifndef _GNU_SOURCE
+#define	_GNU_SOURCE	1
 #endif
 
 #include <errno.h>

@@ -24,6 +24,11 @@ Cambridge, MA 02139, USA.  */
 #include <config.h>
 #endif
 
+/* Enable GNU extensions in glob.h.  */
+#ifndef _GNU_SOURCE
+#define	_GNU_SOURCE	1
+#endif
+
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
