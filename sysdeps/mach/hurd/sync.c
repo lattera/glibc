@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1994,1997,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,11 @@
 #include <hurd.h>
 
 /* Make all changes done to all files actually appear on disk.  */
-int
+void
 sync ()
 {
   /* This is not actually synchronous; we don't wait.  */
   error_t err = __USEPORT (CRDIR, __file_syncfs (port, 0, 1));
   if (err)
-    return __hurd_fail (err);
-  return 0;
+    (void) __hurd_fail (err);
 }

@@ -1,5 +1,21 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Run Unix tests for XPG6.
+	Implement handling of known namespace violations.
+	Improve printing of results.
+
+	* posix/unistd.h (usleep): Correct return type.
+	* sysdeps/unix/sysv/linux/usleep.c: Correct return type.
+	* sysdeps/unix/bsd/usleep.c: Correct return type.
+	* sysdeps/mach/usleep.c: Correct return type.
+	* sysdeps/generic/usleep.c: Correct return type.
+
+	* posix/unistd.h (sync): Correct return type.
+	* sysdeps/generic/sync.c: Likewise.
+	* sysdeps/mach/hurd/sync.c: Likewise.
+
+	* sysdeps/generic/bits/confname.h (_SC_IOV_MAX): New definition.
+
 	* posix/unistd.h: Make seteuid and setegid available for XPG6.
 
 	* wcsmbs/wchar.h: Get FILE definition for XPG5.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <sys/time.h>
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
-void
+int
 usleep (useconds)
      useconds_t useconds;
 {
@@ -30,6 +30,6 @@ usleep (useconds)
   delay.tv_sec = 0;
   delay.tv_usec = useconds;
 
-  (void) __select (0, (fd_set *) NULL, (fd_set *) NULL, (fd_set *) NULL,
+  return __select (0, (fd_set *) NULL, (fd_set *) NULL, (fd_set *) NULL,
 		   &delay);
 }

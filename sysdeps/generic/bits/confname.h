@@ -1,5 +1,5 @@
 /* `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
-   Copyright (C) 1993, 1995-1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1995-1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -185,6 +185,8 @@ enum
 #define	_SC_SELECT			_SC_SELECT
     _SC_UIO_MAXIOV,
 #define	_SC_UIO_MAXIOV			_SC_UIO_MAXIOV
+    _SC_IOV_MAX = _SC_UIO_MAXIOV,
+#define _SC_IOV_MAX			_SC_IOV_MAX
     _SC_PII_INTERNET_STREAM,
 #define	_SC_PII_INTERNET_STREAM		_SC_PII_INTERNET_STREAM
     _SC_PII_INTERNET_DGRAM,

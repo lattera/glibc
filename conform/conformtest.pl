@@ -1,26 +1,28 @@
 #! /usr/bin/perl
 
 $CC = "gcc";
-$CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
+$CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
 
 # List of the headers we are testing.
 @headers = ("wordexp.h", "wctype.h", "wchar.h", "varargs.h", "utmpx.h",
-	     "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
-	     "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
-	     "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
-	     "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
-	     "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
-	     "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
-	     "string.h", "stdlib.h", "stdio.h", "stddef.h", "stdarg.h",
-	     "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
-	     "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
-	     "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
-	     "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
-	     "math.h", "locale.h", "libgen.h", "limits.h", "langinfo.h",
-	     "iso646.h", "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h",
-	     "fnmatch.h", "fmtmsg.h", "float.h", "fcntl.h", "errno.h",
-	     "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
-	     "arpa/inet.h", "aio.h");
+	    "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
+	    "termios.h", "tar.h", "sys/wait.h", "sys/utsname.h", "sys/un.h",
+	    "sys/uio.h", "sys/types.h", "sys/times.h", "sys/timeb.h",
+	    "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
+	    "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
+	    "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
+	    "string.h", "stdlib.h", "stdio.h", "stddef.h", "stdarg.h",
+	    "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
+	    "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
+	    "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
+	    "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
+	    "math.h", "locale.h", "libgen.h", "limits.h", "langinfo.h",
+	    "iso646.h", "inttypes.h", "iconv.h", "grp.h", "glob.h", "ftw.h",
+	    "fnmatch.h", "fmtmsg.h", "float.h", "fcntl.h", "errno.h",
+	    "dlfcn.h", "dirent.h", "ctype.h", "cpio.h", "assert.h",
+	    "arpa/inet.h", "aio.h");
+
+@headers = ('unistd.h');
 
 # These are the ISO C99 keywords.
 @keywords = ('auto', 'break', 'case', 'char', 'const', 'continue', 'default',
@@ -29,12 +31,21 @@ $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 	     'short', 'signed', 'sizeof', 'static', 'struct', 'switch',
 	     'typedef', 'union', 'unsigned', 'void', 'volatile', 'while');
 
+# These are symbols which are known to pollute the namespace.
+@knownproblems = ('unix', 'linux', 'i386');
+
 # Some headers need a bit more attention.
 $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+$mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
 
-# Make an hash table from this information.
-while ($#keywords) {
+# Make a hash table from this information.
+while ($#keywords >= 0) {
   $iskeyword{pop (@keywords)} = 1;
+}
+
+# Make a hash table from the known problems.
+while ($#knownproblems >= 0) {
+  $isknown{pop (@knownproblems)} = 1;
 }
 
 $tmpdir = "/tmp";
@@ -179,31 +190,29 @@ sub runtest
 
 
 sub newtoken {
-  my($token, $nerrors, @allow) = @_;
+  my($token, @allow) = @_;
   my($idx);
 
-  if ($token =~ /^[0-9_]/ || $iskeyword{$token}) {
-    return $nerrors;
-  }
+  return if ($token =~ /^[0-9_]/ || $iskeyword{$token});
 
   for ($idx = 0; $idx <= $#allow; ++$idx) {
-    if (poorfnmatch ($allow[$idx], $token)) {
-      return $nerrors;
-    }
+    return if (poorfnmatch ($allow[$idx], $token));
   }
 
-  ++$nerrors;
-  if ($nerrors == 1) {
-    printf ("FAIL\n    " . "-" x 72 . "\n");
+  if ($isknown{$token}) {
+    ++$nknown;
+  } else {
+    ++$nerrors;
+    if ($nerrors == 1) {
+      printf ("FAIL\n    " . "-" x 72 . "\n");
+    }
+    printf ("    Namespace violation: \"%s\"\n", $token);
   }
-  printf ("    Namespace violation: \"%s\"\n", $token);
-  return $nerrors;
 }
 
 
 sub checknamespace {
   my($h, $fnamebase, @allow) = @_;
-  my($nerrors) = 0;
 
   ++$total;
 
@@ -212,12 +221,14 @@ sub checknamespace {
   print TESTFILE "#include <$h>\n";
   close (TESTFILE);
 
+  $nerrors = 0;
+  $nknown = 0;
   open (CONTENT, "$CC $CFLAGS -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
   loop: while (<CONTENT>) {
     next loop if (/^#undef /);
     chop;
     if (/^#define (.*)/) {
-      $nerrors = newtoken ($1, $nerrors, @allow);
+      newtoken ($1, @allow);
     } else {
       # We have to tokenize the line.
       my($str) = $_;
@@ -226,7 +237,7 @@ sub checknamespace {
 
       foreach $token (split(/[^a-zA-Z0-9_]/, $str)) {
 	if ($token ne "") {
-	  $nerrors = newtoken ($token, $nerrors, @allow);
+	  newtoken ($token, @allow);
 	}
       }
     }
@@ -236,6 +247,9 @@ sub checknamespace {
   if ($nerrors != 0) {
     printf ("    " . "-" x 72 . "\n");
     ++$errors;
+  } elsif ($nknown > 0) {
+    printf ("EXPECTED FAILURES\n");
+    ++$known;
   } else {
     printf ("OK\n");
   }
@@ -272,7 +286,7 @@ while ($#headers >= 0) {
     next control if (/^#/);
     next control if (/^[	]*$/);
 
-    if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
+    if (/^element *({([^}]*)}|([^{ ]*)) *({([^}]*)}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
       my($struct) = "$2$3";
       my($type) = "$5$6";
       my($member) = "$7";
@@ -726,8 +740,30 @@ while ($#headers >= 0) {
 }
 
 printf "-" x 76 . "\n";
-printf ("  Total number of tests  : %4d\n", $total);
-printf ("  Number of failed tests : %4d (%3d%%)\n", $errors, ($errors * 100) / $total);
-printf ("  Number of skipped tests: %4d (%3d%%)\n", $skipped, ($skipped * 100) / $total);
+printf ("  Total number of tests   : %4d\n", $total);
+
+printf ("  Number of known failures: %4d (", $known);
+$percent = ($known * 100) / $total;
+if ($percent < 1.0) {
+  printf (" <1%%)\n");
+} else {
+  printf ("%3d%%)\n", $percent);
+}
+
+printf ("  Number of failed tests  : %4d (", $errors);
+$percent = ($errors * 100) / $total;
+if ($percent < 1.0) {
+  printf (" <1%%)\n");
+} else {
+  printf ("%3d%%)\n", $percent);
+}
+
+printf ("  Number of skipped tests : %4d (", $skipped);
+$percent = ($skipped * 100) / $total;
+if ($percent < 1.0) {
+  printf (" <1%%)\n");
+} else {
+  printf ("%3d%%)\n", $percent);
+}
 
 exit $errors != 0;
