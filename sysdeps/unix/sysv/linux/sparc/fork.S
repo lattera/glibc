@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
 
@@ -26,4 +26,5 @@ PSEUDO (__libc_fork, fork, 0)
 PSEUDO_END (__libc_fork)
 
 weak_alias (__libc_fork, __fork)
+strong_alias (__fork, __GI___fork)
 weak_alias (__libc_fork, fork)

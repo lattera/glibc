@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 97, 99, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,5 +30,6 @@ SYSCALL__ (vfork, 0)
 	sub %o1, 1, %o1
 	retl
 	and %o0, %o1, %o0
+strong_alias (__vfork, __GI___vfork)
 
 weak_alias (__vfork, vfork)

@@ -46,5 +46,6 @@ ENTRY (__vfork)
 	ret
 
 PSEUDO_END (__vfork)
+strong_alias (__vfork, __GI___vfork)
 
 weak_alias (__vfork, vfork)

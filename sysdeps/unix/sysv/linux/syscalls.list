@@ -12,7 +12,7 @@ epoll_ctl	EXTRA	epoll_ctl	i:iiip	epoll_ctl
 epoll_wait	EXTRA	epoll_wait	i:ipii	epoll_wait
 fdatasync	-	fdatasync	i:i	fdatasync
 flock		-	flock		i:ii	__flock		flock
-fork		-	fork		i:	__libc_fork	__fork fork
+fork		-	fork		i:	__libc_fork	__fork fork __GI___fork
 get_kernel_syms	EXTRA	get_kernel_syms	i:p	get_kernel_syms
 getegid		-	getegid		i:	__getegid	getegid
 geteuid		-	geteuid		i:	__geteuid	geteuid

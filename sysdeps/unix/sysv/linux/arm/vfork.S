@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -44,7 +44,8 @@ ENTRY (__vfork)
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))
-	
+
 PSEUDO_END (__vfork)
+strong_alias (__vfork, __GI___vfork)
 
 weak_alias (__vfork, vfork)

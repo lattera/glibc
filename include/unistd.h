@@ -104,6 +104,7 @@ libc_hidden_proto (__getresgid)
 libc_hidden_proto (__setresuid)
 libc_hidden_proto (__setresgid)
 extern __pid_t __vfork (void);
+libc_hidden_proto (__vfork)
 extern int __ttyname_r (int __fd, char *__buf, size_t __buflen);
 extern int __isatty (int __fd);
 extern int __link (__const char *__from, __const char *__to);
@@ -123,6 +124,7 @@ libc_hidden_proto (__read)
 extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
 libc_hidden_proto (__write)
 extern __pid_t __fork (void);
+libc_hidden_proto (__fork)
 extern int __getpagesize (void) __attribute__ ((__const__));
 libc_hidden_proto (__getpagesize)
 extern int __ftruncate (int __fd, __off_t __length);

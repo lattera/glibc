@@ -1,5 +1,34 @@
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/unistd.h: Add libc_hidden_proto for __fork and __vfork.
+	* sysdeps/generic/fork.c: Add libc_hidden_def for __fork.
+	* sysdeps/mach/hurd/fork.c: Likewise.
+	* sysdeps/unix/sysv/aix/fork.c: Likewise.
+	* sysdeps/unix/fork.S: Add __GI___fork alias.
+	* sysdeps/unix/arm/fork.S: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/fork.S: Likewise.
+	* sysdeps/unix/i386/fork.S: Likewise.
+	* sysdeps/unix/mips/fork.S: Likewise.
+	* sysdeps/unix/sparc/fork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/fork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/fork.S: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/generic/vfork.c: Add libc_hidden_def for __vfork.
+	* sysdeps/unix/bsd/hp/m68k/vfork.S: Add __GI___vfork alias.
+	* sysdeps/unix/bsd/i386/vfork.S: Likewise.
+	* sysdeps/unix/bsd/sun/m68k/vfork.S: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/vfork.S: Likewise.
+	* sysdeps/unix/bsd/vax/vfork.S: Likewise.
+	* sysdeps/unix/sparc/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/cris/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+
 	* include/time.h: Add libc_hidden_proto for __nanosleep.
 	* sysdeps/generic/nanosleep.c: Add libc_hidden_def for __nanosleep.
 	* sysdeps/mach/nanosleep.c: Likewise.

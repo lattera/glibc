@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,5 +35,6 @@ ENTRY (__vfork)
 	decl r1
 	andl r1, r0
 	ret
+strong_alias (__vfork, __GI___vfork)
 
 weak_alias (__vfork, vfork)

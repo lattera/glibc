@@ -29,5 +29,6 @@ SYSCALL__ (fork, 0)
 	andl r1, r0
 	ret
 PSEUDO_END (__fork)
+strong_alias (__fork, __GI___fork)
 
 weak_alias (__fork, fork)

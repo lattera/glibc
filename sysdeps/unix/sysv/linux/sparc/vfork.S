@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -25,4 +25,5 @@ PSEUDO (__vfork, vfork, 0)
 	 and	%o0, %o1, %o0
 
 PSEUDO_END (__vfork)
+strong_alias (__vfork, __GI___vfork)
 weak_alias (__vfork, vfork)

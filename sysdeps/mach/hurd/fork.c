@@ -692,5 +692,6 @@ __fork (void)
 
   return err ? __hurd_fail (err) : pid;
 }
+libc_hidden_def (__fork)
 
 weak_alias (__fork, fork)
