@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.globl ___wait3
-___wait3:
+ENTRY(___wait3)
 	movel sp@(8), d1
 	moveal sp@(12), a0
 	movel #SYS_wait, d0
