@@ -8,6 +8,22 @@
 
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/locale.c: Don't print aliases for non-existing
+	locales for 'locale -a'.
+	Patch by Noah Levitt <nlevitt@columbia.edu> [PR libc/4166].
+
+2002-07-19  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/msq.h: New file.
+
+2002-07-16  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	sys/personality.h.
+	* sysdeps/unix/sysv/linux/sys/personality.h: New file.
+
+2002-08-25  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/tst-tlsmod1.c (in_dso): Make sure the TLS variable access is
 	not moved ahead of the fputs call.
 	* elf/tst-tlsmod2.c (in_dso): Likewise.

@@ -347,100 +347,13 @@ write_locales (void)
 
 #define PUT(name) tsearch (name, &all_data, \
 			   (int (*) (const void *, const void *)) strcoll)
+#define GET(name) tfind (name, &all_data, \
+			   (int (*) (const void *, const void *)) strcoll)
 
-  /* Now read the locale.alias files.  */
-  if (argz_create_sep (LOCALE_ALIAS_PATH, ':', &alias_path, &alias_path_len))
-    error (1, errno, gettext ("while preparing output"));
-
-  entry = NULL;
-  while ((entry = argz_next (alias_path, alias_path_len, entry)))
-    {
-      static const char aliasfile[] = "/locale.alias";
-      FILE *fp;
-      char full_name[strlen (entry) + sizeof aliasfile];
-
-      stpcpy (stpcpy (full_name, entry), aliasfile);
-      fp = fopen (full_name, "r");
-      if (fp == NULL)
-	/* Ignore non-existing files.  */
-	continue;
-
-      /* No threads present.  */
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-      while (! feof_unlocked (fp))
-	{
-	  /* It is a reasonable approach to use a fix buffer here
-	     because
-	     a) we are only interested in the first two fields
-	     b) these fields must be usable as file names and so must
-	        not be that long  */
-	  char buf[BUFSIZ];
-	  char *alias;
-	  char *value;
-	  char *cp;
-
-	  if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
-	    /* EOF reached.  */
-	    break;
-
-	  cp = buf;
-	  /* Ignore leading white space.  */
-	  while (isspace (cp[0]) && cp[0] != '\n')
-	    ++cp;
-
-	  /* A leading '#' signals a comment line.  */
-	  if (cp[0] != '\0' && cp[0] != '#' && cp[0] != '\n')
-	    {
-	      alias = cp++;
-	      while (cp[0] != '\0' && !isspace (cp[0]))
-		++cp;
-	      /* Terminate alias name.  */
-	      if (cp[0] != '\0')
-		*cp++ = '\0';
-
-	      /* Now look for the beginning of the value.  */
-	      while (isspace (cp[0]))
-		++cp;
-
-	      if (cp[0] != '\0')
-		{
-		  value = cp++;
-		  while (cp[0] != '\0' && !isspace (cp[0]))
-		    ++cp;
-		  /* Terminate value.  */
-		  if (cp[0] == '\n')
-		    {
-		      /* This has to be done to make the following
-			 test for the end of line possible.  We are
-			 looking for the terminating '\n' which do not
-			 overwrite here.  */
-		      *cp++ = '\0';
-		      *cp = '\n';
-		    }
-		  else if (cp[0] != '\0')
-		    *cp++ = '\0';
-
-		  /* Add the alias.  */
-		  if (! verbose)
-		    PUT (xstrdup (alias));
-		}
-	    }
-
-	  /* Possibly not the whole line fits into the buffer.
-	     Ignore the rest of the line.  */
-	  while (strchr (cp, '\n') == NULL)
-	    {
-	      cp = buf;
-	      if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
-		/* Make sure the inner loop will be left.  The outer
-		   loop will exit at the `feof' test.  */
-		*cp = '\n';
-	    }
-	}
-
-      fclose (fp);
-    }
+  /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
+  PUT ("POSIX");
+  /* And so is the "C" locale.  */
+  PUT ("C");
 
   memset (linebuf, '-', sizeof (linebuf) - 1);
   linebuf[sizeof (linebuf) - 1] = '\0';
@@ -570,13 +483,102 @@ write_locales (void)
   if (ndirents > 0)
     free (dirents);
 
+  /* Now read the locale.alias files.  */
+  if (argz_create_sep (LOCALE_ALIAS_PATH, ':', &alias_path, &alias_path_len))
+    error (1, errno, gettext ("while preparing output"));
+
+  entry = NULL;
+  while ((entry = argz_next (alias_path, alias_path_len, entry)))
+    {
+      static const char aliasfile[] = "/locale.alias";
+      FILE *fp;
+      char full_name[strlen (entry) + sizeof aliasfile];
+
+      stpcpy (stpcpy (full_name, entry), aliasfile);
+      fp = fopen (full_name, "r");
+      if (fp == NULL)
+	/* Ignore non-existing files.  */
+	continue;
+
+      /* No threads present.  */
+      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+      while (! feof_unlocked (fp))
+	{
+	  /* It is a reasonable approach to use a fix buffer here
+	     because
+	     a) we are only interested in the first two fields
+	     b) these fields must be usable as file names and so must
+	        not be that long  */
+	  char buf[BUFSIZ];
+	  char *alias;
+	  char *value;
+	  char *cp;
+
+	  if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
+	    /* EOF reached.  */
+	    break;
+
+	  cp = buf;
+	  /* Ignore leading white space.  */
+	  while (isspace (cp[0]) && cp[0] != '\n')
+	    ++cp;
+
+	  /* A leading '#' signals a comment line.  */
+	  if (cp[0] != '\0' && cp[0] != '#' && cp[0] != '\n')
+	    {
+	      alias = cp++;
+	      while (cp[0] != '\0' && !isspace (cp[0]))
+		++cp;
+	      /* Terminate alias name.  */
+	      if (cp[0] != '\0')
+		*cp++ = '\0';
+
+	      /* Now look for the beginning of the value.  */
+	      while (isspace (cp[0]))
+		++cp;
+
+	      if (cp[0] != '\0')
+		{
+		  value = cp++;
+		  while (cp[0] != '\0' && !isspace (cp[0]))
+		    ++cp;
+		  /* Terminate value.  */
+		  if (cp[0] == '\n')
+		    {
+		      /* This has to be done to make the following
+			 test for the end of line possible.  We are
+			 looking for the terminating '\n' which do not
+			 overwrite here.  */
+		      *cp++ = '\0';
+		      *cp = '\n';
+		    }
+		  else if (cp[0] != '\0')
+		    *cp++ = '\0';
+
+		  /* Add the alias.  */
+		  if (! verbose && GET (value) != NULL)
+		    PUT (xstrdup (alias));
+		}
+	    }
+
+	  /* Possibly not the whole line fits into the buffer.
+	     Ignore the rest of the line.  */
+	  while (strchr (cp, '\n') == NULL)
+	    {
+	      cp = buf;
+	      if (fgets_unlocked (buf, BUFSIZ, fp) == NULL)
+		/* Make sure the inner loop will be left.  The outer
+		   loop will exit at the `feof' test.  */
+		*cp = '\n';
+	    }
+	}
+
+      fclose (fp);
+    }
+
   if (! verbose)
     {
-      /* `POSIX' locale is always available (POSIX.2 4.34.3).  */
-      PUT ("POSIX");
-      /* And so is the "C" locale.  */
-      PUT ("C");
-
       twalk (all_data, print_names);
     }
 }
