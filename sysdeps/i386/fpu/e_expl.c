@@ -24,13 +24,13 @@
 
 #include <math_private.h>
 
-static long double c0 = 1.44268798828125L;
-static long double c1 = 7.05260771340735992468e-6L;
+static long double __attribute__ ((unused)) c0 = 1.44268798828125L;
+static long double __attribute__ ((unused)) c1 = 7.05260771340735992468e-6L;
 
 long double
 __ieee754_expl (long double x)
 {
-  long double res, t;
+  long double res;
 
 /* I added the following ugly construct because expl(+-Inf) resulted
    in NaN.  The ugliness results from the bright minds at Intel.

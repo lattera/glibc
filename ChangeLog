@@ -1,5 +1,12 @@
 2001-06-22  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Add parenthese
+	to avoid warnings.
+
+	* sysdeps/i386/fpu/e_expl.c (__ieee754_expl): Remove unused
+	variable.
+	Add unused attributes to avoid warnings.
+
 	* elf/reldep4mod4.c: Add prototype to avoid warning.
 	* elf/reldep4mod2.c: Likewise.
 
