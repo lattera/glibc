@@ -248,23 +248,22 @@ done:
   POSTPROCESS;
 #endif
 
-  int result;
+  int res;
   if (status == NSS_STATUS_SUCCESS)
-    result = 0;
+    res = 0;
   /* Don't pass back ERANGE if this is not for a too-small buffer.  */
   else if (errno == ERANGE && status != NSS_STATUS_TRYAGAIN)
-    {
+    res = EINVAL;
 #ifdef NEED_H_ERRNO
-      /* These functions only set errno if h_errno is NETDB_INTERNAL.  */
-      if (*h_errnop != NETDB_INTERNAL)
+  /* These functions only set errno if h_errno is NETDB_INTERNAL.  */
+  else if (status == NSS_STATUS_TRYAGAIN && *h_errnop != NETDB_INTERNAL)
+    res = EAGAIN;
 #endif
-	result = ENOENT;
-    }
   else
     return errno;
 
-  __set_errno (result);
-  return result;
+  __set_errno (res);
+  return res;
 }
 
 

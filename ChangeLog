@@ -1,3 +1,12 @@
+2003-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getXXbyYY.c (FUNCTION_NAME): Add a few casts.  Remove
+	unnecessary errno handling.
+
+	* nss/getXXbyYY_r.c (INTERNAL): Use better variable name.
+	Initialize it in all cases.  Change it to be a bit more like the
+	code we had before.
+
 2003-09-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/fileops.c (_IO_file_read, _IO_new_file_write): Add

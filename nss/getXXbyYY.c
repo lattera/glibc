@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,7 +106,7 @@ FUNCTION_NAME (ADD_PARAMS)
   if (buffer == NULL)
     {
       buffer_size = BUFLEN;
-      buffer = malloc (buffer_size);
+      buffer = (char *) malloc (buffer_size);
     }
 
 #ifdef HANDLE_DIGITS_DOTS
@@ -132,14 +132,13 @@ FUNCTION_NAME (ADD_PARAMS)
     {
       char *new_buf;
       buffer_size += BUFLEN;
-      new_buf = realloc (buffer, buffer_size);
+      new_buf = (char *) realloc (buffer, buffer_size);
       if (new_buf == NULL)
 	{
 	  /* We are out of memory.  Free the current buffer so that the
 	     process gets a chance for a normal termination.  */
-	  save = errno;
 	  free (buffer);
-	  __set_errno (save);
+	  __set_errno (ENOMEM);
 	}
       buffer = new_buf;
     }
@@ -150,10 +149,8 @@ FUNCTION_NAME (ADD_PARAMS)
 #ifdef HANDLE_DIGITS_DOTS
 done:
 #endif
-  /* Release lock.  Preserve error value.  */
-  save = errno;
+  /* Release lock.  */
   __libc_lock_unlock (lock);
-  __set_errno (save);
 
 #ifdef NEED_H_ERRNO
   if (h_errno_tmp != 0)
