@@ -1,6 +1,11 @@
+2000-06-21  Andreas Jaeger  <aj@suse.de>
+
+	* elf/vismod2.c: Include <stdlib.h> for abort prototype.
+	* rt/aio_suspend.c: Likewise.
+
 2000-06-20  Ulrich Drepper  <drepper@redhat.com>
 
-	* math/libm-test.inc: Include <strcmp.h>.
+	* math/libm-test.inc: Include <string.h>.
 
 2000-06-20  Jes Sorensen  <jes@linuxcare.com>
 
