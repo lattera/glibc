@@ -1,3 +1,31 @@
+2000-08-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/__longjmp.c: Removed unused variable result.
+	* sysdeps/s390/fpu/bits/fenv.h: Moved FPC_* definitions to fenv_libc.h.
+	* sysdeps/s390/fpu/fclrexcpt.c: Include fenv_libc.h instead of fenv.h.
+	* sysdeps/s390/fpu/fegetenv.c: New file.
+	* sysdeps/s390/fpu/fegetround.c: Include fenv_libc.h instead of fenv.h.
+	* sysdeps/s390/fpu/feholdexcpt.c: New file.
+	* sysdeps/s390/fpu/fenv_libc.h: New file.
+	* sysdeps/s390/fpu/fesetenv.c: New file.
+	* sysdeps/s390/fpu/fesetround.c: Include fenv_libc.h instead of fenv.h.
+	* sysdeps/s390/fpu/feupdateenv.c: New file.
+	* sysdeps/s390/fpu/fgetexcptflg.c: Reformatted.
+	* sysdeps/s390/fpu/fpu_control.h: Corrected header.
+	* sysdeps/s390/fpu/fraiseexcpt.c: New file.
+	* sysdeps/s390/fpu/fsetexcptflg.c: New file.
+	* sysdeps/s390/fpu/ftestexcept.c: New file.
+	* sysdeps/s390/fpu/libm-test-ulps: New file.
+	* sysdeps/s390/gmp-mparam.h: Add end of comment.
+	* sysdeps/s390/initfini.c: New file.
+	* sysdeps/unix/sysv/linux/s390/Dist: Add sys/procfs.h.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Remove sys/reg.h.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: New file.
+	* sysdeps/unix/sysv/linux/s390/lchown.c: New file.
+	* sysdeps/unix/sysv/linux/s390/sys/elf.h: Moved elf definitions to
+	sys/procfs.h as proposed by Mark Kettenis.
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: New file.
+
 2000-08-21  Andreas Jaeger  <aj@suse.de>
 
 	* include/poll.h: Include include/sys/poll.h to get __poll
