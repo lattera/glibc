@@ -64,5 +64,6 @@ nispasswd	100303	rpc.nispasswdd
 ufsd		100233	ufsd
 pcnfsd		150001	pcnfs
 amd		300019  amq
+sgi_fam		391002	fam
 bwnfsd		545580417
 fypxfrd		600100069 freebsd-ypxfrd
