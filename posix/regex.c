@@ -5347,7 +5347,9 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
 /* Use internationalized API instead of SYNTAX.  */
 # define WORDCHAR_P(d)							\
   (iswalnum ((wint_t)((d) == end1 ? *string2				\
-           : (d) == string2 - 1 ? *(end1 - 1) : *(d))) != 0)
+           : (d) == string2 - 1 ? *(end1 - 1) : *(d))) != 0		\
+   || ((d) == end1 ? *string2						\
+       : (d) == string2 - 1 ? *(end1 - 1) : *(d)) == L'_')
 #else /* BYTE */
 # define WORDCHAR_P(d)							\
   (SYNTAX ((d) == end1 ? *string2					\

@@ -2036,7 +2036,8 @@ new_heap(size) size_t size;
   if(p1 != MAP_FAILED) {
     p2 = (char *)(((unsigned long)p1 + (HEAP_MAX_SIZE-1)) & ~(HEAP_MAX_SIZE-1));
     ul = p2 - p1;
-    munmap(p1, ul);
+    if (ul)
+      munmap(p1, ul);
     munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
   } else {
     /* Try to take the chance that an allocation of only HEAP_MAX_SIZE

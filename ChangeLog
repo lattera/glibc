@@ -1,3 +1,26 @@
+2001-07-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/filedoalloc.c (_IO_file_doallocate): A few more minor
+	cleanups and improvements.
+
+2001-07-18  Andreas Schwab  <schwab@suse.de>
+
+	* posix/regex.c (WORDCHAR_P) [WCHAR]: Also return true for the
+	underscore character.
+
+2001-07-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc (new_heap): Don't call munmap for zero length.
+
+2001-07-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/filedoalloc.c (_IO_file_doallocate): Use DEV_TTY_P if
+	available to determine whether descriptor is for tty before
+	calling isatty.
+
+	* sysdeps/unix/sysv/linux/device-nrs.h: Define DEV_TTY_P.
+	* sysdeps/generic/device-nrs.h: Likewise.
+
 2001-07-18  Andreas Jaeger  <aj@suse.de>
 
 	* time/Makefile (tst-getdate-ENV): Add TZDIR to environment.
