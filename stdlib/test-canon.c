@@ -1,5 +1,5 @@
 /* Test program for returning the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>.
 
@@ -132,6 +132,8 @@ do_test (int argc, char ** argv)
       ++errors;
     }
 
+#if 0
+  /* This is now allowed.  The test is invalid.  */
   errno = 0;
   if (realpath ("/", NULL) != NULL || errno != EINVAL)
     {
@@ -139,6 +141,7 @@ do_test (int argc, char ** argv)
 	      " for realpath(...,NULL)\n", argv[0]);
       ++errors;
     }
+#endif
 
   errno = 0;
   if (realpath ("", buf) != NULL || errno != ENOENT)

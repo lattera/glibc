@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <time.h>
 
 #define	SECS_PER_HOUR	(60 * 60)
@@ -73,7 +74,11 @@ __offtime (t, offset, tp)
     }
   tp->tm_year = y - 1900;
   if (tp->tm_year != y - 1900)
-    return 0;
+    {
+      /* The year cannot be represented due to overflow.  */
+      __set_errno (EOVERFLOW);
+      return 0;
+    }
   tp->tm_yday = days;
   ip = __mon_yday[__isleap(y)];
   for (y = 11; days < (long int) ip[y]; --y)

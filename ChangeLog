@@ -1,5 +1,13 @@
 2002-05-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/canonicalize.c (canonicalize): Rename to __realpath and
+	don't define static.  Remove old __realpath function.  TC1 of
+	POSIX 2001 will allow the second parameter to be NULL.
+	* stdlib/test-canon.c: Comment out test for NULL as second
+	parameter of realpath.
+
+	* time/offtime.c (__offtime): Set errno if overflow is detected.
+
 	* elf/Makefile (rtld-routines): Remove dl-brk and dl-sbrk.
 	* sysdeps/unix/sysv/linux/Makefile (sysdep-rtld-routines): Add
 	dl-brk and dl-sbrk.

@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,8 +37,8 @@
    that cannot be resolved.  If the path can be resolved, RESOLVED
    holds the same value as the value returned.  */
 
-static char *
-canonicalize (const char *name, char *resolved)
+char *
+__realpath (const char *name, char *resolved)
 {
   char *rpath, *dest, *extra_buf = NULL;
   const char *start, *end, *rpath_limit;
@@ -204,25 +204,12 @@ error:
     free (rpath);
   return NULL;
 }
-
-
-char *
-__realpath (const char *name, char *resolved)
-{
-  if (resolved == NULL)
-    {
-      __set_errno (EINVAL);
-      return NULL;
-    }
-
-  return canonicalize (name, resolved);
-}
 weak_alias (__realpath, realpath)
 
 
 char *
 __canonicalize_file_name (const char *name)
 {
-  return canonicalize (name, NULL);
+  return __realpath (name, NULL);
 }
 weak_alias (__canonicalize_file_name, canonicalize_file_name)
