@@ -1,3 +1,9 @@
+2005-01-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-fmtmsg.c: Include stdlib.h.
+	* stdio-common/tst-fmemopen2.c: Include string.h.
+	* posix/execvp.c: Include stdbool.h.
+
 2004-12-13  Paolo Bonzini  <bonzini@gnu.org>
 
 	Separate parsing and creation of the NFA.  Avoided recursion on

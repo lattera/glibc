@@ -1,6 +1,7 @@
 #include <fmtmsg.h>
 #include <mcheck.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
