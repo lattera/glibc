@@ -2,6 +2,8 @@
 
 	* sysdeps/posix/getaddrinfo.c (match_prefix): Correctly match
 	partial bytes [BZ #24].
+	* posix/Makefile (tests): Add bug-ga1.
+	* posix/bug-ga1.c: New file.
 
 2004-02-13  Steven Munroe  <sjmunroe@us.ibm.com>
 
