@@ -1,3 +1,15 @@
+1998-09-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de> 
+ 
+	* string/bits/string2.h (__string2_1bptr_p): Don't use a statement 
+	expression. 
+	(__mempcpy, strcpy, __stpcpy, strcmp, strcspn, strspn, strpbrk, 
+	__strsep): Greatly reduce size of expansion by combining common 
+	expressions. 
+	(__mempcpy_small, __strcpy_small, __stpcpy_small): Convert to 
+	inline function. 
+	(__mempcpy_args, __strcpy_args, __stpcpy_args): New macros, used 
+	by the above definitions. 
+ 
 1998-09-27  Geoff Keating  <geoffk@ozemail.com.au> 
  
 	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: New file, use 
