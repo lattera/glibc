@@ -1,5 +1,5 @@
 /* 4.4BSD utility functions for error messages.
-   Copyright (C) 1995, 1996, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,98,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -108,6 +108,7 @@ vwarnx (const char *format, __gnuc_va_list ap)
     }
   funlockfile (stderr);
 }
+libc_hidden_def (warnx)
 
 void
 vwarn (const char *format, __gnuc_va_list ap)
@@ -141,6 +142,7 @@ vwarn (const char *format, __gnuc_va_list ap)
     }
   funlockfile (stderr);
 }
+libc_hidden_def (warnx)
 
 
 void
@@ -148,12 +150,14 @@ warn (const char *format, ...)
 {
   VA (vwarn (format, ap))
 }
+libc_hidden_def (warn)
 
 void
 warnx (const char *format, ...)
 {
   VA (vwarnx (format, ap))
 }
+libc_hidden_def (warnx)
 
 void
 verr (int status, const char *format, __gnuc_va_list ap)
@@ -161,6 +165,7 @@ verr (int status, const char *format, __gnuc_va_list ap)
   vwarn (format, ap);
   exit (status);
 }
+libc_hidden_def (verr)
 
 void
 verrx (int status, const char *format, __gnuc_va_list ap)
@@ -168,6 +173,7 @@ verrx (int status, const char *format, __gnuc_va_list ap)
   vwarnx (format, ap);
   exit (status);
 }
+libc_hidden_def (verrx)
 
 void
 err (int status, const char *format, ...)

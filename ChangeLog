@@ -1,5 +1,15 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* include/sys/syslog.h: Use libc_hidden_proto for syslog, vsyslog.
+	* include/err.h: Use libc_hidden_proto for warn, warnx, vwarn, vwarn,
+	verr, verrx.
+	* include/stdlib.h: Use libc_hidden_proto for exit, getenv, bsearch.
+	* misc/syslog.c: Add libc_hidden_def.
+	* misc/err.c: Likewise.
+	* stdlib/exit.c: Likewise.
+	* stdlib/bsearch.c: Likewise.
+	* sysdeps/generic/getenv.c: Likewise.
+
 	* include/libc-symbols.h (hidden_weak): Define it for [__ASSEMBLER__].
 
 	* sysdeps/unix/make-syscalls.sh: Generate libc_hidden_def or

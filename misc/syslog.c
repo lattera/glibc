@@ -102,6 +102,7 @@ syslog(pri, fmt, va_alist)
 	vsyslog(pri, fmt, ap);
 	va_end(ap);
 }
+libc_hidden_def (syslog)
 
 void
 vsyslog(pri, fmt, ap)
@@ -278,6 +279,7 @@ vsyslog(pri, fmt, ap)
 
 	free (buf);
 }
+libc_hidden_def (vsyslog)
 
 static struct sockaddr SyslogAddr;	/* AF_UNIX address of local logger */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1995,1996,1997,1999,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,95,96,97,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,3 +81,4 @@ exit (int status)
 
   _exit (status);
 }
+libc_hidden_def (exit)
