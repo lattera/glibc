@@ -1,5 +1,9 @@
 Tue Jun 13 15:45:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* configure.in (libc_cv_asm_set_directive): Make sure that the
+ 	`.set' directive really worked by linking against a reference to
+ 	the alias.
+
 	* sysdeps/stub/init-first.c: Don't include <hurd.h>.
 	[PIC] (soinit): Renamed to (global) _init.
 

@@ -342,9 +342,16 @@ AC_CACHE_VAL(libc_cv_asm_set_directive, [dnl
 cat > conftest.s <<\EOF
 .text
 foo: .long 0
-.set bar,foo
+.set glibc_conftest_frobozz,foo
 EOF
-if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+# The alpha-dec-osf1 assembler gives only a warning for `.set'
+# (but it doesn't work), so we must do a linking check to be sure.
+cat > conftest1.c <<\EOF
+extern int glibc_conftest_frobozz;
+main () { printf ("%d\n", glibc_conftest_frobozz); }
+EOF
+if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	    conftest.s conftest1.c 1>&AC_FD_CC 2>&AC_FD_CC; then
   libc_cv_asm_set_directive=yes
 else
   libc_cv_asm_set_directive=no
