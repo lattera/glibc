@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-07-01
+GNU C Library NEWS -- history of user-visible changes.  2000-08-03
 
 Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -8,6 +8,10 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bug-glibc@gnu.org>.
 
 Version 2.2
+
+* Greg McGary added runtime support for bounds checking using gcc's
+  new -fbounded-pointers option.  ix86 target is complete.  PowerPC
+  is in progress.
 
 * Thorsten Kukuk added secure mode support to nscd.
 
