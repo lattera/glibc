@@ -35,7 +35,7 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
     return TD_ERR;
 
   /* IA-64 thread register is r13.  */
-  th->th_unique = regs[13];
+  th->th_unique = (void *) regs[13];
 
   /* Found it.  Now complete the `td_thrhandle_t' object.  */
   th->th_ta_p = (td_thragent_t *) ta;

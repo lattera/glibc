@@ -104,8 +104,10 @@ static LIST_HEAD (stack_used);
 list_t __stack_user __attribute__ ((nocommon));
 hidden_def (__stack_user)
 
+#if COLORING_INCREMENT != 0
 /* Number of threads created.  */
 static unsigned int nptl_ncreated;
+#endif
 
 
 /* Check whether the stack is still used or not.  */
@@ -352,7 +354,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       void *mem;
 
 #if COLORING_INCREMENT != 0
-      /* Add one more page for stack coloring.  Don't to it for stacks
+      /* Add one more page for stack coloring.  Don't do it for stacks
 	 with 16 times pagesize or larger.  This might just cause
 	 unnecessary misalignment.  */
       if (size <= 16 * pagesize_m1)
@@ -383,8 +385,8 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
 	    return errno;
 
-	  /* 'size' is guaranteed to be greater than zero.  So we can
-	     never get a NULL pointer back from MMAP.  */
+	  /* SIZE is guaranteed to be greater than zero.
+	     So we can never get a null pointer back from mmap.  */
 	  assert (mem != NULL);
 
 #if COLORING_INCREMENT != 0

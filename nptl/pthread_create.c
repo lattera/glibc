@@ -227,9 +227,6 @@ start_thread (void *arg)
       THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
     }
 
-  /* The thread is exiting now.  */
-  atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
-
   /* Clean up any state libc stored in thread-local variables.  */
   __libc_thread_freeres ();
 
@@ -268,6 +265,10 @@ start_thread (void *arg)
 	}
     }
 
+  /* The thread is exiting now.  Don't set this bit until after we've hit
+     the event-reporting breakpoint, so that td_thr_get_info on us while at
+     the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
+  atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))

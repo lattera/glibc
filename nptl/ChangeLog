@@ -1,4 +1,27 @@
+2003-03-13  Roland McGrath  <roland@redhat.com>
+
+	* pthread_create.c (start_thread): Set EXITING_BIT after the
+	event-reporting (and destructors), not before.
+
 2003-03-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_timed_wait,
+	lll_futex_wake): Declare register variables as long int instead of
+	unsigned long int.  Patch by Ian Wienand <ianw@gelato.unsw.edu.au>.
+	Make syscall arguments clobbered by the syscall.
+	(lll_futex_wait): Define using lll_futex_timed_wait.
+
+	* sysdeps/ia64/td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Cast regs[13]
+	to void *.
+
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Only declare and set
+	PPID if [! NDEBUG].
+
+	* allocatestack.c (nptl_ncreated): Only declare if
+	COLORING_INCREMENT != 0.
+
+	* pthreadP.h (__pthread_enable_asynccancel_2): New prototype.
+	(__libc_enable_asynccancel_2): Remove prototype.
 
 	* sysdeps/unix/sysv/linux/ia64/fork.c (ARCH_FORK): Swap ptid and
 	ctid to match kernel.

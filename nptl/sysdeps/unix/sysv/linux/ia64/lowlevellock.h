@@ -46,42 +46,23 @@
   "b6", "b7",								      \
   "memory"
 
-#define lll_futex_wait(futex, val) \
-  ({									      \
-     register unsigned long int __o0 asm ("out0")			      \
-       = (unsigned long int) (futex);					      \
-     register unsigned long int __o1 asm ("out1") = FUTEX_WAIT;		      \
-     register unsigned long int __o2 asm ("out2") = (unsigned long int) (val);\
-     register unsigned long int __o3 asm ("out3") = 0ul;		      \
-     register unsigned long int __r8 asm ("r8");			      \
-     register unsigned long int __r10 asm ("r10");			      \
-     register unsigned long int __r15 asm ("r15") = SYS_futex;		      \
-									      \
-     __asm __volatile ("break %3;;"					      \
-		       : "=r" (__r8), "=r" (__r10), "=r" (__r15)	      \
-		       : "i" (0x100000), "2" (__r15), "r" (__o0), "r" (__o1), \
-		 	"r" (__o2), "r" (__o3)				      \
-		       : lll_futex_clobbers);				      \
-     __r10 == -1 ? -__r8 : __r8;					      \
-  })
-
+#define lll_futex_wait(futex, val) lll_futex_timed_wait (futex, val, 0)
 
 #define lll_futex_timed_wait(futex, val, timespec) \
   ({									      \
-     register unsigned long int __o0 asm ("out0")			      \
-       = (unsigned long int) (futex);					      \
-     register unsigned long int __o1 asm ("out1") = FUTEX_WAIT;		      \
-     register unsigned long int __o2 asm ("out2") = (unsigned long int) (val);\
-     register unsigned long int __o3 asm ("out3")			      \
-       = (unsigned long int) (timespec);				      \
-     register unsigned long int __r8 asm ("r8");			      \
-     register unsigned long int __r10 asm ("r10");			      \
-     register unsigned long int __r15 asm ("r15") = SYS_futex;		      \
+     register long int __o0 asm ("out0") = (long int) (futex);		      \
+     register long int __o1 asm ("out1") = FUTEX_WAIT;			      \
+     register long int __o2 asm ("out2") = (long int) (val);		      \
+     register long int __o3 asm ("out3") = (long int) (timespec);	      \
+     register long int __r8 asm ("r8");					      \
+     register long int __r10 asm ("r10");				      \
+     register long int __r15 asm ("r15") = SYS_futex;			      \
 									      \
-     __asm __volatile ("break %3;;"					      \
-		       : "=r" (__r8), "=r" (__r10), "=r" (__r15)	      \
-		       : "i" (0x100000), "2" (__r15), "r" (__o0), "r" (__o1), \
-			 "r" (__o2), "r" (__o3)				      \
+     __asm __volatile ("break %7;;"					      \
+		       : "=r" (__r8), "=r" (__r10), "=r" (__r15),	      \
+			 "=r" (__o0), "=r" (__o1), "=r" (__o2), "=r" (__o3)   \
+		       : "i" (0x100000), "2" (__r15), "3" (__o0), "4" (__o1), \
+		 	 "5" (__o2), "6" (__o3)				      \
 		       : lll_futex_clobbers);				      \
      __r10 == -1 ? -__r8 : __r8;					      \
   })
@@ -89,18 +70,18 @@
 
 #define lll_futex_wake(futex, nr) \
   ({									      \
-     register unsigned long int __o0 asm ("out0")			      \
-       = (unsigned long int) (futex);					      \
-     register unsigned long int __o1 asm ("out1") = FUTEX_WAKE;		      \
-     register unsigned long int __o2 asm ("out2") = (unsigned long int) (nr); \
-     register unsigned long int __r8 asm ("r8");			      \
-     register unsigned long int __r10 asm ("r10");			      \
-     register unsigned long int __r15 asm ("r15") = SYS_futex;		      \
+     register long int __o0 asm ("out0") = (long int) (futex);		      \
+     register long int __o1 asm ("out1") = FUTEX_WAKE;			      \
+     register long int __o2 asm ("out2") = (long int) (nr);		      \
+     register long int __r8 asm ("r8");					      \
+     register long int __r10 asm ("r10");				      \
+     register long int __r15 asm ("r15") = SYS_futex;			      \
 									      \
-     __asm __volatile ("break %3;;"					      \
-		       : "=r" (__r8), "=r" (__r10), "=r" (__r15)	      \
-		       : "i" (0x100000), "2" (__r15), "r" (__o0), "r" (__o1), \
-			 "r" (__o2)					      \
+     __asm __volatile ("break %6;;"					      \
+		       : "=r" (__r8), "=r" (__r10), "=r" (__r15),	      \
+			 "=r" (__o0), "=r" (__o1), "=r" (__o2)		      \
+		       : "i" (0x100000), "2" (__r15), "3" (__o0), "4" (__o1), \
+		 	 "5" (__o2)					      \
 		       : "out3", lll_futex_clobbers);			      \
      __r10 == -1 ? -__r8 : __r8;					      \
   })

@@ -1,3 +1,8 @@
+2003-03-13  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile ($(objpfx)librtld.mk): Tweak regexp so that one-line
+	entries in the map file match too.
+
 2003-03-13  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/clone.S: introduce and use local
