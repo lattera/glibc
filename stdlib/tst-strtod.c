@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,12 @@ static const struct ltest tests[] =
     { "0x00.0050p17", 160.0, '\0', 0 },
     { "0x00.0028p18", 160.0, '\0', 0 },
     { "0x00.0014p19", 160.0, '\0', 0 },
+    { "0x1p-1023",
+      1.11253692925360069154511635866620203210960799023116591527666e-308,
+      '\0', 0 },
+    { "0x0.8p-1022",
+      1.11253692925360069154511635866620203210960799023116591527666e-308,
+      '\0', 0 },
     { NULL, 0, '\0', 0 }
   };
 
