@@ -35,17 +35,12 @@ __new_sem_wait (sem_t *sem)
   CANCELLATION_P (THREAD_SELF);
 
   int *futex = (int *) sem;
-  int val;
   int err;
 
   do
     {
-      if (*futex > 0)
-	{
-	  val = atomic_decrement_if_positive (futex);
-	  if (val > 0)
-	    return 0;
-	}
+      if (atomic_decrement_if_positive (futex) > 0)
+	return 0;
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();

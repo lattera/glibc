@@ -304,7 +304,7 @@ start_threads (void *arg)
 	}
 
       err = pthread_create (&ths[i], &attr, work,
-			    (void *) (rand_r (&state) + starts + i));
+			    (void *) (long) (rand_r (&state) + starts + i));
 
       if (err != 0)
 	error (EXIT_FAILURE, err, "cannot start thread");
@@ -703,7 +703,13 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
 }
 
 
+#ifdef i386
 #define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("rdtsc" : "=A" (Var))
+#elif defined __ia64__
+#define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("mov %0=ar.itc" : "=r" (Var) : : "memory")
+#else
+#error "HP_TIMING_NOW missing"
+#endif
 
 /* Get current value of CLOCK and store it in TP.  */
 int
