@@ -149,6 +149,10 @@ C[] = {
     /* y==zero: x**0 = 1 */
 	if((iy|ly)==0) return C[1];
 
+    /* x==+-1 */
+	if(x == 1.0) return C[1];
+	if(x == -1.0 && isinf(y)) return C[1];
+
     /* +-NaN return x+y */
 	if(ix > 0x7ff00000 || ((ix==0x7ff00000)&&(lx!=0)) ||
 	   iy > 0x7ff00000 || ((iy==0x7ff00000)&&(ly!=0)))

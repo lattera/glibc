@@ -1,5 +1,8 @@
 2001-02-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/flt-32/e_powf.c: Handle x == +-1 correctly.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+
 	* sysdeps/generic/e_scalb.c: Set invalid exception for invalid
 	parameters.
 	* sysdeps/generic/e_scalbf.c: New file.

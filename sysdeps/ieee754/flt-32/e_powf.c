@@ -76,6 +76,10 @@ ivln2_l  =  7.0526075433e-06; /* 0x36eca570 =1/ln2 tail*/
     /* y==zero: x**0 = 1 */
 	if(iy==0) return one;
 
+    /* x==+-1 */
+	if(x == 1.0) return one;
+	if(x == -1.0 && isinf(y)) return one;
+
     /* +-NaN return x+y */
 	if(ix > 0x7f800000 ||
 	   iy > 0x7f800000)
