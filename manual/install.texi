@@ -406,8 +406,7 @@ and if you change any of the message translation files you will need
 
 @itemize @bullet
 @item
-GNU @code{gettext} 0.10.35 or later (version 0.10.35 is a alpha release
-and available via ftp from alpha.gnu.org/gnu)
+GNU @code{gettext} 0.10.36 or later
 @end itemize
 
 @noindent

@@ -362,8 +362,7 @@ If you change any of the `configure.in' files you will also need
 
 and if you change any of the message translation files you will need
 
-   * GNU `gettext' 0.10.35 or later (version 0.10.35 is a alpha release
-     and available via ftp from alpha.gnu.org/gnu)
+   * GNU `gettext' 0.10.36 or later
 
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
@@ -376,6 +375,7 @@ following patterns:
 
      alpha*-*-linux
      arm-*-linux
+     cris-*-linux
      hppa-*-linux
      iX86-*-gnu
      iX86-*-linux

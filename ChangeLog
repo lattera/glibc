@@ -1,5 +1,10 @@
 2001-04-19  Andreas Jaeger  <aj@suse.de>
 
+	* configure.in: Require gettext 0.10.36 or newer.
+
+	* manual/install.texi (Tools for Compilation): Mention gettext
+	0.10.36.
+
 	* po/zh_TW.po: Remove extraneous backslashes.
 
 	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Remove unused
