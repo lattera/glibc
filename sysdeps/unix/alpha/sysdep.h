@@ -109,4 +109,167 @@ __LABEL(name)					\
 
 #define MOVE(x,y)	mov x,y
 
-#endif
+#else /* !ASSEMBLER */
+
+/* Define a macro which expands inline into the wrapper code for a
+   system call.  */
+
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)  INLINE_SYSCALL1(name, nr, args)
+
+#define INLINE_SYSCALL1(name, nr, args...)	\
+({						\
+	long _sc_ret, _sc_err;			\
+	inline_syscall##nr(name, args);		\
+	if (_sc_err)				\
+	  {					\
+	    __set_errno (_sc_ret);		\
+	    _sc_ret = -1L;			\
+	  }					\
+	_sc_ret;				\
+})
+
+#define inline_syscall_clobbers				\
+	"$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8",	\
+	"$22", "$23", "$24", "$25", "$27", "$28"
+
+/* It is moderately important optimization-wise to limit the lifetime
+   of the hard-register variables as much as possible.  Thus we copy
+   in/out as close to the asm as possible.  */
+
+#define inline_syscall0(name)			\
+{						\
+	register long _sc_0 __asm__("$0");	\
+	register long _sc_19 __asm__("$19");	\
+						\
+	_sc_0 = __NR_##name;			\
+	__asm__("callsys # %0 %1 <= %2"		\
+		: "=r"(_sc_0), "=r"(_sc_19)	\
+		: "0"(_sc_0)			\
+		: inline_syscall_clobbers);	\
+	_sc_ret = _sc_0, _sc_err = _sc_19;	\
+}
+
+#define inline_syscall1(name,arg1)		\
+{						\
+	register long _sc_0 __asm__("$0");	\
+	register long _sc_16 __asm__("$16");	\
+	register long _sc_19 __asm__("$19");	\
+						\
+	_sc_0 = __NR_##name;			\
+	_sc_16 = (long) (arg1);			\
+	__asm__("callsys # %0 %1 <= %2 %3"	\
+		: "=r"(_sc_0), "=r"(_sc_19)	\
+		: "0"(_sc_0), "r"(_sc_16)	\
+		: inline_syscall_clobbers);	\
+	_sc_ret = _sc_0, _sc_err = _sc_19;	\
+}
+
+#define inline_syscall2(name,arg1,arg2)			\
+{							\
+	register long _sc_0 __asm__("$0");		\
+	register long _sc_16 __asm__("$16");		\
+	register long _sc_17 __asm__("$17");		\
+	register long _sc_19 __asm__("$19");		\
+							\
+	_sc_0 = __NR_##name;				\
+	_sc_16 = (long) (arg1);				\
+	_sc_17 = (long) (arg2);				\
+	__asm__("callsys # %0 %1 <= %2 %3 %4"		\
+		: "=r"(_sc_0), "=r"(_sc_19)		\
+		: "0"(_sc_0), "r"(_sc_16), "r"(_sc_17)	\
+		: inline_syscall_clobbers);		\
+	_sc_ret = _sc_0, _sc_err = _sc_19;		\
+}
+
+#define inline_syscall3(name,arg1,arg2,arg3)		\
+{							\
+	register long _sc_0 __asm__("$0");		\
+	register long _sc_16 __asm__("$16");		\
+	register long _sc_17 __asm__("$17");		\
+	register long _sc_18 __asm__("$18");		\
+	register long _sc_19 __asm__("$19");		\
+							\
+	_sc_0 = __NR_##name;				\
+	_sc_16 = (long) (arg1);				\
+	_sc_17 = (long) (arg2);				\
+	_sc_18 = (long) (arg3);				\
+	__asm__("callsys # %0 %1 <= %2 %3 %4 %5"	\
+		: "=r"(_sc_0), "=r"(_sc_19)		\
+		: "0"(_sc_0), "r"(_sc_16), "r"(_sc_17),	\
+		  "r"(_sc_18)				\
+		: inline_syscall_clobbers);		\
+	_sc_ret = _sc_0, _sc_err = _sc_19;		\
+}
+
+#define inline_syscall4(name,arg1,arg2,arg3,arg4)	\
+{							\
+	register long _sc_0 __asm__("$0");		\
+	register long _sc_16 __asm__("$16");		\
+	register long _sc_17 __asm__("$17");		\
+	register long _sc_18 __asm__("$18");		\
+	register long _sc_19 __asm__("$19");		\
+							\
+	_sc_0 = __NR_##name;				\
+	_sc_16 = (long) (arg1);				\
+	_sc_17 = (long) (arg2);				\
+	_sc_18 = (long) (arg3);				\
+	_sc_19 = (long) (arg4);				\
+	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6"	\
+		: "=r"(_sc_0), "=r"(_sc_19)		\
+		: "0"(_sc_0), "r"(_sc_16), "r"(_sc_17),	\
+		  "r"(_sc_18), "1"(_sc_19)		\
+		: inline_syscall_clobbers);		\
+	_sc_ret = _sc_0, _sc_err = _sc_19;		\
+}
+
+#define inline_syscall5(name,arg1,arg2,arg3,arg4,arg5)	\
+{							\
+	register long _sc_0 __asm__("$0");		\
+	register long _sc_16 __asm__("$16");		\
+	register long _sc_17 __asm__("$17");		\
+	register long _sc_18 __asm__("$18");		\
+	register long _sc_19 __asm__("$19");		\
+	register long _sc_20 __asm__("$20");		\
+							\
+	_sc_0 = __NR_##name;				\
+	_sc_16 = (long) (arg1);				\
+	_sc_17 = (long) (arg2);				\
+	_sc_18 = (long) (arg3);				\
+	_sc_19 = (long) (arg4);				\
+	_sc_20 = (long) (arg5);				\
+	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"	\
+		: "=r"(_sc_0), "=r"(_sc_19)		\
+		: "0"(_sc_0), "r"(_sc_16), "r"(_sc_17),	\
+		  "r"(_sc_18), "1"(_sc_19), "r"(_sc_20)	\
+		: inline_syscall_clobbers);		\
+	_sc_ret = _sc_0, _sc_err = _sc_19;		\
+}
+
+#define inline_syscall6(name,arg1,arg2,arg3,arg4,arg5,arg6)	\
+{								\
+	register long _sc_0 __asm__("$0");			\
+	register long _sc_16 __asm__("$16");			\
+	register long _sc_17 __asm__("$17");			\
+	register long _sc_18 __asm__("$18");			\
+	register long _sc_19 __asm__("$19");			\
+	register long _sc_20 __asm__("$20");			\
+	register long _sc_21 __asm__("$21");			\
+								\
+	_sc_0 = __NR_##name;					\
+	_sc_16 = (long) (arg1);					\
+	_sc_17 = (long) (arg2);					\
+	_sc_18 = (long) (arg3);					\
+	_sc_19 = (long) (arg4);					\
+	_sc_20 = (long) (arg5);					\
+	_sc_21 = (long) (arg6);					\
+	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"	\
+		: "=r"(_sc_0), "=r"(_sc_19)			\
+		: "0"(_sc_0), "r"(_sc_16), "r"(_sc_17),		\
+		  "r"(_sc_18), "1"(_sc_19), "r"(_sc_20),	\
+		  "r"(_sc_21)					\
+		: inline_syscall_clobbers);			\
+	_sc_ret = _sc_0, _sc_err = _sc_19;			\
+}
+
+#endif /* ASSEMBLER */
