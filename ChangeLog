@@ -1,5 +1,8 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Handle the
+	pseudo denormal representation of LDBL_MIN.
+
 	* iconvdata/SJIS.irreversible: Remove unnecessary entries.
 	* iconvdata/EUC-JP.irreversible: Remove unnecessary entries.
 
@@ -45,7 +48,7 @@
 
 2000-12-01  Ulrich Drepper  <drepper@redhat.com>
 
-	* configure.in: Correct test for pserver CVS access.cc
+	* configure.in: Correct test for pserver CVS access.
 
 2000-11-28  H.J. Lu  <hjl@gnu.org>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,12 +87,25 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 		}
 	      *expt = LDBL_MIN_EXP - 1 - cnt;
 	    }
-	  else
+	  else if (res_ptr[0] != 0)
 	    {
 	      count_leading_zeros (cnt, res_ptr[0]);
 	      res_ptr[N - 1] = res_ptr[0] << cnt;
 	      res_ptr[0] = 0;
 	      *expt = LDBL_MIN_EXP - 1 - BITS_PER_MP_LIMB - cnt;
+	    }
+	  else
+	    {
+	      /* This is the special case of the pseudo denormal number
+		 with only the implicit leading bit set.  The value is
+		 in fact a normal number and so we have to treat this
+		 case differently.  */
+#if N == 2
+	      res_ptr[N - 1] = 0x80000000ul;
+#else
+	      res_ptr[0] = 0x8000000000000000ul;
+#endif
+	      *expt = LDBL_MIN_EXP - 1;
 	    }
 	}
     }
