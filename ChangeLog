@@ -1,3 +1,11 @@
+2004-08-13  Daniel Jacobowitz  <dan@debian.org>
+
+	* scripts/output-format.sed: Handle default case of three-argument
+	OUTPUT_FORMAT.
+
+	* sysdeps/arm/machine-gmon.h (mcount_internal): Mark as
+	__attribute_used__.
+
 2004-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getent.c (ahosts_keys): ai_canonname is NULL for all but the
