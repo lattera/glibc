@@ -1,3 +1,7 @@
+1999-09-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Update PARISC-specific flags and symbolic names.
+
 1999-09-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Update PARISC relocations.

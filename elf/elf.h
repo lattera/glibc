@@ -1380,33 +1380,38 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* Legal values for e_flags field of Elf32_Ehdr.  */
 
-#define EF_PARISC_TRAPNL	1	/* Trap nil pointer dereference.  */
-#define EF_PARISC_EXT		2	/* Program uses arch. extensions.  */
-#define EF_PARISC_ARCH		0xffff0000 /* Architecture version.  */
-/* Defined values are:
-				0x020b	PA-RISC 1.0 big-endian
-				0x0210	PA-RISC 1.1 big-endian
-				0x028b	PA-RISC 1.0 little-endian
-				0x0290	PA-RISC 1.1 little-endian
-*/
+#define EF_PARISC_TRAPNIL	0x00010000 /* Trap nil pointer dereference.  */
+#define EF_PARISC_EXT		0x00020000 /* Program uses arch. extensions. */
+#define EF_PARISC_LSB		0x00040000 /* Program expects little endian. */
+#define EF_PARISC_WIDE		0x00080000 /* Program expects wide mode.  */
+#define EF_PARISC_NO_KABP	0x00100000 /* No kernel assisted branch
+					      prediction.  */
+#define EF_PARISC_LAZYSWAP	0x00400000 /* Allow lazy swapping.  */
+#define EF_PARISC_ARCH		0x0000ffff /* Architecture version.  */
+
+/* Defined values for `e_flags & EF_PARISC_ARCH' are:  */
+
+#define EFA_PARISC_1_0		    0x020b /* PA-RISC 1.0 big-endian.  */
+#define EFA_PARISC_1_1		    0x0210 /* PA-RISC 1.1 big-endian.  */
+#define EFA_PARISC_2_0		    0x0214 /* PA-RISC 2.0 big-endian.  */
+
+/* Additional section indeces.  */
+
+#define SHN_PARISC_ANSI_COMMON	0xff00	   /* Section for tenatively declared
+					      symbols in ANSI C.  */
+#define SHN_PARISC_HUGE_COMMON	0xff01	   /* Common blocks in huge model.  */
 
 /* Legal values for sh_type field of Elf32_Shdr.  */
 
-#define SHT_PARISC_GOT		0x70000000 /* GOT for external data.  */
-#define SHT_PARISC_ARCH		0x70000001 /* Architecture extensions.  */
-#define SHT_PARISC_GLOBAL	0x70000002 /* Definition of $global$.  */
-#define SHT_PARISC_MILLI	0x70000003 /* Millicode routines.  */
-#define SHT_PARISC_UNWIND	0x70000004 /* Unwind information.  */
-#define SHT_PARISC_PLT		0x70000005 /* Procedure linkage table.  */
-#define SHT_PARISC_SDATA	0x70000006 /* Short initialized data.  */
-#define SHT_PARISC_SBSS		0x70000007 /* Short uninitialized data.  */
-#define SHT_PARISC_SYMEXTN	0x70000008 /* Argument/relocation info.  */
-#define SHT_PARISC_STUBS	0x70000009 /* Linker stubs.  */
+#define SHT_PARISC_EXT		0x70000000 /* Contains product specific ext. */
+#define SHT_PARISC_UNWIND	0x70000001 /* Unwind information.  */
+#define SHT_PARISC_DOC		0x70000002 /* Debug info for optimized code. */
 
 /* Legal values for sh_flags field of Elf32_Shdr.  */
 
-#define SHF_PARISC_GLOBAL	0x10000000 /* Section defines dp.  */
 #define SHF_PARISC_SHORT	0x20000000 /* Section with short addressing. */
+#define SHF_PARISC_HUGE		0x40000000 /* Section far from gp.  */
+#define SHF_PARISC_SBP		0x80000000 /* Static branch prediction code. */
 
 /* Legal values for ST_TYPE subfield of st_info (symbol type).  */
 
