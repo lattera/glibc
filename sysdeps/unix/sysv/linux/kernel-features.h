@@ -125,7 +125,7 @@
 
 /* The changed st_ino field appeared in 2.4.0-test6.  But we cannot
    distinguish this version from other 2.4.0 releases.  Therefore play
-   save and assume it available for 2.4.1 and up.  */
+   save and assume it available is for 2.4.1 and up.  */
 #if __LINUX_KERNEL_VERSION >= 132097
 # define __ASSUME_ST_INO_64_BIT		1
 #endif
