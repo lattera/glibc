@@ -19,19 +19,31 @@
 # not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+DEBUG=0
+case $1 in
+-d) DEBUG=1; shift ;;
+esac
+
 common_objpfx=$1
 datafile=$2
 
-DEBUG=0
 here=`pwd`
 
-lang=`sed -e '/^#/d' -e '/^$/d' -e '/^C	/d' -e 's/^\([^	]*\).*/\1/' $datafile | sort | uniq`
+lang=`sed -e '/^#/d' -e '/^$/d' -e '/^C	/d' -e '/^tstfmon/d' -e 's/^\([^	]*\).*/\1/' $datafile | sort | uniq`
 
 # Generate data files.
 for l in $lang; do
     cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
     cn=locales/$cns
     fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
+    I18NPATH=. \
+    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
+    ${common_objpfx}locale/localedef \
+    --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
+done
+for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
+    cn=tst-fmon-locales/$cns
+    fn=charmaps/ISO-8859-1
     I18NPATH=. \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef \
@@ -54,7 +66,9 @@ while read locale format value expect; do
 	else
 	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
 		 "Value: \"${value}\" Expect: \"${expect}\"    failed"
-	    exit 1
+	    if [ $DEBUG -eq 0 ]; then
+		exit 1
+	    fi
 	fi
     fi
 done < $datafile

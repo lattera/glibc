@@ -388,6 +388,24 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       if (other_sign_posn == CHAR_MAX)
 	other_sign_posn = 1;
 
+      /* Check for degenerate cases */
+      if (sep_by_space == 2)
+	{
+	  if (sign_posn == 0 ||
+	      (sign_posn == 1 && !cs_precedes) ||
+	      (sign_posn == 2 && cs_precedes))
+	    /* sign and symbol are not adjacent, so no separator */
+	    sep_by_space = 0;
+	}
+      if (other_sep_by_space == 2)
+	{
+	  if (other_sign_posn == 0 ||
+	      (other_sign_posn == 1 && !other_cs_precedes) ||
+	      (other_sign_posn == 2 && other_cs_precedes))
+	    /* sign and symbol are not adjacent, so no separator */
+	    other_sep_by_space = 0;
+	}
+
       /* Set the left precision and padding needed for alignment */
       if (left_prec == -1)
 	{
@@ -399,54 +417,48 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	  /* Set left_pad to number of spaces needed to align positive
 	     and negative formats */
 
-	  int sign_precedes = 0;
-	  int other_sign_precedes = 0;
+	  int left_bytes = 0;
+	  int other_left_bytes = 0;
 
-	  if (sign_posn == 0 && !is_negative)
-	    left_pad = 1;
+	  /* Work out number of bytes for currency string and separator
+	     preceding the value */
+	  if (cs_precedes)
+	    {
+	      left_bytes += strlen (currency_symbol);
+	      if (sep_by_space != 0)
+		++left_bytes;
+	    }
+
+	  if (other_cs_precedes)
+	    {
+	      other_left_bytes += strlen (currency_symbol);
+	      if (other_sep_by_space != 0)
+		++other_left_bytes;
+	    }
+
+	  /* Work out number of bytes for the sign (or left parenthesis)
+	     preceding the value */
+	  if (sign_posn == 0 && is_negative)
+	    ++left_bytes;
+	  else if (sign_posn == 1)
+	    left_bytes += strlen (sign_string);
+	  else if (cs_precedes && (sign_posn == 3 || sign_posn == 4))
+	    left_bytes += strlen (sign_string);
+
+	  if (other_sign_posn == 0 && !is_negative)
+	    ++other_left_bytes;
+	  else if (other_sign_posn == 1)
+	    other_left_bytes += strlen (other_sign_string);
+	  else if (other_cs_precedes &&
+		   (other_sign_posn == 3 || other_sign_posn == 4))
+	    other_left_bytes += strlen (other_sign_string);
+
+	  /* Compare the number of bytes preceding the value for
+	     each format, and set the padding accordingly */
+	  if (other_left_bytes > left_bytes)
+	    left_pad = other_left_bytes - left_bytes;
 	  else
 	    left_pad = 0;
-
-	  if (!cs_precedes && other_cs_precedes)
-	    {
-	      /* The other format has currency symbol preceding value,
-		 but this format doesn't, so pad by the relevant amount */
-	      left_pad += strlen (currency_symbol);
-	      if (other_sep_by_space != 0)
-		++left_pad;
-	    }
-
-	  /* Work out for each format whether a sign (or left parenthesis)
-	     precedes the value */
-	  if (sign_posn == 0 || sign_posn == 1)
-	    sign_precedes = 1;
-	  if (other_sign_posn == 0 || other_sign_posn == 1)
-	    other_sign_precedes = 1;
-	  if (cs_precedes && (sign_posn == 3 || sign_posn == 4))
-	    sign_precedes = 1;
-	  if (other_cs_precedes
-	      && (other_sign_posn == 3 || other_sign_posn == 4))
-	    other_sign_precedes = 1;
-
-	  if (!sign_precedes && other_sign_precedes)
-	    {
-	      /* The other format has a sign (or left parenthesis) preceding
-		 the value, but this format doesn't */
-	      if (other_sign_posn == 0)
-	        ++left_pad;
-	      else
-	        left_pad += strlen (other_sign_string);
-	    }
-	  else if (sign_precedes && other_sign_precedes)
-	    {
-	      /* Both formats have a sign (or left parenthesis) preceding
-		 the value, so compare their lengths */
-	      int len_diff =
-		((other_sign_posn == 0 ? 1 : (int) strlen (other_sign_string))
-		 - (sign_posn == 0 ? 1 : (int) strlen (sign_string)));
-	      if (len_diff > 0)
-	        left_pad += len_diff;
-	    }
 	}
 
       /* Perhaps we'll someday make these things configurable so
@@ -481,6 +493,10 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 		  if (sep_by_space == 2)
 		    out_char (' ');
 		  out_string (sign_string);
+		  if (sep_by_space == 1)
+		    /* POSIX.2 and SUS are not clear on this case, but C99
+		       says a space follows the adjacent-symbol-and-sign */
+		    out_char (' ');
 		}
 	      else
 		if (sep_by_space == 1)
@@ -560,7 +576,9 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	  if (print_curr_symbol)
 	    {
 	      if ((sign_posn == 3 && sep_by_space == 2)
+		  || (sign_posn == 4 && sep_by_space == 1)
 		  || (sign_posn == 2 && sep_by_space == 1)
+		  || (sign_posn == 1 && sep_by_space == 1)
 		  || (sign_posn == 0 && sep_by_space == 1))
 		out_char (' ');
 	      out_string (currency_symbol);

@@ -45,9 +45,12 @@ ld-test-names := test1 test2 test3 test4 test5
 ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)))
 
+fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
+	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
+
 generated := $(test-input) $(test-output)
 generated-dirs := $(basename $(test-input)) en_US $(ld-test-names) tt_TT\
-		  de_DE.437
+		  de_DE.437 $(addprefix tstfmon_,$(fmon-tests))
 
 distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\

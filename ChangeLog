@@ -1,3 +1,35 @@
+2000-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/Makefile: Add rules to clean up directories created by
+	new strfmon tests.
+
+2000-04-09  Geoff Clare  <gwc@unisoft.com>
+
+	* localedata/tst-fmon.data: Added new tests for strfmon()
+	using test locales with all combinations of cs_precedes,
+	sign_posn and sep_by_space.
+	* localedata/tst-fmon.sh: Updated to support the new tests.
+	* localedata/tst-fmon-locales/tstfmon_n01y12: New file containing
+	the localedef source for the new strfmon() test locale.
+	* localedata/tst-fmon-locales/tstfmon_n02n40: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_n10y31: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_n11y41: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_n12y11: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_n20n32: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_n30y20: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_n41n00: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y01y10: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y02n22: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y22n42: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y30y21: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y32n31: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y40y00: Likewise.
+	* localedata/tst-fmon-locales/tstfmon_y42n21: Likewise.
+
+	* stdlib/strfmon.c: Correct problems with missing or extra
+	spaces for unusual combinations of sign_posn and sep_by_space.
+	Improved left-precision alignment code.
+
 2000-04-07  Andreas Jaeger  <aj@suse.de>
 
 	* posix/Makefile (CFLAGS-regex.c): Remove DEBUG.

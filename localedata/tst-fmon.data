@@ -19,7 +19,7 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 # The format of this file is pretty simple: Each line contains a test
-# for strfmon.  Fields are seperated by TABs.  Lines that start with a
+# for strfmon.  Fields are separated by TABs.  Lines that start with a
 # '#' are comments and are ignored.
 #
 # Field Description
@@ -126,3 +126,112 @@ en_US.ISO-8859-1	%!(#5n	3456.781	  3,456.78
 en_US.ISO-8859-1	%#5n	123.45		 $   123.45
 en_US.ISO-8859-1	%#5n	-123.45		-$   123.45
 en_US.ISO-8859-1	%#5n	3456.781	 $ 3,456.78
+#
+# check all cs_precedes/sign_posn/sep_by_space combinations using
+# special test locales.  The six characters after the "_" indicate
+# these three values for positive and then negative quantities.
+#
+tstfmon_n01y12		%n	123.45		123.45 $
+tstfmon_n01y12		%n	-123.45		- $123.45
+tstfmon_n01y12		%11n	123.45		   123.45 $
+tstfmon_n01y12		%11n	-123.45		  - $123.45
+tstfmon_n01y12		%^=*#5n	123.45		   **123.45 $
+tstfmon_n01y12		%^=*#5n	-123.45		- $**123.45
+#
+tstfmon_n02n40		%n	123.45		123.45$
+tstfmon_n02n40		%n	-123.45		123.45$-
+tstfmon_n02n40		%11n	123.45		    123.45$
+tstfmon_n02n40		%11n	-123.45		   123.45$-
+tstfmon_n02n40		%^=*#5n	123.45		**123.45$
+tstfmon_n02n40		%^=*#5n	-123.45		**123.45$-
+#
+tstfmon_n10y31		%n	123.45		+123.45$
+tstfmon_n10y31		%n	-123.45		-$ 123.45
+tstfmon_n10y31		%11n	123.45		   +123.45$
+tstfmon_n10y31		%11n	-123.45		  -$ 123.45
+tstfmon_n10y31		%^=*#5n	123.45		  +**123.45$
+tstfmon_n10y31		%^=*#5n	-123.45		-$ **123.45
+#
+tstfmon_n11y41		%n	123.45		+123.45 $
+tstfmon_n11y41		%n	-123.45		$- 123.45
+tstfmon_n11y41		%11n	123.45		  +123.45 $
+tstfmon_n11y41		%11n	-123.45		  $- 123.45
+tstfmon_n11y41		%^=*#5n	123.45		  +**123.45 $
+tstfmon_n11y41		%^=*#5n	-123.45		$- **123.45
+#
+tstfmon_n12y11		%n	123.45		+123.45$
+tstfmon_n12y11		%n	-123.45		-$ 123.45
+tstfmon_n12y11		%11n	123.45		   +123.45$
+tstfmon_n12y11		%11n	-123.45		  -$ 123.45
+tstfmon_n12y11		%^=*#5n	123.45		  +**123.45$
+tstfmon_n12y11		%^=*#5n	-123.45		-$ **123.45
+#
+tstfmon_n20n32		%n	123.45		123.45$+
+tstfmon_n20n32		%n	-123.45		123.45- $
+tstfmon_n20n32		%11n	123.45		   123.45$+
+tstfmon_n20n32		%11n	-123.45		  123.45- $
+tstfmon_n20n32		%^=*#5n	123.45		**123.45$+
+tstfmon_n20n32		%^=*#5n	-123.45		**123.45- $
+#
+tstfmon_n30y20		%n	123.45		123.45+$
+tstfmon_n30y20		%n	-123.45		$123.45-
+tstfmon_n30y20		%11n	123.45		   123.45+$
+tstfmon_n30y20		%11n	-123.45		   $123.45-
+tstfmon_n30y20		%^=*#5n	123.45		 **123.45+$
+tstfmon_n30y20		%^=*#5n	-123.45		$**123.45-
+#
+tstfmon_n41n00		%n	123.45		123.45 $+
+tstfmon_n41n00		%n	-123.45		(123.45$)
+tstfmon_n41n00		%11n	123.45		  123.45 $+
+tstfmon_n41n00		%11n	-123.45		  (123.45$)
+tstfmon_n41n00		%^=*#5n	123.45		 **123.45 $+
+tstfmon_n41n00		%^=*#5n	-123.45		(**123.45$)
+#
+tstfmon_y01y10		%n	123.45		$ 123.45
+tstfmon_y01y10		%n	-123.45		-$123.45
+tstfmon_y01y10		%11n	123.45		   $ 123.45
+tstfmon_y01y10		%11n	-123.45		   -$123.45
+tstfmon_y01y10		%^=*#5n	123.45		$ **123.45
+tstfmon_y01y10		%^=*#5n	-123.45		-$**123.45
+#
+tstfmon_y02n22		%n	123.45		$123.45
+tstfmon_y02n22		%n	-123.45		123.45$ O/D
+tstfmon_y02n22		%12n	123.45		     $123.45
+tstfmon_y02n22		%12n	-123.45		 123.45$ O/D
+tstfmon_y02n22		%^=*#5n	123.45		$**123.45
+tstfmon_y02n22		%^=*#5n	-123.45		 **123.45$ O/D
+#
+tstfmon_y22n42		%n	123.45		$123.45+
+tstfmon_y22n42		%n	-123.45		123.45$ -
+tstfmon_y22n42		%11n	123.45		   $123.45+
+tstfmon_y22n42		%11n	-123.45		  123.45$ -
+tstfmon_y22n42		%^=*#5n	123.45		$**123.45+
+tstfmon_y22n42		%^=*#5n	-123.45		 **123.45$ -
+#
+tstfmon_y30y21		%n	123.45		+$123.45
+tstfmon_y30y21		%n	-123.45		$ 123.45-
+tstfmon_y30y21		%11n	123.45		   +$123.45
+tstfmon_y30y21		%11n	-123.45		  $ 123.45-
+tstfmon_y30y21		%^=*#5n	123.45		+$**123.45
+tstfmon_y30y21		%^=*#5n	-123.45		$ **123.45-
+#
+tstfmon_y32n31		%n	123.45		+ $123.45
+tstfmon_y32n31		%n	-123.45		123.45 -$
+tstfmon_y32n31		%11n	123.45		  + $123.45
+tstfmon_y32n31		%11n	-123.45		  123.45 -$
+tstfmon_y32n31		%^=*#5n	123.45		+ $**123.45
+tstfmon_y32n31		%^=*#5n	-123.45		   **123.45 -$
+#
+tstfmon_y40y00		%n	123.45		$+123.45
+tstfmon_y40y00		%n	-123.45		($123.45)
+tstfmon_y40y00		%11n	123.45		   $+123.45
+tstfmon_y40y00		%11n	-123.45		  ($123.45)
+tstfmon_y40y00		%^=*#5n	123.45		$+**123.45
+tstfmon_y40y00		%^=*#5n	-123.45		($**123.45)
+#
+tstfmon_y42n21		%n	123.45		$ +123.45
+tstfmon_y42n21		%n	-123.45		123.45 $-
+tstfmon_y42n21		%11n	123.45		  $ +123.45
+tstfmon_y42n21		%11n	-123.45		  123.45 $-
+tstfmon_y42n21		%^=*#5n	123.45		$ +**123.45
+tstfmon_y42n21		%^=*#5n	-123.45		   **123.45 $-
