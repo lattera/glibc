@@ -14,6 +14,7 @@
 	* nscd/nscd.h: Declare addhstai and readdhstai.
 
 	* sysdeps/posix/getaddrinfo.c: Add support for using cached results.
+	* posix/Makefile (CFLAGS-getaddrinfo.c): Add -DUSE_NSCD.
 
 	* nscd/nscd-client.h  (struct datahead): Use uint8_t instead of bool.
 
