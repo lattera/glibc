@@ -1,3 +1,10 @@
+2000-12-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mach/hurd/if_index.c (__protocol_available): Uncomment,
+	it's not needed at the moment.
+	* sysdeps/generic/if_index.c (__protocol_available): Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c (__protocol_available): Likewise.
+
 2000-12-26  Andreas Jaeger  <aj@suse.de>
 
 	* libio/getc_u.c: Include stdio.h via system path to get internal
