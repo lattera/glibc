@@ -49,7 +49,7 @@ strstr (phaystack, pneedle)
 
   haystack = (const unsigned char *) phaystack;
 
-  if (b = *(needle = (const unsigned char *) pneedle))
+  if ((b = *(needle = (const unsigned char *) pneedle)))
     {
       chartype c;
       haystack--;		/* possible ANSI violation */

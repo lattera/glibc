@@ -54,7 +54,9 @@ do								\
     (map) = resolve_conflict_map;				\
   } while (0)
 
-    struct link_map *resolve_conflict_map = _dl_loaded;
+    struct link_map *resolve_conflict_map __attribute__ ((__unused__))
+      = _dl_loaded;
+    
 
 #include "dynamic-link.h"
 

@@ -1,3 +1,4 @@
+extern int bar (void);
 extern int baz (void);
 
 int
