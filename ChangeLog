@@ -1,5 +1,10 @@
 2000-03-10  Andreas Jaeger  <aj@suse.de>
 
+	* manual/filesys.texi (Working Directory): Fix last patch.
+	Patch by Martin Buchholz  <martin@xemacs.org>.
+
+2000-03-10  Andreas Jaeger  <aj@suse.de>
+
 	* manual/creature.texi (Feature Test Macros): Fix language.
 
 2000-03-10  Roland McGrath  <roland@baalperazim.frob.com>

@@ -91,17 +91,18 @@ using only the standard behavior of @code{getcwd}:
 
 @smallexample
 char *
-gnu_getcwd (size_t size)
+gnu_getcwd ()
 @{
+  size_t size = 100;
+
   while (1)
     @{
       char *buffer = (char *) xmalloc (size);
-      char *value = getcwd (buffer, size);
-      if (value == buffer)
-        return value;
+      if (getcwd (buffer, size) == buffer)
+	return buffer;
       free (buffer);
       if (errno != ERANGE)
-        return value;
+        return 0;
       size *= 2;
     @}
 @}
