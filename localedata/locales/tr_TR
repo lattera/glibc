@@ -24,13 +24,17 @@ escape_char  /
 %   1998-01-11T15:54:39
 %   Onur Tolga Sehitoglu <onur@ceng.metu.edu.tr>,
 %   Dept. of Comp. Eng. METU/Ankara   Turkey
+%   2004-05-29T15:13
+%   Deniz Akkus Kanca <deniz@arayan.com>
+%   2004-10-30T10:28:35
+%   Nilg<U00FC>n Belma Bug<U00FC>ner <nilgun@belgeler.org>
 
 LC_IDENTIFICATION
 title      "Turkish locale for Turkey"
 source     "RAP"
 address    "Sankt J<U00F8>rgens Alle 8, DK-1615 K<U00F8>benhavn V, Danmark"
 contact    ""
-email      "bug-glibc@gnu.org"
+email      "libc-locales@sources.redhat.com"
 tel        ""
 fax        ""
 language   "Turkish"
@@ -3464,18 +3468,19 @@ class "combining_level3"; /
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr	"<U005E><U005B><U0065><U0045><U005D><U002E><U002A>"
-noexpr	"<U005E><U005B><U0068><U0048><U005D><U002E><U002A>"
+yesexpr	"<U005E><U005B><U0079><U0059><U0065><U0045><U005D>"
+noexpr	"<U005E><U005B><U006E><U004E><U0068><U0048><U005D>"
 yesstr	"<U0065><U0076><U0065><U0074>"
 nostr	"<U0068><U0061><U0079><U0131><U0072>"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0054><U0052><U004C><U0020>"
-currency_symbol           "<U0054><U004C>"
+% ISO-4217 (2004-10-25): TRY 949 2
+int_curr_symbol           "<U0054><U0052><U0059><U0020>"
+currency_symbol           "<U0059><U0054><U004C>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U002E>"
-mon_grouping              3
+mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<U002D>"
 int_frac_digits           2
@@ -3489,9 +3494,9 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002E>"
-thousands_sep             ""
-grouping                  -1
+decimal_point             "<U002C>"
+thousands_sep             "<U002E>"
+grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
@@ -3553,7 +3558,7 @@ END LC_MEASUREMENT
 LC_NAME
 name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 <U0025><U006D><U0025><U0074><U0025><U0066>"
-% Say.MŽýn
+% Say<U0131>n
 name_gen    "<U0053><U0061><U0079><U0131><U006E>"
 % Bay
 name_mr     "<U0042><U0061><U0079>"

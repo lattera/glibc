@@ -1,6 +1,5 @@
 # This file names the currently supported and somewhat tested locales.
-# If you have any additions please use the glibcbug script to send an
-# appropriate message.
+# If you have any additions please file a glibc bug report.
 SUPPORTED-LOCALES=\
 aa_DJ/ISO-8859-1 \
 aa_ER/UTF-8 \

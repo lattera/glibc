@@ -1,3 +1,172 @@
+2004-10-31  Petter Reinholdtsen  <pere@hungry.com>
+
+	[BZ #337]
+	* SUPPORTED: Update bug reporting comment.
+	* locales/af_ZA: Change contact address from bug-glibc@gnu.org
+	to libc-locales@sources.redhat.com.
+	* locales/an_ES: Likewise.
+	* locales/ar_AE: Likewise.
+	* locales/ar_BH: Likewise.
+	* locales/ar_DZ: Likewise.
+	* locales/ar_EG: Likewise.
+	* locales/ar_IN: Likewise.
+	* locales/ar_IQ: Likewise.
+	* locales/ar_JO: Likewise.
+	* locales/ar_KW: Likewise.
+	* locales/ar_LB: Likewise.
+	* locales/ar_LY: Likewise.
+	* locales/ar_MA: Likewise.
+	* locales/ar_OM: Likewise.
+	* locales/ar_QA: Likewise.
+	* locales/ar_SA: Likewise.
+	* locales/ar_SD: Likewise.
+	* locales/ar_SY: Likewise.
+	* locales/ar_TN: Likewise.
+	* locales/ar_YE: Likewise.
+	* locales/be_BY: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/br_FR@euro: Likewise.
+	* locales/ca_ES: Likewise.
+	* locales/ca_ES@euro: Likewise.
+	* locales/cs_CZ: Likewise.
+	* locales/da_DK: Likewise.
+	* locales/de_AT: Likewise.
+	* locales/de_AT@euro: Likewise.
+	* locales/de_BE: Likewise.
+	* locales/de_BE@euro: Likewise.
+	* locales/de_CH: Likewise.
+	* locales/de_DE: Likewise.
+	* locales/de_DE@euro: Likewise.
+	* locales/de_LU: Likewise.
+	* locales/de_LU@euro: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/el_GR@euro: Likewise.
+	* locales/en_AU: Likewise.
+	* locales/en_BW: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_GB: Likewise.
+	* locales/en_HK: Likewise.
+	* locales/en_IE: Likewise.
+	* locales/en_IE@euro: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/en_NZ: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_SG: Likewise.
+	* locales/en_US: Likewise.
+	* locales/en_ZW: Likewise.
+	* locales/es_AR: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_CR: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_EC: Likewise.
+	* locales/es_ES: Likewise.
+	* locales/es_ES@euro: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_NI: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PE: Likewise.
+	* locales/es_PR: Likewise.
+	* locales/es_PY: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/es_US: Likewise.
+	* locales/es_UY: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/et_EE: Likewise.
+	* locales/eu_ES: Likewise.
+	* locales/eu_ES@euro: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/fi_FI@euro: Likewise.
+	* locales/fo_FO: Likewise.
+	* locales/fr_BE: Likewise.
+	* locales/fr_BE@euro: Likewise.
+	* locales/fr_CA: Likewise.
+	* locales/fr_CH: Likewise.
+	* locales/fr_FR: Likewise.
+	* locales/fr_FR@euro: Likewise.
+	* locales/fr_LU: Likewise.
+	* locales/fr_LU@euro: Likewise.
+	* locales/ga_IE: Likewise.
+	* locales/ga_IE@euro: Likewise.
+	* locales/gl_ES: Likewise.
+	* locales/gl_ES@euro: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/gv_GB: Likewise.
+	* locales/he_IL: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/id_ID: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/it_CH: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/it_IT@euro: Likewise.
+	* locales/iw_IL: Likewise.
+	* locales/ja_JP: Likewise.
+	* locales/kk_KZ: Likewise.
+	* locales/kl_GL: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ko_KR: Likewise.
+	* locales/kw_GB: Likewise.
+	* locales/lo_LA: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mn_MN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/ms_MY: Likewise.
+	* locales/mt_MT: Likewise.
+	* locales/nb_NO: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/nl_BE@euro: Likewise.
+	* locales/nl_NL: Likewise.
+	* locales/nl_NL@euro: Likewise.
+	* locales/nn_NO: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/pt_PT: Likewise.
+	* locales/pt_PT@euro: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/sk_SK: Likewise.
+	* locales/sl_SI: Likewise.
+	* locales/sq_AL: Likewise.
+	* locales/sv_FI: Likewise.
+	* locales/sv_FI@euro: Likewise.
+	* locales/sv_SE: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	* locales/th_TH: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/uk_UA: Likewise.
+	* locales/ur_PK: Likewise.
+	* locales/vi_VN: Likewise.
+	* locales/wa_BE@euro: Likewise.
+	* locales/zh_CN: Likewise.
+	* locales/zh_HK: Likewise.
+	* locales/zh_SG: Likewise.
+	* locales/zh_TW: Likewise.
+
+	[BZ #187]
+	* locales/tr_TR: Add 'yY' and 'nN' to yesexpr and noexpr, to avoid
+	surprises when using untranslated program.
+	* locales/tr_TR: Remove trailing '.*' from yesexpr and noexpr to
+	make it more like the structure of the POSIX locale values.
+	* locales/tr_TR: Correct numeric decimal point to use comma, and
+	correct grouping.
+	Based on patches from Deniz Akkus Kanca and Nilgün Belma Bugüner.
+
+	[BZ #421]
+	* locales/tr_TR: Update with new currency symbol valid from
+	2005-01-01.  Patch from Nilgün Belma Bugüner.
+	* locales/tr_TR: Convert UTF-8 comment to <U#> notation.
+
 2004-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/fa_IR: Add to_inpunct map.
