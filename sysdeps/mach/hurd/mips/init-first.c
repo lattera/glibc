@@ -27,7 +27,7 @@
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
-extern void __getopt_clean_environment (void);
+extern void __getopt_clean_environment (char **);
 extern void __libc_global_ctors (void);
 
 unsigned int __hurd_threadvar_max;
@@ -110,7 +110,7 @@ init1 (int argc, char *arg0, ...)
   __libc_init (argc, argv, __environ);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment ();
+  __getopt_clean_environment (envp);
 
 #ifdef PIC
   __libc_global_ctors ();
@@ -169,14 +169,14 @@ __init (int *data)
 	 be the return address for `init1'; we will jump there with NEWSP
 	 as the stack pointer.  */
       return newsp;
-    } 
+    }
 
   /* The argument data is just above the stack frame we will unwind by
      returning.  */
   return (void *) data;
 
   (void) &__init;
-}  
+}
 
 #ifdef PIC
 /* This function is called to initialize the shared C library.
@@ -399,7 +399,7 @@ ___libc_init_first (int return_addr, int argc, ...)
 #endif
 
   RUN_HOOK (_hurd_preinit_hook, ());
-  
+
   _hurd_startup ((void **) &argc, &doinit);
 
   (void) &___libc_init_first;
