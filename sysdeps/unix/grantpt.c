@@ -47,7 +47,7 @@ grantpt (fd)
   char namebuf[PTYNAMELEN];
 
   /* Some systems do it for us.  */
-  if (ptsname_r (fd, namebuf, PTYNAMELEN) == NULL)
+  if (__ptsname_r (fd, namebuf, PTYNAMELEN) == NULL)
     return -1;
   if (stat (namebuf, &st))
     return -1;
@@ -71,7 +71,7 @@ grantpt (fd)
 	if (dup2 (fd, PTY_FD) == -1)
 	  _exit (FAIL_EBADF);
 
-      execve (helper, argv, 0);
+      execve (helper, (char *const *) argv, 0);
       _exit (FAIL_EXEC);
     }
   else

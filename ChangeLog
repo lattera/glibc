@@ -1,3 +1,11 @@
+1998-03-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* glibcbug.in: Use mktemp to generate unique file name for
+	temporary files.
+
+	* sysdeps/unix/grantpt.c (grantpt): Use __ptsname_r and not
+	ptsname_r.  Use cast for execve call.
+
 1998-03-20 16:24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add statvfs, fstatvfs, statvfs64, and fstatvfs64.

@@ -24,7 +24,16 @@ STDIO="@stdio@"
 PATH=/bin:/usr/bin:/usr/local/bin:$PATH
 export PATH
 
-TEMP=/tmp/glibcbug.$$
+TEMP=`mktemp -q /tmp/glibcbugXXXXXX`
+if test $? -ne 0; then
+  TEMP=/tmp/glibcbug.$$
+  echo > $TEMP
+fi
+TEMPx=`mktemp -q /tmp/glibcbugXXXXXX`
+if test $? -ne 0; then
+  TEMPx=/tmp/glibcbug.$$.x
+  echo > $TEMPx
+fi
 
 BUGADDR=${1-$BUGGLIBC}
 ENVIRONMENT=`uname -a`
@@ -33,8 +42,8 @@ ENVIRONMENT=`uname -a`
 
 : ${USER=${LOGNAME-`whoami`}}
 
-trap 'rm -f $TEMP $TEMP.x; exit 1' 1 2 3 13 15
-trap 'rm -f $TEMP $TEMP.x' 0
+trap 'rm -f $TEMP $TEMPx; exit 1' 1 2 3 13 15
+trap 'rm -f $TEMP $TEMPx' 0
 
 
 # How to read the passwd database.
@@ -157,11 +166,11 @@ ${ORGANIZATION- $ORGANIZATION_C}
 EOF
 
 chmod u+w $TEMP
-cp $TEMP $TEMP.x
+cp $TEMP $TEMPx
 
 eval $EDIT $TEMP
 
-if cmp -s $TEMP $TEMP.x; then
+if cmp -s $TEMP $TEMPx; then
 	echo "File not changed, no bug report submitted."
 	exit 1
 fi
@@ -254,9 +263,9 @@ sed  -e "
 /^>Description:/,/^>[A-Za-z-]*:/s;$DESCRIPTION_C;;
 /^>How-To-Repeat:/,/^>[A-Za-z-]*:/s;$HOW_TO_REPEAT_C;;
 /^>Fix:/,/^>[A-Za-z-]*:/s;$FIX_C;;
-" $TEMP > $TEMP.x
+" $TEMP > $TEMPx
 
-if $MAIL_AGENT < $TEMP.x; then
+if $MAIL_AGENT < $TEMPx; then
   echo "$COMMAND: problem report sent"
   xs=0; exit
 else
