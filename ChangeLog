@@ -1,5 +1,8 @@
 2004-11-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (_int_malloc): Check for corruption of chunk
+	which is about to be returned.
+
 	* malloc/malloc.c (_int_free): Add a few more cheap tests for
 	corruption.
 

@@ -3840,8 +3840,12 @@ _int_malloc(mstate av, size_t bytes)
   */
 
   if ((unsigned long)(nb) <= (unsigned long)(av->max_fast)) {
-    fb = &(av->fastbins[(fastbin_index(nb))]);
+    long int idx = fastbin_index(nb);
+    fb = &(av->fastbins[idx]);
     if ( (victim = *fb) != 0) {
+      if (__builtin_expect (fastbin_index (chunksize (victim)) != idx, 0))
+	malloc_printerr (check_action, "malloc(): memory corruption (fast)",
+			 chunk2mem (victim));
       *fb = victim->fd;
       check_remalloced_chunk(av, victim, nb);
       return chunk2mem(victim);
@@ -3911,6 +3915,10 @@ _int_malloc(mstate av, size_t bytes)
 
     while ( (victim = unsorted_chunks(av)->bk) != unsorted_chunks(av)) {
       bck = victim->bk;
+      if (__builtin_expect (victim->size <= 2 * SIZE_SZ, 0)
+	  || __builtin_expect (victim->size > av->system_mem, 0))
+	malloc_printerr (check_action, "malloc(): memory corruption",
+			 chunk2mem (victim));
       size = chunksize(victim);
 
       /*
