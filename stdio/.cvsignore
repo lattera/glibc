@@ -4,3 +4,4 @@ TODO COPYING* AUTHORS copyr-* copying.*
 glibc-*
 
 mpn-copy.mk
+distinfo

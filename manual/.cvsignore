@@ -8,3 +8,4 @@ glibc-*
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
 chapters chapters-incl summary.texi stamp-*
+distinfo
