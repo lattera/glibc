@@ -76,10 +76,25 @@ __pthread_rwlock_unlock:
 	leal	READERS_WAKEUP(%edi), %ebx
 
 0:	incl	(%ebx)
-	xorl	%esi, %esi
+	LOCK
+#if MUTEX == 0
+	decl	(%edi)
+#else
+	decl	MUTEX(%edi)
+#endif
+	jne	7f
+
+8:	xorl	%esi, %esi
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
+	xorl	%eax, %eax
+	popl	%edi
+	popl	%esi
+	popl	%ebx
+	ret
+
+	.align	16
 6:	LOCK
 #if MUTEX == 0
 	decl	(%edi)
@@ -111,6 +126,15 @@ __pthread_rwlock_unlock:
 #endif
 	call	__lll_mutex_unlock_wake
 	jmp	4b
+
+7:
+#if MUTEX == 0
+	movl	%edi, %eax
+#else
+	leal	MUTEX(%edx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+	jmp	8b
 
 	.size	__pthread_rwlock_unlock,.-__pthread_rwlock_unlock
 

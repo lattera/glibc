@@ -1,3 +1,8 @@
+2003-02-24  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.S (__syscall_error): Fix
+	unwind info.
+
 2003-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_libc.c [USE___THREAD] (_res): Don't need the

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -23,18 +23,19 @@
 ENTRY(__syscall_error)
 #ifdef _LIBC_REENTRANT
 	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(0)
-	alloc	r35=ar.pfs, 0, 4, 0, 0
+	alloc	r33=ar.pfs, 0, 4, 0, 0
 	mov	r32=rp
-	mov	r33=r8
+	.body
+	mov	r35=r8
 	mov	r34=r1
 	;;
-	br.call.sptk.many b0 = __errno_location#
+	br.call.sptk.many b0 = __errno_location
 .Lret0:		/* force new bundle */
-	st4	[r8]=r33
+	st4	[r8]=r35
 	mov	r1=r34
 	mov	rp=r32
 	mov	r8=-1
-	mov	ar.pfs=r35
+	mov	ar.pfs=r33
 #else /* _LIBC_REENTRANT */
 	/*
 	 * Note that the gp has to be set properly for this to work.

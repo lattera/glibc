@@ -96,11 +96,15 @@ pthread_rwlock_unlock(pthread_rwlock_t *rwlock)
   if (!rwlock->readers) {
     if (rwlock->nr_writers_queued) {
       ++rwlock->writer_wakeup;
+      lll_unlock(rwlock->lock);
       futex_wake(&rwlock->writer_wakeup, 1);
+      return;
     } else
       if (rwlock->nr_readers_queued) {
         ++rwlock->readers_wakeup;
+        lll_unlock(rwlock->lock);
         futex_wake(&rwlock->readers_wakeup, MAX_INT);
+        return;
       }
   }
 
