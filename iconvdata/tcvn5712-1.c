@@ -1,5 +1,5 @@
 /* Conversion to and from TCVN5712-1.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -31,7 +31,9 @@
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
 #define MIN_NEEDED_FROM		1
+#define MAX_NEEDED_FROM		2
 #define MIN_NEEDED_TO		4
+#define MAX_NEEDED_TO		8
 #define PREPARE_LOOP \
   int saved_state;							      \
   int *statep = &data->__statep->__count;
@@ -356,7 +358,7 @@ static const struct
 /* First define the conversion function from TCVN5712-1 to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
-#define MAX_NEEDED_OUTPUT	8
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -598,7 +600,7 @@ static const struct
 /* Next, define the other direction.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_TO
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
-#define MAX_NEEDED_OUTPUT	2
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
