@@ -1,5 +1,11 @@
 2000-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/random_r.c (__setstate_r): Correct offset when computing
+	new rptr and fptr.  Reported by Michael Fischer <fischer@cs.yale.edu>.
+
+	* posix/regex.h: Add macro definitions to allow compiling outside
+	glibc.
+
 	* sysdeps/i370/Implies: Removed.
 	* sysdeps/mvs/Implies: Removed.
 

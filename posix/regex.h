@@ -513,6 +513,22 @@ extern int re_exec _RE_ARGS ((const char *));
 # endif
 #endif
 
+/* GCC 2.95 and later have "__restrict"; C99 compilers have
+   "restrict", and "configure" may have defined "restrict".  */
+#ifndef __restrict
+# if ! (2 < __GNUC__ || (2 == __GNUC__ && 95 <= __GNUC_MINOR__))
+#  if defined restrict || 199901L <= __STDC_VERSION__
+#   define __restrict restrict
+#  else
+#   define __restrict
+#  endif
+# endif
+/* For now unconditionally define __restrict_arr to expand to nothing.
+   Ideally we would have a test for the compiler which allows defining
+   it to restrict.  */
+# define __restrict_arr
+#endif
+
 /* POSIX compatibility.  */
 extern int regcomp _RE_ARGS ((regex_t *__restrict __preg,
 			      const char *__restrict __pattern,

@@ -295,8 +295,8 @@ __setstate_r (arg_state, buf)
   if (type != TYPE_0)
     {
       int rear = new_state[0] / MAX_TYPES;
-      buf->rptr = &new_state[rear];
-      buf->fptr = &new_state[(rear + separation) % degree];
+      buf->rptr = &new_state[1 + rear];
+      buf->fptr = &new_state[1 + (rear + separation) % degree];
     }
   buf->state = &new_state[1];
   /* Set end_ptr too.  */
