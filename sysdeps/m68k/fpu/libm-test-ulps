@@ -48,9 +48,6 @@ float: 1
 ifloat: 1
 
 # cacos
-Test "Imaginary part of: cacos (-2 - 3 i) == 2.1414491111159960199416055713254211 + 1.9833870299165354323470769028940395 i":
-ildouble: 1
-ldouble: 1
 Test "Real part of: cacos (0.7 + 1.2 i) == 1.1351827477151551088992008271819053 - 1.0927647857577371459105272080819308 i":
 double: 1
 float: 1
@@ -87,16 +84,11 @@ ildouble: 1
 ldouble: 1
 
 # casin
-Test "Imaginary part of: casin (-2 - 3 i) == -0.57065278432109940071028387968566963 - 1.9833870299165354323470769028940395 i":
-ildouble: 1
-ldouble: 1
 Test "Real part of: casin (0.7 + 1.2 i) == 0.4356135790797415103321208644578462 + 1.0927647857577371459105272080819308 i":
 double: 3
 float: 2
 idouble: 3
 ifloat: 2
-ildouble: 1
-ldouble: 1
 Test "Imaginary part of: casin (0.7 + 1.2 i) == 0.4356135790797415103321208644578462 + 1.0927647857577371459105272080819308 i":
 float: 2
 ifloat: 2
@@ -109,25 +101,25 @@ double: 6
 float: 19
 idouble: 6
 ifloat: 19
-ildouble: 6
-ldouble: 6
+ildouble: 5
+ldouble: 5
 Test "Imaginary part of: casinh (-2 - 3 i) == -1.9686379257930962917886650952454982 - 0.96465850440760279204541105949953237 i":
 double: 13
 float: 1
 idouble: 13
 ifloat: 1
-ildouble: 7
-ldouble: 7
+ildouble: 6
+ldouble: 6
 Test "Real part of: casinh (0.7 + 1.2 i) == 0.97865459559367387689317593222160964 + 0.91135418953156011567903546856170941 i":
 double: 1
 idouble: 1
-ildouble: 3
-ldouble: 3
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: casinh (0.7 + 1.2 i) == 0.97865459559367387689317593222160964 + 0.91135418953156011567903546856170941 i":
 float: 2
 ifloat: 2
-ildouble: 3
-ldouble: 3
+ildouble: 2
+ldouble: 2
 
 # catan
 Test "Imaginary part of: catan (-2 - 3 i) == -1.4099210495965755225306193844604208 - 0.22907268296853876629588180294200276 i":
@@ -135,27 +127,20 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 7
-ldouble: 7
 Test "Real part of: catan (0.7 + 1.2 i) == 1.0785743834118921877443707996386368 + 0.57705737765343067644394541889341712 i":
 ildouble: 1
 ldouble: 1
 Test "Imaginary part of: catan (0.7 + 1.2 i) == 1.0785743834118921877443707996386368 + 0.57705737765343067644394541889341712 i":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
 
 # catanh
 Test "Real part of: catanh (-2 - 3 i) == -0.14694666622552975204743278515471595 - 1.3389725222944935611241935759091443 i":
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 Test "Real part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959200648705635915 + 0.97024030779509898497385130162655963 i":
 ildouble: 1
-ldouble: 2
-Test "Imaginary part of: catanh (0.7 + 1.2 i) == 0.2600749516525135959200648705635915 + 0.97024030779509898497385130162655963 i":
-ildouble: 2
-ldouble: 2
+ldouble: 1
 
 # cbrt
 Test "cbrt (-0.001) == -0.1":
@@ -226,11 +211,6 @@ ldouble: 2
 Test "Imaginary part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 float: 2
 ifloat: 2
-
-# clog
-Test "Imaginary part of: clog (-2 - 3 i) == 1.2824746787307683680267437207826593 - 2.1587989303424641704769327722648368 i":
-ildouble: 1
-ldouble: 1
 
 # clog10
 Test "Real part of: clog10 (-2 - 3 i) == 0.5569716761534183846 - 0.9375544629863747085 i":
@@ -306,9 +286,9 @@ Test "Real part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
 float: 0.5
 ifloat: 0.5
 Test "Imaginary part of: cpow (e + 0 i, 0 + 2 * M_PIl i) == 1.0 + 0.0 i":
-double: 1.103
+double: 1.1031
 float: 2.5333
-idouble: 1.103
+idouble: 1.1031
 ifloat: 2.5333
 ildouble: 1
 ldouble: 1
@@ -489,12 +469,22 @@ float: 1
 ifloat: 1
 
 # j0
+Test "j0 (-4.0) == -3.9714980986384737228659076845169804197562E-1":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 Test "j0 (1.5) == 0.51182767173591812875":
 float: 1
 ifloat: 1
 Test "j0 (10.0) == -0.24593576445134833520":
 double: 1
 idouble: 1
+Test "j0 (4.0) == -3.9714980986384737228659076845169804197562E-1":
+float: 1
+ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # j1
 Test "j1 (-1.0) == -0.44005058574493351596":
@@ -958,8 +948,6 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
-ildouble: 1
-ldouble: 1
 
 Function: Imaginary part of "casin":
 float: 2
@@ -972,16 +960,16 @@ double: 6
 float: 19
 idouble: 6
 ifloat: 19
-ildouble: 6
-ldouble: 6
+ildouble: 5
+ldouble: 5
 
 Function: Imaginary part of "casinh":
 double: 13
 float: 2
 idouble: 13
 ifloat: 2
-ildouble: 7
-ldouble: 7
+ildouble: 6
+ldouble: 6
 
 Function: Real part of "catan":
 ildouble: 1
@@ -992,16 +980,10 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
-ildouble: 7
-ldouble: 7
 
 Function: Real part of "catanh":
-ildouble: 2
-ldouble: 2
-
-Function: Imaginary part of "catanh":
-ildouble: 2
-ldouble: 2
+ildouble: 1
+ldouble: 1
 
 Function: "cbrt":
 double: 1
@@ -1045,10 +1027,6 @@ Function: Imaginary part of "cexp":
 float: 2
 ifloat: 2
 
-Function: Imaginary part of "clog":
-ildouble: 1
-ldouble: 1
-
 Function: Real part of "clog10":
 double: 1
 float: 1
@@ -1086,9 +1064,9 @@ ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "cpow":
-double: 1.103
+double: 1.1031
 float: 6
-idouble: 1.103
+idouble: 1.1031
 ifloat: 6
 ildouble: 2
 ldouble: 2
@@ -1182,6 +1160,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 Function: "j1":
 float: 2
