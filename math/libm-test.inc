@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -4238,6 +4238,20 @@ yn_test (void)
 
 
 static void
+significand_test (void)
+{
+  /* significand returns the mantissa of the exponential representation.  */
+  START (significand);
+
+  TEST_f_f (significand, 4.0, 1.0);
+  TEST_f_f (significand, 6.0, 1.5);
+  TEST_f_f (significand, 8.0, 1.0);
+
+  END (significand);
+}
+
+
+static void
 initialize (void)
 {
   fpstack_test ("start *init*");
@@ -4432,6 +4446,7 @@ main (int argc, char **argv)
   scalb_test ();
   scalbn_test ();
   scalbln_test ();
+  significand_test ();
 
   /* Power and absolute value functions:  */
   cbrt_test ();
