@@ -168,7 +168,6 @@ install-locales:
 	   case $$locale in \#*) continue;; esac; \
 	   $(LOCALEDEF) -i locales/`echo $$locale | sed 's/\([^.]*\).*/\1/'` \
 			-c -f charmaps/$$charset \
-			-u repertoiremaps/mnemonic.ds \
 			$(inst_localedir)/$$locale; \
 	done < SUPPORTED
 
