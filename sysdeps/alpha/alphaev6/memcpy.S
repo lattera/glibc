@@ -39,6 +39,7 @@
 	.set noat
 
 ENTRY(memcpy)
+	.prologue 0
 
 	mov	$16, $0			# E : copy dest to return
 	ble	$18, $nomoredata	# U : done with the copy?
