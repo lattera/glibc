@@ -41,8 +41,6 @@ __BEGIN_DECLS
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-extern __ptr_t __mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			    int __flags, int __fd, __off_t __offset));
 #ifndef __USE_FILE_OFFSET64
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
 			  int __flags, int __fd, __off_t __offset));
@@ -52,21 +50,17 @@ extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
-extern __ptr_t __mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
-			      int __flags, int __fd, __off64_t __offset));
 extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
 			    int __flags, int __fd, __off64_t __offset));
 #endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-extern int __munmap __P ((__ptr_t __addr, size_t __len));
 extern int munmap __P ((__ptr_t __addr, size_t __len));
 
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
-extern int __mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the
@@ -100,8 +94,6 @@ extern int munlock __P ((__const __ptr_t __addr, size_t __len));
 /* Remap pages mapped by the range [ADDR,ADDR+OLD_LEN) to new length
    NEW_LEN.  If MAY_MOVE is MREMAP_MAYMOVE the returned address may
    differ from ADDR.  */
-extern __ptr_t __mremap __P ((__ptr_t __addr, size_t __old_len,
-			    size_t __new_len, int __may_move));
 extern __ptr_t mremap __P ((__ptr_t __addr, size_t __old_len,
 			  size_t __new_len, int __may_move));
 #endif

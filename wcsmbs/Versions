@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
     # functions used in inline functions or macros
-    __wcsto*_internal;
+    __wcsto*_internal; __mbrlen;
 
     # b*
     btowc;

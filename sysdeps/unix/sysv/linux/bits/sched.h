@@ -50,8 +50,6 @@ struct sched_param
 __BEGIN_DECLS
 
 /* Clone current process.  */
-extern int __clone __P ((int (*__fn) (void *__arg), void *__child_stack,
-			 int __flags, void *__arg));
 #ifdef __USE_MISC
 extern int clone __P ((int (*__fn) (void *__arg), void *__child_stack,
 		       int __flags, void *__arg));

@@ -128,8 +128,6 @@ extern __pid_t wait __P ((__WAIT_STATUS __stat_loc));
    return PID and store the dead child's status in STAT_LOC.
    Return (pid_t) -1 for errors.  If the WUNTRACED bit is
    set in OPTIONS, return status for stopped children; otherwise don't.  */
-extern __pid_t __waitpid __P ((__pid_t __pid, int *__stat_loc,
-			       int __options));
 extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
 			     int __options));
 
@@ -158,8 +156,6 @@ struct rusage;
    nil, store information about the child's resource usage there.  If the
    WUNTRACED bit is set in OPTIONS, return status for stopped children;
    otherwise don't.  */
-extern __pid_t __wait3 __P ((__WAIT_STATUS __stat_loc,
-			     int __options, struct rusage * __usage));
 extern __pid_t wait3 __P ((__WAIT_STATUS __stat_loc,
 			   int __options, struct rusage * __usage));
 #endif
@@ -170,8 +166,6 @@ extern __pid_t wait3 __P ((__WAIT_STATUS __stat_loc,
 struct rusage;
 
 /* PID is like waitpid.  Other args are like wait3.  */
-extern __pid_t __wait4 __P ((__pid_t __pid, __WAIT_STATUS __stat_loc,
-			     int __options, struct rusage *__usage));
 extern __pid_t wait4 __P ((__pid_t __pid, __WAIT_STATUS __stat_loc,
 			   int __options, struct rusage *__usage));
 #endif /* Use BSD.  */

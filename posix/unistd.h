@@ -245,13 +245,11 @@ typedef __intptr_t intptr_t;
 #define	F_OK	0		/* Test for existence.  */
 
 /* Test for access to NAME using the real UID and real GID.  */
-extern int __access __P ((__const char *__name, int __type));
 extern int access __P ((__const char *__name, int __type));
 
 #ifdef __USE_GNU
 /* Test for access to NAME using the effective UID and GID
    (as normal file operations use).  */
-extern int __euidaccess __P ((__const char *__name, int __type));
 extern int euidaccess __P ((__const char *__name, int __type));
 #endif
 
@@ -277,7 +275,6 @@ extern int euidaccess __P ((__const char *__name, int __type));
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
 extern __off_t __lseek __P ((int __fd, __off_t __offset, int __whence));
-extern __off64_t __lseek64 __P ((int __fd, __off64_t __offset, int __whence));
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
 #else
@@ -311,14 +308,10 @@ extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 /* Read NBYTES into BUF from FD at the given position OFFSET without
    changing the file pointer.  Return the number read, -1 for errors
    or 0 for EOF.  */
-extern ssize_t __pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			     __off_t __offset));
 extern ssize_t __pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			       __off64_t __offset));
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
-extern ssize_t __pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
-			      __off_t __offset));
 extern ssize_t __pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
 				__off64_t __offset));
 
@@ -353,7 +346,6 @@ extern ssize_t pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
    If successful, two file descriptors are stored in PIPEDES;
    bytes written on PIPEDES[1] can be read from PIPEDES[0].
    Returns 0 if successful, -1 if not.  */
-extern int __pipe __P ((int __pipedes[2]));
 extern int pipe __P ((int __pipedes[2]));
 
 /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
@@ -372,7 +364,6 @@ extern unsigned int alarm __P ((unsigned int __seconds));
    SIGALRM signal while inside `sleep' call, the handling of the SIGALRM
    signal afterwards is undefined.  There is no return value to indicate
    error, but if `sleep' returns SECONDS, it probably didn't work.  */
-extern unsigned int __sleep __P ((unsigned int __seconds));
 extern unsigned int sleep __P ((unsigned int __seconds));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -395,23 +386,16 @@ extern int pause __P ((void));
 
 
 /* Change the owner and group of FILE.  */
-extern int __chown __P ((__const char *__file,
-			 __uid_t __owner, __gid_t __group));
-extern int chown __P ((__const char *__file,
-		       __uid_t __owner, __gid_t __group));
+extern int chown __P ((__const char *__file, __uid_t __owner,
+		       __gid_t __group));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the owner and group of the file that FD is open on.  */
-extern int __fchown __P ((int __fd,
-			  __uid_t __owner, __gid_t __group));
-extern int fchown __P ((int __fd,
-			__uid_t __owner, __gid_t __group));
+extern int fchown __P ((int __fd, __uid_t __owner, __gid_t __group));
 
 
 /* Change owner and group of FILE, if it is a symbolic
    link the ownership of the symbolic link is changed.  */
-extern int __lchown __P ((__const char *__file, __uid_t __owner,
-			  __gid_t __group));
 extern int lchown __P ((__const char *__file, __uid_t __owner,
 			__gid_t __group));
 
@@ -423,7 +407,6 @@ extern int chdir __P ((__const char *__path));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the process's working directory to the one FD is open on.  */
-extern int __fchdir __P ((int __fd));
 extern int fchdir __P ((int __fd));
 #endif
 
@@ -434,7 +417,6 @@ extern int fchdir __P ((int __fd));
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE == 0, in which case it is as
    big as necessary.  */
-extern char *__getcwd __P ((char *__buf, size_t __size));
 extern char *getcwd __P ((char *__buf, size_t __size));
 
 #ifdef	__USE_GNU
@@ -442,16 +424,6 @@ extern char *getcwd __P ((char *__buf, size_t __size));
    If the environment variable `PWD' is set, and its value is correct,
    that value is used.  */
 extern char *get_current_dir_name __P ((void));
-
-/* Get the canonical absolute name of the named directory, and put it in SIZE
-   bytes of BUF.  Returns NULL if the directory couldn't be determined or
-   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
-   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
-   unless SIZE <= 0, in which case it is as big as necessary.  */
-
-char *__canonicalize_directory_name_internal __P ((__const char *__thisdir,
-						   char *__buf,
-						   size_t __size));
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -463,11 +435,9 @@ extern char *getwd __P ((char *__buf));
 
 
 /* Duplicate FD, returning a new file descriptor on the same file.  */
-extern int __dup __P ((int __fd));
 extern int dup __P ((int __fd));
 
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
-extern int __dup2 __P ((int __fd, int __fd2));
 extern int dup2 __P ((int __fd, int __fd2));
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
@@ -479,8 +449,6 @@ extern char **environ;
 
 /* Replace the current process, executing PATH with arguments ARGV and
    environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
-extern int __execve __P ((__const char *__path, char *__const __argv[],
-			  char *__const __envp[]));
 extern int execve __P ((__const char *__path, char *__const __argv[],
 			char *__const __envp[]));
 
@@ -530,15 +498,12 @@ extern void _exit __P ((int __status)) __attribute__ ((__noreturn__));
 #include <bits/confname.h>
 
 /* Get file-specific configuration information about PATH.  */
-extern long int __pathconf __P ((__const char *__path, int __name));
 extern long int pathconf __P ((__const char *__path, int __name));
 
 /* Get file-specific configuration about descriptor FD.  */
-extern long int __fpathconf __P ((int __fd, int __name));
 extern long int fpathconf __P ((int __fd, int __name));
 
 /* Get the value of the system variable NAME.  */
-extern long int __sysconf __P ((int __name));
 extern long int sysconf __P ((int __name));
 
 #ifdef	__USE_POSIX2
@@ -552,7 +517,6 @@ extern __pid_t __getpid __P ((void));
 extern __pid_t getpid __P ((void));
 
 /* Get the process ID of the calling process's parent.  */
-extern __pid_t __getppid __P ((void));
 extern __pid_t getppid __P ((void));
 
 /* Get the process group ID of the calling process.
@@ -613,7 +577,6 @@ extern int __REDIRECT (setpgrp, __P ((__pid_t __pid, __pid_t __pgrp)),
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
-extern __pid_t __setsid __P ((void));
 extern __pid_t setsid __P ((void));
 
 #ifdef __USE_XOPEN_EXTENDED
@@ -622,30 +585,24 @@ extern __pid_t getsid __P ((__pid_t __pid));
 #endif
 
 /* Get the real user ID of the calling process.  */
-extern __uid_t __getuid __P ((void));
 extern __uid_t getuid __P ((void));
 
 /* Get the effective user ID of the calling process.  */
-extern __uid_t __geteuid __P ((void));
 extern __uid_t geteuid __P ((void));
 
 /* Get the real group ID of the calling process.  */
-extern __gid_t __getgid __P ((void));
 extern __gid_t getgid __P ((void));
 
 /* Get the effective group ID of the calling process.  */
-extern __gid_t __getegid __P ((void));
 extern __gid_t getegid __P ((void));
 
 /* If SIZE is zero, return the number of supplementary groups
    the calling process is in.  Otherwise, fill in the group IDs
    of its supplementary groups in LIST and return the number written.  */
-extern int __getgroups __P ((int __size, __gid_t __list[]));
 extern int getgroups __P ((int __size, __gid_t __list[]));
 
 #ifdef	__USE_GNU
 /* Return nonzero iff the calling process is in group GID.  */
-extern int __group_member __P ((__gid_t __gid));
 extern int group_member __P ((__gid_t __gid));
 #endif
 
@@ -653,13 +610,11 @@ extern int group_member __P ((__gid_t __gid));
    If the calling process is the super-user, set the real
    and effective user IDs, and the saved set-user-ID to UID;
    if not, the effective user ID is set to UID.  */
-extern int __setuid __P ((__uid_t __uid));
 extern int setuid __P ((__uid_t __uid));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
-extern int __setreuid __P ((__uid_t __ruid, __uid_t __euid));
 extern int setreuid __P ((__uid_t __ruid, __uid_t __euid));
 #endif
 
@@ -672,13 +627,11 @@ extern int seteuid __P ((__uid_t __uid));
    If the calling process is the super-user, set the real
    and effective group IDs, and the saved set-group-ID to GID;
    if not, the effective group ID is set to GID.  */
-extern int __setgid __P ((__gid_t __gid));
 extern int setgid __P ((__gid_t __gid));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
-extern int __setregid __P ((__gid_t __rgid, __gid_t __egid));
 extern int setregid __P ((__gid_t __rgid, __gid_t __egid));
 #endif
 
@@ -699,7 +652,6 @@ extern __pid_t fork __P ((void));
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
-extern __pid_t __vfork __P ((void));
 extern __pid_t vfork __P ((void));
 #endif /* Use BSD. */
 
@@ -710,12 +662,10 @@ extern char *ttyname __P ((int __fd));
 
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success, otherwise an error number.  */
-extern int __ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 
 /* Return 1 if FD is a valid descriptor associated
    with a terminal, zero if not.  */
-extern int __isatty __P ((int __fd));
 extern int isatty __P ((int __fd));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -726,27 +676,22 @@ extern int ttyslot __P ((void));
 
 
 /* Make a link to FROM named TO.  */
-extern int __link __P ((__const char *__from, __const char *__to));
 extern int link __P ((__const char *__from, __const char *__to));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Make a symbolic link to FROM named TO.  */
-extern int __symlink __P ((__const char *__from, __const char *__to));
 extern int symlink __P ((__const char *__from, __const char *__to));
 
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-extern int __readlink __P ((__const char *__path, char *__buf, size_t __len));
 extern int readlink __P ((__const char *__path, char *__buf, size_t __len));
 #endif /* Use BSD.  */
 
 /* Remove the link NAME.  */
-extern int __unlink __P ((__const char *__name));
 extern int unlink __P ((__const char *__name));
 
 /* Remove the directory PATH.  */
-extern int __rmdir __P ((__const char *__path));
 extern int rmdir __P ((__const char *__path));
 
 
@@ -812,7 +757,6 @@ extern char *optarg;
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
-extern int __gethostname __P ((char *__name, size_t __len));
 extern int gethostname __P ((char *__name, size_t __len));
 
 /* Set the name of the current host to NAME, which is LEN bytes long.
@@ -849,8 +793,6 @@ extern int revoke __P ((__const char *__file));
    is enabled, the system examines the user PC and increments
    SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
    disable profiling.  Returns zero on success, -1 on error.  */
-extern int __profil __P ((unsigned short int *__sample_buffer, size_t __size,
-			  size_t __offset, unsigned int __scale));
 extern int profil __P ((unsigned short int *__sample_buffer, size_t __size,
 			size_t __offset, unsigned int __scale));
 
@@ -933,7 +875,6 @@ extern int ftruncate64 __P ((int __fd, __off64_t __length));
 
 /* Return the maximum number of file descriptors
    the current process could possibly have.  */
-extern int __getdtablesize __P ((void));
 extern int getdtablesize __P ((void));
 
 #endif /* Use BSD || X/Open Unix.  */
@@ -943,7 +884,6 @@ extern int getdtablesize __P ((void));
 
 /* Set the end of accessible data space (aka "the break") to ADDR.
    Returns zero on success and -1 for errors (with errno set).  */
-extern int __brk __P ((__ptr_t __addr));
 extern int brk __P ((__ptr_t __addr));
 
 # define __need_ptrdiff_t

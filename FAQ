@@ -721,7 +721,7 @@ ypbind.  ypbind 3.3 and older versions don't always remove these files, so
 glibc will continue to use them.  Other BSD versions seem to work correctly.
 Until ypbind 3.4 is released, you can find a patch at
 
-    ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.
+    ftp://ftp.kernel.org/pub/linux/utils/net/NIS/ypbind-3.3-glibc3.diff.gz
 
 
 2.13.	Under Linux/Alpha, I always get "do_ypcall: clnt_call:

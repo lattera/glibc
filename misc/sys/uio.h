@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,8 +34,6 @@ __BEGIN_DECLS
    The buffers are filled in the order specified.
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
-extern ssize_t __readv __P ((int __fd, __const struct iovec *__vector,
-			     int __count));
 extern ssize_t readv __P ((int __fd, __const struct iovec *__vector,
 			   int __count));
 
@@ -44,11 +42,8 @@ extern ssize_t readv __P ((int __fd, __const struct iovec *__vector,
    The data is written in the order specified.
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
-extern ssize_t __writev __P ((int __fd, __const struct iovec *__vector,
-			      int __count));
 extern ssize_t writev __P ((int __fd, __const struct iovec *__vector,
 			    int __count));
-
 
 __END_DECLS
 

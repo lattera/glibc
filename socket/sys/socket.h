@@ -88,7 +88,6 @@ typedef union { __SOCKADDR_ALLTYPES
 /* Create a new socket of type TYPE in domain DOMAIN, using
    protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
    Returns a file descriptor for the new socket, or -1 for errors.  */
-extern int __socket __P ((int __domain, int __type, int __protocol));
 extern int socket __P ((int __domain, int __type, int __protocol));
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using

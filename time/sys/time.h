@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,8 +61,6 @@ extern int gettimeofday __P ((struct timeval *__tv,
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
-extern int __settimeofday __P ((__const struct timeval *__tv,
-				__const struct timezone *__tz));
 extern int settimeofday __P ((__const struct timeval *__tv,
 			      __const struct timezone *__tz));
 
@@ -70,8 +68,6 @@ extern int settimeofday __P ((__const struct timeval *__tv,
    If OLDDELTA is not NULL, it is filled in with the amount
    of time adjustment remaining to be done from the last `adjtime' call.
    This call is restricted to the super-user.  */
-extern int __adjtime __P ((__const struct timeval *__delta,
-			   struct timeval *__olddelta));
 extern int adjtime __P ((__const struct timeval *__delta,
 			 struct timeval *__olddelta));
 
@@ -103,24 +99,18 @@ struct itimerval
 
 /* Set *VALUE to the current setting of timer WHICH.
    Return 0 on success, -1 on errors.  */
-extern int __getitimer __P ((enum __itimer_which __which,
-			     struct itimerval *__value));
 extern int getitimer __P ((enum __itimer_which __which,
 			   struct itimerval *__value));
 
 /* Set the timer WHICH to *NEW.  If OLD is not NULL,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
-extern int __setitimer __P ((enum __itimer_which __which,
-			     __const struct itimerval *__new,
-			     struct itimerval *__old));
 extern int setitimer __P ((enum __itimer_which __which,
 			   __const struct itimerval *__new,
 			   struct itimerval *__old));
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-extern int __utimes __P ((__const char *__file, struct timeval __tvp[2]));
 extern int utimes __P ((__const char *__file, struct timeval __tvp[2]));
 
 

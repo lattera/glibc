@@ -28,7 +28,6 @@
 __BEGIN_DECLS
 
 /* Return information about the filesystem on which FILE resides.  */
-extern int __statvfs __P ((__const char *__file, struct statvfs *__buf));
 #ifndef __USE_FILE_OFFSET64
 extern int statvfs __P ((__const char *__file, struct statvfs *__buf));
 #else
@@ -46,7 +45,6 @@ extern int statvfs64 __P ((__const char *__file, struct statvfs64 *__buf));
 
 /* Return information about the filesystem containing the file FILDES
    refers to.  */
-extern int __fstatvfs __P ((int __fildes, struct statvfs *__buf));
 #ifndef __USE_FILE_OFFSET64
 extern int fstatvfs __P ((int __fildes, struct statvfs *__buf));
 #else

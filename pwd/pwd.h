@@ -107,22 +107,14 @@ extern struct passwd *getpwnam __P ((__const char *__name));
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN_EXTENDED
-extern int __getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
-			      size_t __buflen, struct passwd **__result));
 extern int getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
 			    size_t __buflen, struct passwd **__result));
 # endif
 
-extern int __getpwuid_r __P ((__uid_t __uid, struct passwd *__resultbuf,
-			      char *__buffer, size_t __buflen,
-			      struct passwd **__result));
 extern int getpwuid_r __P ((__uid_t __uid, struct passwd *__resultbuf,
 			    char *__buffer, size_t __buflen,
 			    struct passwd **__result));
 
-extern int __getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
-			      char *__buffer, size_t __buflen,
-			      struct passwd **__result));
 extern int getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
 			    char *__buffer, size_t __buflen,
 			    struct passwd **__result));
@@ -131,9 +123,6 @@ extern int getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
 # ifdef	__USE_SVID
 /* Read an entry from STREAM.  This function is not standardized and
    probably never will.  */
-extern int __fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
-			       char *__buffer, size_t __buflen,
-			       struct passwd **__result));
 extern int fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
 			     char *__buffer, size_t __buflen,
 			     struct passwd **__result));

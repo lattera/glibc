@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,39 +78,26 @@ extern int putspent __P ((__const struct spwd *__p, FILE *__stream));
 
 #ifdef __USE_MISC
 /* Reentrant versions of some of the functions above.  */
-extern int __getspent_r __P ((struct spwd *__result_buf, char *__buffer,
-			      size_t __buflen, struct spwd **__result));
 extern int getspent_r __P ((struct spwd *__result_buf, char *__buffer,
 			    size_t __buflen, struct spwd **__result));
 
-extern int __getspnam_r __P ((__const char *__name, struct spwd *__result_buf,
-			      char *__buffer, size_t __buflen,
-			      struct spwd **__result));
 extern int getspnam_r __P ((__const char *__name, struct spwd *__result_buf,
 			    char *__buffer, size_t __buflen,
 			    struct spwd **__result));
 
-extern int __sgetspent_r __P ((__const char *__string,
-			       struct spwd *__result_buf, char *__buffer,
-			       size_t __buflen, struct spwd **__result));
 extern int sgetspent_r __P ((__const char *__string, struct spwd *__result_buf,
 			     char *__buffer, size_t __buflen,
 			     struct spwd **__result));
 
-extern int __fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
-			       char *__buffer, size_t __buflen,
-			       struct spwd **__result));
 extern int fgetspent_r __P ((FILE *__stream, struct spwd *__result_buf,
 			     char *__buffer, size_t __buflen,
 			     struct spwd **__result));
 #endif	/* misc */
 
 /* Protect password file against multi writers.  */
-extern int __lckpwdf __P ((void));
 extern int lckpwdf __P ((void));
 
 /* Unlock password file.  */
-extern int __ulckpwdf __P ((void));
 extern int ulckpwdf __P ((void));
 
 __END_DECLS

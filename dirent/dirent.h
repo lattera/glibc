@@ -112,12 +112,10 @@ typedef struct __dirstream DIR;
 
 /* Open a directory stream on NAME.
    Return a DIR stream on the directory, or NULL if it could not be opened.  */
-extern DIR *__opendir __P ((__const char *__name));
 extern DIR *opendir __P ((__const char *__name));
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
-extern int __closedir __P ((DIR *__dirp));
 extern int closedir __P ((DIR *__dirp));
 
 /* Read a directory entry from DIRP.  Return a pointer to a `struct
@@ -127,8 +125,6 @@ extern int closedir __P ((DIR *__dirp));
 
    If the Large File Support API is selected we have to use the
    appropriate interface.  */
-extern struct dirent *__readdir __P ((DIR *__dirp));
-extern struct dirent64 *__readdir64 __P ((DIR *__dirp));
 #ifndef __USE_FILE_OFFSET64
 extern struct dirent *readdir __P ((DIR *__dirp));
 #else
@@ -146,8 +142,6 @@ extern struct dirent64 *readdir64 __P ((DIR *__dirp));
 #if defined __USE_POSIX || defined __USE_MISC
 /* Reentrant version of `readdir'.  Return in RESULT a pointer to the
    next entry.  */
-extern int __readdir_r __P ((DIR *__dirp, struct dirent *__entry,
-			     struct dirent **__result));
 # ifndef __USE_FILE_OFFSET64
 extern int readdir_r __P ((DIR *__dirp, struct dirent *__entry,
 			   struct dirent **__result));
@@ -273,8 +267,6 @@ extern int versionsort64 __P ((__const __ptr_t __e1, __const __ptr_t __e2));
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
-extern __ssize_t __getdirentries __P ((int __fd, char *__buf,
-				       size_t __nbytes, __off_t *__basep));
 extern __ssize_t getdirentries __P ((int __fd, char *__buf,
 				     size_t __nbytes, __off_t *__basep));
 

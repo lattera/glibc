@@ -219,7 +219,7 @@ extern unsigned long long int __strtoull_internal __P ((__const char *
 # endif
 #endif /* GCC */
 
-#if defined __OPTIMIZE__ && __GNUC__ >= 2
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ && __GNUC__ >= 2
 /* Define inline functions which call the internal entry points.  */
 
 extern __inline double
@@ -326,25 +326,20 @@ extern long int a64l __P ((__const char *__s));
    The `rand' and `srand' functions are required by the ANSI standard.
    We provide both interfaces to the same random number generator.  */
 /* Return a random long integer between 0 and RAND_MAX inclusive.  */
-extern int32_t __random __P ((void));
 extern int32_t random __P ((void));
 
 /* Seed the random number generator with the given number.  */
-extern void __srandom __P ((unsigned int __seed));
 extern void srandom __P ((unsigned int __seed));
 
 /* Initialize the random number generator to use state buffer STATEBUF,
    of length STATELEN, and seed it with SEED.  Optimal lengths are 8, 16,
    32, 64, 128 and 256, the bigger the better; values less than 8 will
    cause an error and values greater than 256 will be rounded down.  */
-extern __ptr_t __initstate __P ((unsigned int __seed, __ptr_t __statebuf,
-				 size_t __statelen));
 extern __ptr_t initstate __P ((unsigned int __seed, __ptr_t __statebuf,
 			       size_t __statelen));
 
 /* Switch the random number generator to state buffer STATEBUF,
    which should have been previously initialized by `initstate'.  */
-extern __ptr_t __setstate __P ((__ptr_t __statebuf));
 extern __ptr_t setstate __P ((__ptr_t __statebuf));
 
 
@@ -364,18 +359,13 @@ struct random_data
     int32_t *end_ptr;		/* Pointer behind state table.  */
   };
 
-extern int __random_r __P ((struct random_data *__buf, int32_t *__result));
 extern int random_r __P ((struct random_data *__buf, int32_t *__result));
 
-extern int __srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 extern int srandom_r __P ((unsigned int __seed, struct random_data *__buf));
 
-extern int __initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
-			       size_t __statelen, struct random_data *__buf));
 extern int initstate_r __P ((unsigned int __seed, __ptr_t __statebuf,
 			     size_t __statelen, struct random_data *__buf));
 
-extern int __setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
 extern int setstate_r __P ((__ptr_t __statebuf, struct random_data *__buf));
 # endif	/* Use misc.  */
 #endif	/* Use SVID || extended X/Open.  */
@@ -388,7 +378,6 @@ extern void srand __P ((unsigned int __seed));
 
 #ifdef __USE_POSIX
 /* Reentrant interface according to POSIX.1.  */
-extern int __rand_r __P ((unsigned int *__seed));
 extern int rand_r __P ((unsigned int *__seed));
 #endif
 
@@ -426,46 +415,28 @@ struct drand48_data
 # ifdef __USE_MISC
 /* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
 extern int drand48_r __P ((struct drand48_data *__buffer, double *__result));
-extern int __erand48_r __P ((unsigned short int __xsubi[3],
-			     struct drand48_data *__buffer, double *__result));
 extern int erand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, double *__result));
 
 /* Return non-negative, long integer in [0,2^31).  */
 extern int lrand48_r __P ((struct drand48_data *__buffer, long int *__result));
-extern int __nrand48_r __P ((unsigned short int __xsubi[3],
-			     struct drand48_data *__buffer,
-			     long int *__result));
 extern int nrand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, long int *__result));
 
 /* Return signed, long integers in [-2^31,2^31).  */
 extern int mrand48_r __P ((struct drand48_data *__buffer, long int *__result));
-extern int __jrand48_r __P ((unsigned short int __xsubi[3],
-			     struct drand48_data *__buffer,
-			     long int *__result));
 extern int jrand48_r __P ((unsigned short int __xsubi[3],
 			   struct drand48_data *__buffer, long int *__result));
 
 /* Seed random number generator.  */
-extern int __srand48_r __P ((long int __seedval,
-			     struct drand48_data *__buffer));
 extern int srand48_r __P ((long int __seedval, struct drand48_data *__buffer));
 
-extern int __seed48_r __P ((unsigned short int __seed16v[3],
-			    struct drand48_data *__buffer));
 extern int seed48_r __P ((unsigned short int __seed16v[3],
 			  struct drand48_data *__buffer));
 
-extern int __lcong48_r __P ((unsigned short int __param[7],
-			     struct drand48_data *__buffer));
 extern int lcong48_r __P ((unsigned short int __param[7],
 			   struct drand48_data *__buffer));
 # endif	/* Use misc.  */
-
-/* Internal function to compute next state of the generator.  */
-extern int __drand48_iterate __P ((unsigned short int __xsubi[3],
-				   struct drand48_data *__buffer));
 #endif	/* Use SVID or X/Open.  */
 
 
@@ -533,13 +504,10 @@ extern int putenv __P ((__const char *__string));
 #ifdef	__USE_BSD
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
-extern int __setenv __P ((__const char *__name, __const char *__value,
-			  int __replace));
 extern int setenv __P ((__const char *__name, __const char *__value,
 			int __replace));
 
 /* Remove the variable NAME from the environment.  */
-extern void __unsetenv __P ((__const char *__name));
 extern void unsetenv __P ((__const char *__name));
 #endif
 
@@ -547,7 +515,6 @@ extern void unsetenv __P ((__const char *__name));
 /* The `clearenv' was planned to be added to POSIX.1 but probably
    never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
    for Fortran 77) requires this function.  */
-extern int __clearenv __P ((void));
 extern int clearenv __P ((void));
 #endif
 
@@ -576,7 +543,6 @@ extern int system __P ((__const char *__command));
 /* Return a malloc'd string containing the canonical absolute name of the
    named file.  The last file name component need not exist, and may be a
    symlink to a nonexistent file.  */
-extern char *__canonicalize_file_name __P ((__const char *__name));
 extern char *canonicalize_file_name __P ((__const char *__name));
 #endif
 
@@ -587,7 +553,6 @@ extern char *canonicalize_file_name __P ((__const char *__name));
    name is PATH_MAX chars or more, returns null with `errno' set to
    ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
    name in RESOLVED.  */
-extern char *__realpath __P ((__const char *__name, char *__resolved));
 extern char *realpath __P ((__const char *__name, char *__resolved));
 #endif
 
@@ -748,11 +713,9 @@ extern char *ptsname __P ((int __fd));
 /* Store at most BUFLEN characters of the pathname of the slave pseudo
    terminal associated with the master FD is open on in BUF.
    Return 0 on success, otherwise an error number.  */
-extern int __ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 
 /* Open a master pseudo terminal and return its file descriptor.  */
-extern int __getpt __P ((void));
 extern int getpt __P ((void));
 #endif
 

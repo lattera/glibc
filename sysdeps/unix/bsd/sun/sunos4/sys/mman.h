@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.  SunOS 4 version.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -87,20 +87,16 @@ __BEGIN_DECLS
    for errors (in which case `errno' is set).  A successful `mmap' call
    deallocates any previous mapping for the affected region.  */
 
-extern __ptr_t __mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off_t __offset));
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
 			int __flags, int __fd, __off_t __offset));
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN
    bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-extern int __munmap __P ((__ptr_t __addr, size_t __len));
 extern int munmap __P ((__ptr_t __addr, size_t __len));
 
 /* Change the memory protection of the region starting at ADDR and
    extending LEN bytes to PROT.  Returns 0 if successful, -1 for errors
    (and sets errno).  */
-extern int __mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 extern int mprotect __P ((__ptr_t __addr, size_t __len, int __prot));
 
 /* Synchronize the region starting at ADDR and extending LEN bytes with the

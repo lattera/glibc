@@ -53,54 +53,40 @@ extern void logwtmp __P ((__const char *__ut_line, __const char *__ut_name,
 			  __const char *__ut_host));
 
 /* Append entry UTMP to the wtmp-like file WTMP_FILE.  */
-extern void __updwtmp __P ((__const char *__wtmp_file,
-			    __const struct utmp *__utmp));
 extern void updwtmp __P ((__const char *__wtmp_file,
 			  __const struct utmp *__utmp));
 
 /* Change name of the utmp file to be examined.  */
-extern int __utmpname __P ((__const char *__file));
 extern int utmpname __P ((__const char *__file));
 
 /* Read next entry from a utmp-like file.  */
-extern struct utmp *__getutent __P ((void));
 extern struct utmp *getutent __P ((void));
 
 /* Reset the input stream to the beginning of the file.  */
-extern void __setutent __P ((void));
 extern void setutent __P ((void));
 
 /* Close the current open file.  */
-extern void __endutent __P ((void));
 extern void endutent __P ((void));
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_type matching ID->ut_type.  */
-extern struct utmp *__getutid __P ((__const struct utmp *__id));
 extern struct utmp *getutid __P ((__const struct utmp *__id));
 
 /* Search forward from the current point in the utmp file until the
    next entry with a ut_line matching LINE->ut_line.  */
-extern struct utmp *__getutline __P ((__const struct utmp *__line));
 extern struct utmp *getutline __P ((__const struct utmp *__line));
 
 /* Write out entry pointed to by UTMP_PTR into the utmp file.  */
-extern struct utmp *__pututline __P ((__const struct utmp *__utmp_ptr));
 extern struct utmp *pututline __P ((__const struct utmp *__utmp_ptr));
 
 
 #ifdef	__USE_MISC
 /* Reentrant versions of the file for handling utmp files.  */
-extern int __getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
 extern int getutent_r __P ((struct utmp *__buffer, struct utmp **__result));
 
-extern int __getutid_r __P ((__const struct utmp *__id, struct utmp *__buffer,
-			     struct utmp **__result));
 extern int getutid_r __P ((__const struct utmp *__id, struct utmp *__buffer,
 			   struct utmp **__result));
 
-extern int __getutline_r __P ((__const struct utmp *__line,
-			       struct utmp *__buffer, struct utmp **__result));
 extern int getutline_r __P ((__const struct utmp *__line,
 			     struct utmp *__buffer, struct utmp **__result));
 

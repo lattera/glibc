@@ -37,6 +37,7 @@
    all callers.  */
 
 #undef lstat
+#undef __lstat
 int
 __lstat (const char *file, struct stat *buf)
 {

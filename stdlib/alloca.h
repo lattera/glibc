@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,16 +27,13 @@
 __BEGIN_DECLS
 
 /* Remove any previous definitions.  */
-#undef	__alloca
 #undef	alloca
 
 /* Allocate a block that will be freed when the calling function exits.  */
-extern __ptr_t __alloca __P ((size_t __size));
 extern __ptr_t alloca __P ((size_t __size));
 
 #ifdef	__GNUC__
-# define __alloca(size)	__builtin_alloca (size)
-# define alloca(size)	__alloca (size)
+# define alloca(size)	__builtin_alloca (size)
 #endif /* GCC.  */
 
 __END_DECLS

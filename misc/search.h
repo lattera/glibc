@@ -90,7 +90,6 @@ extern ENTRY *hsearch __P ((ENTRY __item, ACTION __action));
 extern int hcreate __P ((size_t __nel));
 
 /* Destroy current internal hashing table.  */
-extern void __hdestroy __P ((void));
 extern void hdestroy __P ((void));
 
 #ifdef __USE_GNU
@@ -127,21 +126,15 @@ VISIT;
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP and insert a new element if not found.  */
-extern void *__tsearch __PMT ((__const void *__key, void **__rootp,
-			       __compar_fn_t compar));
 extern void *tsearch __PMT ((__const void *__key, void **__rootp,
 			     __compar_fn_t compar));
 
 /* Search for an entry matching the given KEY in the tree pointed to
    by *ROOTP.  If no matching entry is available return NULL.  */
-extern void *__tfind __PMT ((__const void *__key, void *__const *__rootp,
-			     __compar_fn_t compar));
 extern void *tfind __PMT ((__const void *__key, void *__const *__rootp,
 			   __compar_fn_t compar));
 
 /* Remove the element matching KEY from the tree pointed to by *ROOTP.  */
-extern void *__tdelete __PMT ((__const void *__key, void **__rootp,
-			       __compar_fn_t compar));
 extern void *tdelete __PMT ((__const void *__key, void **__rootp,
 			     __compar_fn_t compar));
 
@@ -154,7 +147,6 @@ typedef void (*__action_fn_t) __PMT ((__const void *__nodep,
 
 /* Walk through the whole tree and call the ACTION callback for every node
    or leaf.  */
-extern void __twalk __PMT ((__const void *__root, __action_fn_t action));
 extern void twalk __PMT ((__const void *__root, __action_fn_t action));
 
 #ifdef __USE_GNU
@@ -163,7 +155,6 @@ extern void twalk __PMT ((__const void *__root, __action_fn_t action));
 typedef void (*__free_fn_t) __PMT ((void *__nodep));
 
 /* Destroy the whole tree, call FREEFCT for each node or leaf.  */
-extern void __tdestroy __PMT ((void *__root, __free_fn_t freefct));
 extern void tdestroy __PMT ((void *__root, __free_fn_t freefct));
 #endif
 

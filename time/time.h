@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -170,14 +170,6 @@ extern double difftime __P ((time_t __time1, time_t __time0))
 /* Return the `time_t' representation of TP and normalize TP.  */
 extern time_t mktime __P ((struct tm *__tp));
 
-/* Subroutine of `mktime'.  Return the `time_t' representation of TP and
-   normalize TP, given that a `struct tm *' maps to a `time_t' as performed
-   by FUNC.  Keep track of next guess for time_t offset in *OFFSET.  */
-extern time_t __mktime_internal __P ((struct tm *__tp,
-				      struct tm *(*__func) (const time_t *,
-							    struct tm *),
-				      time_t *__offset));
-
 #ifdef __USE_ISOC9X
 /* Return the `time_t' representation of TP and normalize TP, taking
    account for the extra members in `struct tmx'.  */
@@ -229,19 +221,9 @@ extern struct tm *gmtime_r __P ((__const time_t *__timer,
 
 /* Return the `struct tm' representation of *TIMER in local time,
    using *TP to store the result.  */
-extern struct tm *__localtime_r __P ((__const time_t *__timer,
-				      struct tm *__tp));
 extern struct tm *localtime_r __P ((__const time_t *__timer,
 				    struct tm *__tp));
 # endif	/* POSIX or misc */
-
-/* Compute the `struct tm' representation of *T,
-   offset OFFSET seconds east of UTC,
-   and store year, yday, mon, mday, wday, hour, min, sec into *TP.
-   Return nonzero if successful.  */
-extern int __offtime __P ((__const time_t *__timer,
-			   long int __offset,
-			   struct tm *__tp));
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
@@ -255,7 +237,6 @@ extern char *ctime __P ((__const time_t *__timer));
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
-extern char *__asctime_r __P ((__const struct tm *__tp, char *__buf));
 extern char *asctime_r __P ((__const struct tm *__tp, char *__buf));
 
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
@@ -268,18 +249,13 @@ extern char *__tzname[2];	/* Current timezone names.  */
 extern int __daylight;		/* If daylight-saving time is ever in use.  */
 extern long int __timezone;	/* Seconds west of UTC.  */
 
-/* Set time conversion information from the TZ environment variable.
-   If TZ is not defined, a locale-dependent default is used.  */
-extern void __tzset __P ((void));
 
 # ifdef	__USE_POSIX
 /* Same as above.  */
 extern char *tzname[2];
 
-/* Return the maximum length of a timezone name.
-   This is what `sysconf (_SC_TZNAME_MAX)' does.  */
-extern long int __tzname_max __P ((void));
-
+/* Set time conversion information from the TZ environment variable.
+   If TZ is not defined, a locale-dependent default is used.  */
 extern void tzset __P ((void));
 # endif
 
@@ -318,8 +294,6 @@ extern int dysize __P ((int __year));
 
 # ifdef __USE_POSIX199309
 /* Pause execution for a number of nanoseconds.  */
-extern int __nanosleep __P ((__const struct timespec *__requested_time,
-			     struct timespec *__remaining));
 extern int nanosleep __P ((__const struct timespec *__requested_time,
 			   struct timespec *__remaining));
 # endif
@@ -352,7 +326,6 @@ extern struct tm *getdate __P ((__const char *__string));
    variant.  The functionality is the same.  The result is returned in
    the buffer pointed to by RESBUFP and in case of an error the return
    value is != 0 with the same values as given above for `getdate_err'.  */
-extern int __getdate_r __P ((__const char *__string, struct tm *__resbufp));
 extern int getdate_r __P ((__const char *__string, struct tm *__resbufp));
 # endif
 

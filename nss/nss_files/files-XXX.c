@@ -185,7 +185,7 @@ internal_getent (struct STRUCTURE *result,
       if (p == NULL)
 	{
 	  /* End of file or read error.  */
-	  *errnop = errno;
+	  *errnop = ENOENT;
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}

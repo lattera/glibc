@@ -101,12 +101,9 @@ extern int wcsncmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
 
 #ifdef __USE_GNU
 /* Compare S1 and S2, ignoring case.  */
-extern int __wcscasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2));
 extern int wcscasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2));
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
-extern int __wcsncasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
-                               size_t __n));
 extern int wcsncasecmp __P ((__const wchar_t *__s1, __const wchar_t *__s2,
                              size_t __n));
 
@@ -184,7 +181,6 @@ extern size_t wcslen __P ((__const wchar_t *__s));
 
 #ifdef __USE_GNU
 /* Return the number of wide characters in S, but at most MAXLEN.  */
-extern size_t __wcsnlen __P ((__const wchar_t *__s, size_t __maxlen));
 extern size_t wcsnlen __P ((__const wchar_t *__s, size_t __maxlen));
 #endif
 
@@ -211,7 +207,6 @@ extern wchar_t *wmemset __P ((wchar_t *__s, wchar_t __c, size_t __n));
 
 /* Determine whether C constitutes a valid (one-byte) multibyte
    character.  */
-extern wint_t __btowc __P ((int __c));
 extern wint_t btowc __P ((int __c));
 
 /* Determine whether C corresponds to a member of the extended
@@ -220,21 +215,15 @@ extern int wctob __P ((wint_t __c));
 
 /* Determine whether PS points to an object representing the initial
    state.  */
-extern int __mbsinit __P ((__const mbstate_t *__ps));
 extern int mbsinit __P ((__const mbstate_t *__ps));
 
 /* Write wide character representation of multibyte character pointed
    to by S to PWC.  */
-extern size_t __mbrtowc __P ((wchar_t *__restrict __pwc,
-			      __const char *__restrict __s, size_t __n,
-			      mbstate_t *__restrict __p));
 extern size_t mbrtowc __P ((wchar_t *__restrict __pwc,
 			    __const char *__restrict __s, size_t __n,
 			    mbstate_t *__p));
 
 /* Write multibyte representation of wide character WC to S.  */
-extern size_t __wcrtomb __P ((char *__restrict __s, wchar_t __wc,
-			      mbstate_t *__restrict __ps));
 extern size_t wcrtomb __P ((char *__restrict __s, wchar_t __wc,
 			    mbstate_t *__restrict __ps));
 
@@ -244,13 +233,13 @@ extern size_t __mbrlen __P ((__const char *__restrict __s, size_t __n,
 extern size_t mbrlen __P ((__const char *__restrict __s, size_t __n,
 			   mbstate_t *__restrict __ps));
 
-#if defined __OPTIMIZE__ \
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
     && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7))
 /* Define inline function as optimization.  */
 extern __inline size_t mbrlen (__const char *__restrict __s, size_t __n,
 			       mbstate_t *__restrict __ps)
 { return (__ps != NULL
-	  ? __mbrtowc (NULL, __s, __n, __ps) : __mbrlen (__s, __n, NULL)); }
+	  ? mbrtowc (NULL, __s, __n, __ps) : __mbrlen (__s, __n, NULL)); }
 #endif
 
 /* Write wide character representation of multibyte character string
@@ -264,9 +253,6 @@ extern size_t mbsrtowcs __P ((wchar_t *__restrict __dst,
 
 /* Write multibyte character representation of wide character string
    SRC to DST.  */
-extern size_t __wcsrtombs __P ((char *__restrict __dst,
-				__const wchar_t **__restrict __src,
-				size_t __len, mbstate_t *__restrict __ps));
 extern size_t wcsrtombs __P ((char *__restrict __dst,
 			      __const wchar_t **__restrict __src,
 			      size_t __len, mbstate_t *__restrict __ps));
@@ -275,19 +261,12 @@ extern size_t wcsrtombs __P ((char *__restrict __dst,
 #ifdef	__USE_GNU
 /* Write wide character representation of at most NMC bytes of the
    multibyte character string SRC to DST.  */
-extern size_t __mbsnrtowcs __P ((wchar_t *__restrict __dst,
-				 __const char **__restrict __src, size_t __nmc,
-				 size_t __len, mbstate_t *__restrict __ps));
 extern size_t mbsnrtowcs __P ((wchar_t *__restrict __dst,
 			       __const char **__restrict __src, size_t __nmc,
 			       size_t __len, mbstate_t *__restrict __ps));
 
 /* Write multibyte character representation of at most NWC characters
    from the wide character string SRC to DST.  */
-extern size_t __wcsnrtombs __P ((char *__restrict __dst,
-				 __const wchar_t **__restrict __src,
-				 size_t __nwc, size_t __len,
-				 mbstate_t *__restrict __ps));
 extern size_t wcsnrtombs __P ((char *__restrict __dst,
 			       __const wchar_t **__restrict __src,
 			       size_t __nwc, size_t __len,
@@ -492,13 +471,10 @@ extern __inline unsigned long long int wcstouq (__const wchar_t *
 #ifdef	__USE_GNU
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
-extern wchar_t *__wcpcpy __P ((wchar_t *__dest, __const wchar_t *__src));
 extern wchar_t *wcpcpy __P ((wchar_t *__dest, __const wchar_t *__src));
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
    the last character written into DEST.  */
-extern wchar_t *__wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
-				size_t __n));
 extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 			      size_t __n));
 #endif	/* use GNU */

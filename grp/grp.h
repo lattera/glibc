@@ -99,8 +99,6 @@ extern struct group *getgrnam __P ((__const char *__name));
    POSIX people would choose.  */
 
 # if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern int __getgrent_r __P ((struct group *__resultbuf, char *buffer,
-			      size_t __buflen, struct group **__result));
 extern int getgrent_r __P ((struct group *__resultbuf, char *buffer,
 			    size_t __buflen, struct group **__result));
 # endif
@@ -118,9 +116,6 @@ extern int getgrnam_r __P ((__const char *__name, struct group *__resultbuf,
 # ifdef	__USE_SVID
 /* Read a group entry from STREAM.  This function is not standardized
    an probably never will.  */
-extern int __fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
-			       char *buffer, size_t __buflen,
-			       struct group **__result));
 extern int fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
 			     char *buffer, size_t __buflen,
 			     struct group **__result));

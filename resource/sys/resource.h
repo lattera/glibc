@@ -28,8 +28,6 @@ __BEGIN_DECLS
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
-extern int __getrlimit __P ((enum __rlimit_resource __resource,
-			     struct rlimit *__rlimits));
 #ifndef __USE_FILE_OFFSET64
 extern int getrlimit __P ((enum __rlimit_resource __resource,
 			   struct rlimit *__rlimits));
@@ -69,7 +67,6 @@ extern int setrlimit64 __P ((enum __rlimit_resource __resource,
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-extern int __getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
 extern int getrusage __P ((enum __rusage_who __who, struct rusage *__usage));
 
 /* Return the highest priority of any process specified by WHICH and WHO

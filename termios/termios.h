@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,6 @@ extern int cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
 
 
 /* Put the state of FD into *TERMIOS_P.  */
-extern int __tcgetattr __P ((int __fd, struct termios *__termios_p));
 extern int tcgetattr __P ((int __fd, struct termios *__termios_p));
 
 /* Set the state of FD to *TERMIOS_P.

@@ -1,5 +1,5 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
@@ -36,7 +36,6 @@ __BEGIN_DECLS
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
 extern char *gettext __P ((__const char *__msgid));
-extern char *__gettext __P ((__const char *__msgid));
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    LC_MESSAGES locale.  */
@@ -57,14 +56,11 @@ extern char *__dcgettext __P ((__const char *__domainname,
    If DOMAINNAME is null, return the current default.
    If DOMAINNAME is "", reset to the default of "messages".  */
 extern char *textdomain __P ((__const char *__domainname));
-extern char *__textdomain __P ((__const char *__domainname));
 
 /* Specify that the DOMAINNAME message catalog will be found
    in DIRNAME rather than in the system locale data base.  */
 extern char *bindtextdomain __P ((__const char *__domainname,
 				  __const char *__dirname));
-extern char *__bindtextdomain __P ((__const char *__domainname,
-				    __const char *__dirname));
 
 
 /* Optimized version of the function above.  */

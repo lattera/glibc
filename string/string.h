@@ -44,8 +44,6 @@ extern __ptr_t memmove __P ((__ptr_t __dest, __const __ptr_t __src,
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
    Return the position in DEST one byte past where C was copied,
    or NULL if C was not found in the first N bytes of SRC.  */
-extern __ptr_t __memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
-			       int __c, size_t __n));
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN
 extern __ptr_t memccpy __P ((__ptr_t __dest, __const __ptr_t __src,
 			     int __c, size_t __n));
@@ -198,7 +196,6 @@ extern size_t strlen __P ((__const char *__s));
 #ifdef	__USE_GNU
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
-extern size_t __strnlen __P ((__const char *__string, size_t __maxlen));
 extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
 #endif
 
@@ -270,13 +267,11 @@ extern int __strncasecmp_l __P ((__const char *__s1, __const char *__s2,
 #ifdef	__USE_BSD
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
-extern char *__strsep __P ((char **__stringp, __const char *__delim));
 extern char *strsep __P ((char **__stringp, __const char *__delim));
 #endif
 
 #ifdef	__USE_GNU
 /* Compare S1 and S2 as strings holding name & indices/version numbers.  */
-extern int __strverscmp __P ((__const char *__s1, __const char *__s2));
 extern int strverscmp __P ((__const char *__s1, __const char *__s2));
 
 /* Return a string describing the meaning of the signal number in SIG.  */

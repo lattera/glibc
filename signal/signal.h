@@ -81,14 +81,12 @@ extern __sighandler_t __REDIRECT (signal,
 #ifdef __USE_XOPEN
 /* The X/Open definition of `signal' conflicts with the BSD version.
    So they defined another function `bsd_signal'.  */
-extern __sighandler_t __bsd_signal __P ((int __sig, __sighandler_t __handler));
 extern __sighandler_t bsd_signal __P ((int __sig, __sighandler_t __handler));
 #endif
 
 /* Send signal SIG to process number PID.  If PID is zero,
    send SIG to all processes in the current process's process group.
    If PID is < -1, send SIG to all processes in process group - PID.  */
-extern int __kill __P ((__pid_t __pid, int __sig));
 #ifdef __USE_POSIX
 extern int kill __P ((__pid_t __pid, int __sig));
 #endif /* Use POSIX.  */
@@ -115,13 +113,6 @@ extern void psignal __P ((int __sig, __const char *__s));
 #endif /* Use misc.  */
 
 
-/* Block signals in MASK, returning the old mask.  */
-extern int __sigblock __P ((int __mask));
-
-/* Set the mask of blocked signals to MASK, returning the old mask.  */
-extern int __sigsetmask __P ((int __mask));
-
-
 /* The `sigpause' function has two different interfaces.  The original
    BSD definition defines the argument as a mask of the signal, while
    the more modern interface in X/Open defines it as the signal
@@ -143,13 +134,21 @@ extern int sigpause __P ((int __mask));
 
 
 #ifdef __USE_BSD
+/* None of the following functions should be used anymore.  They are here
+   only for compatibility.  A single word (`int') is not guaranteed to be
+   enough to hold a complete signal mask and therefore these functions
+   simply do not work in many situations.  Use `sigprocmask' instead.  */
+
+/* Compute mask for signal SIG.  */
 # define sigmask(sig)	__sigmask(sig)
 
+/* Block signals in MASK, returning the old mask.  */
 extern int sigblock __P ((int __mask));
+
+/* Set the mask of blocked signals to MASK, returning the old mask.  */
 extern int sigsetmask __P ((int __mask));
 
-/* This function is here only for compatibility.
-   Use `sigprocmask' instead.  */
+/* Return currently selected signal mask.  */
 extern int siggetmask __P ((void));
 #endif /* Use BSD.  */
 
@@ -221,14 +220,11 @@ extern int sigorset __P ((sigset_t *__set, __const sigset_t *__left,
 #  include <bits/sigaction.h>
 
 /* Get and/or change the set of blocked signals.  */
-extern int __sigprocmask __P ((int __how,
-			       __const sigset_t *__set, sigset_t *__oset));
 extern int sigprocmask __P ((int __how,
 			     __const sigset_t *__set, sigset_t *__oset));
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
-extern int __sigsuspend __P ((__const sigset_t *__set));
 extern int sigsuspend __P ((__const sigset_t *__set));
 
 /* Get and/or set the action for signal SIG.  */
@@ -242,24 +238,18 @@ extern int sigpending __P ((sigset_t *__set));
 
 
 /* Select any of pending signals from SET or wait for any to arrive.  */
-extern int __sigwait __P ((__const sigset_t *__set, int *__sig));
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
 
 /* Select any of pending signals from SET and place information in INFO.  */
-extern int __sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
 extern int sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
 
 /* Select any of pending signals from SET and place information in INFO.
    Wait the imte specified by TIMEOUT if no signal is pending.  */
-extern int __sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
-				__const struct timespec *__timeout));
 extern int sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
 			      __const struct timespec *__timeout));
 
 /* Send signal SIG to the process PID.  Associate data in VAL with the
    signal.  */
-extern int __sigqueue __P ((__pid_t __pid, int __sig,
-			    __const union sigval __val));
 extern int sigqueue __P ((__pid_t __pid, int __sig,
 			  __const union sigval __val));
 
@@ -295,8 +285,6 @@ struct sigvec
    If the SV_RESETHAND bit is set in `sv_flags', the handler for SIG will be
    reset to SIG_DFL before `sv_handler' is entered.  If OVEC is non-NULL,
    it is filled in with the old information for SIG.  */
-extern int __sigvec __P ((int __sig, __const struct sigvec *__vec,
-			  struct sigvec *__ovec));
 extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
 			struct sigvec *__ovec));
 
@@ -305,7 +293,6 @@ extern int sigvec __P ((int __sig, __const struct sigvec *__vec,
 # include <bits/sigcontext.h>
 
 /* Restore the state saved in SCP.  */
-extern int __sigreturn __P ((struct sigcontext *__scp));
 extern int sigreturn __P ((struct sigcontext *__scp));
 
 #endif /* signal.h included and use BSD.  */
@@ -331,8 +318,6 @@ extern int sigstack __P ((__const struct sigstack *__ss,
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
-extern int __sigaltstack __P ((__const struct sigaltstack *__ss,
-			       struct sigaltstack *__oss));
 extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 

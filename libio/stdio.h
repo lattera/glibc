@@ -187,7 +187,6 @@ extern int fflush_unlocked __P ((FILE *__stream));
 
 #ifdef __USE_GNU
 /* Close all streams.  */
-extern int __fcloseall __P ((void));
 extern int fcloseall __P ((void));
 #endif
 
@@ -280,7 +279,7 @@ extern int vsprintf __P ((char *__restrict __s,
 			  __const char *__restrict __format,
 			  _G_va_list __arg));
 
-#ifdef	__OPTIMIZE__
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
 __STDIO_INLINE int
 vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 {
@@ -290,9 +289,6 @@ vprintf (__const char *__restrict __fmt, _G_va_list __arg)
 
 #if defined __USE_BSD || defined __USE_ISOC9X || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
-extern int __snprintf __P ((char *__restrict __s, size_t __maxlen,
-			    __const char *__restrict __format, ...))
-     __attribute__ ((__format__ (__printf__, 3, 4)));
 extern int snprintf __P ((char *__restrict __s, size_t __maxlen,
 			  __const char *__restrict __format, ...))
      __attribute__ ((__format__ (__printf__, 3, 4)));
@@ -340,19 +336,12 @@ extern int sscanf __P ((__const char *__restrict __s,
 
 #ifdef	__USE_GNU
 /* Read formatted input from S into argument list ARG.  */
-extern int __vfscanf __P ((FILE *__restrict __s,
-			   __const char *__restrict __format,
-			   _G_va_list __arg))
-     __attribute__ ((__format__ (__scanf__, 2, 0)));
 extern int vfscanf __P ((FILE *__restrict __s,
 			 __const char *__restrict __format,
 			 _G_va_list __arg))
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 /* Read formatted input from stdin into argument list ARG.  */
-extern int __vscanf __P ((__const char *__restrict __format,
-			  _G_va_list __arg))
-     __attribute__ ((__format__ (__scanf__, 1, 0)));
 extern int vscanf __P ((__const char *__restrict __format, _G_va_list __arg))
      __attribute__ ((__format__ (__scanf__, 1, 0)));
 
@@ -379,7 +368,7 @@ extern int getchar __P ((void));
    optimization for it.  */
 #define getc(_fp) _IO_getc (_fp)
 
-#ifdef	__OPTIMIZE__
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
 __STDIO_INLINE int
 getchar (void)
 {
@@ -419,7 +408,7 @@ extern int putchar __P ((int __c));
    so we always do the optimization for it.  */
 #define putc(_ch, _fp) _IO_putc (_ch, _fp)
 
-#ifdef __OPTIMIZE__
+#if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
 __STDIO_INLINE int
 putchar (int __c)
 {
@@ -458,7 +447,7 @@ putchar_unlocked (int __c)
   return _IO_putc_unlocked (__c, stdout);
 }
 # endif /* Optimizing.  */
-#endif /* Use POSIX or MISc.  */
+#endif /* Use POSIX or MISC.  */
 
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
@@ -491,16 +480,16 @@ extern char *gets __P ((char *__s));
    NULL), pointing to *N characters of space.  It is realloc'd as
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
-_IO_ssize_t __getdelim __P ((char **__lineptr, size_t *__n,
-			     int __delimiter, FILE *__stream));
-_IO_ssize_t getdelim __P ((char **__lineptr, size_t *__n,
-			   int __delimiter, FILE *__stream));
+extern _IO_ssize_t __getdelim __P ((char **__lineptr, size_t *__n,
+				    int __delimiter, FILE *__stream));
+extern _IO_ssize_t getdelim __P ((char **__lineptr, size_t *__n,
+				  int __delimiter, FILE *__stream));
 
 /* Like `getdelim', but reads up to a newline.  */
-_IO_ssize_t __getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
-_IO_ssize_t getline __P ((char **__lineptr, size_t *__n, FILE *__stream));
+extern _IO_ssize_t getline __P ((char **__lineptr, size_t *__n,
+				 FILE *__stream));
 
-# ifdef	__OPTIMIZE__
+# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
 __STDIO_INLINE _IO_ssize_t
 getline (char **__lineptr, size_t *__n, FILE *__stream)
 {

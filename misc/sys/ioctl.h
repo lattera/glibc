@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,6 @@ __BEGIN_DECLS
 /* Perform the I/O control operation specified by REQUEST on FD.
    One argument may follow; its presence and type depend on REQUEST.
    Return value depends on REQUEST.  Usually -1 indicates error.  */
-extern int __ioctl __P ((int __fd, unsigned long int __request, ...));
 extern int ioctl __P ((int __fd, unsigned long int __request, ...));
 
 __END_DECLS

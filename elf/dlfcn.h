@@ -48,8 +48,6 @@ extern void *dlsym __P ((void *__handle, __const char *__name));
 #ifdef __USE_GNU
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */
-extern void *__dlvsym __P ((void *__handle, __const char *__name,
-			    __const char *__version));
 extern void *dlvsym __P ((void *__handle, __const char *__name,
 			  __const char *__version));
 #endif

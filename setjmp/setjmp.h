@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,16 +76,6 @@ extern void longjmp __P ((jmp_buf __env, int __val))
 extern void _longjmp __P ((jmp_buf __env, int __val))
      __attribute__ ((__noreturn__));
 #endif
-
-/* Internal machine-dependent function to restore context sans signal mask.  */
-extern void __longjmp __P ((__jmp_buf __env, int __val))
-     __attribute__ ((__noreturn__));
-
-/* Internal function to possibly save the current mask of blocked signals
-   in ENV, and always set the flag saying whether or not it was saved.
-   This is used by the machine-dependent definition of `__sigsetjmp'.
-   Always returns zero, for convenience.  */
-extern int __sigjmp_save __P ((jmp_buf __env, int __savemask));
 
 
 #ifdef	__USE_POSIX

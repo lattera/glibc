@@ -1,5 +1,5 @@
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,9 +78,6 @@ extern int select __P ((int __nfds, __fd_set *__readfds,
 #ifdef __USE_POSIX
 /* Same as above only that the TIMEOUT value is given with higher
    resolution.  This version should be used.  */
-extern int __pselect __P ((int __nfds, __fd_set *__readfds,
-			   __fd_set *__writefds, __fd_set *__exceptfds,
-			   struct timespec *__timeout));
 extern int pselect __P ((int __nfds, __fd_set *__readfds,
 			 __fd_set *__writefds, __fd_set *__exceptfds,
 			 struct timespec *__timeout));

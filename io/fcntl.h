@@ -64,7 +64,6 @@ extern int fcntl __P ((int __fd, int __cmd, ...));
    OFLAG determines the type of access used.  If O_CREAT is on OFLAG,
    the third argument is taken as a `mode_t', the mode of the created file.  */
 extern int __open __P ((__const char *__file, int __oflag, ...));
-extern int __open64 __P ((__const char *__file, int __oflag, ...));
 #ifndef __USE_FILE_OFFSET64
 extern int open __P ((__const char *__file, int __oflag, ...));
 #else
