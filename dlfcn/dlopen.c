@@ -1,5 +1,5 @@
 /* Load a shared object at run time.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,3 +54,4 @@ __dlopen_check (const char *file, int mode)
 }
 #include <shlib-compat.h>
 versioned_symbol (libdl, __dlopen_check, dlopen, GLIBC_2_1);
+static_link_warning (dlopen)
