@@ -1,5 +1,8 @@
 1998-09-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getcwd.c: Prevent compiler warning from redefinition
+	of mempcpy.  Reported by Andreas Jaeger.
+
 	* misc/regexp.h (compile): Use alloca instead of __alloca.  It won't
 	pollute the namespace since the compiler will resolve it inline.
 	Reported by Florian La Roche <florian@suse.de>.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -136,7 +136,9 @@ extern void free ();
 #endif	/* Not ANSI_STRING.  */
 
 #ifdef _LIBC
-# define mempcpy __mempcpy
+# ifndef mempcpy
+#  define mempcpy __mempcpy
+# endif
 # define HAVE_MEMPCPY	1
 #endif
 
