@@ -1,8 +1,12 @@
+2003-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (mEMALIGn): Define alias __memalign_internal.
+	(__posix_memalign): Use __memalign_internal instead of memalign.
+
 2003-04-29  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Search for AUTOCONF unconditionally.
 	Just don't complain about missing it under --without-cvs.
-	* configure: Regenerated.
 
 	* include/libc-symbols.h (__symbol_set_attribute): New macro,
 	give hidden for [SHARED] and weak for [! SHARED].
