@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,13 +85,13 @@ extern int authdes_getucred __P ((__const struct authdes_cred * __adc,
 
 /* Get the public key for NAME and place it in KEY.  NAME can only be
    up to MAXNETNAMELEN bytes long and the destination buffer KEY should
-   have HEXKEYBATES + 1 bytes long to fit all characters from the key.  */
+   have HEXKEYBYTES + 1 bytes long to fit all characters from the key.  */
 extern int getpublickey __P ((__const char *__name, char *__key));
 
 /* Get the secret key for NAME and place it in KEY.  PASSWD is used to
    decrypt the encrypted key stored in the database.  NAME can only be
    up to MAXNETNAMELEN bytes long and the destination buffer KEY
-   should have HEXKEYBATES + 1 bytes long to fit all characters from
+   should have HEXKEYBYTES + 1 bytes long to fit all characters from
    the key.  */
 extern int getsecretkey __P ((__const char *__name, char *__key,
 			      __const char *__passwd));

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,13 +24,13 @@
 
 #if defined __BIG_ENDIAN__ || defined _BIG_ENDIAN
 # if defined __LITTLE_ENDIAN__ || defined _LITTLE_ENDIAN
-#  error Please fix sysdeps/powerpc/bits/endian.h (compiling bi-endian?).
+#  error Both BIG_ENDIAN and LITTLE_ENDIAN defined!
 # endif
 # define __BYTE_ORDER __BIG_ENDIAN
 #else
 # if defined __LITTLE_ENDIAN__ || defined _LITTLE_ENDIAN
 #  define __BYTE_ORDER __LITTLE_ENDIAN
 # else
-#  error Please fix sysdeps/powerpc/bits/endian.h.
+#  error Cannot determine current byte order.
 # endif
 #endif

@@ -42,7 +42,7 @@
 /* This program isn't finished yet.
    It has tests for:
    acos, acosh, asin, asinh, atan, atan2, atanh,
-   cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp2, expm1,
+   cbrt, ceil, copysign, cos, cosh, erf, erfc, exp, exp10, exp2, expm1,
    fabs, fdim, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal,
@@ -1188,6 +1188,31 @@ exp_test (void)
 	     CHOOSE (1.5e-17, 0, 0));
   check_eps ("exp (0.7) == 2.0137527074...", FUNC(exp) (0.7),
 	     2.0137527074704765216L, CHOOSE(9e-17L, 0, 0));
+}
+
+
+static void
+exp10_test (void)
+{
+  errno = 0;
+  FUNC(exp10) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
+  check ("exp10 (+0) == 1", FUNC(exp10) (0), 1);
+  check ("exp10 (-0) == 1", FUNC(exp10) (minus_zero), 1);
+
+  check_isinfp ("exp10 (+inf) == +inf", FUNC(exp10) (plus_infty));
+  check ("exp10 (-inf) == 0", FUNC(exp10) (minus_infty), 0);
+  check_eps ("exp10 (3) == 1000", FUNC(exp10) (3), 1000,
+	     CHOOSE(5e-16, 0, 0));
+  check_eps ("exp10 (-1) == 0.1", FUNC(exp10) (-1), 0.1,
+	     CHOOSE(6e-18, 0, 0));
+  check_isinfp ("exp10 (1e6) == +inf", FUNC(exp10) (1e6));
+  check ("exp10 (-1e6) == 0", FUNC(exp10) (-1e6), 0);
+  check_eps ("exp10 (0.7) == 5.0118723...", FUNC(exp10) (0.7),
+	     5.0118723362727228500L, CHOOSE(6e-16, 9e-16, 0));
 }
 
 
@@ -5956,6 +5981,7 @@ main (int argc, char *argv[])
 
   /* exponential and logarithmic functions */
   exp_test ();
+  exp10_test ();
   exp2_test ();
   expm1_test ();
   frexp_test ();

@@ -53,7 +53,7 @@ subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs)
 
 
-libnss_files-routines	:= $(addprefix files-,$(filter-out key, $(databases)))
+libnss_files-routines	:= $(addprefix files-,$(databases))
 distribute		+= files-XXX.c files-parse.c
 
 libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\

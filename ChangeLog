@@ -1,3 +1,24 @@
+1998-06-03 03:09  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/pread.c: Detect missing syscall, like poll().
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+
+1998-06-03 03:09  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/Makefile: Use -G0 on the startup file; this
+	makes it easier to undump emacs.
+	* sysdeps/powerpc/bits/endian.h: Use more informative error message
+	for when the endianness can't be determined.
+
+1998-06-04 13:19  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* nss/Makefile: Add files publickey database support.
+	* nss/libnss_files.map: Export the required functions.
+	* nss/nss_files/files-key.c: Implement it.
+	* sunrpc/rpc/auth_des.h: Correct typos in comments.
+
 1998-06-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_builtin.h: Add aliases for CORBA.

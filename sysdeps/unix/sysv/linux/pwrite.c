@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,6 +19,9 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <sys/syscall.h>
+
+#ifdef __NR_pwrite
 
 extern ssize_t __syscall_pwrite64 (int fd, const void *buf, size_t count,
 				   off_t offset_hi, off_t offset_lo);
@@ -49,4 +52,5 @@ weak_alias (__pwrite, pwrite)
 
 #define __pwrite(fd, buf, count, offset) \
      static internal_function __emulate_pwrite (fd, buf, count, offset)
+#endif
 #include <sysdeps/posix/pwrite.c>
