@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
    This file is part of the GNU C Library.
@@ -26,7 +26,7 @@
 #ifndef __FILEDESC_h
 #define __FILEDESC_h
 
-#define _STDIO_H
+#define __need_FOPEN_MAX
 #include <bits/stdio_lim.h>
 
 #ifndef __DECLARE_FILE_DESCRIPTORS__
