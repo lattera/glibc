@@ -25,6 +25,6 @@ Cambridge, MA 02139, USA.  */
 
 ENTRY (setjmp)
 	lda $27, __sigsetjmp	/* Load address to jump to.  */
-	bis 1, $31, $17		/* Pass a second argument of one.  */
+	bis $31, 1, $17		/* Pass a second argument of one.  */
 	jmp $31, ($27), __sigsetjmp /* Call __sigsetjmp.  */
 	.end setjmp
