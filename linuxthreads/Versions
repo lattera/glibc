@@ -172,6 +172,14 @@ libpthread {
     pthread_cond_wait; pthread_cond_timedwait;
     pthread_cond_signal; pthread_cond_broadcast;
   }
+
+  # Hey you!!  Yes, YOU!  Do not add new symbols here!
+  # The linuxthreads libpthread ABI froze at GLIBC_2.3.2 and lacks
+  # numerous additions that NPTL's libpthread has.  We can't go adding
+  # any new symbols here unless we support all the new symbols in NPTL,
+  # and we don't want to do that.  Linuxthreads is only alive for
+  # compatibility with old binaries using old interfaces.
+
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
     __pthread_initialize;
