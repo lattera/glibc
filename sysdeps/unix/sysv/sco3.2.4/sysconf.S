@@ -21,16 +21,9 @@ Cambridge, MA 02139, USA.  */
 #include <limits.h>
 
 .globl	__tzname_max
-ENTRY (sysconf)
+ENTRY (__sysconf)
 	cmpl 4(%esp), $_SC_TZNAME_MAX /* Is the arg _SC_TZNAME_MAX?  */
 	je tzname
 	DO_CALL (sysconf, 1)	/* No; use the SCO system call.  */
 	ret
-tzname:	movl (C_SYMBOL_NAME(__tzname_max)), %eax /* Yes; use __tzname_max. */
-#ifdef	TZNAME_MAX
-	cmpl $TZNAME_MAX, %eax	/* Is TZNAME_MAX larger?  */
-	jle out
-	movl $TZNAME_MAX, %eax	/* Yes; return it.  */
-out:
-#endif
-	ret
+tzname:	jmp C_SYMBOL_NAME(__tzname_max) /* Yes; bounce to __tzname_max (). */
