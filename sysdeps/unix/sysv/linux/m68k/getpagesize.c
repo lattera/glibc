@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de>.
 
@@ -37,9 +37,10 @@ __getpagesize ()
     return GL(dl_pagesize);
 
 #ifdef __NR_getpagesize
-  result = INTERNAL_SYSCALL (getpagesize, 0);
+  INTERNAL_SYSCALL_DECL (err);
+  result = INTERNAL_SYSCALL (getpagesize, err, 0);
   /* The only possible error is ENOSYS.  */
-  if (!INTERNAL_SYSCALL_ERROR_P (result))
+  if (!INTERNAL_SYSCALL_ERROR_P (result, err))
     return result;
 #endif
 
