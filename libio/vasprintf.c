@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ _IO_vasprintf (result_ptr, format, args)
       *result_ptr = (char *) malloc (needed);
       if (*result_ptr != NULL)
 	{
-	  memcpy (*result_ptr, sf._sbf._f._IO_buf_base, needed);
+	  memcpy (*result_ptr, sf._sbf._f._IO_buf_base, needed - 1);
 	  free (sf._sbf._f._IO_buf_base);
 	}
       else
@@ -83,7 +83,7 @@ _IO_vasprintf (result_ptr, format, args)
     }
   if (*result_ptr == NULL)
     *result_ptr = sf._sbf._f._IO_buf_base;
-  (*result_ptr)[sf._sbf._f._IO_write_ptr-sf._sbf._f._IO_write_base] = '\0';
+  (*result_ptr)[needed - 1] = '\0';
   return ret;
 }
 
