@@ -175,6 +175,12 @@
 # define __ASSUME_FCNTL64		1
 #endif
 
+/* The AT_CLKTCK auxiliary vector entry was introduction in the 2.4.0
+   series.  */
+#if __LINUX_KERNEL_VERSION >= 132097
+# define __ASSUME_AT_CLKTCK		1
+#endif
+
 /* Arm got fcntl64 in 2.4.4, PowerPC and SH have it also in 2.4.4 (I
    don't know when it got introduced).  But PowerPC64 does not support
    separate FCNTL64 call, FCNTL is already 64-bit */

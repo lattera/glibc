@@ -1,3 +1,9 @@
+2003-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_AT_CLKTCK):
+	Define.
+	* sysdeps/unix/sysv/linux/prof-freq.h: New file.
+
 2003-07-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Protect new_sysinfo
