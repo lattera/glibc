@@ -163,6 +163,10 @@
 # define __builtin_expect(expr, val) (expr)
 #endif
 
+/* Determine the return address.  */
+#define RETURN_ADDRESS(nr) \
+  __builtin_extract_return_addr (__builtin_return_address (nr))
+
 /* When a reference to SYMBOL is encountered, the linker will emit a
    warning message MSG.  */
 #ifdef HAVE_GNU_LD
