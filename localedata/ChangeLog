@@ -1,3 +1,7 @@
+2003-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/de_DE: Use two-letter abday values.
+
 2003-05-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* tests-mbwc/tst_wcsxfrm.c (tst_wcsxfrm): Use %zu instead of %d
