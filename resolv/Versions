@@ -71,7 +71,7 @@ libresolv {
   }
   GLIBC_2.3.2 {
     __p_rcode;
-  };
+  }
   GLIBC_PRIVATE {
     # Needed in libnss_dns.
     __ns_name_unpack; __ns_name_ntop;

@@ -1,3 +1,9 @@
+2004-02-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* resolv/Versions: Remove semicolon from the end of libresolv's
+	GLIBC_2.3.2 version block.
+	* Versions.def (libresolv): Add GLIBC_2.3.2.
+
 2004-02-19  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/hppa/fpu/feholdexcpt.c (feholdexcept): Fix order of fp

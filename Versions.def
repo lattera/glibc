@@ -81,6 +81,7 @@ libpthread {
 libresolv {
   GLIBC_2.0
   GLIBC_2.2
+  GLIBC_2.3.2
   GLIBC_PRIVATE
 }
 librt {
