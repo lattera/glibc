@@ -96,13 +96,18 @@ Cambridge, MA 02139, USA.  */
 #define weak_alias(original, alias)	\
   .weak C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+
+/* Declare SYMBOL to be weak.  */
+#define weak_symbol(symbol)	.weak C_SYMBOL_NAME (symbol)
 #else
+#define weak_symbol(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
 #define weak_alias(original, alias) \
   asm (".weak " __SYMBOL_PREFIX #alias "\n" \
        __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
 #endif
 #else
 #define	weak_alias(original, alias) strong_alias(original, alias)
+#define weak_symbol(symbol)	/* Do nothing.  */
 #endif
 
 
