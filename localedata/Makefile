@@ -76,17 +76,20 @@ include ../Makeconfig
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-locale_test_suite := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp \
-		     tst_wctrans tst_iswalpha tst_iswpunct tst_wcschr	 \
-		     tst_wcspbrk tst_wctype tst_iswcntrl tst_iswspace	 \
-		     tst_wcscoll tst_wcsspn tst_iswdigit tst_iswupper	 \
-		     tst_wcscpy tst_wcsstr tst_iswgraph tst_iswxdigit	 \
-		     tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf	 \
-		     tst_wcslen tst_wctob tst_iswctype tst_towlower	 \
-		     tst_wcscat tst_towupper tst_wcscmp tst_wcsncat	 \
-		     tst_wcsncpy tst_wcsxfrm tst_wcwidth tst_mbrlen	 \
-		     tst_mblen tst_strcoll tst_strxfrm tst_mbtowc 	 \
-		     tst_wctomb
+locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
+		     tst_iswctype tst_iswdigit tst_iswgraph            \
+		     tst_iswlower tst_iswprint tst_iswpunct            \
+		     tst_iswspace tst_iswupper tst_iswxdigit tst_mblen \
+		     tst_mbrlen tst_mbrtowc tst_mbsrtowcs tst_mbstowcs \
+		     tst_mbtowc tst_strcoll tst_strfmon tst_strxfrm    \
+		     tst_swscanf tst_towctrans tst_towlower            \
+		     tst_towupper tst_wcrtomb tst_wcscat tst_wcschr    \
+		     tst_wcscmp tst_wcscoll tst_wcscpy tst_wcscspn     \
+		     tst_wcslen tst_wcsncat tst_wcsncmp tst_wcsncpy    \
+		     tst_wcspbrk tst_wcsrtombs tst_wcsspn tst_wcsstr   \
+		     tst_wcstod tst_wcstok tst_wcstombs tst_wcswidth   \
+		     tst_wcsxfrm tst_wctob tst_wctomb tst_wctrans      \
+		     tst_wctype tst_wcwidth
 
 tests = $(locale_test_suite)
 endif
@@ -135,7 +138,7 @@ do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
 do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test do-tst-mbswcs
 	$(SHELL) -e $< $(common-objpfx)
 $(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: do-tst-ctype\
-	do-tst-mbswcs
+	 do-tst-mbswcs
 endif
 endif
 
@@ -167,13 +170,18 @@ tst_iswupper-ENV = $(TEST_MBWC_ENV)
 tst_iswxdigit-ENV = $(TEST_MBWC_ENV)
 tst_mblen-ENV = $(TEST_MBWC_ENV)
 tst_mbrlen-ENV = $(TEST_MBWC_ENV)
+tst_mbrtowc-ENV = $(TEST_MBWC_ENV)
+tst_mbsrtowcs-ENV = $(TEST_MBWC_ENV)
+tst_mbstowcs-ENV = $(TEST_MBWC_ENV)
 tst_mbtowc-ENV = $(TEST_MBWC_ENV)
 tst_strcoll-ENV = $(TEST_MBWC_ENV)
+tst_strfmon-ENV = $(TEST_MBWC_ENV)
 tst_strxfrm-ENV = $(TEST_MBWC_ENV)
 tst_swscanf-ENV = $(TEST_MBWC_ENV)
 tst_towctrans-ENV = $(TEST_MBWC_ENV)
 tst_towlower-ENV = $(TEST_MBWC_ENV)
 tst_towupper-ENV = $(TEST_MBWC_ENV)
+tst_wcrtomb-ENV = $(TEST_MBWC_ENV)
 tst_wcscat-ENV = $(TEST_MBWC_ENV)
 tst_wcschr-ENV = $(TEST_MBWC_ENV)
 tst_wcscmp-ENV = $(TEST_MBWC_ENV)
@@ -185,8 +193,12 @@ tst_wcsncat-ENV = $(TEST_MBWC_ENV)
 tst_wcsncmp-ENV = $(TEST_MBWC_ENV)
 tst_wcsncpy-ENV = $(TEST_MBWC_ENV)
 tst_wcspbrk-ENV = $(TEST_MBWC_ENV)
+tst_wcsrtombs-ENV = $(TEST_MBWC_ENV)
 tst_wcsspn-ENV = $(TEST_MBWC_ENV)
 tst_wcsstr-ENV = $(TEST_MBWC_ENV)
+tst_wcstod-ENV = $(TEST_MBWC_ENV)
+tst_wcstok-ENV = $(TEST_MBWC_ENV)
+tst_wcstombs-ENV = $(TEST_MBWC_ENV)
 tst_wcswidth-ENV = $(TEST_MBWC_ENV)
 tst_wcsxfrm-ENV = $(TEST_MBWC_ENV)
 tst_wctob-ENV = $(TEST_MBWC_ENV)

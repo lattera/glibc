@@ -6,6 +6,15 @@
 	(tst_strcoll-ENV): New.
 	(tst_strxfrm-ENV): New.
 	(tst_wctomb-ENV): New.
+	(tst_mbrtowc-ENV): New.
+	(tst_mbsrtowcs-ENV): New.
+	(tst_mbstowcs-ENV): New.
+	(tst_strfmon-ENV): New.
+	(tst_wcrtomb-ENV): New.
+	(tst_wcsrtombs-ENV): New.
+	(tst_wcstod-ENV): New.
+	(tst_wcstok-ENV): New.
+	(tst_wcstombs-ENV): New.
 
 	* tests-mbwc/tst_wctomb.c: New test file from Shoji Kuwabara
 	<kuwahara@cthulhu.engr.sgi.com>.
@@ -18,6 +27,24 @@
 	* tests-mbwc/tst_strcoll.c: Likewise.
 	* tests-mbwc/tst_mblen.c: Likewise.
 	* tests-mbwc/dat_mblen.c: Likewise.
+	* tests-mbwc/dat_wcstok.c: Likewise.
+	* tests-mbwc/tst_wcstok.c: Likewise.
+	* tests-mbwc/dat_wcstod.c: Likewise.
+	* tests-mbwc/tst_wcstod.c: Likewise.
+	* tests-mbwc/dat_mbrtowc.c: Likewise.
+	* tests-mbwc/tst_mbrtowc.c: Likewise.
+	* tests-mbwc/dat_wcsrtombs.c: Likewise.
+	* tests-mbwc/tst_wcsrtombs.c: Likewise.
+	* tests-mbwc/dat_wcstombs.c: Likewise.
+	* tests-mbwc/tst_wcstombs.c: Likewise.
+	* tests-mbwc/dat_mbsrtowcs.c: Likewise.
+	* tests-mbwc/tst_mbsrtowcs.c: Likewise.
+	* tests-mbwc/dat_wcrtomb.c: Likewise.
+	* tests-mbwc/tst_wcrtomb.c: Likewise.
+	* tests-mbwc/dat_mbstowcs.c: Likewise.
+	* tests-mbwc/tst_mbstowcs.c: Likewise.
+	* tests-mbwc/dat_strfmon.c: Likewise.
+	* tests-mbwc/tst_strfmon.c: Likewise.
 
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
