@@ -1,20 +1,20 @@
 /* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 
 #ifndef	_UTMP_H_
@@ -38,18 +38,18 @@ Boston, MA 02111-1307, USA.  */
 
 /* Make FD be the controlling terminal, stdin, stdout, and stderr;
    then close FD.  Returns 0 on success, nonzero on error.  */
-extern int login_tty __P ((int fd));
+extern int login_tty __P ((int __fd));
 
 
 /* Write the given entry into utmp and wtmp.  */
-extern void login __P ((__const struct utmp *));
+extern void login __P ((__const struct utmp *__entry));
 
 /* Write the utmp entry to say the user on UT_LINE has logged out.  */
-extern int logout __P ((__const char *ut_line));
+extern int logout __P ((__const char *__ut_line));
 
 /* Append to wtmp an entry for the current time and the given info.  */
-extern void logwtmp __P ((__const char *ut_line, __const char *ut_name,
-			  __const char *ut_host));
+extern void logwtmp __P ((__const char *__ut_line, __const char *__ut_name,
+			  __const char *__ut_host));
 
 /* Change name of the utmp file to be examined.  */
 extern int utmpname __P ((__const char *__file));

@@ -30,12 +30,12 @@ ssize_t
 readv (fd, vector, count)
      int fd;
      const struct iovec *vector;
-     size_t count;
+     int count;
 {
   char *buffer;
   size_t bytes;
   int bytes_read;
-  register size_t i;
+  int i;
 
   /* Find the total number of bytes to be read.  */
   bytes = 0;

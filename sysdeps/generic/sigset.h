@@ -37,6 +37,10 @@ typedef unsigned long int __sigset_t;
 #if !defined (_SIGSET_H_fns) && defined (_SIGNAL_H)
 #define _SIGSET_H_fns 1
 
+#ifndef _EXTERN_INLINE
+#define _EXTERN_INLINE extern __inline
+#endif
+
 /* Return a mask that includes SIG only.  The cast to `sigset_t' avoids
    overflow if `sigset_t' is wider than `int'.  */
 #define	__sigmask(sig)	(((__sigset_t) 1) << ((sig) - 1))
@@ -44,38 +48,24 @@ typedef unsigned long int __sigset_t;
 #define	__sigemptyset(set)	((*(set) = (__sigset_t) 0), 0)
 #define	__sigfillset(set)	((*(set) = ~(__sigset_t) 0), 0)
 
-/* These functions must check for a bogus signal number.  We detect it by a
-   zero sigmask, since a number too low or too high will have shifted the 1
-   off the high end of the mask.  If we find an error, we punt to a random
-   call we know fails with EINVAL (kludge city!), so as to avoid referring
-   to `errno' in this file (sigh).  */
+/* These functions needn't check for a bogus signal number -- error
+   checking is done in the non __ versions.  */
 
 extern int __sigismember (__const __sigset_t *, int);
 extern int __sigaddset (__sigset_t *, int);
 extern int __sigdelset (__sigset_t *, int);
 
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
-#endif
 #define __SIGSETFN(NAME, BODY, CONST)					      \
   _EXTERN_INLINE int							      \
-  __##NAME (CONST __sigset_t *__set, int __sig)				      \
+  NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \
-    if (__sig < 1 || __sig > (int) sizeof (__sigset_t) * 8)		      \
-      {									      \
-	extern int raise (int);						      \
-	return raise (-1);						      \
-      }									      \
-    else								      \
-      {									      \
-	__sigset_t __mask = __sigmask (__sig);				      \
-	return BODY;							      \
-      }									      \
+    __sigset_t __mask = __sigmask (__sig);				      \
+    return BODY;							      \
   }
 
-__SIGSETFN (sigismember, (*__set & __mask) ? 1 : 0, __const)
-__SIGSETFN (sigaddset, ((*__set |= __mask), 0), )
-__SIGSETFN (sigdelset, ((*__set &= ~__mask), 0), )
+__SIGSETFN (__sigismember, (*__set & __mask) ? 1 : 0, __const)
+__SIGSETFN (__sigaddset, ((*__set |= __mask), 0), )
+__SIGSETFN (__sigdelset, ((*__set &= ~__mask), 0), )
 
 #undef __SIGSETFN
 

@@ -21,9 +21,9 @@
 #define _SYS_UIO_H	1
 #include <features.h>
 
-__BEGIN_DECLS
-
 #include <sys/types.h>
+
+__BEGIN_DECLS
 
 /* This file defines `struct iovec'.  */
 #include <iovec.h>
@@ -34,7 +34,7 @@ __BEGIN_DECLS
    The buffers are filled in the order specified.
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
-extern ssize_t readv __P ((int __fd, __const struct iovec * __vector,
+extern ssize_t readv __P ((int __fd, __const struct iovec *__vector,
 			   int __count));
 
 /* Write data pointed by the buffers described by VECTOR, which
@@ -42,7 +42,7 @@ extern ssize_t readv __P ((int __fd, __const struct iovec * __vector,
    The data is written in the order specified.
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
-extern ssize_t writev __P ((int __fd, __const struct iovec * __vector,
+extern ssize_t writev __P ((int __fd, __const struct iovec *__vector,
 			    int __count));
 
 

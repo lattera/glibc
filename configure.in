@@ -7,10 +7,6 @@ AC_CONFIG_HEADER(config.h)
 # This will get text that should go into config.make.
 config_vars=
 
-# We need a variable with the absolute path to the toplevel build directory.
-top_absdir=`cd $srcdir; pwd`
-AC_SUBST(top_absdir)
-
 # Check for a --with-gmp argument and set gmp-srcdir in config.make.
 AC_ARG_WITH(gmp, dnl
   --with-gmp=DIRECTORY	  find GMP source code in DIRECTORY (not needed),
@@ -336,7 +332,7 @@ AC_MSG_RESULT(sysdeps/generic sysdeps/stub)
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL="$top_absdir/install-sh -c"
+  INSTALL="$(..)./install-sh -c"
 fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
@@ -348,6 +344,14 @@ fi
 AC_PROG_CPP
 AC_CHECK_TOOL(AR, ar)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
+
+AC_PATH_PROG(BASH, bash, no)
+if test "$BASH" != no && $BASH -c 'test "$BASH_VERSINFO" -ge 2'; then
+  libc_cv_have_bash2=yes
+else
+  libc_cv_have_bash2=no
+fi
+AC_SUBST(libc_cv_have_bash2)
 
 AC_CACHE_CHECK(for signed size_t type, libc_cv_signed_size_t, [dnl
 echo '#include <stddef.h>
@@ -652,6 +656,9 @@ libio) AC_DEFINE(USE_IN_LIBIO) ;;
 default) stdio=stdio ;;
 esac
 AC_MSG_RESULT($stdio)
+
+AC_SUBST(libc_cv_slibdir)
+AC_SUBST(libc_cv_sysconfdir)
 
 AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf)
 if test $gnu_ld = yes; then

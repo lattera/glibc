@@ -32,6 +32,12 @@
    visible as if the object were linked directly into the program.  */
 #define RTLD_GLOBAL	0x100
 
+/* If the first argument of `dlsym' is set to RTLD_NEXT the run-time
+   address of the symbol called NAME in the next shared object is
+   returned.  The "next" relation is defined by the order the shared
+   objects were loaded.  */
+#define RTLD_NEXT	((void *) -1l)
+
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
 extern void *dlopen __P ((__const char *__file, int __mode));

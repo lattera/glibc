@@ -52,7 +52,7 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 	  $(rpcsvc:%=rpcsvc/%) $(rpcsvc:%.x=rpcsvc/%.h)
 rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
-	 rnusers.x spray.x nfs_prot.x rquota.x
+	 rusers.x spray.x nfs_prot.x rquota.x
 install-others = $(includedir)/rpcsvc/bootparam_prot.h \
 		 $(sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)

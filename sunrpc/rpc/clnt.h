@@ -278,7 +278,7 @@ extern CLIENT *clnttcp_create __P ((struct sockaddr_in *__raddr,
  *	struct sockaddr_in *raddr;
  *	u_long program;
  *	u_long version;
- *	struct timeval wait;
+ *	struct timeval wait_resend;
  *	int *sockp;
  *
  * Same as above, but you specify max packet sizes.
@@ -287,35 +287,37 @@ extern CLIENT *clnttcp_create __P ((struct sockaddr_in *__raddr,
  *	struct sockaddr_in *raddr;
  *	u_long program;
  *	u_long version;
- *	struct timeval wait;
+ *	struct timeval wait_resend;
  *	int *sockp;
  *	u_int sendsz;
  *	u_int recvsz;
  */
 extern CLIENT *clntudp_create __P ((struct sockaddr_in *__raddr,
 				    u_long __program, u_long __version,
-				    struct timeval __wait, int *__sockp));
+				    struct timeval __wait_resend,
+				    int *__sockp));
 extern CLIENT *clntudp_bufcreate __P ((struct sockaddr_in *__raddr,
 				       u_long __program, u_long __version,
-				       struct timeval __wait, int *__sockp,
-				       u_int __sendsz, u_int __recvsz));
+				       struct timeval __wait_resend,
+				       int *__sockp, u_int __sendsz,
+				       u_int __recvsz));
 
 /*
  * Print why creation failed
  */
-void clnt_pcreateerror __P ((char *__msg));	/* stderr */
-char *clnt_spcreateerror __P ((char *__msg));	/* string */
+extern void clnt_pcreateerror __P ((char *__msg));	/* stderr */
+extern char *clnt_spcreateerror __P ((char *__msg));	/* string */
 
 /*
  * Like clnt_perror(), but is more verbose in its output
  */
-void clnt_perrno __P ((enum clnt_stat __num));	/* stderr */
+extern void clnt_perrno __P ((enum clnt_stat __num));	/* stderr */
 
 /*
  * Print an English error message, given the client error code
  */
-void clnt_perror __P ((CLIENT *__clnt, char *__msg)); 	/* stderr */
-char *clnt_sperror __P ((CLIENT *__clnt, char *__msg));	/* string */
+extern void clnt_perror __P ((CLIENT *__clnt, char *__msg)); 	/* stderr */
+extern char *clnt_sperror __P ((CLIENT *__clnt, char *__msg));	/* string */
 
 /*
  * If a creation fails, the following allows the user to figure out why.
@@ -332,7 +334,7 @@ extern struct rpc_createerr rpc_createerr;
 /*
  * Copy error message to buffer.
  */
-char *clnt_sperrno __P ((enum clnt_stat __num));	/* string */
+extern char *clnt_sperrno __P ((enum clnt_stat __num));	/* string */
 
 
 

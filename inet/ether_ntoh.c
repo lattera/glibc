@@ -19,6 +19,7 @@
 
 #include <netinet/ether.h>
 #include <netinet/if_ether.h>
+#include <string.h>
 
 #include "../nss/nsswitch.h"
 

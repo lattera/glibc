@@ -99,11 +99,21 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
 
+ifneq ($(have-bash2),yes)
 $(objpfx)ldd: ldd.sh.in Makefile
 	sed -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
 	    -e 's%@VERSION@%$(version)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
+else
+$(objpfx)ldd: ldd.bash.in Makefile
+	sed -e 's%@BASH@%$(BASH)%g' \
+	    -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \
+	    -e 's%@VERSION@%$(version)%g' \
+	    -e 's%@TEXTDOMAINDIR@%$(localedir)%g' < $< > $@.new
+	chmod 555 $@.new
+	mv -f $@.new $@
+endif
 
 # muwahaha
 

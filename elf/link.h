@@ -109,6 +109,11 @@ struct link_map
     struct link_map **l_searchlist;
     unsigned int l_nsearchlist;
 
+    /* We keep another list in which we keep duplicates.  This is
+       needed in _dl_lookup_symbol_skip to implemented RTLD_NEXT.  */
+    struct link_map **l_dupsearchlist;
+    unsigned int l_ndupsearchlist;
+
     /* Dependent object that first caused this object to be loaded.  */
     struct link_map *l_loader;
 
@@ -238,6 +243,14 @@ extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     struct link_map *symbol_scope[],
 				     const char *reference_name,
 				     int flags);
+
+/* For handling RTLD_NEXT we must be able to skip shared objects.  */
+extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
+					  const ElfW(Sym) **sym,
+					  struct link_map *symbol_scope[],
+					  const char *reference_name,
+					  struct link_map *skip_this,
+					  int flags);
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);

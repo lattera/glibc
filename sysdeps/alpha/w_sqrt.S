@@ -1,8 +1,7 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-   Contributed by David Mosberger (davidm@cs.arizona.edu).
-   Based on public-domain C source by Linus Torvalds.
-
    This file is part of the GNU C Library.
+   Contributed by David Mosberger <davidm@cs.arizona.edu>, 1996.
+   Based on public-domain C source by Linus Torvalds.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -15,9 +14,9 @@
    Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-   Cambridge, MA 02139, USA.  */
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* This version is much faster than generic sqrt implementation, but
    it doesn't handle exceptional values or the inexact flag.  Don't use
@@ -25,6 +24,7 @@
 
 #ifndef _IEEE_FP
 
+#define _ERRNO_H
 #include <errnos.h>
 #include <sysdep.h>
 

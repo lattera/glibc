@@ -1,21 +1,21 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <stdlib.h>
@@ -55,21 +55,20 @@ __drand48_iterate (xsubi, buffer)
 
   if (sizeof (unsigned short int) == 2)
     {
-      X = (xsubi[2] << 16 | xsubi[1]) << 16 | xsubi[0];
-      a = (buffer->a[2] << 16 | buffer->a[1]) << 16 | buffer->a[0];
+      X = (u_int64_t)xsubi[2] << 32 | (u_int64_t)xsubi[1] << 16 | xsubi[0];
+      a = ((u_int64_t)buffer->a[2] << 32 | (u_int64_t)buffer->a[1] << 16
+	   | buffer->a[0]);
 
       result = X * a + buffer->c;
 
       xsubi[0] = result & 0xffff;
-      result >>= 16;
-      xsubi[1] = result & 0xffff;
-      result >>= 16;
-      xsubi[2] = result & 0xffff;
+      xsubi[1] = (result >> 16) & 0xffff;
+      xsubi[2] = (result >> 32) & 0xffff;
     }
   else
     {
-      X = xsubi[2] << 16 | xsubi[1] >> 16;
-      a = buffer->a[2] << 16 | buffer->a[1] >> 16;
+      X = (u_int64_t)xsubi[2] << 16 | xsubi[1] >> 16;
+      a = (u_int64_t)buffer->a[2] << 16 | buffer->a[1] >> 16;
 
       result = X * a + buffer->c;
 

@@ -78,7 +78,9 @@ const char *h_errlist[] = {
 };
 int	h_nerr = { sizeof h_errlist / sizeof h_errlist[0] };
 
+#ifndef h_errno
 extern int	h_errno;
+#endif
 
 /*
  * herror --

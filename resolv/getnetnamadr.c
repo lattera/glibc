@@ -58,9 +58,11 @@ static char rcsid[] = "$Id$";
 #include <errno.h>
 #include <string.h>
 
+#ifndef h_errno
 extern int h_errno;
+#endif
 
-#if defined(mips) && defined(SYSTYPE_BSD43)
+#if defined(mips) && defined(SYSTYPE_BSD43) && !defined(errno)
 extern int errno;
 #endif
 

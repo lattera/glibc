@@ -101,8 +101,11 @@ extern struct passwd *getpwnam __P ((__const char *__name));
 
 /* Reentrant versions of some of the functions above.
 
-   PLEASE NOTE: these functions are not yet standardized.  The interface
-   may change in later versions of this library.  */
+   PLEASE NOTE: the `getpwent_r' function is not (yet) standardized.
+   The interface may change in later versions of this library.  But
+   the interface is designed following the principals used for the
+   other reentrant functions so the chances are good this is what the
+   POSIX people would choose.  */
 
 #if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
 extern int __getpwent_r __P ((struct passwd *__resultbuf, char *__buffer,
@@ -127,7 +130,8 @@ extern int getpwnam_r __P ((__const char *__name, struct passwd *__resultbuf,
 
 
 #ifdef	__USE_SVID
-/* Read an entry from STREAM.  */
+/* Read an entry from STREAM.  This function is not standardized and
+   probably never will.  */
 extern int __fgetpwent_r __P ((FILE * __stream, struct passwd *__resultbuf,
 			       char *__buffer, size_t __buflen,
 			       struct passwd **__result));

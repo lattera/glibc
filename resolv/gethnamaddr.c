@@ -133,7 +133,9 @@ typedef union {
     char ac;
 } align;
 
+#ifndef h_errno
 extern int h_errno;
+#endif
 
 #ifdef DEBUG
 static void

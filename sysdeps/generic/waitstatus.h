@@ -37,8 +37,8 @@
 /* Nonzero if STATUS indicates termination by a signal.  */
 #ifdef	__GNUC__
 #define	__WIFSIGNALED(status)						      \
-  (__extension__ ({ int __stat = (status);				      \
-		    !__WIFSTOPPED(__stat) && !__WIFEXITED(__stat); }))
+  (__extension__ ({ int __status = (status);				      \
+		    !__WIFSTOPPED(__status) && !__WIFEXITED(__status); }))
 #else	/* Not GCC.  */
 #define	__WIFSIGNALED(status)	(!__WIFSTOPPED(status) && !__WIFEXITED(status))
 #endif	/* GCC.  */

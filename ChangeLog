@@ -1,3 +1,178 @@
+Wed Nov 20 02:04:11 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Make sigsuspend a weak
+	alias of __sigsuspend.
+
+	* grp/grp.h: Correct comment about POSIX compliance.
+	* pwd/pwd.h: Likewise.
+
+	* login/utmp.h: Update copyright and pretty-print prototypes.
+	* sysdeps/generic/paths.h: Add _PATH_LASTLOG, _PATH_UTMP and
+	_PATH_WTMP from utmpbits.h.
+	* sysdeps/unix/sysv/linux/paths.h: Likewise.
+	* sysdeps/generic/utmpbits.h: Remove here.
+	* sysdeps/gnu/utmpbits.h: Likewise.
+
+	* misc/sys/uio.h: Place __BEGIN_DECLS correctly.
+	Pretty-print prototypes.
+
+	* sysdeps/unix/sysv/linux/sparc/clone.S: New file.  Taken from
+	LinuxThreads-0.5.
+
+Tue Nov 19 13:43:07 1996  Richard Henderson  <rth@tamu.edu>
+
+	* inet/ether_hton.c: Include <string.h>.
+	* inet/ether_ntoh.c: Likewise.
+	* inet/rexec.c: Get errno, index, getpass, getlogin from headers.
+	* misc/search.h: Fix hcreate_r argument type (unsigned -> size_t).
+
+	* misc/sys/cdefs.h: Change __long_double_t definition from typedef
+	to define.  Jim Nance reports problems building XEmacs otherwise.
+
+	* resolv/gethnamaddr.c: Protect h_errno redefinition.
+	* resolv/getnetnamadr.c: Likewise.
+	* resolv/herror.c: Likewise.
+
+	* sysdeps/generic/sigset.h (__SIGSETFN): Operator ## doesn't work
+	with -traditional.  Reported by Eric Youngdale.  While we're at this,
+	don't do error checking in the __ functions.  This is consistent
+	with the sysv4 definitions and seems Right.
+	* signal/signal.h: Don't __OPTIMIZE__ sigops to __ versions.  Add
+	prototype for __sigsuspend.
+	* sysdeps/posix/sigblock.c: Optimize sigmask <-> sigset_t conversions
+	for sigset_t == unsigned long.  De-ansidecl-ify.  Reformat copyright.
+	* sysdeps/posix/sigpause.c: Likewise.
+	* sysdeps/posix/sigsetmask.c: Likewise.
+	* sysdeps/posix/sigvec.c: Likewise.
+	* sysdeps/posix/sigintr.c: Reformat copyright.
+	* sysdeps/posix/signal.c: Check signal number out of range since
+	__sigismember doesn't anymore.  Reformat copyright.
+	* sysdeps/posix/sigwait.c: Use __ versions of sigfillset, sigismember,
+	sigdelset, sigaction, and sigsuspend.
+
+	* stdlib/drand48-iter.c (__drand48_iterate): Cast state fragments
+	to the wider type before shifting.
+
+	* sysdeps/alpha/bsd-_setjmp.S: Silence assembler warning "$at used
+	without .set noat" in profiling hook.
+	* sysdeps/alpha/bsd-setjmp.S: Likewise.
+	* sysdeps/alpha/htonl.S: Likewise.
+	* sysdeps/alpha/htons.S: Likewise.
+	* sysdeps/alpha/s_copysign.S: Likewise.
+	* sysdeps/alpha/setjmp.S: Likewise.
+	* sysdeps/alpha/stpcpy.S: Likewise.
+	* sysdeps/alpha/strcat.S: Likewise.
+	* sysdeps/alpha/strcpy.S: Likewise.
+	* sysdeps/alpha/strncat.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/llseek.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Likewise.  Rename
+	function to __sigsuspend and add weak alias.
+	* sysdeps/unix/sysv/linux/alpha/syscall.S: Likewise.  Add missing END.
+
+	* sysdeps/alpha/w_sqrt.S: Define _ERRNO_H so <errnos.h> defines EDOM.
+
+	* sysdeps/unix/execve.S: Match PSEUDO_END symbol with the symbol
+	SYSCALL__ actually generated.
+
+	* sysdeps/unix/sysv/linux/errnos.h [_LIBC_REENTRANT]: Reflexively
+	#define __set_errno, as several imported subsystems (eg. BIND) check
+	that the symbol is defined.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c: Include <alloca.h>.
+
+	* sysdeps/alpha/memcpy.S: Temporarily remove until I can find a bug
+	that manifests in GCC.
+
+Tue Nov 19 11:10:05 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/posix/writev.c (writev): COUNT parm is now int.
+	* sysdeps/posix/readv.c (readv): Likewise.
+
+Tue Nov 19 15:28:29 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_dns/dns-network.c: Change return type of all functions
+	to enum nss_status.
+	Reported by NIIBE Yutaka.
+	* nss/nss_dns/dns-host.c: Update copyright.
+
+Fri Nov 15 20:16:38 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* config.make.in: Remove definition of top_absdir.
+	* configure.in: Likewise. Use $(..) instead.
+	* Makerules (make-link): Use $(..) to find rellns-sh script.
+
+Sat Nov 16 15:52:29 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/nss.texi (Name Service Switch): Fix reference to
+	`frobnicate'.
+
+Fri Nov 15 22:08:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	sys/mtio.h.
+
+Mon Nov 18 05:51:13 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/waitstatus.h (__WIFSIGNALED): Rename local
+	variable from __stat to __status to prevent shadowing.
+	* sunrpc/rpc/clnt.h (clntudp_create, clntudp_bufcreate): Likewise
+	for parameter __wait.
+	Reported by NIIBE Yutaka.
+
+Mon Nov 18 02:05:38 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/regexp.c: New file.  Implementation of obsolete interface
+	to regular expression matcher (required in XPG4.2).
+	* misc/regexp.h: New file.  Header for above.
+	* misc/Makefile (headers): Add regexp.h.
+	(routines): Add regexp.c.
+	Update copyright.
+
+Sun Nov 17 21:50:24 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdlib/tst-strtod.c (main): Add arguments for main.
+	* stdlib/tst-strtol.c (main): Likewise.
+
+Sun Nov 17 21:15:05 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Substitute libc_cv_slibdir and libc_cv_sysconfdir
+	in output files.
+	* sysdepes/unix/sysv/linux/configure: Define libc_cv_slibdir to /lib
+	and sysconfdir to /etc if $prefix is /usr.
+	* config.make.in: Add slibdir, sysconfdir and BASH to be replaced.
+
+	* elf/Makefile ($(objpfx)ldd): Install ldd.bash.in if
+	$(have-bash2) is yes.
+	* elf/ldd.bash.in: Add copyright and various cleanups.
+	* elf/ldd.sh.in: Likewise.
+
+	Implement RTLD_NEXT.
+	* elf/dlfcn.h: Define RTLD_NEXT.
+	* elf/dl-deps.c: Build second searchlist which contains duplicates.
+	* elf/dl-lookup.c (_dl_lookup_symbol_skip): New function.  Used
+	for RTLD_NEXT lookup.
+	Rewrite _dl_lookup_symbol to put common parts for both lookup
+	functions in a separate function.
+	* elf/dlsym.c: Handle RTLD_NEXT by calling _dl_lookup_symbol_skip.
+	* elf/link.h (struct link_map): Add l_dupsearchlist and
+	l_ndupsearchlist.
+	Add prototype for _dl_lookup_symbol_skip.
+
+	* sunrpc/Makefile (rpcsvc): Add rusers.
+	* sunrpc/rpcsvc/rnusers.x: Remove.  Obsolteted by rusers.x.
+	* sunrpc/rpcsvc/rusers.x: New file.
+
+Sun Nov 17 04:24:35 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c [USE_IN_LIBIO] (buffered_vfprintf): Call
+	__libc_lock_init for local lock.
+	Reported by a sun <asun@zoology.washington.edu>.
+	[!USE_IN_LIBIO] (PAD): Optimize a bit.
+
 Sun Nov 17 03:13:57 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* db/makedb.c: Update and reformat copyright.

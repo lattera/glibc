@@ -26,25 +26,43 @@
 void *
 dlsym (void *handle, const char *name)
 {
+  ElfW(Addr) caller = (ElfW(Addr)) __builtin_return_address (0);
   ElfW(Addr) loadbase;
   const ElfW(Sym) *ref = NULL;
   void doit (void)
     {
-      struct link_map *map = handle, **scope, *mapscope[2] = { map, NULL };
-      const char *owner;
-
-      if (map)
+      if (handle == NULL)
+	/* Search the global scope.  */
+	loadbase = _dl_lookup_symbol
+	  (name, &ref, &(_dl_global_scope ?: _dl_default_scope)[2], NULL, 0);
+      else if (handle == RTLD_NEXT)
 	{
-	  /* Search the scope of the given object.  */
-	  scope = mapscope;
-	  owner = map->l_name;
+	  struct link_map *l, *match;
+
+	  /* Find the highest-addressed object that CALLER is not below.  */
+	  match = NULL;
+	  for (l = _dl_loaded; l; l = l->l_next)
+	    if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
+	      match = l;
+
+	  if (! match)
+	    _dl_signal_error (0, NULL, _("\
+RTLD_NEXT used in code not dynamically loaded"));
+
+	  l = match;
+	  while (l->l_loader)
+	    l = l->l_loader;
+
+	  loadbase = _dl_lookup_symbol_skip
+	    (name, &ref, &_dl_loaded, NULL, l, 0);
 	}
       else
 	{
-	  scope = &(_dl_global_scope ?: _dl_default_scope)[2];
-	  owner = NULL;
+	  /* Search the scope of the given object.  */
+	  struct link_map *map = handle;
+	  struct link_map *mapscope[2] = { map, NULL };
+	  loadbase = _dl_lookup_symbol (name, &ref, mapscope, map->l_name, 0);
 	}
-      loadbase = _dl_lookup_symbol (name, &ref, scope, owner, 0);
     }
 
   return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);

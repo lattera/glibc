@@ -37,6 +37,7 @@ __set_errno (int __err)
 {
   return *__errno_location () = errno = __err;
 }
+#    define __set_errno __set_errno
 #   else /* !_LIBC_REENTRANT */
 #    define __set_errno(val) errno = (val)
 #   endif /* _LIBC_REENTRANT */

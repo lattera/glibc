@@ -33,16 +33,24 @@ _dl_map_object_deps (struct link_map *map,
       struct list *next;
     };
   struct list head[1 + npreloads], *tailp, *scanp;
+  struct list duphead, *duptailp;
   unsigned int nlist;
+  unsigned int nduplist;
 
   /* Start the search list with one element: MAP itself.  */
   head[0].map = map;
+
+  /* We use `l_reserved' as a mark bit to detect objects we have already
+     put in the search list and avoid adding duplicate elements later in
+     the list.  */
+  map->l_reserved = 1;
 
   /* Add the preloaded items after MAP but before any of its dependencies.  */
   for (nlist = 0; nlist < npreloads; ++nlist)
     {
       head[nlist].next = &head[nlist + 1];
       head[nlist + 1].map = preloads[nlist];
+      preloads[nlist]->l_reserved = 1;
     }
 
   /* Terminate the list.  */
@@ -51,10 +59,10 @@ _dl_map_object_deps (struct link_map *map,
   /* Start here for adding dependencies to the list.  */
   tailp = &head[nlist++];
 
-  /* We use `l_reserved' as a mark bit to detect objects we have already
-     put in the search list and avoid adding duplicate elements later in
-     the list.  */
-  map->l_reserved = 1;
+  /* Until now we have the same number of libraries in the normal and
+     the list with duplicates.  */
+  nduplist = nlist;
+  duptailp = &duphead;
 
   /* Process each element of the search list, loading each of its immediate
      dependencies and appending them to the list as we step through it.
@@ -94,6 +102,13 @@ _dl_map_object_deps (struct link_map *map,
 		    /* Set the mark bit that says it's already in the list.  */
 		    dep->l_reserved = 1;
 		  }
+
+		/* In any case Append DEP to the duplicates search list.  */
+		duptailp->next = alloca (sizeof *duptailp);
+		duptailp = duptailp->next;
+		duptailp->map = dep;
+		duptailp->next = NULL;
+		++nduplist;
 	      }
 	}
     }
@@ -112,4 +127,12 @@ _dl_map_object_deps (struct link_map *map,
 	 to avoid duplicates, so the next call starts fresh.  */
       scanp->map->l_reserved = 0;
     }
+
+  map->l_dupsearchlist = malloc (nduplist * sizeof (struct link_map *));
+  map->l_ndupsearchlist = nduplist;
+
+  for (nlist = 0; nlist < npreloads + 1; ++nlist)
+    map->l_dupsearchlist[nlist] = head[nlist].map;
+  for (scanp = duphead.next; scanp; scanp = scanp->next)
+    map->l_dupsearchlist[nlist++] = scanp->map;
 }

@@ -42,17 +42,18 @@
 # define ISDIGIT(Ch)	isdigit (Ch)
 
 # ifdef USE_IN_LIBIO
-#  define PUT(F, S, N)	_IO_sputn (F, S, N)
+#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar)							      \
   if (width > 0)							      \
-    done += _IO_padn (s, Padchar, width)
+    done += _IO_padn (s, (Padchar), width)
 # else
 #  define PUTC(C, F)	putc (C, F)
 ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
 # define PAD(Padchar)							      \
   if (width > 0)							      \
-    { if (__printf_pad (s, Padchar, width) == -1)			      \
-	return -1; else done += width; }
+    { ssize_t __res = __printf_pad (s, (Padchar), width);		      \
+      if (__res == -1) return -1;					      \
+      done += __res; }
 # endif
 #else
 # define vfprintf	vfwprintf
@@ -63,17 +64,18 @@ ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
 # define ISDIGIT(Ch)	iswdigit (Ch)
 
 # ifdef USE_IN_LIBIO
-#  define PUT(F, S, N)	_IO_sputn (F, S, N)
+#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
 #  define PAD(Padchar)							      \
   if (width > 0)							      \
-    done += _IO_wpadn (s, Padchar, width)
+    done += _IO_wpadn (s, (Padchar), width)
 # else
 #  define PUTC(C, F)	wputc (C, F)
 ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 #  define PAD(Padchar)							      \
   if (width > 0)							      \
-    { if (__wprintf_pad (s, Padchar, width) == -1)			      \
-	return -1; else done += width; }
+    { ssize_t __res = __wprintf_pad (s, (Padchar), width);		      \
+      if (__res == -1) return -1;					      \
+      done += __res; }
 # endif
 #endif
 
@@ -1515,6 +1517,7 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
 #ifdef _IO_MTSAFE_IO
   hp->_lock = &helper.lock;
+  __libc_lock_init (*hp->_lock);
 #endif
   _IO_JUMPS (hp) = (struct _IO_jump_t *) &_IO_helper_jumps;
 

@@ -5,7 +5,7 @@ endif
 ifeq ($(subdir), misc)
 sysdep_routines += sysctl clone
 
-sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
+sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \
 		  sys/user.h syscall-list.h sys/sysmacros.h sys/procfs.h \
 		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h

@@ -43,3 +43,12 @@ Linux 2.0.10 or later.  This check uses <linux/version.h>, so
 make sure that file was built correctly when installing the kernel header
 files." 1>&2; exit 1; }
 fi
+
+# The Linux filesystem standard prescribes where to place "essential"
+# files.  I.e., when the installation prefix is "/usr" we have to place
+# shared library objects and the configuation files on the root partition
+# in /lib and /etc.
+if test "$prefix" = "/usr"; then
+  libc_cv_slibdir="/lib"
+  libc_cv_sysconfdir="/etc"
+fi

@@ -98,8 +98,11 @@ extern struct group *getgrnam __P ((__const char *__name));
 
 /* Reentrant versions of some of the functions above.
 
-   PLEASE NOTE: these functions are not yet standardized.  The interface
-   may change in later versions of this library.  */
+   PLEASE NOTE: the `getgrent_r' function is not (yet) standardized.
+   The interface may change in later versions of this library.  But
+   the interface is designed following the principals used for the
+   other reentrant functions so the chances are good this is what the
+   POSIX people would choose.  */
 
 #if defined(__USE_SVID) || defined (__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
 extern int getgrent_r __P ((struct group *__resultbuf, char *buffer,
@@ -117,7 +120,8 @@ extern int getgrnam_r __P ((__const char *__name, struct group *__resultbuf,
 			    struct group **__result));
 
 #ifdef	__USE_SVID
-/* Read a group entry from STREAM.  */
+/* Read a group entry from STREAM.  This function is not standardized
+   an probably never will.  */
 extern int __fgetgrent_r __P ((FILE * __stream, struct group *__resultbuf,
 			       char *buffer, size_t __buflen,
 			       struct group **__result));

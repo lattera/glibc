@@ -23,6 +23,13 @@
 #include <string.h>
 
 
+struct sym_val
+  {
+    ElfW(Addr) a;
+    const ElfW(Sym) *s;
+  };
+
+
 /* This is the hashing function specified by the ELF ABI.  */
 static inline unsigned
 _dl_elf_hash (const char *name)
@@ -44,6 +51,90 @@ _dl_elf_hash (const char *name)
   return hash;
 }
 
+
+/* Inner part of the lookup functions.  */
+static inline ElfW(Addr)
+do_lookup (const char *undef_name, unsigned long int hash,
+	   const ElfW(Sym) **ref, struct sym_val *result,
+	   struct link_map *list[], size_t i, size_t n,
+	   const char *reference_name, struct link_map *skip, int flags)
+{
+  struct link_map *map;
+
+  for (; i < n; ++i)
+    {
+      const ElfW(Sym) *symtab;
+      const char *strtab;
+      ElfW(Symndx) symidx;
+
+      map = list[i];
+
+      /* Here come the extra test needed for `_dl_lookup_symbol_skip'.  */
+      if (skip != NULL && map == skip)
+	continue;
+
+      /* Don't search the executable when resolving a copy reloc.  */
+      if (flags & DL_LOOKUP_NOEXEC && map->l_type == lt_executable)
+	continue;
+
+      symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+      strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+
+      /* Search the appropriate hash bucket in this object's symbol table
+	 for a definition for the same symbol name.  */
+      for (symidx = map->l_buckets[hash % map->l_nbuckets];
+	   symidx != STN_UNDEF;
+	   symidx = map->l_chain[symidx])
+	{
+	  const ElfW(Sym) *sym = &symtab[symidx];
+
+	  if (sym->st_value == 0 || /* No value.  */
+	      ((flags & DL_LOOKUP_NOPLT) != 0 /* Reject PLT entry.  */
+	       && sym->st_shndx == SHN_UNDEF))
+	    continue;
+
+	  switch (ELFW(ST_TYPE) (sym->st_info))
+	    {
+	    case STT_NOTYPE:
+	    case STT_FUNC:
+	    case STT_OBJECT:
+	      break;
+	    default:
+	      /* Not a code/data definition.  */
+	      continue;
+	    }
+
+	  if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
+	    /* Not the symbol we are looking for.  */
+	    continue;
+
+	  switch (ELFW(ST_BIND) (sym->st_info))
+	    {
+	    case STB_GLOBAL:
+	      /* Global definition.  Just what we need.  */
+	      result->s = sym;
+	      result->a = map->l_addr;
+	      return 1;
+	    case STB_WEAK:
+	      /* Weak definition.  Use this value if we don't find
+		 another.  */
+	      if (! result->s)
+		{
+		  result->s = sym;
+		  result->a = map->l_addr;
+		}
+	      break;
+	    default:
+	      /* Local symbols are ignored.  */
+	      break;
+	    }
+	}
+    }
+
+  /* We have not found anything until now.  */
+  return 0;
+}
+
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME.  FLAGS is a set of flags.  If DL_LOOKUP_NOEXEC is set,
    then don't search the executable for a definition; this used for
@@ -57,82 +148,17 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   int flags)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
-  struct
-    {
-      ElfW(Addr) a;
-      const ElfW(Sym) *s;
-    } weak_value = { 0, NULL };
-  size_t i;
-  struct link_map **scope, *map;
+  struct sym_val current_value = { 0, NULL };
+  struct link_map **scope;
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
-    for (i = 0; i < (*scope)->l_nsearchlist; ++i)
-      {
-	const ElfW(Sym) *symtab;
-	const char *strtab;
-	ElfW(Symndx) symidx;
+    if (do_lookup (undef_name, hash, ref, &current_value,
+		   (*scope)->l_searchlist, 0, (*scope)->l_nsearchlist,
+		   reference_name, NULL, flags))
+      break;
 
-	map = (*scope)->l_searchlist[i];
-
-	/* Don't search the executable when resolving a copy reloc.  */
-	if (flags & DL_LOOKUP_NOEXEC && map->l_type == lt_executable)
-	  continue;
-
-	symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-	strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
-
-	/* Search the appropriate hash bucket in this object's symbol table
-	   for a definition for the same symbol name.  */
-	for (symidx = map->l_buckets[hash % map->l_nbuckets];
-	     symidx != STN_UNDEF;
-	     symidx = map->l_chain[symidx])
-	  {
-	    const ElfW(Sym) *sym = &symtab[symidx];
-
-	    if (sym->st_value == 0 || /* No value.  */
-		((flags & DL_LOOKUP_NOPLT) != 0 /* Reject PLT entry.  */
-		 && sym->st_shndx == SHN_UNDEF))
-	      continue;
-
-	    switch (ELFW(ST_TYPE) (sym->st_info))
-	      {
-	      case STT_NOTYPE:
-	      case STT_FUNC:
-	      case STT_OBJECT:
-		break;
-	      default:
-		/* Not a code/data definition.  */
-		continue;
-	      }
-
-	    if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
-	      /* Not the symbol we are looking for.  */
-	      continue;
-
-	    switch (ELFW(ST_BIND) (sym->st_info))
-	      {
-	      case STB_GLOBAL:
-		/* Global definition.  Just what we need.  */
-		*ref = sym;
-		return map->l_addr;
-	      case STB_WEAK:
-		/* Weak definition.  Use this value if we don't find
-		   another.  */
-		if (! weak_value.s)
-		  {
-		    weak_value.s = sym;
-		    weak_value.a = map->l_addr;
-		  }
-		break;
-	      default:
-		/* Local symbols are ignored.  */
-		break;
-	      }
-	  }
-      }
-
-  if (weak_value.s == NULL &&
+  if (current_value.s == NULL &&
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
     {
       /* We could find no value for a strong reference.  */
@@ -144,8 +170,45 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
       _dl_signal_error (0, reference_name, buf);
     }
 
-  *ref = weak_value.s;
-  return weak_value.a;
+  *ref = current_value.s;
+  return current_value.a;
+}
+
+
+/* This function is nearly the same as `_dl_lookup_symbol' but it
+   skips in the first list all objects until SKIP_MAP is found.  I.e.,
+   it only considers objects which were loaded after the described
+   object.  If there are more search lists the object described by
+   SKIP_MAP is only skipped.  */
+ElfW(Addr)
+_dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
+			struct link_map *symbol_scope[],
+			const char *reference_name,
+			struct link_map *skip_map,
+			int flags)
+{
+  int found_entry = 0;
+  const unsigned long int hash = _dl_elf_hash (undef_name);
+  struct sym_val current_value = { 0, NULL };
+  struct link_map **scope;
+  size_t i;
+
+  /* Search the relevant loaded objects for a definition.  */
+  scope = symbol_scope;
+  for (i = 0; (*scope)->l_dupsearchlist[i] != skip_map; ++i)
+    assert (i < (*scope)->l_ndupsearchlist);
+
+  if (! do_lookup (undef_name, hash, ref, &current_value,
+		   (*scope)->l_dupsearchlist, i, (*scope)->l_ndupsearchlist,
+		   reference_name, skip_map, flags))
+    while (*++scope)
+      if (do_lookup (undef_name, hash, ref, &current_value,
+		     (*scope)->l_dupsearchlist, 0, (*scope)->l_ndupsearchlist,
+		     reference_name, skip_map, flags))
+	break;
+
+  *ref = current_value.s;
+  return current_value.a;
 }
 
 

@@ -88,7 +88,7 @@ extern void hdestroy __P ((void));
 
 extern int hsearch_r __P ((ENTRY __item, ACTION __action, ENTRY **__retval,
 			   struct hsearch_data *__htab));
-extern int hcreate_r __P ((unsigned int __nel, struct hsearch_data *htab));
+extern int hcreate_r __P ((size_t __nel, struct hsearch_data *htab));
 extern void hdestroy_r __P ((struct hsearch_data *htab));
 
 

@@ -149,15 +149,6 @@ extern int sigdelset __P ((sigset_t *__set, int __signo));
 /* Return 1 if SIGNO is in SET, 0 if not.  */
 extern int sigismember __P ((__const sigset_t *__set, int signo));
 
-#ifdef	__OPTIMIZE__
-/* <sigset.h> defines the __ versions as macros that do the work.  */
-#define	sigemptyset(set)	__sigemptyset(set)
-#define	sigfillset(set)		__sigfillset(set)
-#define	sigaddset(set, signo)	__sigaddset(set, signo)
-#define	sigdelset(set, signo)	__sigdelset(set, signo)
-#define	sigismember(set, signo)	__sigismember(set, signo)
-#endif
-
 /* Get the system-specific definitions of `struct sigaction'
    and the `SA_*' and `SIG_*'. constants.  */
 #include <sigaction.h>
@@ -170,6 +161,7 @@ extern int sigprocmask __P ((int __how,
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
+extern int __sigsuspend __P ((__const sigset_t *__set));
 extern int sigsuspend __P ((__const sigset_t *__set));
 
 /* Get and/or set the action for signal SIG.  */

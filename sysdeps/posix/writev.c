@@ -30,12 +30,12 @@ ssize_t
 writev (fd, vector, count)
      int fd;
      const struct iovec *vector;
-     size_t count;
+     int count;
 {
   char *buffer;
   register char *bp;
   size_t bytes, to_copy;
-  register size_t i;
+  int i;
 
   /* Find the total number of bytes to be written.  */
   bytes = 0;

@@ -49,6 +49,7 @@
 #define	_PATH_DEVNULL	"/dev/null"
 #define	_PATH_DRUM	"/dev/drum"
 #define	_PATH_KMEM	"/dev/kmem"
+#define _PATH_LASTLOG	"/var/log/lastlog"
 #define	_PATH_MAILDIR	"/var/spool/mail"
 #define	_PATH_MAN	"/usr/man"
 #define	_PATH_MEM	"/dev/mem"
@@ -60,7 +61,9 @@
 #define	_PATH_SHELLS	"/etc/shells"
 #define	_PATH_TTY	"/dev/tty"
 #define	_PATH_UNIX	"/vmlinux"
+#define _PATH_UTMP	"/var/run/utmp"
 #define	_PATH_VI	"/usr/bin/vi"
+#define _PATH_WTMP	"/var/log/wtmp"
 
 /* Provide trailing slash, since mostly used for building pathnames. */
 #define	_PATH_DEV	"/dev/"
