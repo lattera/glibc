@@ -389,7 +389,7 @@ any version of @code{sed}.  The known exception is the script
 @code{po2test.sed} in the @code{intl} subdirectory which is used to
 generate @code{msgs.h} for the testsuite.  This script works correctly
 only with GNU @code{sed} 3.02.  If you like to run the testsuite, you
-should definitly upgrade @code{sed}.
+should definitely upgrade @code{sed}.
 
 @end itemize
 
