@@ -1,3 +1,7 @@
+2001-04-23  Andreas Jaeger  <aj@suse.de>
+
+	* nscd/nscd.h: Add noreturn attribute for start_threads.
+
 2001-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Fix names of XBS5 LFS test variables.
