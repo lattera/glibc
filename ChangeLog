@@ -1,3 +1,8 @@
+2003-11-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (parse_dup_op): Fail with REG_BADBR is first
+	number in {,} expression is larger.
+
 2003-11-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_TGKILL):
