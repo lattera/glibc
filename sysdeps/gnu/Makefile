@@ -49,10 +49,14 @@ endif
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@T
 	mv -f $@T $@
-generated += errlist-compat.c
+$(objpfx)errlist-compat.h: $(objpfx)errlist-compat.c
+	sed -n '1p;/ERR_MAX/p' $< > $@T
+	-chmod a-w $@T
+	mv -f $@T $@
+generated += errlist-compat.c errlist-compat.h
 
 # This will force the generation above to happy if need be.
-$(foreach o,.d $(object-suffixes),$(objpfx)errlist$o):$(objpfx)errlist-compat.c
+$(foreach o,.d $(object-suffixes),$(objpfx)errlist$o):$(objpfx)errlist-compat.h
 endif
 
 ifeq ($(subdir),login)

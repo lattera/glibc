@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2002,2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,16 @@ BEGIN {
     print "#endif";
     print "";
 
-    print "const char *const _sys_errlist_internal[] =";
+    print "#if !defined EMIT_ERR_MAX && !defined ERRLIST_NO_COMPAT";
+    print "# include <errlist-compat.h>";
+    print "#endif";
+    print "#ifdef ERR_MAX";
+    print "# define ERRLIST_SIZE ERR_MAX + 1";
+    print "#else"
+    print "# define ERRLIST_SIZE";
+    print "#endif";
+
+    print "const char *const _sys_errlist_internal[ERRLIST_SIZE] =";
     print "  {";
     print "    [0] = N_(\"Success\"),"
   }
