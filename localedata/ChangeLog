@@ -1,3 +1,8 @@
+2000-07-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/de_DE (LC_TIME): Use `Mit', not `Mot' as abbreviation
+	for Wednesday.  Patch by <enrico.scholz@informatik.tu-chemnitz.de>.
+
 2000-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/sr_YU (yesexpr): Fix "*." -> ".*".
