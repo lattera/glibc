@@ -1,5 +1,11 @@
 2000-12-13  Andreas Jaeger  <aj@suse.de>
 
+	* manual/message.texi (Using gettextized software): Fix typo.
+
+	* manual/charset.texi (Converting a Character): Fix mbstouwcs
+	program to compile.
+	Patch by Martin Buchholz <martin@xemacs.org>.
+
 	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Fix typo.
 	Reported by Michael Kerrisk <mtk16@ext.canterbury.ac.nz>.
 

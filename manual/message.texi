@@ -1669,7 +1669,7 @@ of the environment variable.  It can split the value is different pieces
 and by leaving out the only or the other part it can construct new
 values.  This happens of course in a predictable way.  To understand
 this one must know the format of the environment variable value.  There
-are to more or less standardized forms:
+are two more or less standardized forms:
 
 @table @emph
 @item X/Open Format
