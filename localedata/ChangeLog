@@ -1,5 +1,9 @@
 2001-06-25  Jakub Jelinek  <jakub@redhat.com>
 
+	* locales/ro_RO (day): Use U0163 instead of U021B.
+
+2001-06-25  Jakub Jelinek  <jakub@redhat.com>
+
 	* SUPPORTED (zh_HK): Update character map name to BIG5-HKSCS.
 
 2001-06-09  Bruno Haible  <haible@clisp.cons.org>
