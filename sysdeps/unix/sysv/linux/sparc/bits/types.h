@@ -145,6 +145,9 @@ typedef unsigned short int __ipc_pid_t;
 #endif
 
 
+/* Type to represent block size.  */
+typedef long int __blksize_t;
+
 /* Types from the Large File Support interface.  */
 
 /* Type to count number os disk blocks.  */

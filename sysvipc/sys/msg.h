@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ extern int msgrcv __P ((int __msqid, void *__msgp, size_t __msgsz,
 			long int __msgtyp, int __msgflg));
 
 /* Send message to message queue.  */
-extern int msgsnd __P ((int __msqid, void *__msgp, size_t __msgsz,
+extern int msgsnd __P ((int __msqid, __const void *__msgp, size_t __msgsz,
 			int __msgflg));
 
 __END_DECLS

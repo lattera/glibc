@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ struct stat
     __time_t st_ctime;		/* Status change time, seconds */
     unsigned long int st_ctime_usec; /* and microseconds.  */
 
-    unsigned int st_blksize;	/* Optimal size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal size for I/O.  */
 
 #ifndef __USE_FILE_OFFSET64
     __blkcnt_t st_blocks;	/* Number of 512-byte blocks allocated.
@@ -111,7 +111,7 @@ struct stat64
     __time_t st_ctime;		/* Status change time, seconds */
     unsigned long int st_ctime_usec; /* and microseconds.  */
 
-    unsigned int st_blksize;	/* Optimal size for I/O.  */
+    __blksize_t st_blksize;	/* Optimal size for I/O.  */
 
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.
 				   Not related to `st_blksize'.  */

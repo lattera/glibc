@@ -6,4 +6,8 @@ libc {
     # b*
     backtrace; backtrace_symbols; backtrace_symbols_fd;
   }
+  GLIBC_2.2 {
+    # These are to support some gcc features.
+    __cyg_profile_func_enter; __cyg_profile_func_exit;
+  }
 }

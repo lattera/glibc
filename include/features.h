@@ -125,7 +125,7 @@
 # undef  _POSIX_C_SOURCE
 # define _POSIX_C_SOURCE	199506L
 # undef  _XOPEN_SOURCE
-# define _XOPEN_SOURCE	500
+# define _XOPEN_SOURCE	600
 # undef  _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
 # undef	 _LARGEFILE64_SOURCE
@@ -182,11 +182,14 @@
 
 #ifdef	_XOPEN_SOURCE
 # define __USE_XOPEN	1
-# if (_XOPEN_SOURCE - 0) == 500
+# if (_XOPEN_SOURCE - 0) >= 500
 #  define __USE_XOPEN_EXTENDED	1
 #  define __USE_UNIX98	1
 #  undef _LARGEFILE_SOURCE
 #  define _LARGEFILE_SOURCE	1
+#  if (_XOPEN_SOURCE - 0) == 600
+#   define __USE_XOPEN2K	1
+#  endif
 # else
 #  ifdef _XOPEN_SOURCE_EXTENDED
 #   define __USE_XOPEN_EXTENDED	1

@@ -1,5 +1,5 @@
 /* Header file for monetary value formatting functions.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,15 @@
 #include <features.h>
 
 /* Get needed types.  */
-#include <sys/types.h>
+#define __need_size_t
+#include <stddef.h>
+#include <bits/types.h>
+
+#ifndef	__ssize_t_defined
+typedef __ssize_t ssize_t;
+# define __ssize_t_defined
+#endif
+
 
 __BEGIN_DECLS
 

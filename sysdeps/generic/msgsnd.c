@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -29,7 +29,7 @@
 int
 msgsnd (msqid, msgp, msgsz, msgflg)
      int msqid;
-     void *msgp;
+     const void *msgp;
      size_t msgsz;
      int msgflg;
 {

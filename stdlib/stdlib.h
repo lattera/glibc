@@ -537,7 +537,7 @@ extern char *__secure_getenv __P ((__const char *__name));
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.
    If there is no `=', remove NAME from the environment.  */
-extern int putenv __P ((__const char *__string));
+extern int putenv __P ((char *__string));
 #endif
 
 #ifdef	__USE_BSD
@@ -736,7 +736,7 @@ extern int rpmatch __P ((__const char *__response));
    suboption.  On exit *OPTIONP is set to the beginning of the next
    token or at the terminating NUL character.  */
 extern int getsubopt __P ((char **__restrict __optionp,
-			   __const char *__const *__restrict __tokens,
+			   char *__const *__restrict __tokens,
 			   char **__restrict __valuep));
 #endif
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,7 @@
 #define _XOPEN_LIM_H	1
 
 #define __need_FOPEN_MAX
+#define __need_IOV_MAX
 #include <bits/stdio_lim.h>
 
 /* We do not provide fixed values for
@@ -44,6 +45,9 @@
    CHILD_MAX	Maximum number of simultaneous processes per real
 		user ID.
 
+   IOV_MAX	Maximum number of `iovec' structures that one process has
+		available for use with `readv' or writev'.
+
    OPEN_MAX	Maximum number of files that one process can have open
 		at anyone time.
 
@@ -52,11 +56,6 @@
 
    PASS_MAX	Maximum number of significant bytes in a password.
 */
-
-
-/* Maximum number of `iovec' structures that one process has available
-   for use with `readv' or writev'.  */
-#define IOV_MAX		_XOPEN_IOV_MAX
 
 /* The number of streams that one process can have open at one time.  */
 #define STREAM_MAX	FOPEN_MAX
@@ -92,5 +91,26 @@
 
 /* Default process priority.  */
 #define NZERO		20
+
+
+/* Number of bits in a word of type `int'.  */
+#if INT_MAX == 32767
+# define WORD_BIT	16
+#else
+# if INT_MAX == 2147483647
+#  define WORD_BIT	32
+# else
+/* Safe assumption.  */
+#  define WORD_BIT	64
+# endif
+#endif
+
+/* Number of bits in a word of type `long int'.  */
+#if INT_MAX == 2147483647
+# define LONG_BIT	32
+#else
+/* Safe assumption.  */
+# define LONG_BIT	64
+#endif
 
 #endif /* bits/xopen_lim.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,9 +78,18 @@ typedef __uid_t uid_t;
 #endif	/* X/Open */
 
 #ifdef __USE_UNIX98
-# ifndef __pid_t_defined
-typedef __pid_t pid_t;
-#  define __pid_t_defined
+# ifndef __blkcnt_t_defined
+#  ifndef __USE_FILE_OFFSET64
+typedef __blkcnt_t blkcnt_t;
+#  else
+typedef __blkcnt64_t blkcnt_t;
+#  endif
+#  define __blkcnt_t_defined
+# endif
+
+# ifndef __blksize_t_defined
+typedef __blksize_t blksize_t;
+#  define __blksize_t_defined
 # endif
 #endif	/* Unix98 */
 

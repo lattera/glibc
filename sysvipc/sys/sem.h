@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 
 #include <features.h>
 
-#include <sys/types.h>
+#define __need_size_t
+#include <stddef.h>
 
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
@@ -51,7 +52,7 @@ extern int semget __P ((key_t __key, int __nsems, int __semflg));
 
 /* Operate on semaphore.  */
 extern int semop __P ((int __semid, struct sembuf *__sops,
-		       unsigned int __nsops));
+		       size_t __nsops));
 
 __END_DECLS
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ struct stat
 #else
     __off64_t st_size;			/* Size of file, in bytes.  */
 #endif
-    unsigned long int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;		/* Optimal block size for I/O.  */
 
 #ifndef __USE_FILE_OFFSET64
     __blkcnt_t st_blocks;		/* Number 512-byte blocks allocated. */
@@ -84,7 +84,7 @@ struct stat64
     __dev_t st_rdev;			/* Device number, if device.  */
     unsigned short int __pad2;
     __off64_t st_size;			/* Size of file, in bytes.  */
-    unsigned long int st_blksize;	/* Optimal block size for I/O.  */
+    __blksize_t st_blksize;		/* Optimal block size for I/O.  */
 
     __blkcnt64_t st_blocks;		/* Number 512-byte blocks allocated. */
     __time_t st_atime;			/* Time of last access.  */

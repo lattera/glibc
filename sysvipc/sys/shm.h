@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,8 @@
 
 #include <features.h>
 
-#include <unistd.h>		/* for `getpagesize' declaration */
-#include <sys/types.h>
+#define __need_size_t
+#include <stddef.h>
 
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
@@ -33,6 +33,8 @@
 
 /* Segment low boundary address multiple.  */
 #define SHMLBA		(__getpagesize ())
+extern int __getpagesize __P ((void));
+
 
 /* The following System V style IPC functions implement a shared memory
    facility.  The definition is found in XPG4.2.  */
@@ -43,7 +45,7 @@ __BEGIN_DECLS
 extern int shmctl __P ((int __shmid, int __cmd, struct shmid_ds *__buf));
 
 /* Get shared memory segment.  */
-extern int shmget __P ((key_t __key, int __size, int __shmflg));
+extern int shmget __P ((key_t __key, size_t __size, int __shmflg));
 
 /* Attach shared memory segment.  */
 extern void *shmat __P ((int __shmid, __const void *__shmaddr, int __shmflg));

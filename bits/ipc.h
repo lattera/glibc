@@ -1,6 +1,5 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,7 +20,7 @@
 # error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Mode bits for `msgget', `semget', and `shmget'.  */
 #define IPC_CREAT	01000		/* create key if key does not exist */

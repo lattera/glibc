@@ -115,6 +115,9 @@ typedef struct
 typedef unsigned short int __ipc_pid_t;
 
 
+/* Type to represent block size.  */
+typedef unsigned int __blksize_t;
+
 /* Types from the Large File Support interface.  */
 
 /* Type to count number os disk blocks.  */

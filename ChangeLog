@@ -1,3 +1,76 @@
+1999-08-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Rules: When generating stdio_lim.h also rewrite IOV_MAX definition.
+	* stdio-common/stdio_lim.h.in: Add IOV_MAX template.
+	* include/bits/xopen_lim.h: Don't define IOV_MAX here, get it from
+	stdio_lim.h.  Define LONG_BIT and WORD_BIT.
+
+	* include/features.h: Define __USE_XOPEN2K if _XOPEN_SOURCE == 600.
+
+	* libio/stdio.h: Don't declare cuserid and getopt for X/Open issue 6.
+
+	* misc/search.h: Don't define NULL.
+
+	* posix/sys/types.h: Define blksize_t if it hasn't happened.
+	Only define key_t and blkcnt_t if it hasn't happened before.
+	Define blksize_t if not happened before.
+	* io/sys/stat.h: Don't define pid_t.  Define blkcnt_t and blksize_t.
+	* sysdeps/generic/bits/types.h: Define __blksize_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h (struct stat): Use __blksize_t for
+	st_blksize member.
+	(struct stat64): Likewise.
+	* sysdeps/unix/bsd/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/bist/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Likewise.
+
+	* stdlib/getsubopt.c: Correct type of second argument.
+	* stdlib/stdlib.h: Likewise.
+
+	* stdlib/monetary.h: Don't include sys/types.h.  Define only size_t
+	and ssize_t.
+
+	* sysdeps/generic/putenv.c: Correct type of parameter.
+	* stdlib/stdlib.h: Likewise.
+
+	* sysdeps/generic/msgsnd.c: Correct type of second parameter.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.
+	* sysvips/sys/msg.h: Likewise.
+
+	* sysdeps/generic/semop.c: Correct type of third parameter.
+	* sysdeps/unix/sysv/linux/semop.c: Likewise.
+	* sysvipc/sys/sem.h: Likewise.  Don't include sys/types.h, define
+	size_t.
+
+	* sysdeps/generic/shmget.c: Correct type of second parameter.
+	* sysdeps/unix/sysv/linux/shmget.c: Likewise.
+	* sysvips/sys/shm.h: Likewise.  Don't include unistd.h and sys/types.h.
+	Declare __getpagesize here.
+
+	* sysdeps/generic/bits/ipc.h: Include bits/types.h instead of
+	sys/types.h.
+	* sysdeps/gnu/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: Likewise.
+	* sysvipc/sys/ipc.h: Define uid_t, gid_t, mode_t, and key_t if not
+	already done.
+
+	* sysdeps/unix/bsd/usleep.c: Correct type of parameter.
+
+	* debug/versions: Export __cyg_profile_func_enter and
+	__cyg_profile_func_exit.
+
+	* math/bits/mathcalls.h: Pretty print.
+
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/tst-timezone.c (tests): Update America/Sao_Paulo test

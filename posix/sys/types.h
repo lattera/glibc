@@ -110,8 +110,9 @@ typedef __daddr_t daddr_t;
 typedef __caddr_t caddr_t;
 #endif
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if (defined __USE_SVID || defined __USE_XOPEN) && !defined __key_t_defined
 typedef __key_t key_t;
+# define __key_t_defined
 #endif
 
 #ifdef __USE_XOPEN
@@ -205,13 +206,24 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 #endif /* Use BSD.  */
 
 
+#if defined __USE_UNIX98 && !defined __blksize_t_defined
+typedef __blksize_t blksize_t;
+# define __blksize_t_defined
+#endif
+
 /* Types from the Large File Support interface.  */
 #ifndef __USE_FILE_OFFSET64
+# ifndef __blkcnt_t_defined
 typedef __blkcnt_t blkcnt_t;	 /* Type to count number of disk blocks.  */
+#  define __blkcnt_t_defined
+# endif
 typedef __fsblkcnt_t fsblkcnt_t; /* Type to count file system blocks.  */
 typedef __fsfilcnt_t fsfilcnt_t; /* Type to count file system inodes.  */
 #else
+# ifndef __blkcnt_t_defined
 typedef __blkcnt64_t blkcnt_t;	   /* Type to count number of disk blocks.  */
+#  define __blkcnt_t_defined
+# endif
 typedef __fsblkcnt64_t fsblkcnt_t; /* Type to count file system blocks.  */
 typedef __fsfilcnt64_t fsfilcnt_t; /* Type to count file system inodes.  */
 #endif

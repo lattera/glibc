@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
 void
 usleep (useconds)
-     unsigned int useconds;
+     useconds_t useconds;
 {
   struct timeval delay;
 

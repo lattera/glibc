@@ -588,10 +588,10 @@ extern char *ctermid __P ((char *__s));
 #endif /* Use POSIX.  */
 
 
-#ifdef __USE_XOPEN
+#if defined __USE_XOPEN && !defined __USE_XOPEN2K
 /* Return the name of the current user.  */
 extern char *cuserid __P ((char *__s));
-#endif /* Use X/Open.  */
+#endif /* Use X/Open, but not issue 6.  */
 
 
 #ifdef	__USE_GNU
@@ -620,13 +620,13 @@ extern int ftrylockfile __P ((FILE *__stream));
 extern void funlockfile __P ((FILE *__stream));
 #endif /* POSIX || misc */
 
-#if defined __USE_XOPEN && !defined __USE_GNU
+#if defined __USE_XOPEN && !defined __USE_XOPEN2K && !defined __USE_GNU
 /* The X/Open standard requires some functions and variables to be
    declared here which do not belong into this header.  But we have to
    follow.  In GNU mode we don't do this nonsense.  */
 # define __need_getopt
 # include <getopt.h>
-#endif
+#endif	/* X/Open, but not issue 6 and not for GNU.  */
 
 /* If we are compiling with optimizing read this file.  It contains
    several optizing inline functions and macros.  */
