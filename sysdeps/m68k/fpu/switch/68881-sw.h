@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,9 +33,9 @@
 struct switch_caller
   {
     unsigned short int insn;	/* The `jsr' or `jmp' instruction.  */
-    __ptr_t target;		/* The target of the instruction.  */
-    __ptr_t soft;		/* The address of the soft function.  */
-    __ptr_t fpu;		/* The address of the 68881 function.  */
+    void *target;		/* The target of the instruction.  */
+    void *soft;			/* The address of the soft function.  */
+    void *fpu;			/* The address of the 68881 function.  */
   };
 
 /* These are opcodes (values for `insn', above) for `jmp' and `jsr'
@@ -47,12 +47,12 @@ struct switch_caller
 /* Function to determine whether or not a 68881 is available,
    and modify its caller (which must be a `struct switch_caller', above,
    in data space) to use the appropriate version.  */
-extern void __68881_switch __P ((int __dummy));
+extern void __68881_switch (int __dummy) __THROW;
 
 
 /* Define FUNCTION as a `struct switch_caller' which will call
    `__FUNCTION_68881' if a 68881 is present, and `__FUNCTION_soft' if not.
-#define	switching_function(FUNCTION) 					      \
+#define	switching_function(FUNCTION)					      \
   struct switch_caller FUNCTION =					      \
     {									      \
       JSR, (__ptr_t) __68881_switch,					      \
