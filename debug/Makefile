@@ -39,6 +39,7 @@ libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
 libpcprofile-routines = pcprofile
 libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
 
+others = pcprofiledump
 install-bin = pcprofiledump xtrace
 
 include ../Makeconfig
@@ -60,7 +61,6 @@ $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 	mv -f $@.new $@
 
 $(objpfx)pcprofiledump: $(objpfx)pcprofiledump.o
-	$(LINK.o) -o $@ $^
 
 $(objpfx)xtrace: xtrace.sh
 	rm -f $@.new
