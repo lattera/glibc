@@ -26,6 +26,5 @@
 #define ADD_PARAMS	gid_t gid
 #define ADD_VARIABLES	gid
 #define BUFLEN		NSS_BUFLEN_GROUP
-#define USE_NSCD	1
 
 #include <nss/getXXbyYY_r.c>

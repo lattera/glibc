@@ -26,6 +26,5 @@
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
 #define BUFLEN		NSS_BUFLEN_PASSWD
-#define USE_NSCD	1
 
 #include <nss/getXXbyYY_r.c>

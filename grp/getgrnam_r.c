@@ -25,6 +25,5 @@
 #define DATABASE_NAME	group
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
-#define USE_NSCD	1
 
 #include <nss/getXXbyYY_r.c>

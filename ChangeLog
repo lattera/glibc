@@ -1,3 +1,19 @@
+1998-02-01 00:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/Makefile: Define USE_NSCD in CFLAGS for getgrnam_r.c and
+	getgrgid_r.c if thread package is available.
+	* pwd/Makefile: Likewise.
+	* grp/getgrnam_r.c: Remove USE_NSCD definition.
+	* grp/getgrgid_r.c: Likewise.
+	* pwd/getpwnam_r.c: Likewise.
+	* pwd/getpwuid_r.c: Likewise.
+
+1998-01-31 23:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY_r.c: If NSS function reports too small buffer return
+	with error to allow user intervention.
+	* nss/getXXent_r.c: Likewise.
+
 1998-01-31 21:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_show_aux): Print newline after
@@ -6,7 +22,7 @@
 	* sysdeps/generic/dl-sysdep.c: Include <dl-procinfo.h>.
 	(_dl_show_aux): Call _dl_procinfo to print AT_HWCAP info.
 	* sysdeps/generic/dl-procinfo.h: New file.
-	* sysdeps/unix/sysv/linux/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: New file.
 
 1998-01-31 20:52  Ulrich Drepper  <drepper@cygnus.com>
 
