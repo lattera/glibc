@@ -1,3 +1,8 @@
+2005-02-07  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/pthread/pthread.h (__sigsetjmp): Use pointer as first
+	argument.
+
 2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
 
 	* sysdeps/generic/lowlevellock.h (__generic_mutex_unlock): Fix

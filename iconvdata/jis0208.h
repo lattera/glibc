@@ -1,5 +1,5 @@
 /* Access functions for JISX0208 conversion.
-   Copyright (C) 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2003,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -24,15 +24,6 @@
 #include <gconv.h>
 #include <stdint.h>
 
-/* Conversion table.  */
-extern const uint16_t __jis0208_to_ucs[];
-
-extern const char __jisx0208_from_ucs4_lat1[256][2];
-extern const char __jisx0208_from_ucs4_greek[0xc1][2];
-extern const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[];
-extern const char __jisx0208_from_ucs_tab[][2];
-
-
 /* Struct for table with indeces in UCS mapping table.  */
 struct jisx0208_ucs_idx
 {
@@ -40,6 +31,15 @@ struct jisx0208_ucs_idx
   uint16_t end;
   uint16_t idx;
 };
+
+
+/* Conversion table.  */
+extern const uint16_t __jis0208_to_ucs[];
+
+extern const char __jisx0208_from_ucs4_lat1[256][2];
+extern const char __jisx0208_from_ucs4_greek[0xc1][2];
+extern const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[];
+extern const char __jisx0208_from_ucs_tab[][2];
 
 
 static inline uint32_t
