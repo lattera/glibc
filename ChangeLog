@@ -1,3 +1,9 @@
+Mon Mar 18 22:54:32 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/wait3.c: New file.
+	* sysdeps/unix/sysv/linux/wait.c: Use the bsd4.4 wait, not the
+	one from sysdeps/posix.
+
 Wed Mar 20 09:42:11 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/unix/bsd/waitflags.h (WNOREAP): New macro.
