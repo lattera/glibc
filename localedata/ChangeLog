@@ -1,4 +1,12 @@
+2004-01-01  Petter Reinholdtsen  <pere@hungry.com>
+
+	* tst-fmon.data: Add simple test to check left justified currency
+	values in the C locale.
+
 2004-01-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-fmon.sh: Don't print every line.  The program already prints
+	the failing ones.
 
 	* tst-fmon.c (main): Fix typo in message.
 

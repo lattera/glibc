@@ -1,6 +1,6 @@
 #! /bin/sh
 # Testing the implementation of strfmon(3).
-# Copyright (C) 1996, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1996-1998, 2000, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 #
@@ -45,17 +45,11 @@ while IFS="	" read locale format value expect; do
     case "$locale" in '#'*) continue ;; esac
     if [ -n "$format" ]; then
 	expect=`echo "$expect" | sed 's/^\"\(.*\)\"$/\1/'`
-	if LOCPATH=${common_objpfx}localedata \
-	   GCONV_PATH=${common_objpfx}/iconvdata \
-	   ${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
-	   "$locale" "$format" "$value" "$expect" ; then
-	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
-		 "Value: \"${value}\" Expected: \"${expect}\"  passed"
-	else
-	    errcode=$?
-	    echo "Locale: \"${locale}\" Format: \"${format}\"" \
-		 "Value: \"${value}\" Expected: \"${expect}\"    failed"
-	fi
+	LOCPATH=${common_objpfx}localedata \
+	GCONV_PATH=${common_objpfx}/iconvdata \
+	${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
+	"$locale" "$format" "$value" "$expect" ||
+	errcode=$?
     fi
 done < $datafile
 

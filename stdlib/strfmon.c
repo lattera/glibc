@@ -1,5 +1,5 @@
 /* Formatting a monetary value according to the current locale.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Jochen Hein <Jochen.Hein@informatik.TU-Clausthal.de>, 1996.
@@ -570,7 +570,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       info.is_long = 0;
       info.alt = 0;
       info.space = 0;
-      info.left = left;
+      info.left = 0;
       info.showsign = 0;
       info.group = group;
       info.pad = pad;
