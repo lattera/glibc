@@ -1,3 +1,8 @@
+2004-11-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtod_l.c (INTERNAL (__STRTOF)): If densize > 2
+	and numsize < densize, always shift num up by empty + 1 limbs.
+
 2004-12-07  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (proceed_next_node): Simplify treatment of epsilon

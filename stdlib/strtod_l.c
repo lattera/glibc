@@ -1442,15 +1442,10 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 	  if (numsize < densize)
 	    {
 	      mp_size_t empty = densize - numsize;
+	      register int i;
 
 	      if (bits <= 0)
-		{
-		  register int i;
-		  for (i = numsize; i > 0; --i)
-		    num[i + empty] = num[i - 1];
-		  MPN_ZERO (num, empty + 1);
-		  exponent -= empty * BITS_PER_MP_LIMB;
-		}
+		exponent -= empty * BITS_PER_MP_LIMB;
 	      else
 		{
 		  if (bits + empty * BITS_PER_MP_LIMB <= MANT_DIG)
@@ -1459,7 +1454,6 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 			 cannot optimize the `else' case that good and
 			 this reflects all currently used FLOAT types
 			 and GMP implementations.  */
-		      register int i;
 #if RETURN_LIMB_SIZE <= 2
 		      assert (empty == 1);
 		      __mpn_lshift_1 (retval, RETURN_LIMB_SIZE,
@@ -1470,9 +1464,6 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 		      while (i >= 0)
 			retval[i--] = 0;
 #endif
-		      for (i = numsize; i > 0; --i)
-			num[i + empty] = num[i - 1];
-		      MPN_ZERO (num, empty + 1);
 		    }
 		  else
 		    {
@@ -1492,6 +1483,9 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 		    }
 		  bits += empty * BITS_PER_MP_LIMB;
 		}
+	      for (i = numsize; i > 0; --i)
+		num[i + empty] = num[i - 1];
+	      MPN_ZERO (num, empty + 1);
 	    }
 	  else
 	    {
