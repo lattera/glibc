@@ -1,5 +1,13 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c (ctype_output): Correct sizes of mapping
+	arrays.
+	(allocate_arrays): Allocate memory for map32.  Correctly install
+	default values in it and install defined mappings.
+
+	* locale/programs/ld-monetary.c (monetary_finish): Provide default
+	value for mon_grouping.
+
 	* elf/readlib.c: Include a.out.h last since the Linux/Alpha
 	headers are not clean enough.
 

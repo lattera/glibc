@@ -22,7 +22,7 @@
 
 #define EINVAL	22
 #define ENOSYS	38
-	
+
 	.text
 
 ENTRY (__mmap64)
@@ -51,7 +51,7 @@ ENTRY (__mmap64)
 	movl 36(%esp), %edi
 
 	/* Do the system call trap.  */
-L(do_syscal):
+L(do_syscall):
 	int $0x80
 
 	/* If 0 > %eax > -4096 there was an error.  */

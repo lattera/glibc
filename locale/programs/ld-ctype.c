@@ -787,20 +787,18 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER,
 		      ctype->map[0],
-		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (uint32_t));
+		      (256 + 128) * sizeof (uint32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER,
 		      ctype->map[1],
-		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (uint32_t));
+		      (256 + 128) * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_TOUPPER32,
 		      ctype->map32[0],
-		      (ctype->plane_size * ctype->plane_cnt + 128)
+		      (ctype->plane_size * ctype->plane_cnt)
 		      * sizeof (uint32_t));
 	  CTYPE_DATA (_NL_CTYPE_TOLOWER32,
 		      ctype->map32[1],
-		      (ctype->plane_size * ctype->plane_cnt + 128)
+		      (ctype->plane_size * ctype->plane_cnt)
 		      * sizeof (uint32_t));
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS32,
@@ -981,7 +979,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 	  iov[2 + elem + offset].iov_base = ctype->map32[nr];
 	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
-					     * ctype->plane_cnt + 128)
+					     * ctype->plane_cnt)
 					    * sizeof (uint32_t));
 
 	  idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
@@ -3059,18 +3057,25 @@ Computing table size for character classes might take a while..."),
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map[idx] = (uint32_t *) xmalloc (ctype->plane_size
-					      * ctype->plane_cnt
-					      * sizeof (uint32_t));
+      ctype->map32[idx] = (uint32_t *) xmalloc (ctype->plane_size
+						* ctype->plane_cnt
+						* sizeof (uint32_t));
 
       /* Copy default value (identity mapping).  */
-      memcpy (ctype->map[idx], ctype->names,
+      memcpy (ctype->map32[idx], ctype->names,
 	      ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < 256; ++idx2)
 	if (ctype->map_collection[idx][idx2] != 0)
-	  ctype->map[idx][idx2] = ctype->map_collection[idx][idx2];
+	  ctype->map32[idx][idx2] = ctype->map_collection[idx][idx2];
+
+      while (idx2 < ctype->map_collection_act[idx])
+	if (ctype->map_collection[idx][idx2] != 0)
+	  *find_idx (ctype, &ctype->map32[idx],
+		     &ctype->map_collection_max[idx],
+		     &ctype->map_collection_act[idx],
+		     ctype->names[idx2]) = ctype->map_collection[idx][idx2];
     }
 
   /* Extra array for class and map names.  */

@@ -241,9 +241,15 @@ not correspond to a valid name in ISO 4217"),
 	     "LC_MONETARY", "mon_decimal_point");
     }
 
-  if (monetary->mon_grouping_len == 0 && ! be_quiet && ! nothing)
-    error (0, 0, _("%s: field `%s' not defined"),
-	   "LC_MONETARY", "mon_grouping");
+  if (monetary->mon_grouping_len == 0)
+    {
+      if (! be_quiet && ! nothing)
+	error (0, 0, _("%s: field `%s' not defined"),
+	       "LC_MONETARY", "mon_grouping");
+
+      monetary->mon_grouping = "\177";
+      monetary->mon_grouping_len = 1;
+    }
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, min, max) \
