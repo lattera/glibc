@@ -1,3 +1,21 @@
+2002-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/syslog.c (log_cleanup): New function.
+	(openlog): Use log_cleanup instead of __libc_mutex_unlock.
+	(closelog): Likewise.
+
+	* elf/dl-close.c: Use __rtld_lock_* macros instead of __libc_lock_*.
+	* elf/dl-iteratephdr.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/generic/bits/libc-lock.h: Define __rtld_lock_* macros.
+	* sysdeps/mach/bits/libc-lock.h: Likewise.
+	* sysdeps/mach/hurd/bits/libc-lock.h: Likewise.
+
 2002-12-06  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Cope with zero ALIGN.
@@ -56,7 +74,7 @@
 
 2002-12-05  Ulrich Drepper  <drepper@redhat.com>
 
-	* dirent/bug-readdir1.c (main): Don't call closedir, just close on
+	* dirent/bug-readdir1.c (main): Don't call closedir, just close
 	the file descriptor.  This is testing what the bug report was about.
 
 2002-12-04  Ulrich Drepper  <drepper@redhat.com>

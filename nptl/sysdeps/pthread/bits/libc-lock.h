@@ -33,16 +33,19 @@
    ld.so might be used on old kernels with a different libc.so.  */
 #ifdef _LIBC
 # include <lowlevellock.h>
+# include <tls.h>
 #endif
 
 /* Mutex type.  */
 #if defined _LIBC || defined _IO_MTSAFE_IO
-# if defined NOT_IN_libc || !defined _LIBC
+# if (defined NOT_IN_libc && !defined IS_IN_libpthread) || !defined _LIBC
 typedef pthread_mutex_t __libc_lock_t;
+typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
 # else
 typedef int __libc_lock_t;
+typedef struct { int lock; int cnt; void *owner; } __libc_lock_recursive_t;
 # endif
-typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
+typedef struct { pthread_mutex_t mutex; } __rtld_lock_recursive_t;
 # ifdef __USE_UNIX98
 typedef pthread_rwlock_t __libc_rwlock_t;
 # else
@@ -70,6 +73,8 @@ typedef pthread_key_t __libc_key_t;
   CLASS __libc_rwlock_t NAME;
 #define __libc_lock_define_recursive(CLASS,NAME) \
   CLASS __libc_lock_recursive_t NAME;
+#define __rtld_lock_define_recursive(CLASS,NAME) \
+  CLASS __rtld_lock_recursive_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.
 
@@ -80,7 +85,7 @@ typedef pthread_key_t __libc_key_t;
    initialized locks must be set to one due to the lack of normal
    atomic operations.) */
 
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # if LLL_LOCK_INITIALIZER == 0
 #  define __libc_lock_define_initialized(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
@@ -103,11 +108,27 @@ typedef pthread_key_t __libc_key_t;
 
 /* Define an initialized recursive lock variable NAME with storage
    class CLASS.  */
-#define __libc_lock_define_initialized_recursive(CLASS,NAME) \
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+# if LLL_LOCK_INITIALIZER == 0
+#  define __libc_lock_define_initialized_recursive(CLASS,NAME) \
+  CLASS __libc_lock_recursive_t NAME;
+# else
+#  define __libc_lock_define_initialized_recursive(CLASS,NAME) \
   CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
-#define _LIBC_LOCK_RECURSIVE_INITIALIZER \
+# endif
+# define _LIBC_LOCK_RECURSIVE_INITIALIZER \
+  { LLL_LOCK_INITIALIZER, 0, NULL }
+#else
+# define __libc_lock_define_initialized_recursive(CLASS,NAME) \
+  CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
+# define _LIBC_LOCK_RECURSIVE_INITIALIZER \
   {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
+#endif
 
+#define __rtld_lock_define_initialized_recursive(CLASS,NAME) \
+  CLASS __rtld_lock_recursive_t NAME = _RTLD_LOCK_RECURSIVE_INITIALIZER;
+#define _RTLD_LOCK_RECURSIVE_INITIALIZER \
+  {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
 
 /* If we check for a weakly referenced symbol and then perform a
    normal jump to it te code generated for some platforms in case of
@@ -126,7 +147,7 @@ typedef pthread_key_t __libc_key_t;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_init(NAME) (NAME) = LLL_LOCK_INITIALIZER;
 #else
 # define __libc_lock_init(NAME) \
@@ -136,23 +157,40 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0)
 
 /* Same as last but this time we initialize a recursive mutex.  */
-#define __libc_lock_init_recursive(NAME) \
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+# define __libc_lock_init_recursive(NAME) \
+    (NAME) = (__libc_lock_recursive_t) _LIBC_LOCK_RECURSIVE_INITIALIZER
+#else
+# define __libc_lock_init_recursive(NAME) \
   do {									      \
     if (__pthread_mutex_init != NULL)					      \
       {									      \
 	pthread_mutexattr_t __attr;					      \
 	__pthread_mutexattr_init (&__attr);				      \
-	__pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP); \
+	__pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP);    \
 	__pthread_mutex_init (&(NAME).mutex, &__attr);			      \
 	__pthread_mutexattr_destroy (&__attr);				      \
       }									      \
-  } while (0);
+  } while (0)
+#endif
+
+#define __rtld_lock_init_recursive(NAME) \
+  do {									      \
+    if (__pthread_mutex_init != NULL)					      \
+      {									      \
+	pthread_mutexattr_t __attr;					      \
+	__pthread_mutexattr_init (&__attr);				      \
+	__pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP);    \
+	__pthread_mutex_init (&(NAME).mutex, &__attr);			      \
+	__pthread_mutexattr_destroy (&__attr);				      \
+      }									      \
+  } while (0)
 
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
-#if defined _LIBC && !defined NOT_IN_libc
-# define __libc_lock_fini(NAME) (0)
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+# define __libc_lock_fini(NAME) ((void) 0)
 #else
 # define __libc_lock_fini(NAME) \
   __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
@@ -161,11 +199,15 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_rwlock_destroy, (&(NAME)), 0)
 
 /* Finalize recursive named lock.  */
-#define __libc_lock_fini_recursive(NAME) \
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+# define __libc_lock_fini_recursive(NAME) ((void) 0)
+#else
+# define __libc_lock_fini_recursive(NAME) \
   __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
+#endif
 
 /* Lock the named lock variable.  */
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_lock(NAME) \
   lll_lock (NAME);
 #else
@@ -178,11 +220,27 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_rwlock_wrlock, (&(NAME)), 0)
 
 /* Lock the recursive named lock variable.  */
-#define __libc_lock_lock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+# define __libc_lock_lock_recursive(NAME) \
+  do {									      \
+    void *self = THREAD_SELF;						      \
+    if ((NAME).owner != self)						      \
+      {									      \
+	lll_lock ((NAME).lock);						      \
+	(NAME).owner = self;						      \
+      }									      \
+    ++(NAME).cnt;							      \
+  } while (0)
+#else
+# define __libc_lock_lock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
+#endif
+
+#define __rtld_lock_lock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
 
 /* Try to lock the named lock variable.  */
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_trylock(NAME) \
   lll_trylock (NAME)
 #else
@@ -195,11 +253,34 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_rwlock_trywrlock, (&(NAME)), 0)
 
 /* Try to lock the recursive named lock variable.  */
-#define __libc_lock_trylock_recursive(NAME) \
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+# define __libc_lock_trylock_recursive(NAME)				      \
+  do {									      \
+    int result = 0;							      \
+    void *self = THREAD_SELF;						      \
+    if ((NAME).owner != self)						      \
+      {									      \
+	if (lll_trylock ((NAME).lock) == 0)				      \
+	  {								      \
+	    (NAME).owner = self;					      \
+	    (NAME).cnt = 1;						      \
+	  }								      \
+	else								      \
+	  result = EBUSY;						      \
+      }									      \
+    else								      \
+      ++(NAME).cnt;							      \
+  } while (0)
+#else
+# define __libc_lock_trylock_recursive(NAME) \
   __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)
+#endif
+
+#define __rtld_lock_trylock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_trylock, (&(NAME).mutex), 0)
 
 /* Unlock the named lock variable.  */
-#if defined _LIBC && !defined NOT_IN_libc
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define __libc_lock_unlock(NAME) \
   lll_unlock (NAME);
 #else
@@ -210,9 +291,23 @@ typedef pthread_key_t __libc_key_t;
   __libc_maybe_call (__pthread_rwlock_unlock, (&(NAME)), 0)
 
 /* Unlock the recursive named lock variable.  */
-#define __libc_lock_unlock_recursive(NAME) \
+#if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
+/* We do no error checking here.  */
+# define __libc_lock_unlock_recursive(NAME) \
+  do {									      \
+    if (--(NAME).cnt == 0)						      \
+      {									      \
+	(NAME).owner = NULL;						      \
+	lll_unlock ((NAME).lock);					      \
+      }									      \
+  } while (0)
+#else
+# define __libc_lock_unlock_recursive(NAME) \
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
+#endif
 
+#define __rtld_lock_unlock_recursive(NAME) \
+  __libc_maybe_call (__pthread_mutex_unlock, (&(NAME).mutex), 0)
 
 /* Define once control variable.  */
 #if PTHREAD_ONCE_INIT == 0
@@ -393,9 +488,5 @@ weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
 #  pragma weak _pthread_cleanup_pop_restore
 # endif
 #endif
-
-/* We need portable names for some functions.  E.g., when they are
-   used as argument to __libc_cleanup_region_start.  */
-#define __libc_mutex_unlock __pthread_mutex_unlock
 
 #endif	/* bits/libc-lock.h */

@@ -250,7 +250,7 @@ struct rtld_global
      This must be a recursive lock since the initializer function of
      the loaded object might as well require a call to this function.
      At this time it is not anymore a problem to modify the tables.  */
-  __libc_lock_define_recursive (EXTERN, _dl_load_lock)
+  __rtld_lock_define_recursive (EXTERN, _dl_load_lock)
 
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;

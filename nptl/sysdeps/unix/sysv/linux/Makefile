@@ -22,3 +22,7 @@ sysdep_routines += register-atfork unregister-atfork fork-gen
 
 libpthread-sysdep_routines += pt-fork
 endif
+
+ifeq ($(subdir),posix)
+CFLAGS-fork.c = -D_IO_MTSAFE_IO
+endif

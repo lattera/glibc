@@ -30,6 +30,7 @@
    of libc.  */
 #define __libc_lock_define(CLASS,NAME)
 #define __libc_lock_define_recursive(CLASS,NAME)
+#define __rtld_lock_define_recursive(CLASS,NAME)
 #define __libc_rwlock_define(CLASS,NAME)
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */
@@ -47,6 +48,7 @@
 
 /* Same as last but this time we initialize a recursive mutex.  */
 #define __libc_lock_init_recursive(NAME)
+#define __rtld_lock_init_recursive(NAME)
 
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
@@ -64,6 +66,7 @@
 
 /* Lock the recursive named lock variable.  */
 #define __libc_lock_lock_recursive(NAME)
+#define __rtld_lock_lock_recursive(NAME)
 
 /* Try to lock the named lock variable.  */
 #define __libc_lock_trylock(NAME) 0
@@ -79,6 +82,7 @@
 
 /* Unlock the recursive named lock variable.  */
 #define __libc_lock_unlock_recursive(NAME)
+#define __rtld_lock_unlock_recursive(NAME)
 
 
 /* Define once control variable.  */

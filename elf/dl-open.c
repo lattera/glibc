@@ -486,7 +486,7 @@ _dl_open (const char *file, int mode, const void *caller)
     _dl_signal_error (EINVAL, file, NULL, N_("invalid mode for dlopen()"));
 
   /* Make sure we are alone.  */
-  __libc_lock_lock_recursive (GL(dl_load_lock));
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   args.file = file;
   args.mode = mode;
@@ -500,7 +500,7 @@ _dl_open (const char *file, int mode, const void *caller)
 #endif
 
   /* Release the lock.  */
-  __libc_lock_unlock_recursive (GL(dl_load_lock));
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   if (__builtin_expect (errstring != NULL, 0))
     {

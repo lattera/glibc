@@ -20,12 +20,13 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <libio.h>
+#include <bits/stdio-lock.h>
 
 
 void
 flockfile (stream)
      FILE *stream;
 {
-  pthread_mutex_lock (stream->_lock);
+  _IO_lock_lock (*stream->_lock);
 }
 strong_alias (flockfile, _IO_flockfile)

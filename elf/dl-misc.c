@@ -258,9 +258,9 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
     __writev (fd, iov, niov);
   else
     {
-      __libc_lock_lock_recursive (GL(dl_load_lock));
+      __rtld_lock_lock_recursive (GL(dl_load_lock));
       __writev (fd, iov, niov);
-      __libc_lock_unlock_recursive (GL(dl_load_lock));
+      __rtld_lock_unlock_recursive (GL(dl_load_lock));
     }
 #else
   __writev (fd, iov, niov);

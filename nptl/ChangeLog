@@ -1,3 +1,22 @@
+2002-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Comment out tst-locale2 for now.
+	(CFLAGS-flockfile.c, CFLAGS-funlockfile.c): Define to -D_IO_MTSAFE_IO.
+
+	* sysdeps/unix/sysv/linux/Makefile: Define CFLAGS-fork.c to
+	-D_IO_MTSAFE_IO.
+	* sysdeps/unix/sysv/linux/fork.c: Include <bits/stdio-lock.h>.
+	Use _IO_lock_init instead of explicit assignment.
+
+	* sysdeps/pthread/bits/libc-lock.h: Define __rtld_lock_* macros.
+	Define __libc_lock_* and __libc_lock_recursive macros with
+	lowlevellock macros, not pthread mutexes.
+
+	* flockfile.c: Include <bits/stdio-lock.h>.  Use _IO_lock_lock instead
+	of pthread_mutex_lock.
+	* funlockfile.c: Include <bits/stdio-lock.h>.  Use _IO_lock_unlock
+	instead of pthread_mutex_unlock.
+
 2002-12-06  Roland McGrath  <roland@redhat.com>
 
 	* allocatestack.c (__stack_user): Use uninitialized defn.

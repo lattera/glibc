@@ -20,12 +20,13 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <libio.h>
+#include <bits/stdio-lock.h>
 
 
 void
 funlockfile (stream)
      FILE *stream;
 {
-  pthread_mutex_unlock (stream->_lock);
+  _IO_lock_unlock (*stream->_lock);
 }
 strong_alias (funlockfile, _IO_funlockfile)

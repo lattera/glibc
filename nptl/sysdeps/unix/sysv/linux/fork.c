@@ -24,6 +24,7 @@
 #include <libio/libioP.h>
 #include <tls.h>
 #include "fork.h"
+#include <bits/stdio-lock.h>
 
 
 unsigned long int *__fork_generation_pointer;
@@ -41,8 +42,7 @@ fresetlockfiles (void)
   _IO_ITER i;
 
   for (i = _IO_iter_begin(); i != _IO_iter_end(); i = _IO_iter_next(i))
-    *((pthread_mutex_t *) _IO_iter_file(i)->_lock)
-      = (pthread_mutex_t) PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+    _IO_lock_init (*((_IO_lock_t *) _IO_iter_file(i)->_lock));
 }
 
 
