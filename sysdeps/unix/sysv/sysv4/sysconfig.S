@@ -1,5 +1,4 @@
-/* `__sysconfig' NAME values.
-   Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef __SYSCONFIG_H
-#define __SYSCONFIG_H
+#include <sysdep.h>
 
-#define _CONFIG_OPEN_FILES 4	/* process limit on open files */
-#define _CONFIG_PAGESIZE 6	/* MMU page size */
-#define _CONFIG_CLK_TCK 7	/* all times are in CLK_TCKths of a second */
-
-#endif
-
+SYSCALL__ (sysconfig, 1)
+	ret
