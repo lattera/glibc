@@ -1229,7 +1229,7 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
   if (intarraysize > INIT_SIGMASK)
     ss->blocked = intarray[INIT_SIGMASK];
   if (intarraysize > INIT_SIGPENDING)
-    ss->blocked = intarray[INIT_SIGPENDING];
+    ss->pending = intarray[INIT_SIGPENDING];
   if (intarraysize > INIT_SIGIGN && intarray[INIT_SIGIGN] != 0)
     {
       int signo;
