@@ -1560,6 +1560,29 @@ Before doing this look through the list of known problem first:
   if it cannot directly map a character this is a perfectly good solution
   since the semantics and appearance of the character does not change.
 
+??	How can I find out which version of glibc I am using in the moment?
+
+{UD} If you want to find out about the version from the command line simply
+run the libc binary.  This is probably not possible on all platforms but
+where it is simply locate the libc DSO and start it as an application.  On
+Linux like
+
+	/lib/libc.so.6
+
+This will produce all the information you need.
+
+What always will work is to use the API glibc provides.  Compile and run the
+following little program to get the version information:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#include <stdio.h>
+#include <gnu/libc-version.h>
+int main (void) { puts (gnu_get_libc_version ()); return 0; }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This interface can also obviously be used to perform tests at runtime if
+this should be necessary.
+
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>

@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+# Copyright (C) 1994, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -125,7 +125,7 @@ $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \
 
 # Tell rpcgen where to find the C preprocessor.
 rpcgen-cmd = $(built-program-cmd) -Y `$(CC) -print-file-name=cpp | \
-				      sed "s|/cpp$$||"`
+				      sed 's|/cpp$$||'`
 
 # Install the rpc data base file.
 $(inst_sysconfdir)/rpc: etc.rpc $(+force)

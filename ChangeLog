@@ -1,3 +1,12 @@
+2000-12-11  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile ($(inst_includedir)/gnu/stubs.h): Sort in the C locale.
+
+2000-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/Makefile (rpcgen-cmd): Use single quotes in sed call.
+	Patch by Ed Connell <Ed.Connell@sas.com>.
+
 2000-12-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-639.def: Correct one entry.  Add two missing entries.

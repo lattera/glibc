@@ -149,7 +149,7 @@ $(inst_includedir)/gnu/stubs.h: subdir_install
 	 echo '   It defines a symbol `__stub_FUNCTION'\'' for each function';\
 	 echo '   in the C library which is a stub, meaning it will fail';\
 	 echo '   every time called, usually setting errno to ENOSYS.  */';\
-	 sort $(subdir-stubs)) > $(objpfx)stubs.h
+	 LC_ALL=C sort $(subdir-stubs)) > $(objpfx)stubs.h
 	if test -r $@ && cmp -s $(objpfx)stubs.h $@; \
 	then echo 'stubs.h unchanged'; \
 	else $(INSTALL_DATA) $(objpfx)stubs.h $@; fi
