@@ -26,7 +26,7 @@
 #include "kernel-features.h"
 
 /* Variable to signal whether SIOCGIFCONF is not available.  */
-#if __ASSUME_SIOCGIFNAME == 0
+#if __ASSUME_SIOCGIFNAME == 0 || 1
 static int old_siocgifconf;
 #else
 # define old_siocgifconf 0
@@ -73,7 +73,7 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
     rq_len = RQ_IFS * sizeof (struct ifreq);
 
   /* Read all the interfaces out of the kernel.  */
-  do
+  while (1)
     {
       ifc.ifc_len = rq_len;
       ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
@@ -89,9 +89,12 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 	  *ifreqs = NULL;
 	  return;
 	}
+
+      if (!old_siocgifconf || ifc.ifc_len < rq_len)
+	break;
+
       rq_len *= 2;
     }
-  while (ifc.ifc_len == rq_len && old_siocgifconf);
 
   nifs = ifc.ifc_len / sizeof (struct ifreq);
 

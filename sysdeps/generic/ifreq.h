@@ -44,10 +44,10 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
     }
 
   ifc.ifc_buf = NULL;
-  rq_len = RQ_IFS * sizeof (struct ifreq);
+  rq_len = RQ_IFS * sizeof (struct ifreq) / 2; /* Doubled in the loop.  */
   do
     {
-      ifc.ifc_len = rq_len;
+      ifc.ifc_len = rq_len *= 2;
       ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
       if (ifc.ifc_buf == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
 	{
@@ -60,7 +60,6 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 	  *ifreqs = NULL;
 	  return;
 	}
-      rq_len *= 2;
     }
   while (rq_len < sizeof (struct ifreq) + ifc.ifc_len);
 

@@ -1306,7 +1306,7 @@ __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abstime)
 #ifdef DEBUG
 #include <stdarg.h>
 
-void __pthread_message(char * fmt, ...)
+void __pthread_message(const char * fmt, ...)
 {
   char buffer[1024];
   va_list args;

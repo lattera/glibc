@@ -31,14 +31,25 @@
 # define JB_GPR1   0  /* Also known as the stack pointer */
 # define JB_GPR2   1
 # define JB_LR     2  /* The address we will return to */
-# define JB_GPRS   3  /* GPRs 14 through 31 are saved, 18 in total */
-# define JB_CR     21 /* Condition code registers. */
-# define JB_FPRS   22 /* FPRs 14 through 31 are saved, 18*2 words total */
-# define JB_SIZE   (58*4)
+# if __WORDSIZE == 64
+#  define JB_GPRS   3  /* GPRs 14 through 31 are saved, 18*2 words total.  */
+#  define JB_CR     21 /* Condition code registers. */
+#  define JB_FPRS   22 /* FPRs 14 through 31 are saved, 18*2 words total.  */
+#  define JB_SIZE   (40*8)
+# else
+#  define JB_GPRS   3  /* GPRs 14 through 31 are saved, 18 in total.  */
+#  define JB_CR     21 /* Condition code registers.  */
+#  define JB_FPRS   22 /* FPRs 14 through 31 are saved, 18*2 words total.  */
+#  define JB_SIZE   (58*4)
+# endif 
 #endif
 
 #ifndef	_ASM
+# if __WORDSIZE == 64
+typedef long int __jmp_buf[40];
+# else
 typedef long int __jmp_buf[58];
+# endif
 #endif
 
 /* Test if longjmp to JMPBUF would unwind the frame

@@ -1,3 +1,31 @@
+2002-09-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/setjmp.h [__WORDSIZE]: Add 64-bit jmpbuf.
+	* sysdeps/powerpc/bits/wordsize.h: New file.
+	* sysdeps/powerpc/fpu/bits/mathinline.h (lrint, lrintf): Change long
+	array to int array for 32-/64-bit compatibility.
+
+2002-09-20  Roland McGrath  <roland@redhat.com>
+
+	* login/programs/utmpdump.c: Don't include <error.h>, <errno.h>.
+
+	* sysdeps/generic/utimes.c (__utimes): Don't check TVP for null.
+	Reported by Bruno Haible <bruno@clisp.org>.
+
+	* sysdeps/generic/ifreq.h (__ifreq): Compute termination condition
+	before doubling RQ_LEN.
+	* sysdeps/unix/sysv/linux/ifreq.h (__ifreq): Likewise.
+	Reported by Bruno Haible <bruno@clisp.org>.
+
+2002-09-18  Bruno Haible  <bruno@clisp.org>
+
+	* login/logout.c (logout): Don't assume ut_time has the same size as
+	a time_t.
+	* login/logwtmp.c (logwtmp): Likewise.
+
+	* sysdeps/pthread/configure: New file, moved here from
+	linuxthreads/sysdeps/unix/sysv/linux/configure.
+
 2002-09-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/_exit.c: Include <errno.h>.

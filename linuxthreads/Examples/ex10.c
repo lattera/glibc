@@ -62,6 +62,7 @@ thread (void *arg)
 
       for (;;)
 	{
+	  int err;
 
 	  clock_gettime (CLOCK_REALTIME, &ts);
 
@@ -72,7 +73,7 @@ thread (void *arg)
 	     ts.tv_nsec -= 1000000000L;
 	  }
 
-	  switch (pthread_mutex_timedlock (&mutex, &ts))
+	  switch ((err = pthread_mutex_timedlock (&mutex, &ts)))
 	    {
 	    case 0:
 	      flockfile (stdout);
@@ -86,6 +87,8 @@ thread (void *arg)
 		      (unsigned long) self);
 	      funlockfile (stdout);
 	      continue;
+	    default:
+	      error (EXIT_FAILURE, err, "pthread_mutex_timedlock failure");
 	    }
 	  break;
 	}

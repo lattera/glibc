@@ -63,8 +63,8 @@ __MATH_INLINE long int
 lrint (double __x) __THROW
 {
   union {
-    double __d;
-    long int __ll[2];
+    double __d;   
+    int __ll[2];
   } __u;
   __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
   return __u.__ll[1];
@@ -76,7 +76,7 @@ lrintf (float __x) __THROW
 {
   union {
     double __d;
-    long int __ll[2];
+    int __ll[2];
   } __u;
   __asm__ ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
   return __u.__ll[1];

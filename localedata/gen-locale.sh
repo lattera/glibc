@@ -1,6 +1,6 @@
 #! /bin/sh
 # Generate test locale files.
-# Copyright (C) 2000-2001 Free Software Foundation, Inc.
+# Copyright (C) 2000,01,02 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -25,18 +25,22 @@ locfile="$1"; shift
 
 generate_locale ()
 {
-    charmap=$1
-    input=$2
-    out=$3
-    I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
-    ${localedef} --quiet -c -f $charmap -i $input \
-      ${common_objpfx}localedata/$out
-
-    if [ $? -ne 0 ]; then
-	echo "Charmap: \"${charmap}\" Inputfile: \"${input}\"" \
-	     "Outputdir: \"${out}\" failed"
-	exit 1
-    fi
+  charmap=$1
+  input=$2
+  out=$3
+  if I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
+     ${localedef} --quiet -c -f $charmap -i $input \
+		  ${common_objpfx}localedata/$out
+  then
+    # The makefile checks the timestamp of the LC_CTYPE file,
+    # but localedef won't have touched it if it was able to
+    # hard-link it to an existing file.
+    touch ${common_objpfx}localedata/$out/LC_CTYPE
+  else
+    echo "Charmap: \"${charmap}\" Inputfile: \"${input}\"" \
+	 "Outputdir: \"${out}\" failed"
+    exit 1
+  fi
 }
 
 locfile=`echo $locfile|sed 's|.*/\([^/]*/LC_CTYPE\)|\1|'`
