@@ -634,7 +634,7 @@ static void pthread_handle_free(pthread_t th_id)
   pthread_descr th;
 
   __pthread_lock(&handle->h_lock, NULL);
-  if (invalid_handle(handle, th_id)) {
+  if (nonexisting_handle(handle, th_id)) {
     /* pthread_reap_children has deallocated the thread already,
        nothing needs to be done */
     __pthread_unlock(&handle->h_lock);

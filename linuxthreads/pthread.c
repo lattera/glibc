@@ -513,7 +513,7 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
               &request.req_args.create.mask);
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
   suspend(self);
-  retval = THREAD_GETMEM(self, p_retcode;
+  retval = THREAD_GETMEM(self, p_retcode);
   if (retval == 0)
     *thread = (pthread_t) THREAD_GETMEM(self, p_retval);
   return retval;
