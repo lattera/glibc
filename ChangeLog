@@ -1,3 +1,7 @@
+2001-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-regex.c: Fix several bugs.  Add more tests.
+
 2001-06-26  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/Makefile (user-interfaces): Add pfinet.

@@ -55,7 +55,7 @@ fmon-tests = n01y12 n02n40 n10y31 n11y41 n12y11 n20n32 n30y20 n41n00 \
 	     y01y10 y02n22 y22n42 y30y21 y32n31 y40y00 y42n21
 
 generated := $(test-input) $(test-output) sort-test.out tst-locale.out \
-	     tst-mbswcs.out
+	     tst-mbswcs.out tst-leaks.mtrace mtrace-tst-leaks
 generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
 
@@ -90,7 +90,13 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wcsxfrm tst_wctob tst_wctomb tst_wctrans      \
 		     tst_wctype tst_wcwidth
 
-tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans
+tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
+	tst-leaks
+ifeq (yes,$(build-shared))
+ifneq (no,$(PERL))
+tests: $(objpfx)mtrace-tst-leaks
+endif
+endif
 endif
 
 # Files to install.
@@ -259,3 +265,7 @@ tst-digits-ENV = $(TEST_MBWC_ENV)
 tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-JP
 
 bug-iconv-trans-ENV = LOCPATH=$(common-objpfx)localedata
+
+tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
+$(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@

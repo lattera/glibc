@@ -1,3 +1,8 @@
+2001-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build and run tst-leaks.
+	* tst-leaks.c: New file.
+
 2001-06-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/ro_RO (day): Use U0163 instead of U021B.
