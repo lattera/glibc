@@ -1,3 +1,10 @@
+2002-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* timezone/Makefile (tzbases): Move systemv from here...
+	(tzlinks): to here, since the entries in systemv were all changed
+	from Zone to Link lines in tz-2001a.  Bug reported (and patch
+	tested) by Peter Breitenlohner.
+
 2002-03-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/tst-posixtz.c (tests): Add new tests.

@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,9 +31,9 @@ others	:= zdump zic
 tests	:= test-tz tst-timezone
 
 tzbases := africa antarctica asia australasia europe northamerica \
-	   southamerica etcetera factory systemv \
+	   southamerica etcetera factory \
 	   solar87 solar88 solar89
-tzlinks := backward
+tzlinks := backward systemv
 tzfiles := $(tzbases) $(tzlinks)
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
