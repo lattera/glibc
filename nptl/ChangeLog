@@ -1,3 +1,17 @@
+2003-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sem_post.c: Move to...
+	* sysdeps/unix/sysv/linux/sem_post.c: ...here.
+
+	* sysdeps/unix/sysv/linux/sem_post.c: Move to...
+	* sysdeps/unix/sysv/linux/powerpc/sem_post.c: ... here.  Pass nr + 1
+	instead of nr to lll_futex_wake.  Only set errno and return -1
+	if err < 0.
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (lll_futex_wait,
+	lll_futex_timed_wait, lll_futex_wake, lll_futex_requeue): On success
+	return actual return value from the syscall, not 0.
+
 2003-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c (tf_msgsnd): Don't always use 100 as the type,
@@ -10,7 +24,7 @@
 	* sysdeps/unix/sysv/linux/timer_gettime.c: Add prototype for
 	compat_timer_gettime.
 	* sysdeps/unix/sysv/linux/timer_getoverr.c: Add prototype for
-	compat_timer_getoverrun.o
+	compat_timer_getoverrun.
 	* sysdeps/unix/sysv/linux/timer_delete.c: Add prototype for
 	compat_timer_delete.
 

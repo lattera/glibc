@@ -1,7 +1,7 @@
 /* sem_post -- post to a POSIX semaphore.  Generic futex-using version.
    Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -32,13 +32,14 @@ __new_sem_post (sem_t *sem)
   int *futex = (int *) sem;
   int err, nr;
 
-  __asm __volatile (__lll_rel_instr ::: "memory");
   nr = atomic_exchange_and_add (futex, 1);
-  err = lll_futex_wake (futex, nr);
-  if (err == 0)
-    return 0;
-  __set_errno (-err);
-  return -1;
+  err = lll_futex_wake (futex, nr + 1);
+  if (__builtin_expect (err, 0) < 0)
+    {
+      __set_errno (-err);
+      return -1;
+    }
+  return 0;
 }
 versioned_symbol (libpthread, __new_sem_post, sem_post, GLIBC_2_1);
 #if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
