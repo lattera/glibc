@@ -22,104 +22,57 @@
 
 #include <bits/wordsize.h>
 
-#define SUNOS_MAXWIN   31
+#if __WORDSIZE == 32
 
-/* A register window */
-struct reg_window {
-  unsigned long locals[8];
-  unsigned long ins[8];
+/* It is quite hard to choose what to put here, because
+   Linux/sparc32 had at least 3 totally incompatible
+   signal stack layouts.
+   This one is for the "new" style signals, which are
+   now delivered unless SA_SIGINFO is requested.  */
+
+typedef struct sigcontext
+  {
+    struct
+      {
+	unsigned int	psr;
+	unsigned int	pc;
+	unsigned int	npc;
+	unsigned int	y;
+	unsigned int	u_regs[16]; /* globals and ins */
+      }			si_regs;
+    int			si_mask;
+  };
+
+#else /* sparc64 */
+
+typedef struct
+  {
+    unsigned int	si_float_regs [64];
+    unsigned long	si_fsr;
+    unsigned long	si_gsr;
+    unsigned long	si_fprs;
+  } __siginfo_fpu_t;
+
+struct sigcontext
+  {
+    char		sigc_info[128];
+    struct
+      {
+	unsigned long	u_regs[16]; /* globals and ins */
+	unsigned long	tstate;
+	unsigned long	tpc;
+	unsigned long	tnpc;
+	unsigned int	y;
+	unsigned int	fprs;
+      }			sigc_regs;
+    __siginfo_fpu_t *	sigc_fpu_save;
+    struct
+      {
+	void *		ss_sp;
+	int		ss_flags;
+	unsigned long	ss_size;
+      }			sigc_stack;
+    unsigned long	sigc_mask;
 };
 
-#if __WORDSIZE == 64
-
-/* This is what SunOS doesn't, so we have to write this alone. */
-struct sigcontext {
-  int sigc_onstack;      /* state to restore */
-  int sigc_mask;         /* sigmask to restore */
-  unsigned long sigc_sp;   /* stack pointer */
-  unsigned long sigc_pc;   /* program counter */
-  unsigned long sigc_npc;  /* next program counter */
-  unsigned long sigc_psr;  /* for condition codes etc */
-  unsigned long sigc_g1;   /* User uses these two registers */
-  unsigned long sigc_o0;   /* within the trampoline code. */
-
-  /* Now comes information regarding the users window set
-     at the time of the signal. */
-  int sigc_oswins;       /* outstanding windows */
-
-  /* stack ptrs for each regwin buf */
-  char *sigc_spbuf[SUNOS_MAXWIN];
-
-  /* Windows to restore after signal */
-  struct reg_window sigc_wbuf[SUNOS_MAXWIN];
-};
-
-struct pt_regs {
-        unsigned long u_regs[16]; /* globals and ins */
-        unsigned long tstate;
-        unsigned long tpc;
-        unsigned long tnpc;
-        unsigned int y;
-        unsigned int fprs;
-};
-
-typedef struct {
-        struct     pt_regs si_regs;
-        long       si_mask;
-} __siginfo_t;
-
-typedef struct {
-        unsigned   int si_float_regs [64];
-        unsigned   long si_fsr;
-        unsigned   long si_gsr;
-        unsigned   long si_fprs;
-} __siginfo_fpu_t;
-
-#else
-
-/* This is what SunOS does, so shall I. */
-struct sigcontext {
-  int sigc_onstack;      /* state to restore */
-  int sigc_mask;         /* sigmask to restore */
-  int sigc_sp;           /* stack pointer */
-  int sigc_pc;           /* program counter */
-  int sigc_npc;          /* next program counter */
-  int sigc_psr;          /* for condition codes etc */
-  int sigc_g1;           /* User uses these two registers */
-  int sigc_o0;           /* within the trampoline code. */
-
-  /* Now comes information regarding the users window set
-     at the time of the signal. */
-  int sigc_oswins;       /* outstanding windows */
-
-  /* stack ptrs for each regwin buf */
-  char *sigc_spbuf[SUNOS_MAXWIN];
-
-  /* Windows to restore after signal */
-  struct reg_window sigc_wbuf[SUNOS_MAXWIN];
-};
-
-struct pt_regs {
-        unsigned long psr;
-        unsigned long pc;
-        unsigned long npc;
-        unsigned long y;
-        unsigned long u_regs[16]; /* globals and ins */
-};
-
-typedef struct {
-  struct pt_regs  si_regs;
-  int             si_mask;
-} __siginfo_t;
-
-typedef struct {
-  unsigned   long si_float_regs [32];
-  unsigned   long si_fsr;
-  unsigned   long si_fpqdepth;
-  struct {
-    unsigned long *insn_addr;
-    unsigned long insn;
-  } si_fpqueue [16];
-} __siginfo_fpu_t;
-
-#endif
+#endif /* sparc64 */
