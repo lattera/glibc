@@ -213,7 +213,7 @@ write_call_graph (fd)
   struct gmon_cg_arc_record raw_arc[NARCS_PER_WRITEV]
     __attribute__ ((aligned (__alignof__ (char*))));
   ARCINDEX from_index, to_index;
-  int from_len;
+  u_long from_len;
   u_long frompc;
   struct iovec iov[2 * NARCS_PER_WRITEV];
   int nfilled;

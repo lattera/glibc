@@ -173,7 +173,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 
       __close (sock);
 
-      return nbytes == total ? 0 : -1;
+      return nbytes == (ssize_t) total ? 0 : -1;
     }
   else
     {

@@ -1,0 +1,6 @@
+dnl configure fragment for new libpthread implementation.
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+
+if test "x$libc_cv_gcc___thread" != xyes; then
+  AC_MSG_ERROR(compiler support for __thread is required)
+fi

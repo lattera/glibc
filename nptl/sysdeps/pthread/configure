@@ -1,0 +1,7 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+if test "x$libc_cv_gcc___thread" != xyes; then
+  { { echo "$as_me:$LINENO: error: compiler support for __thread is required" >&5
+echo "$as_me: error: compiler support for __thread is required" >&2;}
+   { (exit 1); exit 1; }; }
+fi

@@ -143,7 +143,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       char *p = buffer;
       size_t total_len;
       uintptr_t align;
-      size_t cnt;
+      nscd_ssize_t cnt;
 
       /* Now allocate the buffer the array for the group members.  We must
 	 align the pointer.  */

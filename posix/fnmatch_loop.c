@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1993, 1996-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -539,11 +540,13 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 				if (! is_range)
 				  {
 # ifdef WIDE_CHAR_VERSION
-				    for (c1 = 0; c1 < wextra[idx]; ++c1)
+				    for (c1 = 0;
+					 (int32_t) c1 < wextra[idx];
+					 ++c1)
 				      if (n[c1] != wextra[1 + c1])
 					break;
 
-				    if (c1 == wextra[idx])
+				    if ((int32_t) c1 == wextra[idx])
 				      goto matched;
 # else
 				    for (c1 = 0; c1 < extra[idx]; ++c1)
@@ -932,7 +935,7 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 	case L('/'):
 	  if (NO_LEADING_PERIOD (flags))
 	    {
-	      if (n == string_end || c != *n)
+	      if (n == string_end || c != (UCHAR) *n)
 		return FNM_NOMATCH;
 
 	      new_no_leading_period = 1;
