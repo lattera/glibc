@@ -1,3 +1,12 @@
+2003-12-16  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/tcb-offsets.sym [!__powerpc64__]: Remove
+	conditional so MULTIPLE_THREADS_OFFSET is generated for both.
+	* sysdeps/powerpc/tls.h [!__powerpc64__]: Remove conditional
+	so TLS_MULTIPLE_THREADS_IN_TCB is generated for both.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h:
+	Include tls.h.
+
 2003-12-04  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h

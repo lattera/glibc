@@ -1,11 +1,6 @@
 #include <sysdep.h>
 #include <tls.h>
 
---
-
--- This could go into powerpc32/ instead and conditionalize #include of it.
-#ifndef __powerpc64__
-
 # ifdef USE_TLS
 
 -- Abuse tls.h macros to derive offsets relative to the thread register.
@@ -21,4 +16,3 @@
 
 MULTIPLE_THREADS_OFFSET		thread_offsetof (multiple_threads)
 
-#endif

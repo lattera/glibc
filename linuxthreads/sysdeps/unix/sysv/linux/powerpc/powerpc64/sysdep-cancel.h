@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <tls.h>
 #ifndef __ASSEMBLER__
 # include <linuxthreads/internals.h>
 #endif

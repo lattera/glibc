@@ -119,9 +119,7 @@ typedef struct
 
 /* Make sure we have the p_multiple_threads member in the thread structure.
    See below.  */
-#  ifndef __powerpc64__
-#   define TLS_MULTIPLE_THREADS_IN_TCB 1
-#  endif
+#  define TLS_MULTIPLE_THREADS_IN_TCB 1
 
 /* Get the thread descriptor definition.  */
 #  include <linuxthreads/descr.h>
