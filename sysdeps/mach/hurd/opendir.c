@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,95,96,97,98,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,98,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,17 +50,22 @@ __opendir (const char *name)
 
   {
     /* Append trailing slash to directory name to force ENOTDIR
-       if it's not a directory.  */
+       if it's not a directory.
+
+       We open using the O_NONBLOCK flag so that a nondirectory with
+       blocking behavior (FIFO or device) gets ENOTDIR immediately
+       rather than waiting for the special file's open wakeup predicate.  */
+
     size_t len = strlen (name);
     if (name[len - 1] == '/')
-      fd = __open (name, O_RDONLY);
+      fd = __open (name, O_RDONLY | O_NONBLOCK);
     else
       {
 	char n[len + 2];
 	memcpy (n, name, len);
 	n[len] = '/';
 	n[len + 1] = '\0';
-	fd = __open (n, O_RDONLY);
+	fd = __open (n, O_RDONLY | O_NONBLOCK);
       }
   }
   if (fd < 0)

@@ -58,5 +58,8 @@ libc {
   GLIBC_PRIVATE {
     # Internal startup hook for libpthread.
     __libc_malloc_pthread_startup;
+
+    # Internal destructor hook for libpthread.
+    __libc_thread_freeres;
   }
 }

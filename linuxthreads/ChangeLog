@@ -1,3 +1,8 @@
+2003-02-21  Roland McGrath  <roland@redhat.com>
+
+	* cancel.c (__pthread_perform_cleanup): Call __libc_thread_freeres
+	instead of __rpc_thread_destroy.
+
 2003-02-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S (__vfork): Call

@@ -15,7 +15,7 @@ __libc_tsd_define (, RPC_VARS)
 /*
  * Task-variable destructor
  */
-void
+void __attribute__ ((section ("__libc_thread_freeres_fn")))
 __rpc_thread_destroy (void)
 {
 	struct rpc_thread_variables *tvp = __libc_tsd_get (RPC_VARS);
@@ -32,6 +32,7 @@ __rpc_thread_destroy (void)
 		free (tvp);
 	}
 }
+text_set_element (__libc_thread_subfreeres, __rpc_thread_destroy);
 
 
 /*

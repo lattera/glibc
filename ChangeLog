@@ -1,3 +1,22 @@
+2003-02-21  Roland McGrath  <roland@redhat.com>
+
+	* malloc/Versions (GLIBC_PRIVATE): Add __libc_thread_freeres.
+	* malloc/thread-freeres.c: New file.
+	* malloc/Makefile (aux): Add it.
+	* sunrpc/Versions (GLIBC_PRIVATE): Removed.
+	* sunrpc/rpc_thread.c (__rpc_thread_destroy): Put in special section
+	"__libc_thread_freeres_fn" and add to __libc_thread_subfreeres set.
+
+	* sysdeps/unix/sysv/linux/i386/geteuid.c (__geteuid): Typo fix.
+	* sysdeps/unix/sysv/linux/i386/getgid.c (__getgid): Typo fix.
+
+2003-02-21  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/opendir.c (__opendir): Use O_NONBLOCK in open.
+
+	* iconvdata/Makefile (tests): Add bug-iconv3 only if
+	[$(have-thread-library) = yes].
+
 2003-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/signum.h (__SIGRTMAX): Define as _NSIG.

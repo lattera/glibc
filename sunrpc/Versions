@@ -113,8 +113,4 @@ libc {
     __rpc_thread_svc_fdset; __rpc_thread_createerr;
     __rpc_thread_svc_pollfd; __rpc_thread_svc_max_pollfd;
   }
-  GLIBC_PRIVATE {
-    # needed by libpthread.
-    __rpc_thread_destroy; __libc_tsd_RPC_VARS;
-  }
 }
