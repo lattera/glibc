@@ -1,10 +1,24 @@
+Wed Jun  5 15:57:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* mach/Machrules: Undo last change.
+	(mach-generated): List .uh and .__h files only for $(user-interfaces),
+	not for each .h in $(interface-headers); server-interfaces have no .uh
+	or .__h files.
+
 Wed Jun  5 15:42:51 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* mach/Machrules (%_server.uh, %_server.__h): New rules, so that the
 	corrsponding .defs file with without the `_server' will be used.
-	
-	* mach/Makefile (mach/mach_interface.defs): Renamed from mach_interface.defs.
+
+	* mach/Makefile (mach/mach_interface.defs): Renamed from
+	mach_interface.defs.
 	(mach/memory_object_user.defs): New variable.
+
+Wed Jun  5 15:10:58 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Make-dist [subdir-dirs]: Set vpath for %, not just %.c.
+
+	* locale/Makefile (subdir-dirs): New variable.
 
 Wed Jun  5 00:01:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
@@ -17,6 +31,8 @@ Wed Jun  5 00:01:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Handle RESOLVE being
 	null in all cases but R_386_COPY.
 	(elf_machine_rel):
+
+Wed Jun  5 00:01:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/bsd/ultrix4/mips/Dist: Updated.
 	* sysdeps/unix/bsd/ultrix4/Dist: Removed.
