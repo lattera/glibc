@@ -464,7 +464,7 @@ mv -f $@.new $@
 endef
 
 install-lib.so := $(filter %.so,$(install-lib:%_pic.a=%.so))
-install-lib := $(filter-out %.so,$(install-lib))
+install-lib := $(filter-out %.so %_pic.a,$(install-lib))
 ifeq (yes,$(build-shared))
 install: $(libdir)/libc.so$(libc.so-version)
 install-lib-nosubdir: $(foreach so,$(install-lib.so),\

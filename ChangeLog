@@ -1,5 +1,8 @@
 Mon Oct 16 03:22:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makerules (install-lib): Filter out %_pic.a; install only the
+	linked shared objects.
+
 	* locale/Makefile (aux): Add SYS_libc.
 	* locale/SYS_libc.c: New file.
 	* libc-symbols.h (_): New macro.
