@@ -1,3 +1,8 @@
+2003-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_broadcast.c: Release lock before
+	signalling waiters.
+
 2003-03-18  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (__lll_test_and_set):
