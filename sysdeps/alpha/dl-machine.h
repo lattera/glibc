@@ -98,7 +98,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       /* The GOT entries for the functions in the PLT have not been
 	 filled in yet.  Their initial contents are directed to the
 	 PLT which arranges for the dynamic linker to be called.  */
-      plt = l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr;
+      plt = l->l_info[DT_PLTGOT]->d_un.d_ptr;
 
       /* This function will be called to perform the relocation.  */
       if (!profile)
