@@ -1,3 +1,7 @@
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/errno.h: Don't include tls.h if _ISOMAC is defined.
+
 2002-07-30  Roland McGrath  <roland@redhat.com>
 
 	* resolv/resolv.h (_res): Define macro unconditionally.
