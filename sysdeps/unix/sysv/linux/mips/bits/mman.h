@@ -53,10 +53,12 @@
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x1000		/* Stack-like segment.  */
+# define MAP_NORESERVE	0x0400		/* don't check for reservations */
+# define MAP_ANONYMOUS	0x0800		/* don't use a file */
+# define MAP_GROWSDOWN	0x1000		/* stack-like segment */
 # define MAP_DENYWRITE	0x2000		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x4000		/* Mark it as an executable.  */
-# define MAP_NORESERVE	0x0400		/* Don't check for reservations.  */
+# define MAP_EXECUTABLE	0x4000		/* mark it as an executable */
+# define MAP_LOCKED	0x8000		/* pages are locked */
 #endif
 
 /* Flags to `msync'.  */
@@ -68,6 +70,15 @@
 #define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
 #define MCL_FUTURE	2		/* Lock all additions to address
 					   space.  */
+
+/* Advice to `madvise'.  */
+#ifdef __USE_BSD
+#define MADV_NORMAL	0		/* default page-in behavior */
+#define MADV_RANDOM	1		/* page-in minimum required */
+#define MADV_SEQUENTIAL	2		/* read-ahead aggressively */
+#define MADV_WILLNEED	3		/* pre-fault pages */
+#define MADV_DONTNEED	4		/* discard these pages */
+#endif
 
 /* Flags for `mremap'.  */
 #ifdef __USE_GNU
