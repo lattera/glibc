@@ -106,7 +106,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
 	++i;
       while (i < n && !isdigit (buf[i]));
 
-      if (*decpt == 1 && buf[0] == '0')
+      if (*decpt == 1 && buf[0] == '0' && value != 0.0)
 	{
 	  /* We must not have leading zeroes.  Strip them all out and
 	     adjust *DECPT if necessary.  */

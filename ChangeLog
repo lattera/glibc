@@ -1,5 +1,8 @@
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/efgcvt_r.c (APPEND): Handle printing of 0.0 correctly.
+	Reported by Göran Uddeborg <goeran@uddeborg.pp.se>.
+
 	* misc/tst-efgcvt.c (ecvt_tests): Add new test case for reported
 	bug.
 
