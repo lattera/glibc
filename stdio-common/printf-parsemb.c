@@ -1,4 +1,4 @@
-/* Internal header for parsing printf format strings.
+/* Helper functions for parsing printf format strings.
    Copyright (C) 1995-1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
@@ -19,7 +19,9 @@
 
 #include <ctype.h>
 #include <limits.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include <wchar.h>
 #include <wctype.h>
 
