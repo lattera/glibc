@@ -524,25 +524,6 @@ show_locale_vars (void)
 }
 
 
-/* Some of the "string" we print contain non-printable characters.  We
-   encode them here.  */
-static void
-print_escaped (const char *string)
-{
-  const unsigned char *ch;
-
-  ch = string;
-  while ('\0' != *ch)
-    {
-      if (isprint (*ch))
-	putchar (*ch);
-      else
-	printf("<0x%02x>", *ch);
-      ++ch;
-    }
-}
-
-
 /* Show the information request for NAME.  */
 static void
 show_info (const char *name)
@@ -556,7 +537,7 @@ show_info (const char *name)
 	case string:
 	  if (show_keyword_name)
 	    printf ("%s=\"", item->name);
-	  print_escaped (nl_langinfo (item->item_id) ? : "");
+	  fputs (nl_langinfo (item->item_id) ? : "", stdout);
 	  if (show_keyword_name)
 	    putchar ('"');
 	  putchar ('\n');
@@ -573,13 +554,13 @@ show_info (const char *name)
 	      {
 		val = nl_langinfo (item->item_id + cnt);
 		if (val != NULL)
-		  print_escaped (val);
+		  fputs (val, stdout);
 		putchar (';');
 	      }
 
 	    val = nl_langinfo (item->item_id + cnt);
 	    if (val != NULL)
-	      print_escaped (val);
+	      fputs (val, stdout);
 
 	    if (show_keyword_name)
 	      putchar ('"');
@@ -590,11 +571,12 @@ show_info (const char *name)
 	  {
 	    int first = 1;
 	    const char *val = nl_langinfo (item->item_id) ? : "";
+	    int cnt;
 
 	    if (show_keyword_name)
 	      printf ("%s=", item->name);
 
-	    while (*val != '\0')
+	    for (cnt = 0; cnt < item->max && *val != '\0'; ++cnt)
 	      {
 		printf ("%s%s%s%s", first ? "" : ";",
 			show_keyword_name ? "\"" : "", val,

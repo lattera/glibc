@@ -1,5 +1,11 @@
 2000-10-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/locale.c (print_item): Fix one more problem with
+	string lists.  Patch by Chen Xiangyang <chenxy@opencjk.org>.
+
+	* locale/categories.def: Add number of arguments to ctype-map-names
+	and ctype-class-names entries.  Mark era as stringlist.
+
 	* iconvdata/Makefile (modules): Add IBM856, IBM930, IBM933, IBM935,
 	IBM937, IBM939, and IBM1046.
 	(distribute): Add ibm856.c, ibm930.c, ibm933.c, ibm935.c, ibm937.c,
