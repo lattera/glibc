@@ -54,7 +54,7 @@ where_is_shmfs (void)
   struct mntent *mp;
   FILE *fp;
 
-  /* The canonical place is /var/shm.  This is at least what the
+  /* The canonical place is /dev/shm.  This is at least what the
      documentation tells everybody to do.  */
   if (__statfs (defaultdir, &f) == 0 && f.f_type == SHMFS_SUPER_MAGIC)
     {
@@ -116,7 +116,7 @@ where_is_shmfs (void)
 
 /* Open shared memory object.  This implementation assumes the shmfs
    implementation introduced in the late 2.3.x kernel series to be
-   available.  Normally the filesystem will be mounted at /var/shm but
+   available.  Normally the filesystem will be mounted at /dev/shm but
    we fall back on searching for the actual mount point should opening
    such a file fail.  */
 int
@@ -230,7 +230,7 @@ shm_unlink (const char *name)
 void
 freeit (void)
 {
-  if (mountpoint.dir != NULL && mountpoint.dir != defaultdir)
+  if (mountpoint.dir != defaultdir)
     free (mountpoint.dir);
 }
 
