@@ -695,11 +695,9 @@ s_output (int argc, const char *argv[], const char *infile, const char *define,
 
   fprintf (fout, "#include <stdio.h>\n");
   fprintf (fout, "#include <stdlib.h>\n");
+  fprintf (fout, "#include <rpc/pmap_clnt.h>\n");
   if (Cflag)
-    {
-      fprintf (fout, "#include <rpc/pmap_clnt.h>\n");
-      fprintf (fout, "#include <string.h>\n");
-    }
+    fprintf (fout, "#include <string.h>\n");
   if (strcmp (svcclosetime, "-1") == 0)
     indefinitewait = 1;
   else if (strcmp (svcclosetime, "0") == 0)
