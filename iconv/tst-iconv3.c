@@ -41,9 +41,9 @@ main (int argc, char *argv[])
 	printf ("Received something else\n");
 
       printf ("inptr change: %td\n", inptr - inbuf);
-      printf ("inlen change: %d\n", BUFSIZE - inbytes_left);
+      printf ("inlen change: %zd\n", BUFSIZE - inbytes_left);
       printf ("outptr change: %zd\n", outptr - (char *) outbuf);
-      printf ("outlen change: %d\n", BUFSIZE * 4 - outbytes_left);
+      printf ("outlen change: %zd\n", BUFSIZE * 4 - outbytes_left);
       result = 1;
     }
   else

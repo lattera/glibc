@@ -1,3 +1,11 @@
+2002-03-24  Andreas Jaeger  <aj@suse.de>
+
+	* manual/memory.texi (Aligned Memory Blocks): Fix typo.
+
+	* stdio-common/tst-fdopen.c (main): Remove unused variable.
+
+	* iconv/tst-iconv3.c (main): Use correct printf strings.
+
 2002-03-18  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (struct cmsgcred): New type.

@@ -20,7 +20,7 @@ main (int argc, char *argv[])
   char *name;
   FILE *fp = NULL;
   int retval = 0;
-  int c, fd;
+  int fd;
 
   name = tmpnam (NULL);
   fp = fopen (name, "w");
