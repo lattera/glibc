@@ -1,3 +1,11 @@
+2000-06-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/sys/syscall.h (SYS_pivot_root,
+	SYS_mincore, SYS_madvise): Added.
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Fix signature of
+	execve.
+
 2000-06-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/Makefile (tests): Add tst-getwc and tst_putwc.

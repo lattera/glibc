@@ -84,7 +84,7 @@
 #define SYS_SVR4_semsys			(SYS_SVR4 +  53)
 #define SYS_SVR4_ioctl			(SYS_SVR4 +  54)
 #define SYS_SVR4_uadmin			(SYS_SVR4 +  55)
-#define SYS_SVR4_exch 			(SYS_SVR4 +  56)
+#define SYS_SVR4_exch			(SYS_SVR4 +  56)
 #define SYS_SVR4_utssys			(SYS_SVR4 +  57)
 #define SYS_SVR4_fsync			(SYS_SVR4 +  58)
 #define SYS_SVR4_exece			(SYS_SVR4 +  59)
@@ -1209,6 +1209,9 @@
 #define	SYS_stat64			(SYS_Linux + 213)
 #define	SYS_lstat64			(SYS_Linux + 214)
 #define	SYS_fstat64			(SYS_Linux + 215)
+#define SYS_pivot_root			(SYS_Linux + 216)
+#define SYS_mincore			(SYS_Linux + 217)
+#define SYS_madvise			(SYS_Linux + 218)
 
 
 #endif	/* sys/syscall.h */
