@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -21,7 +21,7 @@
 static inline int32_t
 findidx (const wint_t **cpp)
 {
-  int_fast32_t i;
+  int32_t i;
   const wint_t *cp;
   wint_t ch;
 

@@ -21,6 +21,7 @@
 #else
 #include <stdio.h>
 #endif
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -331,6 +332,25 @@ main (int argc, char **argv)
       }
   }
 
+  fputs ("Test 13:\n", stdout);
+  {
+    float value;
+    int res;
+
+    res = sscanf ("-InF", "%f", &value);
+    if (res != 1 || isinf (value) != -1)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+
+    res = sscanf ("+InfiNiTY", "%f", &value);
+    if (res != 1 || isinf (value) != 1)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
 
   return result;
 }

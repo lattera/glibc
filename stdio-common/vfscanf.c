@@ -1604,7 +1604,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width == 0 || inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
-	      if (! ISDIGIT (c))
+	      if (! ISDIGIT (c) && TOLOWER (c) != L_('i'))
 		{
 #ifdef COMPILE_WSCANF
 		  if (c != decimal)

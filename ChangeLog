@@ -1,4 +1,14 @@
+2001-08-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtod.c (STRTOF): Skip whole infinity, not just inf.
+	* stdio-common/vfscanf.c (__vfscanf): +- can be followed by i in +-Inf.
+
+	* stdlib/tst-strtod.c (tests): Add Inf tests.
+	* stdio-common/tstscanf.c (main): Add tests for +- before Inf.
+
 2001-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/weightwc.h (findidx): Change type of i to int32_t.
 
 	* wcsmbs/wcsmbs-tst1.c (main): Avoid warning.  Pretty printing.
 

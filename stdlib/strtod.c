@@ -573,15 +573,14 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 #endif
   else if (c < L_('0') || c > L_('9'))
     {
-      int matched = 0;
       /* Check for `INF' or `INFINITY'.  */
-      if (TOLOWER (c) == L_('i')
-	  && ((STRNCASECMP (cp, L_("inf"), 3) == 0 && (matched = 3))
-	      || (STRNCASECMP (cp, L_("infinity"), 8) == 0 && (matched = 8))))
+      if (TOLOWER (c) == L_('i') && STRNCASECMP (cp, L_("inf"), 3) == 0)
 	{
 	  /* Return +/- infinity.  */
 	  if (endptr != NULL)
-	    *endptr = (STRING_TYPE *) (cp + matched);
+	    *endptr = (STRING_TYPE *)
+		      (cp + (STRNCASECMP (cp + 3, L_("inity"), 5) == 0
+			     ? 8 : 3));
 
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
 	}
