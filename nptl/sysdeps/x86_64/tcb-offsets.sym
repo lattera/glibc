@@ -2,7 +2,5 @@
 #include <tls.h>
 
 SELF			offsetof (tcbhead_t, self)
-MULTIPLE_THREADS_OFFSET	offsetof (tcbhead_t, multiple_threads)
-SYSINFO_OFFSET		offsetof (tcbhead_t, sysinfo)
 CLEANUP			offsetof (struct pthread, cleanup)
 CLEANUP_PREV		offsetof (struct _pthread_cleanup_buffer, __prev)

@@ -42,6 +42,8 @@ typedef struct
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
 } tcbhead_t;
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif
 
 

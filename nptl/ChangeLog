@@ -1,3 +1,18 @@
+2003-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/tls.h [__ASSEMBLER__]: Include tcb-offsets.h.
+	* sysdeps/x86_64/tcb-offsets.sym: New file.
+	* sysdeps/x86_64/Makefile: New file.
+
+	* sysdeps/i386/tcb-offsets.sym: Add SELF.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Use SELF
+	to access own pthread_t in TCB.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+
 2003-03-12  Roland McGrath  <roland@redhat.com>
 
 	* pthread-errnos.sym: New file.
@@ -44,6 +59,14 @@
 	CLONE_CHILD_SETTID worked.
 
 2003-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S: New
+	file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S: New
+	file.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h
+	(pthread_cond_t): Add padding.
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_rdlock.S: New file.
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_wrlock.S: New file.

@@ -124,7 +124,7 @@ __pthread_rwlock_rdlock:
 	call	__lll_mutex_lock_wait
 	jmp	2b
 
-14:	cmpl	%gs:8, %eax
+14:	cmpl	%gs:SELF, %eax
 	jne	3b
 	/* Deadlock detected.  */
 	movl	$EDEADLK, %ecx

@@ -22,6 +22,7 @@
 #include <pthread-errnos.h>
 
 
+#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
@@ -35,11 +36,14 @@
 
 	.text
 
-	.globl	__pthread_rwlock_rdlock
-	.type	__pthread_rwlock_rdlock,@function
+	.globl	pthread_rwlock_timedwrlock
+	.type	pthread_rwlock_timedwrlock,@function
 	.align	16
-__pthread_rwlock_rdlock:
-	xorq	%r10, %r10
+pthread_rwlock_timedwrlock:
+	subq	$16, %rsp
+
+	movq	%rdi, %r8
+	movq	%rsi, %r9
 
 	/* Get the lock.  */
 	movl	$1, %esi
@@ -52,122 +56,143 @@ __pthread_rwlock_rdlock:
 	testl	%esi, %esi
 	jne	1f
 
-2:	movq	WRITER(%rdi), %rax
+2:	movq	WRITER(%r8), %rax
 	testq	%rax, %rax
 	jne	14f
-	cmpl	$0, WRITERS_QUEUED(%rdi)
-	je	5f
-	cmpl	$0, FLAGS(%rdi)
+	cmpl	$0, NR_READERS(%r8)
 	je	5f
 
-3:	incl	READERS_QUEUED(%rdi)
+	/* Check the value of the timeout parameter.  */
+3:	cmpq	$1000000000, 8(%r9)
+	jae	19f
+
+	incl	WRITERS_QUEUED(%r8)
 	je	4f
 
-	movl	READERS_WAKEUP(%rdi), %edx
+	movl	WRITERS_WAKEUP(%r8), %edx
 
 	LOCK
 #if MUTEX == 0
-	incl	(%rdi)
+	decl	(%r8)
 #else
-	incl	MUTEX(%rdi)
+	decl	MUTEX(%r8)
 #endif
 	jne	10f
 
-11:	addq	$READERS_WAKEUP-MUTEX, %rdi
-	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
-	movq	$SYS_futex, %rax
+	/* Get current time.  */
+11:	movq	%rsp, %rdi
+	xorq	%rsi, %rsi
+	movq	$SYS_gettimeofday, %rax
 	syscall
 
-	subq	$READERS_WAKEUP-MUTEX, %rdi
+	/* Compute relative timeout.  */
+	movq	8(%rsp), %rax
+	movq	$1000, %rdi
+	mul	%rdi		/* Milli seconds to nano seconds.  */
+	movq	(%r9), %rcx
+	movq	8(%r9), %rdi
+	subq	(%rsp), %rcx
+	subq	%rax, %rdi
+	jns	15f
+	addq	$1000000000, %rdi
+	decq	%rcx
+15:	testq	%rcx, %rcx
+	js	16f		/* Time is already up.  */
+
+	/* Futex call.  */
+	movq	%rcx, (%rsp)	/* Store relative timeout.  */
+	movq	%rdi, 8(%rsp)
+
+	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
+	movq	%rsp, %r10
+	leaq	WRITERS_WAKEUP(%r8), %rdi
+	movq	$SYS_futex, %rax
+	syscall
+	movq	%rax, %rdx
+17:
 
 	/* Reget the lock.  */
 	movl	$1, %esi
 	LOCK
 #if MUTEX == 0
-	xaddl	%esi, (%rdi)
+	xaddl	%esi, (%r8)
 #else
-	xaddl	%esi, MUTEX(%rdi)
+	xaddl	%esi, MUTEX(%r8)
 #endif
 	testl	%esi, %esi
 	jne	12f
 
-13:	decl	READERS_QUEUED(%rdi)
-	jmp	2b
+13:	decl	WRITERS_QUEUED(%r8)
+	cmpq	$-ETIMEDOUT, %rdx
+	jne	2b
+
+18:	movq	$ETIMEDOUT, %rcx
+	jmp	9f
+
 
 5:	xorq	%rcx, %rcx
-	incl	NR_READERS(%rdi)
-	je	8f
+	movq	%fs:SELF, %rax
+	movq	%rax, WRITER(%r8)
 9:	LOCK
 #if MUTEX == 0
-	decl	(%rdi)
+	decl	(%r8)
 #else
-	decl	MUTEX(%rdi)
+	decl	MUTEX(%r8)
 #endif
 	jne	6f
-7:
 
-	movq	%rcx, %rax
+7:	movq	%rcx, %rax
+
+	addq	$16, %rsp
 	retq
 
 1:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_lock_wait
-#if MUTEX != 0
-	subq	$MUTEX, %rdi
-#endif
+	callq	__lll_mutex_lock_wait
 	jmp	2b
 
 14:	cmpq	%fs:SELF, %rax
 	jne	3b
-	/* Deadlock detected.  */
-	movq	$EDEADLK, %rcx
+20:	movq	$EDEADLK, %rcx
 	jmp	9b
 
 6:
-#if MUTEX != 0
-	addq	$MUTEX, %rdi
+#if MUTEX == 0
+	movq	%r8, %rdi
+#else
+	leal	MUTEX(%r8), %rdi
 #endif
-	call	__lll_mutex_unlock_wake
-#if MUTEX != 0
-	subq	$MUTEX, %rdi
-#endif
+	callq	__lll_mutex_unlock_wake
 	jmp	7b
 
 	/* Overflow.  */
-8:	decl	NR_READERS(%rdi)
-	movq	$EAGAIN, %rcx
-	jmp	9b
-
-	/* Overflow.  */
-4:	decl	READERS_QUEUED(%rdi)
+4:	decl	WRITERS_QUEUED(%r8)
 	movq	$EAGAIN, %rcx
 	jmp	9b
 
 10:
-#if MUTEX != 0
-	addq	$MUTEX, %rdi
+#if MUTEX == 0
+	movq	%r8, %rdi
+#else
+	leaq	MUTEX(%r8), %rdi
 #endif
-	call	__lll_mutex_unlock_wake
-#if MUTEX != 0
-	subq	$MUTEX, %rdi
-#endif
+	callq	__lll_mutex_unlock_wake
 	jmp	11b
 
 12:
 #if MUTEX == 0
-	addq	$MUTEX, %rdi
+	movq	%r8, %rdi
+#else
+	leaq	MUTEX(%r8), %rdi
 #endif
-	call	__lll_mutex_lock_wait
-#if MUTEX != 0
-	subq	$MUTEX, %rdi
-#endif
+	callq	__lll_mutex_lock_wait
 	jmp	13b
-	.size	__pthread_rwlock_rdlock,.-__pthread_rwlock_rdlock
 
-	.globl	pthread_rwlock_rdlock
-pthread_rwlock_rdlock = __pthread_rwlock_rdlock
+16:	movq	$-ETIMEDOUT, %rdx
+	jmp	17b
 
-	.globl	__pthread_rwlock_rdlock_internal
-__pthread_rwlock_rdlock_internal = __pthread_rwlock_rdlock
+19:	movq	$EINVAL, %rcx
+	jmp	9b
+	.size	pthread_rwlock_timedwrlock,.-pthread_rwlock_timedwrlock
