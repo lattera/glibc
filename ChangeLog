@@ -1,3 +1,9 @@
+1999-03-31  Mark Kettenis  <kettenis@gnu.org>
+
+	* login/programs/pt_chown.c (main): Save effective user ID before
+	dropping priviliges and use this to check if the program is
+	properly installed.
+
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/testdata/CP1254: Update for charmap changes.

@@ -133,17 +133,18 @@ do_pt_chown (void)
 int
 main (int argc, char *argv[])
 {
+  uid_t euid = geteuid ();
   int remaining;
 
   /* Normal invocation of this program is with no arguments and
      with privileges.
      FIXME: Should use capable (CAP_CHOWN|CAP_FOWNER).  */
-  if (argc == 1 && geteuid () == 0)
+  if (argc == 1 && euid == 0)
     return do_pt_chown ();
 
   /* We aren't going to be using privileges, so drop them right now. */
   setuid (getuid ());
-  
+
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
 
@@ -163,7 +164,7 @@ main (int argc, char *argv[])
     }
 
   /* Check if we are properly installed.  */
-  if (geteuid () != 0)
+  if (euid != 0)
     error (FAIL_EXEC, 0, gettext ("needs to be installed setuid `root'"));
 
   return EXIT_SUCCESS;
