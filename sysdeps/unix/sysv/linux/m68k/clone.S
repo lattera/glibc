@@ -57,8 +57,9 @@ ENTRY (__clone)
 thread_start:
 	subl	%fp, %fp	/* terminate the stack frame */
 	jsr	(%a0)
-	movel	%d0, -(%sp)
-	jbsr	HIDDEN_JUMPTARGET (_exit)
+	movel	%d0, %d1
+	movel	#SYS_ify (exit), %d0
+	trap	#0
 
 PSEUDO_END (__clone)
 
