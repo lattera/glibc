@@ -310,14 +310,24 @@ _dl_start_user:
 
 	     The stack pointer has to be 16 byte aligned. We cannot simply
 	     addjust the stack pointer. We have to move the whole argv and
-	     envp. H.J.  */
+	     envp and adjust _dl_argv by _dl_skip_args.  H.J.  */
 	}
-	{ .mmi
+	{ .mib
 	  ld8 out1 = [r10]	/* is argc actually stored as a long
 				   or as an int? */
+	  addl r2 = @ltoff(_dl_argv), gp
 	  ;;
+	}
+	{ .mmi
+	  ld8 r2 = [r2]		/* Get the address of _dl_argv. */
 	  sub out1 = out1, r3	/* Get the new argc. */
-	  shladd r15 = r3, 3, r11 /* The address of the argv we move */
+	  shladd r3 = r3, 3, r0
+	  ;;
+	}
+	{
+	  .mib
+	  ld8 r17 = [r2]	/* Get _dl_argv. */
+	  add r15 = r11, r3	/* The address of the argv we move */
 	  ;;
 	}
 	/* ??? Could probably merge these two loops into 3 bundles.
@@ -333,8 +343,9 @@ _dl_start_user:
 (p6)	  br.cond.dptk.few 1b
 	  ;;
 	}
-	{ .mib
+	{ .mmi
 	  mov out3 = r11
+	  sub r17 = r17, r3	/* Substract _dl_skip_args. */
 	  addl out0 = @ltoff(_dl_loaded), gp
 	}
 1:	/* Copy env. */
@@ -353,8 +364,9 @@ _dl_start_user:
 	  ld8 out0 = [out0]
 	  ;;
 	}
-	{ .mfb
+	{ .mmb
 	  ld8 out0 = [out0]		/* get the linkmap */
+	  st8 [r2] = r17		/* Load the new _dl_argv. */
 	  br.call.sptk.many b0 = _dl_init#
 	  ;;
 	}
@@ -401,10 +413,6 @@ _dl_start_user:
 
 /* According to the IA-64 specific documentation, Rela is always used.  */
 #define ELF_MACHINE_NO_REL 1
-
-/* Since ia64's stack has to be 16byte aligned, we cannot arbitrarily
-   move the stack pointer. */
-#define ELF_MACHINE_FIXED_STACK 1
 
 /* Return the address of the entry point. */
 extern ElfW(Addr) _dl_start_address (const struct link_map *map,
