@@ -1,5 +1,11 @@
 2000-10-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/unload.c: Generate more debugging output.
+
+	* elf/neededtest.c: Make it more complicated.
+	* elf/neededtest2.c: New file.
+	* elf/Makefile: Add rules to build and run neededtest2.
+
 	* elf/dl-sym.c (_dl_sym): Use exact check for caller PC in range
 	of DSO address space.
 	(_dl_vsym): Likewise.

@@ -64,54 +64,51 @@ check_loaded_objects (const char **loaded)
 int
 main (void)
 {
-  void *obj2[2];
-  void *obj3;
+  void *obj2;
+  void *obj3[2];
   const char *loaded[] = { NULL, NULL, NULL, NULL };
   int errors = 0;
 
   printf ("\nThis is what is in memory now:\n");
   errors += check_loaded_objects (loaded);
-  printf( "Loading shared object neededobj3.so\n");
-  obj3 = dlopen( "neededobj3.so", RTLD_LAZY);
-  if (obj3 == NULL)
+  printf ("\nLoading shared object neededobj2.so\n");
+  obj2 = dlopen ("neededobj2.so", RTLD_LAZY);
+  if (obj2 == NULL)
     {
       printf ("%s\n", dlerror ());
       exit (1);
     }
-  printf ("And this is what is now in memory\n");
   loaded[0] = "neededobj1.so";
   loaded[1] = "neededobj2.so";
+  errors += check_loaded_objects (loaded);
+  printf ("\nLoading shared object neededobj3.so\n");
+  obj3[0] = dlopen( "neededobj3.so", RTLD_LAZY);
+  if (obj3[0] == NULL)
+    {
+      printf ("%s\n", dlerror ());
+      exit (1);
+    }
   loaded[2] = "neededobj3.so";
   errors += check_loaded_objects (loaded);
-  printf ("Now loading shared object neededobj2.so\n");
-  obj2[0] = dlopen ("neededobj2.so", RTLD_LAZY);
-  if (obj2 == NULL)
+  printf ("\nNow loading shared object neededobj3.so again\n");
+  obj3[1] = dlopen ("neededobj3.so", RTLD_LAZY);
+  if (obj3[1] == NULL)
     {
       printf ("%s\n", dlerror ());
       exit (1);
     }
-  printf ("After loading neededobj2.so once\n");
   errors += check_loaded_objects (loaded);
-  printf ("And loading shared object neededobj2.so again\n");
-  obj2[1] = dlopen ("neededobj2.so", RTLD_LAZY);
-  if (obj2 == NULL)
-    {
-      printf ("%s\n", dlerror ());
-      exit (1);
-    }
-  printf ("Again, this is what is in memory\n");
+  printf ("\nClosing neededobj3.so once\n");
+  dlclose (obj3[0]);
   errors += check_loaded_objects (loaded);
-  printf ("Closing neededobj2.so for the first time\n");
-  dlclose (obj2[0]);
+  printf ("\nClosing neededobj2.so\n");
+  dlclose (obj2);
   errors += check_loaded_objects (loaded);
-  printf ("Closing neededobj3.so\n");
-  dlclose (obj3);
-  loaded[2] = NULL;
-  errors += check_loaded_objects (loaded);
-  printf ("Closing neededobj2.so for the second time\n");
-  dlclose (obj2[1]);
+  printf ("\nClosing neededobj3.so for the second time\n");
+  dlclose (obj3[1]);
   loaded[0] = NULL;
   loaded[1] = NULL;
+  loaded[2] = NULL;
   errors += check_loaded_objects (loaded);
   if (errors != 0)
     printf ("%d errors found\n", errors);

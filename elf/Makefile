@@ -97,7 +97,8 @@ ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
-	$(tests-nodlopen-$(have-z-nodlopen)) neededtest unload2 lateglobal
+	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
+	unload2 lateglobal
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
@@ -268,8 +269,11 @@ LDFLAGS-loadtest = -rdynamic
 $(objpfx)loadtest.out: $(test-modules)
 
 $(objpfx)neededtest: $(libdl)
-
 $(objpfx)neededtest.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
+		     $(objpfx)neededobj3.so
+
+$(objpfx)neededtest2: $(libdl)
+$(objpfx)neededtest2.out: $(objpfx)neededobj1.so $(objpfx)neededobj2.so \
 		     $(objpfx)neededobj3.so
 
 $(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so $(libdl)
