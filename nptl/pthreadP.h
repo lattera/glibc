@@ -110,7 +110,7 @@ extern int __pthread_debug attribute_hidden;
 
 extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
-#ifndef SHARED
+#if !defined SHARED && !defined IS_IN_libpthread
      weak_function
 #endif
      ;
