@@ -16,12 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* The syscall stubs jump here when they detect an error.
-   The code for Linux is almost identical to the canonical Unix/i386
-   code, except that the error number in %eax is negated.  */
+#include <sysdep.h>
 
-__syscall_error:
-	negl %eax
-
-#define __syscall_error __syscall_error_1
-#include <sysdeps/unix/i386/sysdep.S>
+SYSCALL (gtty, 2)
+	ret

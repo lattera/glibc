@@ -1,5 +1,6 @@
 /* Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,17 +14,17 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#include <sys/shm.h>
 
-ASM_GLOBAL_DIRECTIVE syscall_error
-ENTRY (syscall)
-	popl %ecx		/* Pop return address into %ecx.  */
-	popl %eax		/* Pop syscall number into %eax.  */
-	pushl %ecx		/* Push back return address.  */
-	DO_CALL (5)		/* Frob the args and do the system call.  */
-	testl %eax, %eax	/* Check %eax for error.  */
-	jl JUMPTARGET(syscall_error) /* Jump to error handler if negative.  */
-	ret			/* Return to caller.  */
+/* Detach shared memory segment starting at address specified by SHMADDR
+   from the caller's data segment.  */
+
+int
+shmdt (shmaddr)
+     char *shmaddr;
+{
+  return __ipc (IPCOP_shmdt, 0, 0, 0, shmaddr);
+}

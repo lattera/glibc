@@ -1,0 +1,7 @@
+# Linux has not yet (as of 1.3.18) the canonical set of <sys/mman.h>
+# system calls.  msync() and madvice() are missing, so their stubs
+# are found here.  I think later version will have them ones.
+unix/mman
+
+# Linux has network support in the kernel.
+unix/inet

@@ -19,6 +19,9 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <sys/socketcall.h>
 
+#define P(a, b) P2(a, b)
+#define P2(a, b) a##b
+
 .globl syscall_error
 
 /* The socket-oriented system calls are handled unusally in Linux.
@@ -29,15 +32,16 @@ Cambridge, MA 02139, USA.  */
 
    The .S files for the other calls just #define socket and #include this.  */
 
-ENTRY (socket)
+.globl P(__,socket)
+ENTRY (P(__,socket))
 
 	/* Save registers.  */
 	movl %ebx, %edx
 
-	movl $SYS_socketcall, %eax	/* System call number in %eax.  */
+	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
 
 	/* Use ## so `socket' is a separate token that might be #define'd.  */
-	movl $SYS_##socket, %ebx	/* Subcode is first arg to syscall.  */
+	movl $P(SOCKOP_,socket), %ebx	/* Subcode is first arg to syscall.  */
 	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
 
         /* Do the system call trap.  */
@@ -52,3 +56,5 @@ ENTRY (socket)
 
 	/* Successful; return the syscall's value.  */
 	ret
+
+weak_alias (P(__,socket), socket)
