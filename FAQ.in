@@ -57,7 +57,7 @@ GNU CC is found, like all other GNU packages, on
 and the many mirror sites.  ftp.gnu.org is always overloaded, so try to find
 a local mirror first.
 
-You always should try to use the latest official release.  Older versions
+You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.2) and GNU CC (2.8.1) should work with the GNU C library (for
 powerpc see question ?powerpc).
@@ -157,6 +157,17 @@ way round (compiling the GNU C library with old kernel headers and running
 on a recent kernel) does not necessarily work.  For example you can't use
 new kernel features when using old kernel headers for compiling the GNU C
 library.
+
+{ZW} Even if you are using a 2.0 kernel on your machine, we recommend you
+compile GNU libc with 2.1 kernel headers.  That way you won't have to
+recompile libc if you ever upgrade to kernel 2.1 or 2.2.  To tell libc which
+headers to use, give configure the --with-headers switch
+(e.g. --with-headers=/usr/src/linux-2.1.107/include).
+
+Note that you must configure the 2.1 kernel if you do this; otherwise libc
+will be unable to find <linux/version.h>.  Just copy .config from your 2.0
+kernel sources to the 2.1 tree, do `make oldconfig', and say no to all the
+new options.
 
 ??	The compiler hangs while building iconvdata modules.  What's
 	wrong?

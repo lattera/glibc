@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#include <unistd.h>
 
 void *
 test_thread (void *v_param)
