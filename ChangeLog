@@ -1,3 +1,11 @@
+2000-09-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/limits.h: Define LLONG_MIN, LLONG_MAX, ULLONG_MAX if
+	necessary.  Move includes of POSIX and Unix limits files to the
+	end.
+	* stdlib/Makefile (tests): Add tst-limits.
+	* stdlib/tst-limits.h: New file.
+
 2000-09-15  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/fpu/fesetenv.c (__fesetenv): Handle FE_NOMASK_ENV.
