@@ -42,8 +42,13 @@ _dl_sym (void *handle, const char *name, void *who)
       match = l;
 
   if (handle == RTLD_DEFAULT)
-    /* Search the global scope.  */
-    result = _dl_lookup_symbol (name, match, &ref, _dl_global_scope, 0, 0);
+    {
+      /* Search the global scope as seen in the caller object.  */
+      if (match != NULL)
+	result = _dl_lookup_symbol (name, match, &ref, match->l_scope, 0, 0);
+      else
+	result = _dl_lookup_symbol (name, match, &ref, _dl_global_scope, 0, 0);
+    }
   else
     {
       if (handle != RTLD_NEXT)
