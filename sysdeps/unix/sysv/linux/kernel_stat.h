@@ -4,7 +4,6 @@ struct kernel_stat
     unsigned short int st_dev;
     unsigned short int __pad1;
 #define _HAVE___PAD1
-#define _NO_LFS___PAD1
     unsigned long int st_ino;
     unsigned short int st_mode;
     unsigned short int st_nlink;
