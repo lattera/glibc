@@ -39,16 +39,18 @@ ENTRY(name)								      \
 L(pseudo_cancel):							      \
 	STM_##args							      \
 	stmg	%r13,%r15,104(%r15);					      \
-	aghi	%r15,-192;						      \
+	lgr	%r14,%r15;						      \
+	aghi	%r15,-160;						      \
+	stg	%r14,0(%r15);						      \
 	brasl	%r14,CENABLE;						      \
-	lr	%r0,%r2;						      \
+	lgr	%r0,%r2;						      \
 	LM_##args							      \
 	DO_CALL(syscall_name, args);					      \
 	lgr	%r13,%r2;						      \
-	lr	%r2,%r0;						      \
+	lgr	%r2,%r0;						      \
 	brasl	%r14,CDISABLE;						      \
 	lgr	%r2,%r13;						      \
-	lmg	%r13,%r15,104+192(%r15);				      \
+	lmg	%r13,%r15,104+160(%r15);				      \
 	lghi	%r4,-4095;						      \
 	clgr	%r2,%r4;						      \
 	jnl	SYSCALL_ERROR_LABEL;					      \
@@ -72,11 +74,11 @@ L(pseudo_end):
 #define STM_5		stmg %r2,%r5,16(%r15);
 
 #define LM_0		/* Nothing */
-#define LM_1		lg %r2,16+192(%r15);
-#define LM_2		lmg %r2,%r3,16+192(%r15);
-#define LM_3		lmg %r2,%r4,16+192(%r15);
-#define LM_4		lmg %r2,%r5,16+192(%r15);
-#define LM_5		lmg %r2,%r5,16+192(%r15);
+#define LM_1		lg %r2,16+160(%r15);
+#define LM_2		lmg %r2,%r3,16+160(%r15);
+#define LM_3		lmg %r2,%r4,16+160(%r15);
+#define LM_4		lmg %r2,%r5,16+160(%r15);
+#define LM_5		lmg %r2,%r5,16+160(%r15);
 
 # ifndef __ASSEMBLER__
 extern int __local_multiple_threads attribute_hidden;

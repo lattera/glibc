@@ -38,21 +38,22 @@ ENTRY(name)								      \
 	br	%r14;							      \
 L(pseudo_cancel):							      \
 	STM_##args							      \
-	stm	%r13,%r15,52(%r15);					      \
+	stm	%r12,%r15,48(%r15);					      \
+	lr	%r14,%r15;						      \
 	ahi	%r15,-96;						      \
+	st	%r14,0(%r15);						      \
 	basr    %r13,0;							      \
 200301:	l	%r1,200302f-200301b(%r13);				      \
-	bas	%r14,0(%r13,%r1);					      \
+	bas	%r14,0(%r1,%r13);					      \
 	lr	%r0,%r2;						      \
 	LM_##args							      \
 	DO_CALL(syscall_name, args);					      \
-	l	%r3,200303f-200301b(%r13);				      \
-	lr	%r4,%r13;						      \
-	lr	%r13,%r2;						      \
+	l	%r1,200303f-200301b(%r13);				      \
+	lr	%r12,%r2;						      \
 	lr	%r2,%r0;						      \
-	bas	%r14,0(%r4,%r3);					      \
-	lr	%r2,%r13;						      \
-	lm	%r13,%r15,52+96(%r15);					      \
+	bas	%r14,0(%r1,%r13);					      \
+	lr	%r2,%r12;						      \
+	lm	%r12,%r15,48+96(%r15);					      \
 	lhi	%r4,-4095;						      \
 	clr	%r2,%r4;						      \
 	jnl	SYSCALL_ERROR_LABEL;					      \

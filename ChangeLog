@@ -1,5 +1,20 @@
 2003-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makerules (build-shlib-helper): Don't use -z defs linker option
+	if no-z-defs is defined either.
+
+2003-01-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/kernel_stat.h: Remove unused
+	file.
+
+2003-01-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: Add vfork.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+
+2003-01-12  Ulrich Drepper  <drepper@redhat.com>
+
 	* io/ftwtest-sh: Add test case for relative path with /. at the end.
 
 2003-01-12  Jim Meyering  <jim@meyering.net>

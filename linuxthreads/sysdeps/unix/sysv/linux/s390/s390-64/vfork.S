@@ -1,7 +1,6 @@
-/* Definition of `struct stat' used in the kernel.  64 bit S/390 version.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-   Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,26 +17,31 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-struct kernel_stat
-  {
-    unsigned int st_dev;
-    unsigned int st_ino;
-    unsigned int st_mode;
-    unsigned int st_nlink;
-    unsigned int st_uid;
-    unsigned int st_gid;
-    unsigned int __pad1;
-    unsigned int st_rdev;
-    unsigned long int st_size;
-    struct timespec st_atim;
-    struct timespec st_mtim;
-    struct timespec st_ctim;
-    unsigned int  st_blksize;
-    int st_blocks;
-    unsigned long __unused[3];
-  };
+#include <sysdep-cancel.h>
+#define _ERRNO_H	1
+#include <bits/errno.h>
 
-extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf);
+/* Clone the calling process, but without copying the whole address space.
+   The calling process is suspended until the new process exits or is
+   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
+   and the process ID of the new process to the old process.  */
 
-#define XSTAT_IS_XSTAT64 1
-#define _HAVE_STAT_NSEC
+ENTRY (__vfork)
+	SINGLE_THREAD_P
+	jgne	HIDDEN_JUMPTARGET(__fork)
+
+	/* Do vfork system call.  */
+	svc	SYS_ify (vfork)
+
+	/* Check for error.  */
+	lghi	%r4,-4095
+	clgr	%r2,%r4
+	jnl	SYSCALL_ERROR_LABEL
+
+	/* Normal return.  */
+	br	%r14
+PSEUDO_END(__vfork)
+
+libc_hidden_def (__vfork)
+
+weak_alias (__vfork, vfork)
