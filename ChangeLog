@@ -1,3 +1,13 @@
+2003-02-05  Jim Meyering  <jim@meyering.net>
+
+	Fix a heap-corrupting bug.
+	* io/ftw.c: Include <limits.h>.
+	(PATH_MAX) [!defined PATH_MAX]: Define to 1024.
+	(process_entry): Allocate enough space to hold the resulting
+	file name.  Don't presume that 2*dirbufsize is enough.
+	(ftw_startup): Always use PATH_MAX to compute buffer size, now that
+	it is guaranteed to be defined.
+
 2003-02-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile: Add rules to build and run bug-iconv3.

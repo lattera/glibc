@@ -25,6 +25,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <ftw.h>
+#include <limits.h>
 #include <search.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,6 +83,14 @@
 # define XSTAT __xstat
 # define FTW_FUNC_T __ftw_func_t
 # define NFTW_FUNC_T __nftw_func_t
+#endif
+
+/* We define PATH_MAX if the system does not provide a definition.
+   This does not artificially limit any operation.  PATH_MAX is simply
+   used as a guesstimate for the expected maximal path length.
+   Buffers will be enlarged if necessary.  */
+#ifndef PATH_MAX
+# define PATH_MAX 1024
 #endif
 
 struct dir_data
@@ -282,18 +291,20 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
   struct STAT st;
   int result = 0;
   int flag = 0;
+  size_t new_buflen;
 
   if (name[0] == '.' && (name[1] == '\0'
 			 || (name[1] == '.' && name[2] == '\0')))
     /* Don't process the "." and ".." entries.  */
     return 0;
 
-  if (data->dirbufsize < data->ftw.base + namlen + 2)
+  new_buflen = data->ftw.base + namlen + 2;
+  if (data->dirbufsize < new_buflen)
     {
       /* Enlarge the buffer.  */
       char *newp;
 
-      data->dirbufsize *= 2;
+      data->dirbufsize = 2 * new_buflen;
       newp = (char *) realloc (data->dirbuf, data->dirbufsize);
       if (newp == NULL)
 	return -1;
@@ -518,11 +529,8 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 						 * sizeof (struct dir_data *));
   memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
 
-#ifdef PATH_MAX
+  /* PATH_MAX is always defined when we get here.  */
   data.dirbufsize = MAX (2 * strlen (dir), PATH_MAX);
-#else
-  data.dirbufsize = 2 * strlen (dir);
-#endif
   data.dirbuf = (char *) malloc (data.dirbufsize);
   if (data.dirbuf == NULL)
     return -1;
