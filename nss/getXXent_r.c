@@ -261,32 +261,29 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 	  && errno == ERANGE)
 	break;
 
-      no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
-			    status, 0);
+      do
+	{
+	  no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
+				status, 0);
 
-      if (is_last_nip)
-	last_nip = nip;
+	  if (is_last_nip)
+	    last_nip = nip;
 
-      if (! no_more && current_nip != nip)
-	/* Call the `setXXent' function.  This wasn't done before.  */
-	do
-	  {
-	    set_function sfct;
+	  if (! no_more)
+	    {
+	      /* Call the `setXXent' function.  This wasn't done before.  */
+	      set_function sfct;
 
-	    no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING,
-				    (void **) &sfct);
+	      no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING,
+				      (void **) &sfct);
 
-	    if (! no_more)
-	      status = (*sfct) (STAYOPEN_TMPVAR);
-	    else
-	      {
+	      if (! no_more)
+		status = (*sfct) (STAYOPEN_TMPVAR);
+	      else
 		status = NSS_STATUS_NOTFOUND;
-		if (no_more == 1)
-		  /* There is no more module to search.  */
-		  break;
-	      }
-	  }
-	while (! no_more && status != NSS_STATUS_SUCCESS);
+	    }
+	}
+      while (! no_more && status != NSS_STATUS_SUCCESS);
     }
 
   __libc_lock_unlock (lock);

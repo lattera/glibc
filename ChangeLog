@@ -1,5 +1,7 @@
 1998-03-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/getXXent_r.c: Correctly handle failing setXXent function.
+
 	* inet/netinet/in.h: Use cast to uint32_t in IPv4 macros.
 	Reported by Andreas Jaeger.
 
