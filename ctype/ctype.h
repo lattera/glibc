@@ -165,20 +165,21 @@ toupper (int __c) __THROW
 
 #if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 # define __tobody(c, f, a) \
-  ({ int __res;								      \
-     if (sizeof (c) > 1)						      \
-       {								      \
-	 if (__builtin_constant_p (c))					      \
-	   {								      \
-	     int __c = (c);						      \
-	     __res = __c < -128 || __c > 255 ? __c : a[__c];		      \
-	   }								      \
-	 else								      \
-	   __res = f (c);						      \
-       }								      \
-     else								      \
-       __res = a[(int) (c)];						      \
-     __res; })
+  (__extension__
+   ({ int __res;							      \
+      if (sizeof (c) > 1)						      \
+	{								      \
+	  if (__builtin_constant_p (c))					      \
+	    {								      \
+	      int __c = (c);						      \
+	      __res = __c < -128 || __c > 255 ? __c : a[__c];		      \
+	    }								      \
+	  else								      \
+	    __res = f (c);						      \
+	}								      \
+      else								      \
+	__res = a[(int) (c)];						      \
+      __res; }))
 
 # define tolower(c) __tobody (c, tolower, __ctype_tolower)
 # define toupper(c) __tobody (c, toupper, __ctype_toupper)

@@ -1,3 +1,7 @@
+1999-06-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ctype/ctype.h: Protect __tobody code by __extension__.
+
 1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/fgetgrent.c (fgetgrent): Remember position of stream before
