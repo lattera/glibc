@@ -59,7 +59,6 @@
 # include <shlib-compat.h>
 
 # define CONCAT(a,b) __CONCAT(a,b)
-# define mbsinit __mbsinit
 # define mbsrtowcs __mbsrtowcs
 # define fnmatch __fnmatch
 extern int fnmatch (const char *pattern, const char *string, int flags);
