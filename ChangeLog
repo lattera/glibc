@@ -9,8 +9,6 @@
 
 	* iconv/gconv_simple.c (internal_ucs4_loop): Fix typo in last change.
 
-	* iconv/gconv_db.c
-
 	* posix/Makefile (tests): Add tst-vfork1.
 	* posix/tst-vfork1.c: New file.
 
