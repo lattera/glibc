@@ -43,9 +43,13 @@
 #if __ASSUME_NETLINK_SUPPORT == 0
 static int no_netlink_support;
 
-#define getifaddrs fallback_getifaddrs
-#include "sysdeps/gnu/ifaddrs.c"
-#undef getifaddrs
+# define getifaddrs fallback_getifaddrs
+# include "sysdeps/gnu/ifaddrs.c"
+# undef getifaddrs
+
+#else
+
+# define no_netlink_support 0
 
 #endif
 
@@ -292,7 +296,7 @@ getifaddrs (struct ifaddrs **ifap)
   if (ifap)
     *ifap = NULL;
 
-  if (netlink_open (&nh) < 0)
+  if (! no_netlink_support && netlink_open (&nh) < 0)
     {
 #if __ASSUME_NETLINK_SUPPORT == 0
        no_netlink_support = 1;
