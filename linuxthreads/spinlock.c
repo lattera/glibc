@@ -64,8 +64,8 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 {
 #if defined HAS_COMPARE_AND_SWAP
   long oldstatus, newstatus;
-  int successful_seizure, spurious_wakeup_count = 0;
-  int spin_count = 0;
+  int successful_seizure, spurious_wakeup_count;
+  int spin_count;
 #endif
 
 #if defined TEST_FOR_COMPARE_AND_SWAP
@@ -79,6 +79,14 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 #endif
 
 #if defined HAS_COMPARE_AND_SWAP
+  /* First try it without preparation.  Maybe it's a completely
+     uncontested lock.  */
+  if (lock->__status == 0 && __compare_and_swap (&lock->__status, 0, 1))
+    return;
+
+  spurious_wakeup_count = 0;
+  spin_count = 0;
+
 again:
 
   /* On SMP, try spinning to get the lock. */
@@ -174,8 +182,6 @@ int __pthread_unlock(struct _pthread_fastlock * lock)
   WRITE_MEMORY_BARRIER();
 
 again:
-  oldstatus = lock->__status;
-
   while ((oldstatus = lock->__status) == 1) {
     if (__compare_and_swap_with_release_semantics(&lock->__status,
 	oldstatus, 0))

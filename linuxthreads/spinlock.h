@@ -104,10 +104,6 @@ static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
 
 static inline int __pthread_trylock (struct _pthread_fastlock * lock)
 {
-#if defined HAS_COMPARE_AND_SWAP
-  long oldstatus;
-#endif
-
 #if defined TEST_FOR_COMPARE_AND_SWAP
   if (!__pthread_has_cas)
 #endif
@@ -119,8 +115,7 @@ static inline int __pthread_trylock (struct _pthread_fastlock * lock)
 
 #if defined HAS_COMPARE_AND_SWAP
   do {
-    oldstatus = lock->__status;
-    if (oldstatus != 0) return EBUSY;
+    if (lock->__status != 0) return EBUSY;
   } while(! __compare_and_swap(&lock->__status, 0, 1));
   return 0;
 #endif
@@ -146,10 +141,6 @@ static inline void __pthread_alt_init_lock(struct _pthread_fastlock * lock)
 
 static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
 {
-#if defined HAS_COMPARE_AND_SWAP
-  long oldstatus;
-#endif
-
 #if defined TEST_FOR_COMPARE_AND_SWAP
   if (!__pthread_has_cas)
 #endif
@@ -173,8 +164,7 @@ static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
 
 #if defined HAS_COMPARE_AND_SWAP
   do {
-    oldstatus = lock->__status;
-    if (oldstatus != 0) return EBUSY;
+    if (lock->__status != 0) return EBUSY;
   } while(! compare_and_swap(&lock->__status, 0, 1, &lock->__spinlock));
   return 0;
 #endif

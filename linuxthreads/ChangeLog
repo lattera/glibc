@@ -1,3 +1,13 @@
+2001-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.c (__pthread_lock) [HAS_COMPARE_AND_SWAP]: Before doing any
+	serious work try once whether the lock is uncontested.
+	Remove duplicate reading of __status before loop.
+	Change suggested by Hans Boehm <hans_boehm@hp.com>.
+
+	* spinlock.h (__pthread_trylock): Remove need for oldstatus variable.
+	(__pthread_alt_trylock): Likewise.
+
 2001-05-01  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	Memory barrier overhaul following line by line inspection.
