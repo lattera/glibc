@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -82,6 +82,8 @@ _IO_setvbuf (fp, buf, mode, size)
 	}
       break;
     case _IONBF:
+      fp->_IO_file_flags &= ~_IO_LINE_BUF;
+      fp->_IO_file_flags |= _IO_UNBUFFERED;
       buf = NULL;
       size = 0;
       break;

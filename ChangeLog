@@ -1,3 +1,10 @@
+2001-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/Makefile (tests): Add tst-ext.
+	* libio/tst-ext.c: New file.
+
+	* libio/iosetvbuf.c (_IO_setvbuf): Clear line buffer flag for _IONBF.
+
 2001-03-25  Ulrich Drepper  <drepper@redhat.com>
 
 	Add changes which were in this form in the original patch by
