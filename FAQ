@@ -228,9 +228,10 @@ ports to other operating systems are underway, although a few people have
 expressed interest.
 
 If you have a system not listed above (or in the `README' file) and you are
-really interested in porting it, contact
+really interested in porting it, see the GNU C Library web pages to learn
+how to start contributing:
 
-	<bug-glibc@gnu.org>
+	http://www.gnu.org/software/libc/resources.html
 
 
 1.2.	What compiler do I need to build GNU libc?
@@ -331,8 +332,6 @@ them.
 
   A full build of the PowerPC library took 1h on a PowerPC 750@400Mhz w/
   64MB of RAM, and about 9h on a 601@60Mhz w/ 72Mb.
-
-  If you have some more measurements let me know.
 
 
 1.8.	What version of the Linux kernel headers should be used?
