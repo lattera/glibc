@@ -1,3 +1,12 @@
+2000-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ko_KR: Changed LC_IDENTIFICATION territory field to
+	Republic of Korea.  Streamlined and extend(include all Hangul
+	syllables) hangul and hanja class definition in LC_CTYPE and
+	hangul portion of LC_COLLATE.  Several changes in LC_TIME.  Added
+	tel_dom_fmt to LC_TELEPHONE.
+	Patch by Jungshik Shin <jshin@pantheon.yale.edu>.
+
 2000-11-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ko_KR: Fix currency_symbol.

@@ -120,6 +120,9 @@ static const char *_nl_current_names[] =
 /* Lock for protecting global data.  */
 __libc_lock_define_initialized (, __libc_setlocale_lock)
 
+/* Defined in loadmsgcat.c.  */
+extern int _nl_msg_cat_cntr;
+
 
 /* Use this when we come along an error.  */
 #define ERROR_RETURN							      \
@@ -334,6 +337,10 @@ setlocale (int category, const char *locale)
 		setname (category, newnames[category]);
 	      }
 	  setname (LC_ALL, composite);
+
+	  /* We successfully loaded a new locale.  Let the message catalog
+	     functions know about this.  */
+	  ++_nl_msg_cat_cntr;
 	}
 
       /* Critical section left.  */
@@ -384,6 +391,10 @@ setlocale (int category, const char *locale)
 
 	  setname (category, newname[0]);
 	  setname (LC_ALL, composite);
+
+	  /* We successfully loaded a new locale.  Let the message catalog
+	     functions know about this.  */
+	  ++_nl_msg_cat_cntr;
 	}
 
       /* Critical section left.  */

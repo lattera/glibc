@@ -49,7 +49,7 @@ __strndup (s, n)
     return NULL;
 
   new[len] = '\0';
-  return memcpy (new, s, len);
+  return (char *) memcpy (new, s, len);
 }
 #ifdef weak_alias
 weak_alias (__strndup, strndup)

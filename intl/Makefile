@@ -60,8 +60,7 @@ $(objpfx)tst-gettext.out: tst-gettext.sh $(objpfx)tst-gettext
 $(objpfx)tst-translit.out: tst-translit.sh $(objpfx)tst-translit
 	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 $(objpfx)tst-gettext2.out: tst-gettext2.sh $(objpfx)tst-gettext2
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/ \
-		 $(objpfx)tst-gettext
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 endif
 endif
 endif

@@ -20,11 +20,10 @@
 
 common_objpfx=$1
 objpfx=$2
-malloc_trace=$3
 
 GCONV_PATH=${common_objpfx}iconvdata
 export GCONV_PATH
-LOCPATH=${common_objpfx}localedata
+LOCPATH=${objpfx}domaindir
 export LOCPATH
 LC_ALL=C
 export LC_ALL
@@ -32,10 +31,32 @@ export LC_ALL
 # Generate the test data.
 test -d ${objpfx}domaindir || mkdir ${objpfx}domaindir
 # Create the locale directories.
-test -d ${objpfx}domaindir/lang1 || mkdir ${objpfx}domaindir/lang1
-test -d ${objpfx}domaindir/lang2 || mkdir ${objpfx}domaindir/lang2
-test -d ${objpfx}domaindir/lang1/LC_MESSAGES || mkdir ${objpfx}domaindir/lang1/LC_MESSAGES
-test -d ${objpfx}domaindir/lang2/LC_MESSAGES || mkdir ${objpfx}domaindir/lang2/LC_MESSAGES
+test -d ${objpfx}domaindir/lang1 || {
+  mkdir ${objpfx}domaindir/lang1
+  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
+    cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
+       ${objpfx}domaindir/lang1
+  done
+}
+test -d ${objpfx}domaindir/lang2 || {
+  mkdir ${objpfx}domaindir/lang2
+  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
+    cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
+       ${objpfx}domaindir/lang2
+  done
+}
+test -d ${objpfx}domaindir/lang1/LC_MESSAGES || {
+  mkdir ${objpfx}domaindir/lang1/LC_MESSAGES
+  cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_MESSAGES/SYS_LC_MESSAGES \
+     ${objpfx}domaindir/lang1/LC_MESSAGES
+}
+test -d ${objpfx}domaindir/lang2/LC_MESSAGES || {
+  mkdir ${objpfx}domaindir/lang2/LC_MESSAGES
+  cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_MESSAGES/SYS_LC_MESSAGES \
+     ${objpfx}domaindir/lang2/LC_MESSAGES
+}
+
+test -f
 
 # Populate them.
 msgfmt -o ${objpfx}domaindir/lang1/LC_MESSAGES/tstlang.mo \
@@ -46,9 +67,15 @@ msgfmt -o ${objpfx}domaindir/lang2/LC_MESSAGES/tstlang.mo \
 
 
 # Now run the test.
-MALLOC_TRACE=$malloc_trace \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-${objpfx}tst-gettext2 > ${objpfx}tst-gettext2.out ${objpfx}domaindir
+${objpfx}tst-gettext2 > ${objpfx}tst-gettext2.out ${objpfx}domaindir &&
+cmp ${objpfx}tst-gettext2.out - <<EOF
+String1 - Lang1: 1st string
+String2 - Lang1: 2nd string
+String1 - Lang2: 1st string
+String2 - Lang2: 2nd string
+String1 - First string for testing.
+String2 - Another string for testing.
+EOF
 
 exit $?
-

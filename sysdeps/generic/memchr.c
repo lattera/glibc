@@ -31,15 +31,18 @@
 # define __ptr_t char *
 #endif /* C++ or ANSI C.  */
 
-#if defined (_LIBC)
+#if defined _LIBC
 # include <string.h>
 # include <memcopy.h>
-# include <stdlib.h>
 #else
 # define reg_char char
 #endif
 
-#if defined (HAVE_LIMITS_H) || defined (_LIBC)
+#if HAVE_STDLIB_H || defined _LIBC
+# include <stdlib.h>
+#endif
+
+#if HAVE_LIMITS_H || defined _LIBC
 # include <limits.h>
 #endif
 
@@ -50,10 +53,14 @@
 #endif
 
 #include <sys/types.h>
+#if HAVE_BP_SYM_H || defined _LIBC
 #include <bp-sym.h>
+#else
+# define BP_SYM(sym) sym
+#endif
 
 #undef memchr
-
+#undef __memchr
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
@@ -201,4 +208,6 @@ __memchr (s, c_in, n)
 
   return 0;
 }
+#ifdef weak_alias
 weak_alias (__memchr, BP_SYM (memchr))
+#endif

@@ -1,3 +1,42 @@
+2000-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/Makefile: tst-gettext2.sh does not need a third parameter.
+
+	* intl/tst-gettext2.sh: Copy locale data.  Adjust LOCPATH.  Verify
+	output of program.
+
+	* intl/tst-gettext2.c: Set C locale if setting other locale
+	failed.  Use gettext() not _().
+
+	* locale/setlocale.c: Increment _nl_msg_cat_cntr whenever we
+	successfully loaded a new locale.
+
+2000-11-13  Andreas Jaeger  <aj@suse.de>
+
+	* configure.in: Require gcc 2.95 or newer.
+
+2000-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/paths.h: Adjust for FHS.
+	Patch by Arkadiusz Miskiewicz <misiek@pld.ORG.PL>.
+
+2000-11-11  Jim Meyering  <meyering@lucent.com>
+
+	* string/strndup.c (strndup): Cast return value to `char *'.
+
+2000-11-15  Jim Meyering  <meyering@ascend.com>
+
+	* sysdeps/generic/memchr.c: Remove some useless parentheses.
+	[HAVE_STDLIB_H || defined _LIBC]: Include <stdlib.h>.
+	[HAVE_BP_SYM_H || defined _LIBC]: Guard inclusion of bp-sym.h.
+	[! (HAVE_BP_SYM_H || defined _LIBC)] (BP_SYM): Define as no-op.
+	Also #undef __memchr.
+	Use `weak_alias' only if it's defined.
+
+2000-11-10  H.J. Lu  <hjl@gnu.org>
+
+	* Makefile.in (install): Set LANGUAGE=C LC_ALL=C.
+
 2000-11-15  Andreas Jaeger  <aj@suse.de>
 
 	* elf/chroot_canon.c: Include <stdint.h>.

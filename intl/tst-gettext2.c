@@ -24,15 +24,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct data_t {
+struct data_t
+{
   const char *selection;
   const char *description;
 };
 
 int data_cnt = 2;
 struct data_t strings[] =
-{{"String1", N_("First string for testing.")},
- {"String2", N_("Another string for testing.")}
+{
+  { "String1", N_("First string for testing.") },
+  { "String2", N_("Another string for testing.") }
 };
 
 const int lang_cnt = 3;
@@ -50,18 +52,20 @@ main (void)
   unsetenv ("LC_CTYPE");
   unsetenv ("LANG");
   unsetenv ("OUTPUT_CHARSET");
-  
+
   textdomain ("tstlang");
 
   for (i = 0; i < lang_cnt; ++i)
     {
       int j;
 
-      setlocale (LC_ALL, lang[i]);
+      if (setlocale (LC_ALL, lang[i]) == NULL)
+	setlocale (LC_ALL, "C");
       bindtextdomain ("tstlang", OBJPFX "domaindir");
 
       for (j = 0; j < data_cnt; ++j)
-	printf ("%s - %s\n", strings[j].selection, _(strings[j].description));
+	printf ("%s - %s\n", strings[j].selection,
+		gettext (strings[j].description));
     }
 
   return 0;
