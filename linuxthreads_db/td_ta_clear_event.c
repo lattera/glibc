@@ -1,4 +1,4 @@
-/* Enable specific event for thread.
+/* Globally disable events.
    Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
@@ -18,14 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-
 #include "thread_dbP.h"
 
 
 td_err_e
-td_thr_set_event (th, event)
-     const td_thrhandle_t *th;
+td_ta_clear_event (ta, event)
+     const td_thragent_t *ta;
      td_thr_events_t *event;
 {
   td_thr_events_t old_event;
@@ -34,22 +32,16 @@ td_thr_set_event (th, event)
   LOG (__FUNCTION__);
 
   /* Write the new value into the thread data structure.  */
-  if (ps_pdread (th->th_ta_p->ph,
-		 ((char *) th->th_unique
-		  + offsetof (struct _pthread_descr_struct,
-			      p_eventbuf.eventmask)),
+  if (ps_pdread (ta->ph, ta->pthread_threads_eventsp,
 		 &old_event, sizeof (td_thrhandle_t)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
-  /* Or the new bits in.  */
+  /* Remove the set bits in.  */
   for (i = 0; i < TD_EVENTSIZE; ++i)
-    old_event.event_bits[i] |= event->event_bits[i];
+    old_event.event_bits[i] &= ~event->event_bits[i];
 
   /* Write the new value into the thread data structure.  */
-  if (ps_pdwrite (th->th_ta_p->ph,
-		  ((char *) th->th_unique
-		   + offsetof (struct _pthread_descr_struct,
-			       p_eventbuf.eventmask)),
+  if (ps_pdwrite (ta->ph, ta->pthread_threads_eventsp,
 		  &old_event, sizeof (td_thrhandle_t)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 

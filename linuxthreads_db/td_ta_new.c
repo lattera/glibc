@@ -51,14 +51,28 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   /* Remember the address.  */
   (*ta)->pthread_threads_eventsp = (td_thr_events_t *) addr;
 
-  /* See whether the library contains the necessary symbols.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_handles",
-		         &addr) != PS_OK)
+  /* Get the pointer to the variable pointing to the thread descriptor
+     with the last event.  */
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
+			 "__pthread_last_event",
+			 &(*ta)->pthread_last_event) != PS_OK)
     {
     free_return:
       free (*ta);
       return TD_ERR;
     }
+
+  /* Get the pointer to the variable containing the number of active
+     threads.  */
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
+			 "__pthread_handles_num",
+			 &(*ta)->pthread_handles_num) != PS_OK)
+    goto free_return;
+
+  /* See whether the library contains the necessary symbols.  */
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_handles",
+		         &addr) != PS_OK)
+    goto free_return;
 
   (*ta)->handles = (struct pthread_handle_struct *) addr;
 

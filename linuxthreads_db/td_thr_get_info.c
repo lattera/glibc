@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
+#include <string.h>
 
 #include "thread_dbP.h"
 
@@ -66,6 +67,8 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
   infop->ti_lid = pds.p_pid;
   infop->ti_ta_p = th->th_ta_p;
   infop->ti_startfunc = pds.p_start_args.start_routine;
+  memcpy (&infop->ti_events, &pds.p_eventbuf.eventmask,
+	  sizeof (td_thr_events_t));
 
   return TD_OK;
 }

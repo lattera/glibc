@@ -1,5 +1,26 @@
 1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* td_ta_thr_iter.c (td_ta_thr_iter): Optimize a bit.  Read all
+	handles at once.
+
+	* thread_dbP.h (struct th_thragent): Add pthread_handle_num.
+	* td_ta_new.c: Initialize pthread_handle_num.
+	* td_ta_event_getmsg.c: If last event was already reported search
+	for another unreported event.
+
+	* td_thr_get_info.c (td_thr_get_info): Initialize ti_events.
+
+	* Makefile (libthread_db-routines): Add td_ta_set_event,
+	td_ta_event_getmsg, and td_ta_clear_event.
+	* td_ta_clear_event.c: New file.
+	* td_ta_event_getmsg.c: New file.
+	* td_ta_new.c: Get address of __pthread_last_event in target.
+	* td_ta_set_event.c: Don't overwrite old mask, set additional bits.
+	* td_thr_set_event.c: Likewise.
+	* td_thr_clear_event.c: Implement.
+	* thread_db.h: Declare td_ta_clear_event and td_ta_event_getmsg.
+	* thread_dbP.h (struct td_thragent): Add pthread_last_event.
+
 	* td_ta_new.c: Don't test for __pthread_threads_debug.  Get address
 	of __pthread_threads_events and fail if this is not possible.
 	* td_ta_event_addr.c: Implement.

@@ -331,9 +331,17 @@ extern td_err_e td_ta_tsd_iter (const td_thragent_t *__ta, td_key_iter_f *__ki,
 extern td_err_e td_ta_event_addr (const td_thragent_t *__ta,
 				  td_event_e __event, td_notify_t *__ptr);
 
-/* Enable EVENT for all threads.  */
+/* Enable EVENT in global mask.  */
 extern td_err_e td_ta_set_event (const td_thragent_t *__ta,
 				 td_thr_events_t *__event);
+
+/* Disable EVENT in global mask.  */
+extern td_err_e td_ta_clear_event (const td_thragent_t *__ta,
+				   td_thr_events_t *__event);
+
+/* Return information about last event.  */
+extern td_err_e td_ta_event_getmsg (const td_thragent_t *__ta,
+				    td_event_msg_t *msg);
 
 
 /* Set suggested concurrency level for process associated with TA.  */

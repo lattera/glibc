@@ -26,11 +26,23 @@ td_ta_set_event (ta, event)
      const td_thragent_t *ta;
      td_thr_events_t *event;
 {
+  td_thr_events_t old_event;
+  int i;
+
   LOG (__FUNCTION__);
 
   /* Write the new value into the thread data structure.  */
+  if (ps_pdread (ta->ph, ta->pthread_threads_eventsp,
+		 &old_event, sizeof (td_thrhandle_t)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  /* Or the new bits in.  */
+  for (i = 0; i < TD_EVENTSIZE; ++i)
+    old_event.event_bits[i] |= event->event_bits[i];
+
+  /* Write the new value into the thread data structure.  */
   if (ps_pdwrite (ta->ph, ta->pthread_threads_eventsp,
-		  event, sizeof (td_thrhandle_t)) != PS_OK)
+		  &old_event, sizeof (td_thrhandle_t)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   return TD_OK;

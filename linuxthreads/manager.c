@@ -55,6 +55,9 @@ volatile int __pthread_threads_debug;
 /* Globally enabled events.  */
 volatile td_thr_events_t __pthread_threads_events;
 
+/* Pointer to thread descriptor with last event.  */
+volatile pthread_descr __pthread_last_event;
+
 /* Mapping from stack segment to thread descriptor. */
 /* Stack segment numbers are also indices into the __pthread_handles array. */
 /* Stack segment number 0 is reserved for the initial thread. */
@@ -422,6 +425,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 		 already scheduled when we send the event.  */
 	      new_thread->p_eventbuf.eventdata = new_thread;
 	      new_thread->p_eventbuf.eventnum = TD_CREATE;
+	      __pthread_last_event = new_thread;
 
 	      /* Now call the function which signals the event.  */
 	      __linuxthreads_create_event ();
@@ -523,6 +527,7 @@ static void pthread_exited(pid_t pid)
 	      /* Yep, we have to signal the death.  */
 	      th->p_eventbuf.eventnum = TD_DEATH;
 	      th->p_eventbuf.eventdata = th;
+	      __pthread_last_event = th;
 
 	      /* Now call the function to signal the event.  */
 	      __linuxthreads_reap_event();

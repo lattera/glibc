@@ -37,7 +37,9 @@ libthread_db-routines = td_init td_log td_ta_delete td_ta_get_nthreads      \
 			td_ta_setconcurrency td_ta_enable_stats		    \
 			td_ta_reset_stats td_ta_get_stats td_ta_event_addr  \
 			td_thr_event_enable td_thr_set_event 		    \
-			td_thr_clear_event td_thr_event_getmsg
+			td_thr_clear_event td_thr_event_getmsg		    \
+			td_ta_set_event td_ta_event_getmsg		    \
+			td_ta_clear_event
 
 libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 

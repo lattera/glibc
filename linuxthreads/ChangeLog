@@ -1,5 +1,11 @@
 1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* internals.h: Declare __pthread_last_event.
+	* manager.c: Define __pthread_last_event.
+	(pthread_handle_create): Set __pthread_last_event.
+	(pthread_exited): Likewise.
+	* join.c (pthread_exit): Likewise.
+
 	* Makefile (libpthread-routines): Add events.
 	* events.c: New file.
 	* internals.h: Protect against multiple inclusion.

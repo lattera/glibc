@@ -41,6 +41,12 @@ struct td_thragent
 
   /* Pointer to the `__pthread_threads_events' variable in the target.  */
   psaddr_t pthread_threads_eventsp;
+
+  /* Pointer to the `__pthread_last_event' variable in the target.  */
+  psaddr_t pthread_last_event;
+
+  /* Pointer to the `__pthread_handles_num' variable.  */
+  psaddr_t pthread_handles_num;
 };
 
 

@@ -54,6 +54,7 @@ void pthread_exit(void * retval)
 	  /* Yep, we have to signal the death.  */
 	  THREAD_SETMEM(self, p_eventbuf.eventnum, TD_DEATH);
 	  THREAD_SETMEM(self, p_eventbuf.eventdata, self);
+	  __pthread_last_event = self;
 
 	  /* Now call the function to signal the event.  */
 	  __linuxthreads_death_event();
