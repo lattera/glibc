@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -58,7 +58,9 @@ ENTRY(name)								      \
 SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
 	.global __errno_location;					      \
         .type   __errno_location,@function;				      \
-	call   __errno_location;					      \
+	CDISABLE;							      \
+	 mov	%l0, %o0;						      \
+	call	__errno_location;					      \
 	 nop;								      \
 	st	%l1, [%o0];						      \
 	jmpl	%i7 + 8, %g0;						      \

@@ -1,3 +1,21 @@
+2004-02-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Add ulps for the
+	2003-11-27 atan2 test.
+
+	* sysdeps/powerpc/fpu/bits/mathinline.h (lrint, lrintf): Protect
+	with #ifndef __powerpc64__.
+
+	* sysdeps/generic/ldsodefs.h (_dl_argv, _dl_argv_internal): If
+	DL_ARGV_NOT_RELRO defined, don't use attribute_relro.
+	* sysdeps/alpha/dl-machine.h (DL_ARGV_NOT_RELRO): Remove.
+	* sysdeps/ia64/dl-machine.h (DL_ARGV_NOT_RELRO): Remove.
+	* sysdeps/sparc/sparc32/dl-machine.h (DL_ARGV_NOT_RELRO): Remove.
+	* sysdeps/sparc/sparc64/dl-machine.h (DL_ARGV_NOT_RELRO): Remove.
+	* sysdeps/alpha/dl-sysdep.h: New file.
+	* sysdeps/ia64/dl-sysdep.h: New file.
+	* sysdeps/sparc/dl-sysdep.h: New file.
+
 2004-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/generic/libc-start.c [LIBC_START_DISABLE_INLINE] (STATIC):
