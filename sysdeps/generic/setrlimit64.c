@@ -41,5 +41,3 @@ setrlimit64 (resource, rlimits)
 
   return setrlimit (resource, &rlimits32);
 }
-
-stub_warning (setrlimit64)
