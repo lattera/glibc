@@ -7,7 +7,6 @@
    License as published by the Free Software Foundation; either
    version 2.1 of the License, or (at your option) any later version.
 
-
    In addition to the permissions in the GNU Lesser General Public
    License, the Free Software Foundation gives you unlimited
    permission to link the compiled version of this file with other

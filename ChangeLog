@@ -1,3 +1,14 @@
+2001-09-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/fpu/s_logbl.S: Move to ...
+	* sysdeps/i386/fpu/s_logbl.c: ...here, use inline assembler.
+
+	* sysdeps/i386/fpu/s_rintl.S: Move to ...
+	* sysdeps/i386/fpu/s_rintl.c: ...here, use inline assembler.
+
+	* sysdeps/i386/fpu/s_significandl.S: Move to ...
+	* sysdeps/i386/fpu/s_significandl.c: ...here, use inline assembler.
+
 2001-09-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strcoll.c [USE_IN_EXTENDED_LOCALE_MODEL]: Correctly get
