@@ -1,3 +1,8 @@
+2000-07-21  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (chunk_alloc): Try mmap_chunk() for smaller
+	allocations only if a non-main arena cannot be extended.
+
 2000-07-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object): Take loader==NULL into account
@@ -21,7 +26,8 @@
 
 2000-07-21  Greg McGary  <greg@mcgary.org>
 
-	* sysdeps/powerpc/bp-asm.h (DISCARD_BOUNDS): Rename from UNCHECK_BOUNDS.
+	* sysdeps/powerpc/bp-asm.h (DISCARD_BOUNDS): Rename from
+	UNCHECK_BOUNDS.
 	* sysdeps/powerpc/bits/setjmp.h (JB_SIZE): New constant.
 	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main):
 	Wrap bounds around argv & envp and each of their string members.
