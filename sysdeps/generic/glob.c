@@ -183,6 +183,7 @@ extern void bcopy ();
 
 #if !defined HAVE_MEMPCPY && __GLIBC__ - 0 == 2 && __GLIBC_MINOR__ >= 1
 # define HAVE_MEMPCPY	1
+# undef  mempcpy
 # define mempcpy(Dest, Src, Len) __mempcpy (Dest, Src, Len)
 #endif
 
