@@ -22,6 +22,9 @@
 
    However, because of how _dl_sym and _dl_tls_symaddr are written, every
    platform needs it when we support TLS.  */
+
+#include <tls.h>		/* Defines USE_TLS (or doesn't).  */
+
 #ifdef USE_TLS
 # define DL_LOOKUP_RETURNS_MAP
 #else
