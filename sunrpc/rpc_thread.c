@@ -85,6 +85,7 @@ __rpc_thread_svc_fdset (void)
 		return &svc_fdset;
 	return &tvp->svc_fdset_s;
 }
+libc_hidden_def (__rpc_thread_svc_fdset)
 
 struct rpc_createerr *
 __rpc_thread_createerr (void)
@@ -96,6 +97,7 @@ __rpc_thread_createerr (void)
 		return &rpc_createerr;
 	return &tvp->rpc_createerr_s;
 }
+libc_hidden_def (__rpc_thread_createerr)
 
 struct pollfd **
 __rpc_thread_svc_pollfd (void)
@@ -107,6 +109,7 @@ __rpc_thread_svc_pollfd (void)
 		return &svc_pollfd;
 	return &tvp->svc_pollfd_s;
 }
+libc_hidden_def (__rpc_thread_svc_pollfd)
 
 int *
 __rpc_thread_svc_max_pollfd (void)
@@ -118,4 +121,6 @@ __rpc_thread_svc_max_pollfd (void)
 		return &svc_max_pollfd;
 	return &tvp->svc_max_pollfd_s;
 }
+libc_hidden_def (__rpc_thread_svc_max_pollfd)
+
 #endif /* _RPC_THREAD_SAFE_ */

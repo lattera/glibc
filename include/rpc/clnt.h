@@ -26,4 +26,10 @@ extern CLIENT *clntunix_create_internal (struct sockaddr_un *__raddr,
 					 int *__sockp, u_int __sendsz,
 					 u_int __recvsz) attribute_hidden;
 
+libc_hidden_proto (clnt_sperrno)
+libc_hidden_proto (clnt_spcreateerror)
+libc_hidden_proto (clnt_perror)
+libc_hidden_proto (clnt_sperror)
+libc_hidden_proto (_rpc_dtablesize)
+
 #endif

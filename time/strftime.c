@@ -1362,7 +1362,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
   return i;
 }
 #ifdef _LIBC
-libc_hidden_def (strftime)
+libc_hidden_def (my_strftime)
 #endif
 
 

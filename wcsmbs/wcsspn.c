@@ -44,3 +44,4 @@ wcsspn (wcs, accept)
 
   return count;
 }
+libc_hidden_def (wcsspn)

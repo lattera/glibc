@@ -68,3 +68,4 @@ des_setparity (char *p)
       p++;
     }
 }
+libc_hidden_def (des_setparity)

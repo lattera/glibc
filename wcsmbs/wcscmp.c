@@ -41,3 +41,4 @@ wcscmp (s1, s2)
 
   return c1 - c2;
 }
+libc_hidden_def (wcscmp)

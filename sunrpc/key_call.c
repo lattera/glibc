@@ -177,6 +177,7 @@ key_encryptsession_pk (char *remotename, netobj *remotekey,
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
+libc_hidden_def (key_encryptsession_pk)
 
 int
 key_decryptsession_pk (char *remotename, netobj *remotekey,
@@ -201,6 +202,7 @@ key_decryptsession_pk (char *remotename, netobj *remotekey,
   *deskey = res.cryptkeyres_u.deskey;
   return 0;
 }
+libc_hidden_def (key_decryptsession_pk)
 
 int
 key_gendes (des_block *key)

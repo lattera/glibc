@@ -34,3 +34,4 @@ wcspbrk (wcs, accept)
 
   return NULL;
 }
+libc_hidden_def (wcspbrk)

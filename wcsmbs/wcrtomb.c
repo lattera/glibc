@@ -108,3 +108,4 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   return result;
 }
 weak_alias (__wcrtomb, wcrtomb)
+libc_hidden_weak (wcrtomb)

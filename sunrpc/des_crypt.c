@@ -105,7 +105,7 @@ cbc_crypt (char *key, char *buf, unsigned int len, unsigned int mode,
   COPY8 (dp.des_ivec, ivec);
   return err;
 }
-
+libc_hidden_def (cbc_crypt)
 
 /*
  * ECB mode encryption
@@ -118,3 +118,4 @@ ecb_crypt (char *key, char *buf, unsigned int len, unsigned int mode)
   dp.des_mode = ECB;
   return common_crypt (key, buf, len, mode, &dp);
 }
+libc_hidden_def (ecb_crypt)

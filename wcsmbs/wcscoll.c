@@ -38,4 +38,5 @@
 
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
 weak_alias (__wcscoll, wcscoll)
+libc_hidden_weak (wcscoll)
 #endif

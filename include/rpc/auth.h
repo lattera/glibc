@@ -28,4 +28,7 @@ extern AUTH *authdes_pk_create_internal (const char *, netobj *, u_int,
 					 struct sockaddr *,
 					 des_block *) attribute_hidden;
 
+libc_hidden_proto (key_encryptsession_pk)
+libc_hidden_proto (key_decryptsession_pk)
+
 #endif

@@ -1,3 +1,39 @@
+2002-08-05  Jakub Jelinek  <jakub@redhat.com>
+
+        * include/wchar.h (wcrtomb, wcscmp, wcsftime, wcsspn, wcschr, wcscoll,
+        wcspbrk): Add libc_hidden_proto.
+        * time/strftime.c (my_strftime): Add libc_hidden_def.
+        (strftime): Remove libc_hidden_def.
+        * wcsmbs/wcschr.c (wcschr): Add libc_hidden_def.
+        * wcsmbs/wcspbrk.c (wcspbrk): Likewise.
+        * wcsmbs/wcsspn.c (wcsspn): Likewise.
+        * wcsmbs/wcscmp.c (wcscmp): Likewise.
+        * wcsmbs/wcrtomb.c (wcrtomb): Add libc_hidden_weak.
+        * wcsmbs/wcscoll.c (wcscoll): Likewise.
+
+        * include/rpc/rpc.h (__rpc_thread_svc_max_pollfd,
+        __rpc_thread_svc_pollfd, __rpc_thread_svc_fdset,
+        __rpc_thread_createerr): Add libc_hidden_proto.
+        * sunrpc/rpc_thread.c (__rpc_thread_svc_max_pollfd,
+        __rpc_thread_svc_pollfd, __rpc_thread_svc_fdset,
+        __rpc_thread_createerr): Add libc_hidden_def.
+
+        * include/rpc/clnt.h (clnt_sperrno, clnt_spcreateerror,
+        clnt_perror, clnt_sperror, _rpc_dtablesize): Add libc_hidden_proto.
+        * sunrpc/clnt_perr.c (clnt_sperrno, clnt_spcreateerror,
+        clnt_perror, clnt_sperror): Add libc_hidden_def.
+        * sunrpc/rpc_dtable.c (_rpc_dtablesize): Likewise.
+
+        * include/rpc/des_crypt.h (des_setparity, ecb_crypt, cbc_crypt): Add
+        libc_hidden_proto.
+        * sunrpc/des_crypt.c (ecb_crypt, cbc_crypt): Add libc_hidden_proto.
+        * sunrpc/des_soft.c (des_setparity): Likewise.
+
+        * include/rpc/auth.h (key_encryptsession_pk, key_decryptsession_pk):
+        Add libc_hidden_proto.
+        * sunrpc/key_call.c (key_encryptsession_pk, key_decryptsession_pk):
+        Add libc_hidden_def.
+
 2002-08-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Replace member

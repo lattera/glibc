@@ -1094,7 +1094,7 @@ cannot allocate TLS data structures for initial thread");
 
       /* Store for detection of the special case by __tls_get_addr
 	 so it knows not to pass this dtv to the normal realloc.  */
-      _dl_initial_dtv = GET_DTV (tcbp);
+      GL(dl_initial_dtv) = GET_DTV (tcbp);
     }
 #endif
 

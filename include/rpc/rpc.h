@@ -49,6 +49,11 @@ __libc_tsd_define (extern, RPC_VARS)
 
 #define RPC_THREAD_VARIABLE(x) (__rpc_thread_variables()->x)
 
+libc_hidden_proto (__rpc_thread_svc_max_pollfd)
+libc_hidden_proto (__rpc_thread_svc_pollfd)
+libc_hidden_proto (__rpc_thread_svc_fdset)
+libc_hidden_proto (__rpc_thread_createerr)
+
 #endif /* _RPC_THREAD_SAFE_ */
 
 #endif

@@ -32,3 +32,4 @@ wcschr (wcs, wc)
 
   return NULL;
 }
+libc_hidden_def (wcschr)
