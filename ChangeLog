@@ -1,3 +1,8 @@
+2003-06-24  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (pread, pwrite): Use
+	the 64-bit syscall name.
+
 2003-06-24  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Update.
