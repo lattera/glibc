@@ -207,8 +207,8 @@ nscd_request_avc_has_perm (int fd, request_type req)
       dbg_log (_("Error getting context of nscd"));
       goto out;
     }
-  if (avc_context_to_sid (scon, &ssid) < 0 ||
-      avc_context_to_sid (tcon, &tsid) < 0)
+  if (avc_context_to_sid (scon, &ssid) < 0
+      || avc_context_to_sid (tcon, &tsid) < 0)
     {
       dbg_log (_("Error getting sid from context"));
       goto out;

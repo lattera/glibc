@@ -112,9 +112,11 @@ $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
 $(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 
 ifeq ($(build-shared),yes)
-$(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
+$(objpfx)nscd: $(common-objpfx)rt/librt.so $(shared-thread-library) \
+	       $(common-objpfx)nis/libnsl.so
 $(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.so
 else
-$(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
+$(objpfx)nscd: $(common-objpfx)rt/librt.a $(static-thread-library) \
+	       $(common-objpfx)nis/libnsl.a
 $(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.a
 endif

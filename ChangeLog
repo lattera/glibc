@@ -1,5 +1,15 @@
 2004-10-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c: Rewrite handling of incoming connections.  All
+	are handled by one thread which then hands of the descriptors for the
+	real work to the worker threads.
+	* nscd/Makefile: Link nscd with librt.
+
+	* nscd/selinux.c: Pretty printing.
+
+	* nscd/dbg_log.c (dbg_log): Don't add unnecessary newline to
+	output.  Let syslog do the formatting if debug_level == 0.
+
 	* nscd/nscd_helper.c (get_mapping): No need to check timestamp if
 	nscd_certainly_running is nonzero.
 

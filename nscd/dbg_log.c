@@ -61,7 +61,8 @@ dbg_log (const char *fmt,...)
 
   if (debug_level > 0)
     {
-      snprintf (msg, sizeof (msg), "%d: %s\n", getpid (), msg2);
+      snprintf (msg, sizeof (msg), "%d: %s%s", getpid (), msg2,
+		msg2[strlen (msg2) - 1] == '\n' ? "" : "\n");
       if (dbgout)
 	{
 	  fputs (msg, dbgout);
@@ -71,9 +72,7 @@ dbg_log (const char *fmt,...)
 	fputs (msg, stderr);
     }
   else
-    {
-      snprintf (msg, sizeof (msg), "%d: %s", getpid (), msg2);
-      syslog (LOG_NOTICE, "%s", msg);
-    }
+    syslog (LOG_NOTICE, "%d %s", getpid (), msg2);
+
   va_end (ap);
 }
