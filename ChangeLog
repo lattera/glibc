@@ -1,4 +1,14 @@
+2001-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/resolv.h (struct __res_state): Add nsinit field.
+	* resolv/res_send.c (res_nsend): Use it instead of nscount.
+	* resolv/res_init.c (__res_vinit): Initialize it.
+	(res_nclose): Clear it instead of nscount.
+
 2001-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/mtrace.pl: Fix matching of addresses.
+	Patch by Aharon Robbins <arnold@skeeve.com>.
 
 	* Versions.def (ld): Add GLIBC_2.2.
 

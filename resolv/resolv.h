@@ -154,6 +154,7 @@ struct __res_state {
 			u_int16_t		nstimes[MAXNS];	/* ms. */
 			int			nssocks[MAXNS];
 			u_int16_t		nscount6;
+			u_int16_t		nsinit;
 			struct sockaddr_in6	*nsaddrs[MAXNS];
 		} _ext;
 	} _u;

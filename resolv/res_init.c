@@ -177,6 +177,7 @@ __res_vinit(res_state statp, int preinit) {
 	statp->_flags = 0;
 	statp->qhook = NULL;
 	statp->rhook = NULL;
+	statp->_u._ext.nsinit = 0;
 	statp->_u._ext.nscount = 0;
 #ifdef _LIBC
 	statp->_u._ext.nscount6 = 0;
@@ -544,5 +545,5 @@ res_nclose(res_state statp) {
 			statp->_u._ext.nssocks[ns] = -1;
 		}
 	}
-	statp->_u._ext.nscount = 0;
+	statp->_u._ext.nsinit = 0;
 }

@@ -394,7 +394,7 @@ res_nsend(res_state statp,
 	 * If the ns_addr_list in the resolver context has changed, then
 	 * invalidate our cached copy and the associated timing data.
 	 */
-	if (EXT(statp).nscount != 0) {
+	if (EXT(statp).nsinit) {
 		int needclose = 0;
 
 		if (EXT(statp).nscount != statp->nscount)
@@ -420,7 +420,7 @@ res_nsend(res_state statp,
 	/*
 	 * Maybe initialize our private copy of the ns_addr_list.
 	 */
-	if (EXT(statp).nscount == 0) {
+	if (EXT(statp).nsinit == 0) {
 #ifdef _LIBC
 		n = 0;
 #endif
@@ -454,6 +454,7 @@ res_nsend(res_state statp,
 #endif
 		}
 		EXT(statp).nscount = statp->nscount;
+		EXT(statp).nsinit = 1;
 #ifdef _LIBC
 		/* If holes left, free memory and set to NULL */
 		while (n < MAXNS) {
