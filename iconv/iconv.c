@@ -39,9 +39,12 @@ iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
 
   if (inbuf == NULL || *inbuf == NULL)
     {
-      result = __gconv (gcd, NULL, NULL, (unsigned char **) outbuf,
-			(unsigned char *) (outstart + *outbytesleft),
-			&converted);
+      if (outbuf == NULL || *outbuf == NULL)
+	result = __gconv (gcd, NULL, NULL, NULL, NULL, &converted);
+      else
+	result = __gconv (gcd, NULL, NULL, (unsigned char **) outbuf,
+			  (unsigned char *) (outstart + *outbytesleft),
+			  &converted);
     }
   else
     {

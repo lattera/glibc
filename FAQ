@@ -170,6 +170,7 @@ please let me know.
 	daylight saving time is in effect the timezone string is EST.
 4.6.	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
+4.7.	Why do so many programs using math functions fail on my AlphaStation?
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -1705,6 +1706,15 @@ filesystem support :-( ).  To get a working make you can use either make
 3.75 or patch 3.77.  A working patch is available via RedHat's Rawhide server
 (ftp://rawhide.redhat.com/SRPMS/SRPMS/make-3.77-*src.rpm).
 
+
+4.7.	Why do so many programs using math functions fail on my AlphaStation?
+
+{AO} The functions floor() and floorf() use an instruction that is not
+implemented in some old PALcodes of AlphaStations.  This may cause
+`Illegal Instruction' core dumps or endless loops in programs that
+catch these signals.  Updating the firmware to a 1999 release has
+fixed the problem on an AlphaStation 200 4/166.
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -1721,6 +1731,7 @@ Answers were given by:
 {GK} Geoffrey Keating, <geoffk@ozemail.com.au>
 {HJ} H.J. Lu, <hjl@gnu.org>
 {CG} Cristian Gafton, <gafton@redhat.com>
+{AO} Alexandre Oliva, <oliva@lsd.ic.unicamp.br>
 
 Local Variables:
  mode:outline

@@ -1,3 +1,8 @@
+1999-12-20  Andreas Jaeger  <aj@suse.de>
+
+	* pthread.c (pthread_initialize): Move getrlimit call after
+	setting of errno.
+
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions: Export pread, __pread64, pread64, pwrite, __pwrite64,

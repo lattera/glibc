@@ -39,7 +39,7 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
   assert (converted != NULL);
   *converted = 0;
 
-  cd->__data[last_step].__outbuf = *outbuf;
+  cd->__data[last_step].__outbuf = outbuf != NULL ? *outbuf : NULL;
   cd->__data[last_step].__outbufend = outbufend;
 
   if (inbuf == NULL || *inbuf == NULL)

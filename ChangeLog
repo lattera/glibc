@@ -1,4 +1,49 @@
+1999-12-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/getmsg.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/i386/putmsg.c: New file.
+	* sysdeps/unix/sysv/linux/i386/putpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getmsg.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/putmsg.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/putpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/mips/getmsg.c: New file.
+	* sysdeps/unix/sysv/linux/mips/getpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/mips/putmsg.c: New file.
+	* sysdeps/unix/sysv/linux/mips/putpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/getmsg.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/getpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/putmsg.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/putpmsg.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add getpmsg and
+	putpmsg.
+
 1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/lxstat64.c: Include "kernel-features.h"
+	before testing for __ASSUME_STAT64_SYSCALL.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+
+1999-12-20  Andreas Schwab  <schwab@suse.de>
+
+	* manual/install.texi (Running make install): Clearify that
+	install_root should be an absolute file name.
+
+1999-12-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.c (__gconv): Deal with outbuf being NULL.
+
+	* iconv/iconv.c (iconv): Allow omitting output buffer if no input
+	buffer is given to place conversion descriptor in initial state.
+	* iconvdata/gconv-modules: Correct aliases CSPC850MULTILINGUAL and
+	CSPC862LATINHEBREW.
+	* iconvdata/gconv-modules: Add aliases GB2312 and csGB2312
+	(according to IANA registry).
+	Reported by Bruno Haible <haible@ilog.fr>.
+
+	* iconvdata/johab.c: Correct completely broken conversion to JOHAB.
 
 	* locale/categories.def: Remove most of the collate definitions.
 	* locale/langinfo.h: Comment out corresponding definitions.

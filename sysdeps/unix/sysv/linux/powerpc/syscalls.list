@@ -14,6 +14,7 @@ rt_sigsuspend	-	rt_sigsuspend	2	__syscall_rt_sigsuspend
 rt_sigtimedwait	-	rt_sigtimedwait	4	__syscall_rt_sigtimedwait
 s_getcwd	getcwd	getcwd		2	__syscall_getcwd
 s_getdents	getdents getdents	3	__syscall_getdents
+s_getpmsg	getpmsg	getpmsg		5	__syscall_getpmsg
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
@@ -21,6 +22,7 @@ s_getrlimit	getrlimit getrlimit	2	__syscall_getrlimit
 s_poll		poll	poll		3	__syscall_poll
 s_pread64	pread64	pread		5	__syscall_pread
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
+s_putpmsg	putpmsg	putpmsg		5	__syscall_putpmsg
 s_pwrite64	pwrite64 pwrite		5	__syscall_pwrite
 s_reboot	reboot	reboot		3	__syscall_reboot
 s_setrlimit	setrlimit setrlimit	3	__syscall_setrlimit

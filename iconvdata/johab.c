@@ -64,12 +64,12 @@ static const uint32_t init_to_ucs[19] =
   0x314c, 0x314d, 0x314e
 };
 
-static const uint32_t final_to_ucs[27] =
+static const uint32_t final_to_ucs[31] =
 {
   L'\0', L'\0', 0x3133, L'\0', 0x3135, 0x3136, L'\0', L'\0',
   0x313a, 0x313b, 0x314c, 0x313d, 0x313e, 0x313f,
-  0x3140, L'\0', L'\0', 0x3144, L'\0', L'\0', L'\0',
-  L'\0', L'\0', L'\0', L'\0', L'\0', L'\0'
+  0x3140, L'\0', L'\0', L'\0', 0x3144, L'\0', L'\0', L'\0',
+  L'\0', L'\0', L'\0', L'\0', L'\0', L'\0', L'\0', L'\0', L'\0'
 };
 
 /* The following three arrays are used to convert
@@ -307,17 +307,17 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
       {									      \
 	if (ch >= 0xac00 && ch <= 0xd7a3)				      \
 	  {								      \
-	    ch -= 0xac00;						      \
-									      \
-	    ch = (init_to_bit[ch / 588]	  /* 21 * 28 = 588 */		      \
-		  + mid_to_bit[(ch / 28) % 21]/* (ch % (21 * 28)) / 28 */     \
-		  + final_to_bit[ch %  28]);  /* (ch % (21 * 28)) % 28 */     \
-									      \
 	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
+									      \
+	    ch -= 0xac00;						      \
+									      \
+	    ch = (init_to_bit[ch / 588]	  /* 21 * 28 = 588 */		      \
+		  + mid_to_bit[(ch / 28) % 21]/* (ch % (21 * 28)) / 28 */     \
+		  + final_to_bit[ch %  28]);  /* (ch % (21 * 28)) % 28 */     \
 									      \
 	    *outptr++ = ch / 256;					      \
 	    *outptr++ = ch % 256;					      \
@@ -337,9 +337,11 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    *outptr++ = ch / 256;					      \
 	    *outptr++ = ch % 256;					      \
 	  }								      \
-	if ((ch >= 0x4e00 && ch <= 0x9fa5) || (ch >= 0xf900 && ch <= 0xfa0b)) \
+	else if ((ch >= 0x4e00 && ch <= 0x9fa5)				      \
+		 || (ch >= 0xf900 && ch <= 0xfa0b))			      \
 	  {								      \
 	    size_t written;						      \
+	    uint32_t temp;						      \
 									      \
 	    written = ucs4_to_ksc5601_hanja (ch, outptr,		      \
 					     (NEED_LENGTH_TEST		      \
@@ -356,13 +358,13 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 									      \
 	    outptr[0] -= 0x4a;						      \
-	    outptr[1] += 0x80;						      \
+	    outptr[1] -= 0x21;						      \
 									      \
-	    outptr[1] += (outptr[0] % 2					      \
-			  ? 0 : (outptr[1] > 0xee ? 0x43 : 0x31));	      \
-	    outptr[1] -= 0xa1;						      \
-	    outptr[0] /= 2;						      \
-	    outptr[0] += 0xe0;						      \
+	    temp = outptr[0] * 94 + outptr[1];				      \
+									      \
+	    outptr[0] = 0xe0 + temp / 188;				      \
+	    outptr[1] = temp % 188;					      \
+	    outptr[1] += outptr[1] >= 78 ? 0x43 : 0x31;			      \
 									      \
 	    outptr += 2;						      \
 	  }								      \

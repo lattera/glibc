@@ -299,14 +299,6 @@ static void pthread_initialize(void)
      STACK_SIZE boundary. */
   __pthread_initial_thread_bos =
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
-  /* Play with the stack size limit to make sure that no stack ever grows
-     beyond STACK_SIZE minus one page (to act as a guard page). */
-  getrlimit(RLIMIT_STACK, &limit);
-  max_stack = STACK_SIZE - __getpagesize();
-  if (limit.rlim_cur > max_stack) {
-    limit.rlim_cur = max_stack;
-    setrlimit(RLIMIT_STACK, &limit);
-  }
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
   /* If we have special thread_self processing, initialize that for the
@@ -317,6 +309,14 @@ static void pthread_initialize(void)
   /* The errno/h_errno variable of the main thread are the global ones.  */
   __pthread_initial_thread.p_errnop = &_errno;
   __pthread_initial_thread.p_h_errnop = &_h_errno;
+  /* Play with the stack size limit to make sure that no stack ever grows
+     beyond STACK_SIZE minus one page (to act as a guard page). */
+  getrlimit(RLIMIT_STACK, &limit);
+  max_stack = STACK_SIZE - __getpagesize();
+  if (limit.rlim_cur > max_stack) {
+    limit.rlim_cur = max_stack;
+    setrlimit(RLIMIT_STACK, &limit);
+  }
   /* Likewise for the resolver state _res.  */
   __pthread_initial_thread.p_resp = &_res;
 #ifdef __SIGRTMIN

@@ -648,7 +648,7 @@ module	INTERNAL		IBM500//		IBM500		1
 #	from			to			module		cost
 alias	CP850//			IBM850//
 alias	850//			IBM850//
-alias	CSPC8MULTILINGUAL//	IBM850//
+alias	CSPC850MULTILINGUAL//	IBM850//
 alias	OSF10020352//		IBM850//
 module	IBM850//		INTERNAL		IBM850		1
 module	INTERNAL		IBM850//		IBM850		1
@@ -702,7 +702,7 @@ module	INTERNAL		IBM861//		IBM861		1
 #	from			to			module		cost
 alias	CP862//			IBM862//
 alias	862//			IBM862//
-alias	CSPC8LATINHEBREW//	IBM862//
+alias	CSPC862LATINHEBREW//	IBM862//
 alias	OSF1002035E//		IBM862//
 module	IBM862//		INTERNAL		IBM862		1
 module	INTERNAL		IBM862//		IBM862		1
@@ -881,6 +881,8 @@ module	INTERNAL		EUC-JP//		EUC-JP		1
 
 #	from			to			module		cost
 alias	EUCCN//			EUC-CN//
+alias	GB2312//		EUC-CN//
+alias	csGB2312//		EUC-CN//
 module	EUC-CN//		INTERNAL		EUC-CN		1
 module	INTERNAL		EUC-CN//		EUC-CN		1
 

@@ -24,6 +24,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include "kernel-features.h"
 
 #if __ASSUME_STAT64_SYSCALL == 0
 # include <xstatconv.c>
