@@ -26,9 +26,8 @@
 /* Safest assumption, if somehow the initializer isn't run.  */
 int __libc_enable_secure = 1;
 
-static void
-__attribute__ ((unused, constructor))
-init_secure (void)
+void
+__libc_init_secure (void)
 {
   __libc_enable_secure = (__geteuid () != __getuid () ||
 			  __getegid () != __getgid ());

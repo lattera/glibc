@@ -84,6 +84,7 @@ do_open (void *a)
 
 
 static int
+internal_function
 dlerror_run (void (*operate) (void *), void *args)
 {
   char *last_errstring = NULL;
@@ -156,7 +157,7 @@ __gconv_find_shlib (const char *name)
      enough to a pointer to our structure to use as a lookup key that
      will be passed to `known_compare' (above).  */
 
-  found = __tfind (&name, loaded, known_compare);
+  found = __tfind (&name, &loaded, known_compare);
   if (found == NULL)
     {
       /* This name was not known before.  */
@@ -208,7 +209,7 @@ static void *release_handle;
 static void
 do_release_shlib (const void *nodep, VISIT value, int level)
 {
-  struct loaded_object *obj = (struct loaded_object *) nodep;
+  struct loaded_object *obj = *(struct loaded_object **) nodep;
 
   if (value != preorder && value != leaf)
     return;

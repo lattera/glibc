@@ -19,8 +19,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <iconv.h>
 #include <gconv.h>
+
+#include <assert.h>
 
 
 size_t
@@ -29,10 +32,39 @@ iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
 {
   gconv_t gcd = (gconv_t) cd;
   size_t converted;
+  int result;
 
-  if (__gconv (gcd, inbuf, inbytesleft, outbuf, outbytesleft, &converted)
-      != GCONV_OK)
-    return (size_t) -1;
+  result = __gconv (gcd, inbuf, inbytesleft, outbuf, outbytesleft, &converted);
+  switch (result)
+    {
+    case GCONV_ILLEGAL_DESCRIPTOR:
+      __set_errno (EBADF);
+      converted = (size_t) -1L;
+      break;
+
+    case GCONV_ILLEGAL_INPUT:
+      __set_errno (EILSEQ);
+      converted = (size_t) -1L;
+      break;
+
+    case GCONV_FULL_OUTPUT:
+      __set_errno (E2BIG);
+      converted = (size_t) -1L;
+      break;
+
+    case GCONV_INCOMPLETE_INPUT:
+      __set_errno (EINVAL);
+      converted = (size_t) -1L;
+      break;
+
+    case GCONV_EMPTY_INPUT:
+    case GCONV_OK:
+      /* Nothing.  */
+      break;
+
+    default:
+      assert (!"Nothing like this should happen");
+    }
 
   return converted;
 }

@@ -30,6 +30,9 @@ __gconv (gconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
   size_t oldinbytes = *inbytesleft;
   int result;
 
+  if (cd == (gconv_t) -1L)
+    return GCONV_ILLEGAL_DESCRIPTOR;
+
   cd->data[last_step].outbuf = *outbuf;
   cd->data[last_step].outbufavail = 0;
   cd->data[last_step].outbufsize = *outbytesleft;

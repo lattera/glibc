@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <iconv.h>
 
 #include <gconv.h>
@@ -26,5 +27,11 @@
 int
 iconv_close (iconv_t cd)
 {
+  if (cd == (iconv_t *) -1L)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+
   return __gconv_close ((gconv_t) cd) ? -1 : 0;
 }

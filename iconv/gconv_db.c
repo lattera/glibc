@@ -99,7 +99,7 @@ derivation_lookup (const char *fromset, const char *toset,
   struct known_derivation key = { fromset, toset, NULL, 0 };
   struct known_derivation *result;
 
-  result = __tfind (&key, known_derivations, derivation_compare);
+  result = __tfind (&key, &known_derivations, derivation_compare);
 
   if (result == NULL)
     return GCONV_NOCONV;
@@ -169,11 +169,18 @@ gen_steps (struct derivation_step *best, const char *toset,
 					 * step_cnt);
   if (result != NULL)
     {
+      int failed = 0;
+
+      *nsteps = step_cnt;
       current = best;
       while (step_cnt-- > 0)
 	{
-	  result[step_cnt].from_name = current->last->result_set;
-	  result[step_cnt].to_name = current->result_set;
+	  result[step_cnt].from_name = (step_cnt == 0
+					? __strdup (fromset)
+					: current->last->result_set);
+	  result[step_cnt].to_name = (step_cnt + 1 == *nsteps
+				      ? __strdup (current->result_set)
+				      : result[step_cnt + 1].from_name);
 
 	  if (current->code->module_name[0] == '/')
 	    {
@@ -182,7 +189,10 @@ gen_steps (struct derivation_step *best, const char *toset,
 		__gconv_find_shlib (current->code->module_name);
 
 	      if (shlib_handle == NULL)
-		break;
+		{
+		  failed = 1;
+		  break;
+		}
 
 	      result[step_cnt].shlib_handle = shlib_handle;
 
@@ -192,6 +202,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 		  /* Argh, no conversion function.  There is something
 		     wrong here.  */
 		  __gconv_release_shlib (result[step_cnt].shlib_handle);
+		  failed = 1;
 		  break;
 		}
 
@@ -208,18 +219,18 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  current = current->last;
 	}
 
-      if (step_cnt != 0)
+      if (failed != 0)
 	{
 	  /* Something went wrong while initializing the modules.  */
-	  while (step_cnt-- > 0)
+	  while (++step_cnt < *nsteps)
 	    __gconv_release_shlib (result[step_cnt].shlib_handle);
 	  free (result);
+	  *nsteps = 0;
 	  status = GCONV_NOCONV;
 	}
       else
 	{
 	  *handle = result;
-	  *nsteps = step_cnt;
 	  status = GCONV_OK;
 	}
     }
@@ -231,12 +242,13 @@ gen_steps (struct derivation_step *best, const char *toset,
 /* The main function: find a possible derivation from the `fromset' (either
    the given name or the alias) to the `toset' (again with alias).  */
 static int
+internal_function
 find_derivation (const char *toset, const char *toset_expand,
 		 const char *fromset, const char *fromset_expand,
 		 struct gconv_step **handle, size_t *nsteps)
 {
   __libc_lock_define_initialized (static, lock)
-  struct derivation_step *current, **lastp, *best = NULL;
+  struct derivation_step *first, *current, **lastp, *best = NULL;
   int best_cost = 0;
   int result;
 
@@ -260,16 +272,17 @@ find_derivation (const char *toset, const char *toset_expand,
      The task is to match the `toset' with any of the available.  */
   if (fromset_expand != NULL)
     {
-      current = NEW_STEP (fromset_expand, NULL, NULL);
-      current->next = NEW_STEP (fromset, NULL, NULL);
-      lastp = &current->next->next;
+      first = NEW_STEP (fromset_expand, NULL, NULL);
+      first->next = NEW_STEP (fromset, NULL, NULL);
+      lastp = &first->next->next;
     }
   else
     {
-      current = NEW_STEP (fromset, NULL, NULL);
-      lastp = &current->next;
+      first = NEW_STEP (fromset, NULL, NULL);
+      lastp = &first->next;
     }
 
+  current = first;
   while (current != NULL)
     {
       /* Now match all the available module specifications against the
@@ -419,13 +432,28 @@ find_derivation (const char *toset, const char *toset_expand,
 		}
 	      else
 		{
-		  /* Append at the end.  */
-		  *lastp = NEW_STEP (result_set, __gconv_modules_db[cnt],
-				     current);
-		  lastp = &(*lastp)->next;
+		  /* Append at the end if there is no entry with this name.  */
+		  struct derivation_step *runp = first;
+
+		  while (runp != NULL)
+		    {
+		      if (__strcasecmp (result_set, runp->result_set) == 0)
+			break;
+		      runp = runp->next;
+		    }
+
+		  if (runp == NULL)
+		    {
+		      *lastp = NEW_STEP (result_set, __gconv_modules_db[cnt],
+					 current);
+		      lastp = &(*lastp)->next;
+		    }
                 }
 	    }
 	}
+
+      /* Go on with the next entry.  */
+      current = current->next;
     }
 
   if (best != NULL)
@@ -470,15 +498,15 @@ __gconv_find_transform (const char *toset, const char *fromset,
   if (__gconv_alias_db != NULL)
     {
       struct gconv_alias key;
-      struct gconv_alias *found;
+      struct gconv_alias **found;
 
       key.fromname = fromset;
-      found = __tfind (&key, __gconv_alias_db, __gconv_alias_compare);
-      fromset_expand = found != NULL ? found->toname : NULL;
+      found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
+      fromset_expand = found != NULL ? (*found)->toname : NULL;
 
       key.fromname = toset;
-      found = __tfind (&key, __gconv_alias_db, __gconv_alias_compare);
-      toset_expand = found != NULL ? found->toname : NULL;
+      found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
+      toset_expand = found != NULL ? (*found)->toname : NULL;
     }
 
   result = find_derivation (toset, toset_expand, fromset, fromset_expand,

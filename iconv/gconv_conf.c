@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <gconv.h>
 #include <search.h>
 #include <stdio.h>
@@ -34,6 +35,12 @@ static const char default_gconv_path[] = GCONV_PATH;
 /* Name of the file containing the module information in the directories
    along the path.  */
 static const char gconv_conf_filename[] = "gconv-modules";
+
+/* Filename extension for the modules.  */
+#ifndef MODULE_EXT
+# define MODULE_EXT ".so"
+#endif
+static const char gconv_module_ext[] = MODULE_EXT;
 
 /* We have a few builtin transformations.  */
 static struct gconv_module builtin_modules[] =
@@ -111,15 +118,18 @@ add_alias (char *rp)
 
   new_alias = (struct gconv_alias *)
     malloc (sizeof (struct gconv_alias) + (wp - from));
-  new_alias->fromname = memcpy ((char *) new_alias
-				+ sizeof (struct gconv_alias),
-				from, to - from);
-  new_alias->toname = memcpy ((char *) new_alias + sizeof (struct gconv_alias)
-			      + (to - from), to, wp - to);
+  if (new_alias != NULL)
+    {
+      new_alias->fromname = memcpy ((char *) new_alias
+				    + sizeof (struct gconv_alias),
+				    from, wp - from);
+      new_alias->toname = new_alias->fromname + (to - from);
 
-  if (__tsearch (new_alias, &__gconv_alias_db, __gconv_alias_compare) == NULL)
-    /* Something went wrong, free this entry.  */
-    free (new_alias);
+      if (__tsearch (new_alias, &__gconv_alias_db, __gconv_alias_compare)
+	  == NULL)
+	/* Something went wrong, free this entry.  */
+	free (new_alias);
+    }
 }
 
 
@@ -138,6 +148,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
   char *from, *to, *module, *wp;
   size_t const_len;
   int from_is_regex;
+  int need_ext;
   int cost;
 
   while (isspace (*rp))
@@ -195,65 +206,68 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
     /* Increment by one for the slash.  */
     ++dir_len;
 
+  /* See whether we must add the ending.  */
+  need_ext = 0;
+  if (wp - module < sizeof (gconv_module_ext)
+      || memcmp (wp - sizeof (gconv_module_ext), gconv_module_ext,
+		 sizeof (gconv_module_ext)) != 0)
+    /* We must add the module extension.  */
+    need_ext = sizeof (gconv_module_ext) - 1;
+
   /* We've collected all the information, now create an entry.  */
 
-  const_len = 0;
   if (from_is_regex)
-    do
-      ++const_len;
-    while (isalnum (from[const_len]) || from[const_len] == '-'
-	   || from[const_len] == '/' || from[const_len] == '.'
-	   || from[const_len] == '_');
+    {
+      const_len = 0;
+      while (isalnum (from[const_len]) || from[const_len] == '-'
+	     || from[const_len] == '/' || from[const_len] == '.'
+	     || from[const_len] == '_')
+	++const_len;
+    }
+  else
+    const_len = to - from - 1;
 
   new_module = (struct gconv_module *) malloc (sizeof (struct gconv_module)
-					       + (wp - from) + const_len
-					       + dir_len);
+					       + (wp - from)
+					       + dir_len + need_ext);
   if (new_module != NULL)
     {
+      char *tmp;
+
+      new_module->from_constpfx = memcpy ((char *) new_module
+					  + sizeof (struct gconv_module),
+					  from, to - from);
       if (from_is_regex)
-	{
-	  new_module->from_pattern = memcpy ((char *) new_module
-					     + sizeof (struct gconv_module),
-					     from, to - from);
-	  new_module->from_constpfx = memcpy ((char *) new_module->from_pattern
-					      + (to - from),
-					      from, const_len);
-	  ((char *) new_module->from_constpfx)[const_len] = '\0';
-	  new_module->from_constpfx_len = const_len;
-	  ++const_len;
-	}
+	new_module->from_pattern = new_module->from_constpfx;
       else
-	{
-	  new_module->from_pattern = NULL;
-	  new_module->from_constpfx = memcpy ((char *) new_module
-					      + sizeof (struct gconv_module),
-					      from, to - from);
-	  new_module->from_constpfx_len = to - from - 1;
-	  const_len = to - from;
-	}
+	new_module->from_pattern = NULL;
+
+      new_module->from_constpfx_len = const_len;
+
       new_module->from_regex = NULL;
 
       new_module->to_string = memcpy ((char *) new_module->from_constpfx
-				      + const_len + 1, to, module - to);
+				      + (to - from), to, module - to);
 
       new_module->cost = cost;
 
+      new_module->module_name = (char *) new_module->to_string + (module - to);
+
       if (dir_len == 0)
-	new_module->module_name = memcpy ((char *) new_module->to_string
-					  + (module - to),
-					  module, wp - module);
+	tmp = (char *) new_module->module_name;
       else
 	{
-	  char *tmp;
-	  new_module->module_name = ((char *) new_module->to_string
-				     + (module - to));
 	  tmp = __mempcpy ((char *) new_module->module_name,
 			   directory, dir_len - 1);
 	  *tmp++ = '/';
-	  memcpy (tmp, module, wp - module);
 	}
 
-      if (__tfind (new_module, *modules, module_compare) != NULL)
+      tmp = __mempcpy (tmp, module, wp - module);
+
+      if (need_ext)
+	memcpy (tmp - 1, gconv_module_ext, sizeof (gconv_module_ext));
+
+      if (__tfind (new_module, modules, module_compare) == NULL)
 	if (__tsearch (new_module, modules, module_compare) == NULL)
 	  /* Something went wrong while inserting the new module.  */
 	  free (new_module);
@@ -267,7 +281,7 @@ static void
 insert_module (const void *nodep, VISIT value, int level)
 {
   if (value == preorder || value == leaf)
-    __gconv_modules_db[__gconv_nmodules++] = (struct gconv_module *) nodep;
+    __gconv_modules_db[__gconv_nmodules++] = *(struct gconv_module **) nodep;
 }
 
 static void
@@ -302,8 +316,6 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	break;
 
       rp = line;
-      while (isspace (*rp))
-	++rp;
       /* Terminate the line (excluding comments or newline) by an NUL byte
 	 to simplify the following code.  */
       endp = strchr (rp, '#');
@@ -316,6 +328,9 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	    *endp = '\0';
 	}
 
+      while (isspace (*rp))
+	++rp;
+
       /* If this is an empty line go on with the next one.  */
       if (rp == endp)
 	continue;
@@ -325,10 +340,10 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	++rp;
 
       if (rp - word == sizeof ("alias") - 1
-	  && memcpy (word, "alias", sizeof ("alias") - 1) == 0)
+	  && memcmp (word, "alias", sizeof ("alias") - 1) == 0)
 	add_alias (rp);
       else if (rp - word == sizeof ("module") - 1
-	       && memcpy (word, "module", sizeof ("module") - 1) == 0)
+	       && memcmp (word, "module", sizeof ("module") - 1) == 0)
 	add_module (rp, directory, dir_len, modules, nmodules);
       /* else */
 	/* Otherwise ignore the line.  */
@@ -349,6 +364,7 @@ __gconv_read_conf (void)
   char *gconv_path, *elem;
   void *modules = NULL;
   size_t nmodules = 0;
+  int save_errno = errno;
 
   if (user_path == NULL)
     /* No user-defined path.  Make a modifiable copy of the default path.  */
@@ -390,31 +406,31 @@ __gconv_read_conf (void)
 
   /* If the configuration files do not contain any valid module specification
      remember this by setting the pointer to the module array to NULL.  */
-  nmodules = sizeof (builtin_modules) / sizeof (struct gconv_module);
+  nmodules += sizeof (builtin_modules) / sizeof (builtin_modules[0]);
   if (nmodules == 0)
+    __gconv_modules_db = NULL;
+  else
     {
-      __gconv_modules_db = NULL;
-      return;
+      __gconv_modules_db =
+	(struct gconv_module **) malloc (nmodules
+					 * sizeof (struct gconv_module));
+      if (__gconv_modules_db != NULL)
+	{
+	  size_t cnt;
+
+	  /* Insert all module entries into the array.  */
+	  __twalk (modules, insert_module);
+
+	  /* No remove the tree data structure.  */
+	  __tdestroy (modules, nothing);
+
+	  /* Finally insert the builtin transformations.  */
+	  for (cnt = 0; cnt < (sizeof (builtin_modules)
+			       / sizeof (struct gconv_module)); ++cnt)
+	    __gconv_modules_db[__gconv_nmodules++] = &builtin_modules[cnt];
+	}
     }
 
-  __gconv_modules_db =
-    (struct gconv_module **) malloc (nmodules * sizeof (struct gconv_module));
-  if (__gconv_modules_db == NULL)
-    /* We cannot do anything.  */
-    return;
-
-  /* First insert the builtin transformations.  */
-  while (__gconv_nmodules < (sizeof (builtin_modules)
-			     / sizeof (struct gconv_module)))
-    {
-      __gconv_modules_db[__gconv_nmodules] =
-	&builtin_modules[__gconv_nmodules];
-      ++__gconv_nmodules;
-    }
-
-  /* Insert all module entries into the array.  */
-  __twalk (modules, insert_module);
-
-  /* No remove the tree data structure.  */
-  __tdestroy (modules, nothing);
+  /* Restore the error number.  */
+  __set_errno (save_errno);
 }

@@ -48,9 +48,8 @@ __gconv_close (gconv_t cd)
 
       /* Next step.  */
       ++srunp;
-      ++drunp;
     }
-  while (!drunp->is_last);
+  while (!(drunp++)->is_last);
 
   /* Save the pointer, we need it below.  */
   srunp = cd->steps;

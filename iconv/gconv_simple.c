@@ -117,7 +117,7 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
       do
 	{
 	  const char *newinbuf = inbuf;
-	  size_t actually = __wcsnrtombs (&data->outbuf[data->outbufavail],
+	  size_t actually = __wmemrtombs (&data->outbuf[data->outbufavail],
 					  (const wchar_t **) &newinbuf,
 					  *inlen / sizeof (wchar_t),
 					  data->outbufsize - data->outbufavail,
@@ -206,7 +206,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
       do
 	{
 	  const char *newinbuf = inbuf;
-	  size_t actually = __mbsnrtowcs ((wchar_t *) &data->outbuf[data->outbufavail],
+	  size_t actually = __wmemrtowcs ((wchar_t *) &data->outbuf[data->outbufavail],
 					  &newinbuf, *inlen,
 					  ((data->outbufsize
 					    - data->outbufavail)

@@ -29,7 +29,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wmemcmp wmemcpy wmemmove wmemset wcpcpy wcpncpy \
 	    btowc wctob mbsinit \
 	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs \
-	    mbsnrtowcs wcsnrtombs \
+	    mbsnrtowcs wcsnrtombs wmemrtowcs wmemrtombs \
 	    wcstol wcstoul wcstoll wcstoull wcstod wcstold wcstof \
 	    wcstol_l wcstoul_l wcstoll_l wcstoull_l \
 	    wcstod_l wcstold_l wcstof_l \

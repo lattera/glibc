@@ -27,11 +27,9 @@
 
 
 static inline void
-strip (char *s)
+strip (char *wp, const char *s)
 {
   int slash_count = 0;
-  char *wp;
-  wp = s;
 
   while (*s != '\0')
     {
@@ -39,7 +37,7 @@ strip (char *s)
 	*wp++ = *s;
       else if (*s == '/')
 	{
-	  if (++slash_count == 2)
+	  if (++slash_count == 3)
 	    break;
 	  *wp++ = '/';
 	}
@@ -67,14 +65,15 @@ iconv_open (const char *tocode, const char *fromcode)
      '_', '-', '/', and '.'.  */
   tocode_len = strlen (tocode);
   tocode_conv = alloca (tocode_len + 3);
-  strip (memcpy (tocode_conv, tocode, tocode_len + 1));
+  strip (tocode_conv, tocode);
 
   fromcode_len = strlen (fromcode);
   fromcode_conv = alloca (fromcode_len + 3);
-  strip (memcpy (fromcode_conv, fromcode, fromcode_len + 1));
+  strip (fromcode_conv, fromcode);
 
   res = __gconv_open (tocode_conv[2] == '\0' ? tocode : tocode_conv,
-		      fromcode_conv[2] == '\0' ? fromcode, fromcode_conv, &cd);
+		      fromcode_conv[2] == '\0' ? fromcode : fromcode_conv,
+		      &cd);
 
   if (res != GCONV_OK)
     {

@@ -1,3 +1,28 @@
+1997-11-24 03:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-support.c: Call __libc_init_secure to make sure
+	__libc_enable_secure is defined early.
+	* sysdeps/generic/enbl-secure.c: Change function name to
+	__libc_init_secure and make it global instead of a constructor.
+
+	* iconv/gconv.c: Fix lots of bugs.
+	* iconv/gconv.h: Likewise.
+	* iconv/gconv_builtin.h: Likewise.
+	* iconv/gconv_close.c: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/iconv.c: Likewise.
+	* iconv/iconv_close.c: Likewise.
+	* iconv/iconv_open.c: Likewise.
+
+	* wcsmbs/Makefile (routines): Add wmemrtowcs and wmemrtombs.
+	* wcsmbs/wchar.h: Add prototypes for wmemrtowcs and wmemrtombs.
+	* wcsmbs/wmemrtombs.c: New file.
+	* wcsmbs/wmemrtowcs.c: New file.
+
 1997-11-22 19:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_simple.c: Fix lots of bugs.

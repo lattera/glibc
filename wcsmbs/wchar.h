@@ -253,6 +253,16 @@ extern size_t mbsnrtowcs __P ((wchar_t *__restrict __dst,
 			       __const char **__restrict __src, size_t __nmc,
 			       size_t __len, mbstate_t *__restrict __ps));
 
+/* Similar function to the above but this does not stop at NUL bytes.  */
+extern size_t __wmemrtowcs __P ((wchar_t *__restrict __dst,
+				 __const char **__restrict __src,
+				 size_t __nmc, size_t __len,
+				 mbstate_t *__restrict __ps));
+extern size_t wmemrtowcs __P ((wchar_t *__restrict __dst,
+			       __const char **__restrict __src,
+			       size_t __nmc, size_t __len,
+			       mbstate_t *__restrict __ps));
+
 /* Write multibyte character representation of at most NWC characters
    from the wide character string SRC to DST.  */
 extern size_t __wcsnrtombs __P ((char *__restrict __dst,
@@ -262,6 +272,16 @@ extern size_t __wcsnrtombs __P ((char *__restrict __dst,
 extern size_t wcsnrtombs __P ((char *__restrict __dst,
 			       __const wchar_t **__restrict __src,
 			       size_t __nwc, size_t __len,
+			       mbstate_t *__restrict __ps));
+
+/* Similar function to the above but this does not stop at NUL bytes.  */
+extern size_t __wmemrtombs __P ((char *__restrict __dst,
+				 __const wchar_t **__restrict __src,
+				 size_t __nwc, size_t len,
+				 mbstate_t *__restrict __ps));
+extern size_t wmemrtombs __P ((char *__restrict __dst,
+			       __const wchar_t **__restrict __src,
+			       size_t __nwc, size_t len,
 			       mbstate_t *__restrict __ps));
 
 

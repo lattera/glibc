@@ -69,19 +69,19 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 		      if (res != GCONV_OK)
 			break;
 		    }
-		  else
-		    if (!data[cnt].is_last)
-		      {
-			data[cnt].outbufsize = GCONV_DEFAULT_BUFSIZE;
-			data[cnt].outbuf =
-			  (char *) malloc (data[cnt].outbufsize);
-			if (data[cnt].outbuf == NULL)
-			  {
-			    res = GCONV_NOMEM;
-			    break;
-			  }
-			data[cnt].outbufavail = 0;
-		      }
+
+		  if (!data[cnt].is_last && data[cnt].outbuf == NULL)
+		    {
+		      data[cnt].outbufsize = GCONV_DEFAULT_BUFSIZE;
+		      data[cnt].outbuf =
+			(char *) malloc (data[cnt].outbufsize);
+		      if (data[cnt].outbuf == NULL)
+			{
+			  res = GCONV_NOMEM;
+			  break;
+			}
+		      data[cnt].outbufavail = 0;
+		    }
 		}
 	    }
 	}
