@@ -49,6 +49,7 @@ __sigaction (sig, act, oact)
   struct old_kernel_sigaction k_sigact, k_osigact;
   int result;
 
+#ifdef __NR_rt_sigaction
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -60,15 +61,15 @@ __sigaction (sig, act, oact)
 	  kact.k_sa_handler = act->sa_handler;
 	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
 	  kact.sa_flags = act->sa_flags;
-#ifdef HAVE_SA_RESTORER
+# ifdef HAVE_SA_RESTORER
 	  kact.sa_restorer = act->sa_restorer;
-#endif
+# endif
 	}
 
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : 0,
-			       oact ? &koact : 0, _NSIG / 8);
+      result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : NULL,
+			       oact ? &koact : NULL, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	{
@@ -77,9 +78,9 @@ __sigaction (sig, act, oact)
 	      oact->sa_handler = koact.k_sa_handler;
 	      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
 	      oact->sa_flags = koact.sa_flags;
-#ifdef HAVE_SA_RESTORER
+# ifdef HAVE_SA_RESTORER
 	      oact->sa_restorer = koact.sa_restorer;
-#endif
+# endif
 	    }
 	  return result;
 	}
@@ -87,6 +88,7 @@ __sigaction (sig, act, oact)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
+#endif
 
   if (act)
     {
@@ -97,8 +99,8 @@ __sigaction (sig, act, oact)
       k_sigact.sa_restorer = act->sa_restorer;
 #endif
     }
-  result = INLINE_SYSCALL (sigaction, 3, sig, act ? &k_sigact : 0,
-			   oact ? &k_osigact : 0);
+  result = INLINE_SYSCALL (sigaction, 3, sig, act ? &k_sigact : NULL,
+			   oact ? &k_osigact : NULL);
   if (oact && result >= 0)
     {
       oact->sa_handler = k_osigact.k_sa_handler;

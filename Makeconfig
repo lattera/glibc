@@ -747,6 +747,7 @@ define \n
 
 endef
 sysdep-subdirs := $(subst $(\n), ,$(sysdep-subdirs))
+sysdep-inhibit-subdirs := $(subst $(\n), ,$(sysdep-inhibit-subdirs))
 endif
 
 # These are the subdirectories containing the library source.
@@ -756,6 +757,7 @@ all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
 	      gnulib iconv iconvdata wctype manual shadow md5-crypt po argp \
 	      $(add-ons) nss localedata timezone rt debug $(sysdep-subdirs) \
 	      $(binfmt-subdir)
+all-subdirs := $(filter-out $(sysdep-inhibit-subdirs),$(all-subdirs))
 subdirs = $(all-subdirs)
 
 # The mach and hurd subdirectories have many generated header files which
@@ -769,10 +771,13 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 
 all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
 $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
-	(echo define sysdep-subdirs;				\
-	 sed 's/#.*$$//' $(all-Subdirs-files) /dev/null;	\
-	 echo endef;						\
-	 echo 'sysd-dirs-done = t';				\
+	(echo define sysdep-subdirs;					\
+	 sed 's/[#-].*$$//' $(all-Subdirs-files) /dev/null;		\
+	 echo endef;							\
+	 echo define sysdep-inhibit-subdirs;				\
+	 sed '/-.*$$/!d;s/^-//' $(all-Subdirs-files) /dev/null;	\
+	 echo endef;							\
+	 echo 'sysd-dirs-done = t';					\
 	) > $@-tmp
 	mv -f $@-tmp $@
 
