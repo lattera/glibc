@@ -1,5 +1,9 @@
 2000-10-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/Makefile (tests): Add test-stat2.
+	(test-stat2-ARS): New variable.
+	* io/test-stat2.c: New file.
+
 	* Makeconfig (ETAGS): Remove -T flag.
 
 	* elf/dl-load.c (open_verify): Only try to load ET_DYN and ET_EXEC
