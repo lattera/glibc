@@ -1,4 +1,5 @@
-# Copyright (C) 1994,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+# Copyright (C) 1994,1995,1996,1997,1998,1999,2000,2001,2003
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +32,7 @@ distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 	    res_hconf res_libc res-state
 
-tests = tst-aton
+tests = tst-aton tst-leaks
 
 include ../Makeconfig
 
@@ -87,3 +88,11 @@ $(objpfx)libanl.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
 		    $(shared-thread-library)
 
 $(objpfx)ga_test: $(objpfx)libanl.so $(shared-thread-library)
+
+$(objpfx)tst-leaks: $(objpfx)libresolv.so
+tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
+$(objpfx)mtrace-tst-leaks: $(objpfx)tst-leaks.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@
+ifneq (no,$(PERL))
+tests: $(objpfx)mtrace-tst-leaks
+endif
