@@ -84,7 +84,7 @@ L(different):
 	sub   %r3,%r5,%r6
 	bgelr+
 L(highbit):
-	mr    %r3,%r6
+	ori   %r3,%r6,1
 	blr
 
 
