@@ -2423,10 +2423,6 @@
 	* assert/assert.h (assert_perror): Correct test for errnum.  Patch
 	by uch@nop.or.jp. [PR libc/437]
 
-1997-12-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
-
-	* locales/pl_PL: Fix int_curr_symbol.
-
 1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nis/nis_cache.c: Include <unistd.h> for declaration of close.

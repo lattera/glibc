@@ -13,6 +13,10 @@
 	* locales/ru_RU: Correct inconsistencies in mon data.
 	Patch by Alexander V. Lukyanov <lav@alpha.netis.ru>.
 
+1997-12-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locales/pl_PL: Fix int_curr_symbol.
+
 1997-10-09 04:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/is_IS: Update from Debian version.
