@@ -333,6 +333,20 @@
 									      \
     (int) resultvar; })
 
+/* The _NCS variant allows non-constant syscall numbers.  */
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+  ({									      \
+    unsigned long int resultvar;					      \
+    register long int r3 asm ("%r3") = (name);			 	      \
+    SUBSTITUTE_ARGS_##nr(args);						      \
+									      \
+    asm volatile (SYSCALL_INST_STR##nr SYSCALL_INST_PAD			      \
+		  : "=z" (resultvar)					      \
+		  : "r" (r3) ASMFMT_##nr				      \
+		  : "memory");						      \
+									      \
+    (int) resultvar; })
+
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 

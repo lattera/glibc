@@ -227,11 +227,6 @@ start_thread (void *arg)
 
   struct pthread *pd = (struct pthread *) arg;
 
-  /* Get the lock the parent locked to force synchronization.  */
-  lll_lock (pd->lock);
-  /* And give it up right away.  */
-  lll_unlock (pd->lock);
-
 #if HP_TIMING_AVAIL
   /* Remember the time when the thread was started.  */
   hp_timing_t now;
@@ -256,6 +251,15 @@ start_thread (void *arg)
     {
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
+
+      int oldtype = CANCEL_ASYNC ();
+
+      /* Get the lock the parent locked to force synchronization.  */
+      lll_lock (pd->lock);
+      /* And give it up right away.  */
+      lll_unlock (pd->lock);
+
+      CANCEL_RESET (oldtype);
 
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT
