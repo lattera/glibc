@@ -64,3 +64,6 @@ librt {
 libutil {
   GLIBC_2.0
 }
+libdb1 {
+  GLIBC_2.0
+}

@@ -1,3 +1,28 @@
+1998-09-23 13:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (all-subdirs): Add db.
+	* Versions.def: Add definition for libdb1.
+	* shlib-versions: Add definitions for libdb1.
+	* db/Makefile (extra-libs): Replace by libdb1.
+	(libdb-routines): Rename to libdb1-routines.
+	(headers): Rename to db1-headers.
+	(distribute): Add $(db1-headers).
+	(install-others): Define to install symlink libdb.so.NN and the
+	$(db1-headers).
+	(CPPFLAGS): Add -USE_LIBDB1
+	Remove rules to build makedb.
+	* db/Versions: Rename libdb to libdb1.
+	* include/db.h: If USE_LIBDB1 is defined include db/db.h.
+
+	* scripts/versions.awk: Recognize digits in library names.
+
+	* db/btree/bt_open.c: Fix compiler warnings.
+	* db/btree/bt_put.c: Likewise.
+	* db/btree/bt_split.c: Likewise.
+	* db/hash/hash.c: Likewise.
+	* db/hash/hash_bigkey.c: Likewise.
+	* db/recno/rec_close.c: Likewise.
+
 1998-09-22 19:58 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* posix/execvp.c: Don't give up searching the PATH if execve

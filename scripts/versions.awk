@@ -12,7 +12,7 @@
 BEGIN {
   nlibs=0;
   while (getline < defsfile) {
-    if (/^[a-zA-Z_]+ {/) {
+    if (/^[a-zA-Z0-9_]+ {/) {
       libs[$1] = 1;
       curlib = $1;
       while (getline < defsfile && ! /^}/) {
@@ -38,7 +38,7 @@ BEGIN {
 }
 
 # This matches the beginning of the version information for a new library.
-/^[a-zA-Z_]+/ {
+/^[a-zA-Z0-9_]+/ {
   actlib = $1;
   if (!libs[$1]) {
     printf("no versions defined for %s\n", $1) > "/dev/stderr";

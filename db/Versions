@@ -1,4 +1,4 @@
-libdb {
+libdb1 {
   GLIBC_2.0 {
     # the real DB entry point.
     dbopen; __dbopen;

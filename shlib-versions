@@ -73,6 +73,10 @@ alpha.*-.*-linux.*	libnsl=1.1
 
 # We use libdb.so.3 for the interface in version 2.x of the Berkeley DB code.
 .*-.*-.*		libdb=3
+# This is the Berkeley DB 1.85.  We use the version numbers from glibc 2.0.*
+# for all times.
+alpha-.*-linux.*        libdb1=2.1
+.*-.*-.*                libdb1=2
 
 # This defines the shared library version numbers we will install.
 alpha.*-.*-linux.*	libcrypt=1.1
