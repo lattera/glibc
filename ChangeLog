@@ -1,3 +1,8 @@
+1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/tst-efgcvt.c (output_r_error): Remove extra parameter to
+	printf call.
+
 1999-11-10  Andreas Jaeger  <aj@suse.de>
 
 	* misc/tst-efgcvt.c: Also test ecvt_r and fcvt_r.

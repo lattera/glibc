@@ -109,7 +109,7 @@ output_r_error (const char *name, double value, int ndigit,
   printf ("Result was buf: \"%s\", decpt: %d, sign: %d return value: %d\n",
 	  res_p, res_decpt, res_sign, res_return);
   printf ("Should be  buf: \"%s\", decpt: %d, sign: %d\n",
-	  exp_p, exp_decpt, exp_sign, exp_return);
+	  exp_p, exp_decpt, exp_sign);
   ++error_count;
 }
 
@@ -140,7 +140,7 @@ test_r (testcase tests[], efcvt_r_func efcvt_r, const char *name)
   int no = 0;
   int decpt, sign, res;
   char buf [1024];
-  
+
 
   while (tests[no].value != -1.0)
     {
@@ -164,7 +164,7 @@ special (void)
   int decpt, sign, res;
   char *p;
   char buf [1024];
-  
+
   p = ecvt (NAN, 10, &decpt, &sign);
   if (sign != 0 || strcmp (p, "nan") != 0)
     output_error ("ecvt", NAN, 10, "nan", 0, 0, p, decpt, sign);
