@@ -3,6 +3,8 @@
 	* aclocal.m4 (LIBC_PROG_FOO_GNU): Name output file using -o to
 	avoid ld test generating an unwanted file.
 
+	* posix/PTESTS: Remove comment about incorrect test (it is correct).
+
 1998-10-30  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
  
 	* sunrpc/Versions: Add xdr_uint32_t and xdr_int32_t. 
