@@ -1,3 +1,9 @@
+2004-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c [!COMPILE_WSCANF] (TOLOWER): Cast first
+	parameter to unsigned char.
+	* sysdeps/generic/strcasestr.c [_LIBC] (TOLOWER): Likewise.
+
 2004-03-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/strtod_l.c (INTERNAL (__STRTOF)): Clear the rest of retval,

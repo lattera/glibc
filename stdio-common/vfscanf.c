@@ -119,7 +119,7 @@
 # define ISSPACE(Ch)	  __isspace_l (Ch, loc)
 # define ISDIGIT(Ch)	  __isdigit_l (Ch, loc)
 # define ISXDIGIT(Ch)	  __isxdigit_l (Ch, loc)
-# define TOLOWER(Ch)	  __tolower_l (Ch, loc)
+# define TOLOWER(Ch)	  __tolower_l ((unsigned char) (Ch), loc)
 # define ORIENT	  if (_IO_vtable_offset (s) == 0			      \
 			      && _IO_fwide (s, -1) != -1)		      \
 			    return EOF

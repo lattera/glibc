@@ -38,7 +38,7 @@
 
 #ifdef _LIBC
 # include <locale/localeinfo.h>
-# define TOLOWER(c) __tolower_l (c, loc)
+# define TOLOWER(c) __tolower_l ((unsigned char) c, loc)
 #else
 # define TOLOWER(c) _tolower (c)
 #endif

@@ -101,7 +101,7 @@
 #define lll_mutex_trylock(lock)	__lll_trylock (&(lock))
 
 /* Set *futex to 2 if it is 0, atomically.  Returns the old value */
-#define lll_mutex_cond_trylock(futex) \
+#define __lll_cond_trylock(futex) \
   ({ int __val;								      \
      __asm __volatile ("1:	lwarx	%0,0,%2\n"			      \
 		       "	cmpwi	0,%0,0\n"			      \
@@ -114,6 +114,7 @@
 		       : "cr0", "memory");				      \
      __val;								      \
   })
+#define lll_mutex_cond_trylock(lock)	__lll_cond_trylock (&(lock))
 
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;
