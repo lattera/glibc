@@ -1,3 +1,9 @@
+2000-09-15  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/fpu/feenablxcpt.c: New file.
+	* sysdeps/mips/fpu/fegetexcept.c: New file.
+	* sysdeps/mips/fpu/fedisblxcpt.c: New file.
+
 2000-09-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/Makefile: Avoid unnecessary test reruns.
