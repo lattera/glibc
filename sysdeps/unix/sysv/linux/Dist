@@ -48,7 +48,6 @@ sa_len.c
 scsi/sg.h
 scsi/scsi.h
 sys/acct.h
-sys/debugreg.h
 sys/fsuid.h
 sys/io.h
 sys/kd.h

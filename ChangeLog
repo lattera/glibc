@@ -1,3 +1,11 @@
+1998-09-14 15:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/arm/fpu/Dist: Moved to...
+	* sysdeps/arm/Dist: ...here.
+	* sysdeps/posix/Dist: Removed.
+	* sysdeps/unix/sysv/linux/Dist: Move sys/debugreg.h to...
+	* sysdeps/unix/sysv/linux/i386/Dist: ...here.
+
 1998-08-26  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* csu/init.c: Don't drag _IO_2_1_stdin_ into the executable.

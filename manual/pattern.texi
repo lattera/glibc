@@ -936,7 +936,6 @@ char *get_regerror (int errcode, regex_t *compiled)
 @end smallexample
 @end deftypefun
 
-@c !!!! this is not actually in the library....
 @node Word Expansion
 @section Shell-Style Word Expansion
 @cindex word expansion

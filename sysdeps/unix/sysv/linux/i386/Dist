@@ -1,10 +1,11 @@
 bits/mman.h
 clone.S
-s_pwrite64.S
 s_pread64.S
-sys/perm.h
-sys/vm86.h
+s_pwrite64.S
+sys/debugreg.h
 sys/elf.h
+sys/perm.h
 sys/procfs.h
 sys/reg.h
 sys/user.h
+sys/vm86.h
