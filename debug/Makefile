@@ -65,7 +65,7 @@ $(objpfx)pcprofiledump: $(objpfx)pcprofiledump.o
 $(objpfx)xtrace: xtrace.sh
 	rm -f $@.new
 	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
-	    -e 's|@LIBDIR@|$(libdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
+	    -e 's|@SLIBDIR@|$(slibdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
