@@ -2040,7 +2040,7 @@ queue.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
+@deftypefun int accept (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length_ptr})
 This function is used to accept a connection request on the server
 socket @var{socket}.
 

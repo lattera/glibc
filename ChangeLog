@@ -1,3 +1,7 @@
+1998-06-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Don't export argp's fmtstream handling functions.
+
 1998-06-03 03:09  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/unix/sysv/linux/pread.c: Detect missing syscall, like poll().
