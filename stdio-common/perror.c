@@ -55,8 +55,10 @@ perror_internal (FILE *fp, const char *s)
 void
 perror (const char *s)
 {
+#ifdef USE_IN_LIBIO
   FILE *fp;
   int fd = -1;
+
 
   /* The standard says that 'perror' must not change the orientation
      of the stream.  What is supposed to happen when the stream isn't
@@ -84,4 +86,7 @@ perror (const char *s)
 
       ((_IO_FILE *) stderr)->_offset = _IO_pos_BAD;
     }
+#else
+  perror_internal (stderr, s);
+#endif
 }

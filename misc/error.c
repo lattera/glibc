@@ -127,7 +127,7 @@ static void
 error_tail (int status, int errnum, const char *message, va_list args)
 {
 # if HAVE_VPRINTF || _LIBC
-#  ifdef _LIBC
+#  if _LIBC && USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     {
 #   define ALLOCA_LIMIT	2000
@@ -181,7 +181,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
 #if defined HAVE_STRERROR_R || _LIBC
       char errbuf[1024];
       char *s = __strerror_r (errnum, errbuf, sizeof errbuf);
-# ifdef _LIBC
+# if _LIBC && USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L": %s", s);
       else
@@ -191,7 +191,7 @@ error_tail (int status, int errnum, const char *message, va_list args)
       fprintf (stderr, ": %s", strerror (errnum));
 #endif
     }
-#ifdef _LIBC
+#if _LIBC && USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     putwc (L'\n', stderr);
   else
@@ -236,7 +236,7 @@ error (status, errnum, message, va_alist)
     (*error_print_progname) ();
   else
     {
-#ifdef _LIBC
+#if _LIBC && USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L"%s: ", program_name);
       else
@@ -317,7 +317,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     (*error_print_progname) ();
   else
     {
-#ifdef _LIBC
+#if _LIBC && USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L"%s: ", program_name);
       else
@@ -327,7 +327,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
 
   if (file_name != NULL)
     {
-#ifdef _LIBC
+#if _LIBC && USE_IN_LIBIO
       if (_IO_fwide (stderr, 0) > 0)
 	__fwprintf (stderr, L"%s:%d: ", file_name, line_number);
       else
