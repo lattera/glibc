@@ -43,6 +43,7 @@
  *
  */
 
+#include <limits.h>
 #include <string.h>
 #include <sys/param.h>
 #include <netinet/in.h>
@@ -487,8 +488,9 @@ struct bsdcred
 {
   uid_t uid;			/* cached uid */
   gid_t gid;			/* cached gid */
-  short grouplen;		/* length of cached groups */
-  gid_t groups[NGROUPS];	/* cached groups */
+  int grouplen;			/* length of cached groups */
+  int grouplen_max;		/* length of allocated cached groups */
+  gid_t groups[0];		/* cached groups */
 };
 
 /*
@@ -515,13 +517,7 @@ authdes_getucred (const struct authdes_cred *adc, uid_t * uid, gid_t * gid,
       return 0;
     }
   cred = (struct bsdcred *) authdes_cache[sid].localcred;
-  if (cred == NULL)
-    {
-      cred = (struct bsdcred *) mem_alloc (sizeof (struct bsdcred));
-      authdes_cache[sid].localcred = (char *) cred;
-      cred->grouplen = INVALID;
-    }
-  if (cred->grouplen == INVALID)
+  if (cred == NULL || cred->grouplen == INVALID)
     {
       /*
        * not in cache: lookup
@@ -530,15 +526,43 @@ authdes_getucred (const struct authdes_cred *adc, uid_t * uid, gid_t * gid,
 			 &i_grouplen, groups))
 	{
 	  debug ("unknown netname");
-	  cred->grouplen = UNKNOWN;	/* mark as lookup up, but not found */
+	  if (cred != NULL)
+	    cred->grouplen = UNKNOWN;	/* mark as lookup up, but not found */
 	  return 0;
 	}
+
+      if (cred != NULL && cred->grouplen_max < i_grouplen)
+	{
+	  /* We already have an allocated data structure.  But it is
+	     too small.  */
+	  free (cred);
+	  authdes_cache[sid].localcred = NULL;
+	  cred = NULL;
+	}
+
+      if (cred == NULL)
+	{
+	  /* We should allocate room for at least NGROUPS groups.  */
+	  int ngroups_max = MAX (i_grouplen, NGROUPS);
+
+	  cred = (struct bsdcred *) mem_alloc (sizeof (struct bsdcred)
+					       + ngroups_max * sizeof (gid_t));
+	  if (cred == NULL)
+	    return 0;
+
+	  authdes_cache[sid].localcred = (char *) cred;
+	  cred->grouplen = INVALID;
+	  cred->grouplen_max = ngroups_max;
+	}
+
       debug ("missed ucred cache");
       *uid = cred->uid = i_uid;
       *gid = cred->gid = i_gid;
-      *grouplen = cred->grouplen = i_grouplen;
+      cred->grouplen = i_grouplen;
       for (i = i_grouplen - 1; i >= 0; --i)
-	cred->groups[i] = groups[i];	/* int to short */
+	cred->groups[i] = groups[i];
+      /* Make sure no too large values are reported.  */
+      *grouplen = MIN (SHRT_MAX, i_grouplen);
       return 1;
     }
   else if (cred->grouplen == UNKNOWN)
@@ -554,9 +578,13 @@ authdes_getucred (const struct authdes_cred *adc, uid_t * uid, gid_t * gid,
    */
   *uid = cred->uid;
   *gid = cred->gid;
-  *grouplen = cred->grouplen;
-  for (i = cred->grouplen - 1; i >= 0; --i)
-    groups[i] = cred->groups[i];	/* short to int */
+
+  /* Another stupidity in the interface: *grouplen is of type short.
+     So we might have to cut the information passed up short.  */
+  int grouplen_copy = MIN (SHRT_MAX, cred->grouplen);
+  *grouplen = grouplen_copy;
+  for (i = grouplen_copy - 1; i >= 0; --i)
+    groups[i] = cred->groups[i];
   return 1;
 }
 

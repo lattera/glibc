@@ -1,5 +1,11 @@
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/svcauth_des.c (authdes_getucred): Removed fixed limit on
+	number of groups in the cache.  Relax the disconnect between the
+	interface of authdes_getucred and netname2user a bit.
+	* sunrpc/auth_unix.c (authunix_create_default): Don't allocate
+	huge arrays on the stack.
+
 	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Use the official
 	not cancelable interfaces.
 

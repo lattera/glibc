@@ -38,7 +38,9 @@
  * for the credentials.
  */
 
+#include <errno.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -165,25 +167,61 @@ INTDEF (authunix_create)
 AUTH *
 authunix_create_default (void)
 {
-  int len;
   char machname[MAX_MACHINE_NAME + 1];
-  uid_t uid;
-  gid_t gid;
-  int max_nr_groups = __sysconf (_SC_NGROUPS_MAX);
-  gid_t gids[max_nr_groups];
 
   if (__gethostname (machname, MAX_MACHINE_NAME) == -1)
     abort ();
   machname[MAX_MACHINE_NAME] = 0;
-  uid = __geteuid ();
-  gid = __getegid ();
+  uid_t uid = __geteuid ();
+  gid_t gid = __getegid ();
 
-  if ((len = __getgroups (max_nr_groups, gids)) < 0)
-    abort ();
+  int max_nr_groups;
+  /* When we have to try a second time, do not use alloca() again.  We
+     might have reached the stack limit already.  */
+  bool retry = false;
+ again:
+  /* Ask the kernel how many groups there are exactly.  Note that we
+     might have to redo all this if the number of groups has changed
+     between the two calls.  */
+  max_nr_groups = __getgroups (0, NULL);
+
+  /* Just some random reasonable stack limit.  */
+#define ALLOCA_LIMIT (1024 / sizeof (gid_t))
+  gid_t *gids = NULL;
+  if (max_nr_groups < ALLOCA_LIMIT && ! retry)
+    gids = (gid_t *) alloca (max_nr_groups * sizeof (gid_t));
+  else
+    {
+      gids = (gid_t *) malloc (max_nr_groups * sizeof (gid_t));
+      if (gids == NULL)
+	return NULL;
+    }
+
+  int len = __getgroups (max_nr_groups, gids);
+  if (len == -1)
+    {
+      if (errno == EINVAL)
+	{
+	  /* New groups added in the meantime.  Try again.  */
+	  if (max_nr_groups >= ALLOCA_LIMIT || retry)
+	    free (gids);
+	  retry = true;
+	  goto again;
+	}
+      /* No other error can happen.  */
+      abort ();
+    }
+
   /* This braindamaged Sun code forces us here to truncate the
      list of groups to NGRPS members since the code in
      authuxprot.c transforms a fixed array.  Grrr.  */
-  return INTUSE(authunix_create) (machname, uid, gid, MIN (NGRPS, len), gids);
+  AUTH *result = INTUSE(authunix_create) (machname, uid, gid, MIN (NGRPS, len),
+					  gids);
+
+  if (max_nr_groups >= ALLOCA_LIMIT || retry)
+    free (gids);
+
+  return result;
 }
 INTDEF (authunix_create_default)
 
