@@ -121,8 +121,9 @@ _hurd_thread_sigstate (thread_t thread)
 #include "thread_state.h"
 #include <hurd/msg_server.h>
 #include <hurd/msg_reply.h>	/* For __msg_sig_post_reply.  */
-#include <assert.h>
 #include <hurd/interrupt.h>
+#include <assert.h>
+#include <unistd.h>
 
 int _hurd_core_limit;	/* XXX */
 
@@ -216,12 +217,9 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
   mach_port_t *portloc = (mach_port_t *) __hurd_threadvar_location_from_sp
     (_HURD_THREADVAR_MIG_REPLY, (void *) thread_state->basic.SP);
 
-  if (sigthread && _hurdsig_catch_fault (SIGSEGV))
-    {
-      assert (_hurdsig_fault_sigcode == (long int) portloc);
-      /* Faulted trying to read the stack.  */
-      return NULL;
-    }
+  if (sigthread && _hurdsig_catch_memory_fault (portloc))
+    /* Faulted trying to read the stack.  */
+    return NULL;
 
   /* Fault now if this pointer is bogus.  */
   *(volatile mach_port_t *) portloc = *portloc;
@@ -363,9 +361,9 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
   reply_ports = alloca (nthreads * sizeof *reply_ports);
 
   nthreads = 0;
-  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
+  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next, ++nthreads)
     if (ss->thread == _hurd_msgport_thread)
-      reply_ports[nthreads++] = MACH_PORT_NULL;
+      reply_ports[nthreads] = MACH_PORT_NULL;
     else
       {
 	int state_changed;
@@ -374,15 +372,26 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
 	/* Abort any operation in progress with interrupt_operation.
 	   Record the reply port the thread is waiting on.
 	   We will wait for all the replies below.  */
-	reply_ports[nthreads++] = _hurdsig_abort_rpcs (ss, signo, 1,
-						       state, &state_changed,
-						       NULL);
-	if (state_changed && live)
-	  /* Aborting the RPC needed to change this thread's state,
-	     and it might ever run again.  So write back its state.  */
-	  __thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
-			      (natural_t *) &state->basic,
-			      MACHINE_THREAD_STATE_COUNT);
+	reply_ports[nthreads] = _hurdsig_abort_rpcs (ss, signo, 1,
+						     state, &state_changed,
+						     NULL);
+	if (live)
+	  {
+	    if (reply_ports[nthreads] != MACH_PORT_NULL)
+	      {
+		/* We will wait for the reply to this RPC below, so the
+		   thread must issue a new RPC rather than waiting for the
+		   reply to the one it sent.  */
+		state->basic.SYSRETURN = EINTR;
+		state_changed = 1;
+	      }
+	    if (state_changed)
+	      /* Aborting the RPC needed to change this thread's state,
+		 and it might ever run again.  So write back its state.  */
+	      __thread_set_state (ss->thread, MACHINE_THREAD_STATE_FLAVOR,
+				  (natural_t *) &state->basic,
+				  MACHINE_THREAD_STATE_COUNT);
+	  }
       }
 
   /* Wait for replies from all the successfully interrupted RPCs.  */
@@ -744,10 +753,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	    mach_port_t *loc;
 
-	    if (_hurdsig_catch_fault (SIGSEGV))
+	    if (_hurdsig_catch_memory_fault (ss->context))
 	      {
-		assert (_hurdsig_fault_sigcode >= (long int) ss->context &&
-			_hurdsig_fault_sigcode < (long int) (ss->context + 1));
 		/* We faulted reading the thread's stack.  Forget that
 		   context and pretend it wasn't there.  It almost
 		   certainly crash if this handler returns, but that's it's
@@ -1176,14 +1183,34 @@ text_set_element (_hurd_reauth_hook, reauth_proc);
 const char *
 _hurdsig_getenv (const char *variable)
 {
-  if (_hurdsig_catch_fault (SIGSEGV))
+  if (_hurdsig_catch_memory_fault (__environ))
     /* We bombed in getenv.  */
     return NULL;
   else
     {
-      const char *value = getenv (variable);
-      /* Fault now if VALUE is a bogus string.  */
-      (void) strlen (value);
+      const size_t len = strlen (variable);
+      char *value = NULL;
+      char *volatile *ep = __environ;
+      while (*ep)
+	{
+	  const char *p = *ep;
+	  _hurdsig_fault_preempter.first = (long int) p;
+	  _hurdsig_fault_preempter.last = VM_MAX_ADDRESS;
+	  if (! strncmp (p, variable, len) && p[len] == '=')
+	    {
+	      char *value;
+	      size_t valuelen;
+	      p += len + 1;
+	      valuelen = strlen (p);
+	      _hurdsig_fault_preempter.last = (long int) (p + valuelen);
+	      value = malloc (++valuelen);
+	      if (value)
+		memcpy (value, p, valuelen);
+	      break;
+	    }
+	  _hurdsig_fault_preempter.first = (long int) ++ep;
+	  _hurdsig_fault_preempter.last = (long int) (ep + 1);
+	}
       _hurdsig_end_catch_fault ();
       return value;
     }

@@ -1,5 +1,5 @@
 /* Replacement for mach_msg used in interruptible Hurd RPCs.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <mach.h>
 #include <mach/mig_errors.h>
+#include <mach/mig_support.h>
 #include <hurd/signal.h>
 
 #include "intr-msg.h"
@@ -45,7 +46,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
      return EINTR when some other thread gets a signal, in which case we
      want to restart our call.  */
   ss->intr_port = msg->msgh_remote_port;
-  
+
   /* A signal may arrive here, after intr_port is set, but before
      the mach_msg system call.  The signal handler might do an
      interruptible RPC, and clobber intr_port; then it would not be
@@ -58,12 +59,12 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
   if (ss->cancel)
     {
-      err = EINTR;
       ss->cancel = 0;
+      return EINTR;
     }
-  else 
-    err = INTR_MSG_TRAP (msg, option, send_size,
-			 rcv_size, rcv_name, timeout, notify);
+
+  err = INTR_MSG_TRAP (msg, option, send_size,
+		       rcv_size, rcv_name, timeout, notify);
 
   switch (err)
     {
@@ -83,7 +84,14 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	   signal thread will have cleared SS->intr_port.
 	   Since it's not cleared, the signal was for another thread,
 	   or SA_RESTART is set.  Restart the interrupted call.  */
-	goto message;
+	{
+	restart:
+	  if (rcv_name != MACH_PORT_NULL)
+	    /* Make sure we have a valid reply port.  The one we were using
+	       may have been destroyed by interruption.  */
+	    msg->msgh_local_port = rcv_name = __mig_get_reply_port ();
+	  goto message;
+	}
       /* FALLTHROUGH */
 
     case MACH_RCV_PORT_DIED:
@@ -139,7 +147,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	      if (ss->intr_port != MACH_PORT_NULL)
 		/* Nope; repeat the RPC.
 		   XXX Resources moved? */
-		goto message;
+		goto restart;
 	      else
 		/* The EINTR return indicates cancellation, so clear the
                    flag.  */

@@ -1,3 +1,32 @@
+Wed Jan  3 20:23:42 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/catch-signal.c: New file.
+
+	* hurd/intr-msg.c: When restarting RPC, fetch a new reply port.
+
+	* hurd/hurdsig.c: Use new hurdfault.h interface.
+	(abort_all_rpcs): Mutate return value to EINTR in threads whose
+	replies we will wait for.
+
+	* hurd/hurdkill.c (_hurd_sig_post): When doing pgrp, make sure we
+	do ourselves last.
+
+Wed Jan  3 19:17:10 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/access.c (__access): Put the uid/gid arguments
+	to auth_makeauth() in the right order.
+
+Wed Jan  3 17:19:04 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/strsep.c: Rewritten.
+
+	* sysdeps/mach/hurd/fork.c: Use a different workaround for the
+ 	suspended page fault deadlock kernel bug: thread_abort our signal
+ 	thread first thing after proc_dostop.
+
+	* sysdeps/mach/hurd/setgid.c: Rewrote gid frobnication to
+	recognize rootness properly.
+
 Tue Jan  2 00:50:10 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurd/signal.h (struct hurd_sigstate): New member `preempters'.
@@ -6,6 +35,7 @@ Tue Jan  2 00:50:10 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* hurd/preempt-sig.c: Rewritten with new interface.
 	* sysdeps/mach/hurd/jmp-unwind.c (_longjmp_unwind): Remove local signal
 	preempters being unwound past.
+	* hurd/hurdsig.c: Use new signal preemption interface.
 
 	* db: New directory, 4.4 BSD db package incorporated from BSD db-1.85
 	release.
