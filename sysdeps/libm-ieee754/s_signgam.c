@@ -1,3 +1,4 @@
 #include "math.h"
 #include "math_private.h"
-int signgam = 0;
+int __signgam = 0;
+weak_alias (__signgam, signgam)

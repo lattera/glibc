@@ -25,6 +25,8 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
+extern int __signgam;
+
 #ifdef __STDC__
 	long double __gammal(long double x)
 #else
@@ -35,7 +37,7 @@ static char rcsid[] = "$NetBSD: $";
         long double y;
 #ifndef _IEEE_LIBM
 	if (_LIB_VERSION == _SVID_)
-	  y = __ieee754_lgammal_r(x,&signgam);
+	  y = __ieee754_lgammal_r(x,&__signgam);
 	else
 	  {
 #endif

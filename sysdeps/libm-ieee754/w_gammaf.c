@@ -20,6 +20,8 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
+extern int __signgam;
+
 #ifdef __STDC__
 	float __gammaf(float x)
 #else
@@ -30,7 +32,7 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
         float y;
 #ifndef _IEEE_LIBM
 	if (_LIB_VERSION == _SVID_)
-	  y = __ieee754_lgammaf_r(x,&signgam);
+	  y = __ieee754_lgammaf_r(x,&__signgam);
 	else
 	  {
 #endif

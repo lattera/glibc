@@ -24,7 +24,7 @@ main (void)
   sock = make_named_socket (CLIENT);
 
   /* Initialize the server socket address. */
-  name.sun_family = AF_UNIX;
+  name.sun_family = AF_LOCAL;
   strcpy (name.sun_path, SERVER);
   size = strlen (name.sun_path) + sizeof (name.sun_family);
 

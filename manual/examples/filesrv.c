@@ -16,8 +16,10 @@ main (void)
   size_t size;
   int nbytes;
 
-  /* Make the socket, then loop endlessly. */
+  /* Remove the filename first, it's ok if the call fails */
+  unlink (SERVER);
 
+  /* Make the socket, then loop endlessly. */
   sock = make_named_socket (SERVER);
   while (1)
     {

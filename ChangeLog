@@ -1,3 +1,35 @@
+1998-04-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/sockunion.h: Fix error message.
+
+	* manual/socket.texi (Interface Naming): Fix typo.
+
+1998-04-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/examples/filesrv.c (main): Remove filename first.
+
+	* manual/socket.texi (Address Formats): Change ?F_LOCAL, ?F_FILE,
+	?F_UNIX.
+
+	* manual/examples/mkfsock.c (make_named_socket): Use PF_LOCAL
+	instead of PF_UNIX.
+
+	* manual/examples/filecli.c (main): Use AF_LOCAL
+	instead of AF_UNIX.
+
+1998-04-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_signgam.c: Define __signgam and make
+	signgam weak alias.
+	* sysdeps/libm-ieee754/w_lgamma.c: Use __signgam not signgam.
+	* sysdeps/libm-ieee754/w_lgammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgammal.c: Likewise.
+	* sysdeps/libm-ieee754/w_gamma.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammal.c: Likewise.
+
+	* login/utmp_daemon.c (open_socket): Use __connect not connect.
+
 1998-04-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* configure.in: Add new option --enable-force-install.  Substitute
@@ -266,7 +298,7 @@
 	(getnodebyname): New prototype.
 	(AI_V4MAPPED, et al.): New constants.
 
-	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h (SA_LEN): New macro.<
+	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h (SA_LEN): New macro.
 	* sysdeps/generic/bits/sockaddr.h (SA_LEN): Likewise.
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add sa_len
 	for socket.
@@ -342,7 +374,7 @@
 
 	* Makeconfig (libtypes): Redo H.J. Lu's change of 1998-03-27.
 
-	* Makerules: Readd missing rule for $(objpfx)stamp.oS.
+	* Makerules: Re-add missing rule for $(objpfx)stamp.oS.
 
 1998-04-06  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 

@@ -328,27 +328,26 @@ corresponding namespace.  Here is a list of address format names:
 
 @table @code
 @comment sys/socket.h
-@comment GNU
-@item AF_FILE
-@vindex AF_FILE
-This designates the address format that goes with the file namespace.
-(@code{PF_FILE} is the name of that namespace.)  @xref{Local Namespace
+@comment POSIX
+@item AF_LOCAL
+@vindex AF_LOCAL
+This designates the address format that goes with the local namespace.
+(@code{PF_LOCAL} is the name of that namespace.)  @xref{Local Namespace
 Details}, for information about this address format.
 
 @comment sys/socket.h
 @comment BSD
 @item AF_UNIX
 @vindex AF_UNIX
-This is a synonym for @code{AF_FILE}, for compatibility.
-(@code{PF_UNIX} is likewise a synonym for @code{PF_FILE}.)
+This is a synonym for @code{AF_LOCAL}, for compatibility.
+(@code{PF_UNIX} is likewise a synonym for @code{PF_LOCAL}.)
 
 @comment sys/socket.h
-@comment BSD
-@item AF_UNIX
-@vindex AF_LOCAL
-This is another synonym for @code{AF_FILE}, for compatibility.
-(@code{PF_LOCAL} is likewise a synonym for @code{PF_FILE}.)
-@strong{POSIX? XXX}
+@comment GNU
+@item AF_FILE
+@vindex AF_FILE
+This is another synonym for @code{AF_LOCAL}, for compatibility.
+(@code{PF_FILE} is likewise a synonym for @code{PF_LOCAL}.)
 
 @comment sys/socket.h
 @comment BSD
@@ -483,7 +482,7 @@ might be @code{lo} (the loopback interface) and @code{eth0} (the first
 Ethernet interface).
 
 Although such names are convenient for humans, it would be clumsy to
-have to use them whenever a program needed to refer to an interface.  In
+have to use them whenever a program needs to refer to an interface.  In
 such situations an interface is referred to by its @dfn{index}, which is
 an arbitrarily-assigned small positive integer.
 
@@ -1953,7 +1952,7 @@ connection in progress (see @code{EINPROGRESS} above).
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 

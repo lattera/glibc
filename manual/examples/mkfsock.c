@@ -13,7 +13,7 @@ make_named_socket (const char *filename)
   size_t size;
 
   /* Create the socket.  */
-  sock = socket (PF_UNIX, SOCK_DGRAM, 0);
+  sock = socket (PF_LOCAL, SOCK_DGRAM, 0);
   if (sock < 0)
     {
       perror ("socket");

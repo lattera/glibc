@@ -23,7 +23,7 @@ static char rcsid[] = "$NetBSD: w_lgamma.c,v 1.6 1995/05/10 20:49:24 jtc Exp $";
 #include "math.h"
 #include "math_private.h"
 
-extern int signgam;
+extern int __signgam;
 
 #ifdef __STDC__
 	double __lgamma(double x)
@@ -33,10 +33,10 @@ extern int signgam;
 #endif
 {
 #ifdef _IEEE_LIBM
-	return __ieee754_lgamma_r(x,&signgam);
+	return __ieee754_lgamma_r(x,&__signgam);
 #else
         double y;
-        y = __ieee754_lgamma_r(x,&signgam);
+        y = __ieee754_lgamma_r(x,&__signgam);
         if(_LIB_VERSION == _IEEE_) return y;
         if(!__finite(y)&&__finite(x)) {
             if(__floor(x)==x&&x<=0.0)

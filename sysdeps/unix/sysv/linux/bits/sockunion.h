@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_SOCKET_H
-# error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
+# error "Never include <bits/sockunion.h> directly; use <sys/socket.h> instead."
 #endif
 
 #include <netash/ash.h>

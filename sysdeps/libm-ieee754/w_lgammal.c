@@ -27,7 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
-extern int signgam;
+extern int __signgam;
 
 #ifdef __STDC__
 	long double __lgammal(long double x)
@@ -37,10 +37,10 @@ extern int signgam;
 #endif
 {
 #ifdef _IEEE_LIBM
-	return __ieee754_lgammal_r(x,&signgam);
+	return __ieee754_lgammal_r(x,&__signgam);
 #else
         long double y;
-        y = __ieee754_lgammal_r(x,&signgam);
+        y = __ieee754_lgammal_r(x,&__signgam);
         if(_LIB_VERSION == _IEEE_) return y;
         if(!__finitel(y)&&__finitel(x)) {
             if(__floorl(x)==x&&x<=0.0)

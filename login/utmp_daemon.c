@@ -415,7 +415,7 @@ open_socket (const char *name)
 
   addr.sun_family = AF_UNIX;
   strcpy (addr.sun_path, name);
-  if (connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
+  if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
       close (sock);
       return -1;
