@@ -183,7 +183,8 @@ fmemopen_close (void *cookie)
 
   c = (fmemopen_cookie_t *) cookie;
 
-  free (c->buffer);
+  if (c->mybuffer)
+    free (c->buffer);
   free (c);
 
   return 0;
