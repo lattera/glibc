@@ -234,7 +234,10 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
   if (read_write & _IO_IS_APPENDING)
     if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
-      return NULL;
+      {
+	close (fdesc);
+	return NULL;
+      }
   INTUSE(_IO_link_in) ((struct _IO_FILE_plus *) fp);
   return fp;
 }

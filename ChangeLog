@@ -1,3 +1,11 @@
+2002-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iofdopen.c (_IO_new_fdopen): Call _IO_setb to deallocate
+	buffers if _IO_file_attach failed.
+
+	* libio/fileops.c (_IO_file_open): Close file descriptor if
+	_IO_SEEKOFF call failed.
+
 2002-03-15  H.J. Lu  <hjl@gnu.org>
             Ulrich Drepper  <drepper@redhat.com>
 
@@ -42,7 +50,7 @@
 	* iconv/gconv_int.h: Declare __gconv_read_conf, __gconv_alias_compare,
 	and __gconv_transliterate as hidden.
 	Add internal_function to __gconv_get_path declaration.
-	* iconv/gconv_int.h: Add internal_function to __gconv_get_path
+	* iconv/gconv_conf.c: Add internal_function to __gconv_get_path
 	definition.  Add attribute_hidden to __gconv_read_conf definition.
 
 2002-03-14  Ulrich Drepper  <drepper@redhat.com>

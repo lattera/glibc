@@ -1045,11 +1045,7 @@ EOF
 int _start (void) { return 0; }
 int __start (void) { return 0; }
 int foo (void) { return 1; }
-#ifdef __i386__
-asm (".section .init_array\n\t.long foo");
-#else
-# error "define appropriately for the architecture"
-#endif
+int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
 EOF
   if AC_TRY_COMMAND([${CC-cc} -o conftest conftest.c
 		     -static -nostartfiles -nostdlib 1>&AC_FD_CC])
