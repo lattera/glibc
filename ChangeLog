@@ -1,5 +1,11 @@
 2000-02-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/gprrest0.S: Use ASM_GLOBAL_DIRECTIVE instead of
+	.globl.
+	* sysdeps/powerpc/gprsave0.S: Likewise.
+	* sysdeps/powerpc/gprrest1.S: Likewise.
+	* sysdeps/powerpc/gprsave1.S: Likewise.
+
 	* sysdeps/powerpc/fpu/s_copysign.S: Use L() instead of local labels.
 	* sysdeps/powerpc/submul_1.S: Likewise.
 	* sysdeps/powerpc/sub_n.S: Likewise.

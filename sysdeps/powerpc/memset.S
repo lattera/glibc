@@ -63,7 +63,7 @@ L(aligned):
 	bf     28,L(a1)
 	stw    r4,-4(r8)
 	stwu   r4,-8(r8)
-L(a1):	blt    cr1,2f
+L(a1):	blt    cr1,L(a2)
 	stw    r4,-4(r8)	# 32nd instruction from .align
 	stw    r4,-8(r8)
 	stw    r4,-12(r8)
