@@ -1,3 +1,8 @@
+2000-09-26  Andreas Jaeger  <aj@suse.de>
+
+	* elf/ldconfig.c (search_dir): Allow unlimited path length.
+	(create_links): Likewise.
+
 2000-09-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/tst-dir.c: Test a few error cases of chdir.
