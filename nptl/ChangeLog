@@ -1,3 +1,9 @@
+2003-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* libc-cancellation.c (__libc_cleanup_routine): Define.
+	* sysdeps/pthread/bits/libc-lock.h (__pthread_cleanup_push): Define.
+	(__pthread_cleanup_pop): Define.
+
 2003-07-01  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/elf/pt-initfini.c: New file.

@@ -389,6 +389,27 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
     } else if (DOIT)							      \
       _buffer.__routine (_buffer.__arg)
 
+
+/* Normal cleanup handling, based on C cleanup attribute.  */
+extern inline void
+__libc_cleanup_routine (struct __pthread_cleanup_frame *f)
+{
+  if (f->__do_it)
+    f->__cancel_routine (f->__cancel_arg);
+}
+
+#define __pthread_cleanup_push(fct, arg) \
+  do {									      \
+    struct __pthread_cleanup_frame __clframe				      \
+      __attribute__ ((__cleanup__ (__libc_cleanup_routine)))		      \
+      = { .__cancel_routine = (routine), .__cancel_arg = (arg),		      \
+          .__do_it = 1 };
+
+#define __pthread_cleanup_pop(execute) \
+    __clframe.__do_it = (execute);					      \
+  } while (0)
+
+
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
   __libc_ptf_call (__pthread_key_create, (KEY, DESTRUCTOR), 1)

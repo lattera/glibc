@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include "pthreadP.h"
 #include "atomic.h"
+#include <bits/libc-lock.h>
 
 
 #ifndef NOT_IN_libc
@@ -101,6 +102,14 @@ __libc_disable_asynccancel (int oldtype)
       /* Prepare the next round.  */
       oldval = curval;
     }
+}
+
+
+void
+__libc_cleanup_routine (struct __pthread_cleanup_frame *f)
+{
+  if (f->__do_it)
+    f->__cancel_routine (f->__cancel_arg);
 }
 
 #endif
