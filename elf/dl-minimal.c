@@ -33,6 +33,20 @@
 
 static void *alloc_ptr, *alloc_end, *alloc_last_block;
 
+/* Declarations of global functions.  */
+extern void weak_function free (void *ptr);
+extern void * weak_function realloc (void *ptr, size_t n);
+extern long int weak_function __strtol_internal (const char *nptr,
+						 char **endptr,
+						 int base, int group);
+extern long int weak_function strtol (const char *nptr, char **endptr,
+				      int base);
+extern unsigned long int weak_function __strtoul_internal
+(const char *nptr, char **endptr, int base, int group);
+extern unsigned long int weak_function strtoul (const char *nptr,
+						char **endptr, int base);
+
+
 void * weak_function
 malloc (size_t n)
 {

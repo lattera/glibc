@@ -6,4 +6,10 @@
 /* Write current profiling data to file.  */
 extern void __write_profiling (void);
 extern void write_profiling (void);
+
+struct __bb;
+extern void __bb_init_func (struct __bb *bb);
+extern void __bb_exit_func (void);
+
+
 #endif
