@@ -29,7 +29,7 @@
 struct pthread_functions __libc_pthread_functions attribute_hidden;
 
 
-#define FORWARD3(name, export, rettype, decl, params, defaction) \
+#define FORWARD2(name, rettype, decl, params, defaction) \
 rettype									      \
 name decl								      \
 {									      \
@@ -39,23 +39,18 @@ name decl								      \
   return __libc_pthread_functions.ptr_##name params;			      \
 }
 
-#define FORWARD2(name, decl, params, defretval) \
-  FORWARD3 (name, name, int, decl, params, return defretval)
-
 #define FORWARD(name, decl, params, defretval) \
-  FORWARD2 (name, decl, params, defretval)
+  FORWARD2 (name, int, decl, params, return defretval)
 
 
 FORWARD (pthread_attr_destroy, (pthread_attr_t *attr), (attr), 0)
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_1)
-FORWARD3 (pthread_attr_init_2_0, __pthread_attr_init_2_0, int,
-	  (pthread_attr_t *attr), (attr), return 0)
+FORWARD (__pthread_attr_init_2_0, (pthread_attr_t *attr), (attr), 0)
 compat_symbol (libc, pthread_attr_init_2_0, pthread_attr_init, GLIBC_2_0);
 #endif
 
-FORWARD3 (pthread_attr_init_2_1, __pthread_attr_init_2_1, int,
-	  (pthread_attr_t *attr), (attr), return 0)
+FORWARD (__pthread_attr_init_2_1, (pthread_attr_t *attr), (attr), 0)
 versioned_symbol (libc, __pthread_attr_init_2_1, pthread_attr_init, GLIBC_2_1);
 
 FORWARD (pthread_attr_getdetachstate,
@@ -109,8 +104,9 @@ FORWARD (pthread_equal, (pthread_t thread1, pthread_t thread2),
 	 (thread1, thread2), 1)
 
 
-FORWARD3 (pthread_exit, pthread_exit, void, (void *retval), (retval),
-	  exit (EXIT_SUCCESS))
+/* Use an alias to avoid warning, as pthread_exit is declared noreturn.  */
+FORWARD2 (__pthread_exit, void, (void *retval), (retval), exit (EXIT_SUCCESS))
+strong_alias (__pthread_exit, pthread_exit);
 
 
 FORWARD (pthread_getschedparam,
@@ -132,7 +128,7 @@ FORWARD (pthread_mutex_lock, (pthread_mutex_t *mutex), (mutex), 0)
 FORWARD (pthread_mutex_unlock, (pthread_mutex_t *mutex), (mutex), 0)
 
 
-FORWARD3 (pthread_self, pthread_self, pthread_t, (void), (), return 0)
+FORWARD2 (pthread_self, pthread_t, (void), (), return 0)
 
 
 FORWARD (pthread_setcancelstate, (int state, int *oldstate), (state, oldstate),

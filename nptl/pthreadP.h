@@ -72,8 +72,8 @@ extern int __pthread_debug attribute_hidden;
 struct pthread_functions
 {
   int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
-  int (*ptr_pthread_attr_init_2_0) (pthread_attr_t *);
-  int (*ptr_pthread_attr_init_2_1) (pthread_attr_t *);
+  int (*ptr___pthread_attr_init_2_0) (pthread_attr_t *);
+  int (*ptr___pthread_attr_init_2_1) (pthread_attr_t *);
   int (*ptr_pthread_attr_getdetachstate) (const pthread_attr_t *, int *);
   int (*ptr_pthread_attr_setdetachstate) (pthread_attr_t *, int);
   int (*ptr_pthread_attr_getinheritsched) (const pthread_attr_t *, int *);
@@ -94,7 +94,7 @@ struct pthread_functions
   int (*ptr_pthread_cond_signal) (pthread_cond_t *);
   int (*ptr_pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
   int (*ptr_pthread_equal) (pthread_t, pthread_t);
-  void (*ptr_pthread_exit) (void *);
+  void (*ptr___pthread_exit) (void *);
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
   int (*ptr_pthread_setschedparam) (pthread_t, int,
 				    const struct sched_param *);

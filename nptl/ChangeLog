@@ -1,3 +1,14 @@
+2002-12-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* forward.c (FORWARD2): Renamed from FORWARD3.  Remove unused export
+	argument.
+	(pthread_attr_init_2_0, pthread_attr_init_2_1): Use FORWARD macro.
+	(pthread_exit): Use strong_alias to avoid warnings.
+	* pthreadP.h (struct pthread_functions): Rename ptr_pthread_exit
+	and ptr_pthread_attr_init_2_* to ptr___pthread_exit and
+	ptr___pthread_attr_init_2_*.
+	* init.c (pthread_functions): Adjust.
+
 2002-12-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* forward.c: Make all functions available by default again.  It

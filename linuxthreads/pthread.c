@@ -240,9 +240,9 @@ static struct pthread_functions pthread_functions =
 #endif
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
-    .ptr_pthread_attr_init_2_0 = __pthread_attr_init_2_0,
+    .ptr___pthread_attr_init_2_0 = __pthread_attr_init_2_0,
 #endif
-    .ptr_pthread_attr_init_2_1 = __pthread_attr_init_2_1,
+    .ptr___pthread_attr_init_2_1 = __pthread_attr_init_2_1,
     .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
     .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
     .ptr_pthread_attr_getinheritsched = __pthread_attr_getinheritsched,
@@ -261,7 +261,7 @@ static struct pthread_functions pthread_functions =
     .ptr_pthread_cond_signal = __pthread_cond_signal,
     .ptr_pthread_cond_wait = __pthread_cond_wait,
     .ptr_pthread_equal = __pthread_equal,
-    .ptr_pthread_exit = __pthread_exit,
+    .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,
     .ptr_pthread_setschedparam = __pthread_setschedparam,
     .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
