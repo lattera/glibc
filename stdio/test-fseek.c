@@ -1,7 +1,7 @@
 #include <ansidecl.h>
 #include <stdio.h>
 
-#define TESTFILE "test.dat"
+#define TESTFILE "/tmp/test.dat"
 
 int
 main __P((void))

@@ -1,3 +1,11 @@
+Fri Feb 24 14:40:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/bug4.c: Put temporary files in /tmp.
+	* stdio/bug3.c: Likewise.
+	* stdio/bug5.c: Likewise.
+	* stdio/test-fseek.c: Likewise.
+	* stdio/test-popen.c: Likewise.
+
 Wed Feb 22 00:44:41 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob/configure.in: Put AC_ISC_POSIX before AC_CONST.

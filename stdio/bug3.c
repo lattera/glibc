@@ -8,7 +8,7 @@ DEFUN_VOID(main)
   FILE *f;
   int i;
 
-  f = fopen("bugtest", "w+");
+  f = fopen("/tmp/bugtest", "w+");
   for (i=0; i<9000; i++)
     putc ('x', f);
   fseek (f, 8180L, 0);

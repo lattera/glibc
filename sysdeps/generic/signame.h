@@ -56,7 +56,7 @@ int sig_number ();
 void psignal ();
 #endif
 #ifndef HAVE_STRSIGNAL
-char *strsignal (int signal);
+char *strsignal ();
 #endif
 #if !defined (HAVE_SYS_SIGLIST)
 extern char *sys_siglist[];

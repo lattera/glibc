@@ -15,8 +15,8 @@ DEFUN_VOID(main)
 {
   FILE *in;
   FILE *out;
-  static char inname[] = "infile";
-  static char outname[] = "outfile";
+  static char inname[] = "/tmp/bug5.in";
+  static char outname[] = "/tmp/bug5.out";
   int i;
 
   /* Create a test file.  */

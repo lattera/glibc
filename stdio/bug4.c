@@ -26,7 +26,7 @@ DEFUN(main, (argc, argv),
 	break;
       }
 
-  f = fopen("bugtest", "w+");
+  f = fopen("/tmp/bugtest", "w+");
   for (i=0; i<9000; i++) {
     putc('x', f);
   }
