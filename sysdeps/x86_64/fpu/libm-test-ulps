@@ -160,6 +160,8 @@ ldouble: 1
 Test "Imaginary part of: ccos (0.75 + 1.25 i) == 1.38173873063425888530729933139078645 - 1.09193013555397466170919531722024128 i":
 ildouble: 1
 ldouble: 1
+float: 1
+ifloat: 1
 
 # ccosh
 Test "Real part of: ccosh (-2 - 3 i) == -3.7245455049153225654 + 0.5118225699873846088 i":
@@ -420,10 +422,12 @@ ldouble: 3
 
 # ctanh
 Test "Real part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 5
 ldouble: 5
+double: 1
+idouble: 1
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
 ildouble: 25
 ldouble: 25
@@ -436,6 +440,8 @@ idouble: 1
 Test "Imaginary part of: ctanh (0.75 + 1.25 i) == 1.37260757053378320258048606571226857 + 0.385795952609750664177596760720790220 i":
 ildouble: 1
 ldouble: 1
+double: 1
+idouble: 1
 
 # erf
 Test "erf (1.25) == 0.922900128256458230136523481197281140":
@@ -459,12 +465,24 @@ ldouble: 1
 Test "exp10 (-1) == 0.1":
 ildouble: 1
 ldouble: 1
+float: 1
+ifloat: 1
+double: 2
+idouble: 2
 Test "exp10 (0.75) == 5.62341325190349080394951039776481231":
 ildouble: 1
 ldouble: 1
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
 Test "exp10 (3) == 1000":
 ildouble: 3
 ldouble: 3
+float: 2
+ifloat: 2
+double: 6
+idouble: 6
 
 # expm1
 Test "expm1 (0.75) == 1.11700001661267466854536981983709561":
@@ -676,6 +694,10 @@ ldouble: 1
 Test "log10 (0.75) == -0.124938736608299953132449886193870744":
 ildouble: 1
 ldouble: 1
+float: 2
+ifloat: 2
+double: 1
+idouble: 1
 Test "log10 (e) == log10(e)":
 float: 1
 ifloat: 1
@@ -707,6 +729,9 @@ idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "sincos (pi/6, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in cos_res":
+float: 1
+ifloat: 1
 
 # tan
 Test "tan (pi/4) == 1":
@@ -1115,9 +1140,9 @@ ldouble: 3
 
 Function: Real part of "ctanh":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 5
 ldouble: 5
 
@@ -1126,6 +1151,8 @@ float: 1
 ifloat: 1
 ildouble: 25
 ldouble: 25
+double: 1
+idouble: 1
 
 Function: "erf":
 double: 1
@@ -1140,6 +1167,10 @@ ldouble: 1
 Function: "exp10":
 ildouble: 3
 ldouble: 3
+float: 2
+ifloat: 2
+double: 6
+idouble: 6
 
 Function: "expm1":
 double: 1
@@ -1188,10 +1219,12 @@ ildouble: 1
 ldouble: 1
 
 Function: "log10":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
 ildouble: 1
 ldouble: 1
+double: 1
+idouble: 1
 
 Function: "log1p":
 float: 1
