@@ -12,7 +12,7 @@
 
 1999-08-02  Thorsten Kukuk  <kukuk@suse.de>
 
-	* nis/nis_callback.c (internal_nis_do_callback) use poll()
+	* nis/nis_callback.c (internal_nis_do_callback): Use poll()
 	instead of select().
 
 1999-08-02  Ulrich Drepper  <drepper@cygnus.com>
