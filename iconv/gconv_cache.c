@@ -203,6 +203,26 @@ find_module (const char *directory, const char *filename,
 
 int
 internal_function
+__gconv_compare_alias_cache (const char *name1, const char *name2, int *result)
+{
+  size_t name1_idx;
+  size_t name2_idx;
+
+  if (cache == NULL)
+    return -1;
+
+  if (find_module_idx (name1, &name1_idx) != 0
+      || find_module_idx (name2, &name2_idx) != 0)
+    *result = strcmp (name1, name2);
+  else
+    *result = (int) (name1_idx - name2_idx);
+
+  return 0;
+}
+
+
+int
+internal_function
 __gconv_lookup_cache (const char *toset, const char *fromset,
 		      struct __gconv_step **handle, size_t *nsteps, int flags)
 {
