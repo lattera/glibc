@@ -1,5 +1,5 @@
 /* Test for dladdr.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Volkmar Sieh <vs@caldera.de> and Andreas Jaeger <aj@suse.de>.
 
@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <ldsodefs.h>
 
 
 #define TEST_FUNCTION do_test ()
@@ -52,7 +54,8 @@ do_test (void)
   if (ret == 0)
     error (EXIT_FAILURE, 0, "dladdr failed");
 
-  printf ("address of ref1 = %p\n", sym);
+  printf ("address of ref1 = %lx\n",
+	  (unsigned long int)  DL_LOOKUP_ADDRESS (sym));
   printf ("ret = %d\n", ret);
   printf ("info.dli_fname = %p (\"%s\")\n", info.dli_fname, info.dli_fname);
   printf ("info.dli_fbase = %p\n", info.dli_fbase);
