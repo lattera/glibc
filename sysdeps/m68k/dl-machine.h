@@ -80,6 +80,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf32_Addr *got;
   extern void _dl_runtime_resolve (Elf32_Word);
+  extern void _dl_runtime_profile (Elf32_Word);
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -90,10 +91,23 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 _GLOBAL_OFFSET_TABLE_[2].  */
       got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
       got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
-      /* This function will get called to fix up the GOT entry
-	 indicated by the offset on the stack, and then jump to the
-	 resolved address.  */
-      got[2] = (Elf32_Addr) &_dl_runtime_resolve;
+
+      /* The got[2] entry contains the address of a function which gets
+	 called to get the address of a so far unresolved function and
+	 jump to it.  The profiling extension of the dynamic linker allows
+	 to intercept the calls to collect information.  In this case we
+	 don't store the address in the GOT so that all future calls also
+	 end in this function.  */
+      if (profile)
+	{
+	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
+	  /* Say that we really want profiling and the timers are started.  */
+	  _dl_profile_map = l;
+	}
+      else
+	/* This function will get called to fix up the GOT entry indicated by
+	   the offset on the stack, and then jump to the resolved address.  */
+	got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
   return lazy;
@@ -101,16 +115,16 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 /* This code is used in dl-runtime.c to call the `fixup' function
    and then redirect to the address it returns.  */
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-| Trampoline for _dl_runtime_resolver
-	.globl _dl_runtime_resolve
-	.type _dl_runtime_resolve, @function
-_dl_runtime_resolve:
+#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name) \
+"| Trampoline for " #fixup_name "
+	.globl " #tramp_name "
+	.type " #tramp_name ", @function
+" #tramp_name ":
 	| Save %a0 (struct return address) and %a1.
 	move.l %a0, -(%sp)
 	move.l %a1, -(%sp)
 	| Call the real address resolver.
-	jbsr fixup
+	jbsr " #fixup_name "
 	| Restore register %a0 and %a1.
 	move.l (%sp)+, %a1
 	move.l (%sp)+, %a0
@@ -118,8 +132,17 @@ _dl_runtime_resolve:
 	addq.l #8, %sp
 	| Call real function.
 	jmp (%d0)
-	.size _dl_runtime_resolve, . - _dl_runtime_resolve
-");
+	.size " #tramp_name ", . - " #tramp_name "\n"
+#ifndef PROF
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
+asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
+     TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup));
+#else
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
+asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
+     ".globl _dl_runtime_profile\n" \
+     ".set _dl_runtime_profile, _dl_runtime_resolve");
+#endif
 #define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0, long int save_a1
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
