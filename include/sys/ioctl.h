@@ -2,5 +2,5 @@
 #include <misc/sys/ioctl.h>
 
 /* Now define the internal interfaces.  */
-extern int __ioctl (int __fd, unsigned long int __request, ...) __THROW;
+extern int __ioctl (int __fd, unsigned long int __request, ...);
 #endif

@@ -3,7 +3,7 @@
 
 /* Now define the internal interfaces.  */
 extern ssize_t __readv (int __fd, __const struct iovec *__vector,
-			int __count) __THROW;
+			int __count);
 extern ssize_t __writev (int __fd, __const struct iovec *__vector,
-			 int __count) __THROW;
+			 int __count);
 #endif

@@ -1,5 +1,66 @@
 1999-11-23  Andreas Jaeger  <aj@suse.de>
 
+	* include/aio.h: Remove __THROW from internal interfaces.  __THROW
+	is only need in external header files that might be compiled by a
+	C++ compiler.
+	* include/alloca.h: Likewise.
+	* include/db.h: Likewise.
+	* include/dirent.h: Likewise.
+	* include/execinfo.h: Likewise.
+	* include/fpu_control.h: Likewise.
+	* include/glob.h: Likewise.
+	* include/grp.h: Likewise.
+	* include/libintl.h: Likewise.
+	* include/math.h: Likewise.
+	* include/math.h: Likewise.
+	* include/mntent.h: Likewise.
+	* include/mntent.h: Likewise.
+	* include/netdb.h: Likewise.
+	* include/pwd.h: Likewise.
+	* include/sched.h: Likewise.
+	* include/shadow.h: Likewise.
+	* include/stdlib.h: Likewise.
+	* include/sys/file.h: Likewise.
+	* include/sys/gmon.h: Likewise.
+	* include/sys/ioctl.h: Likewise.
+	* include/sys/socket.h: Likewise.
+	* include/sys/stat.h: Likewise.
+	* include/sys/sysinfo.h: Likewise.
+	* include/sys/time.h: Likewise.
+	* include/sys/times.h: Likewise.
+	* include/sys/uio.h: Likewise.
+	* include/sys/wait.h: Likewise.
+	* include/termios.h: Likewise.
+	* include/time.h: Likewise.
+	* include/ulimit.h: Likewise.
+	* include/utmp.h: Likewise.
+	* include/wchar.h: Likewise.
+
+1999-11-22  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/rpc_clntout.c (printbody): Fix -CLMNab output.
+	Patch by Jerry Perkins 	<jrperkins@iname.com>, closes PR
+	libc/1456+1457.
+
+1999-11-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/siglist.h: Avoid declaring the same field
+	twice if SIGPWR is defined to SIGLOST.
+	* sysdeps/sparc/sparc32/memcpy.S: bcopy takes size_t argument,
+	not signed, so we should not special case it for negative args.
+	* sysdeps/sparc/sparc32/sparcv9/memmove.c: Don't use generic
+	memmove, use the one provided in memcpy.S.
+	* sysdeps/sparc/sparc64/memcpy.S: bcopy should handle overlapping
+	copies like memmove, while the previous version worked like memcpy.
+	Implement optimized assembly memmove.
+	* sysdeps/sparc/sparc64/memmove.c: New file.
+
+1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/cs.po: Update from translators.
+
+1999-11-23  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/mips/dl-machine.h (elf_machine_dynamic): New function.
 	(elf_machine_got): Removed, not needed anymore.
 	(ELF_MACHINE_RELOC_NOPLT): Removed.
@@ -12,7 +73,7 @@
 	Ralf Baechle <baechle@uni-koblenz.de>.
 
 	* sysdeps/mips/mips64/dl-machine.h: Apply same patches.
-	
+
 1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Don't use the charset

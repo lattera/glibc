@@ -2,5 +2,5 @@
 #include <io/fcntl.h>
 
 /* Now define the internal interfaces.  */
-extern int __open64 (__const char *__file, int __oflag, ...) __THROW;
+extern int __open64 (__const char *__file, int __oflag, ...);
 #endif

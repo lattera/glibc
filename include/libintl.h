@@ -2,14 +2,14 @@
 #include <intl/libintl.h>
 
 /* Now define the internal interfaces.  */
-extern char *__gettext (__const char *__msgid) __THROW;
+extern char *__gettext (__const char *__msgid);
 extern char *__dgettext (__const char *__domainname,
-			 __const char *__msgid) __THROW;
+			 __const char *__msgid);
 extern char *__dcgettext (__const char *__domainname,
-			  __const char *__msgid, int __category) __THROW;
-extern char *__textdomain (__const char *__domainname) __THROW;
+			  __const char *__msgid, int __category);
+extern char *__textdomain (__const char *__domainname);
 extern char *__bindtextdomain (__const char *__domainname,
-			       __const char *__dirname) __THROW;
+			       __const char *__dirname);
 extern const char _libc_intl_domainname[];
 
 /* Define the macros `_' and `N_' for conveniently marking translatable

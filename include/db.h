@@ -7,8 +7,7 @@
 
 /* Internal interface for NSS.  */
 extern int __nss_db_open (const char *,
-			  DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **)
-     __THROW;
+			  DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **);
 #endif
 
 #endif
