@@ -1,3 +1,8 @@
+2000-05-18  Andreas Jaeger  <aj@suse.de>
+
+	* manual/arith.texi (Parsing of Integers): Fix typo.
+	Closes PR libc/1744, reported by blp@gnu.org.
+
 2000-05-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/arm/bits/huge_val.h (HUGE_VAL, HUGE_VALF): Add
