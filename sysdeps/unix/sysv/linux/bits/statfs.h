@@ -62,5 +62,6 @@ struct statfs64
   };
 #endif
 
-/* Tell code we have this member.  */
+/* Tell code we have these members.  */
 #define _STATFS_F_NAMELEN
+#define _STATFS_F_FRSIZE
