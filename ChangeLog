@@ -1,3 +1,12 @@
+1998-10-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/filesys.texi (Setting Permissions): Fix example for
+	reading umask.
+
+1998-10-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/sprof.c (load_profdata): Fix typo in error message.
+
 1998-10-06  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h (RTLD_START): Fix clearing startup
