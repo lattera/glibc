@@ -21,6 +21,6 @@
 
 const struct in6_addr in6addr_any =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } } };
-INTDEF(in6addr_any)
+INTVARDEF(in6addr_any)
 const struct in6_addr in6addr_loopback =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 } } };

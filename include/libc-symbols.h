@@ -363,8 +363,8 @@
 # define INTVARDEF(name) \
   _INTVARDEF(name, name##_internal)
 # define _INTVARDEF(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((visibility ("hidden"))); \
-  strong_alias (name, name##_internal)
+  extern __typeof (name) aliasname __attribute__ ((alias (#name), \
+						   visibility ("hidden")));
 # define INTDEF2(name, newname) strong_alias (name, newname##_internal)
 #else
 # define INTUSE(name) name

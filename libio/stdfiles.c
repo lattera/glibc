@@ -71,4 +71,4 @@ DEF_STDFILE(_IO_2_1_stdout_, 1, &_IO_2_1_stdin_, _IO_NO_READS);
 DEF_STDFILE(_IO_2_1_stderr_, 2, &_IO_2_1_stdout_, _IO_NO_READS+_IO_UNBUFFERED);
 
 struct _IO_FILE_plus *_IO_list_all = &_IO_2_1_stderr_;
-INTDEF(_IO_list_all)
+INTVARDEF(_IO_list_all)

@@ -862,7 +862,7 @@ struct _IO_jump_t _IO_wfile_jumps =
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)
 };
-INTDEF(_IO_wfile_jumps)
+INTVARDEF(_IO_wfile_jumps)
 
 
 struct _IO_jump_t _IO_wfile_jumps_mmap =

@@ -47,7 +47,8 @@
 # include <wchar.h>
 #endif
 
-struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
+/*  Head of basic-block list or NULL. */
+struct __bb *__bb_head attribute_hidden;
 
 struct gmonparam _gmonparam attribute_hidden = { GMON_PROF_OFF };
 

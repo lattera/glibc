@@ -33,7 +33,7 @@ extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
 #endif
-#ifndef SHARED 
+#ifndef SHARED
 extern void _dl_non_dynamic_init (void) internal_function;
 #endif
 extern void __libc_global_ctors (void);
@@ -47,8 +47,8 @@ int __libc_enable_secure;
 #endif
 int __libc_multiple_libcs = 1;
 
-extern int __libc_argc;
-extern char **__libc_argv;
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
 extern char **_dl_argv;
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */

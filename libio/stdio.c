@@ -39,7 +39,11 @@ _IO_FILE *stderr = (FILE *) &_IO_2_1_stderr_;
 #undef _IO_stdout
 #undef _IO_stderr
 #ifdef _LIBC
-strong_alias (stdin, _IO_stdin);
-strong_alias (stdout, _IO_stdout);
-strong_alias (stderr, _IO_stderr);
+# define AL(name) AL2 (name, _IO_##name)
+# define AL2(name, al) \
+  extern __typeof (name) al __attribute__ ((alias (#name),		      \
+					    visibility ("hidden")))
+AL(stdin);
+AL(stdout);
+AL(stderr);
 #endif

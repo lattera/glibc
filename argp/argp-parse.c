@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -81,7 +81,13 @@
 /* When argp is given the --HANG switch, _ARGP_HANG is set and argp will sleep
    for one second intervals, decrementing _ARGP_HANG until it's zero.  Thus
    you can force the program to continue by attaching a debugger and setting
-   it to 0 yourself.  */
+   it to 0 yourself.
+
+   XXX This variable used to be exported.  But there seems to be no
+   need, at least not inside libc.  */
+#ifdef _LIBC
+static
+#endif
 volatile int _argp_hang;
 
 #define OPT_PROGNAME	-2

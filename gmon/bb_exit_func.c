@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
 
@@ -29,6 +29,9 @@
 #include <string.h>
 
 #define OUT_NAME	"gmon.out"
+
+
+extern struct __bb *__bb_head attribute_hidden;
 
 
 void

@@ -1401,7 +1401,7 @@ void     public_mSTATs();
 };  /* end of extern "C" */
 #endif
 
-#include "malloc.h"
+#include <malloc.h>
 #include "thread-m.h"
 
 #ifndef BOUNDED_N

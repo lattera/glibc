@@ -47,8 +47,8 @@ int __libc_enable_secure;
 #endif
 int __libc_multiple_libcs = 1;
 
-extern int __libc_argc;
-extern char **__libc_argv;
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
 extern char **_dl_argv;
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */

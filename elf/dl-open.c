@@ -42,8 +42,8 @@ weak_extern (BP_SYM (_dl_sysdep_start))
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
-extern int __libc_argc;
-extern char **__libc_argv;
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
 
 extern char **__environ;
 

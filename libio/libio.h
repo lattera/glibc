@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1995, 1997-2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995, 1997-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -331,9 +331,9 @@ extern struct _IO_FILE_plus _IO_2_1_stderr_;
 #define _IO_stdout ((_IO_FILE*)(&_IO_2_1_stdout_))
 #define _IO_stderr ((_IO_FILE*)(&_IO_2_1_stderr_))
 #else
-extern _IO_FILE *_IO_stdin;
-extern _IO_FILE *_IO_stdout;
-extern _IO_FILE *_IO_stderr;
+extern _IO_FILE *_IO_stdin attribute_hidden;
+extern _IO_FILE *_IO_stdout attribute_hidden;
+extern _IO_FILE *_IO_stderr attribute_hidden;
 #endif
 
 

@@ -426,15 +426,15 @@ extern int _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
-extern struct _IO_jump_t _IO_file_jumps_mmap;
-extern struct _IO_jump_t _IO_wfile_jumps;
-extern struct _IO_jump_t _IO_wfile_jumps_mmap;
-extern struct _IO_jump_t _IO_old_file_jumps;
+extern struct _IO_jump_t _IO_file_jumps_mmap attribute_hidden;
+extern struct _IO_jump_t _IO_wfile_jumps attribute_hidden;
+extern struct _IO_jump_t _IO_wfile_jumps_mmap attribute_hidden;
+extern struct _IO_jump_t _IO_old_file_jumps attribute_hidden;
 extern struct _IO_jump_t _IO_streambuf_jumps;
-extern struct _IO_jump_t _IO_proc_jumps;
-extern struct _IO_jump_t _IO_old_proc_jumps;
-extern struct _IO_jump_t _IO_str_jumps;
-extern struct _IO_jump_t _IO_wstr_jumps;
+extern struct _IO_jump_t _IO_proc_jumps attribute_hidden;
+extern struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
+extern struct _IO_jump_t _IO_str_jumps attribute_hidden;
+extern struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
 extern struct _IO_codecvt __libio_codecvt;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
@@ -683,10 +683,10 @@ extern _IO_off64_t _IO_str_seekoff_internal __P ((_IO_FILE *, _IO_off64_t,
 extern void _IO_str_init_static_internal __P ((struct _IO_strfile_ *, char *,
 					       int, char *));
 
-extern struct _IO_jump_t _IO_file_jumps_internal;
-extern struct _IO_jump_t _IO_wfile_jumps_internal;
+extern struct _IO_jump_t _IO_file_jumps_internal attribute_hidden;
+extern struct _IO_jump_t _IO_wfile_jumps_internal attribute_hidden;
 
-extern struct _IO_FILE_plus *_IO_list_all_internal;
+extern struct _IO_FILE_plus *_IO_list_all_internal attribute_hidden;
 
 extern void _IO_link_in_internal __P ((struct _IO_FILE_plus *));
 extern int _IO_sputbackc_internal __P ((_IO_FILE *, int));

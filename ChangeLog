@@ -1,5 +1,48 @@
 2002-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/itowa-digits.c (_itowa_lower_digits): Define as hidden.
+	(_itowa_upper_digits): Likewise.
+
+	* libio/stdio.c (_IO_stdin, _IO_stdout, _IO_stderr): Define as hidden.
+	* libio/libio.h [_LIBC] (_IO_stdin, _IO_stdout, _IO_stderr): Declare
+	as hidden.
+
+	* libio/libioP.h: Declare _IO_file_jumps_mmap, _IO_wfile_jumps,
+	_IO_wfile_jumps_mmap, _IO_proc_jumps, _IO_old_proc_jumps,
+	_IO_str_jumps, _IO_wstr_jumps, _IO_file_jumps_internal,
+	_IO_wfile_jumps_internal, and _IO_list_all_internal as hidden.
+
+	* gmon/gmon.c (__bb_head): Define as hidden.
+	* gmon/bb_exit_func.c (__bb_head): Declare as hidden.
+
+	* argp/argp-parse.c (_argp_hang): Define as static.
+
+	* include/libc-symbols.h (_INTVARDEF): Adjust for visibility
+	handling in latest compilers.
+
+	* inet/in6_addr.c (in6addr_any): Use INTVARDEF not INTDEF to
+	define alias.
+	* libio/fileops.c (_IO_file_jumps): Likewise.
+	* libio/stdfiles.c (_IO_list_all): Likewise.
+	* libio/wfileops.c (_IO_wfile_jumps): Likewise.
+
+	* malloc/malloc.h: Move __libc_malloc_initialized declaration to
+	include/malloc.h.
+	* include/malloc.h: Add __libc_malloc_initialized declaration
+	here.  Mark variable hidden.
+	* malloc/malloc.c: Include <malloc.h> not "malloc.h".
+
+	* elf/dl-open.c (__libc_argc): Declare as hidden.
+	(__libc_argv): Likewise.
+	* sysdeps/generic/wordexp.c (__libc_argc): Declare as hidden.
+	(__libc_argv): Likewise.
+	* sysdeps/mach/hurd/i386/init-first.c: Define __libc_argc and
+	__libc_argv as hidden.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/init-first.c: Likewise.
+	* sysdeps/unix/sysv/aix/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+
 	* include/stdlib.h (__libc_drand48_data): Declare as hidden.
 	* stdlib/drand48.c: Remove declaration of __libc_drand48_data here.
 	* stdlib/erand48.c: Likewise.

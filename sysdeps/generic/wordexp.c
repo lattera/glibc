@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -56,8 +56,8 @@
  */
 
 /* These variables are defined and initialized in the startup code.  */
-extern int __libc_argc;
-extern char **__libc_argv;
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
 
 /* Some forward declarations */
 static int parse_dollars (char **word, size_t *word_length, size_t *max_length,
