@@ -22,8 +22,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/* Beginning and end of our code segment.  */
-extern void _start (void), etext (void);
+/* Beginning and end of our code segment. We cannot declare them
+   as the external functions since we want the addresses of those
+   labels. Taking the address of a function may have different
+   meanings on different platforms. */
+extern void _start, etext;
 
 #ifndef HAVE_INITFINI
 /* This function gets called at startup by the normal constructor
