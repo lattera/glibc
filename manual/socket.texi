@@ -1236,12 +1236,7 @@ If the name lookup by @code{gethostbyname} or @code{gethostbyaddr}
 fails, you can find out the reason by looking at the value of the
 variable @code{h_errno}.  (It would be cleaner design for these
 functions to set @code{errno}, but use of @code{h_errno} is compatible
-with other systems.)  Before using @code{h_errno}, you must declare it
-like this:
-
-@smallexample
-extern int h_errno;
-@end smallexample
+with other systems.)
 
 Here are the error codes that you may find in @code{h_errno}:
 

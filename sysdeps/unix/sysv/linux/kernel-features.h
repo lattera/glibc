@@ -21,9 +21,6 @@
 /* This file must not contain any C code.  At least it must be protected
    to allow using the file also in assembler files.  */
 
-/* XXX For testing.  */
-#define __LINUX_KERNEL_VERSION 131584
-
 #ifndef __LINUX_KERNEL_VERSION
 /* We assume the worst; all kernels should be supported.  */
 # define __LINUX_KERNEL_VERSION	0
