@@ -235,18 +235,30 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
 		  \$$(compile-command.S)";				      \
 	     echo "\$$(objpfx)%$$o: $$dir/%.s \$$(before-compile); \
-		  \$$(compile-command.s)";				      \
+		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
 	     $(close-check-inhibit-asm)	\
 	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
 	   done; \
 	   $(open-check-inhibit-asm) \
 	   echo "\$$(objpfx)%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
 		\$$(make-dummy-dep)";			       \
+	   echo "\$$(objpfx)rtld-%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
+		\$$(make-dummy-dep)";			       \
 	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
+		\$$(+make-deps)";					      \
+	   echo "\$$(objpfx)rtld-%.d: $$dir/%.S \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	   $(close-check-inhibit-asm)	\
 	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
+		\$$(+make-deps)";					      \
+	   echo "\$$(objpfx)rtld-%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	 done;								      \
 	 echo 'sysd-rules-done = t') > $@T
@@ -335,12 +347,14 @@ endif
 # together.  You can't compile the C library with such a compiler.
 OUTPUT_OPTION = -o $@
 
+# We need the $(CFLAGS) to be in there to have the right predefines during
+# the dependency run for C sources.  But having it for assembly sources can
+# get the wrong predefines.
 S-CPPFLAGS = $(asm-CPPFLAGS)
 define +make-deps
 $(make-target-directory)
--@rm -f $@
-$(+mkdep) $< $(CFLAGS) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-sed \
+$(+mkdep) $< $(if $(filter %.c,$<),$(CFLAGS)) \
+	     $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | sed \
 -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@ $(generate-md5)
@@ -1090,6 +1104,7 @@ common-mostlyclean:
 				     $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
 	-rm -f core
+	-rm -f $(objpfx)rtld-*.os
 	$(rmobjs)
 define rmobjs
 $(foreach o,$(object-suffixes-for-libc),
@@ -1099,6 +1114,7 @@ endef
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean
 	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
+	-rm -f $(objpfx)rtld-*.d
 	-rm -fr $(addprefix $(objpfx),$(generated-dirs))
 	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(objpfx)distinfo
