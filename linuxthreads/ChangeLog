@@ -1,3 +1,8 @@
+2000-04-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/pt-machine.h (MEMORY_BARRIER): Define.
+	(__compare_and_swap): Mark as modifying memory.
+
 2000-04-11  Geoff Keating  <geoffk@cygnus.com>
 
 	* sysdeps/powerpc/pt-machine.h (MEMORY_BARRIER): Don't be

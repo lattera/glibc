@@ -1,8 +1,8 @@
 /* Machine-dependent pthreads configuration and inline functions.
 
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ralf Baechle <ralf@gnu.ai.mit.edu>.
+   Contributed by Ralf Baechle <ralf@gnu.org>.
    Based on the Alpha version by Richard Henderson <rth@tamu.edu>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,9 @@
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
+
+/* Memory barrier.  */
+#define MEMORY_BARRIER() __asm__ ("" : : : "memory")
 
 
 /* Spinlock implementation; required.  */
@@ -84,7 +87,8 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 	"2:\t.set\tmips0\n\t"
 	"/* End compare & swap */"
 	: "=&r"(ret), "=m"(*p)
-	: "r"(oldval), "r"(newval), "m"(*p));
+	: "r"(oldval), "r"(newval), "m"(*p)
+	: "memory");
 
   return ret;
 }
