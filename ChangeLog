@@ -1,5 +1,15 @@
 2000-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/Makefile (distribute): Add glreflib1.c and glreflib2.c.
+	(tests): Add glrefmain.
+	Add rules to build modules and run tests.  Ignore result of glrefmain
+	for now since it fails.
+	* dlfcn/glrefmain.c: New file.
+	* dlfcn/glreflib1.c: New file.
+	* dlfcn/glreflib2.c: New file.
+
+	* test-skeleton.c: Include <string.h> for strsignal prototype.
+
 	* locale/programs/ld-collate.c (check_duplicate): Allow repertoire
 	to be missing.
 

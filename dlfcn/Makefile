@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
-distribute	:= dlopenold.c
+distribute	:= dlopenold.c glreflib1.c glreflib2.c
 
 extra-libs-others := libdl
 
@@ -31,4 +31,21 @@ libdl-routines	+= dlopenold
 libdl-shared-only-routines := dlopenold
 endif
 
+ifeq (yes,$(build-shared))
+tests = glrefmain
+endif
+modules-names = glreflib1 glreflib2
+extra-objs += $(modules-names:=.os)
+
 include ../Rules
+
+test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+$(test-modules): $(objpfx)%.so: $(objpfx)%.os
+	$(build-module)
+
+$(objpfx)glrefmain: $(objpfx)libdl.so
+$(objpfx)glrefmain.out: $(objpfx)glrefmain \
+			$(objpfx)glreflib1.so $(objpfx)glreflib2.so
+	-$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)glrefmain > $@
