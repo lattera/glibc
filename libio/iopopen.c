@@ -46,9 +46,9 @@
 
 #ifndef _IO_fork
 #ifdef _LIBC
-#define _IO_fork __vfork
+#define _IO_fork __fork
 #else
-#define _IO_fork vfork /* defined in libiberty, if needed */
+#define _IO_fork fork /* defined in libiberty, if needed */
 #endif
 extern _IO_pid_t _IO_fork __P ((void));
 #endif
