@@ -19,12 +19,15 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include <pt-machine.h>
 
 
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
-  XXX
+  while (! __compare_and_swap ((long int *)lock, 0, 1))
+    ;
+  return 0;
 }
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
 
@@ -32,7 +35,7 @@ weak_alias (__pthread_spin_lock, pthread_spin_lock)
 int
 __pthread_spin_trylock (pthread_spinlock_t *lock)
 {
-  XXX
+  return __compare_and_swap ((long int *)lock, 0, 1) ? 0 : EBUSY;
 }
 weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 
@@ -40,7 +43,9 @@ weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 int
 __pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  XXX
+  MEMORY_BARRIER ();
+  *lock = 0;
+  return 0;
 }
 weak_alias (__pthread_spin_unlock, pthread_spin_unlock)
 
@@ -51,7 +56,7 @@ __pthread_spin_init (pthread_spinlock_t *lock, int pshared)
   /* We can ignore the `pshared' parameter.  Since we are busy-waiting
      all processes which can access the memory location `lock' points
      to can use the spinlock.  */
-  XXX
+  *lock = 1;
   return 0;
 }
 weak_alias (__pthread_spin_init, pthread_spin_init)
