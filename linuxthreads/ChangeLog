@@ -1,3 +1,8 @@
+2002-02-17  Andreas Schwab  <schwab@suse.de>
+
+	* signals.c (sigwait): Check for old sighandler being SIG_ERR,
+	not NULL.
+
 2002-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.c (INSTALL_NEW_DTV): Define.
