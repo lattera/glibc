@@ -34,6 +34,9 @@ cleanup_handler(cv)
   ++cv->wakeup_seq;
   ++cv->woken_seq;
 
+  /* make sure no signal gets lost.  */
+  FUTEX_WAKE(cv->wakeup_seq, ALL);
+
   lll_unlock(cv->lock);
 }
 

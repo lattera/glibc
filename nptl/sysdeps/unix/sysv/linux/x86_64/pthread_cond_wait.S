@@ -65,6 +65,14 @@ __condvar_cleanup:
 
 	addq	$1, woken_seq(%rdi)
 
+	/* Wake up all waiters to make sure no signal gets lost.  */
+	addq	$wakeup_seq, %rdi
+	movq	$FUTEX_WAKE, %rsi
+	movl	$0x7fffffff, %edx
+	movq	$SYS_futex, %rax
+	syscall
+	subq	$wakeup_seq, %rdi
+
 	LOCK
 #if cond_lock == 0
 	decl	(%rdi)

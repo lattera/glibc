@@ -34,6 +34,7 @@ struct _condvar_cleanup_buffer
   pthread_mutex_t *mutex;
 };
 
+
 void
 __attribute__ ((visibility ("hidden")))
 __condvar_cleanup (void *arg)
@@ -48,6 +49,16 @@ __condvar_cleanup (void *arg)
      appropriately.  */
   ++cbuffer->cond->__data.__wakeup_seq;
   ++cbuffer->cond->__data.__woken_seq;
+
+  /* Wake everybody to make sure no condvar signal gets lost.  */
+#if BYTE_ORDER == LITTLE_ENDIAN
+  int *futex = ((int *) (&cbuffer->cond->__data.__wakeup_seq));
+#elif BYTE_ORDER == BIG_ENDIAN
+  int *futex = ((int *) (&cbuffer->cond->__data.__wakeup_seq)) + 1;
+#else
+# error "No valid byte order"
+#endif
+  lll_futex_wake (futex, INT_MAX);
 
   /* We are done.  */
   lll_mutex_unlock (cbuffer->cond->__data.__lock);

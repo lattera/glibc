@@ -21,7 +21,7 @@
    the application is using threads.  */
 #ifndef UP
 # define LOCK \
-	cmpl	$0, __libc_multiple_threads_ptr(%rip); 			      \
+	cmpl	$0, __libc_multiple_threads(%rip); 			      \
 	je	0f;							      \
 	lock;								      \
 0:

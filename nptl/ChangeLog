@@ -1,3 +1,22 @@
+2003-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
+	(__condvar_cleanup): Wake up all waiters in case we got signaled
+	after being woken up but before disabling asynchronous
+	cancellation.
+	* sysdeps/pthread/pthread_cond_wait.c (__condvar_cleanup): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__condvar_cleanup): Likewise.
+
+	* init.c (__NR_set_tid_address): If already defined, don't redefine.
+	Make it an error if architecture has no #if case.  Add x86-64.
+
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Add flags for
+	pt-initfini.s generation.
+
+	* sysdeps/x86_64/tls.h: Include <asm/prctl.h>.
+	(TLS_INIT_TP): Fix typo.
+
 2003-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/bits/atomic.h (atomic_exchange_and_add): Swap 2nd and

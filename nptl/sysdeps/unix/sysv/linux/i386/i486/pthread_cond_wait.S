@@ -63,24 +63,24 @@ __condvar_cleanup:
 #endif
 	call	__lll_mutex_lock_wait
 
-1:	addl	$1, wakeup_seq(%ebx)
-	adcl	$0, wakeup_seq+4(%ebx)
+1:	addl	$wakeup_seq, %ebx
+	addl	$1, (%ebx)
+	adcl	$0, 4(%ebx)
 
-	addl	$1, woken_seq(%ebx)
-	adcl	$0, woken_seq+4(%ebx)
+	addl	$1, woken_seq-wakeup_seq(%ebx)
+	adcl	$0, woken_seq-wakeup_seq+4(%ebx)
+
+	/* Wake up all waiters to make sure no signal gets lost.  */
+	movl	$FUTEX_WAKE, %ecx
+	movl	$SYS_futex, %eax
+	movl	$0x7fffffff, %edx
+	ENTER_KERNEL
 
 	LOCK
-#if cond_lock == 0
-	subl	$1, (%ebx)
-#else
-	subl	$1, cond_lock(%ebx)
-#endif
+	subl	$1, cond_lock-wakeup_seq(%ebx)
 	je	2f
-#if cond_lock == 0
-	movl	%ebx, %eax
-#else
-	leal	cond_lock(%ebx), %eax
-#endif
+
+	leal	cond_lock-wakeup_seq(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 
 	/* Lock the mutex unless asynchronous cancellation is in effect.  */

@@ -20,6 +20,7 @@
 #ifndef _TLS_H
 #define _TLS_H	1
 
+#include <asm/prctl.h>	/* For ARCH_SET_FS.  */
 #ifndef __ASSEMBLER__
 # include <stddef.h>
 # include <stdint.h>
@@ -123,7 +124,7 @@ typedef struct
 		   : "=a" (_result)					      \
 		   : "0" ((unsigned long int) __NR_arch_prctl),		      \
 		     "D" ((unsigned long int) ARCH_SET_FS),		      \
-		     "S" (_descr)					      \
+		     "S" (_thrdescr)					      \
 		   : "memory", "cc", "r11", "cx");			      \
 									      \
     _result ? "cannot set %fs base address for thread-local storage" : 0;     \

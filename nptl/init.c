@@ -33,14 +33,20 @@
 #include <shlib-compat.h>
 
 
+#ifndef __NR_set_tid_address
 /* XXX For the time being...  Once we can rely on the kernel headers
    having the definition remove these lines.  */
 #if defined __s390__
 # define __NR_set_tid_address	252
 #elif defined __ia64__
 # define __NR_set_tid_address	1233
-#else
+#elif defined __i386__
 # define __NR_set_tid_address	258
+#elif defined __x86_64__
+# define __NR_set_tid_address	218
+#eli
+# error "define __NR_set_tid_address"
+#endif
 #endif
 
 
