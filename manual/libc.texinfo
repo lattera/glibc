@@ -160,7 +160,9 @@ Appendices
 
 * Library Summary::             A summary showing the syntax, header file,
                                  and derivation of each library feature.
-* Maintenance::                 How to install and maintain the GNU C Library.
+* Installation::                How to install the GNU C library.
+* Maintenance::                 How to enhance and port the GNU C Library.
+* Contributors::                Who wrote what parts of the GNU C Library.
 * Copying::                     The GNU Library General Public License says
                                  how you can copy and share the GNU C Library.
 
@@ -947,11 +949,8 @@ Library Maintenance
 * Reporting Bugs::              How to report bugs (if you want to
                                  get them fixed) and other troubles
                                  you may have with the GNU C library.
-* Porting::                     How to port the GNU C library to
-                                 a new machine or operating system.
 @c * Traditional C Compatibility::  Using the GNU C library with non-ANSI
 @c                                          C compilers.
-* Contributors::		Who wrote what parts of the GNU C Library.
 
 Porting the GNU C Library
 
@@ -996,11 +995,13 @@ Porting the GNU C Library
 @comment Includes of the appendices.
 @include lang.texi
 @include header.texi
+@include install.texi
 @include maint.texi
+@include contrib.texi
 
 
 @set lgpl-appendix
-@node Copying, Concept Index, Maintenance, Top
+@node Copying, Concept Index, Contributors, Top
 @include lgpl.texinfo
 
 

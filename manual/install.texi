@@ -1,0 +1,375 @@
+@c This is for making the `INSTALL' file for the distribution.
+@c Makeinfo ignores it when processing the file from the include.
+@setfilename INSTALL
+
+@node Installation, Maintenance, Library Summary, Top
+@appendix Installing the GNU C Library
+
+@menu
+* Tools for Installation::      We recommend using these tools to build.
+* Supported Configurations::    What systems the GNU C library runs on.
+* Reporting Bugs::              How to report bugs (if you want to
+                                get them fixed) and other troubles
+                                you may have with the GNU C library.
+@end menu
+
+Installation of the GNU C library is relatively simple, but usually
+requires several GNU tools to be installed already.
+@iftex
+(@pxref{Tools for Installation}, below.)
+@end iftex
+
+Before you do anything else, you should read the file @file{FAQ} found
+at the top level of the source tree.  This file answers common questions
+and describes problems you may experience with compilation and
+installation.  It is updated more frequently than this manual.
+
+To configure the GNU C library for your system, run the shell script
+@file{configure} with @code{sh}.  Use an argument which is the
+conventional GNU name for your system configuration---for example,
+@samp{sparc-sun-sunos4.1}, for a Sun 4 running SunOS 4.1.
+@xref{Installation, Installation, Installing GNU CC, gcc.info, Using and
+Porting GNU CC}, for a full description of standard GNU configuration
+names.  If you omit the configuration name, @file{configure} will try to
+guess one for you by inspecting the system it is running on.  It may or
+may not be able to come up with a guess, and the its guess might be
+wrong.  @file{configure} will tell you the canonical name of the chosen
+configuration before proceeding.
+
+Here are some options that you should specify (if appropriate) when
+you run @code{configure}:
+
+@table @samp
+@item --with-binutils=@var{directory}
+Use the binutils (assembler and linker) in @file{@var{directory}}, not
+the ones the C compiler would default to.  You could use this option if
+the default binutils on your system cannot deal with all the constructs
+in the GNU C library.  (@code{configure} will detect the problem and
+suppress these constructs, so the library will still be usable, but
+functionality may be lost---for example, you can not build a shared libc
+with old binutils.)
+
+@c extra blank line makes it look better
+@item --without-fp
+@itemx --nfp
+
+Use this option if your computer lacks hardware floating-point support
+and your operating system does not emulate an FPU.
+
+@item --prefix=@var{directory}
+Install machine-independent data files in subdirectories of
+@file{@var{directory}}.  (You can also set this in @file{configparms};
+see below.)  The default is to install in `/usr/local'.
+
+@item --exec-prefix=@var{directory}
+Install the library and other machine-dependent files in subdirectories
+of @file{@var{directory}}.  (You can also set this in
+@file{configparms}; see below.)  The default is to use <prefix>/bin
+and <prefix>/sbin.
+
+@item --enable-shared
+@itemx --disable-shared
+Enable or disable building of an ELF shared library on systems that
+support it.  The default is to build the shared library on systems using
+ELF when the GNU @code{binutils} are available.
+
+@item --enable-profile
+@itemx --disable-profile
+Enable or disable building of the profiled C library, @samp{-lc_p}.  The
+default is to build the profiled library.  You may wish to disable it if
+you don't plan to do profiling, because it doubles the build time of
+compiling just the unprofiled static library.
+
+@item --enable-omitfp
+Enable building a highly-optimized but possibly undebuggable C
+library.  This causes the normal static and shared (if enabled) C
+libraries to be compiled with maximal optimization, including the
+@samp{-fomit-frame-pointer} switch that makes debugging impossible on
+many machines, and without debugging information (which makes the
+binaries substantially smaller).  An additional static library is
+compiled with no optimization and full debugging information, and
+installed as @samp{-lc_g}.
+
+@item --enable-add-ons[=LIST]
+Certain components of the C library are distributed separately from the
+rest of the sources.  In particular, the @code{crypt} function and its
+friends are separated due to US export control regulations, and the
+threading support code for Linux is maintained separately.  You can get
+these @dfn{add-on} packages from the same place you got the libc
+sources.  To use them, unpack them into your source tree, and give
+@code{configure} the @samp{--enable-add-ons} option.
+
+If you do not wish to use some add-on package that you have present in
+your source tree, give this option a list of the add-ons that you
+@emph{do} want used, like this: @samp{--enable-add-ons=crypt,linuxthreads}
+@end table
+
+You should not build the library in the same directory as the sources,
+because there are bugs in @code{make clean}.  Make a directory for the
+build, and run @code{configure} from that directory, like this:
+
+@smallexample
+mkdir sun4
+cd sun4
+../configure sparc-sun-sunos4.1
+@end smallexample
+
+@noindent
+@code{configure} looks for the sources in whatever directory you
+specified for finding @code{configure} itself.  It does not matter where
+in the file system the source and build directories are---as long as you
+specify the source directory when you run @code{configure}, you will get
+the proper results.
+
+This feature lets you keep sources and binaries in different
+directories, and that makes it easy to build the library for several
+different machines from the same set of sources.  Simply create a
+build directory for each target machine, and run @code{configure} in
+that directory specifying the target machine's configuration name.
+
+The library has a number of special-purpose configuration parameters.
+These are defined in the file @file{configparms}; see the comments in
+that file for the details.  To change them, copy @file{configparms} into
+your build directory and modify it as appropriate for your system.
+@code{configure} will not notice your modifications if you change the
+file in the source directory.
+
+It is easy to configure the GNU C library for cross-compilation by
+setting a few variables in @file{configparms}.  Set @code{CC} to the
+cross-compiler for the target you configured the library for; it is
+important to use this same @code{CC} value when running
+@code{configure}, like this: @samp{CC=@var{target}-gcc configure
+@var{target}}.  Set @code{BUILD_CC} to the compiler to use for for
+programs run on the build system as part of compiling the library.  You
+may need to set @code{AR} and @code{RANLIB} to cross-compiling versions
+of @code{ar} and @code{ranlib} if the native tools are not configured to
+work with object files for the target you configured for.
+
+Some of the machine-dependent code for some machines uses extensions in
+the GNU C compiler, so you may need to compile the library with GCC.
+(In fact, all of the existing complete ports require GCC.)
+
+
+To build the library and related programs, type @code{make}.  This will
+produce a lot of output, some of which may look like errors from
+@code{make} (but isn't).  Look for error messages from @code{make}
+containing @samp{***}.  Those indicate that something is really wrong.
+
+To build and run some test programs which exercise some of the library
+facilities, type @code{make check}.  This will produce several files
+with names like @file{@var{program}.out}.
+
+To format the @cite{GNU C Library Reference Manual} for printing, type
+@w{@code{make dvi}}.  You need a working @TeX{} installation to do this.
+
+To install the library and its header files, and the Info files of the
+manual, type @code{make install}.  This will build things if necessary,
+before installing them.  If you want to install the files in a different
+place than the one specified at configuration time you can specify a
+value for the Makefile variable @code{install_root} on the command line.
+This is useful to create chroot'ed environment or to prepare binary
+releases.@refill
+
+@node Tools for Installation
+@appendixsec Recommended Tools to Install the GNU C Library
+@cindex installation tools
+@cindex tools, for installing library
+
+We recommend installing the following GNU tools before attempting to
+build the GNU C library:
+
+@itemize @bullet
+@item
+GNU @code{make} 3.75
+
+You need the latest version of GNU @code{make}.  Modifying the GNU C
+Library to work with other @code{make} programs would be so hard that we
+recommend you port GNU @code{make} instead.  @strong{Really.}  We
+recommend version GNU @code{make} version 3.75.  Versions 3.76 and
+3.76.1 are known to have bugs which only show up in big projects like
+GNU @code{libc}.
+
+@item
+GCC 2.7.2.3
+
+On most platforms, the GNU C library can only be compiled with the GNU C
+compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
+have problems.
+
+On PowerPC, GCC versions dated earlier than 970904 are known not to work
+(they crash), including 2.7.2.
+
+@item
+GNU @code{binutils} 2.8.1.0.23
+
+Using the GNU @code{binutils} (assembler, linker, and related tools) is
+preferable when possible, and they are required to build an ELF shared C
+library.  Version 2.1 of the library uses ELF symbol versioning
+extensively.  Support for this feature is incomplete or buggy before
+binutils 2.8.1.0.23, so you must use at least this version.
+
+@item
+GNU @code{texinfo} 3.11
+
+To correctly translate and install the Texinfo documentation you need
+this version of the @code{texinfo} package.  Earlier versions do not
+understand all the tags used in the document, and the installation
+mechanisms for the info files is not present or works differently.
+
+On some Debian Linux based systems the @code{install-info} program
+supplied with the system works differently from the one we expect.  You
+must therefore run @code{make install} like this:
+
+@smallexample
+make INSTALL_INFO=/path/to/GNU/install-info install
+@end smallexample
+
+@item
+GNU @code{awk} 3.0
+
+Several files used during the build are generated using features of GNU
+@code{awk} that are not found in other implementations.
+@c XXX: Does mawk work?
+@end itemize
+
+@noindent
+If you change any of the @file{configure.in} files you will also need
+
+@itemize @bullet
+@item
+GNU @code{autoconf} 2.12
+@end itemize
+
+@noindent
+and if you change any of the message translation files you will need
+
+@itemize @bullet
+@item
+GNU @code{gettext} 0.10 or later
+@end itemize
+
+@noindent
+You may also need these packages if you upgrade your source tree using
+patches, although we try to avoid this.
+
+
+@node Supported Configurations
+@appendixsec Supported Configurations
+@cindex configurations, all supported
+
+The GNU C Library currently supports configurations that match the
+following patterns:
+
+@smallexample
+alpha-@var{anything}-linux
+i@var{x}86-@var{anything}-gnu
+i@var{x}86-@var{anything}-linux
+m68k-@var{anything}-linux
+powerpc-@var{anything}-linux
+sparc-@var{anything}-linux
+sparc64-@var{anything}-linux
+@end smallexample
+
+Former releases of this library (version 1.09.1 and perhaps earlier
+versions) used to run on the following configurations:
+
+@smallexample
+alpha-dec-osf1
+alpha-@var{anything}-linuxecoff
+i@var{x}86-@var{anything}-bsd4.3
+i@var{x}86-@var{anything}-isc2.2
+i@var{x}86-@var{anything}-isc3.@var{n}
+i@var{x}86-@var{anything}-sco3.2
+i@var{x}86-@var{anything}-sco3.2v4
+i@var{x}86-@var{anything}-sysv
+i@var{x}86-@var{anything}-sysv4
+i@var{x}86-force_cpu386-none
+i@var{x}86-sequent-bsd
+i960-nindy960-none
+m68k-hp-bsd4.3
+m68k-mvme135-none
+m68k-mvme136-none
+m68k-sony-newsos3
+m68k-sony-newsos4
+m68k-sun-sunos4.@var{n}
+mips-dec-ultrix4.@var{n}
+mips-sgi-irix4.@var{n}
+sparc-sun-solaris2.@var{n}
+sparc-sun-sunos4.@var{n}
+@end smallexample
+
+Since no one has volunteered to test and fix these configurations,
+they are not supported at the moment.  They probably don't compile;
+they definitely don't work anymore.  Porting the library is not hard.
+If you are interested in doing a port, please contact the glibc
+maintainers by sending electronic mail to @email{bug-glibc@@gnu.org}.
+
+Each case of @samp{i@var{x}86} can be @samp{i386}, @samp{i486},
+@samp{i586}, or @samp{i686}.  All of those configurations produce a
+library that can run on any of these processors.  The library will be
+optimized for the specified processor, but will not use instructions not
+available on all of them.
+
+While no other configurations are supported, there are handy aliases for
+these few.  (These aliases work in other GNU software as well.)
+
+@smallexample
+decstation
+hp320-bsd4.3 hp300bsd
+i486-gnu
+i586-linux
+i386-sco
+i386-sco3.2v4
+i386-sequent-dynix
+i386-svr4
+news
+sun3-sunos4.@var{n} sun3
+sun4-solaris2.@var{n} sun4-sunos5.@var{n}
+sun4-sunos4.@var{n} sun4
+@end smallexample
+
+@node Reporting Bugs
+@appendixsec Reporting Bugs
+@cindex reporting bugs
+@cindex bugs, reporting
+
+There are probably bugs in the GNU C library.  There are certainly
+errors and omissions in this manual.  If you report them, they will get
+fixed.  If you don't, no one will ever know about them and they will
+remain unfixed for all eternity, if not longer.
+
+To report a bug, first you must find it.  Hopefully, this will be the
+hard part.  Once you've found a bug, make sure it's really a bug.  A
+good way to do this is to see if the GNU C library behaves the same way
+some other C library does.  If so, probably you are wrong and the
+libraries are right (but not necessarily).  If not, one of the libraries
+is probably wrong.
+
+Once you're sure you've found a bug, try to narrow it down to the
+smallest test case that reproduces the problem.  In the case of a C
+library, you really only need to narrow it down to one library
+function call, if possible.  This should not be too difficult.
+
+The final step when you have a simple test case is to report the bug.
+When reporting a bug, send your test case, the results you got, the
+results you expected, what you think the problem might be (if you've
+thought of anything), your system type, and the version of the GNU C
+library which you are using.  Also include the files
+@file{config.status} and @file{config.make} which are created by running
+@file{configure}; they will be in whatever directory was current when
+you ran @file{configure}.
+
+If you think you have found some way in which the GNU C library does not
+conform to the ISO and POSIX standards (@pxref{Standards and
+Portability}), that is definitely a bug.  Report it!@refill
+
+Send bug reports to the Internet address
+@email{bug-glibc@@gnu.org}.  If you have other problems
+with installation or use, please report those as well.@refill
+
+If you are not sure how a function should behave, and this manual
+doesn't tell you, that's a bug in the manual.  Report that too!  If the
+function's behavior disagrees with the manual, then either the library
+or the manual has a bug, so report the disagreement.  If you find any
+errors or omissions in this manual, please report them to the Internet
+address @email{bug-glibc-manual@@gnu.org}.

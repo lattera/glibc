@@ -1,4 +1,4 @@
-@node Library Summary, Maintenance, Language Features, Top
+@node Library Summary, Installation, Language Features, Top
 @appendix Summary of Library Facilities
 
 This appendix is a complete list of the facilities declared within the

@@ -973,45 +973,63 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
 {
   /* We are poised just after "$(" */
   int paren_depth = 1;
-  int error;
+  int error = 0;
   size_t comm_length = 0;
   size_t comm_maxlen = 0;
   char *comm = NULL;
+  int quoted = 0; /* 1 for singly-quoted, 2 for doubly-quoted */
 
   for (; words[*offset]; ++(*offset))
     {
       switch (words[*offset])
 	{
+	case '\'':
+	  if (quoted == 0)
+	    quoted = 1;
+	  else if (quoted == 1)
+	    quoted = 0;
+
+	  break;
+
+	case '"':
+	  if (quoted == 0)
+	    quoted = 2;
+	  else if (quoted == 2)
+	    quoted = 0;
+
+	  break;
+
 	case ')':
-	  if (--paren_depth == 0)
+	  if (!quoted && --paren_depth == 0)
 	    {
 	      /* Go -- give script to the shell */
-	      error = exec_comm (comm, word, word_length, max_length, flags,
-				 pwordexp, ifs, ifs_white);
-	      free (comm);
+	      if (comm)
+		{
+		  error = exec_comm (comm, word, word_length, max_length,
+				     flags, pwordexp, ifs, ifs_white);
+		  free (comm);
+		}
+
 	      return error;
 	    }
 
 	  /* This is just part of the script */
-	  comm = w_addchar (comm, &comm_length, &comm_maxlen, words[*offset]);
-	  if (comm == NULL)
-	    return WRDE_NOSPACE;
-
 	  break;
 
 	case '(':
-	  ++paren_depth;
-	default:
-	  comm = w_addchar (comm, &comm_length, &comm_maxlen, words[*offset]);
-	  if (comm == NULL)
-	    return WRDE_NOSPACE;
-
-	  break;
+	  if (!quoted)
+	    ++paren_depth;
 	}
+
+      comm = w_addchar (comm, &comm_length, &comm_maxlen, words[*offset]);
+      if (comm == NULL)
+	return WRDE_NOSPACE;
     }
 
   /* Premature end */
-  free (comm);
+  if (comm)
+    free (comm);
+
   return WRDE_SYNTAX;
 }
 
@@ -1022,73 +1040,100 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	     const char *ifs, const char *ifs_white, int quoted)
 {
   /* We are poised just after "$" */
-  enum remove_pattern_enum
+  enum action
   {
-    RP_NONE = 0,
-    RP_SHORT_LEFT,
-    RP_LONG_LEFT,
-    RP_SHORT_RIGHT,
-    RP_LONG_RIGHT
+    ACT_NONE,
+    ACT_RP_SHORT_LEFT = '#',
+    ACT_RP_LONG_LEFT = 'L',
+    ACT_RP_SHORT_RIGHT = '%',
+    ACT_RP_LONG_RIGHT = 'R',
+    ACT_NULL_ERROR = '?',
+    ACT_NULL_SUBST = '-',
+    ACT_NONNULL_SUBST = '+',
+    ACT_NULL_ASSIGN = '='
   };
-  size_t start = *offset;
   size_t env_length = 0;
   size_t env_maxlen = 0;
   size_t pat_length = 0;
   size_t pat_maxlen = 0;
+  size_t start = *offset;
   char *env = NULL;
   char *pattern = NULL;
   char *value = NULL;
-  char action = '\0';
-  enum remove_pattern_enum remove = RP_NONE;
-  int colon_seen = 0;
+  enum action action = ACT_NONE;
   int depth = 0;
+  int colon_seen = 0;
   int seen_hash = 0;
   int free_value = 0;
+  int pattern_is_quoted = 0; /* 1 for singly-quoted, 2 for doubly-quoted */
   int error;
+  int brace = words[*offset] == '{';
+
+  if (brace)
+    ++*offset;
 
   for (; words[*offset]; ++(*offset))
     {
-      switch (words[*offset])
-	{
-	case '{':
-	  ++depth;
+      int special;
 
-	  if (action != '\0' || remove != RP_NONE)
+      if (action != ACT_NONE)
+	{
+	  switch (words[*offset])
 	    {
-	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-				   words[*offset]);
-	      if (pattern == NULL)
-		goto no_space;
+	    case '{':
+	      if (!pattern_is_quoted)
+		++depth;
+	      break;
+
+	    case '}':
+	      if (!pattern_is_quoted)
+		{
+		  if (depth == 0)
+		    goto envsubst;
+		  --depth;
+		}
+	      break;
+
+	    case '\\':
+	      if (!pattern_is_quoted && words[++*offset] == '\0')
+		goto syntax;
+	      break;
+
+	    case '\'':
+	      if (pattern_is_quoted == 0)
+		pattern_is_quoted = 1;
+	      else if (pattern_is_quoted == 1)
+		pattern_is_quoted = 0;
+
+	      break;
+
+	    case '"':
+	      if (pattern_is_quoted == 0)
+		pattern_is_quoted = 2;
+	      else if (pattern_is_quoted == 2)
+		pattern_is_quoted = 0;
 
 	      break;
 	    }
 
-	  if (*offset == start)
-	    break;
+	  pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
+			       words[*offset]);
+	  if (pattern == NULL)
+	    goto no_space;
 
-	  /* Otherwise evaluate */
-	  /* (and re-parse this character) */
-	  --(*offset);
-	  goto envsubst;
+	  continue;
+	}
 
+      switch (words[*offset])
+	{
 	case '}':
-	  if (words[start] != '{')
-	      --(*offset);
+	  if (!brace)
+	    goto end_of_word;
 
-	  if (action != '\0' || remove != RP_NONE)
-	    {
-	      if (--depth)
-		{
-		  pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-				       words[*offset]);
-		  if (pattern == NULL)
-		    goto no_space;
+	  if (env == NULL)
+	    goto syntax;
 
-		  break;
-		}
-	    }
-
-	  /* Evaluate */
+	  /* Evaluate. */
 	  goto envsubst;
 
 	case '#':
@@ -1100,173 +1145,104 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	      goto envsubst;
 	    }
 
-	  if (words[start] != '{')
-	    {
-	      /* Evaluate */
-	      /* (and re-parse this character) */
-	      --(*offset);
-	      goto envsubst;
-	    }
+	  if (!brace)
+	    /* Evaluate */
+	    /* (and re-parse this character) */
+	    goto end_of_word;
 
 	  /* At the start? (i.e. 'string length') */
-	  if (*offset == start + 1)
+	  if (env == NULL)
 	    {
 	      seen_hash = 1;
-	      break;
+	      continue;
 	    }
 	  else if (seen_hash)
 	    goto syntax;
 
-	  /* Separating variable name from prefix pattern? */
-	  if (remove == RP_NONE)
+	  action = ACT_RP_SHORT_LEFT;
+	  if (words[1 + *offset] == '#')
 	    {
-	      remove = RP_SHORT_LEFT;
-	      break;
-	    }
-	  else if (remove == RP_SHORT_LEFT)
-	    {
-	      remove = RP_LONG_LEFT;
-	      break;
+	      ++*offset;
+	      action = ACT_RP_LONG_LEFT;
 	    }
 
-	  /* Must be part of prefix/suffix pattern. */
-	  pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-			       words[*offset]);
-	  if (pattern == NULL)
-	    goto no_space;
-
-	  break;
+	  continue;
 
 	case '%':
-	  if (!env || !*env)
-	    goto syntax;
+	  if (!brace)
+	    /* Re-parse this character after substitution */
+	    goto end_of_word;
 
-	  /* Separating variable name from suffix pattern? */
-	  if (remove == RP_NONE)
-	    {
-	      remove = RP_SHORT_RIGHT;
-	      break;
-	    }
-	  else if (remove == RP_SHORT_RIGHT)
-	    {
-	      remove = RP_LONG_RIGHT;
-	      break;
-	    }
-
-	  /* Must be part of prefix/suffix pattern. */
-	  pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-			       words[*offset]);
-	  if (pattern == NULL)
-	    goto no_space;
-
-	  break;
-
-	case ':':
-	  if (!env || !*env)
-	    goto syntax;
-
-	  if (action != '\0' || remove != RP_NONE)
-	    {
-	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-				   words[*offset]);
-	      if (pattern == NULL)
-		goto no_space;
-
-	      break;
-	    }
-
-	  if ((words[1 + *offset] == '-') || (words[1 + *offset] == '=')
-	      || (words[1 + *offset] == '?') || (words[1 + *offset] == '+'))
-	    {
-	      colon_seen = 1;
-	      break;
-	    }
-
-	  goto syntax;
-
-	case '-':
-	case '=':
-	case '?':
-	case '+':
 	  if (!env || !*env)
 	    goto syntax;
 
 	  if (seen_hash)
 	    goto syntax;
 
-	  if (action != '\0' || remove != RP_NONE)
+	  action = ACT_RP_SHORT_RIGHT;
+	  if (words[1 + *offset] == '%')
 	    {
-	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-				   words[*offset]);
-	      if (pattern == NULL)
-		goto no_space;
-
-	      break;
+	      ++*offset;
+	      action = ACT_RP_LONG_RIGHT;
 	    }
+
+	  continue;
+
+	case ':':
+	  if (!brace)
+	    goto end_of_word;
+
+	  if (!env || !*env)
+	    goto syntax;
+
+	  if (seen_hash)
+	    goto syntax;
+
+	  if (words[1 + *offset] != '-' && words[1 + *offset] != '='
+	      && words[1 + *offset] != '?' && words[1 + *offset] != '+')
+	    goto syntax;
+
+	  colon_seen = 1;
+	  action = words[++*offset];
+	  continue;
+
+	case '-':
+	case '=':
+	case '?':
+	case '+':
+	  if (!brace)
+	    goto end_of_word;
+
+	  if (!env || !*env)
+	    goto syntax;
 
 	  action = words[*offset];
-	  break;
+	  continue;
+	}
 
-	case '\\':
-	  if (action != '\0' || remove != RP_NONE)
-	    {
-	      /* Um. Is this right? */
-	      error = parse_qtd_backslash (word, word_length, max_length,
-					   words, offset);
-	      if (error == 0)
-		break;
-	    }
-	  else
-	    {
-	      error = WRDE_SYNTAX;
-	    }
+      special = (strchr ("*@$", words[*offset]) != NULL
+		 || isdigit (words[*offset]));
 
-	  if (env)
-	    free (env);
+      if (!isalpha (words[*offset]) && !special)
+	/* Stop and evaluate, remembering char we stopped at */
+	break;
 
-	  if (pattern != NULL)
-	    free (pattern);
+      env = w_addchar (env, &env_length, &env_maxlen,
+			   words[*offset]);
+      if (env == NULL)
+	goto no_space;
 
-	  return error;
-
-	default:
-	  if (action != '\0' || remove != RP_NONE)
-	    {
-	      pattern = w_addchar (pattern, &pat_length, &pat_maxlen,
-				   words[*offset]);
-	      if (pattern == NULL)
-		goto no_space;
-
-	      break;
-	    }
-	  else
-	    {
-	      int special = (strchr ("*@$", words[*offset]) != NULL
-			     || isdigit (words[*offset]));
-
-	      if (isalpha (words[*offset]) || special)
-		{
-		  env = w_addchar (env, &env_length, &env_maxlen,
-				   words[*offset]);
-		  if (env == NULL)
-		    goto no_space;
-
-		  if (special && words[start] != '{')
-		    goto envsubst;
-
-		  /* Keep going (get next char) */
-		  break;
-		}
-
-	      /* Stop and evaluate, remembering char we stopped at */
-	      --(*offset);
-	      goto envsubst;
-	    }
+      if (special)
+	{
+	  if (brace)
+	    ++*offset;
+	  goto envsubst;
 	}
     }
 
   /* End of input string -- remember to reparse the character that we stopped
    * at.  */
+end_of_word:
   --(*offset);
 
 envsubst:
@@ -1381,53 +1357,39 @@ envsubst:
       free (env);
 
       /* Each parameter is a separate word ("$@") */
-      if (__libc_argv[0] == NULL)
+      if (__libc_argv[0] != NULL && __libc_argv[1] != NULL)
 	{
-	  /* This can happen if the application is started without any
-	     parameter, not even a name.  This is legal according to
-	     POSIX since the giving parameters is only a "should" rule.  */
-	  *word = __strdup ("");
-	  *max_length = *word_length = 0;
-	}
-      else
-	{
+	  /* Append first parameter to current word. */
 	  int p;
 
-	  for (p = 1; __libc_argv[p + 1]; p++)
+	  *word = w_addstr (*word, word_length, max_length, __libc_argv[1]);
+	  if (*word == NULL)
+	    return WRDE_NOSPACE;
+
+	  for (p = 1; __libc_argv[p]; p++)
 	    {
-	      char *copy = __strdup (__libc_argv[p]);
-	      if (copy == NULL)
+	      if (w_addword (pwordexp, *word))
 		return WRDE_NOSPACE;
-
-	      error = w_addword (pwordexp, copy);
-	      if (error)
-		{
-		  free (copy);
-		  return error;
-		}
-	    }
-
-	  /* Last parameter becomes current word */
-	  if (__libc_argv[p])
-	    {
 	      *word = __strdup (__libc_argv[p]);
+	      *max_length = *word_length = strlen (*word);
 	      if (*word == NULL)
 		return WRDE_NOSPACE;
-
-	      *max_length = *word_length = strlen (*word);
 	    }
 	}
-
+      
       return 0;
     }
 
   value = getenv (env);
 
-  if (action != '\0' || remove != RP_NONE)
+  if (action != ACT_NONE)
     {
       switch (action)
 	{
-	case 0:
+	case ACT_RP_SHORT_LEFT:
+	case ACT_RP_LONG_LEFT:
+	case ACT_RP_SHORT_RIGHT:
+	case ACT_RP_LONG_RIGHT:
 	  {
 	    char *p;
 	    char c;
@@ -1441,9 +1403,9 @@ envsubst:
 	    if (value == NULL)
 	      break;
 
-	    switch (remove)
+	    switch (action)
 	      {
-	      case RP_SHORT_LEFT:
+	      case ACT_RP_SHORT_LEFT:
 		for (p = value; p <= end; ++p)
 		  {
 		    c = *p;
@@ -1459,7 +1421,7 @@ envsubst:
 
 		break;
 
-	      case RP_LONG_LEFT:
+	      case ACT_RP_LONG_LEFT:
 		for (p = end; p >= value; --p)
 		  {
 		    c = *p;
@@ -1475,7 +1437,7 @@ envsubst:
 
 		break;
 
-	      case RP_SHORT_RIGHT:
+	      case ACT_RP_SHORT_RIGHT:
 		for (p = end; p >= value; --p)
 		  {
 		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
@@ -1487,7 +1449,7 @@ envsubst:
 
 		break;
 
-	      case RP_LONG_RIGHT:
+	      case ACT_RP_LONG_RIGHT:
 		for (p = value; p <= end; ++p)
 		  {
 		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
@@ -1500,13 +1462,13 @@ envsubst:
 		break;
 
 	      default:
-		assert (! "Unexpected `remove' value\n");
+		break;
 	      }
 
 	    break;
 	  }
 
-	case '?':
+	case ACT_NULL_ERROR:
 	  if (value && *value)
 	    /* Substitute parameter */
 	    break;
@@ -1519,9 +1481,6 @@ envsubst:
 	      return 0;
 	    }
 
-	  /* Error - exit */
-	  fprintf (stderr, "%s: ", env);
-
 	  if (*pattern)
 	    {
 	      /* Expand 'pattern' and write it to stderr */
@@ -1533,9 +1492,11 @@ envsubst:
 		{
 		  int i;
 
+		  fprintf (stderr, "%s:", env);
+
 		  for (i = 0; i < we.we_wordc; ++i)
 		    {
-		      fprintf (stderr, "%s%s", i ? " " : "", we.we_wordv[i]);
+		      fprintf (stderr, " %s", we.we_wordv[i]);
 		    }
 
 		  fprintf (stderr, "\n");
@@ -1548,12 +1509,12 @@ envsubst:
 	      return error;
 	    }
 
-	  fprintf (stderr, "parameter null or not set\n");
+	  fprintf (stderr, "%s: parameter null or not set\n", env);
 	  free (env);
 	  free (pattern);
 	  return WRDE_BADVAL;
 
-	case '-':
+	case ACT_NULL_SUBST:
 	  if (value && *value)
 	    /* Substitute parameter */
 	    break;
@@ -1577,10 +1538,14 @@ envsubst:
 		/* No field-splitting is allowed, so imagine
 		   quotes around the word.  */
 		char *qtd_pattern = malloc (3 + strlen (pattern));
-		sprintf (qtd_pattern, "\"%s\"", pattern);
+		if (qtd_pattern)
+		  sprintf (qtd_pattern, "\"%s\"", pattern);
 		free (pattern);
 		pattern = qtd_pattern;
 	      }
+
+	    if (pattern == NULL && (pattern = __strdup("")) == NULL)
+	      goto no_space;
 
 	    error = wordexp (pattern, &we, flags);
 	    if (error)
@@ -1606,7 +1571,7 @@ envsubst:
 		goto no_space;
 	      }
 
-	    if (action == '=')
+	    if (action == ACT_NULL_ASSIGN)
 	      {
 		char *words;
 		char *cp;
@@ -1634,7 +1599,7 @@ envsubst:
 	    return 0;
 	  }
 
-	case '+':
+	case ACT_NONNULL_SUBST:
 	  if (value && *value)
 	    goto subst_word;
 
@@ -1646,7 +1611,7 @@ envsubst:
 	  free (pattern);
 	  return 0;
 
-	case '=':
+	case ACT_NULL_ASSIGN:
 	  if (value && *value)
 	    /* Substitute parameter */
 	    break;
@@ -1818,8 +1783,17 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
 	{
 	  /* Differentiate between $((1+3)) and $((echo);(ls)) */
 	  int i = 3 + *offset;
-	  while (words[i] && words[i] != ')')
-	    ++i;
+	  int depth = 0;
+	  while (words[i] && !(depth == 0 && words[i] == ')'))
+	    {
+	      if (words[i] == '(')
+		++depth;
+	      else if (words[i] == ')')
+		--depth;
+
+	      ++i;
+	    }
+
 	  if (words[i] == ')' && words[i + 1] == ')')
 	    {
 	      (*offset) += 3;

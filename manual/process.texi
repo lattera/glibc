@@ -498,10 +498,18 @@ protected using cancelation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The return value is normally the process ID of the child process whose
-status is reported.  If the @code{WNOHANG} option was specified and no
-child process is waiting to be noticed, the value is zero.  A value of
-@code{-1} is returned in case of error.  The following @code{errno}
-error conditions are defined for this function:
+status is reported.  If there are child processes but none of them is
+waiting to be noticed, @code{waitpid} will block until one is.  However,
+if the @code{WNOHANG} option was specified, @code{waitpid} will return
+zero instead of blocking.
+
+If a specific PID to wait for was given to @code{waitpid}, it will
+ignore all other children (if any).  Therefore if there are children
+waiting to be noticed but the child whose PID was specified is not one
+of them, @code{waitpid} will block or return zero as described above.
+
+A value of @code{-1} is returned in case of error.  The following
+@code{errno} error conditions are defined for this function:
 
 @table @code
 @item EINTR
