@@ -2,7 +2,7 @@
    SunOS 4.1) on top of SunOS's wait4 system call, which has semantics
    different from those documented.  Go Sun!
 
-Copyright (C) 1991 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,8 @@ extern pid_t EXFUN(__wait4_syscall,
 
 pid_t
 DEFUN(__wait4, (pid, stat_loc, options, usage),
-      pid_t pid AND union wait *stat_loc AND int options AND PTR usage)
+      pid_t pid AND union wait *stat_loc AND int options AND
+      struct rusage *usage)
 {
   switch (pid)
     {
