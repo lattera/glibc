@@ -1,5 +1,8 @@
 1998-10-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add __syscall_pread
+	and __syscall_pwrite aliases.
+
 	* sunrpc/rpc/auth.h (AUTH_DH): New macro.  Alias for AUTH_DES.
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Drastically simplify and
