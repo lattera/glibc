@@ -66,6 +66,8 @@ CFLAGS-test-stat.c = -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c = -D_LARGEFILE64_SOURCE
 
 ifeq ($(cross-compiling),no)
-tests: $(objpfx)ftwtest
-	$(SHELL) -e ftwtest-sh $(common-objpfx) $(<D)/$(<F)
+tests: $(objpfx)ftwtest.out
+
+$(objpfx)ftwtest.out: $(objpfx)ftwtest
+	$(SHELL) -e ftwtest-sh $(common-objpfx) $(<D)/$(<F) > $@
 endif
