@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -229,7 +229,27 @@ _IO_wfile_underflow (fp)
   /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
   if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
-    _IO_flush_all_linebuffered ();
+    {
+#if 0
+      _IO_flush_all_linebuffered ();
+#else
+      /* We used to flush all line-buffered stream.  This really isn't
+	 required by any standard.  My recollection is that
+	 traditional Unix systems did this for stdout.  stderr better
+	 not be line buffered.  So we do just that here
+	 explicitly.  --drepper */
+      _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+				_IO_stdout);
+      _IO_flockfile (_IO_stdout);
+
+      if ((_IO_stdout->_flags & (_IO_LINKED | _IO_NO_WRITES | _IO_LINE_BUF))
+	  == (_IO_LINKED | _IO_LINE_BUF))
+	_IO_OVERFLOW (_IO_stdout, EOF);
+
+      _IO_funlockfile (_IO_stdout);
+      _IO_cleanup_region_end (0);
+#endif
+    }
 
   _IO_switch_to_get_mode (fp);
 
