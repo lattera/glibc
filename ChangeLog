@@ -1,3 +1,10 @@
+2003-06-17  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/xstatconv.c: Handle STAT_IS_KERNEL_STAT
+	case.
+	(xstat_conv): Rename to __xstat_conv and remove static inline.
+	(xstat64_conv): Likewise.
+
 2003-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sleep.c (__sleep): Handle parameter
