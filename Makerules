@@ -158,7 +158,7 @@ $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules
 	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
 	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
 	 echo 'common-generated += $(@F)'; \
-	 cat $@.dT; rm -f $@.dT) > $@T
+	 sed $(sed-remove-objpfx) $@.dT; rm -f $@.dT) > $@T
 	mv -f $@T $@
 
 # Generate an ordered list of implicit rules which find the source files in
