@@ -26,45 +26,6 @@
 static long int linux_sysconf (int name);
 
 
-static long int
-handle_i486 (int name)
-{
-  /* The processor only has a unified level 1 cache of 8k.  */
-  switch (name)
-    {
-    case _SC_LEVEL1_ICACHE_SIZE:
-    case _SC_LEVEL1_DCACHE_SIZE:
-      return 8 * 1024;
-
-    case _SC_LEVEL1_ICACHE_ASSOC:
-    case _SC_LEVEL1_DCACHE_ASSOC:
-      // XXX Anybody know this?
-      return 0;
-
-    case _SC_LEVEL1_ICACHE_LINESIZE:
-    case _SC_LEVEL1_DCACHE_LINESIZE:
-      // XXX Anybody know for sure?
-      return 16;
-
-    case _SC_LEVEL2_CACHE_SIZE:
-    case _SC_LEVEL2_CACHE_ASSOC:
-    case _SC_LEVEL2_CACHE_LINESIZE:
-    case _SC_LEVEL3_CACHE_SIZE:
-    case _SC_LEVEL3_CACHE_ASSOC:
-    case _SC_LEVEL3_CACHE_LINESIZE:
-    case _SC_LEVEL4_CACHE_SIZE:
-    case _SC_LEVEL4_CACHE_ASSOC:
-      /* Not available.  */
-      break;
-
-    default:
-      assert (! "cannot happen");
-    }
-
-  return -1;
-}
-
-
 static struct intel_02_cache_info
 {
   unsigned int idx;
@@ -191,12 +152,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 static long int
 handle_intel (int name, unsigned int maxidx)
 {
-  if (maxidx < 2)
-    {
-      // XXX Do such processors exist?  When we know we can fill in some
-      // values.
-      return 0;
-    }
+  assert (maxidx >= 2);
 
   /* OK, we can use the CPUID instruction to get all info about the
      caches.  */
@@ -257,35 +213,6 @@ __sysconf (int name)
   /* We only handle the cache information here (for now).  */
   if (name < _SC_LEVEL1_ICACHE_SIZE || name > _SC_LEVEL4_CACHE_ASSOC)
     return linux_sysconf (name);
-
-  /* Recognize i386 and compatible.  These don't have any cache on
-     board.  */
-  int eflags;
-  int ac;
-  asm volatile ("pushfl;\n\t"
-		"popl %0;\n\t"
-		"movl $0x240000, %1;\n\t"
-		"xorl %0, %1;\n\t"
-		"pushl %1;\n\t"
-		"popfl;\n\t"
-		"pushfl;\n\t"
-		"popl %1;\n\t"
-		"xorl %0, %1;\n\t"
-		"pushl %0;\n\t"
-		"popfl"
-		: "=r" (eflags), "=r" (ac));
-  if (ac == 0)
-    /* This is an i386.  */
-    // XXX Is this true for all brands?
-    return -1;
-
-  /* Detect i486, the last Intel processor without CPUID.  */
-  if ((ac & (1 << 21)) == 0)
-    {
-      /* No CPUID.  */
-      // XXX Fill in info about other brands.  For now only Intel.
-      return handle_i486 (name);
-    }
 
   /* Find out what brand of processor.  */
   unsigned int eax;
