@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -263,12 +263,20 @@ setenv (name, value, replace)
   return __add_to_environ (name, value, NULL, replace);
 }
 
-void
+int
 unsetenv (name)
      const char *name;
 {
-  const size_t len = strlen (name);
+  const size_t len;
   char **ep;
+
+  if (name == NULL || *name == '\0' || strchr (name, '=') != NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  len = strlen (name);
 
   LOCK;
 
@@ -288,6 +296,8 @@ unsetenv (name)
       ++ep;
 
   UNLOCK;
+
+  return 0;
 }
 
 /* The `clearenv' was planned to be added to POSIX.1 but probably

@@ -5,7 +5,16 @@ constant RAND_MAX >= 32767
 macro MB_CUR_MAX
 
 type div_t
+element div_t int quot
+element div_t int rem
 type ldiv_t
+element ldiv_t long quot
+element ldiv_t long rem
+#ifdef XOPEN2K
+type lldiv_t
+element lldiv_t {long long} quot
+element lldiv_t {long long} rem
+#endif
 type size_t
 type wchar_t
 
@@ -13,7 +22,6 @@ constant WNOHANG
 constant WUNTRACED
 
 macro WEXITSTATUS
-macro WIFCONTINUED
 macro WIFEXITED
 macro WIFSIGNALED
 macro WIFSTOPPED
@@ -27,6 +35,9 @@ function int atexit (void(*)(void))
 function double atof (const char*)
 function int atoi (const char*)
 function {long int} atol (const char*)
+#ifdef XOPEN2K
+function {long long} atoll (const char*)
+#endif
 function {void*} bsearch (const void*, const void*, size_t, size_t, int(*)(const void*, const void*))
 function {void*} calloc (size_t, size_t)
 function div_t div (int, int)
@@ -46,6 +57,10 @@ function {char*} l64a (long)
 function {long int} labs (long int)
 function void lcong48 (unsigned short int[7])
 function ldiv_t ldiv (long int, long int)
+#ifdef XOPEN2K
+function {long long} llabs (long long)
+function lldiv_t lldiv (long long, long long)
+#endif
 function {long int} lrand48 (void)
 function {void*} malloc (size_t)
 function int mblen (const char*, size_t)
@@ -56,6 +71,9 @@ function int mkstemp (char*)
 function {long int} mrand48 (void)
 function {long int} nrand48 (unsigned short int[3])
 function int posix_memalign (void**, size_t, size_t)
+#ifdef XOPEN2K
+function int posix_openpt (int)
+#endif
 function {char*} ptsname (int)
 function int putenv (char*)
 function void qsort (void*, size_t, size_t, int(*)(const void*, const void*))
@@ -75,7 +93,9 @@ function double strtod (const char*, char**)
 function {long int} strtol (const char*, char**, int)
 function {unsigned long int} strtoul (const char*, char**, int)
 function int system (const char*)
+#ifndef XOPEN2K
 function int ttyslot (void)
+#endif
 function int unlockpt (int)
 function int unsetenv (const char*)
 function {void*} valloc (size_t)

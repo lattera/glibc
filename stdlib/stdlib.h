@@ -395,7 +395,7 @@ extern long int a64l (__const char *__s) __THROW __attribute_pure__;
    The `rand' and `srand' functions are required by the ANSI standard.
    We provide both interfaces to the same random number generator.  */
 /* Return a random long integer between 0 and RAND_MAX inclusive.  */
-extern int32_t random (void) __THROW;
+extern long int random (void) __THROW;
 
 /* Seed the random number generator with the given number.  */
 extern void srandom (unsigned int __seed) __THROW;
@@ -554,7 +554,7 @@ extern void *valloc (size_t __size) __THROW __attribute_malloc__;
 
 #ifdef __USE_XOPEN2K
 /* Allocate memory of SIZE bytes with an alignment of ALIGNMENT.  */
-extern int posix_memalign (void **memptr, size_t alignment, size_t size)
+extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
      __THROW __attribute_malloc__;
 #endif
 
@@ -600,14 +600,14 @@ extern char *__secure_getenv (__const char *__name) __THROW;
 extern int putenv (char *__string) __THROW;
 #endif
 
-#ifdef	__USE_BSD
+#if defined __USE_BSD || defined __USE_XOPEN2K
 /* Set NAME to VALUE in the environment.
    If REPLACE is nonzero, overwrite an existing value.  */
 extern int setenv (__const char *__name, __const char *__value, int __replace)
      __THROW;
 
 /* Remove the variable NAME from the environment.  */
-extern void unsetenv (__const char *__name) __THROW;
+extern int unsetenv (__const char *__name) __THROW;
 #endif
 
 #ifdef	__USE_MISC
@@ -742,6 +742,8 @@ extern char *fcvt (double __value, int __ndigit, int *__restrict __decpt,
    be written to BUF.  */
 extern char *gcvt (double __value, int __ndigit, char *__buf) __THROW;
 
+
+# ifdef __USE_MISC
 /* Long double versions of above functions.  */
 extern char *qecvt (long double __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign) __THROW;
@@ -750,7 +752,6 @@ extern char *qfcvt (long double __value, int __ndigit,
 extern char *qgcvt (long double __value, int __ndigit, char *__buf) __THROW;
 
 
-# ifdef __USE_MISC
 /* Reentrant version of the functions above which provide their own
    buffers.  */
 extern int ecvt_r (double __value, int __ndigit, int *__restrict __decpt,

@@ -1,5 +1,8 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/bits/pthreadtypes.h: Define pthread_attr_t also
+	as struct __pthread_attr_s.
+
 	* semaphore.h (sem_t): Cleanup namespace, rename status and
 	spinlock elements.
 

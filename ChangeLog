@@ -1,5 +1,15 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/stdlib.h-data: Account for XPG6 changes.
+	* stdlib/stdlib.h (__random): Change return value type to long.
+	(posix_memalign): Cleanup parameter names.
+	(setenv, unsetenv): Make available for __USE_XOPEN2K.
+	Change return type of unsetenv to int.
+	(qecvt, qgcvt, qfcvt): Declare only if __USE_MISC.
+	* sysdeps/generic/setenv.c (unsetenv): Change return type to int.
+	Return -1 and set errno if parameter is invalid.
+	* stdlib/random.c (__random): Change return value type to long.
+
 	* conform/data/stdio.h-data: Account for changes in XPG6.
 
 	* conform/data/spawn.h-data: Correct posix_spawnattr_setflags
