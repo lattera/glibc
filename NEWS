@@ -7,6 +7,7 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bug-glibc@gnu.org>.
 
 Version 2.3
+
 * Masahide Washizawa contributed iconv modules for IBM1163 and IBM1164
   charsets.
 
