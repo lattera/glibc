@@ -939,24 +939,37 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
     {
       /* It's no character, so look through the collation elements and
 	 symbol list.  */
-      void *result;
-
-      if (find_entry (&collate->sym_table, symstr, symlen, &result) == 0)
-	{
-	  /* It's a collation symbol.  */
-	  struct symbol_t *sym = (struct symbol_t *) result;
-	  elem = sym->order;
-
-	  if (elem == NULL)
-	    elem = sym->order = new_element (collate, NULL, 0, NULL,
-					     sym->name, strlen (sym->name), 0);
-	}
-      else if (find_entry (&collate->elem_table, symstr, symlen,
+      if (find_entry (&collate->elem_table, symstr, symlen,
 			   (void **) &elem) != 0)
 	{
-	  /* It's also no collation element.  Therefore ignore it.  */
-	  lr_ignore_rest (ldfile, 0);
-	  return 1;
+	  void *result;
+	  struct symbol_t *sym = NULL;
+
+	  /* It's also collation element.  Therefore it's either a
+	     collating symbol or it's a character which is not
+	     supported by the character set.  In the later case we
+	     simply create a dummy entry.  */
+	  if (find_entry (&collate->sym_table, symstr, symlen, &result) == 0)
+	    {
+	      /* It's a collation symbol.  */
+	      sym = (struct symbol_t *) result;
+
+	      elem = sym->order;
+	    }
+
+	  if (elem == NULL)
+	    {
+	      elem = new_element (collate, NULL, 0, NULL, symstr, symlen, 0);
+
+	      if (sym != NULL)
+		sym->order = elem;
+	      else
+		/* Enter a fake element in the sequence table.  This
+		   won't cause anything in the output since there is
+		   no multibyte or wide character associated with
+		   it.  */
+		insert_entry (&collate->seq_table, symstr, symlen, elem);
+	    }
 	}
     }
   else

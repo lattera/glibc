@@ -1,5 +1,7 @@
-/* Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Conversion from and to GEORGIAN-PS.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,30 +18,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <atomicity.h>
-#include <stdlib.h>
-#include <set-hooks.h>
-#include <libc-internal.h>
+#include <stdint.h>
 
-#ifdef USE_IN_LIBIO
-# include "../libio/libioP.h"
-#endif
+/* Specify the conversion table.  */
+#define TABLES <georgian-ps.h>
 
-DEFINE_HOOK (__libc_subfreeres, (void));
+#define CHARSET_NAME	"GEORGIAN-PS//"
+#define HAS_HOLES	0	/* All 256 character are defined.  */
 
-void
-__libc_freeres (void)
-{
-  /* This function might be called from different places.  So better
-     protect for multiple executions since these are fatal.  */
-  static long int already_called;
-
-  if (compare_and_swap (&already_called, 0, 1))
-    {
-#ifdef USE_IN_LIBIO
-      _IO_cleanup ();
-#endif
-
-      RUN_HOOK (__libc_subfreeres, ());
-    }
-}
+#include <8bit-gap.c>

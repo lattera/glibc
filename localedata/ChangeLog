@@ -1,3 +1,9 @@
+2001-08-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/GEORGIAN-PS: New file.
+	* charmaps/GEORGIAN-ACADEMY: New file.
+	* SUPPORTED: Add ka_GE/GEORGIAN-PS.
+
 2001-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build and run tst-mbswcs6.

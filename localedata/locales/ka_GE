@@ -158,3 +158,8 @@ tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
 int_select "8~10"
 int_prefix "995"
 END LC_TELEPHONE
+
+LC_NAME
+% FIXME
+copy "en_DK"
+END LC_NAME

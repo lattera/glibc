@@ -1434,3 +1434,11 @@ module	INTERNAL		VISCII//		VISCII		1
 #	from			to			module		cost
 module	KOI8-T//		INTERNAL		KOI8-T		1
 module	INTERNAL		KOI8-T//		KOI8-T		1
+
+#	from			to			module		cost
+module	GEORGIAN-PS//		INTERNAL		GEORGIAN-PS	1
+module	INTERNAL		GEORGIAN-PS//		GEORGIAN-PS	1
+
+#	from			to			module		cost
+module	GEORGIAN-ACADEMY//	INTERNAL		GEORGIAN-ACADEMY 1
+module	INTERNAL		GEORGIAN-ACADEMY//	GEORGIAN-ACADEMY 1
