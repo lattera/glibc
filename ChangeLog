@@ -1,5 +1,7 @@
 1999-07-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nss/digits_dots.c: Set h_errnop if memory allcoation failed.
+
 	* inet/gethstbyad_r.c (PREPROCESS): Test for unspecified IPv6 address
 	and return an error in this case.
 	* nss/getXXbyYY_r.c: Allow PREPROCESS be defined and use it if

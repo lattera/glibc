@@ -76,6 +76,9 @@
 	      buffer = NULL;
 	      buffer_size = 0;
 	      __set_errno (save);
+# ifdef NEED_H_ERRNO
+	      *h_errnop = TRY_AGAIN;
+# endif
 	      result = (struct hostent *) NULL;
 	      goto done;
 	    }
