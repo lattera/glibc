@@ -1,5 +1,8 @@
 2001-11-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/Makefile (rpcgen-cmd): Use ../scripts/cpp in rpcgen calls.
+	* scripts/cpp: New file.
+
 	* elf/dl-load.c (_dl_map_object): Correct test of DF_1_NODEFLIB
 	for rtld_search_dirs content.  Minor optimizations.
 
