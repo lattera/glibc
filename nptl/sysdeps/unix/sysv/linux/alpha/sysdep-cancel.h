@@ -63,9 +63,14 @@ __LABEL($pseudo_cancel)						\
 	SAVE_ARGS_##args;					\
 	CENABLE;						\
 	LOAD_ARGS_##args;					\
+	/* Save the CENABLE return value in RA.  That register	\
+	   is preserved across syscall and the real return 	\
+	   address is saved on the stack.  */			\
+	mov	v0, ra;						\
 	lda	v0, SYS_ify(syscall_name);			\
 	call_pal PAL_callsys;					\
 	stq	v0, 8(sp);					\
+	mov	ra, a0;						\
 	bne	a3, $multi_error;				\
 	CDISABLE;						\
 	ldq	ra, 0(sp);					\
