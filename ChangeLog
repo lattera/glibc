@@ -1,3 +1,7 @@
+2001-02-10  Andreas Jaeger  <aj@suse.de>
+
+	* manual/string.texi (Search Functions): Fix typo.
+
 2001-02-10  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/bsd/times.c: Reorder includes and add <time.h>.
