@@ -345,7 +345,9 @@ ahosts_keys_int (int af, int xflags, int number, char *key[])
 	      char buf[INET6_ADDRSTRLEN];
 	      printf ("%-15s %-6s %s\n",
 		      inet_ntop (runp->ai_family,
-				 &((struct sockaddr_in *) runp->ai_addr)->sin_addr,
+				 runp->ai_family == AF_INET
+				 ? (void *) &((struct sockaddr_in *) runp->ai_addr)->sin_addr
+				 : (void *) &((struct sockaddr_in6 *) runp->ai_addr)->sin6_addr,
 				 buf, sizeof (buf)),
 		      sockstr,
 		      runp->ai_canonname ?: "");
