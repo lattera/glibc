@@ -1,4 +1,15 @@
-2002-02-05  Andreas Jaeger  <aj@suse.de>
+2002-02-06  Andreas Jaeger  <aj@suse.de>
+
+	* include/libc-symbols.h (INTUSE): Renamed from INT.
+	* elf/dl-deps.c: Change users.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-dst.h: Likewise.
+	* elf/dl-init.c: Likewise.
 
 	* stdio-common/_itoa.h: Undefine SPECIAL to avoid duplicate
 	definition.

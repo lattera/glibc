@@ -296,8 +296,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
       if (result == NULL)
 	{
 	no_memory:
-	  INT(_dl_signal_error) (ENOMEM, NULL, NULL,
-				 N_("cannot create capability list"));
+	  INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL,
+				    N_("cannot create capability list"));
 	}
 
       result[0].str = (char *) result;	/* Does not really matter.  */

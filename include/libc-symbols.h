@@ -352,10 +352,10 @@
 /* Handling on non-exported internal names.  We have to do this only
    for shared code.  */
 #ifdef SHARED
-# define INT(name) name##_internal
+# define INTUSE(name) name##_internal
 # define INTDEF(name) strong_alias (name, name##_internal);
 #else
-# define INT(name) name
+# define INTUSE(name) name
 # define INTDEF(name)
 #endif
 

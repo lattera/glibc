@@ -308,7 +308,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
   if (result == NULL)
     return NULL;
 
-  return INT(_dl_dst_substitute) (l, s, result, 1);
+  return INTUSE(_dl_dst_substitute) (l, s, result, 1);
 }
 
 
@@ -334,7 +334,7 @@ add_name_to_object (struct link_map *l, const char *name)
   if (newname == NULL)
     {
       /* No more memory.  */
-      INT(_dl_signal_error) (ENOMEM, name, NULL,
+      INTUSE(_dl_signal_error) (ENOMEM, name, NULL,
 			     N_("cannot allocate name record"));
       return;
     }
@@ -436,8 +436,8 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	    malloc (sizeof (*dirp) + ncapstr * sizeof (enum r_dir_status)
 		    + where_len + len + 1);
 	  if (dirp == NULL)
-	    INT(_dl_signal_error) (ENOMEM, NULL, NULL,
-				   N_("cannot create cache for search path"));
+	    INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL,
+				      N_("cannot create cache for search path"));
 
 	  dirp->dirname = ((char *) dirp + sizeof (*dirp)
 			   + ncapstr * sizeof (enum r_dir_status));
@@ -519,7 +519,7 @@ decompose_rpath (struct r_search_path_struct *sps,
 		signal_error_cache:
 		  errstring = N_("cannot create cache for search path");
 		signal_error:
-		  INT(_dl_signal_error) (ENOMEM, NULL, NULL, errstring);
+		  INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL, errstring);
 		}
 
 	      result[0] = NULL;
@@ -599,7 +599,7 @@ _dl_init_paths (const char *llp)
     {
       errstring = N_("cannot create search path array");
     signal_error:
-      INT(_dl_signal_error) (ENOMEM, NULL, NULL, errstring);
+      INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL, errstring);
     }
 
   round_size = ((2 * sizeof (struct r_search_path_elem) - 1
@@ -764,7 +764,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
       free (l);
     }
   free (realname);
-  INT(_dl_signal_error) (code, name, NULL, msg);
+  INTUSE(_dl_signal_error) (code, name, NULL, msg);
 }
 
 
@@ -823,7 +823,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   /* Print debugging message.  */
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    INT(_dl_debug_printf) ("file=%s;  generating link map\n", name);
+    INTUSE(_dl_debug_printf) ("file=%s;  generating link map\n", name);
 
   /* This is the ELF header.  We read it in `open_verify'.  */
   header = (void *) fbp->buf;
@@ -836,7 +836,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       if (_dl_zerofd == -1)
 	{
 	  __close (fd);
-	  INT(_dl_signal_error) (errno, NULL, NULL,
+	  INTUSE(_dl_signal_error) (errno, NULL, NULL,
 				 N_("cannot open zero fill device"));
 	}
     }
@@ -1152,7 +1152,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   l->l_entry += l->l_addr;
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    INT(_dl_debug_printf) ("\
+    INTUSE(_dl_debug_printf) ("\
   dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n\
     entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
 			   (int) sizeof (void *) * 2,
@@ -1243,7 +1243,7 @@ print_search_path (struct r_search_path_elem **list,
   char buf[max_dirnamelen + max_capstrlen];
   int first = 1;
 
-  INT(_dl_debug_printf) (" search path=");
+  INTUSE(_dl_debug_printf) (" search path=");
 
   while (*list != NULL && (*list)->what == what) /* Yes, ==.  */
     {
@@ -1514,7 +1514,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 
 	  /* Print name we try if this is wanted.  */
 	  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-	    INT(_dl_debug_printf) ("  trying file=%s\n", buf);
+	    INTUSE(_dl_debug_printf) ("  trying file=%s\n", buf);
 
 	  fd = open_verify (buf, fbp);
 	  if (this_dir->status[cnt] == unknown)
@@ -1648,8 +1648,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   /* Display information if we are debugging.  */
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0)
       && loader != NULL)
-    INT(_dl_debug_printf) ("\nfile=%s;  needed by %s\n", name,
-			   loader->l_name[0] ? loader->l_name : _dl_argv[0]);
+    INTUSE(_dl_debug_printf) ("\nfile=%s;  needed by %s\n", name,
+			      loader->l_name[0] ? loader->l_name : _dl_argv[0]);
 
   if (strchr (name, '/') == NULL)
     {
@@ -1658,7 +1658,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       size_t namelen = strlen (name) + 1;
 
       if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-	INT(_dl_debug_printf) ("find library=%s; searching\n", name);
+	INTUSE(_dl_debug_printf) ("find library=%s; searching\n", name);
 
       fd = -1;
 
@@ -1807,7 +1807,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Add another newline when we a tracing the library loading.  */
       if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-        INT(_dl_debug_printf) ("\n");
+        INTUSE(_dl_debug_printf) ("\n");
     }
   else
     {
@@ -1839,7 +1839,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
 	      || (l = _dl_new_object (name_copy, name, type, loader)) == NULL)
-	    INT(_dl_signal_error) (ENOMEM, name, NULL, N_("\
+	    INTUSE(_dl_signal_error) (ENOMEM, name, NULL, N_("\
 cannot create shared object descriptor"));
 	  /* Signal that this is a faked entry.  */
 	  l->l_faked = 1;
@@ -1853,7 +1853,7 @@ cannot create shared object descriptor"));
 	  return l;
 	}
       else
-	INT(_dl_signal_error) (errno, name, NULL,
+	INTUSE(_dl_signal_error) (errno, name, NULL,
 			       N_("cannot open shared object file"));
     }
 

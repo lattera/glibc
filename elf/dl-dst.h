@@ -25,7 +25,7 @@
     const char *__sf = strchr (name, '$');				      \
 									      \
     if (__builtin_expect (__sf != NULL, 0))				      \
-      __cnt = INT(_dl_dst_count) (__sf, is_path);			      \
+      __cnt = INTUSE(_dl_dst_count) (__sf, is_path);			      \
 									      \
     __cnt; })
 
