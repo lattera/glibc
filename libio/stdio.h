@@ -581,7 +581,7 @@ extern char *ctermid (char *__s) __THROW;
 #endif /* Use POSIX.  */
 
 
-#if defined __USE_XOPEN && !defined __USE_XOPEN2K
+#ifdef __USE_XOPEN
 /* Return the name of the current user.  */
 extern char *cuserid (char *__s) __THROW;
 #endif /* Use X/Open, but not issue 6.  */

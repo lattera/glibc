@@ -147,7 +147,8 @@ extern int aio_read (struct aiocb *__aiocbp) __THROW;
 extern int aio_write (struct aiocb *__aiocbp) __THROW;
 
 /* Initiate list of I/O requests.  */
-extern int lio_listio (int __mode, struct aiocb *__const __list[],
+extern int lio_listio (int __mode,
+		       struct aiocb *__const __list[__restrict_arr],
 		       int __nent, struct sigevent *__restrict __sig) __THROW;
 
 /* Retrieve error status associated with AIOCBP.  */
@@ -174,7 +175,8 @@ extern int __REDIRECT (aio_write, (struct aiocb *__aiocbp) __THROW,
 		       aio_write64);
 
 extern int __REDIRECT (lio_listio,
-		       (int __mode, struct aiocb *__const __list[],
+		       (int __mode,
+			struct aiocb *__const __list[__restrict_arr],
 			int __nent, struct sigevent *__restrict __sig) __THROW,
 		       lio_listio64);
 
@@ -213,7 +215,8 @@ extern int __REDIRECT (aio_fsync,
 extern int aio_read64 (struct aiocb64 *__aiocbp) __THROW;
 extern int aio_write64 (struct aiocb64 *__aiocbp) __THROW;
 
-extern int lio_listio64 (int __mode, struct aiocb64 *__const __list[],
+extern int lio_listio64 (int __mode,
+			 struct aiocb64 *__const __list[__restrict_arr],
 			 int __nent, struct sigevent *__restrict __sig)
      __THROW;
 

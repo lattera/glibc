@@ -196,7 +196,8 @@ __BEGIN_DECLS
 
 #ifndef __USE_FILE_OFFSET64
 /* Get file attributes for FILE and put them in BUF.  */
-extern int stat (__const char *__file, struct stat *__buf) __THROW;
+extern int stat (__const char *__restrict __file,
+		 struct stat *__restrict __buf) __THROW;
 
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
@@ -204,7 +205,8 @@ extern int fstat (int __fd, struct stat *__buf) __THROW;
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (stat,
-		       (__const char *__file, struct stat *__buf) __THROW,
+		       (__const char *__restrict __file,
+			struct stat *__restrict __buf) __THROW,
 		       stat64);
 extern int __REDIRECT (fstat, (int __fd, struct stat *__buf) __THROW, fstat64);
 # else
@@ -213,7 +215,8 @@ extern int __REDIRECT (fstat, (int __fd, struct stat *__buf) __THROW, fstat64);
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int stat64 (__const char *__file, struct stat64 *__buf) __THROW;
+extern int stat64 (__const char *__restrict __file,
+		   struct stat64 *__restrict __buf) __THROW;
 extern int fstat64 (int __fd, struct stat64 *__buf) __THROW;
 #endif
 
@@ -221,18 +224,21 @@ extern int fstat64 (int __fd, struct stat64 *__buf) __THROW;
 # ifndef __USE_FILE_OFFSET64
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
-extern int lstat (__const char *__file, struct stat *__buf) __THROW;
+extern int lstat (__const char *__restrict __file,
+		  struct stat *__restrict __buf) __THROW;
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (lstat,
-		       (__const char *__file, struct stat *__buf) __THROW,
+		       (__const char *__restrict __file,
+			struct stat *__restrict __buf) __THROW,
 		       lstat64);
 #  else
 #   define lstat lstat64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lstat64 (__const char *__file, struct stat64 *__buf) __THROW;
+extern int lstat64 (__const char *__restrict __file,
+		    struct stat64 *__restrict __buf) __THROW;
 # endif
 #endif
 

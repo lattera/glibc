@@ -11,7 +11,7 @@ extern int __adjtime (__const struct timeval *__delta,
 extern int __getitimer (enum __itimer_which __which,
 			struct itimerval *__value);
 extern int __setitimer (enum __itimer_which __which,
-			__const struct itimerval *__new,
-			struct itimerval *__old);
+			__const struct itimerval *__restrict __new,
+			struct itimerval *__restrict __old);
 extern int __utimes (__const char *__file, const struct timeval __tvp[2]);
 #endif

@@ -72,7 +72,8 @@ extern int sem_wait (sem_t *__sem) __THROW;
 
 #ifdef __USE_XOPEN2K
 /* Similar to `sem_wait' but wait only until ABSTIME.  */
-extern int sem_timedwait (sem_t *__sem, __const struct timespec *__abstime)
+extern int sem_timedwait (sem_t *__restrict __sem,
+			  __const struct timespec *__restrict __abstime)
      __THROW;
 #endif
 
@@ -83,7 +84,8 @@ extern int sem_trywait (sem_t *__sem) __THROW;
 extern int sem_post (sem_t *__sem) __THROW;
 
 /* Get current value of SEM and store it in *SVAL.  */
-extern int sem_getvalue (sem_t *__sem, int *__sval) __THROW;
+extern int sem_getvalue (sem_t *__restrict __sem, int *__restrict __sval)
+     __THROW;
 
 __END_DECLS
 

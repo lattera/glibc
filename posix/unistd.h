@@ -696,7 +696,8 @@ extern int symlink (__const char *__from, __const char *__to) __THROW;
 /* Read the contents of the symbolic link PATH into no more than
    LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
-extern int readlink (__const char *__path, char *__buf, size_t __len) __THROW;
+extern int readlink (__const char *__restrict __path, char *__restrict __buf,
+		     size_t __len) __THROW;
 #endif /* Use BSD.  */
 
 /* Remove the link NAME.  */
@@ -961,7 +962,8 @@ extern void encrypt (char *__block, int __edflag) __THROW;
    FROM and copy the result to TO.  The value of TO must not be in the
    range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
    is without partner.  */
-extern void swab (__const void *__from, void *__to, ssize_t __n) __THROW;
+extern void swab (__const void *__restrict __from, void *__restrict __to,
+		  ssize_t __n) __THROW;
 #endif
 
 

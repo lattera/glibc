@@ -232,34 +232,38 @@ extern int sigorset (sigset_t *__set, __const sigset_t *__left,
 # include <bits/sigaction.h>
 
 /* Get and/or change the set of blocked signals.  */
-extern int sigprocmask (int __how, __const sigset_t *__set, sigset_t *__oset)
-     __THROW;
+extern int sigprocmask (int __how, __const sigset_t *__restrict __set,
+			sigset_t *__restrict __oset) __THROW;
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
 extern int sigsuspend (__const sigset_t *__set) __THROW;
 
 /* Get and/or set the action for signal SIG.  */
-extern int __sigaction (int __sig, __const struct sigaction *__act,
-			struct sigaction *__oact) __THROW;
-extern int sigaction (int __sig, __const struct sigaction *__act,
-		      struct sigaction *__oact) __THROW;
+extern int __sigaction (int __sig, __const struct sigaction *__restrict __act,
+			struct sigaction *__restrict __oact) __THROW;
+extern int sigaction (int __sig, __const struct sigaction *__restrict __act,
+		      struct sigaction *__restrict __oact) __THROW;
 
 /* Put in SET all signals that are blocked and waiting to be delivered.  */
 extern int sigpending (sigset_t *__set) __THROW;
 
 
 /* Select any of pending signals from SET or wait for any to arrive.  */
-extern int sigwait (__const sigset_t *__set, int *__sig) __THROW;
+extern int sigwait (__const sigset_t *__restrict __set, int *__restrict __sig)
+     __THROW;
 
 # ifdef __USE_POSIX199309
 /* Select any of pending signals from SET and place information in INFO.  */
-extern int sigwaitinfo (__const sigset_t *__set, siginfo_t *__info) __THROW;
+extern int sigwaitinfo (__const sigset_t *__restrict __set,
+			siginfo_t *__restrict __info) __THROW;
 
 /* Select any of pending signals from SET and place information in INFO.
    Wait the imte specified by TIMEOUT if no signal is pending.  */
-extern int sigtimedwait (__const sigset_t *__set, siginfo_t *__info,
-			 __const struct timespec *__timeout) __THROW;
+extern int sigtimedwait (__const sigset_t *__restrict __set,
+			 siginfo_t *__restrict __info,
+			 __const struct timespec *__restrict __timeout)
+     __THROW;
 
 /* Send signal SIG to the process PID.  Associate data in VAL with the
    signal.  */
@@ -329,8 +333,8 @@ extern int sigstack (struct sigstack *__ss, struct sigstack *__oss) __THROW;
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
-extern int sigaltstack (__const struct sigaltstack *__ss,
-			struct sigaltstack *__oss) __THROW;
+extern int sigaltstack (__const struct sigaltstack *__restrict __ss,
+			struct sigaltstack *__restrict __oss) __THROW;
 
 #endif /* use BSD or X/Open Unix.  */
 

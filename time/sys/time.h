@@ -65,7 +65,8 @@ typedef void *__timezone_ptr_t;
    Returns 0 on success, -1 on errors.
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
-extern int gettimeofday (struct timeval *__tv, __timezone_ptr_t __tz) __THROW;
+extern int gettimeofday (struct timeval *__restrict __tv,
+			 __timezone_ptr_t __restrict __tz) __THROW;
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
@@ -120,8 +121,8 @@ extern int getitimer (__itimer_which_t __which,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
 extern int setitimer (__itimer_which_t __which,
-		      __const struct itimerval *__new,
-		      struct itimerval *__old) __THROW;
+		      __const struct itimerval *__restrict __new,
+		      struct itimerval *__restrict __old) __THROW;
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */

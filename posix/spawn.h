@@ -63,10 +63,13 @@ __BEGIN_DECLS
 
 /* Spawn a new process executing PATH with the attributes describes in *ATTRP.
    Before running the process perform the actions described in FILE-ACTIONS. */
-extern int posix_spawn (pid_t *__pid, __const char *__path,
-			__const posix_spawn_file_actions_t *__file_actions,
-			__const posix_spawnattr_t *__attrp,
-			char *__const argv[], char *__const envp[]) __THROW;
+extern int posix_spawn (pid_t *__restrict __pid,
+			__const char *__restrict __path,
+			__const posix_spawn_file_actions_t *__restrict
+			__file_actions,
+			__const posix_spawnattr_t *__restrict __attrp,
+			char *__const argv[__restrict_arr],
+			char *__const envp[__restrict_arr]) __THROW;
 
 /* Similar to `posix_spawn' but search for FILE in the PATH.  */
 extern int posix_spawnp (pid_t *__pid, __const char *__file,
@@ -83,45 +86,65 @@ extern int posix_spawnattr_destroy (posix_spawnattr_t *__attr) __THROW;
 
 /* Store signal mask for signals with default handling from ATTR in
    SIGDEFAULT.  */
-extern int posix_spawnattr_getsigdefault (__const posix_spawnattr_t *__attr,
-					  sigset_t *__sigdefault) __THROW;
+extern int posix_spawnattr_getsigdefault (__const posix_spawnattr_t *
+					  __restrict __attr,
+					  sigset_t *__restrict __sigdefault)
+     __THROW;
 
 /* Set signal mask for signals with default handling in ATTR to SIGDEFAULT.  */
-extern int posix_spawnattr_setsigdefault (posix_spawnattr_t *__attr,
-					  __const sigset_t *__sigdefault)
+extern int posix_spawnattr_setsigdefault (posix_spawnattr_t *__restrict __attr,
+					  __const sigset_t *__restrict
+					  __sigdefault)
      __THROW;
 
 /* Store signal mask for the new process from ATTR in SIGMASK.  */
-extern int posix_spawnattr_getsigmask (__const posix_spawnattr_t *__attr,
-				       sigset_t *__sigmask) __THROW;
+extern int posix_spawnattr_getsigmask (__const posix_spawnattr_t *__restrict
+				       __attr,
+				       sigset_t *__restrict __sigmask) __THROW;
 
 /* Set signal mask for the new process in ATTR to SIGMASK.  */
-extern int posix_spawnattr_setsigmask (posix_spawnattr_t *__attr,
-				       __const sigset_t *__sigmask) __THROW;
+extern int posix_spawnattr_setsigmask (posix_spawnattr_t *__restrict __attr,
+				       __const sigset_t *__restrict __sigmask)
+     __THROW;
 
 /* Get flag word from the attribute structure.  */
-extern int posix_spawnattr_getflags (__const posix_spawnattr_t *__attr,
-				     short int *__flags) __THROW;
+extern int posix_spawnattr_getflags (__const posix_spawnattr_t *__restrict
+				     __attr,
+				     short int *__restrict __flags) __THROW;
 
 /* Store flags in the attribute structure.  */
 extern int posix_spawnattr_setflags (posix_spawnattr_t *_attr,
 				     short int __flags) __THROW;
 
 /* Get process group ID from the attribute structure.  */
-extern int posix_spawnattr_getpgroup (__const posix_spawnattr_t *__attr,
-				      pid_t *__pgroup) __THROW;
+extern int posix_spawnattr_getpgroup (__const posix_spawnattr_t *__restrict
+				      __attr, pid_t *__restrict __pgroup)
+     __THROW;
 
 /* Store process group ID in the attribute structure.  */
 extern int posix_spawnattr_setpgroup (posix_spawnattr_t *__attr,
 				      pid_t __pgroup) __THROW;
 
 /* Get scheduling policy from the attribute structure.  */
-extern int posix_spawnattr_getschedpolicy (__const posix_spawnattr_t *__attr,
-					   int *__schedpolicy) __THROW;
+extern int posix_spawnattr_getschedpolicy (__const posix_spawnattr_t *
+					   __restrict __attr,
+					   int *__restrict __schedpolicy)
+     __THROW;
 
 /* Store scheduling policy in the attribute structure.  */
 extern int posix_spawnattr_setschedpolicy (posix_spawnattr_t *__attr,
 					   int __schedpolicy) __THROW;
+
+/* Get scheduling parameters from the attribute structure.  */
+extern int posix_spawnattr_getschedparam (__const posix_spawnattr_t *
+					  __restrict __attr,
+					  struct sched_param *__restrict
+					  __schedparam) __THROW;
+
+/* Store scheduling parameters in the attribute structure.  */
+extern int posix_spawnattr_setschedparam (posix_spawnattr_t *__restrict __attr,
+					  const struct sched_param *
+					  __restrict __schedparam) __THROW;
 
 
 /* Initialize data structure for file attribute for `spawn' call.  */
@@ -135,8 +158,9 @@ extern int posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `open' for the given file during the `spawn' call.  */
 extern int posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *
-					     __file_actions,
-					     int __fd, __const char *__path,
+					     __restrict __file_actions,
+					     int __fd,
+					     __const char *__restrict __path,
 					     int __oflag, mode_t __mode)
      __THROW;
 

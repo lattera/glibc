@@ -182,7 +182,8 @@ extern size_t strftime (char *__restrict __s, size_t __maxsize,
 # ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
    The return value is a pointer to the first unparsed character in S.  */
-extern char *strptime (__const char *__s, __const char *__fmt, struct tm *__tp)
+extern char *strptime (__const char *__restrict __s,
+		       __const char *__restrict __fmt, struct tm *__tp)
      __THROW;
 # endif
 
@@ -304,16 +305,17 @@ extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) __THROW;
 
 
 /* Create new per-process timer using CLOCK_ID.  */
-extern int timer_create (clockid_t __clock_id, struct sigevent *__evp,
-			 timer_t *__timerid) __THROW;
+extern int timer_create (clockid_t __clock_id,
+			 struct sigevent *__restrict __evp,
+			 timer_t *__restrict __timerid) __THROW;
 
 /* Delete timer TIMERID.  */
 extern int timer_delete (timer_t __timerid) __THROW;
 
 /* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
 extern int timer_settime (timer_t __timerid, int __flags,
-			  __const struct itimerspec *__value,
-			  struct itimerspec *__ovalue) __THROW;
+			  __const struct itimerspec *__restrict __value,
+			  struct itimerspec *__restrict __ovalue) __THROW;
 
 /* Get current value of timer TIMERID and store it in VLAUE.  */
 extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)

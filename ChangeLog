@@ -1,5 +1,31 @@
 2000-08-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/sys/cdefs.h: Define __restrict_arr.
+	* include/sys/time.h: Add restrict where required by AGd4.
+	* inet/arpa/inet.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statvfs.h: Likewise.
+	* misc/search.h: Likewise.
+	* misc/sys/select.h: Likewise.
+	* posix/glob.h: Likewise.
+	* posix/regex.h: Likewise.
+	* posix/spawn.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* rt/aio.h: Likewise.
+	* signal/signal.h: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* stdlib/ucontext.h: Likewise.
+	* streams/stropts.h: Likewise.
+	* string/string.h: Likewise.
+	* time/time.h: Likewise.
+	* time/sys/time.h: Likewise.
+
+	* posix/spawn.h: Add declarations for posix_spawnattr_getscheparam
+	and posix_spawnattr_setscheparam.
+
+	* libio/stdio.h: Make cuserid prototype again available for all
+	XPG versions.
+
 	* argp/argp-help.c: Unify use of function aliases to make more compact
 	PLT.
 	* include/libintl.h: Likewise.

@@ -44,13 +44,15 @@ __BEGIN_DECLS
 extern int isastream (int __fildes) __THROW;
 
 /* Receive next message from a STREAMS file.  */
-extern int getmsg (int __fildes, struct strbuf *__ctlptr,
-		   struct strbuf *__dataptr, int *__flagsp) __THROW;
+extern int getmsg (int __fildes, struct strbuf *__restrict __ctlptr,
+		   struct strbuf *__restrict __dataptr,
+		   int *__restrict __flagsp) __THROW;
 
 /* Receive next message from a STREAMS file, with *FLAGSP allowing to
    control which message.  */
-extern int getpmsg (int __fildes, struct strbuf *__ctlptr,
-		    struct strbuf *__dataptr, int *__bandp, int *__flagsp)
+extern int getpmsg (int __fildes, struct strbuf *__restrict __ctlptr,
+		    struct strbuf *__restrict __dataptr,
+		    int *__restrict __bandp, int *__restrict __flagsp)
      __THROW;
 
 /* Perform the I/O control operation specified by REQUEST on FD.

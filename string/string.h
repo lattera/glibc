@@ -45,7 +45,8 @@ extern void *memmove (void *__dest, __const void *__src, size_t __n)
    Return the position in DEST one byte past where C was copied,
    or NULL if C was not found in the first N bytes of SRC.  */
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN
-extern void *memccpy (void *__dest, __const void *__src, int __c, size_t __n)
+extern void *memccpy (void *__restrict __dest, __const void *__restrict __src,
+		      int __c, size_t __n)
      __THROW;
 #endif /* SVID.  */
 

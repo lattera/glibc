@@ -1,5 +1,5 @@
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,12 +71,14 @@ typedef __fd_set fd_set;
    (if not NULL) for exceptional conditions.  If TIMEOUT is not NULL, time out
    after waiting the interval specified therein.  Returns the number of ready
    descriptors, or -1 for errors.  */
-extern int __select (int __nfds, __fd_set *__readfds,
-		     __fd_set *__writefds, __fd_set *__exceptfds,
-		     struct timeval *__timeout) __THROW;
-extern int select (int __nfds, __fd_set *__readfds,
-		   __fd_set *__writefds, __fd_set *__exceptfds,
-		   struct timeval *__timeout) __THROW;
+extern int __select (int __nfds, __fd_set *__restrict __readfds,
+		     __fd_set *__restrict __writefds,
+		     __fd_set *__restrict __exceptfds,
+		     struct timeval *__restrict __timeout) __THROW;
+extern int select (int __nfds, __fd_set *__restrict __readfds,
+		   __fd_set *__restrict __writefds,
+		   __fd_set *__restrict __exceptfds,
+		   struct timeval *__restrict __timeout) __THROW;
 
 #ifdef __USE_GNU
 /* XXX Once/if POSIX.1g gets official this prototype will be available
@@ -84,9 +86,11 @@ extern int select (int __nfds, __fd_set *__readfds,
 /* Same as above only that the TIMEOUT value is given with higher
    resolution and a sigmask which is been set temporarily.  This version
    should be used.  */
-extern int pselect (int __nfds, __fd_set *__readfds, __fd_set *__writefds,
-		    __fd_set *__exceptfds, const struct timespec *__timeout,
-		    const __sigset_t *__sigmask) __THROW;
+extern int pselect (int __nfds, __fd_set *__restrict __readfds,
+		    __fd_set *__restrict __writefds,
+		    __fd_set *__restrict __exceptfds,
+		    const struct timespec *__restrict __timeout,
+		    const __sigset_t *__restrict __sigmask) __THROW;
 #endif
 
 __END_DECLS

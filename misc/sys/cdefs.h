@@ -163,4 +163,10 @@
 # define __restrict	/* Ignore */
 #endif
 
+/* ISO C99 also allows to declare arrays as non-overlapping.  The syntax is
+     array_name[restrict]
+   But gcc so far does not support this syntax.  We define a separate macro
+   for this which can be enabled if the underlying compiler supports it.  */
+#define __restrict_arr
+
 #endif	 /* sys/cdefs.h */

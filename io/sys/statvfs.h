@@ -49,18 +49,21 @@ __BEGIN_DECLS
 
 /* Return information about the filesystem on which FILE resides.  */
 #ifndef __USE_FILE_OFFSET64
-extern int statvfs (__const char *__file, struct statvfs *__buf) __THROW;
+extern int statvfs (__const char *__restrict __file,
+		    struct statvfs *__restrict __buf) __THROW;
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (statvfs,
-		       (__const char *__file, struct statvfs *__buf) __THROW,
+		       (__const char *__restrict __file,
+			struct statvfs *__restrict __buf) __THROW,
 		       statvfs64);
 # else
 #  define statvfs statvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int statvfs64 (__const char *__file, struct statvfs64 *__buf) __THROW;
+extern int statvfs64 (__const char *__restrict __file,
+		      struct statvfs64 *__restrict __buf) __THROW;
 #endif
 
 /* Return information about the filesystem containing the file FILDES

@@ -1,5 +1,5 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ enum
    G++ 2.7 does not support transparent unions so there we want the
    old-style declaration, too.  */
 #if defined __cplusplus || !__GNUC_PREREQ (2, 7)
-# define __SOCKADDR_ARG		struct sockaddr *
+# define __SOCKADDR_ARG		struct sockaddr *__restrict
 # define __CONST_SOCKADDR_ARG	__const struct sockaddr *
 #else
 /* Add more `struct sockaddr_AF' types here as necessary.
@@ -82,11 +82,11 @@ enum
   __SOCKADDR_ONETYPE (sockaddr_un) \
   __SOCKADDR_ONETYPE (sockaddr_x25)
 
-# define __SOCKADDR_ONETYPE(type) struct type *__##type##__;
+# define __SOCKADDR_ONETYPE(type) struct type *__restrict __##type##__;
 typedef union { __SOCKADDR_ALLTYPES
 	      } __SOCKADDR_ARG __attribute__ ((__transparent_union__));
 # undef __SOCKADDR_ONETYPE
-# define __SOCKADDR_ONETYPE(type) __const struct type *__##type##__;
+# define __SOCKADDR_ONETYPE(type) __const struct type *__restrict __##type##__;
 typedef union { __SOCKADDR_ALLTYPES
 	      } __CONST_SOCKADDR_ARG __attribute__ ((__transparent_union__));
 # undef __SOCKADDR_ONETYPE
@@ -110,8 +110,8 @@ extern int bind (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len)
      __THROW;
 
 /* Put the local address of FD into *ADDR and its length in *LEN.  */
-extern int getsockname (int __fd, __SOCKADDR_ARG __addr, socklen_t *__len)
-     __THROW;
+extern int getsockname (int __fd, __SOCKADDR_ARG __addr,
+			socklen_t *__restrict __len) __THROW;
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to
@@ -124,8 +124,8 @@ extern int connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len)
 
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
-extern int getpeername (int __fd, __SOCKADDR_ARG __addr, socklen_t *__len)
-     __THROW;
+extern int getpeername (int __fd, __SOCKADDR_ARG __addr,
+			socklen_t *__restrict __len) __THROW;
 
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
@@ -149,8 +149,9 @@ extern int sendto (int __fd, __const void *__buf, size_t __n,
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
    the sender, and store the actual size of the address in *ADDR_LEN.
    Returns the number of bytes read or -1 for errors.  */
-extern int recvfrom (int __fd, void *__buf, size_t __n, int __flags,
-		     __SOCKADDR_ARG __addr, socklen_t *__addr_len) __THROW;
+extern int recvfrom (int __fd, void *__restrict __buf, size_t __n, int __flags,
+		     __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
+     __THROW;
 
 
 /* Send a message described MESSAGE on socket FD.
@@ -168,7 +169,8 @@ extern int recvmsg (int __fd, struct msghdr *__message, int __flags)
    into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
    actual length.  Returns 0 on success, -1 for errors.  */
 extern int getsockopt (int __fd, int __level, int __optname,
-		       void *__optval, socklen_t *__optlen) __THROW;
+		       void *__restrict __optval,
+		       socklen_t *__restrict __optlen) __THROW;
 
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
@@ -187,7 +189,8 @@ extern int listen (int __fd, unsigned int __n) __THROW;
    set *ADDR (which is *ADDR_LEN bytes long) to the address of the connecting
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
-extern int accept (int __fd, __SOCKADDR_ARG __addr, socklen_t *__addr_len)
+extern int accept (int __fd, __SOCKADDR_ARG __addr,
+		   socklen_t *__restrict __addr_len)
      __THROW;
 
 /* Shut down all or part of the connection open on socket FD.

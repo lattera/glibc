@@ -51,13 +51,15 @@ extern char *inet_ntoa (struct in_addr __in) __THROW;
 /* Convert from presentation format of an Internet number in buffer
    starting at CP to the binary network format and store result for
    interface type AF in buffer starting at BUF.  */
-extern int inet_pton (int __af, __const char *__cp, void *__buf) __THROW;
+extern int inet_pton (int __af, __const char *__restrict __cp,
+		      void *__restrict __buf) __THROW;
 
 /* Convert a Internet address in binary network format for interface
    type AF in buffer starting at CP to presentation form and place
    result in buffer of length LEN astarting at BUF.  */
-extern __const char *inet_ntop (int __af, __const void *__cp,
-				char *__buf, socklen_t __len) __THROW;
+extern __const char *inet_ntop (int __af, __const void *__restrict __cp,
+				char *__restrict __buf, socklen_t __len)
+     __THROW;
 
 
 /* The following functions are not part of XNS 5.2.  */

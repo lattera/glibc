@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,8 @@ extern int setcontext (__const ucontext_t *__ucp) __THROW;
 
 /* Save current context in context variable pointed to by OUCP and set
    context from variable pointed to by UCP.  */
-extern int swapcontext (ucontext_t *__oucp, __const ucontext_t *__ucp) __THROW;
+extern int swapcontext (ucontext_t *__restrict __oucp,
+			__const ucontext_t *__restrict __ucp) __THROW;
 
 /* Manipulate user context UCP to continue with calling functions FUNC
    and the ARGC-1 parameters following ARGC when the context is used

@@ -136,7 +136,8 @@ extern void *tfind (__const void *__key, void *__const *__rootp,
 		    __compar_fn_t __compar);
 
 /* Remove the element matching KEY from the tree pointed to by *ROOTP.  */
-extern void *tdelete (__const void *__key, void **__rootp,
+extern void *tdelete (__const void *__restrict __key,
+		      void **__restrict __rootp,
 		      __compar_fn_t __compar);
 
 #ifndef __ACTION_FN_T

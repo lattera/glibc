@@ -1,3 +1,9 @@
+2000-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* semaphore.h: Add restrict where required by AGd4.
+	* sysdeps/pthread/pthread.h: Likewise.
+	* sysdeps/pthread/unix/sysv/linux/bits/sigthread.h: Likewise.
+
 2000-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add ex12.  Add rule to build it.
