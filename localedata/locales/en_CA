@@ -2187,10 +2187,8 @@ noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+height   279
+width    216
 END LC_PAPER
 
 LC_TELEPHONE

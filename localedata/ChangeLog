@@ -1,5 +1,7 @@
 2001-07-19  Jakub Jelinek  <jakub@redhat.com>
 
+	* locales/en_CA (LC_PAPER): Change to Letter.
+	* locales/fr_CA (LC_PAPER): Likewise.
 	* locales/es_PR (LC_PAPER): Change to Letter.
 	(LC_MEASUREMENT): Change to 2.
 	* locales/es_US (LC_PAPER): Change to Letter.
