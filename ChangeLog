@@ -1,3 +1,15 @@
+Thu Jan  9 15:59:35 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/posix_opt.h: New file.
+
+	* sysdeps/mach/hurd/sigwait.c (sigwait): Don't affect signal mask.
+
+	* sysdeps/unix/bsd/tcsendbrk.c (tcsendbreak): Finish
+	deansideclification. 
+
+	* sysdeps/mach/libc-lock.h: Add kludges to pretend to implement
+	recursive locks.
+
 Tue Jan  7 09:48:15 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
 
 	* signal/sigempty.c (sigemptyset): Correct typo: Empty set should
