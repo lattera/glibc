@@ -132,8 +132,19 @@ static struct pthread_functions pthread_functions =
 
 /* For asynchronous cancellation we use a signal.  This is the handler.  */
 static void
-sigcancel_handler (int sig __attribute ((unused)))
+sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 {
+  /* Safety check.  It would be possible to call this function for
+     other signals and send a signal from another thread.  This is not
+     correct and might even be a security problem.  Try to catch as
+     many incorrect invocations as possible.  */
+  if (sig != SIGCANCEL
+      || si->si_code != SI_TKILL)
+    /* XXX The Linux kernel currently does not report the correct PID
+       in the si->si_pid field.  Once this is changed another test
+       will be added.  */
+    return;
+
   struct pthread *self = THREAD_SELF;
 
   int oldval = THREAD_GETMEM (self, cancelhandling);
@@ -209,8 +220,8 @@ __pthread_initialize_minimal_internal (void)
      cannot install the handler we do not abort.  Maybe we should, but
      it is only asynchronous cancellation which is affected.  */
   struct sigaction sa;
-  sa.sa_handler = sigcancel_handler;
-  sa.sa_flags = 0;
+  sa.sa_sigaction = sigcancel_handler;
+  sa.sa_flags = SA_SIGINFO;
   sigemptyset (&sa.sa_mask);
 
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
