@@ -34,7 +34,7 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
    definitions, the lock element must come last, because its storage size
    will not be known outside of libc.  (Or you can use a pointer to the
    lock structure; i.e. NAME begins with a `*'.)  */
-#define __libc_lock_define(CLASS,NAME)
+#define __libc_lock_define(CLASS,NAME) \
   CLASS __libc_lock_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */

@@ -6,6 +6,9 @@ Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 	If there is only a single descriptor, just use its reply port for
 	everything and don't bother creating the port set.
 
+	* sysdeps/mach/libc-lock.h (__libc_lock_define): Backslashify
+	continuation line.
+
 Sat Jul 20 07:15:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* crypt/Makefile, crypt/nocrypt.c: Removed.  It is illegal to export
