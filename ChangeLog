@@ -1,3 +1,11 @@
+2002-07-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc (acos_test): Add missing L suffix for
+	expected result.
+	(cpow_test): Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust errors for cpow, remove
+	error for acos (0.0625).
+
 2002-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/iso-639.def: Add entry for Ganda.
