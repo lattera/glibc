@@ -1,0 +1,2 @@
+/* XXX We will have to see whether it is possible to implement this
+   function at all.  */
