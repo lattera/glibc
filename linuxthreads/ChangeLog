@@ -1,3 +1,8 @@
+2003-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c (tf_sleep): Lower sleep time a bit to not upset
+	recent kernels.
+
 2003-03-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/timer_create.c (timer_create): Return correct
