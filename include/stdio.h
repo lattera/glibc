@@ -14,6 +14,9 @@ extern int __fcloseall (void);
 extern int __snprintf (char *__restrict __s, size_t __maxlen,
 		       __const char *__restrict __format, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
+extern int __vsnprintf (char *__restrict __s, size_t __maxlen,
+			__const char *__restrict __format, _G_va_list __arg)
+     __attribute__ ((__format__ (__printf__, 3, 0)));
 extern int __vfscanf (FILE *__restrict __s,
 		      __const char *__restrict __format,
 		      _G_va_list __arg)

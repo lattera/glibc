@@ -1,3 +1,25 @@
+2001-02-06  Andreas Jaeger  <aj@suse.de>
+
+	* include/pthread.h: New file.
+
+	* wctype/wctype.h: Move internal interfaces from here to...
+	* include/wctype.h: ...here.
+
+	* wcsmbs/wchar.h: Move __wcslen from here to...
+	* include/wchar.h: ...here.
+
+	* posix/sys/wait.h: Move __wait from here to...
+	* include/sys/wait.h: ...here.
+
+	* string/string.h: Move __ffs and __strerror_r from here to...
+	* include/string.h: ...here.
+
+	* stdlib/stdlib.h: Move __on_exit from here to...
+	* include/stdlib.h: ...here.
+
+	* libio/stdio.h: Move __vsnprintf from here to...
+	* include/stdio.h: ...here.
+
 2001-02-06  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/ioperm.c: Don't include kernel

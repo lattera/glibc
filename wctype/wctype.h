@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -175,12 +175,10 @@ extern int iswblank (wint_t __wc) __THROW;
 
 /* Construct value that describes a class of wide characters identified
    by the string argument PROPERTY.  */
-extern wctype_t __wctype (__const char *__property) __THROW;
 extern wctype_t wctype (__const char *__property) __THROW;
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
-extern int __iswctype (wint_t __wc, wctype_t __desc) __THROW;
 extern int iswctype (wint_t __wc, wctype_t __desc) __THROW;
 
 #if __GNUC__ >= 2 && defined __OPTIMIZE__
@@ -255,9 +253,6 @@ extern wint_t towlower (wint_t __wc) __THROW;
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
 extern wint_t towupper (wint_t __wc) __THROW;
-
-/* Map the wide character WC using the mapping described by DESC.  */
-extern wint_t __towctrans (wint_t __wc, wctrans_t __desc) __THROW;
 
 #if __GNUC__ >= 2 && defined __OPTIMIZE__
 /* The tables are always organized in a way which allows direct access

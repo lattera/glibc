@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -230,7 +230,6 @@ extern char *strerror (int __errnum) __THROW;
 #ifdef	__USE_MISC
 /* Reentrant version of `strerror'.  If a temporary buffer is required, at
    most BUFLEN bytes of BUF will be used.  */
-extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
 extern char *strerror_r (int __errnum, char *__buf, size_t __buflen) __THROW;
 #endif
 
@@ -257,7 +256,6 @@ extern char *rindex (__const char *__s, int __c) __THROW __attribute_pure__;
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
-extern int __ffs (int __i) __THROW __attribute__ ((const));
 extern int ffs (int __i) __THROW __attribute__ ((const));
 
 /* The following two functions are non-standard but necessary for non-32 bit

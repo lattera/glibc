@@ -217,7 +217,6 @@ extern wchar_t *wcstok (wchar_t *__restrict __s,
 			wchar_t **__restrict __ptr) __THROW;
 
 /* Return the number of wide characters in S.  */
-extern size_t __wcslen (__const wchar_t *__s) __THROW __attribute_pure__;
 extern size_t wcslen (__const wchar_t *__s) __THROW __attribute_pure__;
 
 #ifdef __USE_GNU

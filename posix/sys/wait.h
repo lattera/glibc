@@ -106,7 +106,6 @@ typedef enum
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
-extern __pid_t __wait (__WAIT_STATUS __stat_loc) __THROW;
 extern __pid_t wait (__WAIT_STATUS __stat_loc) __THROW;
 
 #ifdef	__USE_BSD

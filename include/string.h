@@ -39,7 +39,11 @@ extern void *__memrchr (__const void *__s, int __c, size_t __n)
 
 extern void *__memchr (__const void *__s, int __c, size_t __n)
      __attribute_pure__;
-     
+
+extern int __ffs (int __i) __attribute__ ((const));
+
+extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
+
 /* Now the real definitions.  We do this here since some of the functions
    above are defined as macros in the headers.  */
 #include <string/string.h>
