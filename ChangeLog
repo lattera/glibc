@@ -9,19 +9,6 @@
 	* sysdeps/unix/sysv/aix/init-first.c (init): Likewise.
 	* sysdeps/generic/libc-start.c (__libc_start_main): Likewise.
 
-2002-10-24  Roland McGrath  <roland@redhat.com>
-
-	* sysdeps/generic/ldsodefs.h (struct rtld_global): New member
-	`_dl_tls_static_used'.
-	(TLS_STATIC_MIN): New macro.
-	* sysdeps/generic/libc-tls.c (_dl_tls_static_used): New variable.
-	(__libc_setup_tls): Initialize it.
-	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Likewise.
-	* elf/dl-reloc.c [USE_TLS] (allocate_static_tls): New function.
-	(CHECK_STATIC_TLS): Use it.
-	* elf/dl-close.c (_dl_close): Adjust _dl_tls_static_used when the
-	closed objects occupied a trailing contiguous chunk of static TLS area.
-
 2002-10-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/posix/sigvec.c [SA_RESETHAND]: Disable wrapper hacks and
