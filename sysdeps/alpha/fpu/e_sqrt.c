@@ -212,19 +212,21 @@ __ieee754_sqrt:
 	sll	$2, 32, $2			# e0    :
 	ldt	$f14, $DN($4)			# .. e1 :
 	stq	$2, $Y($sp)			# e0    :
-	ldt	$f13, $Y($sp)			# e1    :
+	nop					# .. e1 : avoid pipe flash
+	nop					# e0    :
+	ldt	$f13, $Y($sp)			# .. e1 :
 
-	mult	$f11, $f13, $f10	# fm    : $f10 = (x * 0.5) * y
+	mult/su	$f11, $f13, $f10	# fm    : $f10 = (x * 0.5) * y
 	mult	$f10, $f13, $f10	# fm    : $f10 = ((x * 0.5) * y) * y
 	subt	$f15, $f10, $f1		# fa    : $f1 = (1.5 - 0.5*x*y*y)
 	mult	$f13, $f1, $f13         # fm    : yp = y*(1.5 - 0.5*x*y*y)
- 	mult	$f11, $f13, $f11	# fm    : $f11 = x * 0.5 * yp
-	mult	$f11, $f13, $f11	# fm    : $f11 = (x * 0.5 * yp) * yp
+ 	mult/su	$f11, $f13, $f1		# fm    : $f11 = x * 0.5 * yp
+	mult	$f1, $f13, $f11		# fm    : $f11 = (x * 0.5 * yp) * yp
 	subt	$f18, $f11, $f1		# fa    : $f1= (1.5-2^-30) - 0.5*x*yp*yp
 	mult	$f13, $f1, $f13		# fm    : ypp = $f13 = yp*$f1
 	subt	$f15, $f12, $f1		# fa    : $f1 = (1.5 - 0.5)
 	ldt	$f15, $UP($4)		# .. e1 :
-	mult	$f16, $f13, $f10	# fm    : z = $f10 = x * ypp
+	mult/su	$f16, $f13, $f10	# fm    : z = $f10 = x * ypp
 	mult	$f10, $f13, $f11	# fm    : $f11 = z*ypp
 	mult	$f10, $f12, $f12	# fm    : $f12 = z*0.5
 	subt	$f1, $f11, $f1		# .. fa : $f1 = 1 - z*ypp
@@ -236,11 +238,11 @@ __ieee754_sqrt:
 	mult/c	$f0, $f12, $f1		# fm    : $f1 = zp * zmi
 	mult/c	$f0, $f11, $f15		# fm    : $f15 = zp * zpl
 
-	subt    $f1, $f16, $f13		# fa    : y1 = zp*zmi - x
-	subt    $f15, $f16, $f15	# fa    : y2 = zp*zpl - x
+	subt/su	$f1, $f16, $f13		# fa    : y1 = zp*zmi - x
+	subt/su	$f15, $f16, $f14	# fa    : y2 = zp*zpl - x
 
 	fcmovge	$f13, $f12, $f0		# res = (y1 >= 0) ? zmi : res
-	fcmovlt	$f15, $f11, $f0		# res = (y2 <  0) ? zpl : res
+	fcmovlt	$f14, $f11, $f0		# res = (y2 <  0) ? zpl : res
 
 	addq	$sp, 16, $sp		# e0    :
 	ret				# .. e1 :

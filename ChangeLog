@@ -1,3 +1,8 @@
+1998-07-29  6:39  Kazushige Goto <goto@statabo.rim.or.jp>
+
+	* sysdeps/alpha/fpu/e_sqrt.c [!_IEEE_FP]: Correctly handle
+	inputs near DBL_MIN.
+
 1998-07-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Lower the priority of
