@@ -1,6 +1,6 @@
-/* IA-64 assembly version of the standard strcat() function.  
+/* IA-64 assembly version of the standard strcat() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,11 +49,11 @@ ENTRY(strcat)
 	.body
 	mov	out0 = dest
 	mov	tmp = gp ;;
-	br.call.sptk.many b0 = strlen# ;; // rc = strlen(dest);
+	br.call.sptk.many b0 = HIDDEN_JUMPTARGET(strlen)# ;; // rc = strlen(dest);
         mov	gp = tmp
 	add	out0 = dest, rc
 	mov	out1 = src
-	br.call.sptk.many b0 = strcpy# ;; // strcpy(dest + strlen(dest), src)
+	br.call.sptk.many b0 = HIDDEN_JUMPTARGET(strcpy)# ;; // strcpy(dest + strlen(dest), src)
 	mov     gp = tmp
 	mov	rc = dest
 	mov	b0 = save_b0
