@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ fixup (
 	  {
 	    const ElfW(Half) *vernum =
 	      (const void *) D_PTR (l, l_info[VERSYMIDX (DT_VERSYM)]);
-	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info) & 0x7fff];
+	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)] & 0x7fff;
 	    const struct r_found_version *version = &l->l_versions[ndx];
 
 	    if (version->hash != 0)
@@ -179,7 +179,7 @@ profile_fixup (
 	      {
 		const ElfW(Half) *vernum =
 		  (const void *) D_PTR (l,l_info[VERSYMIDX (DT_VERSYM)]);
-		ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info) & 0x7fff];
+		ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)] & 0x7fff;
 		const struct r_found_version *version = &l->l_versions[ndx];
 
 		if (version->hash != 0)

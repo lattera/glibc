@@ -1,3 +1,8 @@
+2003-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-runtime.c (fixup): Correct typo in version index computation.
+	(profile_fixup): Likewise.
+
 2002-11-24  Robert Love  <rml@tech9.net>
 
 	* posix/sched.h: Second parameter of sched_setaffinity and
