@@ -27,7 +27,7 @@ ENTRY (__waitpid)
 	pushl %eax		/* Push the new flags word.  */
 	popfl			/* Pop it into the flags.  */
 	DO_CALL (wait, 2)
-	movl 4(%esp), scratch	/* Put status pointer in scratch register.  */
+	movl 8(%esp), scratch	/* Put status pointer in scratch register.  */
 	testl scratch, scratch	/* Is it non-nil?  */
 	je null
 	movl r1, (scratch)	/* Yes; store the status there.  */

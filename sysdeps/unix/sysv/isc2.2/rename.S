@@ -1,1 +1,1 @@
-#include <sysdeps/unix/bsd/rename.S>
+#include <sysdeps/unix/common/rename.S>
