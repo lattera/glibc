@@ -1,3 +1,9 @@
+2003-06-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* test-skeleton.c (timeout_handler): If waitpid returned 0,
+	retry once after a second.  If killed == 0, assume
+	WTERMSIG (status) == SIGKILL.
+
 2003-06-18  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Catch uninitialized

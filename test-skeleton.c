@@ -139,7 +139,20 @@ timeout_handler (int sig __attribute__ ((unused)))
   kill (pid, SIGKILL);
 
   /* Wait for it to terminate.  */
-  killed = waitpid (pid, &status, WNOHANG|WUNTRACED);
+  int i;
+  for (i = 0; i < 5; ++i)
+    {
+      killed = waitpid (pid, &status, WNOHANG|WUNTRACED);
+      if (killed != 0)
+	break;
+
+      /* Delay, give the system time to process the kill.  If the
+	 nanosleep() call return prematurely, all the better.  We
+	 won't restart it since this probably means the child process
+	 finally died.  */
+      struct timespec ts = { .tv_sec = 0, .tv_nsec = 100000000 };
+      nanosleep (&ts, NULL);
+    }
   if (killed != 0 && killed != pid)
     {
       perror ("Failed to killed test process");
@@ -156,7 +169,7 @@ timeout_handler (int sig __attribute__ ((unused)))
     exit (0);
 #endif
 
-  if (WIFSIGNALED (status) && WTERMSIG (status) == SIGKILL)
+  if (killed == 0 || (WIFSIGNALED (status) && WTERMSIG (status) == SIGKILL))
     fputs ("Timed out: killed the child process\n", stderr);
   else if (WIFSTOPPED (status))
     fprintf (stderr, "Timed out: the child process was %s\n",
