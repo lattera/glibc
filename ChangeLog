@@ -1,3 +1,30 @@
+2002-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h (attribute_tls_model_ie): Define.
+	* include/errno.h (errno): Define to __libc_errno in libc.so.
+	Add attribute_tls_model_ie.
+	* include/netdb.h (h_errno): Define to __libc_h_errno in libc.so.
+	Add attribute_tls_model_ie.
+	* include/resolv.h (_res): Define to __libc_res in libc.so.  Add
+	attribute_tls_model_ie.
+	* inet/herrno.c (__libc_h_errno): Add hidden alias to h_errno.
+	(h_errno): Define.
+	* resolv/res_libc.c (__libc_res): Add hidden alias to _res.
+	(_res): Define.
+	* sysdeps/generic/bits/libc-tsd.h (__libc_tsd_define): Add
+	attribute_tls_model_ie.
+	* sysdeps/generic/errno-loc.c (errno): Only undefine if not using
+	__thread.
+	* sysdeps/generic/errno.c (__libc_errno): Add hidden alias to errno.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER): Use
+	__libc_errno in USE___THREAD case.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Likewise.
+	* configure.in (HAVE_TLS_MODEL_ATTRIBUTE): Check for
+	__attribute__((tls_model (""))).
+	* configure: Rebuilt.
+	* config.h.in (HAVE_TLS_MODEL_ATTRIBUTE): Add.
+
 2002-10-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/asia: Update from tzdata2002d.
