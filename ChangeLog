@@ -1,8 +1,24 @@
+2004-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/dl-machine.h: Include <tls.h>.
+
+	* elf/rtld.c (_dl_start_final): Initialze __libc_stack_end here.
+	* sysdeps/generic/dl-sysdep.c: Define __libc_stack_end with
+	rtld_hidden_def and move into .data.rel.ro section.
+	* sysdeps/generic/ldsodefs.h: Declare __libc_stack_end with
+	rtld_hidden_proto.
+	* sysdeps/generic/libc-start.c: Only initialize __libc_stack_end here
+	if !SHARED.
+
 2004-01-13  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S: Fix typo.
 
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable): Move common code in front.  Use
+	__builtin_expect.
 
 	* sysdeps/unix/sysv/linux/dl-execstack.c: Change interface.  Add
 	challenge for caller.

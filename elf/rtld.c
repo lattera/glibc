@@ -253,6 +253,9 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   HP_TIMING_NOW (GL(dl_cpuclock_offset));
 #endif
 
+  /* Initialize the stack end variable.  */
+  __libc_stack_end = __builtin_frame_address (0);
+
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user

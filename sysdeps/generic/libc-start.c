@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,10 +105,11 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
   INIT_ARGV_and_ENVIRON;
 
-  /* Store the lowest stack address.  */
+#ifndef SHARED
+  /* Store the lowest stack address.  This is done in ld.so if this is
+     the code for the DSO.  */
   __libc_stack_end = stack_end;
 
-#ifndef SHARED
 # ifdef HAVE_AUX_VECTOR
   /* First process the auxiliary vector since we need to find the
      program header to locate an eventually present PT_TLS entry.  */

@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995-1998, 2000-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,8 @@ INTVARDEF(__libc_enable_secure)
 int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 /* This variable contains the lowest stack address ever used.  */
-void *__libc_stack_end;
+void *__libc_stack_end __attribute__ ((section (".data.rel.ro")));
+rtld_hidden_def(__libc_stack_end)
 static ElfW(auxv_t) *_dl_auxv;
 
 #ifndef DL_FIND_ARG_COMPONENTS

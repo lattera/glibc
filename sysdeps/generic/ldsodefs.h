@@ -456,6 +456,14 @@ extern void **_dl_initial_error_catch_tsd (void) __attribute__ ((const))
 extern int _dl_make_stack_executable (void **stack_endp) internal_function;
 rtld_hidden_proto (_dl_make_stack_executable)
 
+/* Variable pointing to the end of the stack (or close to it).  This value
+   must be constant over the runtime of the application.  Some programs
+   might use the variable which results in copy relocations on some
+   platforms.  But this does not matter, ld.so can always use the local
+   copy.  */
+extern void *__libc_stack_end;
+rtld_hidden_proto (__libc_stack_end)
+
 /* Parameters passed to the dynamic linker.  */
 extern int _dl_argc attribute_hidden;
 extern char **_dl_argv;
