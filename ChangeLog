@@ -1,6 +1,8 @@
 2001-04-24  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/generic/bits/environments.h: Fix typos.
+	* sysdeps/generic/bits/environments.h (_POSIX_V6_LPBIG_OFFBIG,
+	_XBS5_LPBIG_OFFBIG): Define to -1.
+	Fix typos.
 
 	* sysdeps/generic/bits/confname.h: Add _CS_V6_WIDTH_RESTRICTED_ENVS.
 	* posix/confstr.c: Handle _CS_V6_WIDTH_RESTRICTED_ENVS.
