@@ -1,3 +1,7 @@
+Mon Mar 23 11:16:14 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/m68020/wordcopy.S: New file.
+
 1998-03-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/wordexp.c: Rewrite parse_param.
