@@ -1,3 +1,10 @@
+2004-05-06  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/div_libc.h (_ITOFS, _ITOFT, _FTOIT, _ITOFT2): New.
+	* sysdeps/alpha/divl.S, sysdeps/alpha/divq.S, sysdeps/alpha/divqu.S,
+	sysdeps/alpha/reml.S, sysdeps/alpha/remq.S, sysdeps/alpha/remqu.S:
+	Use them.
+
 2004-05-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/tgmath.h (__TGMATH_UNARY_REAL_IMAG_RET_REAL):Define.

@@ -48,25 +48,20 @@ __divl:
 
 	EXTEND	(X, RV)
 	EXTEND	(Y, AT)
-	stq	RV, 16(sp)
-	stq	AT, 24(sp)
-
-	ldt	$f0, 16(sp)
-	ldt	$f1, 24(sp)
+	_ITOFT2	RV, $f0, 16, AT, $f1, 24
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
-
 	divt/c	$f0, $f1, $f0
 	cvttq/c	$f0, $f0
-	stt	$f0, 16(sp)
-	ldt	$f0, 0(sp)
+	_FTOIT	$f0, RV, 16
 
+	ldt	$f0, 0(sp)
 	ldt	$f1, 8(sp)
-	ldl	RV, 16(sp)
 	lda	sp, FRAME(sp)
 	cfi_restore ($f0)
 	cfi_restore ($f1)
 	cfi_def_cfa_offset (0)
+	sextl	RV, RV
 	ret	$31, (RA), 1
 
 	cfi_endproc

@@ -52,17 +52,13 @@ __remq:
 	   that's done, we have at least 22 cycles until its results are
 	   ready -- all the time in the world to figure out how we're
 	   going to use the results.  */
-	stq	X, 16(sp)
-	stq	Y, 24(sp)
-	beq	Y, DIVBYZERO
-
 	stt	$f0, 0(sp)
 	stt	$f1, 8(sp)
+	beq	Y, DIVBYZERO
 	cfi_rel_offset ($f0, 0)
 	cfi_rel_offset ($f1, 8)
-	ldt	$f0, 16(sp)
-	ldt	$f1, 24(sp)
 
+	_ITOFT2	X, $f0, 16, Y, $f1, 24
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
 	divt/c	$f0, $f1, $f0
@@ -77,9 +73,7 @@ __remq:
 	/* If we get here, we're expecting exact results from the division.
 	   Do nothing else besides convert, compute remainder, clean up.  */
 	cvttq/c	$f0, $f0
-	stt	$f0, 16(sp)
-
-	ldq	AT, 16(sp)
+	_FTOIT	$f0, AT, 16
 	mulq	AT, Y, AT
 	ldt	$f0, 0(sp)
 	cfi_restore ($f1)
@@ -87,7 +81,6 @@ __remq:
 	cfi_restore ($f0)
 	cfi_def_cfa_offset (0)
 	lda	sp, FRAME(sp)
-
 	subq	X, AT, RV
 	ret	$31, (RA), 1
 
@@ -120,8 +113,8 @@ $x_big:
 $fix_sign_in_ret1:
 	cvttq/c	$f0, $f0
 
-	stt	$f0, 8(sp)
-	ldq	Q, 8(sp)
+	_FTOIT	$f0, Q, 8
+	.align	3
 $fix_sign_in_ret2:
 	mulq	Q, Y, QY
 	stq	t4, 8(sp)
@@ -233,9 +226,8 @@ $fix_sign_in:
 
 	bge	t1, $fix_sign_in_ret1
 	cvttq/c	$f0, $f0
-	stt	$f0, 8(sp)
-	ldq	Q, 8(sp)
-
+	_FTOIT	$f0, Q, 8
+	.align	3
 	negq	Q, Q
 	br	$fix_sign_in_ret2
 

@@ -50,18 +50,12 @@ __reml:
 
 	EXTEND	(X, RV)
 	EXTEND	(Y, AT)
-	stq	RV, 16(sp)
-	stq	AT, 24(sp)
-
-	ldt	$f0, 16(sp)
-	ldt	$f1, 24(sp)
+	_ITOFT2	RV, $f0, 16, AT, $f1, 24
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
-
 	divt/c	$f0, $f1, $f0
 	cvttq/c	$f0, $f0
-	stt	$f0, 16(sp)
-	ldq	RV, 16(sp)
+	_FTOIT	$f0, RV, 16
 
 	ldt	$f0, 0(sp)
 	mull	RV, Y, RV
@@ -70,7 +64,6 @@ __reml:
 	cfi_restore ($f0)
 	cfi_restore ($f1)
 	cfi_def_cfa_offset (0)
-
 	subl	X, RV, RV
 	ret	$31, (RA), 1
 

@@ -111,3 +111,48 @@ DIVBYZERO:
 	cfi_endproc
 	.size	DIVBYZERO, .-DIVBYZERO
 .endm
+
+/* Like the ev6 instructions, but fall back to stack use on prior machines.  */
+
+	.arch	ev6
+
+.macro _ITOFS  gr, fr, slot
+#ifdef __alpha_fix__
+	itofs	\gr, \fr
+#else
+	stl	\gr, \slot($sp)
+	lds	\fr, \slot($sp)
+#endif
+.endm
+
+.macro _ITOFT  gr, fr, slot
+#ifdef __alpha_fix__
+	itoft	\gr, \fr
+#else
+	stq	\gr, \slot($sp)
+	ldt	\fr, \slot($sp)
+#endif
+.endm
+
+.macro _FTOIT  fr, gr, slot
+#ifdef __alpha_fix__
+	ftoit	\fr, \gr
+#else
+	stt	\fr, \slot($sp)
+	ldq	\gr, \slot($sp)
+#endif
+.endm
+
+/* Similarly, but move two registers.  Schedules better for pre-ev6.  */
+
+.macro _ITOFT2 gr1, fr1, slot1, gr2, fr2, slot2
+#ifdef __alpha_fix__
+	itoft	\gr1, \fr1
+	itoft	\gr2, \fr2
+#else
+	stq	\gr1, \slot1($sp)
+	stq	\gr2, \slot2($sp)
+	ldt	\fr1, \slot1($sp)
+	ldt	\fr2, \slot2($sp)
+#endif
+.endm
