@@ -87,13 +87,18 @@ struct element_t
      weight computation.
 
      XXX The type here restricts the number of levels to 32.  It could
-     we changed if necessary but I doubt this is necessary.  */
+     be changed if necessary but I doubt this is necessary.  */
   unsigned int used_in_level;
 
   struct element_list_t *weights;
 
   /* Nonzero if this is a real character definition.  */
   int is_character;
+
+  /* Order of the character in the sequence.  This information will
+     be used in range expressions.  */
+  int mbseqorder;
+  int wcseqorder;
 
   /* Where does the definition come from.  */
   const char *file;
@@ -186,6 +191,10 @@ struct locale_collate_t
   /* Arrays with heads of the list for each of the leading bytes in
      the multibyte sequences.  */
   struct element_t **wcheads;
+
+  /* The arrays with the collation sequence order.  */
+  unsigned char mbseqorder[256];
+  uint32_t *wcseqorder;
 };
 
 
@@ -1401,6 +1410,8 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
   int mbact[nrules];
   int wcact;
+  int mbseqact;
+  int wcseqact;
   struct element_t *runp;
   int i;
   int need_undefined = 0;
@@ -1487,6 +1498,8 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
   for (i = 0; i < nrules; ++i)
     mbact[i] = 2;
   wcact = 2;
+  mbseqact = 0;
+  wcseqact = 0;
   runp = collate->start;
   while (runp != NULL)
     {
@@ -1557,6 +1570,14 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  /* We take the opportunity to count the elements which have
 	     wide characters.  */
 	  ++nr_wide_elems;
+	}
+
+      if (runp->is_character)
+	{
+	  if (runp->nmbs == 1)
+	    collate->mbseqorder[((unsigned char *) runp->mbs)[0]] = mbseqact++;
+
+	  runp->wcseqorder = wcseqact++;
 	}
 
       /* Up to the next entry.  */
@@ -1668,6 +1689,14 @@ Computing table size for collation table might take a while..."),
 				   * collate->plane_cnt
 				   * sizeof (struct element_t *)));
 
+  collate->wcseqorder = (uint32_t *)
+    obstack_alloc (&collate->mempool, (collate->plane_size
+				       * collate->plane_cnt
+				       * sizeof (uint32_t)));
+  memset (collate->wcseqorder, '\0', (collate->plane_size
+				      * collate->plane_cnt
+				      * sizeof (uint32_t)));
+
   /* Start adding.  */
   runp = collate->start;
   while (runp != NULL)
@@ -1688,6 +1717,9 @@ Computing table size for collation table might take a while..."),
 
 	      idx += collate->plane_size;
 	    }
+
+	  /* Insert the collation sequence value.  */
+	  collate->wcseqorder[idx] = runp->wcseqorder;
 
 	  /* Find the point where to insert in the list.  */
 	  eptr = &collate->wcheads[idx];
@@ -2560,8 +2592,19 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_EXTRAMB));
   iov[2 + cnt].iov_len = obstack_object_size (&extrapool);
   iov[2 + cnt].iov_base = obstack_finish (&extrapool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
 
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQMB));
+  iov[2 + cnt].iov_base = collate->mbseqorder;
+  iov[2 + cnt].iov_len = 256;
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_COLLSEQWC));
+  iov[2 + cnt].iov_base = collate->wcseqorder;
+  iov[2 + cnt].iov_len = table_size * sizeof (uint32_t);
+  ++cnt;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
 
