@@ -1,5 +1,8 @@
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/aix/getegid.c: Define ID_EFFECTIVE.
+	* sysdeps/unix/sysv/aix/geteuid.c: Likewise.
+
 	* elf/rtld.c: Display statitics option also if hp timing is not
 	available.
 

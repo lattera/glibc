@@ -18,6 +18,9 @@
 
 #include <unistd.h>
 
+#define ID_EFFECTIVE	0x01
+
+
 gid_t
 __getegid (void)
 {
