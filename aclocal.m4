@@ -3,20 +3,22 @@ dnl which appears in configure.in before the sysdep configure scripts are run.
 dnl Each sysdep configure.in does GLIBC_PROVIDES first, to avoid any
 dnl AC_REQUIREs or AC_BEFOREs duplicating their code.
 dnl
-define([AC_FD_MSG],6)dnl Autoconf lossage.
-define([AC_FD_CC],5)dnl Autoconf lossage.
-AC_DEFUN([GLIBC_PROVIDES], [dnl
+define([GLIBC_PROVIDES], [dnl
 AC_PROVIDE([AC_PROG_INSTALL])dnl
 AC_PROVIDE([AC_PROG_RANLIB])dnl
 AC_PROVIDE([AC_PROG_CC])dnl
 AC_PROVIDE([AC_PROG_CPP])dnl
-define([AC_LANG], [C])dnl
-# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+define([AS_MESSAGE_LOG_FD],5)dnl
+define([AS_MESSAGE_FD],6)dnl
+AS_INIT()dnl
+m4_divert_text([HEADER-COMMENT],
+[@%:@ This file is generated from configure.in by Autoconf.  DO NOT EDIT!])
+AC_LANG(C)dnl
 ])dnl
 dnl
 dnl Check for a symbol
 dnl
-AC_DEFUN(AC_CHECK_SYMBOL, [dnl
+AC_DEFUN([AC_CHECK_SYMBOL], [dnl
 AC_MSG_CHECKING(for $1)
 AC_CACHE_VAL(ac_cv_check_symbol_$1, [dnl
 AC_TRY_LINK(,
@@ -36,7 +38,7 @@ dnl
 dnl Locate a program and check that its version is acceptable.
 dnl AC_PROG_CHECK_VER(var, namelist, version-switch,
 dnl 		      [version-extract-regexp], version-glob [, do-if-fail])
-AC_DEFUN(AC_CHECK_PROG_VER,
+AC_DEFUN([AC_CHECK_PROG_VER],
 [AC_CHECK_PROGS([$1], [$2])
 if test -z "[$]$1"; then
   ac_verc_fail=yes
@@ -63,42 +65,10 @@ fi])
 ])
 
 dnl These modifications are to allow for an empty cross compiler tree.
-dnl In the situation that cross-linking is impossible, the variable
-dnl `cross_linkable' will be substituted with "yes".
-dnl The vercheck macros are expected to have been called already.
-AC_DEFUN(AC_PROG_CC_LOCAL,
-[AC_BEFORE([$0], [AC_PROG_CPP])dnl
-
-AC_PROG_CC_WORKS_LOCAL
-AC_PROG_CC_GNU
-if test $ac_cv_prog_gcc != yes; then
-  AC_MSG_ERROR([GNU libc must be compiled using GNU CC])
-fi
+define([_AC_COMPILER_EXEEXT], [EXEEXT=
 ])
 
-AC_DEFUN(AC_PROG_CC_WORKS_LOCAL,
-[AC_MSG_CHECKING([whether the C compiler ($CC $CFLAGS $LDFLAGS) works])
-AC_CACHE_VAL(ac_cv_prog_cc_works,
-[AC_LANG_SAVE
-AC_LANG_C
-AC_TRY_COMPILER([main(){return(0);}], ac_cv_prog_cc_works, ac_cv_prog_cc_cross)
-AC_LANG_RESTORE])
-AC_MSG_RESULT($ac_cv_prog_cc_works)
-if test $ac_cv_prog_cc_works = no; then
- cross_linkable=no
- ac_cv_prog_cc_cross=yes
-dnl AC_MSG_ERROR([installation or configuration problem: C compiler cannot create executables.])
-else
- cross_linkable=yes
-fi
-AC_CACHE_CHECK(
-[whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler],
-ac_cv_prog_cc_cross, [:])
-AC_SUBST(cross_linkable)
-cross_compiling=$ac_cv_prog_cc_cross
-])
-
-AC_DEFUN(LIBC_PROG_FOO_GNU,
+AC_DEFUN([LIBC_PROG_FOO_GNU],
 [# Most GNU programs take a -v and spit out some text including
 # the word 'GNU'.  Some try to read stdin, so give them /dev/null.
 if $1 -o conftest -v </dev/null 2>&1 | grep GNU > /dev/null 2>&1; then
@@ -108,7 +78,7 @@ else
 fi
 rm -fr contest*])
 
-AC_DEFUN(LIBC_PROG_BINUTILS,
+AC_DEFUN([LIBC_PROG_BINUTILS],
 [# Was a --with-binutils option given?
 if test -n "$path_binutils"; then
     # Make absolute; ensure a single trailing slash.

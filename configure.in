@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
-AC_PREREQ(2.13)dnl		dnl Minimum Autoconf version required.
+AC_PREREQ(2.53)dnl		dnl Minimum Autoconf version required.
 AC_INIT(include/features.h)
 AC_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(scripts)
@@ -507,7 +507,7 @@ while test $# -gt 0; do
   esac
 
   # Report each name as we discover it, so there is no long pause in output.
-  echo $ac_n "$name $ac_c" >&AC_FD_MSG
+  echo $ECHO_N "$name $ECHO_C" >&AC_FD_MSG
 
   name_base=`echo $name | sed -e 's@\(.*sysdeps\)/.*@\1@'`
 
@@ -600,7 +600,7 @@ if test "$PWD_P" = no; then
 fi
 
 # These programs are version sensitive.
-AC_REQUIRE([AC_CHECK_TOOL_PREFIX])dnl
+AC_CHECK_TOOL_PREFIX
 AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
   [version \([egcygnustpi-]*[0-9.]*\)], [3.[2-9]*],
   critic_missing="$critic_missing gcc")
@@ -645,8 +645,7 @@ whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
 esac
 test "x$AUTOCONF" != xno || aux_missing="$aux_missing autoconf"
 
-AC_PROG_CC_LOCAL
-AC_CANONICAL_BUILD
+AC_PROG_CC
 if test $host != $build; then
   AC_CHECK_PROGS(BUILD_CC, gcc cc)
 fi
@@ -1749,7 +1748,7 @@ AC_DEFUN(LIBC_KERNEL_ID, [dnl
 ])dnl
 
   AC_CACHE_CHECK(OS release for uname, libc_cv_uname_release, [dnl
-AC_REQUIRE([LIBC_KERNEL_ID])dnl
+LIBC_KERNEL_ID
 changequote(,)dnl
   kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
 changequote([,])dnl
@@ -1767,7 +1766,7 @@ changequote([,])dnl
   uname_release="$libc_cv_uname_release"
 
   AC_CACHE_CHECK(OS version for uname, libc_cv_uname_version, [dnl
-AC_REQUIRE([LIBC_KERNEL_ID])dnl
+LIBC_KERNEL_ID
 changequote(,)dnl
   kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
 changequote([,])dnl

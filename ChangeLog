@@ -1,3 +1,8 @@
+2002-10-07  Andreas Schwab  <schwab@suse.de>
+
+	* aclocal.m4: Fix for autoconf 2.53.
+	* configure.in: Likewise.  Require autoconf 2.53.
+
 2002-10-08  Richard Henderson  <rth@redhat.com>
 
 	* soft-fp/op-4.h: Handle carry correctly in
