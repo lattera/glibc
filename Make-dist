@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -121,13 +121,13 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 	$(addsuffix .c,$(sysdep_routines)) \
 	$(+subdir-nodist) $(dont_distribute)
 foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
-+tsrcs	:= $(filter-out $(+out), $(sources) $(all-headers) $(distribute)) \
-	   $(+sysdeps)
++tsrcs	:= $(filter-out $(+out), $(sources) $(all-headers)) $(+sysdeps)
 foo:=$(shell echo 'made +tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo generated='$(generated)' >&2)
 #generated := $(sort $(generated) $(generated:.S=.c) $(generated:.s=.c))
 #foo:=$(shell echo now generated='$(generated)' >&2)
-+tsrcs := $(sort $(filter-out $(generated),$(+tsrcs)))
++tsrcs := $(filter-out $(generated),$(+tsrcs))
++tsrcs := $(sort $(filter-out $(+out),$(+tsrcs) $(distribute)))
 foo:=$(shell echo '+tsrcs=$(+tsrcs)'>&2)
 foo:=$(shell echo foobie, dammit! >&2)
 

@@ -1,5 +1,8 @@
 1999-01-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Make-dist: If file is generated but still distributed the later
+	is correct.
+
 	* sysdeps/unix/sysv/linux/arm/Dist: Add sys/user.h.
 
 	* manual/Makefile (examples): Filter out the example code from
@@ -10,6 +13,12 @@
 	* nis/nis_error.c (nis_errlist): Fix typo in string.
 
 	* misc/regexp.h: Add restrict to function declarations.
+
+1998-12-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	Patche by Ralf Baechle <ralf@gnu.org>:
+	* sysdeps/mips/sys/regdef.h: New file, enhanced versions of
+	deleted linux specific files.
 
 1999-01-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 

@@ -5,4 +5,5 @@ regdef.h
 sgidefs.h
 fpregdef.h
 sys/fpregdef.h
+sys/regdef.h
 sys/asm.h
