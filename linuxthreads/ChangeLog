@@ -1,3 +1,12 @@
+2000-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add ex11.  Add rules to build it.
+	* Examples/ex11.c: New file.
+	* rwlock.c: Fix complete braindamaged previous try to implement
+	timedout functions.
+
+	* spinlock.c: Pretty print.
+
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add ex10.  Add rules to build it.

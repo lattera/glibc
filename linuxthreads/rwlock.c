@@ -27,6 +27,35 @@
 #include "spinlock.h"
 #include "restart.h"
 
+/* Function called by pthread_cancel to remove the thread from
+   waiting inside pthread_rwlock_timedrdlock or pthread_rwlock_timedwrlock. */
+
+static int rwlock_rd_extricate_func(void *obj, pthread_descr th)
+{
+  volatile pthread_descr self = thread_self();
+  pthread_rwlock_t *rwlock = obj;
+  int did_remove = 0;
+
+  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, self);
+  did_remove = remove_from_queue(&rwlock->__rw_read_waiting, th);
+  __pthread_unlock((struct _pthread_fastlock *) &rwlock->__rw_lock);
+
+  return did_remove;
+}
+
+static int rwlock_wr_extricate_func(void *obj, pthread_descr th)
+{
+  volatile pthread_descr self = thread_self();
+  pthread_rwlock_t *rwlock = obj;
+  int did_remove = 0;
+
+  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, self);
+  did_remove = remove_from_queue(&rwlock->__rw_write_waiting, th);
+  __pthread_unlock((struct _pthread_fastlock *) &rwlock->__rw_lock);
+
+  return did_remove;
+}
+
 /*
  * Check whether the calling thread already owns one or more read locks on the
  * specified lock. If so, return a pointer to the read lock info structure
@@ -214,10 +243,10 @@ __pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
   int readers;
   _pthread_descr writer;
 
-  __pthread_alt_lock (&rwlock->__rw_lock, NULL);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   readers = rwlock->__rw_readers;
   writer = rwlock->__rw_writer;
-  __pthread_alt_unlock (&rwlock->__rw_lock);
+  __pthread_unlock (&rwlock->__rw_lock);
 
   if (readers > 0 || writer != NULL)
     return EBUSY;
@@ -241,18 +270,18 @@ __pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 
   for (;;)
     {
-      __pthread_alt_lock (&rwlock->__rw_lock, self);
+      __pthread_lock (&rwlock->__rw_lock, self);
 
       if (rwlock_can_rdlock(rwlock, have_lock_already))
 	break;
 
       enqueue (&rwlock->__rw_read_waiting, self);
-      __pthread_alt_unlock (&rwlock->__rw_lock);
+      __pthread_unlock (&rwlock->__rw_lock);
       suspend (self); /* This is not a cancellation point */
     }
 
   ++rwlock->__rw_readers;
-  __pthread_alt_unlock (&rwlock->__rw_lock);
+  __pthread_unlock (&rwlock->__rw_lock);
 
   if (have_lock_already || out_of_mem)
     {
@@ -273,6 +302,7 @@ __pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
   pthread_descr self = NULL;
   pthread_readlock_info *existing;
   int out_of_mem, have_lock_already;
+  pthread_extricate_if extr;
 
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
@@ -283,21 +313,46 @@ __pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
   if (self == NULL)
     self = thread_self ();
 
+  /* Set up extrication interface */
+  extr.pu_object = rwlock;
+  extr.pu_extricate_func = rwlock_rd_extricate_func;
+
+  /* Register extrication interface */
+  __pthread_set_own_extricate_if (self, &extr);
+
   for (;;)
     {
-      if (__pthread_alt_timedlock (&rwlock->__rw_lock, self, abstime) == 0)
-	return ETIMEDOUT;
+      __pthread_lock (&rwlock->__rw_lock, self);
 
       if (rwlock_can_rdlock(rwlock, have_lock_already))
 	break;
 
       enqueue (&rwlock->__rw_read_waiting, self);
-      __pthread_alt_unlock (&rwlock->__rw_lock);
-      suspend (self); /* This is not a cancellation point */
+      __pthread_unlock (&rwlock->__rw_lock);
+      /* This is not a cancellation point */
+      if (timedsuspend (self, abstime) == 0)
+	{
+	  int was_on_queue;
+
+	  __pthread_lock (&rwlock->__rw_lock, self);
+	  was_on_queue = remove_from_queue (&rwlock->__rw_read_waiting, self);
+	  __pthread_unlock (&rwlock->__rw_lock);
+
+	  if (was_on_queue)
+	    {
+	      __pthread_set_own_extricate_if (self, 0);
+	      return ETIMEDOUT;
+	    }
+
+	  /* Eat the outstanding restart() from the signaller */
+	  suspend (self);
+	}
     }
 
+  __pthread_set_own_extricate_if (self, 0);
+
   ++rwlock->__rw_readers;
-  __pthread_alt_unlock (&rwlock->__rw_lock);
+  __pthread_unlock (&rwlock->__rw_lock);
 
   if (have_lock_already || out_of_mem)
     {
@@ -322,7 +377,7 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
   have_lock_already = rwlock_have_already(&self, rwlock,
       &existing, &out_of_mem);
 
-  __pthread_alt_lock (&rwlock->__rw_lock, self);
+  __pthread_lock (&rwlock->__rw_lock, self);
 
   /* 0 is passed to here instead of have_lock_already.
      This is to meet Single Unix Spec requirements:
@@ -336,7 +391,7 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
       retval = 0;
     }
 
-  __pthread_alt_unlock (&rwlock->__rw_lock);
+  __pthread_unlock (&rwlock->__rw_lock);
 
   if (retval == 0)
     {
@@ -361,17 +416,17 @@ __pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
 
   while(1)
     {
-      __pthread_alt_lock (&rwlock->__rw_lock, self);
+      __pthread_lock (&rwlock->__rw_lock, self);
       if (rwlock->__rw_readers == 0 && rwlock->__rw_writer == NULL)
 	{
 	  rwlock->__rw_writer = self;
-	  __pthread_alt_unlock (&rwlock->__rw_lock);
+	  __pthread_unlock (&rwlock->__rw_lock);
 	  return 0;
 	}
 
       /* Suspend ourselves, then try again */
       enqueue (&rwlock->__rw_write_waiting, self);
-      __pthread_alt_unlock (&rwlock->__rw_lock);
+      __pthread_unlock (&rwlock->__rw_lock);
       suspend (self); /* This is not a cancellation point */
     }
 }
@@ -383,28 +438,53 @@ __pthread_rwlock_timedwrlock (pthread_rwlock_t *rwlock,
 			      const struct timespec *abstime)
 {
   pthread_descr self;
+  pthread_extricate_if extr;
 
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
   self = thread_self ();
 
+  /* Set up extrication interface */
+  extr.pu_object = rwlock;
+  extr.pu_extricate_func =  rwlock_wr_extricate_func;
+
+  /* Register extrication interface */
+  __pthread_set_own_extricate_if (self, &extr);
+
   while(1)
     {
-      if (__pthread_alt_timedlock (&rwlock->__rw_lock, self, abstime) == 0)
-	return ETIMEDOUT;
+      __pthread_lock (&rwlock->__rw_lock, self);
 
       if (rwlock->__rw_readers == 0 && rwlock->__rw_writer == NULL)
 	{
 	  rwlock->__rw_writer = self;
-	  __pthread_alt_unlock (&rwlock->__rw_lock);
+	  __pthread_set_own_extricate_if (self, 0);
+	  __pthread_unlock (&rwlock->__rw_lock);
 	  return 0;
 	}
 
       /* Suspend ourselves, then try again */
       enqueue (&rwlock->__rw_write_waiting, self);
-      __pthread_alt_unlock (&rwlock->__rw_lock);
-      suspend (self); /* This is not a cancellation point */
+      __pthread_unlock (&rwlock->__rw_lock);
+      /* This is not a cancellation point */
+      if (timedsuspend (self, abstime) == 0)
+	{
+	  int was_on_queue;
+
+	  __pthread_lock (&rwlock->__rw_lock, self);
+	  was_on_queue = remove_from_queue (&rwlock->__rw_write_waiting, self);
+	  __pthread_unlock (&rwlock->__rw_lock);
+
+	  if (was_on_queue)
+	    {
+	      __pthread_set_own_extricate_if (self, 0);
+	      return ETIMEDOUT;
+	    }
+
+	  /* Eat the outstanding restart() from the signaller */
+	  suspend (self);
+	}
     }
 }
 strong_alias (__pthread_rwlock_timedwrlock, pthread_rwlock_timedwrlock)
@@ -415,13 +495,13 @@ __pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
 
-  __pthread_alt_lock (&rwlock->__rw_lock, NULL);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   if (rwlock->__rw_readers == 0 && rwlock->__rw_writer == NULL)
     {
       rwlock->__rw_writer = thread_self ();
       result = 0;
     }
-  __pthread_alt_unlock (&rwlock->__rw_lock);
+  __pthread_unlock (&rwlock->__rw_lock);
 
   return result;
 }
@@ -434,13 +514,13 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
   pthread_descr torestart;
   pthread_descr th;
 
-  __pthread_alt_lock (&rwlock->__rw_lock, NULL);
+  __pthread_lock (&rwlock->__rw_lock, NULL);
   if (rwlock->__rw_writer != NULL)
     {
       /* Unlocking a write lock.  */
       if (rwlock->__rw_writer != thread_self ())
 	{
-	  __pthread_alt_unlock (&rwlock->__rw_lock);
+	  __pthread_unlock (&rwlock->__rw_lock);
 	  return EPERM;
 	}
       rwlock->__rw_writer = NULL;
@@ -452,14 +532,14 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 	  /* Restart all waiting readers.  */
 	  torestart = rwlock->__rw_read_waiting;
 	  rwlock->__rw_read_waiting = NULL;
-	  __pthread_alt_unlock (&rwlock->__rw_lock);
+	  __pthread_unlock (&rwlock->__rw_lock);
 	  while ((th = dequeue (&torestart)) != NULL)
 	    restart (th);
 	}
       else
 	{
 	  /* Restart one waiting writer.  */
-	  __pthread_alt_unlock (&rwlock->__rw_lock);
+	  __pthread_unlock (&rwlock->__rw_lock);
 	  restart (th);
 	}
     }
@@ -468,7 +548,7 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
       /* Unlocking a read lock.  */
       if (rwlock->__rw_readers == 0)
 	{
-	  __pthread_alt_unlock (&rwlock->__rw_lock);
+	  __pthread_unlock (&rwlock->__rw_lock);
 	  return EPERM;
 	}
 
@@ -479,7 +559,7 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
       else
 	th = NULL;
 
-      __pthread_alt_unlock (&rwlock->__rw_lock);
+      __pthread_unlock (&rwlock->__rw_lock);
       if (th != NULL)
 	restart (th);
 

@@ -149,7 +149,7 @@ again:
   return 0;
 }
 
-/* 
+/*
  * Alternate fastlocks do not queue threads directly. Instead, they queue
  * these wait queue node structures. When a timed wait wakes up due to
  * a timeout, it can leave its wait node in the queue (because there
@@ -191,7 +191,7 @@ static struct wait_node *wait_node_alloc(void)
   return (struct wait_node *) oldvalue;
 }
 
-/* Return a node to the head of the free list using an atomic 
+/* Return a node to the head of the free list using an atomic
    operation. */
 
 static void wait_node_free(struct wait_node *wn)
@@ -210,7 +210,7 @@ static void wait_node_free(struct wait_node *wn)
 /* Remove a wait node from the specified queue.  It is assumed
    that the removal takes place concurrently with only atomic insertions at the
    head of the queue. */
-    
+
 static void wait_node_dequeue(struct wait_node **pp_head,
 			      struct wait_node **pp_node,
 			      struct wait_node *p_node,
@@ -281,7 +281,7 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
 {
   struct wait_node *p_wait_node = wait_node_alloc();
   long oldstatus, newstatus;
- 
+
   /* Out of memory, just give up and do ordinary lock. */
   if (p_wait_node == 0) {
     __pthread_alt_lock(lock, self);
@@ -342,13 +342,13 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 
     oldstatus = lock->__status;
     if (oldstatus == 0 || oldstatus == 1) {
-      if (compare_and_swap_with_release_semantics (&lock->__status,
-	  oldstatus, 0, &lock->__spinlock))
+      if (compare_and_swap_with_release_semantics (&lock->__status, oldstatus,
+						   0, &lock->__spinlock))
 	return;
       else
 	continue;
     }
-  
+
     /* Process the entire queue of wait nodes. Remove all abandoned
        wait nodes and put them into the global free queue, and
        remember the one unabandoned node which refers to the thread

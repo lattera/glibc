@@ -38,7 +38,7 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       oldsemaphore events getcpuclockid pspinlock barrier
 
 vpath %.c Examples
-tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 joinrace
+tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 joinrace
 
 include ../Rules
 
@@ -72,4 +72,5 @@ $(objpfx)ex7: $(libpthread)
 $(objpfx)ex8: $(libpthread)
 $(objpfx)ex9: $(libpthread)
 $(objpfx)ex10: $(libpthread) $(librt)
+$(objpfx)ex11: $(libpthread) $(librt)
 $(objpfx)joinrace: $(libpthread)
