@@ -22,9 +22,6 @@ Cambridge, MA 02139, USA.  */
 #include <setjmp.h>
 #include <assert.h>
 
-extern void _hurd_longjmp_thread_state (struct machine_thread_state *,
-					jmp_buf env, int value);
-
 
 /* _hurd_setup_sighandler puts a link on the `active resources' chain so that
    _longjmp_unwind will call this function with the `struct sigcontext *'
