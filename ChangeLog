@@ -1,3 +1,9 @@
+2001-11-06  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Don't include
+	sysdeps/powerpc/elf/sysdep.h.
+	Reported by Kaoru Fukui <k_fukui@highway.ne.jp>.
+
 2001-11-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (process_dl_debug): Rewritten.  Optimized for size not
