@@ -1,3 +1,25 @@
+1999-03-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/segfault.c: Include <stdio-common/_itoa.h> for
+	_itoa_word decl.
+
+	* sysdeps/mach/hurd/Makefile (link-rpcuserlibs): New variable.
+	($(common-objpfx)libc.so): Depend on that instead of $(rpcuserlibs).
+	($(link-rpcuserlibs)): New static pattern rule; link intermediate
+	versions of lib{mach,hurd}user.so without reference to libc.so,
+	then link libc.so against that to get deps and symbol versions, then
+	finally link real lib*user.so against libc.so.
+
+	* sysdeps/mach/hurd/fcntl.c (__fcntl: case F_GETLK,F_SETLK,F_SETLKW):
+	Support whole-file locking (only) by using the file_lock RPC.  This
+	has very wrong semantics, but is better than nothing for the time
+	being.  (Correct POSIX.1 locking will require new RPCs in the Hurd
+	protocols that will be somewhat hairy to specify.)
+
+1999-03-17  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/ptsname.c: New file.
+
 1999-03-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* timezone/asia: Fix rule in Asia/Nicosia entry.
@@ -15,7 +37,7 @@
 
 1999-03-18  Philip Blundell  <philb@gnu.org>
 
-	* sysdeps/unix/sysv/linux/arm/getgroups.c: New file.  Use the i386 
+	* sysdeps/unix/sysv/linux/arm/getgroups.c: New file.  Use the i386
 	implementation.
 
 1999-03-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
