@@ -33,6 +33,7 @@ char *locs;
    found in the buffer starting at EXPBUF.  `loc1' will return the
    first character matched and `loc2' points to the next unmatched
    character.  */
+extern int __step (const char *string, const char *expbuf);
 int
 __step (const char *string, const char *expbuf)
 {
@@ -41,7 +42,7 @@ __step (const char *string, const char *expbuf)
   expbuf += __alignof (regex_t *);
   expbuf -= (expbuf - ((const char *) 0)) % __alignof__ (regex_t *);
 
-  if (__regexec ((regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
+  if (__regexec ((const regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
       == REG_NOMATCH)
     return 0;
 
@@ -55,6 +56,7 @@ weak_alias (__step, step)
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
+extern int __advance (const char *string, const char *expbuf);
 int
 __advance (const char *string, const char *expbuf)
 {
@@ -63,7 +65,7 @@ __advance (const char *string, const char *expbuf)
   expbuf += __alignof__ (regex_t *);
   expbuf -= (expbuf - ((const char *) 0)) % __alignof__ (regex_t *);
 
-  if (__regexec ((regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
+  if (__regexec ((const regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
       == REG_NOMATCH
       /* We have to check whether the check is at the beginning of the
 	 buffer.  */

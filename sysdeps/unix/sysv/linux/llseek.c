@@ -27,6 +27,8 @@ extern int __syscall__llseek (int fd, off_t offset_hi, off_t offset_lo,
 			      loff_t *__unbounded result, int whence);
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
+extern loff_t __llseek (int fd, loff_t offset, int whence);
+
 loff_t
 __llseek (int fd, loff_t offset, int whence)
 {

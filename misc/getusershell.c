@@ -45,8 +45,7 @@ static char sccsid[] = "@(#)getusershell.c	8.1 (Berkeley) 6/4/93";
  * /etc/shells.
  */
 
-static char *okshells[] = { (char *) _PATH_BSHELL, (char *) _PATH_CSHELL,
-			    NULL };
+static const char *okshells[] = { _PATH_BSHELL, _PATH_CSHELL, NULL };
 static char **curshell, **shells, *strings;
 static char **initshells __P((void));
 
@@ -101,21 +100,21 @@ initshells()
 		free(strings);
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "r")) == NULL)
-		return (okshells);
+		return (char **) okshells;
 	if (fstat64(fileno(fp), &statb) == -1) {
 		(void)fclose(fp);
-		return (okshells);
+		return (char **) okshells;
 	}
 	if ((strings = malloc((u_int)statb.st_size + 1)) == NULL) {
 		(void)fclose(fp);
-		return (okshells);
+		return (char **) okshells;
 	}
 	shells = calloc((unsigned)statb.st_size / 3, sizeof (char *));
 	if (shells == NULL) {
 		(void)fclose(fp);
 		free(strings);
 		strings = NULL;
-		return (okshells);
+		return (char **) okshells;
 	}
 	sp = shells;
 	cp = strings;

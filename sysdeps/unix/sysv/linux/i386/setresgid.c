@@ -41,6 +41,8 @@ extern int __libc_missing_32bit_uids;
 #  endif
 # endif /* __NR_setresgid32 */
 
+extern int setresgid (gid_t rgid, gid_t egid, gid_t sgid);
+
 int
 setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {

@@ -41,6 +41,8 @@ extern int __libc_missing_32bit_uids;
 #  endif
 # endif /* __NR_setresuid32 */
 
+extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
+
 int
 __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
