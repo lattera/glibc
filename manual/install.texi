@@ -181,29 +181,16 @@ produce a lot of output, some of which may look like errors from
 @code{make} but isn't.  Look for error messages from @code{make}
 containing @samp{***}.  Those indicate that something is really wrong.
 
-The compilation process takes several hours even on fast hardware.
-Expect at least two hours for the default configuration on i586 for
-Linux.  For Hurd times are much longer.  Except for EGCS 1.1 and GCC
-2.95 (and later versions of GCC), all supported versions of GCC have a
-problem which causes them to take several minutes to compile certain
-files in the iconvdata directory.  Do not panic if the compiler appears
-to hang.
+The compilation process can take several hours.  Expect at least two
+hours for the default configuration on i586 for Linux.  For Hurd times
+are much longer.  Except for EGCS 1.1 and GCC 2.95 (and later versions
+of GCC), all supported versions of GCC have a problem which causes them
+to take several minutes to compile certain files in the iconvdata
+directory.  Do not panic if the compiler appears to hang.
 
-If you want to run a parallel make, you can't just give @code{make} the
-@samp{-j} option, because it won't be passed down to the sub-makes.
-Instead, edit the generated @file{Makefile} and uncomment the line
-
-@smallexample
-# PARALLELMFLAGS = -j 4
-@end smallexample
-
-@noindent
-You can change the @samp{4} to some other number as appropriate for
-your system.  Instead of changing the @file{Makefile}, you could give
-this option directly to @code{make} and call it as, for example,
-@code{make PARALLELMFLAGS=-j4}.  If you're building in the source
-directory, you must use the latter approach since in this case no
-new @file{Makefile} is generated for you to change.
+If you want to run a parallel make, simply pass the @samp{-j} option
+with an appropriate numeric parameter to @code{make}.  You need a recent
+GNU @code{make} version, though.
 
 To build and run test programs which exercise some of the library
 facilities, type @code{make check}.  If it does not complete
@@ -212,6 +199,11 @@ verifying that the problem is not already known.  @xref{Reporting Bugs},
 for instructions on reporting bugs.  Note that some of the tests assume
 they are not being run by @code{root}.  We recommend you compile and
 test glibc as an unprivileged user.
+
+Before reporting bugs make sure there is no problem with your system.
+The tests (and later installation) uses some pre-existing files of the
+system such as @file{/etc/passwd}, @file{/etc/nsswitch.conf} and others.
+These files must all contain correct and sensible content.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
 @w{@code{make dvi}}.  You need a working @TeX{} installation to do this.
