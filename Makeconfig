@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -779,7 +779,7 @@ endif
 # is more or less arbitrary.  The sorting step will take care of the
 # dependencies.  Only the $(binfmt-subdir) should always be kept at the
 # end of the list.
-all-subdirs = csu assert ctype db db2 locale intl catgets math setjmp signal\
+all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      stdlib stdio-common $(stdio) malloc string wcsmbs time dirent \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow md5-crypt po argp \

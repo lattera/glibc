@@ -1,5 +1,9 @@
 2000-01-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makeconfig (all-subdirs): Remove db and db2.
+	* db/*: Removed.
+	* db2/*: Removed.
+
 	* nss/nss_db/db-XXX.c: Move internal_setent and internal_endent
 	functions from here...
 	* nss/db-alias.c: ...and here...
