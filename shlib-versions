@@ -17,6 +17,11 @@
 # to apply on matching configurations when the matching entry for a particular
 # library has no third column.  The defaults must precede the entries they
 # apply to.
+#
+# An entry with WORDSIZE* in the second column gives an alternate
+# configuration tuple whose macros will be conditionally defined in
+# gnu/lib-names.h; @CPU@, @VENDOR@, @OS@ can be used in the third
+# column to compose the alternate tuple matched against the patterns here.
 
 # Configuration		DEFAULT			Earliest symbol set
 # -------------		---------------		------------------------------
@@ -26,6 +31,13 @@ cris-.*-linux.*		DEFAULT			GLIBC_2.2
 x86_64-.*-linux.*       DEFAULT			GLIBC_2.2.5
 powerpc64-.*-linux.*	DEFAULT			GLIBC_2.3
 .*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.6
+
+# Configuration		WORDSIZE32		Alternate configuration
+# -------------		----------		-----------------------
+x86_64-.*-.*		WORDSIZE32		i686-@VENDOR@-@OS@
+s390x-.*-.*		WORDSIZE32		s390-@VENDOR@-@OS@
+powerpc64-.*-.*		WORDSIZE32		powerpc-@VENDOR@-@OS@
+sparc64-.*-.*		WORDSIZE32		sparc-@VENDOR@-@OS@
 
 # Configuration		Library=version		Earliest symbol set (optional)
 # -------------		---------------		------------------------------

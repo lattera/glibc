@@ -1,3 +1,22 @@
+2005-02-10  Roland McGrath  <roland@redhat.com>
+
+	[BZ #632]
+	* scripts/soversions.awk: Expect cpu, vendor, os as separate variables
+	from command line.
+	Grok shlib-versions lines with WORDSIZE* in second column.
+	Add new leading column to output, DEFAULT for existing output lines.
+	Also emit lines with WORDSIZE* for alternate configurations.
+	* Makeconfig ($(common-objpfx)soversions.i): Pass those variables.
+	($(common-objpfx)soversions.mk): Grok new column, use only DEFAULT.
+	($(common-objpfx)gnu/lib-names.stmp): Depend on soversions.i instead
+	of soversions.mk; replace inline shell script with use of ...
+	* scripts/lib-names.awk: New file.  If input has non-DEFAULT lines,
+	emit multiple sets of macros under #if.
+	* shlib-versions (x86_64-.*-.*): Add WORDSIZE32 line mapping to i686.
+	(s390x-.*-.*): Likewise for s390.
+	(powerpc64-.*-.*): Likewise for powerpc.
+	(sparc64-.*-.*): Likewise for sparc.
+
 2005-02-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Fix a typo.
