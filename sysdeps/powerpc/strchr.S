@@ -18,36 +18,46 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <bp-sym.h>
+#include <bp-asm.h>
 
 /* See strlen.s for comments on how this works.  */
 
 /* char * [r3] strchr (const char *s [r3] , int c [r4] )  */
 
-ENTRY (strchr)
+ENTRY (BP_SYM (strchr))
 
 #define rTMP1	r0
 #define rRTN	r3	/* outgoing result */
-#define rSTRin	r3	/* incoming string arg */
-#define rCHR	r4	/* byte we're looking for, spread over the whole word */
+#if __BOUNDED_POINTERS__
+# define rSTR	r4
+# define rCHR	r5	/* byte we're looking for, spread over the whole word */
+# define rWORD	r8	/* the current word */
+#else
+# define rSTR	r3	/* current word pointer */
+# define rCHR	r4	/* byte we're looking for, spread over the whole word */
+# define rWORD	r5	/* the current word */
+#endif
 #define rCLZB	rCHR	/* leading zero byte count */
-#define rWORD	r5	/* the current word */
 #define rFEFE	r6	/* constant 0xfefefeff (-0x01010101) */
 #define r7F7F	r7	/* constant 0x7f7f7f7f */
-#define rSTR	r8	/* current word pointer */
 #define rTMP2	r9
 #define rIGN	r10	/* number of bits we should ignore in the first word */
 #define rMASK	r11	/* mask with the bits to ignore set to 0 */
 #define rTMP3	r12
 
+	CHECK_BOUNDS_LOW (rSTR, rTMP1, rTMP2)
+	STORE_RETURN_BOUNDS (rTMP1, rTMP2)
+
 	rlwimi	rCHR, rCHR, 8, 16, 23
 	li	rMASK, -1
 	rlwimi	rCHR, rCHR, 16, 0, 15
+	rlwinm	rIGN, rSTR, 3, 27, 28
 	lis	rFEFE, -0x101
 	lis	r7F7F, 0x7f7f
-	clrrwi	rSTR, rSTRin, 2
-	addi	r7F7F, r7F7F, 0x7f7f
+	clrrwi	rSTR, rSTR, 2
 	addi	rFEFE, rFEFE, -0x101
-	rlwinm	rIGN, rSTRin, 3, 27, 28
+	addi	r7F7F, r7F7F, 0x7f7f
 /* Test the first (partial?) word.  */
 	lwz	rWORD, 0(rSTR)
 	srw	rMASK, rMASK, rIGN
@@ -80,7 +90,8 @@ L(loopentry):
    happened, though.  */
 L(missed):
 	and.	rTMP1, rTMP1, rTMP2
-	li	rRTN, 0
+	li	rSTR, 0
+	STORE_RETURN_VALUE (rSTR)
 	beqlr
 /* It did happen. Decide which one was first...
    I'm not sure if this is actually faster than a sequence of
@@ -97,7 +108,9 @@ L(missed):
 	bgtlr
 	cntlzw	rCLZB, rTMP2
 	srwi	rCLZB, rCLZB, 3
-	add	rRTN, rSTR, rCLZB
+	add	rSTR, rSTR, rCLZB
+	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, twlge)
+	STORE_RETURN_VALUE (rSTR)
 	blr
 
 L(foundit):
@@ -108,8 +121,10 @@ L(foundit):
 	cntlzw	rCLZB, rTMP2
 	subi	rSTR, rSTR, 4
 	srwi	rCLZB, rCLZB, 3
-	add	rRTN, rSTR, rCLZB
+	add	rSTR, rSTR, rCLZB
+	CHECK_BOUNDS_HIGH_RTN (rSTR, rTMP2, twlge)
+	STORE_RETURN_VALUE (rSTR)
 	blr
-END (strchr)
+END (BP_SYM (strchr))
 
-weak_alias(strchr, index)
+weak_alias (BP_SYM (strchr), BP_SYM (index))

@@ -1,3 +1,8 @@
+2000-07-03  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/powerpc/strchr.S:  Check bounds.
+	Wrap extern symbols in BP_SYM ().
+
 2000-07-03  Andreas Jaeger  <aj@suse.de>
 
 	* dlfcn/Makefile (generated): New.
