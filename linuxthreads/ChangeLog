@@ -1,3 +1,7 @@
+2002-12-27  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h: New file.
+
 2002-12-22  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (omit-deps): Add $(unix-syscalls:%=ptw-%).
