@@ -1,3 +1,8 @@
+2003-01-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+        * sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S [SHARED]:
+	Conditionalize .toc section magic on this.
+
 2003-02-21  Roland McGrath  <roland@redhat.com>
 
 	* cancel.c (__pthread_perform_cleanup): Call __libc_thread_freeres
