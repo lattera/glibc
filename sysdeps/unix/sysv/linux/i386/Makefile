@@ -14,10 +14,6 @@ sysdep_routines += dl-procinfo
 sysdep-rtld-routines += dl-procinfo
 endif
 
-ifeq ($(subdir),csu)
-CFLAGS-initfini.s += -DWEAK_GMON_START
-endif
-
 ifeq ($(subdir),resource)
 sysdep_routines += oldgetrlimit64
 endif
