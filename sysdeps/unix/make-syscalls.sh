@@ -128,7 +128,8 @@ shared-only-routines += $file
     ;;
   *)
     echo "\
-\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \\"
+\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o) \
+\$(objpfx)rtld-$file.os: \\"
     ;;
   esac
 

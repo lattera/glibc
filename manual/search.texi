@@ -251,6 +251,7 @@ The functions mentioned so far in this chapter are searching in a sorted
 or unsorted array.  There are other methods to organize information
 which later should be searched.  The costs of insert, delete and search
 differ.  One possible implementation is using hashing tables.
+The following functions are declared in the the header file @file{search.h}.
 
 @comment search.h
 @comment SVID
@@ -429,7 +430,8 @@ can be used with arbitrary data and not only zero-terminated strings.
 The @code{tsearch} functions have the advantage that no function to
 initialize data structures is necessary.  A simple pointer of type
 @code{void *} initialized to @code{NULL} is a valid tree and can be
-extended or searched.
+extended or searched.  The prototypes for these functions can be found
+in the header file @file{search.h}.
 
 @comment search.h
 @comment SVID

@@ -353,19 +353,3 @@ strong_alias (__strsep, __strsep_g)
    up to 36.  We don't need this here.  */
 const char INTUSE(_itoa_lower_digits)[16] attribute_hidden
   = "0123456789abcdef";
-
-
-
-#undef errno
-/* The 'errno' in ld.so is not exported.  */
-#if USE_TLS && HAVE___THREAD
-extern __thread int errno attribute_hidden;
-#else
-extern int errno attribute_hidden;
-
-int *
-__errno_location (void)
-{
-  return &errno;
-}
-#endif

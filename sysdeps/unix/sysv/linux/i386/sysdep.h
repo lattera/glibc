@@ -26,6 +26,12 @@
 #include <bp-asm.h>
 #include <tls.h>
 
+
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
+
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
@@ -92,10 +98,19 @@ __i686.get_pc_thunk.reg:						      \
   call __i686.get_pc_thunk.reg
 # endif
 
-/* Store (- %eax) into errno through the GOT.  */
-# ifdef _LIBC_REENTRANT
+# if RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_HANDLER						      \
+0:SETUP_PIC_REG(cx);							      \
+  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
+  xorl %edx, %edx;							      \
+  subl %eax, %edx;							      \
+  movl %edx, errno@GOTOFF(%ecx);					      \
+  orl $-1, %eax;							      \
+  jmp L(pseudo_end);
 
-#  if USE_TLS && HAVE___THREAD
+# elif defined _LIBC_REENTRANT
+
+#  if USE___THREAD
 #   define SYSCALL_ERROR_HANDLER					      \
 0:SETUP_PIC_REG (cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
@@ -125,6 +140,7 @@ __i686.get_pc_thunk.reg:						      \
    not modify the stack!  */
 #  endif
 # else
+/* Store (- %eax) into errno through the GOT.  */
 #  define SYSCALL_ERROR_HANDLER						      \
 0:SETUP_PIC_REG(cx);						      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
@@ -274,6 +290,21 @@ asm (".L__X'%ebx = 1\n\t"
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
+    unsigned int resultvar = INTERNAL_SYSCALL(name, nr, args);		      \
+    if (resultvar >= 0xfffff001)					      \
+      {									      \
+	__set_errno (-resultvar);					      \
+	resultvar = 0xffffffff;						      \
+      }									      \
+    (int) resultvar; })
+
+/* Define a macro which expands inline into the wrapper code for a system
+   call.  This use is for internal calls that do not need to handle errors
+   normally.  It will never touch errno.  This returns just what the kernel
+   gave back.  */
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...) \
+  ({									      \
     unsigned int resultvar;						      \
     asm volatile (							      \
     LOADARGS_##nr							      \
@@ -282,11 +313,6 @@ asm (".L__X'%ebx = 1\n\t"
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
-    if (resultvar >= 0xfffff001)					      \
-      {									      \
-	__set_errno (-resultvar);					      \
-	resultvar = 0xffffffff;						      \
-      }									      \
     (int) resultvar; })
 
 #define LOADARGS_0

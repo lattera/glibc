@@ -288,7 +288,7 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#ifdef USE_TLS
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
 # define elf_machine_type_class(type)					      \
   ((((type) == R_X86_64_JUMP_SLOT					      \
      || (type) == R_X86_64_DTPMOD64					      \
@@ -389,7 +389,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	value += sym->st_value;
 #endif
 
-#if defined RTLD_BOOTSTRAP && !(USE_TLS && HAVE___THREAD)
+#if defined RTLD_BOOTSTRAP && !USE___THREAD
       assert (r_type == R_X86_64_GLOB_DAT || r_type == R_X86_64_JUMP_SLOT);
       *reloc_addr = value + reloc->r_addend;
 #else

@@ -14,7 +14,7 @@
 
 # ifdef _LIBC_REENTRANT
 #  include <tls.h>
-#  if USE_TLS && HAVE___THREAD
+#  if USE___THREAD
 #   undef _res
 extern __thread struct __res_state _res;
 #  endif

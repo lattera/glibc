@@ -299,7 +299,7 @@ _dl_start_user:\n\
    define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#ifdef USE_TLS
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
 # define elf_machine_type_class(type) \
   ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32		      \
      || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32	      \
@@ -411,7 +411,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  *reloc_addr = value;
 	  break;
 
-#ifdef USE_TLS
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
 	case R_386_TLS_DTPMOD32:
 # ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module

@@ -306,18 +306,12 @@
 # define __USE_EXTERN_INLINES	1
 #endif
 
-/* This is here only because every header file already includes this one.  */
-#ifndef _LIBC
-/* Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
+
+/* This is here only because every header file already includes this one.
+   Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
    <gnu/stubs.h> contains `#define __stub_FUNCTION' when FUNCTION is a stub
-   which will always return failure (and set errno to ENOSYS).
+   that will always return failure (and set errno to ENOSYS).  */
+#include <gnu/stubs.h>
 
-   We avoid including <gnu/stubs.h> when compiling the C library itself to
-   avoid a dependency loop.  stubs.h depends on every object file.  If
-   this #include were done for the library source code, then every object
-   file would depend on stubs.h.  */
-
-# include <gnu/stubs.h>
-#endif
 
 #endif	/* features.h  */

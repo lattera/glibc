@@ -23,7 +23,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <bits/libc-tsd.h>
 
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
@@ -38,11 +37,8 @@ struct catch
    calls can come from `_dl_map_object_deps', `_dlerror_run', or from
    any of the libc functionality which loads dynamic objects (NSS, iconv).
    Therefore we have to be prepared to save the state in thread-local
-   memory.  */
-
-__libc_tsd_define (static, DL_ERROR)
-#define tsd_getspecific()	__libc_tsd_get (DL_ERROR)
-#define tsd_setspecific(data)	__libc_tsd_set (DL_ERROR, (data))
+   memory.  The _dl_error_catch_tsd function pointer is reset by the thread
+   library so that it returns the address of a thread-local variable.  */
 
 
 /* This message we return as a last resort.  We define the string in a
@@ -72,7 +68,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
   if (! errstring)
     errstring = N_("DYNAMIC LINKER BUG!!!");
 
-  lcatch = tsd_getspecific ();
+  lcatch = *((*GL(dl_error_catch_tsd)) ());
   if (objname == NULL)
     objname = "";
   if (lcatch != NULL)
@@ -151,20 +147,21 @@ _dl_catch_error (const char **objname, const char **errstring,
      inefficient.  So we initialize `c' by hand.  */
   c.errstring = NULL;
 
-  old = tsd_getspecific ();
+  void **catchp = (*GL(dl_error_catch_tsd)) ();
+  old = *catchp;
   errcode = setjmp (c.env);
   if (__builtin_expect (errcode, 0) == 0)
     {
-      tsd_setspecific (&c);
+      *catchp = &c;
       (*operate) (args);
-      tsd_setspecific (old);
+      *catchp = old;
       *objname = NULL;
       *errstring = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
-  tsd_setspecific (old);
+  *catchp = old;
   *objname = c.objname;
   *errstring = c.errstring;
   return errcode == -1 ? 0 : errcode;
@@ -176,18 +173,19 @@ void
 internal_function
 _dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
 {
+  void **catchp = (*GL(dl_error_catch_tsd)) ();
   struct catch *old_catch;
   receiver_fct old_receiver;
 
-  old_catch = tsd_getspecific ();
+  old_catch = *catchp;
   old_receiver = receiver;
 
   /* Set the new values.  */
-  tsd_setspecific (NULL);
+  *catchp = NULL;
   receiver = fct;
 
   (*operate) (args);
 
-  tsd_setspecific (old_catch);
+  *catchp = old_catch;
   receiver = old_receiver;
 }

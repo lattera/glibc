@@ -221,21 +221,18 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   /* Copy the TLS related data if necessary.  */
 #if USE_TLS && !defined DONT_USE_BOOTSTRAP_MAP
-# ifdef HAVE___THREAD
+# if USE___THREAD
   assert (info->l.l_tls_modid != 0);
+  GL(dl_rtld_map).l_tls_blocksize = info->l.l_tls_blocksize;
+  GL(dl_rtld_map).l_tls_align = info->l.l_tls_align;
+  GL(dl_rtld_map).l_tls_initimage_size = info->l.l_tls_initimage_size;
+  GL(dl_rtld_map).l_tls_initimage = info->l.l_tls_initimage;
+  GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
+  GL(dl_rtld_map).l_tls_modid = 1;
 # else
-  if (info->l.l_tls_modid != 0)
+  assert (info->l.l_tls_modid == 0);
 # endif
-    {
-      GL(dl_rtld_map).l_tls_blocksize = info->l.l_tls_blocksize;
-      GL(dl_rtld_map).l_tls_align = info->l.l_tls_align;
-      GL(dl_rtld_map).l_tls_initimage_size = info->l.l_tls_initimage_size;
-      GL(dl_rtld_map).l_tls_initimage = info->l.l_tls_initimage;
-      GL(dl_rtld_map).l_tls_offset = info->l.l_tls_offset;
-      GL(dl_rtld_map).l_tls_modid = 1;
-      GL(dl_rtld_map).l_tls_tp_initialized
-	= info->l.l_tls_tp_initialized;
-    }
+
 #endif
 
 #if HP_TIMING_AVAIL
@@ -276,14 +273,6 @@ _dl_start (void *arg)
   struct dl_start_final_info info;
 # define bootstrap_map info.l
 #endif
-#if USE_TLS || (!DONT_USE_BOOTSTRAP_MAP && !HAVE_BUILTIN_MEMSET)
-  size_t cnt;
-#endif
-#ifdef USE_TLS
-  ElfW(Ehdr) *ehdr;
-  ElfW(Phdr) *phdr;
-  dtv_t initdtv[3];
-#endif
 
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
@@ -311,7 +300,7 @@ _dl_start (void *arg)
 # ifdef HAVE_BUILTIN_MEMSET
   __builtin_memset (bootstrap_map.l_info, '\0', sizeof (bootstrap_map.l_info));
 # else
-  for (cnt = 0;
+  for (size_t cnt = 0;
        cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
        ++cnt)
     bootstrap_map.l_info[cnt] = 0;
@@ -325,24 +314,21 @@ _dl_start (void *arg)
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
   elf_get_dynamic_info (&bootstrap_map);
 
-#if USE_TLS
-# if !defined HAVE___THREAD && !defined DONT_USE_BOOTSTRAP_MAP
-  /* Signal that we have not found TLS data so far.  */
-  bootstrap_map.l_tls_modid = 0;
-# endif
-
+#if USE___THREAD
   /* Get the dynamic linker's own program header.  First we need the ELF
      file header.  The `_begin' symbol created by the linker script points
      to it.  When we have something like GOTOFF relocs, we can use a plain
      reference to find the runtime address.  Without that, we have to rely
      on the `l_addr' value, which is not the value we want when prelinked.  */
-#ifdef DONT_USE_BOOTSTRAP_MAP
-  ehdr = (ElfW(Ehdr) *) &_begin;
-#else
-  ehdr = (ElfW(Ehdr) *) bootstrap_map.l_addr;
-#endif
-  phdr = (ElfW(Phdr) *) ((ElfW(Addr)) ehdr + ehdr->e_phoff);
-  for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
+  ElfW(Ehdr) *ehdr
+# ifdef DONT_USE_BOOTSTRAP_MAP
+    = (ElfW(Ehdr) *) &_begin;
+# else
+    = (ElfW(Ehdr) *) bootstrap_map.l_addr;
+# endif
+  ElfW(Phdr) *phdr = (ElfW(Phdr) *) ((void *) ehdr + ehdr->e_phoff);
+  size_t cnt = ehdr->e_phnum;	/* PT_TLS is usually the last phdr.  */
+  while (cnt-- > 0)
     if (phdr[cnt].p_type == PT_TLS)
       {
 	void *tlsblock;
@@ -431,13 +417,11 @@ _dl_start (void *arg)
 
 	/* So far this is module number one.  */
 	bootstrap_map.l_tls_modid = 1;
-	/* The TP got initialized.  */
-	bootstrap_map.l_tls_tp_initialized = 1;
 
 	/* There can only be one PT_TLS entry.  */
 	break;
       }
-#endif	/* use TLS */
+#endif	/* USE___THREAD */
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -576,6 +560,15 @@ match_version (const char *string, struct link_map *map)
   return 0;
 }
 
+/* _dl_error_catch_tsd points to this for the single-threaded case.
+   It's reset by the thread library for multithreaded programs.  */
+static void ** __attribute__ ((const))
+startup_error_tsd (void)
+{
+  static void *data;
+  return &data;
+}
+
 static const char *library_path;	/* The library search path.  */
 static const char *preloadlist;		/* The list preloaded objects.  */
 static int version_info;		/* Nonzero if information about
@@ -604,6 +597,9 @@ dl_main (const ElfW(Phdr) *phdr,
 #ifdef USE_TLS
   void *tcbp;
 #endif
+
+  /* Explicit initialization since the reloc would just be more work.  */
+  GL(dl_error_catch_tsd) = &startup_error_tsd;
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode);
@@ -1564,16 +1560,9 @@ cannot allocate TLS data structures for initial thread");
 	 into the main thread's TLS area, which we allocated above.  */
       _dl_allocate_tls_init (tcbp);
 
-      /* And finally install it for the main thread.  */
-# ifndef HAVE___THREAD
-      TLS_INIT_TP (tcbp, GL(dl_rtld_map).l_tls_tp_initialized);
-# else
-      /* If the compiler supports the __thread keyword we know that
-	 at least ld.so itself uses TLS and therefore the thread
-	 pointer was initialized earlier.  */
-      assert (GL(dl_rtld_map).l_tls_tp_initialized != 0);
-      TLS_INIT_TP (tcbp, 1);
-# endif
+      /* And finally install it for the main thread.  If ld.so itself uses
+	 TLS we know the thread pointer was initialized earlier.  */
+      TLS_INIT_TP (tcbp, USE___THREAD);
     }
 #endif
 

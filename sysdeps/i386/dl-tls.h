@@ -31,7 +31,7 @@ typedef struct
 extern void *___tls_get_addr (tls_index *ti)
      __attribute__ ((__regparm__ (1)));
 extern void *___tls_get_addr_internal (tls_index *ti)
-     __attribute__ ((__regparm__ (1)));
+     __attribute__ ((__regparm__ (1))) attribute_hidden;
 
 /* The special thing about the x86 TLS ABI is that we have two
    variants of the __tls_get_addr function with different calling
@@ -50,5 +50,5 @@ __tls_get_addr (tls_index *ti)
    version of this file.  */
 # define __tls_get_addr __attribute__ ((__regparm__ (1))) ___tls_get_addr
 strong_alias (___tls_get_addr, ___tls_get_addr_internal)
-# define __TLS_GET_ADDR ___tls_get_addr
+# define __TLS_GET_ADDR ___tls_get_addr_internal
 #endif

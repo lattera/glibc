@@ -23,6 +23,10 @@
 #include <bp-asm.h>
 #include <bp-sym.h>
 
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
 
@@ -42,7 +46,7 @@ syscall_error:
 notb:
 #endif
 #ifndef	PIC
-# if USE_TLS && HAVE___THREAD
+# if USE___THREAD
 	movl %eax, %gs:C_SYMBOL_NAME(errno@NTPOFF)
 # elif !defined _LIBC_REENTRANT
 	movl %eax, C_SYMBOL_NAME(errno)
@@ -57,12 +61,17 @@ notb:
 #else
 	/* The caller has pushed %ebx and then set it up to
 	   point to the GOT before calling us through the PLT.  */
-# if USE_TLS && HAVE___THREAD
+# if USE___THREAD
 	movl C_SYMBOL_NAME(errno@GOTNTPOFF)(%ebx), %ecx
 
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx
 	movl %eax, %gs:0(%ecx)
+# elif RTLD_PRIVATE_ERRNO
+	movl %eax, C_SYMBOL_NAME(errno@GOTOFF)(%ebx)
+
+	/* Pop %ebx value saved before jumping here.  */
+	popl %ebx
 # elif !defined _LIBC_REENTRANT
 	movl C_SYMBOL_NAME(errno@GOT)(%ebx), %ecx
 

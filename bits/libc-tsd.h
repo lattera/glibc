@@ -51,7 +51,7 @@
    We don't define an enum for the possible key values, because the KEYs
    translate directly into variables by macro magic.  */
 
-#if USE_TLS && HAVE___THREAD
+#if USE___THREAD
 # define __libc_tsd_define(CLASS, KEY)	CLASS __thread void *__libc_tsd_##KEY;
 
 # define __libc_tsd_address(KEY)	(&__libc_tsd_##KEY)

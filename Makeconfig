@@ -627,11 +627,15 @@ endif	# $(+cflags) == ""
 libio-include = -I$(..)libio
 
 # These are the variables that the implicit compilation rules use.
+# Note that we can't use -std=* in CPPFLAGS, because it overrides
+# the implicit -lang-asm and breaks cpp behavior for .S files--notably
+# it causes cpp to stop predefining __ASSEMBLER__.
 CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
 	   $(CPPFLAGS-$(suffix $@)) $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) \
 	   $(CPPFLAGS-$(patsubst %$(suffix $@),%,$(@F)))
-override CFLAGS	= $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
+override CFLAGS	= -std=gnu99 \
+		  $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
 # If everything is compiled with -fPIC (implicitly) we must tell this by

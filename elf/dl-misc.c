@@ -31,6 +31,7 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <stdio-common/_itoa.h>
+#include <bits/libc-lock.h>
 
 #ifndef MAP_ANON
 /* This is the only dl-sysdep.c function that is actually needed at run-time
@@ -245,7 +246,17 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
     }
 
   /* Finally write the result.  */
+#ifdef INTERNAL_SYSCALL
+  INTERNAL_SYSCALL (writev, 3, fd, iov, niov);
+#elif RTLD_PRIVATE_ERRNO
+  /* We have to take this lock just to be sure we don't clobber the private
+     errno when it's being used by another thread that cares about it.  */
+  __libc_lock_lock_recursive (GL(dl_load_lock));
   __writev (fd, iov, niov);
+  __libc_lock_unlock_recursive (GL(dl_load_lock));
+#else
+  __writev (fd, iov, niov);
+#endif
 }
 
 

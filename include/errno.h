@@ -4,16 +4,34 @@
 
 #if defined _ERRNO_H && !defined _ISOMAC
 
-# include <tls.h>		/* Defines USE_TLS.  */
+# ifdef IS_IN_rtld
+#  include <dl-sysdep.h>
+# endif
 
-# if USE_TLS && HAVE___THREAD && (!defined NOT_IN_libc || defined IS_IN_rtld)
+# if RTLD_PRIVATE_ERRNO
+/* The dynamic linker uses its own private errno variable.
+   All access to errno inside the dynamic linker is serialized,
+   so a single (hidden) global variable is all it needs.  */
+
 #  undef  errno
 #  define errno errno		/* For #ifndef errno tests.  */
-extern __thread int errno;
+extern int errno attribute_hidden;
 #  define __set_errno(val) (errno = (val))
+
 # else
-#  define __set_errno(val) (*__errno_location ()) = (val)
-# endif
+
+#  include <tls.h>		/* Defines USE_TLS.  */
+
+#  if USE___THREAD
+#   undef  errno
+#   define errno errno		/* For #ifndef errno tests.  */
+extern __thread int errno;
+#   define __set_errno(val) (errno = (val))
+#  else
+#   define __set_errno(val) (*__errno_location ()) = (val)
+#  endif
+
+# endif	/* RTLD_PRIVATE_ERRNO */
 
 #endif /* _ERRNO_H */
 

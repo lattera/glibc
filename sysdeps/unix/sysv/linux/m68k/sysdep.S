@@ -18,19 +18,6 @@
 
 #include <sysdep.h>
 
-/* The Linux version is in fact m68k/ELF and the start.? file for this
-   system (sysdeps/m68k/elf/start.S) is also used by The Hurd.  This file
-   must not contain the definition of the `errno' variable, we have to
-   define it somewhere else.
-
-   ...and this place is here.  */
-	.bss
-	.globl errno
-	.type errno,@object
-errno:	.space 4
-	.size errno,4
-weak_alias (errno, _errno)
-	.text
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines

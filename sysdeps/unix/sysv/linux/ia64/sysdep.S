@@ -20,17 +20,6 @@
 #include <sysdep.h>
 #include <features.h>
 
-	.global errno
-	.common errno,4,4
-	.type errno, @object
-	.size errno, 4
-
-	.global __errno
-__errno = errno
-
-	.global _errno
-_errno = errno
-
 ENTRY(__syscall_error)
 #ifdef _LIBC_REENTRANT
 	.prologue ASM_UNW_PRLG_RP|ASM_UNW_PRLG_PFS, ASM_UNW_PRLG_GRSAVE(0)

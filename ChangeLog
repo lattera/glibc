@@ -1,3 +1,142 @@
+2002-10-09  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/bits/libc-tsd.h [USE___THREAD]: Conditional
+	changed from [USE_TLS && HAVE___THREAD].
+
+	* sysdeps/i386/dl-machine.h (elf_machine_type_class, elf_machine_rel):
+	Disable TLS relocs if [RTLD_BOOTSTRAP && !USE___THREAD].
+	* sysdeps/x86_64/dl-machine.h
+	(elf_machine_type_class, elf_machine_rela): Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_type_class, elf_machine_rela):
+	Likewise.
+
+	* include/link.h (struct link_map): Remove member l_tls_tp_initialized.
+	* elf/rtld.c (_dl_start_final, dl_main): Don't use it.
+	(_dl_start): Conditionalize PT_TLS check on [USE___THREAD].
+
+	* sysdeps/i386/dl-tls.h (__TLS_GET_ADDR): Use ___tls_get_addr_internal
+	instead of ___tls_get_addr.
+	(___tls_get_addr_internal): Add attribute_hidden to decl.
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): New variable
+	_dl_error_catch_tsd.
+	* elf/rtld.c (startup_error_tsd): New function.
+	(dl_main): Point _dl_error_catch_tsd at that.
+	* elf/dl-error.c: Don't use libc-tsd.h for DL_ERROR,
+	use new function pointer instead.
+	* elf/dl-tsd.c: New file.
+	* elf/Makefile (routines): Add it.
+
+2002-10-07  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-misc.c (_dl_debug_vdprintf): Use INTERNAL_SYSCALL macro for
+	writev if it's available.  Otherwise if [RTLD_PRIVATE_ERRNO] then
+	take _dl_load_lock around calling __writev.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (INTERNAL_SYSCALL): New macro.
+	(INLINE_SYSCALL): Use that.
+
+	* sysdeps/generic/dl-sysdep.h: New file.
+	* sysdeps/mach/hurd/dl-sysdep.h: New file.
+	* sysdeps/generic/ldsodefs.h: Include <dl-sysdep.h>.
+	* include/errno.h [IS_IN_rtld]: Include <dl-sysdep.h> to define ...
+	[RTLD_PRIVATE_ERRNO]: Use a hidden global variable for errno and
+	access it directly.
+	* elf/dl-minimal.c (__errno_location): Removed.
+	* sysdeps/unix/i386/sysdep.S (__syscall_errno) [RTLD_PRIVATE_ERRNO]:
+	Use GOTOFF access for errno.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h
+	[RTLD_PRIVATE_ERRNO] (SYSCALL_ERROR_HANDLER): Likewise.
+
+	* sysdeps/unix/x86_64/sysdep.S (__syscall_errno) [RTLD_PRIVATE_ERRNO]:
+	Use PC-relative access for errno.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
+	[RTLD_PRIVATE_ERRNO] (SYSCALL_ERROR_HANDLER): Likewise.
+
+	* include/tls.h: New file.
+	(USE___THREAD): New macro.
+	Define to 1 under [USE_TLS && HAVE___THREAD] and only when compiling
+	libc or libpthread.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h [USE___THREAD]: Conditional
+	changed from [USE_TLS && HAVE___THREAD].
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+	* sysdeps/unix/x86_64/sysdep.S: Likewise.
+	* include/errno.h: Likewise.
+	* include/netdb.h: Likewise.
+	* include/resolv.h: Likewise.
+
+	* sysdeps/generic/errno.c: New file.
+	* csu/Makefile (aux): New variable, list errno.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (errno, _errno): Remove defns.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/cris/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sysdep.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep.S: Likewise.
+	* sysdeps/unix/alpha/sysdep.S: Likewise.
+	* sysdeps/generic/start.c: Likewise.
+	* sysdeps/unix/start.c: Likewise.
+	* sysdeps/unix/arm/start.c: Likewise.
+	* sysdeps/unix/bsd/ultrix4/mips/start.S: Likewise.
+	* sysdeps/unix/sparc/start.c: Likewise.
+	* sysdeps/unix/sysv/irix4/start.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep.S: File removed.
+
+	* manual/search.texi (Tree Search Function, Hash Search Function):
+	Mention search.h clearly.
+
+2002-10-05  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-fxstat64.c: File removed.
+	* elf/dl-xstat64.c: File removed.
+	* elf/Makefile (rtld-routines): Remove them.
+	* sysdeps/unix/sysv/linux/xstat64.c: Remove RTLD_STAT64 conditionals.
+	Instead, use strong_alias instead of versioned_symbol in the
+	!SHLIB_COMPAT case.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+
+	* include/shlib-compat.h
+	(SHLIB_COMPAT): Require that IS_IN_##lib be defined nonzero.
+	[! NOT_IN_libc] (IS_IN_libc): Define it.
+	* cppflags-iterator.mk (CPPFLAGS-$(cpp-src)): Use -Dx=1 not just -Dx.
+	* elf/Makefile (CPPFLAGS-.os): Likewise.
+
+	* sunrpc/rpc_main.c (main): Don't declare with noreturn attribute.
+	Return the status instead of calling exit.
+
+	* Makeconfig (CFLAGS): Prepend -std=gnu99.
+	* Makerules (+make-deps): Use $(CFLAGS) only for .c sources.
+	Remove superfluous rm command, whose @ plus make bugs hid
+	all these commands from the make output.
+
+	* include/stubs-prologue.h: New file.  Give #error under #ifdef _LIBC.
+	* Makefile ($(inst_includedir)/gnu/stubs.h): Depend on it.
+	Use that file's contents instead of literal echo's for the prologue.
+	* include/features.h: Include <gnu/stubs.h> unconditionally.
+	* include/gnu/stubs.h: New file.
+
+2002-09-30  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld-Rules: New file.
+	* elf/Makefile ($(objpfx)librtld.map, $(objpfx)librtld.mk,
+	$(objpfx)rtld-libc.a): New targets.
+	(generated): Add them.
+	(reloc-link): Remove -o $@ from the variable.
+	($(objpfx)dl-allobjs.os): Add -o $@ after $(reloc-link).
+	(distribute): Add rtld-Rules.
+	(CPPFLAGS-.os): Define this instead of CFLAGS-.os.
+	* Makerules ($(+sysdir_pfx)sysd-rules): Emit rules for rtld-% targets.
+	(common-mostlyclean, common-clean): Clean up rtld-* files.
+	* sysdeps/unix/make-syscalls.sh: Add rtld-*.os target name to rules.
+
 2002-10-11  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (__tls_get_addr): After freeing block in

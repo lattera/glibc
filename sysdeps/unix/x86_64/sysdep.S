@@ -23,6 +23,10 @@
 #include <bp-sym.h>
 #include <tls.h>
 
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
 
@@ -41,7 +45,7 @@ syscall_error:
 	movq $EAGAIN, %rax	/* Yes; translate it to EAGAIN.  */
 notb:
 #endif
-#if USE_TLS && HAVE___THREAD
+#if USE___THREAD
 # ifdef PIC
 	movq C_SYMBOL_NAME(errno@GOTTPOFF)(%rip), %rcx
 	movl %eax, %fs:0(%rcx)
@@ -60,7 +64,10 @@ notb:
 	movl %ecx, (%rax)
 # endif
 #else
-# ifndef _LIBC_REENTRANT
+# if RTLD_PRIVATE_ERRNO
+	leaq errno(%rip), %rcx
+	movl %eax, (%rcx)
+# elif !defined _LIBC_REENTRANT
 	movq C_SYMBOL_NAME(errno)@GOTPCREL(%rip), %rcx
 	movl %eax, (%rcx)
 # else

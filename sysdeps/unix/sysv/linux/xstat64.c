@@ -88,17 +88,15 @@ ___xstat64 (int vers, const char *name, struct stat64 *buf)
 #endif
 }
 
-#ifndef RTLD_STAT64
-# include <shlib-compat.h>
 
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 versioned_symbol (libc, ___xstat64, __xstat64, GLIBC_2_2);
-
-# if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 strong_alias (___xstat64, __old__xstat64)
 compat_symbol (libc, __old__xstat64, __xstat64, GLIBC_2_1);
-# endif
-
-#else
-strong_alias (___xstat64, __xstat64);
-#endif
 hidden_ver (___xstat64, __xstat64)
+#else
+strong_alias (___xstat64, __xstat64)
+hidden_def (__xstat64)
+#endif

@@ -34,6 +34,7 @@
 #include <sys/mman.h>
 #include <link.h>
 #include <dl-lookupcfg.h>
+#include <dl-sysdep.h>
 #include <bits/libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
@@ -372,6 +373,10 @@ struct rtld_global
 
   /* Structure describing the dynamic linker itself.  */
   EXTERN struct link_map _dl_rtld_map;
+
+#ifdef _LIBC_REENTRANT
+  EXTERN void **(*_dl_error_catch_tsd) (void) __attribute__ ((const));
+#endif
 #ifdef SHARED
 };
 # define __rtld_global_attribute__

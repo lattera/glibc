@@ -39,10 +39,6 @@ int __data_start = 0;
 weak_alias (__data_start, data_start)
 #endif
 
-VOLATILE int __errno;
-strong_alias (__errno, errno)
-
-
 extern void __libc_init __P ((int argc, char **argv, char **envp));
 extern int main __P ((int argc, char **argv, char **envp));
 

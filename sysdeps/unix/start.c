@@ -35,13 +35,6 @@ weak_alias (__data_start, data_start)
 #define	DECL_DUMMIES
 #endif
 
-#ifndef errno
-/* __errno must be initialized since otherwise one cannot create an
-   alias (at least on some platforms).  */
-volatile int __errno = 0;
-strong_alias (__errno, errno)
-#endif
-
 extern void __libc_init (int argc, char **argv, char **envp);
 extern int main (int argc, char **argv, char **envp);
 

@@ -23,7 +23,7 @@ subdir		:= elf
 headers		= elf.h bits/elfclass.h link.h
 routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 		  dl-iteratephdr-static dl-addr enbl-secure dl-profstub \
-		  dl-origin dl-libc dl-sym
+		  dl-origin dl-libc dl-sym dl-tsd
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -37,11 +37,11 @@ elide-routines.os = $(all-dl-routines) dl-support enbl-secure \
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
-rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal \
-		   dl-xstat64 dl-fxstat64
+rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
-distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
+distribute	:= rtld-Rules \
+		   $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   dl-cache.h dl-hash.h soinit.c sofini.c ldd.bash.in \
 		   genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
 		   dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
@@ -166,14 +166,49 @@ lib-noranlib: $(objpfx)$(rtld-installed-name) \
 endif
 
 # Command to link into a larger single relocatable object.
-reloc-link = $(LINK.o) -nostdlib -nostartfiles -r -o $@
+reloc-link = $(LINK.o) -nostdlib -nostartfiles -r
 
 $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
-	$(reloc-link) $^
+	$(reloc-link) -o $@ $^
 
 # Link together the dynamic linker into a single relocatable object.
-$(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
-	$(reloc-link) '-Wl,-(' $^ -lgcc '-Wl,-)'
+# First we do a link against libc_pic.a just to get a link map,
+# and discard the object produced by that link.  From the link map
+# we can glean all the libc modules that need to go into the dynamic
+# linker.  Then we do a recursive make that goes into all the subdirs
+# those modules come from and builds special rtld-foo.os versions that
+# are compiled with special flags, and puts these modules into rtld-libc.a
+# for us.  Then we do the real link using rtld-libc.a instead of libc_pic.a.
+
+$(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
+	$(reloc-link) -o $@.o '-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@
+	rm -f $@.o
+
+$(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
+	sed -n 's@^$(common-objpfx)\([^(]*\)(\(.*.os\))$$@\1 \2@p' $< | \
+	while read lib file; do \
+	  case $$lib in \
+	  libc_pic.a) \
+	    fgrep -l /$$file \
+		  $(common-objpfx)stamp.os $(common-objpfx)*/stamp.os | \
+	    sed 's@^$(common-objpfx)\([^/]*\)/stamp\.os$$@rtld-\1'" +=$$file@"\
+	    ;; \
+	  */*.a) \
+	    echo rtld-$${lib%%/*} += $$file ;; \
+	  *) echo "Wasn't expecting $$lib($$file)" >&2; exit 1 ;; \
+	  esac; \
+	done > $@T
+	echo rtld-subdirs = `sed 's/^rtld-\([^ ]*\).*$$/\1/' $@T \
+			     | sort -u` >> $@T
+	mv -f $@T $@
+
+$(objpfx)rtld-libc.a: $(objpfx)librtld.mk FORCE
+	$(MAKE) -f $< -f rtld-Rules
+
+generated += librtld.map librtld.mk rtld-libc.a
+
+$(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
+	$(LINK.o) -nostdlib -nostartfiles -r -o $@ '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	@rm -f $@.lds
@@ -209,6 +244,7 @@ $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 	$(make-target-directory)
 	echo "$(subst :, ,$(default-rpath) $(user-defined-trusted-dirs))"    \
 	| $(AWK) -f gen-trusted-dirs.awk > ${@:st=T};
+	echo '#define DL_DST_LIB "$(notdir $(slibdir))"' >> ${@:st=T}
 	$(move-if-change) ${@:st=T} ${@:st=h}
 	touch $@
 CPPFLAGS-dl-load.c = -I$(objpfx). -I$(csu-objpfx).
@@ -265,7 +301,7 @@ CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' -D'SLIBDIR="$(slibdi
 CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
 CFLAGS-cache.c = $(SYSCONF-FLAGS)
 
-CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),-DNOT_IN_libc -DIS_IN_rtld)
+CPPFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),-DNOT_IN_libc=1 -DIS_IN_rtld=1)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))

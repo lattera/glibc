@@ -272,9 +272,6 @@ struct link_map
     ptrdiff_t l_tls_offset;
     /* Index of the module in the dtv array.  */
     size_t l_tls_modid;
-    /* Nonzero if the thread pointer (register or whatever it is) got
-       initialized.  */
-    int l_tls_tp_initialized;
 #endif
   };
 

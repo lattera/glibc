@@ -4,7 +4,7 @@
 /* Macros for accessing h_errno from inside libc.  */
 # ifdef _LIBC_REENTRANT
 #  include <tls.h>
-#  if USE_TLS && HAVE___THREAD
+#  if USE___THREAD
 #   undef  h_errno
 #   define h_errno h_errno	/* For #ifndef h_errno tests.  */
 extern __thread int h_errno;

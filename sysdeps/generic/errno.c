@@ -1,4 +1,4 @@
-/* Dynamic linker's private version of __xstat64.
+/* Definition of `errno' variable.  Canonical version.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,9 +17,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* This special file is needed because some xstat64.c implementations
-   use versioning for __xstat64 and we need to keep it local to
-   the dynamic linker.  */
+#include <errno.h>
+#include <tls.h>
+#undef errno
 
-#define RTLD_STAT64
-#include <xstat64.c>
+#if USE___THREAD
+__thread int errno;
+#else
+/* This differs from plain `int errno;' in that it doesn't create
+   a common definition, but a plain symbol that resides in .bss,
+   which can have an alias.  */
+int errno __attribute__ ((section (".bss")));
+strong_alias (errno, _errno)
+#endif
