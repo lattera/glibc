@@ -21,19 +21,16 @@
 #include <dl-machine.h>
 
 void *
-_dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref)
+_dl_symbol_address (struct link_map *map, const ElfW(Sym) *ref)
 {
+  /* Find the "ip" from the "map" and symbol "ref" */
   Elf32_Addr value = (map ? map->l_addr : 0) + ref->st_value;
 
-  /* On hppa, we have to return the pointer to function descriptor. */
-  if (ELFW(ST_TYPE) (ref->st_info) == STT_FUNC)
-    return (void *) __hppa_make_fptr (map, value, &__fptr_root, NULL);
+  /* On hppa, we have to return the pointer to function descriptor.
+     This involves an "| 2" to inform $$dyncall that this is a plabel32  */
+  if (ELFW(ST_TYPE) (ref->st_info) == STT_FUNC){
+    return (void *)((unsigned long)_dl_make_fptr (map, ref, value) | 2);
+  }
   else
     return (void *) value;
-}
-
-ElfW(Addr)
-_dl_function_address (const struct link_map *map, ElfW(Addr) start)
-{
-  return __hppa_make_fptr (map, start, &__fptr_root, NULL);
 }
