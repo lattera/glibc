@@ -1,3 +1,13 @@
+2003-01-01  Andreas Jaeger  <aj@suse.de>
+
+        * resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Use union
+        type to avoid strict aliasing problem.
+        (_nss_dns_gethostbyname2_r): Likewise.
+        * resolv/nss_dns/dns-network.c (_nss_dns_getnetbyaddr_r): Likewise.
+        (_nss_dns_getnetbyname_r): Likewise.
+	* resolv/gethnamaddr.c (_gethtent): Likewise.
+	(gethostbyname2): Likewise.
+
 2002-12-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/string-inlines.c: Define __memcpy_g and __strchr_g macros
