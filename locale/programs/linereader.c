@@ -791,6 +791,8 @@ non-symbolic character value should not be used"));
 	    free (buf2);
 	  lr->token.val.str.startmb = NULL;
 	  lr->token.val.str.lenmb = 0;
+	  lr->token.val.str.startwc = NULL;
+	  lr->token.val.str.lenwc = 0;
 
 	  return &lr->token;
 	}

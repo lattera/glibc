@@ -1,3 +1,8 @@
+2000-10-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/linereader.c (get_string): Also clear wide
+	string info if illegal_string.
+
 2000-10-03  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: New file.
