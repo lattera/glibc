@@ -1,4 +1,17 @@
-2002-10-17  Jeff Bailey  <jbailey@outpost.dnsalias.org>
+2002-10-18  Jeff Bailey  <jbailey@gnu.org>
+
+        * sysdeps/alpha/elf/configure.in: Remove unneeded sinclude statement.
+        * sysdeps/generic/configure.in: Likewise.
+        * sysdeps/i386/elf/configure.in: Likewise.
+        * sysdeps/ia64/elf/configure.in: Likewise.
+        * sysdeps/mach/configure.in: Likewise.
+        * sysdeps/mach/hurd/configure.in: Likewise.
+        * sysdeps/unix/configure.in: Likewise.
+        * sysdeps/unix/common/configure.in: Likewise.
+        * sysdeps/unix/sysv/aix/configure.in: Likewise.
+        * sysdeps/unix/sysv/linux/configure.in: Likewise.
+        * sysdeps/unix/sysv/linux/mips/configure.in: Likewise.
+        * sysdeps/x86_64/elf/configure.in: Likewise.
 
 	* aclocal.m4: Use just the bits from AS_INIT that are needed for the
 	GLIBC_PROVIDES.  Use plain comment instead of HEADER-COMMENT so

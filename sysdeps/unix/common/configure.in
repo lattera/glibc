@@ -1,4 +1,3 @@
-sinclude(./aclocal.m4)dnl
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
 if test -z "$inhibit_glue"; then
