@@ -1,3 +1,8 @@
+1999-07-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/tester.c: Add tests with constant arguments for strcpy
+	and stpcpy.
+
 1999-07-31  H.J. Lu  <hjl@gnu.org>
 
 	* string/bits/string2.h (__strcpy_small): Fix a typo.

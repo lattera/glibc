@@ -116,6 +116,18 @@ test_strcmp (void)
   }
 }
 
+#define SIMPLE_COPY(fn, n, str, ntest) \
+  do {									      \
+    int __n;								      \
+    char *cp;								      \
+    for (__n = 0; __n < sizeof (one); ++__n)				      \
+      one[__n] = 'Z';							      \
+    fn (one, str);							      \
+    for (cp = one, __n = 0; __n < n; ++__n, ++cp)			      \
+      check (*cp == '0' + (n % 10), ntest);				      \
+    check (*cp == '\0', ntest);						      \
+  } while (0)
+
 void
 test_strcpy (void)
 {
@@ -143,6 +155,24 @@ test_strcpy (void)
       (void) strcpy (two, one + i);		/* Unaligned source. */
       equal (two, "hi there", 9 + (i * 2));
     }
+
+  SIMPLE_COPY(strcpy, 0, "", 41);
+  SIMPLE_COPY(strcpy, 1, "1", 42);
+  SIMPLE_COPY(strcpy, 2, "22", 43);
+  SIMPLE_COPY(strcpy, 3, "333", 44);
+  SIMPLE_COPY(strcpy, 4, "4444", 45);
+  SIMPLE_COPY(strcpy, 5, "55555", 46);
+  SIMPLE_COPY(strcpy, 6, "666666", 47);
+  SIMPLE_COPY(strcpy, 7, "7777777", 48);
+  SIMPLE_COPY(strcpy, 8, "88888888", 49);
+  SIMPLE_COPY(strcpy, 9, "999999999", 50);
+  SIMPLE_COPY(strcpy, 10, "0000000000", 51);
+  SIMPLE_COPY(strcpy, 11, "11111111111", 52);
+  SIMPLE_COPY(strcpy, 12, "222222222222", 53);
+  SIMPLE_COPY(strcpy, 13, "3333333333333", 54);
+  SIMPLE_COPY(strcpy, 14, "44444444444444", 55);
+  SIMPLE_COPY(strcpy, 15, "555555555555555", 56);
+  SIMPLE_COPY(strcpy, 16, "6666666666666666", 57);
 }
 
 void
@@ -207,6 +237,24 @@ test_stpcpy (void)
   check ((stpcpy (stpcpy (stpcpy (one, "a"), "b"), "c") - one) == 3, 40);
   equal (one, "abc", 41);
   equal (one + 4, "xxx", 42);
+
+  SIMPLE_COPY(stpcpy, 0, "", 43);
+  SIMPLE_COPY(stpcpy, 1, "1", 44);
+  SIMPLE_COPY(stpcpy, 2, "22", 45);
+  SIMPLE_COPY(stpcpy, 3, "333", 46);
+  SIMPLE_COPY(stpcpy, 4, "4444", 47);
+  SIMPLE_COPY(stpcpy, 5, "55555", 48);
+  SIMPLE_COPY(stpcpy, 6, "666666", 49);
+  SIMPLE_COPY(stpcpy, 7, "7777777", 50);
+  SIMPLE_COPY(stpcpy, 8, "88888888", 51);
+  SIMPLE_COPY(stpcpy, 9, "999999999", 52);
+  SIMPLE_COPY(stpcpy, 10, "0000000000", 53);
+  SIMPLE_COPY(stpcpy, 11, "11111111111", 54);
+  SIMPLE_COPY(stpcpy, 12, "222222222222", 55);
+  SIMPLE_COPY(stpcpy, 13, "3333333333333", 56);
+  SIMPLE_COPY(stpcpy, 14, "44444444444444", 57);
+  SIMPLE_COPY(stpcpy, 15, "555555555555555", 58);
+  SIMPLE_COPY(stpcpy, 16, "6666666666666666", 59);
 }
 
 void
