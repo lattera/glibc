@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,96,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,97,2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,12 @@
 #include <sysdep.h>
 #include <asm-syntax.h>
 
-SYSCALL (time, 1)
+PSEUDO_NOERRNO (time, time, 1)
 	movl 4(%esp), %edx	/* Put passed pointer in %edx.  */
 	testl %edx, %edx	/* Is it non-nil?  */
 	je L(null)
 	movl %eax, (%edx)	/* Yes; store the time there.  */
 L(null):
 	ret
-PSEUDO_END (time)
+PSEUDO_END_NOERRNO (time)
 libc_hidden_def (time)

@@ -31,16 +31,12 @@ ENTRY (time)
 	/* Align stack.  */
 	sub	$0x8, %rsp
 	cfi_adjust_cfa_offset(8)
-	
+
 	movq	$VSYSCALL_ADDR_vtime, %rax
 	callq	*%rax
-	/* Check error return.  */
-	cmpl	$-4095, %eax
-	jae	SYSCALL_ERROR_LABEL
 
-L(pseudo_end):
 	add	$0x8, %rsp
 	cfi_adjust_cfa_offset(-8)
 	ret
-PSEUDO_END(time)
+PSEUDO_END_NOERRNO(time)
 libc_hidden_def (time)
