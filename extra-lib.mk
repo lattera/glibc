@@ -78,3 +78,13 @@ $(objpfx)$(lib).so: $(firstword $($(lib)-map) \
 endif
 
 endif
+
+cpp-srcs-left = $(lib)-routines
+ifneq (,$($(lib)-routines))
+cpp-srcs-left = $($(lib)-routines)
+include $(patsubst %,$(..)cppflags-iterator.mk,$($(lib)-routines))
+endif
+ifneq (,$($(lib)-sysdep_routines))
+cpp-srcs-left = $($(lib)-sysdep_routines)
+include $(patsubst %,$(..)cppflags-iterator.mk,$($(lib)-sysdep_routines))
+endif

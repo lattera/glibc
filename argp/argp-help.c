@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -62,7 +62,8 @@ char *alloca ();
 #  include <libintl.h>
 #  ifdef _LIBC
 #   undef dgettext
-#   define dgettext(domain, msgid) __dcgettext (domain, msgid, LC_MESSAGES)
+#   define dgettext(domain, msgid) \
+  INTUSE(__dcgettext) (domain, msgid, LC_MESSAGES)
 #  endif
 # else
 #  define dgettext(domain, msgid) (msgid)

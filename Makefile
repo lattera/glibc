@@ -258,7 +258,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
 		test-skeleton.c include/des.h include/libc-internal.h	\
 		include/shlib-compat.h include/pthread.h Versions.def	\
-		INTERFACE CONFORMANCE NAMESPACE				\
+		cppflags-iterator.mk INTERFACE CONFORMANCE NAMESPACE	\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\

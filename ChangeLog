@@ -1,3 +1,27 @@
+2002-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig (CPPFLAGS): Also add CPPFLAGS-<basename> where <basename>
+	is the name of the source file without extension.
+	* Makefile (distribute): Add cppflags-iterator.mk.
+	* cppflags-iterator.mk: New file.
+	* extra-lib.mk: For the sources of the library run
+	cppflags-iterator.mk.
+
+	* include/libintl.h: Declare __dcgettext_internal and
+	_libc_intl_domainname_internal.  Define __dcgettext using these
+	two symbols if used in libc itself.
+	* argp/argp-help.c: Define dgettext using __dcgettext_internal and
+	_libc_intl_domainname_internal.
+	* argp/argp-parse.c: Likewise.
+	* intl/dcgettext.c (__dcgettext): Use INTDEF to define alias.
+	* intl/dgettext.c: Call __dcgettext_internal instead of __dcgettext.
+	* intl/gettext.c: Likewise.
+	* locale/SYS_libc.c (_libc_intl_domainname): Use INTDEF to define
+	alias.
+	* posix/regcomp.c (gettext): Use __dcgettext_internal instead of
+	__dcgettext.
+	* posix/regex_internal.c (gettext): Likewise.
+
 2002-04-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/fpu/s_llrint.S: New.

@@ -42,7 +42,8 @@
 # include <libintl.h>
 # ifdef _LIBC
 #  undef gettext
-#  define gettext(msgid) __dcgettext ("libc", msgid, LC_MESSAGES)
+#  define gettext(msgid) \
+  INTUSE(__dcgettext) (_libc_intl_domainname_internal, msgid, LC_MESSAGES)
 # endif
 #else
 # define gettext(msgid) (msgid)

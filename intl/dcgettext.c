@@ -1,5 +1,5 @@
 /* Implementation of the dcgettext(3) function.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,5 +55,6 @@ DCGETTEXT (domainname, msgid, category)
 
 #ifdef _LIBC
 /* Alias for function name in GNU C Library.  */
+INTDEF(__dcgettext)
 weak_alias (__dcgettext, dcgettext);
 #endif
