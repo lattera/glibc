@@ -1,3 +1,7 @@
+2001-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/cp1258.c: Optimize conversion from UCS4.
+
 2001-12-02  Roland McGrath  <roland@frob.com>
 
 	* mach/Makefile, mach/Machrules: Move comments out of \ continuations.
