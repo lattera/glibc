@@ -319,10 +319,7 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	      }
 	    else
 	      {
-		size_t slen = strlen (dbs[cnt].db_filename);
-		char fname[slen + 8];
-		strcpy (mempcpy (fname, dbs[cnt].db_filename, slen),
-			".XXXXXX");
+		char fname[] = _PATH_NSCD_XYZ_DB_TMP;
 		fd = mkstemp (fname);
 
 		/* We do not need the file name anymore after we
