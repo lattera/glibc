@@ -1,3 +1,8 @@
+2004-01-29  Roland McGrath  <roland@redhat.com>
+
+	* io/ftwtest-sh: Use $tmp consistently, not literal /tmp.
+	Reported by Kevin P. Fleming <kpfleming@backtobasicsmgmt.com>.
+
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/genops.c (_IO_cleanup): Do not use locking when flushing
