@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1997.
 
@@ -103,6 +103,8 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	    status = NIS_RPCERROR;
 	  else
 	    {
+	      status = NIS_SUCCESS;
+
 	      if (NIS_RES_STATUS (res) == NIS_SUCCESS)
 		{
 		    if (__type_of(NIS_RES_OBJECT (res)) == NIS_LINK_OBJ &&
@@ -171,7 +173,6 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	      break;
 	    }
 	  link_first_try = 0; /* Set it back */
-	  status= NIS_SUCCESS;
 	}
       while ((flags & HARD_LOOKUP) && status == NIS_RPCERROR);
 

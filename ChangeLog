@@ -1,3 +1,14 @@
+1999-04-01  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/Versions: Add new xdr functions to GLIBC_2.1.1
+	* sunrpc/xdr.c: Add xdr_hyper, xdr_u_hyper, xdr_longlong_t and
+	xdr_u_longlong_t. Based on patch from Dan Shechter
+	<damageboy@isdn.net.il>.
+	* sunrpc/xdr_intXX_t.c: Implement xdr_int64_t, xdr_uint64_t
+	* sunrpc/rpc/xdr.h: Add prototypes for new xdr functions.
+
+	* nis/nis_lookup.c (nis_lookup): Don't overwrite RPC error code.
+
 1999-04-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/getdents.c (__getdirentries): Return

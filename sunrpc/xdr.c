@@ -193,12 +193,87 @@ xdr_u_long (XDR *xdrs, u_long *ulp)
 }
 
 /*
+ * XDR hyper integers
+ * same as xdr_u_hyper - open coded to save a proc call!
+ */
+bool_t
+xdr_hyper (XDR *xdrs, quad_t *llp)
+{
+  long t1;
+  long t2;
+
+  if (xdrs->x_op == XDR_ENCODE)
+    {
+      t1 = (long) ((*llp) >> 32);
+      t2 = (long) (*llp);
+      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
+    }
+
+  if (xdrs->x_op == XDR_DECODE)
+    {
+      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
+	return FALSE;
+      *llp = ((quad_t) t1) << 32;
+      *llp |= t2;
+      return TRUE;
+    }
+
+  if (xdrs->x_op == XDR_FREE)
+    return TRUE;
+
+  return FALSE;
+}
+
+
+/*
+ * XDR hyper integers
+ * same as xdr_hyper - open coded to save a proc call!
+ */
+bool_t
+xdr_u_hyper (XDR *xdrs, u_quad_t *ullp)
+{
+  unsigned long t1;
+  unsigned long t2;
+
+  if (xdrs->x_op == XDR_ENCODE)
+    {
+      t1 = (unsigned long) ((*ullp) >> 32);
+      t2 = (unsigned long) (*ullp);
+      return (XDR_PUTLONG(xdrs, &t1) && XDR_PUTLONG(xdrs, &t2));
+    }
+
+  if (xdrs->x_op == XDR_DECODE)
+    {
+      if (!XDR_GETLONG(xdrs, &t1) || !XDR_GETLONG(xdrs, &t2))
+	return FALSE;
+      *ullp = ((u_quad_t) t1) << 32;
+      *ullp |= t2;
+      return TRUE;
+    }
+
+  if (xdrs->x_op == XDR_FREE)
+    return TRUE;
+
+  return FALSE;
+}
+
+bool_t
+xdr_longlong_t (XDR *xdrs, quad_t *llp)
+{
+  return xdr_hyper (xdrs, llp);
+}
+
+bool_t
+xdr_u_longlong_t (XDR *xdrs, u_quad_t *ullp)
+{
+  return xdr_u_hyper (xdrs, ullp);
+}
+
+/*
  * XDR short integers
  */
 bool_t
-xdr_short (xdrs, sp)
-     XDR *xdrs;
-     short *sp;
+xdr_short (XDR *xdrs, short *sp)
 {
   long l;
 
@@ -226,9 +301,7 @@ xdr_short (xdrs, sp)
  * XDR unsigned short integers
  */
 bool_t
-xdr_u_short (xdrs, usp)
-     XDR *xdrs;
-     u_short *usp;
+xdr_u_short (XDR *xdrs, u_short *usp)
 {
   u_long l;
 
@@ -257,9 +330,7 @@ xdr_u_short (xdrs, usp)
  * XDR a char
  */
 bool_t
-xdr_char (xdrs, cp)
-     XDR *xdrs;
-     char *cp;
+xdr_char (XDR *xdrs, char *cp)
 {
   int i;
 
@@ -276,9 +347,7 @@ xdr_char (xdrs, cp)
  * XDR an unsigned char
  */
 bool_t
-xdr_u_char (xdrs, cp)
-     XDR *xdrs;
-     u_char *cp;
+xdr_u_char (XDR *xdrs, u_char *cp)
 {
   u_int u;
 
@@ -295,9 +364,7 @@ xdr_u_char (xdrs, cp)
  * XDR booleans
  */
 bool_t
-xdr_bool (xdrs, bp)
-     XDR *xdrs;
-     bool_t *bp;
+xdr_bool (XDR *xdrs, bool_t *bp)
 {
   long lb;
 
@@ -325,9 +392,7 @@ xdr_bool (xdrs, bp)
  * XDR enumerations
  */
 bool_t
-xdr_enum (xdrs, ep)
-     XDR *xdrs;
-     enum_t *ep;
+xdr_enum (XDR *xdrs, enum_t *ep)
 {
   enum sizecheck
     {
@@ -379,10 +444,7 @@ xdr_enum (xdrs, ep)
  * cp points to the opaque object and cnt gives the byte length.
  */
 bool_t
-xdr_opaque (xdrs, cp, cnt)
-     XDR *xdrs;
-     caddr_t cp;
-     u_int cnt;
+xdr_opaque (XDR *xdrs, caddr_t cp, u_int cnt)
 {
   u_int rndup;
   static char crud[BYTES_PER_XDR_UNIT];

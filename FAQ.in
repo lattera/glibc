@@ -641,7 +641,7 @@ copy a NIS_COLD_START file from a Solaris client (the NIS_COLD_START file is
 byte order independent) or generate it with nisinit from the nis-tools
 package; available at
 
-    http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html
+    http://www.suse.de/~kukuk/linux/nisplus.html
 
 ??	I have killed ypbind to stop using NIS, but glibc
 	continues using NIS.
@@ -1422,7 +1422,7 @@ Answers were given by:
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
-{TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
+{TK} Thorsten Kukuk, <kukuk@suse.de>
 {GK} Geoffrey Keating, <geoffk@ozemail.com.au>
 {HJ} H.J. Lu, <hjl@gnu.org>
 {CG} Cristian Gafton, <gafton@redhat.com>

@@ -103,4 +103,8 @@ libc {
     xdr_key_netstres; xdr_keybuf; xdr_keystatus; xdr_netnamestr; xdr_sizeof;
     xdr_uint16_t; xdr_uint32_t; xdr_uint8_t; xdr_unixcred;
   }
+  GLIBC_2.1.1 {
+    xdr_hyper; xdr_u_hyper; xdr_longlong_t; xdr_u_longlong_t;
+    xdr_int64_t; xdr_uint64_t;
+  }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -19,6 +19,60 @@
 
 #include <rpc/types.h>
 #include <rpc/xdr.h>
+
+/* XDR 64bit integers */
+bool_t
+xdr_int64_t (XDR *xdrs, int64_t *ip)
+{
+  int32_t t1;
+  int32_t t2;
+
+  switch (xdrs->x_op)
+    {
+    case XDR_ENCODE:
+      t1 = (int32_t) ((*ip) >> 32);
+      t2 = (int32_t) (*ip);
+      return (XDR_PUTINT32(xdrs, &t1) && XDR_PUTINT32(xdrs, &t2));
+    case XDR_DECODE:
+      if (!XDR_GETINT32(xdrs, &t1) || !XDR_GETINT32(xdrs, &t2))
+        return FALSE;
+      *ip = ((int64_t) t1) << 32;
+      *ip |= t2;
+      return TRUE;
+    case XDR_FREE:
+      return TRUE;
+    default:
+      return FALSE;
+    }
+}
+
+/* XDR 64bit unsigned integers */
+bool_t
+xdr_uint64_t (XDR *xdrs, uint64_t *uip)
+{
+  uint32_t t1;
+  uint32_t t2;
+
+  switch (xdrs->x_op)
+    {
+    case XDR_ENCODE:
+      t1 = (uint32_t) ((*uip) >> 32);
+      t2 = (uint32_t) (*uip);
+      return (XDR_PUTINT32 (xdrs, (int32_t *) &t1) &&
+	      XDR_PUTINT32(xdrs, (int32_t *) &t2));
+    case XDR_DECODE:
+      if (!XDR_GETINT32(xdrs, (int32_t *) &t1) ||
+	  !XDR_GETINT32(xdrs, (int32_t *) &t2))
+        return FALSE;
+      *uip = ((uint64_t) t1) << 32;
+      *uip |= t2;
+      return TRUE;
+    case XDR_FREE:
+      return TRUE;
+    default:
+      return FALSE;
+    }
+}
 
 /* XDR 32bit integers */
 bool_t
@@ -43,10 +97,10 @@ xdr_uint32_t (XDR *xdrs, uint32_t *ulp)
 {
   switch (xdrs->x_op)
     {
-    case XDR_DECODE:
-      return XDR_GETINT32 (xdrs, (int32_t *) ulp);
     case XDR_ENCODE:
       return XDR_PUTINT32 (xdrs, (int32_t *) ulp);
+    case XDR_DECODE:
+      return XDR_GETINT32 (xdrs, (int32_t *) ulp);
     case XDR_FREE:
       return TRUE;
     default:
