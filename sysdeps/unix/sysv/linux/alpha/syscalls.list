@@ -21,8 +21,8 @@ getpeername	-	getpeername	3	__getpeername	getpeername
 getpriority	-	getpriority	2	__getpriority	getpriority
 mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
 llseek		EXTRA	lseek		3	__llseek	llseek __lseek64 lseek64
-pread		EXTRA	pread		4	__pread		pread __pread64 pread64
-pwrite		EXTRA	pwrite		4	__pwrite	pwrite __pwrite64 pwrite64
+pread		-	pread		4	__pread		pread __pread64 pread64
+pwrite		-	pwrite		4	__pwrite	pwrite __pwrite64 pwrite64
 fstatfs		-	fstatfs		2	__fstatfs	fstatfs fstatfs64
 statfs		-	statfs		2	__statfs	statfs statfs64
 getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
