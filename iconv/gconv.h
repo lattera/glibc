@@ -68,7 +68,7 @@ struct __gconv_trans_data;
 /* Type of a conversion function.  */
 typedef int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *,
 			    __const unsigned char **, __const unsigned char *,
-			    unsigned char *, size_t *, int, int);
+			    unsigned char **, size_t *, int, int);
 
 /* Constructor and destructor for local data for conversion step.  */
 typedef int (*__gconv_init_fct) (struct __gconv_step *);
@@ -80,8 +80,8 @@ typedef int (*__gconv_trans_fct) (struct __gconv_step *step,
 				  struct __gconv_step_data *step_data,
 				  __const unsigned char *,
 				  __const unsigned char **,
-				  __const unsigned char *, unsigned char *,
-				  unsigned char **, unsigned char *, size_t *);
+				  __const unsigned char *, unsigned char **,
+				  size_t *);
 
 /* Function to call to provide transliteration module with context.  */
 typedef int (*__gconv_trans_context_fct) (struct __gconv_trans_data *data,

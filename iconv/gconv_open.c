@@ -86,7 +86,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	      csnames = internal_trans_names;
 	      ncsnames = 1;
-	      trans_fct = gconv_transliterate;
+	      trans_fct = __gconv_transliterate;
 	      /* No context, init, or end function.  */
 	    }
 	  else if (strcasecmp (errhand, "WORK AROUND A GCC BUG") == 0)

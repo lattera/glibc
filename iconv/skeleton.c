@@ -271,7 +271,7 @@ gconv_init (struct __gconv_step *step)
 int
 FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	       const unsigned char **inptrp, const unsigned char *inend,
-	       unsigned char *outbufstart, size_t *irreversible, int do_flush,
+	       unsigned char **outbufstart, size_t *irreversible, int do_flush,
 	       int consume_incomplete)
 {
   struct __gconv_step *next_step = step + 1;
@@ -288,6 +288,9 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
     {
       status = __GCONV_OK;
 
+      /* This should never happen during error handling.  */
+      assert (outbufstart == NULL);
+
 #ifdef EMIT_SHIFT_TO_INIT
       /* Emit the escape sequence to reset the state.  */
       EMIT_SHIFT_TO_INIT;
@@ -296,14 +299,15 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
          successfully emitted the escape sequence.  */
       if (status == __GCONV_OK && ! (data->__flags & __GCONV_IS_LAST))
 	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
-				    next_data->__outbuf, irreversible, 1,
+				    NULL, irreversible, 1,
 				    consume_incomplete));
     }
   else
     {
       /* We preserve the initial values of the pointer variables.  */
       const unsigned char *inptr = *inptrp;
-      unsigned char *outbuf = outbufstart;
+      unsigned char *outbuf = (__builtin_expect (outbufstart == NULL, 1)
+			       ? data->__outbuf : *outbufstart);
       unsigned char *outend = data->__outbufend;
       unsigned char *outstart;
       /* This variable is used to count the number of characters we
@@ -331,7 +335,10 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	   || (MAX_NEEDED_TO > 1 && !FROM_DIRECTION))
 	  && consume_incomplete && (data->__statep->__count & 7) != 0)
 	{
-	  /* Yep, we have some bytes left over.  Process them now.  */
+	  /* Yep, we have some bytes left over.  Process them now.
+             But this must not happen while we are called from an
+             error handler.  */
+	  assert (outbufstart == NULL);
 
 # if MAX_NEEDED_FROM > 1
 	  if (MAX_NEEDED_TO == 1 || FROM_DIRECTION)
@@ -412,6 +419,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	    }
 #endif
 
+	  /* If we were called as part of an error handling module we
+	     don't do anything else here.  */
+	  if (__builtin_expect (outbufstart != NULL, 0))
+	    {
+	      *outbufstart = outbuf;
+	      return status;
+	    }
+
 	  /* Give the transliteration module the chance to store the
 	     original text and the result in case it needs a context.  */
 	  if (data->__trans.__trans_context_fct != NULL)
@@ -443,8 +458,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      int result;
 
 	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
-					  outbuf, next_data->__outbuf,
-					  irreversible, 0,
+					  outbuf, NULL, irreversible, 0,
 					  consume_incomplete));
 
 	      if (result != __GCONV_EMPTY_INPUT)

@@ -4472,8 +4472,7 @@ static const char from_ucs4_extra[0x100][2] =
 	      {								      \
 		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				      (step, step_data, *inptrp, &inptr,      \
-				       inend, *outptrp, &outptr, outend,      \
-				       irreversible));			      \
+				       inend, &outbuf, irreversible));	      \
 		if (result != __GCONV_OK)				      \
 		  break;						      \
 	      }								      \
@@ -4501,7 +4500,7 @@ static const char from_ucs4_extra[0x100][2] =
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   *outptrp, &outptr, outend, irreversible)); \
+				   &outbuf, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \

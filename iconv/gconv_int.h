@@ -181,15 +181,13 @@ extern void __gconv_get_builtin_trans (const char *name,
      internal_function;
 
 /* Transliteration using the locale's data.  */
-extern int gconv_transliterate (struct __gconv_step *step,
-				struct __gconv_step_data *step_data,
-				__const unsigned char *inbufstart,
-				__const unsigned char **inbufp,
-				__const unsigned char *inbufend,
-				unsigned char *outbufstart,
-				unsigned char **outbufp,
-				unsigned char *outbufend,
-				size_t *irreversible);
+extern int __gconv_transliterate (struct __gconv_step *step,
+				  struct __gconv_step_data *step_data,
+				  __const unsigned char *inbufstart,
+				  __const unsigned char **inbufp,
+				  __const unsigned char *inbufend,
+				  unsigned char **outbufstart,
+				  size_t *irreversible);
 
 
 /* Builtin transformations.  */
@@ -198,8 +196,9 @@ extern int gconv_transliterate (struct __gconv_step *step,
   extern int Name (struct __gconv_step *step,				      \
 		   struct __gconv_step_data *data,			      \
 		   const unsigned char **inbuf,				      \
-		   const unsigned char *inbufend, unsigned char *outbufstart, \
-		   size_t *irreversible, int do_flush, int consume_incomplete)
+		   const unsigned char *inbufend,			      \
+		   unsigned char **outbufstart, size_t *irreversible,	      \
+		   int do_flush, int consume_incomplete)
 
 __BUILTIN_TRANS (__gconv_transform_ascii_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_ascii);

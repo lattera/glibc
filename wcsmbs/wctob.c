@@ -58,7 +58,7 @@ wctob (c)
 			(__wcsmbs_gconv_fcts.tomb, &data,
 			 (const unsigned char **) &inptr,
 			 (const unsigned char *) &inbuf[1],
-			 data.__outbuf, &dummy, 0, 1));
+			 NULL, &dummy, 0, 1));
 
   /* The conversion failed or the output is too long.  */
   if ((status != __GCONV_OK && status != __GCONV_FULL_OUTPUT

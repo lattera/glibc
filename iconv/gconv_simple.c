@@ -801,7 +801,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   *outptrp, &outptr, outend, irreversible)); \
+				   &outptr, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \
@@ -1190,7 +1190,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   *outptrp, &outptr, outend, irreversible)); \
+				   &outptr, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \
@@ -1257,7 +1257,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  {								      \
 	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
 				  (step, step_data, *inptrp, &inptr, inend,   \
-				   *outptrp, &outptr, outend, irreversible)); \
+				   &outptr, irreversible));		      \
 	    if (result != __GCONV_OK)					      \
 	      break;							      \
 	  }								      \

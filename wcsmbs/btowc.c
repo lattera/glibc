@@ -62,7 +62,7 @@ __btowc (c)
 
   status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
 			(__wcsmbs_gconv_fcts.towc, &data, &inptr, inptr + 1,
-			 data.__outbuf, &dummy, 0, 1));
+			 NULL, &dummy, 0, 1));
   /* The conversion failed.  */
   if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
       && status != __GCONV_EMPTY_INPUT)

@@ -80,7 +80,7 @@ __wcsrtombs (dst, src, len, ps)
 
 	  status = DL_CALL_FCT (tomb->__fct,
 				(tomb, &data, (const unsigned char **) &inbuf,
-				 (const unsigned char *) srcend, data.__outbuf,
+				 (const unsigned char *) srcend, NULL,
 				 &dummy, 0, 1));
 
 	  /* Count the number of bytes.  */
@@ -109,7 +109,7 @@ __wcsrtombs (dst, src, len, ps)
 
       status = DL_CALL_FCT (tomb->__fct,
 			    (tomb, &data, (const unsigned char **) src,
-			     (const unsigned char *) srcend, data.__outbuf,
+			     (const unsigned char *) srcend, NULL,
 			     &dummy, 0, 1));
 
       /* Count the number of bytes.  */

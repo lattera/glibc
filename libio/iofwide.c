@@ -181,7 +181,7 @@ do_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 
   status = DL_CALL_FCT (gs->__fct,
 			(gs, codecvt->__cd_out.__cd.__data, &from_start_copy,
-			 (const unsigned char *) from_end, to_start,
+			 (const unsigned char *) from_end, NULL,
 			 &dummy, 0, 0));
 
   *from_stop = (wchar_t *) from_start_copy;
@@ -229,7 +229,7 @@ do_unshift (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 
   status = DL_CALL_FCT (gs->__fct,
 			(gs, codecvt->__cd_out.__cd.__data, NULL, NULL,
-			 to_start, &dummy, 1, 0));
+			 NULL, &dummy, 1, 0));
 
   *to_stop = codecvt->__cd_out.__cd.__data[0].__outbuf;
 
@@ -277,7 +277,7 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 
   status = DL_CALL_FCT (gs->__fct,
 			(gs, codecvt->__cd_in.__cd.__data, &from_start_copy,
-			 from_end, (char *) to_start, &dummy, 0, 0));
+			 from_end, NULL, &dummy, 0, 0));
 
   *from_stop = from_start_copy;
   *to_stop = (wchar_t *) codecvt->__cd_in.__cd.__data[0].__outbuf;
@@ -354,7 +354,7 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 
   status = DL_CALL_FCT (gs->__fct,
 			(gs, codecvt->__cd_in.__cd.__data, &cp, from_end,
-			 (char *) to_buf, &dummy, 0, 0));
+			 NULL, &dummy, 0, 0));
 
   result = cp - (const unsigned char *) from_start;
 #else

@@ -328,8 +328,7 @@ enum
 		      {							      \
 			result = DL_CALL_FCT (step_data->__trans.__trans_fct, \
 					      (step, step_data, *inptrp,      \
-					       &inptr, inend, *outptrp,	      \
-					       &outptr, outend,		      \
+					       &inptr, inend, &outbuf,	      \
 					       irreversible));		      \
 			if (result != __GCONV_OK)			      \
 			  break;					      \

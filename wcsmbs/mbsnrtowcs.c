@@ -82,7 +82,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	  data.__outbuf = (unsigned char *) buf;
 
 	  status = DL_CALL_FCT (towc->__fct,
-				(towc, &data, &inbuf, srcend, data.__outbuf,
+				(towc, &data, &inbuf, srcend, NULL,
 				 &dummy, 0, 1));
 
 	  result += (wchar_t *) data.__outbuf - buf;
@@ -104,7 +104,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
       status = DL_CALL_FCT (towc->__fct,
 			    (towc, &data, (const unsigned char **) src, srcend,
-			     data.__outbuf, &dummy, 0, 1));
+			     NULL, &dummy, 0, 1));
 
       result = (wchar_t *) data.__outbuf - dst;
 

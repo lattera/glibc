@@ -400,8 +400,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  {							      \
 		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
 					  (step, step_data, *inptrp, &inptr,  \
- 					   inend, *outptrp, &outptr, outend,  \
-					   irreversible));		      \
+ 					   inend, &outbuf, irreversible));    \
 		    if (result != __GCONV_OK)				      \
 		      break;						      \
 		  }							      \
@@ -446,8 +445,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  {							      \
 		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
 					  (step, step_data, *inptrp, &inptr,  \
-					   inend, *outptrp, &outptr, outend,  \
-					   irreversible));		      \
+					   inend, &outbuf, irreversible));    \
 		    if (result != __GCONV_OK)				      \
 		      break;						      \
 		  }							      \
