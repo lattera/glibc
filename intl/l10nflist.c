@@ -23,14 +23,6 @@ Cambridge, MA 02139, USA.  */
 # include <config.h>
 #endif
 
-#if defined _LIBC || defined HAVE_ARGZ_H
-# include <argz.h>
-#endif
-#include <ctype.h>
-
-#if defined STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-#endif
 
 #if defined HAVE_STRING_H || defined _LIBC
 # ifndef _GNU_SOURCE
@@ -44,6 +36,15 @@ Cambridge, MA 02139, USA.  */
 # ifndef strchr
 #  define strchr index
 # endif
+#endif
+
+#if defined _LIBC || defined HAVE_ARGZ_H
+# include <argz.h>
+#endif
+#include <ctype.h>
+
+#if defined STDC_HEADERS || defined _LIBC
+# include <stdlib.h>
 #endif
 
 #include "loadinfo.h"

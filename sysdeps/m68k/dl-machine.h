@@ -17,12 +17,12 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#ifndef dl_machine_h
+#define dl_machine_h
+
 #define ELF_MACHINE_NAME "m68k"
 
 #include <assert.h>
-#include <string.h>
-#include <link.h>
-
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int
@@ -67,109 +67,6 @@ elf_machine_load_address (void)
 #define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
   ((dynamic_info)[DT_RELA]->d_un.d_ptr += sizeof (Elf32_Rela), \
    (dynamic_info)[DT_RELASZ]->d_un.d_val -= sizeof (Elf32_Rela))
-
-/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
-   MAP is the object containing the reloc.  */
-
-static inline void
-elf_machine_rela (struct link_map *map,
-		  const Elf32_Rela *reloc, const Elf32_Sym *sym,
-		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,
-					 Elf32_Addr reloc_addr,
-					 int noplt))
-{
-  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  Elf32_Addr loadbase;
-
-#ifdef RTLD_BOOTSTRAP
-#define RESOLVE(noplt) map->l_addr
-#else
-#define RESOLVE(noplt) (*resolve) (&sym, (Elf32_Addr) reloc_addr, noplt)
-#endif
-
-  switch (ELF32_R_TYPE (reloc->r_info))
-    {
-    case R_68K_COPY:
-      loadbase = RESOLVE (0);
-      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
-      break;
-    case R_68K_GLOB_DAT:
-      loadbase = RESOLVE (0);
-      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
-      break;
-    case R_68K_JMP_SLOT:
-      loadbase = RESOLVE (1);
-      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
-      break;
-    case R_68K_8:
-      loadbase = RESOLVE (0);
-      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			      + reloc->r_addend);
-      break;
-    case R_68K_16:
-      loadbase = RESOLVE (0);
-      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			       + reloc->r_addend);
-      break;
-    case R_68K_32:
-      loadbase = RESOLVE (0);
-      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-		     + reloc->r_addend);
-      break;
-    case R_68K_RELATIVE:
-      *reloc_addr = map->l_addr + reloc->r_addend;
-      break;
-    case R_68K_PC8:
-      loadbase = RESOLVE (0);
-      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			      + reloc->r_addend
-			      - (Elf32_Addr) reloc_addr);
-      break;
-    case R_68K_PC16:
-      loadbase = RESOLVE (0);
-      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			       + reloc->r_addend
-			       - (Elf32_Addr) reloc_addr);
-      break;
-    case R_68K_PC32:
-      loadbase = RESOLVE (0);
-      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-		     + reloc->r_addend
-		     - (Elf32_Addr) reloc_addr);
-      break;
-    case R_68K_NONE:		/* Alright, Wilbur.  */
-      break;
-    default:
-      assert (! "unexpected dynamic reloc type");
-      break;
-    }
-
-#undef RESOLVE
-}
-
-static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
-{
-  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  switch (ELF32_R_TYPE (reloc->r_info))
-    {
-    case R_68K_NONE:
-      break;
-    case R_68K_JMP_SLOT:
-      *reloc_addr += map->l_addr;
-      break;
-    default:
-      assert (! "unexpected PLT reloc type");
-      break;
-    }
-}
-
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type) ((type) == R_68K_JMP_SLOT)
-
-/* The m68k never uses Elf32_Rel relocations.  */
-#define ELF_MACHINE_NO_REL 1
 
 
 /* Set up the loaded object described by L so its unrelocated PLT
@@ -283,3 +180,98 @@ _dl_start_user:
 	move.l %sp, %fp
 	| Jump to the user's entry point.
 	jmp (%a4)");
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_pltrel_p(type) ((type) == R_68K_JMP_SLOT)
+
+/* The m68k never uses Elf32_Rel relocations.  */
+#define ELF_MACHINE_NO_REL 1
+
+#endif /* !dl_machine_h */
+
+#ifdef RESOLVE
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   MAP is the object containing the reloc.  */
+
+static inline void
+elf_machine_rela (struct link_map *map,
+		  const Elf32_Rela *reloc, const Elf32_Sym *sym)
+{
+  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
+  Elf32_Addr loadbase;
+
+  switch (ELF32_R_TYPE (reloc->r_info))
+    {
+    case R_68K_COPY:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
+      break;
+    case R_68K_GLOB_DAT:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
+      break;
+    case R_68K_JMP_SLOT:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 1);
+      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
+      break;
+    case R_68K_8:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			      + reloc->r_addend);
+      break;
+    case R_68K_16:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			       + reloc->r_addend);
+      break;
+    case R_68K_32:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+		     + reloc->r_addend);
+      break;
+    case R_68K_RELATIVE:
+      *reloc_addr = map->l_addr + reloc->r_addend;
+      break;
+    case R_68K_PC8:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			      + reloc->r_addend - (Elf32_Addr) reloc_addr);
+      break;
+    case R_68K_PC16:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+			       + reloc->r_addend - (Elf32_Addr) reloc_addr);
+      break;
+    case R_68K_PC32:
+      loadbase = RESOLVE (&sym, (Elf32_Addr) reloc_addr, 0);
+      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
+		     + reloc->r_addend - (Elf32_Addr) reloc_addr);
+      break;
+    case R_68K_NONE:		/* Alright, Wilbur.  */
+      break;
+    default:
+      assert (! "unexpected dynamic reloc type");
+      break;
+    }
+
+#undef RESOLVE
+}
+
+static inline void
+elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
+{
+  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
+  switch (ELF32_R_TYPE (reloc->r_info))
+    {
+    case R_68K_JMP_SLOT:
+      *reloc_addr += map->l_addr;
+      break;
+    default:
+      assert (! "unexpected PLT reloc type");
+      break;
+    }
+}
+
+#endif /* RESOLVE */

@@ -2,7 +2,7 @@
 
 accept		-	accept		3	accept
 bind		-	bind		3	bind
-__connect	-	connect		3	connect		connect
+connect		-	connect		3	__connect	connect
 gethostid	-	gethostid	0	gethostid
 gethostname	-	gethostname	2	__gethostname	gethostname
 getpeername	-	getpeername	3	getpeername
@@ -12,7 +12,7 @@ listen		-	listen		2	listen
 recv		-	recv		4	recv
 recvfrom	-	recvfrom	6	recvfrom
 recvmsg		-	recvmsg		3	recvmsg
-__send		-	send		4	send		send
+send		-	send		4	__send		send
 sendmsg		-	sendmsg		3	sendmsg
 sendto		-	sendto		6	sendto
 sethostid	-	sethostid	1	sethostid

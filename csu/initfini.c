@@ -57,6 +57,15 @@ rm -f crti.s-new crtn.s-new\n\
 mv crtcommon.tmp crti.s-new\n\
 cp crti.s-new crtn.s-new");
 
+/* Extract a `.end' if one is produced by the compiler.  */
+asm ("fgrep .end >/dev/null 2>&1 <<\\EOF.end && need_end=yes");
+void
+useless_function (void)
+{
+  return;
+}
+asm ("\nEOF.end\n");
+
 /* Append the .init prologue to crti.s-new.  */
 asm ("cat >> crti.s-new <<\\EOF.crti.init");
 
@@ -77,8 +86,9 @@ _init (void)
   /* End the here document containing the .init prologue code.
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */
-  asm (".end _init\n\
+  asm ("\n\
 EOF.crti.init\n\
+	test -n \"$need_end\" && echo .end _init >> crti.s-new\n\
 	fgrep .init crti.s-new >>crtn.s-new\n\
 	fgrep -v .end >> crtn.s-new <<\\EOF.crtn.init");
 }
@@ -96,8 +106,8 @@ _fini (void)
   /* End the here document containing the .fini prologue code.
      Then fetch the .section directive just written and append that
      to crtn.s-new, followed by the function epilogue.  */
-  asm (".end _fini\n\
-EOF.crti.fini\n\
+  asm ("\nEOF.crti.fini\n\
+test -n \"$need_end\" && echo .end _fini >> crti.s-new\n\
 cat > /dev/null <<\\EOF.fini.skip");
 
   {
