@@ -110,9 +110,14 @@ dl_open_worker (void *a)
       for (l = _dl_loaded; l; l = l->l_next)
 	if (l->l_addr != 0 /* Make sure we do not currently set this map up
 			      in this moment.  */
-	    && caller >= (const void *) l->l_addr
-	    && (call_map == NULL || call_map->l_addr < l->l_addr))
-	  call_map = l;
+	    && caller >= (const void *) l->l_map_start
+	    && caller < (const void *) l->l_map_end)
+	  {
+	    /* There must be exactly one DSO for the range of the virtual
+	       memory.  Otherwise something is really broken.  */
+	    call_map = l;
+	    break;
+	  }
 
       if (call_map == NULL)
 	/* In this case we assume this is the main application.  */
