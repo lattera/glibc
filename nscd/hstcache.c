@@ -199,6 +199,17 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	 unnecessarily let the receiver wait.  */
       written = TEMP_FAILURE_RETRY (write (fd, data, total));
 
+      /* If the record contains more than one IP address (used for
+         load balancing etc) don't cache the entry.  This is something
+         the current cache handling cannot handle and it is more than
+         questionable whether it is worthwhile complicating the cache
+         handling just for handling such a special case.  */
+      if (!add_addr && hst->h_addr_list[1] != NULL)
+	{
+	  free (data);
+	  return;
+	}
+
       addr_list_type = (hst->h_length == NS_INADDRSZ
 			? GETHOSTBYADDR : GETHOSTBYADDRv6);
 
@@ -208,13 +219,9 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       /* Now get the lock to safely insert the records.  */
       pthread_rwlock_rdlock (&db->lock);
 
-      /* First add all the aliases.  If the record contains more than
-         one IP address (used for load balancing etc) don't cache the
-         entry.  This is something the current cache handling cannot
-         handle and it is more than questionable whether it is
-         worthwhile complicating the cache handling just for handling
-         such a special case.  */
-      if (!add_addr && hst->h_addr_list[1] == NULL)
+      /* First add all the aliases.  */
+      assert (add_addr || hst->h_addr_list[1] == NULL);
+      if (!add_addr)
 	for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
 	  {
 	    if (addr_list_type == GETHOSTBYADDR)
@@ -232,7 +239,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
 	  {
 	    cache_add (addr_list_type, addresses, hst->h_length, data, total,
-		       data, 0, t, db, owner);
+		       data, cnt + 1 == h_addr_list_cnt, t, db, owner);
 	    addresses += hst->h_length;
 	  }
 
@@ -247,9 +254,11 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 
       /* Avoid adding names if more than one address is available.  See
 	 above for more info.  */
-      if (!add_addr && hst->h_addr_list[1] == NULL)
+      if (!add_addr)
 	{
-	  /* If necessary add the key for this request.  */
+	  /* If necessary add the key for this request.
+
+	     Note: hst->h_addr_list[1] == NULL.  */
 	  if (req->type == GETHOSTBYNAME || req->type == GETHOSTBYNAMEv6)
 	    {
 	      if (addr_list_type == GETHOSTBYADDR)

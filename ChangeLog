@@ -1,5 +1,8 @@
 2004-07-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/hstcache.c (cache_addhst): Fix two scenarios which lead to
+	memory leaks.
+
 	* sysdeps/unix/sysv/linux/ifreq.c (__ifreq): Assign pointer for
 	new buffer at the right time.
 	Reported by Jakub Bogusz <qboosh@pld-linux.org>.
