@@ -145,7 +145,8 @@ _dl_catch_error (char **errstring,
 		 void *args)
 {
   int errcode;
-  struct catch *old, c;
+  struct catch *volatile old;
+  struct catch c;
   /* We need not handle `receiver' since setting a `catch' is handled
      before it.  */
 

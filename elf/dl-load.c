@@ -456,10 +456,12 @@ _dl_init_paths (const char *llp)
   const char **strp;
   struct r_search_path_elem *pelem, **aelem;
   size_t round_size;
+#ifdef PIC
+  struct link_map *l;
+#endif
 
   /* Fill in the information about the application's RPATH and the
      directories addressed by the LD_LIBRARY_PATH environment variable.  */
-  struct link_map *l;
 
   /* Get the capabilities.  */
   capstr = _dl_important_hwcaps (_dl_platform, _dl_platformlen,

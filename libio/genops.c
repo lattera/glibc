@@ -872,7 +872,7 @@ _IO_default_pbackfail (fp, c)
      int c;
 {
   if (fp->_IO_read_ptr > fp->_IO_read_base && !_IO_in_backup (fp)
-      && fp->_IO_read_ptr[-1] == c)
+      && (unsigned char) fp->_IO_read_ptr[-1] == c)
     --fp->_IO_read_ptr;
   else
     {

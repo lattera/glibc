@@ -25,6 +25,7 @@
 #include <elf/ldsodefs.h>
 #include <stdio-common/_itoa.h>
 #include <entry.h>
+#include <fpu_control.h>
 #include "dynamic-link.h"
 #include "dl-librecon.h"
 
@@ -73,6 +74,7 @@ int _dl_verbose;
 const char *_dl_platform;
 size_t _dl_platformlen;
 unsigned long _dl_hwcap;
+fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
 struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 const char *_dl_profile_output;

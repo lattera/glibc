@@ -4,6 +4,9 @@ libc {
     __isnan; __isnanf; __isnanl; __finite; __finitef; __finitel;
     __isinf; __isinff; __isinfl;
 
+    # global variables
+    __fpu_control;
+
     # c*
     copysign; copysignf; copysignl;
 

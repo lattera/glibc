@@ -1,3 +1,55 @@
+1998-09-22 19:58 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* posix/execvp.c: Don't give up searching the PATH if execve
+	returns ENOTDIR.
+
+1998-09-22 12:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c (init): Don't call setfpucw only
+	if _dl_fpu_control_set is set.
+	* sysdeps/generic/dl-sysdep.c: Don't set _dl_fpu_control_set.
+	* elf/rtld.c: Don't define _dl_fpu_control_set.
+	* elf/Versions: Remove _dl_fpu_control_set.
+
+1998-09-22 11:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h (SA_ONSTACK): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	Correct values of other SA_* macros according to kernel headers.
+
+1998-09-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-load.c (_dl_init_paths): Avoid warning about unused
+	variable l.
+	* elf/dl-error.c (_dl_catch_error): Avoid warning about clobbering
+	old.
+
+1998-09-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/ldsodefs.h: Fix typo in comment.
+
+1998-09-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/genops.c (_IO_default_pbackfail): Add cast to unsigned
+	char when comparing buffer contents with putback character.
+
+1998-09-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile (dl-routines, elide-routines.os, rtld-routines):
+	Undo last change.
+	* elf/Versions: Undo last change.  Export _dl_fpu_control and
+	_dl_fpu_control_set.
+	* elf/rtld.c (_dl_fpu_control, _dl_fpu_control_set): New
+	variables.  Include <fpu_control.h>.
+	* sysdeps/generic/dl-sysdep.c: Store AT_FPUCW value in
+	_dl_fpu_control instead of __fpu_control, set _dl_fpu_control_set
+	to indicate that is was seen.
+	* sysdeps/unix/sysv/linux/init-first.c: Omit call to __setfpucw
+	only if _dl_fpu_control was set and is equal to desired value.
+	* math/Makefile (aux): Undo last change.
+	* math/Versions: Export __fpu_control with version GLIBC_2.0.
+
 1998-09-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_lazy_rel): Slightly

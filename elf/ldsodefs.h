@@ -148,7 +148,7 @@ extern unsigned long int _dl_hwcap;
 /* Mask for important hardware capabilities we honour. */
 extern unsigned long int _dl_hwcap_mask;
 
-/* File deccriptor to write debug messages to.  */
+/* File descriptor to write debug messages to.  */
 extern int _dl_debug_fd;
 
 /* Names of shared object for which the RPATH should be ignored.  */

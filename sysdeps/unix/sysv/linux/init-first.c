@@ -34,6 +34,9 @@ static void init (int, char **, char **) __attribute__ ((unused));
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
 
+extern fpu_control_t _dl_fpu_control;
+extern int _dl_fpu_control_set;
+
 /* Set nonzero if we have to be prepared for more then one libc being
    used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs = 1;
@@ -61,8 +64,11 @@ init (int argc, char **argv, char **envp)
       __personality (PER_LINUX);
 
       /* Set the FPU control word to the proper default value if the
-	 kernel would use a different value.  */
-      if (__fpu_control != _FPU_DEFAULT)
+	 kernel would use a different value.  (In a static program we
+	 don't have this information.)  */
+#ifdef PIC
+      if (__fpu_control != _dl_fpu_control)
+#endif
 	__setfpucw (__fpu_control);
     }
 
