@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>, 1999.
 
@@ -18,9 +18,21 @@
    02111-1307 USA.  */
 
 #include <bits/armsigctx.h>
+#include "kernel-features.h"
 
 #define SIGCONTEXT int _a2, int _a3, int _a4, union k_sigcontext
 #define SIGCONTEXT_EXTRA_ARGS _a2, _a3, _a4,
+
+/* The sigcontext structure changed between 2.0 and 2.1 kernels.  On any
+   modern system we should be able to assume that the "new" format will be
+   in use.  */
+#if __LINUX_KERNEL_VERSION > 131328
+
+#define GET_PC(ctx)	((void *) ctx.v21.arm_pc)
+#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME ((void *) ctx.v21.arm_fp)
+#define GET_STACK(ctx)	((void *) ctx.v21.arm_sp)
+
+#else
 
 #define GET_PC(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
 			 ctx.v20.reg.ARM_pc : ctx.v21.arm_pc))
@@ -29,7 +41,11 @@
 			 ctx.v20.reg.ARM_fp : ctx.v21.arm_fp))
 #define GET_STACK(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
 			 ctx.v20.reg.ARM_sp : ctx.v21.arm_sp))
+
+#endif
+
 #define ADVANCE_STACK_FRAME(frm)	\
 			((struct layout *)frm - 1)
+
 #define CALL_SIGHANDLER(handler, signo, ctx) \
   (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
