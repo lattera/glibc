@@ -1,3 +1,10 @@
+2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Don't .set
+	mips2 on new abi.
+	* sysdeps/mips/pt-machine.h (__compare_and_swap): Likewise.
+	Handle 64-bit longs on n64.
+
 2003-03-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/pspinlock.c (__pthread_spin_lock,

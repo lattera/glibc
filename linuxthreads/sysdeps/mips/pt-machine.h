@@ -1,6 +1,7 @@
 /* Machine-dependent pthreads configuration and inline functions.
 
-   Copyright (C) 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
    Based on the Alpha version by Richard Henderson <rth@tamu.edu>.
@@ -60,12 +61,22 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
     ("/* Inline compare & swap */\n"
      "1:\n\t"
      ".set	push\n\t"
+#if _MIPS_SIM == _MIPS_SIM_ABI32
      ".set	mips2\n\t"
+#endif
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+     "lld	%1,%5\n\t"
+#else
      "ll	%1,%5\n\t"
+#endif
      "move	%0,$0\n\t"
      "bne	%1,%3,2f\n\t"
      "move	%0,%4\n\t"
+#if defined _ABI64 && _MIPS_SIM == _ABI64
+     "scd	%0,%2\n\t"
+#else
      "sc	%0,%2\n\t"
+#endif
      ".set	pop\n\t"
      "beqz	%0,1b\n"
      "2:\n\t"

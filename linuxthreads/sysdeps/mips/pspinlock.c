@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  MIPS version.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,9 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
     ("\t\t\t# spin_lock\n"
      "1:\n\t"
      ".set	push\n\t"
+#if _MIPS_SIM == _MIPS_SIM_ABI32
      ".set	mips2\n\t"
+#endif
      "ll	%1,%3\n\t"
      "li	%2,1\n\t"
      "bnez	%1,1b\n\t"
