@@ -1,5 +1,6 @@
 #ifndef _LIBINTL_H
 #include <intl/libintl.h>
+#include <locale.h>
 
 /* Now define the internal interfaces.  */
 extern char *__gettext (__const char *__msgid);

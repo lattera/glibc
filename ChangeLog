@@ -1,5 +1,8 @@
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libintl.h: Include <locale.h> since libintl.h doesn't if
+	we are not optimizing.
+
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Protect against double
 	inclusion.
 
