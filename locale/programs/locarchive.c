@@ -43,8 +43,14 @@
 #include "../../crypt/md5.h"
 #include "../localeinfo.h"
 #include "../locarchive.h"
-#include "simple-hash.h"
 #include "localedef.h"
+
+/* Define the hash function.  We define the function as static inline.
+   We must change the name so as not to conflict with simple-hash.h.  */
+#define compute_hashval static inline archive_hashval
+#define hashval_t uint32_t
+#include "hashval.h"
+#undef compute_hashval
 
 extern const char *output_prefix;
 
@@ -522,7 +528,7 @@ insert_name (struct locarhandle *ah,
   unsigned int insert_idx, idx, incr;
 
   /* Hash value of the locale name.  */
-  uint32_t hval = compute_hashval (name, name_len);
+  uint32_t hval = archive_hashval (name, name_len);
 
   insert_idx = -1;
   idx = hval % head->namehash_size;
@@ -720,7 +726,7 @@ add_locale (struct locarhandle *ah,
 	/* Compute the hash value of the checksum to determine a
 	   starting point for the search in the MD5 hash value
 	   table.  */
-	hval = compute_hashval (data[cnt].sum, 16);
+	hval = archive_hashval (data[cnt].sum, 16);
 
 	idx = hval % head->sumhash_size;
 	incr = 1 + hval % (head->sumhash_size - 2);
@@ -812,7 +818,7 @@ add_locale (struct locarhandle *ah,
 	  error (EXIT_FAILURE, errno, _("cannot add to locale archive"));
 
 	/* Add the hash value to the hash table.  */
-	md5hval = compute_hashval (data[cnt].sum, 16);
+	md5hval = archive_hashval (data[cnt].sum, 16);
 
 	idx = md5hval % head->sumhash_size;
 	incr = 1 + md5hval % (head->sumhash_size - 2);
@@ -1303,7 +1309,7 @@ delete_locales_from_archive (nlist, list)
       unsigned int incr;
 
       /* Search for this locale in the archive.  */
-      hval = compute_hashval (locname, strlen (locname));
+      hval = archive_hashval (locname, strlen (locname));
 
       idx = hval % head->namehash_size;
       incr = 1 + hval % (head->namehash_size - 2);

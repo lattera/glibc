@@ -18,20 +18,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef	LONGBITS
-# include <limits.h>
-# define LONGBITS (sizeof (long int) * CHAR_BIT)
+#ifndef hashval_t
+# define hashval_t unsigned long int
 #endif
+#include <limits.h>		/* For CHAR_BIT.  */
 
-unsigned long int compute_hashval (const void *key, size_t keylen);
-
-unsigned long int
-compute_hashval (key, keylen)
-     const void *key;
-     size_t keylen;
+hashval_t
+compute_hashval (const void *key, size_t keylen)
 {
   size_t cnt;
-  unsigned long int hval;
+  hashval_t hval;
 
   /* Compute the hash value for the given string.  The algorithm
      is taken from [Aho,Sethi,Ullman], modified to reduce the number of
@@ -41,8 +37,8 @@ compute_hashval (key, keylen)
   hval = keylen;
   while (cnt < keylen)
     {
-      hval = (hval << 9) | (hval >> (LONGBITS - 9));
-      hval += (unsigned long int) *(((char *) key) + cnt++);
+      hval = (hval << 9) | (hval >> (sizeof hval * CHAR_BIT - 9));
+      hval += (hashval_t) *(((char *) key) + cnt++);
     }
-  return hval != 0 ? hval : ~((unsigned long int) 0);
+  return hval != 0 ? hval : ~((hashval_t) 0);
 }

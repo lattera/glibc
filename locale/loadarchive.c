@@ -35,6 +35,7 @@
 
 /* Define the hash function.  We define the function as static inline.  */
 #define compute_hashval static inline compute_hashval
+#define hashval_t uint32_t
 #include "hashval.h"
 #undef compute_hashval
 
