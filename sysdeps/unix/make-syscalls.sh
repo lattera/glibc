@@ -24,7 +24,7 @@
 # V: byte-per-page vector (3rd arg to mincore)
 # W: wait status, optionally-NULL pointer to int (e.g., 2nd arg of wait4)
 
-ptr='[abBfFINpPsSW]'	# all pointer keyletters
+ptr='[abBfFINpPsSWV]'	# all pointer keyletters
 int='[inv]'		# all scalar keyletters
 typ='[ifnNpP]'		# typed-arg keyletters: we capture type for use in thunk
 
