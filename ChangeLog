@@ -1,5 +1,8 @@
 1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/Makefile (param.h.dep): Filter out sys/param.h
+	itself.
+
 	* sysdeps/unix/sysv/bits/utsname.h: Test for _SYS_UTSNAME_H, not
 	_UTSNAME_H.
 

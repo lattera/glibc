@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -72,12 +72,13 @@ $(common-objpfx)param.h.c: $(sysincludedir)/sys/param.h
 	cp $< $@
 $(common-objpfx)param.h.dep: $(common-objpfx)param.h.c \
 			     $(sysdep_dir)/unix/Makefile
-	$(+mkdep) -I$(sysincludedir) $<		\
-	| sed > $@-t				\
-	      -e 's@^.*:@@'			\
-	      -e 's@$<@@g'			\
-	      -e 's@$(sysincludedir)/*@@g'	\
-	      -e 's@\\$$@@'			\
+	$(+mkdep) -I$(sysincludedir) $<			\
+	| sed > $@-t					\
+	      -e 's@$(sysincludedir)/sys/param.h@@'	\
+	      -e 's@^.*:@@'				\
+	      -e 's@$<@@g'				\
+	      -e 's@$(sysincludedir)/*@@g'		\
+	      -e 's@\\$$@@'				\
 	      -e 's@^@sys/param.h-includes := $$(sys/param.h-includes) @'
 	mv $@-t $@
 
