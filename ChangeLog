@@ -1,5 +1,41 @@
 2001-11-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (RELEASE): Define as development.
+	(VERSION): Set to 2.2.90.
+
+2001-11-22  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_compat/compat-grp.c: Print group id as unsigned long.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+
+	* nis/nss_compat/compat-pwd.c: Print user id as unsigned long.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+
+	* nis/nss_nis/nis-publickey.c: Use strtoul instead of atoi.
+	* nis/nss_nisplus/nisplus-parser.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+
+	* nscd/grpcache.c: Use strtoul instead of atol.
+	* nscd/pwdcache.c: Likewise.
+	* nss/getent.c: Likewise.
+
+2001-11-27  Paul Eggert  <eggert@twinsun.com>
+
+	* sysdeps/posix/tempname.c (__gen_tempname): Try at least
+	ATTEMPTS_MIN or TMP_MAX times, whichever is greater.
+
+2001-11-19  Bruno Haible  <bruno@clisp.org>
+
+	* locale/programs/simple-hash.c (insert_entry_2): Resize at 75%, not
+	90%.
+	(compute_hashval): Shift by 9 bits, not by 4 bits. This drastically
+	improves the quality of the hash function, especially for short
+	strings.
+
+2001-11-26  Ulrich Drepper  <drepper@redhat.com>
+
 	* stdio-common/vfscanf.c: If incomplete nan of inf(inity) strings
 	are found call conv_error and not input_error [PR libc/2669].
 

@@ -1,5 +1,7 @@
 2001-11-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED (SUPPORTED-LOCALES): Add se_NO/UTF-8.
+
 	* locales/de_CH: Define decimal point to '.' and thousands
 	separator to ' '.  Patch by Niklaus Giger <ngiger@mus.ch>.
 

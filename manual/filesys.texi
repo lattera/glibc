@@ -1171,7 +1171,8 @@ A hardware error occurred while reading or writing data on the disk.
 @c @end group
 @end deftypefun
 
-In some situations it is desirable to resolve all the to get the real
+In some situations it is desirable to resolve all the
+symbolic links to get the real
 name of a file where no prefix names a symbolic link which is followed
 and no filename in the path is @code{.} or @code{..}.  This is for
 instance desirable if files have to be compare in which case different
