@@ -581,8 +581,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    if (is_long_num)						      \
 	      signed_number = args_value[fspec->data_arg].pa_long_int;	      \
-	    else							      \
+	    else if (!is_short)						      \
 	      signed_number = args_value[fspec->data_arg].pa_int;	      \
+	    else	      						      \
+	      signed_number = args_value[fspec->data_arg].pa_short_int;	      \
 									      \
 	  is_negative = signed_number < 0;				      \
 	  number.word = is_negative ? (- signed_number) : signed_number;      \

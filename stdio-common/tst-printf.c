@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000, 2002
+     Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +31,7 @@
 
 static void rfg1 (void);
 static void rfg2 (void);
+static void rfg3 (void);
 
 
 static void
@@ -159,7 +161,7 @@ I am ready for my first lesson today.";
   printf("long octal negative:\t\"%lo\"\n", -2345L);
   printf("long unsigned decimal number:\t\"%lu\"\n", -123456L);
   printf("zero-padded LDN:\t\"%010ld\"\n", -123456L);
-  printf("left-adjusted ZLDN:\t\"%-010ld\"\n", -123456);
+  printf("left-adjusted ZLDN:\t\"%-010ld\"\n", -123456L);
   printf("space-padded LDN:\t\"%10ld\"\n", -123456L);
   printf("left-adjusted SLDN:\t\"%-10ld\"\n", -123456L);
 
@@ -218,8 +220,9 @@ I am ready for my first lesson today.";
     char buf[20];
     char buf2[512];
     printf ("snprintf (\"%%30s\", \"foo\") == %d, \"%.*s\"\n",
-	    snprintf (buf, sizeof (buf), "%30s", "foo"), sizeof (buf), buf);
-    printf ("snprintf (\"%%.999999u\", 10)\n",
+	    snprintf (buf, sizeof (buf), "%30s", "foo"), (int) sizeof (buf),
+	    buf);
+    printf ("snprintf (\"%%.999999u\", 10) == %d\n",
 	    snprintf(buf2, sizeof(buf2), "%.999999u", 10));
   }
 
@@ -269,6 +272,7 @@ I am ready for my first lesson today.";
   puts ("--- Should be no further output. ---");
   rfg1 ();
   rfg2 ();
+  rfg3 ();
 
   {
     char bytes[7];
@@ -351,4 +355,24 @@ rfg2 (void)
   sprintf (buf, "%04.*X", prec, 33);
   if (strcmp (buf, " 021") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, " 021");
+}
+
+static void
+rfg3 (void)
+{
+  char buf[100];
+  double g = 5.0000001;
+  unsigned long l = 1234567890;
+  double d = 321.7654321;
+  char *s = "test-string";
+  int i = 12345;
+  int h = 1234;
+
+  sprintf (buf,
+	   "%1$*5$d %2$*6$hi %3$*7$lo %4$*8$f %9$*12$e %10$*13$g %11$*14$s",
+	   i, h, l, d, 8, 5, 14, 14, d, g, s, 14, 3, 14);
+  if (strcmp (buf,
+	      "   12345  1234    11145401322     321.765432   3.217654e+02   5    test-string") != 0)
+    printf ("got: '%s', expected: '%s'\n", buf,
+	    "   12345  1234    11145401322     321.765432   3.217654e+02   5    test-string");
 }

@@ -290,12 +290,12 @@ _itoa (value, buflim, base, upper_case)
      unsigned int base;
      int upper_case;
 {
-  extern const char _itoa_lower_digits[] attribute_hidden;
+  extern const char INTUSE(_itoa_lower_digits)[] attribute_hidden;
 
   assert (! upper_case);
 
   do
-    *--buflim = _itoa_lower_digits[value % base];
+    *--buflim = INTUSE(_itoa_lower_digits)[value % base];
   while ((value /= base) != 0);
 
   return buflim;
@@ -348,4 +348,5 @@ strong_alias (__strsep, __strsep_g)
 
 /* The '_itoa_lower_digits' variable in libc.so is able to handle bases
    up to 36.  We don't need this here.  */
-const char _itoa_lower_digits[16] = "0123456789abcdef";
+const char INTUSE(_itoa_lower_digits)[16] attribute_hidden
+  = "0123456789abcdef";

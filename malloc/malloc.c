@@ -2824,11 +2824,12 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
     /* Don't try if size wraps around 0 */
     if ((unsigned long)(size) > (unsigned long)(nb)) {
 
-      brk = (char*)(MMAP(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE));
+      char *mbrk = (char*)(MMAP(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE));
 
-      if (brk != MAP_FAILED) {
+      if (mbrk != MAP_FAILED) {
 
         /* We do not need, and cannot use, another sbrk call to find end */
+        brk = mbrk;
         snd_brk = brk + size;
 
         /*

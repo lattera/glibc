@@ -1,3 +1,20 @@
+2002-03-13  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (sYSMALLOc): Don't change brk if mmap failed.
+
+2002-03-02  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/vfprintf.c (process_arg): Fix decimal format with
+	'h' flag and positional arg.
+	* stdio-common/tst-printf.c (rfg3): New function to test
+	positional arguments.
+	(main): Fix some warnings.
+
+2002-03-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-minimal.c (_itoa): Use _itoa_lower_digits_internal if SHARED.
+	* elf/dl-reloc.c (_dl_reloc_bad_type): Likewise.
+
 2002-03-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* grp/initgroups.c (__nss_group_data): Declare as hidden.
