@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,18 +21,7 @@
 #include "../locale/coll-lookup.h"
 
 #define STRING_TYPE wchar_t
-#define USTRING_TYPE wint_t
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define STRXFRM __wcsxfrm_l
-#else
-# define STRXFRM wcsxfrm
-#endif
-#define STRCMP wcscmp
-#define STRLEN __wcslen
-#define STPNCPY __wcpncpy
-#define WEIGHT_H "../locale/weightwc.h"
-#define SUFFIX	WC
-#define L(arg) L##arg
-#define WIDE_CHAR_VERSION 1
+#define STRXFRM wcsxfrm
+#define STRXFRM_L __wcsxfrm_l
 
 #include "../string/strxfrm.c"

@@ -29,6 +29,9 @@ libc_hidden_proto (__wcstoull_internal)
 libc_hidden_proto (__wcscasecmp_l)
 libc_hidden_proto (__wcsncasecmp_l)
 
+libc_hidden_proto (__wcscoll_l)
+libc_hidden_proto (__wcsxfrm_l)
+
 libc_hidden_proto (fputws_unlocked)
 libc_hidden_proto (putwc_unlocked)
 libc_hidden_proto (putwc)

@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997,98,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,14 +18,30 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
-
 #include <xlocale.h>
 
 extern float ____strtof_l_internal (const char *, char **, int, __locale_t);
 extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 						       int, int, __locale_t);
 
-#include <strtof.c>
+#define	FLOAT		float
+#define	FLT		FLT
+#ifdef USE_WIDE_CHAR
+# define STRTOF		wcstof_l
+# define __STRTOF	__wcstof_l
+#else
+# define STRTOF		strtof_l
+# define __STRTOF	__strtof_l
+#endif
+#define	MPN2FLOAT	__mpn_construct_float
+#define	FLOAT_HUGE_VAL	HUGE_VALF
+#define SET_MANTISSA(flt, mant) \
+  do { union ieee754_float u;						      \
+       u.f = (flt);							      \
+       if ((mant & 0x7fffff) == 0)					      \
+	 mant = 0x400000;						      \
+       u.ieee.mantissa = (mant) & 0x7fffff;				      \
+       (flt) = u.f;							      \
+  } while (0)
 
-weak_alias (__strtof_l, strtof_l)
+#include "strtod_l.c"

@@ -1,5 +1,5 @@
 /* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,12 +22,10 @@
 #include <stddef.h>
 #include <locale.h>
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#define UNSIGNED	1
 
 extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 						       wchar_t **, int, int,
 						       __locale_t);
 
-#include <wcstoull.c>
-
-weak_alias (__wcstoull_l, wcstoull_l)
+#include <wcstoll_l.c>

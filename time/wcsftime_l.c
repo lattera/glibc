@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <wchar.h>
+#include <wctype.h>
+
 #define USE_IN_EXTENDED_LOCALE_MODEL 1
-#include <wcsftime.c>
+#define COMPILE_WIDE	1
+#include "strftime_l.c"
 
 weak_alias (__wcsftime_l, wcsftime_l)

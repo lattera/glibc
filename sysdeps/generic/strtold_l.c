@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +18,23 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <xlocale.h>
+
+
+extern double ____strtod_l_internal (const char *, char **, int, __locale_t);
+
 
 /* There is no `long double' type, use the `double' implementations.  */
 long double
-__strtold_internal (const char *nptr, char **endptr, int group)
+____strtold_l_internal (const char *nptr, char **endptr, int group,
+			__locale_t loc)
 {
-  return __strtod_internal (nptr, endptr, group);
+  return ____strtod_l_internal (nptr, endptr, group, loc);
 }
-libc_hidden_def (__strtold_internal)
+
 
 long double
-strtold (const char *nptr, char **endptr)
+strtold (const char *nptr, char **endptr, __locale_t loc)
 {
-  return __strtod_internal (nptr, endptr, 0);
+  return ____strtod_l_internal (nptr, endptr, 0, loc);
 }

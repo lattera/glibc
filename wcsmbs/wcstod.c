@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -17,9 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stddef.h>
+#include <xlocale.h>
 
-/* The actual implementation for all floating point sizes is in strtod.c.  */
 
 #define	USE_WIDE_CHAR	1
+
+extern double ____wcstod_l_internal (const wchar_t *, wchar_t **, int,
+				     __locale_t);
 
 #include <stdlib/strtod.c>

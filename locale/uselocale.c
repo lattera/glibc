@@ -1,5 +1,5 @@
 /* uselocale -- fetch and set the current per-thread locale
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 locale_t
 __uselocale (locale_t newloc)
 {
-  locale_t oldloc = __libc_tsd_get (LOCALE);
+  locale_t oldloc = _NL_CURRENT_LOCALE;
 
   if (newloc != NULL)
     {

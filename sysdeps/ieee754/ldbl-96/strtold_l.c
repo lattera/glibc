@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,16 +21,18 @@
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `long double' version, `strtold'.  */
 
-# define FLOAT		long double
-# define FLT		LDBL
-# ifdef USE_IN_EXTENDED_LOCALE_MODEL
-#  define STRTOF	__strtold_l
-# else
-#  define STRTOF	strtold
-# endif
-# define MPN2FLOAT	__mpn_construct_long_double
-# define FLOAT_HUGE_VAL	HUGE_VALL
-# define SET_MANTISSA(flt, mant) \
+#define FLOAT		long double
+#define FLT		LDBL
+#ifdef USE_WIDE_CHAR
+# define STRTOF		wcstold_l
+# define __STRTOF	__wcstold_l
+#else
+# define STRTOF		strtold_l
+# define __STRTOF	__strtold_l
+#endif
+#define MPN2FLOAT	__mpn_construct_long_double
+#define FLOAT_HUGE_VAL	HUGE_VALL
+#define SET_MANTISSA(flt, mant) \
   do { union ieee854_long_double u;					      \
        u.d = (flt);							      \
        if ((mant & 0x7fffffffffffffffULL) == 0)				      \
@@ -40,4 +42,4 @@
        (flt) = u.d;							      \
   } while (0)
 
-# include "strtod.c"
+#include <strtod_l.c>

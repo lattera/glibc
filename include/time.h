@@ -3,6 +3,7 @@
 # include <time/time.h>
 #else
 # include <time/time.h>
+# include <xlocale.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
@@ -82,6 +83,18 @@ extern int __getdate_r (__const char *__string, struct tm *__resbufp);
 
 /* Determine CLK_TCK value.  */
 extern int __getclktck (void);
+
+
+/* strptime support.  */
+/* Status of lookup: do we use the locale data or the raw data?  */
+enum ptime_locale_status { not, loc, raw };
+
+extern char * __strptime_internal (const char *rp, const char *fmt,
+				   struct tm *tm,
+				   enum ptime_locale_status *decided,
+				   int era_cnt, __locale_t loc)
+     internal_function;
+
 
 
 /* Use in the clock_* functions.  Size of the field representing the

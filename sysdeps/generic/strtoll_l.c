@@ -1,5 +1,5 @@
 /* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,13 +18,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#define QUAD	1
 
 #include <xlocale.h>
 
 extern long long int ____strtoll_l_internal (const char *, char **, int, int,
 					     __locale_t);
 
-#include <strtoll.c>
-
-weak_alias (__strtoll_l, strtoll_l)
+#include <strtol_l.c>

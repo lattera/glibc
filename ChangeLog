@@ -1,3 +1,72 @@
+2004-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	Make the non-_l functions wrappers around the _l functions.
+	* include/monetary.h: Declare __vstrmon_l.
+	* include/string.h: Add libc_hidden_proto for __strcoll_l and
+	__strxfrm_l.
+	* include/time.h: Define ptime_locale_status.  Declare
+	__strptime_internal.
+	* include/wchar.h: Add libc_hidden_proto for __wcscoll_l and
+	__wcsxfrm_l.
+	* stdlib/strfmon.c: Move the code to strfmon_l.c.  Add little
+	wrapper around __vstrfmon_l.
+	* stdlib/strfmon_l.c: Add real implementation.  Split into new
+	function __vstrfmon_l to allow calling it from strfmon.
+	* stdlib/strtod.c: Move real code to strtod_l.c and add wrapper.
+	* stdlib/strtod_l.c: Add real implementation.
+	* stdlib/strtof.c: Adjust to changed strtod.c.
+	* stdlib/strtof_l.c: Include strtod_l.c now.
+	* stdlib/strtold.c: New file.
+	* stdlib/strtold_l.c: Removed.
+	* string/strcoll.c: Move real code to strcoll_l.c: Add wrapper.
+	* string/strcoll_l.c: Add real implementation.
+	* string/strxfrm.c: Move real code to strxfrm_l.c: Add wrapper.
+	* string/strxfrm_l.c: Add real implementation.
+	* sysdeps/generic/strtol.c: Move real implementation to strtol_l.c.
+	Add wrappers.
+	* sysdeps/generic/strtol_l.c: Add real implementation.
+	* sysdeps/generic/strtold.c: Removed.
+	* sysdeps/generic/strtold_l.c: New file.
+	* sysdeps/generic/strtoll_l.c: Include strtol_l.c now.  Adjust
+	#defines.
+	* sysdeps/generic/strtoul_l.c: Likewise.
+	* sysdeps/generic/strtoull_l.c: Likewise.
+	* sysdeps/generic/wcstol_l.c: Likewise.
+	* sysdeps/generic/wcstoll_l.c: Likewise.
+	* sysdeps/generic/wcstoul_l.c: Likewise.
+	* sysdeps/generic/wcstoull_l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/strtold.c: Removed.
+	* sysdeps/ieee754/ldbl-128/strtold_l.c: New file.
+	* sysdeps/ieee754/ldbl-96/strtold.c: Removed.
+	* sysdeps/ieee754/ldbl-96/strtold_l.c: New file.
+	* sysdeps/m68k/strtold.c: Removed.
+	* sysdeps/m68k/strtold_l.c: New file.
+	* time/strftime.c: Move real code to strftime_l.c.  Add wrapper.
+	* time/strftime_l.c: Add real implementation.
+	* time/strptime.c: Move real code to strptime_l.c.  Add wrapper.
+	* time/strptime_l.c: Add real implementation.
+	* time/wcsftime.c: Simplify since only wrappers are defined in
+	strftime.c.
+	* time/wcsftime_l.c: Include strftime_l.c.
+	* wcsmbs/wcscoll.c: Simplify since the file is not used by wcscoll_l.c
+	anymore.
+	* wcsmbs/wcscoll_l.c: Include strcoll_l.c.
+	* wcsmbs/wcsxfrm.c: Simplify since the file is not used by wcsxfrm_l.c
+	anymore.
+	* wcsmbs/wcsxfrm_l.c: Include strxfrm_l.c.
+	* wcsmbs/wcstod.c: Prepare to include new strtod.c.
+	* wcsmbs/wcstod_l.c: Include strtod_l.c.
+	* wcsmbs/wcstof.c: Prepare to include new strtof.c.
+	* wcsmbs/wcstof_l.c: Include strtof_l.c.
+	* wcsmbs/wcstold.c: Prepare to include new strtold.c.
+	* wcsmbs/wcstold_l.c: Include strtold_l.c.
+
+	* locale/uselocale.c: Use _NL_CURRENT_LOCALE instead of __libc_tsd_get.
+
+	* sysdeps/generic/strcasecmp.c: Optimize a bit.  It's better to get
+	a reference to the current locale and then use the _l functions.
+	* sysdeps/generic/strncase.c: Likewise.
+
 2004-03-11  Jeroen Dekkers  <jeroen@dekkers.cx>
 
 	* cppflags-iterator.mk: Change libof-$(cpp-src) to

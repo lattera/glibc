@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -17,27 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stddef.h>
+#include <xlocale.h>
 
-/* The actual implementation for all floating point sizes is in strtod.c.
-   These macros tell it to produce the `float' version, `wcstof'.  */
-
-#define	FLOAT		float
-#define	FLT		FLT
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define STRTOF		__wcstof_l
-#else
-# define STRTOF		wcstof
-#endif
-#define	MPN2FLOAT	__mpn_construct_float
-#define	FLOAT_HUGE_VAL	HUGE_VALF
 #define	USE_WIDE_CHAR	1
-#define SET_MANTISSA(flt, mant) \
-  do { union ieee754_float u;						      \
-       u.f = (flt);							      \
-       if ((mant & 0x7fffff) == 0)					      \
-	 mant = 0x400000;						      \
-       u.ieee.mantissa = (mant) & 0x7fffff;				      \
-       (flt) = u.f;							      \
-  } while (0)
 
-#include <stdlib/strtod.c>
+extern float ____wcstof_l_internal (const wchar_t *, wchar_t **, int,
+				    __locale_t);
+
+#include <stdlib/strtof.c>

@@ -78,6 +78,8 @@ libc_hidden_proto (__strerror_r)
 libc_hidden_proto (__strverscmp)
 libc_hidden_proto (basename)
 libc_hidden_proto (strcoll)
+libc_hidden_proto (__strcoll_l)
+libc_hidden_proto (__strxfrm_l)
 
 libc_hidden_builtin_proto (memchr)
 libc_hidden_builtin_proto (memcpy)

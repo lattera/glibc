@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1999,2000,2001,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -22,17 +22,8 @@
 
 #define STRING_TYPE wchar_t
 #define USTRING_TYPE wint_t
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-# define STRCOLL __wcscoll_l
-#else
-# define STRCOLL __wcscoll
-#endif
-#define STRCMP wcscmp
-#define STRLEN __wcslen
-#define WEIGHT_H "../locale/weightwc.h"
-#define SUFFIX	WC
-#define L(arg) L##arg
-#define WIDE_CHAR_VERSION 1
+#define STRCOLL __wcscoll
+#define STRCOLL_L __wcscoll_l
 
 #include "../string/strcoll.c"
 

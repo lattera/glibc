@@ -1,5 +1,7 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Read decimal floating point numbers.
    This file is part of the GNU C Library.
+   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,28 +18,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <math.h>
-
 /* The actual implementation for all floating point sizes is in strtod.c.
-   These macros tell it to produce the `long double' version, `strtold'.  */
+   These macros tell it to produce the `float' version, `strtof'.  */
 
-# define FLOAT		long double
-# define FLT		LDBL
-# ifdef USE_IN_EXTENDED_LOCALE_MODEL
-#  define STRTOF	__strtold_l
-# else
-#  define STRTOF	strtold
-# endif
-# define MPN2FLOAT	__mpn_construct_long_double
-# define FLOAT_HUGE_VAL	HUGE_VALL
-# define SET_MANTISSA(flt, mant) \
-  do { union ieee854_long_double u;					      \
-       u.d = (flt);							      \
-       u.ieee.mantissa0 = 0x8000;					      \
-       u.ieee.mantissa1 = 0;						      \
-       u.ieee.mantissa2 = ((mant) >> 32);	      			      \
-       u.ieee.mantissa3 = (mant) & 0xffffffff;				      \
-       (flt) = u.d;							      \
-  } while (0)
+#define	FLOAT		long double
+#define	FLT		LDBL
+#ifdef USE_WIDE_CHAR
+# define STRTOF		wcstold
+# define STRTOF_L	__wcstold_l
+#else
+# define STRTOF		strtold
+# define STRTOF_L	__strtold_l
+#endif
 
-# include "strtod.c"
+
+#include "strtod.c"
