@@ -214,7 +214,7 @@ struct msghdr
     struct iovec *msg_iov;	/* Vector of data to send/receive into.  */
     size_t msg_iovlen;		/* Number of elements in the vector.  */
 
-    void  *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
+    void *msg_control;		/* Ancillary data (eg BSD filedesc passing). */
     size_t msg_controllen;	/* Ancillary data buffer length.  */
 
     int msg_flags;		/* Flags on received message.  */
@@ -227,7 +227,7 @@ struct cmsghdr
 				   of cmsghdr structure.  */
     int cmsg_level;		/* Originating protocol.  */
     int cmsg_type;		/* Protocol specific type.  */
-    unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
+    __extension__ unsigned char __cmsg_data __flexarr; /* Ancillary data.  */
     /* XXX Perhaps this should be removed.  */
   };
 
@@ -242,7 +242,7 @@ struct cmsghdr
   ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)		      \
    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) NULL)
 #define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1) \
-			 & ~(sizeof (size_t) - 1))
+			 & (size_t) ~(sizeof (size_t) - 1))
 #define CMSG_SPACE(len) (CMSG_ALIGN (len) \
 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
 #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
