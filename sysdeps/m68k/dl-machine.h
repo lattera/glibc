@@ -52,8 +52,21 @@ elf_machine_got (void)
 static inline Elf32_Addr
 elf_machine_load_address (void)
 {
-  ...
+  Elf32_Addr addr;
+  asm ("here:	lea here(%%pc), %0\n"
+       "	sub.l %#here, %0"
+       : "=a" (addr));
+  return addr;
 }
+
+/* The `subl' insn above will contain an R_68K_RELATIVE relocation
+   entry intended to insert the run-time address of the label `here'.
+   This will be the first relocation in the text of the dynamic
+   linker; we skip it to avoid trying to modify read-only text in this
+   early stage.  */
+#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
+  ((dynamic_info)[DT_RELA]->d_un.d_ptr += sizeof (Elf32_Rela), \
+   (dynamic_info)[DT_RELASZ]->d_un.d_val -= sizeof (Elf32_Rela))
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
@@ -158,11 +171,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
-	| Save %a0 (struct return address).
+	| Save %a0 (struct return address) and %a1.
 	move.l %a0, -(%sp)
+	move.l %a1, -(%sp)
 	| Call the real address resolver.
-	bsr.l fixup
-	| Restore register %a0.
+	jbsr fixup
+	| Restore register %a0 and %a1.
+	move.l (%sp)+, %a1
 	move.l (%sp)+, %a0
 	| Pop parameters
 	addq.l #8, %sp
@@ -170,7 +185,9 @@ _dl_runtime_resolve:
 	jmp (%d0)
 	.size _dl_runtime_resolve, . - _dl_runtime_resolve
 ");
-#define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0
+#define ELF_MACHINE_RUNTIME_FIXUP_ARGS long int save_a0, long int save_a1
+/* The PLT uses Elf32_Rela relocs.  */
+#define elf_machine_relplt elf_machine_rela
 }
 
 
