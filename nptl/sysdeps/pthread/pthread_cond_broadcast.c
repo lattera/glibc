@@ -54,6 +54,10 @@ __pthread_cond_broadcast (cond)
 # error "No valid byte order"
 #endif
 
+      /* Do not use requeue for pshared condvars.  */
+      if (cond->__data.__mutex == (void *) ~0l)
+	goto wake_all;
+
       /* Wake everybody.  */
       pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
       if (__builtin_expect (lll_futex_requeue (futex, 1, INT_MAX,
@@ -61,9 +65,8 @@ __pthread_cond_broadcast (cond)
 			    0))
 	{
 	  /* The requeue functionality is not available.  */
-#ifndef __ASSUME_FUTEX_REQUEUE
+	wake_all:
 	  lll_futex_wake (futex, INT_MAX);
-#endif
 	}
 
       /* That's all.  */

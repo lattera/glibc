@@ -83,8 +83,12 @@ __pthread_cond_broadcast:
 	subl	$1, cond_lock-wakeup_seq(%ebx)
 	jne	7f
 
+	/* Don't use requeue for pshared condvars.  */
+8:	cmpl	$-1, %edi
+	je	9f
+
 	/* Wake up all threads.  */
-8:	movl	$FUTEX_REQUEUE, %ecx
+	movl	$FUTEX_REQUEUE, %ecx
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %esi
 	movl	$1, %edx
@@ -97,10 +101,9 @@ __pthread_cond_broadcast:
 #ifndef __ASSUME_FUTEX_REQUEUE
 	cmpl	$-EINVAL, %eax
 	je	9f
-10:
 #endif
 
-	xorl	%eax, %eax
+10:	xorl	%eax, %eax
 	popl	%edi
 	popl	%esi
 	popl	%ebx
@@ -138,14 +141,12 @@ __pthread_cond_broadcast:
 	call	__lll_mutex_unlock_wake
 	jmp	8b
 
-#ifndef __ASSUME_FUTEX_REQUEUE
 9:	/* The futex requeue functionality is not available.  */
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	jmp	10b
-#endif
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)

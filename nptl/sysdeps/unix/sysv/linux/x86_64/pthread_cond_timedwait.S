@@ -71,15 +71,18 @@ __pthread_cond_timedwait:
 	            +--------------------------+
 	*/
 
+	cmpq	$-1, dep_mutex(%rdi)
+
 	/* Prepare structure passed to cancellation handler.  */
 	movq	%rdi, 8(%rsp)
 	movq	%rsi, 16(%rsp)
 	movq	%rdx, %r13
 
+	je	22f
 	movq	%rsi, dep_mutex(%rdi)
 
 	/* Get internal lock.  */
-	movl	$1, %esi
+22:	movl	$1, %esi
 	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0

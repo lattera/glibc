@@ -93,8 +93,10 @@ __pthread_cond_wait (cond, mutex)
   ++cond->__data.__total_seq;
 
   /* Remember the mutex we are using here.  If there is already a
-     different address store this is a bad user bug.  */
-  cond->__data.__mutex = mutex;
+     different address store this is a bad user bug.  Do not store
+     anything for pshared condvars.  */
+  if (cond->__data.__mutex != (void *) ~0l)
+    cond->__data.__mutex = mutex;
 
   /* Prepare structure passed to cancellation handler.  */
   cbuffer.cond = cond;

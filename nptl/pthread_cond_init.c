@@ -36,6 +36,8 @@ __pthread_cond_init (cond, cond_attr)
   cond->__data.__total_seq = 0;
   cond->__data.__wakeup_seq = 0;
   cond->__data.__woken_seq = 0;
+  cond->__data.__mutex = (icond_attr == NULL || (icond_attr->value & 1) == 0
+			  ? NULL : (void *) ~0l);
 
   return 0;
 }

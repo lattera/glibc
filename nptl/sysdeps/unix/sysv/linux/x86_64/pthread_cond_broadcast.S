@@ -72,8 +72,11 @@ __pthread_cond_broadcast:
 	decl	cond_lock-wakeup_seq(%rdi)
 	jne	7f
 
+8:	cmpq	$-1, %r8
+	je	9f
+
 	/* Wake up all threads.  */
-8:	movq	$FUTEX_REQUEUE, %rsi
+	movq	$FUTEX_REQUEUE, %rsi
 	movq	$SYS_futex, %rax
 	movl	$1, %edx
 	movq	$0x7fffffff, %r10
@@ -82,10 +85,9 @@ __pthread_cond_broadcast:
 #ifndef __ASSUME_FUTEX_REQUEUE
 	cmpq	$-EINVAL, %rax
 	je	9f
-10:
 #endif
 
-	xorl	%eax, %eax
+10:	xorl	%eax, %eax
 	retq
 
 	.align	16
@@ -119,14 +121,12 @@ __pthread_cond_broadcast:
 	subq	$cond_lock-wakeup_seq, %rdi
 	jmp	8b
 
-#ifndef __ASSUME_FUTEX_REQUEUE
 9:	/* The futex requeue functionality is not available.  */
 	movq	$0x7fffffff, %rdx
 	movq	$FUTEX_WAKE, %rsi
 	movq	$SYS_futex, %rax
 	syscall
 	jmp	10b
-#endif
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2)

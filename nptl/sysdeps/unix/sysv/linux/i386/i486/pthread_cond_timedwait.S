@@ -68,11 +68,13 @@ __pthread_cond_timedwait:
 
 	/* Store the reference to the mutex.  If there is already a
 	   different value in there this is a bad user bug.  */
-2:	movl	24(%esp), %eax
+2:	cmpl	$-1, dep_mutex(%ebx)
+	movl	24(%esp), %eax
+	je	17f
 	movl	%eax, dep_mutex(%ebx)
 
 	/* Unlock the mutex.  */
-	xorl	%edx, %edx
+17:	xorl	%edx, %edx
 	call	__pthread_mutex_unlock_usercnt
 
 	testl	%eax, %eax

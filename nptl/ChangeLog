@@ -1,5 +1,34 @@
 2003-11-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Don't
+	store mutex address if the current value is ~0l.
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/pthread/pthread_cond_broadcast.c
+	(__pthread_cond_broadcast): Don't use requeue for pshared
+	condvars.
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__pthread_cond_wait): Don't store mutex address if the current
+	value is ~0l.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Don't use requeue for pshared
+	condvars.
+
+	* pthread_cond_init.c (__pthread_cond_init): Initialize __mutex
+	element with ~0l for pshared condvars, with NULL otherwise.
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S
+	(__pthread_cond_wait): Don't store mutex address if the current
+	value is ~0l.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S
+	(__pthread_cond_broadcast): Don't use requeue for pshared
+	condvars.
+
 	* Makefile: Add rules to build and run tst-cond12 and tst-cond13.
 	* tst-cond12.c: New file.
 	* tst-cond13.c: New file.

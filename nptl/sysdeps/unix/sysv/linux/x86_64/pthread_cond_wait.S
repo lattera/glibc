@@ -117,14 +117,17 @@ __pthread_cond_wait:
 	            +--------------------------+
 	*/
 
-	/* Prepare structure passed to cancellation handler.  */
+	cmpq	$-1, dep_mutex(%rdi)
+
+		/* Prepare structure passed to cancellation handler.  */
 	movq	%rdi, 8(%rsp)
 	movq	%rsi, 16(%rsp)
 
+	je	15f
 	movq	%rsi, dep_mutex(%rdi)
 
 	/* Get internal lock.  */
-	movl	$1, %esi
+15:	movl	$1, %esi
 	xorl	%eax, %eax
 	LOCK
 #if cond_lock == 0
