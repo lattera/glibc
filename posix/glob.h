@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,98,2000,2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -106,7 +106,9 @@ typedef unsigned long int __size_t;
 
 /* Structure describing a globbing run.  */
 #if !defined _AMIGA && !defined VMS /* Buggy compiler.   */
+# ifdef _GNU_SOURCE
 struct stat;
+# endif
 #endif
 typedef struct
   {
@@ -118,15 +120,26 @@ typedef struct
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
     void (*gl_closedir) __PMT ((void *));
+#ifdef _GNU_SOURCE
     struct dirent *(*gl_readdir) __PMT ((void *));
+#else
+    void *(*gl_readdir) __PMT ((void *));
+#endif
     __ptr_t (*gl_opendir) __PMT ((__const char *));
+#ifdef _GNU_SOURCE
     int (*gl_lstat) __PMT ((__const char *__restrict,
 			    struct stat *__restrict));
     int (*gl_stat) __PMT ((__const char *__restrict, struct stat *__restrict));
+#else
+    int (*gl_lstat) __PMT ((__const char *__restrict, void *__restrict));
+    int (*gl_stat) __PMT ((__const char *__restrict, void *__restrict));
+#endif
   } glob_t;
 
 #ifdef _LARGEFILE64_SOURCE
+# ifdef _GNU_SOURCE
 struct stat64;
+# endif
 typedef struct
   {
     __size_t gl_pathc;
@@ -137,12 +150,21 @@ typedef struct
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
     void (*gl_closedir) __PMT ((void *));
+# ifdef _GNU_SOURCE
     struct dirent64 *(*gl_readdir) __PMT ((void *));
+# else
+    void *(*gl_readdir) __PMT ((void *));
+# endif
     __ptr_t (*gl_opendir) __PMT ((__const char *));
+# ifdef _GNU_SOURCE
     int (*gl_lstat) __PMT ((__const char *__restrict,
 			    struct stat64 *__restrict));
     int (*gl_stat) __PMT ((__const char *__restrict,
 			   struct stat64 *__restrict));
+# else
+    int (*gl_lstat) __PMT ((__const char *__restrict, void *__restrict));
+    int (*gl_stat) __PMT ((__const char *__restrict, void *__restrict));
+# endif
   } glob64_t;
 #endif
 

@@ -1,5 +1,7 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/glob.h: Cleanup namespace for non-_GNU_SOURCE case.
+
 	* io/sys/stat.h: Define S_IFSOCK for XPG6.
 
 	* conform/data/fcntl.h-data: posix_madvise is not expected here.
