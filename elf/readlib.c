@@ -87,7 +87,7 @@ process_file (const char *file_name, const char *lib, int *flag,
   if (file == NULL)
     {
       /* No error for stale symlink.  */
-      if (is_link && strstr (file_name, ".so.") != NULL)
+      if (is_link && strstr (file_name, ".so") != NULL)
 	return 1;
       error (0, 0, _("Input file %s not found.\n"), file_name);
       return 1;
