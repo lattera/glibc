@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For Mips/Hurd.
-   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
+extern void __init_misc (int, char **, char **);
 #ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
 #endif
@@ -106,6 +107,7 @@ init1 (int argc, char *arg0, ...)
 		d->portarray, d->portarraysize,
 		d->intarray, d->intarraysize);
 
+  __init_misc (argc, argv, __environ);
   __libc_init (argc, argv, __environ);
 
 #ifdef USE_NONOPTION_FLAGS
