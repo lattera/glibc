@@ -1,5 +1,8 @@
 2002-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libio.h [_IO_MTSAFE_IO && _IO_lock_inexpensive]:
+	Redefine _IO_flockifle and _IO_funlockfile as inlines.
+
 	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): For TLS
 	builds add "tls" in the search path.
 	* elf/ldconfig.c (is_hwcap_platform): Also recognize "tls".

@@ -1,3 +1,7 @@
+2002-12-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_lock_inexpensive): Define.
+
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: Don't define
