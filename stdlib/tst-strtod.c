@@ -157,6 +157,21 @@ main (int argc, char ** argv)
       status = 1;
     }
 
+  static struct { const char *str; long double l; } ltests[] =
+    {
+      { "42.0000000000000000001", 42.0000000000000000001L },
+      { "42.00000000000000000001", 42.00000000000000000001L },
+      { "42.000000000000000000001", 42.000000000000000000001L }
+    };
+  int n;
+  for (n = 0; n < sizeof (ltests) / sizeof (ltests[0]); ++n)
+    if (strtold (ltests[n].str, NULL) != ltests[n].l)
+      {
+	printf ("ltests[%d]: %La != %La\n", n,
+		strtold (ltests[n].str, NULL), ltests[n].l);
+	status = 1;
+      }
+
   status |= long_dbl ();
 
   status |= locale_test ();

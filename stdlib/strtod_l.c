@@ -1484,7 +1484,7 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 						       / BITS_PER_MP_LIMB],
 					       retval, RETURN_LIMB_SIZE,
 					       used % BITS_PER_MP_LIMB);
-			  for (i = used / BITS_PER_MP_LIMB; i >= 0; --i)
+			  for (i = used / BITS_PER_MP_LIMB - 1; i >= 0; --i)
 			    retval[i] = 0;
 			}
 		      else if (used > 0)
