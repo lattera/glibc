@@ -1,5 +1,8 @@
 1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/vfscanf.c: Don't return -1 in case of an invalid
+	format, jsut stop.
+
 	* version.h (VERSION): Bump to 2.0.102.
 
 	* stdio-common/tstdiomisc.c (t2): Update test case for last scanf
