@@ -1,5 +1,8 @@
 2003-06-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/bits/byteswap.h (__bswap_32): Use bswap instruction
+	also for P4.
+
 	* time/tzfile.c: Add a couple of __builtin_expect.
 
 	Remove warnings gcc 3.3 shows.

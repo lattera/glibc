@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,8 @@ __bswap_16 (unsigned short int __bsx)
 # if __GNUC__ >= 2
 /* To swap the bytes in a word the i486 processors and up provide the
    `bswap' opcode.  On i386 we have to use three instructions.  */
-#  if !defined __i486__ && !defined __pentium__ && !defined __pentiumpro__
+#  if !defined __i486__ && !defined __pentium__ && !defined __pentiumpro__ \
+      && !defined __pentium4__
 #   define __bswap_32(x)						      \
      (__extension__							      \
       ({ register unsigned int __v, __x = (x);				      \
