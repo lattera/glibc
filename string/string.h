@@ -127,8 +127,25 @@ extern __ptr_t memmem __P ((__const __ptr_t __haystack, size_t __haystacklen,
 			    __const __ptr_t __needle, size_t __needlelen));
 #endif
 
+
 /* Return the length of S.  */
 extern size_t strlen __P ((__const char *__s));
+
+#ifdef	__USE_GNU
+/* Find the length of STRING, but scan at most MAXLEN characters.
+   If no '\0' terminator is found in that many characters, return MAXLEN.  */
+extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
+
+#ifdef	__OPTIMIZE__
+extern __inline size_t
+strnlen (__const char *__string, size_t __maxlen)
+{
+  __const char *__end = memchr (__string, '\0', __maxlen);
+  return __end ? __end - __string : __maxlen;
+}
+#endif
+#endif
+
 
 /* Return a string describing the meaning of the `errno' code in ERRNUM.  */
 extern char *strerror __P ((int __errnum));

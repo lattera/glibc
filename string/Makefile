@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@ subdir	:= string
 headers	:= string.h strings.h memory.h endian.h bytesex.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
-		   strerror _strerror strlen strncat strncmp strncpy 	\
+		   strerror _strerror strlen strnlen			\
+		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\
 		   strxfrm memchr memcmp memmove memset			\
 		   bcopy bzero ffs stpcpy stpncpy			\

@@ -32,22 +32,18 @@ extern void __libc_global_ctors (void);
 static void
 init (int *data)
 {
+  extern int __personality (int);
+
   int argc = *data;
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
 
-#ifdef __i386__
-  /* Make sure we are not using the iBSC2 personality.  The `personality'
-     syscall takes one argument; zero means the Linux personality.  The
-     argument arrives in %ebx; we have to save and restore %ebx by hand
-     here, because GCC (as of 2.7.0) cannot handle saving and restoring it
-     for us when it is the dedicated GOT register for PIC.  */
-  asm ("pushl %%ebx\n"
-       "xorl %%ebx, %%ebx\n"
-       "int $0x80 # syscall no %0\n"
-       "popl %%ebx"
-       : : "a" (SYS_ify (personality)));
-#endif
+  /* The `personality' system call takes one argument that chooses the
+     "personality", i.e. the set of system calls and such.  Zero is the
+     native Linux value; we must make this call first thing to disable
+     emulation of some other system that might have been enabled by default
+     based on the executable format.  */
+  __personality (0);
 
   /* Set the FPU control word to the proper default value.  */
   __setfpucw (__fpu_control);

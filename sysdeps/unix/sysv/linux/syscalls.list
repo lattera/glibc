@@ -15,6 +15,7 @@ mlockall	-	mlockall	1	__mlockall	mlockall
 mount		-	mount		5	__mount	mount
 munlock		-	munlock		2	__munlock	munlock
 munlockall	-	munlockall	0	__munlockall	munlockall
+personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe	pipe
 reboot		-	reboot		3	reboot
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
