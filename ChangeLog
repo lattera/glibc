@@ -1,3 +1,8 @@
+2001-05-27  Andreas Jaeger  <aj@suse.de>
+
+	* manual/stdio.texi (String Streams): Fix fmemopen description.
+	Reported by Michal Kochanowicz <michal@michal.waw.pl>.
+
 2001-05-26  H.J. Lu <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Change sigsuspend

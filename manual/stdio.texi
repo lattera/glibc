@@ -4798,7 +4798,7 @@ dynamically allocates an array @var{size} bytes long (as with @code{malloc};
 if you are going to write things to the buffer and then read them back
 in again, because you have no way of actually getting a pointer to the
 buffer (for this, try @code{open_memstream}, below).  The buffer is
-freed when the stream is open.
+freed when the stream is closed.
 
 The argument @var{opentype} is the same as in @code{fopen}
 (@pxref{Opening Streams}).  If the @var{opentype} specifies
