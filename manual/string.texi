@@ -477,6 +477,132 @@ strcat (char *to, const char *from)
 This function has undefined results if the strings overlap.
 @end deftypefun
 
+Programmers using the @code{strcat} function (or the following
+@code{strncat} function for that matter) can easily be recognize as
+lazy.  In almost all situations the lengths of the participating strings
+are known.  Or at least, one could know them if one keeps track of the
+results of the various function calls.  But then it is very inefficient
+to use @code{strcat}.  A lot of time is wasted finding the end of the
+destination string so that the actual copying can start.  This is a
+common example:
+
+@cindex __va_copy
+@cindex va_copy
+@smallexample
+/* @r{This function concats arbitrary many strings.  The last}
+   @r{parameter must be @code{NULL}.}  */
+char *
+concat (const char *str, ...)
+@{
+  va_list ap, ap2;
+  size_t total = 1;
+  const char *s;
+  char *result;
+
+  va_start (ap, str);
+  /* @r{Actually @code{va_copy}, but this is the name more gcc versions}
+     @r{understand.}  */
+  __va_copy (ap2, ap);
+
+  /* @r{Determine how much space we need.}  */
+  for (s = str; s != NULL; s = va_arg (ap, const char *))
+    total += strlen (s);
+
+  va_end (ap);
+
+  result = (char *) malloc (total);
+  if (result != NULL)
+    @{
+      result[0] = '\0';
+
+      /* @r{Copy the strings.}  */
+      for (s = str; s != NULL; s = va_arg (ap2, const char *))
+        strcat (result, s);
+    @}
+
+  va_end (ap2);
+
+  return result;
+@}
+@end smallexample
+
+This looks quite simple, especially the second loop where the strings
+are actually copied.  But these innocent lines hide a major performance
+penalty.  Just imagine that ten strings of 100 bytes each have to be
+concatenated.  For the second string we search the already stored 100
+bytes for the end of the string so that we can append the next string.
+For all strings in total the comparisons necessary to find the end of
+the intermediate results sums up to 5500!  If we combine the copying
+with the search for the allocation we can write this function more
+efficent:
+
+@smallexample
+char *
+concat (const char *str, ...)
+@{
+  va_list ap;
+  size_t allocated = 100;
+  char *result = (char *) malloc (allocated);
+  char *wp;
+
+  if (allocated != NULL)
+    @{
+      char *newp;
+
+      va_start (ap, atr);
+
+      wp = result;
+      for (s = str; s != NULL; s = va_arg (ap, const char *))
+        @{
+          size_t len = strlen (s);
+
+          /* @r{Resize the allocated memory if necessary.}  */
+          if (wp + len + 1 > result + allocated)
+            @{
+              allocated = (allocated + len) * 2;
+              newp = (char *) realloc (result, allocated);
+              if (newp == NULL)
+                @{
+                  free (result);
+                  return NULL;
+                @}
+              wp = newp + (wp - result);
+              result = newp;
+            @}
+
+          wp = mempcpy (wp, s, len);
+        @}
+
+      /* @r{Terminate the result string.}  */
+      *wp++ = '\0';
+
+      /* @r{Resize memory to the optimal size.}  */
+      newp = realloc (result, wp - result);
+      if (newp != NULL)
+        result = newp;
+
+      va_end (ap);
+    @}
+
+  return result;
+@}
+@end smallexample
+
+With a bit more knowledge about the input strings one could fine-tune
+the memory allocation.  The difference we are pointing to here is that
+we don't use @code{strcat} anymore.  We always keep track of the length
+of the current intermediate result so we can safe us the search for the
+end of the string and use @code{mempcpy}.  Please note that we also
+don't use @code{stpcpy} which might seem more natural since we handle
+with strings.  But this is not necessary since we already know the
+length of the string and therefore can use the faster memory copying
+function.
+
+Whenever a programmer feels the need to use @code{strcat} she or he
+should think twice and look through the program whether the code cannot
+be rewritten to take advantage of already calculated results.  Again: it
+is almost always unnecessary to use @code{strcat}.
+
 @comment string.h
 @comment ISO
 @deftypefun {char *} strncat (char *@var{to}, const char *@var{from}, size_t @var{size})
@@ -963,6 +1089,30 @@ New code should always use @code{strchr} since this name is defined in
 @w{ISO C} while @code{index} is a BSD invention which never was available
 on @w{System V} derived systems.
 @end deftypefun
+
+One useful, but unusual, use of the @code{strchr} or @code{index}
+function is when one wants to have a pointer pointing to the NUL byte
+terminating a string.  This is often written in this way:
+
+@smallexample
+  s += strlen (s);
+@end smallexample
+
+@noindent
+This is almost optimal but the addition operation duplicated a bit of
+the work already done in the @code{strlen} function.  A better solution
+is this:
+
+@smallexample
+  s = strchr (s, '\0');
+@end smallexample
+
+There is no restriction on the second parameter of @code{strchr} so it
+could very well also be the NUL character.  Those readers thinking very
+hard about this might now point out that the @code{strchr} function is
+more expensive than the @code{strlen} since we have two abort criteria.
+This is right.  But when using the GNU C library this @code{strchr} call
+gets optimized in a special way so that this version actually is faster.
 
 @comment string.h
 @comment ISO

@@ -1,10 +1,14 @@
+1999-01-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/string.texi: Add optimization examples for strcat and strchr.
+
 1999-01-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/Makefile (routines): Remove fgetc.
 	* libio/fgetc.c: Removed.
 	* libio/getc.c: Add fgetc alias.
 	* libio/Versions [GLIBC_2.1]: Add fgetc_unlocked.
-	* libio/getc_u.c: Rename functio to __getc_unlocked and make
+	* libio/getc_u.c: Rename function to __getc_unlocked and make
 	getc_unlocked and fgetc_unlocked weak aliases.
 	* libio/stdio.h: Add prototype for fgetc_unlocked.
 
