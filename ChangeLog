@@ -1,5 +1,8 @@
 2001-04-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconv_prog.c (print_known_names): If printing goes not to
+	a tty print in a more machine-friendly way.
+
 	* sysdeps/ieee754/ldbl-128/e_asinl.c: New file.
 	Contributed by Stephen L Moshier <moshier@mediaone.net>.
 

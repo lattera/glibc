@@ -586,7 +586,7 @@ insert_print_list (const void *nodep, VISIT value, int level)
 }
 
 static void
-do_print  (const void *nodep, VISIT value, int level)
+do_print_human  (const void *nodep, VISIT value, int level)
 {
   if (value == leaf || value == postorder)
     {
@@ -624,6 +624,17 @@ do_print  (const void *nodep, VISIT value, int level)
 
       fwrite (s, len, 1, stdout);
       column += len;
+    }
+}
+
+static void
+do_print  (const void *nodep, VISIT value, int level)
+{
+  if (value == leaf || value == postorder)
+    {
+      const char *s = *(const char **) nodep;
+
+      puts (s);
     }
 }
 
@@ -672,8 +683,13 @@ listed with several different names (aliases).\n\n  "), stdout);
 
   /* Now print the collected names.  */
   column = 2;
-  twalk (printlist, do_print);
+  if (isatty (fileno (stdout)))
+    {
+      twalk (printlist, do_print_human);
 
-  if (column != 0)
-    puts ("");
+      if (column != 0)
+	puts ("");
+    }
+  else
+    twalk (printlist, do_print);
 }
