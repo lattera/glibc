@@ -1,3 +1,8 @@
+2002-01-07  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup): Use
+	volatile on type of ARGC so the compiler doesn't get clever.
+
 2002-01-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/bits/byteswap.h: Prevent double inclusion.
