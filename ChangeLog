@@ -1,5 +1,27 @@
 2000-10-13  Michael Fedrowitz  <michael@fedrowitz.de>
 
+	* sysdeps/unix/sysv/linux/m68k/alphasort64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/fcntl.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/glob64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/lockf64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/oldgetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/scandir64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setrlimit.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/versionsort64.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Add oldgetrlimit64.c.
+	* sysdeps/unix/sysv/linux/m68k/Makefile: Add oldgetrlimit64.
+	* sysdeps/unix/sysv/linux/m68k/Versions: Export __xstat64,
+	__fxstat64, __lxstat64, alphasort64, glob64, getrlimit, setrlimit,
+	getrlimit64, readdir64, readdir64_r, scandir64, versionsort64 at
+	GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Add oldgetrlimit,
+	oldsetrlimit for GLIBC_2.0.
+
 	* sysdeps/m68k/dl-machine.h (_dl_start_user): Pass correct
 	arguments to _dl_init.
 
