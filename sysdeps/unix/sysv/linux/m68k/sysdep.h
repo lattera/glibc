@@ -158,4 +158,50 @@ SYSCALL_ERROR_LABEL:							      \
 #define	MOVE(x,y)	movel x , y
 #endif
 
-#endif	/* __ASSEMBLER__ */
+#else /* not __ASSEMBLER__ */
+
+/* Define a macro which expands into the inline wrapper code for a system
+   call.  */
+#undef INLINE_SYSCALL
+#define INLINE_SYSCALL(name, nr, args...)		\
+  ({ unsigned int _sys_result;				\
+     {							\
+       LOAD_ARGS_##nr (args)				\
+       register int _d0 asm ("%d0") = __NR_##name;	\
+       asm volatile ("trap #0"				\
+		     : "=d" (_d0)			\
+		     : "0" (_d0) ASM_ARGS_##nr		\
+		     : "d0");				\
+       _sys_result = _d0;				\
+     }							\
+     if (_sys_result >= (unsigned int) -4095)		\
+       {						\
+	 __set_errno (-_sys_result);			\
+	 _sys_result = (unsigned int) -1;		\
+       }						\
+     (int) _sys_result; })
+
+#define LOAD_ARGS_0()
+#define ASM_ARGS_0
+#define LOAD_ARGS_1(a1)				\
+  register int _d1 asm ("d1") = (int) (a1);	\
+  LOAD_ARGS_0 ()
+#define ASM_ARGS_1	ASM_ARGS_0, "d" (_d1)
+#define LOAD_ARGS_2(a1, a2)			\
+  register int _d2 asm ("d2") = (int) (a2);	\
+  LOAD_ARGS_1 (a1)
+#define ASM_ARGS_2	ASM_ARGS_1, "d" (_d2)
+#define LOAD_ARGS_3(a1, a2, a3)			\
+  register int _d3 asm ("d3") = (int) (a3);	\
+  LOAD_ARGS_2 (a1, a2)
+#define ASM_ARGS_3	ASM_ARGS_2, "d" (_d3)
+#define LOAD_ARGS_4(a1, a2, a3, a4)		\
+  register int _d4 asm ("d4") = (int) (a4);	\
+  LOAD_ARGS_3 (a1, a2, a3)
+#define ASM_ARGS_4	ASM_ARGS_3, "d" (_d4)
+#define LOAD_ARGS_5(a1, a2, a3, a4, a5)		\
+  register int _d5 asm ("d5") = (int) (a5);	\
+  LOAD_ARGS_4 (a1, a2, a3, a4)
+#define ASM_ARGS_5	ASM_ARGS_4, "d" (_d5)
+
+#endif /* not __ASSEMBLER__ */
