@@ -1,3 +1,23 @@
+1998-04-1 16:52  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/socket.S: Correct test for error and
+	use PLTJMP() rather than explicit (PLT).
+
+	* sysdeps/arm/elf/start.S: Leave most of the initialisation for
+	__libc_start_main().
+
+	Based on patch from Pat Beirne:
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Always define, not only #ifndef PIC.
+	(DO_CALL): Pass fifth argument correctly in R4.
+	(PSEUDO): Correct test for error, call syscall_error through PLT
+	if PIC.
+
+1998-03-31 10:51  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/netash/ash.h: Fix typos and add new
+	definitions.
+
 1998-04-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Remove extra dependencies for EUC-KR.so and

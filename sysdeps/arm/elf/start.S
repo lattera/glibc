@@ -24,19 +24,19 @@
 	This includes _init and _libc_init
 
 
-	At this entry point, most registers' values are unspecified, except for:
+	At this entry point, most registers' values are unspecified, except:
 
-   r0		Contains a function pointer to be registered with `atexit'.
+   a1		Contains a function pointer to be registered with `atexit'.
    		This is how the dynamic linker arranges to have DT_FINI
 		functions called for shared libraries that have been loaded
 		before this code runs.
 
    sp		The stack contains the arguments and environment:
-   		0(%esp)			argc
-		4(%esp)			argv[0]
+   		0(sp)			argc
+		4(sp)			argv[0]
 		...
-		(4*argc)(%esp)		NULL
-		(4*(argc+1))(%esp)	envp[0]
+		(4*argc)(sp)		NULL
+		(4*(argc+1))(sp)	envp[0]
 		...
 					NULL
 */
@@ -44,61 +44,28 @@
 	.text
 	.globl _start
 _start:
-	/* Clear the frame pointer.  The Intel ABI suggests this be done,
-		to mark the outermost frame obviously. This seems like a
-		sensible thing to do  */
+	/* Clear the frame pointer since this is the outermost frame.  */
 	mov fp, #0
 
-	/* r0 contains the address of the shared library termination
-	   function, which we will register with `atexit' to be called by
-	   `exit'.  I suspect that on some systems, and when statically
-	   linked, this will not be set by anything to any function
-	   pointer; hopefully it will be zero so we don't try to call
-	   random pointers.  */
-	cmp r0,#0
-	blne atexit(PLT)
+	/* Pop argc off the stack and save a pointer to argv */
+	ldmfd sp!, {a2}
+	mov a3, sp
 
-	/* Do essential libc initialization.  In statically linked
-	   programs under the GNU Hurd, this is what sets up the
-	   arguments on the stack for the code below. For dyn-link
-	   programs, this has been run already, in the .init code. */
-#ifndef PIC
-	bl __libc_init_first
+	/* Push the last arguments to main() onto the stack */
+	stmfd sp!, {a1}
+	ldr a1, =_fini
+	stmfd sp!, {a1}
 
-	/* Extract the arguments and environment as encoded on the stack
-	   and set up the arguments for `main': argc, argv, envp.  */
-	ldr r0,[sp]
-	add r1,sp,#4
-	add r2,r1,r0,lsl #2
-	add r2,r2,#4
-	/* save a copy of envp while we have it */
-	ldr r3,L_environ
-	str r2,[r3]
+	/* Set up the other arguments for main() that go in registers */
+	ldr a1, =main
+	ldr a4, =_init
 
-	/* Call `_init', which is the entry point to our own `.init'
-	   section; and register with `atexit' to have `exit' call
-	   `_fini', which is the entry point to our own `.fini' section.  */
-	bl _init
-	ldr r0,L_fini
-	bl atexit
-	b L_pfini
+	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini) */
 
-L_fini:	.word _fini
-L_environ: .word _environ
-L_pfini:
-#endif
-	/* rebuild the arg list for main() */
-	ldr r0,[sp]
-	add r1,sp,#4
-	add r2,r1,r0,lsl #2
-	add r2,r2,#4
-
-	/* Call the user's main function, and exit with its value.  */
-	bl main
-	bl exit
+	/* Let the libc call main and exit with its return code.  */
+	bl __libc_start_main
 	/* should never get here....*/
 	bl abort
-
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

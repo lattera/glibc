@@ -43,7 +43,7 @@ ENTRY (__socket)
 
 	/* r0 is < 0 if there was an error.  */
 	cmn r0, $124
-	bge syscall_error(PLT)
+	bhs PLTJMP(syscall_error)
 
 	/* Successful; return the syscall's value.  */
 	RETINSTR(mov,pc,r14)
