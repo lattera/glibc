@@ -1,3 +1,10 @@
+2003-05-28  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/setcontext.S: Pass fourth argument to
+	rt_sigprocmask system call.
+	* sysdeps/unix/sysv/linux/ia64/ucontext_i.h (SC_MASK): Fix value.
+	From Peter A. Buhr <pabuhr@plg2.math.uwaterloo.ca>.
+
 2003-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libc-symbols.h: Define hidden attribute for real also if
