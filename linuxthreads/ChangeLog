@@ -1,3 +1,81 @@
+2002-08-26 Brian Youmans <3diff@gnu.org>
+
+	* Examples/ex10.c: Likewise.
+	* Examples/ex11.c: Likewise.
+	* Examples/ex13.c: Likewise.
+	* Examples/ex8.c: Likewise.
+	* Examples/ex9.c: Likewise.
+	* barrier.c: Likewise.
+	* events.c: Likewise.
+	* lockfile.c: Likewise.
+	* no-tsd.c: Likewise.
+	* pt-machine.c: Likewise.
+	* ptclock_gettime.c: Likewise.
+	* ptclock_settime.c: Likewise.
+	* rwlock.c: Likewise.
+	* sysdeps/alpha/pspinlock.c: Likewise.
+	* sysdeps/alpha/pt-machine.h: Likewise.
+	* sysdeps/arm/pspinlock.c: Likewise.
+	* sysdeps/arm/pt-machine.h: Likewise.
+	* sysdeps/cris/pspinlock.c: Likewise.
+	* sysdeps/cris/pt-machine.h: Likewise.
+	* sysdeps/hppa/pspinlock.c: Likewise.
+	* sysdeps/hppa/pt-machine.h: Likewise.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+	* sysdeps/i386/pspinlock.c: Likewise.
+	* sysdeps/i386/pt-machine.h: Likewise.
+	* sysdeps/i386/useldt.h: Likewise.
+	* sysdeps/ia64/pspinlock.c: Likewise.
+	* sysdeps/ia64/pt-machine.h: Likewise.
+	* sysdeps/m68k/pspinlock.c: Likewise.
+	* sysdeps/m68k/pt-machine.h: Likewise.
+	* sysdeps/mips/pspinlock.c: Likewise.
+	* sysdeps/mips/pt-machine.h: Likewise.
+	* sysdeps/powerpc/pspinlock.c: Likewise.
+	* sysdeps/powerpc/pt-machine.h: Likewise.
+	* sysdeps/pthread/bits/initspin.h: Likewise.
+	* sysdeps/pthread/bits/libc-lock.h: Likewise.
+	* sysdeps/pthread/bits/libc-tsd.h: Likewise.
+	* sysdeps/pthread/getcpuclockid.c: Likewise.
+	* sysdeps/pthread/posix-timer.h: Likewise.
+	* sysdeps/pthread/timer_create.c: Likewise.
+	* sysdeps/pthread/timer_delete.c: Likewise.
+	* sysdeps/pthread/timer_getoverr.c: Likewise.
+	* sysdeps/pthread/timer_gettime.c: Likewise.
+	* sysdeps/pthread/timer_routines.c: Likewise.
+	* sysdeps/pthread/timer_settime.c: Likewise.
+	* sysdeps/pthread/tst-timer.c: Likewise.
+	* sysdeps/s390/pspinlock.c: Likewise.
+	* sysdeps/s390/s390-32/pt-machine.h: Likewise.
+	* sysdeps/s390/s390-64/pt-machine.h: Likewise.
+	* sysdeps/sh/pspinlock.c: Likewise.
+	* sysdeps/sh/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/pspinlock.c: Likewise.
+	* sysdeps/sparc/sparc32/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/pspinlock.c: Likewise.
+	* sysdeps/sparc/sparc64/pspinlock.c: Likewise.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigthread.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/initspin.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+	* tststack.c: Likewise.
+	* unload.c: Likewise.
+	* weaks.c: Likewise.
+	* wrapsyscall.c: Likewise.
+
+	* sysdeps/pthread/pt-initfini.c: Changed copying
+	permission notice to Lesser GPL from Library GPL, including the
+	references in the special exception.
+	* sysdeps/unix/sysv/linux/hppa/pt-initfini.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/pt-initfini.c: Likewise.
+
 2002-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* Examples/ex10.c (thread): tv_nsec == 1000000000 is already
