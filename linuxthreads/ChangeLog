@@ -1,3 +1,7 @@
+2002-09-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/Makefile (CFLAGS-pt-initfini.s): New variable.
+
 2002-09-01  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/pthread/bits/libc-tsd.h (enum __libc_tsd_key_t): Add new keys

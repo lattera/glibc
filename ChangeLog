@@ -4,8 +4,6 @@
 	__pthread_initialize_minimal and __libc_check_standard_fds to
 	match the generic version.
 
-	* sysdeps/powerpc/Makefile (CFLAGS-pt-initfini.s): New variable.
-
 	* sysdeps/unix/sysv/linux/shmat.c (shmat): Add a cast to avoid a
 	warning when INLINE_SYSCALL macro uses the __syscall_ipc function.
 
