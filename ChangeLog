@@ -1,3 +1,8 @@
+2003-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-strncpy.c (do_one_test): Makr start and stop as
+	possibly unused.
+
 2003-04-15  Roland McGrath  <roland@redhat.com>
 
 	* libio/fileops.c (_IO_file_close_it): Macro tweak to avoid warning.
