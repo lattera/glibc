@@ -74,6 +74,8 @@ int _dl_starting_up;
    (except those which cannot be added for some reason).  */
 struct rtld_global _rtld_global =
   {
+    /* Get architecture specific initializer.  */
+#include <dl-procinfo.c>
     ._dl_debug_fd = STDERR_FILENO,
 #if 1
     /* XXX I know about at least one case where we depend on the old

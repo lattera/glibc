@@ -1,5 +1,5 @@
 /* Linux/i386 version of processor capability information handling macros.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,12 +23,8 @@
 
 #include <ldsodefs.h>
 
-/* If anything should be added here check whether the size of each string
-   is still ok with the given array size.  */
-extern const char _dl_x86_cap_flags[][7];
 #define _DL_HWCAP_COUNT 32
 
-extern const char _dl_x86_platforms[][5];
 #define _DL_PLATFORMS_COUNT	4
 
 /* Start at 48 to reserve some space.  */
@@ -49,7 +45,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", _dl_x86_cap_flags[i]);
+      _dl_printf (" %s", GL(dl_x86_cap_flags)[i]);
 
   _dl_printf ("\n");
 
@@ -60,14 +56,14 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return _dl_x86_cap_flags[idx];
+  return GL(dl_x86_cap_flags)[idx];
 };
 
 static inline const char *
 __attribute__ ((unused))
 _dl_platform_string (int idx)
 {
-  return _dl_x86_platforms [idx - _DL_FIRST_PLATFORM];
+  return GL(dl_x86_platforms)[idx - _DL_FIRST_PLATFORM];
 };
 
 enum
@@ -107,7 +103,7 @@ _dl_string_hwcap (const char *str)
 
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, _dl_x86_cap_flags[i]) == 0)
+      if (strcmp (str, GL(dl_x86_cap_flags)[i]) == 0)
 	return i;
     }
   return -1;
@@ -123,7 +119,7 @@ _dl_string_platform (const char *str)
   if (str != NULL)
     for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
       {
-	if (strcmp (str, _dl_x86_platforms[i]) == 0)
+	if (strcmp (str, GL(dl_x86_platforms)[i]) == 0)
 	  return _DL_FIRST_PLATFORM + i;
       }
   return -1;

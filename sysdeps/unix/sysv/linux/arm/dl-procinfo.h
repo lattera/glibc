@@ -1,5 +1,5 @@
 /* Linux/ARM version of processor capability information handling macros.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>, 2001.
 
@@ -23,9 +23,6 @@
 
 #include <ldsodefs.h>
 
-/* If anything should be added here check whether the size of each string
-   is still ok with the given array size.  */
-extern const char _dl_arm_cap_flags[][10];
 #define _DL_HWCAP_COUNT 32
 
 /* The kernel provides platform data but it is not interesting.  */
@@ -42,7 +39,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", _dl_arm_cap_flags[i]);
+      _dl_printf (" %s", GL(dl_arm_cap_flags)[i]);
 
   _dl_printf ("\n");
 
@@ -53,7 +50,7 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return _dl_arm_cap_flags[idx];
+  return GL(dl_arm_cap_flags)[idx];
 };
 
 enum
@@ -78,7 +75,7 @@ _dl_string_hwcap (const char *str)
 
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, _dl_arm_cap_flags[i]) == 0)
+      if (strcmp (str, GL(dl_arm_cap_flags)[i]) == 0)
 	return i;
     }
   return -1;

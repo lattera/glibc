@@ -278,9 +278,12 @@ struct rtld_global
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
 
-  /* Start time on CPU clock.  */
 #if HP_TIMING_AVAIL
+  /* Start time on CPU clock.  */
   EXTERN hp_timing_t _dl_cpuclock_offset;
+
+  /* Overhead of a high-precision timing measurement.  */
+  EXTERN hp_timing_t _dl_hp_timing_overhead;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */
@@ -319,6 +322,10 @@ struct rtld_global
 
   /* File descriptor to write debug messages to.  */
   EXTERN int _dl_debug_fd;
+
+  /* Get architecture specific definitions.  */
+#define PROCINFO_DECL
+#include <dl-procinfo.c>
 
   /* Structure describing the dynamic linker itself.  */
   EXTERN struct link_map _dl_rtld_map;

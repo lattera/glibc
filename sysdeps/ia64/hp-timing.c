@@ -1,5 +1,5 @@
 /* Support for high precision, low overhead timing functions.  IA-64 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2001.
 
@@ -21,4 +21,4 @@
 #include <hp-timing.h>
 
 /* We have to define the variable for the overhead.  */
-hp_timing_t __libc_hp_timing_overhead;
+hp_timing_t _dl_hp_timing_overhead;

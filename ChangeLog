@@ -1,5 +1,25 @@
 2002-01-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-minimal.c: Define _itoa for 32-bit machines with HP timing.
+	* elf/dl-reloc.c: Pretty printing.
+	* sysdeps/generic/ldsodefs.h: Move _dl_hp_timing_overhead and
+	procinfo-related variables in rtld_global struct.
+	* elf/dl-support.c: Likewise.
+	* elf/rtld.c: Likewise.
+	* sysdeps/i386/i686/Makefile: Likewise.
+	* sysdeps/i386/i686/hp-timing.c: Likewise.
+	* sysdeps/i386/i686/hp-timing.h: Likewise.
+	* sysdeps/ia64/Makefile: Likewise.
+	* sysdeps/ia64/hp-timing.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
+	* sysdeps/x86_64/Makefile: Likewise.
+
 	* sysdeps/generic/ldsodefs.h: Add _dl_load_lock, _dl_lazy,
 	_dl_dynamic_weak, _dl_fpu_control, _dl_cpuclock_offset, and
 	_dl_debug_fd to rtld_global.

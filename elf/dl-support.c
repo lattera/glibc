@@ -91,6 +91,9 @@ struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 /* Nonzero during startup.  */
 int _dl_starting_up = 1;
 
+/* Get architecture specific initializer.  */
+#include <dl-procinfo.c>
+
 /* We expect less than a second for relocation.  */
 #ifdef HP_SMALL_TIMING_AVAIL
 # undef HP_TIMING_AVAIL

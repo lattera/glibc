@@ -268,3 +268,26 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
     *endptr = (char *) nptr;
   return result * sign;
 }
+
+
+#if HP_TIMING_AVAIL && ULONG_MAX <= 4294967295UL
+/* We need this function to print the cycle count.  On 64-bit machines the
+   _itoa_word function should be used.  */
+char *
+_itoa (value, buflim, base, upper_case)
+     unsigned long long int value;
+     char *buflim;
+     unsigned int base;
+     int upper_case;
+{
+  char *bp = buflim;
+
+  assert (base == 10);
+
+  do
+    *--bp = '0' + value % 10;
+  while ((value /= 10) != 0);
+
+  return bp;
+}
+#endif

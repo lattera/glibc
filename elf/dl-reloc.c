@@ -138,7 +138,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
 	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
-		? (bump_num_cache_relocations (),				      \
+		? (bump_num_cache_relocations (),			      \
 	   (*ref) = l->l_lookup_cache.ret,				      \
 	   l->l_lookup_cache.value)					      \
 	: ({ lookup_t _lr;						      \
