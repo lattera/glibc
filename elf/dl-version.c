@@ -1,5 +1,5 @@
 /* Handle symbol and library versioning.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -28,7 +28,9 @@
 #include <assert.h>
 
 
-#define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
+#ifndef VERSYMIDX
+# define VERSYMIDX(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
+#endif
 
 
 #define make_string(string, rest...) \
@@ -75,8 +77,7 @@ internal_function
 match_symbol (const char *name, ElfW(Word) hash, const char *string,
 	      struct link_map *map, int verbose, int weak)
 {
-  const char *strtab = (const char *) (map->l_addr
-				       + map->l_info[DT_STRTAB]->d_un.d_ptr);
+  const char *strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
   ElfW(Addr) def_offset;
   ElfW(Verdef) *def;
 
@@ -86,7 +87,7 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 		       map->l_name[0] ? map->l_name : _dl_argv[0],
 		       " required by file ", name, "\n", NULL);
 
-  if (map->l_info[VERSTAG (DT_VERDEF)] == NULL)
+  if (map->l_info[VERSYMIDX (DT_VERDEF)] == NULL)
     {
       /* The file has no symbol versioning.  I.e., the dependent
 	 object was linked against another version of this file.  We
@@ -98,7 +99,7 @@ no version information available (required by ",
       return 0;
     }
 
-  def_offset = map->l_info[VERSTAG (DT_VERDEF)]->d_un.d_ptr;
+  def_offset = map->l_info[VERSYMIDX (DT_VERDEF)]->d_un.d_ptr;
   assert (def_offset != 0);
 
   def = (ElfW(Verdef) *) ((char *) map->l_addr + def_offset);
@@ -173,10 +174,10 @@ _dl_check_map_versions (struct link_map *map, int verbose)
   /* If we don't have a string table, we must be ok.  */
   if (map->l_info[DT_STRTAB] == NULL)
     return 0;
-  strtab = (const char *) (map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+  strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
 
-  dyn = map->l_info[VERSTAG (DT_VERNEED)];
-  def = map->l_info[VERSTAG (DT_VERDEF)];
+  dyn = map->l_info[VERSYMIDX (DT_VERNEED)];
+  def = map->l_info[VERSYMIDX (DT_VERDEF)];
 
   if (dyn != NULL)
     {
@@ -282,8 +283,8 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 	  map->l_nversions = ndx_high + 1;
 
 	  /* Compute the pointer to the version symbols.  */
-	  map->l_versyms = ((void *) map->l_addr
-			    + map->l_info[VERSTAG (DT_VERSYM)]->d_un.d_ptr);
+	  map->l_versyms =
+	    (void *) map->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
 
 	  if (dyn != NULL)
 	    {

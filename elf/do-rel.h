@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,8 +40,8 @@ elf_dynamic_do_rel (struct link_map *map,
 		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
 		    int lazy)
 {
-  const ElfW(Rel) *r = (const ElfW(Rel) *)(map->l_addr + reladdr);
-  const ElfW(Rel) *end = (const ElfW(Rel) *)(map->l_addr + reladdr + relsize);
+  const ElfW(Rel) *r = (const void *) reladdr;
+  const ElfW(Rel) *end = (const void *) (reladdr + relsize);
 
   if (lazy)
     {
@@ -53,13 +53,12 @@ elf_dynamic_do_rel (struct link_map *map,
   else
     {
       const ElfW(Sym) *const symtab =
-	(const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+	(const void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
 
       if (map->l_info[VERSYMIDX (DT_VERSYM)])
 	{
 	  const ElfW(Half) *const version =
-	    (const ElfW(Half) *) (map->l_addr
-				  + map->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+	    (const void *) map->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr;
 
 	  for (; r < end; ++r)
 	    {

@@ -149,8 +149,7 @@ _dl_map_object_deps (struct link_map *map,
 
       if (l->l_info[DT_NEEDED] || l->l_info[AUXTAG] || l->l_info[FILTERTAG])
 	{
-	  const char *strtab = ((void *) l->l_addr
-				+ l->l_info[DT_STRTAB]->d_un.d_ptr);
+	  const char *strtab = (const void *) l->l_info[DT_STRTAB]->d_un.d_ptr;
 	  struct openaux_args args;
 	  struct list *orig;
 	  const ElfW(Dyn) *d;

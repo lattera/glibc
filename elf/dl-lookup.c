@@ -110,8 +110,8 @@ do_lookup (const char *undef_name, unsigned long int hash,
 			   map->l_name[0] ? map->l_name : _dl_argv[0],
 			   "\n", NULL);
 
-      symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-      strtab = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+      symtab = (const void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
+      strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
       verstab = map->l_versyms;
 
       /* Search the appropriate hash bucket in this object's symbol table

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -213,8 +213,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	      extern char **_dl_argv;
 	      const char *strtab;
 
-	      strtab = ((void *) map->l_addr
-			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
+	      strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
 	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "

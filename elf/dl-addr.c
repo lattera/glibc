@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,8 +62,8 @@ _dl_addr (const void *address, Dl_info *info)
   info->dli_fname = match->l_name;
   info->dli_fbase = (void *) match->l_addr;
 
-  symtab = ((void *) match->l_addr + match->l_info[DT_SYMTAB]->d_un.d_ptr);
-  strtab = ((void *) match->l_addr + match->l_info[DT_STRTAB]->d_un.d_ptr);
+  symtab = (const void *) match->l_info[DT_SYMTAB]->d_un.d_ptr;
+  strtab = (const void *) match->l_info[DT_STRTAB]->d_un.d_ptr;
 
   /* We assume that the string table follows the symbol table, because
      there is no way in ELF to know the size of the dynamic symbol table!!  */

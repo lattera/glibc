@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -144,8 +144,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   ElfW(Addr) *got;
   ElfW(Sym) *sym;
   int i, n;
-  const char *strtab
-    = ((void *) map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+  const char *strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
 
 #define RESOLVE_GOTSYM(sym) \
     ({ \
@@ -170,8 +169,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 
   /* Handle global got entries. */
   got += n;
-  sym = (ElfW(Sym) *) ((void *) map->l_addr
-		       + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+  sym = (void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
   sym += map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
   i = (map->l_info[DT_MIPS (SYMTABNO)]->d_un.d_val
        - map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val);
@@ -348,9 +346,9 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 {									      \
   struct link_map *l = elf_machine_runtime_link_map (old_gpreg, stub_pc);     \
   const ElfW(Sym) *const symtab						      \
-    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);     \
+    = (const void *) l->l_info[DT_SYMTAB]->d_un.d_ptr;			      \
   const char *strtab							      \
-    = (void *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);		      \
+    = (const void *) l->l_info[DT_STRTAB]->d_un.d_ptr;			      \
   const ElfW(Addr) *got							      \
     = (const ElfW(Addr) *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);    \
   const ElfW(Word) local_gotno						      \

@@ -1,5 +1,53 @@
 1999-02-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dynamic-link.h (elf_get_dynamic_info): Take new argument with
+	load address.  Relocate d_ptr in DT_DTRTAB, DT_SYMTAB, DT_RELA, DT_REL,
+	DT_JMPREL, DT_PLTGOT, and DT_VERSYM l_info entry.
+	(_ELF_DYNAMIC_DO_RELOC): Take extra argument which specifies whether
+	rel and rela relocations can both happen and skip one test if this
+	is not possible.
+	(ELF_DYNAMIC_DO_RELA, ELF_DYNAMIC_DO_REL): Call _ELF_DYNAMIC_DO_RELOC
+	appropriately.
+	* elf/dl-addr.c (_dl_addr): DT_SYMTAB and DT_STRTAB entries are
+	already relocated.
+	* elf/dl-deps.c (_dl_map_object_deps): DT_STRTAB entry is already
+	relocated.
+	* elf/dl-load.c (_dl_init_paths): DT_STRTAB entry is already relocated.
+	(_dl_map_object_from_fd): Call elf_get_dynamic_info with new argument.
+	(_dl_map_object): DT_STRTAB entry is already relocated.
+	* elf/dl-lookup.c (do_lookup): DT_STRTAB and DT_SYMTAB entries are
+	already relocated.
+	* elf/dl-reloc.c (_dl_relocate_object): DT_STRTAB entry is already
+	relocated.
+	* elf/dl-runtime.c (fixup): DT_SYMTAB, DT_STRTAB, DT_JMPREL, and
+	DT_VERSYM entries are already relocated.
+	(profile_fixup): Likewise.
+	* elf/dl-version.c: Rename VERSTAG macro into VERSYMIDX.  Replace
+	all users.
+	(match_symbol): DT_STRTAB entry is already relocated.
+	(_dl_check_map_versions): Likewise.  Also fo DT_VERSYM.
+	* elf/do-rel.h (elf_dynamic_do_rel): reladdr is now assumed to be
+	relocated already.  DT_SYMTAB and DT_VERSYM entries are also relocated.
+	* elf/rtld.c (_dl_start): Pass extra argument to elf_get_dynamic_info.
+	(find_needed): DT_STRTAB entry is already relocated.
+	(dl_main): Pass extra argument to elf_get_dynamic_info.
+	DT_STRTAB entry is already relocated.
+	* sysdeps/alpha/dl-machine.h (elf_machine_fixup_plt): DT_JMPREL and
+	DT_PLTGOT entries are already relocated.
+	(elf_machine_rela): Likewise for DT_SYMTAB.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): DT_STRTAB is already
+	relocated.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Likewise.
+	(elf_machine_got_rel): Likewise for DT_SYMTAB and DT_STRTAB.
+
+	* grp/initgroups.c (initgroups): If function in current module was
+	successful don't stop but continue to process to get all the groups.
+
 	* elf/dl-load.c (_dl_map_object_from_fd): Use global
 	_dl_pf_to_proot array to convert p_flags value.
 	* elf/dl-reloc.c (_dl_relocate_object): Likewise.

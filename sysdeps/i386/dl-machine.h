@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -339,8 +339,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    {
 	      const char *strtab;
 
-	      strtab = ((const char *) map->l_addr
-			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
+	      strtab = (const char *) map->l_info[DT_STRTAB]->d_un.d_ptr;
 	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 				": Symbol `", strtab + refsym->st_name,
 				"' has different size in shared object, "
@@ -359,7 +358,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	   /* This is defined in rtld.c, but nowhere in the static
 	      libc.a; make the reference weak so static programs can
 	      still link.  This declaration cannot be done when
-	      compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP) because
+	      compiling rtld.c (i.e. #ifdef RTLD_BOOTSTRAP) because
 	      rtld.c contains the common defn for _dl_rtld_map, which
 	      is incompatible with a weak decl in the same file.  */
 	    weak_extern (_dl_rtld_map);

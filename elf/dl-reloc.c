@@ -66,8 +66,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   {
     /* Do the actual relocation of the object's GOT and other data.  */
 
-    const char *strtab		/* String table object symbols.  */
-      = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
+    /* String table object symbols.  */
+    const char *strtab = (const void *) l->l_info[DT_STRTAB]->d_un.d_ptr;
 
     /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
 #define RESOLVE(ref, version, flags) \

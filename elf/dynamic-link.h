@@ -21,6 +21,10 @@
 #include <dl-machine.h>
 #include <assert.h>
 
+#ifndef VERSYMIDX
+# define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
+#endif
+
 
 /* Global read-only variable defined in rtld.c which is nonzero if we
    shall give more warning messages.  */
@@ -30,13 +34,10 @@ extern int _dl_verbose __attribute__ ((unused));
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void __attribute__ ((unused))
-elf_get_dynamic_info (ElfW(Dyn) *dyn,
+elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Addr) l_addr,
 		      ElfW(Dyn) *info[DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM
 				     + DT_EXTRANUM])
 {
-  memset (info, '\0', ((DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM + DT_EXTRANUM)
-		       * sizeof (ElfW(Dyn) *)));
-
   if (! dyn)
     return;
 
@@ -48,7 +49,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 	       dyn->d_tag < DT_LOPROC + DT_PROCNUM)
 	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
       else if ((Elf32_Word) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
-	info[DT_VERSIONTAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM] = dyn;
+	info[VERSYMIDX (dyn->d_tag)] = dyn;
       else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
 	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM
 	     + DT_VERSIONTAGNUM] = dyn;
@@ -57,13 +58,41 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
       ++dyn;
     }
 
-  if (info[DT_RELA])
-    assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
-  if (info[DT_REL])
-    assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
-  if (info[DT_PLTREL])
-    assert (info[DT_PLTREL]->d_un.d_val == DT_REL ||
-	    info[DT_PLTREL]->d_un.d_val == DT_RELA);
+  if (info[DT_PLTGOT] != NULL)
+    info[DT_PLTGOT]->d_un.d_ptr += l_addr;
+  if (info[DT_STRTAB] != NULL)
+    info[DT_STRTAB]->d_un.d_ptr += l_addr;
+  if (info[DT_SYMTAB] != NULL)
+    info[DT_SYMTAB]->d_un.d_ptr += l_addr;
+#if ! ELF_MACHINE_NO_RELA
+  if (info[DT_RELA] != NULL)
+    {
+      assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
+      info[DT_RELA]->d_un.d_ptr += l_addr;
+    }
+#endif
+#if ! ELF_MACHINE_NO_REL
+  if (info[DT_REL] != NULL)
+    {
+      assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
+      info[DT_REL]->d_un.d_ptr += l_addr;
+    }
+#endif
+  if (info[DT_PLTREL] != NULL)
+    {
+#if ELF_MACHINE_NO_RELA
+      assert (info[DT_PLTREL]->d_un.d_val == DT_REL);
+#elif ELF_MACHINE_NO_REL
+      assert (info[DT_PLTREL]->d_un.d_val == DT_RELA);
+#else
+      assert (info[DT_PLTREL]->d_un.d_val == DT_REL
+	      || info[DT_PLTREL]->d_un.d_val == DT_RELA);
+#endif
+    }
+  if (info[DT_JMPREL] != NULL)
+    info[DT_JMPREL]->d_un.d_ptr += l_addr;
+  if (info[VERSYMIDX (DT_VERSYM)] != NULL)
+    info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr += l_addr;
 }
 
 #ifdef RESOLVE
@@ -73,13 +102,13 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
    duplicating their code.  It cannot be done in a more general function
    because we must be able to completely inline.  */
 
-/* On some machines, notably Sparc, DT_REL* includes DT_JMPREL in its
+/* On some machines, notably SPARC, DT_REL* includes DT_JMPREL in its
    range.  Note that according to the ELF spec, this is completely legal!
    But conditionally define things so that on machines we know this will
    not happen we do something more optimal.  */
 
-#ifdef ELF_MACHINE_PLTREL_OVERLAP
-#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy) \
+# ifdef ELF_MACHINE_PLTREL_OVERLAP
+#  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, test_rel) \
   do {									      \
     struct { ElfW(Addr) start, size; int lazy; } ranges[3];		      \
     int ranges_index;							      \
@@ -96,7 +125,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 									      \
      if ((do_lazy)							      \
 	&& (map)->l_info[DT_PLTREL]					      \
-	&& (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
+	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
 	ranges[1].start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;		      \
 	ranges[1].size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
@@ -111,8 +140,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 			      ranges[ranges_index].size,		      \
 			      ranges[ranges_index].lazy);		      \
   } while (0)
-#else
-#define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy) \
+# else
+#  define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, test_rel) \
   do {									      \
     struct { ElfW(Addr) start, size; int lazy; } ranges[2];		      \
     int ranges_index;							      \
@@ -125,8 +154,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
         ranges[0].start = (map)->l_info[DT_##RELOC]->d_un.d_ptr;	      \
         ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
       }									      \
-    if ((map)->l_info[DT_PLTREL] &&					      \
-	(map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)		      \
+    if ((map)->l_info[DT_PLTREL]					      \
+	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
 	ElfW(Addr) start = (map)->l_info[DT_JMPREL]->d_un.d_ptr;	      \
 									      \
@@ -151,28 +180,34 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 			      ranges[ranges_index].size,		      \
 			      ranges[ranges_index].lazy);		      \
   } while (0)
-#endif
+# endif
 
-#if ! ELF_MACHINE_NO_REL
-#include "do-rel.h"
-#define ELF_DYNAMIC_DO_REL(map, lazy) \
-  _ELF_DYNAMIC_DO_RELOC (REL, rel, map, lazy)
-#else
-#define ELF_DYNAMIC_DO_REL(map, lazy) /* Nothing to do.  */
-#endif
+# if ELF_MACHINE_NO_REL || ELF_MACHINE_NO_RELA
+#  define _ELF_CHECK_REL 0
+# else
+#  define _ELF_CHECK_REL 1
+# endif
 
-#if ! ELF_MACHINE_NO_RELA
-#define DO_RELA
-#include "do-rel.h"
-#define ELF_DYNAMIC_DO_RELA(map, lazy) \
-  _ELF_DYNAMIC_DO_RELOC (RELA, rela, map, lazy)
-#else
-#define ELF_DYNAMIC_DO_RELA(map, lazy) /* Nothing to do.  */
-#endif
+# if ! ELF_MACHINE_NO_REL
+#  include "do-rel.h"
+#  define ELF_DYNAMIC_DO_REL(map, lazy) \
+  _ELF_DYNAMIC_DO_RELOC (REL, rel, map, lazy, _ELF_CHECK_REL)
+# else
+#  define ELF_DYNAMIC_DO_REL(map, lazy) /* Nothing to do.  */
+# endif
+
+# if ! ELF_MACHINE_NO_RELA
+#  define DO_RELA
+#  include "do-rel.h"
+#  define ELF_DYNAMIC_DO_RELA(map, lazy) \
+  _ELF_DYNAMIC_DO_RELOC (RELA, rela, map, lazy, _ELF_CHECK_REL)
+# else
+#  define ELF_DYNAMIC_DO_RELA(map, lazy) /* Nothing to do.  */
+# endif
 
 /* This can't just be an inline function because GCC is too dumb
    to inline functions containing inlines themselves.  */
-#define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile) \
+# define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile) \
   do {									      \
     int edr_lazy = elf_machine_runtime_setup ((map), (lazy),		      \
 					      (consider_profile));	      \

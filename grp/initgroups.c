@@ -1,4 +1,4 @@
-/* Copyright (C) 1989, 91, 93, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 91, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -198,7 +198,8 @@ initgroups (user, group)
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
 	 __libc_fatal ("illegal status in " __FUNCTION__);
 
-      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
+      if (status != NSS_STATUS_SUCCESS
+	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
 	 break;
 
       if (nip->next == NULL)

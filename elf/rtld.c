@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -156,7 +156,8 @@ _dl_start (void *arg)
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
-  elf_get_dynamic_info (bootstrap_map.l_ld, bootstrap_map.l_info);
+  elf_get_dynamic_info (bootstrap_map.l_ld, bootstrap_map.l_addr,
+			bootstrap_map.l_info);
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -290,8 +291,7 @@ find_needed (const char *name)
 static int
 match_version (const char *string, struct link_map *map)
 {
-  const char *strtab = (const char *) (map->l_addr
-				       + map->l_info[DT_STRTAB]->d_un.d_ptr);
+  const char *strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
   ElfW(Verdef) *def;
 
 #define VERDEFTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERDEF))
@@ -575,7 +575,8 @@ of this helper program; chances are you did not intend to run this program.\n\
     assert (_dl_rtld_map.l_libname); /* How else did we get here?  */
 
   /* Extract the contents of the dynamic section for easy access.  */
-  elf_get_dynamic_info (_dl_loaded->l_ld, _dl_loaded->l_info);
+  elf_get_dynamic_info (_dl_loaded->l_ld, _dl_loaded->l_addr,
+			_dl_loaded->l_info);
   if (_dl_loaded->l_info[DT_HASH])
     /* Set up our cache of pointers into the hash table.  */
     _dl_setup_hash (_dl_loaded);
@@ -889,8 +890,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		  if (dyn == NULL)
 		    continue;
 
-		  strtab = (const char *)
-		    (map->l_addr + map->l_info[DT_STRTAB]->d_un.d_ptr);
+		  strtab = (const void *) map->l_info[DT_STRTAB]->d_un.d_ptr;
 		  ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
 
 		  if (first)

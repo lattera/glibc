@@ -531,9 +531,9 @@ _dl_init_paths (const char *llp)
 	/* Allocate room for the search path and fill in information
 	   from RPATH.  */
 	l->l_rpath_dirs =
-	  decompose_rpath ((const char *)
-			   (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
-			    + l->l_info[DT_RPATH]->d_un.d_val), l);
+	  decompose_rpath ((const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
+					   + l->l_info[DT_RPATH]->d_un.d_val),
+			   l);
       else
 	l->l_rpath_dirs = NULL;
     }
@@ -983,7 +983,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 			 "  phnum:   ", buf3, "\n\n", NULL);
     }
 
-  elf_get_dynamic_info (l->l_ld, l->l_info);
+  elf_get_dynamic_info (l->l_ld, l->l_addr, l->l_info);
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
 
@@ -1208,8 +1208,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (l->l_info[DT_SONAME] == NULL)
 	    continue;
 
-	  soname = (const char *) (l->l_addr
-				   + l->l_info[DT_STRTAB]->d_un.d_ptr
+	  soname = (const void *) (l->l_info[DT_STRTAB]->d_un.d_ptr
 				   + l->l_info[DT_SONAME]->d_un.d_val);
 	  if (strcmp (name, soname) != 0)
 	    continue;
@@ -1248,8 +1247,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	    /* Make sure the cache information is available.  */
 	    if (l->l_rpath_dirs == NULL)
 	      {
-		size_t ptrval = (l->l_addr
-				 + l->l_info[DT_STRTAB]->d_un.d_ptr
+		size_t ptrval = (l->l_info[DT_STRTAB]->d_un.d_ptr
 				 + l->l_info[DT_RPATH]->d_un.d_val);
 		l->l_rpath_dirs =
 		  decompose_rpath ((const char *) ptrval, l);
