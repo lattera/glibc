@@ -1,5 +1,10 @@
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/gai.c: Define __no_netlink_support if NEED_NETLINK is
+	defined and __ASSUME_NETLINK_SUPPORT is zero.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-gai.c): Add
+	-DNEED_NETLINK.
+
 	* malloc/mtrace.pl: Avoid calling location unless it is needed for
 	output.  Patch by Edward Bishop <binutils@gmail.com>.
 

@@ -153,4 +153,5 @@ endif
 
 ifeq ($(subdir),nscd)
 CFLAGS-connections.c += -DHAVE_EPOLL
+CFLAGS-gai.c += -DNEED_NETLINK
 endif

@@ -19,3 +19,7 @@
 
 /* Some variables normally defined in libc.  */
 service_user *__nss_hosts_database;
+
+#if defined NEED_NETLINK && __ASSUME_NETLINK_SUPPORT == 0
+int __no_netlink_support attribute_hidden;
+#endif
