@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,12 @@ subdir	:= time
 headers	:= time.h sys/time.h sys/timeb.h bits/time.h
 
 routines := offtime asctime clock ctime ctime_r difftime \
-	    gmtime localtime mktime strftime time	 \
+	    gmtime localtime mktime time		 \
 	    gettimeofday settimeofday adjtime tzset	 \
 	    tzfile getitimer setitimer			 \
 	    stime dysize timegm ftime			 \
-	    strptime getdate wcsftime
-
+	    strptime getdate				 \
+	    strftime wcsftime strftime_l wcsftime_l
 distribute := datemsk
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \

@@ -699,6 +699,21 @@ extern size_t wcsftime (wchar_t *__restrict __s, size_t __maxsize,
 			__const wchar_t *__restrict __format,
 			__const struct tm *__restrict __tp) __THROW;
 
+# ifdef __USE_GNU
+# include <xlocale.h>
+
+/* Similar to `wcsftime' but takes the information from
+   the provided locale and not the global locale.  */
+extern size_t __wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
+			    __const wchar_t *__restrict __format,
+			    __const struct tm *__restrict __tp,
+			    __locale_t __loc) __THROW;
+extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
+			  __const wchar_t *__restrict __format,
+			  __const struct tm *__restrict __tp,
+			  __locale_t __loc) __THROW;
+# endif
+
 /* The X/Open standard demands that most of the functions defined in
    the <wctype.h> header must also appear here.  This is probably
    because some X/Open members wrote their implementation before the

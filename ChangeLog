@@ -1,5 +1,15 @@
 2002-08-27  Roland McGrath  <roland@redhat.com>
 
+	* time/time.h (__strptime_l, strptime_l): Declare them.
+
+	* time/time.h (__strftime_l, strftime_l): Declare them.
+	* wcsmbs/wchar.h (__wcsftime_l, wcsftime_l): Declare them.
+	* time/strftime_l.c: New file.
+	* time/wcsftime_l.c: New file.
+	* time/Makefile (routines): Add strftime_l, wcsftime_l.
+	* time/Versions (libc: GLIBC_2.3): Add __strftime_l, __wcsftime_l,
+	strftime_l, wcsftime_l.
+
 	* locale/Versions (libc: GLIBC_PRIVATE): Move __uselocale to ...
 	(libc: GLIBC_2.3): ... here.
 

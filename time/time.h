@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -188,6 +188,28 @@ extern char *strptime (__const char *__restrict __s,
      __THROW;
 # endif
 
+# ifdef __USE_GNU
+/* Similar to the two functions above but take the information from
+   the provided locale and not the global locale.  */
+# include <xlocale.h>
+
+extern size_t __strftime_l (char *__restrict __s, size_t __maxsize,
+			    __const char *__restrict __format,
+			    __const struct tm *__restrict __tp,
+			    __locale_t __loc) __THROW;
+extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
+			  __const char *__restrict __format,
+			  __const struct tm *__restrict __tp,
+			  __locale_t __loc) __THROW;
+
+extern char *__strptime_l (__const char *__restrict __s,
+			   __const char *__restrict __fmt, struct tm *__tp,
+			   __locale_t __loc) __THROW;
+extern char *strptime_l (__const char *__restrict __s,
+			 __const char *__restrict __fmt, struct tm *__tp,
+			 __locale_t __loc) __THROW;
+# endif
+
 
 /* Return the `struct tm' representation of *TIMER
    in Universal Coordinated Time (aka Greenwich Mean Time).  */
@@ -357,7 +379,6 @@ extern struct tm *getdate (__const char *__string) __THROW;
 extern int getdate_r (__const char *__restrict __string,
 		      struct tm *__restrict __resbufp) __THROW;
 # endif
-
 
 __END_DECLS
 
