@@ -740,9 +740,7 @@ have-thread-library = yes
 rpath-dirs += linuxthreads
 endif
 
-ifndef avoid-generated
 -include $(common-objpfx)sysd-dirs
-endif
 
 # These are the subdirectories containing the library source.  The order
 # is more or less arbitrary.  The sorting step will take care of the
@@ -770,6 +768,7 @@ endif
 subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 	   $(filter-out mach hurd,$(subdirs))
 
+ifndef avoid-generated
 all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
 $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 	$(AWK) 'BEGIN { subdirs = ""; inhibit = "" };			\
@@ -796,5 +795,6 @@ $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 	 done								\
 	) | $(AWK) -f $< > $@-tmp
 	mv -f $@-tmp $@
+endif
 
 endif # Makeconfig not yet included
