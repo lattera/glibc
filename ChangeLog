@@ -1,3 +1,9 @@
+2001-07-04  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): For SS->suspended
+	wakeup message, use MACH_MSG_TYPE_MAKE_SEND for the receiver port
+	rather than doing a mach_port_insert_right call first.
+
 2001-06-26  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdioctl.c: Include <string.h> for memcpy decl.

@@ -1014,11 +1014,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    /* There is a sigsuspend waiting.  Tell it to wake up.  */
 	    error_t err;
 	    mach_msg_header_t msg;
-	    err = __mach_port_insert_right (__mach_task_self (),
-					    ss->suspended, ss->suspended,
-					    MACH_MSG_TYPE_MAKE_SEND);
-	    assert_perror (err);
-	    msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MOVE_SEND, 0);
+	    msg.msgh_bits = MACH_MSGH_BITS (MACH_MSG_TYPE_MAKE_SEND, 0);
 	    msg.msgh_remote_port = ss->suspended;
 	    msg.msgh_local_port = MACH_PORT_NULL;
 	    /* These values do not matter.  */
