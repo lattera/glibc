@@ -1,3 +1,8 @@
+1999-05-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (LOCALEDEF): Add I18NPATH definition to find the
+	correct sources.
+
 1999-05-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ru_RU: Abbreviate Saturday Sbt.
