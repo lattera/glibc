@@ -1,3 +1,13 @@
+2000-07-12  H.J. Lu  <hjl@gnu.org>
+
+	* resolv/Versions (libresolv): Add __res_hostalias to GLIBC_2.2
+	for _nss_dns_gethostbyname2_r in resolv/nss_dns/dns-host.c.
+
+2000-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Shut gcc up although
+	it is wrong.
+
 2000-07-12  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_open.c (__gconv_open): Merge duplicated code.

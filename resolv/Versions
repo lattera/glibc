@@ -52,7 +52,7 @@ libresolv {
   }
   GLIBC_2.2 {
     __res_nmkquery; __res_nquery; __res_nquerydomain; __res_nsearch;
-    __ns_get16;
+    __ns_get16; __res_hostalias;
 }
 
 libnss_dns {

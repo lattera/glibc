@@ -1,3 +1,27 @@
+2000-07-11  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (locale_test_suite): Always run test suite.
+	($(addprefix $(objpfx),$(CTYPE_FILES))): Add extra parameter for
+	gen-locale.sh.
+	(do-collate-test): Likewise.
+	(do-tst-fmon): Likewise.
+	(do-tst-locale): Likewise.
+	(do-tst-rpmatch): Likewise.
+	(do-tst-trans): Likewise.
+	(do-tst-mbswcs): Likewise.
+	(do-tst-ctype): Likewise.
+
+	* sort-test.sh : Rewrite to work with static only builds.
+	* tst-ctype.sh: Likewise.
+	* tst-fmon.sh: Likewise.
+	* tst-locale.sh: Likewise.
+	* tst-mbswcs.sh: Likewise.
+	* tst-rpmatch.sh: Likewise.
+	* tst-trans.sh: Likewise.
+
+	* gen-locale.sh (locfile): Fix it for building with
+	sourcedir==builddir and for static only builds.
+
 2000-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/POSIX: Remove repertoire map reference.

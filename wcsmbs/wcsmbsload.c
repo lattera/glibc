@@ -182,8 +182,8 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	     since the internal character set is supposed to be able to
 	     represent all others.  */
 	  new_towc = getfct ("INTERNAL", complete_name);
-	  if (new_towc != NULL)
-	    new_tomb = getfct (complete_name, "INTERNAL");
+	  new_tomb = (new_towc != NULL
+		      ? getfct (complete_name, "INTERNAL") : NULL);
 
 	  /* If any of the conversion functions is not available we don't
 	     use any since this would mean we cannot convert back and
