@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -273,6 +273,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		test-skeleton.c include/des.h include/libc-internal.h	\
 		include/shlib-compat.h include/pthread.h Versions.def	\
 		cppflags-iterator.mk tls.make.c				\
+		include/stubs-prologue.h include/gnu/stubs.h		\
 		INTERFACE CONFORMANCE NAMESPACE LICENSES	        \
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
@@ -280,7 +281,8 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 			    test-installation.pl gen-FAQ.pl versions.awk\
 			    gen-sorted.awk abi-versions.awk abilist.awk	\
 			    firstversions.awk documented.sh cpp		\
-			    output-format.sed gen-as-const.awk)
+			    output-format.sed gen-as-const.awk		\
+			    merge-abilist.awk extract-abilist.awk)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h

@@ -75,7 +75,10 @@ distribute	:= rtld-Rules \
 		   tls-macros.h \
 		   reldep8mod1.c reldep8mod2.c reldep8mod3.c \
 		   nodel2mod1.c nodel2mod2.c nodel2mod3.c \
-		   reldep9mod1.c reldep9mod2.c reldep9mod3.c
+		   reldep9.c reldep9mod1.c reldep9mod2.c reldep9mod3.c \
+		   tst-array1.exp tst-array2.exp tst-array4.exp \
+		   tst-array2dep.c \
+		   check-textrel.c dl-sysdep.h
 
 include ../Makeconfig
 

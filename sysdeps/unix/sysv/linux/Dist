@@ -45,6 +45,7 @@ netipx/ipx.h
 netrom/netrom.h
 netrose/rose.h
 nfs/nfs.h
+pathconf.h
 rt_sigaction.c
 rt_sigpending.c
 rt_sigprocmask.c

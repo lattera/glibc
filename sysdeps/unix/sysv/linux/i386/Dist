@@ -1,3 +1,4 @@
+bp-thunks.h
 clone.S
 olddirent.h
 oldgetrlimit64.c

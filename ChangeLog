@@ -1,10 +1,26 @@
+2003-02-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.3.2.
+
+	* elf/Makefile (distribute): Add reldep9.c, tst-array1.exp,
+	tst-array2.exp, tst-array4.exp, tst-array2dep.c, check-textrel.c,
+	and dl-sysdep.h.
+	* sysdeps/generic/Dist: Add sysdep-cancel.h.
+	* sysdeps/powerpc/nofpu/Dist: Add soft-supp.h.
+	* sysdeps/unix/Dist: Add s-proto-bp.S and s-proto-cancel.S.
+	* sysdeps/unix/sysv/linux/Dist: Add pathconf.h.
+	* sysdeps/unix/sysv/linux/i386/Dist: Add bp-thunk.h.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Dist: Add fe_nomask.c and
+	ucontext_i.h.
+	* Makefile (distribute): Add include/stubs-prologue.h,
+	include/gnu/stubs.h, scripts/merge-abilist.awk, and
+	scripts/extract-abilist.awk.
+
 2003-02-20  Roland McGrath  <roland@redhat.com>
 
 	* math/Makefile (distribute): Don't add generated files.
 
 2003-02-20  Ulrich Drepper  <drepper@redhat.com>
-
-	* version.h (VERSION): Bump to 2.3.2.
 
 	* math/Makefile: Rearrange variable definitions slightly to get
 	definition in the right order.
@@ -20,7 +36,7 @@
 	* inet/rcmd.c (rresvport_af): Avoid using invliad values.  Wrap
 	around in search if port IPPORT_RESERVED/2 has been test.
 
-2002-02-20  Paolo Bonzini <bonzini@gnu.org>
+2002-02-20  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c: Remove inclusions.
 	* posix/regexec.c: Likewise.
