@@ -1,3 +1,8 @@
+2001-04-11  Hans-Peter Nilsson  <hp@axis.com>
+
+	* sysdeps/generic/bits/fenv.h (fexcept_t): Change default type
+	from struct to unsigned int.
+
 2001-04-10  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* elf/elf.h (AT_DCACHEBSIZE, AT_ICACHEBSIZE, AT_UCACHEBSIZE,
