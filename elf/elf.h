@@ -342,6 +342,8 @@ typedef struct
 #define SHF_LINK_ORDER	     (1 << 7)	/* Preserve order after combining */
 #define SHF_OS_NONCONFORMING (1 << 8)	/* Non-standard OS specific handling
 					   required */
+#define SHF_GROUP	     (1 << 9)	/* Section is member of a group.  */
+#define SHF_TLS		     (1 << 10)	/* Section hold thread-local data.  */
 #define SHF_MASKOS	     0x0ff00000	/* OS-specific.  */
 #define SHF_MASKPROC	     0xf0000000	/* Processor-specific */
 

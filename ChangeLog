@@ -1,3 +1,7 @@
+2001-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Define SHF_GROUP and SHF_TLS.
+
 2001-09-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (struct cmsghdr): Don't
