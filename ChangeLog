@@ -1,3 +1,10 @@
+2003-04-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/debugreg.h
+	(DR_CONTROL_RESERVED): Use correct value for 64-bit.
+	Reported by Andrew Derrick Balsa <andrebalsa@mailingaddress.org>.
+	Add bi-arch support.
+
 2003-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (mEMALIGn): Define alias __memalign_internal.
