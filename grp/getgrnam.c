@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,27 +24,13 @@ Cambridge, MA 02139, USA.  */
 
 /* Search for an entry with a matching name.  */
 struct group *
-DEFUN(getgrnam, (name), register CONST char *name)
+DEFUN(getgrnam, (name), const char *name)
 {
-  static PTR info = NULL;
-  register FILE *stream;
-  register struct group *g;
-
-  if (info == NULL)
+  int match (struct group *p)
     {
-      info = __grpalloc();
-      if (info == NULL)
-	return NULL;
+      return ! strcmp (name, p->gr_name);
     }
+  static void *info;
 
-  stream = __grpopen();
-  if (stream == NULL)
-    return NULL;
-
-  while ((g = __grpread(stream, info)) != NULL)
-    if (!strcmp(g->gr_name, name))
-      break;
-
-  (void) fclose(stream);
-  return g;
+  return __grpscan (&info, &match);
 }

@@ -1,3 +1,31 @@
+Fri Aug 25 12:12:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/mmap.c: Fix inverted test of MAP_FIXED.
+
+	* stdio/vfscanf.c (number): Allow field width to inhibit first
+	digit after base detection.
+
+	* stdio/vfprintf.c (vfprintf: %s): Never search past the limit
+	specified by the precision.
+
+	* grp/grpread.c (__grpscan): New function.
+	* grp/grp.h (__grpscan): Declare it.
+	* grp/getgrgid.c: Use __grpscan.
+	* grp/getgrnam.c: Likewise.
+	* pwd/pwdread.c (__pwdscan): New function.
+	* pwd/pwd.h (__pwdscan): Declare it.
+	* pwd/getpwnam.c: Use __pwdscan.
+	* pwd/getpwuid.c: Likewise.
+
+Thu Aug 24 16:29:40 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/mmap.c: Treat (FLAGS & MAP_TYPE) == 0 like
+	MAP_FILE.
+
+	* hurd/thread-cancel.c: Return EINTR when called on self.
+	* sysdeps/i386/elf/start.S (data_start): Define as weak alias for
+	__data_start.
+
 Tue Aug 22 16:49:12 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* inet/netdb.h: Moved to resolv.

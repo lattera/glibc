@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -113,4 +113,35 @@ DEFUN(__pwdread, (stream, p), FILE *stream AND PTR CONST p)
   info->p.pw_shell = start;
 
   return &info->p;
+}
+
+
+struct passwd *
+__pwdscan (void **info, int (*selector) (struct passwd *))
+{
+  FILE *stream;
+  struct passwd *p;
+
+  if (*info == NULL)
+    {
+      *info = __pwdalloc ();
+      if (info == NULL)
+	return NULL;
+    }
+
+  stream = __pwdopen ();
+  if (stream == NULL)
+    return NULL;
+
+  p = NULL;
+  while (! feof (stream))
+    {
+      p = __pwdread (stream, *info);
+      if (p && (*selector) (p))
+	break;
+      p = NULL;
+    }
+
+  (void) fclose (stream);
+  return p;
 }

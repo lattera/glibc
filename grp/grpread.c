@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -132,4 +132,35 @@ DEFUN(__grpread, (stream, g), FILE *stream AND PTR CONST g)
   info->g.gr_mem = info->members;
 
   return &info->g;
+}
+
+
+struct group *
+__grpscan (void **info, int (*selector) (struct group *))
+{
+  FILE *stream;
+  struct group *p;
+
+  if (*info == NULL)
+    {
+      *info = __grpalloc ();
+      if (info == NULL)
+	return NULL;
+    }
+
+  stream = __grpopen ();
+  if (stream == NULL)
+    return NULL;
+
+  p = NULL;
+  while (! feof (stream))
+    {
+      p = __grpread (stream, *info);
+      if (p && (*selector) (p))
+	break;
+      p = NULL;
+    }
+
+  (void) fclose (stream);
+  return p;
 }

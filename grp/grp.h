@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -55,6 +55,11 @@ extern struct group *__grpread __P ((FILE * __stream, __ptr_t __g));
 
 /* Return a chunk of memory containing pre-initialized data for __grpread.  */
 extern __ptr_t __grpalloc __P ((void));
+
+/* Scan the group file, filling in G, until SELECTOR returns nonzero for an
+   entry.  Return the `struct group' of G if successful, NULL on failure.  */
+extern struct group *__grpscan __P ((__ptr_t *__p,
+				     int (*__selector) (struct group *)));
 #endif
 
 

@@ -42,6 +42,8 @@ hurd_thread_cancel (thread_t thread)
 
   if (! ss)
     return EINVAL;
+  if (ss == _hurd_self_sigstate ())
+    return EINTR;		/* Bozo.  */
 
   __spin_lock (&ss->lock);
   assert (! ss->critical_section);

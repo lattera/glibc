@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,27 +24,13 @@ Cambridge, MA 02139, USA.  */
 
 /* Search for an entry with a matching name.  */
 struct passwd *
-DEFUN(getpwnam, (name), register CONST char *name)
+DEFUN(getpwnam, (name), const char *name)
 {
-  static PTR info = NULL;
-  register FILE *stream;
-  register struct passwd *p;
-
-  if (info == NULL)
+  int match (struct passwd *p)
     {
-      info = __pwdalloc();
-      if (info == NULL)
-	return(NULL);
+      return ! strcmp (name, p->pw_name);
     }
+  static void *info;
 
-  stream = __pwdopen();
-  if (stream == NULL)
-    return(NULL);
-
-  while ((p = __pwdread(stream, info)) != NULL)
-    if (!strcmp(p->pw_name, name))
-      break;
-
-  (void) fclose(stream);
-  return(p);
+  return __pwdscan (&info, &match);
 }

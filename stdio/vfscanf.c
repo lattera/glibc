@@ -422,7 +422,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	    base = 10;
 
 	  /* Read the number into WORK.  */
-	  do
+	  while (width != 0 && c != EOF)
 	    {
 	      if (base == 16 ? !isxdigit(c) :
 		  (!isdigit(c) || c - '0' >= base))
@@ -430,11 +430,12 @@ DEFUN(__vfscanf, (s, format, arg),
 	      *w++ = c;
 	      if (width > 0)
 		--width;
-	    } while (inchar() != EOF && width != 0);
+	      (void) inchar ();
+	    }
 
 	  if (w == work ||
 	      (w - work == 1 && (work[0] == '+' || work[0] == '-')))
-	    /* There was on number.  */
+	    /* There was no number.  */
 	    conv_error();
 
 	  /* Convert the number.  */

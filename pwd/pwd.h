@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,6 +58,12 @@ extern struct passwd *__pwdread __P ((FILE * __stream, __ptr_t __p));
 
 /* Return a chunk of memory containing pre-initialized data for __pwdread.  */
 extern __ptr_t __pwdalloc __P ((void));
+
+/* Scan the password file, filling in P, until SELECTOR returns nonzero for
+   an entry.  Return the `struct passwd' of P if successful, NULL on
+   failure.  */
+extern struct passwd *__pwdscan __P ((__ptr_t *__p,
+				      int (*__selector) (struct passwd *)));
 #endif
 
 

@@ -533,21 +533,16 @@ vfprintf (s, format, ap)
 		}
               else if (specs[cnt].info.prec != -1)
 		{
+		  /* Search for the end of the string, but don't search
+                     past the length specified by the precision.  */
 		  const char *end = memchr (str, '\0', specs[cnt].info.prec);
 		  if (end)
 		    len = end - str;
 		  else
-		    len = strlen (str);
-		}
-	      else
-		{
-		  len = strlen (str);
-
-		  if (specs[cnt].info.prec != -1
-		      && (size_t) specs[cnt].info.prec < len)
-		    /* Limit the length to the precision.  */
 		    len = specs[cnt].info.prec;
 		}
+	      else
+		len = strlen (str);
 
               specs[cnt].info.width -= len;
 
