@@ -1,5 +1,19 @@
 2001-06-17  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (restore, restore_rt):
+	Declare these without `static', to avoid warning that we haven't
+	defined them.
+
+	* Makerules (build-module-helper-objlist): New variable,
+	broken out of build-module.  Insert --whole-archive/--no-whole-archive
+	immediately each *_pic.a file in the link object list.
+	(whole-archive): New variable, used by that.
+	(build-module-objlist): New variable using build-module-helper-objlist.
+	(build-module, build-module-helper): Use it.
+	(build-shlib-objlist): New variable using build-module-helper-objlist.
+	(build-shlib): Use that.
+	* sysdeps/mach/hurd/Makefile ($(link-rpcuserlibs)): Likewise.
+
 	* posix/spawni.c: Moved to ...
 	* sysdeps/posix/spawni.c: ... here.
 	* sysdeps/generic/spawni.c: New file.

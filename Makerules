@@ -117,6 +117,11 @@ $(common-objpfx)abi-versions.h: $(..)scripts/abi-versions.awk \
 				$(common-objpfx)Versions.all
 	LC_ALL=C $(AWK) -v oldest_abi=$(oldest-abi) -f $^ > $@T
 	mv -f $@T $@
+
+$(common-objpfx)%.latest: $(common-objpfx)abi-versions.h
+	sed -n '/ VERSION_$*_/{s/^.*_\([A-Z0-9_]*\).*$$/\1/;h;};$${g;p;}' \
+	    $(common-objpfx)abi-versions.h > $@T
+	mv -f $@T $@
 endif # avoid-generated
 endif # $(versioning) = yes
 
@@ -410,17 +415,13 @@ $(build-shlib-helper) \
 	  > $@.lds
 rm -f $@.new
 $(build-shlib-helper) -o $@ -T $@.lds \
-	  -Wl,--whole-archive $(csu-objpfx)abi-note.o \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
+	  $(csu-objpfx)abi-note.o $(build-shlib-objlist)
 rm -f $@.lds
 endef
 else
 define build-shlib
 $(build-shlib-helper) \
-	  -o $@ -Wl,--whole-archive \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
+	  $(build-shlib-objlist)
 endef
 endif
 
@@ -445,19 +446,25 @@ $(build-module-helper) \
 	  > $@.lds
 rm -f $@.new
 $(build-module-helper) -o $@ -T $@.lds \
-	  -Wl,--whole-archive $(csu-objpfx)abi-note.o \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
+	  $(csu-objpfx)abi-note.o $(build-module-objlist)
 rm -f $@.lds
 endef
 else
 define build-module
 $(build-module-helper) \
-	  -o $@ -Wl,--whole-archive \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
+	  -o $@ \
+	  $(build-module-objlist)
 endef
 endif
+
+build-module-helper-objlist = \
+	$(patsubst %_pic.a,$(whole-archive) %_pic.a $(no-whole-archive),\
+		   $(filter-out $(map-file) $(+preinit) $(+postinit),$^))
+whole-archive := -Wl,--whole-archive
+
+build-module-objlist = $(build-module-helper-objlist) $(LDLIBS-$(@F:%.so=%).so)
+build-shlib-objlist = $(build-module-helper-objlist) \
+		      $(LDLIBS-$(@F:lib%.so=%).so)
 
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want

@@ -151,11 +151,9 @@ endif
 $(link-rpcuserlibs): %-link.so: %_pic.a
 # These shared objects are just for the purpose of linking libc,
 # so they don't need abi-note.o linked into them.
-	$(build-module-helper) \
-		-o $@ -nostdlib -Wl,-soname=$(*F).so$($(*F).so-version) \
-		-Wl,--whole-archive \
-		$(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-		$(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
+	$(build-shlib-helper) \
+		-nostdlib -o $@ \
+		$(build-shlib-objlist)
 
 # And get them into the libc.so ldscript.
 $(inst_libdir)/libc.so: $(rpcuserlibs)
