@@ -1,5 +1,8 @@
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (_dl_start_final): Determine load address to locate
+	ehdr with GL(dl_rtld_map).l_map_start.
+
 	* po/ca.po: Update from translation team.
 
 	* elf/rtld.c (dl_main): Read PT_TLS entry of the executable.

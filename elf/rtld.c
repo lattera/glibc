@@ -252,8 +252,8 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 
 #if USE_TLS
   /* Get the dynamic linkers program header.  */
-  ehdr = (ElfW(Ehdr) *) bootstrap_map_p->l_addr;
-  phdr = (ElfW(Phdr) *) (bootstrap_map_p->l_addr + ehdr->e_phoff);
+  ehdr = (ElfW(Ehdr) *) GL(dl_rtld_map).l_map_start;
+  phdr = (ElfW(Phdr) *) (GL(dl_rtld_map).l_map_start + ehdr->e_phoff);
   for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
     if (phdr[cnt].p_type == PT_TLS)
       {
