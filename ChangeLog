@@ -1,5 +1,9 @@
 2004-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/readlib.c (process_file): Before complaining about too-short
+	file, check that it potentially be an ELF file.  Also complain about
+	empty files.  [BZ #151].
+
 	* scripts/test-installation.pl: Fix ld.so recognition for new
 	LD_TRACE_LOADED_OBJECTS output format.
 	Patch by <jsberg04+computing.glibc@ftml.net>  [BZ #407].

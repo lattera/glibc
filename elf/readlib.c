@@ -105,7 +105,15 @@ process_file (const char *real_file_name, const char *file_name,
   if ((size_t) statbuf.st_size < sizeof (struct exec)
       || (size_t) statbuf.st_size < sizeof (ElfW(Ehdr)))
     {
-      error (0, 0, _("File %s is too small, not checked."), file_name);
+      if (statbuf.st_size == 0)
+	error (0, 0, _("File %s is empty, not checked."), file_name);
+      else
+	{
+	  char buf[SELFMAG];
+	  size_t n = MIN (statbuf.st_size, SELFMAG);
+	  if (fread (buf, n, 1, file) == 1 && memcmp (buf, ELFMAG, n) == 0)
+	    error (0, 0, _("File %s is too small, not checked."), file_name);
+	}
       fclose (file);
       return 1;
     }
