@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,20 +21,13 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include <sys/syssgi.h>
 
+extern int __syssgi __P ((int, ...));
+
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
 int
 DEFUN(__getrusage, (who, usage),
       enum __rusage_who who AND struct rusage *usage)
 {
-  return syssgi(SGI_RUSAGE, who, usage);
+  return __syssgi (SGI_RUSAGE, who, usage);
 }
-
-
-#ifdef	 HAVE_GNU_LD
-
-#include <gnu-stabs.h>
-
-stub_warning(__getrusage);
-
-#endif	/* GNU stabs.  */

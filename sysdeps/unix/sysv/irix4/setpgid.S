@@ -16,16 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sys/syssgi.h>
-#include <ansidecl.h>
-#include <sys/types.h>
-#include <grp.h>
+#include <sysdep.h>
 
-extern int __syssgi __P ((int, ...));
-
-/* Set the group set for the current user to GROUPS (N of them).  */
-int
-DEFUN(setgroups, (n, groups), size_t n AND CONST gid_t *groups)
-{
-  return __syssgi (SGI_SETGROUPS, n, groups);
-}   
+PSEUDO (__setpgrp, bsdsetpgrp, 2)
+	ret

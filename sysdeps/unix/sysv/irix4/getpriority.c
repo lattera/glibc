@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@ Cambridge, MA 02139, USA.  */
 #include <sys/resource.h>
 #include <sys/sysmp.h>
 
+extern int __sysmp __P ((int, ...));
+
 /* Return the highest priority of any process specified by WHICH and WHO
    (see <sys/resource.h>); if WHO is zero, the current process, process group,
    or user (as specified by WHO) is used.  A lower priority number means higher
@@ -29,12 +31,16 @@ int
 DEFUN(getpriority, (which, who),
       enum __priority_which which AND int who)
 {
-  if(which == PRIO_PROCESS)
-    return(sysmp(MP_SCHED, MPTS_GTNICE_PROC, who));
-  else if(which == PRIO_PGRP)
-    return(sysmp(MP_SCHED, MPTS_GTNICE_PGRP, who));
-  else if(which == PRIO_USER)
-    return(sysmp(MP_SCHED, MPTS_GTNICE_USER, who));
+  switch (which)
+    {
+    case PRIO_PROCESS:
+      return __sysmp (MP_SCHED, MPTS_GTNICE_PROC, who);
+    case PRIO_PGRP:
+      return __sysmp (MP_SCHED, MPTS_GTNICE_PGRP, who);
+    case PRIO_USER:
+      return __sysmp (MP_SCHED, MPTS_GTNICE_USER, who);
+    }
+
   errno = EINVAL;
   return -1;
 }
