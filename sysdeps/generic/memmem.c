@@ -36,7 +36,7 @@ memmem (haystack, haystack_len, needle, needle_len)
   if (needle_len == 0)
     /* The first occurrence of the empty string is deemed to occur at
        the beginning of the string.  */
-    return (void *) &((const char *) haystack);
+    return (void *) haystack;
 
   for (begin = (const char *) haystack; begin <= last_possible; ++begin)
     if (begin[0] == ((const char *) needle)[0] &&
