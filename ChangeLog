@@ -1,5 +1,9 @@
 1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/time.h: Add forward for struct sigevent.  Unix98 maybe
+	requires to have a full definition but we wait for a bug report
+	based on the test suite.
+
 	* sysdeps/generic/clock_getres.c: New file.
 	* sysdeps/generic/clock_gettime.c: New file.
 	* sysdeps/generic/clock_settime.c: New file.

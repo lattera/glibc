@@ -127,6 +127,10 @@ struct itimerspec
     struct timespec it_interval;
     struct timespec it_value;
   };
+
+/* We can use a simple forward declaration.  */
+struct sigevent;
+
 #endif	/* POSIX.1b */
 
 
