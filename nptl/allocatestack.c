@@ -112,7 +112,7 @@ get_cached_stack (size_t *sizep, void **memp)
     {
       struct pthread *curr;
 
-      curr = list_entry (entry, struct pthread, header.data.list);
+      curr = list_entry (entry, struct pthread, list);
       if (FREE_P (curr) && curr->stackblock_size >= size)
 	{
 	  if (curr->stackblock_size == size)
@@ -139,10 +139,10 @@ get_cached_stack (size_t *sizep, void **memp)
     }
 
   /* Dequeue the entry.  */
-  list_del (&result->header.data.list);
+  list_del (&result->list);
 
   /* And add to the list of stacks in use.  */
-  list_add (&result->header.data.list, &stack_used);
+  list_add (&result->list, &stack_used);
 
   /* And decrease the cache size.  */
   stack_cache_actsize -= result->stackblock_size;
@@ -178,7 +178,7 @@ queue_stack (struct pthread *stack)
   /* We unconditionally add the stack to the list.  The memory may
      still be in use but it will not be reused until the kernel marks
      the stack as not used anymore.  */
-  list_add (&stack->header.data.list, &stack_cache);
+  list_add (&stack->list, &stack_cache);
 
   stack_cache_actsize += stack->stackblock_size;
   if (__builtin_expect (stack_cache_actsize > stack_cache_maxsize, 0))
@@ -193,7 +193,7 @@ queue_stack (struct pthread *stack)
 	{
 	  struct pthread *curr;
 
-	  curr = list_entry (entry, struct pthread, header.data.list);
+	  curr = list_entry (entry, struct pthread, list);
 	  if (FREE_P (curr))
 	    {
 	      /* Unlink the block.  */
@@ -277,13 +277,16 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	 stack cache nor will the memory (except the TLS memory) be freed.  */
       pd->user_stack = true;
 
+#ifdef TLS_MULTIPLE_THREADS_IN_TCB
       /* This is at least the second thread.  */
-      pd->header.data.multiple_threads = 1;
+      pd->multiple_threads = 1;
+#else
+      __pthread_multiple_threads = __libc_multiple_threads = 1;
+#endif
 
 #ifdef NEED_DL_SYSINFO
       /* Copy the sysinfo value from the parent.  */
-      pd->header.data.sysinfo
-	= THREAD_GETMEM (THREAD_SELF, header.data.sysinfo);
+      pd->sysinfo = THREAD_GETMEM (THREAD_SELF, sysinfo);
 #endif
 
       /* Allocate the DTV for this thread.  */
@@ -296,7 +299,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       lll_lock (stack_cache_lock);
 
       /* And add to the list of stacks in use.  */
-      list_add (&pd->header.data.list, &__stack_user);
+      list_add (&pd->list, &__stack_user);
 
       lll_unlock (stack_cache_lock);
     }
@@ -384,13 +387,16 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  pd->lock = LLL_LOCK_INITIALIZER;
 #endif
 
+#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 	  /* This is at least the second thread.  */
-	  pd->header.data.multiple_threads = 1;
+	  pd->multiple_threads = 1;
+#else
+	  __pthread_multiple_threads = __libc_multiple_threads = 1;
+#endif
 
 #ifdef NEED_DL_SYSINFO
 	  /* Copy the sysinfo value from the parent.  */
-	  pd->header.data.sysinfo
-	    = THREAD_GETMEM (THREAD_SELF, header.data.sysinfo);
+	  pd->sysinfo = THREAD_GETMEM (THREAD_SELF, sysinfo);
 #endif
 
 	  /* Allocate the DTV for this thread.  */
@@ -410,7 +416,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  lll_lock (stack_cache_lock);
 
 	  /* And add to the list of stacks in use.  */
-	  list_add (&pd->header.data.list, &stack_used);
+	  list_add (&pd->list, &stack_used);
 
 	  lll_unlock (stack_cache_lock);
 
@@ -435,7 +441,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      lll_lock (stack_cache_lock);
 
 	      /* Remove the thread from the list.  */
-	      list_del (&pd->header.data.list);
+	      list_del (&pd->list);
 
 	      lll_unlock (stack_cache_lock);
 
@@ -492,7 +498,7 @@ __deallocate_stack (struct pthread *pd)
 
   /* Remove the thread from the list of threads with user defined
      stacks.  */
-  list_del (&pd->header.data.list);
+  list_del (&pd->list);
 
   /* Not much to do.  Just free the mmap()ed memory.  Note that we do
      not reset the 'used' flag in the 'tid' field.  This is done by
@@ -525,7 +531,7 @@ __reclaim_stacks (void)
     {
       struct pthread *curp;
 
-      curp = list_entry (runp, struct pthread, header.data.list);
+      curp = list_entry (runp, struct pthread, list);
       if (curp != self)
 	{
 	  /* This marks the stack as free.  */
@@ -542,16 +548,16 @@ __reclaim_stacks (void)
   /* Remove the entry for the current thread to from the cache list
      and add it to the list of running threads.  Which of the two
      lists is decided by the user_stack flag.  */
-  list_del (&self->header.data.list);
+  list_del (&self->list);
 
   /* Re-initialize the lists for all the threads.  */
   INIT_LIST_HEAD (&stack_used);
   INIT_LIST_HEAD (&__stack_user);
 
   if (__builtin_expect (THREAD_GETMEM (self, user_stack), 0))
-    list_add (&self->header.data.list, &__stack_user);
+    list_add (&self->list, &__stack_user);
   else
-    list_add (&self->header.data.list, &stack_used);
+    list_add (&self->list, &stack_used);
 
   /* There is one thread running.  */
   __nptl_nthreads = 1;

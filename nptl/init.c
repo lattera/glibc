@@ -194,7 +194,7 @@ __pthread_initialize_minimal_internal (void)
 
   /* Initialize the list of all running threads with the main thread.  */
   INIT_LIST_HEAD (&__stack_user);
-  list_add (&pd->header.data.list, &__stack_user);
+  list_add (&pd->list, &__stack_user);
 
 
   /* Install the cancellation signal handler.  If for some reason we

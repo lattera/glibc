@@ -46,8 +46,9 @@ typedef struct
 #ifdef NEED_DL_SYSINFO
   uintptr_t sysinfo;
 #endif
-  list_t list;
 } tcbhead_t;
+
+# define TLS_MULTIPLE_THREADS_IN_TCB 1
 
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>

@@ -42,7 +42,7 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
   PREPARE_CREATE;
 #endif
 
-  assert (pd->header.data.tcb != NULL);
+  assert (pd->tcb != NULL);
 
 
   if (__builtin_expect (THREAD_GETMEM (THREAD_SELF, report_events), 0))
@@ -70,8 +70,12 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	    /* Failed.  */
 	    return errno;
 
+#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 	  /* We now have for sure more than one thread.  */
-	  pd->header.data.multiple_threads = 1;
+	  pd->multiple_threads = 1;
+#else
+	  __pthread_multiple_threads = __libc_multiple_threads = 1;
+#endif
 
 	  /* Now fill in the information about the new thread in
 	     the newly created thread's data structure.  We cannot let
@@ -97,8 +101,7 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
     }
 
 #ifdef NEED_DL_SYSINFO
-  assert (THREAD_GETMEM (THREAD_SELF, header.data.sysinfo)
-	  == pd->header.data.sysinfo);
+  assert (THREAD_GETMEM (THREAD_SELF, sysinfo) == pd->sysinfo);
 #endif
 
   /* We rely heavily on various flags the CLONE function understands:
@@ -139,8 +142,10 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
     /* Failed.  */
     return errno;
 
+#ifdef TLS_MULTIPLE_THREADS_IN_TCB
   /* We now have for sure more than one thread.  */
-  THREAD_SETMEM (THREAD_SELF, header.data.multiple_threads, 1);
+  THREAD_SETMEM (THREAD_SELF, multiple_threads, 1);
+#endif
 
   return 0;
 }

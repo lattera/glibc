@@ -84,12 +84,12 @@ typedef struct
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = dtvp + 1
+  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
-# define INSTALL_NEW_DTV(dtv) \
+# define INSTALL_NEW_DTV(dtvp) \
   ({ struct pthread *__pd;						      \
-     THREAD_SETMEM (__pd, header.data.dtvp, dtv); })
+     THREAD_SETMEM (__pd, dtv, (dtvp)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
@@ -133,7 +133,7 @@ typedef struct
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ struct pthread *__pd;						      \
-     THREAD_GETMEM (__pd, header.data.dtvp); })
+     THREAD_GETMEM (__pd, dtv); })
 
 
 /* Return the thread descriptor for the current thread.
@@ -145,7 +145,7 @@ typedef struct
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movq %%fs:%c1,%0" : "=r" (__self)				      \
-	  : "i" (offsetof (struct pthread, header.data.self))); 	      \
+	  : "i" (offsetof (struct pthread, self)));		 	      \
      __self;})
 
 

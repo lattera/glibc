@@ -44,8 +44,9 @@ typedef struct
   void *self;		/* Pointer to the thread descriptor.  */
   int multiple_threads;
   uintptr_t sysinfo;
-  list_t list;
 } tcbhead_t;
+
+# define TLS_MULTIPLE_THREADS_IN_TCB 1
 
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
@@ -116,12 +117,12 @@ union user_desc_init
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) (descr))->dtv = dtvp + 1
+  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
-# define INSTALL_NEW_DTV(dtv) \
+# define INSTALL_NEW_DTV(dtvp) \
   ({ struct pthread *__pd;						      \
-     THREAD_SETMEM (__pd, header.data.dtvp, dtv); })
+     THREAD_SETMEM (__pd, dtv, (dtvp)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
@@ -227,7 +228,7 @@ union user_desc_init
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ struct pthread *__pd;						      \
-     THREAD_GETMEM (__pd, header.data.dtvp); })
+     THREAD_GETMEM (__pd, dtv); })
 
 
 /* Return the thread descriptor for the current thread.
@@ -239,7 +240,7 @@ union user_desc_init
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movl %%gs:%c1,%0" : "=r" (__self)				      \
-	  : "i" (offsetof (struct pthread, header.data.self))); 	      \
+	  : "i" (offsetof (struct pthread, self))); 			      \
      __self;})
 
 

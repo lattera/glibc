@@ -117,8 +117,7 @@
 
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \
-  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
-				   header.data.multiple_threads) == 0, 1)
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF, multiple_threads) == 0, 1)
 # else
 #  define SINGLE_THREAD_P \
 	stc gbr,r0; \

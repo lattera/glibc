@@ -31,6 +31,7 @@
 #include <pthreaddef.h>
 #include <dl-sysdep.h>
 #include "../nptl_db/thread_db.h"
+#include <tls.h>
 
 
 #ifndef TCB_ALIGNMENT
@@ -56,25 +57,19 @@
 /* Thread descriptor data structure.  */
 struct pthread
 {
-  /* XXX Remove this union for IA-64 style TLS module */
+#if !TLS_DTV_AT_TP
+  /* This overlaps tcbhead_t (see tls.h), as used for TLS without threads.  */
   union
   {
-    /* It is very important to always append new elements.  The offsets
-       of some of the elements of the struct are used in assembler code.  */
-    struct
-    {
-      void *tcb;                /* Pointer to the TCB.  This is not always
-                                   the address of this thread descriptor.  */
-      union dtv *dtvp;
-      struct pthread *self;       /* Pointer to this structure */
-      int multiple_threads;
-#ifdef NEED_DL_SYSINFO
-      uintptr_t sysinfo;
-#endif
-      list_t list;
-    } data;
+    tcbhead_t;
     void *__padding[16];
-  } header;
+  };
+#elif TLS_MULTIPLE_THREADS_IN_TCB
+  int multiple_threads;
+#endif
+
+  /* This descriptor's link on the `stack_used' or `__stack_user' list.  */
+  list_t list;
 
   /* Thread ID - which is also a 'is this thread descriptor (and
      therefore stack) used' flag.  */

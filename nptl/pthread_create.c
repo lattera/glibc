@@ -78,7 +78,7 @@ __find_in_stack_list (pd)
     {
       struct pthread *curp;
 
-      curp = list_entry (entry, struct pthread, header.data.list);
+      curp = list_entry (entry, struct pthread, list);
       if (curp == pd)
 	{
 	  result = curp;
@@ -91,7 +91,7 @@ __find_in_stack_list (pd)
       {
 	struct pthread *curp;
 
-	curp = list_entry (entry, struct pthread, header.data.list);
+	curp = list_entry (entry, struct pthread, list);
 	if (curp == pd)
 	  {
 	    result = curp;
@@ -345,11 +345,11 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
      the stack freshly allocated with 'mmap'.  */
 
   /* Reference to the TCB itself.  */
-  pd->header.data.self = pd;
+  pd->self = pd;
 
 #ifdef TLS_TCB_AT_TP
-  /* Self-reference.  */
-  pd->header.data.tcb = pd;
+  /* Self-reference for TLS.  */
+  pd->tcb = pd;
 #endif
 
   /* Store the address of the start routine and the parameter.  Since
