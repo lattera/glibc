@@ -76,6 +76,7 @@ main (void)
 
   sigev2.sigev_notify = SIGEV_THREAD;
   sigev2.sigev_notify_function = notify_func;
+  sigev2.sigev_notify_attributes = NULL;
 
   setvbuf (stdout, 0, _IOLBF, 0);
 
