@@ -2,6 +2,21 @@
 # This is a hack until the import/export stuff is worked out.
 +postctor += /lib/syscalls.exp
 
+ifeq ($(subdir),csu)
+
+sysdep_routines += aix-syscalls
+
+#
+# The foo.c is a workaround for the linker complaining about no input files.
+$(objpfx)aix-syscalls.o : /lib/syscalls.exp
+	echo "static int a;" > foo.c
+	$(CC) -c foo.c
+	ld -bM:SRE -bnoentry -bI:/lib/syscalls.exp -bE:/lib/syscalls.exp foo.o -o $@
+	rm foo.c foo.o
+
+
+endif 
+
 ifeq ($(subdir),misc)
 sysdep_routines  += dl-error dl-support dl-libc dl-open dl-sym \
 		    dl-close dl-addr uitrunc
@@ -24,3 +39,4 @@ inhibit-glue = yes
 ifeq ($(subdir),timezone)
 CPPFLAGS-zic.c = -Dunix
 endif
+
