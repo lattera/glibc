@@ -5505,7 +5505,7 @@ j0_test (void)
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
-  
+
   /* j0 is the Bessel function of the first kind of order 0 */
   check_isnan ("j0 (NaN) = NaN", FUNC(j0) (nan_value));
   check ("j0 (+Inf) = 0", FUNC(j0) (plus_infty), 0);
@@ -5535,7 +5535,7 @@ j1_test (void)
   /* j1 is the Bessel function of the first kind of order 1 */
   check_isnan ("j1 (NaN) = NaN", FUNC(j1) (nan_value));
   check ("j1 (+Inf) = 0", FUNC(j1) (plus_infty), 0);
-  
+
   check ("j1 (-1.0) = -0.44005...", FUNC(j1) (-1.0), -0.44005058574493351596);
   check ("j1 (0) = 0", FUNC(j1) (0.0), 0.0);
   check ("j1 (0.1) = 0.049937...", FUNC(j1) (0.1), 0.049937526036241997556);
@@ -5547,7 +5547,7 @@ j1_test (void)
   check_eps ("j1 (8.0) = 0.23463...", FUNC(j1) (8.0), 0.23463634685391462438,
 	     CHOOSE(0, 0, 1.5e-8));
   check_eps ("j1 (10.0) = 0.04347...", FUNC(j1) (10.0), 0.043472746168861436670,
-	     CHOOSE(0, 7e-18, 3.8e-9));
+	     CHOOSE(0, 2e-17, 3.8e-9));
 }
 
 static void
@@ -5580,7 +5580,7 @@ jn_test (void)
   /* jn (1, x) == j1 (x)  */
   check_isnan ("jn (1, NaN) = NaN", FUNC(jn) (1, nan_value));
   check ("jn (1, +Inf) = 0", FUNC(jn) (1, plus_infty), 0);
-  
+
   check ("jn (1, -1.0) = -0.44005...", FUNC(jn) (1, -1.0), -0.44005058574493351596);
   check ("jn (1, 0.0) = 0", FUNC(jn) (1, 0.0), 0.0);
   check ("jn (1, 0.1) = 0.049937...", FUNC(jn) (1, 0.1), 0.049937526036241997556);
@@ -5592,12 +5592,12 @@ jn_test (void)
   check_eps ("jn (1, 8.0) = 0.23463...", FUNC(jn) (1, 8.0), 0.23463634685391462438,
 	     CHOOSE(0, 0, 1.5e-8));
   check_eps ("jn (1, 10.0) = 0.04347...", FUNC(jn) (1, 10.0), 0.043472746168861436670,
-	     CHOOSE(0, 7e-18, 3.8e-9));
+	     CHOOSE(0, 2e-17, 3.8e-9));
 
   /* jn (3, x)  */
   check_isnan ("jn (3, NaN) = NaN", FUNC(jn) (3, nan_value));
   check ("jn (3, +Inf) = 0", FUNC(jn) (3, plus_infty), 0);
-  
+
   check ("jn (3, -1.0) = -0.01956...", FUNC(jn) (3, -1.0), -0.019563353982668405919);
   check ("jn (3, 0.0) = 0", FUNC(jn) (3, 0.0), 0.0);
   check_eps ("jn (3, 0.1) = 2.082...*10^-6", FUNC(jn) (3, 0.1), 0.000020820315754756261429,
@@ -5613,7 +5613,7 @@ jn_test (void)
   /*  jn (10, x)  */
   check_isnan ("jn (10, NaN) = NaN", FUNC(jn) (10, nan_value));
   check ("jn (10, +Inf) = 0", FUNC(jn) (10, plus_infty), 0);
-  
+
   check_eps ("jn (10, -1.0) = 2.6306...*10^-10", FUNC(jn) (10, -1.0), 0.26306151236874532070e-9,
 	     CHOOSE(0, 0, 3e-17));
   check ("jn (10, 0) = 0", FUNC(jn) (10, 0.0), 0.0);
@@ -5657,7 +5657,7 @@ y0_test (void)
   check_eps ("y0 (8.0) = 0.22352...", FUNC(y0) (8.0), 0.22352148938756622053,
 	     CHOOSE(0, 3e-17, 1.5e-8));
   check_eps ("y0 (10.0) = 0.05567...", FUNC(y0) (10.0), 0.055671167283599391424,
-	     CHOOSE(0, 0, 3.8e-9));
+	     CHOOSE(0, 2e-17, 3.8e-9));
 }
 
 
@@ -5721,7 +5721,7 @@ yn_test (void)
   check_eps ("yn (0, 8.0) = 0.22352...", FUNC(yn) (0, 8.0), 0.22352148938756622053,
 	     CHOOSE(0, 3e-17, 1.5e-8));
   check_eps ("yn (0, 10.0) = 0.05567...", FUNC(yn) (0, 10.0), 0.055671167283599391424,
-	     CHOOSE(0, 0, 3.8e-8));
+	     CHOOSE(0, 2e-17, 3.8e-8));
 
   /* yn (1, x) == y1 (x)  */
   check_isinfn ("yn (1, -1.0) = -inf", FUNC(yn) (1, -1.0));
@@ -5771,7 +5771,7 @@ yn_test (void)
 	     CHOOSE(0, 3e-11, 8e-3));
   check_eps ("yn (10, 10.0) = -0.35981...", FUNC(yn) (10, 10.0), -0.35981415218340272205,
 	     CHOOSE(0, 6e-17, 3e-8));
-  
+
 }
 
 
@@ -6279,7 +6279,7 @@ main (int argc, char *argv[])
   y0_test ();
   y1_test ();
   yn_test ();
-  
+
   /* special tests */
   identities ();
   inverse_functions ();

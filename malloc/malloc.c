@@ -1656,7 +1656,7 @@ ptmalloc_init __MALLOC_P((void))
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
-  __libc_getpagesize = __getpagesize();
+  __libc_pagesize = __getpagesize();
 #endif
   mutex_init(&main_arena.mutex);
   mutex_init(&list_lock);

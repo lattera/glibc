@@ -1,3 +1,10 @@
+1999-06-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (yn_test): Change one delta.
+	(jn_test): Likewise.
+	(j1_test): Likewise.
+	(y0_test): Likewise.
+
 1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/malloc.c: Introduce local variable __libc_getpagesize to
