@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -143,18 +143,21 @@ static inline void bitset_mask (bitset dest, const bitset src);
 #define NEXT_NEWLINE_CONSTRAINT 0x0020
 #define PREV_BEGBUF_CONSTRAINT 0x0040
 #define NEXT_ENDBUF_CONSTRAINT 0x0080
-#define DUMMY_CONSTRAINT 0x0100
+#define WORD_DELIM_CONSTRAINT 0x0100
+#define NOT_WORD_DELIM_CONSTRAINT 0x0200
 
 typedef enum
 {
   INSIDE_WORD = PREV_WORD_CONSTRAINT | NEXT_WORD_CONSTRAINT,
   WORD_FIRST = PREV_NOTWORD_CONSTRAINT | NEXT_WORD_CONSTRAINT,
   WORD_LAST = PREV_WORD_CONSTRAINT | NEXT_NOTWORD_CONSTRAINT,
+  INSIDE_NOTWORD = PREV_NOTWORD_CONSTRAINT | NEXT_NOTWORD_CONSTRAINT,
   LINE_FIRST = PREV_NEWLINE_CONSTRAINT,
   LINE_LAST = NEXT_NEWLINE_CONSTRAINT,
   BUF_FIRST = PREV_BEGBUF_CONSTRAINT,
   BUF_LAST = NEXT_ENDBUF_CONSTRAINT,
-  WORD_DELIM = DUMMY_CONSTRAINT
+  WORD_DELIM = WORD_DELIM_CONSTRAINT,
+  NOT_WORD_DELIM = NOT_WORD_DELIM_CONSTRAINT
 } re_context_type;
 
 typedef struct
