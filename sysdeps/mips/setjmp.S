@@ -24,4 +24,4 @@ Cambridge, MA 02139, USA.  */
 ENTRY (__setjmp)
 	move a1, sp
 	move a2, $fp
-	j __setjmp_aux
+	j ___setjmp_aux
