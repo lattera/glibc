@@ -1,5 +1,5 @@
 /* Conversion from and to TSCII.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <bruno@clisp.org>, 2002.
 
@@ -98,7 +98,8 @@
 		  break;						      \
 		}							      \
 	      /* Write out the pending character.  */			      \
-	      *((uint32_t *) outbuf)++ = data->__statep->__count >> 8;	      \
+	      *((uint32_t *) outbuf) = data->__statep->__count >> 8;	      \
+	      outbuf += sizeof (uint32_t);				      \
 	      /* Retrieve the successor state.  */			      \
 	      data->__statep->__count =					      \
 		tscii_next_state[(data->__statep->__count >> 4) & 0x0f];      \

@@ -1,3 +1,11 @@
+2004-03-07  Andreas Jaeger  <aj@suse.de>
+
+	* iconvdata/iso-2022-cn-ext.c (BODY): Remove cast used as lvalue.
+	* iconvdata/tcvn5712-1.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/euc-jisx0213.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/shift_jisx0213.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/tscii.c (EMIT_SHIFT_TO_INIT): Likewise.
+
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h: Move _dl_initial_searclist,

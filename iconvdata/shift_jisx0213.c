@@ -1,5 +1,5 @@
 /* Conversion from and to Shift_JISX0213.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <bruno@clisp.org>, 2002.
 
@@ -83,7 +83,8 @@
 	  if (__builtin_expect (outbuf + 4 <= outend, 1))		      \
 	    {								      \
 	      /* Write out the last character.  */			      \
-	      *((uint32_t *) outbuf)++ = data->__statep->__count >> 3;	      \
+	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
+	      outbuf += sizeof (uint32_t);				      \
 	      data->__statep->__count = 0;				      \
 	    }								      \
 	  else								      \
