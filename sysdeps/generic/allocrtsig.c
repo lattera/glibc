@@ -33,7 +33,7 @@ static int current_rtmax;
 
 static int initialized;
 
-#include "testrtsig.h"
+#include <testrtsig.h>
 
 static void
 init (void)
