@@ -1,3 +1,8 @@
+2001-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address):
+	Calculate load address differently.
+
 2001-04-12  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/TESTS2: New file.

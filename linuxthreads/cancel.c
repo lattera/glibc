@@ -197,7 +197,8 @@ void __pthread_perform_cleanup(char *currentframe)
 
       last = c;
       c = c->__prev;
-      if (! FRAME_LEFT (last, c))
+
+      if (FRAME_LEFT (last, c))
 	break;
     }
 

@@ -64,23 +64,32 @@ cleanupok (void *arg)
 }
 
 
+static void *
+t3 (void *arg)
+{
+  pthread_cleanup_push (cleanupok, (void *) (long int) 4);
+  inner ((int) (long int) arg);
+  pthread_exit (NULL);
+  pthread_cleanup_pop (0);
+}
+
+
 static void
 innerok (int a)
 {
-  pthread_cleanup_push (cleanup, (void *) (long int) a);
-  if (a)
-    return;
+  pthread_cleanup_push (cleanupok, (void *) (long int) a);
+  pthread_exit (NULL);
   pthread_cleanup_pop (0);
 }
 
 
 static void *
-t3 (void *arg)
+t4 (void *arg)
 {
-  pthread_cleanup_push (cleanupok, (void *) (long int) 4);
+  pthread_cleanup_push (cleanupok, (void *) (long int) 6);
   innerok ((int) (long int) arg);
-  pthread_exit (NULL);
   pthread_cleanup_pop (0);
+  return NULL;
 }
 
 
@@ -90,14 +99,14 @@ main (int argc, char *argv[])
   pthread_t td;
   int err;
   char *tmp;
-  const char *path;
+  const char *prefix;
   const char template[] = "thtstXXXXXX";
   struct stat64 st;
   int result = 0;
 
-  path = argc > 1 ? argv[1] : "";
-  tmp = (char *) alloca (strlen (path) + sizeof template);
-  strcpy (stpcpy (tmp, path), template);
+  prefix = argc > 1 ? argv[1] : "";
+  tmp = (char *) alloca (strlen (prefix) + sizeof template);
+  strcpy (stpcpy (tmp, prefix), template);
 
   fd = mkstemp (tmp);
   if (fd == -1)
@@ -114,6 +123,7 @@ main (int argc, char *argv[])
       exit (1);
     }
 
+#ifdef NOT_YET
   err = pthread_create (&td, NULL, t1, NULL);
   if (err != 0)
     {
@@ -155,6 +165,21 @@ main (int argc, char *argv[])
       printf ("cannot join thread: %s\n", strerror (err));
       exit (1);
     }
+#endif
+
+  err = pthread_create (&td, NULL, t4, (void *) 7);
+  if (err != 0)
+    {
+      printf ("cannot create thread t3: %s\n", strerror (err));
+      exit (1);
+    }
+
+  err = pthread_join (td, NULL);
+  if (err != 0)
+    {
+      printf ("cannot join thread: %s\n", strerror (err));
+      exit (1);
+    }
 
   if (fstat64 (fd, &st) < 0)
     {
@@ -177,7 +202,8 @@ main (int argc, char *argv[])
       result = 1;
     }
 
-  if (cleanupokcnt != 1)
+  // if (cleanupokcnt != 3)  will be three once t3 runs
+  if (cleanupokcnt != 2)
     {
       printf ("cleanupokcnt = %d\n", cleanupokcnt);
       result = 1;
