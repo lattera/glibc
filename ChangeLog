@@ -1,3 +1,8 @@
+1998-06-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.make.in: Remove LDAP support.
+	* nss/Makefile: Likewise.
+
 1998-06-22 17:02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/enbl-secure.c: Don't use __libc_uid.

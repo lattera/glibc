@@ -41,7 +41,7 @@ tests			= test-netdb
 include ../Makeconfig
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files db $(LDAP)
+services		:= files db
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -62,20 +62,12 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
 distribute		+= db-XXX.c
 
-libnss_ldap-routines	:= $(addprefix ldap-,proto) util ldap-nss
-
 
 # Build static module if requested
 ifneq ($(build-static-nss),yes)
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif
 libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
-libnss_ldap-inhibit-o	= $(filter-out .os,$(object-suffixes))
-
-# If we compile the LDAP module we need the headers from the LDAP library.
-ifneq ($(LDAP),)
-CPPFLAGS += -I../ldap
-endif
 
 include ../Rules
 
@@ -88,9 +80,6 @@ $(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	 echo '#define GENERIC "../nss_db/db-XXX.c"';\
 	 echo '#include <$<>') > $@.new
 	mv -f $@.new $@
-
-# To complete the LDAP NSS module we need functions from the LDAP library.
-$(objpfx)libnss_ldap.so: $(common-objpfx)ldap/libldap.so
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

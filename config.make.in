@@ -59,8 +59,6 @@ add-ons = @subdirs@
 cross-compiling = @cross_compiling@
 force-install = @force_install@
 
-LDAP = @LDAP@
-
 # Build tools.
 CC = @CC@
 BUILD_CC = @BUILD_CC@
