@@ -1,5 +1,7 @@
 2003-02-22  Roland McGrath  <roland@redhat.com>
 
+	* Makerules: Fix last change to use $($(subdir)-version) when set.
+
 	* Makerules (install-lib-nosubdir): Depend on installed
 	libfoo-X.Y.Z.so and libfoo.so.NN files so they are installed
 	regardless of the libfoo.so target's dependencies.
