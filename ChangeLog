@@ -1,3 +1,8 @@
+2002-09-22  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/tst-e2big.c: New file.
+	* iconvdata/Makefile (tests): Add tst-e2big.
+
 2002-09-23  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile (test-extras): Define this instead of test-srcs.

@@ -58,7 +58,7 @@ modules.so := $(addsuffix .so, $(modules))
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-tests = bug-iconv1 bug-iconv2 tst-loading
+tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big
 
 test-srcs := tst-table-from tst-table-to
 endif
