@@ -1,5 +1,9 @@
 2001-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/tst-regex.c: Pass REG_NEWLINE to regcomp.  Add extra tests.
+	Restrict printing of string in debug mode to 100 characters to make
+	the output useful for long input texts.
+
 	* posix/Makefile: Add rules to build and run tst-regex.
 
 2001-06-20 Isamu Hasegawa <isamu@yamato.ibm.com>

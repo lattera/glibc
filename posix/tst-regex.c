@@ -84,19 +84,23 @@ main (void)
 
   close (fd);
 
-  /* For the second test we have to convert the file content to UTF-8.  */
-  umem = (char *) calloc (2, memlen);
-  if (umem == NULL)
-    error (EXIT_FAILURE, errno, "while allocating buffer");
-
+  /* We have to convert a few things from Latin-1 to UTF-8.  */
   cd = iconv_open ("UTF-8", "ISO-8859-1");
   if (cd == (iconv_t) -1)
     error (EXIT_FAILURE, errno, "cannot get conversion descriptor");
 
+  /* For the second test we have to convert the file content to UTF-8.
+     Since the text is mostly ASCII it should be enough to allocate
+     twice as much memory for the UTF-8 text than for the Latin-1
+     text.  */
+  umem = (char *) calloc (2, memlen);
+  if (umem == NULL)
+    error (EXIT_FAILURE, errno, "while allocating buffer");
+
   inmem = mem;
   inlen = memlen;
   outmem = umem;
-  outlen = 2 * memlen;
+  outlen = 2 * memlen - 1;
   iconv (cd, &inmem, &inlen, &outmem, &outlen);
   if (inlen != 0)
     error (EXIT_FAILURE, errno, "cannot convert buffer");
@@ -106,16 +110,20 @@ main (void)
   use_clock = clock_getcpuclockid (0, &cl) == 0;
 #endif
 
+#ifdef DEBUG
+  re_set_syntax (RE_DEBUG);
+#endif
+
   /* Run the actual tests.  All tests are run in a single-byte and a
      multi-byte locale.  */
   result = test_expr ("[הבאגיטךםלמסצףעפüתשû]", 2);
   result |= test_expr ("G.ran", 2);
   result |= test_expr ("G.\\{1\\}ran", 2);
-#ifdef DOES_NOT_WORK
-  result |= test_expr ("G.*ran", 2);
-#endif
+  result |= test_expr ("G.*ran", 3);
+  result |= test_expr ("[הבאג]", 0);
 
   /* Free the resources.  */
+  free (umem);
   iconv_close (cd);
   free (mem);
 
@@ -178,7 +186,7 @@ run_test (const char *expr, const char *mem, size_t memlen, int expected)
     use_clock = clock_gettime (cl, &start) == 0;
 #endif
 
-  err = regcomp (&re, expr, 0);
+  err = regcomp (&re, expr, REG_NEWLINE);
   if (err != REG_NOERROR)
     {
       char buf[200];
