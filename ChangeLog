@@ -1,3 +1,7 @@
+2002-12-29  Roland McGrath  <roland@redhat.com>
+
+	* math/Makefile (generated): Add $(addsuffix .c .S,$(calls:s_%=m_%)).
+
 2002-12-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/cache.c (add_to_cache): Don't loop forever with 1ULL << 63 set
