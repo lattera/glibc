@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,22 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   register unsigned short int c;
   int lose = 0;
 
+#define TRYEM do {							      \
+      TRY (isascii);							      \
+      TRY (isalnum);							      \
+      TRY (isalpha);							      \
+      TRY (iscntrl);							      \
+      TRY (isdigit);							      \
+      TRY (isgraph);							      \
+      TRY (islower);							      \
+      TRY (isprint);							      \
+      TRY (ispunct);							      \
+      TRY (isspace);							      \
+      TRY (isupper);							      \
+      TRY (isxdigit);							      \
+      TRY (isblank);							      \
+    } while (0)
+
   for (c = 0; c <= UCHAR_MAX; ++c)
     {
       print_char (c);
@@ -55,38 +71,32 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	  ++lose;
 	}
 
-      if (isascii(c))
-	fputs(" isascii", stdout);
-      if (isalnum(c))
-	fputs(" isalnum", stdout);
-      if (isalpha(c))
-	fputs(" isalpha", stdout);
-      if (iscntrl(c))
-	fputs(" iscntrl", stdout);
-      if (isdigit(c))
-	fputs(" isdigit", stdout);
-      if (isgraph(c))
-	fputs(" isgraph", stdout);
-      if (islower(c))
-	fputs(" islower", stdout);
-      if (isprint(c))
-	fputs(" isprint", stdout);
-      if (ispunct(c))
-	fputs(" ispunct", stdout);
-      if (isspace(c))
-	fputs(" isspace", stdout);
-      if (isupper(c))
-	fputs(" isupper", stdout);
-      if (isxdigit(c))
-	fputs(" isxdigit", stdout);
-      if (isblank(c))
-	fputs(" isblank", stdout);
+#define TRY(isfoo) if (isfoo (c)) fputs (" " #isfoo, stdout)
+      TRYEM;
+#undef TRY
+
       fputs("; lower = ", stdout);
       print_char(tolower(c));
       fputs("; upper = ", stdout);
       print_char(toupper(c));
       putchar('\n');
     }
+
+  fputs ("EOF", stdout);
+  if (tolower (EOF) != EOF)
+    {
+      ++lose;
+      printf (" tolower BOGUS %d;", tolower (EOF));
+    }
+  if (toupper (EOF) != EOF)
+    {
+      ++lose;
+      printf (" toupper BOGUS %d;", toupper (EOF));
+    }
+
+#define TRY(isfoo) if (isfoo (EOF)) fputs (" " #isfoo, stdout), ++lose
+  TRYEM;
+#undef TRY
 
   exit (lose ? EXIT_FAILURE : EXIT_SUCCESS);
 }
