@@ -1,3 +1,7 @@
+2001-08-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/libm-test-ulps: Updated.
+
 2001-08-28  H.J. Lu  <hjl@gnu.org>
 
 	* Makeconfig (combreloc-LDFLAGS): New variable.
