@@ -262,7 +262,7 @@ static int pthread_start_thread(void *arg)
   outcome = self->p_start_args.start_routine(THREAD_GETMEM(self,
 							   p_start_args.arg));
   /* Exit with the given return value */
-  pthread_exit(outcome);
+  __pthread_do_exit(outcome, CURRENT_STACK_FRAME);
   return 0;
 }
 

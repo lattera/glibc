@@ -85,7 +85,7 @@ int __new_sem_wait(sem_t * sem)
 
   if (already_canceled) {
     __pthread_set_own_extricate_if(self, 0);
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
 
   /* Wait for sem_post or cancellation, or fall through if already canceled */
@@ -111,7 +111,7 @@ int __new_sem_wait(sem_t * sem)
   if (THREAD_GETMEM(self, p_woken_by_cancel)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     THREAD_SETMEM(self, p_woken_by_cancel, 0);
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
   /* We got the semaphore */
   return 0;
@@ -245,7 +245,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
 
   if (already_canceled) {
     __pthread_set_own_extricate_if(self, 0);
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
 
   spurious_wakeup_count = 0;
@@ -289,7 +289,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
   if (THREAD_GETMEM(self, p_woken_by_cancel)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     THREAD_SETMEM(self, p_woken_by_cancel, 0);
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
   /* We got the semaphore */
   return 0;

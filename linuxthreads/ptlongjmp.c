@@ -18,6 +18,7 @@
 #include <setjmp.h>
 #include "pthread.h"
 #include "internals.h"
+#include <stackinfo.h>
 
 /* These functions are not declared anywhere since they shouldn't be
    used at another place but here.  */
@@ -31,11 +32,29 @@ static void pthread_cleanup_upto(__jmp_buf target)
 {
   pthread_descr self = thread_self();
   struct _pthread_cleanup_buffer * c;
+  char *currentframe = CURRENT_STACK_FRAME;
 
   for (c = THREAD_GETMEM(self, p_cleanup);
        c != NULL && _JMPBUF_UNWINDS(target, c);
        c = c->__prev)
-    c->__routine(c->__arg);
+    {
+#if _STACK_GROWS_DOWN
+      if ((char *) c <= currentframe)
+	{
+	  c = NULL;
+	  break;
+	}
+#elif _STACK_GROWS_UP
+      if ((char *) c >= currentframe)
+	{
+	  c = NULL;
+	  break;
+	}
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+      c->__routine(c->__arg);
+    }
   THREAD_SETMEM(self, p_cleanup, c);
   if (THREAD_GETMEM(self, p_in_sighandler)
       && _JMPBUF_UNWINDS(target, THREAD_GETMEM(self, p_in_sighandler)))

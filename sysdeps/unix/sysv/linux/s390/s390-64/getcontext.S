@@ -25,9 +25,7 @@
 /*  __getcontext (const ucontext_t *ucp)
 
   Saves the machine context in UCP such that when it is activated,
-  it appears as if __getcontext() returned again.  The only difference
-  is that on a first return, %r2 contains 1 and on a subsequent
-  return, it contains 0.
+  it appears as if __getcontext() returned again.
 
   This implementation is intended to be used for *synchronous* context
   switches only.  Therefore, it does not have to save anything
@@ -61,11 +59,13 @@ ENTRY(__getcontext)
 	std     %f14,SC_FPRS+112(%r5)
 	std     %f15,SC_FPRS+120(%r5)
 
+	/* Set __getcontext return value to 0.  */
+	slr     %r2,%r2
+
 	/* Store general purpose registers.  */
 	stmg    %r0,%r15,SC_GPRS(%r5)
 
-	/* Return 0.  */
-	slgr	%r2,%r2
+	/* Return.  */
 	br	%r14
 END(__getcontext)
 

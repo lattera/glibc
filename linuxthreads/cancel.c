@@ -20,6 +20,9 @@
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
+#include <stackinfo.h>
+
+#include <stdio.h>
 
 int pthread_setcancelstate(int state, int * oldstate)
 {
@@ -31,7 +34,7 @@ int pthread_setcancelstate(int state, int * oldstate)
   if (THREAD_GETMEM(self, p_canceled) &&
       THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE &&
       THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   return 0;
 }
 
@@ -45,7 +48,7 @@ int pthread_setcanceltype(int type, int * oldtype)
   if (THREAD_GETMEM(self, p_canceled) &&
       THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE &&
       THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   return 0;
 }
 
@@ -112,7 +115,7 @@ void pthread_testcancel(void)
   pthread_descr self = thread_self();
   if (THREAD_GETMEM(self, p_canceled)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE)
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
 }
 
 void _pthread_cleanup_push(struct _pthread_cleanup_buffer * buffer,
@@ -155,15 +158,27 @@ void _pthread_cleanup_pop_restore(struct _pthread_cleanup_buffer * buffer,
   if (THREAD_GETMEM(self, p_canceled) &&
       THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE &&
       THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
-    pthread_exit(PTHREAD_CANCELED);
+    __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
 }
 
-void __pthread_perform_cleanup(void)
+void __pthread_perform_cleanup(char *currentframe)
 {
   pthread_descr self = thread_self();
   struct _pthread_cleanup_buffer * c;
+
   for (c = THREAD_GETMEM(self, p_cleanup); c != NULL; c = c->__prev)
-    c->__routine(c->__arg);
+    {
+#if _STACK_GROWS_DOWN
+      if ((char *) c <= currentframe)
+	break;
+#elif _STACK_GROWS_UP
+      if ((char *) c >= currentframe)
+	break;
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+      c->__routine(c->__arg);
+    }
 
   /* And the TSD which needs special help.  */
   if (THREAD_GETMEM(self, p_libc_specific[_LIBC_TSD_KEY_RPC_VARS]) != NULL)

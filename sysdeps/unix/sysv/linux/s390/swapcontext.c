@@ -25,8 +25,14 @@ extern int __setcontext (__const ucontext_t *__ucp) __THROW;
 int
 __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
 {
-  if (__getcontext (oucp) == 0)
-    __setcontext (ucp);
+  /* Save the current machine context to oucp.  */
+  __getcontext (oucp);
+  /* Modify oucp to skip the __setcontext call on reactivation.  */
+  oucp->uc_mcontext.gregs[14] = &&fake_return;
+  /* Restore the machine context in ucp.  */
+  __setcontext (ucp);
+
+fake_return:
   return 0;
 }
 

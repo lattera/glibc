@@ -1,3 +1,14 @@
+2001-04-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: Fix return
+	value of getcontext.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S: Fix return
+	value of setcontext.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/swapcontext.c: Skip setcontext
+	call by changing the saved context.
+
 2001-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/stackinfo.h: New file.

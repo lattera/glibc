@@ -1,3 +1,36 @@
+2001-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* join.c (pthread_exit): Move code to new function __pthread_do_exit
+	which takes an extra parameter with the current frame pointer.
+	Call new function with CURRENT_STACK_FRAME.
+	(__pthread_do_exit): New function.  Call __pthread_perform_cleanup
+	with the new parameter.
+	(pthread_join): Call __pthread_do_exit instead of pthread_exit.
+	* cancel.c (__pthread_perform_cleanup): Takes extra parameter.  Use
+	this parameter as the initial value the cleanup handler records are
+	compared against.  No active cleanup handler record must have an
+	address lower than the previous one and the initial record must be
+	above (below on PA) the frame address passed in.
+	(pthread_setcancelstate): Call __pthread_do_exit instead of
+	pthread_exit.
+	(pthread_setcanceltype): Likewise.
+	(pthread_testcancel): Likewise.
+	(_pthread_cleanup_pop_restore): Likewise.
+	* condvar.c (pthread_cond_wait): Likewise.
+	(pthread_cond_timedwait_relative): Likewise.
+	* manager.c (pthread_start_thread): Likewise.
+	* oldsemaphore.c (__old_sem_wait): Likewise.
+	* pthread.c (pthread_handle_sigcancel): Likewise.
+	* semaphore.c (__new_sem_wait): Likewise.
+	(sem_timedwait): Likewise.
+	* ptlongjmp.c (pthread_cleanup_upto): Also use current stack frame
+	to limit the cleanup handlers which get run.
+	* internals.h: Add prototype for __pthread_do_exit.  Adjust prototype
+	for __pthread_perform_cleanup.
+
+	* Makefile (tests): Add tst-cancel.
+	* tst-cancel.c: New file.
+
 2001-04-08  Hans-Peter Nilsson  <hp@axis.com>
 
 	* sysdeps/cris/pt-machine.h: New file.

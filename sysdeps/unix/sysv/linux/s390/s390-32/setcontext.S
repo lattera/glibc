@@ -62,8 +62,7 @@ ENTRY(__setcontext)
 	/* Load general purpose registers.  */
 	lm	%r0,%r15,SC_GPRS(%r5)
 
-        /* Return 1.  */
-	la      %r2,1
+	/* Return.  */
 	br	%r14
 END(__setcontext)
 

@@ -144,7 +144,7 @@ int __old_sem_wait(old_sem_t * sem)
 		    }
 		}
 	    }
-            pthread_exit(PTHREAD_CANCELED);
+            __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
 	}
     }
 }

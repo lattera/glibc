@@ -817,7 +817,7 @@ static void pthread_handle_sigcancel(int sig)
   if (__builtin_expect (THREAD_GETMEM(self, p_canceled), 0)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     if (THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
-      pthread_exit(PTHREAD_CANCELED);
+      __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
     jmpbuf = THREAD_GETMEM(self, p_cancel_jmp);
     if (jmpbuf != NULL) {
       THREAD_SETMEM(self, p_cancel_jmp, NULL);
