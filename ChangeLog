@@ -1,5 +1,10 @@
 2004-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/loadlocale.c (_nl_intern_locale_data): Recognize LC_CTYPE
+	data where _nl_value_type_LC_CTYPE does not contain the type
+	information.  Add range checks.
+	Reported by John Lumby <johnlumby@hotmail.com> [BZ #356].
+
 	* libio/vasprintf.c (_IO_vasprintf): Fix condition to decide
 	whether to realloc or not.
 	Reported by Pavel Kankovsky <peak@argo.troja.mff.cuni.cz> [BZ #346].
