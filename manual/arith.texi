@@ -29,8 +29,8 @@ These functions are declared in the header files @file{math.h} and
 
 The C language defines several integer data types: integer, short integer,
 long integer, and character, all in both signed and unsigned varieties.
-The GNU C compiler extends the language to contain long long integers 
-as well.  
+The GNU C compiler extends the language to contain long long integers
+as well.
 @cindex signedness
 
 The C integer types were intended to allow code to be portable among
@@ -79,7 +79,7 @@ structure with @emph{at least} N bits, use one of these:
 @item uint64_least_t
 @end itemize
 
-If you don't need a specific storage size, but want the data structure 
+If you don't need a specific storage size, but want the data structure
 that allows the fastest access while having at least N bits (and
 among data structures with the same access speed, the smallest one), use
 one of these:
@@ -95,7 +95,7 @@ one of these:
 @item uint64_fast_t
 @end itemize
 
-If you want an integer with the widest range possible on the platform on 
+If you want an integer with the widest range possible on the platform on
 which it is being used, use one of the following.  If you use these,
 you should write code that takes into account the variable size and range
 of the integer.
@@ -1398,7 +1398,9 @@ integer, returning that value as a @code{double}.  Thus, @code{floor
 @comment math.h
 @comment ISO
 @deftypefunx {long double} truncl (long double @var{x})
-@code{trunc} is another name for @code{floor}
+The @code{trunc} functions round @var{x} towards zero to the nearest
+integer (returned in floating-point format).  Thus, @code{trunc (1.5)}
+is @code{1.0} and @code{trunc (-1.5)} is @code{-1.0}.
 @end deftypefun
 
 @comment math.h
@@ -2131,7 +2133,7 @@ returned on overflow is @code{ULONG_MAX} (@pxref{Range of Type}).
 If @var{string} depicts a negative number, @code{strtoul} acts the same
 as @var{strtol} but casts the result to an unsigned integer.  That means
 for example that @code{strtoul} on @code{"-1"} returns @code{ULONG_MAX}
-and an input more negative than @code{LONG_MIN} returns 
+and an input more negative than @code{LONG_MIN} returns
 (@code{ULONG_MAX} + 1) / 2.
 
 @code{strtoul} sets @var{errno} to @code{EINVAL} if @var{base} is out of
