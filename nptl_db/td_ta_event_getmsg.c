@@ -18,7 +18,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -55,7 +54,8 @@ td_ta_event_getmsg (const td_thragent_t *ta, td_event_msg_t *msg)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* If the structure is on the list there better be an event recorded.  */
-  assert (event.eventnum != TD_EVENT_NONE);
+  if (event.eventnum == TD_EVENT_NONE)
+    return TD_DBERR;
 
   /* Generate the thread descriptor.  */
   th.th_ta_p = (td_thragent_t *) ta;
@@ -66,22 +66,35 @@ td_ta_event_getmsg (const td_thragent_t *ta, td_event_msg_t *msg)
   msg->th_p = &th;
   msg->msg.data = (uintptr_t) event.eventdata;
 
+  /* And clear the event message in the target.  */
+  memset (&event, '\0', sizeof (td_eventbuf_t));
+  if (ps_pdwrite (ta->ph, (char *) addr + offsetof (struct pthread, eventbuf),
+		  &event, sizeof (td_eventbuf_t)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
   /* Get the pointer to the next descriptor with an event.  */
   psaddr_t next;
   if (ps_pdread (ta->ph, (char *) addr + offsetof (struct pthread, nextevent),
 		 &next, sizeof (struct pthread *)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
+  if (next == addr)
+    return TD_DBERR;
+
   /* Store the pointer in the list head variable.  */
   if (ps_pdwrite (ta->ph, ta->pthread_last_event,
 		  &next, sizeof (struct pthread *)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
-  /* Clear the next pointer in the current descriptor.  */
-  next = NULL;
-  if (ps_pdwrite (ta->ph, (char *) addr + offsetof (struct pthread, nextevent),
-		  &next, sizeof (struct pthread *)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  if (next != NULL)
+    {
+      /* Clear the next pointer in the current descriptor.  */
+      next = NULL;
+      if (ps_pdwrite (ta->ph,
+		      (char *) addr + offsetof (struct pthread, nextevent),
+		      &next, sizeof (struct pthread *)) != PS_OK)
+	return TD_ERR;	/* XXX Other error value?  */
+    }
 
   return TD_OK;
 }

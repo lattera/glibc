@@ -1,3 +1,12 @@
+2003-03-18  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_event_getmsg.c (td_thr_event_getmsg): Splice the thread out
+	of the ->nextevent linkage.
+
+	* td_ta_event_getmsg.c (td_ta_event_getmsg): Runtime error instead of
+	assert for reading TD_EVENT_NONE.  Clear the event buffer after
+	reading it.  Add a sanity check for foo->nextevent = foo.
+
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
 	* thread_db.h (td_err_e): Add TD_NOTLS and TD_TLSDEFER.
