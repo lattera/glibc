@@ -83,8 +83,6 @@ include ../Rules
 $(objpfx)libbsd-compat.a: $(dep-dummy-lib); $(make-dummy-lib)
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
-CFLAGS-init-misc.c = -fkeep-inline-functions
-
 ifeq ($(build-shared),yes)
 $(objpfx)tst-tsearch: $(common-objpfx)math/libm.so$(libm.so-version)
 else
