@@ -824,7 +824,7 @@ parts of the library were contributed or worked on by other people.
      changes to fit into the GNU C library and to fit the ANSI C
      standard, but the functional code is Berkeley's.
 
-   * The Internet resolver code is taken directly from BIND 4.9.4,
+   * The Internet resolver code is taken directly from BIND 4.9.5,
      which is under both the Berkeley copyright above and also:
 
           Portions Copyright (C) 1993 by Digital Equipment Corporation.

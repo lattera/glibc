@@ -58,6 +58,7 @@ static char sccsid[] = "@(#)res_comp.c	8.1 (Berkeley) 6/4/93";
 static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
+#include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
@@ -340,34 +341,6 @@ dn_find(exp_dn, msg, dnptrs, lastdnptr)
  * Verify that a domain name uses an acceptable character set.
  */
 
-/****
-To: "Lawrence R. Rogers" <lrr@cert.org>
-cc: cert@cert.org, pvm@home.net
-Subject: Re: VU#14542
-In-reply-to: Your message of "Mon, 19 Feb 1996 17:16:27 PST."
-Date: Tue, 20 Feb 1996 22:37:21 -0800
-From: Paul A Vixie <vixie@wisdom.home.vix.com>
-
-in retrospect,
-
-	hostname = firstlabel ( "." otherlabel )+
-	firstchar = [a-zA-Z0-9_]
-	otherchar = [a-zA-Z0-9_-/]
-	firstlabel = firstchar otherchar*
-	otherlabel = otherchar+
-
-should have been
-
-	hostname = label ( "." label )+
-	firstchar = [a-zA-Z0-9]
-	otherchar = [a-zA-Z0-9_-]
-	label = firstchar otherchar*
-
-i know of no example of a real host name that needs the looser rule i sent
-earlier.  since i'm only trying to bend the spec to fit actual known uses,
-i should not have widened the rules as far as i did earlier.
-****/
-
 /*
  * Note the conspicuous absence of ctype macros in these definitions.  On
  * non-ASCII hosts, we can't depend on string literals or ctype macros to
@@ -434,17 +407,26 @@ int
 res_mailok(dn)
 	const char *dn;
 {
-	int ch, pch;
+	int ch, escaped = 0;
 
-	pch = '\0';
+	/* "." is a valid missing representation */
+	if (*dn == '\0')
+		return(1);
+
+	/* otherwise <label>.<hostname> */
 	while ((ch = *dn++) != '\0') {
 		if (!domainchar(ch))
 			return (0);
-		if (periodchar(ch) && !bslashchar(pch))
+		if (!escaped && periodchar(ch))
 			break;
-		pch = ch;
+		if (escaped)
+			escaped = 0;
+		else if (bslashchar(ch))
+			escaped = 1;
 	}
-	return (res_hnok(dn));
+	if (periodchar(ch))
+		return (res_hnok(dn));
+	return(0);
 }
 
 /*

@@ -50,6 +50,28 @@
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
  * -
+ * Portions Copyright (c) 1995 by International Business Machines, Inc.
+ *
+ * International Business Machines, Inc. (hereinafter called IBM) grants
+ * permission under its copyrights to use, copy, modify, and distribute this
+ * Software with or without fee, provided that the above copyright notice and
+ * all paragraphs of this notice appear in all copies, and that the name of IBM
+ * not be used in connection with the marketing of any product incorporating
+ * the Software or modifications thereof, without specific, written prior
+ * permission.
+ *
+ * To the extent it has a right to do so, IBM grants an immunity from suit
+ * under its patents, if any, for the use, sale or manufacture of products to
+ * the extent that such products are used for performing Domain Name System
+ * dynamic updates in TCP/IP networks by means of the Software.  No immunity is
+ * granted for any product per se or for any other function of any product.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", AND IBM DISCLAIMS ALL WARRANTIES,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE.  IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL,
+ * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE, EVEN
+ * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.
  * --Copyright--
  */
 
@@ -83,7 +105,7 @@
  * is new enough to contain a certain feature.
  */
 
-#define	__BIND		19950621	/* interface version stamp */
+#define __BIND		19960801	/* interface version stamp */
 
 /*
  * Define constants based on rfc883
@@ -92,12 +114,12 @@
 #define MAXDNAME	256		/* maximum domain name */
 #define MAXCDNAME	255		/* maximum compressed domain name */
 #define MAXLABEL	63		/* maximum length of domain label */
-#define	HFIXEDSZ	12		/* #/bytes of fixed data in header */
+#define HFIXEDSZ	12		/* #/bytes of fixed data in header */
 #define QFIXEDSZ	4		/* #/bytes of fixed data in query */
 #define RRFIXEDSZ	10		/* #/bytes of fixed data in r record */
-#define	INT32SZ		4		/* for systems without 32-bit ints */
-#define	INT16SZ		2		/* for systems without 16-bit ints */
-#define	INADDRSZ	4		/* IPv4 T_A */
+#define INT32SZ		4		/* for systems without 32-bit ints */
+#define INT16SZ		2		/* for systems without 16-bit ints */
+#define INADDRSZ	4		/* IPv4 T_A */
 #define IN6ADDRSZ	16		/* IPv6 T_AAAA */
 
 /*
@@ -112,7 +134,7 @@
 #define IQUERY		0x1		/* inverse query */
 #define STATUS		0x2		/* nameserver status query */
 /*#define xxx		0x3*/		/* 0x3 reserved */
-#define	NS_NOTIFY_OP	0x4		/* notify secondary of SOA change */
+#define NS_NOTIFY_OP	0x4		/* notify secondary of SOA change */
 #ifdef ALLOW_UPDATES
 	/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */
 # define UPDATEA	0x9		/* add resource record */
@@ -157,19 +179,20 @@
 #define T_MINFO		14		/* mailbox information */
 #define T_MX		15		/* mail routing information */
 #define T_TXT		16		/* text strings */
-#define	T_RP		17		/* responsible person */
+#define T_RP		17		/* responsible person */
 #define T_AFSDB		18		/* AFS cell database */
 #define T_X25		19		/* X_25 calling address */
 #define T_ISDN		20		/* ISDN calling address */
 #define T_RT		21		/* router */
 #define T_NSAP		22		/* NSAP address */
 #define T_NSAP_PTR	23		/* reverse NSAP lookup (deprecated) */
-#define	T_SIG		24		/* security signature */
-#define	T_KEY		25		/* security key */
-#define	T_PX		26		/* X.400 mail mapping */
-#define	T_GPOS		27		/* geographical position (withdrawn) */
-#define	T_AAAA		28		/* IP6 Address */
-#define	T_LOC		29		/* Location Information */
+#define T_SIG		24		/* security signature */
+#define T_KEY		25		/* security key */
+#define T_PX		26		/* X.400 mail mapping */
+#define T_GPOS		27		/* geographical position (withdrawn) */
+#define T_AAAA		28		/* IP6 Address */
+#define T_LOC		29		/* Location Information */
+#define T_NXT		30		/* Next Valid Name in Zone */
 	/* non standard */
 #define T_UINFO		100		/* user (finger) information */
 #define T_UID		101		/* user ID */
@@ -192,6 +215,48 @@
 #define C_ANY		255		/* wildcard match */
 
 /*
+ * Flags field of the KEY RR rdata
+ */
+#define	KEYFLAG_TYPEMASK	0xC000	/* Mask for "type" bits */
+#define	KEYFLAG_TYPE_AUTH_CONF	0x0000	/* Key usable for both */
+#define	KEYFLAG_TYPE_CONF_ONLY	0x8000	/* Key usable for confidentiality */
+#define	KEYFLAG_TYPE_AUTH_ONLY	0x4000	/* Key usable for authentication */
+#define	KEYFLAG_TYPE_NO_KEY	0xC000	/* No key usable for either; no key */
+/* The type bits can also be interpreted independently, as single bits: */
+#define	KEYFLAG_NO_AUTH		0x8000	/* Key not usable for authentication */
+#define	KEYFLAG_NO_CONF		0x4000	/* Key not usable for confidentiality */
+
+#define	KEYFLAG_EXPERIMENTAL	0x2000	/* Security is *mandatory* if bit=0 */
+#define	KEYFLAG_RESERVED3	0x1000  /* reserved - must be zero */
+#define	KEYFLAG_RESERVED4	0x0800  /* reserved - must be zero */
+#define	KEYFLAG_USERACCOUNT	0x0400	/* key is assoc. with a user acct */
+#define	KEYFLAG_ENTITY		0x0200	/* key is assoc. with entity eg host */
+#define	KEYFLAG_ZONEKEY		0x0100	/* key is zone key for the zone named */
+#define	KEYFLAG_IPSEC		0x0080  /* key is for IPSEC use (host or user)*/
+#define	KEYFLAG_EMAIL		0x0040  /* key is for email (MIME security) */
+#define	KEYFLAG_RESERVED10	0x0020  /* reserved - must be zero */
+#define	KEYFLAG_RESERVED11	0x0010  /* reserved - must be zero */
+#define	KEYFLAG_SIGNATORYMASK	0x000F	/* key can sign DNS RR's of same name */
+
+#define  KEYFLAG_RESERVED_BITMASK ( KEYFLAG_RESERVED3 | \
+				    KEYFLAG_RESERVED4 | \
+				    KEYFLAG_RESERVED10| KEYFLAG_RESERVED11)
+
+/* The Algorithm field of the KEY and SIG RR's is an integer, {1..254} */
+#define	ALGORITHM_MD5RSA	1	/* MD5 with RSA */
+#define	ALGORITHM_EXPIRE_ONLY	253	/* No alg, no security */
+#define	ALGORITHM_PRIVATE_OID	254	/* Key begins with OID indicating alg */
+
+/* Signatures */
+					/* Size of a mod or exp in bits */
+#define	MIN_MD5RSA_KEY_PART_BITS	 512
+#define	MAX_MD5RSA_KEY_PART_BITS	2552
+					/* Total of binary mod and exp, bytes */
+#define	MAX_MD5RSA_KEY_BYTES		((MAX_MD5RSA_KEY_PART_BITS+7/8)*2+3)
+					/* Max length of text sig block */
+#define	MAX_KEY_BASE64			(((MAX_MD5RSA_KEY_BYTES+2)/3)*4)
+
+/*
  * Status return codes for T_UNSPEC conversion routines
  */
 #define CONV_SUCCESS	0
@@ -207,9 +272,9 @@
 #ifdef linux
 # include <endian.h>
 #else
-#define	LITTLE_ENDIAN	1234	/* least-significant byte first (vax, pc) */
-#define	BIG_ENDIAN	4321	/* most-significant byte first (IBM, net) */
-#define	PDP_ENDIAN	3412	/* LSB first in word, MSW first in long (pdp)*/
+#define LITTLE_ENDIAN	1234	/* least-significant byte first (vax, pc) */
+#define BIG_ENDIAN	4321	/* most-significant byte first (IBM, net) */
+#define PDP_ENDIAN	3412	/* LSB first in word, MSW first in long (pdp)*/
 
 #if defined(vax) || defined(ns32000) || defined(sun386) || defined(i386) || \
     defined(MIPSEL) || defined(_MIPSEL) || defined(BIT_ZERO_ON_RIGHT) || \
@@ -259,7 +324,9 @@ typedef struct {
 	unsigned	rd: 1;		/* recursion desired */
 			/* fields in fourth byte */
 	unsigned	ra: 1;		/* recursion available */
-	unsigned	unused :3;	/* unused bits (MBZ as of 4.9.3a3) */
+	unsigned	unused :1;	/* unused bits (MBZ as of 4.9.3a3) */
+	unsigned	ad: 1;		/* authentic data from named */
+	unsigned	cd: 1;		/* checking disabled by resolver */
 	unsigned	rcode :4;	/* response code */
 #endif
 #if BYTE_ORDER == LITTLE_ENDIAN || BYTE_ORDER == PDP_ENDIAN
@@ -271,7 +338,9 @@ typedef struct {
 	unsigned	qr :1;		/* response flag */
 			/* fields in fourth byte */
 	unsigned	rcode :4;	/* response code */
-	unsigned	unused :3;	/* unused bits (MBZ as of 4.9.3a3) */
+	unsigned	cd: 1;		/* checking disabled by resolver */
+	unsigned	ad: 1;		/* authentic data from named */
+	unsigned	unused :1;	/* unused bits (MBZ as of 4.9.3a3) */
 	unsigned	ra :1;		/* recursion available */
 #endif
 			/* remaining bytes */

@@ -967,7 +967,7 @@ changes to fit into the GNU C library and to fit the ANSI C standard,
 but the functional code is Berkeley's.@refill
 
 @item
-The Internet resolver code is taken directly from BIND 4.9.4, which is
+The Internet resolver code is taken directly from BIND 4.9.5, which is
 under both the Berkeley copyright above and also:
 
 @quotation

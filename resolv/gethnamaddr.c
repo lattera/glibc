@@ -58,6 +58,7 @@ static char sccsid[] = "@(#)gethostnamadr.c	8.1 (Berkeley) 6/4/93";
 static char rcsid[] = "$Id$";
 #endif /* LIBC_SCCS and not lint */
 
+#include <sys/types.h>
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -78,10 +79,12 @@ static char rcsid[] = "$Id$";
 #define MULTI_PTRS_ARE_ALIASES 1	/* XXX - experimental */
 
 #if defined(BSD) && (BSD >= 199103) && defined(AF_INET6)
+# include <stdlib.h>
 # include <string.h>
 #else
 # include "../conf/portability.h"
 #endif
+
 #if defined(USE_OPTIONS_H)
 # include <../conf/options.h>
 #endif
@@ -89,7 +92,7 @@ static char rcsid[] = "$Id$";
 #ifdef SPRINTF_CHAR
 # define SPRINTF(x) strlen(sprintf/**/x)
 #else
-# define SPRINTF(x) sprintf x
+# define SPRINTF(x) ((size_t)sprintf x)
 #endif
 
 #define	MAXALIASES	35
@@ -99,7 +102,6 @@ static const char AskedForGot[] =
 			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
 
 static char *h_addr_ptrs[MAXADDRS + 1];
-static struct hostent *gethostbyname_ipv4 __P((const char *));
 
 static struct hostent host;
 static char *host_aliases[MAXALIASES];
@@ -369,6 +371,7 @@ getanswer(answer, anslen, qname, qtype)
 			}
 			bcopy(cp, *hap++ = bp, n);
 			bp += n;
+			buflen -= n;
 			cp += n;
 			break;
 		default:

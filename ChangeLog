@@ -1,3 +1,70 @@
+Wed Aug 14 21:36:16 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtod.c (STRTOD): Correct assertion about size of
+	wint_t and wchar_t.  Reported by David Mosberger-Tang.
+
+Mon Aug 12 22:40:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Remove fifth parameter
+	RELOC_ADDR and make NOPLT a set of flags.  All callers
+	changed.  Delete condition that checks for resolving to the
+	location being filled in.  Add condition to skip the
+	executable's symbols if requested.
+	* elf/link.h: Change declaration of _dl_lookup_symbol
+	accordingly.
+	(DL_LOOKUP_NOEXEC, DL_LOOKUP_NOPLT): New definitions.
+	* elf/dl-reloc.c (RESOLVE): Remove second parameter and rename
+	NOPLT to FLAGS.
+	* elf/dl-runtime.c (RESOLVE): Likewise.
+	* elf/rtld.c (RESOLVE): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Pass
+	DL_LOOKUP_NOEXEC as second argument to the RESOLVE macro if
+	processing a copy reloc, DL_LOOKUP_NOPLT for a jump slot
+	reloc, zero otherwise.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Likewise.
+
+Wed Aug 14 17:57:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* MakeTAGS: Clean up use of --omit-header and -n for xgettext.
+	* po/header.pot: Add empty line at end.
+
+Sun Aug 11 13:45:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* MakeTAGS (all-pot): Remove $P/errlist.pot, all error messages
+ 	are now in $P/stdio-common.pot.
+	(XGETTEXTFLAGS-errlist.pot): Variable removed.
+
+Mon Aug 12 19:25:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (do-ar, o-iterator-doit): Compute path to autolock
+ 	script at run time, not configure time.
+	* config.make.in, configure.in: Undo previous change.
+
+Wed Aug 14 13:20:02 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/close.S: Push return value of thread
+	on stack as argument for `_exit'.  Reported by Andreas Schwab.
+
+Mon Aug 12 19:36:25 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/clone.S: New file.
+
+Wed Aug 14 04:22:35 1996  Richard Henderson  <rth@tamu.edu>
+
+	* elf/dl-load.c (_dl_map_object): Save name in malloced memory.
+	(_dl_map_object_from_fd): Free name on error.
+
+Wed Aug 14 13:00:09 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/strdup.c: Use result of memcpy to avoid reloading.
+
+Tue Aug 13 00:55:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* shadow/sgetspent_r.c (__sgetspent_r): Copy string to buffer, not
+	the other way round.
+
 Tue Aug 13 20:51:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/canonicalize.c (canonicalize): Add cast to prevent
@@ -11,9 +78,8 @@ Tue Aug 13 18:26:45 1996  Ulrich Drepper  <drepper@cygnus.com>
  	sorted.
 
 	Update from bind-4.9.5-T1A.
-	* resolv/Makefile (routines): Add inet_net_ntop, inet_net_pton,
- 	inet_net.
-	(libresolv-routines): Add base64.
+	* resolv/Makefile (libresolv-routines): Add base64, inet_net_ntop,
+ 	inet_net_pton, inet_net.
 
 	* resolv/gethnamaddr.c: Include <sys/types.h>.
 	* resolv/getnetnamadr.c: Likewise.
@@ -58,7 +124,7 @@ Tue Aug 13 18:26:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Declare sym_ntos, sym_ntop, b64_ntop, b64_pton, __p_fqnname,
 	__p_secstodate, dn_count_labels.
 
-	* resolv/arpa/nameser.h (__BIND): Update verison number.
+	* resolv/arpa/nameser.h (__BIND): Update version number.
 	Add KEYFLAG_* and ALGORITHM_* symbols.
 	(HEADER): Add `ad' and `cd' flags.
 
@@ -67,6 +133,16 @@ Tue Aug 13 18:26:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/maint.texi: Document that we use bind-4.9.5.
 	* INSTALL: Ditto.
+
+Mon Aug 12 19:03:22 1996  Thomas Bushnell n/BSG  <thomas@psilocin.gnu.ai.mit.edu>
+
+	* sysdeps/generic/gnu/types.h: Declare __fd_mask as `unsigned long'.
+
+	* mach/Makefile (mach/mach_host.uh): Depend on
+ 	$(objpfx)/mach-syscalls.mk.
+	($(objpfx)mach-shortcuts.h): Depend on $(objpfx)mach/mach_host.h.
+	(This fixes a make loop; thanks to Marcus Daniels
+ 	<marcus@sysc.pdx.edu> for the patch.)
 
 Mon Aug 12 16:41:52 1996  Thomas Bushnell n/BSG  <thomas@gnu.ai.mit.edu>
 

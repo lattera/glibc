@@ -46,13 +46,16 @@ u_long		 inet_addr __P((const char *));
 int		 inet_aton __P((const char *, struct in_addr *));
 u_int32_t	 inet_lnaof __P((struct in_addr));
 struct in_addr	 inet_makeaddr __P((u_int32_t , u_int32_t));
+char *		 inet_neta __P((u_long, char *, size_t));
 u_int32_t	 inet_netof __P((struct in_addr));
 u_int32_t	 inet_network __P((const char *));
+char		*inet_net_ntop __P((int, const void *, int, char *, size_t));
+int		 inet_net_pton __P((int, const char *, void *, size_t));
 char		*inet_ntoa __P((struct in_addr));
-int		 inet_pton __P((int af, const char *src, void *dst));
-const char	*inet_ntop __P((int af, const void *src, char *dst, size_t s));
-u_int		 inet_nsap_addr __P((const char *, u_char *, int maxlen));
-char		*inet_nsap_ntoa __P((int, const u_char *, char *ascii));
+int		 inet_pton __P((int, const char *, void *));
+const char	*inet_ntop __P((int, const void *, char *, size_t));
+u_int		 inet_nsap_addr __P((const char *, u_char *, int));
+char		*inet_nsap_ntoa __P((int, const u_char *, char *));
 __END_DECLS
 
 #endif /* !_INET_H_ */

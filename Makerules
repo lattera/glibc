@@ -474,7 +474,8 @@ define o-iterator-doit
 $(common-objpfx)$(patsubst %,$(libtype$o),c)($(ar-symtab-name)): \
 	  $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 	    $(patsubst $(objpfx)%,%,$(o-objects))) $(subdirs-stamp-o); \
-	$$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
+	$(AUTOLOCK) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c).lck \
+	  $$(RANLIB) $$(common-objpfx)$$(patsubst %,$$(libtype$o),c)
 endef
 ifndef subdir
 subdirs-stamps := $(foreach d,$(subdirs),\

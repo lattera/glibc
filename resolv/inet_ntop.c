@@ -32,7 +32,7 @@ static char rcsid[] = "$Id$";
 #ifdef SPRINTF_CHAR
 # define SPRINTF(x) strlen(sprintf/**/x)
 #else
-# define SPRINTF(x) sprintf x
+# define SPRINTF(x) ((size_t)sprintf x)
 #endif
 
 /*
@@ -127,7 +127,7 @@ inet_ntop6(src, dst, size)
 	 *	Copy the input (bytewise) array into a wordwise array.
 	 *	Find the longest run of 0x00's in src[] for :: shorthanding.
 	 */
-	bzero(words, sizeof words);
+	memset(words, '\0', sizeof words);
 	for (i = 0; i < IN6ADDRSZ; i++)
 		words[i / 2] |= (src[i] << ((1 - (i % 2)) << 3));
 	best.base = -1;
@@ -186,7 +186,7 @@ inet_ntop6(src, dst, size)
 	/*
 	 * Check for overflow, copy, and we're done.
 	 */
-	if ((tp - tmp) > size) {
+	if ((size_t)(tp - tmp) > size) {
 		errno = ENOSPC;
 		return (NULL);
 	}

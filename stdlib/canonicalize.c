@@ -73,7 +73,7 @@ canonicalize (const char *name, char *resolved)
 
       /* find end of path component: */
       for (end = start; *end && *end != '/'; ++end);
-      
+
       if (end - start == 0)
 	break;
       else if (strncmp (start, ".", end - start) == 0)
@@ -110,7 +110,7 @@ canonicalize (const char *name, char *resolved)
 	  memcpy (dest, start, end - start);
 	  dest += end - start;
 	  *dest = '\0';
-	  
+
 	  if (__lstat (rpath, &st) < 0)
 	    goto error;
 
@@ -132,7 +132,7 @@ canonicalize (const char *name, char *resolved)
 	      if (!extra_buf)
 		extra_buf = __alloca (path_max);
 
-	      if (n + strlen (end) >= path_max)
+	      if ((long int) (n + strlen (end)) >= path_max)
 		{
 		  errno = ENAMETOOLONG;
 		  goto error;

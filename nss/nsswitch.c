@@ -189,8 +189,16 @@ __nss_configure_lookup (const char *dbname, const char *service_line)
   size_t cnt;
 
   for (cnt = 0; cnt < sizeof databases; ++cnt)
-    if (strcmp (dbname, databases[cnt].name) == 0)
-      break;
+    {
+      int cmp = strcmp (dbname, databases[cnt].name);
+      if (cmp == 0)
+	break;
+      if (cmp > 0)
+	{
+	  errno = EINVAL;
+	  return -1;
+	}
+    }
 
   if (cnt == sizeof databases)
     {

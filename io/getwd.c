@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <limits.h>
 #include <string.h>
@@ -26,22 +25,30 @@ Cambridge, MA 02139, USA.  */
    If successful, return BUF.  If not, put an error message in
    BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
 char *
-DEFUN(getwd, (buf), char *buf)
+getwd (buf)
+     char *buf;
 {
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+  char fetchbuf[PATH_MAX];
+#else
+#define fetchbuf buf
+#endif
+
   if (buf == NULL)
     {
       errno = EINVAL;
       return NULL;
     }
 
-#ifndef	PATH_MAX
-#define	PATH_MAX	1024	/* Arbitrary; this function is unreliable.  */
-#endif
-  if (getcwd (buf, PATH_MAX) == NULL)
+  if (getcwd (fetchbuf, PATH_MAX) == NULL)
     {
-      (void) strncpy (buf, strerror (errno), PATH_MAX);
+      strncpy (buf, strerror (errno), PATH_MAX);
       return NULL;
     }
+
+  if (fetchbuf != buf)
+    strcpy (buf, fetchbuf);
 
   return buf;
 }

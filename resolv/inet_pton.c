@@ -67,7 +67,7 @@ inet_pton(af, src, dst)
 
 /* int
  * inet_pton4(src, dst)
- *	like inet_pton() but without all the hexadecimal and shorthand.
+ *	like inet_aton() but without all the hexadecimal and shorthand.
  * return:
  *	1 if `src' is a valid dotted quad, else 0.
  * notice:
@@ -111,7 +111,8 @@ inet_pton4(src, dst)
 	}
 	if (octets < 4)
 		return (0);
-	bcopy(tmp, dst, INADDRSZ);
+
+	memcpy(dst, tmp, INADDRSZ);
 	return (1);
 }
 
@@ -140,7 +141,7 @@ inet_pton6(src, dst)
 	int ch, saw_xdigit;
 	u_int val;
 
-	bzero((tp = tmp), IN6ADDRSZ);
+	memset((tp = tmp), '\0', IN6ADDRSZ);
 	endp = tp + IN6ADDRSZ;
 	colonp = NULL;
 	/* Leading :: requires some special handling. */
@@ -209,6 +210,6 @@ inet_pton6(src, dst)
 	}
 	if (tp != endp)
 		return (0);
-	bcopy(tmp, dst, IN6ADDRSZ);
+	memcpy(dst, tmp, IN6ADDRSZ);
 	return (1);
 }
