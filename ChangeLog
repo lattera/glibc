@@ -1,3 +1,12 @@
+2005-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.h: Remove no-glibc support.
+
+2005-01-12  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #650]
+	* malloc/malloc.h: Always include features.h.
+
 2005-01-10  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ia64/fpu/e_logl.c: File removed.
