@@ -1,3 +1,17 @@
+2003-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/cris/sysdep.h: Fix handling of syscalls with
+	more than four parameters.
+	Patch by Uwe Reimann <libc-alpha@pulsar.homelinux.net>.
+
+2003-06-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/kernel_stat.h: New file.
+
+	* stdio-common/printf-parsemb.c: Include stdlib.h and sys/param.h.
+
 2003-06-12  Roland McGrath  <roland@redhat.com>
 
 	* Makerules ($(objpfx)stubs): Rewrite sed magic.
