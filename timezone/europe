@@ -1,13 +1,13 @@
-# @(#)europe	7.65
+# @(#)europe	7.66
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (1999-03-22):
+# From Paul Eggert <eggert@twinsun.com> (1999-10-29):
 # A good source for time zone historical data outside the U.S. is
-# Thomas G. Shanks, The International Atlas (4th edition),
-# San Diego: ACS Publications, Inc. (1995).
+# Thomas G. Shanks, The International Atlas (5th edition),
+# San Diego: ACS Publications, Inc. (1999).
 #
 # Gwillim Law <LAW@encmail.encompass.com> writes that a good source
 # for recent time zone data is the International Air Transport
@@ -724,10 +724,10 @@
 # changes in Alderney and Guernsey were at the same 2am GMT time as
 # for Great Britain; the order for Jersey is more interesting.
 #
-# From Paul Eggert (1999-10-06):
+# From Paul Eggert (1999-10-22):
 # Mark Brader kindly translated the 1916 Jersey order from the French.
 # It says that the 1916 transitions were 05-20 and 09-30 at midnight.
-# Presumably this was 24:00, two hours earlier than Great Britain.
+# No doubt this was 24:00, two or three hours earlier than Great Britain.
 # It also says that after 1916 they'll sync with Great Britain.
 
 # From Joseph S. Myers (1999-09-28):
@@ -1005,9 +1005,6 @@ Rule	Russia	1919	only	-	May	31	23:00	2:00	MDST
 Rule	Russia	1919	only	-	Jul	 1	 2:00	1:00	S
 Rule	Russia	1919	only	-	Aug	16	 0:00	0	-
 Rule	Russia	1921	only	-	Feb	14	23:00	1:00	S
-# Shanks gives 1921 Mar 21 for the following transition.
-# From Andrey A. Chernov <ache@astral.msk.su> (1993-11-12):
-# My sources says, that it is Mar 20, not 21.
 Rule	Russia	1921	only	-	Mar	20	23:00	2:00	M # Midsummer
 Rule	Russia	1921	only	-	Sep	 1	 0:00	1:00	S
 Rule	Russia	1921	only	-	Oct	 1	 0:00	0	-
@@ -1090,7 +1087,7 @@ Rule	Albania	1984	only	-	Apr	 1	0:00	1:00	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Tirane	1:19:20 -	LMT	1914
 			1:00	-	CET	1940 Jun 16
-# The following transition is from Shanks's 4th edition (1995).
+# The following transition is from Shanks.
 			1:00	Albania	CE%sT	1984 Jul
 			1:00	EU	CE%sT
 
@@ -1120,17 +1117,18 @@ Zone	Europe/Vienna	1:05:20 -	LMT	1893 Apr
 			1:00	EU	CE%sT
 
 # Belarus
-# Transitions before 1991 are from Shanks (1995).
+# Transitions before 1991 are from Shanks.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Minsk	1:50:16 -	LMT	1880
 			1:50	-	MMT	1924 May 2 # Minsk Mean Time
 			2:00	-	EET	1930 Jun 21
 			3:00	-	MSK	1941 Jun 28
 			1:00	C-Eur	CE%sT	1944 Jul  3
-			3:00	Russia	MSK/MSD	1991 Mar 31 2:00s
+			3:00	Russia	MSK/MSD	1990
+			3:00	-	MSK	1991 Mar 31 2:00s
 			2:00	1:00	EEST	1991 Sep 29 2:00s
-			2:00	-	EET	1992 Mar 29 2:00s
-			2:00	1:00	EEST	1992 Sep 27 2:00s
+			2:00	-	EET	1992 Mar 29 0:00s
+			2:00	1:00	EEST	1992 Sep 27 0:00s
 			2:00	Russia	EE%sT
 
 # Belgium
@@ -1366,7 +1364,6 @@ Zone	Europe/Helsinki	1:39:52 -	LMT	1878 May 31
 # France
 #
 # Shanks seems to use `24:00' ambiguously; we resolve it with Whitman.
-# From Shanks (1991):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	France	1916	only	-	Jun	14	23:00s	1:00	S
 Rule	France	1916	1919	-	Oct	Sun>=1	23:00s	0	-
@@ -1454,7 +1451,6 @@ Rule	Germany	1945	only	-	May	31	3:00	2:00	M # Midsummer
 Rule	Germany	1945	only	-	Sep	23	3:00	1:00	S
 Rule	Germany	1945	only	-	Nov	18	2:00s	0	-
 Rule	Germany	1946	only	-	Apr	14	2:00s	1:00	S
-# Shanks gives 1946-10-06; go with the PTB.
 Rule	Germany	1946	only	-	Oct	 7	2:00s	0	-
 Rule	Germany	1947	1949	-	Oct	Sun>=1	2:00s	0	-
 Rule	Germany	1947	only	-	Apr	 6	2:00s	1:00	S
@@ -1571,10 +1567,10 @@ Zone	Europe/Budapest	1:16:20 -	LMT	1890 Oct
 # might be a reference to the Julian calendar as opposed to Gregorian, or it
 # might mean something else (???).
 #
-# From Paul Eggert <eggert@twinsun.com> (1993-12-09):
+# From Paul Eggert <eggert@twinsun.com> (1999-10-29):
 # The Iceland Almanak, Shanks and Whitman disagree on many points.
 # We go with the Almanak, except for one claim from Shanks, namely that
-# Reykavik was -1:28 from 1837 to 1908, local mean time before that.
+# Reykavik was 21W57 from 1837 to 1908, local mean time before that.
 #
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Iceland	1917	1918	-	Feb	19	23:00	1:00	S
@@ -1728,8 +1724,6 @@ Zone	Europe/Riga	1:36:24	-	LMT	1880
 			2:00	-	EET	1940 Aug  5
 			3:00	-	MSK	1941 Jul
 			1:00	C-Eur	CE%sT	1944 Oct 13
-			# Shanks says 1944-08-08, but
-			# Riga fell to the Red Army on 1944-10-13.
 			3:00	Russia	MSK/MSD	1989 Mar lastSun 2:00s
 			2:00	1:00	EEST	1989 Sep lastSun 2:00s
 			2:00	Latvia	EE%sT	1997 Jan 21
@@ -1832,12 +1826,14 @@ Zone	Europe/Malta	0:58:04 -	LMT	1893 Nov  2	# Valletta
 			1:00	EU	CE%sT
 
 # Moldova
+# see commentary for Romania
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Chisinau	1:55:20 -	LMT	1924 May  2
 			2:00	-	EET	1930 Jun 21
 			3:00	Russia	MSK/MSD	1991 Mar 31 2:00s
 			2:00	1:00	EEST	1991 Sep 29 2:00s
-			2:00	E-Eur	EE%sT
+			2:00	E-Eur	EE%sT	1997
+			2:00	EU	EE%sT
 
 # Monaco
 # Shanks gives 0:09 for Paris Mean Time; go with Howse's more precise 0:09:21.
@@ -1852,7 +1848,7 @@ Zone	Europe/Monaco	0:29:32 -	LMT	1891 Mar 15
 # Howse writes that the Netherlands' railways used GMT between 1892 and 1940,
 # but for other purposes the Netherlands used Amsterdam mean time.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-# Shanks gives 1916 May 1 0:00 and 1916 Oct 1 0:00; go with Whitman.
+# Shanks gives 1916 Apr 30 24:00 and 1916 Oct 1 00:00; go with Whitman.
 Rule	Neth	1916	only	-	May	 1	2:00s	1:00	NST	# Netherlands Summer Time
 Rule	Neth	1916	only	-	Oct	 2	2:00s	0	AMT	# Amsterdam Mean Time
 Rule	Neth	1917	only	-	Apr	16	2:00s	1:00	NST
@@ -1878,7 +1874,6 @@ Rule	Neth	1937	1939	-	Oct	Sun>=2	2:00s	0	-
 Rule	Neth	1938	1939	-	May	15	2:00s	1:00	S
 Rule	Neth	1945	only	-	Apr	 2	2:00s	1:00	S
 Rule	Neth	1945	only	-	May	20	2:00s	0	-
-# Before 1937, Shanks says just `0:20'; we use Whitman's more precise figure.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Europe/Amsterdam	0:19:28 -	LMT	1892 May
 			0:19:28	Neth	%s	1937 Jul
@@ -2067,6 +2062,14 @@ Zone Atlantic/Madeira	-1:07:36 -	LMT	1884		# Funchal
 			 0:00	EU	WE%sT
 
 # Romania
+#
+# From Paul Eggert (1999-10-07):
+# <a href="http://www.nineoclock.ro/POL/1778pol.html">
+# Nine O'clock</a> (1998-10-23) reports that the switch occurred at
+# 04:00 local time in fall 1998.  For lack of better info,
+# assume that Romania and Moldova switched to EU rules in 1997,
+# the same year as Bulgaria.
+#
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Romania	1932	only	-	May	21	 0:00s	1:00	S
 Rule	Romania	1932	1939	-	Oct	Sun>=1	 0:00s	0	-
@@ -2083,7 +2086,8 @@ Zone Europe/Bucharest	1:44:24 -	LMT	1891 Oct
 			2:00	Romania	EE%sT	1981 Mar 29 2:00s
 			2:00	C-Eur	EE%sT	1991
 			2:00	Romania	EE%sT	1994
-			2:00	E-Eur	EE%sT
+			2:00	E-Eur	EE%sT	1997
+			2:00	EU	EE%sT
 
 # Russia
 
@@ -2293,7 +2297,7 @@ Zone Europe/Stockholm	1:12:12 -	LMT	1878 May 31
 # From Whitman (who writes ``Midnight?''):
 Rule	Swiss	1940	only	-	Nov	 2	0:00	1:00	S
 Rule	Swiss	1940	only	-	Dec	31	0:00	0	-
-# From Shanks (1991):
+# From Shanks:
 Rule	Swiss	1941	1942	-	May	Sun>=1	2:00	1:00	S
 Rule	Swiss	1941	1942	-	Oct	Sun>=1	0:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -2316,7 +2320,6 @@ Rule	Turkey	1922	only	-	Oct	 8	0:00	0	-
 Rule	Turkey	1924	only	-	May	13	0:00	1:00	S
 Rule	Turkey	1924	1925	-	Oct	 1	0:00	0	-
 Rule	Turkey	1925	only	-	May	 1	0:00	1:00	S
-# Shanks omits the first two transitions in 1940; go with Whitman.
 Rule	Turkey	1940	only	-	Jun	30	0:00	1:00	S
 Rule	Turkey	1940	only	-	Oct	 5	0:00	0	-
 Rule	Turkey	1940	only	-	Dec	 1	0:00	1:00	S

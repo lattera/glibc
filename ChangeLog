@@ -1,3 +1,55 @@
+1999-11-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (_dl_dst_count): Allow $ORIGIN to point to
+	directory with the reference since this is as secure as using the
+	object with the dependency.
+	(_dl_dst_substitute): Likewise.
+
+	* elf/dl-load.c (_dl_dst_count): Change strings in first two
+	strncmp calls to allow reuse.
+	(_dl_dst_substitute): Likewise.
+
+1999-11-01  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* posix/regex.c (init_syntax_once): move below definition of
+	ISALNUM etc., then use ISALNUM to init the table, so that
+	the word ops will work if i18n'ed.
+	(SYNTAX): And subscript with 0xFF for 8bit character sets.
+
+1999-11-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/getlogin_r.c (getlogin_r): Sync with getlogin
+	implementation for ttyname_r call; fix inverted condition; return
+	ut_user.  Closes PR libc/1438.
+
+1999-11-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/checktab.awk: Update from tzcode1999h.
+	* timezone/africa: Update from tzdata1999i.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/zone.tab: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Define values also as
+	macros.  Patch by brg@csua.berkeley.edu [PR libc/1439].
+
+1999-11-09  Andreas Jaeger  <aj@suse.de>
+
+	* posix/Makefile (tests): Added tst-getlogin.
+
+	* posix/tst-getlogin.c: New file, contains simple tests for
+	getlogin and getlogin_r.
+
+1999-11-09  Andreas Schwab  <schwab@suse.de>
+
+	* misc/syslog.c: For LOG_PERROR only append a newline if
+	necessary.
+
 1999-11-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add STT_REGISTER, STT_HP_OPAQUE, and STT_ST_STUB

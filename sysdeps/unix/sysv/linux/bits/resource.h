@@ -219,6 +219,9 @@ struct rusage
 enum __priority_which
 {
   PRIO_PROCESS = 0,		/* WHO is a process ID.  */
+#define PRIO_PROCESS PRIO_PROCESS
   PRIO_PGRP = 1,		/* WHO is a process group ID.  */
+#define PRIO_PGRP PRIO_PGRP
   PRIO_USER = 2			/* WHO is a user ID.  */
+#define PRIO_USER PRIO_USER
 };

@@ -1,4 +1,4 @@
-# @(#)australasia	7.51
+# @(#)australasia	7.52
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -8,8 +8,7 @@
 # Australia
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-# Shanks gives 1917 Jan 1 0:01; go with Whitman (and guess 2:00).
-Rule	Aus	1916	only	-	Oct	 1	2:00	1:00	-
+Rule	Aus	1917	only	-	Jan	 1	0:01	1:00	-
 Rule	Aus	1917	only	-	Mar	25	2:00	0	-
 Rule	Aus	1942	only	-	Jan	 1	2:00	1:00	-
 Rule	Aus	1942	only	-	Mar	29	2:00	0	-
@@ -24,11 +23,9 @@ Rule	Aus	1943	only	-	Oct	 3	2:00	1:00	-
 # Northern Territory
 Zone Australia/Darwin	 8:43:20 -	LMT	1895 Feb
 			 9:00	-	CST	1899 May
-			 9:30	-	CST	1917 Jan 1 0:01
 			 9:30	Aus	CST
 # Western Australia
 Zone Australia/Perth	 7:43:24 -	LMT	1895 Dec
-			 8:00	-	WST	1917 Jan 1 0:01
 			 8:00	Aus	WST	1943 Jul
 			 8:00	-	WST	1974 Oct lastSun 2:00s
 			 8:00	1:00	WST	1975 Mar Sun>=1 2:00s
@@ -58,11 +55,9 @@ Rule	AQ	1990	1992	-	Mar	Sun>=1	2:00s	0	-
 Rule	Holiday	1992	1993	-	Oct	lastSun	2:00s	1:00	-
 Rule	Holiday	1993	1994	-	Mar	Sun>=1	2:00s	0	-
 Zone Australia/Brisbane	10:12:08 -	LMT	1895
-			10:00	-	EST	1917 Jan 1 0:01
 			10:00	Aus	EST	1971
 			10:00	AQ	EST
 Zone Australia/Lindeman  9:55:56 -	LMT	1895
-			10:00	-	EST	1917 Jan 1 0:01
 			10:00	Aus	EST	1971
 			10:00	AQ	EST	1992 Jul
 			10:00	Holiday	EST
@@ -81,7 +76,6 @@ Rule	AS	1995	max	-	Mar	lastSun	2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Adelaide	9:14:20 -	LMT	1895 Feb
 			9:00	-	CST	1899 May
-			9:30	-	CST	1917 Jan 1 0:01
 			9:30	Aus	CST	1971
 			9:30	AS	CST
 
@@ -99,11 +93,14 @@ Rule	AT	1986	only	-	Oct	Sun>=15	2:00s	1:00	-
 Rule	AT	1987	1990	-	Mar	Sun>=15	2:00s	0	-
 Rule	AT	1987	only	-	Oct	Sun>=22	2:00s	1:00	-
 Rule	AT	1988	1990	-	Oct	lastSun	2:00s	1:00	-
-Rule	AT	1991	max	-	Oct	Sun>=1	2:00s	1:00	-
+Rule	AT	1991	1999	-	Oct	Sun>=1	2:00s	1:00	-
 Rule	AT	1991	max	-	Mar	lastSun	2:00s	0	-
+Rule	AT	2000	only	-	Aug	lastSun	2:00s	1:00	-
+Rule	AT	2001	max	-	Oct	Sun>=1	2:00s	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Hobart	9:49:16	-	LMT	1895 Sep
-			10:00	-	EST	1917 Jan 1 0:01
+			10:00	-	EST	1916 Oct 1 2:00
+			10:00	1:00	EST	1917 Feb
 			10:00	Aus	EST	1967
 			10:00	AT	EST
 
@@ -121,7 +118,6 @@ Rule	AV	2000	only	-	Aug	lastSun	2:00s	1:00	-
 Rule	AV	2001	max	-	Oct	lastSun	2:00s	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Melbourne 9:39:52 -	LMT	1895 Feb
-			10:00	-	EST	1917 Jan 1 0:01
 			10:00	Aus	EST	1971
 			10:00	AV	EST
 
@@ -141,13 +137,11 @@ Rule	AN	2000	only	-	Aug	lastSun	2:00s	1:00	-
 Rule	AN	2001	max	-	Oct	lastSun	2:00s	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Sydney	10:04:52 -	LMT	1895 Feb
-			10:00	-	EST	1917 Jan 1 0:01
 			10:00	Aus	EST	1971
 			10:00	AN	EST
 Zone Australia/Broken_Hill 9:25:48 -	LMT	1895 Feb
 			10:00	-	EST	1896 Aug 23
 			9:00	-	CST	1899 May
-			9:30	-	CST	1917 Jan 1 0:01
 			9:30	Aus	CST	1971
 			9:30	AN	CST	2000
 			9:30	AS	CST
@@ -157,10 +151,10 @@ Zone Australia/Broken_Hill 9:25:48 -	LMT	1895 Feb
 Rule	LH	1981	1984	-	Oct	lastSun	2:00s	1:00	-
 Rule	LH	1982	1985	-	Mar	Sun>=1	2:00s	0	-
 Rule	LH	1985	only	-	Oct	lastSun	2:00s	0:30	-
-Rule	LH	1986	1989	-	Mar	Sun>=15	2:00s	0	-
+Rule	LH	1986	1991	-	Mar	Sun>=15	2:00s	0	-
 Rule	LH	1986	only	-	Oct	19	2:00s	0:30	-
 Rule	LH	1987	max	-	Oct	lastSun	2:00s	0:30	-
-Rule	LH	1990	1995	-	Mar	Sun>=1	2:00s	0	-
+Rule	LH	1992	1995	-	Mar	Sun>=1	2:00s	0	-
 Rule	LH	1996	max	-	Mar	lastSun	2:00s	0	-
 Zone Australia/Lord_Howe 10:36:20 -	LMT	1895 Feb
 			10:00	-	EST	1981 Mar
@@ -193,7 +187,7 @@ Zone Indian/Christmas	7:02:52 -	LMT	1895 Feb
 			7:00	-	CXT	# Christmas Island Time
 
 # Cook Is
-# From Shanks (1995):
+# From Shanks:
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Cook	1978	only	-	Nov	12	0:00	0:30	HS
 Rule	Cook	1979	1991	-	Mar	Sun>=1	0:00	0	-
@@ -271,8 +265,9 @@ Zone Pacific/Truk	10:07:08 -	LMT	1901
 Zone Pacific/Ponape	10:32:52 -	LMT	1901		# Kolonia
 			11:00	-	PONT			# Ponape Time
 Zone Pacific/Kosrae	10:51:56 -	LMT	1901
-			11:00	-	PONT	1969 Oct
-			12:00	-	KOST			# Kosrae Time
+			11:00	-	KOST	1969 Oct	# Kosrae Time
+			12:00	-	KOST	1999
+			11:00	-	KOST
 
 # Nauru
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -287,6 +282,7 @@ Zone	Pacific/Nauru	11:07:40 -	LMT	1921 Jan 15	# Uaobe
 Rule	NC	1977	1978	-	Dec	Sun>=1	0:00	1:00	S
 Rule	NC	1978	1979	-	Feb	27	0:00	0	-
 Rule	NC	1996	only	-	Dec	 1	2:00s	1:00	S
+# Shanks says the following was at 2:00; go with IATA.
 Rule	NC	1997	only	-	Mar	 2	2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Pacific/Noumea	11:05:48 -	LMT	1912 Jan 13
@@ -394,10 +390,9 @@ Zone	Pacific/Fakaofo	-11:24:56 -	LMT	1901
 			-10:00	-	TKT	# Tokelau Time
 
 # Tonga
-# Transition time is a guess--see below
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	Tonga	1999	max	-	Oct	Sat>=1	0:00	1:00	S
-Rule	Tonga	2000	max	-	Apr	Sat>=15	0:00	-	-
+Rule	Tonga	1999	max	-	Oct	Sat>=1	2:00s	1:00	S
+Rule	Tonga	2000	max	-	Apr	Sun>=16	2:00s	-	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Tongatapu	12:19:20 -	LMT	1901
 			12:20	-	TOT	1941 # Tonga Time
@@ -467,10 +462,10 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (1999-03-22):
+# From Paul Eggert <eggert@twinsun.com> (1999-10-29):
 # A good source for time zone historical data outside the U.S. is
-# Thomas G. Shanks, The International Atlas (4th edition),
-# San Diego: ACS Publications, Inc. (1995).
+# Thomas G. Shanks, The International Atlas (5th edition),
+# San Diego: ACS Publications, Inc. (1999).
 #
 # Gwillim Law <LAW@encmail.encompass.com> writes that a good source
 # for recent time zone data is the International Air Transport
@@ -733,6 +728,13 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # 6 weeks a year now when we are out of sync with the rest of Australia
 # (but nothing new about that).
 
+# From Alex Livingston (1999-10-04):
+# I heard on the ABC (Australian Broadcasting Corporation) radio news on the
+# (long) weekend that Tasmania, which usually goes its own way in this regard,
+# has decided to join with most of NSW, the ACT, and most of Victoria
+# (Australia) and start daylight saving on the last Sunday in August in 2000
+# instead of the first Sunday in October.
+
 # Victoria
 
 # The rules for 1971 through 1991 were reported by George Shepherd
@@ -884,11 +886,11 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # time on both the first Sunday in October and the third Sunday in March.
 # As with Australia, we'll assume the tradition is 2:00s, not 2:00.
 #
-# From Paul Eggert (1996-11-22):
-# Shanks gives no data for Chatham; usno1989 says it's +12:45,
-# usno1995 says it's +12:45/+13:45, and IATA SSIM (1991/1996)
+# From Paul Eggert (1999-10-29):
+# Shanks gives no time data for Chatham; usno1989 says it's +12:45,
+# usno1995 says it's +12:45/+13:45, and IATA SSIM (1991/1999)
 # gives the NZ rules but with transitions at 2:45 local standard time.
-# Guess that they adopted DST in 1990.
+# Guess that they have been in lock-step with NZ since 1990.
 
 ###############################################################################
 
@@ -944,6 +946,14 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 #
 # Shanks writes that Truk switched from GMT+10 to GMT+11 on 1978-10-01;
 # ignore this for now.
+
+# From Paul Eggert (1999-10-29):
+# The Federated States of Micronesia Visitors Board writes in
+# <a href="http://www.fsmgov.org/info/clocks.html">
+# The Federated States of Micronesia - Visitor Information
+# </a> (1999-01-26)
+# that Truk and Yap are GMT+10, and Ponape and Kosrae are GMT+11.
+# We don't know when Kosrae switched from GMT+12; assume January 1 for now.
 
 # Samoa
 
@@ -1018,3 +1028,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Sept. 10, clocks must be turned ahead one hour on the opening day and 
 # set back an hour on the closing date."
 # Alas, no indication of the time of day.
+
+# From Rives McDow (1999-10-06):
+# Tonga started its Daylight Saving on Saturday morning October 2nd at 0200am.
+# Daylight Saving ends on April 16 at 0300am which is Sunday morning.

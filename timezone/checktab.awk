@@ -1,6 +1,6 @@
 # Check tz tables for consistency.
 
-# @(#)checktab.awk	1.5
+# @(#)checktab.awk	1.6
 
 # Contributed by Paul Eggert <eggert@twinsun.com>.
 
@@ -148,7 +148,7 @@ END {
 	if (0 < want_warnings) {
 		for (cc in cc2name) {
 			if (!cc_used[cc]) {
-				printf "%s:%d: warning:" \
+				printf "%s:%d: warning: " \
 					"no Zone entries for %s (%s)\n", \
 					iso_table, cc2NR[cc], cc, cc2name[cc]
 			}

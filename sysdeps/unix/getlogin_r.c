@@ -40,20 +40,20 @@ getlogin_r (name, name_len)
   int result = 0;
   struct utmp *ut, line, buffer;
 
-  {
-    int d = __open ("/dev/tty", 0);
-    if (d < 0)
-      return errno;
+  /* Get name of tty connected to fd 0.  Return if not a tty or
+     if fd 0 isn't open.  Note that a lot of documentation says that
+     getlogin() is based on the controlling terminal---what they
+     really mean is "the terminal connected to standard input".  The
+     getlogin() implementation of DEC Unix, SunOS, Solaris, HP-UX all
+     return NULL if fd 0 has been closed, so this is the compatible
+     thing to do.  Note that ttyname(open("/dev/tty")) on those
+     systems returns /dev/tty, so that is not a possible solution for
+     getlogin().  */
 
-    result = __ttyname_r (d, real_tty_path, sizeof (tty_pathname));
-    (void) __close (d);
-
-    if (result != 0)
-      {
-	__set_errno (result);
-	return result;
-      }
-  }
+  result = __ttyname_r (0, real_tty_path, sizeof (tty_pathname));
+  
+  if (result != 0)
+    return result;
 
   real_tty_path += 5;		/* Remove "/dev/".  */
 
@@ -69,16 +69,16 @@ getlogin_r (name, name_len)
     }
   else
     {
-      size_t needed = strlen (ut->ut_line) + 1;
+      size_t needed = strlen (ut->ut_user) + 1;
 
-      if (needed < name_len)
+      if (needed > name_len)
 	{
 	  __set_errno (ERANGE);
 	  result = ERANGE;
 	}
       else
 	{
-	  memcpy (name, ut->ut_line, needed);
+	  memcpy (name, ut->ut_user, needed);
 	  result = 0;
 	}
     }

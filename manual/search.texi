@@ -475,9 +475,11 @@ elements.
 To remove a specific element matching @var{key} from the tree
 @code{tdelete} can be used.  It locates the matching element using the
 same method as @code{tfind}.  The corresponding element is then removed
-and the data if this tree node is returned by the function.  If there is
-no matching entry in the tree nothing can be deleted and the function
-returns @code{NULL}.
+and a pointer to the parent of the deleted node is returned by the
+function.  If there is no matching entry in the tree nothing can be
+deleted and the function returns @code{NULL}.  If the root of the tree
+is deleted @code{tdelete} returns some unspecified value not equal to
+@code{NULL}.
 @end deftypefun
 
 @comment search.h

@@ -1,4 +1,4 @@
-# @(#)northamerica	7.47
+# @(#)northamerica	7.48
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -408,6 +408,16 @@ Zone America/Louisville	-5:43:02 -	LMT	1883 Nov 18 12:00
 			-5:00	US	E%sT	1974 Jan  6 2:00
 			-6:00	1:00	CDT	1974 Oct 27 2:00
 			-5:00	US	E%sT
+# Wayne County, Kentucky
+# From
+# <a href="http://frwebgate.access.gpo.gov/cgi-bin/getdoc.cgi?dbname=1999_register&docid=99-26945-filed">
+# Federal Register Doc. 99-26945
+# </a> (1999-10-14 08:45-04)
+# In response to a petition by the Wayne County, Kentucky, Fiscal Court,
+# the Department of Transportation (DOT) proposed to move Wayne County,
+# Kentucky, from the Central Time Zone to the Eastern Time Zone.... Now
+# the earliest date that the proposed change might take effect is
+# October 29, 2000.
 
 # Michigan
 #
@@ -482,10 +492,10 @@ Link	Pacific/Honolulu	HST
 ################################################################################
 
 
-# From Paul Eggert <eggert@twinsun.com> (1996-11-22):
+# From Paul Eggert <eggert@twinsun.com> (1999-10-29):
 # A good source for time zone historical data outside the US is
-# Thomas G. Shanks, The International Atlas (4th edition),
-# San Diego: ACS Publications, Inc. (1995).
+# Thomas G. Shanks, The International Atlas (5th edition),
+# San Diego: ACS Publications, Inc. (1999).
 #
 # Gwillim Law <LAW@encmail.encompass.com> writes that a good source
 # for recent time zone data is the International Air Transport
@@ -536,7 +546,7 @@ Link	Pacific/Honolulu	HST
 # From Paul Eggert <eggert@twinsun.com> (1994-11-22):
 # Alas, this sort of thing must be handled by localization software.
 
-# The data for Canada are all from Shanks (1991).
+# The data for Canada are all from Shanks.
 
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
@@ -682,7 +692,7 @@ Zone America/Glace_Bay	-3:59:48 -	LMT	1902 Jun 15
 # says that Ontario east of 90W uses EST/EDT, and west of 90W uses CST/CDT.
 # Officially Atikokan is therefore on CST/CDT, and most likely this report
 # concerns a non-official time observed as a matter of local practice.
-# For what it's worth, Shanks (1995) says that Atikokan has agreed with
+# For what it's worth, Shanks says that Atikokan has agreed with
 # Rainy River ever since standard time was introduced.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
@@ -854,7 +864,7 @@ Zone America/Edmonton	-7:33:52 -	LMT	1906 Sep
 
 # From Paul Eggert (1996-06-12):
 # Shanks writes that since 1970 most of this region has been like Vancouver.
-# Dawswon Creek uses MST.  Much of east BC is like Edmonton.
+# Dawson Creek uses MST.  Much of east BC is like Edmonton.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Vanc	1918	only	-	Apr	14	2:00	1:00	D
@@ -877,9 +887,8 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 
 # Northwest Territories, Nunavut, Yukon
 
-# From Paul Eggert (1996-10-07):
+# From Paul Eggert (1999-10-29):
 # Dawson switched to PST in 1973.  Inuvik switched to MST in 1979.
-# Shanks's table for Watson Lake is corrupted, so we have no data there.
 # Mathew Englander <mathew@io.org> (1996-10-07) gives the following refs:
 #	* 1967. Paragraph 28(34)(g) of the Interpretation Act, S.C. 1967-68,
 #	c. 7 defines Yukon standard time as UTC-9.  This is still valid;
@@ -892,7 +901,7 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 # From Rives McDow (1999-09-04):
 # Nunavut ... moved ... to incorporate the whole territory into one time zone.
 # <a href="http://www.nunatsiaq.com/nunavut/nvt90903_13.html">
-# The change announcement
+# Nunavut moves to single time zone Oct. 31
 # </a> 
 #
 # From Antoine Leca (1999-09-06):
@@ -997,10 +1006,6 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # a zone that's GMT-8 with DST; a zone that's always GMT-7;
 # a zone that's GMT-6 with DST; and a zone that's always GMT-6.
 
-# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
-# Shanks also says there are four zones, but disagrees about the fourth.
-# Instead of GMT-6 with DST, he says there's GMT-8 without DST.
-
 # From Alan Perry <alan.perry@eng.sun.com> (1996-02-15):
 # A guy from our Mexico subsidiary finally found the Presidential Decree
 # outlining the timezone changes in Mexico.
@@ -1039,7 +1044,7 @@ Zone America/Dawson	-9:17:40 -	LMT	1900 Aug 20
 # The State of Quintana Roo has reverted back to central STD and DST times
 # (i.e. UTC -0600 and -0500 as of 1998-08-02).
 
-# From Shanks (1991):
+# From Shanks:
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Mexico	1939	only	-	Feb	5	0:00	1:00	D
 Rule	Mexico	1939	only	-	Jun	25	0:00	0	S
@@ -1052,12 +1057,11 @@ Rule	Mexico	1950	only	-	Jul	30	0:00	0	S
 Rule	Mexico	1996	max	-	Apr	Sun>=1	2:00	1:00	D
 Rule	Mexico	1996	max	-	Oct	lastSun	2:00	0	S
 #
-Rule	BajaN	1950	1966	-	Apr	lastSun	2:00	1:00	D
-Rule	BajaN	1950	1961	-	Sep	lastSun	2:00	0	S
-Rule	BajaN	1961	1966	-	Oct	lastSun	2:00	0	S
+Rule	BajaN	1954	1961	-	Apr	lastSun	2:00	1:00	D
+Rule	BajaN	1954	1961	-	Sep	lastSun	2:00	0	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 # Quintana Roo
-Zone America/Cancun	-5:47:04 -	LMT	1922 Jan  1  1:12:42
+Zone America/Cancun	-5:47:04 -	LMT	1922 Jan  1  0:12:56
 			-6:00	-	CST	1996
 			-6:00	Mexico	C%sT	1997 Oct lastSun 2:00
 			-5:00	Mexico	E%sT	1998 Aug  2  2:00
@@ -1071,7 +1075,7 @@ Zone America/Mexico_City -6:36:36 -	LMT	1922 Jan  1  0:23:24
 			-7:00	-	MST	1932 Mar 30 23:00
 			-6:00	Mexico	C%sT
 # Chihuahua
-Zone America/Chihuahua	-7:04:20 -	LMT	1921 Dec 31 23:55:44
+Zone America/Chihuahua	-7:04:20 -	LMT	1921 Dec 31 23:55:40
 			-7:00	-	MST	1927 Jun 10 23:00
 			-6:00	-	CST	1930 Nov 15
 			-7:00	-	MST	1931 May  1 23:00
@@ -1092,22 +1096,14 @@ Zone America/Mazatlan	-7:05:40 -	LMT	1921 Dec 31 23:54:20
 			-7:00	-	MST	1949 Jan 14
 			-8:00	-	PST	1970
 			-7:00	Mexico	M%sT
-# N Baja California
+# Baja California
 Zone America/Tijuana	-7:48:04 -	LMT	1922 Jan  1  0:11:56
 			-8:00	-	PST	1927 Jun 10 23:00
 			-7:00	-	MST	1930 Nov 16
 			-8:00	-	PST	1942 Apr
 			-7:00	-	MST	1949 Jan 14
-			-8:00	BajaN	P%sT	1967 Apr lastSun 2:00
+			-8:00	BajaN	P%sT	1976
 			-8:00	US	P%sT	1996
-			-8:00	Mexico	P%sT
-# Baja California
-Zone America/Ensenada	-7:46:28 -	LMT	1922 Jan  1  0:13:32
-			-8:00	-	PST	1927 Jun 10 23:00
-			-7:00	-	MST	1930 Nov 16
-			-8:00	-	PST	1942 Apr
-			-7:00	-	MST	1949 Jan 14
-			-8:00	-	PST	1996
 			-8:00	Mexico	P%sT
 #
 # Revillagigedo Is
@@ -1173,8 +1169,6 @@ Zone	America/Cayman	-5:25:32 -	LMT	1890		# Georgetown
 			-5:00	-	EST
 
 # Costa Rica
-# Shanks gives some very odd dates for 1991, and stops there.
-# For now, we won't guess further.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	CR	1979	1980	-	Feb	lastSun	0:00	1:00	D
 Rule	CR	1979	1980	-	Jun	Sun>=1	0:00	0	S
@@ -1185,7 +1179,7 @@ Rule	CR	1992	only	-	Mar	15	0:00	0	S
 # There are too many San Joses elsewhere, so we'll use `Costa Rica'.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone America/Costa_Rica	-5:36:20 -	LMT	1890		# San Jose
-			-5:36	-	SJMT	1921 Jan 15 # San Jose Mean Time
+			-5:36:20 -	SJMT	1921 Jan 15 # San Jose Mean Time
 			-6:00	CR	C%sT
 # Coco
 # no information; probably like America/Costa_Rica
@@ -1236,7 +1230,7 @@ Rule	Cuba	2000	max	-	Apr	 1	0:00s	1:00	D
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	America/Havana	-5:29:28 -	LMT	1890
-			-5:30	-	HMT	1925 Jul 19 12:00 # Havana MT
+			-5:29:36 -	HMT	1925 Jul 19 12:00 # Havana MT
 			-5:00	Cuba	C%sT
 
 # Dominica
@@ -1294,7 +1288,7 @@ Zone America/Guatemala	-6:02:04 -	LMT	1918 Oct 5
 Rule	Haiti	1983	only	-	May	8	0:00	1:00	D
 Rule	Haiti	1984	1987	-	Apr	lastSun	0:00	1:00	D
 Rule	Haiti	1983	1987	-	Oct	lastSun	0:00	0	S
-# Shanks says AT is 2:00, but IATA SSIM (1991/1996) says 1:00s.  Go with IATA.
+# Shanks says AT is 2:00, but IATA SSIM (1991/1997) says 1:00s.  Go with IATA.
 Rule	Haiti	1988	1997	-	Apr	Sun>=1	1:00s	1:00	D
 Rule	Haiti	1988	1997	-	Oct	lastSun	1:00s	0	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -1318,11 +1312,11 @@ Zone America/Tegucigalpa -5:48:52 -	LMT	1921 Apr
 # From U. S. Naval Observatory (1989-01-19):
 # JAMAICA             5 H  BEHIND UTC
 
-# From Shanks (1991):
+# From Shanks:
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	America/Jamaica	-5:07:12 -	LMT	1890		# Kingston
 			-5:07:12 -	KMT	1912 Feb    # Kingston Mean Time
-			-5:00	-	EST	1974 Jan 6 2:00
+			-5:00	-	EST	1974 Apr 28 2:00
 			-5:00	US	E%sT	1984
 			-5:00	-	EST
 

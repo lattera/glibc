@@ -177,10 +177,14 @@ vsyslog(pri, fmt, ap)
 
 		v->iov_base = buf + msgoff;
 		v->iov_len = bufsize - msgoff;
-		++v;
-		v->iov_base = (char *) "\n";
-		v->iov_len = 1;
-		(void)__writev(STDERR_FILENO, iov, 2);
+		/* Append a newline if necessary.  */
+		if (buf[bufsize - 1] != '\n')
+		  {
+		    ++v;
+		    v->iov_base = (char *) "\n";
+		    v->iov_len = 1;
+		  }
+		(void)__writev(STDERR_FILENO, iov, v - iov + 1);
 	}
 
 	/* Prepare for multiple users.  We have to take care: open and
