@@ -1,3 +1,7 @@
+1999-05-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (distribute): Remove dl-origin.h.
+
 1999-05-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/i386/i486/Versions: New file with inline functions from
