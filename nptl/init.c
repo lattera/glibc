@@ -124,7 +124,7 @@ __pthread_initialize_minimal (void)
 #endif
 
   /* Initialize the list of all running threads with the main thread.  */
-  INIT_LIST_HEAD (__stack_user);
+  INIT_LIST_HEAD (&__stack_user);
   list_add (&pd->header.data.list, &__stack_user);
 
 
