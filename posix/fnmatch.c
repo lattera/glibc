@@ -64,27 +64,27 @@
 #  define ISASCII(c) isascii(c)
 # endif
 
-#ifdef isblank
-# define ISBLANK(c) (ISASCII (c) && isblank (c))
-#else
-# define ISBLANK(c) ((c) == ' ' || (c) == '\t')
-#endif
-#ifdef isgraph
-# define ISGRAPH(c) (ISASCII (c) && isgraph (c))
-#else
-# define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
-#endif
+# ifdef isblank
+#  define ISBLANK(c) (ISASCII (c) && isblank (c))
+# else
+#  define ISBLANK(c) ((c) == ' ' || (c) == '\t')
+# endif
+# ifdef isgraph
+#  define ISGRAPH(c) (ISASCII (c) && isgraph (c))
+# else
+#  define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
+# endif
 
-#define ISPRINT(c) (ISASCII (c) && isprint (c))
-#define ISDIGIT(c) (ISASCII (c) && isdigit (c))
-#define ISALNUM(c) (ISASCII (c) && isalnum (c))
-#define ISALPHA(c) (ISASCII (c) && isalpha (c))
-#define ISCNTRL(c) (ISASCII (c) && iscntrl (c))
-#define ISLOWER(c) (ISASCII (c) && islower (c))
-#define ISPUNCT(c) (ISASCII (c) && ispunct (c))
-#define ISSPACE(c) (ISASCII (c) && isspace (c))
-#define ISUPPER(c) (ISASCII (c) && isupper (c))
-#define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
+# define ISPRINT(c) (ISASCII (c) && isprint (c))
+# define ISDIGIT(c) (ISASCII (c) && isdigit (c))
+# define ISALNUM(c) (ISASCII (c) && isalnum (c))
+# define ISALPHA(c) (ISASCII (c) && isalpha (c))
+# define ISCNTRL(c) (ISASCII (c) && iscntrl (c))
+# define ISLOWER(c) (ISASCII (c) && islower (c))
+# define ISPUNCT(c) (ISASCII (c) && ispunct (c))
+# define ISSPACE(c) (ISASCII (c) && isspace (c))
+# define ISUPPER(c) (ISASCII (c) && isupper (c))
+# define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
 
 # define STREQ(s1, s2) ((strcmp (s1, s2) == 0))
 
@@ -142,15 +142,19 @@ __strchrnul (s, c)
 }
 # endif
 
+# ifndef internal_function
+/* Inside GNU libc we mark some function in a special way.  In other
+   environments simply ignore the marking.  */
+#  define internal_function
+# endif
+
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 static int internal_fnmatch __P ((const char *pattern, const char *string,
 				  int no_leading_period, int flags))
      internal_function;
 static int
-#ifdef _LIBC
 internal_function
-#endif
 internal_fnmatch (pattern, string, no_leading_period, flags)
      const char *pattern;
      const char *string;

@@ -1,5 +1,8 @@
 1999-09-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/fnmatch.c (internal_fnmatch): Make it compilable outside
+	glibc by defining internal_function if it isn't already.
+
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): If res_search
 	fails don't rely on errno value.
 	(getanswer_r): Set *ERRNOP in error cases.

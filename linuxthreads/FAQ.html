@@ -73,13 +73,12 @@ platforms.<P>
 
 <H4><A NAME="A.4">A.4: What is the status of LinuxThreads?</A></H4>
 
-In short, it's not completely finished (hence the version numbers in
-0.<I>x</I>), but what is done is pretty mature.
 LinuxThreads implements almost all of Posix 1003.1c, as well as a few
 extensions.  The only part of LinuxThreads that does not conform yet
 to Posix is signal handling (see section <A HREF="#J">J</A>).  Apart
-from the signal stuff, all the Posix 1003.1c base functionality is
-provided and conforms to the standard (to the best of my knowledge).
+from the signal stuff, all the Posix 1003.1c base functionality,
+as well as a number of optional extensions, are provided and conform
+to the standard (to the best of my knowledge).
 The signal stuff is hard to get right, at least without special kernel
 support, and while I'm definitely looking at ways to implement the
 Posix behavior for signals, this might take a long time before it's
@@ -90,11 +89,10 @@ completed.<P>
 The basic functionality (thread creation and termination, mutexes,
 conditions, semaphores) is very stable.  Several industrial-strength
 programs, such as the AOL multithreaded Web server, use LinuxThreads
-and seem quite happy about it.  There are some rough edges in
-the LinuxThreads / C library interface, at least with libc 5, but most
-of these rough edges are fixed in glibc 2, which should soon become
-the standard C library for Linux distributions (see section <A
-HREF="#C">C</A>). <P>
+and seem quite happy about it.  There used to be some rough edges in
+the LinuxThreads / C library interface with libc 5, but glibc 2
+fixes all of those problems and is now the standard C library on major
+Linux distributions (see section <A HREF="#C">C</A>). <P>
 
 <HR>
 <P>
@@ -139,12 +137,22 @@ HREF="news:comp.os.linux.development.kernel">comp.os.linux.development.kernel</A
 The latter is especially appropriate for questions relative to the
 interface between the kernel and LinuxThreads.<P>
 
-Very specific LinuxThreads questions, and in particular everything
-that looks like a potential bug in LinuxThreads, should be mailed
-directly to me (<code>Xavier.Leroy@inria.fr</code>).  Before mailing
-me, make sure that your question is not answered in this FAQ.<P>
+<H4><A NAME="B.4">B.4: How should I report a possible bug in
+LinuxThreads?</A></H4>
 
-<H4><A NAME="B.4">B.4: I'd like to read the POSIX 1003.1c standard. Is
+If you're using glibc 2, the best way by far is to use the
+<code>glibcbug</code> script to mail a bug report to the glibc
+maintainers. <P>
+
+If you're using an older libc, or don't have the <code>glibcbug</code>
+script on your machine, then e-mail me directly
+(<code>Xavier.Leroy@inria.fr</code>).  <P>
+
+In both cases, before sending the bug report, make sure that it is not 
+addressed already in this FAQ.  Also, try to send a short program that
+reproduces the weird behavior you observed. <P>
+
+<H4><A NAME="B.5">B.5: I'd like to read the POSIX 1003.1c standard. Is
 it available online?</A></H4>
 
 Unfortunately, no.  POSIX standards are copyrighted by IEEE, and
@@ -183,8 +191,8 @@ integrated with glibc 2.  The glibc 2 distribution contains the
 sources of a specially adapted version of LinuxThreads.<P>
 
 glibc 2 comes preinstalled as the default C library on several Linux
-distributions, such as RedHat 5.0 and 5.1, and recent beta versions of
-Debian.  Those distributions include the version of LinuxThreads matching
+distributions, such as RedHat 5 and up, and Debian 2.
+Those distributions include the version of LinuxThreads matching
 glibc 2.<P>
 
 <H4><A NAME="C.2">C.2: My system has libc 5 preinstalled, not glibc
@@ -199,14 +207,6 @@ libc 5.2.18 on the one hand, and libc 5.4.12 or later on the other hand.
 Avoid 5.3.12 and 5.4.7: these have problems with the per-thread errno
 variable. <P>
 
-Unfortunately, many popular Linux distributions (e.g. RedHat 4.2) come
-with libc 5.3.12 preinstalled -- the one that does not work with
-LinuxThreads.  Fortunately, you can often find pre-packaged binaries
-of more recent versions of libc for these distributions.  In the case
-of RedHat 4, there is a RPM package for libc-5.4 in the "contrib"
-area of RedHat FTP sites.
-<P>
-
 <H4><A NAME="C.3">C.3: So, should I switch to glibc 2, or stay with a
 recent libc 5?</A></H4>
 
@@ -219,7 +219,7 @@ Switching an already installed
 system from libc 5 to glibc 2 is not completely straightforward.
 See the <A HREF="http://sunsite.unc.edu/LDP/HOWTO/Glibc2-HOWTO.html">Glibc2
 HOWTO</A> for more information.  Much easier is (re-)installing a
-Linux distribution based on glibc 2, such as RedHat 5.1.<P>
+Linux distribution based on glibc 2, such as RedHat 6.<P>
 
 <H4><A NAME="C.4">C.4: Where can I find glibc 2 and the version of
 LinuxThreads that goes with it?</A></H4>
@@ -236,6 +236,31 @@ For libc 5, see <A HREF="ftp://sunsite.unc.edu/pub/Linux/devel/GCC/"><code>ftp:/
 
 For the libc 5 version of LinuxThreads, see
 <A HREF="ftp://ftp.inria.fr/INRIA/Projects/cristal/Xavier.Leroy/linuxthreads/">ftp://ftp.inria.fr/INRIA/Projects/cristal/Xavier.Leroy/linuxthreads/</A>.<P>
+
+<H4><A NAME="C.6">C.6: How can I recompile the glibc 2 version of the
+LinuxThreads sources?</A></H4>
+
+You must transfer the whole glibc sources, then drop the LinuxThreads
+sources in the <code>linuxthreads/</code> subdirectory, then recompile
+glibc as a whole.  There are now too many inter-dependencies between
+LinuxThreads and glibc 2 to allow separate re-compilation of LinuxThreads.
+<P>
+
+<H4><A NAME="C.7">C.7: What is the correspondence between LinuxThreads 
+version numbers, libc version numbers, and RedHat version
+numbers?</A></H4>
+
+Here is a summary. (Information on Linux distributions other than
+RedHat are welcome.)<P>
+
+<TABLE>
+<TR><TD>LinuxThreads </TD> <TD>C library</TD> <TD>RedHat</TD></TR>
+<TR><TD>0.7, 0.71 (for libc 5)</TD> <TD>libc 5.x</TD> <TD>RH 4.2</TD></TR>
+<TR><TD>0.7, 0.71 (for glibc 2)</TD> <TD>glibc 2.0.x</TD> <TD>RH 5.x</TD></TR>
+<TR><TD>0.8</TD> <TD>glibc 2.1.1</TD> <TD>RH 6.0</TD></TR>
+<TR><TD>0.8</TD> <TD>glibc 2.1.2</TD> <TD>not yet released</TD></TR>
+</TABLE>
+<P>
 
 <HR>
 <P>
@@ -271,11 +296,11 @@ descriptor opened on a pipe.  When I link it with LinuxThreads,
 You're using one of the buggy versions of libc (5.3.12, 5.4.7., etc).
 See question <A HREF="#C.1">C.1</A> above.<P>
 
-<H4><A NAME="D.4">D.4: My program crashes the first time it calls
-<CODE>pthread_create()</CODE> !</A></H4>
+<H4><A NAME="D.4">D.4: My program creates a lot of threads, and after
+a while <CODE>pthread_create()</CODE> no longer returns!</A></H4>
 
-You wouldn't be using glibc 2.0, by any chance?  That's a known bug
-with glibc 2.0.  Please upgrade to 2.0.1 or later.<P>
+This is known bug in the version of LinuxThreads that comes with glibc
+2.1.1.  An upgrade to 2.1.2 is recommended. <P>
 
 <H4><A NAME="D.5">D.5: When I'm running a program that creates N
 threads, <code>top</code> or <code>ps</code>
@@ -358,6 +383,55 @@ same level of brace nesting.  This allows
 stack-allocate some data structure, and
 <code>pthread_cleanup_pop</code> to close that block.  It's ugly, but
 it's the standard way of implementing cleanup handlers.<P>
+
+<H4><A NAME="D.9">D.9: I tried to use real-time threads and my program
+loops like crazy and freezes the whole machine!</A></H4>
+
+Versions of LinuxThreads prior to 0.8 are susceptible to ``livelocks''
+(one thread loops, consuming 100% of the CPU time) in conjunction with
+real-time scheduling.  Since real-time threads and processes have
+higher priority than normal Linux processes, all other processes on
+the machine, including the shell, the X server, etc, cannot run and
+the machine appears frozen.<P>
+
+The problem is fixed in LinuxThreads 0.8.<P>
+
+<H4><A NAME="D.10">D.10: My application needs to create thousands of
+threads, or maybe even more.  Can I do this with
+LinuxThreads?</A></H4>
+
+No.  You're going to run into several hard limits:
+<UL>
+<LI>Each thread, from the kernel's standpoint, is one process.  Stock
+Linux kernels are limited to at most 512 processes for the super-user,
+and half this number for regular users.  This can be changed by
+changing <code>NR_TASKS</code> in <code>include/linux/tasks.h</code>
+and recompiling the kernel.  On the x86 processors at least,
+architectural constraints seem to limit <code>NR_TASKS</code> to 4090
+at most.
+<LI>LinuxThreads contains a table of all active threads.  This table
+has room for 1024 threads at most.  To increase this limit, you must
+change <code>PTHREAD_THREADS_MAX</code> in the LinuxThreads sources
+and recompile.
+<LI>By default, each thread reserves 2M of virtual memory space for
+its stack.  This space is just reserved; actual memory is allocated
+for the stack on demand.  But still, on a 32-bit processor, the total
+virtual memory space available for the stacks is on the order of 1G,
+meaning that more than 500 threads will have a hard time fitting in.
+You can overcome this limitation by moving to a 64-bit platform, or by
+allocating smaller stacks yourself using the <code>setstackaddr</code>
+attribute.
+<LI>Finally, the Linux kernel contains many algorithms that run in
+time proportional to the number of process table entries.  Increasing
+this number drastically will slow down the kernel operations
+noticeably.
+</UL>
+(Other POSIX threads libraries have similar limitations, by the way.)
+For all those reasons, you'd better restructure your application so
+that it doesn't need more than, say, 100 threads.  For instance,
+in the case of a multithreaded server, instead of creating a new
+thread for each connection, maintain a fixed-size pool of worker
+threads that pick incoming connection requests from a queue.<P>
 
 <HR>
 <P>
@@ -519,7 +593,7 @@ be passed a C function as third argument.<P>
 <H4><A NAME="F.3">F.3: I'm trying to use LinuxThreads in conjunction
 with libg++, and I'm having all sorts of trouble.</A></H4>
 
-From what I understand, thread support in libg++ is completely broken,
+>From what I understand, thread support in libg++ is completely broken,
 especially with respect to locking of iostreams.  H.J.Lu wrote:
 <BLOCKQUOTE>
 If you want to use thread, I can only suggest egcs and glibc. You
@@ -540,7 +614,14 @@ version of gdb 4.17 developed by Eric Paire and colleages at The Open
 Group, Grenoble.  The patches against gdb 4.17 are available at
 <A HREF="http://www.gr.opengroup.org/java/jdk/linux/debug.htm"><code>http://www.gr.opengroup.org/java/jdk/linux/debug.htm</code></A>.
 Precompiled binaries of the patched gdb are available in RedHat's RPM
-format at <A HREF="http://odin.appliedtheory.com/"><code>http://odin.appliedtheory.com/</code></A>.
+format at <A
+HREF="http://odin.appliedtheory.com/"><code>http://odin.appliedtheory.com/</code></A>.<P>
+
+Some Linux distributions provide an already-patched version of gdb;
+others don't.  For instance, the gdb in RedHat 5.2 is thread-aware,
+but apparently not the one in RedHat 6.0.  Just ask (politely) the
+makers of your Linux distributions to please make sure that they apply
+the correct patches to gdb.<P>
 
 <H4><A NAME="G.2">G.2: Does it work with post-mortem debugging?</A></H4>
 
@@ -668,11 +749,11 @@ signals available and the kernel reserves all of them but two:
 <code>SIGUSR1</code> and <code>SIGUSR2</code>.  So, LinuxThreads has
 no choice but use those two signals.<P>
 
-On recent kernels (late 2.1 kernels and the forthcoming 2.2 kernels),
-more than 32 signals are provided in the form of realtime signals.
-When run on one of those kernels, LinuxThreads uses two reserved
-realtime signals for its internal operation, thus leaving
-<code>SIGUSR1</code> and <code>SIGUSR2</code> free for user code.<P>
+On recent kernels (2.2 and up), more than 32 signals are provided in
+the form of realtime signals. When run on one of those kernels,
+LinuxThreads uses two reserved realtime signals for its internal
+operation, thus leaving <code>SIGUSR1</code> and <code>SIGUSR2</code>
+free for user code.  (This works only with glibc, not with libc 5.) <P>
 
 <H4><A NAME="H.5">H.5: Is the stack of one thread visible from the
 other threads?  Can I pass a pointer into my stack to other threads?
@@ -717,7 +798,7 @@ Windows client? </A></H4>
 The best solution is to use X libraries that have been compiled with
 multithreading options set.  Linux distributions that come with glibc
 2 as the main C library generally provide thread-safe X libraries.
-At least, that seems to be the case for RedHat 5.<P>
+At least, that seems to be the case for RedHat 5 and later.<P>
 
 You can try to recompile yourself the X libraries with multithreading
 options set.  They contain optional support for multithreading; it's
@@ -741,7 +822,7 @@ only. <P>
 thread-safe X libraries that you could distribute?</A></H4>
 
 No, I don't.  Sorry.  But consider installing a Linux distribution
-that comes with thread-safe X libraries, such as RedHat 5.<P>
+that comes with thread-safe X libraries, such as RedHat 6.<P>
 
 <H4><A NAME="I.3">I.3: Can I use library FOO in a multithreaded
 program?</A></H4>
