@@ -75,7 +75,10 @@ endef
 $(common-objpfx)dummy.c:
 	rm -f $@
 	echo 'void __dummy__ (void) { }' > $@
-common-generated += dummy.o dummy.c
+$(common-objpfx)empty.c:
+	cp -f /dev/null $@
+common-generated += dummy.o dummy.c empty.c \
+		    $(addprefix empty,$(object-suffixes))
 
 # This makes all the auxiliary and test programs.
 
