@@ -1135,10 +1135,13 @@ Rule	France	1975	only	-	Mar	20	 2:00s	1:00	" DST"
 Rule	France	1975	only	-	Sep	22	 2:00s	0	-
 Rule	France	1976	only	-	Mar	28	 2:00s	1:00	" DST"
 Rule	France	1976	only	-	Sep	lastSun	 2:00s	0	-
-# Shanks gives 0:09 for Paris Mean Time; go with Whitman's more precise 0:09:05.
+# Shanks gives 0:09 for Paris Mean Time, and Whitman gives 0:09:05,
+# but Howse quotes the actual French legislation as saying 0:09:21.
+# Go with Howse.  Howse writes that the time in France was officially based
+# on PMT-0:09:21 until 1978-08-09, when the time base finally switched to UTC.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Europe/Paris	0:09:05 -	LMT	1891 Mar 15 0:01
-			0:09:05	-	PMT	1911 Mar 11    # Paris Mean Time
+Zone	Europe/Paris	0:09:21 -	LMT	1891 Mar 15 0:01
+			0:09:21	-	PMT	1911 Mar 11    # Paris Mean Time
 			0:00	France	WET%s	1940 Jun 14
 			1:00	M-Eur	MET%s	1944 Aug 25
 			0:00	France	WET%s	1945 Sep 16 3:00
@@ -1466,15 +1469,17 @@ Zone	Europe/Chisinau	1:55:20 -	LMT	1924 May  2
 #			This may change to `EC' soon.
 
 # Monaco
-# Shanks gives 0:09 for Paris Mean Time; go with Whitman's more precise 0:09:05.
+# Shanks gives 0:09 for Paris Mean Time; go with Howse's more precise 0:09:21.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Monaco	0:29:32 -	LMT	1891 Mar 15
-			0:09:05	-	PMT	1911 Mar 11    # Paris Mean Time
+			0:09:21	-	PMT	1911 Mar 11    # Paris Mean Time
 			0:00	France	WET%s	1945 Sep 16 3:00
 			1:00	France	MET%s	1977
 			1:00	EC	MET%s
 
 # Netherlands
+# Howse writes that the Netherlands' railways used GMT between 1892 and 1940,
+# but for other purposes the Netherlands used Amsterdam mean time.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Neth	1892	only	-	May	 1	0:00	0	AMT
 # Shanks gives 1916 May 1 0:00 and 1916 Oct 1 0:00; go with Whitman.
@@ -1663,9 +1668,6 @@ Zone Atlantic/Madeira	-1:07:36 -	LMT	1884		# Funchal
 			 0:00	Port	WET%s	1983 Sep 25 1:00s
 			 0:00	EC	WET%s
 
-# Slovakia
-Link Europe/Prague Europe/Bratislava
-
 # Romania
 # Catholic Romania switched from the Julian to the Gregorian calendar on
 # on 1919 Mar 18.  Greek Orthodox Romania switched on 1920 Mar 18.
@@ -1786,15 +1788,8 @@ Zone Asia/Anadyr	11:49:56 -	LMT	1924 May  2
 			12:00	-	ASK	1992 Jan 19 2:00s
 			13:00	Russia	AS%s
 
-# Yugoslavia (what's left of it -- mostly Serbia)
-# They switched from the Julian to the Gregorian calendar on 1918 Mar 18.
-# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Europe/Belgrade	1:22:00	-	LMT	1884
-			1:00	-	MET	1941 Apr 18 23:00
-			1:00	M-Eur	MET%s	1945 May  8  2:00s
-			1:00	1:00  "MET DST"	1945 Sep 16  2:00s
-			1:00	-	MET	1983
-			1:00	EC	MET%s
+# Slovakia
+Link Europe/Prague Europe/Bratislava
 
 # Slovenia
 # They switched from the Julian to the Gregorian calendar on 1918 Mar 18.
@@ -1837,6 +1832,7 @@ Rule	Spain	1943	1946	-	Apr	Sat>=13	22:00s	2:00	" DDST"
 Rule	Spain	1943	only	-	Oct	 3	22:00s	1:00	" DST"
 Rule	Spain	1944	only	-	Oct	10	22:00s	1:00	" DST"
 Rule	Spain	1945	only	-	Sep	30	 1:00	1:00	" DST"
+Rule	Spain	1946	only	-	Sep	30	 0:00	0	-
 Rule	Spain	1949	only	-	Apr	30	23:00	1:00	" DST"
 Rule	Spain	1949	only	-	Sep	30	 1:00	0	-
 Rule	Spain	1974	1975	-	Apr	Sat>=13	23:00	1:00	" DST"
@@ -1979,6 +1975,16 @@ Zone Europe/Simferopol	2:16:24 -	LMT	1880
 # For now, we'll guess that there was a 2-hour leap forward on March 27.
 			2:00	M-Eur	EET%s	1994 Mar 27 2:00s
 			3:00	Russia	MS%s
+
+# Yugoslavia
+# They switched from the Julian to the Gregorian calendar on 1918 Mar 18.
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone	Europe/Belgrade	1:22:00	-	LMT	1884
+			1:00	-	MET	1941 Apr 18 23:00
+			1:00	M-Eur	MET%s	1945 May  8  2:00s
+			1:00	1:00  "MET DST"	1945 Sep 16  2:00s
+			1:00	-	MET	1983
+			1:00	EC	MET%s
 
 ###############################################################################
 

@@ -1,5 +1,8 @@
 Thu Sep 21 00:03:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* time/africa, time/asia, time/europe, time/northamerica,
+	time/yearistype: New data from ADO 95h.
+
 	* Makerules (build-shlib): Use $(@F:lib%.so=%) in place of
 	$(notdir $*), so it wins for the explicit libc.so rule as well as the
 	pattern rule. 

@@ -1,4 +1,4 @@
-# @(#)northamerica	7.15
+# @(#)northamerica	7.16
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -193,7 +193,7 @@ Zone Pacific/Honolulu	-10:30	US	H%sT	1933 Apr 30 2:00
 			-10:00	-	HST
 
 # Navassa
-# no information; probably like US/Eastern
+# no information; probably like America/New_York
 
 
 # Old names, for S5 users

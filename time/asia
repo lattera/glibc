@@ -1,4 +1,4 @@
-# @(#)asia	7.13
+# @(#)asia	7.14
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -428,7 +428,7 @@ Rule	Zion	1988	only	-	Sep	 3	0:00	0	S
 #Rule	Zion	1991	only	-	Mar	10	0:00	1:00	D
 #Rule	Zion	1991	only	-	Sep	 1	0:00	0	S
 
-# From Ephraim Silverberg (September 5, 1993):
+# From Ephraim Silverberg (September 20, 1995):
 #
 # According to the Office of the Secretary General of the Ministry of
 # Interior, there is NO set rule for Daylight-Savings/Standard time changes.
@@ -437,8 +437,11 @@ Rule	Zion	1988	only	-	Sep	 3	0:00	0	S
 # on the party the Minister of Interior, the size of the coalition
 # government, the phase of the moon and the direction of the wind.  Hence,
 # changes may need to be made on a semi-annual basis.  One thing is entrenched
-# in law, however: that there must be at least 150 days on daylight savings
-# time annually.
+# in law, however: that there must be at least 150 days of daylight savings
+# time annually.  Ever since 1993, the change to daylight savings time has
+# been from midnight Thursday night to 1 a.m. Friday morning and the change
+# back to standard time on Saturday night from midnight daylight savings time
+# to 11 p.m. standard time.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Zion	1989	only	-	Apr	30	0:00	1:00	D
@@ -452,23 +455,35 @@ Rule	Zion	1992	only	-	Sep	 6	0:00	0:00	S
 Rule	Zion	1993	only	-	Apr	 2	0:00	1:00	D
 Rule	Zion	1993	only	-	Sep	 5	0:00	0:00	S
 
-# The dates for 1994-1995 were obtained from Office of the Spokeswoman for
-# the Ministry of Interior, Jerusalem.  There are no dates yet for 1996 and
-# beyond so your guess is as good as theirs (those who are interested can
-# call 972-2-701411 and ask for the spokeswoman).
+# The dates for 1994-1995 were obtained from Office of the Spokeswoman for the
+# Ministry of Interior, Jerusalem, Israel.  The spokeswoman can be reached by
+# calling the switchboard at 972-2-701411 and asking for the spokeswoman.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule    Zion    1994    only    -       Apr      1      0:00    1:00    D
 Rule    Zion    1994    only    -       Aug     28      0:00    0:00    S
 Rule    Zion    1995    only    -       Mar     31      0:00    1:00    D
-# On 1995-03-13 Ephraim Silverberg corrected the next line from Aug 27 to Sep 3.
 Rule    Zion    1995    only    -       Sep      3      0:00    0:00    S
 
-# From Ephraim Silverberg (1995-03-13):
-# The Spokeswoman's office confirmed that there are not yet any dates
-# for the timezone conversion for the years 1996 and beyond yet
-# and this is one of the things the newly-appointed Minister of Interior
-# will have to decide sometime this year.
+# The dates for 1996-1998 were also obtained from Office of the Spokeswoman
+# for the Ministry of Interior, Jerusalem, Israel.  The official announcement
+# can be viewed (in Hebrew) at the following URL:
+#
+#   ftp://ftp.huji.ac.il/pub/misc/timezones/announcements/1996-1998.ps.gz
+#
+# Emptor Caveat: The fall of 1996 is an election year (the change to/from
+# daylight savings time affects the earliest possible time for morning prayers
+# making it is a sensitive issue among the religious sector of the electorate)
+# so political considerations may cause the outgoing government to make the
+# change back to standard time earlier in the fall of 1996 and the incoming
+# government may nullify the 1997/1998 times altogether depending on the
+# coalition formed after the elections.  Life isn't boring here in Israel.
+
+# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+Rule	Zion	1996	1998	-	Mar	Fri>=14	0:00	1:00	D
+Rule	Zion	1996	only	-	Sep	22	0:00	0:00	S
+Rule	Zion	1997	only	-	Nov	 2	0:00	0:00	S
+Rule	Zion	1998	only	-	Oct	25	0:00	0:00	S
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Tel_Aviv	2:19:04 -	LMT	1880
