@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux/Alpha version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,5 +70,13 @@
 #define SIGIOT	SIGABRT
 
 #define	_NSIG		64	/* Biggest signal number + 1.  */
+
+#define SIGRTMIN	(__libc_current_sigrtmin ())
+#define SIGRTMAX	(__libc_current_sigrtmax ())
+
+/* These are the hard limits of the kernel.  These values should not be
+   used directly at user level.  */
+#define __SIGRTMIN	32
+#define __SIGRTMAX	(_NSIG - 1)
 
 #endif	/* <signal.h> included.  */

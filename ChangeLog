@@ -1,5 +1,8 @@
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/signum.h: Add missing RT
+	signal definitions.
+
 	* po/el.po: New file.
 
 1999-02-07  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
