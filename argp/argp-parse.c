@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -33,9 +33,8 @@
    When compiling libc, the _ macro is predefined.  */
 #ifdef HAVE_LIBINTL_H
 # include <libintl.h>
-# define _(msgid)       gettext (msgid)
 #else
-# define _(msgid)       (msgid)
+# define dgettext(domain, msgid) (msgid)
 # define gettext(msgid) (msgid)
 #endif
 #define N_(msgid) (msgid)
@@ -161,7 +160,8 @@ argp_version_parser (int key, char *arg, struct argp_state *state)
       else if (argp_program_version)
 	fprintf (state->out_stream, "%s\n", argp_program_version);
       else
-	__argp_error (state, _("(PROGRAM ERROR) No version known!?"));
+	__argp_error (state, dgettext (state->root_argp->argp_domain,
+				       "(PROGRAM ERROR) No version known!?"));
       if (! (state->flags & ARGP_NO_EXIT))
 	exit (0);
       break;
@@ -634,7 +634,8 @@ parser_finalize (struct parser *parser,
       {
 	if (!(parser->state.flags & ARGP_NO_ERRS) && parser->state.err_stream)
 	  fprintf (parser->state.err_stream,
-		   _("%s: Too many arguments\n"), parser->state.name);
+		   dgettext (parser->argp->argp_domain,
+			     "%s: Too many arguments\n"), parser->state.name);
 	err = EBADKEY;
       }
 
@@ -775,7 +776,8 @@ parser_parse_opt (struct parser *parser, int opt, char *val)
       static const char bad_key_err[] =
 	N_("(PROGRAM ERROR) Option should have been recognized!?");
       if (group_key == 0)
-	__argp_error (&parser->state, "-%c: %s", opt, _(bad_key_err));
+	__argp_error (&parser->state, "-%c: %s", opt,
+		      dgettext (parser->argp->argp_domain, bad_key_err));
       else
 	{
 	  struct option *long_opt = parser->long_opts;
@@ -783,9 +785,9 @@ parser_parse_opt (struct parser *parser, int opt, char *val)
 	    long_opt++;
 	  __argp_error (&parser->state, "--%s: %s",
 			long_opt->name ? long_opt->name : "???",
-			_(bad_key_err));
+			dgettext (parser->argp->argp_domain, bad_key_err));
 	}
-    }	
+    }
 
   return err;
 }
@@ -867,7 +869,7 @@ parser_parse_next (struct parser *parser, int *arg_ebadkey)
     err = parser_parse_arg (parser, optarg);
   else
     err = parser_parse_opt (parser, opt, optarg);
-		      
+
   if (err == EBADKEY)
     *arg_ebadkey = (opt == KEY_END || opt == KEY_ARG);
 

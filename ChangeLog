@@ -1,3 +1,10 @@
+1998-03-06 12:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp.h (struct argp): Add new field domain.
+	* argp/argp-help.c: Change all gettext calls to dgettext and use
+	domain field from appropriate argp in call.
+	* argp/argp-parse.c: Likewise.
+
 1998-03-06 11:35  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/wordexp-test.c: Change testsuite so that it can run even

@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -238,6 +238,11 @@ struct argp
      that should be done by the filter function.  INPUT is either the input
      supplied to argp_parse, or NULL, if argp_help was called directly.  */
   char *(*help_filter)(int __key, __const char *__text, void *__input);
+
+  /* If non-zero the strings used in the argp library are translated using
+     the domain described by this string.  Otherwise the currently installed
+     default domain is used.  */
+  const char *argp_domain;
 };
 
 /* Possible KEY arguments to a help filter function.  */
