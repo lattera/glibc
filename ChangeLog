@@ -1,5 +1,11 @@
 2001-07-20  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/generic/device-nrs.h (DEV_TTY_P): Change argument type
+	from `dev_t' (st_rdev value) `const struct stat *'.
+	* sysdeps/unix/sysv/linux/device-nrs.h (DEV_TTY_P): Likewise.
+	* libio/filedoalloc.c (_IO_file_doallocate): Change caller.
+	* sysdeps/mach/hurd/device-nrs.h: New file.
+
 	* libio/stdio_ext.h: Moved to ...
 	* stdio-common/stdio_ext.h: ... here.
 	* libio/Makefile (headers): Move stdio_ext.h from here ...

@@ -95,7 +95,7 @@ _IO_file_doallocate (fp)
 	  /* Possibly a tty.  */
 	  if (
 #ifdef DEV_TTY_P
-	      DEV_TTY_P (st.st_rdev) ||
+	      DEV_TTY_P (&st) ||
 #endif
 	      isatty (fp->_fileno))
 	    fp->_flags |= _IO_LINE_BUF;
