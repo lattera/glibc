@@ -1,3 +1,11 @@
+2003-07-14  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_FIXED_CLONE_SYSCALL): New macro.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Use it.
+
+	* sysdeps/unix/sysv/linux/utimes.c: Include sysdep.h.
+
 2003-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
