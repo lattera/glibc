@@ -125,6 +125,11 @@ libpthread-nonshared = pthread_atfork
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 CFLAGS-init.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-unwind.c = -fexceptions
+CFLAGS-pthread_testcancel.c = -fexceptions
+CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-cancellation.c = -fasynchronous-unwind-tables
 CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
 

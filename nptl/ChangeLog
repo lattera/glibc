@@ -1,4 +1,13 @@
+2003-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Add
+	unwind info.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+
 2003-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Make sure all cancellation points are compiled with
+	exception and asynchronous unwind tables.
 
 	* sysdeps/x86_64/tls.h (THREAD_SETMEM): Word around compiler bug
 	which mishandles loading of global object addresses in PIC.

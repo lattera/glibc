@@ -42,11 +42,15 @@
 	.type	__pthread_cond_timedwait, @function
 	.align	16
 __pthread_cond_timedwait:
-
+.LSTARTCODE:
 	pushl	%ebp
+.Lpush_ebp:
 	pushl	%edi
+.Lpush_edi:
 	pushl	%esi
+.Lpush_esi:
 	pushl	%ebx
+.Lpush_ebx:
 
 	movl	20(%esp), %ebx
 	movl	28(%esp), %ebp
@@ -64,6 +68,7 @@ __pthread_cond_timedwait:
 
 	/* Unlock the mutex.  */
 2:	pushl	24(%esp)
+.Lpush4:
 	call	__pthread_mutex_unlock_internal
 
 	testl	%eax, %eax
@@ -81,6 +86,7 @@ __pthread_cond_timedwait:
 	leal	__condvar_cleanup, %eax
 #endif
 	subl	$40, %esp
+.Lsubl:
 	leal	28(%esp), %edx
 	movl	%esp, 8(%esp)
 	movl	%eax, 4(%esp)
@@ -226,20 +232,26 @@ __pthread_cond_timedwait:
 	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
 	call	__pthread_mutex_lock_internal
 	addl	$44, %esp
+.Laddl:
 
 	/* We return the result of the mutex_lock operation if it failed.  */
 	testl	%eax, %eax
 	cmovel	%esi, %eax
 
 18:	popl	%ebx
+.Lpop_ebx:
 	popl	%esi
+.Lpop_esi:
 	popl	%edi
+.Lpop_edi:
 	popl	%ebp
+.Lpop_ebp:
 
 	ret
 
 	/* Initial locking failed.  */
 1:
+.LSbl1:
 #if cond_lock == 0
 	movl	%ebx, %ecx
 #else
@@ -250,6 +262,7 @@ __pthread_cond_timedwait:
 
 	/* Unlock in loop requires waekup.  */
 3:
+.LSbl2:
 #if cond_lock == 0
 	movl	%ebx, %eax
 #else
@@ -279,7 +292,9 @@ __pthread_cond_timedwait:
 	jmp	11b
 
 	/* The initial unlocking of the mutex failed.  */
-16:	movl	%eax, (%esp)
+16:
+.LSbl3:
+	movl	%eax, (%esp)
 	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
@@ -300,6 +315,7 @@ __pthread_cond_timedwait:
 
 #if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
 	/* clock_gettime not available.  */
+.LSbl4:
 19:	leal	12(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
@@ -321,6 +337,110 @@ __pthread_cond_timedwait:
 	js	13b
 	jmp	21b
 #endif
+.LENDCODE:
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)
+
+
+	.section .eh_frame,"a",@progbits
+.LSTARTFRAME:
+	.long	L(ENDCIE)-L(STARTCIE)	# Length of the CIE.
+.LSTARTCIE:
+	.long	0			# CIE ID.
+	.byte	1			# Version number.
+#ifdef SHARED
+	.string	"zR"			# NUL-terminated augmentation string.
+#else
+	.ascii	"\0"			# NUL-terminated augmentation string.
+#endif
+	.uleb128 1			# Code alignment factor.
+	.sleb128 -4			# Data alignment factor.
+	.byte	8			# Return address register column.
+#ifdef SHARED
+	.uleb128 1			# Augmentation value length.
+	.byte	0x1b			# Encoding: DW_EH_PE_pcrel
+					# + DW_EH_PE_sdata4.
+#endif
+	.byte 0x0c			# DW_CFA_def_cfa
+	.uleb128 4
+	.uleb128 4
+	.byte	0x88			# DW_CFA_offset, column 0x8
+	.uleb128 1
+	.align 4
+.LENDCIE:
+
+	.long	.LENDFDE-.LSTARTFDE	# Length of the FDE.
+.LSTARTFDE:
+	.long	.LSTARTFDE-.LSTARTFRAME	# CIE pointer.
+#ifdef SHARED
+	.long	.LSTARTCODE-.		# PC-relative start address of the code
+#else
+	.long	.LSTARTCODE		# Start address of the code.
+#endif
+	.long	.LENDCODE-.LSTARTCODE	# Length of the code.
+	.uleb128 0			# No augmentation data.
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpush_ebp-.LSTARTCODE
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 8
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpush_edi-.Lpush_ebp
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 12
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpush_esi-.Lpush_edi
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 16
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpush_ebx-.Lpush_esi
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 20
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpush4-.Lpush_ebx
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 24
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lsubl-.Lpush4
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 64
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Laddl-.Lsubl
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 20
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpop_ebx-.Laddl
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 16
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpop_esi-.Lpop_ebx
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 12
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpop_edi-.Lpop_esi
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 8
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.Lpop_ebp-.Lpop_edi
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 4
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.LSbl1-.Lpop_edi
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 20
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.LSbl2-.LSbl1
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 64
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.LSbl3-.LSbl2
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 24
+#if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
+	.byte	4			# DW_CFA_advance_loc4
+	.long	.LSbl4-.LSbl3
+	.byte	14			# DW_CFA_def_cfa_offset
+	.uleb128 64
+#endif
+	.align	4
+.LENDFDE:
