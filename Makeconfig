@@ -301,14 +301,31 @@ ifeq ($(elf),yes)
 endif
 ifdef objpfx
 csu-objpfx = $(objpfx)
+elf-objpfx = $(objpfx)
 else
 csu-objpfx = $(..)csu/
+elf-objpfx = $(..)elf/
 endif
 
 ifeq (yes,$(build-shared))
 ifndef rtld-installed-name
 rtld-installed-name = ld.so
 endif
+endif
+
+# How to run a program we just linked with our library.
+# The program binary is assumed to be $(word 2,$^).
+built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
+ifneq (yes,$(build-shared))
+built-program-cmd = $(built-program-file)
+else
+, = ,
+define built-program-cmd
+LD_LIBRARY_PATH=$(common-objdir)$(patsubst -Wl$,-rpath-link=%,:%,\
+					   $(filter -Wl$,-rpath-link=%,\
+						    $(sysdep-LDFLAGS))) \
+$(elf-objpfx)ld.so $(built-program-file)
+endef
 endif
 
 ifndef LD

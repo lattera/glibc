@@ -1,5 +1,18 @@
 Tue Oct 24 15:22:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
+	New macro.
+	(PSEUDO): Use it instead of SYSCALL_PIC_SETUP and jmp syscall_error.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (__syscall_error): Define
+	only #ifndef PIC.
+
+	* Makeconfig (built-program-cmd): New variable.
+	* sunrpc/Makefile (rpcgen-cmd): Use $(built-program-cmd).
+	* time/Makefile (zic-cmd): Likewise.
+
+	* hurd/Makefile (user-interfaces): Add hurd/exec_startup.
+
 	* sunrpc/Makefile (librpcsvc-no-lib-dep): New variable.
 	* extra-lib.mk: If $(lib)-no-lib-dep is defined and MAKELEVEL>0,
 	make `others' rather than `lib-noranlib' depend on the libraries.

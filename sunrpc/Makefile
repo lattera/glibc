@@ -87,7 +87,7 @@ include ../Rules
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(common-objpfx)libc.a
 	$(+link)
 
-rpcgen-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
+rpcgen-cmd = $(built-program-cmd)
 
 # The proper file name is longer than 14 chars, so we install it under
 # a shorter name.  But if the filesystem can handle it, we want to

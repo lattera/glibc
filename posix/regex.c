@@ -241,9 +241,11 @@ init_syntax_once ()
 #if HAVE_ALLOCA_H
 #include <alloca.h>
 #else /* not __GNUC__ or HAVE_ALLOCA_H */
+#if 0 /* It is a bad idea to declare alloca.  We always cast the result.  */
 #ifndef _AIX /* Already did AIX, up at the top.  */
 char *alloca ();
 #endif /* not _AIX */
+#endif
 #endif /* not HAVE_ALLOCA_H */ 
 #endif /* not __GNUC__ */
 
@@ -1379,11 +1381,13 @@ static reg_errcode_t compile_range ();
    if necessary.  Also cast from a signed character in the constant
    string passed to us by the user to an unsigned char that we can use
    as an array index (in, e.g., `translate').  */
+#ifndef PATFETCH
 #define PATFETCH(c)							\
   do {if (p == pend) return REG_EEND;					\
     c = (unsigned char) *p++;						\
-    if (translate) c = translate[c]; 					\
+    if (translate) c = (unsigned char) translate[c];			\
   } while (0)
+#endif
 
 /* Fetch the next character in the uncompiled pattern, with no
    translation.  */
@@ -1400,7 +1404,10 @@ static reg_errcode_t compile_range ();
    cast the subscript to translate because some data is declared as
    `char *', to avoid warnings when a string constant is passed.  But
    when we use a character as a subscript we must make it unsigned.  */
-#define TRANSLATE(d) (translate ? translate[(unsigned char) (d)] : (d))
+#ifndef TRANSLATE
+#define TRANSLATE(d) \
+  (translate ? (char) translate[(unsigned char) (d)] : (d))
+#endif
 
 
 /* Macros for outputting the compiled pattern into `buffer'.  */
@@ -1666,7 +1673,7 @@ regex_compile (pattern, size, syntax, bufp)
   const char *pend = pattern + size;
   
   /* How to translate the characters in the pattern.  */
-  char *translate = bufp->translate;
+  RE_TRANSLATE_TYPE translate = bufp->translate;
 
   /* Address of the count-byte of the most recently inserted `exactn'
      command.  This makes it possible to tell if a new exact-match
@@ -2832,7 +2839,7 @@ group_in_compile_stack (compile_stack, regnum)
 static reg_errcode_t
 compile_range (p_ptr, pend, translate, syntax, b)
     const char **p_ptr, *pend;
-    char *translate;
+    RE_TRANSLATE_TYPE translate;
     reg_syntax_t syntax;
     unsigned char *b;
 {
@@ -3264,7 +3271,7 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
 {
   int val;
   register char *fastmap = bufp->fastmap;
-  register char *translate = bufp->translate;
+  register RE_TRANSLATE_TYPE translate = bufp->translate;
   int total_size = size1 + size2;
   int endpos = startpos + range;
 
@@ -3552,7 +3559,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
   unsigned char *just_past_start_mem = 0;
 
   /* We use this to map every character in the string.  */
-  char *translate = bufp->translate;
+  RE_TRANSLATE_TYPE translate = bufp->translate;
 
   /* Failure point stack.  Each place that can handle a failure further
      down the line pushes a failure point on this stack.  It consists of
@@ -3951,7 +3958,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 	      do
 		{
 		  PREFETCH ();
-		  if (translate[(unsigned char) *d++] != (char) *p++)
+		  if ((unsigned char) translate[(unsigned char) *d++]
+		      != (unsigned char) *p++)
                     goto fail;
 		}
 	      while (--mcnt);
@@ -5073,7 +5081,7 @@ static int
 bcmp_translate (s1, s2, len, translate)
      unsigned char *s1, *s2;
      register int len;
-     char *translate;
+     RE_TRANSLATE_TYPE translate;
 {
   register unsigned char *p1 = s1, *p2 = s2;
   while (len)
@@ -5245,7 +5253,9 @@ regcomp (preg, pattern, cflags)
     {
       unsigned i;
       
-      preg->translate = (char *) malloc (CHAR_SET_SIZE);
+      preg->translate
+	= (RE_TRANSLATE_TYPE) malloc (CHAR_SET_SIZE
+				      * sizeof (*(RE_TRANSLATE_TYPE)0));
       if (preg->translate == NULL)
         return (int) REG_ESPACE;
 

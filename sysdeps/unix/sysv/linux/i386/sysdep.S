@@ -16,17 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* The syscall stubs jump here when they detect an error.
-   The code for Linux is almost identical to the canonical Unix/i386
-   code, except that the error number in %eax is negated.  */
-
-.globl __syscall_error
-__syscall_error:
-	negl %eax
-
-#define __syscall_error __syscall_error_1
-#include <sysdeps/unix/i386/sysdep.S>
-
 /* Because the Linux version is in fact i386/ELF and the start.? file
    for this system (sysdeps/i386/elf/start.S) is also used by The Hurd
    and therefore this files must not contain the definition of the
@@ -38,3 +27,21 @@ __syscall_error:
 	.globl errno
 errno:
 	.long 0
+
+/* The following code is not used at all in the shared library.
+   The PIC system call stubs set errno themselves.  */
+
+#ifndef	PIC
+
+/* The syscall stubs jump here when they detect an error.
+   The code for Linux is almost identical to the canonical Unix/i386
+   code, except that the error number in %eax is negated.  */
+
+.globl __syscall_error
+__syscall_error:
+	negl %eax
+
+#define __syscall_error __syscall_error_1
+#include <sysdeps/unix/i386/sysdep.S>
+
+#endif

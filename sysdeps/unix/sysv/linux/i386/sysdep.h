@@ -42,16 +42,31 @@ Cambridge, MA 02139, USA.  */
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
- lose: SYSCALL_PIC_SETUP						      \
-    jmp JUMPTARGET (syscall_error)					      \
-  .globl syscall_error;							      \
+  SYSCALL_ERROR_HANDLER							      \
   ENTRY (name)								      \
     movl $SYS_ify (syscall_name), %eax;					      \
     DO_CALL (args);							      \
     testl %eax, %eax;							      \
-    jl lose
+    jl syscall_error;
 
-/* We define our own ENTRY macro because the alignment should be 16 for ELF.  */
+#ifndef	PIC
+#define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
+#else
+/* Store (- %eax) into errno through the GOT.  */
+#define SYSCALL_ERROR_HANDLER						      \
+syscall_error:								      \
+  call 0f;								      \
+0:popl %ecx;								      \
+  negl %eax;								      \
+  addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ecx;				      \
+  movl errno@GOT(%ecx), %ecx;						      \
+  movl %eax, (%ecx);							      \
+  movl $-1, %eax;							      \
+  ret
+#endif
+
+/* We define our own ENTRY macro because the alignment should be 16 for
+   ELF.  */
 #undef ENTRY
 #define ENTRY(name)							      \
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (name);				      \
@@ -81,7 +96,7 @@ Cambridge, MA 02139, USA.  */
    arguments 4 and 5.)
 
    The following code tries hard to be optimal.  A general assuption
-   (which is true accoriding to the data books I have) is that
+   (which is true according to the data books I have) is that
 
 	2 * xchg	is more expensive than	pushl + movl + popl
 

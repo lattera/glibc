@@ -98,7 +98,7 @@ echo-zonenames: zonenames
 # Although $(zonedir) gets compiled into zic, it is useful to always
 # specify it with -d on the command line so that it can be overridden on
 # the command line of `make install' (e.g., "make install prefix=/foo").
-zic-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^)) -d $(zonedir)
+zic-cmd = $(built-program-cmd) -d $(zonedir)
 define tzcompile
 $(zic-cmd) -L $(word 3,$^) -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
 endef
