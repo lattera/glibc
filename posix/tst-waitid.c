@@ -58,6 +58,9 @@ do_test (int argc, char *argv[])
       _exit (127);
     }
 
+  int status = EXIT_SUCCESS;
+#define RETURN(ok) status = (ok); goto out;
+
   /* Give the child a chance to stop.  */
   sleep (2);
 
@@ -69,10 +72,10 @@ do_test (int argc, char *argv[])
     {
     default:
       error (0, 0, "waitid returned bogus value %d\n", fail);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     case -1:
       error (0, errno, "waitid WNOHANG on stopped");
-      return errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE;
+      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo == 0)
 	break;
@@ -80,7 +83,7 @@ do_test (int argc, char *argv[])
 	error (0, 0, "waitid WNOHANG on stopped status %d\n", info.si_status);
       else
 	error (0, 0, "waitid WNOHANG on stopped signal %d\n", info.si_signo);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     }
 
   /* Next the wait that should succeed right away.  */
@@ -92,47 +95,47 @@ do_test (int argc, char *argv[])
     {
     default:
       error (0, 0, "waitid WSTOPPED|WNOHANG returned bogus value %d\n", fail);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     case -1:
       error (0, errno, "waitid WSTOPPED|WNOHANG on stopped");
-      return errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE;
+      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
 	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped signal %d\n",
 		 info.si_signo);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_STOPPED)
 	{
 	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped code %d\n",
 		 info.si_code);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGSTOP)
 	{
 	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped status %d\n",
 		 info.si_status);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
 	  error (0, 0, "waitid WSTOPPED|WNOHANG on stopped pid %d != %d\n",
 		 info.si_pid, pid);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
     }
 
   if (kill (pid, SIGCONT) != 0)
     {
       error (0, errno, "kill (%d, SIGCONT)", pid);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     }
 
   /* Wait for the child to have continued.  */
   sleep (2);
 
-#if 0
+#if WCONTINUED != 0
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   info.si_pid = -1;
   info.si_status = -1;
@@ -141,34 +144,34 @@ do_test (int argc, char *argv[])
     {
     default:
       error (0, 0, "waitid WCONTINUED returned bogus value %d\n", fail);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     case -1:
       error (0, errno, "waitid WCONTINUED on continued");
-      return errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE;
+      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
 	  error (0, 0, "waitid WCONTINUED on continued signal %d\n",
 		 info.si_signo);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_CONTINUED)
 	{
 	  error (0, 0, "waitid WCONTINUED on continued code %d\n",
 		 info.si_code);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGCONT)
 	{
 	  error (0, 0, "waitid WCONTINUED on continued status %d\n",
 		 info.si_status);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
 	  error (0, 0, "waitid WCONTINUED on continued pid %d != %d\n",
 		 info.si_pid, pid);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
     }
 #endif
@@ -177,7 +180,7 @@ do_test (int argc, char *argv[])
   if (kill (pid, SIGKILL) != 0)
     {
       error (0, errno, "kill (%d, SIGKILL)", pid);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     }
 
 #ifdef WNOWAIT
@@ -189,34 +192,34 @@ do_test (int argc, char *argv[])
     {
     default:
       error (0, 0, "waitid WNOWAIT returned bogus value %d\n", fail);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     case -1:
       error (0, errno, "waitid WNOWAIT on killed");
-      return errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE;
+      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
 	  error (0, 0, "waitid WNOWAIT on killed signal %d\n",
 		 info.si_signo);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_KILLED)
 	{
 	  error (0, 0, "waitid WNOWAIT on killed code %d\n",
 		 info.si_code);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGKILL)
 	{
 	  error (0, 0, "waitid WNOWAIT on killed status %d\n",
 		 info.si_status);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
 	  error (0, 0, "waitid WNOWAIT on killed pid %d != %d\n",
 		 info.si_pid, pid);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
     }
 #else
@@ -232,34 +235,34 @@ do_test (int argc, char *argv[])
     {
     default:
       error (0, 0, "waitid WNOHANG returned bogus value %d\n", fail);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     case -1:
       error (0, errno, "waitid WNOHANG on killed");
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     case 0:
       if (info.si_signo != SIGCHLD)
 	{
 	  error (0, 0, "waitid WNOHANG on killed signal %d\n",
 		 info.si_signo);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_code != CLD_KILLED)
 	{
 	  error (0, 0, "waitid WNOHANG on killed code %d\n",
 		 info.si_code);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_status != SIGKILL)
 	{
 	  error (0, 0, "waitid WNOHANG on killed status %d\n",
 		 info.si_status);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
       if (info.si_pid != pid)
 	{
 	  error (0, 0, "waitid WNOHANG on killed pid %d != %d\n",
 		 info.si_pid, pid);
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
     }
 
@@ -269,16 +272,19 @@ do_test (int argc, char *argv[])
       if (errno != ECHILD)
 	{
 	  error (0, errno, "waitid WEXITED on killed");
-	  return EXIT_FAILURE;
+	  RETURN (EXIT_FAILURE);
 	}
     }
   else
     {
       error (0, 0, "waitid WEXITED returned bogus value %d\n", fail);
-      return EXIT_FAILURE;
+      RETURN (EXIT_FAILURE);
     }
 
-  return EXIT_SUCCESS;
+#undef RETURN
+ out:
+  kill (pid, SIGKILL);		/* Make sure it's dead if we bailed early.  */
+  return status;
 }
 
 #include "../test-skeleton.c"
