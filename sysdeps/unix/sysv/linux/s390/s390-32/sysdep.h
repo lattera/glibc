@@ -1,4 +1,4 @@
-/* Copyright (C) 2000,01,02,03 Free Software Foundation, Inc.
+/* Copyright (C) 2000,01,02,03,04 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -207,7 +207,20 @@
     asm volatile (							      \
     "svc    0\n\t"							      \
     : "=d" (_ret)							      \
-    : "d" (_nr), "i" (__NR_##name) ASMFMT_##nr				      \
+    : "d" (_nr) ASMFMT_##nr						      \
+    : "memory" );							      \
+    _ret; })
+
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(no, err, nr, args...)			      \
+  ({									      \
+    DECLARGS_##nr(args)							      \
+    register unsigned long _nr asm("1") = (unsigned long)(no);		      \
+    register int _ret asm("2");						      \
+    asm volatile (							      \
+    "svc    0\n\t"							      \
+    : "=d" (_ret)							      \
+    : "d" (_nr) ASMFMT_##nr						      \
     : "memory" );							      \
     _ret; })
 

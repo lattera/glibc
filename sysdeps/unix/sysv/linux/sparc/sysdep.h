@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -22,13 +22,17 @@
 
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
-  inline_syscall##nr(__SYSCALL_STRING, name, args)
+  inline_syscall##nr(__SYSCALL_STRING, __NR_##name, args)
 
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...) \
+  inline_syscall##nr(__INTERNAL_SYSCALL_STRING, __NR_##name, args)
+
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   inline_syscall##nr(__INTERNAL_SYSCALL_STRING, name, args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
@@ -41,7 +45,7 @@
 #define inline_syscall0(string,name,dummy...)				\
 ({									\
 	register long __o0 __asm__ ("o0");				\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1) :					\
 			  __SYSCALL_CLOBBERS);				\
@@ -51,7 +55,7 @@
 #define inline_syscall1(string,name,arg1)				\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0) :			\
 			  __SYSCALL_CLOBBERS);				\
@@ -62,7 +66,7 @@
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1) :		\
 			  __SYSCALL_CLOBBERS);				\
@@ -74,7 +78,7 @@
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2) :					\
@@ -88,7 +92,7 @@
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3) :			\
@@ -103,7 +107,7 @@
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
@@ -119,7 +123,7 @@
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __o5 __asm__ ("o5") = (long)(arg6);		\
-	register long __g1 __asm__ ("g1") = __NR_##name;		\
+	register long __g1 __asm__ ("g1") = name;			\
 	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4),		\

@@ -167,7 +167,7 @@ __LABEL(name)						\
 #define INLINE_SYSCALL1(name, nr, args...)	\
 ({						\
 	long _sc_ret, _sc_err;			\
-	inline_syscall##nr(name, args);		\
+	inline_syscall##nr(__NR_##name, args);	\
 	if (__builtin_expect (_sc_err, 0))	\
 	  {					\
 	    __set_errno (_sc_ret);		\
@@ -180,6 +180,9 @@ __LABEL(name)						\
 	INTERNAL_SYSCALL1(name, err_out, nr, args)
 
 #define INTERNAL_SYSCALL1(name, err_out, nr, args...)	\
+	INTERNAL_SYSCALL_NCS(__NR_##name, err_out, nr, args)
+
+#define INTERNAL_SYSCALL_NCS(name, err_out, nr, args...) \
 ({							\
 	long _sc_ret, _sc_err;				\
 	inline_syscall##nr(name, args);			\
@@ -223,7 +226,7 @@ __LABEL(name)						\
 	register long _sc_0 inline_syscall_r0_asm;		\
 	register long _sc_19 __asm__("$19");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2"				\
 	   : inline_syscall_r0_out_constraint (_sc_0),		\
@@ -240,7 +243,7 @@ __LABEL(name)						\
 	register long _sc_16 __asm__("$16");			\
 	register long _sc_19 __asm__("$19");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	_sc_16 = (long) (arg1);					\
 	__asm__ __volatile__					\
 	  ("callsys # %0 %1 <= %2 %3"				\
@@ -259,7 +262,7 @@ __LABEL(name)						\
 	register long _sc_17 __asm__("$17");			\
 	register long _sc_19 __asm__("$19");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	__asm__ __volatile__					\
@@ -280,7 +283,7 @@ __LABEL(name)						\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\
@@ -303,7 +306,7 @@ __LABEL(name)						\
 	register long _sc_18 __asm__("$18");			\
 	register long _sc_19 __asm__("$19");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\
@@ -328,7 +331,7 @@ __LABEL(name)						\
 	register long _sc_19 __asm__("$19");			\
 	register long _sc_20 __asm__("$20");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\
@@ -355,7 +358,7 @@ __LABEL(name)						\
 	register long _sc_20 __asm__("$20");			\
 	register long _sc_21 __asm__("$21");			\
 								\
-	_sc_0 = __NR_##name;					\
+	_sc_0 = name;						\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\

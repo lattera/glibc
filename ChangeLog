@@ -1,3 +1,19 @@
+2004-09-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (inline_syscall[0-6]): Change name
+	argument to numbers from syscall names.
+	(INLINE_SYSCALL1): Pass __NR_##name to inline_syscall##nr.
+	(INTERNAL_SYSCALL_NCS): Renamed from...
+	(INTERNAL_SYSCALL_1): ... this.  Use INTERNAL_SYSCALL_NCS.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (inline_syscall[0-6]):
+	Change name argument to numbers from syscall names.
+	(INLINE_SYSCALL, INTERNAL_SYSCALL): Adjust.
+	(INTERNAL_SYSCALL_NCS): Define.
+
 2004-09-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (malloc_printerr): Use syslog if writev failed.
