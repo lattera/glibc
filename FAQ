@@ -136,6 +136,9 @@ please let me know.
 3.16.	Why has <netinet/ip_fw.h> disappeared?
 3.17.	I get floods of warnings when I use -Wconversion and include
 	<string.h> or <math.h>.
+3.18.	After upgrading to glibc 2.1, I receive errors about
+	unresolved symbols, like `_dl_initial_searchlist' and can not
+	execute any binaries.  What went wrong?
 
 4. Miscellaneous
 
@@ -1415,6 +1418,50 @@ ignore the warnings.
 
 -Wconversion isn't really intended for production use, only for shakedown
 compiles after converting an old program to standard C.
+
+
+3.18.	After upgrading to glibc 2.1, I receive errors about
+	unresolved symbols, like `_dl_initial_searchlist' and can not
+	execute any binaries.  What went wrong?
+
+{AJ} This normally happens if your libc and ld (dynamic linker) are from
+different releases of glibc.  For example, the dynamic linker
+/lib/ld-linux.so.2 comes from glibc 2.0.x, but the version of libc.so.6 is
+from glibc 2.1.
+
+The path /lib/ld-linux.so.2 is hardcoded in every glibc2 binary but
+libc.so.6 is searched via /etc/ld.so.cache and in some special directories
+like /lib and /usr/lib.  If you run configure with another prefix than /usr
+and put this prefix before /lib in /etc/ld.so.conf, your system will break.
+
+So what can you do?  Either of the following should work:
+
+* Run `configure' with the same prefix argument you've used for glibc 2.0.x
+  so that the same paths are used.
+* Replace /lib/ld-linux.so.2 with a link to the dynamic linker from glibc
+  2.1.
+
+You can even call the dynamic linker by hand if everything fails.  You've
+got to set LD_LIBRARY_PATH so that the corresponding libc is found and also
+need to provide an absolute path to your binary:
+
+	LD_LIBRARY_PATH=<path-where-libc.so.6-lives> \
+	<path-where-corresponding-dynamic-linker-lives>/ld-linux.so.2 \
+	<path-to-binary>/binary
+
+For example `LD_LIBRARY_PATH=/libold /libold/ld-linux.so.2 /bin/mv ...'
+might be useful in fixing a broken system (if /libold contains dynamic
+linker and corresponding libc).
+
+With that command line no path is used.  To further debug problems with the
+dynamic linker, use the LD_DEBUG environment variable, e.g.
+`LD_DEBUG=help echo' for the help text.
+
+If you just want to test this release, don't put the lib directory in
+/etc/ld.so.conf.  You can call programs directly with full paths (as above).
+When compiling new programs against glibc 2.1, you've got to specify the
+correct paths to the compiler (option -I with gcc) and linker (options
+--dynamic-linker, -L and --rpath).
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

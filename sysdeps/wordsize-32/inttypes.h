@@ -252,7 +252,7 @@
 __BEGIN_DECLS
 
 /* We have to define the `uintmax_t' type using `lldiv_t'.  */
-#ifndef _STDLIB_H
+#ifndef __lldiv_t_defined
 /* Returned by `lldiv'.  */
 __extension__ typedef struct
   {

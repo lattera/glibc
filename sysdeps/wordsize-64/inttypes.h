@@ -252,7 +252,7 @@
 __BEGIN_DECLS
 
 /* We have to define the `uintmax_t' type using `ldiv_t'.  */
-#ifndef _STDLIB_H
+#ifndef __ldiv_t_defined
 /* Returned by `ldiv'.  */
 typedef struct
   {

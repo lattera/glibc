@@ -1,0 +1,94 @@
+escape_char  /
+comment_char  %
+
+% Indonesian language locale for Bahasa Indonesia
+% Source:
+% Address:
+% Contact: Mohammad DAMT
+% Email: mdamt@linux.or.id
+% Tel: +62-0251-245470
+% Fax:
+% Language: in
+% Territory: ID
+% Revision: 0.3
+% Date: 1999-02-09
+% Application: general
+% Users: general
+% Repertoiremap:
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol         "<I><D><R><SP>"
+currency_symbol         "<R><p>"
+mon_decimal_point       "<,>"
+mon_thousands_sep       "<.>"
+mon_grouping            3;3
+positive_sign           ""
+negative_sign           "<->"
+int_frac_digits         2
+frac_digits             2
+p_cs_precedes           1
+p_sep_by_space          0
+n_cs_precedes           1
+n_sep_by_space          0
+p_sign_posn             1
+n_sign_posn             1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point           "<,>"
+thousands_sep           "<.>"
+grouping                3;3
+END LC_NUMERIC
+
+LC_TIME
+abday       "<M><i><n>";"<S><e><n>";/
+            "<S><e><l>";"<R><a><b>";/
+            "<K><a><m>";"<J><u><m>";/
+            "<S><a><b>"
+day         "<M><i><n><g><g><u>";/
+            "<S><e><n><i><n>";/
+            "<S><e><l><a><s><a>";/
+            "<R><a><b><u>";/
+            "<K><a><m><i><s>";/
+            "<J><u><m><a><t>";/
+            "<S><a><b><t><u>"
+abmon       "<J><a><n>";"<P><e><b>";/
+            "<M><a><r>";"<A><p><r>";/
+            "<M><e><i>";"<J><u><n>";/
+            "<J><u><l>";"<A><g><u>";/
+            "<S><e><p>";"<O><k><t>";/
+            "<N><o><v>";"<D><e><s>"
+mon         "<J><a><n><u><a><r><i>";/
+            "<P><e><b><r><u><a><r><i>";/
+            "<M><a><r><e><t>";/
+            "<A><p><r><i><l>";/
+            "<M><e><i>";/
+            "<J><u><n><i>";/
+            "<J><u><l><i>";/
+            "<A><g><u><s><t><u><s>";/
+            "<S><e><p><t><e><m><b><e><r>";/
+            "<O><k><t><o><b><e><r>";/
+            "<N><o><p><e><m><b><e><r>";/
+            "<D><e><s><e><m><b><e><r>"
+d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><r><SP><%><Z>"
+d_fmt       "<%><d><//><%><m><//><%><y>"
+t_fmt       "<%><T>"
+am_pm       "";""
+t_fmt_ampm  ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr     "<<(><y><Y><)/>><.><*>"
+noexpr      "<<(><t><T><n><N><)/>><.><*>"
+END LC_MESSAGES
