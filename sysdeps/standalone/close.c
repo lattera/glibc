@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
 
@@ -40,3 +40,5 @@ DEFUN(__close, (fd), int fd)
   return 0;
 }
 
+
+weak_alias (__close, close)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
    Ported to standalone by Joel Sherrill jsherril@redstone-emh2.army.mil,
      On-Line Applications Research Corporation.
  
@@ -59,10 +59,7 @@ DEFUN(__NONE_set_memvals, (argc, argv, envp),
 }
  
 #ifdef  HAVE_GNU_LD
- 
-#include <gnu-stabs.h>
-
 text_set_element (__libc_subinit, __NONE_set_memvals);
- 
 #endif
 
+weak_alias (__brk, brk)

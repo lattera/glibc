@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,11 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 
 /* Return X with its sign changed to Y's.  */
-__inline __CONSTVALUE double
+__inline double
 __copysign (double __x, double __y)
 {
   __asm ("cpys %1, %2, %0" : "=f" (__x) : "f" (__y), "f" (__x));
   return __x;
 }
+
+weak_alias (__copysign, copysign)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -49,3 +49,5 @@ ENTRY(__brk)
 error:	ldgp gp,0(gp)
 	jmp zero,syscall_error
 	.end __brk
+
+weak_alias (__brk, brk)
