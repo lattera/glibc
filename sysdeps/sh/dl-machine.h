@@ -456,15 +456,16 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		 const Elf32_Sym *sym, const struct r_found_version *version,
-		 Elf32_Addr *const reloc_addr)
+		  const Elf32_Sym *sym, const struct r_found_version *version,
+		  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   Elf32_Addr value;
 
-#define COPY_UNALIGNED_WORD(sw, tw, align) \
+#define COPY_UNALIGNED_WORD(swp, twp, align) \
   { \
-    void *__s = &(sw), *__t = &(tw); \
+    void *__s = (swp), *__t = (twp); \
     switch ((align)) \
     { \
     case 0: \
@@ -493,10 +494,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	    value = map->l_addr + reloc->r_addend;
 	  else
 	    {
-	      COPY_UNALIGNED_WORD (*reloc_addr, value, (int) reloc_addr & 3);
+	      COPY_UNALIGNED_WORD (reloc_addr_arg, &value,
+				   (int) reloc_addr_arg & 3);
 	      value += map->l_addr;
 	    }
-	  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
+	  COPY_UNALIGNED_WORD (&value, reloc_addr_arg,
+			       (int) reloc_addr_arg & 3);
 	}
     }
 #ifndef RTLD_BOOTSTRAP
@@ -538,8 +541,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 	case R_SH_GLOB_DAT:
 	case R_SH_JMP_SLOT:
@@ -606,12 +609,14 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 used while loading those libraries.  */
 	      value -= map->l_addr + refsym->st_value + reloc->r_addend;
 #endif
-	    COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
+	    COPY_UNALIGNED_WORD (&value, reloc_addr_arg,
+				 (int) reloc_addr_arg & 3);
 	    break;
 	  }
 	case R_SH_REL32:
 	  value = (value - (Elf32_Addr) reloc_addr);
-	  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
+	  COPY_UNALIGNED_WORD (&value, reloc_addr_arg,
+			       (int) reloc_addr_arg & 3);
 	  break;
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
@@ -622,18 +627,19 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   Elf32_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   Elf32_Addr value;
 
   if (reloc->r_addend)
     value = l_addr + reloc->r_addend;
   else
     {
-      COPY_UNALIGNED_WORD (*reloc_addr, value, (int) reloc_addr & 3);
+      COPY_UNALIGNED_WORD (reloc_addr_arg, &value, (int) reloc_addr_arg & 3);
       value += l_addr;
     }
-  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
+  COPY_UNALIGNED_WORD (&value, reloc_addr_arg, (int) reloc_addr_arg & 3);
 
 #undef COPY_UNALIGNED_WORD
 }

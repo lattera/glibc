@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -419,8 +420,9 @@ fix_bad_pc24 (Elf32_Addr *const reloc_addr, Elf32_Addr value)
 static inline void
 elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
-		 Elf32_Addr *const reloc_addr)
+		 void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
@@ -470,8 +472,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 	case R_ARM_GLOB_DAT:
 	case R_ARM_JUMP_SLOT:
@@ -544,8 +546,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  Elf32_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
   if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
@@ -581,8 +584,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 #  endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	case R_ARM_GLOB_DAT:
@@ -623,16 +626,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
-			  Elf32_Addr *const reloc_addr)
+			  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr += l_addr;
 }
 
 # ifndef RTLD_BOOTSTRAP
 static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   Elf32_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
 # endif

@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Sparc64 version.
-   Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2002, 2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -240,8 +241,9 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 static inline void
 elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym, const struct r_found_version *version,
-		  Elf64_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned long int r_type = ELF64_R_TYPE_ID (reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
@@ -292,8 +294,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 #endif
 	case R_SPARC_64:
@@ -392,31 +394,31 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 #ifndef RTLD_BOOTSTRAP
 	case R_SPARC_UA16:
-	  ((unsigned char *) reloc_addr) [0] = value >> 8;
-	  ((unsigned char *) reloc_addr) [1] = value;
+	  ((unsigned char *) reloc_addr_arg) [0] = value >> 8;
+	  ((unsigned char *) reloc_addr_arg) [1] = value;
 	  break;
 	case R_SPARC_UA32:
-	  ((unsigned char *) reloc_addr) [0] = value >> 24;
-	  ((unsigned char *) reloc_addr) [1] = value >> 16;
-	  ((unsigned char *) reloc_addr) [2] = value >> 8;
-	  ((unsigned char *) reloc_addr) [3] = value;
+	  ((unsigned char *) reloc_addr_arg) [0] = value >> 24;
+	  ((unsigned char *) reloc_addr_arg) [1] = value >> 16;
+	  ((unsigned char *) reloc_addr_arg) [2] = value >> 8;
+	  ((unsigned char *) reloc_addr_arg) [3] = value;
 	  break;
 	case R_SPARC_UA64:
-	  if (! ((long) reloc_addr & 3))
+	  if (! ((long) reloc_addr_arg & 3))
 	    {
 	      /* Common in .eh_frame */
-	      ((unsigned int *) reloc_addr) [0] = value >> 32;
-	      ((unsigned int *) reloc_addr) [1] = value;
+	      ((unsigned int *) reloc_addr_arg) [0] = value >> 32;
+	      ((unsigned int *) reloc_addr_arg) [1] = value;
 	      break;
 	    }
-	  ((unsigned char *) reloc_addr) [0] = value >> 56;
-	  ((unsigned char *) reloc_addr) [1] = value >> 48;
-	  ((unsigned char *) reloc_addr) [2] = value >> 40;
-	  ((unsigned char *) reloc_addr) [3] = value >> 32;
-	  ((unsigned char *) reloc_addr) [4] = value >> 24;
-	  ((unsigned char *) reloc_addr) [5] = value >> 16;
-	  ((unsigned char *) reloc_addr) [6] = value >> 8;
-	  ((unsigned char *) reloc_addr) [7] = value;
+	  ((unsigned char *) reloc_addr_arg) [0] = value >> 56;
+	  ((unsigned char *) reloc_addr_arg) [1] = value >> 48;
+	  ((unsigned char *) reloc_addr_arg) [2] = value >> 40;
+	  ((unsigned char *) reloc_addr_arg) [3] = value >> 32;
+	  ((unsigned char *) reloc_addr_arg) [4] = value >> 24;
+	  ((unsigned char *) reloc_addr_arg) [5] = value >> 16;
+	  ((unsigned char *) reloc_addr_arg) [6] = value >> 8;
+	  ((unsigned char *) reloc_addr_arg) [7] = value;
 	  break;
 #endif
 #if !defined RTLD_BOOTSTRAP || defined _NDEBUG
@@ -430,8 +432,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   Elf64_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
 

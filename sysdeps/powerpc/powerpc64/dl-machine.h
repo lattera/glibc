@@ -565,8 +565,9 @@ extern void _dl_reloc_overflow (struct link_map *map,
 
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   Elf64_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
@@ -598,8 +599,9 @@ elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
 		  const struct r_found_version *version,
-		  Elf64_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const int r_type = ELF64_R_TYPE (reloc->r_info);
 #ifndef RTLD_BOOTSTRAP
   const Elf64_Sym *const refsym = sym;
@@ -766,27 +768,28 @@ elf_machine_rela (struct link_map *map,
                             _dl_argv[0] ?: "<program name unknown>",
 			    strtab + refsym->st_name);
 	}
-      memcpy (reloc_addr, (char *) value, MIN (sym->st_size, refsym->st_size));
+      memcpy (reloc_addr_arg, (char *) value,
+	      MIN (sym->st_size, refsym->st_size));
       return;
 
     case R_PPC64_UADDR64:
       /* We are big-endian.  */
-      ((char *) reloc_addr)[0] = (value >> 56) & 0xff;
-      ((char *) reloc_addr)[1] = (value >> 48) & 0xff;
-      ((char *) reloc_addr)[2] = (value >> 40) & 0xff;
-      ((char *) reloc_addr)[3] = (value >> 32) & 0xff;
-      ((char *) reloc_addr)[4] = (value >> 24) & 0xff;
-      ((char *) reloc_addr)[5] = (value >> 16) & 0xff;
-      ((char *) reloc_addr)[6] = (value >> 8) & 0xff;
-      ((char *) reloc_addr)[7] = (value >> 0) & 0xff;
+      ((char *) reloc_addr_arg)[0] = (value >> 56) & 0xff;
+      ((char *) reloc_addr_arg)[1] = (value >> 48) & 0xff;
+      ((char *) reloc_addr_arg)[2] = (value >> 40) & 0xff;
+      ((char *) reloc_addr_arg)[3] = (value >> 32) & 0xff;
+      ((char *) reloc_addr_arg)[4] = (value >> 24) & 0xff;
+      ((char *) reloc_addr_arg)[5] = (value >> 16) & 0xff;
+      ((char *) reloc_addr_arg)[6] = (value >> 8) & 0xff;
+      ((char *) reloc_addr_arg)[7] = (value >> 0) & 0xff;
       return;
 
     case R_PPC64_UADDR32:
       /* We are big-endian.  */
-      ((char *) reloc_addr)[0] = (value >> 24) & 0xff;
-      ((char *) reloc_addr)[1] = (value >> 16) & 0xff;
-      ((char *) reloc_addr)[2] = (value >> 8) & 0xff;
-      ((char *) reloc_addr)[3] = (value >> 0) & 0xff;
+      ((char *) reloc_addr_arg)[0] = (value >> 24) & 0xff;
+      ((char *) reloc_addr_arg)[1] = (value >> 16) & 0xff;
+      ((char *) reloc_addr_arg)[2] = (value >> 8) & 0xff;
+      ((char *) reloc_addr_arg)[3] = (value >> 0) & 0xff;
       return;
 
     case R_PPC64_ADDR32:
@@ -811,8 +814,8 @@ elf_machine_rela (struct link_map *map,
       if (dont_expect ((value + 0x8000) >= 0x10000))
         _dl_reloc_overflow (map, "R_PPC64_UADDR16", reloc_addr, refsym);
       /* We are big-endian.  */
-      ((char *) reloc_addr)[0] = (value >> 8) & 0xff;
-      ((char *) reloc_addr)[1] = (value >> 0) & 0xff;
+      ((char *) reloc_addr_arg)[0] = (value >> 8) & 0xff;
+      ((char *) reloc_addr_arg)[1] = (value >> 0) & 0xff;
       break;
 
     case R_PPC64_ADDR16_DS:

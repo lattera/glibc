@@ -512,8 +512,9 @@ elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
 		  const struct r_found_version *version,
-		  Elf64_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   unsigned long int const r_type = ELF64_R_TYPE (reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC && !defined SHARED
@@ -538,15 +539,14 @@ elf_machine_rela (struct link_map *map,
 	{
 	  /* XXX Make some timings.  Maybe it's preferable to test for
 	     unaligned access and only do it the complex way if necessary.  */
-	  void *reloc_addr_1 = reloc_addr;
 	  Elf64_Addr reloc_addr_val;
 
 	  /* Load value without causing unaligned trap. */
-	  memcpy (&reloc_addr_val, reloc_addr_1, 8);
+	  memcpy (&reloc_addr_val, reloc_addr_arg, 8);
 	  reloc_addr_val += map->l_addr;
 
 	  /* Store value without causing unaligned trap. */
-	  memcpy (reloc_addr_1, &reloc_addr_val, 8);
+	  memcpy (reloc_addr_arg, &reloc_addr_val, 8);
 	}
     }
   else
@@ -598,10 +598,8 @@ elf_machine_rela (struct link_map *map,
 #ifndef RTLD_BOOTSTRAP
       else if (r_type == R_ALPHA_REFQUAD)
 	{
-	  void *reloc_addr_1 = reloc_addr;
-
 	  /* Store value without causing unaligned trap.  */
-	  memcpy (reloc_addr_1, &sym_value, 8);
+	  memcpy (reloc_addr_arg, &sym_value, 8);
 	}
 #endif
 #if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
@@ -649,19 +647,18 @@ elf_machine_rela (struct link_map *map,
 
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   Elf64_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
-  /* XXX Make some timings.  Maybe it's preverable to test for
+  /* XXX Make some timings.  Maybe it's preferable to test for 
      unaligned access and only do it the complex way if necessary.  */
-  void *reloc_addr_1 = reloc_addr;
   Elf64_Addr reloc_addr_val;
 
   /* Load value without causing unaligned trap. */
-  memcpy (&reloc_addr_val, reloc_addr_1, 8);
+  memcpy (&reloc_addr_val, reloc_addr_arg, 8);
   reloc_addr_val += l_addr;
 
   /* Store value without causing unaligned trap. */
-  memcpy (reloc_addr_1, &reloc_addr_val, 8);
+  memcpy (reloc_addr_arg, &reloc_addr_val, 8);
 }
 
 static inline void

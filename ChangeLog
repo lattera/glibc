@@ -1,3 +1,41 @@
+2003-07-31  Alexandre Oliva  <aoliva@redhat.com>
+
+	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rela,
+	elf_machine_rel_relative, elf_machine_rela_relative): Don't assume
+	reloc_addr is aligned.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel, elf_machine_rela,
+	elf_machine_rel_relative, elf_machine_rela_relative): Adjust.
+	* sysdeps/cris/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel, elf_machine_rela,
+	elf_machine_rel_relative, elf_machine_rela_relative): Adjust.
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/mips/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/powerpc/powerpc64/dl-machine.h
+	(elf_machine_rela_relative, elf_machine_rela): Adjust.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): 
+	* sysdeps/sh/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative): Adjust.
+
 2003-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Restore

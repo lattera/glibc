@@ -435,8 +435,9 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  Elf32_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
@@ -510,8 +511,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 #endif
 	case R_SPARC_GLOB_DAT:
@@ -587,14 +588,14 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr = (*reloc_addr & 0xffc00000) | (value >> 10);
 	  break;
 	case R_SPARC_UA16:
-	  ((unsigned char *) reloc_addr) [0] = value >> 8;
-	  ((unsigned char *) reloc_addr) [1] = value;
+	  ((unsigned char *) reloc_addr_arg) [0] = value >> 8;
+	  ((unsigned char *) reloc_addr_arg) [1] = value;
 	  break;
 	case R_SPARC_UA32:
-	  ((unsigned char *) reloc_addr) [0] = value >> 24;
-	  ((unsigned char *) reloc_addr) [1] = value >> 16;
-	  ((unsigned char *) reloc_addr) [2] = value >> 8;
-	  ((unsigned char *) reloc_addr) [3] = value;
+	  ((unsigned char *) reloc_addr_arg) [0] = value >> 24;
+	  ((unsigned char *) reloc_addr_arg) [1] = value >> 16;
+	  ((unsigned char *) reloc_addr_arg) [2] = value >> 8;
+	  ((unsigned char *) reloc_addr_arg) [3] = value;
 	  break;
 #endif
 	case R_SPARC_NONE:		/* Alright, Wilbur.  */
@@ -610,8 +611,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   Elf32_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr += l_addr + reloc->r_addend;
 }
 

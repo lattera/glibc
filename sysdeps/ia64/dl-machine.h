@@ -507,8 +507,9 @@ elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
 		  const struct r_found_version *version,
-		  Elf64_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned long int r_type = ELF64_R_TYPE (reloc->r_info);
   Elf64_Addr value;
 
@@ -607,8 +608,9 @@ elf_machine_rela (struct link_map *map,
 
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   Elf64_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   /* ??? Ignore MSB and Instruction format for now.  */
   assert (ELF64_R_TYPE (reloc->r_info) == R_IA64_REL64LSB);
 

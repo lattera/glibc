@@ -356,8 +356,9 @@ extern void _dl_reloc_overflow (struct link_map *map,
 inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  Elf32_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const Elf32_Sym *const refsym = sym;
   Elf32_Addr value;
   const int r_type = ELF32_R_TYPE (reloc->r_info);
@@ -456,8 +457,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   Elf32_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
 

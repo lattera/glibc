@@ -21,20 +21,30 @@
 #include <assert.h>
 
 #ifdef RESOLVE
+/* We pass reloc_addr as a pointer to void, as opposed to a pointer to
+   ElfW(Addr), because not all architectures can assume that the
+   relocated address is properly aligned, whereas the compiler is
+   entitled to assume that a pointer to a type is properly aligned for
+   the type.  Even if we cast the pointer back to some other type with
+   less strict alignment requirements, the compiler might still
+   remember that the pointer was originally more aligned, thereby
+   optimizing away alignment tests or using word instructions for
+   copying memory, breaking the very code written to handle the
+   unaligned cases.  */
 auto void __attribute__((always_inline))
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 ElfW(Addr) *const reloc_addr);
+		 void *const reloc_addr);
 auto void __attribute__((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
-		  ElfW(Addr) *const reloc_addr);
+		  void *const reloc_addr);
 auto void __attribute__((always_inline))
 elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
-			  ElfW(Addr) *const reloc_addr);
+			  void *const reloc_addr);
 auto void __attribute__((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
-			   ElfW(Addr) *const reloc_addr);
+			   void *const reloc_addr);
 # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
 auto void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,

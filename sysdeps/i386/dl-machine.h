@@ -391,8 +391,9 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 static inline void
 elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
-		 Elf32_Addr *const reloc_addr)
+		 void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
@@ -519,8 +520,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
@@ -534,8 +535,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 static inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
-		  Elf32_Addr *const reloc_addr)
+		  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
   if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
@@ -618,8 +620,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 # endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	default:
@@ -634,8 +636,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
-			  Elf32_Addr *const reloc_addr)
+			  void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   assert (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE);
   *reloc_addr += l_addr;
 }
@@ -643,8 +646,9 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 #ifndef RTLD_BOOTSTRAP
 static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   Elf32_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf32_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
 #endif	/* !RTLD_BOOTSTRAP */

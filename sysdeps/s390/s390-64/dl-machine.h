@@ -344,9 +344,10 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 
 static inline void
 elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
-		 const Elf64_Sym *sym, const struct r_found_version *version,
-		  Elf64_Addr *const reloc_addr)
+		  const Elf64_Sym *sym, const struct r_found_version *version,
+		  void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
 
 #if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
@@ -454,8 +455,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 				rtld_progname ?: "<program name unknown>",
 				strtab + refsym->st_name);
 	    }
-	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
-						   refsym->st_size));
+	  memcpy (reloc_addr_arg, (void *) value,
+		  MIN (sym->st_size, refsym->st_size));
 	  break;
 # endif
 	case R_390_64:
@@ -509,8 +510,9 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
-			   Elf64_Addr *const reloc_addr)
+			   void *const reloc_addr_arg)
 {
+  Elf64_Addr *const reloc_addr = reloc_addr_arg;
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
