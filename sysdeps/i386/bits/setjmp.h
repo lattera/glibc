@@ -41,7 +41,7 @@
 	popl %ecx;		/* jmp_buf value */		\
 	popl %edx;		/* jmp_buf low bound */		\
 	pushl 0(%esp);		/* jmp_buf high bound */	\
-	movel $MASK, 4(%esp);					\
+	movl $MASK, 4(%esp);					\
 	pushl %edx;						\
 	pushl %ecx;						\
 	pushl %eax

@@ -47,6 +47,8 @@
 
 2000-07-03  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/i386/bits/setjmp.h (PUSH_SIGNAL_MASK): Fix typo.
+	
 	* csu/Makefile (extra-objs, install-lib): Add BP objects conditionally.
 	($(objpfx)b$(start-installed-name)): Add non-elf rule.
 
