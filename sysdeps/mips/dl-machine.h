@@ -281,26 +281,30 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 
 #else /* _MIPS_SIM == _MIPS_SIM_NABI32 || _MIPS_SIM == _MIPS_SIM_ABI64 */
 
-#define ELF_DL_FRAME_SIZE 64
+#define ELF_DL_FRAME_SIZE 80
 
 #define ELF_DL_SAVE_ARG_REGS "\
-	sd	$15, 56($29)\n						      \
+	sd	$15, 72($29)\n						      \
 	sd	$4, 8($29)\n						      \
 	sd	$5, 16($29)\n						      \
 	sd	$6, 24($29)\n						      \
 	sd	$7, 32($29)\n						      \
 	sd	$8, 40($29)\n						      \
 	sd	$9, 48($29)\n						      \
+	sd	$10, 56($29)\n						      \
+	sd	$11, 64($29)\n						      \
 "
 
 #define ELF_DL_RESTORE_ARG_REGS "\
-	ld	$31, 56($29)\n						      \
+	ld	$31, 72($29)\n						      \
 	ld	$4, 8($29)\n						      \
 	ld	$5, 16($29)\n						      \
 	ld	$6, 24($29)\n						      \
 	ld	$7, 32($29)\n						      \
 	ld	$8, 40($29)\n						      \
 	ld	$9, 48($29)\n						      \
+	ld	$10, 56($29)\n						      \
+	ld	$11, 64($29)\n						      \
 "
 
 #define IFABIO32(X)
