@@ -621,10 +621,10 @@ get_type (const char **prefixp, const char **typep, defkind dkind)
       *typep = "long";
       (void) peekscan (TOK_INT, &tok);
       break;
-	case TOK_HYPER:
-	  *typep = "int64_t";
+    case TOK_HYPER:
+      *typep = "long long";
       (void) peekscan(TOK_INT, &tok);
-	  break;    
+      break;
     case TOK_VOID:
       if (dkind != DEF_UNION && dkind != DEF_PROGRAM)
 	{
@@ -668,11 +668,11 @@ unsigned_dec (const char **typep)
       *typep = "u_long";
       (void) peekscan (TOK_INT, &tok);
       break;
-	case TOK_HYPER:
+    case TOK_HYPER:
       get_token (&tok);
-	  *typep = "uint64_t";
+      *typep = "unsigned long long";
       (void) peekscan(TOK_INT, &tok);
-	  break;    
+      break;
     case TOK_INT:
       get_token (&tok);
       *typep = "u_int";
