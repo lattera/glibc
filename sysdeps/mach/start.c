@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,11 +30,6 @@ Cambridge, MA 02139, USA.  */
 int __data_start = 0;
 
 volatile int errno;
-
-#ifndef	HAVE_GNU_LD
-#define	__environ	environ
-#endif
-char **__environ;
 
 extern void __mach_init (void);
 extern void __libc_init (int argc, char **argv, char **envp);

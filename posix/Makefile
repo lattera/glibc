@@ -43,7 +43,7 @@ routines :=								      \
 	glob fnmatch							      \
 	confstr								      \
 	getopt getopt1
-aux		:= init-posix
+aux		:= init-posix environ
 tests		:= tstgetopt testfnm
 others		:= getconf
 install-bin	:= getconf

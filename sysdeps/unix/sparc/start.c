@@ -42,15 +42,6 @@ weak_alias (__data_start, data_start)
 
 VOLATILE int errno;
 
-#ifdef	HAVE_WEAK_SYMBOLS
-weak_alias (__environ, environ)
-#else
-#undef	environ
-#define	__environ	environ
-#endif
-
-char **__environ;
-
 extern void EXFUN(__libc_init, (int argc, char **argv, char **envp));
 extern int EXFUN(main, (int argc, char **argv, char **envp));
 

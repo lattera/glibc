@@ -128,7 +128,11 @@ Cambridge, MA 02139, USA.  */
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \
   link_warning ("warning: " #name " is not implemented and will always fail")
+
+/*
 
+*/
+
 #ifdef HAVE_GNU_LD
 
 /* Symbol set support macros.  */

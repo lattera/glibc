@@ -1,9 +1,50 @@
+Sun Feb 19 17:46:13 1995  Roland McGrath  <roland@duality.gnu.ai.mit.edu>
+
+	* posix/Makefile (aux): Add environ.
+	* posix/environ.c: New file.
+	* sysdeps/unix/sparc/start.c: Remove __environ definition.
+	* sysdeps/unix/start.c: Likewise.
+	* sysdeps/unix/sysv/irix4/start.c: Likewise.
+	* sysdeps/mach/hurd/start.c: Likewise.
+	* sysdeps/mach/start.c: Likewise.
+	* sysdeps/stub/start.c: Likewise.
+
+	* sysdeps/unix/make_errlist.c: In produced program, test
+ 	HAVE_WEAK_SYMBOLS instead of HAVE_GNU_LD.
+	* sysdeps/unix/sysv/sysv4/dup2.c: Fix #include of renamed file.
+  	Remove extra weak alias.
+
+	* sysdeps/unix/sysv/sysv4/sigaltstack.S: Fix unsquashed file name
+ 	in #include.
+
+	* libc-symbols.h: Put comment around ^L to pacify Solaris as.
+
+	* sysdeps/posix/Makefile (cded-objdir-includes): New variable
+ 	replaced cded-objdir-CPPFLAGS; transform $(+includes) instead of
+ 	$(CPPFLAGS).
+	(mk-stdiolim): Use it instead.
+
 Fri Feb 17 12:16:27 1995  Roland McGrath  <roland@duality.gnu.ai.mit.edu>
 
+	* mach/mach_init.c (__vm_page_size): Make it initialized.  It does
+ 	not work to make a weak alias to a bss symbol.
+
+	* stdio/Makefile (distribute): Remove mpn-copy.mk; add gen-mpn-copy.
+	(tests): Add test-fwrite.
+	* stdio/test-fwrite.c: New file.
+
+	* stdlib/stdlib.h [__USE_GNU]: Declare strtof, strtold, __strtof,
+ 	__strtold.
+
+	* Makefile (autoconf-it): New canned sequence.  Do cvs commit if
+ 	there is a CVS directory.
+	(configure, %/configure): Use $(autoconf-it) for cmds.
+	* Make-dist: Likewise.
 	* sysdeps/mach/hurd/Makefile (errlist.c, errnos.h): Do cvs commit
  	if there is a CVS directory.
 	* sysdeps/sparc/Makefile (divrem output): Likewise.
 	* sysdeps/alpha/Makefile (divrem output): Likewise.
+	* Makerules ($(gpl2lgpl)): Likewise.
 
 	* Makerules (rule to install lib%.a from $(install-lib)): Fix
  	patsubst to elide ranlib for $(non-lib.a).
@@ -189,8 +230,7 @@ Tue Feb  7 12:17:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* mach/mig_strncpy.c: Include string.h.
 
 	* sysdeps/mach/sysdep.h: Don't #include <mach/mig_support.h>.  Its
- 	inlines cause trouble for files defining global register
- 	variables.
+ 	inlines cause trouble for files defining global register variables.
 
 	* stdio/vfprintf.c: Use _strerror_internal for %m.
 
@@ -323,8 +363,7 @@ Thu Feb  2 20:06:45 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* io/ftw.c (ftw, ftw_dir): Treat ENOENT from stat like EACCES.
 
-	* stdio/vfprintf.c: Set PREC to zero for %. without following
- 	digit.
+	* stdio/vfprintf.c: Set PREC to zero for %. without following digit.
 
 Tue Jan 31 13:49:57 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 

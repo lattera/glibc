@@ -46,9 +46,6 @@ unsigned long int *__hurd_sigthread_variables;
 vm_address_t _hurd_stack_base;
 vm_size_t _hurd_stack_size;
 
-char **__environ;
-weak_alias (__environ, environ)
-
 /* Things that want to be run before _hurd_init or much anything else.
    Importantly, these are called before anything tries to use malloc.  */
 DEFINE_HOOK (_hurd_preinit_hook, (void));

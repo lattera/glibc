@@ -6,11 +6,10 @@
    This file should be prepared to be the first thing in the text section (on
    Unix systems), or otherwise appropriately special.  */
 
-volatile int errno;
-
-#ifndef HAVE_GNU_LD
-#undef environ
-#define __environ environ
+/* The first piece of initialized data.  */
+int __data_start = 0;
+#ifdef HAVE_WEAK_SYMBOLS
+weak_alias (__data_start, data_start)
 #endif
 
-char **__environ;
+volatile int errno;
