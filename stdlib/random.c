@@ -205,17 +205,17 @@ __initstate (seed, arg_state, n)
      char *arg_state;
      size_t n;
 {
-  char *ostate;
+  int32_t *ostate;
 
   __libc_lock_lock (lock);
 
-  ostate = (char *) &unsafe_state.state[-1];
+  ostate = &unsafe_state.state[-1];
 
   __initstate_r (seed, arg_state, n, &unsafe_state);
 
   __libc_lock_unlock (lock);
 
-  return ostate;
+  return (char *) ostate;
 }
 
 weak_alias (__initstate, initstate)
@@ -232,18 +232,18 @@ char *
 __setstate (arg_state)
      char *arg_state;
 {
-  char *ostate;
+  int32_t *ostate;
 
   __libc_lock_lock (lock);
 
-  ostate = (char *) &unsafe_state.state[-1];
+  ostate = &unsafe_state.state[-1];
 
   if (__setstate_r (arg_state, &unsafe_state) < 0)
     ostate = NULL;
 
   __libc_lock_unlock (lock);
 
-  return ostate;
+  return (char *) ostate;
 }
 
 weak_alias (__setstate, setstate)

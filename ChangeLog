@@ -1,5 +1,8 @@
 2001-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/random.c (__initstate): Clean up a cast.
+	(__setstate): Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove select
 	syscall handling.  The generic Linux version should work.
 
