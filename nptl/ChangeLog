@@ -1,3 +1,7 @@
+2003-02-23  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (nptl-version): Change regexp so case sensitivity is ok.
+
 2003-02-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-context1.
