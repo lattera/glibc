@@ -310,7 +310,6 @@ typedef enum __error_t_codes error_t;
 extern int *__errno_location (void) __THROW __attribute__ ((__const__));
 
 #define errno			(*__errno_location ())
-#define __set_errno(val)	(errno = (val))
 
 #endif /* <errno.h> included.  */
 

@@ -17,14 +17,18 @@
 #include <errno.h>
 #include <netdb.h>
 #include <resolv.h>
+#include <tls.h>
 #include "pthread.h"
 #include "internals.h"
 
+#if !USE_TLS || !HAVE___THREAD
+/* The definition in libc is sufficient if we use TLS.  */
 int * __errno_location()
 {
   pthread_descr self = thread_self();
   return THREAD_GETMEM (self, p_errnop);
 }
+#endif
 
 int * __h_errno_location()
 {

@@ -27,6 +27,7 @@
 #endif
 #include "kernel-features.h"
 
+#ifndef ASSEMBLER
 extern long int testandset (int *spinlock);
 extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
@@ -66,6 +67,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 			: "memory");
   return ret;
 }
+#endif
 
 #if __ASSUME_LDT_WORKS > 0
 #include "../useldt.h"

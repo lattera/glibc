@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -53,7 +53,6 @@
   buf->f_flag = 0;
   if (STAT (&st) >= 0)
     {
-      int save_errno = errno;
       struct mntent mntbuf;
       FILE *mtab;
 
@@ -104,6 +103,4 @@
 	  /* Close the file.  */
 	  __endmntent (mtab);
 	}
-
-      __set_errno (save_errno);
     }

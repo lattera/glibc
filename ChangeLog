@@ -1,3 +1,52 @@
+2002-07-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Add test for __thread support in compiler.
+	* config.h.in: Add HAVE___THREAD.
+	* Makefile (headers): Remove errno.h, sys/errno.h, and bits/errno.h.
+	* include/sys/errno.h: Moved to...
+	* stdlib/sys/errno.h: ...here.  New file.
+	* stdlib/errno.h: New file.  Moved from...
+	* include/errno.h: ...here.  Changed into an internal header defining
+	libc-local things like __set_errno.
+	* stdlib/Makefile (headers): Add errno.h, sys/errno.h, and
+	bits/errno.h.
+	* elf/dl-minimal.c: Include <tls.h>.  Define errno as thread-local
+	variable if USE_TLS && HAVE___THREAD.  Don't define __errno_location
+	either.
+	* elf/rtld.c (_dl_start): Add code to initialize TLS for ld.so
+	from...
+	(_dl_start_final): ...here.  Add code to initialize tls elements from
+	bootstrap_map.
+	* sysdeps/generic/errno-loc.c: Define errno as thread-local variable
+	if USE_TLS && HAVE___THREAD.
+	* sysdeps/generic/bits/errno.h: Remove __set_errno definition.
+	* sysdeps/mach/hurd/bits/errno.h: Likewise.
+	* sysdeps/standalone/arm/bits/errno.h: Likewise.
+	* sysdeps/standalone/bits/errno.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/aix/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/hpux/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/errno.h: Likewise.
+	* sysdeps/i386/dl-machine.c (elf_machine_rel) [RTLD_BOOTSTRAP]: Don't
+	use GL(dl_rtld_map), use map parameter.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Define errno in .tbss if
+	USE_TLS && HAVE___THREAD.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Unify SETUP_PIC_REG
+	definitions.  If USE_TLS && HAVE___THREAD store errooor value using
+	TLS code sequence.
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/getcwd.c: No real need to restore errno.
+	* sysdeps/unix/sysv/linux/grantpt.c: Likewise.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
 2002-07-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Fix MS_SYNC and

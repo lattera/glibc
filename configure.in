@@ -1513,6 +1513,22 @@ if test "$libc_cv_gcc_subtract_local_labels" = yes; then
   AC_DEFINE(HAVE_SUBTRACT_LOCAL_LABELS)
 fi
 
+dnl Check whether the compiler supports the __thread keyword.
+AC_CACHE_CHECK([for __thread], libc_cv_gcc___thread,
+[cat > conftest.c <<EOF
+__thread int a = 42;
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS -c conftest.c >&AC_FD_CC]); then
+  libc_cv_gcc___thread=yes
+else
+  libc_cv_gcc___thread=no
+fi
+rm -f conftest*])
+if test "$libc_cv_gcc___thread" = yes; then
+  AC_DEFINE(HAVE___THREAD)
+fi
+
+
 dnl Check whether we have the gd library available.
 AC_MSG_CHECKING(for libgd)
 if test "$with_gd" != "no"; then

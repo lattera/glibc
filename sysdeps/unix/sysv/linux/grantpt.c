@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,12 +56,13 @@ grantpt (int fd)
       if (__libc_fcntl (fd, F_GETFD) == -1 && errno == EBADF)
 	return -1;
 
-      __set_errno (save_errno);
-
        /* If the filedescriptor is no TTY, grantpt has to set errno
           to EINVAL.  */
-       if (errno == ENOTTY)
+       if (save_errno == ENOTTY)
          __set_errno (EINVAL);
+       else
+	 __set_errno (save_errno);
+
        return -1;
     }
 

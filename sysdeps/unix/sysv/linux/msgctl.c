@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -80,7 +80,7 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
   }
 
   {
-    int save_errno = errno, result;
+    int result;
     struct __old_msqid_ds old;
 
     /* Unfortunately there is no way how to find out for sure whether
@@ -90,7 +90,6 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
     if (result != -1 || errno != EINVAL)
       return result;
 
-    __set_errno(save_errno);
     if (cmd == IPC_SET)
       {
 	old.msg_perm.uid = buf->msg_perm.uid;

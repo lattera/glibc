@@ -33,5 +33,3 @@
 # define Exxxx	XXX
 ...
 #endif
-
-#define __set_errno(val) errno = (val)

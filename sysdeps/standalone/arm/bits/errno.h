@@ -60,7 +60,6 @@
 # define EOVERFLOW	32
 #endif
 
-#define __set_errno(val) errno = (val)
 
 /* Function to get address of global `errno' variable.  */
 extern int *__errno_location __P ((void)) __attribute__ ((__const__));

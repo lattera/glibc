@@ -57,5 +57,3 @@
 # define ENOSPC 31
 # define EBUSY 32
 #endif
-
-#define __set_errno(val) errno = (val)

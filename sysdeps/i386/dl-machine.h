@@ -399,7 +399,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	case R_386_TLS_TPOFF32:
 	  /* The offset is positive, backward from the thread pointer.  */
 # ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = GL(dl_rtld_map).l_tls_offset - sym->st_value;
+	  *reloc_addr = map->l_tls_offset - sym->st_value;
 # else
 	  /* We know the offset of object the symbol is contained in.
 	     It is a positive value which will be subtracted from the

@@ -1,3 +1,12 @@
+2002-07-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* errno.c (__errno_location): Don't define unless !USE_TLS
+	|| !HAVE___THREAD.
+	* sysdeps/i386/pt-machine.c: Protect C code with #ifndef ASSEMBLER.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/i386/useldt.h: Likewise.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+
 2002-07-02  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/pspinlock.c: Don't include <sgidefs.h>.  Always

@@ -20,9 +20,10 @@
 #ifndef _TLS_H
 #define _TLS_H
 
-#include <stddef.h>
+# include <pt-machine.h>
 
-#include <pt-machine.h>
+#ifndef ASSEMBLER
+# include <stddef.h>
 
 /* Type for the dtv.  */
 typedef union dtv
@@ -39,56 +40,58 @@ typedef struct
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
 } tcbhead_t;
+#endif
 
 
 /* We can support TLS only if the floating-stack support is available.  */
 #if defined FLOATING_STACKS && defined HAVE_TLS_SUPPORT
 
-/* Get system call information.  */
-# include <sysdep.h>
-
 /* Signal that TLS support is available.  */
 # define USE_TLS	1
 
+# ifndef ASSEMBLER
+/* Get system call information.  */
+#  include <sysdep.h>
+
 
 /* Get the thread descriptor definition.  */
-# include <linuxthreads/descr.h>
+#  include <linuxthreads/descr.h>
 
 /* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+#  define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+#  define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
 
 /* This is the size of the TCB.  */
-# define TLS_TCB_SIZE sizeof (struct _pthread_descr_struct)
+#  define TLS_TCB_SIZE sizeof (struct _pthread_descr_struct)
 
 /* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN __alignof__ (struct _pthread_descr_struct)
+#  define TLS_TCB_ALIGN __alignof__ (struct _pthread_descr_struct)
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
-# define TLS_TCB_AT_TP	1
+#  define TLS_TCB_AT_TP	1
 
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
-# define INSTALL_DTV(descr, dtvp) \
+#  define INSTALL_DTV(descr, dtvp) \
   ((tcbhead_t *) descr)->dtv = dtvp + 1
 
 /* Install new dtv for current thread.  */
-# define INSTALL_NEW_DTV(dtv) \
+#  define INSTALL_NEW_DTV(dtv) \
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_SETMEM (__descr, p_header.data.dtvp, dtv); })
 
 /* Return dtv of given thread descriptor.  */
-# define GET_DTV(descr) \
+#  define GET_DTV(descr) \
   (((tcbhead_t *) descr)->dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(descr) \
+#  define TLS_INIT_TP(descr) \
   do {									      \
     void *_descr = (descr);						      \
     struct modify_ldt_ldt_s ldt_entry =					      \
@@ -116,10 +119,11 @@ typedef struct
 
 
 /* Return the address of the dtv for the current thread.  */
-# define THREAD_DTV() \
+#  define THREAD_DTV() \
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_GETMEM (__descr, p_header.data.dtvp); })
 
-#endif	/* FLOATING_STACKS && HAVE_TLS_SUPPORT */
+# endif	/* FLOATING_STACKS && HAVE_TLS_SUPPORT */
+#endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */

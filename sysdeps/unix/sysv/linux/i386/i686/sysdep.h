@@ -30,32 +30,44 @@
 #ifdef PIC
 # undef SYSCALL_ERROR_HANDLER
 
-/* Store (- %eax) into errno through the GOT.  */
-# ifdef _LIBC_REENTRANT
-
-#  ifndef HAVE_HIDDEN
-#   define SETUP_PIC_REG \
+# undef SETUP_PIC_REG
+# ifndef HAVE_HIDDEN
+#  define SETUP_PIC_REG(reg) \
   call 1f;								      \
   .subsection 1;							      \
-1:movl (%esp), %ebx;							      \
+1:movl (%esp), %e##reg;							      \
   ret;									      \
   .previous
-#  else
-#   define SETUP_PIC_REG \
-  .section .gnu.linkonce.t.__i686.get_pc_thunk.bx,"ax",@progbits;	      \
-  .globl __i686.get_pc_thunk.bx;					      \
-  .hidden __i686.get_pc_thunk.bx;					      \
-  .type __i686.get_pc_thunk.bx,@function;				      \
-__i686.get_pc_thunk.bx:							      \
-  movl (%esp), %ebx;							      \
+# else
+#  define SETUP_PIC_REG(reg) \
+  .section .gnu.linkonce.t.__i686.get_pc_thunk.reg,"ax",@progbits;	      \
+  .globl __i686.get_pc_thunk.reg;					      \
+  .hidden __i686.get_pc_thunk.reg;					      \
+  .type __i686.get_pc_thunk.reg,@function;				      \
+__i686.get_pc_thunk.reg:						      \
+  movl (%esp), %e##reg;							      \
   ret;									      \
   .previous;								      \
-  call __i686.get_pc_thunk.bx
-#  endif
+  call __i686.get_pc_thunk.reg
+# endif
 
-#  define SYSCALL_ERROR_HANDLER						      \
+/* Store (- %eax) into errno through the GOT.  */
+# ifdef _LIBC_REENTRANT
+#  if USE_TLS && HAVE___THREAD
+#   define SYSCALL_ERROR_HANDLER					      \
+0:SETUP_PIC_REG (cx);							      \
+  addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
+  xorl %edx, %edx;							      \
+  subl %eax, %edx;							      \
+  movl %gs:0, %eax;							      \
+  subl errno@gottpoff(%ecx), %eax;					      \
+  movl %edx, (%eax);							      \
+  orl $-1, %eax;							      \
+  jmp L(pseudo_end);
+#  else
+#   define SYSCALL_ERROR_HANDLER					      \
 0:pushl %ebx;								      \
-  SETUP_PIC_REG;							      \
+  SETUP_PIC_REG(bx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ebx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
@@ -70,30 +82,10 @@ __i686.get_pc_thunk.bx:							      \
   jmp L(pseudo_end);
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
-# else
-
-#  ifndef HAVE_HIDDEN
-#   define SETUP_PIC_REG \
-  call 1f;								      \
-  .subsection 1;							      \
-1:movl (%esp), %ecx;							      \
-  ret;									      \
-  .previous
-#  else
-#   define SETUP_PIC_REG \
-  .section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits;	      \
-  .globl __i686.get_pc_thunk.cx;					      \
-  .hidden __i686.get_pc_thunk.cx;					      \
-  .type __i686.get_pc_thunk.cx,@function;				      \
-__i686.get_pc_thunk.cx:							      \
-  movl (%esp), %ecx;							      \
-  ret;									      \
-  .previous;								      \
-  call __i686.get_pc_thunk.cx
 #  endif
-
+# else
 #  define SYSCALL_ERROR_HANDLER						      \
-0:SETUP_PIC_REG;							      \
+0:SETUP_PIC_REG(cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \

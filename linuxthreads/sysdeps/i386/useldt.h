@@ -1,6 +1,6 @@
 /* Special definitions for ix86 machine using segment register based
    thread descriptor.
-   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
@@ -19,6 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef ASSEMBLER
 #include <stddef.h>	/* For offsetof.  */
 #include <stdlib.h>	/* For abort().  */
 
@@ -198,6 +199,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 					     member)));			      \
     }									      \
 })
+#endif
 
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS	1

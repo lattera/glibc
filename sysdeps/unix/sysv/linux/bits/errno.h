@@ -32,16 +32,8 @@
 # define ECANCELED	125
 
 # ifndef __ASSEMBLER__
-/* We now need a declaration of the `errno' variable.  */
-extern int errno;
-
 /* Function to get address of global `errno' variable.  */
 extern int *__errno_location (void) __THROW __attribute__ ((__const__));
-
-#  if defined _LIBC
-/* We wouldn't need a special macro anymore but it is history.  */
-#   define __set_errno(val) (*__errno_location ()) = (val)
-#  endif /* _LIBC */
 
 #  if !defined _LIBC || defined _LIBC_REENTRANT
 /* When using threads, errno is a per-thread value.  */

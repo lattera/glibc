@@ -130,8 +130,13 @@ _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
   hp_timing_t start_time;
-#ifndef HAVE_BUILTIN_MEMSET
+#if !defined HAVE_BUILTIN_MEMSET || defined USE_TLS
   size_t cnt;
+#endif
+#ifdef USE_TLS
+  ElfW(Ehdr) *ehdr;
+  ElfW(Phdr) *phdr;
+  dtv_t initdtv[3];
 #endif
 
   /* This #define produces dynamic linking inline functions for
@@ -165,6 +170,97 @@ _dl_start (void *arg)
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
   elf_get_dynamic_info (&bootstrap_map);
+
+#if USE_TLS
+# ifndef HAVE___THREAD
+  /* Signal that we have not found TLS data so far.  */
+  bootstrap_map.l_tls_modid = 0;
+# endif
+
+  /* Get the dynamic linkers program header.  */
+  ehdr = (ElfW(Ehdr) *) bootstrap_map.l_addr;
+  phdr = (ElfW(Phdr) *) (bootstrap_map.l_addr + ehdr->e_phoff);
+  for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
+    if (phdr[cnt].p_type == PT_TLS)
+      {
+	void *tlsblock;
+	size_t max_align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
+
+	bootstrap_map.l_tls_blocksize = phdr[cnt].p_memsz;
+	bootstrap_map.l_tls_align = phdr[cnt].p_align;
+	assert (bootstrap_map.l_tls_blocksize != 0);
+	bootstrap_map.l_tls_initimage_size = phdr[cnt].p_filesz;
+	bootstrap_map.l_tls_initimage = (void *) (bootstrap_map.l_addr
+						  + phdr[cnt].p_offset);
+
+	/* We can now allocate the initial TLS block.  This can happen
+	   on the stack.  We'll get the final memory later when we
+	   know all about the various objects loaded at startup
+	   time.  */
+# if TLS_TCB_AT_TP
+	tlsblock = alloca (roundup (bootstrap_map.l_tls_blocksize,
+				    TLS_INIT_TCB_ALIGN)
+			   + TLS_INIT_TCB_SIZE
+			   + max_align);
+# elif TLS_DTV_AT_TP
+	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE,
+				    bootstrap_map.l_tls_align)
+			   + bootstrap_map.l_tls_blocksize
+			   + max_align);
+# else
+	/* In case a model with a different layout for the TCB and DTV
+	   is defined add another #elif here and in the following #ifs.  */
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+	/* Align the TLS block.  */
+	tlsblock = (void *) (((uintptr_t) tlsblock + max_align - 1)
+			     & ~(max_align - 1));
+
+	/* Initialize the dtv.  [0] is the length, [1] the generation
+	   counter.  */
+	initdtv[0].counter = 1;
+	initdtv[1].counter = 0;
+
+	/* Initialize the TLS block.  */
+# if TLS_TCB_AT_TP
+	initdtv[2].pointer = tlsblock;
+# elif TLS_DTV_AT_TP
+	bootstrap_map.l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
+					      bootstrap_map.l_tls_align);
+	initdtv[2].pointer = (char *) tlsblock + bootstrap_map.l_tls_offset;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+	memset (__mempcpy (initdtv[2].pointer, bootstrap_map.l_tls_initimage,
+			   bootstrap_map.l_tls_initimage_size),
+		'\0', (bootstrap_map.l_tls_blocksize
+		       - bootstrap_map.l_tls_initimage_size));
+
+	/* Install the pointer to the dtv.  */
+
+	/* Initialize the thread pointer.  */
+# if TLS_TCB_AT_TP
+	bootstrap_map.l_tls_offset
+	  = roundup (bootstrap_map.l_tls_blocksize, TLS_INIT_TCB_ALIGN);
+
+	INSTALL_DTV ((char *) tlsblock + bootstrap_map.l_tls_offset,
+		     initdtv);
+
+	TLS_INIT_TP ((char *) tlsblock + bootstrap_map.l_tls_offset);
+# elif TLS_DTV_AT_TP
+	INSTALL_DTV (tlsblock, initdtv);
+	TLS_INIT_TP (tlsblock);
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+	/* So far this is module number one.  */
+	bootstrap_map.l_tls_modid = 1;
+
+	/* There can only be one PT_TLS entry.  */
+	break;
+      }
+#endif	/* use TLS */
 
 #ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (bootstrap_map.l_info);
@@ -220,12 +316,6 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   ElfW(Addr) *start_addr = alloca (sizeof (ElfW(Addr)));
   extern char _begin[] attribute_hidden;
   extern char _end[] attribute_hidden;
-#ifdef USE_TLS
-  ElfW(Ehdr) *ehdr;
-  ElfW(Phdr) *phdr;
-  size_t cnt;
-  dtv_t initdtv[3];
-#endif
 
   if (HP_TIMING_AVAIL)
     {
@@ -247,96 +337,27 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   GL(dl_rtld_map).l_mach = bootstrap_map_p->l_mach;
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
+  /* Copy the TLS related data if necessary.  */
+#if USE_TLS
+# ifdef HAVE___THREAD
+  assert (bootstrap_map_p->l_tls_modid != 0);
+# else
+  if (bootstrap_map_p->l_tls_modid != 0)
+# endif
+    {
+      GL(dl_rtld_map).l_tls_blocksize = bootstrap_map_p->l_tls_blocksize;
+      GL(dl_rtld_map).l_tls_align = bootstrap_map_p->l_tls_align;
+      GL(dl_rtld_map).l_tls_initimage_size
+	= bootstrap_map_p->l_tls_initimage_size;
+      GL(dl_rtld_map).l_tls_initimage = bootstrap_map_p->l_tls_initimage;
+      GL(dl_rtld_map).l_tls_offset = bootstrap_map_p->l_tls_offset;
+      GL(dl_rtld_map).l_tls_modid = 1;
+    }
+#endif
 
 #if HP_TIMING_AVAIL
   HP_TIMING_NOW (GL(dl_cpuclock_offset));
 #endif
-
-#if USE_TLS
-  /* Get the dynamic linkers program header.  */
-  ehdr = (ElfW(Ehdr) *) GL(dl_rtld_map).l_map_start;
-  phdr = (ElfW(Phdr) *) (GL(dl_rtld_map).l_map_start + ehdr->e_phoff);
-  for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
-    if (phdr[cnt].p_type == PT_TLS)
-      {
-	void *tlsblock;
-	size_t max_align = MAX (TLS_INIT_TCB_ALIGN, phdr[cnt].p_align);
-
-	GL(dl_rtld_map).l_tls_blocksize = phdr[cnt].p_memsz;
-	GL(dl_rtld_map).l_tls_align = phdr[cnt].p_align;
-	assert (GL(dl_rtld_map).l_tls_blocksize != 0);
-	GL(dl_rtld_map).l_tls_initimage_size = phdr[cnt].p_filesz;
-	GL(dl_rtld_map).l_tls_initimage = (void *) (GL(dl_rtld_map).l_map_start
-						    + phdr[cnt].p_offset);
-
-	/* We can now allocate the initial TLS block.  This can happen
-	   on the stack.  We'll get the final memory later when we
-	   know all about the various objects loaded at startup
-	   time.  */
-# if TLS_TCB_AT_TP
-	tlsblock = alloca (roundup (GL(dl_rtld_map).l_tls_blocksize,
-				    TLS_INIT_TCB_ALIGN)
-			   + TLS_INIT_TCB_SIZE
-			   + max_align);
-# elif TLS_DTV_AT_TP
-	tlsblock = alloca (roundup (TLS_INIT_TCB_SIZE,
-				    GL(dl_rtld_map).l_tls_align)
-			   + GL(dl_rtld_map).l_tls_blocksize
-			   + max_align);
-# else
-	/* In case a model with a different layout for the TCB and DTV
-	   is defined add another #elif here and in the following #ifs.  */
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-	/* Align the TLS block.  */
-	tlsblock = (void *) (((uintptr_t) tlsblock + max_align - 1)
-			     & ~(max_align - 1));
-
-	/* Initialize the dtv.  [0] is the length, [1] the generation
-	   counter.  */
-	initdtv[0].counter = 1;
-	initdtv[1].counter = 0;
-
-	/* Initialize the TLS block.  */
-# if TLS_TCB_AT_TP
-	initdtv[2].pointer = tlsblock;
-# elif TLS_DTV_AT_TP
-	GL(dl_rtld_map).l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
-						GL(dl_rtld_map).l_tls_align);
-	initdtv[2].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-	memset (__mempcpy (initdtv[1].pointer, GL(dl_rtld_map).l_tls_initimage,
-			   GL(dl_rtld_map).l_tls_initimage_size),
-		'\0', (GL(dl_rtld_map).l_tls_blocksize
-		       - GL(dl_rtld_map).l_tls_initimage_size));
-
-	/* Install the pointer to the dtv.  */
-
-	/* Initialize the thread pointer.  */
-# if TLS_TCB_AT_TP
-	GL(dl_rtld_map).l_tls_offset
-	  = roundup (GL(dl_rtld_map).l_tls_blocksize, TLS_INIT_TCB_ALIGN);
-
-	INSTALL_DTV ((char *) tlsblock + GL(dl_rtld_map).l_tls_offset,
-		     initdtv);
-
-	TLS_INIT_TP ((char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
-# elif TLS_DTV_AT_TP
-	INSTALL_DTV (tlsblock, initdtv);
-	TLS_INIT_TP (tlsblock);
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-
-	/* So far this is module number one.  */
-	GL(dl_rtld_map).l_tls_modid = 1;
-
-	/* There can only be one PT_TLS entry.  */
-	break;
-      }
-#endif	/* use TLS */
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work

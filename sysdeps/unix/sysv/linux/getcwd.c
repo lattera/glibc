@@ -1,5 +1,5 @@
 /* Determine current working directory.  Linux version.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -64,7 +64,6 @@ static int have_new_dcache = 1;
 char *
 __getcwd (char *buf, size_t size)
 {
-  int save_errno;
   char *path;
   int n;
   char *result;
@@ -92,8 +91,6 @@ __getcwd (char *buf, size_t size)
       if (path == NULL)
 	return NULL;
     }
-
-  save_errno = errno;
 
 #if defined __NR_getcwd || __LINUX_GETCWD_SYSCALL > 0
   if (!no_syscall_getcwd)
@@ -137,8 +134,6 @@ __getcwd (char *buf, size_t size)
 	    free (path);
 	  return NULL;
 	}
-
-      __set_errno (save_errno);
 # endif
     }
 #endif
@@ -178,10 +173,6 @@ __getcwd (char *buf, size_t size)
   if (errno != EACCES && errno != ENAMETOOLONG)
     have_new_dcache = 0;
 #endif
-
-  /* Something went wrong.  Restore the error number and use the generic
-     version.  */
-  __set_errno (save_errno);
 
   /* Don't put restrictions on the length of the path unless the user does.  */
   if (size == 0)

@@ -94,6 +94,9 @@
 /* Define if the compiler supports __builtin_memset.  */
 #undef	HAVE_BUILTIN_MEMSET
 
+/* Define if the __thread keyword is supported.  */
+#undef HAVE___THREAD
+
 /* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */
 #undef	USE_REGPARMS

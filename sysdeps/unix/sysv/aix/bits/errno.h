@@ -144,10 +144,6 @@
 # define EMULTIHOP	125	/* Multihop is not allowed.  */
 # define ENOLINK	126	/* The link has been severed.  */
 # define EOVERFLOW	127	/* Value too large to be stored in data type.*/
-
-# ifdef _LIBC
-#  define __set_errno(val) errno = (val)
-# endif
 #endif
 
 #if !defined _ERRNO_H && defined __need_Emath

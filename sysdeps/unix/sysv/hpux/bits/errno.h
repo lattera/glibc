@@ -32,5 +32,3 @@
 #define ENOMSG		35
 #define ENOSYS		251
 #endif
-
-#define __set_errno(val) errno = (val)
