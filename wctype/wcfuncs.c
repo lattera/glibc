@@ -76,7 +76,7 @@ wint_t
     /* Character is not known.  Default action is to simply return it.  */
     return wc;
 
-  return (wint_t) __ctype_toupper[idx];
+  return (wint_t) __ctype_tolower[idx];
 }
 
 wint_t
