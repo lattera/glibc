@@ -1,5 +1,5 @@
 /* Definition of all available locale categories and their items.  -*- C -*-
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -102,12 +102,12 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (N_SEP_BY_SPACE,                      "n_sep_by_space",         std, byte, 0, 2)
   DEFINE_ELEMENT (P_SIGN_POSN,                         "p_sign_posn",            std, byte, 0, 4)
   DEFINE_ELEMENT (N_SIGN_POSN,                         "n_sign_posn",            std, byte, 0, 4)
-  DEFINE_ELEMENT (_NL_MONETARY_INT_P_CS_PRECEDES,      "int_p_cs_precedes",      std, byte, 0, 1)
-  DEFINE_ELEMENT (_NL_MONETARY_INT_P_SEP_BY_SPACE,     "int_p_sep_by_space",     std, byte, 0, 2)
-  DEFINE_ELEMENT (_NL_MONETARY_INT_N_CS_PRECEDES,      "int_n_cs_precedes",      std, byte, 0, 1)
-  DEFINE_ELEMENT (_NL_MONETARY_INT_N_SEP_BY_SPACE,     "int_n_sep_by_space",     std, byte, 0, 2)
-  DEFINE_ELEMENT (_NL_MONETARY_INT_P_SIGN_POSN,        "int_p_sign_posn",        std, byte, 0, 4)
-  DEFINE_ELEMENT (_NL_MONETARY_INT_N_SIGN_POSN,        "int_n_sign_posn",        std, byte, 0, 4)
+  DEFINE_ELEMENT (__INT_P_CS_PRECEDES,                 "int_p_cs_precedes",      std, byte, 0, 1)
+  DEFINE_ELEMENT (__INT_P_SEP_BY_SPACE,                "int_p_sep_by_space",     std, byte, 0, 2)
+  DEFINE_ELEMENT (__INT_N_CS_PRECEDES,                 "int_n_cs_precedes",      std, byte, 0, 1)
+  DEFINE_ELEMENT (__INT_N_SEP_BY_SPACE,                "int_n_sep_by_space",     std, byte, 0, 2)
+  DEFINE_ELEMENT (__INT_P_SIGN_POSN,                   "int_p_sign_posn",        std, byte, 0, 4)
+  DEFINE_ELEMENT (__INT_N_SIGN_POSN,                   "int_n_sign_posn",        std, byte, 0, 4)
   DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_CURR_SYMBOL,    "duo_int_curr_symbol",    std, string)
   DEFINE_ELEMENT (_NL_MONETARY_DUO_CURRENCY_SYMBOL,    "duo_currency_symbol",    std, string)
   DEFINE_ELEMENT (_NL_MONETARY_DUO_INT_FRAC_DIGITS,    "duo_int_frac_digits",    std, byte)

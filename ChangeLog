@@ -2,6 +2,9 @@
 
 	* locale/locale.h (struct lconv): Add new elements from ISO C99.
 	* locale/localeconv.c: Initialize new elements from ISO C99.
+	* locale/langinfo.h: Remove _NL_MONETARY prefix from descriptors for
+	new standard elements.
+	* locale/categories.def: Adjust accordingly.
 
 	* iconv/iconv.h (iconv): Remove const from inbuf parameter.
 	* iconv/iconv.c: Likewise.
