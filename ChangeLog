@@ -1,3 +1,9 @@
+2004-12-07  Roland McGrath  <roland@redhat.com>
+
+	* rt/tst-timer5.c (setup_test): New function.
+	(TEST_CLOCK_MISSING): Use it to punt test if timer_create does not
+	support CLOCK_MONOTONIC.
+
 2004-12-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone2): Add support for
