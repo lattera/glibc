@@ -2119,8 +2119,17 @@ do_test (void)
 	  close (tempfd2);
 	  tempfd2 = -1;
 	}
-      free (tempfname);
-      tempfname = NULL;
+      if (tempfname != NULL)
+	{
+	  unlink (tempfname);
+	  free (tempfname);
+	  tempfname = NULL;
+	}
+      if (tempmsg != -1)
+	{
+	  msgctl (tempmsg, IPC_RMID, NULL);
+	  tempmsg = -1;
+	}
     }
 
   for (cnt = 0; cnt < ntest_tf; ++cnt)
