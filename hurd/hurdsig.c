@@ -1347,7 +1347,6 @@ _hurdsig_getenv (const char *variable)
 	  _hurdsig_fault_preemptor.last = VM_MAX_ADDRESS;
 	  if (! strncmp (p, variable, len) && p[len] == '=')
 	    {
-	      char *value;
 	      size_t valuelen;
 	      p += len + 1;
 	      valuelen = strlen (p);

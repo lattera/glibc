@@ -1,3 +1,9 @@
+2001-01-24  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/hurdsig.c (_hurdsig_getenv): Remove spurious innermost
+	declaration of value such that we actually return the value of the
+	environment variable.
+
 2001-01-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/init-first.c: Remove extra __sysctl
