@@ -1,3 +1,19 @@
+2000-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/alphaev6/memcpy.S: Don't go through unrolled loop
+	if we would go through it only once.
+	Patch by Rick Gorton <rick.gorton@api-networks.com>.
+
+	* sysdeps/alpha/alphaev67/strncat.S: Fix handling of numeric parameter.
+	Patch by Richard Henderson <rth@redhat.com>.
+
+2000-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (memmove): Add prototypes.
+	(MALLOC_MEMMOVE): Define.
+	(chunk_realloc): Use it instead of MALLOC_COPY if source and
+	destination might overlap.
+
 2000-12-27  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/printf_fp.c (__printf_fp): Add prototype for nested

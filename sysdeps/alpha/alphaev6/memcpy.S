@@ -16,7 +16,7 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
-	
+
 /*
  * Much of the information about 21264 scheduling/coding comes from:
  *	Compiler Writer's Guide for the Alpha 21264
@@ -86,9 +86,9 @@ $single_head_quad:
 
 $do_unroll:
 	addq	$16, 64, $7		# E : Initial (+1 trip) wh64 address
-	cmple	$18, 63, $1		# E : Can we go through the unrolled loop?
+	cmple	$18, 127, $1		# E : Can we go through the unrolled loop?
 	bne	$1, $tail_quads		# U : Nope
-	nop				# E : 
+	nop				# E :
 
 $unroll_body:
 	wh64	($7)			# L1 : memory subsystem hint: 64 bytes at
