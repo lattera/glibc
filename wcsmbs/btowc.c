@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -36,6 +36,7 @@ __btowc (c)
   const unsigned char *inptr = inbuf;
   size_t dummy;
   int status;
+  const struct gconv_fcts *fcts;
 
   /* If the parameter does not fit into one byte or it is the EOF value
      we can give the answer now.  */
@@ -54,14 +55,14 @@ __btowc (c)
   /* Make sure we start in the initial state.  */
   memset (&data.__state, '\0', sizeof (mbstate_t));
 
-  /* Make sure we use the correct function.  */
-  update_conversion_ptrs ();
+  /* Get the conversion functions.  */
+  fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
 
   /* Create the input string.  */
   inbuf[0] = c;
 
-  status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
-			(__wcsmbs_gconv_fcts.towc, &data, &inptr, inptr + 1,
+  status = DL_CALL_FCT (fcts->towc->__fct,
+			(fcts->towc, &data, &inptr, inptr + 1,
 			 NULL, &dummy, 0, 1));
   /* The conversion failed.  */
   if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,13 +40,15 @@ mblen (const char *s, size_t n)
      not.  */
   if (s == NULL)
     {
-      /* Make sure we use the correct value.  */
-      update_conversion_ptrs ();
+      const struct gconv_fcts *fcts;
+
+      /* Get the conversion functions.  */
+      fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
 
       /* Reset the state.  */
       memset (&state, '\0', sizeof state);
 
-      result = __wcsmbs_gconv_fcts.towc->__stateful;
+      result = fcts->towc->__stateful;
     }
   else if (*s == '\0')
     /* According to the ISO C 89 standard this is the expected behaviour.  */

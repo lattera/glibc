@@ -58,6 +58,7 @@ __mbsrtowcs (dst, src, len, ps)
   int status;
   struct __gconv_step *towc;
   size_t non_reversible;
+  const struct gconv_fcts *fcts;
 
   /* Tell where we want the result.  */
   data.__invocation_counter = 0;
@@ -70,16 +71,15 @@ __mbsrtowcs (dst, src, len, ps)
 #endif
   data.__trans = NULL;
 
+  /* Get the conversion functions.  */
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
-  /* Get the conversion function matching the locale.  */
-  towc = wcsmbs_get_towc_func (l);
+  fcts = get_gconv_fcts (l->__locales[LC_CTYPE]);
 #else
-  /* Make sure we use the correct function.  */
-  update_conversion_ptrs ();
+  fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
+#endif
 
   /* Get the structure with the function pointers.  */
-  towc = __wcsmbs_gconv_fcts.towc;
-#endif
+  towc = fcts->towc;
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
@@ -159,11 +159,6 @@ __mbsrtowcs (dst, src, len, ps)
       result = (size_t) -1;
       __set_errno (EILSEQ);
     }
-
-#ifdef USE_IN_EXTENDED_LOCALE_MODEL
-  /* Free the conversion function data structures.  */
-  wcsmbs_free_funcs (towc);
-#endif
 
   return result;
 }

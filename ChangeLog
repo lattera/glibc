@@ -1,3 +1,41 @@
+2002-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/localeinfo.h (struct locale_data): Add private.ctype.
+	* wcsmbs/wcsmbsload.h (__wcsmbs_gconv_fcts, __wcsmbs_last_locale,
+	__wcsmbs_to_wc, update_conversion_ptrs): Removed.
+	(__wcsmbs_gconv_fcts_c, _nl_C_LC_CTYPE): New externs.
+	(__wcsmbs_load_conv): Remove const from argument.
+	(_nl_cleanup_ctype): New proto.
+	(get_gconv_fcts): New function.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_last_locale): Removed.
+	(__wcsmbs_to_wc): Rename back to...
+	(to_wc): ... this.
+	(__wcsmbs_gconv_fcts): Rename to...
+	(__wcsmbs_gconv_fcts_c): ... this.  Make const.  Use to_wc.
+	(lock): Removed.
+	(__libc_setlocale_lock): New extern.
+	(__wcsmbs_load_conv): Remove const from argument.
+	Initialize new_category->private.ctype instead of a global
+	variable.
+	(__wcsmbs_clone_conv): Use get_gconv_fcts instead of
+	update_function_ptrs.  No locking is necessary.
+	(_nl_cleanup_ctype): New function.
+	* wcsmbs/btowc.c (__btowc): Use get_gconv_fcts instead of
+	update_function_ptrs and a global __wcsmbs_gconv_fcts variable.
+	* wcsmbs/mbrtowc.c (__mbrtowc): Likewise.
+	* wcsmbs/mbsnrtowcs.c (__mbsnrtowcs): Likewise.
+	* wcsmbs/wcrtomb.c (__wcrtomb): Likewise.
+	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Likewise.
+	* wcsmbs/wcsrtombs.c (__wcsrtombs): Likewise.
+	* wcsmbs/wctob.c (wctob): Likewise.
+	* stdlib/mblen.c (mblen): Likewise.
+	* stdlib/mbtowc.c (mbtowc): Likewise.
+	* stdlib/wctomb.c (wctomb): Likewise.
+	* wcsmbs/mbsrtowcs.c (__mbsrtowcs): Likewise.
+	Remove calls to wcsmbs_get_towc_func and wcsmbs_free_funcs.
+	* wcsmbs/mbsrtowcs_l.c (wcsmbs_get_towc_func, wcsmbs_free_funcs):
+	Removed.
+
 2002-09-02  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/Versions (ld: GLIBC_2.0): Add __fxstat64.

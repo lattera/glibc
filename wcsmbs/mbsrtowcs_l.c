@@ -21,35 +21,5 @@
 #include <string.h>
 #include "wcsmbsload.h"
 
-
-static inline struct __gconv_step *
-wcsmbs_get_towc_func (__locale_t l)
-{
-  const char *charset;
-  int use_translit;
-  char *norm;
-  size_t nsteps;
-
-  charset = l->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX(CODESET)].string;
-
-  /* Transliteration requested?  */
-  use_translit = l->__locales[LC_CTYPE]->use_translit;
-
-  /* Normalize the name.  */
-  norm = norm_add_slashes (charset, use_translit ? "TRANSLIT" : NULL);
-
-  return __wcsmbs_getfct ("INTERNAL", charset, &nsteps) ?: &__wcsmbs_to_wc;
-}
-
-
-static inline void
-wcsmbs_free_funcs (struct __gconv_step *step)
-{
-  if (step != &__wcsmbs_to_wc)
-    /* There is only one step.  */
-    __gconv_close_transform (step, 1);
-}
-
-
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 #include "mbsrtowcs.c"

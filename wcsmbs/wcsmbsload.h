@@ -35,15 +35,10 @@ struct gconv_fcts
   };
 
 /* Set of currently active conversion functions.  */
-extern struct gconv_fcts __wcsmbs_gconv_fcts attribute_hidden;
-
-
-/* Last loaded locale for LC_CTYPE.  */
-extern const struct locale_data *__wcsmbs_last_locale attribute_hidden;
-
+extern const struct gconv_fcts __wcsmbs_gconv_fcts_c attribute_hidden;
 
 /* Load conversion functions for the currently selected locale.  */
-extern void __wcsmbs_load_conv (const struct locale_data *new_category)
+extern void __wcsmbs_load_conv (struct locale_data *new_category)
      internal_function;
 
 /* Clone the current `__wcsmbs_load_conv' value.  */
@@ -54,12 +49,12 @@ extern void __wcsmbs_clone_conv (struct gconv_fcts *copy)
 extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
      internal_function;
 
+/* Function used for the `private.cleanup' hook.  */
+extern void _nl_cleanup_ctype (struct locale_data *)
+     internal_function attribute_hidden;
+
 
 #include <iconv/gconv_int.h>
-
-
-/* Variable for conversion from ASCII to wchar_t.  */
-extern struct __gconv_step __wcsmbs_to_wc attribute_hidden;
 
 
 /* Load the function implementation if necessary.  */
@@ -67,14 +62,20 @@ extern struct __gconv_step *__wcsmbs_getfct (const char *to, const char *from,
 					     size_t *nstepsp)
      attribute_hidden;
 
+extern const struct locale_data _nl_C_LC_CTYPE attribute_hidden;
 
 /* Check whether the LC_CTYPE locale changed since the last call.
    Update the pointers appropriately.  */
-static inline void
-update_conversion_ptrs (void)
+static inline const struct gconv_fcts *
+get_gconv_fcts (struct locale_data *data)
 {
-  if (__wcsmbs_last_locale != _NL_CURRENT_DATA (LC_CTYPE))
-    __wcsmbs_load_conv (_NL_CURRENT_DATA (LC_CTYPE));
+  if (__builtin_expect (data->private.ctype == NULL, 0))
+    {
+      if (__builtin_expect (data == &_nl_C_LC_CTYPE, 0))
+	return &__wcsmbs_gconv_fcts_c;
+      __wcsmbs_load_conv (data);
+    }
+  return data->private.ctype;
 }
 
 #endif	/* wcsmbsload.h */

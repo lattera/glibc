@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -45,6 +45,7 @@ __wcsrtombs (dst, src, len, ps)
   int status;
   size_t result;
   struct __gconv_step *tomb;
+  const struct gconv_fcts *fcts;
 
   /* Tell where we want the result.  */
   data.__invocation_counter = 0;
@@ -53,11 +54,11 @@ __wcsrtombs (dst, src, len, ps)
   data.__statep = ps ?: &state;
   data.__trans = NULL;
 
-  /* Make sure we use the correct function.  */
-  update_conversion_ptrs ();
+  /* Get the conversion functions.  */
+  fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
 
   /* Get the structure with the function pointers.  */
-  tomb = __wcsmbs_gconv_fcts.tomb;
+  tomb = fcts->tomb;
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)

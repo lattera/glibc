@@ -64,6 +64,7 @@ struct locale_data
     {
       void *data;
       struct lc_time_data *time;
+      const struct gconv_fcts *ctype;
     };
   } private;
 

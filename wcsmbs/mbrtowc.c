@@ -42,6 +42,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   size_t dummy;
   const unsigned char *inbuf;
   char *outbuf = (char *) (pwc ?: buf);
+  const struct gconv_fcts *fcts;
 
   /* Set information for this step.  */
   data.__invocation_counter = 0;
@@ -63,13 +64,13 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   data.__outbuf = outbuf;
   data.__outbufend = outbuf + sizeof (wchar_t);
 
-  /* Make sure we use the correct function.  */
-  update_conversion_ptrs ();
+  /* Get the conversion functions.  */
+  fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
 
   /* Do a normal conversion.  */
   inbuf = (const unsigned char *) s;
-  status = DL_CALL_FCT (__wcsmbs_gconv_fcts.towc->__fct,
-			(__wcsmbs_gconv_fcts.towc, &data, &inbuf, inbuf + n,
+  status = DL_CALL_FCT (fcts->towc->__fct,
+			(fcts->towc, &data, &inbuf, inbuf + n,
 			 NULL, &dummy, 0, 1));
 
   /* There must not be any problems with the conversion but illegal input

@@ -40,14 +40,16 @@ wctomb (char *s, wchar_t wchar)
      not.  */
   if (s == NULL)
     {
-      /* Make sure we use the correct value.  */
-      update_conversion_ptrs ();
+      const struct gconv_fcts *fcts;
+
+      /* Get the conversion functions.  */
+      fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
 
       /* This is an extension in the Unix standard which does not directly
 	 violate ISO C.  */
       memset (&__no_r_state, '\0', sizeof __no_r_state);
 
-      return __wcsmbs_gconv_fcts.tomb->__stateful;
+      return fcts->tomb->__stateful;
     }
 
   return __wcrtomb (s, wchar, &__no_r_state);

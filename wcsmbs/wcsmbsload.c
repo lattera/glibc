@@ -28,14 +28,8 @@
 #include <bits/libc-lock.h>
 
 
-/* Last loaded locale for LC_CTYPE.  We initialize for the C locale
-   which is enabled at startup.  */
-extern const struct locale_data _nl_C_LC_CTYPE;
-const struct locale_data *__wcsmbs_last_locale = &_nl_C_LC_CTYPE;
-
-
 /* These are the descriptions for the default conversion functions.  */
-struct __gconv_step __wcsmbs_to_wc attribute_hidden =
+static struct __gconv_step to_wc =
 {
   .__shlib_handle = NULL,
   .__modname = NULL,
@@ -73,9 +67,9 @@ static struct __gconv_step to_mb =
 
 
 /* For the default locale we only have to handle ANSI_X3.4-1968.  */
-struct gconv_fcts __wcsmbs_gconv_fcts =
+const struct gconv_fcts __wcsmbs_gconv_fcts_c =
 {
-  .towc = &__wcsmbs_to_wc,
+  .towc = &to_wc,
   .towc_nsteps = 1,
   .tomb = &to_mb,
   .tomb_nsteps = 1
@@ -148,90 +142,73 @@ __wcsmbs_getfct (const char *to, const char *from, size_t *nstepsp)
   })
 
 
-/* We must modify global data.  */
-__libc_lock_define_initialized (static, lock)
-
+/* Some of the functions here must not be used while setlocale is called.  */
+__libc_lock_define (extern, __libc_setlocale_lock attribute_hidden)
 
 /* Load conversion functions for the currently selected locale.  */
 void
 internal_function
-__wcsmbs_load_conv (const struct locale_data *new_category)
+__wcsmbs_load_conv (struct locale_data *new_category)
 {
   /* Acquire the lock.  */
-  __libc_lock_lock (lock);
+  __libc_lock_lock (__libc_setlocale_lock);
 
   /* We should repeat the test since while we waited some other thread
      might have run this function.  */
-  if (__builtin_expect (__wcsmbs_last_locale != new_category, 1))
+  if (__builtin_expect (new_category->private.ctype == NULL, 1))
     {
-      if (new_category->name == _nl_C_name)	/* Yes, pointer comparison.  */
+      /* We must find the real functions.  */
+      const char *charset_name;
+      const char *complete_name;
+      struct gconv_fcts *new_fcts;
+      int use_translit;
+
+      /* Allocate the gconv_fcts structure.  */
+      new_fcts = malloc (sizeof *new_fcts);
+      if (new_fcts == NULL)
 	{
 	failed:
-	  __wcsmbs_gconv_fcts.towc = &__wcsmbs_to_wc;
-	  __wcsmbs_gconv_fcts.tomb = &to_mb;
+	  new_category->private.ctype = &__wcsmbs_gconv_fcts_c;
 	}
-      else
+
+      /* Get name of charset of the locale.  */
+      charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
+
+      /* Does the user want transliteration?  */
+      use_translit = new_category->use_translit;
+
+      /* Normalize the name and add the slashes necessary for a
+	 complete lookup.  */
+      complete_name = norm_add_slashes (charset_name,
+					use_translit ? "TRANSLIT" : NULL);
+
+      /* It is not necessary to use transliteration in this direction
+	 since the internal character set is supposed to be able to
+	 represent all others.  */
+      new_fcts->towc = __wcsmbs_getfct ("INTERNAL", complete_name,
+					&new_fcts->towc_nsteps);
+      new_fcts->tomb = (new_fcts->towc != NULL
+			? __wcsmbs_getfct (complete_name, "INTERNAL",
+					   &new_fcts->tomb_nsteps)
+			: NULL);
+
+      /* If any of the conversion functions is not available we don't
+	 use any since this would mean we cannot convert back and
+	 forth.*/
+      if (new_fcts->tomb == NULL)
 	{
-	  /* We must find the real functions.  */
-	  const char *charset_name;
-	  const char *complete_name;
-	  struct __gconv_step *new_towc;
-	  size_t new_towc_nsteps;
-	  struct __gconv_step *new_tomb;
-	  size_t new_tomb_nsteps;
-	  int use_translit;
+	  if (new_fcts->towc != NULL)
+	    __gconv_close_transform (new_fcts->towc, new_fcts->towc_nsteps);
 
-	  /* Free the old conversions.  */
-	  if (__wcsmbs_gconv_fcts.tomb != &to_mb)
-	    __gconv_close_transform (__wcsmbs_gconv_fcts.tomb,
-				     __wcsmbs_gconv_fcts.tomb_nsteps);
-	  if (__wcsmbs_gconv_fcts.towc != &__wcsmbs_to_wc)
-	    __gconv_close_transform (__wcsmbs_gconv_fcts.towc,
-				     __wcsmbs_gconv_fcts.towc_nsteps);
-
-	  /* Get name of charset of the locale.  */
-	  charset_name = new_category->values[_NL_ITEM_INDEX(CODESET)].string;
-
-	  /* Does the user want transliteration?  */
-	  use_translit = new_category->use_translit;
-
-	  /* Normalize the name and add the slashes necessary for a
-             complete lookup.  */
-	  complete_name = norm_add_slashes (charset_name,
-					    use_translit ? "TRANSLIT" : NULL);
-
-	  /* It is not necessary to use transliteration in this direction
-	     since the internal character set is supposed to be able to
-	     represent all others.  */
-	  new_towc = __wcsmbs_getfct ("INTERNAL", complete_name,
-				      &new_towc_nsteps);
-	  new_tomb = (new_towc != NULL
-		      ? __wcsmbs_getfct (complete_name, "INTERNAL",
-					 &new_tomb_nsteps)
-		      : NULL);
-
-	  /* If any of the conversion functions is not available we don't
-	     use any since this would mean we cannot convert back and
-	     forth.*/
-	  if (new_towc == NULL || new_tomb == NULL)
-	    {
-	      if (new_towc != NULL)
-		__gconv_close_transform (new_towc, 1);
-
-	      goto failed;
-	    }
-
-	  __wcsmbs_gconv_fcts.tomb = new_tomb;
-	  __wcsmbs_gconv_fcts.tomb_nsteps = new_tomb_nsteps;
-	  __wcsmbs_gconv_fcts.towc = new_towc;
-	  __wcsmbs_gconv_fcts.towc_nsteps = new_towc_nsteps;
+	  free (new_fcts);
+	  goto failed;
 	}
 
-      /* Set last-used variable for current locale.  */
-      __wcsmbs_last_locale = new_category;
+      new_category->private.ctype = new_fcts;
+      new_category->private.cleanup = &_nl_cleanup_ctype;
     }
 
-  __libc_lock_unlock (lock);
+  __libc_lock_unlock (__libc_setlocale_lock);
 }
 
 
@@ -240,22 +217,18 @@ void
 internal_function
 __wcsmbs_clone_conv (struct gconv_fcts *copy)
 {
-  /* First make sure the function table is up-to-date.  */
-  update_conversion_ptrs ();
+  const struct gconv_fcts *orig;
 
-  /* Make sure the data structures remain the same until we are finished.  */
-  __libc_lock_lock (lock);
+  orig = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
 
   /* Copy the data.  */
-  *copy = __wcsmbs_gconv_fcts;
+  *copy = *orig;
 
   /* Now increment the usage counters.  */
   if (copy->towc->__shlib_handle != NULL)
     ++copy->towc->__counter;
   if (copy->tomb->__shlib_handle != NULL)
     ++copy->tomb->__counter;
-
-  __libc_lock_unlock (lock);
 }
 
 
@@ -275,28 +248,18 @@ __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
   return copy->towc == NULL || copy->tomb == NULL ? 1 : 0;
 }
 
-
-/* Free all resources if necessary.  */
-static void __attribute__ ((unused))
-free_mem (void)
+void internal_function
+_nl_cleanup_ctype (struct locale_data *locale)
 {
-  if (__wcsmbs_gconv_fcts.tomb != &to_mb)
+  const struct gconv_fcts *const data = locale->private.ctype;
+  if (data != NULL)
     {
-      struct __gconv_step *old = __wcsmbs_gconv_fcts.tomb;
-      size_t nold = __wcsmbs_gconv_fcts.tomb_nsteps;
-      __wcsmbs_gconv_fcts.tomb = &to_mb;
-      __wcsmbs_gconv_fcts.tomb_nsteps = 1;
-      __gconv_release_cache (old, nold);
-    }
+      locale->private.ctype = NULL;
+      locale->private.cleanup = NULL;
 
-  if (__wcsmbs_gconv_fcts.towc != &__wcsmbs_to_wc)
-    {
-      struct __gconv_step *old = __wcsmbs_gconv_fcts.towc;
-      size_t nold = __wcsmbs_gconv_fcts.towc_nsteps;
-      __wcsmbs_gconv_fcts.towc = &__wcsmbs_to_wc;
-      __wcsmbs_gconv_fcts.towc_nsteps = 1;
-      __gconv_release_cache (old, nold);
+      /* Free the old conversions.  */
+      __gconv_close_transform (data->tomb, data->tomb_nsteps);
+      __gconv_close_transform (data->towc, data->towc_nsteps);
+      free ((char *) data);
     }
 }
-
-text_set_element (__libc_subfreeres, free_mem);
