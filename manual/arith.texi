@@ -9,6 +9,8 @@ These functions are declared in the header files @file{math.h} and
 @file{complex.h}.
 
 @menu
+* Integers::                    Basic integer types and concepts
+* Integer Division::            Integer division with guaranteed rounding.
 * Floating Point Numbers::      Basic concepts.  IEEE 754.
 * Floating Point Classes::      The five kinds of floating-point number.
 * Floating Point Errors::       When something goes wrong in a calculation.
@@ -17,10 +19,252 @@ These functions are declared in the header files @file{math.h} and
 * Arithmetic Functions::        Fundamental operations provided by the library.
 * Complex Numbers::             The types.  Writing complex constants.
 * Operations on Complex::       Projection, conjugation, decomposition.
-* Integer Division::            Integer division with guaranteed rounding.
 * Parsing of Numbers::          Converting strings to numbers.
 * System V Number Conversion::  An archaic way to convert numbers to strings.
 @end menu
+
+@node Integers
+@section Integers
+@cindex integer
+
+The C language defines several integer data types: integer, short integer,
+long integer, and character, all in both signed and unsigned varieties.
+The GNU C compiler extends the language to contain long long integers 
+as well.  
+@cindex signedness
+
+The C integer types were intended to allow code to be portable among
+machines with different inherent data sizes (word sizes), so each type
+may have different ranges on different machines.  The problem with
+this is that a program often needs to be written for a particular range
+of integers, and sometimes must be written for a particular size of
+storage, regardless of what machine the program runs on.
+
+To address this problem, the GNU C library contains C type definitions
+you can use to declare integers that meet your exact needs.  Because the
+GNU C library header files are customized to a specific machine, your
+program source code doesn't have to be.
+
+These @code{typedef}s are in @file{stdint.h}.
+@pindex stdint.h
+
+If you require that an integer be represented in exactly N bits, use one
+of the following types, with the obvious mapping to bit size and signedness:
+
+@itemize @w
+@item int8_t
+@item int16_t
+@item int32_t
+@item int64_t
+@item uint8_t
+@item uint16_t
+@item uint32_t
+@item uint64_t
+@end itemize
+
+If your C compiler and target machine do not allow integers of a certain
+size, the corresponding above type does not exist.
+
+If you don't need a specific storage size, but want the smallest data
+structure with @emph{at least} N bits, use one of these:
+
+@itemize @w
+@item int8_least_t
+@item int16_least_t
+@item int32_least_t
+@item int64_least_t
+@item uint8_least_t
+@item uint16_least_t
+@item uint32_least_t
+@item uint64_least_t
+@end itemize
+
+If you don't need a specific storage size, but want the data structure 
+that allows the fastest access while having at least N bits (and
+among data structures with the same access speed, the smallest one), use
+one of these:
+
+@itemize @w
+@item int8_fast_t
+@item int16_fast_t
+@item int32_fast_t
+@item int64_fast_t
+@item uint8_fast_t
+@item uint16_fast_t
+@item uint32_fast_t
+@item uint64_fast_t
+@end itemize
+
+If you want an integer with the widest range possible on the platform on 
+which it is being used, use one of the following.  If you use these,
+you should write code that takes into account the variable size and range
+of the integer.
+
+@itemize @w
+@item intmax_t
+@item uintmax_t
+@end itemize
+
+The GNU C library also provides macros that tell you the maximum and
+minimum possible values for each integer data type.  The macro names
+follow these examples: @code{INT32_MAX}, @code{UINT8_MAX},
+@code{INT_FAST32_MIN}, @code{INT_LEAST64_MIN}, @code{UINTMAX_MAX},
+@code{INTMAX_MAX}, @code{INTMAX_MIN}.  Note that there are no macros for
+unsigned integer minima.  These are always zero.
+@cindex maximum possible integer
+@cindex mininum possible integer
+
+There are similar macros for use with C's built in integer types which
+should come with your C compiler.  These are described in @ref{Data Type
+Measurements}.
+
+Don't forget you can use the C @code{sizeof} function with any of these
+data types to get the number of bytes of storage each uses.
+
+
+@node Integer Division
+@section Integer Division
+@cindex integer division functions
+
+This section describes functions for performing integer division.  These
+functions are redundant when GNU CC is used, because in GNU C the
+@samp{/} operator always rounds towards zero.  But in other C
+implementations, @samp{/} may round differently with negative arguments.
+@code{div} and @code{ldiv} are useful because they specify how to round
+the quotient: towards zero.  The remainder has the same sign as the
+numerator.
+
+These functions are specified to return a result @var{r} such that the value
+@code{@var{r}.quot*@var{denominator} + @var{r}.rem} equals
+@var{numerator}.
+
+@pindex stdlib.h
+To use these facilities, you should include the header file
+@file{stdlib.h} in your program.
+
+@comment stdlib.h
+@comment ISO
+@deftp {Data Type} div_t
+This is a structure type used to hold the result returned by the @code{div}
+function.  It has the following members:
+
+@table @code
+@item int quot
+The quotient from the division.
+
+@item int rem
+The remainder from the division.
+@end table
+@end deftp
+
+@comment stdlib.h
+@comment ISO
+@deftypefun div_t div (int @var{numerator}, int @var{denominator})
+This function @code{div} computes the quotient and remainder from
+the division of @var{numerator} by @var{denominator}, returning the
+result in a structure of type @code{div_t}.
+
+If the result cannot be represented (as in a division by zero), the
+behavior is undefined.
+
+Here is an example, albeit not a very useful one.
+
+@smallexample
+div_t result;
+result = div (20, -6);
+@end smallexample
+
+@noindent
+Now @code{result.quot} is @code{-3} and @code{result.rem} is @code{2}.
+@end deftypefun
+
+@comment stdlib.h
+@comment ISO
+@deftp {Data Type} ldiv_t
+This is a structure type used to hold the result returned by the @code{ldiv}
+function.  It has the following members:
+
+@table @code
+@item long int quot
+The quotient from the division.
+
+@item long int rem
+The remainder from the division.
+@end table
+
+(This is identical to @code{div_t} except that the components are of
+type @code{long int} rather than @code{int}.)
+@end deftp
+
+@comment stdlib.h
+@comment ISO
+@deftypefun ldiv_t ldiv (long int @var{numerator}, long int @var{denominator})
+The @code{ldiv} function is similar to @code{div}, except that the
+arguments are of type @code{long int} and the result is returned as a
+structure of type @code{ldiv_t}.
+@end deftypefun
+
+@comment stdlib.h
+@comment ISO
+@deftp {Data Type} lldiv_t
+This is a structure type used to hold the result returned by the @code{lldiv}
+function.  It has the following members:
+
+@table @code
+@item long long int quot
+The quotient from the division.
+
+@item long long int rem
+The remainder from the division.
+@end table
+
+(This is identical to @code{div_t} except that the components are of
+type @code{long long int} rather than @code{int}.)
+@end deftp
+
+@comment stdlib.h
+@comment ISO
+@deftypefun lldiv_t lldiv (long long int @var{numerator}, long long int @var{denominator})
+The @code{lldiv} function is like the @code{div} function, but the
+arguments are of type @code{long long int} and the result is returned as
+a structure of type @code{lldiv_t}.
+
+The @code{lldiv} function was added in @w{ISO C99}.
+@end deftypefun
+
+@comment inttypes.h
+@comment ISO
+@deftp {Data Type} imaxdiv_t
+This is a structure type used to hold the result returned by the @code{imaxdiv}
+function.  It has the following members:
+
+@table @code
+@item intmax_t quot
+The quotient from the division.
+
+@item intmax_t rem
+The remainder from the division.
+@end table
+
+(This is identical to @code{div_t} except that the components are of
+type @code{intmax_t} rather than @code{int}.)
+
+See @ref{Integers} for a description of the @code{intmax_t} type.
+
+@end deftp
+
+@comment inttypes.h
+@comment ISO
+@deftypefun imaxdiv_t imaxdiv (intmax_t @var{numerator}, intmax_t @var{denominator})
+The @code{imaxdiv} function is like the @code{div} function, but the
+arguments are of type @code{intmax_t} and the result is returned as
+a structure of type @code{imaxdiv_t}.
+
+See @ref{Integers} for a description of the @code{intmax_t} type.
+
+The @code{imaxdiv} function was added in @w{ISO C99}.
+@end deftypefun
+
 
 @node Floating Point Numbers
 @section Floating Point Numbers
@@ -919,6 +1163,9 @@ the absolute value of @code{INT_MIN} (the smallest possible @code{int})
 cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 
 @code{llabs} and @code{imaxdiv} are new to @w{ISO C99}.
+
+See @ref{Integers} for a description of the @code{intmax_t} type.
+
 @end deftypefun
 
 @comment math.h
@@ -1784,145 +2031,6 @@ INFINITY + I * copysign (0.0, cimag (z))
 @end smallexample
 @end deftypefun
 
-@node Integer Division
-@section Integer Division
-@cindex integer division functions
-
-This section describes functions for performing integer division.  These
-functions are redundant when GNU CC is used, because in GNU C the
-@samp{/} operator always rounds towards zero.  But in other C
-implementations, @samp{/} may round differently with negative arguments.
-@code{div} and @code{ldiv} are useful because they specify how to round
-the quotient: towards zero.  The remainder has the same sign as the
-numerator.
-
-These functions are specified to return a result @var{r} such that the value
-@code{@var{r}.quot*@var{denominator} + @var{r}.rem} equals
-@var{numerator}.
-
-@pindex stdlib.h
-To use these facilities, you should include the header file
-@file{stdlib.h} in your program.
-
-@comment stdlib.h
-@comment ISO
-@deftp {Data Type} div_t
-This is a structure type used to hold the result returned by the @code{div}
-function.  It has the following members:
-
-@table @code
-@item int quot
-The quotient from the division.
-
-@item int rem
-The remainder from the division.
-@end table
-@end deftp
-
-@comment stdlib.h
-@comment ISO
-@deftypefun div_t div (int @var{numerator}, int @var{denominator})
-This function @code{div} computes the quotient and remainder from
-the division of @var{numerator} by @var{denominator}, returning the
-result in a structure of type @code{div_t}.
-
-If the result cannot be represented (as in a division by zero), the
-behavior is undefined.
-
-Here is an example, albeit not a very useful one.
-
-@smallexample
-div_t result;
-result = div (20, -6);
-@end smallexample
-
-@noindent
-Now @code{result.quot} is @code{-3} and @code{result.rem} is @code{2}.
-@end deftypefun
-
-@comment stdlib.h
-@comment ISO
-@deftp {Data Type} ldiv_t
-This is a structure type used to hold the result returned by the @code{ldiv}
-function.  It has the following members:
-
-@table @code
-@item long int quot
-The quotient from the division.
-
-@item long int rem
-The remainder from the division.
-@end table
-
-(This is identical to @code{div_t} except that the components are of
-type @code{long int} rather than @code{int}.)
-@end deftp
-
-@comment stdlib.h
-@comment ISO
-@deftypefun ldiv_t ldiv (long int @var{numerator}, long int @var{denominator})
-The @code{ldiv} function is similar to @code{div}, except that the
-arguments are of type @code{long int} and the result is returned as a
-structure of type @code{ldiv_t}.
-@end deftypefun
-
-@comment stdlib.h
-@comment ISO
-@deftp {Data Type} lldiv_t
-This is a structure type used to hold the result returned by the @code{lldiv}
-function.  It has the following members:
-
-@table @code
-@item long long int quot
-The quotient from the division.
-
-@item long long int rem
-The remainder from the division.
-@end table
-
-(This is identical to @code{div_t} except that the components are of
-type @code{long long int} rather than @code{int}.)
-@end deftp
-
-@comment stdlib.h
-@comment ISO
-@deftypefun lldiv_t lldiv (long long int @var{numerator}, long long int @var{denominator})
-The @code{lldiv} function is like the @code{div} function, but the
-arguments are of type @code{long long int} and the result is returned as
-a structure of type @code{lldiv_t}.
-
-The @code{lldiv} function was added in @w{ISO C99}.
-@end deftypefun
-
-@comment inttypes.h
-@comment ISO
-@deftp {Data Type} imaxdiv_t
-This is a structure type used to hold the result returned by the @code{imaxdiv}
-function.  It has the following members:
-
-@table @code
-@item intmax_t quot
-The quotient from the division.
-
-@item intmax_t rem
-The remainder from the division.
-@end table
-
-(This is identical to @code{div_t} except that the components are of
-type @code{intmax_t} rather than @code{int}.)
-@end deftp
-
-@comment inttypes.h
-@comment ISO
-@deftypefun imaxdiv_t imaxdiv (intmax_t @var{numerator}, intmax_t @var{denominator})
-The @code{imaxdiv} function is like the @code{div} function, but the
-arguments are of type @code{intmax_t} and the result is returned as
-a structure of type @code{imaxdiv_t}.
-
-The @code{imaxdiv} function was added in @w{ISO C99}.
-@end deftypefun
-
-
 @node Parsing of Numbers
 @section Parsing of Numbers
 @cindex parsing numbers (in formatted input)
@@ -2016,11 +2124,15 @@ There is an example at the end of this section.
 @comment ISO
 @deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
 The @code{strtoul} (``string-to-unsigned-long'') function is like
-@code{strtol} except it returns an @code{unsigned long int} value.  If
-the number has a leading @samp{-} sign, the return value is negated.
+@code{strtol} except it converts to an @code{unsigned long int} value.
 The syntax is the same as described above for @code{strtol}.  The value
-returned on overflow is @code{ULONG_MAX} (@pxref{Range of
-Type}).
+returned on overflow is @code{ULONG_MAX} (@pxref{Range of Type}).
+
+If @var{string} depicts a negative number, @code{strtoul} acts the same
+as @var{strtol} but casts the result to an unsigned integer.  That means
+for example that @code{strtoul} on @code{"-1"} returns @code{ULONG_MAX}
+and an input more negative than @code{LONG_MIN} returns 
+(@code{ULONG_MAX} + 1) / 2.
 
 @code{strtoul} sets @var{errno} to @code{EINVAL} if @var{base} is out of
 range, or @code{ERANGE} on overflow.
@@ -2051,9 +2163,8 @@ The @code{strtoll} function was introduced in @w{ISO C99}.
 @comment stdlib.h
 @comment ISO
 @deftypefun {unsigned long long int} strtoull (const char *@var{string}, char **@var{tailptr}, int @var{base})
-The @code{strtoull} function is like @code{strtoul} except that it
-returns an @code{unsigned long long int}.  The value returned on overflow
-is @code{ULONG_LONG_MAX} (@pxref{Range of Type}).
+The @code{strtoull} function is related to @code{strtoll} the same way
+@code{strtoul} is related to @code{strtol}.
 
 The @code{strtoull} function was introduced in @w{ISO C99}.
 @end deftypefun
@@ -2062,6 +2173,35 @@ The @code{strtoull} function was introduced in @w{ISO C99}.
 @comment BSD
 @deftypefun {unsigned long long int} strtouq (const char *@var{string}, char **@var{tailptr}, int @var{base})
 @code{strtouq} is the BSD name for @code{strtoull}.
+@end deftypefun
+
+@comment inttypes.h
+@comment ???
+@deftypefun {long long int} strtoimax (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtoimax} function is like @code{strtol} except that it returns
+a @code{intmax_t} value, and accepts numbers of a corresponding range.
+
+If the string has valid syntax for an integer but the value is not
+representable because of overflow, @code{strtoimax} returns either
+@code{INTMAX_MAX} or @code{INTMAX_MIN} (@pxref{Integers}), as
+appropriate for the sign of the value.  It also sets @code{errno} to
+@code{ERANGE} to indicate there was overflow.
+
+The symbols for @code{strtoimax} are declared in @file{inttypes.h}.
+
+See @ref{Integers} for a description of the @code{intmax_t} type.
+
+@end deftypefun
+
+@comment inttypes.h
+@comment ???
+@deftypefun uintmax_t strtoumax (const char *@var{string}, char **@var{tailptr}, int @var{base})
+The @code{strtoumax} function is related to @code{strtoimax}
+the same way that @code{strtoul} is related to @code{strtol}.
+
+The symbols for @code{strtoimax} are declared in @file{inttypes.h}.
+
+See @ref{Integers} for a description of the @code{intmax_t} type.
 @end deftypefun
 
 @comment stdlib.h

@@ -33,6 +33,8 @@ too.
 * Search Functions::            Searching for a specific element or substring.
 * Finding Tokens in a String::  Splitting a string into tokens by looking
 				 for delimiters.
+* strfry::                      Function for flash-cooking a string.
+* Trivial Encryption::          Obscuring data.
 * Encode Binary Data::          Encoding and Decoding of Binary Data.
 * Argz and Envz Vectors::       Null-separated string vectors.
 @end menu
@@ -1092,15 +1094,14 @@ specifying a null character as the value of the @var{c} argument.
 @end deftypefun
 
 @comment string.h
-@comment BSD
-@deftypefun {char *} index (const char *@var{string}, int @var{c})
-@code{index} is another name for @code{strchr}; they are exactly the same.
-New code should always use @code{strchr} since this name is defined in
-@w{ISO C} while @code{index} is a BSD invention which never was available
-on @w{System V} derived systems.
+@comment ???
+@deftypefun {char *} strchrnul (const char *@var{string}, int @var{c})
+@code{strchrnul} is the same as @code{strchr} except that if it does
+not find the character, it returns a pointer to string's terminating 
+null character rather than a null pointer.
 @end deftypefun
 
-One useful, but unusual, use of the @code{strchr} or @code{index}
+One useful, but unusual, use of the @code{strchr} 
 function is when one wants to have a pointer pointing to the NUL byte
 terminating a string.  This is often written in this way:
 
@@ -1121,8 +1122,8 @@ There is no restriction on the second parameter of @code{strchr} so it
 could very well also be the NUL character.  Those readers thinking very
 hard about this might now point out that the @code{strchr} function is
 more expensive than the @code{strlen} function since we have two abort
-criteria.  This is right.  But when using the GNU C library is used this
-@code{strchr} call gets optimized in a special way so that this version
+criteria.  This is right.  But in the GNU C library the implementation of
+@code{strchr} is optimized in a special way so that @code{strchr}
 actually is faster.
 
 @comment string.h
@@ -1140,15 +1141,6 @@ strrchr ("hello, world", 'l')
 @end deftypefun
 
 @comment string.h
-@comment BSD
-@deftypefun {char *} rindex (const char *@var{string}, int @var{c})
-@code{rindex} is another name for @code{strrchr}; they are exactly the same.
-New code should always use @code{strrchr} since this name is defined in
-@w{ISO C} while @code{rindex} is a BSD invention which never was available
-on @w{System V} derived systems.
-@end deftypefun
-
-@comment string.h
 @comment ISO
 @deftypefun {char *} strstr (const char *@var{haystack}, const char *@var{needle})
 This is like @code{strchr}, except that it searches @var{haystack} for a
@@ -1163,6 +1155,24 @@ strstr ("hello, world", "l")
     @result{} "llo, world"
 strstr ("hello, world", "wo")
     @result{} "world"
+@end smallexample
+@end deftypefun
+
+
+@comment string.h
+@comment ???
+@deftypefun {char *} strcasestr (const char *@var{haystack}, const char *@var{needle})
+This is like @code{strstr}, except that it ignores case in searching for
+the substring.   Like @code{strcasecmp}, it is locale dependent how
+uppercase and lowercase characters are related.
+
+
+For example,
+@smallexample
+strstr ("hello, world", "L")
+    @result{} "llo, world"
+strstr ("hello, World", "wo")
+    @result{} "World"
 @end smallexample
 @end deftypefun
 
@@ -1226,6 +1236,27 @@ strpbrk ("hello, world", " \t\n,.;!?")
     @result{} ", world"
 @end smallexample
 @c @end group
+@end deftypefun
+
+
+@subsection Compatibility String Search Functions
+
+@comment string.h
+@comment BSD
+@deftypefun {char *} index (const char *@var{string}, int @var{c})
+@code{index} is another name for @code{strchr}; they are exactly the same.
+New code should always use @code{strchr} since this name is defined in
+@w{ISO C} while @code{index} is a BSD invention which never was available
+on @w{System V} derived systems.
+@end deftypefun
+
+@comment string.h
+@comment BSD
+@deftypefun {char *} rindex (const char *@var{string}, int @var{c})
+@code{rindex} is another name for @code{strrchr}; they are exactly the same.
+New code should always use @code{strrchr} since this name is defined in
+@w{ISO C} while @code{rindex} is a BSD invention which never was available
+on @w{System V} derived systems.
 @end deftypefun
 
 @node Finding Tokens in a String
@@ -1389,6 +1420,75 @@ token = strsep (&running, delimiters);    /* token => "punctuation" */
 token = strsep (&running, delimiters);    /* token => "" */
 token = strsep (&running, delimiters);    /* token => NULL */
 @end smallexample
+
+
+@node strfry
+@section strfry
+
+The function below addresses the perennial programming quandary: ``How do
+I take good data in string form and painlessly turn it into garbage?''
+This is actually a fairly simple task for C programmers who do not use
+the GNU C library string functions, but for programs based on the GNU C
+library, the @code{strfry} function is the preferred method for
+destroying string data.
+
+The prototype for this function is in @file{string.h}.
+
+@comment string.h
+@comment GNU
+@deftypefun char *strfry(char *@var{string}) 
+
+@code{strfry} creates a pseudorandom anagram of a string, replacing the
+input with the anagram in place.  For each position in the string,
+@code{strfry} swaps it with a position in the string selected at random
+(from a uniform distribution).  The two positions may be the same.
+
+The return value of @code{strfry} is always @var{string}.
+
+@strong{Portability Note:}  This function is unique to the GNU C library.
+
+@end deftypefun
+
+
+@node Trivial Encryption
+@section Trivial Encryption
+@cindex encryption
+
+
+The @code{memfrob} function converts an array of data to something
+unrecognizable and back again.  It is not encryption in its usual sense
+since it is easy for someone to convert the encrypted data back to clear
+text.  The transformation is analogous to Usenet's ``Rot13'' encryption
+method for obscuring offensive jokes from sensitive eyes and such.
+Unlike Rot13, @code{memfrob} works on arbitrary binary data, not just
+text.
+@cindex Rot13
+
+For true encryption, @xref{Cryptographic Functions}.
+
+This function is declared in @file{string.h}.
+@pindex string.h
+
+@comment string.h
+@comment GNU
+@deftypefun {void *} memfrob (void *@var{mem}, size_t @var{length})
+
+@code{memfrob} transforms (frobnicates) each byte of the data structure
+at @var{mem}, which is @var{length} bytes long, by bitwise exclusive
+oring it with binary 00101010.  It does the transformation in place and
+its return value is always @var{mem}.
+
+Note that @code{memfrob} a second time on the same data structure
+returns it to its original state.
+
+This is a good function for hiding information from someone who doesn't
+want to see it or doesn't want to see it very much.  To really prevent
+people from retrieving the information, use stronger encryption such as
+that described in @xref{Cryptographic Functions}.
+
+@strong{Portability Note:}  This function is unique to the GNU C library.
+
+@end deftypefun
 
 @node Encode Binary Data
 @section Encode Binary Data

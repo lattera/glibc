@@ -1,4 +1,19 @@
+2000-04-25  Jes Sorensen  <Jes.Sorensen@cern.ch>
+
+	* shlib-versions: Rename ia64 dynamic linker to ld-linux-ia64.so.1
+	to avoid name clashes with the ia32 linker.
+
+2000-04-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (_dl_start_user): Fix the _dl_skip_args
+	handling.
+
 2000-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/string.texi: Document strcasestr, strchrnul, strtoimax,
+	strtoumax, strfry, and memfrob.
+	* manual/arith.texi: Document {,u}int*_t types, and strto{i,u}max.
+	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
 
 	* elf/soinit.c (__libc_global_ctors): Call __pthread_initialize_minimal
 	if this function is available.

@@ -291,7 +291,7 @@ _dl_start_user:
 	/* See if we were run as a command with the executable file
 	   name as an extra leading argument.  */
 	ldl	$1, _dl_skip_args
-	beq	$1, $fixup_stack
+	bne	$1, $fixup_stack
 $fixup_stack_ret:
 	/* The special initializer gets called with the stack just
 	   as the application's entry point will see it; it can
@@ -316,7 +316,7 @@ $fixup_stack:
 	ldq	$2, 0($sp)
 	subq	$2, $1, $2
 	mov	$sp, $4
-	s8addq	$2, $sp, $3
+	s8addq	$1, $sp, $3
 	stq	$2, 0($sp)
 	/* Copy down argv.  */
 0:	ldq	$5, 8($3)
