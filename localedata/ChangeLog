@@ -1,5 +1,11 @@
 2000-06-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-fmon.sh: Don't generate de_DE and en_US locale data.
+	* tst-rpmatch.sh: Use de_DE.ISO-8859-1 not de_DE.
+	* tst-ctype.sh: Use de_DE.ISO-8859-1 and en_US.ANSI_X3.4-1968.
+
+	* locales/POSIX: Update for new format.
+
 	* Makefile: Regenerate locale data also if localedef changed.
 
 	* tst-fmon.data: Until we know what is correct, but the spaces

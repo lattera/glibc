@@ -49,13 +49,13 @@ C&no&0
 #& Uh, that's nonsense
 C&nonsens&0
 C&Error&-1
-de_DE&Yes&1
-de_DE&Ja&1
-de_DE&Jammerschade&1
-de_DE&dejavu&-1
-de_DE&Nein&0
-de_DE&Fehler&-1
-de_DE&jein&1
+de_DE.ISO-8859-1&Yes&1
+de_DE.ISO-8859-1&Ja&1
+de_DE.ISO-8859-1&Jammerschade&1
+de_DE.ISO-8859-1&dejavu&-1
+de_DE.ISO-8859-1&Nein&0
+de_DE.ISO-8859-1&Fehler&-1
+de_DE.ISO-8859-1&jein&1
 EOF
 
 rc=$?

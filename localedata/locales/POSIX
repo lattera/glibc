@@ -27,187 +27,201 @@ LC_CTYPE
 # The following is the POSIX Locale LC_CTYPE.
 # "alpha" is by default "upper" and "lower"
 # "alnum" is by definiton "alpha" and "digit"
-# "print" is by default "alnum", "punct" and the <space> character
+# "print" is by default "alnum", "punct" and the <U0020> character
 # "graph" is by default "alnum" and "punct"
 #
-upper   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
-        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>
+upper   <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;\
+        <U0049>;<U004A>;<U004B>;<U004C>;<U004D>;<U004E>;<U004F>;<U0050>;\
+        <U0051>;<U0052>;<U0053>;<U0054>;<U0055>;<U0056>;<U0057>;<U0058>;\
+        <U0059>;<U005A>
 #
-lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
-        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>
+lower   <U0061>;<U0062>;<U0063>;<U0064>;<U0065>;<U0066>;<U0067>;<U0068>;\
+        <U0069>;<U006A>;<U006B>;<U006C>;<U006D>;<U006E>;<U006F>;<U0070>;\
+        <U0071>;<U0072>;<U0073>;<U0074>;<U0075>;<U0076>;<U0077>;<U0078>;\
+        <U0079>;<U007A>
 #
-digit   <zero>;<one>;<two>;<three>;<four>;\
-        <five>;<six>;<seven>;<eight>;<nine>
+digit   <U0030>;<U0031>;<U0032>;<U0033>;<U0034>;\
+        <U0035>;<U0036>;<U0037>;<U0038>;<U0039>
 #
-space   <tab>;<newline>;<vertical-tab>;<form-feed>;\
-        <carriage-return>;<space>
+space   <U0009>;<U000A>;<U000B>;<U000C>;\
+        <U000D>;<U0020>
 #
-cntrl   <alert>;<backspace>;<tab>;<newline>;<vertical-tab>;\
-        <form-feed>;<carriage-return>;\
-        <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;<SO>;<SI>;\
-        <DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;<ETB>;<CAN>;\
-        <EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;<IS1>;<DEL>
+cntrl   <U0007>;<U0008>;<U0009>;<U000A>;<U000B>;\
+        <U000C>;<U000D>;\
+        <U0000>;<U0001>;<U0002>;<U0003>;<U0004>;<U0005>;<U0006>;<U000E>;\
+        <U000F>;<U0010>;<U0011>;<U0012>;<U0013>;<U0014>;<U0015>;<U0016>;\
+        <U0017>;<U0018>;<U0019>;<U001A>;<U001B>;<U001C>;<U001D>;<U001E>;\
+        <U001F>;<U007F>
 #
-punct   <exclamation-mark>;<quotation-mark>;<number-sign>;\
-        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
-        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
-        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
-        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
-        <greater-than-sign>;<question-mark>;<commercial-at>;\
-        <left-square-bracket>;<backslash>;<right-square-bracket>;\
-        <circumflex>;<underscore>;<grave-accent>;\
-        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>
+punct   <U0021>;<U0022>;<U0023>;\
+        <U0024>;<U0025>;<U0026>;<U0027>;\
+        <U0028>;<U0029>;<U002A>;\
+        <U002B>;<U002C>;<U002D>;<U002E>;<U002F>;\
+        <U003A>;<U003B>;<U003C>;<U003D>;\
+        <U003E>;<U003F>;<U0040>;\
+        <U005B>;<U005C>;<U005D>;\
+        <U005E>;<U005F>;<U0060>;\
+        <U007B>;<U007C>;<U007D>;<U007E>
 #
-xdigit  <zero>;<one>;<two>;<three>;<four>;<five>;<six>;<seven>;<eight>;\
-        <nine>;<A>;<B>;<C>;<D>;<E>;<F>;<a>;<b>;<c>;<d>;<e>;<f>
+xdigit  <U0030>;<U0031>;<U0032>;<U0033>;<U0034>;<U0035>;<U0036>;<U0037>;\
+        <U0038>;<U0039>;<U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;\
+        <U0061>;<U0062>;<U0063>;<U0064>;<U0065>;<U0066>
 #
-blank   <space>;<tab>
+blank   <U0020>;<U0009>
 #
-tolower (<A>,<a>);(<B>,<b>);(<C>,<c>);(<D>,<d>);(<E>,<e>);\
-        (<F>,<f>);(<G>,<g>);(<H>,<h>);(<I>,<i>);(<J>,<j>);\
-        (<K>,<k>);(<L>,<l>);(<M>,<m>);(<N>,<n>);(<O>,<o>);\
-        (<P>,<p>);(<Q>,<q>);(<R>,<r>);(<S>,<s>);(<T>,<t>);\
-        (<U>,<u>);(<V>,<v>);(<W>,<w>);(<X>,<x>);(<Y>,<y>);(<Z>,<z>)
+tolower (<U0041>,<U0061>);(<U0042>,<U0062>);(<U0043>,<U0063>);\
+        (<U0044>,<U0064>);(<U0045>,<U0065>);(<U0046>,<U0066>);\
+        (<U0047>,<U0067>);(<U0048>,<U0068>);(<U0049>,<U0069>);\
+        (<U004A>,<U006A>);(<U004B>,<U006B>);(<U004C>,<U006C>);\
+        (<U004D>,<U006D>);(<U004E>,<U006E>);(<U004F>,<U006F>);\
+        (<U0050>,<U0070>);(<U0051>,<U0071>);(<U0052>,<U0072>);\
+        (<U0053>,<U0073>);(<U0054>,<U0074>);(<U0055>,<U0075>);\
+        (<U0056>,<U0076>);(<U0057>,<U0077>);(<U0058>,<U0078>);\
+        (<U0059>,<U0079>);(<U005A>,<U007A>)
 #
-toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);\
-        (<f>,<F>);(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);\
-        (<k>,<K>);(<l>,<L>);(<m>,<M>);(<n>,<N>);(<o>,<O>);\
-        (<p>,<P>);(<q>,<Q>);(<r>,<R>);(<s>,<S>);(<t>,<T>);\
-        (<u>,<U>);(<v>,<V>);(<w>,<W>);(<x>,<X>);(<y>,<Y>);(<z>,<Z>)
+toupper (<U0061>,<U0041>);(<U0062>,<U0042>);(<U0063>,<U0043>);\
+        (<U0064>,<U0044>);(<U0065>,<U0045>);(<U0066>,<U0046>);\
+        (<U0067>,<U0047>);(<U0068>,<U0048>);(<U0069>,<U0049>);\
+        (<U006A>,<U004A>);(<U006B>,<U004B>);(<U006C>,<U004C>);\
+        (<U006D>,<U004D>);(<U006E>,<U004E>);(<U006F>,<U004F>);\
+        (<U0070>,<U0050>);(<U0071>,<U0051>);(<U0072>,<U0052>);\
+        (<U0073>,<U0053>);(<U0074>,<U0054>);(<U0075>,<U0055>);\
+        (<U0076>,<U0056>);(<U0077>,<U0057>);(<U0078>,<U0058>);\
+        (<U0079>,<U0059>);(<U007A>,<U005A>)
 END LC_CTYPE
 
 LC_COLLATE
 # This is the POSIX Locale definition for the LC_COLLATE category.
 # The order is the same as in the ASCII code set.
 order_start forward
-<NUL>
-<SOH>
-<STX>
-<ETX>
-<EOT>
-<ENQ>
-<ACK>
-<alert>
-<backspace>
-<tab>
-<newline>
-<vertical-tab>
-<form-feed>
-<carriage-return>
-<SO>
-<SI>
-<DLE>
-<DC1>
-<DC2>
-<DC3>
-<DC4>
-<NAK>
-<SYN>
-<ETB>
-<CAN>
-<EM>
-<SUB>
-<ESC>
-<IS4>
-<IS3>
-<IS2>
-<IS1>
-<space>
-<exclamation-mark>
-<quotation-mark>
-<number-sign>
-<dollar-sign>
-<percent-sign>
-<ampersand>
-<apostrophe>
-<left-parenthesis>
-<right-parenthesis>
-<asterisk>
-<plus-sign>
-<comma>
-<hyphen>
-<period>
-<slash>
-<zero>
-<one>
-<two>
-<three>
-<four>
-<five>
-<six>
-<seven>
-<eight>
-<nine>
-<colon>
-<semicolon>
-<less-than-sign>
-<equals-sign>
-<greater-than-sign>
-<question-mark>
-<commercial-at>
-<A>
-<B>
-<C>
-<D>
-<E>
-<F>
-<G>
-<H>
-<I>
-<J>
-<K>
-<L>
-<M>
-<N>
-<O>
-<P>
-<Q>
-<R>
-<S>
-<T>
-<U>
-<V>
-<W>
-<X>
-<Y>
-<Z>
-<left-square-bracket>
-<backslash>
-<right-square-bracket>
-<circumflex>
-<underscore>
-<grave-accent>
-<a>
-<b>
-<c>
-<d>
-<e>
-<f>
-<g>
-<h>
-<i>
-<j>
-<k>
-<l>
-<m>
-<n>
-<o>
-<p>
-<q>
-<r>
-<s>
-<t>
-<u>
-<v>
-<w>
-<x>
-<y>
-<z>
-<left-curly-bracket>
-<vertical-line>
-<right-curly-bracket>
-<tilde>
-<DEL>
+<U0000>
+<U0001>
+<U0002>
+<U0003>
+<U0004>
+<U0005>
+<U0006>
+<U0007>
+<U0008>
+<U0009>
+<U000A>
+<U000B>
+<U000C>
+<U000D>
+<U000E>
+<U000F>
+<U0010>
+<U0011>
+<U0012>
+<U0013>
+<U0014>
+<U0015>
+<U0016>
+<U0017>
+<U0018>
+<U0019>
+<U001A>
+<U001B>
+<U001C>
+<U001D>
+<U001E>
+<U001F>
+<U0020>
+<U0021>
+<U0022>
+<U0023>
+<U0024>
+<U0025>
+<U0026>
+<U0027>
+<U0028>
+<U0029>
+<U002A>
+<U002B>
+<U002C>
+<U002D>
+<U002E>
+<U002F>
+<U0030>
+<U0031>
+<U0032>
+<U0033>
+<U0034>
+<U0035>
+<U0036>
+<U0037>
+<U0038>
+<U0039>
+<U003A>
+<U003B>
+<U003C>
+<U003D>
+<U003E>
+<U003F>
+<U0040>
+<U0041>
+<U0042>
+<U0043>
+<U0044>
+<U0045>
+<U0046>
+<U0047>
+<U0048>
+<U0049>
+<U004A>
+<U004B>
+<U004C>
+<U004D>
+<U004E>
+<U004F>
+<U0050>
+<U0051>
+<U0052>
+<U0053>
+<U0054>
+<U0055>
+<U0056>
+<U0057>
+<U0058>
+<U0059>
+<U005A>
+<U005B>
+<U005C>
+<U005D>
+<U005E>
+<U005F>
+<U0060>
+<U0061>
+<U0062>
+<U0063>
+<U0064>
+<U0065>
+<U0066>
+<U0067>
+<U0068>
+<U0069>
+<U006A>
+<U006B>
+<U006C>
+<U006D>
+<U006E>
+<U006F>
+<U0070>
+<U0071>
+<U0072>
+<U0073>
+<U0074>
+<U0075>
+<U0076>
+<U0077>
+<U0078>
+<U0079>
+<U007A>
+<U007B>
+<U007C>
+<U007D>
+<U007E>
+<U007F>
 UNDEFINED
 order_end
 #
@@ -219,7 +233,7 @@ LC_MONETARY
 #
 int_curr_symbol     ""
 currency_symbol     ""
-mon_decimal_point   "<period>"
+mon_decimal_point   "<U002E>"
 mon_thousands_sep   ""
 mon_grouping        -1
 positive_sign       ""
@@ -239,7 +253,7 @@ LC_NUMERIC
 # This is the POSIX Locale definition for
 # the LC_NUMERIC category.
 #
-decimal_point   "<period>"
+decimal_point   "<U002E>"
 thousands_sep   ""
 grouping        -1
 #
@@ -250,46 +264,60 @@ LC_TIME
 # the LC_TIME category.
 #
 # Abbreviated weekday names (%s)
-abday   "<S><u><n>";"<M><o><n>";"<T><u><e>";"<W><e><d>";\
-        "<T><h><u>";"<F><r><i>";"<S><a><t>"
+abday   "<U0053><U0075><U006E>";"<U004D><U006F><U006E>";\
+        "<U0054><U0075><U0065>";"<U0057><U0065><U0064>";\
+        "<U0054><U0068><U0075>";"<U0046><U0072><U0069>";\
+        "<U0053><U0061><U0074>"
 #
 # Full weekday names (%A)
-day     "<S><u><n><d><a><y>";"<M><o><n><d><a><y>";\
-        "<T><u><e><s><d><a><y>";"<W><e><d><n><e><s><d><a><y>";\
-        "<T><h><u><r><s><d><a><y>";"<F><r><i><d><a><y>";\
-        "<S><a><t><u><r><d><a><y>"
+day     "<U0053><U0075><U006E><U0064><U0061><U0079>";\
+        "<U004D><U006F><U006E><U0064><U0061><U0079>";\
+        "<U0054><U0075><U0065><U0073><U0064><U0061><U0079>";\
+        "<U0057><U0065><U0064><U006E><U0065><U0073><U0064><U0061><U0079>";\
+        "<U0054><U0068><U0075><U0072><U0073><U0064><U0061><U0079>";\
+        "<U0046><U0072><U0069><U0064><U0061><U0079>";\
+        "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
 #
 # Abbreviated month names (%b)
-abmon   "<J><a><n>";"<F><e><b>";"<M><a><r>";\
-	"<A><p><r>";"<M><a><y>";"<J><u><n>";\
-        "<J><u><l>";"<A><u><g>";"<S><e><p>";\
-        "<O><c><t>";"<N><o><v>";"<D><e><c>"
+abmon   "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";\
+        "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";\
+        "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";\
+        "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";\
+        "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";\
+        "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
 #
 # Full month names (%B)
-mon     "<J><a><n><u><a><r><y>";"<F><e><b><r><u><a><r><y>";\
-        "<M><a><r><c><h>";"<A><p><r><i><l>";\
-        "<M><a><y>";"<J><u><n><e>";\
-        "<J><u><l><y>";"<A><u><g><u><s><t>";\
-        "<S><e><p><t><e><m><b><e><r>";"<O><c><t><o><b><e><r>";\
-        "<N><o><v><e><m><b><e><r>";"<D><e><c><e><m><b><e><r>"
+mon     "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";\
+        "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";\
+        "<U004D><U0061><U0072><U0063><U0068>";\
+        "<U0041><U0070><U0072><U0069><U006C>";\
+        "<U004D><U0061><U0079>";\
+        "<U004A><U0075><U006E><U0065>";\
+        "<U004A><U0075><U006C><U0079>";\
+        "<U0041><U0075><U0067><U0075><U0073><U0074>";\
+        "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";\
+        "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";\
+        "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";\
+        "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
 #
 # Equivalent of AM/PM (%p)      "AM"/"PM"
-am_pm   "<A><M>";"<P><M>"
+am_pm   "<U0041><U004D>";"<U0050><U004D>"
 #
 # Appropriate date and time representation (%c)
 #       "%a %b %e %H:%M:%S %Y"
-d_t_fmt "<percent-sign><a><space><percent-sign><b><space><percent-sign><e>\
-<space><percent-sign><H><colon><percent-sign><M>\
-<colon><percent-sign><S><space><percent-sign><Y>"
+d_t_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>\
+<U0020><U0025><U0048><U003A><U0025><U004D>\
+<U003A><U0025><U0053><U0020><U0025><U0059>"
 #
 # Appropriate date representation (%x)   "%m/%d/%y"
-d_fmt   "<percent-sign><m><slash><percent-sign><d><slash><percent-sign><y>"
+d_fmt   "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0079>"
 #
 # Appropriate time representation (%X)   "%H:%M:%S"
-t_fmt   "<percent-sign><H><colon><percent-sign><M><colon><percent-sign><S>"
+t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 #
-# Appropriate 12 h time representation (%Xr   "%I:%M:%S %p"
-t_fmt_ampm "<percent-sign><I><colon><percent-sign><M><colon><percent-sign><S><space><percent-sign><p>"
+# Appropriate 12 h time representation (%r)   "%I:%M:%S %p"
+t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>\
+<U0020><U0025><U0070>"
 #
 END LC_TIME
 
@@ -297,7 +325,7 @@ LC_MESSAGES
 # This is the POSIX Locale definition for
 # the LC_NUMERIC category.
 #
-yesexpr "<circumflex><left-square-bracket><y><Y><right-square-bracket>"
+yesexpr "<U005E><U005B><U0079><U0059><U005D>"
 #
-noexpr  "<circumflex><left-square-bracket><n><N><right-square-bracket>"
+noexpr  "<U005E><U005B><U006E><U004E><U005D>"
 END LC_MESSAGES

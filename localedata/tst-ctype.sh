@@ -23,7 +23,7 @@ status=0
 
 # Run the test programs.
 rm -f ${common_objpfx}localedata/tst-ctype.out
-for loc in de_DE de_DE.UTF-8 en_US ja_JP.EUC-JP; do
+for loc in de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 ja_JP.EUC-JP; do
   if test -f tst-ctype-$loc.in; then
     input=tst-ctype-$loc.in
   else
