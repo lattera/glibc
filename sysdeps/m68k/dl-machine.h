@@ -24,8 +24,6 @@
 
 #include <sys/param.h>
 
-#include <assert.h>
-
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (Elf32_Half e_machine)
@@ -313,18 +311,21 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_68K_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:
-	  assert (! "unexpected dynamic reloc type");
+	  _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 0);
 	  break;
 	}
     }
 }
 
 static inline void
-elf_machine_lazy_rel (Elf32_Addr l_addr, const Elf32_Rela *reloc)
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
-  assert (ELF32_R_TYPE (reloc->r_info) == R_68K_JMP_SLOT);
-  *reloc_addr += l_addr;
+  if (ELF32_R_TYPE (reloc->r_info) == R_68K_JMP_SLOT)
+    *reloc_addr += l_addr;
+  else
+    _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 1);
 }
 
 #endif /* RESOLVE */

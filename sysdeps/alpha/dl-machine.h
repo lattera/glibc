@@ -26,7 +26,6 @@
 
 #define ELF_MACHINE_NAME "alpha"
 
-#include <assert.h>
 #include <string.h>
 
 
@@ -490,12 +489,13 @@ elf_machine_rela (struct link_map *map,
 	  *reloc_addr = sym_value;
 	}
       else
-	assert (! "unexpected dynamic reloc type");
+	_dl_reloc_bad_type (map, r_type, 0);
     }
 }
 
 static inline void
-elf_machine_lazy_rel (Elf64_Addr l_addr, const Elf64_Rela *reloc)
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
   Elf64_Addr * const reloc_addr = (void *)(l_addr + reloc->r_offset);
   unsigned long const r_type = ELF64_R_TYPE (reloc->r_info);
@@ -509,7 +509,7 @@ elf_machine_lazy_rel (Elf64_Addr l_addr, const Elf64_Rela *reloc)
   else if (r_type == R_ALPHA_NONE)
     return;
   else
-    assert (! "unexpected PLT reloc type");
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE */
