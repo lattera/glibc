@@ -1,3 +1,14 @@
+2002-10-01  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h
+	[__USE_GNU] (F_SETLEASE, F_GETLEASE, F_NOTIFY): New macros.
+	[__USE_GNU] (DN_ACCESS, DN_MODIFY, DN_CREATE, DN_DELETE, DN_RENAME,
+	DN_ATTRIB, DN_MULTISHOT): New macros.
+
+2002-02-08  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/hppa/elf/start.S: Define __data_start.
+
 2002-10-01  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regex_internal.c (re_string_reconstruct): Reset the member
