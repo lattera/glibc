@@ -1,5 +1,21 @@
 2000-08-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/es_AR: Share LC_COLLATE description with es_ES.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PE: Likewise.
+	* locales/es_PY: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/es_UY: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/es_EC: Share LC_COLLATE description with es_US.
+
 	* locales/ko_KR: Updated for glibc 2.2.
 	Patches by Won-kyu Park <wkpark@chem.skku.ac.kr>.
 	* SUPPORTED: Add ko_KR.
