@@ -1357,6 +1357,7 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
   cmd->Scflag = flag['C'];
   cmd->makefileflag = flag['M'];
 
+#ifndef _RPC_THREAD_SAFE_
   if (mtflag || newstyle)
     {
       /* glibc doesn't support these flags.  */
@@ -1364,6 +1365,7 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
 	       _("This implementation doesn't support newstyle or MT-safe code!\n"));
       return (0);
     }
+#endif
   if (tirpcflag)
     {
       pmflag = inetdflag ? 0 : 1;    /* pmflag or inetdflag is always TRUE */

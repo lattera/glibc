@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
+#include <wctype.h>
 
 
 static int
@@ -386,12 +387,53 @@ run_test (const char *locname)
 	  CLASSTEST (upper);
 	  CLASSTEST (xdigit);
 
+	  /* Character mapping tests.  */
 #define MAPTEST(name) \
 	  if (to##name (c) != __to##name##_l (c, loc))			      \
 	    {								      \
 	      printf ("to%s('\\%o') != __to%s_l('\\%o'): '\\%o' vs '\\%o'\n", \
 		      #name, c, #name, c,				      \
 		      to##name (c), __to##name##_l (c, loc));		      \
+	      result = 1;						      \
+	    }
+	  MAPTEST (lower);
+	  MAPTEST (upper);
+	}
+
+      /* Character class tests, this time for wide characters.  Note that
+	 this only works because we know that the internal encoding is
+	 UCS4.  */
+      for (c = 0; c < 128; ++c)
+	{
+#define CLASSTEST(name) \
+	  if (isw##name (c) != __isw##name##_l (c, loc))		      \
+	    {								      \
+	      printf ("isw%s('\\%o') != __isw%s_l('\\%o')\n",		      \
+		      #name, c, #name, c);				      \
+	      result = 1;						      \
+	    }
+	  CLASSTEST (alnum);
+	  CLASSTEST (alpha);
+	  CLASSTEST (blank);
+	  CLASSTEST (cntrl);
+	  CLASSTEST (digit);
+	  CLASSTEST (lower);
+	  CLASSTEST (graph);
+	  CLASSTEST (print);
+	  CLASSTEST (punct);
+	  CLASSTEST (space);
+	  CLASSTEST (upper);
+	  CLASSTEST (xdigit);
+
+	  /* Character mapping tests.  Note that
+	     this only works because we know that the internal encoding is
+	     UCS4.  */
+#define MAPTEST(name) \
+	  if (tow##name (c) != __tow##name##_l (c, loc))		      \
+	    {								      \
+	      printf ("tow%s('\\%o') != __tow%s_l('\\%o'): '\\%o' vs '\\%o'\n",\
+		      #name, c, #name, c,				      \
+		      tow##name (c), __tow##name##_l (c, loc));		      \
 	      result = 1;						      \
 	    }
 	  MAPTEST (lower);
