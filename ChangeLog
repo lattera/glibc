@@ -1,3 +1,8 @@
+1999-03-07  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/bsd/clock.c (timeval_to_clock_t): Use
+	CLOCKS_PER_SEC instead of CLK_TCK.
+
 1999-03-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Remember
