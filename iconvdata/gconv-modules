@@ -1,5 +1,5 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 #
@@ -341,6 +341,7 @@ module	INTERNAL		ISO-8859-11//		ISO8859-11	1
 alias	ISO-IR-179//		ISO-8859-13//
 alias	LATIN7//		ISO-8859-13//
 alias	L7//			ISO-8859-13//
+alias	BALTIC//		ISO-8859-13//
 module	ISO-8859-13//		INTERNAL		ISO8859-13	1
 module	INTERNAL		ISO-8859-13//		ISO8859-13	1
 
@@ -992,11 +993,6 @@ alias	ISO-IR-143//		IEC_P27-1//
 alias	CSISO143IECP271//	IEC_P27-1//
 module	IEC_P27-1//		INTERNAL		IEC_P27-1	1
 module	INTERNAL		IEC_P27-1//		IEC_P27-1	1
-
-#	from			to			module		cost
-alias	ISO-IR-179//		BALTIC//
-module	BALTIC//		INTERNAL		BALTIC		1
-module	INTERNAL		BALTIC//		BALTIC		1
 
 #	from			to			module		cost
 alias	ISO_9036//		ASMO_449//

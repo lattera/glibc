@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
 	   IBM866 CP1258						 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
-	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1 BALTIC	 \
+	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1		 \
 	   ASMO_449 ANSI_X3.110 CSN_369103 CWI DEC-MCS ECMA-CYRILLIC	 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
@@ -86,7 +86,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
 	      TESTS $(filter-out testdata/CVS%, $(wildcard testdata/*))	    \
 	      run-iconv-test.sh 8bit-generic.c 8bit-gap.c		    \
-	      ansi_x3.110.c asmo_449.c baltic.c big5.c cp737.c cp737.h	    \
+	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \
 	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \
 	      cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c		    \
@@ -149,7 +149,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm865 ibm868 ibm869 ibm875 ibm880 ibm918 ibm1004  \
 			ibm1026 cp1250 cp1251 cp1252 cp1253 cp1254 cp1255  \
 			cp1256 cp1257 ibm866 iso8859-5 iso8859-7 iso8859-8 \
-			iso8859-10 macintosh iec_p27-1 baltic asmo_449	   \
+			iso8859-10 macintosh iec_p27-1 asmo_449		   \
 			csn_369103 cwi dec-mcs ecma-cyrillic gost_19768-74 \
 			greek-ccitt greek7 greek7-old inis inis-8	   \
 			inis-cyrillic iso_2033 iso_5427 iso_5427-ext	   \

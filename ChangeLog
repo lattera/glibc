@@ -1,5 +1,12 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/gconv-modules: Remove BALTIC.  It's the same as
+	ISO-8859-13.
+	* iconvdata/Makefile (distribute): Remove baltic.c.
+	(modules): Remove BALTIC.
+	(gen-8bit-gap-modules): Remove baltic.
+	* iconvdata/baltic.c: Removed.
+
 	* sysdeps/posix/system.c: Correct return value for LINE == NULL.
 
 	* signal/Versions [GLIBC_2.1.3] (libc): Export __sigsuspend.
