@@ -56,15 +56,15 @@ ENTRY (__mmap64)
 L(do_syscall):
 	int $0x80
 
-	/* If 0 > %eax > -4096 there was an error.  */
-	cmpl $-4096, %eax
-	ja SYSCALL_ERROR_LABEL
-
 	/* Restore registers.  */
 	popl %edi
 	popl %esi
 	popl %ebx
 	popl %ebp
+
+	/* If 0 > %eax > -4096 there was an error.  */
+	cmpl $-4096, %eax
+	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
 L(pseudo_end):

@@ -1,5 +1,11 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/Makefile (tests): Add tst-mmap.
+	* posix/tst-mmap.c: New file.
+
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Pop registers after mmap2
+	call before handling error.
+
 	* sysdeps/unix/sysv/linux/i386/mmap64.S: Handle unaligned offsets.
 	* sysdeps/unix/sysv/linux/i386/mmap.S: Likewise.
 
