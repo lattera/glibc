@@ -1,6 +1,4 @@
 ifeq ($(subdir),csu)
-CFLAGS-init-first.c = -fkeep-inline-functions
-
 sysdep_routines += errno-loc
 endif
 

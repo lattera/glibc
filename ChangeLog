@@ -1,5 +1,8 @@
 2001-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile: Remove -fkeep-inline-functions
+	flag for init-first.
+
 	* po/fr.po: Update from translation team.
 
 2001-08-13  Andreas Jaeger  <aj@suse.de>
