@@ -1,5 +1,5 @@
 /* Tester for calling inline string functions.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,6 +59,13 @@ main (void)
   if (strchr ("hello world", ch++) == NULL)
     {
       puts ("strchr test 1 failed");
+      ++errors;
+    }
+
+  const char * const hw = "hello world";
+  if (strpbrk (hw, "o") - hw != 4)
+    {
+      puts ("strpbrk test 1 failed");
       ++errors;
     }
 

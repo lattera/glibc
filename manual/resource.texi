@@ -1367,12 +1367,12 @@ affinity mask can be retrieved from the system.
 
 @comment sched.h
 @comment GNU
-@deftypefun int sched_getaffinity (pid_t @var{pid}, cpu_set_t *@var{cpuset})
+@deftypefun int sched_getaffinity (pid_t @var{pid}, size_t @var{cpusetsize}, cpu_set_t *@var{cpuset})
 
 This functions stores the CPU affinity mask for the process or thread
-with the ID @var{pid} in the memory pointed to by @var{cpuset}.  If
-successful, the function always initializes all bits in the
-@code{cpu_set_t} object and returns zero.
+with the ID @var{pid} in the @var{cpusetsize} bytes long bitmap
+pointed to by @var{cpuset}.  If successful, the function always
+initializes all bits in the @code{cpu_set_t} object and returns zero.
 
 If @var{pid} does not correspond to a process or thread on the system
 the or the function fails for some other reason, it returns @code{-1}
@@ -1395,12 +1395,12 @@ interface must be provided for that.
 
 @comment sched.h
 @comment GNU
-@deftypefun int sched_setaffinity (pid_t @var{pid}, const cpu_set_t *@var{cpuset})
+@deftypefun int sched_setaffinity (pid_t @var{pid}, size_t @var{cpusetsize}, const cpu_set_t *@var{cpuset})
 
-This function installs the affinity mask pointed to by @var{cpuset}
-for the process or thread with the ID @var{pid}.  If successful the
-function returns zero and the scheduler will in future take the
-affinity information into account.
+This function installs the @var{cpusetsize} bytes long affinity mask
+pointed to by @var{cpuset} for the process or thread with the ID @var{pid}.
+If successful the function returns zero and the scheduler will in future
+take the affinity information into account.
 
 If the function fails it will return @code{-1} and @code{errno} is set
 to the error code:

@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -1019,7 +1019,7 @@ __strspn_c3 (__const char *__s, int __accept1, int __accept2, int __accept3)
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
       ? ((__a0 = ((__const char  *) (accept))[0], __a0 == '\0')		      \
-	 ? ((void) (s), NULL)						      \
+	 ? ((void) (s), (char *) NULL)					      \
 	 : ((__a1 = ((__const char *) (accept))[1], __a1 == '\0')	      \
 	    ? strchr (s, __a0)						      \
 	    : ((__a2 = ((__const char *) (accept))[2], __a2 == '\0')	      \

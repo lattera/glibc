@@ -1,9 +1,24 @@
+2004-04-28  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/mq_getattr.c: Include <stddef.h>.
+	* sysdeps/unix/sysv/linux/mq_notify.c: Likewise.
+	* sysdeps/unix/sysv/linux/mq_open.c: Likewise.
+	* sysdeps/unix/sysv/linux/mq_receive.c: Likewise.
+	* sysdeps/unix/sysv/linux/mq_send.c: Likewise.
+
 2004-04-29  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/arm/dl-machine.h (RTLD_START): Avoid unnecessary GOT
 	entries.
 
 2004-04-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* manual/resource.texi (sched_setaffinity, sched_getaffinity): Fix
+	prototypes and description [BZ #131].
+
+	* string/bits/string2.h (strpbrk): Cast NULL to char * [BZ #130].
+	Patch by Ed Catmur <ed@catmur.co.uk>.
+	* string/tst-inlcall.c (main): Add test for strpbrk.
 
 	[BZ #140]
 	* sysdeps/unix/sysv/linux/sys/sysctl.h: Remove linux/compiler.h

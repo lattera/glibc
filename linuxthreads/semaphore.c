@@ -225,7 +225,8 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
     /* The standard requires that if the function would block and the
        time value is illegal, the function returns with an error.  */
     __pthread_unlock(&sem->__sem_lock);
-    return EINVAL;
+    __set_errno (EINVAL);
+    return -1;
   }
 
   /* Set up extrication interface */
@@ -263,7 +264,8 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
 
 	if (was_on_queue) {
 	  __pthread_set_own_extricate_if(self, 0);
-	  return ETIMEDOUT;
+	  __set_errno (ETIMEDOUT);
+	  return -1;
 	}
 
 	/* Eat the outstanding restart() from the signaller */

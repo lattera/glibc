@@ -1,3 +1,8 @@
+2004-04-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* semaphore.c (sem_timedwait): Return -1 and set errno instead of
+	returning error number [BZ #133].  Patch by <rmhaddad@yahoo.com>.
+
 2004-04-22  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
 
 	* sysdeps/unix/sysv/linux/sh/vfork.S: Fix wrong function pointer

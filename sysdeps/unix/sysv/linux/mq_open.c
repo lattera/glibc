@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <mqueue.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <sysdep.h>
 
 #ifdef __NR_mq_open
