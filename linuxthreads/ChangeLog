@@ -1,3 +1,10 @@
+2003-04-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* internals.h: Split pthread_functions definition into...
+	* sysdeps/pthread/pthread-functions.h: ...new file.
+
+	* sysdeps/i386/useldt.h: Include <sysdep.h>.
+
 2003-04-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Rename macros to

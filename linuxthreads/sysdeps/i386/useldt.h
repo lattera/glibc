@@ -22,6 +22,7 @@
 #ifndef __ASSEMBLER__
 #include <stddef.h>	/* For offsetof.  */
 #include <stdlib.h>	/* For abort().	 */
+#include <sysdep.h>
 
 
 /* We don't want to include the kernel header.	So duplicate the
@@ -307,4 +308,3 @@ extern int __have_no_set_thread_area;
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE	8*1024*1024
 #endif
-

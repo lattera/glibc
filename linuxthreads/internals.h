@@ -29,6 +29,7 @@
 #include "descr.h"
 
 #include "semaphore.h"
+#include <pthread-functions.h>
 
 #ifndef THREAD_GETMEM
 # define THREAD_GETMEM(descr, member) descr->member
@@ -469,7 +470,6 @@ extern void __libc_disable_asynccancel (int oldtype)
 
 extern void __pthread_cleanup_upto (__jmp_buf target,
 				    char *targetframe) attribute_hidden;
-struct fork_block;
 extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
 
 #if !defined NOT_IN_libc
@@ -494,64 +494,6 @@ extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
 # define LIBC_CANCEL_HANDLED()	/* Nothing.  */
 #endif
 
-/* Data type shared with libc.  The libc uses it to pass on calls to
-   the thread functions.  */
-struct pthread_functions
-{
-  pid_t (*ptr_pthread_fork) (struct fork_block *);
-  int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
-  int (*ptr___pthread_attr_init_2_0) (pthread_attr_t *);
-  int (*ptr___pthread_attr_init_2_1) (pthread_attr_t *);
-  int (*ptr_pthread_attr_getdetachstate) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setdetachstate) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_getinheritsched) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setinheritsched) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_getschedparam) (const pthread_attr_t *,
-					 struct sched_param *);
-  int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
-					 const struct sched_param *);
-  int (*ptr_pthread_attr_getschedpolicy) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setschedpolicy) (pthread_attr_t *, int);
-  int (*ptr_pthread_attr_getscope) (const pthread_attr_t *, int *);
-  int (*ptr_pthread_attr_setscope) (pthread_attr_t *, int);
-  int (*ptr_pthread_condattr_destroy) (pthread_condattr_t *);
-  int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
-  int (*ptr___pthread_cond_broadcast) (pthread_cond_t *);
-  int (*ptr___pthread_cond_destroy) (pthread_cond_t *);
-  int (*ptr___pthread_cond_init) (pthread_cond_t *,
-				  const pthread_condattr_t *);
-  int (*ptr___pthread_cond_signal) (pthread_cond_t *);
-  int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
-  int (*ptr_pthread_equal) (pthread_t, pthread_t);
-  void (*ptr___pthread_exit) (void *);
-  int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
-  int (*ptr_pthread_setschedparam) (pthread_t, int,
-				    const struct sched_param *);
-  int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_init) (pthread_mutex_t *,
-				 const pthread_mutexattr_t *);
-  int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_trylock) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
-  pthread_t (*ptr_pthread_self) (void);
-  int (*ptr_pthread_setcancelstate) (int, int *);
-  int (*ptr_pthread_setcanceltype) (int, int *);
-  void (*ptr_pthread_do_exit) (void *retval, char *currentframe);
-  void (*ptr_pthread_cleanup_upto) (__jmp_buf target,
-				    char *targetframe);
-  pthread_descr (*ptr_pthread_thread_self) (void);
-  int (*ptr_pthread_internal_tsd_set) (int key, const void *pointer);
-  void * (*ptr_pthread_internal_tsd_get) (int key);
-  void ** __attribute__ ((__const__))
-    (*ptr_pthread_internal_tsd_address) (int key);
-  int (*ptr_pthread_sigaction) (int sig, const struct sigaction * act,
-				struct sigaction *oact);
-  int (*ptr_pthread_sigwait) (const sigset_t *set, int *sig);
-  int (*ptr_pthread_raise) (int sig);
-};
-
-/* Variable in libc.so.  */
-extern struct pthread_functions __libc_pthread_functions attribute_hidden;
 extern int * __libc_pthread_init (const struct pthread_functions *functions);
 
 #if !defined NOT_IN_libc && !defined FLOATING_STACKS
