@@ -1,3 +1,9 @@
+2001-03-09  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (transmem_block_t): Change to unsigned char, to
+	avoid compiler warning.
+	(_nl_find_msg): Add casts to avoid compiler warnings.
+
 2001-03-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* gmon/Makefile (routines): Add sprofil.
