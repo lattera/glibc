@@ -36,15 +36,20 @@ __sigwait (set, sig)
      const sigset_t *set;
      int *sig;
 {
-  siginfo_t info;
   int ret;
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
+  /* XXX INLINE_SYSCALL_NOERROR candiate.  */
   ret =  INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
-			 CHECK_1 (&info), NULL, _NSIG / 8);
-  if (ret == 0)
-    *sig = info.si_signo;
+			 NULL, NULL, _NSIG / 8);
+  if (ret != -1)
+    {
+      *sig = ret;
+      ret = 0;
+    }
+  else
+    ret = errno;
 
   return ret;
 }
