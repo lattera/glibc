@@ -64,25 +64,27 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
 	    xdr_rec xdr_ref xdr_stdio
 
-install-lib := librpcsvc.a
+others := portmap rpcinfo
 install-bin := rpcgen
 install-sbin := rpcinfo portmap
-rpcsvc-objs = $(rpcsvc:%.x=x%.o)
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o
-extra-objs = $(rpcgen-objs) $(rpcsvc-objs)
-omit-deps = $(basename $(rpcsvc-objs))
 # These headers are part of rpcgen.
 distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
+extra-objs = $(rpcgen-objs)
 
-others := portmap rpcinfo
+extra-libs := librpcsvc
+librpcsvc-routines = $(rpcsvc:%.x=x%)
+librpcsvc-inhibit-o = .so # Build no shared rpcsvc library.
+omit-deps = $(librpcsvc-routines)
+
 
 # Sun's code is not too clean.
 override +gccwarn := -w
 
 include ../Rules
 
-$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(libc.a)
+$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) $(common-objpfx)libc.a
 	$(+link)
 
 rpcgen-cmd = $(dir $(word 2,$^))$(notdir $(word 2,$^))
@@ -100,21 +102,6 @@ $(sysconfdir)/rpc: etc.rpc
 
 defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'
 
-# Build the `rpcsvc' library of XDR functions.
-
-lib: $(objpfx)librpcsvc.a
-
-$(objpfx)librpcsvc.a: $(addprefix $(objpfx),$(rpcsvc-objs))
-# This library is small enough that it's simplest to recreate the archive
-# from scratch each time.
-	rm -f $@
-ifdef objdir
-	cd $(objdir); $(AR) cq$(verbose) $@ $(^:$(objpfx)%=%)
-else
-	$(AR) cq$(verbose) $@ $^
-endif
-	$(RANLIB) $@
-
 # Generate the rpcsvc headers with rpcgen.
 $(objpfx)rpcsvc/%.h: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)

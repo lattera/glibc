@@ -217,6 +217,7 @@ parent_echo-distinfo:
 
 distribute  := README INSTALL NOTES COPYING.LIB COPYING ChangeLog NEWS	\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
+	       extra-lib.mk o-iterator.mk				\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.make.in config-name.in Makefile.in \

@@ -262,6 +262,23 @@ sysdep_routines := $(sysdep_routines)
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
 override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
+
+
+# This variable is used in ``include $(o-iterator)'' after defining
+# $(o-iterator-doit) to produce some desired rule using $o for the object
+# suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
+# is produced for each object suffix in use.
+o-iterator = $(patsubst %,$(..)o-iterator.mk,$(object-suffixes))
+
+# The makefile may define $(extra-libs) with `libfoo libbar'
+# to build libfoo.a et al from the modules listed in $(libfoo-routines).
+ifdef extra-libs
+# extra-lib.mk is included once for each extra lib to define rules
+# to build it, and to add its objects to the various variables.
+# During its evaluation, $(lib) is set to the name of the library.
+extra-libs-left := $(extra-libs)
+include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
+endif
 
 +depfiles := $(strip $(sources:.c=.d) \
 		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs))) \
