@@ -787,15 +787,32 @@ search_dir (const struct dir_entry *entry)
 	  continue;
 	}
 
-      /* Links will just point to itself.  */
+
+      /* A link may just point to itself.  */
+      if (is_link)
+	{
+	  /* If the path the link points to isn't its soname and it is not
+	     .so symlink for ld(1) only, we treat it as a normal file.  */
+	  char *real_base_name = basename (real_name);
+
+	  if (strcmp (real_base_name, soname) != 0)
+	    {
+	      len = strlen (real_base_name);
+	      if (len < strlen (".so")
+		  || strcmp (real_base_name + len - strlen (".so"), ".so") != 0
+		  || strncmp (real_base_name, soname, len) != 0)
+		is_link = 0;
+	    }
+        }
+
+      if (real_name != real_file_name)
+	free (real_name);
+
       if (is_link)
 	{
 	  free (soname);
 	  soname = xstrdup (direntry->d_name);
 	}
-
-      if (real_name != real_file_name)
-	free (real_name);
 
       if (flag == FLAG_ELF
 	  && (entry->flag == FLAG_ELF_LIBC5
