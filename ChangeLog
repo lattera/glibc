@@ -1,5 +1,8 @@
 2002-08-30  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/x86_64/hp-timing.h (HP_TIMING_NOW, HP_TIMING_ACCUM): New
+	macros replace the i686 versions for 64-bit mode.
+
 	* locale/duplocale.c: Include <string.h>.
 
 	* intl/dcigettext.c (DCIGETTEXT) [_LIBC]: Check for bogus CATEGORY.
