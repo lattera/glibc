@@ -80,7 +80,7 @@ vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) \
 in-Makerules := yes
 
 ifndef avoid-generated
-include $(+sysdir_pfx)sysd-Makefile
+-include $(+sysdir_pfx)sysd-Makefile
 ifneq ($(sysd-Makefile-sysdirs),$(sysdirs))
 sysd-Makefile-force = FORCE
 FORCE:
@@ -198,7 +198,7 @@ endif
 # included.  It might define inhibit-sysdep-asm, which would affect the
 # contents of sysd-rules.
 ifdef sysd-Makefile-done
-include $(+sysdir_pfx)sysd-rules
+-include $(+sysdir_pfx)sysd-rules
 ifneq ($(sysd-rules-sysdirs),$(sysdirs))
 # The value of $(sysdirs) the sysd-rules was computed for
 # differs from the one we are using now.  So force a rebuild of sysd-rules.
@@ -313,7 +313,7 @@ endif
 
 ifdef +depfiles
 ifneq ($(no_deps),t)
-include $(+depfiles)
+-include $(+depfiles)
 endif
 endif
 

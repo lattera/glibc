@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -37,8 +37,14 @@ __BEGIN_DECLS
 #undef	__need_Emath
 
 #ifdef	_ERRNO_H
-/* Declare the `errno' variable.  */
+/* Declare the `errno' variable, unless it's defined as a macro by
+   errnos.h.  This is the case in GNU, where it is a per-thread variable.
+   This redeclaration using the macro still works, but it will be a
+   function declaration without a prototype and may trigger a
+   -Wstrict-prototypes warning.  */
+#ifndef	errno
 extern int errno;
+#endif
 
 #ifdef __USE_GNU
 /* The full and simple forms of the name with which the program was
