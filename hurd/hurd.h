@@ -238,10 +238,13 @@ extern void _hurd_exit (int status) __attribute__ ((noreturn));
 
 extern void _hurd_startup (void **argptr,
 			   void (*main) (int argc, char **argv, char **envp,
+					 int flags,
 					 mach_port_t *portarray,
 					 mach_msg_type_number_t portarraysize,
 					 int *intarray,
-					 mach_msg_type_number_t intarraysize))
+					 mach_msg_type_number_t intarraysize,
+					 vm_address_t phdr, vm_size_t phdrsz,
+					 vm_address_t user_entry))
      __attribute__ ((noreturn));
 
 /* Initialize the library data structures from the
