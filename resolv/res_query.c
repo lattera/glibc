@@ -139,7 +139,7 @@ __libc_res_nquery(res_state statp,
 			use_malloc = 1;
 			n = res_nmkquery(statp, QUERY, name, class, type, NULL,
 					 0, NULL, buf, MAXPACKET);
-		}		
+		}
 	}
 	if (__builtin_expect (n <= 0, 0)) {
 #ifdef DEBUG
@@ -239,6 +239,9 @@ __libc_res_nsearch(res_state statp,
 		return (__libc_res_nquery(statp, cp, class, type, answer,
 					  anslen, answerp));
 
+	printf("dots=%d, statp->ndots=%d, trailing_dot=%d, name=%s\n",
+	       (int)dots,(int)statp->ndots,(int)trailing_dot,name);
+
 	/*
 	 * If there are enough dots in the name, let's just give it a
 	 * try 'as is'. The threshold can be set with the "ndots" option.
@@ -337,7 +340,7 @@ __libc_res_nsearch(res_state statp,
 	 * for the name, and "." is not on the search list, then try an as-is
 	 * query now.
 	 */
-	if (statp->ndots && !(tried_as_is || root_on_list)) {
+	if (dots && !(tried_as_is || root_on_list)) {
 		ret = __libc_res_nquerydomain(statp, name, NULL, class, type,
 					      answer, anslen, answerp);
 		if (ret > 0)
@@ -388,6 +391,8 @@ __libc_res_nquerydomain(res_state statp,
 	const char *longname = nbuf;
 	int n, d;
 
+	write(2,"<<aaaa\n",7);
+
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
 		printf(";; res_nquerydomain(%s, %s, %d, %d)\n",
@@ -418,8 +423,11 @@ __libc_res_nquerydomain(res_state statp,
 		}
 		sprintf(nbuf, "%s.%s", name, domain);
 	}
-	return (__libc_res_nquery(statp, longname, class, type, answer,
+	int r = (__libc_res_nquery(statp, longname, class, type, answer,
 				  anslen, answerp));
+	write(2,">>aaaa\n",7);
+	return r;
+
 }
 
 int

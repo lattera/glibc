@@ -1,5 +1,8 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_query.c (__libc_res_nsearch): Correctly test whether
+	name contains any dots. [BZ #95]
+
 	* resolv/res_send.c: Compiling with DEBUG defined works again.
 	* resolv/gethnamaddr.c (dprintf): Renamed to Dprintf.  Adjust all
 	callers.
