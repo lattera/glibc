@@ -921,7 +921,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
   if (elem->next != NULL || (collate->cursor != NULL
 			     && elem->next == collate->cursor))
     {
-      lr_error (ldfile, _("order for `%.*s' already defined at %s:%zu"),
+      lr_error (ldfile, _("order for `%.*s' already defined at %s:%Zu"),
 		(int) arg->val.str.lenmb, arg->val.str.startmb,
 		elem->file, elem->line);
       lr_ignore_rest (ldfile, 0);
@@ -1089,7 +1089,7 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 					     && elem->next == collate->cursor))
 		    {
 		      lr_error (ldfile, _("\
-order for `%.*s' already defined at %s:%zu"),
+order for `%.*s' already defined at %s:%Zu"),
 				(int) namelen, seq->name,
 				elem->file, elem->line);
 		      goto increment;
@@ -1228,7 +1228,7 @@ order for `%.*s' already defined at %s:%zu"),
 					     && elem->next == collate->cursor))
 		    {
 		      lr_error (ldfile, _("\
-%s: order for `%.*s' already defined at %s:%zu"),
+%s: order for `%.*s' already defined at %s:%Zu"),
 				"LC_COLLATE", (int) lenfrom, buf,
 				elem->file, elem->line);
 		      continue;
@@ -3391,9 +3391,9 @@ error while adding equivalent collating symbol"));
 		  && collate->undefined.next == collate->cursor))
 	    {
 	      lr_error (ldfile,
-			_("%s: order for `%.*s' already defined at %s:%zu"),
+			_("%s: order for `%.*s' already defined at %s:%Zu"),
 			"LC_COLLATE", 9, "UNDEFINED",
-			(int) collate->undefined.file,
+			collate->undefined.file,
 			collate->undefined.line);
 	      lr_ignore_rest (ldfile, 0);
 	    }
