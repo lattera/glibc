@@ -1,3 +1,10 @@
+2003-06-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c (main): Also recognize names without the
+	__POSIX_ prefix.
+
+	* elf/Makefile (CFLAGS-dl-lookup.c): Define.
+
 2003-06-02  Bernd Schmidt  <bernds@redhat.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (sqrt, __sqrtl, ldexp,

@@ -957,7 +957,9 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
     usage ();
 
   for (c = vars; c->name != NULL; ++c)
-    if (!strcmp (c->name, argv[1]))
+    if (strcmp (c->name, argv[1]) == 0
+	|| (strncmp (c->name, "_POSIX_", 7) == 0
+	    && strcmp (c->name + 7, argv[1]) == 0))
       {
 	long int value;
 	size_t clen;

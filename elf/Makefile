@@ -83,6 +83,7 @@ distribute	:= rtld-Rules \
 		   check-textrel.c dl-sysdep.h
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
 
 include ../Makeconfig
 
