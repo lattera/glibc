@@ -1,3 +1,8 @@
+1999-01-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile: Define libdl variable as name of libdl library and
+	use it in all dependencies.
+
 1999-01-26  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* nss/nss_db/db-netgrp.c (_nss_db_setnetgrent): Suppress warning

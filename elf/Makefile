@@ -79,6 +79,12 @@ endif
 
 tests = loadtest restest1 preloadtest loadfail
 
+ifeq ($(build-shared),yes)
+libdl = $(objpfx)libdl.so$(libdl.so-version)
+else
+libdl = $(objpfx)libdl.a
+endif
+
 include ../Rules
 
 
@@ -198,36 +204,31 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 	mv -f $@.new $@
 
 
-ifeq ($(build-shared),yes)
-$(objpfx)sprof: $(objpfx)libdl.so$(libdl.so-version)
-else
-$(objpfx)sprof: $(objpfx)libdl.a
-endif
+$(objpfx)sprof: $(libdl)
 
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(test-modules)
 
-$(objpfx)testobj1.so: $(objpfx)libdl.so
-$(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(objpfx)libdl.so
-$(objpfx)testobj2.so: $(objpfx)testobj1.so $(objpfx)libdl.so
-$(objpfx)testobj3.so: $(objpfx)libdl.so
-$(objpfx)testobj4.so: $(objpfx)libdl.so
-$(objpfx)testobj5.so: $(objpfx)libdl.so
-$(objpfx)testobj6.so: $(objpfx)libdl.so
+$(objpfx)testobj1.so: $(libdl)
+$(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)
+$(objpfx)testobj2.so: $(objpfx)testobj1.so $(libdl)
+$(objpfx)testobj3.so: $(libdl)
+$(objpfx)testobj4.so: $(libdl)
+$(objpfx)testobj5.so: $(libdl)
+$(objpfx)testobj6.so: $(libdl)
 $(objpfx)failobj.so: $(objpfx)testobj6.so
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
 
-$(objpfx)loadtest: $(objpfx)libdl.so
+$(objpfx)loadtest: $(libdl)
 LDFLAGS-loadtest = -rdynamic
 
 $(objpfx)loadtest.out: $(test-modules)
 
-$(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so \
-		   $(objpfx)libdl.so
+$(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so $(libdl)
 LDFLAGS-restest1 = -rdynamic
 
 $(objpfx)restest1.out: $(test-modules)
@@ -239,7 +240,7 @@ $(objpfx)preloadtest.out: $(preloadtest-preloads:%=$(objpfx)%.so)
 preloadtest-ENV = \
   LD_PRELOAD=$(subst $(empty) ,:,$(strip $(preloadtest-preloads:=.so)))
 
-$(objpfx)loadfail: $(objpfx)libdl.so
+$(objpfx)loadfail: $(libdl)
 LDFLAGS-loadfail = -rdynamic
 
 $(objpfx)loadfile.out: $(objpfx)failobj.so
