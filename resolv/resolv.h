@@ -172,7 +172,7 @@ struct res_sym {
 #define	RES_DFLRETRY		2	/* Default #/tries. */
 
 struct __res_state {
-	int	retrans;	 	/* retransmission time interval */
+	int	retrans;		/* retransmission time interval */
 	int	retry;			/* number of times to retransmit */
 	u_long	options;		/* option flags - see below. */
 	int	nscount;		/* number of name servers */
@@ -254,8 +254,12 @@ typedef struct __res_state *res_state;
 
 /* Things involving an internal (static) resolver context. */
 #if defined _REENTRANT || defined _LIBC_REENTRANT
-extern struct __res_state *__res_state(void);
-#define _res (*__res_state())
+extern struct __res_state *__res_state(void) __attribute__ ((__const__));
+# if defined __RES_PTHREAD_INTERNAL
+extern struct __res_state _res;
+# else
+#  define _res (*__res_state())
+# endif
 #else
 extern struct __res_state _res;
 #endif
@@ -288,7 +292,7 @@ __END_DECLS
 #if !defined(SHARED_LIBBIND) || defined(_LIBC)
 /*
  * If libbind is a shared object (well, DLL anyway)
- * these externs break the linker when resolv.h is 
+ * these externs break the linker when resolv.h is
  * included by a lib client (like named)
  * Make them go away if a client is including this
  *

@@ -49,13 +49,14 @@ __libc_global_ctors (void)
 {
   /* Call constructor functions.  */
   run_hooks (__CTOR_LIST__);
-#ifdef HAVE_DWARF2_UNWIND_INFO
-# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
+
   /* Initialize the thread library at least a bit since the libgcc functions
      are using thread functions if these are available.  */
   if (__pthread_initialize_minimal)
     __pthread_initialize_minimal ();
 
+#ifdef HAVE_DWARF2_UNWIND_INFO
+# ifdef HAVE_DWARF2_UNWIND_INFO_STATIC
   {
     static struct object ob;
     __register_frame_info (__EH_FRAME_BEGIN__, &ob);

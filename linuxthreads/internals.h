@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 
+#define __RES_PTHREAD_INTERNAL
 #include <resolv.h> /* for per-thread resolver context */
 
 
