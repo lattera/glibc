@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
    This file is part of the GNU C Library.
 
@@ -25,49 +25,66 @@
 	.set noreorder
 	.set noat
 
+
 ENTRY(__ffs)
 #ifdef PROF
 	ldgp	gp, 0(pv)
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.prologue 1
+	zap	$16, 0xF0, $16
+	br	$ffsl..ng
+#else
+	.prologue 0
+	zap	$16, 0xF0, $16
+	# FALLTHRU
+#endif
+END(__ffs)
+
+	.align 4
+ENTRY(ffsl)
+#ifdef PROF
+	ldgp	gp, 0(pv)
+	lda	AT, _mcount
+	jsr	AT, (AT), _mcount
+	.prologue 1
+$ffsl..ng:
 #else
 	.prologue 0
 #endif
+	not	$16, $1		# e0    :
+	ldi	$2, -1		# .. e1 :
+	cmpbge	$1, $2, $3	# e0    : bit N == 1 for byte N == 0
+	clr	$0		# .. e1 :
+	addq	$3, 1, $4	# e0    :
+	bic	$4, $3, $3	# e1    : bit N == 1 for first byte N != 0
+	and	$3, 0xF0, $4	# e0    :
+	and	$3, 0xCC, $5	# .. e1 :
+	and	$3, 0xAA, $6	# e0    :
+	cmovne	$4, 4, $0	# .. e1 :
+	cmovne	$5, 2, $5	# e0    :
+	cmovne  $6, 1, $6	# .. e1 :
+	addl	$0, $5, $0	# e0    :
+	addl	$0, $6, $0	# e1    : $0 == N
+	extbl	$16, $0, $1	# e0    : $1 == byte N
+	ldi	$2, 1		# .. e1 :
+	negq	$1, $3		# e0    :
+	and	$3, $1, $3	# e1    : bit N == least bit set of byte N
+	and	$3, 0xF0, $4	# e0    :
+	and	$3, 0xCC, $5	# .. e1 :
+	and	$3, 0xAA, $6	# e0    :
+	cmovne	$4, 5, $2	# .. e1 :
+	cmovne	$5, 2, $5	# e0    :
+	cmovne	$6, 1, $6	# .. e1 :
+	s8addl	$0, $2, $0	# e0    : mult byte ofs by 8 and sum
+	addl	$5, $6, $5	# .. e1 :
+	addl	$0, $5, $0	# e0    :
+	nop			# .. e1 :
+	cmoveq	$16, 0, $0	# e0    : trap input == 0 case.
+	ret			# .. e1 : 18
 
-	ldq_u	zero, 0(sp)	# on the 21064, this helps dual-issuing
-	addl	a0, zero, a0	# the last insn and reduces the stall
-	negq    a0, t0		# due to the srl instruction
-	and     a0, t0, t0
-	clr	v0
-	beq	a0, $done
+END(ffsl)
 
-	# now do binary search for first non-zero bit
-
-	zapnot	t0, 0x03, t2
-	addq    v0, 16, t3
-	cmoveq  t2, t3, v0
-
-	zapnot	t0, 0x05, t2
-	addq    v0, 8, t3
-	cmoveq  t2, t3, v0
-
-	srl	t0, v0, t0
-	addq	v0, 1, v0
-
-	and     t0, 0x0f, t2
-	addq    v0, 4, t3
-	cmoveq  t2, t3, v0
-
-	and     t0, 0x33, t2
-	addq    v0, 2, t3
-	cmoveq  t2, t3, v0
-
-	and     t0, 0x55, t2
-	addq    v0, 1, t3
-	cmoveq  t2, t3, v0
-
-$done:	ret
-
-	END(__ffs)
 weak_alias (__ffs, ffs)
+weak_extern (ffsl)
+weak_alias (ffsl, ffsll)
