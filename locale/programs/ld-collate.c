@@ -714,15 +714,19 @@ insert_value (struct linereader *ldfile, struct token *arg,
 
 static void
 collate_startup (struct linereader *ldfile, struct localedef_t *locale,
-		 int ignore_content)
+		 struct localedef_t *copy_locale, int ignore_content)
 {
   if (!ignore_content)
     {
       struct locale_collate_t *collate;
 
-      collate = locale->categories[LC_COLLATE].collate =
-	(struct locale_collate_t *) xcalloc (1,
-					     sizeof (struct locale_collate_t));
+      if (copy_locale == NULL)
+	collate = locale->categories[LC_COLLATE].collate =
+	  (struct locale_collate_t *) xcalloc (1,
+					       sizeof (struct locale_collate_t));
+      else
+	collate = locale->categories[LC_COLLATE].collate =
+	  copy_locale->categories[LC_COLLATE].collate;
 
       /* Init the various data structures.  */
       init_hash (&collate->elem_table, 100);
@@ -763,6 +767,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
   enum token_t nowtok;
   int state = 0;
   int was_ellipsis = 0;
+  struct localedef_t *copy_locale = NULL;
 
   /* Get the repertoire we have to use.  */
   if (repertoire_name != NULL)
@@ -786,6 +791,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	{
 	  SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
 
+	skip_category:
 	  do
 	    now = lr_token (ldfile, charmap, NULL);
 	  while (now->tok != tok_eof && now->tok != tok_end);
@@ -805,7 +811,16 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	  return;
 	}
 
-      /* XXX Use the name */
+      /* Get the locale definition.  */
+      copy_locale = find_locale (LC_COLLATE, now->val.str.startmb,
+				 repertoire_name, charmap);
+      if ((copy_locale->avail & COLLATE_LOCALE) == 0)
+	{
+	  /* Not yet loaded.  So do it now.  */
+	  if (locfile_read (copy_locale, charmap) != 0)
+	    goto skip_category;
+	}
+
       lr_ignore_rest (ldfile, 1);
 
       now = lr_token (ldfile, charmap, NULL);
@@ -813,7 +828,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
     }
 
   /* Prepare the data structures.  */
-  collate_startup (ldfile, result, ignore_content);
+  collate_startup (ldfile, result, copy_locale, ignore_content);
   collate = result->categories[LC_COLLATE].collate;
 
   while (1)

@@ -1,5 +1,7 @@
 1999-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c: Implement "copy" in LC_COLLATE.
+
 	* locale/programs/ld-collate.c (collate_read): Add handling of
 	reorder-after.
 
