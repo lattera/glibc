@@ -1096,6 +1096,12 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	len = __wcrtomb (buf, (fspec == NULL ? va_arg (ap, wint_t)	      \
 			       : args_value[fspec->data_arg].pa_wchar),	      \
 			 &mbstate);					      \
+	if (len == (size_t) -1)						      \
+	  {								      \
+	    /* Something went wron gduring the conversion.  Bail out.  */     \
+	    done = -1;							      \
+	    goto all_done;						      \
+	  }								      \
 	width -= len;							      \
 	if (!left)							      \
 	  PAD (' ');							      \

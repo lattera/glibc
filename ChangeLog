@@ -1,5 +1,8 @@
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (process_string_arg): Check result of
+	wcrtomb call and bail out if it failed.
+
 	* malloc/Makefile (test-srcs): Add tst-mtrace.
 	(distribute): Add tst-mtrace.sh.
 	Add rule to run tst-mtrace.sh.
@@ -15,7 +18,7 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
 
-	* configure.in: Fix CLAGS-memprofstat.c definition after
+	* configure.in: Fix CFLAGS-memprofstat.c definition after
 	2000-06-19 change.
 	Patch by Bradford W. Johnson <bradford@math.umn.edu>.
 
