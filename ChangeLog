@@ -1,3 +1,8 @@
+2004-07-17  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/memcpy.S: Improve instruction scheduling
+	for POWER4 machines.
+
 2004-07-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #274]
