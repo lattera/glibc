@@ -296,7 +296,7 @@ cannot handle old request version %d; current version is %d"),
 	  /* No, sent the prepared record.  */
 	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
 					 db->disabled_iov->iov_len))
-	      != db->disabled_iov->iov_len
+	      != (ssize_t) db->disabled_iov->iov_len
 	      && __builtin_expect (debug_level, 0) > 0)
 	    {
 	      /* We have problems sending the result.  */

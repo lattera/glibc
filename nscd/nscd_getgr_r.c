@@ -60,40 +60,12 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 }
 
 
-/* Create a socket connected to a name. */
-static int
-open_socket (void)
-{
-  struct sockaddr_un addr;
-  int sock;
-  int saved_errno = errno;
-
-  sock = __socket (PF_UNIX, SOCK_STREAM, 0);
-  if (sock < 0)
-    {
-      __set_errno (saved_errno);
-      return -1;
-    }
-
-  addr.sun_family = AF_UNIX;
-  strcpy (addr.sun_path, _PATH_NSCDSOCKET);
-  if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
-    {
-      __close (sock);
-      __set_errno (saved_errno);
-      return -1;
-    }
-
-  return sock;
-}
-
-
 static int
 internal_function
 nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group *resultbuf, char *buffer, size_t buflen)
 {
-  int sock = open_socket ();
+  int sock = __nscd_open_socket ();
   request_header req;
   gr_response_header gr_resp;
   ssize_t nbytes;

@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -109,5 +109,8 @@ typedef struct
   int32_t error;
 } hst_response_header;
 
+
+/* Open socket connection to nscd server.  */
+extern int __nscd_open_socket (void) attribute_hidden;
 
 #endif /* nscd.h */

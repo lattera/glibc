@@ -1,3 +1,17 @@
+2003-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd-client.h: Add declaration for __nscd_open_socket.
+	* nscd/nscd_gethst_r.c (__nscd_open_socket): Renamed from
+	open_socket.  Not static anymore.
+	(nscd_gethst_r): Use __nscd_open_socket.
+	* nscd/nscd_getgr_r.c (open_socket): Removed.
+	(nscd_getgr_r): Use __nscd_open_socket.
+	* nscd/nscd_getpw_r.c (open_socket): Removed.
+	(nscd_getpw_r): Use __nscd_open_socket.
+
+	* nscd/nscd.c (main): Change type of fdn to long int and use strtol.
+	* nscd/connections.c (handle_request): Add cast to avoid warning.
+
 2003-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* signal/sigfillset.c: Moved to...

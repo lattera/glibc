@@ -86,8 +86,8 @@ __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 
 
 /* Create a socket connected to a name. */
-static int
-open_socket (void)
+int
+__nscd_open_socket (void)
 {
   struct sockaddr_un addr;
   int sock;
@@ -119,7 +119,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	       struct hostent *resultbuf, char *buffer, size_t buflen,
 	       int *h_errnop)
 {
-  int sock = open_socket ();
+  int sock = __nscd_open_socket ();
   hst_response_header hst_resp;
   request_header req;
   ssize_t nbytes;

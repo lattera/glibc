@@ -176,7 +176,7 @@ main (int argc, char **argv)
 	  while ((dirent = readdir64 (d)) != NULL)
 	    {
 	      char *endp;
-	      unsigned long int fdn = strtoul (dirent->d_name, &endp, 10);
+	      long int fdn = strtol (dirent->d_name, &endp, 10);
 
 	      if (*endp == '\0' && fdn != dfdn && fdn >= min_close_fd)
 		close ((int) fdn);
