@@ -2,6 +2,9 @@
 
 	* weaks.c: Fix typo.
 
+	* shlib-versions (mips.*-.*-linux.*): Support only GLIBC 2.0 and
+	2.2 for linuxthreads.
+
 2000-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c
