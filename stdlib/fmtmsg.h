@@ -1,5 +1,5 @@
 /* Message display handling.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,6 @@
 #define __FMTMSG_H	1
 
 #include <features.h>
-
-#define __need_NULL
-#include <stddef.h>
 
 
 __BEGIN_DECLS
@@ -71,12 +68,12 @@ enum
 
 
 /* Macros which can be used as null values for the arguments of `fmtmsg'.  */
-#define MM_NULLLBL	NULL
+#define MM_NULLLBL	((char *) 0)
 #define MM_NULLSEV	0
 #define MM_NULLMC	((long int) 0)
-#define MM_NULLTXT	NULL
-#define MM_NULLACT	NULL
-#define MM_NULLTAG	NULL
+#define MM_NULLTXT	((char *) 0)
+#define MM_NULLACT	((char *) 0)
+#define MM_NULLTAG	((char *) 0)
 
 
 /* Possible return values of `fmtmsg'.  */
