@@ -14,14 +14,9 @@ fi
 
 case "$machine" in
   i386*)
-    # With --enable-libio, the default oldest ABI is 2.2.6;
-    # without --enable-libio, the default oldest ABI is 2.0.
+    # The default oldest ABI is 2.2.6.
     # We only need a "yes" here if the oldest ABI supported will be < 2.2.6.
-    if if test "$stdio" = libio; then
-         test "$oldest_abi" != default && test "$oldest_abi" \< "2.2.6"
-       else
-         test "$oldest_abi" = default || test "$oldest_abi" \< "2.2.6"
-       fi; then
+    if test "$oldest_abi" != default && test "$oldest_abi" \< "2.2.6"; then
       libc_cv_gcc_unwind_find_fde=yes
     fi
     ;;

@@ -139,10 +139,10 @@ endif
 ####
 
 
-# Set this to either `stdio' or `libio', to compile in either GNU stdio
-# or GNU libio.
+# Set this to the name of the subdirectory that implements stdio.
+# The only option right now is `libio'.
 ifndef stdio
-stdio = stdio
+stdio = libio
 endif
 
 # Common prefix for machine-independent installation directories.
@@ -762,6 +762,7 @@ $(common-objpfx)shlib-versions.v.i: \
 						     $(add-ons) \
 						     $(subdirs)))
 $(common-objpfx)soversions.i: $(common-objpfx)shlib-versions.v
+	default_setname='$(filter-out %_default,$(oldest-abi:%=GLIBC_%))'; \
 	while read conf version setname; do \
 	  test -n "$$version" && \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
@@ -769,6 +770,7 @@ $(common-objpfx)soversions.i: $(common-objpfx)shlib-versions.v
 	  if test "x$$version" = xDEFAULT; then \
 	    default_setname="$$setname"; \
 	  else \
+	    $(abi-default_setname) \
 	    lib=`echo $$version | sed 's/=.*$$//'`; \
 	    if eval test -z "\$${versioned_$${lib}}"; then \
 	      eval versioned_$${lib}=yes; \

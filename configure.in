@@ -86,15 +86,6 @@ AC_ARG_WITH(headers, dnl
                           [default=compiler default]],
 	    sysheaders=$withval, sysheaders='')
 
-AC_ARG_ENABLE(libio, dnl
-[  --enable-libio          build in GNU libio instead of GNU stdio],
- 	      [if test $enableval = yes; then
-	         stdio=libio
-	       else
-	         stdio=stdio
-	       fi],
-	      stdio=default)
-
 AC_ARG_ENABLE(sanity-checks, dnl
 [  --disable-sanity-checks really do not use threads (should not be used
 			  except in special situations) [default=yes]],
@@ -1646,13 +1637,8 @@ else
   config_uname=
 fi
 
-AC_MSG_CHECKING(stdio selection)
-AC_SUBST(stdio)
-case $stdio in
-libio) AC_DEFINE(USE_IN_LIBIO) ;;
-default) stdio=stdio ;;
-esac
-AC_MSG_RESULT($stdio)
+dnl This is tested by existing code and it's simpler to avoid changing it.
+AC_DEFINE(USE_IN_LIBIO)
 
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
