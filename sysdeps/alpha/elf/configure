@@ -60,7 +60,7 @@ fi
 fi
 
 echo $ac_n "checking for GP relative module local relocs""... $ac_c" 1>&6
-echo "configure:20: checking for GP relative module local relocs" >&5
+echo "configure:64: checking for GP relative module local relocs" >&5
 if eval "test \"`echo '$''{'libc_cv_alpha_hidden_gprel'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -75,7 +75,7 @@ int foo (void)
 EOF
 
 libc_cv_alpha_hidden_gprel=no
-if { ac_try='${CC-cc} -S $CFLAGS -O2 -fpic conftest.c 1>&5'; { (eval echo configure:35: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} -S $CFLAGS -O2 -fpic conftest.c 1>&5'; { (eval echo configure:79: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   if grep -q 'bar.*!gprel' conftest.s \
      && grep -q 'baz.*!gprel' conftest.s \
      && ! grep -q 'bar.*!literal' conftest.s \
