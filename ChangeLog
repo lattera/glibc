@@ -2,6 +2,8 @@
 
 	* Makerules (libc.so): Add AS_NEEDED line for dynamic linker.
 
+	* elf/Makefile: Run tst-tls9-static again.
+
 2005-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-tls.c (static_dtv): Size the same as the
