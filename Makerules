@@ -459,6 +459,8 @@ endif
 
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.  We don't use suffix rules.
+# Don't define any builtin rules.
+MAKEFLAGS := $(MAKEFLAGS)r
 
 # Generic rule for making directories.
 %/:

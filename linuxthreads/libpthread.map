@@ -4,9 +4,15 @@ GLIBC_2.0 {
     _pthread_cleanup_pop; _pthread_cleanup_pop_restore; _pthread_cleanup_push;
     _pthread_cleanup_push_defer;
 
+    # Internal libc interface to libpthread
+    __libc_internal_tsd_get; __libc_internal_tsd_set;
+
     # Overwritten libc functions.
-    close; fcntl; fork; fsync; lseek; msync; nanosleep; open; pause; raise;
-    read; system; tcdrain; wait; waitpid; write;
+    close; connect; fcntl; fork; fsync; lseek; msync; nanosleep; open;
+    pause; raise; read; recv; recvfrom; recvmsg; send; sendmsg; sendto;
+    system; tcdrain; wait; waitpid; write;
+    __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
+    __write;
 
     # POSIX.1c extensions to libc.
     flockfile; funlockfile; ftrylockfile;

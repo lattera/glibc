@@ -64,7 +64,7 @@ subdirs = csu assert ctype db2 locale intl catgets math setjmp signal stdlib \
 	  stdio-common $(stdio) malloc string wcsmbs time dirent grp pwd \
 	  posix io termios resource misc socket sysvipc gmon gnulib iconv \
 	  iconvdata wctype manual shadow md5-crypt po argp $(add-ons) nss \
-	  localedata timezone $(rt) $(sysdep-subdirs) $(binfmt-subdir)
+	  localedata timezone rt $(sysdep-subdirs) $(binfmt-subdir)
 export subdirs := $(subdirs)	# Benign, useless in GNU make before 3.63.
 
 # The mach and hurd subdirectories have many generated header files which

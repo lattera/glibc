@@ -1,3 +1,9 @@
+1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libpthread.map: Add __libc_internal_tsd_get and
+	__libc_internal_tsd_set.  Add missing cancelable functions. Export
+	libc internal versions of the cancelable functions.
+
 1998-03-13 16:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* weaks.c: Define pthread_attr_init as GLIBC_2.0 and GLIBC_2.1.

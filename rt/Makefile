@@ -1,4 +1,4 @@
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,6 @@ subdir	:= rt
 
 headers	:= aio.h
 
-extra-libs := librt
-extra-libs-others := $(extra-libs)
-
 librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_read64 aio_return aio_suspend aio_write		\
 		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
@@ -33,7 +30,17 @@ librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 
 librt-map := librt.map
 
-distribute := aio_misc.h
+# Make sure that everything is distributed independent of configuration.
+distribute := aio_misc.h $(librt-routines:=.c) $(librt-map)
+
+include ../Makeconfig
+
+ifeq ($(have-thread-library),yes)
+
+extra-libs := librt
+extra-libs-others := $(extra-libs)
+
+endif
 
 include ../Rules
 

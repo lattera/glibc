@@ -25,25 +25,26 @@ routines := nscd_getpw_r nscd_getgr_r
 
 include ../Makeconfig
 
-# We can later add the names of other thread packages here.
-ifneq (,$(findstring linuxthreads,$(add-ons)))
+ifeq ($(have-thread-library),yes)
 
 others := nscd
 install-sbin := nscd
 
-nscd-routines := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
-		 getgrnam_r getgrgid_r dbg_log nscd_conf nscd_stat
-extra-objs := $(nscd-routines:=.o)
+nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
+		getgrnam_r getgrgid_r dbg_log nscd_conf nscd_stat
+extra-objs := $(nscd-modules:=.o)
 
 endif
 
-distribute := nscd.h dbg_log.h $(nscd-routines:=.c) TODO nscd.conf nscd.init \
+distribute := nscd.h dbg_log.h $(nscd-modules:=.c) TODO nscd.conf nscd.init \
 	      nscd_proto.h
 
 include ../Rules
 
+$(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
+
 ifeq ($(build-shared),yes)
-$(objpfx)nscd: $(nscd-routines:%=$(objpfx)%.o) $(objpfx)../linuxthreads/libpthread.so$(libpthread.so-version) $(objpfx)../nis/libnsl.so$(libnsl.so-version)
+$(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
 else
-$(objpfx)nscd: $(nscd-routines:%=$(objpfx)%.o) $(objpfx)../linuxthreads/libpthread.a $(objpfx)../nis/libnsl.a
+$(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
 endif

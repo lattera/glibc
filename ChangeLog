@@ -1,3 +1,27 @@
+1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Export internal versions of cancelable functions.
+
+1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (MAKEFLAGS): Append `r'.
+
+1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig: Define have-thread-library, shared-thread-library
+	and static-thread-library if a thread library is available.  Don't
+	define rt.
+	* nscd/Makefile: Compile nscd if have-thread-library.  Rename
+	nscd-routines to nscd-modules.  Use shared-thread-library and
+	static-thread-library in dependencies.
+	* rt/Makefile: Only compile librt if have-thread-library is
+	defined.
+	* Makefile (subdirs): Always include rt subdir.
+
+1998-03-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)gnu/lib-names.h): Add dummy command.
+
 1998-03-14 21:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Recognize variations for 32 MIPS processors.

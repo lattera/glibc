@@ -101,6 +101,7 @@ GLIBC_2.0 {
     __strcasecmp; __write; _strerror_internal; _dl_sysdep_output;
     _dl_debug_message;
     __ffs;
+    __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;
