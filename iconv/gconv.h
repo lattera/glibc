@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,6 +71,9 @@ typedef int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *,
 			    __const unsigned char **, __const unsigned char *,
 			    unsigned char **, size_t *, int, int);
 
+/* Type of a specialized conversion function for a single byte to INTERNAL.  */
+typedef wint_t (*__gconv_btowc_fct) (struct __gconv_step *, unsigned char);
+
 /* Constructor and destructor for local data for conversion step.  */
 typedef int (*__gconv_init_fct) (struct __gconv_step *);
 typedef void (*__gconv_end_fct) (struct __gconv_step *);
@@ -120,6 +123,7 @@ struct __gconv_step
   char *__to_name;
 
   __gconv_fct __fct;
+  __gconv_btowc_fct __btowc_fct;
   __gconv_init_fct __init_fct;
   __gconv_end_fct __end_fct;
 
