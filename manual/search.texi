@@ -183,6 +183,10 @@ Functions}):
 
 The @code{qsort} function derives its name from the fact that it was
 originally implemented using the ``quick sort'' algorithm.
+
+The implementation of @code{qsort} in this library might not be an
+in-place sort and might thereby use an extra amount of memory to store
+the array.
 @end deftypefun
 
 @node Search/Sort Example
