@@ -6,6 +6,7 @@
 	* math/complex.h: Don't define _Complex macro for gcc 3.  Add
 	__extension__ to _Complex_I definition since gcc warns if -pedantic.
 	* math/bits/cmathcalls.h (conj): Add __extension__ since we use ~.
+	Patches by Joseph S. Myers <jsm28@cam.ac.uk>.
 
 	* include/limits.h: Define LLONG_MIN, LLONG_MAX, ULLONG_MAX if
 	necessary.  Move includes of POSIX and Unix limits files to the
