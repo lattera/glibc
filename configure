@@ -1833,8 +1833,33 @@ m680?0)		base_machine=m68k machine=m68k/$machine ;;
 m68k)		base_machine=m68k machine=m68k/m68020 ;;
 m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
-mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
-mips*)		base_machine=mips machine=mips/$machine ;;
+mips64*)	base_machine=mips64
+		case "$CC $CPPFLAGS $CFLAGS " in
+		*" -mabi=n32 "*) mips_cc_abi=n32 ;;
+		*" -mabi=64 "*|*" -mabi=n64 "*) mips_cc_abi=64 ;;
+		*" -mabi=32 "*|*" -mabi=o32 "*) mips_cc_abi=32 ;;
+		*) mips_cc_abi=default ;;
+		esac
+		case $config_os in
+		*abin32*) mips_config_abi=n32 ;;
+		*abi64*|*abin64*) mips_config_abi=64 ;;
+		*abi32*|*abio32*) mips_config_abi=32 ;;
+		*) mips_config_abi=$mips_cc_abi ;;
+		esac
+		case $mips_config_abi in
+		default) machine=mips/mips64/n32 mips_config_abi=n32 ;;
+		n32) machine=mips/mips64/n32 ;;
+		64) machine=mips/mips64/n64 ;;
+		32) machine=mips/mips32/kern64 ;;
+		esac
+		machine=$machine/$config_machine
+		if test $mips_config_abi != $mips_cc_abi; then
+		  # This won't make it to config.make, but we want to
+		  # set this in case configure tests depend on it.
+		  CPPFLAGS="$CPPFLAGS -mabi=$mips_config_abi"
+		fi
+		;;
+mips*)		base_machine=mips machine=mips/mips32/$machine ;;
 powerpc)	base_machine=powerpc machine=powerpc/powerpc32 ;;
 powerpc64)	base_machine=powerpc machine=powerpc/powerpc64 ;;
 s390)           base_machine=s390 machine=s390/s390-32 ;;
@@ -5170,7 +5195,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5173 "configure"
+#line 5198 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5496,7 +5521,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5499 "configure"
+#line 5524 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5596,7 +5621,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5599 "configure"
+#line 5624 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5664,7 +5689,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5667 "configure"
+#line 5692 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
