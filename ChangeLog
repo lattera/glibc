@@ -1,3 +1,19 @@
+2003-03-11  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
+	Check SYM_MAP rather than SYM as definedness check.
+	Handle R_PPC64_ADDR32, R_PPC64_ADDR30, and R_PPC64_REL64 relocs.
+	Don't handle R_PPC64_REL24 reloc.
+	Mostly from Steven Munroe <sjmunroe@us.ibm.com>.
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h
+	[USE_TLS] (elf_machine_type_class): Match all the TLS relocs in a
+	block, so we cover all the TPREL16* flavors without 6 ||s.
+	[USE_TLS] (elf_machine_tprel): New function.
+	(elf_machine_rela) [USE_TLS]: Use elf_machine_tprel for TPREL64 reloc,
+	and handle TPREL16 relocs too.  Return rather than break for DTPREL64.
+	Mostly from Steven Munroe <sjmunroe@us.ibm.com>.
+
 2003-03-11  Ralf Baechle  <ralf@linux-mips.org>
 
 	* sysdeps/unix/sysv/linux/mips/clone.S (__thread_start): Use jal
