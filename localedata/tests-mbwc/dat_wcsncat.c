@@ -58,7 +58,7 @@ TST_WCSNCAT tst_wcsncat_loc [] = {
        {   0,    0,    0,
 	   { 0x00E1,0x00E2,0x0000		}    },
       },
-      {is_last: 1}
+      {.is_last = 1}
     }
   },
   {
@@ -103,7 +103,7 @@ TST_WCSNCAT tst_wcsncat_loc [] = {
        {   0,    0,    0,
 	   { 0x0051,0x0052,0x0000		}    },
       },
-      {is_last: 1}
+      {.is_last = 1}
     }
   },
   {
@@ -145,7 +145,7 @@ TST_WCSNCAT tst_wcsncat_loc [] = {
        {   0,    0,    0,
 	   { 0x3051,0x3052,0x0000		}    },
       },
-      {is_last: 1}
+      {.is_last = 1}
     }
   },
   {

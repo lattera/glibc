@@ -66,7 +66,7 @@ TST_WCTYPE tst_wctype_loc [] = {
 	  { /*inp*/ { "special"	       },  /* #16 */
 	    /*exp*/ { 0,1,0,	       },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twctype, TST_LOC_enUS },
@@ -119,7 +119,7 @@ TST_WCTYPE tst_wctype_loc [] = {
 	  { /*inp*/ { "special"	       },  /* #16 */
 	    /*exp*/ { 0,1,0,	       },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twctype, TST_LOC_eucJP },
@@ -178,7 +178,7 @@ TST_WCTYPE tst_wctype_loc [] = {
 	  { /*inp*/ { "jdigit"	       },  /* #18 */
 	    /*exp*/ { 0,0,0,	       },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twctype, TST_LOC_end }}

@@ -32,7 +32,7 @@ TST_WCSTOD tst_wcstod_loc [] = {
 	/*E*/
 	{ 0,1,123.456,	       123.456,			   0x0040  }
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -52,7 +52,7 @@ TST_WCSTOD tst_wcstod_loc [] = {
 	/*E*/
 	{ 0,1,123.456,	       123.456,			   0x0040  }
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -65,7 +65,7 @@ TST_WCSTOD tst_wcstod_loc [] = {
 	/*E*/
 	{ 0,1,123.456,	       123.456,			   0x0040  }
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

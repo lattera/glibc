@@ -50,7 +50,7 @@ TST_STRXFRM tst_strxfrm_loc [] = {
 	/*inp*/ { "abc", "\244\241\244\242",  13,  9 },	 /* #07 */
 	/*exp*/ { 0,0,0,		       },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -81,7 +81,7 @@ TST_STRXFRM tst_strxfrm_loc [] = {
 	/*exp*/ { EINVAL,0,0,		       },
       },
 #endif
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -108,7 +108,7 @@ TST_STRXFRM tst_strxfrm_loc [] = {
 	/*exp*/ { EINVAL,0,0,		       },
       },
 #endif
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

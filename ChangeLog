@@ -1,3 +1,68 @@
+2003-01-03  Andreas Jaeger  <aj@suse.de>, Jakub Jelinek <jakub@redhat.com>
+
+	* resolv/res_libc.c: Provide declaration for __res_init_weak and
+	reorder declarations.
+
+2003-01-03  Art Haas  <ahaas@airmail.net>
+
+	* localedata/tests-mbwc/dat_iswalnum.c: Convert GCC extension
+	initiailzer syntax to C99.
+	* localedata/tests-mbwc/dat_iswalpha.c: Likewise.
+	* localedata/tests-mbwc/dat_iswcntrl.c: Likewise.
+	* localedata/tests-mbwc/dat_iswctype.c: Likewise.
+	* localedata/tests-mbwc/dat_iswdigit.c: Likewise.
+	* localedata/tests-mbwc/dat_iswgraph.c: Likewise.
+	* localedata/tests-mbwc/dat_iswlower.c: Likewise.
+	* localedata/tests-mbwc/dat_iswprint.c: Likewise.
+	* localedata/tests-mbwc/dat_iswpunct.c: Likewise.
+	* localedata/tests-mbwc/dat_iswspace.c: Likewise.
+	* localedata/tests-mbwc/dat_iswupper.c: Likewise.
+	* localedata/tests-mbwc/dat_iswxdigit.c: Likewise.
+	* localedata/tests-mbwc/dat_mblen.c: Likewise.
+	* localedata/tests-mbwc/dat_mbrlen.c: Likewise.
+	* localedata/tests-mbwc/dat_mbrtowc.c: Likewise.
+	* localedata/tests-mbwc/dat_mbsrtowcs.c: Likewise.
+	* localedata/tests-mbwc/dat_mbstowcs.c: Likewise.
+	* localedata/tests-mbwc/dat_mbtowc.c: Likewise.
+	* localedata/tests-mbwc/dat_strcoll.c: Likewise.
+	* localedata/tests-mbwc/dat_strfmon.c: Likewise.
+	* localedata/tests-mbwc/dat_strxfrm.c: Likewise.
+	* localedata/tests-mbwc/dat_swscanf.c: Likewise.
+	* localedata/tests-mbwc/dat_towctrans.c: Likewise.
+	* localedata/tests-mbwc/dat_towlower.c: Likewise.
+	* localedata/tests-mbwc/dat_towupper.c: Likewise.
+	* localedata/tests-mbwc/dat_wcrtomb.c: Likewise.
+	* localedata/tests-mbwc/dat_wcscat.c: Likewise.
+	* localedata/tests-mbwc/dat_wcschr.c: Likewise.
+	* localedata/tests-mbwc/dat_wcscmp.c: Likewise.
+	* localedata/tests-mbwc/dat_wcscoll.c: Likewise.
+	* localedata/tests-mbwc/dat_wcscpy.c: Likewise.
+	* localedata/tests-mbwc/dat_wcscspn.c: Likewise.
+	* localedata/tests-mbwc/dat_wcslen.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsncat.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsncmp.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsncpy.c: Likewise.
+	* localedata/tests-mbwc/dat_wcspbrk.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsrtombs.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsspn.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsstr.c: Likewise.
+	* localedata/tests-mbwc/dat_wcstod.c: Likewise.
+	* localedata/tests-mbwc/dat_wcstok.c: Likewise.
+	* localedata/tests-mbwc/dat_wcstombs.c: Likewise.
+	* localedata/tests-mbwc/dat_wcswidth.c: Likewise.
+	* localedata/tests-mbwc/dat_wcsxfrm.c: Likewise.
+	* localedata/tests-mbwc/dat_wctob.c: Likewise.
+	* localedata/tests-mbwc/dat_wctomb.c: Likewise.
+	* localedata/tests-mbwc/dat_wctrans.c: Likewise.
+	* localedata/tests-mbwc/dat_wctype.c: Likewise.
+	* localedata/tests-mbwc/dat_wcwidth.c: Likewise.
+
+2003-01-03  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (inline_syscall_r0_asm): New.
+	(inline_syscall_r0_constraint): New.
+	(inline_syscall[0-6]): Use them.
+
 2003-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (_dl_allocate_tls, _dl_deallocate_tls):

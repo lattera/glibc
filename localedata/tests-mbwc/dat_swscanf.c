@@ -71,7 +71,7 @@ TST_SWSCANF tst_swscanf_loc [] =
 	},
       },
       /*---------------------------------------------------*/
-      { is_last: 1}	/* Last element.  */
+      { .is_last = 1}	/* Last element.  */
     }
   },
   {
@@ -112,7 +112,7 @@ TST_SWSCANF tst_swscanf_loc [] =
 	},
       },
       /*---------------------------------------------------*/
-      { is_last: 1}	/* Last element.  */
+      { .is_last = 1}	/* Last element.  */
     }
   },
   {
@@ -172,7 +172,7 @@ TST_SWSCANF tst_swscanf_loc [] =
       },
 #endif
       /*---------------------------------------------------*/
-      { is_last: 1}	/* Last element.  */
+      { .is_last = 1}	/* Last element.  */
     }
   },
   {

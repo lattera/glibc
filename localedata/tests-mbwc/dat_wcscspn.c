@@ -55,7 +55,7 @@ TST_WCSCSPN tst_wcscspn_loc [] = {
 			 { 0x00D1,0x00D3,0x00D4,0x0000 }, },  /* #11 */
 	    /*expect*/ { 0,1,0,			  },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcscspn, TST_LOC_enUS },
@@ -104,7 +104,7 @@ TST_WCSCSPN tst_wcscspn_loc [] = {
 			 { 0x0041,0x0043,0x0044,0x0000 }, },  /* #11 */
 	    /*expect*/ { 0,1,0,			  },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcscspn, TST_LOC_eucJP },
@@ -153,7 +153,7 @@ TST_WCSCSPN tst_wcscspn_loc [] = {
 			 { 0x3041,0x3043,0x3044,0x0000 }, },  /* #11 */
 	    /*expect*/ { 0,1,0,			  },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcscspn, TST_LOC_end }}

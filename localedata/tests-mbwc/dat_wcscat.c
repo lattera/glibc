@@ -43,7 +43,7 @@ TST_WCSCAT tst_wcscat_loc [] = {
        {   0,	0,    0,
 	   { 0x0001,0xFFFF,0x0080,0x0090,0x0000 }	},
       },
-      {is_last: 1}
+      {.is_last = 1}
     }
   },
   {
@@ -73,7 +73,7 @@ TST_WCSCAT tst_wcscat_loc [] = {
        {   0,	  0,	0,
 	   { 0x0001,0xFFFF,0x0080,0x0090,0x0000 }  },
       },
-      {is_last: 1}
+      {.is_last = 1}
     }
   },
   {
@@ -103,7 +103,7 @@ TST_WCSCAT tst_wcscat_loc [] = {
        {   0,	0,    0,
 	   { 0x0001,0xFFFF,0x0080,0x0090,0x0000 }	},
       },
-      {is_last: 1}
+      {.is_last = 1}
     }
   },
   {

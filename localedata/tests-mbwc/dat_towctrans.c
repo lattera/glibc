@@ -46,7 +46,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
       {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
       {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
       {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -60,7 +60,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
       {	 { 0x0080, "tolower" }, { 0,	   1,0x0080 }  },
       {	 { 0x00EC, "toupper" }, { 0,	   1,0x00CC }  },
       {	 { 0x00CC, "tolower" }, { 0,	   1,0x00EC }  },
-      { is_last: 1 }		  
+      { .is_last = 1 }		  
     }				  
   },				  
   {				  
@@ -74,7 +74,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
       {	 { 0x007F, "tolower" }, { 0,	   1,0x007F }  },
       {	 { 0x0061, "toupper" }, { 0,	   1,0x0041 }  },
       {	 { 0x0041, "tolower" }, { 0,	   1,0x0061 }  },
-      { is_last: 1 }		  
+      { .is_last = 1 }		  
     }				  
   },				  
   {				  
@@ -84,7 +84,7 @@ TST_TOWCTRANS tst_towctrans_loc [] = {
       {	 { 0xFF41, "toupper" }, { 0,	   1,0xFF21 }  },
       {	 { 0x30A1, "tojhira" }, { 0,	   1,0x3041 }  },
       {	 { 0x3041, "tojkata" }, { 0,	   1,0x30A1 }  },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

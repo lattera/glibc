@@ -62,7 +62,7 @@ TST_WCSSTR tst_wcsstr_loc [] = {
 		     { 0x0000			   }, },  /* #11 */
 	/*expect*/ { 0,0,0,			      },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -112,7 +112,7 @@ TST_WCSSTR tst_wcsstr_loc [] = {
 		     { 0x0000			   }, },  /* #11 */
 	/*expect*/ { 0,0,0,			      },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -162,7 +162,7 @@ TST_WCSSTR tst_wcsstr_loc [] = {
 		     { 0x0000			   }, },  /* #11 */
 	/*expect*/ { 0,0,0,			      },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

@@ -45,7 +45,7 @@ TST_MBSRTOWCS tst_mbsrtowcs_loc [] = {
 	}
       },
       { /*----------------- END -----------------*/
-	is_last: 1
+	.is_last = 1
       }
     }
   },
@@ -86,7 +86,7 @@ TST_MBSRTOWCS tst_mbsrtowcs_loc [] = {
 	}
       },
       { /*----------------- END -----------------*/
-	is_last: 1
+	.is_last = 1
       }
     }
   },
@@ -127,7 +127,7 @@ TST_MBSRTOWCS tst_mbsrtowcs_loc [] = {
 	}
       },
       { /*----------------- END -----------------*/
-	is_last: 1
+	.is_last = 1
       }
     }
   },

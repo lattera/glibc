@@ -75,7 +75,7 @@ TST_WCSRTOMBS tst_wcsrtombs_loc [] = {
       { /*input.*/ { 0,1,	{ 0x0000 },			 5, 0, 0 },
 	/*expect*/ { 0,1,0,	 ""					 },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -136,7 +136,7 @@ TST_WCSRTOMBS tst_wcsrtombs_loc [] = {
       { /*input.*/ { 0,1,	{ 0x0000 },			 5, 0, 0 },
 	/*expect*/ { 0,1,0,	 ""					 },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -198,7 +198,7 @@ TST_WCSRTOMBS tst_wcsrtombs_loc [] = {
       { /*input.*/ { 0,1,	{ 0x0000 },			 5, 0, 0 },
 	/*expect*/ { 0,1,0,	 ""					 },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

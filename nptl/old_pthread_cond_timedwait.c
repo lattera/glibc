@@ -39,7 +39,7 @@ __pthread_cond_timedwait_2_0 (cond, mutex, abstime)
       if (newcond == NULL)
 	return ENOMEM;
 
-      *newcond = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+      *newcond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
 
       atomic_write_barrier ();
 

@@ -38,7 +38,7 @@ TST_WCWIDTH tst_wcwidth_loc [] = {
 	  /*exp*/ { 0,	1,EOF,	     },
 	},
 #endif
-	{ is_last: 1 }
+	{ .is_last = 1 }
       }
     },
     {
@@ -65,7 +65,7 @@ TST_WCWIDTH tst_wcwidth_loc [] = {
 	{ /*inp*/ { 0x3041		     },	 /* #07 */
 	  /*exp*/ { 0,	1,-1,	     },
 	},
-	{ is_last: 1 }
+	{ .is_last = 1 }
       }
     },
     {
@@ -101,7 +101,7 @@ TST_WCWIDTH tst_wcwidth_loc [] = {
 	{ /*inp*/ { 0x3041		     },	 /* #07 */
 	  /*exp*/ { 0,	1,2,	     },
 	},
-	{ is_last: 1 }
+	{ .is_last = 1 }
       }
     },
     {

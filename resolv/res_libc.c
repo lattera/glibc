@@ -92,7 +92,8 @@ compat_symbol (libc, _res, _res, GLIBC_2_0);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2)
 # undef res_init
-strong_alias (__res_init, __res_init_weak);
+extern int __res_init_weak (void);
 weak_extern (__res_init_weak);
+strong_alias (__res_init, __res_init_weak);
 compat_symbol (libc, __res_init_weak, res_init, GLIBC_2_0);
 #endif

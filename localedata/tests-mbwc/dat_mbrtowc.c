@@ -52,7 +52,7 @@ TST_MBRTOWC tst_mbrtowc_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
 #if 0
@@ -92,7 +92,7 @@ TST_MBRTOWC tst_mbrtowc_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -130,7 +130,7 @@ TST_MBRTOWC tst_mbrtowc_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
 #endif

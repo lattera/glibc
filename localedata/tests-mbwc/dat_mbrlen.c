@@ -52,7 +52,7 @@ TST_MBRLEN tst_mbrlen_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -90,7 +90,7 @@ TST_MBRLEN tst_mbrlen_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -150,7 +150,7 @@ TST_MBRLEN tst_mbrlen_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

@@ -77,7 +77,7 @@ TST_WCTOMB tst_wctomb_loc [] = {
       { /*input.*/ { 0,	   0x0000  },
 	/*expect*/ { 0,0,0,  ""	   },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -104,7 +104,7 @@ TST_WCTOMB tst_wctomb_loc [] = {
       { /*input.*/ { 0,	   0x0000  },
 	/*expect*/ { 0,0,0,  ""	   },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -130,7 +130,7 @@ TST_WCTOMB tst_wctomb_loc [] = {
       { /*input.*/ { 0,	   0x008E  },
 	/*expect*/ { 0,0,0,  ""	   },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

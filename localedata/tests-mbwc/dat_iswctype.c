@@ -174,7 +174,7 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x00FF, "upper"  }, { 0,1,0 }  },	   /* y dia    */
       {	 { 0x00B9, "xdigit" }, { 0,1,0 }  },	   /* SUP 1    */
       {	 { 0x00BC, "xdigit" }, { 0,1,0 }  },	   /* 1/4      */
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -383,7 +383,7 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x007F, "xdigit" }, { 0,1,0 }  },
       {	 { 0x0080, "xdigit" }, { 0,1,0 }  },
       {	 { 0x0061, "xxxxxx" }, { 0,1,0 }  },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -651,7 +651,7 @@ TST_ISWCTYPE tst_iswctype_loc [] = {
       {	 { 0x4E06, "jkanji" }, { 0,1,0 }  },	   /* CJK UNI.IDEO.NON-J */
 #endif
       {	 { 0x4E07, "jkanji" }, { 0,0,0 }  },	   /* CJK UNI.IDEO.	 */
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

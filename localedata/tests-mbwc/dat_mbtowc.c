@@ -146,7 +146,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -232,7 +232,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -332,7 +332,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

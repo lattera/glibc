@@ -44,7 +44,7 @@ TST_ISW_LOC (GRAPH, graph) = {
 	{  { 0x00F7 }, { 0,0,0 }  },	/* division */
 	{  { 0x00F8 }, { 0,0,0 }  },	/* o stroke */
 	{  { 0x00FF }, { 0,0,0 }  },	/* y dia    */
-	{ is_last: 1 }			/* Last element.  */
+	{ .is_last = 1 }		/* Last element.  */
       }
   },
   {   TST_ISW_REC (enUS, graph)
@@ -69,7 +69,7 @@ TST_ISW_LOC (GRAPH, graph) = {
 	{  { 0x007E }, { 0,0,0 }  },
 	{  { 0x007F }, { 0,1,0 }  },
 	{  { 0x0080 }, { 0,1,0 }  }, /* 20 */
-	{ is_last: 1 }			/* Last element.  */
+	{ .is_last = 1 }		/* Last element.  */
       }
   },
   {   TST_ISW_REC( eucJP, graph )
@@ -156,7 +156,7 @@ TST_ISW_LOC (GRAPH, graph) = {
 	{  { 0xFF70 }, { 0,0,0 }  },	/* HALF KATA PL -     */
 	{  { 0xFF71 }, { 0,0,0 }  },	/* HALF KATA A	      */
 	{  { 0xFF9E }, { 0,0,0 }  },	/* HALF KATA MI	      */
-	{ is_last: 1 }			/* Last element.  */
+	{ .is_last = 1 }		/* Last element.  */
       }
   },
   {   TST_ISW_REC (end, graph) }

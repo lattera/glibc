@@ -31,7 +31,7 @@ TST_WCRTOMB tst_wcrtomb_loc [] = {
       { /*input.*/ { 0,		 0x0092,   0,0 },
 	/*expect*/ { 0,	   1,1,	 ""	       },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -58,7 +58,7 @@ TST_WCRTOMB tst_wcrtomb_loc [] = {
       { /*input.*/ { 0,		 0x0092,   0,0 },
 	/*expect*/ { 0,	   1,1,	 ""	       },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -84,7 +84,7 @@ TST_WCRTOMB tst_wcrtomb_loc [] = {
       { /*input.*/ { 0,		 0x008E,   0,0 },
 	/*expect*/ { 0,	   0,0,	 ""	       },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

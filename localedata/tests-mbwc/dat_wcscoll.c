@@ -83,7 +83,7 @@ TST_WCSCOLL tst_wcscoll_loc [] = {
 			 { 0x00E1,0x0092,0x00E9,0x0000 }, },  /* #10 */
 	    /*expect*/ { 0,0,0, -1,		       },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcscoll, TST_LOC_enUS },
@@ -154,7 +154,7 @@ TST_WCSCOLL tst_wcscoll_loc [] = {
 	    /*expect*/ { 0,0,0, 0,		       },
 	  },
 #endif
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcscoll, TST_LOC_eucJP },
@@ -199,7 +199,7 @@ TST_WCSCOLL tst_wcscoll_loc [] = {
 			 { 0x30FF,0x3092,0x3049,0x0000 }, },  /* #10 */
 	    /*expect*/ { 0,0,0, +1,		       },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcscoll, TST_LOC_end } }

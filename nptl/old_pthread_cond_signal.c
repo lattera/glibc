@@ -37,7 +37,7 @@ __pthread_cond_signal_2_0 (cond)
       if (newcond == NULL)
 	return ENOMEM;
 
-      *newcond = (struct pthread_cond_t) PTHREAD_COND_INITIALIZER;
+      *newcond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
 
       atomic_write_barrier ();
 

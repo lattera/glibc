@@ -51,7 +51,7 @@ TST_WCSTOK tst_wcstok_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -88,7 +88,7 @@ TST_WCSTOK tst_wcstok_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -125,7 +125,7 @@ TST_WCSTOK tst_wcstok_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

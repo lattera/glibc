@@ -48,7 +48,7 @@ TST_WCSCMP tst_wcscmp_loc [] = {
 		     { 0x00D1,0x00D2,0x0000	       }, },  /* #8 */
 	/*expect*/ { 0,1,1,			  },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -86,7 +86,7 @@ TST_WCSCMP tst_wcscmp_loc [] = {
 		     { 0x0041,0x0042,0x0000	       }, },  /* #8 */
 	/*expect*/ { 0,1,1,			  },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -124,7 +124,7 @@ TST_WCSCMP tst_wcscmp_loc [] = {
 		     { 0x3041,0x3042,0x0000	       }, },  /* #8 */
 	/*expect*/ { 0,1,1,			  },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

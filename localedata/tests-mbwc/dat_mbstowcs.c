@@ -44,7 +44,7 @@ TST_MBSTOWCS tst_mbstowcs_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -82,7 +82,7 @@ TST_MBSTOWCS tst_mbstowcs_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -130,7 +130,7 @@ TST_MBSTOWCS tst_mbstowcs_loc [] = {
 	  }
 	}
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

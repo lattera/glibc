@@ -29,7 +29,7 @@ TST_WCSLEN tst_wcslen_loc [] = {
 	{ /*input.*/ { { 0x0000 }                      },  /* #02 */
 	  /*expect*/ { 0,1,0,                        },
 	},
-	{ is_last: 1 }
+	{ .is_last = 1 }
       }
   },
   {   { Twcslen, TST_LOC_enUS },
@@ -40,7 +40,7 @@ TST_WCSLEN tst_wcslen_loc [] = {
 	{ /*input.*/ { { 0x0000 }                      },  /* #02 */
 	  /*expect*/ { 0,1,0,                        },
 	},
-	{ is_last: 1 }
+	{ .is_last = 1 }
       }
   },
   {   { Twcslen, TST_LOC_eucJP },
@@ -51,7 +51,7 @@ TST_WCSLEN tst_wcslen_loc [] = {
 	{ /*input.*/ { { 0x0000 }                      },  /* #02 */
 	  /*expect*/ { 0,1,0,                        },
 	},
-	{ is_last: 1 }
+	{ .is_last = 1 }
       }
   },
   {   { Twcslen, TST_LOC_end }}

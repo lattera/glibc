@@ -17,7 +17,7 @@ TST_WCTOB tst_wctob_loc [] = {
 	  {  { 0x0080 }, { 0,	 1, 0x80       }  },
 	  {  { 0x00C4 }, { 0,	 1, 0xC4       }  },
 	  {  { 0x30C4 }, { 0,	 1, EOF	       }  },
-	  {  is_last: 1 } /* Last element.  */
+	  {  .is_last = 1 } /* Last element.  */
 	}
     },
     {	{ Twctob, TST_LOC_enUS },
@@ -34,7 +34,7 @@ TST_WCTOB tst_wctob_loc [] = {
 	  {  { 0x00C4 }, { 0,	 1, EOF        }  },
 #endif
 	  {  { 0x30C4 }, { 0,	 1, EOF	       }  },
-	  {  is_last: 1 } /* Last element.  */
+	  {  .is_last = 1 } /* Last element.  */
 	}
     },
     {	{ Twctob, TST_LOC_eucJP },
@@ -46,7 +46,7 @@ TST_WCTOB tst_wctob_loc [] = {
 	  {  { 0x00FF }, { 0,	 1, EOF        }  },
 	  {  { 0x00C4 }, { 0,	 1, EOF	       }  },
 	  {  { 0x30C4 }, { 0,	 1, EOF	       }  },
-	  {  is_last: 1 } /* Last element.  */
+	  {  .is_last = 1 } /* Last element.  */
 	}
     },
     {	{ Twctob, TST_LOC_end } }

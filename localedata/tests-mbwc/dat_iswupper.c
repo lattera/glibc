@@ -40,7 +40,7 @@ TST_ISW_LOC (UPPER, upper) = {
 	{  { 0x00F7 }, { 0,1,0 }  },	/* division */
 	{  { 0x00F8 }, { 0,1,0 }  },	/* o stroke */
 	{  { 0x00FF }, { 0,1,0 }  },	/* y dia    */
-	{ is_last: 1 }			/* Last entry.	*/
+	{ .is_last = 1 }		/* Last entry.	*/
       }
   },
   {   TST_ISW_REC (enUS, upper)
@@ -65,7 +65,7 @@ TST_ISW_LOC (UPPER, upper) = {
 	{  { 0x007E }, { 0,1,0 }  },
 	{  { 0x007F }, { 0,1,0 }  },
 	{  { 0x0080 }, { 0,1,0 }  },
-	{ is_last: 1 }		  /* Last entry.  */
+	{ .is_last = 1 }		/* Last entry.  */
       }
   },
   {   TST_ISW_REC (eucJP, upper)
@@ -83,7 +83,7 @@ TST_ISW_LOC (UPPER, upper) = {
 	{  { 0xFF6F }, { 0,1,0 }  },	/* HALF KATA tu	      */
 	{  { 0xFF71 }, { 0,1,0 }  },	/* HALF KATA A	      */
 	{  { 0xFF9E }, { 0,1,0 }  },	/* HALF KATA MI	      */
-	{ is_last: 1 }			/* Last entry.	*/
+	{ .is_last = 1 }		/* Last entry.	*/
       }
   },
   {   TST_ISW_REC (end, upper) }

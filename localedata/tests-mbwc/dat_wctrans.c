@@ -36,7 +36,7 @@ TST_WCTRANS tst_wctrans_loc [] = {
           { /*inp*/ { "xxxxx"          },  /* #6 */
             /*exp*/ { 0,1,0,         },
           },
-	  { is_last: 1 }
+	  { .is_last = 1 }
         }
     },
     {   { Twctrans, TST_LOC_enUS },
@@ -59,7 +59,7 @@ TST_WCTRANS tst_wctrans_loc [] = {
           { /*inp*/ { "xxxxx"          },  /* #6 */
             /*exp*/ { 0,1,0,         },
           },
-	  { is_last: 1 }
+	  { .is_last = 1 }
         }
     },
     {   { Twctrans, TST_LOC_eucJP },
@@ -88,7 +88,7 @@ TST_WCTRANS tst_wctrans_loc [] = {
           { /*inp*/ { "tojkata"        },  /* #8 */
             /*exp*/ { 0,0,0,         },
           },
-	  { is_last: 1 }
+	  { .is_last = 1 }
         }
     },
     {   { Twctrans, TST_LOC_end }}

@@ -63,7 +63,7 @@ TST_WCSPBRK tst_wcspbrk_loc [] = {
 		     { 0x0000			   }, },  /* #11 */
 	/*expect*/ { 0,1,(wchar_t *)NULL, 0x0000    },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -113,7 +113,7 @@ TST_WCSPBRK tst_wcspbrk_loc [] = {
 		     { 0x0000			   }, },  /* #11 */
 	/*expect*/ { 0,1,(wchar_t *)NULL, 0x0000    },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -163,7 +163,7 @@ TST_WCSPBRK tst_wcspbrk_loc [] = {
 		     { 0x0000			   }, },  /* #11 */
 	/*expect*/ { 0,1,(wchar_t *)NULL, 0x0000    },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

@@ -31,7 +31,7 @@ TST_WCSCHR tst_wcschr_loc [] = {
 	  { /*input.*/ { { 0x0000,0x00C2,0x00C3,0x0000 }, 0x0000 },  /* #7 */
 	    /*expect*/ { 0,0,0 },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcschr, TST_LOC_enUS },
@@ -57,7 +57,7 @@ TST_WCSCHR tst_wcschr_loc [] = {
 	  { /*input.*/ { { 0x0000,0x0042,0x0043,0x0000 }, 0x0000 },  /* #7 */
 	    /*expect*/ { 0,0,0 },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcschr, TST_LOC_eucJP },
@@ -83,7 +83,7 @@ TST_WCSCHR tst_wcschr_loc [] = {
 	  { /*input.*/ { { 0x0000,0x3042,0x3043,0x0000 }, 0x0000 },  /* #7 */
 	    /*expect*/ { 0,0,0 },
 	  },
-	  { is_last: 1 }
+	  { .is_last = 1 }
 	}
     },
     {	{ Twcschr, TST_LOC_end } }

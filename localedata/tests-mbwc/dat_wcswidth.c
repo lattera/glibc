@@ -74,7 +74,7 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
       { /*input.*/ { { 0x00C1,0x3044,0x0000 },		 2 },  /* 20 */
 	/*expect*/ { 0,1,-1				   },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -158,7 +158,7 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
       { /*input.*/ { { 0x0041,0x3044,0x0000 },		 2 },  /* 20 */
 	/*expect*/ { 0,1,-1				   },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -232,7 +232,7 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
       { /*input.*/ { { 0x0041,0x3044,0x0000 },		 2 },  /* 20 */
 	/*expect*/ { 0,1,3				   },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

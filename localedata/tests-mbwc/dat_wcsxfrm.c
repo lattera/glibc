@@ -37,7 +37,7 @@ TST_WCSXFRM tst_wcsxfrm_loc [] = {
       { /*inp*/ { { 0x00DC,0x0000 }, { 0x00E4,0x0000 }, 7, 7 },	 /* #05 */
 	/*exp*/ {   0,	       0,0,		     },
       },
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -62,7 +62,7 @@ TST_WCSXFRM tst_wcsxfrm_loc [] = {
 	/*exp*/ {   EINVAL,	       1,(size_t)-1,	     },
       },
 #endif
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {
@@ -89,7 +89,7 @@ TST_WCSXFRM tst_wcsxfrm_loc [] = {
 	/*exp*/ {   EINVAL,	       1,(size_t)-1,	     },
       },
 #endif
-      { is_last: 1 }
+      { .is_last = 1 }
     }
   },
   {

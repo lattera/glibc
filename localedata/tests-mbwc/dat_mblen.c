@@ -68,7 +68,7 @@ TST_MBLEN tst_mblen_loc [] = {
       /* 06: a null pointer.  */
       {	 { 0, "",	   USE_MBCURMAX }, { 0,	0,  0 }	 },
       /* Last element.	*/
-      {	 is_last: 1 }
+      {	 .is_last = 1 }
     }
   },
   {
@@ -87,7 +87,7 @@ TST_MBLEN tst_mblen_loc [] = {
       /* 06: a null pointer.  */	     
       {	 { 0, "",	   USE_MBCURMAX }, { 0,	0,  0 }	 },
       /* Last element.	*/
-      {	 is_last: 1 }
+      {	 .is_last = 1 }
     }
   },
   {
@@ -106,7 +106,7 @@ TST_MBLEN tst_mblen_loc [] = {
       /* 06: a null pointer.  */	     
       {	 { 0, "",	   USE_MBCURMAX }, { 0,	0,  0 }	 },
       /* Last element.	*/
-      {	 is_last: 1 }
+      {	 .is_last = 1 }
     }
   },
   {

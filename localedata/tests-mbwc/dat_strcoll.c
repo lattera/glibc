@@ -54,7 +54,7 @@ TST_STRCOLL tst_strcoll_loc [] = {
       { /*input.*/ { "B",	"ä"		      },  /* #9 */
 	/*expect*/ { 0,0,+1,			      },
       },
-      { is_last: 1 } /* Last element.  */
+      { .is_last = 1 } /* Last element.  */
     }
   },
   {
@@ -109,7 +109,7 @@ TST_STRCOLL tst_strcoll_loc [] = {
 	/*expect*/ { EINVAL,0,0,		      },
       },
 #endif
-      { is_last: 1 } /* Last element.  */
+      { .is_last = 1 } /* Last element.  */
     }
   },
   {
@@ -153,7 +153,7 @@ TST_STRCOLL tst_strcoll_loc [] = {
 	/*expect*/ { EINVAL,0,0,		      },
       },
 #endif
-      { is_last: 1 } /* Last element.  */
+      { .is_last = 1 } /* Last element.  */
     }
   },
   {
