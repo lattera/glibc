@@ -1,5 +1,9 @@
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_SPIN_LOCKS):
+	Defined.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+
 	* sysdeps/pthread/pthread.h: Add prototypes for pthread_spin_init,
 	pthread_spin_destroy, pthread_spin_lock, pthread_spin_trylock,
 	and pthread_spin_unlock.

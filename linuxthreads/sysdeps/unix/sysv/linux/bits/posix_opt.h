@@ -122,4 +122,7 @@
 /* We support the Timeouts option.  */
 #define _POSIX_TIMEOUTS	200912L
 
+/* We support spinlocks.  */
+#define _POSIX_SPIN_LOCKS	200912L
+
 #endif /* posix_opt.h */
