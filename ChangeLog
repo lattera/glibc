@@ -1,3 +1,7 @@
+2005-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/circleload1.c (main): Pretty printing.
+
 2005-03-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/wordexp.c (exec_comm_child): Add inline keyword.
