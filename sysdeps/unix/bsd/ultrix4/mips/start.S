@@ -18,13 +18,6 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#ifndef HAVE_WEAK_SYMBOLS
-#define __environ environ
-#else
-weak_alias (__environ, environ)
-#endif
-
-.comm __environ,	4
 .comm errno,		4
 
 ENTRY(__start)
