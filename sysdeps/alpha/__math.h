@@ -18,11 +18,17 @@ Cambridge, MA 02139, USA.  */
 
 #if defined (__GNUC__) && !defined (__NO_MATH_INLINES)
 
-extern __inline
+extern __inline double
 __copysign (double __x, double __y)
 {
   __asm ("cpys %1, %2, %0" : "=f" (__x) : "f" (__y), "f" (__x));
   return __x;
+}
+
+extern __inline double
+fabs (double __x)
+{
+  return __copysign (0, __x);
 }
 
 #endif
