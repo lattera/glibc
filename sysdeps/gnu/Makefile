@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.
+# Copyright (C) 1996,97,98,99,2001,02 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,26 @@ $(..)sysdeps/gnu/errlist.c: $(..)sysdeps/gnu/errlist.awk \
 	mv -f $@-tmp $@
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
+endif
+
+vpath errlist.c $(full_config_sysdirs)
+$(..)sysdeps/gnu/errlist-compat.c: errlist.c \
+				   $(..)sysdeps/gnu/errlist-compat.awk \
+				   $(..)sysdeps/gnu/Versions
+	$(AWK) -v maxerr=`\
+	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DNOT_IN_libc -DEMIT_ERR_MAX $< -o - \
+	  | sed -n 's/^.*@@@[^0-9]*\([0-9]*\)[^0-9]*@@@.*$$/\1/p'` \
+	       -f $(filter-out $<,$^) > $@T
+# Make it unwritable so noone will edit it by mistake.
+	-chmod a-w $@T
+	mv -f $@T $@
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs commit -m'Regenerated from $^' $@
+endif
+
+ifeq ($(subdir),stdio-common)
+# This will force the generation above to happy if need be.
+$(objpfx)errlist.d: $(..)sysdeps/gnu/errlist-compat.c
 endif
 
 ifeq ($(subdir),login)

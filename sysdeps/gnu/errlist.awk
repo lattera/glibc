@@ -42,22 +42,16 @@ BEGIN {
     print "#include <errno.h>";
     print "#include <libintl.h>";
     print "";
-    print "#ifndef SYS_ERRLIST";
-    print "# define SYS_ERRLIST _sys_errlist";
-    print "# define SYS_ERRLIST_ALIAS sys_errlist";
-    print "#endif";
-    print "#ifndef SYS_NERR";
-    print "# define SYS_NERR _sys_nerr";
-    print "# define SYS_NERR_ALIAS sys_nerr";
-    print "#endif";
     print "#ifndef ERR_REMAP";
     print "# define ERR_REMAP(n) n";
     print "#endif";
     print "";
-    print "const char *const SYS_ERRLIST[] =";
+
+    print "const char *const _sys_errlist_internal[] =";
     print "  {";
     print "    [0] = N_(\"Success\"),"
   }
+
 $1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
 errnoh == 1 && $1 == "@comment" \
   {
@@ -86,6 +80,10 @@ errnoh == 4 && $1 == "@end" && $2 == "deftypevr" \
   {
     printf "/*%s */\n", desc;
     printf "    [ERR_REMAP (%s)] = N_(\"%s\"),\n", e, etext;
+    printf "# if %s > ERR_MAX\n", e;
+    print  "# undef ERR_MAX";
+    printf "# define ERR_MAX %s\n", e;
+    print  "# endif";
     print "#endif";
     errnoh = 0;
     next;
@@ -99,13 +97,15 @@ errnoh == 4 \
 END {
   print "  };";
   print "";
-  print "const int SYS_NERR = sizeof SYS_ERRLIST / sizeof SYS_ERRLIST [0];";
-  print "#ifdef SYS_ERRLIST_ALIAS";
-  print "weak_alias (_sys_errlist, SYS_ERRLIST_ALIAS)";
+  print "const int _sys_nerr_internal";
+  print "  = sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0];";
+  print "";
+  print "#if !defined NOT_IN_libc && !ERRLIST_NO_COMPAT";
+  print "# include \"errlist-compat.c\"";
   print "#endif";
-  print "#ifdef SYS_NERR_ALIAS";
-  print "weak_alias (_sys_nerr, SYS_NERR_ALIAS)";
+  print "";
+  print "#ifdef EMIT_ERR_MAX";
+  print "void dummy (void)"
+  print "{ asm volatile (\" @@@ %0 @@@ \" : : \"i\" (ERR_REMAP (ERR_MAX))); }"
   print "#endif";
-  print "INTVARDEF2(SYS_ERRLIST, _sys_errlist)";
-  print "INTVARDEF2(SYS_NERR, _sys_nerr)";
-  }
+}
