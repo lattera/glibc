@@ -1,3 +1,12 @@
+2001-02-11  Andreas Jaeger  <aj@suse.de>
+
+	* manual/resource.texi (Memory Resources): Fix typo.
+
+	* libio/Makefile ($(objpfx)test-freopen.out): Pass
+	run-program-prefix.
+
+	* libio/test-freopen.sh: Use run_program_prefix.
+
 2001-02-10  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/Makefile (tests): Don't run tst-fmtmsg when
