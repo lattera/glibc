@@ -29,7 +29,8 @@ extern int __sigaction_syscall (int,
 static void
 trampoline (int sig, int code, struct sigcontext *context)
 {
-  (*user_handlers[sig]) (sig, code, context);
+  (*(void (*) (int, int, struct sigcontext *)) user_handlers[sig])
+    (sig, code, context);
   __context_syscall (1, context);
 }
 
