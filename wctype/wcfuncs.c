@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,8 @@
 #include "wchar-lookup.h"
 
 /* These are not exported.  */
-extern const char *__ctype32_wctype[12];
-extern const char *__ctype32_wctrans[2];
+extern const char *__ctype32_wctype[12] attribute_hidden;
+extern const char *__ctype32_wctrans[2] attribute_hidden;
 
 /* Provide real-function versions of all the wctype macros.  */
 

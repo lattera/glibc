@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ const __int32_t *__ctype_tolower = b (__int32_t, tolower, 128);
 const __int32_t *__ctype_toupper = b (__int32_t, toupper, 128);
 const __uint32_t *__ctype32_tolower = b (__uint32_t, tolower, 128);
 const __uint32_t *__ctype32_toupper = b (__uint32_t, toupper, 128);
-const char *__ctype32_wctype[12] =
+const char *__ctype32_wctype[12] attribute_hidden =
 {
   b(char, class_upper, 32),
   b(char, class_lower, 32),
@@ -63,9 +63,9 @@ const char *__ctype32_wctype[12] =
   b(char, class_punct, 32),
   b(char, class_alnum, 32)
 };
-const char *__ctype32_wctrans[2] =
+const char *__ctype32_wctrans[2] attribute_hidden =
 {
   b(char, map_toupper, 0),
   b(char, map_tolower, 0)
 };
-const char *__ctype32_width = b (char, width, 0);
+const char *__ctype32_width attribute_hidden = b (char, width, 0);

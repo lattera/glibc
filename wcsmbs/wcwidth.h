@@ -1,5 +1,5 @@
 /* Internal header containing implementation of wcwidth() function.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -23,7 +23,7 @@
 #include "../wctype/wchar-lookup.h"
 
 /* Table containing width information.  */
-extern const char *__ctype32_width;
+extern const char *__ctype32_width attribute_hidden;
 
 static __inline int
 internal_wcwidth (wchar_t wc)
