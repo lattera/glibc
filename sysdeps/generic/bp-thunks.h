@@ -31,12 +31,19 @@
 #include <libc-symbols.h>
 #include <bp-sym.h>
 #include <bp-checks.h>
+
+/* Get `struct timeval' definition for select.  */
+#define __need_timeval
+#include <bits/time.h>
+
 #include <stddef.h>
 #include <unistd.h>
 #include <sched.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <time.h>
 #include <utime.h>
+
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/klog.h>

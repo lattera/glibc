@@ -55,40 +55,40 @@ ptrace (enum __ptrace_request request, ...)
     case PTRACE_POKETEXT:
     case PTRACE_POKEDATA:
     case PTRACE_POKEUSER:
-      CHECK_1 ((int *) addr);
-      CHECK_1 ((int *) data);
+      (void) CHECK_1 ((int *) addr);
+      (void) CHECK_1 ((int *) data);
       break;
 
     case PTRACE_GETREGS:
     case PTRACE_SETREGS:
 #ifdef __i386__
-      CHECK_1 ((struct user_regs_struct *) data);
+      (void) CHECK_1 ((struct user_regs_struct *) data);
 #else
       /* We don't know the size of data, so the best we can do is ensure
 	 that `data' is valid for at least one word.  */
-      CHECK_1 ((int *) data);
+      (void) CHECK_1 ((int *) data);
 #endif
       break;
 
     case PTRACE_GETFPREGS:
     case PTRACE_SETFPREGS:
 #ifdef __i386__
-      CHECK_1 ((struct user_fpregs_struct *) data);
+      (void) CHECK_1 ((struct user_fpregs_struct *) data);
 #else
       /* We don't know the size of data, so the best we can do is ensure
 	 that `data' is valid for at least one word.  */
-      CHECK_1 ((int *) data);
+      (void) CHECK_1 ((int *) data);
 #endif
       break;
 
     case PTRACE_GETFPXREGS:
     case PTRACE_SETFPXREGS:
 #ifdef __i386__
-      CHECK_1 ((struct user_fpxregs_struct *) data);
+      (void) CHECK_1 ((struct user_fpxregs_struct *) data);
 #else
       /* We don't know the size of data, so the best we can do is ensure
 	 that `data' is valid for at least one word.  */
-      CHECK_1 ((int *) data);
+      (void) CHECK_1 ((int *) data);
 #endif
       break;
     };

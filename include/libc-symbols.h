@@ -81,7 +81,8 @@
    possible, instead of embedded assembly language.  */
 
 /* Define ALIASNAME as a strong alias for NAME.  */
-# define strong_alias(name, aliasname) \
+# define strong_alias(name, aliasname) _strong_alias(name, aliasname)
+# define _strong_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 
 /* This comes between the return type and function name in
@@ -93,7 +94,8 @@
 
 /* Define ALIASNAME as a weak alias for NAME.
    If weak aliases are not available, this defines a strong alias.  */
-#  define weak_alias(name, aliasname) \
+#  define weak_alias(name, aliasname) _weak_alias (name, aliasname)
+#  define _weak_alias(name, aliasname) \
   extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */

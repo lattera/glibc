@@ -1,3 +1,18 @@
+2000-07-11  Greg McGary  <greg@mcgary.org>
+
+	* include/libc-symbols.h [!__ASSEMBLER__] (strong_alias):
+	Add extra level of macro expansion.
+	[!__ASSEMBLER__ && HAVE_WEAK_SYMBOLS] (weak_alias): nLikewise.
+	* sysdeps/generic/bp-thunks.h: Ensure `struct timeval' definition
+	is available at the time `select' prototype is declared.
+	* sysdeps/unix/make-syscalls.sh: Remove unused variables.
+	Collect non-versioned weak aliases.  Consider only non-versioned
+	aliases for the user-visible systemcall name.  Do checks inline with
+	call to primitive system call.
+	* sysdeps/unix/sysv/linux/ptrace.c (ptrace): Add void cast to
+	stand-alone bounds checks to suppress unused value warnings.
+	* sysdeps/unix/sysv/linux/sysctl.c (__sysctl): Likewise.
+
 2000-07-10  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/check_fds.c: New file.  Implements

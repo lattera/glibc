@@ -40,9 +40,9 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
     newval: newval,
     newlen: newlen
   };
-  CHECK_N (name, nlen);
-  CHECK_N (oldval, *oldlenp);
-  CHECK_N (newval, newlen);
+  (void) CHECK_N (name, nlen);
+  (void) CHECK_N (oldval, *oldlenp);
+  (void) CHECK_N (newval, newlen);
 
   return INLINE_SYSCALL (_sysctl, 1, __ptrvalue (&args));
 }

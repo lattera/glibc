@@ -23,14 +23,8 @@
 ptrlet='[abBfNpPs]'
 argdig='[1-9]'
 fixarg='[^vV]'$argdig	# fixed args (declare extern)
-strarg=s$argdig		# string arg (check with CHECK_STRING)
-twoarg=f$argdig		# fd pair arg (check with CHECK_N (..., 2)
-objarg=p$argdig		# object arg (check with CHECK_1)
 ptrarg=$ptrlet$argdig	# pointer arg (toss bounds)
-rtnarg='P'$argdig	# pointer return value (add bounds)
-bufarg='[bB]'$argdig	# buffer arg (check with CHECK_N)
 intarg='[inv]'$argdig	# scalar arg
-borarg='[iv]'$argdig	# boring arg (just pass it through)
 
 ##############################################################################
 
@@ -193,8 +187,14 @@ shared-only-routines += $file
   x-,-,* | x*,*.[sS],*V*) ;;
   x*,-,*$ptrlet* | x*,*.[sS],*$ptrlet*)
 
+    nv_weak=`for name in $weak; do
+		case $name in
+		*@*) ;;
+		*) echo $name;;
+	        esac; done`
+
     # choose the name with the fewest leading underscores, preferably none
-    set `echo $strong $weak |tr ' \t' '\n' |sort -r`
+    set `echo $strong $nv_weak |tr '@ \t' ' \n\n' |sort -r`
     callname=$1
 
     # convert signature string to individual numbered arg names
@@ -237,31 +237,22 @@ shared-only-routines += $file
 			-e 's/\('$ptrarg'\)/__typeof (\1v) *__unbounded/g' \
 			-e 's/\('$intarg'\)/__typeof (\1v)/g'`); \\'; \\"
 
-    # generate thunk bounds checks
-    for arg; do
-      next=$2; shift
-      case $arg in
-      B$argdig) echo "	 echo '  __ptrvalue (${arg}a) && \\'; \\" ;;
-      esac
-      case $arg in
-      n$argdig) len=$arg ;; ### save for possible use with return value.
-      $strarg) echo "	 echo '  CHECK_STRING (${arg}a); \\'; \\" ;;
-      $objarg) echo "	 echo '  CHECK_1 (${arg}a); \\'; \\" ;;
-      $twoarg) echo "	 echo '  CHECK_N (${arg}a, 2); \\'; \\" ;;
-      $bufarg)
-	case $next in
-	n$argdig) echo "	 echo '  CHECK_N (${arg}a, ${next}a); \\'; \\" ;;
-	N$argdig) echo "	 echo '  CHECK_N (${arg}a, *CHECK_1 (${next}a)); \\'; \\" ;;
-	*) echo "### BP Thunk Error: Expected length after buffer ###" ;;
-	esac ;;
-      esac
-    done
+    # stash length arg for use with mman calls that return pointers
+    len=`echo $args |sed -e 's/.*\('n$argdig'\).*/\1/'`
 
     # generate thunk epilogue
     funcall="($callname) (`echo $args | \
-		    sed -e 's/ /, /g' \
-			-e 's/\('$ptrarg'\)/__ptrvalue (\1a)/g' \
-			-e 's/\('$intarg'\)/\1a/g'`)"
+	    sed -e 's/ /, /g' \
+		-e 's/\('a$argdig'\)/__ptrvalue (\1a)/g' \
+		-e 's/\('s$argdig'\)/CHECK_STRING (\1a)/g' \
+		-e 's/\('p$argdig'\)/CHECK_1 (\1a)/g' \
+		-e 's/\('f$argdig'\)/CHECK_N (\1a, 2)/g' \
+		-e 's/\('b$argdig'\), \('n$argdig'\)/CHECK_N (\1a, \2), \2/g' \
+		-e 's/\('b$argdig'\), \('N$argdig'\)/CHECK_N (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
+		-e 's/\('B$argdig'\), \('n$argdig'\)/CHECK_Nopt (\1a, \2), \2/g' \
+		-e 's/\('B$argdig'\), \('N$argdig'\)/CHECK_Nopt (\1a, *CHECK_1 (\2a)), __ptrvalue (\2a)/g' \
+		-e 's/\('[ivn]$argdig'\)/\1a/g'`)"
+
     case $rtn in
     P*) echo "	 echo '{ __typeof ($rtn) *__bounded rtn; \\'; \\
 	 echo '  __ptrlow (rtn) = __ptrvalue (rtn) = $funcall; \\'; \\
@@ -271,12 +262,10 @@ shared-only-routines += $file
     echo "	 echo '} \\'; \\"
 
     # generate thunk aliases
-    for name in $weak; do
-      case $name in
-	*@*) ;;
-	*) echo "	 echo 'weak_alias (BP_SYM ($strong), BP_SYM ($name)) \\'; \\" ;;
-      esac
+    for name in $nv_weak; do
+      echo "	 echo 'weak_alias (BP_SYM ($strong), BP_SYM ($name)) \\'; \\"
     done
+
     # wrap up
     echo "\
 	 echo ''; \\
