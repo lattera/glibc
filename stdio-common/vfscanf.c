@@ -76,6 +76,8 @@
 #  define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
 				     _IO_sputbackwc (s, c))))
+#  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
+					 _IO_sputbackwc (s, c)))
 #  define inchar()	(c == WEOF ? WEOF				      \
 			 : ((c = _IO_getwc_unlocked (s)),		      \
 			    (void) (c != WEOF && ++read_in), c))
@@ -102,9 +104,11 @@
 #  undef EOF
 #  define EOF		  WEOF
 # else
-#  define ungetc(c, s)	((void) ((int) (signed char) c == EOF		      \
+#  define ungetc(c, s)	((void) ((int) c == EOF				      \
 				 || (--read_in,				      \
 				     _IO_sputbackc (s, (unsigned char) c))))
+#  define ungetc_not_eof(c, s)	((void) (--read_in,			      \
+					 _IO_sputbackc (s, (unsigned char) c)))
 #  define inchar()	(c == EOF ? EOF					      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF && ++read_in), c))
@@ -170,6 +174,7 @@
   __libc_cleanup_region_end (0)
 #else
 # define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
+# define ungetc_not_eof(c, s)	(--read_in, (ungetc) (c, s))
 # define inchar()	(c == EOF ? EOF					      \
 			 : ((c = getc (s)), (void) (c != EOF && ++read_in), c))
 # define MEMCPY(d, s, n)  memcpy (d, s, n)
@@ -320,7 +325,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (wpsize == wpmax)						    \
 	{								    \
 	  CHAR_T *old = wp;						    \
-	  wpmax = UCHAR_MAX > 2 * wpmax ? UCHAR_MAX : 2 * wpmax;	    \
+	  wpmax = (UCHAR_MAX + 1 > 2 * wpmax ? UCHAR_MAX + 1 : 2 * wpmax);  \
 	  wp = (CHAR_T *) alloca (wpmax * sizeof (wchar_t));		    \
 	  if (old != NULL)						    \
 	    MEMCPY (wp, old, wpsize);					    \
@@ -403,7 +408,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 #endif
 
 #ifndef COMPILE_WSCANF
-      if (!isascii (*f))
+      if (!isascii ((unsigned char) *f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
 	  int len = __mbrlen (f, strlen (f), &state);
@@ -414,9 +419,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  c = inchar ();
 		  if (c == EOF)
 		    input_error ();
-		  else if (c != *f++)
+		  else if (c != (unsigned char) *f++)
 		    {
-		      ungetc (c, s);
+		      ungetc_not_eof (c, s);
 		      conv_error ();
 		    }
 		}
@@ -475,11 +480,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       wpsize = 0;
 
       /* Check for a positional parameter specification.  */
-      if (ISDIGIT (*f))
+      if (ISDIGIT ((UCHAR_T) *f))
 	{
-	  argpos = *f++ - L_('0');
-	  while (ISDIGIT (*f))
-	    argpos = argpos * 10 + (*f++ - L_('0'));
+	  argpos = (UCHAR_T) *f++ - L_('0');
+	  while (ISDIGIT ((UCHAR_T) *f))
+	    argpos = argpos * 10 + ((UCHAR_T) *f++ - L_('0'));
 	  if (*f == L_('$'))
 	    ++f;
 	  else
@@ -509,15 +514,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  }
 
       /* We have seen width. */
-      if (ISDIGIT (*f))
+      if (ISDIGIT ((UCHAR_T) *f))
 	flags |= WIDTH;
 
       /* Find the maximum field width.  */
       width = 0;
-      while (ISDIGIT (*f))
+      while (ISDIGIT ((UCHAR_T) *f))
 	{
 	  width *= 10;
-	  width += *f++ - L_('0');
+	  width += (UCHAR_T) *f++ - L_('0');
 	}
     got_width:
       if (width == 0)
@@ -617,7 +622,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    input_error ();
 	  if (c != fc)
 	    {
-	      ungetc (c, s);
+	      ungetc_not_eof (c, s);
 	      conv_error ();
 	    }
 	  break;
@@ -837,7 +842,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  if (ISSPACE (c))
 		    {
-		      ungetc (c, s);
+		      ungetc_not_eof (c, s);
 		      break;
 		    }
 
@@ -937,7 +942,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (!(flags & SUPPRESS))
 		{
 #ifdef COMPILE_WSCANF
-		  /* We have to emit the code to get into the intial
+		  /* We have to emit the code to get into the initial
 		     state.  */
 		  char buf[MB_LEN_MAX];
 		  size_t n = __wcrtomb (buf, L'\0', &state);
@@ -1002,7 +1007,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      {
 		if (ISSPACE (c))
 		  {
-		    ungetc (c, s);
+		    ungetc_not_eof (c, s);
 		    break;
 		  }
 
@@ -1263,7 +1268,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			mbdigits[n] = strchr (mbdigits[n], '\0') + 1;
 
 		      cmpp = mbdigits[n];
-		      while (*cmpp == c && avail > 0)
+		      while ((unsigned char) *cmpp == c && avail > 0)
 			{
 			  if (*++cmpp == '\0')
 			    break;
@@ -1288,8 +1293,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			{
 			  ungetc (c, s);
 			  while (--cmpp > mbdigits[n])
-			    ungetc (*cmpp, s);
-			  c = *cmpp;
+			    ungetc_not_eof ((unsigned char) *cmpp, s);
+			  c = (unsigned char) *cmpp;
 			}
 
 		      /* Advance the pointer to the next string.  */
@@ -1316,7 +1321,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			      int avail = width > 0 ? width : INT_MAX;
 
 			      cmpp = mbdigits[n];
-			      while (*cmpp == c && avail > 0)
+			      while ((unsigned char) *cmpp == c && avail > 0)
 				{
 				  if (*++cmpp == '\0')
 				    break;
@@ -1340,8 +1345,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 				{
 				  ungetc (c, s);
 				  while (--cmpp > mbdigits[n])
-				    ungetc (*cmpp, s);
-				  c = *cmpp;
+				    ungetc_not_eof ((unsigned char) *cmpp, s);
+				  c = (unsigned char) *cmpp;
 				}
 
 			      /* Advance the pointer to the next string.  */
@@ -1377,7 +1382,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      const char *cmpp = thousands;
 		      int avail = width > 0 ? width : INT_MAX;
 
-		      while (*cmpp == c && avail > 0)
+		      while ((unsigned char) *cmpp == c && avail > 0)
 			{
 			  ADDW (c);
 			  if (*++cmpp == '\0')
@@ -1398,8 +1403,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			      wpsize -= cmpp - thousands;
 			      ungetc (c, s);
 			      while (--cmpp > thousands)
-				ungetc (*cmpp, s);
-			      c = *cmpp;
+				ungetc_not_eof ((unsigned char) *cmpp, s);
+			      c = (unsigned char) *cmpp;
 			    }
 			  break;
 			}
@@ -1449,7 +1454,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			const char *cmpp = thousands;
 			int avail = width > 0 ? width : INT_MAX;
 
-			while (*cmpp == c && avail > 0)
+			while ((unsigned char) *cmpp == c && avail > 0)
 			  {
 			    ADDW (c);
 			    if (*++cmpp == '\0')
@@ -1470,8 +1475,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 				wpsize -= cmpp - thousands;
 				ungetc (c, s);
 				while (--cmpp > thousands)
-				  ungetc (*cmpp, s);
-				c = *cmpp;
+				  ungetc_not_eof ((unsigned char) *cmpp, s);
+				c = (unsigned char) *cmpp;
 			      }
 			    break;
 			  }
@@ -1611,7 +1616,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  const char *cmpp = decimal;
 		  int avail = width > 0 ? width : INT_MAX;
 
-		  while (*cmpp == c && avail > 0)
+		  while ((unsigned char) *cmpp == c && avail > 0)
 		    if (*++cmpp == '\0')
 		      break;
 		    else
@@ -1629,7 +1634,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  ungetc (c, s);
 			  if (cmpp == decimal)
 			    break;
-			  c = *--cmpp;
+			  c = (unsigned char) *--cmpp;
 			}
 
 		      conv_error ();
@@ -1779,7 +1784,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 		  if (! got_dot)
 		    {
-		      while (*cmpp == c && avail > 0)
+		      while ((unsigned char) *cmpp == c && avail > 0)
 			if (*++cmpp == '\0')
 			  break;
 			else
@@ -1794,7 +1799,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    {
 		      /* Add all the characters.  */
 		      for (cmpp = decimal; *cmpp != '\0'; ++cmpp)
-			ADDW (*cmpp);
+			ADDW ((unsigned char) *cmpp);
 		      if (width > 0)
 			width = avail;
 		      got_dot = 1;
@@ -1815,7 +1820,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			    ++cmp2p;
 			  if (cmp2p == cmpp)
 			    {
-			      while (*cmp2p == c && avail > 0)
+			      while ((unsigned char) *cmp2p == c && avail > 0)
 				if (*++cmp2p == '\0')
 				  break;
 				else
@@ -1831,7 +1836,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			{
 			  /* Add all the characters.  */
 			  for (cmpp = thousands; *cmpp != '\0'; ++cmpp)
-			    ADDW (*cmpp);
+			    ADDW ((unsigned char) *cmpp);
 			  if (width > 0)
 			    width = avail;
 			}
@@ -1924,12 +1929,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 #else
 	  /* Fill WP with byte flags indexed by character.
 	     We will use this flag map for matching input characters.  */
-	  if (wpmax < UCHAR_MAX)
+	  if (wpmax < UCHAR_MAX + 1)
 	    {
-	      wpmax = UCHAR_MAX;
+	      wpmax = UCHAR_MAX + 1;
 	      wp = (char *) alloca (wpmax);
 	    }
-	  memset (wp, '\0', UCHAR_MAX);
+	  memset (wp, '\0', UCHAR_MAX + 1);
 
 	  fc = *f;
 	  if (fc == ']' || fc == '-')
@@ -1947,7 +1952,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      {
 		/* Add all characters from the one before the '-'
 		   up to (but not including) the next format char.  */
-		for (fc = f[-2]; fc < *f; ++fc)
+		for (fc = (unsigned char) f[-2]; fc < (unsigned char) *f; ++fc)
 		  wp[fc] = 1;
 	      }
 	    else
@@ -2069,7 +2074,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 		  if (wp[c] == not_in)
 		    {
-		      ungetc (c, s);
+		      ungetc_not_eof (c, s);
 		      break;
 		    }
 
@@ -2270,7 +2275,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 		  if (wp[c] == not_in)
 		    {
-		      ungetc (c, s);
+		      ungetc_not_eof (c, s);
 		      break;
 		    }
 
@@ -2323,7 +2328,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (!(flags & SUPPRESS))
 		{
 #ifdef COMPILE_WSCANF
-		  /* We have to emit the code to get into the intial
+		  /* We have to emit the code to get into the initial
 		     state.  */
 		  char buf[MB_LEN_MAX];
 		  size_t n = __wcrtomb (buf, L'\0', &state);
