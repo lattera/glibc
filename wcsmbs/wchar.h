@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -320,6 +320,22 @@ __END_NAMESPACE_C99
 
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
+
+/* We can use the BTOWC and WCTOB optimizations since we know that all
+   locales must use ASCII encoding for the values in the ASCII range
+   and because the wchar_t encoding is always ISO 10646.  */
+extern wint_t __btowc_alias (int __c) __asm ("btowc");
+extern __inline wint_t
+__NTH (btowc (int __c))
+{ return (__builtin_constant_p (__c) && __c >= '\0' && __c <= '\x7f'
+	  ? (wint_t) __c : __btowc_alias (__c)); }
+
+extern int __wctob_alias (wint_t __c) __asm ("wctob");
+extern __inline int
+__NTH (wctob (wint_t __wc))
+{ return (__builtin_constant_p (__wc) && __wc >= L'\0' && __wc <= L'\x7f'
+	  ? (int) __wc : __wctob_alias (__wc)); }
+
 extern __inline size_t
 __NTH (mbrlen (__const char *__restrict __s, size_t __n,
 	       mbstate_t *__restrict __ps))

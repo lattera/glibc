@@ -1,3 +1,14 @@
+2005-03-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/fpu/libm_cpu_defs.h: Update copyright.
+
+2005-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/btowc.c (__btowc): Optimize parameters in ASCII range.
+	* wcsmbs/wctob.c (wctob): Likewise.
+	* wcsmbs/wchar.h (btowc): Add optimized inline function.
+	(wctob): Likewise.
+
 2005-03-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Use functionally

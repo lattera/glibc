@@ -40,6 +40,11 @@ wctob (c)
   if (c == WEOF)
     return EOF;
 
+  /* We know that only ASCII compatible encodings are used for the
+     locale and that the wide character encoding is ISO 10646.  */
+  if (c >= L'\0' && c <= L'\x7f')
+    return (int) c;
+
   /* Tell where we want the result.  */
   data.__outbuf = buf;
   data.__outbufend = buf + MB_LEN_MAX;
@@ -69,5 +74,5 @@ wctob (c)
       || data.__outbuf != (unsigned char *) (buf + 1))
     return EOF;
 
-  return (unsigned char) buf[0];
+  return buf[0];
 }

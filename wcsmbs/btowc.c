@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2000,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <ctype.h>
 #include <dlfcn.h>
 #include <gconv.h>
 #include <stdio.h>
@@ -36,6 +37,11 @@ __btowc (c)
      we can give the answer now.  */
   if (c < SCHAR_MIN || c > UCHAR_MAX || c == EOF)
     return WEOF;
+
+  /* We know that only ASCII compatible encodings are used for the
+     locale and that the wide character encoding is ISO 10646.  */
+  if (isascii (c))
+    return (wint_t) c;
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
