@@ -1,3 +1,13 @@
+1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.105.
+
+	* sysdeps/generic/Dist: Add bits/libc-tsd.h.
+
+	* sysdeps/mach/hurd/Dist: Add bits/libc-tsd.h.
+
+	* sysdeps/unix/sysv/linux/mips/Dist: Add xstatconv.c.
+
 1998-11-29 1998  H.J. Lu  <hjl@gnu.org>
 
 	* libio/genops.c (_IO_unbuffer_write): Renamed from

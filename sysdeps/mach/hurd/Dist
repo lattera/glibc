@@ -4,6 +4,7 @@ err_hurd.sub
 libc-ldscript
 libc_p-ldscript
 cthreads.c
+bits/libc-tsd.h
 net/ethernet.h
 net/if.h
 net/if_arp.h
