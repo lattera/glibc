@@ -56,7 +56,7 @@ lr_open (const char *fname, kw_hash_fct_t hf)
     return lr_create (stdin, "<stdin>", hf);
   else
     {
-      fp = fopen (fname, "r");
+      fp = fopen (fname, "rm");
       if (fp == NULL)
 	return NULL;
       return lr_create (fp, fname, hf);

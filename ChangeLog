@@ -1,3 +1,10 @@
+2002-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locale.c (write_locales): Use 'm' flag in fopen call.
+	* locale/programs/linereader.c (lr_open): Likewise.
+	* locale/programs/charmap-dir.c (charmap_open): Likewise.
+	* locale/programs/locarchive.c (add_locale_to_archive): Likewise.
+
 2002-10-17  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/bug-regex11.c: Add a test case for the bug reported by

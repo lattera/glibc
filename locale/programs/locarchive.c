@@ -971,7 +971,7 @@ add_locale_to_archive (ah, name, data, replace)
   if (alias_file != NULL)
     {
       FILE *fp;
-      fp = fopen (alias_file, "r");
+      fp = fopen (alias_file, "rm");
       if (fp == NULL)
 	error (1, errno, _("locale alias file `%s' not found"),
 	       alias_file);

@@ -224,7 +224,7 @@ charmap_open (const char *directory, const char *name)
     *p++ = '/';
   p = stpcpy (p, name);
 
-  stream = fopen (pathname, "r");
+  stream = fopen (pathname, "rm");
   if (stream != NULL)
     return stream;
 

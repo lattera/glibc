@@ -495,7 +495,7 @@ write_locales (void)
       char full_name[strlen (entry) + sizeof aliasfile];
 
       stpcpy (stpcpy (full_name, entry), aliasfile);
-      fp = fopen (full_name, "r");
+      fp = fopen (full_name, "rm");
       if (fp == NULL)
 	/* Ignore non-existing files.  */
 	continue;
