@@ -1,3 +1,10 @@
+2005-03-28  Roland McGrath  <roland@redhat.com>
+
+	* locale/langinfo.h (_NL_LOCALE_NAME): New macro.
+	[__USE_GNU] (NL_LOCALE_NAME): New macro.
+	* locale/nl_langinfo.c: Grok special item value for _NL_LOCALE_NAME,
+	return locale name string for the category.
+
 2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/mips/atomicity.h: Remove unused file.
