@@ -575,16 +575,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
 #endif
 
-      if (inet_pton (AF_INET, name, at->addr) > 0)
+      if (__inet_aton (name, (struct in_addr *) at->addr) != 0)
 	{
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    at->family = AF_INET;
-	  else if (req->ai_flags & AI_V4MAPPED)
+	  else if (req->ai_family == AF_INET6 && req->ai_flags & AI_V4MAPPED)
 	    {
 	      ((uint32_t *) at->addr)[3] = *(uint32_t *) at->addr;
 	      ((uint32_t *) at->addr)[2] = htonl (0xffff);
 	      ((uint32_t *) at->addr)[1] = 0;
 	      ((uint32_t *) at->addr)[0] = 0;
+	      at->family = AF_INET6;
 	    }
 	  else
 	    return -EAI_ADDRFAMILY;
@@ -1323,7 +1324,7 @@ getaddrinfo (const char *name, const char *service,
 	  |AI_IDN|AI_CANONIDN|AI_IDN_ALLOW_UNASSIGNED
 	  |AI_IDN_USE_STD3_ASCII_RULES
 #endif
-	  |AI_ALL))
+	  |AI_NUMERICSERV|AI_ALL))
     return EAI_BADFLAGS;
 
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
@@ -1339,7 +1340,7 @@ getaddrinfo (const char *name, const char *service,
       __check_pf (&seen_ipv4, &seen_ipv6);
 
       /* Now make a decision on what we return, if anything.  */
-      if (hints->ai_family == PF_UNSPEC)
+      if (hints->ai_family == PF_UNSPEC && (seen_ipv4 || seen_ipv6))
 	{
 	  /* If we haven't seen both IPv4 and IPv6 interfaces we can
 	     narrow down the search.  */
@@ -1361,8 +1362,13 @@ getaddrinfo (const char *name, const char *service,
       char *c;
       gaih_service.name = service;
       gaih_service.num = strtoul (gaih_service.name, &c, 10);
-      if (*c)
-	gaih_service.num = -1;
+      if (*c != '\0')
+	{
+	  if (hints->ai_flags & AI_NUMERICSERV)
+	    return EAI_NONAME;
+
+	  gaih_service.num = -1;
+	}
       else
 	/* Can't specify a numerical socket unless a protocol family was
 	   given. */
@@ -1466,8 +1472,6 @@ getaddrinfo (const char *name, const char *service,
 
   if (pai == NULL && last_i == 0)
     return 0;
-
-  freeaddrinfo (p);
 
   return last_i ? -(last_i & GAIH_EAI) : EAI_NONAME;
 }

@@ -1,3 +1,43 @@
+2004-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Recognize all the IPv4
+	numeric address formats inet_addr knows.
+	(getaddrinfo): Allow AI_NUMERICSERV flag.
+	If neither IPv4 nor IPv6 inerface is present we cannot make any
+	decision for AI_ADDRCONFIG.  Fail if AI_NUMERICSERV is set and the
+	string is not just a number.  Remove useless freeaddrinfo call.
+	* resolv/netdb.h (AI_NUMERICSERV): Define.
+	Based on a patch by a.guru@sympatico.ca.
+
+2004-08-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strfmon_l.c (__vstrfmon_l): Memset whole info structure
+	instead of trying to initialize some, but not all, fields one by
+	one.
+	* stdio-common/printf_size.c (printf_size): Initialize fb_info
+	structure with *info instead of trying to initialize some, but not
+	all, fields from it.
+
+	* nscd/connections.c (handle_request): Check if req->type is in
+	LASTDBREQ .. LASTREQ range instead of req.
+
+	* locale/programs/linereader.c (lr_create): Initialize
+	lr->return_widestr to 0.
+
+	* elf/dl-close.c (free_slotinfo): Add __libc_freeres_fn_section.
+	(free_mem): Call free_slotinfo just once.
+
+	* stdio-common/tst-fmemopen.c (main): Check for MAP_FAILED instead
+	of NULL.
+
+	* locale/localeinfo.h (_nl_locale_subfreeres): New prototype.
+	* locale/setlocale.c (free_category): Add __libc_freeres_fn_section.
+	(free_mem): Rename to _nl_locale_subfreeres.
+	* iconv/gconv_db.c: Include locale/localeinfo.h.
+	(free_derivation, free_modules_db): Add __libc_freeres_fn_section.
+	(free_mem): Call _nl_locale_subfreeres.
+	* iconv/gconv_dl.c (do_release_all): Add __libc_freeres_fn_section.
+
 2004-08-04  Roland McGrath  <roland@frob.com>
 
 	* Makeconfig ($(common-objpfx)config.status):
