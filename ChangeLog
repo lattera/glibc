@@ -1,3 +1,22 @@
+Fri Dec 22 00:57:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/setuid.c: Rewrote ID frobnication to do the
+	right thing.
+	* sysdeps/mach/hurd/setgid.c: Likewise.
+	* sysdeps/mach/hurd/setreuid.c: Likewise.
+	* sysdeps/mach/hurd/setregid.c: Likewise.
+	* sysdeps/mach/hurd/setegid.c: Likewise.
+	* sysdeps/mach/hurd/seteuid.c: Likewise.
+
+	* sysdeps/mach/hurd/fork.c: Peek __mach_task_self_ value before
+	proc_dostop call to work around kernel paging bug.
+
+Thu Dec 21 12:19:32 1995  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/setuid.c (__setuid): Actually add the new uid
+ 	instead of putting it (and other uids) in the gids and leaving the
+ 	old uids as is.
+
 Wed Dec 20 18:23:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdio/internals.c (flushbuf): If the target is -1, always

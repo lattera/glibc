@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,17 +40,18 @@ DEFUN(setegid, (gid), gid_t gid)
       /* Make a new auth handle which has EGID as the first element in the
          list of effective gids.  */
 
-      size_t ngen = _hurd_id.gen.ngids < 1 ? 1 : _hurd_id.gen.ngids;
-      gid_t newgen[ngen];
-
-      newgen[0] = gid;
-      memcpy (&newgen[1], _hurd_id.gen.gids, (ngen - 1) * sizeof (gid_t));
+      if (_hurd_id.gen.ngids > 0)
+	{
+	  _hurd_id.gen.gids[0] = gid;
+	  _hurd_id.valid = 0;
+	}
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 			_hurd_id.gen.uids, _hurd_id.gen.nuids,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
-			newgen, ngen,
+			_hurd_id.gen.ngids ? _hurd_id.gen.gids : &gid,
+			_hurd_id.gen.ngids ?: 1,
 			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			&newauth));
     }

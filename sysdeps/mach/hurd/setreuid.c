@@ -39,19 +39,45 @@ __setreuid (uid_t ruid, uid_t euid)
       /* Make a new auth handle which has RUID as the real uid,
 	 and EUID as the first element in the list of effective uids.  */
 
-      size_t ngen = _hurd_id.gen.nuids < 1 ? 1 : _hurd_id.gen.nuids;
-      size_t naux = _hurd_id.aux.nuids < 1 ? 1 : _hurd_id.aux.nuids;
-      uid_t newaux[naux], newgen[ngen];
+      uid_t *newgen, *newaux;
+      size_t ngen, naux;
 
-      newgen[0] = euid;
-      memcpy (&newgen[1], _hurd_id.gen.uids, (ngen - 1) * sizeof (uid_t));
-      newaux[0] = ruid;
-      memcpy (&newaux[1], _hurd_id.aux.uids, (naux - 1) * sizeof (uid_t));
+      newgen = _hurd_id.gen.uids;
+      ngen = _hurd_id.gen.nuids;
+      if (euid != -1)
+	{
+	  if (_hurd_id.gen.nuids == 0)
+	    {
+	      /* No effective uids now.  The new set will be just UID.  */
+	      newgen = &euid;
+	      ngen = 1;
+	    }
+	  else
+	    {
+	      _hurd_id.gen.uids[0] = euid;
+	      _hurd_id.valid = 0;
+	    }
+	}
+
+      newaux = _hurd_id.aux.uids;
+      naux = _hurd_id.aux.nuids;
+      if (ruid != -1)
+	{
+	  if (_hurd_id.aux.nuids == 0)
+	    {
+	      newaux = &ruid;
+	      naux = 1;
+	    }
+	  else
+	    {
+	      _hurd_id.aux.uids[0] = ruid;
+	      _hurd_id.valid = 0;
+	    }
+	}
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			newgen, ngen,
-			newaux, naux,
+			newgen, ngen, newaux, naux,
 			_hurd_id.gen.gids, _hurd_id.gen.ngids,
 			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			&newauth));

@@ -43,22 +43,45 @@ DEFUN(__setgid, (gid), gid_t gid)
       /* Make a new auth handle which has GID as the real gid,
 	 and as the first element in the list of effective gids.  */
 
-      gid_t newgen[_hurd_id.gen.ngids + 1];
-      gid_t newaux[_hurd_id.aux.ngids];
-      
-      newgen[0] = gid;
-      memcpy (&newgen[1], _hurd_id.gen.gids,
-	      _hurd_id.gen.ngids * sizeof (gid_t));
-      newaux[0] = gid;
-      memcpy (&newaux[1], _hurd_id.aux.gids,
-	      (_hurd_id.aux.ngids - 1) * sizeof (gid_t));
+      gid_t *newgen, *newaux, auxbuf[2];
+      size_t ngen, naux;
+
+      newaux = _hurd_id.aux.gids;
+      naux = _hurd_id.aux.ngids;
+      if (_hurd_id.gen.ngids == 0)
+	{
+	  /* No effective gids now.  The new set will be just GID.  */
+	  newgen = &gid;
+	  ngen = 1;
+	}
+      else if (_hurd_id.gen.gids[0] == 0)
+	{
+	  /* We are root; set the effective, real, and saved to GID.  */
+	  _hurd_id.gen.gids[0] = gid;
+	  _hurd_id.valid = 0;
+	  newgen = _hurd_id.gen.gids;
+	  ngen = _hurd_id.gen.ngids;
+	  if (_hurd_id.aux.ngids < 2)
+	    {
+	      newaux = auxbuf;
+	      naux = 2;
+	    }
+	  _hurd_id.aux.gids[0] = _hurd_id.aux.gids[1] = gid;
+	}
+      else
+	{
+	  /* We are not root; just change the effective GID.  */
+	  _hurd_id.gen.gids[0] = gid;
+	  _hurd_id.valid = 0;
+	  newgen = _hurd_id.gen.gids;
+	  ngen = _hurd_id.gen.ngids;
+	}
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			_hurd_id.gen.uids, _hurd_id.gen.nuids,
-			_hurd_id.aux.uids, _hurd_id.aux.nuids,
-			newgen, 1 + _hurd_id.gen.ngids,
-			newaux, _hurd_id.aux.ngids,
+			newgen, ngen, newaux, naux,
+			_hurd_id.gen.gids, _hurd_id.gen.ngids,
+			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			&newauth));
     }
   __mutex_unlock (&_hurd_id.lock);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,15 +40,16 @@ DEFUN(seteuid, (uid), uid_t uid)
       /* Make a new auth handle which has EUID as the first element in the
          list of effective uids.  */
 
-      size_t ngen = _hurd_id.gen.nuids < 1 ? 1 : _hurd_id.gen.nuids;
-      uid_t newgen[ngen];
-
-      newgen[0] = uid;
-      memcpy (&newgen[1], _hurd_id.gen.uids, (ngen - 1) * sizeof (uid_t));
+      if (_hurd_id.gen.nuids > 0)
+	{
+	  _hurd_id.gen.uids[0] = uid;
+	  _hurd_id.valid = 0;
+	}
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			newgen, ngen,
+			_hurd_id.gen.nuids ? _hurd_id.gen.uids : &uid,
+			_hurd_id.gen.nuids ?: 1,
 			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			_hurd_id.gen.gids, _hurd_id.gen.ngids,
 			_hurd_id.aux.gids, _hurd_id.aux.ngids,

@@ -43,20 +43,43 @@ DEFUN(__setuid, (uid), uid_t uid)
       /* Make a new auth handle which has UID as the real uid,
 	 and as the first element in the list of effective uids.  */
 
-      uid_t newgen[_hurd_id.gen.nuids + 1];
-      uid_t newaux[_hurd_id.aux.nuids];
-      
-      newgen[0] = uid;
-      memcpy (&newgen[1], _hurd_id.gen.uids,
-	      _hurd_id.gen.nuids * sizeof (uid_t));
-      newaux[0] = uid;
-      memcpy (&newaux[1], _hurd_id.aux.uids + 1,
-	      (_hurd_id.aux.nuids - 1) * sizeof (uid_t));
+      uid_t *newgen, *newaux, auxbuf[2];
+      size_t ngen, naux;
+
+      newaux = _hurd_id.aux.uids;
+      naux = _hurd_id.aux.nuids;
+      if (_hurd_id.gen.nuids == 0)
+	{
+	  /* No effective uids now.  The new set will be just UID.  */
+	  newgen = &uid;
+	  ngen = 1;
+	}
+      else if (_hurd_id.gen.uids[0] == 0)
+	{
+	  /* We are root; set the effective, real, and saved to UID.  */
+	  _hurd_id.gen.uids[0] = uid;
+	  _hurd_id.valid = 0;
+	  newgen = _hurd_id.gen.uids;
+	  ngen = _hurd_id.gen.nuids;
+	  if (_hurd_id.aux.nuids < 2)
+	    {
+	      newaux = auxbuf;
+	      naux = 2;
+	    }
+	  _hurd_id.aux.uids[0] = _hurd_id.aux.uids[1] = uid;
+	}
+      else
+	{
+	  /* We are not root; just change the effective UID.  */
+	  _hurd_id.gen.uids[0] = uid;
+	  _hurd_id.valid = 0;
+	  newgen = _hurd_id.gen.uids;
+	  ngen = _hurd_id.gen.nuids;
+	}
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-			newgen, 1 + _hurd_id.gen.nuids,
-			newaux, _hurd_id.aux.nuids,
+			newgen, ngen, newaux, naux,
 			_hurd_id.gen.gids, _hurd_id.gen.ngids,
 			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			&newauth));
