@@ -1,5 +1,5 @@
 /* brk system call for Linux/HPPA.
-   Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,17 +24,12 @@
 /* This must be initialized data because commons can't have aliases.  */
 void *__curbrk = 0;
 
-/* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
-   to work around different old braindamage in the old Linux ELF dynamic
-   linker.  */
-weak_alias (__curbrk, ___brk_addr)
-
 int
 __brk (void *addr)
 {
   void *newbrk;
 
-  __curbrk = newbrk = INLINE_SYSCALL(brk, 1, addr);
+  __curbrk = newbrk = (void *) INLINE_SYSCALL (brk, 1, addr);
 
   if (newbrk < addr)
     {
