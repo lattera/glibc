@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995,1996,1997,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,21 +54,16 @@ __strcasecmp (s1, s2 LOCALE_PARAM)
 {
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;
-  unsigned char c1, c2;
+  int result;
 
   if (p1 == p2)
     return 0;
 
-  do
-    {
-      c1 = TOLOWER (*p1++);
-      c2 = TOLOWER (*p2++);
-      if (c1 == '\0')
-	break;
-    }
-  while (c1 == c2);
+  while ((result = TOLOWER (*p1) - TOLOWER (*p2++)) == 0)
+    if (*p1++ == '\0')
+      break;
 
-  return c1 - c2;
+  return result;
 }
 #ifndef __strcasecmp
 weak_alias (__strcasecmp, strcasecmp)
