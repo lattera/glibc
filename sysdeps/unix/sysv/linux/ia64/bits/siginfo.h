@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/ia64 version.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -176,7 +176,7 @@ enum
 
 # ifdef __USE_GNU
    , ILL_BREAK
-#  define ILL_BREAK	__ILL_BREAK
+#  define ILL_BREAK	ILL_BREAK
 # endif
 };
 
@@ -201,15 +201,15 @@ enum
 # define FPE_FLTSUB	FPE_FLTSUB
 # ifdef __USE_GNU
    , FPE_DECOVF
-#  define FPE_DECOVF	__FPE_DECOVF
+#  define FPE_DECOVF	FPE_DECOVF
    , FPE_DECDIV
-#  define FPE_DECDIV	__FPE_DECDIV
+#  define FPE_DECDIV	FPE_DECDIV
    , FPE_DECERR
-#  define FPE_DECERR	__FPE_DECERR
+#  define FPE_DECERR	FPE_DECERR
    , FPE_INVASC
-#  define FPE_INVASC	__FPE_INVASC
+#  define FPE_INVASC	FPE_INVASC
    , FPE_INVDEC
-#  define FPE_INVDEC	__FPE_INVDEC
+#  define FPE_INVDEC	FPE_INVDEC
 # endif
 };
 
@@ -222,7 +222,7 @@ enum
 # define SEGV_ACCERR	SEGV_ACCERR
 # ifdef __USE_GNU
   , SEGV_PSTKOVF		/* Paragraph stack overflow. */
-# define SEGV_PSTKOVF	__SEGV_PSTKOVF
+# define SEGV_PSTKOVF	SEGV_PSTKOVF
 # endif
 };
 

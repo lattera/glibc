@@ -1,3 +1,9 @@
+2004-01-30  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (ILL_BREAK,
+	FPE_DECOVF, FPE_DECDIV, FPE_DECERR, FPE_INVASC, FPE_INVDEC,
+	SEGV_PSTKOVF): Remove underscore prefix from definition.
+
 2004-01-28  Paolo Bonzini  <bonzini@gnu.org>
 
 	Merge regex changes in gawk.
