@@ -1,6 +1,6 @@
 /* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-     Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
+   Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,6 @@
 #define SC_MASK 0x008
 #define SC_STCK 0x088
 #define SC_VERS 0x098
-#define SC_GPRS 0x09c
+#define SC_GPRS 0x0a0
 #define SC_FPC  0x130
 #define SC_FPRS 0x138
-
