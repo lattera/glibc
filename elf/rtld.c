@@ -1181,7 +1181,6 @@ process_dl_debug (const char *dl_debug)
 	    case 4:
 	      if (memcmp (dl_debug, "help", 4) == 0)
 		{
-		  /* The `statistics' flag is not always implemented.  */
 		  _dl_sysdep_message ("\
 Valid options for the LD_DEBUG environment variable are:\n\
 \n\

@@ -27,6 +27,8 @@
 
 2000-04-18  Andreas Jaeger  <aj@suse.de>
 
+	* elf/rtld.c (process_dl_debug): Remove obsolete comment.
+
 	* sysdeps/mips/dl-machine.h (elf_machine_rel): Fix relocation.
 
 2000-04-18  Ulrich Drepper  <drepper@redhat.com>
