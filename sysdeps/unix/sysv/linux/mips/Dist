@@ -1,10 +1,11 @@
 clone.S
+entry.h
 kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
-entry.h
-xstatconv.c
 sys/acct.h
 sys/cachectl.h
 sys/procfs.h
 sys/sysmips.h
+sys/tas.h
+xstatconv.c
