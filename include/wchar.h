@@ -41,7 +41,7 @@ extern wchar_t *__wcschrnul __P ((__const wchar_t *__s, wchar_t __wc));
 
 extern int __vfwscanf __P ((FILE *__restrict __s,
 			    __const wchar_t *__restrict __format,
-			    va_list __arg))
+			    __gnuc_va_list __arg))
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 # endif
 #endif
