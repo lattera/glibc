@@ -177,15 +177,20 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
 	  result = (*foundp)->sem;
 	  ++(*foundp)->refcnt;
 	}
-      else if (existing != SEM_FAILED)
+      else
 	{
-	  /* We haven't found a mapping but the caller has a mapping.
-	     Install it.  */
+	  /* We haven't found a mapping.  Install ione.  */
 	  struct inuse_sem *newp;
 
 	  newp = (struct inuse_sem *) malloc (sizeof (*newp) + namelen);
 	  if (newp != NULL)
 	    {
+	      /* If the caller hasn't provided any map it now.  */
+	      if (existing == SEM_FAILED)
+		existing = (sem_t *) mmap (NULL, sizeof (sem_t),
+					   PROT_READ | PROT_WRITE, MAP_SHARED,
+					   fd, 0);
+
 	      newp->dev = st.st_dev;
 	      newp->ino = st.st_ino;
 	      newp->refcnt = 1;
@@ -193,7 +198,8 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
 	      memcpy (newp->name, name, namelen);
 
 	      /* Insert the new value.  */
-	      if (tsearch (newp, &__sem_mappings, __sem_search) != NULL)
+	      if (existing != MAP_FAILED
+		  && tsearch (newp, &__sem_mappings, __sem_search) != NULL)
 		/* Successful.  */
 		result = existing;
 	      else
@@ -207,7 +213,7 @@ check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
       lll_unlock (__sem_mappings_lock);
     }
 
-  if (result != existing && existing != SEM_FAILED)
+  if (result != existing && existing != SEM_FAILED && existing != MAP_FAILED)
     {
       /* Do not disturb errno.  */
       INTERNAL_SYSCALL_DECL (err);
@@ -268,16 +274,9 @@ sem_open (const char *name, int oflag, ...)
 	  /* Return.  errno is already set.  */
 	}
       else
-	{
-	  /* Check whether we already have this semaphore mapped.  */
-	  result = check_add_mapping (name, namelen, fd, SEM_FAILED);
-
-	  /* Map the sem_t structure from the file.  */
-	  if (result == SEM_FAILED)
-	    result = (sem_t *) mmap (NULL, sizeof (sem_t),
-				     PROT_READ | PROT_WRITE, MAP_SHARED,
-				     fd, 0);
-	}
+	/* Check whether we already have this semaphore mapped and
+	   create one if necessary.  */
+	result = check_add_mapping (name, namelen, fd, SEM_FAILED);
     }
   else
     {

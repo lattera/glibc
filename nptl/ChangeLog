@@ -1,5 +1,11 @@
 2003-05-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-sem8 and tst-sem9.
+	* tst-sem8.c: New file.
+	* tst-sem9.c: New file.
+	* sem_open.c: Fix creation of in_use record if the file exists but
+	no internal record.
+
 	* posix-timer.h: Remove old, unused timer_id2ptr and timer_ptr2id
 	definitions.
 
