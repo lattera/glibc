@@ -1,3 +1,10 @@
+1999-08-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* timezone/tst-timezone.c (main): Don't pass const strings to
+	putenv to avoid warnings.
+
+	* posix/regexbug1.c: Include <stdio.h> for puts prototype.
+
 1999-08-29  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/Versions: Add _nss_*_getipnodebyname_r.
