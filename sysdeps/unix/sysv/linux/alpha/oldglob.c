@@ -44,7 +44,7 @@ typedef struct
 
 int
 __old_glob (const char *pattern, int flags,
-	    int (*errfunc) __P ((const char *, int)),
+	    int (*errfunc) (const char *, int),
 	    old_glob_t *pglob)
 {
   glob_t correct;

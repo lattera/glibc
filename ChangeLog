@@ -1,5 +1,7 @@
 2000-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c (__old_glob): Loose __P.
+
 	* locale/Versions [libc] (GLIBC_2.2): Add localeconv.
 	* locale/localeconv.c: Make function versioned (with same definition).
 
