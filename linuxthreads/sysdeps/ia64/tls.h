@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  linuxthreads/IA-64 version.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,13 +24,18 @@
 
 # include <dl-sysdep.h>
 # include <pt-machine.h>
+# include <stdbool.h>
 # include <stddef.h>
 
 /* Type for the dtv.  */
 typedef union dtv
 {
   size_t counter;
-  void *pointer;
+  struct
+  {
+    void *val;
+    bool is_static;
+  } pointer;
 } dtv_t;
 
 #else /* __ASSEMBLER__ */

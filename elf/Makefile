@@ -734,6 +734,8 @@ $(objpfx)tst-pie1: $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -o $@ $(objpfx)tst-pie1.o $(objpfx)tst-piemod1.so \
 	  $(common-objpfx)libc_nonshared.a
+
+generated += tst-pie1 tst-pie1.out tst-pie1.o
 endif
 
 check-textrel-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE

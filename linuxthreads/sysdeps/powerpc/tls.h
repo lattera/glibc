@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  linuxthreads/PPC version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,13 +23,18 @@
 #ifndef __ASSEMBLER__
 
 # include <pt-machine.h>
+# include <stdbool.h>
 # include <stddef.h>
 
 /* Type for the dtv.  */
 typedef union dtv
 {
   size_t counter;
-  void *pointer;
+  struct
+  {
+    void *val;
+    bool is_static;
+  } pointer;
 } dtv_t;
 
 #else /* __ASSEMBLER__ */
@@ -99,9 +104,9 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.
-   
-   The global register variable is declared in pt-machine.h with the 
-   wrong type, so we need some extra casts to get the desired result.  
+
+   The global register variable is declared in pt-machine.h with the
+   wrong type, so we need some extra casts to get the desired result.
    This avoids a lvalue cast that gcc-3.4 does not like.  */
 # define TLS_INIT_TP(TCBP, SECONDCALL) \
     (__thread_self = (struct _pthread_descr_struct *) \

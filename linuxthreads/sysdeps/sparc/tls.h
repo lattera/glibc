@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  linuxthreads/sparc version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,13 +23,18 @@
 #ifndef __ASSEMBLER__
 
 # include <pt-machine.h>
+# include <stdbool.h>
 # include <stddef.h>
 
 /* Type for the dtv.  */
 typedef union dtv
 {
   size_t counter;
-  void *pointer;
+  struct
+  {
+    void *val;
+    bool is_static;
+  } pointer;
 } dtv_t;
 
 typedef struct

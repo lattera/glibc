@@ -1,3 +1,19 @@
+2005-01-08  Andreas Jaeger  <aj@suse.de>
+
+	* pthread.c (init_one_static_tls): Adjust initialization of DTV
+	entry for static tls deallocation fix.
+
+	* sysdeps/alpha/tls.h (dtv_t): Change pointer type to be struct which
+	also contains information whether the memory pointed to is static
+	TLS or not, include <stdbool.h>.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/ia64/tls.h: Likewise.
+	* sysdeps/powerpc/tls.h: Likewise.
+	* sysdeps/s390/tls.h: Likewise.
+	* sysdeps/sh/tls.h: Likewise.
+	* sysdeps/sparc/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+
 2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (tests): Add tst-align.

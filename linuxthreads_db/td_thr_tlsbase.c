@@ -1,5 +1,5 @@
 /* Locate TLS data for a thread.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,10 +59,10 @@ td_thr_tlsbase (const td_thrhandle_t *th,
 
   /* It could be that the memory for this module is not allocated for
      the given thread.  */
-  if (pdtv.pointer == TLS_DTV_UNALLOCATED)
+  if (pdtv.pointer.val == TLS_DTV_UNALLOCATED)
     return TD_TLSDEFER;
 
-  *base = (char *) pdtv.pointer;
+  *base = (char *) pdtv.pointer.val;
 
   return TD_OK;
 #else
