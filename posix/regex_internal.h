@@ -121,6 +121,7 @@ extern const size_t __re_error_msgid_idx[] attribute_hidden;
 #define BITSET_UINTS ((SBC_MAX + UINT_BITS - 1) / UINT_BITS)
 typedef unsigned int bitset[BITSET_UINTS];
 typedef unsigned int *re_bitset_ptr_t;
+typedef const unsigned int *re_const_bitset_ptr_t;
 
 #define bitset_set(set,i) (set[i / UINT_BITS] |= 1 << i % UINT_BITS)
 #define bitset_clear(set,i) (set[i / UINT_BITS] &= ~(1 << i % UINT_BITS))
@@ -337,12 +338,16 @@ struct re_string_t
   unsigned int tip_context;
   /* The translation passed as a part of an argument of re_compile_pattern.  */
   RE_TRANSLATE_TYPE trans;
+  /* Copy of re_dfa_t's word_char.  */
+  re_const_bitset_ptr_t word_char;
   /* 1 if REG_ICASE.  */
   unsigned char icase;
   unsigned char is_utf8;
   unsigned char map_notascii;
   unsigned char mbs_allocated;
   unsigned char offsets_needed;
+  unsigned char newline_anchor;
+  unsigned char word_ops_used;
   int mb_cur_max;
 };
 typedef struct re_string_t re_string_t;
@@ -363,14 +368,17 @@ typedef struct re_dfa_t re_dfa_t;
 static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
 					 int len, int init_len,
 					 RE_TRANSLATE_TYPE trans, int icase,
-					 const re_dfa_t *dfa) internal_function;
+					 const re_dfa_t *dfa)
+     internal_function;
 static reg_errcode_t re_string_construct (re_string_t *pstr, const char *str,
 					  int len, RE_TRANSLATE_TYPE trans,
-					  int icase, const re_dfa_t *dfa) internal_function;
+					  int icase, const re_dfa_t *dfa)
+     internal_function;
 static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
-					    int eflags, int newline) internal_function;
+					    int eflags) internal_function;
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
-						int new_buf_len) internal_function;
+						int new_buf_len)
+     internal_function;
 # ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
 static int build_wcs_upper_buffer (re_string_t *pstr) internal_function;
@@ -379,15 +387,19 @@ static void build_upper_buffer (re_string_t *pstr) internal_function;
 static void re_string_translate_buffer (re_string_t *pstr) internal_function;
 static void re_string_destruct (re_string_t *pstr) internal_function;
 # ifdef RE_ENABLE_I18N
-static int re_string_elem_size_at (const re_string_t *pstr, int idx) internal_function;
-static inline int re_string_char_size_at (const re_string_t *pstr, int idx) internal_function;
-static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx) internal_function;
+static int re_string_elem_size_at (const re_string_t *pstr, int idx)
+     internal_function;
+static inline int re_string_char_size_at (const re_string_t *pstr, int idx)
+     internal_function;
+static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx)
+     internal_function;
 # endif /* RE_ENABLE_I18N */
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
-					  int eflags, int newline_anchor) internal_function;
+					  int eflags) internal_function;
 static unsigned char re_string_peek_byte_case (const re_string_t *pstr,
 					       int idx) internal_function;
-static unsigned char re_string_fetch_byte_case (re_string_t *pstr) internal_function;
+static unsigned char re_string_fetch_byte_case (re_string_t *pstr)
+     internal_function;
 #endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
@@ -471,7 +483,7 @@ struct re_dfastate_t
   re_node_set nodes;
   re_node_set *entrance_nodes;
   struct re_dfastate_t **trtable;
-  unsigned int context : 10;
+  unsigned int context : 4;
   unsigned int halt : 1;
   /* If this state can accept `multi byte'.
      Note that we refer to multibyte characters, and multi character
@@ -542,13 +554,13 @@ struct re_backref_cache_entry
 
 typedef struct
 {
+  /* The string object corresponding to the input string.  */
+  re_string_t input;
   /* EFLAGS of the argument of regexec.  */
   int eflags;
   /* Where the matching ends.  */
   int match_last;
   int last_node;
-  /* The string object corresponding to the input string.  */
-  re_string_t *input;
   /* The state log used by the matcher.  */
   re_dfastate_t **state_log;
   int state_log_top;
@@ -594,7 +606,6 @@ struct re_fail_stack_t
 
 struct re_dfa_t
 {
-  re_bitset_ptr_t word_char;
   re_subexp_t *subexps;
   re_token_t *nodes;
   int nodes_alloc;
@@ -629,7 +640,10 @@ struct re_dfa_t
   unsigned int has_mb_node : 1;
   unsigned int is_utf8 : 1;
   unsigned int map_notascii : 1;
+  unsigned int word_ops_used : 1;
   int mb_cur_max;
+  bitset word_char;
+  reg_syntax_t syntax;
 #ifdef DEBUG
   char* re_str;
 #endif

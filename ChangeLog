@@ -1,3 +1,67 @@
+2004-01-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_node_set_insert): Remove unused variables.
+
+	* posix/regex_internal.h (re_dfa_t): Add syntax field.
+	* posix/regcomp.c (parse): Initialize dfa->syntax.
+	* posix/regexec.c (acquire_init_state_context,
+	prune_impossible_nodes, check_matching, check_halt_state_context,
+	proceed_next_node, sift_states_iter_mb, sift_states_backward,
+	update_cur_sifted_state, sift_states_bkref, transit_state,
+	transit_state_sb, transit_state_mb, transit_state_bkref,
+	get_subexp, get_subexp_sub, check_arrival, expand_bkref_cache,
+	build_trtable): Remove preg argument, add dfa argument instead
+	and remove dfa = preg->buffer initialization in the body.
+	Adjust all callers.
+	(check_node_accept_bytes, group_nodes_into_DFAstates,
+	check_node_accept): Likewise.  Use dfa->syntax instead of
+	preg->syntax.
+	(check_arrival_add_next_nodes): Remove preg argument.
+
+	* posix/regex_internal.h (re_match_context_t): Make input
+	re_string_t instead of a pointer to it.
+	* posix/regex_internal.c (re_string_construct_common): Don't clear
+	pstr here...
+	(re_string_construct): ... but only here.
+	* posix/regexec.c (match_ctx_init): Remove input argument.  Don't
+	initialize fields to zero.
+	(re_search_internal): Move input into mctx.input.
+	(acquire_init_state_context, check_matching,
+	check_halt_state_context, proceed_next_node,
+	clean_state_log_if_needed, sift_states_bkref, sift_states_iter_mb,
+	transit_state, transit_state_sb, transit_state_mb,
+	transit_state_bkref, get_subexp, check_arrival,
+	check_arrival_add_next_nodes, check_node_accept, extend_buffers):
+	Change mctx->input into &mctx->input and mctx->input->field into
+	mctx->input.field.
+
+2004-01-02  Jakub Jelinek  <jakub@redhat.com>
+	    Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h (re_const_bitset_ptr_t): New type.
+	(re_string_t): Add newline_anchor, word_char and word_ops_used fields.
+	(re_dfa_t): Change word_char type to bitset.  Add word_ops_used field.
+	(re_string_context_at, re_string_reconstruct): Remove last argument.
+	* posix/regex_internal.c (re_string_allocate): Initialize
+	pstr->word_char and pstr->word_ops_used.
+	(re_string_context_at): Remove newline_anchor argument.
+	Use input->newline_anchor instead, swap && conditions.
+	Only use IS_WIDE_WORD_CHAR if input->word_ops_used != 0.
+	Use input->word_char bitmap instead of IS_WORD_CHAR.
+	(re_string_reconstruct): Likewise.
+	Adjust re_string_context_at caller.
+	* posix/regexec.c (acquire_init_state_context,
+	check_halt_state_context, transit_state, transit_state_sb,
+	transit_state_mb, transit_state_bkref, check_arrival,
+	check_node_accept): Adjust re_string_context_at and
+	re_string_reconstruct callers.
+	(re_search_internal): Likewise.  Set input.newline_anchor.
+	(build_trtable): Use dfa->word_char bitmap instead of IS_WORD_CHAR.
+	* posix/regcomp.c (init_word_char): Change return type to void.
+	Set dfa->word_ops_used.
+	(free_dfa_content): Don't free dfa->word_char.
+	(parse_expression): Remove error handling for init_word_char.
+
 2004-01-01  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.h (re_dfastate_t): Fix size of the CONTEXT

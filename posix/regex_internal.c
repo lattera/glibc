@@ -67,6 +67,8 @@ re_string_allocate (pstr, str, len, init_len, trans, icase, dfa)
   if (BE (ret != REG_NOERROR, 0))
     return ret;
 
+  pstr->word_char = dfa->word_char;
+  pstr->word_ops_used = dfa->word_ops_used;
   pstr->mbs = pstr->mbs_allocated ? pstr->mbs : (unsigned char *) str;
   pstr->valid_len = (pstr->mbs_allocated || dfa->mb_cur_max > 1) ? 0 : len;
   pstr->valid_raw_len = pstr->valid_len;
@@ -84,6 +86,7 @@ re_string_construct (pstr, str, len, trans, icase, dfa)
      const re_dfa_t *dfa;
 {
   reg_errcode_t ret;
+  memset (pstr, '\0', sizeof (re_string_t));
   re_string_construct_common (str, len, pstr, trans, icase, dfa);
 
   if (len > 0)
@@ -183,7 +186,6 @@ re_string_construct_common (str, len, pstr, trans, icase, dfa)
      int icase;
      const re_dfa_t *dfa;
 {
-  memset (pstr, '\0', sizeof (re_string_t));
   pstr->raw_mbs = (const unsigned char *) str;
   pstr->len = len;
   pstr->raw_len = len;
@@ -572,9 +574,9 @@ re_string_translate_buffer (pstr)
    convert to upper case in case of REG_ICASE, apply translation.  */
 
 static reg_errcode_t
-re_string_reconstruct (pstr, idx, eflags, newline)
+re_string_reconstruct (pstr, idx, eflags)
      re_string_t *pstr;
-     int idx, eflags, newline;
+     int idx, eflags;
 {
   int offset = idx - pstr->raw_mbs_idx;
   if (offset < 0)
@@ -609,8 +611,7 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 	 )
 	{
 	  /* Yes, move them to the front of the buffer.  */
-	  pstr->tip_context = re_string_context_at (pstr, offset - 1, eflags,
-						    newline);
+	  pstr->tip_context = re_string_context_at (pstr, offset - 1, eflags);
 #ifdef RE_ENABLE_I18N
 	  if (pstr->mb_cur_max > 1)
 	    memmove (pstr->wcs, pstr->wcs + offset,
@@ -695,8 +696,11 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 		    memset (pstr->mbs, 255, pstr->valid_len);
 		}
 	      pstr->valid_raw_len = pstr->valid_len;
-	      pstr->tip_context = (IS_WIDE_WORD_CHAR (wc) ? CONTEXT_WORD
-				   : ((newline && IS_WIDE_NEWLINE (wc))
+	      pstr->tip_context = ((BE (pstr->word_ops_used != 0, 0)
+				    && IS_WIDE_WORD_CHAR (wc))
+				   ? CONTEXT_WORD
+				   : ((IS_WIDE_NEWLINE (wc)
+				       && pstr->newline_anchor)
 				      ? CONTEXT_NEWLINE : 0));
 	    }
 	  else
@@ -705,8 +709,9 @@ re_string_reconstruct (pstr, idx, eflags, newline)
 	      int c = pstr->raw_mbs[pstr->raw_mbs_idx + offset - 1];
 	      if (pstr->trans)
 		c = pstr->trans[c];
-	      pstr->tip_context = (IS_WORD_CHAR (c) ? CONTEXT_WORD
-				   : ((newline && IS_NEWLINE (c))
+	      pstr->tip_context = (bitset_contain (pstr->word_char, c)
+				   ? CONTEXT_WORD
+				   : ((IS_NEWLINE (c) && pstr->newline_anchor)
 				      ? CONTEXT_NEWLINE : 0));
 	    }
 	}
@@ -843,9 +848,9 @@ re_string_destruct (pstr)
 /* Return the context at IDX in INPUT.  */
 
 static unsigned int
-re_string_context_at (input, idx, eflags, newline_anchor)
+re_string_context_at (input, idx, eflags)
      const re_string_t *input;
-     int idx, eflags, newline_anchor;
+     int idx, eflags;
 {
   int c;
   if (idx < 0 || idx == input->len)
@@ -874,17 +879,18 @@ re_string_context_at (input, idx, eflags, newline_anchor)
 	    return input->tip_context;
 	}
       wc = input->wcs[wc_idx];
-      if (IS_WIDE_WORD_CHAR (wc))
+      if (BE (input->word_ops_used != 0, 0) && IS_WIDE_WORD_CHAR (wc))
 	return CONTEXT_WORD;
-      return (newline_anchor && IS_WIDE_NEWLINE (wc)) ? CONTEXT_NEWLINE : 0;
+      return (IS_WIDE_NEWLINE (wc) && input->newline_anchor
+	      ? CONTEXT_NEWLINE : 0);
     }
   else
 #endif
     {
       c = re_string_byte_at (input, idx);
-      if (IS_WORD_CHAR (c))
+      if (bitset_contain (input->word_char, c))
 	return CONTEXT_WORD;
-      return (newline_anchor && IS_NEWLINE (c)) ? CONTEXT_NEWLINE : 0;
+      return IS_NEWLINE (c) && input->newline_anchor ? CONTEXT_NEWLINE : 0;
     }
 }
 
@@ -1156,7 +1162,7 @@ re_node_set_insert (set, elem)
      re_node_set *set;
      int elem;
 {
-  int idx, right, mid;
+  int idx;
   /* In case the set is empty.  */
   if (set->alloc == 0)
     {
@@ -1206,7 +1212,7 @@ re_node_set_insert (set, elem)
 }
 
 /* Compare two node sets SET1 and SET2.
-   return 1 if SET1 and SET2 are equivalent, retrun 0 otherwise.  */
+   return 1 if SET1 and SET2 are equivalent, return 0 otherwise.  */
 
 static int
 re_node_set_compare (set1, set2)

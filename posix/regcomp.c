@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -24,7 +24,7 @@ static void re_compile_fastmap_iter (regex_t *bufp,
 				     const re_dfastate_t *init_state,
 				     char *fastmap);
 static reg_errcode_t init_dfa (re_dfa_t *dfa, int pat_len);
-static reg_errcode_t init_word_char (re_dfa_t *dfa);
+static void init_word_char (re_dfa_t *dfa);
 #ifdef RE_ENABLE_I18N
 static void free_charset (re_charset_t *cset);
 #endif /* RE_ENABLE_I18N */
@@ -611,7 +611,6 @@ free_dfa_content (re_dfa_t *dfa)
         re_free (entry->array);
       }
   re_free (dfa->state_table);
-  re_free (dfa->word_char);
 #ifdef RE_ENABLE_I18N
   re_free (dfa->sb_char);
 #endif
@@ -839,7 +838,6 @@ init_dfa (dfa, pat_len)
 
   dfa->subexps_alloc = 1;
   dfa->subexps = re_malloc (re_subexp_t, dfa->subexps_alloc);
-  /* dfa->word_char = NULL; */
 
   dfa->mb_cur_max = MB_CUR_MAX;
 #ifdef _LIBC
@@ -879,19 +877,16 @@ init_dfa (dfa, pat_len)
    "word".  In this case "word" means that it is the word construction
    character used by some operators like "\<", "\>", etc.  */
 
-static reg_errcode_t
+static void
 init_word_char (dfa)
      re_dfa_t *dfa;
 {
   int i, j, ch;
-  dfa->word_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
-  if (BE (dfa->word_char == NULL, 0))
-    return REG_ESPACE;
+  dfa->word_ops_used = 1;
   for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
     for (j = 0; j < UINT_BITS; ++j, ++ch)
       if (isalnum (ch) || ch == '_')
 	dfa->word_char[i] |= 1 << j;
-  return REG_NOERROR;
 }
 
 /* Free the work area which are only used while compiling.  */
@@ -1960,6 +1955,7 @@ parse (regexp, preg, syntax, err)
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   bin_tree_t *tree, *eor, *root;
   re_token_t current_token;
+  dfa->syntax = syntax;
   fetch_token (&current_token, regexp, syntax | RE_CARET_ANCHORS_HERE);
   tree = parse_reg_exp (regexp, preg, &current_token, syntax, 0, err);
   if (BE (*err != REG_NOERROR && tree == NULL, 0))
@@ -2191,12 +2187,8 @@ parse_expression (regexp, preg, token, syntax, nest, err)
     case ANCHOR:
       if ((token->opr.ctx_type
 	   & (WORD_DELIM | INSIDE_WORD | WORD_FIRST | WORD_LAST))
-	  && dfa->word_char == NULL)
-	{
-	  *err = init_word_char (dfa);
-	  if (BE (*err != REG_NOERROR, 0))
-	    return NULL;
-	}
+	  && dfa->word_ops_used == 0)
+	init_word_char (dfa);
       if (token->opr.ctx_type == WORD_DELIM)
 	{
 	  bin_tree_t *tree_first, *tree_last;
