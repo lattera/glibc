@@ -1,8 +1,13 @@
+2004-12-18  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/bits/local_lim.h:
+	New file removed withdrawn for the moment.
+
 2004-12-17  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/clone.S: New file.
 	* sysdeps/alpha/tcb-offsets.sym (TID_OFFSET): New.
-	
+
 2004-12-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/bits/local_lim.h: New file.
@@ -51,7 +56,7 @@
 	* sysdeps/pthread/posix-timer.h (__timer_signal_thread_pclk,
 	__timer_signal_thread_tclk): Remove.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Removed.
-	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_>opt.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Removed.
 
 2004-12-07  Jakub Jelinek  <jakub@redhat.com>
