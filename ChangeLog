@@ -1,8 +1,15 @@
+2000-08-01  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=resource]
+	(sysdep_routines): Add oldgetrlimit, oldsetrlimit.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add oldgetrlimit,
+	oldsetrlimit for GLIBC_2.0.
+
 2000-08-01  Andreas Jaeger  <aj@suse.de>
 
 	* nss/nss_files/files-ethers.c: Use case-insensitive lookup.
-	(LINE_PARSER): Allow any number of spaces between ip address and number.
-	Fixes PR libc/1833, reported by rp010gf@voruta.vu.lt.
+	(LINE_PARSER): Allow any number of spaces between ip address and
+	number.  Fixes PR libc/1833, reported by rp010gf@voruta.vu.lt.
 
 	* conform/data/netdb.h-data: Remove getipnodebyaddr and friends.
 
@@ -14,7 +21,8 @@
 
 	* nis/nss_nis/nis-hosts.c (_nss_nis_getipnodebyname_r): #if 0 for
 	now, getipnodebyname is deprecated.
-	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_getipnodebyname_r): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_getipnodebyname_r):
+	Likewise.
 
 	* inet/Makefile (routines): Don't build getipnodebyaddr and
 	friends.
@@ -33,7 +41,7 @@
 
 2000-08-01  Andreas Schwab  <schwab@suse.de>
 
-        * Make-dist (dist): Resolve `..' in file names.
+	* Make-dist (dist): Resolve `..' in file names.
 
 2000-08-01  Andreas Jaeger  <aj@suse.de>
 
