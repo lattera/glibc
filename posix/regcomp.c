@@ -33,6 +33,14 @@ static reg_errcode_t create_initial_state (re_dfa_t *dfa);
 #ifdef RE_ENABLE_I18N
 static void optimize_utf8 (re_dfa_t *dfa);
 #endif
+struct subexp_optimize
+{
+  re_dfa_t *dfa;
+  re_token_t *nodes;
+  int no_sub, re_nsub;
+};
+static bin_tree_t *optimize_subexps (struct subexp_optimize *so,
+                                     bin_tree_t *node, int sidx, int depth);
 static reg_errcode_t analyze (re_dfa_t *dfa);
 static reg_errcode_t analyze_tree (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_first (re_dfa_t *dfa, bin_tree_t *node);
@@ -238,8 +246,8 @@ re_compile_pattern (pattern, length, bufp)
 
   /* And GNU code determines whether or not to get register information
      by passing null for the REGS argument to re_match, etc., not by
-     setting no_sub.  */
-  bufp->no_sub = 0;
+     setting no_sub, unless RE_NO_SUB is set.  */
+  bufp->no_sub = !!(re_syntax_options & RE_NO_SUB);
 
   /* Match anchors at newline.  */
   bufp->newline_anchor = 1;
@@ -633,6 +641,7 @@ free_dfa_content (re_dfa_t *dfa)
   if (dfa->sb_char != utf8_sb_map)
     re_free (dfa->sb_char);
 #endif
+  re_free (dfa->subexp_map);
 #ifdef DEBUG
   re_free (dfa->re_str);
 #endif
@@ -809,6 +818,17 @@ re_compile_internal (preg, pattern, length, syntax)
   if (dfa->is_utf8 && !(syntax & RE_ICASE) && preg->translate == NULL)
     optimize_utf8 (dfa);
 #endif
+
+  if (preg->re_nsub > 0)
+    {
+      struct subexp_optimize so;
+
+      so.dfa = dfa;
+      so.nodes = dfa->nodes;
+      so.no_sub = preg->no_sub;
+      so.re_nsub = preg->re_nsub;
+      dfa->str_tree = optimize_subexps (&so, dfa->str_tree, -1, 0);
+    }
 
   /* Analyze the tree and collect information which is necessary to
      create the dfa.  */
@@ -1120,6 +1140,82 @@ optimize_utf8 (dfa)
   dfa->has_mb_node = dfa->nbackref > 0 || has_period;
 }
 #endif
+
+static bin_tree_t *
+optimize_subexps (so, node, sidx, depth)
+     struct subexp_optimize *so;
+     bin_tree_t *node;
+     int sidx, depth;
+{
+  int idx, new_depth, new_sidx;
+  bin_tree_t *ret;
+  if (node == NULL)
+    return NULL;
+
+  new_depth = 0;
+  new_sidx = sidx;
+  if ((depth & 1) && node->type == CONCAT
+      && node->right && node->right->type == 0
+      && so->nodes[idx = node->right->node_idx].type == OP_CLOSE_SUBEXP)
+    {
+      new_depth = depth + 1;
+      if (new_depth == 2
+          || (so->nodes[idx].opr.idx < 8 * sizeof (so->dfa->used_bkref_map)
+              && so->dfa->used_bkref_map & (1 << so->nodes[idx].opr.idx)))
+        new_sidx = so->nodes[idx].opr.idx;
+    }
+  node->left = optimize_subexps (so, node->left, new_sidx, new_depth);
+  new_depth = (depth & 1) == 0 && node->type == CONCAT
+              && node->left && node->left->type == 0
+              && so->nodes[node->left->node_idx].type == OP_OPEN_SUBEXP
+              ? depth + 1 : 0;
+  node->right = optimize_subexps (so, node->right, sidx, new_depth);
+                                     
+  if (node->type != CONCAT)
+    return node;
+  if ((depth & 1) == 0
+      && node->left
+      && node->left->type == 0
+      && so->nodes[idx = node->left->node_idx].type == OP_OPEN_SUBEXP)
+    ret = node->right;
+  else if ((depth & 1)
+           && node->right
+           && node->right->type == 0
+           && so->nodes[idx = node->right->node_idx].type == OP_CLOSE_SUBEXP)
+    ret = node->left;
+  else
+    return node;
+
+  if (so->nodes[idx].opr.idx < 8 * sizeof (so->dfa->used_bkref_map)
+      && so->dfa->used_bkref_map & (1 << so->nodes[idx].opr.idx))
+    return node;
+
+  if (!so->no_sub)
+    {
+      int i;
+
+      if (depth < 2)
+        return node;
+
+      if (so->dfa->subexp_map == NULL)
+        {
+          so->dfa->subexp_map = re_malloc (int, so->re_nsub);
+          if (so->dfa->subexp_map == NULL)
+            return node;
+
+          for (i = 0; i < so->re_nsub; i++)
+            so->dfa->subexp_map[i] = i;
+        }
+
+      i = so->nodes[idx].opr.idx;
+      assert (sidx < i);
+      so->dfa->subexp_map[i] = sidx;
+    }
+
+  so->nodes[idx].type = OP_DELETED_SUBEXP;
+  ret->parent = node->parent;
+  return ret;
+}
 
 /* Analyze the structure tree, and calculate "first", "next", "edest",
    "eclosure", and "inveclosure".  */
@@ -1525,6 +1621,8 @@ calc_inveclosure (dfa)
   int src, idx, dest;
   for (src = 0; src < dfa->nodes_len; ++src)
     {
+      if (dfa->nodes[src].type == OP_DELETED_SUBEXP)
+        continue;
       for (idx = 0; idx < dfa->eclosures[src].nelem; ++idx)
 	{
 	  dest = dfa->eclosures[src].elems[idx];
@@ -1560,6 +1658,9 @@ calc_eclosure (dfa)
 #ifdef DEBUG
       assert (dfa->eclosures[node_idx].nelem != -1);
 #endif
+      if (dfa->nodes[node_idx].type == OP_DELETED_SUBEXP)
+        continue;
+
       /* If we have already calculated, skip it.  */
       if (dfa->eclosures[node_idx].nelem != 0)
 	continue;

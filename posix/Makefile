@@ -80,7 +80,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 bug-regex20 \
 		   bug-regex21 bug-regex22 bug-regex23 bug-regex24 \
-		   tst-nice tst-nanosleep \
+		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-waitid \
 		   tst-getaddrinfo2 bug-glob1 bug-glob2
@@ -160,6 +160,7 @@ tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex1-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regex-ENV = LOCPATH=$(common-objpfx)localedata
+tst-regex2-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex5-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex6-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex17-ENV = LOCPATH=$(common-objpfx)localedata
@@ -244,8 +245,10 @@ $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-regex: $(common-objpfx)rt/librt.so
+$(objpfx)tst-regex2: $(common-objpfx)rt/librt.so
 else
 $(objpfx)tst-regex: $(common-objpfx)rt/librt.a
+$(objpfx)tst-regex2: $(common-objpfx)rt/librt.a
 endif
 
 $(objpfx)bug-ga2-mem: $(objpfx)bug-ga2.out

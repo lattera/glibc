@@ -893,7 +893,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 					    * sizeof (CHAR_T)));	      \
 	    }								      \
 	  if (readonly_format < 0)					      \
-	    __libc_fatal ("*** %n is writable segment detected ***\n");	      \
+	    __libc_fatal ("*** %n in writable segment detected ***\n");	      \
 	}								      \
       /* Answer the count of characters written.  */			      \
       if (fspec == NULL)						      \

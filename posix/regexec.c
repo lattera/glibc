@@ -882,6 +882,18 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 	    pmatch[reg_idx].rm_so += match_first;
 	    pmatch[reg_idx].rm_eo += match_first;
 	  }
+
+      if (dfa->subexp_map)
+        for (reg_idx = 0;
+             reg_idx + 1 < nmatch && reg_idx < preg->re_nsub;
+             reg_idx++)
+          if (dfa->subexp_map[reg_idx] != reg_idx)
+            {
+              pmatch[reg_idx + 1].rm_so
+                = pmatch[dfa->subexp_map[reg_idx] + 1].rm_so;
+              pmatch[reg_idx + 1].rm_eo
+                = pmatch[dfa->subexp_map[reg_idx] + 1].rm_eo;
+            }
     }
 
  free_return:

@@ -1,3 +1,23 @@
+2004-11-18  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #544]
+	* posix/regex.h (RE_NO_SUB): New define.
+	* posix/regex_internal.h (OP_DELETED_SUBEXP): New.
+	(re_dfa_t): Add subexp_map.
+	* posix/regcomp.c (struct subexp_optimize): New type.
+	(optimize_subexps): New routine.
+	(re_compile_internal): Call it.
+	(re_compile_pattern): Set preg->no_sub to 1 if RE_NO_SUB.
+	(free_dfa_content): Free subexp_map.
+	(calc_inveclosure, calc_eclosure): Skip OP_DELETED_SUBEXP
+	nodes.
+	* posix/regexec.c (re_search_internal): If subexp_map
+	is not NULL, duplicate registers as needed.
+	* posix/Makefile: Add rules to build and run tst-regex2.
+	* posix/tst-regex2.c: New test.
+	* posix/rxspencer/tests: Fix last two tests (\0 -> \1).
+	Add some new tests for nested subexpressions.
+
 2004-11-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/libio.h (_IO_FLAGS2_FORTIFY): Renamed from

@@ -179,6 +179,10 @@ typedef unsigned long int reg_syntax_t;
    immediately after an alternation or begin-group operator.  */
 #define RE_CONTEXT_INVALID_DUP (RE_CARET_ANCHORS_HERE << 1)
 
+/* If this bit is set, then no_sub will be set to 1 during
+   re_compile_pattern.  */
+#define RE_NO_SUB (RE_CONTEXT_INVALID_DUP << 1)
+
 /* This global variable defines the particular regexp syntax to use (for
    some interfaces).  When a regexp is compiled, the syntax used is
    stored in the pattern buffer, so changing this does not affect

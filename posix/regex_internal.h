@@ -189,6 +189,7 @@ typedef enum
   OP_DUP_PLUS = EPSILON_BIT | 4,
   OP_DUP_QUESTION = EPSILON_BIT | 5,
   ANCHOR = EPSILON_BIT | 6,
+  OP_DELETED_SUBEXP = EPSILON_BIT | 7,
 
   /* Tree type, these are used only by tree. */
   CONCAT = 16,
@@ -644,6 +645,7 @@ struct re_dfa_t
   int mb_cur_max;
   bitset word_char;
   reg_syntax_t syntax;
+  int *subexp_map;
 #ifdef DEBUG
   char* re_str;
 #endif
