@@ -1,5 +1,8 @@
 2000-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* grp/initgroups.c (initgroups): Deallocate groups array.
+	Reported by jani.raiha@sonera.com [PR libc/1868].
+
 	* sysdeps/s390/Dist: Add fpu/fenv_libc.h.
 	* sysdeps/alpha/Dist: Likewise.
 

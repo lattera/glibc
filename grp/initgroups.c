@@ -225,6 +225,8 @@ initgroups (user, group)
     result = setgroups (start, groups);
   while (result == -1 && errno == EINVAL && --start > 0);
 
+  free (groups);
+
   return result;
 #endif
 }
