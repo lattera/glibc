@@ -1,3 +1,13 @@
+2000-08-02  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/socketpair.c (__socketpair): Renamed from
+	socketpair.  Made socketpair a weak alias.
+	* sysdeps/mach/hurd/pipe.c (__pipe): Reimplemented using
+	__socketpair.  Use S_IFIFO protocol to make pipes POSIX
+	conforming, but fall back on the old protocol if the socket server
+	doesn't support it.
+	* include/sys/socket.h: Add prototype for __socketpair.
+
 2000-08-09  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/vfprintf.c (vfprintf): Also set `is_long' if the

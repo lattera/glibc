@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 94, 95, 96, 97, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +17,20 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/socket.h>
-#include <hurd.h>
-#include <hurd/socket.h>
-#include <hurd/fd.h>
-#include <unistd.h>
 #include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#include <hurd.h>
+#include <hurd/fd.h>
+#include <hurd/socket.h>
 
 /* Create two new sockets, of type TYPE in domain DOMAIN and using
    protocol PROTOCOL, which are connected to each other, and put file
    descriptors for them in FDS[0] and FDS[1].  If PROTOCOL is zero,
    one will be chosen automatically.  Returns 0 on success, -1 for errors.  */
-/* XXX should be __socketpair ? */
 int
-socketpair (domain, type, protocol, fds)
-     int domain;
-     int type;
-     int protocol;
-     int fds[2];
+__socketpair (int domain, int type, int protocol, int fds[2])
 {
   error_t err;
   socket_t server, sock1, sock2;
@@ -95,3 +91,5 @@ socketpair (domain, type, protocol, fds)
   fds[1] = d2;
   return 0;
 }
+
+weak_alias (__socketpair, socketpair)
