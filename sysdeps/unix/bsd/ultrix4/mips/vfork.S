@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -31,5 +31,6 @@ parent:
 	ret
 	nop
 	.end __vfork
+strong_alias (__vfork, __GI___vfork)
 
 weak_alias (__vfork, vfork)
