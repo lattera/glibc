@@ -216,8 +216,7 @@ extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
    the namespace rules does not allow this.  */
 extern void __bzero __P ((__ptr_t __s, size_t __n));
 
-#if defined __USE_BSD || (defined __USE_XOPEN_EXTENDED \
-			  && (_POSIX_C_SOURCE - 0) < 199506L)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy __P ((__const __ptr_t __src, __ptr_t __dest, size_t __n));
 

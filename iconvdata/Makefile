@@ -475,13 +475,14 @@ endif
 
 include ../Rules
 
-.PHONY: do-iconv-test
-tests: do-iconv-test
+tests: $(objpfx)iconv-test.out
 
-do-iconv-test: run-iconv-test.sh $(objpfx)gconv-modules \
-	       $(addprefix $(objpfx),$(modules.so)) \
-	       $(common-objdir)/iconv/iconv_prog
-	$(SHELL) -e $< $(common-objdir) > $(objpfx)iconv-test.out
+$(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
+			 $(addprefix $(objpfx),$(modules.so)) \
+			 $(common-objdir)/iconv/iconv_prog 
+	$(SHELL) -e $< $(common-objdir) > $@
 
+ifdef objpfx
 $(objpfx)gconv-modules: gconv-modules
 	cp $^ $@
+endif

@@ -1,5 +1,5 @@
 /* Implementation of the dcgettext(3) function.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -140,10 +140,6 @@ static char *stpcpy PARAMS ((char *dest, const char *src));
 
 #ifndef PATH_MAX
 # define PATH_MAX _POSIX_PATH_MAX
-#endif
-
-#ifndef internal_function
-# define internal_function
 #endif
 
 /* XPG3 defines the result of `setlocale (category, NULL)' as:

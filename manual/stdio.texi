@@ -1545,12 +1545,12 @@ make_message (char *name, char *value)
 @group
   if (nchars >= size)
     @{
-      /* @r{Reallocate buffer now that we know 
+      /* @r{Reallocate buffer now that we know
          how much space is needed.} */
       buffer = (char *) xrealloc (buffer, nchars + 1);
 
       /* @r{Try again.} */
-      snprintf (buffer, size, "value of %s is %s", 
+      snprintf (buffer, size, "value of %s is %s",
                 name, value);
     @}
   /* @r{The last call worked, return the string.} */
@@ -1727,7 +1727,7 @@ eprintf (const char *template, ...)
   extern char *program_invocation_short_name;
 
   fprintf (stderr, "%s: ", program_invocation_short_name);
-  va_start (ap, count);
+  va_start (ap, template);
   vfprintf (stderr, template, ap);
   va_end (ap);
 @}

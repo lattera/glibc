@@ -391,7 +391,7 @@ gconv_end (struct gconv_step *data)
 	break;								      \
       default:								      \
 	break;								      \
-      case '\x80' ... '\xff':						      \
+      case 0x80 ... 0xff:						      \
 	/* Illegal character.  */					      \
 	failure = GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
