@@ -1,3 +1,32 @@
+2000-09-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/gbk.c (USE_PRIVATE_AREA): Define to 0.
+	(__gbk_to_ucs): Conditionalize private area mappings.
+	(__gbk_from_ucs4_tab9): Likewise.
+	(BODY for TO_LOOP): Likewise.
+	* iconvdata/testdata/GBK: Don't use characters not yet in Unicode.
+	* iconvdata/testdata/GBK..UTF-8: Likewise.
+	* iconvdata/tst-tables.sh: Enable GBK test.
+
+2000-09-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/gbk.c (__gbk_to_ucs): Swap U+2014 and U+2015.
+	(__gbk_from_ucs4_tab4): Swap entries for U+2014 and U+2015.
+	(BODY for FROM_LOOP): Reject input > 0xFEA0, avoids out-of-bounds
+	array access.
+	* iconvdata/gbgbk.c (BODY for FROM_LOOP): Map 0xA844 to 0xA1AA.
+	* iconvdata/testdata/GBK..UTF8: Swap U+2014 and U+2015.
+
+2000-09-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/johab.c (final_to_ucs): Fix typos.
+	(jamo_from_ucs_table): Likewise.
+	(BODY for FROM_LOOP): Map 0x5c to U+20A9. Reject ranges
+	0xD9E6..0xD9FE and 0xDEF2..0xDEFE.
+	(BODY for TO_LOOP): Map U+20A9 to 0x5c. Don't produce values in
+	the range 0xD9E6..0xD9FE.
+	* iconvdata/tst-tables.sh: Enable JOHAB testing.
+
 2000-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_conf.c (__gconv_get_path): Fix problem with relative

@@ -72,7 +72,8 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(wildcard tests-mbwc/*.[ch])				\
 	      $(addprefix tst-fmon-locales/tstfmon_,$(fmon-tests))	\
 	      gen-locale.sh show-ucs-data.c tst-langinfo.sh		\
-	      tst-wctype.sh tst-wctype.input
+	      tst-wctype.sh tst-wctype.input gen-unicode-ctype.c	\
+	      dump-ctype.c
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig

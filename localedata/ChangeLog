@@ -1,3 +1,25 @@
+2000-09-24  Bruno Haible  <haible@clisp.cons.org>
+
+	* gen-unicode-ctype.c: New file.
+	* dump-ctype.c: New file.
+	* Makefile (distribute): Add them.
+	* locales/i18n: Update LC_CTYPE part to Unicode 3.0, using
+	gen-unicode-ctype.c.
+	(blank): Add U+1680.
+	(cntrl): Add U+2028, U+2029.
+	(space): Add U+1680, U+2028, U+2029.
+	(digit): Add Myanmar, Ethiopic, Khmer, Mongolian, fullwidth digits.
+	(alnum, alpha, print, graph, punct): Lots of additions.
+	(lower, upper, tolower, toupper, combining, combining_level3): Update.
+	(totitle): New map.
+	* tst-ctype-de_DE.ISO-8859-1.in: Mark U00B5 as lower; the Unicode 3.0
+	towupper functions maps it to U039C. Mark U00A0 as graph, print, punct.
+	* tests-mbwc/dat_iswctype.c: Mark U00A0 as graph, print, punct.
+	* tests-mbwc/dat_iswgraph.c: Mark U00A0 as graph.
+	* tests-mbwc/dat_iswprint.c: Mark U00A0 as print.
+	* tests-mbwc/dat_iswpunct.c: Mark U00A0 as punct.
+	* tests-mbwc/dat_wcswidth.c: U00A0 is now print.
+
 2000-09-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/GBK: Add commented mappings for GBK characters not yet in

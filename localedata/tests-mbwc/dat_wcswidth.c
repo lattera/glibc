@@ -56,7 +56,11 @@ TST_WCSWIDTH tst_wcswidth_loc [] = {
 	/*expect*/ { 0,1,-1				   },
       },
       { /*input.*/ { { 0x00C1,0x00A0,0x0000 },		 2 },  /* 16 */
+#ifdef SHOJI_IS_RIGHT
 	/*expect*/ { 0,1,-1				   },
+#else
+	/*expect*/ { 0,1,2				   },
+#endif
       },
       { /*input.*/ { { 0x00C1,0x00A1,0x0000 },		 2 },  /* 17 */
 	/*expect*/ { 0,1,2				   },

@@ -16,7 +16,11 @@ TST_ISW_LOC (PRINT, print) = {
       {
 	{  { 0x0080 }, { 0,1,0 }  },  /* CTRL     */
 	{  { 0x009F }, { 0,1,0 }  },  /* CTRL     */
+#ifdef SHOJI_IS_RIGHT
 	{  { 0x00A0 }, { 0,1,0 }  },  /* NB SPACE */
+#else
+	{  { 0x00A0 }, { 0,0,0 }  },  /* NB SPACE */
+#endif
 	{  { 0x00A1 }, { 0,0,0 }  },  /* UD !     */
 	{  { 0x00B0 }, { 0,0,0 }  },  /* Degree   */
 	{  { 0x00B1 }, { 0,0,0 }  },  /* +- sign  */

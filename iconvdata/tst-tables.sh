@@ -191,7 +191,7 @@ cat <<EOF |
   BIG5HKSCS
   EUC-JP
   EUC-CN            GB2312
-  #GBK                                  Converter uses private area characters
+  GBK
   EUC-TW
   GB18030
   #
