@@ -1,6 +1,15 @@
+2003-04-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Rewrite to avoid writing
+	below the stack pointer even if switching to the same context we are
+	running right now.
+
 2003-04-05  Ulrich Drepper  <drepper@redhat.com>
 
-	* math/test-tgmath.c (F): Initialize c.
+	* catgets/gencat.c (read_input_file): Make sure that \n is not
+	alone on the line before testing for continuation.
+
+	* math/test-tgmath.c (compile_test): Initialize c.
 
 2003-04-05  Alexandre Oliva  <aoliva@redhat.com>
 

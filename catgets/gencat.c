@@ -333,7 +333,7 @@ read_input_file (struct catalog *current, const char *fname)
 	      /* There might be more than one backslash at the end of
 		 the line.  Only if there is an odd number of them is
 		 the line continued.  */
-	      if (buf[act_len - 1] == '\\')
+	      if (act_len > 0 && buf[act_len - 1] == '\\')
 		{
 		  int temp_act_len = act_len;
 
