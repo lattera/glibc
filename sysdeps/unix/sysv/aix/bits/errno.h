@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -98,6 +98,8 @@
 # define ESOCKTNOSUPPORT 63	/* Socket type not supported.  */
 # define EOPNOTSUPP	64	/* Operation not supported on socket.  */
 # define EPFNOSUPPORT	65	/* Protocol family not supported.  */
+# define EAFNOSUPPORT	66	/* Address family not supported by protocol
+				   family.  */
 # define EADDRINUSE	67	/* Address already in use.  */
 # define EADDRNOTAVAIL	68	/* Can't assign requested address.  */
 # define ENETDOWN	69	/* Network is down.  */
