@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -27,8 +27,8 @@
 
 #include <assert.h>
 
-#include "linereader.h"
 #include "localedef.h"
+#include "linereader.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -96,8 +96,8 @@ numeric_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (numeric == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_NUMERIC");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_NUMERIC"));
 	  numeric_startup (NULL, locale, 0);
 	  numeric = locale->categories[LC_NUMERIC].numeric;
 	  nothing = 1;
@@ -110,21 +110,22 @@ numeric_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (numeric->decimal_point == NULL)
     {
       if (! be_quiet && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_NUMERIC", "decimal_point");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_NUMERIC", "decimal_point"));
       numeric->decimal_point = ".";
     }
   else if (numeric->decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
-      error (0, 0, _("\
+      WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must not be the empty string"),
-	     "LC_NUMERIC", "decimal_point");
+			      "LC_NUMERIC", "decimal_point"));
     }
   if (numeric->decimal_point_wc == L'\0')
     numeric->decimal_point_wc = L'.';
 
   if (numeric->grouping_len == 0 && ! be_quiet && ! nothing)
-    error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", "grouping");
+    WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+			    "LC_NUMERIC", "grouping"));
 }
 
 

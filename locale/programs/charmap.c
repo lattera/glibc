@@ -29,8 +29,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <error.h>
 
-#include "error.h"
+#include "localedef.h"
 #include "linereader.h"
 #include "charmap.h"
 #include "charmap-dir.h"
@@ -42,8 +43,6 @@
 /* Define the lookup function.  */
 #include "charmap-kw.h"
 
-
-extern void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
 static struct charmap_t *parse_charmap (struct linereader *cmfile,
@@ -133,7 +132,8 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 	  result = parse_charmap (cmfile, verbose, be_quiet);
 
 	  if (result == NULL && !be_quiet)
-	    error (0, errno, _("character map file `%s' not found"), filename);
+	    WITH_CUR_LOCALE (error (0, errno, _("\
+character map file `%s' not found"), filename));
 	}
     }
 
@@ -190,8 +190,8 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
 	result = parse_charmap (cmfile, verbose, be_quiet);
 
       if (result == NULL)
-	error (4, errno, _("default character map file `%s' not found"),
-	       DEFAULT_CHARMAP);
+	WITH_CUR_LOCALE (error (4, errno, _("\
+default character map file `%s' not found"), DEFAULT_CHARMAP));
     }
 
   /* Test of ASCII compatibility of locale encoding.
@@ -247,9 +247,9 @@ charmap_read (const char *filename, int verbose, int be_quiet, int use_default)
       while (*p++ != '\0');
 
       if (failed)
-	fprintf (stderr, _("\
+	WITH_CUR_LOCALE (fprintf (stderr, _("\
 character map `%s' is not ASCII compatible, locale not ISO C compliant\n"),
-		 result->code_set_name);
+				  result->code_set_name));
     }
 
   return result;
@@ -324,9 +324,9 @@ parse_charmap (struct linereader *cmfile, int verbose, int be_quiet)
 	      if (result->mb_cur_min > result->mb_cur_max)
 		{
 		  if (!be_quiet)
-		    error (0, 0, _("\
+		    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: <mb_cur_max> must be greater than <mb_cur_min>\n"),
-			   cmfile->fname);
+					    cmfile->fname));
 
 		  result->mb_cur_min = result->mb_cur_max;
 		}
@@ -829,14 +829,16 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	  continue;
 
 	default:
-	  error (5, 0, _("%s: error in state machine"), __FILE__);
+	  WITH_CUR_LOCALE (error (5, 0, _("%s: error in state machine"),
+				  __FILE__));
 	  /* NOTREACHED */
 	}
       break;
     }
 
   if (state != 91 && !be_quiet)
-    error (0, 0, _("%s: premature end of file"), cmfile->fname);
+    WITH_CUR_LOCALE (error (0, 0, _("%s: premature end of file"),
+			    cmfile->fname));
 
   lr_close (cmfile);
 

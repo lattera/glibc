@@ -31,10 +31,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <error.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-#include "error.h"
+#include "localedef.h"
 #include "charmap.h"
 #include "locfile.h"
 
@@ -189,7 +190,8 @@ main (int argc, char *argv[])
      defines error code 3 for this situation so I think it must be
      a fatal error (see P1003.2 4.35.8).  */
   if (sysconf (_SC_2_LOCALEDEF) < 0)
-    error (3, 0, _("FATAL: system does not define `_POSIX2_LOCALEDEF'"));
+    WITH_CUR_LOCALE (error (3, 0, _("\
+FATAL: system does not define `_POSIX2_LOCALEDEF'")));
 
   /* Process charmap file.  */
   charmap = charmap_read (charmap_file, verbose, be_quiet, 1);
@@ -202,7 +204,8 @@ main (int argc, char *argv[])
 
   /* Now read the locale file.  */
   if (locfile_read (&global, charmap) != 0)
-    error (4, errno, _("cannot open locale definition file `%s'"), input_file);
+    WITH_CUR_LOCALE (error (4, errno, _("\
+cannot open locale definition file `%s'"), input_file));
 
   /* Perhaps we saw some `copy' instructions.  */
   while (1)
@@ -217,8 +220,8 @@ main (int argc, char *argv[])
 	break;
 
       if (locfile_read (runp, charmap) != 0)
-	error (4, errno, _("cannot open locale definition file `%s'"),
-	       runp->name);
+	WITH_CUR_LOCALE (error (4, errno, _("\
+cannot open locale definition file `%s'"), runp->name));
     }
 
   /* Check the categories we processed in source form.  */
@@ -229,13 +232,14 @@ main (int argc, char *argv[])
   if (error_message_count == 0 || force_output != 0)
     {
       if (cannot_write_why != 0)
-	error (4, cannot_write_why, _("cannot write output files to `%s'"),
-	       output_path);
+	WITH_CUR_LOCALE (error (4, cannot_write_why, _("\
+cannot write output files to `%s'"), output_path));
       else
 	write_all_categories (locales, charmap, output_path);
     }
   else
-    error (4, 0, _("no output file produced because warning were issued"));
+    WITH_CUR_LOCALE (error (4, 0, _("\
+no output file produced because warning were issued")));
 
   /* This exit status is prescribed by POSIX.2 4.35.7.  */
   exit (error_message_count != 0);
@@ -485,13 +489,14 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name,
     }
 
   if (generate && (runp->needed & (1 << locale)) != 0)
-    error (5, 0, _("circular dependencies between locale definitions"));
+    WITH_CUR_LOCALE (error (5, 0, _("\
+circular dependencies between locale definitions")));
 
   if (copy_locale != NULL)
     {
       if (runp->categories[locale].generic != NULL)
-	error (5, 0, _("cannot add already read locale `%s' a second time"),
-	       name);
+	WITH_CUR_LOCALE (error (5, 0, _("\
+cannot add already read locale `%s' a second time"), name));
       else
 	runp->categories[locale].generic =
 	  copy_locale->categories[locale].generic;
@@ -516,8 +521,8 @@ find_locale (int locale, const char *name, const char *repertoire_name,
 
   if ((result->avail & (1 << locale)) == 0
       && locfile_read (result, charmap) != 0)
-    error (4, errno, _("cannot open locale definition file `%s'"),
-	   result->name);
+    WITH_CUR_LOCALE (error (4, errno, _("\
+cannot open locale definition file `%s'"), result->name));
 
   return result;
 }
@@ -536,8 +541,8 @@ load_locale (int locale, const char *name, const char *repertoire_name,
 
   if ((result->avail & (1 << locale)) == 0
       && locfile_read (result, charmap) != 0)
-    error (4, errno, _("cannot open locale definition file `%s'"),
-	   result->name);
+    WITH_CUR_LOCALE (error (4, errno, _("\
+cannot open locale definition file `%s'"), result->name));
 
   return result;
 }

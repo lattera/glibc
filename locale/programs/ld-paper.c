@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,6 +28,7 @@
 
 #include <assert.h>
 
+#include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -88,7 +89,8 @@ paper_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (paper == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"), "LC_PAPER");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_PAPER"));
 	  paper_startup (NULL, locale, 0);
 	  paper = locale->categories[LC_PAPER].paper;
 	  nothing = 1;
@@ -98,7 +100,8 @@ paper_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (paper->height == 0)
     {
       if (! nothing)
-	error (0, 0, _("%s: field `%s' not defined"), "LC_PAPER", "height");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_PAPER", "height"));
       /* Use as default values the values from the i18n locale.  */
       paper->height = 297;
     }
@@ -106,7 +109,8 @@ paper_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (paper->width == 0)
     {
       if (! nothing)
-	error (0, 0, _("%s: field `%s' not defined"), "LC_PAPER", "width");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_PAPER", "width"));
       /* Use as default values the values from the i18n locale.  */
       paper->width = 210;
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,6 +28,7 @@
 
 #include <assert.h>
 
+#include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -91,8 +92,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (telephone == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_TELEPHONE");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_TELEPHONE"));
 	  telephone_startup (NULL, locale, 0);
 	  telephone = locale->categories[LC_TELEPHONE].telephone;
 	  nothing = 1;
@@ -102,8 +103,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (telephone->tel_int_fmt == NULL)
     {
       if (! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_TELEPHONE", "tel_int_fmt");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_TELEPHONE", "tel_int_fmt"));
       /* Use as the default value the value of the i18n locale.  */
       telephone->tel_int_fmt = "+%c %a %l";
     }
@@ -114,8 +115,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       const char *cp = telephone->tel_int_fmt;
 
       if (*cp == '\0')
-	error (0, 0, _("%s: field `%s' must not be empty"),
-	       "LC_TELEPHONE", "tel_int_fmt");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
+				"LC_TELEPHONE", "tel_int_fmt"));
       else
 	while (*cp != '\0')
 	  {
@@ -123,9 +124,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	      {
 		if (strchr ("aAlc", *++cp) == NULL)
 		  {
-		    error (0, 0, _("\
-%s: invalid escape sequence in field `%s'"),
-			   "LC_TELEPHONE", "tel_int_fmt");
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_int_fmt"));
 		    break;
 		  }
 	      }
@@ -147,8 +147,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	    {
 	      if (strchr ("aAlc", *++cp) == NULL)
 		{
-		  error (0, 0, _("%s: invalid escape sequence in field `%s'"),
-			 "LC_TELEPHONE", "tel_dom_fmt");
+		  WITH_CUR_LOCALE (error (0, 0, _("\
+%s: invalid escape sequence in field `%s'"), "LC_TELEPHONE", "tel_dom_fmt"));
 		  break;
 		}
 	    }
@@ -160,7 +160,8 @@ telephone_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (telephone->cat == NULL)						      \
     {									      \
       if (verbose && ! nothing)						      \
-	error (0, 0, _("%s: field `%s' not defined"), "LC_TELEPHONE", #cat);  \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				"LC_TELEPHONE", #cat));     		      \
       telephone->cat = "";						      \
     }
 

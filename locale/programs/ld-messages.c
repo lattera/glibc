@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -29,8 +29,8 @@
 
 #include <assert.h>
 
-#include "linereader.h"
 #include "localedef.h"
+#include "linereader.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -95,8 +95,8 @@ messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (messages == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_MESSAGES");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_MESSAGES"));
 	  messages_startup (NULL, locale, 0);
 	  messages = locale->categories[LC_MESSAGES].messages;
 	  nothing = 1;
@@ -112,15 +112,16 @@ messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (messages->yesexpr == NULL)
     {
       if (! be_quiet && ! nothing)
-	error (0, 0, _("%s: field `%s' undefined"), "LC_MESSAGES", "yesexpr");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' undefined"),
+				"LC_MESSAGES", "yesexpr"));
       messages->yesexpr = "^[yY]";
     }
   else if (messages->yesexpr[0] == '\0')
     {
       if (!be_quiet)
-	error (0, 0, _("\
+	WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must not be an empty string"),
-	       "LC_MESSAGES", "yesexpr");
+				"LC_MESSAGES", "yesexpr"));
     }
   else
     {
@@ -134,9 +135,9 @@ messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  char errbuf[BUFSIZ];
 
 	  (void) regerror (result, &re, errbuf, BUFSIZ);
-	  error (0, 0, _("\
+	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: no correct regular expression for field `%s': %s"),
-		 "LC_MESSAGES", "yesexpr", errbuf);
+				  "LC_MESSAGES", "yesexpr", errbuf));
 	}
       else if (result != 0)
 	regfree (&re);
@@ -145,15 +146,16 @@ messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (messages->noexpr == NULL)
     {
       if (! be_quiet && ! nothing)
-	error (0, 0, _("%s: field `%s' undefined"), "LC_MESSAGES", "noexpr");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' undefined"),
+				"LC_MESSAGES", "noexpr"));
       messages->noexpr = "^[nN]";
     }
   else if (messages->noexpr[0] == '\0')
     {
       if (!be_quiet)
-	error (0, 0, _("\
+	WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must not be an empty string"),
-	       "LC_MESSAGES", "noexpr");
+				"LC_MESSAGES", "noexpr"));
     }
   else
     {
@@ -167,9 +169,9 @@ messages_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  char errbuf[BUFSIZ];
 
 	  (void) regerror (result, &re, errbuf, BUFSIZ);
-	  error (0, 0, _("\
+	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: no correct regular expression for field `%s': %s"),
-		 "LC_MESSAGES", "noexpr", errbuf);
+				  "LC_MESSAGES", "noexpr", errbuf));
 	}
       else if (result != 0)
 	regfree (&re);

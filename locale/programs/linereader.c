@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -29,17 +29,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "localedef.h"
 #include "charmap.h"
 #include "error.h"
 #include "linereader.h"
-#include "localedef.h"
 #include "locfile.h"
-
-/* Prototypes for a few program-wide used functions.  */
-extern void *xmalloc (size_t __n);
-extern void *xrealloc (void *__p, size_t __n);
-extern char *xstrdup (const char *__str);
-
 
 /* Prototypes for local functions.  */
 static struct token *get_toplvl_escape (struct linereader *lr);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -27,6 +27,7 @@
 
 #include <assert.h>
 
+#include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -91,7 +92,8 @@ name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (name == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"), "LC_NAME");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_NAME"));
 	  name_startup (NULL, locale, 0);
 	  name = locale->categories[LC_NAME].name;
 	  nothing = 1;
@@ -101,7 +103,8 @@ name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (name->name_fmt == NULL)
     {
       if (! nothing)
-	error (0, 0, _("%s: field `%s' not defined"), "LC_NAME", "name_fmt");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_NAME", "name_fmt"));
       /* Use as the default value the value of the i18n locale.  */
       name->name_fmt = "%p%t%g%t%m%t%f";
     }
@@ -112,8 +115,8 @@ name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       const char *cp = name->name_fmt;
 
       if (*cp == '\0')
-	error (0, 0, _("%s: field `%s' must not be empty"),
-	       "LC_NAME", "name_fmt");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
+				"LC_NAME", "name_fmt"));
       else
 	while (*cp != '\0')
 	  {
@@ -124,9 +127,8 @@ name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		  ++cp;
 		if (strchr ("dfFgGlomMpsSt", *cp) == NULL)
 		  {
-		    error (0, 0, _("\
-%s: invalid escape sequence in field `%s'"),
-			   "LC_NAME", "name_fmt");
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: invalid escape sequence in field `%s'"), "LC_NAME", "name_fmt"));
 		    break;
 		  }
 	      }
@@ -138,7 +140,8 @@ name_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (name->cat == NULL)						      \
     {									      \
       if (verbose && ! nothing)						      \
-	error (0, 0, _("%s: field `%s' not defined"), "LC_NAME", #cat);	      \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				"LC_NAME", #cat));          		      \
       name->cat = "";							      \
     }
 

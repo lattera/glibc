@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -298,7 +298,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 {
   int (*setfct) (const char *, struct __netgrent *);
   void (*endfct) (struct __netgrent *);
-  int (*getfct) (struct __netgrent *, char *, size_t);
+  int (*getfct) (struct __netgrent *, char *, size_t, int *);
   struct name_list *known = NULL;
   struct name_list *needed = NULL;
   int result = 0;
@@ -328,7 +328,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 	    {
 	      char buffer[1024];
 
-	      while ((*getfct) (&entry, buffer, sizeof buffer)
+	      while ((*getfct) (&entry, buffer, sizeof buffer, &errno)
 		     == NSS_STATUS_SUCCESS)
 		{
 		  if (entry.type == group_val)

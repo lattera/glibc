@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -30,8 +30,8 @@
 
 #include <assert.h>
 
-#include "linereader.h"
 #include "localedef.h"
+#include "linereader.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -157,7 +157,8 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (time == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"), "LC_TIME");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_TIME"));
 	  time_startup (NULL, locale, 0);
 	  time = locale->categories[LC_TIME].time;
 	  nothing = 1;
@@ -172,7 +173,8 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       int i;								      \
 									      \
       if (! be_quiet && ! nothing)					      \
-	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				"LC_TIME", #cat));          		      \
 									      \
       for (i = 0; i < sizeof (initval) / sizeof (initval[0]); ++i)	      \
 	time->cat[i] = initval[i];					      \
@@ -192,7 +194,8 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (time->cat == NULL)						      \
     {									      \
       if (! be_quiet && ! nothing)					      \
-	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				"LC_TIME", #cat));          		      \
 									      \
       time->cat = initval;						      \
     }
@@ -242,10 +245,9 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  if (*str != '+' && *str != '-')
 	    {
 	      if (!be_quiet)
-		error (0, 0,
-		       _("%s: direction flag in string %Zd in `era' field"
-			 " is not '+' nor '-'"),
-		       "LC_TIME", idx + 1);
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: direction flag in string %Zd in `era' field is not '+' nor '-'"),
+					"LC_TIME", idx + 1));
 	      /* Default arbitrarily to '+'.  */
 	      time->era_entries[idx].direction = '+';
 	    }
@@ -254,10 +256,9 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  if (*++str != ':')
 	    {
 	      if (!be_quiet)
-		error (0, 0,
-		       _("%s: direction flag in string %Zd in `era' field"
-			 " is not a single character"),
-		       "LC_TIME", idx + 1);
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: direction flag in string %Zd in `era' field is not a single character"),
+					"LC_TIME", idx + 1));
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -268,17 +269,17 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  if (endp == str)
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: invalid number for offset in string %Zd in"
-			       " `era' field"),
-		       "LC_TIME", idx + 1);
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: invalid number for offset in string %Zd in `era' field"),
+					"LC_TIME", idx + 1));
 	      (void) strsep (&str, ":");
 	    }
 	  else if (*endp != ':')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: garbage at end of offset value in"
-			       " string %Zd in `era' field"),
-		       "LC_TIME", idx + 1);
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: garbage at end of offset value in string %Zd in `era' field"),
+					"LC_TIME", idx + 1));
 	      (void) strsep (&str, ":");
 	    }
 	  else
@@ -327,18 +328,18 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		{
 		invalid_start_date:
 		  if (!be_quiet)
-		    error (0, 0, _("%s: invalid starting date in string %Zd in"
-				   " `era' field"),
-			   "LC_TIME", idx + 1);
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: invalid starting date in string %Zd in `era' field"),
+					    "LC_TIME", idx + 1));
 		  (void) strsep (&str, ":");
 		}
 	      else if (*endp != ':')
 		{
 		garbage_start_date:
 		  if (!be_quiet)
-		    error (0, 0, _("%s: garbage at end of starting date "
-				   "in string %Zd in `era' field "),
-			   "LC_TIME", idx + 1);
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: garbage at end of starting date in string %Zd in `era' field "),
+					    "LC_TIME", idx + 1));
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -355,9 +356,9 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 			   && time->era_entries[idx].start_date[2] == 29
 			   && !__isleap (time->era_entries[idx].start_date[0])))
 		      && !be_quiet)
-			  error (0, 0, _("%s: starting date is invalid in"
-					 " string %Zd in `era' field"),
-				 "LC_TIME", idx + 1);
+			  WITH_CUR_LOCALE (error (0, 0, _("\
+%s: starting date is invalid in string %Zd in `era' field"),
+						  "LC_TIME", idx + 1));
 		}
 	    }
 
@@ -404,18 +405,18 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		{
 		invalid_stop_date:
 		  if (!be_quiet)
-		    error (0, 0, _("%s: invalid stopping date in string %Zd in"
-				   " `era' field"),
-			   "LC_TIME", idx + 1);
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: invalid stopping date in string %Zd in `era' field"),
+					    "LC_TIME", idx + 1));
 		  (void) strsep (&str, ":");
 		}
 	      else if (*endp != ':')
 		{
 		garbage_stop_date:
 		  if (!be_quiet)
-		    error (0, 0, _("%s: garbage at end of stopping date "
-				   "in string %Zd in `era' field"),
-			   "LC_TIME", idx + 1);
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: garbage at end of stopping date in string %Zd in `era' field"),
+					    "LC_TIME", idx + 1));
 		  (void) strsep (&str, ":");
 		}
 	      else
@@ -432,17 +433,17 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 			   && time->era_entries[idx].stop_date[2] == 29
 			   && !__isleap (time->era_entries[idx].stop_date[0])))
 		      && !be_quiet)
-			  error (0, 0, _("%s: stopping date is invalid in"
-					 " string %Zd in `era' field"),
-				 "LC_TIME", idx + 1);
+			  WITH_CUR_LOCALE (error (0, 0, _("\
+%s: stopping date is invalid in string %Zd in `era' field"),
+						  "LC_TIME", idx + 1));
 		}
 	    }
 
 	  if (str == NULL || *str == '\0')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: missing era name in string %Zd in `era'"
-			       " field"), "LC_TIME", idx + 1);
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: missing era name in string %Zd in `era' field"), "LC_TIME", idx + 1));
 	      time->era_entries[idx].name =
 		time->era_entries[idx].format = "";
 	    }
@@ -453,9 +454,9 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	      if (str == NULL || *str == '\0')
 		{
 		  if (!be_quiet)
-		    error (0, 0, _("%s: missing era format in string %Zd"
-				   " in `era' field"),
-			   "LC_TIME", idx + 1);
+		    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: missing era format in string %Zd in `era' field"),
+					    "LC_TIME", idx + 1));
 		  time->era_entries[idx].name =
 		    time->era_entries[idx].format = "";
 		}
@@ -482,33 +483,33 @@ time_finish (struct localedef_t *locale, const struct charmap_t *charmap)
     time->week_1stday = 19971130;
 
   if (time->week_1stweek > time->week_ndays)
-    error (0, 0, _("\
+    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: third operand for value of field `%s' must not be larger than %d"),
-	   "LC_TIME", "week", 7);
+			    "LC_TIME", "week", 7));
 
   if (time->first_weekday == '\0')
     /* The definition does not specify this so the default is used.  */
     time->first_weekday = 1;
   else if (time->first_weekday > time->week_ndays)
-    error (0, 0, _("\
+    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: values of field `%s' must not be larger than %d"),
-	   "LC_TIME", "first_weekday", 7);
+			    "LC_TIME", "first_weekday", 7));
 
   if (time->first_workday == '\0')
     /* The definition does not specify this so the default is used.  */
     time->first_workday = 1;
   else if (time->first_workday > time->week_ndays)
-    error (0, 0, _("\
+    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: values of field `%s' must not be larger than %d"),
-	   "LC_TIME", "first_workday", 7);
+			    "LC_TIME", "first_workday", 7));
 
   if (time->cal_direction == '\0')
     /* The definition does not specify this so the default is used.  */
     time->cal_direction = 1;
   else if (time->cal_direction > 3)
-    error (0, 0, _("\
+    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: values for field `%s' must not be larger than %d"),
-	   "LC_TIME", "cal_direction", 3);
+			    "LC_TIME", "cal_direction", 3));
 
   /* XXX We don't perform any tests on the timezone value since this is
      simply useless, stupid $&$!@...  */

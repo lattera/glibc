@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,6 +28,7 @@
 
 #include <assert.h>
 
+#include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -91,8 +92,8 @@ measurement_finish (struct localedef_t *locale,
       if (measurement == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_MEASUREMENT");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_MEASUREMENT"));
 	  measurement_startup (NULL, locale, 0);
 	  measurement = locale->categories[LC_MEASUREMENT].measurement;
 	  nothing = 1;
@@ -102,16 +103,16 @@ measurement_finish (struct localedef_t *locale,
   if (measurement->measurement == 0)
     {
       if (! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_MEASUREMENT", "measurement");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_MEASUREMENT", "measurement"));
       /* Use as the default value the value of the i18n locale.  */
       measurement->measurement = 1;
     }
   else
     {
       if (measurement->measurement > 3)
-	error (0, 0, _("%s: invalid value for field `%s'"),
-	       "LC_MEASUREMENT", "measurement");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: invalid value for field `%s'"),
+				"LC_MEASUREMENT", "measurement"));
     }
 }
 

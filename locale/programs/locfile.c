@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -568,9 +568,8 @@ write_locale_data (const char *output_path, const char *category,
       if (fd == -1)
 	{
 	  if (!be_quiet)
-	    error (0, save_err, _("\
-cannot open output file `%s' for category `%s'"),
-		   fname, category);
+	    WITH_CUR_LOCALE (error (0, save_err, _("\
+cannot open output file `%s' for category `%s'"), fname, category));
 	  free (fname);
 	  return;
 	}
@@ -593,8 +592,8 @@ cannot open output file `%s' for category `%s'"),
       if (writev (fd, &vec[cnt], step) < 0)
 	{
 	  if (!be_quiet)
-	    error (0, errno, _("failure while writing data for category `%s'"),
-		   category);
+	    WITH_CUR_LOCALE (error (0, errno, _("\
+failure while writing data for category `%s'"), category));
 	  break;
 	}
     }
@@ -690,9 +689,8 @@ cannot open output file `%s' for category `%s'"),
 			      if (rename (tmp_fname, fname) < 0)
 				{
 				  if (!be_quiet)
-				    error (0, errno, _("\
-cannot create output file `%s' for category `%s'"),
-					   fname, category);
+				    WITH_CUR_LOCALE (error (0, errno, _("\
+cannot create output file `%s' for category `%s'"), fname, category));
 				}
 			      free (tmp_fname);
 			      free (other_fname);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -29,6 +29,7 @@
 
 #include <assert.h>
 
+#include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -130,8 +131,8 @@ identification_finish (struct localedef_t *locale,
       if (identification == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_IDENTIFICATION");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_IDENTIFICATION"));
 	  identification_startup (NULL, locale, 0);
 	  identification
 	    = locale->categories[LC_IDENTIFICATION].identification;
@@ -143,8 +144,8 @@ identification_finish (struct localedef_t *locale,
   if (identification->cat == NULL)					      \
     {									      \
       if (verbose && ! nothing)						      \
-	error (0, 0, _("%s: field `%s' not defined"),			      \
-	       "LC_IDENTIFICATION", #cat);				      \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+			       	"LC_IDENTIFICATION", #cat));		      \
       identification->cat = "";						      \
     }
 
@@ -167,8 +168,9 @@ identification_finish (struct localedef_t *locale,
     if (num != LC_ALL && identification->category[num] == NULL)
       {
 	if (verbose && ! nothing)
-	  error (0, 0, _("%s: no identification for category `%s'"),
-		 "LC_IDENTIFICATION", category_name[num]);
+	  WITH_CUR_LOCALE (error (0, 0, _("\
+%s: no identification for category `%s'"),
+				  "LC_IDENTIFICATION", category_name[num]));
 	identification->category[num] = "";
       }
 }

@@ -1,5 +1,35 @@
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/getnetgrent_r.c (innetgr): Add int* parameter to getfct
+	definition and pass &errno in use of this variable.
+	Reported by Simon Wilkinson <simon@sxw.org.uk> [PR libc/2911].
+
+2002-02-04  Andreas Schwab  <schwab@suse.de>
+
+	* locale/programs/localedef.h (WITH_CUR_LOCALE): Define.
+	* locale/programs/charmap-dir.c: Wrap calls that output messages
+	with WITH_CUR_LOCALE.  Include "localedef.h" first.
+	* locale/programs/charmap.c: Likewise.
+	* locale/programs/ld-address.c: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-identification.c: Likewise.
+	* locale/programs/ld-measurement.c: Likewise.
+	* locale/programs/ld-messages.c: Likewise.
+	* locale/programs/ld-monetary.c: Likewise.
+	* locale/programs/ld-name.c: Likewise.
+	* locale/programs/ld-numeric.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-telephone.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/programs/linereader.c: Likewise.
+	* locale/programs/linereader.h: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* locale/programs/locfile.c: Likewise.
+	* locale/programs/repertoire.c: Likewise.
+
+2002-02-05  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/rtld.c (_dl_start_final): Determine load address to locate
 	ehdr with GL(dl_rtld_map).l_map_start.
 

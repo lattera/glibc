@@ -27,11 +27,11 @@
 #include <wchar.h>
 #include <sys/param.h>
 
+#include "localedef.h"
 #include "charmap.h"
 #include "localeinfo.h"
 #include "linereader.h"
 #include "locfile.h"
-#include "localedef.h"
 #include "elem-hash.h"
 
 /* Uncomment the following line in the production version.  */
@@ -1516,7 +1516,8 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
     {
       /* No data, no check.  */
       if (! be_quiet)
-	error (0, 0, _("No definition for %s category found"), "LC_COLLATE");
+	WITH_CUR_LOCALE (error (0, 0, _("No definition for %s category found"),
+				"LC_COLLATE"));
       return;
     }
 
@@ -1531,9 +1532,9 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  && ((sect->rules[i] & sort_position)
 	      != (collate->sections->rules[i] & sort_position)))
 	{
-	  error (0, 0, _("\
+	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: `position' must be used for a specific level in all sections or none"),
-		 "LC_COLLATE");
+				  "LC_COLLATE"));
 	  break;
 	}
 
@@ -1554,9 +1555,10 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		  {
 		    if (runp->weights[i].w[j]->weights == NULL)
 		      {
-			error_at_line (0, 0, runp->file, runp->line,
-				       _("symbol `%s' not defined"),
-				       runp->weights[i].w[j]->name);
+			WITH_CUR_LOCALE (error_at_line (0, 0, runp->file,
+							runp->line,
+							_("symbol `%s' not defined"),
+							runp->weights[i].w[j]->name));
 
 			need_undefined = 1;
 			runp->weights[i].w[j] = &collate->undefined;
@@ -1629,11 +1631,14 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		      /* This should not happen.  It means that we have
 			 to symbols with the same byte sequence.  It is
 			 of course an error.  */
-		      error_at_line (0, 0, (*eptr)->file, (*eptr)->line,
-				     _("symbol `%s' has the same encoding as"),
-				     (*eptr)->name);
-		      error_at_line (0, 0, runp->file, runp->line,
-				     _("symbol `%s'"), runp->name);
+		      WITH_CUR_LOCALE (error_at_line (0, 0, (*eptr)->file,
+						      (*eptr)->line,
+						      _("\
+symbol `%s' has the same encoding as"), (*eptr)->name);
+				       error_at_line (0, 0, runp->file,
+						      runp->line,
+						      _("symbol `%s'"),
+						      runp->name));
 		      goto dont_insert;
 		    }
 		  else if (c < 0)
@@ -1732,11 +1737,14 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		      /* This should not happen.  It means that we have
 			 two symbols with the same byte sequence.  It is
 			 of course an error.  */
-		      error_at_line (0, 0, (*eptr)->file, (*eptr)->line,
-				     _("symbol `%s' has the same encoding as"),
-				     (*eptr)->name);
-		      error_at_line (0, 0, runp->file, runp->line,
-				     _("symbol `%s'"), runp->name);
+		      WITH_CUR_LOCALE (error_at_line (0, 0, (*eptr)->file,
+						      (*eptr)->line,
+						      _("\
+symbol `%s' has the same encoding as"), (*eptr)->name);
+				       error_at_line (0, 0, runp->file,
+						      runp->line,
+						      _("symbol `%s'"),
+						      runp->name));
 		      goto dont_insertwc;
 		    }
 		  else if (c < 0)
@@ -1777,7 +1785,7 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  /* This seems not to be enforced by recent standards.  Don't
 	     emit an error, simply append UNDEFINED at the end.  */
 	  if (0)
-	    error (0, 0, _("no definition of `UNDEFINED'"));
+	    WITH_CUR_LOCALE (error (0, 0, _("no definition of `UNDEFINED'")));
 
 	  /* Add UNDEFINED at the end.  */
 	  collate->undefined.mborder =
@@ -3389,8 +3397,8 @@ error while adding equivalent collating symbol"));
 	    }
 	  else if (state == 3)
 	    {
-	      error (0, 0, _("%s: missing `reorder-end' keyword"),
-		     "LC_COLLATE");
+	      WITH_CUR_LOCALE (error (0, 0, _("\
+%s: missing `reorder-end' keyword"), "LC_COLLATE"));
 	      state = 4;
 	    }
 	  else if (state != 2 && state != 4)
@@ -3739,11 +3747,11 @@ error while adding equivalent collating symbol"));
 		    }
 		}
 	      else if (state == 3)
-		error (0, 0, _("%s: missing `reorder-end' keyword"),
-		       "LC_COLLATE");
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: missing `reorder-end' keyword"), "LC_COLLATE"));
 	      else if (state == 5)
-		error (0, 0, _("%s: missing `reorder-sections-end' keyword"),
-		       "LC_COLLATE");
+		WITH_CUR_LOCALE (error (0, 0, _("\
+%s: missing `reorder-sections-end' keyword"), "LC_COLLATE"));
 	    }
 	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
 	  if (arg->tok == tok_eof)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -30,8 +30,8 @@
 
 #include <assert.h>
 
-#include "linereader.h"
 #include "localedef.h"
+#include "linereader.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -191,8 +191,8 @@ monetary_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (monetary == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_MONETARY");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_MONETARY"));
 	  monetary_startup (NULL, locale, 0);
 	  monetary = locale->categories[LC_MONETARY].monetary;
 	  nothing = 1;
@@ -203,8 +203,8 @@ monetary_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (monetary->cat == NULL)						      \
     {									      \
       if (! be_quiet && ! nothing)					      \
-	error (0, 0, _("%s: field `%s' not defined"),			      \
-	       "LC_MONETARY", #cat);					      \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				"LC_MONETARY", #cat));			      \
       monetary->cat = initval;						      \
     }
 
@@ -221,18 +221,18 @@ monetary_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (strlen (monetary->int_curr_symbol) != 4)
 	{
 	  if (! be_quiet && ! nothing)
-	    error (0, 0, _("\
+	    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value of field `int_curr_symbol' has wrong length"),
-		   "LC_MONETARY");
+				    "LC_MONETARY"));
 	}
       else if (bsearch (monetary->int_curr_symbol, valid_int_curr,
 			NR_VALID_INT_CURR, sizeof (const char *),
 			(comparison_fn_t) curr_strcmp) == NULL
 	       && !be_quiet)
-	error (0, 0, _("\
+	WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value of field `int_curr_symbol' does \
 not correspond to a valid name in ISO 4217"),
-	       "LC_MONETARY");
+				"LC_MONETARY"));
     }
 
   /* The decimal point must not be empty.  This is not said explicitly
@@ -241,15 +241,15 @@ not correspond to a valid name in ISO 4217"),
   if (monetary->mon_decimal_point == NULL)
     {
       if (! be_quiet && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_MONETARY", "mon_decimal_point");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_MONETARY", "mon_decimal_point"));
       monetary->mon_decimal_point = ".";
     }
   else if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
-      error (0, 0, _("\
+      WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must not be the empty string"),
-	     "LC_MONETARY", "mon_decimal_point");
+			      "LC_MONETARY", "mon_decimal_point"));
     }
   if (monetary->mon_decimal_point_wc == L'\0')
     monetary->mon_decimal_point_wc = L'.';
@@ -257,8 +257,8 @@ not correspond to a valid name in ISO 4217"),
   if (monetary->mon_grouping_len == 0)
     {
       if (! be_quiet && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_MONETARY", "mon_grouping");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_MONETARY", "mon_grouping"));
 
       monetary->mon_grouping = (char *) "\177";
       monetary->mon_grouping_len = 1;
@@ -269,15 +269,15 @@ not correspond to a valid name in ISO 4217"),
   if (monetary->cat == -2)						      \
     {									      \
        if (! be_quiet && ! nothing)					      \
-	 error (0, 0, _("%s: field `%s' not defined"),			      \
-	        "LC_MONETARY", #cat);					      \
+	 WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				 "LC_MONETARY", #cat));			      \
        monetary->cat = initval;						      \
     }									      \
   else if ((monetary->cat < min || monetary->cat > max)			      \
 	   && !be_quiet && !nothing)					      \
-    error (0, 0, _("							      \
+    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
-	   "LC_MONETARY", #cat, min, max)
+			    "LC_MONETARY", #cat, min, max))
 
   TEST_ELEM (int_frac_digits, -128, 127, -1);
   TEST_ELEM (frac_digits, -128, 127, -1);
@@ -305,9 +305,9 @@ not correspond to a valid name in ISO 4217"),
     monetary->cat = monetary->alt;					      \
   else if ((monetary->cat < min || monetary->cat > max) && !be_quiet	      \
 	   && ! nothing)						      \
-    error (0, 0, _("\
+    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
-	   "LC_MONETARY", #cat, min, max)
+			    "LC_MONETARY", #cat, min, max))
 
   TEST_ELEM (int_p_cs_precedes, p_cs_precedes, -1, 1);
   TEST_ELEM (int_p_sep_by_space, p_sep_by_space, -1, 2);

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +28,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include "localedef.h"
 #include "charmap-dir.h"
-
-extern void *xmalloc (size_t n);
-extern void *xrealloc (void *p, size_t n);
 
 /* The data type of a charmap directory being traversed.  */
 struct charmap_dir
@@ -58,8 +56,8 @@ charmap_opendir (const char *directory)
   dir = opendir (directory);
   if (dir == NULL)
     {
-      error (1, errno, gettext ("cannot read character map directory `%s'"),
-             directory);
+      WITH_CUR_LOCALE (error (1, errno, gettext ("\
+cannot read character map directory `%s'"), directory));
       return NULL;
     }
 

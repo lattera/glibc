@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -30,11 +30,11 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "localedef.h"
 #include "linereader.h"
 #include "charmap.h"
 #include "repertoire.h"
 #include "simple-hash.h"
-#include "localedef.h"
 
 
 /* Simple keyword hashing for the repertoiremap.  */
@@ -322,13 +322,14 @@ argument to <%s> must be a single character"),
     }
 
   if (state != 2 && state != 90 && !be_quiet)
-    error (0, 0, _("%s: premature end of file"), repfile->fname);
+    WITH_CUR_LOCALE (error (0, 0, _("%s: premature end of file"),
+			    repfile->fname));
 
   lr_close (repfile);
 
   if (tsearch (result, &known, &repertoire_compare) == NULL)
     /* Something went wrong.  */
-    error (0, errno, _("cannot safe new repertoire map"));
+    WITH_CUR_LOCALE (error (0, errno, _("cannot safe new repertoire map")));
 
   return result;
 }
@@ -339,7 +340,8 @@ repertoire_complain (const char *name)
 {
   if (tfind (name, &unavailable, (__compar_fn_t) strcmp) == NULL)
     {
-      error (0, errno, _("repertoire map file `%s' not found"), name);
+      WITH_CUR_LOCALE (error (0, errno, _("\
+repertoire map file `%s' not found"), name));
 
       /* Remember that we reported this map.  */
       tsearch (name, &unavailable, (__compar_fn_t) strcmp);

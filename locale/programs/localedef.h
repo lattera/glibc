@@ -24,6 +24,7 @@
 /* Get the basic locale definitions.  */
 #include <locale.h>
 #include <stddef.h>
+#include <errno.h>
 
 #include "repertoire.h"
 
@@ -120,6 +121,19 @@ extern void *xmalloc (size_t __n);
 extern void *xcalloc (size_t __n, size_t __size);
 extern void *xrealloc (void *__p, size_t __n);
 extern char *xstrdup (const char *__str);
+
+
+/* Wrapper to switch LC_CTYPE back to the locale specified in the
+   environment for output.  */
+#define WITH_CUR_LOCALE(stmt)					\
+  do {								\
+      int saved_errno = errno;					\
+      const char *cur_locale_ = setlocale (LC_CTYPE, NULL);	\
+      setlocale (LC_CTYPE, "");					\
+      errno = saved_errno; 					\
+      stmt;							\
+      setlocale (LC_CTYPE, cur_locale_);			\
+  } while (0)
 
 
 /* Mark given locale as to be read.  */

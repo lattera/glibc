@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -29,6 +29,7 @@
 
 #include <assert.h>
 
+#include "localedef.h"
 #include "localeinfo.h"
 #include "locfile.h"
 
@@ -128,8 +129,8 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       if (address == NULL)
 	{
 	  if (! be_quiet)
-	    error (0, 0, _("No definition for %s category found"),
-		   "LC_ADDRESS");
+	    WITH_CUR_LOCALE (error (0, 0, _("\
+No definition for %s category found"), "LC_ADDRESS"));
 	  address_startup (NULL, locale, 0);
 	  address = locale->categories[LC_ADDRESS].address;
 	  nothing = 1;
@@ -139,8 +140,8 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (address->postal_fmt == NULL)
     {
       if (! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_ADDRESS", "postal_fmt");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_ADDRESS", "postal_fmt"));
       /* Use as the default value the value of the i18n locale.  */
       address->postal_fmt = "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N";
     }
@@ -151,8 +152,8 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
       const char *cp = address->postal_fmt;
 
       if (*cp == '\0')
-	error (0, 0, _("%s: field `%s' must not be empty"),
-	       "LC_ADDRESS", "postal_fmt");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
+				"LC_ADDRESS", "postal_fmt"));
       else
 	while (*cp != '\0')
 	  {
@@ -163,9 +164,9 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		  ++cp;
 		if (strchr ("afdbshNtreCzTSc%", *cp) == NULL)
 		  {
-		    error (0, 0, _("\
+		    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: invalid escape `%%%c' sequence in field `%s'"),
-			   "LC_ADDRESS", *cp, "postal_fmt");
+					    "LC_ADDRESS", *cp, "postal_fmt"));
 		    break;
 		  }
 	      }
@@ -177,7 +178,8 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (address->cat == NULL)						      \
     {									      \
       if (verbose && ! nothing)						      \
-	error (0, 0, _("%s: field `%s' not defined"), "LC_ADDRESS", #cat);    \
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
+				"LC_ADDRESS", #cat));  	    		      \
       address->cat = "";						      \
     }
 
@@ -194,16 +196,16 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   if (address->lang_term == NULL)
     {
       if (verbose && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"), "LC_ADDRESS",
-	       "lang_term");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_ADDRESS", "lang_term"));
       address->lang_term = "";
       cnt = sizeof (iso639) / sizeof (iso639[0]);
     }
   else if (address->lang_term[0] == '\0')
     {
       if (verbose)
-	error (0, 0, _("%s: field `%s' must not be empty"),
-	       "LC_ADDRESS", "lang_term");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
+				"LC_ADDRESS", "lang_term"));
       cnt = sizeof (iso639) / sizeof (iso639[0]);
     }
   else
@@ -213,22 +215,23 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	if (strcmp (address->lang_term, iso639[cnt].term) == 0)
 	  break;
       if (cnt == sizeof (iso639) / sizeof (iso639[0]))
-	error (0, 0, _("\
+	WITH_CUR_LOCALE (error (0, 0, _("\
 %s: terminology language code `%s' not defined"),
-	       "LC_ADDRESS", address->lang_term);
+				"LC_ADDRESS", address->lang_term));
     }
 
   if (address->lang_ab == NULL)
     {
       if (verbose && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"), "LC_ADDRESS", "lang_ab");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_ADDRESS", "lang_ab"));
       address->lang_ab = "";
     }
   else if (address->lang_ab[0] == '\0')
     {
       if (verbose)
-	error (0, 0, _("%s: field `%s' must not be empty"),
-	       "LC_ADDRESS", "lang_ab");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
+				"LC_ADDRESS", "lang_ab"));
     }
   else
     {
@@ -239,15 +242,15 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	    if (strcmp (address->lang_ab, iso639[cnt].ab) == 0)
 	      break;
 	  if (cnt == sizeof (iso639) / sizeof (iso639[0]))
-	    error (0, 0, _("\
+	    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: language abbreviation `%s' not defined"),
-		   "LC_ADDRESS", address->lang_ab);
+				    "LC_ADDRESS", address->lang_ab));
 	}
       else
 	if (strcmp (iso639[cnt].ab, address->lang_ab) != 0)
-	  error (0, 0, _("\
+	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: `%s' value does not match `%s' value"),
-		 "LC_ADDRESS", "lang_ab", "lang_term");
+				  "LC_ADDRESS", "lang_ab", "lang_term"));
     }
 
   if (address->lang_lib == NULL)
@@ -256,8 +259,8 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   else if (address->lang_lib[0] == '\0')
     {
       if (verbose)
-	error (0, 0, _("%s: field `%s' must not be empty"),
-	       "LC_ADDRESS", "lang_lib");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' must not be empty"),
+				"LC_ADDRESS", "lang_lib"));
     }
   else
     {
@@ -267,22 +270,22 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	    if (strcmp (address->lang_lib, iso639[cnt].lib) == 0)
 	      break;
 	  if (cnt == sizeof (iso639) / sizeof (iso639[0]))
-	    error (0, 0, _("\
+	    WITH_CUR_LOCALE (error (0, 0, _("\
 %s: language abbreviation `%s' not defined"),
-		   "LC_ADDRESS", address->lang_lib);
+				    "LC_ADDRESS", address->lang_lib));
 	}
       else
 	if (strcmp (iso639[cnt].ab, address->lang_ab) != 0)
-	  error (0, 0, _("\
+	  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: `%s' value does not match `%s' value"), "LC_ADDRESS", "lang_lib",
-		 helper == 1 ? "lang_term" : "lang_ab");
+				  helper == 1 ? "lang_term" : "lang_ab"));
     }
 
   if (address->country_num == 0)
     {
       if (verbose && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_ADDRESS", "country_num");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_ADDRESS", "country_num"));
       cnt = sizeof (iso3166) / sizeof (iso3166[0]);
     }
   else
@@ -292,34 +295,36 @@ address_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 	  break;
 
       if (cnt == sizeof (iso3166) / sizeof (iso3166[0]))
-	error (0, 0, _("\
+	WITH_CUR_LOCALE (error (0, 0, _("\
 %s: numeric country code `%d' not valid"),
-	       "LC_ADDRESS", address->country_num);
+				"LC_ADDRESS", address->country_num));
     }
 
   if (address->country_ab2 == NULL)
     {
       if (verbose && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_ADDRESS", "country_ab2");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_ADDRESS", "country_ab2"));
       address->country_ab2 = "  ";
     }
   else if (cnt != sizeof (iso3166) / sizeof (iso3166[0])
 	   && strcmp (address->country_ab2, iso3166[cnt].ab2) != 0)
-    error (0, 0, _("%s: `%s' value does not match `%s' value"),
-	   "LC_ADDRESS", "country_ab2", "country_num");
+    WITH_CUR_LOCALE (error (0, 0,
+			    _("%s: `%s' value does not match `%s' value"),
+			    "LC_ADDRESS", "country_ab2", "country_num"));
 
   if (address->country_ab3 == NULL)
     {
       if (verbose && ! nothing)
-	error (0, 0, _("%s: field `%s' not defined"),
-	       "LC_ADDRESS", "country_ab3");
+	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),
+				"LC_ADDRESS", "country_ab3"));
       address->country_ab3 = "   ";
     }
   else if (cnt != sizeof (iso3166) / sizeof (iso3166[0])
 	   && strcmp (address->country_ab3, iso3166[cnt].ab3) != 0)
-    error (0, 0, _("%s: `%s' value does not match `%s' value"),
-	   "LC_ADDRESS", "country_ab3", "country_num");
+    WITH_CUR_LOCALE (error (0, 0, _("\
+%s: `%s' value does not match `%s' value"),
+			    "LC_ADDRESS", "country_ab3", "country_num"));
 }
 
 
