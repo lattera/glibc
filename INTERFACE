@@ -848,8 +848,9 @@ nanosleep			nanosleep
 nextafter			nextafter
 nextafterf			nextafterf
 nextafterl			nextafterl
-			      >	nextafterx			NEW: ISO C 9x
-			      >	nextafterxf			NEW: ISO C 9x
+			      >	nexttoward			NEW: ISO C 9x
+			      >	nexttowardf			NEW: ISO C 9x
+			      >	nexttowardl			NEW: ISO C 9x
 nfsservctl			nfsservctl
 			      >	nftw				NEW: Unix98
 			      >	nftw64				NEW: LFS
@@ -1210,7 +1211,6 @@ strerror_r			strerror_r
 strfmon				strfmon
 strfry				strfry
 strftime			strftime
-			      >	strfxtime			NEW: ISO C 9x
 strlen				strlen
 strncasecmp			strncasecmp
 strncat				strncat

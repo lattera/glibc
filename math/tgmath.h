@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -322,8 +322,8 @@
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 #define nextafter(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, nextafter)
-#define nextafterx(Val1, Val2) \
-     __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, nextafterx)
+#define nexttoward(Val1, Val2) \
+     __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, nexttoward)
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */
 #define remainder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, remainder)

@@ -1,3 +1,7 @@
+1999-01-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/tgmath.h (nexttoward): Rename nextafterx to nexttoward.
+
 1999-01-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Add baud rates >

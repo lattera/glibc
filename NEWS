@@ -320,8 +320,9 @@ nearbyintf			NEW: ISO C 9x
 nearbyintl			NEW: ISO C 9x
 netname2host			NEW: Secure RPC
 netname2user			NEW: Secure RPC
-nextafterx			NEW: ISO C 9x
-nextafterxf			NEW: ISO C 9x
+nexttoward			NEW: ISO C 9x
+nexttowardf			NEW: ISO C 9x
+nexttowardl			NEW: ISO C 9x
 nftw				NEW: Unix98
 nftw64				NEW: LFS
 open64				NEW: LFS
@@ -377,7 +378,6 @@ statfs64			NEW: LFS
 statvfs				NEW: Unix98
 statvfs64			NEW: LFS
 strcasestr			NEW: GNU ext.
-strfxtime			NEW: ISO C 9x
 strtoimax			NEW: ISO C 9x
 strtoumax			NEW: ISO C 9x
 strverscmp			NEW: GNU ext.
