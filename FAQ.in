@@ -487,7 +487,7 @@ versions of some string functions.  These can only be used with GCC.  See
 	libc anymore?
 
 
-Removed.  Does not apply anymore.
+{} Removed.  Does not apply anymore.
 
 ??	When I use GNU libc on my Linux system by linking against
 	the libc.so which comes with glibc all I get is a core dump.
@@ -1321,7 +1321,7 @@ completely.
 	the Perl db modules the testsuite is not passed.  This did not
 	happen with db-1, gdbm, or ndbm.
 
-Removed.  Does not apply anymore.
+{} Removed.  Does not apply anymore.
 
 ??	The pow() inline function I get when including <math.h> is broken.
 	I get segmentation faults when I run the program.
@@ -1413,7 +1413,7 @@ benchmark program for measuring disk access).
 ??	Programs compiled with glibc 2.1 can't read db files made with glibc
 	2.0.  What has changed that programs like rpm break?
 
-Removed.  Does not apply anymore.
+{} Removed.  Does not apply anymore.
 
 ??	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
 	when I try to use it, it always returns -1 and sets errno to ENOSYS.
@@ -1525,7 +1525,7 @@ and regulations of the country this effects.  glibc behaves correctly.
 ??make	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
 
-Removed.  Does not apply anymore, use make 3.79 or newer.
+{} Removed.  Does not apply anymore, use make 3.79 or newer.
 
 ??	Why do so many programs using math functions fail on my AlphaStation?
 
