@@ -1,5 +1,8 @@
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Rewrite test to give gcc to clean up after itself.
+	Patch by Greg Schafer.
+
 	* posix/regex.c: Support crappy compilers and platforms which have
 	problems with alloca.
 	* posix/regex_internal.h: Likewise.

@@ -1,3 +1,11 @@
+2004-01-09  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
+	[!HAVE_TLS_SUPPORT]: Define SINGLE_THREAD_P using static
+	__lib*_multiple_threads.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	[!HAVE_TLS_SUPPORT]: Likewise.
+
 2004-01-13  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/tcb-offsets.sym: Put -- separator line before any
