@@ -173,7 +173,6 @@ __inline_mathop(significand, getman)
 
 # ifdef __USE_ISOC9X
 __inline_mathop(log2, log2)
-__inline_mathop(exp2, twotox)
 __inline_mathop(trunc, intrz)
 # endif
 
@@ -445,7 +444,6 @@ __inline_forward_c(double,ceil, (double __x), (__x))
 __inline_forward_c(int,isinf, (double __value), (__value))
 __inline_forward_c(int,finite, (double __value), (__value))
 __inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
-__inline_forward_c(double,scalbln, (double __x, long int __n), (__x, __n))
 # endif
 # if defined __USE_MISC || defined __USE_XOPEN
 #  ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
@@ -453,6 +451,7 @@ __inline_forward_c(int,isnan, (double __value), (__value))
 #  endif
 # endif
 # ifdef __USE_ISOC9X
+__inline_forward_c(double,scalbln, (double __x, long int __n), (__x, __n))
 __inline_forward_c(double,nearbyint, (double __value), (__value))
 __inline_forward_c(long int,lrint, (double __value), (__value))
 __inline_forward_c(double,fma, (double __x, double __y, double __z),
@@ -473,10 +472,10 @@ __inline_forward_c(float,ceilf, (float __x), (__x))
 __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
 __inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
-__inline_forward_c(float,scalblnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
 #  endif
 # ifdef __USE_ISOC9X
+__inline_forward_c(float,scalblnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
 __inline_forward_c(long int,lrintf, (float __value), (__value))
 __inline_forward_c(float,fmaf, (float __x, float __y, float __z),
@@ -495,11 +494,11 @@ __inline_forward_c(long double,ceill, (long double __x), (__x))
 __inline_forward_c(int,isinfl, (long double __value), (__value))
 __inline_forward_c(int,finitel, (long double __value), (__value))
 __inline_forward_c(long double,scalbnl, (long double __x, int __n), (__x, __n))
-__inline_forward_c(long double,scalblnl, (long double __x, long int __n),
-		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
 # endif
 # ifdef __USE_ISOC9X
+__inline_forward_c(long double,scalblnl, (long double __x, long int __n),
+		   (__x, __n))
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
 __inline_forward_c(long int,lrintl, (long double __value), (__value))
 __inline_forward_c(long double,fmal,
