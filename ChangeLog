@@ -1,5 +1,8 @@
 2001-08-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/strtol.c: Little optimizations.  Add some
+	__builtin_expect.
+
 	* conform/conformtest.pl: <inttypes.h> test required <stddef.h>.
 
 	* wcsmbs/wchar.h (wcwdith): Change parameter type to wchar_t.

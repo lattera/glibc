@@ -263,7 +263,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
      in the format described in <locale.h>.  */
   const char *grouping;
 
-  if (group)
+  if (__builtin_expect (group, 0))
     {
       grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
       if (*grouping <= 0 || *grouping == CHAR_MAX)
@@ -305,22 +305,18 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   /* Skip white space.  */
   while (ISSPACE (*s))
     ++s;
-  if (*s == L_('\0'))
+  if (__builtin_expect (*s == L_('\0'), 0))
     goto noconv;
 
   /* Check for a sign.  */
+  negative = 0;
   if (*s == L_('-'))
     {
       negative = 1;
       ++s;
     }
   else if (*s == L_('+'))
-    {
-      negative = 0;
-      ++s;
-    }
-  else
-    negative = 0;
+    ++s;
 
   /* Recognize number prefix and if BASE is zero, figure it out ourselves.  */
   if (*s == L_('0'))
@@ -343,7 +339,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   if (base != 10)
     grouping = NULL;
 
-  if (grouping)
+  if (__builtin_expect (grouping != NULL, 0))
     {
 # ifndef USE_WIDE_CHAR
       thousands_len = strlen (thousands);
@@ -506,7 +502,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
     overflow = 1;
 #endif
 
-  if (overflow)
+  if (__builtin_expect (overflow, 0))
     {
       __set_errno (ERANGE);
 #if UNSIGNED
