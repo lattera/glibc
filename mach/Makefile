@@ -47,7 +47,9 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 		   $(addprefix device/,device device_request)
 # We produce mach_interface.h from mach.defs because there is already a
 # <mach/mach.h> that is not the interface header (thanks CMU).
-mach_interface.defs = mach.defs
+mach/mach_interface.defs = mach/mach.defs
+# Similarly for memory_object_user vs. memory_object
+mach/memory_object_user.defs = mach/memory_object.defs
 server-interfaces := mach/exc
 tests := hello
 # It is important that we do not use the wildcard function to expand

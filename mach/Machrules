@@ -145,6 +145,7 @@ $(objpfx)%_server.c $(objpfx)%_server.h:
 
 # To get header files that declare both the straight and __ functions,
 # we generate two files and paste them together.
+$(objpfx)%_server.uh:; $(mig.uh)
 $(objpfx)%.uh:; $(mig.uh)
 define mig.uh
 $(make-target-directory)
@@ -152,6 +153,7 @@ $(include-%.defs) | \
 $(MIG) - /dev/null $(MIGFLAGS) \
        -header $@ -server /dev/null -user /dev/null
 endef
+$(objpfx)%_server.__h:; $(mig.__h)
 $(objpfx)%.__h:; $(mig.__h)
 define mig.__h
 $(make-target-directory)
