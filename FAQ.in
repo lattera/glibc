@@ -62,37 +62,35 @@ may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.3 and 1.1) and GNU CC (2.8.1) should work with the GNU C library
 (for powerpc see question ?powerpc).
 
+{ZW} You may have problems if you try to mix code compiled with
+EGCS and with GCC 2.8.1. See ?exception for details.
+
 ??	When I try to compile glibc I get only error messages.
 	What's wrong?
 
 {UD} You definitely need GNU make to translate GNU libc.  No other make
 program has the needed functionality.
 
-We recommend version GNU make version 3.75.  Versions 3.76 and 3.76.1 have
-bugs which appear when building big projects like GNU libc.  Versions before
-3.74 have bugs and/or are missing features.
+We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
+have bugs and/or are missing features.  Version 3.76 has bugs which
+appear when building big projects like GNU libc. 3.76.1 appears to work but
+some people have reported problems.
 
-??	Do I need a special linker or archiver?
+??	Do I need a special linker or assembler?
 
-{UD} You may be able to use your system linker, but GNU libc works best with
-GNU binutils.
+{ZW} If you want a shared library, you need a linker and assembler that
+understand all the features of ELF, including weak and versioned symbols.
+The static library can be compiled with less featureful tools, but lacks key
+features such as NSS.
 
-On systems where the native linker does not support weak symbols you will
-not get a fully ISO C compliant C library.  Generally speaking you should
-use the GNU binutils if they provide at least the same functionality as your
-system's tools.
+For Linux or Hurd, you want binutils 2.8.1.0.23, 2.9.1, or 2.9.1.0.15 or
+higher.  These are the only versions we've tested and found reliable.  Other
+versions after 2.8.1.0.23 may work but we don't recommend them, especially
+not when C++ is involved.  Earlier versions do not work at all.
 
-Always get the newest release of GNU binutils available.  Older releases are
-known to have bugs that prevent a successful compilation.
-
-{AJ} Please don't use binutils 2.7.  That release contains some bugs which
-might make it necessary that you've got to recompile all your glibc2
-binaries when upgrading the GNU C library.
-
-{ZW} As of release 2.1 a linker supporting symbol versions is required.  For
-Linux, get binutils-2.8.1.0.23 or later.  Other systems may have native
-linker support, but it's moot right now, because glibc has not been ported
-to them.
+Other operating systems may come with system tools that have all the
+necessary features, but this is moot because glibc hasn't been ported to
+them.
 
 ??powerpc	Which compiler should I use for powerpc?
 
@@ -107,7 +105,7 @@ variables.  There is a temporary patch at:
 
 Later versions of egcs may fix this problem.
 
-??	Do I need some more things to compile GNU C Library?
+??	Do I need some more things to compile the GNU C Library?
 
 {UD} Yes, there are some more :-).
 
@@ -117,15 +115,15 @@ Later versions of egcs may fix this problem.
   site.  (We distribute compiled message catalogs, but they may not be
   updated in patches.)
 
-* Some files depend on special tools.  E.g., files ending in .gperf
-  need a `gperf' program.  The GNU version (part of libg++) is known
-  to work while some vendor versions do not.
+* Some files are built with special tools.  E.g., files ending in .gperf
+  need a `gperf' program.  The GNU version (now available in a separate
+  package, formerly only as part of libg++) is known to work while some
+  vendor versions do not.
 
   You should not need these tools unless you change the source files.
 
-* Some scripts need perl5 - but at the moment those scripts are not
-  vital for building and installing GNU libc (some data files will not
-  be created).
+* Perl 5 is needed if you wish to test an installation of GNU libc
+  as the primary C library.
 
 * When compiling for Linux, the header files of the Linux kernel must
   be available to the compiler as <linux/*.h> and <asm/*.h>.
@@ -167,7 +165,7 @@ recompile libc if you ever upgrade to kernel 2.1 or 2.2.  To tell libc which
 headers to use, give configure the --with-headers switch
 (e.g. --with-headers=/usr/src/linux-2.1.107/include).
 
-Note that you must configure the 2.1 kernel if you do this; otherwise libc
+Note that you must configure the 2.1 kernel if you do this, otherwise libc
 will be unable to find <linux/version.h>.  Just copy .config from your 2.0
 kernel sources to the 2.1 tree, do `make oldconfig', and say no to all the
 new options.
@@ -175,8 +173,9 @@ new options.
 ??	The compiler hangs while building iconvdata modules.  What's
 	wrong?
 
-{ZW} This is a problem of older GCC.  Initialization of large static arrays
-is very slow.  The compiler will eventually finish; give it time.
+{ZW} This is a problem with old versions of GCC.  Initialization of large
+static arrays is very slow.  The compiler will eventually finish; give it
+time.
 
 The problem is fixed in egcs 1.1 but not in earlier releases.
 
@@ -526,6 +525,34 @@ not a symlink to libc.so.6.  It should look something like this:
 
 GROUP ( libc.so.6 libc_nonshared.a )
 
+??exception	When I run an executable on one system which I compiled on
+	another, I get dynamic linker errors.  Both systems have the same
+	version of glibc installed.  What's wrong?
+
+{ZW} Glibc on one of these systems was compiled with gcc 2.7 or 2.8, the
+other with egcs (any version).  Egcs has functions in its internal
+`libgcc.a' to support exception handling with C++.  They are linked into
+any program or dynamic library compiled with egcs, whether it needs them or
+not.  Dynamic libraries then turn around and export those functions again
+unless special steps are taken to prevent them.
+
+When you link your program, it resolves its references to the exception
+functions to the ones exported accidentally by libc.so.  That works fine as
+long as libc has those functions.  On the other system, libc doesn't have
+those functions because it was compiled by gcc 2.8, and you get undefined
+symbol errors.  The symbols in question are named things like
+`__register_frame_info'.
+
+For glibc 2.0, the workaround is to not compile libc with egcs.  We've also
+incorporated a patch which should prevent the EH functions sneaking into
+libc.  It doesn't matter what compiler you use to compile your program.
+
+For glibc 2.1, we've chosen to do it the other way around: libc.so
+explicitly provides the EH functions.  This is to prevent other shared
+libraries from doing it.  You must therefore compile glibc 2.1 with EGCS
+unless you don't care about ever importing binaries from other systems.
+Again, it doesn't matter what compiler you use for your programs.
+
 ??	How can I compile gcc 2.7.2.1 from the gcc source code using
 	glibc 2.x?
 
@@ -627,7 +654,6 @@ db-Makefile'.  Please note that not all services are capable of using a
 database.  Currently passwd, group, ethers, protocol, rpc, services shadow
 and netgroup are implemented.
 
-
 ??	I have /usr/include/net and /usr/include/scsi as symlinks
 	into my Linux source tree.  Is that wrong?
 
@@ -680,18 +706,18 @@ So in case of doubt report such a warning message as a problem.
 
 ??	What do I need for C++ development?
 
-{HJ,AJ} You need either egcs 1.1 which comes directly with libstdc++ or 
-gcc-2.8.1 together with libstdc++ 2.8.1.1.  egcs 1.1 has the better C++ 
-support and works directly with glibc 2.1.  If you use gcc-2.8.1 with 
-libstdc++ 2.8.1.1, you need to modify libstdc++ a bit.  A patch is available 
-as: 
-	ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz 
- 
-Please note that libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work 
-very well with the GNU C library due to vtable thunks.  If you're upgrading 
-from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the library 
-compiled for 2.0 is not compatible due to the new Large File Support (LFS) 
-in version 2.1. 
+{HJ,AJ} You need either egcs 1.1 which comes directly with libstdc++ or
+gcc-2.8.1 together with libstdc++ 2.8.1.1.  egcs 1.1 has the better C++
+support and works directly with glibc 2.1.  If you use gcc-2.8.1 with
+libstdc++ 2.8.1.1, you need to modify libstdc++ a bit.  A patch is available
+as:
+	ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz
+
+Please note that libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work
+very well with the GNU C library due to vtable thunks.  If you're upgrading
+from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the library
+compiled for 2.0 is not compatible due to the new Large File Support (LFS)
+in version 2.1.
 
 {UD} But since in the case of a shared libstdc++ the version numbers should
 be different existing programs will continue to work.
@@ -742,13 +768,11 @@ really screwed up.
 
 ??	When I use nscd the machine freezes.
 
-{UD} It is well known that you cannot use nscd with Linux 2.0.*.  There
-is functionality missing in the kernel and work-arounds are not suitable.
-Beside this some parts of the kernel are too buggy when it comes to using
-threads.
+{UD} You cannot use nscd with Linux 2.0.*.  There is functionality missing
+in the kernel and work-arounds are not suitable.  Besides, some parts of the
+kernel are too buggy when it comes to using threads.
 
-So you have the possibilities to run Linux 2.0.* or update to a higher
-version and start using nscd.
+If you need nscd, you have to use a 2.1 kernel.
 
 Note that I have at this point no information about any other platform.
 

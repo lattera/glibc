@@ -1,5 +1,7 @@
 1998-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.103.
+
 	* aclocal.m4 (LIBC_PROG_BINUTILS): Also add AR and RANLIB using the
 	same method.
 	* configure.in: Don't define AR and RANLIB here.
