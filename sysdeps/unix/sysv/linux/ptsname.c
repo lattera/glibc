@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -96,19 +96,19 @@ __ptsname_r (int fd, char *buf, size_t buflen)
          `int' of 8 bytes we never need more than 20 digits.  */
       char numbuf[21];
       const char *devpts = _PATH_DEVPTS;
-      const size_t devptslen = strlen (devpts);
+      const size_t devptslen = strlen (_PATH_DEVPTS);
       char *p;
 
-      numbuf[20] = '\0';
-      p = _itoa_word (ptyno, &numbuf[20], 10, 0);
+      numbuf[sizeof (numbuf) - 1] = '\0';
+      p = _itoa_word (ptyno, &numbuf[sizeof (numbuf) - 1], 10, 0);
 
-      if (buflen < devptslen + strlen (p) + 1)
+      if (buflen < devptslen + &numbuf[sizeof (numbuf)] - p)
 	{
 	  __set_errno (ERANGE);
 	  return ERANGE;
 	}
 
-      __stpcpy (__stpcpy (buf, devpts), p);
+      memcpy (__stpcpy (buf, devpts), p, &numbuf[sizeof (numbuf)] - p);
     }
   else if (errno == EINVAL)
 #endif
