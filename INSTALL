@@ -1,27 +1,88 @@
 Installing the GNU C Library
 ****************************
 
-   Installation of the GNU C library is relatively simple, but usually
-requires several GNU tools to be installed already.
-
    Before you do anything else, you should read the file `FAQ' found at
 the top level of the source tree.  This file answers common questions
 and describes problems you may experience with compilation and
 installation.  It is updated more frequently than this manual.
 
-   To configure the GNU C library for your system, run the shell script
-`configure' with `sh'.  You might use an argument which is the
-conventional GNU name for your system configuration--for example,
-`i486-pc-linux-gnu', for Linux running on i486.  *Note Installation:
-(gcc.info)Installation, for a full description of standard GNU
-configuration names.  If you omit the configuration name, `configure'
-will try to guess one for you by inspecting the system it is running
-on.  It may or may not be able to come up with a guess, and the guess
-might be wrong.  `configure' will tell you the canonical name of the
-chosen configuration before proceeding.
+   Two components of GNU Libc are distributed as "add-on" bundles
+separate from the main distribution.  Unless you are doing an unusual
+installation, you should get them both.  Support for the `crypt'
+function is distributed separately because of US export restrictions.
+If you are outside the US or Canada, you must get `crypt' support from
+a site outside the US, such as `ftp.ifi.uio.no'.  (Most non-US mirrors
+of `ftp.gnu.org' will have it too.)  The file you need is
+`glibc-crypt-VERSION.tar.gz'.  Support for POSIX threads is maintained
+by someone else, so it's in a separate package.  At the moment it is
+only available for Linux systems; this will change in the future.  Get
+it from the same place you got the main bundle; the file is
+`glibc-linuxthreads-VERSION.tar.gz'.  Both add-on bundles should be
+unpacked into the top level of the libc source tree.
 
-   Here are some options that you should specify (if appropriate) when
-you run `configure':
+   You will need recent versions of several GNU tools: definitely GCC
+and GNU Make, and possibly others.  *Note Tools for Installation::,
+below.
+
+Configuring and compiling GNU Libc
+==================================
+
+   GNU Libc cannot be compiled in the source directory.  You must
+create a separate directory for the object files.  This directory
+should be outside the source tree.  For example, if you have unpacked
+the glibc sources in `/src/gnu/glibc-2.1.0', create a directory
+`/src/gnu/glibc-build' to put the object files in.
+
+   From your object directory, run the shell script `configure' found
+at the top level of the source tree.  In the scenario above, you'd type
+
+     $ ../glibc-2.1.0/configure ARGS...
+
+`configure' takes many options, but you can get away with knowing only
+two: `--enable-add-ons' and `--prefix'.  The `--enable-add-ons' option
+tells configure to use all the add-on bundles it finds in the source
+directory.  Since important functionality is provided in add-ons, you
+should always give this option.  The `--prefix' option tells configure
+where you want glibc installed.  This defaults to `/usr/local'.  If you
+are installing glibc as your primary C library, give the option
+`--prefix=/usr', which will put components in `/usr' or `/' as
+appropriate.
+
+   It may also be useful to set the CC and CFLAGS variables in the
+environment when running `configure'.  CC selects the C compiler that
+will be used, and CFLAGS sets optimization options for the compiler.
+
+   Here are all the useful options known by `configure':
+
+`--prefix=DIRECTORY'
+     Install machine-independent data files in subdirectories of
+     `DIRECTORY'.  The default is to install in `/usr/local'.
+
+`--exec-prefix=DIRECTORY'
+     Install the library and other machine-dependent files in
+     subdirectories of `DIRECTORY'.  The default is to the `--prefix'
+     directory if that option is given, or `/usr/local' otherwise.
+
+`--with-headers=DIRECTORY'
+     Look for kernel header files in DIRECTORY, not `/usr/include'.
+     Glibc needs information from the kernel's private header files.
+     It will normally look in `/usr/include' for them, but if you give
+     this option, it will look in DIRECTORY instead.
+
+     This option is primarily of use on a system where the headers in
+     `/usr/include' come from an older version of glibc.  Conflicts can
+     occasionally happen in this case.  Note that Linux libc5 qualifies
+     as an older version of glibc.  You can also use this option if you
+     want to compile glibc with a newer set of kernel headers than the
+     ones found in `/usr/include'.
+
+`--enable-add-ons[=LIST]'
+     Enable add-on packages in your source tree.  If this option is
+     given with no list, it enables all the add-on packages it finds.
+     If you do not wish to use some add-on package that you have
+     present in your source tree, give this option a list of the
+     add-ons that you *do* want used, like this:
+     `--enable-add-ons=crypt,linuxthreads'
 
 `--with-binutils=DIRECTORY'
      Use the binutils (assembler and linker) in `DIRECTORY', not the
@@ -33,129 +94,80 @@ you run `configure':
      build a shared libc with old binutils.)
 
 `--without-fp'
-`--nfp'
      Use this option if your computer lacks hardware floating-point
      support and your operating system does not emulate an FPU.
 
-`--prefix=DIRECTORY'
-     Install machine-independent data files in subdirectories of
-     `DIRECTORY'.  (You can also set this in `configparms'; see below.)
-     The default is to install in `/usr/local'.
+`--disable-static'
+     Don't build static libraries.  Static libraries aren't that useful
+     these days, but we recommend you build them in case you need them.
 
-`--exec-prefix=DIRECTORY'
-     Install the library and other machine-dependent files in
-     subdirectories of `DIRECTORY'.  (You can also set this in
-     `configparms'; see below.)  The default is to use <prefix>/bin and
-     <prefix>/sbin.
-
-`--enable-shared'
 `--disable-shared'
-     Enable or disable building of an ELF shared library on systems that
-     support it.  The default is to build the shared library on systems
-     using ELF when the GNU `binutils' are available.
+     Don't build shared libraries even if we could.  Not all systems
+     support shared libraries; you need ELF support and (currently) the
+     GNU linker.
 
-`--enable-profile'
 `--disable-profile'
-     Enable or disable building of the profiled C library, `-lc_p'.  The
-     default is to build the profiled library.  You may wish to disable
-     it if you don't plan to do profiling, because it doubles the build
-     time of compiling just the unprofiled static library.
+     Don't build libraries with profiling information.  You may want to
+     use this option if you don't plan to do profiling.
 
 `--enable-omitfp'
-     Enable building a highly-optimized but possibly undebuggable C
-     library.  This causes the normal static and shared (if enabled) C
-     libraries to be compiled with maximal optimization, including the
-     `-fomit-frame-pointer' switch that makes debugging impossible on
-     many machines, and without debugging information (which makes the
-     binaries substantially smaller).  An additional static library is
-     compiled with no optimization and full debugging information, and
-     installed as `-lc_g'.
+     Use maximum optimization for the normal (static and shared)
+     libraries, and compile separate static libraries with debugging
+     information and no optimisation.  We recommend against this.  The
+     extra optimization doesn't gain you much, it may provoke compiler
+     bugs, and you won't be able to trace bugs through the C library.
 
-`--enable-add-ons[=LIST]'
-     Certain components of the C library are distributed separately
-     from the rest of the sources.  In particular, the `crypt' function
-     and its friends are separated due to US export control
-     regulations, and the threading support code for Linux is
-     maintained separately.  You can get these "add-on" packages from
-     the same place you got the libc sources.  To use them, unpack them
-     into your source tree, and give `configure' the `--enable-add-ons'
-     option.
+`--disable-versioning'
+     Don't compile the shared libraries with symbol version information.
+     Doing this will make the library that's built incompatible with old
+     binaries, so it's not recommended.
 
-     If you do not wish to use some add-on package that you have
-     present in your source tree, give this option a list of the
-     add-ons that you *do* want used, like this:
-     `--enable-add-ons=crypt,linuxthreads'
+`--enable-static-nss'
+     Compile static versions of the NSS (Name Service Switch) libraries.
+     This is not recommended because it defeats the purpose of NSS; a
+     program linked statically with the NSS libraries cannot be
+     dynamically reconfigured to use a different name database.
 
-`--with-headers=DIRECTORY'
-     Search only DIRECTORY and the C compiler's private directory for
-     header files not found in the libc sources.  `/usr/include' will
-     not be searched if this option is given.  On Linux, DIRECTORY
-     should be the kernel's private include directory (usually
-     `/usr/src/linux/include').
+`--build=BUILD-SYSTEM'
+`--host=HOST-SYSTEM'
+     These options are for cross-compiling.  If you give them both and
+     BUILD-SYSTEM is different from HOST-SYSTEM, `configure' will
+     prepare to cross-compile glibc from BUILD-SYSTEM to be used on
+     HOST-SYSTEM.  You'll probably need the `--with-headers' option
+     too, and you may have to override CONFIGURE's selection of the
+     compiler and/or binutils.
 
-     This option is primarily of use on a system where the headers in
-     `/usr/include' come from an older version of glibc.  Conflicts can
-     occasionally happen in this case.  Note that Linux libc5 qualifies
-     as an older version of glibc.  You can also use this option if you
-     want to compile glibc with a newer set of kernel headers than the
-     ones found in `/usr/include'.
-
-   You should not build the library in the same directory as the
-sources, because there are bugs in `make clean'.  Make a directory for
-the build, and run `configure' from that directory, like this:
-
-     mkdir linux
-     cd linux
-     ../configure
-
-`configure' looks for the sources in whatever directory you specified
-for finding `configure' itself.  It does not matter where in the file
-system the source and build directories are--as long as you specify the
-source directory when you run `configure', you will get the proper
-results.
-
-   This feature lets you keep sources and binaries in different
-directories, and that makes it easy to build the library for several
-different machines from the same set of sources.  Simply create a build
-directory for each target machine, and run `configure' in that
-directory specifying the target machine's configuration name.
-
-   The library has a number of special-purpose configuration parameters.
-These are defined in the file `configparms'; see the comments in that
-file for the details.  To change them, copy `configparms' into your
-build directory and modify it as appropriate for your system.
-`configure' will not notice your modifications if you change the file
-in the source directory.
-
-   It is easy to configure the GNU C library for cross-compilation by
-setting a few variables in `configparms'.  Set `CC' to the
-cross-compiler for the target you configured the library for; it is
-important to use this same `CC' value when running `configure', like
-this: `CC=TARGET-gcc configure TARGET'.  Set `BUILD_CC' to the compiler
-to use for for programs run on the build system as part of compiling
-the library.  You may need to set `AR' and `RANLIB' to cross-compiling
-versions of `ar' and `ranlib' if the native tools are not configured to
-work with object files for the target you configured for.
-
-   Some of the machine-dependent code for some machines uses extensions
-in the GNU C compiler, so you may need to compile the library with GCC.
-(In fact, all of the existing complete ports require GCC.)
+     If you give just one of these, `configure' will get confused.  If
+     `configure' doesn't correctly guess your system type for a native
+     build, report that as a bug.
 
    To build the library and related programs, type `make'.  This will
 produce a lot of output, some of which may look like errors from `make'
-(but isn't).  Look for error messages from `make' containing `***'.
+but isn't.  Look for error messages from `make' containing `***'.
 Those indicate that something is really wrong.
 
-   The compilation process takes several hours even on fast hardware;
-expect at least two hours for the default configuration on i586 for
-Linux.  For Hurd times are much longer.  All current releases of GCC
-have a problem which causes them to take several minutes to compile
-certain files in the iconvdata directory.  Do not panic if the compiler
-appears to hang.
+   The compilation process takes several hours even on fast hardware.
+Expect at least two hours for the default configuration on i586 for
+Linux.  For Hurd times are much longer.  Except for EGCS 1.1 (and later
+versions of EGCS), all supported versions of GCC have a problem which
+causes them to take several minutes to compile certain files in the
+iconvdata directory.  Do not panic if the compiler appears to hang.
+
+   If you want to run a parallel make, you can't just give `make' the
+`-j' option, because it won't be passed down to the sub-makes.
+Instead, edit the generated `Makefile' and uncomment the line
+
+     # PARALLELMFLAGS = -j 4
+
+You can change the `4' to some other number as appropriate for your
+system.
 
    To build and run some test programs which exercise some of the
-library facilities, type `make check'.  This will produce several files
-with names like `PROGRAM.out'.
+library facilities, type `make check'.  This should complete
+successfully; if it doesn't, do not use the built library, and report a
+bug.  *Note Reporting Bugs::, for how to do that.  Note that some of
+the tests assume they are not being run by `root'.  We recommend you
+compile and test glibc as an unprivileged user.
 
    To format the `GNU C Library Reference Manual' for printing, type
 `make dvi'.  You need a working TeX installation to do this.
@@ -168,25 +180,8 @@ value for the Makefile variable `install_root' on the command line.
 This is useful to create chroot'ed environment or to prepare binary
 releases.
 
-   For now (in this alpha version, and at least on RedHat Linux), if you
-are trying to install this as your default libraries, a different
-installation method is recommended.  Move `/usr/include' out of the
-way, create a new `/usr/include' directory (don't forget the symlinks
-`/usr/include/asm' and `/usr/include/linux', that should point to
-`/usr/src/linux/include/asm' and `/usr/src/linux/include/linux' -or
-wherever you keep your kernel sources-respectively), build normally and
-install into somewhere else via `install_root'. Then move your
-`/usr/include' back, and copy the newly created stuff by hand over the
-old. Remember to copy programs and shared libraries into `FILENAME.new'
-and then move `FILENAME.new' to `FILENAME', as the files might be in
-use. You will have to `ranlib' your copies of the static libraries
-`/usr/lib/libNAME.a'. You will see that `libbsd-compat.a', `libieee.a',
-and `libmcheck.a' are just object files, not archives. This is normal.
-Copy the new header files over the old ones by something like
-`cd /usr; (cd INSTALL_ROOT; tar cf - include) | tar xf -'.
-
-Recommended Tools to Install the GNU C Library
-==============================================
+Recommended Tools for Compilation
+=================================
 
    We recommend installing the following GNU tools before attempting to
 build the GNU C library:
@@ -196,25 +191,29 @@ build the GNU C library:
      You need the latest version of GNU `make'.  Modifying the GNU C
      Library to work with other `make' programs would be so hard that we
      recommend you port GNU `make' instead.  *Really.*  We recommend
-     version GNU `make' version 3.75.  Versions 3.76 and 3.76.1 are
-     known to have bugs which only show up in big projects like GNU
-     `libc'.
+     version GNU `make' version 3.75 or 3.77.  All earlier versions
+     have severe bugs or lack features. Version 3.76 is known to have
+     bugs which only show up in big projects like GNU `libc'.  Version
+     3.76.1 seems OK but some people have reported problems.
 
-   * GCC 2.8.1/EGCS 1.0.2
+   * EGCS 1.1 or 1.0.3
 
-     On most platforms, the GNU C library can only be compiled with the
-     GNU C compiler family.  We recommend GCC version 2.8.1 and EGCS
-     version 1.0.2 or later versions of these two; earlier versions may
-     have problems.
+     The GNU C library can only be compiled with the GNU C compiler
+     family.  We recommend EGCS 1.0.3 or higher.  GCC 2.8.1 and older
+     versions of EGCS may have problems, particularly on non-Intel
+     architectures.  GCC 2.7.x has catastrophic bugs and cannot be used
+     at all.
 
-   * GNU `binutils' 2.8.1.0.23
+   * GNU `binutils' 2.8.1.0.23, 2.9.1, or 2.9.0.15
 
-     Using the GNU `binutils' (assembler, linker, and related tools) is
-     preferable when possible, and they are required to build an ELF
-     shared C library.  Version 2.1 of the library uses ELF symbol
-     versioning extensively.  Support for this feature is incomplete or
-     buggy before binutils 2.8.1.0.23, so you must use at least this
-     version.
+     You must use GNU binutils (as and ld) if you want to build a shared
+     library.  Even if you don't, we recommend you use them anyway.  No
+     one has tested compilation with non-GNU binutils in a long time.
+
+     The quality of binutils releases has varied a bit recently.  The
+     bugs are in obscure features, but glibc uses quite a few of those.
+     2.8.1.0.23, 2.9.1, and 2.9.0.15 are known to work.  Versions after
+     2.8.1.0.23 may or may not work.  Older versions definitely don't.
 
    * GNU `texinfo' 3.11
 
@@ -230,10 +229,16 @@ build the GNU C library:
 
           make INSTALL_INFO=/path/to/GNU/install-info install
 
-   * GNU `awk' 3.0
+   * GNU `awk' 3.0, or some other POSIX awk
 
-     Several files used during the build are generated using features
-     of GNU `awk' that are not found in other implementations.
+     Awk is used in several places to generate files.  The scripts
+     should work with any POSIX-compliant awk implementation; GNU awk
+     3.0 and `mawk' 1.3 are known to work.
+
+   * Perl 5
+
+     Perl is not required, but it is used if present to test the
+     installation.  We may decide to use it elsewhere in the future.
 
 If you change any of the `configure.in' files you will also need
 
@@ -241,7 +246,7 @@ If you change any of the `configure.in' files you will also need
 
 and if you change any of the message translation files you will need
 
-   * GNU `gettext' 0.10 or later
+   * GNU `gettext' 0.10.35 or later
 
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
@@ -252,28 +257,28 @@ Supported Configurations
    The GNU C Library currently supports configurations that match the
 following patterns:
 
-     alpha-ANYTHING-linux
-     arm-ANYTHING-linuxaout
-     arm-ANYTHING-none
-     iX86-ANYTHING-gnu
-     iX86-ANYTHING-linux
-     m68k-ANYTHING-linux
-     powerpc-ANYTHING-linux
-     sparc-ANYTHING-linux
-     sparc64-ANYTHING-linux
+     alpha-*-linux
+     arm-*-linuxaout
+     arm-*-none
+     iX86-*-gnu
+     iX86-*-linux
+     m68k-*-linux
+     powerpc-*-linux
+     sparc-*-linux
+     sparc64-*-linux
 
    Former releases of this library (version 1.09.1 and perhaps earlier
 versions) used to run on the following configurations:
 
      alpha-dec-osf1
-     alpha-ANYTHING-linuxecoff
-     iX86-ANYTHING-bsd4.3
-     iX86-ANYTHING-isc2.2
-     iX86-ANYTHING-isc3.N
-     iX86-ANYTHING-sco3.2
-     iX86-ANYTHING-sco3.2v4
-     iX86-ANYTHING-sysv
-     iX86-ANYTHING-sysv4
+     alpha-*-linuxecoff
+     iX86-*-bsd4.3
+     iX86-*-isc2.2
+     iX86-*-isc3.N
+     iX86-*-sco3.2
+     iX86-*-sco3.2v4
+     iX86-*-sysv
+     iX86-*-sysv4
      iX86-force_cpu386-none
      iX86-sequent-bsd
      i960-nindy960-none
@@ -314,32 +319,6 @@ for these few.  (These aliases work in other GNU software as well.)
      sun3-sunos4.N sun3
      sun4-solaris2.N sun4-sunos5.N
      sun4-sunos4.N sun4
-
-Useful hints for the installation
-=================================
-
-   There are a some more or less obvious methods one should know when
-compiling GNU libc:
-
-   * Better never compile in the source directory.  Create a new
-     directory and run the `configure' from there.  Everything should
-     happen automagically.
-
-   * You can use the `-j' option of GNU make by changing the line
-     specifying `PARALLELMAKE' in the Makefile generated during the
-     configuration.
-
-     It is not useful to start the `make' process using the `-j' option
-     since this option is not propagated down to the sub-`make's.
-
-   * If you made some changes after a complete build and only want to
-     check these changes run `make' while specifying the list of
-     subdirs it has to visit.
-
-          make subdirs="nss elf"
-
-     The above build run will only visit the subdirectories `nss' and
-     `elf'.  Beside this it updates the `libc' files itself.
 
 Reporting Bugs
 ==============

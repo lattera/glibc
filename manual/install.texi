@@ -6,42 +6,100 @@
 @c %MENU% How to install the GNU C library
 @appendix Installing the GNU C Library
 
-@menu
-* Tools for Installation::      We recommend using these tools to build.
-* Supported Configurations::    What systems the GNU C library runs on.
-* Tips for Installation::       Useful hints for the installation.
-* Reporting Bugs::              How to report bugs (if you want to
-                                get them fixed) and other troubles
-                                you may have with the GNU C library.
-@end menu
-
-Installation of the GNU C library is relatively simple, but usually
-requires several GNU tools to be installed already.
-@iftex
-(@pxref{Tools for Installation}, below.)
-@end iftex
-
 Before you do anything else, you should read the file @file{FAQ} found
 at the top level of the source tree.  This file answers common questions
 and describes problems you may experience with compilation and
 installation.  It is updated more frequently than this manual.
 
-To configure the GNU C library for your system, run the shell script
-@file{configure} with @code{sh}.  You might use an argument which is the
-conventional GNU name for your system configuration---for example,
-@samp{i486-pc-linux-gnu}, for Linux running on i486.
-@xref{Installation, Installation, Installing GNU CC, gcc.info, Using and
-Porting GNU CC}, for a full description of standard GNU configuration
-names.  If you omit the configuration name, @file{configure} will try to
-guess one for you by inspecting the system it is running on.  It may or
-may not be able to come up with a guess, and the guess might be
-wrong.  @file{configure} will tell you the canonical name of the chosen
-configuration before proceeding.
+Two components of GNU Libc are distributed as @dfn{add-on} bundles
+separate from the main distribution.  Unless you are doing an unusual
+installation, you should get them both.  Support for the @code{crypt}
+function is distributed separately because of US export restrictions.
+If you are outside the US or Canada, you must get @code{crypt} support
+from a site outside the US, such as @samp{ftp.ifi.uio.no}.
+@c Check this please someone:
+(Most non-US mirrors of @samp{ftp.gnu.org} will have it too.)  The file
+you need is @file{glibc-crypt-@var{VERSION}.tar.gz}.  Support for POSIX
+threads is maintained by someone else, so it's in a separate package.
+At the moment it is only available for Linux systems; this will change
+in the future.  Get it from the same place you got the main bundle; the
+file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.  Both add-on
+bundles should be unpacked into the top level of the libc source tree.
 
-Here are some options that you should specify (if appropriate) when
-you run @code{configure}:
+You will need recent versions of several GNU tools: definitely GCC and
+GNU Make, and possibly others.  @xref{Tools for Installation}, below.
+
+@menu
+* Configuring and compiling::   How to compile and test GNU libc.
+* Tools for Compilation::       You'll need these first.
+* Supported Configurations::    What it runs on, what it doesn't.
+* Reporting Bugs::              So they'll get fixed.
+@end menu
+
+@node Configuring and compiling
+@appendixsec Configuring and compiling GNU Libc
+
+GNU Libc cannot be compiled in the source directory.  You must create a
+separate directory for the object files.  This directory should be
+outside the source tree.  For example, if you have unpacked the glibc
+sources in @file{/src/gnu/glibc-2.1.0}, create a directory
+@file{/src/gnu/glibc-build} to put the object files in.
+
+From your object directory, run the shell script @file{configure} found
+at the top level of the source tree.  In the scenario above, you'd type
+
+@smallexample
+$ ../glibc-2.1.0/configure @var{args...}
+@end smallexample
+
+@noindent
+@code{configure} takes many options, but you can get away with knowing
+only two: @samp{--enable-add-ons} and @samp{--prefix}.  The
+@samp{--enable-add-ons} option tells configure to use all the add-on
+bundles it finds in the source directory.  Since important functionality
+is provided in add-ons, you should always give this option.  The
+@code{--prefix} option tells configure where you want glibc installed.
+This defaults to @file{/usr/local}.  If you are installing glibc as your
+primary C library, give the option @samp{--prefix=/usr}, which will put
+components in @file{/usr} or @file{/} as appropriate.
+
+It may also be useful to set the @var{CC} and @var{CFLAGS} variables in
+the environment when running @code{configure}.  @var{CC} selects the C
+compiler that will be used, and @var{CFLAGS} sets optimization options
+for the compiler.
+
+Here are all the useful options known by @code{configure}:
 
 @table @samp
+@item --prefix=@var{directory}
+Install machine-independent data files in subdirectories of
+@file{@var{directory}}.  The default is to install in @file{/usr/local}.
+
+@item --exec-prefix=@var{directory}
+Install the library and other machine-dependent files in subdirectories
+of @file{@var{directory}}.  The default is to the @samp{--prefix}
+directory if that option is given, or @file{/usr/local} otherwise.
+
+@item --with-headers=@var{directory}
+Look for kernel header files in @var{directory}, not
+@file{/usr/include}.  Glibc needs information from the kernel's private
+header files.  It will normally look in @file{/usr/include} for them,
+but if you give this option, it will look in @var{DIRECTORY} instead.
+
+This option is primarily of use on a system where the headers in
+@file{/usr/include} come from an older version of glibc.  Conflicts can
+occasionally happen in this case.  Note that Linux libc5 qualifies as an
+older version of glibc.  You can also use this option if you want to
+compile glibc with a newer set of kernel headers than the ones found in
+@file{/usr/include}.
+
+@item --enable-add-ons[=@var{list}]
+Enable add-on packages in your source tree.  If this option is given
+with no list, it enables all the add-on packages it finds.  If you do
+not wish to use some add-on package that you have present in your source
+tree, give this option a list of the add-ons that you @emph{do} want
+used, like this: @samp{--enable-add-ons=crypt,linuxthreads}
+
 @item --with-binutils=@var{directory}
 Use the binutils (assembler and linker) in @file{@var{directory}}, not
 the ones the C compiler would default to.  You could use this option if
@@ -53,133 +111,84 @@ with old binutils.)
 
 @c extra blank line makes it look better
 @item --without-fp
-@itemx --nfp
-
 Use this option if your computer lacks hardware floating-point support
 and your operating system does not emulate an FPU.
 
-@item --prefix=@var{directory}
-Install machine-independent data files in subdirectories of
-@file{@var{directory}}.  (You can also set this in @file{configparms};
-see below.)  The default is to install in `/usr/local'.
+@item --disable-static
+Don't build static libraries.  Static libraries aren't that useful these
+days, but we recommend you build them in case you need them.
 
-@item --exec-prefix=@var{directory}
-Install the library and other machine-dependent files in subdirectories
-of @file{@var{directory}}.  (You can also set this in
-@file{configparms}; see below.)  The default is to use <prefix>/bin
-and <prefix>/sbin.
+@item --disable-shared
+Don't build shared libraries even if we could.  Not all systems support
+shared libraries; you need ELF support and (currently) the GNU linker.
 
-@item --enable-shared
-@itemx --disable-shared
-Enable or disable building of an ELF shared library on systems that
-support it.  The default is to build the shared library on systems using
-ELF when the GNU @code{binutils} are available.
-
-@item --enable-profile
-@itemx --disable-profile
-Enable or disable building of the profiled C library, @samp{-lc_p}.  The
-default is to build the profiled library.  You may wish to disable it if
-you don't plan to do profiling, because it doubles the build time of
-compiling just the unprofiled static library.
+@item --disable-profile
+Don't build libraries with profiling information.  You may want to use
+this option if you don't plan to do profiling.
 
 @item --enable-omitfp
-Enable building a highly-optimized but possibly undebuggable C
-library.  This causes the normal static and shared (if enabled) C
-libraries to be compiled with maximal optimization, including the
-@samp{-fomit-frame-pointer} switch that makes debugging impossible on
-many machines, and without debugging information (which makes the
-binaries substantially smaller).  An additional static library is
-compiled with no optimization and full debugging information, and
-installed as @samp{-lc_g}.
+Use maximum optimization for the normal (static and shared)
+libraries, and compile separate static libraries with debugging
+information and no optimisation.  We recommend against this.  The extra
+optimization doesn't gain you much, it may provoke compiler bugs, and
+you won't be able to trace bugs through the C library.
 
-@item --enable-add-ons[=LIST]
-Certain components of the C library are distributed separately from the
-rest of the sources.  In particular, the @code{crypt} function and its
-friends are separated due to US export control regulations, and the
-threading support code for Linux is maintained separately.  You can get
-these @dfn{add-on} packages from the same place you got the libc
-sources.  To use them, unpack them into your source tree, and give
-@code{configure} the @samp{--enable-add-ons} option.
+@item --disable-versioning
+Don't compile the shared libraries with symbol version information.
+Doing this will make the library that's built incompatible with old
+binaries, so it's not recommended.
 
-If you do not wish to use some add-on package that you have present in
-your source tree, give this option a list of the add-ons that you
-@emph{do} want used, like this: @samp{--enable-add-ons=crypt,linuxthreads}
+@item --enable-static-nss
+Compile static versions of the NSS (Name Service Switch) libraries.
+This is not recommended because it defeats the purpose of NSS; a program
+linked statically with the NSS libraries cannot be dynamically
+reconfigured to use a different name database.
 
-@item --with-headers=DIRECTORY
-Search only DIRECTORY and the C compiler's private directory for header
-files not found in the libc sources.  @file{/usr/include} will not be
-searched if this option is given.  On Linux, DIRECTORY should be the
-kernel's private include directory (usually
-@file{/usr/src/linux/include}).
+@c another extra blank line
+@item --build=@var{build-system}
+@itemx --host=@var{host-system}
+These options are for cross-compiling.  If you give them both and
+@var{build-system} is different from @var{host-system}, @code{configure}
+will prepare to cross-compile glibc from @var{build-system} to be used
+on @var{host-system}.  You'll probably need the @samp{--with-headers}
+option too, and you may have to override @var{configure}'s selection of
+the compiler and/or binutils.
 
-This option is primarily of use on a system where the headers in
-@file{/usr/include} come from an older version of glibc.  Conflicts can
-occasionally happen in this case.  Note that Linux libc5 qualifies as an
-older version of glibc.  You can also use this option if you want to
-compile glibc with a newer set of kernel headers than the ones found in
-@file{/usr/include}.
+If you give just one of these, @code{configure} will get confused.  If
+@code{configure} doesn't correctly guess your system type for a native
+build, report that as a bug.
 @end table
-
-You should not build the library in the same directory as the sources,
-because there are bugs in @code{make clean}.  Make a directory for the
-build, and run @code{configure} from that directory, like this:
-
-@smallexample
-mkdir linux
-cd linux
-../configure
-@end smallexample
-
-@noindent
-@code{configure} looks for the sources in whatever directory you
-specified for finding @code{configure} itself.  It does not matter where
-in the file system the source and build directories are---as long as you
-specify the source directory when you run @code{configure}, you will get
-the proper results.
-
-This feature lets you keep sources and binaries in different
-directories, and that makes it easy to build the library for several
-different machines from the same set of sources.  Simply create a
-build directory for each target machine, and run @code{configure} in
-that directory specifying the target machine's configuration name.
-
-The library has a number of special-purpose configuration parameters.
-These are defined in the file @file{configparms}; see the comments in
-that file for the details.  To change them, copy @file{configparms} into
-your build directory and modify it as appropriate for your system.
-@code{configure} will not notice your modifications if you change the
-file in the source directory.
-
-It is easy to configure the GNU C library for cross-compilation by
-setting a few variables in @file{configparms}.  Set @code{CC} to the
-cross-compiler for the target you configured the library for; it is
-important to use this same @code{CC} value when running
-@code{configure}, like this: @samp{CC=@var{target}-gcc configure
-@var{target}}.  Set @code{BUILD_CC} to the compiler to use for for
-programs run on the build system as part of compiling the library.  You
-may need to set @code{AR} and @code{RANLIB} to cross-compiling versions
-of @code{ar} and @code{ranlib} if the native tools are not configured to
-work with object files for the target you configured for.
-
-Some of the machine-dependent code for some machines uses extensions in
-the GNU C compiler, so you may need to compile the library with GCC.
-(In fact, all of the existing complete ports require GCC.)
 
 To build the library and related programs, type @code{make}.  This will
 produce a lot of output, some of which may look like errors from
-@code{make} (but isn't).  Look for error messages from @code{make}
+@code{make} but isn't.  Look for error messages from @code{make}
 containing @samp{***}.  Those indicate that something is really wrong.
 
-The compilation process takes several hours even on fast hardware;
-expect at least two hours for the default configuration on i586 for
-Linux.  For Hurd times are much longer.  All current releases of GCC
-have a problem which causes them to take several minutes to compile
-certain files in the iconvdata directory.  Do not panic if the compiler
-appears to hang.
+The compilation process takes several hours even on fast hardware.
+Expect at least two hours for the default configuration on i586 for
+Linux.  For Hurd times are much longer.  Except for EGCS 1.1 (and later
+versions of EGCS), all supported versions of GCC have a problem which
+causes them to take several minutes to compile certain files in the
+iconvdata directory.  Do not panic if the compiler appears to hang.
+
+If you want to run a parallel make, you can't just give @code{make} the
+@samp{-j} option, because it won't be passed down to the sub-makes.
+Instead, edit the generated @file{Makefile} and uncomment the line
+
+@smallexample
+# PARALLELMFLAGS = -j 4
+@end smallexample
+
+@noindent
+You can change the @samp{4} to some other number as appropriate for
+your system.
 
 To build and run some test programs which exercise some of the library
-facilities, type @code{make check}.  This will produce several files
-with names like @file{@var{program}.out}.
+facilities, type @code{make check}.  This should complete successfully;
+if it doesn't, do not use the built library, and report a bug.
+@xref{Reporting Bugs}, for how to do that.  Note that some of the tests
+assume they are not being run by @code{root}.  We recommend you compile
+and test glibc as an unprivileged user.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
 @w{@code{make dvi}}.  You need a working @TeX{} installation to do this.
@@ -192,27 +201,8 @@ value for the Makefile variable @code{install_root} on the command line.
 This is useful to create chroot'ed environment or to prepare binary
 releases.@refill
 
-For now (in this alpha version, and at least on RedHat Linux), if you
-are trying to install this as your default libraries, a different
-installation method is recommended.  Move @file{/usr/include} out of the
-way, create a new @file{/usr/include} directory (don't forget the
-symlinks @file{/usr/include/asm} and @file{/usr/include/linux}, that
-should point to @file{/usr/src/linux/include/asm} and
-@file{/usr/src/linux/include/linux} -or wherever you keep your kernel
-sources-respectively), build normally and install into somewhere else
-via @code{install_root}. Then move your @code{/usr/include} back, and
-copy the newly created stuff by hand over the old. Remember to copy
-programs and shared libraries into @file{FILENAME.new} and then move
-@file{FILENAME.new} to @file{FILENAME}, as the files might be in
-use. You will have to @code{ranlib} your copies of the static libraries
-@file{/usr/lib/libNAME.a}. You will see that @file{libbsd-compat.a},
-@file{libieee.a}, and @file{libmcheck.a} are just object files, not
-archives. This is normal.  Copy the new header files over the old ones
-by something like @w{@code{cd /usr; (cd INSTALL_ROOT; tar cf - include) |
-tar xf -}}.
-
-@node Tools for Installation
-@appendixsec Recommended Tools to Install the GNU C Library
+@node Tools for Compilation
+@appendixsec Recommended Tools for Compilation
 @cindex installation tools
 @cindex tools, for installing library
 
@@ -226,25 +216,30 @@ GNU @code{make} 3.75
 You need the latest version of GNU @code{make}.  Modifying the GNU C
 Library to work with other @code{make} programs would be so hard that we
 recommend you port GNU @code{make} instead.  @strong{Really.}  We
-recommend version GNU @code{make} version 3.75.  Versions 3.76 and
-3.76.1 are known to have bugs which only show up in big projects like
-GNU @code{libc}.
+recommend version GNU @code{make} version 3.75 or 3.77.  All earlier
+versions have severe bugs or lack features. Version 3.76 is known to
+have bugs which only show up in big projects like GNU @code{libc}.
+Version 3.76.1 seems OK but some people have reported problems.
 
 @item
-GCC 2.8.1/EGCS 1.0.2
+EGCS 1.1 or 1.0.3
 
-On most platforms, the GNU C library can only be compiled with the GNU C
-compiler family.  We recommend GCC version 2.8.1 and EGCS version 1.0.2
-or later versions of these two; earlier versions may have problems.
+The GNU C library can only be compiled with the GNU C compiler family.
+We recommend EGCS 1.0.3 or higher.  GCC 2.8.1 and older versions of EGCS
+may have problems, particularly on non-Intel architectures.  GCC 2.7.x
+has catastrophic bugs and cannot be used at all.
 
 @item
-GNU @code{binutils} 2.8.1.0.23
+GNU @code{binutils} 2.8.1.0.23, 2.9.1, or 2.9.0.15
 
-Using the GNU @code{binutils} (assembler, linker, and related tools) is
-preferable when possible, and they are required to build an ELF shared C
-library.  Version 2.1 of the library uses ELF symbol versioning
-extensively.  Support for this feature is incomplete or buggy before
-binutils 2.8.1.0.23, so you must use at least this version.
+You must use GNU binutils (as and ld) if you want to build a shared
+library.  Even if you don't, we recommend you use them anyway.  No one
+has tested compilation with non-GNU binutils in a long time.
+
+The quality of binutils releases has varied a bit recently.  The bugs
+are in obscure features, but glibc uses quite a few of those.
+2.8.1.0.23, 2.9.1, and 2.9.0.15 are known to work.  Versions after
+2.8.1.0.23 may or may not work.  Older versions definitely don't.
 
 @item
 GNU @code{texinfo} 3.11
@@ -263,11 +258,18 @@ make INSTALL_INFO=/path/to/GNU/install-info install
 @end smallexample
 
 @item
-GNU @code{awk} 3.0
+GNU @code{awk} 3.0, or some other POSIX awk
 
-Several files used during the build are generated using features of GNU
-@code{awk} that are not found in other implementations.
-@c XXX: Does mawk work?
+Awk is used in several places to generate files.  The scripts should
+work with any POSIX-compliant awk implementation; GNU awk 3.0 and
+@code{mawk} 1.3 are known to work.
+
+@item
+Perl 5
+
+Perl is not required, but it is used if present to test the
+installation.  We may decide to use it elsewhere in the future.
+
 @end itemize
 
 @noindent
@@ -283,13 +285,12 @@ and if you change any of the message translation files you will need
 
 @itemize @bullet
 @item
-GNU @code{gettext} 0.10 or later
+GNU @code{gettext} 0.10.35 or later
 @end itemize
 
 @noindent
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
-
 
 @node Supported Configurations
 @appendixsec Supported Configurations
@@ -299,15 +300,15 @@ The GNU C Library currently supports configurations that match the
 following patterns:
 
 @smallexample
-alpha-@var{anything}-linux
-arm-@var{anything}-linuxaout
-arm-@var{anything}-none
-i@var{x}86-@var{anything}-gnu
-i@var{x}86-@var{anything}-linux
-m68k-@var{anything}-linux
-powerpc-@var{anything}-linux
-sparc-@var{anything}-linux
-sparc64-@var{anything}-linux
+alpha-@var{*}-linux
+arm-@var{*}-linuxaout
+arm-@var{*}-none
+i@var{x}86-@var{*}-gnu
+i@var{x}86-@var{*}-linux
+m68k-@var{*}-linux
+powerpc-@var{*}-linux
+sparc-@var{*}-linux
+sparc64-@var{*}-linux
 @end smallexample
 
 Former releases of this library (version 1.09.1 and perhaps earlier
@@ -315,14 +316,14 @@ versions) used to run on the following configurations:
 
 @smallexample
 alpha-dec-osf1
-alpha-@var{anything}-linuxecoff
-i@var{x}86-@var{anything}-bsd4.3
-i@var{x}86-@var{anything}-isc2.2
-i@var{x}86-@var{anything}-isc3.@var{n}
-i@var{x}86-@var{anything}-sco3.2
-i@var{x}86-@var{anything}-sco3.2v4
-i@var{x}86-@var{anything}-sysv
-i@var{x}86-@var{anything}-sysv4
+alpha-@var{*}-linuxecoff
+i@var{x}86-@var{*}-bsd4.3
+i@var{x}86-@var{*}-isc2.2
+i@var{x}86-@var{*}-isc3.@var{n}
+i@var{x}86-@var{*}-sco3.2
+i@var{x}86-@var{*}-sco3.2v4
+i@var{x}86-@var{*}-sysv
+i@var{x}86-@var{*}-sysv4
 i@var{x}86-force_cpu386-none
 i@var{x}86-sequent-bsd
 i960-nindy960-none
@@ -367,39 +368,6 @@ sun3-sunos4.@var{n} sun3
 sun4-solaris2.@var{n} sun4-sunos5.@var{n}
 sun4-sunos4.@var{n} sun4
 @end smallexample
-
-@node Tips for Installation
-@appendixsec Useful hints for the installation
-
-There are a some more or less obvious methods one should know when
-compiling GNU libc:
-
-@itemize @bullet
-@item
-Better never compile in the source directory.  Create a new directory
-and run the @file{configure} from there.  Everything should happen
-automagically.
-
-@item
-You can use the @code{-j} option of GNU make by changing the line
-specifying @code{PARALLELMAKE} in the Makefile generated during the
-configuration.
-
-It is not useful to start the @code{make} process using the @code{-j}
-option since this option is not propagated down to the sub-@code{make}s.
-
-@item
-If you made some changes after a complete build and only want to check
-these changes run @code{make} while specifying the list of subdirs it
-has to visit.
-
-@smallexample
-make subdirs="nss elf"
-@end smallexample
-
-The above build run will only visit the subdirectories @file{nss} and
-@file{elf}.  Beside this it updates the @file{libc} files itself.
-@end itemize
 
 @node Reporting Bugs
 @appendixsec Reporting Bugs

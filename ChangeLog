@@ -1,3 +1,7 @@
+1998-11-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* elf/dlopenold.c: Compile only if DO_VERSIONING is also defined. 
+ 
 1998-11-03  H.J. Lu  <hjl@gnu.org> 
  
 	* libio/fileops.c (new_do_write): New function. 
