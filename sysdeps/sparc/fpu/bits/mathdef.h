@@ -25,7 +25,7 @@
 /* FIXME! This file describes properties of the compiler, not the machine;
    it should not be part of libc!  */
 
-#if defined __USE_ISOC9X && defined _MATH_H
+#if defined __USE_ISOC99 && defined _MATH_H
 # ifdef __GNUC__
 #  if __STDC__ == 1
 
@@ -73,7 +73,7 @@ typedef double double_t;
 /* Number of decimal digits for the `double' type.  */
 # define DECIMAL_DIG	15
 
-#endif	/* ISO C 9X */
+#endif	/* ISO C99 */
 
 #ifndef __NO_LONG_DOUBLE_MATH
 

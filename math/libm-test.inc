@@ -77,7 +77,7 @@
    testing.  Handling of specific inputs (e.g. infinity, not-a-number)
    is also tested.  Correct handling of exceptions is checked
    against.  These implemented tests should check all cases that are
-   specified in ISO C 9X.
+   specified in ISO C99.
 
    Exception testing: At the moment only divide-by-zero and invalid
    exceptions are tested.  Overflow/underflow and inexact exceptions
@@ -3994,7 +3994,7 @@ main (int argc, char **argv)
   check_ulp ();
 #endif
 
-  /* Keep the tests a wee bit ordered (according to ISO 9X).  */
+  /* Keep the tests a wee bit ordered (according to ISO C99).  */
   /* Classification macros:  */
   fpclassify_test ();
   isfinite_test ();

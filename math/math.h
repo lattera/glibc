@@ -33,10 +33,10 @@ __BEGIN_DECLS
 #include <bits/huge_val.h>
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
-#ifdef	 __USE_ISOC9X
+#ifdef	 __USE_ISOC99
 # include <bits/nan.h>
 #endif
-/* Get general and ISO C 9X specific information.  */
+/* Get general and ISO C99 specific information.  */
 #include <bits/mathdef.h>
 
 
@@ -64,7 +64,7 @@ __BEGIN_DECLS
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 
 
 /* Include the file of declarations again, this time using `float'
@@ -102,20 +102,20 @@ __BEGIN_DECLS
 
 # endif /* __STDC__ || __GNUC__ */
 
-#endif	/* Use misc or ISO C 9X.  */
+#endif	/* Use misc or ISO C99.  */
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL
 
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
 /* This variable is used by `gamma' and `lgamma'.  */
 extern int signgam;
 #endif
 
 
-/* ISO C 9X defines some generic macros which work on any data type.  */
-#if __USE_ISOC9X
+/* ISO C99 defines some generic macros which work on any data type.  */
+#if __USE_ISOC99
 
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
@@ -229,7 +229,7 @@ enum
       ? __isinf (x) : __isinfl (x))
 # endif
 
-#endif /* Use ISO C 9X.  */
+#endif /* Use ISO C99.  */
 
 #ifdef	__USE_MISC
 /* Support for various different standard error handling behaviors.  */
@@ -239,7 +239,7 @@ typedef enum
   _SVID_,	/* According to System V, release 4.  */
   _XOPEN_,	/* Nowadays also Unix98.  */
   _POSIX_,
-  _ISOC_	/* Actually this is ISO C 9X.  */
+  _ISOC_	/* Actually this is ISO C99.  */
 } _LIB_VERSION_TYPE;
 
 /* This variable can be changed at run-time to any of the values above to
@@ -349,8 +349,8 @@ extern int matherr (struct exception *__exc);
 #endif
 
 
-#if __USE_ISOC9X
-/* ISO C 9X defines some macros to compare number while taking care
+#if __USE_ISOC99
+/* ISO C99 defines some macros to compare number while taking care
    for unordered numbers.  Since many FPUs provide special
    instructions to support these operations and these tests are
    defined in <bits/mathinline.h>, we define the generic macros at

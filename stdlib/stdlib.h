@@ -54,7 +54,7 @@ typedef struct
 # define __ldiv_t_defined	1
 #endif
 
-#if defined __USE_ISOC9X && !defined __lldiv_t_defined
+#if defined __USE_ISOC99 && !defined __lldiv_t_defined
 /* Returned by `lldiv'.  */
 __extension__ typedef struct
   {
@@ -87,8 +87,8 @@ extern int atoi (__const char *__nptr) __THROW;
 /* Convert a string to a long integer.  */
 extern long int atol (__const char *__nptr) __THROW;
 
-#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
-/* These functions will part of the standard C library in ISO C 9X.  */
+#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
+/* These functions will part of the standard C library in ISO C99.  */
 __extension__ extern long long int atoll (__const char *__nptr) __THROW;
 #endif
 
@@ -96,7 +96,7 @@ __extension__ extern long long int atoll (__const char *__nptr) __THROW;
 extern double strtod (__const char *__restrict __nptr,
 		      char **__restrict __endptr) __THROW;
 
-#ifdef	__USE_ISOC9X
+#ifdef	__USE_ISOC99
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float strtof (__const char *__restrict __nptr,
 		     char **__restrict __endptr) __THROW;
@@ -125,8 +125,8 @@ extern unsigned long long int strtouq (__const char *__restrict __nptr,
      __THROW;
 #endif /* GCC and use BSD.  */
 
-#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_MISC)
-/* These functions will part of the standard C library in ISO C 9X.  */
+#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_MISC)
+/* These functions will part of the standard C library in ISO C99.  */
 
 /* Convert a string to a quadword integer.  */
 __extension__
@@ -137,7 +137,7 @@ __extension__
 extern unsigned long long int strtoull (__const char *__restrict __nptr,
 					char **__restrict __endptr, int __base)
      __THROW;
-#endif /* ISO C 9X or GCC and use MISC.  */
+#endif /* ISO C99 or GCC and use MISC.  */
 
 
 #ifdef __USE_GNU
@@ -214,7 +214,7 @@ extern unsigned long int __strtoul_internal (__const char *__restrict __nptr,
 					     int __base, int __group) __THROW;
 # define __strtoul_internal_defined	1
 #endif
-#if defined __GNUC__ || defined __USE_ISOC9X
+#if defined __GNUC__ || defined __USE_ISOC99
 # ifndef __strtoll_internal_defined
 __extension__
 extern long long int __strtoll_internal (__const char *__restrict __nptr,
@@ -255,7 +255,7 @@ strtoul (__const char *__restrict __nptr, char **__restrict __endptr,
   return __strtoul_internal (__nptr, __endptr, __base, 0);
 }
 
-# ifdef __USE_ISOC9X
+# ifdef __USE_ISOC99
 extern __inline float
 strtof (__const char *__restrict __nptr, char **__restrict __endptr) __THROW
 {
@@ -283,7 +283,7 @@ strtouq (__const char *__restrict __nptr, char **__restrict __endptr,
 }
 # endif
 
-# if defined __USE_MISC || defined __USE_ISOC9X
+# if defined __USE_MISC || defined __USE_ISOC99
 __extension__ extern __inline long long int
 strtoll (__const char *__restrict __nptr, char **__restrict __endptr,
 	 int __base) __THROW
@@ -314,7 +314,7 @@ atol (__const char *__nptr) __THROW
   return strtol (__nptr, (char **) NULL, 10);
 }
 
-# if defined __USE_MISC || defined __USE_ISOC9X
+# if defined __USE_MISC || defined __USE_ISOC99
 __extension__ extern __inline long long int
 atoll (__const char *__nptr) __THROW
 {
@@ -517,7 +517,7 @@ extern int on_exit (void (*__func) (int __status, void *__arg), void *__arg)
    perform stdio cleanup, and terminate program execution with STATUS.  */
 extern void exit (int __status) __THROW __attribute__ ((__noreturn__));
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 /* Terminate the program with STATUS without calling any of the
    functions registered with `atexit' or `on_exit'.  */
 extern void _Exit (int __status) __THROW __attribute__ ((__noreturn__));
@@ -628,7 +628,7 @@ extern void qsort (void *__base, size_t __nmemb, size_t __size,
 /* Return the absolute value of X.  */
 extern int abs (int __x) __THROW __attribute__ ((__const__));
 extern long int labs (long int __x) __THROW __attribute__ ((__const__));
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 __extension__ extern long long int llabs (long long int __x)
      __THROW __attribute__ ((__const__));
 #endif
@@ -641,7 +641,7 @@ extern div_t div (int __numer, int __denom)
      __THROW __attribute__ ((__const__));
 extern ldiv_t ldiv (long int __numer, long int __denom)
      __THROW __attribute__ ((__const__));
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 __extension__ extern lldiv_t lldiv (long long int __numer,
 				    long long int __denom)
      __THROW __attribute__ ((__const__));

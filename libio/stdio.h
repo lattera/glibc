@@ -265,7 +265,7 @@ extern int vprintf (__const char *__restrict __format, _G_va_list __arg)
 extern int vsprintf (char *__restrict __s, __const char *__restrict __format,
 		     _G_va_list __arg) __THROW;
 
-#if defined __USE_BSD || defined __USE_ISOC9X || defined __USE_UNIX98
+#if defined __USE_BSD || defined __USE_ISOC99 || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
 extern int snprintf (char *__restrict __s, size_t __maxlen,
 		     __const char *__restrict __format, ...)
@@ -310,7 +310,7 @@ extern int scanf (__const char *__restrict __format, ...) __THROW;
 extern int sscanf (__const char *__restrict __s,
 		   __const char *__restrict __format, ...) __THROW;
 
-#ifdef	__USE_ISOC9X
+#ifdef	__USE_ISOC99
 /* Read formatted input from S into argument list ARG.  */
 extern int vfscanf (FILE *__restrict __s, __const char *__restrict __format,
 		    _G_va_list __arg)

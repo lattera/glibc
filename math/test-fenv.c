@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Tests for ISO C 9X 7.6: Floating-point environment  */
+/* Tests for ISO C99 7.6: Floating-point environment  */
 
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE

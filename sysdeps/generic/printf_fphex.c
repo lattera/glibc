@@ -1,5 +1,5 @@
 /* Print floating point number in hexadecimal notation according to
-   ISO C 9X.
+   ISO C99.
    Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.

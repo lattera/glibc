@@ -90,32 +90,32 @@ bzero				bzero
 cabs				cabs
 cabsf				cabsf
 cabsl				cabsl
-			      >	cacos				NEW: ISO C 9x
-			      >	cacosf				NEW: ISO C 9x
-			      >	cacosh				NEW: ISO C 9x
-			      >	cacoshf				NEW: ISO C 9x
-			      >	cacoshl				NEW: ISO C 9x
-			      >	cacosl				NEW: ISO C 9x
+			      >	cacos				NEW: ISO C99
+			      >	cacosf				NEW: ISO C99
+			      >	cacosh				NEW: ISO C99
+			      >	cacoshf				NEW: ISO C99
+			      >	cacoshl				NEW: ISO C99
+			      >	cacosl				NEW: ISO C99
 calloc				calloc
 callrpc				callrpc
 canonicalize_file_name		canonicalize_file_name
 			      >	capget				NEW: kernel
 			      >	capset				NEW: kernel
-			      >	carg				NEW: ISO C 9x
-			      >	cargf				NEW: ISO C 9x
-			      >	cargl				NEW: ISO C 9x
-			      >	casin				NEW: ISO C 9x
-			      >	casinf				NEW: ISO C 9x
-			      >	casinh				NEW: ISO C 9x
-			      >	casinhf				NEW: ISO C 9x
-			      >	casinhl				NEW: ISO C 9x
-			      >	casinl				NEW: ISO C 9x
-			      >	catan				NEW: ISO C 9x
-			      >	catanf				NEW: ISO C 9x
-			      >	catanh				NEW: ISO C 9x
-			      >	catanhf				NEW: ISO C 9x
-			      >	catanhl				NEW: ISO C 9x
-			      >	catanl				NEW: ISO C 9x
+			      >	carg				NEW: ISO C99
+			      >	cargf				NEW: ISO C99
+			      >	cargl				NEW: ISO C99
+			      >	casin				NEW: ISO C99
+			      >	casinf				NEW: ISO C99
+			      >	casinh				NEW: ISO C99
+			      >	casinhf				NEW: ISO C99
+			      >	casinhl				NEW: ISO C99
+			      >	casinl				NEW: ISO C99
+			      >	catan				NEW: ISO C99
+			      >	catanf				NEW: ISO C99
+			      >	catanh				NEW: ISO C99
+			      >	catanhf				NEW: ISO C99
+			      >	catanhl				NEW: ISO C99
+			      >	catanl				NEW: ISO C99
 catclose			catclose
 catgets				catgets
 catopen				catopen
@@ -123,18 +123,18 @@ catopen				catopen
 cbrt				cbrt
 cbrtf				cbrtf
 cbrtl				cbrtl
-			      >	ccos				NEW: ISO C 9x
-			      >	ccosf				NEW: ISO C 9x
-			      >	ccosh				NEW: ISO C 9x
-			      >	ccoshf				NEW: ISO C 9x
-			      >	ccoshl				NEW: ISO C 9x
-			      >	ccosl				NEW: ISO C 9x
+			      >	ccos				NEW: ISO C99
+			      >	ccosf				NEW: ISO C99
+			      >	ccosh				NEW: ISO C99
+			      >	ccoshf				NEW: ISO C99
+			      >	ccoshl				NEW: ISO C99
+			      >	ccosl				NEW: ISO C99
 ceil				ceil
 ceilf				ceilf
 ceill				ceill
-			      >	cexp				NEW: ISO C 9x
-			      >	cexpf				NEW: ISO C 9x
-			      >	cexpl				NEW: ISO C 9x
+			      >	cexp				NEW: ISO C99
+			      >	cexpf				NEW: ISO C99
+			      >	cexpl				NEW: ISO C99
 cfgetispeed			cfgetispeed
 cfgetospeed			cfgetospeed
 cfmakeraw			cfmakeraw
@@ -147,9 +147,9 @@ chflags				chflags
 chmod				chmod
 chown				chown
 chroot				chroot
-			      >	cimag				NEW: ISO C 9x
-			      >	cimagf				NEW: ISO C 9x
-			      >	cimagl				NEW: ISO C 9x
+			      >	cimag				NEW: ISO C99
+			      >	cimagf				NEW: ISO C99
+			      >	cimagl				NEW: ISO C99
 clearenv			clearenv
 clearerr			clearerr
 clearerr_locked		      <					REMOVED
@@ -168,20 +168,20 @@ clntudp_bufcreate		clntudp_bufcreate
 clntudp_create			clntudp_create
 			      >	clntunix_create			NEW: sunrpc ext
 clock				clock
-			      >	clog				NEW: ISO C 9x
-			      >	clog10				NEW: ISO C 9x
-			      >	clog10f				NEW: ISO C 9x
-			      >	clog10l				NEW: ISO C 9x
-			      >	clogf				NEW: ISO C 9x
-			      >	clogl				NEW: ISO C 9x
+			      >	clog				NEW: ISO C99
+			      >	clog10				NEW: ISO C99
+			      >	clog10f				NEW: ISO C99
+			      >	clog10l				NEW: ISO C99
+			      >	clogf				NEW: ISO C99
+			      >	clogl				NEW: ISO C99
 clone				clone
 close				close
 closedir			closedir
 closelog			closelog
 confstr				confstr
-			      >	conj				NEW: ISO C 9x
-			      >	conjf				NEW: ISO C 9x
-			      >	conjl				NEW: ISO C 9x
+			      >	conj				NEW: ISO C99
+			      >	conjf				NEW: ISO C99
+			      >	conjl				NEW: ISO C99
 connect				connect
 copysign			copysign
 copysignf			copysignf
@@ -192,33 +192,33 @@ cosh				cosh
 coshf				coshf
 coshl				coshl
 cosl				cosl
-			      >	cpow				NEW: ISO C 9x
-			      >	cpowf				NEW: ISO C 9x
-			      >	cpowl				NEW: ISO C 9x
-			      >	cproj				NEW: ISO C 9x
-			      >	cprojf				NEW: ISO C 9x
-			      >	cprojl				NEW: ISO C 9x
-			      >	creal				NEW: ISO C 9x
-			      >	crealf				NEW: ISO C 9x
-			      >	creall				NEW: ISO C 9x
+			      >	cpow				NEW: ISO C99
+			      >	cpowf				NEW: ISO C99
+			      >	cpowl				NEW: ISO C99
+			      >	cproj				NEW: ISO C99
+			      >	cprojf				NEW: ISO C99
+			      >	cprojl				NEW: ISO C99
+			      >	creal				NEW: ISO C99
+			      >	crealf				NEW: ISO C99
+			      >	creall				NEW: ISO C99
 creat				creat
 			      >	creat64				NEW: LFS
 create_module			create_module
-			      >	csin				NEW: ISO C 9x
-			      >	csinf				NEW: ISO C 9x
-			      >	csinh				NEW: ISO C 9x
-			      >	csinhf				NEW: ISO C 9x
-			      >	csinhl				NEW: ISO C 9x
-			      >	csinl				NEW: ISO C 9x
-			      >	csqrt				NEW: ISO C 9x
-			      >	csqrtf				NEW: ISO C 9x
-			      >	csqrtl				NEW: ISO C 9x
-			      >	ctan				NEW: ISO C 9x
-			      >	ctanf				NEW: ISO C 9x
-			      >	ctanh				NEW: ISO C 9x
-			      >	ctanhf				NEW: ISO C 9x
-			      >	ctanhl				NEW: ISO C 9x
-			      >	ctanl				NEW: ISO C 9x
+			      >	csin				NEW: ISO C99
+			      >	csinf				NEW: ISO C99
+			      >	csinh				NEW: ISO C99
+			      >	csinhf				NEW: ISO C99
+			      >	csinhl				NEW: ISO C99
+			      >	csinl				NEW: ISO C99
+			      >	csqrt				NEW: ISO C99
+			      >	csqrtf				NEW: ISO C99
+			      >	csqrtl				NEW: ISO C99
+			      >	ctan				NEW: ISO C99
+			      >	ctanf				NEW: ISO C99
+			      >	ctanh				NEW: ISO C99
+			      >	ctanhf				NEW: ISO C99
+			      >	ctanhl				NEW: ISO C99
+			      >	ctanl				NEW: ISO C99
 ctermid				ctermid
 ctime				ctime
 ctime_r				ctime_r
@@ -300,12 +300,12 @@ execve				execve
 execvp				execvp
 exit				exit
 exp				exp
-			      >	exp10				NEW: ISO C 9x
-			      >	exp10f				NEW: ISO C 9x
-			      >	exp10l				NEW: ISO C 9x
-			      >	exp2				NEW: ISO C 9x
-			      >	exp2f				NEW: ISO C 9x
-			      >	exp2l				NEW: ISO C 9x
+			      >	exp10				NEW: ISO C99
+			      >	exp10f				NEW: ISO C99
+			      >	exp10l				NEW: ISO C99
+			      >	exp2				NEW: ISO C99
+			      >	exp2f				NEW: ISO C99
+			      >	exp2l				NEW: ISO C99
 expf				expf
 expl				expl
 expm1				expm1
@@ -326,27 +326,27 @@ fcvt				fcvt
 fcvt_r				fcvt_r
 fdatasync			fdatasync
 			      >	fdetach				NEW: STREAMS
-			      >	fdim				NEW: ISO C 9x
-			      >	fdimf				NEW: ISO C 9x
-			      >	fdiml				NEW: ISO C 9x
+			      >	fdim				NEW: ISO C99
+			      >	fdimf				NEW: ISO C99
+			      >	fdiml				NEW: ISO C99
 fdopen				fdopen
-			      >	feclearexcept			NEW: ISO C 9x
-			      >	fegetenv			NEW: ISO C 9x
-			      >	fegetexceptflag			NEW: ISO C 9x
-			      >	fegetround			NEW: ISO C 9x
-			      >	feholdexcept			NEW: ISO C 9x
+			      >	feclearexcept			NEW: ISO C99
+			      >	fegetenv			NEW: ISO C99
+			      >	fegetexceptflag			NEW: ISO C99
+			      >	fegetround			NEW: ISO C99
+			      >	feholdexcept			NEW: ISO C99
 feof				feof
 feof_locked		      <					REMOVED
 feof_unlocked			feof_unlocked
-			      >	feraiseexcept			NEW: ISO C 9x
+			      >	feraiseexcept			NEW: ISO C99
 ferror				ferror
 ferror_locked		      <					REMOVED
 ferror_unlocked			ferror_unlocked
-			      >	fesetenv			NEW: ISO C 9x
-			      >	fesetexceptflag			NEW: ISO C 9x
-			      >	fesetround			NEW: ISO C 9x
-			      >	fetestexcept			NEW: ISO C 9x
-			      >	feupdateenv			NEW: ISO C 9x
+			      >	fesetenv			NEW: ISO C99
+			      >	fesetexceptflag			NEW: ISO C99
+			      >	fesetround			NEW: ISO C99
+			      >	fetestexcept			NEW: ISO C99
+			      >	feupdateenv			NEW: ISO C99
 fexecve				fexecve
 fflush				fflush
 fflush_locked		      <					REMOVED
@@ -376,15 +376,15 @@ flockfile			flockfile
 floor				floor
 floorf				floorf
 floorl				floorl
-			      >	fma				NEW: ISO C 9x
-			      >	fmaf				NEW: ISO C 9x
-			      >	fmal				NEW: ISO C 9x
-			      >	fmax				NEW: ISO C 9x
-			      >	fmaxf				NEW: ISO C 9x
-			      >	fmaxl				NEW: ISO C 9x
-			      >	fmin				NEW: ISO C 9x
-			      >	fminf				NEW: ISO C 9x
-			      >	fminl				NEW: ISO C 9x
+			      >	fma				NEW: ISO C99
+			      >	fmaf				NEW: ISO C99
+			      >	fmal				NEW: ISO C99
+			      >	fmax				NEW: ISO C99
+			      >	fmaxf				NEW: ISO C99
+			      >	fmaxl				NEW: ISO C99
+			      >	fmin				NEW: ISO C99
+			      >	fminf				NEW: ISO C99
+			      >	fminl				NEW: ISO C99
 fmod				fmod
 fmodf				fmodf
 fmodl				fmodl
@@ -732,12 +732,12 @@ link				link
 listen				listen
 llabs				llabs
 lldiv				lldiv
-			      >	llrint				NEW: ISO C 9x
-			      >	llrintf				NEW: ISO C 9x
-			      >	llrintl				NEW: ISO C 9x
-			      >	llround				NEW: ISO C 9x
-			      >	llroundf			NEW: ISO C 9x
-			      >	llroundl			NEW: ISO C 9x
+			      >	llrint				NEW: ISO C99
+			      >	llrintf				NEW: ISO C99
+			      >	llrintl				NEW: ISO C99
+			      >	llround				NEW: ISO C99
+			      >	llroundf			NEW: ISO C99
+			      >	llroundl			NEW: ISO C99
 llseek				llseek
 loc1				loc1
 loc2				loc2
@@ -753,9 +753,9 @@ log10l				log10l
 log1p				log1p
 log1pf				log1pf
 log1pl				log1pl
-			      >	log2				NEW: ISO C 9x
-			      >	log2f				NEW: ISO C 9x
-			      >	log2l				NEW: ISO C 9x
+			      >	log2				NEW: ISO C99
+			      >	log2f				NEW: ISO C99
+			      >	log2l				NEW: ISO C99
 logb				logb
 logbf				logbf
 logbl				logbl
@@ -764,12 +764,12 @@ logl				logl
 longjmp				longjmp
 lrand48				lrand48
 lrand48_r			lrand48_r
-			      >	lrint				NEW: ISO C 9x
-			      >	lrintf				NEW: ISO C 9x
-			      >	lrintl				NEW: ISO C 9x
-			      >	lround				NEW: ISO C 9x
-			      >	lroundf				NEW: ISO C 9x
-			      >	lroundl				NEW: ISO C 9x
+			      >	lrint				NEW: ISO C99
+			      >	lrintf				NEW: ISO C99
+			      >	lrintl				NEW: ISO C99
+			      >	lround				NEW: ISO C99
+			      >	lroundf				NEW: ISO C99
+			      >	lroundl				NEW: ISO C99
 lsearch				lsearch
 lseek				lseek
 			      >	lseek64				NEW: LFS
@@ -836,21 +836,21 @@ munlock				munlock
 munlockall			munlockall
 munmap				munmap
 muntrace			muntrace
-			      >	nan				NEW: ISO C 9x
-			      >	nanf				NEW: ISO C 9x
-			      >	nanl				NEW: ISO C 9x
+			      >	nan				NEW: ISO C99
+			      >	nanf				NEW: ISO C99
+			      >	nanl				NEW: ISO C99
 nanosleep			nanosleep
-			      >	nearbyint			NEW: ISO C 9x
-			      >	nearbyintf			NEW: ISO C 9x
-			      >	nearbyintl			NEW: ISO C 9x
+			      >	nearbyint			NEW: ISO C99
+			      >	nearbyintf			NEW: ISO C99
+			      >	nearbyintl			NEW: ISO C99
 			      >	netname2host			NEW: Secure RPC
 			      >	netname2user			NEW: Secure RPC
 nextafter			nextafter
 nextafterf			nextafterf
 nextafterl			nextafterl
-			      >	nexttoward			NEW: ISO C 9x
-			      >	nexttowardf			NEW: ISO C 9x
-			      >	nexttowardl			NEW: ISO C 9x
+			      >	nexttoward			NEW: ISO C99
+			      >	nexttowardf			NEW: ISO C99
+			      >	nexttowardl			NEW: ISO C99
 nfsservctl			nfsservctl
 			      >	nftw				NEW: Unix98
 			      >	nftw64				NEW: LFS
@@ -1012,9 +1012,9 @@ remainderf			remainderf
 remainderl			remainderl
 remove				remove
 remque				remque
-			      >	remquo				NEW: ISO C 9x
-			      >	remquof				NEW: ISO C 9x
-			      >	remquol				NEW: ISO C 9x
+			      >	remquo				NEW: ISO C99
+			      >	remquof				NEW: ISO C99
+			      >	remquol				NEW: ISO C99
 rename				rename
 res_init			res_init
 revoke				revoke
@@ -1027,9 +1027,9 @@ rint				rint
 rintf				rintf
 rintl				rintl
 rmdir				rmdir
-			      >	round				NEW: ISO C 9x
-			      >	roundf				NEW: ISO C 9x
-			      >	roundl				NEW: ISO C 9x
+			      >	round				NEW: ISO C99
+			      >	roundf				NEW: ISO C99
+			      >	roundl				NEW: ISO C99
 rpc_createerr			rpc_createerr
 rpmatch				rpmatch
 rresvport			rresvport
@@ -1040,9 +1040,9 @@ sbrk				sbrk
 scalb				scalb
 scalbf				scalbf
 scalbl				scalbl
-			      >	scalbln				NEW: ISO C 9x
-			      >	scalblnf			NEW: ISO C 9x
-			      >	scalblnl			NEW: ISO C 9x
+			      >	scalbln				NEW: ISO C99
+			      >	scalblnf			NEW: ISO C99
+			      >	scalblnl			NEW: ISO C99
 scalbn				scalbn
 scalbnf				scalbnf
 scalbnl				scalbnl
@@ -1227,7 +1227,7 @@ strspn				strspn
 strstr				strstr
 strtod				strtod
 strtof				strtof
-			      >	strtoimax			NEW: ISO C 9x
+			      >	strtoimax			NEW: ISO C99
 strtok				strtok
 strtok_r			strtok_r
 strtol				strtol
@@ -1236,7 +1236,7 @@ strtoll				strtoll
 strtoq				strtoq
 strtoul				strtoul
 strtoull			strtoull
-			      >	strtoumax			NEW: ISO C 9x
+			      >	strtoumax			NEW: ISO C99
 strtouq				strtouq
 			      >	strverscmp			NEW: GNU ext.
 strxfrm				strxfrm
@@ -1303,9 +1303,9 @@ telldir				telldir
 tempnam				tempnam
 textdomain			textdomain
 tfind				tfind
-			      >	tgamma				NEW: ISO C 9x
-			      >	tgammaf				NEW: ISO C 9x
-			      >	tgammal				NEW: ISO C 9x
+			      >	tgamma				NEW: ISO C99
+			      >	tgammaf				NEW: ISO C99
+			      >	tgammal				NEW: ISO C99
 time				time
 timegm				timegm
 timelocal			timelocal
@@ -1322,11 +1322,11 @@ towctrans			towctrans
 towlower			towlower
 towupper			towupper
 tr_break			tr_break
-			      >	trunc				NEW: ISO C 9x
+			      >	trunc				NEW: ISO C99
 truncate			truncate
 			      >	truncate64			NEW: LFS
-			      >	truncf				NEW: ISO C 9x
-			      >	truncl				NEW: ISO C 9x
+			      >	truncf				NEW: ISO C99
+			      >	truncl				NEW: ISO C99
 tsearch				tsearch
 ttyname				ttyname
 ttyname_r			ttyname_r
@@ -1409,16 +1409,16 @@ wcsspn				wcsspn
 wcsstr				wcsstr
 wcstod				wcstod
 wcstof				wcstof
-			      >	wcstoimax			NEW: ISO C 9x
+			      >	wcstoimax			NEW: ISO C99
 wcstok				wcstok
 wcstol				wcstol
 wcstold				wcstold
-			      >	wcstoll				NEW: ISO C 9x
+			      >	wcstoll				NEW: ISO C99
 wcstombs			wcstombs
 wcstoq				wcstoq
 wcstoul				wcstoul
-			      >	wcstoull			NEW: ISO C 9x
-			      >	wcstoumax			NEW: ISO C 9x
+			      >	wcstoull			NEW: ISO C99
+			      >	wcstoumax			NEW: ISO C99
 wcstouq				wcstouq
 			      >	wcswcs				NEW: Unix98
 wcswidth			wcswidth

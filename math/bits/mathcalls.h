@@ -81,7 +81,7 @@ __MATHCALL (sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */
 __MATHCALL (tanh,, (_Mdouble_ __x));
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Hyperbolic arc cosine of X.  */
 __MATHCALL (acosh,, (_Mdouble_ __x));
 /* Hyperbolic arc sine of X.  */
@@ -117,7 +117,7 @@ __MATHCALL (log10,, (_Mdouble_ __x));
 /* Break VALUE into integral and fractional parts.  */
 __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr));
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return exp(X) - 1.  */
 __MATHCALL (expm1,, (_Mdouble_ __x));
 
@@ -128,7 +128,7 @@ __MATHCALL (log1p,, (_Mdouble_ __x));
 __MATHCALL (logb,, (_Mdouble_ __x));
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 /* Compute base-2 exponential of X.  */
 __MATHCALL (exp2,, (_Mdouble_ __x));
 
@@ -145,12 +145,12 @@ __MATHCALL (pow,, (_Mdouble_ __x, _Mdouble_ __y));
 /* Return the square root of X.  */
 __MATHCALL (sqrt,, (_Mdouble_ __x));
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
 /* Return `sqrt(X*X + Y*Y)'.  */
 __MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 #endif
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return the cube root of X.  */
 __MATHCALL (cbrt,, (_Mdouble_ __x));
 #endif
@@ -202,12 +202,12 @@ __MATHCALL (drem,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (significand,, (_Mdouble_ __x));
 #endif /* Use misc.  */
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 /* Return X with its signed changed to Y's.  */
 __MATHCALLX (copysign,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 /* Return representation of NaN for double type.  */
 __MATHCALLX (nan,, (__const char *__tagb), (__const__));
 #endif
@@ -230,7 +230,7 @@ __MATHCALL (yn,, (int, _Mdouble_));
 #endif
 
 
-#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_ISOC99
 /* Error and gamma functions.  */
 __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
@@ -251,14 +251,14 @@ __MATHCALL (lgamma,_r, (_Mdouble_, int *__signgamp));
 #endif
 
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return the integer nearest X in the direction of the
    prevailing rounding mode.  */
 __MATHCALL (rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
 __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
-# ifdef __USE_ISOC9X
+# ifdef __USE_ISOC99
 __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 # endif
 
@@ -277,7 +277,7 @@ __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbln,, (_Mdouble_ __x, long int __n));
 
@@ -333,4 +333,4 @@ __MATHDECL_1 (int, __signbit,, (_Mdouble_ __value))
 
 /* Multiply-add function computed as a ternary operation.  */
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
-#endif /* Use ISO C 9X.  */
+#endif /* Use ISO C99.  */

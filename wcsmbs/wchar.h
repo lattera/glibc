@@ -324,7 +324,7 @@ extern int wcswidth (__const wchar_t *__s, size_t __n) __THROW;
 extern double wcstod (__const wchar_t *__restrict __nptr,
 		      wchar_t **__restrict __endptr) __THROW;
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 /* Likewise for `float' and `long double' sizes of floating-point numbers.  */
 extern float wcstof (__const wchar_t *__restrict __nptr,
 		     wchar_t **__restrict __endptr) __THROW;
@@ -360,7 +360,7 @@ extern unsigned long long int wcstouq (__const wchar_t *__restrict __nptr,
 				       int __base) __THROW;
 #endif /* GCC and use GNU.  */
 
-#if defined __USE_ISOC9X || (defined __GNUC__ && defined __USE_GNU)
+#if defined __USE_ISOC99 || (defined __GNUC__ && defined __USE_GNU)
 /* Convert initial portion of wide string NPTR to `long int'
    representation.  */
 __extension__
@@ -374,7 +374,7 @@ __extension__
 extern unsigned long long int wcstoull (__const wchar_t *__restrict __nptr,
 					wchar_t **__restrict __endptr,
 					int __base) __THROW;
-#endif /* ISO C 9X or GCC and GNU.  */
+#endif /* ISO C99 or GCC and GNU.  */
 
 #ifdef __USE_GNU
 /* The concept of one static locale per category is not very well
@@ -522,7 +522,7 @@ extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
 
 
 /* Wide character I/O functions.  */
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
 /* Select orientation for stream.  */
 extern int fwide (FILE *__fp, int __mode) __THROW;

@@ -1141,7 +1141,7 @@ Equivalent to the use of @code{%m/%d/%y} in this place.
 Equivalent to the use of @code{%Y-%m-%d} which is the @w{ISO 8601} date
 format.
 
-This is a GNU extension following an @w{ISO C 9X} extension to
+This is a GNU extension following an @w{ISO C99} extension to
 @code{strftime}.
 
 @item %g

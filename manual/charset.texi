@@ -120,7 +120,7 @@ defined as @code{char} the type @code{wint_t} must be defined as
 
 @pindex wchar.h
 This type is defined in @file{wchar.h} and got introduced in the second
-amendment to @w{ISO C 89}.
+amendment to @w{ISO C89}.
 @end deftp
 
 As there are for the @code{char} data type there also exist macros

@@ -1041,7 +1041,7 @@ sort_strings_fast (char **array, int nstrings)
 @end smallexample
 
 @strong{Compatibility Note:}  The string collation functions are a new
-feature of @w{ISO C 89}.  Older C dialects have no equivalent feature.
+feature of @w{ISO C89}.  Older C dialects have no equivalent feature.
 
 @node Search Functions
 @section Search Functions

@@ -53,7 +53,7 @@ contact <bug-glibc@gnu.org>.
      with long double arguments.
 
      Beside this most of the complex math functions which are new in
-     ISO C 9X should be improved.  Writing some of them in assembler is
+     ISO C99 should be improved.  Writing some of them in assembler is
      useful to exploit the parallelism which often is available.
 
 

@@ -37,7 +37,7 @@ static char rcsid[] = "$NetBSD: w_lgamma.c,v 1.6 1995/05/10 20:49:24 jtc Exp $";
 	int local_signgam;
         y = __ieee754_lgamma_r(x,&local_signgam);
 	if (_LIB_VERSION != _ISOC_)
-	  /* ISO C 9x does not define the global variable.  */
+	  /* ISO C99 does not define the global variable.  */
 	  signgam = local_signgam;
         if(_LIB_VERSION == _IEEE_) return y;
         if(!__finite(y)&&__finite(x)) {

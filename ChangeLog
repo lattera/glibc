@@ -1,3 +1,64 @@
+1999-10-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* includes/features.h: Replace __USE_ISOC9X by __USE_ISOC99 and also
+	recognize _ISOC99_SOURCE.
+	* libio/stdio.h: Likewise.
+	* math/math.h: Likewise.
+	* math/bits/mathcalls.h: Likewise.
+	* math/stdio.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* sysdeps/alpha/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/alpha/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/arm/bits/huge_val.h: Likewise.
+	* sysdeps/generic/bits/mathdef.h: Likewise.
+	* sysdeps/i386/bits/huge_val.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/ieee754/bits/huge_val.h: Likewise.
+	* sysdeps/m68k/bits/huge_val.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/bits/mathinline.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/sparc/sparc32/fpu/bits/huge_val.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
+	* sysdeps/powerpc/bits/mathdef.h: Moved to...
+	* sysdeps/powerpc/fpu/bits/mathdef.h: ...here.
+	* sysdeps/powerpc/bits/mathinline.h: Moved to...
+	* sysdeps/powerpc/fpu/bits/mathinline.h: ...here.
+
+1999-10-31  Andreas Jaeger  <aj@suse.de>
+
+	* manual/math.texi (Errors in Math Functions): Correct TeX code.
+
+1999-10-31  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc:  Change comments to use ISO C99 instead of
+	ISO C9x.
+	* math/w_lgamma.c: Likewise.
+	* math/w_lgammaf.c: Likewise.
+	* math/w_lgammal.c: Likewise.
+	* math/test-fenv.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/printf_fphex.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/printf_fphex.c: Likewise.
+	* sysdeps/generic/printf_fphex.c: Likewise.
+
+1999-10-31  Andreas Jaeger  <aj@suse.de>
+
+	* manual/arith.texi (Parsing of Floats): Remove C from ISO C comment.
+
+	* manual/math.texi: Change ISO C9x to ISO C99.
+	* manual/startup.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+
+1999-10-31  Andreas Jaeger  <aj@suse.de>
+
+	* manual/arith.texi: Change ISO C9x to ISO C99.
+	* manual/time.texi (Low-Level Time String Parsing): Likewise.
+
 1999-10-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* socket/Makefile (distribute): Add ifreq.h.

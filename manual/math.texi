@@ -42,8 +42,8 @@ these functions have prototypes declared in the header file
 All mathematical functions which take a floating-point argument
 have three variants, one each for @code{double}, @code{float}, and
 @code{long double} arguments.  The @code{double} versions are mostly
-defined in @w{ISO C 89}.  The @code{float} and @code{long double}
-versions are from the numeric extensions to C included in @w{ISO C 9X}.
+defined in @w{ISO C89}.  The @code{float} and @code{long double}
+versions are from the numeric extensions to C included in @w{ISO C99}.
 
 Which of the three versions of a function should be used depends on the
 situation.  For most calculations, the @code{float} functions are the
@@ -216,11 +216,11 @@ to cope with its absence.
 
 @cindex complex trigonometric functions
 
-@w{ISO C 9x} defines variants of the trig functions which work on
+@w{ISO C99} defines variants of the trig functions which work on
 complex numbers.  The GNU C library provides these functions, but they
 are only useful if your compiler supports the new complex types defined
 by the standard.
-@c Change this when gcc is fixed. -zw
+@c XXX Change this when gcc is fixed. -zw
 (As of this writing GCC supports complex numbers, but there are bugs in
 the implementation.)
 
@@ -377,7 +377,7 @@ If both @var{x} and @var{y} are zero, @code{atan2} returns zero.
 @end deftypefun
 
 @cindex inverse complex trigonometric functions
-@w{ISO C 9x} defines complex versions of the inverse trig functions.
+@w{ISO C99} defines complex versions of the inverse trig functions.
 
 @comment complex.h
 @comment ISO
@@ -575,7 +575,7 @@ number.  @file{math.h} defines constants so you can check for this.
 @code{ilogb} returns this value if its argument is @code{0}.  The
 numeric value is either @code{INT_MIN} or @code{-INT_MAX}.
 
-This macro is defined in @w{ISO C 9X}.
+This macro is defined in @w{ISO C99}.
 @end deftypevr
 
 @comment math.h
@@ -584,7 +584,7 @@ This macro is defined in @w{ISO C 9X}.
 @code{ilogb} returns this value if its argument is @code{NaN}.  The
 numeric value is either @code{INT_MIN} or @code{INT_MAX}.
 
-This macro is defined in @w{ISO C 9X}.
+This macro is defined in @w{ISO C99}.
 @end deftypevr
 
 These values are system specific.  They might even be the same.  The
@@ -707,7 +707,7 @@ near zero.
 @cindex complex exponentiation functions
 @cindex complex logarithm functions
 
-@w{ISO C 9X} defines complex variants of some of the exponentiation and
+@w{ISO C99} defines complex variants of some of the exponentiation and
 logarithm functions.
 
 @comment complex.h
@@ -1094,17 +1094,17 @@ instead of in the @var{signgam} global.  This means it is reentrant.
 These functions exist for compatibility reasons.  They are equivalent to
 @code{lgamma} etc.  It is better to use @code{lgamma} since for one the
 name reflects better the actual computation, moreover @code{lgamma} is
-standardized in @w{ISO C 9x} while @code{gamma} is not.
+standardized in @w{ISO C99} while @code{gamma} is not.
 @end deftypefun
 
 @comment math.h
-@comment XPG
+@comment XPG, ISO
 @deftypefun double tgamma (double @var{x})
 @comment math.h
-@comment XPG
+@comment XPG, ISO
 @deftypefunx float tgammaf (float @var{x})
 @comment math.h
-@comment XPG
+@comment XPG, ISO
 @deftypefunx {long double} tgammal (long double @var{x})
 @code{tgamma} applies the gamma function to @var{x}.  The gamma
 function is defined as
@@ -1117,7 +1117,7 @@ gamma (x) = integral from 0 to @infinity{} of t^(x-1) e^-t dt
 @end smallexample
 @end ifnottex
 
-This function was introduced in @w{ISO C 9x}.
+This function was introduced in @w{ISO C99}.
 @end deftypefun
 
 @comment math.h
@@ -1216,7 +1216,7 @@ representation @math{d.d@dots{}d@mul{}2^e} (we assume IEEE
 floating-point numbers with base 2) the ULP is represented by
 
 @tex
-$$\frac{|{\mathrm d.d\dots d - (z/2^e)|}{2^{p-1}}$$
+$${|d.d\dots d - (z/2^e)|}\over {2^{p-1}}$$
 @end tex
 @ifnottex
 @smallexample

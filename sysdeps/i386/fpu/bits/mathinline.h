@@ -29,8 +29,8 @@
 #endif
 
 
-#if defined __USE_ISOC9X && defined __GNUC__ && __GNUC__ >= 2
-/* ISO C 9X defines some macros to perform unordered comparisons.  The
+#if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2
+/* ISO C99 defines some macros to perform unordered comparisons.  The
    ix87 FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
@@ -148,7 +148,7 @@ __signbitl (long double __x)
    be suffixed with f and l for the float and long double version,
    respectively).  OP is the name of the FPU operation.  */
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 # define __inline_mathop(func, op) \
   __inline_mathop_ (double, func, op)					      \
   __inline_mathop_ (float, __CONCAT(func,f), op)			      \
@@ -162,7 +162,7 @@ __signbitl (long double __x)
   __inline_mathop_decl_ (float_type, func, op, "0" (__x))
 
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 # define __inline_mathop_decl(func, op, params...) \
   __inline_mathop_decl_ (double, func, op, params)			      \
   __inline_mathop_decl_ (float, __CONCAT(func,f), op, params)		      \
@@ -182,7 +182,7 @@ __signbitl (long double __x)
   }
 
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 # define __inline_mathcode(func, arg, code) \
   __inline_mathcode_ (double, func, arg, code)				      \
   __inline_mathcode_ (float, __CONCAT(func,f), arg, code)		      \
@@ -514,7 +514,7 @@ ldexp (double __x, int __y)
 
 
 /* Optimized versions for some non-standardized functions.  */
-#if defined __USE_ISOC9X || defined __USE_MISC
+#if defined __USE_ISOC99 || defined __USE_MISC
 
 __inline_mathcode (expm1, __x, __expm1_code)
 
@@ -561,7 +561,7 @@ __inline_mathcode(logb, __x, \
 
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 __inline_mathop_decl (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
 
 __MATH_INLINE float ldexpf (float __x, int __y);

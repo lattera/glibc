@@ -1193,7 +1193,7 @@ char}, as appropriate.  A @code{char} argument is converted to an
 anyway, but the @samp{h} modifier says to convert it back to a
 @code{char} again.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 
 @item h
 Specifies that the argument is a @code{short int} or @code{unsigned
@@ -1206,7 +1206,7 @@ anyway, but the @samp{h} modifier says to convert it back to a
 Specifies that the argument is a @code{intmax_t} or @code{uintmax_t}, as
 appropriate.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 
 @item l
 Specifies that the argument is a @code{long int} or @code{unsigned long
@@ -1227,13 +1227,13 @@ from 4.4 BSD; a @w{@code{long long int}} is sometimes called a ``quad''
 @item t
 Specifies that the argument is a @code{ptrdiff_t}.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 
 @item z
 @itemx Z
 Specifies that the argument is a @code{size_t}.
 
-@samp{z} was introduced in @w{ISO C 9x}.  @samp{Z} is a GNU extension
+@samp{z} was introduced in @w{ISO C99}.  @samp{Z} is a GNU extension
 predating this addition and should not be used in new code.
 @end table
 
@@ -1624,7 +1624,7 @@ In practice, it is often easier just to use @code{asprintf}, below.
 is the number of characters stored, not including the terminating null.
 If this value equals @code{@var{size} - 1}, then there was not enough
 space in @var{s} for all the output.  This change was necessary with
-the adoption of snprintf by ISO C9x.
+the adoption of snprintf by ISO C99.
 @end deftypefun
 
 @node Dynamic Output
@@ -2685,7 +2685,7 @@ specify other sizes of integer:
 Specifies that the argument is a @code{signed char *} or @code{unsigned
 char *}.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 
 @item h
 Specifies that the argument is a @code{short int *} or @code{unsigned
@@ -2694,7 +2694,7 @@ short int *}.
 @item j
 Specifies that the argument is a @code{intmax_t *} or @code{uintmax_t *}.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 
 @item l
 Specifies that the argument is a @code{long int *} or @code{unsigned
@@ -2715,12 +2715,12 @@ from 4.4 BSD; a @w{@code{long long int}} is sometimes called a ``quad''
 @item t
 Specifies that the argument is a @code{ptrdiff_t *}.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 
 @item z
 Specifies that the argument is a @code{size_t *}.
 
-This modifier was introduced in @w{ISO C 9x}.
+This modifier was introduced in @w{ISO C99}.
 @end table
 
 All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, and @samp{%G}

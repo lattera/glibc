@@ -19,9 +19,9 @@
 
 #ifdef	__GNUC__
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
-/* ISO C 9X defines some macros to perform unordered comparisons.  The
+/* ISO C99 defines some macros to perform unordered comparisons.  The
    m68k FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
@@ -98,7 +98,7 @@
    suffixed with f and l for the float and long double version, resp).  OP
    is the name of the fpu operation (without leading f).  */
 
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 # define __inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)			\
   __inline_mathop1(float, __CONCAT(func,f), op)		\
@@ -123,7 +123,7 @@ __inline_mathop(__tan, tan)
 __inline_mathop(__tanh, tanh)
 __inline_mathop(__fabs, abs)
 
-#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __inline_mathop(__rint, int)
 __inline_mathop(__expm1, etoxm1)
 __inline_mathop(__log1p, lognp1)
@@ -133,7 +133,7 @@ __inline_mathop(__log1p, lognp1)
 __inline_mathop(__significand, getman)
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 __inline_mathop(__log2, log2)
 __inline_mathop(__trunc, intrz)
 #endif
@@ -146,7 +146,7 @@ __inline_mathop(sin, sin)
 __inline_mathop(tan, tan)
 __inline_mathop(tanh, tanh)
 
-# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 __inline_mathop(rint, int)
 __inline_mathop(expm1, etoxm1)
 __inline_mathop(log1p, lognp1)
@@ -156,7 +156,7 @@ __inline_mathop(log1p, lognp1)
 __inline_mathop(significand, getman)
 # endif
 
-# ifdef __USE_ISOC9X
+# ifdef __USE_ISOC99
 __inline_mathop(log2, log2)
 __inline_mathop(trunc, intrz)
 # endif
@@ -223,7 +223,7 @@ __m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))		  \
 }
 
 __inline_functions(double,)
-#if defined __USE_MISC || defined __USE_ISOC9X
+#if defined __USE_MISC || defined __USE_ISOC99
 __inline_functions(float,f)
 __inline_functions(long double,l)
 #endif
@@ -287,7 +287,7 @@ __inline_functions(long double,l)
 
 #endif
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
 # define __inline_functions(float_type, s)				  \
 __m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
@@ -383,18 +383,18 @@ __inline_forward(double,frexp, (double __value, int *__expptr),
 __inline_forward_c(double,floor, (double __x), (__x))
 __inline_forward_c(double,ceil, (double __x), (__x))
 # ifdef __USE_MISC
-#  ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
+#  ifndef __USE_ISOC99 /* Conflict with macro of same name.  */
 __inline_forward_c(int,isinf, (double __value), (__value))
 #  endif
 __inline_forward_c(int,finite, (double __value), (__value))
 __inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
 # endif
 # if defined __USE_MISC || defined __USE_XOPEN
-#  ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
+#  ifndef __USE_ISOC99 /* Conflict with macro of same name.  */
 __inline_forward_c(int,isnan, (double __value), (__value))
 #  endif
 # endif
-# ifdef __USE_ISOC9X
+# ifdef __USE_ISOC99
 __inline_forward_c(double,scalbln, (double __x, long int __n), (__x, __n))
 __inline_forward_c(double,nearbyint, (double __value), (__value))
 __inline_forward_c(long int,lrint, (double __value), (__value))
@@ -406,7 +406,7 @@ __inline_forward(void,sincos, (double __x, double *__sinx, double *__cosx),
 		 (__x, __sinx, __cosx))
 # endif
 
-# if defined __USE_MISC || defined __USE_ISOC9X
+# if defined __USE_MISC || defined __USE_ISOC99
 
 __inline_forward(float,frexpf, (float __value, int *__expptr),
 		 (__value, __expptr))
@@ -418,7 +418,7 @@ __inline_forward_c(int,finitef, (float __value), (__value))
 __inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
 #  endif
-# ifdef __USE_ISOC9X
+# ifdef __USE_ISOC99
 __inline_forward_c(float,scalblnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(float,nearbyintf, (float __value), (__value))
 __inline_forward_c(long int,lrintf, (float __value), (__value))
@@ -440,7 +440,7 @@ __inline_forward_c(int,finitel, (long double __value), (__value))
 __inline_forward_c(long double,scalbnl, (long double __x, int __n), (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
 # endif
-# ifdef __USE_ISOC9X
+# ifdef __USE_ISOC99
 __inline_forward_c(long double,scalblnl, (long double __x, long int __n),
 		   (__x, __n))
 __inline_forward_c(long double,nearbyintl, (long double __value), (__value))
@@ -455,7 +455,7 @@ __inline_forward(void,sincosl,
 		 (__x, __sinx, __cosx))
 # endif
 
-#endif /* Use misc or ISO C9X */
+#endif /* Use misc or ISO C99 */
 
 #undef __inline_forward
 #undef __inline_forward_c

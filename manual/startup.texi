@@ -792,7 +792,7 @@ The @w{ISO C} committee members were not sure whether the definitions of
 @code{_exit} and @code{_Exit} were compatible so they have not used the
 POSIX name.
 
-This function was introduced in @w{ISO C9x} and is declared in
+This function was introduced in @w{ISO C99} and is declared in
 @file{stdlib.h}.
 @end deftypefun
 

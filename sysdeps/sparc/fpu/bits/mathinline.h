@@ -26,7 +26,7 @@
 
 #if defined __GNUC__
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
 #if __WORDSIZE == 32
 
@@ -78,7 +78,7 @@
 	  __r = qop;						      	      \
 	}								      \
       __r; }))
-      
+
 # define isgreater(x, y) __unordered_v9cmp(x, y, "g", _Qp_cmp (&__x, &__y) == 2)
 # define isgreaterequal(x, y) __unordered_v9cmp(x, y, "ge", (_Qp_cmp (&__x, &__y) & 1) == 0)
 # define isless(x, y) __unordered_v9cmp(x, y, "l", _Qp_cmp (&__x, &__y) == 1)
@@ -88,7 +88,7 @@
 
 #endif /* sparc64 */
 
-#endif /* __USE_ISOC9X */
+#endif /* __USE_ISOC99 */
 
 #if (!defined __NO_MATH_INLINES || defined __LIBC_INTERNAL_MATH_INLINES) && defined __OPTIMIZE__
 
@@ -190,7 +190,7 @@ __ieee754_sqrtl(long double __x)
 #endif /* __LIBC_INTERNAL_MATH_INLINES */
 #endif /* gcc 2.8+ */
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
 __MATH_INLINE double fdim (double __x, double __y);
 __MATH_INLINE double
@@ -206,6 +206,6 @@ fdimf (float __x, float __y)
   return __x < __y ? 0 : __x - __y;
 }
 
-#endif /* __USE_ISOC9X */
+#endif /* __USE_ISOC99 */
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 #endif /* __GNUC__ */

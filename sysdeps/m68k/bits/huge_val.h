@@ -52,9 +52,9 @@ static union { unsigned char __c[8]; double __d; } __huge_val =
 #endif	/* GCC.  */
 
 
-/* ISO C 9X extensions: (float) HUGE_VALF and (long double) HUGE_VALL.  */
+/* ISO C 99 extensions: (float) HUGE_VALF and (long double) HUGE_VALL.  */
 
-#ifdef __USE_ISOC9X
+#ifdef __USE_ISOC99
 
 # if __GNUC_PREREQ(2,95)
 
@@ -89,4 +89,4 @@ static union { unsigned char __c[12]; long double __ld; } __huge_vall =
 
 # endif /* GCC 2.95.  */
 
-#endif	/* __USE_ISOC9X.  */
+#endif	/* __USE_ISOC99.  */

@@ -68,7 +68,7 @@ and @dfn{not a number} (NaN).
 @cindex classes, floating-point
 @pindex math.h
 
-@w{ISO C 9x} defines macros that let you determine what sort of
+@w{ISO C99} defines macros that let you determine what sort of
 floating-point number a variable holds.
 
 @comment math.h
@@ -145,7 +145,7 @@ to
 
 Another set of floating-point classification functions was provided by
 BSD.  The GNU C library also supports these functions; however, we
-recommend that you use the C9x macros in new code.  Those are standard
+recommend that you use the ISO C99 macros in new code.  Those are standard
 and will be available more widely.  Also, since they are macros, you do
 not have to worry about the type of their argument.
 
@@ -174,7 +174,7 @@ This function returns @code{-1} if @var{x} represents negative infinity,
 This function returns a nonzero value if @var{x} is a ``not a number''
 value, and zero otherwise.
 
-@strong{Note:} The @code{isnan} macro defined by @w{ISO C 9x} overrides
+@strong{Note:} The @code{isnan} macro defined by @w{ISO C99} overrides
 the BSD function.  This is normally not a problem, because the two
 routines behave identically.  However, if you really need to get the BSD
 function for some reason, you can write
@@ -407,7 +407,7 @@ You can test whether a floating-point value is infinite by comparing it
 to this macro.  However, this is not recommended; you should use the
 @code{isfinite} macro instead.  @xref{Floating Point Classes}.
 
-This macro was introduced in the @w{ISO C 9X} standard.
+This macro was introduced in the @w{ISO C99} standard.
 @end deftypevr
 
 @comment math.h
@@ -434,7 +434,7 @@ calculations, unless you explicitly test the sign bit with
 @node Status bit operations
 @subsection Examining the FPU status word
 
-@w{ISO C 9x} defines functions to query and manipulate the
+@w{ISO C99} defines functions to query and manipulate the
 floating-point status word.  You can use these functions to check for
 untrapped exceptions when it's convenient, rather than worrying about
 them in the middle of a calculation.
@@ -848,7 +848,7 @@ Most computers use a two's complement integer representation, in which
 the absolute value of @code{INT_MIN} (the smallest possible @code{int})
 cannot be represented; thus, @w{@code{abs (INT_MIN)}} is not defined.
 
-@code{llabs} and @code{imaxdiv} are new to @w{ISO C 9x}.
+@code{llabs} and @code{imaxdiv} are new to @w{ISO C99}.
 @end deftypefun
 
 @comment math.h
@@ -1271,7 +1271,7 @@ This function is another name for @code{drem}.
 @cindex FP arithmetic
 
 There are some operations that are too complicated or expensive to
-perform by hand on floating-point numbers.  @w{ISO C 9x} defines
+perform by hand on floating-point numbers.  @w{ISO C99} defines
 functions to do these operations, which mostly involve changing single
 bits.
 
@@ -1380,7 +1380,7 @@ int v = a < 1.0;
 will raise an exception if @var{a} is NaN.  (This does @emph{not}
 happen with @code{==} and @code{!=}; those merely return false and true,
 respectively, when NaN is examined.)  Frequently this exception is
-undesirable.  @w{ISO C 9x} therefore defines comparison functions that
+undesirable.  @w{ISO C99} therefore defines comparison functions that
 do not raise exceptions when NaN is examined.  All of the functions are
 implemented as macros which allow their arguments to be of any
 floating-point type.  The macros are guaranteed to evaluate their
@@ -1545,7 +1545,7 @@ hardware.
 @pindex complex.h
 @cindex complex numbers
 
-@w{ISO C 9x} introduces support for complex numbers in C.  This is done
+@w{ISO C99} introduces support for complex numbers in C.  This is done
 with a new type qualifier, @code{complex}.  It is a keyword if and only
 if @file{complex.h} has been included.  There are three complex types,
 corresponding to the three real types:  @code{float complex},
@@ -1634,7 +1634,7 @@ clever compiler to get the same results.
 @cindex decompose complex numbers
 @pindex complex.h
 
-@w{ISO C 9x} also defines functions that perform basic operations on
+@w{ISO C99} also defines functions that perform basic operations on
 complex numbers, such as decomposition and conjugation.  The prototypes
 for all these functions are in @file{complex.h}.  All functions are
 available in three variants, one for each of the three complex types.
@@ -1821,7 +1821,7 @@ The @code{lldiv} function is like the @code{div} function, but the
 arguments are of type @code{long long int} and the result is returned as
 a structure of type @code{lldiv_t}.
 
-The @code{lldiv} function was added in @w{ISO C 9x}.
+The @code{lldiv} function was added in @w{ISO C99}.
 @end deftypefun
 
 @comment inttypes.h
@@ -1849,7 +1849,7 @@ The @code{imaxdiv} function is like the @code{div} function, but the
 arguments are of type @code{intmax_t} and the result is returned as
 a structure of type @code{imaxdiv_t}.
 
-The @code{imaxdiv} function was added in @w{ISO C 9x}.
+The @code{imaxdiv} function was added in @w{ISO C99}.
 @end deftypefun
 
 
@@ -1969,7 +1969,7 @@ representable because of overflow, @code{strtoll} returns either
 appropriate for the sign of the value.  It also sets @code{errno} to
 @code{ERANGE} to indicate there was overflow.
 
-The @code{strtoll} function was introduced in @w{ISO C 9x}.
+The @code{strtoll} function was introduced in @w{ISO C99}.
 @end deftypefun
 
 @comment stdlib.h
@@ -1985,7 +1985,7 @@ The @code{strtoull} function is like @code{strtoul} except that it
 returns an @code{unsigned long long int}.  The value returned on overflow
 is @code{ULONG_LONG_MAX} (@pxref{Range of Type}).
 
-The @code{strtoull} function was introduced in @w{ISO C 9x}.
+The @code{strtoull} function was introduced in @w{ISO C99}.
 @end deftypefun
 
 @comment stdlib.h
@@ -2017,7 +2017,7 @@ instead.
 This function is similar to @code{atol}, except it returns a @code{long
 long int}.
 
-The @code{atoll} function was introduced in @w{ISO C 9x}.  It too is
+The @code{atoll} function was introduced in @w{ISO C99}.  It too is
 obsolete (despite having just been added); use @code{strtoll} instead.
 @end deftypefun
 
@@ -2166,10 +2166,10 @@ examining @var{errno} and @var{tailptr}.
 @end deftypefun
 
 @comment stdlib.h
-@comment ISO C
+@comment ISO
 @deftypefun float strtof (const char *@var{string}, char **@var{tailptr})
 @comment stdlib.h
-@comment ISO C
+@comment ISO
 @deftypefunx {long double} strtold (const char *@var{string}, char **@var{tailptr})
 These functions are analogous to @code{strtod}, but return @code{float}
 and @code{long double} values respectively.  They report errors in the
@@ -2178,7 +2178,7 @@ than @code{strtod}, but has less precision; conversely, @code{strtold}
 can be much slower but has more precision (on systems where @code{long
 double} is a separate type).
 
-These functions have been GNU extensions and are new to @w{ISO C 9x}.
+These functions have been GNU extensions and are new to @w{ISO C99}.
 @end deftypefun
 
 @comment stdlib.h
