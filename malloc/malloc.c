@@ -1292,7 +1292,10 @@ static void      free_atfork();
 /* sizes, alignments */
 
 #define SIZE_SZ                (sizeof(INTERNAL_SIZE_T))
-#define MALLOC_ALIGNMENT       (SIZE_SZ + SIZE_SZ)
+/* Allow the default to be overwritten on the compiler command line.  */
+#ifndef MALLOC_ALIGNMENT
+# define MALLOC_ALIGNMENT      (SIZE_SZ + SIZE_SZ)
+#endif
 #define MALLOC_ALIGN_MASK      (MALLOC_ALIGNMENT - 1)
 #define MINSIZE                (sizeof(struct malloc_chunk))
 

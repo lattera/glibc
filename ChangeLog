@@ -1,3 +1,10 @@
+2001-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c: Allow MALLOC_ALIGNMENT to be defined on the
+	compiler command line.
+	* sysdeps/hppa/Makefile: Add -DMALLOC_ALIGNMENT=16 to compiler
+	command line for malloc.c.
+
 2001-04-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/time.h: Move to...
