@@ -24,6 +24,7 @@
 enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
 			_LIBC_TSD_KEY_DL_ERROR,
 			_LIBC_TSD_KEY_RPC_VARS,
+			_LIBC_TSD_KEY_LOCALE,
 			_LIBC_TSD_KEY_N };
 
 #include <tls.h>
