@@ -1,3 +1,10 @@
+1999-02-03  Jeff Bailey  <jbailey@nisa.net>
+
+	* sysdeps/unix/make_errlist.c: Add i18n and copyright to
+	generated files.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c: Fix typo.
+
 1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/mktime.c: Use ISO C form for function definitions and

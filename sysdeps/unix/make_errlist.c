@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include <time.h>
 
 /* Make a definition for sys_errlist.  */
 
@@ -29,6 +30,32 @@ int
 main ()
 {
   register int i;
+  struct tm timenow;
+  time_t now;
+  int year;
+
+  now = time(NULL);
+  timenow = *localtime(&now);
+
+  year = timenow.tm_year + 1900;
+
+  printf ("/* Copyright (C) %d Free Software Foundation, Inc.\n\
+   This file is part of the GNU C Library.\n\
+\n\
+   The GNU C Library is free software; you can redistribute it and/or\n\
+   modify it under the terms of the GNU Library General Public License as\n\
+   published by the Free Software Foundation; either version 2 of the\n\
+   License, or (at your option) any later version.\n\
+\n\
+   The GNU C Library is distributed in the hope that it will be useful,\n\
+   but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n\
+   Library General Public License for more details.\n\
+\n\
+   You should have received a copy of the GNU Library General Public\n\
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,\n\
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,\n\
+   Boston, MA 02111-1307, USA.  */\n\n", year);
 
   puts ("#include <stddef.h>\n");
   puts ("\n/* This is a list of all known `errno' codes.  */\n");
@@ -37,7 +64,7 @@ main ()
   puts ("const char *const _sys_errlist[] =\n  {");
 
   for (i = 0; i < sys_nerr; ++i)
-    printf ("    \"%s\",\n",
+    printf ("    N_(\"%s\"),\n",
 #ifdef HAVE_STRERROR
 	  strerror (i)
 #else /* ! HAVE_STRERROR */
