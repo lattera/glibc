@@ -1,5 +1,5 @@
 /* Compute positive difference.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,22 +30,23 @@ ENTRY(__fdimf)
 	sahf
 	jp	1f
 
-	fsubrp	%st, %st(1)
-	jc	2f
+	jc	3f
 
-	fstp	%st(0)
+	fstp	%st(1)
 	fldz
 	jmp	2f
+
+3:	fsubrp	%st, %st(1)
+	ret
 
 1:	fxam
 	fnstsw
 	andb	$0x45, %ah
 	cmpb	$0x01, %ah
-	je	3f
+	je	2f
 
 	fxch
-3:	fstp	%st(1)
-
-2:	ret
+2:	fstp	%st(1)
+	ret
 END(__fdimf)
 weak_alias (__fdimf, fdimf)

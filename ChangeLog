@@ -1,4 +1,10 @@
-2004-09-29  Ulrich Drepper  <drepper@redhat.com>
+2004-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/s_fdim.S (__fdim): Handle +inf/+inf.
+	* sysdeps/i386/fpu/s_fdimf.S (__fdimf): Likewise.
+	* sysdeps/i386/fpu/s_fdiml.S (__fdiml): Likewise.
+
+004-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* grp/initgroups.c: Move compat_call implementation...
 	* grp/compat-initgroups.c: ...to here.  New file.
