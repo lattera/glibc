@@ -1,5 +1,21 @@
 Sun Oct 15 21:04:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* hurd/hurd/lookup.h: New file.
+	* hurd/hurdlookup.c (__file_name_lookup_under): New function.
+	(__hurd_file_name_lookup, __hurd_file_name_lookup_retry,
+	__hurd_file_name_split): Rewritten to take callback functions for
+	using any needed init or dtable port, instead of passing in crdir
+	and cwdir ports.  
+	(__file_name_lookup, __file_name_split): Use new calling
+	convention; pass _hurd_ports_use and __getdport as the callback
+	functions. 
+
+	* sysdeps/mach/hurd/chroot.c: Use __file_name_lookup_under instead
+	of __hurd_file_name_lookup.
+	* sysdeps/mach/hurd/chdir.c: Likewise.
+	* sysdeps/mach/hurd/fchdir.c: Likewise.
+	* hurd/fchroot.c: Likewise.
+
 	* stdlib/Makefile (mpn-found): Don't omit %.s.
 	(mpn-copy-sysdep): Omit files in nonexistent directories.
 	(copy-mpn): Commit files to CVS.

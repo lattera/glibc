@@ -27,16 +27,14 @@ int
 DEFUN(__chdir, (file_name), CONST char *file_name)
 {
   file_t file, dir;
-  error_t err;
 
   file = __file_name_lookup (file_name, O_EXEC, 0);
   if (file == MACH_PORT_NULL)
     return -1;
-  err = __USEPORT (CRDIR, __hurd_file_name_lookup (port, file, "",
-						   O_EXEC, 0, &dir));
+  dir = __file_name_lookup_under (file, "", O_EXEC, 0);
   __mach_port_deallocate (__mach_task_self (), file);
-  if (err)
-    return __hurd_fail (err);
+  if (dir == MACH_PORT_NULL)
+    return -1;
 
   _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], dir);
   return 0;

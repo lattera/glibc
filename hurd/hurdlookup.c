@@ -17,6 +17,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <hurd.h>
+#include <hurd/lookup.h>
 #include <string.h>
 #include <limits.h>
 #include <fcntl.h>
@@ -41,73 +42,88 @@ lookup_error (error_t error)
 }
 
 error_t
-__hurd_file_name_lookup (file_t crdir, file_t cwdir,
+__hurd_file_name_lookup (error_t (*use_init_port)
+			   (int which, error_t (*operate) (file_t)),
+			 file_t (*get_dtable_port) (int fd),
 			 const char *file_name, int flags, mode_t mode,
 			 file_t *result)
 {
   error_t err;
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
-  file_t startdir;
 
-  startdir = file_name[0] == '/' ? crdir : cwdir;
+  error_t lookup (mach_port_t startdir)
+    {
+      while (file_name[0] == '/')
+	file_name++;
 
-  while (file_name[0] == '/')
-    file_name++;
+      return lookup_error (__dir_lookup (startdir, file_name, flags, mode,
+					 &doretry, retryname, result));
+    }
 
-  if (err = __dir_lookup (startdir, file_name, flags, mode,
-			  &doretry, retryname, result))
-    return lookup_error (err);
+  err = (*use_init_port) (file_name[0] == '/'
+			  ? INIT_PORT_CRDIR : INIT_PORT_CWDIR,
+			  &lookup);
+  if (! err)
+    err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port,
+					 doretry, retryname, flags, mode,
+					 result);
 
-  return __hurd_file_name_lookup_retry (crdir, doretry, retryname, flags, mode,
-					result);
+  return err;
 }
 weak_alias (__hurd_file_name_lookup, hurd_file_name_lookup)
 
 error_t
-__hurd_file_name_lookup_retry (file_t crdir,
+__hurd_file_name_lookup_retry (error_t (*use_init_port)
+			         (int which, error_t (*operate) (file_t)),
+			       file_t (*get_dtable_port) (int fd),
 			       enum retry_type doretry,
 			       char retryname[1024],
 			       int flags, mode_t mode,
 			       file_t *result)
 {
   error_t err;
-  file_t startdir;
-  file_t newpt;
   char *file_name;
-  int dealloc_dir;
   int nloops;
 
-  dealloc_dir = 0;
+  error_t lookup (file_t startdir)
+    {
+      while (file_name[0] == '/')
+	file_name++;
+
+      return lookup_error (__dir_lookup (startdir, file_name, flags, mode,
+					 &doretry, retryname, result));
+    }
+  error_t reauthenticate (file_t unauth)
+    {
+      error_t err;
+      mach_port_t ref = __mach_reply_port ();
+      error_t reauth (auth_t auth)
+	{
+	  return __auth_user_authenticate (auth, unauth, ref,
+					   MACH_MSG_TYPE_MAKE_SEND,
+					   result);
+	}
+      err = __io_reauthenticate (unauth, ref, MACH_MSG_TYPE_MAKE_SEND);
+      if (! err)
+	err = (*use_init_port) (INIT_PORT_AUTH, &reauth);
+      __mach_port_destroy (__mach_task_self (), ref);
+      __mach_port_deallocate (__mach_task_self (), unauth);
+      return err;
+    }
+
   nloops = 0;
   err = 0;
-  
-  while (1)
+  do
     {
-      if (dealloc_dir)
-	__mach_port_deallocate (__mach_task_self (), startdir);
-      if (err)
-	return lookup_error (err);
+      file_t startdir = MACH_PORT_NULL;
+      int dirport = INIT_PORT_CWDIR;
 
       switch (doretry)
 	{
 	case FS_RETRY_REAUTH:
-	  {
-	    mach_port_t ref = __mach_reply_port ();
-	    err = __io_reauthenticate (*result,
-				       ref, MACH_MSG_TYPE_MAKE_SEND);
-	    if (! err)
-	      err = __USEPORT
-		(AUTH, __auth_user_authenticate (port, *result,
-						 ref,
-						 MACH_MSG_TYPE_MAKE_SEND,
-						 &newpt));
-	    __mach_port_destroy (__mach_task_self (), ref);
-	  }
-	  __mach_port_deallocate (__mach_task_self (), *result);
-	  if (err)
+	  if (err = reauthenticate (*result))
 	    return err;
-	  *result = newpt;
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
@@ -134,7 +150,6 @@ __hurd_file_name_lookup_retry (file_t crdir,
 	    }
 
 	  startdir = *result;
-	  dealloc_dir = 1;
 	  file_name = retryname;
 	  break;
 
@@ -142,8 +157,7 @@ __hurd_file_name_lookup_retry (file_t crdir,
 	  switch (retryname[0])
 	    {
 	    case '/':
-	      startdir = crdir;
-	      dealloc_dir = 0;
+	      dirport = INIT_PORT_CRDIR;
 	      if (*result != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), *result);
 	      file_name = &retryname[1];
@@ -166,24 +180,29 @@ __hurd_file_name_lookup_retry (file_t crdir,
 		      errno = save;
 		      return ENOENT;
 		    }
-		  *result = __getdport (fd);
-		  if (*result == MACH_PORT_NULL)
+		  if (! get_dtable_port)
+		    err = EGRATUITOUS;
+		  else
 		    {
-		      /* If the name was a proper number, but the file
-			 descriptor does not exist, we return EBADF instead
-			 of ENOENT.  */
-		      error_t err = errno;
-		      errno = save;
-		      return err;
+		      *result = (*get_dtable_port) (fd);
+		      if (*result == MACH_PORT_NULL)
+			{
+			  /* If the name was a proper number, but the file
+			     descriptor does not exist, we return EBADF instead
+			     of ENOENT.  */
+			  err = errno;
+			  errno = save;
+			}
 		    }
 		  errno = save;
+		  if (err)
+		    return err;
 		  if (*end == '\0')
 		    return 0;
 		  else
 		    {
 		      /* Do a normal retry on the remaining components.  */
 		      startdir = *result;
-		      dealloc_dir = 1;
 		      file_name = end + 1; /* Skip the slash.  */
 		      break;
 		    }
@@ -202,6 +221,7 @@ __hurd_file_name_lookup_retry (file_t crdir,
 		  struct host_basic_info hostinfo;
 		  mach_msg_type_number_t hostinfocnt = HOST_BASIC_INFO_COUNT;
 		  char *p;
+		  /* XXX want client's host */
 		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
 					 (natural_t *) &hostinfo,
 					 &hostinfocnt))
@@ -216,7 +236,6 @@ __hurd_file_name_lookup_retry (file_t crdir,
 		  if (p > retryname)
 		    strcpy (retryname, p);
 		  startdir = *result;
-		  dealloc_dir = 1;
 		}
 	      else
 		goto bad_magic;
@@ -229,29 +248,15 @@ __hurd_file_name_lookup_retry (file_t crdir,
 		    error_t opentty (file_t *result)
 		      {
 			error_t err;
-			file_t unauth;
-			err = __USEPORT (CTTYID,
-					 __termctty_open_terminal (port,
-								   flags,
-								   &unauth));
-			if (! err)
+			error_t ctty_open (file_t port)
 			  {
-			    mach_port_t ref = __mach_reply_port ();
-			    err = __io_reauthenticate
-			      (unauth,
-			       ref,
-			       MACH_MSG_TYPE_MAKE_SEND);
-			    if (! err)
-			      err = __USEPORT
-				(AUTH, __auth_user_authenticate
-				 (port,
-				  unauth,
-				  ref, MACH_MSG_TYPE_MAKE_SEND,
-				  result));
-			    __mach_port_deallocate (__mach_task_self (),
-						    unauth);
-			    __mach_port_destroy (__mach_task_self (), ref);
+			    return __termctty_open_terminal (port,
+							     flags,
+							     result);
 			  }
+			err = (*use_init_port) (INIT_PORT_CTTYID, &ctty_open);
+			if (! err)
+			  err = reauthenticate (*result);
 			return err;
 		      }
 
@@ -260,7 +265,6 @@ __hurd_file_name_lookup_retry (file_t crdir,
 		  case '/':
 		    if (err = opentty (&startdir))
 		      return err;
-		    dealloc_dir = 1;
 		    strcpy (retryname, &retryname[4]);
 		    break;
 		  default:
@@ -280,32 +284,43 @@ __hurd_file_name_lookup_retry (file_t crdir,
 	  return EGRATUITOUS;
 	}
 
-      err = __dir_lookup (startdir, file_name, flags, mode,
-			  &doretry, retryname, result);
-    }
+      if (startdir != MACH_PORT_NULL)
+	{
+	  err = lookup (startdir);
+	  __mach_port_deallocate (__mach_task_self (), startdir);
+	  startdir = MACH_PORT_NULL;
+	}
+      else
+	err = (*use_init_port) (dirport, &lookup);
+    } while (! err);
+
+  return err;
 }
 weak_alias (__hurd_file_name_lookup_retry, hurd_file_name_lookup_retry)
 
 error_t
-__hurd_file_name_split (file_t crdir, file_t cwdir,
+__hurd_file_name_split (error_t (*use_init_port)
+			  (int which, error_t (*operate) (file_t)),
+			file_t (*get_dtable_port) (int fd),
 			const char *file_name,
 			file_t *dir, char **name)
 {
-  const char *lastslash;
-  error_t err;
+  error_t addref (file_t crdir)
+    {
+      *dir = crdir;
+      return __mach_port_mod_refs (__mach_task_self (), 
+				   crdir, MACH_PORT_RIGHT_SEND, +1);
+    }
 
-  lastslash = strrchr (file_name, '/');
+  const char *lastslash = strrchr (file_name, '/');
+
   if (lastslash != NULL)
     {
       if (lastslash == file_name)
 	{
 	  /* "/foobar" => crdir + "foobar".  */
 	  *name = (char *) file_name + 1;
-	  if (err = __mach_port_mod_refs (__mach_task_self (), 
-					  crdir, MACH_PORT_RIGHT_SEND, +1))
-	    return err;
-	  *dir = crdir;
-	  return 0;
+	  return (*use_init_port) (INIT_PORT_CRDIR, &addref);
 	}
       else
 	{
@@ -314,18 +329,15 @@ __hurd_file_name_split (file_t crdir, file_t cwdir,
 	  memcpy (dirname, file_name, lastslash - file_name);
 	  dirname[lastslash - file_name] = '\0';
 	  *name = (char *) lastslash + 1;
-	  return __hurd_file_name_lookup (crdir, cwdir, dirname, 0, 0, dir);
+	  return __hurd_file_name_lookup (use_init_port, get_dtable_port,
+					  dirname, 0, 0, dir);
 	}
     }
   else
     {
       /* "foobar" => cwdir + "foobar".  */
       *name = (char *) file_name;
-      if (err = __mach_port_mod_refs (__mach_task_self (),
-				      cwdir, MACH_PORT_RIGHT_SEND, +1))
-	return err;
-      *dir = cwdir;
-      return 0;
+      return (*use_init_port) (INIT_PORT_CWDIR, &addref);
     }
 }
 weak_alias (__hurd_file_name_split, hurd_file_name_split)
@@ -335,22 +347,13 @@ file_t
 __file_name_lookup (const char *file_name, int flags, mode_t mode)
 {
   error_t err;
-  file_t result, crdir, cwdir;
-  struct hurd_userlink crdir_ulink, cwdir_ulink;
+  file_t result;
 
-  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
-  cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
-
-  err = __hurd_file_name_lookup (crdir, cwdir, file_name, flags, mode,
+  err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport,
+				 file_name, flags, mode,
 				 &result);
 
-  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
-  _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
-
-  if (err)
-    return __hurd_fail (err), MACH_PORT_NULL;
-  else
-    return result;
+  return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
 }
 weak_alias (__file_name_lookup, file_name_lookup)
 
@@ -359,23 +362,33 @@ file_t
 __file_name_split (const char *file_name, char **name)
 {
   error_t err;
-  file_t dir, crdir, cwdir;
-  struct hurd_userlink crdir_ulink, cwdir_ulink;
+  file_t result;
 
-  crdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink);
-  cwdir = _hurd_port_get (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink);
+  err = __hurd_file_name_split (&_hurd_ports_use, &__getdport,
+				file_name, &result, name);
 
-  err = __hurd_file_name_split (crdir, cwdir, file_name, &dir, name);
-
-  _hurd_port_free (&_hurd_ports[INIT_PORT_CRDIR], &crdir_ulink, crdir);
-  _hurd_port_free (&_hurd_ports[INIT_PORT_CWDIR], &cwdir_ulink, cwdir);
-
-  if (err)
-    {
-      errno = err;
-      return MACH_PORT_NULL;
-    }
-  else
-    return dir;
+  return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
 }
 weak_alias (__file_name_split, file_name_split)
+
+
+file_t
+__file_name_lookup_under (file_t startdir,
+			  const char *file_name, int flags, mode_t mode)
+{
+  error_t err;
+  file_t result;
+
+  error_t use_init_port (int which, error_t (*operate) (mach_port_t))
+    {
+      return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
+	      _hurd_ports_use (which, operate));
+    }
+
+  err = __hurd_file_name_lookup (&use_init_port, &__getdport,
+				 file_name, flags, mode,
+				 &result);
+
+  return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
+}
+weak_alias (__file_name_lookup_under, file_name_lookup_under)

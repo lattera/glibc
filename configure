@@ -707,22 +707,18 @@ os=$config_os
 # Expand the configuration machine name into a subdirectory by architecture
 # type and particular chip.
 case "$machine" in
-i[345]86)
-  machine=i386/$machine ;;
-sparc[6789])
-  machine=sparc/$machine ;;
-m68k)
-  machine=m68k/m68020 ;;
-m680?0)
-  machine=m68k/$machine ;;
-m88k)
-  machine=m88k/m88100 ;;
-m88???)
-  machine=m88k/$machine ;;
-mips64*)
-  machine=mips/mips64/$machine ;;
-mips*)
-  machine=mips/$machine ;;
+a29k | am29000)	machine=a29k ;;
+alpha*)		machine=alpha/$machine ;;
+hppa*)		machine=hppa/$machine ;;
+i[345]86)	machine=i386/$machine ;;
+m680?0)		machine=m68k/$machine ;;
+m68k)		machine=m68k/m68020 ;;
+m88???)		machine=m88k/$machine ;;
+m88k)		machine=m88k/m88100 ;;
+mips*)		machine=mips/$machine ;;
+mips64*)	machine=mips/mips64/$machine ;;
+sparc[6789])	machine=sparc/$machine ;;
+supersparc)	machine=sparc/sparc8 ;;
 esac
 
 # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
@@ -1116,7 +1112,7 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1120 "configure"
+#line 1116 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1130,7 +1126,7 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1134 "configure"
+#line 1130 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1184,7 +1180,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1188 "configure"
+#line 1184 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1307,7 +1303,7 @@ if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1311 "configure"
+#line 1307 "configure"
 #include "confdefs.h"
 
 int main() { return 0; }
