@@ -24,9 +24,7 @@
 /* Output-room function for obstack streams.  */
 
 static void
-grow (stream, c)
-     FILE *stream;
-     int c;
+grow (FILE *stream, int c)
 {
   struct obstack *const obstack = (struct obstack *) stream->__cookie;
 
@@ -34,7 +32,7 @@ grow (stream, c)
      of the buffer which the user has already written into.  */
   obstack_blank_fast (obstack, - (stream->__put_limit - stream->__bufp));
 
-  if (stream->__target > obstack_object_size (obstack))
+  if ((size_t) stream->__target > obstack_object_size (obstack))
     {
       /* Our target (where the buffer maps to) is always zero except when
 	 the user just did a SEEK_END fseek.  If he sought within the
@@ -83,10 +81,7 @@ grow (stream, c)
    There is no external state to munge.  */
 
 static int
-seek (cookie, pos, whence)
-     void *cookie;
-     fpos_t *pos;
-     int whence;
+seek (void *cookie, fpos_t *pos, int whence)
 {
   switch (whence)
     {
@@ -110,8 +105,7 @@ seek (cookie, pos, whence)
    Only what has been written to the stream can be read back.  */
 
 static int
-input (stream)
-     FILE *stream;
+input (FILE *stream)
 {
   /* Re-sync with the obstack, growing the object if necessary.  */
   grow (stream, EOF);
@@ -126,9 +120,7 @@ input (stream)
 /* Initialize STREAM to talk to OBSTACK.  */
 
 static void
-init_obstream (stream, obstack)
-      FILE *stream;
-      struct obstack *obstack;
+init_obstream (FILE *stream, struct obstack *obstack)
 {
   stream->__mode.__write = 1;
   stream->__mode.__read = 1;

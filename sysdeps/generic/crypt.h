@@ -50,6 +50,8 @@ struct crypt_data
     int direction, initialized;
   };
 
+extern char *__crypt_r __P ((__const char *__key, __const char *__salt,
+			     struct crypt_data *__data));
 extern char *crypt_r __P ((__const char *__key, __const char *__salt,
 			   struct crypt_data *__data));
 #endif

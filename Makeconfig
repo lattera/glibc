@@ -338,15 +338,19 @@ ifndef asm-CPPFLAGS
 asm-CPPFLAGS =
 endif
 
+# ELF always supports init/fini sections
+ifeq ($(elf),yes)
+have-initfini = yes
+endif
+
 # Installed name of the startup code.
-ifneq ($(elf),yes)
-# When not using ELF, there is just one startfile, called crt0.o.
+ifneq ($(have-initfini),yes)
+# When not having init/fini, there is just one startfile, called crt0.o.
 start-installed-name = crt0.o
 else
-# In the ELF universe, crt0.o is called crt1.o, and there are
+# On systems having init/fini, crt0.o is called crt1.o, and there are
 # some additional bizarre files.
 start-installed-name = crt1.o
-have-initfini = yes
 endif
 
 
@@ -583,6 +587,8 @@ $(common-objpfx)version.mk: $(..)version.h $(..)Makeconfig
 	       -e 's/^.*VERSION.*"\([^"]*\)".*$$/version=\1/p' \
 	    < $< > $@-new
 	mv -f $@-new $@
+
+common-generated += version.mk
 
 ifeq (yes, $(build-shared))
 

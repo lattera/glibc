@@ -19,6 +19,8 @@
 #include <string.h>
 #include <memcopy.h>
 
+#undef strcat
+
 /* Append SRC on the end of DEST.  */
 char *
 strcat (dest, src)

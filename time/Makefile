@@ -59,7 +59,9 @@ define nl
 
 
 endef
+ifneq ($(no_deps),t)
 -include $(addprefix $(objpfx)z.,$(tzfiles))
+endif
 
 # Make these absolute file names.
 installed-localtime-file := $(firstword $(filter /%,$(inst_localtime-file)) \
@@ -80,6 +82,7 @@ endif
 ifeq ($(have-ksh),yes)
 install-others += $(inst_zonedir)/iso3166.tab $(inst_zonedir)/zone.tab
 install-bin += tzselect
+generated += tzselect
 endif
 
 include ../Rules

@@ -48,9 +48,9 @@ _nss_create_tablename (void)
       char buf [40 + strlen (nis_local_directory ())];
       char *p;
 
-      p = stpcpy (buf, "mail_aliases.org_dir.");
-      p = stpcpy (p, nis_local_directory ());
-      tablename_val = strdup (buf);
+      p = __stpcpy (buf, "mail_aliases.org_dir.");
+      p = __stpcpy (p, nis_local_directory ());
+      tablename_val = __strdup (buf);
       if (tablename_val == NULL)
         return NSS_STATUS_TRYAGAIN;
       tablename_len = strlen (tablename_val);

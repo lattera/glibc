@@ -19,6 +19,7 @@
 #include <stddef.h>
 #include <string.h>
 
+#undef memmem
 
 /* Return the first occurrence of NEEDLE in HAYSTACK.  */
 void *

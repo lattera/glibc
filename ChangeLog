@@ -1,3 +1,433 @@
+1997-09-11 04:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db2/db_int.h: Define __set_errno if not yet available.
+	* db2/btree/bt_rec.c: Use __set_errno to set errno value.
+	* db2/clib/getlong.c: Likewise.
+	* db2/db185/db185.c: Likewise.
+	* db2/db185/db185_int.h: Likewise.
+	* db2/dbm/dbm.c: Likewise.
+	* db2/lock/lock_deadlock.c: Likewise.
+	* db2/log/log_archive.c: Likewise.
+
+	* elf/dl-profile.c: Implement mcount function.
+
+	* gmon/gmon.c: Use __profil not profil because of namespace pollution.
+	* gmon/mcount.c: Remove BSD kernel code.
+	Use compare&swap instruction if possible to change state variable.
+	Optimize frompc folding.
+	* gmon/sys/gmon.h (struct gmonparam): Change state field to long int.
+	* sysdeps/i386/i486/atomicity.h: New file.
+	* sysdeps/stub/atomicity.h: New file.
+	* sysdeps/mach/hurd/profil.c: Define function as __profil and make
+	profil weak alias.
+	* sysdeps/posix/profil.c: Likewise.
+
+	* string/bits/string2.h: New file.
+	* include/bits/string2.h: New file.
+	* string/Makefile (routines): Add mempcpy.
+	(tests): Add inl-tester.
+	Remove _D__NO_STRING_INLINES from CFLAGS-* variables.
+	* sysdeps/generic/mempcpy.c: New file.
+	* sysdeps/generic/memccpy.c: Undef function name to enable definition
+	as macro.
+	* sysdeps/generic/memchr.c: Likewise.
+	* sysdeps/generic/memcmp.c: Likewise.
+	* sysdeps/generic/memmem.c: Likewise.
+	* sysdeps/generic/memmove.c: Likewise.
+	* sysdeps/generic/strcat.c: Likewise.
+	* sysdeps/generic/strchr.c: Likewise.
+	* sysdeps/generic/strcmp.c: Likewise.
+	* sysdeps/generic/strcpy.c: Likewise.
+	* sysdeps/generic/strcspn.c: Likewise.
+	* sysdeps/generic/strlen.c: Likewise.
+	* sysdeps/generic/strncat.c: Likewise.
+	* sysdeps/generic/strncmp.c: Likewise.
+	* sysdeps/generic/strncpy.c: Likewise.
+	* sysdeps/generic/strpbrk.c: Likewise.
+	* sysdeps/generic/strrchr.c: Likewise.
+	* sysdeps/generic/strsep.c: Likewise.
+	* sysdeps/generic/strspn.c: Likewise.
+	* sysdeps/generic/strstr.c: Likewise.
+	* sysdeps/generic/strtok.c: Likewise.
+	* sysdeps/generic/strtok_r.c: Likewise.
+	* sysdeps/i386/memset.c: Likewise.
+	* sysdeps/i386/bits/string.h: Correct a few types and constraints.
+	* sysdeps/i386/i486/bits/string.h: Heavy rewrites and optimizations.
+	* string/stratcliff.c: Undefine __USE_STRING_INLINES.
+	* string/tst-strlen.c: Likewise.
+	* string/string.h: Add prototype for mempcpy.  Include bits/string2.h
+	header always if optimizing.
+	* intl/dcgettext.c: Don't unconditionally define stpcpy, only if not
+	yet defined.
+	* intl/l10nflist.c: Likewise.
+
+	* string/tester.c: Add copyright and make little cleanups.
+
+	* inet/test_ifindex.c: Change type of ni variable to unsigned int.
+
+	* locale/programs/ld-ctype.c (struct locale_ctype_t): Change type
+	of fields map_collection_max and map_collection_act to size_t.
+
+	* nss/libnss_files.map: Group entries.
+
+	* posix/unistd.h: Add prototype for __setpgid and __profil.
+
+	* sysdeps/generic/crypt.h: Declare __crypt_r.
+
+	* sysdeps/i386/bits/select.h: Fix fatal bugs, use correct casts now.
+
+	* sysdeps/i386/fpu/bits/mathinline.h (isgreater, isgreaterequal,
+	isless, islessequal, islessgreater, isunordered): Optimize a bit.
+
+	* sysdeps/stub/ftruncate.c: Include missing header for prototype.
+	* sysdeps/stub/getdents.c: Likewise.
+	* sysdeps/stub/reboot.c: Likewise.
+	* sysdeps/stub/swapon.c: Likewise.
+	* sysdeps/stub/syscall.c: Likewise.
+	* sysdeps/stub/ualarm.c: Likewise.
+	* sysdeps/stub/usleep.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/if_index.c: Don't compile or use opensock
+	if SIOGIFINDEX and SIOGIFNAME are not defined.
+
+	* sysdeps/unix/sysv/linux/net/if.h: Add IFF_PORTSEL and IFF_AUTOMEDIA
+	according to recent kernel changes.
+
+1997-09-10 21:32  Klaus Espenlaub  <kespenla@student.informatik.uni-ulm.de>
+
+	* Makeconfig: Use $(have-initfini) instead of $(elf) to figure out
+	the installed name of the startup code.
+	(common-generated): Add version.mk.
+	* Makefile (distclean-1): Add glibcbug.
+	* Makerules: Replace -lgcc by $(gnulib).
+	* catgets/Makefile (generated): Add xmalloc.o.
+	* csu/Makefile (generated): Replace align.h and end.h by defs.h to
+	match the generated file.
+	* manual/Makefile (mostlyclean): Add stub-manual and stamp.o.
+	(realclean): Changed to remove chapters-incl[12].
+	* po/Makefile (realclean): New rule to remove the generated .mo files.
+	* time/Makefile: Only include zonefile dependencies if $(no_deps) is
+	not true to avoid make clean failure when directory time doesn't exist
+	yet.
+	(generated): Add tzselect.
+
+	* stdio/fgets.c (fgets): Add casts to reduce gcc warning noise.
+	* stdio/internals.c (flushbuf): Likewise.
+	* stdio/linewrap.c (lwupdate): Likewise.
+	* stdio/memstream.c (enlarge_buffer): Likewise.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Likewise.
+	* time/tzset.c (compute_change): Likewise.
+	* misc/init-misc.c (__init_misc): Only declare static if HAVE_GNU_LD
+	is defined.
+	* sysdeps/posix/pipestream.c (FUNC): Change to generate ANSI C style
+	functions.
+	* sysdeps/stub/init-posix.c: Likewise.
+	* sysdeps/stub/profil.c: Likewise.
+	* munch-tmpl.c (__libc_init): Convert to ANSI C style declaration to
+	reduce gcc warning noise.
+	* stdio/glue.c (_filbuf, _flsbuf): Likewise.
+	* stdio/obstream.c (grow, seek, input, init_obstream): Likewise.
+	* stdio/vasprintf.c (enlarge_buffer): Likewise.
+	* sysdeps/generic/sysd-stdio.c (__stdio_read, __stdio_write,
+	__stdio_seek, __stdio_close, __stdio_fileno, __stdio_open,
+	__stdio_reopen): Likewise.
+	* sysdeps/posix/defs.c (_cleanup): Likewise.
+	* time/offtime.c (__offtime): Add cast.
+
+	* posix/getopt.c: Don't use text_set_element if not defined.
+
+	* configure.in: Provide a check for underscores before user labels
+	that works even when the compiler used for building doesn't work
+	(like when there is no C library).  Use the old way if the compiler
+	works.
+
+1997-09-10 05:08  David S. Miller  <davem@caip.rutgers.edu>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/ioctls.h: The TC* ioctls use
+	'T' not 't' on SparcLinux.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: tcflag_t is 32 bits.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Add aliases for
+	_longjmp and siglongjmp.
+
+1997-09-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/stdio.h: Add format attributes to the extra printf and
+	scanf like functions.
+	* stdio/stdio.h: Likewise.
+
+1997-09-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
+	Print tablename_val, not tablename_len.
+
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_getntohost_r):
+	Use sprintf instead of sprintf, the string always fits.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_gethostbyaddr_r):
+	Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
+	Likewise.
+	* nis/nss_nisplus/nisplus-proto.c
+	(_nss_nisplus_getprotobynumber_r): Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_getrpcbynumber_r):
+	Likewise.
+	* nis/nss_nisplus/nisplus-service.c
+	(_nss_nisplus_getservbynumber_r): Likewise.
+
+	* nis/nss_nisplus/nisplus-alias.c (_nss_create_tablename): Use
+	__stpcpy, __stpncpy and __strdup instead of public names.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_create_tablename):
+	Likewise.
+	* nis/nss_nisplus/nisplus-grp.c (_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_create_tablename):
+	Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_parse_netgroup):
+	Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_parse_netent):
+	Likewise.
+	(_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-proto.c (_nss_nisplus_parse_protoent):
+	Likewise.
+	(_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c (_nss_create_tablename):
+	Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_parse_rpcent):
+	Likewise.
+	(_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_parse_servent):
+	Likewise.
+	(_nss_create_tablename): Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_create_tablename):
+	Likewise.
+
+	* libc.map: Export __stpcpy and __strdup.
+
+1997-09-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/Makefile (CFLAGS-test-float.c, CFLAGS-test-double.c,
+	CFLAGS-test-ldouble.c): Pass -ffloat-store to avoid excessive
+	precision.
+
+1997-09-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* include/rpc/auth_des.h: New file.
+
+1997-09-09  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (__mktime_internal): Declare sec_requested even if
+	!LEAP_SECONDS_POSSIBLE, since it's needed at the end when checking
+	for time_t overflow.
+
+1997-09-09 22:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c: Correct test for too small buffer.
+	Reported by Erik Troan <ewt@redhat.com>.
+
+	* elf/dl-close.c: Include <bits/libc-lock.h>, not <libc-lock.h>.
+	* elf/dl-open.c: Likewise.
+
+1997-09-07 17:09  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/Makefile: Kill setjmp_aux.
+	* sysdeps/alpha/bits/setjmp.h: Rewrite in terms of an array.
+	* sysdeps/alpha/__longjmp.c: Remove.
+	* sysdeps/alpha/setjmp_aux.c: Remove.
+	* sysdeps/alpha/__longjmp.S: New file.
+	* sysdeps/alpha/bsd-_setjmp.S: Stub out.
+	* sysdeps/alpha/bsd-setjmp.S: Likewise.
+	* sysdeps/alpha/setjmp.S: Do the work; don't call __setjmp_aux.
+	Move _setjmp and setjmp from bsd-*.S.
+
+1997-09-06  20:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/rpc/auth.h: New file.
+	* include/rpc/auth_unix.h: New file.
+
+1997-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	Fix gmtime so that it reports leap seconds when TZ
+	indicates that leap seconds are desired.
+
+	* time/gmtime.c (<stddef.h>): Remove unnecessary include.
+	(gmtime): Put after gmtime_r, to help the compiler inline.
+	(__tz_convert): New decl.
+	(gmtime_r): Use __tz_convert instead of __offtime,
+	so that leap seconds are handled correctly.
+
+	* time/localtime.c (<errno.h>, <libc-lock.h>): Remove includes that
+	are now unnecessary.
+	(__tzset_internal, __tz_compute, __tzfile_compute, __use_tzfile,
+	__tzset_lock): Remove extern decls that are now unnecessary.
+	(localtime_internal): Moved to __tz_convert in tzset.c.
+	so that localtime and gmtime can both use it easily.
+	(localtime): Put after localtime_r, to help the compiler inline.
+	(localtime_r): Use __tz_convert instead of localtime_internal.
+
+	* time/strftime.c (__tz_compute): Remove unused (and now incorrect)
+	decl.
+
+	* time/tzfile.c (__tzfile_compute): New arg USE_LOCALTIME.
+
+	* time/tzset.c (<errno.h>): Include.
+	(_tmbuf): New decl.
+	(__tzfile_compute): New function.
+	(tz_compute): Renamed from __tz_compute.  No longer extern.
+	Remove redundant call to tzset_internal.
+	(tzset_internal): Renamed from __tzset_internal.  No longer extern.
+	(tzset_lock): Renamed from __tzset_lock.  No longer extern.
+	(__tz_convert): New function, containing functionality of old
+	localtime_internal function, plus locking and optional UTC.
+
+1997-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	* time/tzfile.c (__tzfile_read): Don't read a file if TZ is the empty
+	string, just use UTC without leap seconds.  This is for compatibility
+	with the Olson code.
+
+1997-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	* time/tzset.c (__tzname_max): Lock tz data structures before
+	invoking tzset_internal.
+
+	* time/tzfile.c: Define compute_tzname_max statically.
+
+1997-09-07 10:57  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_call.c: Remove not longer necessary HAVE_SECURE_RPC ifdefs.
+	* nis/nis_intern.h: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+
+	* sunrpc/auth_des.c: Don't dereference NULL pointer,
+	initialize ad->ad_timediff.
+
+	* sunrpc/auth_none.c: Don't define our own prototypes, use the one
+	from the header files.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+
+	* sunrpc/key_call.c: Fix signal handling.
+
+	* sunrpc/openchild.c: Don't use /bin/sh to start /usr/etc/keyenvoy,
+	or we will get a deadlock with NIS+.
+
+	* sunrpc/rpc/auth.h: Add prototype for xdr_opaque_auth, don't define
+	HAVE_SECURE_RPC.
+
+1997-09-07 15:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/select.h [__GNUC__] (__FD_ZERO, __FD_SET, __FD_CLR,
+	__FD_ISSET): Use correct casts to address array correctly.
+	Reported by urbanw@cs.umu.se.
+
+1997-09-07 05:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c: Include <bits/libc-lock.h>, not <libc-lock.h>.
+	* elf/dl-open.c: Likewise.
+	* sysdeps/i386/memset.c: Undefine memset in case the header with the
+	optimized functions is included.
+	Patches by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+	* sysdeps/i386/bits/string.h [__PIC__] (strcspn, strspn, strpbrk,
+	strsep): Use register for second parameter.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+	Reported by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+1997-09-03 09:48  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* math/libm-test.c: Change various tolerances to match what the
+	tested routines can actually provide.
+
+	* math/Makefile: Add new tests.
+	* math/atest-sincos.c: New file.
+	* math/atest-exp.c: New file.
+
+	* csu/Makefile: Give initfini.s and initfiniS.s their own
+	CFLAGS-* macros so they can be overridden.
+	* sysdeps/powerpc/Makefile [subdir=csu]: Override flags for
+	initfiniS.s to use -fpic instead of -fPIC, because the sed script
+	breaks otherwise.
+
+	* sysdeps/powerpc/Makefile [build-shared]: Use -fpic not -fPIC for
+	efficiency.
+
+	* sysdeps/powerpc/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Don't use register 0, to let _mcount be in a shared object.
+
+	* sysdeps/powerpc/dl-machine.h: Use full sentences in comments.
+	Generally clean up.  Suppress some code we don't need when relocating
+	ld.so.
+	* sysdeps/powerpc/test-arith.c: Change loop indices to size_t when
+	appropriate to suppress gcc warning.
+	* resolv/res_send.c: Suppress warning.
+	* sunrpc/xdr_sizeof.c: Suppress warning.
+
+	* FAQ: Add ppc-linux.
+	* manual/maint.texi: Add ppc-linux.  Explain that gcc can't build it
+	yet.
+
+	* sysdeps/unix/sysv/linux/powerpc/profil-counter.h: Correct for
+	current kernels.
+
+1997-08-15 07:45  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* stdlib/fmtmsg.c: Use two parameters for __libc_once_define.
+	* sysdeps/i386/machine-gmon.h: Correct typo.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Change to match
+	kernel.
+
+	* sysdeps/generic/dl-sysdep.c: Add hook for bizzare PPC argument hack.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Rewrite to use
+	sysdeps/linux/dl-sysdep.c.
+
+	* sysdeps/powerpc/Makefile [subdir=gmon]: Compile ppc-mcount.
+	* sysdeps/powerpc/machine-gmon.h: Use ppc-mcount.
+	* sysdeps/powerpc/ppc-mcount: New file.
+
+	The following are mostly changes to allow profiling:
+	* sysdeps/powerpc/add_n.S: Added.
+	* sysdeps/powerpc/add_n.s: Removed.
+	* sysdeps/powerpc/addmul_1.S: Added.
+	* sysdeps/powerpc/addmul_1.s: Removed.
+	* sysdeps/powerpc/bsd-_setjmp.S: Use JUMPTARGET macro.
+	* sysdeps/powerpc/bsd-setjmp.S: Use JUMPTARGET macro.
+	* sysdeps/powerpc/lshift.S: Added.
+	* sysdeps/powerpc/lshift.s: Removed.
+	* sysdeps/powerpc/memset.S: Added.
+	* sysdeps/powerpc/memset.s: Removed.
+	* sysdeps/powerpc/mul_1.S: Added.
+	* sysdeps/powerpc/mul_1.s: Removed.
+	* sysdeps/powerpc/rshift.S: Added.
+	* sysdeps/powerpc/rshift.s: Removed.
+	* sysdeps/powerpc/s_copysign.S: Use ENTRY, END, weak_alias macros.
+	* sysdeps/powerpc/s_fabs.S: Use ENTRY, END, weak_alias macros.
+	* sysdeps/powerpc/setjmp.S: Use JUMPTARGET macro.
+	* sysdeps/powerpc/strchr.S: Added.
+	* sysdeps/powerpc/strchr.s: Removed.
+	* sysdeps/powerpc/strcmp.S: Added.
+	* sysdeps/powerpc/strcmp.s: Removed.
+	* sysdeps/powerpc/strlen.S: Added.
+	* sysdeps/powerpc/strlen.s: Removed.
+	* sysdeps/powerpc/sub_n.S: Added.
+	* sysdeps/powerpc/sub_n.s: Removed.
+	* sysdeps/powerpc/submul_1.S: Added.
+	* sysdeps/powerpc/submul_1.s: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/_exit.S: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/brk.S: Added.
+	* sysdeps/unix/sysv/linux/powerpc/brk.c: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Use new macros. Fix
+	various bugs. Document that it isn't tested.
+	* sysdeps/unix/sysv/linux/powerpc/sigreturn.S: Make look like
+	sysdeps/unix/_exit.S.
+	* sysdeps/unix/sysv/linux/powerpc/socket.S: Use new macros.
+	* sysdeps/unix/sysv/linux/powerpc/syscall.S: Use new macros.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Define some new macros
+	to make assembler (possibly) more portable, allow profiling, etc.
+
 1997-09-05 03:15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (subdirs): Reorganize order so that nss follows add-ons.

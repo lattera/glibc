@@ -22,10 +22,7 @@
 EXTERNS
 
 void
-__libc_init (argc, argv, envp)
-     int argc;
-     char **argv;
-     char **envp;
+__libc_init (int argc, char **argv, char **envp)
 {
   CALLS
 

@@ -38,7 +38,7 @@ static int db185_seq __P((const DB185 *, DBT185 *, DBT185 *, u_int));
 static int db185_sync __P((const DB185 *, u_int));
 
 DB185 *
-dbopen(file, oflags, mode, type, openinfo)
+__dbopen(file, oflags, mode, type, openinfo)
 	const char *file;
 	int oflags, mode;
 	DBTYPE type;
@@ -181,18 +181,19 @@ dbopen(file, oflags, mode, type, openinfo)
 	 * Store the returned pointer to the real DB 2.0 structure in the
 	 * internal pointer.  Ugly, but we're not going for pretty, here.
 	 */
-	if ((errno = db_open(file,
-	    type, __db_oflags(oflags), mode, NULL, dbinfop, &dbp)) != 0) {
+	if ((__set_errno(db_open(file,
+	    type, __db_oflags(oflags), mode, NULL, dbinfop, &dbp))) != 0) {
 		free(db185p);
 		return (NULL);
 	}
 
 	/* Create the cursor used for sequential ops. */
-	if ((errno = dbp->cursor(dbp, NULL, &((DB185 *)db185p)->dbc)) != 0) {
+	if ((__set_errno(dbp->cursor(dbp, NULL, &((DB185 *)db185p)->dbc)))
+	    != 0) {
 		s_errno = errno;
 		(void)dbp->close(dbp, 0);
 		free(db185p);
-		errno = s_errno;
+		__set_errno(s_errno);
 		return (NULL);
 	}
 
@@ -200,9 +201,10 @@ dbopen(file, oflags, mode, type, openinfo)
 	return (db185p);
 
 einval:	free(db185p);
-	errno = EINVAL;
+	__set_errno(EINVAL);
 	return (NULL);
 }
+weak_alias (__dbopen, dbopen)
 
 static int
 db185_close(db185p)
@@ -212,7 +214,7 @@ db185_close(db185p)
 
 	dbp = (DB *)db185p->internal;
 
-	errno = dbp->close(dbp, 0);
+	__set_errno(dbp->close(dbp, 0));
 
 	free(db185p);
 
@@ -237,9 +239,9 @@ db185_del(db185p, key185, flags)
 	if (flags & ~R_CURSOR)
 		goto einval;
 	if (flags & R_CURSOR)
-		errno = db185p->dbc->c_del(db185p->dbc, 0);
+		__set_errno(db185p->dbc->c_del(db185p->dbc, 0));
 	else
-		errno = dbp->del(dbp, NULL, &key, 0);
+		__set_errno(dbp->del(dbp, NULL, &key, 0));
 
 	switch (errno) {
 	case 0:
@@ -249,7 +251,7 @@ db185_del(db185p, key185, flags)
 	}
 	return (-1);
 
-einval:	errno = EINVAL;
+einval:	__set_errno(EINVAL);
 	return (-1);
 }
 
@@ -262,7 +264,7 @@ db185_fd(db185p)
 
 	dbp = (DB *)db185p->internal;
 
-	return ((errno = dbp->fd(dbp, &fd)) == 0 ? fd : -1);
+	return ((__set_errno(dbp->fd(dbp, &fd))) == 0 ? fd : -1);
 }
 
 static int
@@ -287,7 +289,7 @@ db185_get(db185p, key185, data185, flags)
 	if (flags)
 		goto einval;
 
-	switch (errno = dbp->get(dbp, NULL, &key, &data, 0)) {
+	switch (__set_errno(dbp->get(dbp, NULL, &key, &data, 0))) {
 	case 0:
 		data185->data = data.data;
 		data185->size = data.size;
@@ -297,7 +299,7 @@ db185_get(db185p, key185, data185, flags)
 	}
 	return (-1);
 
-einval:	errno = EINVAL;
+einval:	__set_errno(EINVAL);
 	return (-1);
 }
 
@@ -324,46 +326,46 @@ db185_put(db185p, key185, data185, flags)
 
 	switch (flags) {
 	case 0:
-		errno = dbp->put(dbp, NULL, &key, &data, 0);
+		__set_errno(dbp->put(dbp, NULL, &key, &data, 0));
 		break;
 	case R_CURSOR:
-		errno =
-		    db185p->dbc->c_put(db185p->dbc, &key, &data, DB_CURRENT);
+		__set_errno(
+		    db185p->dbc->c_put(db185p->dbc, &key, &data, DB_CURRENT));
 		break;
 	case R_IAFTER:
 	case R_IBEFORE:
 		if (dbp->type != DB_RECNO)
 			goto einval;
 
-		if ((errno = dbp->cursor(dbp, NULL, &dbcp_put)) != 0)
+		if ((__set_errno(dbp->cursor(dbp, NULL, &dbcp_put))) != 0)
 			return (-1);
-		if ((errno =
-		    dbcp_put->c_get(dbcp_put, &key, &data, DB_SET)) != 0) {
+		if ((__set_errno(
+		    dbcp_put->c_get(dbcp_put, &key, &data, DB_SET))) != 0) {
 			s_errno = errno;
 			(void)dbcp_put->c_close(dbcp_put);
-			errno = s_errno;
+			__set_errno(s_errno);
 			return (-1);
 		}
 		memset(&data, 0, sizeof(data));
 		data.data = data185->data;
 		data.size = data185->size;
-		errno = dbcp_put->c_put(dbcp_put,
-		    &key, &data, flags == R_IAFTER ? DB_AFTER : DB_BEFORE);
+		__set_errno(dbcp_put->c_put(dbcp_put,
+		    &key, &data, flags == R_IAFTER ? DB_AFTER : DB_BEFORE));
 		s_errno = errno;
 		(void)dbcp_put->c_close(dbcp_put);
-		errno = s_errno;
+		__set_errno(s_errno);
 		break;
 	case R_NOOVERWRITE:
-		errno = dbp->put(dbp, NULL, &key, &data, DB_NOOVERWRITE);
+		__set_errno(dbp->put(dbp, NULL, &key, &data, DB_NOOVERWRITE));
 		break;
 	case R_SETCURSOR:
 		if (dbp->type != DB_BTREE && dbp->type != DB_RECNO)
 			goto einval;
 
-		if ((errno = dbp->put(dbp, NULL, &key, &data, 0)) != 0)
+		if ((__set_errno(dbp->put(dbp, NULL, &key, &data, 0))) != 0)
 			break;
-		errno =
-		    db185p->dbc->c_get(db185p->dbc, &key, &data, DB_SET_RANGE);
+		__set_errno(db185p->dbc->c_get(db185p->dbc,
+					       &key, &data, DB_SET_RANGE));
 		break;
 	default:
 		goto einval;
@@ -379,7 +381,7 @@ db185_put(db185p, key185, data185, flags)
 	}
 	return (-1);
 
-einval:	errno = EINVAL;
+einval:	__set_errno(EINVAL);
 	return (-1);
 }
 
@@ -424,7 +426,8 @@ db185_seq(db185p, key185, data185, flags)
 	default:
 		goto einval;
 	}
-	switch (errno = db185p->dbc->c_get(db185p->dbc, &key, &data, flags)) {
+	switch (__set_errno(db185p->dbc->c_get(db185p->dbc,
+					       &key, &data, flags))) {
 	case 0:
 		key185->data = key.data;
 		key185->size = key.size;
@@ -436,7 +439,7 @@ db185_seq(db185p, key185, data185, flags)
 	}
 	return (-1);
 
-einval:	errno = EINVAL;
+einval:	__set_errno(EINVAL);
 	return (-1);
 }
 
@@ -464,8 +467,8 @@ db185_sync(db185p, flags)
 		goto einval;
 	}
 
-	return ((errno = dbp->sync(dbp, 0)) == 0 ? 0 : -1);
+	return ((__set_errno(dbp->sync(dbp, 0))) == 0 ? 0 : -1);
 
-einval:	errno = EINVAL;
+einval:	__set_errno(EINVAL);
 	return (-1);
 }

@@ -58,8 +58,6 @@ static char sccsid[] = "@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro";
 #include <sys/socket.h>
 #include <rpc/pmap_clnt.h>
 
-extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
-
 #define MCALL_MSG_SIZE 24
 
 struct ct_data

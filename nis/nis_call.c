@@ -151,7 +151,6 @@ __bind_connect (dir_binding *dbp)
 
   if (dbp->use_auth)
     {
-#if defined(HAVE_SECURE_RPC)
       if (serv->key_type == NIS_PK_DH)
 	{
 	  char netname[MAXNETNAMELEN+1];
@@ -168,7 +167,6 @@ __bind_connect (dir_binding *dbp)
 	    dbp->clnt->cl_auth = authunix_create_default ();
 	}
       else
-#endif
 	dbp->clnt->cl_auth = authunix_create_default ();
       dbp->use_auth = TRUE;
     }

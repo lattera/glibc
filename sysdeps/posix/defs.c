@@ -63,7 +63,7 @@ FILE *__stdio_head = &stdstreams[0];
    to cause _cleanup to be linked in.  */
 
 void
-_cleanup ()
+_cleanup (void)
 {
   __fcloseall ();
 }

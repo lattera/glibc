@@ -18,7 +18,6 @@
 
 #include <sysdep.h>
 
-	.text
 ENTRY (syscall)
 	mr   %r0,%r3
 	mr   %r3,%r4
@@ -27,10 +26,5 @@ ENTRY (syscall)
 	mr   %r6,%r7
 	mr   %r7,%r8
 	sc
-	bnslr
-#ifdef PIC
-	b __syscall_error@plt
-#else
-	b __syscall_error
-#endif
+	PSEUDO_RET
 PSEUDO_END (syscall)

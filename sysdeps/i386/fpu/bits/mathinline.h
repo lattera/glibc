@@ -28,43 +28,40 @@
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
 # define isgreater(x, y) \
-     ({ int __result;							      \
+     ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x45, %%ah; setz %%al;"	      \
-		 "andl $0x01, %0"					      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
 # define isgreaterequal(x, y) \
-     ({ int __result;							      \
+     ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
-		 "andl $0x01, %0"					      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
 # define isless(x, y) \
-     ({ int __result;							      \
+     ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
-		 "setz %%al; andl $0x01, %0"				      \
+		 "setz %%al"						      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
 # define islessequal(x, y) \
-     ({ int __result;							      \
+     ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
-		 "setz %%al; andl $0x01, %0"				      \
+		 "setz %%al"						      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
 # define islessgreater(x, y) \
-     ({ int __result;							      \
+     ({ register char __result;						      \
 	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
-		 "andl $0x01, %0"					      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 
 # define isunordered(x, y) \
-     ({ int __result;							      \
-	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0x01, %0"	      \
+     ({ register char __result;						      \
+	__asm__ ("fucompp; fnstsw; sahf; setp %%al"			      \
 		 : "=a" (__result) : "u" (y), "t" (x) : "cc", "st", "st(1)"); \
 	__result; })
 #endif

@@ -25,11 +25,7 @@
 
 ENTRY (__setjmp)
 	li %r4,1			/* Set second argument to 1.  */
-#ifdef PIC
-	b __sigsetjmp@plt
-#else
-	b __sigsetjmp
-#endif
+	b JUMPTARGET(__sigsetjmp)
 END (__setjmp)
 
 	.globl setjmp

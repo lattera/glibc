@@ -171,6 +171,13 @@ extern char *strtok_r __P ((char *__s, __const char *__delim,
    HAYSTACK is HAYSTACKLEN bytes long.  */
 extern __ptr_t memmem __P ((__const __ptr_t __haystack, size_t __haystacklen,
 			    __const __ptr_t __needle, size_t __needlelen));
+
+/* Copy N bytes of SRC to DEST, return pointer to bytes after the
+   last written byte.  */
+extern __ptr_t __mempcpy __P ((__ptr_t __restrict __dest,
+			       __const __ptr_t __restrict __src, size_t __n));
+extern __ptr_t mempcpy __P ((__ptr_t __restrict __dest,
+			     __const __ptr_t __restrict __src, size_t __n));
 #endif
 
 
@@ -274,21 +281,30 @@ extern char *basename __P ((__const char *__filename));
 #endif
 
 
-/* Some functions might be implemented as optimized inline assembler
-   functions.  Only include this file if we really want them.  */
-#if defined __USE_STRING_INLINES && defined __OPTIMIZE__
-# include <bits/string.h>
-#endif
-
-
-/* Now provide some generic optimizations.  */
 #if defined __GNUC__ && __GNUC__ >= 2 && defined __OPTIMIZE__
-extern __inline size_t
-strnlen (__const char *__string, size_t __maxlen)
-{
-  __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
-  return __end ? __end - __string : __maxlen;
-}
+/* When using GNU CC we provide some optimized versions of selected
+   functions from this header.  There are two kinds of optimizations:
+
+   - machine-dependent optmizations, most probably using inline
+     assembler code; these could be quite expensive since the code
+     size could increase significantly.
+     These optimizations are not used unless the symbol
+	__USE_STRING_INLINES
+     is defined before including this header
+
+   - machine-independent optimizations which do not increase the
+     code size significantly and which optimize mainly situations
+     where one or more arguments are compile-time constants.
+     These optimizations are used always when the compiler is
+     taught to optimized.  */
+
+/* Get the machine-dependent optimizations if wanted.  */
+# ifdef __USE_STRING_INLINES
+#  include <bits/string.h>
+# endif
+
+/* These are generic optimizations which do not add too much inline code.  */
+# include <bits/string2.h>
 #endif
 
 __END_DECLS

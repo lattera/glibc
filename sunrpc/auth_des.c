@@ -109,7 +109,7 @@ struct ad_private
  * Create the client des authentication object
  */
 AUTH *
-authdes_create (const char *servername, u_int window, 
+authdes_create (const char *servername, u_int window,
 		struct sockaddr *syncaddr, des_block * ckey)
   /* servername - network name of server */
   /* window     - time to live */
@@ -161,6 +161,7 @@ authdes_pk_create (const char *servername, netobj * pkey, u_int window,
    */
   bcopy (namebuf, ad->ad_fullname, ad->ad_fullnamelen + 1);
   bcopy (servername, ad->ad_servername, ad->ad_servernamelen + 1);
+  ad->ad_timediff.tv_sec = ad->ad_timediff.tv_usec = 0;
   if (syncaddr != NULL)
     {
       ad->ad_syncaddr = *syncaddr;
@@ -198,11 +199,13 @@ failed:
   if (auth != NULL)
     FREE (auth, sizeof (AUTH));
   if (ad != NULL)
-    FREE (ad, sizeof (struct ad_private));
-  if (ad->ad_fullname != NULL)
-    FREE (ad->ad_fullname, ad->ad_fullnamelen + 1);
-  if (ad->ad_servername != NULL)
-    FREE (ad->ad_servername, ad->ad_servernamelen + 1);
+    {
+      FREE (ad, sizeof (struct ad_private));
+      if (ad->ad_fullname != NULL)
+	FREE (ad->ad_fullname, ad->ad_fullnamelen + 1);
+      if (ad->ad_servername != NULL)
+	FREE (ad->ad_servername, ad->ad_servernamelen + 1);
+    }
   return (NULL);
 }
 

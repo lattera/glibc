@@ -24,6 +24,8 @@
 # include <string.h>
 #endif
 
+#undef strpbrk
+
 /* Find the first occurrence in S of any character in ACCEPT.  */
 char *
 strpbrk (s, accept)

@@ -1,6 +1,3 @@
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)openchild.c	2.3 88/08/15 4.0 RPCSRC; from 1.7 88/02/08 SMI";
-#endif
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -46,8 +43,6 @@ static char sccsid[] = "@(#)openchild.c	2.3 88/08/15 4.0 RPCSRC; from 1.7 88/02/
 #include <rpc/rpc.h>
 #include <rpc/clnt.h>
 
-static char SHELL[] = "/bin/sh";
-
 /*
  * returns pid, or -1 for failure
  */
@@ -58,13 +53,12 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
   int pid;
   int pdto[2];
   int pdfrom[2];
-  char *com;
 
   if (pipe (pdto) < 0)
     goto error1;
   if (pipe (pdfrom) < 0)
     goto error2;
-  switch (pid = vfork ())
+  switch (pid = fork ())
     {
     case -1:
       goto error3;
@@ -77,13 +71,12 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
       dup (pdto[0]);
       close (1);
       dup (pdfrom[1]);
+      fflush (stderr);
       for (i = _rpc_dtablesize () - 1; i >= 3; i--)
 	close (i);
-      com = malloc (strlen (command) + 6);
-      if (com == NULL)
-	_exit (~0);
-      sprintf (com, "exec %s", command);
-      execl (SHELL, basename (SHELL), "-c", com, NULL);
+      fflush (stderr);
+      execlp (command, command, 0);
+      perror ("exec");
       _exit (~0);
 
     default:

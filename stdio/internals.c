@@ -238,7 +238,7 @@ flushbuf (register FILE *fp, int c)
 	      else
 		__clearerr (fp);
 
-	      if (fp->__get_limit - fp->__buffer < o)
+	      if ((size_t) (fp->__get_limit - fp->__buffer) < o)
 		/* Oops.  We didn't read enough (probably because we got EOF).
 		   Forget we even mentioned it.  */
 		fp->__target += o;
@@ -280,7 +280,7 @@ flushbuf (register FILE *fp, int c)
 	    }
 	}
 
-      if (fp->__bufp - fp->__buffer <= buffer_offset && flush_only)
+      if ((size_t) (fp->__bufp - fp->__buffer) <= buffer_offset && flush_only)
 	{
 	  /* There is nothing new in the buffer, only data that
 	     was read back aligned from the file.  */

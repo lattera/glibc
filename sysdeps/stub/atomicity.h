@@ -1,5 +1,5 @@
-/* brk system call for Linux/ppc.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Low-level functions for atomitc operations.  ix86 version, x >= 4.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,31 +17,37 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-#include <errno.h>
+#ifndef _ATOMICITY_H
+#define _ATOMICITY_H	1
 
-void *__curbrk;
+#include <inttypes.h>
 
-int
-__brk (void *addr)
+
+static inline int
+__attribute__ ((unused))
+exchange_and_add (uint32_t *mem, int val)
 {
-  register void *syscall_arg asm ("r3") = addr;
-  register int syscall_number asm ("r0") = SYS_ify (brk);
-  register void *newbrk asm ("r3");
-  asm ("sc"
-       : "=r" (newbrk)
-       : "r" (syscall_arg), "r" (syscall_number)
-       : "r4","r5","r6","r7","r8","r9","r10","r11","r12",
-         "ctr", "mq", "cr0", "cr1", "cr6", "cr7");
-
-  __curbrk = newbrk;
-
-  if (newbrk < addr)
-    {
-      __set_errno (ENOMEM);
-      return -1;
-    }
-
-  return 0;
+  int result = *mem;
+  *mem += val;
+  return result;
 }
-weak_alias (__brk, brk)
+
+static inline void
+__attribute__ ((unused))
+atomic_add (uint32_t *mem, int val)
+{
+  *mem += val;
+}
+
+static inline int
+__attribute__ ((unused))
+compare_and_swap (long int *p, long int oldval, long int newval)
+{
+  if (*p != oldval)
+    return 0;
+
+  *p = newval;
+  return 1;
+}
+
+#endif /* atomicity.h */

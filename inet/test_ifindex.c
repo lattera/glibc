@@ -45,7 +45,8 @@ main (void)
   for (p = idx; p->if_index || p->if_name; ++p)
     {
       char buf[IFNAMSIZ];
-      int ni, result;
+      unsigned int ni;
+      int result;
       printf ("%3d %15s | ", p->if_index, p->if_name);
       printf ("%3d", ni = if_nametoindex (p->if_name));
       printf ("%15s", if_indextoname (p->if_index, buf));

@@ -42,6 +42,8 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
    and MCOUNT macros.  */
 #include "machine-gmon.h"
 
+#include <atomicity.h>
+
 /*
  * mcount is called on entry to each function compiled with the profiling
  * switch set.  _mcount(), which is declared in a machine-dependent way
@@ -63,9 +65,6 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	register struct tostruct *top, *prevtop;
 	register struct gmonparam *p;
 	register long toindex;
-#ifdef KERNEL
-	register int s;
-#endif
 	int i;
 
 	p = &_gmonparam;
@@ -73,13 +72,9 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	 * check that we are profiling
 	 * and that we aren't recursively invoked.
 	 */
-	if (p->state != GMON_PROF_ON)
-		return;
-#ifdef KERNEL
-	MCOUNT_ENTER;
-#else
-	p->state = GMON_PROF_BUSY;
-#endif
+	if (! compare_and_swap (&p->state, GMON_PROF_ON, GMON_PROF_BUSY))
+	  return;
+
 	/*
 	 * check that frompcindex is a reasonable pc value.
 	 * for example:	signal catchers get called from the stack,
@@ -89,8 +84,14 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 	if (frompc > p->textsize)
 		goto done;
 
-	/* avoid integer divide if possible: */
-	if (p->log_hashfraction >= 0) {
+	/* The following test used to be
+		if (p->log_hashfraction >= 0)
+	   But we can simplify this if we assume the profiling data
+	   is always initialized by the functions in gmon.c.  But
+	   then it is possible to avoid a runtime check and use the
+	   smae `if' as in gmon.c.  So keep these tests in sync.  */
+	if ((HASHFRACTION & (HASHFRACTION - 1)) == 0) {
+	  /* avoid integer divide if possible: */
 	    i = frompc >> p->log_hashfraction;
 	} else {
 	    i = frompc / (p->hashfraction * sizeof(*p->froms));
@@ -167,17 +168,10 @@ _MCOUNT_DECL(frompc, selfpc)	/* _mcount; may be static, inline, etc */
 
 	}
 done:
-#ifdef KERNEL
-	MCOUNT_EXIT;
-#else
 	p->state = GMON_PROF_ON;
-#endif
 	return;
 overflow:
 	p->state = GMON_PROF_ERROR;
-#ifdef KERNEL
-	MCOUNT_EXIT;
-#endif
 	return;
 }
 

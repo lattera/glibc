@@ -46,8 +46,6 @@ static char sccsid[] = "@(#)clnt_raw.c 1.22 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/svc.h>
 #include <rpc/xdr.h>
 
-extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
-
 #define MCALL_MSG_SIZE 24
 
 /*

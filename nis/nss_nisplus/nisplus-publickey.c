@@ -25,10 +25,8 @@
 #include <syslog.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
-#ifdef HAVE_SECURE_RPC
 #include <rpc/key_prot.h>
 extern int xdecrypt (char *, char *);
-#endif
 
 #include <nss-nisplus.h>
 
@@ -107,7 +105,6 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
 enum nss_status
 _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 {
-#ifdef HAVE_SECURE_RPC
   nis_result *res;
   enum nss_status retval;
   char buf[NIS_MAXNAMELEN+2];
@@ -179,9 +176,6 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 
   buf[HEXKEYBYTES] = 0;
   strcpy (skey, buf);
-#else
-  skey[0] = 0;
-#endif
 
   return NSS_STATUS_SUCCESS;
 }

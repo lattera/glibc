@@ -41,8 +41,8 @@ struct child
    These all simply call the corresponding
    original function with the original cookie.  */
 
-#define FUNC(type, name, args)						      \
-  static type __CONCAT(child_,name) args __CONCAT(name,decl)		      \
+#define FUNC(type, name, proto, args)					      \
+  static type __CONCAT(child_,name) proto				      \
   {									      \
     struct child *c = (struct child *) cookie;				      \
     {									      \
@@ -51,16 +51,12 @@ struct child
     }									      \
   }
 
-#define readdecl void *cookie; register char *buf; register size_t n;
-FUNC (int, read, (cookie, buf, n))
-#define writedecl void *cookie; register const char *buf; register size_t n;
-FUNC (int, write, (cookie, buf, n))
-#define seekdecl void *cookie; fpos_t *pos; int whence;
-FUNC (int, seek, (cookie, pos, whence))
-#define closedecl void *cookie;
-FUNC (int, close, (cookie))
-#define filenodecl void *cookie;
-FUNC (int, fileno, (cookie))
+FUNC (int, read, (void *cookie, char *buf, size_t n), (cookie, buf, n))
+FUNC (int, write, (void *cookie, const char *buf, size_t n), (cookie, buf, n))
+FUNC (int, seek, (void *cookie, fpos_t *pos, int whence),
+      (cookie, pos, whence))
+FUNC (int, close, (void *cookie), (cookie))
+FUNC (int, fileno, (void *cookie), (cookie))
 
 static const __io_functions child_funcs
   = { child_read, child_write, child_seek, child_close, child_fileno };

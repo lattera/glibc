@@ -92,9 +92,9 @@ _nss_create_tablename (void)
       char buf [40 + strlen (nis_local_directory ())];
       char *p;
 
-      p = stpcpy (buf, "ethers.org_dir.");
-      p = stpcpy (p, nis_local_directory ());
-      tablename_val = strdup (buf);
+      p = __stpcpy (buf, "ethers.org_dir.");
+      p = __stpcpy (p, nis_local_directory ());
+      tablename_val = __strdup (buf);
       if (tablename_val == NULL)
         return NSS_STATUS_TRYAGAIN;
       tablename_len = strlen (tablename_val);
@@ -267,10 +267,10 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
       char buf[255 + tablename_len];
 
       memset (&buf, '\0', sizeof (buf));
-      snprintf(buf, sizeof (buf), "[addr=%x:%x:%x:%x:%x:%x],ethers.org_dir",
-	       addr->ether_addr_octet[0], addr->ether_addr_octet[1],
-	       addr->ether_addr_octet[2], addr->ether_addr_octet[3],
-	       addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
+      sprintf(buf, "[addr=%x:%x:%x:%x:%x:%x],ethers.org_dir",
+	      addr->ether_addr_octet[0], addr->ether_addr_octet[1],
+	      addr->ether_addr_octet[2], addr->ether_addr_octet[3],
+	      addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
 
       result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 

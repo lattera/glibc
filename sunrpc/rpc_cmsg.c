@@ -42,8 +42,6 @@ static char sccsid[] = "@(#)rpc_callmsg.c 1.4 87/08/11 Copyr 1984 Sun Micro";
 #include <sys/param.h>
 #include <rpc/rpc.h>
 
-extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
-
 /*
  * XDR a call message
  */

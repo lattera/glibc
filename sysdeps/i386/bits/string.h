@@ -41,7 +41,7 @@
 __STRING_INLINE void *
 __memcpy_c (void *__dest, __const void *__src, size_t __n)
 {
-  switch (n)
+  switch (__n)
     {
     case 0:
       return __dest;
@@ -102,10 +102,10 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
      "rep; movsl"							      \
      x									      \
      : /* no outputs */							      \
-     : "c" (n / 4), "D" (__dest), "S" (__src)				      \
+     : "c" (__n / 4), "D" (__dest), "S" (__src)				      \
      : "cx", "di", "si", "memory");
 
-  switch (n % 4)
+  switch (__n % 4)
     {
     case 0:
       __COMMON_CODE ("");
@@ -232,8 +232,7 @@ __memset_gg (void *__s, char __c, size_t __n)
 {
   __asm__ __volatile__
     ("cld\n\t"
-     "rep\n\t"
-     "stosb"
+     "rep; stosb"
      : /* no output */
      : "a" (__c),"D" (__s), "c" (__n)
      : "cx", "di", "memory");
@@ -518,7 +517,7 @@ strcspn (__const char *__s, __const char *__reject)
      "2:\n\t"
      "popl	%%ebx"
      : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__reject)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__reject)
      : "ax", "cx", "di", "cc");
   return (__res - 1) - __s;
 }
@@ -577,7 +576,7 @@ strspn (__const char *__s, __const char *__accept)
      "2:\n\t"
      "popl	%%ebx"
      : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__accept)
      : "ax", "cx", "di", "cc");
   return (__res - 1) - __s;
 }
@@ -639,7 +638,7 @@ strpbrk (__const char *__s, __const char *__accept)
      "3:\n\t"
      "popl	%%ebx"
      : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__accept)
      : "ax", "cx", "di", "cc");
   return __res;
 }
@@ -704,7 +703,7 @@ strstr (__const char *__haystack, __const char *__needle)
      "2:\n\t"
      "popl	%%ebx"
      : "=a" (__res)
-     : "0" (0), "c" (0xffffffff), "S" (__haystack), "g" (__needle)
+     : "0" (0), "c" (0xffffffff), "S" (__haystack), "r" (__needle)
      : "cx", "di", "si", "cc");
   return __res;
 }

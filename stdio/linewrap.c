@@ -169,7 +169,7 @@ lwupdate (FILE *stream, int c, struct line_wrap_data **wrapper_cookie)
 	       the end of the buffer.  */
 	    nl = stream->__bufp;
 	}
-      else if (d->point_col + (nl - buf) < d->rmargin)
+      else if ((size_t) d->point_col + (nl - buf) < d->rmargin)
 	{
 	  /* The buffer contains a full line that fits within the maximum
 	     line width.  Reset point and scan the next line.  */

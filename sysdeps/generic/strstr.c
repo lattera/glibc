@@ -36,6 +36,8 @@
 
 typedef unsigned chartype;
 
+#undef strstr
+
 char *
 strstr (phaystack, pneedle)
      const char *phaystack;

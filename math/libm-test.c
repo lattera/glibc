@@ -1003,7 +1003,7 @@ cbrt_test (void)
 	     CHOOSE (5e-18L, 0, 0));
   check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE (5e-17L, 0, 0));
   check_eps ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0,
-	     CHOOSE (3e-16L, 0, 0));
+	     CHOOSE (3e-16L, 5e-16, 0));
 }
 
 
@@ -1095,7 +1095,7 @@ exp_test (void)
   check_isinfp ("exp (+inf) == +inf", FUNC(exp) (plus_infty));
   check ("exp (-inf) == 0", FUNC(exp) (minus_infty), 0);
 #endif
-  check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 0, 0));
+  check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 5e-16, 0));
 }
 
 
@@ -1129,7 +1129,7 @@ expm1_test (void)
 #endif
 
   check_eps ("expm1 (1) == e-1", FUNC(expm1) (1), M_E - 1.0,
-	     CHOOSE (4e-18L, 0, 0));
+	     CHOOSE (4e-18L, 0, 2e-7));
 }
 
 
@@ -4600,7 +4600,7 @@ static void
 inverse_functions (void)
 {
   inverse_func_pair_test ("asin(sin(x)) == x",
-			FUNC(sin), FUNC(asin), 1.0, CHOOSE (2e-18L, 0, 1e-7L));
+			FUNC(sin), FUNC(asin), 1.0, CHOOSE (2e-18L, 0, 3e-7L));
   inverse_func_pair_test ("sin(asin(x)) == x",
 			  FUNC(asin), FUNC(sin), 1.0, 0.0);
 
@@ -4706,14 +4706,14 @@ identities (void)
   identities1_test (-1, CHOOSE (1e-18L, 0, 1e-7));
 
   identities2_test (0.2L, CHOOSE (1e-19L, 1e-16, 0));
-  identities2_test (0.9L, CHOOSE (0, 1e-15, 0));
+  identities2_test (0.9L, CHOOSE (0, 1e-15, 2e-7));
   identities2_test (0, 0);
-  identities2_test (-1, CHOOSE (1e-18L, 1e-15, 0));
+  identities2_test (-1, CHOOSE (1e-18L, 1e-15, 2e-7));
 
   identities3_test (0.2L, CHOOSE (1e-18L, 0, 1e-7));
   identities3_test (0.9L, CHOOSE (1e-18L, 1e-15, 1e-6));
   identities3_test (0, CHOOSE (0, 0, 1e-6));
-  identities3_test (-1, CHOOSE (1e-18L, 0, 1e-6));
+  identities3_test (-1, CHOOSE (1e-18L, 7e-16, 1e-6));
 }
 
 

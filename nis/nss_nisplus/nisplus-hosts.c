@@ -98,8 +98,8 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   if (NISENTRYLEN (0, 0, result) + 1 > room_left)
     goto no_more_room;
 
-  p = stpncpy (first_unused, NISENTRYVAL (0, 0, result),
-	       NISENTRYLEN (0, 0, result));
+  p = __stpncpy (first_unused, NISENTRYVAL (0, 0, result),
+		 NISENTRYLEN (0, 0, result));
   *p = '\0';
   room_left -= (NISENTRYLEN (0, 0, result) + 1);
   host->h_name = first_unused;
@@ -115,8 +115,8 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 	    goto no_more_room;
 
 	  *p++ = ' ';
-	  p = stpncpy (p, NISENTRYVAL (i, 1, result),
-		       NISENTRYLEN (i, 1, result));
+	  p = __stpncpy (p, NISENTRYVAL (i, 1, result),
+			 NISENTRYLEN (i, 1, result));
 	  *p = '\0';
 	  room_left -= (NISENTRYLEN (i, 1, result) + 1);
 	}
@@ -176,9 +176,9 @@ _nss_create_tablename (void)
       char buf [40 + strlen (nis_local_directory ())];
       char *p;
 
-      p = stpcpy (buf, "hosts.org_dir.");
-      p = stpcpy (p, nis_local_directory ());
-      tablename_val = strdup (buf);
+      p = __stpcpy (buf, "hosts.org_dir.");
+      p = __stpcpy (p, nis_local_directory ());
+      tablename_val = __strdup (buf);
       if (tablename_val == NULL)
         return NSS_STATUS_TRYAGAIN;
       tablename_len = strlen (tablename_val);
@@ -415,7 +415,7 @@ _nss_nisplus_gethostbyaddr_r (const char *addr, int addrlen, int type,
       char buf[255 + tablename_len];
       int retval, parse_res;
 
-      snprintf(buf, sizeof (buf) -1, "[addr=%s],%s",
+      sprintf (buf, "[addr=%s],%s",
 	       inet_ntoa (*(struct in_addr *)addr), tablename_val);
       result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 

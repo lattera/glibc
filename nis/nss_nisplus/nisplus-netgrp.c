@@ -92,8 +92,8 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
       else
 	{
 	  result->val.triple.host = cp;
-	  cp = stpncpy (cp, NISENTRYVAL (position, 2, data),
-			NISENTRYLEN (position, 2, data));
+	  cp = __stpncpy (cp, NISENTRYVAL (position, 2, data),
+			  NISENTRYLEN (position, 2, data));
 	  *cp = '\0';
 	  ++cp;
 	}
@@ -103,8 +103,8 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
       else
 	{
 	  result->val.triple.user = cp;
-	  cp = stpncpy (cp, NISENTRYVAL (position, 3, data),
-			NISENTRYLEN (position, 3, data));
+	  cp = __stpncpy (cp, NISENTRYVAL (position, 3, data),
+			  NISENTRYLEN (position, 3, data));
 	  *cp = '\0';
 	  ++cp;
 	}
@@ -114,8 +114,8 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
       else
 	{
 	  result->val.triple.domain = cp;
-	  cp = stpncpy (cp, NISENTRYVAL (position, 4, data),
-			NISENTRYLEN (position, 4, data));
+	  cp = __stpncpy (cp, NISENTRYVAL (position, 4, data),
+			  NISENTRYLEN (position, 4, data));
 	  *cp = '\0';
 	}
 

@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <sys/swap.h>
 
 /* Make the block special device PATH available to the system for swapping.
    This call is restricted to the super-user.  */

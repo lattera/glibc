@@ -42,7 +42,10 @@ enum
     IFF_MASTER = 0x400,		/* Master of a load balancer.  */
     IFF_SLAVE = 0x800,		/* Slave of a load balancer.  */
 
-    IFF_MULTICAST = 0x1000	/* Supports multicast.  */
+    IFF_MULTICAST = 0x1000,	/* Supports multicast.  */
+
+    IFF_PORTSEL = 0x2000,	/* Can set media type.  */
+    IFF_AUTOMEDIA = 0x4000	/* Auto media select active.  */
   };
 
 /* The ifaddr structure contains information about one address of an

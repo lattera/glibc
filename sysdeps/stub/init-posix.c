@@ -19,7 +19,7 @@
 #ifndef	HAVE_GNU_LD
 
 void
-__init_posix ()
+__init_posix (void)
 {
   return;
 }

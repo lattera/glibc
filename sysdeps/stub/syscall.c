@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <errno.h>
+#include <unistd.h>
 
 /* Do system call CALLNO, passing it the remaining arguments.
    This only makes sense in certain operating systems.  */

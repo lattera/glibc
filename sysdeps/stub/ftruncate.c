@@ -18,6 +18,7 @@
 
 #include <sys/types.h>
 #include <errno.h>
+#include <unistd.h>
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int

@@ -112,8 +112,8 @@ __tzfile_read (const char *file)
     /* No user specification; use the site-wide default.  */
     file = TZDEFAULT;
   else if (*file == '\0')
-    /* User specified the empty string; use UTC explicitly.  */
-    file = "Universal";
+    /* User specified the empty string; use UTC with no leap seconds.  */
+    return;
   else
     {
       /* We must not allow to read an arbitrary file in a setuid
@@ -411,19 +411,23 @@ find_transition (time_t timer)
 }
 
 int
-__tzfile_compute (time_t timer, long int *leap_correct, int *leap_hit)
+__tzfile_compute (time_t timer, int use_localtime,
+		  long int *leap_correct, int *leap_hit)
 {
-  struct ttinfo *info;
   register size_t i;
 
-  info = find_transition (timer);
-  __daylight = info->isdst;
-  __timezone = info->offset;
-  for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
-       ++i)
-    __tzname[types[i].isdst] = &zone_names[types[i].idx];
-  if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
-    __tzname[info->isdst] = &zone_names[info->idx];
+  if (use_localtime)
+    {
+      struct ttinfo *info = find_transition (timer);
+      __daylight = info->isdst;
+      __timezone = info->offset;
+      for (i = 0;
+	   i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
+	   ++i)
+	__tzname[types[i].isdst] = &zone_names[types[i].idx];
+      if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
+	__tzname[info->isdst] = &zone_names[info->idx];
+    }
 
   *leap_correct = 0L;
   *leap_hit = 0;
@@ -455,7 +459,7 @@ __tzfile_compute (time_t timer, long int *leap_correct, int *leap_hit)
   return 1;
 }
 
-void
+static void
 compute_tzname_max (size_t chars)
 {
   extern size_t __tzname_cur_max; /* Defined in tzset.c. */

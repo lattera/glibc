@@ -132,12 +132,13 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.info* dir-add.info
+	-rm -f libc.dvi libc.info* dir-add.info $(common-objpfx)stub-manual
+	-rm -f $(foreach o,$(object-suffixes),$(objpfx)stamp$o)
 clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
 realclean: distclean
-	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
+	-rm -f chapters chapters-incl* summary.texi stamp-summary *.c.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
 	-rm -f libc.log libc.aux libc.toc dir-add.texi
 

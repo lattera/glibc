@@ -24,6 +24,8 @@
 typedef char reg_char;
 #endif
 
+#undef strncat
+
 char *
 strncat (s1, s2, n)
      char *s1;

@@ -268,6 +268,7 @@ distclean-1: subdir_$(distclean-1)
 	-rm -f $(config-generated)
 	-rm -f $(addprefix $(objpfx),config.status config.cache config.log)
 	-rm -f $(addprefix $(objpfx),config.make config-name.h config.h)
+	-rm -f $(addprefix $(objpfx),glibcbug)
 ifdef objdir
 	-rm -f $(objpfx)Makefile
 endif

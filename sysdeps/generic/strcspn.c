@@ -29,6 +29,8 @@
 # endif
 #endif
 
+#undef strcspn
+
 /* Return the length of the maximum initial segment of S
    which contains no characters from REJECT.  */
 size_t

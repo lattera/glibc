@@ -199,8 +199,8 @@ dbm_open(file, oflags, mode)
 	dbinfo.h_nelem = 1;
 
 	(void)snprintf(path, sizeof(path), "%s%s", file, DBM_SUFFIX);
-	if ((errno = db_open(path,
-	    DB_HASH, __db_oflags(oflags), mode, NULL, &dbinfo, &dbp)) != 0)
+	if ((__set_errno(db_open(path,
+	    DB_HASH, __db_oflags(oflags), mode, NULL, &dbinfo, &dbp))) != 0)
 		return (NULL);
 	return ((DBM *)dbp);
 }
@@ -261,7 +261,7 @@ dbm_firstkey(db)
 	DBC *cp;
 
 	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
-		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
+		if ((__set_errno(db->cursor(db, NULL, &cp))) != 0) {
 			memset(&key, 0, sizeof(key));
 			return (key);
 		}
@@ -294,7 +294,7 @@ dbm_nextkey(db)
 	int status;
 
 	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
-		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
+		if ((__set_errno(db->cursor(db, NULL, &cp))) != 0) {
 			memset(&key, 0, sizeof(key));
 			return (key);
 		}
@@ -330,9 +330,9 @@ dbm_delete(db, key)
 	_key.size = key.dsize;
 	ret = (((DB *)db)->del)((DB *)db, NULL, &_key, 0);
 	if (ret < 0)
-		errno = ENOENT;
+		__set_errno(ENOENT);
 	else if (ret > 0) {
-		errno = ret;
+		__set_errno(ret);
 		ret = -1;
 	}
 	return (ret);

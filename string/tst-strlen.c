@@ -1,3 +1,7 @@
+/* Make sure we don't test the optimized inline functions if we want to
+   test the real implementation.  */
+#undef __USE_STRING_INLINES
+
 #include <stdio.h>
 #include <string.h>
 

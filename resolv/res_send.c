@@ -468,7 +468,7 @@ read_len:
 				while (len != 0) {
 					char junk[PACKETSZ];
 
-					n = (len > sizeof(junk)
+					n = ((size_t) len > sizeof(junk)
 					     ? sizeof(junk)
 					     : len);
 					if ((n = read(s, junk, n)) > 0)

@@ -1,4 +1,4 @@
-/* Definitions for POSIX memory map inerface.  Linux/MIPS version.
+/* Definitions for POSIX memory map inerface.  Linux/PowerPC version.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -46,26 +46,15 @@
 #define MAP_FIXED	0x010		/* Interpret addr exactly.  */
 #ifdef __USE_MISC
 # define MAP_FILE	0x000
-# define MAP_ANONYMOUS	0x800		/* Don't use a file.  */
+# define MAP_ANONYMOUS	0x020		/* Don't use a file.  */
 # define MAP_ANON	MAP_ANONYMOUS
-#endif
-
-/* Not used by Linux, but here to make sure we don't clash with ABI
-   defines.  */
-#ifdef __USE_MISC
-# define MAP_RENAME	0x020		/* Assign page to file.  */
-# define MAP_AUTOGROW	0x040		/* File may grow by writing.  */
-# define MAP_LOCAL	0x080		/* Copy on fork/sproc.  */
-# define MAP_AUTORSRV	0x100		/* Logical swap reserved on demand.  */
 #endif
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x1000		/* Stack-like segment.  */
-# define MAP_DENYWRITE	0x2000		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x4000		/* Mark it as an executable.  */
-# define MAP_LOCKED	0x8000		/* Lock the mapping.  */
-# define MAP_NORESERVE	0x0400		/* Don't check for reservations.  */
+# define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
+# define MAP_DENYWRITE	0x0800		/* ETXTBSY */
+# define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
 #endif
 
 /* Flags to `msync'.  */
@@ -74,9 +63,10 @@
 #define MS_INVALIDATE	2		/* Invalidate the caches.  */
 
 /* Flags for `mlockall'.  */
-#define MCL_CURRENT	1		/* Lock all currently mapped pages.  */
-#define MCL_FUTURE	2		/* Lock all additions to address
+#define MCL_CURRENT	0x2000		/* Lock all currently mapped pages.  */
+#define MCL_FUTURE	0x4000		/* Lock all additions to address
 					   space.  */
+
 
 /* Flags for `mremap'.  */
 #ifdef __USE_GNU

@@ -34,6 +34,8 @@
 #include <string.h>
 #endif
 
+#undef memcmp
+
 #ifdef _LIBC
 
 #include <memcopy.h>

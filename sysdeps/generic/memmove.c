@@ -29,11 +29,13 @@
 #define	a1const
 #define	a2	src	/* Second arg is SRC.  */
 #define	a2const	const
+#undef memmove
 #endif
 #if	!defined(RETURN) || !defined(rettype)
 #define	RETURN(s)	return (s)	/* Return DEST.  */
 #define	rettype		void *
 #endif
+
 
 rettype
 memmove (a1, a2, len)

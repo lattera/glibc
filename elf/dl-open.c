@@ -21,7 +21,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,

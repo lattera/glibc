@@ -44,3 +44,5 @@ ENTRY(longjmp)
 END(longjmp)
 
 strong_alias(longjmp, __longjmp)
+eak_alias(longjmp, _longjmp)
+weak_alias(longjmp, siglongjmp)

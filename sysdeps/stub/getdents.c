@@ -19,6 +19,7 @@
 #include <stddef.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <dirent.h>
 
 ssize_t
 __getdirentries (fd, buf, nbytes, basep)

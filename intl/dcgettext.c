@@ -95,7 +95,9 @@ void free ();
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
 # define getcwd __getcwd
-# define stpcpy __stpcpy
+# ifndef stpcpy
+#  define stpcpy __stpcpy
+# endif
 #else
 # if !defined HAVE_GETCWD
 char *getwd ();

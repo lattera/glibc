@@ -68,7 +68,9 @@
 /* Rename the non ANSI C functions.  This is required by the standard
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
-# define stpcpy(dest, src) __stpcpy(dest, src)
+# ifndef stpcpy
+#  define stpcpy(dest, src) __stpcpy(dest, src)
+# endif
 #else
 # ifndef HAVE_STPCPY
 static char *stpcpy PARAMS ((char *dest, const char *src));

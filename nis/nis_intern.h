@@ -52,10 +52,8 @@ extern nis_error __do_niscall __P ((const_nis_name name, u_long prog,
 				    xdrproc_t xargs, caddr_t req,
 				    xdrproc_t xres, caddr_t resp,
 				    u_long flags));
-#if defined (HAVE_SECURE_RPC)
 extern AUTH *authdes_pk_create __P ((const char *, const netobj *, u_int,
 				     struct sockaddr *, des_block *));
-#endif
 
 /* NIS+ cache */
 extern directory_obj *__cache_search __P ((const_nis_name name));

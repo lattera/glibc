@@ -73,8 +73,7 @@ unix_FILE _iob[] =
    In a Unix stdio FILE `_cnt' is the first element.
    In a GNU stdio or glued FILE, the first element is the magic number.  */
 int
-_filbuf (file)
-     unix_FILE *file;
+_filbuf (unix_FILE *file)
 {
   switch (++file->glue.magic)	/* Compensate for Unix getc's decrement.  */
     {
@@ -95,9 +94,7 @@ _filbuf (file)
 
 /* Called by the Unix stdio `putc' macro.  Much like getc, above.  */
 int
-_flsbuf (c, file)
-     int c;
-     unix_FILE *file;
+_flsbuf (int c, unix_FILE *file)
 {
   /* Compensate for putc's decrement.  */
   switch (++file->glue.magic)

@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <unistd.h>
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
 unsigned int

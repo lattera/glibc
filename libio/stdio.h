@@ -251,30 +251,38 @@ vprintf (const char *__restrict __fmt, _G_va_list __arg)
 #if defined __USE_BSD || defined __USE_ISOC9X
 /* Maximum chars of output to write in MAXLEN.  */
 extern int __snprintf __P ((char *__restrict __s, size_t __maxlen,
-			    __const char *__restrict __format, ...));
+			    __const char *__restrict __format, ...))
+     __attribute__ ((__format__ (__printf__, 3, 4)));
 extern int snprintf __P ((char *__restrict __s, size_t __maxlen,
-			  __const char *__restrict __format, ...));
+			  __const char *__restrict __format, ...))
+     __attribute__ ((__format__ (__printf__, 3, 4)));
 
 extern int __vsnprintf __P ((char *__restrict __s, size_t __maxlen,
 			     __const char *__restrict __format,
-			     _G_va_list __arg));
+			     _G_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 3, 0)));
 extern int vsnprintf __P ((char *__restrict __s, size_t __maxlen,
 			   __const char *__restrict __format,
-			   _G_va_list __arg));
+			   _G_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 3, 0)));
 #endif
 
 #ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf __P ((char **__restrict __ptr,
-			   __const char *__restrict __f, _G_va_list __arg));
+			   __const char *__restrict __f, _G_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 2, 0)));
 extern int asprintf __P ((char **__restrict __ptr,
-			  __const char *__restrict __fmt, ...));
+			  __const char *__restrict __fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 
 /* Write formatted output to a file descriptor.  */
 extern int vdprintf __P ((int __fd, __const char *__restrict __fmt,
-			  _G_va_list __arg));
-extern int dprintf __P ((int __fd, __const char *__restrict __fmt, ...));
+			  _G_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int dprintf __P ((int __fd, __const char *__restrict __fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 #endif
 
 
@@ -291,23 +299,29 @@ extern int sscanf __P ((__const char *__restrict __s,
 /* Read formatted input from S into argument list ARG.  */
 extern int __vfscanf __P ((FILE *__restrict __s,
 			   __const char *__restrict __format,
-			   _G_va_list __arg));
+			   _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 2, 0)));
 extern int vfscanf __P ((FILE *__restrict __s,
 			 __const char *__restrict __format,
-			 _G_va_list __arg));
+			 _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 /* Read formatted input from stdin into argument list ARG.  */
 extern int __vscanf __P ((__const char *__restrict __format,
-			  _G_va_list __arg));
-extern int vscanf __P ((__const char *__restrict __format, _G_va_list __arg));
+			  _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 1, 0)));
+extern int vscanf __P ((__const char *__restrict __format, _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 1, 0)));
 
 /* Read formatted input from S into argument list ARG.  */
 extern int __vsscanf __P ((__const char *__restrict __s,
 			   __const char *__restrict __format,
-			   _G_va_list __arg));
+			   _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 2, 0)));
 extern int vsscanf __P ((__const char *__restrict __s,
 			 __const char *__restrict __format,
-			 _G_va_list __arg));
+			 _G_va_list __arg))
+     __attribute__ ((__format__ (__scanf__, 2, 0)));
 #endif /* Use GNU.  */
 
 

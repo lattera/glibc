@@ -21,10 +21,6 @@ ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
 endif
 
-ifeq ($(subdir),setjmp)
-sysdep_routines += setjmp_aux
-endif
-
 ifeq ($(subdir),gnulib)
 sysdep_routines += $(divrem)
 endif
@@ -45,6 +41,6 @@ endif
 
 divrem := divl divq reml remq
 
-# For now, build everything with full IEEE math support. 
+# For now, build everything with full IEEE math support.
 # TODO: build separate libm and libm-ieee.
 sysdep-CFLAGS += -mieee

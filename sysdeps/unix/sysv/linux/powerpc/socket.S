@@ -71,17 +71,11 @@ ENTRY(P(__,socket))
 #if NARGS >= 9
 #error too many arguments!
 #endif
-	li   %r3,P(SOCKOP_,socket)
-	addi %r4,%r1,stackblock
+	li	%r3,P(SOCKOP_,socket)
+	addi	%r4,%r1,stackblock
 	DO_CALL(SYS_ify(socketcall))
-	addi %r1,%r1,48
-	bnslr
-#ifdef PIC
-	b __syscall_error@plt
-#else
-	b __syscall_error
-#endif
-
+	addi	%r1,%r1,48
+	PSEUDO_RET
 PSEUDO_END (P(__,socket))
 
 weak_alias (P(__,socket), socket)

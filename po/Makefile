@@ -66,6 +66,9 @@ $(mo-installed): %.mo; $(do-install)
 .PHONY: linguas linguas.mo
 linguas: $(ALL_LINGUAS:=.po)
 linguas.mo: $(ALL_LINGUAS:=.mo)
+
+realclean:
+	rm -f $(ALL_LINGUAS:=.mo)
 
 # Copy the PO files from the translation coordinator's repository.
 

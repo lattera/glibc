@@ -17,10 +17,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <signal.h>
+#include <sys/ptrace.h>
+
+/* You can also do this by using
+   void
+   profil_counter (int signo, struct pt_regs *pt)
+   {
+     profil_count ((void *) pt->nip);
+   }
+   */
 
 void
-profil_counter (int signo, struct sigcontext sc)
+profil_counter (int signo, void **regs)
 {
-  profil_count ((void *) sc.regs->nip);
+  profil_count (regs[PT_NIP]);
 }

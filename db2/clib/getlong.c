@@ -18,6 +18,7 @@ static const char sccsid[] = "@(#)getlong.c	10.2 (Sleepycat) 5/1/97";
 #endif
 
 #include "db.h"
+#include "db_int.h"
 #include "clib_ext.h"
 
 /*
@@ -34,7 +35,7 @@ get_long(p, min, max, storep)
 	long val;
 	char *end;
 
-	errno = 0;
+	__set_errno(0);
 	val = strtol(p, &end, 10);
 	if ((val == LONG_MIN || val == LONG_MAX) && errno == ERANGE)
 		err(1, "%s", p);

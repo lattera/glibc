@@ -25,6 +25,12 @@
 
 #define	DB_MINCACHE	10		/* Minimum cached pages */
 
+/* Handle `errno' in the presence of multi-threading correctly.  On some
+   systems we need a special macro to do this right.  */
+#ifndef __set_errno
+# define __set_errno(val) (errno) = (val)
+#endif
+
 /*
  * Aligning items to particular sizes or in pages or memory.  ALIGNP is a
  * separate macro, as we've had to cast the pointer to different integral

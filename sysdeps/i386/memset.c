@@ -23,6 +23,8 @@
 
 #ifdef	__GNUC__
 
+#undef memset
+
 void *
 memset (void *dstpp, int c, size_t len)
 {

@@ -206,12 +206,15 @@ On most platforms, the GNU C library can only be compiled with the GNU C
 compiler.  We recommend GCC version 2.7.2 or later; earlier versions may
 have problems.
 
+On PowerPC, GCC versions dated earlier than 970904 are known not to work
+(they crash), including 2.7.2.
+
 @item
-@code{binutils} 2.8
+@code{binutils} 2.8.1
 
 Using the GNU @code{binutils} (assembler, linker, and related tools) is
 preferable when possible, and they are required to build an ELF shared C
-library.  We recommend @code{binutils} version 2.8 or later; earlier
+library.  We recommend @code{binutils} version 2.8.1 or later; earlier
 versions are known to have problems or to not support all architectures.
 @end itemize
 
@@ -227,6 +230,7 @@ alpha-@var{anything}-linux
 i@var{x}86-@var{anything}-gnu
 i@var{x}86-@var{anything}-linux
 m68k-@var{anything}-linux
+powerpc-@var{anything}-linux
 @end smallexample
 
 Former releases of this library (version 1.09.1 and perhaps earlier
@@ -896,6 +900,10 @@ support for the Alpha processor.
 @item
 David Mosberger-Tang contributed the port to Linux/Alpha
 (@code{alpha-@var{anything}-linux}).
+
+@item
+The port to Linux on PowerPC (@code{powerpc-@var{anything}-linux})
+was contributed by Geoffrey Keating.
 
 @item
 Miles Bader wrote the argp argument-parsing package, and the argz/envz

@@ -60,7 +60,7 @@ GLIBC_2.0 {
     __ctype_get_mb_cur_max;
 
     # functions used in other libraries
-    __printf_fp; __stpncpy;
+    __printf_fp; __stpncpy; __stpcpy; __strdup;
     _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
     __nss_database_lookup; __internal_endnetgrent; __internal_getnetgrent_r;
     __internal_setnetgrent; __gmtime_r; __secure_getenv;

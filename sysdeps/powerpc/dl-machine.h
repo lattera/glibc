@@ -149,33 +149,34 @@ elf_machine_load_address (void)
 #define elf_machine_relplt elf_machine_rela
 
 /* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns. It is called
-   from code built in the PLT by elf_machine_runtime_setup. */
+   and then redirect to the address it returns.  It is called
+   from code built in the PLT by elf_machine_runtime_setup.  */
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.section \".text\"
 	.align 2
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve,@function
 _dl_runtime_resolve:
- # We need to save the registers used to pass parameters.
- # We build a stack frame to put them in.
+ # We need to save the registers used to pass parameters, and register 0,
+ # which is used by _mcount; the registers are saved in a stack frame.
 	stwu 1,-48(1)
-	mflr 0
+	stw 0,12(1)
 	stw 3,16(1)
 	stw 4,20(1)
-	stw 0,52(1)
-	stw 5,24(1)
- # We also need to save some of the condition register fields.
-	mfcr 0
-	stw 6,28(1)
-	stw 7,32(1)
-	stw 8,36(1)
-	stw 9,40(1)
-	stw 10,44(1)
-	stw 0,12(1)
  # The code that calls this has put parameters for `fixup' in r12 and r11.
 	mr 3,12
+	stw 5,24(1)
 	mr 4,11
+	stw 6,28(1)
+	mflr 0
+ # We also need to save some of the condition register fields.
+	stw 7,32(1)
+	stw 0,52(1)
+	stw 8,36(1)
+	mfcr 0
+	stw 9,40(1)
+	stw 10,44(1)
+	stw 0,8(1)
 	bl fixup@local
  # 'fixup' returns the address we want to branch to.
 	mtctr 3
@@ -184,20 +185,21 @@ _dl_runtime_resolve:
 	lwz 10,44(1)
 	lwz 9,40(1)
 	mtlr 0
-	lwz 0,12(1)
 	lwz 8,36(1)
+	lwz 0,8(1)
 	lwz 7,32(1)
 	lwz 6,28(1)
 	mtcrf 0xFF,0
 	lwz 5,24(1)
 	lwz 4,20(1)
 	lwz 3,16(1)
+	lwz 0,12(1)
  # ...unwind the stack frame, and jump to the PLT entry we updated.
 	addi 1,1,48
 	bctr
 0:
 	.size	 _dl_runtime_resolve,0b-_dl_runtime_resolve
- # undo '.section text'.
+ # Undo '.section text'.
 	.previous
 ");
 
@@ -213,20 +215,20 @@ asm ("\
 	.type _start,@function
 _start:
  # We start with the following on the stack, from top:
- # argc (4 bytes)
- # arguments for program (terminated by NULL)
- # environment variables (terminated by NULL)
- # arguments for the program loader
+ # argc (4 bytes);
+ # arguments for program (terminated by NULL);
+ # environment variables (terminated by NULL);
+ # arguments for the program loader.
  # FIXME: perhaps this should do the same trick as elf/start.c?
 
  # Call _dl_start with one parameter pointing at argc
-	mr 3,1
+	mr   3,1
  #  (we have to frob the stack pointer a bit to allow room for
  #   _dl_start to save the link register)
-	li 4,0
+	li   4,0
 	addi 1,1,-16
-	stw 4,0(1)
-	bl _dl_start@local
+	stw  4,0(1)
+	bl   _dl_start@local
 
  # Now, we do our main work of calling initialisation procedures.
  # The ELF ABI doesn't say anything about parameters for these,
@@ -234,70 +236,72 @@ _start:
  # Changing these is strongly discouraged (not least because argc is
  # passed by value!).
 
- #  put our GOT pointer in r31
-	bl _GLOBAL_OFFSET_TABLE_-4@local
+ #  Put our GOT pointer in r31,
+	bl   _GLOBAL_OFFSET_TABLE_-4@local
 	mflr 31
- #  the address of _start in r30
-	mr 30,3
- #  &_dl_argc in 29, &_dl_argv in 27, and _dl_default_scope in 28
-	lwz 28,_dl_default_scope@got(31)
-	lwz 29,_dl_argc@got(31)
-	lwz 27,_dl_argv@got(31)
+ #  the address of _start in r30,
+	mr   30,3
+ #  &_dl_argc in 29, &_dl_argv in 27, and _dl_default_scope in 28.
+	lwz  28,_dl_default_scope@got(31)
+	lwz  29,_dl_argc@got(31)
+	lwz  27,_dl_argv@got(31)
 0:
- #  call initfunc = _dl_init_next(_dl_default_scope[2])
-	lwz 3,8(28)
-	bl _dl_init_next@plt
- # if initfunc is NULL, we exit the loop
-	mr. 0,3
-	beq 1f
+ #  Set initfunc = _dl_init_next(_dl_default_scope[2])
+	lwz  3,8(28)
+	bl   _dl_init_next@plt
+ # If initfunc is NULL, we exit the loop; otherwise,
+	cmpwi 3,0
+	beq  1f
  # call initfunc(_dl_argc, _dl_argv, _dl_argv+_dl_argc+1)
-	mtlr 0
-	lwz 3,0(29)
-	lwz 4,0(27)
+	mtlr 3
+	lwz  3,0(29)
+	lwz  4,0(27)
 	slwi 5,3,2
-	add 5,4,5
+	add  5,4,5
 	addi 5,5,4
 	blrl
  # and loop.
-	b 0b
+	b    0b
 1:
  # Now, to conform to the ELF ABI, we have to:
- # pass argv (actually _dl_argv) in r4
-	lwz 4,0(27)
- # pass argc (actually _dl_argc) in r3
-	lwz 3,0(29)
- # pass envp (actually _dl_argv+_dl_argc+1) in r5
+ # Pass argc (actually _dl_argc) in r3;
+	lwz  3,0(29)
+ # pass argv (actually _dl_argv) in r4;
+	lwz  4,0(27)
+ # pass envp (actually _dl_argv+_dl_argc+1) in r5;
 	slwi 5,3,2
-	add 5,4,5
-	addi 5,5,4
- # pass the auxilary vector in r6. This is passed just after _envp.
-	addi 6,5,-4
+	add  6,4,5
+	addi 5,6,4
+ # pass the auxilary vector in r6. This is passed to us just after _envp.
 2:	lwzu 0,4(6)
-	cmpwi 1,0,0
-	bne 2b
+	cmpwi 0,0,0
+	bne  2b
 	addi 6,6,4
- # pass a termination function pointer (in this case _dl_fini) in r7
-	lwz 7,_dl_fini@got(31)
- # now, call the start function in r30...
+ # Pass a termination function pointer (in this case _dl_fini) in r7.
+	lwz  7,_dl_fini@got(31)
+ # Now, call the start function in r30...
 	mtctr 30
- # pass the stack pointer in r1 (so far so good), pointing to a NULL value
- # (this lets our startup code distinguish between a program linked statically,
+	lwz  26,_dl_starting_up@got(31)
+ # Pass the stack pointer in r1 (so far so good), pointing to a NULL value.
+ # (This lets our startup code distinguish between a program linked statically,
  # which linux will call with argc on top of the stack which will hopefully
  # never be zero, and a dynamically linked program which will always have
  # a NULL on the top of the stack).
  # Take the opportunity to clear LR, so anyone who accidentally returns
- # from _start gets SEGV.
-	li 0,0
-	stw 0,0(1)
-	mtlr 0
- # and also clear _dl_starting_up
-	lwz 26,_dl_starting_up@got(31)
-	stw 0,0(26)
- # go do it!
+ # from _start gets SEGV.  Also clear the next few words of the stack.
+	li   31,0
+	stw  31,0(1)
+	mtlr 31
+	stw  31,4(1)
+ 	stw  31,8(1)
+	stw  31,12(1)
+ # Clear _dl_starting_up.
+	stw  31,0(26)
+ # Go do it!
 	bctr
 0:
 	.size	 _start,0b-_start
- # undo '.section text'.
+ # Undo '.section text'.
 	.previous
 ");
 
@@ -346,7 +350,7 @@ static ElfW(Addr) _dl_preferred_address = 1
 
 /* We require the address of the PLT entry returned from fixup, not
    the first word of the PLT entry. */
-#define ELF_FIXUP_RETURN_VALUE(map, result)  (&(result))
+#define ELF_FIXUP_RETURN_VALUE(map, result)  ((Elf32_Addr) &(result))
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
@@ -396,7 +400,7 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 {
   if (map->l_info[DT_JMPREL])
     {
-      int i;
+      Elf32_Word i;
       /* Fill in the PLT. Its initial contents are directed to a
 	 function earlier in the PLT which arranges for the dynamic
 	 linker to be called back.  */
@@ -516,10 +520,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 {
 #ifndef RTLD_BOOTSTRAP
   const Elf32_Sym *const refsym = sym;
+  extern char **_dl_argv;
 #endif
   Elf32_Word loadbase, finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
-  extern char **_dl_argv;
 
   if (rinfo == R_PPC_NONE)
     return;
@@ -551,9 +555,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		     + reloc->r_addend);
     }
 
-  /* This is an if/else if chain because GCC 2.7.2.[012] turns case
-     statements into non-PIC table lookups.  When a later version
-     comes out that fixes this, this should be changed.  */
+  /* This is still an if/else if chain because GCC uses the GOT to find
+     the table for table-based switch statements, and we haven't set it
+     up yet.  */
   if (rinfo == R_PPC_UADDR32 ||
       rinfo == R_PPC_GLOB_DAT ||
       rinfo == R_PPC_ADDR32 ||
@@ -561,6 +565,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     {
       *reloc_addr = finaladdr;
     }
+#ifndef RTLD_BOOTSTRAP
   else if (rinfo == R_PPC_ADDR16_LO)
     {
       *(Elf32_Half*) reloc_addr = finaladdr;
@@ -573,7 +578,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     {
       *(Elf32_Half*) reloc_addr = (finaladdr + 0x8000) >> 16;
     }
-#ifndef RTLD_BOOTSTRAP
   else if (rinfo == R_PPC_REL24)
     {
       Elf32_Sword delta = finaladdr - (Elf32_Word) (char *) reloc_addr;
@@ -693,12 +697,14 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #endif
     }
 
+#ifndef RTLD_BOOTSTRAP
   if (rinfo == R_PPC_ADDR16_LO ||
       rinfo == R_PPC_ADDR16_HI ||
       rinfo == R_PPC_ADDR16_HA ||
       rinfo == R_PPC_REL24 ||
       rinfo == R_PPC_ADDR24)
     MODIFIED_CODE_NOQUEUE (reloc_addr);
+#endif
 }
 
 #define ELF_MACHINE_NO_REL 1

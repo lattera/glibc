@@ -18,6 +18,7 @@
 
 #include <string.h>
 
+#undef strspn
 
 /* Return the length of the maximum initial segment
    of S which contains only characters in ACCEPT.  */

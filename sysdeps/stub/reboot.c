@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <sys/reboot.h>
 
 /* Reboot the system.  */
 int

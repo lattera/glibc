@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <string.h>
 #include <memcopy.h>
+
+#undef strcmp
 
 /* Compare S1 and S2, returning less than, equal to or
    greater than zero if S1 is lexicographically less than,

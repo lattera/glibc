@@ -26,6 +26,7 @@
 #include <bits/libc-lock.h>
 
 /* Try to get a socket to talk to the kernel.  */
+#if defined SIOGIFINDEX || defined SIOGIFNAME
 static int
 opensock (void)
 {
@@ -63,6 +64,7 @@ opensock (void)
   __libc_lock_unlock (lock);
   return fd;
 }
+#endif
 
 unsigned int
 if_nametoindex (const char *ifname)

@@ -33,10 +33,10 @@
 #undef  TCSETS
 #undef  TCSETSW
 #undef  TCSETSF
-#define TCGETS	_IOR ('t', 19, struct __kernel_termios)
-#define TCSETS	_IOW ('t', 20, struct __kernel_termios)
-#define TCSETSW	_IOW ('t', 21, struct __kernel_termios)
-#define TCSETSF	_IOW ('t', 22, struct __kernel_termios)
+#define TCGETS	_IOR ('T', 8, struct __kernel_termios)
+#define TCSETS	_IOW ('T', 9, struct __kernel_termios)
+#define TCSETSW	_IOW ('T', 10, struct __kernel_termios)
+#define TCSETSF	_IOW ('T', 11, struct __kernel_termios)
 
 #include <linux/sockios.h>
 

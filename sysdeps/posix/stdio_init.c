@@ -26,8 +26,7 @@
    If no buffer is allocated, but the bufsize is set,
    the bufsize will be used to allocate the buffer.  */
 void
-__stdio_init_stream (stream)
-     FILE *stream;
+__stdio_init_stream (FILE *stream)
 {
   const int fd = (int) stream->__cookie;
   struct stat statb;

@@ -20,6 +20,8 @@
 #include <string.h>
 #include <memcopy.h>
 
+#undef strcpy
+
 /* Copy SRC to DEST.  */
 char *
 strcpy (dest, src)

@@ -326,7 +326,7 @@ __getcwd (buf, size)
 	{
 	  size_t namlen = _D_EXACT_NAMLEN (d);
 
-	  if ((size_t) (pathp - path) < namlen)
+	  if ((size_t) (pathp - path) <= namlen)
 	    {
 	      if (buf != NULL)
 		{

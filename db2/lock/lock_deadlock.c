@@ -300,8 +300,8 @@ retry:	count = lt->region->nlockers;
 			for (lp = SH_TAILQ_FIRST(&op->holders, __db_lock);
 			    lp != NULL;
 			    lp = SH_TAILQ_NEXT(lp, links, __db_lock)) {
-				if ((errno = __lock_getobj(lt, lp->holder,
-				    NULL, DB_LOCK_LOCKER, &lockerp)) != 0) {
+				if ((__set_errno(__lock_getobj(lt, lp->holder,
+				    NULL, DB_LOCK_LOCKER, &lockerp))) != 0) {
 					__db_err(dbenv,
 					    "warning unable to find object");
 					continue;
@@ -472,7 +472,7 @@ __dd_debug(dbenv, idmap, bitmap, nlockers)
 	 * Alloc space to print 10 bytes per item waited on.
 	 */
 	if ((msgbuf = (char *)malloc((nlockers + 1) * 10 + 64)) == NULL) {
-		errno = ENOMEM;
+		__set_errno(ENOMEM);
 		__db_err(dbenv, "%s", strerror(errno));
 		return;
 	}

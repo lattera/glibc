@@ -23,7 +23,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/mman.h>
-#include <libc-lock.h>
+#include <bits/libc-lock.h>
 
 
 /* During the program run we must not modify the global data of

@@ -54,8 +54,6 @@ static char sccsid[] = "@(#)auth_unix.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/auth.h>
 #include <rpc/auth_unix.h>
 
-extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
-
 /*
  * Unix authenticator operations vector
  */

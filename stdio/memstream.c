@@ -39,7 +39,7 @@ enlarge_buffer (register FILE *stream, int c)
     *info->bufsize = stream->__bufp - stream->__buffer;
 
   if (stream->__target != -1
-      && stream->__target > *info->bufsize)
+      && (size_t) stream->__target > *info->bufsize)
     /* Our target (where the buffer maps to) is always zero except when
        the user just did a SEEK_END fseek.  If he sought within the
        buffer, we need do nothing and will zero the target below.  If he

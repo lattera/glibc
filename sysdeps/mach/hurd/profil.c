@@ -103,7 +103,7 @@ __profile_frequency (void)
 }
 
 int
-profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
+__profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
   error_t err;
 
@@ -132,6 +132,7 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 
   return err ? __hurd_fail (err) : 0;
 }
+weak_alias (__profil, profil)
 
 /* Fetch PC samples.  This function must be very careful not to depend
    on Hurd threadvar variables.  We arrange that by using a special

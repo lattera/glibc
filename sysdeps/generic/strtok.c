@@ -21,6 +21,8 @@
 
 static char *olds = NULL;
 
+#undef strtok
+
 /* Parse S into tokens separated by characters in DELIM.
    If S is NULL, the last string strtok() was called with is
    used.  For example:

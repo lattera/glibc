@@ -19,6 +19,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #define _GNU_SOURCE 1
+
+/* Make sure we don't test the optimized inline functions if we want to
+   test the real implementation.  */
+#undef __USE_STRING_INLINES
+
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>

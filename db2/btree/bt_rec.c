@@ -301,7 +301,7 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 		if ((_lp = (PAGE *)malloc(file_dbp->pgsize)) == NULL)
 			goto nomem;
 		if ((_rp = (PAGE *)malloc(file_dbp->pgsize)) == NULL) {
-nomem:			errno = ENOMEM;
+nomem:			__set_errno(ENOMEM);
 			__db_err(file_dbp->dbenv, "%s", strerror(errno));
 			goto out;
 		}
@@ -668,7 +668,7 @@ __bam_cadjust_recover(logp, dbtp, lsnp, redo, info)
 	REC_INTRO(__bam_cadjust_read);
 
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
-		errno = __db_pgerr(file_dbp, argp->pgno);
+		__set_errno(__db_pgerr(file_dbp, argp->pgno));
 		pagep = NULL;
 		goto out;
 	}

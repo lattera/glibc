@@ -18,11 +18,12 @@
 
 #include <string.h>
 
-/*
- * Copy no more than N bytes of SRC to DEST, stopping when C is found.
- * Return the position in DEST one byte past where C was copied,
- * or NULL if C was not found in the first N bytes of SRC.
- */
+#undef __memccpy
+#undef memccpy
+
+/* Copy no more than N bytes of SRC to DEST, stopping when C is found.
+   Return the position in DEST one byte past where C was copied, or
+   NULL if C was not found in the first N bytes of SRC.  */
 void *
 __memccpy (dest, src, c, n)
       void *dest; const void *src;

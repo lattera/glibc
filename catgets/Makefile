@@ -1,4 +1,4 @@
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,8 @@ others		= gencat
 install-bin	= gencat
 
 gencat-modules	= xmalloc
+
+generated += xmalloc.o
 
 # To find xmalloc.c
 vpath %.c ../locale/programs

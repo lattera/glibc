@@ -132,7 +132,6 @@ extern char *tzname[];
 #ifdef _LIBC
 # define gmtime_r __gmtime_r
 # define localtime_r __localtime_r
-extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 # define tzname __tzname
 # define tzset __tzset
 #else

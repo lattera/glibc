@@ -26,9 +26,7 @@
 
 /* Enlarge STREAM's buffer.  */
 static void
-enlarge_buffer (stream, c)
-     FILE *stream;
-     int c;
+enlarge_buffer (FILE *stream, int c)
 {
   ptrdiff_t bufp_offset = stream->__bufp - stream->__buffer;
   char *newbuf;

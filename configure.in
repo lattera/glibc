@@ -605,13 +605,45 @@ if test $elf != yes; then
   fi
 fi
 
+dnl AC_CHECK_ASM_UNDERSCORE([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+AC_DEFUN(AC_CHECK_ASM_UNDERSCORE,
+[cat > conftest.$ac_ext <<EOF
+dnl This sometimes fails to find confdefs.h, for some reason.
+dnl [#]line __oline__ "[$]0"
+[#]line __oline__ "configure"
+#include "confdefs.h"
+void underscore_test(void) {
+return; }
+EOF
+if AC_TRY_EVAL(ac_compile); then
+  if grep _underscore_test conftest* >/dev/null; then
+    ifelse([$1], , :, [rm -f conftest*
+    $1])
+  else
+    ifelse([$2], , , [rm -f conftest*
+    $2])
+  fi
+else
+  echo "configure: failed program was:" >&AC_FD_CC
+  cat conftest.$ac_ext >&AC_FD_CC
+  ifelse([$2], , , [rm -f conftest*
+  $2])
+fi
+rm -f conftest*])
+
 if test $elf = yes; then
   libc_cv_asm_underscores=no
 else
-  AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
-		 [AC_TRY_LINK([asm ("_glibc_foobar:");], [glibc_foobar ();],
-			      libc_cv_asm_underscores=yes,
-			      libc_cv_asm_underscores=no)])
+  if test $ac_cv_prog_cc_works = yes; then
+    AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
+		   [AC_TRY_LINK([asm ("_glibc_foobar:");], [glibc_foobar ();],
+			        libc_cv_asm_underscores=yes,
+			        libc_cv_asm_underscores=no)])
+  else
+    AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
+		   [AC_CHECK_ASM_UNDERSCORE(libc_cv_asm_underscores=yes,
+				            libc_cv_asm_underscores=no)])
+  fi
 fi
 if test $libc_cv_asm_underscores = no; then
   AC_DEFINE(NO_UNDERSCORES)

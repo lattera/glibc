@@ -89,8 +89,8 @@ struct locale_ctype_t
 #define MAX_NR_CHARMAP 16
   const char *mapnames[MAX_NR_CHARMAP];
   u_int32_t *map_collection[MAX_NR_CHARMAP];
-  u_int32_t map_collection_max[MAX_NR_CHARMAP];
-  u_int32_t map_collection_act[MAX_NR_CHARMAP];
+  size_t map_collection_max[MAX_NR_CHARMAP];
+  size_t map_collection_act[MAX_NR_CHARMAP];
   size_t map_collection_nr;
   size_t last_map_idx;
   unsigned int from_map_char;

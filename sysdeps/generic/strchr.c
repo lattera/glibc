@@ -22,9 +22,9 @@
 
 #include <string.h>
 
+#undef strchr
 
 /* Find the first occurrence of C in S.  */
-
 char *
 strchr (s, c)
      const char *s;

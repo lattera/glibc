@@ -28,10 +28,7 @@
 
 /* Read N bytes into BUF from COOKIE.  */
 int
-__stdio_read (cookie, buf, n)
-     void *cookie;
-     register char *buf;
-     register size_t n;
+__stdio_read (void *cookie, char *buf, size_t n;)
 {
   const int fd = (int) cookie;
 #if	defined (EINTR) && defined (EINTR_REPEAT)
@@ -58,10 +55,7 @@ __stdio_read (cookie, buf, n)
 
 /* Write N bytes from BUF to COOKIE.  */
 int
-__stdio_write (cookie, buf, n)
-     void *cookie;
-     register const char *buf;
-     register size_t n;
+__stdio_write (void *cookie, const char *buf, size_t n)
 {
   const int fd = (int) cookie;
   register size_t written = 0;
@@ -92,10 +86,7 @@ __stdio_write (cookie, buf, n)
    The new file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 int
-__stdio_seek (cookie, pos, whence)
-     void *cookie;
-     fpos_t *pos;
-     int whence;
+__stdio_seek (void *cookie, fpos_t *pos, int whence)
 {
   off_t new;
   new = __lseek ((int) cookie, (off_t) *pos, whence);
@@ -108,8 +99,7 @@ __stdio_seek (cookie, pos, whence)
 
 /* Close COOKIE.  */
 int
-__stdio_close (cookie)
-     void *cookie;
+__stdio_close (void *cookie)
 {
   return __close ((int) cookie);
 }
@@ -118,8 +108,7 @@ __stdio_close (cookie)
    or -1 for errors.  If COOKIE does not relate to any POSIX.1 file
    descriptor, this should return -1 with errno set to EOPNOTSUPP.  */
 int
-__stdio_fileno (cookie)
-     void *cookie;
+__stdio_fileno (void *cookie)
 {
   return (int) cookie;
 }
@@ -127,10 +116,7 @@ __stdio_fileno (cookie)
 
 /* Open the given file with the mode given in the __io_mode argument.  */
 int
-__stdio_open (filename, m, cookieptr)
-     const char *filename;
-     __io_mode m;
-     void **cookieptr;
+__stdio_open (const char *filename, __io_mode m, void **cookieptr)
 {
   int fd;
   int mode;
@@ -164,11 +150,8 @@ __stdio_open (filename, m, cookieptr)
 /* Open FILENAME with the mode in M.  Use the same magic cookie
    already in *COOKIEPTR if possible, closing the old cookie with CLOSEFN.  */
 int
-__stdio_reopen (filename, m, cookieptr, closefn)
-     const char *filename;
-     __io_mode m;
-     void **cookieptr;
-     __io_close_fn closefn;
+__stdio_reopen (const char *filename, __io_mode m, void **cookieptr,
+		__io_close_fn closefn)
 {
   void *newcookie;
 

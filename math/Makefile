@@ -77,14 +77,15 @@ distribute += $(long-c-yes:=.c)
 
 # Rules for the test suite.
 tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble test-matherr test-fenv
+	test-ifloat test-idouble test-matherr test-fenv \
+	atest-exp atest-sincos
 # We do the `long double' tests only if this data type is available and
 # distrinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
 
-CFLAGS-test-float.c = -fno-inline
-CFLAGS-test-double.c = -fno-inline
-CFLAGS-test-ldouble.c = -fno-inline
+CFLAGS-test-float.c = -fno-inline -ffloat-store
+CFLAGS-test-double.c = -fno-inline -ffloat-store
+CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
 LDLIBS-test-ifloat = math/libm
 LDLIBS-test-idouble = math/libm
 LDLIBS-test-ildoubl = math/libm
@@ -92,6 +93,8 @@ LDLIBS-test-float = math/libm
 LDLIBS-test-double = math/libm
 LDLIBS-test-ldouble = math/libm
 LDLIBS-test-matherr = math/libm
+LDLIBS-atest-exp = math/libm
+LDLIBS-atest-sincos = math/libm
 
 distribute += libm-test.c
 

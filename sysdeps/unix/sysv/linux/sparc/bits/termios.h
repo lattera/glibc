@@ -20,9 +20,9 @@
 #ifndef _SPARC_TERMBITS_H
 #define _SPARC_TERMBITS_H	1
 
-typedef unsigned char   cc_t;
-typedef unsigned int    speed_t;
-typedef unsigned long   tcflag_t;
+typedef unsigned char cc_t;
+typedef unsigned int speed_t;
+typedef unsigned int tcflag_t;
 
 #define NCCS 17
 struct termios
@@ -31,11 +31,11 @@ struct termios
     tcflag_t c_oflag;		/* output mode flags */
     tcflag_t c_cflag;		/* control mode flags */
     tcflag_t c_lflag;		/* local mode flags */
-    cc_t c_line;			/* line discipline */
+    cc_t c_line;		/* line discipline */
     cc_t c_cc[NCCS];		/* control characters */
 #ifdef __KERNEL__
 #define SIZEOF_USER_TERMIOS sizeof (struct termios) - (2*sizeof (cc_t))
-    cc_t _x_cc[2];                  /* We need them to hold vmin/vtime */
+    cc_t _x_cc[2];		/* We need them to hold vmin/vtime */
 #endif
   };
 

@@ -60,7 +60,7 @@ profil_count (void *pc)
    disable profiling.  Returns zero on success, -1 on error.  */
 
 int
-profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
+__profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
   static struct sigaction act, oact;
   static struct itimerval timer, otimer;
@@ -103,5 +103,6 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   timer.it_interval = timer.it_value;
   return setitimer (ITIMER_PROF, &timer, &otimer);
 }
+weak_alias (__profil, profil)
 
 #endif

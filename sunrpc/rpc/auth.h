@@ -99,7 +99,7 @@ struct AUTH {
   struct auth_ops {
     void (*ah_nextverf) __P ((AUTH *));
     int  (*ah_marshal) __P ((AUTH *, XDR *));	/* nextverf & serialize */
-    int  (*ah_validate) __P ((AUTH *, struct opaque_auth *));	
+    int  (*ah_validate) __P ((AUTH *, struct opaque_auth *));
 						/* validate verifier */
     int  (*ah_refresh) __P ((AUTH *));		/* refresh credentials */
     void (*ah_destroy) __P ((AUTH *));     	/* destroy this structure */
@@ -163,7 +163,7 @@ extern AUTH *authunix_create __P ((char *__machname, __uid_t __uid,
 				   __gid_t *__aup_gids));
 extern AUTH *authunix_create_default __P ((void));
 extern AUTH *authnone_create __P ((void));
-extern AUTH *authdes_create __P ((const char *__servername, u_int __window, 
+extern AUTH *authdes_create __P ((const char *__servername, u_int __window,
 				  struct sockaddr *__syncaddr,
 				  des_block *__ckey));
 
@@ -182,7 +182,7 @@ extern AUTH *authdes_create __P ((const char *__servername, u_int __window,
 extern int getnetname __P ((char *));
 extern int host2netname __P ((char *, __const char *, __const char *));
 extern int user2netname __P ((char *, __const uid_t, __const char *));
-extern int netname2user __P ((__const char *, uid_t *, gid_t *, int *, 
+extern int netname2user __P ((__const char *, uid_t *, gid_t *, int *,
 			      gid_t *));
 extern int netname2host __P ((__const char *, char *, __const int));
 
@@ -200,11 +200,11 @@ extern int key_setsecret __P ((char *));
 extern int key_secretkey_is_set __P ((void));
 extern int key_get_conv __P ((char *, des_block *));
 
-__END_DECLS
+/*
+ * XDR an opaque authentication struct.
+ */
+extern bool_t xdr_opaque_auth __P ((XDR *, struct opaque_auth *));
 
-/* This is for compiling the glibc NIS+ code with DES auth. */
-#ifdef _LIBC
-#define HAVE_SECURE_RPC 1
-#endif
+__END_DECLS
 
 #endif /* rpc/auth.h */

@@ -19,6 +19,7 @@
 #include <string.h>
 #include <memcopy.h>
 
+#undef strncpy
 
 char *
 strncpy (s1, s2, n)

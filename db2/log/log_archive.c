@@ -68,7 +68,7 @@ log_archive(logp, listp, flags, db_malloc)
 	 * but that's just not possible.
 	 */
 	if (LF_ISSET(DB_ARCH_ABS)) {
-		errno = 0;
+		__set_errno(0);
 		if ((pref = getcwd(buf, sizeof(buf))) == NULL)
 			return (errno == 0 ? ENOMEM : errno);
 	} else

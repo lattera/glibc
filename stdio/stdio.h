@@ -423,28 +423,38 @@ vprintf (const char *__restrict __fmt, __gnuc_va_list __arg)
 }
 #endif /* Optimizing.  */
 
-#ifdef	__USE_GNU
+#if defined __USE_BSD || defined __USE_ISOC9X
 /* Maximum chars of output to write in MAXLEN.  */
 extern int __snprintf __P ((char *__s, size_t __maxlen,
-			    __const char *__format, ...));
+			    __const char *__format, ...))
+     __attribute__ ((__format__ (__printf__, 3, 4)));
 extern int snprintf __P ((char *__s, size_t __maxlen,
-			  __const char *__format, ...));
+			  __const char *__format, ...))
+     __attribute__ ((__format__ (__printf__, 3, 4)));
 
 extern int __vsnprintf __P ((char *__s, size_t __maxlen,
-			     __const char *__format, __gnuc_va_list __arg));
+			     __const char *__format, __gnuc_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 3, 0)));
 extern int vsnprintf __P ((char *__s, size_t __maxlen,
-			   __const char *__format, __gnuc_va_list __arg));
+			   __const char *__format, __gnuc_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 3, 0)));
+#endif
 
+#ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf __P ((char **__ptr, __const char *__f,
-			   __gnuc_va_list __arg));
-extern int asprintf __P ((char **__ptr, __const char *__fmt, ...));
+			   __gnuc_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int asprintf __P ((char **__ptr, __const char *__fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 0)));
 
 /* Write formatted output to a file descriptor.  */
 extern int vdprintf __P ((int __fd, __const char *__fmt,
-			  __gnuc_va_list __arg));
-extern int dprintf __P ((int __fd, __const char *__fmt, ...));
+			  __gnuc_va_list __arg))
+     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int dprintf __P ((int __fd, __const char *__fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif
 
 

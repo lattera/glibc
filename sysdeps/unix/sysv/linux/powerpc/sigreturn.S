@@ -18,9 +18,6 @@
 
 #include <sysdep.h>
 
-/* The 'sigreturn' syscall does not return.  */
-
-	.text
-ENTRY(__sigreturn)
-	DO_CALL(SYS_ify(sigreturn))
-PSEUDO_END (__sigreturn)
+PSEUDO (__sigreturn, sigreturn, 1)
+	/* Shouldn't get here.  */
+PSEUDO_END(__sigreturn)

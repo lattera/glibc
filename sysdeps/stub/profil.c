@@ -28,7 +28,7 @@
    disable profiling.  Returns zero on success, -1 on error.  */
 
 int
-profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
+__profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
   if (scale == 0)
     /* Disable profiling.  */
@@ -37,4 +37,5 @@ profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   __set_errno (ENOSYS);
   return -1;
 }
+weak_alias (__profil, profil)
 stub_warning (profil)

@@ -82,8 +82,8 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
           if (NISENTRYLEN (i, 1, result) + 2 > room_left)
 	    goto no_more_room;
 	  *p++ = ' ';
-          p = stpncpy (p, NISENTRYVAL (i, 1, result),
-                       NISENTRYLEN (i, 1, result));
+          p = __stpncpy (p, NISENTRYVAL (i, 1, result),
+			 NISENTRYLEN (i, 1, result));
           *p = '\0';
           room_left -= (NISENTRYLEN (i, 1, result) + 1);
         }
@@ -144,9 +144,9 @@ _nss_create_tablename (void)
       char buf [40 + strlen (nis_local_directory ())];
       char *p;
 
-      p = stpcpy (buf, "rpc.org_dir.");
-      p = stpcpy (p, nis_local_directory ());
-      tablename_val = strdup (buf);
+      p = __stpcpy (buf, "rpc.org_dir.");
+      p = __stpcpy (p, nis_local_directory ());
+      tablename_val = __strdup (buf);
       if (tablename_val == NULL)
         return NSS_STATUS_TRYAGAIN;
       tablename_len = strlen (tablename_val);
@@ -329,7 +329,7 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
     nis_result *result;
     char buf[100 + tablename_len];
 
-    snprintf (buf, sizeof (buf), "[number=%d],%s", number, tablename_val);
+    sprintf (buf, "[number=%d],%s", number, tablename_val);
 
     result = nis_list(buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 

@@ -130,6 +130,7 @@ typedef struct {
 #if defined(__cplusplus)
 extern "C" {
 #endif
+DB185 *__dbopen __P((const char *, int, int, DBTYPE, const void *));
 DB185 *dbopen __P((const char *, int, int, DBTYPE, const void *));
 #if defined(__cplusplus)
 };

@@ -433,6 +433,7 @@ extern __pid_t __bsd_getpgrp __P ((__pid_t __pid));
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
+extern int __setpgid __P ((__pid_t __pid, __pid_t __pgid));
 extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
 
 /* Get the process group ID of process PID.  */
@@ -705,6 +706,8 @@ extern int revoke __P ((__const char *__file));
    is enabled, the system examines the user PC and increments
    SAMPLE_BUFFER[((PC - OFFSET) / 2) * SCALE / 65536].  If SCALE is zero,
    disable profiling.  Returns zero on success, -1 on error.  */
+extern int __profil __P ((unsigned short int *__sample_buffer, size_t __size,
+			  size_t __offset, unsigned int __scale));
 extern int profil __P ((unsigned short int *__sample_buffer, size_t __size,
 			size_t __offset, unsigned int __scale));
 

@@ -25,8 +25,7 @@
 /* SIGALRM signal handler for `sleep'.  This does nothing but return,
    but SIG_IGN isn't supposed to break `pause'.  */
 static void
-sleep_handler (sig)
-     int sig;
+sleep_handler (int sig)
 {
   return;
 }

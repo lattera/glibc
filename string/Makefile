@@ -30,7 +30,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\
 		   strtok_r strxfrm memchr memcmp memmove memset	\
-		   bcopy bzero ffs stpcpy stpncpy			\
+		   mempcpy bcopy bzero ffs stpcpy stpncpy		\
 		   strcasecmp strncase strcasecmp_l strncase_l		\
 		   memccpy memcpy wordcopy strsep			\
 		   swab strfry memfrob memmem				\
@@ -40,17 +40,19 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   envz basename					\
 		   strcoll_l strxfrm_l
 
-tests		:= tester testcopy test-ffs tst-strlen stratcliff \
-	           tst-svc
+tests		:= tester inl-tester testcopy test-ffs tst-strlen	\
+		   stratcliff tst-svc
 distribute	:= memcopy.h pagecopy.h tst-svc.expect
 
 
 include ../Rules
 
 tester-ENV = LANGUAGE=C
-CFLAGS-tester.c = -fno-builtin -D__NO_STRING_INLINES
-CFLAGS-tst-strlen.c = -fno-builtin -D__NO_STRING_INLINES
-CFLAGS-stratcliff.c = -fno-builtin -D__NO_STRING_INLINES
+inl-tester-ENV = LANGUAGE=C
+CFLAGS-tester.c = -fno-builtin
+CFLAGS-inl-tester.c = -fno-builtin
+CFLAGS-tst-strlen.c = -fno-builtin
+CFLAGS-stratcliff.c = -fno-builtin
 
 tests: $(objpfx)tst-svc.out
 	cmp tst-svc.expect $(objpfx)tst-svc.out

@@ -30,13 +30,12 @@
 ENTRY(__clone)
 	/* Set up stack frame, save registers.  */
 	stwu  %r1,-32(%r1)
-	stw   %r31,16(%r1)
-	stw   %r30,20(%r1)
-
 	/* Check for child_stack == NULL || fn == NULL.  */
 	cmpwi %cr0,%r4,0
-	beq-  %cr0,badargs
+	stw   %r31,16(%r1)
 	cmpwi %cr1,%r3,0
+	stw   %r30,20(%r1)
+	beq-  %cr0,badargs
 	beq-  %cr1,badargs
 
 	/* Set up stack frame for child.  */
@@ -45,7 +44,7 @@ ENTRY(__clone)
 	li    %r0,0
 	stw   %r0,0(%r4)
 
-	/* Save new stack, fn, args across syscall.  */
+	/* Save fn, args across syscall.  */
 	mr    %r30,%r3		/* Function in r30.  */
 	mr    %r31,%r6		/* Arguments in r31.  */
 
@@ -70,21 +69,15 @@ child:
 	mr    %r3,%r31
 	blrl
 	/* Call _exit with result from procedure.  */
-#ifdef PIC
-	b _exit@plt
-#else
-	b _exit
-#endif
+	b JUMPTARGET(_exit)
 
 badargs:
-	li 3,-EINVAL
+	li    %r3,EINVAL
 error:
-#ifdef PIC
-	b __syscall_error@plt
-#else
-	b __syscall_error
-#endif
-
-PSEUDO_END (__clone)
+	lwz   %r31,16(%r1)
+	lwz   %r30,20(%r1)
+	addi  %r1,%r1,32
+	b JUMPTARGET(__syscall_error)
+END (__clone)
 
 weak_alias (__clone, clone)

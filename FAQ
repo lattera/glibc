@@ -102,6 +102,7 @@ in the future are:
 	i[3456]86-*-linux-gnu	Linux-2.0 on Intel
 	m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
 	alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
+	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 
 Other Linux platforms are also on the way to be supported but I need
 some success reports first.
@@ -177,7 +178,8 @@ Library.
   form the tools from the GNU gettext package are necessary.  See
   ftp://prep.ai.mit.edu/pub/gnu or better any mirror site.
 
-* lots of diskspace (for i?86-linux this means, e.g., ~70MB).
+* lots of diskspace (for i?86-linux this means, e.g., ~170MB; for ppc-linux
+  even ~200MB).
 
   You should avoid compiling on a NFS mounted device.  This is very
   slow.

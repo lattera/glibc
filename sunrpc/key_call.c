@@ -32,11 +32,12 @@
 
 /*
  * The original source is from the RPCSRC 4.0 package from Sun Microsystems.
- * The Interface to keyserver protocoll 2 was added by 
+ * The Interface to keyserver protocoll 2 was added by
  * Thorsten Kukuk <kukuk@vt.uni-paderborn.de>
  */
 
 #include <stdio.h>
+#include <errno.h>
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
@@ -52,21 +53,21 @@
 
 #define debug(msg)		/* turn off debugging */
 
-extern int _openchild (char *command, FILE ** fto, FILE ** ffrom);
+extern int _openchild (char *command, FILE **fto, FILE **ffrom);
 
 
 static int key_call (u_long, xdrproc_t xdr_arg, char *,
 		     xdrproc_t xdr_rslt, char *);
 
 static struct timeval trytimeout = {KEY_TIMEOUT, 0};
-static struct timeval tottimeout = {KEY_TIMEOUT * KEY_NRETRY, 0};
+static struct timeval tottimeout = {KEY_TIMEOUT *KEY_NRETRY, 0};
 
 int
 key_setsecret (char *secretkey)
 {
   keystatus status;
 
-  if (!key_call ((u_long) KEY_SET, (xdrproc_t) xdr_keybuf, secretkey, 
+  if (!key_call ((u_long) KEY_SET, (xdrproc_t) xdr_keybuf, secretkey,
 		 (xdrproc_t) xdr_keystatus, (char *) &status))
     return -1;
   if (status != KEY_SUCCESS)
@@ -102,14 +103,14 @@ key_secretkey_is_set (void)
 }
 
 int
-key_encryptsession (char *remotename, des_block * deskey)
+key_encryptsession (char *remotename, des_block *deskey)
 {
   cryptkeyarg arg;
   cryptkeyres res;
 
   arg.remotename = remotename;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_ENCRYPT, (xdrproc_t) xdr_cryptkeyarg, 
+  if (!key_call ((u_long) KEY_ENCRYPT, (xdrproc_t) xdr_cryptkeyarg,
 		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
     return -1;
 
@@ -123,7 +124,7 @@ key_encryptsession (char *remotename, des_block * deskey)
 }
 
 int
-key_decryptsession (char *remotename, des_block * deskey)
+key_decryptsession (char *remotename, des_block *deskey)
 {
   cryptkeyarg arg;
   cryptkeyres res;
@@ -143,8 +144,8 @@ key_decryptsession (char *remotename, des_block * deskey)
 }
 
 int
-key_encryptsession_pk (char *remotename, netobj * remotekey,
-		       des_block * deskey)
+key_encryptsession_pk (char *remotename, netobj *remotekey,
+		       des_block *deskey)
 {
   cryptkeyarg2 arg;
   cryptkeyres res;
@@ -152,7 +153,7 @@ key_encryptsession_pk (char *remotename, netobj * remotekey,
   arg.remotename = remotename;
   arg.remotekey = *remotekey;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_ENCRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2, 
+  if (!key_call ((u_long) KEY_ENCRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2,
 		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
     return -1;
 
@@ -166,8 +167,8 @@ key_encryptsession_pk (char *remotename, netobj * remotekey,
 }
 
 int
-key_decryptsession_pk (char *remotename, netobj * remotekey,
-		       des_block * deskey)
+key_decryptsession_pk (char *remotename, netobj *remotekey,
+		       des_block *deskey)
 {
   cryptkeyarg2 arg;
   cryptkeyres res;
@@ -175,7 +176,7 @@ key_decryptsession_pk (char *remotename, netobj * remotekey,
   arg.remotename = remotename;
   arg.remotekey = *remotekey;
   arg.deskey = *deskey;
-  if (!key_call ((u_long) KEY_DECRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2, 
+  if (!key_call ((u_long) KEY_DECRYPT_PK, (xdrproc_t) xdr_cryptkeyarg2,
 		 (char *) &arg, (xdrproc_t) xdr_cryptkeyres, (char *) &res))
     return -1;
 
@@ -189,7 +190,7 @@ key_decryptsession_pk (char *remotename, netobj * remotekey,
 }
 
 int
-key_gendes (des_block * key)
+key_gendes (des_block *key)
 {
   struct sockaddr_in sin;
   CLIENT *client;
@@ -222,7 +223,7 @@ key_setnet (struct key_netstarg *arg)
 {
   keystatus status;
 
-  if (!key_call ((u_long) KEY_NET_PUT, (xdrproc_t) xdr_key_netstarg, 
+  if (!key_call ((u_long) KEY_NET_PUT, (xdrproc_t) xdr_key_netstarg,
 		 (char *) arg,(xdrproc_t) xdr_keystatus, (char *) &status))
     return -1;
 
@@ -235,7 +236,7 @@ key_setnet (struct key_netstarg *arg)
 }
 
 int
-key_get_conv (char *pkey, des_block * deskey)
+key_get_conv (char *pkey, des_block *deskey)
 {
   cryptkeyres res;
 
@@ -273,16 +274,13 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   XDR xdrrslt;
   FILE *fargs;
   FILE *frslt;
-  void (*osigchild) (int);
+  sigset_t oldmask, mask;
   union wait status;
   int pid;
   int success;
   uid_t ruid;
   uid_t euid;
   static char MESSENGER[] = "/usr/etc/keyenvoy";
-
-  success = 1;
-  osigchild = signal (SIGCHLD, SIG_IGN);
 
   if (proc == KEY_ENCRYPT_PK && __key_encryptsession_pk_LOCAL)
     {
@@ -306,6 +304,11 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
       return 1;
     }
 
+  success = 1;
+  sigemptyset (&mask);
+  sigaddset (&mask, SIGCHLD);
+  sigprocmask (SIG_BLOCK, &mask, &oldmask);
+
   /*
    * We are going to exec a set-uid program which makes our effective uid
    * zero, and authenticates us with our real uid. We need to make the
@@ -320,6 +323,7 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   if (pid < 0)
     {
       debug ("open_streams");
+      sigprocmask(SIG_SETMASK, &oldmask, NULL);
       return (0);
     }
   xdrstdio_create (&xdrargs, fargs, XDR_ENCODE);
@@ -337,27 +341,26 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
       debug ("xdr rslt");
       success = 0;
     }
+  fclose(frslt);
 
-#ifdef NOTDEF
-  /*
-   * WARNING! XXX
-   * The original code appears first.  wait4 returns only after the process
-   * with the requested pid terminates.  The effect of using wait() instead
-   * has not been determined.
-   */
-  fclose (frslt);
-  if (wait4 (pid, &status, 0, NULL) < 0 || status.w_retcode != 0)
+ wait_again:
+  if (wait4(pid, &status, 0, NULL) < 0)
     {
-      debug ("wait4");
-      success = 0;
+      if (errno == EINTR)
+	goto wait_again;
+      debug("wait4");
+      if (errno == ECHILD || errno == ESRCH)
+	perror("wait");
+      else
+	success = 0;
     }
-#endif /* def NOTDEF */
-  if (wait (&status) < 0 || status.w_retcode != 0)
-    {
-      debug ("wait");
-      success = 0;
-    }
-  signal (SIGCHLD, osigchild);
+  else
+    if (status.w_retcode)
+      {
+	debug("wait4 1");
+	success = 0;
+      }
+  sigprocmask(SIG_SETMASK, &oldmask, NULL);
 
   return (success);
 }

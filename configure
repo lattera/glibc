@@ -1918,23 +1918,26 @@ EOF
   fi
 fi
 
+
+
 if test $elf = yes; then
   libc_cv_asm_underscores=no
 else
-  echo $ac_n "checking for _ prefix on C symbol names""... $ac_c" 1>&6
-echo "configure:1926: checking for _ prefix on C symbol names" >&5
+  if test $ac_cv_prog_cc_works = yes; then
+    echo $ac_n "checking for _ prefix on C symbol names""... $ac_c" 1>&6
+echo "configure:1929: checking for _ prefix on C symbol names" >&5
 if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1931 "configure"
+#line 1934 "configure"
 #include "confdefs.h"
 asm ("_glibc_foobar:");
 int main() {
 glibc_foobar ();
 ; return 0; }
 EOF
-if { (eval echo configure:1938: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:1941: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   libc_cv_asm_underscores=yes
 else
@@ -1947,6 +1950,37 @@ rm -f conftest*
 fi
 
 echo "$ac_t""$libc_cv_asm_underscores" 1>&6
+  else
+    echo $ac_n "checking for _ prefix on C symbol names""... $ac_c" 1>&6
+echo "configure:1956: checking for _ prefix on C symbol names" >&5
+if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1961 "configure"
+#include "confdefs.h"
+void underscore_test(void) {
+return; }
+EOF
+if { (eval echo configure:1966: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  if grep _underscore_test conftest* >/dev/null; then
+    rm -f conftest*
+    libc_cv_asm_underscores=yes
+  else
+    rm -f conftest*
+    libc_cv_asm_underscores=no
+  fi
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -f conftest*
+  libc_cv_asm_underscores=no
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_asm_underscores" 1>&6
+  fi
 fi
 if test $libc_cv_asm_underscores = no; then
   cat >> confdefs.h <<\EOF
@@ -1961,7 +1995,7 @@ if test $elf = yes; then
   libc_cv_asm_weakext_directive=no
 else
   echo $ac_n "checking for assembler .weak directive""... $ac_c" 1>&6
-echo "configure:1965: checking for assembler .weak directive" >&5
+echo "configure:1999: checking for assembler .weak directive" >&5
 if eval "test \"`echo '$''{'libc_cv_asm_weak_directive'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -1984,7 +2018,7 @@ echo "$ac_t""$libc_cv_asm_weak_directive" 1>&6
 
 if test $libc_cv_asm_weak_directive = no; then
   echo $ac_n "checking for assembler .weakext directive""... $ac_c" 1>&6
-echo "configure:1988: checking for assembler .weakext directive" >&5
+echo "configure:2022: checking for assembler .weakext directive" >&5
 if eval "test \"`echo '$''{'libc_cv_asm_weakext_directive'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2021,7 +2055,7 @@ EOF
 fi
 
 echo $ac_n "checking for ld --no-whole-archive""... $ac_c" 1>&6
-echo "configure:2025: checking for ld --no-whole-archive" >&5
+echo "configure:2059: checking for ld --no-whole-archive" >&5
 if eval "test \"`echo '$''{'libc_cv_ld_no_whole_archive'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2032,7 +2066,7 @@ __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
-			    -o conftest conftest.c 1>&5'; { (eval echo configure:2036: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c 1>&5'; { (eval echo configure:2070: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_ld_no_whole_archive=yes
 else
   libc_cv_ld_no_whole_archive=no
@@ -2043,7 +2077,7 @@ fi
 echo "$ac_t""$libc_cv_ld_no_whole_archive" 1>&6
 
 echo $ac_n "checking for gcc -fno-exceptions""... $ac_c" 1>&6
-echo "configure:2047: checking for gcc -fno-exceptions" >&5
+echo "configure:2081: checking for gcc -fno-exceptions" >&5
 if eval "test \"`echo '$''{'libc_cv_gcc_no_exceptions'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2054,7 +2088,7 @@ __throw () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS
 			    -nostdlib -nostartfiles -fno-exceptions
-			    -o conftest conftest.c 1>&5'; { (eval echo configure:2058: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c 1>&5'; { (eval echo configure:2092: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_no_exceptions=yes
 else
   libc_cv_gcc_no_exceptions=no
@@ -2106,7 +2140,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:2110: checking OS release for uname" >&5
+echo "configure:2144: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2128,7 +2162,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:2132: checking OS version for uname" >&5
+echo "configure:2166: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2150,7 +2184,7 @@ else
 fi
 
 echo $ac_n "checking stdio selection""... $ac_c" 1>&6
-echo "configure:2154: checking stdio selection" >&5
+echo "configure:2188: checking stdio selection" >&5
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -2162,7 +2196,7 @@ esac
 echo "$ac_t""$stdio" 1>&6
 
 echo $ac_n "checking ldap selection""... $ac_c" 1>&6
-echo "configure:2166: checking ldap selection" >&5
+echo "configure:2200: checking ldap selection" >&5
 
 case $add_ons in
 *ldap*)

@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <bits/libc-lock.h>
+#include <rpc/auth.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/yp.h>
@@ -627,7 +628,7 @@ yp_all (const char *indomain, const char *inmap,
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)
 	{
-	  puts ("yp_all: clnttcp_create failed");
+	  puts (_("yp_all: clnttcp_create failed"));
 	  __libc_lock_unlock (ypbindlist_lock);
 	  return YPERR_PMAP;
 	}
@@ -787,7 +788,6 @@ int
 yp_update (char *domain, char *map, unsigned ypop,
 	   char *key, int keylen, char *data, int datalen)
 {
-#if defined (HAVE_SECURE_RPC)
   union
     {
       ypupdate_args update_args;
@@ -872,7 +872,4 @@ again:
       return YPERR_RPC;
     }
   return res;
-#else
-  return YPERR_YPERR;
-#endif
 }

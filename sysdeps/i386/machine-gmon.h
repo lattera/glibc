@@ -1,4 +1,4 @@
-/* i386-specific implemetation of profiling support.
+/* i386-specific implementation of profiling support.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -36,6 +36,6 @@ void mcount_internal (u_long frompc, u_long selfpc);
 void mcount_internal (u_long frompc, u_long selfpc)
 
 
-/* Define MCOUNT as empty since we have a the implementation in another
+/* Define MCOUNT as empty since we have the implementation in another
    file.  */
 #define MCOUNT

@@ -33,8 +33,8 @@ __offtime (t, offset, tp)
      long int offset;
      struct tm *tp;
 {
-  register long int days, rem, y;
-  register const unsigned short int *ip;
+  long int days, rem, y;
+  const unsigned short int *ip;
 
   days = *t / SECS_PER_DAY;
   rem = *t % SECS_PER_DAY;
@@ -75,7 +75,7 @@ __offtime (t, offset, tp)
   tp->tm_year = y - 1900;
   tp->tm_yday = days;
   ip = __mon_yday[__isleap(y)];
-  for (y = 11; days < ip[y]; --y)
+  for (y = 11; days < (long int) ip[y]; --y)
     continue;
   days -= ip[y];
   tp->tm_mon = y;

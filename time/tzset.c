@@ -17,6 +17,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <errno.h>
+#include <bits/libc-lock.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,15 +28,19 @@
 /* Defined in mktime.c.  */
 extern const unsigned short int __mon_yday[2][13];
 
+/* Defined in localtime.c.  */
+extern struct tm _tmbuf;
+
 #define NOID
 #include "tzfile.h"
 
 extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
+extern int __tzfile_compute __P ((time_t timer, int use_localtime,
+				  long int *leap_correct, int *leap_hit));
 extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
 extern char * __tzstring __P ((const char *string));
-extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
@@ -43,6 +49,9 @@ long int __timezone = 0L;
 weak_alias (__tzname, tzname)
 weak_alias (__daylight, daylight)
 weak_alias (__timezone, timezone)
+
+/* This locks all the state variables in tzfile.c and this file.  */
+__libc_lock_define (static, tzset_lock)
 
 
 #define	min(a, b)	((a) < (b) ? (a) : (b))
@@ -74,6 +83,8 @@ static tz_rule tz_rules[2];
 
 
 static int compute_change __P ((tz_rule *rule, int year));
+static int tz_compute __P ((time_t timer, const struct tm *tm));
+static void tzset_internal __P ((int always));
 
 /* Header for a list of buffers containing time zone strings.  */
 struct tzstring_head
@@ -139,9 +150,8 @@ __tzstring (string)
 static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
-void __tzset_internal __P ((int always));
-void
-__tzset_internal (always)
+static void
+tzset_internal (always)
      int always;
 {
   static int is_initialized = 0;
@@ -426,7 +436,11 @@ size_t __tzname_cur_max;
 long int
 __tzname_max ()
 {
-  __tzset_internal (0);
+  __libc_lock_lock (tzset_lock);
+
+  tzset_internal (0);
+
+  __libc_lock_unlock (tzset_lock);
 
   return __tzname_cur_max;
 }
@@ -473,8 +487,9 @@ compute_change (rule, year)
     case M:
       /* Mm.n.d - Nth "Dth day" of month M.  */
       {
-	register int i, d, m1, yy0, yy1, yy2, dow;
-	register const unsigned short int *myday =
+	unsigned int i;
+	int d, m1, yy0, yy1, yy2, dow;
+	const unsigned short int *myday =
 	  &__mon_yday[__isleap (year)][rule->m];
 
 	/* First add SECSPERDAY for each day in months before M.  */
@@ -496,7 +511,7 @@ compute_change (rule, year)
 	  d += 7;
 	for (i = 1; i < rule->n; ++i)
 	  {
-	    if (d + 7 >= myday[0] - myday[-1])
+	    if (d + 7 >= (int) myday[0] - myday[-1])
 	      break;
 	    d += 7;
 	  }
@@ -519,13 +534,11 @@ compute_change (rule, year)
 /* Figure out the correct timezone for *TIMER and TM (which must be the same)
    and set `__tzname', `__timezone', and `__daylight' accordingly.
    Return nonzero on success, zero on failure.  */
-int
-__tz_compute (timer, tm)
+static int
+tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;
 {
-  __tzset_internal (0);
-
   if (! compute_change (&tz_rules[0], 1900 + tm->tm_year) ||
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
@@ -548,20 +561,15 @@ __tz_compute (timer, tm)
   return 1;
 }
 
-#include <bits/libc-lock.h>
-
-/* This locks all the state variables in tzfile.c and this file.  */
-__libc_lock_define (, __tzset_lock)
-
 /* Reinterpret the TZ environment variable and set `tzname'.  */
 #undef tzset
 
 void
 __tzset (void)
 {
-  __libc_lock_lock (__tzset_lock);
+  __libc_lock_lock (tzset_lock);
 
-  __tzset_internal (1);
+  tzset_internal (1);
 
   if (!__use_tzfile)
     {
@@ -570,6 +578,67 @@ __tzset (void)
       __tzname[1] = (char *) tz_rules[1].name;
     }
 
-  __libc_lock_unlock (__tzset_lock);
+  __libc_lock_unlock (tzset_lock);
 }
 weak_alias (__tzset, tzset)
+
+/* Return the `struct tm' representation of *TIMER in the local timezone.
+   Use local time if USE_LOCALTIME is nonzero, UTC otherwise.  */
+struct tm *
+__tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
+{
+  long int leap_correction;
+  int leap_extra_secs;
+
+  if (timer == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  __libc_lock_lock (tzset_lock);
+
+  /* Update internal database according to current TZ setting.
+     POSIX.1 8.3.7.2 says that localtime_r is not required to set tzname.
+     This is a good idea since this allows at least a bit more parallelism.
+     By analogy we apply the same rule to gmtime_r.  */
+  tzset_internal (tp == &_tmbuf);
+
+  if (__use_tzfile)
+    {
+      if (! __tzfile_compute (*timer, use_localtime,
+			      &leap_correction, &leap_extra_secs))
+	tp = NULL;
+    }
+  else
+    {
+      __offtime (timer, 0, tp);
+      if (! tz_compute (*timer, tp))
+	tp = NULL;
+      leap_correction = 0L;
+      leap_extra_secs = 0;
+    }
+
+  if (tp)
+    {
+      if (use_localtime)
+	{
+	  tp->tm_isdst = __daylight;
+	  tp->tm_zone = __tzname[__daylight];
+	  tp->tm_gmtoff = __timezone;
+	}
+      else
+	{
+	  tp->tm_isdst = 0;
+	  tp->tm_zone = "GMT";
+	  tp->tm_gmtoff = 0L;
+	}
+
+      __offtime (timer, tp->tm_gmtoff - leap_correction, tp);
+      tp->tm_sec += leap_extra_secs;
+    }
+
+  __libc_lock_unlock (tzset_lock);
+
+  return tp;
+}

@@ -2,6 +2,7 @@
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Based on the BSD mcount implementation.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -30,6 +31,7 @@
 #include <sys/gmon_out.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <atomicity.h>
 
 /* The LD_PROFILE feature has to be implemented different to the
    normal profiling using the gmon/ functions.  The problem is that an
@@ -146,19 +148,19 @@ static long int state;
 static volatile uint16_t *kcount;
 static size_t kcountsize;
 
-struct here_tostruct
+struct here_fromstruct
   {
     struct here_cg_arc_record volatile *here;
     uint16_t link;
   };
 
-static uint16_t *froms;
-static size_t fromssize;
-
-static struct here_tostruct *tos;
+static uint16_t *tos;
 static size_t tossize;
-static size_t tolimit;
-static size_t toidx;
+
+static struct here_fromstruct *froms;
+static size_t fromssize;
+static size_t fromlimit;
+static size_t fromidx;
 
 static uintptr_t lowpc;
 static uintptr_t highpc;
@@ -169,6 +171,11 @@ static unsigned int log_hashfraction;
 /* This is the information about the mmaped memory.  */
 static struct gmon_hdr *addr;
 static off_t expected_size;
+
+/* See profil(2) where this is described.  */
+static int s_scale;
+#define SCALE_1_TO_1	0x10000L
+
 
 
 /* Set up profiling data to profile object desribed by MAP.  The output
@@ -184,7 +191,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   ElfW(Addr) mapend = 0;
   struct gmon_hdr gmon_hdr;
   struct gmon_hist_hdr hist_hdr;
-  char *hist;
+  char *hist, *cp;
   size_t idx;
 
   /* Compute the size of the sections which contain program code.  */
@@ -205,9 +212,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
      with the same formulars as in `monstartup' (see gmon.c).  */
   state = GMON_PROF_OFF;
   lowpc = ROUNDDOWN (mapstart + map->l_addr,
-		     HISTFRACTION * sizeof(HISTCOUNTER));
+		     HISTFRACTION * sizeof (HISTCOUNTER));
   highpc = ROUNDUP (mapend + map->l_addr,
-		    HISTFRACTION * sizeof(HISTCOUNTER));
+		    HISTFRACTION * sizeof (HISTCOUNTER));
   textsize = highpc - lowpc;
   kcountsize = textsize / HISTFRACTION;
   hashfraction = HASHFRACTION;
@@ -217,17 +224,17 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
     log_hashfraction = __builtin_ffs (hashfraction * sizeof (*froms)) - 1;
   else
     log_hashfraction = -1;
-  fromssize = textsize / HASHFRACTION;
-  tolimit = textsize * ARCDENSITY / 100;
-  if (tolimit < MINARCS)
-    tolimit = MINARCS;
-  if (tolimit > MAXARCS)
-    tolimit = MAXARCS;
-  tossize = tolimit * sizeof (struct here_tostruct);
+  tossize = textsize / HASHFRACTION;
+  fromlimit = textsize * ARCDENSITY / 100;
+  if (fromlimit < MINARCS)
+    fromlimit = MINARCS;
+  if (fromlimit > MAXARCS)
+    fromlimit = MAXARCS;
+  fromssize = fromlimit * sizeof (struct here_fromstruct);
 
   expected_size = (sizeof (struct gmon_hdr)
 		   + 4 + sizeof (struct gmon_hist_hdr) + kcountsize
-		   + 4 + 4 + tossize * sizeof (struct here_cg_arc_record));
+		   + 4 + 4 + fromssize * sizeof (struct here_cg_arc_record));
 
   /* Create the gmon_hdr we expect or write.  */
   memset (&gmon_hdr, '\0', sizeof (struct gmon_hdr));
@@ -247,9 +254,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
      soname (or the file name) and the ending ".profile".  */
   filename = (char *) alloca (strlen (output_dir) + 1 + strlen (_dl_profile)
 			      + sizeof ".profile");
-  __stpcpy (__stpcpy (__stpcpy (__stpcpy (filename, output_dir), "/"),
-		      _dl_profile),
-	    ".profile");
+  cp = __stpcpy (filename, output_dir);
+  *cp++ = '/';
+  __stpcpy (__stpcpy (cp, _dl_profile), ".profile");
 
   fd = __open (filename, O_RDWR | O_CREAT, 0666);
   if (fd == -1)
@@ -356,7 +363,7 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
     }
 
   /* Allocate memory for the froms data and the pointer to the tos records.  */
-  froms = (uint16_t *) calloc (fromssize + tossize, 1);
+  tos = (uint16_t *) calloc (tossize + fromssize, 1);
   if (froms == NULL)
     {
       __munmap ((void *) addr, expected_size);
@@ -364,8 +371,8 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       /* NOTREACHED */
     }
 
-  tos = (struct here_tostruct *) ((char *) froms + fromssize);
-  toidx = 0;
+  froms = (struct here_fromstruct *) ((char *) tos + tossize);
+  fromidx = 0;
 
   /* Now we have to process all the arc count entries.  BTW: it is
      not critical whether the *NARCSP value changes meanwhile.  Before
@@ -376,16 +383,25 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
      frequently used entries at the front of the list.  */
   for (idx = narcs = *narcsp; idx > 0; )
     {
-      size_t from_index;
-      size_t newtoidx;
+      size_t to_index;
+      size_t newfromidx;
       --idx;
-      from_index = ((data[idx].from_pc - lowpc)
-		    / (hashfraction * sizeof (*froms)));
-      newtoidx = toidx++;
-      tos[newtoidx].here = &data[idx];
-      tos[newtoidx].link = froms[from_index];
-      froms[from_index] = newtoidx;
+      to_index = ((data[idx].self_pc - lowpc)
+		  / (hashfraction * sizeof (*tos)));
+      newfromidx = fromidx++;
+      froms[newfromidx].here = &data[idx];
+      froms[newfromidx].link = tos[to_index];
+      tos[to_index] = newfromidx;
     }
+
+  /* Setup counting data.  */
+  if (kcountsize < highpc - lowpc)
+    s_scale = ((double) kcountsize / (highpc - lowpc)) * SCALE_1_TO_1;
+  else
+    s_scale = SCALE_1_TO_1;
+
+  /* Start the profiler.  */
+  __profil ((void *) kcount, kcountsize, lowpc, s_scale);
 
   /* Turn on profiling.  */
   state = GMON_PROF_ON;
@@ -395,9 +411,12 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 void
 _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
 {
-  if (state != GMON_PROF_ON)
+  uint16_t *topcindex;
+  size_t i, fromindex;
+  struct here_fromstruct *fromp;
+
+  if (! compare_and_swap (&state, GMON_PROF_ON, GMON_PROF_BUSY))
     return;
-  state = GMON_PROF_BUSY;
 
   /* Compute relative addresses.  The shared object can be loaded at
      any address.  The value of frompc could be anything.  We cannot
@@ -411,6 +430,86 @@ _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc)
   if (selfpc >= textsize)
     goto done;
 
+  /* Getting here we now have to find out whether the location was
+     already used.  If yes we are lucky and only have to increment a
+     counter (this also has to be atomic).  If the entry is new things
+     are getting complicated...  */
+
+  /* Avoid integer divide if possible.  */
+  if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
+    i = selfpc >> log_hashfraction;
+  else
+    i = selfpc / (hashfraction * sizeof (*tos));
+
+  topcindex = &tos[i];
+  fromindex = *topcindex;
+
+  if (fromindex == 0)
+    goto check_new_or_add;
+
+  fromp = &froms[fromindex];
+
+  /* We have to look through the chain of arcs whether there is already
+     an entry for our arc.  */
+  while (fromp->here->from_pc == frompc)
+    {
+      if (fromp->link != 0)
+	do
+	  fromp = &froms[fromp->link];
+	while (fromp->link != 0 && fromp->here->from_pc != frompc);
+
+      if (fromp->link == 0)
+	{
+	  topcindex = &fromp->link;
+
+	check_new_or_add:
+	  /* Our entry is not among the entries we read so far from the
+	     data file.  Now see whether we have to update the list.  */
+	  while (narcs != *narcsp)
+	    {
+	      size_t to_index;
+	      size_t newfromidx;
+	      to_index = ((data[narcs].self_pc - lowpc)
+			  / (hashfraction * sizeof (*tos)));
+	      newfromidx = fromidx++;
+	      froms[newfromidx].here = &data[narcs];
+	      froms[newfromidx].link = tos[to_index];
+	      tos[to_index] = newfromidx;
+	      ++narcs;
+	    }
+
+	  /* If we still have no entry stop searching and insert.  */
+	  if (*topcindex == 0)
+	    {
+	      fromidx = 1 + exchange_and_add (narcsp, 1);
+	      ++narcs;
+
+	      /* In rare cases it could happen that all entries in FROMS are
+		 occupied.  So we cannot count this anymore.  */
+	      if (fromidx >= fromlimit)
+		goto done;
+
+	      *topcindex = fromindex;
+	      fromp = &froms[fromindex];
+
+	      fromp = &froms[fromp->link];
+
+	      fromp->link = 0;
+	      fromp->here->from_pc = frompc;
+	      fromp->here->count = 0;
+
+	      break;
+	    }
+
+	  fromp = &froms[*topcindex];
+	}
+      else
+	/* Found in.  */
+	break;
+    }
+
+  /* Increment the counter.  */
+  atomic_add (&fromp->here->count, 1);
 
  done:
   state = GMON_PROF_ON;

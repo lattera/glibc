@@ -55,15 +55,17 @@ crtstuff = crti crtn
 
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
-generated += $(crtstuff:=.S) initfini.s align.h end.h
+generated += $(crtstuff:=.S) initfini.s defs.h
 omit-deps += $(crtstuff)
 
 # Special rules for the building of crti.o and crtn.o
 $(objpfx)crt%.o: $(objpfx)crt%.S $(objpfx)defs.h
 	$(compile.S) -g0 $(ASFLAGS-.os) -o $@
 
+CFLAGS-initfini.s = -O0 -g0 -fPIC
+
 $(objpfx)initfini.s: initfini.c
-	$(compile.c) -O0 -g0 -S -fPIC -finhibit-size-directive \
+	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
 		$(no-exceptions) -o $@
 
 # We only have one kind of startup code files.  Static binaries and

@@ -30,7 +30,7 @@ char *
 fgets (s, n, stream)
      char *s;
      int n;
-     register FILE *stream;
+     FILE *stream;
 {
   register char *p = s;
 
@@ -98,7 +98,7 @@ fgets (s, n, stream)
 	  i = stream->__get_limit - stream->__bufp;
 	}
 
-      if (i > n)
+      if (i > (size_t) n)
 	i = n;
 
       found = (char *) __memccpy ((void *) p, stream->__bufp, '\n', i);

@@ -44,8 +44,6 @@ static char sccsid[] = "@(#)auth_none.c 1.19 87/08/11 Copyr 1984 Sun Micro";
 
 #define MAX_MARSHEL_SIZE 20
 
-extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
-
 /*
  * Authenticator operations routines
  */

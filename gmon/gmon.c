@@ -82,13 +82,13 @@ __moncontrol (mode)
   if (mode)
     {
       /* start */
-      profil((void *) p->kcount, p->kcountsize, p->lowpc, s_scale);
+      __profil((void *) p->kcount, p->kcountsize, p->lowpc, s_scale);
       p->state = GMON_PROF_ON;
     }
   else
     {
       /* stop */
-      profil((void *) 0, 0, 0, 0);
+      __profil(NULL, 0, 0, 0);
       p->state = GMON_PROF_OFF;
     }
 }
@@ -113,6 +113,8 @@ __monstartup (lowpc, highpc)
   p->kcountsize = p->textsize / HISTFRACTION;
   p->hashfraction = HASHFRACTION;
   p->log_hashfraction = -1;
+  /* The following test must be kept in sync with the corresponding
+     test in mcount.c.  */
   if ((HASHFRACTION & (HASHFRACTION - 1)) == 0) {
       /* if HASHFRACTION is a power of two, mcount can use shifting
 	 instead of integer division.  Precompute shift amount. */

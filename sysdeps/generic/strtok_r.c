@@ -19,6 +19,7 @@
 
 #include <string.h>
 
+#undef strtok_r
 
 /* Parse S into tokens separated by characters in DELIM.
    If S is NULL, the saved pointer in SAVE_PTR is used as

@@ -226,7 +226,7 @@ check_result(int line, const char *rm, tocheck_t expected, tocheck_t actual)
   if (memcmp(&expected, &actual, sizeof(tocheck_t)) != 0)
     {
       unsigned char *ex, *ac;
-      int i;
+      size_t i;
 
       printf("%s:%d:round %s:result failed\n"
 	     " expected result 0x", __FILE__, line, rm);
@@ -323,7 +323,7 @@ check_excepts(int line, const char *rm, int expected, int actual)
     expected = expected & ~excepts_missing | FE_INVALID_SNAN;
   if ((expected & all_exceptions) != actual)
     {
-      int i;
+      size_t i;
       printf("%s:%d:round %s:exceptions failed\n"
 	     " expected exceptions ", __FILE__, line,rm);
       for (i = 0; i < sizeof(excepts)/sizeof(excepts[0]); i++)
@@ -419,7 +419,7 @@ static const optest_t optests[] = {
   {__LINE__,B_NEG, 1,P_1Z,P_1Z1, 0,0,0, R_ALL, 0, 0,P_1Z,P_1Z1 },
   {__LINE__,B_NEG, 0,P_Z,P_Z1,  0,0,0, R_ALL, 0, 1,P_Z,P_Z1 },
   {__LINE__,B_NEG, 1,P_Z,P_Z1,  0,0,0, R_ALL, 0, 0,P_Z,P_Z1 },
-  
+
   /* Absolute value.  */
   {__LINE__,B_ABS, 0,P_Z,P_Z,   0,0,0, R_ALL, 0, 0,P_Z,P_Z },
   {__LINE__,B_ABS, 1,P_Z,P_Z,   0,0,0, R_ALL, 0, 0,P_Z,P_Z },
@@ -433,7 +433,7 @@ static const optest_t optests[] = {
   {__LINE__,B_ABS, 1,P_1Z,P_1Z1, 0,0,0, R_ALL, 0, 0,P_1Z,P_1Z1 },
   {__LINE__,B_ABS, 0,P_Z,P_Z1,  0,0,0, R_ALL, 0, 0,P_Z,P_Z1 },
   {__LINE__,B_ABS, 1,P_Z,P_Z1,  0,0,0, R_ALL, 0, 0,P_Z,P_Z1 },
-  
+
   /* Square root.  */
   {__LINE__,B_SQRT, 0,P_Z,P_Z,   0,0,0, R_ALL, 0, 0,P_Z,P_Z },
   {__LINE__,B_SQRT, 1,P_Z,P_Z,   0,0,0, R_ALL, 0, 1,P_Z,P_Z },
@@ -459,7 +459,8 @@ static const optest_t optests[] = {
 static void
 check_op(void)
 {
-  int i, j;
+  size_t i;
+  int j;
   tocheck_t r, a, b, x;
   int raised;
 
@@ -497,7 +498,7 @@ static void
 fail_xr(int line, const char *rm, tocheck_t x, tocheck_t r, tocheck_t xx,
 	int xflag)
 {
-  int i;
+  size_t i;
   unsigned char *cx, *cr, *cxx;
 
   printf("%s:%d:round %s:fail\n with x=0x", __FILE__, line,rm);
@@ -539,7 +540,7 @@ check_sqrt(tocheck_t a)
 	  r0 = delta(r1,-1); r2 = delta(r1,1);
 	  switch (1 << j)
 	    {
-	    case R_NEAREST: 
+	    case R_NEAREST:
 	      x0 = r0 * r0 - a; x2 = r2 * r2 - a;
 	      ok = fabs(x0) >= fabs(x1) && fabs(x1) <= fabs(x2);
 	      break;

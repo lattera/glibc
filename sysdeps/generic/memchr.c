@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -47,9 +47,10 @@
 
 #include <sys/types.h>
 
+#undef memchr
+
 
 /* Search no more than N bytes of S for C.  */
-
 __ptr_t
 memchr (s, c, n)
      const __ptr_t s;

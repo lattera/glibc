@@ -32,16 +32,19 @@
 
 
 /* Copy N bytes of SRC to DEST.  */
+#define _HAVE_STRING_ARCH_memcpy 1
 #define memcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (n)				      \
 		  ? __memcpy_c (dest, src, n)				      \
 		  : __memcpy_g (dest, src, n)))
 #define __memcpy_c(dest, src, n) \
-  (((n) % 4 == 0)							      \
-   ? __memcpy_by4 (dest, src, n)					      \
-   : (((n) % 2 == 0)							      \
-      ? __memcpy_by2 (dest, src, n)					      \
-      : __memcpy_g (dest, src, n)))
+  ((n) == 0								      \
+   ? (dest)								      \
+   : (((n) % 4 == 0)							      \
+      ? __memcpy_by4 (dest, src, n)					      \
+      : (((n) % 2 == 0)							      \
+	 ? __memcpy_by2 (dest, src, n)					      \
+	 : __memcpy_g (dest, src, n))))
 
 __STRING_INLINE void *
 __memcpy_by4 (void *__dest, __const void *__src, size_t __n)
@@ -135,6 +138,7 @@ memmove (void *__dest, __const void *__src, size_t __n)
 
 
 /* Compare N bytes of S1 and S2.  */
+#define _HAVE_STRING_ARCH_memcmp 1
 #ifndef __PIC__
 /* gcc has problems to spill registers when using PIC.  */
 __STRING_INLINE int
@@ -157,6 +161,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 
 
 /* Set N bytes of S to C.  */
+#define _HAVE_STRING_ARCH_memset 1
 #define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? (__builtin_constant_p (n)				      \
@@ -166,17 +171,21 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 		     ? __memset_gc (s, c, n)				      \
 		     : __memset_gg (s, c, n))))
 #define __memset_cc(s, c, n) \
-  (((n) % 4 == 0)							      \
-   ? __memset_cc_by4 (s, c, n)						      \
-   : (((n) % 2== 0)							      \
-      ? __memset_cc_by2 (s, c, n)					      \
-      : __memset_cg (s, c, n)))
+  ((n) == 0								      \
+   ? (s)								      \
+   : (((n) % 4 == 0)							      \
+      ? __memset_cc_by4 (s, c, n)					      \
+      : (((n) % 2== 0)							      \
+	 ? __memset_cc_by2 (s, c, n)					      \
+	 : __memset_cg (s, c, n))))
 #define __memset_gc(s, c, n) \
-  (((n) % 4== 0)							      \
-   ? __memset_gc_by4 (s, c, n)						      \
-   : (((n) % 2 == 0)							      \
-      ? __memset_gc_by2 (s, c, n)					      \
-      : __memset_gg (s, c, n)))
+  ((n) == 0								      \
+   ? (s)								      \
+   : (((n) % 4== 0)							      \
+      ? __memset_gc_by4 (s, c, n)					      \
+      : (((n) % 2 == 0)							      \
+	 ? __memset_gc_by2 (s, c, n)					      \
+	 : __memset_gg (s, c, n))))
 
 __STRING_INLINE void *
 __memset_cc_by4 (void *__s, int __c, size_t __n)
@@ -196,7 +205,7 @@ __memset_cc_by4 (void *__s, int __c, size_t __n)
 }
 
 __STRING_INLINE void *
-__memset_cc_by2 (void *__s, char __c, size_t __n)
+__memset_cc_by2 (void *__s, int __c, size_t __n)
 {
   register void *__tmp = __s;
   register int __dummy;
@@ -217,7 +226,7 @@ __memset_cc_by2 (void *__s, char __c, size_t __n)
 }
 
 __STRING_INLINE void *
-__memset_gc_by4 (void *__s, char __c, size_t __n)
+__memset_gc_by4 (void *__s, int __c, size_t __n)
 {
   register void *__tmp = __s;
   register int __dummy;
@@ -238,7 +247,7 @@ __memset_gc_by4 (void *__s, char __c, size_t __n)
 }
 
 __STRING_INLINE void *
-__memset_gc_by2 (void *__s, char __c, size_t __n)
+__memset_gc_by2 (void *__s, int __c, size_t __n)
 {
   register void *__tmp = __s;
   register int __dummy1, __dummy2;
@@ -263,7 +272,7 @@ __memset_gc_by2 (void *__s, char __c, size_t __n)
 }
 
 __STRING_INLINE void *
-__memset_cg (void *__s, char __c, size_t __n)
+__memset_cg (void *__s, int __c, size_t __n)
 {
   register void *__tmp = __s;
   __asm__ __volatile__
@@ -279,7 +288,7 @@ __memset_cg (void *__s, char __c, size_t __n)
 }
 
 __STRING_INLINE void *
-__memset_gg (void *__s, char __c, size_t __n)
+__memset_gg (void *__s, int __c, size_t __n)
 {
   register void *__tmp = __s;
   __asm__ __volatile__
@@ -297,6 +306,7 @@ __memset_gg (void *__s, char __c, size_t __n)
 
 
 /* Search N bytes of S for C.  */
+#define _HAVE_STRING_ARCH_memchr 1
 __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
@@ -318,16 +328,21 @@ memchr (__const void *__s, int __c, size_t __n)
 
 
 /* Return the length of S.  */
+#define _HAVE_STRING_ARCH_strlen 1
+#define strlen(str) \
+  (__extension__ (__builtin_constant_p (str)				      \
+		  ? sizeof (str) - 1					      \
+		  : __strlen_g (str)))
 __STRING_INLINE size_t
-strlen (__const char *__str)
+__strlen_g (__const char *__str)
 {
   register char __dummy;
   register __const char *__tmp = __str;
   __asm__ __volatile__
     ("1:\n\t"
-     "movb	(%0),%1\n\t"
+     "movb	(%0),%b1\n\t"
      "leal	1(%0),%0\n\t"
-     "testb	%1,%1\n\t"
+     "testb	%b1,%b1\n\t"
      "jne	1b"
      : "=r" (__tmp), "=q" (__dummy)
      : "0" (__str)
@@ -337,19 +352,25 @@ strlen (__const char *__str)
 
 
 /* Copy SRC to DEST.  */
+#define _HAVE_STRING_ARCH_strcpy 1
+#define strcpy(dest, src) \
+  (__extension__ (__builtin_constant_p (src)				      \
+		  ? (char *) memcpy (dest, src, strlen (src) + 1)	      \
+		  : __strcpy_g (dest, src)))
+
 __STRING_INLINE char *
-strcpy (char *__dest, __const char *__src)
+__strcpy_g (char *__dest, __const char *__src)
 {
   register char *__tmp = __dest;
   register char __dummy;
   __asm__ __volatile__
     (
      "1:\n\t"
-     "movb	(%0),%2\n\t"
-     "incl	%0\n\t"
-     "movb	%2,(%1)\n\t"
-     "incl	%1\n\t"
-     "testb	%2,%2\n\t"
+     "movb	(%0),%b2\n\t"
+     "leal	1(%0),%0\n\t"
+     "movb	%b2,(%1)\n\t"
+     "leal	1(%1),%1\n\t"
+     "testb	%b2,%b2\n\t"
      "jne	1b"
      : "=r" (__src), "=r" (__tmp), "=q" (__dummy)
      : "0" (__src), "1" (__tmp)
@@ -358,9 +379,233 @@ strcpy (char *__dest, __const char *__src)
 }
 
 
-/* Copy no more than N characters of SRC to DEST.  */
+#ifdef __USE_GNU
+# define _HAVE_STRING_ARCH_stpcpy 1
+/* Copy SRC to DEST.  */
+# define __stpcpy(dest, src) \
+  (__extension__ (__builtin_constant_p (src)				      \
+		  ? (strlen (src) + 1 <= 8				      \
+		     ? __stpcpy_small (dest, src, strlen (src) + 1)	      \
+		     : __stpcpy_c (dest, src, strlen (src) + 1))	      \
+		  : __stpcpy_g (dest, src)))
+# define __stpcpy_c(dest, src, srclen) \
+  ((srclen) % 4 == 0							      \
+   ? __mempcpy_by4 (dest, src, srclen)					      \
+   : ((srclen) % 2 == 0							      \
+      ? __mempcpy_by2 (dest, src, srclen)				      \
+      : __mempcpy_byn (dest, src, srclen)))
+
+/* In glibc itself we use this symbol for namespace reasons.  */
+# define stpcpy(dest, src) __stpcpy (dest, src)
+
 __STRING_INLINE char *
-strncpy (char *__dest, __const char *__src, size_t __n)
+__stpcpy_small (char *__dest, __const char __src[], size_t __srclen)
+{
+  register char *__tmp = __dest;
+  switch (__srclen)
+    {
+    case 7:
+      *((unsigned short int *) __tmp)++ = *((unsigned short int *) __src)++;
+    case 5:
+      *((unsigned int *) __tmp)++ = *((unsigned int *) __src)++;
+      *((unsigned char *) __tmp) = '\0';
+      return __tmp;
+
+    case 8:
+      *((unsigned int *) __tmp)++ = *((unsigned int *) __src)++;
+    case 4:
+      *((unsigned int *) __tmp) = *((unsigned int *) __src);
+      return __tmp + 3;
+
+    case 6:
+      *((unsigned int *) __tmp)++ = *((unsigned int *) __src)++;
+    case 2:
+      *((unsigned short int *) __tmp) = *((unsigned short int *) __src);
+      return __tmp + 1;
+
+    case 3:
+      *((unsigned short int *) __tmp)++ = *((unsigned short int *) __src)++;
+    case 1:
+      *((unsigned char *) __tmp) = '\0';
+      return __tmp;
+
+    default:
+      break;
+    }
+  /* This should never happen.  */
+  return NULL;
+}
+
+__STRING_INLINE char *
+__mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
+{
+  register char *__tmp = __dest;
+  register int __dummy1, __dummy2;
+  __asm__ __volatile__
+    ("1:\n\t"
+     "movl	(%2),%0\n\t"
+     "leal	4(%2),%2\n\t"
+     "movl	%0,(%1)\n\t"
+     "leal	4(%1),%1\n\t"
+     "decl	%3\n\t"
+     "jnz	1b"
+     : "=r" (__dummy1), "=r" (__tmp), "=r" (__src), "=r" (__dummy2)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 4)
+     : "memory", "cc");
+  return __tmp - 1;
+}
+
+__STRING_INLINE char *
+__mempcpy_by2 (char *__dest, __const char *__src, size_t __srclen)
+{
+  register char *__tmp = __dest;
+  register int __dummy1, __dummy2;
+  __asm__ __volatile__
+    ("shrl	$1,%3\n\t"
+     "jz	2f\n"                 /* only a word */
+     "1:\n\t"
+     "movl	(%2),%0\n\t"
+     "leal	4(%2),%2\n\t"
+     "movl	%0,(%1)\n\t"
+     "leal	4(%1),%1\n\t"
+     "decl	%3\n\t"
+     "jnz	1b\n"
+     "2:\n\t"
+     "movw	(%2),%w0\n\t"
+     "movw	%w0,(%1)"
+     : "=q" (__dummy1), "=r" (__tmp), "=r" (__src), "=r" (__dummy2)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 2)
+     : "memory", "cc");
+  return __tmp + 1;
+}
+
+__STRING_INLINE char *
+__mempcpy_byn (char *__dest, __const char *__src, size_t __srclen)
+{
+  register char *__tmp = __dest;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "shrl	$1,%%ecx\n\t"
+     "jnc	1f\n\t"
+     "movsb\n"
+     "1:\n\t"
+     "shrl	$1,%%ecx\n\t"
+     "jnc	2f\n\t"
+     "movsw\n"
+     "2:\n\t"
+     "rep; movsl"
+     : "=D" (__tmp)
+     : "c" (__srclen), "0" (__tmp),"S" (__src)
+     : "cx", "di", "si", "memory", "cc");
+  return __tmp - 1;
+}
+
+__STRING_INLINE char *
+__stpcpy_g (char *__dest, __const char *__src)
+{
+  register char *__tmp = __dest;
+  register char __dummy;
+  __asm__ __volatile__
+    (
+     "1:\n\t"
+     "movb	(%0),%b2\n\t"
+     "leal	1(%0),%0\n\t"
+     "movb	%b2,(%1)\n\t"
+     "leal	1(%1),%1\n\t"
+     "testb	%b2,%b2\n\t"
+     "jne	1b"
+     : "=r" (__src), "=r" (__tmp), "=q" (__dummy)
+     : "0" (__src), "1" (__tmp)
+     : "memory", "cc");
+  return __tmp - 1;
+}
+#endif
+
+
+/* Copy no more than N characters of SRC to DEST.  */
+#define _HAVE_STRING_ARCH_strncpy 1
+#define strncpy(dest, src, n) \
+  (__extension__ (__builtin_constant_p (src)				      \
+		  ? ((strlen (src) + 1 >= ((size_t) (n))		      \
+		      ? (char *) memcpy (dest, src, n)			      \
+		      : __strncpy_cg (dest, src, strlen (src) + 1, n)))	      \
+		  : __strncpy_gg (dest, src, n)))
+#define __strncpy_cg(dest, src, srclen, n) \
+  (((srclen) % 4 == 0)							      \
+   ? __strncpy_by4 (dest, src, srclen, n)				      \
+   : (((srclen) % 2 == 0)						      \
+      ? __strncpy_by2 (dest, src, srclen, n)				      \
+      : __strncpy_byn (dest, src, srclen, n)))
+
+__STRING_INLINE char *
+__strncpy_by4 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
+{
+  register char *__tmp = __dest;
+  register int __dummy1, __dummy2;
+  __asm__ __volatile__
+    ("1:\n\t"
+     "movl	(%2),%0\n\t"
+     "leal	4(%2),%2\n\t"
+     "movl	%0,(%1)\n\t"
+     "leal	4(%1),%1\n\t"
+     "decl	%3\n\t"
+     "jnz	1b"
+     : "=r" (__dummy1), "=r" (__tmp), "=r" (__src), "=r" (__dummy2)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 4)
+     : "memory", "cc");
+  (void) memset (__tmp, '\0', __n - __srclen);
+  return __dest;
+}
+
+__STRING_INLINE char *
+__strncpy_by2 (char *__dest, __const char __src[], size_t __srclen, size_t __n)
+{
+  register char *__tmp = __dest;
+  register int __dummy1, __dummy2;
+  __asm__ __volatile__
+    ("shrl	$1,%3\n\t"
+     "jz	2f\n"                 /* only a word */
+     "1:\n\t"
+     "movl	(%2),%0\n\t"
+     "leal	4(%2),%2\n\t"
+     "movl	%0,(%1)\n\t"
+     "leal	4(%1),%1\n\t"
+     "decl	%3\n\t"
+     "jnz	1b\n"
+     "2:\n\t"
+     "movw	(%2),%w0\n\t"
+     "movw	%w0,(%1)\n\t"
+     : "=q" (__dummy1), "=r" (__tmp), "=r" (__src), "=r" (__dummy2)
+     : "1" (__tmp), "2" (__src), "3" (__srclen / 2)
+     : "memory", "cc");
+  (void) memset (__tmp + 2, '\0', __n - __srclen);
+  return __dest;
+}
+
+__STRING_INLINE char *
+__strncpy_byn (char *__dest, __const char __src[], size_t __srclen, size_t __n)
+{
+  register char *__tmp = __dest;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "shrl	$1,%%ecx\n\t"
+     "jnc	1f\n\t"
+     "movsb\n"
+     "1:\n\t"
+     "shrl	$1,%%ecx\n\t"
+     "jnc	2f\n\t"
+     "movsw\n"
+     "2:\n\t"
+     "rep; movsl"
+     : "=D" (__tmp)
+     : "c" (__srclen), "0" (__tmp),"S" (__src)
+     : "cx", "di", "si", "memory", "cc");
+  (void) memset (__tmp, '\0', __n - __srclen);
+  return __dest;
+}
+
+__STRING_INLINE char *
+__strncpy_gg (char *__dest, __const char *__src, size_t __n)
 {
   register char *__tmp = __dest;
   register char __dummy;
@@ -390,14 +635,35 @@ strncpy (char *__dest, __const char *__src, size_t __n)
 
 
 /* Append SRC onto DEST.  */
+#define _HAVE_STRING_ARCH_strcat 1
+#define strcat(dest, src) \
+  (__extension__ (__builtin_constant_p (src)				      \
+		  ? __strcat_c (dest, src, strlen (src) + 1)		      \
+		  : __strcat_g (dest, src)))
+
 __STRING_INLINE char *
-strcat (char *__dest, __const char *__src)
+__strcat_c (char *__dest, __const char __src[], size_t __srclen)
+{
+  register char *__tmp = __dest - 1;
+  __asm__ __volatile__
+    ("1:\n\t"
+     "incl	%0\n\t"
+     "cmpb	$0,(%0)\n\t"
+     "jne	1b\n"
+     : "=r" (__tmp)
+     : "0" (__tmp)
+     : "cc");
+  (void) memcpy (__tmp, __src, __srclen);
+  return __dest;
+}
+
+__STRING_INLINE char *
+__strcat_g (char *__dest, __const char *__src)
 {
   register char *__tmp = __dest - 1;
   register char __dummy;
   __asm__ __volatile__
-    (
-     "1:\n\t"
+    ("1:\n\t"
      "incl	%1\n\t"
      "cmpb	$0,(%1)\n\t"
      "jne	1b\n"
@@ -416,16 +682,23 @@ strcat (char *__dest, __const char *__src)
 
 
 /* Append no more than N characters from SRC onto DEST.  */
+#define _HAVE_STRING_ARCH_strncat 1
+#define strncat(dest, src, n) \
+  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
+		  ? (strlen (src) < ((size_t) (n))			      \
+		     ? strcat (dest, src)				      \
+		     : (memcpy (strchr (dest, '\0'), src, n), dest))	      \
+		  : __strncat_g (dest, src, n)))
+
 __STRING_INLINE char *
-strncat (char *__dest, __const char *__src, size_t __n)
+__strncat_g (char *__dest, __const char __src[], size_t __n)
 {
   register char *__tmp = __dest - 1;
   register char __dummy;
   __asm__ __volatile__
-    (
-     "1:\n\t"
-     "incl	%1\n\t"
-     "cmpb	$0,(%1)\n\t"
+    ("1:\n\t"
+     "cmpb	$0,1(%1)\n\t"
+     "leal	1(%1),%1\n\t"
      "jne	1b\n"
      "2:\n\t"
      "decl	%3\n\t"
@@ -435,7 +708,8 @@ strncat (char *__dest, __const char *__src, size_t __n)
      "movb	%b0,(%1)\n\t"
      "leal	1(%1),%1\n\t"
      "testb	%b0,%b0\n\t"
-     "jne	2b\n"
+     "jne	2b\n\t"
+     "decl	%1\n"
      "3:\n\t"
      "movb	$0,(%1)\n\t"
      : "=q" (__dummy), "=r" (__tmp), "=r" (__src), "=r" (__n)
@@ -446,6 +720,7 @@ strncat (char *__dest, __const char *__src, size_t __n)
 
 
 /* Compare S1 and S2.  */
+#define _HAVE_STRING_ARCH_strcmp 1
 __STRING_INLINE int
 strcmp (__const char *__s1, __const char *__s2)
 {
@@ -474,8 +749,16 @@ strcmp (__const char *__s1, __const char *__s2)
 
 
 /* Compare N characters of S1 and S2.  */
+#define _HAVE_STRING_ARCH_strncmp 1
+#define strncmp(s1, s2, n) \
+  (__extension__ (__builtin_constant_p (s1) && strlen (s1) < ((size_t) (n))   \
+		  ? strcmp (s1, s2)					      \
+		  : (__builtin_constant_p (s2) && strlen (s2) < ((size_t) (n))\
+		     ? strcmp (s1, s2)					      \
+		     : __strncmp_g (s1, s2, n))))
+
 __STRING_INLINE int
-strncmp (__const char *__s1, __const char *__s2, size_t __n)
+__strncmp_g (__const char *__s1, __const char *__s2, size_t __n)
 {
   register int __res;
   __asm__ __volatile__
@@ -505,10 +788,31 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
 
 
 /* Find the first occurrence of C in S.  */
+#define _HAVE_STRING_ARCH_strchr 1
 #define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strchr_c (s, ((c) & 0xff) << 8)			      \
 		  : __strchr_g (s, c)))
+
+__STRING_INLINE char *
+__strchr_c (__const char *__s, int __c)
+{
+  register char *__res;
+  __asm__ __volatile__
+    ("1:\n\t"
+     "movb	(%0),%%al\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	2f\n\t"
+     "leal	1(%0),%0\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne	1b\n\t"
+     "xorl	%0,%0\n"
+     "2:"
+     : "=r" (__res)
+     : "a" (__c), "0" (__s)
+     : "ax", "cc");
+  return __res;
+}
 
 __STRING_INLINE char *
 __strchr_g (__const char *__s, int __c)
@@ -531,40 +835,58 @@ __strchr_g (__const char *__s, int __c)
   return __res;
 }
 
-__STRING_INLINE char *
-__strchr_c (__const char *__s, int __c)
-{
-  register char *__res;
-  __asm__ __volatile__
-    ("1:\n\t"
-     "movb	(%0),%%al\n\t"
-     "cmpb	%%ah,%%al\n\t"
-     "je	2f\n\t"
-     "leal	1(%0),%0\n\t"
-     "testb	%%al,%%al\n\t"
-     "jne	1b\n\t"
-     "xorl	%0,%0\n"
-     "2:"
-     : "=r" (__res)
-     : "a" (__c), "0" (__s)
-     : "ax", "cc");
-  return __res;
-}
-
 
 /* Find the last occurrence of C in S.  */
+#define _HAVE_STRING_ARCH_strrchr 1
 #define strrchr(s, c) \
   (__extension__ (__builtin_constant_p (c)				      \
 		  ? __strrchr_c (s, ((c) & 0xff) << 8)			      \
 		  : __strrchr_g (s, c)))
+
+#ifdef __i686__
+__STRING_INLINE char *
+__strrchr_c (__const char *__s, int __c)
+{
+  register char *__res;
+  __asm__ __volatile__
+    ("cld\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "cmovne	%%esi,%0\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne 1b"
+     : "=d" (__res)
+     : "0" (1), "S" (__s),"a" (__c)
+     : "ax", "si", "cc");
+  return __res - 1;
+}
 
 __STRING_INLINE char *
 __strrchr_g (__const char *__s, int __c)
 {
   register char *__res;
   __asm__ __volatile__
-    ("cld\n\t"
-     "movb	%%al,%%ah\n"
+    ("movb	%%al,%%ah\n"
+     "cld\n\t"
+     "1:\n\t"
+     "lodsb\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "cmovne	%%esi,%0\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne 1b"
+     : "=r" (__res)
+     : "0" (1), "S" (__s),"a" (__c)
+     : "ax", "si", "cc");
+  return __res - 1;
+}
+#else
+__STRING_INLINE char *
+__strrchr_c (__const char *__s, int __c)
+{
+  register char *__res;
+  __asm__ __volatile__
+    ("cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "cmpb	%%ah,%%al\n\t"
@@ -580,11 +902,12 @@ __strrchr_g (__const char *__s, int __c)
 }
 
 __STRING_INLINE char *
-__strrchr_c (__const char *__s, int __c)
+__strrchr_g (__const char *__s, int __c)
 {
   register char *__res;
   __asm__ __volatile__
-    ("cld\n\t"
+    ("movb	%%al,%%ah\n"
+     "cld\n\t"
      "1:\n\t"
      "lodsb\n\t"
      "cmpb	%%ah,%%al\n\t"
@@ -593,28 +916,55 @@ __strrchr_c (__const char *__s, int __c)
      "2:\n\t"
      "testb	%%al,%%al\n\t"
      "jne 1b"
-     : "=d" (__res)
+     : "=r" (__res)
      : "0" (0), "S" (__s),"a" (__c)
      : "ax", "si", "cc");
   return __res;
 }
+#endif
 
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
-#ifdef __PIC__
+#define _HAVE_STRING_ARCH_strcspn 1
+#define strcspn(s, reject) \
+  (__extension__ (__builtin_constant_p (reject) && sizeof ((reject)[0]) == 1  \
+		  ? ((reject)[0] == '\0'				      \
+		     ? strlen (s)					      \
+		     : ((reject)[1] == '\0'				      \
+			? __strcspn_c1 (s, (((reject)[0] << 8) & 0xff00))     \
+			: __strcspn_cg (s, reject, strlen (reject))))	      \
+		  : __strcspn_g (s, reject)))
+
 __STRING_INLINE size_t
-strcspn (__const char *__s, __const char *__reject)
+__strcspn_c1 (__const char *__s, int __reject)
 {
   register char *__res;
   __asm__ __volatile__
-    ("push	%%ebx\n\t"
-     "cld\n\t"
-     "movl	%4,%%edi\n\t"
-     "repne; scasb\n\t"
-     "notl	%%ecx\n\t"
-     "decl	%%ecx\n\t"
-     "movl	%%ecx,%%ebx\n"
+    ("1:\n\t"
+     "movb	(%0),%%al\n\t"
+     "leal	1(%0),%0\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	2f\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne	1b\n"
+     "2:"
+     : "=r" (__res)
+     : "a" (__reject), "0" (__s)
+     : "ax", "cc");
+  return (__res - 1) - __s;
+}
+
+#ifdef __PIC__
+__STRING_INLINE size_t
+__strcspn_cg (__const char *__s, __const char __reject[], size_t __reject_len)
+{
+  register __const char *__res;
+  int __mem;
+  __asm__ __volatile__
+    ("movl	%%ebx,%1\n\t"
+     "movl	%%ecx,%%ebx\n\t"
+     "cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
@@ -624,35 +974,82 @@ strcspn (__const char *__s, __const char *__reject)
      "repne; scasb\n\t"
      "jne	1b\n"
      "2:\n\t"
-     "popl	%%ebx"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__reject)
+     "movl	%1,%%ebx"
+     : "=S" (__res), "=&m" (__mem)
+     : "c" (__reject_len), "0" (__s), "r" (__reject), "1" (__mem)
+     : "ax", "cx", "di", "cc");
+  return (__res - 1) - __s;
+}
+
+__STRING_INLINE size_t
+__strcspn_g (__const char *__s, __const char *__reject)
+{
+  register __const char *__res;
+  int __mem;
+  __asm__ __volatile__
+    ("movl	%%ebx,%1\n\t"
+     "movl	%5,%%edi\n\t"
+     "cld\n\t"
+     "repne; scasb\n\t"
+     "notl	%%ecx\n\t"
+     "leal	-1(%%ecx),%%ebx\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "testb	%%al,%%al\n\t"
+     "je	2f\n\t"
+     "movl	%5,%%edi\n\t"
+     "movl	%%ebx,%%ecx\n\t"
+     "repne; scasb\n\t"
+     "jne	1b\n"
+     "2:\n\t"
+     "movl	%1,%%ebx"
+     : "=S" (__res), "=&m" (__mem)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "r" (__reject), "1" (__mem)
      : "ax", "cx", "di", "cc");
   return (__res - 1) - __s;
 }
 #else
 __STRING_INLINE size_t
-strcspn (__const char *__s, __const char *__reject)
+__strcspn_cg (__const char *__s, __const char __reject[], size_t __reject_len)
 {
-  register char *__res;
+  register __const char *__res;
   __asm__ __volatile__
-    ("cld\n\t"
-     "movl	%4,%%edi\n\t"
-     "repne; scasb\n\t"
-     "notl	%%ecx\n\t"
-     "decl	%%ecx\n\t"
-     "movl	%%ecx,%%edx\n"
+    ("cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%ebx,%%edi\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repne; scasb\n\t"
      "jne	1b\n"
      "2:"
      : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__reject)
+     : "d" (__reject_len), "0" (__s), "b" (__reject)
+     : "ax", "cx", "di", "cc");
+  return (__res - 1) - __s;
+}
+
+__STRING_INLINE size_t
+__strcspn_g (__const char *__s, __const char *__reject)
+{
+  register __const char *__res;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "repne; scasb\n\t"
+     "notl	%%ecx\n\t"
+     "leal	-1(%%ecx),%%edx\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "testb	%%al,%%al\n\t"
+     "je	2f\n\t"
+     "movl	%%ebx,%%edi\n\t"
+     "movl	%%edx,%%ecx\n\t"
+     "repne; scasb\n\t"
+     "jne	1b\n"
+     "2:"
+     : "=S" (__res)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "b" (__reject), "D" (__reject)
      : "ax", "cx", "dx", "di", "cc");
   return (__res - 1) - __s;
 }
@@ -661,57 +1058,129 @@ strcspn (__const char *__s, __const char *__reject)
 
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
-#ifdef __PIC__
+#define _HAVE_STRING_ARCH_strspn 1
+#define strspn(s, accept) \
+  (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
+		  ? ((accept)[0] == '\0'				      \
+		     ? 0						      \
+		     : ((accept)[1] == '\0'				      \
+			? __strspn_c1 (s, (((accept)[0] << 8 ) & 0xff00))     \
+			: __strspn_cg (s, accept, strlen (accept))))	      \
+		  : __strspn_g (s, accept)))
+
 __STRING_INLINE size_t
-strspn (__const char *__s, __const char *__accept)
+__strspn_c1 (__const char *__s, int __accept)
 {
   register char *__res;
+  /* Please note that __accept never can be '\0'.  */
   __asm__ __volatile__
-    ("pushl	%%ebx\n\t"
-     "cld\n\t"
-     "movl	%4,%%edi\n\t"
-     "repne; scasb\n\t"
-     "notl	%%ecx\n\t"
-     "decl	%%ecx\n\t"
-     "movl	%%ecx,%%ebx\n"
+    ("1:\n\t"
+     "movb	(%0),%%al\n\t"
+     "leal	1(%0),%0\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	1b\n"
+     "2:"
+     : "=r" (__res)
+     : "a" (__accept), "0" (__s)
+     : "ax", "cc");
+  return (__res - 1) - __s;
+}
+
+#ifdef __PIC__
+__STRING_INLINE size_t
+__strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
+{
+  register __const char *__res;
+  int __mem;
+  __asm__ __volatile__
+    ("movl	%%ebx,%1\n\t"
+     "movl	%%ecx,%%ebx\n\t"
+     "cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%edx,%%edi\n\t"
      "movl	%%ebx,%%ecx\n\t"
      "repne; scasb\n\t"
      "je	1b\n"
      "2:\n\t"
-     "popl	%%ebx"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
+     "movl	%1,%%ebx"
+     : "=S" (__res), "=m" (__mem)
+     : "c" (__accept_len), "0" (__s), "d" (__accept), "1" (__mem)
+     : "ax", "cx", "di", "cc");
+  return (__res - 1) - __s;
+}
+
+__STRING_INLINE size_t
+__strspn_g (__const char *__s, __const char *__accept)
+{
+  register __const char *__res;
+  int __mem;
+  __asm__ __volatile__
+    ("movl	%%ebx,%1\n\t"
+     "cld\n\t"
+     "repne; scasb\n\t"
+     "notl	%%ecx\n\t"
+     "leal	-1(%%ecx),%%ebx\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "testb	%%al,%%al\n\t"
+     "je	2f\n\t"
+     "movl	%%edx,%%edi\n\t"
+     "movl	%%ebx,%%ecx\n\t"
+     "repne; scasb\n\t"
+     "je	1b\n"
+     "2:\n\t"
+     "movl	%1,%%ebx"
+     : "=S" (__res), "=m" (__mem)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "d" (__accept), "1" (__mem),
+       "D" (__accept)
      : "ax", "cx", "di", "cc");
   return (__res - 1) - __s;
 }
 #else
 __STRING_INLINE size_t
-strspn (__const char *__s, __const char *__accept)
+__strspn_cg (__const char *__s, __const char __accept[], size_t __accept_len)
 {
-  register char *__res;
+  register __const char *__res;
   __asm__ __volatile__
-    ("cld\n\t"
-     "movl	%4,%%edi\n\t"
-     "repne; scasb\n\t"
-     "notl	%%ecx\n\t"
-     "decl	%%ecx\n\t"
-     "movl	%%ecx,%%edx\n"
+    ("cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%ebx,%%edi\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repne; scasb\n\t"
      "je	1b\n"
      "2:"
      : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
+     : "d" (__accept_len), "0" (__s), "b" (__accept), "D" (__accept)
+     : "ax", "cx", "dx", "di", "cc");
+  return (__res - 1) - __s;
+}
+
+__STRING_INLINE size_t
+__strspn_g (__const char *__s, __const char *__accept)
+{
+  register __const char *__res;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "repne; scasb\n\t"
+     "notl	%%ecx\n\t"
+     "leal	-1(%%ecx),%%edx\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "testb	%%al,%%al\n\t"
+     "je	2f\n\t"
+     "movl	%%ebx,%%edi\n\t"
+     "movl	%%edx,%%ecx\n\t"
+     "repne; scasb\n\t"
+     "je	1b\n"
+     "2:"
+     : "=S" (__res)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "b" (__accept), "D" (__accept)
      : "ax", "cx", "dx", "di", "cc");
   return (__res - 1) - __s;
 }
@@ -719,24 +1188,31 @@ strspn (__const char *__s, __const char *__accept)
 
 
 /* Find the first occurrence in S of any character in ACCEPT.  */
+#define _HAVE_STRING_ARCH_strpbrk 1
+#define strpbrk(s, accept) \
+  (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
+		  ? ((accept)[0] == '\0'				      \
+		     ? NULL						      \
+		     : ((accept)[1] == '\0'				      \
+			? strchr (s, (accept)[0])			      \
+			: __strpbrk_cg (s, accept, strlen (accept))))	      \
+		  : __strpbrk_g (s, accept)))
+
 #ifdef __PIC__
 __STRING_INLINE char *
-strpbrk (__const char *__s, __const char *__accept)
+__strpbrk_cg (__const char *__s, __const char __accept[], size_t __accept_len)
 {
   register char *__res;
+  int __mem;
   __asm__ __volatile__
-    ("pushl	%%ebx\n\t"
-     "cld\n\t"
-     "movl	%4,%%edi\n\t"
-     "repne; scasb\n\t"
-     "notl	%%ecx\n\t"
-     "decl	%%ecx\n\t"
-     "movl	%%ecx,%%ebx\n"
+    ("movl	%%ebx,%1\n\t"
+     "movl	%%ecx,%%ebx\n\t"
+     "cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%edx,%%edi\n\t"
      "movl	%%ebx,%%ecx\n\t"
      "repne; scasb\n\t"
      "jne	1b\n\t"
@@ -745,29 +1221,57 @@ strpbrk (__const char *__s, __const char *__accept)
      "2:\n\t"
      "xorl	%0,%0\n"
      "3:\n\t"
-     "popl	%%ebx"
-     : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
+     "movl	%1,%%ebx"
+     : "=S" (__res), "=m" (__mem)
+     : "c" (__accept_len), "0" (__s), "d" (__accept), "1" (__mem)
+     : "ax", "cx", "di", "cc");
+  return __res;
+}
+
+__STRING_INLINE char *
+__strpbrk_g (__const char *__s, __const char *__accept)
+{
+  register char *__res;
+  int __mem;
+  __asm__ __volatile__
+    ("movl	%%ebx,%1\n\t"
+     "movl	%%edx,%%edi\n\t"
+     "cld\n\t"
+     "repne; scasb\n\t"
+     "notl	%%ecx\n\t"
+     "leal	-1(%%ecx),%%ebx\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "testb	%%al,%%al\n\t"
+     "je	2f\n\t"
+     "movl	%%edx,%%edi\n\t"
+     "movl	%%ebx,%%ecx\n\t"
+     "repne; scasb\n\t"
+     "jne	1b\n\t"
+     "decl	%0\n\t"
+     "jmp	3f\n"
+     "2:\n\t"
+     "xorl	%0,%0\n"
+     "3:\n\t"
+     "movl	%1,%%ebx"
+     : "=S" (__res), "=m" (__mem)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "d" (__accept), "1" (__mem)
      : "ax", "cx", "di", "cc");
   return __res;
 }
 #else
 __STRING_INLINE char *
-strpbrk (__const char *__s, __const char *__accept)
+__strpbrk_cg (__const char *__s, __const char __accept[], size_t __accept_len)
 {
   register char *__res;
   __asm__ __volatile__
-    ("cld\n\t"
-     "movl	%4,%%edi\n\t"
-     "repne; scasb\n\t"
-     "notl	%%ecx\n\t"
-     "decl	%%ecx\n\t"
-     "movl	%%ecx,%%edx\n"
+    ("movl	%%ebx,%%edi\n\t"
+     "cld\n"
      "1:\n\t"
      "lodsb\n\t"
      "testb	%%al,%%al\n\t"
      "je	2f\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%ebx,%%edi\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repne; scasb\n\t"
      "jne	1b\n\t"
@@ -777,7 +1281,36 @@ strpbrk (__const char *__s, __const char *__accept)
      "xorl	%0,%0\n"
      "3:"
      : "=S" (__res)
-     : "a" (0), "c" (0xffffffff), "0" (__s), "g" (__accept)
+     : "d" (__accept_len), "0" (__s), "b" (__accept)
+     : "ax", "cx", "dx", "di", "cc");
+  return __res;
+}
+
+__STRING_INLINE char *
+__strpbrk_g (__const char *__s, __const char *__accept)
+{
+  register char *__res;
+  __asm__ __volatile__
+    ("movl	%%ebx,%%edi\n\t"
+     "cld\n\t"
+     "repne; scasb\n\t"
+     "notl	%%ecx\n\t"
+     "leal	-1(%%ecx),%%edx\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "testb	%%al,%%al\n\t"
+     "je	2f\n\t"
+     "movl	%%ebx,%%edi\n\t"
+     "movl	%%edx,%%ecx\n\t"
+     "repne; scasb\n\t"
+     "jne	1b\n\t"
+     "decl	%0\n\t"
+     "jmp	3f\n"
+     "2:\n\t"
+     "xorl	%0,%0\n"
+     "3:"
+     : "=S" (__res)
+     : "a" (0), "c" (0xffffffff), "0" (__s), "b" (__accept)
      : "ax", "cx", "dx", "di", "cc");
   return __res;
 }
@@ -785,63 +1318,138 @@ strpbrk (__const char *__s, __const char *__accept)
 
 
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
+#define _HAVE_STRING_ARCH_strstr 1
 #ifdef __PIC__
+/* XXX GCC has problems to spill the registers.  */
+# define strstr(haystack, needle) \
+  (__extension__ (__builtin_constant_p (needle) && sizeof ((needle)[0]) == 1  \
+		  ? ((needle)[0] == '\0'				      \
+		     ? haystack						      \
+		     : ((needle)[1] == '\0'				      \
+			? strchr (haystack, (needle)[0])		     \
+			: strstr (haystack, needle)))			      \
+		  : strstr (haystack, needle)))
+
+# if 0
+/* Please note that this function need not handle NEEDLEs with a
+   length shorter than two.  */
 __STRING_INLINE char *
-strstr (__const char *__haystack, __const char *__needle)
+__strstr_cg (__const char *__haystack, __const char __needle[],
+	     size_t __needle_len)
 {
   register char *__res;
+  int __mem;
   __asm__ __volatile__
-    ("pushl	%%ebx\n\t"
-     "cld\n\t" \
-     "movl	%4,%%edi\n\t"
+    ("movl	%%ebx,%1\n\t"
+     "movl	%%ecx,%%ebx\n"
+     "cld\n" \
+     "1:\n\t"
+     "movl	%%edx,%%edi\n\t"
+     "movl	%%esi,%%eax\n\t"
+     "movl	%%ebx,%%ecx\n\t"
+     "repe; cmpsb\n\t"
+     "je	2f\n\t"
+     "cmpb	$0,-1(%%esi)\n\t"
+     "leal	1(%%eax),%%esi\n\t"
+     "jne	1b\n\t"
+     "xorl	%%eax,%%eax\n"
+     "2:\n\t"
+     "movl	%1,%%ebx"
+     : "=a" (__res), "=m" (__mem)
+     : "c" (__needle_len), "S" (__haystack), "d" (__needle), "1" (__mem)
+     : "cx", "di", "si", "cc");
+  return __res;
+}
+
+__STRING_INLINE char *
+__strstr_g (__const char *__haystack, __const char *__needle)
+{
+  register char *__res;
+  int __mem;
+  __asm__ __volatile__
+    ("movl	%2,%%edi\n\t"
+     "cld\n\t"
      "repne; scasb\n\t"
      "notl	%%ecx\n\t"
+     "movl	%%ebx,%1\n\t"
      "decl	%%ecx\n\t"	/* NOTE! This also sets Z if searchstring='' */
      "movl	%%ecx,%%ebx\n"
      "1:\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%edx,%%edi\n\t"
      "movl	%%esi,%%eax\n\t"
      "movl	%%ebx,%%ecx\n\t"
      "repe; cmpsb\n\t"
      "je	2f\n\t"		/* also works for empty string, see above */
-     "xchgl	%%eax,%%esi\n\t"
-     "incl	%%esi\n\t"
-     "cmpb	$0,-1(%%eax)\n\t"
+     "cmpb	$0,-1(%%esi)\n\t"
+     "leal	1(%%eax),%%esi\n\t"
      "jne	1b\n\t"
-     "xorl	%%eax,%%eax\n\t"
+     "xorl	%%eax,%%eax\n"
      "2:\n\t"
-     "popl	%%ebx"
-     : "=a" (__res)
-     : "0" (0), "c" (0xffffffff), "S" (__haystack), "g" (__needle)
+     "movl	%1,%%ebx"
+     : "=a" (__res), "=&m" (__mem)
+     : "0" (0), "c" (0xffffffff), "S" (__haystack), "d" (__needle), "1" (__mem)
      : "cx", "di", "si", "cc");
   return __res;
 }
+# endif
 #else
+# define strstr(haystack, needle) \
+  (__extension__ (__builtin_constant_p (needle) && sizeof ((needle)[0]) == 1  \
+		  ? ((needle)[0] == '\0'				      \
+		     ? haystack						      \
+		     : ((needle)[1] == '\0'				      \
+			? strchr (haystack, (needle)[0]) 		      \
+			: __strstr_cg (haystack, needle, strlen (needle))))   \
+		  : __strstr_g (haystack, needle)))
+
 __STRING_INLINE char *
-strstr (__const char *__haystack, __const char *__needle)
+__strstr_cg (__const char *__haystack, __const char __needle[],
+	     size_t __needle_len)
 {
   register char *__res;
   __asm__ __volatile__
-    ("cld\n\t" \
-     "movl	%4,%%edi\n\t"
+    ("cld\n" \
+     "1:\n\t"
+     "movl	%%ebx,%%edi\n\t"
+     "movl	%%esi,%%eax\n\t"
+     "movl	%%edx,%%ecx\n\t"
+     "repe; cmpsb\n\t"
+     "je	2f\n\t"
+     "cmpb	$0,-1(%%esi)\n\t"
+     "leal	1(%%eax),%%esi\n\t"
+     "jne	1b\n\t"
+     "xorl	%%eax,%%eax\n"
+     "2:"
+     : "=a" (__res)
+     : "d" (__needle_len), "S" (__haystack), "b" (__needle)
+     : "cx", "dx", "di", "si", "cc");
+  return __res;
+}
+
+__STRING_INLINE char *
+__strstr_g (__const char *__haystack, __const char *__needle)
+{
+  register char *__res;
+  __asm__ __volatile__
+    ("movl	%1,%%edi\n\t"
+     "cld\n\t"
      "repne; scasb\n\t"
      "notl	%%ecx\n\t"
      "decl	%%ecx\n\t"	/* NOTE! This also sets Z if searchstring='' */
      "movl	%%ecx,%%edx\n"
      "1:\n\t"
-     "movl	%4,%%edi\n\t"
+     "movl	%%ebx,%%edi\n\t"
      "movl	%%esi,%%eax\n\t"
      "movl	%%edx,%%ecx\n\t"
      "repe; cmpsb\n\t"
      "je	2f\n\t"		/* also works for empty string, see above */
-     "xchgl	%%eax,%%esi\n\t"
-     "incl	%%esi\n\t"
-     "cmpb	$0,-1(%%eax)\n\t"
+     "cmpb	$0,-1(%%esi)\n\t"
+     "leal	1(%%eax),%%esi\n\t"
      "jne	1b\n\t"
-     "xorl	%%eax,%%eax\n\t"
+     "xorl	%%eax,%%eax\n"
      "2:"
      : "=a" (__res)
-     : "0" (0), "c" (0xffffffff), "S" (__haystack), "g" (__needle)
+     : "0" (0), "c" (0xffffffff), "S" (__haystack), "b" (__needle)
      : "cx", "dx", "di", "si", "cc");
   return __res;
 }
