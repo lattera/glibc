@@ -1,9 +1,21 @@
+2002-12-07  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Reintroduce changes
+	from 2002-12-06, but remove unnecessary memset call without removing
+	necessary copy of initialization image.
+
+	* Makerules ($(common-objpfx)format.lds): New target.
+	(common-generated): Add it.
+	($(inst_libdir)/libc.so): Depend on that, and cat it into the result.
+	* scripts/output-format.sed: New file.
+	* Makefile (distribute): Add it.
+
 2002-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-tls.c: Include <sys/param.h>.
 	Reported by Art Haas <ahaas@airmail.net>.
 
-2002-12-07  Kenneth W. Chen  <kenneth.w.chen@intel.com>.
+2002-12-07  Kenneth W. Chen  <kenneth.w.chen@intel.com>
 
 	* sysdeps/ia64/strncpy.S (strncpy): Clear ar.ec.  Fix .recovery4.
 

@@ -21,7 +21,9 @@
 #include <ldsodefs.h>
 #include <tls.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <sys/param.h>
+
 
 #ifdef SHARED
  #error makefile bug, this file is for static only
@@ -169,8 +171,8 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   /* Initialize the TLS block.  */
 # if TLS_TCB_AT_TP
   static_dtv[2].pointer = ((char *) tlsblock + tcb_offset
-			   - roundup (memsz, align));
-  static_map.l_tls_offset = roundup (memsz, align);
+			   - roundup (memsz, align ?: 1));
+  static_map.l_tls_offset = roundup (memsz, align ?: 1);
 # elif TLS_DTV_AT_TP
   tcb_offset = roundup (tcbsize, align);
   static_dtv[2].pointer = (char *) tlsblock + tcb_offset;
@@ -178,8 +180,8 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-  memset (__mempcpy (static_dtv[2].pointer, initimage, filesz),
-	  '\0', memsz - filesz);
+  /* sbrk gives us zero'd memory, so we don't need to clear the remainder.  */
+  memcpy (static_dtv[2].pointer, initimage, filesz);
 
   /* Install the pointer to the dtv.  */
 
@@ -187,13 +189,15 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 # if TLS_TCB_AT_TP
   INSTALL_DTV ((char *) tlsblock + tcb_offset, static_dtv);
 
-  TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
+  const char *lossage = TLS_INIT_TP ((char *) tlsblock + tcb_offset, 0);
 # elif TLS_DTV_AT_TP
   INSTALL_DTV (tlsblock, static_dtv);
-  TLS_INIT_TP (tlsblock, 0);
+  const char *lossage = TLS_INIT_TP (tlsblock, 0);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
+  if (__builtin_expect (lossage != NULL, 0))
+    __libc_fatal (lossage);
 
   /* We have to create a fake link map which normally would be created
      by the dynamic linker.  It just has to have enough information to
