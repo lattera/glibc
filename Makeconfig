@@ -444,7 +444,7 @@ link-extra-libs-static = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
 else
 ifeq (yes,$(build-shared))
 # We can try to link the programs with lib*_pic.a...
-link-libc-static = $(link-libc) $(common-objpfx)libc_pic.a
+link-libc-static = $(gnulib) $(common-objpfx)libc_pic.a
 link-extra-libs-static = $(link-extra-libs)
 endif
 endif

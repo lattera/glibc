@@ -1,10 +1,23 @@
 1998-12-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/speed.c (IBAUD0): New definition.  Bit
+	set in c_iflag if cfsetispeed is call with SPEED set to zero.
+	(cfgetispeed): Return zero if prior if IBAUD0 is set.
+	(cfsetospeed): Clear IBAUD0 bit.
+	(cfgetispeed): Set IBAUD0 bit if necessary.
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Clear
+	the IBAUD0 bit in c_iflag when making the system call.
+	Work around a Linux kernel bug which silently changes the
+	PARENB/CREAD/CSIZE bits in c_cflag on pty.
 	* sysdeps/unix/sysv/linux/speed.c (cfsetispeed): Make a real
 	function.  Don't set speed is SPEED parameter is zero since this
 	means set it to the output speed.
+	Based on a patch by H.J. Lu <hjl@gnu.org>.
 
 	* version.h (VERSION): Bump to 2.0.106.
+
+	* Makeconfig (link-libc-static): Don't use link-libc since this
+	includes the shared object.  Use gnulib only.
 
 1998-12-07 12:06  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -28,6 +28,24 @@
 #include <kernel_termios.h>
 
 
+/* This is a gross hack around a kernel bug.  If the cfsetispeed functions
+   is called with the SPEED argument set to zero this means use the same
+   speed as for output.  But we don't have independent input and output
+   speeds and therefore cannot record this.
+
+   We use an unused bit in the `c_iflag' field to keep track of this
+   use of `cfsetispeed'.  The value here must correspond to the one used
+   in `speed.c'.  */
+#if !defined _HAVE_C_ISPEED || !defined _HAVE_C_OSPEED
+# define IBAUD0	020000000000
+#else
+/* If we have separate values for input and output speed don't bother
+   with this.  Define the value as zero so the compiler sees we don't
+   have to do the AND below.  */
+# define IBAUD0	0
+#endif
+
+
 /* Set the state of FD to *TERMIOS_P.  */
 int
 tcsetattr (fd, optional_actions, termios_p)
@@ -37,6 +55,7 @@ tcsetattr (fd, optional_actions, termios_p)
 {
   struct __kernel_termios k_termios;
   unsigned long int cmd;
+  int retval;
 
   switch (optional_actions)
     {
@@ -54,7 +73,7 @@ tcsetattr (fd, optional_actions, termios_p)
       return -1;
     }
 
-  k_termios.c_iflag = termios_p->c_iflag;
+  k_termios.c_iflag = termios_p->c_iflag & ~IBAUD0;
   k_termios.c_oflag = termios_p->c_oflag;
   k_termios.c_cflag = termios_p->c_cflag;
   k_termios.c_lflag = termios_p->c_lflag;
@@ -68,5 +87,34 @@ tcsetattr (fd, optional_actions, termios_p)
   memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],
 	  __KERNEL_NCCS * sizeof (cc_t));
 
-  return __ioctl (fd, cmd, &k_termios);
+  retval = __ioctl (fd, cmd, &k_termios);
+
+  if (retval == 0 && cmd == TCSETS)
+    {
+      /* The Linux kernel has a bug which silently ignore the invalid
+	 c_cflag on pty. We have to check it here. */
+      int save = errno;
+      retval = __ioctl (fd, TCGETS, &k_termios);
+      if (retval)
+	{
+	  /* We cannot verify if the setting is ok. We don't return
+	     an error (?). */
+	  __set_errno (save);
+	  retval = 0;
+	}
+      else if ((termios_p->c_cflag & (PARENB | CREAD))
+	       != (k_termios.c_cflag & (PARENB | CREAD))
+	       || ((termios_p->c_cflag & CSIZE)
+		   && ((termios_p->c_cflag & CSIZE)
+		       != (k_termios.c_cflag & CSIZE))))
+	{
+	  /* It looks like the Linux kernel silently changed the
+	     PARENB/CREAD/CSIZE bits in c_cflag. Report it as an
+	     error. */
+	  __set_errno (EINVAL);
+	  retval = -1;
+	}
+    }
+
+  return retval;
 }

@@ -22,6 +22,17 @@
 #include <termios.h>
 
 
+/* This is a gross hack around a kernel bug.  If the cfsetispeed functions
+   is called with the SPEED argument set to zero this means use the same
+   speed as for output.  But we don't have independent input and output
+   speeds and therefore cannot record this.
+
+   We use an unused bit in the `c_iflag' field to keep track of this
+   use of `cfsetispeed'.  The value here must correspond to the one used
+   in `tcsetattr.c'.  */
+#define IBAUD0	020000000000
+
+
 /* Return the output baud rate stored in *TERMIOS_P.  */
 speed_t
 cfgetospeed (termios_p)
@@ -31,8 +42,16 @@ cfgetospeed (termios_p)
 }
 
 /* Return the input baud rate stored in *TERMIOS_P.
-   For Linux there is no difference between input and output speed.  */
-strong_alias (cfgetospeed, cfgetispeed);
+   Although for Linux there is no difference between input and output
+   speed, the numerical 0 is a special case for the input baud rate. It
+   should set the input baud rate to the output baud rate. */
+speed_t
+cfgetispeed (termios_p)
+     const struct termios *termios_p;
+{
+  return ((termios_p->c_iflag & IBAUD0)
+	  ? 0 : termios_p->c_cflag & (CBAUD | CBAUDEX));
+}
 
 /* Set the output baud rate stored in *TERMIOS_P to SPEED.  */
 int
@@ -47,6 +66,7 @@ cfsetospeed  (termios_p, speed)
       return -1;
     }
 
+  termios_p->c_iflag &= ~IBAUD0;
   termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
   termios_p->c_cflag |= speed;
 
@@ -69,8 +89,11 @@ cfsetispeed (termios_p, speed)
       return -1;
     }
 
-  if (speed != 0)
+  if (speed == 0)
+    termios_p->c_iflag |= IBAUD0;
+  else
     {
+      termios_p->c_iflag &= ~IBAUD0;
       termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
       termios_p->c_cflag |= speed;
     }
