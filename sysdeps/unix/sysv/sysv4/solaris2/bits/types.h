@@ -94,8 +94,10 @@ typedef struct
        from the user namespace.  */
 #ifdef __USE_XOPEN
     unsigned long int fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
+# define __FDS_BITS(set) ((set)->fds_bits)
 #else
     unsigned long int __fds_bits[(__FD_SETSIZE + (__NFDBITS - 1)) / __NFDBITS];
+# define __FDS_BITS(set) ((set)->__fds_bits)
 #endif
   } __fd_set;
 
