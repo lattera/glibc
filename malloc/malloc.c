@@ -2026,7 +2026,7 @@ new_heap(size) size_t size;
      anyway). */
   p1 = (char *)MMAP(0, HEAP_MAX_SIZE<<1, PROT_NONE, MAP_PRIVATE|MAP_NORESERVE);
   if(p1 != MAP_FAILED) {
-    p2 = (char *)(((unsigned long)p1 + HEAP_MAX_SIZE) & ~(HEAP_MAX_SIZE-1));
+    p2 = (char *)(((unsigned long)p1 + (HEAP_MAX_SIZE-1)) & ~(HEAP_MAX_SIZE-1));
     ul = p2 - p1;
     munmap(p1, ul);
     munmap(p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);

@@ -2857,6 +2857,7 @@ j0_test (void)
 static void
 j1_test (void)
 {
+  FLOAT s, c;
   errno = 0;
   FUNC (sincos) (0, &s, &c);
   if (errno == ENOSYS)
@@ -2890,6 +2891,7 @@ j1_test (void)
 static void
 jn_test (void)
 {
+  FLOAT s, c;
   errno = 0;
   FUNC (sincos) (0, &s, &c);
   if (errno == ENOSYS)
@@ -4014,6 +4016,7 @@ trunc_test (void)
 static void
 y0_test (void)
 {
+  FLOAT s, c;
   errno = 0;
   FUNC (sincos) (0, &s, &c);
   if (errno == ENOSYS)
@@ -4047,6 +4050,7 @@ y0_test (void)
 static void
 y1_test (void)
 {
+  FLOAT s, c;
   errno = 0;
   FUNC (sincos) (0, &s, &c);
   if (errno == ENOSYS)
@@ -4079,6 +4083,7 @@ y1_test (void)
 static void
 yn_test (void)
 {
+  FLOAT s, c;
   errno = 0;
   FUNC (sincos) (0, &s, &c);
   if (errno == ENOSYS)

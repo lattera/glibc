@@ -1,3 +1,9 @@
+2001-02-14  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (new_heap): When allocating large chunk aligned
+	to HEAP_MAX_SIZE, prefer one with lower address, to avoid `holes'
+	between the heaps.
+
 2001-02-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/libm-test.inc (j0_test): Check whether sincos is available.
