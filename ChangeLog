@@ -1,5 +1,8 @@
 1999-11-22  Andreas Jaeger  <aj@suse.de>
 
+	* locale/programs/ld-collate.c (insert_value): Correct order of
+	arguments for lr_error call.
+
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add
 	__syscall_setrlimit.
 
