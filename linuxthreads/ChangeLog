@@ -1,3 +1,8 @@
+2005-03-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Use
+	functionally equivalent, but shorter instructions.
+
 2005-03-28  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* sysdeps/mips/tls.h: New file.

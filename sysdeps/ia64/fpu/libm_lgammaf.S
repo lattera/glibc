@@ -47,6 +47,7 @@
 // 09/16/02  Improved accuracy on intervals reduced to [1;1.25]
 // 10/21/02  Now it returns SIGN(GAMMA(x))=-1 for negative zero
 // 02/10/03  Reordered header: .section, .global, .proc, .align
+// 07/22/03  Reformatted some data tables
 //
 //*********************************************************************
 //
@@ -685,19 +686,26 @@ data8 0x3FF1029A9DD542B4,0xBFFAD37C209D3B25 // A6,A5
 data8 0x405385E6FD9BE7EA // A0
 data8 0x478895F1C0000000 // Overflow boundary
 data8 0x400062D97D26B523,0xC00A03E1529FF023 // A6,A5
-data8 0x4069204C51E566CE,0 // A0
+data8 0x4069204C51E566CE // A0
+data8 0x0000000000000000 // pad
 data8 0x40101476B38FD501,0xC0199DE7B387C0FC // A6,A5
-data8 0x407EB8DAEC83D759,0 // A0
+data8 0x407EB8DAEC83D759 // A0
+data8 0x0000000000000000 // pad
 data8 0x401FDB008D65125A,0xC0296B506E665581 // A6,A5
-data8 0x409226D93107EF66,0 // A0
+data8 0x409226D93107EF66 // A0
+data8 0x0000000000000000 // pad
 data8 0x402FB3EAAF3E7B2D,0xC039521142AD8E0D // A6,A5
-data8 0x40A4EFA4F072792E,0 // A0
+data8 0x40A4EFA4F072792E // A0
+data8 0x0000000000000000 // pad
 data8 0x403FA024C66B2563,0xC0494569F250E691 // A6,A5
-data8 0x40B7B747C9235BB8,0 // A0
+data8 0x40B7B747C9235BB8 // A0
+data8 0x0000000000000000 // pad
 data8 0x404F9607D6DA512C,0xC0593F0B2EDDB4BC // A6,A5
-data8 0x40CA7E29C5F16DE2,0 // A0
+data8 0x40CA7E29C5F16DE2 // A0
+data8 0x0000000000000000 // pad
 data8 0x405F90C5F613D98D,0xC0693BD130E50AAF // A6,A5
-data8 0x40DD4495238B190C,0 // A0
+data8 0x40DD4495238B190C // A0
+data8 0x0000000000000000 // pad
 //
 // polynomial approximation of ln(sin(Pi*x)/(Pi*x)), |x| <= 0.5
 data8 0xBFD58731A486E820,0xBFA4452CC28E15A9 // S16,S14
@@ -2132,6 +2140,7 @@ lgammaf_libm_err:
       nop.i        0
 };;
 GLOBAL_LIBM_END(__libm_lgammaf)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

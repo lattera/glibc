@@ -16,8 +16,18 @@ import_c() {
 	echo "$1 $libm_dir/$2 $3"
 }
 
-import_c DUMMY libm_support.h libm_support.h
-import_c DUMMY libm_error.c libm_error.c
+dummy_files="
+libm_cpu_defs.h
+libm_error_codes.h
+libm_support.h
+libm_error.c
+"
+
+for f in $dummy_files
+do
+  import_c DUMMY $f $f
+done
+
 import_c scalblnf scalblnf.c s_scalblnf.c
 
 for f in acos acosh asin atanh cosh exp2 exp10 fmod log2 pow remainder \

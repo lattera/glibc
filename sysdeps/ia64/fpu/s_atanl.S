@@ -812,6 +812,7 @@ GLOBAL_IEEE754_ENTRY(atanl)
 ;;
 
 GLOBAL_IEEE754_END(atanl)
+
 GLOBAL_IEEE754_ENTRY(atan2l)
 
 { .mfi
@@ -1951,6 +1952,7 @@ ATANL_ArgY_Not_INF:
 ;;
 
 GLOBAL_IEEE754_END(atan2l)
+ 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

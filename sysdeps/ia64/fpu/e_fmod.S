@@ -499,6 +499,7 @@ FMOD_Y_ZERO:
 }
 
 GLOBAL_IEEE754_END(fmod)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

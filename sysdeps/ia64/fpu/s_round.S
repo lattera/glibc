@@ -44,6 +44,7 @@
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 01/20/03 Improved performance and reduced code size
 // 04/18/03 Eliminate possible WAW dependency warning
+// 09/03/03 Improved performance
 //==============================================================
 
 // API
@@ -52,14 +53,13 @@
 //==============================================================
 
 // general input registers:
-// r14 - r19
+// r14 - r18
 
 rSignexp   = r14
 rExp       = r15
 rExpMask   = r16
 rBigexp    = r17
 rExpHalf   = r18
-rExpMHalf  = r19
 
 // floating-point registers:
 // f8 - f13
@@ -67,7 +67,7 @@ rExpMHalf  = r19
 fXtruncInt = f9
 fNormX     = f10
 fHalf      = f11
-fMHalf     = f12
+fInc       = f12
 fRem       = f13
 
 // predicate registers used:
@@ -119,15 +119,15 @@ GLOBAL_LIBM_ENTRY(round)
 }
 ;;
 
-{ .mmf
+{ .mfi
       setf.exp         fHalf = rExpHalf      // Form 0.5
-      mov              rExpMHalf   = 0x2FFFE // Form sign and exponent of -0.5
       fclass.m         p7,p0 = f8, 0x0b      // Test x unorm
+      nop.i            0
 }
 ;;
 
 { .mfb
-      setf.exp         fMHalf = rExpMHalf    // Form -0.5
+      nop.m            0
       fclass.m         p6,p0 = f8, 0x1e3     // Test x natval, nan, inf
 (p7)  br.cond.spnt     ROUND_UNORM           // Branch if x unorm
 }
@@ -135,27 +135,31 @@ GLOBAL_LIBM_ENTRY(round)
 
 ROUND_COMMON:
 // Return here from ROUND_UNORM
-{ .mfi
+{ .mfb
       nop.m            0
       fcmp.lt.s1       p8,p9 = f8, f0        // Test if x < 0
-      nop.i            0
-}
-{ .mfb
-      and              rExp = rSignexp, rExpMask // Get biased exponent
-(p6)  fma.d.s0         f8 = f8, f1, f0       // Result if x natval, nan, inf
-(p6)  br.ret.spnt      b0                    // Exit if x natval, nan, inf
+(p6)  br.cond.spnt     ROUND_SPECIAL         // Exit if x natval, nan, inf
 }
 ;;
 
 { .mfi
-      cmp.lt           p6,p0 = rExp, rExpHalf // Is |x| < 0.5?
+      nop.m            0
       fcvt.xf          f8 = fXtruncInt        // Pre-Result if 0.5 <= |x| < 2^52
-      cmp.ge           p7,p0 = rExp, rBigexp  // Is |x| >= 2^52?
-}
-{ .mfi
-      cmp.lt           p10,p0 = rExp, rExpHalf // Is |x| < 0.5? 
-      nop.f            0
       nop.i            0
+}
+;;
+
+{ .mfi
+      and              rExp = rSignexp, rExpMask // Get biased exponent
+      fmerge.s         fInc = fNormX, f1      // Form increment if |rem| >= 0.5
+      nop.i            0
+}
+;;
+
+{ .mmi
+      cmp.lt           p6,p0 = rExp, rExpHalf // Is |x| < 0.5?
+      cmp.ge           p7,p0 = rExp, rBigexp  // Is |x| >= 2^52?
+      cmp.lt           p10,p0 = rExp, rExpHalf // Is |x| < 0.5? 
 }
 ;;
 
@@ -176,44 +180,52 @@ ROUND_COMMON:
 // Here if 0.5 <= |x| < 2^52
 { .mfi
       nop.m            0
-      fms.s1           fRem = fNormX, f1, f8  // Get remainder = x - trunc(x)
+(p9)  fms.s1           fRem = fNormX, f1, f8  // Get remainder = x - trunc(x)
+      nop.i            0
+}
+{ .mfi
+      nop.m            0
+(p8)  fms.s1           fRem = f8, f1, fNormX  // Get remainder = trunc(x) - x
       nop.i            0
 }
 ;;
 
 { .mfi
       nop.m            0
-(p8)  fcmp.le.s1       p8,p0 = fRem, fMHalf
-      nop.i            0
-}
-{ .mfi
-      nop.m            0
-(p9)  fcmp.ge.s1       p9,p0 = fRem, fHalf
+      fcmp.ge.s1       p9,p0 = fRem, fHalf    // Test |rem| >= 0.5
       nop.i            0
 }
 ;;
 
 // If x < 0 and remainder <= -0.5, then subtract 1 from result
 // If x > 0 and remainder >= +0.5, then add 1 to result
-.pred.rel "mutex",p8,p9
-{ .mfi
-      nop.m            0
-(p8)  fms.d.s0         f8 = f8, f1, f1
-      nop.i            0
-}
 { .mfb
       nop.m            0
-(p9)  fma.d.s0         f8 = f8, f1, f1
+(p9)  fma.d.s0         f8 = f8, f1, fInc
       br.ret.sptk      b0
 }
 ;;
 
 
+ROUND_SPECIAL:
+// Here if x natval, nan, inf
+{ .mfb
+      nop.m            0
+      fma.d.s0         f8 = f8, f1, f0
+      br.ret.sptk      b0
+}
+;;
+
 ROUND_UNORM:
 // Here if x unorm
-{ .mfb
+{ .mfi
       getf.exp         rSignexp  = fNormX     // Get signexp, recompute if unorm
       fcmp.eq.s0       p7,p0 = f8, f0         // Dummy op to set denormal flag
+      nop.i            0
+}
+{ .mfb
+      nop.m            0
+      fcvt.fx.trunc.s1 fXtruncInt  = fNormX   // Convert to int in significand
       br.cond.sptk     ROUND_COMMON           // Return to main path
 }
 ;;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -56,7 +56,7 @@ __pthread_cond_timedwait:
 .Lsubq:
 
 	cmpq	$1000000000, 8(%rdx)
-	movq	$EINVAL, %rax
+	movl	$EINVAL, %eax
 	jae	18f
 
 	/* Stack frame:
@@ -102,7 +102,7 @@ __pthread_cond_timedwait:
 
 	/* Unlock the mutex.  */
 2:	movq	16(%rsp), %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	callq	__pthread_mutex_unlock_usercnt
 
 	testl	%eax, %eax
@@ -141,7 +141,7 @@ __pthread_cond_timedwait:
 	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
 	   kernel.  */
 	leaq	24(%rsp), %rsi
-	movq	$__NR_clock_gettime, %rax
+	movl	$__NR_clock_gettime, %eax
 	syscall
 # ifndef __ASSUME_POSIX_TIMERS
 	cmpq	$-ENOSYS, %rax
@@ -155,13 +155,13 @@ __pthread_cond_timedwait:
 	subq	32(%rsp), %rdx
 #else
 	leaq	24(%rsp), %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	32(%rsp), %rax
-	movq	$1000, %rdx
+	movl	$1000, %edx
 	mul	%rdx		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rcx
 	movq	8(%r13), %rdx
@@ -195,10 +195,14 @@ __pthread_cond_timedwait:
 	movl	%eax, (%rsp)
 
 	leaq	24(%rsp), %r10
-	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
 	movq	%r12, %rdx
 	addq	$cond_futex, %rdi
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 	movq	%rax, %r14
 
@@ -237,7 +241,7 @@ __pthread_cond_timedwait:
 
 13:	incq	wakeup_seq(%rdi)
 	incl	cond_futex(%rdi)
-	movq	$ETIMEDOUT, %r14
+	movl	$ETIMEDOUT, %r14d
 	jmp	14f
 
 23:	xorq	%r14, %r14
@@ -256,8 +260,8 @@ __pthread_cond_timedwait:
 	jne	25f
 
 	addq	$cond_nwaiters, %rdi
-	movq	$SYS_futex, %rax
-	movq	$FUTEX_WAKE, %rsi
+	movl	$SYS_futex, %eax
+	movl	$FUTEX_WAKE, %esi
 	movl	$1, %edx
 	syscall
 	subq	$cond_nwaiters, %rdi
@@ -349,13 +353,13 @@ __pthread_cond_timedwait:
 #if defined __NR_clock_gettime && !defined __ASSUME_POSIX_TIMERS
 	/* clock_gettime not available.  */
 19:	leaq	24(%rsp), %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	32(%rsp), %rax
-	movq	$1000, %rdx
+	movl	$1000, %edx
 	mul	%rdx		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rcx
 	movq	8(%r13), %rdx

@@ -27,7 +27,8 @@ sysdep_routines += libc_libm_error libm_frexp libm_frexpf libm_frexpl \
 		   $(duplicated-routines)
 
 sysdep-CPPFLAGS += -include libm-symbols.h \
-	-D__POSIX__ \
+	-D__POSIX__ -Dopensource \
 	-D_LIB_VERSIONIMF=_LIB_VERSION \
-	-DSIZE_INT_32 -DSIZE_LONG_INT_64 -DSIZE_LONG_LONG_INT_64
+	-DSIZE_INT_32 -DSIZE_LONG_INT_64 -DSIZE_LONG_LONG_INT_64 \
+	-DSIZE_LONG_64 -DIA64
 endif

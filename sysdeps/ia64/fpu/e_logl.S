@@ -634,6 +634,7 @@ GLOBAL_IEEE754_ENTRY(logl)
 
 GLOBAL_IEEE754_END(logl)
 
+
 GLOBAL_IEEE754_ENTRY(log10l)
 { .mfi
       alloc r32 = ar.pfs,0,21,4,0
@@ -1144,6 +1145,7 @@ LOGL_64_negative:
 
 
 GLOBAL_IEEE754_END(log10l)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

@@ -1,7 +1,7 @@
 .file "exp10l.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -44,6 +44,7 @@
 // 02/06/03 Reordered header: .section, .global, .proc, .align
 // 05/08/03 Reformatted assembly source; corrected overflow result for round to
 //          -inf and round to zero; exact results now don't set inexact flag
+// 12/16/04 Call error handling on underflow.
 //
 // API
 //==============================================================
@@ -79,9 +80,9 @@
 
 // Registers used
 //==============================================================
-// f6-f15, f32-f62
+// f6-f15, f32-f63
 // r14-r30, r32-r40
-// p6-p8, p12-p14
+// p6-p8, p11-p14
 //
 
 
@@ -129,6 +130,7 @@
        FR_4        = f60
        FR_28       = f61
        FR_32       = f62
+       FR_SNORM_LIMIT = f63
 
 
        GR_ADDR0    = r14
@@ -178,6 +180,7 @@ LOCAL_OBJECT_START(poly_coeffs)
        data8 0x3f55d87fe78a6731 // C_5
        data8 0x3f2430912f86c787 // C_6
        data8 0x9257edfe9b5fb698, 0x00003fbf // log2(10)_low (bits 64...127)
+       data8 0x9a1bc98027a81918, 0x0000c00b // Smallest normal threshold
 LOCAL_OBJECT_END(poly_coeffs)
 
 
@@ -435,7 +438,7 @@ GLOBAL_IEEE754_ENTRY(exp10l)
 
 {.mmf
        // GR_D_ADDR = pointer to D table
-       add GR_D_ADDR = 2048-64+96+16, GR_ADDR0
+       add GR_D_ADDR = 2048-64+96+32, GR_ADDR0
        // load C_3, C_4
        ldfpd FR_COEFF3, FR_COEFF4 = [ GR_ADDR0 ], 16
        // y = x*log2(10)*2^8
@@ -471,7 +474,8 @@ GLOBAL_IEEE754_ENTRY(exp10l)
 }
 
 {.mfi
-       nop.m 0
+       // load smallest normal limit
+       ldfe FR_SNORM_LIMIT = [ GR_ADDR0 ], 16
        // x>overflow threshold ?
        fcmp.gt.s1 p12, p7 = f8, FR_OF_TEST
        nop.i 0 ;;
@@ -598,6 +602,13 @@ GLOBAL_IEEE754_ENTRY(exp10l)
 
 {.mfi
        nop.m 0
+       // test if x >= smallest normal limit
+       fcmp.ge.s1 p11, p0 = f8, FR_SNORM_LIMIT
+       nop.i 0 ;;
+}
+
+{.mfi
+       nop.m 0
        // P36 = P34+r2*P56
        fma.s1 FR_COEFF4 = FR_COEFF5, FR_COEFF3, FR_COEFF4
        nop.i 0
@@ -646,9 +657,16 @@ GLOBAL_IEEE754_ENTRY(exp10l)
        // result = T+T*P
  (p14) fma.s0 f8 = FR_COEFF3, FR_UF_TEST, FR_UF_TEST
        // return
-       br.ret.sptk b0 ;;
+ (p11) br.ret.sptk b0 ;;                  // return, if result normal
 }
 
+// Here if result in denormal range (and not zero)
+{.mib
+       nop.m 0
+       mov GR_Parameter_TAG= 264
+       br.cond.sptk __libm_error_region           // Branch to error handling
+}
+;;
 
 SPECIAL_EXP10:
 
@@ -703,46 +721,34 @@ SPECIAL_EXP10:
 
 OUT_RANGE_EXP10:
 
-{.mii
-       // overflow: p8 = 1
+// underflow: p6 = 1
+// overflow: p8 = 1
+
+.pred.rel "mutex",p6,p8
+{.mmi
   (p8) mov GR_CONST1 = 0x1fffe
-       nop.i 0
-       nop.i 0 ;;
-}
-
-{.mmb
-  (p8) mov GR_Parameter_TAG = 165
-  (p8) setf.exp FR_KF0 = GR_CONST1
-       nop.b 999 ;;
-}
-
-{.mfi
-       nop.m 999
-  (p8) fma.s0 f8 = FR_KF0, FR_KF0, f0
-       nop.i 999
-}
-{.mii
-       nop.m 0
-       // underflow: p6 = 1
   (p6) mov GR_CONST1 = 1
-       nop.i 0 ;;
+       nop.i 0
 }
+;;
 
-{.mmb
-       nop.m 0
-  (p6) setf.exp FR_KF0 = GR_CONST1
-       nop.b 999 ;;
+{.mii
+       setf.exp FR_KF0 = GR_CONST1
+  (p8) mov GR_Parameter_TAG = 165
+  (p6) mov GR_Parameter_TAG = 264
 }
+;;
 
 {.mfb
        nop.m 999
-  (p6) fma.s0 f8 = FR_KF0, FR_KF0, f0
-       // will not call libm_error for underflow
-  (p6) br.ret.sptk b0 ;;
+       fma.s0 f8 = FR_KF0, FR_KF0, f0             // Create overflow/underflow
+       br.cond.sptk __libm_error_region           // Branch to error handling
 }
+;;
 
 GLOBAL_IEEE754_END(exp10l)
 weak_alias (exp10l, pow10l)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

@@ -21,33 +21,34 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
 // 02/02/00 Initial version
-// 01/26/01 ldexpl completely reworked and now standalone version 
+// 01/26/01 ldexpl completely reworked and now standalone version
 // 01/04/02 Added handling for int 32 or 64 bits
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 08/04/03 Improved performance
 //
 // API
 //==============================================================
-// long double __libm_ldexpl  (long double x, int n, int int_type) 
+// long double __libm_ldexpl  (long double x, int n, int int_type)
 // input  floating point f8 and int n (r34), int int_type (r35)
 // output floating point f8
 //
@@ -55,27 +56,41 @@
 // int_type = 1 if int is 64 bits
 //
 // Returns x* 2**n using an fma and detects overflow
-// and underflow.   
+// and underflow.
 //
 //
+// Strategy:
+//  Compute biased exponent of result exp_Result = N + exp_X
+//  Break into ranges:
+//   exp_Result > 0x13ffe                 -> Certain overflow
+//   exp_Result = 0x13ffe                 -> Possible overflow
+//   0x0c001 <= exp_Result < 0x13ffe      -> No over/underflow (main path)
+//   0x0c001 - 63 <= exp_Result < 0x0c001 -> Possible underflow
+//   exp_Result < 0x0c001 - 63            -> Certain underflow
 
 FR_Big         = f6
 FR_NBig        = f7
 FR_Floating_X  = f8
 FR_Result      = f8
 FR_Result2     = f9
-FR_Result3     = f11
-FR_Norm_X      = f12
-FR_Two_N       = f14
-FR_Two_to_Big  = f15
+FR_Result3     = f10
+FR_Norm_X      = f11
+FR_Two_N       = f12
 
+GR_neg_ov_limit= r14
 GR_N_Biased    = r15
 GR_Big         = r16
 GR_NBig        = r17
-GR_Scratch     = r18
-GR_Scratch1    = r19
+GR_exp_Result  = r18
+GR_pos_ov_limit= r19
 GR_Bias        = r20
 GR_N_as_int    = r21
+GR_signexp_X   = r22
+GR_exp_X       = r23
+GR_exp_mask    = r24
+GR_max_exp     = r25
+GR_min_exp     = r26
+GR_min_den_exp = r27
 
 GR_SAVE_B0          = r32
 GR_SAVE_GP          = r33
@@ -93,242 +108,298 @@ GLOBAL_LIBM_ENTRY(__libm_ldexpl)
 //   Build the exponent Bias
 //
 {    .mfi
-     alloc         r32=ar.pfs,3,0,4,0
-     fclass.m      p7,p0 = FR_Floating_X, 0xe7 //@snan | @qnan | @inf | @zero
-     addl          GR_Bias = 0x0FFFF,r0
+     getf.exp      GR_signexp_X = FR_Floating_X // Get signexp of x
+     fclass.m      p6,p0 = FR_Floating_X, 0xe7  // @snan | @qnan | @inf | @zero
+     mov           GR_Bias = 0x0ffff
 }
-
 //
-//   Is N zero?
 //   Normalize x
 //   Is integer type 32 bits?
 //
 {    .mfi
-     cmp.eq        p6,p0 = r34,r0  
-     fnorm.s1      FR_Norm_X  =   FR_Floating_X 
-     cmp.eq        p8,p9 = r35,r0  
+     mov           GR_Big = 35000      // If N this big then certain overflow
+     fnorm.s1      FR_Norm_X = FR_Floating_X
+     cmp.eq        p8,p9 = r35,r0
 }
 ;;
 
 //   Sign extend N if int is 32 bits
 {    .mfi
 (p9) mov           GR_N_as_int = r34     // Copy N if int is 64 bits
-     nop.f 0
+     fclass.m      p9,p0 = FR_Floating_X, 0x0b // Test for x=unorm
 (p8) sxt4          GR_N_as_int = r34     // Sign extend N if int is 32 bits
+}
+{ .mfi
+     mov           GR_NBig = -35000    // If N this small then certain underflow
+     nop.f         0
+     mov           GR_max_exp = 0x13ffe      // Exponent of maximum long double
+}
+;;
+
+//   Create biased exponent for 2**N
+{    .mfi
+     add           GR_N_Biased = GR_Bias,GR_N_as_int
+     nop.f         0
+     cmp.ge        p7, p0 = GR_N_as_int, GR_Big  // Certain overflow?
+}
+{    .mib
+     cmp.le        p8, p0 = GR_N_as_int, GR_NBig // Certain underflow?
+     mov           GR_min_exp = 0x0c001      // Exponent of minimum long double
+(p9) br.cond.spnt  LDEXPL_UNORM              // Branch if x=unorm
+}
+;;
+
+LDEXPL_COMMON:
+// Main path continues.  Also return here from x=unorm path.
+//   Create 2**N
+.pred.rel "mutex",p7,p8
+{    .mfi
+     setf.exp      FR_Two_N = GR_N_Biased
+     nop.f         0
+(p7) mov           GR_N_as_int = GR_Big      // Limit max N
+}
+{    .mfi
+(p8) mov           GR_N_as_int = GR_NBig     // Limit min N
+     nop.f         0
+(p8) cmp.eq        p7,p0 = r0,r0             // Set p7 if |N| big
 }
 ;;
 
 //
-//   Branch and return special values.
-//   Create -35000
-//   Create 35000
+//   Create biased exponent for 2**N for N big
+//   Is N zero?
 //
 {    .mfi
-     addl          GR_Big = 35000,r0
+(p7) add           GR_N_Biased = GR_Bias,GR_N_as_int
      nop.f         0
-     add           GR_N_Biased = GR_Bias,GR_N_as_int
+     cmp.eq.or     p6,p0 = r34,r0
 }
-{    .mfb
-     addl          GR_NBig = -35000,r0
-(p7) fma.s0        FR_Result = FR_Floating_X,f1, f0 
-(p7) br.ret.spnt   b0  
-};;
+{    .mfi
+     mov           GR_pos_ov_limit = 0x13fff // Exponent for positive overflow
+     nop.f         0
+     mov           GR_exp_mask = 0x1ffff     // Exponent mask
+}
+;;
 
 //
-//   Build the exponent Bias
-//   Return x when N = 0
+//   Create 2**N for N big
+//   Return x when N = 0 or X = Nan, Inf, Zero
 //
 {    .mfi
-     setf.exp      FR_Two_N = GR_N_Biased                   
+(p7) setf.exp      FR_Two_N = GR_N_Biased
      nop.f         0
-     addl          GR_Scratch1  = 0x063BF,r0 
+     mov           GR_min_den_exp = 0x0c001 - 63 // Exp of min denorm long dble
 }
 {    .mfb
-     addl          GR_Scratch  = 0x019C3F,r0 
-(p6) fma.s0        FR_Result = FR_Floating_X,f1, f0 
-(p6) br.ret.spnt   b0  
-};;
+     and           GR_exp_X = GR_exp_mask, GR_signexp_X
+(p6) fma.s0        FR_Result = FR_Floating_X, f1, f0
+(p6) br.ret.spnt   b0
+}
+;;
 
 //
-//   Create 2*big
-//   Create 2**-big 
-//   Is N > 35000     
-//   Is N < -35000     
 //   Raise Denormal operand flag with compare
-//   Main path, create 2**N
+//   Compute biased result exponent
 //
 {    .mfi
-     setf.exp      FR_NBig = GR_Scratch1                  
-     nop.f         0
-     cmp.ge        p6, p0 = GR_N_as_int, GR_Big
-}
-{    .mfi
-     setf.exp      FR_Big = GR_Scratch                  
+     add           GR_exp_Result = GR_exp_X, GR_N_as_int
      fcmp.ge.s0    p0,p11 = FR_Floating_X,f0
-     cmp.le        p8, p0 = GR_N_as_int, GR_NBig
-};;
+     mov           GR_neg_ov_limit = 0x33fff // Exponent for negative overflow
+}
+;;
 
 //
-//   Adjust 2**N if N was very small or very large
+//   Do final operation
 //
 {    .mfi
-     nop.m 0
-(p6) fma.s1        FR_Two_N = FR_Big,f1,f0
-     nop.i 0
+     cmp.lt        p7,p6 = GR_exp_Result, GR_max_exp  // Test no overflow
+     fma.s0        FR_Result = FR_Two_N,FR_Norm_X,f0
+     cmp.lt        p9,p0 = GR_exp_Result, GR_min_den_exp // Test sure underflow
 }
-{ .mlx
-     nop.m 999
-     movl          GR_Scratch = 0x0000000000033FFF 
-};;
-
-
-{    .mfi
-     nop.m 0
-(p8) fma.s1        FR_Two_N = FR_NBig,f1,f0
-     nop.i 0
+{    .mfb
+     nop.m         0
+     nop.f         0
+(p9) br.cond.spnt  LDEXPL_UNDERFLOW           // Branch if certain underflow
 }
-{    .mlx
-     nop.m 999
-     movl          GR_Scratch1= 0x0000000000013FFF 
-};;
+;;
 
-//   Set up necessary status fields 
+{    .mib
+(p6) cmp.gt.unc    p6,p8 = GR_exp_Result, GR_max_exp  // Test sure overflow
+(p7) cmp.ge.unc    p7,p9 = GR_exp_Result, GR_min_exp  // Test no over/underflow
+(p7) br.ret.sptk   b0                         // Return from main path
+}
+;;
+
+{    .bbb
+(p6) br.cond.spnt  LDEXPL_OVERFLOW            // Branch if certain overflow
+(p8) br.cond.spnt  LDEXPL_POSSIBLE_OVERFLOW   // Branch if possible overflow
+(p9) br.cond.spnt  LDEXPL_POSSIBLE_UNDERFLOW  // Branch if possible underflow
+}
+;;
+
+// Here if possible underflow.
+// Resulting exponent: 0x0c001-63 <= exp_Result < 0x0c001
+LDEXPL_POSSIBLE_UNDERFLOW:
+//
+// Here if possible overflow.
+// Resulting exponent: 0x13ffe = exp_Result
+LDEXPL_POSSIBLE_OVERFLOW:
+
+//   Set up necessary status fields
 //
 //   S0 user supplied status
 //   S2 user supplied status + WRE + TD  (Overflows)
 //   S3 user supplied status + FZ + TD   (Underflows)
 //
 {    .mfi
-     nop.m 999
+     nop.m         0
      fsetc.s3      0x7F,0x41
-     nop.i 999
+     nop.i         0
 }
 {    .mfi
-     nop.m 999
+     nop.m         0
      fsetc.s2      0x7F,0x42
-     nop.i 999
-};;
+     nop.i         0
+}
+;;
 
 //
-//   Do final operation
+//   Do final operation with s2 and s3
 //
 {    .mfi
-     setf.exp      FR_NBig = GR_Scratch
-     fma.s0        FR_Result = FR_Two_N,FR_Norm_X,f0 
-     nop.i         999
+     setf.exp      FR_NBig = GR_neg_ov_limit
+     fma.s3        FR_Result3 = FR_Two_N,FR_Norm_X,f0
+     nop.i         0
 }
 {    .mfi
-     nop.m         999
-     fma.s3        FR_Result3 = FR_Two_N,FR_Norm_X,f0 
-     nop.i         999
-};;
-{    .mfi
-     setf.exp      FR_Big = GR_Scratch1
-     fma.s2        FR_Result2 = FR_Two_N,FR_Norm_X,f0 
-     nop.i         999
-};;
+     setf.exp      FR_Big = GR_pos_ov_limit
+     fma.s2        FR_Result2 = FR_Two_N,FR_Norm_X,f0
+     nop.i         0
+}
+;;
 
 //   Check for overflow or underflow.
 //   Restore s3
 //   Restore s2
 //
 {    .mfi
-     nop.m 0
+     nop.m         0
      fsetc.s3      0x7F,0x40
-     nop.i 999 
+     nop.i         0
 }
 {    .mfi
-     nop.m 0
+     nop.m         0
      fsetc.s2      0x7F,0x40
-     nop.i 999
-};;
+     nop.i         0
+}
+;;
 
 //
 //   Is the result zero?
 //
 {    .mfi
-     nop.m 999
+     nop.m         0
      fclass.m      p6, p0 =  FR_Result3, 0x007
-     nop.i 999 
-} 
+     nop.i         0
+}
 {    .mfi
-     addl          GR_Tag = 144, r0
+     nop.m         0
      fcmp.ge.s1    p7, p8 = FR_Result2 , FR_Big
-     nop.i 0
-};;
+     nop.i         0
+}
+;;
 
 //
 //   Detect masked underflow - Tiny + Inexact Only
 //
 {    .mfi
-     nop.m 999
+     nop.m         0
 (p6) fcmp.neq.unc.s1 p6, p0 = FR_Result , FR_Result2
-     nop.i 999 
-};; 
+     nop.i         0
+}
+;;
 
 //
 //   Is result bigger the allowed range?
 //   Branch out for underflow
 //
 {    .mfb
-(p6) addl           GR_Tag = 145, r0
+     nop.m          0
 (p8) fcmp.le.unc.s1 p9, p10 = FR_Result2 , FR_NBig
-(p6) br.cond.spnt   LDEXPL_UNDERFLOW 
-};;
+(p6) br.cond.spnt   LDEXPL_UNDERFLOW
+}
+;;
 
 //
 //   Branch out for overflow
 //
-{ .mbb
-     nop.m 0
-(p7) br.cond.spnt   LDEXPL_OVERFLOW 
-(p9) br.cond.spnt   LDEXPL_OVERFLOW 
-};;
-
-//
-//   Return from main path.
-//
-{    .mfb
-     nop.m 999
-     nop.f 0
-     br.ret.sptk     b0;;                   
+{ .bbb
+(p7) br.cond.spnt   LDEXPL_OVERFLOW
+(p9) br.cond.spnt   LDEXPL_OVERFLOW
+     br.ret.sptk    b0             //   Return from main path.
 }
+;;
+
+// Here if result overflows
+LDEXPL_OVERFLOW:
+{ .mib
+     alloc         r32=ar.pfs,3,0,4,0
+     addl          GR_Tag = 144, r0    // Set error tag for overflow
+     br.cond.sptk  __libm_error_region // Call error support for overflow
+}
+;;
+
+// Here if result underflows
+LDEXPL_UNDERFLOW:
+{ .mib
+     alloc         r32=ar.pfs,3,0,4,0
+     addl          GR_Tag = 145, r0    // Set error tag for underflow
+     br.cond.sptk  __libm_error_region // Call error support for underflow
+}
+;;
+
+// Here if x=unorm
+LDEXPL_UNORM:
+{ .mib
+     getf.exp      GR_signexp_X = FR_Norm_X // Get signexp of normalized x
+     nop.i         0
+     br.cond.sptk  LDEXPL_COMMON            // Return to main path
+}
+;;
+
 
 GLOBAL_LIBM_END(__libm_ldexpl)
-__libm_error_region:
-
-LDEXPL_OVERFLOW: 
-LDEXPL_UNDERFLOW: 
+LOCAL_LIBM_ENTRY(__libm_error_region)
 
 //
 // Get stack address of N
 //
 .prologue
 { .mfi
-    add   GR_Parameter_Y=-32,sp         
+    add   GR_Parameter_Y=-32,sp
     nop.f 0
 .save   ar.pfs,GR_SAVE_PFS
-    mov  GR_SAVE_PFS=ar.pfs              
+    mov  GR_SAVE_PFS=ar.pfs
 }
 //
-// Adjust sp 
+// Adjust sp
 //
 { .mfi
 .fframe 64
-   add sp=-64,sp                         
+   add sp=-64,sp
    nop.f 0
-   mov GR_SAVE_GP=gp       
+   mov GR_SAVE_GP=gp
 };;
 
 //
-//  Store N on stack in correct position 
+//  Store N on stack in correct position
 //  Locate the address of x on stack
 //
 { .mmi
-   st8 [GR_Parameter_Y] =  GR_N_as_int,16       
-   add GR_Parameter_X = 16,sp          
+   st8 [GR_Parameter_Y] =  GR_N_as_int,16
+   add GR_Parameter_X = 16,sp
 .save   b0, GR_SAVE_B0
-   mov GR_SAVE_B0=b0                  
+   mov GR_SAVE_B0=b0
 };;
 
 //
@@ -337,42 +408,42 @@ LDEXPL_UNDERFLOW:
 //
 .body
 { .mib
-   stfe [GR_Parameter_X] = FR_Norm_X 
-   add   GR_Parameter_RESULT = 0,GR_Parameter_Y   
+   stfe [GR_Parameter_X] = FR_Norm_X
+   add   GR_Parameter_RESULT = 0,GR_Parameter_Y
    nop.b 0
 }
 { .mib
-   stfe [GR_Parameter_Y] = FR_Result                 
+   stfe [GR_Parameter_Y] = FR_Result
    add   GR_Parameter_Y = -16,GR_Parameter_Y
-   br.call.sptk b0=__libm_error_support#   
+   br.call.sptk b0=__libm_error_support#
 };;
 
 //
 //  Get location of result on stack
 //
 { .mmi
+   add   GR_Parameter_RESULT = 48,sp
    nop.m 0
-   nop.m 0
-   add   GR_Parameter_RESULT = 48,sp    
+   nop.i 0
 };;
 
 //
-//  Get the new result 
+//  Get the new result
 //
 { .mmi
-   ldfe  FR_Result = [GR_Parameter_RESULT]      
+   ldfe  FR_Result = [GR_Parameter_RESULT]
 .restore sp
-   add   sp = 64,sp                       
-   mov   b0 = GR_SAVE_B0                  
+   add   sp = 64,sp
+   mov   b0 = GR_SAVE_B0
 };;
 
 //
 //  Restore gp, ar.pfs and return
 //
 { .mib
-   mov   gp = GR_SAVE_GP                  
-   mov   ar.pfs = GR_SAVE_PFS             
-   br.ret.sptk     b0                  
+   mov   gp = GR_SAVE_GP
+   mov   ar.pfs = GR_SAVE_PFS
+   br.ret.sptk     b0
 };;
 
 LOCAL_LIBM_END(__libm_error_region)

@@ -1,7 +1,7 @@
 .file "tancotl.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -50,6 +50,7 @@
 // 02/10/03 Reordered header: .section, .global, .proc, .align;
 //          used data8 for long double table values
 // 05/15/03 Reformatted data tables
+// 10/26/04 Avoided using r14-31 as scratch so not clobbered by dynamic loader
 //
 //*********************************************************************
 //
@@ -65,7 +66,7 @@
 //                              f32-f121
 //
 //    General Purpose Registers:
-//      r14-r26,r32-r57
+//      r32-r70
 //
 //    Predicate Registers:      p6-p15
 //
@@ -1171,20 +1172,6 @@ TWO_TO_NEG65        = f119
 fp_tmp              = f120
 mOne                = f121
 
-GR_sig_inv_pi  = r14
-GR_rshf_2to64  = r15
-GR_exp_2tom64  = r16
-GR_rshf        = r17
-GR_exp_2_to_63 = r18
-GR_exp_2_to_24 = r19
-GR_signexp_x   = r20
-GR_exp_x       = r21
-GR_exp_mask    = r22
-GR_exp_2tom14  = r23
-GR_exp_m2tom14 = r24
-GR_exp_2tom33  = r25
-GR_exp_m2tom33 = r26
-
 GR_SAVE_B0     = r33
 GR_SAVE_GP     = r34
 GR_SAVE_PFS    = r35
@@ -1204,13 +1191,28 @@ bmask2         = r48
 gr_tmp         = r49
 cot_flag       = r50
 
-GR_SAVE_B0                  = r51
-GR_SAVE_PFS                 = r52
-GR_SAVE_GP                  = r53
-GR_Parameter_X              = r54
-GR_Parameter_Y              = r55
-GR_Parameter_RESULT         = r56
-GR_Parameter_Tag            = r57
+GR_sig_inv_pi  = r51
+GR_rshf_2to64  = r52
+GR_exp_2tom64  = r53
+GR_rshf        = r54
+GR_exp_2_to_63 = r55
+GR_exp_2_to_24 = r56
+GR_signexp_x   = r57
+GR_exp_x       = r58
+GR_exp_mask    = r59
+GR_exp_2tom14  = r60
+GR_exp_m2tom14 = r61
+GR_exp_2tom33  = r62
+GR_exp_m2tom33 = r63
+
+GR_SAVE_B0                  = r64
+GR_SAVE_PFS                 = r65
+GR_SAVE_GP                  = r66
+
+GR_Parameter_X              = r67
+GR_Parameter_Y              = r68
+GR_Parameter_RESULT         = r69
+GR_Parameter_Tag            = r70
 
 
 .section .text
@@ -1223,7 +1225,7 @@ __libm_cotl:
 LOCAL_LIBM_ENTRY(cotl)
 
 { .mlx
-      alloc r32 = ar.pfs, 0,22,4,0
+      alloc r32 = ar.pfs, 0,35,4,0
       movl GR_sig_inv_pi = 0xa2f9836e4e44152a // significand of 1/pi
 }
 { .mlx
@@ -1246,13 +1248,14 @@ LOCAL_LIBM_ENTRY(cotl)
 
 LOCAL_LIBM_END(cotl)
 
+
 .proc __libm_tanl#
 __libm_tanl:
 .endp __libm_tanl#
 GLOBAL_IEEE754_ENTRY(tanl)
 
 { .mlx
-      alloc r32 = ar.pfs, 0,22,4,0
+      alloc r32 = ar.pfs, 0,35,4,0
       movl GR_sig_inv_pi = 0xa2f9836e4e44152a // significand of 1/pi
 }
 { .mlx
@@ -3088,6 +3091,7 @@ TANL_UNSUPPORTED:
 ;;
 
 GLOBAL_IEEE754_END(tanl)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

@@ -60,6 +60,7 @@
 // 02/10/03 Reordered header: .section, .global, .proc, .align;
 //          used data8 for long double table values
 // 04/17/03 Added missing mutex directive
+// 10/13/03 Corrected .endp names to match .proc names
 //
 //*********************************************************************
 //
@@ -2755,6 +2756,7 @@ POWL_64_SQRT:
 
 GLOBAL_LIBM_END(powl)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
@@ -2803,6 +2805,6 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         br.ret.sptk     b0                     // Return
 };;
 
-.endp
+LOCAL_LIBM_END(__libm_error_region#)
 .type   __libm_error_support#,@function
 .global __libm_error_support#

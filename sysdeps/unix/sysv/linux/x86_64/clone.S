@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ ENTRY (BP_SYM (__clone))
 	movq	%r8, %rdx
 	movq	%r9, %r8
 	movq	8(%rsp), %r10
-	movq	$SYS_ify(clone),%rax
+	movl	$SYS_ify(clone),%eax
 
 	/* End FDE now, because in the child the unwind info will be
 	   wrong.  */
@@ -91,7 +91,7 @@ L(pseudo_end):
 L(thread_start):
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
-	xorq	%rbp, %rbp
+	xorl	%ebp, %ebp
 
 #ifdef RESET_PID
 	testq	$CLONE_THREAD, %rdi
@@ -99,7 +99,7 @@ L(thread_start):
 	testq	$CLONE_VM, %rdi
 	movl	$-1, %eax
 	jne	2f
-	movq	$SYS_ify(getpid), %rax
+	movl	$SYS_ify(getpid), %eax
 	syscall
 2:	movl	%eax, %fs:PID
 	movl	%eax, %fs:TID

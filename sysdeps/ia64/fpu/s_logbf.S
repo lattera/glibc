@@ -219,6 +219,7 @@ LOGB_ZERO:
 
 GLOBAL_LIBM_END(logbf)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 

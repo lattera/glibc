@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -45,7 +45,7 @@
     POPARGS_##args							      \
     /* The return value from CENABLE is argument for CDISABLE.  */	      \
     movq %rax, (%rsp);							      \
-    movq $SYS_ify (syscall_name), %rax;					      \
+    movl $SYS_ify (syscall_name), %eax;					      \
     syscall;								      \
     movq (%rsp), %rdi;							      \
     /* Save %rax since it's the error code from the syscall.  */	      \

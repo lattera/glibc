@@ -106,6 +106,7 @@ FR_RESULT           = f8
 
 LOCAL_LIBM_ENTRY(cabsf)
 LOCAL_LIBM_END(cabsf)
+
 GLOBAL_IEEE754_ENTRY(hypotf)
 {.mfi
   alloc r32= ar.pfs,0,4,4,0
@@ -337,6 +338,7 @@ GLOBAL_IEEE754_ENTRY(hypotf)
 (p9) br.ret.sptk b0;; 
 }
 GLOBAL_IEEE754_END(hypotf)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mii

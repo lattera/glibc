@@ -1,7 +1,7 @@
-.file "libm_sincosl.asm"
+.file "libm_sincosl.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -43,6 +43,9 @@
 // 05/13/02 Initial version of sincosl (based on libm's sinl and cosl)
 // 02/10/03 Reordered header: .section, .global, .proc, .align;
 //          used data8 for long double table values
+// 10/13/03 Corrected .file name
+// 02/11/04 cisl is moved to the separate file.
+// 10/26/04 Avoided using r14-31 as scratch so not clobbered by dynamic loader
 //
 //*********************************************************************
 //
@@ -50,9 +53,8 @@
 //
 // API's
 //==============================================================
-// 1) long double _Complex cisl(long double)
-// 2) void sincosl(long double, long double*s, long double*c)
-// 3) __libm_sincosl - internal LIBM function, that accepts
+// 1) void sincosl(long double, long double*s, long double*c)
+// 2) __libm_sincosl - internal LIBM function, that accepts
 //    argument in f8 and returns cosine through f8, sine through f9
 //
 //
@@ -65,7 +67,7 @@
 //                              f32-f121
 //
 //    General Purpose Registers:
-//      r32-r47
+//      r32-r61
 //
 //    Predicate Registers:      p6-p15
 //
@@ -775,20 +777,6 @@ FR_Tmp            = f94
 sincos_pResSin = r34
 sincos_pResCos = r35
 
-GR_sig_inv_pi  = r14
-GR_rshf_2to64  = r15
-GR_exp_2tom64  = r16
-GR_rshf        = r17
-GR_ad_p        = r18
-GR_ad_d        = r19
-GR_ad_pp       = r20
-GR_ad_qq       = r21
-GR_ad_c        = r22
-GR_ad_s        = r23
-GR_ad_ce       = r24
-GR_ad_se       = r25
-GR_ad_m14      = r26
-GR_ad_s1       = r27
 GR_exp_m2_to_m3= r36
 GR_N_Inc       = r37
 GR_Cis         = r38
@@ -803,6 +791,20 @@ GR_N_SignS     = r45
 GR_N_SignC     = r46
 GR_N_SinCos    = r47
 
+GR_sig_inv_pi  = r48
+GR_rshf_2to64  = r49
+GR_exp_2tom64  = r50
+GR_rshf        = r51
+GR_ad_p        = r52
+GR_ad_d        = r53
+GR_ad_pp       = r54
+GR_ad_qq       = r55
+GR_ad_c        = r56
+GR_ad_s        = r57
+GR_ad_ce       = r58
+GR_ad_se       = r59
+GR_ad_m14      = r60
+GR_ad_s1       = r61
 
 // For unwind support
 GR_SAVE_B0     = r39
@@ -814,7 +816,7 @@ GR_SAVE_PFS    = r41
 
 GLOBAL_IEEE754_ENTRY(sincosl)
 { .mlx  ///////////////////////////// 1 /////////////////
-      alloc r32 = ar.pfs,3,13,2,0
+      alloc r32 = ar.pfs,3,27,2,0
       movl GR_sig_inv_pi = 0xa2f9836e4e44152a // significand of 1/pi
 }
 { .mlx
@@ -834,11 +836,9 @@ GLOBAL_IEEE754_ENTRY(sincosl)
 };;
 GLOBAL_IEEE754_END(sincosl)
 
-LOCAL_LIBM_ENTRY(cisl)
-LOCAL_LIBM_END(cisl)
 GLOBAL_LIBM_ENTRY(__libm_sincosl)
 { .mlx  ///////////////////////////// 1 /////////////////
-      alloc r32 = ar.pfs,3,14,2,0
+      alloc r32 = ar.pfs,3,27,2,0
       movl GR_sig_inv_pi = 0xa2f9836e4e44152a // significand of 1/pi
 }
 { .mlx
@@ -2447,6 +2447,7 @@ SINCOSL_SPECIAL:
 
 GLOBAL_LIBM_END(__libm_sincosl)
 
+
 // *******************************************************************
 // *******************************************************************
 // *******************************************************************
@@ -2461,7 +2462,7 @@ GLOBAL_LIBM_END(__libm_sincosl)
 //         c is in f9
 //         N is in r8
 //     Be sure to allocate at least 2 GP registers as output registers for
-//     __libm_pi_by_2_reduce.  This routine uses r49-50. These are used as
+//     __libm_pi_by_2_reduce.  This routine uses r62-63. These are used as
 //     scratch registers within the __libm_pi_by_2_reduce routine (for speed).
 //
 //     We know also that __libm_pi_by_2_reduce preserves f10-15, f71-127.  We

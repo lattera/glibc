@@ -247,6 +247,7 @@ LOCAL_LIBM_ENTRY(cotf)
 
 LOCAL_LIBM_END(cotf)
 
+
 GLOBAL_IEEE754_ENTRY(tanf)
 
 { .mlx
@@ -548,6 +549,7 @@ Return_From_Huges:
 ;;
 
 GLOBAL_IEEE754_END(tanf)
+
 
 LOCAL_LIBM_ENTRY(__libm_callout)
 Huge_Argument:

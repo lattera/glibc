@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02,03,04 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,7 +119,7 @@
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
   leaq rtld_errno(%rip), %rcx;			\
-  xorq %rdx, %rdx;				\
+  xorl %edx, %edx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
@@ -133,7 +133,7 @@
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
   movq SYSCALL_ERROR_ERRNO@GOTTPOFF(%rip), %rcx;\
-  xorq %rdx, %rdx;				\
+  xorl %edx, %edx;				\
   subq %rax, %rdx;				\
   movl %edx, %fs:(%rcx);			\
   orq $-1, %rax;				\
@@ -143,7 +143,7 @@
    Note that errno occupies only 4 bytes.  */
 # define SYSCALL_ERROR_HANDLER			\
 0:						\
-  xorq %rdx, %rdx;				\
+  xorl %edx, %edx;				\
   subq %rax, %rdx;				\
   pushq %rdx;					\
   cfi_adjust_cfa_offset(8);			\
@@ -161,7 +161,7 @@
 #else /* Not _LIBC_REENTRANT.  */
 # define SYSCALL_ERROR_HANDLER			\
 0:movq errno@GOTPCREL(%RIP), %rcx;		\
-  xorq %rdx, %rdx;				\
+  xorl %edx, %edx;				\
   subq %rax, %rdx;				\
   movl %edx, (%rcx);				\
   orq $-1, %rax;				\
@@ -208,7 +208,7 @@
 #undef	DO_CALL
 #define DO_CALL(syscall_name, args)		\
     DOARGS_##args				\
-    movq $SYS_ify (syscall_name), %rax;		\
+    movl $SYS_ify (syscall_name), %eax;		\
     syscall;
 
 #define DOARGS_0 /* nothing */

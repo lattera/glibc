@@ -1,5 +1,6 @@
 /* file: lgamma.c */
 
+
 // Copyright (c) 2002 Intel Corporation
 // All rights reserved.
 //
@@ -20,7 +21,6 @@
 // products derived from this software without specific prior written
 // permission.
 
-// WARRANTY DISCLAIMER
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT

@@ -47,12 +47,12 @@
 // 03/19/02 Added stack unwind around call to __libm_cisf_large
 // 09/05/02 Work range is widened by reduction strengthen (2 parts of Pi/16)
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 02/11/04 cisf is moved to the separate file.
 
 // API
 //==============================================================
-// 1) float _Complex cisf(float)
-// 2) void sincosf(float, float*s, float*c)
-// 3) __libm_sincosf - internal LIBM function, that accepts
+// 1) void sincosf(float, float*s, float*c)
+// 2) __libm_sincosf - internal LIBM function, that accepts
 //    argument in f8 and returns cosine through f8, sine through f9
 
 //
@@ -400,7 +400,7 @@ GLOBAL_IEEE754_ENTRY(sincosf)
 { .mlx
       alloc         GR_SAVE_PFS              = ar.pfs, 0, 21, 0, 0
       movl          cisf_GR_sig_inv_pi_by_16 = 0xA2F9836E4E44152A // 16/pi signd
-                                             
+
 }
 // cis_GR_rshf_2to61 = 1.1000 2^(63+63-2)
 { .mlx
@@ -420,8 +420,7 @@ GLOBAL_IEEE754_ENTRY(sincosf)
       br.cond.sptk  _CISF_COMMON
 };;
 GLOBAL_IEEE754_END(sincosf)
-LOCAL_LIBM_ENTRY(cisf)
-LOCAL_LIBM_END(cisf)
+
 GLOBAL_LIBM_ENTRY(__libm_sincosf)
 { .mlx
 // cisf_GR_sig_inv_pi_by_16 = significand of 16/pi
@@ -438,7 +437,7 @@ GLOBAL_LIBM_ENTRY(__libm_sincosf)
 { .mfi
       ld8           cisf_AD_1           = [cisf_AD_1]
       fnorm.s1      cisf_NORM_f8        = cisf_Arg
-      cmp.eq        p14, p13            = r0, r0 
+      cmp.eq        p14, p13            = r0, r0
 }
 // cisf_GR_exp_2tom61 = exponent of scaling factor 2^-61
 { .mib
@@ -499,7 +498,7 @@ _CISF_COMMON:
 // p10 is true if f8 exp is >= 0x10017
 { .mmb
       ldfpd         cisf_P1,cisf_Q1     = [cisf_AD_1], 16
-      cmp.ge        p10, p0             = cisf_r_exp, cisf_exp_limit 
+      cmp.ge        p10, p0             = cisf_r_exp, cisf_exp_limit
 (p10) br.cond.spnt  _CISF_LARGE_ARGS    // go to |x| >= 2^24 path
 };;
 
@@ -521,7 +520,7 @@ _CISF_COMMON:
 
 // N = (int)cisf_int_Nfloat
 { .mfi
-      getf.sig      cisf_GR_n           = cisf_W_2TO61_RSH 
+      getf.sig      cisf_GR_n           = cisf_W_2TO61_RSH
       nop.f         0
       nop.i         0
 };;
@@ -537,7 +536,7 @@ _CISF_COMMON:
 
 //Get M (least k+1 bits of N)
 { .mmi
-      and           cisf_GR_m_sin       = 0x1f,cisf_GR_n 
+      and           cisf_GR_m_sin       = 0x1f,cisf_GR_n
       and           cisf_GR_m_cos       = 0x1f,cisf_GR_n_cos
       nop.i         0
 };;
@@ -552,7 +551,7 @@ _CISF_COMMON:
 { .mmf
       ldfpd         cisf_Sm_sin, cisf_Cm_sin = [cisf_AD_2_sin]
       ldfpd         cisf_Sm_cos, cisf_Cm_cos = [cisf_AD_2_cos]
-      fclass.m.unc  p10,p0                   = cisf_Arg,0x0b 
+      fclass.m.unc  p10,p0                   = cisf_Arg,0x0b
 };;
 
 { .mfi
@@ -679,6 +678,7 @@ _CISF_RETURN:
       br.ret.sptk   b0 // exit for sincos
 };;
 GLOBAL_LIBM_END(__libm_sincosf)
+
 ////  |x| > 2^24 path  ///////
 .proc _CISF_LARGE_ARGS
 _CISF_LARGE_ARGS:
@@ -728,7 +728,7 @@ _CISF_LARGE_ARGS:
 { .mfb
       nop.m         0
       fma.s.s0      cisf_Sin_res        = cisf_Sin_res, f1, f0
-(p14) br.cond.sptk  _CISF_RETURN 
+(p14) br.cond.sptk  _CISF_RETURN
 };;
 
 { .mmb

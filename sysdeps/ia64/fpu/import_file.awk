@@ -7,10 +7,13 @@ BEGIN {
 	getline;
 	while (!match($0, "^// WARRANTY DISCLAIMER")) {
 		print;
-		getline;
+		if (!getline) {
+			break;
+		}
 	}
-	getline;
-	printf								      \
+	if (getline)
+	{
+		printf								      \
 "// Redistribution and use in source and binary forms, with or without\n"     \
 "// modification, are permitted provided that the following conditions are\n" \
 "// met:\n"								      \
@@ -25,10 +28,11 @@ BEGIN {
 "// * The name of Intel Corporation may not be used to endorse or promote\n"  \
 "// products derived from this software without specific prior written\n"     \
 "// permission.\n\n";
-	if (LICENSE_ONLY == "y") {
-		do {
-			print;
-		} while (getline);
+		if (LICENSE_ONLY == "y") {
+			do {
+				print;
+			} while (getline);
+		}
 	}
 }
 
@@ -115,7 +119,6 @@ BEGIN {
 			print
 			getline;
 		}
-		getline;
 		printf "%s_END(%s)\n", type, name;
 		if (match(name, "^exp10[fl]?$")) {
 			t=substr(name,6)

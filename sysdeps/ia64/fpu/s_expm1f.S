@@ -612,6 +612,7 @@ EXPM1_CERTAIN_OVERFLOW:
 
 GLOBAL_IEEE754_END(expm1f)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

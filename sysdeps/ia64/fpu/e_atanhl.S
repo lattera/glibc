@@ -1101,6 +1101,7 @@ atanhl_gt_one:
 };;
 
 GLOBAL_LIBM_END(atanhl)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

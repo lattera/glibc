@@ -601,6 +601,7 @@ ACOSF_ABS_ONE:
 
 GLOBAL_LIBM_END(acosf)
 
+
 // Stack operations when calling error support.
 //       (1)               (2)
 //   sp   -> +          psp -> +

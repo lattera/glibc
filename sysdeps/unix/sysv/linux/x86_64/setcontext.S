@@ -1,5 +1,5 @@
 /* Install given context.
-   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -40,10 +40,10 @@ ENTRY(__setcontext)
 	/* Set the signal mask with
 	   rt_sigprocmask (SIG_SETMASK, mask, NULL, _NSIG/8).  */
 	leaq	oSIGMASK(%rdi), %rsi
-	xorq	%rdx, %rdx
-	movq	$SIG_SETMASK, %rdi
-	movq	$_NSIG8,%r10
-	movq	$__NR_rt_sigprocmask, %rax
+	xorl	%edx, %edx
+	movl	$SIG_SETMASK, %edi
+	movl	$_NSIG8,%r10d
+	movl	$__NR_rt_sigprocmask, %eax
 	syscall
 	popq	%rdi			/* Reload %rdi, adjust stack.  */
 	cfi_adjust_cfa_offset(-8)
@@ -96,7 +96,7 @@ ENTRY(__setcontext)
 	cfi_startproc
 
 	/* Clear rax to indicate success.  */
-	xorq	%rax, %rax
+	xorl	%eax, %eax
 
 L(pseudo_end):
 	ret

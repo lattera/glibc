@@ -1008,6 +1008,7 @@ atanh_ge_one:
 
 GLOBAL_LIBM_END(atanh)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 

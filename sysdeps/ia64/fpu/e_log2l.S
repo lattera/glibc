@@ -761,6 +761,7 @@ LOG2_PSEUDO_ZERO:
 
 GLOBAL_IEEE754_END(log2l)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

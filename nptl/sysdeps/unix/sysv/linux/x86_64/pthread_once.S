@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -74,8 +74,12 @@ __pthread_once:
 	jnz	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-	movq	%r10, %rsi		/* movq $FUTEX_WAIT, %rsi */
-	movq	$SYS_futex, %rax
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
+	movl	$SYS_futex, %eax
 	syscall
 	jmp	6b
 
@@ -98,12 +102,12 @@ __pthread_once:
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx
 	movl	$FUTEX_WAKE, %esi
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 
 4:	addq	$8, %rsp
 .Ladd:
-	xorq	%rax, %rax
+	xorl	%eax, %eax
 	retq
 
 	.size	__pthread_once,.-__pthread_once
@@ -124,8 +128,8 @@ clear_once_control:
 	movl	$0, (%rdi)
 
 	movl	$0x7fffffff, %edx
-	movq	$FUTEX_WAKE, %rsi
-	movq	$SYS_futex, %rax
+	movl	$FUTEX_WAKE, %esi
+	movl	$SYS_futex, %eax
 	syscall
 
 	movq	%r8, %rdi

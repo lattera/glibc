@@ -41,7 +41,7 @@ END (__memset_chk)
 ENTRY (memset)
 #if BZERO_P
 	mov	%rsi,%rdx	/* Adjust parameter.  */
-	xorq	%rsi,%rsi	/* Fill with 0s.  */
+	xorl	%esi,%esi	/* Fill with 0s.  */
 #endif
 	cmp	$0x7,%rdx	/* Check for small length.  */
 	mov	%rdi,%rcx	/* Save ptr as return value.  */

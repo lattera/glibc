@@ -35,7 +35,7 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http: //www.intel.com/software/products/opensource/libraries/num.htm.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
@@ -494,6 +494,7 @@ OUT_RANGE_exp2:
 ;;
 
 GLOBAL_LIBM_END(exp2)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 

@@ -1,7 +1,7 @@
 .file "sincosl.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -47,6 +47,8 @@
 // 05/13/02 Changed interface to __libm_pi_by_2_reduce
 // 02/10/03 Reordered header: .section, .global, .proc, .align;
 //          used data8 for long double table values
+// 10/13/03 Corrected final .endp name to match .proc
+// 10/26/04 Avoided using r14-31 as scratch so not clobbered by dynamic loader
 //
 //*********************************************************************
 //
@@ -63,8 +65,7 @@
 //                              f32-f99
 //
 //    General Purpose Registers:
-//      r32-r43
-//      r44-r45 (Used to pass arguments to pi_by_2 reduce routine)
+//      r32-r58
 //
 //    Predicate Registers:      p6-p13
 //
@@ -715,20 +716,6 @@ FR_PP_1_lo        = f98
 FR_ArgPrime       = f99
 FR_inexact        = f100
 
-GR_sig_inv_pi  = r14
-GR_rshf_2to64  = r15
-GR_exp_2tom64  = r16
-GR_rshf        = r17
-GR_ad_p        = r18
-GR_ad_d        = r19
-GR_ad_pp       = r20
-GR_ad_qq       = r21
-GR_ad_c        = r22
-GR_ad_s        = r23
-GR_ad_ce       = r24
-GR_ad_se       = r25
-GR_ad_m14      = r26
-GR_ad_s1       = r27
 GR_exp_m2_to_m3= r36
 GR_N_Inc       = r37
 GR_Sin_or_Cos  = r38
@@ -738,6 +725,21 @@ GR_exp_mask    = r41
 GR_exp_2_to_63 = r42
 GR_exp_2_to_m3 = r43
 GR_exp_2_to_24 = r44
+
+GR_sig_inv_pi  = r45
+GR_rshf_2to64  = r46
+GR_exp_2tom64  = r47
+GR_rshf        = r48
+GR_ad_p        = r49
+GR_ad_d        = r50
+GR_ad_pp       = r51
+GR_ad_qq       = r52
+GR_ad_c        = r53
+GR_ad_s        = r54
+GR_ad_ce       = r55
+GR_ad_se       = r56
+GR_ad_m14      = r57
+GR_ad_s1       = r58
 
 // Added for unwind support
 
@@ -750,7 +752,7 @@ GR_SAVE_PFS    = r41
 
 GLOBAL_IEEE754_ENTRY(sinl)
 { .mlx
-      alloc r32 = ar.pfs,0,12,2,0
+      alloc r32 = ar.pfs,0,27,2,0
       movl GR_sig_inv_pi = 0xa2f9836e4e44152a // significand of 1/pi
 }
 { .mlx
@@ -772,9 +774,10 @@ GLOBAL_IEEE754_ENTRY(sinl)
 ;;
 
 GLOBAL_IEEE754_END(sinl)
+
 GLOBAL_IEEE754_ENTRY(cosl)
 { .mlx
-      alloc r32 = ar.pfs,0,12,2,0
+      alloc r32 = ar.pfs,0,27,2,0
       movl GR_sig_inv_pi = 0xa2f9836e4e44152a // significand of 1/pi
 }
 { .mlx
@@ -2285,6 +2288,7 @@ SINCOSL_SPECIAL:
 }
 
 GLOBAL_IEEE754_END(cosl)
+
 // *******************************************************************
 // *******************************************************************
 // *******************************************************************
@@ -2299,7 +2303,7 @@ GLOBAL_IEEE754_END(cosl)
 //         c is in f9
 //         N is in r8
 //     Be sure to allocate at least 2 GP registers as output registers for
-//     __libm_pi_by_2_reduce.  This routine uses r49-50. These are used as
+//     __libm_pi_by_2_reduce.  This routine uses r59-60. These are used as
 //     scratch registers within the __libm_pi_by_2_reduce routine (for speed).
 //
 //     We know also that __libm_pi_by_2_reduce preserves f10-15, f71-127.  We
@@ -2356,6 +2360,6 @@ SINCOSL_ARG_TOO_LARGE:
         br.cond.sptk SINCOSL_NORMAL_R    // Branch if |r|>=2^-3 for |x| >= 2^63
 };;
 
-.endp
+LOCAL_LIBM_END(__libm_callout)
 .type   __libm_pi_by_2_reduce#,@function
 .global __libm_pi_by_2_reduce#

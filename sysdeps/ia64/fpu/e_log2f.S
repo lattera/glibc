@@ -493,6 +493,7 @@ SPECIAL_log2f:
 
 GLOBAL_LIBM_END(log2f)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -82,14 +82,14 @@ sem_timedwait:
 7:	call	__pthread_enable_asynccancel
 	movl	%eax, 16(%rsp)
 
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	movq	%rsp, %rdi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
-	movq	$1000, %rdi
+	movl	$1000, %edi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rdi
 	movq	8(%r13), %rsi
@@ -107,8 +107,8 @@ sem_timedwait:
 
 	movq	%rsp, %r10
 	movq	%r12, %rdi
-	xorq	%rsi, %rsi
-	movq	$SYS_futex, %rax
+	xorl	%esi, %esi
+	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
 	syscall
 	movq	%rax, %r14

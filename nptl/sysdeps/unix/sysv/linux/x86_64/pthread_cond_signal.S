@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -66,9 +66,9 @@ __pthread_cond_signal:
 	addl	$1, (%rdi)
 
 	/* Wake up one thread.  */
-	movq	$FUTEX_WAKE, %rsi
-	movq	$SYS_futex, %rax
-	movq	$1, %rdx
+	movl	$FUTEX_WAKE, %esi
+	movl	$SYS_futex, %eax
+	movl	$1, %edx
 	syscall
 
 	/* Unlock.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -48,12 +48,16 @@ __lll_mutex_lock_wait:
 
 	xorq	%r10, %r10	/* No timeout.  */
 	movl	$2, %edx
-	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
 
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne	2f
 
-1:	movq	$SYS_futex, %rax
+1:	movl	$SYS_futex, %eax
 	syscall
 
 2:	movl	%edx, %eax
@@ -93,7 +97,7 @@ __lll_mutex_timedlock_wait:
 1:
 	/* Get current time.  */
 	movq	%rsp, %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	/* This is a regular function call, all caller-save registers
 	   might be clobbered.  */
@@ -101,7 +105,7 @@ __lll_mutex_timedlock_wait:
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
-	movq	$1000, %rdi
+	movl	$1000, %edi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rdi
 	movq	8(%r13), %rsi
@@ -126,9 +130,13 @@ __lll_mutex_timedlock_wait:
 	je	8f
 
 	movq	%rsp, %r10
-	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
 	movq	%r12, %rdi
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 	movq	%rax, %rcx
 
@@ -195,9 +203,9 @@ __lll_mutex_unlock_wake:
 	pushq	%rdx
 
 	movl	$0, (%rdi)
-	movq	$FUTEX_WAKE, %rsi
+	movl	$FUTEX_WAKE, %esi
 	movl	$1, %edx	/* Wake one thread.  */
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 
 	popq	%rdx
@@ -222,13 +230,13 @@ __lll_timedwait_tid:
 
 	/* Get current time.  */
 2:	movq	%rsp, %rdi
-	xorq	%rsi, %rsi
+	xorl	%esi, %esi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
-	movq	$1000, %rdi
+	movl	$1000, %edi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r13), %rdi
 	movq	8(%r13), %rsi
@@ -248,9 +256,13 @@ __lll_timedwait_tid:
 	jz	4f
 
 	movq	%rsp, %r10
-	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
+#if FUTEX_WAIT == 0
+	xorl	%esi, %esi
+#else
+	movl	$FUTEX_WAIT, %esi
+#endif
 	movq	%r12, %rdi
-	movq	$SYS_futex, %rax
+	movl	$SYS_futex, %eax
 	syscall
 
 	cmpl	$0, (%rdi)

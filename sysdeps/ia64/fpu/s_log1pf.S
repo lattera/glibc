@@ -48,6 +48,7 @@
 // 10/02/02 Improved performance by basing on log algorithm
 // 02/10/03 Reordered header: .section, .global, .proc, .align
 // 04/18/03 Eliminate possible WAW dependency warning
+// 12/16/03 Fixed parameter passing to/from error handling routine
 //
 // API
 //==============================================================
@@ -732,6 +733,7 @@ log_libm_err:
 ;;
 
 GLOBAL_IEEE754_END(log1pf)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

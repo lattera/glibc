@@ -1139,6 +1139,7 @@ ACOSH_LESS_ONE:
 
 GLOBAL_LIBM_END(acosh)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 

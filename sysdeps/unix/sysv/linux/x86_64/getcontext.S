@@ -1,5 +1,5 @@
 /* Save current context.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -67,16 +67,20 @@ ENTRY(__getcontext)
 	/* Save the current signal mask with
 	   rt_sigprocmask (SIG_BLOCK, NULL, set,_NSIG/8).  */
 	leaq	oSIGMASK(%rdi), %rdx
-	xorq	%rsi,%rsi
-	movq	$SIG_BLOCK, %rdi
-	movq	$_NSIG8,%r10
-	movq	$__NR_rt_sigprocmask, %rax
+	xorl	%esi,%esi
+#if SIG_BLOCK == 0
+	xorl	%edi, %edi
+#else
+	movl	$SIG_BLOCK, %edi
+#endif
+	movl	$_NSIG8,%r10d
+	movl	$__NR_rt_sigprocmask, %eax
 	syscall
 	cmpq	$-4095, %rax		/* Check %rax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 
 	/* All done, return 0 for success.  */
-	xorq	%rax, %rax
+	xorl	%eax, %eax
 L(pseudo_end):
 	ret
 PSEUDO_END(__getcontext)

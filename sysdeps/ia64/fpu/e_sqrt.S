@@ -252,6 +252,7 @@ GLOBAL_IEEE754_ENTRY(sqrt)
 }
 // END DOUBLE PRECISION MINIMUM LATENCY SQUARE ROOT ALGORITHM
 GLOBAL_IEEE754_END(sqrt)
+
 // Stack operations when calling error support.
 //       (1)               (2)                          (3) (call)              (4)
 //   sp   -> +          psp -> +                     psp -> +                   sp -> +

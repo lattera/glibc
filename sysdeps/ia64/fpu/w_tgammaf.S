@@ -45,6 +45,7 @@
 // 02/10/03  Reordered header: .section, .global, .proc, .align
 // 04/04/03  Changed error codes for overflow and negative integers
 // 04/10/03  Changed code for overflow near zero handling
+// 12/16/03  Fixed parameter passing to/from error handling routine
 //
 //*********************************************************************
 //
@@ -1274,6 +1275,7 @@ tgammaf_libm_err:
 };;
 
 GLOBAL_LIBM_END(tgammaf)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi
@@ -1289,19 +1291,19 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         mov GR_SAVE_GP=gp                       // Save gp
 };;
 { .mmi
-        stfd [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
+        stfs [GR_Parameter_Y] = FR_Y,16         // STORE Parameter 2 on stack
         add GR_Parameter_X = 16,sp              // Parameter 1 address
 .save   b0, GR_SAVE_B0                      
         mov GR_SAVE_B0=b0                       // Save b0 
 };;
 .body
 { .mib
-        stfd [GR_Parameter_X] = FR_X           // STORE Parameter 1 on stack 
+        stfs [GR_Parameter_X] = FR_X           // STORE Parameter 1 on stack 
         add   GR_Parameter_RESULT = 0,GR_Parameter_Y  // Parameter 3 address 
         nop.b 0                                      
 }
 { .mib
-        stfd [GR_Parameter_Y] = FR_RESULT      // STORE Parameter 3 on stack
+        stfs [GR_Parameter_Y] = FR_RESULT      // STORE Parameter 3 on stack
         add   GR_Parameter_Y = -16,GR_Parameter_Y  
         br.call.sptk b0=__libm_error_support# // Call error handling function
 };;
@@ -1311,7 +1313,7 @@ LOCAL_LIBM_ENTRY(__libm_error_region)
         add   GR_Parameter_RESULT = 48,sp
 };;
 { .mmi
-        ldfd  f8 = [GR_Parameter_RESULT]       // Get return result off stack
+        ldfs  f8 = [GR_Parameter_RESULT]       // Get return result off stack
 .restore sp
         add   sp = 64,sp                       // Restore stack pointer
         mov   b0 = GR_SAVE_B0                  // Restore return address

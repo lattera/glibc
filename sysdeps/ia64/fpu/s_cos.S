@@ -1,7 +1,7 @@
 .file "sincos.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -51,6 +51,8 @@
 // 06/03/02 Insure inexact flag set for large arg result
 // 09/05/02 Work range is widened by reduction strengthen (3 parts of Pi/16)
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 08/08/03 Improved performance
+// 10/28/04 Saved sincos_r_sincos to avoid clobber by dynamic loader 
 
 // API
 //==============================================================
@@ -170,11 +172,11 @@
 // Registers used
 //==============================================================
 // general input registers:
-// r14 -> r19
-// r32 -> r45
+// r14 -> r26
+// r32 -> r35
 
 // predicate registers used:
-// p6 -> p14
+// p6 -> p11
 
 // floating-point registers used
 // f9 -> f15
@@ -236,16 +238,6 @@ fp_tmp                         = f61
 
 /////////////////////////////////////////////////////////////
 
-sincos_AD_1                    = r33
-sincos_AD_2                    = r34
-sincos_exp_limit               = r35
-sincos_r_signexp               = r36
-sincos_AD_beta_table           = r37
-sincos_r_sincos                = r38
-
-sincos_r_exp                   = r39
-sincos_r_17_ones               = r40
-
 sincos_GR_sig_inv_pi_by_16     = r14
 sincos_GR_rshf_2to61           = r15
 sincos_GR_rshf                 = r16
@@ -254,11 +246,18 @@ sincos_GR_n                    = r18
 sincos_GR_m                    = r19
 sincos_GR_32m                  = r19
 sincos_GR_all_ones             = r19
+sincos_AD_1                    = r20
+sincos_AD_2                    = r21
+sincos_exp_limit               = r22
+sincos_r_signexp               = r23
+sincos_r_17_ones               = r24
+sincos_r_sincos                = r25
+sincos_r_exp                   = r26
 
-gr_tmp                         = r41
-GR_SAVE_PFS                    = r41
-GR_SAVE_B0                     = r42
-GR_SAVE_GP                     = r43
+GR_SAVE_PFS                    = r33
+GR_SAVE_B0                     = r34
+GR_SAVE_GP                     = r35
+GR_SAVE_r_sincos               = r36
 
 
 RODATA
@@ -405,7 +404,7 @@ LOCAL_OBJECT_END(double_sin_cos_beta_k4)
 GLOBAL_IEEE754_ENTRY(sin)
 
 { .mlx
-      alloc         r32                 = ar.pfs, 1, 13, 0, 0
+      getf.exp      sincos_r_signexp    = f8
       movl sincos_GR_sig_inv_pi_by_16   = 0xA2F9836E4E44152A // signd of 16/pi
 }
 { .mlx
@@ -427,10 +426,11 @@ GLOBAL_IEEE754_ENTRY(sin)
 ;;
 
 GLOBAL_IEEE754_END(sin)
+
 GLOBAL_IEEE754_ENTRY(cos)
 
 { .mlx
-      alloc         r32                 = ar.pfs, 1, 13, 0, 0
+      getf.exp      sincos_r_signexp    = f8
       movl sincos_GR_sig_inv_pi_by_16   = 0xA2F9836E4E44152A // signd of 16/pi
 }
 { .mlx
@@ -464,7 +464,6 @@ _SINCOS_COMMON:
 // Form two constants we need
 //  16/pi * 2^-2 * 2^63, scaled by 2^61 since we just loaded the significand
 //  1.1000...000 * 2^(63+63-2) to right shift int(W) into the low significand
-// fcmp used to set denormal, and invalid on snans
 { .mfi
       setf.sig      sincos_SIG_INV_PI_BY_16_2TO61 = sincos_GR_sig_inv_pi_by_16
       fclass.m      p6,p0                         = f8, 0xe7 // if x = 0,inf,nan
@@ -480,10 +479,15 @@ _SINCOS_COMMON:
 //  2^-61 for scaling Nfloat
 // 0x1001a is register_bias + 27.
 // So if f8 >= 2^27, go to large argument routines
-{ .mmi
-      getf.exp      sincos_r_signexp    = f8
+{ .mfi
+      alloc         r32                 = ar.pfs, 1, 4, 0, 0
+      fclass.m      p11,p0              = f8, 0x0b // Test for x=unorm
+      mov           sincos_GR_all_ones  = -1 // For "inexect" constant create
+}
+{ .mib
       setf.exp      sincos_2TOM61       = sincos_GR_exp_2tom61
-      addl          gr_tmp              = -1,r0 // For "inexect" constant create
+      nop.i         999
+(p6)  br.cond.spnt  _SINCOS_SPECIAL_ARGS
 }
 ;;
 
@@ -493,41 +497,31 @@ _SINCOS_COMMON:
 { .mmb
       ldfe          sincos_Pi_by_16_1   = [sincos_AD_1],16
       setf.d        sincos_RSHF         = sincos_GR_rshf
-(p6)  br.cond.spnt  _SINCOS_SPECIAL_ARGS
+(p11) br.cond.spnt  _SINCOS_UNORM       // Branch if x=unorm
 }
 ;;
 
+_SINCOS_COMMON2:
+// Return here if x=unorm
+// Create constant used to set inexact
 { .mmi
       ldfe          sincos_Pi_by_16_2   = [sincos_AD_1],16
-      setf.sig      fp_tmp              = gr_tmp // constant for inexact set
-      nop.i         999
-};;
-
-{ .mfi
-      ldfe          sincos_Pi_by_16_3   = [sincos_AD_1],16
-      nop.f         999
-      nop.i         999
-};;
-
-// Polynomial coefficients (Q4, P4, Q3, P3, Q2, Q1, P2, P1) loading
-{ .mmi
-      ldfpd         sincos_P4,sincos_Q4 = [sincos_AD_1],16
-      nop.m         999
+      setf.sig      fp_tmp              = sincos_GR_all_ones
       nop.i         999
 };;
 
 // Select exponent (17 lsb)
-{ .mmi
-      ldfpd         sincos_P3,sincos_Q3 = [sincos_AD_1],16
-      nop.m         999
+{ .mfi
+      ldfe          sincos_Pi_by_16_3   = [sincos_AD_1],16
+      nop.f         999
       dep.z         sincos_r_exp        = sincos_r_signexp, 0, 17 
-}
-;;
+};;
 
+// Polynomial coefficients (Q4, P4, Q3, P3, Q2, Q1, P2, P1) loading
 // p10 is true if we must call routines to handle larger arguments
 // p10 is true if f8 exp is >= 0x1001a (2^27)
 { .mmb
-      ldfpd         sincos_P2,sincos_Q2 = [sincos_AD_1],16
+      ldfpd         sincos_P4,sincos_Q4 = [sincos_AD_1],16
       cmp.ge        p10,p0              = sincos_r_exp,sincos_exp_limit 
 (p10) br.cond.spnt  _SINCOS_LARGE_ARGS // Go to "large args" routine
 };;
@@ -536,66 +530,61 @@ _SINCOS_COMMON:
 // Multiply x by scaled 16/pi and add large const to shift integer part of W to
 //   rightmost bits of significand
 { .mfi
-      ldfpd         sincos_P1,sincos_Q1 = [sincos_AD_1],16
+      ldfpd         sincos_P3,sincos_Q3 = [sincos_AD_1],16
       fma.s1 sincos_W_2TO61_RSH = sincos_NORM_f8,sincos_SIG_INV_PI_BY_16_2TO61,sincos_RSHF_2TO61
       nop.i         999
 };;
 
+// get N = (int)sincos_int_Nfloat
 // sincos_NFLOAT = Round_Int_Nearest(sincos_W)
 // This is done by scaling back by 2^-61 and subtracting the shift constant
-{ .mfi
-      nop.m         999
-      fms.s1 sincos_NFLOAT = sincos_W_2TO61_RSH,sincos_2TOM61,sincos_RSHF
-      nop.i         999 
-};;
-
-
-// get N = (int)sincos_int_Nfloat
-{ .mfi
+{ .mmf
       getf.sig      sincos_GR_n         = sincos_W_2TO61_RSH
-      nop.f         999
-      nop.i         999 
+      ldfpd         sincos_P2,sincos_Q2 = [sincos_AD_1],16
+      fms.s1 sincos_NFLOAT = sincos_W_2TO61_RSH,sincos_2TOM61,sincos_RSHF
 };;
 
-// Add 2^(k-1) (which is in sincos_r_sincos) to N
 // sincos_r          = -sincos_Nfloat * sincos_Pi_by_16_1 + x
 { .mfi
-      add           sincos_GR_n         = sincos_GR_n, sincos_r_sincos
+      ldfpd         sincos_P1,sincos_Q1 = [sincos_AD_1],16
       fnma.s1 sincos_r = sincos_NFLOAT, sincos_Pi_by_16_1, sincos_NORM_f8
       nop.i         999 
 };;
 
-// Get M (least k+1 bits of N)
+// Add 2^(k-1) (which is in sincos_r_sincos) to N
 { .mmi
-      and           sincos_GR_m         = 0x1f,sincos_GR_n;;
+      add           sincos_GR_n         = sincos_GR_n, sincos_r_sincos
+;;
+// Get M (least k+1 bits of N)
+      and           sincos_GR_m         = 0x1f,sincos_GR_n
+      nop.i         999 
+};;
+
+// sincos_r          = sincos_r -sincos_Nfloat * sincos_Pi_by_16_2
+{ .mfi
       nop.m         999
+      fnma.s1 sincos_r = sincos_NFLOAT, sincos_Pi_by_16_2,  sincos_r
       shl           sincos_GR_32m       = sincos_GR_m,5
 };;
 
 // Add 32*M to address of sin_cos_beta table
+// For sin denorm. - set uflow
 { .mfi
       add           sincos_AD_2         = sincos_GR_32m, sincos_AD_1
-(p8)  fclass.m.unc  p10,p0              = f8,0x0b // For sin denorm. - set uflow
+(p8)  fclass.m.unc  p10,p0              = f8,0x0b
       nop.i         999 
 };;
 
 // Load Sin and Cos table value using obtained index m  (sincosf_AD_2)
 { .mfi
       ldfe          sincos_Sm           = [sincos_AD_2],16
-(p9)  fclass.m.unc  p11,p0              = f8,0x0b // For cos denorm - set denorm
-      nop.i         999 
-};;
-
-// sincos_r          = sincos_r -sincos_Nfloat * sincos_Pi_by_16_2
-{ .mfi
-      ldfe          sincos_Cm           = [sincos_AD_2]
-      fnma.s1 sincos_r = sincos_NFLOAT, sincos_Pi_by_16_2,  sincos_r
+      nop.f         999 
       nop.i         999 
 };;
 
 // get rsq = r*r
 { .mfi
-      nop.m         999
+      ldfe          sincos_Cm           = [sincos_AD_2]
       fma.s1        sincos_rsq          = sincos_r, sincos_r,   f0 // r^2 = r*r
       nop.i         999
 }
@@ -660,7 +649,6 @@ _SINCOS_COMMON:
       fma.s1        sincos_Q            = sincos_rsq, sincos_Q_temp2, sincos_Q1
       nop.i         999
 }
-
 { .mfi
       nop.m         999
       fma.s1        sincos_P            = sincos_rsq, sincos_P_temp2, sincos_P1
@@ -675,7 +663,6 @@ _SINCOS_COMMON:
       fma.s1        sincos_Q            = sincos_srsq,sincos_Q, sincos_Sm
       nop.i         999
 }
-
 { .mfi
       nop.m         999
       fma.s1        sincos_P            = sincos_rcub,sincos_P, sincos_r_exact
@@ -683,18 +670,11 @@ _SINCOS_COMMON:
 };;
 
 // If sin(denormal), force underflow to be set
-.pred.rel "mutex",p10,p11
 { .mfi
       nop.m         999
-(p10) fmpy.d.s0     fp_tmp              = f8,f8  // forces underflow flag
-      nop.i         999                          // for denormal sine args
-}
-{ .mfi
-      nop.m         999
-(p11) fma.d.s0      fp_tmp              = f8,f1, f8  // forces denormal flag
-      nop.i         999                              // for denormal cosine args
+(p10) fmpy.d.s0     fp_tmp              = sincos_NORM_f8,sincos_NORM_f8
+      nop.i         999
 };;
-
 
 // Final calculation
 // result = C[m]*P + Q
@@ -724,13 +704,22 @@ _SINCOS_SPECIAL_ARGS:
       br.ret.sptk   b0 // Exit for x = 0/Inf/NaN path
 };;
 
+_SINCOS_UNORM:
+// Here if x=unorm
+{ .mfb
+      getf.exp      sincos_r_signexp    = sincos_NORM_f8 // Get signexp of x 
+      fcmp.eq.s0    p11,p0              = f8, f0  // Dummy op to set denorm flag
+      br.cond.sptk  _SINCOS_COMMON2     // Return to main path
+};;
+
 GLOBAL_IEEE754_END(cos)
+
 //////////// x >= 2^27 - large arguments routine call ////////////
 LOCAL_LIBM_ENTRY(__libm_callout_sincos)
 _SINCOS_LARGE_ARGS:
 .prologue
 { .mfi
-      mov           sincos_GR_all_ones  = -1 // 0xffffffff
+      mov           GR_SAVE_r_sincos    = sincos_r_sincos // Save sin or cos
       nop.f         999
 .save ar.pfs,GR_SAVE_PFS
       mov           GR_SAVE_PFS         = ar.pfs
@@ -753,7 +742,7 @@ _SINCOS_LARGE_ARGS:
 };;
 
 { .mbb
-      cmp.ne        p9,p0               = sincos_r_sincos, r0 // set p9 if cos
+      cmp.ne        p9,p0               = GR_SAVE_r_sincos, r0 // set p9 if cos
       nop.b         999
 (p9)  br.call.sptk.many b0              = __libm_cos_large# // cos(large_X)
 };;

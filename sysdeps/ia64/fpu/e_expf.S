@@ -1,7 +1,7 @@
 .file "expf.s"
 
 
-// Copyright (c) 2000 - 2002, Intel Corporation
+// Copyright (c) 2000 - 2003, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -52,6 +52,7 @@
 // 09/26/02 support of higher precision inputs added, underflow threshold
 //          corrected
 // 11/15/02 Improved performance on Itanium 2, added possible over/under paths
+// 05/30/03 Set inexact flag on unmasked overflow/underflow
 //
 //
 // API
@@ -521,7 +522,7 @@ EXP_CERTAIN_OVERFLOW:
 }
 { .mfb
       mov             GR_Parameter_TAG = 16
-      fma.s.s0        FR_RESULT = fTmp, fTmp, f0 // Set I,O and +INF result
+      fma.s.s0        FR_RESULT = fTmp, fTmp, fTmp // Set I,O and +INF result
       br.cond.sptk    __libm_error_region
 }
 ;;
@@ -604,6 +605,13 @@ EXP_CERTAIN_UNDERFLOW:
 }
 ;;
 
+{ .mfi
+      nop.m           0
+      fmerge.se       fTmp = fTmp, f64DivLn2    // Small with non-trial signif
+      nop.i           0
+}
+;;
+      
 { .mfb
       nop.m           0
       fma.s.s0        f8 = fTmp, fTmp, f0 // Set I,U, tiny (+0.0) result
@@ -648,6 +656,7 @@ EXP_UNDERFLOW_ZERO:
 ;;
 
 GLOBAL_IEEE754_END(expf)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

@@ -408,6 +408,7 @@ GLOBAL_IEEE754_ENTRY(sinf)
 };;
 
 GLOBAL_IEEE754_END(sinf)
+
 GLOBAL_IEEE754_ENTRY(cosf)
 
 { .mlx
@@ -657,6 +658,7 @@ _SINCOSF_SPECIAL_ARGS:
 };;
 
 GLOBAL_IEEE754_END(cosf)
+
 //////////// x >= 2^24 - large arguments routine call ////////////
 LOCAL_LIBM_ENTRY(__libm_callout_sincosf)
 _SINCOSF_LARGE_ARGS:

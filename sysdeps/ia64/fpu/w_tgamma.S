@@ -1781,6 +1781,7 @@ tgamma_libm_err:
 };;
 
 GLOBAL_LIBM_END(tgamma)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

@@ -1386,6 +1386,7 @@ GLOBAL_IEEE754_ENTRY(log10)
 };;
 GLOBAL_IEEE754_END(log10)
 
+
 GLOBAL_IEEE754_ENTRY(log)
 { .mfi
       getf.exp      GR_Exp = f8 // if x is unorm then must recompute
@@ -1666,6 +1667,7 @@ log_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(log)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

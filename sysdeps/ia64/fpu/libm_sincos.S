@@ -46,12 +46,13 @@
 // 03/19/02 Added stack unwind around call to __libm_cis_large
 // 09/05/02 Work range is widened by reduction strengthen (3 parts of Pi/16)
 // 02/10/03 Reordered header: .section, .global, .proc, .align
-// 
+// 08/08/03 Improved performance
+// 02/11/04 cis is moved to the separate file.
+//
 // API
 //==============================================================
-// 1) double _Complex cis(double)
-// 2) void sincos(double, double*s, double*c)
-// 3) __libm_sincos - internal LIBM function, that accepts
+// 1) void sincos(double, double*s, double*c)
+// 2) __libm_sincos - internal LIBM function, that accepts
 //    argument in f8 and returns cosine through f8, sine through f9
 //
 // Overview of operation
@@ -65,12 +66,12 @@
 //    nfloat = Round result to integer (round-to-nearest)
 //
 // r = x -  nfloat * pi/2^k
-//    Do this as ((((x -  nfloat * HIGH(pi/2^k))) - 
-//                        nfloat * LOW(pi/2^k)) - 
+//    Do this as ((((x -  nfloat * HIGH(pi/2^k))) -
+//                        nfloat * LOW(pi/2^k)) -
 //                        nfloat * LOWEST(pi/2^k) for increased accuracy.
 //    pi/2^k is stored as two numbers that when added make pi/2^k.
 //       pi/2^k = HIGH(pi/2^k) + LOW(pi/2^k)
-//    HIGH and LOW parts are rounded to zero values, 
+//    HIGH and LOW parts are rounded to zero values,
 //    and LOWEST is rounded to nearest one.
 //
 // x = (nfloat * pi/2^k) + r
@@ -166,15 +167,14 @@
 // Registers used
 //==============================================================
 // general input registers:
-// r14 -> r19
-// r32 -> r49
+// r14 -> r39
 
 // predicate registers used:
 // p6 -> p14
-
+//
 // floating-point registers used
 // f9 -> f15
-// f32 -> f100
+// f32 -> f67
 
 // Assembly macros
 //==============================================================
@@ -246,38 +246,32 @@ cis_Q                       = f67
 cis_pResSin                 = r33
 cis_pResCos                 = r34
 
-cis_exp_limit               = r35
-cis_r_signexp               = r36
-cis_AD_beta_table           = r37
-cis_r_sincos                = r38
-
-cis_r_exp                   = r39
-cis_r_17_ones               = r40
-
 cis_GR_sig_inv_pi_by_16     = r14
 cis_GR_rshf_2to61           = r15
 cis_GR_rshf                 = r16
 cis_GR_exp_2tom61           = r17
 cis_GR_n                    = r18
-
 cis_GR_n_sin                = r19
-cis_GR_m_sin                = r41
-cis_GR_32m_sin              = r41
+cis_exp_limit               = r20
+cis_r_signexp               = r21
+cis_AD_1                    = r22
+cis_r_sincos                = r23
+cis_r_exp                   = r24
+cis_r_17_ones               = r25
+cis_GR_m_sin                = r26
+cis_GR_32m_sin              = r26
+cis_GR_n_cos                = r27
+cis_GR_m_cos                = r28
+cis_GR_32m_cos              = r28
+cis_AD_2_sin                = r29
+cis_AD_2_cos                = r30
+cis_gr_tmp                  = r31
 
-cis_GR_n_cos                = r42
-cis_GR_m_cos                = r43
-cis_GR_32m_cos              = r43
-
-cis_AD_2_sin                = r44
-cis_AD_2_cos                = r45
-
-cis_gr_tmp                  = r46
-GR_SAVE_B0                  = r47
-GR_SAVE_GP                  = r48
-rB0_SAVED                   = r49
-GR_SAVE_PFS                 = r50
-GR_SAVE_PR                  = r51
-cis_AD_1                    = r52
+GR_SAVE_B0                  = r35
+GR_SAVE_GP                  = r36
+rB0_SAVED                   = r37
+GR_SAVE_PFS                 = r38
+GR_SAVE_PR                  = r39
 
 RODATA
 
@@ -408,14 +402,14 @@ LOCAL_OBJECT_END(double_sin_cos_beta_k4)
 GLOBAL_IEEE754_ENTRY(sincos)
 // cis_GR_sig_inv_pi_by_16 = significand of 16/pi
 { .mlx
-      alloc         GR_SAVE_PFS             = ar.pfs, 0, 21, 0, 0
+      getf.exp      cis_r_signexp       = cis_Arg
       movl          cis_GR_sig_inv_pi_by_16 = 0xA2F9836E4E44152A
-                                             
+
 }
 // cis_GR_rshf_2to61 = 1.1000 2^(63+63-2)
 { .mlx
       addl          cis_AD_1                = @ltoff(double_cis_pi), gp
-      movl          cis_GR_rshf_2to61       = 0x47b8000000000000 
+      movl          cis_GR_rshf_2to61       = 0x47b8000000000000
 };;
 
 { .mfi
@@ -430,12 +424,11 @@ GLOBAL_IEEE754_ENTRY(sincos)
       br.cond.sptk  _CIS_COMMON
 };;
 GLOBAL_IEEE754_END(sincos)
-LOCAL_LIBM_ENTRY(cis)
-LOCAL_LIBM_END(cis)
+
 GLOBAL_LIBM_ENTRY(__libm_sincos)
 // cis_GR_sig_inv_pi_by_16 = significand of 16/pi
 { .mlx
-      alloc         GR_SAVE_PFS             = ar.pfs,0,21,0,0
+      getf.exp      cis_r_signexp       = cis_Arg
       movl          cis_GR_sig_inv_pi_by_16 = 0xA2F9836E4E44152A
 }
 // cis_GR_rshf_2to61 = 1.1000 2^(63+63-2)
@@ -443,11 +436,12 @@ GLOBAL_LIBM_ENTRY(__libm_sincos)
       addl          cis_AD_1            = @ltoff(double_cis_pi), gp
       movl          cis_GR_rshf_2to61   = 0x47b8000000000000
 };;
+
 // p14 set for __libm_sincos and cis
 { .mfi
       ld8           cis_AD_1            = [cis_AD_1]
       fnorm.s1      cis_NORM_f8         = cis_Arg
-      cmp.eq        p14, p13            = r0, r0 
+      cmp.eq        p14, p13            = r0, r0
 }
 // cis_GR_exp_2tom61 = exponent of scaling factor 2^-61
 { .mib
@@ -476,10 +470,15 @@ _CIS_COMMON:
 //  2^-61 for scaling Nfloat
 //  0x1001a is register_bias + 27.
 //  So if f8 >= 2^27, go to large arguments routine
-{ .mmi
-      getf.exp      cis_r_signexp       = cis_Arg
-      setf.exp      cis_2TOM61          = cis_GR_exp_2tom61
+{ .mfi
+      alloc         GR_SAVE_PFS         = ar.pfs, 3, 5, 0, 0
+      fclass.m      p11,p0              = cis_Arg, 0x0b // Test for x=unorm
       mov           cis_exp_limit       = 0x1001a
+}
+{ .mib
+      setf.exp      cis_2TOM61          = cis_GR_exp_2tom61
+      nop.i         0
+(p6)  br.cond.spnt  _CIS_SPECIAL_ARGS
 };;
 
 //  Load the two pieces of pi/16
@@ -488,9 +487,11 @@ _CIS_COMMON:
 { .mmb
       ldfe          cis_Pi_by_16_hi     = [cis_AD_1],16
       setf.d        cis_RSHF            = cis_GR_rshf
-(p6)  br.cond.spnt  _CIS_SPECIAL_ARGS
+(p11) br.cond.spnt  _CIS_UNORM          // Branch if x=unorm
 };;
 
+_CIS_COMMON2:
+// Return here if x=unorm
 // Create constant inexact set
 { .mmi
       ldfe          cis_Pi_by_16_lo     = [cis_AD_1],16
@@ -498,23 +499,18 @@ _CIS_COMMON:
       nop.i         0
 };;
 
+// Select exponent (17 lsb)
 { .mfi
       ldfe          cis_Pi_by_16_lowest = [cis_AD_1],16
       nop.f         0
-      nop.i         0
+      dep.z         cis_r_exp           = cis_r_signexp, 0, 17
 };;
 
 // Start loading P, Q coefficients
-{ .mib
-      ldfpd         cis_P4,cis_Q4       = [cis_AD_1],16
-      dep.z         cis_r_exp           = cis_r_signexp, 0, 17
-      nop.b         0
-};;
-
 // p10 is true if we must call routines to handle larger arguments
 // p10 is true if f8 exp is > 0x1001a
 { .mmb
-      ldfpd         cis_P3,cis_Q3       = [cis_AD_1],16
+      ldfpd         cis_P4,cis_Q4       = [cis_AD_1],16
       cmp.ge        p10, p0             = cis_r_exp, cis_exp_limit
 (p10) br.cond.spnt  _CIS_LARGE_ARGS // go to |x| >= 2^27 path
 };;
@@ -523,39 +519,33 @@ _CIS_COMMON:
 // Multiply x by scaled 16/pi and add large const to shift integer part of W to
 // rightmost bits of significand
 { .mfi
-      ldfpd  cis_P2,cis_Q2   = [cis_AD_1],16
+      ldfpd         cis_P3,cis_Q3       = [cis_AD_1],16
       fma.s1 cis_W_2TO61_RSH = cis_NORM_f8,cis_SIG_INV_PI_BY_16_2TO61,cis_RSHF_2TO61
       nop.i  0
 };;
 
+// get N = (int)cis_int_Nfloat
 // cis_NFLOAT = Round_Int_Nearest(cis_W)
+{ .mmf
+      getf.sig      cis_GR_n            = cis_W_2TO61_RSH
+      ldfpd  cis_P2,cis_Q2   = [cis_AD_1],16
+      fms.s1        cis_NFLOAT          = cis_W_2TO61_RSH,cis_2TOM61,cis_RSHF
+};;
+
+// cis_r = -cis_Nfloat * cis_Pi_by_16_hi + x
 { .mfi
       ldfpd         cis_P1,cis_Q1       = [cis_AD_1], 16
-      fms.s1        cis_NFLOAT          = cis_W_2TO61_RSH,cis_2TOM61,cis_RSHF
-      nop.i         0
-};;
-
-// get N = (int)cis_int_Nfloat
-{ .mfi
-      getf.sig      cis_GR_n            = cis_W_2TO61_RSH 
-      nop.f         0
-      nop.i         0
-};;
-
-// Add 2^(k-1) (which is in cis_r_sincos) to N
-// cis_r = -cis_Nfloat * cis_Pi_by_16_hi + x
-// cis_r =  cis_r -cis_Nfloat * cis_Pi_by_16_lo
-{ .mfi
-      add           cis_GR_n_cos        = 0x8, cis_GR_n
       fnma.s1       cis_r               = cis_NFLOAT,cis_Pi_by_16_hi,cis_NORM_f8
       nop.i         0
 };;
 
-//Get M (least k+1 bits of N)
+// Add 2^(k-1) (which is in cis_r_sincos) to N
 { .mmi
+      add           cis_GR_n_cos        = 0x8, cis_GR_n
+;;
+//Get M (least k+1 bits of N)
       and           cis_GR_m_sin        = 0x1f,cis_GR_n
       and           cis_GR_m_cos        = 0x1f,cis_GR_n_cos
-      nop.i         0
 };;
 
 { .mmi
@@ -565,9 +555,10 @@ _CIS_COMMON:
 };;
 
 // Add 32*M to address of sin_cos_beta table
-{ .mmi
+// cis_r =  cis_r -cis_Nfloat * cis_Pi_by_16_lo
+{ .mfi
       add           cis_AD_2_sin        = cis_GR_32m_sin, cis_AD_1
-      nop.m         0
+      fnma.s1       cis_r               = cis_NFLOAT, cis_Pi_by_16_lo,  cis_r
       shl           cis_GR_32m_cos      = cis_GR_m_cos,5
 };;
 
@@ -580,7 +571,6 @@ _CIS_COMMON:
 
 { .mfi
       ldfe          cis_Sm_cos          = [cis_AD_2_cos], 16
-      fnma.s1       cis_r               = cis_NFLOAT, cis_Pi_by_16_lo,  cis_r
       nop.i         0
 };;
 
@@ -604,7 +594,7 @@ _CIS_COMMON:
 
 { .mfi
       ldfe          cis_Cm_cos          = [cis_AD_2_cos]
-      fma.s1        cis_P_temp1         = cis_rsq, cis_P4, cis_P3 
+      fma.s1        cis_P_temp1         = cis_rsq, cis_P4, cis_P3
       nop.i         0
 }
 
@@ -638,18 +628,18 @@ _CIS_COMMON:
 
 { .mfi
       nop.m         0
+      fmpy.s1       cis_rcub            = cis_r_exact, cis_rsq // get r^3
+      nop.i         0
+};;
+
+{ .mfi
+      nop.m         0
       fma.s1        cis_Q               = cis_rsq, cis_Q_temp2, cis_Q1
       nop.i         0
 }
 { .mfi
       nop.m         0
       fma.s1        cis_P               = cis_rsq, cis_P_temp2, cis_P1
-      nop.i         0
-};;
-
-{ .mfi
-      nop.m         0
-      fmpy.s1       cis_rcub            = cis_r_exact, cis_rsq // get r^3
       nop.i         0
 };;
 
@@ -717,7 +707,17 @@ _CIS_SPECIAL_ARGS:
       stfd          [cis_pResCos]       = cis_Cos_res
       br.ret.sptk   b0 // common exit for sincos main path
 };;
+
+_CIS_UNORM:
+// Here if x=unorm
+{ .mfb
+      getf.exp      cis_r_signexp       = cis_NORM_f8 // Get signexp of x
+      fcmp.eq.s0    p11,p0              = cis_Arg, f0 // Dummy op to set denorm
+      br.cond.sptk  _CIS_COMMON2        // Return to main path
+};;
+
 GLOBAL_LIBM_END(__libm_sincos)
+
 ////  |x| > 2^27 path  ///////
 .proc _CIS_LARGE_ARGS
 _CIS_LARGE_ARGS:

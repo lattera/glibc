@@ -170,7 +170,7 @@ _dl_start_user:\n\
 	# argv -> rdx\n\
 	leaq 8(%r13), %rdx\n\
 	# Clear %rbp to mark outermost frame obviously even for constructors.\n\
-	xorq %rbp, %rbp\n\
+	xorl %ebp, %ebp\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %rdx, as per ELF ABI.\n\

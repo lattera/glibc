@@ -557,6 +557,7 @@ EXP_ERROR_RETURN:
 }
 
 GLOBAL_IEEE754_END(remainderl)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

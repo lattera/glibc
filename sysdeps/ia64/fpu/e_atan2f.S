@@ -827,6 +827,7 @@ ATAN2F_XY_INF_NAN_ZERO:
 
 GLOBAL_IEEE754_END(atan2f)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
          mov            GR_Parameter_TAG      = 38

@@ -106,6 +106,7 @@ FR_RESULT           = f8
 
 LOCAL_LIBM_ENTRY(cabs)
 LOCAL_LIBM_END(cabs)
+
 GLOBAL_IEEE754_ENTRY(hypot)
 
 {.mfi
@@ -384,6 +385,7 @@ GLOBAL_IEEE754_ENTRY(hypot)
 (p9) br.ret.sptk b0;; 
 }
 GLOBAL_IEEE754_END(hypot)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

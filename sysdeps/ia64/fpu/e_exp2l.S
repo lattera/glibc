@@ -747,6 +747,7 @@ OUT_RANGE_exp2l:
 
 GLOBAL_LIBM_END(exp2l)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 {.mfi

@@ -204,6 +204,7 @@ GLOBAL_IEEE754_ENTRY(sqrtf)
 //
 GLOBAL_IEEE754_END(sqrtf)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mii

@@ -49,6 +49,7 @@
 //          used data8 for long double table values
 // 03/11/03 Improved accuracy and performance, corrected missing inexact flags
 // 04/17/03 Eliminated misplaced and unused data label
+// 12/15/03 Eliminated call to error support on expm1l underflow
 //
 //********************************************************************* 
 //
@@ -677,6 +678,7 @@ GLOBAL_IEEE754_ENTRY(expm1l)
 
 GLOBAL_IEEE754_END(expm1l)
 
+
 GLOBAL_IEEE754_ENTRY(expl)
 //
 //    Set p7 false for exp, p6 true
@@ -1287,28 +1289,14 @@ EXP_POSSIBLE_UNDERFLOW:
 
 { .mfi
       nop.m 999
-(p7)  fclass.m.unc p12, p0 = FR_ftz, 0x00F // If expm1, FTZ result denorm, zero?
-      nop.i 999
-}
-;;
-
-{ .mfi
-      nop.m 999
 (p6)  fclass.m.unc p11, p0 = FR_ftz, 0x00F // If exp, FTZ result denorm or zero?
       nop.i 999
 }
 ;;
 
 { .mfb
-(p12) mov   GR_Parameter_TAG = 40             // expm1 underflow
-      fmerge.s FR_X = f8,f8                   // Save x for error call
-(p12) br.cond.spnt __libm_error_region        // Branch on expm1 underflow
-}
-;;
-
-{ .mib
 (p11) mov   GR_Parameter_TAG = 13             // exp underflow
-      nop.i 999
+      fmerge.s FR_X = f8,f8                   // Save x for error call
 (p11) br.cond.spnt __libm_error_region        // Branch on exp underflow
 }
 ;;
@@ -1389,6 +1377,7 @@ EXP_64_UNSUPPORTED:
 ;;
 
 GLOBAL_IEEE754_END(expl)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ syscall_error:
 	   EWOULDBLOCK_sys is the original number.  */
 	cmpq $EWOULDBLOCK_sys, %rax /* Is it the old EWOULDBLOCK?  */
 	jne notb		/* Branch if not.  */
-	movq $EAGAIN, %rax	/* Yes; translate it to EAGAIN.  */
+	movl $EAGAIN, %eax	/* Yes; translate it to EAGAIN.  */
 notb:
 #endif
 #if USE___THREAD

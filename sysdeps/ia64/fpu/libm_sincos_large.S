@@ -792,6 +792,7 @@ GLOBAL_LIBM_END(__libm_sincos_large)
 
 
 
+
 GLOBAL_LIBM_ENTRY(__libm_sin_large)
 
 { .mlx
@@ -821,6 +822,7 @@ alloc GR_Table_Base = ar.pfs,0,12,2,0
 }
 
 GLOBAL_LIBM_END(__libm_sin_large)
+
 GLOBAL_LIBM_ENTRY(__libm_cos_large)
 
 { .mlx
@@ -2672,6 +2674,7 @@ SINCOS_SPECIAL:
         br.ret.sptk   b0 ;;
 }
 GLOBAL_LIBM_END(__libm_cos_large)
+
 
 // *******************************************************************
 // *******************************************************************

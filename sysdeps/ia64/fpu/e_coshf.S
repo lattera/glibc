@@ -652,6 +652,7 @@ COSH_UNORM:
 
 GLOBAL_IEEE754_END(coshf)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

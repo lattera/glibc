@@ -164,6 +164,7 @@ FDIM_OVERFLOW:
 
 GLOBAL_LIBM_END(fdiml)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 // Call error support to report possible range error
 .prologue

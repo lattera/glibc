@@ -1145,6 +1145,7 @@ LOG1P_LT_Minus_1:
 
 
 GLOBAL_IEEE754_END(log1pl)
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 { .mfi

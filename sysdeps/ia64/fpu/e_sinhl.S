@@ -1055,6 +1055,7 @@ SINH_HUGE:
 
 GLOBAL_IEEE754_END(sinhl)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 

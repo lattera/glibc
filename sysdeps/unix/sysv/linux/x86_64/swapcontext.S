@@ -1,5 +1,5 @@
 /* Save current context and install the given one.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -73,9 +73,9 @@ ENTRY(__swapcontext)
 	   rt_sigprocmask (SIG_BLOCK, newset, oldset,_NSIG/8).  */
 	leaq	oSIGMASK(%rdi), %rdx
 	leaq	oSIGMASK(%rsi), %rsi
-	movq	$SIG_SETMASK, %rdi
-	movq	$_NSIG8,%r10
-	movq	$__NR_rt_sigprocmask, %rax
+	movl	$SIG_SETMASK, %edi
+	movl	$_NSIG8,%r10d
+	movl	$__NR_rt_sigprocmask, %eax
 	syscall
 	cmpq	$-4095, %rax		/* Check %rax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
@@ -114,7 +114,7 @@ ENTRY(__swapcontext)
 	movq	oRSI(%rsi), %rsi
 
 	/* Clear rax to indicate success.  */
-	xorq	%rax, %rax
+	xorl	%eax, %eax
 
 L(pseudo_end):
 	ret

@@ -52,6 +52,7 @@
 // 08/20/02  Corrected inexact flag and directed rounding symmetry bugs
 // 02/06/03  Reordered header: .section, .global, .proc, .align
 // 04/17/03  Added missing mutex directive
+// 12/23/03  atan2(NaN1,NaN2) now QNaN1, for consistency with atan2f, atan2l
 //
 // API
 //==============================================================
@@ -142,7 +143,7 @@
 //             -0                -0          -pi
 //
 //            Nan             anything      quiet Y
-//            anything        NaN           quiet X
+//            Not NaN         NaN           quiet X
 
 // atan2(+-0/+-0) sets double error tag to 37
 
@@ -388,7 +389,7 @@ GLOBAL_IEEE754_ENTRY(atan2)
 }
 { .mfb
            ldfe         atan2_P21  = [EXP_AD_P2],16
-(p10)      fma.d.s0 f8 = atan2_Y,atan2_X,f0   // If y=nan, result quietized y
+(p10)      fma.d.s0 f8 = atan2_X,atan2_Y,f0   // If y=nan, result quietized y
 (p10)      br.ret.spnt b0        // Exit if y=nan
 ;;
 }
@@ -984,6 +985,7 @@ ATAN2_ERROR:
 ;;
 }
 GLOBAL_IEEE754_END(atan2)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

@@ -841,6 +841,7 @@ GLOBAL_IEEE754_ENTRY(log10f)
       br.cond.sptk  logf_log10f_common
 };;
 GLOBAL_IEEE754_END(log10f)
+
 GLOBAL_IEEE754_ENTRY(logf)
 { .mfi
       getf.exp      GR_Exp = f8 // if x is unorm then must recompute
@@ -1086,6 +1087,7 @@ logf_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(logf)
+
 
 // Stack operations when calling error support.
 //       (1)               (2)                          (3) (call)              (4)

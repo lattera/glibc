@@ -1,7 +1,7 @@
 .file "exp10f.s"
 
 
-// Copyright (c) 2000 - 2003, Intel Corporation
+// Copyright (c) 2000 - 2004, Intel Corporation
 // All rights reserved.
 //
 // Contributed 2000 by the Intel Numerics Group, Intel Corporation
@@ -35,7 +35,7 @@
 //
 // Intel Corporation is the author of this code, and requests that all
 // problem reports or change requests be submitted to it directly at
-// http: //www.intel.com/software/products/opensource/libraries/num.htm.
+// http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
 //==============================================================
@@ -43,6 +43,7 @@
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 09/06/02 Improved performance and accuracy; no inexact flags on exact cases
 // 01/29/03 Added missing } to bundle templates
+// 12/16/04 Call error handling on underflow.
 //
 // API
 //==============================================================
@@ -80,8 +81,8 @@
 // Registers used
 //==============================================================
 // r2-r3, r14-r40
-// f6-f15, f32-f51
-// p6-p9, p12
+// f6-f15, f32-f52
+// p6-p12
 //
 
 
@@ -102,6 +103,7 @@ GR_Fh_ADDR          = r23
 GR_EXPMAX           = r24
 
 GR_ROUNDVAL         = r26
+GR_SNORM_LIMIT      = r26
 GR_MASK             = r27
 GR_KF0              = r28
 GR_MASK_low         = r29
@@ -153,6 +155,7 @@ FR_E                = f49
 FR_exact_limit      = f50
 
 FR_int_x            = f51
+FR_SNORM_LIMIT      = f52
 
 
 // Data tables
@@ -246,8 +249,12 @@ GLOBAL_IEEE754_ENTRY(exp10f)
 }
 ;;
 
-{.mib
+{.mlx
        ldfe FR_LOG2_10= [ GR_COEFF_START ], 16  // load log2(10)*2^(10-63)
+       movl GR_SNORM_LIMIT= 0xc217b818          // Smallest normal threshold
+}
+{.mib
+       nop.m 0
        nop.i 0
  (p12) br.cond.spnt SPECIAL_exp10               // Branch if nan, inf, zero
 }
@@ -261,7 +268,7 @@ GLOBAL_IEEE754_ENTRY(exp10f)
 ;;
 
 {.mfi
-       nop.m 0
+       setf.s FR_SNORM_LIMIT= GR_SNORM_LIMIT      // Set smallest normal limit
  (p8)  fcvt.fx.s1 FR_int_x = f8                   // Convert x to integer
        nop.i 0
 }
@@ -335,7 +342,7 @@ GLOBAL_IEEE754_ENTRY(exp10f)
 
 {.mfb
        ldf8 FR_T_high= [ GR_Fh_ADDR ]            // load T_high= 2^{f_high}
-       nop.f 0
+       fcmp.ge.s1 p11, p0= f8, FR_SNORM_LIMIT    // Test x for normal range
  (p12) br.cond.spnt OUT_RANGE_exp10
 }
 ;;
@@ -390,10 +397,17 @@ GLOBAL_IEEE754_ENTRY(exp10f)
 {.mfb
        nop.m 0
  (p9)  fma.s.s1 f8= FR_P, FR_T, FR_T              // result= T+T*P, exact use s1
-       br.ret.sptk b0                             // return
+ (p11) br.ret.sptk b0                             // return, if result normal
 }
 ;;
 
+// Here if result in denormal range (and not zero)
+{.mib
+       nop.m 0
+       mov GR_Parameter_TAG= 266
+       br.cond.sptk __libm_error_region           // Branch to error handling
+}
+;;
 
 SPECIAL_exp10:
 {.mfi
@@ -446,52 +460,34 @@ SPECIAL_exp10:
 
 OUT_RANGE_exp10:
 
+// underflow: p6= 1
 // overflow: p8= 1
 
-{.mii
+.pred.rel "mutex",p6,p8
+{.mmi
  (p8)  mov GR_EXPMAX= 0x1fffe
-       nop.i 0
-       nop.i 0
-}
-;;
-
-
-{.mmb
- (p8)  mov GR_Parameter_TAG= 167
- (p8)  setf.exp FR_R= GR_EXPMAX
-       nop.b 999
-}
-;;
-
-{.mfi
-       nop.m 999
- (p8)  fma.s.s0 f8= FR_R, FR_R, f0                // Create overflow
-       nop.i 999
-}
-// underflow: p6= 1
-{.mii
-       nop.m 0
  (p6)  mov GR_EXPMAX= 1
        nop.i 0
 }
 ;;
 
-{.mmb
-       nop.m 0
- (p6)  setf.exp FR_R= GR_EXPMAX
-       nop.b 999
+{.mii
+       setf.exp FR_R= GR_EXPMAX
+ (p8)  mov GR_Parameter_TAG= 167
+ (p6)  mov GR_Parameter_TAG= 266
 }
 ;;
 
 {.mfb
-       nop.m 999
- (p6)  fma.s.s0 f8= FR_R, FR_R, f0                // Create underflow
- (p6)  br.ret.sptk b0                  // will not call libm_error for underflow
+       nop.m 0
+       fma.s.s0 f8= FR_R, FR_R, f0                // Create overflow/underflow
+       br.cond.sptk __libm_error_region           // Branch to error handling
 }
 ;;
 
 GLOBAL_IEEE754_END(exp10f)
 weak_alias (exp10f, pow10f)
+
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 

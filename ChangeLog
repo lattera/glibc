@@ -1,3 +1,23 @@
+2005-03-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Use functionally
+	equivalent, but shorter instructions.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: Likewise.
+	* sysdeps/unix/x86_64/sysdep.S: Likewise.
+	* sysdeps/x86_64/strchr.S: Likewise.
+	* sysdeps/x86_64/memset.S: Likewise.
+	* sysdeps/x86_64/strcspn.S: Likewise.
+	* sysdeps/x86_64/strcmp.S: Likewise.
+	* sysdeps/x86_64/elf/start.S: Likewise.
+	* sysdeps/x86_64/strspn.S: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* sysdeps/x86_64/bsd-_setjmp.S: Likewise.
+	* sysdeps/x86_64/bsd-setjmp.S: Likewise.
+	* sysdeps/x86_64/strtok.S: Likewise.
+
 2005-03-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/fpu/e_acosf.S: Update from Intel libm 2005-03-21.

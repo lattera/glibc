@@ -206,6 +206,7 @@ ILOGB_ZERO:
 
 GLOBAL_LIBM_END(ilogbf)
 
+
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue
 

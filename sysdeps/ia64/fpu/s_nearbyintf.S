@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://www.intel.com/software/products/opensource/libraries/num.htm.
 //
 // History
@@ -43,48 +43,44 @@
 // 02/08/01 Corrected behavior for all rounding modes.
 // 05/20/02 Cleaned up namespace and sf0 syntax
 // 02/10/03 Reordered header: .section, .global, .proc, .align
+// 07/25/03 Improved performance
 //==============================================================
-//
+
 // API
 //==============================================================
 // float nearbyintf(float x)
-//
-// general registers used:  
-//
+//==============================================================
 
-nearbyint_GR_signexp   = r14
-nearbyint_GR_exponent  = r15
-nearbyint_GR_17ones    = r16
-nearbyint_GR_10033     = r17
-nearbyint_GR_fpsr      = r18
-nearbyint_GR_rcs0      = r19
-nearbyint_GR_rcs0_mask = r20
+// general input registers:
+// r14 - r21
 
+rSignexp   = r14
+rExp       = r15
+rExpMask   = r16
+rBigexp    = r17
+rFpsr      = r19
+rRcs0      = r20
+rRcs0Mask  = r21
 
-// predicate registers used: 
-// p6-11
+// floating-point registers:
+// f8 - f10
 
-// floating-point registers used: 
+fXInt      = f9
+fNormX     = f10
 
-NEARBYINT_NORM_f8      = f9                        
-NEARBYINT_FLOAT_INT_f8 = f10
-NEARBYINT_INT_f8       = f11
+// predicate registers used:
+// p6 - p10
 
 // Overview of operation
 //==============================================================
-
 // float nearbyintf(float x)
-// Return an integer value (represented as a float) that is x rounded to integer in current
-// rounding mode 
-// *******************************************************************************
-
-// Set denormal flag for denormal input and
-// and take denormal fault if necessary.
-
-// Is the input an integer value already?
+// Return an integer value (represented as a float) that is x
+// rounded to integer in current rounding mode
+// Inexact is not set, otherwise result identical with rint.
+//==============================================================
 
 // double_extended
-// if the exponent is >= 1003e => 3F(true) = 63(decimal)
+// if the exponent is > 1003e => 3F(true) = 63(decimal)
 // we have a significand of 64 bits 1.63-bits.
 // If we multiply by 2^63, we no longer have a fractional part
 // So input is an integer value already.
@@ -97,128 +93,125 @@ NEARBYINT_INT_f8       = f11
 // So input is an integer value already.
 
 // single
-// if the exponent is >= 10016 => 17(true) = 23(decimal)
-// we have a significand of 53 bits 1.52-bits. (implicit 1)
-// If we multiply by 2^52, we no longer have a fractional part
+// if the exponent is > 10016 => 17(true) = 23(decimal)
+// we have a significand of 24 bits 1.23-bits. (implicit 1)
+// If we multiply by 2^23, we no longer have a fractional part
 // So input is an integer value already.
-
-// If x is NAN, ZERO, or INFINITY, then  return
-
-// qnan snan inf norm     unorm 0 -+
-// 1    1    1   0        0     1 11     0xe7
-
 
 .section .text
 GLOBAL_LIBM_ENTRY(nearbyintf)
 
 { .mfi
-      mov nearbyint_GR_fpsr = ar40           // Read the fpsr--need to check rc.s0
-      fcvt.fx.s1     NEARBYINT_INT_f8  = f8
-      addl            nearbyint_GR_10033 = 0x10016, r0
+      getf.exp         rSignexp  = f8        // Get signexp, recompute if unorm
+      fclass.m         p7,p0 = f8, 0x0b      // Test x unorm
+      addl             rBigexp = 0x10016, r0 // Set exponent at which is integer
 }
 { .mfi
-      nop.m 999
-      fnorm.s1        NEARBYINT_NORM_f8  = f8
-      mov         nearbyint_GR_17ones    = 0x1FFFF
-;;
+      nop.m            0
+      fcvt.fx.s1       fXInt  = f8           // Convert to int in significand
+      mov              rExpMask    = 0x1FFFF // Form exponent mask
 }
+;;
 
 { .mfi
-      nop.m 999
-      fclass.m.unc  p6,p0 = f8, 0xe7
-      mov         nearbyint_GR_rcs0_mask  = 0x0c00
-;;
-}
-
-{ .mfb
-	nop.m 999
-(p6)  fnorm.s.s0 f8 = f8
-(p6)  br.ret.spnt   b0    // Exit if x nan, inf, zero
-;;
-}
-
-{ .mfi
-	nop.m 999
-      fcvt.xf         NEARBYINT_FLOAT_INT_f8   = NEARBYINT_INT_f8
-	nop.i 999
-;;
-}
-
-{ .mfi
-      getf.exp nearbyint_GR_signexp  = NEARBYINT_NORM_f8
-      fcmp.eq.s0  p8,p0 = f8,f0      // Dummy op to set denormal
-        nop.i 999
-;;
-}
-
-
-{ .mii
-	nop.m 999
-	nop.i 999 
-      and      nearbyint_GR_exponent = nearbyint_GR_signexp, nearbyint_GR_17ones
-;;
-}
-
-{ .mmi
-      cmp.ge.unc      p7,p6 = nearbyint_GR_exponent, nearbyint_GR_10033
-      and nearbyint_GR_rcs0 = nearbyint_GR_rcs0_mask, nearbyint_GR_fpsr
-	nop.i 999
-;;
-}
-
-// Check to see if s0 rounding mode is round to nearest.  If not then set s2
-// rounding mode to that of s0 and repeat conversions.
-NEARBYINT_COMMON:
-{ .mfb
-      cmp.ne   p11,p0 = nearbyint_GR_rcs0, r0
-(p6) fclass.m.unc   p9,p10  = NEARBYINT_FLOAT_INT_f8, 0x07  // Test for result=0
-(p11) br.cond.spnt NEARBYINT_NOT_ROUND_NEAREST  // Branch if not round to nearest
-;;
-}
-
-{ .mfi
-	nop.m 999
-(p7) fnorm.s.s0   f8 = f8
-	nop.i 999
-;;
-}
-
-// If result is zero, merge sign of input
-{ .mfi
-     nop.m 999
-(p9) fmerge.s f8 = f8, NEARBYINT_FLOAT_INT_f8
-     nop.i 999
+      mov              rFpsr = ar40          // Read fpsr -- check rc.s0
+      fclass.m         p6,p0 = f8, 0x1e3     // Test x natval, nan, inf
+      nop.i            0
 }
 { .mfb
-      nop.m 999
-(p10) fnorm.s.s0 f8 = NEARBYINT_FLOAT_INT_f8
-     br.ret.sptk    b0
-;;
+      nop.m            0
+      fnorm.s1         fNormX  = f8          // Normalize input
+(p7)  br.cond.spnt     RINT_UNORM            // Branch if x unorm
 }
-
-
-NEARBYINT_NOT_ROUND_NEAREST:
-// Set rounding mode of s2 to that of s0
-{ .mfi
-      mov nearbyint_GR_rcs0 = r0       // Clear so we don't come back here
-      fsetc.s2     0x7f, 0x40
-	nop.i 999
 ;;
-}
 
-{ .mfi
-	nop.m 999
-      fcvt.fx.s2     NEARBYINT_INT_f8  = f8
-	nop.i 999
-;;
-}
 
+RINT_COMMON:
+// Return here from RINT_UNORM
 { .mfb
-	nop.m 999
-      fcvt.xf         NEARBYINT_FLOAT_INT_f8   = NEARBYINT_INT_f8
-      br.cond.sptk  NEARBYINT_COMMON
-;;
+      and              rExp = rSignexp, rExpMask // Get biased exponent
+(p6)  fma.s.s0         f8 = f8, f1, f0       // Result if x natval, nan, inf
+(p6)  br.ret.spnt      b0                    // Exit if x natval, nan, inf
 }
+;;
 
+{ .mfi
+      mov              rRcs0Mask = 0x0c00     // Mask for rc.s0
+      fcvt.xf          f8 = fXInt             // Result assume |x| < 2^23
+      cmp.ge           p7,p8 = rExp, rBigexp  // Is |x| >= 2^23?
+}
+;;
+
+// We must correct result if |x| >= 2^23
+{ .mfi
+      nop.m            0
+(p7)  fma.s.s0         f8 = fNormX, f1, f0    // If |x| >= 2^23, result x
+      nop.i            0
+}
+;;
+
+{ .mfi
+      nop.m            0
+(p8)  fmerge.s         f8 = fNormX, f8        // Make sign nearbyintf(x)= sign x
+      nop.i            0
+}
+;;
+
+{ .mfi
+(p8)  and              rRcs0 = rFpsr, rRcs0Mask // Get rounding mode for sf0
+      nop.f            0
+      nop.i            0
+}
+;;
+
+// If |x| < 2^23 we must test for other rounding modes
+{ .mbb
+(p8)  cmp.ne.unc       p10,p0 = rRcs0, r0     // Test for other rounding modes
+(p10) br.cond.spnt     RINT_NOT_ROUND_NEAREST // Branch if not round nearest
+      br.ret.sptk      b0                     // Exit main path if round nearest
+}
+;;
+
+
+RINT_UNORM:
+// Here if x unorm
+{ .mfb
+      getf.exp         rSignexp  = fNormX     // Get signexp, recompute if unorm
+      fcmp.eq.s0       p7,p0 = f8, f0         // Dummy op to set denormal flag
+      br.cond.sptk     RINT_COMMON            // Return to main path
+}
+;;
+
+RINT_NOT_ROUND_NEAREST:
+// Here if not round to nearest, and |x| < 2^23
+// Set rounding mode of s2 to that of s0, and repeat the conversion using s2
+{ .mfi
+      nop.m            0
+      fsetc.s2         0x7f, 0x40
+      nop.i            0
+}
+;;
+
+{ .mfi
+      nop.m            0
+      fcvt.fx.s2       fXInt  = fNormX        // Convert to int in significand
+      nop.i            0
+}
+;;
+
+{ .mfi
+      nop.m            0
+      fcvt.xf          f8 = fXInt             // Expected result
+      nop.i            0
+}
+;;
+
+// Be sure sign of result = sign of input.  Fixes cases where result is 0.
+{ .mfb
+      nop.m            0
+      fmerge.s         f8 = fNormX, f8
+      br.ret.sptk      b0                     // Exit main path
+}
+;;
 
 GLOBAL_LIBM_END(nearbyintf)

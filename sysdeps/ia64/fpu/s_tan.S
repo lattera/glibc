@@ -282,6 +282,7 @@ LOCAL_LIBM_ENTRY(cot)
 
 LOCAL_LIBM_END(cot)
 
+
 GLOBAL_IEEE754_ENTRY(tan)
 // The initial fnorm will take any unmasked faults and
 // normalize any single/double unorms
@@ -736,6 +737,7 @@ COMMON_PATH:
       br.ret.sptk    b0 ;;
 }
 GLOBAL_IEEE754_END(tan)
+
 
 LOCAL_LIBM_ENTRY(__libm_callout)
 TAN_DBX:

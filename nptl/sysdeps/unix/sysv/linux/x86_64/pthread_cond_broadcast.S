@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -81,10 +81,10 @@ __pthread_cond_broadcast:
 	je	9f
 
 	/* Wake up all threads.  */
-	movq	$FUTEX_CMP_REQUEUE, %rsi
-	movq	$SYS_futex, %rax
+	movl	$FUTEX_CMP_REQUEUE, %esi
+	movl	$SYS_futex, %eax
 	movl	$1, %edx
-	movq	$0x7fffffff, %r10
+	movl	$0x7fffffff, %r10d
 	syscall
 
 	/* For any kind of error, which mainly is EAGAIN, we try again
@@ -128,9 +128,9 @@ __pthread_cond_broadcast:
 	jmp	8b
 
 9:	/* The futex requeue functionality is not available.  */
-	movq	$0x7fffffff, %rdx
-	movq	$FUTEX_WAKE, %rsi
-	movq	$SYS_futex, %rax
+	movl	$0x7fffffff, %edx
+	movl	$FUTEX_WAKE, %esi
+	movl	$SYS_futex, %eax
 	syscall
 	jmp	10b
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
