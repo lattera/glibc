@@ -1,3 +1,11 @@
+2004-02-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/pspinlock.c: Move from here.
+	* sysdeps/powerpc/powerpc32/pspinlock.c: To here.
+	* sysdeps/powerpc/powerpc64/pspinlock.c: New file.
+	* sysdeps/powerpc/powerpc64/pt-machine.h: Define __compare_and_swap32
+	and __compare_and_swap32_with_release_semantics.
+
 2004-02-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (generated): Remove tst-stack1.mtrace and tst-stack1-mem.

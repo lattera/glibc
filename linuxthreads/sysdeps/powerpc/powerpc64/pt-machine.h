@@ -30,6 +30,7 @@
 
 extern long int testandset (int *spinlock);
 extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+extern int __compare_and_swap32 (int *p, int oldval, int newval);
 
 /* For multiprocessor systems, we want to ensure all memory accesses
    are completed before we reset a lock.  On other systems, we still
@@ -110,6 +111,49 @@ __compare_and_swap_with_release_semantics (long int *p,
 	   "      xor. %0,%3,%0;"
 	   "      bne 1f;"
 	   "      stdcx. %2,0,%1;"
+	   "      bne- 0b;"
+	   "1:    "
+	: "=&r"(ret)
+	: "r"(p), "r"(newval), "r"(oldval)
+	: "cr0", "memory");
+  return (int)(ret == 0);
+}
+
+PT_EI int
+__compare_and_swap32 (int *p, int oldval, int newval)
+{
+  int ret;
+
+  __asm__ __volatile__ (
+	   "0:    lwarx %0,0,%1 ;"
+	   "      xor. %0,%3,%0;"
+	   "      bne 1f;"
+	   "      stwcx. %2,0,%1;"
+	   "      bne- 0b;"
+	   "1:    "
+	: "=&r"(ret)
+	: "r"(p), "r"(newval), "r"(oldval)
+	: "cr0", "memory");
+  /* This version of __compare_and_swap is to be used when acquiring
+     a lock, so we don't need to worry about whether other memory
+     operations have completed, but we do need to be sure that any loads
+     after this point really occur after we have acquired the lock.  */
+  __asm__ __volatile__ ("isync" : : : "memory");
+  return (int)(ret == 0);
+}
+
+PT_EI int
+__compare_and_swap32_with_release_semantics (long int *p,
+					   long int oldval, long int newval)
+{
+  long int ret;
+
+  MEMORY_BARRIER ();
+  __asm__ __volatile__ (
+	   "0:    lwarx %0,0,%1 ;"
+	   "      xor. %0,%3,%0;"
+	   "      bne 1f;"
+	   "      stwcx. %2,0,%1;"
 	   "      bne- 0b;"
 	   "1:    "
 	: "=&r"(ret)
