@@ -1,19 +1,15 @@
 Fri Mar 17 13:28:04 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* sysdeps/ieee754/ldbl2mpn.c (__mpn_extract_long_double):
-	Handle 80-bit denormalized numbers correct.
+	Handle 80-bit denormalized numbers correctly.
 
-	* stdlib/strtod.c,stdlib/strtof.c,stdlib/strtold.c:
+	* stdlib/strtod.c, stdlib/strtof.c, stdlib/strtold.c:
 	[IMPLICIT_ONE,*_MAX_10_EXP_LOG]: not needed anymore.
-	* stdlib/strtod.c (RETURN): parenthesis around return value.
-	(round_and_return): correct handling of denormalized numbers.
-	(__strtod_internal): don't check for grouping when not requested
-	while returning 0.0.
+	* stdlib/strtod.c (RETURN): Add parentheses around return value.
+	(round_and_return): Correct handling of denormalized numbers.
 
 	* stdio/fpioconst.[ch]: [LDBL_MAX_10_EXP_LOG]: don't use it.
 	LAST_POW10 defines the maximal available exponent.
-
-	* stdlib/{atof,atoi,atol}.c: use __strtoX_internal.
 
 Thu Mar 16 00:04:41 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
