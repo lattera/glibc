@@ -193,12 +193,13 @@ $syscall_error:					\
 	register long _sc_19 __asm__("$19");			\
 								\
 	_sc_0 = __NR_##name;					\
-	__asm__("callsys # %0 %1 <= %2"				\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-	          "=r"(_sc_19)					\
-		: "0"(_sc_0)					\
-		: inline_syscall_clobbers,			\
-		  "$16", "$17", "$18", "$20", "$21");		\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2"				\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19)					\
+	   : "0"(_sc_0)						\
+	   : inline_syscall_clobbers,				\
+	     "$16", "$17", "$18", "$20", "$21");		\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
@@ -210,12 +211,13 @@ $syscall_error:					\
 								\
 	_sc_0 = __NR_##name;					\
 	_sc_16 = (long) (arg1);					\
-	__asm__("callsys # %0 %1 <= %2 %3"			\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-		  "=r"(_sc_19), "=r"(_sc_16)			\
-		: "0"(_sc_0), "2"(_sc_16)			\
-		: inline_syscall_clobbers,			\
-		  "$17", "$18", "$20", "$21");			\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2 %3"				\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19), "=r"(_sc_16)				\
+	   : "0"(_sc_0), "2"(_sc_16)				\
+	   : inline_syscall_clobbers,				\
+	     "$17", "$18", "$20", "$21");			\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
@@ -229,12 +231,13 @@ $syscall_error:					\
 	_sc_0 = __NR_##name;					\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
-	__asm__("callsys # %0 %1 <= %2 %3 %4"			\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17)	\
-		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17)		\
-		: inline_syscall_clobbers,			\
-		  "$18", "$20", "$21");				\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2 %3 %4"			\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17)		\
+	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17)		\
+	   : inline_syscall_clobbers,				\
+	     "$18", "$20", "$21");				\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
@@ -250,13 +253,14 @@ $syscall_error:					\
 	_sc_16 = (long) (arg1);					\
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\
-	__asm__("callsys # %0 %1 <= %2 %3 %4 %5"		\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),	\
-		  "=r"(_sc_18)					\
-		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-		  "4"(_sc_18)					\
-		: inline_syscall_clobbers, "$20", "$21");	\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2 %3 %4 %5"			\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),		\
+	     "=r"(_sc_18)					\
+	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
+	     "4"(_sc_18)					\
+	   : inline_syscall_clobbers, "$20", "$21");		\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
@@ -273,13 +277,14 @@ $syscall_error:					\
 	_sc_17 = (long) (arg2);					\
 	_sc_18 = (long) (arg3);					\
 	_sc_19 = (long) (arg4);					\
-	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6"		\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),	\
-		  "=r"(_sc_18)					\
-		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-		  "4"(_sc_18), "1"(_sc_19)			\
-		: inline_syscall_clobbers, "$20", "$21");	\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6"			\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),		\
+	     "=r"(_sc_18)					\
+	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
+	     "4"(_sc_18), "1"(_sc_19)				\
+	   : inline_syscall_clobbers, "$20", "$21");		\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
@@ -298,13 +303,14 @@ $syscall_error:					\
 	_sc_18 = (long) (arg3);					\
 	_sc_19 = (long) (arg4);					\
 	_sc_20 = (long) (arg5);					\
-	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"		\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-		  "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),	\
-		  "=r"(_sc_18),	"=r"(_sc_20)			\
-		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-		  "4"(_sc_18), "1"(_sc_19), "5"(_sc_20)		\
-		: inline_syscall_clobbers, "$21");		\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7"		\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19), "=r"(_sc_16), "=r"(_sc_17),		\
+	     "=r"(_sc_18), "=r"(_sc_20)				\
+	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
+	     "4"(_sc_18), "1"(_sc_19), "5"(_sc_20)		\
+	   : inline_syscall_clobbers, "$21");			\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 
@@ -325,14 +331,14 @@ $syscall_error:					\
 	_sc_19 = (long) (arg4);					\
 	_sc_20 = (long) (arg5);					\
 	_sc_21 = (long) (arg6);					\
-	__asm__("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"	\
-		: inline_syscall_r0_out_constraint (_sc_0),	\
-		  "=r"(_sc_19) "=r"(_sc_16), "=r"(_sc_17),	\
-		  "=r"(_sc_18), "=r"(_sc_20), "=r"(_sc_21)	\
-		: "0"(_sc_0), "2"(_sc_16), "3"(_sc_17),		\
-		  "4"(_sc_18), "1"(_sc_19), "5"(_sc_20),	\
-		  "6"(_sc_21)					\
-		: inline_syscall_clobbers);			\
+	__asm__ __volatile__					\
+	  ("callsys # %0 %1 <= %2 %3 %4 %5 %6 %7 %8"		\
+	   : inline_syscall_r0_out_constraint (_sc_0),		\
+	     "=r"(_sc_19) "=r"(_sc_16), "=r"(_sc_17),		\
+	     "=r"(_sc_18), "=r"(_sc_20), "=r"(_sc_21)		\
+	   : "0"(_sc_0), "2"(_sc_16), "3"(_sc_17), "4"(_sc_18),	\
+	     "1"(_sc_19), "5"(_sc_20), "6"(_sc_21)		\
+	   : inline_syscall_clobbers);				\
 	_sc_ret = _sc_0, _sc_err = _sc_19;			\
 }
 

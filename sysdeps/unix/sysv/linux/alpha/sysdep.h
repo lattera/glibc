@@ -75,7 +75,8 @@
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err_out, nr, args...)			\
 ({									\
-	extern char ChEcK[__NR_##name == __NR_rt_sigaction ? -1 : 1];	\
+	extern char ChEcK[__NR_##name == __NR_rt_sigaction ? -1 : 1]	\
+	  __attribute__((unused));					\
 	INTERNAL_SYSCALL1(name, err_out, nr, args);			\
 })
 
