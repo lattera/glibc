@@ -22,11 +22,13 @@
 
 2000-09-14  Greg McGary  <greg@mcgary.org>
 
-	* bp-checks.h: Remove bogus reference to GNU MP in copyright notice.
-	* bp-semctl.h: Likewise.
-	* bp-start.h: Likewise.
-	* bp-sym.h: Likewise.
-	* bp-thunks.h: Likewise.  Include <stdio.h> to get rename prototype.
+	* sysdeps/generic/bp-checks.h: Remove bogus reference to GNU MP in
+	copyright notice.
+	* sysdeps/generic/bp-semctl.h: Likewise.
+	* sysdeps/generic/bp-start.h: Likewise.
+	* sysdeps/generic/bp-sym.h: Likewise.
+	* sysdeps/generic/bp-thunks.h: Likewise.  Include <stdio.h> to get
+	rename prototype.
 
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
