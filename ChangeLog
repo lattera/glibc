@@ -1,3 +1,23 @@
+2000-05-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): If req->ai_family ==
+	AF_UNSPEC don't allow the IPv6 lookup to return mapped IPv4 addresses.
+
+	* nss/nss_files/files-hosts.c (LINE_PARSER): Simplify.  Correct
+	handling of AI_V4MAPPED flag.
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): If lookup
+	of IPv6 address failed and RES_USE_INET6 bit in _res.options is set,
+	perform lookup for T_A type and tell getanswer_r to convert the
+	result with new argument.
+	(_nss_dns_gethostbyaddr_r): Pass zero as new argument to getanswer_r.
+	Don't convert addresses from IPv4 to IPv6 here.
+	(getanswer_r): Take new parameter indicating if mapping from IPv4 to
+	IPv6 is wanted.  Allow qtype and type from reply to disagree if
+	IPv4 mapping has to be done.  Perform mappings if required by the
+	caller and not if RES_USE_INET6 bit in _res.options is set.
+	Add several __builtin_expect.
+
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/open_catalog.c (__open_catalog): Add a few __builtin_expect.

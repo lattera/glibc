@@ -53,30 +53,18 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (af == AF_INET && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
-     {
-       if (flags & AI_V4MAPPED)
-	 {
-	   map_v4v6_address ((char *) entdata->host_addr,
-			     (char *) entdata->host_addr);
-	   result->h_addrtype = AF_INET6;
-	   result->h_length = IN6ADDRSZ;
-	 }
-       else
-	 {
-	   result->h_addrtype = AF_INET;
-	   result->h_length = INADDRSZ;
-	 }
-     }
-   else if (af == AF_INET6
-	    && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-     {
-       result->h_addrtype = AF_INET6;
-       result->h_length = IN6ADDRSZ;
-     }
-   else
+   if (inet_pton (af, addr, entdata->host_addr) <= 0
+       && (af != AF_INET6 || (flags & AI_V4MAPPED) == 0
+	   || inet_pton (AF_INET, addr, entdata->host_addr) <= 0
+	   || (map_v4v6_address ((char *) entdata->host_addr,
+				 (char *) entdata->host_addr),
+	       0)))
      /* Illegal address: ignore line.  */
      return 0;
+
+   /* We always return entries of the requested form.  */
+   result->h_addrtype = af;
+   result->h_length = af == AF_INET ? INADDRSZ : IN6ADDRSZ;
 
    /* Store a pointer to the address in the expected form.  */
    entdata->h_addr_ptrs[0] = entdata->host_addr;
@@ -97,6 +85,8 @@ DB_LOOKUP (hostbyname, ,,
 	   }, const char *name)
 
 #undef EXTRA_ARGS_VALUE
+/* XXX Is using _res to determine whether we want to convert IPv4 addresses
+   to IPv6 addresses really the right thing to do?  */
 #define EXTRA_ARGS_VALUE \
   , af, ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0)
 DB_LOOKUP (hostbyname2, ,,

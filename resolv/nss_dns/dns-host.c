@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -114,15 +114,16 @@ typedef union querybuf
 
 /* These functions are defined in res_comp.c.  */
 #define NS_MAXCDNAME	255	/* maximum compressed domain name */
-extern int __ns_name_ntop __P ((const u_char *, char *, size_t));
-extern int __ns_name_unpack __P ((const u_char *, const u_char *,
-				  const u_char *, u_char *, size_t));
+extern int __ns_name_ntop (const u_char *, char *, size_t);
+extern int __ns_name_unpack (const u_char *, const u_char *,
+			     const u_char *, u_char *, size_t);
 
 
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
 				    const char *qname, int qtype,
 				    struct hostent *result, char *buffer,
-				    size_t buflen, int *errnop, int *h_errnop);
+				    size_t buflen, int *errnop, int *h_errnop,
+				    int map);
 
 enum nss_status
 _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
@@ -132,6 +133,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   querybuf host_buffer;
   int size, type, n;
   const char *cp;
+  int map = 0;
 
   if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
     return NSS_STATUS_UNAVAIL;
@@ -166,13 +168,29 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 		   sizeof (host_buffer.buf));
   if (n < 0)
     {
+      enum nss_status status = (errno == ECONNREFUSED
+				? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
       *h_errnop = h_errno;
-      *errnop = *h_errnop == TRY_AGAIN ? EAGAIN : ENOENT;
-      return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
+      *errnop = h_errno == TRY_AGAIN ? EAGAIN : ENOENT;
+
+      /* If we are looking for a IPv6 address and mapping is enabled
+	 by having the RES_USE_INET6 bit in _res.options set, we try
+	 another lookup.  */
+      if (af == AF_INET6 && (_res.options & RES_USE_INET6))
+	n = res_nsearch (&_res, name, C_IN, T_A, host_buffer.buf,
+			 sizeof (host_buffer.buf));
+
+      if (n < 0)
+	return status;
+
+      map = 1;
+
+      result->h_addrtype = AF_INET;
+      result->h_length = INADDRSZ;;
     }
 
   return getanswer_r (&host_buffer, n, name, type, result, buffer, buflen,
-		      errnop, h_errnop);
+		      errnop, h_errnop, map);
 }
 
 
@@ -276,7 +294,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
     }
 
   status = getanswer_r (&host_buffer, n, qbuf, T_PTR, result, buffer, buflen,
-			errnop, h_errnop);
+			errnop, h_errnop, 0 /* XXX */);
   if (status != NSS_STATUS_SUCCESS)
     {
       *h_errnop = h_errno;
@@ -294,6 +312,9 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
   memcpy (host_data->host_addr, addr, len);
   host_data->h_addr_ptrs[0] = (char *) host_data->host_addr;
   host_data->h_addr_ptrs[1] = NULL;
+#if 0
+  /* XXX I think this is wrong.  Why should an IPv4 address be
+     converted to IPv6 if the user explicitly asked for IPv4?  */
   if (af == AF_INET && (_res.options & RES_USE_INET6))
     {
       map_v4v6_address ((char *) host_data->host_addr,
@@ -301,6 +322,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
       result->h_addrtype = AF_INET6;
       result->h_length = IN6ADDRSZ;
     }
+#endif
   *h_errnop = NETDB_SUCCESS;
   return NSS_STATUS_SUCCESS;
 }
@@ -309,7 +331,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	     struct hostent *result, char *buffer, size_t buflen,
-	     int *errnop, int *h_errnop)
+	     int *errnop, int *h_errnop, int map)
 {
   struct host_data
   {
@@ -326,10 +348,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   char *bp, **ap, **hap;
   char tbuf[MAXDNAME];
   const char *tname;
-  int (*name_ok) __P ((const char *));
+  int (*name_ok) (const char *);
   u_char packtmp[NS_MAXCDNAME];
+  int have_to_map = 0;
 
-  if (linebuflen < 0)
+  if (__builtin_expect (linebuflen, 0) < 0)
     {
       /* The buffer is too small.  */
     too_small:
@@ -363,7 +386,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   ancount = ntohs (hp->ancount);
   qdcount = ntohs (hp->qdcount);
   cp = answer->buf + HFIXEDSZ;
-  if (qdcount != 1)
+  if (__builtin_expect (qdcount, 1) != 1)
     {
       *h_errnop = NO_RECOVERY;
       *errnop = ENOENT;
@@ -374,7 +397,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 			packtmp, sizeof packtmp);
   if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
     {
-      if (errno == EMSGSIZE)
+      if (__builtin_expect (errno, 0) == EMSGSIZE)
 	goto too_small;
 
       n = -1;
@@ -430,7 +453,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 			    packtmp, sizeof packtmp);
       if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	{
-	  if (errno == EMSGSIZE)
+	  if (__builtin_expect (errno, 0) == EMSGSIZE)
 	    goto too_small;
 
 	  n = -1;
@@ -469,7 +492,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  /* Store alias.  */
 	  *ap++ = bp;
 	  n = strlen (bp) + 1;		/* For the \0.  */
-	  if (n >= MAXHOSTNAMELEN)
+	  if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -478,9 +501,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;	/* For the \0.  */
-	  if (n > linebuflen)
+	  if (__builtin_expect (n > linebuflen, 0))
 	    goto too_small;
-	  if (n >= MAXHOSTNAMELEN)
+	  if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -502,9 +525,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  cp += n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
-	  if (n > linebuflen)
+	  if (__builtin_expect (n > linebuflen, 0))
 	    goto too_small;
-	  if (n >= MAXHOSTNAMELEN)
+	  if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -514,7 +537,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	  continue;
 	}
-      if (type == T_SIG || type == T_KEY || type == T_NXT)
+      if (__builtin_expect (type == T_SIG, 0)
+	  || __builtin_expect (type == T_KEY, 0)
+	  || __builtin_expect (type == T_NXT, 0))
 	{
 	  /* We don't support DNSSEC yet.  For now, ignore the record
 	     and send a low priority message to syslog.  */
@@ -524,7 +549,10 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  cp += n;
 	  continue;
 	}
-      if (type != qtype)
+
+      if (type == T_A && qtype == T_AAAA && map)
+	have_to_map = 1;
+      else if (__builtin_expect (type != qtype, 0))
 	{
 	  syslog (LOG_NOTICE | LOG_AUTH,
 	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
@@ -547,7 +575,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 				packtmp, sizeof packtmp);
 	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
 	    {
-	      if (errno == EMSGSIZE)
+	      if (__builtin_expect (errno, 0) == EMSGSIZE)
 		goto too_small;
 
 	      n = -1;
@@ -569,7 +597,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (n != -1)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
-	      if (n >= MAXHOSTNAMELEN)
+	      if (__builtin_expect (n, 0) >= MAXHOSTNAMELEN)
 		{
 		  ++had_error;
 		  break;
@@ -580,7 +608,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  break;
 #else
 	  result->h_name = bp;
-	  if (_res.options & RES_USE_INET6)
+	  if (have_to_map)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
 	      if (n >= MAXHOSTNAMELEN)
@@ -597,7 +625,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 #endif
 	case T_A:
 	case T_AAAA:
-	  if (strcasecmp (result->h_name, bp) != 0)
+	  if (__builtin_expect (strcasecmp (result->h_name, bp), 0) != 0)
 	    {
 	      syslog (LOG_NOTICE | LOG_AUTH, AskedForGot, result->h_name, bp);
 	      cp += n;
@@ -621,7 +649,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= sizeof (align) - ((u_long) bp % sizeof (align));
 	  bp += sizeof (align) - ((u_long) bp % sizeof (align));
 
-	  if (n > linebuflen)
+	  if (__builtin_expect (n > linebuflen, 0))
 	    goto too_small;
 	  if (hap >= &host_data->h_addr_ptrs[MAX_NR_ADDRS-1])
 	    {
@@ -665,7 +693,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	}
 
-      if (_res.options & RES_USE_INET6)
+      if (have_to_map)
 	map_v4v6_hostent (result, &bp, &linebuflen);
       *h_errnop = NETDB_SUCCESS;
       return NSS_STATUS_SUCCESS;
