@@ -46,7 +46,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
 		   testobj6.c testobj1_1.c failobj.c unloadmod.c \
 		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c \
-		   dep1.c dep2.c dep3.c dep4.c dl-dtprocnum.h \
+		   dep1.c dep2.c dep3.c dep4.c dl-dtprocnum.h unsecvars.h \
 		   vismain.c vismod1.c vismod2.c vismod3.c \
 		   constload2.c constload3.c filtmod1.c filtmod2.c \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \

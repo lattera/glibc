@@ -239,7 +239,7 @@ setlocale (int category, const char *locale)
   locale_path = NULL;
   locale_path_len = 0;
 
-  locpath_var = __secure_getenv ("LOCPATH");
+  locpath_var = getenv ("LOCPATH");
   if (locpath_var != NULL && locpath_var[0] != '\0')
     if (__argz_create_sep (locpath_var, ':',
 			   &locale_path, &locale_path_len) != 0)

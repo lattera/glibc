@@ -27,6 +27,8 @@
 #include <ldsodefs.h>
 #include <dl-machine.h>
 #include <bits/libc-lock.h>
+#include <dl-librecon.h>
+#include <unsecvars.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -124,6 +126,26 @@ non_dynamic_init (void)
   _dl_bind_not = *(getenv ("LD_BIND_NOT") ?: "") != '\0';
 
   _dl_dynamic_weak = *(getenv ("LD_DYNAMIC_WEAK") ?: "") == '\0';
+
+  if (__libc_enable_secure)
+    {
+      static const char *unsecure_envvars[] =
+      {
+	UNSECURE_ENVVARS,
+#ifdef EXTRA_UNSECURE_ENVVARS
+	EXTRA_UNSECURE_ENVVARS
+#endif
+      };
+      size_t cnt;
+
+      for (cnt = 0;
+	   cnt < sizeof (unsecure_envvars) / sizeof (unsecure_envvars[0]);
+	   ++cnt)
+	unsetenv (unsecure_envvars[cnt]);
+
+      if (__access ("/etc/suid-debug", F_OK) != 0)
+	unsetenv ("MALLOC_CHECK_");
+    }
 
 #ifdef DL_PLATFORM_INIT
   DL_PLATFORM_INIT;

@@ -30,6 +30,7 @@
 #include <bits/libc-lock.h>
 #include "dynamic-link.h"
 #include "dl-librecon.h"
+#include <unsecvars.h>
 
 #include <assert.h>
 
@@ -1465,6 +1466,7 @@ process_envvars (enum mode *modep, int *lazyp)
     {
       static const char *unsecure_envvars[] =
       {
+	UNSECURE_ENVVARS,
 #ifdef EXTRA_UNSECURE_ENVVARS
 	EXTRA_UNSECURE_ENVVARS
 #endif
@@ -1486,6 +1488,9 @@ process_envvars (enum mode *modep, int *lazyp)
 	   cnt < sizeof (unsecure_envvars) / sizeof (unsecure_envvars[0]);
 	   ++cnt)
 	unsetenv (unsecure_envvars[cnt]);
+
+      if (__access ("/etc/suid-debug", F_OK) != 0)
+	unsetenv ("MALLOC_CHECK_");
     }
 
   /* The name of the object to profile cannot be empty.  */

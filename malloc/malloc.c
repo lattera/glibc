@@ -1722,7 +1722,7 @@ ptmalloc_init __MALLOC_P((void))
 	mALLOPt(M_MMAP_MAX, atoi(s));
     }
   s = getenv("MALLOC_CHECK_");
-  if(s && (! secure || access ("/etc/suid-debug", F_OK) == 0)) {
+  if(s) {
     if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     __malloc_check_init();
   }

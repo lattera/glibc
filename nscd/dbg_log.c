@@ -1,4 +1,4 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -61,7 +61,7 @@ dbg_log (const char *fmt,...)
   else
     {
       snprintf (msg, sizeof (msg), "%d: %s", getpid (), msg2);
-      syslog (LOG_NOTICE, msg);
+      syslog (LOG_NOTICE, "%s", msg);
     }
   va_end (ap);
 }

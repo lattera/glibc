@@ -327,7 +327,7 @@ _res_hconf_init (void)
 
   memset (&_res_hconf, '\0', sizeof (_res_hconf));
 
-  hconf_name = __secure_getenv (ENV_HOSTCONF);
+  hconf_name = getenv (ENV_HOSTCONF);
   if (hconf_name == NULL)
     hconf_name = _PATH_HOSTCONF;
 

@@ -420,7 +420,7 @@ __gconv_get_path (void)
       char *cwd;
       size_t cwdlen;
 
-      user_path = __secure_getenv ("GCONV_PATH");
+      user_path = getenv ("GCONV_PATH");
       if (user_path == NULL)
 	{
 	  /* No user-defined path.  Make a modifiable copy of the

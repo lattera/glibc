@@ -185,7 +185,7 @@ __res_vinit(res_state statp, int preinit) {
 #endif
 
 	/* Allow user to override the local domain definition */
-	if ((cp = __secure_getenv("LOCALDOMAIN")) != NULL) {
+	if ((cp = getenv("LOCALDOMAIN")) != NULL) {
 		(void)strncpy(statp->defdname, cp, sizeof(statp->defdname) - 1);
 		statp->defdname[sizeof(statp->defdname) - 1] = '\0';
 		haveenv++;
@@ -423,7 +423,7 @@ __res_vinit(res_state statp, int preinit) {
 #endif /* !RFC1535 */
 	}
 
-	if ((cp = __secure_getenv("RES_OPTIONS")) != NULL)
+	if ((cp = getenv("RES_OPTIONS")) != NULL)
 		res_setoptions(statp, cp, "env");
 	statp->options |= RES_INIT;
 	return (0);

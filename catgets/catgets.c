@@ -56,7 +56,7 @@ catopen (const char *cat_name, int flag)
 
       env_var_len = strlen (env_var) + 1;
 
-      nlspath = __secure_getenv ("NLSPATH");
+      nlspath = getenv ("NLSPATH");
       if (nlspath != NULL && *nlspath != '\0')
 	{
 	  /* Append the system dependent directory.  */
