@@ -105,15 +105,6 @@ struct name_info
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
-#define OPT_VERBOSE	1000
-
-/* Definitions of arguments for argp functions.  */
-static const struct argp_option options[] =
-{
-  { "verbose", OPT_VERBOSE, NULL, 0, N_("print progress information") },
-  { NULL, 0, NULL, 0, NULL }
-};
-
 /* Short description of program.  */
 static const char doc[] = N_("\
 Create fastloading iconv module configuration file.");
@@ -121,16 +112,13 @@ Create fastloading iconv module configuration file.");
 /* Strings for arguments in help texts.  */
 static const char args_doc[] = N_("[DIR...]");
 
-/* Prototype for option handler.  */
-static error_t parse_opt (int key, char *arg, struct argp_state *state);
-
 /* Function to print some extra text in the help message.  */
 static char *more_help (int key, const char *text, void *input);
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-  options, parse_opt, args_doc, doc, NULL, more_help
+  NULL, NULL, args_doc, doc, NULL, more_help
 };
 
 
@@ -155,9 +143,6 @@ static void generate_name_info (void);
 /* Write the output file.  */
 static int write_output (void);
 
-
-/* Nonzero if verbose ouput is wanted.  */
-static int verbose;
 
 /* Search tree of the modules we know.  */
 static void *modules;
@@ -269,7 +254,8 @@ main (int argc, char *argv[])
   char *tp;
 
   /* Enable memory use testing.  */
-  mcheck_pedantic (NULL);
+  /* mcheck_pedantic (NULL); */
+  mtrace ();
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -318,22 +304,6 @@ main (int argc, char *argv[])
   status = write_output ();
 
   return status;
-}
-
-
-/* Handle program arguments.  */
-static error_t
-parse_opt (int key, char *arg, struct argp_state *state)
-{
-  switch (key)
-    {
-    case OPT_VERBOSE:
-      verbose = 1;
-      break;
-    default:
-      return ARGP_ERR_UNKNOWN;
-    }
-  return 0;
 }
 
 
@@ -433,6 +403,9 @@ add_alias (char *rp)
     return;
   *wp++ = '\0';
 
+  assert (strlen (from) + 1 == to - from);
+  assert (strlen (to) + 1 == wp - to);
+
   new_alias (from, to - from, to, wp - to);
 }
 
@@ -502,8 +475,8 @@ new_module (const char *fromname, size_t fromlen, const char *toname,
   tmp = mempcpy (new_module->filename, filename, filelen);
   if (need_ext)
     {
-      memcpy (tmp - 1, gconv_module_ext, sizeof (gconv_module_ext));
-      filelen += sizeof (gconv_module_ext) - 1;
+      memcpy (tmp - 1, gconv_module_ext, need_ext + 1);
+      filelen += need_ext;
     }
   new_module->directory = directory;
 

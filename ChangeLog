@@ -1,5 +1,8 @@
 2001-07-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconvconfig.c: Remove --verbose option.  Comment out
+	mcheck_verbose call.
+
 	* iconv/strtab.c (morememory): Fix little memory handling problem.
 
 2001-07-22  Andreas Schwab  <schwab@suse.de>
