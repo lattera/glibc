@@ -69,6 +69,10 @@
 	* sysdeps/cris/dl-machine.h (elf_machine_rela_relative): Likewise.
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela_relative): Likewise.
 	* sysdeps/powerpc/dl-machine.h (elf_machine_rela_relative): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela_relative):
+	Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela_relative):
+	Likewise.
 	* sysdeps/ia64/dl-machine.h (elf_machine_rela_relative): Likewise.
 	Fix argument types.
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela_relative): Likewise.
