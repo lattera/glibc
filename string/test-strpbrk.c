@@ -97,7 +97,7 @@ do_test (size_t align, size_t pos, size_t len)
   char *rej, *s;
 
   align &= 7;
-  if (align + pos >= page_size || len > 240)
+  if (align + pos + 10 >= page_size || len > 240)
     return;
 
   rej = buf2 + (random () & 255);
@@ -127,6 +127,12 @@ do_test (size_t align, size_t pos, size_t len)
 	}
     }
   s[pos] = rej[random () % (len + 1)];
+  if (s[pos])
+    {
+      for (i = pos + 1; i < pos + 10; ++i)
+	s[i] = random () & 255;
+      s[i] = '\0';
+    }
   result = STRPBRK_RESULT (s, pos);
 
   if (HP_TIMING_AVAIL)

@@ -47,8 +47,8 @@ simple_stpncpy (char *dst, const char *src, size_t n)
 char *
 stupid_stpncpy (char *dst, const char *src, size_t n)
 {
-  size_t ns = strlen (src);
-  size_t i, nc = n < ns ? n : ns;
+  size_t nc = strnlen (src, n);
+  size_t i;
 
   for (i = 0; i < nc; ++i)
     dst[i] = src[i];

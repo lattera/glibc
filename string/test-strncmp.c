@@ -42,7 +42,7 @@ simple_strncmp (const char *s1, const char *s2, size_t n)
 int
 stupid_strncmp (const char *s1, const char *s2, size_t n)
 {
-  size_t ns1 = strlen (s1) + 1, ns2 = strlen (s2) + 1;
+  size_t ns1 = strnlen (s1, n) + 1, ns2 = strnlen (s2, n) + 1;
   int ret = 0;
 
   n = ns1 < n ? ns1 : n;

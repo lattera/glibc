@@ -99,7 +99,7 @@ do_test (size_t align, size_t pos, size_t len)
   char *acc, *s;
 
   align &= 7;
-  if (align + pos >= page_size || len > 240 || ! len)
+  if (align + pos + 10 >= page_size || len > 240 || ! len)
     return;
 
   acc = buf2 + (random () & 255);
@@ -120,6 +120,12 @@ do_test (size_t align, size_t pos, size_t len)
   s[pos] = random () & 255;
   if (strchr (acc, s[pos]))
     s[pos] = '\0';
+  else
+    {
+      for (i = pos + 1; i < pos + 10; ++i)
+	s[i] = random () & 255;
+      s[i] = '\0';
+    }
 
   if (HP_TIMING_AVAIL)
     printf ("Length %4zd, alignment %2zd, acc len %2zd:", pos, align, len);

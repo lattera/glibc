@@ -1,3 +1,27 @@
+2002-10-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/test-strspn.c (do_test): Ensure zero termination.
+	* string/test-strpbrk.c (do_test): Likewise.
+	* string/test-strncmp.c (stupid_strncmp): Use strnlen, not strlen.
+	* string/test-strncpy.c (stupid_strncpy): Likewise.
+	* string/test-stpncpy.c (stupid_stpncpy): Likewise.
+
+2002-10-08  Roland McGrath  <roland@redhat.com>
+
+	* string/test-string.h (test_init): Fill BUF1 and BUF2 with
+	nonzero characters.
+
+2002-09-22  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mmap64.c (MMAP2_PAGE_SHIFT): Renamed
+	from PAGE_SHIFT.  Define if not defined.  Check MMAP2_PAGE_SHIFT
+	only if __NR_mmap2 is defined.
+
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: Moved to ...
+	* sysdeps/unix/sysv/linux/mmap64.c: ... here.
+	* sysdeps/unix/sysv/linux/hppa/mmap64.c: File removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/mmap64.c: FIle removed,
+
 2002-11-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bug-regex13.c (tests): Add new test.
