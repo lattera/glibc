@@ -220,7 +220,7 @@ _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
     INTUSE(_dl_signal_error) (0, NULL, NULL, N_("\
 internal error: symidx out of range of fptr table"));
 
-  while (ftab[symidx] == NULL)
+  while (ftab[symidx] == 0)
     {
       /* GOT has already been relocated in elf_get_dynamic_info -
 	 don't try to relocate it again.  */

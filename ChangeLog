@@ -1,6 +1,8 @@
 2003-05-02  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/generic/dl-fptr.c (_dl_unmap): Fix typo in test.
+	* sysdeps/generic/dl-fptr.c (_dl_make_fptr): Use 0 not NULL for
+	comparing ftab elements.
+	(_dl_unmap): Fix typo in test.
 	(_dl_make_fptr): Fix typos introduced in last change.
 
 	* sysdeps/generic/dl-fptr.c: Put back one optimization from the
