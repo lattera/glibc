@@ -1,7 +1,10 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/generic/setenv.c: Update(__add_to_environ): Initialize
-	ep after we have the lock.
+	* sysdeps/unix/bsd/telldir.c (seekdir): Correct type of second
+	parameter.
+
+	* sysdeps/generic/setenv.c (__add_to_environ): Initialize ep
+	after we have the lock.
 
 	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h: New file.
 	Patch by Richard Henderson.

@@ -44,7 +44,7 @@ telldir (dirp)
      DIR *dirp;
 {
   struct record *new;
-  off_t pos;
+  long int pos;
 
   new = malloc (sizeof *new);
   if (new == NULL)
@@ -71,7 +71,7 @@ telldir (dirp)
 void
 seekdir (dirp, pos)
      DIR *dirp;
-     __off_t pos;
+     long int pos;
 {
   struct record *r, **prevr;
 
