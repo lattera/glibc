@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_func.c	10.7 (Sleepycat) 9/16/97";
+static const char sccsid[] = "@(#)hash_func.c	10.8 (Sleepycat) 4/10/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES

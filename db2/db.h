@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.h.src	10.102 (Sleepycat) 1/18/98
+ *	@(#)db.h.src	10.131 (Sleepycat) 6/2/98
  */
 
 #ifndef _DB_H_
@@ -54,8 +54,7 @@
  *
  * !!!
  * We also provide the standard u_int, u_long etc., if they're not provided
- * by the system.  This isn't completely necessary, but the example programs
- * need them.
+ * by the system.
  */
 #ifndef	__BIT_TYPES_DEFINED__
 #define	__BIT_TYPES_DEFINED__
@@ -72,9 +71,9 @@
 
 
 #define	DB_VERSION_MAJOR	2
-#define	DB_VERSION_MINOR	3
-#define	DB_VERSION_PATCH	16
-#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.16: (1/19/98)"
+#define	DB_VERSION_MINOR	4
+#define	DB_VERSION_PATCH	14
+#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.4.14: (6/2/98)"
 
 typedef	u_int32_t	db_pgno_t;	/* Page number type. */
 typedef	u_int16_t	db_indx_t;	/* Page offset type. */
@@ -95,6 +94,7 @@ struct __db_bt_stat;	typedef struct __db_bt_stat DB_BTREE_STAT;
 struct __db_dbt;	typedef struct __db_dbt DBT;
 struct __db_env;	typedef struct __db_env DB_ENV;
 struct __db_info;	typedef struct __db_info DB_INFO;
+struct __db_lock_stat;	typedef struct __db_lock_stat DB_LOCK_STAT;
 struct __db_lockregion;	typedef struct __db_lockregion DB_LOCKREGION;
 struct __db_lockreq;	typedef struct __db_lockreq DB_LOCKREQ;
 struct __db_locktab;	typedef struct __db_locktab DB_LOCKTAB;
@@ -102,6 +102,7 @@ struct __db_log;	typedef struct __db_log DB_LOG;
 struct __db_log_stat;	typedef struct __db_log_stat DB_LOG_STAT;
 struct __db_lsn;	typedef struct __db_lsn DB_LSN;
 struct __db_mpool;	typedef struct __db_mpool DB_MPOOL;
+struct __db_mpool_finfo;typedef struct __db_mpool_finfo DB_MPOOL_FINFO;
 struct __db_mpool_fstat;typedef struct __db_mpool_fstat DB_MPOOL_FSTAT;
 struct __db_mpool_stat;	typedef struct __db_mpool_stat DB_MPOOL_STAT;
 struct __db_mpoolfile;	typedef struct __db_mpoolfile DB_MPOOLFILE;
@@ -134,7 +135,7 @@ struct __db_dbt {
  * There are a set of functions that the application can replace with its
  * own versions, and some other knobs which can be turned at run-time.
  */
-#define	DB_FUNC_CALLOC	 1		/* ANSI C calloc. */
+#define	DB_FUNC_CALLOC	 1	/* DELETED: ANSI C calloc. */
 #define	DB_FUNC_CLOSE	 2		/* POSIX 1003.1 close. */
 #define	DB_FUNC_DIRFREE	 3		/* DB: free directory list. */
 #define	DB_FUNC_DIRLIST	 4		/* DB: create directory list. */
@@ -149,12 +150,18 @@ struct __db_dbt {
 #define	DB_FUNC_REALLOC	13		/* ANSI C realloc. */
 #define	DB_FUNC_SEEK	14		/* POSIX 1003.1 lseek. */
 #define	DB_FUNC_SLEEP	15		/* DB: sleep secs/usecs. */
-#define	DB_FUNC_STRDUP	16		/* DB: strdup(3). */
+#define	DB_FUNC_STRDUP	16	/* DELETED: DB: strdup(3). */
 #define	DB_FUNC_UNLINK	17		/* POSIX 1003.1 unlink. */
 #define	DB_FUNC_UNMAP	18		/* DB: unmap shared memory file. */
 #define	DB_FUNC_WRITE	19		/* POSIX 1003.1 write. */
 #define	DB_FUNC_YIELD	20		/* DB: yield thread to scheduler. */
 #define	DB_TSL_SPINS	21		/* DB: initialize spin count. */
+#define	DB_FUNC_RUNLINK	22		/* DB: remove a shared region. */
+#define	DB_REGION_ANON	23		/* DB: anonymous, unnamed regions. */
+#define	DB_REGION_INIT	24		/* DB: page-fault regions in create. */
+#define	DB_REGION_NAME	25		/* DB: anonymous, named regions. */
+#define	DB_MUTEXLOCKS	26		/* DB: turn off all mutex locks. */
+#define	DB_PAGEYIELD	27		/* DB: yield the CPU on pool get. */
 
 /*
  * Database configuration and initialization.
@@ -162,52 +169,51 @@ struct __db_dbt {
  /*
   * Flags understood by both db_open(3) and db_appinit(3).
   */
-#define	DB_CREATE		0x00001	/* O_CREAT: create file as necessary. */
-#define	DB_NOMMAP		0x00002	/* Don't mmap underlying file. */
-#define	DB_THREAD		0x00004	/* Free-thread DB package handles. */
+#define	DB_CREATE	      0x000001	/* O_CREAT: create file as necessary. */
+#define	DB_NOMMAP	      0x000002	/* Don't mmap underlying file. */
+#define	DB_THREAD	      0x000004	/* Free-thread DB package handles. */
 
 /*
  * Flags understood by db_appinit(3).
- *
- * DB_MUTEXDEBUG is internal only, and not documented.
  */
-/*				0x00007	   COMMON MASK. */
-#define	DB_INIT_LOCK		0x00008	/* Initialize locking. */
-#define	DB_INIT_LOG		0x00010	/* Initialize logging. */
-#define	DB_INIT_MPOOL		0x00020	/* Initialize mpool. */
-#define	DB_INIT_TXN		0x00040	/* Initialize transactions. */
-#define	DB_MPOOL_PRIVATE	0x00080	/* Mpool: private memory pool. */
-#define	DB_MUTEXDEBUG		0x00100	/* Do not get/set mutexes in regions. */
-#define	DB_RECOVER		0x00200	/* Run normal recovery. */
-#define	DB_RECOVER_FATAL	0x00400 /* Run catastrophic recovery. */
-#define	DB_TXN_NOSYNC		0x00800	/* Do not sync log on commit. */
-#define	DB_USE_ENVIRON		0x01000	/* Use the environment. */
-#define	DB_USE_ENVIRON_ROOT	0x02000	/* Use the environment if root. */
+/*			      0x000007	   COMMON MASK. */
+#define	DB_INIT_LOCK	      0x000008	/* Initialize locking. */
+#define	DB_INIT_LOG	      0x000010	/* Initialize logging. */
+#define	DB_INIT_MPOOL	      0x000020	/* Initialize mpool. */
+#define	DB_INIT_TXN	      0x000040	/* Initialize transactions. */
+#define	DB_MPOOL_PRIVATE      0x000080	/* Mpool: private memory pool. */
+#define	__UNUSED_100	      0x000100
+#define	DB_RECOVER	      0x000200	/* Run normal recovery. */
+#define	DB_RECOVER_FATAL      0x000400	/* Run catastrophic recovery. */
+#define	DB_TXN_NOSYNC	      0x000800	/* Do not sync log on commit. */
+#define	DB_USE_ENVIRON	      0x001000	/* Use the environment. */
+#define	DB_USE_ENVIRON_ROOT   0x002000	/* Use the environment if root. */
 
 /* CURRENTLY UNUSED LOCK FLAGS. */
-#define	DB_TXN_LOCK_2PL		0x00000	/* Two-phase locking. */
-#define	DB_TXN_LOCK_OPTIMISTIC	0x00000	/* Optimistic locking. */
-#define	DB_TXN_LOCK_MASK	0x00000	/* Lock flags mask. */
+#define	DB_TXN_LOCK_2PL	      0x000000	/* Two-phase locking. */
+#define	DB_TXN_LOCK_OPTIMIST  0x000000	/* Optimistic locking. */
+#define	DB_TXN_LOCK_MASK      0x000000	/* Lock flags mask. */
 
 /* CURRENTLY UNUSED LOG FLAGS. */
-#define	DB_TXN_LOG_REDO		0x00000	/* Redo-only logging. */
-#define	DB_TXN_LOG_UNDO		0x00000	/* Undo-only logging. */
-#define	DB_TXN_LOG_UNDOREDO	0x00000	/* Undo/redo write-ahead logging. */
-#define	DB_TXN_LOG_MASK		0x00000	/* Log flags mask. */
+#define	DB_TXN_LOG_REDO	      0x000000	/* Redo-only logging. */
+#define	DB_TXN_LOG_UNDO	      0x000000	/* Undo-only logging. */
+#define	DB_TXN_LOG_UNDOREDO   0x000000	/* Undo/redo write-ahead logging. */
+#define	DB_TXN_LOG_MASK	      0x000000	/* Log flags mask. */
 
 /*
  * Flags understood by db_open(3).
  *
- * DB_EXCL and DB_TEMPORARY are internal only, and not documented.
- * DB_SEQUENTIAL is currently internal, but likely to be exported some day.
+ * DB_EXCL and DB_TEMPORARY are internal only, and are not documented.
+ * DB_SEQUENTIAL is currently internal, but may be exported some day.
  */
-/*				0x00007	   COMMON MASK. */
-/*				0x07fff	   ALREADY USED. */
-#define	DB_EXCL			0x08000	/* O_EXCL: exclusive open. */
-#define	DB_RDONLY		0x10000	/* O_RDONLY: read-only. */
-#define	DB_SEQUENTIAL		0x20000	/* Indicate sequential access. */
-#define	DB_TEMPORARY		0x40000	/* Remove on last close. */
-#define	DB_TRUNCATE		0x80000	/* O_TRUNCATE: replace existing DB. */
+/*			      0x000007	   COMMON MASK. */
+/*			      0x003fff	   ALREADY USED. */
+#define	__UNUSED_4000	      0x004000
+#define	DB_EXCL		      0x008000	/* O_EXCL: exclusive open. */
+#define	DB_RDONLY	      0x010000	/* O_RDONLY: read-only. */
+#define	DB_SEQUENTIAL	      0x020000	/* Indicate sequential access. */
+#define	DB_TEMPORARY	      0x040000	/* Remove on last close. */
+#define	DB_TRUNCATE	      0x080000	/* O_TRUNCATE: replace existing DB. */
 
 /*
  * Deadlock detector modes; used in the DBENV structure to configure the
@@ -240,9 +246,9 @@ struct __db_env {
 	/* Locking. */
 	DB_LOCKTAB	*lk_info;	/* Return from lock_open(). */
 	u_int8_t	*lk_conflicts;	/* Two dimensional conflict matrix. */
-	int		 lk_modes;	/* Number of lock modes in table. */
-	u_int		 lk_max;	/* Maximum number of locks. */
-	u_int32_t	 lk_detect;	/* Deadlock detect on every conflict. */
+	u_int32_t	 lk_modes;	/* Number of lock modes in table. */
+	u_int32_t	 lk_max;	/* Maximum number of locks. */
+	u_int32_t	 lk_detect;	/* Deadlock detect on all conflicts. */
 
 	/* Logging. */
 	DB_LOG		*lg_info;	/* Return from log_open(). */
@@ -255,7 +261,7 @@ struct __db_env {
 
 	/* Transactions. */
 	DB_TXNMGR	*tx_info;	/* Return from txn_open(). */
-	unsigned int	 tx_max;	/* Maximum number of transactions. */
+	u_int32_t	 tx_max;	/* Maximum number of transactions. */
 	int (*tx_recover)		/* Dispatch function for recovery. */
 	    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 
@@ -300,17 +306,17 @@ struct __db_info {
 	void *(*db_malloc) __P((size_t));
 
 	/* Btree access method. */
-	int		 bt_maxkey;	/* Maximum keys per page. */
-	int		 bt_minkey;	/* Minimum keys per page. */
+	u_int32_t	 bt_maxkey;	/* Maximum keys per page. */
+	u_int32_t	 bt_minkey;	/* Minimum keys per page. */
 	int (*bt_compare)		/* Comparison function. */
 	    __P((const DBT *, const DBT *));
 	size_t (*bt_prefix)		/* Prefix function. */
 	    __P((const DBT *, const DBT *));
 
 	/* Hash access method. */
-	unsigned int	 h_ffactor;	/* Fill factor. */
-	unsigned int	 h_nelem;	/* Number of elements. */
-	u_int32_t	(*h_hash)	/* Hash function. */
+	u_int32_t 	 h_ffactor;	/* Fill factor. */
+	u_int32_t	 h_nelem;	/* Number of elements. */
+	u_int32_t      (*h_hash)	/* Hash function. */
 	    __P((const void *, u_int32_t));
 
 	/* Recno access method. */
@@ -353,6 +359,7 @@ struct __db_info {
 #define	DB_SET		0x010000	/* c_get(), log_get() */
 #define	DB_SET_RANGE	0x020000	/* c_get() */
 #define	DB_SET_RECNO	0x040000	/* c_get() */
+#define	DB_CURLSN	0x080000	/* log_put() */
 
 /*
  * DB (user visible) error return codes.
@@ -435,14 +442,14 @@ struct __db {
 	void *(*db_malloc) __P((size_t));
 
 					/* Functions. */
-	int (*close)	__P((DB *, int));
+	int (*close)	__P((DB *, u_int32_t));
 	int (*cursor)	__P((DB *, DB_TXN *, DBC **));
-	int (*del)	__P((DB *, DB_TXN *, DBT *, int));
+	int (*del)	__P((DB *, DB_TXN *, DBT *, u_int32_t));
 	int (*fd)	__P((DB *, int *));
-	int (*get)	__P((DB *, DB_TXN *, DBT *, DBT *, int));
-	int (*put)	__P((DB *, DB_TXN *, DBT *, DBT *, int));
-	int (*stat)	__P((DB *, void *, void *(*)(size_t), int));
-	int (*sync)	__P((DB *, int));
+	int (*get)	__P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
+	int (*put)	__P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
+	int (*stat)	__P((DB *, void *, void *(*)(size_t), u_int32_t));
+	int (*sync)	__P((DB *, u_int32_t));
 
 #define	DB_AM_DUP	0x000001	/* DB_DUP (internal). */
 #define	DB_AM_INMEM	0x000002	/* In-memory; no sync on close. */
@@ -483,9 +490,9 @@ struct __dbc {
 	void	 *internal;		/* Access method private. */
 
 	int (*c_close)	__P((DBC *));
-	int (*c_del)	__P((DBC *, int));
-	int (*c_get)	__P((DBC *, DBT *, DBT *, int));
-	int (*c_put)	__P((DBC *, DBT *, DBT *, int));
+	int (*c_del)	__P((DBC *, u_int32_t));
+	int (*c_get)	__P((DBC *, DBT *, DBT *, u_int32_t));
+	int (*c_put)	__P((DBC *, DBT *, DBT *, u_int32_t));
 };
 
 /* Btree/recno statistics structure. */
@@ -524,10 +531,11 @@ struct __db_bt_stat {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int   db_appinit __P((const char *, char * const *, DB_ENV *, int));
+int   db_appinit __P((const char *, char * const *, DB_ENV *, u_int32_t));
 int   db_appexit __P((DB_ENV *));
 int   db_jump_set __P((void *, int));
-int   db_open __P((const char *, DBTYPE, int, int, DB_ENV *, DB_INFO *, DB **));
+int   db_open __P((const char *,
+	  DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **));
 int   db_value_set __P((int, int));
 char *db_version __P((int *, int *, int *));
 #if defined(__cplusplus)
@@ -575,6 +583,21 @@ typedef enum {
 	DB_LOCK_IWR			/* Intent to read and write. */
 } db_lockmode_t;
 
+/*
+ * Status of a lock.
+ */
+typedef enum {
+	DB_LSTAT_ABORTED,		/* Lock belongs to an aborted txn. */
+	DB_LSTAT_ERR,			/* Lock is bad. */
+	DB_LSTAT_FREE,			/* Lock is unallocated. */
+	DB_LSTAT_HELD,			/* Lock is currently held. */
+	DB_LSTAT_NOGRANT,		/* Lock was not granted. */
+	DB_LSTAT_PENDING,		/* Lock was waiting and has been
+					 * promoted; waiting for the owner
+					 * to run and upgrade it to held. */
+	DB_LSTAT_WAITING		/* Lock is on the wait queue. */
+} db_status_t;
+
 /* Lock request structure. */
 struct __db_lockreq {
 	db_lockop_t	 op;		/* Operation. */
@@ -596,19 +619,38 @@ extern const u_int8_t db_rw_conflicts[];
 #define	DB_LOCK_RIW_N	6
 extern const u_int8_t db_riw_conflicts[];
 
+struct __db_lock_stat {
+	u_int32_t st_magic;		/* Lock file magic number. */
+	u_int32_t st_version;		/* Lock file version number. */
+	u_int32_t st_maxlocks;		/* Maximum number of locks in table. */
+	u_int32_t st_nmodes;		/* Number of lock modes. */
+	u_int32_t st_numobjs;		/* Number of objects. */
+	u_int32_t st_nlockers;		/* Number of lockers. */
+	u_int32_t st_nconflicts;	/* Number of lock conflicts. */
+	u_int32_t st_nrequests;		/* Number of lock gets. */
+	u_int32_t st_nreleases;		/* Number of lock puts. */
+	u_int32_t st_ndeadlocks;	/* Number of lock deadlocks. */
+	u_int32_t st_region_wait;	/* Region lock granted after wait. */
+	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
+	u_int32_t st_refcnt;		/* Region reference count. */
+	u_int32_t st_regsize;		/* Region size. */
+};
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
 int	  lock_close __P((DB_LOCKTAB *));
-int	  lock_detect __P((DB_LOCKTAB *, int, int));
+int	  lock_detect __P((DB_LOCKTAB *, u_int32_t, u_int32_t));
 int	  lock_get __P((DB_LOCKTAB *,
-	    u_int32_t, int, const DBT *, db_lockmode_t, DB_LOCK *));
+	    u_int32_t, u_int32_t, const DBT *, db_lockmode_t, DB_LOCK *));
 int	  lock_id __P((DB_LOCKTAB *, u_int32_t *));
-int	  lock_open __P((const char *, int, int, DB_ENV *, DB_LOCKTAB **));
+int	  lock_open __P((const char *,
+	    u_int32_t, int, DB_ENV *, DB_LOCKTAB **));
 int	  lock_put __P((DB_LOCKTAB *, DB_LOCK));
+int	  lock_stat __P((DB_LOCKTAB *, DB_LOCK_STAT **, void *(*)(size_t)));
 int	  lock_unlink __P((const char *, int, DB_ENV *));
 int	  lock_vec __P((DB_LOCKTAB *,
-	    u_int32_t, int, DB_LOCKREQ *, int, DB_LOCKREQ **));
+	    u_int32_t, u_int32_t, DB_LOCKREQ *, int, DB_LOCKREQ **));
 #if defined(__cplusplus)
 }
 #endif
@@ -651,19 +693,21 @@ struct __db_log_stat {
 	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
 	u_int32_t st_cur_file;		/* Current log file number. */
 	u_int32_t st_cur_offset;	/* Current log file offset. */
+	u_int32_t st_refcnt;		/* Region reference count. */
+	u_int32_t st_regsize;		/* Region size. */
 };
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 log_archive __P((DB_LOG *, char **[], int, void *(*)(size_t)));
+int	 log_archive __P((DB_LOG *, char **[], u_int32_t, void *(*)(size_t)));
 int	 log_close __P((DB_LOG *));
 int	 log_compare __P((const DB_LSN *, const DB_LSN *));
 int	 log_file __P((DB_LOG *, const DB_LSN *, char *, size_t));
 int	 log_flush __P((DB_LOG *, const DB_LSN *));
-int	 log_get __P((DB_LOG *, DB_LSN *, DBT *, int));
-int	 log_open __P((const char *, int, int, DB_ENV *, DB_LOG **));
-int	 log_put __P((DB_LOG *, DB_LSN *, const DBT *, int));
+int	 log_get __P((DB_LOG *, DB_LSN *, DBT *, u_int32_t));
+int	 log_open __P((const char *, u_int32_t, int, DB_ENV *, DB_LOG **));
+int	 log_put __P((DB_LOG *, DB_LSN *, const DBT *, u_int32_t));
 int	 log_register __P((DB_LOG *, DB *, const char *, DBTYPE, u_int32_t *));
 int	 log_stat __P((DB_LOG *, DB_LOG_STAT **, void *(*)(size_t)));
 int	 log_unlink __P((const char *, int, DB_ENV *));
@@ -705,6 +749,17 @@ struct __db_mpool_stat {
 	u_int32_t st_page_trickle;	/* Pages written by memp_trickle. */
 	u_int32_t st_region_wait;	/* Region lock granted after wait. */
 	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
+	u_int32_t st_refcnt;		/* Region reference count. */
+	u_int32_t st_regsize;		/* Region size. */
+};
+
+/* Mpool file open information structure. */
+struct __db_mpool_finfo {
+	int	   ftype;		/* File type. */
+	DBT	  *pgcookie;		/* Byte-string passed to pgin/pgout. */
+	u_int8_t  *fileid;		/* Unique file ID. */
+	int32_t	   lsn_offset;		/* LSN offset in page. */
+	u_int32_t  clear_len;		/* Cleared length on created pages. */
 };
 
 /* Mpool file statistics structure. */
@@ -724,13 +779,13 @@ extern "C" {
 #endif
 int	memp_close __P((DB_MPOOL *));
 int	memp_fclose __P((DB_MPOOLFILE *));
-int	memp_fget __P((DB_MPOOLFILE *, db_pgno_t *, int, void *));
+int	memp_fget __P((DB_MPOOLFILE *, db_pgno_t *, u_int32_t, void *));
 int	memp_fopen __P((DB_MPOOL *, const char *,
-	    int, int, int, size_t, int, DBT *, u_int8_t *, DB_MPOOLFILE **));
-int	memp_fput __P((DB_MPOOLFILE *, void *, int));
-int	memp_fset __P((DB_MPOOLFILE *, void *, int));
+	    u_int32_t, int, size_t, DB_MPOOL_FINFO *, DB_MPOOLFILE **));
+int	memp_fput __P((DB_MPOOLFILE *, void *, u_int32_t));
+int	memp_fset __P((DB_MPOOLFILE *, void *, u_int32_t));
 int	memp_fsync __P((DB_MPOOLFILE *));
-int	memp_open __P((const char *, int, int, DB_ENV *, DB_MPOOL **));
+int	memp_open __P((const char *, u_int32_t, int, DB_ENV *, DB_MPOOL **));
 int	memp_register __P((DB_MPOOL *, int,
 	    int (*)(db_pgno_t, void *, DBT *),
 	    int (*)(db_pgno_t, void *, DBT *)));
@@ -765,16 +820,21 @@ struct __db_txn_active {
 };
 
 struct __db_txn_stat {
-	DB_LSN		st_last_ckp;	/* lsn of the last checkpoint */
-	DB_LSN		st_pending_ckp;	/* last checkpoint did not finish */
-	time_t		st_time_ckp;	/* time of last checkpoint */
-	u_int32_t	st_last_txnid;	/* last transaction id given out */
-	u_int32_t	st_maxtxns;	/* maximum number of active txns */
-	u_int32_t	st_naborts;	/* number of aborted transactions */
-	u_int32_t	st_nbegins;	/* number of begun transactions */
-	u_int32_t	st_ncommits;	/* number of committed transactions */
-	u_int32_t	st_nactive;	/* number of active transactions */
-	DB_TXN_ACTIVE	*st_txnarray;	/* array of active transactions */
+	DB_LSN	  st_last_ckp;		/* lsn of the last checkpoint */
+	DB_LSN	  st_pending_ckp;	/* last checkpoint did not finish */
+	time_t	  st_time_ckp;		/* time of last checkpoint */
+	u_int32_t st_last_txnid;	/* last transaction id given out */
+	u_int32_t st_maxtxns;	/* maximum number of active txns */
+	u_int32_t st_naborts;	/* number of aborted transactions */
+	u_int32_t st_nbegins;	/* number of begun transactions */
+	u_int32_t st_ncommits;	/* number of committed transactions */
+	u_int32_t st_nactive;	/* number of active transactions */
+	DB_TXN_ACTIVE
+		 *st_txnarray;	/* array of active transactions */
+	u_int32_t st_region_wait;	/* Region lock granted after wait. */
+	u_int32_t st_region_nowait;	/* Region lock granted without wait. */
+	u_int32_t st_refcnt;		/* Region reference count. */
+	u_int32_t st_regsize;		/* Region size. */
 };
 
 #if defined(__cplusplus)
@@ -782,11 +842,11 @@ extern "C" {
 #endif
 int	  txn_abort __P((DB_TXN *));
 int	  txn_begin __P((DB_TXNMGR *, DB_TXN *, DB_TXN **));
-int	  txn_checkpoint __P((const DB_TXNMGR *, int, int));
+int	  txn_checkpoint __P((const DB_TXNMGR *, u_int32_t, u_int32_t));
 int	  txn_commit __P((DB_TXN *));
 int	  txn_close __P((DB_TXNMGR *));
 u_int32_t txn_id __P((DB_TXN *));
-int	  txn_open __P((const char *, int, int, DB_ENV *, DB_TXNMGR **));
+int	  txn_open __P((const char *, u_int32_t, int, DB_ENV *, DB_TXNMGR **));
 int	  txn_prepare __P((DB_TXN *));
 int	  txn_stat __P((DB_TXNMGR *, DB_TXN_STAT **, void *(*)(size_t)));
 int	  txn_unlink __P((const char *, int, DB_ENV *));
@@ -810,10 +870,17 @@ int	  txn_unlink __P((const char *, int, DB_ENV *));
  */
 #define	DBM_SUFFIX	".db"
 
+#if defined(_XPG4_2)
+typedef struct {
+	char *dptr;
+	size_t dsize;
+} datum;
+#else
 typedef struct {
 	char *dptr;
 	int dsize;
 } datum;
+#endif
 
 /*
  * Translate DBM calls into DB calls so that DB doesn't step on the
@@ -894,7 +961,7 @@ typedef enum {
 
 typedef struct entry {
 	char *key;
-	void *data;
+	char *data;
 } ENTRY;
 
 /*
@@ -909,7 +976,7 @@ typedef struct entry {
 #if defined(__cplusplus)
 extern "C" {
 #endif
-int	 __db_hcreate __P((unsigned int));
+int	 __db_hcreate __P((size_t));
 void	 __db_hdestroy __P((void));
 ENTRY	*__db_hsearch __P((ENTRY, ACTION));
 #if defined(__cplusplus)

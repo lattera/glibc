@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_fsync.c	10.3 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)os_fsync.c	10.5 (Sleepycat) 4/19/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -32,3 +32,18 @@ __db_fsync(fd)
 {
 	return (__os_fsync(fd) ? errno : 0);
 }
+
+#ifdef __hp3000s900
+#include <fcntl.h>
+
+int
+__mpe_fsync(fd)
+	int fd;
+{
+	extern FCONTROL(short, short, void *);
+
+	FCONTROL(_MPE_FILENO(fd), 2, NULL);	/* Flush the buffers */
+	FCONTROL(_MPE_FILENO(fd), 6, NULL);	/* Write the EOF */
+	return (0);
+}
+#endif

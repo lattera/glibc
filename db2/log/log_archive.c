@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_archive.c	10.30 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)log_archive.c	10.37 (Sleepycat) 5/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -24,8 +24,8 @@ static const char sccsid[] = "@(#)log_archive.c	10.30 (Sleepycat) 1/8/98";
 #include "db_dispatch.h"
 #include "shqueue.h"
 #include "log.h"
-#include "clib_ext.h"
 #include "common_ext.h"
+#include "clib_ext.h"			/* XXX: needed for getcwd. */
 
 static int __absname __P((char *, char *, char **));
 static int __build_data __P((DB_LOG *, char *, char ***, void *(*)(size_t)));
@@ -40,7 +40,7 @@ int
 log_archive(dblp, listp, flags, db_malloc)
 	DB_LOG *dblp;
 	char ***listp;
-	int flags;
+	u_int32_t flags;
 	void *(*db_malloc) __P((size_t));
 {
 	DBT rec;
@@ -89,6 +89,11 @@ log_archive(dblp, listp, flags, db_malloc)
 		break;
 	case 0:
 		if ((ret = __log_findckp(dblp, &stable_lsn)) != 0) {
+			/*
+			 * A return of DB_NOTFOUND means that we didn't find
+			 * any records in the log (so we are not going to be
+			 * deleting any log files).
+			 */
 			if (ret != DB_NOTFOUND)
 				return (ret);
 			*listp = NULL;
@@ -269,7 +274,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 
 		/* Get the real name. */
 		if ((ret = __db_appname(dblp->dbenv,
-		    DB_APP_DATA, NULL, array[last], NULL, &real_name)) != 0)
+		    DB_APP_DATA, NULL, array[last], 0, NULL, &real_name)) != 0)
 			goto err2;
 
 		/* If the file doesn't exist, ignore it. */
@@ -335,21 +340,25 @@ __absname(pref, name, newnamep)
 	char *pref, *name, **newnamep;
 {
 	size_t l_pref, l_name;
+	int isabspath;
 	char *newname;
 
-	l_pref = strlen(pref);
 	l_name = strlen(name);
+	isabspath = __db_abspath(name);
+	l_pref = isabspath ? 0 : strlen(pref);
 
 	/* Malloc space for concatenating the two. */
-	if ((newname = (char *)__db_malloc(l_pref + l_name + 2)) == NULL)
+	if ((*newnamep =
+	    newname = (char *)__db_malloc(l_pref + l_name + 2)) == NULL)
 		return (ENOMEM);
 
-	/* Build the name. */
-	memcpy(newname, pref, l_pref);
-	if (strchr(PATH_SEPARATOR, newname[l_pref - 1]) == NULL)
-		newname[l_pref++] = PATH_SEPARATOR[0];
+	/* Build the name.  If `name' is an absolute path, ignore any prefix. */
+	if (!isabspath) {
+		memcpy(newname, pref, l_pref);
+		if (strchr(PATH_SEPARATOR, newname[l_pref - 1]) == NULL)
+			newname[l_pref++] = PATH_SEPARATOR[0];
+	}
 	memcpy(newname + l_pref, name, l_name + 1);
-	*newnamep = newname;
 
 	return (0);
 }
@@ -409,5 +418,5 @@ static int
 __cmpfunc(p1, p2)
 	const void *p1, *p2;
 {
-	return (strcmp(*((char **)p1), *((char **)p2)));
+	return (strcmp(*((char * const *)p1), *((char * const *)p2)));
 }

@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_page.c	10.31 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)hash_page.c	10.40 (Sleepycat) 6/2/98";
 #endif /* not lint */
 
 /*
@@ -70,15 +70,11 @@ static const char sccsid[] = "@(#)hash_page.c	10.31 (Sleepycat) 1/8/98";
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
-#include "db_swap.h"
 #include "hash.h"
 
 static int __ham_lock_bucket __P((DB *, HASH_CURSOR *, db_lockmode_t));
@@ -266,6 +262,7 @@ __ham_item_last(hashp, cursorp, mode)
 	F_SET(cursorp, H_OK);
 	return (__ham_item_prev(hashp, cursorp, mode));
 }
+
 /*
  * PUBLIC: int __ham_item_first __P((HTAB *, HASH_CURSOR *, db_lockmode_t));
  */
@@ -285,8 +282,10 @@ __ham_item_first(hashp, cursorp, mode)
 }
 
 /*
- * Returns a pointer to key/data pair on a page.  In the case of bigkeys,
- * just returns the page number and index of the bigkey pointer pair.
+ * __ham_item_prev --
+ *	Returns a pointer to key/data pair on a page.  In the case of
+ *	bigkeys, just returns the page number and index of the bigkey
+ *	pointer pair.
  *
  * PUBLIC: int __ham_item_prev __P((HTAB *, HASH_CURSOR *, db_lockmode_t));
  */
@@ -487,12 +486,61 @@ __ham_putitem(p, dbt, type)
 	NUM_ENT(p) += 1;
 }
 
+/*
+ * PUBLIC: void __ham_reputpair
+ * PUBLIC:    __P((PAGE *p, u_int32_t, u_int32_t, const DBT *, const DBT *));
+ *
+ * This is a special case to restore a key/data pair to its original
+ * location during recovery.  We are guaranteed that the pair fits
+ * on the page and is not the last pair on the page (because if it's
+ * the last pair, the normal insert works).
+ */
+void
+__ham_reputpair(p, psize, ndx, key, data)
+	PAGE *p;
+	u_int32_t psize, ndx;
+	const DBT *key, *data;
+{
+	db_indx_t i, movebytes, newbytes;
+	u_int8_t *from;
+
+	/* First shuffle the existing items up on the page.  */
+	movebytes =
+	    (ndx == 0 ? psize : p->inp[H_DATAINDEX(ndx - 1)]) - HOFFSET(p);
+	newbytes = key->size + data->size;
+	from = (u_int8_t *)p + HOFFSET(p);
+	memmove(from - newbytes, from, movebytes);
+
+	/*
+	 * Adjust the indices and move them up 2 spaces. Note that we
+	 * have to check the exit condition inside the loop just in case
+	 * we are dealing with index 0 (db_indx_t's are unsigned).
+	 */
+	for (i = NUM_ENT(p) - 1; ; i-- ) {
+		p->inp[i + 2] = p->inp[i] - newbytes;
+		if (i == H_KEYINDEX(ndx))
+			break;
+	}
+
+	/* Put the key and data on the page. */
+	p->inp[H_KEYINDEX(ndx)] =
+	    (ndx == 0 ? psize : p->inp[H_DATAINDEX(ndx - 1)]) - key->size;
+	p->inp[H_DATAINDEX(ndx)] = p->inp[H_KEYINDEX(ndx)] - data->size;
+	memcpy(P_ENTRY(p, H_KEYINDEX(ndx)), key->data, key->size);
+	memcpy(P_ENTRY(p, H_DATAINDEX(ndx)), data->data, data->size);
+
+	/* Adjust page info. */
+	HOFFSET(p) -= newbytes;
+	NUM_ENT(p) += 2;
+}
+
 
 /*
  * PUBLIC: int __ham_del_pair __P((HTAB *, HASH_CURSOR *, int));
- * XXX TODO: if the item is an offdup, delete the other pages and
- * then remove the pair. If the offpage page is 0, then you can
- * just remove the pair.
+ *
+ * XXX
+ * TODO: if the item is an offdup, delete the other pages and then remove
+ * the pair. If the offpage page is 0, then you can just remove the pair.
  */
 int
 __ham_del_pair(hashp, cursorp, reclaim_page)
@@ -648,8 +696,9 @@ __ham_del_pair(hashp, cursorp, reclaim_page)
 		/*
 		 * Cursor is advanced to the beginning of the next page.
 		 */
-		cursorp->bndx = NDX_INVALID;
+		cursorp->bndx = 0;
 		cursorp->pgno = PGNO(p);
+		F_SET(cursorp, H_DELETED);
 		chg_pgno = PGNO(p);
 		if ((ret = __ham_dirty_page(hashp, p)) != 0 ||
 		    (ret = __ham_del_page(hashp->dbp, n_pagep)) != 0)
@@ -748,8 +797,8 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 {
 	DBT old_dbt, tdata, tmp;
 	DB_LSN	new_lsn;
+	int32_t change;			/* XXX: Possible overflow. */
 	u_int32_t len;
-	int32_t change;
 	int is_big, ret, type;
 	u_int8_t *beg, *dest, *end, *hk, *src;
 
@@ -789,7 +838,7 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 		change += dbt->doff + dbt->dlen - len;
 
 
-	if (change > (int)P_FREESPACE(hcp->pagep) || is_big) {
+	if (change > (int32_t)P_FREESPACE(hcp->pagep) || is_big) {
 		/*
 		 * Case 3 -- two subcases.
 		 * A. This is not really a partial operation, but an overwrite.
@@ -954,7 +1003,7 @@ __ham_split_page(hashp, obucket, nbucket)
 	HTAB *hashp;
 	u_int32_t obucket, nbucket;
 {
-	DBT key, val, page_dbt;
+	DBT key, page_dbt;
 	DB_ENV *dbenv;
 	DB_LSN new_lsn;
 	PAGE **pp, *old_pagep, *temp_pagep, *new_pagep;
@@ -995,7 +1044,7 @@ __ham_split_page(hashp, obucket, nbucket)
 
 	big_len = 0;
 	big_buf = NULL;
-	val.flags = key.flags = 0;
+	key.flags = 0;
 	while (temp_pagep != NULL) {
 		for (n = 0; n < (db_indx_t)H_NUMPAIRS(temp_pagep); n++) {
 			if ((ret =
@@ -1103,8 +1152,8 @@ __ham_split_page(hashp, obucket, nbucket)
 	    ret == 0)
 		ret = tret;
 
-err:	if (0) {
-		if (old_pagep != NULL)
+	if (0) {
+err:		if (old_pagep != NULL)
 			(void)__ham_put_page(hashp->dbp, old_pagep, 1);
 		if (new_pagep != NULL)
 			(void)__ham_put_page(hashp->dbp, new_pagep, 1);
@@ -1121,8 +1170,8 @@ err:	if (0) {
  * to which we just added something.  This allows us to link overflow
  * pages and return the new page having correctly put the last page.
  *
- * PUBLIC: int __ham_add_el __P((HTAB *, HASH_CURSOR *, const DBT *, const DBT *,
- * PUBLIC:     int));
+ * PUBLIC: int __ham_add_el
+ * PUBLIC:    __P((HTAB *, HASH_CURSOR *, const DBT *, const DBT *, int));
  */
 int
 __ham_add_el(hashp, hcp, key, val, type)
@@ -1136,8 +1185,8 @@ __ham_add_el(hashp, hcp, key, val, type)
 	DB_LSN new_lsn;
 	HOFFPAGE doff, koff;
 	db_pgno_t next_pgno;
-	u_int32_t data_size, key_size, pairsize;
-	int do_expand, is_keybig, is_databig, rectype, ret;
+	u_int32_t data_size, key_size, pairsize, rectype;
+	int do_expand, is_keybig, is_databig, ret;
 	int key_type, data_type;
 
 	do_expand = 0;
@@ -1268,13 +1317,14 @@ __ham_add_el(hashp, hcp, key, val, type)
  * another.  Works for all types of hash entries (H_OFFPAGE, H_KEYDATA,
  * H_DUPLICATE, H_OFFDUP).  Since we log splits at a high level, we
  * do not need to do any logging here.
- * PUBLIC: void __ham_copy_item __P((HTAB *, PAGE *, int, PAGE *));
+ *
+ * PUBLIC: void __ham_copy_item __P((HTAB *, PAGE *, u_int32_t, PAGE *));
  */
 void
 __ham_copy_item(hashp, src_page, src_ndx, dest_page)
 	HTAB *hashp;
 	PAGE *src_page;
-	int src_ndx;
+	u_int32_t src_ndx;
 	PAGE *dest_page;
 {
 	u_int32_t len;
@@ -1409,7 +1459,7 @@ __ham_del_page(dbp, pagep)
 		LSN(pagep) = new_lsn;
 	}
 
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	{
 		db_pgno_t __pgno;
 		DB_LSN __lsn;
@@ -1563,13 +1613,13 @@ __ham_overflow_page(dbp, type, pp)
 #ifdef DEBUG
 /*
  * PUBLIC: #ifdef DEBUG
- * PUBLIC: int __bucket_to_page __P((HTAB *, int));
+ * PUBLIC: db_pgno_t __bucket_to_page __P((HTAB *, db_pgno_t));
  * PUBLIC: #endif
  */
-int
+db_pgno_t
 __bucket_to_page(hashp, n)
 	HTAB *hashp;
-	int n;
+	db_pgno_t n;
 {
 	int ret_val;
 
@@ -1579,7 +1629,6 @@ __bucket_to_page(hashp, n)
 	return (ret_val);
 }
 #endif
-
 
 /*
  * Create a bunch of overflow pages at the current split point.
@@ -1660,8 +1709,9 @@ __ham_get_cpage(hashp, hcp, mode)
  * Get a new page at the cursor, putting the last page if necessary.
  * If the flag is set to H_ISDUP, then we are talking about the
  * duplicate page, not the main page.
- * PUBLIC: int __ham_next_cpage __P((HTAB *, HASH_CURSOR *, db_pgno_t,
- * PUBLIC:     int, int));
+ *
+ * PUBLIC: int __ham_next_cpage
+ * PUBLIC:    __P((HTAB *, HASH_CURSOR *, db_pgno_t, int, u_int32_t));
  */
 int
 __ham_next_cpage(hashp, hcp, pgno, dirty, flags)
@@ -1669,22 +1719,22 @@ __ham_next_cpage(hashp, hcp, pgno, dirty, flags)
 	HASH_CURSOR *hcp;
 	db_pgno_t pgno;
 	int dirty;
-	int flags;
+	u_int32_t flags;
 {
 	PAGE *p;
 	int ret;
 
-	if (flags & H_ISDUP && hcp->dpagep != NULL &&
+	if (LF_ISSET(H_ISDUP) && hcp->dpagep != NULL &&
 	    (ret = __ham_put_page(hashp->dbp, hcp->dpagep, dirty)) != 0)
 		return (ret);
-	else if (!(flags & H_ISDUP) && hcp->pagep != NULL &&
+	else if (!LF_ISSET(H_ISDUP) && hcp->pagep != NULL &&
 	    (ret = __ham_put_page(hashp->dbp, hcp->pagep, dirty)) != 0)
 		return (ret);
 
 	if ((ret = __ham_get_page(hashp->dbp, pgno, &p)) != 0)
 		return (ret);
 
-	if (flags & H_ISDUP) {
+	if (LF_ISSET(H_ISDUP)) {
 		hcp->dpagep = p;
 		hcp->dpgno = pgno;
 		hcp->dndx = 0;

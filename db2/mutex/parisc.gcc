@@ -1,5 +1,5 @@
-/* 
- * @(#)parisc.gcc	8.5 (Sleepycat) 1/18/97
+/*
+ * @(#)parisc.gcc	8.8 (Sleepycat) 6/2/98
  *
  * Copyright (c) 1996-1997, The University of Utah and the Computer Systems
  * Laboratory at the University of Utah (CSL).  All rights reserved.
@@ -22,19 +22,15 @@
 
 /*
  * The PA-RISC has a "load and clear" instead of a "test and set" instruction.
- * The 32-bit word used by that instruction must be 16-byte aligned hence we
- * allocate 16 bytes for a tsl_t and use the word that is properly aligned.
- * We could use the "aligned" attribute in GCC but that doesn't work for stack
- * variables.
+ * The 32-bit word used by that instruction must be 16-byte aligned.  We could
+ * use the "aligned" attribute in GCC but that doesn't work for stack variables.
  */
 #define	TSL_SET(tsl) ({							\
-	int *__l = (int *)(((int)(tsl)+15)&~15);			\
+	register tsl_t *__l = (tsl);					\
 	int __r;							\
 	asm volatile("ldcws 0(%1),%0" : "=r" (__r) : "r" (__l));	\
 	__r & 1;							\
 })
 
-#define	TSL_UNSET(tsl) ({						\
-	int *__l = (int *)(((int)(tsl)+15)&~15);			\
-	*__l = -1;							\
-})
+#define	TSL_UNSET(tsl)	(*(tsl) = -1)
+#define	TSL_INIT(tsl)	TSL_UNSET(tsl)

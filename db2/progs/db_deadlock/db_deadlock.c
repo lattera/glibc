@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_deadlock.c	10.17 (Sleepycat) 1/15/98";
+static const char sccsid[] = "@(#)db_deadlock.c	10.19 (Sleepycat) 4/10/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -54,13 +54,15 @@ main(argc, argv)
 	u_int32_t atype;
 	time_t now;
 	long usecs;
-	int ch, flags, verbose;
+	u_int32_t flags;
+	int ch, verbose;
 	char *home, *logfile;
 
 	atype = DB_LOCK_DEFAULT;
 	home = logfile = NULL;
 	usecs = 0;
-	flags = verbose = 0;
+	flags = 0;
+	verbose = 0;
 	while ((ch = getopt(argc, argv, "a:h:L:t:vw")) != EOF)
 		switch (ch) {
 		case 'a':

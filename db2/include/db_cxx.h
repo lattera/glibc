@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_cxx.h	10.13 (Sleepycat) 11/25/97
+ *	@(#)db_cxx.h	10.17 (Sleepycat) 5/2/98
  */
 
 #ifndef _DB_CXX_H_
@@ -178,11 +178,11 @@ class _exported DbLock
     friend DbLockTab;
 
 public:
-    DbLock(unsigned int);
+    DbLock(u_int);
     DbLock();
 
-    unsigned int get_lock_id();
-    void set_lock_id(unsigned int);
+    u_int get_lock_id();
+    void set_lock_id(u_int);
 
     int put(DbLockTab *locktab);
 
@@ -202,16 +202,16 @@ class _exported DbLockTab
 friend DbEnv;
 public:
     int close();
-    int detect(int flags, int atype);
-    int get(u_int32_t locker, int flags, const Dbt *obj,
+    int detect(u_int32_t flags, int atype);
+    int get(u_int32_t locker, u_int32_t flags, const Dbt *obj,
             db_lockmode_t lock_mode, DbLock *lock);
     int id(u_int32_t *idp);
-    int vec(u_int32_t locker, int flags, DB_LOCKREQ list[],
+    int vec(u_int32_t locker, u_int32_t flags, DB_LOCKREQ list[],
 	    int nlist, DB_LOCKREQ **elistp);
 
     // Create or remove new locktab files
     //
-    static int open(const char *dir, int flags, int mode,
+    static int open(const char *dir, u_int32_t flags, int mode,
                     DbEnv* dbenv, DbLockTab **regionp);
     static int unlink(const char *dir, int force, DbEnv* dbenv);
 
@@ -252,13 +252,13 @@ class _exported DbLog
 {
 friend DbEnv;
 public:
-    int archive(char **list[], int flags, void *(*db_malloc)(size_t));
+    int archive(char **list[], u_int32_t flags, void *(*db_malloc)(size_t));
     int close();
     static int compare(const DbLsn *lsn0, const DbLsn *lsn1);
     int file(DbLsn *lsn, char *namep, int len);
     int flush(const DbLsn *lsn);
-    int get(DbLsn *lsn, Dbt *data, int flags);
-    int put(DbLsn *lsn, const Dbt *data, int flags);
+    int get(DbLsn *lsn, Dbt *data, u_int32_t flags);
+    int put(DbLsn *lsn, const Dbt *data, u_int32_t flags);
 
     // Normally these would be called register and unregister to
     // parallel the C interface, but "register" is a reserved word.
@@ -268,7 +268,7 @@ public:
 
     // Create or remove new log files
     //
-    static int open(const char *dir, int flags, int mode,
+    static int open(const char *dir, u_int32_t flags, int mode,
                     DbEnv* dbenv, DbLog **regionp);
     static int unlink(const char *dir, int force, DbEnv* dbenv);
 
@@ -300,17 +300,17 @@ private:
 
 class _exported DbMpoolFile
 {
+friend DbEnv;
 public:
     int close();
-    int get(db_pgno_t *pgnoaddr, int flags, void *pagep);
-    int put(void *pgaddr, int flags);
-    int set(void *pgaddr, int flags);
+    int get(db_pgno_t *pgnoaddr, u_int32_t flags, void *pagep);
+    int put(void *pgaddr, u_int32_t flags);
+    int set(void *pgaddr, u_int32_t flags);
     int sync();
 
     static int open(DbMpool *mp, const char *file,
-                    int ftype, int flags, int mode,
-                    size_t pagesize, int lsn_offset,
-                    Dbt *pgcookie, u_int8_t *uid, DbMpoolFile **mpf);
+                    u_int32_t flags, int mode, size_t pagesize,
+                    DB_MPOOL_FINFO *finfop, DbMpoolFile **mpf);
 
 private:
     // We can add data to this class if needed
@@ -356,7 +356,7 @@ public:
 
     // Create or remove new mpool files
     //
-    static int open(const char *dir, int flags, int mode,
+    static int open(const char *dir, u_int32_t flags, int mode,
                     DbEnv* dbenv, DbMpool **regionp);
     static int unlink(const char *dir, int force, DbEnv* dbenv);
 
@@ -391,13 +391,13 @@ class _exported DbTxnMgr
 friend DbEnv;
 public:
     int begin(DbTxn *pid, DbTxn **tid);
-    int checkpoint(int kbyte, int min) const;
+    int checkpoint(u_int32_t kbyte, u_int32_t min) const;
     int close();
     int stat(DB_TXN_STAT **statp, void *(*db_malloc)(size_t));
 
     // Create or remove new txnmgr files
     //
-    static int open(const char *dir, int flags, int mode,
+    static int open(const char *dir, u_int32_t flags, int mode,
                     DbEnv* dbenv, DbTxnMgr **regionp);
     static int unlink(const char *dir, int force, DbEnv* dbenv);
 
@@ -510,12 +510,12 @@ public:
     // Hash access method.
 
     // Fill factor.
-    unsigned int get_h_ffactor() const;
-    void set_h_ffactor(unsigned int);
+    u_int32_t get_h_ffactor() const;
+    void set_h_ffactor(u_int32_t);
 
     // Number of elements.
-    unsigned int get_h_nelem() const;
-    void set_h_nelem(unsigned int);
+    u_int32_t get_h_nelem() const;
+    void set_h_nelem(u_int32_t);
 
     // Hash function.
     typedef u_int32_t (*h_hash_fcn)(const void *, u_int32_t);
@@ -584,7 +584,7 @@ public:
     // application with these arguments.  Do not use it if you
     // need to set other parameters via the access methods.
     //
-    DbEnv(const char *homeDir, char *const *db_config, int flags);
+    DbEnv(const char *homeDir, char *const *db_config, u_int32_t flags);
 
     // Use this constructor if you wish to *delay* the initialization
     // of the db library.  This is useful if you need to set
@@ -596,7 +596,7 @@ public:
     // Used in conjunction with the default constructor to
     // complete the initialization of the db library.
     //
-    int appinit(const char *homeDir, char *const *db_config, int flags);
+    int appinit(const char *homeDir, char *const *db_config, u_int32_t flags);
 
     // Called automatically when DbEnv is destroyed, or can be
     // called at any time to shut down Db.
@@ -673,8 +673,8 @@ public:
     void set_lk_modes(int);
 
     // Maximum number of locks.
-    unsigned int get_lk_max() const;
-    void set_lk_max(unsigned int);
+    u_int32_t get_lk_max() const;
+    void set_lk_max(u_int32_t);
 
     // Deadlock detect on every conflict.
     u_int32_t get_lk_detect() const;
@@ -714,8 +714,8 @@ public:
     DbTxnMgr *get_tx_info() const;
 
     // Maximum number of transactions.
-    unsigned int get_tx_max() const;
-    void set_tx_max(unsigned int);
+    u_int32_t get_tx_max() const;
+    void set_tx_max(u_int32_t);
 
     // Dispatch function for recovery.
     typedef int (*tx_recover_fcn)(DB_LOG *, DBT *, DB_LSN *, int, void *);
@@ -781,18 +781,18 @@ class _exported Db
     friend DbEnv;
 
 public:
-    int close(int flags);
+    int close(u_int32_t flags);
     int cursor(DbTxn *txnid, Dbc **cursorp);
-    int del(DbTxn *txnid, Dbt *key, int flags);
+    int del(DbTxn *txnid, Dbt *key, u_int32_t flags);
     int fd(int *fdp);
-    int get(DbTxn *txnid, Dbt *key, Dbt *data, int flags);
-    int put(DbTxn *txnid, Dbt *key, Dbt *data, int flags);
-    int stat(void *sp, void *(*db_malloc)(size_t), int flags);
-    int sync(int flags);
+    int get(DbTxn *txnid, Dbt *key, Dbt *data, u_int32_t flags);
+    int put(DbTxn *txnid, Dbt *key, Dbt *data, u_int32_t flags);
+    int stat(void *sp, void *(*db_malloc)(size_t), u_int32_t flags);
+    int sync(u_int32_t flags);
 
     DBTYPE get_type() const;
 
-    static int open(const char *fname, DBTYPE type, int flags,
+    static int open(const char *fname, DBTYPE type, u_int32_t flags,
                     int mode, DbEnv *dbenv, DbInfo *info, Db **dbpp);
 
 private:
@@ -867,9 +867,9 @@ class _exported Dbc : protected DBC
 
 public:
     int close();
-    int del(int flags);
-    int get(Dbt* key, Dbt *data, int flags);
-    int put(Dbt* key, Dbt *data, int flags);
+    int del(u_int32_t flags);
+    int get(Dbt* key, Dbt *data, u_int32_t flags);
+    int put(Dbt* key, Dbt *data, u_int32_t flags);
 
 private:
     // No data is permitted in this class (see comment at top)

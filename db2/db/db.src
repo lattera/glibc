@@ -1,11 +1,11 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
- *	@(#)db.src	10.4 (Sleepycat) 11/2/97
+ *
+ *	@(#)db.src	10.6 (Sleepycat) 4/28/98
  */
-#include "config.h"
 
 PREFIX	db
 
@@ -153,4 +153,7 @@ END
  * noop -- do nothing, but get an LSN.
  */
 BEGIN noop
+ARG	fileid		u_int32_t	lu
+ARG	pgno		db_pgno_t	lu
+POINTER	prevlsn		DB_LSN *	lu
 END

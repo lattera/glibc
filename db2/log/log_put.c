@@ -1,21 +1,19 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_put.c	10.24 (Sleepycat) 1/17/98";
+static const char sccsid[] = "@(#)log_put.c	10.35 (Sleepycat) 5/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -43,18 +41,19 @@ log_put(dblp, lsn, dbt, flags)
 	DB_LOG *dblp;
 	DB_LSN *lsn;
 	const DBT *dbt;
-	int flags;
+	u_int32_t flags;
 {
 	int ret;
 
 	/* Validate arguments. */
-#define	OKFLAGS	(DB_CHECKPOINT | DB_FLUSH)
+#define	OKFLAGS	(DB_CHECKPOINT | DB_FLUSH | DB_CURLSN)
 	if (flags != 0) {
 		if ((ret =
 		    __db_fchk(dblp->dbenv, "log_put", flags, OKFLAGS)) != 0)
 			return (ret);
 		switch (flags) {
 		case DB_CHECKPOINT:
+		case DB_CURLSN:
 		case DB_FLUSH:
 		case 0:
 			break;
@@ -73,14 +72,14 @@ log_put(dblp, lsn, dbt, flags)
  * __log_put --
  *	Write a log record; internal version.
  *
- * PUBLIC: int __log_put __P((DB_LOG *, DB_LSN *, const DBT *, int));
+ * PUBLIC: int __log_put __P((DB_LOG *, DB_LSN *, const DBT *, u_int32_t));
  */
 int
 __log_put(dblp, lsn, dbt, flags)
 	DB_LOG *dblp;
 	DB_LSN *lsn;
 	const DBT *dbt;
-	int flags;
+	u_int32_t flags;
 {
 	DBT fid_dbt, t;
 	DB_LSN r_unused;
@@ -90,6 +89,17 @@ __log_put(dblp, lsn, dbt, flags)
 	int ret;
 
 	lp = dblp->lp;
+
+	/*
+	 * If the application just wants to know where we are, fill in
+	 * the information.  Currently used by the transaction manager
+	 * to avoid writing TXN_begin records.
+	 */
+	if (LF_ISSET(DB_CURLSN)) {
+		lsn->file = lp->lsn.file;
+		lsn->offset = lp->lsn.offset;
+		return (0);
+	}
 
 	/* If this information won't fit in the file, swap files. */
 	if (lp->lsn.offset + sizeof(HDR) + dbt->size > lp->persist.lg_max) {
@@ -151,7 +161,7 @@ __log_put(dblp, lsn, dbt, flags)
 	 *	Append the set of file name information into the log.
 	 */
 	if (flags == DB_CHECKPOINT) {
-		lp->c_lsn = *lsn;
+		lp->chkpt_lsn = *lsn;
 
 		for (fnp = SH_TAILQ_FIRST(&dblp->lp->fq, __fname);
 		    fnp != NULL; fnp = SH_TAILQ_NEXT(fnp, q, __fname)) {
@@ -159,7 +169,7 @@ __log_put(dblp, lsn, dbt, flags)
 			t.data = R_ADDR(dblp, fnp->name_off);
 			t.size = strlen(t.data) + 1;
 			memset(&fid_dbt, 0, sizeof(fid_dbt));
-			fid_dbt.data = R_ADDR(dblp, fnp->fileid_off);
+			fid_dbt.data = fnp->ufid;
 			fid_dbt.size = DB_FILE_ID_LEN;
 			if ((ret = __log_register_log(dblp, NULL, &r_unused, 0,
 			    LOG_CHECKPOINT, &t, &fid_dbt, fnp->id, fnp->s_type))
@@ -324,7 +334,11 @@ __log_flush(dblp, lsn)
 	 */
 	lp->s_lsn = lp->f_lsn;
 	if (!current)
-		--lp->s_lsn.offset;
+		if (lp->s_lsn.offset == 0) {
+			--lp->s_lsn.file;
+			lp->s_lsn.offset = lp->persist.lg_max;
+		} else
+			--lp->s_lsn.offset;
 
 	return (0);
 }
@@ -416,7 +430,7 @@ __log_write(dblp, addr, len)
 	 * Seek to the offset in the file (someone may have written it
 	 * since we last did).
 	 */
-	if ((ret = __db_seek(dblp->lfd, 0, 0, lp->w_off, SEEK_SET)) != 0)
+	if ((ret = __db_seek(dblp->lfd, 0, 0, lp->w_off, 0, SEEK_SET)) != 0)
 		return (ret);
 	if ((ret = __db_write(dblp->lfd, addr, len, &nw)) != 0)
 		return (ret);
@@ -461,7 +475,7 @@ log_file(dblp, lsn, namep, len)
 		return (ret);
 
 	/* Check to make sure there's enough room and copy the name. */
-	if (len < strlen(p)) {
+	if (len < strlen(p) + 1) {
 		*namep = '\0';
 		return (ENOMEM);
 	}
@@ -518,5 +532,5 @@ __log_name(dblp, filenumber, namep)
 
 	(void)snprintf(name, sizeof(name), LFNAME, filenumber);
 	return (__db_appname(dblp->dbenv,
-	    DB_APP_LOG, dblp->dir, name, NULL, namep));
+	    DB_APP_LOG, dblp->dir, name, 0, NULL, namep));
 }

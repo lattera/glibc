@@ -1,35 +1,27 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dup.c	10.11 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)db_dup.c	10.18 (Sleepycat) 5/31/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
-#include "db_swap.h"
 #include "btree.h"
 #include "db_am.h"
-#include "common_ext.h"
 
 static int __db_addpage __P((DB *,
     PAGE **, db_indx_t *, int (*)(DB *, u_int32_t, PAGE **)));
@@ -209,9 +201,8 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 	PAGE *h, *np, *tp;
 	BKEYDATA *bk;
 	DBT page_dbt;
-	db_indx_t indx, nindex, oindex, sum;
-	db_indx_t halfbytes, i, lastsum;
-	int did_indx, ret, s;
+	db_indx_t halfbytes, i, indx, lastsum, nindex, oindex, s, sum;
+	int did_indx, ret;
 
 	h = *hp;
 	indx = *indxp;
@@ -219,7 +210,7 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 	/* Create a temporary page to do compaction onto. */
 	if ((tp = (PAGE *)__db_malloc(dbp->pgsize)) == NULL)
 		return (ENOMEM);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	memset(tp, 0xff, dbp->pgsize);
 #endif
 	/* Create new page for the split. */
@@ -239,6 +230,7 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 	for (sum = 0, lastsum = 0, i = 0; i < NUM_ENT(h); i++) {
 		if (i == indx) {
 			sum += size;
+			did_indx = 1;
 			if (lastsum < halfbytes && sum >= halfbytes) {
 				/* We've crossed the halfway point. */
 				if ((db_indx_t)(halfbytes - lastsum) <
@@ -252,7 +244,6 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 			}
 			*indxp = i;
 			lastsum = sum;
-			did_indx = 1;
 		}
 		if (B_TYPE(GET_BKEYDATA(h, i)->type) == B_KEYDATA)
 			sum += BKEYDATA_SIZE(GET_BKEYDATA(h, i)->len);

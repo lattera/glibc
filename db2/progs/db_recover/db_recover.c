@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_recover.c	10.17 (Sleepycat) 1/15/98";
+static const char sccsid[] = "@(#)db_recover.c	10.19 (Sleepycat) 4/10/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -29,7 +29,7 @@ static const char sccsid[] = "@(#)db_recover.c	10.17 (Sleepycat) 1/15/98";
 #include "common_ext.h"
 #include "clib_ext.h"
 
-DB_ENV	*db_init __P((char *, int, int));
+DB_ENV	*db_init __P((char *, u_int32_t, int));
 int	 main __P((int, char *[]));
 void	 usage __P((void));
 
@@ -45,7 +45,8 @@ main(argc, argv)
 	extern int optind;
 	DB_ENV *dbenv;
 	time_t now;
-	int ch, flags, verbose;
+	u_int32_t flags;
+	int ch, verbose;
 	char *home;
 
 	home = NULL;
@@ -88,10 +89,11 @@ main(argc, argv)
 DB_ENV *
 db_init(home, flags, verbose)
 	char *home;
-	int flags, verbose;
+	u_int32_t flags;
+	int verbose;
 {
 	DB_ENV *dbenv;
-	int local_flags;
+	u_int32_t local_flags;
 
 	if ((dbenv = (DB_ENV *)calloc(sizeof(DB_ENV), 1)) == NULL) {
 		errno = ENOMEM;

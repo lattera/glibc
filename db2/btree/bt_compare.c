@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,14 +47,12 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_compare.c	10.4 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_compare.c	10.9 (Sleepycat) 5/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -106,7 +104,6 @@ __bam_cmp(dbp, k1, e)
 		if (B_TYPE(bk->type) == B_OVERFLOW)
 			bo = (BOVERFLOW *)bk;
 		else {
-			memset(&k2, 0, sizeof(k2));
 			k2.data = bk->data;
 			k2.size = bk->len;
 		}
@@ -115,7 +112,6 @@ __bam_cmp(dbp, k1, e)
 		if (B_TYPE(bi->type) == B_OVERFLOW)
 			bo = (BOVERFLOW *)(bi->data);
 		else {
-			memset(&k2, 0, sizeof(k2));
 			k2.data = bi->data;
 			k2.size = bi->len;
 		}
@@ -139,10 +135,21 @@ __bam_cmp(dbp, k1, e)
 		 * Otherwise, we need a contiguous record so we can hand it
 		 * to the user's routine.
 		 */
+		memset(&k2, 0, sizeof(k2));
 		if (__db_goff(dbp, &k2, bo->tlen,
-		    bo->pgno, &t->bt_rdata.data, &t->bt_rdata.ulen) != 0)
-			abort();
+		    bo->pgno, &t->bt_rdata.data, &t->bt_rdata.ulen) != 0) {
+			(void)__db_panic(dbp);
+			return (0);
+		}
 	}
+
+	/*
+	 * XXX
+	 * Note, we have not cleared the k2 DBT in this path.  This should
+	 * be okay, because the user's comparison routine had better not be
+	 * looking at any fields other than the data/size.  We don't clear
+	 * it because we go through this path a lot and it's expensive.
+	 */
 	return ((*t->bt_compare)(k1, &k2));
 }
 

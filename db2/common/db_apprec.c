@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,18 +9,17 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_apprec.c	10.23 (Sleepycat) 1/17/98";
+static const char sccsid[] = "@(#)db_apprec.c	10.30 (Sleepycat) 5/3/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <time.h>
 #include <string.h>
-#include <stdlib.h>
+#include <time.h>
 #endif
 
 #include "db_int.h"
@@ -36,18 +35,19 @@ static const char sccsid[] = "@(#)db_apprec.c	10.23 (Sleepycat) 1/17/98";
  * __db_apprec --
  *	Perform recovery.
  *
- * PUBLIC: int __db_apprec __P((DB_ENV *, int));
+ * PUBLIC: int __db_apprec __P((DB_ENV *, u_int32_t));
  */
 int
 __db_apprec(dbenv, flags)
 	DB_ENV *dbenv;
-	int flags;
+	u_int32_t flags;
 {
 	DBT data;
 	DB_LOG *lp;
 	DB_LSN ckp_lsn, first_lsn, lsn;
 	time_t now;
-	int is_thread, ret;
+	u_int32_t is_thread;
+	int ret;
 	void *txninfo;
 
 	lp = dbenv->lg_info;
@@ -91,14 +91,14 @@ __db_apprec(dbenv, flags)
 	if ((ret = log_get(lp, &ckp_lsn, &data, DB_CHECKPOINT)) != 0) {
 		/*
 		 * If we don't find a checkpoint, start from the beginning.
-		 * If that fails, we're done.  Note, we require that there
-		 * be log records if we're performing recovery, and fail if
-		 * there aren't.
+		 * If that fails, we're done.  Note, we do not require that
+		 * there be log records if we're performing recovery.
 		 */
 		if ((ret = log_get(lp, &ckp_lsn, &data, DB_FIRST)) != 0) {
-			__db_err(dbenv, "First log record not found");
 			if (ret == DB_NOTFOUND)
-				ret = EINVAL;
+				ret = 0;
+			else
+				__db_err(dbenv, "First log record not found");
 			goto out;
 		}
 	}
@@ -134,14 +134,17 @@ __db_apprec(dbenv, flags)
 	} else
 		if ((ret = __log_findckp(lp, &first_lsn)) == DB_NOTFOUND) {
 			/*
-			 * If recovery was specified, there must be log files.
-			 * If we don't find one, it's an error.  (This should
-			 * have been caught above, when a log_get() of DB_FIRST
-			 * or DB_CHECKPOINT succeeded, but paranoia is good.)
+			 * We don't require that log files exist if recovery
+			 * was specified.
 			 */
-			ret = EINVAL;
+			ret = 0;
 			goto out;
 		}
+
+	if (dbenv->db_verbose)
+		__db_err(lp->dbenv, "Recovery starting from [%lu][%lu]",
+		    (u_long)first_lsn.file, (u_long)first_lsn.offset);
+
 	for (ret = log_get(lp, &lsn, &data, DB_LAST);
 	    ret == 0 && log_compare(&lsn, &first_lsn) > 0;
 	    ret = log_get(lp, &lsn, &data, DB_PREV)) {
@@ -175,21 +178,21 @@ __db_apprec(dbenv, flags)
 	__log_close_files(lp);
 
 	/*
-	 * Now set the maximum transaction id, set the last checkpoint lsn,
-	 * and the current time.  Then take a checkpoint.
+	 * Now set the last checkpoint lsn and the current time,
+	 * take a checkpoint, and reset the txnid.
 	 */
 	(void)time(&now);
-	dbenv->tx_info->region->last_txnid = ((__db_txnhead *)txninfo)->maxid;
 	dbenv->tx_info->region->last_ckp = ckp_lsn;
 	dbenv->tx_info->region->time_ckp = (u_int32_t)now;
 	if ((ret = txn_checkpoint(dbenv->tx_info, 0, 0)) != 0)
 		goto out;
+	dbenv->tx_info->region->last_txnid = TXN_MINIMUM;
 
 	if (dbenv->db_verbose) {
 		__db_err(lp->dbenv, "Recovery complete at %.24s", ctime(&now));
-		__db_err(lp->dbenv, "%s %lu %s [%lu][%lu]",
+		__db_err(lp->dbenv, "%s %lx %s [%lu][%lu]",
 		    "Maximum transaction id",
-		    (u_long)dbenv->tx_info->region->last_txnid,
+		    ((DB_TXNHEAD *)txninfo)->maxid,
 		    "Recovery checkpoint",
 		    (u_long)dbenv->tx_info->region->last_ckp.file,
 		    (u_long)dbenv->tx_info->region->last_ckp.offset);

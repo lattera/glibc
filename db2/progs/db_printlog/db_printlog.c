@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_printlog.c	10.11 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)db_printlog.c	10.12 (Sleepycat) 4/10/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES

@@ -53,10 +53,10 @@ __BEGIN_DECLS
 /* Structure describing a mount table entry.  */
 struct mntent
   {
-    const char *mnt_fsname;	/* Device or server for filesystem.  */
-    const char *mnt_dir;	/* Directory mounted on.  */
-    const char *mnt_type;	/* Type of filesystem: ufs, nfs, etc.  */
-    const char *mnt_opts;	/* Comma-separated options for fs.  */
+    char *mnt_fsname;		/* Device or server for filesystem.  */
+    char *mnt_dir;		/* Directory mounted on.  */
+    char *mnt_type;		/* Type of filesystem: ufs, nfs, etc.  */
+    char *mnt_opts;		/* Comma-separated options for fs.  */
     int mnt_freq;		/* Dump frequency (in days).  */
     int mnt_passno;		/* Pass number for `fsck'.  */
   };

@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,13 +47,12 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_delete.c	10.25 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)bt_delete.c	10.31 (Sleepycat) 5/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#include <stdio.h>
 #include <string.h>
 #endif
 
@@ -67,14 +66,14 @@ static int __bam_dpages __P((DB *, BTREE *));
  * __bam_delete --
  *	Delete the items referenced by a key.
  *
- * PUBLIC: int __bam_delete __P((DB *, DB_TXN *, DBT *, int));
+ * PUBLIC: int __bam_delete __P((DB *, DB_TXN *, DBT *, u_int32_t));
  */
 int
 __bam_delete(argdbp, txn, key, flags)
 	DB *argdbp;
 	DB_TXN *txn;
 	DBT *key;
-	int flags;
+	u_int32_t flags;
 {
 	BTREE *t;
 	DB *dbp;
@@ -87,8 +86,8 @@ __bam_delete(argdbp, txn, key, flags)
 	stack = 0;
 
 	/* Check for invalid flags. */
-	if ((ret =
-	    __db_delchk(argdbp, flags, F_ISSET(argdbp, DB_AM_RDONLY))) != 0)
+	if ((ret = __db_delchk(argdbp,
+	    key, flags, F_ISSET(argdbp, DB_AM_RDONLY))) != 0)
 		return (ret);
 
 	GETHANDLE(argdbp, txn, &dbp, ret);
@@ -107,6 +106,11 @@ __bam_delete(argdbp, txn, key, flags)
 			break;
 	for (; cnt > 0; --cnt, ++t->lstat.bt_deleted)
 		if (__bam_ca_delete(dbp, h->pgno, indx, NULL, 1) == 0) {
+			/*
+			 * XXX
+			 * Delete the key item first, otherwise the duplicate
+			 * checks in __bam_ditem() won't work!
+			 */
 			if ((ret = __bam_ditem(dbp, h, indx)) != 0)
 				goto err;
 			if ((ret = __bam_ditem(dbp, h, indx)) != 0)
@@ -138,14 +142,14 @@ err:	if (stack)
  * __ram_delete --
  *	Delete the items referenced by a key.
  *
- * PUBLIC: int __ram_delete __P((DB *, DB_TXN *, DBT *, int));
+ * PUBLIC: int __ram_delete __P((DB *, DB_TXN *, DBT *, u_int32_t));
  */
 int
 __ram_delete(argdbp, txn, key, flags)
 	DB *argdbp;
 	DB_TXN *txn;
 	DBT *key;
-	int flags;
+	u_int32_t flags;
 {
 	BKEYDATA bk;
 	BTREE *t;
@@ -159,8 +163,8 @@ __ram_delete(argdbp, txn, key, flags)
 	stack = 0;
 
 	/* Check for invalid flags. */
-	if ((ret =
-	    __db_delchk(argdbp, flags, F_ISSET(argdbp, DB_AM_RDONLY))) != 0)
+	if ((ret = __db_delchk(argdbp,
+	    key, flags, F_ISSET(argdbp, DB_AM_RDONLY))) != 0)
 		return (ret);
 
 	GETHANDLE(argdbp, txn, &dbp, ret);
@@ -284,19 +288,32 @@ __bam_ditem(dbp, h, indx)
 	case P_LBTREE:
 		/*
 		 * If it's a duplicate key, discard the index and don't touch
-		 * the actual page item.  This works because no data item can
-		 * have an index that matches any other index so even if the
-		 * data item is in an index "slot", it won't match any other
-		 * index.
+		 * the actual page item.
+		 *
+		 * XXX
+		 * This works because no data item can have an index matching
+		 * any other index so even if the data item is in a key "slot",
+		 * it won't match any other index.
 		 */
-		if (!(indx % 2)) {
-			if (indx > 0 && h->inp[indx] == h->inp[indx - P_INDX])
-				return (__bam_adjindx(dbp,
-				    h, indx, indx - P_INDX, 0));
+		if ((indx % 2) == 0) {
+			/*
+			 * Check for a duplicate after us on the page.  NOTE:
+			 * we have to delete the key item before deleting the
+			 * data item, otherwise the "indx + P_INDX" calculation
+			 * won't work!
+			 */
 			if (indx + P_INDX < (u_int32_t)NUM_ENT(h) &&
 			    h->inp[indx] == h->inp[indx + P_INDX])
 				return (__bam_adjindx(dbp,
 				    h, indx, indx + O_INDX, 0));
+			/*
+			 * Check for a duplicate before us on the page.  It
+			 * doesn't matter if we delete the key item before or
+			 * after the data item for the purposes of this one.
+			 */
+			if (indx > 0 && h->inp[indx] == h->inp[indx - P_INDX])
+				return (__bam_adjindx(dbp,
+				    h, indx, indx - P_INDX, 0));
 		}
 		/* FALLTHROUGH */
 	case P_LRECNO:
@@ -396,7 +413,8 @@ __bam_dpage(dbp, key)
 	DB_LOCK lock;
 	PAGE *h;
 	db_pgno_t pgno;
-	int exact, level, ret;
+	int level;		/* !!!: has to hold number of tree levels. */
+	int exact, ret;
 
 	ret = 0;
 	t = dbp->internal;
@@ -527,13 +545,14 @@ __bam_dpages(dbp, t)
 		goto release;
 
 	/*
-	 * If we deleted the next-to-last item from the root page, the tree
-	 * can collapse a level.  Try and write lock the remaining root + 1
-	 * page and copy it onto the root page.  If we can't get the lock,
-	 * that's okay, the tree just stays a level deeper than we'd like.
+	 * If we just deleted the last or next-to-last item from the root page,
+	 * the tree can collapse a level.  Write lock the last page referenced
+	 * by the root page and copy it over the root page.  If we can't get a
+	 * write lock, that's okay, the tree just remains a level deeper than
+	 * we'd like.
 	 */
 	h = epg->page;
-	if (h->pgno == PGNO_ROOT && NUM_ENT(h) == 1) {
+	if (h->pgno == PGNO_ROOT && NUM_ENT(h) <= 1) {
 		pgno = TYPE(epg->page) == P_IBTREE ?
 		    GET_BINTERNAL(epg->page, 0)->pgno :
 		    GET_RINTERNAL(epg->page, 0)->pgno;
@@ -573,13 +592,21 @@ __bam_dpages(dbp, t)
 		(void)memp_fset(dbp->mpf, epg->page, DB_MPOOL_DIRTY);
 
 		/*
-		 * Free the last page in that level of the btree and discard
-		 * the lock.  (The call to __bam_free discards our reference
+		 * Free the page copied onto the root page and discard its
+		 * lock.  (The call to __bam_free() discards our reference
 		 * to the page.)
+		 *
+		 * It's possible that the reverse split we're doing involves
+		 * pages from the stack of pages we're deleting.  Don't free
+		 * the page twice.
 		 */
-		(void)__bam_free(dbp, h);
+		 if (h->pgno == (epg + 1)->page->pgno)
+			(void)memp_fput(dbp->mpf, h, 0);
+		else {
+			(void)__bam_free(dbp, h);
+			++t->lstat.bt_freed;
+		}
 		(void)__BT_TLPUT(dbp, lock);
-		++t->lstat.bt_freed;
 
 		/* Adjust the cursors. */
 		__bam_ca_move(dbp, h->pgno, PGNO_ROOT);
@@ -596,12 +623,17 @@ __bam_dpages(dbp, t)
 	 * Don't bother checking for errors.  We've unlinked the subtree from
 	 * the tree, and there's no possibility of recovery.
 	 */
-	for (; ++epg <= t->bt_csp; ++t->lstat.bt_freed) {
+	while (++epg <= t->bt_csp) {
+		/*
+		 * XXX
+		 * Why do we need to do this?  Isn't the page already empty?
+		 */
 		if (NUM_ENT(epg->page) != 0)
 			(void)__bam_ditem(dbp, epg->page, epg->indx);
 
 		(void)__bam_free(dbp, epg->page);
 		(void)__BT_TLPUT(dbp, epg->lock);
+		++t->lstat.bt_freed;
 	}
 	return (0);
 

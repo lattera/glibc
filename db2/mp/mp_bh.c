@@ -1,13 +1,13 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.28 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)mp_bh.c	10.38 (Sleepycat) 5/20/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -59,8 +59,10 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	    dbmfp != NULL; dbmfp = TAILQ_NEXT(dbmfp, q))
 		if (dbmfp->mfp == mfp) {
 			if (F_ISSET(dbmfp, MP_READONLY) &&
-			    __memp_upgrade(dbmp, dbmfp, mfp))
+			    __memp_upgrade(dbmp, dbmfp, mfp)) {
+				UNLOCKHANDLE(dbmp, dbmp->mutexp);
 				return (0);
+			}
 			break;
 		}
 	UNLOCKHANDLE(dbmp, dbmp->mutexp);
@@ -111,8 +113,8 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	if (F_ISSET(mfp, MP_TEMP))
 		return (0);
 
-	if (__memp_fopen(dbmp, mfp, R_ADDR(dbmp, mfp->path_off), mfp->ftype,
-	    0, 0, mfp->stat.st_pagesize, 0, NULL, NULL, 0, &dbmfp) != 0)
+	if (__memp_fopen(dbmp, mfp, R_ADDR(dbmp, mfp->path_off),
+	    0, 0, mfp->stat.st_pagesize, 0, NULL, &dbmfp) != 0)
 		return (0);
 
 found:	return (__memp_pgwrite(dbmfp, bhp, restartp, wrotep));
@@ -152,7 +154,7 @@ __memp_pgread(dbmfp, bhp, can_create)
 	ret = 0;
 	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (dbmfp->fd == -1 || (ret =
-	    __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0) {
+	    __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, 0, SEEK_SET)) != 0) {
 		if (!can_create) {
 			if (dbmfp->fd == -1)
 				ret = EINVAL;
@@ -164,8 +166,17 @@ __memp_pgread(dbmfp, bhp, can_create)
 		}
 		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 
-		/* Clear any uninitialized data. */
-		memset(bhp->buf, 0, pagesize);
+		/* Clear the created page. */
+		if (mfp->clear_len == 0)
+			memset(bhp->buf, 0, pagesize);
+		else {
+			memset(bhp->buf, 0, mfp->clear_len);
+#ifdef DIAGNOSTIC
+			memset(bhp->buf + mfp->clear_len,
+			    0xff, pagesize - mfp->clear_len);
+#endif
+		}
+
 		goto pgin;
 	}
 
@@ -186,8 +197,16 @@ __memp_pgread(dbmfp, bhp, can_create)
 			goto err;
 		}
 
-		/* Clear any uninitialized data. */
-		memset(bhp->buf + nr, 0, pagesize - nr);
+		/*
+		 * If we didn't fail until we tried the read, don't clear the
+		 * whole page, it wouldn't be insane for a filesystem to just
+		 * always behave that way.  Else, clear any uninitialized data.
+		 */
+		if (nr == 0)
+			memset(bhp->buf, 0,
+			    mfp->clear_len == 0 ? pagesize : mfp->clear_len);
+		else
+			memset(bhp->buf + nr, 0, pagesize - nr);
 	}
 
 	/* Call any pgin function. */
@@ -308,31 +327,31 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 
 	/* Temporary files may not yet have been created. */
 	LOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (dbmfp->fd == -1)
-		if ((ret = __db_appname(dbenv, DB_APP_TMP,
-		    NULL, NULL, &dbmfp->fd, NULL)) != 0 || dbmfp->fd == -1) {
-			UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-			__db_err(dbenv,
-			    "unable to create temporary backing file");
-			goto err;
-		}
+	if (dbmfp->fd == -1 &&
+	    ((ret = __db_appname(dbenv, DB_APP_TMP, NULL, NULL,
+	    DB_CREATE | DB_EXCL | DB_TEMPORARY, &dbmfp->fd, NULL)) != 0 ||
+	    dbmfp->fd == -1)) {
+		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
+		__db_err(dbenv, "unable to create temporary backing file");
+		goto err;
+	}
 
-	/* Write the page out. */
-	if ((ret = __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0)
+	/*
+	 * Write the page out.
+	 *
+	 * XXX
+	 * Shut the compiler up; it doesn't understand the correlation between
+	 * the failing clauses to __db_lseek and __db_write and this ret != 0.
+	 */
+	COMPQUIET(fail, NULL);
+	if ((ret =
+	    __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, 0, SEEK_SET)) != 0)
 		fail = "seek";
 	else if ((ret = __db_write(dbmfp->fd, bhp->buf, pagesize, &nw)) != 0)
 		fail = "write";
 	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (ret != 0) {
-		/*
-		 * XXX
-		 * Shut the compiler up; it doesn't understand the correlation
-		 * between the failing clauses to __db_lseek and __db_write and
-		 * this ret != 0.
-		 */
-		COMPQUIET(fail, NULL);
+	if (ret != 0)
 		goto syserr;
-	}
 
 	if (nw != (ssize_t)pagesize) {
 		ret = EIO;
@@ -548,7 +567,7 @@ __memp_upgrade(dbmp, dbmfp, mfp)
 	 * way we could have gotten a file descriptor of any kind.
 	 */
 	if ((ret = __db_appname(dbmp->dbenv, DB_APP_DATA,
-	    NULL, R_ADDR(dbmp, mfp->path_off), NULL, &rpath)) != 0)
+	    NULL, R_ADDR(dbmp, mfp->path_off), 0, NULL, &rpath)) != 0)
 		return (ret);
 	if (__db_open(rpath, 0, 0, 0, &fd) != 0) {
 		F_SET(dbmfp, MP_UPGRADE_FAIL);

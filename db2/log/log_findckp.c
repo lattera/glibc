@@ -1,21 +1,20 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_findckp.c	10.12 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)log_findckp.c	10.15 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -44,10 +43,10 @@ static const char sccsid[] = "@(#)log_findckp.c	10.12 (Sleepycat) 10/25/97";
  * We find one at 500.  This means that we can truncate the log before
  * 500 or run recovery beginning at 500.
  *
- * Returns 0 if we find a checkpoint.
+ * Returns 0 if we find a suitable checkpoint or we retrieved the
+ * first record in the log from which to start.
+ * Returns DB_NOTFOUND if there are no log records.
  * Returns errno on error.
- * Returns DB_NOTFOUND if we could not find a suitable start point and
- * we should start from the beginning.
  *
  * PUBLIC: int __log_findckp __P((DB_LOG *, DB_LSN *));
  */
@@ -70,9 +69,12 @@ __log_findckp(lp, lsnp)
 	memset(&data, 0, sizeof(data));
 	if (F_ISSET(lp, DB_AM_THREAD))
 		F_SET(&data, DB_DBT_MALLOC);
-	if ((ret = log_get(lp, &last_ckp, &data, DB_CHECKPOINT)) != 0)
-		return (ret == ENOENT ? DB_NOTFOUND : ret);
 	ZERO_LSN(ckp_lsn);
+	if ((ret = log_get(lp, &last_ckp, &data, DB_CHECKPOINT)) != 0)
+		if (ret == ENOENT)
+			goto get_first;
+		else
+			return (ret);
 
 	next_lsn = last_ckp;
 	do {
@@ -115,16 +117,12 @@ __log_findckp(lp, lsnp)
 	 * beginning of the log.
 	 */
 	if (log_compare(&last_ckp, &ckp_lsn) > 0) {
-		if ((ret = log_get(lp, &last_ckp, &data, DB_FIRST)) != 0)
+get_first:	if ((ret = log_get(lp, &last_ckp, &data, DB_FIRST)) != 0)
 			return (ret);
 		if (F_ISSET(lp, DB_AM_THREAD))
 			__db_free(data.data);
 	}
 	*lsnp = last_ckp;
-
-	if (verbose)
-		__db_err(lp->dbenv, "Rolling forward from [%lu][%lu]",
-			(u_long)last_ckp.file, (u_long)last_ckp.offset);
 
 	return (IS_ZERO_LSN(last_ckp) ? DB_NOTFOUND : 0);
 }

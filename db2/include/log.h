@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.h	10.19 (Sleepycat) 1/17/98
+ *	@(#)log.h	10.25 (Sleepycat) 4/10/98
  */
 
 #ifndef _LOG_H_
@@ -15,9 +15,10 @@ struct __hdr;		typedef struct __hdr HDR;
 struct __log;		typedef struct __log LOG;
 struct __log_persist;	typedef struct __log_persist LOGP;
 
+#ifndef MAXLFNAME
 #define	MAXLFNAME	99999		/* Maximum log file name. */
 #define	LFNAME		"log.%05d"	/* Log file name template. */
-
+#endif
 					/* Default log name. */
 #define DB_DEFAULT_LOG_FILE	"__db_log.share"
 
@@ -31,17 +32,19 @@ struct __log_persist;	typedef struct __log_persist LOGP;
 	if (F_ISSET(dblp, DB_AM_THREAD))				\
 		(void)__db_mutex_unlock((dblp)->mutexp, -1);
 #define	LOCK_LOGREGION(dblp)						\
-	(void)__db_mutex_lock(&((RLAYOUT *)(dblp)->lp)->lock, (dblp)->fd)
+	(void)__db_mutex_lock(&((RLAYOUT *)(dblp)->lp)->lock,		\
+	    (dblp)->reginfo.fd)
 #define	UNLOCK_LOGREGION(dblp)						\
-	(void)__db_mutex_unlock(&((RLAYOUT *)(dblp)->lp)->lock, (dblp)->fd)
+	(void)__db_mutex_unlock(&((RLAYOUT *)(dblp)->lp)->lock,		\
+	    (dblp)->reginfo.fd)
 
 /*
  * The per-process table that maps log file-id's to DB structures.
  */
 typedef	struct __db_entry {
-	DB	*dbp;			/* Associated DB structure. */
-	int	refcount;		/* Reference counted. */
-	int	deleted;		/* File was not found during open. */
+	DB	 *dbp;			/* Associated DB structure. */
+	u_int32_t refcount;		/* Reference counted. */
+	int	  deleted;		/* File was not found during open. */
 } DB_ENTRY;
 
 /*
@@ -75,10 +78,9 @@ struct __db_log {
 	LOG	 *lp;			/* Address of the shared LOG. */
 
 	DB_ENV	 *dbenv;		/* Reference to error information. */
+	REGINFO	  reginfo;		/* Region information. */
 
-	void     *maddr;		/* Address of mmap'd region. */
 	void     *addr;			/* Address of shalloc() region. */
-	int	  fd;			/* Region file descriptor. */
 
 	char	 *dir;			/* Directory argument. */
 
@@ -131,7 +133,7 @@ struct __log {
 
 	u_int32_t w_off;		/* Current write offset in the file. */
 
-	DB_LSN	  c_lsn;		/* LSN of the last checkpoint. */
+	DB_LSN	  chkpt_lsn;		/* LSN of the last checkpoint. */
 	time_t	  chkpt;		/* Time of the last checkpoint. */
 
 	DB_LOG_STAT stat;		/* Log statistics. */
@@ -159,9 +161,8 @@ struct __fname {
 	u_int32_t id;			/* Logging file id. */
 	DBTYPE	  s_type;		/* Saved DB type. */
 
-	u_int32_t fileid_off;		/* Unique file id offset. */
-
 	size_t	  name_off;		/* Name offset. */
+	u_int8_t  ufid[DB_FILE_ID_LEN];	/* Unique file id. */
 };
 
 /* File open/close register log record opcodes. */

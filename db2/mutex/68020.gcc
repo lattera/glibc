@@ -1,5 +1,5 @@
 /*
- * @(#)68020.gcc	10.1 (Sleepycat) 4/12/97
+ * @(#)68020.gcc	10.2 (Sleepycat) 2/15/98
  *
  * For gcc/68K, 0 is clear, 1 is set.
  */
@@ -16,4 +16,3 @@
 
 #define	TSL_UNSET(tsl)	(*(tsl) = 0)
 #define	TSL_INIT(tsl)	TSL_UNSET(tsl)
-

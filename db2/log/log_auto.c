@@ -15,8 +15,6 @@
 #include "db_dispatch.h"
 #include "log.h"
 #include "db_am.h"
-#include "common_ext.h"
-
 /*
  * PUBLIC: int __log_register_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
@@ -92,7 +90,7 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(id);
 	memcpy(bp, &ftype, sizeof(ftype));
 	bp += sizeof(ftype);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -108,22 +106,23 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__log_register_print(notused1, dbtp, lsnp, notused3, notused4)
+__log_register_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__log_register_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __log_register_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -137,20 +136,20 @@ __log_register_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\topcode: %lu\n", (u_long)argp->opcode);
 	printf("\tname: ");
 	for (i = 0; i < argp->name.size; i++) {
-		c = ((char *)argp->name.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->name.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tuid: ");
 	for (i = 0; i < argp->uid.size; i++) {
-		c = ((char *)argp->uid.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->uid.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tid: %lu\n", (u_long)argp->id);

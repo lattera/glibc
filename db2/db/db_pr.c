@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_pr.c	10.20 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)db_pr.c	10.29 (Sleepycat) 5/23/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -16,7 +16,6 @@ static const char sccsid[] = "@(#)db_pr.c	10.20 (Sleepycat) 1/8/98";
 
 #include <ctype.h>
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -160,7 +159,7 @@ __db_prdb(dbp)
 	}
 
 	fprintf(fp, "%s ", t);
-	__db_prflags(dbp->flags, fn);
+	__db_prflags(dbp->flags, fn, fp);
 	fprintf(fp, "\n");
 
 	return (0);
@@ -179,12 +178,16 @@ __db_prbtree(dbp)
 	static const FN mfn[] = {
 		{ BTM_DUP,	"duplicates" },
 		{ BTM_RECNO,	"recno" },
+		{ BTM_RECNUM,	"btree:records" },
+		{ BTM_FIXEDLEN,	"recno:fixed-length" },
+		{ BTM_RENUMBER,	"recno:renumber" },
 		{ 0 },
 	};
 	BTMETA *mp;
 	BTREE *t;
 	EPG *epg;
 	FILE *fp;
+	PAGE *h;
 	RECNO *rp;
 	db_pgno_t i;
 	int ret;
@@ -193,19 +196,29 @@ __db_prbtree(dbp)
 	fp = __db_prinit(NULL);
 
 	(void)fprintf(fp, "%s\nOn-page metadata:\n", DB_LINE);
-	i = PGNO_METADATA;
 
+	i = PGNO_METADATA;
 	if ((ret = __bam_pget(dbp, (PAGE **)&mp, &i, 0)) != 0)
 		return (ret);
 
 	(void)fprintf(fp, "magic %#lx\n", (u_long)mp->magic);
-	(void)fprintf(fp, "version %lu\n", (u_long)mp->version);
+	(void)fprintf(fp, "version %#lx\n", (u_long)mp->version);
 	(void)fprintf(fp, "pagesize %lu\n", (u_long)mp->pagesize);
 	(void)fprintf(fp, "maxkey: %lu minkey: %lu\n",
 	    (u_long)mp->maxkey, (u_long)mp->minkey);
-	(void)fprintf(fp, "free %lu\n", (u_long)mp->free);
-	(void)fprintf(fp, "flags %lu", (u_long)mp->flags);
-	__db_prflags(mp->flags, mfn);
+
+	(void)fprintf(fp, "free %lu", (u_long)mp->free);
+	for (i = mp->free; i != PGNO_INVALID;) {
+		if ((ret = __bam_pget(dbp, &h, &i, 0)) != 0)
+			return (ret);
+		i = h->next_pgno;
+		(void)memp_fput(dbp->mpf, h, 0);
+		(void)fprintf(fp, ", %lu", (u_long)i);
+	}
+	(void)fprintf(fp, "\n");
+
+	(void)fprintf(fp, "flags %#lx", (u_long)mp->flags);
+	__db_prflags(mp->flags, mfn, fp);
 	(void)fprintf(fp, "\n");
 	(void)memp_fput(dbp->mpf, mp, 0);
 
@@ -576,7 +589,7 @@ __db_isbad(h, die)
 	BKEYDATA *bk;
 	FILE *fp;
 	db_indx_t i;
-	int type;
+	u_int type;
 
 	fp = __db_prinit(NULL);
 
@@ -668,7 +681,8 @@ __db_pr(p, len)
 	u_int32_t len;
 {
 	FILE *fp;
-	int i, lastch;
+	u_int lastch;
+	int i;
 
 	fp = __db_prinit(NULL);
 
@@ -681,7 +695,7 @@ __db_pr(p, len)
 			if (isprint(*p) || *p == '\n')
 				fprintf(fp, "%c", *p);
 			else
-				fprintf(fp, "%#x", (u_int)*p);
+				fprintf(fp, "0x%.2x", (u_int)*p);
 		}
 		if (len > 20) {
 			fprintf(fp, "...");
@@ -690,6 +704,50 @@ __db_pr(p, len)
 	}
 	if (lastch != '\n')
 		fprintf(fp, "\n");
+}
+
+/*
+ * __db_prdbt --
+ *	Print out a DBT data element.
+ *
+ * PUBLIC: int __db_prdbt __P((DBT *, int, FILE *));
+ */
+int
+__db_prdbt(dbtp, checkprint, fp)
+	DBT *dbtp;
+	int checkprint;
+	FILE *fp;
+{
+	static const char hex[] = "0123456789abcdef";
+	u_int8_t *p;
+	u_int32_t len;
+
+	/*
+	 * !!!
+	 * This routine is the routine that dumps out items in the format
+	 * used by db_dump(1) and db_load(1).  This means that the format
+	 * cannot change.
+	 */
+	if (checkprint) {
+		for (len = dbtp->size, p = dbtp->data; len--; ++p)
+			if (isprint(*p)) {
+				if (*p == '\\' && fprintf(fp, "\\") != 1)
+					return (EIO);
+				if (fprintf(fp, "%c", *p) != 1)
+					return (EIO);
+			} else
+				if (fprintf(fp, "\\%c%c",
+				    hex[(u_int8_t)(*p & 0xf0) >> 4],
+				    hex[*p & 0x0f]) != 3)
+					return (EIO);
+	} else
+		for (len = dbtp->size, p = dbtp->data; len--; ++p)
+			if (fprintf(fp, "%c%c",
+			    hex[(u_int8_t)(*p & 0xf0) >> 4],
+			    hex[*p & 0x0f]) != 2)
+				return (EIO);
+
+	return (fprintf(fp, "\n") == 1 ? 0 : EIO);
 }
 
 /*
@@ -721,23 +779,21 @@ __db_proff(vp)
  * __db_prflags --
  *	Print out flags values.
  *
- * PUBLIC: void __db_prflags __P((u_int32_t, const FN *));
+ * PUBLIC: void __db_prflags __P((u_int32_t, const FN *, FILE *));
  */
 void
-__db_prflags(flags, fn)
+__db_prflags(flags, fn, fp)
 	u_int32_t flags;
 	FN const *fn;
-{
 	FILE *fp;
+{
 	const FN *fnp;
 	int found;
 	const char *sep;
 
-	fp = __db_prinit(NULL);
-
 	sep = " (";
 	for (found = 0, fnp = fn; fnp->mask != 0; ++fnp)
-		if (fnp->mask & flags) {
+		if (LF_ISSET(fnp->mask)) {
 			fprintf(fp, "%s%s", sep, fnp->name);
 			sep = ", ";
 			found = 1;

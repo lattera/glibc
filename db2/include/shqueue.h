@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)shqueue.h	8.12 (Sleepycat) 9/10/97
+ *	@(#)shqueue.h	8.13 (Sleepycat) 4/10/98
  */
 #ifndef	_SYS_SHQUEUE_H_
 #define	_SYS_SHQUEUE_H_

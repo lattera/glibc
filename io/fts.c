@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 1990, 1993
+ * Copyright (c) 1990, 1993, 1994
  *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)fts.c	8.2 (Berkeley) 1/2/94";
+static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
@@ -65,7 +65,8 @@ static size_t	 fts_maxarglen __P((char * const *)) internal_function;
 static void	 fts_padjust __P((FTS *, void *)) internal_function;
 static int	 fts_palloc __P((FTS *, size_t)) internal_function;
 static FTSENT	*fts_sort __P((FTS *, FTSENT *, int)) internal_function;
-static u_short	 fts_stat __P((FTS *, FTSENT *, int)) internal_function;
+static u_short	 fts_stat __P((FTS *, struct dirent *, FTSENT *, int))
+     internal_function;
 
 #ifndef MAX
 #define MAX(a, b)	({ __typeof__ (a) _a = (a); \
@@ -142,7 +143,7 @@ fts_open(argv, options, compar)
 		p->fts_level = FTS_ROOTLEVEL;
 		p->fts_parent = parent;
 		p->fts_accpath = p->fts_name;
-		p->fts_info = fts_stat(sp, p, ISSET(FTS_COMFOLLOW));
+		p->fts_info = fts_stat(sp, NULL, p, ISSET(FTS_COMFOLLOW));
 
 		/* Command-line "." and ".." are real directories. */
 		if (p->fts_info == FTS_DOT)
@@ -298,7 +299,7 @@ fts_read(sp)
 
 	/* Any type of file may be re-visited; re-stat and re-turn. */
 	if (instr == FTS_AGAIN) {
-		p->fts_info = fts_stat(sp, p, 0);
+		p->fts_info = fts_stat(sp, NULL, p, 0);
 		return (p);
 	}
 
@@ -310,7 +311,7 @@ fts_read(sp)
 	 */
 	if (instr == FTS_FOLLOW &&
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
-		p->fts_info = fts_stat(sp, p, 1);
+		p->fts_info = fts_stat(sp, NULL, p, 1);
 		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR))
 			if ((p->fts_symfd = open(".", O_RDONLY, 0)) < 0) {
 				p->fts_errno = errno;
@@ -398,7 +399,7 @@ next:	tmp = p;
 		if (p->fts_instr == FTS_SKIP)
 			goto next;
 		if (p->fts_instr == FTS_FOLLOW) {
-			p->fts_info = fts_stat(sp, p, 1);
+			p->fts_info = fts_stat(sp, NULL, p, 1);
 			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR))
 				if ((p->fts_symfd =
 				    open(".", O_RDONLY, 0)) < 0) {
@@ -577,7 +578,7 @@ fts_build(sp, type)
 	FTSENT *cur, *tail;
 	DIR *dirp;
 	void *adjaddr;
-	int cderrno, descend, len, level, maxlen, nlinks, saved_errno;
+	int cderrno, descend, len, level, maxlen, nlinks, oflag, saved_errno;
 	char *cp;
 
 	/* Set current node pointer. */
@@ -587,7 +588,15 @@ fts_build(sp, type)
 	 * Open the directory for reading.  If this fails, we're done.
 	 * If being called from fts_read, set the fts_info field.
 	 */
-	if ((dirp = opendir(cur->fts_accpath)) == NULL) {
+#ifdef DTF_HIDEW
+	if (ISSET (FTS_WHITEOUT))
+		oflag = DTF_NODUP|DTF_REWIND;
+	else
+		oflag = DTF_HIDEW|DTF_NODUP|DTF_REWIND;
+#else
+# define __opendir2(path, flag) opendir(path)
+#endif
+       if ((dirp = __opendir2 (cur->fts_accpath, oflag)) == NULL) {
 		if (type == BREAD) {
 			cur->fts_info = FTS_DNR;
 			cur->fts_errno = errno;
@@ -719,7 +728,7 @@ mem1:				saved_errno = errno;
 			} else
 				p->fts_accpath = p->fts_name;
 			/* Stat it. */
-			p->fts_info = fts_stat(sp, p, 0);
+			p->fts_info = fts_stat(sp, dp, p, 0);
 
 			/* Decrement link count if applicable. */
 			if (nlinks > 0 && (p->fts_info == FTS_D ||
@@ -757,11 +766,15 @@ mem1:				saved_errno = errno;
 	}
 
 	/*
-	 * If descended after called from fts_children or called from
-	 * fts_read and didn't find anything, get back.  If can't get
-	 * back, done.
+	 * If descended after called from fts_children or after called from
+	 * fts_read and nothing found, get back.  At the root level we use
+	 * the saved fd; if one of fts_open()'s arguments is a relative path
+	 * to an empty directory, we wind up here with no other way back.  If
+	 * can't get back, we're done.
 	 */
-	if (descend && (!nitems || type == BCHILD) && CHDIR(sp, "..")) {
+	if (descend && (type == BCHILD || !nitems) &&
+	    (cur->fts_level == FTS_ROOTLEVEL ?
+	     FCHDIR (sp, sp->fts_rfd) : CHDIR (sp, ".."))) {
 		cur->fts_info = FTS_ERR;
 		SET(FTS_STOP);
 		return (NULL);
@@ -782,9 +795,10 @@ mem1:				saved_errno = errno;
 
 static u_short
 internal_function
-fts_stat(sp, p, follow)
+fts_stat(sp, dp, p, follow)
 	FTS *sp;
 	register FTSENT *p;
+	struct dirent *dp;
 	int follow;
 {
 	register FTSENT *t;
@@ -795,6 +809,19 @@ fts_stat(sp, p, follow)
 
 	/* If user needs stat info, stat buffer already allocated. */
 	sbp = ISSET(FTS_NOSTAT) ? &sb : p->fts_statp;
+
+#ifdef DT_WHT
+	/*
+	 * Whited-out files don't really exist.  However, there's stat(2) file
+	 * mask for them, so we set it so that programs (i.e., find) don't have
+	 * to test FTS_W separately from other file types.
+	 */
+	if (dp != NULL && dp->d_type == DT_WHT) {
+		memset(sbp, 0, sizeof(struct stat));
+		sbp->st_mode = S_IFWHT;
+		return (FTS_W);
+       }
+#endif
 
 	/*
 	 * If doing a logical walk, or application requested FTS_FOLLOW, do

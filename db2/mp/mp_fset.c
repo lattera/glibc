@@ -1,13 +1,13 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fset.c	10.12 (Sleepycat) 11/26/97";
+static const char sccsid[] = "@(#)mp_fset.c	10.15 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -30,16 +30,14 @@ int
 memp_fset(dbmfp, pgaddr, flags)
 	DB_MPOOLFILE *dbmfp;
 	void *pgaddr;
-	int flags;
+	u_int32_t flags;
 {
 	BH *bhp;
 	DB_MPOOL *dbmp;
 	MPOOL *mp;
-	MPOOLFILE *mfp;
 	int ret;
 
 	dbmp = dbmfp->dbmp;
-	mfp = dbmfp->mfp;
 	mp = dbmp->mp;
 
 	/* Validate arguments. */

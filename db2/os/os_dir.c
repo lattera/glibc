@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_dir.c	10.13 (Sleepycat) 10/28/97";
+static const char sccsid[] = "@(#)os_dir.c	10.15 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -32,13 +32,9 @@ static const char sccsid[] = "@(#)os_dir.c	10.13 (Sleepycat) 10/28/97";
 #endif
 
 #include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
-#include "common_ext.h"
 
 /*
  * __os_dirlist --

@@ -1,24 +1,20 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fopen.c	10.37 (Sleepycat) 1/18/98";
+static const char sccsid[] = "@(#)mp_fopen.c	10.47 (Sleepycat) 5/4/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
@@ -28,22 +24,21 @@ static const char sccsid[] = "@(#)mp_fopen.c	10.37 (Sleepycat) 1/18/98";
 #include "common_ext.h"
 
 static int __memp_mf_close __P((DB_MPOOL *, DB_MPOOLFILE *));
-static int __memp_mf_open __P((DB_MPOOL *, const char *,
-    int, size_t, db_pgno_t, int, DBT *, u_int8_t *, MPOOLFILE **));
+static int __memp_mf_open __P((DB_MPOOL *,
+    const char *, size_t, db_pgno_t, DB_MPOOL_FINFO *, MPOOLFILE **));
 
 /*
  * memp_fopen --
  *	Open a backing file for the memory pool.
  */
 int
-memp_fopen(dbmp, path, ftype,
-    flags, mode, pagesize, lsn_offset, pgcookie, fileid, retp)
+memp_fopen(dbmp, path, flags, mode, pagesize, finfop, retp)
 	DB_MPOOL *dbmp;
 	const char *path;
-	int ftype, flags, mode, lsn_offset;
+	u_int32_t flags;
+	int mode;
 	size_t pagesize;
-	DBT *pgcookie;
-	u_int8_t *fileid;
+	DB_MPOOL_FINFO *finfop;
 	DB_MPOOLFILE **retp;
 {
 	int ret;
@@ -59,31 +54,31 @@ memp_fopen(dbmp, path, ftype,
 		return (EINVAL);
 	}
 
-	return (__memp_fopen(dbmp, NULL, path, ftype,
-	    flags, mode, pagesize, lsn_offset, pgcookie, fileid, 1, retp));
+	return (__memp_fopen(dbmp,
+	    NULL, path, flags, mode, pagesize, 1, finfop, retp));
 }
 
 /*
  * __memp_fopen --
  *	Open a backing file for the memory pool; internal version.
  *
- * PUBLIC: int __memp_fopen __P((DB_MPOOL *, MPOOLFILE *, const char *, int,
- * PUBLIC:    int, int, size_t, int, DBT *, u_int8_t *, int, DB_MPOOLFILE **));
+ * PUBLIC: int __memp_fopen __P((DB_MPOOL *, MPOOLFILE *, const char *,
+ * PUBLIC:    u_int32_t, int, size_t, int, DB_MPOOL_FINFO *, DB_MPOOLFILE **));
  */
 int
-__memp_fopen(dbmp, mfp, path,
-    ftype, flags, mode, pagesize, lsn_offset, pgcookie, fileid, needlock, retp)
+__memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 	DB_MPOOL *dbmp;
 	MPOOLFILE *mfp;
 	const char *path;
-	int ftype, flags, mode, lsn_offset, needlock;
+	u_int32_t flags;
+	int mode, needlock;
 	size_t pagesize;
-	DBT *pgcookie;
-	u_int8_t *fileid;
+	DB_MPOOL_FINFO *finfop;
 	DB_MPOOLFILE **retp;
 {
 	DB_ENV *dbenv;
 	DB_MPOOLFILE *dbmfp;
+	DB_MPOOL_FINFO finfo;
 	db_pgno_t last_pgno;
 	size_t size;
 	u_int32_t mbytes, bytes;
@@ -91,17 +86,33 @@ __memp_fopen(dbmp, mfp, path,
 	u_int8_t idbuf[DB_FILE_ID_LEN];
 	char *rpath;
 
-	/*
-	 * XXX
-	 * If mfp is provided, the following arguments do NOT need to be
-	 * specified:
-	 *      lsn_offset
-	 *      pgcookie
-	 *      fileid
-	 */
 	dbenv = dbmp->dbenv;
 	ret = 0;
 	rpath = NULL;
+
+	/*
+	 * If mfp is provided, we take the DB_MPOOL_FINFO information from
+	 * the mfp.  We don't bother initializing everything, because some
+	 * of them are expensive to acquire.  If no mfp is provided and the
+	 * finfop argument is NULL, we default the values.
+	 */
+	if (finfop == NULL) {
+		memset(&finfo, 0, sizeof(finfo));
+		if (mfp != NULL) {
+			finfo.ftype = mfp->ftype;
+			finfo.pgcookie = NULL;
+			finfo.fileid = NULL;
+			finfo.lsn_offset = mfp->lsn_off;
+			finfo.clear_len = mfp->clear_len;
+		} else {
+			finfo.ftype = 0;
+			finfo.pgcookie = NULL;
+			finfo.fileid = NULL;
+			finfo.lsn_offset = -1;
+			finfo.clear_len = 0;
+		}
+		finfop = &finfo;
+	}
 
 	/* Allocate and initialize the per-process structure. */
 	if ((dbmfp =
@@ -126,11 +137,11 @@ __memp_fopen(dbmp, mfp, path,
 	} else {
 		/* Get the real name for this file and open it. */
 		if ((ret = __db_appname(dbenv,
-		    DB_APP_DATA, NULL, path, NULL, &rpath)) != 0)
+		    DB_APP_DATA, NULL, path, 0, NULL, &rpath)) != 0)
 			goto err;
 		if ((ret = __db_open(rpath,
-		    LF_ISSET(DB_CREATE | DB_RDONLY), DB_CREATE | DB_RDONLY,
-		    mode, &dbmfp->fd)) != 0) {
+		   LF_ISSET(DB_CREATE | DB_RDONLY),
+		   DB_CREATE | DB_RDONLY, mode, &dbmfp->fd)) != 0) {
 			__db_err(dbenv, "%s: %s", rpath, strerror(ret));
 			goto err;
 		}
@@ -156,12 +167,11 @@ __memp_fopen(dbmp, mfp, path,
 		 * don't use timestamps, otherwise there'd be no chance of any
 		 * other process joining the party.
 		 */
-		if (mfp == NULL && fileid == NULL) {
+		if (finfop->fileid == NULL) {
 			if ((ret = __db_fileid(dbenv, rpath, 0, idbuf)) != 0)
 				goto err;
-			fileid = idbuf;
+			finfop->fileid = idbuf;
 		}
-		FREES(rpath);
 	}
 
 	/*
@@ -173,8 +183,8 @@ __memp_fopen(dbmp, mfp, path,
 		LOCKREGION(dbmp);
 
 	if (mfp == NULL)
-		ret = __memp_mf_open(dbmp, path, ftype,
-		    pagesize, last_pgno, lsn_offset, pgcookie, fileid, &mfp);
+		ret = __memp_mf_open(dbmp,
+		    path, pagesize, last_pgno, finfop, &mfp);
 	else {
 		++mfp->ref;
 		ret = 0;
@@ -218,7 +228,7 @@ __memp_fopen(dbmp, mfp, path,
 			F_CLR(mfp, MP_CAN_MMAP);
 		if (path == NULL)
 			F_CLR(mfp, MP_CAN_MMAP);
-		if (ftype != 0)
+		if (finfop->ftype != 0)
 			F_CLR(mfp, MP_CAN_MMAP);
 		if (LF_ISSET(DB_NOMMAP))
 			F_CLR(mfp, MP_CAN_MMAP);
@@ -229,11 +239,14 @@ __memp_fopen(dbmp, mfp, path,
 	dbmfp->addr = NULL;
 	if (F_ISSET(mfp, MP_CAN_MMAP)) {
 		dbmfp->len = size;
-		if (__db_map(dbmfp->fd, dbmfp->len, 1, 1, &dbmfp->addr) != 0) {
+		if (__db_mapfile(rpath,
+		    dbmfp->fd, dbmfp->len, 1, &dbmfp->addr) != 0) {
 			dbmfp->addr = NULL;
 			F_CLR(mfp, MP_CAN_MMAP);
 		}
 	}
+	if (rpath != NULL)
+		FREES(rpath);
 
 	LOCKHANDLE(dbmp, dbmp->mutexp);
 	TAILQ_INSERT_TAIL(&dbmp->dbmfq, dbmfp, q);
@@ -260,15 +273,12 @@ err:	/*
  *	Open an MPOOLFILE.
  */
 static int
-__memp_mf_open(dbmp, path,
-    ftype, pagesize, last_pgno, lsn_offset, pgcookie, fileid, retp)
+__memp_mf_open(dbmp, path, pagesize, last_pgno, finfop, retp)
 	DB_MPOOL *dbmp;
 	const char *path;
-	int ftype, lsn_offset;
 	size_t pagesize;
 	db_pgno_t last_pgno;
-	DBT *pgcookie;
-	u_int8_t *fileid;
+	DB_MPOOL_FINFO *finfop;
 	MPOOLFILE **retp;
 {
 	MPOOLFILE *mfp;
@@ -286,12 +296,13 @@ __memp_mf_open(dbmp, path,
 		    mfp != NULL; mfp = SH_TAILQ_NEXT(mfp, q, __mpoolfile)) {
 			if (F_ISSET(mfp, MP_TEMP))
 				continue;
-			if (!memcmp(fileid,
+			if (!memcmp(finfop->fileid,
 			    R_ADDR(dbmp, mfp->fileid_off), DB_FILE_ID_LEN)) {
-				if (ftype != mfp->ftype ||
+				if (finfop->clear_len != mfp->clear_len ||
+				    finfop->ftype != mfp->ftype ||
 				    pagesize != mfp->stat.st_pagesize) {
 					__db_err(dbmp->dbenv,
-					    "%s: ftype or pagesize changed",
+			    "%s: ftype, clear length or pagesize changed",
 					    path);
 					return (EINVAL);
 				}
@@ -311,8 +322,9 @@ __memp_mf_open(dbmp, path,
 	/* Initialize the structure. */
 	memset(mfp, 0, sizeof(MPOOLFILE));
 	mfp->ref = 1;
-	mfp->ftype = ftype;
-	mfp->lsn_off = lsn_offset;
+	mfp->ftype = finfop->ftype;
+	mfp->lsn_off = finfop->lsn_offset;
+	mfp->clear_len = finfop->clear_len;
 
 	/*
 	 * If the user specifies DB_MPOOL_LAST or DB_MPOOL_NEW on a memp_fget,
@@ -320,7 +332,7 @@ __memp_mf_open(dbmp, path,
 	 * it away.
 	 */
 	mfp->stat.st_pagesize = pagesize;
-	mfp->last_pgno = last_pgno;
+	mfp->orig_last_pgno = mfp->last_pgno = last_pgno;
 
 	F_SET(mfp, MP_CAN_MMAP);
 	if (ISTEMPORARY)
@@ -336,19 +348,19 @@ __memp_mf_open(dbmp, path,
 		if ((ret = __memp_ralloc(dbmp,
 		    DB_FILE_ID_LEN, &mfp->fileid_off, &p)) != 0)
 			goto err;
-		memcpy(p, fileid, DB_FILE_ID_LEN);
+		memcpy(p, finfop->fileid, DB_FILE_ID_LEN);
 	}
 
 	/* Copy the page cookie into shared memory. */
-	if (pgcookie == NULL || pgcookie->size == 0) {
+	if (finfop->pgcookie == NULL || finfop->pgcookie->size == 0) {
 		mfp->pgcookie_len = 0;
 		mfp->pgcookie_off = 0;
 	} else {
 		if ((ret = __memp_ralloc(dbmp,
-		    pgcookie->size, &mfp->pgcookie_off, &p)) != 0)
+		    finfop->pgcookie->size, &mfp->pgcookie_off, &p)) != 0)
 			goto err;
-		memcpy(p, pgcookie->data, pgcookie->size);
-		mfp->pgcookie_len = pgcookie->size;
+		memcpy(p, finfop->pgcookie->data, finfop->pgcookie->size);
+		mfp->pgcookie_len = finfop->pgcookie->size;
 	}
 
 	/* Prepend the MPOOLFILE to the list of MPOOLFILE's. */
@@ -397,7 +409,7 @@ memp_fclose(dbmfp)
 
 	/* Discard any mmap information. */
 	if (dbmfp->addr != NULL &&
-	    (ret = __db_unmap(dbmfp->addr, dbmfp->len)) != 0)
+	    (ret = __db_unmapfile(dbmfp->addr, dbmfp->len)) != 0)
 		__db_err(dbmp->dbenv,
 		    "%s: %s", __memp_fn(dbmfp), strerror(ret));
 
@@ -480,13 +492,13 @@ __memp_mf_close(dbmp, dbmfp)
 	SH_TAILQ_REMOVE(&mp->mpfq, mfp, q, __mpoolfile);
 
 	/* Free the space. */
-	__db_shalloc_free(dbmp->addr, mfp);
 	if (mfp->path_off != 0)
 		__db_shalloc_free(dbmp->addr, R_ADDR(dbmp, mfp->path_off));
 	if (mfp->fileid_off != 0)
 		__db_shalloc_free(dbmp->addr, R_ADDR(dbmp, mfp->fileid_off));
 	if (mfp->pgcookie_off != 0)
 		__db_shalloc_free(dbmp->addr, R_ADDR(dbmp, mfp->pgcookie_off));
+	__db_shalloc_free(dbmp->addr, mfp);
 
 ret1:	UNLOCKREGION(dbmp);
 	return (0);

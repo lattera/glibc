@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_debug.c	10.2 (Sleepycat) 6/21/97";
+static const char sccsid[] = "@(#)hash_debug.c	10.6 (Sleepycat) 5/7/98";
 #endif /* not lint */
 
 #ifdef DEBUG
@@ -60,9 +60,6 @@ static const char sccsid[] = "@(#)hash_debug.c	10.2 (Sleepycat) 6/21/97";
  */
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-
-#include <stdio.h>
-#include <string.h>
 #endif
 
 #include "db_int.h"
@@ -83,10 +80,9 @@ __ham_dump_bucket(hashp, bucket)
 {
 	PAGE *p;
 	db_pgno_t pgno;
-	int ret;
 
 	for (pgno = BUCKET_TO_PAGE(hashp, bucket); pgno != PGNO_INVALID;) {
-		if ((ret = memp_fget(hashp->dbp->mpf, &pgno, 0, &p)) != 0)
+		if (memp_fget(hashp->dbp->mpf, &pgno, 0, &p) != 0)
 			break;
 		(void)__db_prpage(p, 1);
 		pgno = p->next_pgno;

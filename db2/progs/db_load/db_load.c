@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,14 +9,13 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_load.c	10.15 (Sleepycat) 12/29/97";
+static const char sccsid[] = "@(#)db_load.c	10.20 (Sleepycat) 6/2/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #include <errno.h>
 #include <limits.h>
@@ -27,6 +26,8 @@ static const char sccsid[] = "@(#)db_load.c	10.15 (Sleepycat) 12/29/97";
 #endif
 
 #include "db_int.h"
+#include "db_page.h"
+#include "db_am.h"
 #include "clib_ext.h"
 
 void	badnum __P((void));
@@ -55,7 +56,8 @@ main(argc, argv)
 	DB_ENV *dbenv;
 	DB_INFO dbinfo;
 	db_recno_t recno;
-	int ch, no_header, pflag;
+	u_int32_t db_nooverwrite;
+	int ch, checkprint, existed, no_header;
 	char **clist, **clp, *home;
 
 	/* Allocate enough room for configuration arguments. */
@@ -63,9 +65,10 @@ main(argc, argv)
 		err(1, NULL);
 
 	home = NULL;
-	no_header = 0;
+	db_nooverwrite = 0;
+	existed = checkprint = no_header = 0;
 	argtype = dbtype = DB_UNKNOWN;
-	while ((ch = getopt(argc, argv, "c:f:h:Tt:")) != EOF)
+	while ((ch = getopt(argc, argv, "c:f:h:nTt:")) != EOF)
 		switch (ch) {
 		case 'c':
 			*clp++ = optarg;
@@ -77,8 +80,11 @@ main(argc, argv)
 		case 'h':
 			home = optarg;
 			break;
+		case 'n':
+			db_nooverwrite = DB_NOOVERWRITE;
+			break;
 		case 'T':
-			no_header = pflag = 1;
+			no_header = checkprint = 1;
 			break;
 		case 't':
 			if (strcmp(optarg, "btree") == 0) {
@@ -105,18 +111,18 @@ main(argc, argv)
 	if (argc != 1)
 		usage();
 
-	/* Initialize the environment. */
-	dbenv = db_init(home);
-	memset(&dbinfo, 0, sizeof(DB_INFO));
+	/* Initialize the environment if the user specified one. */
+	dbenv = home == NULL ? NULL : db_init(home);
 
 	/*
 	 * Read the header.  If there isn't any header, we're expecting flat
-	 * text, set the pflag appropriately.
+	 * text, set the checkprint flag appropriately.
 	 */
+	memset(&dbinfo, 0, sizeof(DB_INFO));
 	if (no_header)
 		dbtype = argtype;
 	else {
-		rheader(&dbtype, &pflag, &dbinfo);
+		rheader(&dbtype, &checkprint, &dbinfo);
 		if (argtype != DB_UNKNOWN) {
 			/* Conversion to/from recno is prohibited. */
 			if ((dbtype == DB_RECNO && argtype != DB_RECNO) ||
@@ -133,17 +139,20 @@ main(argc, argv)
 	configure(&dbinfo, clist);
 
 	/* Open the DB file. */
-	if ((errno = db_open(argv[0], dbtype, DB_CREATE | DB_TRUNCATE,
-	    S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH,
-	    dbenv, &dbinfo, &dbp)) != 0)
+	if ((errno = db_open(argv[0], dbtype, DB_CREATE,
+	    __db_omode("rwrwrw"), dbenv, &dbinfo, &dbp)) != 0)
 		err(1, "%s", argv[0]);
 
 	/* Initialize the key/data pair. */
 	memset(&key, 0, sizeof(DBT));
-	if ((key.data = (void *)malloc(key.ulen = 1024)) == NULL) {
-		errno = ENOMEM;
-		err(1, NULL);
-	}
+	if (dbtype == DB_RECNO) {
+		key.data = &recno;
+		key.size = sizeof(recno);
+	} else
+		if ((key.data = (void *)malloc(key.ulen = 1024)) == NULL) {
+			errno = ENOMEM;
+			err(1, NULL);
+		}
 	memset(&data, 0, sizeof(DBT));
 	if ((data.data = (void *)malloc(data.ulen = 1024)) == NULL) {
 		errno = ENOMEM;
@@ -151,22 +160,17 @@ main(argc, argv)
 	}
 
 	/* Get each key/data pair and add them to the database. */
-	if (dbtype == DB_RECNO) {
-		key.data = &recno;
-		key.size = sizeof(recno);
-		for (recno = 1;; ++recno) {
-			if (pflag) {
+	for (recno = 1;; ++recno) {
+		if (dbtype == DB_RECNO)
+			if (checkprint) {
 				if (dbt_rprint(&data))
 					break;
-			} else
+			} else {
 				if (dbt_rdump(&data))
 					break;
-			if ((errno = dbp->put(dbp, NULL, &key, &data, 0)) != 0)
-				err(1, "%s", argv[0]);
-		}
-	} else
-		for (;;) {
-			if (pflag) {
+			}
+		else
+			if (checkprint) {
 				if (dbt_rprint(&key))
 					break;
 				if (dbt_rprint(&data))
@@ -177,13 +181,26 @@ main(argc, argv)
 				if (dbt_rdump(&data))
 fmt:					err(1, "odd number of key/data pairs");
 			}
-			if ((errno = dbp->put(dbp, NULL, &key, &data, 0)) != 0)
-				err(1, "%s", argv[0]);
+		switch (errno =
+		    dbp->put(dbp, NULL, &key, &data, db_nooverwrite)) {
+		case 0:
+			break;
+		case DB_KEYEXIST:
+			existed = 1;
+			warnx("%s: line %d: key already exists, not loaded:",
+			    argv[0],
+			    dbtype == DB_RECNO ? recno : recno * 2 - 1);
+			(void)__db_prdbt(&key, checkprint, stderr);
+			break;
+		default:
+			err(1, "%s", argv[0]);
+			/* NOTREACHED */
 		}
+	}
 
 	if ((errno = dbp->close(dbp, 0)) != 0)
 		err(1, "%s", argv[0]);
-	return (0);
+	return (existed ? 1 : 0);
 }
 
 /*
@@ -200,13 +217,26 @@ db_init(home)
 		errno = ENOMEM;
 		err(1, NULL);
 	}
-	dbenv->db_errfile = stderr;
-	dbenv->db_errpfx = progname;
 
-	if ((errno =
-	    db_appinit(home, NULL, dbenv, DB_CREATE | DB_USE_ENVIRON)) != 0)
-		err(1, "db_appinit");
-	return (dbenv);
+	/*
+	 * The database may be live, try and use the shared regions.
+	 *
+	 * If it works, we're done.  Set the error output options so that
+	 * future errors are correctly reported.
+	 */
+	if ((errno = db_appinit(home, NULL, dbenv, DB_INIT_LOCK |
+	    DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_USE_ENVIRON)) == 0) {
+		dbenv->db_errfile = stderr;
+		dbenv->db_errpfx = progname;
+		return (dbenv);
+	}
+
+	/*
+	 * If the db_appinit fails, assume the database isn't live, and don't
+	 * bother with an environment.
+	 */
+	free(dbenv);
+	return (NULL);
 }
 
 #define	FLAG(name, value, keyword, flag)				\
@@ -279,16 +309,16 @@ configure(dbinfop, clp)
  *	Read the header message.
  */
 void
-rheader(dbtypep, pflagp, dbinfop)
+rheader(dbtypep, checkprintp, dbinfop)
 	DBTYPE *dbtypep;
-	int *pflagp;
+	int *checkprintp;
 	DB_INFO *dbinfop;
 {
 	long lineno, val;
 	char name[256], value[256];
 
 	*dbtypep = DB_UNKNOWN;
-	*pflagp = 0;
+	*checkprintp = 0;
 
 	for (lineno = 1;; ++lineno) {
 		/* If we don't see the expected information, it's an error. */
@@ -301,11 +331,11 @@ rheader(dbtypep, pflagp, dbinfop)
 
 		if (strcmp(name, "format") == 0) {
 			if (strcmp(value, "bytevalue") == 0) {
-				*pflagp = 0;
+				*checkprintp = 0;
 				continue;
 			}
 			if (strcmp(value, "print") == 0) {
-				*pflagp = 1;
+				*checkprintp = 1;
 				continue;
 			}
 			errx(1, "line %d: unknown format", lineno);
@@ -390,39 +420,6 @@ dbt_rprint(dbtp)
 }
 
 /*
- * digitize --
- *	Convert a character to an integer.
- */
-int
-digitize(c)
-	int c;
-{
-	switch (c) {			/* Don't depend on ASCII ordering. */
-	case '0': return (0);
-	case '1': return (1);
-	case '2': return (2);
-	case '3': return (3);
-	case '4': return (4);
-	case '5': return (5);
-	case '6': return (6);
-	case '7': return (7);
-	case '8': return (8);
-	case '9': return (9);
-	case 'a': return (10);
-	case 'b': return (11);
-	case 'c': return (12);
-	case 'd': return (13);
-	case 'e': return (14);
-	case 'f': return (15);
-	}
-
-	err(1, "unexpected hexadecimal value");
-	/* NOTREACHED */
-
-	return (0);
-}
-
-/*
  * dbt_rdump --
  *	Read a byte dump line into a DBT structure.
  */
@@ -459,6 +456,39 @@ dbt_rdump(dbtp)
 }
 
 /*
+ * digitize --
+ *	Convert a character to an integer.
+ */
+int
+digitize(c)
+	int c;
+{
+	switch (c) {			/* Don't depend on ASCII ordering. */
+	case '0': return (0);
+	case '1': return (1);
+	case '2': return (2);
+	case '3': return (3);
+	case '4': return (4);
+	case '5': return (5);
+	case '6': return (6);
+	case '7': return (7);
+	case '8': return (8);
+	case '9': return (9);
+	case 'a': return (10);
+	case 'b': return (11);
+	case 'c': return (12);
+	case 'd': return (13);
+	case 'e': return (14);
+	case 'f': return (15);
+	}
+
+	err(1, "unexpected hexadecimal value");
+	/* NOTREACHED */
+
+	return (0);
+}
+
+/*
  * badnum --
  *	Display the bad number message.
  */
@@ -475,7 +505,8 @@ badnum()
 void
 usage()
 {
-	(void)fprintf(stderr,
-"usage: db_load [-T]\n\t[-c name=value] [-f file] [-h home] [-t btree | hash] db_file\n");
+	(void)fprintf(stderr, "%s\n\t%s\n",
+	    "usage: db_load [-nT]",
+    "[-c name=value] [-f file] [-h home] [-t btree | hash | recno] db_file");
 	exit(1);
 }

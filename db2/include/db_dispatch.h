@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -36,26 +36,30 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)db_dispatch.h	10.1 (Sleepycat) 4/12/97
+ *	@(#)db_dispatch.h	10.4 (Sleepycat) 5/3/98
  */
 
 #ifndef _DB_DISPATCH_H
 #define _DB_DISPATCH_H
 
+struct __db_txnhead;	typedef struct __db_txnhead DB_TXNHEAD;
+struct __db_txnlist;	typedef struct __db_txnlist DB_TXNLIST;
+
 /*
  * Declarations and typedefs for the list of transaction IDs used during
  * recovery.
  */
-
-typedef struct __db_txnhead {
-	LIST_HEAD(__db_headlink, _db_txnlist) head;
+struct __db_txnhead {
+	LIST_HEAD(__db_headlink, __db_txnlist) head;
 	u_int32_t maxid;
-} __db_txnhead;
+	int32_t generation;
+};
 
-typedef struct _db_txnlist {
-	LIST_ENTRY(_db_txnlist) links;
-	u_int32_t	txnid;
-} __db_txnlist;
+struct __db_txnlist {
+	LIST_ENTRY(__db_txnlist) links;
+	u_int32_t txnid;
+	int32_t	generation;
+};
 
 #define	DB_log_BEGIN		  0
 #define	DB_txn_BEGIN		  5

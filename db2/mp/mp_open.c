@@ -1,23 +1,20 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_open.c	10.16 (Sleepycat) 11/28/97";
+static const char sccsid[] = "@(#)mp_open.c	10.23 (Sleepycat) 5/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
@@ -33,13 +30,14 @@ static const char sccsid[] = "@(#)mp_open.c	10.16 (Sleepycat) 11/28/97";
 int
 memp_open(path, flags, mode, dbenv, retp)
 	const char *path;
-	int flags, mode;
+	u_int32_t flags;
+	int mode;
 	DB_ENV *dbenv;
 	DB_MPOOL **retp;
 {
 	DB_MPOOL *dbmp;
 	size_t cachesize;
-	int ret;
+	int is_private, ret;
 
 	/* Validate arguments. */
 #ifdef HAVE_SPINLOCKS
@@ -62,15 +60,16 @@ memp_open(path, flags, mode, dbenv, retp)
 	dbmp->dbenv = dbenv;
 
 	/* Decide if it's possible for anyone else to access the pool. */
-	if ((dbenv == NULL && path == NULL) || LF_ISSET(DB_MPOOL_PRIVATE))
-		F_SET(dbmp, MP_ISPRIVATE);
+	is_private =
+	    (dbenv == NULL && path == NULL) || LF_ISSET(DB_MPOOL_PRIVATE);
 
 	/*
 	 * Map in the region.  We do locking regardless, as portions of it are
 	 * implemented in common code (if we put the region in a file, that is).
 	 */
 	F_SET(dbmp, MP_LOCKREGION);
-	if ((ret = __memp_ropen(dbmp, path, cachesize, mode, flags)) != 0)
+	if ((ret = __memp_ropen(dbmp,
+	    path, cachesize, mode, is_private, LF_ISSET(DB_CREATE))) != 0)
 		goto err;
 	F_CLR(dbmp, MP_LOCKREGION);
 
@@ -79,7 +78,7 @@ memp_open(path, flags, mode, dbenv, retp)
 	 * If it's threaded, then we have to lock both the handles and the
 	 * region, and we need to allocate a mutex for that purpose.
 	 */
-	if (!F_ISSET(dbmp, MP_ISPRIVATE))
+	if (!is_private)
 		F_SET(dbmp, MP_LOCKREGION);
 	if (LF_ISSET(DB_THREAD)) {
 		F_SET(dbmp, MP_LOCKHANDLE | MP_LOCKREGION);
@@ -135,10 +134,11 @@ memp_close(dbmp)
 	}
 
 	/* Close the region. */
-	if ((t_ret = __memp_rclose(dbmp)) && ret == 0)
+	if ((t_ret = __db_rdetach(&dbmp->reginfo)) != 0 && ret == 0)
 		ret = t_ret;
 
-	/* Discard the structure. */
+	if (dbmp->reginfo.path != NULL)
+		FREES(dbmp->reginfo.path);
 	FREE(dbmp, sizeof(DB_MPOOL));
 
 	return (ret);
@@ -154,8 +154,19 @@ memp_unlink(path, force, dbenv)
 	int force;
 	DB_ENV *dbenv;
 {
-	return (__db_runlink(dbenv,
-	    DB_APP_NONE, path, DB_DEFAULT_MPOOL_FILE, force));
+	REGINFO reginfo;
+	int ret;
+
+	memset(&reginfo, 0, sizeof(reginfo));
+	reginfo.dbenv = dbenv;
+	reginfo.appname = DB_APP_NONE;
+	if (path != NULL && (reginfo.path = __db_strdup(path)) == NULL)
+		return (ENOMEM);
+	reginfo.file = DB_DEFAULT_MPOOL_FILE;
+	ret = __db_runlink(&reginfo, force);
+	if (reginfo.path != NULL)
+		FREES(reginfo.path);
+	return (ret);
 }
 
 /*

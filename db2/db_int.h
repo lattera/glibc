@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_int.h.src	10.41 (Sleepycat) 1/8/98
+ *	@(#)db_int.h.src	10.62 (Sleepycat) 5/23/98
  */
 
 #ifndef _DB_INTERNAL_H_
@@ -12,8 +12,6 @@
 
 #include "db.h"				/* Standard DB include file. */
 #include "queue.h"
-#include "os_func.h"
-#include "os_ext.h"
 
 /*******************************************************
  * General purpose constants and macros.
@@ -77,8 +75,8 @@
 #define	R_ADDR(base, offset)	((void *)((u_int8_t *)((base)->addr) + offset))
 #define	R_OFFSET(base, p)	((u_int8_t *)(p) - (u_int8_t *)(base)->addr)
 
-/* Free and free-string macros that overwrite memory during debugging. */
-#ifdef DEBUG
+/* Free and free-string macros that overwrite memory. */
+#ifdef DIAGNOSTIC
 #undef	FREE
 #define	FREE(p, len) {							\
 	memset(p, 0xff, len);						\
@@ -117,35 +115,40 @@ typedef struct __fn {
 #undef	DB_LINE
 #define	DB_LINE "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
+/* Global variables. */
+typedef struct __db_globals {
+	int db_mutexlocks;		/* DB_MUTEXLOCKS */
+	int db_region_anon;		/* DB_REGION_ANON, DB_REGION_NAME */
+	int db_region_init;		/* DB_REGION_INIT */
+	int db_tsl_spins;		/* DB_TSL_SPINS */
+	int db_pageyield;		/* DB_PAGEYIELD */
+} DB_GLOBALS;
+extern	DB_GLOBALS	__db_global_values;
+#define	DB_GLOBAL(v)	__db_global_values.v
+
 /* Unused, or not-used-yet variable.  "Shut that bloody compiler up!" */
 #define	COMPQUIET(n, v)	(n) = (v)
+
+/*
+ * Win16 needs specific syntax on callback functions.  Nobody else cares.
+ */
+#ifndef	DB_CALLBACK
+#define	DB_CALLBACK	/* Nothing. */
+#endif
 
 /*******************************************************
  * Files.
  *******************************************************/
-#ifndef MAXPATHLEN		/* Maximum path length. */
-#ifdef PATH_MAX
-#define	MAXPATHLEN	PATH_MAX
-#else
+ /*
+  * We use 1024 as the maximum path length.  It's too hard to figure out what
+  * the real path length is, as it was traditionally stored in <sys/param.h>,
+  * and that file isn't always available.
+  */
+#undef	MAXPATHLEN
 #define	MAXPATHLEN	1024
-#endif
-#endif
 
 #define	PATH_DOT	"."	/* Current working directory. */
 #define	PATH_SEPARATOR	"/"	/* Path separator character. */
-
-#ifndef S_IRUSR			/* UNIX specific file permissions. */
-#define	S_IRUSR	0000400		/* R for owner */
-#define	S_IWUSR	0000200		/* W for owner */
-#define	S_IRGRP	0000040		/* R for group */
-#define	S_IWGRP	0000020		/* W for group */
-#define	S_IROTH	0000004		/* R for other */
-#define	S_IWOTH	0000002		/* W for other */
-#endif
-
-#ifndef S_ISDIR			/* UNIX specific: directory test. */
-#define	S_ISDIR(m)	((m & 0170000) == 0040000)
-#endif
 
 /*******************************************************
  * Mutex support.
@@ -176,12 +179,12 @@ typedef unsigned char tsl_t;
 typedef struct _db_mutex_t {
 #ifdef HAVE_SPINLOCKS
 	tsl_t	  tsl_resource;		/* Resource test and set. */
-#ifdef DEBUG
-	u_long	  pid;			/* Lock holder: 0 or process pid. */
+#ifdef DIAGNOSTIC
+	u_int32_t pid;			/* Lock holder: 0 or process pid. */
 #endif
 #else
 	u_int32_t off;			/* Backing file offset. */
-	u_long	  pid;			/* Lock holder: 0 or process pid. */
+	u_int32_t pid;			/* Lock holder: 0 or process pid. */
 #endif
 	u_int32_t spins;		/* Spins before block. */
 	u_int32_t mutex_set_wait;	/* Granted after wait. */
@@ -195,11 +198,11 @@ typedef struct _db_mutex_t {
  *******************************************************/
 /* Lock/unlock a DB thread. */
 #define	DB_THREAD_LOCK(dbp)						\
-	(F_ISSET(dbp, DB_AM_THREAD) ?					\
-	    __db_mutex_lock((db_mutex_t *)(dbp)->mutexp, -1) : 0)
+	if (F_ISSET(dbp, DB_AM_THREAD))					\
+	    (void)__db_mutex_lock((db_mutex_t *)(dbp)->mutexp, -1);
 #define	DB_THREAD_UNLOCK(dbp)						\
-	(F_ISSET(dbp, DB_AM_THREAD) ?					\
-	    __db_mutex_unlock((db_mutex_t *)(dbp)->mutexp, -1) : 0)
+	if (F_ISSET(dbp, DB_AM_THREAD))					\
+	    (void)__db_mutex_unlock((db_mutex_t *)(dbp)->mutexp, -1);
 
 /* Btree/recno local statistics structure. */
 struct __db_bt_lstat;	typedef struct __db_bt_lstat DB_BTREE_LSTAT;
@@ -228,7 +231,7 @@ typedef enum {
 } APPNAME;
 
 /*******************************************************
- * Regions.
+ * Shared memory regions.
  *******************************************************/
 /*
  * The shared memory regions share an initial structure so that the general
@@ -240,15 +243,68 @@ typedef enum {
  */
 typedef struct _rlayout {
 	db_mutex_t lock;		/* Region mutex. */
+#define	DB_REGIONMAGIC	0x120897
+	u_int32_t  valid;		/* Valid magic number. */
 	u_int32_t  refcnt;		/* Region reference count. */
 	size_t	   size;		/* Region length. */
 	int	   majver;		/* Major version number. */
 	int	   minver;		/* Minor version number. */
 	int	   patch;		/* Patch version number. */
+#define	INVALID_SEGID	-1
+	int	   segid;		/* shmget(2) ID, or Win16 segment ID. */
 
-#define	DB_R_DELETED	0x01		/* Region was deleted. */
+#define	REGION_ANONYMOUS	0x01	/* Region is/should be in anon mem. */
 	u_int32_t  flags;
 } RLAYOUT;
+
+/*
+ * DB creates all regions on 4K boundaries out of sheer paranoia, so that
+ * we don't make the underlying VM unhappy.
+ */
+#define	DB_VMPAGESIZE	(4 * 1024)
+#define	DB_ROUNDOFF(i) {						\
+	(i) += DB_VMPAGESIZE - 1;					\
+	(i) -= (i) % DB_VMPAGESIZE;					\
+}
+
+/*
+ * The interface to region attach is nasty, there is a lot of complex stuff
+ * going on, which has to be retained between create/attach and detach.  The
+ * REGINFO structure keeps track of it.
+ */
+struct __db_reginfo;	typedef struct __db_reginfo REGINFO;
+struct __db_reginfo {
+					/* Arguments. */
+	DB_ENV	   *dbenv;		/* Region naming info. */
+	APPNAME	    appname;		/* Region naming info. */
+	char	   *path;		/* Region naming info. */
+	const char *file;		/* Region naming info. */
+	int	    mode;		/* Region mode, if a file. */
+	size_t	    size;		/* Region size. */
+	u_int32_t   dbflags;		/* Region file open flags, if a file. */
+
+					/* Results. */
+	char	   *name;		/* Region name. */
+	void	   *addr;		/* Region address. */
+	int	    fd;			/* Fcntl(2) locking file descriptor.
+					   NB: this is only valid if a regular
+					   file is backing the shared region,
+					   and mmap(2) is being used to map it
+					   into our address space. */
+	int	    segid;		/* shmget(2) ID, or Win16 segment ID. */
+
+					/* Shared flags. */
+/*				0x0001	COMMON MASK with RLAYOUT structure. */
+#define	REGION_CANGROW		0x0002	/* Can grow. */
+#define	REGION_CREATED		0x0004	/* Created. */
+#define	REGION_HOLDINGSYS	0x0008	/* Holding system resources. */
+#define	REGION_LASTDETACH	0x0010	/* Delete on last detach. */
+#define	REGION_MALLOC		0x0020	/* Created in malloc'd memory. */
+#define	REGION_PRIVATE		0x0040	/* Private to thread/process. */
+#define	REGION_REMOVED		0x0080	/* Already deleted. */
+#define	REGION_SIZEDEF		0x0100	/* Use default region size if exists. */
+	u_int32_t   flags;
+};
 
 /*******************************************************
  * Mpool.
@@ -281,7 +337,7 @@ typedef struct __dbpginfo {
 #define	DB_LOGGING(dbp)							\
 	(F_ISSET(dbp, DB_AM_LOGGING) && !F_ISSET(dbp, DB_AM_RECOVER))
 
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 /*
  * Debugging macro to log operations.
  *	If DEBUG_WOP is defined, log operations that modify the database.
@@ -318,7 +374,7 @@ typedef struct __dbpginfo {
 #else
 #define	DEBUG_LREAD(D, T, O, K, A, F)
 #define	DEBUG_LWRITE(D, T, O, K, A, F)
-#endif /* DEBUG */
+#endif /* DIAGNOSTIC */
 
 /*******************************************************
  * Transactions and recovery.
@@ -339,4 +395,8 @@ struct __db_txn {
 	size_t		off;		/* Detail structure within region. */
 	TAILQ_ENTRY(__db_txn) links;
 };
+
+#include "os_func.h"
+#include "os_ext.h"
+
 #endif /* !_DB_INTERNAL_H_ */

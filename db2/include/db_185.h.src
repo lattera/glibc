@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -36,7 +36,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)db_185.h.src	8.5 (Sleepycat) 1/15/98
+ *	@(#)db_185.h.src	8.7 (Sleepycat) 4/10/98
  */
 
 #ifndef _DB_185_H_
@@ -127,11 +127,11 @@ typedef struct __db {
 /* Structure used to pass parameters to the btree routines. */
 typedef struct {
 #define	R_DUP		0x01	/* duplicate keys */
-	u_long	flags;
-	u_int	cachesize;	/* bytes to cache */
-	int	maxkeypage;	/* maximum keys per page */
-	int	minkeypage;	/* minimum keys per page */
-	u_int	psize;		/* page size */
+	u_int32_t flags;
+	u_int32_t cachesize;	/* bytes to cache */
+	u_int32_t maxkeypage;	/* maximum keys per page */
+	u_int32_t minkeypage;	/* minimum keys per page */
+	u_int32_t psize;	/* page size */
 	int	(*compare)	/* comparison function */
 	    __P((const DBT *, const DBT *));
 	size_t	(*prefix)	/* prefix function */
@@ -144,10 +144,10 @@ typedef struct {
 
 /* Structure used to pass parameters to the hashing routines. */
 typedef struct {
-	u_int	bsize;		/* bucket size */
-	u_int	ffactor;	/* fill factor */
-	u_int	nelem;		/* number of elements */
-	u_int	cachesize;	/* bytes to cache */
+	u_int32_t bsize;	/* bucket size */
+	u_int32_t ffactor;	/* fill factor */
+	u_int32_t nelem;	/* number of elements */
+	u_int32_t cachesize;	/* bytes to cache */
 	u_int32_t		/* hash function */
 		(*hash) __P((const void *, size_t));
 	int	lorder;		/* byte order */
@@ -158,9 +158,9 @@ typedef struct {
 #define	R_FIXEDLEN	0x01	/* fixed-length records */
 #define	R_NOKEY		0x02	/* key not required */
 #define	R_SNAPSHOT	0x04	/* snapshot the input */
-	u_long	flags;
-	u_int	cachesize;	/* bytes to cache */
-	u_int	psize;		/* page size */
+	u_int32_t flags;
+	u_int32_t cachesize;	/* bytes to cache */
+	u_int32_t psize;	/* page size */
 	int	lorder;		/* byte order */
 	size_t	reclen;		/* record length (fixed-length records) */
 	u_char	bval;		/* delimiting byte (variable-length records */

@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_open.c	10.22 (Sleepycat) 1/6/98";
+static const char sccsid[] = "@(#)bt_open.c	10.27 (Sleepycat) 5/6/98";
 #endif /* not lint */
 
 /*
@@ -60,21 +60,15 @@ static const char sccsid[] = "@(#)bt_open.c	10.22 (Sleepycat) 1/6/98";
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #include <errno.h>
-#include <fcntl.h>
 #include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
 #include "btree.h"
-#include "common_ext.h"
 
 static int __bam_keyalloc __P((BTREE *));
 static int __bam_setmeta __P((DB *, BTREE *));
@@ -295,6 +289,7 @@ __bam_setmeta(dbp, t)
 	}
 
 	/* Initialize the tree structure metadata information. */
+	memset(meta, 0, sizeof(BTMETA));
 	ZERO_LSN(meta->lsn);
 	meta->pgno = PGNO_METADATA;
 	meta->magic = DB_BTREEMAGIC;
@@ -303,7 +298,6 @@ __bam_setmeta(dbp, t)
 	meta->maxkey = t->bt_maxkey;
 	meta->minkey = t->bt_minkey;
 	meta->free = PGNO_INVALID;
-	meta->flags = 0;
 	if (dbp->type == DB_RECNO)
 		F_SET(meta, BTM_RECNO);
 	if (F_ISSET(dbp, DB_AM_DUP))
@@ -314,8 +308,6 @@ __bam_setmeta(dbp, t)
 		F_SET(meta, BTM_RECNUM);
 	if (F_ISSET(dbp, DB_RE_RENUMBER))
 		F_SET(meta, BTM_RENUMBER);
-	meta->re_len = 0;
-	meta->re_pad = 0;
 	memcpy(meta->uid, dbp->lock.fileid, DB_FILE_ID_LEN);
 
 	/* Create and initialize a root page. */

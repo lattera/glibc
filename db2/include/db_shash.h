@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_shash.h	10.2 (Sleepycat) 9/16/97
+ *	@(#)db_shash.h	10.3 (Sleepycat) 4/10/98
  */
 
 /* Hash Headers */

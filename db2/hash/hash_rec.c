@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,14 +47,13 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_rec.c	10.15 (Sleepycat) 12/4/97";
+static const char sccsid[] = "@(#)hash_rec.c	10.19 (Sleepycat) 5/23/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -64,7 +63,6 @@ static const char sccsid[] = "@(#)hash_rec.c	10.15 (Sleepycat) 12/4/97";
 #include "hash.h"
 #include "btree.h"
 #include "log.h"
-#include "db_dispatch.h"
 #include "common_ext.h"
 
 /*
@@ -131,13 +129,23 @@ __ham_insdel_recover(logp, dbtp, lsnp, redo, info)
 
 	if ((op == DELPAIR && cmp_n == 0 && !redo) ||
 	    (op == PUTPAIR && cmp_p == 0 && redo)) {
-		/* Need to redo a PUT or undo a delete. */
-		__ham_putitem(pagep, &argp->key,
-		    !redo || PAIR_ISKEYBIG(argp->opcode) ?
-		    H_OFFPAGE : H_KEYDATA);
-		__ham_putitem(pagep, &argp->data,
-		    !redo || PAIR_ISDATABIG(argp->opcode) ?
-		    H_OFFPAGE : H_KEYDATA);
+		/*
+		 * Need to redo a PUT or undo a delete.  If we are undoing a
+		 * delete, we've got to restore the item back to its original
+		 * position.  That's a royal pain in the butt (because we do
+		 * not store item lengths on the page), but there's no choice.
+		 */
+		if (op != DELPAIR ||
+		    argp->ndx == (u_int32_t)H_NUMPAIRS(pagep)) {
+			__ham_putitem(pagep, &argp->key,
+			    !redo || PAIR_ISKEYBIG(argp->opcode) ?
+			    H_OFFPAGE : H_KEYDATA);
+			__ham_putitem(pagep, &argp->data,
+			    !redo || PAIR_ISDATABIG(argp->opcode) ?
+			    H_OFFPAGE : H_KEYDATA);
+		} else
+			(void) __ham_reputpair(pagep, hashp->hdr->pagesize,
+			    argp->ndx, &argp->key, &argp->data);
 
 		LSN(pagep) = redo ? *lsnp : argp->pagelsn;
 		if ((ret = __ham_put_page(file_dbp, pagep, 1)) != 0)
@@ -453,7 +461,7 @@ __ham_newpgno_recover(logp, dbtp, lsnp, redo, info)
 	DBT *dbtp;
 	DB_LSN *lsnp;
 	int redo;
-	 void *info;
+	void *info;
 {
 	__ham_newpgno_args *argp;
 	DB *mdbp, *file_dbp;
@@ -574,7 +582,7 @@ __ham_splitmeta_recover(logp, dbtp, lsnp, redo, info)
 	DBT *dbtp;
 	DB_LSN *lsnp;
 	int redo;
-	 void *info;
+	void *info;
 {
 	__ham_splitmeta_args *argp;
 	DB *mdbp, *file_dbp;
@@ -649,7 +657,7 @@ __ham_splitdata_recover(logp, dbtp, lsnp, redo, info)
 	DBT *dbtp;
 	DB_LSN *lsnp;
 	int redo;
-	 void *info;
+	void *info;
 {
 	__ham_splitdata_args *argp;
 	DB *mdbp, *file_dbp;

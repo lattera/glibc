@@ -1,23 +1,20 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_rec.c	10.18 (Sleepycat) 12/15/97";
+static const char sccsid[] = "@(#)bt_rec.c	10.21 (Sleepycat) 4/28/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#include <ctype.h>
 #include <errno.h>
-#include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -27,7 +24,6 @@ static const char sccsid[] = "@(#)bt_rec.c	10.18 (Sleepycat) 12/15/97";
 #include "hash.h"
 #include "btree.h"
 #include "log.h"
-#include "db_dispatch.h"
 #include "common_ext.h"
 
 /*
@@ -51,7 +47,7 @@ __bam_pg_alloc_recover(logp, dbtp, lsnp, redo, info)
 	PAGE *pagep;
 	DB *file_dbp, *mdbp;
 	db_pgno_t pgno;
-	int cmp_n, cmp_p, created, modified, ret;
+	int cmp_n, cmp_p, modified, ret;
 
 	REC_PRINT(__bam_pg_alloc_print);
 	REC_INTRO(__bam_pg_alloc_read);
@@ -86,18 +82,17 @@ __bam_pg_alloc_recover(logp, dbtp, lsnp, redo, info)
 	}
 
 	/* Fix up the allocated page. */
-	created = IS_ZERO_LSN(LSN(pagep));
 	modified = 0;
 	cmp_n = log_compare(lsnp, &LSN(pagep));
 	cmp_p = log_compare(&LSN(pagep), &argp->page_lsn);
-	if ((created || cmp_p == 0) && redo) {
+	if (cmp_p == 0 && redo) {
 		/* Need to redo update described. */
 		P_INIT(pagep, file_dbp->pgsize,
 		    argp->pgno, PGNO_INVALID, PGNO_INVALID, 0, argp->ptype);
 
 		pagep->lsn = *lsnp;
 		modified = 1;
-	} else if ((created || cmp_n == 0) && !redo) {
+	} else if (cmp_n == 0 && !redo) {
 		/* Need to undo update described. */
 		P_INIT(pagep, file_dbp->pgsize,
 		    argp->pgno, PGNO_INVALID, meta->free, 0, P_INVALID);

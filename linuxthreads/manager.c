@@ -93,6 +93,8 @@ int __pthread_manager(void *arg)
   sigfillset(&mask);
   sigdelset(&mask, PTHREAD_SIG_RESTART);
   sigprocmask(SIG_SETMASK, &mask, NULL);
+  /* Raise our priority to match that of main thread */
+  __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);
   /* Enter server loop */
   while(1) {
     FD_ZERO(&readfds);
@@ -276,6 +278,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_start_args.start_routine = start_routine;
   new_thread->p_start_args.arg = arg;
   new_thread->p_start_args.mask = *mask;
+  /* Raise priority of thread manager if needed */
+  __pthread_manager_adjust_prio(new_thread->p_priority);
   /* Do the cloning */
   pid = __clone(pthread_start_thread, (void **) new_thread,
                 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
@@ -390,10 +394,22 @@ static void pthread_reap_children(void)
   }
 }
 
-/* Free the resources of a thread */
+/* Try to free the resources of a thread when requested by pthread_join
+   or pthread_detach on a terminated thread. */
 
 static void pthread_handle_free(pthread_descr th)
 {
+  pthread_descr t;
+
+  /* Check that the thread th is still there -- pthread_reap_children
+     might have deallocated it already */
+  t = __pthread_main_thread;
+  do {
+    if (t == th) break;
+    t = t->p_nextlive;
+  } while (t != __pthread_main_thread);
+  if (t != th) return;
+
   acquire(th->p_spinlock);
   if (th->p_exited) {
     release(th->p_spinlock);
@@ -454,4 +470,19 @@ static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode)
 void __pthread_manager_sighandler(int sig)
 {
   terminated_children = 1;
+}
+
+/* Adjust priority of thread manager so that it always run at a priority
+   higher than all threads */
+
+void __pthread_manager_adjust_prio(int thread_prio)
+{
+  struct sched_param param;
+
+  if (thread_prio <= __pthread_manager_thread.p_priority) return;
+  param.sched_priority =
+    thread_prio < __sched_get_priority_max(SCHED_FIFO) 
+    ? thread_prio + 1 : thread_prio;
+  __sched_setscheduler(__pthread_manager_thread.p_pid, SCHED_FIFO, &param);
+  __pthread_manager_thread.p_priority = thread_prio;
 }

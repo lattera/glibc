@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,22 +47,19 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_overflow.c	10.7 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)db_overflow.c	10.11 (Sleepycat) 5/7/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
 #include "db_am.h"
-#include "common_ext.h"
 
 /*
  * Big key/data code.
@@ -91,9 +88,9 @@ __db_goff(dbp, dbt, tlen, pgno, bpp, bpsz)
 {
 	PAGE *h;
 	db_indx_t bytes;
-	int ret;
 	u_int32_t curoff, needed, start;
 	u_int8_t *p, *src;
+	int ret;
 
 	/*
 	 * Check if the buffer is big enough; if it is not and we are
@@ -259,13 +256,13 @@ __db_poff(dbp, dbt, pgnop, newfunc)
  * __db_ovref --
  *	Increment/decrement the reference count on an overflow page.
  *
- * PUBLIC: int __db_ovref __P((DB *, db_pgno_t, int));
+ * PUBLIC: int __db_ovref __P((DB *, db_pgno_t, int32_t));
  */
 int
 __db_ovref(dbp, pgno, adjust)
 	DB *dbp;
 	db_pgno_t pgno;
-	int adjust;
+	int32_t adjust;
 {
 	PAGE *h;
 	int ret;
@@ -277,7 +274,7 @@ __db_ovref(dbp, pgno, adjust)
 
 	if (DB_LOGGING(dbp))
 		if ((ret = __db_ovref_log(dbp->dbenv->lg_info, dbp->txn,
-		    &LSN(h), 0, dbp->log_fileid, h->pgno, (int32_t)adjust,
+		    &LSN(h), 0, dbp->log_fileid, h->pgno, adjust,
 		    &LSN(h))) != 0)
 			return (ret);
 	OV_REF(h) += adjust;
@@ -353,8 +350,8 @@ __db_moff(dbp, dbt, pgno)
 {
 	PAGE *pagep;
 	u_int32_t cmp_bytes, key_left;
-	int ret;
 	u_int8_t *p1, *p2;
+	int ret;
 
 	/* While there are both keys to compare. */
 	for (ret = 0, p1 = dbt->data,

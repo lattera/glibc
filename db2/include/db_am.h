@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_am.h	10.8 (Sleepycat) 1/8/98
+ *	@(#)db_am.h	10.9 (Sleepycat) 4/10/98
  */
 #ifndef _DB_AM_H
 #define _DB_AM_H

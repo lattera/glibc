@@ -288,7 +288,7 @@ int __pthread_manager(void *reqfd);
 void __pthread_manager_sighandler(int sig);
 void __pthread_reset_main_thread(void);
 void __fresetlockfiles(void);
-
+void __pthread_manager_adjust_prio(int thread_prio);
 
 /* Prototypes for the function without cancelation support when the
    normal version has it.  */

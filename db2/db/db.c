@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -44,20 +44,16 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db.c	10.45 (Sleepycat) 12/4/97";
+static const char sccsid[] = "@(#)db.c	10.57 (Sleepycat) 5/7/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #include <errno.h>
-#include <fcntl.h>
 #include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
@@ -71,7 +67,7 @@ static const char sccsid[] = "@(#)db.c	10.45 (Sleepycat) 12/4/97";
 #include "db_am.h"
 #include "common_ext.h"
 
-static int db_close __P((DB *, int));
+static int db_close __P((DB *, u_int32_t));
 static int db_fd __P((DB *, int *));
 
 /*
@@ -99,7 +95,8 @@ int
 db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	const char *fname;
 	DBTYPE type;
-	int flags, mode;
+	u_int32_t flags;
+	int mode;
 	DB_ENV *dbenv;
 	DB_INFO *dbinfo;
 	DB **dbpp;
@@ -108,6 +105,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	DB *dbp;
 	DBT pgcookie;
 	DB_ENV *envp, t_dbenv;
+	DB_MPOOL_FINFO finfo;
 	DB_PGINFO pginfo;
 	HASHHDR *hashm;
 	size_t cachesize;
@@ -125,10 +123,26 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	if ((ret = __db_fchk(dbenv, "db_open", flags, OKFLAGS)) != 0)
 		return (ret);
 
-	if (dbenv != NULL &&
-	    LF_ISSET(DB_THREAD) && !F_ISSET(dbenv, DB_ENV_THREAD)) {
-		__db_err(dbenv, "environment not created using DB_THREAD");
-		return (EINVAL);
+	if (dbenv != NULL) {
+		/*
+		 * You can't specify threads during the db_open() if the
+		 * environment wasn't configured with them.
+		 */
+		if (LF_ISSET(DB_THREAD) && !F_ISSET(dbenv, DB_ENV_THREAD)) {
+			__db_err(dbenv,
+			    "environment not created using DB_THREAD");
+			return (EINVAL);
+		}
+
+		/*
+		 * Specifying a cachesize to db_open(3), after creating an
+		 * environment, is a common mistake.
+		 */
+		if (dbinfo != NULL && dbinfo->db_cachesize != 0) {
+			__db_err(dbenv,
+			    "cachesize will be ignored if environment exists");
+			return (EINVAL);
+		}
 	}
 
 	/* Initialize for error return. */
@@ -203,7 +217,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 
 	/* Fill in the default file mode. */
 	if (mode == 0)
-		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
+		mode = __db_omode("rwrw--");
 
 	/* Check if the user wants us to swap byte order. */
 	if (dbinfo != NULL)
@@ -230,7 +244,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	if (fname != NULL && fname[0] != '\0') {
 		/* Get the real file name. */
 		if ((ret = __db_appname(dbenv,
-		     DB_APP_DATA, NULL, fname, NULL, &real_name)) != 0)
+		     DB_APP_DATA, NULL, fname, 0, NULL, &real_name)) != 0)
 			goto err;
 
 		/*
@@ -455,22 +469,6 @@ empty:	/*
 	}
 
 	/*
-	 * Set and/or correct the cache size; must be a multiple of the
-	 * page size.
-	 */
-	if (dbinfo == NULL || dbinfo->db_cachesize == 0)
-		cachesize = dbp->pgsize * DB_MINCACHE;
-	else {
-		cachesize = dbinfo->db_cachesize;
-		if (cachesize & (dbp->pgsize - 1))
-			cachesize += (~cachesize & (dbp->pgsize - 1)) + 1;
-		if (cachesize < dbp->pgsize * DB_MINCACHE)
-			cachesize = dbp->pgsize * DB_MINCACHE;
-		if (cachesize < 20 * 1024)
-			cachesize = 20 * 1024;
-	}
-
-	/*
 	 * If no mpool supplied by the application, attach to a local,
 	 * created buffer pool.
 	 *
@@ -499,10 +497,28 @@ empty:	/*
 			envp = dbenv;
 			restore = 1;
 		}
+
+		/*
+		 * Set and/or correct the cache size; must be a multiple of
+		 * the page size.
+		 */
+		if (dbinfo == NULL || dbinfo->db_cachesize == 0)
+			cachesize = dbp->pgsize * DB_MINCACHE;
+		else {
+			cachesize = dbinfo->db_cachesize;
+			if (cachesize & (dbp->pgsize - 1))
+				cachesize +=
+				    (~cachesize & (dbp->pgsize - 1)) + 1;
+			if (cachesize < dbp->pgsize * DB_MINCACHE)
+				cachesize = dbp->pgsize * DB_MINCACHE;
+			if (cachesize < 20 * 1024)
+				cachesize = 20 * 1024;
+		}
 		envp->mp_size = cachesize;
+
 		if ((ret = memp_open(NULL, DB_CREATE | DB_MPOOL_PRIVATE |
 		    (F_ISSET(dbp, DB_AM_THREAD) ? DB_THREAD : 0),
-		    S_IRUSR | S_IWUSR, envp, &dbp->mp)) != 0)
+		    __db_omode("rw----"), envp, &dbp->mp)) != 0)
 			goto err;
 		if (restore)
 			*dbenv = t_dbenv;
@@ -566,9 +582,18 @@ empty:	/*
 	pgcookie.data = &pginfo;
 	pgcookie.size = sizeof(DB_PGINFO);
 
-	if ((ret = memp_fopen(dbp->mp, fname, ftype,
-	    F_ISSET(dbp, DB_AM_RDONLY) ? DB_RDONLY : 0, 0, dbp->pgsize,
-	    0, &pgcookie, dbp->lock.fileid, &dbp->mpf)) != 0)
+	/*
+	 * Set up additional memp_fopen information.
+	 */
+	memset(&finfo, 0, sizeof(finfo));
+	finfo.ftype = ftype;
+	finfo.pgcookie = &pgcookie;
+	finfo.fileid = dbp->lock.fileid;
+	finfo.lsn_offset = 0;
+	finfo.clear_len = DB_PAGE_CLEAR_LEN;
+	if ((ret = memp_fopen(dbp->mp, fname,
+	    F_ISSET(dbp, DB_AM_RDONLY) ? DB_RDONLY : 0,
+	    0, dbp->pgsize, &finfo, &dbp->mpf)) != 0)
 		goto err;
 
 	/*
@@ -673,7 +698,7 @@ err:	/* Close the file descriptor. */
 static int
 db_close(dbp, flags)
 	DB *dbp;
-	int flags;
+	u_int32_t flags;
 {
 	DBC *dbc;
 	DB *tdbp;
@@ -734,7 +759,7 @@ db_close(dbp, flags)
 	}
 
 	/* Sync the memory pool. */
-	if ((t_ret = memp_fsync(dbp->mpf)) != 0 &&
+	if (!LF_ISSET(DB_NOSYNC) && (t_ret = memp_fsync(dbp->mpf)) != 0 &&
 	    t_ret != DB_INCOMPLETE && ret == 0)
 		ret = t_ret;
 
@@ -796,18 +821,11 @@ db_fd(dbp, fdp)
         DB *dbp;
 	int *fdp;
 {
-	/* In-memory database can't have a file descriptor. */
-	if (F_ISSET(dbp, DB_AM_INMEM))
-		return (ENOENT);
-
 	/*
 	 * XXX
-	 * Truly spectacular layering violation.  As we don't open the
-	 * underlying file until we need it, it may not be initialized.
+	 * Truly spectacular layering violation.
 	 */
-	if ((*fdp = dbp->mpf->fd) == -1)
-		return (ENOENT);
-	return (0);
+	return (__mp_xxx_fd(dbp->mpf, fdp));
 }
 
 /*
@@ -821,6 +839,11 @@ __db_pgerr(dbp, pgno)
 	DB *dbp;
 	db_pgno_t pgno;
 {
+	/*
+	 * Three things are certain:
+	 * Death, taxes, and lost data.
+	 * Guess which has occurred.
+	 */
 	__db_err(dbp->dbenv,
 	    "unable to create/retrieve page %lu", (u_long)pgno);
 	return (__db_panic(dbp));

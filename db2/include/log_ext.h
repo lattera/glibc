@@ -13,8 +13,8 @@ int __log_register_read __P((void *, __log_register_args **));
 int __log_init_print __P((DB_ENV *));
 int __log_init_recover __P((DB_ENV *));
 int __log_findckp __P((DB_LOG *, DB_LSN *));
-int __log_get __P((DB_LOG *, DB_LSN *, DBT *, int, int));
-int __log_put __P((DB_LOG *, DB_LSN *, const DBT *, int));
+int __log_get __P((DB_LOG *, DB_LSN *, DBT *, u_int32_t, int));
+int __log_put __P((DB_LOG *, DB_LSN *, const DBT *, u_int32_t));
 int __log_name __P((DB_LOG *, int, char **));
 int __log_register_recover
     __P((DB_LOG *, DBT *, DB_LSN *, int, void *));

@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_stat.c	10.6 (Sleepycat) 7/2/97";
+static const char sccsid[] = "@(#)hash_stat.c	10.8 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -20,7 +20,6 @@ static const char sccsid[] = "@(#)hash_stat.c	10.6 (Sleepycat) 7/2/97";
 #include "db_int.h"
 #include "db_page.h"
 #include "hash.h"
-#include "common_ext.h"
 
 /*
  * __ham_stat --

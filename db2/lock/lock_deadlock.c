@@ -1,25 +1,21 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
-	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)lock_deadlock.c	10.26 (Sleepycat) 11/25/97";
-#endif
+static const char sccsid[] = "@(#)lock_deadlock.c	10.32 (Sleepycat) 4/26/98";
+#endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
 #include <string.h>
-#include <stdlib.h>
 #endif
 
 #include "db_int.h"
@@ -59,14 +55,14 @@ static int  __dd_build
 static u_int32_t
 	   *__dd_find __P((u_int32_t *, locker_info *, u_int32_t));
 
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 static void __dd_debug __P((DB_ENV *, locker_info *, u_int32_t *, u_int32_t));
 #endif
 
 int
 lock_detect(lt, flags, atype)
 	DB_LOCKTAB *lt;
-	int flags, atype;
+	u_int32_t flags, atype;
 {
 	DB_ENV *dbenv;
 	locker_info *idmap;
@@ -96,7 +92,7 @@ lock_detect(lt, flags, atype)
 
 	if (nlockers == 0)
 		return (0);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if (dbenv->db_verbose != 0)
 		__dd_debug(dbenv, idmap, bitmap, nlockers);
 #endif
@@ -202,7 +198,7 @@ __dd_build(dbenv, bmp, nlockers, idmap)
 	u_int8_t *pptr;
 	locker_info *id_array;
 	u_int32_t *bitmap, count, *entryp, i, id, nentries, *tmpmap;
-	int is_first, ret;
+	int is_first;
 
 	lt = dbenv->lk_info;
 
@@ -322,8 +318,8 @@ retry:	count = lt->region->nlockers;
 			    lp != NULL;
 			    is_first = 0,
 			    lp = SH_TAILQ_NEXT(lp, links, __db_lock)) {
-				if ((ret = __lock_getobj(lt, lp->holder,
-				    NULL, DB_LOCK_LOCKER, &lockerp)) != 0) {
+				if (__lock_getobj(lt, lp->holder,
+				    NULL, DB_LOCK_LOCKER, &lockerp) != 0) {
 					__db_err(dbenv,
 					    "warning unable to find object");
 					continue;
@@ -357,8 +353,8 @@ retry:	count = lt->region->nlockers;
 	for (id = 0; id < count; id++) {
 		if (!id_array[id].valid)
 			continue;
-		if ((ret = __lock_getobj(lt,
-		    id_array[id].id, NULL, DB_LOCK_LOCKER, &lockerp)) != 0) {
+		if (__lock_getobj(lt,
+		    id_array[id].id, NULL, DB_LOCK_LOCKER, &lockerp) != 0) {
 			__db_err(dbenv,
 			    "No locks for locker %lu", (u_long)id_array[id].id);
 			continue;
@@ -448,7 +444,7 @@ __dd_abort(dbenv, info)
 	SH_LIST_REMOVE(lockp, locker_links, __db_lock);
 	sh_obj = (DB_LOCKOBJ *)((u_int8_t *)lockp + lockp->obj);
 	SH_TAILQ_REMOVE(&sh_obj->waiters, lockp, links, __db_lock);
-        (void)__db_mutex_unlock(&lockp->mutex, lt->fd);
+        (void)__db_mutex_unlock(&lockp->mutex, lt->reginfo.fd);
 
 	ret = 0;
 
@@ -456,7 +452,7 @@ out:	UNLOCK_LOCKREGION(lt);
 	return (ret);
 }
 
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 static void
 __dd_debug(dbenv, idmap, bitmap, nlockers)
 	DB_ENV *dbenv;

@@ -1,21 +1,19 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log.c	10.39 (Sleepycat) 1/17/98";
+static const char sccsid[] = "@(#)log.c	10.54 (Sleepycat) 5/31/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #include <errno.h>
-#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -23,7 +21,6 @@ static const char sccsid[] = "@(#)log.c	10.39 (Sleepycat) 1/17/98";
 
 #include "db_int.h"
 #include "shqueue.h"
-#include "db_shash.h"
 #include "log.h"
 #include "db_dispatch.h"
 #include "txn_auto.h"
@@ -38,15 +35,14 @@ static int __log_recover __P((DB_LOG *));
 int
 log_open(path, flags, mode, dbenv, lpp)
 	const char *path;
-	int flags;
+	u_int32_t flags;
 	int mode;
 	DB_ENV *dbenv;
 	DB_LOG **lpp;
 {
 	DB_LOG *dblp;
 	LOG *lp;
-	size_t len;
-	int fd, newregion, ret, retry_cnt;
+	int ret;
 
 	/* Validate arguments. */
 #ifdef HAVE_SPINLOCKS
@@ -57,22 +53,13 @@ log_open(path, flags, mode, dbenv, lpp)
 	if ((ret = __db_fchk(dbenv, "log_open", flags, OKFLAGS)) != 0)
 		return (ret);
 
-	/*
-	 * We store 4-byte offsets into the file, so the maximum file
-	 * size can't be larger than that.
-	 */
-	if (dbenv != NULL && dbenv->lg_max > UINT32_T_MAX) {
-		__db_err(dbenv, "log_open: maximum file size too large");
-		return (EINVAL);
-	}
-
 	/* Create and initialize the DB_LOG structure. */
 	if ((dblp = (DB_LOG *)__db_calloc(1, sizeof(DB_LOG))) == NULL)
 		return (ENOMEM);
 
 	if (path != NULL && (dblp->dir = __db_strdup(path)) == NULL) {
-		__db_free(dblp);
-		return (ENOMEM);
+		ret = ENOMEM;
+		goto err;
 	}
 
 	dblp->dbenv = dbenv;
@@ -85,102 +72,87 @@ log_open(path, flags, mode, dbenv, lpp)
 	 * file names there.  Make it fairly large so that we don't have to
 	 * grow it.
 	 */
-	len = 30 * 1024;
+#define	DEF_LOG_SIZE	(30 * 1024)
 
 	/* Map in the region. */
-	retry_cnt = newregion = 0;
-retry:	if (LF_ISSET(DB_CREATE)) {
-		ret = __db_rcreate(dbenv, DB_APP_LOG, path,
-		    DB_DEFAULT_LOG_FILE, mode, len, 0, &fd, &dblp->maddr);
-		if (ret == 0) {
-			/* Put the LOG structure first in the region. */
-			lp = dblp->maddr;
-
-			/* Initialize the rest of the region as free space. */
-			dblp->addr = (u_int8_t *)dblp->maddr + sizeof(LOG);
-			__db_shalloc_init(dblp->addr, len - sizeof(LOG));
-
-			/* Initialize the LOG structure. */
-			lp->persist.lg_max = dbenv == NULL ? 0 : dbenv->lg_max;
-			if (lp->persist.lg_max == 0)
-				lp->persist.lg_max = DEFAULT_MAX;
-			lp->persist.magic = DB_LOGMAGIC;
-			lp->persist.version = DB_LOGVERSION;
-			lp->persist.mode = mode;
-			SH_TAILQ_INIT(&lp->fq);
-
-			/* Initialize LOG LSNs. */
-			lp->lsn.file = 1;
-			lp->lsn.offset = 0;
-
-			newregion = 1;
-		} else if (ret != EEXIST)
+	dblp->reginfo.dbenv = dbenv;
+	dblp->reginfo.appname = DB_APP_LOG;
+	if (path == NULL)
+		dblp->reginfo.path = NULL;
+	else
+		if ((dblp->reginfo.path = __db_strdup(path)) == NULL)
 			goto err;
-	}
-
-	/* If we didn't or couldn't create the region, try and join it. */
-	if (!newregion &&
-	    (ret = __db_ropen(dbenv, DB_APP_LOG,
-	    path, DB_DEFAULT_LOG_FILE, 0, &fd, &dblp->maddr)) != 0) {
-		/*
-		 * If we fail because the file isn't available, wait a
-		 * second and try again.
-		 */
-		if (ret == EAGAIN && ++retry_cnt < 3) {
-			(void)__db_sleep(1, 0);
-			goto retry;
-		}
+	dblp->reginfo.file = DB_DEFAULT_LOG_FILE;
+	dblp->reginfo.mode = mode;
+	dblp->reginfo.size = DEF_LOG_SIZE;
+	dblp->reginfo.dbflags = flags;
+	dblp->reginfo.flags = REGION_SIZEDEF;
+	if ((ret = __db_rattach(&dblp->reginfo)) != 0)
 		goto err;
+
+	/*
+	 * The LOG structure is first in the region, the rest of the region
+	 * is free space.
+	 */
+	dblp->lp = dblp->reginfo.addr;
+	dblp->addr = (u_int8_t *)dblp->lp + sizeof(LOG);
+
+	/* Initialize a created region. */
+	if (F_ISSET(&dblp->reginfo, REGION_CREATED)) {
+		__db_shalloc_init(dblp->addr, DEF_LOG_SIZE - sizeof(LOG));
+
+		/* Initialize the LOG structure. */
+		lp = dblp->lp;
+		lp->persist.lg_max = dbenv == NULL ? 0 : dbenv->lg_max;
+		if (lp->persist.lg_max == 0)
+			lp->persist.lg_max = DEFAULT_MAX;
+		lp->persist.magic = DB_LOGMAGIC;
+		lp->persist.version = DB_LOGVERSION;
+		lp->persist.mode = mode;
+		SH_TAILQ_INIT(&lp->fq);
+
+		/* Initialize LOG LSNs. */
+		lp->lsn.file = 1;
+		lp->lsn.offset = 0;
 	}
 
-	/* Set up the common information. */
-	dblp->lp = dblp->maddr;
-	dblp->addr = (u_int8_t *)dblp->maddr + sizeof(LOG);
-	dblp->fd = fd;
-
-	/* Initialize thread information. */
+	/* Initialize thread information, mutex. */
 	if (LF_ISSET(DB_THREAD)) {
 		F_SET(dblp, DB_AM_THREAD);
-
-		if (!newregion)
-			LOCK_LOGREGION(dblp);
 		if ((ret = __db_shalloc(dblp->addr,
-		    sizeof(db_mutex_t), MUTEX_ALIGNMENT, &dblp->mutexp)) == 0)
-			(void)__db_mutex_init(dblp->mutexp, -1);
-		if (!newregion)
-			UNLOCK_LOGREGION(dblp);
-		if (ret != 0) {
-			(void)log_close(dblp);
-			if (newregion)
-				(void)log_unlink(path, 1, dbenv);
-			return (ret);
-		}
+		    sizeof(db_mutex_t), MUTEX_ALIGNMENT, &dblp->mutexp)) != 0)
+			goto err;
+		(void)__db_mutex_init(dblp->mutexp, -1);
 	}
 
 	/*
-	 * If doing recovery, try and recover any previous log files
-	 * before releasing the lock.
+	 * If doing recovery, try and recover any previous log files before
+	 * releasing the lock.
 	 */
-	if (newregion) {
-		ret = __log_recover(dblp);
-		UNLOCK_LOGREGION(dblp);
+	if (F_ISSET(&dblp->reginfo, REGION_CREATED) &&
+	    (ret = __log_recover(dblp)) != 0)
+		goto err;
 
-		if (ret != 0) {
-			(void)log_close(dblp);
-			(void)log_unlink(path, 1, dbenv);
-			return (ret);
-		}
-	}
+	UNLOCK_LOGREGION(dblp);
 	*lpp = dblp;
 	return (0);
 
-err:	/*
-	 * We never get here with an allocated thread-mutex, so we do
-	 * not have to worry about freeing it.
-	 */
-	FREE(dblp, sizeof(DB_LOG));
-	return (ret);
+err:	if (dblp->reginfo.addr != NULL) {
+		if (dblp->mutexp != NULL)
+			__db_shalloc_free(dblp->addr, dblp->mutexp);
 
+		UNLOCK_LOGREGION(dblp);
+		(void)__db_rdetach(&dblp->reginfo);
+		if (F_ISSET(&dblp->reginfo, REGION_CREATED))
+			(void)log_unlink(path, 1, dbenv);
+	}
+
+	if (dblp->reginfo.path != NULL)
+		FREES(dblp->reginfo.path);
+	if (dblp->dir != NULL)
+		FREES(dblp->dir);
+	FREE(dblp, sizeof(*dblp));
+	return (ret);
 }
 
 /*
@@ -234,7 +206,7 @@ __log_recover(dblp)
 			continue;
 		memcpy(&chk, dbt.data, sizeof(u_int32_t));
 		if (chk == DB_txn_ckp) {
-			lp->c_lsn = lsn;
+			lp->chkpt_lsn = lsn;
 			found_checkpoint = 1;
 		}
 	}
@@ -273,7 +245,7 @@ __log_recover(dblp)
 				continue;
 			memcpy(&chk, dbt.data, sizeof(u_int32_t));
 			if (chk == DB_txn_ckp) {
-				lp->c_lsn = lsn;
+				lp->chkpt_lsn = lsn;
 				found_checkpoint = 1;
 			}
 		}
@@ -281,7 +253,7 @@ __log_recover(dblp)
 
 	/* If we never find a checkpoint, that's okay, just 0 it out. */
 	if (!found_checkpoint)
-		ZERO_LSN(lp->c_lsn);
+		ZERO_LSN(lp->chkpt_lsn);
 
 	__db_err(dblp->dbenv,
 	    "Recovering the log: last valid LSN: file: %lu offset %lu",
@@ -380,7 +352,7 @@ __log_valid(dblp, lp, cnt)
 	if ((ret = __db_open(p,
 	    DB_RDONLY | DB_SEQUENTIAL,
 	    DB_RDONLY | DB_SEQUENTIAL, 0, &fd)) != 0 ||
-	    (ret = __db_seek(fd, 0, 0, sizeof(HDR), SEEK_SET)) != 0 ||
+	    (ret = __db_seek(fd, 0, 0, sizeof(HDR), 0, SEEK_SET)) != 0 ||
 	    (ret = __db_read(fd, &persist, sizeof(LOGP), &nw)) != 0 ||
 	    nw != sizeof(LOGP)) {
 		if (ret == 0)
@@ -429,8 +401,6 @@ log_close(dblp)
 {
 	int ret, t_ret;
 
-	ret = 0;
-
 	/* Discard the per-thread pointer. */
 	if (dblp->mutexp != NULL) {
 		LOCK_LOGREGION(dblp);
@@ -439,9 +409,7 @@ log_close(dblp)
 	}
 
 	/* Close the region. */
-	if ((t_ret =
-	    __db_rclose(dblp->dbenv, dblp->fd, dblp->maddr)) != 0 && ret == 0)
-		ret = t_ret;
+	ret = __db_rdetach(&dblp->reginfo);
 
 	/* Close open files, release allocated memory. */
 	if (dblp->lfd != -1 && (t_ret = __db_close(dblp->lfd)) != 0 && ret == 0)
@@ -456,8 +424,9 @@ log_close(dblp)
 	if (dblp->dir != NULL)
 		FREES(dblp->dir);
 
-	/* Free the structure. */
-	FREE(dblp, sizeof(DB_LOG));
+	if (dblp->reginfo.path != NULL)
+		FREES(dblp->reginfo.path);
+	FREE(dblp, sizeof(*dblp));
 
 	return (ret);
 }
@@ -472,8 +441,19 @@ log_unlink(path, force, dbenv)
 	int force;
 	DB_ENV *dbenv;
 {
-	return (__db_runlink(dbenv,
-	    DB_APP_LOG, path, DB_DEFAULT_LOG_FILE, force));
+	REGINFO reginfo;
+	int ret;
+
+	memset(&reginfo, 0, sizeof(reginfo));
+	reginfo.dbenv = dbenv;
+	reginfo.appname = DB_APP_LOG;
+	if (path != NULL && (reginfo.path = __db_strdup(path)) == NULL)
+		return (ENOMEM);
+	reginfo.file = DB_DEFAULT_LOG_FILE;
+	ret = __db_runlink(&reginfo, force);
+	if (reginfo.path != NULL)
+		FREES(reginfo.path);
+	return (ret);
 }
 
 /*
@@ -510,6 +490,9 @@ log_stat(dblp, gspp, db_malloc)
 
 	(*gspp)->st_cur_file = lp->lsn.file;
 	(*gspp)->st_cur_offset = lp->lsn.offset;
+
+	(*gspp)->st_refcnt = lp->rlayout.refcnt;
+	(*gspp)->st_regsize = lp->rlayout.size;
 
 	UNLOCK_LOGREGION(dblp);
 

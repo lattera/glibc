@@ -58,7 +58,8 @@ struct _pthread_descr_struct __pthread_initial_thread = {
 };
 
 /* Descriptor of the manager thread; none of this is used but the error
-   variables and the address for identification.  */
+   variables, the p_pid and p_priority fields,
+   and the address for identification.  */
 
 struct _pthread_descr_struct __pthread_manager_thread = {
   NULL,                       /* pthread_descr p_nextlive */
@@ -107,10 +108,6 @@ int __pthread_manager_request = -1;
 /* Other end of the pipe for sending requests to the thread manager. */
 
 int __pthread_manager_reader;
-
-/* PID of thread manager */
-
-static int __pthread_manager_pid;
 
 /* Limits of the thread manager stack */
 
@@ -203,6 +200,7 @@ static void pthread_initialize(void)
 static int pthread_initialize_manager(void)
 {
   int manager_pipe[2];
+  int pid;
 
   /* If basic initialization not done yet (e.g. we're called from a
      constructor run before our constructor), do it now */
@@ -217,20 +215,19 @@ static int pthread_initialize_manager(void)
     free(__pthread_manager_thread_bos);
     return -1;
   }
-  __pthread_manager_request = manager_pipe[1]; /* writing end */
-  __pthread_manager_reader = manager_pipe[0]; /* reading end */
   /* Start the thread manager */
-  __pthread_manager_pid =
-    __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
-	    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-	    (void *)(long)manager_pipe[0]);
-  if (__pthread_manager_pid == -1) {
+  pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
+                CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+                (void *)(long)manager_pipe[0]);
+  if (pid == -1) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
     __libc_close(manager_pipe[1]);
-    __pthread_manager_request = -1;
     return -1;
   }
+  __pthread_manager_request = manager_pipe[1]; /* writing end */
+  __pthread_manager_reader = manager_pipe[0]; /* reading end */
+  __pthread_manager_thread.p_pid = pid;
   return 0;
 }
 
@@ -319,6 +316,8 @@ int pthread_setschedparam(pthread_t thread, int policy,
   }
   th->p_priority = policy == SCHED_OTHER ? 0 : param->sched_priority;
   release(&handle->h_spinlock);
+  if (__pthread_manager_request >= 0)
+    __pthread_manager_adjust_prio(th->p_priority);
   return 0;
 }
 
@@ -359,7 +358,7 @@ static void pthread_exit_process(int retcode, void *arg)
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
     if (self == __pthread_main_thread)
-      waitpid(__pthread_manager_pid, NULL, __WCLONE);
+      waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
   }
 }
 
@@ -392,7 +391,7 @@ static void pthread_handle_sigcancel(int sig)
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
     if (self == __pthread_main_thread)
-      waitpid(__pthread_manager_pid, NULL, __WCLONE);
+      waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
     _exit(__pthread_exit_code);
   }
   if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {

@@ -1,43 +1,12 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.src	10.4 (Sleepycat) 1/17/98
- *
- * This is the source file used to create the logging functions for the
- * log package.  Each access method (or set of routines wishing to register
- * record types with the transaction system) should have a file like this.
- * Each type of log record and its parameters is defined.  The basic
- * format of a record definition is:
- *
- * BEGIN	<RECORD_TYPE>
- * ARG|STRING|POINTER	<variable name>	<variable type> <printf format>
- * ...
- * END
- * ARG the argument is a simple parameter of the type *	specified.
- * DBT the argument is a DBT (db.h) containing a length and pointer.
- * PTR the argument is a pointer to the data type specified; the entire
- *     type should be logged.
- *
- * There are a set of shell scripts of the form xxx.sh that generate c
- * code and or h files to process these.  (This is probably better done
- * in a single PERL script, but for now, this works.)
- *
- * The DB recovery system requires the following three fields appear in
- * every record, and will assign them to the per-record-type structures
- * as well as making them the first parameters to the appropriate logging
- * call.
- * rectype:	record-type, identifies the structure and log/read call
- * txnid:	transaction id, a DBT in this implementation
- * prev:	the last LSN for this transaction
+ *	@(#)log.src	10.5 (Sleepycat) 4/10/98
  */
 
-/*
- * Use the argument of PREFIX as the prefix for all record types,
- * routines, id numbers, etc.
- */
 PREFIX	log
 
 /* Used for registering name/id translations at open or close. */

@@ -53,8 +53,10 @@ enum
 #define S_APPEND	S_APPEND
   S_IMMUTABLE = 512,		/* Immutable file.  */
 #define S_IMMUTABLE	S_IMMUTABLE
-  MS_NOATIME = 1024		/* Do not update access times.  */
+  MS_NOATIME = 1024,		/* Do not update access times.  */
 #define MS_NOATIME	MS_NOATIME
+  MS_NODIRATIME = 2048		/* Do not update directory access times.  */
+#define MS_NODIRATIME	MS_NODIRATIME
 };
 
 /* Flags that can be altered by MS_REMOUNT  */

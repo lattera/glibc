@@ -1,3 +1,181 @@
+1998-06-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h (struct ip_options): Define
+	__data member only for gcc.  Reported by ak@muc.de.
+
+	* misc/mntent.h: Undo last patch.
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Undo last patch.
+	* misc/tst/mntent.c: Adjust code for this change.
+
+	* io/fts.c: Updated from a slightly more recent BSD version.
+	* io/fts.h: Likewise.
+
+	* libc.map: Add __libc_stack_end.
+
+	* db2/Makefile (routines): Add lock_region.
+	* db2/config.h: Update from db-2.4.14.
+	* db2/db.h: Likewise.
+	* db2/db_185.h: Likewise.
+	* db2/db_int.h: Likewise.
+	* db2/bt_close.c: Likewise.
+	* db2/bt_compare.c: Likewise.
+	* db2/bt_conv.c: Likewise.
+	* db2/bt_cursor.c: Likewise.
+	* db2/bt_delete.c: Likewise.
+	* db2/bt_open.c: Likewise.
+	* db2/bt_page.c: Likewise.
+	* db2/bt_put.c: Likewise.
+	* db2/bt_rec.c: Likewise.
+	* db2/bt_recno.c: Likewise.
+	* db2/bt_rsearch.c: Likewise.
+	* db2/bt_search.c: Likewise.
+	* db2/bt_split.c: Likewise.
+	* db2/bt_stat.c: Likewise.
+	* db2/btree.src: Likewise.
+	* db2/btree_auto.c: Likewise.
+	* db2/getlong.c: Likewise.
+	* db2/db_appinit.c: Likewise.
+	* db2/db_apprec.c: Likewise.
+	* db2/db_byteorder.c: Likewise.
+	* db2/db_err.c: Likewise.
+	* db2/db_log2.c: Likewise.
+	* db2/db_region.c: Likewise.
+	* db2/db_salloc.c: Likewise.
+	* db2/db_shash.c: Likewise.
+	* db2/db.c: Likewise.
+	* db2/db.src: Likewise.
+	* db2/db_auto.c: Likewise.
+	* db2/db_conv.c: Likewise.
+	* db2/db_dispatch.c: Likewise.
+	* db2/db_dup.c: Likewise.
+	* db2/db_overflow.c: Likewise.
+	* db2/db_pr.c: Likewise.
+	* db2/db_rec.c: Likewise.
+	* db2/db_ret.c: Likewise.
+	* db2/db_thread.c: Likewise.
+	* db2/db185.c: Likewise.
+	* db2/db185_int.h: Likewise.
+	* db2/dbm.c: Likewise.
+	* db2/hash.c: Likewise.
+	* db2/hash.src: Likewise.
+	* db2/hash_auto.c: Likewise.
+	* db2/hash_conv.c: Likewise.
+	* db2/hash_debug.c: Likewise.
+	* db2/hash_dup.c: Likewise.
+	* db2/hash_func.c: Likewise.
+	* db2/hash_page.c: Likewise.
+	* db2/hash_rec.c: Likewise.
+	* db2/hash_stat.c: Likewise.
+	* db2/btree.h: Likewise.
+	* db2/btree_ext.h: Likewise.
+	* db2/clib_ext.h: Likewise.
+	* db2/common_ext.h: Likewise.
+	* db2/cxx_int.h: Likewise.
+	* db2/db.h.src: Likewise.
+	* db2/db_185.h.src: Likewise.
+	* db2/db_am.h: Likewise.
+	* db2/db_auto.h: Likewise.
+	* db2/db_cxx.h: Likewise.
+	* db2/db_dispatch.h: Likewise.
+	* db2/db_ext.h: Likewise.
+	* db2/db_int.h.src: Likewise.
+	* db2/db_page.h: Likewise.
+	* db2/db_shash.h: Likewise.
+	* db2/db_swap.h: Likewise.
+	* db2/hash.h: Likewise.
+	* db2/hash_ext.h: Likewise.
+	* db2/lock.h: Likewise.
+	* db2/lock_ext.h: Likewise.
+	* db2/log.h: Likewise.
+	* db2/log_ext.h: Likewise.
+	* db2/mp.h: Likewise.
+	* db2/mp_ext.h: Likewise.
+	* db2/mutex_ext.h: Likewise.
+	* db2/os_ext.h: Likewise.
+	* db2/os_func.h: Likewise.
+	* db2/queue.h: Likewise.
+	* db2/shqueue.h: Likewise.
+	* db2/txn.h: Likewise.
+	* db2/lock.c: Likewise.
+	* db2/lock_conflict.c: Likewise.
+	* db2/lock_deadlock.c: Likewise.
+	* db2/lock_region.c: Likewise.
+	* db2/lock_util.c: Likewise.
+	* db2/log.c: Likewise.
+	* db2/log.src: Likewise.
+	* db2/log_archive.c: Likewise.
+	* db2/log_auto.c: Likewise.
+	* db2/log_compare.c: Likewise.
+	* db2/log_findckp.c: Likewise.
+	* db2/log_get.c: Likewise.
+	* db2/log_put.c: Likewise.
+	* db2/log_rec.c: Likewise.
+	* db2/log_register.c: Likewise.
+	* db2/mp_bh.c: Likewise.
+	* db2/mp_fget.c: Likewise.
+	* db2/mp_fopen.c: Likewise.
+	* db2/mp_fput.c: Likewise.
+	* db2/mp_fset.c: Likewise.
+	* db2/mp_open.c: Likewise.
+	* db2/mp_pr.c: Likewise.
+	* db2/mp_region.c: Likewise.
+	* db2/mp_sync.c: Likewise.
+	* db2/68020.gcc: Likewise.
+	* db2/mutex.c: Likewise.
+	* db2/parisc.gcc: Likewise.
+	* db2/parisc.hp: Likewise.
+	* db2/sco.cc: Likewise.
+	* db2/os_abs.c: Likewise.
+	* db2/os_alloc.c: Likewise.
+	* db2/os_config.c: Likewise.
+	* db2/os_dir.c: Likewise.
+	* db2/os_fid.c: Likewise.
+	* db2/os_fsync.c: Likewise.
+	* db2/os_map.c: Likewise.
+	* db2/os_oflags.c: Likewise.
+	* db2/os_open.c: Likewise.
+	* db2/os_rpath.c: Likewise.
+	* db2/os_rw.c: Likewise.
+	* db2/os_seek.c: Likewise.
+	* db2/os_sleep.c: Likewise.
+	* db2/os_spin.c: Likewise.
+	* db2/os_stat.c: Likewise.
+	* db2/os_unlink.c: Likewise.
+	* db2/db_archive.c: Likewise.
+	* db2/db_checkpoint.c: Likewise.
+	* db2/db_deadlock.c: Likewise.
+	* db2/db_dump.c: Likewise.
+	* db2/db_dump185.c: Likewise.
+	* db2/db_load.c: Likewise.
+	* db2/db_printlog.c: Likewise.
+	* db2/db_recover.c: Likewise.
+	* db2/db_stat.c: Likewise.
+	* db2/txn.c: Likewise.
+	* db2/txn.src: Likewise.
+	* db2/txn_auto.c: Likewise.
+	* db2/txn_rec.c: Likewise.
+
+	* elf/rtld.c: Move definition of __libc_stack_end to ...
+	* sysdeps/generic/dl-sysdep.h: ...here.
+
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Handle nodiratime option.
+	* sysdeps/unix/sysv/linux/bits/statvfs.h: Define ST_NODIRATIME.
+	* sysdeps/unix/sysv/linux/sys/mount.h: Define MS_NODIRATIME.
+
+1998-06-08 21:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Handle constant option string
+	from mntent correctly.
+
+1998-06-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/Makefile (generated): Correct typo.
+
+1998-06-04  Philip Blundell  <philb@gnu.org>
+
+	* elf/elf.h (EM_ARM, et al.): New definitions.
+	* sysdeps/arm/dl-machine.h: Update for new draft ARM ELF ABI.
+
 1998-06-08 21:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* localedata/SUPPORTED: Add sk_SK.

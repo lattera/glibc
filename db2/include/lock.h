@@ -1,16 +1,19 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)lock.h	10.10 (Sleepycat) 11/13/97
+ *	@(#)lock.h	10.15 (Sleepycat) 5/10/98
  */
 
 typedef struct __db_lockobj	DB_LOCKOBJ;
 
 #define DB_DEFAULT_LOCK_FILE	"__db_lock.share"
-#define DB_LOCK_DEFAULT_N	5000
+
+#ifndef DB_LOCK_DEFAULT_N
+#define DB_LOCK_DEFAULT_N	5000	/* Default # of locks in region. */
+#endif
 
 /*
  * The locker id space is divided between the transaction manager and the lock
@@ -54,9 +57,9 @@ struct __db_lockregion {
 
 /* Macros to lock/unlock the region. */
 #define	LOCK_LOCKREGION(lt)						\
-	(void)__db_mutex_lock(&(lt)->region->hdr.lock, (lt)->fd)
+	(void)__db_mutex_lock(&(lt)->region->hdr.lock, (lt)->reginfo.fd)
 #define	UNLOCK_LOCKREGION(lt)						\
-	(void)__db_mutex_unlock(&(lt)->region->hdr.lock, (lt)->fd)
+	(void)__db_mutex_unlock(&(lt)->region->hdr.lock, (lt)->reginfo.fd)
 
 /*
  * Since we will be keeping DBTs in shared memory, we need the equivalent
@@ -69,9 +72,6 @@ typedef struct __sh_dbt {
 
 #define SH_DBT_PTR(p)	((void *)(((u_int8_t *)(p)) + (p)->off))
 
-/*
- * The lock table is the per-process cookie returned from a lock_open call.
- */
 struct __db_lockobj {
 	SH_DBT	lockobj;		/* Identifies object locked. */
 	SH_TAILQ_ENTRY links;		/* Links for free list. */
@@ -98,12 +98,14 @@ struct __db_lockobj {
 #define	holders	dlinks._holders
 #define	heldby	dlinks._heldby
 
+/*
+ * The lock table is the per-process cookie returned from a lock_open call.
+ */
 struct __db_locktab {
 	DB_ENV		*dbenv;		/* Environment. */
-	int		 fd;		/* mapped file descriptor */
-	DB_LOCKREGION	*region;	/* address of shared memory region */
+	REGINFO		 reginfo;	/* Region information. */
+	DB_LOCKREGION	*region;	/* Address of shared memory region. */
 	DB_HASHTAB 	*hashtab; 	/* Beginning of hash table. */
-	size_t		reg_size;	/* last known size of lock region */
 	void		*mem;		/* Beginning of string space. */
 	u_int8_t 	*conflicts;	/* Pointer to conflict matrix. */
 };
@@ -111,21 +113,6 @@ struct __db_locktab {
 /* Test for conflicts. */
 #define CONFLICTS(T, HELD, WANTED) \
 	T->conflicts[HELD * T->region->nmodes + WANTED]
-
-/*
- * Status of a lock.
- */
-typedef enum {
-	DB_LSTAT_ABORTED,		/* Lock belongs to an aborted txn. */
-	DB_LSTAT_ERR,			/* Lock is bad. */
-	DB_LSTAT_FREE,			/* Lock is unallocated. */
-	DB_LSTAT_HELD,			/* Lock is currently held. */
-	DB_LSTAT_NOGRANT,		/* Lock was not granted. */
-	DB_LSTAT_PENDING,		/* Lock was waiting and has been
-					 * promoted; waiting for the owner
-					 * to run and upgrade it to held. */
-	DB_LSTAT_WAITING		/* Lock is on the wait queue. */
-} db_status_t;
 
 /*
  * Resources in the lock region.  Used to indicate which resource
@@ -186,18 +173,5 @@ struct __db_lock {
 	(N) * ALIGN(sizeof(struct __db_lock), MUTEX_ALIGNMENT) +	\
 	ALIGN((N) * sizeof(DB_LOCKOBJ), sizeof(size_t)) +		\
 	ALIGN(STRING_SIZE(N), sizeof(size_t)))
-
-#ifdef DEBUG
-#define	LOCK_DEBUG_LOCKERS	0x0001
-#define	LOCK_DEBUG_LOCK	 	0x0002
-#define	LOCK_DEBUG_OBJ	 	0x0004
-#define	LOCK_DEBUG_CONF	 	0x0008
-#define	LOCK_DEBUG_MEM	 	0x0010
-#define	LOCK_DEBUG_BUCKET	0x0020
-#define LOCK_DEBUG_OBJECTS	0x0040
-#define	LOCK_DEBUG_ALL	 	0xFFFF
-
-#define	LOCK_DEBUG_NOMUTEX	0x0100
-#endif
 
 #include "lock_ext.h"

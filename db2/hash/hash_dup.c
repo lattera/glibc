@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -42,7 +42,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_dup.c	10.10 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)hash_dup.c	10.14 (Sleepycat) 5/7/98";
 #endif /* not lint */
 
 /*
@@ -61,15 +61,11 @@ static const char sccsid[] = "@(#)hash_dup.c	10.10 (Sleepycat) 1/8/98";
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
-#include "db_swap.h"
 #include "hash.h"
 
 static int __ham_check_move __P((HTAB *, HASH_CURSOR *, int32_t));
@@ -89,14 +85,14 @@ static int __ham_make_dup __P((const DBT *, DBT *d, void **, u_int32_t *));
  * Case 4: The element is large enough to push the duplicate set onto a
  *	   separate page.
  *
- * PUBLIC: int __ham_add_dup __P((HTAB *, HASH_CURSOR *, DBT *, int));
+ * PUBLIC: int __ham_add_dup __P((HTAB *, HASH_CURSOR *, DBT *, u_int32_t));
  */
 int
 __ham_add_dup(hashp, hcp, nval, flags)
 	HTAB *hashp;
 	HASH_CURSOR *hcp;
 	DBT *nval;
-	int flags;
+	u_int32_t flags;
 {
 	DBT pval, tmp_val;
 	u_int32_t del_len, new_size;
@@ -367,9 +363,9 @@ __ham_check_move(hashp, hcp, add_len)
 	DB_LSN new_lsn;
 	PAGE *next_pagep;
 	db_pgno_t next_pgno;
-	int rectype, ret;
-	u_int32_t new_datalen, old_len;
+	u_int32_t new_datalen, old_len, rectype;
 	u_int8_t *hk;
+	int ret;
 
 	/*
 	 * Check if we can do whatever we need to on this page.  If not,
@@ -419,7 +415,8 @@ __ham_check_move(hashp, hcp, add_len)
 		    (ret = __ham_put_page(hashp->dbp, next_pagep, 0)) != 0)
 			return (ret);
 
-		if ((ret = __ham_get_page(hashp->dbp, next_pgno, &next_pagep)) != 0)
+		if ((ret =
+		    __ham_get_page(hashp->dbp, next_pgno, &next_pagep)) != 0)
 			return (ret);
 
 		if (P_FREESPACE(next_pagep) >= new_datalen)

@@ -1,20 +1,19 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_register.c	10.14 (Sleepycat) 1/19/98";
+static const char sccsid[] = "@(#)log_register.c	10.18 (Sleepycat) 5/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -42,12 +41,12 @@ log_register(dblp, dbp, name, type, idp)
 	u_int32_t fid;
 	int inserted, ret;
 	char *fullname;
-	void *fidp, *namep;
+	void *namep;
 
 	fid = 0;
 	inserted = 0;
 	fullname = NULL;
-	fnp = fidp = namep = NULL;
+	fnp = namep = NULL;
 
 	/* Check the arguments. */
 	if (type != DB_BTREE && type != DB_HASH && type != DB_RECNO) {
@@ -57,7 +56,7 @@ log_register(dblp, dbp, name, type, idp)
 
 	/* Get the log file id. */
 	if ((ret = __db_appname(dblp->dbenv,
-	    DB_APP_DATA, NULL, name, NULL, &fullname)) != 0)
+	    DB_APP_DATA, NULL, name, 0, NULL, &fullname)) != 0)
 		return (ret);
 
 	LOCK_LOGREGION(dblp);
@@ -70,8 +69,7 @@ log_register(dblp, dbp, name, type, idp)
 	    fnp != NULL; fnp = SH_TAILQ_NEXT(fnp, q, __fname)) {
 		if (fid <= fnp->id)
 			fid = fnp->id + 1;
-		if (!memcmp(dbp->lock.fileid,
-		    R_ADDR(dblp, fnp->fileid_off), DB_FILE_ID_LEN)) {
+		if (!memcmp(dbp->lock.fileid, fnp->ufid, DB_FILE_ID_LEN)) {
 			++fnp->ref;
 			fid = fnp->id;
 			goto found;
@@ -84,15 +82,7 @@ log_register(dblp, dbp, name, type, idp)
 	fnp->ref = 1;
 	fnp->id = fid;
 	fnp->s_type = type;
-
-	if ((ret = __db_shalloc(dblp->addr, DB_FILE_ID_LEN, 0, &fidp)) != 0)
-		goto err;
-	/*
-	 * XXX Now that uids are fixed size, we can put them in the fnp
-	 * structure.
-	 */
-	fnp->fileid_off = R_OFFSET(dblp, fidp);
-	memcpy(fidp, dbp->lock.fileid, DB_FILE_ID_LEN);
+	memcpy(fnp->ufid, dbp->lock.fileid, DB_FILE_ID_LEN);
 
 	len = strlen(name) + 1;
 	if ((ret = __db_shalloc(dblp->addr, len, 0, &namep)) != 0)
@@ -126,8 +116,6 @@ err:		/*
 			SH_TAILQ_REMOVE(&dblp->lp->fq, fnp, q, __fname);
 		if (namep != NULL)
 			__db_shalloc_free(dblp->addr, namep);
-		if (fidp != NULL)
-			__db_shalloc_free(dblp->addr, fidp);
 		if (fnp != NULL)
 			__db_shalloc_free(dblp->addr, fnp);
 	}
@@ -176,7 +164,7 @@ log_unregister(dblp, fid)
 		r_name.data = R_ADDR(dblp, fnp->name_off);
 		r_name.size = strlen(r_name.data) + 1;
 		memset(&fid_dbt, 0, sizeof(fid_dbt));
-		fid_dbt.data =  R_ADDR(dblp, fnp->fileid_off);
+		fid_dbt.data = fnp->ufid;
 		fid_dbt.size = DB_FILE_ID_LEN;
 		if ((ret = __log_register_log(dblp, NULL, &r_unused,
 		    0, LOG_CLOSE, &r_name, &fid_dbt, fid, fnp->s_type)) != 0)
@@ -190,7 +178,6 @@ log_unregister(dblp, fid)
 	if (fnp->ref > 1)
 		--fnp->ref;
 	else {
-		__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->fileid_off));
 		__db_shalloc_free(dblp->addr, R_ADDR(dblp, fnp->name_off));
 		SH_TAILQ_REMOVE(&dblp->lp->fq, fnp, q, __fname);
 		__db_shalloc_free(dblp->addr, fnp);

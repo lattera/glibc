@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -43,10 +43,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)hash.src	10.2 (Sleepycat) 11/2/97
+ *	@(#)hash.src	10.3 (Sleepycat) 4/10/98
  */
-
-#include "config.h"
 
 /*
  * This is the source file used to create the logging functions for the

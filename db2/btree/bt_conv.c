@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_conv.c	10.5 (Sleepycat) 9/15/97";
+static const char sccsid[] = "@(#)bt_conv.c	10.6 (Sleepycat) 4/10/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES

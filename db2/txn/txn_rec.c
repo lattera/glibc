@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -40,24 +40,20 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn_rec.c	10.6 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)txn_rec.c	10.11 (Sleepycat) 5/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
+#include <errno.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
 #include "shqueue.h"
 #include "txn.h"
-#include "db_dispatch.h"
 #include "db_am.h"
-#include "common_ext.h"
 
 /*
  * PUBLIC: int __txn_regop_recover
@@ -69,7 +65,7 @@ __txn_regop_recover(logp, dbtp, lsnp, redo, info)
 	DBT *dbtp;
 	DB_LSN *lsnp;
 	int redo;
-	 void *info;
+	void *info;
 {
 	__txn_regop_args *argp;
 	int ret;
@@ -77,8 +73,8 @@ __txn_regop_recover(logp, dbtp, lsnp, redo, info)
 #ifdef DEBUG_RECOVER
 	(void)__txn_regop_print(logp, dbtp, lsnp, redo, info);
 #endif
-	logp = logp;			/* XXX: Shut the compiler up. */
-	redo = redo;
+	COMPQUIET(redo, 0);
+	COMPQUIET(logp, NULL);
 
 	if ((ret = __txn_regop_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -90,9 +86,11 @@ __txn_regop_recover(logp, dbtp, lsnp, redo, info)
 			__db_txnlist_add(info, argp->txnid->txnid);
 		break;
 	case TXN_PREPARE:	/* Nothing to do. */
-	case TXN_BEGIN:
-		/* Call find so that we update the maxid. */
+		/* Call __db_txnlist_find so that we update the maxid. */
 		(void)__db_txnlist_find(info, argp->txnid->txnid);
+		break;
+	default:
+		ret = EINVAL;
 		break;
 	}
 
@@ -118,13 +116,20 @@ __txn_ckp_recover(logp, dbtp, lsnp, redo, info)
 #ifdef DEBUG_RECOVER
 	__txn_ckp_print(logp, dbtp, lsnp, redo, info);
 #endif
-	logp = logp;			/* XXX: Shut the compiler up. */
-	redo = redo;
-	info = info;
+	COMPQUIET(logp, NULL);
 
 	if ((ret = __txn_ckp_read(dbtp->data, &argp)) != 0)
 		return (ret);
 
+	/*
+	 * Check for 'restart' checkpoint record.  This occurs when the
+	 * checkpoint lsn is equal to the lsn of the checkpoint record
+	 * and means that we could set the transaction ID back to 1, so
+	 * that we don't exhaust the transaction ID name space.
+	 */
+	if (argp->ckp_lsn.file == lsnp->file &&
+	    argp->ckp_lsn.offset == lsnp->offset)
+		__db_txnlist_gen(info, redo ? -1 : 1);
 	*lsnp = argp->last_ckp;
 	__db_free(argp);
 	return (DB_TXN_CKP);

@@ -1,21 +1,21 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_salloc.c	10.6 (Sleepycat) 7/5/97";
+static const char sccsid[] = "@(#)db_salloc.c	10.13 (Sleepycat) 5/10/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdio.h>
+#include <string.h>
 #endif
 
 #include "db_int.h"
@@ -109,11 +109,13 @@ __db_shalloc(p, len, align, retp)
 
 		*(void **)retp = rp;
 
+#define	SHALLOC_FRAGMENT	32
 		/*
-		 * If there are at least 32 bytes of additional memory, divide
-		 * the chunk into two chunks.
+		 * If there are at least SHALLOC_FRAGMENT additional bytes of
+		 * memory, divide the chunk into two chunks.
 		 */
-		if ((u_int8_t *)rp >= (u_int8_t *)&elp->links + 32) {
+		if ((u_int8_t *)rp >=
+		    (u_int8_t *)&elp->links + SHALLOC_FRAGMENT) {
 			sp = rp;
 			*--sp = elp->len -
 			    ((u_int8_t *)rp - (u_int8_t *)&elp->links);
@@ -136,7 +138,7 @@ __db_shalloc(p, len, align, retp)
 		return (0);
 	}
 
-	/* Nothing found large enough; need to figure out how to grow region. */
+	/* Nothing found large enough; need to grow the region. */
 	return (ENOMEM);
 }
 
@@ -159,11 +161,17 @@ __db_shalloc_free(regionp, ptr)
 	 * Step back over flagged length fields to find the beginning of
 	 * the object and its real size.
 	 */
-	for (sp = (size_t *)ptr; sp[-1] == ILLEGAL_SIZE; --sp);
+	for (sp = (size_t *)ptr; sp[-1] == ILLEGAL_SIZE; --sp)
+		;
 	ptr = sp;
 
 	newp = (struct __data *)((u_int8_t *)ptr - sizeof(size_t));
 	free_size = newp->len;
+
+	/* Trash the returned memory. */
+#ifdef DIAGNOSTIC
+	memset(ptr, 0xff, free_size);
+#endif
 
 	/*
 	 * Walk the list, looking for where this entry goes.
@@ -177,7 +185,8 @@ __db_shalloc_free(regionp, ptr)
 	hp = (struct __head *)regionp;
 	for (elp = SH_LIST_FIRST(hp, __data), lastp = NULL;
 	    elp != NULL && (void *)elp < (void *)ptr;
-	    lastp = elp, elp = SH_LIST_NEXT(elp, links, __data));
+	    lastp = elp, elp = SH_LIST_NEXT(elp, links, __data))
+		;
 
 	/*
 	 * Elp is either NULL (we reached the end of the list), or the slot
@@ -259,27 +268,30 @@ __db_shsizeof(ptr)
 	 * Step back over flagged length fields to find the beginning of
 	 * the object and its real size.
 	 */
-	for (sp = (size_t *)ptr; sp[-1] == ILLEGAL_SIZE; --sp);
+	for (sp = (size_t *)ptr; sp[-1] == ILLEGAL_SIZE; --sp)
+		;
 
 	elp = (struct __data *)((u_int8_t *)sp - sizeof(size_t));
 	return (elp->len);
 }
 
-#ifdef DEBUG
 /*
  * __db_shalloc_dump --
  *
- * PUBLIC: void __db_shalloc_dump __P((FILE *, void *));
+ * PUBLIC: void __db_shalloc_dump __P((void *, FILE *));
  */
 void
-__db_shalloc_dump(fp, addr)
-	FILE *fp;
+__db_shalloc_dump(addr, fp)
 	void *addr;
+	FILE *fp;
 {
 	struct __data *elp;
 
+	/* Make it easy to call from the debugger. */
 	if (fp == NULL)
 		fp = stderr;
+
+	fprintf(fp, "%s\nMemory free list\n", DB_LINE);
 
 	for (elp = SH_LIST_FIRST((struct __head *)addr, __data);
 	    elp != NULL;
@@ -287,4 +299,3 @@ __db_shalloc_dump(fp, addr)
 		fprintf(fp, "%#lx: %lu\t", (u_long)elp, (u_long)elp->len);
 	fprintf(fp, "\n");
 }
-#endif

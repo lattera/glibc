@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_recno.c	10.26 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)bt_recno.c	10.37 (Sleepycat) 5/23/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -16,8 +16,6 @@ static const char sccsid[] = "@(#)bt_recno.c	10.26 (Sleepycat) 1/8/98";
 
 #include <errno.h>
 #include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -25,16 +23,17 @@ static const char sccsid[] = "@(#)bt_recno.c	10.26 (Sleepycat) 1/8/98";
 #include "db_page.h"
 #include "btree.h"
 
-static int __ram_add __P((DB *, db_recno_t *, DBT *, int, int));
+static int __ram_add __P((DB *, db_recno_t *, DBT *, u_int32_t, u_int32_t));
 static int __ram_c_close __P((DBC *));
-static int __ram_c_del __P((DBC *, int));
-static int __ram_c_get __P((DBC *, DBT *, DBT *, int));
-static int __ram_c_put __P((DBC *, DBT *, DBT *, int));
+static int __ram_c_del __P((DBC *, u_int32_t));
+static int __ram_c_get __P((DBC *, DBT *, DBT *, u_int32_t));
+static int __ram_c_put __P((DBC *, DBT *, DBT *, u_int32_t));
 static int __ram_fmap __P((DB *, db_recno_t));
-static int __ram_get __P((DB *, DB_TXN *, DBT *, DBT *, int));
-static int __ram_put __P((DB *, DB_TXN *, DBT *, DBT *, int));
+static int __ram_get __P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
+static int __ram_iget __P((DB *, DBT *, DBT *));
+static int __ram_put __P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
 static int __ram_source __P((DB *, RECNO *, const char *));
-static int __ram_sync __P((DB *, int));
+static int __ram_sync __P((DB *, u_int32_t));
 static int __ram_update __P((DB *, db_recno_t, int));
 static int __ram_vmap __P((DB *, db_recno_t));
 static int __ram_writeback __P((DB *));
@@ -142,7 +141,7 @@ __ram_open(dbp, type, dbinfo)
 
 err:	/* If we mmap'd a source file, discard it. */
 	if (rp->re_smap != NULL)
-		(void)__db_unmap(rp->re_smap, rp->re_msize);
+		(void)__db_unmapfile(rp->re_smap, rp->re_msize);
 
 	/* If we opened a source file, discard it. */
 	if (rp->re_fd != -1)
@@ -199,9 +198,9 @@ __ram_cursor(dbp, txn, dbcp)
 	 * All cursors are queued from the master DB structure.  Add the
 	 * cursor to that queue.
 	 */
-	DB_THREAD_LOCK(dbp);
+	CURSOR_SETUP(dbp);
 	TAILQ_INSERT_HEAD(&dbp->curs_queue, dbc, links);
-	DB_THREAD_UNLOCK(dbp);
+	CURSOR_TEARDOWN(dbp);
 
 	*dbcp = dbc;
 	return (0);
@@ -216,16 +215,10 @@ __ram_get(argdbp, txn, key, data, flags)
 	DB *argdbp;
 	DB_TXN *txn;
 	DBT *key, *data;
-	int flags;
+	u_int32_t flags;
 {
-	BTREE *t;
 	DB *dbp;
-	PAGE *h;
-	db_indx_t indx;
-	db_recno_t recno;
-	int exact, ret, stack;
-
-	stack = 0;
+	int ret;
 
 	DEBUG_LWRITE(argdbp, txn, "ram_get", key, NULL, flags);
 
@@ -234,6 +227,30 @@ __ram_get(argdbp, txn, key, data, flags)
 		return (ret);
 
 	GETHANDLE(argdbp, txn, &dbp, ret);
+
+	ret = __ram_iget(dbp, key, data);
+
+	PUTHANDLE(dbp);
+	return (ret);
+}
+
+/*
+ * __ram_iget --
+ *	Internal ram get function, called for both standard and cursor
+ *	get after the flags have been checked.
+ */
+static int
+__ram_iget(dbp, key, data)
+	DB *dbp;
+	DBT *key, *data;
+{
+	BTREE *t;
+	PAGE *h;
+	db_indx_t indx;
+	db_recno_t recno;
+	int exact, ret, stack;
+
+	stack = 0;
 	t = dbp->internal;
 
 	/* Check the user's record number and fill in as necessary. */
@@ -265,7 +282,6 @@ done:	/* Discard the stack. */
 	if (stack)
 		__bam_stkrel(dbp);
 
-	PUTHANDLE(dbp);
 	return (ret);
 }
 
@@ -278,7 +294,7 @@ __ram_put(argdbp, txn, key, data, flags)
 	DB *argdbp;
 	DB_TXN *txn;
 	DBT *key, *data;
-	int flags;
+	u_int32_t flags;
 {
 	BTREE *t;
 	DB *dbp;
@@ -324,7 +340,7 @@ __ram_put(argdbp, txn, key, data, flags)
 static int
 __ram_sync(argdbp, flags)
 	DB *argdbp;
-	int flags;
+	u_int32_t flags;
 {
 	DB *dbp;
 	int ret;
@@ -361,7 +377,7 @@ __ram_close(argdbp)
 
 	/* Close any underlying mmap region. */
 	if (rp->re_smap != NULL)
-		(void)__db_unmap(rp->re_smap, rp->re_msize);
+		(void)__db_unmapfile(rp->re_smap, rp->re_msize);
 
 	/* Close any backing source file descriptor. */
 	if (rp->re_fd != -1)
@@ -403,17 +419,10 @@ __ram_c_iclose(dbp, dbc)
 	DB *dbp;
 	DBC *dbc;
 {
-	/*
-	 * All cursors are queued from the master DB structure.  For
-	 * now, discard the DB handle which triggered this call, and
-	 * replace it with the cursor's reference.
-	 */
-	dbp = dbc->dbp;
-
 	/* Remove the cursor from the queue. */
-	DB_THREAD_LOCK(dbp);
+	CURSOR_SETUP(dbp);
 	TAILQ_REMOVE(&dbp->curs_queue, dbc, links);
-	DB_THREAD_UNLOCK(dbp);
+	CURSOR_TEARDOWN(dbp);
 
 	/* Discard the structures. */
 	FREE(dbc->internal, sizeof(RCURSOR));
@@ -429,7 +438,7 @@ __ram_c_iclose(dbp, dbc)
 static int
 __ram_c_del(dbc, flags)
 	DBC *dbc;
-	int flags;
+	u_int32_t flags;
 {
 	DBT key;
 	RCURSOR *cp;
@@ -466,7 +475,7 @@ static int
 __ram_c_get(dbc, key, data, flags)
 	DBC *dbc;
 	DBT *key, *data;
-	int flags;
+	u_int32_t flags;
 {
 	BTREE *t;
 	DB *dbp;
@@ -537,7 +546,7 @@ retry:	/* Update the record number. */
 
 	/*
 	 * Return the key if the user didn't give us one, and then pass it
-	 * into __ram_get().
+	 * into __ram_iget().
 	 */
 	if (flags != DB_SET && flags != DB_SET_RANGE &&
 	    (ret = __db_retcopy(key, &cp->recno, sizeof(cp->recno),
@@ -555,7 +564,7 @@ retry:	/* Update the record number. */
 	 *
 	 * Skip any keys that don't really exist.
 	 */
-	if ((ret = __ram_get(dbp, dbc->txn, key, data, 0)) != 0)
+	if ((ret = __ram_iget(dbp, key, data)) != 0)
 		if (ret == DB_KEYEMPTY &&
 		    (flags == DB_NEXT || flags == DB_PREV))
 			goto retry;
@@ -575,7 +584,7 @@ static int
 __ram_c_put(dbc, key, data, flags)
 	DBC *dbc;
 	DBT *key, *data;
-	int flags;
+	u_int32_t flags;
 {
 	BTREE *t;
 	RCURSOR *cp, copy;
@@ -624,28 +633,21 @@ split:		arg = &cp->recno;
 	if ((ret = __bam_stkrel(dbp)) != 0)
 		goto err;
 
-	if (flags != DB_CURRENT) {
-		/* Adjust the counts. */
-		if ((ret = __bam_adjust(dbp, t, 1)) != 0)
-			goto err;
+	switch (flags) {
+	case DB_AFTER:
+		/* Adjust the cursors. */
+		__ram_ca(dbp, cp->recno, CA_IAFTER);
 
-		switch (flags) {
-		case DB_AFTER:
-			/* Adjust the cursors. */
-			__ram_ca(dbp, cp->recno, CA_IAFTER);
+		/* Set this cursor to reference the new record. */
+		cp->recno = copy.recno + 1;
+		break;
+	case DB_BEFORE:
+		/* Adjust the cursors. */
+		__ram_ca(dbp, cp->recno, CA_IBEFORE);
 
-			/* Set this cursor to reference the new record. */
-			cp->recno = copy.recno + 1;
-			break;
-		case DB_BEFORE:
-			/* Adjust the cursors. */
-			__ram_ca(dbp, cp->recno, CA_IBEFORE);
-
-			/* Set this cursor to reference the new record. */
-			cp->recno = copy.recno;
-			break;
-		}
-
+		/* Set this cursor to reference the new record. */
+		cp->recno = copy.recno;
+		break;
 	}
 
 	/*
@@ -679,7 +681,7 @@ __ram_ca(dbp, recno, op)
 	/*
 	 * Adjust the cursors.  See the comment in __bam_ca_delete().
 	 */
-	DB_THREAD_LOCK(dbp);
+	CURSOR_SETUP(dbp);
 	for (dbc = TAILQ_FIRST(&dbp->curs_queue);
 	    dbc != NULL; dbc = TAILQ_NEXT(dbc, links)) {
 		cp = (RCURSOR *)dbc->internal;
@@ -698,7 +700,7 @@ __ram_ca(dbp, recno, op)
 			break;
 		}
 	}
-	DB_THREAD_UNLOCK(dbp);
+	CURSOR_TEARDOWN(dbp);
 }
 
 #ifdef DEBUG
@@ -715,14 +717,15 @@ __ram_cprint(dbp)
 	DBC *dbc;
 	RCURSOR *cp;
 
-	DB_THREAD_LOCK(dbp);
+	CURSOR_SETUP(dbp);
 	for (dbc = TAILQ_FIRST(&dbp->curs_queue);
 	    dbc != NULL; dbc = TAILQ_NEXT(dbc, links)) {
 		cp = (RCURSOR *)dbc->internal;
 		fprintf(stderr,
 		    "%#0x: recno: %lu\n", (u_int)cp, (u_long)cp->recno);
 	}
-	DB_THREAD_UNLOCK(dbp);
+	CURSOR_TEARDOWN(dbp);
+
 	return (0);
 }
 #endif /* DEBUG */
@@ -853,11 +856,11 @@ __ram_source(dbp, rp, fname)
 	const char *fname;
 {
 	size_t size;
-	u_int32_t mbytes, bytes;
-	int oflags, ret;
+	u_int32_t bytes, mbytes, oflags;
+	int ret;
 
 	if ((ret = __db_appname(dbp->dbenv,
-	    DB_APP_DATA, NULL, fname, NULL, &rp->re_source)) != 0)
+	    DB_APP_DATA, NULL, fname, 0, NULL, &rp->re_source)) != 0)
 		return (ret);
 
 	oflags = F_ISSET(dbp, DB_AM_RDONLY) ? DB_RDONLY : 0;
@@ -886,7 +889,8 @@ __ram_source(dbp, rp, fname)
 	}
 
 	size = mbytes * MEGABYTE + bytes;
-	if ((ret = __db_map(rp->re_fd, (size_t)size, 1, 1, &rp->re_smap)) != 0)
+	if ((ret = __db_mapfile(rp->re_source,
+	    rp->re_fd, (size_t)size, 1, &rp->re_smap)) != 0)
 		goto err;
 	rp->re_cmap = rp->re_smap;
 	rp->re_emap = (u_int8_t *)rp->re_smap + (rp->re_msize = size);
@@ -952,7 +956,7 @@ __ram_writeback(dbp)
 	 * open will fail.
 	 */
 	if (rp->re_smap != NULL) {
-		(void)__db_unmap(rp->re_smap, rp->re_msize);
+		(void)__db_unmapfile(rp->re_smap, rp->re_msize);
 		rp->re_smap = NULL;
 	}
 
@@ -1078,19 +1082,22 @@ __ram_fmap(dbp, top)
 
 	sp = (u_int8_t *)rp->re_cmap;
 	ep = (u_int8_t *)rp->re_emap;
-	while (recno <= top) {
+	while (recno < top) {
 		if (sp >= ep) {
 			F_SET(rp, RECNO_EOF);
 			return (DB_NOTFOUND);
 		}
 		len = rp->re_len;
 		for (p = t->bt_rdata.data;
-		    sp < ep && len > 0; *p++ = *sp++, --len);
+		    sp < ep && len > 0; *p++ = *sp++, --len)
+			;
 
 		/*
-		 * Another process may have read some portion of the input
-		 * file already, in which case we just want to discard the
-		 * new record.
+		 * Another process may have read this record from the input
+		 * file and stored it into the database already, in which
+		 * case we don't need to repeat that operation.  We detect
+		 * this by checking if the last record we've read is greater
+		 * or equal to the number of records in the database.
 		 *
 		 * XXX
 		 * We should just do a seek, since the records are fixed
@@ -1138,17 +1145,20 @@ __ram_vmap(dbp, top)
 
 	sp = (u_int8_t *)rp->re_cmap;
 	ep = (u_int8_t *)rp->re_emap;
-	while (recno <= top) {
+	while (recno < top) {
 		if (sp >= ep) {
 			F_SET(rp, RECNO_EOF);
 			return (DB_NOTFOUND);
 		}
-		for (data.data = sp; sp < ep && *sp != delim; ++sp);
+		for (data.data = sp; sp < ep && *sp != delim; ++sp)
+			;
 
 		/*
-		 * Another process may have read some portion of the input
-		 * file already, in which case we just want to discard the
-		 * new record.
+		 * Another process may have read this record from the input
+		 * file and stored it into the database already, in which
+		 * case we don't need to repeat that operation.  We detect
+		 * this by checking if the last record we've read is greater
+		 * or equal to the number of records in the database.
 		 */
 		if (rp->re_last >= recno) {
 			data.size = sp - (u_int8_t *)data.data;
@@ -1172,12 +1182,13 @@ __ram_add(dbp, recnop, data, flags, bi_flags)
 	DB *dbp;
 	db_recno_t *recnop;
 	DBT *data;
-	int flags, bi_flags;
+	u_int32_t flags, bi_flags;
 {
+	BKEYDATA *bk;
 	BTREE *t;
 	PAGE *h;
 	db_indx_t indx;
-	int exact, ret, stack;
+	int exact, isdeleted, ret, stack;
 
 	t = dbp->internal;
 
@@ -1190,34 +1201,63 @@ retry:	/* Find the slot for insertion. */
 	stack = 1;
 
 	/*
-	 * The recno access method doesn't currently support duplicates, so
-	 * if an identical key is already in the tree we're either overwriting
-	 * it or an error is returned.
+	 * If DB_NOOVERWRITE is set and the item already exists in the tree,
+	 * return an error unless the item has been marked for deletion.
 	 */
-	if (exact && LF_ISSET(DB_NOOVERWRITE)) {
-		ret = DB_KEYEXIST;
-		goto err;
+	isdeleted = 0;
+	if (exact) {
+		bk = GET_BKEYDATA(h, indx);
+		if (B_DISSET(bk->type)) {
+			isdeleted = 1;
+			__bam_ca_replace(dbp, h->pgno, indx, REPLACE_SETUP);
+		} else
+			if (LF_ISSET(DB_NOOVERWRITE)) {
+				ret = DB_KEYEXIST;
+				goto err;
+			}
 	}
 
 	/*
 	 * Select the arguments for __bam_iitem() and do the insert.  If the
 	 * key is an exact match, or we're replacing the data item with a
-	 * new data item.  If the key isn't an exact match, we're inserting
-	 * a new key/data pair, before the search location.
+	 * new data item, replace the current item.  If the key isn't an exact
+	 * match, we're inserting a new key/data pair, before the search
+	 * location.
 	 */
-	if ((ret = __bam_iitem(dbp, &h, &indx, NULL,
-	    data, exact ? DB_CURRENT : DB_BEFORE, bi_flags)) == DB_NEEDSPLIT) {
+	switch (ret = __bam_iitem(dbp,
+	    &h, &indx, NULL, data, exact ? DB_CURRENT : DB_BEFORE, bi_flags)) {
+	case 0:
+		/*
+		 * Done.  Clean up the cursor and adjust the internal page
+		 * counts.
+		 */
+		if (isdeleted)
+			__bam_ca_replace(dbp, h->pgno, indx, REPLACE_SUCCESS);
+		break;
+	case DB_NEEDSPLIT:
+		/*
+		 * We have to split the page.  Back out the cursor setup,
+		 * discard the stack of pages, and do the split.
+		 */
+		if (isdeleted)
+			__bam_ca_replace(dbp, h->pgno, indx, REPLACE_FAILED);
+
 		(void)__bam_stkrel(dbp);
 		stack = 0;
-		if ((ret = __bam_split(dbp, recnop)) != 0)
-			goto err;
-		goto retry;
-	}
 
-	if (!exact && ret == 0)
-		__bam_adjust(dbp, t, 1);
+		if ((ret = __bam_split(dbp, recnop)) != 0)
+			break;
+
+		goto retry;
+		/* NOTREACHED */
+	default:
+		if (isdeleted)
+			__bam_ca_replace(dbp, h->pgno, indx, REPLACE_FAILED);
+		break;
+	}
 
 err:	if (stack)
 		__bam_stkrel(dbp);
+
 	return (ret);
 }

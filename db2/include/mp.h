@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.25 (Sleepycat) 1/8/98
+ *	@(#)mp.h	10.33 (Sleepycat) 5/4/98
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -16,10 +16,12 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 #define	DB_DEFAULT_MPOOL_FILE	"__db_mpool.share"
 
 /*
- *  We default to 128K (16 8K pages) if the user doesn't specify, and
+ * We default to 128K (16 8K pages) if the user doesn't specify, and
  * require a minimum of 20K.
  */
+#ifndef	DB_CACHESIZE_DEF
 #define	DB_CACHESIZE_DEF	(128 * 1024)
+#endif
 #define	DB_CACHESIZE_MIN	( 20 * 1024)
 
 #define	INVALID		0		/* Invalid shared memory offset. */
@@ -79,30 +81,30 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 #define	LOCKINIT(dbmp, mutexp)						\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE | MP_LOCKREGION))		\
 		(void)__db_mutex_init(mutexp,				\
-		    MUTEX_LOCK_OFFSET((dbmp)->maddr, mutexp))
+		    MUTEX_LOCK_OFFSET((dbmp)->reginfo.addr, mutexp))
 
 #define	LOCKHANDLE(dbmp, mutexp)					\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE))				\
-		(void)__db_mutex_lock(mutexp, (dbmp)->fd)
+		(void)__db_mutex_lock(mutexp, (dbmp)->reginfo.fd)
 #define	UNLOCKHANDLE(dbmp, mutexp)					\
 	if (F_ISSET(dbmp, MP_LOCKHANDLE))				\
-		(void)__db_mutex_unlock(mutexp, (dbmp)->fd)
+		(void)__db_mutex_unlock(mutexp, (dbmp)->reginfo.fd)
 
 #define	LOCKREGION(dbmp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
 		(void)__db_mutex_lock(&((RLAYOUT *)(dbmp)->mp)->lock,	\
-		    (dbmp)->fd)
+		    (dbmp)->reginfo.fd)
 #define	UNLOCKREGION(dbmp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
 		(void)__db_mutex_unlock(&((RLAYOUT *)(dbmp)->mp)->lock,	\
-		(dbmp)->fd)
+		(dbmp)->reginfo.fd)
 
 #define	LOCKBUFFER(dbmp, bhp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
-		(void)__db_mutex_lock(&(bhp)->mutex, (dbmp)->fd)
+		(void)__db_mutex_lock(&(bhp)->mutex, (dbmp)->reginfo.fd)
 #define	UNLOCKBUFFER(dbmp, bhp)						\
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
-		(void)__db_mutex_unlock(&(bhp)->mutex, (dbmp)->fd)
+		(void)__db_mutex_unlock(&(bhp)->mutex, (dbmp)->reginfo.fd)
 
 /*
  * DB_MPOOL --
@@ -120,20 +122,16 @@ struct __db_mpool {
 
 /* These fields are not protected. */
 	DB_ENV     *dbenv;		/* Reference to error information. */
+	REGINFO	    reginfo;		/* Region information. */
 
 	MPOOL	   *mp;			/* Address of the shared MPOOL. */
 
-	void	   *maddr;		/* Address of mmap'd region. */
 	void	   *addr;		/* Address of shalloc() region. */
 
 	DB_HASHTAB *htab;		/* Hash table of bucket headers. */
 
-	int	    fd;			/* Underlying mmap'd fd. */
-
-#define	MP_ISPRIVATE	0x01		/* Private, so local memory. */
-#define	MP_LOCKHANDLE	0x02		/* Threaded, lock handles and region. */
-#define	MP_LOCKREGION	0x04		/* Concurrent access, lock region. */
-#define	MP_MALLOC	0x08		/* If region in allocated memory. */
+#define	MP_LOCKHANDLE	0x01		/* Threaded, lock handles and region. */
+#define	MP_LOCKREGION	0x02		/* Concurrent access, lock region. */
 	u_int32_t  flags;
 };
 
@@ -146,8 +144,8 @@ struct __db_mpreg {
 
 	int ftype;			/* File type. */
 					/* Pgin, pgout routines. */
-	int (*pgin) __P((db_pgno_t, void *, DBT *));
-	int (*pgout) __P((db_pgno_t, void *, DBT *));
+	int (DB_CALLBACK *pgin) __P((db_pgno_t, void *, DBT *));
+	int (DB_CALLBACK *pgout) __P((db_pgno_t, void *, DBT *));
 };
 
 /*
@@ -207,7 +205,7 @@ struct __mpool {
 	size_t	    htab_buckets;	/* Number of hash table entries. */
 
 	DB_LSN	    lsn;		/* Maximum checkpoint LSN. */
-	int	    lsn_cnt;		/* Checkpoint buffers left to write. */
+	u_int32_t   lsn_cnt;		/* Checkpoint buffers left to write. */
 
 	DB_MPOOL_STAT stat;		/* Global mpool statistics. */
 
@@ -225,7 +223,9 @@ struct __mpoolfile {
 	u_int32_t ref;			/* Reference count. */
 
 	int	  ftype;		/* File type. */
-	int	  lsn_off;		/* Page's LSN offset. */
+
+	int32_t	  lsn_off;		/* Page's LSN offset. */
+	u_int32_t clear_len;		/* Bytes to clear on page create. */
 
 	size_t	  path_off;		/* File name location. */
 	size_t	  fileid_off;		/* File identification location. */
@@ -233,9 +233,10 @@ struct __mpoolfile {
 	size_t	  pgcookie_len;		/* Pgin/pgout cookie length. */
 	size_t	  pgcookie_off;		/* Pgin/pgout cookie location. */
 
-	int	  lsn_cnt;		/* Checkpoint buffers left to write. */
+	u_int32_t lsn_cnt;		/* Checkpoint buffers left to write. */
 
 	db_pgno_t last_pgno;		/* Last page in the file. */
+	db_pgno_t orig_last_pgno;	/* Original last page in the file. */
 
 #define	MP_CAN_MMAP	0x01		/* If the file can be mmap'd. */
 #define	MP_TEMP		0x02		/* Backing file is a temporary. */

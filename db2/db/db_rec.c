@@ -1,30 +1,25 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_rec.c	10.12 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)db_rec.c	10.16 (Sleepycat) 4/28/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
-#endif
-#include <ctype.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
+#endif
 
 #include "db_int.h"
 #include "shqueue.h"
 #include "db_page.h"
-#include "db_dispatch.h"
 #include "log.h"
 #include "hash.h"
 #include "btree.h"
@@ -48,7 +43,8 @@ __db_addrem_recover(logp, dbtp, lsnp, redo, info)
 	DB *file_dbp, *mdbp;
 	DB_MPOOLFILE *mpf;
 	PAGE *pagep;
-	int change, cmp_n, cmp_p, ret;
+	u_int32_t change;
+	int cmp_n, cmp_p, ret;
 
 	REC_PRINT(__db_addrem_print);
 	REC_INTRO(__db_addrem_read);
@@ -193,7 +189,8 @@ __db_big_recover(logp, dbtp, lsnp, redo, info)
 	DB *file_dbp, *mdbp;
 	DB_MPOOLFILE *mpf;
 	PAGE *pagep;
-	int change, cmp_n, cmp_p, ret;
+	u_int32_t change;
+	int cmp_n, cmp_p, ret;
 
 	REC_PRINT(__db_big_print);
 	REC_INTRO(__db_big_read);
@@ -503,7 +500,8 @@ __db_addpage_recover(logp, dbtp, lsnp, redo, info)
 	DB *file_dbp, *mdbp;
 	DB_MPOOLFILE *mpf;
 	PAGE *pagep;
-	int change, cmp_n, cmp_p, ret;
+	u_int32_t change;
+	int cmp_n, cmp_p, ret;
 
 	REC_PRINT(__db_addpage_print);
 	REC_INTRO(__db_addpage_read);
@@ -601,8 +599,7 @@ __db_debug_recover(logp, dbtp, lsnp, redo, info)
  * __db_noop_recover --
  *	Recovery function for noop.
  *
- * PUBLIC: int __db_noop_recover
- * PUBLIC:   __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+ * PUBLIC: int __db_noop_recover __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
 __db_noop_recover(logp, dbtp, lsnp, redo, info)
@@ -613,16 +610,30 @@ __db_noop_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__db_noop_args *argp;
-	int ret;
-
-	COMPQUIET(redo, 0);
-	COMPQUIET(logp, NULL);
+	DB *file_dbp, *mdbp;
+	DB_MPOOLFILE *mpf;
+	PAGE *pagep;
+	u_int32_t change;
+	int cmp_n, cmp_p, ret;
 
 	REC_PRINT(__db_noop_print);
-	REC_NOOP_INTRO(__db_noop_read);
+	REC_INTRO(__db_noop_read);
 
+	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0)
+		goto out;
+
+	cmp_n = log_compare(lsnp, &LSN(pagep));
+	cmp_p = log_compare(&LSN(pagep), &argp->prevlsn);
+	change = 0;
+	if (cmp_p == 0 && redo) {
+		LSN(pagep) = *lsnp;
+		change = DB_MPOOL_DIRTY;
+	} else if (cmp_n == 0 && !redo) {
+		LSN(pagep) = argp->prevlsn;
+		change = DB_MPOOL_DIRTY;
+	}
 	*lsnp = argp->prev_lsn;
-	ret = 0;
+	ret = memp_fput(mpf, pagep, change);
 
-	REC_NOOP_CLOSE;
+out:	REC_CLOSE;
 }

@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -40,16 +40,13 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_rec.c	10.16 (Sleepycat) 1/17/98";
+static const char sccsid[] = "@(#)log_rec.c	10.20 (Sleepycat) 4/28/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -90,7 +87,7 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 
 	if ((argp->opcode == LOG_CHECKPOINT && redo == TXN_OPENFILES) ||
 	    (argp->opcode == LOG_OPEN &&
-	    (redo == TXN_REDO || redo == TXN_OPENFILES || 
+	    (redo == TXN_REDO || redo == TXN_OPENFILES ||
 	     redo == TXN_FORWARD_ROLL)) ||
 	    (argp->opcode == LOG_CLOSE &&
 	    (redo == TXN_UNDO || redo == TXN_BACKWARD_ROLL))) {
@@ -121,6 +118,7 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 			if (!logp->dbentry[argp->id].deleted)
 				ret = EINVAL;
 		} else if (--logp->dbentry[argp->id].refcount == 0) {
+			F_SET(logp->dbentry[argp->id].dbp, DB_AM_RECOVER);
 			ret = logp->dbentry[argp->id].dbp->close(
 			    logp->dbentry[argp->id].dbp, 0);
 			logp->dbentry[argp->id].dbp = NULL;

@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_page.h	10.13 (Sleepycat) 9/24/97
+ *	@(#)db_page.h	10.15 (Sleepycat) 5/1/98
  */
 
 #ifndef _DB_PAGE_H_
@@ -28,6 +28,14 @@
 #define	PGNO_METADATA	0	/* Metadata page number. */
 #define	PGNO_INVALID	0	/* Metadata page number, therefore illegal. */
 #define	PGNO_ROOT	1	/* Root is page #1. */
+
+/*
+ * When we create pages in mpool, we ask mpool to clear some number of bytes
+ * in the header.  This number must be at least as big as the regular page
+ * headers and cover enough of the btree and hash meta-data pages to obliterate
+ * the magic and version numbers.
+ */
+#define	DB_PAGE_CLEAR_LEN	32
 
 /************************************************************************
  BTREE METADATA PAGE LAYOUT

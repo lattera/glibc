@@ -91,47 +91,49 @@ int __pthread_mutex_lock(pthread_mutex_t * mutex)
 {
   pthread_descr self;
 
-  while(1) {
-    acquire(&mutex->m_spinlock);
-    switch(mutex->m_kind) {
-    case PTHREAD_MUTEX_FAST_NP:
-      if (mutex->m_count == 0) {
-        mutex->m_count = 1;
-        release(&mutex->m_spinlock);
-        return 0;
-      }
-      self = thread_self();
-      break;
-    case PTHREAD_MUTEX_RECURSIVE_NP:
-      self = thread_self();
-      if (mutex->m_count == 0 || mutex->m_owner == self) {
-        mutex->m_count++;
-        mutex->m_owner = self;
-        release(&mutex->m_spinlock);
-        return 0;
-      }
-      break;
-    case PTHREAD_MUTEX_ERRORCHECK_NP:
-      self = thread_self();
-      if (mutex->m_count == 0) {
-	mutex->m_count = 1;
-	mutex->m_owner = self;
-	release(&mutex->m_spinlock);
-	return 0;
-      } else if (mutex->m_owner == self) {
-	release(&mutex->m_spinlock);
-	return EDEADLK;
-      }
-      break;
-    default:
+  acquire(&mutex->m_spinlock);
+  switch(mutex->m_kind) {
+  case PTHREAD_MUTEX_FAST_NP:
+    if (mutex->m_count == 0) {
+      mutex->m_count = 1;
       release(&mutex->m_spinlock);
-      return EINVAL;
+      return 0;
     }
-    /* Suspend ourselves, then try again */
-    enqueue(&mutex->m_waiting, self);
+    self = thread_self();
+    break;
+  case PTHREAD_MUTEX_RECURSIVE_NP:
+    self = thread_self();
+    if (mutex->m_count == 0 || mutex->m_owner == self) {
+      mutex->m_count++;
+      mutex->m_owner = self;
+      release(&mutex->m_spinlock);
+      return 0;
+    }
+    break;
+  case PTHREAD_MUTEX_ERRORCHECK_NP:
+    self = thread_self();
+    if (mutex->m_count == 0) {
+      mutex->m_count = 1;
+      mutex->m_owner = self;
+      release(&mutex->m_spinlock);
+      return 0;
+    } else if (mutex->m_owner == self) {
+      release(&mutex->m_spinlock);
+      return EDEADLK;
+    }
+    break;
+  default:
     release(&mutex->m_spinlock);
-    suspend(self); /* This is not a cancellation point */
+    return EINVAL;
   }
+  /* Suspend ourselves */
+  enqueue(&mutex->m_waiting, self);
+  release(&mutex->m_spinlock);
+  suspend(self); /* This is not a cancellation point */
+  /* Now we own the mutex */
+  ASSERT(mutex->m_count == 1);
+  mutex->m_owner = self;        /* for recursive and errorcheck mutexes */
+  return 0;
 }
 weak_alias (__pthread_mutex_lock, pthread_mutex_lock)
 
@@ -142,30 +144,33 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
   acquire(&mutex->m_spinlock);
   switch (mutex->m_kind) {
   case PTHREAD_MUTEX_FAST_NP:
-    mutex->m_count = 0;
     break;
   case PTHREAD_MUTEX_RECURSIVE_NP:
-    mutex->m_count--;
-    if (mutex->m_count > 0) {
+    if (mutex->m_count >= 2) {
+      mutex->m_count--;
       release(&mutex->m_spinlock);
       return 0;
     }
-    mutex->m_count = 0; /* so that excess unlocks do not break everything */
     break;
   case PTHREAD_MUTEX_ERRORCHECK_NP:
     if (mutex->m_count == 0 || mutex->m_owner != thread_self()) {
       release(&mutex->m_spinlock);
       return EPERM;
     }
-    mutex->m_count = 0;
     break;
   default:
     release(&mutex->m_spinlock);
     return EINVAL;
   }
   th = dequeue(&mutex->m_waiting);
+  /* If no waiters, unlock the mutex */
+  if (th == NULL) mutex->m_count = 0;
   release(&mutex->m_spinlock);
-  if (th != NULL) restart(th);
+  /* If there is a waiter, restart it with the mutex still locked */
+  if (th != NULL) {
+    mutex->m_owner = NULL;      /* we no longer own the mutex */
+    restart(th);
+  }
   return 0;
 }
 weak_alias (__pthread_mutex_unlock, pthread_mutex_unlock)

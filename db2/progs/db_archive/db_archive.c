@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_archive.c	10.15 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_archive.c	10.17 (Sleepycat) 4/10/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -50,7 +50,8 @@ main(argc, argv)
 	extern char *optarg;
 	extern int optind;
 	DB_ENV *dbenv;
-	int ch, flags, verbose;
+	u_int32_t flags;
+	int ch, verbose;
 	char *home, **list;
 
 	flags = verbose = 0;

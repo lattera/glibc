@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,23 +47,19 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash.c	10.36 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)hash.c	10.45 (Sleepycat) 5/11/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-#include <sys/stat.h>
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #endif
 
-#include "shqueue.h"
 #include "db_int.h"
+#include "shqueue.h"
 #include "db_page.h"
 #include "db_am.h"
 #include "db_ext.h"
@@ -71,20 +67,20 @@ static const char sccsid[] = "@(#)hash.c	10.36 (Sleepycat) 1/8/98";
 #include "log.h"
 
 static int  __ham_c_close __P((DBC *));
-static int  __ham_c_del __P((DBC *, int));
-static int  __ham_c_get __P((DBC *, DBT *, DBT *, int));
-static int  __ham_c_put __P((DBC *, DBT *, DBT *, int));
+static int  __ham_c_del __P((DBC *, u_int32_t));
+static int  __ham_c_get __P((DBC *, DBT *, DBT *, u_int32_t));
+static int  __ham_c_put __P((DBC *, DBT *, DBT *, u_int32_t));
 static int  __ham_c_init __P((DB *, DB_TXN *, DBC **));
 static int  __ham_cursor __P((DB *, DB_TXN *, DBC **));
-static int  __ham_delete __P((DB *, DB_TXN *, DBT *, int));
-static int  __ham_dup_return __P((HTAB *, HASH_CURSOR *, DBT *, int));
-static int  __ham_get __P((DB *, DB_TXN *, DBT *, DBT *, int));
-static void __ham_init_htab __P((HTAB *, u_int));
+static int  __ham_delete __P((DB *, DB_TXN *, DBT *, u_int32_t));
+static int  __ham_dup_return __P((HTAB *, HASH_CURSOR *, DBT *, u_int32_t));
+static int  __ham_get __P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
+static void __ham_init_htab __P((HTAB *, u_int32_t, u_int32_t));
 static int  __ham_lookup __P((HTAB *,
 		HASH_CURSOR *, const DBT *, u_int32_t, db_lockmode_t));
 static int  __ham_overwrite __P((HTAB *, HASH_CURSOR *, DBT *));
-static int  __ham_put __P((DB *, DB_TXN *, DBT *, DBT *, int));
-static int  __ham_sync __P((DB *, int));
+static int  __ham_put __P((DB *, DB_TXN *, DBT *, DBT *, u_int32_t));
+static int  __ham_sync __P((DB *, u_int32_t));
 
 /************************** INTERFACE ROUTINES ***************************/
 /* OPEN/CLOSE */
@@ -175,9 +171,9 @@ __ham_open(dbp, dbinfo)
 			goto out;
 		}
 
-		hashp->hdr->ffactor =
-		    dbinfo != NULL && dbinfo->h_ffactor ? dbinfo->h_ffactor : 0;
-		__ham_init_htab(hashp, dbinfo != NULL ? dbinfo->h_nelem : 0);
+		__ham_init_htab(hashp,
+		    dbinfo != NULL ? dbinfo->h_nelem : 0,
+		    dbinfo != NULL ? dbinfo->h_ffactor : 0);
 		if (F_ISSET(dbp, DB_AM_DUP))
 			F_SET(hashp->hdr, DB_HASH_DUP);
 		if ((ret = __ham_dirty_page(hashp, (PAGE *)hashp->hdr)) != 0)
@@ -230,7 +226,7 @@ out:	(void)__ham_close(dbp);
 }
 
 /*
- * PUBLIC: int  __ham_close __P((DB *));
+ * PUBLIC: int __ham_close __P((DB *));
  */
 int
 __ham_close(dbp)
@@ -264,13 +260,14 @@ __ham_close(dbp)
  * Returns 0 on No Error
  */
 static void
-__ham_init_htab(hashp, nelem)
+__ham_init_htab(hashp, nelem, ffactor)
 	HTAB *hashp;
-	u_int nelem;
+	u_int32_t nelem, ffactor;
 {
 	int32_t l2, nbuckets;
 
-	hashp->hdr->nelem = 0;
+	memset(hashp->hdr, 0, sizeof(HASHHDR));
+	hashp->hdr->ffactor = ffactor;
 	hashp->hdr->pagesize = hashp->dbp->pgsize;
 	ZERO_LSN(hashp->hdr->lsn);
 	hashp->hdr->magic = DB_HASHMAGIC;
@@ -287,8 +284,6 @@ __ham_init_htab(hashp, nelem)
 
 	nbuckets = 1 << l2;
 
-	hashp->hdr->spares[l2] = 0;
-	hashp->hdr->spares[l2 + 1] = 0;
 	hashp->hdr->ovfl_point = l2;
 	hashp->hdr->last_freed = PGNO_INVALID;
 
@@ -310,7 +305,7 @@ __ham_init_htab(hashp, nelem)
 static int
 __ham_sync(dbp, flags)
 	DB *dbp;
-	int flags;
+	u_int32_t flags;
 {
 	int ret;
 
@@ -342,10 +337,9 @@ __ham_get(dbp, txn, key, data, flags)
 	DB_TXN *txn;
 	DBT *key;
 	DBT *data;
-	int flags;
+	u_int32_t flags;
 {
 	DB *ldbp;
-	DBC *cp;
 	HTAB *hashp;
 	HASH_CURSOR *hcp;
 	int ret, t_ret;
@@ -362,7 +356,6 @@ __ham_get(dbp, txn, key, data, flags)
 	hashp = (HTAB *)ldbp->internal;
 	SET_LOCKER(ldbp, txn);
 	GET_META(ldbp, hashp);
-	cp = TAILQ_FIRST(&ldbp->curs_queue);
 
 	hashp->hash_accesses++;
 	hcp = (HASH_CURSOR *)TAILQ_FIRST(&ldbp->curs_queue)->internal;
@@ -386,14 +379,14 @@ __ham_put(dbp, txn, key, data, flags)
 	DB_TXN *txn;
 	DBT *key;
 	DBT *data;
-	int flags;
+	u_int32_t flags;
 {
 	DB *ldbp;
-	HTAB *hashp;
-	HASH_CURSOR *hcp;
 	DBT tmp_val, *myval;
-	int ret, t_ret;
+	HASH_CURSOR *hcp;
+	HTAB *hashp;
 	u_int32_t nbytes;
+	int ret, t_ret;
 
 	DEBUG_LWRITE(dbp, txn, "ham_put", key, data, flags);
 	if ((ret = __db_putchk(dbp, key, data,
@@ -531,7 +524,7 @@ __ham_delete(dbp, txn, key, flags)
 	DB *dbp;
 	DB_TXN *txn;
 	DBT *key;
-	int flags;
+	u_int32_t flags;
 {
 	DB *ldbp;
 	HTAB *hashp;
@@ -539,7 +532,8 @@ __ham_delete(dbp, txn, key, flags)
 	int ret, t_ret;
 
 	DEBUG_LWRITE(dbp, txn, "ham_delete", key, NULL, flags);
-	if ((ret = __db_delchk(dbp, flags, F_ISSET(dbp, DB_AM_RDONLY))) != 0)
+	if ((ret =
+	    __db_delchk(dbp, key, flags, F_ISSET(dbp, DB_AM_RDONLY))) != 0)
 		return (ret);
 
 	ldbp = dbp;
@@ -639,12 +633,12 @@ __ham_c_iclose(dbp, dbc)
 static int
 __ham_c_del(cursor, flags)
 	DBC *cursor;
-	int flags;
+	u_int32_t flags;
 {
 	DB *ldbp;
-	HTAB *hashp;
 	HASH_CURSOR *hcp;
 	HASH_CURSOR save_curs;
+	HTAB *hashp;
 	db_pgno_t ppgno, chg_pgno;
 	int ret, t_ret;
 
@@ -756,7 +750,7 @@ __ham_c_del(cursor, flags)
 normal:		ret = __ham_del_pair(hashp, hcp, 1);
 
 out:	if ((t_ret = __ham_item_done(hashp, hcp, ret == 0)) != 0 && ret == 0)
-		t_ret = ret;
+		ret = t_ret;
 	if (ret != 0)
 		*hcp = save_curs;
 	RELEASE_META(hashp->dbp, hashp);
@@ -770,7 +764,7 @@ __ham_c_get(cursor, key, data, flags)
 	DBC *cursor;
 	DBT *key;
 	DBT *data;
-	int flags;
+	u_int32_t flags;
 {
 	DB *ldbp;
 	HTAB *hashp;
@@ -805,7 +799,7 @@ __ham_c_get(cursor, key, data, flags)
 			ret = __ham_item_prev(hashp, hcp, DB_LOCK_READ);
 			break;
 		}
-		/* FALL THROUGH */
+		/* FALLTHROUGH */
 	case DB_LAST:
 		ret = __ham_item_last(hashp, hcp, DB_LOCK_READ);
 		break;
@@ -893,7 +887,7 @@ __ham_c_get(cursor, key, data, flags)
 		}
 	}
 out1:	if ((t_ret = __ham_item_done(hashp, hcp, 0)) != 0 && ret == 0)
-		t_ret = ret;
+		ret = t_ret;
 out:	if (ret)
 		*hcp = save_curs;
 	RELEASE_META(hashp->dbp, hashp);
@@ -907,17 +901,17 @@ __ham_c_put(cursor, key, data, flags)
 	DBC *cursor;
 	DBT *key;
 	DBT *data;
-	int flags;
+	u_int32_t flags;
 {
 	DB *ldbp;
-	HTAB *hashp;
 	HASH_CURSOR *hcp, save_curs;
-	int ret, t_ret;
+	HTAB *hashp;
 	u_int32_t nbytes;
+	int ret, t_ret;
 
 	DEBUG_LWRITE(cursor->dbp, cursor->txn, "ham_c_put",
 	    flags == DB_KEYFIRST || flags == DB_KEYLAST ? key : NULL,
-	    NULL, flags);
+	    data, flags);
 	ldbp = cursor->dbp;
 	if (F_ISSET(cursor->dbp, DB_AM_THREAD) &&
 	    (ret = __db_gethandle(cursor->dbp, __ham_hdup, &ldbp)) != 0)
@@ -1087,14 +1081,14 @@ __ham_dup_return(hashp, hcp, val, flags)
 	HTAB *hashp;
 	HASH_CURSOR *hcp;
 	DBT *val;
-	int flags;
+	u_int32_t flags;
 {
 	PAGE *pp;
 	DBT *myval, tmp_val;
 	db_indx_t ndx;
 	db_pgno_t pgno;
 	u_int8_t *hk, type;
-	int indx, ret;
+	int ret;
 	db_indx_t len;
 
 	/* Check for duplicate and return the first one. */
@@ -1145,7 +1139,6 @@ __ham_dup_return(hashp, hcp, val, flags)
 			memcpy(&pgno, HOFFDUP_PGNO(P_ENTRY(hcp->pagep, ndx)),
 			    sizeof(db_pgno_t));
 			if (flags == DB_LAST || flags == DB_PREV) {
-				indx = (int)hcp->dndx;
 				if ((ret = __db_dend(hashp->dbp,
 				    pgno, &hcp->dpagep)) != 0)
 					return (ret);
@@ -1451,14 +1444,15 @@ __ham_c_update(hcp, chg_pgno, len, add, is_dup)
  * __ham_hdup --
  *	This function gets called when we create a duplicate handle for a
  *	threaded DB.  It should create the private part of the DB structure.
+ *
  * PUBLIC: int  __ham_hdup __P((DB *, DB *));
  */
 int
 __ham_hdup(orig, new)
 	DB *orig, *new;
 {
-	HTAB *hashp;
 	DBC *curs;
+	HTAB *hashp;
 	int ret;
 
 	if ((hashp = (HTAB *)__db_malloc(sizeof(HTAB))) == NULL)

@@ -15,8 +15,6 @@
 #include "db_dispatch.h"
 #include "btree.h"
 #include "db_am.h"
-#include "common_ext.h"
-
 /*
  * PUBLIC: int __bam_pg_alloc_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
@@ -85,7 +83,7 @@ int __bam_pg_alloc_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(ptype);
 	memcpy(bp, &next, sizeof(next));
 	bp += sizeof(next);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -101,22 +99,23 @@ int __bam_pg_alloc_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_pg_alloc_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_pg_alloc_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_pg_alloc_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_pg_alloc_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -249,7 +248,7 @@ int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
 	}
 	memcpy(bp, &next, sizeof(next));
 	bp += sizeof(next);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -265,22 +264,23 @@ int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_pg_free_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_pg_free_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_pg_free_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_pg_free_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -297,11 +297,11 @@ __bam_pg_free_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->meta_lsn.file, (u_long)argp->meta_lsn.offset);
 	printf("\theader: ");
 	for (i = 0; i < argp->header.size; i++) {
-		c = ((char *)argp->header.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->header.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tnext: %lu\n", (u_long)argp->next);
@@ -443,7 +443,7 @@ int __bam_split_log(logp, txnid, ret_lsnp, flags,
 		memcpy(bp, pg->data, pg->size);
 		bp += pg->size;
 	}
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -459,22 +459,23 @@ int __bam_split_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_split_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_split_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_split_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_split_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -498,11 +499,11 @@ __bam_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->nlsn.file, (u_long)argp->nlsn.offset);
 	printf("\tpg: ");
 	for (i = 0; i < argp->pg.size; i++) {
-		c = ((char *)argp->pg.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->pg.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\n");
@@ -639,7 +640,7 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*rootlsn));
 	bp += sizeof(*rootlsn);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -655,22 +656,23 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_rsplit_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_rsplit_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_rsplit_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_rsplit_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -685,21 +687,21 @@ __bam_rsplit_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tpgno: %lu\n", (u_long)argp->pgno);
 	printf("\tpgdbt: ");
 	for (i = 0; i < argp->pgdbt.size; i++) {
-		c = ((char *)argp->pgdbt.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->pgdbt.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tnrec: %lu\n", (u_long)argp->nrec);
 	printf("\trootent: ");
 	for (i = 0; i < argp->rootent.size; i++) {
-		c = ((char *)argp->rootent.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->rootent.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\trootlsn: [%lu][%lu]\n",
@@ -817,7 +819,7 @@ int __bam_adj_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(indx_copy);
 	memcpy(bp, &is_insert, sizeof(is_insert));
 	bp += sizeof(is_insert);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -833,22 +835,23 @@ int __bam_adj_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_adj_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_adj_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_adj_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_adj_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -975,7 +978,7 @@ int __bam_cadjust_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(adjust);
 	memcpy(bp, &total, sizeof(total));
 	bp += sizeof(total);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -991,22 +994,23 @@ int __bam_cadjust_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_cadjust_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_cadjust_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_cadjust_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_cadjust_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -1124,7 +1128,7 @@ int __bam_cdel_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(*lsn);
 	memcpy(bp, &indx, sizeof(indx));
 	bp += sizeof(indx);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -1140,22 +1144,23 @@ int __bam_cdel_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_cdel_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_cdel_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_cdel_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_cdel_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -1307,7 +1312,7 @@ int __bam_repl_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(prefix);
 	memcpy(bp, &suffix, sizeof(suffix));
 	bp += sizeof(suffix);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -1323,22 +1328,23 @@ int __bam_repl_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__bam_repl_print(notused1, dbtp, lsnp, notused3, notused4)
+__bam_repl_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__bam_repl_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __bam_repl_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -1357,20 +1363,20 @@ __bam_repl_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tisdeleted: %lu\n", (u_long)argp->isdeleted);
 	printf("\torig: ");
 	for (i = 0; i < argp->orig.size; i++) {
-		c = ((char *)argp->orig.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->orig.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\trepl: ");
 	for (i = 0; i < argp->repl.size; i++) {
-		c = ((char *)argp->repl.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->repl.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tprefix: %lu\n", (u_long)argp->prefix);

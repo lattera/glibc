@@ -14,8 +14,6 @@
 #include "db_page.h"
 #include "db_dispatch.h"
 #include "db_am.h"
-#include "common_ext.h"
-
 /*
  * PUBLIC: int __db_addrem_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
@@ -107,7 +105,7 @@ int __db_addrem_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*pagelsn));
 	bp += sizeof(*pagelsn);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -123,22 +121,23 @@ int __db_addrem_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_addrem_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_addrem_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_addrem_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_addrem_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -156,20 +155,20 @@ __db_addrem_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tnbytes: %lu\n", (u_long)argp->nbytes);
 	printf("\thdr: ");
 	for (i = 0; i < argp->hdr.size; i++) {
-		c = ((char *)argp->hdr.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->hdr.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tdbt: ");
 	for (i = 0; i < argp->dbt.size; i++) {
-		c = ((char *)argp->dbt.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->dbt.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tpagelsn: [%lu][%lu]\n",
@@ -296,7 +295,7 @@ int __db_split_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*pagelsn));
 	bp += sizeof(*pagelsn);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -312,22 +311,23 @@ int __db_split_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_split_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_split_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_split_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_split_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -343,11 +343,11 @@ __db_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tpgno: %lu\n", (u_long)argp->pgno);
 	printf("\tpageimage: ");
 	for (i = 0; i < argp->pageimage.size; i++) {
-		c = ((char *)argp->pageimage.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->pageimage.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tpagelsn: [%lu][%lu]\n",
@@ -490,7 +490,7 @@ int __db_big_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*nextlsn));
 	bp += sizeof(*nextlsn);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -506,22 +506,23 @@ int __db_big_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_big_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_big_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_big_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_big_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -539,11 +540,11 @@ __db_big_print(notused1, dbtp, lsnp, notused3, notused4)
 	printf("\tnext_pgno: %lu\n", (u_long)argp->next_pgno);
 	printf("\tdbt: ");
 	for (i = 0; i < argp->dbt.size; i++) {
-		c = ((char *)argp->dbt.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->dbt.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tpagelsn: [%lu][%lu]\n",
@@ -660,7 +661,7 @@ int __db_ovref_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*lsn));
 	bp += sizeof(*lsn);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -676,22 +677,23 @@ int __db_ovref_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_ovref_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_ovref_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_ovref_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_ovref_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -823,7 +825,7 @@ int __db_relink_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*lsn_next));
 	bp += sizeof(*lsn_next);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -839,22 +841,23 @@ int __db_relink_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_relink_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_relink_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_relink_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_relink_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -985,7 +988,7 @@ int __db_addpage_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*nextlsn));
 	bp += sizeof(*nextlsn);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -1001,22 +1004,23 @@ int __db_addpage_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_addpage_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_addpage_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_addpage_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_addpage_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -1159,7 +1163,7 @@ int __db_debug_log(logp, txnid, ret_lsnp, flags,
 	}
 	memcpy(bp, &arg_flags, sizeof(arg_flags));
 	bp += sizeof(arg_flags);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -1175,22 +1179,23 @@ int __db_debug_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_debug_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_debug_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_debug_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_debug_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -1203,30 +1208,30 @@ __db_debug_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->prev_lsn.offset);
 	printf("\top: ");
 	for (i = 0; i < argp->op.size; i++) {
-		c = ((char *)argp->op.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->op.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tfileid: %lu\n", (u_long)argp->fileid);
 	printf("\tkey: ");
 	for (i = 0; i < argp->key.size; i++) {
-		c = ((char *)argp->key.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->key.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\tdata: ");
 	for (i = 0; i < argp->data.size; i++) {
-		c = ((char *)argp->data.data)[i];
-		if (isprint(c) || c == 0xa)
-			putchar(c);
+		ch = ((u_int8_t *)argp->data.data)[i];
+		if (isprint(ch) || ch == 0xa)
+			putchar(ch);
 		else
-			printf("%#x ", c);
+			printf("%#x ", ch);
 	}
 	printf("\n");
 	printf("\targ_flags: %lu\n", (u_long)argp->arg_flags);
@@ -1280,13 +1285,18 @@ __db_debug_read(recbuf, argpp)
 
 /*
  * PUBLIC: int __db_noop_log
- * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t));
+ * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
+ * PUBLIC:     u_int32_t, db_pgno_t, DB_LSN *));
  */
-int __db_noop_log(logp, txnid, ret_lsnp, flags)
+int __db_noop_log(logp, txnid, ret_lsnp, flags,
+	fileid, pgno, prevlsn)
 	DB_LOG *logp;
 	DB_TXN *txnid;
 	DB_LSN *ret_lsnp;
 	u_int32_t flags;
+	u_int32_t fileid;
+	db_pgno_t pgno;
+	DB_LSN * prevlsn;
 {
 	DBT logrec;
 	DB_LSN *lsnp, null_lsn;
@@ -1302,7 +1312,10 @@ int __db_noop_log(logp, txnid, ret_lsnp, flags)
 		lsnp = &null_lsn;
 	} else
 		lsnp = &txnid->last_lsn;
-	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN);
+	logrec.size = sizeof(rectype) + sizeof(txn_num) + sizeof(DB_LSN)
+	    + sizeof(fileid)
+	    + sizeof(pgno)
+	    + sizeof(*prevlsn);
 	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
 		return (ENOMEM);
 
@@ -1313,7 +1326,16 @@ int __db_noop_log(logp, txnid, ret_lsnp, flags)
 	bp += sizeof(txn_num);
 	memcpy(bp, lsnp, sizeof(DB_LSN));
 	bp += sizeof(DB_LSN);
-#ifdef DEBUG
+	memcpy(bp, &fileid, sizeof(fileid));
+	bp += sizeof(fileid);
+	memcpy(bp, &pgno, sizeof(pgno));
+	bp += sizeof(pgno);
+	if (prevlsn != NULL)
+		memcpy(bp, prevlsn, sizeof(*prevlsn));
+	else
+		memset(bp, 0, sizeof(*prevlsn));
+	bp += sizeof(*prevlsn);
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -1329,22 +1351,23 @@ int __db_noop_log(logp, txnid, ret_lsnp, flags)
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__db_noop_print(notused1, dbtp, lsnp, notused3, notused4)
+__db_noop_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__db_noop_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __db_noop_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -1355,6 +1378,10 @@ __db_noop_print(notused1, dbtp, lsnp, notused3, notused4)
 	    (u_long)argp->txnid->txnid,
 	    (u_long)argp->prev_lsn.file,
 	    (u_long)argp->prev_lsn.offset);
+	printf("\tfileid: %lu\n", (u_long)argp->fileid);
+	printf("\tpgno: %lu\n", (u_long)argp->pgno);
+	printf("\tprevlsn: [%lu][%lu]\n",
+	    (u_long)argp->prevlsn.file, (u_long)argp->prevlsn.offset);
 	printf("\n");
 	__db_free(argp);
 	return (0);
@@ -1383,6 +1410,12 @@ __db_noop_read(recbuf, argpp)
 	bp += sizeof(argp->txnid->txnid);
 	memcpy(&argp->prev_lsn, bp, sizeof(DB_LSN));
 	bp += sizeof(DB_LSN);
+	memcpy(&argp->fileid, bp, sizeof(argp->fileid));
+	bp += sizeof(argp->fileid);
+	memcpy(&argp->pgno, bp, sizeof(argp->pgno));
+	bp += sizeof(argp->pgno);
+	memcpy(&argp->prevlsn, bp,  sizeof(argp->prevlsn));
+	bp += sizeof(argp->prevlsn);
 	*argpp = argp;
 	return (0);
 }

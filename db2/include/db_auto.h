@@ -114,6 +114,9 @@ typedef struct _db_noop_args {
 	u_int32_t type;
 	DB_TXN *txnid;
 	DB_LSN prev_lsn;
+	u_int32_t	fileid;
+	db_pgno_t	pgno;
+	DB_LSN 	prevlsn;
 } __db_noop_args;
 
 #endif

@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db185.c	8.14 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db185.c	8.17 (Sleepycat) 5/7/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -20,7 +20,6 @@ static const char sccsid[] = "@(#)db185.c	8.14 (Sleepycat) 10/25/97";
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #endif
@@ -114,6 +113,16 @@ __dbopen(file, oflags, mode, type, openinfo)
 		 * and DB 2.0 doesn't.
 		 *
 		 * !!!
+		 * Setting the file name to NULL specifies that we're creating
+		 * a temporary backing file, in DB 2.X.  If we're opening the
+		 * DB file read-only, change the flags to read-write, because
+		 * temporary backing files cannot be opened read-only, and DB
+		 * 2.X will return an error.  We are cheating here -- if the
+		 * application does a put on the database, it will succeed --
+		 * although that would be a stupid thing for the application
+		 * to do.
+		 *
+		 * !!!
 		 * Note, the file name in DB 1.85 was a const -- we don't do
 		 * that in DB 2.0, so do that cast.
 		 */
@@ -122,6 +131,10 @@ __dbopen(file, oflags, mode, type, openinfo)
 				(void)__os_close(__os_open(file, oflags, mode));
 			dbinfop->re_source = (char *)file;
 			file = NULL;
+
+			if (O_RDONLY)
+				oflags &= ~O_RDONLY;
+			oflags |= O_RDWR;
 		}
 
 		if ((ri = openinfo) != NULL) {
@@ -181,15 +194,14 @@ __dbopen(file, oflags, mode, type, openinfo)
 	 * Store the returned pointer to the real DB 2.0 structure in the
 	 * internal pointer.  Ugly, but we're not going for pretty, here.
 	 */
-	if ((__set_errno(db_open(file,
-	    type, __db_oflags(oflags), mode, NULL, dbinfop, &dbp))) != 0) {
+	if ((errno = db_open(file,
+	    type, __db_oflags(oflags), mode, NULL, dbinfop, &dbp)) != 0) {
 		__db_free(db185p);
 		return (NULL);
 	}
 
 	/* Create the cursor used for sequential ops. */
-	if ((__set_errno(dbp->cursor(dbp, NULL, &((DB185 *)db185p)->dbc)))
-	    != 0) {
+	if ((errno = dbp->cursor(dbp, NULL, &((DB185 *)db185p)->dbc)) != 0) {
 		s_errno = errno;
 		(void)dbp->close(dbp, 0);
 		__db_free(db185p);

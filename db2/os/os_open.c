@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_open.c	10.20 (Sleepycat) 11/27/97";
+static const char sccsid[] = "@(#)os_open.c	10.26 (Sleepycat) 5/4/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -25,12 +25,13 @@ static const char sccsid[] = "@(#)os_open.c	10.20 (Sleepycat) 11/27/97";
  * __db_open --
  *	Open a file descriptor.
  *
- * PUBLIC: int __db_open __P((const char *, int, int, int, int *));
+ * PUBLIC: int __db_open __P((const char *, u_int32_t, u_int32_t, int, int *));
  */
 int
 __db_open(name, arg_flags, ok_flags, mode, fdp)
 	const char *name;
-	int arg_flags, ok_flags, mode, *fdp;
+	u_int32_t arg_flags, ok_flags;
+	int mode, *fdp;
 {
 	int fd, flags;
 
@@ -54,7 +55,7 @@ __db_open(name, arg_flags, ok_flags, mode, fdp)
 	else
 		flags |= O_RDWR;
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(WIN16)
 #ifdef _MSC_VER
 	if (arg_flags & DB_SEQUENTIAL)
 		flags |= _O_SEQUENTIAL;
@@ -80,7 +81,7 @@ __db_open(name, arg_flags, ok_flags, mode, fdp)
 		(void)__os_unlink(name);
 #endif
 
-#if !defined(_WIN32) && !defined(macintosh)
+#if !defined(_WIN32) && !defined(WIN16)
 	/*
 	 * Deny access to any child process; done for Win32 by O_NOINHERIT,
 	 * MacOS has neither child processes nor fd inheritance.

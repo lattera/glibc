@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -36,7 +36,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)db_swap.h	10.3 (Sleepycat) 6/10/97
+ *	@(#)db_swap.h	10.5 (Sleepycat) 4/10/98
  */
 
 #ifndef _DB_SWAP_H_
@@ -74,7 +74,7 @@
 /*
  * Little endian <==> big endian 16-bit swap macros.
  *	M_16_SWAP	swap a memory location
- *	P_16_COPY	copy potentially unaligned  from one location to another
+ *	P_16_COPY	copy potentially unaligned 2 byte quantities
  *	P_16_SWAP	swap a referenced memory location
  */
 #define	M_16_SWAP(a) {							\

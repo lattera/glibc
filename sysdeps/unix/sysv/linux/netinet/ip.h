@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #ifndef __NETINET_IP_H
 #define __NETINET_IP_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
 #include <sys/types.h>
 
 #include <netinet/in.h>
@@ -60,7 +60,9 @@ struct ip_options
     u_int8_t router_alert;
     u_int8_t __pad1;
     u_int8_t __pad2;
+#ifdef __GNUC__
     u_int8_t __data[0];
+#endif
   };
 
 struct iphdr

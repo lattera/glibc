@@ -15,8 +15,6 @@
 #include "db_dispatch.h"
 #include "txn.h"
 #include "db_am.h"
-#include "common_ext.h"
-
 /*
  * PUBLIC: int __txn_regop_log
  * PUBLIC:     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
@@ -58,7 +56,7 @@ int __txn_regop_log(logp, txnid, ret_lsnp, flags,
 	bp += sizeof(DB_LSN);
 	memcpy(bp, &opcode, sizeof(opcode));
 	bp += sizeof(opcode);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -74,22 +72,23 @@ int __txn_regop_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__txn_regop_print(notused1, dbtp, lsnp, notused3, notused4)
+__txn_regop_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__txn_regop_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __txn_regop_read(dbtp->data, &argp)) != 0)
 		return (ret);
@@ -186,7 +185,7 @@ int __txn_ckp_log(logp, txnid, ret_lsnp, flags,
 	else
 		memset(bp, 0, sizeof(*last_ckp));
 	bp += sizeof(*last_ckp);
-#ifdef DEBUG
+#ifdef DIAGNOSTIC
 	if ((u_int32_t)(bp - (u_int8_t *)logrec.data) != logrec.size)
 		fprintf(stderr, "Error in log record length");
 #endif
@@ -202,22 +201,23 @@ int __txn_ckp_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
 int
-__txn_ckp_print(notused1, dbtp, lsnp, notused3, notused4)
+__txn_ckp_print(notused1, dbtp, lsnp, notused2, notused3)
 	DB_LOG *notused1;
 	DBT *dbtp;
 	DB_LSN *lsnp;
-	int notused3;
-	void *notused4;
+	int notused2;
+	void *notused3;
 {
 	__txn_ckp_args *argp;
 	u_int32_t i;
-	int c, ret;
+	u_int ch;
+	int ret;
 
 	i = 0;
-	c = 0;
+	ch = 0;
 	notused1 = NULL;
-	notused3 = 0;
-	notused4 = NULL;
+	notused2 = 0;
+	notused3 = NULL;
 
 	if ((ret = __txn_ckp_read(dbtp->data, &argp)) != 0)
 		return (ret);

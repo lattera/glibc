@@ -1,27 +1,25 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_thread.c	8.13 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db_thread.c	8.15 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
 #include "db_int.h"
 #include "db_page.h"
-#include "shqueue.h"
 #include "db_am.h"
 
 static int __db_getlockid __P((DB *, DB *));

@@ -1,20 +1,19 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fput.c	10.17 (Sleepycat) 12/20/97";
+static const char sccsid[] = "@(#)mp_fput.c	10.22 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #endif
 
 #include "db_int.h"
@@ -31,12 +30,11 @@ int
 memp_fput(dbmfp, pgaddr, flags)
 	DB_MPOOLFILE *dbmfp;
 	void *pgaddr;
-	int flags;
+	u_int32_t flags;
 {
 	BH *bhp;
 	DB_MPOOL *dbmp;
 	MPOOL *mp;
-	MPOOLFILE *mfp;
 	int wrote, ret;
 
 	dbmp = dbmfp->dbmp;
@@ -71,8 +69,9 @@ memp_fput(dbmfp, pgaddr, flags)
 
 	/*
 	 * If we're mapping the file, there's nothing to do.  Because we can
-	 * quit mapping at any time, we have to check on each buffer to see
-	 * if it's in the map region.
+	 * stop mapping the file at any time, we have to check on each buffer
+	 * to see if the address we gave the application was part of the map
+	 * region.
 	 */
 	if (dbmfp->addr != NULL && pgaddr >= dbmfp->addr &&
 	    (u_int8_t *)pgaddr <= (u_int8_t *)dbmfp->addr + dbmfp->len)
@@ -98,36 +97,33 @@ memp_fput(dbmfp, pgaddr, flags)
 		F_SET(bhp, BH_DISCARD);
 
 	/*
-	 * If more than one reference to the page, we're done.  Ignore discard
-	 * flags (for now) and leave it at its position in the LRU chain.  The
-	 * rest gets done at last reference close.
+	 * Check for a reference count going to zero.  This can happen if the
+	 * application returns a page twice.
 	 */
-#ifdef DEBUG
 	if (bhp->ref == 0) {
-		__db_err(dbmp->dbenv,
-    "Unpinned page returned: reference count on page %lu went negative.",
-		    (u_long)bhp->pgno);
-		abort();
+		__db_err(dbmp->dbenv, "%s: page %lu: unpinned page returned",
+		    __memp_fn(dbmfp), (u_long)bhp->pgno);
+		UNLOCKREGION(dbmp);
+		return (EINVAL);
 	}
-#endif
+
+	/*
+	 * If more than one reference to the page, we're done.  Ignore the
+	 * discard flags (for now) and leave it at its position in the LRU
+	 * chain.  The rest gets done at last reference close.
+	 */
 	if (--bhp->ref > 0) {
 		UNLOCKREGION(dbmp);
 		return (0);
 	}
 
-	/* Move the buffer to the head/tail of the LRU chain. */
-	SH_TAILQ_REMOVE(&mp->bhq, bhp, q, __bh);
-	if (F_ISSET(bhp, BH_DISCARD))
-		SH_TAILQ_INSERT_HEAD(&mp->bhq, bhp, q, __bh);
-	else
-		SH_TAILQ_INSERT_TAIL(&mp->bhq, bhp, q);
-
 	/*
-	 * If this buffer is scheduled for writing because of a checkpoint,
-	 * write it now.  If we can't write it, set a flag so that the next
-	 * time the memp_sync function is called we try writing it there,
-	 * as the checkpoint application better be able to write all of the
-	 * files.
+	 * If this buffer is scheduled for writing because of a checkpoint, we
+	 * need to write it (if we marked it dirty), or update the checkpoint
+	 * counters (if we didn't mark it dirty).  If we try to write it and
+	 * can't, that's not necessarily an error, but set a flag so that the
+	 * next time the memp_sync function runs we try writing it there, as
+	 * the checkpoint application better be able to write all of the files.
 	 */
 	if (F_ISSET(bhp, BH_WRITE))
 		if (F_ISSET(bhp, BH_DIRTY)) {
@@ -137,11 +133,17 @@ memp_fput(dbmfp, pgaddr, flags)
 		} else {
 			F_CLR(bhp, BH_WRITE);
 
-			mfp = R_ADDR(dbmp, bhp->mf_offset);
-			--mfp->lsn_cnt;
-
+			--dbmfp->mfp->lsn_cnt;
 			--mp->lsn_cnt;
 		}
+
+	/* Move the buffer to the head/tail of the LRU chain. */
+	SH_TAILQ_REMOVE(&mp->bhq, bhp, q, __bh);
+	if (F_ISSET(bhp, BH_DISCARD))
+		SH_TAILQ_INSERT_HEAD(&mp->bhq, bhp, q, __bh);
+	else
+		SH_TAILQ_INSERT_TAIL(&mp->bhq, bhp, q);
+
 
 	UNLOCKREGION(dbmp);
 	return (0);

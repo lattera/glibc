@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -43,7 +43,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)btree.h	10.17 (Sleepycat) 9/23/97
+ *	@(#)btree.h	10.21 (Sleepycat) 5/23/98
  */
 
 /* Forward structure declarations. */
@@ -103,28 +103,39 @@ struct __recno;		typedef struct __recno RECNO;
  * to return deleted entries.  To simplify both the mnemonic representation
  * and the code that checks for various cases, we construct a set of bitmasks.
  */
-#define	S_READ		0x0001		/* Read locks. */
-#define	S_WRITE		0x0002		/* Write locks. */
+#define	S_READ		0x00001		/* Read locks. */
+#define	S_WRITE		0x00002		/* Write locks. */
 
-#define	S_APPEND	0x0040		/* Append to the tree. */
-#define	S_DELNO		0x0080		/* Don't return deleted items. */
-#define	S_DUPFIRST	0x0100		/* Return first duplicate. */
-#define	S_DUPLAST	0x0200		/* Return last duplicate. */
-#define	S_EXACT		0x0400		/* Exact items only. */
-#define	S_PARENT	0x0800		/* Lock page pair. */
+#define	S_APPEND	0x00040		/* Append to the tree. */
+#define	S_DELNO		0x00080		/* Don't return deleted items. */
+#define	S_DUPFIRST	0x00100		/* Return first duplicate. */
+#define	S_DUPLAST	0x00200		/* Return last duplicate. */
+#define	S_EXACT		0x00400		/* Exact items only. */
+#define	S_PARENT	0x00800		/* Lock page pair. */
+#define	S_STACK		0x01000		/* Need a complete stack. */
 
-#define	S_DELETE	(S_WRITE | S_DUPFIRST | S_DELNO | S_EXACT)
+#define	S_DELETE	(S_WRITE | S_DUPFIRST | S_DELNO | S_EXACT | S_STACK)
 #define	S_FIND		(S_READ | S_DUPFIRST | S_DELNO)
-#define	S_INSERT	(S_WRITE | S_DUPLAST)
-#define	S_KEYFIRST	(S_WRITE | S_DUPFIRST)
-#define	S_KEYLAST	(S_WRITE | S_DUPLAST)
+#define	S_INSERT	(S_WRITE | S_DUPLAST | S_STACK)
+#define	S_KEYFIRST	(S_WRITE | S_DUPFIRST | S_STACK)
+#define	S_KEYLAST	(S_WRITE | S_DUPLAST | S_STACK)
 #define	S_WRPAIR	(S_WRITE | S_DUPLAST | S_PARENT)
+
+/*
+ * If doing insert search (including keyfirst or keylast operations) or a
+ * split search on behalf of an insert, it's okay to return the entry one
+ * past the end of the page.
+ */
+#define	PAST_END_OK(f)							\
+	((f) == S_INSERT ||						\
+	(f) == S_KEYFIRST || (f) == S_KEYLAST || (f) == S_WRPAIR)
 
 /*
  * Flags to __bam_iitem().
  */
-#define	BI_NEWKEY	0x01		/* New key. */
-#define	BI_DELETED	0x02		/* Key/data pair only placeholder. */
+#define	BI_DELETED	0x01		/* Key/data pair only placeholder. */
+#define	BI_DOINCR	0x02		/* Increment the record count. */
+#define	BI_NEWKEY	0x04		/* New key. */
 
 /*
  * Various routines pass around page references.  A page reference can be a
@@ -136,6 +147,21 @@ struct __epg {
 	db_indx_t indx;			/* The index on the page. */
 	DB_LOCK	  lock;			/* The page's lock. */
 };
+
+/*
+ * All cursors are queued from the master DB structure.  Convert the user's
+ * DB reference to the master DB reference.  We lock the master DB mutex
+ * so that we can walk the cursor queue.  There's no race in accessing the
+ * cursors, because if we're modifying a page, we have a write lock on it,
+ * and therefore no other thread than the current one can have a cursor that
+ * references the page.
+ */
+#define	CURSOR_SETUP(dbp) {						\
+	(dbp) = (dbp)->master;						\
+	DB_THREAD_LOCK(dbp);						\
+}
+#define	CURSOR_TEARDOWN(dbp)						\
+	DB_THREAD_UNLOCK(dbp);
 
 /*
  * Btree cursor.

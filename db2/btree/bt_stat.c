@@ -1,21 +1,20 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_stat.c	10.14 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)bt_stat.c	10.17 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -29,14 +28,14 @@ static void __bam_add_rstat __P((DB_BTREE_LSTAT *, DB_BTREE_STAT *));
  * __bam_stat --
  *	Gather/print the btree statistics
  *
- * PUBLIC: int __bam_stat __P((DB *, void *, void *(*)(size_t), int));
+ * PUBLIC: int __bam_stat __P((DB *, void *, void *(*)(size_t), u_int32_t));
  */
 int
 __bam_stat(argdbp, spp, db_malloc, flags)
 	DB *argdbp;
 	void *spp;
 	void *(*db_malloc) __P((size_t));
-	int flags;
+	u_int32_t flags;
 {
 	BTMETA *meta;
 	BTREE *t;

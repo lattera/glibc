@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,15 +47,14 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)dbm.c	10.10 (Sleepycat) 1/16/98";
+static const char sccsid[] = "@(#)dbm.c	10.16 (Sleepycat) 5/7/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
-#include <sys/param.h>
+#include <sys/types.h>
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <string.h>
 #endif
 
@@ -82,7 +81,7 @@ __db_dbm_init(file)
 	if (__cur_db != NULL)
 		(void)dbm_close(__cur_db);
 	if ((__cur_db =
-	    dbm_open(file, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) != NULL)
+	    dbm_open(file, O_CREAT | O_RDWR, __db_omode("rw----"))) != NULL)
 		return (0);
 	if ((__cur_db = dbm_open(file, O_RDONLY, 0)) != NULL)
 		return (0);
@@ -244,19 +243,19 @@ __db_ndbm_fetch(db, key)
 {
 	DBT _key, _data;
 	datum data;
-	int status;
+	int ret;
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
 	_key.size = key.dsize;
 	_key.data = key.dptr;
-	status = db->get((DB *)db, NULL, &_key, &_data, 0);
-	if (status) {
-		data.dptr = NULL;
-		data.dsize = 0;
-	} else {
+	if ((ret = db->get((DB *)db, NULL, &_key, &_data, 0)) == 0) {
 		data.dptr = _data.data;
 		data.dsize = _data.size;
+	} else {
+		data.dptr = NULL;
+		data.dsize = 0;
+		__set_errno (ret == DB_NOTFOUND ? ENOENT : ret);
 	}
 	return (data);
 }
@@ -273,7 +272,7 @@ __db_ndbm_firstkey(db)
 {
 	DBT _key, _data;
 	datum key;
-	int status;
+	int ret;
 
 	DBC *cp;
 
@@ -285,13 +284,13 @@ __db_ndbm_firstkey(db)
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
-	status = (cp->c_get)(cp, &_key, &_data, DB_FIRST);
-	if (status) {
-		key.dptr = NULL;
-		key.dsize = 0;
-	} else {
+	if ((ret = (cp->c_get)(cp, &_key, &_data, DB_FIRST)) == 0) {
 		key.dptr = _key.data;
 		key.dsize = _key.size;
+	} else {
+		key.dptr = NULL;
+		key.dsize = 0;
+		__set_errno (ret == DB_NOTFOUND ? ENOENT : ret);
 	}
 	return (key);
 }
@@ -309,7 +308,7 @@ __db_ndbm_nextkey(db)
 	DBC *cp;
 	DBT _key, _data;
 	datum key;
-	int status;
+	int ret;
 
 	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
 		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
@@ -319,13 +318,13 @@ __db_ndbm_nextkey(db)
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
-	status = (cp->c_get)(cp, &_key, &_data, DB_NEXT);
-	if (status) {
-		key.dptr = NULL;
-		key.dsize = 0;
-	} else {
+	if ((ret = (cp->c_get)(cp, &_key, &_data, DB_NEXT)) == 0) {
 		key.dptr = _key.data;
 		key.dsize = _key.size;
+	} else {
+		key.dptr = NULL;
+		key.dsize = 0;
+		__set_errno (ret == DB_NOTFOUND ? ENOENT : ret);
 	}
 	return (key);
 }
@@ -347,14 +346,10 @@ __db_ndbm_delete(db, key)
 	memset(&_key, 0, sizeof(DBT));
 	_key.data = key.dptr;
 	_key.size = key.dsize;
-	ret = (((DB *)db)->del)((DB *)db, NULL, &_key, 0);
-	if (ret < 0)
-		errno = ENOENT;
-	else if (ret > 0) {
-		errno = ret;
-		ret = -1;
-	}
-	return (ret);
+	if ((ret = (((DB *)db)->del)((DB *)db, NULL, &_key, 0)) == 0)
+		return (0);
+	errno = ret == DB_NOTFOUND ? ENOENT : ret;
+	return (-1);
 }
 weak_alias (__db_ndbm_delete, dbm_delete)
 
@@ -371,6 +366,7 @@ __db_ndbm_store(db, key, data, flags)
 	int flags;
 {
 	DBT _key, _data;
+	int ret;
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
@@ -378,8 +374,13 @@ __db_ndbm_store(db, key, data, flags)
 	_key.size = key.dsize;
 	_data.data = data.dptr;
 	_data.size = data.dsize;
-	return (db->put((DB *)db,
-	    NULL, &_key, &_data, (flags == DBM_INSERT) ? DB_NOOVERWRITE : 0));
+	if ((ret = db->put((DB *)db, NULL,
+	    &_key, &_data, flags == DBM_INSERT ? DB_NOOVERWRITE : 0)) == 0)
+		return (0);
+	if (ret == DB_KEYEXIST)
+		return (1);
+	errno = ret;
+	return (-1);
 }
 weak_alias (__db_ndbm_store, dbm_store)
 

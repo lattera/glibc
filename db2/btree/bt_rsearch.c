@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -44,14 +44,11 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_rsearch.c	10.8 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)bt_rsearch.c	10.15 (Sleepycat) 5/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
-
-#include <stdio.h>
-#include <stdlib.h>
 #endif
 
 #include "db_int.h"
@@ -62,13 +59,13 @@ static const char sccsid[] = "@(#)bt_rsearch.c	10.8 (Sleepycat) 8/24/97";
  * __bam_rsearch --
  *	Search a btree for a record number.
  *
- * PUBLIC: int __bam_rsearch __P((DB *, db_recno_t *, u_int, int, int *));
+ * PUBLIC: int __bam_rsearch __P((DB *, db_recno_t *, u_int32_t, int, int *));
  */
 int
 __bam_rsearch(dbp, recnop, flags, stop, exactp)
 	DB *dbp;
 	db_recno_t *recnop;
-	u_int flags;
+	u_int32_t flags;
 	int stop, *exactp;
 {
 	BINTERNAL *bi;
@@ -78,7 +75,7 @@ __bam_rsearch(dbp, recnop, flags, stop, exactp)
 	RINTERNAL *ri;
 	db_indx_t indx, top;
 	db_pgno_t pg;
-	db_recno_t recno, total;
+	db_recno_t i, recno, total;
 	int isappend, ret, stack;
 
 	t = dbp->internal;
@@ -136,8 +133,7 @@ __bam_rsearch(dbp, recnop, flags, stop, exactp)
 			*exactp = 1;
 		else {
 			*exactp = 0;
-			if (flags == S_DELETE ||
-			    flags == S_FIND || recno > total + 1) {
+			if (!PAST_END_OK(flags) || recno > total + 1) {
 				(void)memp_fput(dbp->mpf, h, 0);
 				(void)__BT_LPUT(dbp, lock);
 				return (DB_NOTFOUND);
@@ -164,30 +160,65 @@ __bam_rsearch(dbp, recnop, flags, stop, exactp)
 		stack = 1;
 	}
 
-	/* Records in the tree are 0-based, and record numbers are 1-based. */
-	--recno;
-
+	/*
+	 * !!!
+	 * Record numbers in the tree are 0-based, but the recno is
+	 * 1-based.  All of the calculations below have to take this
+	 * into account.
+	 */
 	for (total = 0;;) {
 		switch (TYPE(h)) {
 		case P_LBTREE:
-			BT_STK_ENTER(t, h, (recno - total) * P_INDX, lock, ret);
+			recno -= total;
+
+			/*
+			 * There may be logically deleted records on the page,
+			 * walk the page correcting for them.  The record may
+			 * not exist if there are enough deleted records in the
+			 * page.
+			 */
+			if (recno <= NUM_ENT(h))
+				for (i = recno - 1;; --i) {
+					if (B_DISSET(GET_BKEYDATA(h,
+					    i * P_INDX + O_INDX)->type))
+						++recno;
+					if (i == 0)
+						break;
+				}
+			if (recno > NUM_ENT(h)) {
+				*exactp = 0;
+				if (!PAST_END_OK(flags) ||
+				    recno > (db_recno_t)(NUM_ENT(h) + 1)) {
+					ret = DB_NOTFOUND;
+					goto err;
+				}
+
+			}
+
+			/* Correct from 1-based to 0-based for a page offset. */
+			--recno;
+			BT_STK_ENTER(t, h, recno * P_INDX, lock, ret);
 			return (ret);
 		case P_IBTREE:
 			for (indx = 0, top = NUM_ENT(h);;) {
 				bi = GET_BINTERNAL(h, indx);
-				if (++indx == top || total + bi->nrecs > recno)
+				if (++indx == top || total + bi->nrecs >= recno)
 					break;
 				total += bi->nrecs;
 			}
 			pg = bi->pgno;
 			break;
 		case P_LRECNO:
-			BT_STK_ENTER(t, h, recno - total, lock, ret);
+			recno -= total;
+
+			/* Correct from 1-based to 0-based for a page offset. */
+			--recno;
+			BT_STK_ENTER(t, h, recno, lock, ret);
 			return (ret);
 		case P_IRECNO:
 			for (indx = 0, top = NUM_ENT(h);;) {
 				ri = GET_RINTERNAL(h, indx);
-				if (++indx == top || total + ri->nrecs > recno)
+				if (++indx == top || total + ri->nrecs >= recno)
 					break;
 				total += ri->nrecs;
 			}
@@ -244,13 +275,13 @@ err:	BT_STK_POP(t);
  * __bam_adjust --
  *	Adjust the tree after adding or deleting a record.
  *
- * PUBLIC: int __bam_adjust __P((DB *, BTREE *, int));
+ * PUBLIC: int __bam_adjust __P((DB *, BTREE *, int32_t));
  */
 int
 __bam_adjust(dbp, t, adjust)
 	DB *dbp;
 	BTREE *t;
-	int adjust;
+	int32_t adjust;
 {
 	EPG *epg;
 	PAGE *h;
@@ -264,7 +295,7 @@ __bam_adjust(dbp, t, adjust)
 			    (ret = __bam_cadjust_log(dbp->dbenv->lg_info,
 			    dbp->txn, &LSN(h), 0, dbp->log_fileid,
 			    PGNO(h), &LSN(h), (u_int32_t)epg->indx,
-			    (int32_t)adjust, 1)) != 0)
+			    adjust, 1)) != 0)
 				return (ret);
 
 			if (TYPE(h) == P_IBTREE)
@@ -322,26 +353,31 @@ db_recno_t
 __bam_total(h)
 	PAGE *h;
 {
-	db_recno_t recs;
-	db_indx_t nxt, top;
+	db_recno_t nrecs;
+	db_indx_t indx, top;
+
+	nrecs = 0;
+	top = NUM_ENT(h);
 
 	switch (TYPE(h)) {
 	case P_LBTREE:
-		recs = NUM_ENT(h) / 2;
+		/* Check for logically deleted records. */
+		for (indx = 0; indx < top; indx += P_INDX)
+			if (!B_DISSET(GET_BKEYDATA(h, indx + O_INDX)->type))
+				++nrecs;
 		break;
 	case P_IBTREE:
-		for (recs = 0, nxt = 0, top = NUM_ENT(h); nxt < top; ++nxt)
-			recs += GET_BINTERNAL(h, nxt)->nrecs;
+		for (indx = 0; indx < top; indx += O_INDX)
+			nrecs += GET_BINTERNAL(h, indx)->nrecs;
 		break;
 	case P_LRECNO:
-		recs = NUM_ENT(h);
+		nrecs = NUM_ENT(h);
 		break;
 	case P_IRECNO:
-		for (recs = 0, nxt = 0, top = NUM_ENT(h); nxt < top; ++nxt)
-			recs += GET_RINTERNAL(h, nxt)->nrecs;
+		for (indx = 0; indx < top; indx += O_INDX)
+			nrecs += GET_RINTERNAL(h, indx)->nrecs;
 		break;
-	default:
-		abort();
 	}
-	return (recs);
+
+	return (nrecs);
 }

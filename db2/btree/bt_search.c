@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -47,15 +47,13 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_search.c	10.9 (Sleepycat) 11/18/97";
+static const char sccsid[] = "@(#)bt_search.c	10.15 (Sleepycat) 5/6/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #endif
 
@@ -68,13 +66,13 @@ static const char sccsid[] = "@(#)bt_search.c	10.9 (Sleepycat) 11/18/97";
  *	Search a btree for a key.
  *
  * PUBLIC: int __bam_search __P((DB *,
- * PUBLIC:     const DBT *, u_int, int, db_recno_t *, int *));
+ * PUBLIC:     const DBT *, u_int32_t, int, db_recno_t *, int *));
  */
 int
 __bam_search(dbp, key, flags, stop, recnop, exactp)
 	DB *dbp;
 	const DBT *key;
-	u_int flags;
+	u_int32_t flags;
 	int stop, *exactp;
 	db_recno_t *recnop;
 {
@@ -109,8 +107,7 @@ __bam_search(dbp, key, flags, stop, recnop, exactp)
 	 * Retrieve the root page.
 	 */
 	pg = PGNO_ROOT;
-	stack = F_ISSET(dbp, DB_BT_RECNUM) &&
-	    (flags == S_INSERT || flags == S_DELETE);
+	stack = F_ISSET(dbp, DB_BT_RECNUM) && LF_ISSET(S_STACK);
 	if ((ret = __bam_lget(dbp,
 	    0, pg, stack ? DB_LOCK_WRITE : DB_LOCK_READ, &lock)) != 0)
 		return (ret);
@@ -179,6 +176,14 @@ __bam_search(dbp, key, flags, stop, recnop, exactp)
 			if (LF_ISSET(S_EXACT))
 				goto notfound;
 
+			/*
+			 * !!!
+			 * Possibly returning a deleted record -- DB_SET_RANGE,
+			 * DB_KEYFIRST and DB_KEYLAST don't require an exact
+			 * match, and we don't want to walk multiple pages here
+			 * to find an undeleted record.  This is handled in the
+			 * __bam_c_search() routine.
+			 */
 			BT_STK_ENTER(t, h, base, lock, ret);
 			return (ret);
 		}
@@ -249,7 +254,10 @@ match:	*exactp = 1;
 	/*
 	 * If we got here, we know that we have a btree leaf page.
 	 *
-	 * If there are duplicates, go to the first/last one.
+	 * If there are duplicates, go to the first/last one.  This is
+	 * safe because we know that we're not going to leave the page,
+	 * all duplicate sets that are not on overflow pages exist on a
+	 * single leaf page.
 	 */
 	if (LF_ISSET(S_DUPLAST))
 		while (indx < (db_indx_t)(NUM_ENT(h) - P_INDX) &&
@@ -261,8 +269,8 @@ match:	*exactp = 1;
 			indx -= P_INDX;
 
 	/*
-	 * Now check if we are allowed to return deleted item; if not
-	 * find/last the first non-deleted item.
+	 * Now check if we are allowed to return deleted items; if not
+	 * find the next (or previous) non-deleted item.
 	 */
 	if (LF_ISSET(S_DELNO)) {
 		if (LF_ISSET(S_DUPLAST))

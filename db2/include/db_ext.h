@@ -53,7 +53,8 @@ int __db_debug_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_debug_read __P((void *, __db_debug_args **));
 int __db_noop_log
-    __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t));
+    __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
+    u_int32_t, db_pgno_t, DB_LSN *));
 int __db_noop_print
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_noop_read __P((void *, __db_noop_args **));
@@ -67,8 +68,9 @@ int __db_add_recovery __P((DB_ENV *,
 int __db_txnlist_init __P((void *));
 int __db_txnlist_add __P((void *, u_int32_t));
 int __db_txnlist_find __P((void *, u_int32_t));
-void __db_txnlist_print __P((void *));
 void __db_txnlist_end __P((void *));
+void __db_txnlist_gen __P((void *, int));
+void __db_txnlist_print __P((void *));
 int __db_dput __P((DB *,
    DBT *, PAGE **, db_indx_t *, int (*)(DB *, u_int32_t, PAGE **)));
 int __db_drem __P((DB *,
@@ -83,7 +85,7 @@ int __db_goff __P((DB *, DBT *,
     u_int32_t, db_pgno_t, void **, u_int32_t *));
 int __db_poff __P((DB *, const DBT *, db_pgno_t *,
     int (*)(DB *, u_int32_t, PAGE **)));
-int __db_ovref __P((DB *, db_pgno_t, int));
+int __db_ovref __P((DB *, db_pgno_t, int32_t));
 int __db_doff __P((DB *, db_pgno_t, int (*)(DB *, PAGE *)));
 int __db_moff __P((DB *, const DBT *, db_pgno_t));
 void __db_loadme __P((void));
@@ -97,7 +99,8 @@ int __db_prnpage __P((DB_MPOOLFILE *, db_pgno_t));
 int __db_prpage __P((PAGE *, int));
 int __db_isbad __P((PAGE *, int));
 void __db_pr __P((u_int8_t *, u_int32_t));
-void __db_prflags __P((u_int32_t, const FN *));
+int __db_prdbt __P((DBT *, int, FILE *));
+void __db_prflags __P((u_int32_t, const FN *, FILE *));
 int __db_addrem_recover
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_split_recover __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
@@ -108,8 +111,7 @@ int __db_relink_recover
 int __db_addpage_recover
    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_debug_recover __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
-int __db_noop_recover
-  __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
+int __db_noop_recover __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_ret __P((DB *,
    PAGE *, u_int32_t, DBT *, void **, u_int32_t *));
 int __db_retcopy __P((DBT *,

@@ -1,14 +1,14 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1997
+ * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_stat.c	10.11 (Sleepycat) 1/8/98";
+static const char sccsid[] = "@(#)os_stat.c	10.15 (Sleepycat) 4/27/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -16,11 +16,9 @@ static const char sccsid[] = "@(#)os_stat.c	10.11 (Sleepycat) 1/8/98";
 #include <sys/stat.h>
 
 #include <errno.h>
-#include <string.h>
 #endif
 
 #include "db_int.h"
-#include "common_ext.h"
 
 /*
  * __os_exists --
@@ -37,8 +35,17 @@ __os_exists(path, isdirp)
 
 	if (stat(path, &sb) != 0)
 		return (errno);
+
+#if !defined(S_ISDIR) || defined(STAT_MACROS_BROKEN)
+#if defined(_WIN32) || defined(WIN16)
+#define	S_ISDIR(m)	(_S_IFDIR & (m))
+#else
+#define	S_ISDIR(m)	(((m) & 0170000) == 0040000)
+#endif
+#endif
 	if (isdirp != NULL)
 		*isdirp = S_ISDIR(sb.st_mode);
+
 	return (0);
 }
 
@@ -69,10 +76,16 @@ __os_ioinfo(path, fd, mbytesp, bytesp, iosizep)
 	if (bytesp != NULL)
 		*bytesp = sb.st_size % MEGABYTE;
 
-	/* Return the underlying filesystem blocksize, if available. */
+	/*
+	 * Return the underlying filesystem blocksize, if available.
+	 *
+	 * XXX
+	 * Check for a 0 size -- HP's MPE architecture has st_blksize,
+	 * but it's always 0.
+	 */
 #ifdef HAVE_ST_BLKSIZE
-	if (iosizep != NULL)
-		*iosizep = sb.st_blksize;
+	if (iosizep != NULL && (*iosizep = sb.st_blksize) == 0)
+		*iosizep = DB_DEF_IOSIZE;
 #else
 	if (iosizep != NULL)
 		*iosizep = DB_DEF_IOSIZE;

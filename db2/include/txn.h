@@ -1,10 +1,10 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)txn.h	10.11 (Sleepycat) 10/25/97
+ *	@(#)txn.h	10.15 (Sleepycat) 4/21/98
  */
 #ifndef	_TXN_H_
 #define	_TXN_H_
@@ -52,12 +52,11 @@ struct __db_txnmgr {
 	TAILQ_HEAD(_chain, __db_txn)	txn_chain;
 
 /* These fields are not protected. */
+	REGINFO		reginfo;	/* Region information. */
 	DB_ENV		*dbenv;		/* Environment. */
 	int (*recover)			/* Recovery dispatch routine */
 	    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
-	int		 fd;		/* mapped file descriptor */
-	u_int		 flags;		/* DB_TXN_NOSYNC, DB_THREAD */
-	size_t		 reg_size;	/* how large we think the region is */
+	u_int32_t	 flags;		/* DB_TXN_NOSYNC, DB_THREAD */
 	DB_TXNREGION	*region;	/* address of shared memory region */
 	void		*mem;		/* address of the shalloc space */
 };
@@ -102,17 +101,16 @@ struct __db_txnregion {
 		(void)__db_mutex_unlock((tmgrp)->mutexp, -1)
 
 #define	LOCK_TXNREGION(tmgrp)						\
-	(void)__db_mutex_lock(&(tmgrp)->region->hdr.lock, (tmgrp)->fd)
+	(void)__db_mutex_lock(&(tmgrp)->region->hdr.lock, (tmgrp)->reginfo.fd)
 #define	UNLOCK_TXNREGION(tmgrp)						\
-	(void)__db_mutex_unlock(&(tmgrp)->region->hdr.lock, (tmgrp)->fd)
+	(void)__db_mutex_unlock(&(tmgrp)->region->hdr.lock, (tmgrp)->reginfo.fd)
 
 /*
  * Log record types.
  */
-#define	TXN_BEGIN	1
-#define	TXN_COMMIT	2
-#define	TXN_PREPARE	3
-#define	TXN_CHECKPOINT	4
+#define	TXN_COMMIT	1
+#define	TXN_PREPARE	2
+#define	TXN_CHECKPOINT	3
 
 #include "txn_auto.h"
 #include "txn_ext.h"

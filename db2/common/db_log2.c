@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 /*
@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_log2.c	10.3 (Sleepycat) 6/21/97";
+static const char sccsid[] = "@(#)db_log2.c	10.5 (Sleepycat) 4/26/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -63,6 +63,7 @@ __db_log2(num)
 	u_int32_t i, limit;
 
 	limit = 1;
-	for (i = 0; limit < num; limit = limit << 1, i++);
+	for (i = 0; limit < num; limit = limit << 1, i++)
+		;
 	return (i);
 }

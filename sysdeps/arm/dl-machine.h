@@ -308,10 +308,10 @@ _dl_start_user:
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_ARM_JMP_SLOT)
+#define elf_machine_lookup_noplt_p(type) ((type) == R_ARM_JUMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_JMP_SLOT	R_ARM_JMP_SLOT
+#define ELF_MACHINE_JMP_SLOT	R_ARM_JUMP_SLOT
 
 /* The i386 never uses Elf32_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1
@@ -397,7 +397,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 						   refsym->st_size));
 	  break;
 	case R_ARM_GLOB_DAT:
-	case R_ARM_JMP_SLOT:
+	case R_ARM_JUMP_SLOT:
 
 #if 0
 #define _HEX(i) for (j=28; j>=0; j-=4) b[7-j/4]="0123456789abcdef"[((int)i>>j)&15];
@@ -429,7 +429,7 @@ __asm__ (" mov r0, #2; mov r1, %0; mov r2, #2; swi 0x00900004; "
 #endif
 	  *reloc_addr = value;
 	  break;
-	case R_ARM_32:
+	case R_ARM_ABS32:
 	  {
 #ifndef RTLD_BOOTSTRAP
 	   /* This is defined in rtld.c, but nowhere in the static
@@ -450,7 +450,7 @@ __asm__ (" mov r0, #2; mov r1, %0; mov r2, #2; swi 0x00900004; "
 	    *reloc_addr += value;
 	    break;
 	  }
-	case R_ARM_PC26:
+	case R_ARM_PC24:
 	  *reloc_addr += (value - (Elf32_Addr) reloc_addr);
 	  break;
 	default:
@@ -466,7 +466,7 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rel *reloc)
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   switch (ELF32_R_TYPE (reloc->r_info))
     {
-    case R_ARM_JMP_SLOT:
+    case R_ARM_JUMP_SLOT:
       *reloc_addr += map->l_addr;
       break;
     default:

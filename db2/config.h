@@ -24,6 +24,9 @@
 /* Define to `unsigned' if <sys/types.h> doesn't define.  */
 /* #undef size_t */
 
+/* Define if the `S_IS*' macros in <sys/stat.h> do not work properly.  */
+/* #undef STAT_MACROS_BROKEN */
+
 /* Define if you have the ANSI C header files.  */
 #define STDC_HEADERS 1
 
@@ -36,20 +39,29 @@
 /* Define if you want a debugging version. */
 /* #undef DEBUG */
 
+/* Define if you want a version with run-time diagnostic checking. */
+/* #undef DIAGNOSTIC */
+
 /* Define if you have sigfillset (and sigprocmask). */
 #define HAVE_SIGFILLSET 1
 
-/* Define if seeking to 64-bit file offsets requires the _llseek() call. */
-/* #undef HAVE_LLSEEK */
-
-/* Define if seeking to 64-bit file offsets requires the _lseeki64() call. */
-/* #undef HAVE_LSEEKI */
+/* Define if building on AIX, HP, Solaris to get big-file environment. */
+/* #undef HAVE_FILE_OFFSET_BITS */
+#ifdef HAVE_FILE_OFFSET_BITS
+#define _FILE_OFFSET_BITS 64
+#endif
 
 /* Define if you have spinlocks. */
 /* #undef HAVE_SPINLOCKS */
 
 /* Define if you want to use mc68020/gcc assembly spinlocks. */
 /* #undef HAVE_ASSEM_MC68020_GCC */
+
+/* Define if you want to use parisc/gcc assembly spinlocks. */
+/* #undef HAVE_ASSEM_PARISC_GCC */
+
+/* Define if you want to use sco/cc assembly spinlocks. */
+/* #undef HAVE_ASSEM_SCO_CC */
 
 /* Define if you want to use sparc/gcc assembly spinlocks. */
 /* #undef HAVE_ASSEM_SPARC_GCC */
@@ -68,6 +80,9 @@
 
 /* Define if you have the SGI abilock_t spinlocks. */
 /* #undef HAVE_FUNC_SGI */
+
+/* Define if you have the ReliantUNIX spinlock_t spinlocks. */
+/* #undef HAVE_FUNC_RELIANT */
 
 /* Define if you have the Solaris mutex_t spinlocks. */
 /* #undef HAVE_FUNC_SOLARIS */
@@ -102,11 +117,11 @@
 /* Define if you have the select function.  */
 #define HAVE_SELECT 1
 
+/* Define if you have the shmget function.  */
+#define HAVE_SHMGET 1
+
 /* Define if you have the snprintf function.  */
 #define HAVE_SNPRINTF 1
-
-/* Define if you have the strdup function.  */
-#define HAVE_STRDUP 1
 
 /* Define if you have the strerror function.  */
 #define HAVE_STRERROR 1

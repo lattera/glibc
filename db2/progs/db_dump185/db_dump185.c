@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_dump185.c	10.8 (Sleepycat) 9/21/97";
+static const char sccsid[] = "@(#)db_dump185.c	10.10 (Sleepycat) 4/10/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -30,7 +30,7 @@ static const char sccsid[] = "@(#)db_dump185.c	10.8 (Sleepycat) 9/21/97";
 #include "clib_ext.h"
 
 /* Hash Table Information */
-typedef struct hashhdr {		/* Disk resident portion */
+typedef struct hashhdr185 {		/* Disk resident portion */
 	int		magic;		/* Magic NO for hash tables */
 	int		version;	/* Version ID */
 	u_int32_t	lorder;		/* Byte Order */
@@ -48,11 +48,34 @@ typedef struct hashhdr {		/* Disk resident portion */
 					 * table */
 	int		ffactor;	/* Fill factor */
 	int		nkeys;		/* Number of keys in hash table */
-} HASHHDR;
+} HASHHDR185;
+typedef struct htab185	 {		/* Memory resident data structure */
+	HASHHDR185 	hdr;		/* Header */
+} HTAB185;
 
-typedef struct htab	 {		/* Memory resident data structure */
-	HASHHDR 	hdr;		/* Header */
-} HTAB;
+/* Hash Table Information */
+typedef struct hashhdr186 {	/* Disk resident portion */
+	int32_t	magic;		/* Magic NO for hash tables */
+	int32_t	version;	/* Version ID */
+	int32_t	lorder;		/* Byte Order */
+	int32_t	bsize;		/* Bucket/Page Size */
+	int32_t	bshift;		/* Bucket shift */
+	int32_t	ovfl_point;	/* Where overflow pages are being allocated */
+	int32_t	last_freed;	/* Last overflow page freed */
+	int32_t	max_bucket;	/* ID of Maximum bucket in use */
+	int32_t	high_mask;	/* Mask to modulo into entire table */
+	int32_t	low_mask;	/* Mask to modulo into lower half of table */
+	int32_t	ffactor;	/* Fill factor */
+	int32_t	nkeys;		/* Number of keys in hash table */
+	int32_t	hdrpages;	/* Size of table header */
+	int32_t	h_charkey;	/* value of hash(CHARKEY) */
+#define NCACHED	32		/* number of bit maps and spare points */
+	int32_t	spares[NCACHED];/* spare pages for overflow */
+	u_int16_t	bitmaps[NCACHED];	/* address of overflow page bitmaps */
+} HASHHDR186;
+typedef struct htab186	 {		/* Memory resident data structure */
+	HASHHDR186 	hdr;		/* Header */
+} HTAB186;
 
 typedef struct _epgno {
 	u_int32_t pgno;			/* the page number */
@@ -149,8 +172,8 @@ typedef struct _btree {
 	u_int32_t flags;
 } BTREE;
 
-void	db_185_btree __P((DB *, int));
-void	db_185_hash __P((DB *, int));
+void	db_btree __P((DB *, int));
+void	db_hash __P((DB *, int));
 void	dbt_dump __P((DBT *));
 void	dbt_print __P((DBT *));
 int	main __P((int, char *[]));
@@ -193,9 +216,9 @@ main(argc, argv)
 	if ((dbp = dbopen(argv[0], O_RDONLY, 0, DB_BTREE, NULL)) == NULL) {
 		if ((dbp = dbopen(argv[0], O_RDONLY, 0, DB_HASH, NULL)) == NULL)
 			err(1, "%s", argv[0]);
-		db_185_hash(dbp, pflag);
+		db_hash(dbp, pflag);
 	} else
-		db_185_btree(dbp, pflag);
+		db_btree(dbp, pflag);
 
 	/*
 	 * !!!
@@ -219,36 +242,43 @@ main(argc, argv)
 }
 
 /*
- * db_185_hash --
+ * db_hash --
  *	Dump out hash header information.
  */
 void
-db_185_hash(dbp, pflag)
+db_hash(dbp, pflag)
 	DB *dbp;
 	int pflag;
 {
-	HTAB *hashp;
-
-	hashp = dbp->internal;
+	HTAB185 *hash185p;
+	HTAB186 *hash186p;
 
 	printf("format=%s\n", pflag ? "print" : "bytevalue");
 	printf("type=hash\n");
-	printf("h_ffactor=%lu\n", (u_long)hashp->hdr.ffactor);
-#ifdef NOT_AVAILABLE_IN_DB_185
-	printf("h_nelem=%lu\n", (u_long)hashp->hdr.nelem);
-#endif
-	if (hashp->hdr.lorder != 0)
-		printf("db_lorder=%lu\n", (u_long)hashp->hdr.lorder);
-	printf("db_pagesize=%lu\n", (u_long)hashp->hdr.bsize);
+
+	/* DB 1.85 was version 2, DB 1.86 was version 3. */
+	hash185p = dbp->internal;
+	if (hash185p->hdr.version > 2) {
+		hash186p = dbp->internal;
+		printf("h_ffactor=%lu\n", (u_long)hash186p->hdr.ffactor);
+		if (hash186p->hdr.lorder != 0)
+			printf("db_lorder=%lu\n", (u_long)hash186p->hdr.lorder);
+		printf("db_pagesize=%lu\n", (u_long)hash186p->hdr.bsize);
+	} else {
+		printf("h_ffactor=%lu\n", (u_long)hash185p->hdr.ffactor);
+		if (hash185p->hdr.lorder != 0)
+			printf("db_lorder=%lu\n", (u_long)hash185p->hdr.lorder);
+		printf("db_pagesize=%lu\n", (u_long)hash185p->hdr.bsize);
+	}
 	printf("HEADER=END\n");
 }
 
 /*
- * db_185_btree --
+ * db_btree --
  *	Dump out btree header information.
  */
 void
-db_185_btree(dbp, pflag)
+db_btree(dbp, pflag)
 	DB *dbp;
 	int pflag;
 {

@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_dump.c	10.16 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_dump.c	10.19 (Sleepycat) 5/23/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,8 +35,6 @@ static const char sccsid[] = "@(#)db_dump.c	10.16 (Sleepycat) 8/27/97";
 
 void	configure __P((char *));
 DB_ENV *db_init __P((char *));
-void	dbt_dump __P((DBT *));
-void	dbt_print __P((DBT *));
 int	main __P((int, char *[]));
 void	pheader __P((DB *, int));
 void	usage __P((void));
@@ -55,11 +53,11 @@ main(argc, argv)
 	DBC *dbcp;
 	DBT key, data;
 	DB_ENV *dbenv;
-	int ch, dflag, pflag;
+	int ch, checkprint, dflag;
 	char *home;
 
 	home = NULL;
-	dflag = pflag = 0;
+	checkprint = dflag = 0;
 	while ((ch = getopt(argc, argv, "df:h:p")) != EOF)
 		switch (ch) {
 		case 'd':
@@ -73,7 +71,7 @@ main(argc, argv)
 			home = optarg;
 			break;
 		case 'p':
-			pflag = 1;
+			checkprint = 1;
 			break;
 		case '?':
 		default:
@@ -89,7 +87,7 @@ main(argc, argv)
 		if (home != NULL)
 			errx(1,
 			    "the -d and -h options may not both be specified");
-		if (pflag)
+		if (checkprint)
 			errx(1,
 			    "the -d and -p options may not both be specified");
 	}
@@ -116,23 +114,19 @@ main(argc, argv)
 	}
 
 	/* Print out the header. */
-	pheader(dbp, pflag);
+	pheader(dbp, checkprint);
 
 	/* Print out the key/data pairs. */
 	memset(&key, 0, sizeof(key));
 	memset(&data, 0, sizeof(data));
-	if (pflag)
-		while ((errno = dbcp->c_get(dbcp, &key, &data, DB_NEXT)) == 0) {
-			if (dbp->type != DB_RECNO)
-				dbt_print(&key);
-			dbt_print(&data);
-		}
-	else
-		while ((errno = dbcp->c_get(dbcp, &key, &data, DB_NEXT)) == 0) {
-			if (dbp->type != DB_RECNO)
-				dbt_dump(&key);
-			dbt_dump(&data);
-		}
+	while ((errno = dbcp->c_get(dbcp, &key, &data, DB_NEXT)) == 0) {
+		if (dbp->type != DB_RECNO &&
+		    (errno = __db_prdbt(&key, checkprint, stdout)) != 0)
+			break;
+		if ((errno = __db_prdbt(&data, checkprint, stdout)) != 0)
+			break;
+	}
+
 	if (errno != DB_NOTFOUND)
 		err(1, "cursor get");
 
@@ -227,47 +221,6 @@ pheader(dbp, pflag)
 		printf("db_pagesize=%lu\n", (u_long)dbp->pgsize);
 
 	printf("HEADER=END\n");
-}
-
-static char hex[] = "0123456789abcdef";
-
-/*
- * dbt_dump --
- *	Write out a key or data item using byte values.
- */
-void
-dbt_dump(dbtp)
-	DBT *dbtp;
-{
-	u_int32_t len;
-	u_int8_t *p;
-
-	for (len = dbtp->size, p = dbtp->data; len--; ++p)
-		(void)printf("%c%c",
-		    hex[(u_int8_t)(*p & 0xf0) >> 4], hex[*p & 0x0f]);
-	printf("\n");
-}
-
-/*
- * dbt_print --
- *	Write out a key or data item using printable characters.
- */
-void
-dbt_print(dbtp)
-	DBT *dbtp;
-{
-	u_int32_t len;
-	u_int8_t *p;
-
-	for (len = dbtp->size, p = dbtp->data; len--; ++p)
-		if (isprint(*p)) {
-			if (*p == '\\')
-				(void)printf("\\");
-			(void)printf("%c", *p);
-		} else
-			(void)printf("\\%c%c",
-			    hex[(u_int8_t)(*p & 0xf0) >> 4], hex[*p & 0x0f]);
-	printf("\n");
 }
 
 /*

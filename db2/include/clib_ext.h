@@ -53,9 +53,6 @@ int snprintf __P((char *, size_t, const char *, ...));
 int snprintf();
 #endif
 #endif
-#ifndef HAVE_STRDUP
-char *strdup __P((const char *));
-#endif
 #ifndef HAVE_STRERROR
 char *strerror __P((int));
 #endif

@@ -1,23 +1,21 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_appinit.c	10.38 (Sleepycat) 1/7/98";
+static const char sccsid[] = "@(#)db_appinit.c	10.52 (Sleepycat) 6/2/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
-#include <sys/param.h>
-#include <sys/stat.h>
+#include <sys/types.h>
 
 #include <ctype.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,14 +32,14 @@ static const char sccsid[] = "@(#)db_appinit.c	10.38 (Sleepycat) 1/7/98";
 #include "clib_ext.h"
 #include "common_ext.h"
 
-static int __db_home __P((DB_ENV *, const char *, int));
+static int __db_home __P((DB_ENV *, const char *, u_int32_t));
 static int __db_parse __P((DB_ENV *, char *));
-static int __db_tmp_dir __P((DB_ENV *, int));
-static int __db_tmp_open __P((DB_ENV *, char *, int *));
+static int __db_tmp_dir __P((DB_ENV *, u_int32_t));
+static int __db_tmp_open __P((DB_ENV *, u_int32_t, char *, int *));
 
 /*
  * db_version --
- *	Return verision information.
+ *	Return version information.
  */
 char *
 db_version(majverp, minverp, patchp)
@@ -65,16 +63,18 @@ db_appinit(db_home, db_config, dbenv, flags)
 	const char *db_home;
 	char * const *db_config;
 	DB_ENV *dbenv;
-	int flags;
+	u_int32_t flags;
 {
 	FILE *fp;
-	int ret;
+	int mode, ret;
 	char * const *p;
 	char *lp, buf[MAXPATHLEN * 2];
 
 	/* Validate arguments. */
 	if (dbenv == NULL)
 		return (EINVAL);
+
+
 #ifdef HAVE_SPINLOCKS
 #define	OKFLAGS								\
    (DB_CREATE | DB_NOMMAP | DB_THREAD | DB_INIT_LOCK | DB_INIT_LOG |	\
@@ -89,10 +89,9 @@ db_appinit(db_home, db_config, dbenv, flags)
 	if ((ret = __db_fchk(dbenv, "db_appinit", flags, OKFLAGS)) != 0)
 		return (ret);
 
-#define	RECOVERY_FLAGS (DB_CREATE | DB_INIT_TXN | DB_INIT_LOG)
-	if (LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL) &&
-	    LF_ISSET(RECOVERY_FLAGS) != RECOVERY_FLAGS)
-		return (__db_ferr(dbenv, "db_appinit", 1));
+	/* Transactions imply logging. */
+	if (LF_ISSET(DB_INIT_TXN))
+		LF_SET(DB_INIT_LOG);
 
 	/* Convert the db_appinit(3) flags. */
 	if (LF_ISSET(DB_THREAD))
@@ -147,47 +146,48 @@ db_appinit(db_home, db_config, dbenv, flags)
 	F_SET(dbenv, DB_ENV_APPINIT);
 
 	/*
-	 * If we are doing recovery, remove all the regions.
+	 * If we are doing recovery, remove all the old shared memory
+	 * regions.
 	 */
 	if (LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL)) {
-		/* Remove all the old shared memory regions.  */
-		if ((ret = log_unlink(NULL, 1 /* force */, dbenv)) != 0)
+		if ((ret = log_unlink(NULL, 1, dbenv)) != 0)
 			goto err;
-		if ((ret = memp_unlink(NULL, 1 /* force */, dbenv)) != 0)
+		if ((ret = memp_unlink(NULL, 1, dbenv)) != 0)
 			goto err;
-		if ((ret = lock_unlink(NULL, 1 /* force */, dbenv)) != 0)
+		if ((ret = lock_unlink(NULL, 1, dbenv)) != 0)
 			goto err;
-		if ((ret = txn_unlink(NULL, 1 /* force */, dbenv)) != 0)
+		if ((ret = txn_unlink(NULL, 1, dbenv)) != 0)
 			goto err;
 	}
 
-	/* Transactions imply logging. */
-	if (LF_ISSET(DB_INIT_TXN))
-		LF_SET(DB_INIT_LOG);
-
-	/* Default permissions are 0660. */
-#undef	DB_DEFPERM
-#define	DB_DEFPERM	(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP)
-
-	/* Initialize the subsystems. */
+	/*
+	 * Create the new shared regions.
+	 *
+	 * Default permissions are read-write for both owner and group.
+	 */
+	mode = __db_omode("rwrw--");
 	if (LF_ISSET(DB_INIT_LOCK) && (ret = lock_open(NULL,
 	    LF_ISSET(DB_CREATE | DB_THREAD),
-	    DB_DEFPERM, dbenv, &dbenv->lk_info)) != 0)
+	    mode, dbenv, &dbenv->lk_info)) != 0)
 		goto err;
 	if (LF_ISSET(DB_INIT_LOG) && (ret = log_open(NULL,
 	    LF_ISSET(DB_CREATE | DB_THREAD),
-	    DB_DEFPERM, dbenv, &dbenv->lg_info)) != 0)
+	    mode, dbenv, &dbenv->lg_info)) != 0)
 		goto err;
 	if (LF_ISSET(DB_INIT_MPOOL) && (ret = memp_open(NULL,
 	    LF_ISSET(DB_CREATE | DB_MPOOL_PRIVATE | DB_NOMMAP | DB_THREAD),
-	    DB_DEFPERM, dbenv, &dbenv->mp_info)) != 0)
+	    mode, dbenv, &dbenv->mp_info)) != 0)
 		goto err;
 	if (LF_ISSET(DB_INIT_TXN) && (ret = txn_open(NULL,
 	    LF_ISSET(DB_CREATE | DB_THREAD | DB_TXN_NOSYNC),
-	    DB_DEFPERM, dbenv, &dbenv->tx_info)) != 0)
+	    mode, dbenv, &dbenv->tx_info)) != 0)
 		goto err;
 
-	/* Initialize recovery. */
+	/*
+	 * If the application is running with transactions, initialize the
+	 * function tables.  Once that's done, do recovery for any previous
+	 * run.
+	 */
 	if (LF_ISSET(DB_INIT_TXN)) {
 		if ((ret = __bam_init_recover(dbenv)) != 0)
 			goto err;
@@ -199,12 +199,12 @@ db_appinit(db_home, db_config, dbenv, flags)
 			goto err;
 		if ((ret = __txn_init_recover(dbenv)) != 0)
 			goto err;
-	}
 
-	/* Run recovery if necessary. */
-	if (LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL) && (ret =
-	    __db_apprec(dbenv, LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL))) != 0)
-		goto err;
+		if (LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL) &&
+		    (ret = __db_apprec(dbenv,
+		    LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL))) != 0)
+			goto err;
+	}
 
 	return (ret);
 
@@ -282,21 +282,21 @@ db_appexit(dbenv)
  *	it in allocated space.
  *
  * PUBLIC: int __db_appname __P((DB_ENV *,
- * PUBLIC:    APPNAME, const char *, const char *, int *, char **));
+ * PUBLIC:    APPNAME, const char *, const char *, u_int32_t, int *, char **));
  */
 int
-__db_appname(dbenv, appname, dir, file, fdp, namep)
+__db_appname(dbenv, appname, dir, file, tmp_oflags, fdp, namep)
 	DB_ENV *dbenv;
 	APPNAME appname;
 	const char *dir, *file;
+	u_int32_t tmp_oflags;
 	int *fdp;
 	char **namep;
 {
 	DB_ENV etmp;
 	size_t len;
-	int ret, slash, tmp_create, tmp_free;
+	int data_entry, ret, slash, tmp_create, tmp_free;
 	const char *a, *b, *c;
-	int data_entry;
 	char *p, *start;
 
 	a = b = c = NULL;
@@ -349,8 +349,8 @@ __db_appname(dbenv, appname, dir, file, fdp, namep)
 	 *
 	 * DB_ENV	   APPNAME	   RESULT
 	 * -------------------------------------------
-	 * null		   DB_APP_TMP	   <tmp>/<create>
-	 * set		   DB_APP_TMP	   DB_HOME/DB_TMP_DIR/<create>
+	 * null		   DB_APP_TMP*	   <tmp>/<create>
+	 * set		   DB_APP_TMP*	   DB_HOME/DB_TMP_DIR/<create>
 	 */
 retry:	switch (appname) {
 	case DB_APP_NONE:
@@ -431,7 +431,14 @@ done:	len =
 	    (c == NULL ? 0 : strlen(c) + 1) +
 	    (file == NULL ? 0 : strlen(file) + 1);
 
-	if ((start = (char *)__db_malloc(len)) == NULL) {
+	/*
+	 * Allocate space to hold the current path information, as well as any
+	 * temporary space that we're going to need to create a temporary file
+	 * name.
+	 */
+#define	DB_TRAIL	"XXXXXX"
+	if ((start =
+	    (char *)__db_malloc(len + sizeof(DB_TRAIL) + 10)) == NULL) {
 		__db_err(dbenv, "%s", strerror(ENOMEM));
 		if (tmp_free)
 			FREES(etmp.db_tmp_dir);
@@ -460,14 +467,15 @@ done:	len =
 		FREES(etmp.db_tmp_dir);
 
 	/* Create the file if so requested. */
-	if (tmp_create) {
-		ret = __db_tmp_open(dbenv, start, fdp);
+	if (tmp_create &&
+	    (ret = __db_tmp_open(dbenv, tmp_oflags, start, fdp)) != 0) {
 		FREES(start);
-	} else {
-		*namep = start;
-		ret = 0;
+		return (ret);
 	}
-	return (ret);
+
+	if (namep != NULL)
+		*namep = start;
+	return (0);
 }
 
 /*
@@ -478,7 +486,7 @@ static int
 __db_home(dbenv, db_home, flags)
 	DB_ENV *dbenv;
 	const char *db_home;
-	int flags;
+	u_int32_t flags;
 {
 	const char *p;
 
@@ -532,10 +540,12 @@ __db_parse(dbenv, s)
 		return (ENOMEM);
 
 	tp = local_s;
-	while ((name = strsep(&tp, " \t")) != NULL && *name == '\0');
+	while ((name = strsep(&tp, " \t")) != NULL && *name == '\0')
+		;
 	if (name == NULL)
 		goto illegal;
-	while ((value = strsep(&tp, " \t")) != NULL && *value == '\0');
+	while ((value = strsep(&tp, " \t")) != NULL && *value == '\0')
+		;
 	if (value == NULL) {
 illegal:	ret = EINVAL;
 		__db_err(dbenv, "illegal name-value pair: %s", s);
@@ -591,7 +601,7 @@ static char *sTempFolder;
 static int
 __db_tmp_dir(dbenv, flags)
 	DB_ENV *dbenv;
-	int flags;
+	u_int32_t flags;
 {
 	static const char * list[] = {	/* Ordered: see db_appinit(3). */
 		"/var/tmp",
@@ -671,49 +681,45 @@ __db_tmp_dir(dbenv, flags)
  *	Create a temporary file.
  */
 static int
-__db_tmp_open(dbenv, dir, fdp)
+__db_tmp_open(dbenv, flags, path, fdp)
 	DB_ENV *dbenv;
-	char *dir;
+	u_int32_t flags;
+	char *path;
 	int *fdp;
 {
 #ifdef HAVE_SIGFILLSET
 	sigset_t set, oset;
 #endif
 	u_long pid;
-	size_t len;
-	int isdir, ret;
-	char *trv, buf[MAXPATHLEN];
+	int mode, isdir, ret;
+	const char *p;
+	char *trv;
 
 	/*
 	 * Check the target directory; if you have six X's and it doesn't
 	 * exist, this runs for a *very* long time.
 	 */
-	if ((ret = __db_exists(dir, &isdir)) != 0) {
-		__db_err(dbenv, "%s: %s", dir, strerror(ret));
+	if ((ret = __db_exists(path, &isdir)) != 0) {
+		__db_err(dbenv, "%s: %s", path, strerror(ret));
 		return (ret);
 	}
 	if (!isdir) {
-		__db_err(dbenv, "%s: %s", dir, strerror(EINVAL));
+		__db_err(dbenv, "%s: %s", path, strerror(EINVAL));
 		return (EINVAL);
 	}
 
 	/* Build the path. */
-#define	DB_TRAIL	"/XXXXXX"
-	if ((len = strlen(dir)) + sizeof(DB_TRAIL) > sizeof(buf)) {
-		__db_err(dbenv,
-		    "tmp_open: %s: %s", buf, strerror(ENAMETOOLONG));
-		return (ENAMETOOLONG);
-	}
-	(void)strcpy(buf, dir);
-	(void)strcpy(buf + len, DB_TRAIL);
-	buf[len] = PATH_SEPARATOR[0];			/* WIN32 */
+	for (trv = path; *trv != '\0'; ++trv)
+		;
+	*trv = PATH_SEPARATOR[0];
+	for (p = DB_TRAIL; (*++trv = *p) != '\0'; ++p)
+		;
 
 	/*
 	 * Replace the X's with the process ID.  Pid should be a pid_t,
 	 * but we use unsigned long for portability.
 	 */
-	for (pid = getpid(),
-	    trv = buf + len + sizeof(DB_TRAIL) - 1; *--trv == 'X'; pid /= 10)
+	for (pid = getpid(); *--trv == 'X'; pid /= 10)
 		switch (pid % 10) {
 		case 0: *trv = '0'; break;
 		case 1: *trv = '1'; break;
@@ -728,30 +734,33 @@ __db_tmp_open(dbenv, dir, fdp)
 		}
 	++trv;
 
+	/* Set up open flags and mode. */
+	LF_SET(DB_CREATE | DB_EXCL);
+	mode = __db_omode("rw----");
+
 	/*
-	 * Try and open a file.  We block every signal we can get our hands
+	 * Try to open a file.  We block every signal we can get our hands
 	 * on so that, if we're interrupted at the wrong time, the temporary
 	 * file isn't left around -- of course, if we drop core in-between
 	 * the calls we'll hang forever, but that's probably okay.  ;-}
 	 */
 #ifdef HAVE_SIGFILLSET
-	(void)sigfillset(&set);
+	if (LF_ISSET(DB_TEMPORARY))
+		(void)sigfillset(&set);
 #endif
 	for (;;) {
 #ifdef HAVE_SIGFILLSET
-		(void)sigprocmask(SIG_BLOCK, &set, &oset);
+		if (LF_ISSET(DB_TEMPORARY))
+			(void)sigprocmask(SIG_BLOCK, &set, &oset);
 #endif
-#define	DB_TEMPOPEN	DB_CREATE | DB_EXCL | DB_TEMPORARY
-		if ((ret = __db_open(buf,
-		    DB_TEMPOPEN, DB_TEMPOPEN, S_IRUSR | S_IWUSR, fdp)) == 0) {
+		ret = __db_open(path, flags, flags, mode, fdp);
 #ifdef HAVE_SIGFILLSET
+		if (LF_ISSET(DB_TEMPORARY))
 			(void)sigprocmask(SIG_SETMASK, &oset, NULL);
 #endif
+		if (ret == 0)
 			return (0);
-		}
-#ifdef HAVE_SIGFILLSET
-		(void)sigprocmask(SIG_SETMASK, &oset, NULL);
-#endif
+
 		/*
 		 * XXX:
 		 * If we don't get an EEXIST error, then there's something
@@ -761,7 +770,7 @@ __db_tmp_open(dbenv, dir, fdp)
 		 */
 		if (ret != EEXIST) {
 			__db_err(dbenv,
-			    "tmp_open: %s: %s", buf, strerror(ret));
+			    "tmp_open: %s: %s", path, strerror(ret));
 			return (ret);
 		}
 

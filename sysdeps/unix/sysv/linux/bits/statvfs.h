@@ -87,6 +87,8 @@ enum
 #define ST_APPEND	ST_APPEND
   ST_IMMUTABLE = 512,		/* Immutable file.  */
 #define ST_IMMUTABLE	ST_IMMUTABLE
-  ST_NOATIME = 1024		/* Do not update access times.  */
+  ST_NOATIME = 1024,		/* Do not update access times.  */
 #define ST_NOATIME	ST_NOATIME
+  ST_NODIRATIME			/* Do not update directory access times.  */
+#define ST_NODIRATIME	ST_NODIRATIME
 };

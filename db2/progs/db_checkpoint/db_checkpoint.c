@@ -1,7 +1,7 @@
 /*-
  * See the file LICENSE for redistribution information.
  *
- * Copyright (c) 1996, 1997
+ * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  */
 
@@ -9,9 +9,9 @@
 
 #ifndef lint
 static const char copyright[] =
-"@(#) Copyright (c) 1997\n\
+"@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_checkpoint.c	10.14 (Sleepycat) 1/17/98";
+static const char sccsid[] = "@(#)db_checkpoint.c	10.17 (Sleepycat) 5/3/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -37,7 +37,6 @@ static const char sccsid[] = "@(#)db_checkpoint.c	10.14 (Sleepycat) 1/17/98";
 #include "common_ext.h"
 
 char	*check __P((DB_ENV *, long, long));
-int	 checkpoint __P((DB_ENV *, char *, int));
 DB_ENV	*db_init __P((char *));
 int	 logpid __P((char *, int));
 int	 main __P((int, char *[]));
@@ -58,26 +57,39 @@ main(argc, argv)
 	extern int optind;
 	DB_ENV *dbenv;
 	time_t now;
-	long kbytes, minutes, seconds;
-	int ch, eval, verbose;
+	long argval;
+	u_int32_t kbytes, minutes, seconds;
+	int ch, eval, once, verbose;
 	char *home, *logfile;
 
-	home = logfile = NULL;
+	/*
+	 * XXX
+	 * Don't allow a fully unsigned 32-bit number, some compilers get
+	 * upset and require it to be specified in hexadecimal and so on.
+	 */
+#define	MAX_UINT32_T	2147483647
+
 	kbytes = minutes = 0;
-	verbose = 0;
-	while ((ch = getopt(argc, argv, "h:k:L:p:v")) != EOF)
+	once = verbose = 0;
+	home = logfile = NULL;
+	while ((ch = getopt(argc, argv, "1h:k:L:p:v")) != EOF)
 		switch (ch) {
+		case '1':
+			once = 1;
+			break;
 		case 'h':
 			home = optarg;
 			break;
 		case 'k':
-			get_long(optarg, 1, LONG_MAX, &kbytes);
+			get_long(optarg, 1, (long)MAX_UINT32_T, &argval);
+			kbytes = argval;
 			break;
 		case 'L':
 			logfile = optarg;
 			break;
 		case 'p':
-			get_long(optarg, 1, LONG_MAX, &minutes);
+			get_long(optarg, 1, (long)MAX_UINT32_T, &argval);
+			minutes = argval;
 			break;
 		case 'v':
 			verbose = 1;
@@ -92,8 +104,8 @@ main(argc, argv)
 	if (argc != 0)
 		usage();
 
-	if (kbytes == 0 && minutes == 0) {
-		warnx("at least one of -k and -p must be specified");
+	if (once == 0 && kbytes == 0 && minutes == 0) {
+		warnx("at least one of -1, -k and -p must be specified");
 		usage();
 	}
 
@@ -113,8 +125,6 @@ main(argc, argv)
 	eval = 0;
 	seconds = kbytes != 0 ? 30 : minutes * 60;
 	while (!interrupted) {
-		(void)__db_sleep(seconds, 0);
-
 		if (verbose) {
 			(void)time(&now);
 			printf("checkpoint: %s", ctime(&now));
@@ -134,6 +144,11 @@ main(argc, argv)
 			__db_err(dbenv, "checkpoint: %s", strerror(errno));
 			break;
 		}
+
+		if (once)
+			break;
+
+		(void)__db_sleep(seconds, 0);
 	}
 
 	if (logfile != NULL && logpid(logfile, 0))
@@ -244,6 +259,6 @@ void
 usage()
 {
 	(void)fprintf(stderr,
-    "usage: db_checkpoint [-v] [-h home] [-k kbytes] [-L file] [-p min]\n");
+    "usage: db_checkpoint [-1v] [-h home] [-k kbytes] [-L file] [-p min]\n");
 	exit(1);
 }

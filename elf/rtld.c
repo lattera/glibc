@@ -93,8 +93,6 @@ const char *_dl_inhibit_rpath;		/* RPATH values which should be
    never be called.  */
 int _dl_starting_up;
 
-/* This variable contains the lowest stack address ever used.  */
-void *__libc_stack_end;
 
 static void dl_main (const ElfW(Phdr) *phdr,
 		     ElfW(Half) phent,

@@ -65,7 +65,7 @@ libdb-routines := bt_close bt_compare bt_conv bt_cursor bt_delete \
 	os_spin db_overflow db_pr db_rec db_region db_ret db_salloc \
 	db_shash db_thread hash hash_auto hash_conv hash_debug \
 	hash_dup hash_func hash_page hash_rec hash_stat lock \
-	lock_conflict lock_deadlock lock_util log log_archive \
+	lock_conflict lock_deadlock lock_region lock_util log log_archive \
 	log_auto log_compare log_findckp log_get log_put log_rec \
 	log_register mp_bh mp_fget mp_fopen mp_fput mp_fset \
 	mp_open mp_pr mp_region mp_sync mutex txn txn_auto \
