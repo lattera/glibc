@@ -1,3 +1,8 @@
+2002-04-19  Andreas Jaeger  <aj@suse.de>
+
+	* math/libm-test.inc: Fix comment, suggested by Hartvig Ekner
+	<hartvige@mips.com>.
+
 2002-04-15  H.J. Lu  <hjl@gnu.org>
 
 	* include/math.h (__finitel_internal): Declare only if
