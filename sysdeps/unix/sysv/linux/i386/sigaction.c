@@ -28,17 +28,48 @@
 #include <kernel_sigaction.h>
 
 
+extern int __syscall_rt_signal (int, const struct sigaction *,
+				struct sigaction *, size_t);
+
+/* The variable is shared between all wrappers around signal handling
+   functions which have RT equivalents.  It is defined in sigsuspend.c.  */
+extern int __libc_have_rt_sigs;
+
+
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
 __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  struct kernel_sigaction k_newact, k_oldact;
+  struct old_kernel_sigaction k_newact, k_oldact;
   int result;
+
+  /* First try the RT signals.  */
+  if (__libc_have_rt_sigs)
+    {
+      struct sigaction nact;
+
+      nact.sa_handler = act->sa_handler;
+      memcpy (&nact.sa_mask, &act->sa_mask, sizeof (sigset_t));
+      nact.sa_flags = act->sa_flags;
+
+      nact.sa_restorer = ((act->sa_flags & SA_NOMASK)
+			  ? &&restore_nomask : &&restore);
+
+      /* XXX The size argument hopefully will have to be changed to the
+	 real size of the user-level sigset_t.  */
+      result = __syscall_rt_sigaction (sig, &nact, oact,
+				       _NSIG / (8 * sizeof (long int)));
+
+      if (result >= 0 || errno != ENOSYS)
+	return result;
+
+      __libc_have_rt_sigs = 0;
+    }
 
   if (act)
     {
-      k_newact.sa_handler = act->sa_handler;
+      k_newact.k_sa_handler = act->sa_handler;
       k_newact.sa_mask = act->sa_mask.__val[0];
       k_newact.sa_flags = act->sa_flags;
 
@@ -62,7 +93,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 
   if (oact)
     {
-      oact->sa_handler = k_oldact.sa_handler;
+      oact->sa_handler = k_oldact.k_sa_handler;
       oact->sa_mask.__val[0] = k_oldact.sa_mask;
       oact->sa_flags = k_oldact.sa_flags;
       oact->sa_restorer = k_oldact.sa_restorer;

@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997-11-12T04:42:03+0100 drepper>
+Time-stamp: <1997-12-03T15:30:07+0100 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -26,8 +26,6 @@ Severity: [  *] to [***]
 [ **]  There are problems with signal handling when using LinuxThreads.
 
 [ **]  The libm-ieee `log2' function seems to be very inaccurate.
-
-[  *]  The libm-ieee `remquo' function rounds 3.0/2.0 incorrectly.
 
 [  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
        to be the best.

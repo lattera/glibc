@@ -84,6 +84,7 @@ __csqrtf (__complex__ float x)
 	}
       else
 	{
+#if 0 /* FIXME: this is broken. */
 	  __complex__ float q;
 	  float t, r;
 
@@ -99,6 +100,15 @@ __csqrtf (__complex__ float x)
 
 	  /* Heron iteration in complex arithmetic.  */
 	  res = 0.5 * (q + q / x);
+#else
+	  float d, imag;
+
+	  d = __ieee754_hypotf (__real__ x, __imag__ x);
+	  imag = __ieee754_sqrtf (0.5 * (d - __real__ x));
+
+	  __real__ res = __ieee754_sqrtf (0.5 * (d + __real__ x));
+	  __imag__ res = __copysignf (imag, __imag__ x);
+#endif
 	}
     }
 

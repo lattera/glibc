@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define __LIBC_INTERNAL_MATH_INLINES
 #define scalbln __no_scalbln_decl
 #define scalblnf __no_scalblnf_decl
 #define scalblnl __no_scalblnl_decl

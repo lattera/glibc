@@ -43,7 +43,7 @@ int __libc_argc;
 char **__libc_argv;
 
 /* We often need the PID.  Cache this value.  */
-pid_t __libc_pid;
+pid_t __libc_pid = 0xf00baa;
 
 
 static void

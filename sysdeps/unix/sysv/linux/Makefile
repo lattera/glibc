@@ -16,7 +16,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/user.h sys/sysmacros.h sys/procfs.h sys/prctl.h \
 		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h \
 		  sys/quota.h sys/fsuid.h bits/mman.h \
-		  scsi/sg.h
+		  scsi/sg.h sys/pci.h sys/ultrasound.h
 
 install-others += $(inst_includedir)/bits/syscall.h
 
@@ -108,4 +108,10 @@ ifndef no_deps
 # Get the list of dependencies (probably /usr/include/linux/limits.h).
 -include $(common-objpfx)bits/stdio_lim.d
 endif
+
+ifeq ($(subdir),signal)
+sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
+		   rt_sigqueueinfo rt_sigaction
+endif
+
 common-generated += bits/stdio_lim.h bits/stdio_lim.d

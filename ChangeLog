@@ -1,3 +1,229 @@
+1997-12-03 23:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Add shared-thread-library variable.
+
+	* math/Makfile (CPPFLAGS): Add -D__LIBC_INTERNAL_MATH_INLINES.
+	* sysdeps/i386/Makefile: Don't define ___LIBC_INTERNAL_MATH_INLINES
+	here.
+	* sysdeps/m68k/fpu/e_acos.c: Likewise.
+	* sysdeps/m68k/fpu/e_atan2.c: Likewise.
+	* sysdeps/m68k/fpu/e_fmod.c: Likewise.
+	* sysdeps/m68k/fpu/e_pow.c: Likewise.
+	* sysdeps/m68k/fpu/e_scalb.c: Likewise.
+	* sysdeps/m68k/fpu/k_cos.c: Likewise.
+	* sysdeps/m68k/fpu/k_sin.c: Likewise.
+	* sysdeps/m68k/fpu/k_tan.c: Likewise.
+	* sysdeps/m68k/fpu/s_atan.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccos.c: Likewise.
+	* sysdeps/m68k/fpu/s_ccosh.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_csin.c: Likewise.
+	* sysdeps/m68k/fpu/s_csinh.c: Likewise.
+	* sysdeps/m68k/fpu/s_frexp.c: Likewise.
+	* sysdeps/m68k/fpu/s_ilogb.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrint.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintf.c: Likewise.
+	* sysdeps/m68k/fpu/s_llrintl.c: Likewise.
+	* sysdeps/m68k/fpu/s_lrint.c: Likewise.
+	* sysdeps/m68k/fpu/s_modf.c: Likewise.
+	* sysdeps/m68k/fpu/s_remquo.c: Likewise.
+	* sysdeps/m68k/fpu/s_scalbn.c: Likewise.
+	* sysdeps/m68k/fpu/s_sincos.c: Likewise.
+
+	* libc.map: Add __libc_current_sigrtmin, __libc_current_sigrtmax,
+	__libc_allocate_rtsig, sigqueue, sigtimedwait, sigwaitinfo.
+	* signal/Makefile (headers): Add bits/siginfo.h.
+	(routines): Add allocrtsig, sigtimedwait, sigwaitinfo, sigqueue.
+	(distribute): Add testrtsig.h.
+	* signal/allocrtsig.c: New file.
+	* signal/signal.h: Define `union sigval'.  Include <bits/siginfo.h>.
+	Declare sigwaitinfo, sigtimedwait, sigqueue, __libc_current_sigrtmin,
+	__libc_current_sigrtmax.
+	* sysdeps/generic/sigqueue.c: New file.
+	* sysdeps/generic/sigtimedwait.c: New file.
+	* sysdeps/generic/sigwaitinfo.c: New file.
+	* sysdeps/generic/testrtsig.h: New file.
+	* sysdeps/generic/bits/siginfo.h: New file.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: New file.
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h: Define struct as
+	old_kernel_sigaction and rename sa_handler member to k_sa_handler.
+	* sysdeps/unix/sysv/linux/rt_sigaction.c: New file.
+	* sysdeps/unix/sysv/linux/rt_sigprocmask.c: New file.
+	* sysdeps/unix/sysv/linux/rt_sigqueueinfo.c: New file.
+	* sysdeps/unix/sysv/linux/rt_sigreturn.c: New file.
+	* sysdeps/unix/sysv/linux/rt_sigsuspend.c: New file.
+	* sysdeps/unix/sysv/linux/rt_sigtimedwait.c: New file.
+	* sysdeps/unix/sysv/linux/sigpending.c: New file.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: New file.
+	* sysdeps/unix/sysv/linux/sigqueue.c: New file.
+	* sysdeps/unix/sysv/linux/sigreturn.c: New file.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: New file.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: New file.
+	* sysdeps/unix/sysv/linux/testrtsig.h: New file.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Update for AIO.
+	* sysdeps/unix/sysv/linux/syscalls.list: Update for AIO.
+	* sysdeps/unix/sysv/linux/sigaction.c: Update for AIO.
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Define AIO_PRIO_DELTA_MAX.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define _XOPEN_REALTIME
+	and _POSIX_REALTIME_SIGNALS.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Update for AIO.
+	* sysdeps/unix/sysv/linux/bits/signum.h: Define SIGRTMIN/MAX and
+	update _NSIG.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Update for AIO.
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Linux/i386 specific
+	definitions.
+
+	* Makefile (subdirs): Add rt.
+	* shlib-versions: Add entry for librt.
+	* rt/Makefile: New file.
+	* rt/aio.h: New file.
+	* rt/aio_cancel.c: New file.
+	* rt/aio_error.c: New file.
+	* rt/aio_fsync.c: New file.
+	* rt/aio_misc.c: New file.
+	* rt/aio_misc.h: New file.
+	* rt/aio_read.c: New file.
+	* rt/aio_read64.c: New file.
+	* rt/aio_return.c: New file.
+	* rt/aio_suspend.c: New file.
+	* rt/aio_write.c: New file.
+	* rt/aio_write64.c: New file.
+	* rt/lio_listio.c: New file.
+	* rt/lio_listio64.c: New file.
+	* sysdeps/generic/aio_sigqueue.c: New file.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add new files
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=signal]
+	(sysdep_routines): Add rt_sigsuspend, rt_sigprocmask, rt_sigtimedwait,
+	rt_sigqueueinfo, rt_sigaction.
+
+	* posix/Makefile (headers): Add bits/environments.h.
+	* posix/confstr.c: Correctly handle _CS_XBS5_ILP32_OFFBIG_CFLAGS
+	and _CS_LFS_CFLAGS on 64bit platforms.
+	* posix/unistd.h: Define _XOPEN_LEGACY.  Explain _XOPEN_REALTIME
+	and _XOPEN_REALTIME_THREADS.  Include bits/environments.h.
+	* sysdeps/generic/bits/confname.h: Define _SC_* constants for
+	compilation modules.
+	* sysdeps/wordsize-32/bits/environments.h: New file.
+	* sysdeps/wordsize-64/bits/environments.h: New file.
+
+	* posix/getopt.c: Remove declaration of getpid and __libc_pid.
+	* posix/getopt_init.c: Test for value 0xf00baa of uninitialized
+	__libc_pid.
+	* sysdeps/unix/sysv/linux/init-first.c: Initialize __libc_pid to
+	0xf00baa.
+
+	* string/string.h: Add declaration of __strverscmp.
+	* string/strverscmp.c: Rename function ot __strverscmp and make old
+	name weak alias.
+
+	* sysdeps/generic/dl-sysdep.c: Declare and define __libc_uid.
+	* sysdeps/generic/enbl-secure.c: Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/sigset.h: Pretty print.
+
+	* sysdeps/unix/sysv/linux/sys/pci.h: New file.
+
+1997-12-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/sys/wait.h: Use __transparent_union__ instead of
+	transparent_union.  Reported by Roland McGrath.
+
+1997-12-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/inet_neta.c (inet_neta): Change type of first parameter
+	to u_int32_t.  Suggested by John Lavagnino <John_Lavagnino@Brown.edu>
+	[PR libc/366].
+
+	* resolv/inet_addr.c (inet_addr): Change return type to u_int32_t.
+
+	* inet/arpa/inet.h: Change types of inet_neta and inet_addr.
+
+1997-12-03 20:40  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* grp/initgroups.c: Increase buffer if it is too small.
+
+1997-12-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Don't use u_int8_t for bit
+	fields, this is no ISO C.  Reported by Andreas Jaeger.
+
+1997-12-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/sys/ucontext.h (enum): Add missing commata.
+
+1997-12-03 08:58  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/generic/bits/utsname.h: <sys/utsname.h> defines
+	_SYS_UTSNAME_H not _UTSNAME_H.
+
+1997-11-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-profile.c (_dl_start_profile): Avoid overflow when
+	computing s_scale.
+
+1997-11-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_csqrt.c: Use different formula for now.
+	* sysdeps/libm-ieee754/s_csqrtf.c: Likewise.
+	* sysdeps/libm-ieee754/s_csqrtl.c: Likewise.
+
+	* math/libm-test.c (csqrt_test): Add testcase.
+
+1997-12-03 15:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/ultrasound.h: New file.
+	* sysdeps/unix/sysv/linux/sys/Dist: Add it.
+	* sysdeps/unix/sysv/linux/sys/Makefile [$(subdir)=misc]: Likewise.
+
+1997-11-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/timex.h: Fix declaration.
+
+1997-12-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (acos_test): Add more tests.
+	(asin_test): Likewise.
+	(atan_test): Likewise.
+	(exp_test): Likewise.
+	(sin_test): Likewise.
+	(sqrt_test): Likewise.
+	(cpow_test): Likewise.
+	(csqrt_test): Likewise.
+	(cexp_test): Correct typo in gcc version test.
+
+1997-12-02 17:14  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/arm/__longjmp.S: Define _SETJMP_H before including
+	<bits/setjmp.h>.
+	* sysdeps/arm/setjmp.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: New file.
+
+1997-12-02 18:07  Philip Blundell  <pb@nexus.co.uk>
+
+	* stdio/stdio.h: Add prototype for tmpfile64().
+
+1997-12-02 17:47  Philip Blundell  <pb@nexus.co.uk>
+
+	* stdio/stdio.h (__stdio_gen_tempname): Add extra argument to
+	prototype to keep in step with libio version.
+
+	* stdio-common/tmpfile64.c: Include <errno.h> for ENOSYS.
+
+1997-12-02 17:41  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/generic/Makefile: Don't try to use make_siglist if
+	cross-compiling.
+
+1997-12-02 01:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S: When cloned process returns
+	load GOT ptr before jumping to _exit.
+	Reported by Xavier Leroy.
+
 1997-12-01 17:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile (subdirs): Add iconvdata and localedata.

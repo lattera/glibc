@@ -16,11 +16,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <signal.h>
-#include <stddef.h>
 #include <unistd.h>
 
 extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
+extern int __syscall_rt_sigsuspend (sigset_t *, size_t);
+
+
+/* The variable is shared between all wrappers around signal handling
+   functions which have RT equivalents.  */
+int __libc_have_rt_sigs = 1;
+
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
@@ -28,10 +35,20 @@ int
 __sigsuspend (set)
      const sigset_t *set;
 {
-  /* XXX This will have to be changed once the kernel knows about
-     larger sigsets.  */
-  unsigned long int word = set->__val[0];
+  /* First try the RT signals.  */
+  if (__libc_have_rt_sigs)
+    {
+      /* XXX The size argument hopefully will have to be changed to the
+	 real size of the user-level sigset_t.  */
+      int result = __syscall_rt_sigsuspend (set,
+					    _NSIG / (8 * sizeof (long int)));
 
-  return __syscall_sigsuspend (0, 0, word);
+      if (result >= 0 || errno != ENOSYS)
+	return result;
+
+      __libc_have_rt_sigs = 0;
+    }
+
+  return __syscall_sigsuspend (0, 0, set->__val[0]);
 }
 weak_alias (__sigsuspend, sigsuspend)

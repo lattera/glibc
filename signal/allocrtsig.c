@@ -1,0 +1,89 @@
+/* Handle real-time signal allocation.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <signal.h>
+
+/* In these variables we keep track of the used variables.  If the
+   platform does not support any real-time signals we will define the
+   values to some unreasonable value which will signal failing of all
+   the functions below.  */
+#ifndef __SIGRTMIN
+static int current_rtmin = -1;
+static int current_rtmax = -1;
+#else
+static int current_rtmin = __SIGRTMIN;
+static int current_rtmax = __SIGRTMAX;
+
+static int initialized;
+
+#include "testrtsig.h"
+
+static void
+init (void)
+{
+  if (!kernel_has_rtsig ())
+    {
+      current_rtmin = -1;
+      current_rtmax = -1;
+    }
+  initialized = 1;
+}
+#endif
+
+/* Return number of available real-time signal with highest priority.  */
+int
+__libc_current_sigrtmin (void)
+{
+#ifdef __SIGRTMIN
+  if (!initialized)
+    init ();
+#endif
+  return current_rtmin;
+}
+
+/* Return number of available real-time signal with lowest priority.  */
+int
+__libc_current_sigrtmax (void)
+{
+#ifdef __SIGRTMIN
+  if (!initialized)
+    init ();
+#endif
+  return current_rtmax;
+}
+
+/* Allocate real-time signal with highest/lowest available
+   priority.  Please note that we don't use a lock since we assume
+   this function to be called at program start.  */
+int
+__libc_allocate_rtsig (int high)
+{
+#ifndef __SIGRTMIN
+  return -1;
+#else
+  if (!initialized)
+    init ();
+  if (current_rtmin != -1 || current_rtmin > current_rtmax)
+    /* We don't have anymore signal available.  */
+    return -1;
+
+  return high ? current_rtmin++ : current_rtmax--;
+#endif
+}

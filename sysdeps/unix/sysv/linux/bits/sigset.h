@@ -18,13 +18,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SIGSET_H_types
-#define	_SIGSET_H_types	1
+# define _SIGSET_H_types	1
 
 typedef int __sig_atomic_t;
 
 /* A `sigset_t' has a bit for each signal.  */
 
-#define _SIGSET_NWORDS	(1024 / (8 * sizeof (unsigned long int)))
+# define _SIGSET_NWORDS	(1024 / (8 * sizeof (unsigned long int)))
 typedef struct
   {
     unsigned long int __val[_SIGSET_NWORDS];
@@ -39,44 +39,44 @@ typedef struct
    trouble can be caused by functions being defined (e.g., any global
    register vars declared later will cause compilation errors).  */
 
-#if !defined (_SIGSET_H_fns) && defined (_SIGNAL_H)
-#define _SIGSET_H_fns 1
+#if !defined _SIGSET_H_fns && defined _SIGNAL_H
+# define _SIGSET_H_fns 1
 
-#ifndef _EXTERN_INLINE
-#define _EXTERN_INLINE extern __inline
-#endif
+# ifndef _EXTERN_INLINE
+#  define _EXTERN_INLINE extern __inline
+# endif
 
 /* Return a mask that includes the bit for SIG only.  */
-#define __sigmask(sig) \
-  (((unsigned long) 1) << (((sig) - 1) % (8 * sizeof (unsigned long int))))
+# define __sigmask(sig) \
+  (((unsigned long int) 1) << (((sig) - 1) % (8 * sizeof (unsigned long int))))
 
 /* Return the word index for SIG.  */
-#define __sigword(sig)	(((sig) - 1) / (8 * sizeof (unsigned long int)))
+# define __sigword(sig)	(((sig) - 1) / (8 * sizeof (unsigned long int)))
 
-#if defined __GNUC__ && __GNUC__ >= 2
-# define __sigemptyset(set) \
+# if defined __GNUC__ && __GNUC__ >= 2
+#  define __sigemptyset(set) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__set = (set);				      \
 		    while (--__cnt >= 0) __set->__val[__cnt] = 0;	      \
 		    0; }))
-# define __sigfillset(set) \
+#  define __sigfillset(set) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__set = (set);				      \
 		    while (--__cnt >= 0) __set->__val[__cnt] = ~0UL;	      \
 		    0; }))
 
-# ifdef _GNU_SOURCE
+#  ifdef __USE_GNU
 /* The POSIX does not specify for handling the whole signal set in one
    command.  This is often wanted and so we define three more functions
    here.  */
-# define __sigisemptyset(set) \
+#   define __sigisemptyset(set) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    const sigset_t *__set = (set);			      \
 		    int __ret = __set->__val[--__cnt];			      \
 		    while (!__ret && --__cnt >= 0)			      \
 			__ret = __set->__val[__cnt];			      \
 		    __ret == 0; }))
-# define __sigandset(dest, left, right) \
+#   define __sigandset(dest, left, right) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__dest = (dest);				      \
 		    const sigset_t *__left = (left);			      \
@@ -85,7 +85,7 @@ typedef struct
 		      __dest->__val[__cnt] = (__left->__val[__cnt]	      \
 					      & __right->__val[__cnt]);	      \
 		    0; }))
-# define __sigorset(dest, left, right) \
+#   define __sigorset(dest, left, right) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__dest = (dest);				      \
 		    const sigset_t *__left = (left);			      \
@@ -94,8 +94,8 @@ typedef struct
 		      __dest->__val[__cnt] = (__left->__val[__cnt]	      \
 					      | __right->__val[__cnt]);	      \
 		    0; }))
+#  endif
 # endif
-#endif
 
 /* These functions needn't check for a bogus signal number -- error
    checking is done in the non __ versions.  */
@@ -104,7 +104,7 @@ extern int __sigismember (__const __sigset_t *, int);
 extern int __sigaddset (__sigset_t *, int);
 extern int __sigdelset (__sigset_t *, int);
 
-#define __SIGSETFN(NAME, BODY, CONST)					      \
+# define __SIGSETFN(NAME, BODY, CONST)					      \
   _EXTERN_INLINE int							      \
   NAME (CONST __sigset_t *__set, int __sig)				      \
   {									      \

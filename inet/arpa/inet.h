@@ -28,7 +28,7 @@ __BEGIN_DECLS
 
 /* Convert Internet host address from numbers-and-dots notation in CP
    into binary data in network byte order.  */
-extern unsigned long int inet_addr __P ((__const char *__cp));
+extern u_int32_t inet_addr __P ((__const char *__cp));
 
 /* Convert Internet host address from numbers-and-dots notation in CP
    into binary data and store the result in the structure INP.  */
@@ -43,8 +43,7 @@ extern struct in_addr inet_makeaddr __P ((u_int32_t __net, u_int32_t __host));
 
 /* Format a network number NET into presentation format and place result
    in buffer starting at BUF with length of LEN bytes.  */
-extern char *inet_neta __P ((unsigned long int __net, char *__buf,
-			     size_t __len));
+extern char *inet_neta __P ((u_int32_t __net, char *__buf, size_t __len));
 
 /* Return network number part of the Internet address IN.  */
 extern u_int32_t inet_netof __P ((struct in_addr __in));

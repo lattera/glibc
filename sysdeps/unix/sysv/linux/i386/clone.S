@@ -23,6 +23,7 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <asm-syntax.h>
 
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg); */
 
@@ -63,6 +64,12 @@ ENTRY(__clone)
 thread_start:
 	subl	%ebp,%ebp	/* terminate the stack frame */
 	call	*%ebx
+#ifdef PIC
+	call	L(here)
+L(here):
+	popl	%ebx
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-L(here)], %ebx
+#endif
 	pushl	%eax
 	call	JUMPTARGET (_exit)
 

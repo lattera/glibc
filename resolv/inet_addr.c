@@ -71,7 +71,7 @@ static char rcsid[] = "$Id$";
  * Ascii internet address interpretation routine.
  * The value returned is in network order.
  */
-u_long
+u_int32_t
 inet_addr(cp)
 	register const char *cp;
 {

@@ -31,6 +31,12 @@ netinet/tcp.h
 netinet/udp.h
 netipx/ipx.h
 nfs/nfs.h
+rt_sigaction.c
+rt_sigprocmask.c
+rt_sigqueueinfo.c
+rt_sigreturn.c
+rt_sigsuspend.c
+rt_sigtimedwait.c
 scsi/sg.h
 sys/acct.h
 sys/debugreg.h
@@ -41,6 +47,7 @@ sys/kdaemon.h
 sys/klog.h
 sys/mount.h
 sys/mtio.h
+sys/pci.h
 sys/prctl.h
 sys/procfs.h
 sys/quota.h
@@ -50,6 +57,7 @@ sys/sysctl.h
 sys/sysinfo.h
 sys/sysmacros.h
 sys/timex.h
+sys/ultrasound.h
 sys/user.h
 sys/vt.h
 xstatconv.c

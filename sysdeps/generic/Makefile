@@ -33,6 +33,7 @@ endif
 
 ifeq ($(subdir),stdio-common)
 ifneq ($(inhibit-siglist),yes)
+ifneq ($(cross-compiling),yes)
 ifeq	"$(filter %siglist.c,$(before-compile))" ""
 before-compile := $(before-compile) $(objpfx)siglist.c
 $(objpfx)siglist.c: $(objpfx)make_siglist
@@ -46,6 +47,7 @@ $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
 	$(native-compile)
 
 generated := $(generated) make_siglist siglist.c
+endif
 endif
 endif
 endif

@@ -161,7 +161,8 @@ extern char *__stdio_gen_tempname __P ((char *__buf, size_t __bufsize,
 					__const char *__pfx,
 					int __dir_search,
 					size_t *__lenptr,
-					FILE **__streamptr));
+					FILE **__streamptr,
+					int __large_file));
 
 
 /* Print out MESSAGE on the error output and abort.  */
@@ -297,6 +298,9 @@ extern int rename __P ((__const char *__old, __const char *__new));
 
 /* Create a temporary file and open it read/write.  */
 extern FILE *tmpfile __P ((void));
+#ifdef __USE_LARGEFILE64
+extern FILE *tmpfile64 __P ((void));
+#endif
 /* Generate a temporary filename.  */
 extern char *tmpnam __P ((char *__s));
 

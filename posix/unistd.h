@@ -77,6 +77,9 @@ __BEGIN_DECLS
    are present.  */
 #define	_XOPEN_ENH_I18N	1
 
+/* The legacy interfaces are also available.  */
+#define _XOPEN_LEGACY	1
+
 
 /* Get values of POSIX options:
 
@@ -122,6 +125,8 @@ __BEGIN_DECLS
    _POSIX_POLL			Implementation supports `poll' function.
    _POSIX_SELECT		Implementation supports `select' and `pselect'.
 
+   _XOPEN_REALTIME		X/Open realtime support is available.
+   _XOPEN_REALTIME_THREADS	X/Open realtime thread support is available.
    _XOPEN_SHM			Shared memory interface according to XPG4.2.
 
    _XBS5_ILP32_OFF32		Implementation provides environment with 32-bit
@@ -162,6 +167,10 @@ __BEGIN_DECLS
 
 #include <bits/posix_opt.h>
 
+/* Get the environment definitions from Unix98.  */
+#ifdef __USE_UNIX98
+# include <bits/environments.h>
+#endif
 
 /* Standard file descriptors.  */
 #define	STDIN_FILENO	0	/* Standard input.  */

@@ -117,7 +117,7 @@ CPPFLAGS-s_lib_version.c := -D_POSIX_MODE
 
 # We don't want the fdlibm code to use the inline math functions,
 # only the fdlibm code.
-CPPFLAGS += -D__NO_MATH_INLINES
+CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES
 
 # Using omit-long-double-fcts is only a temporary hack.
 ifneq ($(omit-long-double-fcts),yes)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +17,16 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef	_SYS_TIMEX_H
-
 #define	_SYS_TIMEX_H	1
-#include <features.h>
 
+#include <features.h>
 #include <sys/time.h>
 #include <linux/timex.h>
 
 __BEGIN_DECLS
 
 extern int __adjtimex __P ((struct timex *__ntx));
+extern int adjtimex __P ((struct timex *__ntx));
 
 __END_DECLS
 

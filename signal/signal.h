@@ -172,6 +172,20 @@ typedef __sigset_t sigset_t;
 
 # ifdef _SIGNAL_H
 
+/* We need `struct timespec' later on.  */
+#  define __need_timespec
+#  include <time.h>
+
+/* Type for data associated with a signal.  */
+typedef union sigval
+  {
+    int sival_int;
+    void *sival_ptr;
+  } sigval_t;
+
+/* Get the `siginfo_t' type plus the needed symbols.  */
+# include <bits/siginfo.h>
+
 /* Clear all signals from SET.  */
 extern int sigemptyset __P ((sigset_t *__set));
 
@@ -228,6 +242,24 @@ extern int sigpending __P ((sigset_t *__set));
 /* Select any of pending signals from SET or wait for any to arrive.  */
 extern int __sigwait __P ((__const sigset_t *__set, int *__sig));
 extern int sigwait __P ((__const sigset_t *__set, int *__sig));
+
+/* Select any of pending signals from SET and place information in INFO.  */
+extern int __sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
+extern int sigwaitinfo __P ((__const sigset_t *__set, siginfo_t *__info));
+
+/* Select any of pending signals from SET and place information in INFO.
+   Wait the imte specified by TIMEOUT if no signal is pending.  */
+extern int __sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
+				__const struct timespec *__timeout));
+extern int sigtimedwait __P ((__const sigset_t *__set, siginfo_t *__info,
+			      __const struct timespec *__timeout));
+
+/* Send signal SIG to the process PID.  Associate data in VAL with the
+   signal.  */
+extern int __sigqueue __P ((__pid_t __pid, int __sig,
+			    __const union sigval __val));
+extern int sigqueue __P ((__pid_t __pid, int __sig,
+			  __const union sigval __val));
 
 # endif /* <signal.h> included.  */
 
@@ -312,6 +344,18 @@ extern int sigaltstack __P ((__const struct sigaltstack *__ss,
 			     struct sigaltstack *__oss));
 
 #endif /* signal.h included and use BSD or X/Open Unix.  */
+
+
+/* The following functions are used internally in the C library and in
+   other code which need deep insights.  */
+
+/* Return number of available real-time signal with highest priority.  */
+extern int __libc_current_sigrtmin __P ((void));
+/* Return number of available real-time signal with lowest priority.  */
+extern int __libc_current_sigrtmax __P ((void));
+
+/* Allocate real-time signal with highest/lowest available priority.  */
+extern int __libc_allocate_rtsig __P ((int __high));
 
 __END_DECLS
 

@@ -31,13 +31,13 @@ struct timestamp
     u_int8_t len;
     u_int8_t ptr;
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-    u_int8_t flags:4;
-    u_int8_t overflow:4;
+    unsigned int flags:4;
+    unsigned int overflow:4;
 #elif __BYTE_ORDER == __BIG_ENDIAN
-    u_int8_t overflow:4;
-    u_int8_t flags:4;
+    unsigned int overflow:4;
+    unsigned int flags:4;
 #else
-#error	"Please fix <bits/endian.h>"
+# error	"Please fix <bits/endian.h>"
 #endif
     u_int32_t data[9];
   };
@@ -49,14 +49,14 @@ struct ip_options
     u_int8_t srr;
     u_int8_t rr;
     u_int8_t ts;
-    u_int8_t is_setbyuser:1;	/* Set by setsockopt?			*/
-    u_int8_t is_data:1;		/* Options in __data, rather than skb	*/
-    u_int8_t is_strictroute:1; /* Strict source route		*/
-    u_int8_t srr_is_hit:1;	/* Packet destination addr was our one	*/
-    u_int8_t is_changed:1;	/* IP checksum more not valid		*/
-    u_int8_t rr_needaddr:1;	/* Need to record addr of outgoing dev	*/
-    u_int8_t ts_needtime:1;	/* Need to record timestamp		*/
-    u_int8_t ts_needaddr:1;	/* Need to record addr of outgoing dev  */
+    unsigned int is_setbyuser:1;   /* Set by setsockopt?		  */
+    unsigned int is_data:1;	   /* Options in __data, rather than skb  */
+    unsigned int is_strictroute:1; /* Strict source route		  */
+    unsigned int srr_is_hit:1;	   /* Packet destination addr was our one */
+    unsigned int is_changed:1;	   /* IP checksum more not valid	  */
+    unsigned int rr_needaddr:1;	   /* Need to record addr of outgoing dev */
+    unsigned int ts_needtime:1;	   /* Need to record timestamp		  */
+    unsigned int ts_needaddr:1;	   /* Need to record addr of outgoing dev */
     u_int8_t router_alert;
     u_int8_t __pad1;
     u_int8_t __pad2;
@@ -66,13 +66,13 @@ struct ip_options
 struct iphdr
   {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-    u_int8_t ihl:4;
-    u_int8_t version:4;
+    unsigned int ihl:4;
+    unsigned int version:4;
 #elif __BYTE_ORDER == __BIG_ENDIAN
-    u_int8_t	version:4;
-    u_int8_t ihl:4;
+    unsigned int version:4;
+    unsigned int ihl:4;
 #else
-#error	"Please fix <bits/endian.h>"
+# error	"Please fix <bits/endian.h>"
 #endif
     u_int8_t tos;
     u_int16_t tot_len;
@@ -133,12 +133,12 @@ struct iphdr
 struct ip
   {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-    u_int8_t ip_hl:4;			/* header length */
-    u_int8_t ip_v:4;			/* version */
+    unsigned int ip_hl:4;		/* header length */
+    unsigned int ip_v:4;		/* version */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-    u_int8_t ip_v:4;			/* version */
-    u_int8_t ip_hl:4;			/* header length */
+    unsigned int ip_v:4;		/* version */
+    unsigned int ip_hl:4;		/* header length */
 #endif
     u_int8_t ip_tos;			/* type of service */
     u_short ip_len;			/* total length */
@@ -163,12 +163,12 @@ struct ip_timestamp
     u_int8_t ipt_len;			/* size of structure (variable) */
     u_int8_t ipt_ptr;			/* index of current entry */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-    u_int8_t ipt_flg:4;			/* flags, see below */
-    u_int8_t ipt_oflw:4;		/* overflow counter */
+    unsigned int ipt_flg:4;		/* flags, see below */
+    unsigned int ipt_oflw:4;		/* overflow counter */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-    u_int8_t ipt_oflw:4;		/* overflow counter */
-    u_int8_t ipt_flg:4;			/* flags, see below */
+    unsigned int ipt_oflw:4;		/* overflow counter */
+    unsigned int ipt_flg:4;		/* flags, see below */
 #endif
     u_int32_t data[9];
   };

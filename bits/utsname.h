@@ -16,7 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _UTSNAME_H
+#ifndef _SYS_UTSNAME_H
 # error "Never include <bits/utsname.h> directly; use <sys/utsname.h> instead."
 #endif
 

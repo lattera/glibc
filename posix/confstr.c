@@ -44,7 +44,9 @@ confstr (name, buf, len)
       }
       break;
 
+    case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
     case _CS_LFS_CFLAGS:
+#if defined _XBS5_ILP32_OFF32 && !defined _XBS5_ILP32_OFFBIG
       /* Signal that we want the new ABI.  */
       {
 	static const char file_offset[] = "-D_FILE_OFFSET_BITS=64";
@@ -52,6 +54,7 @@ confstr (name, buf, len)
 	string_len = sizeof (file_offset);
       }
       break;
+#endif
 
     case _CS_LFS_LINTFLAGS:
     case _CS_LFS_LDFLAGS:
@@ -65,7 +68,6 @@ confstr (name, buf, len)
     case _CS_XBS5_ILP32_OFF32_LDFLAGS:
     case _CS_XBS5_ILP32_OFF32_LIBS:
     case _CS_XBS5_ILP32_OFF32_LINTFLAGS:
-    case _CS_XBS5_ILP32_OFFBIG_CFLAGS:
     case _CS_XBS5_ILP32_OFFBIG_LDFLAGS:
     case _CS_XBS5_ILP32_OFFBIG_LIBS:
     case _CS_XBS5_ILP32_OFFBIG_LINTFLAGS:

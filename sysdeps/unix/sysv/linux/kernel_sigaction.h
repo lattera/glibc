@@ -2,8 +2,8 @@
 
 #define HAVE_SA_RESTORER
 
-struct kernel_sigaction {
-	__sighandler_t sa_handler;
+struct old_kernel_sigaction {
+	__sighandler_t k_sa_handler;
 	unsigned long sa_mask;
 	unsigned long sa_flags;
 	void (*sa_restorer) __P ((void));

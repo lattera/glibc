@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#define _SETJMP_H
 #define _ASM
 #include <bits/setjmp.h>
 
@@ -32,6 +33,6 @@ ENTRY (__longjmp)
 	add	r2, r2, #48
 	lfmfd	f4, 4, [r2]
 #endif
-	
+
 	LOADREGS(ia, r2, {v1-v6, sl, fp, sp, pc})
 END (__longjmp)

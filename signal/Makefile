@@ -22,7 +22,7 @@
 subdir	:= signal
 
 headers	:= signal.h sys/signal.h bits/signum.h bits/sigcontext.h \
-	   bits/sigaction.h bits/sigset.h
+	   bits/sigaction.h bits/sigset.h bits/siginfo.h
 
 routines	:= signal raise killpg \
 		   sigaction sigprocmask kill \
@@ -32,11 +32,12 @@ routines	:= signal raise killpg \
 		   sigsetops sigempty sigfillset sigaddset sigdelset sigismem \
 		   sigreturn \
 		   siggetmask sysv_signal \
-		   sigisempty sigandset sigorset
+		   sigisempty sigandset sigorset \
+		   allocrtsig sigtimedwait sigwaitinfo sigqueue
 
 tests		:= tst-signal
 
-distribute	:= sigsetops.h
+distribute	:= sigsetops.h testrtsig.h
 
 
 include ../Rules

@@ -47,7 +47,7 @@ static const char rcsid[] = "$Id$";
  */
 char *
 inet_neta(src, dst, size)
-	u_long src;
+	u_int32_t src;
 	char *dst;
 	size_t size;
 {

@@ -35,6 +35,13 @@ pipe		-	pipe		1	__pipe		pipe
 prctl		EXTRA	prctl		5	prctl
 query_module	EXTRA	query_module	5	query_module
 quotactl	EXTRA	quotactl	4	quotactl
+rt_sigaction	sigaction	rt_sigaction	4	__syscall_rt_sigaction
+rt_sigpending	sigpendding	rt_sigpending	2	__syscall_rt_sigpending
+rt_sigprocmask	sigprocmask	rt_sigprocmask	4	__syscall_rt_sigprocmask
+rt_sigqueueinfo	sigqueue	rt_sigqueueinfo	3	__syscall_rt_sigqueueinfo
+rt_sigreturn	sigreturn	rt_sigreturn	1	__syscall_rt_sigreturn
+rt_sigsuspend	sigsuspend	rt_sigsuspend	2	__syscall_rt_sigsuspend
+rt_sigtimedwait	sigtimedwait	rt_sigtimedwait	4	__syscall_rt_sigtimedwait
 s_getdents	EXTRA	getdents	3	__getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_poll		poll	poll		3	__syscall_poll
@@ -43,6 +50,9 @@ s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_pwrite64	EXTRA	pwrite		5	__syscall_pwrite64
 s_reboot	EXTRA	reboot		3	__syscall_reboot
 s_sigaction	sigaction sigaction	3	__syscall_sigaction
+s_sigpending	EXTRA	sigpending	1	__syscall_sigpending
+s_sigprocmask	EXTRA	sigprocmask	3	__syscall_sigprocmask
+s_sigreturn	sigreturn sigreturn	1	__syscall_sigreturn
 s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
 s_ustat		ustat	ustat		2	__syscall_ustat
@@ -60,9 +70,6 @@ setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid
 setresgid	EXTRA	setresgid	3	setresgid
 setresuid	EXTRA	setresuid	3	setresuid
-sigpending	-	sigpending	1	sigpending
-sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
-sigreturn	-	sigreturn	1	__sigreturn	sigreturn
 sys_fstat	fxstat	fstat		2	__syscall_fstat
 sys_lstat	lxstat	lstat		2	__syscall_lstat
 sys_mknod	xmknod	mknod		3	__syscall_mknod

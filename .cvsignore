@@ -20,7 +20,6 @@ docs
 
 crypt
 linuxthreads
-localedata
 secure_rpc
 
 aio

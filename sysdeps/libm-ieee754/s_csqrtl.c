@@ -84,6 +84,7 @@ __csqrtl (__complex__ long double x)
 	}
       else
 	{
+#if 0 /* FIXME: this is broken. */
 	  __complex__ long double q;
 	  long double t, r;
 
@@ -99,6 +100,15 @@ __csqrtl (__complex__ long double x)
 
 	  /* Heron iteration in complex arithmetic.  */
 	  res = 0.5 * (q + q / x);
+#else
+	  long double d, imag;
+
+	  d = __ieee754_hypotl (__real__ x, __imag__ x);
+	  imag = __ieee754_sqrtl (0.5 * (d - __real__ x));
+
+	  __real__ res = __ieee754_sqrtl (0.5 * (d + __real__ x));
+	  __imag__ res = __copysignl (imag, __imag__ x);
+#endif
 	}
     }
 

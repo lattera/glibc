@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,13 @@
 /* Filenames are not silently truncated.  */
 #define	_POSIX_NO_TRUNC	1
 
+/* X/Open realtime support is available.  */
+#define _XOPEN_REALTIME	1
+
 /* XPG4.2 shared memory is supported.  */
 #define	_XOPEN_SHM	1
+
+/* Real-time signals are supported.  */
+#define _POSIX_REALTIME_SIGNALS	1
 
 #endif /* bits/posix_opt.h */

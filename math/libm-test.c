@@ -78,12 +78,13 @@
 
 /* "Philosophy":
 
-   This suite tests the correct implementation of mathematical
-   functions in libm.  Some simple, specific parameters are tested for
-   correctness. Handling of specific inputs (e.g. infinity,
-   not-a-number) is also tested. Correct handling of exceptions is
-   checked against. These implemented tests should check all cases
-   that are specified in ISO C 9X.
+   This suite tests some aspects of the correct implementation of
+   mathematical functions in libm.  Some simple, specific parameters
+   are tested for correctness but there's no exhaustive
+   testing. Handling of specific inputs (e.g. infinity, not-a-number)
+   is also tested. Correct handling of exceptions is checked
+   against. These implemented tests should check all cases that are
+   specified in ISO C 9X.
 
    Exception testing: At the moment only divide-by-zero and invalid
    exceptions are tested. Overflow/underflow and inexact exceptions
@@ -837,9 +838,15 @@ acos_test (void)
 		   FUNC(acos) (x),
 		   INVALID_EXCEPTION);
 #endif
+  check ("acos (0) == pi/2", FUNC(acos) (0), M_PI_2);
+  check ("acos (-0) == pi/2", FUNC(acos) (minus_zero), M_PI_2);
 
   check ("acos (1) == 0", FUNC(acos) (1), 0);
   check ("acos (-1) == pi", FUNC(acos) (-1), M_PI);
+
+  check ("acos (0.5) == pi/3", FUNC(acos) (0.5), M_PI_6 * 2.0);
+  check ("acos (-0.5) == 2*pi/3", FUNC(acos) (-0.5), M_PI_6 * 4.0);
+
 }
 
 
@@ -878,9 +885,14 @@ asin_test (void)
 #endif
 
   check ("asin (0) == 0", FUNC(asin) (0), 0);
+  check ("asin (-0) == -0", FUNC(asin) (minus_zero), minus_zero);
   check_eps ("asin (0.5) ==  pi/6", FUNC(asin) (0.5), M_PI_6,
 	     CHOOSE(3.5e-18, 0, 2e-7));
+  check_eps ("asin (-0.5) ==  -pi/6", FUNC(asin) (-0.5), -M_PI_6,
+	     CHOOSE(3.5e-18, 0, 2e-7));
   check ("asin (1.0) ==  pi/2", FUNC(asin) (1.0), M_PI_2);
+  check ("asin (-1.0) ==  -pi/2", FUNC(asin) (-1.0), -M_PI_2);
+
 }
 
 
@@ -906,6 +918,10 @@ atan_test (void)
 
   check ("atan (+inf) == pi/2", FUNC(atan) (plus_infty), M_PI_2);
   check ("atan (-inf) == -pi/2", FUNC(atan) (minus_infty), -M_PI_2);
+
+  check ("atan (1) == pi/4", FUNC(atan) (1), M_PI_4);
+  check ("atan (-1) == -pi/4", FUNC(atan) (1), M_PI_4);
+
 }
 
 
@@ -1062,6 +1078,8 @@ cos_test (void)
 
   check_eps ("cos (pi/3) == 0.5", FUNC(cos) (M_PI_6 * 2.0),
 	     0.5, CHOOSE (4e-18L, 1e-15L, 1e-7L));
+  check_eps ("cos (2*pi/3) == -0.5", FUNC(cos) (M_PI_6 * 4.0),
+	     -0.5, CHOOSE (4e-18L, 1e-15L, 1e-7L));
   check_eps ("cos (pi/2) == 0", FUNC(cos) (M_PI_2),
 	     0, CHOOSE (1e-19L, 1e-16L, 1e-7L));
 
@@ -1123,6 +1141,9 @@ exp_test (void)
   check ("exp (-inf) == 0", FUNC(exp) (minus_infty), 0);
 #endif
   check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 5e-16, 0));
+
+  check ("exp (2) == e^2", FUNC(exp) (2), M_E * M_E);
+  check ("exp (3) == e^3", FUNC(exp) (3), M_E * M_E * M_E);
 }
 
 
@@ -1724,8 +1745,11 @@ sin_test (void)
 		   INVALID_EXCEPTION);
 
   check_eps ("sin (pi/6) == 0.5", FUNC(sin) (M_PI_6),
-	     0.5,CHOOSE (4e-18L, 0, 0));
+	     0.5, CHOOSE (4e-18L, 0, 0));
+  check_eps ("sin (-pi/6) == -0.5", FUNC(sin) (-M_PI_6),
+	     -0.5, CHOOSE (4e-18L, 0, 0));
   check ("sin (pi/2) == 1", FUNC(sin) (M_PI_2), 1);
+  check ("sin (-pi/2) == -1", FUNC(sin) (-M_PI_2), -1);
 }
 
 
@@ -2328,6 +2352,9 @@ sqrt_test (void)
   check_ext ("sqrt (x*x) == x", FUNC(sqrt) (x*x), x, x);
   check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
   check ("sqrt (0.25) == 0.5", FUNC(sqrt) (0.25), 0.5);
+  check ("sqrt (6642.25) == 81.5", FUNC(sqrt) (6642.25), 81.5);
+  check_eps ("sqrt (15239.903) == 123.45", FUNC(sqrt) (15239.903), 123.45,
+	     CHOOSE (3e-6L, 3e-6, 8e-6));
 
 }
 
@@ -2459,7 +2486,7 @@ cexp_test (void)
   check_isnan ("imag(cexp(0 + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
 
-#if defined __GNUC__ && __GNUC__ <= 2 && __GNUC_MINOR <= 7
+#if defined __GNUC__ && __GNUC__ <= 2 && __GNUC_MINOR__ <= 7
   if (verbose)
     printf ("The following test for cexp might fail due to a gcc compiler error!\n");
 #endif
@@ -4767,9 +4794,21 @@ csqrt_test (void)
   check_isnan ("real(csqrt(NaN + i NaN)) = NaN", __real__ result);
   check_isnan ("imag(csqrt(NaN + i NaN)) = NaN", __imag__ result);
 
+  result = FUNC(csqrt) (BUILD_COMPLEX (16.0, -30.0));
+  check ("real(csqrt(16 - 30i)) = 5", __real__ result, 5.0);
+  check ("imag(csqrt(16 - 30i)) = -3", __imag__ result, -3.0);
+
   result = FUNC(csqrt) (BUILD_COMPLEX (-1, 0));
   check ("real(csqrt(1 + i0) = 0", __real__ result, 0);
   check ("imag(csqrt(1 + i0) = 1", __imag__ result, 1);
+
+  result = FUNC(csqrt) (BUILD_COMPLEX (0, 2));
+  check ("real(csqrt(0 + i 2) = 1", __real__ result, 1);
+  check ("imag(csqrt(0 + i 2) = 1", __imag__ result, 1);
+
+  result = FUNC(csqrt) (BUILD_COMPLEX (119, 120));
+  check ("real(csqrt(119 + i 120) = 12", __real__ result, 12);
+  check ("imag(csqrt(119 + i 120) = 5", __imag__ result, 5);
 }
 
 
@@ -4779,14 +4818,24 @@ cpow_test (void)
   __complex__ MATHTYPE result;
 
   result = FUNC (cpow) (BUILD_COMPLEX (1, 0), BUILD_COMPLEX (0, 0));
-  check ("real(cpow (1 + i0), (0 + i0)) = 0", __real__ result, 1);
-  check ("imag(cpow (1 + i0), (0 + i0)) = 0", __imag__ result, 0);
+  check ("real(cpow (1 + i0), (0 + i0)) == 0", __real__ result, 1);
+  check ("imag(cpow (1 + i0), (0 + i0)) == 0", __imag__ result, 0);
 
   result = FUNC (cpow) (BUILD_COMPLEX (2, 0), BUILD_COMPLEX (10, 0));
-  check_eps ("real(cpow (2 + i0), (10 + i0)) = 1024", __real__ result, 1024,
+  check_eps ("real(cpow (2 + i0), (10 + i0)) == 1024", __real__ result, 1024,
 	     CHOOSE (2e-16L, 0, 0));
-  check ("imag(cpow (2 + i0), (10 + i0)) = 0", __imag__ result, 0);
+  check ("imag(cpow (2 + i0), (10 + i0)) == 0", __imag__ result, 0);
 
+  result = FUNC (cpow) (BUILD_COMPLEX (M_E, 0), BUILD_COMPLEX (0, 2*M_PI));
+  check ("real(cpow (e + i0), (0 + i 2*PI)) == 1", __real__ result, 1);
+  check_eps ("imag(cpow (e + i0), (0 + i 2*PI)) == 0", __imag__ result, 0,
+	     CHOOSE (1e-18L, 3e-16, 4e-7));
+
+  result = FUNC (cpow) (BUILD_COMPLEX (2, 3), BUILD_COMPLEX (4, 0));
+  check_eps ("real(cpow (2 + i3), (4 + i0)) == -119", __real__ result, -119,
+	     CHOOSE (2e-17L, 2e-14, 4e-5));
+  check_eps ("imag(cpow (2 + i3), (4 + i0)) == -120", __imag__ result, -120,
+	     CHOOSE (4e-17L, 0, 8e-6));
 }
 
 

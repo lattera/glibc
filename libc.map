@@ -20,6 +20,7 @@ GLIBC_2.0 {
 
     # helper functions
     __errno_location; __libc_init_first; __h_errno_location;
+    __libc_current_sigrtmin; __libc_current_sigrtmax; __libc_allocate_rtsig;
 
     # functions with special/multiple interfaces
     __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
@@ -432,5 +433,8 @@ GLIBC_2.1 {
 
     # functions in normal name space
     fopen; fclose;
+
+    # New RT signal functions.
+    sigqueue; sigtimedwait; sigwaitinfo;
 
 } GLIBC_2.0;

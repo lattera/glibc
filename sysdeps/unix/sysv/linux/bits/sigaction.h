@@ -25,7 +25,16 @@
 struct sigaction
   {
     /* Signal handler.  */
-    __sighandler_t sa_handler;
+    union
+      {
+	/* Used if SA_SIGINFO is not set.  */
+	__sighandler_t sa_handler;
+	/* Used if SA_SIGINFO is set.  */
+	void (*sa_sigaction) __P ((int, siginfo_t *, void *));
+      }
+    __sigaction_handler;
+#define sa_handler	__sigaction_handler.sa_handler
+#define sa_sigaction	__sigaction_handler.sa_sigaction
 
     /* Additional set of signals to be blocked.  */
     __sigset_t sa_mask;
@@ -39,17 +48,22 @@ struct sigaction
 
 /* Bits in `sa_flags'.  */
 #define	SA_NOCLDSTOP  1		 /* Don't send SIGCHLD when children stop.  */
-#ifdef __USE_MISC
-# define SA_STACK     0x08000000 /* Use signal stack by using `sa_restorer'. */
+#define SA_SIGINFO    4		 /* Invoke signal-catching function with
+				    three arguments instead of one.  */
+#if defined __USE_UNIX98 || defined __USE_MISC
+# define SA_ONSTACK   0x08000000 /* Use signal stack by using `sa_restorer'. */
 # define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
-# define SA_INTERRUPT 0x20000000 /* Historical no-op.  */
 # define SA_NODEFER   0x40000000 /* Don't automatically block the signal when
 				    its handler is being executed.  */
 # define SA_RESETHAND 0x80000000 /* Reset to SIG_DFL on entry to handler.  */
+#endif
+#ifdef __USE_MISC
+# define SA_INTERRUPT 0x20000000 /* Historical no-op.  */
 
 /* Some aliases for the SA_ constants.  */
 # define SA_NOMASK    SA_NODEFER
 # define SA_ONESHOT   SA_RESETHAND
+# define SA_STACK     SA_ONSTACK
 #endif
 
 /* Values for the HOW argument to `sigprocmask'.  */

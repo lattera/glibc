@@ -18,7 +18,3 @@ CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
 CFLAGS-dl-load.c += -Wno-unused
 CFLAGS-dl-reloc.c += -Wno-unused
 endif
-
-ifeq ($(subdir),math)
-CPPFLAGS += -D__LIBC_INTERNAL_MATH_INLINES
-endif

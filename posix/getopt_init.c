@@ -53,7 +53,7 @@ __getopt_clean_environment (char **env)
 
   /* Generate name of the environment variable.  We must know the PID
      and we must not use `sprintf'.  */
-  if (__libc_pid == 0)
+  if (__libc_pid == 0xf00baa)
     __libc_pid = getpid ();
 
   /* Construct "_<PID>_GNU_nonoption_argv_flags_=" string.  */

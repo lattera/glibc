@@ -18,24 +18,33 @@ Version 2.1
 * Miles Bader provided the `argp' function family to support hierachical
   command line argument parsing, layered on top of getopt.
 
-* strtod accepts new hexadecimal floating-point format from ISO C 9X
+* strtod accepts new hexadecimal floating-point format from ISO C 9X.
 
 * printf has two new specifiers %a and %A to print hexadecimal flaoting-point
-  numbers
+  numbers.
 
-* scanf recognizes the %A format for scanning floating point numbers
+* scanf recognizes the %a and %A format for scanning floating point numbers.
 
 * the new header <inttypes.h> from ISO C 9X provides information and
-  interfaces for the available integer types
+  interfaces for the available integer types.
 
 * the new header <complex.h> contains definitions of the complex math
-  functions from ISO C 9X
+  functions from ISO C 9X.
+
+* the new header <tgmath.h> defines generic macros to use complex or
+  real valued functions.
 
 * Thorsten Kukuk provided an implementation for NIS+, securelevel 0, 1 and 2.
 
 * Andreas Jaeger provided a test suite for the math library.
 
 * Mark Kettenis implemented the utmpx interface and an utmp daemon.
+
+* Ulrich Drepper added character conversion functions.
+
+* Optimized string functions have been added.
+
+* The localedata addon is now part of glibc.
 
 Version 2.0.5
 

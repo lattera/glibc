@@ -60,7 +60,7 @@ typedef union
   {
     union wait *__uptr;
     int *__iptr;
-  } __WAIT_STATUS __attribute__ ((transparent_union));
+  } __WAIT_STATUS __attribute__ ((__transparent_union__));
 # define __WAIT_STATUS_DEFN	int *
 #endif
 

@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <limits.h>
 #include <link.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -403,13 +404,20 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   /* Setup counting data.  */
   if (kcountsize < highpc - lowpc)
     {
-      /* XXX I've not yet verified that the second expression is really
-	 well suited but something like this is in any case necessary
-	 for targets without hardware FP support.  --drepper  */
 #if 0
       s_scale = ((double) kcountsize / (highpc - lowpc)) * SCALE_1_TO_1;
 #else
-      s_scale = (kcountsize * SCALE_1_TO_1) / (highpc - lowpc);
+      size_t range = highpc - lowpc;
+      size_t quot = range / kcountsize;
+
+      if (quot >= SCALE_1_TO_1)
+	s_scale = 1;
+      else if (quot >= SCALE_1_TO_1 / 256)
+	s_scale = SCALE_1_TO_1 / quot;
+      else if (range > ULONG_MAX / 256)
+	s_scale = (SCALE_1_TO_1 * 256) / (range / (kcountsize / 256));
+      else
+	s_scale = (SCALE_1_TO_1 * 256) / ((range * 256) / kcountsize);
 #endif
     }
   else

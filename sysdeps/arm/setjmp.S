@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#define _SETJMP_H
 #define _ASM
 #include <bits/setjmp.h>
 
@@ -28,7 +29,7 @@ ENTRY (__sigsetjmp)
 	/* Save registers */
 #if __ARM_USES_FP
 	sfmea	f4, 4, [r0]!
-#endif	
+#endif
 	stmia	r0, {v1-v6, sl, fp, sp, lr}
 
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */

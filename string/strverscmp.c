@@ -39,7 +39,7 @@
 */
 
 int
-strverscmp (s1, s2)
+__strverscmp (s1, s2)
      const char *s1;
      const char *s2;
 {
@@ -109,3 +109,4 @@ strverscmp (s1, s2)
       return state;
   }
 }
+weak_alias (__strverscmp, strverscmp)

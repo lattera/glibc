@@ -44,9 +44,9 @@ enum
 #define ES	ES
   DS,
 #define DS	DS
-  EDI
+  EDI,
 #define EDI	EDI
-  ESI
+  ESI,
 #define ESI	ESI
   EBP,
 #define EBP	EBP

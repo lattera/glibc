@@ -176,6 +176,10 @@ other make program has the needed functionality.
 Versions before 3.74 have bugs which prevent correct execution so you
 should upgrade to the latest version before starting the compilation.
 
+We recommend version GNU make version 3.75.  Versions 3.76 and
+3.76.1 are known to have bugs which only show up in big projects like
+GNU libc.
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q4]	``After I changed configure.in I get `Autoconf version X.Y.
@@ -338,10 +342,6 @@ incompatibilities:
        syscall name:	wrapper name:	declaring header file:
        -------------	-------------	----------------------
        bdflush		bdflush		<sys/kdaemon.h>
-       create_module	create_module	<sys/module.h>
-       delete_module	delete_module	<sys/module.h>
-       get_kernel_syms	get_kernel_syms	<sys/module.h>
-       init_module	init_module	<sys/module.h>
        syslog		ksyslog_ctl	<sys/klog.h>
 
 * lpd: Older versions of lpd depend on a routine called _validuser().

@@ -1,5 +1,5 @@
 /* Signal number definitions.  Linux version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 #ifdef	_SIGNAL_H
 
 /* Fake signal functions.  */
-#define SIG_ERR ((__sighandler_t) -1) /* Error return.  */
-#define SIG_DFL ((__sighandler_t) 0) /* Default action.  */
-#define SIG_IGN ((__sighandler_t) 1) /* Ignore signal.  */
+#define SIG_ERR	((__sighandler_t) -1)		/* Error return.  */
+#define SIG_DFL	((__sighandler_t) 0)		/* Default action.  */
+#define SIG_IGN	((__sighandler_t) 1)		/* Ignore signal.  */
 
 
 /* Signals.  */
@@ -42,7 +42,7 @@
 #define	SIGPIPE		13	/* Broken pipe (POSIX).  */
 #define	SIGALRM		14	/* Alarm clock (POSIX).  */
 #define	SIGTERM		15	/* Termination (ANSI).  */
-#define	SIGSTKFLT	16	/* ??? */
+#define	SIGSTKFLT	16	/* Stack fault.  */
 #define	SIGCLD		SIGCHLD	/* Same as SIGCHLD (System V).  */
 #define	SIGCHLD		17	/* Child status has changed (POSIX).  */
 #define	SIGCONT		18	/* Continue (POSIX).  */
@@ -61,6 +61,15 @@
 #define	SIGPWR		30	/* Power failure restart (System V).  */
 #define SIGUNUSED	31
 
-#define	_NSIG		32	/* Biggest signal number + 1.  */
+#define	_NSIG		64	/* Biggest signal number + 1
+				   (including real-time signals).  */
+
+#define SIGRTMIN        (__libc_current_sigrtmin ())
+#define SIGRTMAX        (__libc_current_sigrtmax ())
+
+/* These are the hard limits of the kernel.  These values should not be
+   used directly at user level.  */
+#define __SIGRTMIN	32
+#define __SIGRTMAX	(_NSIG - 1)
 
 #endif	/* <signal.h> included.  */
