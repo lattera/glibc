@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -40,8 +40,8 @@ __libc_lock_define_initialized (static, lock)
 
 struct response
 {
-  char *val;
   struct response *next;
+  char val[0];
 };
 
 static struct response *start;
@@ -56,26 +56,18 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
+      struct response *newp = malloc (sizeof (struct response) + invallen + 1);
+      if (newp == NULL)
+	return YP_FALSE; /* We have no error code for out of memory */
+
       if (start == NULL)
-	{
-	  start = malloc (sizeof (struct response));
-	  if (start == NULL)
-	    return YP_FALSE;
-	  next = start;
-	}
+	start = newp;
       else
-	{
-	  next->next = malloc (sizeof (struct response));
-	  if (next->next == NULL)
-	    return YP_FALSE;
-	  next = next->next;
-	}
-      next->next = NULL;
-      next->val = malloc (invallen + 1);
-      if (next->val == NULL)
-	return YP_FALSE;
-      strncpy (next->val, inval, invallen);
-      next->val[invallen] = '\0';
+	next->next = newp;
+      next = newp;
+
+      newp->next = NULL;
+      *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
     }
 
   return 0;
@@ -86,8 +78,6 @@ internal_nis_endetherent (void)
 {
   while (start != NULL)
     {
-      if (start->val != NULL)
-	free (start->val);
       next = start;
       start = start->next;
       free (next);

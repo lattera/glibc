@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -38,8 +38,8 @@
 
 struct response_t
 {
-  char *val;
   struct response_t *next;
+  char val[0];
 };
 
 struct intern_t
@@ -60,26 +60,19 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
+      struct response_t *newp = malloc (sizeof (struct response_t)
+					+ invallen + 1);
+      if (newp == NULL)
+	return YP_FALSE; /* We have no error code for out of memory */
+
       if (intern->start == NULL)
-        {
-          intern->start = malloc (sizeof (struct response_t));
-	  if (intern->start == NULL)
-	    return YP_FALSE;
-          intern->next = intern->start;
-        }
+	intern->start = newp;
       else
-        {
-          intern->next->next = malloc (sizeof (struct response_t));
-	  if (intern->next->next == NULL)
-	    return YP_FALSE;
-          intern->next = intern->next->next;
-        }
-      intern->next->next = NULL;
-      intern->next->val = malloc (invallen + 1);
-      if (intern->next->val == NULL)
-	return YP_FALSE;
-      strncpy (intern->next->val, inval, invallen);
-      intern->next->val[invallen] = '\0';
+	intern->next->next = newp;
+      intern->next = newp;
+
+      newp->next = NULL;
+      *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
     }
 
   return 0;
@@ -209,8 +202,6 @@ _nss_nis_initgroups_dyn (const char *user, gid_t group, long int *start,
 done:
   while (intern.start != NULL)
     {
-      if (intern.start->val != NULL)
-        free (intern.start->val);
       intern.next = intern.start;
       intern.start = intern.start->next;
       free (intern.next);

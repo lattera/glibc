@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -38,8 +38,8 @@ __libc_lock_define_initialized (static, lock)
 
 struct response_t
 {
-  char *val;
   struct response_t *next;
+  char val[0];
 };
 
 struct intern_t
@@ -62,26 +62,19 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 
   if (inkey && inkeylen > 0 && inval && invallen > 0)
     {
-      if (intern->start == NULL)
-        {
-          intern->start = malloc (sizeof (struct response_t));
-	  if (intern->start == NULL)
-	    return YP_FALSE; /* We have no error code for out of memory */
-          intern->next = intern->start;
-        }
-      else
-        {
-          intern->next->next = malloc (sizeof (struct response_t));
-	  if (intern->next->next == NULL)
-	    return YP_FALSE; /* We have no error code for out of memory */
-          intern->next = intern->next->next;
-        }
-      intern->next->next = NULL;
-      intern->next->val = malloc (invallen + 1);
-      if (intern->next->val == NULL)
+      struct response_t *newp = malloc (sizeof (struct response_t)
+					+ invallen + 1);
+      if (newp == NULL)
 	return YP_FALSE; /* We have no error code for out of memory */
-      strncpy (intern->next->val, inval, invallen);
-      intern->next->val[invallen] = '\0';
+
+      if (intern->start == NULL)
+	intern->start = newp;
+      else
+	intern->next->next = newp;
+      intern->next = newp;
+
+      newp->next = NULL;
+      *((char *) mempcpy (newp->val, inval, invallen)) = '\0';
     }
 
   return 0;
@@ -92,13 +85,10 @@ internal_nis_endservent (intern_t * intern)
 {
   while (intern->start != NULL)
     {
-      if (intern->start->val != NULL)
-        free (intern->start->val);
       intern->next = intern->start;
       intern->start = intern->start->next;
       free (intern->next);
     }
-  intern->start = NULL;
 
   return NSS_STATUS_SUCCESS;
 }
