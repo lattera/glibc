@@ -100,6 +100,8 @@ extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
+extern __ptr_t __mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
+			      int __flags, int __fd, __off64_t __offset));
 extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
 			  int __flags, int __fd, __off64_t __offset));
 #endif

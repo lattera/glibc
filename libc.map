@@ -6,7 +6,7 @@ GLIBC_2.0 {
     _nl_msg_cat_cntr; __environ; _environ; _res;
     ___brk_addr; __curbrk; _nl_current_LC_CTYPE; _libc_intl_domainname;
     _sys_errlist; _sys_siglist; __progname; _nl_default_dirname;
-    __timezone; __daylight; __tzname;
+    _nl_domain_bindings; __timezone; __daylight; __tzname;
     _nl_current_LC_COLLATE; __collate_element_hash;
     __collate_element_strings; __collate_symbol_classes;
     __collate_symbol_hash; __collate_symbol_strings;

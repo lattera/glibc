@@ -1,4 +1,4 @@
-/* Round long double value to long int.
+/* Round double value to long long int.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,12 +26,12 @@
    clipping to MAX_LLONG or MIN_LLONG.  */
 
 long long int
-__llround (long double x)
+__llround (double x)
 {
-  long double xrf;
+  double xrf;
   long long int xr;
   xr = (long long int) x;
-  xrf = (long double) xr;
+  xrf = (double) xr;
   if (x >= 0.0)
     if (x - xrf >= 0.5 && x - xrf < 1.0 && x+1 > 0)
       return x+1;
@@ -44,3 +44,7 @@ __llround (long double x)
       return x;
 }
 weak_alias (__llround, llround)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__llround, __llroundl)
+weak_alias (__llround, llroundl)
+#endif

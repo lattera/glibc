@@ -20,7 +20,9 @@
 #define _SYS_KD_H	1
 
 /* Make sure the <linux/types.h> header is not loaded.  */
-#define _LINUX_TYPES_H	1
+#ifndef _LINUX_TYPES_H
+# define _LINUX_TYPES_H	1
+#endif
 
 #include <linux/kd.h>
 

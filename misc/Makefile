@@ -52,7 +52,7 @@ routines := brk sbrk sstk ioctl \
 	    chflags fchflags \
 	    insremque getttyent getusershell getpass ttyslot \
 	    syslog syscall daemon \
-	    mmap munmap mprotect msync madvise \
+	    mmap munmap mprotect msync madvise mmap64 \
 	    efgcvt efgcvt_r qefgcvt qefgcvt_r \
 	    hsearch hsearch_r tsearch lsearch \
 	    err error ustat \

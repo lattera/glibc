@@ -34,7 +34,7 @@ foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
 
 ifndef sysdep_dirs
 # Find all sysdep directories.
-export sysdep_dirs := $(shell find $(..)sysdeps -type d \
+export sysdep_dirs := $(shell find $(..)sysdeps -type d ! -name bits \
 				   ! -name CVS ! -name RCS -print)
 else
 # Defined by the parent.

@@ -171,6 +171,12 @@ ifdef static-only-routines
 $(static-only-routines:%=$(objpfx)%.os): %.os: $(common-objpfx)empty.os
 	rm -f $@
 	ln $< $@
+
+# Must build the routines as PIC, though, because they can end up in (users')
+# shared objects.  We don't want to use CFLAGS-os because users may, for
+# example, make that processor-specific.
+$(static-only-routines:%=$(objpfx)%.o): $(objpfx)%.o: %.c $(before-compile)
+	$(compile.c) $(pic-ccflag) $(OUTPUT_OPTION)
 endif
 
 ifdef shared-only-routines

@@ -1,5 +1,5 @@
 /* Definitions for POSIX 1003.1b-1993 (aka POSIX.4) scheduling interface.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,9 @@
 
 /* Get type definitions.  */
 #include <bits/types.h>
-#include <sys/time.h>		/* for struct timespec */
+
+#define __need_timespec
+#include <time.h>
 
 /* Get system specific constant and data structure definitions.  */
 #include <bits/sched.h>

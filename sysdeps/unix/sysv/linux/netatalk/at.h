@@ -16,8 +16,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __NETATALK_ATALK_H
-#define __NETATALK_ATALK_H 1
+#ifndef _NETATALK_AT_H
+#define _NETATALK_AT_H 1
 
 #include <asm/types.h>
 #include <sys/socket.h>
@@ -25,4 +25,4 @@
 
 #define SOL_ATALK       258     /* sockopt level for atalk */
 
-#endif
+#endif	/* netatalk/at.h */

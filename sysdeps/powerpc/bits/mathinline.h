@@ -18,28 +18,14 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifdef __GNUC__
-#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
-
-#ifdef __cplusplus
-# define __MATH_INLINE __inline
-#else
-# define __MATH_INLINE extern __inline
-#endif
-
-__MATH_INLINE double __sgn1 (double __x);
-__MATH_INLINE double
-__sgn1 (double __x)
-{
-  return __x >= 0.0 ? 1.0 : -1.0;
-}
-#endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
 #if __USE_ISOC9X && !defined _SOFT_FLOAT
 # define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
       unsigned __r;							      \
-      __asm__("fcmpu 7,%1,%2 ; mfcr %0" : "=r" (__r) : "f" (__x), "f"(__y));  \
+      __asm__("fcmpu 7,%1,%2 ; mfcr %0" : "=r" (__r) : "f" (__x), "f"(__y)    \
+              : "cr7");  \
       __r; }))
 
 # define isgreater(x, y) (__unordered_cmp (x, y) >> 2 & 1)
@@ -50,4 +36,53 @@ __sgn1 (double __x)
 # define isunordered(x, y) (__unordered_cmp (x, y) & 1)
 #endif /* __USE_ISOC9X && !_SOFT_FLOAT */
 
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
+
+#ifdef __cplusplus
+# define __MATH_INLINE __inline
+#else
+# define __MATH_INLINE extern __inline
+#endif  /* __cplusplus */
+
+#ifdef __USE_ISOC9X
+__MATH_INLINE long int lrint (double __x);
+__MATH_INLINE long int
+lrint (double __x)
+{
+  union {
+    double __d;
+    long int __ll[2];
+  } __u;
+  asm ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
+  return __u.__ll[1];
+}
+
+__MATH_INLINE long int lrintf (float __x);
+__MATH_INLINE long int
+lrintf (float __x)
+{
+  union {
+    double __d;
+    long int __ll[2];
+  } __u;
+  asm ("fctiw %0,%1" : "=f"(__u.__d) : "f"(__x));
+  return __u.__ll[1];
+}
+
+__MATH_INLINE double fdim (double __x, double __y);
+__MATH_INLINE double
+fdim (double __x, double __y)
+{
+  return __x < __y ? 0 : __x - __y;
+}
+
+__MATH_INLINE float fdimf (float __x, float __y);
+__MATH_INLINE float
+fdimf (float __x, float __y)
+{
+  return __x < __y ? 0 : __x - __y;
+}
+
+#endif /* __USE_ISOC9X */
+#endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 #endif /* __GNUC__  */

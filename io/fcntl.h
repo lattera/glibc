@@ -99,7 +99,7 @@ extern int creat64 __P ((__const char *__file, __mode_t __mode));
 # ifndef __USE_FILE_OFFSET64
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 # else
-extern int lockf __P ((int __fd, int __cmd, __off_t __len))
+extern int lockf __P ((int __fd, int __cmd, __off64_t __len))
      __asm__ ("lockf64");
 # endif
 # ifdef __USE_LARGEFILE64

@@ -12,7 +12,9 @@
 #ifndef	_RPCSVC_NIS_TAGS_H
 #define	_RPCSVC_NIS_TAGS_H
 
+#if 0
 #pragma ident	"@(#)nis_tags.h	1.16	96/10/25 SMI"
+#endif
 /* from file: zns_tags.h	1.7 Copyright (c) 1990 Sun Microsystems */
 
 #ifdef	__cplusplus

@@ -273,7 +273,7 @@ extern __off_t __lseek __P ((int __fd, __off_t __offset, int __whence));
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
 #else
-extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence))
+extern __off_t lseek __P ((int __fd, __off64_t __offset, int __whence))
      __asm__ ("lseek64");
 #endif
 #ifdef __USE_LARGEFILE64
@@ -304,7 +304,7 @@ extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			   __off_t __offset));
 # else
 extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			   __off_t __offset)) __asm__ ("pread64");
+			   __off64_t __offset)) __asm__ ("pread64");
 # endif
 extern ssize_t __pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			       __off64_t __offset));
@@ -322,7 +322,7 @@ extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			    __off_t __offset));
 # else
 extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
-			    __off_t __offset)) __asm__ ("pwrite64");
+			    __off64_t __offset)) __asm__ ("pwrite64");
 # endif
 extern ssize_t __pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
 				__off64_t __offset));
@@ -878,7 +878,7 @@ extern int getpagesize __P ((void));
 #ifndef __USE_FILE_OFFSET64
 extern int truncate __P ((__const char *__file, __off_t __length));
 #else
-extern int truncate __P ((__const char *__file, __off_t __length))
+extern int truncate __P ((__const char *__file, __off64_t __length))
      __asm__ ("truncate64");
 #endif
 #ifdef __USE_LARGEFILE64
@@ -889,7 +889,7 @@ extern int truncate64 __P ((__const char *__file, __off64_t __length));
 #ifndef __USE_FILE_OFFSET64
 extern int ftruncate __P ((int __fd, __off_t __length));
 #else
-extern int ftruncate __P ((int __fd, __off_t __length))
+extern int ftruncate __P ((int __fd, __off64_t __length))
      __asm__ ("ftruncate64");
 #endif
 #ifdef __USE_LARGEFILE64
@@ -957,7 +957,7 @@ extern long int syscall __P ((long int __sysno, ...));
 # ifndef __USE_FILE_OFFSET64
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 # else
-extern int lockf __P ((int __fd, int __cmd, __off_t __len))
+extern int lockf __P ((int __fd, int __cmd, __off64_t __len))
      __asm__ ("lockf64");
 # endif
 # ifdef __USE_LARGEFILE64

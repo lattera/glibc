@@ -21,7 +21,8 @@
 #
 subdir	:= stdlib
 
-headers	:= stdlib.h alloca.h monetary.h fmtmsg.h ucontext.h sys/ucontext.h
+headers	:= stdlib.h alloca.h monetary.h fmtmsg.h ucontext.h sys/ucontext.h    \
+	   inttypes.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \
@@ -44,7 +45,8 @@ routines	:=							      \
 	strtof_l strtod_l strtold_l					      \
 	system canonicalize						      \
 	a64l l64a							      \
-	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg
+	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
+	strtoimax strtoumax wcstoimax wcstoumax
 
 distribute	:= exit.h grouping.h abort-instr.h
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \

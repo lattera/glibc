@@ -19,26 +19,28 @@
 
 #include "math.h"
 
-#ifdef NO_LONG_DOUBLE
-
 long int
-__lrint (long double x)
-{
-  return (long int) __rintl(x);
-}
-
-#else
-
-long int
-__lrint (long double x)
+__lrint (double x)
 {
   union {
     double d;
     long int ll[2];
   } u;
   asm ("fctiw %0,%1" : "=f"(u.d) : "f"(x));
-  return d.ll[1];
+  return u.ll[1];
 }
-
-#endif
 weak_alias (__lrint, lrint)
+
+/* This code will also work for a 'float' argument.  */
+asm ("\
+        .globl __lrintf
+        .globl lrintf
+        .weak lrintf
+	.set __lrintf,__lrint
+	.set lrintf,__lrint
+");
+
+#ifdef NO_LONG_DOUBLE
+strong_alias (__lrint, __lrintl)
+weak_alias (__lrint, lrintl)
+#endif

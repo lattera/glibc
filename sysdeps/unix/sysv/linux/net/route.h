@@ -19,10 +19,9 @@
 /* Based on the 4.4BSD and Linux version of this file.  */
 
 #ifndef _NET_ROUTE_H
-
 #define _NET_ROUTE_H	1
-#include <features.h>
 
+#include <features.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>

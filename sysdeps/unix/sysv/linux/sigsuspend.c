@@ -25,8 +25,8 @@ extern int __syscall_rt_sigsuspend (const sigset_t *, size_t);
 
 
 /* The variable is shared between all wrappers around signal handling
-   functions which have RT equivalents.  */
-int __libc_have_rt_sigs = 1;
+   functions which have RT equivalents.  It is defined in sigaction.c.  */
+extern int __libc_have_rt_sigs;
 
 
 /* Change the set of blocked signals to SET,

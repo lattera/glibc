@@ -42,7 +42,7 @@ few people have expressed interest.
 If you have a system not listed above (or in the `README' file) and
 you are really interested in porting it, contact
 
-	<bug-glibc@prep.ai.mit.edu>
+	<bug-glibc@gnu.org>
 
 ??	What compiler do I need to build GNU libc?
 
@@ -103,7 +103,7 @@ has not been ported to them.
   You should not need these tools unless you change the source files.
 
 * Some scripts need perl5 - but at the moment those scripts are not
-  vital for building and installing GNU libc (some data files will not 
+  vital for building and installing GNU libc (some data files will not
   be created).
 
 * When compiling for Linux, the header files of the Linux kernel must

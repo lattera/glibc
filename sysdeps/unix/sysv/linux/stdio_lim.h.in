@@ -21,7 +21,7 @@
 # error "Never include <bits/stdio_lim.h> directly; use <stdio.h> instead."
 #endif
 
-#ifndef __need_FOPEN_MAX
+#ifdef _STDIO_H
 # define L_tmpnam 19
 # define TMP_MAX 238328
 
@@ -31,6 +31,9 @@
 # endif
 
 # define FILENAME_MAX	DEFAULT_FILENAME_MAX
+
+# undef __need_FOPEN_MAX
+# define __need_FOPEN_MAX
 #endif
 
 #if defined __need_FOPEN_MAX && !defined __defined_FOPEN_MAX

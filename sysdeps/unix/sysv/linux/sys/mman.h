@@ -42,18 +42,20 @@ __BEGIN_DECLS
    deallocates any previous mapping for the affected region.  */
 
 extern __ptr_t __mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off_t __offset));
+			    int __flags, int __fd, __off_t __offset));
 #ifndef __USE_FILE_OFFSET64
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			int __flags, int __fd, __off_t __offset));
+			  int __flags, int __fd, __off_t __offset));
 #else
 extern __ptr_t mmap __P ((__ptr_t __addr, size_t __len, int __prot,
-			int __flags, int __fd, __off_t __offset))
+			  int __flags, int __fd, __off64_t __offset))
      __asm__ ("mmap64");
 #endif
 #ifdef __USE_LARGEFILE64
+extern __ptr_t __mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
+			      int __flags, int __fd, __off64_t __offset));
 extern __ptr_t mmap64 __P ((__ptr_t __addr, size_t __len, int __prot,
-			  int __flags, int __fd, __off64_t __offset));
+			    int __flags, int __fd, __off64_t __offset));
 #endif
 
 /* Deallocate any mapping for the region starting at ADDR and extending LEN

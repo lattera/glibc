@@ -25,7 +25,7 @@ extern int __syscall_rt_sigprocmask (int, const sigset_t *, sigset_t *,
 				     size_t);
 
 /* The variable is shared between all wrappers around signal handling
-   functions which have RT equivalents.  It is defined in sigsuspend.c.  */
+   functions which have RT equivalents.  It is defined in sigaction.c.  */
 extern int __libc_have_rt_sigs;
 
 

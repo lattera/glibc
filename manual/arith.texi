@@ -2,16 +2,22 @@
 @ifclear cdot
 @ifhtml
 @set cdot ·
+@macro mul
+·
+@end macro
 @end ifhtml
 @iftex
-@set cdot @cdot
+@set cdot ·
+@macro mul
+@cdot
+@end macro
 @end iftex
 @ifclear cdot
 @set cdot x
-@end ifclear
 @macro mul
-@value{cdot}
+x
 @end macro
+@end ifclear
 @end ifclear
 
 @node Arithmetic, Date and Time, Mathematics, Top
@@ -211,6 +217,13 @@ This function returns @code{-1} if @var{x} represents negative infinity,
 This function returns a nonzero value if @var{x} is a ``not a number''
 value, and zero otherwise.  (You can just as well use @code{@var{x} !=
 @var{x}} to get the same result).
+
+However, @code{isnan} will not raise an invalid exception if @var{x} is
+a signalling NaN, while @code{@var{x} != @var{x}} will.  This makes
+@code{isnan} much slower than the alternative; in code where performance
+matters and signalling NaNs are unimportant, it's usually better to use
+@code{@var{x} != @var{x}}, even though this is harder to understand.
+
 @end deftypefun
 
 @comment math.h

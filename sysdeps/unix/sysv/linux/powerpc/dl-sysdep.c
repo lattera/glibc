@@ -29,12 +29,13 @@
     (envp) = (argv) + (argc) + 1;				\
     for (_tmp = (void **) (envp); *_tmp; ++_tmp)		\
       continue;							\
-    if (*_tmp == 0 && ((size_t)_tmp & 0xf) != 0)		\
+    /* The following '++' is important!  */			\
+    ++_tmp;							\
+    if (*_tmp == 0)						\
       {								\
 	size_t _test = (size_t)_tmp;				\
 	_test = _test + 0xf & ~0xf;				\
-	if (*(long *)_test == AT_PHDR)				\
-	  _tmp = (void **)_test;				\
+	_tmp = (void **)_test;					\
       }								\
     (auxp) = (void *) _tmp;					\
   } while (0)

@@ -30,8 +30,8 @@ extern int __syscall_rt_sigaction (int, const struct sigaction *,
 				   struct sigaction *, size_t);
 
 /* The variable is shared between all wrappers around signal handling
-   functions which have RT equivalents.  It is defined in sigsuspend.c.  */
-extern int __libc_have_rt_sigs;
+   functions which have RT equivalents.  */
+int __libc_have_rt_sigs = -1;
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.

@@ -2,16 +2,22 @@
 @ifclear cdot
 @ifhtml
 @set cdot ·
+@macro mul
+·
+@end macro
 @end ifhtml
 @iftex
-@set cdot @cdot
+@set cdot ·
+@macro mul
+@cdot
+@end macro
 @end iftex
 @ifclear cdot
 @set cdot x
-@end ifclear
 @macro mul
-@value{cdot}
+x
 @end macro
+@end ifclear
 @end ifclear
 @iftex
 @set infty @infty

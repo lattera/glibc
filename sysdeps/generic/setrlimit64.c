@@ -43,4 +43,3 @@ setrlimit64 (resource, rlimits)
 }
 
 stub_warning (setrlimit64)
-#include <stub-tag.h>

@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #define _ASM
+#define _SETJMP_H
 #include <bits/setjmp.h>
 
 ENTRY (__sigsetjmp)

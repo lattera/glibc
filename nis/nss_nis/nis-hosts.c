@@ -199,7 +199,8 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	++p;
       free (result);
 
-      if ((parse_res = parse_line (p, host, data, buflen, errnop)) == -1)
+      parse_res = parse_line (p, host, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  free (outkey);
 	  *h_errnop = NETDB_INTERNAL;

@@ -1,5 +1,4 @@
-/* Round a long long floating point value to an integer in the current
-   rounding mode.
+/* Round a double value to a long long in the current rounding mode.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,8 +20,12 @@
 #include "math.h"
 
 long long int
-__llrint (long double x)
+__llrint (double x)
 {
-  return (long long int) __rintl (x);
+  return (long long int) __rint (x);
 }
 weak_alias (__llrint, llrint)
+#ifdef NO_LONG_DOUBLE
+strong_alias (__llrint, __llrintl)
+weak_alias (__llrint, llrintl)
+#endif

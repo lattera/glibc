@@ -86,7 +86,6 @@ contact <bug-glibc@prep.ai.mit.edu>
 
 [13] Several more or less small functions have to be written:
 
-     + tcgetid() and waitid()			from XPG4.2
      + grantpt(), ptsname(), unlockpt()		from XPG4.2
 
      More information is available on request.
@@ -96,6 +95,8 @@ contact <bug-glibc@prep.ai.mit.edu>
      of text.  In fact, this would be a recode-library (you know, GNU recode).
      This is needed in several places in the GNU libc and I already have
      rather concrete plans but so far no possibility to start this.
+
+***  The library is available, no it remains to be used in the streams.
 
 
 [15] Cleaning up the header files.  Ideally, each header style should

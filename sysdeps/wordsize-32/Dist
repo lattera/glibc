@@ -1,5 +1,0 @@
-inttypes.h
-strtoimax.c
-strtoumax.c
-wcstoimax.c
-wcstoumax.c

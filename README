@@ -1,4 +1,4 @@
-This directory contains the version 2.0.90 test release of the GNU C Library.
+This directory contains the version 2.0.91 test release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
@@ -47,7 +47,7 @@ provides the Unix `crypt' function, plus some other entry points.
 Because of the United States export restriction on DES implementations,
 we are distributing this code separately from the rest of the C
 library.  There is an extra distribution tar file just for crypt; it is
-called `glibc-crypt-2.0.90.tar.gz'.  You can just unpack the crypt
+called `glibc-crypt-2.0.91.tar.gz'.  You can just unpack the crypt
 distribution along with the rest of the C library and build; you can
 also build the library without getting crypt.  Users outside the USA
 can get the crypt distribution via anonymous FTP from ftp.ifi.uio.no
@@ -80,7 +80,7 @@ in the GNU C library, explaining how you can tell the library what
 facilities you want it to make available.
 
 We prefer to get bug reports sent using the `glibcbug' shell script which
-is install together with the rest of the GNU libc to <bugs@gnu.org>.
+is installed together with the rest of the GNU libc to <bugs@gnu.org>.
 Simply run this shell script and fill in the information.  Nevertheless
 you can still send bug reports to <bug-glibc@prep.ai.mit.edu> as normal
 electronic mails.

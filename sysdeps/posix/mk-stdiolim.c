@@ -49,7 +49,7 @@ main()
 
   /* These values correspond to the code in sysdeps/posix/tempname.c.
      Change the values here if you change that code.  */
-  puts ("#ifndef __need_FOPEN_MAX");
+  puts ("#ifdef _STDIO_H");
   printf ("# define L_tmpnam %u\n", sizeof ("/usr/tmp/") + 9);
   printf ("# define TMP_MAX %u\n", 62 * 62 * 62);
 
@@ -74,6 +74,8 @@ main()
 #endif
 	  );
 
+  puts ("# undef __need_FOPEN_MAX");
+  puts ("# define __need_FOPEN_MAX	1");
   puts ("#endif\n");
 
   /* POSIX does not require that OPEN_MAX and PATH_MAX be defined, so

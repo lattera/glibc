@@ -20,7 +20,7 @@
 #define _KERNEL_TERMIOS_H 1
 
 /* We need the definition of tcflag_t, cc_t, and speed_t.  */
-#include <bits/termios.h>
+#include <termios.h>
 
 #define __KERNEL_NCCS 19
 

@@ -55,13 +55,14 @@ EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
 EBCDIC-CA-FR-routines := ebcdic-ca-fr
 libJIS-routines := jis0201 jis0208 jis0212
 
-distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl \
-	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c \
-	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c\
-	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	  \
-	      koi-8.c koi8-r.c koi8-r.h hp-roman8.c latin-greek.c	  \
-	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c\
-	      ebcdic-at-de-a.c ebcdic-ca-fr.c
+distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
+	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
+	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
+	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	    \
+	      koi-8.c koi8-r.c koi8-r.h hp-roman8.c latin-greek.c	    \
+	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c  \
+	      ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c jis0208.c jis0212.c \
+	      extra-module.mk
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))

@@ -39,6 +39,12 @@
 #endif
 
 
+/* Maximum length of any multibyte character in any locale.
+   We define this value here since the gcc header does not define
+   the correct value.  */
+#define MB_LEN_MAX	6
+
+
 #if __GNUC__ >= 2
 
  /* Get the compiler's limits.h, which defines all the ANSI constants.  */
@@ -62,9 +68,6 @@
 
 /* Number of bits in a `char'.	*/
 #  define CHAR_BIT	8
-
-/* Maximum length of any multibyte character in any locale.  */
-#  define MB_LEN_MAX	6
 
 /* Minimum and maximum values a `signed char' can hold.  */
 #  define SCHAR_MIN	(-128)

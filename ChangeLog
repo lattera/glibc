@@ -1,3 +1,137 @@
+1997-12-28 15:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/powerpc/__longjmp.S: Define _SETJMP_H before including
+	<bits/setjmp.h>.
+	* sysdeps/powerpc/setjmp.S: Likewise.
+	Patches by Matt McLean <keys@keys.got.net>.
+
+	* Make-dist (sysdep_dirs): Ignore bits dirs while searching.
+
+	* Makefile: Undo last patch.
+	(distribute): Add test-installation.pl.
+
+	* configure.in: Correct handling of --enable-add-ons without parameter.
+	Correct address of WWW pages.
+
+	* libc.map: Add _nl_domain_bindings.
+
+	* db2/mutex/tsl_parisc.s: New file.
+
+	* iconvdata/Makefile (distribute): Add jis0201.c, jis0208.c, jis0212.c,
+	and extra-module.mk.
+
+	* localedata/Makefile (distribute): New.  Add all the files.
+
+	* stdlib/Makefile (headers): Add inttypes.h.
+	(routines): Add strtoimax, strtoumax, wcstoimax, and wcstoumax.
+	* sysdeps/generic/inttypes.h: New file.
+	* sysdeps/generic/strtoimax.c: New file.
+	* sysdeps/generic/strtoumax.c: New file.
+	* sysdeps/generic/wcstoimax.c: New file.
+	* sysdeps/generic/wcstoumax.c: New file.
+	* sysdeps/wordsize-32/Dist: Removed.
+	* sysdeps/wordsize-32/Makefile: Removed.
+	* sysdeps/wordsize-64/Dist: Removed.
+	* sysdeps/wordsize-64/Makefile: Removed.
+	* sysdeps/generic/bits/environments.h: New file.
+
+	* include/limits.h: Define MB_LEN_MAX in any case to 6.  The gcc
+	header is still not correct.
+
+	* io/fcntl.h [__USE_FILE_OFFSET64]: We have to use the __*64 types.
+	* posix/unistd.h: Likewise.
+	* sysdeps/generic/sys/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mman.h: Likewise.
+
+	* manual/arith.texi: Change definition of mul macro.
+	* manual/math.texi: Likewise.
+
+	* misc/Makefile (routines): Add mmap64.
+	* sysdeps/generic/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/mmap64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add __mmap64 and mmap64
+	aliases to mmap.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+
+	* sysdeps/generic/setrlimit64.c: Don't mark as stub.
+
+	* nis/nss_nis/nis-hosts.c (internal_nis_gethostent_r): Pretty print.
+
+	* nis(rpcsvc/nis_tags.h: Prevent warning by unknown pragma.
+
+	* sysdeps/posix/mk-stdiolim.c: Generate correct file which defines
+	FOPEN_MAX also when included by limits.h.
+	* sysdeps/unix/sysv/linux/stdio_lim.h.in: Likewise.
+
+	* sysdeps/unix/sysv/linux/Dist: Add oldsiglist.c, netax25/ax25.h,
+	and netrom/netrom.h.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=stdio-common]: Add
+	oldsiglist to sysdep_routines, not aux.
+	[$(subdir)=inet] (sysdep_headers): Add netax25/ax25.h, netrom/netrom.h.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Remove SOL_AX25, SOL_ATALK,
+	and SOL_NETROM definition.
+
+	* sysdeps/unix/sysv/linux/i386/Dist: Add s_pwrite64.S and s_pread64.S.
+
+	* sysdeps/unix/sysv/linux/net/route.h: Pretty print.
+	* sysdeps/unix/sysv/linux/netatalk/at.h: Pretty print.
+
+1997-12-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/net/route.h: New file.
+
+	* sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h: Replace
+	sa_handler with k_sa_handler.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add __getrlimit as
+	strong alias.
+	Reported by a sun.
+
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Don't define
+	__libc_have_rt_sigs here.
+	* sysdeps/unix/sysv/linux/sigaction.c: Do it instead here.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c: Correct comment.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+
+1997-12-11 07:51  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/atomicity.h: New file.
+	* sysdeps/mach/powerpc/machine-lock.h: New file.
+
+	* Rules: Use -fpic to build anything that might end up in a users'
+	shared library.
+
+	* sysdeps/powerpc/s_fdim.c: New file.
+	* sysdeps/powerpc/s_fdimf.c: New file.
+	* sysdeps/powerpc/s_fmax.S: New file.
+	* sysdeps/powerpc/s_fmaxf.S: New file.
+	* sysdeps/powerpc/s_fmin.S: New file.
+	* sysdeps/powerpc/s_fminf.S: New file.
+	* sysdeps/powerpc/s_llrint.c: Now is for double.
+	* sysdeps/powerpc/s_llrintf.c: New file.
+	* sysdeps/powerpc/s_llround.c: Now is for double.
+	* sysdeps/powerpc/s_llroundf.c: New file.
+	* sysdeps/powerpc/s_lrint.c: Now is for double.
+	* sysdeps/powerpc/s_lrintf.S: New file.
+	* sysdeps/powerpc/s_lround.c: Now is for double.
+	* sysdeps/powerpc/s_lroundf.c: New file.
+	* sysdeps/powerpc/bits/mathinlines.h: Add inline versions of lrint,
+	lrintf, fdim, fdimf.
+
+	* sysdeps/unix/sysv/linux/powerpc/kernel_termios.h: Don't use bits/
+	file directly, use its parent.
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Re-instate '++'
+	(for the third time).
+
+1997-12-20 13:50  Richard Henderson  <rth@cygnus.com>
+
+	* posix/sched.h: timespec is in <time.h>.
+
+	* sysdeps/unix/sysv/linux/sys/kd.h: Don't redefine _LINUX_TYPES_H.
+
 1997-12-22 18:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Stop with error if --disable-static is used when
