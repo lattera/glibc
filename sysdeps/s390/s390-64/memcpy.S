@@ -32,8 +32,11 @@ ENTRY(memcpy)
 	jz	.L3
 	aghi	%r4,-1		    # length - 1
 	lgr	%r1,%r2		    # copy destination address
-	srag	%r5,%r4,8
+	srlg	%r5,%r4,8
+	ltgr    %r5,%r5             # < 256 bytes to mvoe ?
 	jz	.L1
+	chi     %r6,255             # > 1 MB to move ?
+	jh	.L4
 .L0:	mvc	0(256,%r1),0(%r3)   # move in 256 byte chunks
 	la	%r1,256(%r1)
 	la	%r3,256(%r3)
@@ -42,5 +45,15 @@ ENTRY(memcpy)
 	mvc	0(1,%r1),0(%r3)	    # instruction for execute
 .L2:	ex	%r4,0(%r5)	    # execute mvc with length ((%r4)&255)+1
 .L3:	br	%r14
+	# data copies > 1MB are faster with mvcle.
+.L4:	aghi    %r4,1               # length + 1
+	lgr	%r5,%r4	            # source length
+	lgr	%r4,%r2             # source address
+	lgr	%r2,%r3             # set destination
+	lgr	%r3,%r5             # destination length = source length
+.L5:	mvcle	%r2,%r4,0           # thats it, MVCLE is your friend
+	jo	.L5
+	lgr     %r2,%r1             # return destination address
+	br	%r14
 END(memcpy)
 	
