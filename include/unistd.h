@@ -5,18 +5,23 @@
 extern int __access (__const char *__name, int __type);
 extern int __euidaccess (__const char *__name, int __type);
 extern __off64_t __lseek64 (int __fd, __off64_t __offset, int __whence);
+extern __off_t __lseek (int __fd, __off_t __offset, int __whence);
 extern __off_t __libc_lseek (int __fd, __off_t __offset, int __whence);
 extern __off64_t __libc_lseek64 (int __fd, __off64_t __offset, int __whence);
 extern ssize_t __pread (int __fd, void *__buf, size_t __nbytes,
 			__off_t __offset);
 extern ssize_t __libc_pread (int __fd, void *__buf, size_t __nbytes,
 			     __off_t __offset);
+extern ssize_t __pread64 (int __fd, void *__buf, size_t __nbytes,
+			  __off64_t __offset);
 extern ssize_t __libc_pread64 (int __fd, void *__buf, size_t __nbytes,
 			       __off64_t __offset);
 extern ssize_t __pwrite (int __fd, __const void *__buf, size_t __n,
 			 __off_t __offset);
 extern ssize_t __libc_pwrite (int __fd, __const void *__buf, size_t __n,
 			      __off_t __offset);
+extern ssize_t __pwrite64 (int __fd, __const void *__buf, size_t __n,
+			   __off64_t __offset);
 extern ssize_t __libc_pwrite64 (int __fd, __const void *__buf, size_t __n,
 				__off64_t __offset);
 extern ssize_t __libc_read (int __fd, void *__buf, size_t __n);
@@ -51,6 +56,7 @@ extern int __execve (__const char *__path, char *__const __argv[],
 extern long int __pathconf (__const char *__path, int __name);
 extern long int __fpathconf (int __fd, int __name);
 extern long int __sysconf (int __name);
+extern __pid_t __getpid (void);
 extern __pid_t __getppid (void);
 extern __pid_t __setsid (void);
 extern __uid_t __getuid (void);
@@ -62,6 +68,7 @@ extern int __group_member (__gid_t __gid);
 extern int __setuid (__uid_t __uid);
 extern int __setreuid (__uid_t __ruid, __uid_t __euid);
 extern int __setgid (__gid_t __gid);
+extern int __setpgid (__pid_t __pid, __pid_t __pgid);
 extern int __setregid (__gid_t __rgid, __gid_t __egid);
 extern __pid_t __vfork (void);
 extern int __ttyname_r (int __fd, char *__buf, size_t __buflen);
@@ -75,6 +82,13 @@ extern int __profil (unsigned short int *__sample_buffer, size_t __size,
 		     size_t __offset, unsigned int __scale);
 extern int __getdtablesize (void);
 extern int __brk (void *__addr);
+extern int __close (int __fd);
+extern ssize_t __read (int __fd, void *__buf, size_t __nbytes);
+extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
+extern __pid_t __fork (void);
+extern int __getpagesize (void) __attribute__ ((__const__));
+extern int __ftruncate (int __fd, __off_t __length);
+extern void *__sbrk (intptr_t __delta);
 
 
 /* This variable is set nonzero at startup if the process's effective

@@ -96,7 +96,7 @@ __BEGIN_DECLS
 
    _POSIX_JOB_CONTROL		Job control is supported.
    _POSIX_SAVED_IDS		Processes have a saved set-user-ID
-   				and a saved set-group-ID.
+				and a saved set-group-ID.
    _POSIX_REALTIME_SIGNALS	Real-time, queued signals are supported.
    _POSIX_PRIORITY_SCHEDULING	Priority scheduling is supported.
    _POSIX_TIMERS		POSIX.4 clocks and timers are supported.
@@ -153,11 +153,11 @@ __BEGIN_DECLS
    for a specific file can be obtained from `pathconf' and `fpathconf'.
 
    _POSIX_CHOWN_RESTRICTED	Only the super user can use `chown' to change
-   				the owner of a file.  `chown' can only be used
+				the owner of a file.  `chown' can only be used
 				to change the group ID of a file to a group of
 				which the calling process is a member.
    _POSIX_NO_TRUNC		Pathname components longer than
-   				NAME_MAX generate an error.
+				NAME_MAX generate an error.
    _POSIX_VDISABLE		If defined, if the value of an element of the
 				`c_cc' member of `struct termios' is
 				_POSIX_VDISABLE, no character will have the
@@ -286,7 +286,6 @@ extern int euidaccess (__const char *__name, int __type) __THROW;
    the current position (if WHENCE is SEEK_CUR),
    or the end of the file (if WHENCE is SEEK_END).
    Return the new file position.  */
-extern __off_t __lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
 #else
@@ -304,29 +303,16 @@ extern __off64_t lseek64 (int __fd, __off64_t __offset, int __whence) __THROW;
 #endif
 
 /* Close the file descriptor FD.  */
-extern int __close (int __fd) __THROW;
 extern int close (int __fd) __THROW;
 
 /* Read NBYTES into BUF from FD.  Return the
    number read, -1 for errors or 0 for EOF.  */
-extern ssize_t __read (int __fd, void *__buf, size_t __nbytes) __THROW;
 extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __THROW;
 
 /* Write N bytes of BUF to FD.  Return the number written, or -1.  */
-extern ssize_t __write (int __fd, __const void *__buf, size_t __n) __THROW;
 extern ssize_t write (int __fd, __const void *__buf, size_t __n) __THROW;
 
 #ifdef __USE_UNIX98
-/* Read NBYTES into BUF from FD at the given position OFFSET without
-   changing the file pointer.  Return the number read, -1 for errors
-   or 0 for EOF.  */
-extern ssize_t __pread64 (int __fd, void *__buf, size_t __nbytes,
-			  __off64_t __offset) __THROW;
-/* Write N bytes of BUF to FD at the given position OFFSET without
-   changing the file pointer.  Return the number written, or -1.  */
-extern ssize_t __pwrite64 (int __fd, __const void *__buf, size_t __n,
-			   __off64_t __offset) __THROW;
-
 # ifndef __USE_FILE_OFFSET64
 extern ssize_t pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
      __THROW;
@@ -348,8 +334,13 @@ extern ssize_t __REDIRECT (pwrite, (int __fd, __const void *__buf,
 # endif
 
 # ifdef __USE_LARGEFILE64
+/* Read NBYTES into BUF from FD at the given position OFFSET without
+   changing the file pointer.  Return the number read, -1 for errors
+   or 0 for EOF.  */
 extern ssize_t pread64 (int __fd, void *__buf, size_t __nbytes,
 			__off64_t __offset) __THROW;
+/* Write N bytes of BUF to FD at the given position OFFSET without
+   changing the file pointer.  Return the number written, or -1.  */
 extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
 			 __off64_t __offset) __THROW;
 # endif
@@ -524,7 +515,6 @@ extern size_t confstr (int __name, char *__buf, size_t __len) __THROW;
 
 
 /* Get the process ID of the calling process.  */
-extern __pid_t __getpid (void) __THROW;
 extern __pid_t getpid (void) __THROW;
 
 /* Get the process ID of the calling process's parent.  */
@@ -552,7 +542,6 @@ extern __pid_t getpgid (__pid_t __pid) __THROW;
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
    If PGID is zero, the process ID of the process is used.  */
-extern int __setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
 extern int setpgid (__pid_t __pid, __pid_t __pgid) __THROW;
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -655,7 +644,6 @@ extern int setegid (__gid_t __gid) __THROW;
 /* Clone the calling process, creating an exact copy.
    Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
-extern __pid_t __fork (void) __THROW;
 extern __pid_t fork (void) __THROW;
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
@@ -822,7 +810,6 @@ extern int sync (void) __THROW;
 
 /* Return the number of bytes in a page.  This is the system's page size,
    which is not necessarily the same as the hardware page size.  */
-extern int __getpagesize (void)  __THROW __attribute__ ((__const__));
 extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 
 
@@ -843,7 +830,6 @@ extern int truncate64 (__const char *__file, __off64_t __length) __THROW;
 #endif
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
-extern int __ftruncate (int __fd, __off_t __length) __THROW;
 #ifndef __USE_FILE_OFFSET64
 extern int ftruncate (int __fd, __off_t __length) __THROW;
 #else
@@ -876,7 +862,6 @@ extern int brk (void *__addr) __THROW;
    If successful, returns the address the previous end of data space
    (i.e. the beginning of the new space, if DELTA > 0);
    returns (void *) -1 for errors (with errno set).  */
-extern void *__sbrk (intptr_t __delta) __THROW;
 extern void *sbrk (intptr_t __delta) __THROW;
 #endif
 
