@@ -1,3 +1,8 @@
+2000-06-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (__ptrace_request): Define
+	PTRACE_GETFPXREGS and PTRACE_SETFPXREGS.
+
 2000-06-23  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Replace arg-count

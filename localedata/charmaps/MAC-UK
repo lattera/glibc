@@ -4,351 +4,260 @@
 % automatically generated from the charDB
 
 CHARMAP
-<NU>                   /x00     <U0000> NULL
-<NUL>                  /x00     <U0000> NULL
-<SH>                   /x01     <U0001> START OF HEADING
-<SOH>                  /x01     <U0001> START OF HEADING
-<STX>                  /x02     <U0002> START OF TEXT
-<SX>                   /x02     <U0002> START OF TEXT
-<ETX>                  /x03     <U0003> END OF TEXT
-<EX>                   /x03     <U0003> END OF TEXT
-<EOT>                  /x04     <U0004> END OF TRANSMISSION
-<ET>                   /x04     <U0004> END OF TRANSMISSION
-<ENQ>                  /x05     <U0005> ENQUIRY
-<EQ>                   /x05     <U0005> ENQUIRY
-<ACK>                  /x06     <U0006> ACKNOWLEDGE
-<AK>                   /x06     <U0006> ACKNOWLEDGE
-<BEL>                  /x07     <U0007> BELL
-<BL>                   /x07     <U0007> BELL
-<alert>                /x07     <U0007> BELL
-<BS>                   /x08     <U0008> BACKSPACE
-<backspace>            /x08     <U0008> BACKSPACE
-<HT>                   /x09     <U0009> HORIZONTAL TABULATION
-<tab>                  /x09     <U0009> HORIZONTAL TABULATION
-<LF>                   /x0A     <U000A> LINE FEED
-<newline>              /x0A     <U000A> LINE FEED
-<VT>                   /x0B     <U000B> VERTICAL TABULATION
-<vertical-tab>         /x0B     <U000B> VERTICAL TABULATION
-<FF>                   /x0C     <U000C> FORM FEED
-<form-feed>            /x0C     <U000C> FORM FEED
-<CR>                   /x0D     <U000D> CARRIAGE RETURN
-<carriage-return>      /x0D     <U000D> CARRIAGE RETURN
-<SO>                   /x0E     <U000E> SHIFT OUT
-<SI>                   /x0F     <U000F> SHIFT IN
-<DL>                   /x10     <U0010> DATA LINK ESCAPE
-<DLE>                  /x10     <U0010> DATA LINK ESCAPE
-<D1>                   /x11     <U0011> DEVICE CONTROL ONE
-<DC1>                  /x11     <U0011> DEVICE CONTROL ONE
-<D2>                   /x12     <U0012> DEVICE CONTROL TWO
-<DC2>                  /x12     <U0012> DEVICE CONTROL TWO
-<D3>                   /x13     <U0013> DEVICE CONTROL THREE
-<DC3>                  /x13     <U0013> DEVICE CONTROL THREE
-<D4>                   /x14     <U0014> DEVICE CONTROL FOUR
-<DC4>                  /x14     <U0014> DEVICE CONTROL FOUR
-<NAK>                  /x15     <U0015> NEGATIVE ACKNOWLEDGE
-<NK>                   /x15     <U0015> NEGATIVE ACKNOWLEDGE
-<SY>                   /x16     <U0016> SYNCHRONOUS IDLE
-<SYN>                  /x16     <U0016> SYNCHRONOUS IDLE
-<EB>                   /x17     <U0017> END OF TRANSMISSION BLOCK
-<ETB>                  /x17     <U0017> END OF TRANSMISSION BLOCK
-<CAN>                  /x18     <U0018> CANCEL
-<CN>                   /x18     <U0018> CANCEL
-<EM>                   /x19     <U0019> END OF MEDIUM
-<SB>                   /x1A     <U001A> SUBSTITUTE
-<SUB>                  /x1A     <U001A> SUBSTITUTE
-<EC>                   /x1B     <U001B> ESCAPE
-<ESC>                  /x1B     <U001B> ESCAPE
-<FS>                   /x1C     <U001C> FILE SEPARATOR
-<IS4>                  /x1C     <U001C> FILE SEPARATOR
-<GS>                   /x1D     <U001D> GROUP SEPARATOR
-<IS3>                  /x1D     <U001D> GROUP SEPARATOR
-<intro>                /x1D     <U001D> GROUP SEPARATOR
-<IS2>                  /x1E     <U001E> RECORD SEPARATOR
-<RS>                   /x1E     <U001E> RECORD SEPARATOR
-<IS1>                  /x1F     <U001F> UNIT SEPARATOR
-<US>                   /x1F     <U001F> UNIT SEPARATOR
-<space>                /x20     <U0020> SPACE
-<SP>                   /x20     <U0020> SPACE
-<!>                    /x21     <U0021> EXCLAMATION MARK
-<exclamation-mark>     /x21     <U0021> EXCLAMATION MARK
-<">                    /x22     <U0022> QUOTATION MARK
-<quotation-mark>       /x22     <U0022> QUOTATION MARK
-<Nb>                   /x23     <U0023> NUMBER SIGN
-<number-sign>          /x23     <U0023> NUMBER SIGN
-<H->                   /x23     <U0023> NUMBER SIGN
-<!S>                   /x24     <U0024> DOLLAR SIGN
-<DO>                   /x24     <U0024> DOLLAR SIGN
-<dollar-sign>          /x24     <U0024> DOLLAR SIGN
-<%>                    /x25     <U0025> PERCENT SIGN
-<percent-sign>         /x25     <U0025> PERCENT SIGN
-<&>                    /x26     <U0026> AMPERSAND
-<ampersand>            /x26     <U0026> AMPERSAND
-<'>                    /x27     <U0027> APOSTROPHE
-<apostrophe>           /x27     <U0027> APOSTROPHE
-<(>                    /x28     <U0028> LEFT PARENTHESIS
-<left-parenthesis>     /x28     <U0028> LEFT PARENTHESIS
-<)>                    /x29     <U0029> RIGHT PARENTHESIS
-<right-parenthesis>    /x29     <U0029> RIGHT PARENTHESIS
-<*>                    /x2A     <U002A> ASTERISK
-<asterisk>             /x2A     <U002A> ASTERISK
-<+>                    /x2B     <U002B> PLUS SIGN
-<plus-sign>            /x2B     <U002B> PLUS SIGN
-<,>                    /x2C     <U002C> COMMA
-<comma>                /x2C     <U002C> COMMA
-<->                    /x2D     <U002D> HYPHEN-MINUS
-<hyphen>               /x2D     <U002D> HYPHEN-MINUS
-<hyphen-minus>         /x2D     <U002D> HYPHEN-MINUS
-<.>                    /x2E     <U002E> FULL STOP
-<full-stop>            /x2E     <U002E> FULL STOP
-<period>               /x2E     <U002E> FULL STOP
-<//>                   /x2F     <U002F> SOLIDUS
-<slash>                /x2F     <U002F> SOLIDUS
-<solidus>              /x2F     <U002F> SOLIDUS
-<0>                    /x30     <U0030> DIGIT ZERO
-<zero>                 /x30     <U0030> DIGIT ZERO
-<1>                    /x31     <U0031> DIGIT ONE
-<one>                  /x31     <U0031> DIGIT ONE
-<2>                    /x32     <U0032> DIGIT TWO
-<two>                  /x32     <U0032> DIGIT TWO
-<3>                    /x33     <U0033> DIGIT THREE
-<three>                /x33     <U0033> DIGIT THREE
-<4>                    /x34     <U0034> DIGIT FOUR
-<four>                 /x34     <U0034> DIGIT FOUR
-<5>                    /x35     <U0035> DIGIT FIVE
-<five>                 /x35     <U0035> DIGIT FIVE
-<6>                    /x36     <U0036> DIGIT SIX
-<six>                  /x36     <U0036> DIGIT SIX
-<7>                    /x37     <U0037> DIGIT SEVEN
-<seven>                /x37     <U0037> DIGIT SEVEN
-<8>                    /x38     <U0038> DIGIT EIGHT
-<eight>                /x38     <U0038> DIGIT EIGHT
-<9>                    /x39     <U0039> DIGIT NINE
-<nine>                 /x39     <U0039> DIGIT NINE
-<:>                    /x3A     <U003A> COLON
-<colon>                /x3A     <U003A> COLON
-<;>                    /x3B     <U003B> SEMICOLON
-<semicolon>            /x3B     <U003B> SEMICOLON
-<<>                    /x3C     <U003C> LESS-THAN SIGN
-<less-than-sign>       /x3C     <U003C> LESS-THAN SIGN
-<=>                    /x3D     <U003D> EQUALS SIGN
-<equals-sign>          /x3D     <U003D> EQUALS SIGN
-</>>                   /x3E     <U003E> GREATER-THAN SIGN
-<greater-than-sign>    /x3E     <U003E> GREATER-THAN SIGN
-<?>                    /x3F     <U003F> QUESTION MARK
-<question-mark>        /x3F     <U003F> QUESTION MARK
-<At>                   /x40     <U0040> COMMERCIAL AT
-<commercial-at>        /x40     <U0040> COMMERCIAL AT
-<@>                    /x40     <U0040> COMMERCIAL AT
-<Oa>                   /x40     <U0040> COMMERCIAL AT
-<A>                    /x41     <U0041> LATIN CAPITAL LETTER A
-<B>                    /x42     <U0042> LATIN CAPITAL LETTER B
-<C>                    /x43     <U0043> LATIN CAPITAL LETTER C
-<D>                    /x44     <U0044> LATIN CAPITAL LETTER D
-<E>                    /x45     <U0045> LATIN CAPITAL LETTER E
-<F>                    /x46     <U0046> LATIN CAPITAL LETTER F
-<G>                    /x47     <U0047> LATIN CAPITAL LETTER G
-<H>                    /x48     <U0048> LATIN CAPITAL LETTER H
-<I>                    /x49     <U0049> LATIN CAPITAL LETTER I
-<J>                    /x4A     <U004A> LATIN CAPITAL LETTER J
-<K>                    /x4B     <U004B> LATIN CAPITAL LETTER K
-<L>                    /x4C     <U004C> LATIN CAPITAL LETTER L
-<M>                    /x4D     <U004D> LATIN CAPITAL LETTER M
-<N>                    /x4E     <U004E> LATIN CAPITAL LETTER N
-<O>                    /x4F     <U004F> LATIN CAPITAL LETTER O
-<P>                    /x50     <U0050> LATIN CAPITAL LETTER P
-<Q>                    /x51     <U0051> LATIN CAPITAL LETTER Q
-<R>                    /x52     <U0052> LATIN CAPITAL LETTER R
-<S>                    /x53     <U0053> LATIN CAPITAL LETTER S
-<T>                    /x54     <U0054> LATIN CAPITAL LETTER T
-<U>                    /x55     <U0055> LATIN CAPITAL LETTER U
-<V>                    /x56     <U0056> LATIN CAPITAL LETTER V
-<W>                    /x57     <U0057> LATIN CAPITAL LETTER W
-<X>                    /x58     <U0058> LATIN CAPITAL LETTER X
-<Y>                    /x59     <U0059> LATIN CAPITAL LETTER Y
-<Z>                    /x5A     <U005A> LATIN CAPITAL LETTER Z
-<<(>                   /x5B     <U005B> LEFT SQUARE BRACKET
-<left-square-bracket>  /x5B     <U005B> LEFT SQUARE BRACKET
-<////>                 /x5C     <U005C> REVERSE SOLIDUS
-<backslash>            /x5C     <U005C> REVERSE SOLIDUS
-<reverse-solidus>      /x5C     <U005C> REVERSE SOLIDUS
-<)/>>                  /x5D     <U005D> RIGHT SQUARE BRACKET
-<right-square-bracket> /x5D     <U005D> RIGHT SQUARE BRACKET
-<'/>>                  /x5E     <U005E> CIRCUMFLEX ACCENT
-<circumflex>           /x5E     <U005E> CIRCUMFLEX ACCENT
-<circumflex-accent>    /x5E     <U005E> CIRCUMFLEX ACCENT
-<_>                    /x5F     <U005F> LOW LINE
-<low-line>             /x5F     <U005F> LOW LINE
-<underscore>           /x5F     <U005F> LOW LINE
-<'!>                   /x60     <U0060> GRAVE ACCENT
-<grave-accent>         /x60     <U0060> GRAVE ACCENT
-<a>                    /x61     <U0061> LATIN SMALL LETTER A
-<b>                    /x62     <U0062> LATIN SMALL LETTER B
-<c>                    /x63     <U0063> LATIN SMALL LETTER C
-<d>                    /x64     <U0064> LATIN SMALL LETTER D
-<e>                    /x65     <U0065> LATIN SMALL LETTER E
-<f>                    /x66     <U0066> LATIN SMALL LETTER F
-<g>                    /x67     <U0067> LATIN SMALL LETTER G
-<h>                    /x68     <U0068> LATIN SMALL LETTER H
-<i>                    /x69     <U0069> LATIN SMALL LETTER I
-<j>                    /x6A     <U006A> LATIN SMALL LETTER J
-<k>                    /x6B     <U006B> LATIN SMALL LETTER K
-<l>                    /x6C     <U006C> LATIN SMALL LETTER L
-<m>                    /x6D     <U006D> LATIN SMALL LETTER M
-<n>                    /x6E     <U006E> LATIN SMALL LETTER N
-<o>                    /x6F     <U006F> LATIN SMALL LETTER O
-<p>                    /x70     <U0070> LATIN SMALL LETTER P
-<q>                    /x71     <U0071> LATIN SMALL LETTER Q
-<r>                    /x72     <U0072> LATIN SMALL LETTER R
-<s>                    /x73     <U0073> LATIN SMALL LETTER S
-<t>                    /x74     <U0074> LATIN SMALL LETTER T
-<u>                    /x75     <U0075> LATIN SMALL LETTER U
-<v>                    /x76     <U0076> LATIN SMALL LETTER V
-<w>                    /x77     <U0077> LATIN SMALL LETTER W
-<x>                    /x78     <U0078> LATIN SMALL LETTER X
-<y>                    /x79     <U0079> LATIN SMALL LETTER Y
-<z>                    /x7A     <U007A> LATIN SMALL LETTER Z
-<(!>                   /x7B     <U007B> LEFT CURLY BRACKET
-<left-brace>           /x7B     <U007B> LEFT CURLY BRACKET
-<left-curly-bracket>   /x7B     <U007B> LEFT CURLY BRACKET
-<!!>                   /x7C     <U007C> VERTICAL LINE
-<vertical-line>        /x7C     <U007C> VERTICAL LINE
-<!)>                   /x7D     <U007D> RIGHT CURLY BRACKET
-<right-brace>          /x7D     <U007D> RIGHT CURLY BRACKET
-<right-curly-bracket>  /x7D     <U007D> RIGHT CURLY BRACKET
-<'?>                   /x7E     <U007E> TILDE
-<tilde>                /x7E     <U007E> TILDE
-<DEL>                  /x7F     <U007F> DELETE
-<DT>                   /x7F     <U007F> DELETE
-<A=>                   /x80     <U0410> CYRILLIC CAPITAL LETTER A
-<B=>                   /x81     <U0411> CYRILLIC CAPITAL LETTER BE
-<V=>                   /x82     <U0412> CYRILLIC CAPITAL LETTER VE
-<G=>                   /x83     <U0413> CYRILLIC CAPITAL LETTER GHE
-<D=>                   /x84     <U0414> CYRILLIC CAPITAL LETTER DE
-<E=>                   /x85     <U0415> CYRILLIC CAPITAL LETTER IE
-<Z%>                   /x86     <U0416> CYRILLIC CAPITAL LETTER ZHE
-<Z=>                   /x87     <U0417> CYRILLIC CAPITAL LETTER ZE
-<I=>                   /x88     <U0418> CYRILLIC CAPITAL LETTER I
-<J=>                   /x89     <U0419> CYRILLIC CAPITAL LETTER SHORT I
-<K=>                   /x8A     <U041A> CYRILLIC CAPITAL LETTER KA
-<L=>                   /x8B     <U041B> CYRILLIC CAPITAL LETTER EL
-<M=>                   /x8C     <U041C> CYRILLIC CAPITAL LETTER EM
-<N=>                   /x8D     <U041D> CYRILLIC CAPITAL LETTER EN
-<O=>                   /x8E     <U041E> CYRILLIC CAPITAL LETTER O
-<P=>                   /x8F     <U041F> CYRILLIC CAPITAL LETTER PE
-<R=>                   /x90     <U0420> CYRILLIC CAPITAL LETTER ER
-<S=>                   /x91     <U0421> CYRILLIC CAPITAL LETTER ES
-<T=>                   /x92     <U0422> CYRILLIC CAPITAL LETTER TE
-<U=>                   /x93     <U0423> CYRILLIC CAPITAL LETTER U
-<F=>                   /x94     <U0424> CYRILLIC CAPITAL LETTER EF
-<H=>                   /x95     <U0425> CYRILLIC CAPITAL LETTER HA
-<C=>                   /x96     <U0426> CYRILLIC CAPITAL LETTER TSE
-<C%>                   /x97     <U0427> CYRILLIC CAPITAL LETTER CHE
-<S%>                   /x98     <U0428> CYRILLIC CAPITAL LETTER SHA
-<Sc>                   /x99     <U0429> CYRILLIC CAPITAL LETTER SHCHA
-<=">                   /x9A     <U042A> CYRILLIC CAPITAL LETTER HARD SIGN
-<Y=>                   /x9B     <U042B> CYRILLIC CAPITAL LETTER YERU
-<%">                   /x9C     <U042C> CYRILLIC CAPITAL LETTER SOFT SIGN
-<JE>                   /x9D     <U042D> CYRILLIC CAPITAL LETTER E
-<JU>                   /x9E     <U042E> CYRILLIC CAPITAL LETTER YU
-<JA>                   /x9F     <U042F> CYRILLIC CAPITAL LETTER YA
-<//->                  /xA0     <U2020> DAGGER
-<DG>                   /xA1     <U00B0> DEGREE SIGN
-<G3>                   /xA2     <U0490> CYRILLIC CAPITAL LETTER GHE WITH UPTURN
-<L->                   /xA3     <U00A3> POUND SIGN
-<Pd>                   /xA3     <U00A3> POUND SIGN
-<SE>                   /xA4     <U00A7> SECTION SIGN
-<sb>                   /xA5     <U2022> BULLET
-<PI>                   /xA6     <U00B6> PILCROW SIGN
-<9I>                   /xA6     <U00B6> PILCROW SIGN
-<II>                   /xA7     <U0406> CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I
-<Rg>                   /xA8     <U00AE> REGISTERED SIGN
-<Co>                   /xA9     <U00A9> COPYRIGHT SIGN
-<TM>                   /xAA     <U2122> TRADE MARK SIGN
-<D%>                   /xAB     <U0402> CYRILLIC CAPITAL LETTER DJE
-<d%>                   /xAC     <U0452> CYRILLIC SMALL LETTER DJE
-<!=>                   /xAD     <U2260> NOT EQUAL TO
-<G%>                   /xAE     <U0403> CYRILLIC CAPITAL LETTER GJE
-<g%>                   /xAF     <U0453> CYRILLIC SMALL LETTER GJE
-<00>                   /xB0     <U221E> INFINITY
-<+->                   /xB1     <U00B1> PLUS-MINUS SIGN
-<=<>                   /xB2     <U2264> LESS-THAN OR EQUAL TO
-</>=>                  /xB3     <U2265> GREATER-THAN OR EQUAL TO
-<ii>                   /xB4     <U0456> CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I
-<My>                   /xB5     <U00B5> MICRO SIGN
-<g3>                   /xB6     <U0491> CYRILLIC SMALL LETTER GHE WITH UPTURN
-<J%>                   /xB7     <U0408> CYRILLIC CAPITAL LETTER JE
-<IE>                   /xB8     <U0404> CYRILLIC CAPITAL LETTER UKRAINIAN IE
-<ie>                   /xB9     <U0454> CYRILLIC SMALL LETTER UKRAINIAN IE
-<YI>                   /xBA     <U0407> CYRILLIC CAPITAL LETTER YI
-<yi>                   /xBB     <U0457> CYRILLIC SMALL LETTER YI
-<LJ>                   /xBC     <U0409> CYRILLIC CAPITAL LETTER LJE
-<lj>                   /xBD     <U0459> CYRILLIC SMALL LETTER LJE
-<NJ>                   /xBE     <U040A> CYRILLIC CAPITAL LETTER NJE
-<nj>                   /xBF     <U045A> CYRILLIC SMALL LETTER NJE
-<j%>                   /xC0     <U0458> CYRILLIC SMALL LETTER JE
-<DS>                   /xC1     <U0405> CYRILLIC CAPITAL LETTER DZE
-<NO>                   /xC2     <U00AC> NOT SIGN
-<7!>                   /xC2     <U00AC> NOT SIGN
-<RT>                   /xC3     <U221A> SQUARE ROOT
-<f2>                   /xC4     <U0192> LATIN SMALL LETTER F WITH HOOK
-<?2>                   /xC5     <U2248> ALMOST EQUAL TO
-<DE>                   /xC6     <U2206> INCREMENT
-<<<>                   /xC7     <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
-</>/>>                 /xC8     <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
-<.3>                   /xC9     <U2026> HORIZONTAL ELLIPSIS
-<NS>                   /xCA     <U00A0> NO-BREAK SPACE
-<Ts>                   /xCB     <U040B> CYRILLIC CAPITAL LETTER TSHE
-<ts>                   /xCC     <U045B> CYRILLIC SMALL LETTER TSHE
-<KJ>                   /xCD     <U040C> CYRILLIC CAPITAL LETTER KJE
-<kj>                   /xCE     <U045C> CYRILLIC SMALL LETTER KJE
-<ds>                   /xCF     <U0455> CYRILLIC SMALL LETTER DZE
-<-N>                   /xD0     <U2013> EN DASH
-<-M>                   /xD1     <U2014> EM DASH
-<"6>                   /xD2     <U201C> LEFT DOUBLE QUOTATION MARK
-<"9>                   /xD3     <U201D> RIGHT DOUBLE QUOTATION MARK
-<'6>                   /xD4     <U2018> LEFT SINGLE QUOTATION MARK
-<'9>                   /xD5     <U2019> RIGHT SINGLE QUOTATION MARK
-<-:>                   /xD6     <U00F7> DIVISION SIGN
-<:9>                   /xD7     <U201E> DOUBLE LOW-9 QUOTATION MARK
-<V%>                   /xD8     <U040E> CYRILLIC CAPITAL LETTER SHORT U
-<v%>                   /xD9     <U045E> CYRILLIC SMALL LETTER SHORT U
-<DZ>                   /xDA     <U040F> CYRILLIC CAPITAL LETTER DZHE
-<dz>                   /xDB     <U045F> CYRILLIC SMALL LETTER DZHE
-<N0>                   /xDC     <U2116> NUMERO SIGN
-<IO>                   /xDD     <U0401> CYRILLIC CAPITAL LETTER IO
-<io>                   /xDE     <U0451> CYRILLIC SMALL LETTER IO
-<ja>                   /xDF     <U044F> CYRILLIC SMALL LETTER YA
-<a=>                   /xE0     <U0430> CYRILLIC SMALL LETTER A
-<b=>                   /xE1     <U0431> CYRILLIC SMALL LETTER BE
-<v=>                   /xE2     <U0432> CYRILLIC SMALL LETTER VE
-<g=>                   /xE3     <U0433> CYRILLIC SMALL LETTER GHE
-<d=>                   /xE4     <U0434> CYRILLIC SMALL LETTER DE
-<e=>                   /xE5     <U0435> CYRILLIC SMALL LETTER IE
-<z%>                   /xE6     <U0436> CYRILLIC SMALL LETTER ZHE
-<z=>                   /xE7     <U0437> CYRILLIC SMALL LETTER ZE
-<i=>                   /xE8     <U0438> CYRILLIC SMALL LETTER I
-<j=>                   /xE9     <U0439> CYRILLIC SMALL LETTER SHORT I
-<k=>                   /xEA     <U043A> CYRILLIC SMALL LETTER KA
-<l=>                   /xEB     <U043B> CYRILLIC SMALL LETTER EL
-<m=>                   /xEC     <U043C> CYRILLIC SMALL LETTER EM
-<n=>                   /xED     <U043D> CYRILLIC SMALL LETTER EN
-<o=>                   /xEE     <U043E> CYRILLIC SMALL LETTER O
-<p=>                   /xEF     <U043F> CYRILLIC SMALL LETTER PE
-<r=>                   /xF0     <U0440> CYRILLIC SMALL LETTER ER
-<s=>                   /xF1     <U0441> CYRILLIC SMALL LETTER ES
-<t=>                   /xF2     <U0442> CYRILLIC SMALL LETTER TE
-<u=>                   /xF3     <U0443> CYRILLIC SMALL LETTER U
-<f=>                   /xF4     <U0444> CYRILLIC SMALL LETTER EF
-<h=>                   /xF5     <U0445> CYRILLIC SMALL LETTER HA
-<c=>                   /xF6     <U0446> CYRILLIC SMALL LETTER TSE
-<c%>                   /xF7     <U0447> CYRILLIC SMALL LETTER CHE
-<s%>                   /xF8     <U0448> CYRILLIC SMALL LETTER SHA
-<sc>                   /xF9     <U0449> CYRILLIC SMALL LETTER SHCHA
-<='>                   /xFA     <U044A> CYRILLIC SMALL LETTER HARD SIGN
-<y=>                   /xFB     <U044B> CYRILLIC SMALL LETTER YERU
-<%'>                   /xFC     <U044C> CYRILLIC SMALL LETTER SOFT SIGN
-<je>                   /xFD     <U044D> CYRILLIC SMALL LETTER E
-<ju>                   /xFE     <U044E> CYRILLIC SMALL LETTER YU
-<Cu>                   /xFF     <U00A4> CURRENCY SIGN
-<Xo>                   /xFF     <U00A4> CURRENCY SIGN
+<U0000>     /x00         NULL
+<U0001>     /x01         START OF HEADING
+<U0002>     /x02         START OF TEXT
+<U0003>     /x03         END OF TEXT
+<U0004>     /x04         END OF TRANSMISSION
+<U0005>     /x05         ENQUIRY
+<U0006>     /x06         ACKNOWLEDGE
+<U0007>     /x07         BELL
+<U0008>     /x08         BACKSPACE
+<U0009>     /x09         HORIZONTAL TABULATION
+<U000A>     /x0a         LINE FEED
+<U000B>     /x0b         VERTICAL TABULATION
+<U000C>     /x0c         FORM FEED
+<U000D>     /x0d         CARRIAGE RETURN
+<U000E>     /x0e         SHIFT OUT
+<U000F>     /x0f         SHIFT IN
+<U0010>     /x10         DATA LINK ESCAPE
+<U0011>     /x11         DEVICE CONTROL ONE
+<U0012>     /x12         DEVICE CONTROL TWO
+<U0013>     /x13         DEVICE CONTROL THREE
+<U0014>     /x14         DEVICE CONTROL FOUR
+<U0015>     /x15         NEGATIVE ACKNOWLEDGE
+<U0016>     /x16         SYNCHRONOUS IDLE
+<U0017>     /x17         END OF TRANSMISSION BLOCK
+<U0018>     /x18         CANCEL
+<U0019>     /x19         END OF MEDIUM
+<U001A>     /x1a         SUBSTITUTE
+<U001B>     /x1b         ESCAPE
+<U001C>     /x1c         FILE SEPARATOR
+<U001D>     /x1d         GROUP SEPARATOR
+<U001E>     /x1e         RECORD SEPARATOR
+<U001F>     /x1f         UNIT SEPARATOR
+<U0020>     /x20         SPACE
+<U0021>     /x21         EXCLAMATION MARK
+<U0022>     /x22         QUOTATION MARK
+<U0023>     /x23         NUMBER SIGN
+<U0024>     /x24         DOLLAR SIGN
+<U0025>     /x25         PERCENT SIGN
+<U0026>     /x26         AMPERSAND
+<U0027>     /x27         APOSTROPHE
+<U0028>     /x28         LEFT PARENTHESIS
+<U0029>     /x29         RIGHT PARENTHESIS
+<U002A>     /x2a         ASTERISK
+<U002B>     /x2b         PLUS SIGN
+<U002C>     /x2c         COMMA
+<U002D>     /x2d         HYPHEN-MINUS
+<U002E>     /x2e         FULL STOP
+<U002F>     /x2f         SOLIDUS
+<U0030>     /x30         DIGIT ZERO
+<U0031>     /x31         DIGIT ONE
+<U0032>     /x32         DIGIT TWO
+<U0033>     /x33         DIGIT THREE
+<U0034>     /x34         DIGIT FOUR
+<U0035>     /x35         DIGIT FIVE
+<U0036>     /x36         DIGIT SIX
+<U0037>     /x37         DIGIT SEVEN
+<U0038>     /x38         DIGIT EIGHT
+<U0039>     /x39         DIGIT NINE
+<U003A>     /x3a         COLON
+<U003B>     /x3b         SEMICOLON
+<U003C>     /x3c         LESS-THAN SIGN
+<U003D>     /x3d         EQUALS SIGN
+<U003E>     /x3e         GREATER-THAN SIGN
+<U003F>     /x3f         QUESTION MARK
+<U0040>     /x40         COMMERCIAL AT
+<U0041>     /x41         LATIN CAPITAL LETTER A
+<U0042>     /x42         LATIN CAPITAL LETTER B
+<U0043>     /x43         LATIN CAPITAL LETTER C
+<U0044>     /x44         LATIN CAPITAL LETTER D
+<U0045>     /x45         LATIN CAPITAL LETTER E
+<U0046>     /x46         LATIN CAPITAL LETTER F
+<U0047>     /x47         LATIN CAPITAL LETTER G
+<U0048>     /x48         LATIN CAPITAL LETTER H
+<U0049>     /x49         LATIN CAPITAL LETTER I
+<U004A>     /x4a         LATIN CAPITAL LETTER J
+<U004B>     /x4b         LATIN CAPITAL LETTER K
+<U004C>     /x4c         LATIN CAPITAL LETTER L
+<U004D>     /x4d         LATIN CAPITAL LETTER M
+<U004E>     /x4e         LATIN CAPITAL LETTER N
+<U004F>     /x4f         LATIN CAPITAL LETTER O
+<U0050>     /x50         LATIN CAPITAL LETTER P
+<U0051>     /x51         LATIN CAPITAL LETTER Q
+<U0052>     /x52         LATIN CAPITAL LETTER R
+<U0053>     /x53         LATIN CAPITAL LETTER S
+<U0054>     /x54         LATIN CAPITAL LETTER T
+<U0055>     /x55         LATIN CAPITAL LETTER U
+<U0056>     /x56         LATIN CAPITAL LETTER V
+<U0057>     /x57         LATIN CAPITAL LETTER W
+<U0058>     /x58         LATIN CAPITAL LETTER X
+<U0059>     /x59         LATIN CAPITAL LETTER Y
+<U005A>     /x5a         LATIN CAPITAL LETTER Z
+<U005B>     /x5b         LEFT SQUARE BRACKET
+<U005C>     /x5c         REVERSE SOLIDUS
+<U005D>     /x5d         RIGHT SQUARE BRACKET
+<U005E>     /x5e         CIRCUMFLEX ACCENT
+<U005F>     /x5f         LOW LINE
+<U0060>     /x60         GRAVE ACCENT
+<U0061>     /x61         LATIN SMALL LETTER A
+<U0062>     /x62         LATIN SMALL LETTER B
+<U0063>     /x63         LATIN SMALL LETTER C
+<U0064>     /x64         LATIN SMALL LETTER D
+<U0065>     /x65         LATIN SMALL LETTER E
+<U0066>     /x66         LATIN SMALL LETTER F
+<U0067>     /x67         LATIN SMALL LETTER G
+<U0068>     /x68         LATIN SMALL LETTER H
+<U0069>     /x69         LATIN SMALL LETTER I
+<U006A>     /x6a         LATIN SMALL LETTER J
+<U006B>     /x6b         LATIN SMALL LETTER K
+<U006C>     /x6c         LATIN SMALL LETTER L
+<U006D>     /x6d         LATIN SMALL LETTER M
+<U006E>     /x6e         LATIN SMALL LETTER N
+<U006F>     /x6f         LATIN SMALL LETTER O
+<U0070>     /x70         LATIN SMALL LETTER P
+<U0071>     /x71         LATIN SMALL LETTER Q
+<U0072>     /x72         LATIN SMALL LETTER R
+<U0073>     /x73         LATIN SMALL LETTER S
+<U0074>     /x74         LATIN SMALL LETTER T
+<U0075>     /x75         LATIN SMALL LETTER U
+<U0076>     /x76         LATIN SMALL LETTER V
+<U0077>     /x77         LATIN SMALL LETTER W
+<U0078>     /x78         LATIN SMALL LETTER X
+<U0079>     /x79         LATIN SMALL LETTER Y
+<U007A>     /x7a         LATIN SMALL LETTER Z
+<U007B>     /x7b         LEFT CURLY BRACKET
+<U007C>     /x7c         VERTICAL LINE
+<U007D>     /x7d         RIGHT CURLY BRACKET
+<U007E>     /x7e         TILDE
+<U007F>     /x7f         DELETE
+<U0410>     /x80         CYRILLIC CAPITAL LETTER A
+<U0411>     /x81         CYRILLIC CAPITAL LETTER BE
+<U0412>     /x82         CYRILLIC CAPITAL LETTER VE
+<U0413>     /x83         CYRILLIC CAPITAL LETTER GHE
+<U0414>     /x84         CYRILLIC CAPITAL LETTER DE
+<U0415>     /x85         CYRILLIC CAPITAL LETTER IE
+<U0416>     /x86         CYRILLIC CAPITAL LETTER ZHE
+<U0417>     /x87         CYRILLIC CAPITAL LETTER ZE
+<U0418>     /x88         CYRILLIC CAPITAL LETTER I
+<U0419>     /x89         CYRILLIC CAPITAL LETTER SHORT I
+<U041A>     /x8a         CYRILLIC CAPITAL LETTER KA
+<U041B>     /x8b         CYRILLIC CAPITAL LETTER EL
+<U041C>     /x8c         CYRILLIC CAPITAL LETTER EM
+<U041D>     /x8d         CYRILLIC CAPITAL LETTER EN
+<U041E>     /x8e         CYRILLIC CAPITAL LETTER O
+<U041F>     /x8f         CYRILLIC CAPITAL LETTER PE
+<U0420>     /x90         CYRILLIC CAPITAL LETTER ER
+<U0421>     /x91         CYRILLIC CAPITAL LETTER ES
+<U0422>     /x92         CYRILLIC CAPITAL LETTER TE
+<U0423>     /x93         CYRILLIC CAPITAL LETTER U
+<U0424>     /x94         CYRILLIC CAPITAL LETTER EF
+<U0425>     /x95         CYRILLIC CAPITAL LETTER HA
+<U0426>     /x96         CYRILLIC CAPITAL LETTER TSE
+<U0427>     /x97         CYRILLIC CAPITAL LETTER CHE
+<U0428>     /x98         CYRILLIC CAPITAL LETTER SHA
+<U0429>     /x99         CYRILLIC CAPITAL LETTER SHCHA
+<U042A>     /x9a         CYRILLIC CAPITAL LETTER HARD SIGN
+<U042B>     /x9b         CYRILLIC CAPITAL LETTER YERU
+<U042C>     /x9c         CYRILLIC CAPITAL LETTER SOFT SIGN
+<U042D>     /x9d         CYRILLIC CAPITAL LETTER E
+<U042E>     /x9e         CYRILLIC CAPITAL LETTER YU
+<U042F>     /x9f         CYRILLIC CAPITAL LETTER YA
+<U2020>     /xa0         DAGGER
+<U00B0>     /xa1         DEGREE SIGN
+<U0490>     /xa2         CYRILLIC CAPITAL LETTER GHE WITH UPTURN
+<U00A3>     /xa3         POUND SIGN
+<U00A7>     /xa4         SECTION SIGN
+<U2022>     /xa5         BULLET
+<U00B6>     /xa6         PILCROW SIGN
+<U0406>     /xa7         CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I
+<U00AE>     /xa8         REGISTERED SIGN
+<U00A9>     /xa9         COPYRIGHT SIGN
+<U2122>     /xaa         TRADE MARK SIGN
+<U0402>     /xab         CYRILLIC CAPITAL LETTER DJE
+<U0452>     /xac         CYRILLIC SMALL LETTER DJE
+<U2260>     /xad         NOT EQUAL TO
+<U0403>     /xae         CYRILLIC CAPITAL LETTER GJE
+<U0453>     /xaf         CYRILLIC SMALL LETTER GJE
+<U221E>     /xb0         INFINITY
+<U00B1>     /xb1         PLUS-MINUS SIGN
+<U2264>     /xb2         LESS-THAN OR EQUAL TO
+<U2265>     /xb3         GREATER-THAN OR EQUAL TO
+<U0456>     /xb4         CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I
+<U00B5>     /xb5         MICRO SIGN
+<U0491>     /xb6         CYRILLIC SMALL LETTER GHE WITH UPTURN
+<U0408>     /xb7         CYRILLIC CAPITAL LETTER JE
+<U0404>     /xb8         CYRILLIC CAPITAL LETTER UKRAINIAN IE
+<U0454>     /xb9         CYRILLIC SMALL LETTER UKRAINIAN IE
+<U0407>     /xba         CYRILLIC CAPITAL LETTER YI
+<U0457>     /xbb         CYRILLIC SMALL LETTER YI
+<U0409>     /xbc         CYRILLIC CAPITAL LETTER LJE
+<U0459>     /xbd         CYRILLIC SMALL LETTER LJE
+<U040A>     /xbe         CYRILLIC CAPITAL LETTER NJE
+<U045A>     /xbf         CYRILLIC SMALL LETTER NJE
+<U0458>     /xc0         CYRILLIC SMALL LETTER JE
+<U0405>     /xc1         CYRILLIC CAPITAL LETTER DZE
+<U00AC>     /xc2         NOT SIGN
+<U221A>     /xc3         SQUARE ROOT
+<U0192>     /xc4         LATIN SMALL LETTER F WITH HOOK
+<U2248>     /xc5         ALMOST EQUAL TO
+<U2206>     /xc6         INCREMENT
+<U00AB>     /xc7         LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+<U00BB>     /xc8         RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+<U2026>     /xc9         HORIZONTAL ELLIPSIS
+<U00A0>     /xca         NO-BREAK SPACE
+<U040B>     /xcb         CYRILLIC CAPITAL LETTER TSHE
+<U045B>     /xcc         CYRILLIC SMALL LETTER TSHE
+<U040C>     /xcd         CYRILLIC CAPITAL LETTER KJE
+<U045C>     /xce         CYRILLIC SMALL LETTER KJE
+<U0455>     /xcf         CYRILLIC SMALL LETTER DZE
+<U2013>     /xd0         EN DASH
+<U2014>     /xd1         EM DASH
+<U201C>     /xd2         LEFT DOUBLE QUOTATION MARK
+<U201D>     /xd3         RIGHT DOUBLE QUOTATION MARK
+<U2018>     /xd4         LEFT SINGLE QUOTATION MARK
+<U2019>     /xd5         RIGHT SINGLE QUOTATION MARK
+<U00F7>     /xd6         DIVISION SIGN
+<U201E>     /xd7         DOUBLE LOW-9 QUOTATION MARK
+<U040E>     /xd8         CYRILLIC CAPITAL LETTER SHORT U
+<U045E>     /xd9         CYRILLIC SMALL LETTER SHORT U
+<U040F>     /xda         CYRILLIC CAPITAL LETTER DZHE
+<U045F>     /xdb         CYRILLIC SMALL LETTER DZHE
+<U2116>     /xdc         NUMERO SIGN
+<U0401>     /xdd         CYRILLIC CAPITAL LETTER IO
+<U0451>     /xde         CYRILLIC SMALL LETTER IO
+<U044F>     /xdf         CYRILLIC SMALL LETTER YA
+<U0430>     /xe0         CYRILLIC SMALL LETTER A
+<U0431>     /xe1         CYRILLIC SMALL LETTER BE
+<U0432>     /xe2         CYRILLIC SMALL LETTER VE
+<U0433>     /xe3         CYRILLIC SMALL LETTER GHE
+<U0434>     /xe4         CYRILLIC SMALL LETTER DE
+<U0435>     /xe5         CYRILLIC SMALL LETTER IE
+<U0436>     /xe6         CYRILLIC SMALL LETTER ZHE
+<U0437>     /xe7         CYRILLIC SMALL LETTER ZE
+<U0438>     /xe8         CYRILLIC SMALL LETTER I
+<U0439>     /xe9         CYRILLIC SMALL LETTER SHORT I
+<U043A>     /xea         CYRILLIC SMALL LETTER KA
+<U043B>     /xeb         CYRILLIC SMALL LETTER EL
+<U043C>     /xec         CYRILLIC SMALL LETTER EM
+<U043D>     /xed         CYRILLIC SMALL LETTER EN
+<U043E>     /xee         CYRILLIC SMALL LETTER O
+<U043F>     /xef         CYRILLIC SMALL LETTER PE
+<U0440>     /xf0         CYRILLIC SMALL LETTER ER
+<U0441>     /xf1         CYRILLIC SMALL LETTER ES
+<U0442>     /xf2         CYRILLIC SMALL LETTER TE
+<U0443>     /xf3         CYRILLIC SMALL LETTER U
+<U0444>     /xf4         CYRILLIC SMALL LETTER EF
+<U0445>     /xf5         CYRILLIC SMALL LETTER HA
+<U0446>     /xf6         CYRILLIC SMALL LETTER TSE
+<U0447>     /xf7         CYRILLIC SMALL LETTER CHE
+<U0448>     /xf8         CYRILLIC SMALL LETTER SHA
+<U0449>     /xf9         CYRILLIC SMALL LETTER SHCHA
+<U044A>     /xfa         CYRILLIC SMALL LETTER HARD SIGN
+<U044B>     /xfb         CYRILLIC SMALL LETTER YERU
+<U044C>     /xfc         CYRILLIC SMALL LETTER SOFT SIGN
+<U044D>     /xfd         CYRILLIC SMALL LETTER E
+<U044E>     /xfe         CYRILLIC SMALL LETTER YU
+<U00A4>     /xff         CURRENCY SIGN
 END CHARMAP

@@ -1,5 +1,5 @@
 /* `ptrace' debugger support interface.  Linux version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,6 +97,16 @@ enum __ptrace_request
   /* Detach from a process attached to with PTRACE_ATTACH.  */
   PTRACE_DETACH = 17,
 #define PT_DETACH PTRACE_DETACH
+
+  /* Get all extended floating point registers used by a processes.
+     This is not supported on all machines.  */
+   PTRACE_GETFPXREGS = 18,
+#define PT_GETFPXREGS PTRACE_GETFPXREGS
+
+  /* Set all extended floating point registers used by a processes.
+     This is not supported on all machines.  */
+   PTRACE_SETFPXREGS = 19,
+#define PT_SETFPXREGS PTRACE_SETFPXREGS
 
   /* Continue and stop at the next (return from) syscall.  */
   PTRACE_SYSCALL = 24
