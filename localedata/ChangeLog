@@ -1,5 +1,22 @@
 2003-11-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/aa_DJ: New file.
+	* locales/aa_ER: New file.
+	* locales/aa_ER@saaho: New file.
+	* locales/aa_ET: New file.
+	* locales/byn_ER: New file.
+	* locales/gez_ER: New file.
+	* locales/gez_ER@abegede: New file.
+	* locales/gez_ET: New file.
+	* locales/gez_ET@abegede: New file.
+	* locales/om_ET: New file.
+	* locales/om_KE: New file.
+	* locales/sid_ET: New file.
+	* locales/so_DJ: New file.
+	* locales/so_ET: New file.
+	* locales/so_KE: New file.
+	* locales/so_SO: New file.
+	* locales/tig_ER: New file.
 	* locales/am_ET: Various updates.
 	* locales/ti_ER: Likewise.
 	* locales/ti_ET: Likewise.
