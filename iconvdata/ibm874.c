@@ -1,5 +1,5 @@
-/* Conversion from and to CP874.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+/* Conversion from and to IBM874.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -21,9 +21,9 @@
 #include <stdint.h>
 
 /* Specify the conversion table.  */
-#define TABLES <cp874.h>
+#define TABLES <ibm874.h>
 
-#define CHARSET_NAME	"CP874//"
+#define CHARSET_NAME	"IBM874//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

@@ -1,3 +1,7 @@
+1999-04-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* iconvdata/ibm874.c (TABLES, CHARSET_NAME): Follow name change.
+
 1999-04-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Rename CP874 to IBM874.
