@@ -1,5 +1,7 @@
 2000-06-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/pathconf.c: Define LINK_MAX.
+
 	* locale/programs/ld-ctype.c (ctype_output): Really write out
 	mboutdigits information.
 	* localedata/tst-trans.c: Add code to test printf's I flag with locale.
