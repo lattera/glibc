@@ -1,6 +1,7 @@
 1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/i386/pt-machine.h (testandset): Add memory clobber.
+	* sysdeps/i386/i686/pt-machine.h (testandset): Add memory clobber.
+	* sysdeps/i386/pt-machine.h: Likewise
 	Suggested by Roland McGrath.
 
 1998-08-28 13:58  Ulrich Drepper  <drepper@cygnus.com>

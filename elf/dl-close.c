@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <string.h>
@@ -139,8 +140,16 @@ _dl_close (struct link_map *map)
 	  __munmap ((caddr_t) (imap->l_addr + mapstart), mapend - mapstart);
 
 	  /* Finally, unlink the data structure and free it.  */
-	  if (imap->l_prev)
+#ifdef PIC
+	  /* We will unlink the first object only if this is a statically
+	     linked program.  */
+	  assert (imap->l_prev != NULL);
+#else
+	  if (imap->l_prev != NULL)
 	    imap->l_prev->l_next = imap->l_next;
+	  else
+	    _dl_loaded = imap->l_next;
+#endif
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
 	  if (imap->l_searchlist && imap->l_searchlist != list)

@@ -1,3 +1,9 @@
+1998-08-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c (_dl_close): Update _dl_loaded if the first
+	object on the list is removed.  Don't use this code for PIC.
+	Reported by HJ Lu [PR libc/770].
+
 1998-08-31 15:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* db2/db_int.h: Use <db.h> instead of "db.h" to find header in include.

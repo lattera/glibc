@@ -26,9 +26,11 @@ testandset (int *spinlock)
 {
   int ret;
 
-  __asm__ __volatile__("xchgl %0, %1"
-	: "=r"(ret), "=m"(*spinlock)
-	: "0"(1), "m"(*spinlock));
+  __asm__ __volatile__(
+       "xchgl %0, %1"
+       : "=r"(ret), "=m"(*spinlock)
+       : "0"(1), "m"(*spinlock)
+       : "memory");
 
   return ret;
 }
