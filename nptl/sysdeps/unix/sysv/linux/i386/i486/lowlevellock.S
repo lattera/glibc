@@ -21,10 +21,12 @@
 
 	.text
 
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
+#ifndef LOCK
+# ifdef UP
+#  define LOCK
+# else
+#  define LOCK lock
+# endif
 #endif
 
 #define SYS_gettimeofday	__NR_gettimeofday
@@ -66,6 +68,7 @@ __lll_lock_wait:
 	.size	__lll_lock_wait,.-__lll_lock_wait
 
 
+#ifdef NOT_IN_libc
 	.globl	lll_unlock_wake_cb
 	.type	lll_unlock_wake_cb,@function
 	.hidden	lll_unlock_wake_cb
@@ -85,6 +88,7 @@ lll_unlock_wake_cb:
 	popl	%ebx
 	ret
 	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
+#endif
 
 
 	.globl	__lll_unlock_wake
@@ -99,8 +103,8 @@ __lll_unlock_wake:
 	movl	%eax, %ebx
 1:	movl	$FUTEX_WAKE, %ecx
 	movl	$1, %edx	/* Wake one thread.  */
-	movl	%edx, (%ebx)	/* Stores '$1'.  */
 	movl	$SYS_futex, %eax
+	movl	%edx, (%ebx)	/* Stores '$1'.  */
 	ENTER_KERNEL
 
 	popl	%edx
@@ -110,6 +114,7 @@ __lll_unlock_wake:
 	.size	__lll_unlock_wake,.-__lll_unlock_wake
 
 
+#ifdef NOT_IN_libc
 	.globl	__lll_timedwait_tid
 	.type	__lll_timedwait_tid,@function
 	.hidden	__lll_timedwait_tid
@@ -175,3 +180,4 @@ __lll_timedwait_tid:
 6:	movl	$ETIMEDOUT, %eax
 	jmp	3b
 	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
+#endif

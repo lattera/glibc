@@ -1,5 +1,12 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Don't define
+	LOCK is already defined.  Don't define lll_unlock_wake_cb and
+	__lll_timedwait_tid for libc.so.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Only
+	define LOCK here (if UP is not defined).  The actual code is in
+	lowlevellock.S.
+
 	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h: New needed anymore.
 	* sysdeps/unix/sysv/linux/s390/lowlevelsem.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/sem_post.c: Include lowlevellock.h
