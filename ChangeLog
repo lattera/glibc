@@ -1,3 +1,13 @@
+Wed Jun 26 13:19:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): Don't deallocate
+	DOTID & DOTDEVID until we're finished with them (we need to keep
+	them at least until we've fetched the next level of id ports, so
+	that mach will be able to use the same name if they're the same).
+	Add inner_errlose: label, which deallocates DOTID & DOTDEVID and
+	jumps to errlose, for those places where such cleanup is needed.
+
 Wed Jun 26 01:58:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* nss/nss_files/files-parse.c (parse_list): Count null in EOL calc.
