@@ -1,3 +1,9 @@
+1999-02-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (vfprintf): If precision or width if too
+	large for work_buffer, allocate new buffer.
+	(printf_unknown): Likewise.  [PR libc/988]
+
 1999-02-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/ttyname.c: Use __xstat and __fxstat

@@ -227,7 +227,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Buffer intermediate results.  */
   char work_buffer[1000];
-#define workend (&work_buffer[sizeof (work_buffer) - 1])
+  char *workend;
 
   /* State for restartable multibyte character handling functions.  */
   mbstate_t mbstate;
@@ -1084,6 +1084,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       char pad = ' ';	/* Padding character.  */
       CHAR_T spec;
 
+      workend = &work_buffer[sizeof (work_buffer) - 1];
+
       /* Get current character in format string.  */
       JUMP (*++f, step0_jumps);
 
@@ -1157,12 +1159,22 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    pad = L_(' ');
 	    left = 1;
 	  }
+
+	if (width + 32 >= sizeof (work_buffer))
+	  /* We have to use a special buffer.  The "32" is just a safe
+	     bet for all the output which is not counted in the width.  */
+	  workend = alloca (width + 32) + (width + 31);
       }
       JUMP (*f, step1_jumps);
 
       /* Given width in format string.  */
     LABEL (width):
       width = read_int (&f);
+
+      if (width + 32 >= sizeof (work_buffer))
+	/* We have to use a special buffer.  The "32" is just a safe
+	   bet for all the output which is not counted in the width.  */
+	workend = alloca (width + 32) + (width + 31);
       if (*f == L_('$'))
 	/* Oh, oh.  The argument comes from a positional parameter.  */
 	goto do_positional;
@@ -1189,6 +1201,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	prec = read_int (&f);
       else
 	prec = 0;
+      if (prec > width && prec + 32 > sizeof (work_buffer))
+	workend = alloca (spec + 32) + (spec + 31);
       JUMP (*f, step2_jumps);
 
       /* Process 'h' modifier.  There might another 'h' following.  */
@@ -1471,6 +1485,10 @@ do_positional:
 	    prec = specs[nspecs_done].info.prec;
 	  }
 
+	/* Maybe the buffer is too small.  */
+	if (MAX (prec, width) + 32 > sizeof (work_buffer))
+	  workend = alloca (MAX (prec, width) + 32) + (MAX (prec, width) + 31);
+
 	/* Process format specifiers.  */
 	while (1)
 	  {
@@ -1558,7 +1576,8 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 {
   int done = 0;
-  char work_buffer[BUFSIZ];
+  char work_buffer[MAX (info->width, info->spec) + 32];
+  char *const workend = &work_buffer[sizeof (work_buffer) - 1];
   register char *w;
 
   outchar ('%');
