@@ -824,7 +824,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	}
 
       /* Adjust the exponent for the bits we are shifting in.  */
-      exponent += bits - 1;
+      exponent += bits - 1 + (int_no - 1) * 4;
 
       while (--dig_no > 0 && idx >= 0)
 	{

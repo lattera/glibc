@@ -3,7 +3,7 @@
 	* stdlib/tst-strtod.c: Add more hexadecimal tests.
 
 	* stdlib/strtod.c: Handle hexadecimal numbers with leading digit
-	!= 1 correctly.
+	!= 1 correctly and more than one digit before decimal point..
 
 1999-10-27  Andreas Jaeger  <aj@suse.de>
 
