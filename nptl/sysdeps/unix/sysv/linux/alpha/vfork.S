@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,10 +25,13 @@
 	rduniq;								\
 	ldl	a2, PID_OFFSET(v0);					\
 	mov	v0, a1;							\
-	/* Write back its negation, to indicate that the pid value is	\
-	   uninitialized in the the child, and in the window between	\
-	   here and the point at which we restore the value.  */	\
-	negl	a2, t0;							\
+	/* If the cached value is initialized (nonzero), then write	\
+	   back its negation, or INT_MIN, to indicate that the pid	\
+	   value is uninitialized in the the child, and in the window	\
+	   between here and the point at which we restore the value.  */ \
+	ldah	t0, -0x8000;						\
+	negl	a2, t1;							\
+	cmovne	a2, t1, t0;						\
 	stl	t0, PID_OFFSET(v0);
 
 PSEUDO (__vfork, vfork, 0)
