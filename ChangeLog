@@ -1,3 +1,7 @@
+2003-08-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/inet_mkadr.c (inet_makeaddr): Optimize.
+
 2003-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/stdio.h: Add declarations for __builtin_fwrite and
