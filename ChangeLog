@@ -1,3 +1,13 @@
+2002-10-18  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (libc_link_dests, libc_link_sources): Remove these
+	variables and the AC_LINK_FILES call.
+
+	* sysdeps/powerpc/soft-fp/Versions (libc: GLIBC_2.3.2): Fix last
+	change to put new symbols here instead of in GLIBC_2.2.
+	* sysdeps/powerpc/Subdirs: Move this file ...
+	* sysdeps/powerpc/soft-fp/Subdirs: ... here.
+
 2002-10-07  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/bits/time.h: Replaced with contents of the

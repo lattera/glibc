@@ -1685,10 +1685,6 @@ AC_SUBST(sizeof_long_double)
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 
-# sysdeps configure fragments may set these with files to be linked below.
-libc_link_dests=
-libc_link_sources=
-
 # They also can set these variables.
 use_ldconfig=no
 ldd_rewrite_script=no
@@ -1723,8 +1719,6 @@ if test x$libc_cv_gcc_unwind_find_fde = xyes; then
   AC_DEFINE(EXPORT_UNWIND_FIND_FDE)
 fi
 AC_SUBST(libc_cv_gcc_unwind_find_fde)
-
-AC_LINK_FILES(`echo $libc_link_sources`, `echo $libc_link_dests`)
 
 # If we will use the generic uname implementation, we must figure out what
 # it will say by examining the system, and write the results in config-name.h.
