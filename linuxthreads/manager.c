@@ -308,10 +308,22 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 }
 
 
-/* Free the resources of a thread. */
+/* Try to free the resources of a thread when requested by pthread_join
+   or pthread_detach on a terminated thread. */
 
 static void pthread_free(pthread_descr th)
 {
+  pthread_descr t;
+
+  /* Check that the thread th is still there -- pthread_reap_children
+     might have deallocated it already */
+  t = __pthread_main_thread;
+  do {
+    if (t == th) break;
+    t = t->p_nextlive;
+  } while (t != __pthread_main_thread);
+  if (t != th) return;
+
   pthread_handle handle;
   ASSERT(th->p_exited);
   /* Make the handle invalid */

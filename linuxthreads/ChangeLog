@@ -1,3 +1,8 @@
+1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_free): Detect already free child.
+	Patch by Xavier Leroy, reported by Matthias Urlichs.
+
 1998-04-23  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Makefile (linuxthreads-version): Renamed back from
