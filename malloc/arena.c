@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -275,11 +275,11 @@ ptmalloc_unlock_all2 __MALLOC_P((void))
   __free_hook = save_free_hook;
 #endif
   for(ar_ptr = &main_arena;;) {
-    (void)mutex_init(&ar_ptr->mutex);
+    mutex_init(&ar_ptr->mutex);
     ar_ptr = ar_ptr->next;
     if(ar_ptr == &main_arena) break;
   }
-  (void)mutex_init(&list_lock);
+  mutex_init(&list_lock);
 }
 
 #else
@@ -711,7 +711,6 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
 #endif
 {
   mstate a;
-  int err;
 
   if(!a_tsd)
     a = a_tsd = &main_arena;
@@ -753,16 +752,13 @@ arena_get2(a_tsd, size) mstate a_tsd; size_t size;
 
   tsd_setspecific(arena_key, (Void_t *)a);
   mutex_init(&a->mutex);
-  err = mutex_lock(&a->mutex); /* remember result */
+  mutex_lock(&a->mutex); /* remember result */
 
   /* Add the new arena to the global list.  */
   (void)mutex_lock(&list_lock);
   a->next = main_arena.next;
   main_arena.next = a;
   (void)mutex_unlock(&list_lock);
-
-  if(err) /* locking failed; keep arena for further attempts later */
-    return 0;
 
   THREAD_STAT(++(a->stat_lock_loop));
   return a;
