@@ -1,5 +1,8 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-profile.c (_dl_start_profile): Open the output file with
+	O_NOFOLLOW if possible.
+
 	* include/stdlib.h: Add __posix_openpt declaration.
 	* stdlib/stdlib.h: Add posix_openpt declaration.
 	* login/Versions: Add posix_openpt for GLIBC_2.2.1.
