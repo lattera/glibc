@@ -21,6 +21,12 @@
 #define globfree(pglob) \
   __new_globfree (pglob)
 
+/* We need prototypes for these new names.  */
+extern int __new_glob (const char *__pattern, int __flags,
+		       int (*__errfunc) (const char *, int),
+		       glob_t *__pglob);
+extern void __new_globfree (glob_t *__pglob);
+
 #include <sysdeps/generic/glob.c>
 
 #undef glob

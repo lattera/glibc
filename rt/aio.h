@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -164,7 +164,7 @@ extern int aio_suspend __P ((__const struct aiocb *__const __list[],
 
 /* Force all operations associated with file desriptor described by
    `aio_fildes' member of AIOCBP.  */
-extern int aio_fsync __P ((int __op, struct aiocb *__aiocbp));
+extern int aio_fsync __P ((int __operation, struct aiocb *__aiocbp));
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (aio_read, __P ((struct aiocb *__aiocbp)), aio_read64);
@@ -189,7 +189,8 @@ extern int __REDIRECT (aio_suspend,
 			     int __nent, __const struct timespec *__timeout)),
 		       aio_suspend64);
 
-extern int __REDIRECT (aio_fsync __P ((int __op, struct aiocb *__aiocbp)),
+extern int __REDIRECT (aio_fsync __P ((int __operation,
+				       struct aiocb *__aiocbp)),
 		       aio_fsync64);
 
 # else
@@ -220,7 +221,7 @@ extern int aio_suspend64 __P ((__const struct aiocb64 *__const __list[],
 			       int __nent,
 			       __const struct timespec *__timeout));
 
-extern int aio_fsync64 __P ((int __op, struct aiocb64 *__aiocbp));
+extern int aio_fsync64 __P ((int __operation, struct aiocb64 *__aiocbp));
 #endif
 
 __END_DECLS
