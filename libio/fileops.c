@@ -308,7 +308,15 @@ DEFUN(_IO_file_overflow, (f, ch),
 	  _IO_doallocbuf(f);
 	  _IO_setg (f, f->_IO_buf_base, f->_IO_buf_base, f->_IO_buf_base);
 	}
-      /* Otherwise must be currently reading. */
+      /* Otherwise must be currently reading.
+	 If _IO_read_ptr (and hence also _IO_read_end) is at the buffer end,
+	 logically slide the buffer forwards one block (by setting the
+	 read pointers to all point at the beginning of the block).  This
+	 makes room for subsequent output.
+	 Otherwise, set the read pointers to _IO_read_end (leaving that
+	 alone, so it can continue to correspond to the external position). */
+      if (f->_IO_read_ptr == f->_IO_buf_end)
+	f->_IO_read_end = f->_IO_read_ptr = f->_IO_buf_base;
       f->_IO_write_ptr = f->_IO_read_ptr;
       f->_IO_write_base = f->_IO_write_ptr;
       f->_IO_write_end = f->_IO_buf_end;

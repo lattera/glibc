@@ -37,6 +37,9 @@
    state.  */
 #define __libc_lock_init(NAME)
 
+/* Same as last but this time we initialize a recursive mutex.  */
+#define __libc_lock_init_recursive(NAME)
+
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */

@@ -61,16 +61,3 @@ __syscall_error:
 	rts
 END (__syscall_error)
 #endif /* PIC */
-
-	.weak __errno_location
-	.type __errno_location,@function
-	.align 4
-__errno_location:
-	CALL_MCOUNT
-#ifdef PIC
-	move.l	(%pc, errno@GOTPC), %a0
-#else
-	lea	errno, %a0
-#endif
-	rts
-END (__errno_location)

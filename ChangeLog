@@ -1,3 +1,50 @@
+Thu Nov 28 03:11:11 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/fileops.c: Update from latest libg++.
+
+	* sysdeps/unix/sysv/linux/init-first.c: Reformat copyright.
+
+	* sysdeps/stub/libc-lock.h: Add __libc_lock_init_recursive.
+	* libio/genops.c (_IO_init): Use __libc_lock_init_recursive
+	instead of __libc_lock_init for streams.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* sysdepsunix/sysv/linux/i386/brk.c: Reformat copyright.
+
+	* sysdeps/generic/errno-loc.c: New file.  Generic definition of
+	__errno_location function.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Remove definition of
+	__errno_location.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=csu]: Add errno-loc
+	to sysdep-routines.
+
+	* sysdeps/unix/sysv/linux/configure: Add test for linuxthreads
+	and crypt add-on and warn if not available.
+
+Wed Nov 27 23:09:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/ko.po: Update from Bang Jun-Young <bangjy@nownuri.nowcom.co.kr>.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove _llseek.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=misc] (routines): Add
+	llseek.
+	* sysdeps/unix/sysv/linux/llseek.c: New file.  Uses syscall.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add __sys_llseek.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Add __sys_llseek.
+	Reported by HJ Lu <hjl@gnu.ai.mit.edu>.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add llseek.
+	* sysdeps/unix/sysv/linux/alpha/llseek.S: Remove.  Generic syscall
+	is enough.
+	Patch by Richard Henderson <rth@tamu.edu>.
+
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Add prototypes for
+	pciconfig_read and pciconfig_write.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add new syscalls
+	pciconfig_read and pciconfig_write.
+
+	* login/getutent_r.c: Fix several bugs in last change.
+
 Wed Nov 27 06:10:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Fix typo.
@@ -58,16 +105,6 @@ Wed Nov 27 06:10:10 1996  Ulrich Drepper  <drepper@cygnus.com>
 	Use -Wno-format flag for scanf4.c and scanf7.c.
 
 	* stdlib/stdlib.h: Reformat.
-
-	* time/africa: Update from ADO tzdata1996m.
-	* time/antarctica: Likewise.
-	* time/asia: Likewise.
-	* time/australia: Likewise.
-	* time/etcetera: Likewise.
-	* time/europe: Likewise.
-	* time/northamerica: Likewise.
-	* time/southamerica: Likewise.
-	* time/zone.tab: Likewise.
 
 Fri Nov 22 19:34:12 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

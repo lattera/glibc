@@ -54,6 +54,19 @@ extern unsigned long bus_base_sparse __P ((void)) __attribute__ ((const));
 extern int _hae_shift __P ((void)) __attribute__ ((const));
 extern int hae_shift __P ((void)) __attribute__ ((const));
 
+/* Access PCI space protected from machine checks.  */
+extern int pciconfig_read __P ((unsigned long int __bus,
+				unsigned long int __dfn,
+				unsigned long int __off,
+				unsigned long int __len,
+				unsigned char *__buf));
+
+extern int pciconfig_write __P ((unsigned long int __bus,
+				 unsigned long int __dfn,
+				 unsigned long int __off,
+				 unsigned long int __len,
+				 unsigned char *__buf));
+
 __END_DECLS
 
 #endif /* _SYS_IO_H */

@@ -21,6 +21,7 @@ getdents	-	getdents	3	__getdirentries	getdirentries
 getpeername	-	getpeername	3	__getpeername	getpeername
 getpriority	-	getpriority	2	__getpriority	getpriority
 mmap		-	mmap		6	__mmap		mmap
+llseek		EXTRA	lseek		3	llseek
 
 # these are actually common with the x86:
 fstatfs		-	fstatfs		2	__fstatfs	fstatfs
@@ -46,3 +47,7 @@ setsockopt	-	setsockopt	5	__setsockopt	setsockopt
 shutdown	-	shutdown	2	__shutdown	shutdown
 socketpair	-	socketpair	4	__socketpair	socketpair
 sysctl		-	_sysctl		6	sysctl
+
+# access pci space protected from machine checks:
+pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
+pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write

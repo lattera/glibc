@@ -52,20 +52,3 @@ ENTRY (__syscall_error)
 #include <sysdeps/unix/i386/sysdep.S>
 
 #endif	/* !PIC */
-
-
-	.weak __errno_location
-	.type __errno_location,@function
-	.align 16
-__errno_location:
-	CALL_MCOUNT
-#ifdef PIC
-	call .L2
-.L2:	popl %ecx
-	addl $_GLOBAL_OFFSET_TABLE_+[.-.L2], %ecx
-	movl errno@GOT(%ecx), %eax
-#else
-	movl $errno, %eax
-#endif
-	ret
-END (__errno_location)

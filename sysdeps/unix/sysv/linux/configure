@@ -52,3 +52,25 @@ if test "$prefix" = "/usr"; then
   libc_cv_slibdir="/lib"
   libc_cv_sysconfdir="/etc"
 fi
+
+# Under Linux the LinuxThreads and crypt add-on should be available.
+case $add_ons in
+  # Both are available.  Good.
+  *linuxthreads*des-crypt* | *des-crypt*linuxthreads*)
+    ;;
+  *linuxthreads*)
+    echo "\
+*** WARNING:
+*** Are you sure you do not want to use the \`crypt' add-on?"
+    ;;
+  *des-crypt*)
+    echo "\
+*** WARNING:
+*** Are you sure you do not want to use the \`LinuxThread' add-on?"
+    ;;
+  *)
+    echo "\
+*** WARNING: Are you sure you do not want to use the \`LinuxThreads'
+*** and \`crypt' add-ons?"
+    ;;
+esac

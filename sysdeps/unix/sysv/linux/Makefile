@@ -1,9 +1,11 @@
 ifeq ($(subdir), csu)
 CFLAGS-init-first.c = -fkeep-inline-functions
+
+sysdep_routines += errno-loc
 endif
 
 ifeq ($(subdir), misc)
-sysdep_routines += sysctl clone
+sysdep_routines += sysctl clone llseek
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \
