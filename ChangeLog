@@ -1,3 +1,8 @@
+1998-03-14 21:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Recognize variations for 32 MIPS processors.
+	Don't assume ELF systems always have .weak, test for .weakext.
+
 1998-03-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Irix6 is an ELF platform.

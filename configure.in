@@ -201,7 +201,11 @@ m68k)		base_machine=m68k machine=m68k/m68020 ;;
 m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
 mips64*)	base_machine=mips64 machine=mips/mips64/$machine ;;
-mips*)		base_machine=mips machine=mips/$machine ;;
+mips*)		base_machine=mips
+		case "`uname -m`" in
+		IP22) machine=mips/mips3 ;;
+		*)    machine=mips/$machine ,,
+		esac ;;
 sparc | sparcv[67])
 		base_machine=sparc machine=sparc/sparc32 ;;
 sparcv8 | supersparc | hypersparc)
@@ -775,10 +779,9 @@ fi
 
 if test $elf = yes; then
   libc_cv_weak_symbols=yes
-  libc_cv_asm_weak_directive=yes
-  libc_cv_asm_weakext_directive=no
-else
-  AC_CACHE_CHECK(for assembler .weak directive, libc_cv_asm_weak_directive,
+fi
+
+AC_CACHE_CHECK(for assembler .weak directive, libc_cv_asm_weak_directive,
 		 [dnl
 cat > conftest.s <<EOF
 .text
@@ -787,12 +790,12 @@ foo:
 .weak foo
 .weak bar; bar = foo
 EOF
-  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
-    libc_cv_asm_weak_directive=yes
-  else
-    libc_cv_asm_weak_directive=no
-  fi
-  rm -f conftest*])
+if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+  libc_cv_asm_weak_directive=yes
+else
+  libc_cv_asm_weak_directive=no
+fi
+rm -f conftest*])
 
 if test $libc_cv_asm_weak_directive = no; then
   AC_CACHE_CHECK(for assembler .weakext directive,
@@ -805,6 +808,7 @@ foo:
 .weakext bar foo
 .weakext baz
 ${libc_cv_asm_global_directive} baz
+baz:
 EOF
   if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
     libc_cv_asm_weakext_directive=yes
@@ -813,8 +817,7 @@ EOF
   fi
   rm -f conftest*])
 
-  fi # no .weak
-fi # not ELF
+fi # no .weak
 
 if test $libc_cv_asm_weak_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAK_DIRECTIVE)
