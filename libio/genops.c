@@ -447,10 +447,10 @@ _IO_default_xsputn (f, data, n)
   for (;;)
     {
       /* Space available. */
-      _IO_ssize_t count = f->_IO_write_end - f->_IO_write_ptr;
-      if (count > 0)
+      if (f->_IO_write_ptr < f->_IO_write_end)
 	{
-	  if ((_IO_size_t) count > more)
+	  _IO_size_t count = f->_IO_write_end - f->_IO_write_ptr;
+	  if (count > more)
 	    count = more;
 	  if (count > 20)
 	    {
@@ -462,9 +462,7 @@ _IO_default_xsputn (f, data, n)
 #endif
 	      s += count;
             }
-	  else if (count <= 0)
-	    count = 0;
-	  else
+	  else if (count)
 	    {
 	      char *p = f->_IO_write_ptr;
 	      _IO_ssize_t i;
@@ -504,10 +502,10 @@ _IO_default_xsgetn (fp, data, n)
   for (;;)
     {
       /* Data available. */
-      _IO_ssize_t count = fp->_IO_read_end - fp->_IO_read_ptr;
-      if (count > 0)
+      if (fp->_IO_read_ptr < fp->_IO_read_end)
 	{
-	  if ((_IO_size_t) count > more)
+	  _IO_size_t count = fp->_IO_read_end - fp->_IO_read_ptr;
+	  if (count > more)
 	    count = more;
 	  if (count > 20)
 	    {
@@ -519,9 +517,7 @@ _IO_default_xsgetn (fp, data, n)
 #endif
 	      fp->_IO_read_ptr += count;
 	    }
-	  else if (count <= 0)
-	    count = 0;
-	  else
+	  else if (count)
 	    {
 	      char *p = fp->_IO_read_ptr;
 	      int i = (int) count;
