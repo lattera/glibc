@@ -82,6 +82,7 @@ generated += isomac isomac.out
 CFLAGS-bsearch.c = $(exceptions)
 CFLAGS-msort.c = $(exceptions)
 CFLAGS-qsort.c = $(exceptions)
+CFLAGS-system.c = -fexceptions
 
 include ../Makeconfig
 

@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <time.h>
 #include <hp-timing.h>
-
+#include <sysdep-cancel.h>
 
 #if HP_TIMING_AVAIL
 # define CPUCLOCK_P(clock) \
@@ -94,5 +94,15 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
     /* Not supported.  */
     return ENOTSUP;
 
-  return __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
+  if (SINGLE_THREAD_P)
+    return __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
+
+  /* More than one thread running, enable cancellation.  */
+  int oldstate = LIBC_CANCEL_ASYNC ();
+
+  int result = __builtin_expect (nanosleep (req, rem), 0) ? errno : 0;
+
+  LIBC_CANCEL_RESET (oldstate);
+
+  return result;
 }

@@ -1,3 +1,32 @@
+2003-06-15  Ulrich Drepper  <drepper@redhat.com>
+
+	Fix cancellation point handling wrt exception based cleanup.
+	* io/Makefile: Compile fcntl.c, poll.c, and lockf.c with exceptions.
+	* misc/Makefile: Compile pselect.c, readv.c, writev.c, and usleep.c
+	with exceptions.
+	* posix/Makefile: Compile pread.c, pread64.c, pwrite.c, pwrite64.c,
+	sleep.c, wait.c, waitid.c, and waitpid.c with exceptions.
+	* rt/Makefile: Compile aio_suspend.c and clock_nanosleep.c with
+	exceptions.
+	* signal/Makefile: Compile sigpause.c, sigsuspend.c, sigtimedwait.c,
+	sigwait.c, and sigwaitinfo.c with exceptions.
+	* stdlib/Makefile: Compile system.c with exceptions.
+	* sysvipc/Makefile: Compile msgrcv.c and msgsnd.c with exceptions.
+	* termios/Makefile: Compile tcdrain.c with exceptions.
+	* sysdeps/generic/lockf.c: Add comment explaining the cancellation
+	situation.
+	* sysdeps/generic/pselect.c: Likewise.
+	* sysdeps/posix/sigpause.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/posix/waitid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/usleep.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Major rewrite of
+	INTERNAL_SYSCALL to not use push inside asm statement so that
+	unwind info is correct around the syscall.
+	* sysdeps/unix/clock_nanosleep.c: Add cancellation support.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c: Likewise.
+
 2003-06-15  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1996,1997,1998,2000,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,5 +67,8 @@ lockf (int fd, int cmd, off_t len)
       return -1;
     }
 
+  /* lockf() is a cancellation point but so is fcntl() if F_SETLKW is
+     used.  Therefore we don't have to care about cancellation here,
+     the fcntl() function will take care of it.  */
   return __fcntl (fd, cmd, &fl);
 }

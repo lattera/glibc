@@ -44,3 +44,9 @@ distribute	:= sigsetops.h testrtsig.h sigset-cvt-mask.h
 
 
 include ../Rules
+
+CFLAGS-sigpause.c = -fexceptions
+CFLAGS-sigsuspend.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigtimedwait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigwait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigwaitinfo.c = -fexceptions -fasynchronous-unwind-tables

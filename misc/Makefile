@@ -77,6 +77,10 @@ tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch
 
 CFLAGS-tsearch.c = $(exceptions)
 CFLAGS-lsearch.c = $(exceptions)
+CFLAGS-pselect.c = -fexceptions
+CFLAGS-readv.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-writev.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-usleep.c = -fexceptions
 
 include ../Rules
 

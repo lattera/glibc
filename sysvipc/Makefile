@@ -30,3 +30,6 @@ routines := ftok \
 	    shmat shmdt shmget shmctl
 
 include ../Rules
+
+CFLAGS-msgrcv.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgsnd.c = -fexceptions -fasynchronous-unwind-tables

@@ -22,7 +22,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # define _IMM12 #-12
 # define _IMM16 #-16

@@ -49,6 +49,9 @@ distribute := aio_misc.h
 
 include ../Rules
 
+CFLAGS-aio_suspend.c = -fexceptions
+CFLAGS-clock_nanosleep.c = -fexceptions -fasynchronous-unwind-tables
+
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.

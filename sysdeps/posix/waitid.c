@@ -1,5 +1,5 @@
 /* Pseudo implementation of waitid.
-   Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1997.
 
@@ -66,6 +66,9 @@ do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
       return -1;
     }
 
+  /* Note the waitid() is a cancellation point.  But since we call
+     waitpid() which itself is a cancellation point we do not have
+     to do anything here.  */
   child = __waitpid (pid, &status, options);
 
   if (child == -1)

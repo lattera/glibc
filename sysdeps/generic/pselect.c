@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -50,6 +50,9 @@ do_pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   if (sigmask != NULL)
     __sigprocmask (SIG_SETMASK, sigmask, &savemask);
 
+  /* Note the pselect() is a cancellation point.  But since we call
+     select() which itself is a cancellation point we do not have
+     to do anything here.  */
   retval = __select (nfds, readfds, writefds, exceptfds,
 		     timeout != NULL ? &tval : NULL);
 

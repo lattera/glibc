@@ -118,6 +118,15 @@ endif
 
 CFLAGS-regex.c = -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER
+CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sleep.c = -fexceptions
+CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-waitid.c = -fexceptions
+CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
+
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
 

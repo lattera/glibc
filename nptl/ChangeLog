@@ -1,3 +1,25 @@
+2003-06-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h (LIBC_CANCEL_ASYNC): Also define for librt.
+	(LIBC_CANCEL_RESET): Likewise.
+	Declare __librt_enable_asynccancel and __librt_disable_asynccancel.
+	* sysdeps/pthread/Makefile (librt-sysdep_routines): Add
+	librt-cancellation.
+	(CFLAGS-libcrt-cancellation.c): Define.
+	* sysdeps/pthread/librt-cancellation.c: New file.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Define all the nice
+	macros also when compiling librt.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/timer_create.c: Add prototype for
+	compat_timer_create.
+
 2003-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/posix-timer.h (timespec_compare): Always inline.

@@ -18,7 +18,7 @@
 
 #include <time.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include "kernel-features.h"
 
 
@@ -32,7 +32,18 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   INTERNAL_SYSCALL_DECL (err);
   int r;
 
-  r = INTERNAL_SYSCALL (clock_nanosleep, err, 4, clock_id, flags, req, rem);
+  if (SINGLE_THREAD_P)
+    r = INTERNAL_SYSCALL (clock_nanosleep, err, 4, clock_id, flags, req, rem);
+  else
+    {
+      int oldstate = LIBC_CANCEL_ASYNC ();
+
+      r = INTERNAL_SYSCALL (clock_nanosleep, err, 4, clock_id, flags, req,
+			    rem);
+
+      LIBC_CANCEL_RESET (oldstate);
+    }
+
   return (INTERNAL_SYSCALL_ERROR_P (r, err)
 	  ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
 }
@@ -48,15 +59,20 @@ extern int __libc_missing_posix_timers attribute_hidden;
   if (!__libc_missing_posix_timers)					      \
     {									      \
       INTERNAL_SYSCALL_DECL (err);					      \
+									      \
+      int oldstate = LIBC_CANCEL_ASYNC ();				      \
+									      \
       int r = INTERNAL_SYSCALL (clock_nanosleep, err, 4, clock_id, flags,     \
 				req, rem);				      \
+									      \
+      LIBC_CANCEL_RESET (oldstate);					      \
 									      \
       if (!INTERNAL_SYSCALL_ERROR_P (r, err))				      \
 	return 0;							      \
 									      \
       if (INTERNAL_SYSCALL_ERRNO (r, err) != ENOSYS)			      \
 	return INTERNAL_SYSCALL_ERRNO (r, err);				      \
-      									      \
+									      \
       __libc_missing_posix_timers = 1;					      \
     }
 # endif

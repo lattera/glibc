@@ -1,5 +1,5 @@
 /* Implementation of the BSD usleep function using nanosleep.
-   Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -27,5 +27,8 @@ usleep (useconds_t useconds)
   struct timespec ts = { .tv_sec = (long int) (useconds / 1000000),
 			 .tv_nsec = (long int) (useconds % 1000000) * 1000ul };
 
+  /* Note the usleep() is a cancellation point.  But since we call
+     nanosleep() which itself is a cancellation point we do not have
+     to do anything here.  */
   return __nanosleep (&ts, NULL);
 }

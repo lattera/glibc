@@ -1,5 +1,5 @@
 /* Implementation of the POSIX sleep function using nanosleep.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -64,6 +64,9 @@ __sleep (unsigned int seconds)
 	  return -1;
 	}
 
+      /* Note the sleep() is a cancellation point.  But since we call
+	 nanosleep() which itself is a cancellation point we do not
+	 have to do anything here.  */
       if (oact.sa_handler == SIG_IGN)
 	{
 	  /* We should leave SIGCHLD blocked.  */

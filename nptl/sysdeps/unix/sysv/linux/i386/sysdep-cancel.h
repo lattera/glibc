@@ -23,7 +23,7 @@
 # include <nptl/pthreadP.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \

@@ -297,7 +297,7 @@ asm (".L__X'%ebx = 1\n\t"
      ".macro bpushl name reg\n\t"
      ".if 1 - \\name\n\t"
      ".if 2 - \\name\n\t"
-     "pushl %ebx\n\t"
+     "error\n\t"
      ".else\n\t"
      "xchgl \\reg, %ebx\n\t"
      ".endif\n\t"
@@ -306,16 +306,9 @@ asm (".L__X'%ebx = 1\n\t"
      ".macro bpopl name reg\n\t"
      ".if 1 - \\name\n\t"
      ".if 2 - \\name\n\t"
-     "popl %ebx\n\t"
+     "error\n\t"
      ".else\n\t"
      "xchgl \\reg, %ebx\n\t"
-     ".endif\n\t"
-     ".endif\n\t"
-     ".endm\n\t"
-     ".macro bmovl name reg\n\t"
-     ".if 1 - \\name\n\t"
-     ".if 2 - \\name\n\t"
-     "movl \\reg, %ebx\n\t"
      ".endif\n\t"
      ".endif\n\t"
      ".endm\n\t");
@@ -342,7 +335,8 @@ asm (".L__X'%ebx = 1\n\t"
 # ifdef SHARED
 #  define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
-    unsigned int resultvar;						      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
@@ -355,7 +349,8 @@ asm (".L__X'%ebx = 1\n\t"
 # else
 #  define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
-    unsigned int resultvar;						      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
@@ -368,11 +363,12 @@ asm (".L__X'%ebx = 1\n\t"
 #else
 # define INTERNAL_SYSCALL(name, err, nr, args...) \
   ({									      \
-    unsigned int resultvar;						      \
+    register unsigned int resultvar;					      \
+    EXTRAVAR_##nr							      \
     asm volatile (							      \
     LOADARGS_##nr							      \
     "movl %1, %%eax\n\t"						      \
-    "int $0x80\n\t"						      \
+    "int $0x80\n\t"							      \
     RESTOREARGS_##nr							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
@@ -390,44 +386,92 @@ asm (".L__X'%ebx = 1\n\t"
 #define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOADARGS_0
-#if defined I386_USE_SYSENTER && defined SHARED
-# define LOADARGS_1 \
-    "bpushl .L__X'%k3, %k3\n\t"						      \
-    "bmovl .L__X'%k3, %k3\n\t"
+#ifdef __PIC__
+# if defined I386_USE_SYSENTER
+#  define LOADARGS_1 \
+    "bpushl .L__X'%k3, %k3\n\t"
+#  define LOADARGS_5 \
+    "movl %%ebx, %4\n\t"						      \
+    "movl %3, %%ebx\n\t"
+# else
+#  define LOADARGS_1 \
+    "bpushl .L__X'%k2, %k2\n\t"
+#  define LOADARGS_5 \
+    "movl %%ebx, %3\n\t"						      \
+    "movl %2, %%ebx\n\t"
+# endif
+# define LOADARGS_2	LOADARGS_1
+# define LOADARGS_3 \
+    "xchgl %%ebx, %%edi\n\t"
+# define LOADARGS_4	LOADARGS_3
 #else
-# define LOADARGS_1 \
-    "bpushl .L__X'%k2, %k2\n\t"						      \
-    "bmovl .L__X'%k2, %k2\n\t"
+# define LOADARGS_1
+# define LOADARGS_2
+# define LOADARGS_3
+# define LOADARGS_4
+# define LOADARGS_5
 #endif
-#define LOADARGS_2	LOADARGS_1
-#define LOADARGS_3	LOADARGS_1
-#define LOADARGS_4	LOADARGS_1
-#define LOADARGS_5	LOADARGS_1
 
 #define RESTOREARGS_0
-#if defined I386_USE_SYSENTER && defined SHARED
-# define RESTOREARGS_1 \
+#ifdef __PIC__
+# if defined I386_USE_SYSENTER && defined SHARED
+#  define RESTOREARGS_1 \
     "bpopl .L__X'%k3, %k3\n\t"
-#else
-# define RESTOREARGS_1 \
+#  define RESTOREARGS_5 \
+    "movl %4, %%ebx"
+# else
+#  define RESTOREARGS_1 \
     "bpopl .L__X'%k2, %k2\n\t"
+#  define RESTOREARGS_5 \
+    "movl %3, %%ebx"
+# endif
+# define RESTOREARGS_2	RESTOREARGS_1
+# define RESTOREARGS_3 \
+    "xchgl %%edi, %%ebx\n\t"
+# define RESTOREARGS_4	RESTOREARGS_3
+#else
+# define RESTOREARGS_1
+# define RESTOREARGS_2
+# define RESTOREARGS_3
+# define RESTOREARGS_4
+# define RESTOREARGS_5
 #endif
-#define RESTOREARGS_2	RESTOREARGS_1
-#define RESTOREARGS_3	RESTOREARGS_1
-#define RESTOREARGS_4	RESTOREARGS_1
-#define RESTOREARGS_5	RESTOREARGS_1
 
 #define ASMFMT_0()
-#define ASMFMT_1(arg1) \
-	, "acdSD" (arg1)
-#define ASMFMT_2(arg1, arg2) \
+#ifdef __PIC__
+# define ASMFMT_1(arg1) \
+	, "cd" (arg1)
+# define ASMFMT_2(arg1, arg2) \
 	, "d" (arg1), "c" (arg2)
-#define ASMFMT_3(arg1, arg2, arg3) \
-	, "aSD" (arg1), "c" (arg2), "d" (arg3)
-#define ASMFMT_4(arg1, arg2, arg3, arg4) \
-	, "aD" (arg1), "c" (arg2), "d" (arg3), "S" (arg4)
-#define ASMFMT_5(arg1, arg2, arg3, arg4, arg5) \
-	, "a" (arg1), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5)
+# define ASMFMT_3(arg1, arg2, arg3) \
+	, "D" (arg1), "c" (arg2), "d" (arg3)
+# define ASMFMT_4(arg1, arg2, arg3, arg4) \
+	, "D" (arg1), "c" (arg2), "d" (arg3), "S" (arg4)
+# define ASMFMT_5(arg1, arg2, arg3, arg4, arg5) \
+	, "0" (arg1), "m" (_xv), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5)
+#else
+# define ASMFMT_1(arg1) \
+	, "b" (arg1)
+# define ASMFMT_2(arg1, arg2) \
+	, "b" (arg1), "c" (arg2)
+# define ASMFMT_3(arg1, arg2, arg3) \
+	, "b" (arg1), "c" (arg2), "d" (arg3)
+# define ASMFMT_4(arg1, arg2, arg3, arg4) \
+	, "b" (arg1), "c" (arg2), "d" (arg3), "S" (arg4)
+# define ASMFMT_5(arg1, arg2, arg3, arg4, arg5) \
+	, "b" (arg1), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5)
+#endif
+
+#define EXTRAVAR_0
+#define EXTRAVAR_1
+#define EXTRAVAR_2
+#define EXTRAVAR_3
+#define EXTRAVAR_4
+#ifdef __PIC__
+# define EXTRAVAR_5 int _xv;
+#else
+# define EXTRAVAR_5
+#endif
 
 #endif	/* __ASSEMBLER__ */
 

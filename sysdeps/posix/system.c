@@ -162,6 +162,9 @@ do_system (const char *line)
 	}
       while (child != pid);
 #else
+      /* Note the system() is a cancellation point.  But since we call
+	 waitpid() which itself is a cancellation point we do not
+	 have to do anything here.  */
       if (TEMP_FAILURE_RETRY (__waitpid (pid, &status, 0)) != pid)
 	status = -1;
 #endif

@@ -32,6 +32,8 @@
 
 #ifdef __NR_timer_create
 # ifndef __ASSUME_POSIX_TIMERS
+static int compat_timer_create (clockid_t clock_id, struct sigevent *evp,
+				timer_t *timerid);
 #  define timer_create static compat_timer_create
 #  include <nptl/sysdeps/pthread/timer_create.c>
 #  undef timer_create
