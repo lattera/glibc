@@ -13,9 +13,11 @@ AC_PROVIDE([AC_PROG_CC])dnl
 AC_PROVIDE([AC_PROG_CPP])dnl
 define([AS_MESSAGE_LOG_FD],5)dnl
 define([AS_MESSAGE_FD],6)dnl
-AS_INIT()dnl
-m4_divert_text([HEADER-COMMENT],
-[@%:@ This file is generated from configure.in by Autoconf.  DO NOT EDIT!])
+dnl Ripped out of AS_INIT, which does more cruft we do not want.
+m4_wrap([m4_divert_pop([BODY])[]])
+m4_divert_push([BODY])[]dnl
+dnl End of ripped out of AS_INIT.
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
 define([_AC_LANG], [C])dnl
 ])dnl
 dnl

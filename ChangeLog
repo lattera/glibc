@@ -1,3 +1,9 @@
+2002-10-17  Jeff Bailey  <jbailey@outpost.dnsalias.org>
+
+	* aclocal.m4: Use just the bits from AS_INIT that are needed for the
+	GLIBC_PROVIDES.  Use plain comment instead of HEADER-COMMENT so
+	that it's obvious when extra autoconf machinery is being dragged in.
+
 2002-10-18  Roland McGrath  <roland@redhat.com>
 
 	* configure.in: Remove bogus echo included in
