@@ -206,7 +206,7 @@ _IO_fwide (fp, mode)
 	 char streams have much more problems with not knowing the
 	 current position and so we should disable the optimization
 	 which allows the functions without knowing the position.  */
-      fp->_offset = _IO_SYSSEEK (fp, 0, 0);
+      fp->_offset = _IO_SYSSEEK (fp, 0, _IO_seek_cur);
     }
 
   /* Set the mode now.  */
