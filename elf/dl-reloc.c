@@ -35,6 +35,33 @@
 #endif
 
 
+#ifdef USE_TLS
+/* We are trying to perform a static TLS relocation in MAP, but it was
+   dynamically loaded.  This can only work if there is enough surplus in
+   the static TLS area already allocated for each running thread.  If this
+   object's TLS segment is too big to fit, we return false.  If it fits,
+   we set MAP->l_tls_offset and return true.  */
+static bool
+allocate_static_tls (struct link_map *map)
+{
+  size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
+  if (offset + map->l_tls_blocksize > (GL(dl_tls_static_size)
+# if TLS_TCB_AT_TP
+				       - TLS_TCB_SIZE
+# elif TLS_DTV_AT_TP
+  /* dl_tls_static_used includes the TCB at the beginning.  */
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+				       ))
+    return false;
+  map->l_tls_offset = offset;
+  GL(dl_tls_static_used) = offset + map->l_tls_blocksize;
+  return true;
+}
+#endif
+
+
 void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 		     int lazy, int consider_profiling)
@@ -159,9 +186,19 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)
 
+    /* This macro is used as a callback from elf_machine_rel{a,} when a
+       static TLS reloc is about to be performed.  Since (in dl-load.c) we
+       permit dynamic loading of objects that might use such relocs, we
+       have to check whether each use is actually doable.  If the object
+       whose TLS segment the reference resolves to was allocated space in
+       the static TLS block at startup, then it's ok.  Otherwise, we make
+       an attempt to allocate it in surplus space on the fly.  If that
+       can't be done, we fall back to the error that DF_STATIC_TLS is
+       intended to produce.  */
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
-      if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0))		      \
+      if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0)		      \
+	  && !allocate_static_tls (sym_map))				      \
 	{								      \
 	  errstring = N_("shared object cannot be dlopen()ed");		      \
 	  INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);	      \

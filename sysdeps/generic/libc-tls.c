@@ -182,12 +182,17 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   GL(dl_tls_max_dtv_idx) = 1;
   GL(dl_tls_dtv_slotinfo_list) = &static_slotinfo.si;
 
-  /* That is the size of the TLS memory for this object.  */
-  GL(dl_tls_static_size) = (roundup (memsz, align ?: 1)
+  memsz = roundup (memsz, align ?: 1);
 # if TLS_TCB_AT_TP
-			    + tcbsize
+  memsz += tcbsize;
 # endif
-			    );
+
+  /* That is the size of the TLS memory for this object.  The initialized
+     value of _dl_tls_static_size is provided by dl-open.c to request some
+     surplus that permits dynamic loading of modules with IE-model TLS.  */
+  GL(dl_tls_static_size) = roundup (memsz + GL(dl_tls_static_size),
+				    TLS_TCB_ALIGN);
+  GL(dl_tls_static_used) = memsz;
   /* The alignment requirement for the static TLS block.  */
   GL(dl_tls_static_align) = MAX (TLS_TCB_ALIGN, max_align);
   /* Number of elements in the static TLS block.  */

@@ -31,6 +31,10 @@
 # include <dl-tls.h>
 # include <ldsodefs.h>
 
+/* Amount of excess space to allocate in the static TLS area
+   to allow dynamic loading of modules defining IE-model TLS data.  */
+# define TLS_STATIC_SURPLUS	64
+
 /* Value used for dtv entries for which the allocation is delayed.  */
 # define TLS_DTV_UNALLOCATED	((void *) -1l)
 
@@ -150,7 +154,9 @@ _dl_determine_tlsoffset (void)
   // XXX would invalidate the offsets the linker creates for the LE
   // XXX model.
 
-  GL(dl_tls_static_size) = offset + TLS_TCB_SIZE;
+  GL(dl_tls_static_used) = offset;
+  GL(dl_tls_static_size) = roundup (offset + TLS_STATIC_SURPLUS + TLS_TCB_SIZE,
+				    TLS_TCB_ALIGN);
 # elif TLS_DTV_AT_TP
   /* The TLS blocks start right after the TCB.  */
   offset = TLS_TCB_SIZE;
@@ -186,7 +192,9 @@ _dl_determine_tlsoffset (void)
       offset += prev_size;
     }
 
-  GL(dl_tls_static_size) = offset;
+  GL(dl_tls_static_used) = offset;
+  GL(dl_tls_static_size) = roundup (offset + TLS_STATIC_SURPLUS,
+				    TLS_TCB_ALIGN);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif

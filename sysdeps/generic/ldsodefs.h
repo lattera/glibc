@@ -326,9 +326,6 @@ struct rtld_global
 /* Number of additional slots in the dtv allocated.  */
 # define DTV_SURPLUS	(14)
 
-/* The value of _dl_tls_static_size is kept a multiple of this.  */
-# define TLS_STATIC_MIN	(1024)
-
   /* Initial dtv of the main thread, not allocated with normal malloc.  */
   EXTERN void *_dl_initial_dtv;
   /* Generation counter for the dtv.  */
