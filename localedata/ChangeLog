@@ -1,3 +1,31 @@
+2000-09-20  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/iso-2022-jp.c (BODY for FROM_LOOP): Reject 0x80.
+	(BODY for TO_LOOP): Clear bit 7 when outputting ISO-8859-1 upper half
+	characters.
+	* iconvdata/gen-8bit-gap-1.sh: Recognize lowercase hexadecimal digits
+	as equivalent to uppercase hexadecimal digits.
+
+2000-09-20  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/testdata/EUC-KR..UTF8: New file.
+	* iconvdata/testdata/EUC-TW: New file.
+	* iconvdata/testdata/EUC-TW..UTF8: New file.
+	* iconvdata/testdata/EUC-JP: New file.
+	* iconvdata/testdata/EUC-JP..UTF8: New file.
+	* iconvdata/testdata/ISO-2022-JP: New file.
+	* iconvdata/testdata/ISO-2022-JP..UTF8: New file.
+	* iconvdata/testdata/ISO-2022-JP-2: New file.
+	* iconvdata/testdata/ISO-2022-JP-2..UTF8: New file.
+	* iconvdata/testdata/ISO-2022-KR: Add a few more lines.
+	* iconvdata/testdata/ISO-2022-KR..UTF8: New file.
+	* iconvdata/testdata/ISO-2022-CN: New file.
+	* iconvdata/testdata/ISO-2022-CN..UTF8: New file.
+	* iconvdata/testdata/ISO-2022-CN-EXT: New file.
+	* iconvdata/testdata/ISO-2022-CN-EXT..UTF8: New file.
+	* iconvdata/TESTS: Enable tests for ISO-2022-JP, ISO-2022-JP-2,
+	ISO-2022-CN, ISO-2022-CN-EXT, EUC-JP, EUC-TW.
+
 2000-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_GB: Update LC_PAPER and LC_MEASUREMENT information.
