@@ -44,6 +44,7 @@
 #include <string.h>
 #include <locale.h>
 #include <xlocale.h>
+#include <bits/wordsize.h>
 
 #ifdef USE_NUMBER_GROUPING
 # include "../locale/localeinfo.h"
@@ -163,6 +164,48 @@
 # include "grouping.h"
 #endif
 
+
+/* Define tables of maximum values and remainders in order to detect
+   overflow.  Do this at compile-time in order to avoid the runtime
+   overhead of the division.  */
+
+#define DEF(TYPE, NAME)							   \
+  const TYPE NAME[] attribute_hidden					   \
+	__attribute__((section(".gnu.linkonce.ro." #NAME))) =		   \
+  {									   \
+    F(2), F(3), F(4), F(5), F(6), F(7), F(8), F(9), F(10), 		   \
+    F(11), F(12), F(13), F(14), F(15), F(16), F(17), F(18), F(19), F(20),  \
+    F(21), F(22), F(23), F(24), F(25), F(26), F(27), F(28), F(29), F(30),  \
+    F(31), F(32), F(33), F(34), F(35), F(36)				   \
+  }
+
+#define F(X)	ULONG_MAX / X
+  DEF (unsigned long, __strtol_ul_max_tab);
+#undef F
+#if defined(QUAD) && __WORDSIZE == 32
+# define F(X)	ULONG_LONG_MAX / X
+  DEF (unsigned long long, __strtol_ull_max_tab);
+# undef F
+# define F(X)	ULONG_LONG_MAX % X
+  DEF (unsigned char, __strtol_ull_rem_tab);
+# undef F
+#else
+# define F(X)	ULONG_MAX % X
+  DEF (unsigned char, __strtol_ul_rem_tab);
+# undef F
+#endif
+#undef DEF
+
+/* Define some more readable aliases for these arrays which correspond
+   to how they'll be used in the function below.  */
+#define jmax_tab	__strtol_ul_max_tab
+#if defined(QUAD) && __WORDSIZE == 32
+# define cutoff_tab	__strtol_ull_max_tab
+# define cutlim_tab	__strtol_ull_rem_tab
+#else
+# define cutoff_tab	__strtol_ul_max_tab
+# define cutlim_tab	__strtol_ul_rem_tab
+#endif
 
 
 /* Convert NPTR to an `unsigned long int' or `long int' in base BASE.
@@ -325,8 +368,9 @@ INTERNAL (__strtol_l) (nptr, endptr, base, group, loc)
 #endif
     end = NULL;
 
-  cutoff = STRTOL_ULONG_MAX / (unsigned LONG int) base;
-  cutlim = STRTOL_ULONG_MAX % (unsigned LONG int) base;
+  /* Avoid runtime division; lookup cutoff and limit.  */
+  cutoff = cutoff_tab[base - 2];
+  cutlim = cutlim_tab[base - 2];
 
   overflow = 0;
   i = 0;
@@ -334,7 +378,7 @@ INTERNAL (__strtol_l) (nptr, endptr, base, group, loc)
   if (sizeof (long int) != sizeof (LONG int))
     {
       unsigned long int j = 0;
-      unsigned long int jmax = ULONG_MAX / base;
+      unsigned long int jmax = jmax_tab[base - 2];
 
       for (;c != L_('\0'); c = *++s)
 	{
