@@ -61,23 +61,23 @@ typedef unsigned int __uint32_t;
 #if __WORDSIZE == 64
 typedef signed long int __int64_t;
 typedef unsigned long int __uint64_t;
-typedef __quad_t *__qaddr_t;
 #else
 # ifdef __GNUC__
 __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
 # endif
 #endif
+typedef __quad_t *__qaddr_t;
 
 typedef __u_quad_t __dev_t;		/* Type of device numbers.  */
 typedef __u_int __uid_t;		/* Type of user identifications.  */
 typedef __u_int __gid_t;		/* Type of group identifications.  */
 typedef __u_long __ino_t;		/* Type of file serial numbers.  */
-typedef __uint64_t __ino64_t;		/* Type of file serial numbers.  */
+typedef __u_long __ino64_t;		/* Type of file serial numbers.  */
 typedef __u_int __mode_t;		/* Type of file attribute bitmasks.  */
 typedef __u_int __nlink_t; 		/* Type of file link counts.  */
 typedef long int __off_t;		/* Type of file sizes and offsets.  */
-typedef __int64_t  __off64_t;		/*  "" (LFS) */
+typedef __quad_t  __off64_t;		/*  "" (LFS) */
 typedef __quad_t __loff_t;		/* Type of file sizes and offsets.  */
 typedef int __pid_t;			/* Type of process identifications.  */
 #if __WORDSIZE == 64
@@ -138,9 +138,9 @@ typedef int __key_t;
 
 /* Used in `struct shmid_ds'.  */
 #if __WORDSIZE == 64
-typedef int       __ipc_pid_t;
+typedef int		   __ipc_pid_t;
 #else
-typedef short int __ipc_pid_t;
+typedef unsigned short int __ipc_pid_t;
 #endif
 
 
