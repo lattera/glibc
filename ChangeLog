@@ -3,6 +3,9 @@
 	* sysdeps/generic/bits/byteswap.h (__bswap_64): Make it usable for
 	64bit platforms.  Reported by Dave Gilbert <gilbertd@treblig.org>.
 
+	* string/Makefile (tests): Add tst-bswap.
+	* string/tst-bswap.c: New file.
+
 2000-12-11  Bruno Haible  <haible@clisp.cons.org>
 
 	* Makefile ($(inst_includedir)/gnu/stubs.h): Sort in the C locale.
