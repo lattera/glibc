@@ -738,13 +738,19 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	      long long int convertme;
 
 	      if (bracket || words[1 + *offset] != ')')
-		return WRDE_SYNTAX;
+		{
+		  free (expr);
+		  return WRDE_SYNTAX;
+		}
 
 	      ++(*offset);
 
 	      /* Go - evaluate. */
 	      if (*expr && eval_expr (expr, &numresult) != 0)
-		return WRDE_SYNTAX;
+		{
+		  free (expr);
+		  return WRDE_SYNTAX;
+		}
 
 	      if (numresult < 0)
 		{
@@ -779,7 +785,10 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 
 	      /* Go - evaluate. */
 	      if (*expr && eval_expr (expr, &numresult) != 0)
-		return WRDE_SYNTAX;
+		{
+		  free (expr);
+		  return WRDE_SYNTAX;
+		}
 
 	      result[20] = '\0';
 	      *word = w_addstr (*word, word_length, max_length,
@@ -839,6 +848,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   if ((pid = __fork ()) < 0)
     {
       /* Bad */
+      __close (fildes[0]);
+      __close (fildes[1]);
       return WRDE_NOSPACE;
     }
 
@@ -891,12 +902,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
 	  *word = w_addmem (*word, word_length, max_length, buffer, buflen);
 	  if (*word == NULL)
-	    {
-	      __kill (pid, SIGKILL);
-	      __waitpid (pid, NULL, 0);
-	      __close (fildes[0]);
-	      return WRDE_NOSPACE;
-	    }
+	    goto no_space;
 	}
     }
   else
@@ -963,15 +969,14 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		  /* First IFS white space, or IFS non-whitespace.
 		   * Delimit the field.  Nulls are converted by w_addword. */
 		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
-		    {
-		      __kill (pid, SIGKILL);
-		      __waitpid (pid, NULL, 0);
-		      __close (fildes[0]);
-		      return WRDE_NOSPACE;
-		    }
+		    goto no_space;
 
 		  if (keep_empty_word)
-		    *word = w_emptyword (word_length, max_length);
+		    {
+		      *word = w_emptyword (word_length, max_length);
+		      if (*word == NULL)
+			goto no_space;
+		    }
 		  else
 		    *word = w_newword (word_length, max_length);
 		  /* fall back round the loop.. */
@@ -987,12 +992,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		  *word = w_addchar (*word, word_length, max_length,
 				     buffer[i]);
 		  if (*word == NULL)
-		    {
-		      __kill (pid, SIGKILL);
-		      __waitpid (pid, NULL, 0);
-		      __close (fildes[0]);
-		      return WRDE_NOSPACE;
-		    }
+		    goto no_space;
 		}
 	    }
 	}
@@ -1015,6 +1015,12 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
   __close (fildes[0]);
   return 0;
+
+no_space:
+  __kill (pid, SIGKILL);
+  __waitpid (pid, NULL, 0);
+  __close (fildes[0]);
+  return WRDE_NOSPACE;
 }
 
 static int
@@ -1331,6 +1337,8 @@ envsubst:
 			      &buffer[20], 10, 0);
 	  *word = w_addstr (*word, word_length, max_length, value);
 	  free (env);
+	  if (pattern)
+	    free (pattern);
 	  return *word ? 0 : WRDE_NOSPACE;
 	}
       /* Is it `$*' or `$@' (unquoted) ? */
@@ -1400,11 +1408,8 @@ envsubst:
   if (value == NULL && (flags & WRDE_UNDEF))
     {
       /* Variable not defined. */
-      if (pattern)
-	free (pattern);
-      if (env)
-	free (env);
-      return WRDE_BADVAL;
+      error = WRDE_BADVAL;
+      goto do_error;
     }
 
   if (action != ACT_NONE)
@@ -1490,8 +1495,14 @@ envsubst:
 		      {
 			char *newval;
 			newval = malloc (p - value + 1);
+
 			if (newval == NULL)
-			  goto no_space;
+			  {
+			    if (free_value)
+			      free (value);
+			    goto no_space;
+			  }
+
 			*(char *) __mempcpy (newval, value, p - value) = '\0';
 			if (free_value)
 			  free (value);
@@ -1510,8 +1521,14 @@ envsubst:
 		      {
 			char *newval;
 			newval = malloc (p - value + 1);
+
 			if (newval == NULL)
-			  goto no_space;
+			  {
+			    if (free_value)
+			      free (value);
+			    goto no_space;
+			  }
+
 			*(char *) __mempcpy (newval, value, p - value) = '\0';
 			if (free_value)
 			  free (value);
@@ -1568,11 +1585,9 @@ envsubst:
 	      error = WRDE_BADVAL;
 	    }
 
-	  free (env);
-	  free (pattern);
 	  if (free_value)
 	    free (value);
-	  return error;
+	  goto do_error;
 
 	case ACT_NULL_SUBST:
 	  if (value && *value)
@@ -1582,11 +1597,9 @@ envsubst:
 	  if (!colon_seen && value)
 	    {
 	      /* Substitute NULL */
-	      free (env);
-	      free (pattern);
 	      if (free_value)
 		free (value);
-	      return 0;
+	      goto success;
 	    }
 
 	subst_word:
@@ -1614,26 +1627,22 @@ envsubst:
 
 	    error = wordexp (pattern, &we, flags);
 	    if (error)
-	      {
-		free (env);
-		free (pattern);
-		return error;
-	      }
+	      goto do_error;
 
 	    /* Fingers crossed that the quotes worked.. */
 	    assert (!quoted || we.we_wordc == 1);
 
 	    /* Substitute */
 	    for (i = 0; i < we.we_wordc; ++i)
-	      if (w_addword (pwordexp, __strdup (we.we_wordv[i]))
-		  == WRDE_NOSPACE)
+	      if ((error = w_addword (pwordexp, __strdup (we.we_wordv[i])))
+		  != 0)
 		break;
 
 	    if (i < we.we_wordc)
 	      {
 		/* Ran out of space */
 		wordfree (&we);
-		goto no_space;
+		goto do_error;
 	      }
 
 	    if (action == ACT_NULL_ASSIGN)
@@ -1665,9 +1674,7 @@ envsubst:
 	      }
 
 	    wordfree (&we);
-	    free (env);
-	    free (pattern);
-	    return 0;
+	    goto success;
 	  }
 
 	case ACT_NONNULL_SUBST:
@@ -1678,11 +1685,9 @@ envsubst:
 	    goto subst_word;
 
 	  /* Substitute NULL */
-	  free (env);
-	  free (pattern);
 	  if (free_value)
 	    free (value);
-	  return 0;
+	  goto success;
 
 	case ACT_NULL_ASSIGN:
 	  if (value && *value)
@@ -1692,11 +1697,9 @@ envsubst:
 	  if (!colon_seen && value)
 	    {
 	      /* Substitute NULL */
-	      free (env);
-	      free (pattern);
 	      if (free_value)
 		free (value);
-	      return 0;
+	      goto success;
 	    }
 
 	  /* This checks for '=' so it knows to assign */
@@ -1707,8 +1710,8 @@ envsubst:
 	}
     }
 
-  free (env);
-  free (pattern);
+  free (env); env = NULL;
+  free (pattern); pattern = NULL;
 
   if (seen_hash)
     {
@@ -1811,23 +1814,25 @@ envsubst:
 
   return 0;
 
+success:
+  error = 0;
+  goto do_error;
+
 no_space:
-  if (env)
-    free (env);
-
-  if (pattern)
-    free (pattern);
-
-  return WRDE_NOSPACE;
+  error = WRDE_NOSPACE;
+  goto do_error;
 
 syntax:
+  error = WRDE_SYNTAX;
+
+do_error:
   if (env)
     free (env);
 
   if (pattern)
     free (pattern);
 
-  return WRDE_SYNTAX;
+  return error;
 }
 
 static int
@@ -2068,13 +2073,19 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
     {
       pwordexp->we_wordv = calloc (1 + pwordexp->we_offs, sizeof (char *));
       if (pwordexp->we_wordv == NULL)
-	return WRDE_NOSPACE;
+	{
+	  error = WRDE_NOSPACE;
+	  goto do_error;
+	}
     }
   else
     {
       pwordexp->we_wordv = calloc (1, sizeof (char *));
       if (pwordexp->we_wordv == NULL)
-	return WRDE_NOSPACE;
+	{
+	  error = WRDE_NOSPACE;
+	  goto do_error;
+	}
 
       pwordexp->we_offs = 0;
     }
@@ -2144,7 +2155,10 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 
       case '`':
 	if (flags & WRDE_NOCMD)
-	  return WRDE_CMDSUB;
+	  {
+	    error = WRDE_CMDSUB;
+	    goto do_error;
+	  }
 
 	++words_offset;
 	error = parse_backtick (&word, &word_length, &max_length, words,

@@ -1,3 +1,13 @@
+1998-09-13 19:25  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (parse_arith): Fix memory leaks.
+	(exec_comm): Likewise.
+	(parse_param): Likewise.
+	(wordexp): Likewise.
+	(exec_comm): Reduce number of function return points.
+	(parse_param): Likewise.
+	(wordexp): Likewise.
+
 1998-09-13 14:53  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: Field-splitting ':abc:' with IFS=: should
