@@ -1,3 +1,7 @@
+1998-10-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Add support for Cygnus GNUPro compilers.
+
 1998-10-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* stdio/stdio.h: Use __PMT instead of __P in typedefs.
