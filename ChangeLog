@@ -1,3 +1,8 @@
+2002-10-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (struct filebuf): For buf element to have the
+	alignment of ElfXX_Ehdr since this is what will be stored in it.
+
 2002-10-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/locarchive.c (add_alias): Change locrec_offset arg
@@ -47,7 +52,7 @@
 
 	* csu/gmon-start.c: Pretty printing.
 
-2002-10-19  Art Haas <ahaas@neosoft.com>
+2002-10-19  Art Haas  <ahaas@neosoft.com>
 
 	* configure.in: Replace AC_CONFIG_HEADER with AC_CONFIG_HEADERS,
 	add AC_HELP_STRING to all AC_ARG_WITH and AC_ARG_ENABLE macros,
