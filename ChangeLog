@@ -15,6 +15,18 @@
 	* sysdeps/unix/sysv/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list
 
+	* sysdeps/generic/strcpy.c (strcpy): Stifle unused-value warnings.
+	* sysdeps/unix/sysv/linux/execve.c (__execve): Add const
+	qualifiers.  Don't check NULL-terminator of argv & envp.
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Use
+	unbounded pointer type in word-size assertion.
+	* sysdeps/unix/sysv/linux/ptrace.c (ptrace): Add missing
+	cases to stifle warnings.
+
+	* libio/iofdopen.c (_IO_new_fdopen): Pass _IO_FILE_plus pointer to
+	_IO_file_attach.
+	* libio/iovdprintf.c (_IO_vdprintf): Likewise.
+
 2000-07-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_open.c (__gconv_open): Initialize the __data

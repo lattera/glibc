@@ -91,6 +91,16 @@ ptrace (enum __ptrace_request request, ...)
       (void) CHECK_1 ((int *) data);
 #endif
       break;
+
+    case PTRACE_TRACEME:
+    case PTRACE_CONT:
+    case PTRACE_KILL:
+    case PTRACE_SINGLESTEP:
+    case PTRACE_ATTACH:
+    case PTRACE_DETACH:
+    case PTRACE_SYSCALL:
+      /* Neither `data' nor `addr' needs any checks.  */
+      break;
     };
 #endif
 

@@ -79,7 +79,7 @@ get_proc_path (char *buffer, size_t bufsize)
     return result;
 
   /* Now store the copied value.  But do it atomically.  */
-  assert (sizeof (long int) == sizeof (void *));
+  assert (sizeof (long int) == sizeof (void *__unbounded));
   if (compare_and_swap ((long int *) &mount_proc, (long int) 0,
 			(long int) copy_result) == 0)
     /* Replacing the value failed.  This means another thread was

@@ -48,7 +48,7 @@ _IO_vdprintf (d, format, arg)
 #if  !_IO_UNIFIED_JUMPTABLES
   tmpfil.vtable = NULL;
 #endif
-  if (_IO_file_attach (&tmpfil.file, d) == NULL)
+  if (_IO_file_attach ((_IO_FILE *) &tmpfil, d) == NULL)
     {
       _IO_un_link (&tmpfil);
       return EOF;

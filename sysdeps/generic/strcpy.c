@@ -42,8 +42,8 @@ strcpy (dest, src)
   while (c != '\0');
 
   n = s - src;
-  CHECK_BOUNDS_HIGH (src + n);
-  CHECK_BOUNDS_HIGH (dest + n);
+  (void) CHECK_BOUNDS_HIGH (src + n);
+  (void) CHECK_BOUNDS_HIGH (dest + n);
 
   return dest;
 }
