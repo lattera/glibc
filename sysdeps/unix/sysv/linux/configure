@@ -130,7 +130,12 @@ if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   else
     libc_cv_slibdir="/lib"
   fi
-  libc_cv_sysconfdir="/etc"
+  # Allow the user to override the path with --sysconfdir
+  if test $sysconfdir = '${prefix}/etc'; then
+    libc_cv_sysconfdir=/etc
+  else
+    libc_cv_sysconfdir=$sysconfdir
+   fi
   libc_cv_rootsbindir="/sbin"
 fi
 
@@ -189,7 +194,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:193: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:198: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

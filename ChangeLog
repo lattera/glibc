@@ -1,5 +1,10 @@
 2000-06-14  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/configure.in: Set libc_cv_sysconfdir
+	depending on the configure option --sysconfdir.
+        Closes PR libc/1762.
+        Patch by Andreas Schwab <schwab@suse.de>.
+
 	* sysdeps/mips/dl-machine.h: Pass finalizer correctly to user
 	entry point.
 	Reported by Jim Pick <jim@jimpick.com>.
