@@ -64,9 +64,21 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
        until we tell it to.  */
     lll_lock (pd->lock);
 
+  /* One more thread.  We cannot have the thread do this itself, since it
+     might exist but not have been scheduled yet by the time we've returned
+     and need to check the value to behave correctly.  We must do it before
+     creating the thread, in case it does get scheduled first and then
+     might mistakenly think it was the only thread.  In the failure case,
+     we momentarily store a false value; this doesn't matter because there
+     is no kosher thing a signal handler interrupting us right here can do
+     that cares whether the thread count is correct.  */
+  atomic_increment (&__nptl_nthreads);
+
   if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
 		  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
     {
+      atomic_decrement (&__nptl_nthreads); /* Oops, we lied for a second.  */
+
       /* Failed.  If the thread is detached, remove the TCB here since
 	 the caller cannot do this.  The caller remembered the thread
 	 as detached and cannot reverify that it is not since it must

@@ -222,9 +222,6 @@ __free_tcb (struct pthread *pd)
 static int
 start_thread (void *arg)
 {
-  /* One more thread.  */
-  atomic_increment (&__nptl_nthreads);
-
   struct pthread *pd = (struct pthread *) arg;
 
 #if HP_TIMING_AVAIL
