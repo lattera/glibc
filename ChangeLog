@@ -1,3 +1,8 @@
+1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (regex_compile): Don't allow non-alphabet
+	characters in character set name.
+
 1998-03-25 00:00  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp.c (w_newword): New function.

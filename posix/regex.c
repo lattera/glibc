@@ -2168,7 +2168,7 @@ regex_compile (pattern, size, syntax, bufp)
                     for (;;)
                       {
                         PATFETCH (c);
-                        if (c == ':' || c == ']' || p == pend
+                        if (c == ':' || c == ']' || !isalpha (c) || p == pend
                             || c1 == CHAR_CLASS_MAX_LENGTH)
                           break;
                         str[c1++] = c;
