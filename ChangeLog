@@ -1,3 +1,10 @@
+1999-07-11  H.J. Lu  <hjl@gnu.org>
+
+	* nscd/grpcache.c: Add prefix "__" to get[a-z]*_r () to get
+	nscd's own strong version of the get[a-z]*_r function.
+	* nscd/hstcache.c: Likwise.
+	* nscd/pwdcache.c: Likwise.
+
 1999-07-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Recognize 2.95 as gcc version number.

@@ -305,8 +305,8 @@ addhstbyname (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (gethostbyname2_r (key, AF_INET, &resultbuf, buffer, buflen, &hst,
-			   &h_errno) != 0
+  while (__gethostbyname2_r (key, AF_INET, &resultbuf, buffer, buflen,
+  			     &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
@@ -349,8 +349,8 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer, buflen,
-			  &hst, &h_errno) != 0
+  while (__gethostbyaddr_r (key, INADDRSZ, AF_INET, &resultbuf, buffer,
+  			    buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
@@ -394,8 +394,8 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (gethostbyname2_r (key, AF_INET6, &resultbuf, buffer, buflen, &hst,
-			   &h_errno) != 0
+  while (__gethostbyname2_r (key, AF_INET6, &resultbuf, buffer, buflen,
+  			     &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {
@@ -438,8 +438,8 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf, buffer, buflen,
-			  &hst, &h_errno) != 0
+  while (__gethostbyaddr_r (key, IN6ADDRSZ, AF_INET6, &resultbuf,
+  			    buffer, buflen, &hst, &h_errno) != 0
 	 && h_errno == NETDB_INTERNAL
 	 && errno == ERANGE)
     {

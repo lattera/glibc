@@ -217,7 +217,7 @@ addgrbyname (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
+  while (__getgrnam_r (key, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
     {
       errno = 0;
@@ -256,7 +256,7 @@ addgrbygid (struct database *db, int fd, request_header *req,
       seteuid (uid);
     }
 
-  while (getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
+  while (__getgrgid_r (gid, &resultbuf, buffer, buflen, &grp) != 0
 	 && errno == ERANGE)
     {
       errno = 0;

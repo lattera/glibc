@@ -215,7 +215,7 @@ addpwbyname (struct database *db, int fd, request_header *req,
       seteuid (c_uid);
     }
 
-  while (getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
+  while (__getpwnam_r (key, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
     {
       errno = 0;
@@ -254,7 +254,7 @@ addpwbyuid (struct database *db, int fd, request_header *req,
       seteuid (c_uid);
     }
 
-  while (getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
+  while (__getpwuid_r (uid, &resultbuf, buffer, buflen, &pwd) != 0
 	 && errno == ERANGE)
     {
       errno = 0;
