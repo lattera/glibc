@@ -1,3 +1,19 @@
+2001-07-22  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Support SA_RESETHAND
+	and SA_NODEFER options.  Spurred to action by Igor Khavkine.
+
+	* sysdeps/generic/bits/sigaction.h [__USE_UNIX98 || __USE_MISC]
+	(SA_NODEFER, SA_RESETHAND): New macros, same bit values as FreeBSD.
+	[__USE_MISC] (SA_INTERRUPT): New macro, value 0.
+	[__USE_MISC] (SA_NOMASK, SA_ONESHOT, SA_STACK): New macros, aliases
+	as in other sysdeps versions of this file.
+
+        * sysdeps/generic/bits/sigaction.h (struct sigaction): Use a union
+	and provide sa_handler and sa_sigaction member names as macros, as
+	done in other sysdeps versions of this file.
+	Suggested by Igor Khavkine <i_khavki@alcor.concordia.ca>.
+
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex.c: Revamp memory allocation for WCHAR functions to

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,97,98,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,12 @@
 struct sigaction
   {
     /* Signal handler.  */
-    __sighandler_t sa_handler;
+    union {
+      __sighandler_t sa_handler;
+      void (*sa_sigaction) (int, siginfo_t *, void *);
+    } __sigaction_handler;
+# define sa_handler    __sigaction_handler.sa_handler
+# define sa_sigaction  __sigaction_handler.sa_sigaction
 
     /* Additional set of signals to be blocked.  */
     __sigset_t sa_mask;
@@ -43,8 +48,20 @@ struct sigaction
 #if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK	0x0001	/* Take signal on signal stack.  */
 # define SA_RESTART	0x0002	/* Restart syscall on signal return.  */
+# define SA_NODEFER	0x0010	/* Don't automatically block the signal when
+				    its handler is being executed.  */
+# define SA_RESETHAND	0x0004	/* Reset to SIG_DFL on entry to handler.  */
 #endif
 #define	SA_NOCLDSTOP	0x0008	/* Don't send SIGCHLD when children stop.  */
+
+#ifdef __USE_MISC
+# define SA_INTERRUPT	0	/* Historical no-op ("not SA_RESTART").  */
+
+/* Some aliases for the SA_ constants.  */
+# define SA_NOMASK    SA_NODEFER
+# define SA_ONESHOT   SA_RESETHAND
+# define SA_STACK     SA_ONSTACK
+#endif
 
 
 /* Values for the HOW argument to `sigprocmask'.  */
