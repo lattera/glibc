@@ -1,3 +1,9 @@
+2003-01-10  Guido Günther <agx@sigxcpu.org>
+
+	* sysdeps/unix/mips/fork.S: Add PSEUDO_END.
+	* sysdeps/unix/mips/brk.S: Likewise.
+	* sysdeps/unix/mips/pipe.S: Likewise.
+
 2003-01-10  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/getsysstats.c: New file.
