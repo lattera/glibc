@@ -1,3 +1,8 @@
+Mon Jan  8 17:43:23 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/Makefile (lib-modules): Renamed hash to locfile-hash.
+	* locale/hash.c: Renamed to locale/locfile-hash.c.
+
 Sat Jan  6 16:39:14 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makefile (subdirs): Added db.
