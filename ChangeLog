@@ -1,3 +1,12 @@
+2004-09-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (DO_INLINE_SYSCALL):
+	Renamed to ...
+	(DO_INLINE_SYSCALL_NCS): This.
+	(DO_INLINE_SYSCALL): New.
+	(INLINE_SYSCALL): Updated.
+	(INTERNAL_SYSCALL_NCS): Updated.
+
 2004-09-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/sprof.c (load_shobj): Add support for reading symbol table

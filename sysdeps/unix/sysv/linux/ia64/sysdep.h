@@ -199,7 +199,7 @@
 
 #ifdef IA64_USE_NEW_STUB
 
-# define DO_INLINE_SYSCALL(name, nr, args...)				      \
+# define DO_INLINE_SYSCALL_NCS(name, nr, args...)			      \
     LOAD_ARGS_##nr (args)						      \
     register long _r8 __asm ("r8");					      \
     register long _r10 __asm ("r10");					      \
@@ -221,7 +221,7 @@
 
 #else /* !IA64_USE_NEW_STUB */
 
-# define DO_INLINE_SYSCALL(name, nr, args...)			\
+# define DO_INLINE_SYSCALL_NCS(name, nr, args...)		\
     LOAD_ARGS_##nr (args)					\
     register long _r8 asm ("r8");				\
     register long _r10 asm ("r10");				\
@@ -237,10 +237,13 @@
 
 #endif /* !IA64_USE_NEW_STUB */
 
+#define DO_INLINE_SYSCALL(name, nr, args...)	\
+  DO_INLINE_SYSCALL_NCS (__NR_##name, nr, ##args)
+
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)	\
   ({						\
-    DO_INLINE_SYSCALL(__NR_##name, nr, args)	\
+    DO_INLINE_SYSCALL_NCS(__NR_##name, nr, args)\
     if (_r10 == -1)				\
       {						\
 	__set_errno (_retval);			\
@@ -254,7 +257,7 @@
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL_NCS(name, err, nr, args...)	\
   ({							\
-    DO_INLINE_SYSCALL(name, nr, args)			\
+    DO_INLINE_SYSCALL_NCS(name, nr, args)		\
     err = _r10;						\
     _retval; })
 #define INTERNAL_SYSCALL(name, err, nr, args...)	\
