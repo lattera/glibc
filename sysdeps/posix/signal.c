@@ -1,5 +1,5 @@
 /* BSD-like signal function.
-   Copyright (C) 1991, 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,1992,1996,1997,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <signal.h>
 
 
-sigset_t _sigintr;		/* Set by siginterrupt.  */
+sigset_t _sigintr attribute_hidden;		/* Set by siginterrupt.  */
 
 /* Set the handler for the signal SIG to HANDLER,
    returning the old handler, or SIG_ERR on error.  */

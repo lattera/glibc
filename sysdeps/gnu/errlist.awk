@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -106,6 +106,6 @@ END {
   print "#ifdef SYS_NERR_ALIAS";
   print "weak_alias (_sys_nerr, SYS_NERR_ALIAS)";
   print "#endif";
-  print "INTDEF2(SYS_ERRLIST, _sys_errlist)";
-  print "INTDEF2(SYS_NERR, _sys_nerr)";
+  print "INTVARDEF2(SYS_ERRLIST, _sys_errlist)";
+  print "INTVARDEF2(SYS_NERR, _sys_nerr)";
   }

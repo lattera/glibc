@@ -1,5 +1,14 @@
 2002-03-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/gnu/errlist.awk: Define _sys_errlist_internal and
+	_sys_nerr_internal with INTVARDEF2.
+	* include/libc-symbols.h (INTVARDEF2): New macro.
+	* include/stdio.h (_sys_errlist_internal): Declare as hidden.
+	(_sys_nerr_internal): Library.
+
+	* sysdeps/posix/signal.c (_sigintr): Define as hidden.
+	* sysdeps/posix/sigintr.c (_sigintr): Declare as hidden.
+
 	* stdio-common/tst-printf.sh: Adjust for last change in tst-printf.c.
 
 2002-03-13  Wolfram Gloger  <wg@malloc.de>

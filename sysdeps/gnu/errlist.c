@@ -845,5 +845,5 @@ weak_alias (_sys_errlist, SYS_ERRLIST_ALIAS)
 #ifdef SYS_NERR_ALIAS
 weak_alias (_sys_nerr, SYS_NERR_ALIAS)
 #endif
-INTDEF2(SYS_ERRLIST, _sys_errlist)
-INTDEF2(SYS_NERR, _sys_nerr)
+INTVARDEF2(SYS_ERRLIST, _sys_errlist)
+INTVARDEF2(SYS_NERR, _sys_nerr)
