@@ -35,7 +35,7 @@ __kill (pid_t pid, int sig)
   mach_port_t proc;
   struct hurd_userlink ulink;
 
-  inline void kill_pid (pid_t pid) /* Kill one PID.  */
+  void kill_pid (pid_t pid) /* Kill one PID.  */
     {
       /* SIGKILL is not delivered as a normal signal.
 	 Sending SIGKILL to a process means to terminate its task.  */
