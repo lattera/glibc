@@ -8,6 +8,8 @@
 	from latest Linux kernel.
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h (MADV_*): Likewise.
 
+	* misc/sys/mman.h: Add prototype for mincore.
+
 2000-03-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add oldsetrlimit
