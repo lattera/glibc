@@ -1,8 +1,10 @@
 2003-02-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_create.c: Include <atomic.h>.
 	* allocatestack.c (allocate_stack): Implement coloring of the
 	allocated stack memory.  Rename pagesize to pagesize_m1.  It's the
 	size minus one.  Adjust users.
+	* sysdeps/i386/i686/Makefile: New file.
 
 2003-02-02  Ulrich Drepper  <drepper@redhat.com>
 

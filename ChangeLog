@@ -1,3 +1,12 @@
+2003-01-31  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c:
+	Include kernel-features.h
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+
 2003-02-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/tls-macros.h [sparc] (TLS_LD, TLS_GD): Add "cc" clobbers.

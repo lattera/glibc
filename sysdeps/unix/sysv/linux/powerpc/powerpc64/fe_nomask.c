@@ -22,6 +22,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 #include <sys/prctl.h>
+#include "kernel-features.h"
 
 const fenv_t *
 __fe_nomask_env (void)
