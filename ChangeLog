@@ -1,5 +1,10 @@
 2002-08-21  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: Generate bits/syscall.h
+	with biarch support.
+
+2002-08-21  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/x86_64/sysdep.h (CALL_MCOUNT): Fix it.
 
 	* sysdeps/x86_64/Makefile (sysdep_routines): Add _mcount.
