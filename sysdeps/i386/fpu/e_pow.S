@@ -311,8 +311,7 @@ ENTRY(__ieee754_pow)
 	ret
 
 22:	fstp	%st(0)
-23:	popl	%eax
-	popl	%edx
+23:	addl	$8, %esp	// Don't use 2 x pop
 24:	fldl	MO(zero)
 	ret
 

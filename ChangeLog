@@ -1,3 +1,12 @@
+1999-07-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/e_pow.S: Use addl %esp instead of pop.
+	* sysdeps/i386/fpu/e_powf.S: Likewise.
+	* sysdeps/i386/fpu/e_powl.S: Likewise.  [PR libc/1213].
+
+	* sysdeps/generic/e_lgammal_r.c: Set *signgam to zero.
+	* sysdeps/generic/e_gammal_r.c: Likewise.  [PR libc/1212].
+
 1999-07-30  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (GET_NPROCS_PARSER): New

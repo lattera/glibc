@@ -303,7 +303,7 @@ ENTRY(__ieee754_powf)
 	ret
 
 22:	fstp	%st(0)
-23:	popl	%eax
+23:	addl	$4, %esp	// Don't use pop.
 24:	fldl	MO(zero)
 	ret
 
