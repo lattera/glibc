@@ -11,6 +11,7 @@ main (void)
   const unsigned char *extra;
   uint32_t nrules;
   char *ca;
+  union locale_data_value u;
 
   ca = setlocale (LC_ALL, "da_DK.ISO-8859-1");
   if (ca == NULL)
@@ -27,7 +28,8 @@ main (void)
       return 1;
     }
 
-  table_size = (size_t) nl_langinfo (_NL_COLLATE_SYMB_HASH_SIZEMB);
+  u.string = nl_langinfo (_NL_COLLATE_SYMB_HASH_SIZEMB);
+  table_size = u.word;
   symb_table = (const int32_t *) nl_langinfo (_NL_COLLATE_SYMB_TABLEMB);
   extra = (const unsigned char *) nl_langinfo (_NL_COLLATE_SYMB_EXTRAMB);
 
