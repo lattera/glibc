@@ -1,5 +1,9 @@
 2002-10-08  Roland McGrath  <roland@redhat.com>
 
+	* configure.in (aux_missing warning): Change "too old" to
+	"incompatible versions", since for autoconf it's "too new" right now.
+	* configure: Regenerated.
+
 	* configure.in (AUTOCONF): New check to set it.  Set to "no" if the
 	one found doesn't work on our configure.in.
 	* configure: Regenerated.

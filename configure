@@ -2204,7 +2204,7 @@ fi
 #   [2.10.[1-9]* | 2.1[1-9]* | 2.9-ia64-*], AS=: critic_missing=t)
 
 test -n "$aux_missing" && echo "configure: warning: 
-*** These auxiliary programs are missing or too old:$aux_missing
+*** These auxiliary programs are missing or incompatible versions:$aux_missing
 *** some features will be disabled.
 *** Check the INSTALL file for required versions." 1>&2
 
