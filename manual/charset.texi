@@ -628,8 +628,8 @@ string pointed to by @var{pwc}.  The conversion is performed according
 to the locale currently selected for the @code{LC_CTYPE} category.  If
 the conversion for the character set used in the locale requires a state
 the multibyte string is interpreted in the state represented by the
-object pointed to by @var{ps}.  If @var{ps} is a null pointer an static,
-internal state variable used only by the @code{mbrtowc} variable is
+object pointed to by @var{ps}.  If @var{ps} is a null pointer, a static,
+internal state variable used only by the @code{mbrtowc} function is
 used.
 
 If the next multibyte character corresponds to the NUL wide character
@@ -729,7 +729,7 @@ Otherwise the multibyte character sequence is invalid and the return
 value is @code{(size_t) -1}.
 
 The multibyte sequence is interpreted in the state represented by the
-object pointer to by @var{ps}.  If @var{ps} is a null pointer an state
+object pointed to by @var{ps}.  If @var{ps} is a null pointer, a state
 object local to @code{mbrlen} is used.
 
 @pindex wchar.h
