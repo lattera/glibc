@@ -1511,9 +1511,9 @@ run job at %I %p,%B %dnd
 As one can see the template list can contain very specific strings like
 @code{run job at %I %p,%B %dnd}.  Using the above list of templates and
 assuming the current time is Mon Sep 22 12:19:47 EDT 1986 we can get the
-The results for the given input.
+following results for the given input.
 
-@multitable {xxxxxxxxxxxx} {xxxxxxxx} {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+@multitable {xxxxxxxxxxxx} {xxxxxxxxxx} {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
 @item        Mon @tab       %a @tab    Mon Sep 22 12:19:47 EDT 1986
 @item        Sun @tab       %a @tab    Sun Sep 28 12:19:47 EDT 1986
 @item        Fri @tab       %a @tab    Fri Sep 26 12:19:47 EDT 1986
@@ -1543,7 +1543,7 @@ description above for a list of the possible error values.
 @emph{Warning:} The @code{getdate} function should @emph{never} be
 used in SUID-programs.  The reason is obvious: using the
 @code{DATEMSK} environment variable one can get the function to open
-any arbitrary file and changes are high that with some bogus input
+any arbitrary file and chances are high that with some bogus input
 (such as a binary file) the program will crash.
 @end deftypefun
 
