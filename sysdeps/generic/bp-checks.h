@@ -1,9 +1,7 @@
 /* Bounded-pointer checking macros for C.
    Copyright (C) 2000 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
    Contributed by Greg McGary <greg@mcgary.org>
-
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in the GNU MP Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
