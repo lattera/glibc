@@ -9,7 +9,11 @@ Please send GNU C library bug reports using the `glibcbug' script to
 
 Version 2.1.1
 
-* New ISO C 9x function _exit, imaxabs, and imaxdiv are added.
+* New ISO C 9x function _Exit, imaxabs, and imaxdiv are added.
+
+* New xdr functions are added.
+
+* Fixed a number of bugs and incompatibilities with glibc 2.0.
 
 Version 2.1
 

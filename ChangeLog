@@ -1,3 +1,17 @@
+1999-04-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* libio/obprintf.c (_IO_obstack_overflow): Put the write end at
+	the real end of the chunk, not some random point inbetween.
+	(_IO_obstack_xsputn): Likewise.  Actually copy the data into the
+	obstack when growing.  Use fast version of obstack_blank when
+	shrinking.
+	(struct _IO_obstack_file): Use _IO_FILE_plus instead of explicitly
+	allocating the vtable pointer.
+	(_IO_obstack_vprintf): Adjust for above change and avoid
+	unnecessary casts.  Use fast version of obstack_blank when
+	shrinking.
+	Fixes PR libc/1075.
+
 1999-04-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Fix typo.  Add UJIS alias.
