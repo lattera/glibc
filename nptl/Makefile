@@ -312,7 +312,7 @@ endif
 extra-objs += $(crti-objs) $(crtn-objs)
 omit-deps += crti crtn
 
-CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
+CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions $(fno-unit-at-a-time)
 endif
 
 CFLAGS-flockfile.c = -D_IO_MTSAFE_IO
