@@ -2322,7 +2322,7 @@ This function is not implemented.
 @end table
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} this
-function is in fact @code{aio_return64} since the LFS interface
+function is in fact @code{aio_fsync64} since the LFS interface
 transparently replaces the normal implementation.
 @end deftypefun
 
