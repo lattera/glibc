@@ -1,5 +1,8 @@
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/zh_CN: Update for new format.
+	Patch by Yong Li <yong.li@asu.edu>.
+
 	* tst-langinfo.c: Add copyright text.
 
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>

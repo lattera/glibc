@@ -1,896 +1,496 @@
 comment_char %
 escape_char  /
 %
-% Chinese language locale for Peoples Republic of China
-% Source: RAP and GB2312-1980
-% The work is based on Keld Simonsen's locale definition
-% file for zh_CN revision 4.3 and ja_JP revision 2.2
+% Chinese language locale for the Peoples Republic of China
 %
-% Contact: ha_shao
-% Email: hashao@china.com
-% Language: zh
-% Territory: CN
-% Revision: 1.0
-% Date: 1999-04-28
-% Users: general
-% Repertoiremap: mnemonic,ds
-% Charset: GB_2312-80
-% Distribution and use is free, also
-% for commercial purposes.
+% This work is based on ISO PDTR 14652, Unicode 3.0, locale definition
+% file for zh_CN revision 1.0 (hashao@china.com, 1999-04-28) and
+% charmap file for GBK version 1.0 (sean.chen@turbolinux.com).
+%
+% The file is designed to work with multiple charsets.  To ease the
+% maintance and adding support for new charsets, all characters are
+% in UCS notation and presented in Unicode order.
+%
+% Changelog:
+% Tue Jul 25 2000 Yong Li <rigel863@hotmail.com>
+% - first version for glibc 2.2
 
+LC_IDENTIFICATION
+title      "Chinese locale for Peoples Republic of China"
+source     ""
+address    ""
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "zh"
+territory  "CN"
+revision   "0.1"
+date       "2000-07-25"
+%
+category  "zh_CN:2000";LC_IDENTIFICATION
+category  "zh_CN:2000";LC_CTYPE
+category  "zh_CN:2000";LC_COLLATE
+category  "zh_CN:2000";LC_TIME
+category  "zh_CN:2000";LC_NUMERIC
+category  "zh_CN:2000";LC_MONETARY
+category  "zh_CN:2000";LC_MESSAGES
+category  "zh_CN:2000";LC_PAPER
+category  "zh_CN:2000";LC_NAME
+category  "zh_CN:2000";LC_ADDRESS
+category  "zh_CN:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
 
 
 LC_CTYPE
 
-% The following is the GB2312-1980 Locale LC_CTYPE.
-% "alpha" is by default "upper" and "lower"
-% "alnum" is by definiton "alpha" and "digit"
-% "print" is by default "alnum", "punct" and the <space> character
-% "graph" is by default "alnum" and "punct"
-%
-%
-% upper class:
-%       alphabets in portable character set,
-%       Roman letters in GB2312-1980,
-%       Greek letters in GB2312-1980,
-%       Russian letters in GB2312-1980.
+upper /
+% Basic Latin/
+	<U0041>..<U005A>;/
+% Fullwidth Latin letters/
+	<UFF21>..<UFF3A>;/
+% Greek/
+	<U0391>..<U03A1>;<U03A3>..<U03A9>;/
+% Cyrillic/
+	<U0401>;<U0410>..<U042F>
 
-upper   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
-        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;/
-        <c0333>....<c0358>;/
-        <c0601>....<c0624>;/
-        <c0701>....<c0733>
+lower /
+% Basic Latin/
+	<U0061>..<U007A>;/
+% Fullwidth Latin letters/
+	<UFF41>..<UFF5A>;/
+% Greek/
+	<U03B1>..<U03C1>;<U03C3>..<U03C9>;/
+% Cyrillic/
+	<U0430>..<U044F>;<U0451>;/
+% Latin-1/
+	<U00E0>;<U00E1>;<U00E8>;<U00E9>;<U00EA>;<U00EC>;<U00ED>;<U00F2>;/
+	<U00F3>;<U00F9>;<U00FA>;<U00FC>;/
+% Latin Extensions/
+	<U0101>;<U0113>;<U011B>;<U012B>;<U0144>;<U0148>;<U014D>;<U016B>;/
+	<U01CE>;<U01D0>;<U01D2>;<U01D4>;<U01D6>;<U01D8>;<U01DA>;<U01DC>;/
+	<U0251>;<U0261>
 
-%
-% lower class:
-%       Alphabets in portable character set,
-%       Roman letters in GB2312-1980,
-%       Greek letters in GB2312-1980,
-%       Russian letters in GB2312-1980.
+alpha 	<U0041>..<U005A>;<U0061>..<U007A>;/
+	<UFF21>..<UFF3A>;<UFF41>..<UFF5A>;/
+	<U0391>..<U03A1>;<U03A3>..<U03A9>;/
+	<U03B1>..<U03C1>;<U03C3>..<U03C9>;/
+	<U0401>;<U0410>..<U042F>;<U0430>..<U044F>;<U0451>;/
+	<U0101>;<U00E1>;<U01CE>;<U00E0>;<U0113>;<U00E9>;<U011B>;<U00E8>;/
+	<U012B>;<U00ED>;<U01D0>;<U00EC>;<U014D>;<U00F3>;<U01D2>;<U00F2>;/
+	<U016B>;<U00FA>;<U01D4>;<U00F9>;<U01D6>;<U01D8>;<U01DA>;<U01DC>;/
+	<U00FC>;<U00EA>;<U0144>;<U0148>;<U0251>;<U0261>;/
+% Roman Numbers/
+	<U2160>..<U216B>;<U2170>..<U2179>;/
+% Hiragana/
+	<U3041>..<U3093>;<U309B>;<U309C>;<U309D>;<U309E>;/
+% Katakana/
+	<U30A1>..<U30F6>;<U30FC>;<U30FD>;<U30FE>;/
+% Bopomofo/
+	<U3105>..<U3129>
 
-lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;/
-        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;/
-        <c0365>....<c0390>;/
-        <c0633>....<c0656>;/
-        <c0749>....<c0781>
+digit   <U0030>..<U0039>;/
+% Fullwidth digits/
+	<UFF10>..<UFF19>
 
-%
-% alpha class (default):
-% It includes, by default, all the characters defined to be in
-% upper or lower classes.
-%
+outdigit <U0030>..<U0039>
 
-%
-% digit class
-%
-digit   <zero>;<one>;<two>;<three>;<four>;/
-        <five>;<six>;<seven>;<eight>;<nine>
+xdigit  <U0030>..<U0039>;/
+        <U0041>..<U0046>;/
+        <U0061>..<U0066>
 
-%
-% space class:
-%       Space characters defined in ISO DIS 9945-2 "POSIX" locale
-%       Space in GB2312-1980
-%
+% blank: space, tab, ideographic space
+blank   <U0020>;<U0009>;<U3000>
 
-space   <tab>;<newline>;<vertical-tab>;<form-feed>;/
-        <carriage-return>;<space>;/
-        <c0101>
+% space: tab, newline, vertical-tab, form-feed, carriage-return, space
+space   <U0009>;<U000A>;<U000B>;<U000C>;<U000D>;<U0020>;<U3000>
 
-%
-% cntrl class: C0 and C1 control characters as per ISO 6429.
-% SS2 and SS3 may be excluded if an acompanying charmap uses them
-% as single shifts to invoke graphic characters (as in EUC).
-% Control characters in udc or vdc may be added.
-%
+% cntrl: all C0 and C1 control characters
+cntrl   <U0000>..<U001F>;<U007F>..<U009F>
 
+punct /
+% Based on ISO14652 "i18n" with following modifications:/
+%     1. remove digits and alphabets from full-width forms/
+%     2. add box drawing elements/
+% Basic Latin/
+	<U0021>..<U002F>;<U003A>..<U0040>;<U005B>..<U0060>;<U007B>..<U007E>;/
+% Latin-1 Supplement/
+	<U00A4>;<U00A7>;<U00A8>;<U00B0>;<U00B1>;<U00B7>;<U00D7>;/
+% General Punctuation/
+	<U2010>;<U2013>..<U2016>;<U2018>;<U2019>;<U201C>;<U201D>;<U2025>;/
+	<U2026>;<U2030>;<U2032>;<U2033>;<U2035>;<U203B>;/
+% Letterlike Symbols/
+	<U2103>;<U2105>;<U2109>;<U2116>;<U2121>;/
+% Mathematical Operators and Miscellaneous Technical/
+	<U2208>;<U220F>;<U2211>;<U2215>;<U221A>;<U221D>;<U221E>;<U221F>;/
+	<U2220>;<U2223>;<U2225>;<U2227>;<U2228>;<U2229>;<U222A>;<U222B>;/
+	<U222E>;<U2234>;<U2235>;<U2236>;<U2237>;<U223D>;<U2248>;<U224C>;/
+	<U2252>;<U2260>;<U2261>;<U2264>;<U2265>;<U2266>;<U2267>;<U226E>;/
+	<U226F>;<U2295>;<U2299>;<U22A5>;<U22BF>;/
+	<U2312>;/
+% Box Drawing/
+        <U2500>..<U254B>;<U2550>..<U2573>;/
+% Block Elements/
+	<U2581>..<U258F>;<U2593>;<U2594>;<U2595>;/
+% Geometric Shapes/
+	<U25A0>;<U25A1>;<U25B2>;<U25B3>;<U25BC>;<U25BD>;<U25C6>;<U25C7>;/
+	<U25CB>;<U25CE>;<U25CF>;<U25E2>;<U25E3>;<U25E4>;<U25E5>;/
+% Miscellaneous Symbols/
+	<U2605>;<U2606>;<U2609>;<U2640>;<U2642>;/
+% CJK Symbols and Punctuation/
+	<U3001>;<U3002>;<U3003>;<U3005>..<U3017>;<U301D>;<U301E>;/
+% Enclosed CJK Letters and Months/
+	<U3220>..<U3229>;<U3231>;<U32A3>;/
+% CJK Compatibility/
+	<U338E>;<U338F>;<U339C>;<U339D>;<U339E>;<U33A1>;<U33C4>;<U33CE>;/
+	<U33D1>;<U33D2>;<U33D5>;/
+% CJK Compatibility Forms/
+	<UFE49>..<UFE4F>;/
+% Small Form Variants/
+	<UFE50>;<UFE51>;<UFE52>;<UFE54>;<UFE55>;<UFE56>;<UFE57>;<UFE59>;/
+	<UFE5A>..<UFE66>;<UFE68>;<UFE69>;<UFE6A>;<UFE6B>;/
+% Fullwidth Forms/
+	<UFF01>..<UFF0F>;<UFF1A>..<UFF20>;<UFF3B>..<UFF40>;<UFF5B>..<UFF5E>;/
+	<UFFE0>..<UFFE5>
 
-cntrl   <alert>;<backspace>;<tab>;<newline>;<vertical-tab>;/
-        <form-feed>;<carriage-return>;/
-        <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;<SO>;/
-        <SI>;<DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;/
-        <ETB>;<CAN>;<EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;/
-        <IS1>;<DEL>;/
-        <PA>;<HO>;<BH>;<NH>;<IN>;<NL>;<SA>;<ES>;<HS>;<HJ>;/
-        <VS>;<PD>;<PU>;<RI>;<S2>;<S3>;/
-        <DC>;<P1>;<P2>;<TS>;<CC>;<MW>;<SG>;<EG>;/
-        <SS>;<GC>;<SC>;<CI>;<ST>;<OC>;<PM>;<AC>;<NS>
+graph /
+% Basic Latin/
+	<U0021>..<U007E>;/
+% Latin-1 Supplement/
+	<U00A4>;<U00A7>;<U00A8>;<U00B0>;<U00B1>;<U00B7>;<U00D7>;<U00E0>;/
+	<U00E1>;<U00E8>;<U00E9>;<U00EA>;<U00EC>;<U00ED>;<U00F2>;<U00F3>;/
+	<U00F7>;<U00F9>;<U00FA>;<U00FC>;/
+% Latin Extensions/
+	<U0101>;<U0113>;<U011B>;<U012B>;<U0144>;<U0148>;<U014D>;<U016B>;/
+	<U01CE>;<U01D0>;<U01D2>;<U01D4>;<U01D6>;<U01D8>;<U01DA>;<U01DC>;/
+	<U0251>;<U0261>;/
+% Mandarin tone sympols/
+	<U02C7>;<U02C9>;<U02CA>;<U02CB>;<U02D9>;/
+% Greek/
+	<U0391>..<U03A1>;<U03A3>..<U03A9>;/
+	<U03B1>..<U03C1>;<U03C3>..<U03C9>;/
+% Cyrillic/
+	<U0401>;<U0410>..<U044F>;<U0451>;/
+% General Punctuation/
+	<U2010>;<U2013>..<U2016>;<U2018>;<U2019>;<U201C>;<U201D>;<U2025>;/
+	<U2026>;<U2030>;<U2032>;<U2033>;<U2035>;<U203B>;/
+% Letterlike Symbols/
+	<U2103>;<U2105>;<U2109>;<U2116>;<U2121>;/
+% Roman Numbers/
+	<U2160>..<U216B>;<U2170>..<U2179>;/
+% Arrows/
+	<U2190>..<U2193>;<U2196>..<U2199>;/
+% Mathematical Operators and Miscellaneous Technical/
+	<U2208>;<U220F>;<U2211>;<U2215>;<U221A>;<U221D>;<U221E>;<U221F>;/
+	<U2220>;<U2223>;<U2225>;<U2227>;<U2228>;<U2229>;<U222A>;<U222B>;/
+	<U222E>;<U2234>;<U2235>;<U2236>;<U2237>;<U223D>;<U2248>;<U224C>;/
+	<U2252>;<U2260>;<U2261>;<U2264>;<U2265>;<U2266>;<U2267>;<U226E>;/
+	<U226F>;<U2295>;<U2299>;<U22A5>;<U22BF>;/
+	<U2312>;/
+% Enclosed Alphanumerics/
+	<U2460>..<U2469>;<U2474>..<U249B>;/
+% Box Drawing/
+	<U2500>..<U254B>;<U2550>..<U2573>;/
+% Block Elements/
+	<U2581>..<U258F>;<U2593>;<U2594>;<U2595>;/
+% Geometric Shapes/
+	<U25A0>;<U25A1>;<U25B2>;<U25B3>;<U25BC>;<U25BD>;<U25C6>;<U25C7>;/
+	<U25CB>;<U25CE>;<U25CF>;<U25E2>;<U25E3>;<U25E4>;<U25E5>;/
+% Miscellaneous Symbols/
+	<U2605>;<U2606>;<U2609>;<U2640>;<U2642>;/
+% CJK Symbols and Punctuation/
+	<U3001>;<U3002>;<U3003>;<U3005>..<U3017>;<U301D>;<U301E>;/
+	<U3021>..<U3029>;/
+% Hiragana/
+	<U3041>..<U3093>;<U309B>;<U309C>;<U309D>;<U309E>;/
+% Katakana/
+	<U30A1>..<U30F6>;<U30FC>;<U30FD>;<U30FE>;/
+% Bopomofo/
+	<U3105>..<U3129>;/
+% Enclosed CJK Letters and Months/
+	<U3220>..<U3229>;<U3231>;<U32A3>;/
+% CJK Compatibility/
+	<U338E>;<U338F>;<U339C>;<U339D>;<U339E>;<U33A1>;<U33C4>;<U33CE>;/
+	<U33D1>;<U33D2>;<U33D5>;/
+% Private/
+% symbols/
+	<UE7C7>;<UE7C8>;<UE7E7>..<UE7F3>;/
+% hanzi/
+	<UE815>..<UE864>;/
+% CJK Compatibility Forms/
+	<UFE30>;<UFE31>;<UFE33>..<UFE44>;<UFE49>..<UFE4F>;/
+% Small Form Variants/
+	<UFE50>;<UFE51>;<UFE52>;<UFE54>;<UFE55>;<UFE56>;<UFE57>;<UFE59>;/
+	<UFE5A>..<UFE66>;<UFE68>;<UFE69>;<UFE6A>;<UFE6B>;/
+% Fullwidth Forms/
+	<UFF01>..<UFF5E>;<UFFE0>..<UFFE5>;/
+% CJK Unified Ideographs Extension A/
+% This block is added in Unicode 3 and currently not in any GB encoding./
+% However, the forthcoming GB18030 might include this./
+%	<U3400>..<U4DBF>;/
+% CJK Unified Ideographs/
+	<U4E00>..<U9FA5>;/
+% CJK Compatibility Ideographs/
+	<UF92C>;<UF979>;<UF995>;<UF9E7>;<UF9F1>;<UFA0C>;<UFA0D>;<UFA0E>;/
+	<UFA0F>;<UFA11>;<UFA13>;<UFA14>;<UFA18>;<UFA1F>;<UFA20>;<UFA21>;/
+	<UFA23>;<UFA24>;<UFA27>;<UFA28>;<UFA29>
 
-%
-% punct class:
-% Special characters in udc or vdc may be added as long as they
-% do not belong to classes cntrl, alpha, digit.
-%
+%print: graph + <space>
+print  	<U0020>..<U007E>;/
+	<U00A4>;<U00A7>;<U00A8>;<U00B0>;<U00B1>;<U00B7>;<U00D7>;<U00E0>;/
+	<U00E1>;<U00E8>;<U00E9>;<U00EA>;<U00EC>;<U00ED>;<U00F2>;<U00F3>;/
+	<U00F7>;<U00F9>;<U00FA>;<U00FC>;/
+	<U0101>;<U0113>;<U011B>;<U012B>;<U0144>;<U0148>;<U014D>;<U016B>;/
+	<U01CE>;<U01D0>;<U01D2>;<U01D4>;<U01D6>;<U01D8>;<U01DA>;<U01DC>;/
+	<U0251>;<U0261>;/
+	<U02C7>;<U02C9>;<U02CA>;<U02CB>;<U02D9>;/
+	<U0391>..<U03A1>;<U03A3>..<U03A9>;/
+	<U03B1>..<U03C1>;<U03C3>..<U03C9>;/
+	<U0401>;<U0410>..<U044F>;<U0451>;/
+	<U2010>;<U2013>..<U2016>;<U2018>;<U2019>;<U201C>;<U201D>;<U2025>;/
+	<U2026>;<U2030>;<U2032>;<U2033>;<U2035>;<U203B>;/
+	<U2103>;<U2105>;<U2109>;<U2116>;<U2121>;/
+	<U2160>..<U216B>;<U2170>..<U2179>;/
+	<U2190>..<U2193>;<U2196>..<U2199>;/
+	<U2208>;<U220F>;<U2211>;<U2215>;<U221A>;<U221D>;<U221E>;<U221F>;/
+	<U2220>;<U2223>;<U2225>;<U2227>;<U2228>;<U2229>;<U222A>;<U222B>;/
+	<U222E>;<U2234>;<U2235>;<U2236>;<U2237>;<U223D>;<U2248>;<U224C>;/
+	<U2252>;<U2260>;<U2261>;<U2264>;<U2265>;<U2266>;<U2267>;<U226E>;/
+	<U226F>;<U2295>;<U2299>;<U22A5>;<U22BF>;/
+	<U2312>;/
+	<U2460>..<U2469>;<U2474>..<U249B>;/
+	<U2581>..<U258F>;<U2593>;<U2594>;<U2595>;/
+	<U25A0>;<U25A1>;<U25B2>;<U25B3>;<U25BC>;<U25BD>;<U25C6>;<U25C7>;/
+	<U25CB>;<U25CE>;<U25CF>;<U25E2>;<U25E3>;<U25E4>;<U25E5>;/
+	<U2605>;<U2606>;<U2609>;<U2640>;<U2642>;/
+	<U3000>;<U3001>;<U3002>;<U3003>;<U3005>..<U3017>;<U301D>;<U301E>;/
+	<U3021>..<U3029>;/
+	<U3041>..<U3093>;<U309B>;<U309C>;<U309D>;<U309E>;/
+	<U30A1>..<U30F6>;<U30FC>;<U30FD>;<U30FE>;/
+	<U3105>..<U3129>;/
+	<U3220>..<U3229>;<U3231>;<U32A3>;/
+	<U338E>;<U338F>;<U339C>;<U339D>;<U339E>;<U33A1>;<U33C4>;<U33CE>;/
+	<U33D1>;<U33D2>;<U33D5>;/
+	<UE7C7>;<UE7C8>;<UE7E7>..<UE7F3>;/
+	<UE815>..<UE864>;/
+	<UFE30>;<UFE31>;<UFE33>..<UFE44>;<UFE49>..<UFE4F>;/
+	<UFE50>;<UFE51>;<UFE52>;<UFE54>;<UFE55>;<UFE56>;<UFE57>;<UFE59>;/
+	<UFE5A>..<UFE66>;<UFE68>;<UFE69>;<UFE6A>;<UFE6B>;/
+	<UFF01>..<UFF5E>;<UFFE0>..<UFFE5>;/
+%	<U3400>..<U4DBF>;/
+	<U4E00>..<U9FA5>;/
+	<UF92C>;<UF979>;<UF995>;<UF9E7>;<UF9F1>;<UFA0C>;<UFA0D>;<UFA0E>;/
+	<UFA0F>;<UFA11>;<UFA13>;<UFA14>;<UFA18>;<UFA1F>;<UFA20>;<UFA21>;/
+	<UFA23>;<UFA24>;<UFA27>;<UFA28>;<UFA29>
 
-punct   <exclamation-mark>;<quotation-mark>;<number-sign>;/
-        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;/
-        <left-parenthesis>;<right-parenthesis>;<asterisk>;/
-        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;/
-        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;/
-        <greater-than-sign>;<question-mark>;<commercial-at>;/
-        <left-square-bracket>;<backslash>;<right-square-bracket>;/
-        <circumflex>;<underscore>;<grave-accent>;/
-        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;/
-        <c0102>....<c0110>;/
-        <c0113>....<c0131>;/
-        <c0301>;<c0312>;<c0326>;<c0327>;<c0311>
+toupper (<U0061>,<U0041>);(<U0062>,<U0042>);(<U0063>,<U0043>);/
+        (<U0064>,<U0044>);(<U0065>,<U0045>);(<U0066>,<U0046>);/
+        (<U0067>,<U0047>);(<U0068>,<U0048>);(<U0069>,<U0049>);/
+        (<U006A>,<U004A>);(<U006B>,<U004B>);(<U006C>,<U004C>);/
+        (<U006D>,<U004D>);(<U006E>,<U004E>);(<U006F>,<U004F>);/
+        (<U0070>,<U0050>);(<U0071>,<U0051>);(<U0072>,<U0052>);/
+        (<U0073>,<U0053>);(<U0074>,<U0054>);(<U0075>,<U0055>);/
+        (<U0076>,<U0056>);(<U0077>,<U0057>);(<U0078>,<U0058>);/
+        (<U0079>,<U0059>);(<U007A>,<U005A>);/
+        (<UFF41>,<UFF21>);(<UFF42>,<UFF22>);(<UFF43>,<UFF23>);/
+        (<UFF44>,<UFF24>);(<UFF45>,<UFF25>);(<UFF46>,<UFF26>);/
+        (<UFF47>,<UFF27>);(<UFF48>,<UFF28>);(<UFF49>,<UFF29>);/
+        (<UFF4A>,<UFF2A>);(<UFF4B>,<UFF2B>);(<UFF4C>,<UFF2C>);/
+        (<UFF4D>,<UFF2D>);(<UFF4E>,<UFF2E>);(<UFF4F>,<UFF2F>);/
+        (<UFF50>,<UFF30>);(<UFF51>,<UFF31>);(<UFF52>,<UFF32>);/
+        (<UFF53>,<UFF33>);(<UFF54>,<UFF34>);(<UFF55>,<UFF35>);/
+        (<UFF56>,<UFF36>);(<UFF57>,<UFF37>);(<UFF58>,<UFF38>);/
+        (<UFF59>,<UFF39>);(<UFF5A>,<UFF3A>);/
+        (<U03B1>,<U0391>);(<U03B2>,<U0392>);(<U03B3>,<U0393>);/
+        (<U03B4>,<U0394>);(<U03B5>,<U0395>);(<U03B6>,<U0396>);/
+        (<U03B7>,<U0397>);(<U03B8>,<U0398>);(<U03B9>,<U0399>);/
+        (<U03BA>,<U039A>);(<U03BB>,<U039B>);(<U03BC>,<U039C>);/
+        (<U03BD>,<U039D>);(<U03BE>,<U039E>);(<U03BF>,<U039F>);/
+        (<U03C0>,<U03A0>);(<U03C1>,<U03A1>);(<U03C3>,<U03A3>);/
+        (<U03C4>,<U03A4>);(<U03C5>,<U03A5>);(<U03C6>,<U03A6>);/
+        (<U03C7>,<U03A7>);(<U03C8>,<U03A8>);(<U03C9>,<U03A9>);/
+        (<U0430>,<U0410>);(<U0431>,<U0411>);(<U0432>,<U0412>);/
+        (<U0433>,<U0413>);(<U0434>,<U0414>);(<U0435>,<U0415>);/
+        (<U0451>,<U0401>);(<U0436>,<U0416>);(<U0437>,<U0417>);/
+        (<U0438>,<U0418>);(<U0439>,<U0419>);(<U043A>,<U041A>);/
+        (<U043B>,<U041B>);(<U043C>,<U041C>);(<U043D>,<U041D>);/
+        (<U043E>,<U041E>);(<U043F>,<U041F>);(<U0440>,<U0420>);/
+        (<U0441>,<U0421>);(<U0442>,<U0422>);(<U0443>,<U0423>);/
+        (<U0444>,<U0424>);(<U0445>,<U0425>);(<U0446>,<U0426>);/
+        (<U0447>,<U0427>);(<U0448>,<U0428>);(<U0449>,<U0429>);/
+        (<U044A>,<U042A>);(<U044B>,<U042B>);(<U044C>,<U042C>);/
+        (<U044D>,<U042D>);(<U044E>,<U042E>);(<U044F>,<U042F>)
 
-%
-% graph class:
-%       upper, lower, alpha, digit, xdigit
-%       GB2312-1980 printable characters
-%       Printable characters in udc or vdc classes may be added.
+tolower (<U0041>,<U0061>);(<U0042>,<U0062>);(<U0043>,<U0063>);/
+        (<U0044>,<U0064>);(<U0045>,<U0065>);(<U0046>,<U0066>);/
+        (<U0047>,<U0067>);(<U0048>,<U0068>);(<U0049>,<U0069>);/
+        (<U004A>,<U006A>);(<U004B>,<U006B>);(<U004C>,<U006C>);/
+        (<U004D>,<U006D>);(<U004E>,<U006E>);(<U004F>,<U006F>);/
+        (<U0050>,<U0070>);(<U0051>,<U0071>);(<U0052>,<U0072>);/
+        (<U0053>,<U0073>);(<U0054>,<U0074>);(<U0055>,<U0075>);/
+        (<U0056>,<U0076>);(<U0057>,<U0077>);(<U0058>,<U0078>);/
+        (<U0059>,<U0079>);(<U005A>,<U007A>);/
+        (<UFF21>,<UFF41>);(<UFF22>,<UFF42>);(<UFF23>,<UFF43>);/
+        (<UFF24>,<UFF44>);(<UFF25>,<UFF45>);(<UFF26>,<UFF46>);/
+        (<UFF27>,<UFF47>);(<UFF28>,<UFF48>);(<UFF29>,<UFF49>);/
+        (<UFF2A>,<UFF4A>);(<UFF2B>,<UFF4B>);(<UFF2C>,<UFF4C>);/
+        (<UFF2D>,<UFF4D>);(<UFF2E>,<UFF4E>);(<UFF2F>,<UFF4F>);/
+        (<UFF30>,<UFF50>);(<UFF31>,<UFF51>);(<UFF32>,<UFF52>);/
+        (<UFF33>,<UFF53>);(<UFF34>,<UFF54>);(<UFF35>,<UFF55>);/
+        (<UFF36>,<UFF56>);(<UFF37>,<UFF57>);(<UFF38>,<UFF58>);/
+        (<UFF39>,<UFF59>);(<UFF3A>,<UFF5A>);/
+        (<U0391>,<U03B1>);(<U0392>,<U03B2>);(<U0393>,<U03B3>);/
+        (<U0394>,<U03B4>);(<U0395>,<U03B5>);(<U0396>,<U03B6>);/
+        (<U0397>,<U03B7>);(<U0398>,<U03B8>);(<U0399>,<U03B9>);/
+        (<U039A>,<U03BA>);(<U039B>,<U03BB>);(<U039C>,<U03BC>);/
+        (<U039D>,<U03BD>);(<U039E>,<U03BE>);(<U039F>,<U03BF>);/
+        (<U03A0>,<U03C0>);(<U03A1>,<U03C1>);(<U03A3>,<U03C3>);/
+        (<U03A4>,<U03C4>);(<U03A5>,<U03C5>);(<U03A6>,<U03C6>);/
+        (<U03A7>,<U03C7>);(<U03A8>,<U03C8>);(<U03A9>,<U03C9>);/
+        (<U0410>,<U0430>);(<U0411>,<U0431>);(<U0412>,<U0432>);/
+        (<U0413>,<U0433>);(<U0414>,<U0434>);(<U0415>,<U0435>);/
+        (<U0401>,<U0451>);(<U0416>,<U0436>);(<U0417>,<U0437>);/
+        (<U0418>,<U0438>);(<U0419>,<U0439>);(<U041A>,<U043A>);/
+        (<U041B>,<U043B>);(<U041C>,<U043C>);(<U041D>,<U043D>);/
+        (<U041E>,<U043E>);(<U041F>,<U043F>);(<U0420>,<U0440>);/
+        (<U0421>,<U0441>);(<U0422>,<U0442>);(<U0423>,<U0443>);/
+        (<U0424>,<U0444>);(<U0425>,<U0445>);(<U0426>,<U0446>);/
+        (<U0427>,<U0447>);(<U0428>,<U0448>);(<U0429>,<U0449>);/
+        (<U042A>,<U044A>);(<U042B>,<U044B>);(<U042C>,<U044C>);/
+        (<U042D>,<U044D>);(<U042E>,<U044E>);(<U042F>,<U044F>);/
 
-graph   <exclamation-mark>;<quotation-mark>;<number-sign>;/
-        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;/
-        <left-parenthesis>;<right-parenthesis>;<asterisk>;/
-        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;/
-        <zero>;<one>;<two>;<three>;<four>;/
-        <five>;<six>;<seven>;<eight>;<nine>;/
-        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;/
-        <greater-than-sign>;<question-mark>;/
-        <commercial-at>;/
-        <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
-        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;/
-        <left-square-bracket>;<backslash>;<right-square-bracket>;/
-        <circumflex>;<underscore>;/
-        <grave-accent>;/
-        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;/
-        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;/
-        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;/
-        <c0102>....<c0194>;/
-        <c0217>....<c0266>;/
-        <c0269>....<c0278>;/
-        <c0281>....<c0292>;/
-        <c0301>....<c0394>;/
-        <c0401>....<c0483>;/
-        <c0501>....<c0586>;/
-        <c0601>....<c0624>;/
-        <c0633>....<c0656>;/
-        <c0701>....<c0733>;/
-        <c0749>....<c0781>;/
-        <c0801>....<c0826>;/
-        <c0837>....<c0873>;/
-        <c0904>....<c0979>;/
-        <c1601>....<c1694>;/
-        <c1701>....<c1794>;/
-        <c1801>....<c1894>;/
-        <c1901>....<c1994>;/
-        <c2001>....<c2094>;/
-        <c2101>....<c2194>;/
-        <c2201>....<c2294>;/
-        <c2301>....<c2394>;/
-        <c2401>....<c2494>;/
-        <c2501>....<c2594>;/
-        <c2601>....<c2694>;/
-        <c2701>....<c2794>;/
-        <c2801>....<c2894>;/
-        <c2901>....<c2994>;/
-        <c3001>....<c3094>;/
-        <c3101>....<c3194>;/
-        <c3201>....<c3294>;/
-        <c3301>....<c3394>;/
-        <c3401>....<c3494>;/
-        <c3501>....<c3594>;/
-        <c3601>....<c3694>;/
-        <c3701>....<c3794>;/
-        <c3801>....<c3894>;/
-        <c3901>....<c3994>;/
-        <c4001>....<c4094>;/
-        <c4101>....<c4194>;/
-        <c4201>....<c4294>;/
-        <c4301>....<c4394>;/
-        <c4401>....<c4494>;/
-        <c4501>....<c4594>;/
-        <c4601>....<c4694>;/
-        <c4701>....<c4794>;/
-        <c4801>....<c4894>;/
-        <c4901>....<c4994>;/
-        <c5001>....<c5094>;/
-        <c5101>....<c5194>;/
-        <c5201>....<c5294>;/
-        <c5301>....<c5394>;/
-        <c5401>....<c5494>;/
-        <c5501>....<c5594>;/
-        <c5601>....<c5694>;/
-        <c5701>....<c5794>;/
-        <c5801>....<c5894>;/
-        <c5901>....<c5994>;/
-        <c6001>....<c6094>;/
-        <c6101>....<c6194>;/
-        <c6201>....<c6294>;/
-        <c6301>....<c6394>;/
-        <c6401>....<c6494>;/
-        <c6501>....<c6594>;/
-        <c6601>....<c6694>;/
-        <c6701>....<c6794>;/
-        <c6801>....<c6894>;/
-        <c6901>....<c6994>;/
-        <c7001>....<c7094>;/
-        <c7101>....<c7194>;/
-        <c7201>....<c7294>;/
-        <c7301>....<c7394>;/
-        <c7401>....<c7494>;/
-        <c7501>....<c7594>;/
-        <c7601>....<c7694>;/
-        <c7701>....<c7794>;/
-        <c7801>....<c7894>;/
-        <c7901>....<c7994>;/
-        <c8001>....<c8094>;/
-        <c8101>....<c8194>;/
-        <c8201>....<c8294>;/
-        <c8301>....<c8394>;/
-        <c8401>....<c8494>;/
-        <c8501>....<c8594>;/
-        <c8601>....<c8694>;/
-        <c8701>....<c8794>
-
-%
-% print class:
-%       <space>, <c0101>,
-%       upper, lower, alpha, digit, xdigit
-%       GB2312-1980 printable characters
-
-print   <space>;/
-        <exclamation-mark>;<quotation-mark>;<number-sign>;/
-        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;/
-        <left-parenthesis>;<right-parenthesis>;<asterisk>;/
-        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;/
-        <zero>;<one>;<two>;<three>;<four>;/
-        <five>;<six>;<seven>;<eight>;<nine>;/
-        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;/
-        <greater-than-sign>;<question-mark>;/
-        <commercial-at>;/
-        <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
-        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;/
-        <left-square-bracket>;<backslash>;<right-square-bracket>;/
-        <circumflex>;<underscore>;/
-        <grave-accent>;/
-        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;/
-        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;/
-        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;/
-        <c0101>....<c0194>;/
-        <c0217>....<c0266>;/
-        <c0269>....<c0278>;/
-        <c0281>....<c0292>;/
-        <c0301>....<c0394>;/
-        <c0401>....<c0483>;/
-        <c0501>....<c0586>;/
-        <c0601>....<c0624>;/
-        <c0633>....<c0656>;/
-        <c0701>....<c0733>;/
-        <c0749>....<c0781>;/
-        <c0801>....<c0826>;/
-        <c0837>....<c0873>;/
-        <c0904>....<c0979>;/
-        <c1601>....<c1694>;/
-        <c1701>....<c1794>;/
-        <c1801>....<c1894>;/
-        <c1901>....<c1994>;/
-        <c2001>....<c2094>;/
-        <c2101>....<c2194>;/
-        <c2201>....<c2294>;/
-        <c2301>....<c2394>;/
-        <c2401>....<c2494>;/
-        <c2501>....<c2594>;/
-        <c2601>....<c2694>;/
-        <c2701>....<c2794>;/
-        <c2801>....<c2894>;/
-        <c2901>....<c2994>;/
-        <c3001>....<c3094>;/
-        <c3101>....<c3194>;/
-        <c3201>....<c3294>;/
-        <c3301>....<c3394>;/
-        <c3401>....<c3494>;/
-        <c3501>....<c3594>;/
-        <c3601>....<c3694>;/
-        <c3701>....<c3794>;/
-        <c3801>....<c3894>;/
-        <c3901>....<c3994>;/
-        <c4001>....<c4094>;/
-        <c4101>....<c4194>;/
-        <c4201>....<c4294>;/
-        <c4301>....<c4394>;/
-        <c4401>....<c4494>;/
-        <c4501>....<c4594>;/
-        <c4601>....<c4694>;/
-        <c4701>....<c4794>;/
-        <c4801>....<c4894>;/
-        <c4901>....<c4994>;/
-        <c5001>....<c5094>;/
-        <c5101>....<c5194>;/
-        <c5201>....<c5294>;/
-        <c5301>....<c5394>;/
-        <c5401>....<c5494>;/
-        <c5501>....<c5594>;/
-        <c5601>....<c5694>;/
-        <c5701>....<c5794>;/
-        <c5801>....<c5894>;/
-        <c5901>....<c5994>;/
-        <c6001>....<c6094>;/
-        <c6101>....<c6194>;/
-        <c6201>....<c6294>;/
-        <c6301>....<c6394>;/
-        <c6401>....<c6494>;/
-        <c6501>....<c6594>;/
-        <c6601>....<c6694>;/
-        <c6701>....<c6794>;/
-        <c6801>....<c6894>;/
-        <c6901>....<c6994>;/
-        <c7001>....<c7094>;/
-        <c7101>....<c7194>;/
-        <c7201>....<c7294>;/
-        <c7301>....<c7394>;/
-        <c7401>....<c7494>;/
-        <c7501>....<c7594>;/
-        <c7601>....<c7694>;/
-        <c7701>....<c7794>;/
-        <c7801>....<c7894>;/
-        <c7901>....<c7994>;/
-        <c8001>....<c8094>;/
-        <c8101>....<c8194>;/
-        <c8201>....<c8294>;/
-        <c8301>....<c8394>;/
-        <c8401>....<c8494>;/
-        <c8501>....<c8594>;/
-        <c8601>....<c8694>;/
-        <c8701>....<c8794>
-
-%
-% xdigit class
-%
-xdigit  <zero>;<one>;<two>;<three>;<four>;/
-        <five>;<six>;<seven>;<eight>;<nine>;/
-        <A>;<B>;<C>;<D>;<E>;<F>;/
-        <a>;<b>;<c>;<d>;<e>;<f>
-
-%
-% blank class
-%
-blank   <space>;<tab>
-
-%
-% toupper and tolower:  also handle Roman, Greek and Russian
-%                       characters in GB3212-1980
-
-toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);/
-        (<f>,<F>);(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);/
-        (<k>,<K>);(<l>,<L>);(<m>,<M>);(<n>,<N>);(<o>,<O>);/
-        (<p>,<P>);(<q>,<Q>);(<r>,<R>);(<s>,<S>);(<t>,<T>);/
-        (<u>,<U>);(<v>,<V>);(<w>,<W>);(<x>,<X>);(<y>,<Y>);/
-        (<z>,<Z>);/
-        (<c0365>,<c0333>);(<c0366>,<c0334>);(<c0367>,<c0335>);/
-        (<c0368>,<c0336>);(<c0369>,<c0337>);(<c0370>,<c0338>);/
-        (<c0371>,<c0339>);(<c0372>,<c0340>);(<c0373>,<c0341>);/
-        (<c0374>,<c0342>);(<c0375>,<c0343>);(<c0376>,<c0344>);/
-        (<c0377>,<c0345>);(<c0378>,<c0346>);(<c0379>,<c0347>);/
-        (<c0380>,<c0348>);(<c0381>,<c0349>);(<c0382>,<c0350>);/
-        (<c0383>,<c0351>);(<c0384>,<c0352>);(<c0385>,<c0353>);/
-        (<c0386>,<c0354>);(<c0387>,<c0355>);(<c0388>,<c0356>);/
-        (<c0389>,<c0357>);(<c0390>,<c0358>);/
-        (<c0633>,<c0601>);(<c0634>,<c0602>);(<c0635>,<c0603>);/
-        (<c0636>,<c0604>);(<c0637>,<c0605>);(<c0638>,<c0606>);/
-        (<c0639>,<c0607>);(<c0640>,<c0608>);(<c0641>,<c0609>);/
-        (<c0642>,<c0610>);(<c0643>,<c0611>);(<c0644>,<c0612>);/
-        (<c0645>,<c0613>);(<c0646>,<c0614>);(<c0647>,<c0615>);/
-        (<c0648>,<c0616>);(<c0649>,<c0617>);(<c0650>,<c0618>);/
-        (<c0651>,<c0619>);(<c0652>,<c0620>);(<c0653>,<c0621>);/
-        (<c0654>,<c0622>);(<c0655>,<c0623>);(<c0656>,<c0624>);/
-        (<c0749>,<c0701>);(<c0750>,<c0702>);(<c0751>,<c0703>);/
-        (<c0752>,<c0704>);(<c0753>,<c0705>);(<c0754>,<c0706>);/
-        (<c0755>,<c0707>);(<c0756>,<c0708>);(<c0757>,<c0709>);/
-        (<c0758>,<c0710>);(<c0759>,<c0711>);(<c0760>,<c0712>);/
-        (<c0761>,<c0713>);(<c0762>,<c0714>);(<c0763>,<c0715>);/
-        (<c0764>,<c0716>);(<c0765>,<c0717>);(<c0766>,<c0718>);/
-        (<c0767>,<c0719>);(<c0768>,<c0720>);(<c0769>,<c0721>);/
-        (<c0770>,<c0722>);(<c0771>,<c0723>);(<c0772>,<c0724>);/
-        (<c0773>,<c0725>);(<c0774>,<c0726>);(<c0775>,<c0727>);/
-        (<c0776>,<c0728>);(<c0777>,<c0729>);(<c0778>,<c0730>);/
-        (<c0779>,<c0731>);(<c0780>,<c0732>);(<c0781>,<c0733>)
-
-tolower (<A>,<a>);(<B>,<b>);(<C>,<c>);(<D>,<d>);(<E>,<e>);/
-        (<F>,<f>);(<G>,<g>);(<H>,<h>);(<I>,<i>);(<J>,<j>);/
-        (<K>,<k>);(<L>,<l>);(<M>,<m>);(<N>,<n>);(<O>,<o>);/
-        (<P>,<p>);(<Q>,<q>);(<R>,<r>);(<S>,<s>);(<T>,<t>);/
-        (<U>,<u>);(<V>,<v>);(<W>,<w>);(<X>,<x>);(<Y>,<y>);/
-        (<Z>,<z>);/
-        (<c0333>,<c0365>);(<c0334>,<c0366>);(<c0335>,<c0367>);/
-        (<c0336>,<c0368>);(<c0337>,<c0369>);(<c0338>,<c0370>);/
-        (<c0339>,<c0371>);(<c0340>,<c0372>);(<c0341>,<c0373>);/
-        (<c0342>,<c0374>);(<c0343>,<c0375>);(<c0344>,<c0376>);/
-        (<c0345>,<c0377>);(<c0346>,<c0378>);(<c0347>,<c0379>);/
-        (<c0348>,<c0380>);(<c0349>,<c0381>);(<c0350>,<c0382>);/
-        (<c0351>,<c0383>);(<c0352>,<c0384>);(<c0353>,<c0385>);/
-        (<c0354>,<c0386>);(<c0355>,<c0387>);(<c0356>,<c0388>);/
-        (<c0357>,<c0389>);(<c0358>,<c0390>);/
-        (<c0601>,<c0633>);(<c0602>,<c0634>);(<c0603>,<c0635>);/
-        (<c0604>,<c0636>);(<c0605>,<c0637>);(<c0606>,<c0638>);/
-        (<c0607>,<c0639>);(<c0608>,<c0640>);(<c0609>,<c0641>);/
-        (<c0610>,<c0642>);(<c0611>,<c0643>);(<c0612>,<c0644>);/
-        (<c0613>,<c0645>);(<c0614>,<c0646>);(<c0615>,<c0647>);/
-        (<c0616>,<c0648>);(<c0617>,<c0649>);(<c0618>,<c0650>);/
-        (<c0619>,<c0651>);(<c0620>,<c0652>);(<c0621>,<c0653>);/
-        (<c0622>,<c0654>);(<c0623>,<c0655>);(<c0624>,<c0656>);/
-        (<c0701>,<c0749>);(<c0702>,<c0750>);(<c0703>,<c0751>);/
-        (<c0704>,<c0752>);(<c0705>,<c0753>);(<c0706>,<c0754>);/
-        (<c0707>,<c0755>);(<c0708>,<c0756>);(<c0709>,<c0757>);/
-        (<c0710>,<c0758>);(<c0711>,<c0759>);(<c0712>,<c0760>);/
-        (<c0713>,<c0761>);(<c0714>,<c0762>);(<c0715>,<c0763>);/
-        (<c0716>,<c0764>);(<c0717>,<c0765>);(<c0718>,<c0766>);/
-        (<c0719>,<c0767>);(<c0720>,<c0768>);(<c0721>,<c0769>);/
-        (<c0722>,<c0770>);(<c0723>,<c0771>);(<c0724>,<c0772>);/
-        (<c0725>,<c0773>);(<c0726>,<c0774>);(<c0727>,<c0775>);/
-        (<c0728>,<c0776>);(<c0729>,<c0777>);(<c0730>,<c0778>);/
-        (<c0731>,<c0779>);(<c0732>,<c0780>);(<c0733>,<c0781>)
-
+class	"hanzi"; /
+%	<U3400>..<U4DBF>;/
+	<U4E00>..<U9FA5>;/
+	<UF92C>;<UF979>;<UF995>;<UF9E7>;<UF9F1>;<UFA0C>;<UFA0D>;<UFA0E>;/
+	<UFA0F>;<UFA11>;<UFA13>;<UFA14>;<UFA18>;<UFA1F>;<UFA20>;<UFA21>;/
+	<UFA23>;<UFA24>;<UFA27>;<UFA28>;<UFA29>
 END LC_CTYPE
 
+% ISO 14651 collation sequence
 LC_COLLATE
-
-order_start forward
-<NUL>
-<SOH>
-<STX>
-<ETX>
-<EOT>
-<ENQ>
-<ACK>
-<alert>
-<backspace>
-<tab>
-<newline>
-<vertical-tab>
-<form-feed>
-<carriage-return>
-<SI>
-<SO>
-<DLE>
-<DC1>
-<DC2>
-<DC3>
-<DC4>
-<NAK>
-<SYN>
-<ETB>
-<CAN>
-<EM>
-<SUB>
-<ESC>
-<IS4>
-<IS3>
-<IS2>
-<IS1>
-<space>
-<exclamation-mark>
-<quotation-mark>
-<number-sign>
-<dollar-sign>
-<percent-sign>
-<ampersand>
-<apostrophe>
-<left-parenthesis>
-<right-parenthesis>
-<asterisk>
-<plus-sign>
-<comma>
-<hyphen>
-<period>
-<slash>
-<zero>
-<one>
-<two>
-<three>
-<four>
-<five>
-<seven>
-<eight>
-<nine>
-<colon>
-<semicolon>
-<less-than-sign>
-<equals-sign>
-<greater-than-sign>
-<question-mark>
-<commercial-at>
-<A>
-<B>
-<C>
-<D>
-<E>
-<F>
-<G>
-<H>
-<I>
-<J>
-<K>
-<L>
-<M>
-<N>
-<O>
-<P>
-<Q>
-<R>
-<S>
-<T>
-<U>
-<V>
-<W>
-<X>
-<Y>
-<Z>
-<left-square-bracket>
-<backslash>
-<right-square-bracket>
-<circumflex>
-<underscore>
-<grave-accent>
-<a>
-<b>
-<c>
-<d>
-<e>
-<f>
-<g>
-<h>
-<i>
-<j>
-<k>
-<l>
-<m>
-<n>
-<o>
-<p>
-<q>
-<r>
-<s>
-<t>
-<u>
-<v>
-<w>
-<y>
-<z>
-<left-curly-bracket>
-<vertical-line>
-<right-curly-bracket>
-<tilde>
-<DEL>
-%
-% GB2312-1980 Code order here
-% pinyin first, radical second
-% bad sorting here.
-
-<c0101>
-...
-<c0194>
-<c0217>
-...
-<c0266>
-<c0269>
-...
-<c0278>
-<c0281>
-...
-<c0292>
-<c0301>
-...
-<c0394>
-<c0401>
-...
-<c0483>
-<c0501>
-...
-<c0586>
-<c0601>
-...
-<c0624>
-<c0633>
-...
-<c0656>
-<c0701>
-...
-<c0733>
-<c0749>
-...
-<c0781>
-<c0801>
-...
-<c0826>
-<c0837>
-...
-<c0873>
-<c0904>
-...
-<c0979>
-<c1601>
-...
-<c1694>
-<c1701>
-...
-<c1794>
-<c1801>
-...
-<c1894>
-<c1901>
-...
-<c1994>
-<c2001>
-...
-<c2094>
-<c2101>
-...
-<c2194>
-<c2201>
-...
-<c2294>
-<c2301>
-...
-<c2394>
-<c2401>
-...
-<c2494>
-<c2501>
-...
-<c2594>
-<c2601>
-...
-<c2694>
-<c2701>
-...
-<c2794>
-<c2801>
-...
-<c2894>
-<c2901>
-...
-<c2994>
-<c3001>
-...
-<c3094>
-<c3101>
-...
-<c3194>
-<c3201>
-...
-<c3294>
-<c3301>
-...
-<c3394>
-<c3401>
-...
-<c3494>
-<c3501>
-...
-<c3594>
-<c3601>
-...
-<c3694>
-<c3701>
-...
-<c3794>
-<c3801>
-...
-<c3894>
-<c3901>
-...
-<c3994>
-<c4001>
-...
-<c4094>
-<c4101>
-...
-<c4194>
-<c4201>
-...
-<c4294>
-<c4301>
-...
-<c4394>
-<c4401>
-...
-<c4494>
-<c4501>
-...
-<c4594>
-<c4601>
-...
-<c4694>
-<c4701>
-...
-<c4794>
-<c4801>
-...
-<c4894>
-<c4901>
-...
-<c4994>
-<c5001>
-...
-<c5094>
-<c5101>
-...
-<c5194>
-<c5201>
-...
-<c5294>
-<c5301>
-...
-<c5394>
-<c5401>
-...
-<c5494>
-<c5501>
-...
-<c5594>
-<c5601>
-...
-<c5694>
-<c5701>
-...
-<c5794>
-<c5801>
-...
-<c5894>
-<c5901>
-...
-<c5994>
-<c6001>
-...
-<c6094>
-<c6101>
-...
-<c6194>
-<c6201>
-...
-<c6294>
-<c6301>
-...
-<c6394>
-<c6401>
-...
-<c6494>
-<c6501>
-...
-<c6594>
-<c6601>
-...
-<c6694>
-<c6701>
-...
-<c6794>
-<c6801>
-...
-<c6894>
-<c6901>
-...
-<c6994>
-<c7001>
-...
-<c7094>
-<c7101>
-...
-<c7194>
-<c7201>
-...
-<c7294>
-<c7301>
-...
-<c7394>
-<c7401>
-...
-<c7494>
-<c7501>
-...
-<c7594>
-<c7601>
-...
-<c7694>
-<c7701>
-...
-<c7794>
-<c7801>
-...
-<c7894>
-<c7901>
-...
-<c7994>
-<c8001>
-...
-<c8094>
-<c8101>
-...
-<c8194>
-<c8201>
-...
-<c8294>
-<c8301>
-...
-<c8394>
-<c8401>
-...
-<c8494>
-<c8501>
-...
-<c8594>
-<c8601>
-...
-<c8694>
-<c8701>
-...
-<c8794>
-
-UNDEFINED
-order_end
-
+copy "iso14651_t1"
 END LC_COLLATE
 
-% The following is Keld Simonsen's work.
-% I guess no need to add anything.
 
 LC_MONETARY
-int_curr_symbol           "<C><N><Y><SP>"
-currency_symbol           "<c5218>"
-mon_decimal_point         "<.>"
-mon_thousands_sep         "<,>"
-mon_grouping              3;0
+int_curr_symbol           "<U0043><U004E><U0059><U0020>"
+currency_symbol           "<UFFE5>"
+mon_decimal_point         "<U002E>"
+mon_thousands_sep         "<U002C>"
+mon_grouping              3
 positive_sign             ""
-negative_sign             "<->"
+negative_sign             "<U002D>"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             1
 p_sep_by_space            0
 n_cs_precedes             1
 n_sep_by_space            0
-p_sign_posn               1
+int_p_cs_precedes         1
+int_p_sep_by_space        0
+int_n_cs_precedes         1
+int_n_sep_by_space        0
+p_sign_posn               4
 n_sign_posn               4
+int_p_sign_posn           1
+int_n_sign_posn           1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<.>"
-thousands_sep             "<,>"
-grouping                  3;0
+decimal_point             "<U002E>"
+thousands_sep             "<U002C>"
+grouping                  3
 END LC_NUMERIC
 
 LC_TIME
-abday   "<c4053>","<c5027>";"<c2294>";"<c4093>";/
-        "<c4336>";"<c4669>";"<c3389>"
-day     "<c4839><c3858><c4053>";/
-        "<c4839><c3858><c5027>";/
-        "<c4839><c3858><c2294>";/
-        "<c4839><c3858><c4093>";/
-        "<c4839><c3858><c4336>";/
-        "<c4839><c3858><c4669>";/
-        "<c4839><c3858><c3389>"
-abmon   "<1><c5234>";/
-        "<2><c5234>";/
-        "<3><c5234>";/
-        "<4><c5234>";/
-        "<5><c5234>";/
-        "<6><c5234>";/
-        "<7><c5234>";/
-        "<8><c5234>";/
-        "<9><c5234>";/
-        "<1><0><c5234>";/
-        "<1><1><c5234>";/
-        "<1><2><c5234>"
-mon     "<c5027><c5234>";/
-        "<c2294><c5234>";/
-        "<c4093><c5234>";/
-        "<c4336><c5234>";/
-        "<c4669><c5234>";/
-        "<c3389><c5234>";/
-        "<c3863><c5234>";/
-        "<c1643><c5234>";/
-        "<c3037><c5234>";/
-        "<c4214><c5234>";/
-        "<c4214><c5027><c5234>";/
-        "<c4214><c2294><c5234>"
-d_t_fmt "<%><Y><c3674><%><m><c5234><%><d><c4053><%><A><%><H><c4217><%><M><c2354><%><S><c3575>"
-d_fmt   "<%><Y><-><%><m><-><%><d>"
-t_fmt   "<%><T>"
-am_pm   "";""
-t_fmt_ampm ""
+abday 	"<U65E5>";"<U4E00>";"<U4E8C>";"<U4E09>";"<U56DB>";"<U4E94>";"<U516D>"
+
+day 	"<U661F><U671F><U65E5>";/
+	"<U661F><U671F><U4E00>";/
+	"<U661F><U671F><U4E8C>";/
+	"<U661F><U671F><U4E09>";/
+	"<U661F><U671F><U56DB>";/
+	"<U661F><U671F><U4E94>";/
+	"<U661F><U671F><U516D>"
+
+abmon	"<U0020><U0031><U6708>";"<U0020><U0032><U6708>";/
+	"<U0020><U0033><U6708>";"<U0020><U0034><U6708>";/
+	"<U0020><U0035><U6708>";"<U0020><U0036><U6708>";/
+	"<U0020><U0037><U6708>";"<U0020><U0038><U6708>";/
+	"<U0020><U0039><U6708>";"<U0031><U0030><U6708>";/
+	"<U0031><U0031><U6708>";"<U0031><U0032><U6708>"
+
+mon	"<U4E00><U6708>";"<U4E8C><U6708>";"<U4E09><U6708>";/
+	"<U56DB><U6708>";"<U4E94><U6708>";"<U516D><U6708>";/
+	"<U4E03><U6708>";"<U516B><U6708>";"<U4E5D><U6708>";/
+	"<U5341><U6708>";"<U5341><U4E00><U6708>";"<U5341><U4E8C><U6708>"
+
+d_t_fmt "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5><U0020>/
+<U0025><U0041><U0020><U0025><U0048><U65F6><U0025><U004D><U5206><U0025>/
+<U0053><U79D2>"
+
+d_fmt   "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5>"
+
+t_fmt   "<U0025><U0048><U65F6><U0025><U004D><U5206><U0025><U0053><U79D2>"
+
+am_pm   "<U4E0A><U5348>";"<U4E0B><U5348>"
+
+t_fmt_ampm "<U0025><U0070><U0020><U0025><U0049><U65F6><U0025><U004D><U5206><U0025><U0053><U79D2>"
+
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<<(><1><c0357><c0389><c4239><Y><y><)/>><.><*>"
-noexpr      "<<(><0><c0378><c0346><c2381><N><n><)/>><.><*>"
+% Any string starting with a Latin Y(y) or Chinese "Shi4" is recognized
+% as affirmative answer.
+% Any string starting with a Latin N(n) or Chinese "Bu4" or "Fou3" is
+% recognized as negative answer.
+yesexpr "<U005E><U005B><U0079><U0059><U662F><U005D>"
+noexpr  "<U005E><U005B><U006E><U004E><U4E0D><U5426><U005D>"
 END LC_MESSAGES
+
+LC_PAPER
+% I assume A4, FIXME
+height   297
+width    210
+END LC_PAPER
+
+LC_TELEPHONE
+tel_int_fmt	"<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+tel_dom_fmt	"<U0030><U0025><U0061><U0020><U0025><U006C>"
+int_select	"<U0030><U0030>"
+int_prefix	"<U0038><U0036>"
+END LC_TELEPHONE
+
+LC_NAME
+name_fmt	"<U0025><U0066><U0025><U0074><U0025><U0067><U0025><U0074><U0025><U0064>"
+name_gen	""
+name_miss	"<U5C0F><U59D0>"
+name_mr		"<U5148><U751F>"
+name_mrs	"<U592A><U592A>"
+name_ms		"<U5973><U58EB>"
+END LC_NAME
+
+LC_ADDRESS
+postal_fmt	"<U0025><U0063><U0025><U004E><U0025>/
+<U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025>/
+<U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0062><U0025><U004E>/
+<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0061>/
+<U0025><U004E>"
+country_name	"<U4E2D><U534E><U4EBA><U6C11><U5171><U548C><U56FD>"
+%country_post	"FIXME"
+country_ab2	"<U0043><U004E>"
+country_ab3	"<U0043><U0048><U004E>"
+country_num	156
+%country_car	"FIXME"
+country_isbn	"<U0037>"
+lang_name	"<U4E2D><U6587>"
+lang_ab		"<U007A><U0068>"
+lang_term	"<U007A><U0068><U006F>"
+lang_lib	"<U0063><U0068><U0069>"
+END LC_ADDRESS
+
+LC_MEASUREMENT
+measurement    1
+END LC_MEASUREMENT
