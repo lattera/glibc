@@ -806,6 +806,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       _exit (0);
     }
+_dl_sysdep_message("start reloc\n", NULL);
 
   {
     /* Now we have all the objects loaded.  Relocate them all except for
@@ -843,7 +844,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 Re-relocate ourselves with user-controlled symbol definitions.  */
       _dl_relocate_object (&_dl_rtld_map, &_dl_default_scope[2], 0);
   }
-
+_dl_sysdep_message("end reloc\n", NULL);
   {
     /* Initialize _r_debug.  */
     struct r_debug *r = _dl_debug_initialize (_dl_rtld_map.l_addr);
@@ -930,7 +931,7 @@ process_dl_debug (char *dl_debug)
 		   && (issep (dl_debug[4]) || dl_debug[4] == '\0'))
 	    {
 	      _dl_sysdep_message ("\
-Valid options for the DL_DEBUG environment variable are:\n\
+Valid options for the LD_DEBUG environment variable are:\n\
 \n\
   help    display this help message and exit
   libs    display library search paths\n", NULL);

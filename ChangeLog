@@ -1,3 +1,8 @@
+1998-03-06 11:48  Mark M._Kettenis  <kettenis@hall.phys.uva.nl>
+
+	* elf/rtld.c (process_dl_debug): Fix typo: "DL_DEBUG" ->
+	"LD_DEBUG".
+
 1998-03-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/Makefile (tests): Add wordexp-test.
