@@ -52,6 +52,7 @@ rt_sigtimedwait.c
 sa_len.c
 scsi/sg.h
 scsi/scsi.h
+scsi/scsi_ioctl.h
 sys/acct.h
 sys/fsuid.h
 sys/io.h

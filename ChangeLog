@@ -1,3 +1,18 @@
+1999-11-07  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/scsi/scsi_ioctl.h: New file with some
+	defines from Linux scsi_ioctl.h header.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Added
+	scsi_ioctl.h.
+	* sysdeps/unix/sysv/linux/Dist: Likewise.
+
+	* sysdeps/unix/sysv/linux/scsi/sg.h: Synced with Linux 2.3.26;
+	pretty printed.
+
+	* sysdeps/unix/sysv/linux/scsi/scsi.h (TYPE_ENCLOSURE): Added to
+	sync with Linux 2.3.26.
+
 1999-11-17  Andreas Jaeger  <aj@suse.de>
 
 	* shlib-versions: Allow mipsel for libm.

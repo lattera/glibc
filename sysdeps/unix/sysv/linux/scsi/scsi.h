@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -145,6 +145,7 @@
 #define TYPE_MOD            0x07    /* Magneto-optical disk -
 				     * - treated as TYPE_DISK */
 #define TYPE_MEDIUM_CHANGER 0x08
+#define TYPE_ENCLOSURE	    0x0d    /* Enclosure Services Device */
 #define TYPE_NO_LUN         0x7f
 
 /*
