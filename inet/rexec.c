@@ -43,6 +43,7 @@ static char sccsid[] = "@(#)rexec.c	8.1 (Berkeley) 6/4/93";
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/uio.h>
 
 int	rexecoptions;
 libc_freeres_ptr (static char *ahostbuf);
@@ -136,7 +137,8 @@ retry:
 		(void) sprintf(num, "%u", port);
 		(void) __write(s, num, strlen(num)+1);
 		{ int len = sizeof (from);
-		  s3 = accept(s2, (struct sockaddr *)&from, &len);
+		  s3 = TEMP_FAILURE_RETRY (accept(s2, (struct sockaddr *)&from,
+						  &len));
 		  __close(s2);
 		  if (s3 < 0) {
 			perror("accept");
@@ -146,10 +148,15 @@ retry:
 		}
 		*fd2p = s3;
 	}
-	(void) __write(s, name, strlen(name) + 1);
-	/* should public key encypt the password here */
-	(void) __write(s, pass, strlen(pass) + 1);
-	(void) __write(s, cmd, strlen(cmd) + 1);
+
+	struct iovec iov[3] =
+	  {
+	    [0] = { .iov_base = (void *) name, .iov_len = strlen (name) + 1 },
+	    /* should public key encypt the password here */
+	    [1] = { .iov_base = (void *) pass, .iov_len = strlen (pass) + 1 },
+	    [2] = { .iov_base = (void *) cmd, .iov_len = strlen (cmd) + 1 }
+	  };
+	(void) TEMP_FAILURE_RETRY (__writev (s, iov, 3));
 
 	/* We don't need the memory allocated for the name and the password
 	   in ruserpass anymore.  */
