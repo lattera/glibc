@@ -1,7 +1,3 @@
-2004-07-12  Roland McGrath  <roland@frob.com>
-
-	* ChangeLog: Spurious commit [BZ #209] for testing loginfo script.
-
 2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #263]
