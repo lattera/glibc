@@ -1,5 +1,5 @@
 /* `struct termios' speed frobnication functions.  Linux version.
-   Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ cfsetospeed  (termios_p, speed)
      speed_t speed;
 {
   if ((speed & ~CBAUD) != 0
-      && (speed < B57600 || speed > B460800))
+      && (speed < B57600 || speed > B4000000))
     {
       __set_errno (EINVAL);
       return -1;
@@ -82,7 +82,7 @@ cfsetispeed (termios_p, speed)
      speed_t speed;
 {
   if ((speed & ~CBAUD) != 0
-      && (speed < B57600 || speed > B460800))
+      && (speed < B57600 || speed > B4000000))
     {
       __set_errno (EINVAL);
       return -1;

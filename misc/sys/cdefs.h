@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -196,7 +196,7 @@
 /* ISO C99 also allows to declare arrays as non-overlapping.  The syntax is
      array_name[restrict]
    GCC 3.1 supports this.  */
-#if __GNUC_PREREQ (3,1)
+#if __GNUC_PREREQ (3,1) && !defined __GNUG__
 # define __restrict_arr	__restrict
 #else
 # ifdef __GNUC__
