@@ -716,6 +716,12 @@ CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC -DLIBC_NONSHARED=1
 libtype.oS = lib%_nonshared.a
 endif
 
+# The assembler can generate debug information too.
+ifndef ASFLAGS
+ifeq ($(have-cpp-asm-debuginfo),yes)
+ASFLAGS := $(filter -g%,$(CFLAGS))
+endif
+endif
 
 +gnu-stabs = $(shell echo>&2 '*** BARF ON ME')
 

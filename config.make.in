@@ -50,6 +50,7 @@ with-cvs = @with_cvs@
 old-glibc-headers = @old_glibc_headers@
 unwind-find-fde = @libc_cv_gcc_unwind_find_fde@
 have-initfini-array = @libc_cv_initfinit_array@
+have-cpp-asm-debuginfo = @libc_cv_cpp_asm_debuginfo@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 
