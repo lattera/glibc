@@ -38,6 +38,7 @@ please let me know.
 1.13.	Why do I get messages about missing thread functions when I use
 	librt?  I don't even use threads.
 1.14.	What's the problem with configure --enable-omitfp?
+1.15.	I get failures during `make check'.  What shall I do?
 
 2. Installation and configuration issues
 
@@ -174,7 +175,7 @@ GNU CC is found, like all other GNU packages, on
 and the many mirror sites.  ftp.gnu.org is always overloaded, so try to find
 a local mirror first.
 
-You always should try to use the latest official release.  Older versions
+You should always try to use the latest official release.  Older versions
 may not have all the features GNU libc requires.  The current releases of
 egcs (1.0.2) and GNU CC (2.8.1) should work with the GNU C library (for
 powerpc see question question 1.5).
@@ -278,6 +279,17 @@ way round (compiling the GNU C library with old kernel headers and running
 on a recent kernel) does not necessarily work.  For example you can't use
 new kernel features when using old kernel headers for compiling the GNU C
 library.
+
+{ZW} Even if you are using a 2.0 kernel on your machine, we recommend you
+compile GNU libc with 2.1 kernel headers.  That way you won't have to
+recompile libc if you ever upgrade to kernel 2.1 or 2.2.  To tell libc which
+headers to use, give configure the --with-headers switch
+(e.g. --with-headers=/usr/src/linux-2.1.107/include).
+
+Note that you must configure the 2.1 kernel if you do this; otherwise libc
+will be unable to find <linux/version.h>.  Just copy .config from your 2.0
+kernel sources to the 2.1 tree, do `make oldconfig', and say no to all the
+new options.
 
 
 1.8.	The compiler hangs while building iconvdata modules.  What's
@@ -393,6 +405,30 @@ the library names.
 
 The compilation of these extra libraries and the compiler optimizations slow
 down the build process and need more disk space.
+
+
+1.15.	I get failures during `make check'.  What shall I do?
+
+{AJ} The testsuite should compile and run cleanly on your system, every
+failure should be looked into.  Depending on the failure I wouldn't advise
+installing the library at all.
+
+You should consider using the `glibcbug' script to report the failure,
+providing as much detail as possible.  If you run a test directly, please
+remember to set up the environment correctly.  You want to test the compiled
+library - and not your installed one.  The best way is to copy the exact
+command line which failed and run the test from the subdirectory for this
+test in the sources.
+
+There are some failures which are not directly related to the GNU libc:
+- Some compiler produce buggy code.  The current egcs snapshots are ok and
+  the not yet released egcs 1.1 should be ok.  gcc 2.8.1 might cause some
+  failures, gcc 2.7.2.x is so buggy, that explicit checks have been used so
+  that you can't build with it.
+- The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
+  floating point handling has quite a number of bugs and therefore most of
+  the test cases in the math subdirectory will fail.  The current Linux 2.1
+  development kernels have fixes for the floating point support on Alpha.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

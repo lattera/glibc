@@ -19,6 +19,7 @@
 
 #include <byteswap.h>
 #include <endian.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
@@ -38,6 +39,10 @@ __open_catalog (__nl_catd catalog)
   int fd = -1;
   struct stat st;
   int swapping;
+  size_t cnt;
+  size_t max_offset;
+  size_t tab_size;
+  const char *lastp;
 
   /* Make sure we are alone.  */
   __libc_lock_lock (catalog->lock);
@@ -175,8 +180,16 @@ __open_catalog (__nl_catd catalog)
     }
 
   /* Avoid dealing with directories and block devices */
-  if (fd < 0 || __fstat (fd, &st) < 0 || !S_ISREG (st.st_mode))
+  if (fd < 0 || __fstat (fd, &st) < 0)
     {
+      catalog->status = nonexisting;
+      goto unlock_return;
+    }
+  if (!S_ISREG (st.st_mode) || st.st_size < sizeof (struct catalog_obj))
+    {
+      /* `errno' is not set correctly but the file is not usable.
+	 Use an reasonable error value.  */
+      __set_errno (EINVAL);
       catalog->status = nonexisting;
       goto unlock_return;
     }
@@ -242,6 +255,7 @@ __open_catalog (__nl_catd catalog)
     swapping = 1;
   else
     {
+    invalid_file:
       /* Invalid file.  Free the resources and mark catalog as not
 	 usable.  */
       if (catalog->status == mmapped)
@@ -275,6 +289,29 @@ __open_catalog (__nl_catd catalog)
   catalog->strings =
     (const char *) &catalog->file_ptr->name_ptr[catalog->plane_size
 					       * catalog->plane_depth * 3 * 2];
+
+  /* Determine the largest string offset mentioned in the table.  */
+  max_offset = 0;
+  tab_size = 3 * catalog->plane_size * catalog->plane_depth;
+  for (cnt = 2; cnt < tab_size; cnt += 3)
+    if (catalog->name_ptr[cnt] > max_offset)
+      max_offset = catalog->name_ptr[cnt];
+
+  /* Now we can check whether the file is large enough to contain the
+     tables it says it contains.  */
+  if (st.st_size <= (sizeof (struct catalog_obj) + 2 * tab_size + max_offset))
+    /* The last string is not contained in the file.  */
+    goto invalid_file;
+
+  lastp = catalog->strings + max_offset;
+  max_offset = (st.st_size
+		- sizeof (struct catalog_obj) + 2 * tab_size + max_offset);
+  while (*lastp != '\0')
+    {
+      if (--max_offset == 0)
+	goto invalid_file;
+      ++lastp;
+    }
 
   /* Release the lock again.  */
  unlock_return:

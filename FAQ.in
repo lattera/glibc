@@ -277,6 +277,30 @@ the library names.
 The compilation of these extra libraries and the compiler optimizations slow
 down the build process and need more disk space.
 
+??	I get failures during `make check'.  What shall I do?
+
+{AJ} The testsuite should compile and run cleanly on your system, every
+failure should be looked into.  Depending on the failure I wouldn't advise
+installing the library at all.
+
+You should consider using the `glibcbug' script to report the failure,
+providing as much detail as possible.  If you run a test directly, please
+remember to set up the environment correctly.  You want to test the compiled
+library - and not your installed one.  The best way is to copy the exact
+command line which failed and run the test from the subdirectory for this
+test in the sources.
+
+There are some failures which are not directly related to the GNU libc:
+- Some compiler produce buggy code.  The current egcs snapshots are ok and
+  the not yet released egcs 1.1 should be ok.  gcc 2.8.1 might cause some
+  failures, gcc 2.7.2.x is so buggy, that explicit checks have been used so
+  that you can't build with it.
+- The kernel might have bugs.  For example on Linux/Alpha 2.0.34 the
+  floating point handling has quite a number of bugs and therefore most of
+  the test cases in the math subdirectory will fail.  The current Linux 2.1
+  development kernels have fixes for the floating point support on Alpha.
+
+
 ? Installation and configuration issues
 
 ??	Can I replace the libc on my Linux system with GNU libc?
