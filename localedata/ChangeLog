@@ -1,3 +1,9 @@
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/ISIRI-3342: New file.
+	* locales/fa_IR: New file.
+	Contributed by Roozbeh Pournader <roozbeh@sina.sharif.ac.ir>.
+
 1999-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/de_DE: Correct syntax of multi-character weights.

@@ -1,0 +1,367 @@
+<code_set_name> ISIRI-3342
+<comment_char> %
+<escape_char> /
+% version: 0.0
+% repertoiremap:
+% source: Iranian standard ISIRI 3342 (1993)
+% author: Pablo Saratxaga, and Roozbeh Pournader
+% email: pablo@mandrakesoft.com, roozbeh@sina.sharif.ac.ir
+ 
+% I think the mnemonic for upper space (0xA0) should be different from
+% lower space (0x20). Because the semantics are different, although they
+% are mapped to a single Unicode character. This is specially important
+% when specifying LC_CTYPE. Because we need to distinguish the characters.
+% Also, their BIDI behaviour is different of course. This is true also
+% of other characters like punctuations, etc.
+% Please note that the Unicode equivalents of the Persian part (0x80..0xFF)
+% are for compatiblity purposes only. I have also changed the fourth
+% column consisting of names to reflect the difference. The names are
+% invented on the pattern of Unicode character names. --RP
+%
+% NOTE: Some entries were missing in the mnemonics.ds file; We invented our
+% own. Those are: <zwnj>, <zwj>, <!+>, <Rl>, <%+>, <.+>, <,f>, <(+>,
+% <)+>, <*X+>, <+f>, <-f>, <.f>, <//f>, <0f>..<9f>, <:f>, <<f>, <=f>,
+% </>f>, <kf>, <yf>, <)/>+>, <<(+>, <!)+>, <(!+>, <<<+>, </>/>+>, <*+>,
+% <!!+>, and <////+>. Also, all character sequences
+% <NU>..<US>, <SP>, <DT> have counter-parts <NU+>..<US+>, <SP+>, <DT+>
+ 
+CHARMAP
+<NU>                   /x00   <U0000> NULL (NUL)
+<SH>                   /x01   <U0001> START OF HEADING (SOH)
+<SX>                   /x02   <U0002> START OF TEXT (STX)
+<EX>                   /x03   <U0003> END OF TEXT (ETX)
+<ET>                   /x04   <U0004> END OF TRANSMISSION (EOT)
+<EQ>                   /x05   <U0005> ENQUIRY (ENQ)
+<AK>                   /x06   <U0006> ACKNOWLEDGE (ACK)
+<BL>                   /x07   <U0007> BELL (BEL)
+<BS>                   /x08   <U0008> BACKSPACE (BS)
+<HT>                   /x09   <U0009> CHARACTER TABULATION (HT)
+<LF>                   /x0A   <U000A> LINE FEED (LF)
+<VT>                   /x0B   <U000B> LINE TABULATION (VT)
+<FF>                   /x0C   <U000C> FORM FEED (FF)
+<CR>                   /x0D   <U000D> CARRIAGE RETURN (CR)
+<SO>                   /x0E   <U000E> SHIFT OUT (SO)
+<SI>                   /x0F   <U000F> SHIFT IN (SI)
+<DL>                   /x10   <U0010> DATALINK ESCAPE (DLE)
+<D1>                   /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<D2>                   /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<D3>                   /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<D4>                   /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NK>                   /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SY>                   /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<EB>                   /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CN>                   /x18   <U0018> CANCEL (CAN)
+<EM>                   /x19   <U0019> END OF MEDIUM (EM)
+<SB>                   /x1A   <U001A> SUBSTITUTE (SUB)
+<EC>                   /x1B   <U001B> ESCAPE (ESC)
+<FS>                   /x1C   <U001C> FILE SEPARATOR (IS4)
+<GS>                   /x1D   <U001D> GROUP SEPARATOR (IS3)
+<RS>                   /x1E   <U001E> RECORD SEPARATOR (IS2)
+<US>                   /x1F   <U001F> UNIT SEPARATOR (IS1)
+<SP>                   /x20   <U0020> SPACE
+<!>                    /x21   <U0021> EXCLAMATION MARK
+<">                    /x22   <U0022> QUOTATION MARK
+<Nb>                   /x23   <U0023> NUMBER SIGN
+<DO>                   /x24   <U0024> DOLLAR SIGN
+<%>                    /x25   <U0025> PERCENT SIGN
+<&>                    /x26   <U0026> AMPERSAND
+<'>                    /x27   <U0027> APOSTROPHE
+<(>                    /x28   <U0028> LEFT PARENTHESIS
+<)>                    /x29   <U0029> RIGHT PARENTHESIS
+<*>                    /x2A   <U002A> ASTERISK
+<+>                    /x2B   <U002B> PLUS SIGN
+<,>                    /x2C   <U002C> COMMA
+<->                    /x2D   <U002D> HYPHEN-MINUS
+<.>                    /x2E   <U002E> FULL STOP
+<//>                   /x2F   <U002F> SOLIDUS
+<0>                    /x30   <U0030> DIGIT ZERO
+<1>                    /x31   <U0031> DIGIT ONE
+<2>                    /x32   <U0032> DIGIT TWO
+<3>                    /x33   <U0033> DIGIT THREE
+<4>                    /x34   <U0034> DIGIT FOUR
+<5>                    /x35   <U0035> DIGIT FIVE
+<6>                    /x36   <U0036> DIGIT SIX
+<7>                    /x37   <U0037> DIGIT SEVEN
+<8>                    /x38   <U0038> DIGIT EIGHT
+<9>                    /x39   <U0039> DIGIT NINE
+<:>                    /x3A   <U003A> COLON
+<;>                    /x3B   <U003B> SEMICOLON
+<<>                    /x3C   <U003C> LESS-THAN SIGN
+<=>                    /x3D   <U003D> EQUALS SIGN
+</>>                   /x3E   <U003E> GREATER-THAN SIGN
+<?>                    /x3F   <U003F> QUESTION MARK
+<At>                   /x40   <U0040> COMMERCIAL AT
+<A>                    /x41   <U0041> LATIN CAPITAL LETTER A
+<B>                    /x42   <U0042> LATIN CAPITAL LETTER B
+<C>                    /x43   <U0043> LATIN CAPITAL LETTER C
+<D>                    /x44   <U0044> LATIN CAPITAL LETTER D
+<E>                    /x45   <U0045> LATIN CAPITAL LETTER E
+<F>                    /x46   <U0046> LATIN CAPITAL LETTER F
+<G>                    /x47   <U0047> LATIN CAPITAL LETTER G
+<H>                    /x48   <U0048> LATIN CAPITAL LETTER H
+<I>                    /x49   <U0049> LATIN CAPITAL LETTER I
+<J>                    /x4A   <U004A> LATIN CAPITAL LETTER J
+<K>                    /x4B   <U004B> LATIN CAPITAL LETTER K
+<L>                    /x4C   <U004C> LATIN CAPITAL LETTER L
+<M>                    /x4D   <U004D> LATIN CAPITAL LETTER M
+<N>                    /x4E   <U004E> LATIN CAPITAL LETTER N
+<O>                    /x4F   <U004F> LATIN CAPITAL LETTER O
+<P>                    /x50   <U0050> LATIN CAPITAL LETTER P
+<Q>                    /x51   <U0051> LATIN CAPITAL LETTER Q
+<R>                    /x52   <U0052> LATIN CAPITAL LETTER R
+<S>                    /x53   <U0053> LATIN CAPITAL LETTER S
+<T>                    /x54   <U0054> LATIN CAPITAL LETTER T
+<U>                    /x55   <U0055> LATIN CAPITAL LETTER U
+<V>                    /x56   <U0056> LATIN CAPITAL LETTER V
+<W>                    /x57   <U0057> LATIN CAPITAL LETTER W
+<X>                    /x58   <U0058> LATIN CAPITAL LETTER X
+<Y>                    /x59   <U0059> LATIN CAPITAL LETTER Y
+<Z>                    /x5A   <U005A> LATIN CAPITAL LETTER Z
+<<(>                   /x5B   <U005B> LEFT SQUARE BRACKET
+<////>                 /x5C   <U005C> REVERSE SOLIDUS
+<)/>>                  /x5D   <U005D> RIGHT SQUARE BRACKET
+<'/>>                  /x5E   <U005E> CIRCUMFLEX ACCENT
+<_>                    /x5F   <U005F> LOW LINE
+<'!>                   /x60   <U0060> GRAVE ACCENT
+<a>                    /x61   <U0061> LATIN SMALL LETTER A
+<b>                    /x62   <U0062> LATIN SMALL LETTER B
+<c>                    /x63   <U0063> LATIN SMALL LETTER C
+<d>                    /x64   <U0064> LATIN SMALL LETTER D
+<e>                    /x65   <U0065> LATIN SMALL LETTER E
+<f>                    /x66   <U0066> LATIN SMALL LETTER F
+<g>                    /x67   <U0067> LATIN SMALL LETTER G
+<h>                    /x68   <U0068> LATIN SMALL LETTER H
+<i>                    /x69   <U0069> LATIN SMALL LETTER I
+<j>                    /x6A   <U006A> LATIN SMALL LETTER J
+<k>                    /x6B   <U006B> LATIN SMALL LETTER K
+<l>                    /x6C   <U006C> LATIN SMALL LETTER L
+<m>                    /x6D   <U006D> LATIN SMALL LETTER M
+<n>                    /x6E   <U006E> LATIN SMALL LETTER N
+<o>                    /x6F   <U006F> LATIN SMALL LETTER O
+<p>                    /x70   <U0070> LATIN SMALL LETTER P
+<q>                    /x71   <U0071> LATIN SMALL LETTER Q
+<r>                    /x72   <U0072> LATIN SMALL LETTER R
+<s>                    /x73   <U0073> LATIN SMALL LETTER S
+<t>                    /x74   <U0074> LATIN SMALL LETTER T
+<u>                    /x75   <U0075> LATIN SMALL LETTER U
+<v>                    /x76   <U0076> LATIN SMALL LETTER V
+<w>                    /x77   <U0077> LATIN SMALL LETTER W
+<x>                    /x78   <U0078> LATIN SMALL LETTER X
+<y>                    /x79   <U0079> LATIN SMALL LETTER Y
+<z>                    /x7A   <U007A> LATIN SMALL LETTER Z
+<(!>                   /x7B   <U007B> LEFT CURLY BRACKET
+<!!>                   /x7C   <U007C> VERTICAL LINE
+<!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
+<'?>                   /x7E   <U007E> TILDE
+<DT>                   /x7F   <U007F> DELETE (DEL)
+ 
+<NU+>                  /x80   <U0000> ARABIC NULL (NUL)
+<SH+>                  /x81   <U0001> ARABIC START OF HEADING (SOH)
+<SX+>                  /x82   <U0002> ARABIC START OF TEXT (STX)
+<EX+>                  /x83   <U0003> ARABIC END OF TEXT (ETX)
+<ET+>                  /x84   <U0004> ARABIC END OF TRANSMISSION (EOT)
+<EQ+>                  /x85   <U0005> ARABIC ENQUIRY (ENQ)
+<AK+>                  /x86   <U0006> ARABIC ACKNOWLEDGE (ACK)
+<BL+>                  /x87   <U0007> ARABIC BELL (BEL)
+<BS+>                  /x88   <U0008> ARABIC BACKSPACE (BS)
+<HT+>                  /x89   <U0009> ARABIC CHARACTER TABULATION (HT)
+<LF+>                  /x8A   <U000A> ARABIC LINE FEED (LF)
+<VT+>                  /x8B   <U000B> ARABIC LINE TABULATION (VT)
+<FF+>                  /x8C   <U000C> ARABIC FORM FEED (FF)
+<CR+>                  /x8D   <U000D> ARABIC CARRIAGE RETURN (CR)
+<SO+>                  /x8E   <U000E> ARABIC SHIFT OUT (SO)
+<SI+>                  /x8F   <U000F> ARABIC SHIFT IN (SI)
+<DL+>                  /x90   <U0010> ARABIC DATALINK ESCAPE (DLE)
+<D1+>                  /x91   <U0011> ARABIC DEVICE CONTROL ONE (DC1)
+<D2+>                  /x92   <U0012> ARABIC DEVICE CONTROL TWO (DC2)
+<D3+>                  /x93   <U0013> ARABIC DEVICE CONTROL THREE (DC3)
+<D4+>                  /x94   <U0014> ARABIC DEVICE CONTROL FOUR (DC4)
+<NK+>                  /x95   <U0015> ARABIC NEGATIVE ACKNOWLEDGE (NAK)
+<SY+>                  /x96   <U0016> ARABIC SYNCHRONOUS IDLE (SYN)
+<EB+>                  /x97   <U0017> ARABIC END OF TRANSMISSION BLOCK (ETB)
+<CN+>                  /x98   <U0018> ARABIC CANCEL (CAN)
+<EM+>                  /x99   <U0019> ARABIC END OF MEDIUM (EM)
+<SB+>                  /x9A   <U001A> ARABIC SUBSTITUTE (SUB)
+<EC+>                  /x9B   <U001B> ARABIC ESCAPE (ESC)
+<FS+>                  /x9C   <U001C> ARABIC FILE SEPARATOR (IS4)
+<GS+>                  /x9D   <U001D> ARABIC GROUP SEPARATOR (IS3)
+<RS+>                  /x9E   <U001E> ARABIC RECORD SEPARATOR (IS2)
+<US+>                  /x9F   <U001F> ARABIC UNIT SEPARATOR (IS1)
+ 
+<SP+>                  /xA0   <U0020> ARABIC SPACE
+<zwnj>                 /xA1   <U200C> ZERO WIDTH NON-JOINER
+<zwj>                  /xA2   <U200D> ZERO WIDTH JOINER
+<!+>                   /xA3   <U0021> ARABIC EXCLAMATION MARK
+<Rl>                   /xA4   <U00A4> RIAL SIGN
+<%+>                   /xA5   <U066A> ARABIC PERCENT SIGN
+<.+>                   /xA6   <U002E> ARABIC FULL STOP
+<,f>                   /xA7   <U066C> ARABIC THOUSANDS SEPARATOR
+<(+>                   /xA8   <U0029> ARABIC CLOSING PARENTHESIS
+<)+>                   /xA9   <U0028> ARABIC OPENING PARENTHESIS
+<*X+>                  /xAA   <U00D7> ARABIC MULTIPLICATION SIGN
+<+f>                   /xAB   <U002B> ARABIC PLUS SIGN
+<,+>                   /xAC   <U060C> ARABIC COMMA
+<-f>                   /xAD   <U002D> ARABIC HYPHEN-MINUS
+<.f>                   /xAE   <U066B> ARABIC DECIMAL SEPARATOR
+<//f>                  /xAF   <U002F> ARABIC SOLIDUS
+<0f>                   /xB0   <U06F0> EXTENDED ARABIC-INDIC DIGIT ZERO
+<1f>                   /xB1   <U06F1> EXTENDED ARABIC-INDIC DIGIT ONE
+<2f>                   /xB2   <U06F2> EXTENDED ARABIC-INDIC DIGIT TWO
+<3f>                   /xB3   <U06F3> EXTENDED ARABIC-INDIC DIGIT THREE
+<4f>                   /xB4   <U06F4> EXTENDED ARABIC-INDIC DIGIT FOUR
+<5f>                   /xB5   <U06F5> EXTENDED ARABIC-INDIC DIGIT FIVE
+<6f>                   /xB6   <U06F6> EXTENDED ARABIC-INDIC DIGIT SIX
+<7f>                   /xB7   <U06F7> EXTENDED ARABIC-INDIC DIGIT SEVEN
+<8f>                   /xB8   <U06F8> EXTENDED ARABIC-INDIC DIGIT EIGHT
+<9f>                   /xB9   <U06F9> EXTENDED ARABIC-INDIC DIGIT NINE
+<:f>                   /xBA   <U003A> ARABIC COLON
+<;+>                   /xBB   <U061B> ARABIC SEMICOLON
+</>f>                  /xBC   <U003C> ARABIC GREATER-THAN SIGN
+<=f>                   /xBD   <U003D> ARABIC EQUALS SIGN
+<<f>                   /xBE   <U003E> ARABIC LESS-THAN SIGN
+<?+>                   /xBF   <U061F> ARABIC QUESTION MARK
+<aM>                   /xC0   <U0622> ARABIC LETTER ALEF WITH MADDA ABOVE
+<a+>                   /xC1   <U0627> ARABIC LETTER ALEF
+<H'>                   /xC2   <U0621> ARABIC LETTER HAMZA
+<b+>                   /xC3   <U0628> ARABIC LETTER BEH
+<p+>                   /xC4   <U067E> ARABIC LETTER PEH
+<t+>                   /xC5   <U062A> ARABIC LETTER TEH
+<tk>                   /xC6   <U062B> ARABIC LETTER THEH
+<g+>                   /xC7   <U062C> ARABIC LETTER JEEM
+<tc>                   /xC8   <U0686> ARABIC LETTER TCHEH
+<hk>                   /xC9   <U062D> ARABIC LETTER HAH
+<x+>                   /xCA   <U062E> ARABIC LETTER KHAH
+<d+>                   /xCB   <U062F> ARABIC LETTER DAL
+<dk>                   /xCC   <U0630> ARABIC LETTER THAL
+<r+>                   /xCD   <U0631> ARABIC LETTER REH
+<z+>                   /xCE   <U0632> ARABIC LETTER ZAIN
+<zj>                   /xCF   <U0698> ARABIC LETTER JEH
+<s+>                   /xD0   <U0633> ARABIC LETTER SEEN
+<sn>                   /xD1   <U0634> ARABIC LETTER SHEEN
+<c+>                   /xD2   <U0635> ARABIC LETTER SAD
+<dd>                   /xD3   <U0636> ARABIC LETTER DAD
+<tj>                   /xD4   <U0637> ARABIC LETTER TAH
+<zH>                   /xD5   <U0638> ARABIC LETTER ZAH
+<e+>                   /xD6   <U0639> ARABIC LETTER AIN
+<i+>                   /xD7   <U063A> ARABIC LETTER GHAIN
+<f+>                   /xD8   <U0641> ARABIC LETTER FEH
+<q+>                   /xD9   <U0642> ARABIC LETTER QAF
+<kf>                   /xDA   <U06A9> ARABIC LETTER KEHEH
+<gf>                   /xDB   <U06AF> ARABIC LETTER GAF
+<l+>                   /xDC   <U0644> ARABIC LETTER LAM
+<m+>                   /xDD   <U0645> ARABIC LETTER MEEM
+<n+>                   /xDE   <U0646> ARABIC LETTER NOON
+<w+>                   /xDF   <U0648> ARABIC LETTER WAW
+<h+>                   /xE0   <U0647> ARABIC LETTER HEH
+<yf>                   /xE1   <U06CC> ARABIC LETTER FARSI YEH
+<<(+>                  /xE2   <U005D> ARABIC CLOSING SQUARE BRACKET
+<)/>+>                 /xE3   <U005B> ARABIC OPENING SQUARE BRACKET
+<(!+>                  /xE4   <U007D> ARABIC CLOSING CURLY BRACKET
+<!)+>                  /xE5   <U007B> ARABIC OPENING CURLY BRACKET
+<<<>                   /xE6   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+</>/>>                 /xE7   <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+<*+>                   /xE8   <U002A> ARABIC ASTERISK
+<++>                   /xE9   <U0640> ARABIC TATWEEL
+<!!+>                  /xEA   <U007C> ARABIC VERTICAL LINE
+<////+>                /xEB   <U005C> ARABIC REVERSE SOLIDUS
+<//+>                  /xF0   <U064E> ARABIC FATHA
+<1+>                   /xF1   <U0650> ARABIC KASRA
+<'+>                   /xF2   <U064F> ARABIC DAMMA
+<:+>                   /xF3   <U064B> ARABIC FATHATAN
+<=+>                   /xF4   <U064D> ARABIC KASRATAN
+<"+>                   /xF5   <U064C> ARABIC DAMMATAN
+<3+>                   /xF6   <U0651> ARABIC SHADDA
+<0+>                   /xF7   <U0652> ARABIC SUKUN
+<aH>                   /xF8   <U0623> ARABIC LETTER ALEF WITH HAMZA ABOVE
+<wH>                   /xF9   <U0624> ARABIC LETTER WAW WITH HAMZA ABOVE
+<ah>                   /xFA   <U0625> ARABIC LETTER ALEF WITH HAMZA BELOW
+<yH>                   /xFB   <U0626> ARABIC LETTER YEH WITH HAMZA ABOVE
+<tm>                   /xFC   <U0629> ARABIC LETTER TEH MARBUTA
+<k+>                   /xFD   <U0643> ARABIC LETTER KAF
+<y+>                   /xFE   <U064A> ARABIC LETTER YEH
+<DT+>                  /xFF   <U007F> ARABIC DELETE
+ 
+<NUL>                  /x00   <U0000> NULL (NUL)
+<SOH>                  /x01   <U0001> START OF HEADING (SOH)
+<STX>                  /x02   <U0002> START OF TEXT (STX)
+<ETX>                  /x03   <U0003> END OF TEXT (ETX)
+<EOT>                  /x04   <U0004> END OF TRANSMISSION (EOT)
+<ENQ>                  /x05   <U0005> ENQUIRY (ENQ)
+<ACK>                  /x06   <U0006> ACKNOWLEDGE (ACK)
+<alert>                /x07   <U0007> BELL (BEL)
+<BEL>                  /x07   <U0007> BELL (BEL)
+<backspace>            /x08   <U0008> BACKSPACE (BS)
+<tab>                  /x09   <U0009> CHARACTER TABULATION (HT)
+<newline>              /x0A   <U000A> LINE FEED (LF)
+<vertical-tab>         /x0B   <U000B> LINE TABULATION (VT)
+<form-feed>            /x0C   <U000C> FORM FEED (FF)
+<carriage-return>      /x0D   <U000D> CARRIAGE RETURN (CR)
+<DLE>                  /x10   <U0010> DATALINK ESCAPE (DLE)
+<DC1>                  /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<DC2>                  /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<DC3>                  /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<DC4>                  /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NAK>                  /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SYN>                  /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<ETB>                  /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CAN>                  /x18   <U0018> CANCEL (CAN)
+<SUB>                  /x1A   <U001A> SUBSTITUTE (SUB)
+<ESC>                  /x1B   <U001B> ESCAPE (ESC)
+<IS4>                  /x1C   <U001C> FILE SEPARATOR (IS4)
+<IS3>                  /x1D   <U001D> GROUP SEPARATOR (IS3)
+<intro>                /x1D   <U001D> GROUP SEPARATOR (IS3)
+<IS2>                  /x1E   <U001E> RECORD SEPARATOR (IS2)
+<IS1>                  /x1F   <U001F> UNIT SEPARATOR (IS1)
+<DEL>                  /x7F   <U007F> DELETE (DEL)
+<space>                /x20   <U0020> SPACE
+<exclamation-mark>     /x21   <U0021> EXCLAMATION MARK
+<quotation-mark>       /x22   <U0022> QUOTATION MARK
+<number-sign>          /x23   <U0023> NUMBER SIGN
+<dollar-sign>          /x24   <U0024> DOLLAR SIGN
+<percent-sign>         /x25   <U0025> PERCENT SIGN
+<ampersand>            /x26   <U0026> AMPERSAND
+<apostrophe>           /x27   <U0027> APOSTROPHE
+<left-parenthesis>     /x28   <U0028> LEFT PARENTHESIS
+<right-parenthesis>    /x29   <U0029> RIGHT PARENTHESIS
+<asterisk>             /x2A   <U002A> ASTERISK
+<plus-sign>            /x2B   <U002B> PLUS SIGN
+<comma>                /x2C   <U002C> COMMA
+<hyphen>               /x2D   <U002D> HYPHEN-MINUS
+<hyphen-minus>         /x2D   <U002D> HYPHEN-MINUS
+<period>               /x2E   <U002E> FULL STOP
+<full-stop>            /x2E   <U002E> FULL STOP
+<slash>                /x2F   <U002F> SOLIDUS
+<solidus>              /x2F   <U002F> SOLIDUS
+<zero>                 /x30   <U0030> DIGIT ZERO
+<one>                  /x31   <U0031> DIGIT ONE
+<two>                  /x32   <U0032> DIGIT TWO
+<three>                /x33   <U0033> DIGIT THREE
+<four>                 /x34   <U0034> DIGIT FOUR
+<five>                 /x35   <U0035> DIGIT FIVE
+<six>                  /x36   <U0036> DIGIT SIX
+<seven>                /x37   <U0037> DIGIT SEVEN
+<eight>                /x38   <U0038> DIGIT EIGHT
+<nine>                 /x39   <U0039> DIGIT NINE
+<colon>                /x3A   <U003A> COLON
+<semicolon>            /x3B   <U003B> SEMICOLON
+<less-than-sign>       /x3C   <U003C> LESS-THAN SIGN
+<equals-sign>          /x3D   <U003D> EQUALS SIGN
+<greater-than-sign>    /x3E   <U003E> GREATER-THAN SIGN
+<question-mark>        /x3F   <U003F> QUESTION MARK
+<commercial-at>        /x40   <U0040> COMMERCIAL AT
+<left-square-bracket>  /x5B   <U005B> LEFT SQUARE BRACKET
+<backslash>            /x5C   <U005C> REVERSE SOLIDUS
+<reverse-solidus>      /x5C   <U005C> REVERSE SOLIDUS
+<right-square-bracket> /x5D   <U005D> RIGHT SQUARE BRACKET
+<circumflex>           /x5E   <U005E> CIRCUMFLEX ACCENT
+<circumflex-accent>    /x5E   <U005E> CIRCUMFLEX ACCENT
+<underscore>           /x5F   <U005F> LOW LINE
+<low-line>             /x5F   <U005F> LOW LINE
+<grave-accent>         /x60   <U0060> GRAVE ACCENT
+<left-brace>           /x7B   <U007B> LEFT CURLY BRACKET
+<left-curly-bracket>   /x7B   <U007B> LEFT CURLY BRACKET
+<vertical-line>        /x7C   <U007C> VERTICAL LINE
+<right-brace>          /x7D   <U007D> RIGHT CURLY BRACKET
+<right-curly-bracket>  /x7D   <U007D> RIGHT CURLY BRACKET
+<tilde>                /x7E   <U007E> TILDE
+END CHARMAP

@@ -44,4 +44,8 @@ libc {
     # v*
     valloc;
   }
+  GLIBC_2.1 {
+    # Special functions.
+    __libc_freeres;
+  }
 }

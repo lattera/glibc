@@ -1,0 +1,510 @@
+comment_char %
+escape_char  /
+%
+% Persian Language Locale for Iran with ISIRI-3342 character set
+% Source: The Persian Internet Project
+% Address: Computing Center, Sharif University of Technology,
+%    Azadi Ave, Tehran, Iran
+% Contact: Roozbeh Pournader
+% Email: roozbeh@sina.sharif.ac.ir
+% Tel: +98 21 6022378
+% Fax:
+% Language: fa
+% Territory: IR
+% Revision: 0.0
+% Date: 1999-12-11
+% Users: general
+% Repertoiremap:
+% Charset: ISIRI-3342
+% Distribution and use is free, also
+% for commercial purposes.
+ 
+% Note that the following can not be used for character sets
+% other than ISIRI-3342. It is dependent to the ISIRI-3342
+% BIDI behaviour which is not the same as Unicode BIDI behaviour.
+% So, another versions will be needed for UTF-8 and IRAN-SYSTEM.
+ 
+LC_CTYPE
+%
+upper   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>
+%
+lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;/
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>
+%
+alpha   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;/
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;/
+        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;/
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;/
+        <aM>;<a+>;<H'>;<b+>;<p+>;<t+>;<tk>;<g+>;<tc>;<hk>;/
+        <x+>;<d+>;<dk>;<r+>;<z+>;<zj>;<s+>;<sn>;<c+>;<dd>;/
+        <tj>;<zH>;<e+>;<i+>;<f+>;<q+>;<kf>;<gf>;<l+>;<m+>;/
+        <n+>;<w+>;<h+>;<yf>;<aH>;<wH>;<ah>;<yh>;<tm>;<k+>;<y+>
+%
+% I'm not sure how can I make Persian digits get accepted
+% as digits.
+%
+digit   <0>;...;<9>;/
+	<0f>;...;<9f>
+%
+xdigit  <0>;<1>;<2>;<3>;<4>;/
+        <5>;<6>;<7>;<8>;<9>;/
+        <A>;<B>;<C>;<D>;<E>;<F>;/
+        <a>;<b>;<c>;<d>;<e>;<f>
+%
+blank   <SP>;<HT>;<SP+>;<HT+>
+%
+space   <SP>;<LF>;<VT>;<FF>;<CR>;<HT>;/
+        <SP+>;<LF+>;<VT+>;<FF+>;<CR+>;<HT+>
+%
+cntrl   <NU>;<SH>;<SX>;<EX>;<ET>;<EQ>;/
+        <AK>;<BL>;<BS>;<HT>;<LF>;<VT>;/
+        <FF>;<CR>;<SO>;<SI>;<DL>;<D1>;/
+        <D2>;<D3>;<D4>;<NK>;<SY>;<EB>;/
+        <CN>;<EM>;<SB>;<EC>;<FS>;<GS>;/
+        <RS>;<US>;/
+        <NU+>;<SH+>;<SX+>;<EX+>;<ET+>;<EQ+>;/
+        <AK+>;<BL+>;<BS+>;<HT+>;<LF+>;<VT+>;/
+        <FF+>;<CR+>;<SO+>;<SI+>;<DL+>;<D1+>;/
+        <D2+>;<D3+>;<D4+>;<NK+>;<SY+>;<EB+>;/
+        <CN+>;<EM+>;<SB+>;<EC+>;<FS+>;<GS+>;/
+        <RS+>;<US+>;/
+        <zwnj>;<zwj>
+%
+punct   <!>;<">;<Nb>;<DO>;<%>;<&>;<'>;/
+        <(>;<)>;<*>;<+>;<,>;<->;<.>;/
+        <//>;<:>;<;>;<<>;<=>;</>>;<?>;/
+        <At>;<<(>;<////>;<)/>>;<'/>>;/
+        <_>;<'!>;<(!>;<!!>;<!)>;<'?>;/
+        <!+>;<Rl>;<%+>;<.+>;<,f>;<(+>;/
+        <)+>;<*X+>;<+f>;<,+>;<-f>;<.f>;/
+        <//f>;<:f>;<;+>;</>f>;<=f>;/
+        <<f>;<?+>;<<(+>;<)/>+>;<(!+>;/
+        <!)+>;<<<>;</>/>>;<*+>;<++>;/
+        <!!+>;<////>;<//+>;<1+>;<'+>;/
+        <:+>;<=+>;<"+>;<3+>;<0+>
+%
+tolower (<A>,<a>);(<B>,<b>);(<C>,<c>);(<D>,<d>);(<E>,<e>);/
+        (<F>,<f>);(<G>,<g>);(<H>,<h>);(<I>,<i>);(<J>,<j>);/
+        (<K>,<k>);(<L>,<l>);(<M>,<m>);(<N>,<n>);(<O>,<o>);/
+        (<P>,<p>);(<Q>,<q>);(<R>,<r>);(<S>,<s>);(<T>,<t>);/
+        (<U>,<u>);(<V>,<v>);(<W>,<w>);(<X>,<x>);(<Y>,<y>);(<Z>,<z>)
+%
+toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);/
+        (<f>,<F>);(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);/
+        (<k>,<K>);(<l>,<L>);(<m>,<M>);(<n>,<N>);(<o>,<O>);/
+        (<p>,<P>);(<q>,<Q>);(<r>,<R>);(<s>,<S>);(<t>,<T>);/
+        (<u>,<U>);(<v>,<V>);(<w>,<W>);(<x>,<X>);(<y>,<Y>);(<z>,<Z>)
+END LC_CTYPE
+ 
+LC_COLLATE
+ 
+% Based on en_DK collation specifications.
+% Many lines are deleted because ISIRI-3342 does
+% not support any Latin character not in ASCII.
+% The four part sorting is preserved to maintain
+% compatiblity with original en_DK.P
+ 
+% Ordering algorithm:
+%  1. Spaces and hyphen (but not soft
+%     hyphen) before punctuation
+%     characters, punctuation characters
+%     before numbers,
+%     umbers before letters.
+%  2. A distinction is made with regards
+%     to case as noted below.
+%  3. Special characters are ignored
+%     when comparing letters, but then
+%     they are considered
+%  4. Latin script is sorted before Arabic
+%     to attract notice in index, etc.
+%
+% collating symbols
+ 
+collating-symbol <CAPITAL>
+collating-symbol <SMALL>
+ 
+collating-symbol <NONE>
+collating-symbol <SPECIAL>
+ 
+% Latin collation order:
+%   letter;accent;case;specials
+% which becomes
+%   letter;variant;harekat;specials
+% for Persian.
+ 
+order_start forward;forward;forward;position
+ 
+% <CAPITAL> or <SMALL> letters first:
+ 
+<CAPITAL>
+<SMALL>
+ 
+% Accents:
+ 
+<NONE>
+<SPECIAL>
+ 
+<SP>	IGNORE;IGNORE;IGNORE;<SP>
+<SP+>   IGNORE;IGNORE;IGNORE;<SP+>
+<HT>	IGNORE;IGNORE;IGNORE;<HT>
+<HT+>   IGNORE;IGNORE;IGNORE;<HT+>
+<VT>	IGNORE;IGNORE;IGNORE;<VT>
+<VT+>	IGNORE;IGNORE;IGNORE;<VT+>
+<CR>	IGNORE;IGNORE;IGNORE;<CR>
+<CR+>	IGNORE;IGNORE;IGNORE;<CR+>
+<LF>	IGNORE;IGNORE;IGNORE;<LF>
+<LF+>	IGNORE;IGNORE;IGNORE;<LF+>
+<FF>	IGNORE;IGNORE;IGNORE;<FF>
+<FF+>	IGNORE;IGNORE;IGNORE;<FF+>
+<_>	IGNORE;IGNORE;IGNORE;<_>
+<->	IGNORE;IGNORE;IGNORE;<->
+<-f>	IGNORE;IGNORE;IGNORE;<-f>
+<++>	IGNORE;IGNORE;IGNORE;<++>
+<,>	IGNORE;IGNORE;IGNORE;<,>
+<;>	IGNORE;IGNORE;IGNORE;<;>
+<:>	IGNORE;IGNORE;IGNORE;<:>
+<:f>	IGNORE;IGNORE;IGNORE;<:f>
+<!>	IGNORE;IGNORE;IGNORE;<!>
+<!+>	IGNORE;IGNORE;IGNORE;<!+>
+<?>	IGNORE;IGNORE;IGNORE;<?>
+<//>	IGNORE;IGNORE;IGNORE;<//>
+<//f>	IGNORE;IGNORE;IGNORE;<//f>
+<.>	IGNORE;IGNORE;IGNORE;<.>
+<.+>	IGNORE;IGNORE;IGNORE;<.+>
+<'!>	IGNORE;IGNORE;IGNORE;<'!>
+<'/>>	IGNORE;IGNORE;IGNORE;<'/>>
+<'?>	IGNORE;IGNORE;IGNORE;<'?>
+<'>	IGNORE;IGNORE;IGNORE;<'>
+<">	IGNORE;IGNORE;IGNORE;<">
+<<<>	IGNORE;IGNORE;IGNORE;<<<>
+</>/>>	IGNORE;IGNORE;IGNORE;</>/>>
+<(>	IGNORE;IGNORE;IGNORE;<(>
+<)+>	IGNORE;IGNORE;IGNORE;<)+>
+<)>	IGNORE;IGNORE;IGNORE;<)>
+<(+>	IGNORE;IGNORE;IGNORE;<(+>
+<<(>	IGNORE;IGNORE;IGNORE;<<(>
+<)/>+>	IGNORE;IGNORE;IGNORE;<)/>+>
+<)/>>	IGNORE;IGNORE;IGNORE;<)/>>
+<<(+>	IGNORE;IGNORE;IGNORE;<<(+>
+<(!>	IGNORE;IGNORE;IGNORE;<(!>
+<!)+>	IGNORE;IGNORE;IGNORE;<!)+>
+<!)>	IGNORE;IGNORE;IGNORE;<!)>
+<(!+>	IGNORE;IGNORE;IGNORE;<(!+>
+<At>	IGNORE;IGNORE;IGNORE;<At>
+<DO>	IGNORE;IGNORE;IGNORE;<DO>
+<*>	IGNORE;IGNORE;IGNORE;<*>
+<*+>	IGNORE;IGNORE;IGNORE;<*+>
+<////>	IGNORE;IGNORE;IGNORE;<////>
+<////+>	IGNORE;IGNORE;IGNORE;<////+>
+<&>	IGNORE;IGNORE;IGNORE;<&>
+<Nb>	IGNORE;IGNORE;IGNORE;<Nb>
+<%>	IGNORE;IGNORE;IGNORE;<%>
+<+>	IGNORE;IGNORE;IGNORE;<+>
+<+f>	IGNORE;IGNORE;IGNORE;<+f>
+<*X+>	IGNORE;IGNORE;IGNORE;<*X+>
+<<>	IGNORE;IGNORE;IGNORE;<<>
+<<f>	IGNORE;IGNORE;IGNORE;<<f>
+<=>	IGNORE;IGNORE;IGNORE;<=>
+<=f>	IGNORE;IGNORE;IGNORE;<=f>
+</>>	IGNORE;IGNORE;IGNORE;</>>
+</>f>	IGNORE;IGNORE;IGNORE;</>f>
+<!!>	IGNORE;IGNORE;IGNORE;<!!>
+<!!+>	IGNORE;IGNORE;IGNORE;<!!+>
+<NU>	IGNORE;IGNORE;IGNORE;<NU>
+<SH>	IGNORE;IGNORE;IGNORE;<SH>
+<SX>	IGNORE;IGNORE;IGNORE;<SX>
+<EX>	IGNORE;IGNORE;IGNORE;<EX>
+<ET>	IGNORE;IGNORE;IGNORE;<ET>
+<EQ>	IGNORE;IGNORE;IGNORE;<EQ>
+<AK>	IGNORE;IGNORE;IGNORE;<AK>
+<BL>	IGNORE;IGNORE;IGNORE;<BL>
+<BS>	IGNORE;IGNORE;IGNORE;<BS>
+<SO>	IGNORE;IGNORE;IGNORE;<SO>
+<SI>	IGNORE;IGNORE;IGNORE;<SI>
+<DL>	IGNORE;IGNORE;IGNORE;<DL>
+<D1>	IGNORE;IGNORE;IGNORE;<D1>
+<D2>	IGNORE;IGNORE;IGNORE;<D2>
+<D3>	IGNORE;IGNORE;IGNORE;<D3>
+<D4>	IGNORE;IGNORE;IGNORE;<D4>
+<NK>	IGNORE;IGNORE;IGNORE;<NK>
+<SY>	IGNORE;IGNORE;IGNORE;<SY>
+<EB>	IGNORE;IGNORE;IGNORE;<EB>
+<CN>	IGNORE;IGNORE;IGNORE;<CN>
+<EM>	IGNORE;IGNORE;IGNORE;<EM>
+<SB>	IGNORE;IGNORE;IGNORE;<SB>
+<EC>	IGNORE;IGNORE;IGNORE;<EC>
+<FS>	IGNORE;IGNORE;IGNORE;<FS>
+<GS>	IGNORE;IGNORE;IGNORE;<GS>
+<RS>	IGNORE;IGNORE;IGNORE;<RS>
+<US>	IGNORE;IGNORE;IGNORE;<US>
+<DT>	IGNORE;IGNORE;IGNORE;<DT>
+<NU+>	IGNORE;IGNORE;IGNORE;<NU+>
+<SH+>	IGNORE;IGNORE;IGNORE;<SH+>
+<SX+>	IGNORE;IGNORE;IGNORE;<SX+>
+<EX+>	IGNORE;IGNORE;IGNORE;<EX+>
+<ET+>	IGNORE;IGNORE;IGNORE;<ET+>
+<EQ+>	IGNORE;IGNORE;IGNORE;<EQ+>
+<AK+>	IGNORE;IGNORE;IGNORE;<AK+>
+<BL+>	IGNORE;IGNORE;IGNORE;<BL+>
+<BS+>	IGNORE;IGNORE;IGNORE;<BS+>
+<SO+>	IGNORE;IGNORE;IGNORE;<SO+>
+<SI+>	IGNORE;IGNORE;IGNORE;<SI+>
+<DL+>	IGNORE;IGNORE;IGNORE;<DL+>
+<D1+>	IGNORE;IGNORE;IGNORE;<D1+>
+<D2+>	IGNORE;IGNORE;IGNORE;<D2+>
+<D3+>	IGNORE;IGNORE;IGNORE;<D3+>
+<D4+>	IGNORE;IGNORE;IGNORE;<D4+>
+<NK+>	IGNORE;IGNORE;IGNORE;<NK+>
+<SY+>	IGNORE;IGNORE;IGNORE;<SY+>
+<EB+>	IGNORE;IGNORE;IGNORE;<EB+>
+<CN+>	IGNORE;IGNORE;IGNORE;<CN+>
+<EM+>	IGNORE;IGNORE;IGNORE;<EM+>
+<SB+>	IGNORE;IGNORE;IGNORE;<SB+>
+<EC+>	IGNORE;IGNORE;IGNORE;<EC+>
+<FS+>	IGNORE;IGNORE;IGNORE;<FS+>
+<GS+>	IGNORE;IGNORE;IGNORE;<GS+>
+<RS+>	IGNORE;IGNORE;IGNORE;<RS+>
+<US+>	IGNORE;IGNORE;IGNORE;<US+>
+<DT+>	IGNORE;IGNORE;IGNORE;<DT+>
+<zwnj>	IGNORE;IGNORE;IGNORE;<zwnj>
+<zwj>	IGNORE;IGNORE;IGNORE;<zwj>
+UNDEFINED	IGNORE;IGNORE;IGNORE
+ 
+<0>	<0>;<0>;IGNORE;IGNORE
+<1>	<1>;<1>;IGNORE;IGNORE
+<2>	<2>;<2>;IGNORE;IGNORE
+<3>	<3>;<3>;IGNORE;IGNORE
+<4>	<4>;<4>;IGNORE;IGNORE
+<5>	<5>;<5>;IGNORE;IGNORE
+<6>	<6>;<6>;IGNORE;IGNORE
+<7>	<7>;<7>;IGNORE;IGNORE
+<8>	<8>;<8>;IGNORE;IGNORE
+<9>	<9>;<9>;IGNORE;IGNORE
+ 
+<A>	<A>;<NONE>;<CAPITAL>;IGNORE
+<a>	<A>;<NONE>;<SMALL>;IGNORE
+<B>	<B>;<NONE>;<CAPITAL>;IGNORE
+<b>	<B>;<NONE>;<SMALL>;IGNORE
+<C>	<C>;<NONE>;<CAPITAL>;IGNORE
+<c>	<C>;<NONE>;<SMALL>;IGNORE
+<D>	<D>;<NONE>;<CAPITAL>;IGNORE
+<d>	<D>;<NONE>;<SMALL>;IGNORE
+<E>	<E>;<NONE>;<CAPITAL>;IGNORE
+<e>	<E>;<NONE>;<SMALL>;IGNORE
+<F>	<F>;<NONE>;<CAPITAL>;IGNORE
+<f>	<F>;<NONE>;<SMALL>;IGNORE
+<G>	<G>;<NONE>;<CAPITAL>;IGNORE
+<g>	<G>;<NONE>;<SMALL>;IGNORE
+<H>	<H>;<NONE>;<CAPITAL>;IGNORE
+<h>	<H>;<NONE>;<SMALL>;IGNORE
+<I>	<I>;<NONE>;<CAPITAL>;IGNORE
+<i>	<I>;<NONE>;<SMALL>;IGNORE
+<J>	<J>;<NONE>;<CAPITAL>;IGNORE
+<j>	<J>;<NONE>;<SMALL>;IGNORE
+<K>	<K>;<NONE>;<CAPITAL>;IGNORE
+<k>	<K>;<NONE>;<SMALL>;IGNORE
+<L>	<L>;<NONE>;<CAPITAL>;IGNORE
+<l>	<L>;<NONE>;<SMALL>;IGNORE
+<M>	<M>;<NONE>;<CAPITAL>;IGNORE
+<m>	<M>;<NONE>;<SMALL>;IGNORE
+<N>	<N>;<NONE>;<CAPITAL>;IGNORE
+<n>	<N>;<NONE>;<SMALL>;IGNORE
+<O>	<O>;<NONE>;<CAPITAL>;IGNORE
+<o>	<O>;<NONE>;<SMALL>;IGNORE
+<P>	<P>;<NONE>;<CAPITAL>;IGNORE
+<p>	<P>;<NONE>;<SMALL>;IGNORE
+<Q>	<Q>;<NONE>;<CAPITAL>;IGNORE
+<q>	<Q>;<NONE>;<SMALL>;IGNORE
+<R>	<R>;<NONE>;<CAPITAL>;IGNORE
+<r>	<R>;<NONE>;<SMALL>;IGNORE
+<S>	<S>;<NONE>;<CAPITAL>;IGNORE
+<s>	<S>;<NONE>;<SMALL>;IGNORE
+<T>	<T>;<NONE>;<CAPITAL>;IGNORE
+<t>	<T>;<NONE>;<SMALL>;IGNORE
+<U>	<U>;<NONE>;<CAPITAL>;IGNORE
+<u>	<U>;<NONE>;<SMALL>;IGNORE
+<V>	<V>;<NONE>;<CAPITAL>;IGNORE
+<v>	<V>;<NONE>;<SMALL>;IGNORE
+<W>	<W>;<NONE>;<CAPITAL>;IGNORE
+<w>	<W>;<NONE>;<SMALL>;IGNORE
+<X>	<X>;<NONE>;<CAPITAL>;IGNORE
+<x>	<X>;<NONE>;<SMALL>;IGNORE
+<Y>	<Y>;<NONE>;<CAPITAL>;IGNORE
+<y>	<Y>;<NONE>;<SMALL>;IGNORE
+<Z>	<Z>;<NONE>;<CAPITAL>;IGNORE
+<z>	<Z>;<NONE>;<SMALL>;IGNORE
+ 
+% Persian digits have equal weight to Latin ones,
+% but sorted after them if the strings are equal.
+ 
+<0f>	<0>;<0f>;IGNORE;IGNORE
+<1f>	<1>;<1f>;IGNORE;IGNORE
+<2f>	<2>;<2f>;IGNORE;IGNORE
+<3f>	<3>;<3f>;IGNORE;IGNORE
+<4f>	<4>;<4f>;IGNORE;IGNORE
+<5f>	<5>;<5f>;IGNORE;IGNORE
+<6f>	<6>;<6f>;IGNORE;IGNORE
+<7f>	<7>;<7f>;IGNORE;IGNORE
+<8f>	<8>;<8f>;IGNORE;IGNORE
+<9f>	<9>;<9f>;IGNORE;IGNORE
+ 
+<,+>	IGNORE;IGNORE;IGNORE;<,+>
+<;+>	IGNORE;IGNORE;IGNORE;<;+>
+<?+>	IGNORE;IGNORE;IGNORE;<?+>
+<%+>	IGNORE;IGNORE;IGNORE;<%+>
+ 
+% I am not sure where should I put the next two characters.
+<.f>	IGNORE;IGNORE;IGNORE;<.f>
+<,f>	IGNORE;IGNORE;IGNORE;<,f>
+ 
+% Rial sign is considered as a sequence of its composing letters.
+% If equal, it comes first.
+ 
+<Rl>	"<r+><yf><a+><l+>";"<NONE><NONE><NONE><NONE>";IGNORE;IGNORE
+ 
+<aM>	<aM>;<aM>;IGNORE;IGNORE
+<a+>	<a+>;<a+>;IGNORE;IGNORE
+<H'>	<H'>;<H'>;IGNORE;IGNORE
+<aH>	<H'>;<aH>;IGNORE;IGNORE
+<wH>	<H'>;<wH>;IGNORE;IGNORE
+<ah>	<H'>;<ah>;IGNORE;IGNORE
+<yH>	<H'>;<yH>;IGNORE;IGNORE
+<b+>	<b+>;<b+>;IGNORE;IGNORE
+<p+>	<p+>;<p+>;IGNORE;IGNORE
+<t+>	<t+>;<t+>;IGNORE;IGNORE
+<tk>	<tk>;<tk>;IGNORE;IGNORE
+<g+>	<g+>;<g+>;IGNORE;IGNORE
+<tc>	<tc>;<tc>;IGNORE;IGNORE
+<hk>	<hk>;<hk>;IGNORE;IGNORE
+<x+>	<x+>;<x+>;IGNORE;IGNORE
+<d+>	<d+>;<d+>;IGNORE;IGNORE
+<dk>	<dk>;<dk>;IGNORE;IGNORE
+<r+>	<r+>;<r+>;IGNORE;IGNORE
+<z+>	<z+>;<z+>;IGNORE;IGNORE
+<zj>	<zj>;<zj>;IGNORE;IGNORE
+<s+>	<s+>;<s+>;IGNORE;IGNORE
+<sn>	<sn>;<sn>;IGNORE;IGNORE
+<c+>	<c+>;<c+>;IGNORE;IGNORE
+<dd>	<dd>;<dd>;IGNORE;IGNORE
+<tj>	<tj>;<tj>;IGNORE;IGNORE
+<zH>	<zH>;<zH>;IGNORE;IGNORE
+<e+>	<e+>;<e+>;IGNORE;IGNORE
+<i+>	<i+>;<i+>;IGNORE;IGNORE
+<f+>	<f+>;<f+>;IGNORE;IGNORE
+<q+>	<q+>;<q+>;IGNORE;IGNORE
+<kf>	<kf>;<kf>;IGNORE;IGNORE
+<k+>	<kf>;<k+>;IGNORE;IGNORE
+<gf>	<gf>;<gf>;IGNORE;IGNORE
+<l+>	<l+>;<l+>;IGNORE;IGNORE
+<m+>	<m+>;<m+>;IGNORE;IGNORE
+<n+>	<n+>;<n+>;IGNORE;IGNORE
+<w+>	<w+>;<w+>;IGNORE;IGNORE
+<h+>	<h+>;<h+>;IGNORE;IGNORE
+<tm>	<h+>;<tm>;IGNORE;IGNORE
+<yf>	<yf>;<yf>;IGNORE;IGNORE
+<y+>	<yf>;<y+>;IGNORE;IGNORE
+ 
+<//+>	IGNORE;IGNORE;<//+>;IGNORE
+<1+>	IGNORE;IGNORE;<1+>;IGNORE
+<'+>	IGNORE;IGNORE;<'+>;IGNORE
+<:+>	IGNORE;IGNORE;<:+>;IGNORE
+<=+>	IGNORE;IGNORE;<=+>;IGNORE
+<"+>	IGNORE;IGNORE;<"+>;IGNORE
+<3+>	IGNORE;IGNORE;<3+>;IGNORE
+<0+>	IGNORE;IGNORE;<0+>;IGNORE
+ 
+order_end
+ 
+END LC_COLLATE
+ 
+LC_MONETARY
+int_curr_symbol   "<I><R><R><SP>"
+currency_symbol   "<Rl>"
+mon_decimal_point "<.f>"
+mon_thousands_sep "<,f>"
+mon_grouping      3
+positive_sign     ""
+negative_sign     "<-f>"
+int_frac_digits   0
+frac_digits       0
+%
+% The POSIX standard does not allow different formats for
+% displaying currency as local and international.
+% When they were different, following order specifies
+% the conventions of local currency display.
+%
+% The following positioning is based on ISIRI-3342 BIDI, and should not be
+% used when using Unicode BIDI.
+%
+p_cs_precedes     0
+p_sep_by_space    2
+n_cs_precedes     0
+n_sep_by_space    2
+p_sign_posn       3
+n_sign_posn       3
+END LC_MONETARY
+ 
+LC_NUMERIC
+decimal_point     "<.f>"
+thousands_sep     "<,f>"
+grouping          3
+END LC_NUMERIC
+ 
+LC_TIME
+abday   "<yf><.+>";"<d+><.+>";"<s+><.+>";/
+        "<tc><.+>";"<p+><.+>";"<g+><.+>";/
+	"<sn><.+>"
+%
+day     "<yf><kf><zwnj><sn><n+><b+><h+>";/
+        "<d+><w+><sn><n+><b+><h+>";/
+        "<s+><h+><zwnj><sn><n+><b+><h+>";/
+        "<tc><h+><a+><r+><sn><n+><b+><h+>";/
+        "<p+><n+><g+><zwnj><sn><n+><b+><h+>";/
+        "<g+><m+><e+><h+>";/
+        "<sn><n+><b+><h+>"
+%
+mon     "<zj><a+><n+><w+><yf><h+>";/
+        "<f+><w+><r+><w+><yf><h+>";/
+        "<m+><a+><r+><s+>";/
+        "<aM><w+><r+><yf><l+>";/
+        "<m+><h+>";/
+        "<zj><w+><yH><n+>";/
+        "<zj><w+><yH><yf><h+>";/
+        "<a+><w+><t+>";/
+        "<s+><p+><t+><a+><m+><b+><r+>";/
+        "<a+><k+><t+><b+><r+>";/
+        "<n+><w+><a+><m+><b+><r+>";/
+        "<d+><s+><a+><m+><b+><r+>"
+%
+abmon   "<zj><a+><n+>";"<f+><w+><r+>";/
+        "<m+><a+><r+>";"<aM><w+><r+>";/
+        "<m+><++><h+>";"<zj><w+><n+>";/
+        "<zj><w+><yf>";"<a+><w+><t+>";/
+        "<s+><p+><t+>";"<a+><k+><t+>";/
+        "<n+><w+><a+>";"<d+><s+><a+>"
+%
+am_pm   "<c+><b+><hk>";"<e+><c+><r+>"
+%
+% The following date and time formats are based on ISIRI-3342 BIDI, and
+% should not be used when using Unicode BIDI.
+%
+d_t_fmt "<%><S><:f><%><M><:f><%><I><SP+><%><p><SP+>/
+<%><A><SP+><%><e><SP+><%><B><SP+><%><Y>"
+%
+d_fmt "<%><d><//f><%><m><//f><%><Y>"
+%
+t_fmt "<%><S><:f><%><M><:f><%><H>"
+%
+t_fmt_ampm "<%><S><:f><%><M><:f><%><I><SP+><%><p>"
+%
+END LC_TIME
+ 
+% <b+> for <b+><l+><h+>, <aM> for <am><r+><yf>,
+% <x+> for <x+><yf><r+>, <n+> for <n+><h+>.
+% <f> and <o> are placeholders for <b+> and <x+>
+% in Persian standard keyboard (revised ISIRI-2901).
+LC_MESSAGES
+yesexpr "<<(><y><Y><b+><aM><f><)/>><.><*>"
+noexpr  "<<(><n><N><x+><n+><o><)/>><.><*>"
+END LC_MESSAGES
