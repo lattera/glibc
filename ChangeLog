@@ -15,6 +15,10 @@ Thu Mar 16 00:04:41 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* stdlib/stdlib.h (__strtof, __strtold): Declarations removed.
 	(__strto{f,d,ld,l,ul,q,uq}_internal): Declare these functions.
 	[__OPTIMIZE__]: Define inline functions calling those.
+	* stdlib/strtold.c (STRTOF): Set to strtold, not __strtold.
+	(strtold): Remove weak alias.
+	* stdlib/strtof.c (STRTOF): Set to strtof, not __strtof.
+	(strtof): Remove weak alias.
 	* stdlib/grouping.h: New file, written by drepper.
 	* stdlib/Makefile (distribute): Add grouping.h.
 	* stdio/vfscanf.c: Grok %' modifier to numeric conversions.  Call
