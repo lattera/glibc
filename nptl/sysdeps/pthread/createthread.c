@@ -27,10 +27,6 @@
 
 
 #define CLONE_SIGNAL    	(CLONE_SIGHAND | CLONE_THREAD)
-/* XXX Remove when definition is common place.  */
-#ifndef CLONE_STOPPED
-# define CLONE_STOPPED 0x02000000
-#endif
 
 /* Unless otherwise specified, the thread "register" is going to be
    initialized with a pointer to the TCB.  */

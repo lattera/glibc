@@ -1,5 +1,7 @@
 2003-07-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/createthread.c: Don't define CLONE_STOPPED.
+
 	* Makefile: Define various *-no-z-defs variables for test DSOs
 	which has undefined symbols.
 

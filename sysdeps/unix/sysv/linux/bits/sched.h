@@ -55,6 +55,7 @@
 				      force CLONE_PTRACE on this clone.  */
 # define CLONE_CHILD_SETTID 0x01000000 /* Store TID in userlevel buffer in
 					  the child.  */
+# define CLONE_STOPPED	0x02000000 /* Start in stopped state.  */
 #endif
 
 /* The official definition.  */

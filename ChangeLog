@@ -1,5 +1,7 @@
 2003-07-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/sched.h (CLONE_STOPPED): Define.
+
 	* sysdeps/i386/fpu/feenablxcpt.c (feenableexcept): Reverse use of
 	stmxcsr and ldmxcsr.
 
