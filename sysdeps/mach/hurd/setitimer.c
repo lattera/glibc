@@ -140,7 +140,7 @@ static int
 setitimer_locked (const struct itimerval *new, struct itimerval *old,
 		  void *crit)
 {
-  struct itimerval newval = *new;
+  struct itimerval newval;
   struct timeval now, remaining, elapsed;
   struct timeval old_interval;
   error_t err;
@@ -154,6 +154,18 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
       _hurd_itimer_thread = MACH_PORT_NULL;
     }
 
+  if (!new)
+    {
+      /* Just return the current value in OLD without changing anything.
+	 This is what BSD does, even though it's not documented. */
+      if (old)
+	*old = _hurd_itemerval;
+      spin_unlock (&_hurd_itimer_lock);
+      _hurd_critical_section_unlock (crit);
+      return 0;
+    }
+
+  newval = *new;
   if ((newval.it_value.tv_sec | newval.it_value.tv_usec) != 0)
     {
       /* Make sure the itimer thread is set up.  */
