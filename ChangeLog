@@ -1,3 +1,12 @@
+Wed Mar 29 11:26:48 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	More changes from Germano Caronni <caronni@tik.ethz.ch>:
+	* malloc/free.c: Relocate _heapinfo when that allows us to return
+ 	core to the system.
+
+	* malloc/malloc.c: Move #include <errno.h> outside #ifndef
+	_MALLOC_INTERNAL.
+
 Mon Mar 27 02:23:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* mach/Makefile (headers): Add mach/mach_traps.h.

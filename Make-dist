@@ -210,6 +210,7 @@ README: README.template version.c
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.
 	chmod 444 $@
+	test -d CVS && commit -m'Remade for $(release)-$(version)' $@
 
 
 endif	# Subdirectory vs. parent makefile

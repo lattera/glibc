@@ -10,3 +10,5 @@ sun4 i386 i386-gnuelf hp300-netbsd hp300
 ieeetest hppa-sysdeps regex
 
 gpl2lgpl.sed
+distinfo
+distinfo

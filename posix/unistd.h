@@ -427,8 +427,8 @@ extern int isatty __P ((int __fd));
 
 #ifdef __USE_BSD
 /* Return the index into the active-logins file (utmp) for
-   the terminal FD is open on.  */
-extern int ttyslot ((int __fd));
+   the controlling terminal.  */
+extern int ttyslot __P ((void));
 #endif
 
 
