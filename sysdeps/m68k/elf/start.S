@@ -50,6 +50,10 @@ _start:
 	move.l %sp, %a0		/* The argument vector starts just at the
 				   current stack top.  */
 
+	/* Provide the highest stack address to the user code (for stacks
+	   which grow downward).  */
+	pea (%sp)
+
 	pea (%a1)		/* Push address of the shared library
 				   termination function.  */
 

@@ -1,3 +1,11 @@
+Wed Jun 10 10:32:11 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Set
+	_dl_profile_map only if the name matches.
+	(_dl_start_user): Remember stack address.
+	* sysdeps/m68k/elf/start.S: Pass new argument to
+	__libc_start_user. 
+
 1998-06-09 18:16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/Makefile (libm-calls): Add w_exp10 and e_exp10.
