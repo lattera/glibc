@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/SPARC sigaction.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,7 @@ struct sigaction
 
 /* Bits in `sa_flags'.  */
 #define	SA_NOCLDSTOP 0x00000008  /* Don't send SIGCHLD when children stop.  */
+#define SA_NOCLDWAIT 0x00000100  /* Don't create zombie on child death.  */
 #define SA_SIGINFO   0x00000200  /* Invoke signal-catching function with
 				    three arguments instead of one.  */
 #ifdef __USE_MISC

@@ -1,5 +1,5 @@
 /* User functions for run-time dynamic loading.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,6 @@
 #define	_DLFCN_H 1
 
 #include <features.h>
-#define __need_NULL
-#include <stddef.h>
 
 /* Collect various system dependent definitions and declarations.  */
 #include <bits/dlfcn.h>
@@ -37,7 +35,7 @@
 /* If the first argument to `dlsym' or `dlvsym' is set to RTLD_DEFAULT
    the run-time address of the symbol called NAME in the global scope
    is returned.  */
-# define RTLD_DEFAULT	NULL
+# define RTLD_DEFAULT	((void *) 0)
 #endif
 
 __BEGIN_DECLS

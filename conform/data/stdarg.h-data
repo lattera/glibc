@@ -1,0 +1,7 @@
+type va_list
+
+// XXX We didn't check the parameters.
+macro va_start
+macro va_arg
+macro va_end
+macro va_copy

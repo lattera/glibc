@@ -17,7 +17,7 @@ macro FTW_DEPTH
 macro FTW_CHDIR
 
 function int ftw (const char*, int (*) (const char *, const struct stat*, int), int)
-function int nftw (const char*, int (*) (const char *, const struct stat*, int, FTW *), int, int)
+function int nftw (const char*, int (*) (const char *, const struct stat*, int, struct FTW *), int, int)
 
 allow *_t
 #endif

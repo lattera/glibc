@@ -22,7 +22,7 @@ function {void*} lfind (const void*, const void*, size_t*, size_t, int (*)(const
 function {void*} lsearch (const void*, void*, size_t*, size_t, int (*)(const void*, const void*))
 function void remque (void*)
 function {void*} tdelete (const void*, void**, int(*)(const void*, const void*))
-function {void*} tfind (const void*, void*const*, int(*)(const void*, const void*)) tfind (const void*, void*const*, int(*)(const void*, const void*))
+function {void*} tfind (const void*, void*const*, int(*)(const void*, const void*))
 function {void*} tsearch (const void*, void**, int(*)(const void*, const void*))
 function void twalk (const void*, void (*) (const void*, VISIT, int))
 

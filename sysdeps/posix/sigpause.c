@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1994-1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,12 +60,20 @@ __sigpause (sig_or_mask, is_sig)
 /* We have to provide a default version of this function since the
    standards demand it.  The version which is a bit more reasonable is
    the BSD version.  So make this the default.  */
-int __default_sigpause __P ((int mask));
 int
-__default_sigpause (mask)
-     int mask;
+__default_sigpause (int mask)
 {
   return __sigpause (mask, 0);
 }
 #undef sigpause
 weak_alias (__default_sigpause, sigpause)
+
+
+/* We have to provide a default version of this function since the
+   standards demand it.  The version which is a bit more reasonable is
+   the BSD version.  So make this the default.  */
+int
+__xpg_sigpause (int sig)
+{
+  return __sigpause (sig, 1);
+}

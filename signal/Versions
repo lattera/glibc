@@ -45,4 +45,8 @@ libc {
     # LinuxThreads needs this entry point.
     __sigsuspend;
   }
+  GLIBC_2.2 {
+    # Needed to provide a pointer to the XPG sigpause function.
+    __xpg_sigpause;
+  }
 }

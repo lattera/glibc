@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,9 +55,15 @@ typedef __sigset_t sigset_t;
 #include <bits/types.h>
 #include <bits/signum.h>
 
-#if defined __USE_XOPEN && !defined __pid_t_defined
+#ifdef __USE_XOPEN
+# ifndef __pid_t_defined
 typedef __pid_t pid_t;
-# define __pid_t_defined
+#  define __pid_t_defined
+# endif
+# ifndef __uid_t_defined
+typedef __uid_t uid_t;
+#  define __uid_t_defined
+# endif
 #endif	/* Unix98 */
 
 
@@ -140,6 +146,9 @@ extern int sigpause (int __mask) __THROW;
 # define sigpause(mask) __sigpause ((mask), 0)
 #else
 # ifdef __USE_XOPEN
+#  ifdef __GNUC__
+extern int sigpause (int __sig) __asm__ ("__xpg_sigpause") __THROW;
+#  endif
 /* Remove a signal from the signal mask and suspend the process.  */
 #  define sigpause(sig) __sigpause ((sig), 1)
 # endif
@@ -309,12 +318,14 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 extern int siginterrupt (int __sig, int __interrupt) __THROW;
 
 # include <bits/sigstack.h>
+# ifdef __USE_XOPEN
+#  include <ucontext.h>
+# endif
 
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.
    This interface is obsolete and on many platform not implemented.  */
-extern int sigstack (__const struct sigstack *__ss,
-		     struct sigstack *__oss) __THROW;
+extern int sigstack (struct sigstack *__ss, struct sigstack *__oss) __THROW;
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */

@@ -1,5 +1,5 @@
 /* Emulate sigstack function using sigaltstack.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -26,7 +26,7 @@
 #ifdef __NR_sigaltstack
 int
 sigstack (ss, oss)
-     const struct sigstack *ss;
+     struct sigstack *ss;
      struct sigstack *oss;
 {
   stack_t sas;

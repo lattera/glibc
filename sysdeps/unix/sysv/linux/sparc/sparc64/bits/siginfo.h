@@ -93,7 +93,7 @@ typedef struct siginfo
 	/* SIGPOLL.  */
 	struct
 	  {
-	    long int si_band;	/* Band event for SIGPOLL.  */
+	    int si_band;	/* Band event for SIGPOLL.  */
 	    int si_fd;
 	  } _sigpoll;
       } _sifields;

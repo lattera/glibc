@@ -1,0 +1,191 @@
+typed-constant SIG_DFL {void(*)(int)}
+typed-constant SIG_ERR {void(*)(int)}
+typed-constant SIG_HOLD {void(*)(int)}
+typed-constant SIG_IGN {void(*)(int)}
+
+type sig_atomic_t
+type sigset_t
+type pid_t
+
+element {union sigval} int sival_int
+element {union sigval} {void*} sival_ptr
+
+type {struct sigevent}
+
+// Test the elements of the sigevent_t structure.
+element {struct sigevent} int sigev_notify
+element {struct sigevent} int sigev_signo
+element {struct sigevent} {union sigval} sigev_value
+element {struct sigevent} {void(*)(union sigval)} sigev_notify_function
+element {struct sigevent} {pthread_attr_t*} sigev_notify_attributes
+
+constant SIGEV_NONE
+constant SIGEV_SIGNAL
+constant SIGEV_THREAD
+
+type {union sigval}
+
+macro SIGRTMIN
+macro SIGRTMAX
+
+constant SIGABRT
+constant SIGALRM
+constant SIGFPE
+constant SIGHUP
+constant SIGILL
+constant SIGINT
+constant SIGKILL
+constant SIGPIPE
+constant SIGQUIT
+constant SIGSEGV
+constant SIGTERM
+constant SIGUSR1
+constant SIGUSR2
+constant SIGCHLD
+constant SIGCONT
+constant SIGSTOP
+constant SIGTSTP
+constant SIGTTIN
+constant SIGTTOU
+constant SIGBUS
+constant SIGPOLL
+constant SIGPROF
+constant SIGSYS
+constant SIGTRAP
+constant SIGURG
+constant SIGVALRM
+constant SIGXCPU
+constant SIGXFSZ
+
+type {struct sigaction}
+
+element {struct sigaction} {void(*} sa_handler )(int)
+element {struct sigaction} sigset_t sa_mask
+element {struct sigaction} int sa_flags
+element {struct sigaction} {void(*} sa_sigaction )(int, siginfo_t*, void*)
+
+constant SA_NOCLDSTOP
+constant SIG_BLOCK
+constant SIG_UNBLOCK
+constant SIG_SETMASK
+constant SA_ONSTACK
+constant SA_RESETHAND
+constant SA_RESTART
+constant SA_SIGINFO
+constant SA_NOCLDWAIT
+constant SA_NODEFER
+constant SS_ONSTACK
+constant SS_DISABLE
+constant MINSIGSTKSZ
+constant SIGSTKSZ
+
+type ucontext_t
+
+element ucontext_t {ucontext_t*} uc_link
+element ucontext_t sigset_t uc_sigmask
+element ucontext_t stack_t uc_stack
+element ucontext_t mcontext_t uc_mcontext
+
+type stack_t
+
+element stack_t {void*} ss_sp
+element stack_t size_t ss_size
+element stack_t int ss_flags
+
+type {struct sigstack}
+
+element {struct sigstack} int ss_onstack
+element {struct sigstack} {void*} ss_sp
+
+type siginfo_t
+
+element siginfo_t int si_signo
+element siginfo_t int si_errno
+element siginfo_t int si_code
+element siginfo_t pid_t si_pid
+element siginfo_t uid_t si_uid
+element siginfo_t {void*} si_addr
+element siginfo_t int si_status
+element siginfo_t long si_band
+element siginfo_t {union sigval} si_value
+
+constant ILL_ILLOPC
+constant ILL_ILLOPN
+constant ILL_ILLADR
+constant ILL_ILLTRP
+constant ILL_PRVOPC
+constant ILL_PRVREG
+constant ILL_COPROC
+constant ILL_BADSTK
+constant FPE_INTDIV
+constant FPE_INTOVF
+constant FPE_FLTDIV
+constant FPE_FLTOVF
+constant FPE_FLTUND
+constant FPE_FLTRES
+constant FPE_FLTINV
+constant FPE_FLTSUB
+constant SEGV_MAPERR
+constant SEGV_ACCERR
+constant BUS_ADRALN
+constant BUS_ADRERR
+constant BUS_OBJERR
+constant TRAP_BRKPT
+constant TRAP_TRACE
+constant CLD_EXITED
+constant CLD_KILLED
+constant CLD_DUMPED
+constant CLD_TRAPPED
+constant CLD_STOPPED
+constant CLD_CONTINUED
+constant POLL_IN
+constant POLL_OUT
+constant POLL_MSG
+constant POLL_ERR
+constant POLL_PRI
+constant POLL_HUP
+constant SI_USER
+constant SI_QUEUE
+constant SI_TIMER
+constant SI_ASYNCIO
+constant SI_MESGQ
+
+function void (*bsd_signal (int, void(*)(int)))(int)
+function int kill (pid_t, int)
+function int killpg (pid_t, int)
+function int pthread_kill (pthread_t, int)
+function int pthread_sigmask (int, const sigset_t*, sigset_t*)
+function int raise (int)
+function int sigaction (int, const struct sigaction*, struct sigaction*)
+function int sigaddset (sigset_t*, int)
+function int sigaltstack (const stack_t*, stack_t*)
+function int sigdelset (sigset_t*, int)
+function int sigemptyset (sigset_t*)
+function int sigfillset (sigset_t*)
+function int sighold (int)
+function int sigignore (int)
+function int siginterrupt (int, int)
+function int sigismember (const sigset_t*, int)
+function void (*signal (int, void(*)(int)))(int)
+function int sigpause (int)
+function int sigpending (sigset_t*)
+function int sigprocmask (int, const sigset_t*, sigset_t*)
+function int sigqueue (pid_t, int, const union sigval)
+function int sigrelse (int)
+function void (*sigset (int, void(*)(int)))(int)
+function int sigstack (struct sigstack*, struct sigstack*)
+function int sigsuspend (const sigset_t*)
+function int sigtimedwait (const sigset_t*, siginfo_t*, const struct timespec*)
+function int sigwait (const sigset_t*, int*)
+function int sigwaitinfo (const sigset_t*, siginfo_t*)
+
+allow SIG*
+allow sa_*
+allow uc_*
+allow ss_*
+allow sv_*
+allow si_*
+allow SI_*
+allow sigev_*
+allow SIGEV_*
+allow sival_*

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ extern iconv_t iconv_open (__const char *__tocode, __const char *__fromcode)
 /* Convert at most *INBYTESLEFT bytes from *INBUF according to the
    code conversion algorithm specified by CD and place up to
    *OUTBYTESLEFT bytes in buffer at *OUTBUF.  */
-extern size_t iconv (iconv_t cd, __const char **__restrict __inbuf,
+extern size_t iconv (iconv_t __cd, __const char **__restrict __inbuf,
 		     size_t *__restrict __inbytesleft,
 		     char **__restrict __outbuf,
 		     size_t *__restrict __outbytesleft);

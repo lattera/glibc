@@ -1,0 +1,103 @@
+constant BUFSIZ
+constant FILENAME_MAX
+constant FOPEN_MAX
+
+constant _IOFBF
+constant _IOLBF
+constant _IONBF
+
+constant L_ctermid
+constant L_cuserid
+constant L_tmpnam
+
+constant SEEK_CUR
+constant SEEK_END
+constant SEEK_SET
+
+constant TMP_MAX
+
+constant EOF
+
+constant NULL
+
+constant P_tmpdir
+
+macro stdin
+macro stdout
+macro stderr
+
+type FILE
+type fpos_t
+type va_list
+type size_t
+
+function void clearerr (FILE*)
+function {char*} ctermid (char*)
+function {char*} cuserid (char*)
+function int fclose (FILE*)
+function {FILE*} fdopen (int, const char*)
+function int feof (FILE*)
+function int ferror (FILE*)
+function int fflush (FILE*)
+function int fgetc (FILE*)
+function int fgetpos (FILE*, fpos_t*)
+function {char*} fgets (char*, int, FILE*)
+function int fileno (FILE*)
+function void flockfile (FILE*)
+function {FILE*} fopen (const char*, const char*)
+function int fprintf (FILE*, const char*, ...)
+function int fputc (int, FILE*)
+function int fputs (const char*, FILE*)
+function size_t fread (void*, size_t, size_t, FILE*)
+function {FILE*} freopen (const char*, const char*, FILE*)
+function int fscanf (FILE*, const char*, ...)
+function int fseek (FILE*, long int, int)
+function int fseeko (FILE*, off_t, int)
+function int fsetpos (FILE*, const fpos_t*)
+function {long int} ftell (FILE*)
+function off_t ftello (FILE*)
+function int ftrylockfile (FILE*)
+function void funlockfile (FILE*)
+function size_t fwrite (const void*, size_t, size_t, FILE*)
+function int getc (FILE*)
+function int getchar (void)
+function int getc_unlocked (FILE*)
+function int getopt (int, char *const[], const char *)
+function {char*} gets (char*)
+function int getw (FILE*)
+function int pclose (FILE*)
+function void perror (const char*)
+function {FILE*} popen (const char*, const char*)
+function int printf (const char*, ...)
+function int putc (int, FILE*)
+function int putchar (int)
+function int putc_unlocked (int, FILE*)
+function int putchar_unlocked (int)
+function int puts (const char*)
+function int putw (int, FILE*)
+function int remove (const char*)
+function int rename (const char*, const char*)
+function void rewind (FILE*)
+function int scanf (const char*, ...)
+function void setbuf (FILE*, char*)
+function int setvbuf (FILE*, char*, int, size_t)
+function int snprintf (char*, size_t, const char*, ...)
+function int sprintf (char *, const char *, ...)
+function int sscanf (const char*, const char*, ...)
+function {char*} tempnam (const char*, const char*)
+function {FILE*} tmpfile (void)
+function {char*} tmpnam (char*)
+function int ungetc (int, FILE*)
+function int vfprintf (FILE*, const char*, va_list)
+function int vprintf (const char*, va_list)
+function int vsnprintf (char*, size_t, const char*, va_list)
+function int vsprintf (char*, const char*, va_list)
+
+#if !defined ISO && !defined POSIX
+variable {char*} optarg
+variable int opterr
+variable int optind
+variable int optopt
+
+allow-header stddef.h
+#endif

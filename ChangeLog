@@ -1,5 +1,50 @@
 2000-02-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/dlfcn.h (RTLD_DEFAULT): Don't use NULL.
+
+	* iconv/iconv.h (iconv): Fix prototype.
+
+	* misc/libgen.h: When using gcc using renaming feature to get XPG
+	definition of basename.
+
+	* misc/search.h (struct entry): Fix type of element data.
+
+	* posix/unistd.h (getpagesize): Declare as const function.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Define SA_NOCLDWAIT.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+
+	* signal/signal.h [__USE_XOPEN]: Define uid_t.
+	(sigstack): Correct type of first parameter.
+	* sysdeps/generic/sigstack.c (sigstack): Likewise.
+	* sysdeps/unix/sysv/linux/sigstack.c (sigstack): Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: New file.  Copy of
+	old sysdeps/unix/sysv/linux/bits/siginfo.h.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h [struct siginfo] (si_band):
+	Change type to `long int'.
+
+	* signal/signal.h [__USE_XOPEN]: Declare sigpause to redirect to
+	__xpg_sigpause.
+	* sysdeps/generic/sigpause.c: Define __xpg_sigpause.
+	* sysdeps/posix/sigpause.c: Likewise.
+
+	* conform/conformtest.pl: Correct bugs.  Add more functionality.
+	* conform/data/dlfcn.h-data: Correct typos.
+	* conform/data/ftw.h-data: Likewise.
+	* conform/data/iconv.h-data: Likewise.
+	* conform/data/nl_types.h-data: Likewise.
+	* conform/data/search.h-data: Likewise.
+	* conform/data/semaphore.h-data: New file.
+	* conform/data/setjmp.h-data: New file.
+	* conform/data/signal.h-data: New file.
+	* conform/data/stdarg.h-data: New file.
+	* conform/data/stddef.h-data: New file.
+	* conform/data/stdio.h-data: New file.
+
 	* po/de.po: Update from translation team.
 
 1999-12-31  Martin Buchholz  <martin@xemacs.org>

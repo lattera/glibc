@@ -10,4 +10,5 @@ function int dlclose (void*)
 function {char*} dlerror (void)
 
 allow *_t
+allow RTLD_*
 #endif

@@ -6,7 +6,7 @@ constant NL_SETD
 constant NL_CAT_LOCALE
 
 function int catclose (nl_catd)
-function {char*} catgets (nl_catd, int, int, char char*)
+function {char*} catgets (nl_catd, int, int, const char*)
 function nl_catd catopen (const char*, int)
 
 allow *_t

@@ -1,0 +1,23 @@
+#if !defined ISO
+type sem_t
+
+constant SEM_FAILED
+
+function int sem_close (sem_t*)
+function int sem_destroy (sem_t*)
+function int sem_getvalue (sem_t*, int*)
+function int sem_init (sem_t*, int, unsigned int)
+function {sem_t*} sem_open (const char*, int, ...)
+function int sem_post (sem_t*)
+function int sem_trywait (sem_t*)
+function int sem_unlink (const char*)
+function int sem_wait (sem_t*)
+
+# if !defined POSIX
+allow-header fcntl.h
+allow-header sys/types.h
+# endif
+
+allow sem_*
+allow SEM_*
+#endif

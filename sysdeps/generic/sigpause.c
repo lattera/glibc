@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,10 +30,8 @@ __sigpause (sig_or_mask, is_sig)
 stub_warning (__sigpause)
 
 
-int __default_sigpause __P ((int mask));
 int
-__default_sigpause (mask)
-     int mask;
+__default_sigpause (int mask)
 {
   __set_errno (ENOSYS);
   return -1;
@@ -41,3 +39,11 @@ __default_sigpause (mask)
 weak_alias (__default_sigpause, sigpause)
 stub_warning (sigpause)
 #include <stub-tag.h>
+
+
+int
+__xpg_sigpause (int sig)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
