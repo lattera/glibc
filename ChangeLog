@@ -1,3 +1,13 @@
+2000-09-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/lockf64.c: New file.
+
+	* sysdeps/unix/sysv/linux/s390/fcntl.c: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/lockf64.c: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/fcntl.c: New file.
+
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Handle unaligned
