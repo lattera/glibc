@@ -1,5 +1,7 @@
 #include <dlfcn.h>
 
+int nextmod1_dummy_var;
+
 int
 successful_rtld_next_test (void)
 {
@@ -16,5 +18,10 @@ successful_rtld_next_test (void)
 void *
 failing_rtld_next_use (void)
 {
-  return dlsym (RTLD_NEXT, __FUNCTION__);
+  void *ret = dlsym (RTLD_NEXT, __FUNCTION__);
+
+  /* Ensure we are not tail call optimized, because then RTLD_NEXT
+     might return this function.  */
+  ++nextmod1_dummy_var;
+  return ret;
 }

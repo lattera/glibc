@@ -1,3 +1,8 @@
+2000-10-03  GOTO Masanori  <gotom@debian.or.jp>
+
+	* locales/ja_JP: Changed yesexpr/noexpr expression,
+	fixed typo in era, added definition for name_gen.
+
 2000-09-30  Bruno Haible  <haible@clisp.cons.org>
 
 	* SUPPORTED: Add ko_KR.UTF-8.

@@ -1,3 +1,10 @@
+2000-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/nextmod1.c (failing_rtld_next_use): Ensure it is not tail call
+	optimized.
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: New file.
+
 2000-10-02  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Add missing .mips0 at the
