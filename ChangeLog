@@ -1,5 +1,8 @@
 1999-08-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/fileops.c (_IO_file_xsgetn): Allocate buffer if none is
+	allocated so far.  [PR libc/1261].
+
 	* math/libm-test.c (j0_test): Adjust deltas for m68k.
 	(jn_test): Likewise.
 

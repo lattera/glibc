@@ -849,6 +849,17 @@ _IO_file_xsgetn (fp, data, n)
 
   want = n;
 
+  if (fp->_IO_buf_base == NULL)
+    {
+      /* Maybe we already have a push back pointer.  */
+      if (fp->_IO_save_base != NULL)
+	{
+	  free (fp->_IO_save_base);
+	  fp->_flags &= ~_IO_IN_BACKUP;
+	}
+      _IO_doallocbuf (fp);
+    }
+
   while (want > 0)
     {
       have = fp->_IO_read_end - fp->_IO_read_ptr;
