@@ -370,7 +370,7 @@ _dl_allocate_tls_init (void *result)
 	  assert (map->l_tls_modid == cnt);
 	  assert (map->l_tls_blocksize >= map->l_tls_initimage_size);
 # if TLS_TCB_AT_TP
-	  assert (map->l_tls_offset >= map->l_tls_blocksize);
+	  assert ((size_t) map->l_tls_offset >= map->l_tls_blocksize);
 	  dest = (char *) result - map->l_tls_offset;
 # elif TLS_DTV_AT_TP
 	  dest = (char *) result + map->l_tls_offset;

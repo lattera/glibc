@@ -105,7 +105,7 @@
    cancellation state value is saved.  */
 # define EH_FRAME_0(name) \
     .byte 4;								      \
-    .long L(PUSHSTATE)-name;						      \
+    .long L(PUSHSTATE)-L(name##START);					      \
     .byte 14;								      \
     .uleb128 8;								      \
     .byte 4;								      \
@@ -122,7 +122,7 @@
    also to save the content of the %ebx register.  */
 # define EH_FRAME_3(name) \
     .byte 4;								      \
-    .long L(PUSHBX1)-name;						      \
+    .long L(PUSHBX1)-L(name##START);					      \
     .byte 14;								      \
     .uleb128 8;								      \
     .byte 4;								      \
@@ -149,7 +149,7 @@
 /* With four parameters the syscall wrappers have to save %ebx and %esi.  */
 # define EH_FRAME_4(name) \
     .byte 4;								      \
-    .long L(PUSHSI1)-name;						      \
+    .long L(PUSHSI1)-L(name##START);					      \
     .byte 14;								      \
     .uleb128 8;								      \
     .byte 4;								      \
@@ -193,7 +193,7 @@
    and %edi.  */
 # define EH_FRAME_5(name) \
     .byte 4;								      \
-    .long L(PUSHDI1)-name;						      \
+    .long L(PUSHDI1)-L(name##START);					      \
     .byte 14;								      \
     .uleb128 8;								      \
     .byte 4;								      \

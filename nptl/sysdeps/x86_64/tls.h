@@ -204,6 +204,15 @@ typedef struct
      __value; })
 
 
+/* Loading addresses of objects on x86-64 needs to be treated special
+   when generating PIC code.  */
+#ifdef __pic__
+# define IMM_MODE "nr"
+#else
+# define IMM_MODE "ir"
+#endif
+
+
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
@@ -212,7 +221,7 @@ typedef struct
 		       "i" (offsetof (struct pthread, member)));	      \
      else if (sizeof (descr->member) == 4)				      \
        asm volatile ("movl %0,%%fs:%P1" :				      \
-		     : "ir" (value),					      \
+		     : IMM_MODE (value),				      \
 		       "i" (offsetof (struct pthread, member)));	      \
      else								      \
        {								      \
@@ -222,7 +231,7 @@ typedef struct
 	   abort ();							      \
 									      \
 	 asm volatile ("movq %q0,%%fs:%P1" :				      \
-		       : "ir" ((unsigned long int) value),		      \
+		       : IMM_MODE ((unsigned long int) value),		      \
 			 "i" (offsetof (struct pthread, member)));	      \
        }})
 
@@ -236,7 +245,7 @@ typedef struct
 		       "r" (idx));					      \
      else if (sizeof (descr->member[0]) == 4)				      \
        asm volatile ("movl %0,%%fs:%P1(,%q2,4)" :			      \
-		     : "ir" (value),					      \
+		     : IMM_MODE (value),				      \
 		       "i" (offsetof (struct pthread, member[0])),	      \
 		       "r" (idx));					      \
      else								      \
@@ -247,7 +256,7 @@ typedef struct
 	   abort ();							      \
 									      \
 	 asm volatile ("movq %q0,%%fs:%P1(,%q2,8)" :			      \
-		       : "r" ((unsigned long int) value),		      \
+		       : IMM_MODE ((unsigned long int) value),		      \
 			 "i" (offsetof (struct pthread, member[0])),	      \
 			 "r" (idx));					      \
        }})

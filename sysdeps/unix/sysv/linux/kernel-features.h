@@ -289,3 +289,8 @@
 # define __ASSUME_NETLINK_SUPPORT	1
 #endif
 
+/* For x86, support for the sysenter instruction was available in
+   2.5.53.  */
+#if __LINUX_KERNEL_VERSION >= 132405 && defined __i386__
+# define __ASSUME_VSYSCALL	1
+#endif
