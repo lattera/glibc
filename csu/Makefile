@@ -37,7 +37,7 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 install-lib = $(start-installed-name) g$(start-installed-name) \
 	      $(csu-dummies)
 distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
-	     abi-note.S init.c
+	     abi-note.S init.c munch-tmpl.c
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
 

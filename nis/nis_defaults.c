@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -72,7 +72,7 @@ searchowner (char *str)
 static u_long
 searchttl (char *str)
 {
-  char buf[1024];
+  char buf[strlen (str) + 1];
   char *cptr, *dptr;
   u_long time;
   int i;
@@ -89,6 +89,7 @@ searchttl (char *str)
     return DEFAULT_TTL;
 
   strncpy (buf, dptr, i);
+  buf[i] = '\0';
   time = 0;
 
   dptr = buf;
@@ -131,7 +132,7 @@ searchttl (char *str)
 static u_long
 searchaccess (char *str, u_long access)
 {
-  char buf[NIS_MAXNAMELEN];
+  char buf[strlen (str) + 1];
   char *cptr;
   u_long result = access;
   int i;
@@ -149,9 +150,12 @@ searchaccess (char *str, u_long access)
     return 0;
 
   strncpy (buf, cptr, i);
+  buf[i] = '\0';
 
   n = o = g = w = 0;
   cptr = buf;
+  if (*cptr == ',') /* Fix for stupid Solaris scripts */
+    ++cptr;
   while (*cptr != '\0')
     {
       switch (*cptr)
@@ -172,7 +176,7 @@ searchaccess (char *str, u_long access)
 	  o = g = w = 1;
 	  break;
 	case '-':
-	  cptr++;		/* Remove "=" from beginning */
+	  cptr++;		/* Remove "-" from beginning */
 	  while (*cptr != '\0' && *cptr != ',')
 	    {
 	      switch (*cptr)
@@ -225,7 +229,7 @@ searchaccess (char *str, u_long access)
 	  n = o = g = w = 0;
 	  break;
 	case '+':
-	  cptr++;		/* Remove "=" from beginning */
+	  cptr++;		/* Remove "+" from beginning */
 	  while (*cptr != '\0' && *cptr != ',')
 	    {
 	      switch (*cptr)
@@ -347,7 +351,8 @@ searchaccess (char *str, u_long access)
 	default:
 	  return result = ULONG_MAX;
 	}
-      cptr++;
+      if (*cptr != '\0')
+	cptr++;
     }
 
   return result;
@@ -356,7 +361,7 @@ searchaccess (char *str, u_long access)
 nis_name
 __nis_default_owner (char *defaults)
 {
-  char default_owner[NIS_MAXNAMELEN];
+  char default_owner[NIS_MAXNAMELEN + 1];
   char *cptr, *dptr;
 
   strcpy (default_owner, nis_local_principal ());
@@ -367,7 +372,8 @@ __nis_default_owner (char *defaults)
       if (dptr != NULL)
 	{
 	  char *p = searchowner (defaults);
-	  strcpy (default_owner, p);
+	  if (strlen (p) <= NIS_MAXNAMELEN)
+	    strcpy (default_owner, p);
 	  free (p);
 	}
     }
@@ -380,7 +386,8 @@ __nis_default_owner (char *defaults)
 	  if (dptr != NULL)
 	    {
 	      char *p = searchowner (cptr);
-	      strcpy (default_owner, p);
+	      if (strlen (p) <= NIS_MAXNAMELEN)
+		strcpy (default_owner, p);
 	      free (p);
 	    }
 	}
@@ -392,7 +399,7 @@ __nis_default_owner (char *defaults)
 nis_name
 __nis_default_group (char *defaults)
 {
-  char default_group[NIS_MAXNAMELEN];
+  char default_group[NIS_MAXNAMELEN + 1];
   char *cptr, *dptr;
 
   strcpy (default_group, nis_local_group ());
@@ -403,7 +410,9 @@ __nis_default_group (char *defaults)
       if (dptr != NULL)
 	{
 	  char *p = searchgroup (defaults);
-	  strcpy (default_group, p);
+
+	  if (strlen (p) <= NIS_MAXNAMELEN)
+	    strcpy (default_group, p);
 	  free (p);
 	}
     }
@@ -416,7 +425,9 @@ __nis_default_group (char *defaults)
 	  if (dptr != NULL)
 	    {
 	      char *p = searchgroup (cptr);
-	      strcpy (default_group, p);
+
+	      if (strlen (p) <= NIS_MAXNAMELEN)
+		strcpy (default_group, p);
 	      free (p);
 	    }
 	}
