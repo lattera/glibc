@@ -202,4 +202,9 @@ extern const char *_nl_get_alt_digit (unsigned int number);
 /* Similar, but now for wide characters.  */
 extern const wchar_t *_nl_get_walt_digit (unsigned int number);
 
+/* Postload processing.  */
+extern void _nl_postload_ctype (void);
+extern void _nl_postload_time (void);
+
+
 #endif	/* localeinfo.h */

@@ -119,7 +119,7 @@ int _dl_starting_up;
 
 
 static void dl_main (const ElfW(Phdr) *phdr,
-		     ElfW(Half) phent,
+		     ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry);
 
 struct link_map _dl_rtld_map;
@@ -371,7 +371,7 @@ static int version_info;		/* Nonzero if information about
 
 static void
 dl_main (const ElfW(Phdr) *phdr,
-	 ElfW(Half) phent,
+	 ElfW(Word) phnum,
 	 ElfW(Addr) *user_entry)
 {
   const ElfW(Phdr) *ph;
@@ -513,7 +513,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	}
 
       phdr = _dl_loaded->l_phdr;
-      phent = _dl_loaded->l_phnum;
+      phnum = _dl_loaded->l_phnum;
       /* We overwrite here a pointer to a malloc()ed string.  But since
 	 the malloc() implementation used at this point is the dummy
 	 implementations which has no real free() function it does not
@@ -529,7 +529,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (_dl_loaded == NULL)
 	_dl_sysdep_fatal ("cannot allocate memory for link map\n", NULL);
       _dl_loaded->l_phdr = phdr;
-      _dl_loaded->l_phnum = phent;
+      _dl_loaded->l_phnum = phnum;
       _dl_loaded->l_entry = *user_entry;
 
       /* At this point we are in a bit of trouble.  We would have to
@@ -557,7 +557,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   _dl_loaded->l_map_start = ~0;
 
   /* Scan the program header table for the dynamic section.  */
-  for (ph = phdr; ph < &phdr[phent]; ++ph)
+  for (ph = phdr; ph < &phdr[phnum]; ++ph)
     switch (ph->p_type)
       {
       case PT_PHDR:
