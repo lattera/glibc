@@ -32,36 +32,13 @@ pthread_sigmask (how, newmask, oldmask)
   sigset_t local_newmask;
 
   /* The only thing we have to make sure here is that SIGCANCEL is not
-     blocked and that SIGTIMER is not unblocked.  */
-  if (newmask != NULL)
+     blocked.  */
+  if (newmask != NULL
+      && __builtin_expect (__sigismember (newmask, SIGCANCEL), 0))
     {
-      if (__builtin_expect (__sigismember (newmask, SIGCANCEL), 0))
-	{
-	  local_newmask = *newmask;
-	  __sigdelset (&local_newmask, SIGCANCEL);
-	  newmask = &local_newmask;
-	}
-
-      if (__builtin_expect (__sigismember (newmask, SIGTIMER), 0))
-	{
-	  if (how == SIG_UNBLOCK)
-	    {
-	      if (newmask != &local_newmask)
-		local_newmask = *newmask;
-	      __sigdelset (&local_newmask, SIGTIMER);
-	      newmask = &local_newmask;
-	    }
-	}
-      else
-	{
-	  if (how == SIG_SETMASK)
-	    {
-	      if (newmask != &local_newmask)
-		local_newmask = *newmask;
-	      __sigaddset (&local_newmask, SIGTIMER);
-	      newmask = &local_newmask;
-	    }
-	}
+      local_newmask = *newmask;
+      __sigdelset (&local_newmask, SIGCANCEL);
+      newmask = &local_newmask;
     }
 
 #ifdef INTERNAL_SYSCALL

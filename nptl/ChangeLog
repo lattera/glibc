@@ -1,3 +1,16 @@
+2003-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal): Don't block SIGTIMER.
+	* pthreadP.h: Make SIGTIMER and SIGCANCEL the same.
+	* sysdeps/pthread/pthread_sigmask.c: Remove handling of SIGTIMER.
+	* sysdeps/pthread/sigaction.c: Likewise.
+	* sysdeps/pthread/sigprocmask.c: New file.
+	* sysdeps/unix/sysv/linux/allocrtsig.c (current_rtmin): Define as
+	__SIGRTMIN+1.
+	* sysdeps/unix/sysv/linux/timer_routines.c (timer_helper_thread):
+	Block SIGTIMER.  Also handle SI_TKILL events and terminate thread
+	in this case.
+
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h

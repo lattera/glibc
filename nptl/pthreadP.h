@@ -162,8 +162,10 @@ __do_cancel (void)
 #define SIGCANCEL	__SIGRTMIN
 
 
-/* Signal needed for the kernel-supported POSIX timer implementation.  */
-#define SIGTIMER	(__SIGRTMIN + 1)
+/* Signal needed for the kernel-supported POSIX timer implementation.
+   We can reuse the cancellation signal since we can distinguish
+   cancellation from timer expirations.  */
+#define SIGTIMER	SIGCANCEL
 
 
 /* Internal prototypes.  */

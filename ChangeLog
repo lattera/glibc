@@ -1,7 +1,17 @@
+2003-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Prevent changing mask for
+	SIGCANCEL.
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Define SI_TKILL.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Define SI_TKILL.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Define SI_TKILL.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Define SI_TKILL.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Define SI_TKILL.
+
 2003-04-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/not-cancel.h (open_not_cancel): Cast
-	first syscall parameter to cnst char*.
+	first syscall parameter to const char*.
 
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 

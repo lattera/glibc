@@ -36,7 +36,7 @@ __sigaction (sig, act, oact)
      const struct sigaction *act;
      struct sigaction *oact;
 {
-  if (sig == SIGCANCEL || sig == SIGTIMER)
+  if (sig == SIGCANCEL)
     {
       __set_errno (EINVAL);
       return -1;

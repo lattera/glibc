@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,19 @@ __sigprocmask (how, set, oset)
      const sigset_t *set;
      sigset_t *oset;
 {
+#ifdef SIGCANCEL
+  sigset_t local_newmask;
+
+  /* The only thing we have to make sure here is that SIGCANCEL is not
+     blocked.  */
+  if (set != NULL && __builtin_expect (__sigismember (set, SIGCANCEL), 0))
+    {
+      local_newmask = *set;
+      __sigdelset (&local_newmask, SIGCANCEL);
+      set = &local_newmask;
+    }
+#endif
+
 #if __ASSUME_REALTIME_SIGNALS > 0
   return INLINE_SYSCALL (rt_sigprocmask, 4, how, CHECK_SIGSET_NULL_OK (set),
 			 CHECK_SIGSET_NULL_OK (oset), _NSIG / 8);

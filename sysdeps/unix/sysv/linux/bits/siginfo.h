@@ -128,8 +128,10 @@ typedef struct siginfo
    signals.  */
 enum
 {
-  SI_ASYNCNL = -6,		/* Sent by asynch name lookup completion.  */
+  SI_ASYNCNL = -60,		/* Sent by asynch name lookup completion.  */
 # define SI_ASYNCNL	SI_ASYNCNL
+  SI_TKILL = -6,		/* Sent by tkill.  */
+# define SI_TKILL	SI_TKILL
   SI_SIGIO,			/* Sent by queued SIGIO. */
 # define SI_SIGIO	SI_SIGIO
   SI_ASYNCIO,			/* Sent by AIO completion.  */

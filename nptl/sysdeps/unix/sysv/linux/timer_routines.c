@@ -49,6 +49,11 @@ timer_helper_thread (void *arg)
   sigset_t ss;
   sigemptyset (&ss);
   sigaddset (&ss, SIGTIMER);
+  /* SIGTIMER is the same signal as SIGCANCEL and it is therefore
+     unblocked so far.  Block it for this thread, we handle
+     cancellation explicitly.  */
+  INTERNAL_SYSCALL_DECL (err);
+  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_BLOCK, &ss, NULL, _NSIG / 8);
 
   /* Endless loop of waiting for signals.  The loop is only ended when
      the thread is canceled.  */
@@ -56,14 +61,19 @@ timer_helper_thread (void *arg)
     {
       siginfo_t si;
 
-      if (sigwaitinfo (&ss, &si) > 0 && si.si_code == SI_TIMER)
+      if (sigwaitinfo (&ss, &si) > 0)
 	{
+	  if (si.si_code == SI_TIMER)
+	    {
+	      struct timer *tk = (struct timer *) si.si_ptr;
 
-	  struct timer *tk = (struct timer *) si.si_ptr;
-
-	  /* That the signal we are waiting for.  */
-	  pthread_t th;
-	  (void) pthread_create (&th, &tk->attr, timer_sigev_thread, tk);
+	      /* That the signal we are waiting for.  */
+	      pthread_t th;
+	      (void) pthread_create (&th, &tk->attr, timer_sigev_thread, tk);
+	    }
+	  else if (si.si_code == SI_TKILL)
+	    /* The thread is canceled.  */
+	    pthread_exit (NULL);
 	}
     }
 }

@@ -20,7 +20,7 @@
 #include <signal.h>
 
 
-static int current_rtmin = __SIGRTMIN + 2;
+static int current_rtmin = __SIGRTMIN + 1;
 static int current_rtmax = __SIGRTMAX;
 
 
