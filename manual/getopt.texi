@@ -68,7 +68,8 @@ Normally these values come directly from the arguments received by
 The @var{options} argument is a string that specifies the option
 characters that are valid for this program.  An option character in this
 string can be followed by a colon (@samp{:}) to indicate that it takes a
-required argument.
+required argument.  If an option character is followed by two colons
+(@samp{::}), its argument is optional; this is a GNU extension.
 
 If the @var{options} argument string begins with a hyphen (@samp{-}), this
 is treated specially.  It permits arguments that are not options to be
