@@ -1,3 +1,9 @@
+2003-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ustat.c (ustat): Set errno to EINVAL if
+	the device ID is invalid and return -1.
+	* sysdeps/unix/sysv/linux/xmknod.c (__xmknod): Likewise.
+
 2003-09-26  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/getcontext.S: Pass fourth argument to
