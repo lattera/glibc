@@ -278,7 +278,10 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
       if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       else
-	return NSS_STATUS_NOTFOUND;
+	{
+	  *errnop = ENOENT;
+	  return NSS_STATUS_NOTFOUND;
+	}
     }
 
   return NSS_STATUS_SUCCESS;

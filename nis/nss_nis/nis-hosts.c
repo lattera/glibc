@@ -321,6 +321,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       else
 	{
 	  *h_errnop = HOST_NOT_FOUND;
+	  *errnop = ENOENT;
 	  return NSS_STATUS_NOTFOUND;
 	}
     }
@@ -392,7 +393,10 @@ _nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int af,
 	  *errnop = errno;
 	}
       if (retval == NSS_STATUS_NOTFOUND)
-	*h_errnop = HOST_NOT_FOUND;
+	{
+	  *h_errnop = HOST_NOT_FOUND;
+	  *errnop = ENOENT;
+	}
       return retval;
     }
 

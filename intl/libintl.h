@@ -82,7 +82,7 @@ extern char *bindtextdomain (__const char *__domainname,
 # define dgettext(domainname, msgid)					      \
   dcgettext (domainname, msgid, LC_MESSAGES)
 
-# if __GNUC_PREREQ (2,7)
+# if __GLIBC__ >= 2 && __GNUC_PREREQ (2,7)
 /* Variable defined in loadmsgcat.c which gets incremented every time a
    new catalog is loaded.  */
 extern int _nl_msg_cat_cntr;

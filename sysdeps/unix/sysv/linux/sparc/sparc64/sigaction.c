@@ -44,6 +44,7 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
     {
       kact.k_sa_handler = act->sa_handler;
       memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
+      kact.sa_flags = act->sa_flags;
       kact.sa_restorer = NULL;
     }
 

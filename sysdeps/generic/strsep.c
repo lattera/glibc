@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,8 @@ __strsep (char **stringp, const char *delim)
 	{
 	  if (*begin == ch)
 	    end = begin;
+	  else if (*begin == '\0')
+	    end = NULL;
 	  else
 	    end = strchr (begin + 1, ch);
 	}

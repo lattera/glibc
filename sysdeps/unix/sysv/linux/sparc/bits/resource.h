@@ -105,6 +105,20 @@ enum __rlimit_resource
 };
 
 /* Value to indicate that there is no limit.  */
+#if __WORDSIZE == 64
+
+#ifndef __USE_FILE_OFFSET64
+# define RLIM_INFINITY ((unsigned long int)(~0UL))
+#else
+# define RLIM_INFINITY 0xffffffffffffffffuLL
+#endif
+
+#ifdef __USE_LARGEFILE64
+# define RLIM64_INFINITY 0xffffffffffffffffuLL
+#endif
+
+#else
+
 #ifndef __USE_FILE_OFFSET64
 # define RLIM_INFINITY ((long int)(~0UL >> 1))
 #else
@@ -113,6 +127,8 @@ enum __rlimit_resource
 
 #ifdef __USE_LARGEFILE64
 # define RLIM64_INFINITY 0x7fffffffffffffffLL
+#endif
+
 #endif
 
 /* We can represent all limits.  */

@@ -300,10 +300,9 @@ static void pthread_initialize(void)
   __pthread_initial_thread_bos =
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
   /* Play with the stack size limit to make sure that no stack ever grows
-     beyond STACK_SIZE minus two pages (one page for the thread descriptor
-     immediately beyond, and one page to act as a guard page). */
+     beyond STACK_SIZE minus one page (to act as a guard page). */
   getrlimit(RLIMIT_STACK, &limit);
-  max_stack = STACK_SIZE - 2 * __getpagesize();
+  max_stack = STACK_SIZE - __getpagesize();
   if (limit.rlim_cur > max_stack) {
     limit.rlim_cur = max_stack;
     setrlimit(RLIMIT_STACK, &limit);

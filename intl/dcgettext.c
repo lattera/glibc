@@ -121,6 +121,9 @@ char *getcwd ();
 # ifndef HAVE_STPCPY
 static char *stpcpy PARAMS ((char *dest, const char *src));
 # endif
+# ifndef HAVE_MEMPCPY
+static void *mempcpy PARAMS ((void *dest, const void *src, size_t n));
+# endif
 #endif
 
 /* Amount to increase buffer size by in each try.  */
@@ -130,7 +133,7 @@ static char *stpcpy PARAMS ((char *dest, const char *src));
 /* Non-POSIX BSD systems might have gcc's limits.h, which doesn't define
    PATH_MAX but might cause redefinition warnings when sys/param.h is
    later included (as on MORE/BSD 4.3).  */
-#if defined(_POSIX_VERSION) || (defined(HAVE_LIMITS_H) && !defined(__GNUC__))
+#if defined _POSIX_VERSION || (defined HAVE_LIMITS_H && !defined __GNUC__)
 # include <limits.h>
 #endif
 
@@ -138,16 +141,16 @@ static char *stpcpy PARAMS ((char *dest, const char *src));
 # define _POSIX_PATH_MAX 255
 #endif
 
-#if !defined(PATH_MAX) && defined(_PC_PATH_MAX)
+#if !defined PATH_MAX && defined _PC_PATH_MAX
 # define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 : pathconf ("/", _PC_PATH_MAX))
 #endif
 
 /* Don't include sys/param.h if it already has been.  */
-#if defined(HAVE_SYS_PARAM_H) && !defined(PATH_MAX) && !defined(MAXPATHLEN)
+#if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
 # include <sys/param.h>
 #endif
 
-#if !defined(PATH_MAX) && defined(MAXPATHLEN)
+#if !defined PATH_MAX && defined MAXPATHLEN
 # define PATH_MAX MAXPATHLEN
 #endif
 
@@ -163,6 +166,68 @@ static char *stpcpy PARAMS ((char *dest, const char *src));
    system (e.g. those using GNU C Library).  */
 #ifdef _LIBC
 # define HAVE_LOCALE_NULL
+#endif
+
+/* We want to allocate a string at the end of the struct.  gcc makes
+   this easy.  */
+#ifdef __GNUC__
+# define ZERO 0
+#else
+# define ZERO 1
+#endif
+
+/* This is the type used for the search tree where known translations
+   are stored.  */
+struct known_translation_t
+{
+  /* Domain in which to search.  */
+  char *domain;
+
+  /* The category.  */
+  int category;
+
+  /* State of the catalog counter at the point the string was found.  */
+  int counter;
+
+  /* And finally the translation.  */
+  const char *translation;
+
+  /* Pointer to the string in question.  */
+  char msgid[ZERO];
+};
+
+/* Root of the search tree with known translations.  We can use this
+   only if the system provides the `tsearch' function family.  */
+#if defined HAVE_TSEARCH || defined _LIBC
+# include <search.h>
+
+static void *root;
+
+# ifdef _LIBC
+#  define tsearch __tsearch
+# endif
+
+/* Function to compare two entries in the table of known translations.  */
+static int
+transcmp (const void *p1, const void *p2)
+{
+  struct known_translation_t *s1 = (struct known_translation_t *) p1;
+  struct known_translation_t *s2 = (struct known_translation_t *) p2;
+  int result;
+
+  result = strcmp (s1->msgid, s2->msgid);
+  if (result == 0)
+    {
+      result = strcmp (s1->msgid, s2->msgid);
+      if (result == 0)
+	/* We compare the category last (though this is the cheapest
+	   operation) since it is hopefully always the same (namely
+	   LC_MESSAGES).  */
+	result = s1->category - s2->category;
+    }
+
+  return result;
+}
 #endif
 
 /* Name of the default domain used for gettext(3) prior any call to
@@ -268,11 +333,33 @@ DCGETTEXT (domainname, msgid, category)
   char *dirname, *xdomainname;
   char *single_locale;
   char *retval;
-  int saved_errno = errno;
+  int saved_errno;
+#if defined HAVE_TSEARCH || defined _LIBC
+  struct known_translation_t *search;
+  struct known_translation_t **foundp;
+  size_t msgid_len = strlen (msgid) + 1;
+#endif
+  size_t domainname_len;
 
   /* If no real MSGID is given return NULL.  */
   if (msgid == NULL)
     return NULL;
+
+#if defined HAVE_TSEARCH || defined _LIBC
+  /* Try to find the translation among those which we found at some time.  */
+  search = (struct known_translation_t *) alloca (sizeof (*search)
+						  + msgid_len);
+  memcpy (search->msgid, msgid, msgid_len);
+  search->domain = (char *) domainname;
+  search->category = category;
+
+  foundp = (struct known_translation_t **) tfind (search, &root, transcmp);
+  if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
+    return (char *) (*foundp)->translation;
+#endif
+
+  /* Preserve the `errno' value.  */
+  saved_errno = errno;
 
   /* See whether this is a SUID binary or not.  */
   DETERMINE_SECURE;
@@ -340,12 +427,13 @@ DCGETTEXT (domainname, msgid, category)
   categoryname = category_to_name (category);
   categoryvalue = guess_category_value (category, categoryname);
 
+  domainname_len = strlen (domainname);
   xdomainname = (char *) alloca (strlen (categoryname)
-				 + strlen (domainname) + 5);
+				 + domainname_len + 5);
   ADD_BLOCK (block_list, xdomainname);
 
-  stpcpy (stpcpy (stpcpy (stpcpy (xdomainname, categoryname), "/"),
-		  domainname),
+  stpcpy (mempcpy (stpcpy (stpcpy (xdomainname, categoryname), "/"),
+		  domainname, domainname_len),
 	  ".mo");
 
   /* Creating working area.  */
@@ -422,6 +510,38 @@ DCGETTEXT (domainname, msgid, category)
 	    {
 	      FREE_BLOCKS (block_list);
 	      __set_errno (saved_errno);
+#if defined HAVE_TSEARCH || defined _LIBC
+	      if (foundp == NULL)
+		{
+		  /* Create a new entry and add it to the search tree.  */
+		  struct known_translation_t *newp;
+
+		  newp = (struct known_translation_t *)
+		    malloc (sizeof (*newp) + msgid_len
+			    + domainname_len + 1 - ZERO);
+		  if (newp != NULL)
+		    {
+		      newp->domain = mempcpy (newp->msgid, msgid, msgid_len);
+		      memcpy (newp->domain, domainname, domainname_len + 1);
+		      newp->category = category;
+		      newp->counter = _nl_msg_cat_cntr;
+		      newp->translation = retval;
+
+		      /* Insert the entry in the search tree.  */
+		      foundp = (struct known_translation_t **)
+			tsearch (newp, &root, transcmp);
+		      if (&newp != foundp)
+			/* The insert failed.  */
+			free (newp);
+		    }
+		}
+	      else
+		{
+		  /* We can update the existing entry.  */
+		  (*foundp)->counter = _nl_msg_cat_cntr;
+		  (*foundp)->translation = retval;
+		}
+#endif
 	      return retval;
 	    }
 	}
@@ -571,12 +691,13 @@ _nl_find_msg (domain_file, msgid)
 	    return NULL;
 
 	  if (W (domain->must_swap, domain->orig_tab[nstr - 1].length) == len
-	      && strcmp (msgid,
-			 domain->data + W (domain->must_swap,
-					   domain->orig_tab[nstr - 1].offset))
-	         == 0)
-	    return (char *) domain->data
-	      + W (domain->must_swap, domain->trans_tab[nstr - 1].offset);
+	      && (strcmp (msgid,
+			  domain->data + W (domain->must_swap,
+					    domain->orig_tab[nstr - 1].offset))
+		  == 0))
+	    return ((char *) domain->data
+		    + W (domain->must_swap,
+			 domain->trans_tab[nstr - 1].offset));
 	}
       /* NOTREACHED */
     }
@@ -590,9 +711,9 @@ _nl_find_msg (domain_file, msgid)
       int cmp_val;
 
       act = (bottom + top) / 2;
-      cmp_val = strcmp (msgid, domain->data
-			       + W (domain->must_swap,
-				    domain->orig_tab[act].offset));
+      cmp_val = strcmp (msgid, (domain->data
+				+ W (domain->must_swap,
+				     domain->orig_tab[act].offset)));
       if (cmp_val < 0)
 	top = act;
       else if (cmp_val > 0)
@@ -602,9 +723,9 @@ _nl_find_msg (domain_file, msgid)
     }
 
   /* If an translation is found return this.  */
-  return bottom >= top ? NULL : (char *) domain->data
-                                + W (domain->must_swap,
-				     domain->trans_tab[act].offset);
+  return bottom >= top ? NULL : ((char *) domain->data
+				 + W (domain->must_swap,
+				      domain->trans_tab[act].offset));
 }
 
 
@@ -728,6 +849,17 @@ stpcpy (dest, src)
 }
 #endif
 
+#if !_LIBC && !HAVE_MEMPCPY
+static void *
+mempcpy (dest, src, n)
+     void *dest;
+     const void *src;
+     size_t n;
+{
+  return (void *) ((char *) memcpy (dst, src, n) + n);
+}
+#endif
+
 
 #ifdef _LIBC
 /* If we want to free all resources we have to do some work at
@@ -748,6 +880,9 @@ free_mem (void)
   if (_nl_current_default_domain != _nl_default_default_domain)
     /* Yes, again a pointer comparison.  */
     free ((char *) _nl_current_default_domain);
+
+  /* Remove the search tree with the know translations.  */
+  __tdestroy (root, free);
 }
 
 text_set_element (__libc_subfreeres, free_mem);

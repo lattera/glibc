@@ -807,6 +807,7 @@ test_strtok_r (void)
 void
 test_strsep (void)
 {
+  char *ptr;
   it = "strsep";
   cp = strcpy(one, "first, second, third");
   equal(strsep(&cp, ", "), "first", 1);	/* Basic test. */
@@ -901,6 +902,32 @@ test_strsep (void)
   equal(strsep(&cp, "xy,"), "", 71);
   check(strsep(&cp, "x,y") == NULL, 72);
   check(strsep(&cp, ",xy") == NULL, 73);	/* Persistence. */
+
+  cp = strcpy(one, "ABC");
+  one[4] = ':';
+  equal(strsep(&cp, "C"), "AB", 74);	/* Access beyond NUL.  */
+  ptr = strsep(&cp, ":");
+  equal(ptr, "", 75);
+  check(ptr == one + 3, 76);
+  check(cp == NULL, 77);
+
+  cp = strcpy(one, "ABC");
+  one[4] = ':';
+  equal(strsep(&cp, "CD"), "AB", 78);	/* Access beyond NUL.  */
+  ptr = strsep(&cp, ":.");
+  equal(ptr, "", 79);
+  check(ptr == one + 3, 80);
+
+  cp = strcpy(one, "ABC");		/* No token in string.  */
+  equal(strsep(&cp, ","), "ABC", 81);
+  check(cp == NULL, 82);
+
+  *one = '\0';				/* Empty string. */
+  cp = one;
+  ptr = strsep(&cp, ",");
+  equal(ptr, "", 83);
+  check(ptr == one, 84);
+  check(cp == NULL, 85);
 }
 
 void

@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -50,8 +50,11 @@ _nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 
   domain = strchr (netname, '@');
   if (!domain)
-    return NSS_STATUS_UNAVAIL;
-  domain++;
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
+  ++domain;
 
   retval = yperr2nss (yp_match (domain, "publickey.byname", netname,
 				strlen (netname), &result, &len));
@@ -95,8 +98,11 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
 
   domain = strchr (netname, '@');
   if (!domain)
-    return NSS_STATUS_UNAVAIL;
-  domain++;
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
+  ++domain;
 
   retval = yperr2nss (yp_match (domain, "publickey.byname", netname,
 				strlen (netname), &result, &len));
@@ -196,10 +202,13 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 
   domain = strchr (netname, '@');
   if (!domain)
-    return NSS_STATUS_UNAVAIL;
+    {
+      *errnop = EINVAL;
+      return NSS_STATUS_UNAVAIL;
+    }
 
   /* Point past the '@' character */
-  domain++;
+  ++domain;
   lookup = NULL;
   yperr = yp_match (domain, "netid.byname", netname, strlen (netname),
 		    &lookup, &len);
@@ -209,11 +218,13 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       break;			/* the successful case */
     case YPERR_DOMAIN:
     case YPERR_KEY:
+      *errnop = ENOENT;
       return NSS_STATUS_NOTFOUND;
     case YPERR_MAP:
     default:
       return NSS_STATUS_UNAVAIL;
     }
+
   if (lookup)
     {
       enum nss_status err;
@@ -224,7 +235,9 @@ _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       return err;
     }
   else
-    return NSS_STATUS_NOTFOUND;
-
+    {
+      *errnop = ENOENT;
+      return NSS_STATUS_NOTFOUND;
+    }
   return NSS_STATUS_SUCCESS;
 }

@@ -263,6 +263,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
     {
       ent->nis = 0;
+      *errnop = ENOENT;
       return NSS_STATUS_NOTFOUND;
     }
 
@@ -445,7 +446,10 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
         ++p;
       parse_res = _nss_files_parse_grent (p, result, data, buflen, errnop);
       if (parse_res == -1)
-	return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
     }
 
   if (parse_res)

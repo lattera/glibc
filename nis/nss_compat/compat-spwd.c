@@ -383,6 +383,7 @@ getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
       if (parse_res == -1)
 	{
 	  ent->netgrdata.cursor = saved_cursor;
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -1112,7 +1113,10 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	  && result->sp_namp[1] != '@')
 	{
 	  if (strcmp (&result->sp_namp[1], name) == 0)
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  else
 	    continue;
 	}
@@ -1128,8 +1132,11 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	      status = getspnam_plususer (name, result, buffer, buflen,
 					  errnop);
 	      if (status == NSS_STATUS_RETURN)
-		/* We couldn't parse the entry */
-		return NSS_STATUS_NOTFOUND;
+		{
+		  /* We couldn't parse the entry */
+		  *errnop = ENOENT;
+		  return NSS_STATUS_NOTFOUND;
+		}
 	      else
 		return status;
 	    }
@@ -1142,7 +1149,10 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 
 	  status = getspnam_plususer (name, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
-	    return NSS_STATUS_NOTFOUND;
+	    {
+	      *errnop = ENOENT;
+	      return NSS_STATUS_NOTFOUND;
+	    }
 	  else
 	    return status;
 	}
@@ -1159,7 +1169,10 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
   enum nss_status status;
 
   if (name[0] == '-' || name[0] == '+')
-    return NSS_STATUS_NOTFOUND;
+    {
+      *errnop = ENOENT;
+      return NSS_STATUS_NOTFOUND;
+    }
 
   if (ni == NULL)
     {

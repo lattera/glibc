@@ -27,7 +27,9 @@
    FIXME! This file does not deal with the -fshort-double option of
    gcc! */
 
-#if defined __USE_ISOC99 && defined _MATH_H
+#if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
+# define _MATH_H_MATHDEF	1
+
 # ifdef __GNUC__
 #  if __STDC__ == 1
 

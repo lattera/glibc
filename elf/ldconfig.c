@@ -97,6 +97,9 @@ static int opt_only_cline = 0;
 /* Path to root for chroot.  */
 static char *opt_chroot;
 
+/* Manually link given shared libraries.  */
+static int opt_manual_link = 0;
+
 /* Cache file to use.  */
 static const char *cache_file;
 
@@ -119,6 +122,7 @@ static const struct argp_option options[] =
   { NULL, 'C', "CACHE", 0, N_("Use CACHE as cache file"), 0},
   { NULL, 'f', "CONF", 0, N_("Use CONF as configuration file"), 0},
   { NULL, 'n', NULL, 0, N_("Only process directories specified on the command line.  Don't build cache."), 0},
+  { NULL, 'l', NULL, 0, N_("Manually link individual libraries."), 0},
   { NULL, 0, NULL, 0, NULL, 0 }
 };
 
@@ -147,6 +151,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'f':
       config_file = arg;
+      break;
+    case 'l':
+      opt_manual_link = 1;
       break;
     case 'N':
       opt_build_cache = 0;
@@ -322,6 +329,75 @@ create_links (const char *path, const char *libname, const char *soname)
   else if (opt_verbose)
     fputs ("\n", stdout);
 }
+
+/* Manually link the given library.  */
+static void
+manual_link (char *library)
+{
+  char *path;
+  char *libname;
+  char *soname;
+  struct stat stat_buf;
+  int flag;
+
+  /* Prepare arguments for create_links call.  Split library name in
+     directory and filename first.  Since path is allocated, we've got
+     to be careful to free at the end.  */
+  path = xstrdup (library);
+  libname = strrchr (path, '/');
+
+  if (libname)
+    {
+      /* Successfully split names.  Check if path is just "/" to avoid
+         an empty path.  */
+      if (libname == path)
+	{
+	  libname = library + 1;
+	  path = xrealloc (path, 2);
+	  strcpy (path, "/");
+	}
+      else
+	{
+	  *libname = '\0';
+	  ++libname;
+	}
+    }
+  else
+    {
+      /* There's no path, construct one. */
+      libname = library;
+      path = xrealloc (path, 2);
+      strcpy (path, ".");
+    }
+
+  /* Do some sanity checks first.  */
+  if (lstat (library, &stat_buf))
+    {
+      error (0, errno, _("Can't lstat %s"), library);
+      free (path);
+      return;
+    }
+  /* We don't want links here!  */
+  else if (!S_ISREG (stat_buf.st_mode))
+    {
+      error (0, 0, _("Ignored file %s since it is not a regular file."),
+	     library);
+      free (path);
+      return;
+    }
+  libname = basename (library);
+  if (process_file (library, libname, &flag, &soname, 0))
+    {
+      error (0, 0, _("No link created since soname could not be found for %s"),
+	     library);
+      free (path);
+      return;
+    }
+  create_links (path, libname, soname);
+  free (soname);
+  free (path);
+}
+
 
 /* Read a whole directory and search for libraries.
    The purpose is two-fold:
@@ -595,8 +671,9 @@ main (int argc, char **argv)
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
-  /* Remaining arguments are additional libraries.  */
-  if (remaining != argc)
+  /* Remaining arguments are additional libraries if opt_manual_link
+     is not set.  */
+  if (remaining != argc && !opt_manual_link)
     {
       int i;
       for (i = remaining; i < argc; ++i)
@@ -626,6 +703,18 @@ main (int argc, char **argv)
       exit (0);
     }
 
+  if (opt_manual_link)
+    {
+      /* Link all given libraries manually.  */
+      int i;
+
+      for (i = remaining; i < argc; ++i)
+	manual_link (argv [i]);
+
+      exit (0);
+    }
+  
+  
   if (opt_build_cache)
     init_cache ();
 

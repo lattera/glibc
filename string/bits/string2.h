@@ -118,7 +118,7 @@ __STRING2_COPY_TYPE (8);
      __uint8_t __c = (__uint8_t) (c);					      \
 									      \
      /* This `switch' statement will be removed at compile-time.  */	      \
-     switch ((unsigned int) n)						      \
+     switch ((unsigned int) (n))					      \
        {								      \
        case 15:								      \
 	 __u->__ui = __c * 0x01010101;					      \
@@ -1078,8 +1078,10 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
   __extension__								      \
   ({ char __r0, __r1, __r2;						      \
      (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
-      && (__r0 = ((__const char *) (reject))[0], __r0 != '\0')		      \
-      ? ((__r1 = ((__const char *) (reject))[1], __r1 == '\0')		      \
+      && (__r0 = ((__const char *) (reject))[0],			      \
+	  ((__const char *) (reject))[0] != '\0')			      \
+      ? ((__r1 = ((__const char *) (reject))[1],			      \
+	 ((__const char *) (reject))[1] == '\0')			      \
 	 ? __strsep_1c (s, __r0)					      \
 	 : ((__r2 = ((__const char *) (reject))[2], __r2 == '\0')	      \
 	    ? __strsep_2c (s, __r0, __r1)				      \

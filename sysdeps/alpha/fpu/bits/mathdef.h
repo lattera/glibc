@@ -23,7 +23,9 @@
 /* FIXME! This file describes properties of the compiler, not the machine;
    it should not be part of libc!  */
 
-#if defined __USE_ISOC99 && defined _MATH_H
+#if defined __USE_ISOC99 && defined _MATH_H && !defined _MATH_H_MATHDEF
+# define _MATH_H_MATHDEF	1
+
 # ifdef __GNUC__
 #  if __STDC__ == 1
 

@@ -488,10 +488,14 @@ Test "Real part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383
 ildouble: 2
 ldouble: 2
 Test "Imaginary part of: ctanh (-2 - 3 i) == -0.9653858790221331242 + 0.0098843750383224937 i":
+float: 1
+ifloat: 1
 ildouble: 23
 ldouble: 23
 Test "Real part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
 Test "Imaginary part of: ctanh (0 + pi/4 i) == 0.0 + 1.0 i":
+float: 1
+ifloat: 1
 double: 0.5
 idouble: 0.5
 Test "Real part of: ctanh (0.7 + 1.2 i) == 1.3472197399061191630 + 0.4778641038326365540 i":
@@ -636,6 +640,9 @@ idouble: 1
 Test "j0 (8.0) == 0.17165080713755390609":
 float: 1
 ifloat: 1
+Test "j0 (10.0) == -0.24593576445134833520":
+double: 2
+idouble: 2
 
 # j1
 Test "j1 (10.0) == 0.043472746168861436670":
@@ -654,6 +661,8 @@ ifloat: 1
 Test "jn (0, 10.0) == -0.24593576445134833520":
 float: 1
 ifloat: 1
+double: 2
+idouble: 2
 Test "jn (0, 2.0) == 0.22389077914123566805":
 float: 1
 ifloat: 1
@@ -673,33 +682,46 @@ idouble: 1
 Test "jn (1, 8.0) == 0.23463634685391462438":
 float: 1
 ifloat: 1
+Test "jn (10, -1.0) == 0.26306151236874532070e-9":
+float: 1
+ifloat: 1
 Test "jn (10, 0.1) == 0.26905328954342155795e-19":
 double: 4
 float: 2
 idouble: 4
 ifloat: 2
 Test "jn (10, 0.7) == 0.75175911502153953928e-11":
-double: 3
+double: 4
 float: 1
-idouble: 3
+idouble: 4
+ifloat: 1
+Test "jn (10, 1.0) == 0.26306151236874532070e-9":
+float: 1
 ifloat: 1
 Test "jn (10, 2.0) == 0.25153862827167367096e-6":
 float: 1
 ifloat: 1
-double: 1
-idouble: 1
+double: 2
+idouble: 2
 Test "jn (10, 10.0) == 0.20748610663335885770":
-float: 1
-ifloat: 1
+float: 2
+ifloat: 2
+double: 4
+idouble: 4
 Test "jn (3, 0.1) == 0.000020820315754756261429":
 double: 1
 idouble: 1
 Test "jn (3, 0.7) == 0.0069296548267508408077":
 double: 2
 idouble: 2
+Test "jn (3, 2.0) == 0.12894324947440205110":
+double: 1
+idouble: 1
 Test "jn (3, 10.0) == 0.058379379305186812343":
 float: 1
 ifloat: 1
+double: 3
+idouble: 3
 
 # lgamma
 Test "lgamma (-0.5) == log(2*sqrt(pi))":
@@ -847,6 +869,8 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "y0 (0.7) == -0.19066492933739506743":
+float: 1
+ifloat: 1
 double: 2
 idouble: 2
 Test "y0 (1.0) == 0.088256964215676957983":
@@ -857,6 +881,8 @@ ifloat: 1
 Test "y0 (1.5) == 0.38244892379775884396":
 float: 1
 ifloat: 1
+double: 1
+idouble: 1
 Test "y0 (2.0) == 0.51037567264974511960":
 double: 1
 idouble: 1
@@ -891,9 +917,9 @@ idouble: 3
 ifloat: 2
 Test "y1 (2.0) == -0.10703243154093754689":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "y1 (8.0) == -0.15806046173124749426":
 float: 2
 ifloat: 2
@@ -905,6 +931,8 @@ float: 1
 idouble: 1
 ifloat: 1
 Test "yn (0, 0.7) == -0.19066492933739506743":
+float: 1
+ifloat: 1
 double: 2
 idouble: 2
 Test "yn (0, 1.0) == 0.088256964215676957983":
@@ -915,6 +943,8 @@ ifloat: 1
 Test "yn (0, 1.5) == 0.38244892379775884396":
 float: 1
 ifloat: 1
+double: 1
+idouble: 1
 Test "yn (0, 2.0) == 0.51037567264974511960":
 double: 1
 idouble: 1
@@ -947,9 +977,9 @@ idouble: 3
 ifloat: 2
 Test "yn (1, 2.0) == -0.10703243154093754689":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "yn (1, 8.0) == -0.15806046173124749426":
 float: 2
 ifloat: 2
@@ -974,8 +1004,8 @@ ifloat: 1
 Test "yn (10, 2.0) == -129184.54220803928264":
 float: 1
 ifloat: 1
-double: 1
-idouble: 1
+double: 2
+idouble: 2
 Test "yn (3, 0.1) == -5099.3323786129048894":
 double: 1
 float: 1
@@ -984,6 +1014,9 @@ ifloat: 1
 Test "yn (3, 0.7) == -15.819479052819633505":
 double: 2
 idouble: 2
+Test "yn (3, 2.0) == -1.1277837768404277861":
+double: 1
+idouble: 1
 Test "yn (3, 10.0) == -0.25136265718383732978":
 double: 1
 float: 1
@@ -1263,6 +1296,8 @@ ildouble: 286
 ldouble: 286
 
 Function: Imaginary part of "ctanh":
+float: 1
+ifloat: 1
 double: 1
 idouble: 1
 ildouble: 3074
@@ -1313,8 +1348,8 @@ ldouble: 560
 Function: "j0":
 float: 1
 ifloat: 1
-double: 1
-idouble: 1
+double: 2
+idouble: 2
 
 Function: "j1":
 double: 1

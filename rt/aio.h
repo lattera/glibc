@@ -57,7 +57,8 @@ struct aiocb
   char __unused[32];
 };
 
-/* The same for the 64bit offsets.  */
+/* The same for the 64bit offsets.  Please note that the members aio_fildes
+   to __return_value have to be the same in aiocb and aiocb64.  */
 #ifdef __USE_LARGEFILE64
 struct aiocb64
 {
@@ -69,6 +70,7 @@ struct aiocb64
   struct sigevent aio_sigevent;	/* Signal number and value.  */
 
   /* Internal members.  */
+  struct aiocb *__next_prio;
   int __abs_prio;
   int __policy;
   int __error_code;

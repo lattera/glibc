@@ -1,3 +1,120 @@
+1999-12-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h (__strtok_r_1c): Help gcc optimizing string
+	access.
+
+	* locale/programs/ld-collate.c: Implement handling of absolute
+	ellipsis.  Parsing of file and constructing the internal data
+	structures should now be complete.
+	(collate_finish): Start adding support to generate the data
+	structures which are written out to the file.
+
+	* intl/dcgettext.c: Rewrite to handle caching of previous results here
+	instead of in the dcgettext macro.
+	* intl/libintl.h (dcgettext): Don't define for systems using this
+	glibc or systems with tsearch.
+
+	* sysdeps/generic/mathdef.h: Protect definitions for math.h
+	against double inclusion.
+	* sysdeps/alpha/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Likewise.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Add more deltas (are mobile PIIs
+	that different?).
+
+1999-12-17  Andreas Jaeger  <aj@suse.de>
+
+	* rt/aio.h (struct aiocb64): Add member __next_prio to sync the
+	struct with aiocb.
+
+	* rt/Makefile (tests): Added tst-aio64.
+	Added dependency rules for tst-aio64.
+
+	* rt/tst-aio64.c: New file, copied from tst-aio.c and changed for
+	64bit tests.
+
+1999-12-15  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/oldgetrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/alpha/oldsetrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/bits/resource.h: Change RLIM_INFINITY back to
+	old value (signed long).
+	* sysdeps/unix/sysv/linux/i386/bits/resource.h: New, with unsigned
+	long RLIM_INFINITY.
+	* sysdeps/unix/sysv/linux/getrlimit.c: Moved from here to ...
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: ... here.
+	* sysdeps/unix/sysv/linux/getrlimit64.c: Moved from here to ...
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: ... here.
+	* sysdeps/unix/sysv/linux/oldgetrlimit64.c: Moved from here to ...
+	* sysdeps/unix/sysv/linux/i386/oldgetrlimit64.c: ... here.
+	* sysdeps/unix/sysv/linux/oldsetrlimit64.c: Moved from here to ...
+	* sysdeps/unix/sysv/linux/i386/oldsetrlimit64.c: ... here.
+	* sysdeps/unix/sysv/linux/setrlimit.c: Moved from here to ...
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: ... here.
+	* sysdeps/unix/sysv/linux/setrlimit64.c: Moved from here to ...
+	* sysdeps/unix/sysv/linux/i386/setrlimit64.c: ... here.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: New.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/oldgetrlimit64.c: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/oldsetrlimit64.c: Removed.
+
+1999-12-17  Andreas Jaeger  <aj@suse.de>
+
+	* elf/ldconfig.c: Add new option -l to manualy link shared
+	libraries.
+	(options): Added option.
+	(parse_opt): Set option.
+	(main): Handle option.
+	(manual_link): New function.
+
+1999-12-17  Thorsten Kukuk  <kukuk@suse.de>
+
+	* string/bits/string2.h: Fix patch from 1999-12-07.
+
+1999-12-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/strsep.c: If delim string has only one character
+	don't run over end of string.
+
+	* locale/programs/ld-collate.c (insert_weights): Also update next
+	pointer of last cursor element.
+	(insert_value): Return nonzero value if nothing got inserted.
+	(handle_ellipsis): Don't do anything if to-value cannot be inserted.
+
+1999-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/longlong.h (__sparc_v9__): Use %rDIGIT instead of %DIGIT
+	where appropriate.
+
+1999-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (__sigaction):
+	Copy sa_flags into kernel sigaction structure.
+
+1999-12-14  Andreas Jaeger  <aj@suse.de>
+
+	* string/tester.c (test_strsep): More tests for access beyond
+	the final NUL.  The first two tests come from PR libc/1486 by
+	martinea@iro.umontreal.ca.
+
+1999-12-14  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/ypclnt.c: Correct handling of cached client handles.
+	(__xdr_ypresp_all): Call callback function for errors, too,
+	like Solaris does.
+	* nis/nss_compat/compat-grp.c: Make sure errno is always set correct.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise. Also use services.byservicename
+	Map if available, optimize query if name/port and protocol is known.
+
 1999-12-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (collate_read): Make symbolic

@@ -1,3 +1,11 @@
+1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_allocate_stack): Correct computation of
+	new_thread_bottom.  Correct handling of stack size and when the
+	rlimit method to guard for stack growth is used.
+	* pthread.c (pthread_initialize): Stack limit must be STACK_SIZE
+	minus one pagesize (not two).
+
 1999-12-03  Andreas Jaeger  <aj@suse.de>
 
 	* Versions: Add __res_state with version GLIBC_2.2.

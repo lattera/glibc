@@ -172,7 +172,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
 	  return NSS_STATUS_NOTFOUND;
 	}
       p = strncpy (buffer, data->next->val, buflen);
-           while (isspace (*p))
+      while (isspace (*p))
         ++p;
 
       parse_res = _nss_files_parse_servent (p, serv, pdata, buflen, errnop);
@@ -213,6 +213,63 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
     {
       *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
+    }
+
+  /* If the protocol is given, we could try if our NIS server knows
+     about services.byservicename map. If yes, we only need one query */
+  if (protocol != NULL)
+    {
+      char key[strlen (name) + strlen (protocol) + 2];
+      char *cp, *domain, *result;
+      size_t keylen, len;
+
+      /* If this fails, the other solution will also fail. */
+      if (yp_get_default_domain (&domain))
+	return NSS_STATUS_UNAVAIL;
+
+      /* key is: "name/protocol" */
+      cp = stpcpy (key, name);
+      *cp++ = '/';
+      stpcpy (cp, protocol);
+      keylen = strlen (key);
+      status = yperr2nss (yp_match (domain, "services.byservicename", key,
+				    keylen, &result, &len));
+
+      /* If we found the key, it's ok and parse the result. If not,
+	 fall through and parse the complete table. */
+      if (status == NSS_STATUS_SUCCESS)
+	{
+	  struct parser_data *pdata = (void *) buffer;
+	  int parse_res;
+	  char *p;
+
+	  if ((size_t) (len + 1) > buflen)
+	    {
+	      free (result);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  p = strncpy (buffer, result, len);
+	  buffer[len] = '\0';
+	  while (isspace (*p))
+	    ++p;
+	  free (result);
+	  parse_res = _nss_files_parse_servent (p, serv, pdata,
+						buflen, errnop);
+	  if (parse_res < 0)
+	    {
+	      if (parse_res == -1)
+		return NSS_STATUS_TRYAGAIN;
+	      else
+		{
+		  *errnop = ENOENT;
+		  return NSS_STATUS_NOTFOUND;
+		}
+	    }
+	  else
+	    return NSS_STATUS_SUCCESS;
+	}
     }
 
   status = internal_nis_setservent (&data);
@@ -256,10 +313,57 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
   enum nss_status status;
   int found;
 
-  if (protocol == NULL)
+  /* If the protocol is given, we only need one query */
+  if (protocol != NULL)
     {
-      *errnop = EINVAL;
-      return NSS_STATUS_UNAVAIL;
+      char key[100 + strlen (protocol) + 2];
+      char *domain, *result;
+      size_t keylen, len;
+
+      /* If this fails, the other solution will also fail. */
+      if (yp_get_default_domain (&domain))
+	return NSS_STATUS_UNAVAIL;
+
+      /* key is: "port/protocol" */
+      keylen = snprintf (key, sizeof (key), "%d/%s", port, protocol);
+      status = yperr2nss (yp_match (domain, "services.byname", key,
+				    keylen, &result, &len));
+
+      /* If we found the key, it's ok and parse the result. If not,
+	 fall through and parse the complete table. */
+      if (status == NSS_STATUS_SUCCESS)
+	{
+	  struct parser_data *pdata = (void *) buffer;
+	  int parse_res;
+	  char *p;
+
+	  if ((size_t) (len + 1) > buflen)
+	    {
+	      free (result);
+	      *errnop = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  p = strncpy (buffer, result, len);
+	  buffer[len] = '\0';
+	  while (isspace (*p))
+	    ++p;
+	  free (result);
+	  parse_res = _nss_files_parse_servent (p, serv, pdata,
+						buflen, errnop);
+	  if (parse_res < 0)
+	    {
+	      if (parse_res == -1)
+		return NSS_STATUS_TRYAGAIN;
+	      else
+		{
+		  *errnop = ENOENT;
+		  return NSS_STATUS_NOTFOUND;
+		}
+	    }
+	  else
+	    return NSS_STATUS_SUCCESS;
+	}
     }
 
   status = internal_nis_setservent (&data);
@@ -270,7 +374,8 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
   while (!found &&
          ((status = internal_nis_getservent_r (serv, buffer, buflen, errnop,
 					       &data)) == NSS_STATUS_SUCCESS))
-    if (serv->s_port == port && strcmp (serv->s_proto, protocol) == 0)
+    if (serv->s_port == port &&
+	(protocol == NULL || strcmp (serv->s_proto, protocol) == 0))
       found = 1;
 
   internal_nis_endservent (&data);

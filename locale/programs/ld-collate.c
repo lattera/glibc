@@ -73,7 +73,8 @@ struct element_t
 
   const char *mbs;
   const uint32_t *wcs;
-  int order;
+  int mborder;
+  int wcorder;
 
   struct element_list_t *weights;
 
@@ -87,6 +88,9 @@ struct element_t
   /* Predecessor and successor in the order list.  */
   struct element_t *last;
   struct element_t *next;
+
+  /* Next element in multibyte output list.  */
+  struct element_t *mbnext;
 };
 
 /* Special element value.  */
@@ -151,6 +155,10 @@ struct locale_collate_t
      that the definitions from more than one input file contains information.
      Therefore we keep all relevant input in a list.  */
   struct locale_collate_t *next;
+
+  /* Arrays with heads of the list for each of the leading bytes in
+     the multibyte sequences.  */
+  struct element_t *mbheads[256];
 };
 
 
@@ -176,7 +184,7 @@ make_seclist_elem (struct locale_collate_t *collate, const char *string,
 
 
 static struct element_t *
-new_element (struct locale_collate_t *collate, const char *mbs,
+new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
 	     const uint32_t *wcs, const char *name, size_t namelen)
 {
   struct element_t *newp;
@@ -185,7 +193,10 @@ new_element (struct locale_collate_t *collate, const char *mbs,
 					     sizeof (*newp));
   newp->name = name == NULL ? NULL : obstack_copy (&collate->mempool,
 						   name, namelen);
-  newp->mbs = mbs;
+  if (mbs != NULL)
+    newp->mbs = obstack_copy0 (&collate->mempool, mbs, mbslen);
+  else
+    newp->mbs = NULL;
   if (wcs != NULL)
     {
       size_t nwcs = wcslen ((wchar_t *) wcs) + 1;
@@ -196,7 +207,8 @@ new_element (struct locale_collate_t *collate, const char *mbs,
     }
   else
     newp->wcs = NULL;
-  newp->order = 0;
+  newp->mborder = 0;
+  newp->wcorder = 0;
 
   /* Will be allocated later.  */
   newp->weights = NULL;
@@ -208,6 +220,8 @@ new_element (struct locale_collate_t *collate, const char *mbs,
 
   newp->last = NULL;
   newp->next = NULL;
+
+  newp->mbnext = NULL;
 
   return newp;
 }
@@ -457,14 +471,15 @@ find_element (struct linereader *ldfile, struct locale_collate_t *collate,
 	  result = sym->order;
 
 	  if (result == NULL)
-	    result = sym->order = new_element (collate, NULL, NULL, NULL, 0);
+	    result = sym->order = new_element (collate, NULL, 0, NULL,
+					       NULL, 0);
 	}
       else if (find_entry (&collate->elem_table, str, len,
 			   (void **) &result) != 0)
 	{
 	  /* It's also no collation element.  So it is an character
 	     element defined later.  */
-	  result = new_element (collate, NULL, NULL, str, len);
+	  result = new_element (collate, NULL, 0, NULL, str, len);
 	  if (result != NULL)
 	    /* Insert it into the sequence table.  */
 	    insert_entry (&collate->seq_table, str, len, result);
@@ -499,6 +514,8 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
   elem->line = ldfile->lineno;
   elem->last = collate->cursor;
   elem->next = collate->cursor ? collate->cursor->next : NULL;
+  if (collate->cursor != NULL)
+    collate->cursor->next = elem;
   elem->weights = (struct element_list_t *)
     obstack_alloc (&collate->mempool, nrules * sizeof (struct element_list_t));
   memset (elem->weights, '\0', nrules * sizeof (struct element_list_t));
@@ -683,7 +700,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 }
 
 
-static void
+static int
 insert_value (struct linereader *ldfile, struct token *arg,
 	      struct charmap_t *charmap, struct repertoire_t *repertoire,
 	      struct locale_collate_t *collate)
@@ -721,14 +738,14 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	  elem = sym->order;
 
 	  if (elem == NULL)
-	    elem = sym->order = new_element (collate, NULL, NULL, NULL, 0);
+	    elem = sym->order = new_element (collate, NULL, 0, NULL, NULL, 0);
 	}
       else if (find_entry (&collate->elem_table, arg->val.str.startmb,
 			   arg->val.str.lenmb, (void **) &elem) != 0)
 	{
 	  /* It's also no collation element.  Therefore ignore it.  */
 	  lr_ignore_rest (ldfile, 0);
-	  return;
+	  return 1;
 	}
     }
   else
@@ -741,6 +758,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 
 	  /* We have to allocate an entry.  */
 	  elem = new_element (collate, seq != NULL ? seq->bytes : NULL,
+			      seq != NULL ? seq->nbytes : 0,
 			      wcs, arg->val.str.startmb, arg->val.str.lenmb);
 
 	  /* And add it to the table.  */
@@ -755,14 +773,16 @@ insert_value (struct linereader *ldfile, struct token *arg,
   if (elem->next != NULL || (collate->cursor != NULL
 			     && elem->next == collate->cursor))
     {
-      lr_error (ldfile, _("order for `%.*s' already defined at %s:%Z"),
+      lr_error (ldfile, _("order for `%.*s' already defined at %s:%zu"),
 		arg->val.str.lenmb, arg->val.str.startmb,
 		elem->file, elem->line);
       lr_ignore_rest (ldfile, 0);
-      return;
+      return 1;
     }
 
   insert_weights (ldfile, elem, charmap, repertoire, collate, tok_none);
+
+  return 0;
 }
 
 
@@ -780,8 +800,11 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
   startp = collate->cursor;
 
   /* Process and add the end-entry.  */
-  if (arg != NULL)
-    insert_value (ldfile, arg, charmap, repertoire, collate);
+  if (arg != NULL
+      && insert_value (ldfile, arg, charmap, repertoire, collate))
+    /* Something went wrong with inserting the to-value.  This means
+       we cannot process the ellipsis.  */
+    return;
 
   /* Reset the cursor.  */
   collate->cursor = startp;
@@ -805,7 +828,168 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
 
   if (ellipsis == tok_ellipsis3)
     {
-      /* XXX */
+      /* One requirement we make here: the length of the byte
+	 sequences for the first and end character must be the same.
+	 This is mainly to prevent unwanted effects and this is often
+	 not what is wanted.  */
+      size_t len = (startp->mbs != NULL ? strlen (startp->mbs)
+		    : (endp->mbs != NULL ? strlen (endp->mbs) : 0));
+      char mbcnt[len + 1];
+      char mbend[len + 1];
+
+      /* Well, this should be caught somewhere else already.  Just to
+	 make sure.  */
+      assert (startp == NULL || startp->wcs == NULL || startp->wcs[1] == 0);
+      assert (endp == NULL || endp->wcs == NULL || endp->wcs[1] == 0);
+
+      if (startp != NULL && endp != NULL
+	  && startp->mbs != NULL && endp->mbs != NULL
+	  && strlen (startp->mbs) != strlen (endp->mbs))
+	{
+	  lr_error (ldfile, _("\
+%s: byte sequences of first and last character must have the same length"),
+		    "LC_COLLATE");
+	  return;
+	}
+
+      /* Determine whether we have to generate multibyte sequences.  */
+      if ((startp == NULL || startp->mbs != NULL)
+	  && (endp == NULL || endp->mbs != NULL))
+	{
+	  int cnt;
+	  int ret;
+
+	  /* Prepare the beginning byte sequence.  This is either from the
+	     beginning byte sequence or it is all nulls if it was an
+	     initial ellipsis.  */
+	  if (startp == NULL || startp->mbs == NULL)
+	    memset (mbcnt, '\0', len);
+	  else
+	    {
+	      memcpy (mbcnt, startp->mbs, len);
+
+	      /* And increment it so that the value is the first one we will
+		 try to insert.  */
+	      for (cnt = len - 1; cnt >= 0; --cnt)
+		if (++mbcnt[cnt] != '\0')
+		  break;
+	    }
+	  mbcnt[len] = '\0';
+
+	  /* And the end sequence.  */
+	  if (endp == NULL || endp->mbs == NULL)
+	    memset (mbend, '\0', len);
+	  else
+	    memcpy (mbend, endp->mbs, len);
+	  mbend[len] = '\0';
+
+	  /* Test whether we have a correct range.  */
+	  ret = memcmp (mbcnt, mbend, len);
+	  if (ret >= 0)
+	    {
+	      if (ret > 0)
+		lr_error (ldfile, _("%s: byte sequence of first character of \
+sequence is not lower than that of the last character"), "LC_COLLATE");
+	      return;
+	    }
+
+	  /* Generate the byte sequences data.  */
+	  while (1)
+	    {
+	      struct charseq *seq;
+
+	      /* Quite a bit of work ahead.  We have to find the character
+		 definition for the byte sequence and then determine the
+		 wide character belonging to it.  */
+	      seq = charmap_find_symbol (charmap, mbcnt, len);
+	      if (seq != NULL)
+		{
+		  struct element_t *elem;
+		  size_t namelen;
+
+		  if (seq->ucs4 == UNINITIALIZED_CHAR_VALUE)
+		    seq->ucs4 = repertoire_find_value (repertoire, seq->name,
+						       strlen (seq->name));
+
+		  /* I don't this this can ever happen.  */
+		  assert (seq->name != NULL);
+		  namelen = strlen (seq->name);
+
+		  /* Now we are ready to insert the new value in the
+		     sequence.  Find out whether the element is
+		     already known.  */
+		  if (find_entry (&collate->seq_table, seq->name, namelen,
+				  (void **) &elem) != 0)
+		    {
+		      uint32_t wcs[2] = { seq->ucs4, 0 };
+
+		      /* We have to allocate an entry.  */
+		      elem = new_element (collate, mbcnt, len, wcs, seq->name,
+					  namelen);
+
+		      /* And add it to the table.  */
+		      if (insert_entry (&collate->seq_table, seq->name,
+					namelen, elem) != 0)
+			/* This cannot happen.  */
+			assert (! "Internal error");
+		    }
+
+		  /* Test whether this element is not already in the list.  */
+		  if (elem->next != NULL || (collate->cursor != NULL
+					     && elem->next == collate->cursor))
+		    {
+		      lr_error (ldfile, _("\
+order for `%.*s' already defined at %s:%zu"),
+				namelen, seq->name, elem->file, elem->line);
+		      goto increment;
+		    }
+
+		  /* Enqueue the new element.  */
+		  elem->last = collate->cursor;
+		  elem->next = collate->cursor->next;
+		  elem->last->next = elem;
+		  if (elem->next != NULL)
+		    elem->next->last = elem;
+		  collate->cursor = elem;
+
+		 /* Add the weight value.  We take them from the
+		    `ellipsis_weights' member of `collate'.  */
+		  elem->weights = (struct element_list_t *)
+		    obstack_alloc (&collate->mempool,
+				   nrules * sizeof (struct element_list_t));
+		  for (cnt = 0; cnt < nrules; ++cnt)
+		    if (collate->ellipsis_weight.weights[cnt].cnt == 1
+			&& (collate->ellipsis_weight.weights[cnt].w[0]
+			    == ELEMENT_ELLIPSIS2))
+		      {
+			elem->weights[cnt].w = (struct element_t **)
+			  obstack_alloc (&collate->mempool,
+					 sizeof (struct element_t *));
+			elem->weights[cnt].w[0] = elem;
+			elem->weights[cnt].cnt = 1;
+		      }
+		    else
+		      {
+			/* Simly use the weight from `ellipsis_weight'.  */
+			elem->weights[cnt].w =
+			  collate->ellipsis_weight.weights[cnt].w;
+			elem->weights[cnt].cnt =
+			  collate->ellipsis_weight.weights[cnt].cnt;
+		      }
+		}
+
+	      /* Increment for the next round.  */
+	    increment:
+	      for (cnt = len - 1; cnt >= 0; --cnt)
+		if (++mbcnt[cnt] != '\0')
+		  break;
+
+	      /* Find out whether this was all.  */
+	      if (cnt < 0 || memcmp (mbcnt, mbend, len) >= 0)
+		/* Yep, that's all.  */
+		break;
+	    }
+	}
     }
   else
     {
@@ -883,7 +1067,7 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
 					     && elem->next == collate->cursor))
 		    {
 		      lr_error (ldfile, _("\
-%s: order for `%.*s' already defined at %s:%Z"),
+%s: order for `%.*s' already defined at %s:%zu"),
 				"LC_COLLATE", lenfrom, buf,
 				elem->file, elem->line);
 		      continue;
@@ -923,6 +1107,7 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
 		      /* We have to allocate an entry.  */
 		      elem = new_element (collate,
 					  seq != NULL ? seq->bytes : NULL,
+					  seq != NULL ? seq->nbytes : 0,
 					  wc == ILLEGAL_CHAR_VALUE
 					  ? NULL : wcs,
 					  buf, lenfrom);
@@ -1023,6 +1208,67 @@ collate_startup (struct linereader *ldfile, struct localedef_t *locale,
 void
 collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
+  /* Now is the time when we can assign the individual collation
+     values for all the symbols.  We have possibly different values
+     for the wide- and the multibyte-character symbols.  This is done
+     since it might make a difference in the encoding if there is in
+     some cases no multibyte-character but there are wide-characters.
+     (The other way around it is not important since theencoded
+     collation value in the wide-character case is 32 bits wide and
+     therefore requires no encoding).
+
+     The lowest collation value assigned is 2.  Zero is reserved for
+     the NUL byte terminating the strings in the `strxfrm'/`wcsxfrm'
+     functions and 1 is used to separate the individual passes for the
+     different rules.
+
+     We also have to construct is list with all the bytes/words which
+     can come first in a sequence, followed by all the elements which
+     also start with this byte/word.  The order is reverse which has
+     among others the important effect that longer strings are located
+     first in the list.  This is required for the output data since
+     the algorithm used in `strcoll' etc depends on this.
+
+     The multibyte case is easy.  We simply sort into an array with
+     256 elements.  */
+  struct locale_collate_t *collate = locale->categories[LC_COLLATE].collate;
+  int mbact = 2;
+  int wcact = 2;
+  struct element_t *runp = collate->start;
+
+  while (runp != NULL)
+    {
+      if (runp->mbs != NULL)
+	{
+	  struct element_t **eptr;
+
+	  /* Determine the order.  */
+	  runp->mborder = mbact++;
+
+	  /* Find the point where to insert in the list.  */
+	  eptr = &collate->mbheads[(unsigned int) runp->mbs[0]];
+	  while (*eptr != NULL)
+	    {
+	      /* Check which string is larger, the one we want to insert
+		 or the current element of the list we are looking at.  */
+	      assert (runp->mbs[0] == (*eptr)->mbs[0]);
+	      if (strcmp (runp->mbs, (*eptr)->mbs) > 0)
+		break;
+
+	      eptr = &(*eptr)->mbnext;
+	    }
+
+	  /* Set the pointers.  */
+	  runp->mbnext = *eptr;
+	  *eptr = runp;
+	}
+
+      if (runp->wcs != NULL)
+	runp->wcorder = wcact++;
+
+      /* Up to the next entry.  */
+      runp = runp->next;
+    }
 }
 
 
@@ -1257,7 +1503,8 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 		      if (insert_entry (&collate->elem_table,
 					symbol, symbol_len,
 					new_element (collate,
-						     NULL, NULL, NULL, 0)) < 0)
+						     NULL, 0, NULL, symbol,
+						     symbol_len)) < 0)
 			lr_error (ldfile, _("\
 error while adding collating element"));
 		    }
@@ -1519,9 +1766,12 @@ error while adding equivalent collating symbol"));
 	    goto err_label;
 
 	  /* Handle ellipsis at end of list.  */
-	  if (was_ellipsis)
-	    /* XXX */
-	    abort ();
+	  if (was_ellipsis != tok_none)
+	    {
+	      handle_ellipsis (ldfile, NULL, was_ellipsis, charmap, repertoire,
+			       collate);
+	      was_ellipsis = tok_none;
+	    }
 
 	  state = 2;
 	  lr_ignore_rest (ldfile, 1);
@@ -1543,9 +1793,12 @@ error while adding equivalent collating symbol"));
 	      state = 2;
 
 	      /* Handle ellipsis at end of list.  */
-	      if (was_ellipsis)
-		/* XXX */
-		abort ();
+	      if (was_ellipsis != tok_none)
+		{
+		  handle_ellipsis (ldfile, arg, was_ellipsis, charmap,
+				   repertoire, collate);
+		  was_ellipsis = tok_none;
+		}
 	    }
 	  else if (state != 2 && state != 3)
 	    goto err_label;
@@ -1610,9 +1863,12 @@ error while adding equivalent collating symbol"));
 	      state = 2;
 
 	      /* Handle ellipsis at end of list.  */
-	      if (was_ellipsis)
-		/* XXX */
-		abort ();
+	      if (was_ellipsis != tok_none)
+		{
+		  handle_ellipsis (ldfile, NULL, was_ellipsis, charmap,
+				   repertoire, collate);
+		  was_ellipsis = tok_none;
+		}
 	    }
 	  else if (state == 3)
 	    {
@@ -1848,7 +2104,7 @@ error while adding equivalent collating symbol"));
 		  && collate->undefined.next == collate->cursor))
 	    {
 	      lr_error (ldfile,
-			_("%s: order for `%.*s' already defined at %s:%Z"),
+			_("%s: order for `%.*s' already defined at %s:%zu"),
 			"LC_COLLATE", 9, "UNDEFINED", collate->undefined.file,
 			collate->undefined.line);
 	      lr_ignore_rest (ldfile, 0);
@@ -1892,9 +2148,12 @@ error while adding equivalent collating symbol"));
 			    "LC_COLLATE");
 
 		  /* Handle ellipsis at end of list.  */
-		  if (was_ellipsis)
-		    /* XXX */
-		    abort ();
+		  if (was_ellipsis != tok_none)
+		    {
+		      handle_ellipsis (ldfile, NULL, was_ellipsis, charmap,
+				       repertoire, collate);
+		      was_ellipsis = tok_none;
+		    }
 		}
 	      else if (state == 3)
 		error (0, 0, _("%s: missing `reorder-end' keyword"),
