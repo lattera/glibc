@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,94,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,35 +16,20 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
 #include <errno.h>
-#include <utime.h>
-#include <time.h>
 #include <sys/types.h>
-#include <sys/time.h>
+#include <sched.h>
 
 
-/* Set the access and modification times of FILE to those given in TIMES.
-   If TIMES is NULL, set them to the current time.  */
+/* Retrieve the CPU affinity mask for a particular process.  */
 int
-utime (file, times)
-     const char *file;
-     const struct utimbuf *times;
+sched_getaffinity (pid, len, mask)
+     pid_t pid;
+     unsigned long int len;
+     unsigned long int *mask;
 {
-  struct timeval timevals[2];
-  struct timeval *tvp;
-
-  if (times != NULL)
-    {
-      timevals[0].tv_sec = (time_t) times->actime;
-      timevals[0].tv_usec = 0L;
-      timevals[1].tv_sec = (time_t) times->modtime;
-      timevals[1].tv_usec = 0L;
-      tvp = timevals;
-    }
-  else
-    tvp = NULL;
-
-  return __utimes (file, tvp);
+  __set_errno (ENOSYS);
+  return -1;
 }
-libc_hidden_def (utime)
+stub_warning (sched_getaffinity)
+#include <stub-tag.h>

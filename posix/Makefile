@@ -51,7 +51,7 @@ routines :=								      \
 	confstr								      \
 	getopt getopt1 getopt_init					      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
-	sched_primin sched_rr_gi					      \
+	sched_primin sched_rr_gi sched_getaffinity sched_setaffinity	      \
 	getaddrinfo gai_strerror wordexp				      \
 	pread pwrite pread64 pwrite64					      \
 	spawn_faction_init spawn_faction_destroy spawn_faction_addclose	      \

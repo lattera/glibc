@@ -1,5 +1,5 @@
 /* Definitions for POSIX 1003.1b-1993 (aka POSIX.4) scheduling interface.
-   Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,6 +61,17 @@ extern int sched_get_priority_min (int __algorithm) __THROW;
 
 /* Get the SCHED_RR interval for the named process.  */
 extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) __THROW;
+
+
+#ifdef __USE_GNU
+/* Set the CPU affinity for a task */
+extern int sched_setaffinity (__pid_t __pid, unsigned long int __len,
+			      unsigned long int *__mask) __THROW;
+
+/* Get the CPU affinity for a task */
+extern int sched_getaffinity (__pid_t __pid, unsigned long int __len,
+			      unsigned long int *__mask) __THROW;
+#endif
 
 __END_DECLS
 
