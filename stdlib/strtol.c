@@ -150,7 +150,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   if (base < 0 || base == 1 || base > 36)
     base = 10;
 
-  s = nptr;
+  save = s = nptr;
 
   /* Skip white space.  */
   while (isspace (*s))
@@ -269,9 +269,17 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   return (negative ? -i : i);
 
 noconv:
-  /* There was no number to convert.  */
+  /* We must handle a special case here: the base is 0 or 16 and the
+     first two characters and '0' and 'x', but the rest are no
+     hexadecimal digits.  This is no error case.  We return 0 and
+     ENDPTR points to the `x`.  */
   if (endptr != NULL)
-    *endptr = (char *) nptr;
+    if (save - nptr >= 2 && tolower (save[-1]) == 'x' && save[-2] == '0')
+      *endptr = (char *) &save[-1];
+    else
+      /*  There was no number to convert.  */
+      *endptr = (char *) nptr;
+
   return 0L;
 }
 

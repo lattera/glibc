@@ -32,5 +32,8 @@ strxfrm (dest, src, n)
      const char *src;
      size_t n;
 {
+  if (n == 0)
+    return strlen (src);
+
   return __stpncpy (dest, src, n) - dest;
 }

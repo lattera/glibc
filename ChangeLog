@@ -1,3 +1,12 @@
+Sun Jan 14 01:01:10 1996  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* stdlib/strtol.c: Return correct pointer for strings
+	like "0xyz" and base 0 or 16.
+
+	* string/strxfrm.c: Handle case for LENGTH == 0 correct.
+
+	* sunrpc/etc.rpc: Add some more known protocols.
+
 Fri Jan 12 13:40:01 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/gnu/types.h: Moved to sysdeps/generic/gnu/types.h.

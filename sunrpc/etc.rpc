@@ -31,3 +31,6 @@ keyserv		100029	keyserver
 tfsd		100037 
 nsed		100038
 nsemntd		100039
+pcnfsd		150001
+amd		300019	amq
+bwnfsd		545580417
