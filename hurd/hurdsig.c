@@ -1024,6 +1024,7 @@ signal_allowed (int signo, mach_port_t refport)
     case SIGINFO:
     case SIGTTIN:
     case SIGTTOU:
+    case SIGWINCH:
       /* Job control signals can be sent by the controlling terminal.  */
       if (__USEPORT (CTTYID, port == refport))
 	goto win;

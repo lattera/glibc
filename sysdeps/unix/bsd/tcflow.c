@@ -32,9 +32,9 @@ tcflow (fd, action)
   switch (action)
     {
     case TCOOFF:
-      return __ioctl (fd, TIOCSTOP, (PTR) NULL);
+      return __ioctl (fd, TIOCSTOP, (void *) NULL);
     case TCOON:
-      return __ioctl (fd, TIOCSTART, (PTR) NULL);
+      return __ioctl (fd, TIOCSTART, (void *) NULL);
 
     case TCIOFF:
     case TCION:

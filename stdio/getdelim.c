@@ -135,7 +135,8 @@ __getdelim (lineptr, n, terminator, stream)
 	  if (i > copy)
 	    i = copy;
 
-	  found = (char *) __memccpy ((PTR) p, stream->__bufp, terminator, i);
+	  found = (char *) __memccpy ((void *) p, stream->__bufp, 
+				      terminator, i);
 	  if (found != NULL)
 	    {
 	      stream->__bufp += found - p;

@@ -47,5 +47,5 @@ tcflush (fd, queue_selector)
       return -1;
     }
 
-  return __ioctl (fd, TIOCFLUSH, (PTR) &arg);
+  return __ioctl (fd, TIOCFLUSH, (void *) &arg);
 }

@@ -1,3 +1,8 @@
+Tue Oct  8 13:58:31 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/ports-get.c (_hurd_ports_get): If the requested port is
+	null, don't attempt mach_port_mod_refs.
+
 Mon Oct  7 14:51:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/pipestream.c: New file to avoid use of

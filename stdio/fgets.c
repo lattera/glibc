@@ -101,7 +101,7 @@ fgets (s, n, stream)
       if (i > n)
 	i = n;
 
-      found = (char *) __memccpy ((PTR) p, stream->__bufp, '\n', i);
+      found = (char *) __memccpy ((void *) p, stream->__bufp, '\n', i);
 
       if (found != NULL)
 	{

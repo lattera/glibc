@@ -31,8 +31,10 @@ __wait4 (pid_t pid, __WAIT_STATUS_DEFN stat_loc,
   error_t err;
   struct rusage ignored;
   natural_t sigcode;
-
-  err = __USEPORT (PROC, __proc_wait (port, pid, options, stat_loc, &sigcode,
+  int dummy;
+  
+  err = __USEPORT (PROC, __proc_wait (port, pid, options, 
+				      stat_loc ?: &dummy, &sigcode,
 				      usage ?: &ignored, &dead));
 
   return err ? (pid_t) __hurd_fail (err) : dead;

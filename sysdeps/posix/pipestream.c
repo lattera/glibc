@@ -42,7 +42,7 @@ struct child
    original function with the original cookie.  */
 
 #define FUNC(type, name, args)						      \
-  static type __CONCAT(child_,name) args __CONCAT(name,decl))		      \
+  static type __CONCAT(child_,name) args __CONCAT(name,decl)		      \
   {									      \
     struct child *c = (struct child *) cookie;				      \
     {									      \
@@ -51,15 +51,15 @@ struct child
     }									      \
   }
 
-#define readdecl void *cookie AND register char *buf AND register size_t n
+#define readdecl void *cookie; register char *buf; register size_t n;
 FUNC (int, read, (cookie, buf, n))
-#define writedecl void *cookie AND register const char *buf AND register size_t n
+#define writedecl void *cookie; register const char *buf; register size_t n;
 FUNC (int, write, (cookie, buf, n))
-#define seekdecl void *cookie AND fpos_t *pos AND int whence
+#define seekdecl void *cookie; fpos_t *pos; int whence;
 FUNC (int, seek, (cookie, pos, whence))
-#define closedecl void *cookie
+#define closedecl void *cookie;
 FUNC (int, close, (cookie))
-#define filenodecl void *cookie
+#define filenodecl void *cookie;
 FUNC (int, fileno, (cookie))
 
 static const __io_functions child_funcs
@@ -116,7 +116,7 @@ popen (command, mode)
       new_argv[1] = "-c";
       new_argv[2] = command;
       new_argv[3] = NULL;
-      (void) execve (SH_PATH, (char *CONST *) new_argv, environ);
+      (void) execve (SH_PATH, (char *const *) new_argv, environ);
       /* Die if it failed.  */
       _exit (127);
     }
@@ -156,7 +156,7 @@ popen (command, mode)
   child->pid = pid;
   child->cookie = stream->__cookie;
   child->funcs = stream->__io_funcs;
-  stream->__cookie = (PTR) child;
+  stream->__cookie = (void *) child;
   stream->__io_funcs = child_funcs;
   stream->__ispipe = 1;
   return stream;

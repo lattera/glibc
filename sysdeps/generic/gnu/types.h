@@ -47,6 +47,7 @@ typedef unsigned int __ino_t;	/* Type of file serial numbers.  */
 typedef unsigned int __mode_t;	/* Type of file attribute bitmasks.  */
 typedef unsigned short int __nlink_t; /* Type of file link counts.  */
 typedef long int __off_t;	/* Type of file sizes and offsets.  */
+typedef __quad_t __loff_t;	/* Type of file sizes and offsets.  */
 typedef int __pid_t;		/* Type of process identifications.  */
 typedef int __ssize_t;		/* Type of a byte count, or error.  */
 typedef __u_quad_t __fsid_t;	/* Type of file system IDs.  */
@@ -83,9 +84,5 @@ typedef unsigned long __fd_mask;
 #define	__FD_SET(d, set)	((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))
 #define	__FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
 #define	__FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
-
-#ifdef __USE_SVID
-typedef long int key_t;
-#endif
 
 #endif /* gnu/types.h */
