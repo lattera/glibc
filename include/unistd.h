@@ -117,6 +117,7 @@ extern int __getdtablesize (void);
 extern int __brk (void *__addr);
 extern int __close (int __fd);
 libc_hidden_proto (__close)
+extern int __libc_close (int __fd);
 extern ssize_t __read (int __fd, void *__buf, size_t __nbytes);
 libc_hidden_proto (__read)
 extern ssize_t __write (int __fd, __const void *__buf, size_t __n);

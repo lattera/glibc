@@ -47,7 +47,7 @@ pthread_setcancelstate (state, oldstate)
 		     ? PTHREAD_CANCEL_DISABLE : PTHREAD_CANCEL_ENABLE);
 
       /* Avoid doing unnecessary work.  The atomic operation can
-	 potentially be expensive if the bug has to be locked and
+	 potentially be expensive if the memory has to be locked and
 	 remote cache lines have to be invalidated.  */
       if (oldval == newval)
 	break;

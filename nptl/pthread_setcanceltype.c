@@ -47,7 +47,7 @@ __pthread_setcanceltype (type, oldtype)
 		    ? PTHREAD_CANCEL_ASYNCHRONOUS : PTHREAD_CANCEL_DEFERRED);
 
       /* Avoid doing unnecessary work.  The atomic operation can
-	 potentially be expensive if the bug has to be locked and
+	 potentially be expensive if the memory has to be locked and
 	 remote cache lines have to be invalidated.  */
       if (oldval == newval)
 	break;
