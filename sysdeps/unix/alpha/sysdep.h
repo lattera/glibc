@@ -134,6 +134,21 @@ __LABEL(name)						\
 
 #define ret_NOERRNO ret
 
+#define PSEUDO_ERRVAL(name, syscall_name, args)	\
+	.globl name;					\
+	.align 4;					\
+	.ent name,0;					\
+__LABEL(name)						\
+	PSEUDO_PROLOGUE;				\
+	PSEUDO_PREPARE_ARGS				\
+	lda	v0, SYS_ify(syscall_name);		\
+	call_pal PAL_callsys;
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(sym)  END(sym)
+
+#define ret_ERRVAL ret
+
 #define r0	v0
 #define r1	a4
 
