@@ -1,4 +1,4 @@
-# Copyright (C) 1993 Free Software Foundation, Inc.
+# Copyright (C) 1994 Free Software Foundation, Inc.
 # Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
 #   On-Line Applications Research Corporation.
 
@@ -18,5 +18,7 @@
 # Cambridge, MA 02139, USA.
 
 ifeq (bare,$(subdir))
-install-lib += force_cpu386.ld
+install-others += $(libdir)/force_cpu386.ld
+$(libdir)/force_cpu386.ld: $(sysdep_dir)/standalone/i386/target.ld
+	$(do-install)
 endif
