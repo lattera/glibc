@@ -27,7 +27,7 @@
 int
 do_test (void)
 {
-#ifdef _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
+#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
   clockid_t cl;
   /* This is really only a linking-test here.  */
   int e = pthread_getcpuclockid (pthread_self (), &cl);

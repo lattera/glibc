@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 
-#ifdef _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0
+#if defined _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0
 static int
 run_test (clockid_t cl)
 {

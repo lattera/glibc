@@ -25,7 +25,7 @@
 #include <unistd.h>
 
 
-#ifdef _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
+#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
 static pthread_barrier_t b2;
 static pthread_barrier_t bN;
 
