@@ -559,10 +559,10 @@ AC_REQUIRE([AC_CHECK_TOOL_PREFIX])dnl
 AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
   [version \([egcygnustpi-]*[0-9.]*\)],
   [*gcc-2.9[5-9].*|*2.8.[1-9]*|*2.9|*2.9.[0-9]*|2.9[5-9]*|3.[0-9]*|cygnus-2.9[1-9]*|gcc-2.9[5-9]|gcc-2.1[0-9][0-9]|sgicc-*],
-  critic_missing="$critic_missing make")
+  critic_missing=gcc)
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
-  [3.79* | 3.[89]*], critic_missing=t)
+  [3.79* | 3.[89]*], critic_missing="$critic_missing make")
 
 
 if test -n "$critic_missing"; then
