@@ -155,12 +155,6 @@ extern void abort (), exit ();
 
 #endif	/* Standard headers.  */
 
-#ifdef HAVE_GETLOGIN_R
-extern int getlogin_r __P ((char *, size_t));
-#else
-extern char *getlogin __P ((void));
-#endif
-
 #ifndef	ANSI_STRING
 
 # ifndef bzero
@@ -286,6 +280,12 @@ extern char *alloca ();
 # undef	GLOB_PERIOD
 #endif
 #include <glob.h>
+
+#ifdef HAVE_GETLOGIN_R
+extern int getlogin_r __P ((char *, size_t));
+#else
+extern char *getlogin __P ((void));
+#endif
 
 static
 #if __GNUC__ - 0 >= 2

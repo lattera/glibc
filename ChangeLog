@@ -1,5 +1,38 @@
 1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* string/bits/string2.h: Fix aliasing problems.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+	* sysdeps/i386/bits/string.h: Likewise.
+
+1998-12-28  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/dl-machine.c: Handle shared library profiling.
+	* elf/rtld.c (dl_main): Don't call malloc() between
+	re-relocating the dynamic linker and running the application's crt0.
+
+1999-07-21  Paul D. Smith  <psmith@gnu.org>
+
+	* sysdeps/generic/glob.c: Move getlogin{,_r} prototypes below
+	glob.h to get __P() macro.
+
+	* posix/fnmatch.c (internal_fnmatch): Use K&R definition syntax,
+	not ANSI.
+	(__strchrnul): This won't exist outside GLIBC, so create one.
+
+1999-07-25  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Always define __qaddr_t.
+	__ino64_t should be 32bit unsigned type on sparc32.
+	Define __off64_t to __quad_t instead of __int64_t.
+	Make __pic_pid_t unsigned on sparc32.
+
+1999-07-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* localedata/tst-rpmatch.sh: Use "&" instead of "§" to avoid a bug
+	in bash 2.03.
+
+1999-07-25  Ulrich Drepper  <drepper@cygnus.com>
+
 	* iconvdata/euc-kr.c (euckr_from_ucs4): Set cp[0] to '\0' in case
 	of an error.  Patch by Changwoo Ryu <cwryu@debian.org>.
 

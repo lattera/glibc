@@ -1024,6 +1024,14 @@ of this helper program; chances are you did not intend to run this program.\n\
        _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
     _dl_sysdep_start_cleanup ();
 
+    /* Now enable profiling if needed.  Like the previous call,
+       this has to go here because the calls it makes should use the
+       rtld versions of the functions (particularly calloc()), but it
+       needs to have _dl_profile_map set up by the relocator.  */
+    if (_dl_profile_map != NULL)
+      /* We must prepare the profiling.  */
+      _dl_start_profile (_dl_profile_map, _dl_profile_output);
+
     if (_dl_rtld_map.l_opencount > 0)
       {
 	/* There was an explicit ref to the dynamic linker as a shared lib.
@@ -1081,11 +1089,6 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* We must munmap() the cache file.  */
   _dl_unload_cache ();
 #endif
-
-  /* Now enable profiling if needed.  */
-  if (_dl_profile_map != NULL)
-    /* We must prepare the profiling.  */
-    _dl_start_profile (_dl_profile_map, _dl_profile_output);
 
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */
@@ -1299,11 +1302,7 @@ process_envvars (enum mode *modep, int *lazyp)
 
 	  /* Which shared object shall be profiled.  */
 	  if (memcmp (&envline[3], "PROFILE", 7) == 0)
-	    {
-	      _dl_profile = &envline[11];
-	      if (*_dl_profile == '\0')
-		_dl_profile = NULL;
-	    }
+	    _dl_profile = &envline[11];
 	  break;
 
 	case 8:
@@ -1388,12 +1387,22 @@ process_envvars (enum mode *modep, int *lazyp)
 	unsetenv ("LD_PRELOAD");
       if (library_path != NULL)
 	unsetenv ("LD_LIBRARY_PATH");
+      if (_dl_origin_path != NULL)
+	unsetenv ("LD_ORIGIN_PATH");
+      if (debug_output != NULL)
+	unsetenv ("LD_DEBUG_OUTPUT");
+      if (_dl_profile != NULL)
+	unsetenv ("LD_PROFILE");
 
       for (cnt = 0;
 	   cnt < sizeof (unsecure_envvars) / sizeof (unsecure_envvars[0]);
 	   ++cnt)
 	unsetenv (unsecure_envvars[cnt]);
     }
+
+  /* The name of the object to profile cannot be empty.  */
+  if (_dl_profile != NULL && *_dl_profile == '\0')
+    _dl_profile = NULL;
 
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug

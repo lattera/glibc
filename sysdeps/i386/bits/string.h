@@ -54,59 +54,65 @@ __STRING_INLINE void *
 __memcpy_c (void *__dest, __const void *__src, size_t __n)
 {
   register unsigned long int __d0, __d1, __d2;
+  union {
+    unsigned int __ui;
+    unsigned short int __usi;
+    unsigned char __uc;
+  } *__u = __dest;
   switch (__n)
     {
     case 0:
       return __dest;
     case 1:
-      *(unsigned char *) __dest = *(const unsigned char *) __src;
+      __u->__uc = *(const unsigned char *) __src;
       return __dest;
     case 2:
-      *(unsigned short int *) __dest = *(const unsigned short int *) __src;
+      __u->__usi = *(const unsigned short int *) __src;
       return __dest;
     case 3:
-      *(unsigned short int *) __dest = *(const unsigned short int *) __src;
-      *(2 + (unsigned char *) __dest) = *(2 + (const unsigned char *) __src);
+      __u->__usi = *(const unsigned short int *) __src;
+      __u = (void *) __u + 2;
+      __u->__uc = *(2 + (const unsigned char *) __src);
       return __dest;
     case 4:
-      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
+      __u->__ui = *(const unsigned int *) __src;
       return __dest;
-    case 6:	/* for ethernet addresses */
-      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
-      *(2 + (unsigned short int *) __dest) =
-	*(2 + (const unsigned short int *) __src);
+    case 6:
+      __u->__ui = *(const unsigned int *) __src;
+      __u = (void *) __u + 4;
+      __u->__usi = *(2 + (const unsigned short int *) __src);
       return __dest;
     case 8:
-      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
-      *(1 + (unsigned long int *) __dest) =
-	*(1 + (const unsigned long int *) __src);
+      __u->__ui = *(const unsigned int *) __src;
+      __u = (void *) __u + 4;
+      __u->__ui = *(1 + (const unsigned int *) __src);
       return __dest;
     case 12:
-      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
-      *(1 + (unsigned long int *) __dest) =
-	*(1 + (const unsigned long int *) __src);
-      *(2 + (unsigned long int *) __dest) =
-	*(2 + (const unsigned long int *) __src);
+      __u->__ui = *(const unsigned int *) __src;
+      __u = (void *) __u + 4;
+      __u->__ui = *(1 + (const unsigned int *) __src);
+      __u = (void *) __u + 4;
+      __u->__ui = *(2 + (const unsigned int *) __src);
       return __dest;
     case 16:
-      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
-      *(1 + (unsigned long int *) __dest) =
-	*(1 + (const unsigned long int *) __src);
-      *(2 + (unsigned long int *) __dest) =
-	*(2 + (const unsigned long int *) __src);
-      *(3 + (unsigned long int *) __dest) =
-	*(3 + (const unsigned long int *) __src);
+      __u->__ui = *(const unsigned int *) __src;
+      __u = (void *) __u + 4;
+      __u->__ui = *(1 + (const unsigned int *) __src);
+      __u = (void *) __u + 4;
+      __u->__ui = *(2 + (const unsigned int *) __src);
+      __u = (void *) __u + 4;
+      __u->__ui = *(3 + (const unsigned int *) __src);
       return __dest;
     case 20:
-      *(unsigned long int *) __dest = *(const unsigned long int *) __src;
-      *(1 + (unsigned long int *) __dest) =
-	*(1 + (const unsigned long int *) __src);
-      *(2 + (unsigned long int *) __dest) =
-	*(2 + (const unsigned long int *) __src);
-      *(3 + (unsigned long int *) __dest) =
-	*(3 + (const unsigned long int *) __src);
-      *(4 + (unsigned long int *) __dest) =
-	*(4 + (const unsigned long int *) __src);
+      __u->__ui = *(const unsigned int *) __src;
+      __u = (void *) __u + 4;
+      __u->__ui = *(1 + (const unsigned int *) __src);
+      __u = (void *) __u + 4;
+      __u->__ui = *(2 + (const unsigned int *) __src);
+      __u = (void *) __u + 4;
+      __u->__ui = *(3 + (const unsigned int *) __src);
+      __u = (void *) __u + 4;
+      __u->__ui = *(4 + (const unsigned int *) __src);
       return __dest;
     }
 #define __COMMON_CODE(x) \
@@ -115,7 +121,7 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
      "rep; movsl"							      \
      x									      \
      : "=&c" (__d0), "=&D" (__d1), "=&S" (__d2)				      \
-     : "0" (__n / 4), "1" (__dest), "2" (__src)				      \
+     : "0" (__n / 4), "1" (&__u->__uc), "2" (__src)			      \
      : "memory");
 
   switch (__n % 4)
@@ -184,22 +190,28 @@ __STRING_INLINE void *
 __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
 {
   register unsigned long int __d0, __d1;
+  union {
+    unsigned int __ui;
+    unsigned short int __usi;
+    unsigned char __uc;
+  } *__u = __s;
   switch (__n)
     {
     case 0:
       return __s;
     case 1:
-      *(unsigned char *) __s = __pattern;
+      __u->__uc = __pattern;
       return __s;
     case 2:
-      *(unsigned short int *) __s = __pattern;
+      __u->__usi = __pattern;
       return __s;
     case 3:
-      *(unsigned short int *) __s = __pattern;
-      *(2 + (unsigned char *) __s) = __pattern;
+      __u->__usi = __pattern;
+      __u = __extension__ ((void *) __u + 1);
+      __u->__uc = __pattern;
       return __s;
     case 4:
-      *(unsigned long *) __s = __pattern;
+      __u->__ui = __pattern;
       return __s;
 	}
 #define __COMMON_CODE(x) \
@@ -208,7 +220,7 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
      "rep; stosl"							      \
      x									      \
      : "=&c" (__d0), "=&D" (__d1)					      \
-     : "a" (__pattern), "0" (__n / 4), "1" (__s)			      \
+     : "a" (__pattern), "0" (__n / 4), "1" (&__u->__uc)			      \
      : "memory")
 
   switch (__n % 4)

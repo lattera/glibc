@@ -110,51 +110,68 @@ __STRING2_COPY_TYPE (8);
 
 #  define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
-     __uint32_t *__ts = (__uint32_t *) __s;				      \
+     union {								      \
+       unsigned int __ui;						      \
+       unsigned short int __usi;					      \
+       unsigned char __uc;						      \
+     } *__u = __s;							      \
      __uint8_t __c = (__uint8_t) (c);					      \
-     									      \
+									      \
      /* This `switch' statement will be removed at compile-time.  */	      \
      switch (n)								      \
        {								      \
        case 15:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 11:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 7:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 3:								      \
-	 *((__uint16_t *) __ts)++ = __c * 0x0101;			      \
-	 *((__uint8_t *) __ts) = __c;					      \
+	 __u->__usi = (unsigned short int) __c * 0x0101;		      \
+	 __u = (void *) __u + 2;					      \
+	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 14:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 10:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 6:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 2:								      \
-	 *((__uint16_t *) __ts) = __c * 0x0101;				      \
+	 __u->__usi = (unsigned short int) __c * 0x0101;		      \
 	 break;								      \
 									      \
        case 13:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 9:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 5:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 1:								      \
-	 *((__uint8_t *) __ts) = __c;					      \
+	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 16:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 12:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 8:								      \
-	 *__ts++ = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
+	 __u = (void *) __u + 4;					      \
        case 4:								      \
-	 *__ts = __c * 0x01010101;					      \
+	 __u->__ui = __c * 0x01010101;					      \
        case 0:								      \
 	 break;								      \
        }								      \
@@ -169,7 +186,7 @@ __STRING2_COPY_TYPE (8);
 
 /* GCC optimizes memset(s, 0, n) but not bzero(s, n).
    The optimization is broken before EGCS 1.1.  */
-#if __GNUC_PREREQ (2, 91)
+# if __GNUC_PREREQ (2, 91)
 #  define __bzero(s, n) __builtin_memset (s, '\0', n)
 # endif
 
@@ -207,48 +224,60 @@ __mempcpy_small (void *__dest1,
 		 __uint32_t __src0_4, __uint32_t __src4_4,
 		 size_t __srclen)
 {
-  char *__dest = (char *) __dest1;
+  union {
+    __uint32_t __ui;
+    __uint16_t __usi;
+    unsigned char __uc;
+    unsigned char __c;
+  } *__u = __dest1;
   switch (__srclen)
     {
     case 1:
-      *__dest++ = __src0_1;
+      __u->__c = __src0_1;
+      __u = (void *) __u + 1;
       break;
     case 2:
-      *((__uint16_t *) __dest) = __src0_2;
-      __dest += 2;
+      __u->__usi = __src0_2;
+      __u = (void *) __u + 2;
       break;
     case 3:
-      *((__uint16_t *) __dest) = __src0_2;
-      __dest += 2;
-      *__dest++ = __src2_1;
+      __u->__usi = __src0_2;
+      __u = (void *) __u + 2;
+      __u->__c = __src2_1;
+      __u = (void *) __u + 1;
       break;
     case 4:
-      *((__uint32_t *) __dest) = __src0_4;
-      __dest += 4;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
       break;
     case 5:
-      *((__uint32_t *) __dest) = __src0_4;
-      __dest += 4;
-      *__dest++ = __src4_1;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__c = __src4_1;
+      __u = (void *) __u + 1;
       break;
     case 6:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint16_t *) (__dest + 4)) = __src4_2;
-      __dest += 6;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_2;
+      __u = (void *) __u + 2;
       break;
     case 7:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint16_t *) (__dest + 4)) = __src4_2;
-      __dest += 6;
-      *__dest++ = __src6_1;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_2;
+      __u = (void *) __u + 2;
+      __u->__c = __src6_1;
+      __u = (void *) __u + 1;
       break;
     case 8:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint32_t *) (__dest + 4)) = __src4_4;
-      __dest += 8;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__ui = __src4_4;
+      __u = (void *) __u + 4;
       break;
     }
-  return (void *) __dest;
+  return (void *) __u;
 }
 #  else
 #   define __mempcpy_args(src) \
@@ -287,41 +316,50 @@ __STRING_INLINE void *__mempcpy_small (void *, char, __STRING2_COPY_ARR2,
 				       __STRING2_COPY_ARR7,
 				       __STRING2_COPY_ARR8, size_t);
 __STRING_INLINE void *
-__mempcpy_small (void *__dest1, char __src1,
+__mempcpy_small (void *__dest, char __src1,
 		 __STRING2_COPY_ARR2 __src2, __STRING2_COPY_ARR3 __src3,
 		 __STRING2_COPY_ARR4 __src4, __STRING2_COPY_ARR5 __src5,
 		 __STRING2_COPY_ARR6 __src6, __STRING2_COPY_ARR7 __src7,
 		 __STRING2_COPY_ARR8 __src8, size_t __srclen)
 {
-  char *__dest = (char *) __dest1;
+  union {
+    char __c;
+    __STRING2_COPY_ARR2 __sca2;
+    __STRING2_COPY_ARR3 __sca3;
+    __STRING2_COPY_ARR4 __sca4;
+    __STRING2_COPY_ARR5 __sca5;
+    __STRING2_COPY_ARR6 __sca6;
+    __STRING2_COPY_ARR7 __sca7;
+    __STRING2_COPY_ARR8 __sca8;
+  } *__u = __dest;
   switch (__srclen)
     {
     case 1:
-      *__dest = __src1;
+      __u->__c = __src1;
       break;
     case 2:
-      __extension__ *((__STRING2_COPY_ARR2 *) __dest) = __src2;
+      __extension__ __u->__sca2 = __src2;
       break;
     case 3:
-      __extension__ *((__STRING2_COPY_ARR3 *) __dest) = __src3;
+      __extension__ __u->__sca3 = __src3;
       break;
     case 4:
-      __extension__ *((__STRING2_COPY_ARR4 *) __dest) = __src4;
+      __extension__ __u->__sca4 = __src4;
       break;
     case 5:
-      __extension__ *((__STRING2_COPY_ARR5 *) __dest) = __src5;
+      __extension__ __u->__sca5 = __src5;
       break;
     case 6:
-      __extension__ *((__STRING2_COPY_ARR6 *) __dest) = __src6;
+      __extension__ __u->__sca6 = __src6;
       break;
     case 7:
-      __extension__ *((__STRING2_COPY_ARR7 *) __dest) = __src7;
+      __extension__ __u->__sca7 = __src7;
       break;
     case 8:
-      __extension__ *((__STRING2_COPY_ARR8 *) __dest) = __src8;
+      __extension__ __u->__sca8 = __src8;
       break;
     }
-  return (void *) (__dest + __srclen);
+  return __extension__ ((void *) __u + __srclen);
 }
 #  endif
 # endif
@@ -362,37 +400,48 @@ __strcpy_small (char *__dest,
 		__uint32_t __src0_4, __uint32_t __src4_4,
 		size_t __srclen)
 {
+  union {
+    __uint32_t __ui;
+    __uint16_t __usi;
+    unsigned char __uc;
+  } *__u = (void *) __dest;
   switch (__srclen)
     {
     case 1:
-      *__dest = '\0';
+      __u->__uc = '\0';
       break;
     case 2:
-      *((__uint16_t *) __dest) = __src0_2;
+      __u->__usi = __src0_2;
       break;
     case 3:
-      *((__uint16_t *) __dest) = __src0_2;
-      *(__dest + 2) = '\0';
+      __u->__usi = __src0_2;
+      __u = (void *) __u + 2;
+      __u->__uc = '\0';
       break;
     case 4:
-      *((__uint32_t *) __dest) = __src0_4;
+      __u->__ui = __src0_4;
       break;
     case 5:
-      *((__uint32_t *) __dest) = __src0_4;
-      *(__dest + 4) = '\0';
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__uc = '\0';
       break;
     case 6:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint16_t *) (__dest + 4)) = __src4_2;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_2;
       break;
     case 7:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint16_t *) (__dest + 4)) = __src4_2;
-      *(__dest + 6) = '\0';
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_2;
+      __u = (void *) __u + 2;
+      __u->__uc = '\0';
       break;
     case 8:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint32_t *) (__dest + 4)) = __src4_4;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_4;
       break;
     }
   return __dest;
@@ -439,31 +488,41 @@ __strcpy_small (char *__dest,
 		__STRING2_COPY_ARR6 __src6, __STRING2_COPY_ARR7 __src7,
 		__STRING2_COPY_ARR8 __src8, size_t __srclen)
 {
+  union {
+    char __c;
+    __STRING2_COPY_ARR2 __sca2;
+    __STRING2_COPY_ARR3 __sca3;
+    __STRING2_COPY_ARR4 __sca4;
+    __STRING2_COPY_ARR5 __sca5;
+    __STRING2_COPY_ARR6 __sca6;
+    __STRING2_COPY_ARR7 __sca7;
+    __STRING2_COPY_ARR8 __sca8;
+  } *__u = __dest;
   switch (__srclen)
     {
     case 1:
-      *__dest = '\0';
+      __u->__c = '\0';
       break;
     case 2:
-      __extension__ *((__STRING2_COPY_ARR2 *) __dest) = __src2;
+      __extension__ __u->__sca2 = __src2;
       break;
     case 3:
-      __extension__ *((__STRING2_COPY_ARR3 *) __dest) = __src3;
+      __extension__ __u->__sca3 = __src3;
       break;
     case 4:
-      __extension__ *((__STRING2_COPY_ARR4 *) __dest) = __src4;
+      __extension__ __u->__sca4 = __src4;
       break;
     case 5:
-      __extension__ *((__STRING2_COPY_ARR5 *) __dest) = __src5;
+      __extension__ __u->__sca5 = __src5;
       break;
     case 6:
-      __extension__ *((__STRING2_COPY_ARR6 *) __dest) = __src6;
+      __extension__ __u->__sca6 = __src6;
       break;
     case 7:
-      __extension__ *((__STRING2_COPY_ARR7 *) __dest) = __src7;
+      __extension__ __u->__sca7 = __src7;
       break;
     case 8:
-      __extension__ *((__STRING2_COPY_ARR8 *) __dest) = __src8;
+      __extension__ __u->__sca8 = __src8;
       break;
   }
   return __dest;
@@ -500,47 +559,55 @@ __stpcpy_small (char *__dest,
 		__uint32_t __src0_4, __uint32_t __src4_4,
 		size_t __srclen)
 {
+  union {
+    unsigned int __ui;
+    unsigned short int __usi;
+    unsigned char __uc;
+  } *__u = (void *) __dest;
   switch (__srclen)
     {
     case 1:
-      *__dest = '\0';
+      __u->__uc = '\0';
       break;
     case 2:
-      *((__uint16_t *) __dest) = __src0_2;
-      ++__dest;
+      __u->__usi = __src0_2;
+      __u = (void *) __u + 1;
       break;
     case 3:
-      *((__uint16_t *) __dest) = __src0_2;
-      __dest += sizeof (__uint16_t);
-      *__dest = '\0';
+      __u->__usi = __src0_2;
+      __u = (void *) __u + 2;
+      __u->__uc = '\0';
       break;
     case 4:
-      *((__uint32_t *) __dest) = __src0_4;
-      __dest += 3;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 3;
       break;
     case 5:
-      *((__uint32_t *) __dest) = __src0_4;
-      __dest += 4;
-      *__dest = '\0';
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__uc = '\0';
       break;
     case 6:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint16_t *) (__dest + 4)) = __src4_2;
-      __dest += 5;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_2;
+      __u = (void *) __u + 1;
       break;
     case 7:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint16_t *) (__dest + 4)) = __src4_2;
-      __dest += 6;
-      *__dest = '\0';
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__usi = __src4_2;
+      __u = (void *) __u + 2;
+      __u->__uc = '\0';
       break;
     case 8:
-      *((__uint32_t *) __dest) = __src0_4;
-      *((__uint32_t *) (__dest + 4)) = __src4_4;
-      __dest += 7;
+      __u->__ui = __src0_4;
+      __u = (void *) __u + 4;
+      __u->__ui = __src4_4;
+      __u = (void *) __u + 3;
       break;
     }
-  return __dest;
+  return &__u->__uc;
 }
 #  else
 #  define __stpcpy_args(src) \
@@ -584,31 +651,41 @@ __stpcpy_small (char *__dest,
 		__STRING2_COPY_ARR6 __src6, __STRING2_COPY_ARR7 __src7,
 		__STRING2_COPY_ARR8 __src8, size_t __srclen)
 {
+  union {
+    char __c;
+    __STRING2_COPY_ARR2 __sca2;
+    __STRING2_COPY_ARR3 __sca3;
+    __STRING2_COPY_ARR4 __sca4;
+    __STRING2_COPY_ARR5 __sca5;
+    __STRING2_COPY_ARR6 __sca6;
+    __STRING2_COPY_ARR7 __sca7;
+    __STRING2_COPY_ARR8 __sca8;
+  } *__u = __dest;
   switch (__srclen)
     {
     case 1:
-      *__dest = '\0';
+      __u->__uc = '\0';
       break;
     case 2:
-      __extension__ *((__STRING2_COPY_ARR2 *) __dest) = __src2;
+      __extension__ __u->__sca2 = __src2;
       break;
     case 3:
-      __extension__ *((__STRING2_COPY_ARR3 *) __dest) = __src3;
+      __extension__ __u->__sca3 = __src3;
       break;
     case 4:
-      __extension__ *((__STRING2_COPY_ARR4 *) __dest) = __src4;
+      __extension__ __u->__sca4 = __src4;
       break;
     case 5:
-      __extension__ *((__STRING2_COPY_ARR5 *) __dest) = __src5;
+      __extension__ __u->__sca5 = __src5;
       break;
     case 6:
-      __extension__ *((__STRING2_COPY_ARR6 *) __dest) = __src6;
+      __extension__ __u->__sca6 = __src6;
       break;
     case 7:
-      __extension__ *((__STRING2_COPY_ARR7 *) __dest) = __src7;
+      __extension__ __u->__sca7 = __src7;
       break;
     case 8:
-      __extension__ *((__STRING2_COPY_ARR8 *) __dest) = __src8;
+      __extension__ __u->__sca8 = __src8;
       break;
   }
   return __dest + __srclen - 1;

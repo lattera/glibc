@@ -211,12 +211,17 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 
 #define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
-     unsigned int *__ts = (unsigned int *) __s;				      \
+     union {								      \
+       unsigned int __ui;						      \
+       unsigned short int __usi;					      \
+       unsigned char __uc;						      \
+     } *__u = __s;							      \
      unsigned int __c = ((unsigned int) ((unsigned char) (c))) * 0x01010101;  \
 									      \
      /* We apply a trick here.  `gcc' would implement the following	      \
-	assignments using absolute operands.  But this uses to much	      \
-	memory (7, instead of 4 bytes).  */				      \
+	assignments using immediate operands.  But this uses to much	      \
+	memory (7, instead of 4 bytes).  So we force the value in a	      \
+	registers.  */							      \
      if (n == 3 || n >= 5)						      \
        __asm__ __volatile__ ("" : "=r" (__c) : "0" (__c));		      \
 									      \
@@ -224,44 +229,57 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
      switch (n)								      \
        {								      \
        case 15:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 11:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 7:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 3:								      \
-	 *((unsigned short int *) __ts)++ = (unsigned short int) __c;	      \
-	 *((unsigned char *) __ts) = (unsigned char) __c;		      \
+	 __u->__usi = (unsigned short int) __c;				      \
+	 __u = (void *) __u + 2;					      \
+	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 14:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 10:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 6:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 2:								      \
-	 *((unsigned short int *) __ts) = (unsigned short int) __c;	      \
+	 __u->__usi = (unsigned short int) __c;				      \
 	 break;								      \
 									      \
        case 13:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 9:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 5:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 1:								      \
-	 *((unsigned char *) __ts) = (unsigned char) __c;		      \
+	 __u->__uc = (unsigned char) __c;				      \
 	 break;								      \
 									      \
        case 16:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 12:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 8:								      \
-	 *__ts++ = __c;							      \
+	 __u->__ui = __c;						      \
+	 __u = (void *) __u + 4;					      \
        case 4:								      \
-	 *__ts = __c;							      \
+	 __u->__ui = __c;						      \
        case 0:								      \
 	 break;								      \
        }								      \
@@ -494,48 +512,50 @@ __strlen_g (__const char *__str)
 		  : __strcpy_g (dest, src)))
 
 #define __strcpy_small(dest, src, srclen) \
-  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
+  (__extension__ ({ char *__dest = (dest);				      \
+		    union {						      \
+		      unsigned int __ui;				      \
+		      unsigned short int __usi;				      \
+		      unsigned char __uc;				      \
+		      char __c;						      \
+		    } *__u = (void *) __dest;				      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
-			*__dest = '\0';					      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 2:						      \
-			*((unsigned short int *) __dest) =		      \
-			  __STRING_SMALL_GET16 (src, 0);		      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
 			break;						      \
 		      case 3:						      \
-			*((unsigned short int *) __dest) =		      \
-			  __STRING_SMALL_GET16 (src, 0);		      \
-			*(__dest + 2) = '\0';				      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
+			__u = (void *) __u + 2;				      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 4:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
 			break;						      \
 		      case 5:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*(__dest + 4) = '\0';				      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 6:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned short int *) (__dest + 4)) =	      \
-			  __STRING_SMALL_GET16 (src, 4);		      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
 			break;						      \
 		      case 7:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned short int *) (__dest + 4)) =	      \
-			  __STRING_SMALL_GET16 (src, 4);		      \
-			*(__dest + 6) = '\0';				      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
+			__u = (void *) __u + 2;				      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 8:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned int *) (__dest + 4)) =		      \
-			  __STRING_SMALL_GET32 (src, 4);		      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 4);	      \
 			break;						      \
 		      }							      \
 		    (char *) __dest; }))
@@ -583,56 +603,56 @@ __strcpy_g (char *__dest, __const char *__src)
 # define stpcpy(dest, src) __stpcpy (dest, src)
 
 # define __stpcpy_small(dest, src, srclen) \
-  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
+  (__extension__ ({ union {						      \
+		      unsigned int __ui;				      \
+		      unsigned short int __usi;				      \
+		      unsigned char __uc;				      \
+		      char __c;						      \
+		    } *__u = (void *) (dest);				      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
-			*__dest = '\0';					      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 2:						      \
-			*((unsigned short int *) __dest) =		      \
-			  __STRING_SMALL_GET16 (src, 0);		      \
-			++__dest;					      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
+			__u = (void *) __u + 1;				      \
 			break;						      \
 		      case 3:						      \
-			*((unsigned short int *) __dest)++ =		      \
-			  __STRING_SMALL_GET16 (src, 0);		      \
-			*__dest = '\0';					      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 0);	      \
+			__u = (void *) __u + 2;				      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 4:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			__dest += 3;					      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 3;				      \
 			break;						      \
 		      case 5:						      \
-			*((unsigned int *) __dest)++ =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*__dest = '\0';					      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 6:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned short int *) (__dest + 4)) =	      \
-			  __STRING_SMALL_GET16 (src, 4);		      \
-			__dest += 5;					      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
+			__u = (void *) __u + 1;				      \
 			break;						      \
 		      case 7:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned short int *) (__dest + 4)) =	      \
-			  __STRING_SMALL_GET16 (src, 4);		      \
-			__dest += 6;					      \
-			*__dest = '\0';					      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__usi = __STRING_SMALL_GET16 (src, 4);	      \
+			__u = (void *) __u + 2;				      \
+			__u->__uc = '\0';				      \
 			break;						      \
 		      case 8:						      \
-			*((unsigned int *) __dest) =			      \
-			  __STRING_SMALL_GET32 (src, 0);		      \
-			*((unsigned int *) (__dest + 4)) =		      \
-			  __STRING_SMALL_GET32 (src, 4);		      \
-			__dest += 7;					      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 0);	      \
+			__u = (void *) __u + 4;				      \
+			__u->__ui = __STRING_SMALL_GET32 (src, 4);	      \
+			__u = (void *) __u + 3;				      \
 			break;						      \
 		      }							      \
-		    (char *) __dest; }))
+		    (char *) __u; }))
 
 __STRING_INLINE char *__mempcpy_by4 (char *__dest, __const char *__src,
 				     size_t __srclen);

@@ -127,14 +127,35 @@ extern char *getenv ();
 extern int errno;
 # endif
 
+/* This function doesn't exist on most systems.  */
+
+# if !defined HAVE___STRCHRNUL && !defined _LIBC
+static char *
+__strchrnul (s, c)
+     const char *s;
+     int c;
+{
+  char *result = strchr (s, c);
+  if (result == NULL)
+    result = strchr (s, '\0');
+  return result;
+}
+# endif
+
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
+static int internal_fnmatch __P ((const char *pattern, const char *string,
+				  int no_leading_period, int flags))
+     internal_function;
 static int
 #ifdef _LIBC
 internal_function
 #endif
-internal_fnmatch (const char *pattern, const char *string,
-		  int no_leading_period, int flags)
+internal_fnmatch (pattern, string, no_leading_period, flags)
+     const char *pattern;
+     const char *string;
+     int no_leading_period;
+     int flags;
 {
   register const char *p = pattern, *n = string;
   register unsigned char c;

@@ -176,6 +176,11 @@ __elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 				  ? _dl_prof_resolve
 				  : _dl_runtime_resolve);
 
+      if (profile && _dl_name_match_p (_dl_profile, map))
+	/* This is the object we are looking for.  Say that we really
+	   want profiling and the timers are started.  */
+	_dl_profile_map = map;
+
       if (lazy)
 	for (i = 0; i < num_plt_entries; i++)
 	{
