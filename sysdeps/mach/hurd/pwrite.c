@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <hurd/fd.h>
 
 /* Write NBYTES of BUF to FD at given position OFFSET without changing
    the file position.  Return the number written, or -1.  */

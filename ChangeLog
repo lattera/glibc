@@ -3,7 +3,8 @@
 	* sysdeps/mach/hurd/mmap.c (__mmap): Use correct arguments in
 	__vm_allocate calls.
 
-1999-07-20  Mark Kettenis  <kettenis@gnu.org>
+	* sysdeps/mach/hurd/pread.c (__pread): Include <hurd/fd.h>.  Fix typo.
+	* sysdeps/mach/hurd/pwrite.c (__pwrite): Include <hurd/fd.h>.
 
 	* sysdeps/mach/hurd/sysd-stdio.c (__stdio_read): Call
 	_hurd_fd_read with new OFFSET argument set to -1.

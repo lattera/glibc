@@ -20,9 +20,10 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <hurd/fd.h>
 
 ssize_t
-__pread (int fd, void *buf, size_t nbyte, off_t offset)
+__pread (int fd, void *buf, size_t nbytes, off_t offset)
 {
   error_t err = HURD_FD_USE (fd, _hurd_fd_read (descriptor,
 						buf, &nbytes, offset));
