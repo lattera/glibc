@@ -25,27 +25,60 @@
 #include <bits/atomic.h>
 
 
-#ifndef atomic_compare_and_exchange_acq
-# define atomic_compare_and_exchange_acq(mem, newval, oldval) \
-  ({ __typeof (__arch_compare_and_exchange_32_acq (mem, newval, oldval))      \
-	 __result;							      \
+#ifndef atomic_compare_and_exchange_val_acq
+# define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+  ({ __typeof (*mem) __result;						      \
      if (sizeof (*mem) == 1)						      \
-       __result = __arch_compare_and_exchange_8_acq (mem, newval, oldval);    \
+       __result = __arch_compare_and_exchange_val_8_acq (mem, newval, oldval);\
      else if (sizeof (*mem) == 2)					      \
-       __result = __arch_compare_and_exchange_16_acq (mem, newval, oldval);   \
+       __result = __arch_compare_and_exchange_val_16_acq (mem, newval,oldval);\
      else if (sizeof (*mem) == 4)					      \
-       __result = __arch_compare_and_exchange_32_acq (mem, newval, oldval);   \
+       __result = __arch_compare_and_exchange_val_32_acq (mem, newval,oldval);\
      else if (sizeof (*mem) == 8)					      \
-       __result = __arch_compare_and_exchange_64_acq (mem, newval, oldval);   \
+       __result = __arch_compare_and_exchange_val_64_acq (mem, newval,oldval);\
      else								      \
        abort ();							      \
      __result; })
 #endif
 
 
-#ifndef atomic_compare_and_exchange_rel
-# define atomic_compare_and_exchange_rel(mem, oldval, newval) \
-  atomic_compare_and_exchange_acq (mem, oldval, newval)
+#ifndef atomic_compare_and_exchange_val_rel
+# define atomic_compare_and_exchange_val_rel(mem, oldval, newval) \
+  atomic_compare_and_exchange_val_acq (mem, oldval, newval)
+#endif
+
+
+#ifndef atomic_compare_and_exchange_bool_acq
+# ifdef __arch_compare_and_exchange_bool_32_acq
+#  define atomic_compare_and_exchange_val_acq(mem, newval, oldval) \
+  ({ __typeof (__arch_compare_and_exchange_bool_32_acq (mem, 0, 0)) __result; \
+     if (sizeof (*mem) == 1)						      \
+       __result = __arch_compare_and_exchange_bool_8_acq (mem, newval,	      \
+							  oldval);	      \
+     else if (sizeof (*mem) == 2)					      \
+       __result = __arch_compare_and_exchange_bool_16_acq (mem, newval,	      \
+							   oldval);	      \
+     else if (sizeof (*mem) == 4)					      \
+       __result = __arch_compare_and_exchange_bool_32_acq (mem, newval,	      \
+							   oldval);	      \
+     else if (sizeof (*mem) == 8)					      \
+       __result = __arch_compare_and_exchange_bool_64_acq (mem, newval,	      \
+							   oldval);	      \
+     else								      \
+       abort ();							      \
+     __result; })
+# else
+#  define atomic_compare_and_exchange_bool_acq(mem, newval, oldval) \
+  ({ __typeof (oldval) __oldval = (oldval);				      \
+     atomic_compare_and_exchange_val_acq (mem, newval, __oldval) != __oldval; \
+  })
+# endif
+#endif
+
+
+#ifndef atomic_compare_and_exchange_bool_rel
+# define atomic_compare_and_exchange_bool_rel(mem, oldval, newval) \
+  atomic_compare_and_exchange_bool_acq (mem, oldval, newval)
 #endif
 
 
@@ -58,9 +91,10 @@
 									      \
      do									      \
        __oldval = (*__memp);						      \
-     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
-							       __value,	      \
-							       __oldval), 0));\
+     while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
+								    __value,  \
+								    __oldval),\
+			      0));					      \
 									      \
      __oldval; })
 #endif
@@ -75,10 +109,11 @@
 									      \
      do									      \
        __oldval = (*__memp);						      \
-     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
-							       __oldval	      \
-							       + __value,     \
-							       __oldval), 0));\
+     while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
+								    __oldval  \
+								    + __value,\
+								    __oldval),\
+			      0));					      \
 									      \
      __oldval; })
 #endif
@@ -124,9 +159,11 @@
 	 if (__builtin_expect (__oldval <= 0, 0))			      \
 	   break;							      \
        }								      \
-     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
-							       __oldval - 1,  \
-							       __oldval), 0));\
+     while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
+								    __oldval  \
+								    - 1,      \
+								    __oldval),\
+			      0));\
      __oldval; })
 #endif
 
@@ -157,10 +194,11 @@
 									      \
      do									      \
        __oldval = (*__memp);						      \
-     while (__builtin_expect (atomic_compare_and_exchange_acq (__memp,	      \
-							       __oldval	      \
-							       | __mask,      \
-							       __oldval), 0));\
+     while (__builtin_expect (atomic_compare_and_exchange_bool_acq (__memp,   \
+								    __oldval  \
+								    | __mask, \
+								    __oldval),\
+			      0));					      \
 									      \
      __oldval & __mask; })
 #endif
