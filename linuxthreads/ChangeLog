@@ -1,3 +1,7 @@
+2001-09-22  Andreas Jaeger  <aj@suse.de>
+
+	* linuxthreads/tst-context.c: Avoid compile warning.
+
 2001-09-20  Andreas Jaeger  <aj@suse.de>
 
 	* shlib-versions: Add x86-64.

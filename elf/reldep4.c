@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 int
-main()
+main (void)
 {
   int i;
   void *h1, *h2;

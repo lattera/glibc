@@ -56,7 +56,9 @@ threadfct (void *arg)
 #endif
 
 
+#ifdef FLOATING_STACKS
 static volatile int global;
+#endif
 
 int
 main (void)
