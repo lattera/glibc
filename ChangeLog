@@ -1,3 +1,10 @@
+2004-06-21  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #231]
+	* sysdeps/unix/alpha/Makefile: New file.
+	* sysdeps/unix/alpha/rt-sysdep.S: New file.
+	Reported by Jakub Bogusz <qboosh@pld-linux.org>.
+
 2004-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): For AI_CANONNAME,
