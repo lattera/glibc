@@ -1272,8 +1272,9 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 		    : (__ptr_t) opendir (directory));
 	  if (stream == NULL)
 	    {
-	      if ((errfunc != NULL && (*errfunc) (directory, errno))
-		  || (flags & GLOB_ERR))
+	      if (errno != ENOTDIR
+		  && ((errfunc != NULL && (*errfunc) (directory, errno))
+		      || (flags & GLOB_ERR)))
 		return GLOB_ABORTED;
 	      nfound = 0;
 	      meta = 0;

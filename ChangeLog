@@ -1,3 +1,9 @@
+1999-05-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c (glob_in_dir): It's no error if opendir
+	fails on a file.
+	Reported by Sergei Ivanov <svivanov@pdmi.ras.ru> [PR libc/1032].
+
 1998-03-30  Joel Klecker  <espy@debian.org>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile
