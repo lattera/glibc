@@ -1,0 +1,590 @@
+<code_set_name> GBK
+<mb_cur_max> 2
+<mb_cur_min> 1
+<comment_char> %
+<escape_char> /
+
+% Chinese charmap for GBK
+% version: 0.1
+% Contact: Sean Chen
+% Email: sean.chen@turbolinux.com
+% Distribution and use is free, even for comercial purpose. 
+%
+
+CHARMAP
+<NU>                   /x00   <U0000> NULL (NUL)
+<SH>                   /x01   <U0001> START OF HEADING (SOH)
+<SX>                   /x02   <U0002> START OF TEXT (STX)
+<EX>                   /x03   <U0003> END OF TEXT (ETX)
+<ET>                   /x04   <U0004> END OF TRANSMISSION (EOT)
+<EQ>                   /x05   <U0005> ENQUIRY (ENQ)
+<AK>                   /x06   <U0006> ACKNOWLEDGE (ACK)
+<BL>                   /x07   <U0007> BELL (BEL)
+<BS>                   /x08   <U0008> BACKSPACE (BS)
+<HT>                   /x09   <U0009> CHARACTER TABULATION (HT)
+<LF>                   /x0A   <U000A> LINE FEED (LF)
+<VT>                   /x0B   <U000B> LINE TABULATION (VT)
+<FF>                   /x0C   <U000C> FORM FEED (FF)
+<CR>                   /x0D   <U000D> CARRIAGE RETURN (CR)
+<SO>                   /x0E   <U000E> SHIFT OUT (SO)
+<SI>                   /x0F   <U000F> SHIFT IN (SI)
+<DL>                   /x10   <U0010> DATALINK ESCAPE (DLE)
+<D1>                   /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<D2>                   /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<D3>                   /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<D4>                   /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NK>                   /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SY>                   /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<EB>                   /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CN>                   /x18   <U0018> CANCEL (CAN)
+<EM>                   /x19   <U0019> END OF MEDIUM (EM)
+<SB>                   /x1A   <U001A> SUBSTITUTE (SUB)
+<EC>                   /x1B   <U001B> ESCAPE (ESC)
+<FS>                   /x1C   <U001C> FILE SEPARATOR (IS4)
+<GS>                   /x1D   <U001D> GROUP SEPARATOR (IS3)
+<RS>                   /x1E   <U001E> RECORD SEPARATOR (IS2)
+<US>                   /x1F   <U001F> UNIT SEPARATOR (IS1)
+<SP>                   /x20   <U0020> SPACE
+<!>                    /x21   <U0021> EXCLAMATION MARK
+<">                    /x22   <U0022> QUOTATION MARK
+<Nb>                   /x23   <U0023> NUMBER SIGN
+<DO>                   /x24   <U0024> DOLLAR SIGN
+<%>                    /x25   <U0025> PERCENT SIGN
+<&>                    /x26   <U0026> AMPERSAND
+<'>                    /x27   <U0027> APOSTROPHE
+<(>                    /x28   <U0028> LEFT PARENTHESIS
+<)>                    /x29   <U0029> RIGHT PARENTHESIS
+<*>                    /x2A   <U002A> ASTERISK
+<+>                    /x2B   <U002B> PLUS SIGN
+<,>                    /x2C   <U002C> COMMA
+<->                    /x2D   <U002D> HYPHEN-MINUS
+<.>                    /x2E   <U002E> FULL STOP
+<//>                   /x2F   <U002F> SOLIDUS
+<0>                    /x30   <U0030> DIGIT ZERO
+<1>                    /x31   <U0031> DIGIT ONE
+<2>                    /x32   <U0032> DIGIT TWO
+<3>                    /x33   <U0033> DIGIT THREE
+<4>                    /x34   <U0034> DIGIT FOUR
+<5>                    /x35   <U0035> DIGIT FIVE
+<6>                    /x36   <U0036> DIGIT SIX
+<7>                    /x37   <U0037> DIGIT SEVEN
+<8>                    /x38   <U0038> DIGIT EIGHT
+<9>                    /x39   <U0039> DIGIT NINE
+<:>                    /x3A   <U003A> COLON
+<;>                    /x3B   <U003B> SEMICOLON
+<<>                    /x3C   <U003C> LESS-THAN SIGN
+<=>                    /x3D   <U003D> EQUALS SIGN
+</>>                   /x3E   <U003E> GREATER-THAN SIGN
+<?>                    /x3F   <U003F> QUESTION MARK
+<At>                   /x40   <U0040> COMMERCIAL AT
+<A>                    /x41   <U0041> LATIN CAPITAL LETTER A
+<B>                    /x42   <U0042> LATIN CAPITAL LETTER B
+<C>                    /x43   <U0043> LATIN CAPITAL LETTER C
+<D>                    /x44   <U0044> LATIN CAPITAL LETTER D
+<E>                    /x45   <U0045> LATIN CAPITAL LETTER E
+<F>                    /x46   <U0046> LATIN CAPITAL LETTER F
+<G>                    /x47   <U0047> LATIN CAPITAL LETTER G
+<H>                    /x48   <U0048> LATIN CAPITAL LETTER H
+<I>                    /x49   <U0049> LATIN CAPITAL LETTER I
+<J>                    /x4A   <U004A> LATIN CAPITAL LETTER J
+<K>                    /x4B   <U004B> LATIN CAPITAL LETTER K
+<L>                    /x4C   <U004C> LATIN CAPITAL LETTER L
+<M>                    /x4D   <U004D> LATIN CAPITAL LETTER M
+<N>                    /x4E   <U004E> LATIN CAPITAL LETTER N
+<O>                    /x4F   <U004F> LATIN CAPITAL LETTER O
+<P>                    /x50   <U0050> LATIN CAPITAL LETTER P
+<Q>                    /x51   <U0051> LATIN CAPITAL LETTER Q
+<R>                    /x52   <U0052> LATIN CAPITAL LETTER R
+<S>                    /x53   <U0053> LATIN CAPITAL LETTER S
+<T>                    /x54   <U0054> LATIN CAPITAL LETTER T
+<U>                    /x55   <U0055> LATIN CAPITAL LETTER U
+<V>                    /x56   <U0056> LATIN CAPITAL LETTER V
+<W>                    /x57   <U0057> LATIN CAPITAL LETTER W
+<X>                    /x58   <U0058> LATIN CAPITAL LETTER X
+<Y>                    /x59   <U0059> LATIN CAPITAL LETTER Y
+<Z>                    /x5A   <U005A> LATIN CAPITAL LETTER Z
+<<(>                   /x5B   <U005B> LEFT SQUARE BRACKET
+<////>                 /x5C   <U005C> REVERSE SOLIDUS
+<)/>>                  /x5D   <U005D> RIGHT SQUARE BRACKET
+<'/>>                  /x5E   <U005E> CIRCUMFLEX ACCENT
+<_>                    /x5F   <U005F> LOW LINE
+<'!>                   /x60   <U0060> GRAVE ACCENT
+<a>                    /x61   <U0061> LATIN SMALL LETTER A
+<b>                    /x62   <U0062> LATIN SMALL LETTER B
+<c>                    /x63   <U0063> LATIN SMALL LETTER C
+<d>                    /x64   <U0064> LATIN SMALL LETTER D
+<e>                    /x65   <U0065> LATIN SMALL LETTER E
+<f>                    /x66   <U0066> LATIN SMALL LETTER F
+<g>                    /x67   <U0067> LATIN SMALL LETTER G
+<h>                    /x68   <U0068> LATIN SMALL LETTER H
+<i>                    /x69   <U0069> LATIN SMALL LETTER I
+<j>                    /x6A   <U006A> LATIN SMALL LETTER J
+<k>                    /x6B   <U006B> LATIN SMALL LETTER K
+<l>                    /x6C   <U006C> LATIN SMALL LETTER L
+<m>                    /x6D   <U006D> LATIN SMALL LETTER M
+<n>                    /x6E   <U006E> LATIN SMALL LETTER N
+<o>                    /x6F   <U006F> LATIN SMALL LETTER O
+<p>                    /x70   <U0070> LATIN SMALL LETTER P
+<q>                    /x71   <U0071> LATIN SMALL LETTER Q
+<r>                    /x72   <U0072> LATIN SMALL LETTER R
+<s>                    /x73   <U0073> LATIN SMALL LETTER S
+<t>                    /x74   <U0074> LATIN SMALL LETTER T
+<u>                    /x75   <U0075> LATIN SMALL LETTER U
+<v>                    /x76   <U0076> LATIN SMALL LETTER V
+<w>                    /x77   <U0077> LATIN SMALL LETTER W
+<x>                    /x78   <U0078> LATIN SMALL LETTER X
+<y>                    /x79   <U0079> LATIN SMALL LETTER Y
+<z>                    /x7A   <U007A> LATIN SMALL LETTER Z
+<(!>                   /x7B   <U007B> LEFT CURLY BRACKET
+<!!>                   /x7C   <U007C> VERTICAL LINE
+<!)>                   /x7D   <U007D> RIGHT CURLY BRACKET
+<'?>                   /x7E   <U007E> TILDE
+<DT>                   /x7F   <U007F> DELETE (DEL)
+<PA>                   /x80   <U0080> PADDING CHARACTER (PAD)
+<NUL>                  /x00   <U0000> NUL
+<SOH>                  /x01   <U0001> START OF HEADING (SOH)
+<STX>                  /x02   <U0002> START OF TEXT (STX)
+<ETX>                  /x03   <U0003> END OF TEXT (ETX)
+<EOT>                  /x04   <U0004> END OF TRANSMISSION (EOT)
+<ENQ>                  /x05   <U0005> ENQUIRY (ENQ)
+<ACK>                  /x06   <U0006> ACKNOWLEDGE (ACK)
+<alert>                /x07   <U0007> BELL (BEL)
+<BEL>                  /x07   <U0007> BELL (BEL)
+<backspace>            /x08   <U0008> BACKSPACE (BS)
+<tab>                  /x09   <U0009> CHARACTER TABULATION (HT)
+<newline>              /x0A   <U000A> LINE FEED (LF)
+<vertical-tab>         /x0B   <U000B> LINE TABULATION (VT)
+<form-feed>            /x0C   <U000C> FORM FEED (FF)
+<carriage-return>      /x0D   <U000D> CARRIAGE RETURN (CR)
+<DLE>                  /x10   <U0010> DATALINK ESCAPE (DLE)
+<DC1>                  /x11   <U0011> DEVICE CONTROL ONE (DC1)
+<DC2>                  /x12   <U0012> DEVICE CONTROL TWO (DC2)
+<DC3>                  /x13   <U0013> DEVICE CONTROL THREE (DC3)
+<DC4>                  /x14   <U0014> DEVICE CONTROL FOUR (DC4)
+<NAK>                  /x15   <U0015> NEGATIVE ACKNOWLEDGE (NAK)
+<SYN>                  /x16   <U0016> SYNCHRONOUS IDLE (SYN)
+<ETB>                  /x17   <U0017> END OF TRANSMISSION BLOCK (ETB)
+<CAN>                  /x18   <U0018> CANCEL (CAN)
+<SUB>                  /x1A   <U001A> SUBSTITUTE (SUB)
+<ESC>                  /x1B   <U001B> ESCAPE (ESC)
+<IS4>                  /x1C   <U001C> FILE SEPARATOR (IS4)
+<IS3>                  /x1D   <U001D> GROUP SEPARATOR (IS3)
+<intro>                /x1D   <U001D> GROUP SEPARATOR (IS3)
+<IS2>                  /x1E   <U001E> RECORD SEPARATOR (IS2)
+<IS1>                  /x1F   <U001F> UNIT SEPARATOR (IS1)
+<DEL>                  /x7F   <U007F> DELETE (DEL)
+<space>                /x20   <U0020> SPACE
+<exclamation-mark>     /x21   <U0021> EXCLAMATION MARK
+<quotation-mark>       /x22   <U0022> QUOTATION MARK
+<number-sign>          /x23   <U0023> NUMBER SIGN
+<dollar-sign>          /x24   <U0024> DOLLAR SIGN
+<percent-sign>         /x25   <U0025> PERCENT SIGN
+<ampersand>            /x26   <U0026> AMPERSAND
+<apostrophe>           /x27   <U0027> APOSTROPHE
+<left-parenthesis>     /x28   <U0028> LEFT PARENTHESIS
+<right-parenthesis>    /x29   <U0029> RIGHT PARENTHESIS
+<asterisk>             /x2A   <U002A> ASTERISK
+<plus-sign>            /x2B   <U002B> PLUS SIGN
+<comma>                /x2C   <U002C> COMMA
+<hyphen>               /x2D   <U002D> HYPHEN-MINUS
+<hyphen-minus>         /x2D   <U002D> HYPHEN-MINUS
+<period>               /x2E   <U002E> FULL STOP
+<full-stop>            /x2E   <U002E> FULL STOP
+<slash>                /x2F   <U002F> SOLIDUS
+<solidus>              /x2F   <U002F> SOLIDUS
+<zero>                 /x30   <U0030> DIGIT ZERO
+<one>                  /x31   <U0031> DIGIT ONE
+<two>                  /x32   <U0032> DIGIT TWO
+<three>                /x33   <U0033> DIGIT THREE
+<four>                 /x34   <U0034> DIGIT FOUR
+<five>                 /x35   <U0035> DIGIT FIVE
+<six>                  /x36   <U0036> DIGIT SIX
+<seven>                /x37   <U0037> DIGIT SEVEN
+<eight>                /x38   <U0038> DIGIT EIGHT
+<nine>                 /x39   <U0039> DIGIT NINE
+<colon>                /x3A   <U003A> COLON
+<semicolon>            /x3B   <U003B> SEMICOLON
+<less-than-sign>       /x3C   <U003C> LESS-THAN SIGN
+<equals-sign>          /x3D   <U003D> EQUALS SIGN
+<greater-than-sign>    /x3E   <U003E> GREATER-THAN SIGN
+<question-mark>        /x3F   <U003F> QUESTION MARK
+<commercial-at>        /x40   <U0040> COMMERCIAL AT
+<left-square-bracket>  /x5B   <U005B> LEFT SQUARE BRACKET
+<backslash>            /x5C   <U005C> REVERSE SOLIDUS
+<reverse-solidus>      /x5C   <U005C> REVERSE SOLIDUS
+<right-square-bracket> /x5D   <U005D> RIGHT SQUARE BRACKET
+<circumflex>           /x5E   <U005E> CIRCUMFLEX ACCENT
+<circumflex-accent>    /x5E   <U005E> CIRCUMFLEX ACCENT
+<underscore>           /x5F   <U005F> LOW LINE
+<low-line>             /x5F   <U005F> LOW LINE
+<grave-accent>         /x60   <U0060> GRAVE ACCENT
+<left-brace>           /x7B   <U007B> LEFT CURLY BRACKET
+<left-curly-bracket>   /x7B   <U007B> LEFT CURLY BRACKET
+<vertical-line>        /x7C   <U007C> VERTICAL LINE
+<right-brace>          /x7D   <U007D> RIGHT CURLY BRACKET
+<right-curly-bracket>  /x7D   <U007D> RIGHT CURLY BRACKET
+<tilde>                /x7E   <U007E> TILDE
+
+<b0100>...<b0162>       /x81/x40        region 0x8140 - 0x817e
+<b0164>...<b0196>       /x81/x80        region 0x8180 - 0x81a0
+<a0101>...<a0194>       /x81/xa1        region 0x81a1 - 0x81fe
+<b0200>...<b0262>       /x82/x40        region 0x8240 - 0x827e
+<b0264>...<b0296>       /x82/x80        region 0x8280 - 0x82a0
+<a0201>...<a0294>       /x82/xa1        region 0x82a1 - 0x82fe
+<b0300>...<b0362>       /x83/x40        region 0x8340 - 0x837e
+<b0364>...<b0396>       /x83/x80        region 0x8380 - 0x83a0
+<a0301>...<a0394>       /x83/xa1        region 0x83a1 - 0x83fe
+<b0400>...<b0462>       /x84/x40        region 0x8440 - 0x847e
+<b0464>...<b0496>       /x84/x80        region 0x8480 - 0x84a0
+<a0401>...<a0494>       /x84/xa1        region 0x84a1 - 0x84fe
+<b0500>...<b0562>       /x85/x40        region 0x8540 - 0x857e
+<b0564>...<b0596>       /x85/x80        region 0x8580 - 0x85a0
+<a0501>...<a0594>       /x85/xa1        region 0x85a1 - 0x85fe
+<b0600>...<b0662>       /x86/x40        region 0x8640 - 0x867e
+<b0664>...<b0696>       /x86/x80        region 0x8680 - 0x86a0
+<a0601>...<a0694>       /x86/xa1        region 0x86a1 - 0x86fe
+<b0700>...<b0762>       /x87/x40        region 0x8740 - 0x877e
+<b0764>...<b0796>       /x87/x80        region 0x8780 - 0x87a0
+<a0701>...<a0794>       /x87/xa1        region 0x87a1 - 0x87fe
+<b0800>...<b0862>       /x88/x40        region 0x8840 - 0x887e
+<b0864>...<b0896>       /x88/x80        region 0x8880 - 0x88a0
+<a0801>...<a0894>       /x88/xa1        region 0x88a1 - 0x88fe
+<b0900>...<b0962>       /x89/x40        region 0x8940 - 0x897e
+<b0964>...<b0996>       /x89/x80        region 0x8980 - 0x89a0
+<a0901>...<a0994>       /x89/xa1        region 0x89a1 - 0x89fe
+<b1000>...<b1062>       /x8a/x40        region 0x8a40 - 0x8a7e
+<b1064>...<b1096>       /x8a/x80        region 0x8a80 - 0x8aa0
+<a1001>...<a1094>       /x8a/xa1        region 0x8aa1 - 0x8afe
+<b1100>...<b1162>       /x8b/x40        region 0x8b40 - 0x8b7e
+<b1164>...<b1196>       /x8b/x80        region 0x8b80 - 0x8ba0
+<a1101>...<a1194>       /x8b/xa1        region 0x8ba1 - 0x8bfe
+<b1200>...<b1262>       /x8c/x40        region 0x8c40 - 0x8c7e
+<b1264>...<b1296>       /x8c/x80        region 0x8c80 - 0x8ca0
+<a1201>...<a1294>       /x8c/xa1        region 0x8ca1 - 0x8cfe
+<b1300>...<b1362>       /x8d/x40        region 0x8d40 - 0x8d7e
+<b1364>...<b1396>       /x8d/x80        region 0x8d80 - 0x8da0
+<a1301>...<a1394>       /x8d/xa1        region 0x8da1 - 0x8dfe
+<b1400>...<b1462>       /x8e/x40        region 0x8e40 - 0x8e7e
+<b1464>...<b1496>       /x8e/x80        region 0x8e80 - 0x8ea0
+<a1401>...<a1494>       /x8e/xa1        region 0x8ea1 - 0x8efe
+<b1500>...<b1562>       /x8f/x40        region 0x8f40 - 0x8f7e
+<b1564>...<b1596>       /x8f/x80        region 0x8f80 - 0x8fa0
+<a1501>...<a1594>       /x8f/xa1        region 0x8fa1 - 0x8ffe
+<b1600>...<b1662>       /x90/x40        region 0x9040 - 0x907e
+<b1664>...<b1696>       /x90/x80        region 0x9080 - 0x90a0
+<a1601>...<a1694>       /x90/xa1        region 0x90a1 - 0x90fe
+<b1700>...<b1762>       /x91/x40        region 0x9140 - 0x917e
+<b1764>...<b1796>       /x91/x80        region 0x9180 - 0x91a0
+<a1701>...<a1794>       /x91/xa1        region 0x91a1 - 0x91fe
+<b1800>...<b1862>       /x92/x40        region 0x9240 - 0x927e
+<b1864>...<b1896>       /x92/x80        region 0x9280 - 0x92a0
+<a1801>...<a1894>       /x92/xa1        region 0x92a1 - 0x92fe
+<b1900>...<b1962>       /x93/x40        region 0x9340 - 0x937e
+<b1964>...<b1996>       /x93/x80        region 0x9380 - 0x93a0
+<a1901>...<a1994>       /x93/xa1        region 0x93a1 - 0x93fe
+<b2000>...<b2062>       /x94/x40        region 0x9440 - 0x947e
+<b2064>...<b2096>       /x94/x80        region 0x9480 - 0x94a0
+<a2001>...<a2094>       /x94/xa1        region 0x94a1 - 0x94fe
+<b2100>...<b2162>       /x95/x40        region 0x9540 - 0x957e
+<b2164>...<b2196>       /x95/x80        region 0x9580 - 0x95a0
+<a2101>...<a2194>       /x95/xa1        region 0x95a1 - 0x95fe
+<b2200>...<b2262>       /x96/x40        region 0x9640 - 0x967e
+<b2264>...<b2296>       /x96/x80        region 0x9680 - 0x96a0
+<a2201>...<a2294>       /x96/xa1        region 0x96a1 - 0x96fe
+<b2300>...<b2362>       /x97/x40        region 0x9740 - 0x977e
+<b2364>...<b2396>       /x97/x80        region 0x9780 - 0x97a0
+<a2301>...<a2394>       /x97/xa1        region 0x97a1 - 0x97fe
+<b2400>...<b2462>       /x98/x40        region 0x9840 - 0x987e
+<b2464>...<b2496>       /x98/x80        region 0x9880 - 0x98a0
+<a2401>...<a2494>       /x98/xa1        region 0x98a1 - 0x98fe
+<b2500>...<b2562>       /x99/x40        region 0x9940 - 0x997e
+<b2564>...<b2596>       /x99/x80        region 0x9980 - 0x99a0
+<a2501>...<a2594>       /x99/xa1        region 0x99a1 - 0x99fe
+<b2600>...<b2662>       /x9a/x40        region 0x9a40 - 0x9a7e
+<b2664>...<b2696>       /x9a/x80        region 0x9a80 - 0x9aa0
+<a2601>...<a2694>       /x9a/xa1        region 0x9aa1 - 0x9afe
+<b2700>...<b2762>       /x9b/x40        region 0x9b40 - 0x9b7e
+<b2764>...<b2796>       /x9b/x80        region 0x9b80 - 0x9ba0
+<a2701>...<a2794>       /x9b/xa1        region 0x9ba1 - 0x9bfe
+<b2800>...<b2862>       /x9c/x40        region 0x9c40 - 0x9c7e
+<b2864>...<b2896>       /x9c/x80        region 0x9c80 - 0x9ca0
+<a2801>...<a2894>       /x9c/xa1        region 0x9ca1 - 0x9cfe
+<b2900>...<b2962>       /x9d/x40        region 0x9d40 - 0x9d7e
+<b2964>...<b2996>       /x9d/x80        region 0x9d80 - 0x9da0
+<a2901>...<a2994>       /x9d/xa1        region 0x9da1 - 0x9dfe
+<b3000>...<b3062>       /x9e/x40        region 0x9e40 - 0x9e7e
+<b3064>...<b3096>       /x9e/x80        region 0x9e80 - 0x9ea0
+<a3001>...<a3094>       /x9e/xa1        region 0x9ea1 - 0x9efe
+<b3100>...<b3162>       /x9f/x40        region 0x9f40 - 0x9f7e
+<b3164>...<b3196>       /x9f/x80        region 0x9f80 - 0x9fa0
+<a3101>...<a3194>       /x9f/xa1        region 0x9fa1 - 0x9ffe
+<b3200>...<b3262>       /xa0/x40        region 0xa040 - 0xa07e
+<b3264>...<b3296>       /xa0/x80        region 0xa080 - 0xa0a0
+<a3201>...<a3294>       /xa0/xa1        region 0xa0a1 - 0xa0fe
+<c0101>...<c0194>       /xa1/xa1        region 0xa1a1 - 0xa1fe
+<c0201>...<c0210>       /xa2/xa1        region 0xa2a1 - 0xa2aa
+<c0217>...<c0266>       /xa2/xb1        region 0xa2b1 - 0xa2e2
+<c0269>...<c0278>       /xa2/xe5        region 0xa2e5 - 0xa2ee
+<c0281>...<c0292>       /xa2/xf1        region 0xa2f1 - 0xa2fc
+<c0301>...<c0394>       /xa3/xa1        region 0xa3a1 - 0xa3fe
+<c0401>...<c0483>       /xa4/xa1        region 0xa4a1 - 0xa4f3
+<c0501>...<c0586>       /xa5/xa1        region 0xa5a1 - 0xa5f6
+<c0601>...<c0624>       /xa6/xa1        region 0xa6a1 - 0xa6b8
+<c0633>...<c0656>       /xa6/xc1        region 0xa6c1 - 0xa6d8
+<c0664>...<c0675>       /xa6/xe0        region 0xa6e0 - 0xa6eb
+<c0678>...<c0685>       /xa6/xee        region 0xa6ee - 0xa6f5
+<c0701>...<c0733>       /xa7/xa1        region 0xa7a1 - 0xa7c1
+<c0749>...<c0781>       /xa7/xd1        region 0xa7d1 - 0xa7f1
+<d0800>...<d0862>       /xa8/x40        region 0xa840 - 0xa87e
+<d0864>...<d0885>       /xa8/x80        region 0xa880 - 0xa895
+<c0801>...<c0832>       /xa8/xa1        region 0xa8a1 - 0xa8c0
+<c0837>...<c0873>       /xa8/xc5        region 0xa8c5 - 0xa8e9
+<d0900>...<d0926>       /xa9/x40        region 0xa940 - 0xa95a
+<d0928>                 /xa9/x5c               0xa95c
+<d0932>...<d0962>       /xa9/x60        region 0xa960 - 0xa97e
+<d0964>...<d0986>       /xa9/x80        region 0xa980 - 0xa996
+<c0904>...<c0979>       /xa9/xa4        region 0xa9a4 - 0xa9ef
+<d1000>...<d1062>       /xaa/x40        region 0xaa40 - 0xaa7e
+<d1064>...<d1096>       /xaa/x80        region 0xaa80 - 0xaaa0
+<d1100>...<d1162>       /xab/x40        region 0xab40 - 0xab7e
+<d1164>...<d1196>       /xab/x80        region 0xab80 - 0xaba0
+<d1200>...<d1262>       /xac/x40        region 0xac40 - 0xac7e
+<d1264>...<d1296>       /xac/x80        region 0xac80 - 0xaca0
+<d1300>...<d1362>       /xad/x40        region 0xad40 - 0xad7e
+<d1364>...<d1396>       /xad/x80        region 0xad80 - 0xada0
+<d1400>...<d1462>       /xae/x40        region 0xae40 - 0xae7e
+<d1464>...<d1496>       /xae/x80        region 0xae80 - 0xaea0
+<d1500>...<d1562>       /xaf/x40        region 0xaf40 - 0xaf7e
+<d1564>...<d1596>       /xaf/x80        region 0xaf80 - 0xafa0
+<d1600>...<d1662>       /xb0/x40        region 0xb040 - 0xb07e
+<d1664>...<d1696>       /xb0/x80        region 0xb080 - 0xb0a0
+<c1601>...<c1694>       /xb0/xa1        region 0xb0a1 - 0xb0fe
+<d1700>...<d1762>       /xb1/x40        region 0xb140 - 0xb17e
+<d1764>...<d1796>       /xb1/x80        region 0xb180 - 0xb1a0
+<c1701>...<c1794>       /xb1/xa1        region 0xb1a1 - 0xb1fe
+<d1800>...<d1862>       /xb2/x40        region 0xb240 - 0xb27e
+<d1864>...<d1896>       /xb2/x80        region 0xb280 - 0xb2a0
+<c1801>...<c1894>       /xb2/xa1        region 0xb2a1 - 0xb2fe
+<d1900>...<d1962>       /xb3/x40        region 0xb340 - 0xb37e
+<d1964>...<d1996>       /xb3/x80        region 0xb380 - 0xb3a0
+<c1901>...<c1994>       /xb3/xa1        region 0xb3a1 - 0xb3fe
+<d2000>...<d2062>       /xb4/x40        region 0xb440 - 0xb47e
+<d2064>...<d2096>       /xb4/x80        region 0xb480 - 0xb4a0
+<c2001>...<c2094>       /xb4/xa1        region 0xb4a1 - 0xb4fe
+<d2100>...<d2162>       /xb5/x40        region 0xb540 - 0xb57e
+<d2164>...<d2196>       /xb5/x80        region 0xb580 - 0xb5a0
+<c2101>...<c2194>       /xb5/xa1        region 0xb5a1 - 0xb5fe
+<d2200>...<d2262>       /xb6/x40        region 0xb640 - 0xb67e
+<d2264>...<d2296>       /xb6/x80        region 0xb680 - 0xb6a0
+<c2201>...<c2294>       /xb6/xa1        region 0xb6a1 - 0xb6fe
+<d2300>...<d2362>       /xb7/x40        region 0xb740 - 0xb77e
+<d2364>...<d2396>       /xb7/x80        region 0xb780 - 0xb7a0
+<c2301>...<c2394>       /xb7/xa1        region 0xb7a1 - 0xb7fe
+<d2400>...<d2462>       /xb8/x40        region 0xb840 - 0xb87e
+<d2464>...<d2496>       /xb8/x80        region 0xb880 - 0xb8a0
+<c2401>...<c2494>       /xb8/xa1        region 0xb8a1 - 0xb8fe
+<d2500>...<d2562>       /xb9/x40        region 0xb940 - 0xb97e
+<d2564>...<d2596>       /xb9/x80        region 0xb980 - 0xb9a0
+<c2501>...<c2594>       /xb9/xa1        region 0xb9a1 - 0xb9fe
+<d2600>...<d2662>       /xba/x40        region 0xba40 - 0xba7e
+<d2664>...<d2696>       /xba/x80        region 0xba80 - 0xbaa0
+<c2601>...<c2694>       /xba/xa1        region 0xbaa1 - 0xbafe
+<d2700>...<d2762>       /xbb/x40        region 0xbb40 - 0xbb7e
+<d2764>...<d2796>       /xbb/x80        region 0xbb80 - 0xbba0
+<c2701>...<c2794>       /xbb/xa1        region 0xbba1 - 0xbbfe
+<d2800>...<d2862>       /xbc/x40        region 0xbc40 - 0xbc7e
+<d2864>...<d2896>       /xbc/x80        region 0xbc80 - 0xbca0
+<c2801>...<c2894>       /xbc/xa1        region 0xbca1 - 0xbcfe
+<d2900>...<d2962>       /xbd/x40        region 0xbd40 - 0xbd7e
+<d2964>...<d2996>       /xbd/x80        region 0xbd80 - 0xbda0
+<c2901>...<c2994>       /xbd/xa1        region 0xbda1 - 0xbdfe
+<d3000>...<d3062>       /xbe/x40        region 0xbe40 - 0xbe7e
+<d3064>...<d3096>       /xbe/x80        region 0xbe80 - 0xbea0
+<c3001>...<c3094>       /xbe/xa1        region 0xbea1 - 0xbefe
+<d3100>...<d3162>       /xbf/x40        region 0xbf40 - 0xbf7e
+<d3164>...<d3196>       /xbf/x80        region 0xbf80 - 0xbfa0
+<c3101>...<c3194>       /xbf/xa1        region 0xbfa1 - 0xbffe
+<d3200>...<d3262>       /xc0/x40        region 0xc040 - 0xc07e
+<d3264>...<d3296>       /xc0/x80        region 0xc080 - 0xc0a0
+<c3201>...<c3294>       /xc0/xa1        region 0xc0a1 - 0xc0fe
+<d3300>...<d3362>       /xc1/x40        region 0xc140 - 0xc17e
+<d3364>...<d3396>       /xc1/x80        region 0xc180 - 0xc1a0
+<c3301>...<c3394>       /xc1/xa1        region 0xc1a1 - 0xc1fe
+<d3400>...<d3462>       /xc2/x40        region 0xc240 - 0xc27e
+<d3464>...<d3496>       /xc2/x80        region 0xc280 - 0xc2a0
+<c3401>...<c3494>       /xc2/xa1        region 0xc2a1 - 0xc2fe
+<d3500>...<d3562>       /xc3/x40        region 0xc340 - 0xc37e
+<d3564>...<d3596>       /xc3/x80        region 0xc380 - 0xc3a0
+<c3501>...<c3594>       /xc3/xa1        region 0xc3a1 - 0xc3fe
+<d3600>...<d3662>       /xc4/x40        region 0xc440 - 0xc47e
+<d3664>...<d3696>       /xc4/x80        region 0xc480 - 0xc4a0
+<c3601>...<c3694>       /xc4/xa1        region 0xc4a1 - 0xc4fe
+<d3700>...<d3762>       /xc5/x40        region 0xc540 - 0xc57e
+<d3764>...<d3796>       /xc5/x80        region 0xc580 - 0xc5a0
+<c3701>...<c3794>       /xc5/xa1        region 0xc5a1 - 0xc5fe
+<d3800>...<d3862>       /xc6/x40        region 0xc640 - 0xc67e
+<d3864>...<d3896>       /xc6/x80        region 0xc680 - 0xc6a0
+<c3801>...<c3894>       /xc6/xa1        region 0xc6a1 - 0xc6fe
+<d3900>...<d3962>       /xc7/x40        region 0xc740 - 0xc77e
+<d3964>...<d3996>       /xc7/x80        region 0xc780 - 0xc7a0
+<c3901>...<c3994>       /xc7/xa1        region 0xc7a1 - 0xc7fe
+<d4000>...<d4062>       /xc8/x40        region 0xc840 - 0xc87e
+<d4064>...<d4096>       /xc8/x80        region 0xc880 - 0xc8a0
+<c4001>...<c4094>       /xc8/xa1        region 0xc8a1 - 0xc8fe
+<d4100>...<d4162>       /xc9/x40        region 0xc940 - 0xc97e
+<d4164>...<d4196>       /xc9/x80        region 0xc980 - 0xc9a0
+<c4101>...<c4194>       /xc9/xa1        region 0xc9a1 - 0xc9fe
+<d4200>...<d4262>       /xca/x40        region 0xca40 - 0xca7e
+<d4264>...<d4296>       /xca/x80        region 0xca80 - 0xcaa0
+<c4201>...<c4294>       /xca/xa1        region 0xcaa1 - 0xcafe
+<d4300>...<d4362>       /xcb/x40        region 0xcb40 - 0xcb7e
+<d4364>...<d4396>       /xcb/x80        region 0xcb80 - 0xcba0
+<c4301>...<c4394>       /xcb/xa1        region 0xcba1 - 0xcbfe
+<d4400>...<d4462>       /xcc/x40        region 0xcc40 - 0xcc7e
+<d4464>...<d4496>       /xcc/x80        region 0xcc80 - 0xcca0
+<c4401>...<c4494>       /xcc/xa1        region 0xcca1 - 0xccfe
+<d4500>...<d4562>       /xcd/x40        region 0xcd40 - 0xcd7e
+<d4564>...<d4596>       /xcd/x80        region 0xcd80 - 0xcda0
+<c4501>...<c4594>       /xcd/xa1        region 0xcda1 - 0xcdfe
+<d4600>...<d4662>       /xce/x40        region 0xce40 - 0xce7e
+<d4664>...<d4696>       /xce/x80        region 0xce80 - 0xcea0
+<c4601>...<c4694>       /xce/xa1        region 0xcea1 - 0xcefe
+<d4700>...<d4762>       /xcf/x40        region 0xcf40 - 0xcf7e
+<d4764>...<d4796>       /xcf/x80        region 0xcf80 - 0xcfa0
+<c4701>...<c4794>       /xcf/xa1        region 0xcfa1 - 0xcffe
+<d4800>...<d4862>       /xd0/x40        region 0xd040 - 0xd07e
+<d4864>...<d4896>       /xd0/x80        region 0xd080 - 0xd0a0
+<c4801>...<c4894>       /xd0/xa1        region 0xd0a1 - 0xd0fe
+<d4900>...<d4962>       /xd1/x40        region 0xd140 - 0xd17e
+<d4964>...<d4996>       /xd1/x80        region 0xd180 - 0xd1a0
+<c4901>...<c4994>       /xd1/xa1        region 0xd1a1 - 0xd1fe
+<d5000>...<d5062>       /xd2/x40        region 0xd240 - 0xd27e
+<d5064>...<d5096>       /xd2/x80        region 0xd280 - 0xd2a0
+<c5001>...<c5094>       /xd2/xa1        region 0xd2a1 - 0xd2fe
+<d5100>...<d5162>       /xd3/x40        region 0xd340 - 0xd37e
+<d5164>...<d5196>       /xd3/x80        region 0xd380 - 0xd3a0
+<c5101>...<c5194>       /xd3/xa1        region 0xd3a1 - 0xd3fe
+<d5200>...<d5262>       /xd4/x40        region 0xd440 - 0xd47e
+<d5264>...<d5296>       /xd4/x80        region 0xd480 - 0xd4a0
+<c5201>...<c5294>       /xd4/xa1        region 0xd4a1 - 0xd4fe
+<d5300>...<d5362>       /xd5/x40        region 0xd540 - 0xd57e
+<d5364>...<d5396>       /xd5/x80        region 0xd580 - 0xd5a0
+<c5301>...<c5394>       /xd5/xa1        region 0xd5a1 - 0xd5fe
+<d5400>...<d5462>       /xd6/x40        region 0xd640 - 0xd67e
+<d5464>...<d5496>       /xd6/x80        region 0xd680 - 0xd6a0
+<c5401>...<c5494>       /xd6/xa1        region 0xd6a1 - 0xd6fe
+<d5500>...<d5562>       /xd7/x40        region 0xd740 - 0xd77e
+<d5564>...<d5596>       /xd7/x80        region 0xd780 - 0xd7a0
+<c5501>...<c5594>       /xd7/xa1        region 0xd7a1 - 0xd7fe
+<d5600>...<d5662>       /xd8/x40        region 0xd840 - 0xd87e
+<d5664>...<d5696>       /xd8/x80        region 0xd880 - 0xd8a0
+<c5601>...<c5694>       /xd8/xa1        region 0xd8a1 - 0xd8fe
+<d5700>...<d5762>       /xd9/x40        region 0xd940 - 0xd97e
+<d5764>...<d5796>       /xd9/x80        region 0xd980 - 0xd9a0
+<c5701>...<c5794>       /xd9/xa1        region 0xd9a1 - 0xd9fe
+<d5800>...<d5862>       /xda/x40        region 0xda40 - 0xda7e
+<d5864>...<d5896>       /xda/x80        region 0xda80 - 0xdaa0
+<c5801>...<c5894>       /xda/xa1        region 0xdaa1 - 0xdafe
+<d5900>...<d5962>       /xdb/x40        region 0xdb40 - 0xdb7e
+<d5964>...<d5996>       /xdb/x80        region 0xdb80 - 0xdba0
+<c5901>...<c5994>       /xdb/xa1        region 0xdba1 - 0xdbfe
+<d6000>...<d6062>       /xdc/x40        region 0xdc40 - 0xdc7e
+<d6064>...<d6096>       /xdc/x80        region 0xdc80 - 0xdca0
+<c6001>...<c6094>       /xdc/xa1        region 0xdca1 - 0xdcfe
+<d6100>...<d6162>       /xdd/x40        region 0xdd40 - 0xdd7e
+<d6164>...<d6196>       /xdd/x80        region 0xdd80 - 0xdda0
+<c6101>...<c6194>       /xdd/xa1        region 0xdda1 - 0xddfe
+<d6200>...<d6262>       /xde/x40        region 0xde40 - 0xde7e
+<d6264>...<d6296>       /xde/x80        region 0xde80 - 0xdea0
+<c6201>...<c6294>       /xde/xa1        region 0xdea1 - 0xdefe
+<d6300>...<d6362>       /xdf/x40        region 0xdf40 - 0xdf7e
+<d6364>...<d6396>       /xdf/x80        region 0xdf80 - 0xdfa0
+<c6301>...<c6394>       /xdf/xa1        region 0xdfa1 - 0xdffe
+<d6400>...<d6462>       /xe0/x40        region 0xe040 - 0xe07e
+<d6464>...<d6496>       /xe0/x80        region 0xe080 - 0xe0a0
+<c6401>...<c6494>       /xe0/xa1        region 0xe0a1 - 0xe0fe
+<d6500>...<d6562>       /xe1/x40        region 0xe140 - 0xe17e
+<d6564>...<d6596>       /xe1/x80        region 0xe180 - 0xe1a0
+<c6501>...<c6594>       /xe1/xa1        region 0xe1a1 - 0xe1fe
+<d6600>...<d6662>       /xe2/x40        region 0xe240 - 0xe27e
+<d6664>...<d6696>       /xe2/x80        region 0xe280 - 0xe2a0
+<c6601>...<c6694>       /xe2/xa1        region 0xe2a1 - 0xe2fe
+<d6700>...<d6762>       /xe3/x40        region 0xe340 - 0xe37e
+<d6764>...<d6796>       /xe3/x80        region 0xe380 - 0xe3a0
+<c6701>...<c6794>       /xe3/xa1        region 0xe3a1 - 0xe3fe
+<d6800>...<d6862>       /xe4/x40        region 0xe440 - 0xe47e
+<d6864>...<d6896>       /xe4/x80        region 0xe480 - 0xe4a0
+<c6801>...<c6894>       /xe4/xa1        region 0xe4a1 - 0xe4fe
+<d6900>...<d6962>       /xe5/x40        region 0xe540 - 0xe57e
+<d6964>...<d6996>       /xe5/x80        region 0xe580 - 0xe5a0
+<c6901>...<c6994>       /xe5/xa1        region 0xe5a1 - 0xe5fe
+<d7000>...<d7062>       /xe6/x40        region 0xe640 - 0xe67e
+<d7064>...<d7096>       /xe6/x80        region 0xe680 - 0xe6a0
+<c7001>...<c7094>       /xe6/xa1        region 0xe6a1 - 0xe6fe
+<d7100>...<d7162>       /xe7/x40        region 0xe740 - 0xe77e
+<d7164>...<d7196>       /xe7/x80        region 0xe780 - 0xe7a0
+<c7101>...<c7194>       /xe7/xa1        region 0xe7a1 - 0xe7fe
+<d7200>...<d7262>       /xe8/x40        region 0xe840 - 0xe87e
+<d7264>...<d7296>       /xe8/x80        region 0xe880 - 0xe8a0
+<c7201>...<c7294>       /xe8/xa1        region 0xe8a1 - 0xe8fe
+<d7300>...<d7362>       /xe9/x40        region 0xe940 - 0xe97e
+<d7364>...<d7396>       /xe9/x80        region 0xe980 - 0xe9a0
+<c7301>...<c7394>       /xe9/xa1        region 0xe9a1 - 0xe9fe
+<d7400>...<d7462>       /xea/x40        region 0xea40 - 0xea7e
+<d7464>...<d7496>       /xea/x80        region 0xea80 - 0xeaa0
+<c7401>...<c7494>       /xea/xa1        region 0xeaa1 - 0xeafe
+<d7500>...<d7562>       /xeb/x40        region 0xeb40 - 0xeb7e
+<d7564>...<d7596>       /xeb/x80        region 0xeb80 - 0xeba0
+<c7501>...<c7594>       /xeb/xa1        region 0xeba1 - 0xebfe
+<d7600>...<d7662>       /xec/x40        region 0xec40 - 0xec7e
+<d7664>...<d7696>       /xec/x80        region 0xec80 - 0xeca0
+<c7601>...<c7694>       /xec/xa1        region 0xeca1 - 0xecfe
+<d7700>...<d7762>       /xed/x40        region 0xed40 - 0xed7e
+<d7764>...<d7796>       /xed/x80        region 0xed80 - 0xeda0
+<c7701>...<c7794>       /xed/xa1        region 0xeda1 - 0xedfe
+<d7800>...<d7862>       /xee/x40        region 0xee40 - 0xee7e
+<d7864>...<d7896>       /xee/x80        region 0xee80 - 0xeea0
+<c7801>...<c7894>       /xee/xa1        region 0xeea1 - 0xeefe
+<d7900>...<d7962>       /xef/x40        region 0xef40 - 0xef7e
+<d7964>...<d7996>       /xef/x80        region 0xef80 - 0xefa0
+<c7901>...<c7994>       /xef/xa1        region 0xefa1 - 0xeffe
+<d8000>...<d8062>       /xf0/x40        region 0xf040 - 0xf07e
+<d8064>...<d8096>       /xf0/x80        region 0xf080 - 0xf0a0
+<c8001>...<c8094>       /xf0/xa1        region 0xf0a1 - 0xf0fe
+<d8100>...<d8162>       /xf1/x40        region 0xf140 - 0xf17e
+<d8164>...<d8196>       /xf1/x80        region 0xf180 - 0xf1a0
+<c8101>...<c8194>       /xf1/xa1        region 0xf1a1 - 0xf1fe
+<d8200>...<d8262>       /xf2/x40        region 0xf240 - 0xf27e
+<d8264>...<d8296>       /xf2/x80        region 0xf280 - 0xf2a0
+<c8201>...<c8294>       /xf2/xa1        region 0xf2a1 - 0xf2fe
+<d8300>...<d8362>       /xf3/x40        region 0xf340 - 0xf37e
+<d8364>...<d8396>       /xf3/x80        region 0xf380 - 0xf3a0
+<c8301>...<c8394>       /xf3/xa1        region 0xf3a1 - 0xf3fe
+<d8400>...<d8462>       /xf4/x40        region 0xf440 - 0xf47e
+<d8464>...<d8496>       /xf4/x80        region 0xf480 - 0xf4a0
+<c8401>...<c8494>       /xf4/xa1        region 0xf4a1 - 0xf4fe
+<d8500>...<d8562>       /xf5/x40        region 0xf540 - 0xf57e
+<d8564>...<d8596>       /xf5/x80        region 0xf580 - 0xf5a0
+<c8501>...<c8594>       /xf5/xa1        region 0xf5a1 - 0xf5fe
+<d8600>...<d8662>       /xf6/x40        region 0xf640 - 0xf67e
+<d8664>...<d8696>       /xf6/x80        region 0xf680 - 0xf6a0
+<c8601>...<c8694>       /xf6/xa1        region 0xf6a1 - 0xf6fe
+<d8700>...<d8762>       /xf7/x40        region 0xf740 - 0xf77e
+<d8764>...<d8796>       /xf7/x80        region 0xf780 - 0xf7a0
+<c8701>...<c8794>       /xf7/xa1        region 0xf7a1 - 0xf7fe
+<d8800>...<d8862>       /xf8/x40        region 0xf840 - 0xf87e
+<d8864>...<d8896>       /xf8/x80        region 0xf880 - 0xf8a0
+<d8900>...<d8962>       /xf9/x40        region 0xf940 - 0xf97e
+<d8964>...<d8996>       /xf9/x80        region 0xf980 - 0xf9a0
+<d9000>...<d9062>       /xfa/x40        region 0xfa40 - 0xfa7e
+<d9064>...<d9096>       /xfa/x80        region 0xfa80 - 0xfaa0
+<d9100>...<d9162>       /xfb/x40        region 0xfb40 - 0xfb7e
+<d9164>...<d9196>       /xfb/x80        region 0xfb80 - 0xfba0
+<d9200>...<d9262>       /xfc/x40        region 0xfc40 - 0xfc7e
+<d9264>...<d9296>       /xfc/x80        region 0xfc80 - 0xfca0
+<d9300>...<d9362>       /xfd/x40        region 0xfd40 - 0xfd7e
+<d9364>...<d9396>       /xfd/x80        region 0xfd80 - 0xfda0
+<d9400>...<d9462>       /xfe/x40        region 0xfe40 - 0xfe7e
+<d9464>...<d9496>       /xfe/x80        region 0xfe80 - 0xfea0
+
+END CHARMAP 

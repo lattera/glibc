@@ -1,3 +1,45 @@
+1999-12-31  Martin Buchholz  <martin@xemacs.org>
+
+	* argp/argp-help.c: Likewise.
+	* argp/argp.h: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/elf.h: Likewise.
+	* elf/rtld.c: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* localedata/tst-fmon.data: Likewise.
+	* localedata/tst-rpmatch.sh: Likewise.
+	* login/programs/xtmp.h: Likewise.
+	* manual/arith.texi: Likewise.
+	* manual/charset.texi: Likewise.
+	* manual/creature.texi: Likewise.
+	* manual/llio.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/users.texi: Likewise.
+	* manual/examples/argp-ex2.c: Likewise.
+	* manual/examples/argp-ex3.c: Likewise.
+	* manual/examples/argp-ex4.c: Likewise.
+	* manual/examples/mkfsock.c: Likewise.
+	* math/test-fenv.c: Likewise.
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nss/test-netdb.c: Likewise.
+	* posix/regex.c: Likewise.
+	* scripts/test-installation.pl: Likewise.
+	* stdlib/canonicalize.c: Likewise.
+	* stdlib/fmtmsg.c: Likewise.
+	* string/argz-replace.c: Likewise.
+	* string/argz.h: Likewise.
+	* string/bits/string2.h: Likewise.
+	* sysdeps/generic/glob.c: Likewise.
+	* sysdeps/generic/setenv.c: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
+	* sysdeps/posix/waitid.c: Likewise.
+	* time/tzset.c: Likewise.
+
 2000-02-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add

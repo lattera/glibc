@@ -1285,3 +1285,11 @@ CHARMAP
 <k9201>...<k9294>		/d252/d161
 <k9301>...<k9394>		/d253/d161
 END CHARMAP
+
+% added feature (Wed Feb  9 16:38:39 KST 2000)
+
+WIDTH_DEFAULT 2
+WIDTH
+<space>...<tilde> 1
+END WIDTH
+
