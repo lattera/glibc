@@ -1,4 +1,4 @@
-@node Contributors, Copying, Maintenance, Top
+@node Contributors, Free Manuals, Maintenance, Top
 @c %MENU% Who wrote what parts of the GNU C library
 @appendix Contributors to the GNU C Library
 

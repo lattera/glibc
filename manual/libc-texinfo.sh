@@ -68,6 +68,7 @@ mv -f incl.$$ chapters.texi
   !/^\*/ { print; }
  ' smenu.$$
  cat <<EOF
+* Free Manuals::		 Free Software Needs Free Documentation.
 * Copying::                      The GNU Lesser General Public License says
                                   how you can copy and share the GNU C Library.
 * Documentation License::        This manual is under the GNU Free

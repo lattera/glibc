@@ -58,7 +58,8 @@ chapters = $(addsuffix .texi, \
 		       resource setjmp signal startup process job nss	\
 		       users sysinfo conf crypt debug)
 add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
-appendices = lang.texi header.texi install.texi maint.texi contrib.texi
+appendices = lang.texi header.texi install.texi maint.texi contrib.texi \
+	     freemanuals.texi
 
 -include texis
 texis: texis.awk $(chapters) $(add-chapters) $(appendices) lesser.texi fdl.texi

@@ -52,10 +52,19 @@ use vars qw (%results @all_floats %suffices @all_functions);
 %pplatforms =
   ( "i386/fpu" => "ix86",
     "generic" => "Generic",
-    "alpha" => "Alpha"
+    "alpha/fpu" => "Alpha",
+    "ia64/fpu" => "IA64",
+    "m68k/fpu" => "M68k",
+    "mips/fpu" => "MIPS",
+    "powerpc/fpu" => "PowerPC",
+    "sparc/sparc32/fpu" => "Sparc 32-bit",
+    "sparc/sparc64/fpu" => "Sparc 64-bit",
+    "sh/sh4/fpu" => "SH4",
+    "s390/fpu" => "S/390",
+    "arm" => "ARM"
   );
 
-@all_functions = 
+@all_functions =
   ( "acos", "acosh", "asin", "asinh", "atan", "atanh",
     "atan2", "cabs", "cacos", "cacosh", "carg", "casin", "casinh",
     "catan", "catanh", "cbrt", "ccos", "ccosh", "ceil", "cexp", "cimag",
@@ -78,6 +87,8 @@ if ($#ARGV == 0) {
 }
 
 find (\&find_files, $sources);
+
+@platforms = sort by_platforms @platforms;
 
 &print_all;
 
@@ -131,7 +142,7 @@ sub parse_ulps {
       } elsif ($eps eq "0") {
 	# ignore
 	next;
-      } elsif (!exists $results{$test}{$platform}{$type}{$float} 
+      } elsif (!exists $results{$test}{$platform}{$type}{$float}
 	    || $results{$test}{$platform}{$type}{$float} ne 'fail') {
 	$results{$test}{$platform}{$type}{$float} = $eps;
       }
@@ -150,7 +161,7 @@ sub parse_ulps {
 sub get_value {
   my ($fct, $platform, $type, $float) = @_;
 
-  return (exists $results{$fct}{$platform}{$type}{$float} 
+  return (exists $results{$fct}{$platform}{$type}{$float}
 	  ? $results{$fct}{$platform}{$type}{$float} : "0");
 }
 
@@ -163,27 +174,28 @@ sub canonicalize_platform {
   return exists $pplatforms{$platform} ? $pplatforms{$platform} : $platform;
 }
 
-sub print_all {
-  my ($fct, $platform, $float, $first, $i);
+sub print_platforms {
+  my (@p) = @_;
+  my ($fct, $platform, $float, $first, $i, $platform_no, $platform_total);
 
   print '@multitable {nexttowardf} ';
-  foreach (@platforms) {
+  foreach (@p) {
     print ' {1000 + i 1000}';
   }
   print "\n";
 
   print '@item Function ';
-  foreach (@platforms) {
+  foreach (@p) {
     print ' @tab ';
     print &canonicalize_platform ($_);
   }
   print "\n";
 
-  
+
   foreach $fct (@all_functions) {
     foreach $float (@all_floats) {
       print "\@item $fct$suffices{$float} ";
-      foreach $platform (@platforms) {
+      foreach $platform (@p) {
 	print ' @tab ';
 	if (exists $results{$fct}{$platform}{'normal'}{$float}
 	    || exists $results{$fct}{$platform}{'real'}{$float}
@@ -203,4 +215,25 @@ sub print_all {
   }
 
   print "\@end multitable\n";
+}
+
+sub print_all {
+  my ($i, $max);
+
+  my ($columns) = 5;
+
+  # Print only 5 platforms at a time.
+  for ($i=0; $i < $#platforms; $i+=$columns) {
+    $max = $i+$columns-1 > $#platforms ? $#platforms : $i+$columns-1;
+    print_platforms (@platforms[$i .. $max]);
+  }
+}
+
+sub by_platforms {
+  my ($pa, $pb);
+
+  $pa = $pplatforms{$a} ? $pplatforms{$a} : $a;
+  $pb = $pplatforms{$b} ? $pplatforms{$b} : $b;
+  
+  return $pa cmp $pb;
 }

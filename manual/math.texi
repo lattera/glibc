@@ -1230,12 +1230,12 @@ floating-point number representation.  Ideally the error for all
 functions is always less than 0.5ulps.  Using rounding bits this is also
 possible and normally implemented for the basic operations.  To achieve
 the same for the complex math functions requires a lot more work and
-this was not spend so far.
+this has not yet been done.
 
 Therefore many of the functions in the math library have errors.  The
 table lists the maximum error for each function which is exposed by one
-of the existing tests in the test suite.  It is tried to cover as much
-as possible and really list the maximum error (or at least a ballpark
+of the existing tests in the test suite.  The table tries to cover as much
+as possible and list the actual maximum error (or at least a ballpark
 figure) but this is often not achieved due to the large search space.
 
 The table lists the ULP values for different architectures.  Different
@@ -1243,6 +1243,8 @@ architectures have different results since their hardware support for
 floating-point operations varies and also the existing hardware support
 is different.
 
+@page
+@c This multitable does not fit on a single page
 @include libm-err.texi
 
 @node Pseudo-Random Numbers
