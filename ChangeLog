@@ -1,5 +1,12 @@
 1999-08-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* sysdeps/unix/mips/sysdep.h: Use __syscall_error.
+
+	* sysdeps/unix/mips/sysdep.S: Rewrite, don't declare errno here.
+	Patches by Ralf Baechle <ralf@uni-koblenz.de>
+
+1999-08-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* sysdeps/unix/sysv/linux/net/if_arp.h: Add new constants from
 	Linux 2.3.15.
 
