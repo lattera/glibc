@@ -1,3 +1,7 @@
+2003-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sched.h (NCPUBITS): Define.
+
 2003-05-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig (gnulib): Remove -lgcc_eh again.
