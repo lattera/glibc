@@ -1,4 +1,4 @@
-/* Definitions for POSIX memory map inerface.  Linux/PowerPC version.
+/* Definitions for POSIX memory map interface.  Linux/PowerPC version.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _SYS_MMAN_H
-# error "Never include this file directly.  Use <sys/mman.h> instead"
+# error "Never use <bits/mman.h> directly; include <sys/mman.h> instead."
 #endif
 
 /* The following definitions basically come from the kernel headers.

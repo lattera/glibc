@@ -1,6 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  MIPS version.
    Copyright (C) 1992, 1993, 1995, 1997 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@zen.org).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,6 +15,10 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+#ifndef _SETJMP_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
 
 typedef struct
   {

@@ -1,6 +1,5 @@
 /* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson <rth@tamu.edu>, 1997
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _FENV_H
-#error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
+# error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
 #endif
 
 
@@ -51,20 +50,20 @@ enum
 
     FE_INVALID =	1UL << 17,
 #define FE_INVALID	FE_INVALID
-    
+
     FE_ALL_EXCEPT =
 	(FE_INEXACT | FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW | FE_INVALID)
-#define FE_ALL_EXCEPT	FE_ALL_EXCEPT 
+#define FE_ALL_EXCEPT	FE_ALL_EXCEPT
   };
 
 
-/* Alpha chips support all four defined rouding modes. 
+/* Alpha chips support all four defined rouding modes.
 
    Note that code must be compiled to use dynamic rounding (/d) instructions
    to see these changes.  For gcc this is -mfp-rounding-mode=d; for DEC cc
-   this is -fprm d.  The default for both is static rounding to nearest. 
+   this is -fprm d.  The default for both is static rounding to nearest.
 
-   These are shifted down 58 bits from the hardware fpcr because the 
+   These are shifted down 58 bits from the hardware fpcr because the
    functions are declared to take integers.  */
 
 enum
@@ -100,5 +99,5 @@ typedef unsigned long fenv_t;
 #endif
 
 /* The system calls to talk to the kernel's FP code.  */
-extern unsigned long __ieee_get_fp_control(void);
-extern void __ieee_set_fp_control(unsigned long);
+extern unsigned long int __ieee_get_fp_control __P ((void));
+extern void __ieee_set_fp_control __P ((unsigned long int __value));

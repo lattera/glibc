@@ -17,18 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_SOCKET_H
-#error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
+#ifndef _SYS_STAT_H
+# error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
-
-
-#include <features.h>
 
 #define	__need_size_t
 #define __need_NULL
 #include <stddef.h>
-
-__BEGIN_DECLS
 
 /* Type for length arguments in socket calls.  */
 typedef unsigned int socklen_t;
@@ -173,5 +168,3 @@ struct linger
     int l_onoff;		/* Nonzero to linger on close.  */
     int l_linger;		/* Time to linger.  */
   };
-
-__END_DECLS

@@ -1,6 +1,5 @@
 /* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Brendan Kehoe (brendan@zen.org).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,12 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <sys/stat.h> instead.
- */
-
-#ifndef	_BITS_STAT_H
-#define	_BITS_STAT_H
+#ifndef _SYS_STAT_H
+# error "Never include <bits/stat.h> directly; use <sys/stat.h> instead."
+#endif
 
 #include <bits/types.h>
 
@@ -76,5 +72,3 @@ struct stat
 #define	__S_IREAD	0400	/* Read by owner.  */
 #define	__S_IWRITE	0200	/* Write by owner.  */
 #define	__S_IEXEC	0100	/* Execute by owner.  */
-
-#endif	/* bits/stat.h */

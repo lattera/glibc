@@ -1,5 +1,9 @@
 /* Define the machine-dependent type `jmp_buf'.  m68k version.  */
 
+#ifndef _SETJMP_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
+
 typedef struct
   {
     /* There are eight 4-byte data registers, but D0 is not saved.  */
@@ -7,10 +11,10 @@ typedef struct
 
     /* There are six 4-byte address registers, plus the FP and SP.  */
     int *__aregs[6];
-    int * __fp;
-    int * __sp;
+    int *__fp;
+    int *__sp;
 
-#if defined(__HAVE_68881__) || defined(__HAVE_FPU__)
+#if defined __HAVE_68881__ || defined __HAVE_FPU__
     /* There are eight floating point registers which
        are saved in IEEE 96-bit extended format.  */
     char __fpregs[8 * (96 / 8)];

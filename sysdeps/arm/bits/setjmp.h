@@ -1,10 +1,14 @@
 /* Define the machine-dependent type `jmp_buf'.  ARM version. */
 
+#ifndef _SETJMP_H
+# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
+#endif
+
 #ifndef _ASM
 /* Jump buffer contains v1-v6, sl, fp, sp, pc and (f4-f7) if we do FP. */
-#if __ARM_USES_FP
+# if __ARM_USES_FP
 typedef int __jmp_buf[22];
-#else
+# else
 typedef int __jmp_buf[10];
-#endif
+# endif
 #endif

@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_BYTESWAP_H
-#define _BITS_BYTESWAP_H	1
+#if !defined _BYTESWAP_H && !defined _NETINET_IN_H
+# error "Never use <bits/byteswap.h> directly; include <byteswap.h> instead."
+#endif
 
 /* Swap bytes in 16 bit value.  We don't provide an assembler version
    because GCC is smart enough to generate optimal assembler output, and
@@ -32,7 +33,7 @@
    (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
 
 #if defined __GNUC__ && __GNUC__ >= 2
-#define __bswap_32(x) \
+# define __bswap_32(x) \
   __extension__					\
   ({ unsigned int __v;				\
      if (__builtin_constant_p (x))		\
@@ -45,12 +46,12 @@
 			     : "0" (x));	\
      __v; })
 #else
-#define __bswap_32(x) __bswap_constant_32 (x)
+# define __bswap_32(x) __bswap_constant_32 (x)
 #endif
 
 #if defined __GNUC__ && __GNUC__ >= 2
 /* Swap bytes in 64 bit value.  */
-#define __bswap_64(x) \
+# define __bswap_64(x) \
   __extension__						\
   ({ union { unsigned long long int __ll;		\
 	     unsigned long int __l[2]; } __v, __r;	\
@@ -59,5 +60,3 @@
      __r.__l[1] = __bswap_32 (__v.__l[0]);		\
      __r.__ll; })
 #endif
-
-#endif /* bits/byteswap.h */
