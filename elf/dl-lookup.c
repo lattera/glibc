@@ -108,7 +108,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
   /* Determine whether UNDEF_MAP already has a reference to MAP.  First
      look in the normal dependencies.  */
-  if (undef_map->l_searchlist.r_list != NULL)
+  if (undef_map->l_initfini != NULL)
     {
       list = undef_map->l_initfini;
 

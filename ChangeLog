@@ -1,5 +1,8 @@
 2005-03-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-lookup.c (add_dependency): Always search l_initfini if
+	the list exists.
+
 	* elf/Makefile: Add rules to build and run order2.
 	* elf/order2.c: New file.
 	* elf/order2mod1.c: New file.
