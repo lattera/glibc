@@ -284,6 +284,8 @@ svcunix_destroy (SVCXPRT *xprt)
 struct cmessage {
   struct cmsghdr cmsg;
   struct ucred cmcred;
+  /* hack to make sure we have enough memory */
+  char dummy[(CMSG_ALIGN (sizeof (struct ucred)) - sizeof (struct ucred) + sizeof (long))];
 };
 
 /* XXX This is not thread safe, but since the main functions in svc.c
@@ -293,15 +295,16 @@ static struct cmessage cm;
 #endif
 
 static int
-__msgread (int sock, void *buf, size_t cnt)
+__msgread (int sock, void *data, size_t cnt)
 {
-  struct iovec iov[1];
+  struct iovec iov;
   struct msghdr msg;
+  int len;
 
-  iov[0].iov_base = buf;
-  iov[0].iov_len = cnt;
+  iov.iov_base = data;
+  iov.iov_len = cnt;
 
-  msg.msg_iov = iov;
+  msg.msg_iov = &iov;
   msg.msg_iovlen = 1;
   msg.msg_name = NULL;
   msg.msg_namelen = 0;
@@ -319,42 +322,65 @@ __msgread (int sock, void *buf, size_t cnt)
   }
 #endif
 
-  return recvmsg (sock, &msg, 0);
+ restart:
+  len = recvmsg (sock, &msg, 0);
+  if (len >= 0)
+    {
+      if (msg.msg_flags & MSG_CTRUNC || len == 0)
+        return 0;
+      else
+        return len;
+    }
+  if (errno == EINTR)
+    goto restart;
+  return -1;
 }
 
 static int
-__msgwrite (int sock, void *buf, size_t cnt)
+__msgwrite (int sock, void *data, size_t cnt)
 {
 #ifndef SCM_CREDENTIALS
   /* We cannot implement this reliably.  */
   __set_errno (ENOSYS);
   return -1;
 #else
-  struct iovec iov[1];
+  struct iovec iov;
   struct msghdr msg;
+  struct cmsghdr *cmsg = &cm.cmsg;
+  struct ucred cred;
+  int len;
 
-  iov[0].iov_base = buf;
-  iov[0].iov_len = cnt;
+  /* XXX I'm not sure, if gete?id() is always correct, or if we should use
+     get?id(). But since keyserv needs geteuid(), we have no other chance.
+     It would be much better, if the kernel could pass both to the server. */
+  cred.pid = __getpid ();
+  cred.uid = __geteuid ();
+  cred.gid = __getegid ();
 
-  cm.cmsg.cmsg_type = SCM_CREDENTIALS;
-  cm.cmsg.cmsg_level = SOL_SOCKET;
-  cm.cmsg.cmsg_len = sizeof (struct cmessage);
-  /* XXX I'm not sure, if we really should use gete?id(), or get?id().
-     It would be much better, if the kernel could pass both to the
-     client. */
-  cm.cmcred.pid = __getpid ();
-  cm.cmcred.uid = __geteuid ();
-  cm.cmcred.gid = __getegid ();
+  memcpy (CMSG_DATA(cmsg), &cred, sizeof (struct ucred));
+  cmsg->cmsg_level = SOL_SOCKET;
+  cmsg->cmsg_type = SCM_CREDENTIALS;
+  cmsg->cmsg_len = sizeof(*cmsg) + sizeof(struct ucred);
 
-  msg.msg_iov = iov;
+  iov.iov_base = data;
+  iov.iov_len = cnt;
+
+  msg.msg_iov = &iov;
   msg.msg_iovlen = 1;
   msg.msg_name = NULL;
   msg.msg_namelen = 0;
-  msg.msg_control = (caddr_t) &cm;
-  msg.msg_controllen = sizeof (struct cmessage);
+  msg.msg_control = cmsg;
+  msg.msg_controllen = CMSG_ALIGN(cmsg->cmsg_len);
   msg.msg_flags = 0;
 
-  return sendmsg (sock, &msg, 0);
+ restart:
+  len = sendmsg (sock, &msg, 0);
+  if (len >= 0)
+    return len;
+  if (errno == EINTR)
+    goto restart;
+  return -1;
+
 #endif
 }
 
@@ -446,8 +472,8 @@ svcunix_recv (SVCXPRT *xprt, struct rpc_msg *msg)
     {
       cd->x_id = msg->rm_xid;
       /* set up verifiers */
-      msg->rm_call.cb_verf.oa_flavor = AUTH_UNIX;
 #ifdef SCM_CREDENTIALS
+      msg->rm_call.cb_verf.oa_flavor = AUTH_UNIX;
       msg->rm_call.cb_verf.oa_base = (caddr_t) &cm;
       msg->rm_call.cb_verf.oa_length = sizeof (cm);
 #endif

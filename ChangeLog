@@ -1,3 +1,9 @@
+1999-03-18  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/clnt_unix.c: Fix creation of parameters for
+ 	sendmsg/recvmsg on non intel platforms.
+	* sunrpc/svc_unix.c: Likewise.
+
 1999-03-18  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/getgroups.c: New file.  Use the i386 
