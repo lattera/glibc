@@ -1,5 +1,7 @@
 2000-01-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/llseek.c: Formulate warning message stronger.
+
 	* iconvdata/gconv-modules: Remove BALTIC.  It's the same as
 	ISO-8859-13.
 	* iconvdata/Makefile (distribute): Remove baltic.c.
@@ -55,8 +57,7 @@
 
 	* posix/bits/posix2_lim.h: Remove _POSIX2_EQUIV_CLASS_MAX.  I have
 	no idea where this came from.
-	* sysdeps/posix/sysconf.c: Remove _POSIX2_EQUIV_CLASS_MAX
-	handling.
+	* sysdeps/posix/sysconf.c: Remove _POSIX2_EQUIV_CLASS_MAX handling.
 
 1999-12-31  Andreas Jaeger  <aj@suse.de>
 
