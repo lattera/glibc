@@ -6388,7 +6388,11 @@ byte_re_match_2_internal (bufp, string1, size1,string2, size2, pos,
 		    /* If wcscoll(the collating symbol, whole string) > 0,
 		       any substring of the string never match with the
 		       collating symbol.  */
+# ifdef _LIBC
 		    if (__wcscoll (workp, d) > 0)
+# else
+		    if (wcscoll (workp, d) > 0)
+# endif
 		      {
 			workp += length + 1;
 			continue;
