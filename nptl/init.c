@@ -130,7 +130,8 @@ static const struct pthread_functions pthread_functions =
     .ptr__pthread_cleanup_push_defer = __pthread_cleanup_push_defer,
     .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore,
     .ptr_nthreads = &__nptl_nthreads,
-    .ptr___pthread_unwind = &__pthread_unwind
+    .ptr___pthread_unwind = &__pthread_unwind,
+    .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd
   };
 # define ptr_pthread_functions &pthread_functions
 #else

@@ -210,7 +210,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
 	tst-detach1 \
 	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
-	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 \
+	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 \
 	tst-tls1 tst-tls2 \
 	tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
 	tst-atfork1 \

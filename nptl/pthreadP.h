@@ -439,4 +439,6 @@ extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
 extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
                                           int execute);
 
+extern void __nptl_deallocate_tsd (void) attribute_hidden;
+
 #endif	/* pthreadP.h */

@@ -1,3 +1,14 @@
+2004-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread-functions.h: Add ptr__nptl_deallocate_tsd.
+	* init.c (pthread_functions): Add ptr__nptl_deallocate_tsd.
+	* pthreadP.h: Declare __nptl_deallocate_tsd.
+	* pthread_create.c (deallocate_tsd): Remove to __nptl_deallocate_tsd.
+	Adjust caller.
+
+	* Makefile (tests): Add tst-tsd5.
+	* tst-tsd5.c: New file.
+
 2004-03-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/pthread_attr_setaffinity.c

@@ -1,3 +1,8 @@
+2004-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/libc-start.c (LIBC_START_MAIN)
+	[HAVE_CLEANUP_JMP_BUF]: Call __nptl_deallocate_tsd.
+
 2004-03-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): If protocol

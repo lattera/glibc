@@ -102,9 +102,9 @@ __find_in_stack_list (pd)
 
 
 /* Deallocate POSIX thread-local-storage.  */
-static void
-internal_function
-deallocate_tsd (void)
+void
+attribute_hidden
+__nptl_deallocate_tsd (void)
 {
   struct pthread *self = THREAD_SELF;
 
@@ -268,7 +268,7 @@ start_thread (void *arg)
     }
 
   /* Run the destructor for the thread-local data.  */
-  deallocate_tsd ();
+  __nptl_deallocate_tsd ();
 
   /* Clean up any state libc stored in thread-local variables.  */
   __libc_thread_freeres ();
