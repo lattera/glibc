@@ -18,9 +18,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-
-#include "link.h"
+#include <stddef.h>
+#include <link.h>
 #include "thread_dbP.h"
+
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 # define TLS_DTV_UNALLOCATED	((void *) -1l)
@@ -38,9 +39,17 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 
   LOG ("td_thr_tls_get_addr");
 
+  psaddr_t dtvpp = th->th_unique;
+#if TLS_TCB_AT_TP
+  dtvpp += offsetof (struct pthread, dtv);
+#elif TLS_DTV_AT_TP
+  dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv);
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined."
+#endif
+
   /* Get the DTV pointer from the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph, &((struct pthread *) th->th_unique)->dtv,
-		 &dtvp, sizeof dtvp) != PS_OK)
+  if (ps_pdread (th->th_ta_p->ph, dtvpp, &dtvp, sizeof dtvp) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* Read the module ID from the link_map.  */

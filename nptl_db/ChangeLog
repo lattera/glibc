@@ -1,8 +1,13 @@
-2003-03-10  Ulrich Drepper  <drepper@redhat.com>
+2003-03-10  Roland McGrath  <roland@redhat.com>
 
-	* td_ta_thr_iter.c: Update for TCB change.
-	* td_thr_tls_get_addr.c: Likewise.
-	* td_thr_validate.c: Likewise.
+	* td_ta_thr_iter.c (iterate_thread_list): Don't use `header.data.'
+	prefix for `struct pthread' members.
+	* td_thr_validate.c (check_thread_list): Likewise.
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Likewise.
+
+2003-03-03  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Handle TLS_DTV_AT_TP.
 
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 

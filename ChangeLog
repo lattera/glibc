@@ -1,3 +1,8 @@
+2003-03-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Correct system
+	call names for pread and pwrite.
+
 2003-03-10  Roland McGrath  <roland@redhat.com>
 
 	* dlfcn/Makefile (libdl-routines): Add dladdr1.
