@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/MIPS version.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,8 +119,10 @@ typedef struct siginfo
    signals.  */
 enum
 {
-  SI_ASYNCNL = -6,		/* Sent by asynch name lookup completion.  */
+  SI_ASYNCNL = -60,		/* Sent by asynch name lookup completion.  */
 # define SI_ASYNCNL	SI_ASYNCNL
+  SI_TKILL = -6,		/* Sent by tkill. */
+# define SI_TKILL	SI_TKILL
   SI_SIGIO,			/* Sent by queued SIGIO. */
 # define SI_SIGIO	SI_SIGIO
   SI_MESGQ,			/* Sent by real time mesq state change.  */
