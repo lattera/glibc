@@ -1,5 +1,8 @@
 2003-11-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex_internal.c (build_wcs_upper_buffer): If mbrtowc
+	fails, just use the byte, do no fancy conversions.
+
 	* posix/regex_internal.h (re_string_first_byte): Use ->valid_len
 	not ->len.
 	(re_string_is_single_byte_char): Likewise.

@@ -294,16 +294,11 @@ build_wcs_upper_buffer (pstr)
 	    }
 	  else if (mbclen == (size_t) -1 || mbclen == 0)
 	    {
-	      /* In case of a singlebyte character.  */
+	      /* It is an invalid character.  Just use the byte.  */
 	      int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
-	      /* Apply the translation if we need.  */
-	      if (BE (pstr->trans != NULL, 0) && mbclen == 1)
-		{
-		  ch = pstr->trans[ch];
-		  pstr->mbs_case[byte_idx] = ch;
-		}
-	      pstr->wcs[byte_idx] = towupper (wc);
-	      pstr->mbs[byte_idx++] = toupper (ch);
+	      pstr->mbs[byte_idx] = ch;
+	      /* And also cast it to wide char.  */
+	      pstr->wcs[byte_idx++] = (wchar_t) ch;
 	      if (BE (mbclen == (size_t) -1, 0))
 		pstr->cur_state = prev_st;
 	    }
@@ -324,7 +319,7 @@ build_wcs_upper_buffer (pstr)
 	mbclen = mbrtowc (&wc,
 			  ((const char *) pstr->raw_mbs + pstr->raw_mbs_idx
 			   + byte_idx), remain_len, &pstr->cur_state);
-	if (mbclen == 1 || mbclen == (size_t) -1 || mbclen == 0)
+	if (mbclen == 1)
 	  {
 	    /* In case of a singlebyte character.  */
 	    int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
@@ -350,6 +345,16 @@ build_wcs_upper_buffer (pstr)
 	    /* Write paddings.  */
 	    for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
 	      pstr->wcs[byte_idx++] = WEOF;
+	  }
+	else if (mbclen == (size_t) -1 || mbclen == 0)
+	  {
+	    /* It is an invalid character.  Just use the byte.  */
+	    int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
+	    pstr->mbs[byte_idx] = ch;
+	    /* And also cast it to wide char.  */
+	    pstr->wcs[byte_idx++] = (wchar_t) ch;
+	    if (BE (mbclen == (size_t) -1, 0))
+	      pstr->cur_state = prev_st;
 	  }
 	else
 	  {
