@@ -1,5 +1,8 @@
 2002-07-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): If loaded object uses
+	TLS fail is USE_TLS is not defined.
+
 	* libio/wfileops.c (_IO_wfile_seekoff): Reposition wide pointers
 	and adjust state for seek position.  [PR libc/4070]
 	* libio/Makefile (tests): Add bug-rewind.

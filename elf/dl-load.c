@@ -940,8 +940,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  }
 	  break;
 
-#ifdef USE_TLS
 	case PT_TLS:
+#ifdef USE_TLS
 	  if (ph->p_memsz > 0)
 	    {
 	      l->l_tls_blocksize = ph->p_memsz;
@@ -954,8 +954,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	      /* Assign the next available module ID.  */
 	      l->l_tls_modid = _dl_next_tls_modid ();
 	    }
-	  break;
+#else
+	  /* Uh-oh, the binary expects TLS support but we cannot
+	     provide it.  */
+	  _dl_fatal_printf ("cannot handle file '%s' with TLS data", name);
 #endif
+	  break;
 	}
 
     /* Now process the load commands and map segments into memory.  */
