@@ -460,6 +460,9 @@ GLIBC_2.1 {
     # chown interface change.
     chown;
 
+    # Change in pthread_attr_t.
+    pthread_attr_init;
+
     # functions in normal name space
     # Please keep them sorted by name!
 
