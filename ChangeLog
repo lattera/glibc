@@ -1,3 +1,14 @@
+2002-09-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/sysdep.h: Remove powerpc32 specific macros.
+	* sysdeps/powerpc/powerpc32/sysdep.h: New file.  Define powerpc32
+	specific macros copied from sysdeps/powerpc/sysdep.h.
+	* sysdeps/powerpc/powerpc64/sysdep.h: New file.  Define powerpc64
+	specific macros.
+	* sysdeps/unix/powerpc/sysdep.h: Include <bits/wordsize.h>.
+	[__WORDSIZE==64]: Include sysdeps/powerpc/powerpc64/sysdep.h.
+	[!__WORDSIZE==64]: Include sysdeps/powerpc/powerpc32/sysdep.h.
+
 2002-09-19  Bruno Haible  <bruno@clisp.org>
 
 	* intl/dcigettext.c (DCIGETTEXT): Restore errno only right before

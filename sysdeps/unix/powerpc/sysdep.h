@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 1999, 2002 
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,4 +18,9 @@
    02111-1307 USA.  */
 
 #include <sysdeps/unix/sysdep.h>
-#include <sysdeps/powerpc/sysdep.h>
+#include <bits/wordsize.h>
+#if __WORDSIZE == 64
+#include <sysdeps/powerpc/powerpc64/sysdep.h>
+#else
+#include <sysdeps/powerpc/powerpc32/sysdep.h>
+#endif
