@@ -27,17 +27,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <utmp.h>
-#include <gnu/lib-names.h>
 #include <sys/stat.h>
 
 #include "utmp-private.h"
-#include "../elf/link.h"
 
 
 /* The various backends we have.  */
 static int __setutent_unknown (int reset);
 static int __getutent_r_unknown (struct utmp *buffer, struct utmp **result);
-static void __pututline_unknown (const struct utmp *data);
+static struct utmp *__pututline_unknown (const struct utmp *data);
 static void __endutent_unknown (void);
 
 
@@ -142,24 +140,29 @@ __getutent_r_unknown (struct utmp *buffer, struct utmp **result)
 }
 
 
-void
+struct utmp *
 __pututline (const struct utmp *data)
 {
+  struct utmp *buffer;
+
   __libc_lock_lock (__libc_utmp_lock);
 
-  (*__libc_utmp_jump_table->pututline) (data);
+  buffer = (*__libc_utmp_jump_table->pututline) (data);
 
   __libc_lock_unlock (__libc_utmp_lock);
+
+  return buffer;
 }
+weak_alias (__pututline, pututline)
 
 
-static void
+static struct utmp *
 __pututline_unknown (const struct utmp *data)
 {
   /* It is not yet initialized.  */
   __setutent_unknown (0);
 
-  (*__libc_utmp_jump_table->pututline) (data);
+  return (*__libc_utmp_jump_table->pututline) (data);
 }
 
 

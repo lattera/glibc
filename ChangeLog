@@ -1,3 +1,11 @@
+Thu Nov 28 23:03:32 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/netinet/in_systm.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add netinet/in_systm.h.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet] (sysdep_headers):
+	Add netinet/in_systm.h.
+	Reported by NIIBE Yutaka <gniibe@mri.co.jp>.
+
 Thu Nov 28 03:11:11 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/fileops.c: Update from latest libg++.
@@ -9,7 +17,7 @@ Thu Nov 28 03:11:11 1996  Ulrich Drepper  <drepper@cygnus.com>
 	instead of __libc_lock_init for streams.
 	Reported by a sun <asun@zoology.washington.edu>.
 
-	* sysdepsunix/sysv/linux/i386/brk.c: Reformat copyright.
+	* sysdeps/unix/sysv/linux/i386/brk.c: Reformat copyright.
 
 	* sysdeps/generic/errno-loc.c: New file.  Generic definition of
 	__errno_location function.

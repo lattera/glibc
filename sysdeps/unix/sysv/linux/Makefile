@@ -51,5 +51,9 @@ ifeq ($(subdir), stdio-common)
 inhibit-siglist := yes
 endif
 
+ifeq ($(subdir), inet)
+sysdep_headers += netinet/in_systm.h
+endif
+
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
