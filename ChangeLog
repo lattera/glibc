@@ -1,3 +1,22 @@
+1998-06-08 13:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/sprof.c: Implement call graph profiling.
+
+	* sysdeps/generic/getenv.c: Optimize to use strncmp less often.
+
+1998-06-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/fgetpwent_r.c (__fgetpwent_r): Correct buffer overflow fix.
+	* grp/fgetgrent_r.c (__fgetgrent_r): Likewise.
+	* shadow/fgetspent_r.c (__fgetspent_r): Likewise.
+	Noticed by Jake Garver <garver@valkyrie.net>.
+
+1998-06-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/genops.c (__underflow): Read character from read pointer
+	as unsigned.
+	(__uflow): Likewise.
+
 1998-06-07 13:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add _dl_profile.

@@ -76,6 +76,7 @@ static const struct argp_option options[] =
   { NULL, 0, NULL, 0, N_("Output selection:") },
   { "flat-profile", 'p', NULL, 0,
     N_("generate flat profile with counts and ticks") },
+  { "graph", 'q', NULL, 0, N_("generate call graph") },
 
   { "test", OPT_TEST, NULL, OPTION_HIDDEN, NULL },
   { NULL, 0, NULL, 0, NULL }
@@ -102,8 +103,9 @@ static enum
 {
   NONE = 0,
   FLAT_MODE = 1 << 0,
+  CALL_GRAPH_MODE = 1 << 1,
 
-  DEFAULT_MODE = FLAT_MODE
+  DEFAULT_MODE = FLAT_MODE | CALL_GRAPH_MODE
 } mode;
 
 /* If nonzero the total number of invocations of a function is emitted.  */
@@ -114,20 +116,32 @@ int do_test;
 
 /* Strcuture describing calls.  */
 struct here_fromstruct
-  {
-    struct here_cg_arc_record volatile *here;
-    uint16_t link;
-  };
+{
+  struct here_cg_arc_record volatile *here;
+  uint16_t link;
+};
 
 /* We define a special type to address the elements of the arc table.
    This is basically the `gmon_cg_arc_record' format but it includes
    the room for the tag and it uses real types.  */
 struct here_cg_arc_record
-  {
-    uintptr_t from_pc;
-    uintptr_t self_pc;
-    uint32_t count;
-  } __attribute__ ((packed));
+{
+  uintptr_t from_pc;
+  uintptr_t self_pc;
+  uint32_t count;
+} __attribute__ ((packed));
+
+
+struct known_symbol;
+struct arc_list
+{
+  size_t idx;
+  uintmax_t count;
+
+  struct arc_list *next;
+};
+
+static struct obstack ob_list;
 
 
 struct known_symbol
@@ -138,6 +152,9 @@ struct known_symbol
 
   uintmax_t ticks;
   uintmax_t calls;
+
+  struct arc_list *froms;
+  struct arc_list *tos;
 };
 
 
@@ -198,7 +215,9 @@ static void unload_profdata (struct profdata *profdata);
 static void count_total_ticks (struct shobj *shobj, struct profdata *profdata);
 static void count_calls (struct shobj *shobj, struct profdata *profdata);
 static void read_symbols (struct shobj *shobj);
+static void add_arcs (struct profdata *profdata);
 static void generate_flat_profile (struct profdata *profdata);
+static void generate_call_graph (struct profdata *profdata);
 
 
 int
@@ -278,6 +297,9 @@ no filename for profiling data given and shared object `%s' has no soname"),
   /* Count the calls.  */
   count_calls (shobj_handle, profdata_handle);
 
+  /* Add the arc information.  */
+  add_arcs (profdata_handle);
+
   /* If no mode is specified fall back to the default mode.  */
   if (mode == NONE)
     mode = DEFAULT_MODE;
@@ -285,6 +307,9 @@ no filename for profiling data given and shared object `%s' has no soname"),
   /* Do some work.  */
   if (mode & FLAT_MODE)
     generate_flat_profile (profdata_handle);
+
+  if (mode & CALL_GRAPH_MODE)
+    generate_call_graph (profdata_handle);
 
   /* Free the resources.  */
   unload_shobj (shobj_handle);
@@ -300,6 +325,12 @@ parse_opt (int key, char *arg, struct argp_state *state)
 {
   switch (key)
     {
+    case 'p':
+      mode |= FLAT_MODE;
+      break;
+    case 'q':
+      mode |= CALL_GRAPH_MODE;
+      break;
     case OPT_TEST:
       do_test = 1;
       break;
@@ -800,7 +831,7 @@ count_total_ticks (struct shobj *shobj, struct profdata *profdata)
 }
 
 
-static struct known_symbol *
+static size_t
 find_symbol (uintptr_t addr)
 {
   size_t sidx = 0;
@@ -811,7 +842,7 @@ find_symbol (uintptr_t addr)
       uintptr_t end = start + sortsym[sidx]->size;
 
       if (addr >= start && addr < end)
-	return sortsym[sidx];
+	return sidx;
 
       if (addr < start)
 	break;
@@ -819,7 +850,7 @@ find_symbol (uintptr_t addr)
       ++sidx;
     }
 
-  return NULL;
+  return (size_t) -1l;
 }
 
 
@@ -833,12 +864,12 @@ count_calls (struct shobj *shobj, struct profdata *profdata)
   for (cnt = 0; cnt < narcs; ++cnt)
     {
       uintptr_t here = data[cnt].self_pc;
-      struct known_symbol *symbol;
+      size_t symbol_idx;
 
       /* Find the symbol for this address.  */
-      symbol = find_symbol (here);
-      if (symbol != NULL)
-	symbol->calls += data[cnt].count;
+      symbol_idx = find_symbol (here);
+      if (symbol_idx != (size_t) -1l)
+	sortsym[symbol_idx]->calls += data[cnt].count;
     }
 }
 
@@ -846,8 +877,8 @@ count_calls (struct shobj *shobj, struct profdata *profdata)
 static int
 symorder (const void *o1, const void *o2)
 {
-  const struct known_symbol *p1 = (struct known_symbol *) o1;
-  const struct known_symbol *p2 = (struct known_symbol *) o2;
+  const struct known_symbol *p1 = (const struct known_symbol *) o1;
+  const struct known_symbol *p2 = (const struct known_symbol *) o2;
 
   return p1->addr - p2->addr;
 }
@@ -872,6 +903,7 @@ read_symbols (struct shobj *shobj)
 #define obstack_chunk_free free
   obstack_init (&shobj->ob_str);
   obstack_init (&shobj->ob_sym);
+  obstack_init (&ob_list);
 
   /* Process the symbols.  */
   if (shobj->symtab)
@@ -947,6 +979,8 @@ read_symbols (struct shobj *shobj)
 	      newsym->addr = symtab->st_value;
 	      newsym->size = symtab->st_size;
 	      newsym->ticks = 0;
+	      newsym->froms = NULL;
+	      newsym->tos = NULL;
 
 	      existp = tfind (newsym, &symroot, symorder);
 	      if (existp == NULL)
@@ -979,6 +1013,85 @@ read_symbols (struct shobj *shobj)
 }
 
 
+static void
+add_arcs (struct profdata *profdata)
+{
+  uint32_t narcs = profdata->narcs;
+  struct here_cg_arc_record *data = profdata->data;
+  uint32_t cnt;
+
+  for (cnt = 0; cnt < narcs; ++cnt)
+    {
+      /* First add the incoming arc.  */
+      size_t sym_idx = find_symbol (data[cnt].self_pc);
+
+      if (sym_idx != (size_t) -1l)
+	{
+	  struct known_symbol *sym = sortsym[sym_idx];
+	  struct arc_list *runp = sym->froms;
+
+	  while (runp != NULL
+		 && ((data[cnt].from_pc == 0 && runp->idx != (size_t) -1l)
+		     || (data[cnt].from_pc != 0
+			 && (runp->idx == (size_t) -1l
+			     || data[cnt].from_pc < sortsym[runp->idx]->addr
+			     || (data[cnt].from_pc
+				 >= (sortsym[runp->idx]->addr
+				     + sortsym[runp->idx]->size))))))
+	    runp = runp->next;
+
+	  if (runp == NULL)
+	    {
+	      /* We need a new entry.  */
+	      struct arc_list *newp = (struct arc_list *)
+		obstack_alloc (&ob_list, sizeof (struct arc_list));
+
+	      if (data[cnt].from_pc == 0)
+		newp->idx = (size_t) -1l;
+	      else
+		newp->idx = find_symbol (data[cnt].from_pc);
+	      newp->count = data[cnt].count;
+	      newp->next = sym->froms;
+	      sym->froms = newp;
+	    }
+	  else
+	    /* Increment the counter for the found entry.  */
+	    runp->count += data[cnt].count;
+	}
+
+      /* Now add it to the appropriate outgoing list.  */
+      sym_idx = find_symbol (data[cnt].from_pc);
+      if (sym_idx != (size_t) -1l)
+	{
+	  struct known_symbol *sym = sortsym[sym_idx];
+	  struct arc_list *runp = sym->tos;
+
+	  while (runp != NULL
+		 && (runp->idx == (size_t) -1l
+		     || data[cnt].self_pc < sortsym[runp->idx]->addr
+		     || data[cnt].self_pc >= (sortsym[runp->idx]->addr
+					      + sortsym[runp->idx]->size)))
+	    runp = runp->next;
+
+	  if (runp == NULL)
+	    {
+	      /* We need a new entry.  */
+	      struct arc_list *newp = (struct arc_list *)
+		obstack_alloc (&ob_list, sizeof (struct arc_list));
+
+	      newp->idx = find_symbol (data[cnt].self_pc);
+	      newp->count = data[cnt].count;
+	      newp->next = sym->tos;
+	      sym->tos = newp;
+	    }
+	  else
+	    /* Increment the counter for the found entry.  */
+	    runp->count += data[cnt].count;
+	}
+    }
+}
+
+
 static int
 countorder (const void *p1, const void *p2)
 {
@@ -1007,13 +1120,13 @@ printflat (const void *node, VISIT value, int level)
 
       cumu_ticks += s->ticks;
 
-      printf ("%6.2f%10.2f%9.2f%9" PRIdMAX "%9.2f%9.2f  %s\n",
+      printf ("%6.2f%10.2f%9.2f%9" PRIdMAX "%9.2f           %s\n",
 	      total_ticks ? (100.0 * s->ticks) / total_ticks : 0.0,
 	      tick_unit * cumu_ticks,
 	      tick_unit * s->ticks,
 	      s->calls,
 	      s->calls ? (s->ticks * 1000000) * tick_unit / s->calls : 0,
-	      0.0,	/* FIXME: don't know about called functions.  */
+	      /* FIXME: don't know about called functions.  */
 	      s->name);
     }
 }
@@ -1048,4 +1161,72 @@ generate_flat_profile (struct profdata *profdata)
   twalk (data, printflat);
 
   tdestroy (data, freenoop);
+}
+
+
+static void
+generate_call_graph (struct profdata *profdata)
+{
+  size_t cnt;
+
+  puts ("\nindex % time    self  children    called     name\n");
+
+  for (cnt = 0; cnt < symidx; ++cnt)
+    if (sortsym[cnt]->froms != NULL || sortsym[cnt]->tos != NULL)
+      {
+	struct arc_list *runp;
+	size_t n;
+
+	/* First print the from-information.  */
+	runp = sortsym[cnt]->froms;
+	while (runp != NULL)
+	  {
+	    printf ("            %8.2f%8.2f%9" PRIdMAX "/%-9" PRIdMAX "   %s",
+		    (runp->idx != (size_t) -1l
+		     ? sortsym[runp->idx]->ticks * tick_unit : 0.0),
+		    0.0, /* FIXME: what's time for the childern, recursive */
+		    runp->count, sortsym[cnt]->calls,
+		    (runp->idx != (size_t) -1l ?
+		     sortsym[runp->idx]->name : "<UNKNOWN>"));
+
+	    if (runp->idx != (size_t) -1l)
+	      printf (" [%Zd]", runp->idx);
+	    putchar_unlocked ('\n');
+
+	    runp = runp->next;
+	  }
+
+	/* Info abount the function itself.  */
+	n = printf ("[%d]", cnt);
+	printf ("%*s%5.1f%8.2f%8.2f%9" PRIdMAX "         %s [%Zd]\n",
+		7 - n, " ",
+		total_ticks ? (100.0 * sortsym[cnt]->ticks) / total_ticks : 0,
+		sortsym[cnt]->ticks * tick_unit,
+		0.0, /* FIXME: what's time for the childern, recursive */
+		sortsym[cnt]->calls,
+		sortsym[cnt]->name, cnt);
+
+	/* Info about the functions this function calls.  */
+	runp = sortsym[cnt]->tos;
+	while (runp != NULL)
+	  {
+	    printf ("            %8.2f%8.2f%9" PRIdMAX "/",
+		    (runp->idx != (size_t) -1l
+		     ? sortsym[runp->idx]->ticks * tick_unit : 0.0),
+		    0.0, /* FIXME: what's time for the childern, recursive */
+		    runp->count);
+
+	    if (runp->idx != (size_t) -1l)
+	      printf ("%-9" PRIdMAX "   %s [%Zd]\n",
+		      sortsym[runp->idx]->calls,
+		      sortsym[runp->idx]->name,
+		      runp->idx);
+	    else
+	      fputs ("???         <UNKNOWN>\n\n", stdout);
+
+	    runp = runp->next;
+	  }
+
+	fputs ("-----------------------------------------------\n", stdout);
+      }
 }

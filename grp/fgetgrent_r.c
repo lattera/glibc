@@ -61,14 +61,14 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
 
   do
     {
-      buffer[buflen] = '\xff';
+      buffer[buflen - 1] = '\xff';
       p = fgets (buffer, buflen, stream);
       if (p == NULL && feof (stream))
 	{
 	  *result = NULL;
 	  return errno;
 	}
-      if (p == NULL || buffer[buflen] != '\xff')
+      if (p == NULL || buffer[buflen - 1] != '\xff')
 	{
 	  *result = NULL;
 	  return errno = ERANGE;

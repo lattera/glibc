@@ -273,7 +273,7 @@ __underflow (fp)
     {
       _IO_switch_to_main_get_area (fp);
       if (fp->_IO_read_ptr < fp->_IO_read_end)
-	return *fp->_IO_read_ptr;
+	return *(unsigned char *) fp->_IO_read_ptr;
     }
   if (_IO_have_markers (fp))
     {
@@ -298,7 +298,7 @@ __uflow (fp)
     {
       _IO_switch_to_main_get_area (fp);
       if (fp->_IO_read_ptr < fp->_IO_read_end)
-	return *fp->_IO_read_ptr++;
+	return *(unsigned char *) fp->_IO_read_ptr++;
     }
   if (_IO_have_markers (fp))
     {
