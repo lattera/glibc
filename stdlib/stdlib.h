@@ -444,6 +444,15 @@ extern size_t mbstowcs __P ((wchar_t * __pwcs, __const char *__s, size_t __n));
 extern size_t wcstombs __P ((char *__s, __const wchar_t * __pwcs, size_t __n));
 
 
+#ifdef __USE_SVID
+/* Determine whether the string value of RESPONSE matches the affirmation
+   or negative response expression as specified by the LC_MESSAGES category
+   in the program's current locale.  Returns 1 if affirmative, 0 if
+   negative, and -1 if not matching.  */
+extern int rpmatch __P ((__const char *__response));
+#endif
+
+
 __END_DECLS
 
 #endif /* stdlib.h  */

@@ -118,9 +118,6 @@ endif # subdir
 ifndef XGETTEXT
 XGETTEXT = xgettext
 endif
-ifndef MSGJOIN
-MSGJOIN = msgjoin
-endif
 
 P = $(..)po
 
@@ -133,11 +130,17 @@ endif
 define extract
 @rm -f $@.new
 $(XGETTEXT) --keyword=_ --keyword=N_ --sort-output -d - \
-	    $(XGETTEXTFLAGS-$(@F)) > $@.new /dev/null $^
+	    $(XGETTEXTFLAGS-$(@F)) > $@.new $^
 mv -f $@.new $@
 endef
 
-$P/$(domain).pot: $(tags_sources); $(extract)
+text-srcs := $(filter %.c %.h %.cc %.C,$(tags_sources))
+$P/$(domain).pot: $(text-srcs)
+ifeq (,$(text-srcs))
+	cp /dev/null $@
+else
+	$(extract)
+endif
 
 $P/siglist.pot: $(common-objpfx)siglist.c; $(extract)
 $P/errlist.pot: $(..)sysdeps/mach/hurd/errlist.c; $(extract)
@@ -152,7 +155,7 @@ all-pot = $P/libc-top.pot $(subdirs:%=$P/%.pot) \
 ifndef subdir
 $P/SYS_libc.pot: $(all-pot)
 	@rm -f $@.new
-	$(MSGJOIN) $^ > $@.new
+	$(XGETTEXT) -d - --omit-header $^ > $@.new
 	mv -f $@.new $@
 	test ! -d CVS || cvs ci -m'Regenerated from source files' $@
 

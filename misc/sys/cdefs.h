@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -73,17 +73,18 @@ typedef long double __long_double_t;
 #define __ptr_t char *
 typedef double __long_double_t;
 
-#endif
-
-/* The BSD header files use the ANSI keywords unmodified.  (This means that
-   old programs may lose if they use the new keywords as identifiers.)  We
-   define them to their __ versions, which are taken care of above.  */
-
+/* The BSD header files use the ANSI keywords unmodified (this means that
+   old programs may lose if they use the new keywords as identifiers), but
+   those names are not available under -traditional.  We define them to
+   their __ versions, which are taken care of above.  */
 #ifdef	__USE_BSD
 #define	const		__const
 #define	signed		__signed
 #define	volatile	__volatile
 #endif
+
+#endif	/* __STDC__ */
+
 
 /* C++ needs to know that types and declarations are C, not C++.  */
 #ifdef	__cplusplus

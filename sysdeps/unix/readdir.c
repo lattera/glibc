@@ -52,11 +52,12 @@ readdir (DIR *dirp)
 	  off_t base;
 	  ssize_t bytes;
 
-	  if (sizeof (dp->d_name) > 1)
-	    /* Fixed-size struct; must read one at a time (see below).  */
-	    maxread = sizeof *dp;
-	  else
-	    maxread = dirp->allocation;
+#ifndef _DIRENT_HAVE_D_RECLEN
+	  /* Fixed-size struct; must read one at a time (see below).  */
+	  maxread = sizeof *dp;
+#else
+	  maxread = dirp->allocation;
+#endif
 
 	  base = dirp->filepos;
 	  bytes = __getdirentries (dirp->fd, dirp->data, maxread, &base);

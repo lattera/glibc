@@ -1,3 +1,38 @@
+Mon Mar 25 03:35:16 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* malloc/malloc.c (morecore): Don't attempt recursive realloc of info
+	table when _heaplimit==0 during realloc growing large block.
+
+	* MakeTAGS (extract): Remove /dev/null from xgettext command line.
+	(text-srcs): New variable: extract only C sources from $(tags_sources).
+	(po/$(domain).pot): Depend on that.
+	If it's empty, cp /dev/null $@ instead of $(extract).
+
+	* misc/Makefile (headers): Add iovec.h.
+	* sysdeps/unix/sysv/linux/iovec.h: New file.
+	* sysdeps/generic/iovec.h: New file.
+	* misc/sys/uio.h (struct iovec): Type replaced with #include <iovec.h>.
+
+	* configure.in (NO_UNDERSCORES check): Use AC_TRY_LINK instead of
+	AC_TRY_COMPILE.
+
+	* misc/sys/cdefs.h [__USE_BSD] (const, signed, volatile): Move these
+	macros inside [! __STDC__].
+
+	* stdlib/rpmatch.c: New file.
+	* stdlib/Makefile (routines): Add rpmatch.
+	* stdlib/stdlib.h [__USE_SVID]: Declare rpmatch.
+
+	* MakeTAGS (MSGJOIN): Variable removed.
+	(po/SYS_libc.pot): Use $(XGETTEXT) instead of $(MSGJOIN).
+
+Wed Mar 20 20:08:46 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysdep.h: Don't define C_SYMBOL_NAME.
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Don't define
+	NO_UNDERSCORES.
+
 Thu Mar 21 11:19:15 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* mach/devstream.c (input): Translate \r to \n on input.

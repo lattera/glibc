@@ -413,9 +413,9 @@ if test $elf = yes; then
   libc_cv_asm_underscores=no
 else
   AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
-		 [AC_TRY_COMPILE([asm ("_glibc_foobar:");], [glibc_foobar ();],
-				 libc_cv_asm_underscores=yes,
-				 libc_cv_asm_underscores=no)])
+		 [AC_TRY_LINK([asm ("_glibc_foobar:");], [glibc_foobar ();],
+			      libc_cv_asm_underscores=yes,
+			      libc_cv_asm_underscores=no)])
 fi
 if test $libc_cv_asm_underscores = no; then
   AC_DEFINE(NO_UNDERSCORES)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,16 +26,8 @@ __BEGIN_DECLS
 #define	__need_size_t
 #include <stddef.h>
 
-
-/* Structure describing a section of memory.  */
-
-struct iovec
-{
-  /* Starting address.  */
-  __ptr_t iov_base;
-  /* Length in bytes.  */
-  size_t iov_len;
-};
+/* This file defines `struct iovec'.  */
+#include <iovec.h>
 
 
 /* Read data from file descriptor FD, and put the result in the

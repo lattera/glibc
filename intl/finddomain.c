@@ -1,5 +1,5 @@
 /* finddomain.c -- handle list of needed message catalogs
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 This program is free software; you can redistribute it and/or modify
@@ -63,20 +63,21 @@ void free ();
 /* Rename the non ANSI C functions.  This is required by the standard
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
-# define stpcpy __stpcpy
+# define stpcpy(dest, src) __stpcpy(dest, src)
 #endif
 
 /* Encoding of locale name parts.  */
-#define CEN_REVISION	1
-#define CEN_SPONSOR	2
-#define CEN_SPECIAL	4
-#define XPG_CODESET	8
-#define TERRITORY	16
-#define CEN_AUDIENCE	32
-#define XPG_MODIFIER	64
+#define CEN_REVISION		1
+#define CEN_SPONSOR		2
+#define CEN_SPECIAL		4
+#define XPG_NORM_CODESET	8
+#define XPG_CODESET		16
+#define TERRITORY		32
+#define CEN_AUDIENCE		64
+#define XPG_MODIFIER		128
 
 #define CEN_SPECIFIC	(CEN_REVISION|CEN_SPONSOR|CEN_SPECIAL|CEN_AUDIENCE)
-#define XPG_SPECIFIC	(XPG_CODESET|XPG_MODIFIER)
+#define XPG_SPECIFIC	(XPG_CODESET|XPG_NORM_CODESET|XPG_MODIFIER)
 
 
 /* List of already loaded domains.  */
@@ -88,6 +89,7 @@ static struct loaded_domain *make_entry_rec PARAMS ((const char *dirname,
 						     const char *language,
 						     const char *territory,
 						     const char *codeset,
+						     const char *normalized_codeset,
 						     const char *modifier,
 						     const char *special,
 						     const char *sponsor,
@@ -95,9 +97,13 @@ static struct loaded_domain *make_entry_rec PARAMS ((const char *dirname,
 						     const char *domainname,
 						     int do_allocate));
 
+/* Normalize name of selected codeset.  */
+static const char *normalize_codeset PARAMS ((const char *codeset));
+
 /* Substitution for systems lacking this function in their C library.  */
 #if !_LIBC && !HAVE_STPCPY
-static char *stpcpy PARAMS ((char *dest, const char *src));
+static char *stpcpy__ PARAMS ((char *dest, const char *src));
+# define stpcpy(dest, src) stpcpy__ (dest, src)
 #endif
 
 
@@ -116,6 +122,7 @@ _nl_find_domain (dirname, locale, domainname)
   const char *modifier = NULL;
   const char *territory = NULL;
   const char *codeset = NULL;
+  const char *normalized_codeset = NULL;
   const char *special = NULL;
   const char *sponsor = NULL;
   const char *revision = NULL;
@@ -141,13 +148,14 @@ _nl_find_domain (dirname, locale, domainname)
 		(2) sponsor
 		(3) special
 		(4) codeset
-		(5) territory
-		(6) audience/modifier
+		(5) normalized codeset
+		(6) territory
+		(7) audience/modifier
    */
 
   /* If we have already tested for this locale entry there has to
      be one data set in the list of loaded domains.  */
-  retval = make_entry_rec (dirname, 0, locale, NULL, NULL, NULL,
+  retval = make_entry_rec (dirname, 0, locale, NULL, NULL, NULL, NULL,
 			   NULL, NULL, NULL, domainname, 0);
   if (retval != NULL)
     {
@@ -225,6 +233,15 @@ _nl_find_domain (dirname, locale, domainname)
 	    ++cp;
 
 	  mask |= XPG_CODESET;
+
+	  if (codeset != cp && codeset[0] != '\0')
+	    {
+	      normalized_codeset = normalize_codeset (codeset);
+	      if (strcmp (codeset, normalized_codeset) == 0)
+		free ((char *) normalized_codeset);
+	      else
+		mask |= XPG_NORM_CODESET;
+	    }
 	}
     }
 
@@ -297,8 +314,8 @@ _nl_find_domain (dirname, locale, domainname)
   /* Create all possible locale entries which might be interested in
      generalzation.  */
   retval = make_entry_rec (dirname, mask, language, territory, codeset,
-			   modifier, special, sponsor, revision,
-			   domainname, 1);
+			   normalized_codeset, modifier, special, sponsor,
+			   revision, domainname, 1);
   if (retval == NULL)
     /* This means we are out of core.  */
     return NULL;
@@ -331,13 +348,15 @@ _nl_find_domain (dirname, locale, domainname)
 
 
 static struct loaded_domain *
-make_entry_rec (dirname, mask, language, territory, codeset, modifier,
-		special, sponsor, revision, domain, do_allocate)
+make_entry_rec (dirname, mask, language, territory, codeset,
+		normalized_codeset, modifier, special, sponsor, revision,
+		domain, do_allocate)
      const char *dirname;
      int mask;
      const char *language;
      const char *territory;
      const char *codeset;
+     const char *normalized_codeset;
      const char *modifier;
      const char *special;
      const char *sponsor;
@@ -358,23 +377,26 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
      both syntaces set this is necessary to prevent constructing
      illegal local names.  */
   /* FIXME: Rewrite because test is necessary only in first round.  */
-  if ((mask & CEN_SPECIFIC) == 0 || (mask & XPG_SPECIFIC) == 0)
+  if ((mask & CEN_SPECIFIC) == 0 || (mask & XPG_SPECIFIC) == 0
+      || ((mask & XPG_CODESET) != 0 && (mask & XPG_NORM_CODESET) != 0))
     {
       /* Allocate room for the full file name.  */
       filename = (char *) malloc (strlen (dirname) + 1
 				  + strlen (language)
 				  + ((mask & TERRITORY) != 0
-				     ? strlen (territory) : 0)
+				     ? strlen (territory) + 1 : 0)
 				  + ((mask & XPG_CODESET) != 0
-				     ? strlen (codeset) : 0)
+				     ? strlen (codeset) + 1 : 0)
+				  + ((mask & XPG_NORM_CODESET) != 0
+				     ? strlen (normalized_codeset) + 1 : 0)
 				  + ((mask & XPG_MODIFIER) != 0 ?
-				     strlen (modifier) : 0)
+				     strlen (modifier) + 1 : 0)
 				  + ((mask & CEN_SPECIAL) != 0
-				     ? strlen (special) : 0)
+				     ? strlen (special) + 1 : 0)
 				  + ((mask & CEN_SPONSOR) != 0
-				     ? strlen (sponsor) : 0)
+				     ? strlen (sponsor) + 1 : 0)
 				  + ((mask & CEN_REVISION) != 0
-				     ? strlen (revision) : 0) + 1
+				     ? strlen (revision) + 1 : 0) + 1
 				  + strlen (domain) + 1);
 
       if (filename == NULL)
@@ -396,7 +418,12 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
       if ((mask & XPG_CODESET) != 0)
 	{
 	  *cp++ = '.';
-      cp = stpcpy (cp, codeset);
+	  cp = stpcpy (cp, codeset);
+	}
+      if ((mask & XPG_NORM_CODESET) != 0)
+	{
+	  *cp++ = '.';
+	  cp = stpcpy (cp, normalized_codeset);
 	}
       if ((mask & (XPG_MODIFIER | CEN_AUDIENCE)) != 0)
 	{
@@ -470,17 +497,61 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
     }
 
   entries = 0;
-  for (cnt = 126; cnt >= 0; --cnt)
+  for (cnt = 254; cnt >= 0; --cnt)
     if (cnt < mask && (cnt & ~mask) == 0
-	&& ((cnt & CEN_SPECIFIC) == 0 || (cnt & XPG_SPECIFIC) == 0))
+	&& ((cnt & CEN_SPECIFIC) == 0 || (cnt & XPG_SPECIFIC) == 0)
+	&& ((cnt & XPG_CODESET) == 0 || (cnt & XPG_NORM_CODESET) == 0))
       retval->successor[entries++] = make_entry_rec (dirname, cnt,
 						     language, territory,
-						     codeset, modifier,
-						     special, sponsor,
-						     revision, domain, 1);
+						     codeset,
+						     normalized_codeset,
+						     modifier, special,
+						     sponsor, revision,
+						     domain, 1);
   retval->successor[entries] = NULL;
 
   return retval;
+}
+
+
+static const char *
+normalize_codeset (codeset)
+     const char *codeset;
+{
+  int len = 0;
+  int only_digit = 1;
+  const char *cp;
+  char *retval;
+  char *wp;
+
+  for (cp = codeset; cp[0] != '\0'; ++cp)
+    if (isalnum (cp[0]))
+      {
+	++len;
+
+	if (isalpha (cp[0]))
+	  only_digit = 0;
+      }
+
+  retval = (char *) malloc ((only_digit ? 3 : 0) + len + 1);
+
+  if (retval != NULL)
+    {
+      if (only_digit)
+	wp = stpcpy (retval, "ISO");
+      else
+	wp = retval;
+
+      for (cp = codeset; cp[0] != '\0'; ++cp)
+	if (isalpha (cp[0]))
+	  *wp++ = toupper (cp[0]);
+	else if (isdigit (cp[0]))
+	  *wp++ = cp[0];
+
+      *wp = '\0';
+    }
+
+  return (const char *) retval;
 }
 
 
@@ -492,7 +563,7 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
    to be defined.  */
 #if !_LIBC && !HAVE_STPCPY
 static char *
-stpcpy (dest, src)
+stpcpy__ (dest, src)
      char *dest;
      const char *src;
 {
