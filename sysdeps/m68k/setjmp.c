@@ -46,7 +46,7 @@ DEFUN(__setjmp, (env), jmp_buf env)
 
 #if	defined(__HAVE_68881__) || defined(__HAVE_FPU__)
   /* Save floating-point (68881) registers FP0 through FP7.  */
-  asm volatile("fmovem%.x fp0-fp7, %0" : : "m" (env[0].__fpregs));
+  asm volatile("fmovem%.x fp0-fp7, %0" : : "m" (env[0].__fpregs[0]));
 #endif
 
   return 0;
