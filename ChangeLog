@@ -1,9 +1,15 @@
 2002-08-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/hstcache.c (cache_addhst): Add new parameter saying whether
+	entry was for getaddr* lookup or not.  Add only matching cache
+	entry.  Change all callers [PR libc/4317].
+
 	* libio/wfileops.c (_IO_wfile_seekoff): Set fp->_offset after
 	finding the read position [PR libc/4265].
 	* libio/Makefile (tests): Add bug-rewind2.
 	* libio/bug-rewind2.c: New file.
+
+	* libio/bug-rewind.c: Fix creation of temp file.
 
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 

@@ -89,7 +89,7 @@ struct hostdata
 
 static void
 cache_addhst (struct database *db, int fd, request_header *req, void *key,
-	      struct hostent *hst, uid_t owner)
+	      struct hostent *hst, uid_t owner, int add_addr)
 {
   ssize_t total;
   ssize_t written;
@@ -219,7 +219,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
          handle and it is more than questionable whether it is
          worthwhile complicating the cache handling just for handling
          such a special case.  */
-      if (hst->h_addr_list[1] == NULL)
+      if (!add_addr && hst->h_addr_list[1] == NULL)
 	for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
 	  {
 	    if (addr_list_type == GETHOSTBYADDR)
@@ -233,15 +233,16 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	  }
 
       /* Next the normal addresses.  */
-      for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
-	{
-	  cache_add (addr_list_type, addresses, hst->h_length, data, total,
-		     data, 0, t, db, owner);
-	  addresses += hst->h_length;
-	}
+      if (add_addr)
+	for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
+	  {
+	    cache_add (addr_list_type, addresses, hst->h_length, data, total,
+		       data, 0, t, db, owner);
+	    addresses += hst->h_length;
+	  }
 
       /* If necessary the IPv6 addresses.  */
-      if (addr_list_type == GETHOSTBYADDR)
+      if (add_addr && addr_list_type == GETHOSTBYADDR)
 	for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
 	  {
 	    cache_add (GETHOSTBYADDRv6, addresses, IN6ADDRSZ, data, total,
@@ -251,7 +252,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 
       /* Avoid adding names if more than one address is available.  See
 	 above for more info.  */
-      if (hst->h_addr_list[1] == NULL)
+      if (!add_addr && hst->h_addr_list[1] == NULL)
 	{
 	  /* If necessary add the key for this request.  */
 	  if (req->type == GETHOSTBYNAME || req->type == GETHOSTBYNAMEv6)
@@ -349,7 +350,7 @@ addhstbyname (struct database *db, int fd, request_header *req,
   if (secure[hstdb])
     seteuid (oldeuid);
 
-  cache_addhst (db, fd, req, key, hst, uid);
+  cache_addhst (db, fd, req, key, hst, uid, 0);
 
   if (use_malloc)
     free (buffer);
@@ -426,7 +427,7 @@ addhstbyaddr (struct database *db, int fd, request_header *req,
   if (secure[hstdb])
     seteuid (oldeuid);
 
-  cache_addhst (db, fd, req, key, hst, uid);
+  cache_addhst (db, fd, req, key, hst, uid, 1);
 
   if (use_malloc)
     free (buffer);
@@ -504,7 +505,7 @@ addhstbynamev6 (struct database *db, int fd, request_header *req,
   if (secure[hstdb])
     seteuid (oldeuid);
 
-  cache_addhst (db, fd, req, key, hst, uid);
+  cache_addhst (db, fd, req, key, hst, uid, 0);
 
   if (use_malloc)
     free (buffer);
@@ -581,7 +582,7 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req,
   if (secure[hstdb])
     seteuid (oldeuid);
 
-  cache_addhst (db, fd, req, key, hst, uid);
+  cache_addhst (db, fd, req, key, hst, uid, 1);
 
   if (use_malloc)
     free (buffer);
