@@ -306,8 +306,10 @@ $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 		 echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
 		 echo "symbol_version ($${call}_$${ver}, $$call, $$ver);" ;; \
 	   *) echo "weak_alias (_no_syscall, $$call)"; \
+	      echo "stub_warning ($$call)"; \
 	      echo "weak_alias (_no_syscall, __GI_$$call)" ;; \
 	   esac; \
+	 echo '#include <stub-tag.h>'; \
 	 done) > $@T
 	mv -f $@T $@
 generated += stub-syscalls.c
