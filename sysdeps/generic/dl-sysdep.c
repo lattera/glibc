@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <elf.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <link.h>
 #include <unistd.h>
@@ -108,7 +109,7 @@ void
 _dl_sysdep_start_cleanup (void)
 {
 }
-
+
 #ifndef MAP_ANON
 /* This is only needed if the system doesn't support MAP_ANON.  */
 
@@ -118,6 +119,41 @@ _dl_sysdep_open_zero_fill (void)
   return __open ("/dev/zero", O_RDONLY);
 }
 #endif
+
+/* Read the whole contents of FILE into new mmap'd space with given
+   protections.  *SIZEP gets the size of the file.  */
+
+void *
+_dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
+{
+  void *contents;
+  struct stat st;
+  int fd = __open (file, O_RDONLY);
+  if (fd < 0)
+    return NULL;
+  if (__fstat (fd, &st) < 0)
+    result = NULL;
+  else
+    {
+      /* Map a copy of the file contents.  */
+      result = __mmap (0, st.st_size, prot,
+#ifdef MAP_COPY
+		       MAP_COPY
+#else
+		       MAP_PRIVATE
+#endif
+#ifdef MAP_FILE
+		       | MAP_FILE
+#endif
+		       , fd, 0);
+      if (result == (void *) -1)
+	result = NULL;
+      else
+	*sizep = st.st_size;
+    }
+  __close (fd);
+  return result;
+}
 
 void
 _dl_sysdep_fatal (const char *msg, ...)
