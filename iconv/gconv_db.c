@@ -613,7 +613,8 @@ find_derivation (const char *toset, const char *toset_expand,
 int
 internal_function
 __gconv_find_transform (const char *toset, const char *fromset,
-			struct __gconv_step **handle, size_t *nsteps)
+			struct __gconv_step **handle, size_t *nsteps,
+			int flags)
 {
   __libc_once_define (static, once);
   const char *fromset_expand = NULL;
@@ -646,6 +647,21 @@ __gconv_find_transform (const char *toset, const char *fromset,
       key.fromname = toset;
       found = __tfind (&key, &__gconv_alias_db, __gconv_alias_compare);
       toset_expand = found != NULL ? (*found)->toname : NULL;
+    }
+
+  if ((flags & GCONV_AVOID_NOCONV)
+      /* We are not supposed to create a pseudo transformation (means
+	 copying) when the input and output character set are the same.  */
+      && (strcmp (toset, fromset) == 0
+	  || (toset_expand != NULL && strcmp (toset_expand, fromset) == 0)
+	  || (fromset_expand != NULL
+	      && (strcmp (toset, fromset_expand) == 0
+		  || (toset_expand != NULL
+		      && strcmp (toset_expand, fromset_expand) == 0)))))
+    {
+      /* Both character sets are the same.  */
+      __libc_lock_unlock (lock);
+      return __GCONV_NOCONV;
     }
 
   result = find_derivation (toset, toset_expand, fromset, fromset_expand,
