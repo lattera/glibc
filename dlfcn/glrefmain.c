@@ -70,6 +70,9 @@ do_test (void)
 
   dlclose (d2);
 
+  puts ("glreflib2 also closed");
+  fflush (stdout);
+
   return 0;
 }
 

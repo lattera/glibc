@@ -87,18 +87,41 @@ _dl_fini (void)
 		    memmove (&maps[j] + 1,
 			     &maps[j],
 			     (k - j) * sizeof (struct link_map *));
-		    maps[j] = here;
+		    maps[j++] = here;
 
 		    break;
 		  }
 		else
 		  ++runp;
 	    }
+
+	  if (__builtin_expect (maps[k]->l_reldeps != NULL, 0))
+	    {
+	      unsigned int m = maps[k]->l_reldepsact;
+	      struct link_map **relmaps = maps[k]->l_reldeps;
+
+	      while (m-- > 0)
+		{
+		  if (relmaps[m] == l)
+		    {
+		      struct link_map *here = maps[k];
+
+		      /* Move it now.  */
+		      memmove (&maps[j] + 1,
+			       &maps[j],
+			       (k - j) * sizeof (struct link_map *));
+		      maps[j] = here;
+
+		      break;
+		    }
+
+		}
+	    }
 	}
     }
 
   /* `maps' now contains the objects in the right order.  Now call the
-     destructors.  We have the process this array from the front.  */
+     destructors.  We have to process this array from the front.  */
   for (i = 0; i < nloaded; ++i)
     {
       l = maps[i];

@@ -208,6 +208,11 @@ struct link_map
 
     /* List of object in order of the init and fini calls.  */
     struct link_map **l_initfini;
+
+    /* List of the dependencies introduced through symbol binding.  */
+    unsigned int l_reldepsmax;
+    unsigned int l_reldepsact;
+    struct link_map **l_reldeps;
   };
 
 #endif /* link.h */

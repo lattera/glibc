@@ -43,8 +43,10 @@ internal_function
 _dl_close (void *_map)
 {
   struct link_map **list;
+  struct link_map **rellist;
   struct link_map *map = _map;
-  unsigned nsearchlist;
+  unsigned int nsearchlist;
+  unsigned int nrellist;
   unsigned int i;
 
   if (map->l_opencount == 0)
@@ -64,6 +66,9 @@ _dl_close (void *_map)
 
   list = map->l_searchlist.r_list;
   nsearchlist = map->l_searchlist.r_nlist;
+
+  rellist = map->l_reldeps;
+  nrellist = map->l_reldepsact;
 
   /* Call all termination functions at once.  */
   for (i = 0; i < nsearchlist; ++i)
@@ -190,6 +195,16 @@ _dl_close (void *_map)
 
 	  free (imap);
 	}
+    }
+
+  /* Now we can perhaps also remove the modules for which we had
+     dependencies because of symbol lookup.  */
+  if (rellist != NULL)
+    {
+      while (nrellist-- > 0)
+	_dl_close (rellist[nrellist]);
+
+      free (rellist);
     }
 
   free (list);

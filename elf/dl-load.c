@@ -748,7 +748,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       }
 
   /* Print debugging message.  */
-  if (_dl_debug_files)
+  if (__builtin_expect (_dl_debug_files, 0))
     _dl_debug_message (1, "file=", name, ";  generating link map\n", NULL);
 
   /* Read the header directly.  */
@@ -1046,7 +1046,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 
   l->l_entry += l->l_addr;
 
-  if (_dl_debug_files)
+  if (__builtin_expect (_dl_debug_files, 0))
     {
       const size_t nibbles = sizeof (void *) * 2;
       char buf1[nibbles + 1];
@@ -1182,7 +1182,8 @@ open_path (const char *name, size_t namelen, int preloaded,
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
-      if (_dl_debug_libs && current_what != this_dir->what)
+      if (__builtin_expect (_dl_debug_libs, 0)
+	  && current_what != this_dir->what)
 	{
 	  current_what = this_dir->what;
 	  print_search_path (dirs, current_what, this_dir->where);
@@ -1202,7 +1203,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	     - buf);
 
 	  /* Print name we try if this is wanted.  */
-	  if (_dl_debug_libs)
+	  if (__builtin_expect (_dl_debug_libs, 0))
 	    _dl_debug_message (1, "  trying file=", buf, "\n", NULL);
 
 	  fd = __open (buf, O_RDONLY);
@@ -1316,7 +1317,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
     }
 
   /* Display information if we are debugging.  */
-  if (_dl_debug_files && loader != NULL)
+  if (__builtin_expect (_dl_debug_files, 0) && loader != NULL)
     _dl_debug_message (1, "\nfile=", name, ";  needed by ",
 		       loader->l_name[0] ? loader->l_name : _dl_argv[0],
 		       "\n", NULL);
@@ -1327,7 +1328,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       size_t namelen = strlen (name) + 1;
 
-      if (_dl_debug_libs)
+      if (__builtin_expect (_dl_debug_libs, 0))
 	_dl_debug_message (1, "find library=", name, "; searching\n", NULL);
 
       fd = -1;
@@ -1411,7 +1412,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = open_path (name, namelen, preloaded, rtld_search_dirs, &realname);
 
       /* Add another newline when we a tracing the library loading.  */
-      if (_dl_debug_libs)
+      if (__builtin_expect (_dl_debug_libs, 0))
         _dl_debug_message (1, "\n", NULL);
     }
   else

@@ -1,3 +1,37 @@
+2000-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Increment j counter after swapping in
+	element at this position.
+
+	* elf/Versions [ld.so] (GLIBC_2.2): Export _dl_load_lock.
+	* elf/link.h (struct link_map): Add l_reldepsmax, l_reldepsact, and
+	l_reldeps elements.
+	* elf/dl-lookup.c (add_dependency): New function.
+	(_dl_lookup_symbol): Use it whenever symbol was found in a global,
+	dynamically loaded object.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	* elf/dl-open.c: Don't define _dl_load_lock here...
+	* elf/rtld.c: ...but here...
+	* elf/dl-support.c: ...and here.
+	* elf/dl-close.c (_dl_close): Close also dependent objects introduce
+	through relocation.
+	* elf/dl-fini.c (_dl_fini): Also take dependencies introduced through
+	relocations.
+	* dlfcn/Makefile (glrefmain.out): Test is not expected to fail
+	anymore.
+	* dlfcn/glrefmain.c: Add one more debug message.
+
+	* Makeconfig (preprocess-versions): Don't add $(CPPFLAGS) to compiler
+	command line.
+	* Makerules (sysd-versions): Use ( ) instead of { }.
+
+	* elf/dl-load.c: Use __builtin_expect to signal that compiler should
+	optimize for the non-debugging case.
+	* elf/dl-lookup.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+
 2000-04-02  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c: Replace PIC #ifdefs with SHARED.

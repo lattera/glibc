@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <dl-machine.h>
+#include <bits/libc-lock.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -80,6 +81,15 @@ struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 
 /* Nonzero during startup.  */
 int _dl_starting_up = 1;
+
+/* During the program run we must not modify the global data of
+   loaded shared object simultanously in two threads.  Therefore we
+   protect `_dl_open' and `_dl_close' in dl-close.c.
+
+   This must be a recursive lock since the initializer function of
+   the loaded object might as well require a call to this function.
+   At this time it is not anymore a problem to modify the tables.  */
+__libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 
 static void non_dynamic_init (void) __attribute__ ((unused));

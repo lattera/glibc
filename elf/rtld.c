@@ -27,6 +27,7 @@
 #include <entry.h>
 #include <fpu_control.h>
 #include <hp-timing.h>
+#include <bits/libc-lock.h>
 #include "dynamic-link.h"
 #include "dl-librecon.h"
 
@@ -104,6 +105,15 @@ struct r_scope_elem *_dl_main_searchlist;
 struct r_scope_elem _dl_initial_searchlist;
 /* Array which is used when looking up in the global scope.  */
 struct r_scope_elem *_dl_global_scope[2];
+
+/* During the program run we must not modify the global data of
+   loaded shared object simultanously in two threads.  Therefore we
+   protect `_dl_open' and `_dl_close' in dl-close.c.
+
+   This must be a recursive lock since the initializer function of
+   the loaded object might as well require a call to this function.
+   At this time it is not anymore a problem to modify the tables.  */
+__libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This

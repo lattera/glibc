@@ -56,11 +56,11 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
 
   /* Some security at this point.  Prevent starting a SUID binary where
      the standard file descriptors are not opened.  */
-  if (__libc_enable_secure)
+  if (__builtin_expect (__libc_enable_secure, 0))
     check_standard_fds ();
 
   /* Register the destructor of the dynamic linker if there is any.  */
-  if (rtld_fini != NULL)
+  if (__builtin_expect (rtld_fini != NULL, 1))
     atexit (rtld_fini);
 
   /* Call the initializer of the libc.  This is only needed here if we
@@ -76,14 +76,14 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (_dl_debug_impcalls)
+  if (__builtin_expect (_dl_debug_impcalls, 0))
     _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
   if (init)
     (*init) ();
 
 #ifdef SHARED
-  if (_dl_debug_impcalls)
+  if (__builtin_expect (_dl_debug_impcalls, 0))
     _dl_debug_message (1, "\ntransferring control: ", argv[0], "\n\n", NULL);
 #endif
 

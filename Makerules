@@ -306,13 +306,13 @@ $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
 			       $(wildcard $(sysdirs:%=%/Versions)) \
 			       $(sysd-versions-force)
-	{ echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
+	( echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
 	  cat $(filter-out $< $(word 2,$^) $(sysd-versions-force),$^) \
 	  | $(preprocess-versions) \
 	  | LC_ALL=C $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
 			    -v move_if_change='$(move-if-change)' \
 			    -f $(word 2,$^); \
-	} > $@T
+	) > $@T
 	mv -f $@T $@
 endif # avoid-generated
 endif # $(versioning) = yes

@@ -18,11 +18,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <ldsodefs.h>
 #include "dl-hash.h"
 #include <dl-machine.h>
+#include <bits/libc-lock.h>
 
 #include <assert.h>
 
@@ -59,6 +61,15 @@ struct sym_val
 /* Statistics function.  */
 unsigned long int _dl_num_relocations;
 
+/* During the program run we must not modify the global data of
+   loaded shared object simultanously in two threads.  Therefore we
+   protect `_dl_open' and `_dl_close' in dl-close.c.
+
+   This must be a recursive lock since the initializer function of
+   the loaded object might as well require a call to this function.
+   At this time it is not anymore a problem to modify the tables.  */
+__libc_lock_define (extern, _dl_load_lock)
+
 
 /* We have two different situations when looking up a simple: with or
    without versioning.  gcc is not able to optimize a single function
@@ -68,6 +79,105 @@ unsigned long int _dl_num_relocations;
 
 #define VERSIONED	1
 #include "do-lookup.h"
+
+
+/* Add extra dependency on MAP to UNDEF_MAP.  */
+static int
+add_dependency (struct link_map *undef_map, struct link_map *map)
+{
+  struct link_map **list;
+  unsigned act;
+  unsigned int i;
+  int result = 0;
+
+  /* Make sure nobody can unload the object while we are at it.  */
+  __libc_lock_lock (_dl_load_lock);
+
+  /* Determine whether UNDEF_MAP already has a reference to MAP.  First
+     look in the normal dependencies.  */
+  list = undef_map->l_searchlist.r_list;
+  act = undef_map->l_searchlist.r_nlist;
+
+  for (i = 0; i < act; ++i)
+    if (list[i] == map)
+      break;
+
+  if (__builtin_expect (i, act) == act)
+    {
+      /* No normal dependency.  See whether we already had to add it
+	 to the special list of dynamic dependencies.  */
+      list = undef_map->l_reldeps;
+      act = undef_map->l_reldepsact;
+
+      for (i = 0; i < act; ++i)
+	if (list[i] == map)
+	  break;
+
+      if (i == act)
+	{
+	  /* The object is not yet in the dependency list.  Before we add
+	     it make sure just one more time the object we are about to
+	     reference is still available.  There is a brief period in
+	     which the object could have been removed since we found the
+	     definition.  */
+	  struct link_map *runp = _dl_loaded;
+
+	  while (runp != NULL && runp != map)
+	    runp = runp->l_next;
+
+	  if (runp != NULL)
+	    {
+	      /* The object is still available.  Add the reference now.  */
+	      if (act >= undef_map->l_reldepsmax)
+		{
+		  /* Allocate more memory for the dependency list.  Since
+		     this can never happen during the startup phase we can
+		     use `realloc'.  */
+		  void *newp;
+
+		  undef_map->l_reldepsmax += 5;
+		  newp = realloc (undef_map->l_reldeps,
+				  undef_map->l_reldepsmax);
+
+		  if (__builtin_expect (newp != NULL, 1))
+		    undef_map->l_reldeps = (struct link_map **) newp;
+		  else
+		    /* Correct the addition.  */
+		    undef_map->l_reldepsmax -= 5;
+		}
+
+	      /* If we didn't manage to allocate memory for the list this
+		 is no fatal mistake.  We simply increment the use counter
+		 of the referenced object and don't record the dependencies.
+		 This means this increment can never be reverted and the
+		 object will never be unloaded.  This is semantically the
+		 correct behaviour.  */
+	      if (act < undef_map->l_reldepsmax)
+		undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
+
+	      /* And increment the counter in the referenced object.  */
+	      ++map->l_opencount;
+
+	      /* Display information if we are debugging.  */
+	      if (__builtin_expect (_dl_debug_files, 0))
+		_dl_debug_message (1, "\nfile=",
+				   map->l_name[0] ? map->l_name : _dl_argv[0],
+				   ";  needed by ",
+				   undef_map->l_name[0]
+				   ? undef_map->l_name : _dl_argv[0],
+				   " (relocation dependency)\n\n", NULL);
+	    }
+	  else
+	    /* Whoa, that was bad luck.  We have to search again.  */
+	    result = -1;
+	}
+    }
+
+  /* Release the lock.  */
+  __libc_lock_unlock (_dl_load_lock);
+
+  return result;
+}
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
@@ -90,7 +200,24 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   for (scope = symbol_scope; *scope; ++scope)
     if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
 		   *scope, 0, NULL, reloc_type))
-      break;
+      {
+	/* We have to check whether this would bind UNDEF_MAP to an object
+	   in the global scope which was dynamically loaded.  In this case
+	   we have to prevent the latter from being unloaded unless the
+	   UNDEF_MAP object is also unloaded.  */
+	if (current_value.m->l_global
+	    && (__builtin_expect (current_value.m->l_type, lt_library)
+		== lt_loaded)
+	    && undef_map != current_value.m
+	    /* Add UNDEF_MAP to the dependencies.  */
+	    && add_dependency (undef_map, current_value.m) < 0)
+	  /* Something went wrong.  Perhaps the object we tried to reference
+	     was just removed.  Try finding another definition.  */
+	  return _dl_lookup_symbol (undef_name, undef_map, ref, symbol_scope,
+				    reloc_type);
+
+	break;
+      }
 
   if (current_value.s == NULL)
     {
@@ -104,7 +231,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       return 0;
     }
 
-  if (_dl_debug_bindings)
+  if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
@@ -143,13 +270,47 @@ _dl_lookup_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (i >= (*scope)->r_nlist
-      || ! do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		      *scope, i, skip_map, 0))
+  if (i < (*scope)->r_nlist
+      && do_lookup (undef_name, undef_map, hash, *ref, &current_value,
+		    *scope, i, skip_map, 0))
+    {
+      /* We have to check whether this would bind UNDEF_MAP to an object
+	 in the global scope which was dynamically loaded.  In this case
+	 we have to prevent the latter from being unloaded unless the
+	 UNDEF_MAP object is also unloaded.  */
+      if (current_value.m->l_global
+	  && (__builtin_expect (current_value.m->l_type, lt_library)
+	      == lt_loaded)
+	  && undef_map != current_value.m
+	  /* Add UNDEF_MAP to the dependencies.  */
+	  && add_dependency (undef_map, current_value.m) < 0)
+	/* Something went wrong.  Perhaps the object we tried to reference
+	   was just removed.  Try finding another definition.  */
+	return _dl_lookup_symbol_skip (undef_name, undef_map, ref,
+				       symbol_scope, skip_map);
+    }
+  else
     while (*++scope)
       if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
 		     *scope, 0, skip_map, 0))
-	break;
+	{
+	  /* We have to check whether this would bind UNDEF_MAP to an object
+	     in the global scope which was dynamically loaded.  In this case
+	     we have to prevent the latter from being unloaded unless the
+	     UNDEF_MAP object is also unloaded.  */
+	  if (current_value.m->l_global
+	      && (__builtin_expect (current_value.m->l_type, lt_library)
+		  == lt_loaded)
+	      && undef_map != current_value.m
+	      /* Add UNDEF_MAP to the dependencies.  */
+	      && add_dependency (undef_map, current_value.m) < 0)
+	    /* Something went wrong.  Perhaps the object we tried to reference
+	       was just removed.  Try finding another definition.  */
+	    return _dl_lookup_symbol_skip (undef_name, undef_map, ref,
+					   symbol_scope, skip_map);
+
+	  break;
+	}
 
   if (current_value.s == NULL)
     {
@@ -157,7 +318,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
       return 0;
     }
 
-  if (_dl_debug_bindings)
+  if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
@@ -198,7 +359,25 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 				     &current_value, *scope, 0, version, NULL,
 				     reloc_type);
       if (res > 0)
-	break;
+	{
+	  /* We have to check whether this would bind UNDEF_MAP to an object
+	     in the global scope which was dynamically loaded.  In this case
+	     we have to prevent the latter from being unloaded unless the
+	     UNDEF_MAP object is also unloaded.  */
+	  if (current_value.m->l_global
+	      && (__builtin_expect (current_value.m->l_type, lt_library)
+		  == lt_loaded)
+	      && undef_map != current_value.m
+	      /* Add UNDEF_MAP to the dependencies.  */
+	      && add_dependency (undef_map, current_value.m) < 0)
+	    /* Something went wrong.  Perhaps the object we tried to reference
+	       was just removed.  Try finding another definition.  */
+	    return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
+						symbol_scope, version,
+						reloc_type);
+
+	  break;
+	}
 
       if (res < 0)
 	{
@@ -232,7 +411,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
       return 0;
     }
 
-  if (_dl_debug_bindings)
+  if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
@@ -271,15 +450,49 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (i >= (*scope)->r_nlist
-      || ! do_lookup_versioned (undef_name, undef_map, hash, *ref,
-				&current_value, *scope, i, version, skip_map,
-				0))
+  if (i < (*scope)->r_nlist
+      && do_lookup_versioned (undef_name, undef_map, hash, *ref,
+			      &current_value, *scope, i, version, skip_map, 0))
+    {
+      /* We have to check whether this would bind UNDEF_MAP to an object
+	 in the global scope which was dynamically loaded.  In this case
+	 we have to prevent the latter from being unloaded unless the
+	 UNDEF_MAP object is also unloaded.  */
+      if (current_value.m->l_global
+	  && (__builtin_expect (current_value.m->l_type, lt_library)
+	      == lt_loaded)
+	  && undef_map != current_value.m
+	  /* Add UNDEF_MAP to the dependencies.  */
+	  && add_dependency (undef_map, current_value.m) < 0)
+	/* Something went wrong.  Perhaps the object we tried to reference
+	   was just removed.  Try finding another definition.  */
+	return _dl_lookup_versioned_symbol_skip (undef_name, undef_map, ref,
+						 symbol_scope, version,
+						 skip_map);
+    }
+  else
     while (*++scope)
       if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
 			       &current_value, *scope, 0, version, skip_map,
 			       0))
-	break;
+	{
+	  /* We have to check whether this would bind UNDEF_MAP to an object
+	     in the global scope which was dynamically loaded.  In this case
+	     we have to prevent the latter from being unloaded unless the
+	     UNDEF_MAP object is also unloaded.  */
+	  if (current_value.m->l_global
+	      && (__builtin_expect (current_value.m->l_type, lt_library)
+		  == lt_loaded)
+	      && undef_map != current_value.m
+	      /* Add UNDEF_MAP to the dependencies.  */
+	      && add_dependency (undef_map, current_value.m) < 0)
+	    /* Something went wrong.  Perhaps the object we tried to reference
+	       was just removed.  Try finding another definition.  */
+	    return _dl_lookup_versioned_symbol_skip (undef_name, undef_map,
+						     ref, symbol_scope,
+						     version, skip_map);
+	  break;
+	}
 
   if (current_value.s == NULL)
     {
@@ -298,7 +511,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
       return 0;
     }
 
-  if (_dl_debug_bindings)
+  if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
