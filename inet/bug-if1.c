@@ -27,29 +27,9 @@
 static int
 do_test (void)
 {
-  /* Get list of all interfaces.  */
-  struct if_nameindex *il = if_nameindex ();
-  if (il == NULL)
-    {
-      puts ("cannot get interface list, maybe the system does not support networking; bailing out");
-      return 0;
-    }
-
-  /* Determine the highest interface number.  */
-  unsigned int max = 0;
-  for (int cnt = 0; il[cnt].if_name != NULL; ++cnt)
-    if (il[cnt].if_index > max)
-      max = il[cnt].if_index;
-
-  /* Use the next higher value (if possible).  */
-  if (max == UINT_MAX)
-    {
-      puts ("highest index too high; need more clever way to determine test index");
-      return 0;
-    }
-
   char buf[IF_NAMESIZE];
-  char *cp = if_indextoname (max + 1, buf);
+  /* Index 0 is always invalid (see RFC 3493).  */
+  char *cp = if_indextoname (0, buf);
   if (cp != NULL)
     {
       printf ("invalid index returned result \"%s\"\n", cp);
