@@ -111,6 +111,16 @@ while read file srcfile caller syscall args strong weak; do
   echo "#### CALL=$file NUMBER=$callnum ARGS=$args SOURCE=$srcfile"
 
  case x$srcfile"$callnum" in
+ x--)
+  # Undefined callnum for an extra syscall.
+  if [ x$caller != x- ]; then
+    if [ x$noerrno != x ]; then
+      echo >&2 "$0: no number for $fileno, no-error syscall ($strong $weak)"
+      exit 2
+    fi
+    echo "unix-stub-syscalls += $strong $weak"
+  fi
+  ;;
  x*-) ;; ### Do nothing for undefined callnum
  x-*)
   echo "ifeq (,\$(filter $file,\$(unix-syscalls)))"

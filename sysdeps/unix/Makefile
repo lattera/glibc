@@ -282,6 +282,36 @@ omit-deps += $(unix-syscalls)
 
 ifeq (misc,$(subdir))
 sysdep_routines += $(unix-extra-syscalls)
+
+ifdef unix-stub-syscalls
+# The system call entry points in this list are supposed to be additional
+# functions not overriding any other sysdeps/.../call.c implementation, but
+# their system call numbers are unavailable in the kernel headers we're
+# using.  Instead of a system call stub, these get a function that fails
+# with ENOSYS.  We just generate a single module defining one function and
+# making all these entry point names aliases for it.
+sysdep_routines += stub-syscalls
+$(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
+			  $(..)sysdeps/unix/Makefile
+	(echo '#include <errno.h>'; \
+	 echo 'long int _no_syscall (void)'; \
+	 echo '{ __set_errno (ENOSYS); return -1L; }'; \
+	 for call in $(unix-stub-syscalls); do \
+	   case $$call in \
+	   *@@*) ver=$${call##*@}; call=$${call%%*@}; \
+		 echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
+		 echo "default_symbol_version \
+		         ($${call}_$${ver}, $$call, $$ver);" ;; \
+	   *@@*) ver=$${call##*@}; call=$${call%%*@}; \
+		 echo "strong_alias (_no_syscall, $${call}_$${ver})"; \
+		 echo "symbol_version ($${call}_$${ver}, $$call, $$ver);" ;; \
+	   *) echo "weak_alias (_no_syscall, $$call)"; \
+	      echo "weak_alias (_no_syscall, __GI_$$call)" ;; \
+	   esac; \
+	 done) > $@T
+	mv -f $@T $@
+generated += stub-syscalls.c
+endif
 endif
 
 export sysdirs
