@@ -1,5 +1,5 @@
 /* Test of the gettext functions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -235,7 +235,9 @@ positive_gettext_test (void)
     {
       const char *found = gettext (msgs[cnt].msgid);
 
-      if (found == NULL || strcmp (found, msgs[cnt].msgstr) != 0)
+      if (found == NULL
+	  || (msgs[cnt].msgstr[0] != '\0'
+	      && strcmp (found, msgs[cnt].msgstr) != 0))
 	{
 	  /* Oops, shouldn't happen.  */
 	  printf ("\
@@ -281,7 +283,9 @@ positive_dgettext_test (const char *domain)
     {
       const char *found = dgettext (domain, msgs[cnt].msgid);
 
-      if (found == NULL || strcmp (found, msgs[cnt].msgstr) != 0)
+      if (found == NULL
+	  || (msgs[cnt].msgstr[0] != '\0'
+	      && strcmp (found, msgs[cnt].msgstr) != 0))
 	{
 	  /* Oops, shouldn't happen.  */
 	  printf ("\
@@ -305,7 +309,9 @@ positive_dcgettext_test (const char *domain, int category)
     {
       const char *found = dcgettext (domain, msgs[cnt].msgid, category);
 
-      if (found == NULL || strcmp (found, msgs[cnt].msgstr) != 0)
+      if (found == NULL
+	  || (msgs[cnt].msgstr[0] != '\0'
+	      && strcmp (found, msgs[cnt].msgstr) != 0))
 	{
 	  /* Oops, shouldn't happen.  */
 	  printf ("\

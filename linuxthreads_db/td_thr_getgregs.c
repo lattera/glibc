@@ -28,6 +28,13 @@ td_thr_getgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   LOG ("td_thr_getgregs");
 
+  if (th->th_unique == NULL)
+    {
+      /* No data yet.  */
+      memset (gregs, '\0', sizeof (prgregset_t));
+      return TD_OK;
+    }
+
   /* We have to get the state and the PID for this thread.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
 		 sizeof (struct _pthread_descr_struct)) != PS_OK)

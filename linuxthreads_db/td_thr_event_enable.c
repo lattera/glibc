@@ -31,6 +31,7 @@ td_thr_event_enable (th, onoff)
   LOG ("td_thr_event_enable");
 
   /* Write the new value into the thread data structure.  */
+if (th->th_unique != NULL)
   if (ps_pdwrite (th->th_ta_p->ph,
 		  ((char *) th->th_unique
 		   + offsetof (struct _pthread_descr_struct, p_report_events)),

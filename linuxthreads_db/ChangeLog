@@ -1,3 +1,11 @@
+2002-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_ta_thr_iter.c: Some more changes to enable using TLS-enabled
+	libpthread.
+	* td_thr_event_enable.c: Likewise.
+	* td_thr_getfpregs.c: Likewise.
+	* td_thr_getgregs.c: Likewise.
+
 2002-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_ta_map_id2thr.c: Begin fixing implementation for libpthread with

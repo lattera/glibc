@@ -47,7 +47,7 @@ handle_descr (const td_thragent_t *ta, td_thr_iter_f *callback,
 	     p_userstack but this should not be necessary here.  */
 
 	  th.th_ta_p = (td_thragent_t *) ta;
-	  th.th_unique = &pds;
+	  th.th_unique = NULL;
 	  if (callback (&th, cbdata_p) != 0)
 	    return TD_DBERR;
 

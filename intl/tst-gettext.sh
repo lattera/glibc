@@ -49,9 +49,9 @@ test -d ${objpfx}localedir/existing-locale/LC_MESSAGES || {
 
 # Populate them.
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_MESSAGES/existing-domain.mo \
-       ../po/de.po
+       -f ../po/de.po
 msgfmt -o ${objpfx}domaindir/existing-locale/LC_TIME/existing-time-domain.mo \
-       ../po/de.po
+       -f ../po/de.po
 
 GCONV_PATH=${common_objpfx}iconvdata
 export GCONV_PATH
