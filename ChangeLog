@@ -1,3 +1,8 @@
+2005-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/byteswap.h: Make sure result of all the
+	functions and macros is unsigned.
+
 2005-02-11  Barry deFrese  <bddebian@comcast.net>
 
 	[BZ #722]

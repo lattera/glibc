@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.
-   Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,2000,2001,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,28 +29,28 @@
 # define __bswap_16(x) \
     (__extension__							      \
      ({ unsigned short int __bsx = (x);					      \
-        ((((__bsx) >> 8) & 0xff) | (((__bsx) & 0xff) << 8)); }))
+        ((((__bsx) >> 8) & 0xffu) | (((__bsx) & 0xffu) << 8)); }))
 #else
 static __inline unsigned short int
 __bswap_16 (unsigned short int __bsx)
 {
-  return ((((__bsx) >> 8) & 0xff) | (((__bsx) & 0xff) << 8));
+  return ((((__bsx) >> 8) & 0xffu) | (((__bsx) & 0xffu) << 8));
 }
 #endif
 
 /* Swap bytes in 32 bit value.  */
 #ifdef __GNUC__
 # define __bswap_32(x) \
-    (__extension__							      \
-     ({ unsigned int __bsx = (x);					      \
-        ((((__bsx) & 0xff000000) >> 24) | (((__bsx) & 0x00ff0000) >>  8) |    \
-	 (((__bsx) & 0x0000ff00) <<  8) | (((__bsx) & 0x000000ff) << 24)); }))
+  (__extension__							      \
+   ({ unsigned int __bsx = (x);						      \
+      ((((__bsx) & 0xff000000u) >> 24) | (((__bsx) & 0x00ff0000u) >>  8) |    \
+       (((__bsx) & 0x0000ff00u) <<  8) | (((__bsx) & 0x000000ffu) << 24)); }))
 #else
 static __inline unsigned int
 __bswap_32 (unsigned int __bsx)
 {
-  return ((((__bsx) & 0xff000000) >> 24) | (((__bsx) & 0x00ff0000) >>  8) |
-	  (((__bsx) & 0x0000ff00) <<  8) | (((__bsx) & 0x000000ff) << 24));
+  return ((((__bsx) & 0xff000000u) >> 24) | (((__bsx) & 0x00ff0000u) >>  8) |
+	  (((__bsx) & 0x0000ff00u) <<  8) | (((__bsx) & 0x000000ffu) << 24));
 }
 #endif
 
