@@ -101,7 +101,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	{
 	case PT_LOAD:
 	  if (loadaddr == -1)
-	    loadaddr = segment->p_vaddr - segment_p_offset;
+	    loadaddr = segment->p_vaddr - segment->p_offset;
 	  break;
 
 	case PT_DYNAMIC:
