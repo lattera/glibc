@@ -1,3 +1,7 @@
+2002-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* extra-lib.mk: Mark assignment to lib with override.
+
 2002-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makerules: Use cppflags-iterator.mk to add defines for all test

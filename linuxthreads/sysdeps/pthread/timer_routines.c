@@ -416,7 +416,7 @@ thread_func (void *arg)
 		  timer->overrun_count = 0;
 		  timespec_add (&timer->expirytime, &timer->expirytime,
 				&timer->value.it_interval);
-		  while (timespec_compare(&timer->expirytime, &now) < 0)
+		  while (timespec_compare (&timer->expirytime, &now) < 0)
 		    {
 		      timespec_add (&timer->expirytime, &timer->expirytime,
 				    &timer->value.it_interval);

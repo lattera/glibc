@@ -6,7 +6,7 @@
 # to be included in that library.  A sysdep Makefile can add to
 # $(lib)-sysdep_routines to include additional modules.
 
-lib := $(firstword $(extra-libs-left))
+override lib := $(firstword $(extra-libs-left))
 extra-libs-left := $(filter-out $(lib),$(extra-libs-left))
 
 object-suffixes-$(lib) := $(filter-out $($(lib)-inhibit-o),$(object-suffixes))
