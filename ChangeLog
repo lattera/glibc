@@ -1,3 +1,8 @@
+1999-06-11  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/hurdsock.c (max_domain): Initialize to `-1'.
+	(_hurd_socket_server): Fix off-by-one error in setting `max_domain'.
+
 1999-06-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/printf-parse.h (parse_one_spec): Add support for a
