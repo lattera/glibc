@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifdef USE_NONOPTION_FLAGS
 /* Attention: this file is *not* necessary when the GNU getopt functions
    are used outside the GNU libc.  Some additional functionality of the
    getopt functions in GNU libc require this additional work.  */
@@ -71,3 +72,4 @@ __getopt_clean_environment (char **env)
 	/* Continue the loop in case the name appears again.  */
       }
 }
+#endif	/* USE_NONOPTION_FLAGS */

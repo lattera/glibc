@@ -1,3 +1,15 @@
+2001-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* config.h.in: Add #undef line for USE_NONOPTION_FLAGS.
+	* posix/getopt_init.c: Produce code only if USE_NONOPTION_FLAGS is
+	defined.
+	* posix/getopt.c: Use __getopt_nonoption_flags only if
+	USE_NONOPTION_FLAGS is defined.
+	* sysdeps/mach/hurd/i386/init-first.c: Use __getopt_clean_environment
+	only if USE_NONOPTION_FLAGS is defined.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+
 2001-08-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/e_j0l.c: New file.
