@@ -44,7 +44,8 @@
 size_t
 __ctype_get_mb_cur_max (void)
 {
-  size_t correct_value = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
+  union locale_data_value u;
 
-  return ((size_t []) { 1, 1, 1, 2, 2, 3, 4 })[correct_value];
+  u.string = nl_langinfo (_NL_CTYPE_MB_CUR_MAX);
+  return ((size_t []) { 1, 1, 1, 2, 2, 3, 4 })[u.word];
 }

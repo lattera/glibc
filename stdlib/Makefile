@@ -70,9 +70,7 @@ mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm-syntax.h
 routines := $(strip $(routines) $(mpn-routines))	\
 	    dbl2mpn ldbl2mpn				\
 	    mpn2flt mpn2dbl mpn2ldbl
-# mp_clz seems not to be used.  At least on x86.  If removing the file
-# does not cause problem clean this up and actually remove the file.
-aux := fpioconst# mp_clz_tab
+aux := fpioconst mp_clz_tab
 distribute := $(distribute) $(mpn-headers) gen-mpn-copy fpioconst.h
 
 generated += isomac isomac.out

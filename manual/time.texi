@@ -1143,7 +1143,8 @@ the result is written right adjusted and space padded to the given
 size.
 
 An optional modifier can follow the optional flag and width
-specification.  The modifiers, which are POSIX.2 extensions, are:
+specification.  The modifiers, which were first standardized by
+POSIX.2-1992 and by @w{ISO C99}, are:
 
 @table @code
 @item E
@@ -1185,7 +1186,7 @@ The preferred calendar time representation for the current locale.
 The century of the year.  This is equivalent to the greatest integer not
 greater than the year divided by 100.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %d
 The day of the month as a decimal number (range @code{01} through @code{31}).
@@ -1193,19 +1194,19 @@ The day of the month as a decimal number (range @code{01} through @code{31}).
 @item %D
 The date using the format @code{%m/%d/%y}.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %e
 The day of the month like with @code{%d}, but padded with blank (range
 @code{ 1} through @code{31}).
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %F
 The date using the format @code{%Y-%m-%d}.  This is the form specified
 in the @w{ISO 8601} standard and is the preferred form for all uses.
 
-This format is a @w{ISO C99} extension.
+This format was first standardized by @w{ISO C99} and by POSIX.1-2001.
 
 @item %g
 The year corresponding to the ISO week number, but without the century
@@ -1213,7 +1214,7 @@ The year corresponding to the ISO week number, but without the century
 as @code{%y}, except that if the ISO week number (see @code{%V}) belongs
 to the previous or next year, that year is used instead.
 
-This format was introduced in @w{ISO C99}.
+This format was first standardized by @w{ISO C99} and by POSIX.1-2001.
 
 @item %G
 The year corresponding to the ISO week number.  This has the same format
@@ -1221,14 +1222,14 @@ and value as @code{%Y}, except that if the ISO week number (see
 @code{%V}) belongs to the previous or next year, that year is used
 instead.
 
-This format was introduced in @w{ISO C99} but was previously available
-as a GNU extension.
+This format was first standardized by @w{ISO C99} and by POSIX.1-2001
+but was previously available as a GNU extension.
 
 @item %h
 The abbreviated month name according to the current locale.  The action
 is the same as for @code{%b}.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %H
 The hour as a decimal number, using a 24-hour clock (range @code{00} through
@@ -1262,7 +1263,7 @@ The minute as a decimal number (range @code{00} through @code{59}).
 @item %n
 A single @samp{\n} (newline) character.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %p
 Either @samp{AM} or @samp{PM}, according to the given time value; or the
@@ -1278,19 +1279,19 @@ Either @samp{am} or @samp{pm}, according to the given time value; or the
 corresponding strings for the current locale, printed in lowercase
 characters.  Noon is treated as @samp{pm} and midnight as @samp{am}.
 
-This format was introduced in @w{ISO C99} but was previously available
-as a GNU extension.
+This format is a GNU extension.
 
 @item %r
 The complete calendar time using the AM/PM format of the current locale.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
+In the POSIX locale, this format is equivalent to @code{%I:%M:%S %p}.
 
 @item %R
 The hour and minute in decimal numbers using the format @code{%H:%M}.
 
-This format was introduced in @w{ISO C99} but was previously available
-as a GNU extension.
+This format was first standardized by @w{ISO C99} and by POSIX.1-2001
+but was previously available as a GNU extension.
 
 @item %s
 The number of seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC.
@@ -1304,18 +1305,18 @@ The seconds as a decimal number (range @code{00} through @code{60}).
 @item %t
 A single @samp{\t} (tabulator) character.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %T
 The time of day using decimal numbers using the format @code{%H:%M:%S}.
 
-This format is a POSIX.2 extension.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %u
 The day of the week as a decimal number (range @code{1} through
 @code{7}), Monday being @code{1}.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %U
 The week number of the current year as a decimal number (range @code{00}
@@ -1334,7 +1335,7 @@ The week before week @code{01} of a year is the last week (@code{52} or
 @code{53}) of the previous year even if it contains days from the new
 year.
 
-This format is a POSIX.2 extension and also appears in @w{ISO C99}.
+This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %w
 The day of the week as a decimal number (range @code{0} through
@@ -1365,10 +1366,10 @@ before the year @code{1} are numbered @code{0}, @code{-1}, and so on.
 @code{-0600} or @code{+0100}), or nothing if no time zone is
 determinable.
 
-This format was introduced in @w{ISO C99} but was previously available
-as a GNU extension.
+This format was first standardized by @w{ISO C99} and by POSIX.1-2001
+but was previously available as a GNU extension.
 
-A full @w{RFC 822} timestamp is generated by the format
+In the POSIX locale, a full @w{RFC 822} timestamp is generated by the format
 @w{@samp{"%a, %d %b %Y %H:%M:%S %z"}} (or the equivalent
 @w{@samp{"%a, %d %b %Y %T %z"}}).
 

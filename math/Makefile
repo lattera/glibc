@@ -183,7 +183,7 @@ o = .os
 endif
 gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%$o,\
 		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \
-		      lshift rshift udiv_qrnnd inlines)
+		      lshift rshift mp_clz_tab udiv_qrnnd inlines)
 $(objpfx)atest-exp: $(gmp-objs)
 $(objpfx)atest-sincos: $(gmp-objs)
 $(objpfx)atest-exp2: $(gmp-objs)

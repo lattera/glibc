@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -535,9 +535,8 @@ my_strftime (s, maxsize, format, tp ut_argument)
     }
   else
     {
-      /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
-	 time zone names contained in the external variable `tzname' shall
-	 be set as if the tzset() function had been called.  */
+      /* POSIX.1 requires that local time zone information is used as
+	 though strftime called tzset.  */
 # if HAVE_TZSET
       tzset ();
 # endif
@@ -756,7 +755,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 #endif
 
 	case L_('b'):
-	case L_('h'):		/* POSIX.2 extension.  */
+	case L_('h'):
 	  if (change_case)
 	    {
 	      to_uppcase = 1;
@@ -851,7 +850,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  break;
 #endif
 
-	case L_('C'):		/* POSIX.2 extension.  */
+	case L_('C'):
 	  if (modifier == L_('O'))
 	    goto bad_format;
 	  if (modifier == L_('E'))
@@ -898,7 +897,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  /* Fall through.  */
 # endif
 #endif
-	case L_('D'):		/* POSIX.2 extension.  */
+	case L_('D'):
 	  if (modifier != 0)
 	    goto bad_format;
 	  subfmt = L_("%m/%d/%y");
@@ -910,7 +909,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 
 	  DO_NUMBER (2, tp->tm_mday);
 
-	case L_('e'):		/* POSIX.2 extension.  */
+	case L_('e'):
 	  if (modifier == L_('E'))
 	    goto bad_format;
 
@@ -1042,7 +1041,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 
 	  DO_NUMBER (2, tp->tm_mon + 1);
 
-	case L_('n'):		/* POSIX.2 extension.  */
+	case L_('n'):
 	  add (1, *p = L_('\n'));
 	  break;
 
@@ -1066,11 +1065,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  goto underlying_strftime;
 #endif
 
-	case L_('R'):		/* ISO C99 extension.  */
+	case L_('R'):
 	  subfmt = L_("%H:%M");
 	  goto subformat;
 
-	case L_('r'):		/* POSIX.2 extension.  */
+	case L_('r'):
 #ifdef _NL_CURRENT
 	  if (*(subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME,
 						       NLW(T_FMT_AMPM)))
@@ -1141,15 +1140,15 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  /* Fall through.  */
 # endif
 #endif
-	case L_('T'):		/* POSIX.2 extension.  */
+	case L_('T'):
 	  subfmt = L_("%H:%M:%S");
 	  goto subformat;
 
-	case L_('t'):		/* POSIX.2 extension.  */
+	case L_('t'):
 	  add (1, *p = L_('\t'));
 	  break;
 
-	case L_('u'):		/* POSIX.2 extension.  */
+	case L_('u'):
 	  DO_NUMBER (1, (tp->tm_wday - 1 + 7) % 7 + 1);
 
 	case L_('U'):
@@ -1159,8 +1158,8 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7);
 
 	case L_('V'):
-	case L_('g'):		/* ISO C99 extension.  */
-	case L_('G'):		/* ISO C99 extension.  */
+	case L_('g'):
+	case L_('G'):
 	  if (modifier == L_('E'))
 	    goto bad_format;
 	  {
@@ -1268,7 +1267,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    zone = tzname[tp->tm_isdst];
 #endif
 	  if (! zone)
-	    zone = "";		/* POSIX.2 requires the empty string here.  */
+	    zone = "";
 
 #ifdef COMPILE_WIDE
 	  {
@@ -1284,7 +1283,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 #endif
 	  break;
 
-	case L_('z'):		/* ISO C99 extension.  */
+	case L_('z'):
 	  if (tp->tm_isdst < 0)
 	    break;
 

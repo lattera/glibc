@@ -50,6 +50,5 @@ libc {
     # global variables
     __collate_element_hash; __collate_element_strings;
     __collate_symbol_classes; __collate_symbol_hash; __collate_symbol_strings;
-    _nl_current_LC_COLLATE; _nl_current_LC_CTYPE;
   }
 }

@@ -1,3 +1,39 @@
+2002-03-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/broken_cur_max.c (__ctype_get_mb_cur_max): Use nl_langinfo.
+	* locale/Versions (_nl_current_LC_COLLATE, _nl_current_LC_CTYPE):
+	Remove.
+
+2002-03-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/mp_clz_tab.c: New file.
+	* sysdeps/i386/mp_clz_tab.c: New file.
+	* sysdeps/hppa/mp_clz_tab.c: New file.
+	* sysdeps/powerpc/mp_clz_tab.c: New file.
+	* stdlib/Makefile (aux): Revert last patch.
+	* math/Makefile (gmp-objs): Likewise.
+
+2002-03-13  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c: Comment fixes for references to obsolescent
+	standards, In most cases the simplest fix is to remove the
+	confusing comments.  Cross-referencing all the standards properly
+	is a bit of a pain, and it should be enough to put that info in
+	the documentation as I did in my recent time.texi patch.
+
+2002-03-13  Paul Eggert  <eggert@twinsun.com>
+
+	* manual/time.texi (Formatting Calendar Time):
+	ISO C99 also specifies the E and O modifiers.
+	%P is a GNU extension, and is not in ISO C99.
+	Mention that %r is equivalent to %I:%M:%S %p in the POSIX locale.
+	%T is also in ISO C99.
+	The RFC 822 example is not valid in arbitrary locales.
+	Reword the POSIX.2 wording slightly, to make it a bit clearer
+	that POSIX.2 formats are also supported by later POSIX versions.
+	If a format was introduced in ISO C99 it is also required by
+	POSIX.1-2001.
+
 2002-03-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/gnu/errlist.awk: Define _sys_errlist_internal and
