@@ -1,5 +1,5 @@
 /* Interface to GNU libc specific functions for version information.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,9 @@
 __BEGIN_DECLS
 
 /* Return string describing release status of currently running GNU libc.  */
-extern const char *__gnu_get_libc_release (void) __THROW;
 extern const char *gnu_get_libc_release (void) __THROW;
 
 /* Return string describing version of currently running GNU libc.  */
-extern const char *__gnu_get_libc_version (void) __THROW;
 extern const char *gnu_get_libc_version (void) __THROW;
 
 __END_DECLS

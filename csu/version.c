@@ -44,6 +44,7 @@ __libc_print_version (void)
   __write (STDOUT_FILENO, banner, sizeof banner - 1);
 }
 
+extern const char *__gnu_get_libc_release (void);
 const char *
 __gnu_get_libc_release (void)
 {
@@ -51,6 +52,7 @@ __gnu_get_libc_release (void)
 }
 weak_alias (__gnu_get_libc_release, gnu_get_libc_release)
 
+extern const char *__gnu_get_libc_version (void);
 const char *
 __gnu_get_libc_version (void)
 {

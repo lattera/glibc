@@ -1,3 +1,10 @@
+2001-03-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/version.c (__gnu_get_libc_release): Add prototype.
+	(__gnu_get_libc_version): Likewise.
+	* include/gnu/libc-version.h: Remove prototypes for not exported
+	functions.
+
 2001-03-21  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/makecontext.c: Include libintl.h
