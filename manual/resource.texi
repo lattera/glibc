@@ -511,19 +511,615 @@ The process tried to set its current limit beyond its maximum limit.
 @end deftypefun
 
 @node Priority
-@section Process Priority
+@section Process CPU Priority And Scheduling
 @cindex process priority
+@cindex cpu priority
 @cindex priority of a process
 
-@pindex sys/resource.h
-When several processes try to run, their respective priorities determine
-what share of the CPU each process gets.  This section describes how you
-can read and set the priority of a process.  All these functions and
-macros are declared in @file{sys/resource.h}.
+When multiple processes simultaneously require CPU time, the system's
+scheduling policy and process CPU priorities determine which processes
+get it.  This section describes how that determination is made and
+GNU C library functions to control it.
 
-The range of valid priority values depends on the operating system, but
-typically it runs from @code{-20} to @code{20}.  A lower priority value
-means the process runs more often.  These constants describe the range of
+It is common to refer to CPU scheduling simply as scheduling and a
+process' CPU priority simply as the process' priority, with the CPU
+resource being implied.  Bear in mind, though, that CPU time is not the
+only resource a process uses or that processes contend for.  In some
+cases, it is not even particularly important.  Giving a process a high
+``priority'' may have very little effect on how fast a process runs with
+respect to other processes.  The priorities discussed in this section
+apply only to CPU time.
+
+CPU scheduling is a complex issue and different systems do it in wildly
+different ways.  New ideas continually develop and find their way into
+the intricacies of the various systems' scheduling algorithms.  This
+section discusses the general concepts, some specifics of systems 
+that commonly use the GNU C library, and some standards.
+
+For simplicity, we talk about CPU contention as if there is only one CPU
+in the system.  But all the same principles apply when a processor has
+multiple CPUs, and knowing that the number of processes that can run at
+any one time is equal to the number of CPUs, you can easily extrapolate
+the information.
+
+The functions described in this section are all defined by the POSIX.1
+and POSIX.1b standards (the @code{sched...} functions are POSIX.1b).
+However, POSIX does not define any semantics for the values that these
+functions get and set.  In this chapter, the semantics are based on the
+Linux kernel's implementation of the POSIX standard.  As you will see,
+the Linux implementation is quite the inverse of what the authors of the
+POSIX syntax had in mind.
+
+@menu
+* Absolute Priority::               The first tier of priority.  Posix
+* Realtime Scheduling::             Scheduling among the process nobility
+* Basic Scheduling Functions::      Get/set scheduling policy, priority
+* Traditional Scheduling::          Scheduling among the vulgar masses
+@end menu
+
+
+
+@node Absolute Priority
+@subsection Absolute Priority
+@cindex absolute priority
+@cindex priority, absolute
+
+Every process has an absolute priority, and it is represented by a number.
+The higher the number, the higher the absolute priority.
+
+@cindex realtime CPU scheduling
+On systems of the past, and most systems today, all processes have
+absolute priority 0 and this section is irrelevant.  In that case,
+@xref{Traditional Scheduling}.  Absolute priorities were invented to
+accomodate realtime systems, in which it is vital that certain processes
+be able to respond to external events happening in real time, which
+means they cannot wait around while some other process that @emph{wants
+to}, but doesn't @emph{need to} run occupies the CPU.
+
+@cindex ready to run
+@cindex preemptive scheduling
+When two processes are in contention to use the CPU at any instant, the
+one with the higher absolute priority always gets it.  This is true even if the
+process with the lower priority is already using the CPU (i.e. the
+scheduling is preemptive).  Of course, we're only talking about
+processes that are running or ``ready to run,'' which means they are
+ready to execute instructions right now.  When a process blocks to wait
+for something like I/O, its absolute priority is irrelevant.
+
+@cindex runnable process
+@strong{Note:}  The term ``runnable'' is a synonym for ``ready to run.''
+
+When two processes are running or ready to run and both have the same
+absolute priority, it's more interesting.  In that case, who gets the
+CPU is determined by the scheduling policy.  If the processeses have
+absolute priority 0, the traditional scheduling policy described in
+@ref{Traditional Scheduling} applies.  Otherwise, the policies described
+in @ref{Realtime Scheduling} apply.
+
+You normally give an absolute priority above 0 only to a process that
+can be trusted not to hog the CPU.  Such processes are designed to block
+(or terminate) after relatively short CPU runs.
+
+A process begins life with the same absolute priority as its parent
+process.  Functions described in @ref{Basic Scheduling Functions} can
+change it.
+
+Only a privileged process can change a process' absolute priority to
+something other than @code{0}.  Only a privileged process or the
+target process' owner can change its absolute priority at all.
+
+POSIX requires absolute priority values used with the realtime
+scheduling policies to be consecutive with a range of at least 32.  On
+Linux, they are 1 through 99.  The functions
+@code{sched_get_priority_max} and @code{sched_set_priority_min} portably
+tell you what the range is on a particular system.
+
+
+@subsubsection Using Absolute Priority
+
+One thing you must keep in mind when designing real time applications is
+that having higher absolute priority than any other process doesn't
+guarantee the process can run continuously.  Two things that can wreck a
+good CPU run are interrupts and page faults.  
+
+Interrupt handlers live in that limbo between processes.  The CPU is
+executing instructions, but they aren't part of any process.  An
+interrupt will stop even the highest priority process.  So you must
+allow for slight delays and make sure that no device in the system has
+an interrupt handler that could cause too long a delay between
+instructions for your process.
+
+Similarly, a page fault causes what looks like a straightforward
+sequence of instructions to take a long time.  The fact that other
+processes get to run while the page faults in is of no consequence,
+because as soon as the I/O is complete, the high priority process will
+kick them out and run again, but the wait for the I/O itself could be a
+problem.  To neutralize this threat, use @code{mlock} or
+@code{mlockall}.
+
+There are a few ramifications of the absoluteness of this priority on a
+single-CPU system that you need to keep in mind when you choose to set a
+priority and also when you're working on a program that runs with high
+absolute priority.  Consider a process that has higher absolute priority
+than any other process in the system and due to a bug in its program, it
+gets into an infinite loop.  It will never cede the CPU.  You can't run
+a command to kill it because your command would need to get the CPU in
+order to run.  The errant program is in complete control.  It controls
+the vertical, it controls the horizontal.
+
+There are two ways to avoid this: 1) keep a shell running somewhere with
+a higher absolute priority.  2) keep a controlling terminal attached to
+the high priority process group.  All the priority in the world won't
+stop an interrupt handler from running and delivering a signal to the
+process if you hit Control-C.
+
+Some systems use absolute priority as a means of allocating a fixed per
+centage of CPU time to a process.  To do this, a super high priority
+privileged process constantly monitors the process' CPU usage and raises
+its absolute priority when the process isn't getting its entitled share
+and lowers it when the process is exceeding it.
+
+@strong{Note:}  The absolute priority is sometimes called the ``static
+priority.''  We don't use that term in this manual because it misses the
+most important feature of the absolute priority:  its absoluteness.
+
+
+@node Realtime Scheduling
+@subsection Realtime Scheduling
+@comment realtime scheduling
+
+Whenever two processes with the same absolute priority are ready to run,
+the kernel has a decision to make, because only one can run at a time.
+If the processes have absolute priority 0, the kernel makes this decision
+as described in @ref{Traditional Scheduling}.  Otherwise, the decision
+is as described in this section.
+
+If two processes are ready to run but have different absolute priorities,
+the decision is much simpler, and is described in @ref{Absolute
+Priority}.
+
+Each process has a scheduling policy.  For processes with absolute 
+priority other than zero, there are two available:
+
+@enumerate
+@item
+First Come First Served
+@item
+Round Robin
+@end enumerate
+
+The most sensible case is where all the processes with a certain
+absolute priority have the same scheduling policy.  We'll discuss that
+first.
+
+In Round Robin, processes share the CPU, each one running for a small
+quantum of time (``time slice'') and then yielding to another in a
+circular fashion.  Of course, only processes that are ready to run and
+have the same absolute priority are in this circle.
+
+In First Come First Served, the process that has been waiting the
+longest to run gets the CPU, and it keeps it until it voluntarily
+relinquishes the CPU, runs out of things to do (blocks), or gets
+preempted by a higher priority process.
+
+First Come First Served, along with maximal absolute priority and
+careful control of interrupts and page faults, is the one to use when a
+process absolutely, positively has to run at full CPU speed or not at
+all.
+
+Judicious use of @code{sched_yield} function invocations by processes
+with First Come First Served scheduling policy forms a good compromise
+between Round Robin and First Come First Served.
+
+To understand how scheduling works when processes of different scheduling
+policies occupy the same absolute priority, you have to know the nitty
+gritty details of how processes enter and exit the ready to run list:
+
+In both cases, the ready to run list is organized as a true queue, where
+a process gets pushed onto the tail when it becomes ready to run and is
+popped off the head when the scheduler decides to run it.  Note that
+ready to run and running are two mutually exclusive states.  When the
+scheduler runs a process, that process is no longer ready to run and no
+longer in the ready to run list.  When the process stops running, it
+may go back to being ready to run again.
+
+The only difference between a process that is assigned the Round Robin
+scheduling policy and a process that is assigned First Come First Serve
+is that in the former case, the process is automatically booted off the
+CPU after a certain amount of time.  When that happens, the process goes
+back to being ready to run, which means it enters the queue at the tail.
+The time quantum we're talking about is small.  Really small.  This is
+not your father's timesharing.  For example, with the Linux kernel, the
+round robin time slice is a thousand times shorter than its typical
+time slice for traditional scheduling.
+
+A process begins life with the same scheduling policy as its parent process.
+Functions described in @ref{Basic Scheduling Functions} can change it.
+
+Only a privileged process can set the scheduling policy of a process
+that has absolute priority higher than 0.
+
+@node Basic Scheduling Functions
+@subsection Basic Scheduling Functions
+
+This section describes functions in the GNU C library for setting the
+absolute priority and scheduling policy of a process.
+
+@strong{Portability Note:}  On systems that have the functions in this
+section, the macro _POSIX_PRIORITY_SCHEDULING is defined in
+@file{<unistd.h>}.
+
+For the case that the scheduling policy is traditional scheduling, more
+functions to fine tune the scheduling are in @ref{Traditional Scheduling}.
+
+Don't try to make too much out of the naming and structure of these
+functions.  They don't match the concepts described in this manual
+because the functions are as defined by POSIX.1b, but the implementation
+on systems that use the GNU C library is the inverse of what the POSIX
+structure contemplates.  The POSIX scheme assumes that the primary
+scheduling parameter is the scheduling policy and that the priority
+value, if any, is a parameter of the scheduling policy.  In the
+implementation, though, the priority value is king and the scheduling
+policy, if anything, only fine tunes the effect of that priority.
+
+The symbols in this section are declared by including file @file{sched.h}.
+
+@comment sched.h
+@comment POSIX
+@deftp {Data Type} {struct sched_param}
+This structure describes an absolute priority.
+@table @code
+@item int sched_priority
+absolute priority value
+@end table
+@end deftp
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_setscheduler (pid_t @var{pid}, int @var{policy}, const struct sched_param *@var{param})
+
+This function sets both the absolute priority and the scheduling policy
+for a process.
+
+It assigns the absolute priority value given by @var{param} and the
+scheduling policy @var{policy} to the process with Process ID @var{pid},
+or the calling process if @var{pid} is zero.  If @var{policy} is
+negative, @code{sched_setschedule} keeps the existing scheduling policy.
+
+The following macros represent the valid values for @var{policy}:
+
+@table @code
+@item SCHED_OTHER
+Traditional Scheduling
+@item SCHED_FIFO
+First In First Out 
+@item SCHED_RR
+Round Robin
+@end table
+
+@c The Linux kernel code (in sched.c) actually reschedules the process,
+@c but it puts it at the head of the run queue, so I'm not sure just what
+@c the effect is, but it must be subtle.
+
+On success, the return value is @code{0}.  Otherwise, it is @code{-1}
+and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+to this function are:
+
+@table @code
+@item EPERM
+@itemize @bullet
+@item
+The calling process does not have @code{CAP_SYS_NICE} permission and
+@var{policy} is not @code{SCHED_OTHER} (or it's negative and the
+existing policy is not @code{SCHED_OTHER}.
+
+@item
+The calling process does not have @code{CAP_SYS_NICE} permission and its
+owner is not the target process' owner.  I.e.  the effective uid of the
+calling process is neither the effective nor the real uid of process
+@var{pid}.
+@c We need a cross reference to the capabilities section, when written.
+@end itemize
+
+@item ESRCH
+There is no process with pid @var{pid} and @var{pid} is not zero.
+
+@item EINVAL
+@itemize @bullet
+@item
+@var{policy} does not identify an existing scheduling policy.
+
+@item
+The absolute priority value identified by *@var{param} is outside the
+valid range for the scheduling policy @var{policy} (or the existing
+scheduling policy if @var{policy} is negative) or @var{param} is
+null.  @code{sched_get_priority_max} and @code{sched_get_priority_min}
+tell you what the valid range is.
+
+@item
+@var{pid} is negative.
+@end itemize
+@end table
+
+@end deftypefun
+
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_getscheduler (pid_t @var{pid})
+
+This function returns the scheduling policy assigned to the process with
+Process ID (pid) @var{pid}, or the calling process if @var{pid} is zero.
+
+The return value is the scheduling policy.  See
+@code{sched_setscheduler} for the possible values.
+
+If the function fails, the return value is instead @code{-1} and
+@code{errno} is set accordingly.
+
+The @code{errno} values specific to this function are:
+
+@table @code
+
+@item ESRCH
+There is no process with pid @var{pid} and it is not zero.
+
+@item EINVAL
+@var{pid} is negative.
+
+@end table
+
+Note that this function is not an exact mate to @code{sched_setscheduler}
+because while that function sets the scheduling policy and the absolute
+priority, this function gets only the scheduling policy.  To get the
+absolute priority, use @code{sched_getparam}.
+
+@end deftypefun
+
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_setparam (pid_t @var{pid}, const struct sched_param *@var{param})
+
+This function sets a process' absolute priority.
+
+It is functionally identical to @code{sched_setscheduler} with
+@var{policy} = @code{-1}.
+
+@c in fact, that's how it's implemented in Linux.
+
+@end deftypefun
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_getparam (pid_t @var{pid}, const struct sched_param *@var{param})
+
+This function returns a process' absolute priority.
+
+@var{pid} is the Process ID (pid) of the process whose absolute priority
+you want to know.
+
+@var{param} is a pointer to a structure in which the function stores the
+absolute priority of the process.
+
+On success, the return value is @code{0}.  Otherwise, it is @code{-1}
+and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+to this function are:
+
+@table @code
+
+@item ESRCH
+There is no process with pid @var{pid} and it is not zero.
+
+@item EINVAL
+@var{pid} is negative.
+
+@end table
+
+@end deftypefun
+
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_get_priority_min (int *@var{policy});
+
+This function returns the lowest absolute priority value that is
+allowable for a process with scheduling policy @var{policy}.
+
+On Linux, it is 0 for SCHED_OTHER and 1 for everything else.
+
+On success, the return value is @code{0}.  Otherwise, it is @code{-1}
+and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+to this function are:
+
+@table @code
+@item EINVAL
+@var{policy} does not identify an existing scheduling policy.
+@end table
+
+@end deftypefun
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_set_priority_max (int *@var{policy});
+
+This function returns the highest absolute priority value that is
+allowable for a process that with scheduling policy @var{policy}.
+
+On Linux, it is 0 for SCHED_OTHER and 99 for everything else.
+
+On success, the return value is @code{0}.  Otherwise, it is @code{-1}
+and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+to this function are:
+
+@table @code
+@item EINVAL
+@var{policy} does not identify an existing scheduling policy.
+@end table
+
+@end deftypefun
+
+@comment sched.h
+@comment POSIX
+@deftypefun int sched_rr_get_interval (pid_t @var{pid}, struct timespec *@var{interval})
+
+This function returns the length of the quantum (time slice) used with 
+the Round Robin scheduling policy, if it is used, for the process with
+Process ID @var{pid}.
+
+It returns the length of time as @var{interval}.  
+@c We need a cross-reference to where timespec is explained.  But that
+@c section doesn't exist yet, and the time chapter needs to be slightly
+@c reorganized so there is a place to put it (which will be right next
+@c to timeval, which is presently misplaced).  2000.05.07.
+
+With a Linux kernel, the round robin time slice is always 150
+microseconds, and @var{pid} need not even be a real pid.
+
+The return value is @code{0} on success and in the pathological case
+that it fails, the return value is @code{-1} and @code{errno} is set
+accordingly.  There is nothing specific that can go wrong with this
+function, so there are no specific @code{errno} values.
+
+@end deftypefun
+
+@comment sched.h
+@comment POSIX
+@deftypefun sched_yield (void)
+
+This function voluntarily gives up the process' claim on the CPU.
+
+Technically, @code{sched_yield} causes the calling process to be made
+immediately ready to run (as opposed to running, which is what it was
+before).  This means that if it has absolute priority higher than 0, it
+gets pushed onto the tail of the queue of processes that share its
+absolute priority and are ready to run, and it will run again when its
+turn next arrives.  If its absolute priority is 0, it is more
+complicated, but still has the effect of yielding the CPU to other
+processes.
+
+If there are no other processes that share the calling process' absolute
+priority, this function doesn't have any effect.
+
+To the extent that the containing program is oblivious to what other
+processes in the system are doing and how fast it executes, this
+function appears as a no-op.
+
+The return value is @code{0} on success and in the pathological case
+that it fails, the return value is @code{-1} and @code{errno} is set
+accordingly.  There is nothing specific that can go wrong with this
+function, so there are no specific @code{errno} values.
+
+@end deftypefun
+
+@node Traditional Scheduling
+@subsection Traditional Scheduling
+@cindex scheduling, traditional
+
+This section is about the scheduling among processes whose absolute
+priority is 0.  When the system hands out the scraps of CPU time that
+are left over after the processes with higher absolulte priority have
+taken all they want, the scheduling described herein determines who
+among the great unwashed processes gets them.
+
+@menu
+* Traditional Scheduling Intro::
+* Traditional Scheduling Functions::
+@end menu
+
+@node Traditional Scheduling Intro
+@subsubsection Introduction To Traditional Scheduling
+
+Long before there was absolute priority (See @ref{Absolute Priority}),
+Unix systems were scheduling the CPU using this system.  When Posix came
+in like the Romans and imposed absolute priorities to accomodate the
+needs of realtime processing, it left the indigenous Absolute Priority
+Zero processes to govern themselves by their own familiar scheduling
+policy.
+
+Indeed, absolute priorities higher than zero are not available on many
+systems today and are not typically used when they are, being intended
+mainly for computers that do realtime processing.  So this section
+describes the only scheduling many programmers need to be concerned
+about.
+
+But just to be clear about the scope of this scheduling: Any time a
+process with a absolute priority of 0 and a process with an absolute
+priority higher than 0 are ready to run at the same time, the one with
+absolute priority 0 does not run.  If it's already running when the
+higher priority ready-to-run process comes into existence, it stops
+immediately.
+
+In addition to its absolute priority of zero, every process has another
+priority, which we will refer to as "dynamic priority" because it changes
+over time.  The dynamic priority is meaningless for processes with 
+an absolute priority higher than zero.
+
+The dynamic priority sometimes determines who gets the next turn on the
+CPU.  Sometimes it determines how long turns last.  Sometimes it
+determines whether a process can kick another off the CPU.
+
+In Linux, the value is a combination of these things, but mostly it is
+just determines the length of the time slice.  The higher a process'
+dynamic priority, the longer a shot it gets on the CPU when it gets one.
+If it doesn't use up its time slice before giving up the CPU to do
+something like wait for I/O, it is favored for getting the CPU back when
+it's ready for it, to finish out its time slice.  Other than that,
+selection of processes for new time slices is basically round robin.
+But the scheduler does throw a bone to the low priority processes: A
+process' dynamic priority rises every time it is snubbed in the
+scheduling process.  In Linux, even the fat kid gets to play.
+
+The fluctuation of a process' dynamic priority is regulated by another
+value: The ``nice'' value.  The nice value is an integer, usually in the
+range -20 to 20, and represents an upper limit on a process' dynamic
+priority.  The higher the nice number, the lower that limit.
+
+On a typical Linux system, for example, a process with a nice value of
+20 can get only 10 milliseconds on the CPU at a time, whereas a process
+with a nice value of -20 can achieve a high enough priority to get 400
+milliseconds.
+
+The idea of the nice value is deferential courtesy.  In the beginning,
+in the Unix garden of Eden, all processes shared equally in the bounty
+of the computer system.  But not all processes really need the same
+share of CPU time, so the nice value gave a courteous process the
+ability to refuse its equal share of CPU time that others might prosper.
+Hence, the higher a process' nice value, the nicer the process is.
+(Then a snake came along and offered some process a negative nice value
+and the system became the crass resource allocation system we know
+today).
+
+Dynamic priorities tend upward and downward with an objective of
+smoothing out allocation of CPU time and giving quick response time to
+infrequent requests.  But they never exceed their nice limits, so on a
+heavily loaded CPU, the nice value effectively determines how fast a
+process runs.
+
+In keeping with the socialistic heritage of Unix process priority, a
+process begins life with the same nice value as its parent process and
+can raise it at will.  A process can also raise the nice value of any
+other process owned by the same user (or effective user).  But only a
+privileged process can lower its nice value.  A privileged process can
+also raise or lower another process' nice value.
+
+GNU C Library functions for getting and setting nice values are described in 
+@xref{Traditional Scheduling Functions}.
+
+@node Traditional Scheduling Functions
+@subsubsection Functions For Traditional Scheduling
+
+@pindex sys/resource.h
+This section describes how you can read and set the nice value of a
+process.  All these symbols are declared in @file{sys/resource.h}.
+
+The function and macro names are defined by POSIX, and refer to
+"priority," but the functions actually have to do with nice values, as
+the terms are used both in the manual and POSIX.
+
+The range of valid nice values depends on the kernel, but typically it
+runs from @code{-20} to @code{20}.  A lower nice value corresponds to
+higher priority for the process.  These constants describe the range of
 priority values:
 
 @table @code
@@ -531,24 +1127,49 @@ priority values:
 @comment BSD
 @item PRIO_MIN
 @vindex PRIO_MIN
-The smallest valid priority value.
+The lowest valid nice value.
 
 @comment sys/resource.h
 @comment BSD
 @item PRIO_MAX
 @vindex PRIO_MAX
-The largest valid priority value.
+The highest valid nice value.
 @end table
 
 @comment sys/resource.h
-@comment BSD
+@comment BSD,POSIX
 @deftypefun int getpriority (int @var{class}, int @var{id})
-Read the priority of a class of processes; @var{class} and @var{id}
+Return the nice value of a set of processes; @var{class} and @var{id}
 specify which ones (see below).  If the processes specified do not all
-have the same priority, this returns the smallest value that any of them
+have the same nice value, this returns the lowest value that any of them
 has.
 
-The return value is the priority value on success, and @code{-1} on
+On success, the return value is @code{0}.  Otherwise, it is @code{-1}
+and @code{ERRNO} is set accordingly.  The @code{errno} values specific
+to this function are:
+
+@table @code
+@item ESRCH
+The combination of @var{class} and @var{id} does not match any existing
+process.
+
+@item EINVAL
+The value of @var{class} is not valid.
+@end table
+
+If the return value is @code{-1}, it could indicate failure, or it could
+be the nice value.  The only way to make certain is to set @code{errno =
+0} before calling @code{getpriority}, then use @code{errno != 0}
+afterward as the criterion for failure.
+@end deftypefun
+
+@comment sys/resource.h
+@comment BSD,POSIX
+@deftypefun int setpriority (int @var{class}, int @var{id}, int @var{niceval})
+Set the nice value of a set of processes to @var{niceval}; @var{class}
+and @var{id} specify which ones (see below).
+
+The return value is the nice value on success, and @code{-1} on
 failure.  The following @code{errno} error condition are possible for
 this function:
 
@@ -559,39 +1180,18 @@ process.
 
 @item EINVAL
 The value of @var{class} is not valid.
-@end table
-
-If the return value is @code{-1}, it could indicate failure, or it
-could be the priority value.  The only way to make certain is to set
-@code{errno = 0} before calling @code{getpriority}, then use @code{errno
-!= 0} afterward as the criterion for failure.
-@end deftypefun
-
-@comment sys/resource.h
-@comment BSD
-@deftypefun int setpriority (int @var{class}, int @var{id}, int @var{priority})
-Set the priority of a class of processes to @var{priority}; @var{class}
-and @var{id} specify which ones (see below).
-
-The return value is @code{0} on success and @code{-1} on failure.  The
-following @code{errno} error condition are defined for this function:
-
-@table @code
-@item ESRCH
-The combination of @var{class} and @var{id} does not match any existing
-process.
-
-@item EINVAL
-The value of @var{class} is not valid.
 
 @item EPERM
-You tried to set the priority of some other user's process, and you
-don't have privileges for that.
+The call would set the nice value of a process which is owned by a different
+user than the calling process (i.e. the target process' real or effective
+uid does not match the calling process' effective uid) and the calling
+process does not have @code{CAP_SYS_NICE} permission.
 
 @item EACCES
-You tried to lower the priority of a process, and you don't have
-privileges for that.
+The call would lower the process' nice value and the process does not have
+@code{CAP_SYS_NICE} permission.
 @end table
+
 @end deftypefun
 
 The arguments @var{class} and @var{id} together specify a set of
@@ -603,32 +1203,31 @@ processes in which you are interested.  These are the possible values of
 @comment BSD
 @item PRIO_PROCESS
 @vindex PRIO_PROCESS
-Read or set the priority of one process.  The argument @var{id} is a
-process ID.
+One particular process.  The argument @var{id} is a process ID (pid).
 
 @comment sys/resource.h
 @comment BSD
 @item PRIO_PGRP
 @vindex PRIO_PGRP
-Read or set the priority of one process group.  The argument @var{id} is
-a process group ID.
+All the processes in a particular process group.  The argument @var{id} is
+a process group ID (pgid).
 
 @comment sys/resource.h
 @comment BSD
 @item PRIO_USER
 @vindex PRIO_USER
-Read or set the priority of one user's processes.  The argument @var{id}
-is a user ID.
+All the processes owned by a particular user (i.e. whose real uid
+indicates the user).  The argument @var{id} is a user ID (uid).
 @end table
 
-If the argument @var{id} is 0, it stands for the current process,
-current process group, or the current user, according to @var{class}.
+If the argument @var{id} is 0, it stands for the calling process, its
+process group, or its owner (real uid), according to @var{class}.
 
 @c ??? I don't know where we should say this comes from.
 @comment Unix
 @comment dunno.h
 @deftypefun int nice (int @var{increment})
-Increment the priority of the current process by @var{increment}.
+Increment the nice value of the calling process by @var{increment}.
 The return value is the same as for @code{setpriority}.
 
 Here is an equivalent definition of @code{nice}:
@@ -642,3 +1241,4 @@ nice (int increment)
 @}
 @end smallexample
 @end deftypefun
+
