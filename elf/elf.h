@@ -137,7 +137,14 @@ typedef struct
 #define EI_VERSION	6		/* File version byte index */
 					/* Value must be EV_CURRENT */
 
-#define EI_PAD		7		/* Byte index of padding bytes */
+#define EI_OSABI	7		/* OS ABI identification */
+#define ELFOSABI_SYSV		0	/* UNIX System V ABI */
+#define ELFOSABI_HPUX		1	/* HP-UX */
+#define ELFOSABI_STANDALONE	255	/* Standalone (embedded) application */
+
+#define EI_ABIVERSION	8		/* ABI version */
+
+#define EI_PAD		9		/* Byte index of padding bytes */
 
 /* Legal values for e_type (object file type).  */
 
