@@ -450,6 +450,8 @@ thread_func (void *arg)
      forever - but we have to add it for proper nesting.  */
   pthread_cleanup_pop (1);
 
+  /* NOTREACHED */
+  return NULL;
 }
 
 

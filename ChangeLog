@@ -1,5 +1,7 @@
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c: Fix typo in comment.  Add a few more __builtin_expect.
+
 	* sysdeps/generic/dl-cache.h (_dl_cache_libcmp): Define as static
 	inline to avoid defining it in every file which includes this header.
 

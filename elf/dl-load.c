@@ -902,12 +902,14 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	case PT_LOAD:
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
-	  if ((ph->p_align & (GL(dl_pagesize) - 1)) != 0)
+	  if (__builtin_expect ((ph->p_align & (GL(dl_pagesize) - 1)) != 0,
+				0))
 	    {
 	      errstring = N_("ELF load command alignment not page-aligned");
 	      goto call_lose;
 	    }
-	  if (((ph->p_vaddr - ph->p_offset) & (ph->p_align - 1)) != 0)
+	  if (__builtin_expect (((ph->p_vaddr - ph->p_offset)
+				 & (ph->p_align - 1)) != 0, 0))
 	    {
 	      errstring
 		= N_("ELF load command address/offset not properly aligned");
@@ -988,7 +990,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	l->l_map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplength,
 					      c->prot, MAP_COPY | MAP_FILE,
 					      fd, c->mapoff);
-	if ((void *) l->l_map_start == MAP_FAILED)
+	if (__builtin_expect ((void *) l->l_map_start == MAP_FAILED, 0))
 	  {
 	  map_error:
 	    errstring = N_("failed to map segment from shared object");
@@ -1068,8 +1070,13 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		if ((c->prot & PROT_WRITE) == 0)
 		  {
 		    /* Dag nab it.  */
-		    if (__mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
-				    GL(dl_pagesize), c->prot|PROT_WRITE) < 0)
+		    if (__builtin_expect (__mprotect ((caddr_t)
+						      (zero
+						       & ~(GL(dl_pagesize)
+							   - 1)),
+						      GL(dl_pagesize),
+						      c->prot|PROT_WRITE) < 0,
+					  0))
 		      {
 			errstring = N_("cannot change memory protections");
 			goto call_lose_errno;
@@ -1088,7 +1095,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
 				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
 				ANONFD, 0);
-		if (mapat == MAP_FAILED)
+		if (__builtin_expect (mapat == MAP_FAILED, 0))
 		  {
 		    errstring = N_("cannot map zero-fill pages");
 		    goto call_lose_errno;
@@ -1137,7 +1144,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   if (l->l_ld == 0)
     {
-      if (type == ET_DYN)
+      if (__builtin_expect (type == ET_DYN, 0))
 	{
 	  errstring = N_("object file has no dynamic section");
 	  goto call_lose;
@@ -1811,7 +1818,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
 			&realname, &fb);
 
-      /* Add another newline when we a tracing the library loading.  */
+      /* Add another newline when we are tracing the library loading.  */
       if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
         INTUSE(_dl_debug_printf) ("\n");
     }
