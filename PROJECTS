@@ -37,8 +37,7 @@ contact <bug-glibc@gnu.org>.
      for the current status (of course better use a mirror of ftp.gnu.org).
 
 
-[ 6] Write `long double' versions of the math functions.  This should be
-     done in collaboration with the NetBSD and FreeBSD people.
+[ 6] Write `long double' versions of the math functions.
 
      The libm is in fact fdlibm (not the same as in Linux libc 5).
 
@@ -124,6 +123,9 @@ contact <bug-glibc@gnu.org>.
 [19] A user-level STREAMS implementation should be available if the
      kernel does not provide the support.
 
+***  This is a much lower priority job now that STREAMS are optional in
+     XPG.
+
 
 [20] More conversion modules for iconv(3).  Existing modules should be
      extended to do things like transliteration if this is wanted.
@@ -142,10 +144,10 @@ contact <bug-glibc@gnu.org>.
        used, only offsets.
      OR
        if POSIX shared memory is available use a named shared memory
-       region to put the data is
+       region to put the data in
      - each program using NSS functionality tries to open the file
        with the data.
-     - by checking some timestamp (which the nscd renew frequently)
+     - by checking some timestamp (which the nscd renews frequently)
        the programs can test whether the file is still valid
      - if the file is valid look through the nscd and locate the
        appropriate hash table for the database and lookup the data.
@@ -155,7 +157,7 @@ contact <bug-glibc@gnu.org>.
 
 
 [22] It should be possible to have the information gconv-modules in
-     a simple database which is faster to access.  Using libdb is probably
+     a simple cache which is faster to access.  Using libdb is probably
      overkill and loading it would probably be slower than reading the
      plain text file.  But a file format with a simple hash table and
      some data it points to should be fine.  Probably it should be
@@ -166,7 +168,7 @@ contact <bug-glibc@gnu.org>.
 	    && stat ("gconv-modules.db", &std) == 0
 	    && stp.st_mtime < std.st_mtime)
 	  {
-	    ... use the database ...
+	    ... use the cache ...
 	  {
 	else
 	  {

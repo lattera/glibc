@@ -1,3 +1,7 @@
+2001-02-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iofwide.c: Remove fwide alias.
+
 2001-02-20  Andreas Jaeger  <aj@suse.de>
 
 	* iconvdata/Makefile (tests): Only run mtrace-tst-loading if perl

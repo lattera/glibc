@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -203,10 +203,6 @@ _IO_fwide (fp, mode)
 
   return mode;
 }
-
-#ifdef weak_alias
-weak_alias (_IO_fwide, fwide)
-#endif
 
 
 static enum __codecvt_result
