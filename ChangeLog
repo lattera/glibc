@@ -1,5 +1,8 @@
 2005-03-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close): Print debug message just before
+	destroying a link map.
+
 	* elf/do-lookup.h (do_lookup_x): Add namespace info to debug output.
 	* elf/dl-version.c (match_symbol): Likewise.
 

@@ -279,15 +279,16 @@ _dl_close (void *_map)
       if (new_opencount[i] == 0 && imap->l_type == lt_loaded
 	  && (imap->l_flags_1 & DF_1_NODELETE) == 0)
 	{
-	  /* When debugging print a message first.  */
-	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-	    _dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
-			      imap->l_name, ns);
-
 	  /* Call its termination function.  Do not do it for
 	     half-cooked objects.  */
 	  if (imap->l_init_called)
 	    {
+	      /* When debugging print a message first.  */
+	      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS,
+				    0))
+		_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
+				  imap->l_name, ns);
+
 	      if (imap->l_info[DT_FINI_ARRAY] != NULL)
 		{
 		  ElfW(Addr) *array =
@@ -554,6 +555,11 @@ _dl_close (void *_map)
 
 	      reldeps = newrel;
 	    }
+
+	  /* Print debugging message.  */
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
+	    _dl_debug_printf ("\nfile=%s [%lu];  destroying link map\n",
+			      imap->l_name, imap->l_ns);
 
 	  /* This name always is allocated.  */
 	  free (imap->l_name);
