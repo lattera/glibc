@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dlfcn.h>
+#include <stddef.h>
 
 struct dlopen_args
 {

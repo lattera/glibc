@@ -23,6 +23,7 @@
 #include <gconv.h>
 #include <sys/param.h>
 #include <dlfcn.h>
+#include <stddef.h>
 
 int
 internal_function
