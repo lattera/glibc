@@ -1,3 +1,8 @@
+2003-03-10  Steven Munroe  <sjmunroe@us.ibm.com>
+
+        * sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Don't clobber R7.
+	Copy extra params for NPTL to registers used in clone syscall.
+
 2003-03-10  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Correct system
