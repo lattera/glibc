@@ -74,7 +74,7 @@ extern int __pthread_debug attribute_hidden;
     if (CANCEL_ENABLED_AND_CANCELED (cancelhandling))			      \
       {									      \
 	THREAD_SETMEM (self, result, PTHREAD_CANCELED);			      \
-	__do_cancel (CURRENT_STACK_FRAME);				      \
+	__do_cancel ();							      \
       }									      \
   } while (0)
 
@@ -85,9 +85,41 @@ extern int __pthread_debug attribute_hidden;
 #define CANCEL_RESET(oldtype) \
   __pthread_disable_asynccancel (oldtype)
 
-/* Function performing the cancellation.  */
-extern void __do_cancel (char *currentframe)
-     __attribute ((visibility ("hidden"), noreturn, regparm (1)));
+/* Same as CANCEL_ASYNC, but for use in libc.so.  */
+#define LIBC_CANCEL_ASYNC() \
+  __libc_enable_asynccancel ()
+/* Same as CANCEL_RESET, but for use in libc.so.  */
+#define LIBC_CANCEL_RESET(oldtype) \
+  __libc_disable_asynccancel (oldtype)
+
+
+/* This function is responsible for calling all registered cleanup
+   handlers and then terminate the thread.  This includes dellocating
+   the thread-specific data.  The implementation is complicated by the
+   fact that we have to handle to cancellation handler registration
+   methods: exceptions using try/finally and setjmp.
+
+   The setjmp method is always available.  The user might compile some
+   code which uses this method because no modern compiler is
+   available.  So we have to handle these first since we cannot call
+   the cleanup handlers if the stack frames are gone.  At the same
+   time this opens a hole for the register exception handler blocks
+   since now they might be in danger of using an overwritten stack
+   frame.  The advise is to only use new or only old style cancellation
+   handling.  */
+static inline void
+__do_cancel (void)
+{
+  struct pthread *self = THREAD_SELF;
+
+  /* Throw an exception.  */
+  // XXX TBI
+
+  /* If throwing an exception didn't work try the longjmp.  */
+  __libc_longjmp (self->cancelbuf, 1);
+
+  /* NOTREACHED */
+}
 
 
 /* Test whether stackframe is still active.  */
@@ -186,7 +218,13 @@ extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 extern int __pthread_kill (pthread_t threadid, int signo);
 extern int __pthread_setcanceltype (int type, int *oldtype);
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
-extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
+extern void __pthread_disable_asynccancel (int oldtype)
+     internal_function attribute_hidden;
+
+/* The two functions are in libc.so and not exported.  */
+extern int __libc_enable_asynccancel (void) attribute_hidden;
+extern void __libc_disable_asynccancel (int oldtype)
+     internal_function attribute_hidden;
 
 #ifdef IS_IN_libpthread
 /* Special versions which use non-exported functions.  */

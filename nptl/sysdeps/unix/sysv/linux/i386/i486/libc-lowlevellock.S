@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <tls.h>
 
 	.text
 
@@ -48,13 +49,7 @@ __lll_lock_wait:
 
 	orl	$-1, %eax	/* Load -1.  */
 #ifndef UP
-# ifdef PIC
-	call	__i686.get_pc_thunk.dx
-	addl	$_GLOBAL_OFFSET_TABLE_, %edx
-	cmpl	$0, __libc_locking_needed@GOTOFF(%edx)
-# else
-	cmpl	$0, __libc_locking_needed
-# endif
+	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET
 	je,pt	0f
 	lock
 0:
@@ -83,13 +78,7 @@ lll_unlock_wake_cb:
 
 	movl	20(%esp), %ebx
 #ifndef UP
-# ifdef PIC
-	call	__i686.get_pc_thunk.dx
-	addl	$_GLOBAL_OFFSET_TABLE_, %edx
-	cmpl	$0, __libc_locking_needed@GOTOFF(%edx)
-# else
-	cmpl	$0, __libc_locking_needed
-# endif
+	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET
 	je,pt	0f
 	lock
 0:

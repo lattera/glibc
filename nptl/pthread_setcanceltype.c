@@ -60,7 +60,7 @@ __pthread_setcanceltype (type, oldtype)
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
 	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-	      __do_cancel (CURRENT_STACK_FRAME);
+	      __do_cancel ();
 	    }
 
 	  break;

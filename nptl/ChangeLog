@@ -1,3 +1,38 @@
+2002-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (routines): Add libc-cancellation.
+	* libc-cancellation.c: New file.
+	* descr.h (struct pthread): Add multiple_threads field.
+	* allocatestack.c (allocate_stack): Initialize multiple_header field of
+	new thread descriptor to 1.
+	* sysdeps/unix/sysv/linux/i386/createthread.c (create_thread):
+	Initialize multiple_thread field after successful thread creation.
+	* cancellation.c (__do_cancel): Move to pthreadP.h.
+	(__pthread_enable_asynccancel): Remove parameter from __do_cancel call.
+	(__pthread_disable_asynccancel): Add internal_function attribute.
+	* init.c (sigcancel_handler): Remove parameter from __do_cancel call.
+	* pthread_setcancelstate.c: Likewise.
+	* pthread_setcanceltype.c: Likewise.
+	* pthread_exit.c: Likewise.
+	* pthreadP.h (CANCELLATION_P): Likewise.
+	(__do_cancel): Define as static inline.
+	(LIBC_CANCEL_ASYNC, LIBC_CANCEL_RESET): New #defines.
+	(__libc_enable_asynccancel, __libc_disable_asynccancel): New
+	declarations.
+	* sysdeps/i386/tls.h (tcbhead_t): Add list and multiple_threads
+	fields.  Define MULTIPLE_THREADS_OFFSET.
+	* sysdeps/pthread/bits/libc-lock.h: Remove __libc_locking_needed
+	declaration.
+	* sysdeps/unix/sysv/linux/accept.S: New file.
+	* sysdeps/unix/sysv/linux/read.c: New file.
+	* sysdeps/unix/sysv/linux/write.c: New file.
+	* sysdeps/unix/sysv/linux/i386/pt-socket.S: New file.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Remove definition and
+	initialization of __libc_locking_needed.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Don't use
+	__libc_locking_needed, use multiple_threads field in TCB.
+	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Likewise.
+
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i686/libc-lowlevellock.S: Use i486

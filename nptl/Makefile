@@ -28,7 +28,7 @@ headers := pthread.h semaphore.h
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 
-routines = alloca_cutoff forward libc-lowlevellock
+routines = alloca_cutoff forward libc-lowlevellock libc-cancellation
 shared-only-routines = forward
 
 libpthread-routines = init events \

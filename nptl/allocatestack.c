@@ -272,6 +272,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* This is a user-provided stack.  */
       pd->user_stack = true;
 
+      /* There is at least one more thread.  */
+      pd->header.data.multiple_threads = 1;
+
       /* Allocate the DTV for this thread.  */
       if (_dl_allocate_tls (pd) == NULL)
 	/* Something went wrong.  */
@@ -336,6 +339,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* Initialize the lock.  */
 	  pd->lock = LLL_LOCK_INITIALIZER;
+
+	  /* There is at least one more thread.  */
+	  pd->header.data.multiple_threads = 1;
 
 	  /* Allocate the DTV for this thread.  */
 	  if (_dl_allocate_tls (pd) == NULL)

@@ -84,7 +84,7 @@ sigcancel_handler (int sig __attribute ((unused)))
 
 	      /* Run the registered destructors and terminate the
 		 thread.  */
-	      __do_cancel (CURRENT_STACK_FRAME);
+	      __do_cancel ();
 	    }
 
 	  break;

@@ -17,25 +17,34 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <list.h>
-#include "fork.h"
-#include <bits/libc-lock.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <sysdep.h>
+#include <unistd.h>
+#include <nptl/pthreadP.h>
+#include <tls.h>
 
 
-static struct fork_handler pthread_child_handler;
-
-
-void
-__libc_pthread_init (ptr, reclaim)
-     unsigned long int *ptr;
-     void (*reclaim) (void);
+ssize_t
+__libc_write (int fd, const void *buf, size_t count)
 {
-  /* Remember the pointer to the generation counter in libpthread.  */
-  __fork_generation_pointer = ptr;
+#ifndef NOT_IN_libc
+  if (__builtin_expect (THREAD_GETMEM (THREAD_SELF,
+				       header.data.multiple_threads) == 0, 1))
+    return INLINE_SYSCALL (write, 3, fd, buf, count);
 
-  /* Called by a child after fork.  */
-  pthread_child_handler.handler = reclaim;
+  int oldtype = LIBC_CANCEL_ASYNC ();
+#endif
 
-  /* The fork handler needed by libpthread.  */
-  list_add_tail (&pthread_child_handler.list, &__fork_child_list);
+  ssize_t result = INLINE_SYSCALL (write, 3, fd, buf, count);
+
+#ifndef NOT_IN_libc
+  LIBC_CANCEL_RESET (oldtype);
+#endif
+
+  return result;
 }
+libc_hidden_def (__libc_write)
+strong_alias (__libc_write, __write)
+libc_hidden_weak (__write)
+weak_alias (__libc_write, write)

@@ -23,35 +23,6 @@
 #include "atomic.h"
 
 
-/* This function is responsible for calling all registered cleanup
-   handlers and then terminate the thread.  This includes dellocating
-   the thread-specific data.  The implementation is complicated by the
-   fact that we have to handle to cancellation handler registration
-   methods: exceptions using try/finally and setjmp.
-
-   The setjmp method is always available.  The user might compile some
-   code which uses this method because no modern compiler is
-   available.  So we have to handle these first since we cannot call
-   the cleanup handlers if the stack frames are gone.  At the same
-   time this opens a hole for the register exception handler blocks
-   since now they might be in danger of using an overwritten stack
-   frame.  The advise is to only use new or only old style cancellation
-   handling.  */
-void
-__do_cancel (char *currentframe)
-{
-  struct pthread *self = THREAD_SELF;
-
-  /* Throw an exception.  */
-  // XXX TBI
-
-  /* If throwing an exception didn't work try the longjmp.  */
-  __libc_longjmp (self->cancelbuf, 1);
-
-  /* NOTREACHED */
-}
-
-
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
    They do not need to check parameters etc.  */
@@ -76,7 +47,7 @@ __pthread_enable_asynccancel (void)
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
 	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-	      __do_cancel (CURRENT_STACK_FRAME);
+	      __do_cancel ();
 	    }
 
 	  break;
@@ -88,7 +59,7 @@ __pthread_enable_asynccancel (void)
 
 
 void
-attribute_hidden
+internal_function attribute_hidden
 __pthread_disable_asynccancel (int oldtype)
 {
   /* If asynchronous cancellation was enabled before we do not have

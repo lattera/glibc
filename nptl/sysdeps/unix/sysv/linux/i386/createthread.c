@@ -82,6 +82,9 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	    /* Failed.  */
 	    return errno;
 
+	  /* We now have for sure more than one thread.  */
+	  pd->header.data.multiple_threads = 1;
+
 	  /* Now fill in the information about the new thread in
 	     the newly created thread's data structure.  We cannot let
 	     the new thread do this since we don't know whether it was
@@ -141,6 +144,9 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	       CLONE_DETACHED | 0, pd, &pd->tid, &desc.desc, &pd->tid) == -1)
     /* Failed.  */
     return errno;
+
+  /* We now have for sure more than one thread.  */
+  pd->header.data.multiple_threads = 1;
 
   return 0;
 }

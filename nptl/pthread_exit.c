@@ -27,5 +27,5 @@ pthread_exit (value)
 {
   THREAD_SETMEM (THREAD_SELF, result, value);
 
-  __do_cancel (CURRENT_STACK_FRAME);
+  __do_cancel ();
 }

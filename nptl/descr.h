@@ -58,6 +58,8 @@ struct pthread
   /* XXX Remove this union for IA-64 style TLS module */
   union
   {
+    /* It is very important to always append new elements.  The offsets
+       of some of the elements of the struct are used in assembler code.  */
     struct
     {
       void *tcb;                /* Pointer to the TCB.  This is not always
@@ -65,6 +67,7 @@ struct pthread
       union dtv *dtvp;
       struct pthread *self;       /* Pointer to this structure */
       list_t list;
+      int multiple_threads;
     } data;
     void *__padding[16];
   } header;

@@ -24,6 +24,7 @@
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
+# include <list.h>
 
 
 /* Type for the dtv.  */
@@ -40,6 +41,8 @@ typedef struct
 			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
+  list_t list;
+  int multiple_threads;
 } tcbhead_t;
 #endif
 
@@ -52,9 +55,12 @@ typedef struct
 /* Signal that TLS support is available.  */
 #define USE_TLS	1
 
-/* Alignment requirement for the stack.  For IA-32 this is govern by
+/* Alignment requirement for the stack.  For IA-32 this is governed by
    the SSE memory functions.  */
 #define STACK_ALIGN	16
+
+/* Offset of the MULTIPLE_THREADS element in tcbhead_t.  */
+#define MULTIPLE_THREADS_OFFSET 20
 
 
 #ifndef __ASSEMBLER__

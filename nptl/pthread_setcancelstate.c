@@ -58,7 +58,7 @@ pthread_setcancelstate (state, oldstate)
 					   oldval) == 0)
 	{
 	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
-	    __do_cancel (CURRENT_STACK_FRAME);
+	    __do_cancel ();
 
 	  break;
 	}

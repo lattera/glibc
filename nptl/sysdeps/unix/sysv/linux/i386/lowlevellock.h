@@ -21,6 +21,7 @@
 #define _LOWLEVELLOCK_H	1
 
 #include <time.h>
+#include <sys/param.h>
 #include <bits/pthreadtypes.h>
 
 #ifndef LOCK_INSTR
@@ -182,26 +183,27 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
    the lock prefix when the thread library is not used.
 
    XXX In future we might even want to avoid it on UP machines.  */
+# include <tls.h>
 
 /* Nonzero if locking is needed.  */
 extern int __libc_locking_needed attribute_hidden;
 
 # define lll_trylock(futex) \
   ({ unsigned char ret;							      \
-     __asm __volatile ("cmpl $0, %5\n\t"				      \
+     __asm __volatile ("cmpl $0, %%gs:%P5\n\t"				      \
 		       "je,pt 0f\n\t"					      \
 		       "lock\n"						      \
 		       "0:\tcmpxchgl %2, %1; setne %0"			      \
 		       : "=a" (ret), "=m" (futex)			      \
 		       : "r" (0), "1" (futex), "0" (1),			      \
-		         "m" (__libc_locking_needed)			      \
+		         "i" (offsetof (tcbhead_t, multiple_threads))	      \
 		       : "memory");					      \
      ret; })
 
 
 # define lll_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
-	    __asm __volatile ("cmpl $0, %5\n\t"				      \
+	    __asm __volatile ("cmpl $0, %%gs:%P5\n\t"			      \
 			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\txaddl %0, %2\n\t"			      \
@@ -214,13 +216,13 @@ extern int __libc_locking_needed attribute_hidden;
 			      "2:"					      \
 			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
 			      : "0" (-1), "2" (futex),			      \
-		                "m" (__libc_locking_needed)		      \
+		                "i" (offsetof (tcbhead_t, multiple_threads))  \
 			      : "memory"); })
 
 
 # define lll_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm __volatile ("cmpl $0, %3\n\t"				      \
+            __asm __volatile ("cmpl $0, %%gs:%P3\n\t"			      \
 			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
 			      "0:\tincl %0\n\t"				      \
@@ -232,7 +234,8 @@ extern int __libc_locking_needed attribute_hidden;
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=m" (futex), "=&a" (ignore)		      \
-			      : "0" (futex), "m" (__libc_locking_needed)      \
+			      : "0" (futex),				      \
+				"i" (offsetof (tcbhead_t, multiple_threads))  \
 			      : "memory"); })
 #endif
 

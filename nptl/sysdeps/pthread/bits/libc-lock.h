@@ -25,12 +25,6 @@
 #include <stddef.h>
 
 
-#if defined _LIBC && !defined NOT_IN_libc
-/* Nonzero if locking is needed.  */
-extern int __libc_locking_needed attribute_hidden;
-#endif
-
-
 /* Fortunately Linux now has a mean to do locking which is realtime
    safe without the aid of the thread library.  We also need no fancy
    options like error checking mutexes etc.  We only need simple

@@ -333,7 +333,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 static void
 log_cleanup (void *arg)
 {
-  __libc_lock_unlock (*(__libc_lock_t *) arg);
+  __libc_lock_unlock (syslog_lock);
 }
 
 void
@@ -341,7 +341,7 @@ openlog (const char *ident, int logstat, int logfac)
 {
 #ifdef _LIBC_REENTRANT
   /* Protect against multiple users.  */
-  __libc_cleanup_region_start (1, log_cleanup, &syslog_lock);
+  __libc_cleanup_region_start (1, log_cleanup, NULL);
   __libc_lock_lock (syslog_lock);
 #endif
 
@@ -375,7 +375,7 @@ closelog ()
 {
 #ifdef _LIBC_REENTRANT
   /* Protect against multiple users.  */
-  __libc_cleanup_region_start (1, log_cleanup, &syslog_lock);
+  __libc_cleanup_region_start (1, log_cleanup, NULL);
   __libc_lock_lock (syslog_lock);
 #endif
 
