@@ -32,7 +32,7 @@
 #endif
 
 #ifdef USE_IN_LIBIO
-# include <libio/iolibio.h>
+# include <libio/libioP.h>
 # define fflush(s) _IO_flush_all_lockp (0)
 #endif
 
