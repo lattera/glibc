@@ -259,8 +259,9 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
      should be double from what is currently used.  */
   newhead.namehash_size = MAX (next_prime (2 * newhead.namehash_used),
 			       newhead.namehash_size);
-  printf ("name: size: %u, used: %d, new: size: %u\n",
-	  head->namehash_size, head->namehash_used, newhead.namehash_size);
+  if (! be_quiet)
+    printf ("name: size: %u, used: %d, new: size: %u\n",
+	    head->namehash_size, head->namehash_used, newhead.namehash_size);
 
   newhead.string_offset = (newhead.namehash_offset
 			   + (newhead.namehash_size

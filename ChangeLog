@@ -1,3 +1,16 @@
+2002-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/localedef.c (add_to_readlist): Error about
+	circular dependencies only if the locale in question hasn't
+	been finished.
+	* locale/programs/linereader.c (get_string): Pass LC_CTYPE not
+	CTYPE_LOCALE to load_locale.
+	* locale/programs/locfile.c (locfile_read): Don't include
+	unneeded but available locales in locale_mask.
+
+	* locale/programs/locarchive.c (enlarge_archive): If quiet, don't
+	print any messages about enlarging archive.
+
 2002-08-20 Brian Youmans <3diff@gnu.org>
 
         * manual/contrib.texi: Removed licenses, added acknowledgements

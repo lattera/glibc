@@ -47,7 +47,7 @@ locfile_read (struct localedef_t *result, const struct charmap_t *charmap)
 {
   const char *filename = result->name;
   const char *repertoire_name = result->repertoire_name;
-  int locale_mask = result->needed ^ result->avail;
+  int locale_mask = result->needed & ~result->avail;
   struct linereader *ldfile;
   int not_here = ALL_LOCALES;
 

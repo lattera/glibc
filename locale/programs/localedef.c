@@ -561,7 +561,9 @@ add_to_readlist (int locale, const char *name, const char *repertoire_name,
 	}
     }
 
-  if (generate && (runp->needed & (1 << locale)) != 0)
+  if (generate
+      && (runp->needed & (1 << locale)) != 0
+      && (runp->avail & (1 << locale)) == 0)
     WITH_CUR_LOCALE (error (5, 0, _("\
 circular dependencies between locale definitions")));
 

@@ -735,7 +735,7 @@ non-symbolic character value should not be used"));
 				  int old_needed = locale->needed;
 
 				  locale->needed = 0;
-				  locale = load_locale (CTYPE_LOCALE,
+				  locale = load_locale (LC_CTYPE,
 							locale->name,
 							locale->repertoire_name,
 							charmap, locale);
