@@ -692,12 +692,8 @@ re_compile_internal (preg, pattern, length, syntax)
       return err;
     }
 
-  if (syntax & RE_ICASE)
-    err = re_string_construct_toupper (&regexp, pattern, length,
-                                       preg->translate);
-  else
-    err = re_string_construct (&regexp, pattern, length, preg->translate);
-
+  err = re_string_construct (&regexp, pattern, length, preg->translate,
+                             syntax & RE_ICASE);
   if (BE (err != REG_NOERROR, 0))
     {
       re_free (dfa);

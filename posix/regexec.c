@@ -39,7 +39,7 @@
 #include "regex_internal.h"
 
 static reg_errcode_t match_ctx_init (re_match_context_t *cache, int eflags,
-                                     int n);
+				     re_string_t *input, int n);
 static void match_ctx_free (re_match_context_t *cache);
 static reg_errcode_t match_ctx_add_entry (re_match_context_t *cache, int node,
                                           int from, int to);
@@ -49,68 +49,54 @@ static reg_errcode_t re_search_internal (const regex_t *preg,
                                          regmatch_t pmatch[], int eflags);
 static inline re_dfastate_t *acquire_init_state_context (reg_errcode_t *err,
                                                          const regex_t *preg,
-                                                         const re_string_t *input,
-                                                         int idx, int eflags);
-static int check_matching (const regex_t *preg, re_string_t *input,
-                           re_match_context_t *mctx, re_dfastate_t **state_log,
-                           int start_idx, int fl_search, int fl_longest_match);
+                                                         const re_match_context_t *mctx,
+                                                         int idx);
+static int check_matching (const regex_t *preg, re_match_context_t *mctx,
+                           int fl_search, int fl_longest_match);
 static int check_halt_node_context (const re_dfa_t *dfa, int node,
                                     unsigned int context);
 static int check_halt_state_context (const regex_t *preg,
                                      const re_dfastate_t *state,
-                                     const re_string_t *input, int idx,
-                                     int eflags);
+                                     const re_match_context_t *mctx, int idx);
 static int proceed_next_node (const regex_t *preg,
-                              re_dfastate_t **state_log,
                               const re_match_context_t *mctx,
-                              const re_string_t *input,
                               int *pidx, int node, re_node_set *eps_via_nodes);
-static reg_errcode_t set_regs (const regex_t *preg, re_dfastate_t **state_log,
+static reg_errcode_t set_regs (const regex_t *preg,
                                const re_match_context_t *mctx,
-                               const re_string_t *input, size_t nmatch,
-                               regmatch_t *pmatch, int last);
-static int sift_states_iter_mb (const regex_t *preg, re_dfastate_t **state_log,
+                               size_t nmatch, regmatch_t *pmatch, int last);
+static int sift_states_iter_mb (const regex_t *preg,
                                 const re_match_context_t *mctx,
-                                const re_string_t *input, int node_idx,
-                                int str_idx, int max_str_idx);
+                                int node_idx, int str_idx, int max_str_idx);
 static int sift_states_iter_bkref (const re_dfa_t *dfa,
                                    re_dfastate_t **state_log,
                                    struct re_backref_cache_entry *mctx_entry,
-                                   int node_idx, int idx, int match_first,
-                                   int match_last);
+                                   int node_idx, int idx, int match_last);
 static reg_errcode_t sift_states_backward (const regex_t *preg,
-                                           re_dfastate_t **state_log,
                                            const re_match_context_t *mctx,
-                                           const re_string_t *input,
                                            int last_node);
+static reg_errcode_t clean_state_log_if_need (re_match_context_t *mctx,
+                                              int next_state_log_idx);
 static reg_errcode_t add_epsilon_backreference (const re_dfa_t *dfa,
                                                 const re_match_context_t *mctx,
                                                 const re_node_set *plog,
                                                 int idx,
                                                 re_node_set *state_buf);
 static re_dfastate_t *transit_state (reg_errcode_t *err, const regex_t *preg,
-                                     re_dfastate_t *state, re_string_t *input,
-                                     int fl_search, re_dfastate_t **state_log,
-                                     re_match_context_t *mctx);
+                                     re_match_context_t *mctx,
+                                     re_dfastate_t *state, int fl_search);
 static re_dfastate_t *transit_state_sb (reg_errcode_t *err, const regex_t *preg,
                                         re_dfastate_t *pstate,
-                                        re_string_t *input, int fl_search,
+                                        int fl_search,
                                         re_match_context_t *mctx);
 static reg_errcode_t transit_state_mb (const regex_t *preg,
                                        re_dfastate_t *pstate,
-                                       const re_string_t *input,
-                                       re_dfastate_t **state_log,
                                        re_match_context_t *mctx);
 static reg_errcode_t transit_state_bkref (const regex_t *preg,
                                           re_dfastate_t *pstate,
-                                          const re_string_t *input,
-                                          re_dfastate_t **state_log,
                                           re_match_context_t *mctx);
 static reg_errcode_t transit_state_bkref_loop (const regex_t *preg,
-                                               const re_string_t *input,
                                                re_node_set *nodes,
                                                re_dfastate_t **work_state_log,
-                                               re_dfastate_t **state_log,
                                                re_match_context_t *mctx);
 static re_dfastate_t **build_trtable (const regex_t *dfa,
                                       const re_dfastate_t *state,
@@ -124,7 +110,8 @@ static int group_nodes_into_DFAstates (const regex_t *dfa,
                                        re_node_set *states_node,
                                        bitset *states_ch);
 static int check_node_accept (const regex_t *preg, const re_token_t *node,
-                              const re_string_t *input, int idx, int eflags);
+                              const re_match_context_t *mctx, int idx);
+static reg_errcode_t extend_buffers (re_match_context_t *mctx);
 
 /* Entry point for POSIX code.  */
 
@@ -523,7 +510,7 @@ re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
   re_string_t input;
-  re_dfastate_t **state_log;
+  int left_lim, right_lim, incr;
   int fl_longest_match, match_first, match_last = -1;
   re_match_context_t mctx;
   char *fastmap = ((preg->fastmap != NULL && preg->fastmap_accurate)
@@ -540,53 +527,91 @@ re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
   /* We must check the longest matching, if nmatch > 0.  */
   fl_longest_match = (nmatch != 0);
 
+  err = re_string_allocate (&input, string, length, dfa->nodes_len + 1,
+                            preg->translate, preg->syntax & RE_ICASE);
+  if (BE (err != REG_NOERROR, 0))
+    return err;
+
+  err = match_ctx_init (&mctx, eflags, &input, dfa->nbackref * 2);
+  if (BE (err != REG_NOERROR, 0))
+    return err;
+
   /* We will log all the DFA states through which the dfa pass,
      if nmatch > 1, or this dfa has "multibyte node", which is a
      back-reference or a node which can accept multibyte character or
      multi character collating element.  */
   if (nmatch > 1 || dfa->has_mb_node)
     {
-      state_log = re_malloc (re_dfastate_t *, length + 1);
-      if (BE (state_log == NULL, 0))
+      mctx.state_log = re_malloc (re_dfastate_t *, dfa->nodes_len + 1);
+      if (BE (mctx.state_log == NULL, 0))
         return REG_ESPACE;
     }
   else
-    state_log = NULL;
-
-  if (preg->syntax & RE_ICASE)
-    err = re_string_construct_toupper (&input, string, length, preg->translate);
-  else
-    err = re_string_construct (&input, string, length, preg->translate);
-  if (BE (err != REG_NOERROR, 0))
-    return err;
-
-  err = match_ctx_init (&mctx, eflags, dfa->nbackref * 2);
-  if (BE (err != REG_NOERROR, 0))
-    return err;
+    mctx.state_log = NULL;
 
 #ifdef DEBUG
   /* We assume front-end functions already check them.  */
   assert (start + range >= 0 && start + range <= length);
 #endif
 
+  match_first = start;
+  input.tip_context = ((eflags & REG_NOTBOL) ? CONTEXT_BEGBUF
+                       : CONTEXT_NEWLINE | CONTEXT_BEGBUF);
+
   /* Check incrementally whether of not the input string match.  */
-  for (match_first = start; ;)
+  incr = (range < 0) ? -1 : 1;
+  left_lim = (range < 0) ? start + range : start;
+  right_lim = (range < 0) ? start : start + range;
+
+  for (;;)
     {
-      if ((match_first < length
-           && (fastmap == NULL
-               || fastmap[re_string_byte_at (&input, match_first)]))
-          || preg->can_be_null)
+      /* At first get the current byte from input string.  */
+      int ch;
+      if (MB_CUR_MAX > 1 && (preg->syntax & RE_ICASE || preg->translate))
         {
+          /* In this case, we can't determin easily the current byte,
+             since it might be a component byte of a multibyte character.
+             Then we use the constructed buffer instead.  */
+          /* If MATCH_FIRST is out of the valid range, reconstruct the
+             buffers.  */
+          if (input.raw_mbs_idx + input.valid_len <= match_first)
+            re_string_reconstruct (&input, match_first, eflags,
+                                   preg->newline_anchor);
+          /* If MATCH_FIRST is out of the buffer, leave it as '\0'.
+             Note that MATCH_FIRST must not be smaller than 0.  */
+          ch = ((match_first >= length) ? 0
+                : re_string_byte_at (&input, match_first - input.raw_mbs_idx));
+        }
+      else
+        {
+          /* We apply translate/conversion manually, since it is trivial
+             in this case.  */
+          /* If MATCH_FIRST is out of the buffer, leave it as '\0'.
+             Note that MATCH_FIRST must not be smaller than 0.  */
+          ch = (match_first < length) ? (unsigned char)string[match_first] : 0;
+          /* Apply translation if we need.  */
+          ch = preg->translate ? preg->translate[ch] : ch;
+          /* In case of case insensitive mode, convert to upper case.  */
+          ch = ((preg->syntax & RE_ICASE) && islower (ch)) ? toupper (ch) : ch;
+        }
+
+      /* Eliminate inappropriate one by fastmap.  */
+      if (preg->can_be_null || fastmap == NULL || fastmap[ch])
+        {
+          /* Reconstruct the buffers so that the matcher can assume that
+             the matching starts from the begining of the buffer.  */
+          re_string_reconstruct (&input, match_first, eflags,
+                                 preg->newline_anchor);
 #ifdef RE_ENABLE_I18N
-          if (MB_CUR_MAX == 1 || re_string_first_byte (&input, match_first))
+          /* Eliminate it when it is a component of a multibyte character
+             and isn't the head of a multibyte character.  */
+          if (MB_CUR_MAX == 1 || re_string_first_byte (&input, 0))
 #endif
             {
-              /* We assume that the matching starts from `match_first'.  */
-              re_string_set_index (&input, match_first);
-              mctx.match_first = mctx.state_log_top = match_first;
-              mctx.nbkref_ents = mctx.max_bkref_len = 0;
-              match_last = check_matching (preg, &input, &mctx, state_log,
-                                           match_first, 0, fl_longest_match);
+              /* It seems to be appropriate one, then use the matcher.  */
+              /* We assume that the matching starts from 0.  */
+              mctx.state_log_top = mctx.nbkref_ents = mctx.max_bkref_len = 0;
+              match_last = check_matching (preg, &mctx, 0, fl_longest_match);
               if (match_last != -1)
                 {
                   if (BE (match_last == -2, 0))
@@ -597,18 +622,9 @@ re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
             }
         }
       /* Update counter.  */
-      if (range < 0)
-        {
-          --match_first;
-          if (match_first < start + range)
-            break;
-        }
-      else
-        {
-          ++match_first;
-          if (match_first > start + range)
-            break;
-        }
+      match_first += incr;
+      if (match_first < left_lim || right_lim < match_first)
+        break;
     }
 
   /* Set pmatch[] if we need.  */
@@ -621,30 +637,38 @@ re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
         pmatch[reg_idx].rm_so = pmatch[reg_idx].rm_eo = -1;
 
       /* Set the points where matching start/end.  */
-      pmatch[0].rm_so = mctx.match_first;
+      pmatch[0].rm_so = 0;
       mctx.match_last = pmatch[0].rm_eo = match_last;
 
       if (!preg->no_sub && nmatch > 1)
         {
           /* We need the ranges of all the subexpressions.  */
           int halt_node;
-          re_dfastate_t *pstate = state_log[match_last];
+          re_dfastate_t *pstate = mctx.state_log[match_last];
 #ifdef DEBUG
-          assert (state_log != NULL);
+          assert (mctx.state_log != NULL);
 #endif
-          halt_node = check_halt_state_context (preg, pstate, &input,
-                                                match_last, eflags);
-          err = sift_states_backward (preg, state_log, &mctx, &input, halt_node);
+          halt_node = check_halt_state_context (preg, pstate, &mctx,
+                                                match_last);
+          err = sift_states_backward (preg, &mctx, halt_node);
           if (BE (err != REG_NOERROR, 0))
             return err;
-          err = set_regs (preg, state_log, &mctx, &input, nmatch, pmatch,
-                          halt_node);
+          err = set_regs (preg, &mctx, nmatch, pmatch, halt_node);
           if (BE (err != REG_NOERROR, 0))
             return err;
         }
+
+      /* At last, add the offset to the each registers, since we slided
+         the buffers so that We can assume that the matching starts from 0.  */
+      for (reg_idx = 0; reg_idx < nmatch; ++reg_idx)
+        if (pmatch[reg_idx].rm_so != -1)
+          {
+            pmatch[reg_idx].rm_so += match_first;
+            pmatch[reg_idx].rm_eo += match_first;
+          }
     }
 
-  re_free (state_log);
+  re_free (mctx.state_log);
   if (dfa->nbackref)
     match_ctx_free (&mctx);
   re_string_destruct (&input);
@@ -656,11 +680,11 @@ re_search_internal (preg, string, length, start, range, nmatch, pmatch, eflags)
    since initial states may have constraints like "\<", "^", etc..  */
 
 static inline re_dfastate_t *
-acquire_init_state_context (err, preg, input, idx, eflags)
+acquire_init_state_context (err, preg, mctx, idx)
      reg_errcode_t *err;
      const regex_t *preg;
-     const re_string_t *input;
-     int idx, eflags;
+     const re_match_context_t *mctx;
+     int idx;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
 
@@ -668,7 +692,7 @@ acquire_init_state_context (err, preg, input, idx, eflags)
   if (dfa->init_state->has_constraint)
     {
       unsigned int context;
-      context =  re_string_context_at (input, idx - 1, eflags,
+      context =  re_string_context_at (mctx->input, idx - 1, mctx->eflags,
                                        preg->newline_anchor);
       if (IS_WORD_CONTEXT (context))
         return dfa->init_state_word;
@@ -697,52 +721,51 @@ acquire_init_state_context (err, preg, input, idx, eflags)
    and return the index where the matching end, return -1 if not match,
    or return -2 in case of an error.
    FL_SEARCH means we must search where the matching starts,
-   FL_LONGEST_MATCH means we want the POSIX longest matching.  */
+   FL_LONGEST_MATCH means we want the POSIX longest matching.
+   Note that the matcher assume that the maching starts from the current
+   index of the buffer.  */
 
 static int
-check_matching (preg, input, mctx, state_log, start_idx, fl_search,
-                fl_longest_match)
+check_matching (preg, mctx, fl_search, fl_longest_match)
     const regex_t *preg;
-    re_string_t *input;
     re_match_context_t *mctx;
-    re_dfastate_t **state_log;
-    int start_idx, fl_search, fl_longest_match;
+    int fl_search, fl_longest_match;
 {
   reg_errcode_t err;
-  int match = 0, match_last = -1;
+  int match = 0;
+  int match_last = -1;
+  int cur_str_idx = re_string_cur_idx (mctx->input);
   re_dfastate_t *cur_state;
 
-  cur_state = acquire_init_state_context (&err, preg, input, start_idx,
-                                          mctx->eflags);
+  cur_state = acquire_init_state_context (&err, preg, mctx, cur_str_idx);
   /* An initial state must not be NULL(invalid state).  */
   if (BE (cur_state == NULL, 0))
     return -2;
-  if (state_log != NULL)
-    state_log[start_idx] = cur_state;
+  if (mctx->state_log != NULL)
+    mctx->state_log[cur_str_idx] = cur_state;
   /* If the RE accepts NULL string.  */
   if (cur_state->halt)
     {
       if (!cur_state->has_constraint
-          || check_halt_state_context (preg, cur_state, input, start_idx,
-                                       mctx->eflags))
+          || check_halt_state_context (preg, cur_state, mctx, cur_str_idx))
         {
           if (!fl_longest_match)
-            return start_idx;
+            return cur_str_idx;
           else
             {
-              match_last = start_idx;
+              match_last = cur_str_idx;
               match = 1;
             }
         }
     }
 
-  while (!re_string_eoi (input))
+  while (!re_string_eoi (mctx->input))
     {
-      cur_state = transit_state (&err, preg, cur_state, input,
-                                 fl_search && !match, state_log, mctx);
+      cur_state = transit_state (&err, preg, mctx, cur_state,
+                                 fl_search && !match);
       if (cur_state == NULL) /* Reached at the invalid state or an error.  */
         {
-          int cur_str_idx = re_string_cur_idx (input);
+          cur_str_idx = re_string_cur_idx (mctx->input);
           if (BE (err != REG_NOERROR, 0))
             return -2;
           if (fl_search && !match)
@@ -750,27 +773,27 @@ check_matching (preg, input, mctx, state_log, start_idx, fl_search,
               /* Restart from initial state, since we are searching
                  the point from where matching start.  */
 #ifdef RE_ENABLE_I18N
-              if (MB_CUR_MAX == 1 || re_string_first_byte (input, cur_str_idx))
+              if (MB_CUR_MAX == 1
+                  || re_string_first_byte (mctx->input, cur_str_idx))
 #endif /* RE_ENABLE_I18N */
-                cur_state = acquire_init_state_context (&err, preg, input,
-                                                        cur_str_idx,
-                                                        mctx->eflags);
+                cur_state = acquire_init_state_context (&err, preg, mctx,
+                                                        cur_str_idx);
               if (BE (cur_state == NULL && err != REG_NOERROR, 0))
                 return -2;
-              if (state_log != NULL)
-                state_log[cur_str_idx] = cur_state;
+              if (mctx->state_log != NULL)
+                mctx->state_log[cur_str_idx] = cur_state;
             }
           else if (!fl_longest_match && match)
             break;
           else /* (fl_longest_match && match) || (!fl_search && !match)  */
             {
-              if (state_log == NULL)
+              if (mctx->state_log == NULL)
                 break;
               else
                 {
                   int max = mctx->state_log_top;
                   for (; cur_str_idx <= max; ++cur_str_idx)
-                    if (state_log[cur_str_idx] != NULL)
+                    if (mctx->state_log[cur_str_idx] != NULL)
                       break;
                   if (cur_str_idx > max)
                     break;
@@ -783,12 +806,11 @@ check_matching (preg, input, mctx, state_log, start_idx, fl_search,
           /* Reached at a halt state.
              Check the halt state can satisfy the current context.  */
           if (!cur_state->has_constraint
-              || check_halt_state_context (preg, cur_state, input,
-                                           re_string_cur_idx (input),
-                                           mctx->eflags))
+              || check_halt_state_context (preg, cur_state, mctx,
+                                           re_string_cur_idx (mctx->input)))
             {
               /* We found an appropriate halt state.  */
-              match_last = re_string_cur_idx (input);
+              match_last = re_string_cur_idx (mctx->input);
               match = 1;
               if (!fl_longest_match)
                 break;
@@ -823,11 +845,11 @@ static int check_halt_node_context (dfa, node, context)
    match the context, return the node.  */
 
 static int
-check_halt_state_context (preg, state, input, idx, eflags)
+check_halt_state_context (preg, state, mctx, idx)
     const regex_t *preg;
     const re_dfastate_t *state;
-    const re_string_t *input;
-    int idx, eflags;
+    const re_match_context_t *mctx;
+    int idx;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   int i;
@@ -835,7 +857,8 @@ check_halt_state_context (preg, state, input, idx, eflags)
 #ifdef DEBUG
   assert (state->halt);
 #endif
-  context = re_string_context_at (input, idx, eflags, preg->newline_anchor);
+  context = re_string_context_at (mctx->input, idx, mctx->eflags,
+                                  preg->newline_anchor);
   for (i = 0; i < state->nodes.nelem; ++i)
     if (check_halt_node_context (dfa, state->nodes.elems[i], context))
       return state->nodes.elems[i];
@@ -848,11 +871,9 @@ check_halt_state_context (preg, state, input, idx, eflags)
    of errors.  */
 
 static int
-proceed_next_node (preg, state_log, mctx, input, pidx, node, eps_via_nodes)
+proceed_next_node (preg, mctx, pidx, node, eps_via_nodes)
     const regex_t *preg;
-    re_dfastate_t **state_log;
     const re_match_context_t *mctx;
-    const re_string_t *input;
     int *pidx, node;
     re_node_set *eps_via_nodes;
 {
@@ -863,9 +884,9 @@ proceed_next_node (preg, state_log, mctx, input, pidx, node, eps_via_nodes)
       err = re_node_set_insert (eps_via_nodes, node);
       if (BE (err < 0, 0))
         return -1;
-      for (i = 0; i < state_log[*pidx]->nodes.nelem; ++i)
+      for (i = 0; i < mctx->state_log[*pidx]->nodes.nelem; ++i)
         {
-          int candidate = state_log[*pidx]->nodes.elems[i];
+          int candidate = mctx->state_log[*pidx]->nodes.elems[i];
           if (!re_node_set_contains (dfa->edests + node, candidate)
               && !(dfa->nodes[candidate].type == OP_CONTEXT_NODE
                    && re_node_set_contains (dfa->edests + node,
@@ -892,7 +913,7 @@ proceed_next_node (preg, state_log, mctx, input, pidx, node, eps_via_nodes)
         }
 
       if (ACCEPT_MB_NODE (type))
-        naccepted = check_node_accept_bytes (preg, entity, input, *pidx);
+        naccepted = check_node_accept_bytes (preg, entity, mctx->input, *pidx);
       else if (type == OP_BACK_REF)
         {
           for (i = 0; i < mctx->nbkref_ents; ++i)
@@ -907,11 +928,12 @@ proceed_next_node (preg, state_log, mctx, input, pidx, node, eps_via_nodes)
               if (BE (err < 0, 0))
                 return -1;
               dest_node = dfa->nexts[node];
-              if (re_node_set_contains (&state_log[*pidx]->nodes, dest_node))
+              if (re_node_set_contains (&mctx->state_log[*pidx]->nodes,
+                                        dest_node))
                 return dest_node;
-              for (i = 0; i < state_log[*pidx]->nodes.nelem; ++i)
+              for (i = 0; i < mctx->state_log[*pidx]->nodes.nelem; ++i)
                 {
-                  dest_node = state_log[*pidx]->nodes.elems[i];
+                  dest_node = mctx->state_log[*pidx]->nodes.elems[i];
                   if ((dfa->nodes[dest_node].type == OP_CONTEXT_NODE
                        && (dfa->nexts[node]
                            == dfa->nodes[dest_node].opr.ctx_info->entity)))
@@ -921,13 +943,12 @@ proceed_next_node (preg, state_log, mctx, input, pidx, node, eps_via_nodes)
         }
 
       if (naccepted != 0
-          || check_node_accept (preg, dfa->nodes + node, input, *pidx,
-                                mctx->eflags))
+          || check_node_accept (preg, dfa->nodes + node, mctx, *pidx))
         {
           dest_node = dfa->nexts[node];
           *pidx = (naccepted == 0) ? *pidx + 1 : *pidx + naccepted;
 #ifdef DEBUG
-          assert (state_log[*pidx] != NULL);
+          assert (mctx->state_log[*pidx] != NULL);
 #endif
           re_node_set_empty (eps_via_nodes);
           return dest_node;
@@ -946,11 +967,9 @@ proceed_next_node (preg, state_log, mctx, input, pidx, node, eps_via_nodes)
    pmatch[i].rm_so == pmatch[i].rm_eo == -1 (i > 1).  */
 
 static reg_errcode_t
-set_regs (preg, state_log, mctx, input, nmatch, pmatch, last_node)
+set_regs (preg, mctx, nmatch, pmatch, last_node)
     const regex_t *preg;
-    re_dfastate_t **state_log;
     const re_match_context_t *mctx;
-    const re_string_t *input;
     size_t nmatch;
     regmatch_t *pmatch;
     int last_node;
@@ -961,7 +980,7 @@ set_regs (preg, state_log, mctx, input, nmatch, pmatch, last_node)
   int i;
 #ifdef DEBUG
   assert (nmatch > 1);
-  assert (state_log != NULL);
+  assert (mctx->state_log != NULL);
 #endif
   cur_node = dfa->init_node;
   real_nmatch = (nmatch <= preg->re_nsub) ? nmatch : preg->re_nsub + 1;
@@ -1002,8 +1021,7 @@ set_regs (preg, state_log, mctx, input, nmatch, pmatch, last_node)
         break;
 
       /* Proceed to next node.  */
-      cur_node = proceed_next_node (preg, state_log, mctx, input, &idx,
-                                    cur_node, &eps_via_nodes);
+      cur_node = proceed_next_node (preg, mctx, &idx, cur_node, &eps_via_nodes);
       if (BE (cur_node < 0, 0))
         return REG_ESPACE;
     }
@@ -1013,15 +1031,15 @@ set_regs (preg, state_log, mctx, input, nmatch, pmatch, last_node)
 
 #define NUMBER_OF_STATE 1
 
-/* This function checks the STATE_LOG from the MCTX->match_last
-   to MCTX->match_first and sift the nodes in each states according to
-   the following rules.  Updated state_log will be wrote to STATE_LOG.
+/* This function checks the STATE_LOG from the MCTX->match_last to 0
+   and sift the nodes in each states according to the following rules.
+   Updated state_log will be wrote to STATE_LOG.
 
    Rules: We throw away the Node `a' in the STATE_LOG[STR_IDX] if...
      1. When STR_IDX == MATCH_LAST(the last index in the state_log):
         If `a' isn't the LAST_NODE and `a' can't epsilon transit to
         the LAST_NODE, we throw away the node `a'.
-     2. When MATCH_FIRST <= STR_IDX < MATCH_LAST and `a' accepts
+     2. When 0 <= STR_IDX < MATCH_LAST and `a' accepts
         string `s' and transit to `b':
         i. If 'b' isn't in the STATE_LOG[STR_IDX+strlen('s')], we throw
            away the node `a'.
@@ -1037,11 +1055,9 @@ set_regs (preg, state_log, mctx, input, nmatch, pmatch, last_node)
   ((state) != NULL && re_node_set_contains (&(state)->nodes, node))
 
 static reg_errcode_t
-sift_states_backward (preg, state_log, mctx, input, last_node)
+sift_states_backward (preg, mctx, last_node)
     const regex_t *preg;
-    re_dfastate_t **state_log;
     const re_match_context_t *mctx;
-    const re_string_t *input;
     int last_node;
 {
   reg_errcode_t err;
@@ -1051,12 +1067,12 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
   re_node_set *plog;	/* Points the state_log[str_idx]->nodes  */
 
 #ifdef DEBUG
-  assert (state_log != NULL && state_log[str_idx] != NULL);
+  assert (mctx->state_log != NULL && mctx->state_log[str_idx] != NULL);
 #endif
   err = re_node_set_alloc (&state_buf, NUMBER_OF_STATE);
   if (BE (err != REG_NOERROR, 0))
     return err;
-  plog = &state_log[str_idx]->nodes;
+  plog = &mctx->state_log[str_idx]->nodes;
 
   /* Build sifted state_log[str_idx].  It has the nodes which can epsilon
      transit to the last_node and the last_node itself.  */
@@ -1064,7 +1080,8 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
   if (BE (err != REG_NOERROR, 0))
     return err;
 
-  if (state_log[str_idx] != NULL && state_log[str_idx]->has_backref)
+  if (mctx->state_log[str_idx] != NULL
+      && mctx->state_log[str_idx]->has_backref)
     {
       err = add_epsilon_backreference (dfa, mctx, plog, str_idx, &state_buf);
       if (BE (err != REG_NOERROR, 0))
@@ -1072,19 +1089,19 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
     }
 
   /* Update state log.  */
-  state_log[str_idx] = re_acquire_state (&err, dfa, &state_buf);
-  if (BE (state_log[str_idx] == NULL && err != REG_NOERROR, 0))
+  mctx->state_log[str_idx] = re_acquire_state (&err, dfa, &state_buf);
+  if (BE (mctx->state_log[str_idx] == NULL && err != REG_NOERROR, 0))
     return err;
 
   /* Then check each states in the state_log.  */
-  while (str_idx > mctx->match_first)
+  while (str_idx > 0)
     {
       int i, j;
       /* Update counters.  */
       re_node_set_empty (&state_buf);
       --str_idx;
-      plog = ((state_log[str_idx] == NULL) ? &empty_set
-              : &state_log[str_idx]->nodes);
+      plog = ((mctx->state_log[str_idx] == NULL) ? &empty_set
+              : &mctx->state_log[str_idx]->nodes);
 
       /* Then build the next sifted state.
          We build the next sifted state on `state_buf', and update
@@ -1106,27 +1123,25 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
 
           /* If the node may accept `multi byte'.  */
           if (ACCEPT_MB_NODE (type))
-            naccepted = sift_states_iter_mb (preg, state_log, mctx, input,
-                                             entity, str_idx,
+            naccepted = sift_states_iter_mb (preg, mctx, entity, str_idx,
                                              mctx->match_last);
 
           /* If the node is a back reference.  */
           else if (type == OP_BACK_REF)
             for (j = 0; j < mctx->nbkref_ents; ++j)
               {
-                naccepted = sift_states_iter_bkref (dfa, state_log,
+                naccepted = sift_states_iter_bkref (dfa, mctx->state_log,
                                                     mctx->bkref_ents + j,
                                                     prev_node, str_idx,
-                                                    mctx->match_first,
                                                     mctx->match_last);
                 if (naccepted)
                   break;
               }
 
           if (!naccepted
-              && check_node_accept (preg, dfa->nodes + prev_node, input,
-                                    str_idx, mctx->eflags)
-              && STATE_NODE_CONTAINS (state_log[str_idx + 1],
+              && check_node_accept (preg, dfa->nodes + prev_node, mctx,
+                                    str_idx)
+              && STATE_NODE_CONTAINS (mctx->state_log[str_idx + 1],
                                       dfa->nexts[prev_node]))
             naccepted = 1;
 
@@ -1140,7 +1155,8 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
           if (BE (err != REG_NOERROR, 0))
             return err;
         }
-      if (state_log[str_idx] != NULL && state_log[str_idx]->has_backref)
+      if (mctx->state_log[str_idx] != NULL
+          && mctx->state_log[str_idx]->has_backref)
         {
           err = add_epsilon_backreference (dfa, mctx, plog, str_idx, &state_buf);
           if (BE (err != REG_NOERROR, 0))
@@ -1148,8 +1164,8 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
         }
 
       /* Update state_log.  */
-      state_log[str_idx] = re_acquire_state (&err, dfa, &state_buf);
-      if (BE (state_log[str_idx] == NULL && err != REG_NOERROR, 0))
+      mctx->state_log[str_idx] = re_acquire_state (&err, dfa, &state_buf);
+      if (BE (mctx->state_log[str_idx] == NULL && err != REG_NOERROR, 0))
         return err;
     }
 
@@ -1159,36 +1175,44 @@ sift_states_backward (preg, state_log, mctx, input, last_node)
 
 /* Helper functions.  */
 
-static inline void
-clean_state_log_if_need (state_log, mctx, next_state_log_idx)
-    re_dfastate_t **state_log;
+static inline reg_errcode_t
+clean_state_log_if_need (mctx, next_state_log_idx)
     re_match_context_t *mctx;
     int next_state_log_idx;
 {
   int top = mctx->state_log_top;
+
+  if (next_state_log_idx >= mctx->input->bufs_len
+      || (next_state_log_idx >= mctx->input->valid_len
+          && mctx->input->valid_len < mctx->input->len))
+    {
+      reg_errcode_t err;
+      err = extend_buffers (mctx);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
+
   if (top < next_state_log_idx)
     {
-      memset (state_log + top + 1, '\0',
+      memset (mctx->state_log + top + 1, '\0',
               sizeof (re_dfastate_t *) * (next_state_log_idx - top));
       mctx->state_log_top = next_state_log_idx;
     }
+  return REG_NOERROR;
 }
 
 static int
-sift_states_iter_mb (preg, state_log, mctx, input, node_idx, str_idx,
-                     max_str_idx)
+sift_states_iter_mb (preg, mctx, node_idx, str_idx, max_str_idx)
     const regex_t *preg;
-    re_dfastate_t **state_log;
     const re_match_context_t *mctx;
-    const re_string_t *input;
     int node_idx, str_idx, max_str_idx;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   int naccepted;
   /* Check the node can accept `multi byte'.  */
-  naccepted = check_node_accept_bytes (preg, node_idx, input, str_idx);
+  naccepted = check_node_accept_bytes (preg, node_idx, mctx->input, str_idx);
   if (naccepted > 0 && str_idx + naccepted <= max_str_idx &&
-      !STATE_NODE_CONTAINS (state_log[str_idx + naccepted],
+      !STATE_NODE_CONTAINS (mctx->state_log[str_idx + naccepted],
                             dfa->nexts[node_idx]))
     /* The node can't accept the `multi byte', or the
        destination was already throwed away, then the node
@@ -1200,12 +1224,11 @@ sift_states_iter_mb (preg, state_log, mctx, input, node_idx, str_idx,
 }
 
 static int
-sift_states_iter_bkref (dfa, state_log, mctx_entry, node_idx, idx, match_first,
-                        match_last)
+sift_states_iter_bkref (dfa, state_log, mctx_entry, node_idx, idx, match_last)
     const re_dfa_t *dfa;
     re_dfastate_t **state_log;
     struct re_backref_cache_entry *mctx_entry;
-    int node_idx, idx, match_first, match_last;
+    int node_idx, idx, match_last;
 {
   int naccepted = 0;
   int from_idx, to_idx;
@@ -1244,7 +1267,7 @@ add_epsilon_backreference (dfa, mctx, plog, idx, state_buf)
               if (entry->from == entry->to && entry->from == idx)
                 break;
             }
-          if (j < mctx->nbkref_ents || idx == mctx->match_first)
+          if (j < mctx->nbkref_ents || idx == 0)
             {
               reg_errcode_t err;
               err = re_node_set_add_intersect (state_buf, plog,
@@ -1266,30 +1289,38 @@ add_epsilon_backreference (dfa, mctx, plog, idx, state_buf)
    update the destination of STATE_LOG.  */
 
 static re_dfastate_t *
-transit_state (err, preg, state, input, fl_search, state_log, mctx)
+transit_state (err, preg, mctx, state, fl_search)
      reg_errcode_t *err;
      const regex_t *preg;
-     re_dfastate_t *state, **state_log;
-     re_string_t *input;
-     int fl_search;
      re_match_context_t *mctx;
+     re_dfastate_t *state;
+     int fl_search;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   re_dfastate_t **trtable, *next_state;
   unsigned char ch;
 
+  if (re_string_cur_idx (mctx->input) + 1 >= mctx->input->bufs_len
+      || (re_string_cur_idx (mctx->input) + 1 >= mctx->input->valid_len
+          && mctx->input->valid_len < mctx->input->len))
+    {
+      *err = extend_buffers (mctx);
+      if (BE (*err != REG_NOERROR, 0))
+        return NULL;
+    }
+
   *err = REG_NOERROR;
   if (state == NULL)
     {
       next_state = state;
-      re_string_skip_bytes (input, 1);
+      re_string_skip_bytes (mctx->input, 1);
     }
   else
     {
       /* If the current state can accept multibyte.  */
       if (state->accept_mb)
         {
-          *err = transit_state_mb (preg, state, input, state_log, mctx);
+          *err = transit_state_mb (preg, state, mctx);
           if (BE (*err != REG_NOERROR, 0))
             return NULL;
         }
@@ -1298,7 +1329,7 @@ transit_state (err, preg, state, input, fl_search, state_log, mctx)
       if (1)
         {
           /* Use transition table  */
-          ch = re_string_fetch_byte (input);
+          ch = re_string_fetch_byte (mctx->input);
           trtable = fl_search ? state->trtable_search : state->trtable;
           if (trtable == NULL)
             {
@@ -1313,25 +1344,24 @@ transit_state (err, preg, state, input, fl_search, state_log, mctx)
       else
         {
           /* don't use transition table  */
-          next_state = transit_state_sb (err, preg, state, input, fl_search,
-                                         mctx);
+          next_state = transit_state_sb (err, preg, state, fl_search, mctx);
           if (BE (next_state == NULL && err != REG_NOERROR, 0))
             return NULL;
         }
     }
 
   /* Update the state_log if we need.  */
-  if (state_log != NULL)
+  if (mctx->state_log != NULL)
     {
-      int cur_idx = re_string_cur_idx (input);
+      int cur_idx = re_string_cur_idx (mctx->input);
       if (cur_idx > mctx->state_log_top)
         {
-          state_log[cur_idx] = next_state;
+          mctx->state_log[cur_idx] = next_state;
           mctx->state_log_top = cur_idx;
         }
-      else if (state_log[cur_idx] == 0)
+      else if (mctx->state_log[cur_idx] == 0)
         {
-          state_log[cur_idx] = next_state;
+          mctx->state_log[cur_idx] = next_state;
         }
       else
         {
@@ -1342,7 +1372,7 @@ transit_state (err, preg, state, input, fl_search, state_log, mctx)
              the destination of a multibyte char/collating element/
              back reference.  Then the next state is the union set of
              these destinations and the results of the transition table.  */
-          pstate = state_log[cur_idx];
+          pstate = mctx->state_log[cur_idx];
           log_nodes = pstate->entrance_nodes;
           if (next_state != NULL)
             {
@@ -1357,9 +1387,10 @@ transit_state (err, preg, state, input, fl_search, state_log, mctx)
           /* Note: We already add the nodes of the initial state,
                    then we don't need to add them here.  */
 
-          context = re_string_context_at (input, re_string_cur_idx (input) - 1,
+          context = re_string_context_at (mctx->input,
+                                          re_string_cur_idx (mctx->input) - 1,
                                           mctx->eflags, preg->newline_anchor);
-          next_state = state_log[cur_idx]
+          next_state = mctx->state_log[cur_idx]
             = re_acquire_state_context (err, dfa, &next_nodes, context);
           /* We don't need to check errors here, since the return value of
              this function is next_state and ERR is already set.  */
@@ -1370,10 +1401,10 @@ transit_state (err, preg, state, input, fl_search, state_log, mctx)
       /* If the next state has back references.  */
       if (next_state != NULL && next_state->has_backref)
         {
-          *err = transit_state_bkref (preg, next_state, input, state_log, mctx);
+          *err = transit_state_bkref (preg, next_state, mctx);
           if (BE (*err != REG_NOERROR, 0))
             return NULL;
-          next_state = state_log[cur_idx];
+          next_state = mctx->state_log[cur_idx];
         }
     }
   return next_state;
@@ -1385,18 +1416,17 @@ transit_state (err, preg, state, input, fl_search, state_log, mctx)
    accepting the current input byte.  */
 
 static re_dfastate_t *
-transit_state_sb (err, preg, state, input, fl_search, mctx)
+transit_state_sb (err, preg, state, fl_search, mctx)
      reg_errcode_t *err;
      const regex_t *preg;
      re_dfastate_t *state;
-     re_string_t *input;
      int fl_search;
      re_match_context_t *mctx;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   re_node_set next_nodes;
   re_dfastate_t *next_state;
-  int node_cnt, cur_str_idx = re_string_cur_idx (input);
+  int node_cnt, cur_str_idx = re_string_cur_idx (mctx->input);
   unsigned int context;
 
   *err = re_node_set_alloc (&next_nodes, state->nodes.nelem + 1);
@@ -1405,8 +1435,7 @@ transit_state_sb (err, preg, state, input, fl_search, mctx)
   for (node_cnt = 0; node_cnt < state->nodes.nelem; ++node_cnt)
     {
       int cur_node = state->nodes.elems[node_cnt];
-      if (check_node_accept (preg, dfa->nodes + cur_node, input,
-                             cur_str_idx, mctx->eflags))
+      if (check_node_accept (preg, dfa->nodes + cur_node, mctx, cur_str_idx))
         {
           *err = re_node_set_merge (&next_nodes,
                                     dfa->eclosures + dfa->nexts[cur_node]);
@@ -1434,22 +1463,21 @@ transit_state_sb (err, preg, state, input, fl_search, mctx)
             return NULL;
         }
     }
-  context = re_string_context_at (input, cur_str_idx, mctx->eflags,
+  context = re_string_context_at (mctx->input, cur_str_idx, mctx->eflags,
                                   preg->newline_anchor);
   next_state = re_acquire_state_context (err, dfa, &next_nodes, context);
   /* We don't need to check errors here, since the return value of
      this function is next_state and ERR is already set.  */
 
   re_node_set_free (&next_nodes);
-  re_string_skip_bytes (input, 1);
+  re_string_skip_bytes (mctx->input, 1);
   return next_state;
 }
 
 static reg_errcode_t
-transit_state_mb (preg, pstate, input, state_log, mctx)
+transit_state_mb (preg, pstate, mctx)
     const regex_t *preg;
-    re_dfastate_t *pstate, **state_log;
-    const re_string_t *input;
+    re_dfastate_t *pstate;
     re_match_context_t *mctx;
 {
   reg_errcode_t err;
@@ -1466,7 +1494,8 @@ transit_state_mb (preg, pstate, input, state_log, mctx)
 
       if (dfa->nodes[cur_node_idx].type == OP_CONTEXT_NODE)
         {
-          context = re_string_context_at (input, re_string_cur_idx (input),
+          context = re_string_context_at (mctx->input,
+                                          re_string_cur_idx (mctx->input),
                                           mctx->eflags, preg->newline_anchor);
           if (NOT_SATISFY_NEXT_CONSTRAINT (dfa->nodes[cur_node_idx].constraint,
                                         context))
@@ -1476,14 +1505,16 @@ transit_state_mb (preg, pstate, input, state_log, mctx)
 
       /* How many bytes the node can accepts?  */
       if (ACCEPT_MB_NODE (dfa->nodes[cur_node_idx].type))
-        naccepted = check_node_accept_bytes (preg, cur_node_idx, input,
-                                             re_string_cur_idx (input));
+        naccepted = check_node_accept_bytes (preg, cur_node_idx, mctx->input,
+                                             re_string_cur_idx (mctx->input));
       if (naccepted == 0)
         continue;
 
       /* The node can accepts `naccepted' bytes.  */
-      dest_idx = re_string_cur_idx (input) + naccepted;
-      clean_state_log_if_need (state_log, mctx, dest_idx);
+      dest_idx = re_string_cur_idx (mctx->input) + naccepted;
+      err = clean_state_log_if_need (mctx, dest_idx);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
 #ifdef DEBUG
       assert (dfa->nexts[cur_node_idx] != -1);
 #endif
@@ -1491,7 +1522,7 @@ transit_state_mb (preg, pstate, input, state_log, mctx)
          then we use pstate->nodes.elems[i] instead.  */
       new_nodes = dfa->eclosures + dfa->nexts[pstate->nodes.elems[i]];
 
-      dest_state = state_log[dest_idx];
+      dest_state = mctx->state_log[dest_idx];
       if (dest_state == NULL)
         dest_nodes = *new_nodes;
       else
@@ -1501,11 +1532,11 @@ transit_state_mb (preg, pstate, input, state_log, mctx)
           if (BE (err != REG_NOERROR, 0))
             return err;
         }
-      context = re_string_context_at (input, dest_idx - 1, mctx->eflags,
+      context = re_string_context_at (mctx->input, dest_idx - 1, mctx->eflags,
                                       preg->newline_anchor);
-      state_log[dest_idx] = re_acquire_state_context (&err, dfa, &dest_nodes,
-                                                      context);
-      if (BE (state_log[dest_idx] == NULL && err != REG_NOERROR, 0))
+      mctx->state_log[dest_idx]
+        = re_acquire_state_context (&err, dfa, &dest_nodes, context);
+      if (BE (mctx->state_log[dest_idx] == NULL && err != REG_NOERROR, 0))
         return err;
       if (dest_state != NULL)
         re_node_set_free (&dest_nodes);
@@ -1514,24 +1545,20 @@ transit_state_mb (preg, pstate, input, state_log, mctx)
 }
 
 static reg_errcode_t
-transit_state_bkref (preg, pstate, input, state_log, mctx)
+transit_state_bkref (preg, pstate, mctx)
     const regex_t *preg;
-    re_dfastate_t *pstate, **state_log;
-    const re_string_t *input;
+    re_dfastate_t *pstate;
     re_match_context_t *mctx;
 {
   reg_errcode_t err;
   re_dfastate_t **work_state_log;
 
-#ifdef DEBUG
-  assert (mctx->match_first != -1);
-#endif
-  work_state_log = re_malloc (re_dfastate_t *, re_string_cur_idx (input) + 1);
+  work_state_log = re_malloc (re_dfastate_t *,
+                              re_string_cur_idx (mctx->input) + 1);
   if (BE (work_state_log == NULL, 0))
     return REG_ESPACE;
 
-  err = transit_state_bkref_loop (preg, input, &pstate->nodes, work_state_log,
-                                  state_log, mctx);
+  err = transit_state_bkref_loop (preg, &pstate->nodes, work_state_log, mctx);
   re_free (work_state_log);
   return err;
 }
@@ -1539,23 +1566,24 @@ transit_state_bkref (preg, pstate, input, state_log, mctx)
 /* Caller must allocate `work_state_log'.  */
 
 static reg_errcode_t
-transit_state_bkref_loop (preg, input, nodes, work_state_log, state_log, mctx)
+transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
     const regex_t *preg;
-    const re_string_t *input;
     re_node_set *nodes;
-    re_dfastate_t **work_state_log, **state_log;
+    re_dfastate_t **work_state_log;
     re_match_context_t *mctx;
 {
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   int i, j;
+  re_dfastate_t **state_log_bak;
   regmatch_t *cur_regs = re_malloc (regmatch_t, preg->re_nsub + 1);
-  int cur_str_idx = re_string_cur_idx (input);
+  int cur_str_idx = re_string_cur_idx (mctx->input);
   if (BE (cur_regs == NULL, 0))
     return REG_ESPACE;
 
   for (i = 0; i < nodes->nelem; ++i)
     {
+      unsigned char *buf;
       int dest_str_idx, subexp_idx, prev_nelem, subexp_len;
       int node_idx = nodes->elems[i];
       unsigned int context;
@@ -1569,8 +1597,8 @@ transit_state_bkref_loop (preg, input, nodes, work_state_log, state_log, mctx)
       else if (node->type == OP_CONTEXT_NODE &&
                dfa->nodes[node->opr.ctx_info->entity].type == OP_BACK_REF)
         {
-          context = re_string_context_at (input, cur_str_idx, mctx->eflags,
-                                          preg->newline_anchor);
+          context = re_string_context_at (mctx->input, cur_str_idx,
+                                          mctx->eflags, preg->newline_anchor);
           if (NOT_SATISFY_NEXT_CONSTRAINT (node->constraint, context))
             continue;
           subexp_idx = dfa->nodes[node->opr.ctx_info->entity].opr.idx;
@@ -1580,29 +1608,37 @@ transit_state_bkref_loop (preg, input, nodes, work_state_log, state_log, mctx)
 
       /* `node' is a backreference.
          At first, set registers to check the backreference. */
-      cur_regs[0].rm_so = mctx->match_first;
+      cur_regs[0].rm_so = 0;
       cur_regs[0].rm_eo = cur_str_idx;
-      memcpy (work_state_log + mctx->match_first,
-              state_log + mctx->match_first,
-              sizeof (re_dfastate_t *)
-	      * (cur_str_idx - mctx->match_first + 1));
+      memcpy (work_state_log, mctx->state_log,
+              sizeof (re_dfastate_t *) * (cur_str_idx  + 1));
       mctx->match_last = cur_str_idx;
-      sift_states_backward (preg, work_state_log, mctx, input, node_idx);
-      if (!STATE_NODE_CONTAINS (work_state_log[mctx->match_first],
-                                dfa->init_node))
+      state_log_bak = mctx->state_log;
+      mctx->state_log = work_state_log;
+      sift_states_backward (preg, mctx, node_idx);
+      if (!STATE_NODE_CONTAINS (work_state_log[0], dfa->init_node))
         continue;
       for (j = 1; j <= preg->re_nsub; ++j)
         cur_regs[j].rm_so = cur_regs[j].rm_eo = -1;
-      set_regs (preg, work_state_log, mctx, input,
-                subexp_idx + 1, cur_regs, node_idx);
+      set_regs (preg, mctx, subexp_idx + 1, cur_regs, node_idx);
+      mctx->state_log = state_log_bak;
 
       /* Then check that the backreference can match the input string.  */
       subexp_len = cur_regs[subexp_idx].rm_eo - cur_regs[subexp_idx].rm_so;
-      if (subexp_len < 0
-          || (strncmp ((re_string_get_buffer (input)
-                        + cur_regs[subexp_idx].rm_so),
-                       re_string_get_buffer (input) + cur_str_idx, subexp_len)
-              != 0))
+      if (subexp_len < 0 || cur_str_idx + subexp_len > mctx->input->len)
+        continue;
+
+      if (cur_str_idx + subexp_len > mctx->input->valid_len
+          && mctx->input->valid_len < mctx->input->len)
+        {
+          reg_errcode_t err;
+          err = extend_buffers (mctx);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+        }
+      buf = re_string_get_buffer (mctx->input);
+      if (strncmp (buf + cur_regs[subexp_idx].rm_so, buf + cur_str_idx,
+                   subexp_len) != 0)
         continue;
 
       /* Successfully matched, add a new cache entry.  */
@@ -1610,7 +1646,9 @@ transit_state_bkref_loop (preg, input, nodes, work_state_log, state_log, mctx)
       err = match_ctx_add_entry (mctx, node_idx, cur_str_idx, dest_str_idx);
       if (BE (err != REG_NOERROR, 0))
         return err;
-      clean_state_log_if_need (state_log, mctx, dest_str_idx);
+      err = clean_state_log_if_need (mctx, dest_str_idx);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
 
       /* And add the epsilon closures (which is `new_dest_nodes') of
          the backreference to appropriate state_log.  */
@@ -1621,19 +1659,20 @@ transit_state_bkref_loop (preg, input, nodes, work_state_log, state_log, mctx)
         new_dest_nodes = dfa->nodes[node_idx].opr.ctx_info->bkref_eclosure;
       else
         new_dest_nodes = dfa->eclosures + dfa->nexts[node_idx];
-      context = (IS_WORD_CHAR (re_string_byte_at (input, dest_str_idx - 1))
+      context = (IS_WORD_CHAR (re_string_byte_at (mctx->input,
+                                                  dest_str_idx - 1))
                  ? CONTEXT_WORD : 0);
-      dest_state = state_log[dest_str_idx];
+      dest_state = mctx->state_log[dest_str_idx];
 
-      prev_nelem = ((state_log[cur_str_idx] == NULL) ? 0
-                    : state_log[cur_str_idx]->nodes.nelem);
+      prev_nelem = ((mctx->state_log[cur_str_idx] == NULL) ? 0
+                    : mctx->state_log[cur_str_idx]->nodes.nelem);
       /* Add `new_dest_node' to state_log.  */
       if (dest_state == NULL)
         {
-          state_log[dest_str_idx] = re_acquire_state_context (&err, dfa,
-                                                              new_dest_nodes,
-                                                              context);
-          if (BE (state_log[dest_str_idx] == NULL && err != REG_NOERROR, 0))
+          mctx->state_log[dest_str_idx]
+            = re_acquire_state_context (&err, dfa, new_dest_nodes, context);
+          if (BE (mctx->state_log[dest_str_idx] == NULL
+                  && err != REG_NOERROR, 0))
             return err;
         }
       else
@@ -1643,20 +1682,21 @@ transit_state_bkref_loop (preg, input, nodes, work_state_log, state_log, mctx)
                                         new_dest_nodes);
           if (BE (err != REG_NOERROR, 0))
             return err;
-          state_log[dest_str_idx] = re_acquire_state_context (&err, dfa,
-                                                              &dest_nodes,
-                                                              context);
-          if (BE (state_log[dest_str_idx] == NULL && err != REG_NOERROR, 0))
+          mctx->state_log[dest_str_idx]
+            = re_acquire_state_context (&err, dfa, &dest_nodes, context);
+          if (BE (mctx->state_log[dest_str_idx] == NULL
+                  && err != REG_NOERROR, 0))
             return err;
           re_node_set_free (&dest_nodes);
         }
 
       /* We need to check recursively if the backreference can epsilon
          transit.  */
-      if (subexp_len == 0 && state_log[cur_str_idx]->nodes.nelem > prev_nelem)
+      if (subexp_len == 0
+          && mctx->state_log[cur_str_idx]->nodes.nelem > prev_nelem)
         {
-          err = transit_state_bkref_loop (preg, input, new_dest_nodes,
-                                          work_state_log, state_log, mctx);
+          err = transit_state_bkref_loop (preg, new_dest_nodes, work_state_log,
+                                          mctx);
           if (BE (err != REG_NOERROR, 0))
             return err;
         }
@@ -2170,11 +2210,11 @@ find_collation_sequence_value (mbs, mbs_len)
    byte of the INPUT.  */
 
 static int
-check_node_accept (preg, node, input, idx, eflags)
+check_node_accept (preg, node, mctx, idx)
     const regex_t *preg;
     const re_token_t *node;
-    const re_string_t *input;
-    int idx, eflags;
+    const re_match_context_t *mctx;
+    int idx;
 {
   const re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   const re_token_t *cur_node;
@@ -2183,7 +2223,8 @@ check_node_accept (preg, node, input, idx, eflags)
     {
       /* The node has constraints.  Check whether the current context
          satisfies the constraints.  */
-      unsigned int context = re_string_context_at (input, idx, eflags,
+      unsigned int context = re_string_context_at (mctx->input, idx,
+                                                   mctx->eflags,
                                                    preg->newline_anchor);
       if (NOT_SATISFY_NEXT_CONSTRAINT (node->constraint, context))
         return 0;
@@ -2192,7 +2233,7 @@ check_node_accept (preg, node, input, idx, eflags)
   else
     cur_node = node;
 
-  ch = re_string_byte_at (input, idx);
+  ch = re_string_byte_at (mctx->input, idx);
   if (cur_node->type == CHARACTER)
     return cur_node->opr.c == ch;
   else if (cur_node->type == SIMPLE_BRACKET)
@@ -2203,17 +2244,69 @@ check_node_accept (preg, node, input, idx, eflags)
   else
     return 0;
 }
+
+/* Extend the buffers, if the buffers have run out.  */
+
+static reg_errcode_t
+extend_buffers (mctx)
+     re_match_context_t *mctx;
+{
+  reg_errcode_t ret;
+  re_string_t *pstr = mctx->input;
+
+  /* Double the lengthes of the buffers.  */
+  ret = re_string_realloc_buffers (pstr, pstr->bufs_len * 2);
+  if (BE (ret != REG_NOERROR, 0))
+    return ret;
+
+  if (mctx->state_log != NULL)
+    {
+      /* And double the length of state_log.  */
+      mctx->state_log = re_realloc (mctx->state_log, re_dfastate_t *,
+                                    pstr->bufs_len * 2);
+      if (BE (mctx->state_log == NULL, 0))
+        return REG_ESPACE;
+    }
+
+  /* Then reconstruct the buffers.  */
+  if (pstr->icase)
+    {
+#ifdef RE_ENABLE_I18N
+      if (MB_CUR_MAX > 1)
+        build_wcs_upper_buffer (pstr);
+      else
+#endif /* RE_ENABLE_I18N  */
+        build_upper_buffer (pstr);
+    }
+  else
+    {
+#ifdef RE_ENABLE_I18N
+      if (MB_CUR_MAX > 1)
+        build_wcs_buffer (pstr);
+      else
+#endif /* RE_ENABLE_I18N  */
+        {
+          if (pstr->trans != NULL)
+            re_string_translate_buffer (pstr);
+          else
+            pstr->valid_len = pstr->bufs_len;
+        }
+    }
+  return REG_NOERROR;
+}
+
 
 /* Functions for matching context.  */
 
 static reg_errcode_t
-match_ctx_init (mctx, eflags, n)
+match_ctx_init (mctx, eflags, input, n)
     re_match_context_t *mctx;
-    int eflags;
-    int n;
+    int eflags, n;
+    re_string_t *input;
 {
   mctx->eflags = eflags;
-  mctx->match_first = mctx->match_last = -1;
+  mctx->input = input;
+  mctx->match_last = -1;
   if (n > 0)
     {
       mctx->bkref_ents = re_malloc (struct re_backref_cache_entry, n);

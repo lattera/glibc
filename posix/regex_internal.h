@@ -201,33 +201,67 @@ typedef struct
 
 struct re_string_t
 {
+  /* Indicate the raw buffer which is the original string passed as an
+     argument of regexec(), re_search(), etc..  */
+  const unsigned char *raw_mbs;
+  /* Index in RAW_MBS.  Each character mbs[i] corresponds to
+     raw_mbs[raw_mbs_idx + i].  */
+  int raw_mbs_idx;
   /* Store the multibyte string.  In case of "case insensitive mode" like
-     REG_ICASE, upper cases of the string are stored.  */
-  const unsigned char *mbs;
+     REG_ICASE, upper cases of the string are stored, otherwise MBS points
+     the same address that RAW_MBS points.  */
+  unsigned char *mbs;
   /* Store the case sensitive multibyte string.  In case of
      "case insensitive mode", the original string are stored,
      otherwise MBS_CASE points the same address that MBS points.  */
-  const unsigned char *mbs_case;
-  int cur_idx;
-  int len;
+  unsigned char *mbs_case;
 #ifdef RE_ENABLE_I18N
   /* Store the wide character string which is corresponding to MBS.  */
   wchar_t *wcs;
+  mbstate_t cur_state;
 #endif
-  /* 1 if mbs is allocated by regex library.  */
-  unsigned int mbs_alloc : 1;
-  /* 1 if mbs_case is allocated by regex library.  */
-  unsigned int mbs_case_alloc : 1;
+  /* The length of the valid characters in the buffers.  */
+  int valid_len;
+  /* The length of the buffers MBS, MBS_CASE, and WCS.  */
+  int bufs_len;
+  /* The index in MBS, which is updated by re_string_fetch_byte.  */
+  int cur_idx;
+  /* This is length_of_RAW_MBS - RAW_MBS_IDX.  */
+  int len;
+  /* The context of mbs[0].  We store the context independently, since
+     the context of mbs[0] may be different from raw_mbs[0], which is
+     the beginning of the input string.  */
+  unsigned int tip_context;
+  /* The translation passed as a part of an argument of re_compile_pattern.  */
+  RE_TRANSLATE_TYPE trans;
+  /* 1 if REG_ICASE.  */
+  unsigned int icase : 1;
 };
 typedef struct re_string_t re_string_t;
+/* In case of REG_ICASE, we allocate the buffer dynamically for mbs.  */
+#define MBS_ALLOCATED(pstr) (pstr->icase)
+/* In case that we need translation, we allocate the buffer dynamically
+   for mbs_case.  Note that mbs == mbs_case if not REG_ICASE.  */
+#define MBS_CASE_ALLOCATED(pstr) (pstr->trans != NULL)
 
+
+static reg_errcode_t re_string_allocate (re_string_t *pstr,
+                                         const unsigned char *str, int len,
+                                         int init_len,
+                                         RE_TRANSLATE_TYPE trans, int icase);
 static reg_errcode_t re_string_construct (re_string_t *pstr,
 					  const unsigned char *str, int len,
-					  RE_TRANSLATE_TYPE trans);
-static reg_errcode_t re_string_construct_toupper (re_string_t *pstr,
-						  const unsigned char *str,
-						  int len,
-						  RE_TRANSLATE_TYPE trans);
+                                          RE_TRANSLATE_TYPE trans, int icase);
+static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
+                                            int eflags, int newline);
+static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
+                                                int new_buf_len);
+#ifdef RE_ENABLE_I18N
+static void build_wcs_buffer (re_string_t *pstr);
+static void build_wcs_upper_buffer (re_string_t *pstr);
+#endif /* RE_ENABLE_I18N */
+static void build_upper_buffer (re_string_t *pstr);
+static void re_string_translate_buffer (re_string_t *pstr);
 static void re_string_destruct (re_string_t *pstr);
 #ifdef RE_ENABLE_I18N
 static int re_string_elem_size_at (const re_string_t *pstr, int idx);
@@ -253,8 +287,7 @@ static unsigned int re_string_context_at (const re_string_t *input, int idx,
 #define re_string_cur_idx(pstr) ((pstr)->cur_idx)
 #define re_string_get_buffer(pstr) ((pstr)->mbs)
 #define re_string_length(pstr) ((pstr)->len)
-#define re_string_byte_at(pstr,idx) \
-  ((pstr)->mbs[idx])
+#define re_string_byte_at(pstr,idx) ((pstr)->mbs[idx])
 #define re_string_skip_bytes(pstr,idx) ((pstr)->cur_idx += (idx))
 #define re_string_set_index(pstr,idx) ((pstr)->cur_idx = (idx))
 
@@ -278,27 +311,6 @@ struct bin_tree_t
   re_node_set eclosure;
 };
 typedef struct bin_tree_t bin_tree_t;
-
-struct re_backref_cache_entry
-{
-  int node;
-  int from;
-  int to;
-  int flag;
-};
-
-typedef struct
-{
-  int eflags;
-  int match_first;
-  int match_last;
-  int state_log_top;
-  /* Back reference cache.  */
-  int nbkref_ents;
-  int abkref_ents;
-  struct re_backref_cache_entry *bkref_ents;
-  int max_bkref_len;
-} re_match_context_t;
 
 
 #define CONTEXT_WORD 1
@@ -362,6 +374,32 @@ struct re_state_table_entry
   int alloc;
   re_dfastate_t **array;
 };
+
+struct re_backref_cache_entry
+{
+  int node;
+  int from;
+  int to;
+  int flag;
+};
+
+typedef struct
+{
+  /* EFLAGS of the argument of regexec.  */
+  int eflags;
+  /* Where the matching ends.  */
+  int match_last;
+  /* The string object corresponding to the input string.  */
+  re_string_t *input;
+  /* The state log used by the matcher.  */
+  re_dfastate_t **state_log;
+  int state_log_top;
+  /* Back reference cache.  */
+  int nbkref_ents;
+  int abkref_ents;
+  struct re_backref_cache_entry *bkref_ents;
+  int max_bkref_len;
+} re_match_context_t;
 
 struct re_dfa_t
 {

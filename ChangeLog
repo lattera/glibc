@@ -1,3 +1,48 @@
+2002-04-22  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (re_compile_internal): Adapt it to new interface
+	of buffer building functions.
+	* posix/regex_internal.c (re_string_allocate): New function.
+	(re_string_realloc_buffers): New function.
+	(re_string_skip_chars): New function.
+	(re_string_reconstruct): New function.
+	(re_string_construct): Adapt it to new interface of buffer building
+	functions.
+	(re_string_construct_common): Likewise.
+	(build_wcs_buffer): Likewise.
+	(build_wcs_upper_buffer): Likewise.
+	(build_upper_buffer): Likewise.
+	(re_string_translate_buffer): Likewise.
+	(re_string_context_at): Adapt it to variable length buffers.
+	* posix/regex_internal.h (re_string_t): Add new fields to handle
+	variable length buffers.
+	(re_match_context_t): Likewise.
+	* posix/regexec.c (re_search_internal): Adapt it to new interface
+	of re_string_t and re_match_context_t.
+	(acquire_init_state_context): Likewise.
+	(check_matching): Likewise.
+	(check_halt_state_context): Likewise.
+	(proceed_next_node): Likewise.
+	(set_regs): Likewise.
+	(sift_states_backward): Likewise.
+	(clean_state_log_if_need): Likewise.
+	(sift_states_iter_mb): Likewise.
+	(sift_states_iter_bkref): Likewise.
+	(add_epsilon_backreference): Likewise.
+	(transit_state): Likewise.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(transit_state_bkref): Likewise.
+	(transit_state_bkref_loop): Likewise.
+	(check_node_accept): Likewise.
+	(match_ctx_init): Likewise.
+	(extend_buffers): New function.
+
+2002-04-21  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/tst-table.sh: For the second check, use the truncated
+	GB18030 charmap table, like for the first check.
+
 2002-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (open_verify): Correct __lseek parameters.
