@@ -1025,7 +1025,7 @@ static const char re_error_msgid[] =
     gettext_noop ("Invalid regular expression") /* REG_BADPAT */
     "\0"
 #define REG_ECOLLATE_IDX (REG_BADPAT_IDX + sizeof "Invalid regular expression")
-    gettext_noop ("Invalid collation character"), /* REG_ECOLLATE */
+    gettext_noop ("Invalid collation character") /* REG_ECOLLATE */
     "\0"
 #define REG_ECTYPE_IDX	(REG_ECOLLATE_IDX + sizeof "Invalid collation character")
     gettext_noop ("Invalid character class name") /* REG_ECTYPE */
@@ -1064,7 +1064,7 @@ static const char re_error_msgid[] =
     gettext_noop ("Regular expression too big") /* REG_ESIZE */
     "\0"
 #define REG_ERPAREN_IDX	(REG_ESIZE_IDX + sizeof "Regular expression too big")
-    gettext_noop ("Unmatched ) or \\)"), /* REG_ERPAREN */
+    gettext_noop ("Unmatched ) or \\)") /* REG_ERPAREN */
   };
 
 static const size_t re_error_msgid_idx[] =

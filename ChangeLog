@@ -1,3 +1,7 @@
+1999-06-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/regex.c (re_error_msgid): Remove extra commas.
+
 1999-06-14  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* stdlib/tst-strtoll.c: New file.
