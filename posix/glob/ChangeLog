@@ -1,3 +1,14 @@
+Fri Dec  8 13:04:51 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c: Implement new options GLOB_ALTDIRFUNC, GLOB_BRACE,
+	GLOB_TILDE, GLOB_NOMAGIC.
+	(glob): Use stat instead of lstat to determine directoriness.
+	* posix/glob.h (GLOB_ALTDIRFUNC, GLOB_BRACE, GLOB_NOMAGIC, GLOB_TILDE):
+	New flag bits.
+	(__GLOB_FLAGS): Include them.
+	(glob_t): New members gl_closedir, gl_readdir, gl_opendir, gl_lstat,
+	gl_stat.
+
 Mon Sep 11 14:00:14 1995  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob): Comment fix.

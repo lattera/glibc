@@ -38,6 +38,22 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   vm_prot_t vmprot;
   memory_object_t memobj;
   vm_address_t mapaddr;
+  vm_size_t pageoff;
+
+  pageoff = offset & (vm_page_size - 1);
+  offset &= ~(vm_page_size - 1);
+
+  mapaddr = (vm_address_t) addr;
+  if (flags & MAP_FIXED)
+    {
+      /* A specific address is requested.  It need not be page-aligned;
+	 it just needs to be congruent with the object offset.  */
+      if ((mapaddr & (vm_page_size - 1)) != pageoff)
+	return (caddr_t) (long int) __hurd_fail (EINVAL);
+      else
+	/* We will add back PAGEOFF after mapping.  */
+	mapaddr -= pageoff;
+    }
 
   vmprot = VM_PROT_NONE;
   if (prot & PROT_READ)
@@ -100,16 +116,16 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
       }
     }
 
-  mapaddr = (vm_address_t) addr;
+  /* XXX handle MAP_INHERIT */
+
   err = __vm_map (__mach_task_self (),
 		  &mapaddr, (vm_size_t) len, (vm_address_t) 0,
 		  ! (flags & MAP_FIXED),
 		  memobj, (vm_offset_t) offset,
-		  flags & (MAP_COPY|MAP_PRIVATE),
+		  ! (flags & MAP_SHARED),
 		  vmprot, VM_PROT_ALL,
-		  (flags & MAP_INHERIT) == 0 ? VM_INHERIT_NONE :
-		  (flags & (MAP_COPY|MAP_PRIVATE)) ? VM_INHERIT_COPY :
-		  VM_INHERIT_SHARE);
+		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
+
   if (err == KERN_NO_SPACE && (flags & MAP_FIXED))
     {
       /* XXX this is not atomic as it is in unix! */
@@ -129,7 +145,13 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   if (memobj != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), memobj);
 
-  return err ? (caddr_t) (long int) __hurd_fail (err) : (caddr_t) mapaddr;
+  if (err)
+    return (caddr_t) (long int) __hurd_fail (err);
+
+  /* Adjust the mapping address for the offset-within-page.  */
+  mapaddr += pageoff;
+
+  return (caddr_t) mapaddr;
 }
 
 weak_alias (__mmap, mmap)

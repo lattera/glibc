@@ -182,8 +182,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  l = _dl_map_object (NULL, _dl_argv[0]);
 	  phdr = l->l_phdr;
 	  phent = l->l_phnum;
-	  l->l_type = lt_executable;
-	  l->l_libname = (char *) "";
+	  l->l_name = (char *) "";
 	  *user_entry = l->l_entry;
 	}
       else
@@ -270,6 +269,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 		  {
 		    struct link_map *new;
 		    new = _dl_map_object (l, strtab + d->d_un.d_val);
+		    new->l_type = lt_library;
 		    if (!before_rtld && new == &rtld_map)
 		      before_rtld = last;
 		    last = new;

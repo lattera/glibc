@@ -62,7 +62,8 @@ _dl_init_next (void)
 	      }
 	}
 
-      if (l->l_info[DT_INIT])
+      if (l->l_info[DT_INIT] &&
+	  !(l->l_name[0] == '\0' && l->l_type == lt_executable))
 	{
 	  /* Run this object's initializer.  */
 	  l->l_init_running = 1;
@@ -76,7 +77,7 @@ _dl_init_next (void)
     }
 
   /* Look for the first initializer not yet called.  */
-  l = _dl_loaded->l_next;	/* Skip the executable itself.  */
+  l = _dl_loaded;
   do
     {
       init = next_init (l);
