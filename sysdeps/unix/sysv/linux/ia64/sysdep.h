@@ -110,6 +110,17 @@
 #undef PSEUDO_END_NOERRNO
 #define PSEUDO_END_NOERRNO(name)	.endp C_SYMBOL_NAME(name);
 
+#undef PSEUDO_ERRVAL
+#define	PSEUDO_ERRVAL(name, syscall_name, args)	\
+  ENTRY(name)						\
+    DO_CALL (SYS_ify(syscall_name));		\
+	cmp.eq p6,p0=-1,r10;			\
+(p6)	mov r10=r8;
+
+
+#undef PSEUDO_END_ERRVAL
+#define PSEUDO_END_ERRVAL(name)	.endp C_SYMBOL_NAME(name);
+
 #undef END
 #define END(name)						\
 	.size	C_SYMBOL_NAME(name), . - C_SYMBOL_NAME(name) ;	\

@@ -367,3 +367,9 @@
 #if __LINUX_KERNEL_VERSION >= 132609
 # define __ASSUME_CLONE_STOPPED	1
 #endif
+
+/* The fixed version of the posix_fadvise64 syscall appeared in
+   2.6.0-test3.  At least for x86.  */
+#if __LINUX_KERNEL_VERSION >= 132609 && defined __i386__
+# define __ASSUME_FADVISE64_64_SYSCALL	1
+#endif

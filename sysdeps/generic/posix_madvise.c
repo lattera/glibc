@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <sys/types.h>
+#include <sys/mman.h>
 #include <errno.h>
-#include <fcntl.h>
-#include <sysdep.h>
 
-/* Advice the system about the expected behaviour of the application with
-   respect to the file associated with FD.  */
+/* Advise the system about particular usage patterns the program follows
+   for the region starting at ADDR and extending LEN bytes.  */
 
 int
-posix_fadvise (int fd, off_t offset, off_t len, int advise)
+posix_madvise (__ptr_t addr, size_t len, int advice)
 {
-#ifdef __NR_fadvise64
-  return INLINE_SYSCALL (fadvise64, 5, fd,
-			 __LONG_LONG_PAIR (offset >> 31, offset), len, advise);
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
+  return ENOSYS;
 }
+stub_warning (posix_madvise)
+#include <stub-tag.h>

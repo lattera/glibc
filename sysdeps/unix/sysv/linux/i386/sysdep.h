@@ -90,6 +90,20 @@
 
 #define ret_NOERRNO ret
 
+/* The function has to return the error code.  */
+#undef	PSEUDO_ERRVAL
+#define	PSEUDO_ERRVAL(name, syscall_name, args) \
+  .text;								      \
+  ENTRY (name)								      \
+    DO_CALL (syscall_name, args);					      \
+    negl %eax
+
+#undef	PSEUDO_END_ERRVAL
+#define	PSEUDO_END_ERRVAL(name) \
+  END (name)
+
+#define ret_ERRVAL ret
+
 #ifndef PIC
 # define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 #else

@@ -28,7 +28,8 @@ ioperm		-	ioperm		i:iii	ioperm
 iopl		-	iopl		i:i	iopl
 klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
-madvise		-	madvise		i:pii	posix_madvise	madvise
+posix_madvise	-	madvise		Vi:pii	posix_madvise
+madvise		-	madvise		i:pii	madvise
 mincore		-	mincore		i:anV	mincore
 mlock		-	mlock		i:bn	mlock
 mlockall	-	mlockall	i:i	mlockall
@@ -43,7 +44,8 @@ pause		-	pause		Ci:	__libc_pause	pause
 personality	init-first personality	i:i	__personality	personality
 pipe		-	pipe		i:f	__pipe		pipe
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
-posix_fadvise64	-	fadvise64	i:iiiii	posix_fadvise64
+posix_fadvise64 -	fadvise64	Vi:iiiii	__posix_fadvise64_l32	posix_fadvise64@GLIBC_2.2
+posix_fadvise64_64 -	fadvise64_64	Vi:iiiiii __posix_fadvise64_l64	posix_fadvise64@GLIBC_2.3.3
 prctl		EXTRA	prctl		i:iiiii	__prctl		prctl
 putpmsg		-	putpmsg		i:ippii	putpmsg
 query_module	EXTRA	query_module	i:sipip	query_module

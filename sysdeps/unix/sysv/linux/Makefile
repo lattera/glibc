@@ -135,7 +135,7 @@ CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
 
 ifeq ($(subdir),io)
-sysdep_routines += xstatconv
+sysdep_routines += xstatconv posix_fadvise64_64
 endif
 
 ifeq ($(subdir),elf)

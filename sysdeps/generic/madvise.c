@@ -24,11 +24,10 @@
    for the region starting at ADDR and extending LEN bytes.  */
 
 int
-posix_madvise (__ptr_t addr, size_t len, int advice)
+madvise (__ptr_t addr, size_t len, int advice)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (posix_madvise, madvise)
 stub_warning (madvise)
 #include <stub-tag.h>

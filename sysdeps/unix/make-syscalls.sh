@@ -88,6 +88,7 @@ while read file srcfile caller syscall args strong weak; do
   case $args in
   C*) cancellable=-cancel; args=`echo $args | sed 's/C:\?//'`;;
   E*) noerrno=_NOERRNO; args=`echo $args | sed 's/E:\?//'`;;
+  V*) noerrno=_ERRVAL; args=`echo $args | sed 's/V:\?//'`;;
   esac
 
   # Derive the number of arguments from the argument signature
