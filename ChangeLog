@@ -1,3 +1,7 @@
+2003-12-01  Automatic
+
+	* version.h (VERSION): Bump to 2.3.3.
+
 2003-11-30  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/vfprintf.c: Do not inline buffered_vfprintf to
