@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -257,7 +257,7 @@ extern int sigwaitinfo (__const sigset_t *__restrict __set,
 			siginfo_t *__restrict __info) __THROW;
 
 /* Select any of pending signals from SET and place information in INFO.
-   Wait the imte specified by TIMEOUT if no signal is pending.  */
+   Wait the time specified by TIMEOUT if no signal is pending.  */
 extern int sigtimedwait (__const sigset_t *__restrict __set,
 			 siginfo_t *__restrict __info,
 			 __const struct timespec *__restrict __timeout)

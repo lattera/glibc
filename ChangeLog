@@ -1,3 +1,8 @@
+2002-03-23  Andreas Jaeger  <aj@suse.de>
+
+	* signal/signal.h: Fix typo. Patch by Steve Kemp
+	<skx@tardis.ed.ac.uk>.
+
 2002-03-22  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Add getresgid and
