@@ -1,3 +1,9 @@
+2003-07-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Restore
+	alignment of TCB used before the last change so that it matches
+	ld's output for IE code.
+
 2003-07-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/ctype.h (__ctype_b_loc, __ctype_toupper_loc,
