@@ -1,5 +1,5 @@
 /* Catch segmentation faults and print backtrace.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -61,9 +61,15 @@ extern void *__libc_stack_end;
 # define INNER_THAN <
 #endif
 
+/* By default assume the `next' pointer in struct layout points to the
+   next struct layout.  */
+#ifndef ADVANCE_STACK_FRAME
+# define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
+#endif
+
 struct layout
 {
-  struct layout *next;
+  void *next;
   void *return_address;
 };
 
@@ -118,7 +124,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
     {
       ++cnt;
 
-      current = current->next;
+      current = ADVANCE_STACK_FRAME (current->next);
     }
 
   arr = alloca (cnt * sizeof (void *));
@@ -133,7 +139,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
     {
       arr[cnt++] = current->return_address;
 
-      current = current->next;
+      current = ADVANCE_STACK_FRAME (current->next);
     }
 
   /* If the last return address was NULL, assume that it doesn't count.  */
@@ -179,7 +185,7 @@ install_handler (void)
 	    sa.sa_flags |= SA_ONSTACK;
 	}
     }
-  
+
   if (sigs == NULL)
     sigaction (SIGSEGV, &sa, NULL);
   else if (sigs[0] == '\0')

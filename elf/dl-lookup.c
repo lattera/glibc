@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,8 +73,6 @@ do_lookup (const char *undef_name, unsigned long int hash,
   struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;
   struct link_map *map;
-
-  ++_dl_num_relocations;
 
   for (; i < n; ++i)
     {
@@ -189,7 +187,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	  goto found_it;
 	}
 
-      /* If we have seem exactly one versioned symbol while we are
+      /* If we have seen exactly one versioned symbol while we are
 	 looking for an unversioned symbol and the version is not the
 	 default version we still accept this symbol since there are
 	 no possible ambiguities.  */
@@ -244,6 +242,8 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
 
+  ++_dl_num_relocations;
+
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     if (do_lookup (undef_name, hash, *ref, &current_value,
@@ -293,6 +293,8 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
   struct r_scope_elem **scope;
   size_t i;
 
+  ++_dl_num_relocations;
+
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
@@ -341,6 +343,8 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
+
+  ++_dl_num_relocations;
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
@@ -408,6 +412,8 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
   size_t i;
+
+  ++_dl_num_relocations;
 
   /* Search the relevant loaded objects for a definition.  */
   scope = symbol_scope;

@@ -1,3 +1,9 @@
+1999-02-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-lookup.c: Increment _dl_num_relocations in the four entry
+	point functions, not do_lookup since the later can be called more
+	than once.
+
 1999-02-03  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* sysdeps/generic/segfault.c: Add ADVANCE_STACK_FRAME
