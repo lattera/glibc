@@ -111,12 +111,18 @@ check_all ()
      with.  */
   struct hdr *runp = root;
 
+  /* Temporarily turn off the checks.  */
+  pedantic = 0;
+
   while (runp != NULL)
     {
       (void) checkhdr (runp);
 
       runp = runp->next;
     }
+
+  /* Turn checks on again.  */
+  pedantic = 1;
 }
 
 static void unlink_blk __P ((struct hdr *ptr));

@@ -1,5 +1,8 @@
 2000-03-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/localedef.c (construct_output_path): If path
+	contains a / compute the end of the directory name correctly.
+
 	* include/features.h: Undef and document __USE_XOPEN2K.
 
 	* malloc/mcheck.c: Implement pedantic checking of all allocated blocks

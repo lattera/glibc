@@ -367,7 +367,7 @@ construct_output_path (char *path)
 	 memory allocation.  */
       size_t len = strlen (path) + 1;
       result = xmalloc (len + 1);
-      endp = mempcpy (result, path, len);
+      endp = mempcpy (result, path, len) - 1;
     }
 
   errno = 0;
