@@ -1,3 +1,14 @@
+2002-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-support.c (_dl_non_dynamic_init): Renamed from
+	non_dynamic_init and exported now.
+	* sysdeps/unix/sysv/linux/ldsodefs.h: Declare _dl_non_dynamic_init.
+	* sysdeps/unix/sysv/linux/init-first.c: Call _dl_non_dynamic_init for
+	!SHARED.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/init-first.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (free_slotinfo): Check for end of list and return

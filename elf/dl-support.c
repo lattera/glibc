@@ -177,10 +177,10 @@ _dl_aux_init (ElfW(auxv_t) *av)
 }
 #endif
 
-static void non_dynamic_init (void) __attribute__ ((unused));
 
-static void
-non_dynamic_init (void)
+void
+internal_function
+_dl_non_dynamic_init (void)
 {
   if (HP_TIMING_AVAIL)
     HP_TIMING_NOW (_dl_cpuclock_offset);
@@ -228,7 +228,7 @@ non_dynamic_init (void)
   if (_dl_platform != NULL)
     _dl_platformlen = strlen (_dl_platform);
 }
-text_set_element (__libc_subinit, non_dynamic_init);
+
 
 const struct r_strlenpair *
 internal_function
