@@ -22,7 +22,8 @@ extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
 		   defaultmod1.c defaultmod2.c errmsg1mod.c modatexit.c \
-		   modcxaatexit.c modstatic.c
+		   modcxaatexit.c modstatic.c \
+		   bug-dlsym1-lib1.c bug-dlsym1-lib2.c
 
 extra-libs-others := libdl
 
@@ -35,13 +36,15 @@ endif
 libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit bug-dlopen1
+tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit \
+	bug-dlopen1 bug-dlsym1
 ifeq (yes,$(have-protected))
 tests += tstatexit
 endif
 endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
-		errmsg1mod modatexit modcxaatexit
+		errmsg1mod modatexit modcxaatexit \
+		bug-dlsym1-lib1 bug-dlsym1-lib2
 
 ifeq (yesyesyes,$(build-static)$(build-shared)$(elf))
 tests += tststatic
@@ -95,6 +98,17 @@ $(objpfx)tststatic.out: $(objpfx)tststatic $(objpfx)modstatic.so
 $(objpfx)modstatic.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a
 
 $(objpfx)bug-dlopen1: $(libdl)
+
+$(objpfx)bug-dlsym1: $(libdl) $(objpfx)bug-dlsym1-lib2.so
+$(objpfx)bug-dlsym1.out: $(objpfx)bug-dlsym1-lib1.so \
+			 $(objpfx)bug-dlsym1-lib2.so
+$(objpfx)bug-dlsym1-lib1.so: $(objpfx)bug-dlsym1-lib2.so \
+			     $(common-objpfx)libc.so \
+			     $(common-objpfx)libc_nonshared.a
+$(objpfx)bug-dlsym1-lib2.so: $(common-objpfx)libc.so \
+			     $(common-objpfx)libc_nonshared.a
+
+
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
