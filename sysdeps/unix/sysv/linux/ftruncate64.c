@@ -18,6 +18,7 @@
 
 #include <sys/types.h>
 #include <errno.h>
+#include <endian.h>
 #include <unistd.h>
 
 #include <sysdep.h>
@@ -31,14 +32,13 @@
 extern int __have_no_truncate64;
 #endif
 
+/* The order of hight, low depends on endianness.  */
 extern int __syscall_ftruncate64 (int fd, int high_length, int low_length);
 
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int
-ftruncate64 (fd, length)
-     int fd;
-     off64_t length;
+ftruncate64 (int fd, off64_t length)
 {
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
   if (! __have_no_truncate64)
@@ -49,8 +49,11 @@ ftruncate64 (fd, length)
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
+#if __BYTE_ORDER == __LITTLE_ENDIAN
       int result = INLINE_SYSCALL (ftruncate64, 3, fd, low, high);
-
+#elif __BYTE_ORDER == __BIG_ENDIAN
+      int result = INLINE_SYSCALL (ftruncate64, 3, fd, high, low);
+#endif
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)
 #endif
