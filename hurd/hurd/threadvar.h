@@ -20,6 +20,8 @@
 #ifndef _HURD_THREADVAR_H
 #define	_HURD_THREADVAR_H
 
+#include <features.h>
+
 /* The per-thread variables are found by ANDing this mask
    with the value of the stack pointer and then adding this offset.
 
