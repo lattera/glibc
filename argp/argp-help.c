@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing help output
-   Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -52,6 +52,9 @@ char *alloca ();
 #include <stdarg.h>
 #include <malloc.h>
 #include <ctype.h>
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 #ifndef _
 /* This is for other GNU distributions with internationalized messages.  */
@@ -1702,18 +1705,38 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 
 	  __flockfile (stream);
 
-	  fputs_unlocked (state ? state->name : program_invocation_short_name,
-			  stream);
-	  putc_unlocked (':', stream);
-	  putc_unlocked (' ', stream);
-
 	  va_start (ap, fmt);
-	  vfprintf (stream, fmt, ap);
-	  va_end (ap);
 
-	  putc_unlocked ('\n', stream);
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stream, 0) > 0)
+	    {
+	      char *buf;
+
+	      asprintf (&buf, fmt, ap);
+
+	      fwprintf (stream, L"%s: %s\n",
+			state ? state->name : program_invocation_short_name,
+			buf);
+
+	      free (buf);
+	    }
+	  else
+#endif
+	    {
+	      fputs_unlocked (state
+			      ? state->name : program_invocation_short_name,
+			      stream);
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
+
+	      vfprintf (stream, fmt, ap);
+
+	      putc_unlocked ('\n', stream);
+	    }
 
 	  __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
+
+	  va_end (ap);
 
 	  __funlockfile (stream);
 	}
@@ -1743,29 +1766,68 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 	{
 	  __flockfile (stream);
 
-	  fputs_unlocked (state ? state->name : program_invocation_short_name,
-			  stream);
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stream, 0) > 0)
+	    fputws_unlocked (state
+			     ? state->name : program_invocation_short_name,
+			     stream);
+	  else
+#endif
+	    fputs_unlocked (state
+			    ? state->name : program_invocation_short_name,
+			    stream);
 
 	  if (fmt)
 	    {
 	      va_list ap;
 
-	      putc_unlocked (':', stream);
-	      putc_unlocked (' ', stream);
-
 	      va_start (ap, fmt);
-	      vfprintf (stream, fmt, ap);
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stream, 0) > 0)
+		{
+		  char *buf;
+
+		  asprintf (&buf, fmt, ap);
+
+		  fwprintf (stream, L": %s", buf);
+
+		  free (buf);
+		}
+	      else
+#endif
+		{
+		  putc_unlocked (':', stream);
+		  putc_unlocked (' ', stream);
+
+		  vfprintf (stream, fmt, ap);
+		}
+
 	      va_end (ap);
 	    }
 
 	  if (errnum)
 	    {
-	      putc_unlocked (':', stream);
-	      putc_unlocked (' ', stream);
-	      fputs (strerror (errnum), stream);
+	      char buf[200];
+
+#ifdef USE_IN_LIBIO
+	      if (_IO_fwide (stream, 0) > 0)
+		fwprintf (stream, ": %s",
+			  __strerror_r (errnum, buf, sizeof (buf)));
+	      else
+#endif
+		{
+		  putc_unlocked (':', stream);
+		  putc_unlocked (' ', stream);
+		  fputs (__strerror_r (errnum, buf, sizeof (buf)), stream);
+		}
 	    }
 
-	  putc_unlocked ('\n', stream);
+#ifdef USE_IN_LIBIO
+	  if (_IO_fwide (stream, 0) > 0)
+	    putwc_unlocked (L'\n', stream);
+	  else
+#endif
+	    putc_unlocked ('\n', stream);
 
 	  __funlockfile (stream);
 

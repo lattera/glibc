@@ -132,7 +132,7 @@ xdrmem_getbytes (XDR *xdrs, caddr_t addr, u_int len)
 {
   if ((xdrs->x_handy -= len) < 0)
     return FALSE;
-  bcopy (xdrs->x_private, addr, len);
+  memcpy (addr, xdrs->x_private, len);
   xdrs->x_private += len;
   return TRUE;
 }
@@ -146,7 +146,7 @@ xdrmem_putbytes (XDR *xdrs, const char *addr, u_int len)
 {
   if ((xdrs->x_handy -= len) < 0)
     return FALSE;
-  bcopy (addr, xdrs->x_private, len);
+  memcpy (xdrs->x_private, addr, len);
   xdrs->x_private += len;
   return TRUE;
 }

@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated environment vectors
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -104,9 +104,9 @@ envz_add (char **envz, size_t *envz_len, const char *name, const char *value)
 
       if (new_envz)
 	{
-	  bcopy (name, new_envz + old_envz_len, name_len);
+	  memcpy (new_envz + old_envz_len, name, name_len);
 	  new_envz[old_envz_len + name_len] = SEP;
-	  bcopy (value, new_envz + old_envz_len + name_len + 1, value_len);
+	  memcpy (new_envz + old_envz_len + name_len + 1, value, value_len);
 	  new_envz[new_envz_len - 1] = 0;
 
 	  *envz = new_envz;
@@ -163,7 +163,7 @@ envz_strip (char **envz, size_t *envz_len)
       left -= entry_len;
       if (! index (entry, SEP))
 	/* Null entry. */
-	bcopy (entry, entry + entry_len, left);
+	memmove (entry + entry_len, entry, left);
       else
 	entry += entry_len;
     }

@@ -1,9 +1,25 @@
+2001-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/svcauth_des.c (_svcauth_des): Avoid using bcopy.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/svc_authux.c (_svcauth_unix): Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/getrpcport.c (getrpcport): Likewise.
+	* sunrpc/clnt_simp.c (callrpc): Likewise.
+	* sunrpc/clnt_gen.c (clnt_create): Likewise.
+	* string/envz.c: Likewise.
+
+	* po/ko.po: Update from translation team.
+
+	* argp/argp-help.c: Handle wide oriented stderr stream.
+
 2001-08-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/strtol.c: Little optimizations.  Add some
 	__builtin_expect.
 
-	* conform/conformtest.pl: <inttypes.h> test required <stddef.h>.
+	* conform/conformtest.pl: <inttypes.h> test requires <stddef.h>.
 
 	* wcsmbs/wchar.h (wcwdith): Change parameter type to wchar_t.
 	* wcsmbs/wcwidth.c (wcwdith): Likewise.

@@ -122,7 +122,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
 
       timeout.tv_usec = 0;
       timeout.tv_sec = 5;
-      bcopy (hp->h_addr, (char *) &server_addr.sin_addr, hp->h_length);
+      memcpy ((char *) &server_addr.sin_addr, hp->h_addr, hp->h_length);
       server_addr.sin_family = AF_INET;
       server_addr.sin_port = 0;
       if ((crp->client = clntudp_create (&server_addr, (u_long) prognum,
