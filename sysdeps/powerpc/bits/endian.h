@@ -31,6 +31,7 @@
 # if defined __LITTLE_ENDIAN__ || defined _LITTLE_ENDIAN
 #  define __BYTE_ORDER __LITTLE_ENDIAN
 # else
-#  error Cannot determine current byte order.
+#  warning Cannot determine current byte order, assuming big-endian.
+#  define __BYTE_ORDER __BIG_ENDIAN
 # endif
 #endif

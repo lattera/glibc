@@ -18,13 +18,32 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#include <math.h>
+
+#ifndef __NO_LONG_DOUBLE_MATH
 
 #include <xlocale.h>
+#define USE_IN_EXTENDED_LOCALE_MODEL	1
 
 extern long double ____strtold_l_internal (const char *, char **, int,
 					   __locale_t);
 extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 						       int, int, __locale_t);
 
-#include <strtold.c>
+# include <strtold.c>
+
+#else
+/* There is no `long double' type, use the `double' implementations.  */
+long double
+____strtold_l_internal (const char *nptr, char **endptr, int group,
+			__locale_t loc)
+{
+  return ____strtod_l_internal (nptr, endptr, group, loc);
+}
+
+long double
+__strtold_l (const char *nptr, char **endptr, __locale_t loc)
+{
+  return __strtod_internal (nptr, endptr, 0, loc);
+}
+#endif

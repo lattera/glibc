@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,9 @@
 #include "gmp-impl.h"
 #include <ieee754.h>
 #include <float.h>
+#include <math.h>
+
+#ifndef __NO_LONG_DOUBLE_MATH
 
 /* Convert a multi-precision integer of the needed number of bits (64 for
    long double) and an integral power of two to a `long double' in IEEE854
@@ -44,3 +47,5 @@ __mpn_construct_long_double (mp_srcptr frac_ptr, int expt, int sign)
 
   return u.d;
 }
+
+#endif /* __NO_LONG_DOUBLE_MATH */

@@ -1,5 +1,5 @@
 /* Table of MP integer constants 10^(2^i), used for floating point <-> decimal.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,6 +54,7 @@ static const mp_limb_t _ten_p8[] =
     0xd8d99f72, 0x12152f87, 0x6bde50c6, 0xcf4a6e70, 0xd595d80f, 0x26b2716e,
     0xadc666b0, 0x1d153624, 0x3c42d35a, 0x63ff540e, 0xcc5573c0, 0x65f9ef17,
     0x55bc28f2, 0x80dcc7f7, 0xf46eeddc, 0x5fdcefce, 0x000553f7 };
+#ifndef __NO_LONG_DOUBLE_MATH
 static const mp_limb_t _ten_p9[] =
   { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -195,9 +196,7 @@ static const mp_limb_t _ten_p12[] =
     0xd868b275, 0x8bd2b496, 0x1c5563f4, 0xc234d8f5, 0xf868e970, 0xf9151fff,
     0xae7be4a2, 0x271133ee, 0xbb0fd922, 0x25254932, 0xa60a9fc0, 0x104bcd64,
     0x30290145, 0x00000062 };
-
-/* This value is the index of the last array element.  */
-#define _LAST_POW10	12
+#endif	/* !__NO_LONG_DOUBLE_MATH */
 
 #elif BITS_PER_MP_LIMB == 64
 
@@ -228,6 +227,7 @@ static const mp_limb_t _ten_p8[] =
     0x12152f87d8d99f72, 0xcf4a6e706bde50c6, 0x26b2716ed595d80f,
     0x1d153624adc666b0, 0x63ff540e3c42d35a, 0x65f9ef17cc5573c0,
     0x80dcc7f755bc28f2, 0x5fdcefcef46eeddc, 0x00000000000553f7 };
+#ifndef __NO_LONG_DOUBLE_MATH
 static const mp_limb_t _ten_p9[] =
   { 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
     0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
@@ -369,14 +369,18 @@ static const mp_limb_t _ten_p12[] =
     0x8bd2b496d868b275, 0xc234d8f51c5563f4, 0xf9151ffff868e970,
     0x271133eeae7be4a2, 0x25254932bb0fd922, 0x104bcd64a60a9fc0,
     0x0000006230290145 };
-
-/* This value is the index of the last array element.  */
-#define _LAST_POW10	12
+#endif
 
 #else
-#  error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
+# error "mp_limb_t size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
+#ifndef __NO_LONG_DOUBLE_MATH
+/* This value is the index of the last array element.  */
+# define _LAST_POW10	12
+#else
+# define _LAST_POW10	8
+#endif
 
 /* Each of array variable above defines one mpn integer which is a power of 10.
    This table points to those variables, indexed by the exponent.  */
@@ -392,12 +396,14 @@ const struct mp_power _fpioconst_pow10[_LAST_POW10 + 1] =
     { _ten_p6, sizeof (_ten_p6) / sizeof (_ten_p6[0]),		213,	 210 },
     { _ten_p7, sizeof (_ten_p7) / sizeof (_ten_p7[0]),		426,	 422 },
     { _ten_p8, sizeof (_ten_p8) / sizeof (_ten_p8[0]),	  	851,	 848 },
+#ifndef __NO_LONG_DOUBLE_MATH
     { _ten_p9, sizeof (_ten_p9) / sizeof (_ten_p9[0]),	 	1701,	1698 },
     { _ten_p10, sizeof (_ten_p10) / sizeof (_ten_p10[0]),	3402,	3399 },
     { _ten_p11, sizeof (_ten_p11) / sizeof (_ten_p11[0]),	6804,	6800 },
     { _ten_p12, sizeof (_ten_p12) / sizeof (_ten_p12[0]), 	13607, 13604 }
+#endif
   };
 
 #if LAST_POW10 > _LAST_POW10
-#error "Need to expand 10^(2^i) table for i up to" LAST_POW10
+# error "Need to expand 10^(2^i) table for i up to" LAST_POW10
 #endif

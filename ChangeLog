@@ -1,3 +1,23 @@
+1998-12-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/fpioconst.c: If __NO_LONG_DOUBLE_MATH don't define constants
+	beyond range of double.
+	* stdlib/fpioconst.h (_fpioconst_pow10): Reduce size according to
+	fpioconst.c change.
+	* stdlib/strtold.c: Fall back on double functions if
+	__NO_LONG_DOUBLE_MATH.
+	* stdlib/strtold_l.c: Likewise.
+	* wcsmbs/wcstold.c: Likewise.
+	* wcsmbs/wcstold_l.c: Likewise.
+	* sysdeps/ieee754/ldbl2mpn.c: Don't generate code if
+	__NO_LONG_DOUBLE_MATH.
+	* sysdeps/ieee754/mpn2ldbl.c: Likewise.
+
+1998-12-28  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/bits/endian.h: Use #warning, not #error, if
+	the endianness can't be determined, for makedepend.
+
 1998-12-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-lookup.c (_dl_num_relocations): New variable.

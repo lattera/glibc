@@ -19,10 +19,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #define __need_wchar_t
+#include <math.h>
 #include <stddef.h>
 #include <locale.h>
 
-#define USE_IN_EXTENDED_LOCALE_MODEL	1
+#ifndef __NO_LONG_DOUBLE_MATH
+
+# define USE_IN_EXTENDED_LOCALE_MODEL	1
 
 extern long double ____wcstold_l_internal (const wchar_t *, wchar_t **, int,
 					   __locale_t);
@@ -30,4 +33,19 @@ extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 						       wchar_t **, int, int,
 						       __locale_t);
 
-#include <wcstold.c>
+# include <wcstold.c>
+#else
+/* There is no `long double' type, use the `double' implementations.  */
+long double
+____wcstold_l_internal (const wchar_t *nptr, wchar_t **endptr, int group,
+			__locale_t loc)
+{
+  return ____wcstod_l_internal (nptr, endptr, group, loc);
+}
+
+long double
+__wcstold_l (const wchar_t *nptr, wchar_t **endptr, __locale_t loc)
+{
+  return __wcstod_internal (nptr, endptr, 0, loc);
+}
+#endif
