@@ -127,9 +127,11 @@ tr_freehook (ptr, caller)
      __ptr_t ptr;
      const __ptr_t caller;
 {
+  __libc_lock_lock (lock);
   tr_where (caller);
   /* Be sure to print it first.  */
   fprintf (mallstream, "- %p\n", ptr);
+  __libc_lock_unlock (lock);
   if (ptr == mallwatch)
     tr_break ();
   __libc_lock_lock (lock);
@@ -159,11 +161,11 @@ tr_mallochook (size, caller)
     hdr = (__ptr_t) malloc (size);
   __malloc_hook = tr_mallochook;
 
-  __libc_lock_unlock (lock);
-
   tr_where (caller);
   /* We could be printing a NULL here; that's OK.  */
   fprintf (mallstream, "+ %p %#lx\n", hdr, (unsigned long int) size);
+
+  __libc_lock_unlock (lock);
 
   if (hdr == mallwatch)
     tr_break ();
@@ -196,8 +198,6 @@ tr_reallochook (ptr, size, caller)
   __malloc_hook = tr_mallochook;
   __realloc_hook = tr_reallochook;
 
-  __libc_lock_unlock (lock);
-
   tr_where (caller);
   if (hdr == NULL)
     /* Failed realloc.  */
@@ -210,6 +210,8 @@ tr_reallochook (ptr, size, caller)
       tr_where (caller);
       fprintf (mallstream, "> %p %#lx\n", hdr, (unsigned long int) size);
     }
+
+  __libc_lock_unlock (lock);
 
   if (hdr == mallwatch)
     tr_break ();

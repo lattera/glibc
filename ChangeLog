@@ -1,3 +1,14 @@
+1999-06-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/dl-load.c (_dl_init_paths): Add one more element to aelem
+	to not write beyond allocated memory.
+	Reported by John Reiser <jreiser@BitWagon.com>, closes PR libc/1167.
+
+1999-06-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/mtrace.c: Keep lock while printing output lines.
+	Patch by carsten.zimmermann@mediaways.net [PR libc/1166].
+
 1999-06-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Add warnings about broken code.
