@@ -854,7 +854,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 			    ? (ctype->map_collection_nr - 2)
 			    : (ctype->nr_charclass + ctype->map_collection_nr)));
   struct iovec iov[2 + nelems + 2 * ctype->nr_charclass
-		  + ctype->map_collection_nr + 2];
+		  + ctype->map_collection_nr + 4];
   struct locale_file data;
   uint32_t idx[nelems + 1];
   uint32_t default_missing_len;
@@ -1112,6 +1112,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN):
+	    /* Align entries.  */
+	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
+	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
+	    idx[elem] += iov[2 + elem + offset].iov_len;
+	    ++offset;
+
 	    default_missing_len = (ctype->default_missing
 				   ? wcslen ((wchar_t *)ctype->default_missing)
 				   : 0);
@@ -1129,6 +1135,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_IGNORE_LEN):
+	    /* Align entries.  */
+	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
+	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
+	    idx[elem] += iov[2 + elem + offset].iov_len;
+	    ++offset;
+
 	    iov[2 + elem + offset].iov_base = &ctype->ntranslit_ignore;
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
@@ -1200,7 +1212,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
     }
 
   assert (2 + elem + offset == (nelems + 2 * ctype->nr_charclass
-				+ ctype->map_collection_nr + 2 + 2));
+				+ ctype->map_collection_nr + 4 + 2));
 
   write_locale_data (output_path, "LC_CTYPE", 2 + elem + offset, iov);
 }
@@ -2620,6 +2632,9 @@ with character code range values one must use the absolute ellipsis `...'"));
 	     array.  */
 	  cnt = 0;
 
+	  ldfile->translate_strings = 1;
+	  ldfile->return_widestr = 1;
+
 	  /* We proceed until we see the `translit_end' token.  */
 	  while (now = lr_token (ldfile, charmap, repertoire),
 		 now->tok != tok_translit_end && now->tok != tok_eof)
@@ -2713,7 +2728,8 @@ previous definition was here"));
 			      ctype->default_missing_file = ldfile->fname;
 			      ctype->default_missing_lineno = ldfile->lineno;
 			    }
-			  lr_ignore_rest (ldfile, 1);
+			  /* We can have more entries, ignore them.  */
+			  lr_ignore_rest (ldfile, 0);
 			  break;
 			}
 		      else if (wstr == (uint32_t *) -1l)
@@ -2744,6 +2760,7 @@ previous definition was here"));
 
 	      read_translit_entry (ldfile, ctype, now, charmap, repertoire);
 	    }
+	  ldfile->return_widestr = 0;
 	  break;
 
 	case tok_ident:

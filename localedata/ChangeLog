@@ -1,3 +1,7 @@
+2000-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/i18n: Add transliteration information.
+
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ca_ES@euro: Country is Spain.
