@@ -628,6 +628,7 @@ typedef struct
    Dyn.d_un.d_val field of the Elf*_Dyn structure.  This follows Sun's
    approach.  */
 #define DT_VALRNGLO	0x6ffffd00
+#define DT_CHECKSUM	0x6ffffdf8
 #define DT_PLTPADSZ	0x6ffffdf9
 #define DT_MOVEENT	0x6ffffdfa
 #define DT_MOVESZ	0x6ffffdfb

@@ -1,5 +1,7 @@
 2001-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h (DT_CHECKSUM): Define.
+
 	* sysdeps/generic/strtoll.c: Don't export __strto*_internal as
 	default symbol.
 	* sysdeps/generic/strtoull.c: Likewise.
