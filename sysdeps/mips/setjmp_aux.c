@@ -19,7 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <setjmp.h>
 
 /* This function is only called via the assembly language routine
-   __setjmp, which arranges to pass in the stack pointer and the frame
+   __sigsetjmp, which arranges to pass in the stack pointer and the frame
    pointer.  We do things this way because it's difficult to reliably
    access them in C.  */
 
