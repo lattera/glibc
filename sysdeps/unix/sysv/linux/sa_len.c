@@ -1,5 +1,4 @@
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +16,31 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#include <sys/socket.h>
 
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   If no '\0' terminator is found in that many characters, return MAXLEN.  */
+#include <netatalk/at.h>
+#include <netax25/ax25.h>
+#include <netinet/in.h>
+#include <netipx/ipx.h>
+#include <netrose/rose.h>
 
-size_t
-__strnlen (const char *string, size_t maxlen)
+int
+__libc_sa_len (sa_family_t af)
 {
-  const char *end = memchr (string, '\0', maxlen);
-  return end ? end - string : maxlen;
+  switch (af)
+    {
+    case AF_APPLETALK:
+      return sizeof (struct sockaddr_at);
+    case AF_AX25:
+      return sizeof (struct sockaddr_ax25);
+    case AF_INET:
+      return sizeof (struct sockaddr_in);
+    case AF_INET6:
+      return sizeof (struct sockaddr_in6);
+    case AF_IPX:
+      return sizeof (struct sockaddr_ipx);
+    case AF_ROSE:
+      return sizeof (struct sockaddr_rose);
+    }
+  return 0;
 }
-weak_alias (__strnlen, strnlen)

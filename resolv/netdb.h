@@ -28,6 +28,7 @@
 /* This is necessary to make this include file properly replace the
    Sun version.  */
 #include <rpc/netdb.h>
+#include <sys/socket.h>		/* need socklen_t */
 #define __need_size_t
 #include <stddef.h>
 
@@ -119,7 +120,7 @@ extern struct hostent *gethostbyaddr __P ((__const char *__addr, int __len,
 extern struct hostent *gethostbyname __P ((__const char *__name));
 
 /* Return entry from host data base for host with NAME.  AF must be
-   set to the address type which as `AF_INET' for IPv4 or `AF_INET6'
+   set to the address type which is `AF_INET' for IPv4 or `AF_INET6'
    for IPv6.  */
 extern struct hostent *gethostbyname2 __P ((__const char *__name, int __af));
 
@@ -163,6 +164,19 @@ extern int gethostbyname2_r __P ((__const char *__name, int __af,
 				  size_t __buflen, struct hostent **__result,
 				  int *__h_errnop));
 #endif	/* misc */
+
+
+/* Return entry from host data base for host with NAME.  AF must be
+   set to the desired address type (either `AF_INET' or `AF_INET6').
+   FLAGS is some combination of the following AI_* values.  */
+extern struct hostent *getnodebyname __P ((__const char *__name, int __af,
+					   int __flags));
+
+#define AI_V4MAPPED	1	/* IPv4-mapped addresses are acceptable.  */
+#define AI_ALL		2	/* Return both IPv4 and IPv6 addresses.  */
+#define AI_ADDRCONFIG	4	/* Use configuration of this host to choose
+				   returned address type.  */
+#define AI_DEFAULT	(AI_V4MAPPED | AI_ADDRCONFIG)
 
 
 /* Description of data base entry for a single network.  NOTE: here a
@@ -413,6 +427,7 @@ struct addrinfo
 /* Possible values for `ai_flags' field in `addrinfo' structure.  */
 # define AI_PASSIVE	1	/* Socket address is intended for `bind'.  */
 # define AI_CANONNAME	2	/* Request for canonical name.  */
+# define AI_NUMERICHOST	3	/* Don't use name resolution.  */
 
 /* Error values for `getaddrinfo' function.  */
 # define EAI_BADFLAGS	-1	/* Invalid value for `ai_flags' field.  */
@@ -430,11 +445,11 @@ struct addrinfo
 # define NI_MAXHOST      1025
 # define NI_MAXSERV      32
 
-# define NI_NUMERICHOST 1
-# define NI_NUMERICSERV 2
-# define NI_NOFQDN 4
-# define NI_NAMEREQD 8
-# define NI_DGRAM 16
+# define NI_NUMERICHOST	1	/* Don't try to look up hostname.  */
+# define NI_NUMERICSERV 2	/* Don't convert port number to name.  */
+# define NI_NOFQDN	4	/* Only return nodename portion.  */
+# define NI_NAMEREQD	8	/* Don't return numeric addresses.  */
+# define NI_DGRAM	16	/* Look up UDP service rather than TCP.  */
 
 /* Translate name of a service location and/or a service name to set of
    socket addresses.  */
@@ -449,7 +464,7 @@ extern void freeaddrinfo __P ((struct addrinfo *__ai));
 extern char *gai_strerror __P  ((int __ecode));
 
 /* Translate a socket address to a location and service name.  */
-extern int getnameinfo __P ((__const struct sockaddr *__sa, size_t __salen,
+extern int getnameinfo __P ((__const struct sockaddr *__sa, socklen_t __salen,
 			     char *__host, size_t __hostlen,
 			     char *__serv, size_t __servlen,
 			     int __flags));

@@ -2345,6 +2345,13 @@ It is possible for @code{tmpnam} to fail if you call it too many times
 without removing previously created files.  This is because the fixed
 length of a temporary file name gives room for only a finite number of
 different names.  If @code{tmpnam} fails, it returns a null pointer.
+
+@strong{Warning:} Since between the time the pathname is constructed and
+the file is created another process might have created a file with this
+name using @code{tmpnam} is a possible security hole.  The
+implementation generates names which hardly can be predicted but opening
+the file in any case should use the @code{O_EXCL} flag.  Using
+@code{tmpfile} is a safe way to avoid this problem.
 @end deftypefun
 
 @comment stdio.h
@@ -2445,6 +2452,13 @@ The @code{mktemp} function generates a unique file name by modifying
 name, it makes @var{template} an empty string and returns that.  If
 @var{template} does not end with @samp{XXXXXX}, @code{mktemp} returns a
 null pointer.
+
+@strong{Warning:} Since between the time the pathname is constructed and
+the file is created another process might have created a file with this
+name using @code{mktemp} is a possible security hole.  The
+implementation generates names which hardly can be predicted but opening
+the file in any case should use the @code{O_EXCL} flag.  Using
+@code{mkstemp} is a safe way to avoid this problem.
 @end deftypefun
 
 @comment unistd.h

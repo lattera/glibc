@@ -76,6 +76,234 @@ __gconv_transform_dummy (struct gconv_step *step, struct gconv_step_data *data,
 }
 
 
+/* Convert from ISO 646-IRV to ISO 10646/UCS4.  */
+int
+__gconv_transform_ascii_ucs4 (struct gconv_step *step,
+			      struct gconv_step_data *data, const char *inbuf,
+			      size_t *inlen, size_t *written, int do_flush)
+{
+  struct gconv_step *next_step = step + 1;
+  struct gconv_step_data *next_data = data + 1;
+  gconv_fct fct = next_step->fct;
+  size_t do_write;
+  int result;
+
+  /* If the function is called with no input this means we have to reset
+     to the initial state.  The possibly partly converted input is
+     dropped.  */
+  if (do_flush)
+    {
+      /* Clear the state.  */
+      memset (data->statep, '\0', sizeof (mbstate_t));
+      do_write = 0;
+
+      /* Call the steps down the chain if there are any.  */
+      if (data->is_last)
+	result = GCONV_OK;
+      else
+	{
+	  struct gconv_step *next_step = step + 1;
+	  struct gconv_step_data *next_data = data + 1;
+
+	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
+
+	  /* Clear output buffer.  */
+	  data->outbufavail = 0;
+	}
+    }
+  else
+    {
+      int save_errno = errno;
+      do_write = 0;
+
+      result = GCONV_OK;
+      do
+	{
+	  const unsigned char *newinbuf = inbuf;
+	  size_t actually = 0;
+	  size_t cnt = 0;
+
+	  while (data->outbufavail + sizeof (wchar_t) <= data->outbufsize
+		 && cnt < *inlen)
+	    {
+	      if (*newinbuf > '\x7f')
+		{
+		  /* This is no correct ANSI_X3.4-1968 character.  */
+		  result = GCONV_ILLEGAL_INPUT;
+		  break;
+		}
+
+	      /* It's an one byte sequence.  */
+	      *(wchar_t *) &data->outbuf[data->outbufavail++]
+		= (wchar_t) *newinbuf;
+	      ++actually;
+
+	      ++newinbuf;
+	      ++cnt;
+	    }
+
+	  /* Remember how much we converted.  */
+	  do_write += cnt * sizeof (wchar_t);
+	  *inlen -= cnt;
+
+	  /* Check whether an illegal character appeared.  */
+	  if (result != GCONV_OK)
+	    break;
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = (*inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
+	  if (data->outbufavail > 0)
+	    {
+	      /* Call the functions below in the chain.  */
+	      size_t newavail = data->outbufavail;
+
+	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
+			       written, 0);
+
+	      /* Correct the output buffer.  */
+	      if (newavail != data->outbufavail && newavail > 0)
+		{
+		  memmove (data->outbuf,
+			   &data->outbuf[data->outbufavail - newavail],
+			   newavail);
+		  data->outbufavail = newavail;
+		}
+	    }
+	}
+      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
+    }
+
+  if (written != NULL && data->is_last)
+    *written = do_write / sizeof (wchar_t);
+
+  return result;
+}
+
+
+/* Convert from ISO 10646/UCS to ISO 646-IRV.  */
+int
+__gconv_transform_ucs4_ascii (struct gconv_step *step,
+			      struct gconv_step_data *data, const char *inbuf,
+			      size_t *inlen, size_t *written, int do_flush)
+{
+  struct gconv_step *next_step = step + 1;
+  struct gconv_step_data *next_data = data + 1;
+  gconv_fct fct = next_step->fct;
+  size_t do_write;
+  int result;
+
+  /* If the function is called with no input this means we have to reset
+     to the initial state.  The possibly partly converted input is
+     dropped.  */
+  if (do_flush)
+    {
+      /* Clear the state.  */
+      memset (data->statep, '\0', sizeof (mbstate_t));
+      do_write = 0;
+
+      /* Call the steps down the chain if there are any.  */
+      if (data->is_last)
+	result = GCONV_OK;
+      else
+	{
+	  struct gconv_step *next_step = step + 1;
+	  struct gconv_step_data *next_data = data + 1;
+
+	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
+
+	  /* Clear output buffer.  */
+	  data->outbufavail = 0;
+	}
+    }
+  else
+    {
+      int save_errno = errno;
+      do_write = 0;
+
+      result = GCONV_OK;
+      do
+	{
+	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
+	  size_t actually = 0;
+	  size_t cnt = 0;
+
+	  while (data->outbufavail < data->outbufsize
+		 && cnt + sizeof (wchar_t) <= *inlen)
+	    {
+	      if (*newinbuf < L'\0' || *newinbuf > L'\x7f')
+		{
+		  /* This is no correct ANSI_X3.4-1968 character.  */
+		  result = GCONV_ILLEGAL_INPUT;
+		  break;
+		}
+
+	      /* It's an one byte sequence.  */
+	      data->outbuf[data->outbufavail++] = (char) *newinbuf;
+	      ++actually;
+
+	      ++newinbuf;
+	      ++cnt;
+	    }
+
+	  /* Remember how much we converted.  */
+	  do_write += cnt;
+	  *inlen -= cnt * sizeof (wchar_t);
+
+	  /* Check whether an illegal character appeared.  */
+	  if (result != GCONV_OK)
+	    break;
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = (*inlen < sizeof (wchar_t)
+			? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT);
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
+	  if (data->outbufavail > 0)
+	    {
+	      /* Call the functions below in the chain.  */
+	      size_t newavail = data->outbufavail;
+
+	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
+			       written, 0);
+
+	      /* Correct the output buffer.  */
+	      if (newavail != data->outbufavail && newavail > 0)
+		{
+		  memmove (data->outbuf,
+			   &data->outbuf[data->outbufavail - newavail],
+			   newavail);
+		  data->outbufavail = newavail;
+		}
+	    }
+	}
+      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
+    }
+
+  if (written != NULL && data->is_last)
+    *written = do_write;
+
+  return result;
+}
+
+
 int
 __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 			     struct gconv_step_data *data, const char *inbuf,

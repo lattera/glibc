@@ -108,9 +108,9 @@ get_sym (void *a)
 }
 
 
-static void *
+void *
 internal_function
-find_func (void *handle, const char *name)
+__gconv_find_func (void *handle, const char *name)
 {
   struct get_sym_args args;
 
@@ -170,7 +170,7 @@ __gconv_find_shlib (const char *name)
 	{
 	  if (dlerror_run (do_open, found) == 0)
 	    {
-	      found->fct = find_func (found->handle, "gconv");
+	      found->fct = __gconv_find_func (found->handle, "gconv");
 	      if (found->fct == NULL)
 		{
 		  /* Argh, no conversion function.  There is something
@@ -180,8 +180,10 @@ __gconv_find_shlib (const char *name)
 		}
 	      else
 		{
-		  found->init_fct = find_func (found->handle, "gconv_init");
-		  found->end_fct = find_func (found->handle, "gconv_end");
+		  found->init_fct = __gconv_find_func (found->handle,
+						       "gconv_init");
+		  found->end_fct = __gconv_find_func (found->handle,
+						      "gconv_end");
 
 		  /* We have succeeded in loading the shared object.  */
 		  found->counter = 1;

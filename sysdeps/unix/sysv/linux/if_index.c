@@ -117,52 +117,46 @@ if_nameindex (void)
 #else
   int fd = opensock ();
   struct ifconf ifc;
-  unsigned int rq_ifs = 4, nifs, i;
+  unsigned int nifs, i;
   int rq_len;
   struct if_nameindex *idx = NULL;
-#ifdef SIOCGIFCOUNT
-  static int siocgifcount_works = 1;
-#endif
+  static int new_siocgifconf = 1;
+#define RQ_IFS	4
 
   if (fd < 0)
     return NULL;
 
-#ifdef SIOCGIFCOUNT
-  /* We may be able to find out how many interfaces really exist, rather
-     than guessing.  This ioctl is not present in kernels before version
-     2.1.50.  */
-  if (siocgifcount_works)
-    {
-      int serrno = errno;
+  ifc.ifc_buf = NULL;
 
-      if (ioctl (fd, SIOCGIFCOUNT, &nifs) < 0)
+  /* We may be able to get the needed buffer size directly, rather than
+     guessing.  */
+  if (new_siocgifconf)
+    {
+      ifc.ifc_buf = NULL;
+      ifc.ifc_len = 0;
+      if (ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
 	{
-	  if (errno == EINVAL)
-	    {
-	      siocgifcount_works = 0;
-	      __set_errno (serrno);
-	    }
+	  new_siocgifconf = 0;
+	  rq_len = RQ_IFS * sizeof (struct ifreq);
 	}
       else
-	rq_ifs = nifs + 1;
+	rq_len = ifc.ifc_len;
     }
-#endif
-
-  ifc.ifc_buf = NULL;
+  else
+    rq_len = RQ_IFS * sizeof (struct ifreq);
 
   /* Read all the interfaces out of the kernel.  */
   do
     {
-      rq_len = ifc.ifc_len = rq_ifs * sizeof (struct ifreq);
-      ifc.ifc_buf = alloca (ifc.ifc_len);
+      ifc.ifc_buf = alloca (ifc.ifc_len = rq_len);
       if ((ifc.ifc_buf == NULL) || (ioctl (fd, SIOCGIFCONF, &ifc) < 0))
 	{
 	  close (fd);
 	  return NULL;
 	}
-      rq_ifs *= 2;
+      rq_len *= 2;
     }
-  while (ifc.ifc_len == rq_len);
+  while (ifc.ifc_len == rq_len && new_siocgifconf == 0);
 
   nifs = ifc.ifc_len / sizeof (struct ifreq);
 

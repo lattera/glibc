@@ -64,6 +64,7 @@ AR = @AR@
 RANLIB = @RANLIB@
 MAKEINFO = @MAKEINFO@
 AS = $(CC) -c
+MIG = @MIG@
 
 # Installation tools.
 INSTALL = @INSTALL@

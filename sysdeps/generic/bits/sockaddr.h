@@ -1,5 +1,5 @@
 /* Definition of `struct sockaddr_*' common members.  Generic/4.2 BSD version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,5 +37,8 @@ typedef unsigned short int sa_family_t;
 
 #define __SOCKADDR_COMMON_SIZE	(sizeof (unsigned short int))
 
+/* Return the length of a `sockaddr' structure.  */
+#define SA_LEN(_x)	__libc_sa_len((_x)->sa_family)
+extern int __libc_sa_len __P ((sa_family_t __af));
 
 #endif	/* bits/sockaddr.h */

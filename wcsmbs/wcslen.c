@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -22,7 +22,7 @@
 
 /* Copy SRC to DEST.  */
 size_t
-wcslen (s)
+__wcslen (s)
      const wchar_t *s;
 {
   size_t len = 0;
@@ -40,3 +40,4 @@ wcslen (s)
 
   return len;
 }
+weak_alias (__wcslen, wcslen)

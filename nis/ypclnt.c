@@ -435,8 +435,8 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
 		      (caddr_t) & req, (xdrproc_t) xdr_ypresp_val,
 		      (caddr_t) & resp);
 
-  if (result != RPC_SUCCESS)
-    return YPERR_RPC;
+  if (result != YPERR_SUCCESS)
+    return result;
   if (resp.stat != YP_TRUE)
     return ypprot_err (resp.stat);
 
@@ -519,8 +519,8 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
 		      (caddr_t) & req, (xdrproc_t) xdr_ypresp_key_val,
 		      (caddr_t) & resp);
 
-  if (result != RPC_SUCCESS)
-    return YPERR_RPC;
+  if (result != YPERR_SUCCESS)
+    return result;
   if (resp.stat != YP_TRUE)
     return ypprot_err (resp.stat);
 
@@ -557,8 +557,8 @@ yp_master (const char *indomain, const char *inmap, char **outname)
   result = do_ypcall (indomain, YPPROC_MASTER, (xdrproc_t) xdr_ypreq_nokey,
 	  (caddr_t) & req, (xdrproc_t) xdr_ypresp_master, (caddr_t) & resp);
 
-  if (result != RPC_SUCCESS)
-    return YPERR_RPC;
+  if (result != YPERR_SUCCESS)
+    return result;
   if (resp.stat != YP_TRUE)
     return ypprot_err (resp.stat);
 
@@ -587,8 +587,8 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
   result = do_ypcall (indomain, YPPROC_ORDER, (xdrproc_t) xdr_ypreq_nokey,
 	   (caddr_t) & req, (xdrproc_t) xdr_ypresp_order, (caddr_t) & resp);
 
-  if (result != RPC_SUCCESS)
-    return YPERR_RPC;
+  if (result != YPERR_SUCCESS)
+    return result;
   if (resp.stat != YP_TRUE)
     return ypprot_err (resp.stat);
 
@@ -743,8 +743,8 @@ yp_maplist (const char *indomain, struct ypmaplist **outmaplist)
   result = do_ypcall (indomain, YPPROC_MAPLIST, (xdrproc_t) xdr_domainname,
     (caddr_t) & indomain, (xdrproc_t) xdr_ypresp_maplist, (caddr_t) & resp);
 
-  if (result != RPC_SUCCESS)
-    return YPERR_RPC;
+  if (result != YPERR_SUCCESS)
+    return result;
   if (resp.stat != YP_TRUE)
     return ypprot_err (resp.stat);
 

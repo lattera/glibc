@@ -24,6 +24,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "pty-internal.h"
 
@@ -40,21 +41,38 @@ char *
 ptsname (fd)
      int fd;
 {
-  return __ptsname_r (fd, namebuf, PTYNAMELEN);
+  return __ptsname_r (fd, namebuf, PTYNAMELEN) != 0 ? NULL : namebuf;
 }
 
-char *
-__ptsname_r (fd, buf, len)
+int
+__ptsname_r (fd, buf, buflen)
      int fd;
      char *buf;
-     unsigned int len;
+     size_t buflen;
 {
-  char nbuf[PTYNAMELEN], idbuf[6];
-  int ptyno;
   struct stat st;
+  int save = errno;
+  int ptyno;
+  char nbuf[PTYNAMELEN], idbuf[6];
+  char *cp;
 
 #ifdef TIOCGPTN
   static int tiocgptn_works = 1;
+#endif
+
+  if (!buf)
+    {
+      __set_errno (EINVAL);
+      return EINVAL;
+    }
+
+  if (!__isatty (fd))
+    {
+      __set_errno (ENOTTY);
+      return ENOTTY;
+    }
+
+#ifdef TIOCGPTN
   if (tiocgptn_works)
     {
       if (ioctl (fd, TIOCGPTN, &ptyno) == 0)
@@ -62,23 +80,21 @@ __ptsname_r (fd, buf, len)
       else
 	{
 	  if(errno != EINVAL)
-	    return 0;
+	    return errno;
 	  else
 	    tiocgptn_works = 0;
 	}
     }
 #endif
-  /* /dev/ptmx will make it into the kernel before 32 bit dev_t, so
-     this should be safe.  */
-  if (__fxstat (_STAT_VER, fd, &st))
-    return 0;
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
+    return errno;
 
   ptyno = minor (st.st_rdev);
   if (major (st.st_rdev) == 4)
     ptyno -= 128;
 
 #ifdef TIOCGPTN
-gotit:
+ gotit:
 #endif
   /* Two different possible naming schemes for pty slaves:
      the SVr4 way.  */
@@ -86,22 +102,32 @@ gotit:
   idbuf[5] = '\0';
   __stpcpy (__stpcpy (nbuf, "/dev/pts/"),
 	    _itoa_word (ptyno, &idbuf[4], 10, 0));
-  if (!__xstat (_STAT_VER, nbuf, &st))
-    return strncpy (buf, nbuf, len);
-  else
-    if (errno != ENOENT)
-      return NULL;
+  if (__xstat (_STAT_VER, nbuf, &st) < 0)
+    {
+      if (errno != ENOENT)
+	return errno;
 
-  /* ...and the BSD way.  */
-  nbuf[5]  = 't';
-  nbuf[7]  = 'y';
-  nbuf[8]  = __ptyname1[ptyno / 16];
-  nbuf[9]  = __ptyname2[ptyno % 16];
-  nbuf[10] = '\0';
+      /* ...and the BSD way.  */
+      nbuf[5]  = 't';
+      nbuf[7]  = 'y';
+      nbuf[8]  = __ptyname1[ptyno / 16];
+      nbuf[9]  = __ptyname2[ptyno % 16];
+      nbuf[10] = '\0';
 
-  if (__xstat (_STAT_VER, nbuf, &st))
-    return NULL;
+      if (__xstat (_STAT_VER, nbuf, &st) < 0)
+	return errno;
+    }
 
-  return strncpy (buf, nbuf, len);
+  if (buflen < strlen (nbuf) + 1)
+    {
+      __set_errno (ERANGE);
+      return ERANGE;
+    }
+
+  cp = __stpncpy (buf, nbuf, buflen);
+  cp[0] = '\0';
+
+  __set_errno (save);
+  return 0;
 }
 weak_alias (__ptsname_r, ptsname_r)

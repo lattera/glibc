@@ -48,7 +48,7 @@ openpty (pmast, pslave, pname, tio, wins)
   if (unlockpt (pfd))
     goto bail;
 
-  if (!ptsname_r (pfd, name, PTYNAMELEN))
+  if (ptsname_r (pfd, name, PTYNAMELEN) != 0)
     goto bail;
 
   tfd = open (name, O_RDWR);

@@ -1,5 +1,5 @@
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Definition of `sockaddr_union'.  Linux version.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,30 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#ifndef _SYS_SOCKET_H
+# error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
+#endif
 
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   If no '\0' terminator is found in that many characters, return MAXLEN.  */
+#include <netash/ash.h>
+#include <netatalk/at.h>
+#include <netax25/ax25.h>
+#include <netinet/in.h>
+#include <netipx/ipx.h>
+#include <netrose/rose.h>
+#include <sys/un.h>
 
-size_t
-__strnlen (const char *string, size_t maxlen)
-{
-  const char *end = memchr (string, '\0', maxlen);
-  return end ? end - string : maxlen;
-}
-weak_alias (__strnlen, strnlen)
+/* Union of all sockaddr types (required by IPv6 Basic API).  This is
+   somewhat evil.  */
+union sockaddr_union
+  {
+    struct sockaddr sa;
+    struct sockaddr_ash sash;
+    struct sockaddr_at sat;
+    struct sockaddr_ax25 sax25;
+    struct sockaddr_in sin;
+    struct sockaddr_in6 sin6;
+    struct sockaddr_ipx sipx;
+    struct sockaddr_rose rose;
+    struct sockaddr_un sun;
+    char __maxsize[128];
+  };

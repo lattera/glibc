@@ -46,6 +46,7 @@ rt_sigqueueinfo.c
 rt_sigreturn.c
 rt_sigsuspend.c
 rt_sigtimedwait.c
+sa_len.c
 scsi/sg.h
 scsi/scsi.h
 sys/acct.h

@@ -398,6 +398,10 @@ __gconv_read_conf (void)
   elem = strtok_r (gconv_path, ":", &gconv_path);
   while (elem != NULL)
     {
+#ifndef MAXPATHLEN
+      /* We define a reasonable limit.  */
+# define 4096
+#endif
       char real_elem[MAXPATHLEN];
 
       if (realpath (elem, real_elem) != NULL)

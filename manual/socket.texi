@@ -21,13 +21,16 @@ system, and the socket functions always exist, but if the system does
 not really support sockets, these functions always fail.
 
 @strong{Incomplete:} We do not currently document the facilities for
-broadcast messages or for configuring Internet interfaces.
+broadcast messages or for configuring Internet interfaces.  The
+reentrant functions and some newer functions that are related to IPv6
+aren't documented either so far.
 
 @menu
 * Socket Concepts::	Basic concepts you need to know about.
 * Communication Styles::Stream communication, datagrams, and other styles.
 * Socket Addresses::	How socket names (``addresses'') work.
-* File Namespace::	Details about the file namespace.
+* Interface Naming::	Identifying specific network interfaces.
+* Local Namespace::	Details about the local namespace.
 * Internet Namespace::	Details about the Internet namespace.
 * Misc Namespaces::	Other namespaces not documented fully here.
 * Open/Close Sockets::  Creating sockets and destroying them.
@@ -141,13 +144,13 @@ But now the POSIX people came and unified the interface with their words
 @code{size_t} is 64 bits wide and so variable references are not anymore
 possible.
 
-A solution provides the Unix98 specification which finally introduces a
-type @code{socklen_t}.  This type is used in all of the cases that were
-previously changed to use @code{size_t}.  The only requirement of this
-type is that it is an unsigned type of at least 32 bits.  Therefore,
-implementations which require references to 32 bit variables be passed
-can be as happy as implementations which use right from the start 64 bit
-values.
+A solution is provided by the Unix98 specification which finally
+introduces a type @code{socklen_t}.  This type is used in all of the
+cases that were previously changed to use @code{size_t}.  The only
+requirement of this type is that it is an unsigned type of at least 32
+bits.  Therefore, implementations which require references to 32 bit
+variables be passed can be as happy as implementations which use right
+from the start 64 bit values.
 
 
 @node Communication Styles
@@ -260,11 +263,11 @@ system assigns an address automatically if you have not specified one.
 
 Occasionally a client needs to specify an address because the server
 discriminates based on addresses; for example, the rsh and rlogin
-protocols look at the client's socket address and don't bypass password
-checking unless it is less than @code{IPPORT_RESERVED} (@pxref{Ports}).
+protocols look at the client's socket address and only bypass password
+checking if it is less than @code{IPPORT_RESERVED} (@pxref{Ports}).
 
 The details of socket addresses vary depending on what namespace you are
-using.  @xref{File Namespace}, or @ref{Internet Namespace}, for specific
+using.  @xref{Local Namespace}, or @ref{Internet Namespace}, for specific
 information.
 
 Regardless of the namespace, you use the same functions @code{bind} and
@@ -304,7 +307,7 @@ The symbols in this section are defined in the header file
 
 @comment sys/socket.h
 @comment BSD
-@deftp {Date Type} {struct sockaddr}
+@deftp {Data Type} {struct sockaddr}
 The @code{struct sockaddr} type itself has the following members:
 
 @table @code
@@ -329,7 +332,7 @@ corresponding namespace.  Here is a list of address format names:
 @item AF_FILE
 @vindex AF_FILE
 This designates the address format that goes with the file namespace.
-(@code{PF_FILE} is the name of that namespace.)  @xref{File Namespace
+(@code{PF_FILE} is the name of that namespace.)  @xref{Local Namespace
 Details}, for information about this address format.
 
 @comment sys/socket.h
@@ -338,6 +341,14 @@ Details}, for information about this address format.
 @vindex AF_UNIX
 This is a synonym for @code{AF_FILE}, for compatibility.
 (@code{PF_UNIX} is likewise a synonym for @code{PF_FILE}.)
+
+@comment sys/socket.h
+@comment BSD
+@item AF_UNIX
+@vindex AF_LOCAL
+This is another synonym for @code{AF_FILE}, for compatibility.
+(@code{PF_LOCAL} is likewise a synonym for @code{PF_FILE}.)
+@strong{POSIX? XXX}
 
 @comment sys/socket.h
 @comment BSD
@@ -376,7 +387,7 @@ information about how to use them.
 @pindex sys/socket.h
 Use the @code{bind} function to assign an address to a socket.  The
 prototype for @code{bind} is in the header file @file{sys/socket.h}.
-For examples of use, see @ref{File Namespace}, or see @ref{Inet Example}.
+For examples of use, see @ref{Local Socket Example}, or see @ref{Inet Example}.
 
 @comment sys/socket.h
 @comment BSD
@@ -462,29 +473,107 @@ You can't read the address of a socket in the file namespace.  This is
 consistent with the rest of the system; in general, there's no way to
 find a file's name from a descriptor for that file.
 
-@node File Namespace
-@section The File Namespace
-@cindex file namespace, for sockets
+@node Interface Naming
+@section Interface Naming
 
-This section describes the details of the file namespace, whose
-symbolic name (required when you create a socket) is @code{PF_FILE}.
+Each network interface has a name.  This usually consists of a few
+letters that relate to the type of interface, which may be followed by a
+number if there is more than one interface of that type.  Examples
+might be @code{lo} (the loopback interface) and @code{eth0} (the first
+Ethernet interface).
+
+Although such names are convenient for humans, it would be clumsy to
+have to use them whenever a program needed to refer to an interface.  In
+such situations an interface is referred to by its @dfn{index}, which is
+an arbitrarily-assigned small positive integer.
+
+The following functions, constants and data types are declared in the
+header file @file{net/if.h}.
+
+@comment net/if.h
+@deftypevr Constant size_t IFNAMSIZ
+This constant defines the maximum buffer size needed to hold an
+interface name, including its terminating zero byte.
+@end deftypevr
+
+@comment net/if.h
+@comment IPv6 basic API
+@deftypefun unsigned int if_nametoindex (const char *ifname)
+This function yields the interface index corresponding to a particular
+name.  If no interface exists with the name given, it returns 0.
+@end deftypefun
+
+@comment net/if.h
+@comment IPv6 basic API
+@deftypefun char *if_indextoname (unsigned int ifindex, char *ifname)
+This function maps an interface index to its corresponding name.  The
+returned name is placed in the buffer pointed to by @code{ifname}, which
+must be at least @code{IFNAMSIZE} bytes in length.  If the index was
+invalid, the function's return value is a null pointer, otherwise it is
+@code{ifname}.
+@end deftypefun
+
+@comment net/if.h
+@comment IPv6 basic API
+@deftp {Data Type} {struct if_nameindex}
+This data type is used to hold the information about a single
+interface.  It has the following members:
+
+@table @code
+@item unsigned int if_index;
+This is the interface index.
+
+@item char *if_name
+This is the null-terminated index name.
+
+@end table
+@end deftp
+
+@comment net/if.h
+@comment IPv6 basic API
+@deftypefun struct if_nameindex *if_nameindex (void)
+This function returns an array of @code{if_nameindex} structures, one
+for every interface that is present.  The end of the list is indicated
+by a structure with an interface of 0 and a null name pointer.  If an
+error occurs, this function returns a null pointer.
+
+The returned structure must be freed with @code{if_freenameindex} after
+use.
+@end deftypefun
+
+@comment net/if.h
+@comment IPv6 basic API
+@deftypefun void if_freenameindex (struct if_nameindex *ptr)
+This function frees the structure returned by an earlier call to
+@code{if_nameindex}.
+@end deftypefun
+
+@node Local Namespace
+@section The Local Namespace
+@cindex local namespace, for sockets
+
+This section describes the details of the local namespace, whose
+symbolic name (required when you create a socket) is @code{PF_LOCAL}.
+The local namespace is also known as ``Unix domain sockets''.  Another
+name is file namespace since socket addresses are normally implemented
+as file names.
 
 @menu
-* Concepts: File Namespace Concepts.	What you need to understand.
-* Details: File Namespace Details.	Address format, symbolic names, etc.
-* Example: File Socket Example.		Example of creating a socket.
+* Concepts: Local Namespace Concepts. What you need to understand.
+* Details: Local Namespace Details.   Address format, symbolic names, etc.
+* Example: Local Socket Example.      Example of creating a socket.
 @end menu
 
-@node File Namespace Concepts
-@subsection File Namespace Concepts
+@node Local Namespace Concepts
+@subsection Local Namespace Concepts
 
-In the file namespace, socket addresses are file names.  You can specify
+In the local namespace, socket addresses are file names.  You can specify
 any file name you want as the address of the socket, but you must have
 write permission on the directory containing it.  In order to connect to
 a socket, you must have read permission for it.  It's common to put
 these files in the @file{/tmp} directory.
 
-One peculiarity of the file namespace is that the name is only used when
+One peculiarity of the local namespace is that the name is only used when
 opening the connection; once that is over with, the address is not
 meaningful and may not exist.
 
@@ -494,53 +583,60 @@ which contains the name of the socket.  You can see the socket in a
 directory listing, but connecting to it never succeeds.  Some programs
 take advantage of this, such as by asking the client to send its own
 process ID, and using the process IDs to distinguish between clients.
-However, we recommend you not use this method in protocols you design,
+However, we recommend you not to use this method in protocols you design,
 as we might someday permit connections from other machines that mount
 the same file systems.  Instead, send each new client an identifying
 number if you want it to have one.
 
-After you close a socket in the file namespace, you should delete the
+After you close a socket in the local namespace, you should delete the
 file name from the file system.  Use @code{unlink} or @code{remove} to
 do this; see @ref{Deleting Files}.
 
-The file namespace supports just one protocol for any communication
+The local namespace supports just one protocol for any communication
 style; it is protocol number @code{0}.
 
-@node File Namespace Details
-@subsection Details of File Namespace
+@node Local Namespace Details
+@subsection Details of Local Namespace
 
 @pindex sys/socket.h
-To create a socket in the file namespace, use the constant
-@code{PF_FILE} as the @var{namespace} argument to @code{socket} or
+To create a socket in the local namespace, use the constant
+@code{PF_LOCAL} as the @var{namespace} argument to @code{socket} or
 @code{socketpair}.  This constant is defined in @file{sys/socket.h}.
 
 @comment sys/socket.h
-@comment GNU
-@deftypevr Macro int PF_FILE
-This designates the file namespace, in which socket addresses are file
-names, and its associated family of protocols.
+@comment POSIX
+@deftypevr Macro int PF_LOCAL
+This designates the local namespace, in which socket addresses are local
+names, and its associated family of protocols.  @code{PF_Local} is the
+macro used by Posix.1g.
 @end deftypevr
 
 @comment sys/socket.h
 @comment BSD
 @deftypevr Macro int PF_UNIX
-This is a synonym for @code{PF_FILE}, for compatibility's sake.
+This is a synonym for @code{PF_LOCAL}, for compatibility's sake.
 @end deftypevr
 
-The structure for specifying socket names in the file namespace is
+@comment sys/socket.h
+@comment GNU
+@deftypevr Macro int PF_FILE
+This is a synonym for @code{PF_LOCAL}, for compatibility's sake.
+@end deftypevr
+
+The structure for specifying socket names in the local namespace is
 defined in the header file @file{sys/un.h}:
 @pindex sys/un.h
 
 @comment sys/un.h
 @comment BSD
 @deftp {Data Type} {struct sockaddr_un}
-This structure is used to specify file namespace socket addresses.  It has
+This structure is used to specify local namespace socket addresses.  It has
 the following members:
 
 @table @code
 @item short int sun_family
 This identifies the address family or format of the socket address.
-You should store the value @code{AF_FILE} to designate the file
+You should store the value @code{AF_LOCAL} to designate the local
 namespace.  @xref{Socket Addresses}.
 
 @item char sun_path[108]
@@ -554,14 +650,20 @@ the length of the filename.
 @end deftp
 
 You should compute the @var{length} parameter for a socket address in
-the file namespace as the sum of the size of the @code{sun_family}
+the local namespace as the sum of the size of the @code{sun_family}
 component and the string length (@emph{not} the allocation size!) of
-the file name string.
+the file name string.  This can be done using the macro @code{SUN_LEN}:
 
-@node File Socket Example
-@subsection Example of File-Namespace Sockets
+@comment sys/un.h
+@comment BSD
+@deftypefn {Macro} int SUNLEN (@emph{struct sockaddr_un *} @var{ptr})
+The macro computes the length of socket address in the local namespace.
+@end deftypefn
 
-Here is an example showing how to create and name a socket in the file
+@node Local Socket Example
+@subsection Example of Local-Namespace Sockets
+
+Here is an example showing how to create and name a socket in the local
 namespace.
 
 @smallexample
@@ -572,19 +674,30 @@ namespace.
 @section The Internet Namespace
 @cindex Internet namespace, for sockets
 
-This section describes the details the protocols and socket naming
+This section describes the details of the protocols and socket naming
 conventions used in the Internet namespace.
 
-To create a socket in the Internet namespace, use the symbolic name
+Originaly the Internet namespace used only IP version 4 (IPv4).  With
+the growing number of hosts on the Internet, a new protocol with a
+larger address space was neccessary: IP version 6 (IPv6).  IPv6
+introduces besides 128bit addresses (IPv4 has 32bit addresses) also
+other features and will eventually replace IPv4.
+
+To create a socket in the IPv4 Internet namespace, use the symbolic name
 @code{PF_INET} of this namespace as the @var{namespace} argument to
-@code{socket} or @code{socketpair}.  This macro is defined in
-@file{sys/socket.h}.
+@code{socket} or @code{socketpair}.  For IPv6 addresses, you need the
+macro @code{PF_INET6}. These macros are defined in @file{sys/socket.h}.
 @pindex sys/socket.h
 
 @comment sys/socket.h
 @comment BSD
 @deftypevr Macro int PF_INET
-This designates the Internet namespace and associated family of
+This designates the IPv4 Internet namespace and associated family of
+protocols.
+@end deftypevr
+
+@deftypevr Macro int AF_INET6
+This designates the IPv6 Internet namespace and associated family of
 protocols.
 @end deftypevr
 
@@ -637,7 +750,7 @@ This is the data type used to represent socket addresses in the
 Internet namespace.  It has the following members:
 
 @table @code
-@item short int sin_family
+@item sa_family_t sin_family
 This identifies the address family or format of the socket address.
 You should store the value of @code{AF_INET} in this member.
 @xref{Socket Addresses}.
@@ -654,14 +767,14 @@ This is the port number.  @xref{Ports}.
 
 When you call @code{bind} or @code{getsockname}, you should specify
 @code{sizeof (struct sockaddr_in)} as the @var{length} parameter if
-you are using an Internet namespace socket address.
+you are using an IPv4 Internet namespace socket address.
 
 @deftp {Data Type} {struct sockaddr_in6}
 This is the data type used to represent socket addresses in the IPv6
 namespace.  It has the following members:
 
 @table @code
-@item short int sin6_family
+@item sa_family_t sin6_family
 This identifies the address family or format of the socket address.
 You should store the value of @code{AF_INET6} in this member.
 @xref{Socket Addresses}.
@@ -691,7 +804,7 @@ numeric host addresses as sequences of up to eight numbers separated by
 colons, as in @samp{5f03:1200:836f:c100::1}.
 
 Each computer also has one or more @dfn{host names}, which are strings
-of words separated by periods, as in @samp{churchy.gnu.ai.mit.edu}.
+of words separated by periods, as in @samp{mescaline.gnu.org}.
 
 Programs that let the user specify a host typically accept both numeric
 addresses and host names.  But the program needs a numeric address to
@@ -715,18 +828,21 @@ Each computer on the Internet has one or more Internet addresses,
 numbers which identify that computer among all those on the Internet.
 @end ifinfo
 
-@c I think this whole section could possibly be removed.  It is slightly
-@c misleading these days.
-
 @cindex network number
 @cindex local network address number
-An Internet host address is a number containing four bytes of data.
-These are divided into two parts, a @dfn{network number} and a
-@dfn{local network address number} within that network.  The network
-number consists of the first one, two or three bytes; the rest of the
-bytes are the local address.
+An IPv4 Internet host address is a number containing four bytes of data.
+Historically these are divided into two parts, a @dfn{network number} and a
+@dfn{local network address number} within that network.  In the
+mid-1990s classless address were introduced which changed the
+behaviour.  Since some functions implicitly expect the old definitions,
+we first describe the class based network and will then describe
+classless addresses.  IPv6 uses only classless adresses and therefore
+the following paragraphs don't apply.
 
-Network numbers are registered with the Network Information Center
+The class based IPv4 network number consists of the first one, two or
+three bytes; the rest of the bytes are the local address.
+
+IPv4 network numbers are registered with the Network Information Center
 (NIC), and are divided into three classes---A, B, and C.  The local
 network address numbers of individual machines are registered with the
 administrator of the particular network.
@@ -742,7 +858,8 @@ Internet address specify the address within that network.
 
 The Class A network 0 is reserved for broadcast to all networks.  In
 addition, the host number 0 within each network is reserved for broadcast
-to all hosts in that network.
+to all hosts in that network.  These uses are obsolete now but out of
+compatibility reasons you shouldn't use network 0 and host number 0.
 
 The Class A network 127 is reserved for loopback; you can always use
 the Internet address @samp{127.0.0.1} to refer to the host machine.
@@ -752,6 +869,7 @@ have multiple Internet host addresses.  However, there is never
 supposed to be more than one machine with the same host address.
 
 @c !!! this section could document the IN_CLASS* macros in <netinet/in.h>.
+@c No, it shouldn't since they're obsolete.
 
 @cindex standard dot notation, for Internet addresses
 @cindex dot notation, for Internet addresses
@@ -760,7 +878,8 @@ for Internet addresses:
 
 @table @code
 @item @var{a}.@var{b}.@var{c}.@var{d}
-This specifies all four bytes of the address individually.
+This specifies all four bytes of the address individually and is the
+commonly used representation.
 
 @item @var{a}.@var{b}.@var{c}
 The last part of the address, @var{c}, is interpreted as a 2-byte quantity.
@@ -768,7 +887,7 @@ This is useful for specifying host addresses in a Class B network with
 network address number @code{@var{a}.@var{b}}.
 
 @item @var{a}.@var{b}
-The last part of the address, @var{c}, is interpreted as a 3-byte quantity.
+The last part of the address, @var{b}, is interpreted as a 3-byte quantity.
 This is useful for specifying host addresses in a Class A network with
 network address number @var{a}.
 
@@ -782,14 +901,49 @@ the radix apply.  In other words, a leading @samp{0x} or @samp{0X} implies
 hexadecimal radix; a leading @samp{0} implies octal; and otherwise decimal
 radix is assumed.
 
+@subsubheading Classless Addresses
+
+IPv4 addresses (and IPv6 addresses also) are now considered as
+classless.  The distinction between classes A, B, and C can be ignored.
+Instead a IPv4 host adddress consists of a 32-bit address and a 32-bit
+mask.  The mask contains bits of 1 for the network part and bits of 0
+for the host part.  The 1-bits are contigous from the leftmost bit, the
+0-bits are contigous from the rightmost bit so that the netmask can also
+be written as a prefix length of bits of 1.  Classes A, B and C are just
+special cases of this general rule.  For example, class A addresses have
+a netmask of @samp{255.0.0.0} or a prefix length of 8.
+
+Classless IPv4 network addresses are written in numbers-and-dots
+notation with the prefix length appended and a slash as separator.  For
+example the class A network 10 is written as @samp{10.0.0.0/8}.
+
+@subsubheading IPv6 Addresses
+
+IPv6 addresses contain 128 bits (IPv4 has 32 bits) of data.  A host
+address is usually written as eight 16-bit hexadecimal numbers that are
+separated by colons.  Two colons are used to appreviated strings of
+consecutive zeros.  For example the IPv6 loopback address which is
+@samp{0:0:0:0:0:0:0:1} can be just written as @samp{::1}.
+
 @node Host Address Data Type
 @subsubsection Host Address Data Type
 
-Internet host addresses are represented in some contexts as integers
-(type @code{unsigned long int}).  In other contexts, the integer is
+IPv4 Internet host addresses are represented in some contexts as integers
+(type @code{uint32_t}).  In other contexts, the integer is
 packaged inside a structure of type @code{struct in_addr}.  It would
 be better if the usage were made consistent, but it is not hard to extract
 the integer from the structure or put the integer into a structure.
+
+You will find older code that uses @code{unsigned long int} for
+IPv4 Internet host addresses instead of @code{uint32_t} or @code{struct
+in_addr}.  Historically @code{unsigned long int} was a 32 bit number but
+with 64 bit machines this has changed.  Using @code{unsigned long int}
+might break the code if it is used on machines where this type doesn't
+have 32 bits.  @code{uint32_t} is specified by Unix98 and guaranteed to have
+32 bits.
+
+IPv6 Internet host addresses have 128 bits and are packaged inside a
+structure of type @code{struct in6_addr}.
 
 The following basic definitions for Internet addresses are declared in
 the header file @file{netinet/in.h}:
@@ -798,16 +952,16 @@ the header file @file{netinet/in.h}:
 @comment netinet/in.h
 @comment BSD
 @deftp {Data Type} {struct in_addr}
-This data type is used in certain contexts to contain an Internet host
-address.  It has just one field, named @code{s_addr}, which records the
-host address number as an @code{unsigned long int}.
+This data type is used in certain contexts to contain an IPv4 Internet
+host address.  It has just one field, named @code{s_addr}, which records
+the host address number as an @code{uint32_t}.
 @end deftp
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned int} INADDR_LOOPBACK
+@deftypevr Macro {uint32_t} INADDR_LOOPBACK
 You can use this constant to stand for ``the address of this machine,''
-instead of finding its actual address.  It is the Internet address
+instead of finding its actual address.  It is the IPv4 Internet address
 @samp{127.0.0.1}, which is usually called @samp{localhost}.  This
 special constant saves you the trouble of looking up the address of your
 own machine.  Also, the system usually implements @code{INADDR_LOOPBACK}
@@ -817,7 +971,7 @@ talking to itself.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned int} INADDR_ANY
+@deftypevr Macro {uint32_t} INADDR_ANY
 You can use this constant to stand for ``any incoming address,'' when
 binding to an address.  @xref{Setting Address}.  This is the usual
 address to give in the @code{sin_addr} member of @w{@code{struct
@@ -826,14 +980,14 @@ sockaddr_in}} when you want to accept Internet connections.
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned int} INADDR_BROADCAST
+@deftypevr Macro {uint32_t} INADDR_BROADCAST
 This constant is the address you use to send a broadcast message.
 @c !!! broadcast needs further documented
 @end deftypevr
 
 @comment netinet/in.h
 @comment BSD
-@deftypevr Macro {unsigned int} INADDR_NONE
+@deftypevr Macro {uint32_t} INADDR_NONE
 This constant is returned by some functions to indicate an error.
 @end deftypevr
 
@@ -876,7 +1030,7 @@ Order}, for an explanation of network and host byte order.
 @comment arpa/inet.h
 @comment BSD
 @deftypefun int inet_aton (const char *@var{name}, struct in_addr *@var{addr})
-This function converts the Internet host address @var{name}
+This function converts the IPv4 Internet host address @var{name}
 from the standard numbers-and-dots notation into binary data and stores
 it in the @code{struct in_addr} that @var{addr} points to.
 @code{inet_aton} returns nonzero if the address is valid, zero if not.
@@ -884,8 +1038,8 @@ it in the @code{struct in_addr} that @var{addr} points to.
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun {unsigned long int} inet_addr (const char *@var{name})
-This function converts the Internet host address @var{name} from the
+@deftypefun {uint32_t} inet_addr (const char *@var{name})
+This function converts the IPv4 Internet host address @var{name} from the
 standard numbers-and-dots notation into binary data.  If the input is
 not valid, @code{inet_addr} returns @code{INADDR_NONE}.  This is an
 obsolete interface to @code{inet_aton}, described immediately above; it
@@ -896,17 +1050,21 @@ indicate error return.
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun {unsigned long int} inet_network (const char *@var{name})
+@deftypefun {uint32_t} inet_network (const char *@var{name})
 This function extracts the network number from the address @var{name},
 given in the standard numbers-and-dots notation. The returned address is
 in host order. If the input is not valid, @code{inet_network} returns
 @code{-1}.
+
+The function works only with traditional IPv4 class A,B and C network
+types.  It doesn't work with classless addresses and shouldn't be used
+anymore.
 @end deftypefun
 
 @comment arpa/inet.h
 @comment BSD
 @deftypefun {char *} inet_ntoa (struct in_addr @var{addr})
-This function converts the Internet host address @var{addr} to a
+This function converts the IPv4 Internet host address @var{addr} to a
 string in the standard numbers-and-dots notation.  The return value is
 a pointer into a statically-allocated buffer.  Subsequent calls will
 overwrite the same buffer, so you should copy the string if you need
@@ -915,28 +1073,40 @@ to save it.
 In multi-threaded programs each thread has an own statically-allocated
 buffer.  But still subsequent calls of @code{inet_ntoa} in the same
 thread will overwrite the result of the last call.
+
+Instead of @code{inet_ntoa} the newer function @code{inet_ntop} which is
+described below should be used since it handles both IPv4 and IPv6
+addresses.
 @end deftypefun
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun {struct in_addr} inet_makeaddr (int @var{net}, int @var{local})
-This function makes an Internet host address by combining the network
+@deftypefun {struct in_addr} inet_makeaddr (uint32_t @var{net}, uint32_t @var{local})
+This function makes an IPv4 Internet host address by combining the network
 number @var{net} with the local-address-within-network number
 @var{local}.
 @end deftypefun
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun int inet_lnaof (struct in_addr @var{addr})
+@deftypefun uint32_t inet_lnaof (struct in_addr @var{addr})
 This function returns the local-address-within-network part of the
 Internet host address @var{addr}.
+
+The function works only with traditional IPv4 class A,B and C network
+types.  It doesn't work with classless addresses and shouldn't be used
+anymore.
 @end deftypefun
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun int inet_netof (struct in_addr @var{addr})
+@deftypefun uint32_t inet_netof (struct in_addr @var{addr})
 This function returns the network number part of the Internet host
 address @var{addr}.
+
+The function works only with traditional IPv4 class A,B and C network
+types.  It doesn't work with classless addresses and shouldn't be used
+anymore.
 @end deftypefun
 
 @comment arpa/inet.h
@@ -952,7 +1122,7 @@ responsibility to make sure the buffer is large enough.
 
 @comment arpa/inet.h
 @comment IPv6 basic API
-@deftypefun {char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, size_t @var{len})
+@deftypefun {const char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, size_t @var{len})
 This function converts an Internet address (either IPv4 or IPv6) from
 network (binary) to presentation (textual) form.  @var{af} should be
 either @code{AF_INET} or @code{AF_INET6}, as appropriate.  @var{cp} is a
@@ -970,9 +1140,9 @@ buffer.  The return value from the function will be this buffer address.
 Besides the standard numbers-and-dots notation for Internet addresses,
 you can also refer to a host by a symbolic name.  The advantage of a
 symbolic name is that it is usually easier to remember.  For example,
-the machine with Internet address @samp{128.52.46.32} is also known as
-@samp{churchy.gnu.ai.mit.edu}; and other machines in the @samp{gnu.ai.mit.edu}
-domain can refer to it simply as @samp{churchy}.
+the machine with Internet address @samp{158.121.106.19} is also known as
+@samp{alpha.gnu.org}; and other machines in the @samp{gnu.org}
+domain can refer to it simply as @samp{alpha}.
 
 @pindex /etc/hosts
 @pindex netdb.h
@@ -1021,9 +1191,10 @@ first host address.
 
 As far as the host database is concerned, each address is just a block
 of memory @code{h_length} bytes long.  But in other contexts there is an
-implicit assumption that you can convert this to a @code{struct in_addr} or
-an @code{unsigned long int}.  Host addresses in a @code{struct hostent}
-structure are always given in network byte order; see @ref{Byte Order}.
+implicit assumption that you can convert IPv4 addresses to a
+@code{struct in_addr} or an @code{uint32_t}.  Host addresses in
+a @code{struct hostent} structure are always given in network byte
+order; see @ref{Byte Order}.
 
 You can use @code{gethostbyname}, @code{gethostbyname2} or
 @code{gethostbyaddr} to search the hosts database for information about
@@ -1051,10 +1222,12 @@ allows the caller to specify the desired address family (e.g.@:
 @comment BSD
 @deftypefun {struct hostent *} gethostbyaddr (const char *@var{addr}, int @var{length}, int @var{format})
 The @code{gethostbyaddr} function returns information about the host
-with Internet address @var{addr}.  The @var{length} argument is the
-size (in bytes) of the address at @var{addr}.  @var{format} specifies
-the address format; for an Internet address, specify a value of
-@code{AF_INET}.
+with Internet address @var{addr}.  The parameter @var{addr} is not
+really a pointer to char - it can be a pointer to an IPv4 or an IPv6
+address. The @var{length} argument is the size (in bytes) of the address
+at @var{addr}.  @var{format} specifies the address format; for an IPv4
+Internet address, specify a value of @code{AF_INET}; for an IPv6
+Internet address, use @code{AF_INET6}.
 
 If the lookup fails, @code{gethostbyaddr} returns a null pointer.
 @end deftypefun
@@ -1122,14 +1295,14 @@ reopening the database for each call.
 
 @comment netdb.h
 @comment BSD
-@deftypefun {struct hostent *} gethostent ()
+@deftypefun {struct hostent *} gethostent (void)
 This function returns the next entry in the hosts database.  It
 returns a null pointer if there are no more entries.
 @end deftypefun
 
 @comment netdb.h
 @comment BSD
-@deftypefun void endhostent ()
+@deftypefun void endhostent (void)
 This function closes the hosts database.
 @end deftypefun
 
@@ -1306,40 +1479,44 @@ If you use @code{getservbyname} and @code{gethostbyname} or
 already in the network byte order, and you can copy them directly into
 the @code{sockaddr_in} structure.
 
-Otherwise, you have to convert the values explicitly.  Use
-@code{htons} and @code{ntohs} to convert values for the @code{sin_port}
-member.  Use @code{htonl} and @code{ntohl} to convert values for the
+Otherwise, you have to convert the values explicitly.  Use @code{htons}
+and @code{ntohs} to convert values for the @code{sin_port} member.  Use
+@code{htonl} and @code{ntohl} to convert IPv4 addresses for the
 @code{sin_addr} member.  (Remember, @code{struct in_addr} is equivalent
-to @code{unsigned long int}.)  These functions are declared in
+to @code{uint32_t}.)  These functions are declared in
 @file{netinet/in.h}.
 @pindex netinet/in.h
 
 @comment netinet/in.h
 @comment BSD
-@deftypefun {unsigned short int} htons (unsigned short int @var{hostshort})
-This function converts the @code{short} integer @var{hostshort} from
+@deftypefun {uint16_t} htons (uint16_t @var{hostshort})
+This function converts the @code{uint16_t} integer @var{hostshort} from
 host byte order to network byte order.
 @end deftypefun
 
 @comment netinet/in.h
 @comment BSD
-@deftypefun {unsigned short int} ntohs (unsigned short int @var{netshort})
-This function converts the @code{short} integer @var{netshort} from
+@deftypefun {uint16_t} ntohs (uint16_t @var{netshort})
+This function converts the @code{uint16_t} integer @var{netshort} from
 network byte order to host byte order.
 @end deftypefun
 
 @comment netinet/in.h
 @comment BSD
-@deftypefun {unsigned long int} htonl (unsigned long int @var{hostlong})
-This function converts the @code{long} integer @var{hostlong} from
+@deftypefun {uint32_t} htonl (uint32_t @var{hostlong})
+This function converts the @code{uint32_t} integer @var{hostlong} from
 host byte order to network byte order.
+
+This is used for IPv4 internet addresses.
 @end deftypefun
 
 @comment netinet/in.h
 @comment BSD
-@deftypefun {unsigned long int} ntohl (unsigned long int @var{netlong})
-This function converts the @code{long} integer @var{netlong} from
+@deftypefun {uint32_t} ntohl (uint32_t @var{netlong})
+This function converts the @code{uint32_t} integer @var{netlong} from
 network byte order to host byte order.
+
+This is used for IPv4 internet addresses.
 @end deftypefun
 
 @node Protocols Database
@@ -1511,7 +1688,7 @@ declared in @file{sys/socket.h}.
 This function creates a socket and specifies communication style
 @var{style}, which should be one of the socket styles listed in
 @ref{Communication Styles}.  The @var{namespace} argument specifies
-the namespace; it must be @code{PF_FILE} (@pxref{File Namespace}) or
+the namespace; it must be @code{PF_LOCAL} (@pxref{Local Namespace}) or
 @code{PF_INET} (@pxref{Internet Namespace}).  @var{protocol}
 designates the specific protocol (@pxref{Socket Concepts}); zero is
 usually right for @var{protocol}.
@@ -1545,7 +1722,7 @@ positioning operations.
 @end deftypefun
 
 For examples of how to call the @code{socket} function,
-see @ref{File Namespace}, or @ref{Inet Example}.
+see @ref{Local Socket Example}, or @ref{Inet Example}.
 
 
 @node Closing a Socket
@@ -1630,7 +1807,7 @@ The @var{namespace}, @var{style}, and @var{protocol} arguments are
 interpreted as for the @code{socket} function.  @var{style} should be
 one of the communication styles listed in @ref{Communication Styles}.
 The @var{namespace} argument specifies the namespace, which must be
-@code{AF_FILE} (@pxref{File Namespace}); @var{protocol} specifies the
+@code{AF_LOCAL} (@pxref{Local Namespace}); @var{protocol} specifies the
 communications protocol, but zero is the only meaningful value.
 
 If @var{style} specifies a connectionless communication style, then
@@ -1807,7 +1984,7 @@ your server, make it examine the addresses associated with connection
 requests or implement some other handshaking or identification
 protocol.
 
-In the File namespace, the ordinary file protection bits control who has
+In the local namespace, the ordinary file protection bits control who has
 access to connect to the socket.
 
 @comment sys/socket.h
@@ -1910,7 +2087,7 @@ connections immediately available.
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -1922,7 +2099,7 @@ connectionless communication styles.
 
 @comment sys/socket.h
 @comment BSD
-@deftypefun int getpeername (int @var{socket}, struct sockaddr *@var{addr}, size_t *@var{length-ptr})
+@deftypefun int getpeername (int @var{socket}, struct sockaddr *@var{addr}, socklen_t *@var{length-ptr})
 The @code{getpeername} function returns the address of the socket that
 @var{socket} is connected to; it stores the address in the memory space
 specified by @var{addr} and @var{length-ptr}.  It stores the length of
@@ -2042,7 +2219,7 @@ signal is ignored or blocked, or if its handler returns, then
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2060,7 +2237,7 @@ Primitives}.
 @deftypefun int recv (int @var{socket}, void *@var{buffer}, size_t @var{size}, int @var{flags})
 The @code{recv} function is like @code{read}, but with the additional
 flags @var{flags}.  The possible values of @var{flags} are described
-In @ref{Socket Data Options}.
+in @ref{Socket Data Options}.
 
 If nonblocking mode is set for @var{socket}, and no data is available to
 be read, @code{recv} fails immediately rather than waiting.  @xref{File
@@ -2092,7 +2269,7 @@ You never connected this socket.
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2135,6 +2312,9 @@ stream socket in the Internet namespace.  It doesn't do anything
 particularly interesting once it has connected to the server; it just
 sends a text string to the server and exits.
 
+This program uses @code{init_sockaddr} to set up the socket address; see
+@ref{Inet Example}.
+
 @smallexample
 @include inetcli.c.texi
 @end smallexample
@@ -2155,8 +2335,8 @@ gotten a message from a client.  It does close the socket for that
 client when it detects an end-of-file condition (resulting from the
 client shutting down its end of the connection).
 
-This program uses @code{make_socket} and @code{init_sockaddr} to set
-up the socket address; see @ref{Inet Example}.
+This program uses @code{make_socket} to set up the socket address; see
+@ref{Inet Example}.
 
 @smallexample
 @include inetsrv.c.texi
@@ -2208,8 +2388,14 @@ in the receiving process, whether any ordinary data was sent before
 the mark:
 
 @smallexample
-success = ioctl (socket, SIOCATMARK, &result);
+success = ioctl (socket, SIOCATMARK, &atmark);
 @end smallexample
+
+The @code{integer} variable @var{atmark} is set to a nonzero value if
+the socket's read pointer has reached the ``mark''.
+
+@c Posix  1.g specifies sockatmark for this ioctl.  sockatmark is not
+@c implemented yet.
 
 Here's a function to discard any ordinary data preceding the
 out-of-band mark:
@@ -2222,10 +2408,10 @@ discard_until_mark (int socket)
     @{
       /* @r{This is not an arbitrary limit; any size will do.}  */
       char buffer[1024];
-      int result, success;
+      int atmark, success;
 
       /* @r{If we have reached the mark, return.}  */
-      success = ioctl (socket, SIOCATMARK, &result);
+      success = ioctl (socket, SIOCATMARK, &atmark);
       if (success < 0)
         perror ("ioctl");
       if (result)
@@ -2276,9 +2462,8 @@ read_oob (int socket)
       /* @r{This is an arbitrary limit.}
          @r{Does anyone know how to do this without a limit?}  */
       char *buffer = (char *) xmalloc (1024);
-      struct buffer *link;
       int success;
-      int result;
+      int atmark;
 
       /* @r{Try again to read the out-of-band data.}  */
       success = recv (socket, buffer, sizeof buffer, MSG_OOB);
@@ -2294,10 +2479,10 @@ read_oob (int socket)
         @}
 
       /* @r{If we fail, see if we are at the mark.}  */
-      success = ioctl (socket, SIOCATMARK, &result);
+      success = ioctl (socket, SIOCATMARK, &atmark);
       if (success < 0)
         perror ("ioctl");
-      if (result)
+      if (atmark)
         @{
           /* @r{At the mark; skipping past more ordinary data cannot help.}
              @r{So just wait a while.}  */
@@ -2351,7 +2536,7 @@ sockets using connectionless communication styles.
 * Sending Datagrams::    Sending packets on a datagram socket.
 * Receiving Datagrams::  Receiving packets on a datagram socket.
 * Datagram Example::     An example program: packets sent over a
-                           datagram socket in the file namespace.
+                           datagram socket in the local namespace.
 * Example Receiver::	 Another program, that receives those packets.
 @end menu
 
@@ -2397,7 +2582,7 @@ due to a problem related to a previous call.
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2423,8 +2608,8 @@ packet protocol, you must always know how long a packet to expect.
 
 The @var{addr} and @var{length-ptr} arguments are used to return the
 address where the packet came from.  @xref{Socket Addresses}.  For a
-socket in the file domain, the address information won't be meaningful,
-since you can't read the address of such a socket (@pxref{File
+socket in the local domain, the address information won't be meaningful,
+since you can't read the address of such a socket (@pxref{Local
 Namespace}).  You can specify a null pointer as the @var{addr} argument
 if you are not interested in this information.
 
@@ -2435,7 +2620,7 @@ are also the same as for @code{recv}.
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 
@@ -2474,7 +2659,7 @@ semaphores or whatever) are freed even if the thread is cancel.
 This function is defined as a cancelation point in multi-threaded
 programs.  So one has to be prepared for this and make sure that
 possibly allocated resources (like memory, files descriptors,
-semaphores or whatever) are freed even if the thread is cancel.
+semaphores or whatever) are freed even if the thread is canceled.
 @c @xref{pthread_cleanup_push}, for a method how to do this.
 @end deftypefun
 @end ignore
@@ -2483,9 +2668,9 @@ semaphores or whatever) are freed even if the thread is cancel.
 @subsection Datagram Socket Example
 
 Here is a set of example programs that send messages over a datagram
-stream in the file namespace.  Both the client and server programs use the
-@code{make_named_socket} function that was presented in @ref{File
-Namespace}, to create and name their sockets.
+stream in the local namespace.  Both the client and server programs use
+the @code{make_named_socket} function that was presented in @ref{Local
+Socket Example}, to create and name their sockets.
 
 First, here is the server program.  It sits in a loop waiting for
 messages to arrive, bouncing each message back to the sender.
@@ -2741,7 +2926,7 @@ this option, you can actually have two sockets with the same Internet
 port number; but the system won't allow you to use the two
 identically-named sockets in a way that would confuse the Internet.  The
 reason for this option is that some higher-level Internet protocols,
-including FTP, require you to keep reusing the same socket number.
+including FTP, require you to keep reusing the same port number.
 
 The value has type @code{int}; a nonzero value means ``yes''.
 
@@ -2890,7 +3075,7 @@ network.
 
 @comment netdb.h
 @comment BSD
-@deftypefun {struct netent *} getnetbyaddr (long @var{net}, int @var{type})
+@deftypefun {struct netent *} getnetbyaddr (unsigned long int @var{net}, int @var{type})
 The @code{getnetbyaddr} function returns information about the network
 of type @var{type} with number @var{net}.  You should specify a value of
 @code{AF_INET} for the @var{type} argument for Internet networks.

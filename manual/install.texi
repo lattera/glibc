@@ -171,6 +171,25 @@ value for the Makefile variable @code{install_root} on the command line.
 This is useful to create chroot'ed environment or to prepare binary
 releases.@refill
 
+For now (in this alpha version, and at least on RedHat Linux), if you
+are trying to install this as your default libraries, a different
+installation method is recommended.  Move @file{/usr/include} out of the
+way, create a new @file{/usr/include} directory (don't forget the
+symlinks @file{/usr/include/asm} and @file{/usr/include/linux}, that
+should point to @file{/usr/src/linux/include/asm} and
+@file{/usr/src/linux/include/linux} -or wherever you keep your kernel
+sources-respectively), build normally and install into somewhere else
+via @code{install_root}. Then move your @code{/usr/include} back, and
+copy the newly created stuff by hand over the old. Remember to copy
+programs and shared libraries into @file{FILENAME.new} and then move
+@file{FILENAME.new} to @file{FILENAME}, as the files might be in
+use. You will have to @code{ranlib} your copies of the static libraries
+@file{/usr/lib/libNAME.a}. You will see that @file{libbsd-compat.a},
+@file{libieee.a}, and @file{libmcheck.a} are just object files, not
+archives. This is normal.  Copy the new header files over the old ones
+by something like @w{@code{cd /usr; (cd INSTALL_ROOT; tar cf - include) |
+tar xf -}}.
+
 @node Tools for Installation
 @appendixsec Recommended Tools to Install the GNU C Library
 @cindex installation tools

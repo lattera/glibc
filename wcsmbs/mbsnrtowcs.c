@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -18,16 +18,20 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <gconv.h>
+#include <string.h>
 #include <wchar.h>
+#include <wcsmbsload.h>
+
+#include <assert.h>
 
 #ifndef EILSEQ
-#define EILSEQ EINVAL
+# define EILSEQ EINVAL
 #endif
 
 
-/* We don't need the state really because we don't have shift states
-   to maintain between calls to this function.  */
-static mbstate_t internal;
+/* This is the private state used if PS is NULL.  */
+static mbstate_t state;
 
 /* This is a non-standard function but it is very useful in the
    implementation of stdio because we have to deal with unterminated
@@ -40,128 +44,89 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
      size_t len;
      mbstate_t *ps;
 {
-  size_t written = 0;
-  const char *run = *src;
-  const char *last = run + nmc;
-  wchar_t value;
-  size_t count;
+  size_t inbytes_in;
+  struct gconv_step_data data;
+  size_t result = 0;
+  int status;
 
-  if (ps == NULL)
-    ps = &internal;
+  /* Tell where we want the result.  */
+  data.is_last = 1;
+  data.statep = ps ?: &state;
 
-  /* Get information from last use of this state.  */
-  count = ps->count;
-  value = ps->value;
+  if (nmc == 0)
+    return 0;
+  inbytes_in = __strnlen (*src, nmc - 1) + 1;
 
+  /* Make sure we use the correct function.  */
+  update_conversion_ptrs ();
+
+  /* We have to handle DST == NULL special.  */
   if (dst == NULL)
-    /* The LEN parameter has to be ignored if we don't actually write
-       anything.  */
-    len = ~0;
-
-  /* Copy all words.  */
-  while (written < len && run < last)
     {
-      unsigned char byte;
+      wchar_t buf[64];		/* Just an arbitrary size.  */
+      size_t inbytes = inbytes_in;
+      const char *inbuf = *src;
+      size_t written;
 
-      /* Store address of next byte to process.  */
-      *src = run;
-
-      /* Start reading a new character only if we are in the initial
-	 state.  */
-      if (count == 0)
+      data.outbuf = (char *) buf;
+      data.outbufsize = sizeof (buf);
+      do
 	{
-	  byte = *run++;
+	  inbuf += inbytes_in - inbytes;
+	  inbytes_in = inbytes;
+	  data.outbufavail = 0;
+	  written = 0;
 
-	  /* We expect a start of a new multibyte character.  */
-	  if (byte < 0x80)
-	    {
-	      /* One byte sequence.  */
-	      count = 0;
-	      value = byte;
-	    }
-	  else if ((byte & 0xe0) == 0xc0)
-	    {
-	      count = 1;
-	      value = byte & 0x1f;
-	    }
-	  else if ((byte & 0xf0) == 0xe0)
-	    {
-	      /* We expect three bytes.  */
-	      count = 2;
-	      value = byte & 0x0f;
-	    }
-	  else if ((byte & 0xf8) == 0xf0)
-	    {
-	      /* We expect four bytes.  */
-	      count = 3;
-	      value = byte & 0x07;
-	    }
-	  else if ((byte & 0xfc) == 0xf8)
-	    {
-	      /* We expect five bytes.  */
-	      count = 4;
-	      value = byte & 0x03;
-	    }
-	  else if ((byte & 0xfe) == 0xfc)
-	    {
-	      /* We expect six bytes.  */
-	      count = 5;
-	      value = byte & 0x01;
-	    }
-	  else
-	    {
-	      /* This is an illegal encoding.  */
-	      __set_errno (EILSEQ);
-	      return (size_t) -1;
-	    }
+	  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
+						     &data, inbuf, &inbytes,
+						     &written, 0);
+	  result += written;
 	}
+      while (status == GCONV_FULL_OUTPUT);
 
-      /* Read the possible remaining bytes.  */
-      while (run < last && count > 0)
+      if (status == GCONV_OK && ((wchar_t *) dst)[written - 1] == L'\0')
+	/* Don't count the NUL character in.  */
+	--result;
+    }
+  else
+    {
+      /* This code is based on the safe assumption that all internal
+	 multi-byte encodings use the NUL byte only to mark the end
+	 of the string.  */
+      size_t inbytes = inbytes_in;
+
+      data.outbuf = (char *) dst;
+      data.outbufsize = len * sizeof (wchar_t);
+      data.outbufavail = 0;
+
+      status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
+						 &data, *src, &inbytes,
+						 &result, 0);
+
+      /* We have to determine whether the last character converted
+	 is the NUL character.  */
+      if (status == GCONV_OK && ((wchar_t *) dst)[result - 1] == L'\0')
 	{
-	  byte = *run++;
-	  --count;
-
-	  if ((byte & 0xc0) != 0x80)
-	    {
-	      /* This is an illegal encoding.  */
-	      __set_errno (EILSEQ);
-	      return (size_t) -1;
-	    }
-
-	  value <<= 6;
-	  value |= byte & 0x3f;
-	}
-
-      /* If this character is only partially available remember this.  */
-      if (run == last && count != 0)
-	{
-	  ps->count = count;
-	  ps->value = value;
-	  break;
-	}
-
-      /* Store value is required.  */
-      if (dst != NULL)
-	*dst++ = value;
-
-      /* The whole sequence is read.  Check whether end of string is
-	 reached.  */
-      if (value == L'\0')
-	{
-	  /* Found the end of the string.  */
+	  assert (result > 0);
+	  assert (mbsinit (data.statep));
 	  *src = NULL;
-	  ps->count = 0;
-	  return written;
+	  --result;
 	}
-
-      /* Increment counter of produced words.  */
-      ++written;
+      else
+	*src += inbytes_in - inbytes;
     }
 
-  /* Store address of next byte to process.  */
-  *src = run;
+  /* There must not be any problems with the conversion but illegal input
+     characters.  */
+  assert (status == GCONV_OK || status == GCONV_ILLEGAL_INPUT
+	  || status == GCONV_INCOMPLETE_INPUT || status == GCONV_FULL_OUTPUT);
 
-  return written;
+  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT)
+    {
+      result = (size_t) -1;
+      __set_errno (EILSEQ);
+    }
+
+  return result;
 }
 weak_alias (__mbsnrtowcs, mbsnrtowcs)

@@ -19,7 +19,7 @@
 @c sold 0.06/1.09, print run out 21may96
 @set EDITION 0.07 DRAFT
 @set VERSION 2.00 Beta
-@set UPDATED 04 Aug 1997
+@set UPDATED 03 Apr 1998
 @set ISBN 1-882114-53-1
 
 @ifinfo
@@ -28,7 +28,7 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993, '94, '95, '96, '97 Free Software Foundation, Inc.
+Copyright (C) 1993, '94, '95, '96, '97, '98 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -74,7 +74,7 @@ Foundation.
 @center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1993, '94, '95, '96, '97 Free Software Foundation, Inc.
+Copyright @copyright{} 1993, '94, '95, '96, '97, '98 Free Software Foundation, Inc.
 @sp 2
 Published by the Free Software Foundation @*
 59 Temple Place -- Suite 330, @*
@@ -507,7 +507,7 @@ Sockets
 * Socket Concepts::             Basic concepts you need to know about.
 * Communication Styles::        Stream communication, datagrams, and others.
 * Socket Addresses::            How socket names (``addresses'') work.
-* File Namespace::              Details about the file namespace.
+* Local Namespace::             Details about the local namespace.
 * Internet Namespace::          Details about the Internet namespace.
 * Open/Close Sockets::          Creating sockets and destroying them.
 * Connections::                 Operations on sockets with connection state.
@@ -570,7 +570,7 @@ Datagrams
 * Sending Datagrams::           Sending packets on a datagram socket.
 * Receiving Datagrams::         Receiving packets on a datagram socket.
 * Datagram Example::            An example program: packets sent over a
-                                 datagram stream in the file namespace.
+                                 datagram stream in the local namespace.
 * Example Receiver::            Another program, that receives those packets.
 
 Socket Options

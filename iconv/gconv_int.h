@@ -129,6 +129,10 @@ extern int __gconv_close_transform (struct gconv_step *__steps,
 extern struct gconv_loaded_object *__gconv_find_shlib (const char *__name)
      internal_function;
 
+/* Find function named NAME in shared object referenced by HANDLE.  */
+void *__gconv_find_func (void *handle, const char *name)
+     internal_function;
+
 /* Release shared object.  If no further reference is available unload
    the object.  */
 extern int __gconv_release_shlib (struct gconv_loaded_object *__handle)
@@ -149,6 +153,8 @@ extern void __gconv_get_builtin_trans (const char *__name,
 		   int __do_flush)
 
 __BUILTIN_TRANS (__gconv_transform_dummy);
+__BUILTIN_TRANS (__gconv_transform_ascii_ucs4);
+__BUILTIN_TRANS (__gconv_transform_ucs4_ascii);
 __BUILTIN_TRANS (__gconv_transform_ucs4_utf8);
 __BUILTIN_TRANS (__gconv_transform_utf8_ucs4);
 __BUILTIN_TRANS (__gconv_transform_ucs2_ucs4);

@@ -1,6 +1,6 @@
 /* Convert characters in input buffer using conversion descriptor to
    output buffer.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -34,19 +34,24 @@ __gconv (gconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
   if (cd == (gconv_t) -1L)
     return GCONV_ILLEGAL_DESCRIPTOR;
 
-  cd->data[last_step].outbuf = *outbuf;
+  cd->data[last_step].outbuf = outbuf ? *outbuf : NULL;
   cd->data[last_step].outbufavail = 0;
   cd->data[last_step].outbufsize = *outbytesleft;
 
   if (converted != NULL)
     *converted = 0;
 
-  result = (*cd->steps->fct) (cd->steps, cd->data, *inbuf, inbytesleft,
+  result = (*cd->steps->fct) (cd->steps, cd->data,
+			      inbuf ? *inbuf : NULL, inbytesleft,
 			      converted, inbuf == NULL || *inbuf == NULL);
 
-  *inbuf += oldinbytes - *inbytesleft;
-  *outbuf += cd->data[last_step].outbufavail;
-  *outbytesleft -= cd->data[last_step].outbufavail;
+  if (inbuf != NULL && *inbuf != NULL)
+    *inbuf += oldinbytes - *inbytesleft;
+  if (outbuf != NULL && *outbuf != NULL)
+    {
+      *outbuf += cd->data[last_step].outbufavail;
+      *outbytesleft -= cd->data[last_step].outbufavail;
+    }
 
   return result;
 }

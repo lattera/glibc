@@ -34,7 +34,7 @@ unlockpt (fd)
 {
   char buf[PTYNAMELEN];
 
-  if (ptsname_r (fd, buf, PTYNAMELEN))
+  if (__ptsname_r (fd, buf, PTYNAMELEN))
     return -1;
 
   return revoke (buf);

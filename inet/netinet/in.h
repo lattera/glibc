@@ -22,8 +22,8 @@
 #include <features.h>
 #include <stdint.h>
 
-#include <sys/socket.h>
 #include <sys/types.h>
+#include <bits/socket.h>
 
 
 __BEGIN_DECLS

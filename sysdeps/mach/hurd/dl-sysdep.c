@@ -546,8 +546,8 @@ __close (int fd)
   return 0;
 }
 
-caddr_t weak_function
-__mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+__ptr_t weak_function
+__mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
@@ -656,7 +656,7 @@ _dl_sysdep_message (const char *msg, ...)
 			? VM_INHERIT_SHARE : VM_INHERIT_COPY);
     }
 
-  return err ? (caddr_t) __hurd_fail (err) : (caddr_t) mapaddr;
+  return err ? (__ptr_t) __hurd_fail (err) : (__ptr_t) mapaddr;
 }
 
 void weak_function

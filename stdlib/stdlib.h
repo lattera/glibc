@@ -733,16 +733,20 @@ extern int grantpt __P ((int __fd));
    Call after grantpt().  */
 extern int unlockpt __P ((int __fd));
 
-/* Get the name of the slave.  */
+/* Return the pathname of the pseudo terminal slave assoicated with
+   the master FD is open on, or NULL on errors.
+   The returned storage is good until the next call to this function.  */
 extern char *ptsname __P ((int __fd));
 #endif
 
 #ifdef __USE_GNU
-/* Reentrant version of ptsname.  */
-extern char *__ptsname_r __P ((int __fd, char *__buf, unsigned int __len));
-extern char *ptsname_r __P ((int __fd, char *__buf, unsigned int __len));
+/* Store at most BUFLEN characters of the pathname of the slave pseudo
+   terminal associated with the master FD is open on in BUF.
+   Return 0 on success, otherwise an error number.  */
+extern int __ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
+extern int ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 
-/* Open a master pseudo tty and return its file descriptor.  */
+/* Open a master pseudo terminal and return its file descriptor.  */
 extern int __getpt __P ((void));
 extern int getpt __P ((void));
 #endif

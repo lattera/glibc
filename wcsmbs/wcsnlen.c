@@ -1,6 +1,6 @@
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,15 +17,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#include <wchar.h>
 
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   If no '\0' terminator is found in that many characters, return MAXLEN.  */
 
+/* Copy SRC to DEST.  */
 size_t
-__strnlen (const char *string, size_t maxlen)
+__wcsnlen (s, maxlen)
+     const wchar_t *s;
+     size_t maxlen;
 {
-  const char *end = memchr (string, '\0', maxlen);
-  return end ? end - string : maxlen;
+  size_t len = 0;
+
+  while (s[len] != L'\0' && maxlen > 0)
+    {
+      if (s[++len] == L'\0' || --maxlen == 0)
+	return len;
+      if (s[++len] == L'\0' || --maxlen == 0)
+	return len;
+      if (s[++len] == L'\0' || --maxlen == 0)
+	return len;
+      ++len;
+    }
+
+  return len;
 }
-weak_alias (__strnlen, strnlen)
+weak_alias (__wcsnlen, wcsnlen)

@@ -47,9 +47,9 @@ grantpt (fd)
   char namebuf[PTYNAMELEN];
 
   /* Some systems do it for us.  */
-  if (__ptsname_r (fd, namebuf, PTYNAMELEN) == NULL)
+  if (__ptsname_r (fd, namebuf, PTYNAMELEN) != 0)
     return -1;
-  if (stat (namebuf, &st))
+  if (__xstat (_STAT_VER, namebuf, &st) != 0)
     return -1;
 
   if (st.st_uid == getuid ())

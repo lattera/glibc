@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -166,7 +166,14 @@ extern wchar_t *wcstok __P ((wchar_t *__restrict __s,
 			     wchar_t **__restrict __ptr));
 
 /* Return the number of wide characters in S.  */
+extern size_t __wcslen __P ((__const wchar_t *__s));
 extern size_t wcslen __P ((__const wchar_t *__s));
+
+#ifdef __USE_GNU
+/* Return the number of wide characters in S, but at most MAXLEN.  */
+extern size_t __wcsnlen __P ((__const wchar_t *__s, size_t __maxlen));
+extern size_t wcsnlen __P ((__const wchar_t *__s, size_t __maxlen));
+#endif
 
 
 /* Search N wide characters of S for C.  */
@@ -260,16 +267,6 @@ extern size_t mbsnrtowcs __P ((wchar_t *__restrict __dst,
 			       __const char **__restrict __src, size_t __nmc,
 			       size_t __len, mbstate_t *__restrict __ps));
 
-/* Similar function to the above but this does not stop at NUL bytes.  */
-extern size_t __wmemrtowcs __P ((wchar_t *__restrict __dst,
-				 __const char **__restrict __src,
-				 size_t __nmc, size_t __len,
-				 mbstate_t *__restrict __ps));
-extern size_t wmemrtowcs __P ((wchar_t *__restrict __dst,
-			       __const char **__restrict __src,
-			       size_t __nmc, size_t __len,
-			       mbstate_t *__restrict __ps));
-
 /* Write multibyte character representation of at most NWC characters
    from the wide character string SRC to DST.  */
 extern size_t __wcsnrtombs __P ((char *__restrict __dst,
@@ -279,16 +276,6 @@ extern size_t __wcsnrtombs __P ((char *__restrict __dst,
 extern size_t wcsnrtombs __P ((char *__restrict __dst,
 			       __const wchar_t **__restrict __src,
 			       size_t __nwc, size_t __len,
-			       mbstate_t *__restrict __ps));
-
-/* Similar function to the above but this does not stop at NUL bytes.  */
-extern size_t __wmemrtombs __P ((char *__restrict __dst,
-				 __const wchar_t **__restrict __src,
-				 size_t __nwc, size_t len,
-				 mbstate_t *__restrict __ps));
-extern size_t wmemrtombs __P ((char *__restrict __dst,
-			       __const wchar_t **__restrict __src,
-			       size_t __nwc, size_t len,
 			       mbstate_t *__restrict __ps));
 #endif	/* use GNU */
 

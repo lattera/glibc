@@ -33,6 +33,9 @@ __BEGIN_DECLS
    `struct msghdr', and `struct linger' types.  */
 #include <bits/socket.h>
 
+/* Get the definition of `sockaddr_union'.  */
+#include <bits/sockunion.h>
+
 #ifdef __USE_BSD
 /* This is the 4.3 BSD `struct sockaddr' format, which is used as wire
    format in the grotty old 4.3 `talk' protocol.  */

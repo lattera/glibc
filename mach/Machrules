@@ -1,6 +1,6 @@
 # Rules for MiG interfaces that want to go into the C library.
 
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,9 +44,6 @@ endif
 
 include ../Makeconfig
 
-ifndef MIG
-MIG = mig
-endif
 MIGFLAGS = -DMACH_IPC_COMPAT=0 -DSTANDALONE -DTypeCheck=0 \
 	   $(+includes) $(migdefines) -subrprefix __
 

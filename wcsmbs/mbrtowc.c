@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -18,113 +18,77 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <gconv.h>
 #include <wchar.h>
+#include <wcsmbsload.h>
+
+#include <assert.h>
 
 #ifndef EILSEQ
-#define EILSEQ EINVAL
+# define EILSEQ EINVAL
 #endif
 
 
-static mbstate_t internal;
+/* This is the private state used if PS is NULL.  */
+static mbstate_t state;
 
 size_t
 __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
-  size_t used = 0;
+  wchar_t buf[1];
+  struct gconv_step_data data;
+  size_t inbytes;
+  int status;
+  size_t result;
 
-  if (ps == NULL)
-    ps = &internal;
+  /* Tell where we want the result.  */
+  data.outbuf = (char *) (pwc ?: buf);
+  data.outbufavail = 0;
+  data.outbufsize = sizeof (wchar_t);
+  data.is_last = 1;
+  data.statep = ps ?: &state;
 
+  /* A first special case is if S is NULL.  This means put PS in the
+     initial state.  */
   if (s == NULL)
     {
-      /* See first paragraph of description in 7.16.6.3.2.  */
-      ps->count = 0;
-      return 0;
+      data.outbuf = (char *) buf;
+      s = "";
+      n = 1;
     }
 
-  if (n > 0)
+  /* Make sure we use the correct function.  */
+  update_conversion_ptrs ();
+
+  /* Do a normal conversion.  */
+  inbytes = n;
+  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
+					     &data, s, &inbytes, NULL, 0);
+
+  /* There must not be any problems with the conversion but illegal input
+     characters.  The output buffer must be large enough, otherwise the
+     definition of MB_CUR_MAX is not correct.  All the other possible
+     errors also must not happen.  */
+  assert (status == GCONV_OK || status == GCONV_ILLEGAL_INPUT
+	  || status == GCONV_INCOMPLETE_INPUT);
+
+  if (status == GCONV_OK)
     {
-      if (ps->count == 0)
+      if (*(wchar_t *)data.outbuf == L'\0')
 	{
-	  unsigned char byte = (unsigned char) *s++;
-	  ++used;
-
-	  /* We must look for a possible first byte of a UTF8 sequence.  */
-	  if (byte < 0x80)
-	    {
-	      /* One byte sequence.  */
-	      if (pwc != NULL)
-		*pwc = (wchar_t) byte;
-	      return byte ? used : 0;
-	    }
-
-	  if ((byte & 0xc0) == 0x80 || (byte & 0xfe) == 0xfe)
-	    {
-	      /* Oh, oh.  An encoding error.  */
-	      __set_errno (EILSEQ);
-	      return (size_t) -1;
-	    }
-
-	  if ((byte & 0xe0) == 0xc0)
-	    {
-	      /* We expect two bytes.  */
-	      ps->count = 1;
-	      ps->value = byte & 0x1f;
-	    }
-	  else if ((byte & 0xf0) == 0xe0)
-	    {
-	      /* We expect three bytes.  */
-	      ps->count = 2;
-	      ps->value = byte & 0x0f;
-	    }
-	  else if ((byte & 0xf8) == 0xf0)
-	    {
-	      /* We expect four bytes.  */
-	      ps->count = 3;
-	      ps->value = byte & 0x07;
-	    }
-	  else if ((byte & 0xfc) == 0xf8)
-	    {
-	      /* We expect five bytes.  */
-	      ps->count = 4;
-	      ps->value = byte & 0x03;
-	    }
-	  else
-	    {
-	      /* We expect six bytes.  */
-	      ps->count = 5;
-	      ps->value = byte & 0x01;
-	    }
+	  /* The converted character is the NUL character.  */
+	  assert (mbsinit (data.statep));
+	  result = 0;
 	}
-
-      /* We know we have to handle a multibyte character and there are
-	 some more bytes to read.  */
-      while (used < n)
-	{
-	  /* The second to sixths byte must be of the form 10xxxxxx.  */
-	  unsigned char byte = (unsigned char) *s++;
-	  ++used;
-
-	  if ((byte & 0xc0) != 0x80)
-	    {
-	      /* Oh, oh.  An encoding error.  */
-	      __set_errno (EILSEQ);
-	      return (size_t) -1;
-	    }
-
-	  ps->value <<= 6;
-	  ps->value |= byte & 0x3f;
-
-	  if (--ps->count == 0)
-	    {
-	      /* The character is finished.  */
-	      if (pwc != NULL)
-		*pwc = (wchar_t) ps->value;
-	      return ps->value ? used : 0;
-	    }
-	}
+      else
+	result = n - inbytes;
+    }
+  else
+    {
+      result = status == GCONV_INCOMPLETE_INPUT ? (size_t) -2 : (size_t) -1;
+      __set_errno (EILSEQ);
     }
 
-  return (size_t) -2;
+  return result;
 }
 weak_alias (__mbrtowc, mbrtowc)

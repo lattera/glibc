@@ -781,7 +781,8 @@ _IO_file_xsgetn (fp, data, n)
      void *data;
      _IO_size_t n;
 {
-  register _IO_size_t want, have, count;
+  register _IO_size_t want, have;
+  register _IO_ssize_t count;
   register char *s = data;
 
   want = n;
@@ -815,13 +816,18 @@ _IO_file_xsgetn (fp, data, n)
 	  /* If we now want less than a buffer, underflow and repeat
 	     the copy.  Otherwise, _IO_SYSREAD directly to
 	     the user buffer. */
-	  if (fp->_IO_buf_base && want < fp->_IO_buf_end - fp->_IO_buf_base)
+	  if (fp->_IO_buf_base && want <= fp->_IO_buf_end - fp->_IO_buf_base)
 	    {
 	      if (__underflow (fp) == EOF)
 		break;
 
 	      continue;
 	    }
+
+	  /* These must be set before the sysread as we might longjmp out
+	     waiting for input. */
+	  _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
+	  _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
 
 	  count = _IO_SYSREAD (fp, s, want);
 	  if (count <= 0)
@@ -836,6 +842,8 @@ _IO_file_xsgetn (fp, data, n)
 
 	  s += count;
 	  want -= count;
+	  if (fp->_offset != _IO_pos_BAD)
+	    _IO_pos_adjust (fp->_offset, count);
 	}
     }
 

@@ -198,6 +198,7 @@ extern size_t strlen __P ((__const char *__s));
 #ifdef	__USE_GNU
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
+extern size_t __strnlen __P ((__const char *__string, size_t __maxlen));
 extern size_t strnlen __P ((__const char *__string, size_t __maxlen));
 #endif
 

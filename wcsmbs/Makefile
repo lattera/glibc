@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -22,21 +22,22 @@
 subdir	:= wcsmbs
 
 headers	:= wchar.h
-distribute := wcwidth.h
+distribute := wcwidth.h wcsmbsload.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \
 	    wmemcmp wmemcpy wmemmove wmemset wcpcpy wcpncpy \
 	    btowc wctob mbsinit \
 	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs \
-	    mbsnrtowcs wcsnrtombs wmemrtowcs wmemrtombs \
+	    mbsnrtowcs wcsnrtombs wcsnlen \
 	    wcstol wcstoul wcstoll wcstoull wcstod wcstold wcstof \
 	    wcstol_l wcstoul_l wcstoll_l wcstoull_l \
 	    wcstod_l wcstold_l wcstof_l \
 	    wcscoll wcsxfrm \
 	    wcwidth wcswidth \
 	    wcscoll_l wcsxfrm_l \
-	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l
+	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
+	    wcsmbsload
 
 tests := tst-wcstof
 

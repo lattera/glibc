@@ -34,54 +34,31 @@ dnl
 
 dnl Locate a program and check that its version is acceptable.
 dnl AC_PROG_CHECK_VER(var, namelist, version-switch,
-dnl 		      [version-extract-regexp], version-glob, fatal)
+dnl 		      [version-extract-regexp], version-glob [, do-if-fail])
 AC_DEFUN(AC_CHECK_PROG_VER,
-[# Prepare to iterate over the program-name list.
-set dummy $2; shift
-AC_MSG_CHECKING([for [$]1])
-AC_CACHE_VAL(ac_cv_prog_$1, [dnl
-if test -n "[$]$1"; then
-  ac_cv_prog_$1="[$]$1" # Let the user override the test.
+[AC_CHECK_PROGS([$1], [$2])
+if test -z "[$]$1"; then
+  ac_verc_fail=yes
 else
-  IFS="${IFS=   }"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_word; do
-    for ac_dir in $PATH; do
-      test -z "$ac_dir" && ac_dir=.
-      if test -f $ac_dir/$ac_word; then
-        ac_cv_prog_$1="$ac_word"
-        break
-      fi
-    done
-    test -n "$ac_cv_prog_$1" && break
-  done
-  IFS="$ac_save_ifs"
-fi])dnl
-if test -z "$ac_cv_prog_$1"; then
-  AC_MSG_RESULT(no)
-  $1=:
-  ac_verc_fail=t; ifelse([$6],,,[ac_verc_fatal=$6])
-else
-# Found it, now check the version.
-ac_word=$ac_cv_prog_$1
-dnl Do this by hand to avoid "(cached) (cached)".
-  if test "[$]{ac_cv_prog_$1_ver+set}" != set; then
+  # Found it, now check the version.
+  AC_MSG_CHECKING([version of [$]$1])
 changequote(<<,>>)dnl
-    ac_cv_prog_$1_ver=`$ac_word $3 2>&1 ifelse(<<$4>>,,,<<| sed -n 's/^.*$4.*$/\1/p'>>)`
-  fi
-  if test -n "$ac_cv_prog_$1_ver"; then
-  case $ac_cv_prog_$1_ver in
-    <<$5>>) ac_vers_ok=", ok";  $1=$ac_cv_prog_$1;;
+  ac_prog_version=`<<$>>$1 $3 2>&1 ifelse(<<$4>>,,,
+                   <<| sed -n 's/^.*patsubst(<<$4>>,/,\/).*$/\1/p'>>)`
+  case $ac_prog_version in
+    '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
+    <<$5>>)
 changequote([,])dnl
-         *) ac_vers_ok=", bad"; $1=:
-	    ac_verc_fail=t; ifelse([$6],,,[ac_verc_fatal=$6]);;
+       ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
+    *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
+
   esac
-  else
-    ac_vers_ok="v. ?.??, bad"; $1=:
-    ac_verc_fail=t; ifelse([$6],,,[ac_verc_fatal=$6])
-  fi
-AC_MSG_RESULT($ac_word $ac_cv_prog_$1_ver$ac_vers_ok)
+  AC_MSG_RESULT([$ac_prog_version])
 fi
-AC_SUBST($1)dnl
+ifelse([$6],,,
+[if test $ac_verc_fail = yes; then
+  $6
+fi])
 ])
 
 dnl These modifications are to allow for an empty cross compiler tree.

@@ -582,6 +582,13 @@ touch $@
 endef
 O%-lib = $(..)$(patsubst %,$(libtype$*),c)
 
+ifndef static-only-routines
+subdir_lib: $(objpfx)stamp.oS
+$(objpfx)stamp.oS:
+	$(make-target-directory)
+	rm -f $@; > $@
+endif
+
 endif
 
 # Rules to update the $(ar-symtab-name) member with ranlib,

@@ -280,7 +280,7 @@ decompose_rpath (const char *rpath, size_t additional_room,
 		 const char *what, const char *where)
 {
   /* Make a copy we can work with.  */
-  char *copy = strdupa (rpath);
+  char *copy = local_strdup (rpath);
   char *cp;
   struct r_search_path_elem **result;
   /* First count the number of necessary elements in the result array.  */

@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 /* Given the file descriptor of a master pty, return the pathname
    of the associated slave. */
@@ -28,14 +29,14 @@ ptsname (fd)
      int fd __attribute__ ((unused));
 {
   __set_errno (ENOSYS);
-  return 0;
+  return NULL;
 }
 
-char *
+int
 __ptsname_r (fd, buf, len)
      int fd __attribute__ ((unused));
      char *buf __attribute__ ((unused));
-     unsigned int len __attribute__ ((unused));
+     size_t len __attribute__ ((unused));
 {
   __set_errno (ENOSYS);
   return 0;

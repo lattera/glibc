@@ -1,3 +1,159 @@
+1998-04-07 08:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.c: Take care for NULL arguments.
+	* iconv/gconv_dl.c: Make find_func function global.
+	* iconv/gconv_int.h: Add prototype for __gconv_find_func.
+	Add prototypes for ASCII conversion functions.
+	* iconv/gconv_simple.c: Add ASCII conversion functions.
+	* locale/C-ctype.c: Correct charset name.
+
+	* wcsmbs/Makefile (distribute): Add wcsmbsload.h.
+	(routines): Remove wmemrtowcs and wmemrtombs, add wcsnlen and
+	wcsmbsload.
+	* wcsmbs/btowc.c: Rewrite to use iconv functionality.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+	* wcsmbs/wchar.h: Add prototype for __wcslen, wcsnlen.  Remove
+	prototypes for wmemr*.
+	* wcsmbs/wcslen.c: Rename to __wcslen and make wcslen weak alias.
+	* wcsmbs/wcsnlen.c: New file.
+	* wcsmbs/wcsmbsload.c: New file.
+	* wcsmbs/wcsmbsload.h: New file.
+
+	* manual/filesys.texi: Mention risks of tmpnam and mktemp.
+
+	* manual/install.texi: Describe some more critical points.
+
+	* string/string.h: Add prototype for __strnlen.
+	* string/strnlen.c: Rename to __strnlen and make strnlen weak alias.
+
+	* sysdeps/posix/mktemp.c: Rewrite to allow many more files and
+	much less predictable names.
+	* sysdeps/posix/mkstemp.c: Likewise.
+
+1998-04-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/libc.texinfo (Top): Change "file namespace" to "local
+	namespace".
+
+	* manual/socket.texi: Change file namespace to local namespace.
+	(Out-of-Band Data): Remove unneeded variable link.
+	(Host Address Functions): Use uint32_t consequently and add a
+	number of clarifications for IPv4/IPv6, classless addresses.
+	(Internet Namespace): Added some paragraphs about IPv6.
+	Based on suggestions by Francesco Potorti` <F.Potorti@cnuce.cnr.it>.
+
+1998-04-05  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	Update for draft-ietf-ipngwg-bsd-api-new-01.txt:
+
+	* resolv/netdb.h (getnameinfo): Use `socklen_t' not `size_t'.
+	(NI_NUMERICHOST, et al.): Tidy up and add comments.
+	(AI_NUMERICHOST): Define.
+	(getnodebyname): New prototype.
+	(AI_V4MAPPED, et al.): New constants.
+
+	* sysdeps/unix/bsd/bsd4.4/bits/sockaddr.h (SA_LEN): New macro.<
+	* sysdeps/generic/bits/sockaddr.h (SA_LEN): Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add sa_len
+	for socket.
+	* sysdeps/unix/sysv/linux/sa_len.c: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add sa_len.c.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Make multiple #inclusion safe.
+
+	* sysdeps/generic/bits/sockunion.h: New file, defining sockaddr_union.
+	* sysdeps/unix/sysv/linux/bits/sockunion.h: Likewise.
+	* socket/Makefile (headers): Add bits/sockunion.h.
+	* socket/sys/socket.h: Include <bits/sockunion.h>
+	* inet/netinet/in.h: Include <bits/sockaddr.h> rather than
+	<sys/socket.h>, to avoid getting sockaddr_union defined.
+	* sysdeps/generic/bits/socket.h: Allow inclusion from netinet.in.h.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/if_index.c: Remove use of SIOCGIFCOUNT
+	(2.2.x kernels won't have it).
+
+1998-04-06 21:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/bits/ioctls.h: Allow inclusion from hurd/ioctl.h.
+	* sysdeps/mach/hurd/dl-sysdep.c: Use __ptr_t not caddr_t.
+	* iconv/gconv_conf.c: Define MAXPATHLEN if not available before.
+	Patches by UCHIYAMA Yasushi <uch@nop.or.jp>.
+
+1998-04-05  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* manual/socket.texi (Socket Addresses): Fix a typo.
+	(Interface Naming): New section.
+
+1998-04-05 23:29  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Check for CC using $ac_tool_prefix, to handle
+	cross-compilation.  Use AC_CHECK_TOOL to find MiG.
+	* config.make.in: Add MIG to be substituted.
+	* mach/Machrules: Don't define MIG variable.
+
+	Patch by Gordon Matzigkeit <gord@profitpress.com>.
+
+1998-04-05  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* elf/dl-load.c (decompose_rpath): Use local_strdup instead of
+	strdupa to copy rpath.
+
+1998-04-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Fix gcc version check.
+
+	* aclocal.m4 (AC_PROG_CHECK_VER): Rewritten to make less confusing.
+
+1998-04-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Fix gcc version check.
+
+	* aclocal.m4 (AC_PROG_CHECK_VER): Rewritten to make less
+	confusing.
+
+1998-04-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Fix gcc version check.
+
+	* aclocal.m4 (AC_PROG_CHECK_VER): Rewritten to make less
+	confusing.
+
+1998-03-31  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/unix/bsd/unlockpt.c (unlockpt): Call __ptsname_r instead
+	of ptsname_r.
+
+	* stdlib/stdlib.h: Change prototype of ptsname_r to make it more
+	like ttyname_r.
+	* sysdeps/unix/sysv/linux/ptsname.c (__ptsname_r): Likewise.
+	* sysdeps/generic/ptsname.c (__ptsname_r): Likewise.
+	* sysdeps/unix/grantpt.c (grantpt): Change check of return value
+	of __ptsname_r accordingly.
+	* login/openpty.c (openpty): Likewise.
+
+1998-06-04 18:47  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (_IO_file_xsgetn): Adjust pointers.
+
+1998-04-06 13:58  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (libtypes): Redo H.J. Lu's change of 1998-03-27.
+
+	* Makerules: Readd missing rule for $(objpfx)stamp.oS.
+
+1998-04-06  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Don't give YPERR_RPC back, use the do_ypcall
+	return value for better error checking.
+
 1998-04-06  Jakub Jelinek <jj@sunsite.ms.mff.cuni.cz>
 
 	* elf/dl-runtime.c (fixup, profile_fixup): The final arg to

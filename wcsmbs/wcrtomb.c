@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -18,77 +18,86 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <gconv.h>
+#include <stdlib.h>
 #include <wchar.h>
+#include <wcsmbsload.h>
+
+#include <assert.h>
 
 #ifndef EILSEQ
-#define EILSEQ EINVAL
+# define EILSEQ EINVAL
 #endif
 
-static const wchar_t encoding_mask[] =
-{
-  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
-};
 
-static const unsigned char encoding_byte[] =
-{
-  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
-};
-
-/* The state is for this UTF8 encoding not used.  */
-static mbstate_t internal;
+/* This is the private state used if PS is NULL.  */
+static mbstate_t state;
 
 size_t
 __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
-  size_t written = 0;
+  char buf[MB_CUR_MAX];
+  struct gconv_step_data data;
+  int status;
+  size_t result;
 
-  if (ps == NULL)
-    ps = &internal;
+  /* Tell where we want the result.  */
+  data.outbuf = s;
+  data.outbufavail = 0;
+  data.outbufsize = MB_CUR_MAX;
+  data.is_last = 1;
+  data.statep = ps ?: &state;
 
+  /* A first special case is if S is NULL.  This means put PS in the
+     initial state.  */
   if (s == NULL)
     {
-      /* This is equivalent to wcrtomb (<<internal>, L'\0', ps).  We
-	 only have to reset the state.  */
-      ps->count = 0;
-      return 1;
+      data.outbuf = buf;
+      wc = L'\0';
     }
 
-  /* Store the UTF8 representation of WC.  */
-  if (wc < 0 || wc > 0x7fffffff)
+  /* Make sure we use the correct function.  */
+  update_conversion_ptrs ();
+
+  /* If WC is the NUL character we write into the output buffer the byte
+     sequence necessary for PS to get into the initial state, followed
+     by a NUL byte.  */
+  if (wc == L'\0')
     {
-      /* This is no correct ISO 10646 character.  */
+      size_t inbytes = 0;
+
+      status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
+						 &data, NULL, &inbytes,
+						 NULL, 1);
+
+      if (status == GCONV_OK)
+	data.outbuf[data.outbufavail++] = '\0';
+    }
+  else
+    {
+      /* Do a normal conversion.  */
+      size_t inbytes = sizeof (wchar_t);
+
+      status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
+						 &data, (char *) &wc, &inbytes,
+						 NULL, 0);
+    }
+
+  /* There must not be any problems with the conversion but illegal input
+     characters.  The output buffer must be large enough, otherwise the
+     definition of MB_CUR_MAX is not correct.  All the other possible
+     errors also must not happen.  */
+  assert (status == GCONV_OK || status == GCONV_ILLEGAL_INPUT
+	  || status == GCONV_INCOMPLETE_INPUT);
+
+  if (status == GCONV_OK)
+    result = data.outbufavail;
+  else
+    {
+      result = (size_t) -1;
       __set_errno (EILSEQ);
-      return (size_t) -1;
     }
 
-  if (wc < 0x80)
-    {
-      /* It's a one byte sequence.  */
-      if (s != NULL)
-	*s = (char) wc;
-      ps->count = 0;
-      return 1;
-    }
-
-  for (written = 2; written < 6; ++written)
-    if ((wc & encoding_mask[written - 2]) == 0)
-      break;
-
-  if (s != NULL)
-    {
-      size_t cnt = written;
-      s[0] = encoding_byte[cnt - 2];
-
-      --cnt;
-      do
-	{
-	  s[cnt] = 0x80 | (wc & 0x3f);
-	  wc >>= 6;
-	}
-      while (--cnt > 0);
-      s[0] |= wc;
-    }
-
-  return written;
+  return result;
 }
 weak_alias (__wcrtomb, wcrtomb)
