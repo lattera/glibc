@@ -1,3 +1,9 @@
+1999-12-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/charmap.c (charmap_new_char): Recognize special
+	character names Uxxxx and Pxxxx and initialize the UCS4 value from
+	the value of xxxx.
+
 1999-12-17  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/Versions: Export __cxa_atexit and __cxa_finalize.

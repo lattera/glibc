@@ -800,7 +800,32 @@ charmap_new_char (struct linereader *lr, struct charmap_t *cm,
       newp->nbytes = nbytes;
       memcpy (newp->bytes, bytes, nbytes);
       newp->name = obstack_copy (ob, from, len1 + 1);
+
       newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
+      if ((from[0] == 'U' || from[0] == 'P') && (len1 == 5 || len1 == 9))
+	{
+	  /* Maybe the name is of the form `Uxxxx' or `Uxxxxxxxx' where
+	     xxxx and xxxxxxxx are hexadecimal numbers.  In this case
+	     we use the value of xxxx or xxxxxxxx as the UCS4 value of
+	     this character and we don't have to consult the repertoire
+	     map.
+
+	     If the name is of the form `Pxxxx' or `Pxxxxxxxx' the xxxx
+	     and xxxxxxxx also give the code point in UCS4 but this must
+	     be in the private, i.e., unassigned, area.  This should be
+	     used for characters which do not (yet) have an equivalent
+	     in ISO 10646 and Unicode.  */
+	  char *endp;
+
+	  errno = 0;
+	  newp->ucs4 = strtoul (from, &endp, 16);
+	  if (endp - from != len1
+	      || (newp->ucs4 == ULONG_MAX && errno == ERANGE)
+	      || newp->ucs4 >= 0x80000000)
+	    /* This wasn't successful.  Signal this name cannot be a
+	       correct UCS value.  */
+	    newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
+	}
 
       insert_entry (ht, from, len1, newp);
       insert_entry (bt, newp->bytes, nbytes, newp);
@@ -847,7 +872,7 @@ hexadecimal range format should use only capital characters"));
 	  && errno == ERANGE)
       || *to_end != '\0')
     {
-      lr_error (lr, _("<%s> and <%s> are illegal names for range"));
+      lr_error (lr, _("<%s> and <%s> are illegal names for range"), from, to);
       return;
     }
 
@@ -868,7 +893,33 @@ hexadecimal range format should use only capital characters"));
       newp->nbytes = nbytes;
       memcpy (newp->bytes, bytes, nbytes);
       newp->name = name_end;
+
       newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
+      if ((name_end[0] == 'U' || name_end[0] == 'P')
+	  && (len1 == 5 || len1 == 9))
+	{
+	  /* Maybe the name is of the form `Uxxxx' or `Uxxxxxxxx' where
+	     xxxx and xxxxxxxx are hexadecimal numbers.  In this case
+	     we use the value of xxxx or xxxxxxxx as the UCS4 value of
+	     this character and we don't have to consult the repertoire
+	     map.
+
+	     If the name is of the form `Pxxxx' or `Pxxxxxxxx' the xxxx
+	     and xxxxxxxx also give the code point in UCS4 but this must
+	     be in the private, i.e., unassigned, area.  This should be
+	     used for characters which do not (yet) have an equivalent
+	     in ISO 10646 and Unicode.  */
+	  char *endp;
+
+	  errno = 0;
+	  newp->ucs4 = strtoul (name_end, &endp, 16);
+	  if (endp - name_end != len1
+	      || (newp->ucs4 == ULONG_MAX && errno == ERANGE)
+	      || newp->ucs4 >= 0x80000000)
+	    /* This wasn't successful.  Signal this name cannot be a
+	       correct UCS value.  */
+	    newp->ucs4 = UNINITIALIZED_CHAR_VALUE;
+	}
 
       insert_entry (ht, name_end, len1, newp);
       insert_entry (bt, newp->bytes, nbytes, newp);
