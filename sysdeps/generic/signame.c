@@ -23,6 +23,14 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <config.h>
 #endif
 
+/* Some systems declare `sys_siglist in <unistd.h>; if
+   configure defined SYS_SIGLIST_DECLARED, it may expect
+   to find the declaration there.  */
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+
 /* Some systems do not define NSIG in <signal.h>.  */
 #ifndef	NSIG
 #ifdef	_NSIG
