@@ -258,14 +258,14 @@ DEFUN(_IO_str_pbackfail, (fp, c),
 }
 
 void
-DEFUN (_IO_str_finish, (fp),
-      register _IO_FILE* fp)
+DEFUN (_IO_str_finish, (fp, dummy),
+      register _IO_FILE* fp AND int dummy)
 {
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
     (((_IO_strfile*)fp)->_s._free_buffer)(fp->_IO_buf_base);
   fp->_IO_buf_base = NULL;
 
-  _IO_default_finish(fp);
+  _IO_default_finish(fp, 0);
 }
 
 struct _IO_jump_t _IO_str_jumps = {

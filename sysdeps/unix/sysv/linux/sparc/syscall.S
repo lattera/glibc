@@ -16,15 +16,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#define DONT_LOAD_G1
 #include <sysdep.h>
-ENTRY (__libc_syscall)
+	.text
+ENTRY (syscall)
 	or	%o0,%g0,%g1
 	or	%o1,%g0,%o0
 	or	%o2,%g0,%o1
 	or	%o3,%g0,%o2
 	or	%o4,%g0,%o3
 	or	%o5,%g0,%o4
-PSEUDO_NOENT(__libc_syscall, syscall, 5)
+	ta	0x10
+	bcc	1f
+	nop
+	save %sp, -96, %sp
+	call __errno_location
+	nop
+	st %i0,[%o0]
+	restore
+	retl
+	mov -1, %o0
+1:
 	ret
-SYSCALL__POST(syscall,5)
+
+PSEUDO_END (syscall)

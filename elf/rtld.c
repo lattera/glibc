@@ -79,7 +79,7 @@ RTLD_START
 #error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
 #endif
 
-ElfW(Addr)
+static ElfW(Addr)
 _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
@@ -126,6 +126,10 @@ _dl_start (void *arg)
 			_dl_rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
 			_dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
 
+#ifdef ELF_ADJUST_ARG
+  ELF_ADJUST_ARG(arg);
+#endif
+
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
@@ -147,7 +151,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Addr) *user_entry)
 {
   const ElfW(Phdr) *ph;
-  struct link_map *l;
+  struct link_map *main_map;
   int lazy;
   enum { normal, list, verify, trace } mode;
   struct link_map **preloads;
@@ -235,7 +239,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	{
 	  void doit (void)
 	    {
-	      l = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
+	      main_map = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
 	    }
 	  char *err_str = NULL;
 	  const char *obj_name __attribute__ ((unused));
@@ -248,37 +252,23 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    }
 	}
       else
-	l = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
+	main_map = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
 
-      phdr = l->l_phdr;
-      phent = l->l_phnum;
-      l->l_name = (char *) "";
-      *user_entry = l->l_entry;
+      phdr = main_map->l_phdr;
+      phent = main_map->l_phnum;
+      main_map->l_name = (char *) "";
+      *user_entry = main_map->l_entry;
     }
   else
     {
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
-      l = _dl_new_object ((char *) "", "", lt_executable);
-      if (l == NULL)
+      main_map = _dl_new_object ((char *) "", "", lt_executable);
+      if (main_map == NULL)
 	_dl_sysdep_fatal ("cannot allocate memory for link map", NULL);
-      l->l_phdr = phdr;
-      l->l_phnum = phent;
-      l->l_entry = *user_entry;
-    }
-
-  if (l != _dl_loaded)
-    {
-      /* GDB assumes that the first element on the chain is the
-	 link_map for the executable itself, and always skips it.
-	 Make sure the first one is indeed that one.  */
-      l->l_prev->l_next = l->l_next;
-      if (l->l_next)
-	l->l_next->l_prev = l->l_prev;
-      l->l_prev = NULL;
-      l->l_next = _dl_loaded;
-      _dl_loaded->l_prev = l;
-      _dl_loaded = l;
+      main_map->l_phdr = phdr;
+      main_map->l_phnum = phent;
+      main_map->l_entry = *user_entry;
     }
 
   /* Scan the program header table for the dynamic section.  */
@@ -288,7 +278,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       case PT_DYNAMIC:
 	/* This tells us where to find the dynamic section,
 	   which tells us everything we need to do.  */
-	l->l_ld = (void *) l->l_addr + ph->p_vaddr;
+	main_map->l_ld = (void *) main_map->l_addr + ph->p_vaddr;
 	break;
       case PT_INTERP:
 	/* This "interpreter segment" was used by the program loader to
@@ -297,7 +287,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	   dlopen call or DT_NEEDED entry, for something that wants to link
 	   against the dynamic linker as a shared library, will know that
 	   the shared object is already loaded.  */
-	_dl_rtld_libname.name = (const char *) l->l_addr + ph->p_vaddr;
+	_dl_rtld_libname.name = (const char *) main_map->l_addr + ph->p_vaddr;
 	_dl_rtld_libname.next = NULL;
 	_dl_rtld_map.l_libname = &_dl_rtld_libname;
 	has_interp = 1;
@@ -317,25 +307,24 @@ of this helper program; chances are you did not intend to run this program.\n",
   if (mode == verify)
     /* We were called just to verify that this is a dynamic executable
        using us as the program interpreter.  */
-    _exit (l->l_ld == NULL ? 1 : has_interp ? 0 : 2);
+    _exit (main_map->l_ld == NULL ? 1 : has_interp ? 0 : 2);
 
   /* Extract the contents of the dynamic section for easy access.  */
-  elf_get_dynamic_info (l->l_ld, l->l_info);
-  if (l->l_info[DT_HASH])
+  elf_get_dynamic_info (main_map->l_ld, main_map->l_info);
+  if (main_map->l_info[DT_HASH])
     /* Set up our cache of pointers into the hash table.  */
-    _dl_setup_hash (l);
+    _dl_setup_hash (main_map);
 
   /* Put the link_map for ourselves on the chain so it can be found by
-     name.  */
+     name.  Note that at this point the global chain of link maps contains
+     exactly one element, which is pointed to by main_map.  */
   if (! _dl_rtld_map.l_name)
     /* If not invoked directly, the dynamic linker shared object file was
        found by the PT_INTERP name.  */
     _dl_rtld_map.l_name = (char *) _dl_rtld_map.l_libname->name;
   _dl_rtld_map.l_type = lt_library;
-  while (l->l_next)
-    l = l->l_next;
-  l->l_next = &_dl_rtld_map;
-  _dl_rtld_map.l_prev = l;
+  main_map->l_next = &_dl_rtld_map;
+  _dl_rtld_map.l_prev = main_map;
 
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The later can also
@@ -445,7 +434,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
-  _dl_map_object_deps (l, preloads, npreloads, mode == trace);
+  _dl_map_object_deps (main_map, preloads, npreloads, mode == trace);
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
@@ -465,11 +454,11 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 chain in symbol search order because gdb uses the chain's order as
 	 its symbol search order.  */
       unsigned int i = 1;
-      while (l->l_searchlist[i] != &_dl_rtld_map)
+      while (main_map->l_searchlist[i] != &_dl_rtld_map)
 	++i;
-      _dl_rtld_map.l_prev = l->l_searchlist[i - 1];
-      _dl_rtld_map.l_next = (i + 1 < l->l_nsearchlist ?
-			     l->l_searchlist[i + 1] : NULL);
+      _dl_rtld_map.l_prev = main_map->l_searchlist[i - 1];
+      _dl_rtld_map.l_next = (i + 1 < main_map->l_nsearchlist ?
+			     main_map->l_searchlist[i + 1] : NULL);
       assert (_dl_rtld_map.l_prev->l_next == _dl_rtld_map.l_next);
       _dl_rtld_map.l_prev->l_next = &_dl_rtld_map;
       if (_dl_rtld_map.l_next)
@@ -484,7 +473,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   {
     void doit (void)
       {
-	if (_dl_check_all_versions (l, 1) && mode == normal)
+	if (_dl_check_all_versions (main_map, 1) && mode == normal)
 	  /* We cannot start the application.  Abort now.  */
 	  _exit (1);
       }
@@ -504,22 +493,26 @@ of this helper program; chances are you did not intend to run this program.\n",
       if (! _dl_loaded->l_info[DT_NEEDED])
 	_dl_sysdep_message ("\t", "statically linked\n", NULL);
       else
-	for (l = _dl_loaded->l_next; l; l = l->l_next)
-	  if (l->l_opencount == 0)
-	    /* The library was not found.  */
-	    _dl_sysdep_message ("\t", l->l_libname->name, " => not found\n",
-				NULL);
-	  else
-	    {
-	      char buf[20], *bp;
-	      buf[sizeof buf - 1] = '\0';
-	      bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
-	      while ((size_t) (&buf[sizeof buf - 1] - bp)
-		     < sizeof l->l_addr * 2)
-		*--bp = '0';
-	      _dl_sysdep_message ("\t", l->l_libname->name, " => ", l->l_name,
-				  " (0x", bp, ")\n", NULL);
-	    }
+	{
+	  struct link_map *l;
+
+	  for (l = _dl_loaded->l_next; l; l = l->l_next)
+	    if (l->l_opencount == 0)
+	      /* The library was not found.  */
+	      _dl_sysdep_message ("\t", l->l_libname->name, " => not found\n",
+				  NULL);
+	    else
+	      {
+		char buf[20], *bp;
+		buf[sizeof buf - 1] = '\0';
+		bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
+		while ((size_t) (&buf[sizeof buf - 1] - bp)
+		       < sizeof l->l_addr * 2)
+		  *--bp = '0';
+		_dl_sysdep_message ("\t", l->l_libname->name, " => ",
+				    l->l_name, " (0x", bp, ")\n", NULL);
+	      }
+	}
 
       if (mode != trace)
 	for (i = 1; i < _dl_argc; ++i)
@@ -544,6 +537,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       else if (lazy >= 0)
 	{
 	  /* We have to do symbol dependency testing.  */
+	  struct link_map *l;
 	  void doit (void)
 	    {
 	      _dl_relocate_object (l, _dl_object_relocation_scope (l), lazy);
@@ -576,6 +570,7 @@ of this helper program; chances are you did not intend to run this program.\n",
        the dynamic linker out of order because it has no copy relocs (we
        know that because it is self-contained).  */
 
+    struct link_map *l;
     l = _dl_loaded;
     while (l->l_next)
       l = l->l_next;
@@ -605,6 +600,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   {
     /* Initialize _r_debug.  */
     struct r_debug *r = _dl_debug_initialize (_dl_rtld_map.l_addr);
+    struct link_map *l;
 
     l = _dl_loaded;
 

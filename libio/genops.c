@@ -481,8 +481,8 @@ DEFUN(_IO_default_sync, (fp),
    current implementation, this function can get called twice! */
 
 void
-DEFUN(_IO_default_finish, (fp),
-      _IO_FILE *fp)
+DEFUN(_IO_default_finish, (fp, dummy),
+      _IO_FILE *fp AND int dummy)
 {
   struct _IO_marker *mark;
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))

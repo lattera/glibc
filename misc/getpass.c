@@ -59,9 +59,7 @@ getpass (prompt)
       /* Save the old one. */
       s = t;
       /* Tricky, tricky. */
-      t.c_lflag &= ~(ECHO|ISIG|ICANON);
-      t.c_cc[VTIME] = 0;
-      t.c_cc[VMIN] = 1;
+      t.c_lflag &= ~(ECHO|ISIG);
       tty_changed = (tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &t) == 0);
     }
   else

@@ -1,21 +1,21 @@
 /* Startup code compliant to the ELF SPARC ABI.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* This is the canonical entry point, usually the first thing in the text
    segment.  The SVR4/SPARC ABI (NOTE: I don't actually have it) says that
@@ -82,7 +82,7 @@ nofini:
 	sll ENVP, 2, ENVP
 	add ARGV, ENVP, ENVP
 	/* Store ENVP in the global variable `_environ'.  */
-	st [TMP + %lo(_environ)], ENVP
+	ld [TMP + %lo(_environ)], ENVP
 
 	/* Call `_init', which is the entry point to our own `.init'
 	   section; and register with `atexit' to have `exit' call
@@ -100,6 +100,7 @@ nofini:
 	mov ENVP, %o2
 
 	call exit		/* This should never return.  */
+	nop
 	unimp 0			/* Crash if somehow it does return.  */
 
 /* Define a symbol for the first piece of initialized data.  */

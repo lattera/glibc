@@ -334,7 +334,7 @@ _dl_check_all_versions (struct link_map *map, int verbose)
   int result = 0;
 
   for (l = map; l != NULL; l = l->l_next)
-    result |= _dl_check_map_versions (l, verbose);
+    result |= l->l_opencount != 0 && _dl_check_map_versions (l, verbose);
 
   return result;
 }

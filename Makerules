@@ -80,6 +80,12 @@ ar-symtab-name = __.SYMDEF
 else
 ar-symtab-name = # The null name is used in ELF archives.
 endif
+
+# This variable is used in ``include $(o-iterator)'' after defining
+# $(o-iterator-doit) to produce some desired rule using $o for the object
+# suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
+# is produced for each object suffix in use.
+o-iterator = $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-left))
 
 # Include any system-specific makefiles.
 
@@ -167,23 +173,25 @@ $(common-objpfx)dummy.d:
 # generated sysdep rules in included from sysd-rules below.  When
 # compiling in the source tree, generated sources go into the current
 # directory, and those should be chosen before any sources in sysdeps.
-$(objpfx)%.o: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.so: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.po: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.go: %.S $(before-compile); $(compile-command.S)
-$(objpfx)%.bo: %.S $(before-compile); $(compile-command.S)
+define o-iterator-doit
+$(objpfx)%$o: %.S $(before-compile); $$(compile-command.S)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 $(objpfx)%.d: %.S $(before-compile); $(+make-deps)
-$(objpfx)%.o: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.so: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.po: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.go: %.s $(before-compile); $(compile-command.s)
-$(objpfx)%.bo: %.s $(before-compile); $(compile-command.s)
+
+define o-iterator-doit
+$(objpfx)%$o: %.s $(before-compile); $$(compile-command.s)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 $(objpfx)%.d: %.s $(common-objpfx)dummy.d; $(make-dummy-dep)
-$(objpfx)%.o: %.c $(before-compile); $(compile-command.c)
-$(objpfx)%.so: %.c $(before-compile); $(compile-command.c)
-$(objpfx)%.po: %.c $(before-compile); $(compile-command.c)
-$(objpfx)%.go: %.c $(before-compile); $(compile-command.c)
-$(objpfx)%.bo: %.c $(before-compile); $(compile-command.c)
+
+define o-iterator-doit
+$(objpfx)%$o: %.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 $(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 
 # Omit the objpfx rules when building in the source tree, because
@@ -191,23 +199,25 @@ $(objpfx)%.d: %.c $(before-compile); $(+make-deps)
 ifdef objpfx
 # Define first rules to find the source files in $(objpfx).
 # Generated source files will end up there.
-$(objpfx)%.o: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)%.so: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)%.po: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)%.go: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)%.bo: $(objpfx)%.S $(before-compile); $(compile-command.S)
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.S $(before-compile); $$(compile-command.S)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
-$(objpfx)%.o: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.so: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.po: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.go: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)%.bo: $(objpfx)%.s $(before-compile); $(compile-command.s)
+
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.s $(before-compile); $$(compile-command.s)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.s $(common-objpfx)dummy.d; $(make-dummy-dep)
-$(objpfx)%.o: $(objpfx)%.c $(before-compile); $(compile-command.c)
-$(objpfx)%.so: $(objpfx)%.c $(before-compile); $(compile-command.c)
-$(objpfx)%.po: $(objpfx)%.c $(before-compile); $(compile-command.c)
-$(objpfx)%.go: $(objpfx)%.c $(before-compile); $(compile-command.c)
-$(objpfx)%.bo: $(objpfx)%.c $(before-compile); $(compile-command.c)
+
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(object-suffixes)
+include $(o-iterator)
 $(objpfx)%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 endif
 
@@ -390,12 +400,6 @@ headers := $(headers) $(sysdep_headers)
 # replacing every ".c" in `sources' with a ".o".
 override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
 
-
-# This variable is used in ``include $(o-iterator)'' after defining
-# $(o-iterator-doit) to produce some desired rule using $o for the object
-# suffix, and setting $(object-suffixes-left) to $(object-suffixes); a copy
-# is produced for each object suffix in use.
-o-iterator = $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-left))
 
 # The makefile may define $(extra-libs) with `libfoo libbar'
 # to build libfoo.a et al from the modules listed in $(libfoo-routines).

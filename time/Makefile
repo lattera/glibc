@@ -106,12 +106,12 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		    ;\
 	 echo 'ifdef $*-zones'						    ;\
 	 if test x$(findstring $*, $(tzlinks)) != x; then		     \
-	   echo '$$(addprefix $$(inst_datadir)/zone%/right/,$$($*-zones)) \';\
-	   echo '$$(addprefix $$(inst_datadir)/zone%/posix/,$$($*-zones)) \';\
-	   echo '$$(addprefix $$(inst_datadir)/zone%/,$$($*-zones)): \'	    ;\
-	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_datadir)/zone%/right/,$$($$t-zones))) \' ;\
-	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_datadir)/zone%/posix/,$$($$t-zones))) \' ;\
-	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_datadir)/zone%/,$$($$t-zones)))' ;\
+	   echo '$$(addprefix $$(inst_zonedir)/right/,$$($*-zones)) \';\
+	   echo '$$(addprefix $$(inst_zonedir)/posix/,$$($*-zones)) \';\
+	   echo '$$(addprefix $$(inst_zonedir)/,$$($*-zones)): \'	    ;\
+	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_zonedir)/right/,$$($$t-zones))) \' ;\
+	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_zonedir)/posix/,$$($$t-zones))) \' ;\
+	   echo '$$(foreach t,$$(tzbases),$$(addprefix $$(inst_zonedir)/,$$($$t-zones)))' ;\
 	 fi								    ;\
 	 echo '$$(addprefix $$(inst_datadir)/zone%/right/,$$($*-zones)): \' ;\
 	 echo '$< $$(objpfx)zic leapseconds yearistype'			    ;\

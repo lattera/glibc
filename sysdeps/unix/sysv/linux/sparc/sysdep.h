@@ -20,6 +20,11 @@
 #ifndef _LINUX_SPARC_SYSDEP_H
 #define _LINUX_SPARC_SYSDEP_H 1
 
+/* Kernel headers use __ASSEMBLY__ */
+#ifdef ASSEMBLER
+#define __ASSEMBLY__
+#endif
+
 #include <sysdeps/unix/sparc/sysdep.h>
 
 #undef SYS_ify
@@ -30,11 +35,33 @@
 #ifdef DONT_LOAD_G1
 # define LOADSYSCALL(x)
 #else
-# define LOADSYSCALL(x) mov SYS_##n, %g1
+# define LOADSYSCALL(x) mov __NR_##x, %g1
 #endif
 
-/* Linux/SPARC uses a different trap number and uses __errno_location always */
+/* Linux/SPARC uses a different trap number */
 #undef PSEUDO
+
+#ifdef PIC
+#define SYSCALL_ERROR_HANDLER \
+	.global C_SYMBOL_NAME(__errno_location);\
+        .type   C_SYMBOL_NAME(__errno_location),@function;\
+	save   %sp,-96,%sp;\
+	call   __errno_location;\
+	nop;\
+	st %i0,[%o0];\
+	restore;\
+	retl;\
+	mov -1,%o0;
+#else
+#define SYSCALL_ERROR_HANDLER \
+	save %sp,-96,%sp;						      \
+	call __errno_location;						      \
+	nop;								      \
+	st %i0,[%o0];							      \
+	restore;							      \
+	retl;								      \
+	mov -1,%o0;
+#endif   /* PIC */
 
 #define PSEUDO(name, syscall_name, args) \
 	.text;								      \
@@ -43,14 +70,8 @@
 	ta 0x10;							      \
 	bcc,a 1f;							      \
 	nop;								      \
-	save %sp,96,%sp;						      \
-	call __errno_location;						      \
-	nop;								      \
-	st %i0,[%o0];							      \
-	restore;							      \
-	retl;								      \
-	mov -1,%o0;							      \
-1:
+	SYSCALL_ERROR_HANDLER;						      \
+1:;
 
 #endif	/* ASSEMBLER */
 

@@ -138,8 +138,8 @@ DEFUN(_IO_file_close_it, (fp),
 }
 
 void
-DEFUN(_IO_file_finish, (fp),
-      register _IO_FILE* fp)
+DEFUN(_IO_file_finish, (fp, dummy),
+      register _IO_FILE* fp AND int dummy)
 {
   if (_IO_file_is_open(fp))
     {
@@ -147,7 +147,7 @@ DEFUN(_IO_file_finish, (fp),
       if (!(fp->_flags & _IO_DELETE_DONT_CLOSE))
 	_IO_SYSCLOSE (fp);
     }
-  _IO_default_finish(fp);
+  _IO_default_finish(fp, 0);
 }
 
 _IO_FILE *

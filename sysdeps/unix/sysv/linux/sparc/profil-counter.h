@@ -22,14 +22,5 @@
 void
 profil_counter (int signo, __siginfo_t si)
 {
-  extern int __sparc_old_signals;
-
-  if (__sparc_old_signals)
-    {
-      struct sigcontext_struct *s = (void *) &si;
-
-      profil_count ((void *) s->sigc_pc);
-    }
-  else
-    profil_count ((void *) si.si_regs.pc);
+  profil_count ((void *) si.si_regs.pc);
 }

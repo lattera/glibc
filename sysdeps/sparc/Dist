@@ -1,4 +1,5 @@
 DEFS.h
+elf/DEFS.h
 dotmul.S umul.S
 divrem.m4 sdiv.S udiv.S rem.S urem.S
 alloca.S

@@ -22,6 +22,10 @@
 #include <sys/signal.h>
 #include <errno.h>
 
+/* Commented out while I figure out what the fuck goes on */
+long ____sig_table [NSIG];
+#if 0
+
 /* The kernel will deliver signals in the old way if the signal
    number is a positive number.  The kernel will deliver a signal
    with the new stack layout if the signal number is a negative number.
@@ -30,7 +34,6 @@
    using at runtime.  */
 
 extern void ____sparc_signal_trampoline (int);
-long ____sig_table [NSIG];
 
 int
 __trampoline_sigaction (int sig, struct sigaction *new, struct sigaction *old)
@@ -60,7 +63,7 @@ __trampoline_sigaction (int sig, struct sigaction *new, struct sigaction *old)
 	  "1:"
 	  : "=r" (ret), "=r" ((long int) sig), "=r" ((long int) new),
 	    "=r" ((long int) old)
-	  : "0" (SYS_sigaction), "1" (sig), "2" (new), "3" (old)
+	  : "0" (__NR_sigaction), "1" (sig), "2" (new), "3" (old)
 	  : "g1", "o0", "o1", "o2");
 
   if (ret >= 0)
@@ -79,9 +82,12 @@ __trampoline_sigaction (int sig, struct sigaction *new, struct sigaction *old)
   __set_errno (-ret);
   return -1;
 }
+#else
+#    define __new_sigaction __sigaction
+#endif
 
 int
-__new_sigaction (int sig, struct sigaction *new, struct sigaction *old)
+__new_sigaction (int sig, __const struct sigaction *new, struct sigaction *old)
 {
   int ret;
 
@@ -98,7 +104,7 @@ __new_sigaction (int sig, struct sigaction *new, struct sigaction *old)
 	  "1:"
 	  : "=r" (ret), "=r" ((long int) sig), "=r" ((long int) new),
 	    "=r" ((long int) old)
-	  : "0" (SYS_sigaction), "1" (sig), "2" (new), "3" (old)
+	  : "0" (__NR_sigaction), "1" (sig), "2" (new), "3" (old)
 	  : "g1", "o0", "o1", "o2");
   if (ret >= 0)
     return 0;
@@ -106,10 +112,11 @@ __new_sigaction (int sig, struct sigaction *new, struct sigaction *old)
   return -1;
 }
 
+#if 0
 int
-__sigaction (int sig, struct sigaction *new, struct sigaction *old)
+__sigaction (int sig, __const struct sigaction *new, struct sigaction *old)
 {
-  static (*sigact_routine) (int, struct sigaction *, struct sigaction *);
+  static (*sigact_routine) (int, __const struct sigaction *, struct sigaction *);
   int ret;
   struct sigaction sa;
 
@@ -124,4 +131,6 @@ __sigaction (int sig, struct sigaction *new, struct sigaction *old)
 
   return __sigaction (sig, new, old);
 }
+#endif
+
 weak_alias (__sigaction, sigaction);

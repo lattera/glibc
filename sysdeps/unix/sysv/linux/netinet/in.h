@@ -233,12 +233,17 @@ struct ip_mreq
     struct in_addr imr_interface;	/* local IP address of interface */
   };
 
-/* Functions to convert between host and network byte order.  */
+/* Functions to convert between host and network byte order.
 
-extern unsigned long int ntohl __P ((unsigned long int));
-extern unsigned short int ntohs __P ((unsigned short int));
-extern unsigned long int htonl __P ((unsigned long int));
-extern unsigned short int htons __P ((unsigned short int));
+   Please note that these functions normally take `unsigned long int' or
+   `unsigned short int' values as arguments and also return them.  But
+   this was a short-sighted decision since on different systems the types
+   may have different representations but the values are always the same.  */
+
+extern u_int32_t ntohl __P ((u_int32_t __netlong));
+extern u_int16_t ntohs __P ((u_int16_t __netshort));
+extern u_int32_t htonl __P ((u_int32_t __hostlong));
+extern u_int16_t htons __P ((u_int16_t __hostshort));
 
 #include <endian.h>
 

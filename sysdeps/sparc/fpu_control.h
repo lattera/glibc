@@ -53,13 +53,6 @@
 /* private namespace. It should only be used by crt0.o. */
 extern unsigned short __fpu_control;
 
-__BEGIN_DECLS
-
-/* called by crt0.o. It can be used to manipulate 387 control word. */
-extern void __setfpucw __P ((unsigned short));
-
-__END_DECLS
-
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 

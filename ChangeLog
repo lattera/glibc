@@ -1,3 +1,130 @@
+1997-02-27 05:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/Makefile: Add rules to run and distribute xtract-typefun.
+	* manual/xtract-typefun.awk: New file.  Script to extract function,
+	variable, macro anchor to put into the `dir' file.
+	* manual/signal.texi: Document difference between SysV and BSD
+	signal(3) function and add documentation for sysv_signal.
+
+	* sysdeps/libm-i387/e_acoshl.c: Clear upper half of word containing
+	exponent before comparing.
+
+1997-02-27 01:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/netinet/in.h (htonl, htons, ntohl, ntohs): Change
+	prototypes to use types with explicit width.  `unsigned long' is
+	different on 64 bit systems.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
+	* sysdeps/generic/htonl.c: Likewise.
+	* sysdeps/generic/htons.c: Likewise.
+	* sysdeps/generic/ntohl.c: Likewise.
+	* sysdeps/generic/ntohs.c: Likewise.
+	Suggested by a sun <asun@zoology.washington.edu>.
+
+1997-02-26 08:30  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* math/math.h: Include <__math.h> if __NO_MATH_INLINES is not
+	defined and we want optimization.
+
+1997-02-27 01:13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/netinet/in.h (htonl, htons, ntohl, ntohs): Change
+	prototypes to use types with explicit width.  `unsigned long' is
+	different on 64 bit systems.
+	Suggested by a sun <asun@zoology.washington.edu>.
+
+1997-02-02 19:53  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/getpass.c: Don't disable canonical input.
+	Reverted patch of Mon Jan  6 01:35:29 1997.
+
+1996-12-14 22:07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/libioP.h (_IO_finish_t): Take additional parameter, to
+	match the hidden __in_chrg parameter of the destructor.
+	(_IO_FINISH): Pass zero for it.
+	* libio/genops.c (_IO_default_finish): Add second parameter, which
+	is ignored.
+	* libio/memstream.c (_IO_mem_finish): Likewise.
+	* libio/fileops.c (_IO_mem_finish): Likewise.
+	* libio/strops.c (_IO_str_finish): Likewise.  All callers changed.
+
+1997-02-27 00:23  H.J. Lu  <hjl@lucon.org>
+
+	* time/Makefile: Avoid using patterns in dependencies.
+
+1997-02-26 00:56  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* elf/rtld.c: Make _dl_start static.  Otherwise the linker on the
+	SPARC will convert the call _dl_start into a call into the PLT.
+
+	* elf/rtld.c (_dl_start): On the SPARC we need to adjust the value
+	of arg to make it point to the actual values.
+
+	* sysdeps/sparc/elf/DEFS.h: New ELF specific version.
+	* sysdeps/sparc/Dist: Mention sysdeps/sparc/elf/DEFS.h.
+
+	* sysdeps/sparc/bsd-_setjmp.S, sysdeps/sparc/bsd-setjmp.S: Make
+	them PIC aware.
+
+	* sysdeps/sparc/dl-machine.h (elf_machine_load_address):
+	Implemented.
+	(elf_machine_rela): Make it compile; fix existing relocation
+	types; add unhandled relocation types.
+	(ELF_ADJUST_ARG): Get pointer to arguments at program startup.
+	(RTLD_START): Initial implementation, not yet finished.
+
+	* sysdeps/sparc/elf/start.S: Fix.
+
+	* sysdeps/sparc/fpu_control.h: Remove duplicate declaration of
+	__setfpucw.
+
+	* sysdeps/sparc/divrem.m4: Make compilable under Linux.
+	* sysdeps/sparc/rem.S, sysdeps/sparc/sdiv.S, sysdeps/sparc/udiv.S,
+	sysdeps/sparc/urem.S : Regenerated.
+
+	* sysdeps/sparc/setjmp.S: Make it PIC aware.
+
+	* sysdeps/unix/sysv/linux/sparc/__sigtrampoline.S: Define
+	__ASSEMBLY__ before using kernel header.
+
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Use -mv8 flag to compile
+	rtld.c.
+
+	* sysdeps/unix/sysv/linux/sparc/brk.c: Implement.
+	* sysdeps/unix/sysv/linux/sparc/profil-counter.h: Remove code
+	to handle old signals.
+	* sysdeps/unix/sysv/linux/sparc/sigaction.c: Implements sigaction
+	for all Linux/SPARC kernels.
+	* sysdeps/unix/sysv/linux/sparc/syscall.S: Add code to store
+	errno using __errno_location.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: Add various handler
+	macros for assembler sources.
+	* sysdeps/unix/sysv/linux/sparc/errno.c: Define errno.
+
+1997-02-25 16:02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (dl_main): Remove dead code that is never executed.
+	Rename local variable l to main_map where it is used to point to
+	the load_map for the executable.
+
+1997-02-25 15:03  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-version.c (_dl_check_all_versions): Ignore libraries that
+	could not be found.
+
+1997-02-24 23:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules: Generate implicit object suffix rules automagically.
+	(o-iterator): Move before first use.
+
+	* Makeconfig (all-object-suffixes): Add .bo suffix.
+
+1997-02-25 15:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/e_acoshf.S (__ieee754_acoshf): Test correct
+	word on stack for overflow.
+
 1997-02-24 23:05  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
 
 	* malloc/malloc.c (malloc_get_state): New function.
@@ -155,7 +282,7 @@
 	__STRICT_ANSI__.
 
 	* math/math.h: Prevent definition of struct exception when using
-	C++.
+	C++.  Use __exception instead.
 
 1997-02-22 01:45  Ulrich Drepper  <drepper@cygnus.com>
 

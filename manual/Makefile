@@ -21,6 +21,9 @@
 subdir := manual
 export subdir := $(subdir)
 
+# We need GNU awk for the xtract-typefun script.
+GAWK = gawk
+
 .PHONY: all dvi info
 all: dvi info
 dvi: libc.dvi
@@ -60,6 +63,17 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # touch is broken on our machines.  Sigh.
 	date > $@
 
+# Generate a file which can be added to the `dir' content to provide direct
+# access to the documentation of the function, variables, and other
+# definitions.
+dir-add.texi: manual/xtract-typefun.awk $(chapters-incl)
+	if test -n "$(chapters-incl)"; then \
+	  (for i in $(chapters-incl); do \
+	     $(GAWK) -f $< < $i; \
+	   done) | sort > $@.new; \
+	   ./move-if-change $@.new $@; \
+	fi
+
 # Generate Texinfo files from the C source for the example programs.
 %.c.texi: examples/%.c
 	sed -e 's,[{}],@&,g'				\
@@ -78,7 +92,8 @@ distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
 	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
-	     stamp-summary chapters chapters-incl
+	     stamp-summary chapters chapters-incl			\
+	     xtract-typefun.awk
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^

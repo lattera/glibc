@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ struct _IO_FILE_memstream
 
 
 static int _IO_mem_sync __P ((_IO_FILE* fp));
-static void _IO_mem_finish __P ((_IO_FILE* fp));
+static void _IO_mem_finish __P ((_IO_FILE* fp, int));
 
 
 static const struct _IO_jump_t _IO_mem_jumps =
@@ -124,8 +124,9 @@ _IO_mem_sync (fp)
 
 
 static void
-_IO_mem_finish (fp)
+_IO_mem_finish (fp, dummy)
      _IO_FILE* fp;
+     int dummy;
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
 
@@ -139,5 +140,5 @@ _IO_mem_finish (fp)
 
   fp->_IO_buf_base = NULL;
 
-  _IO_default_finish (fp);
+  _IO_default_finish (fp, 0);
 }

@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SPARC version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,13 +36,7 @@
 static inline int
 elf_machine_matches_host (Elf32_Half e_machine)
 {
-  switch (e_machine)
-    {
-    case EM_SPARC:
-      return 1;
-    default:
-      return 0;
-    }
+  return e_machine == EM_SPARC;
 }
 
 
@@ -62,28 +56,50 @@ static inline Elf32_Addr
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-???
+
+  asm (
+       "add   %%fp,0x44,%%o2\n\t"	/* o2 = point to argc */
+       "ld    [%%o2 - 4],%%o0\n\t"	/* o0 = load argc     */
+       "sll   %%o0, 2, %%o0\n\t"	/* o0 = argc * sizeof (int) */
+       "add   %%o2,%%o0,%%o2\n\t"	/* o2 = skip over argv */
+       "add   %%o2,4,%%o2\n\t"		/* skip over null after argv */
+
+       /* Now %o2 is pointing to env, skip over that as well.  */
+       "1:\n\t"
+       "ld    [%%o2],%%o0\n\t"
+        "cmp   %%o0,0\n\t"
+       "bnz   1b\n\t"
+       "add   %%o2,4,%%o2\n\t"
+
+       /* Note that above, we want to advance the NULL after envp so
+	  we always add 4.  */
+
+       /* Now, search for the AT_BASE property.  */
+       "2:\n\t"
+       "ld   [%%o2],%%o0\n\t"
+       "cmp  %%o0,0\n\t"
+       "be,a 3f\n\t"
+       "or   %%g0,%%g0,%0\n\t"
+       "cmp  %%o0,7\n\t"	/* AT_BASE = 7 */
+       "be,a 3f\n\t"
+       "ld   [%%o2+4],%0\n\t"
+       "b    2b\n\t"
+       "add  %%o2,8,%%o2\n\t"
+       /* At this point %0 has the load address for the interpreter */
+       "3:\n\t"
+       : "=r" (addr)
+       : /* no inputs */
+       : "o0", "o2");
   return addr;
 }
 
-/* The `subl' insn above will contain an R_68K_RELATIVE relocation
-   entry intended to insert the run-time address of the label `here'.
-   This will be the first relocation in the text of the dynamic
-   linker; we skip it to avoid trying to modify read-only text in this
-   early stage.  */
-#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
-  ((dynamic_info)[DT_RELA]->d_un.d_ptr += sizeof (Elf32_Rela), \
-   (dynamic_info)[DT_RELASZ]->d_un.d_val -= sizeof (Elf32_Rela))
-
+#ifdef RESOLVE
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
 static inline void
 elf_machine_rela (struct link_map *map,
-		  const Elf32_Rela *reloc, const Elf32_Sym *sym,
-		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,
-					 Elf32_Addr reloc_addr,
-					 int noplt))
+		  const Elf32_Rela *reloc, const Elf32_Sym *sym)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
@@ -91,21 +107,17 @@ elf_machine_rela (struct link_map *map,
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_SPARC_COPY:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, DL_LOOKUP_NOEXEC);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_SPARC_GLOB_DAT:
     case R_SPARC_32:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (&sym, 0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend);
       break;
     case R_SPARC_JMP_SLOT:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 1) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
+      loadbase = RESOLVE (&sym, DL_LOOKUP_NOPLT);
       {
 	Elf32_Addr value = ((sym ? (loadbase + sym->st_value) : 0)
 			    + reloc->r_addend);
@@ -114,25 +126,20 @@ elf_machine_rela (struct link_map *map,
       }
       break;
     case R_SPARC_8:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, 0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend);
       break;
     case R_SPARC_16:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, 0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend);
       break;
-    case R_SPARC_32:
-      loadbase = (resolve ? (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0) :
-		  /* RESOLVE is null during bootstrap relocation.  */
-		  map->l_addr);
-      break;
     case R_SPARC_RELATIVE:
-      *reloc_addr = map->l_addr + reloc->r_addend;
+      *reloc_addr += map->l_addr + reloc->r_addend;
       break;
     case R_SPARC_DISP8:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, 0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend
 			      - (Elf32_Addr) reloc_addr);
@@ -144,10 +151,30 @@ elf_machine_rela (struct link_map *map,
 			       - (Elf32_Addr) reloc_addr);
       break;
     case R_SPARC_DISP32:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, 0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend
 		     - (Elf32_Addr) reloc_addr);
+      break;
+      case R_SPARC_LO10:
+	{
+	  unsigned int saddr;
+
+	  loadbase = RESOLVE (&sym, 0);
+	  saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
+
+	  *reloc_addr = (*reloc_addr & ~0x3ff) | (saddr & 0x3ff);
+	}
+       break;
+    case R_SPARC_HI22:
+      {
+	unsigned int saddr;
+
+	loadbase = RESOLVE (&sym, 0);
+	saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
+
+	*reloc_addr = (*reloc_addr & 0xffc00000)|(saddr >> 10);
+      }
       break;
     case R_SPARC_NONE:		/* Alright, Wilbur.  */
       break;
@@ -171,6 +198,10 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
       break;
     }
 }
+
+#define ELF_ADJUST_ARG(arg) __asm__("\tadd %%fp,64,%0\n" : "=r" (arg))
+
+#endif	/* RESOLV */
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
@@ -213,26 +244,27 @@ elf_machine_runtime_setup (struct link_map *l, int lazy)
       plt[1] = OPCODE_CALL | (((Elf32_Addr) &_dl_runtime_resolve -
 			       (Elf32_Addr) &plt[1]) >> 2);
       plt[2] = OPCODE_NOP;	/* Fill call delay slot.  */
-      plt[3] = l;
+      plt[3] = (Elf32_Addr *) l;
     }
 
   /* This code is used in dl-runtime.c to call the `fixup' function
      and then redirect to the address it returns.  */
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-| Trampoline for _dl_runtime_resolver
+# Trampoline for _dl_runtime_resolver
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 _dl_runtime_resolve:
-	| Pass two args to fixup: the PLT address computed from the PC saved
-	| in the PLT's call insn, and the reloc offset passed in %g1.
-	ld [%o7 + 8], %o1	| Second arg, loaded from PLTPC[2].
-	call fixup
-	shrl %g1, 22, %o0	| First arg, set in delay slot of call.
-	| Jump to the real function.
-	jmpl %o0, %g0
-	| In the delay slot of that jump, restore the register window
-	| saved by the first insn of the PLT.
-	restore
+	#call  %g0
+	# Pass two args to fixup: the PLT address computed from the PC saved
+	# in the PLT's call insn, and the reloc offset passed in %g1.
+	#ld [%o7 + 8], %o1      | Second arg, loaded from PLTPC[2].
+	#call fixup
+	#shrl %g1, 22, %o0      | First arg, set in delay slot of call.
+	# Jump to the real function.
+	#jmpl %o0, %g0
+	# In the delay slot of that jump, restore the register window
+	# saved by the first insn of the PLT.
+	#restore
 	.size _dl_runtime_resolve, . - _dl_runtime_resolve
 ");
 /* The PLT uses Elf32_Rela relocs.  */
@@ -248,4 +280,13 @@ _dl_runtime_resolve:
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
-#define RTLD_START asm (???)
+#define RTLD_START __asm__ ( \
+".text\n\
+ .globl _start\n\
+ .type _start,@function\n\
+_start:\n\
+  call _dl_start\n\
+  nop\n\
+  call %o0\n\
+  nop\n\
+");

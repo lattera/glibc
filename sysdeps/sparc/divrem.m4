@@ -83,10 +83,14 @@ L.$1.eval(2**N+$2):
 	ifelse($1, 1, `9:')')dnl
 
 #include "DEFS.h"
+#ifdef __linux__
+#include <asm/traps.h>
+#else
 #ifdef __svr4__
 #include <sys/trap.h>
 #else
 #include <machine/trap.h>
+#endif
 #endif
 
 FUNC(NAME)

@@ -101,8 +101,8 @@ extern "C" {
 /* The 'finish' function does any final cleaning up of an _IO_FILE object.
    It does not delete (free) it, but does everything else to finalize it/
    It matches the streambuf::~streambuf virtual destructor.  */
-typedef void (*_IO_finish_t) __P((_IO_FILE*)); /* finalize */
-#define _IO_FINISH(FP) JUMP0(__finish, FP)
+typedef void (*_IO_finish_t) __P((_IO_FILE*, int)); /* finalize */
+#define _IO_FINISH(FP) JUMP1(__finish, FP, 0)
 
 /* The 'overflow' hook flushes the buffer.
    The second argument is a character, or EOF.
@@ -295,7 +295,7 @@ extern int _IO_seekmark __P((_IO_FILE *, struct _IO_marker *, int));
 extern int _IO_default_underflow __P((_IO_FILE*));
 extern int _IO_default_uflow __P((_IO_FILE*));
 extern int _IO_default_doallocate __P((_IO_FILE*));
-extern void _IO_default_finish __P((_IO_FILE *));
+extern void _IO_default_finish __P((_IO_FILE *, int));
 extern int _IO_default_pbackfail __P((_IO_FILE*, int));
 extern _IO_FILE* _IO_default_setbuf __P((_IO_FILE *, char*, _IO_ssize_t));
 extern _IO_size_t _IO_default_xsputn __P((_IO_FILE *, const void*, _IO_size_t));
@@ -352,7 +352,7 @@ extern _IO_ssize_t _IO_file_read __P((_IO_FILE*, void*, _IO_ssize_t));
 extern int _IO_file_sync __P((_IO_FILE*));
 extern int _IO_file_close_it __P((_IO_FILE*));
 extern _IO_fpos_t _IO_file_seek __P((_IO_FILE *, _IO_off_t, int));
-extern void _IO_file_finish __P((_IO_FILE*));
+extern void _IO_file_finish __P((_IO_FILE*, int));
 
 /* Other file functions. */
 extern _IO_FILE* _IO_file_attach __P((_IO_FILE *, int));
@@ -366,7 +366,7 @@ extern int _IO_str_underflow __P((_IO_FILE*));
 extern int _IO_str_overflow __P((_IO_FILE *, int));
 extern int _IO_str_pbackfail __P((_IO_FILE*, int));
 extern _IO_fpos_t _IO_str_seekoff __P((_IO_FILE*,_IO_off_t,int,int));
-extern void _IO_str_finish __P ((_IO_FILE*));
+extern void _IO_str_finish __P ((_IO_FILE*, int));
 
 /* Other strfile functions */
 extern void _IO_str_init_static __P((_IO_FILE *, char*, int, char*));

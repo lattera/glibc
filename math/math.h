@@ -99,13 +99,17 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 #endif
 
 
-#if defined __USE_SVID && !defined __cplusplus
+#ifdef __USE_SVID
 /* In SVID error handling, `matherr' is called with this description
    of the exceptional condition.
 
    We have a problem when using C++ since `exception' is reserved in
    C++.  */
+#ifdef __cplusplus
+struct __exception
+#else
 struct exception
+#endif
   {
     int type;
     char *name;
@@ -114,8 +118,13 @@ struct exception
     double retval;
   };
 
+#ifdef __cplusplus
+extern int __matherr __P ((struct __exception *));
+extern int matherr __P ((struct __exception *));
+#else
 extern int __matherr __P ((struct exception *));
 extern int matherr __P ((struct exception *));
+#endif
 
 #define X_TLOSS		1.41484755040568800000e+16
 
@@ -131,7 +140,7 @@ extern int matherr __P ((struct exception *));
 #define HUGE		FLT_MAX
 #include <float.h>		/* Defines FLT_MAX.  */
 
-#endif	/* SVID && !C++ */
+#endif	/* SVID */
 
 
 #ifdef __USE_BSD
@@ -164,7 +173,7 @@ extern int matherr __P ((struct exception *));
 
 
 /* Get machine-dependent inline versions (if there are any).  */
-#if defined (__NO_MATH_INLINES) || defined (__OPTIMIZE__)
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 #include <__math.h>
 #endif
 
