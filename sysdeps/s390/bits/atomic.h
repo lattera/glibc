@@ -46,10 +46,10 @@ typedef uintmax_t uatomic_max_t;
 
 
 #define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   ({ __typeof (mem) __archmem = (mem);					      \
@@ -72,5 +72,5 @@ typedef uintmax_t uatomic_max_t;
    implement them by use of the csd instruction. The straightforward
    implementation causes warnings so we skip the definition for now.  */
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 #endif

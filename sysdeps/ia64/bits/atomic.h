@@ -60,10 +60,10 @@ typedef uintmax_t uatomic_max_t;
 				     (long) (newval)))
 
 #define __arch_compare_and_exchange_val_8_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_16_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval) \
   __sync_val_compare_and_swap_si ((int *) (mem), (int) (long) (oldval), \

@@ -1,5 +1,5 @@
 /* Store current floating-point environment.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
@@ -36,7 +36,7 @@ fegetenv (fenv_t *envp)
      no way to find out the ieee instruction pointer if there was no fault.  */
   _FPU_GETCW (envp->fpc);
   envp->ieee_instruction_pointer =
-    ptrace (PTRACE_PEEKUSER, getpid (), PT_IEEE_IP);
+    (void *) ptrace (PTRACE_PEEKUSER, getpid (), PT_IEEE_IP);
 
   /* Success.  */
   return 0;

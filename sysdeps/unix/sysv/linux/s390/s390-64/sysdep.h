@@ -163,13 +163,13 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				      \
   ({									      \
-    unsigned int _ret = INTERNAL_SYSCALL (name, , nr, args);		      \
+    long _ret = INTERNAL_SYSCALL (name, , nr, args);			      \
     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_ret, ), 0))	      \
      {									      \
        __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
        _ret = -1;							      \
      }									      \
-    (int) _ret; })
+    _ret; })
 
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
@@ -178,7 +178,7 @@
 #define INTERNAL_SYSCALL_DIRECT(name, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
-    register int _ret asm("2");						      \
+    register long _ret asm("2");					      \
     asm volatile (							      \
     "svc    %b1\n\t"							      \
     : "=d" (_ret)							      \
@@ -191,7 +191,7 @@
   ({									      \
     DECLARGS_##nr(args)							      \
     register unsigned long _nr asm("1") = (unsigned long)(__NR_##name);	      \
-    register int _ret asm("2");						      \
+    register long _ret asm("2");					      \
     asm volatile (							      \
     "svc    0\n\t"							      \
     : "=d" (_ret)							      \
@@ -207,7 +207,7 @@
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err)				      \
-  ((unsigned int) (val) >= 0xfffff001u)
+  ((unsigned long) (val) >= -4095UL)
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))

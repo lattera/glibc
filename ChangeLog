@@ -1,3 +1,31 @@
+2003-05-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/bits/atomic.h (__arch_compare_and_exchange_val_8_acq,
+	__arch_compare_and_exchange_val_16_acq): Cast 0 to mem's type.
+	* sysdeps/powerpc/powerpc32/bits/atomic.h
+	(__arch_compare_and_exchange_val_64_acq): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/bits/atomic.h
+	(__arch_compare_and_exchange_val_8_acq,
+	__arch_compare_and_exchange_val_16_acq,
+	__arch_compare_and_exchange_val_64_acq): Likewise.
+	* sysdeps/sparc/sparc64/bits/atomic.h
+	(__arch_compare_and_exchange_val_8_acq,
+	__arch_compare_and_exchange_val_16_acq): Likewise.
+	* sysdeps/s390/bits/atomic.h (__arch_compare_and_exchange_val_8_acq,
+	__arch_compare_and_exchange_val_16_acq,
+	__arch_compare_and_exchange_val_64_acq): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/atomic.h
+	(__arch_compare_and_exchange_val_64_acq): Likewise.
+	* sysdeps/s390/s390-64/backtrace.c (__backtrace): Add cast to shut
+	up warning.
+	* sysdeps/s390/fpu/fegetenv.c (fegetenv): Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INLINE_SYSCALL, INTERNAL_SYSCALL_DIRECT, INTERNAL_SYSCALL_SVC0):
+	Return long instead of int.
+	(INTERNAL_SYSCALL_ERROR_P): Cast val to unsigned long, replace
+	0xfffff001u with -4095UL.
+
 2003-05-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/fpu_control.h: New from i386.

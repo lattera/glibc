@@ -1,3 +1,8 @@
+2003-05-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* tests-mbwc/tst_wcsxfrm.c (tst_wcsxfrm): Use %zu instead of %d
+	format specifier when printing ret.
+
 2003-04-30  Petter Reinholdtsen  <pere@hungry.com>
 
 	* tst-fmon.c: Report name of locale if setlocale() fails.

@@ -122,7 +122,7 @@ typedef uintmax_t uatomic_max_t;
    such an operation.  So don't define any code for now.  */
 
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 
 #define atomic_exchange_and_add(mem, value) \
   ({ __typeof (*(mem)) __result, __tmp, __value = (value); \

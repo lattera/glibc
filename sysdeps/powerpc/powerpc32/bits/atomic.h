@@ -49,7 +49,7 @@
   (abort (), 0)
 
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
-  (abort (), 0)
+  (abort (), (__typeof (*mem)) 0)
 
 # define __arch_atomic_exchange_64(mem, value) \
     ({ abort (); (*mem) = (value); })
