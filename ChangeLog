@@ -23,9 +23,16 @@
 	(ldexpf): Likewise.
 	(ldexpl): Likewise.
 	(__finite): Likewise.
-	(__inline_mathcode*NP*): New macros without prototype
+	(__inline_mathcodeNP): New macro without prototype
 	declarations.
-	(__inline_mathop*NP*): Likewise.
+	(__inline_mathcodeNP2): Likewise.
+	(__inline_mathcodeNP3): Likewise.
+	(__inline_mathcodeNP_): Likewise.
+	(__inline_mathcodeNP2_): Likewise.
+	(__inline_mathcodeNP3_): Likewise.
+	(__inline_mathopNP): Likewise.
+	(__inline_mathop_declNP): Likewise.
+	(__inline_mathop_declNP_): Likewise.
 	(__inline_mathcode_): Use __inline_mathcodeNP_.
 	(__inline_mathcode2_): Use __inline_mathcodeNP2_.
 	(__inline_mathcode3_): Use __inline_mathcodeNP3_.
@@ -39,7 +46,9 @@
 	(__atan2l): Likewise.
 	(fmod): Likewise.
 	(pow): Likewise.
-	(*fabs*): Likewise.
+	(fabsf): Likewise.
+	(fabsl): Likewise.
+	(__fabsl): Likewise.
 	(asin): Likewise.
 	(acos): Likewise.
 	(sinh): Likewise.
