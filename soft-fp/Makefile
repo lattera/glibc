@@ -36,6 +36,7 @@ gcc-quad-routines := negtf2 addtf3 subtf3 multf3 divtf3 eqtf2 \
 
 distribute := double.h op-1.h op-2.h op-4.h op-common.h quad.h \
 	single.h soft-fp.h extended.h ChangeLog Banner configure \
+	op-8.h testit.c \
 	$(addsuffix .c,$(gcc-single-routines)) \
 	$(addsuffix .c,$(gcc-double-routines)) \
 	$(addsuffix .c,$(gcc-quad-routines))

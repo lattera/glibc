@@ -1,5 +1,7 @@
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/Makefile (distribute): Add memprof.sh and memprofstat.c.
+
 	* crypt/Makefile (distribute): Add md5.h.
 
 	* Makefile (distribute): Add include/shlib-compat.h.
