@@ -328,7 +328,9 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	    }
 	  cp += n;
 	  *alias_pointer++ = bp;
-	  bp += strlen (bp) + 1;
+	  n = strlen (bp) + 1;
+	  bp += n;
+	  linebuflen -= n;
 	  result->n_addrtype = class == C_IN ? AF_INET : AF_UNSPEC;
 	  ++have_answer;
 	}
