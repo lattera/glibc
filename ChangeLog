@@ -29,7 +29,7 @@
 2003-01-03  Art Haas  <ahaas@airmail.net>
 
 	* localedata/tests-mbwc/dat_iswalnum.c: Convert GCC extension
-	initiailzer syntax to C99.
+	initializer syntax to C99.
 	* localedata/tests-mbwc/dat_iswalpha.c: Likewise.
 	* localedata/tests-mbwc/dat_iswcntrl.c: Likewise.
 	* localedata/tests-mbwc/dat_iswctype.c: Likewise.
