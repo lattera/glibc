@@ -30,7 +30,6 @@ __sigwaitinfo (set, info)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return __syscall_rt_sigtimedwait (set, info, NULL,
-				    _NSIG / (8 * sizeof (long int)));
+  return __syscall_rt_sigtimedwait (set, info, NULL, _NSIG / 8);
 }
 weak_alias (__sigwaitinfo, sigwaitinfo)

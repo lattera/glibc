@@ -65,6 +65,6 @@ extern int __internal_setnetgrent (const char *group,
 extern void __internal_endnetgrent (struct __netgrent *datap);
 extern int __internal_getnetgrent_r (char **hostp, char **userp,
 				     char **domainp, struct __netgrent *datap,
-				     char *buffer, size_t buflen);
+				     char *buffer, size_t buflen, int *errnop);
 
 #endif /* netgroup.h */

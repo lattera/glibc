@@ -134,7 +134,7 @@ _nss_db_endaliasent (void)
    the result.  */
 static enum nss_status
 lookup (const DBT *key, struct aliasent *result, char *buffer,
-	    size_t buflen)
+	size_t buflen, int *errnop)
 {
   enum nss_status status;
   DBT value;
@@ -154,7 +154,7 @@ lookup (const DBT *key, struct aliasent *result, char *buffer,
       if (buflen < key->size + 1)
 	{
 	no_more_room:
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -218,7 +218,8 @@ lookup (const DBT *key, struct aliasent *result, char *buffer,
 }
 
 enum nss_status
-_nss_db_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen)
+_nss_db_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
+		       int *errnop)
 {
   /* Return next entry in host file.  */
   enum nss_status status;
@@ -227,7 +228,7 @@ _nss_db_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen)
 
   __libc_lock_lock (lock);
   key.size = 1 + snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
-  status = lookup (&key, result, buffer, buflen);
+  status = lookup (&key, result, buffer, buflen, errnop);
   __libc_lock_unlock (lock);
 
   return status;
@@ -236,7 +237,7 @@ _nss_db_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_db_getaliasbyname_r (const char *name, struct aliasent *result,
-			  char *buffer, size_t buflen)
+			  char *buffer, size_t buflen, int *errnop)
 {
   DBT key;
   enum nss_status status;
@@ -248,7 +249,7 @@ _nss_db_getaliasbyname_r (const char *name, struct aliasent *result,
   memcpy (&((char *) key.data)[1], name, key.size - 1);
 
   __libc_lock_lock (lock);
-  status = lookup (&key, result, buffer, buflen);
+  status = lookup (&key, result, buffer, buflen, errnop);
   __libc_lock_unlock (lock);
 
   return status;

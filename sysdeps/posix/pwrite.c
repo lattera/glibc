@@ -54,4 +54,7 @@ __pwrite (int fd, const void *buf, size_t nbyte, off_t offset)
 
   return result;
 }
+
+#ifndef __pwrite
 weak_alias (__pwrite, pwrite)
+#endif

@@ -162,7 +162,7 @@ CONCAT(_nss_files_end,ENTNAME) (void)
 
 static enum nss_status
 internal_getent (struct STRUCTURE *result,
-		 char *buffer, int buflen H_ERRNO_PROTO)
+		 char *buffer, int buflen, int *errnop H_ERRNO_PROTO)
 {
   char *p;
   struct parser_data *data = (void *) buffer;
@@ -171,7 +171,7 @@ internal_getent (struct STRUCTURE *result,
 
   if (buflen < (int) sizeof *data + 1)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       H_ERRNO_SET (NETDB_INTERNAL);
       return NSS_STATUS_TRYAGAIN;
     }
@@ -185,6 +185,7 @@ internal_getent (struct STRUCTURE *result,
       if (p == NULL)
 	{
 	  /* End of file or read error.  */
+	  *errnop = errno;
 	  H_ERRNO_SET (HOST_NOT_FOUND);
 	  return NSS_STATUS_NOTFOUND;
 	}
@@ -192,7 +193,7 @@ internal_getent (struct STRUCTURE *result,
 	{
 	  /* The line is too long.  Give the user the opportunity to
 	     enlarge the buffer.  */
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  H_ERRNO_SET (NETDB_INTERNAL);
 	  return NSS_STATUS_TRYAGAIN;
 	}
@@ -204,7 +205,7 @@ internal_getent (struct STRUCTURE *result,
   while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	 /* Parse the line.  If it is invalid, loop to get the next
 	    line of the file to parse.  */
-	 || ! (parse_result = parse_line (p, result, data, buflen)));
+	 || ! (parse_result = parse_line (p, result, data, buflen, errnop)));
 
   /* Filled in RESULT with the next entry from the database file.  */
   return parse_result == -1 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_SUCCESS;
@@ -213,8 +214,8 @@ internal_getent (struct STRUCTURE *result,
 
 /* Return the next entry from the database file, doing locking.  */
 enum nss_status
-CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
-				  char *buffer, size_t buflen H_ERRNO_PROTO)
+CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
+				  size_t buflen, int *errnop H_ERRNO_PROTO)
 {
   /* Return next entry in host file.  */
   enum nss_status status = NSS_STATUS_SUCCESS;
@@ -237,7 +238,8 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
 
       if (status == NSS_STATUS_SUCCESS)
 	{
-	  status = internal_getent (result, buffer, buflen H_ERRNO_ARG);
+	  status = internal_getent (result, buffer, buflen, errnop
+				    H_ERRNO_ARG);
 
 	  /* Remember this position if we were successful.  If the
 	     operation failed we give the user a chance to repeat the
@@ -270,8 +272,8 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
 #define DB_LOOKUP(name, keysize, keypattern, break_if_match, proto...)	      \
 enum nss_status								      \
 _nss_files_get##name##_r (proto,					      \
-			  struct STRUCTURE *result,			      \
-			  char *buffer, size_t buflen H_ERRNO_PROTO)	      \
+			  struct STRUCTURE *result, char *buffer,	      \
+			  size_t buflen, int *errnop H_ERRNO_PROTO)	      \
 {									      \
   enum nss_status status;						      \
 									      \
@@ -285,7 +287,8 @@ _nss_files_get##name##_r (proto,					      \
       /* Tell getent function that we have repositioned the file pointer.  */ \
       last_use = getby;							      \
 									      \
-      while ((status = internal_getent (result, buffer, buflen H_ERRNO_ARG))  \
+      while ((status = internal_getent (result, buffer, buflen, errnop	      \
+					H_ERRNO_ARG))			      \
 	     == NSS_STATUS_SUCCESS)					      \
 	{ break_if_match }						      \
 									      \

@@ -42,7 +42,7 @@ static unsigned long position = 0;
 
 static enum nss_status
 _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
-			     size_t buflen)
+			     size_t buflen, int *errnop)
 {
   enum nss_status status;
 
@@ -60,7 +60,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
       result->type = group_val;
       if (NISENTRYLEN (position, 1, data) >= buflen)
 	{
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       strncpy (buffer, NISENTRYVAL (position, 1, data),
@@ -78,7 +78,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
   if (NISENTRYLEN (position, 2, data) + NISENTRYLEN (position, 3, data) +
       NISENTRYLEN (position, 4, data) + 6 > buflen)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       status = NSS_STATUS_TRYAGAIN;
     }
   else
@@ -94,8 +94,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 	  result->val.triple.host = cp;
 	  cp = __stpncpy (cp, NISENTRYVAL (position, 2, data),
 			  NISENTRYLEN (position, 2, data));
-	  *cp = '\0';
-	  ++cp;
+	  *cp++ = '\0';
 	}
 
       if (NISENTRYLEN (position, 3, data) == 0)
@@ -105,8 +104,7 @@ _nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer,
 	  result->val.triple.user = cp;
 	  cp = __stpncpy (cp, NISENTRYVAL (position, 3, data),
 			  NISENTRYLEN (position, 3, data));
-	  *cp = '\0';
-	  ++cp;
+	  *cp++ = '\0';
 	}
 
       if (NISENTRYLEN (position, 4, data) == 0)
@@ -190,13 +188,13 @@ _nss_nisplus_endnetgrent (void)
 
 enum nss_status
 _nss_nisplus_getnetgrent_r (struct __netgrent *result,
-			    char *buffer, size_t buflen)
+			    char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = _nss_nisplus_parse_netgroup (result, buffer, buflen);
+  status = _nss_nisplus_parse_netgroup (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 

@@ -79,7 +79,7 @@ _nss_nis_endnetent (void)
 
 static enum nss_status
 internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
-			  int *herrnop)
+			  int *errnop, int *herrnop)
 {
   struct parser_data *data = (void *) buffer;
   char *domain, *result, *outkey;
@@ -107,7 +107,7 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
           if (retval == NSS_STATUS_TRYAGAIN)
 	    {
 	      *herrnop = NETDB_INTERNAL;
-	      __set_errno (EAGAIN);
+	      *errnop = errno;
 	    }
           return retval;
         }
@@ -126,10 +126,12 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
         ++p;
       free (result);
 
-      if ((parse_res = _nss_files_parse_netent (p, net, data, buflen)) == -1)
+      parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  free (outkey);
 	  *herrnop = NETDB_INTERNAL;
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -145,13 +147,13 @@ internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
 
 enum nss_status
 _nss_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
-		      int *herrnop)
+		      int *errnop, int *herrnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getnetent_r (net, buffer, buflen, herrnop);
+  status = internal_nis_getnetent_r (net, buffer, buflen, errnop, herrnop);
 
   __libc_lock_unlock (lock);
 
@@ -159,8 +161,8 @@ _nss_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_getnetbyname_r (const char *name, struct netent *net,
-			 char *buffer, size_t buflen, int *herrnop)
+_nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
+			 size_t buflen, int *errnop, int *herrnop)
 {
   enum nss_status retval;
   struct parser_data *data = (void *) buffer;
@@ -184,7 +186,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
     {
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
-	  __set_errno (EAGAIN);
+	  *errnop = errno;
 	  *herrnop = NETDB_INTERNAL;
 	}
       return retval;
@@ -193,7 +195,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       *herrnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
@@ -204,7 +206,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_netent (p, net, data, buflen);
+  parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
 
   if (parse_res < 1)
     {
@@ -220,7 +222,8 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net,
 
 enum nss_status
 _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
-			 char *buffer, size_t buflen, int *herrnop)
+			 char *buffer, size_t buflen, int *errnop,
+			 int *herrnop)
 {
   struct parser_data *data = (void *) buffer;
   char *domain;
@@ -264,7 +267,7 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 	    else
 	      {
 		if (retval == NSS_STATUS_TRYAGAIN)
-		  __set_errno (EAGAIN);
+		  *errnop = errno;
 		return retval;
 	      }
 	  }
@@ -272,7 +275,7 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
       if ((size_t) (len + 1) > buflen)
 	{
 	  free (result);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  *herrnop = NETDB_INTERNAL;
 	  return NSS_STATUS_TRYAGAIN;
 	}
@@ -283,8 +286,7 @@ _nss_nis_getnetbyaddr_r (unsigned long addr, int type, struct netent *net,
 	  ++p;
 	free (result);
 
-	parse_res = _nss_files_parse_netent (p, net, data, buflen);
-
+	parse_res = _nss_files_parse_netent (p, net, data, buflen, errnop);
 
 	if (parse_res < 1)
 	  {

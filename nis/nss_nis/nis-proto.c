@@ -136,7 +136,7 @@ _nss_nis_endprotoent (void)
 
 static enum nss_status
 internal_nis_getprotoent_r (struct protoent *proto,
-			    char *buffer, size_t buflen)
+			    char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   int parse_res;
@@ -156,24 +156,25 @@ internal_nis_getprotoent_r (struct protoent *proto,
       while (isspace (*p))
         ++p;
 
-      if ((parse_res = _nss_files_parse_protoent (p, proto, data, 
-						  buflen)) == -1)
+      parse_res = _nss_files_parse_protoent (p, proto, data, buflen, errnop);
+      if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
       next = next->next;
     }
   while (!parse_res);
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
-_nss_nis_getprotoent_r (struct protoent *proto, char *buffer, size_t buflen)
+_nss_nis_getprotoent_r (struct protoent *proto, char *buffer, size_t buflen,
+			int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getprotoent_r (proto, buffer, buflen);
+  status = internal_nis_getprotoent_r (proto, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -182,7 +183,7 @@ _nss_nis_getprotoent_r (struct protoent *proto, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -204,14 +205,14 @@ _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -221,7 +222,8 @@ _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
     ++p;
   free (result);
 
-  if ((parse_res = _nss_files_parse_protoent (p, proto, data, buflen)) == -1)
+  parse_res = _nss_files_parse_protoent (p, proto, data, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
 
   if (parse_res)
@@ -232,7 +234,7 @@ _nss_nis_getprotobyname_r (const char *name, struct protoent *proto,
 
 enum nss_status
 _nss_nis_getprotobynumber_r (int number, struct protoent *proto,
-			     char *buffer, size_t buflen)
+			     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -251,14 +253,14 @@ _nss_nis_getprotobynumber_r (int number, struct protoent *proto,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -268,7 +270,8 @@ _nss_nis_getprotobynumber_r (int number, struct protoent *proto,
     ++p;
   free (result);
 
-  if ((parse_res = _nss_files_parse_protoent (p, proto, data, buflen)) == -1)
+  parse_res = _nss_files_parse_protoent (p, proto, data, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
 
   if (parse_res)

@@ -17,12 +17,36 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
 
+extern ssize_t __syscall_pread64 (int fd, void *buf, size_t count,
+				  off_t offset_hi, off_t offset_lo);
+
+static ssize_t __emulate_pread (int fd, void *buf, size_t count,
+				off_t offset) internal_function;
+
+
 ssize_t
-__pread (int fd, void *buf, size_t nbytes, off_t offset)
+__pread (fd, buf, count, offset)
+     int fd;
+     void *buf;
+     size_t count;
+     off_t offset;
 {
-  return __pread64 (fd, buf, nbytes, (off64_t) offset);
+  ssize_t result;
+
+  /* First try the syscall.  */
+  result = __syscall_pread64 (fd, buf, count, 0, offset);
+  if (result == -1 && errno == ENOSYS)
+    /* No system call available.  Use the emulation.  */
+    result = __emulate_pread (fd, buf, count, offset);
+
+  return result;
 }
 
 weak_alias (__pread, pread)
+
+#define __pread(fd, buf, count, offset) \
+     static internal_function __emulate_pread (fd, buf, count, offset)
+#include <sysdeps/posix/pread.c>

@@ -692,6 +692,8 @@ endif
 # for now.
 ifneq (,$(findstring linuxthreads,$(add-ons)))
 shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so
+# Yes, we can compile librt.
+rt = rt
 endif
 
 endif # build-shared

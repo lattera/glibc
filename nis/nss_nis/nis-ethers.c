@@ -143,7 +143,8 @@ _nss_nis_endetherent (void)
 }
 
 static enum nss_status
-internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
+internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen,
+			    int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   int parse_res;
@@ -163,23 +164,25 @@ internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
       while (isspace (*p))
         ++p;
 
-      if ((parse_res = _nss_files_parse_etherent (p, eth, data, buflen)) == -1)
+      parse_res = _nss_files_parse_etherent (p, eth, data, buflen, errnop);
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       next = next->next;
     }
   while (!parse_res);
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
 enum nss_status
-_nss_nis_getetherent_r (struct ether *result, char *buffer, size_t buflen)
+_nss_nis_getetherent_r (struct ether *result, char *buffer, size_t buflen,
+			int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getetherent_r (result, buffer, buflen);
+  status = internal_nis_getetherent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -188,7 +191,7 @@ _nss_nis_getetherent_r (struct ether *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_gethostton_r (const char *name, struct ether *eth,
-		       char *buffer, size_t buflen)
+		       char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -210,14 +213,14 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+        *errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -227,7 +230,8 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
     ++p;
   free (result);
 
-  if ((parse_res = _nss_files_parse_etherent (p, eth, data, buflen)) == -1)
+  parse_res = _nss_files_parse_etherent (p, eth, data, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
 
   if (!parse_res)
@@ -238,7 +242,7 @@ _nss_nis_gethostton_r (const char *name, struct ether *eth,
 
 enum nss_status
 _nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
-		       char *buffer, size_t buflen)
+		       char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -269,14 +273,14 @@ _nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+        *errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -286,7 +290,8 @@ _nss_nis_getntohost_r (struct ether_addr *addr, struct ether *eth,
     ++p;
   free (result);
 
-  if ((parse_res = _nss_files_parse_etherent (p, eth, data, buflen)) == -1)
+  parse_res = _nss_files_parse_etherent (p, eth, data, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
 
   if (!parse_res)

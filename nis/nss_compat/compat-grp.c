@@ -225,7 +225,7 @@ _nss_compat_endgrent (void)
 
 static enum nss_status
 getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
-		   size_t buflen)
+		   size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   char *domain;
@@ -286,13 +286,14 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
       while (isspace (*p))
 	++p;
 
-      if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
+      parse_res = _nss_files_parse_grent (p, result, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  free (ent->oldkey);
 	  ent->oldkey = save_oldkey;
 	  ent->oldkeylen = save_oldlen;
 	  ent->nis_first = save_nis_first;
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
@@ -312,7 +313,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 
 static enum nss_status
 getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
-                       size_t buflen)
+                       size_t buflen, int *errnop)
 {
   int parse_res;
 
@@ -347,13 +348,14 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
 	      return niserr2nss (ent->result->status);
             }
         }
-      if ((parse_res = _nss_nisplus_parse_grent (ent->result, 0, result,
-						 buffer, buflen)) == -1)
+      parse_res = _nss_nisplus_parse_grent (ent->result, 0, result,
+					    buffer, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (ent->result);
 	  ent->result = save_oldres;
 	  ent->nis_first = save_nis_first;
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
@@ -374,7 +376,7 @@ getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
 /* This function handle the +group entrys in /etc/group */
 static enum nss_status
 getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
-		    size_t buflen)
+		    size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   int parse_res;
@@ -393,11 +395,12 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
           nis_freeresult (res);
           return status;
         }
-      if ((parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer,
-						 buflen)) == -1)
+      parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer, buflen,
+					    errnop);
+      if (parse_res == -1)
 	{
-	  __set_errno (ERANGE);
 	  nis_freeresult (res);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       nis_freeresult (res);
@@ -408,21 +411,25 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (yp_match (domain, "group.byname", name, strlen (name),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       p = strncpy (buffer, outval,
                    buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
       free (outval);
       while (isspace (*p))
         p++;
-      if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
-	{
-	  __set_errno (ERANGE);
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      parse_res = _nss_files_parse_grent (p, result, data, buflen, errnop);
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
     }
 
   if (parse_res)
@@ -434,7 +441,7 @@ getgrnam_plusgroup (const char *name, struct group *result, char *buffer,
 
 static enum nss_status
 getgrent_next_file (struct group *result, ent_t *ent,
-		    char *buffer, size_t buflen)
+		    char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   while (1)
@@ -453,7 +460,8 @@ getgrent_next_file (struct group *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
-		  __set_errno (ERANGE);
+		  fsetpos (ent->stream, &pos);
+		  *errnop = ERANGE;
 		  return NSS_STATUS_TRYAGAIN;
 		}
 	    }
@@ -468,13 +476,14 @@ getgrent_next_file (struct group *result, ent_t *ent,
       while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
+						   errnop)));
 
       if (parse_res == -1)
 	{
 	  /* The parser ran out of space.  */
 	  fsetpos (ent->stream, &pos);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -500,14 +509,22 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	     /etc/group */
 	  blacklist_store_name (&result->gr_name[1], ent);
 	  status = getgrnam_plusgroup (&result->gr_name[1], result, buffer,
-				       buflen);
+				       buflen, errnop);
           if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
             break;
           else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
               continue;
             else
-              return status;
+	      {
+		if (status == NSS_STATUS_TRYAGAIN)
+		  {
+		    /* The parser ran out of space.  */
+		    fsetpos (ent->stream, &pos);
+		    *errnop = ERANGE;
+		  }
+		return status;
+	      }
 	}
 
       /* +:... */
@@ -517,9 +534,9 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  ent->nis_first = TRUE;
 
 	  if (use_nisplus)
-	    return getgrent_next_nisplus (result, ent, buffer, buflen);
+	    return getgrent_next_nisplus (result, ent, buffer, buflen, errnop);
 	  else
-	    return getgrent_next_nis (result, ent, buffer, buflen);
+	    return getgrent_next_nis (result, ent, buffer, buflen, errnop);
 	}
     }
 
@@ -529,21 +546,22 @@ getgrent_next_file (struct group *result, ent_t *ent,
 
 static enum nss_status
 internal_getgrent_r (struct group *gr, ent_t *ent, char *buffer,
-		     size_t buflen)
+		     size_t buflen, int *errnop)
 {
   if (ent->nis)
     {
       if (use_nisplus)
-	return getgrent_next_nisplus (gr, ent, buffer, buflen);
+	return getgrent_next_nisplus (gr, ent, buffer, buflen, errnop);
       else
-	return getgrent_next_nis (gr, ent, buffer, buflen);
+	return getgrent_next_nis (gr, ent, buffer, buflen, errnop);
     }
   else
-    return getgrent_next_file (gr, ent, buffer, buflen);
+    return getgrent_next_file (gr, ent, buffer, buflen, errnop);
 }
 
 enum nss_status
-_nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen)
+_nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen,
+			int *errnop)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
@@ -554,7 +572,7 @@ _nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen)
     status = internal_setgrent (&ext_ent);
 
   if (status == NSS_STATUS_SUCCESS)
-    status = internal_getgrent_r (grp, &ext_ent, buffer, buflen);
+    status = internal_getgrent_r (grp, &ext_ent, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -564,7 +582,7 @@ _nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen)
 /* Searches in /etc/group and the NIS/NIS+ map for a special group */
 static enum nss_status
 internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   while (1)
@@ -583,7 +601,8 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
-		  __set_errno (ERANGE);
+		  fsetpos (ent->stream, &pos);
+		  *errnop = ERANGE;
 		  return NSS_STATUS_TRYAGAIN;
 		}
 	    }
@@ -598,13 +617,14 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
       while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
+						   errnop)));
 
       if (parse_res == -1)
 	{
 	  /* The parser ran out of space.  */
 	  fsetpos (ent->stream, &pos);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -618,8 +638,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	}
 
       /* -group */
-      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0')
 	{
 	  if (strcmp (&result->gr_name[1], name) == 0)
 	    return NSS_STATUS_NOTFOUND;
@@ -628,14 +647,14 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	}
 
       /* +group */
-      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0')
 	{
 	  if (strcmp (name, &result->gr_name[1]) == 0)
 	    {
 	      enum nss_status status;
 
-	      status = getgrnam_plusgroup (name, result, buffer, buflen);
+	      status = getgrnam_plusgroup (name, result, buffer, buflen,
+					   errnop);
 	      if (status == NSS_STATUS_RETURN)
 		/* We couldn't parse the entry */
 		continue;
@@ -648,7 +667,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 	{
 	  enum nss_status status;
 
-	  status = getgrnam_plusgroup (name, result, buffer, buflen);
+	  status = getgrnam_plusgroup (name, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN)
 	    /* We couldn't parse the entry */
 	    continue;
@@ -662,7 +681,7 @@ internal_getgrnam_r (const char *name, struct group *result, ent_t *ent,
 
 enum nss_status
 _nss_compat_getgrnam_r (const char *name, struct group *grp,
-			char *buffer, size_t buflen)
+			char *buffer, size_t buflen, int *errnop)
 {
   ent_t ent = {0, 0, NULL, 0, NULL, NULL, {NULL, 0, 0}};
   enum nss_status status;
@@ -679,7 +698,7 @@ _nss_compat_getgrnam_r (const char *name, struct group *grp,
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  status = internal_getgrnam_r (name, grp, &ent, buffer, buflen);
+  status = internal_getgrnam_r (name, grp, &ent, buffer, buflen, errnop);
 
   internal_endgrent (&ent);
 
@@ -689,7 +708,7 @@ _nss_compat_getgrnam_r (const char *name, struct group *grp,
 /* This function handle the + entry in /etc/group */
 static enum nss_status
 getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
-		    size_t buflen)
+		    size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   int parse_res;
@@ -709,10 +728,10 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
           return status;
         }
       if ((parse_res = _nss_nisplus_parse_grent (res, 0, result, buffer,
-						 buflen)) == -1)
+						 buflen, errnop)) == -1)
 	{
-	  __set_errno (ERANGE);
 	  nis_freeresult (res);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       nis_freeresult (res);
@@ -724,23 +743,27 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       snprintf (buf, sizeof (buf), "%d", gid);
 
       if (yp_match (domain, "group.bygid", buf, strlen (buf),
 		    &outval, &outvallen) != YPERR_SUCCESS)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       p = strncpy (buffer, outval,
                    buflen < (size_t) outvallen ? buflen : (size_t) outvallen);
       free (outval);
       while (isspace (*p))
         p++;
-      if ((parse_res = _nss_files_parse_grent (p, result, data, buflen)) == -1)
-	{
-	  __set_errno (ERANGE);
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      parse_res = _nss_files_parse_grent (p, result, data, buflen, errnop);
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
     }
 
   if (parse_res)
@@ -753,7 +776,7 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
 /* Searches in /etc/group and the NIS/NIS+ map for a special group id */
 static enum nss_status
 internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   while (1)
@@ -772,7 +795,8 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 		return NSS_STATUS_NOTFOUND;
 	      else
 		{
-		  __set_errno (ERANGE);
+		  fsetpos (ent->stream, &pos);
+		  *errnop = ERANGE;
 		  return NSS_STATUS_TRYAGAIN;
 		}
 	    }
@@ -787,13 +811,14 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines. */
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen)));
+	     !(parse_res = _nss_files_parse_grent (p, result, data, buflen,
+						   errnop)));
 
       if (parse_res == -1)
 	{
 	  /* The parser ran out of space.  */
 	  fsetpos (ent->stream, &pos);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -807,16 +832,14 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	}
 
       /* -group */
-      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '-' && result->gr_name[1] != '\0')
 	{
           blacklist_store_name (&result->gr_name[1], ent);
           continue;
 	}
 
       /* +group */
-      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
-	  && result->gr_name[1] != '@')
+      if (result->gr_name[0] == '+' && result->gr_name[1] != '\0')
 	{
 	  enum nss_status status;
 
@@ -824,7 +847,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
              /etc/group */
           blacklist_store_name (&result->gr_name[1], ent);
 	  status = getgrnam_plusgroup (&result->gr_name[1], result, buffer,
-				      buflen);
+				      buflen, errnop);
 	  if (status == NSS_STATUS_SUCCESS && result->gr_gid == gid)
 	    break;
 	  else
@@ -835,7 +858,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 	{
 	  enum nss_status status;
 
-	  status = getgrgid_plusgroup (gid, result, buffer, buflen);
+	  status = getgrgid_plusgroup (gid, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
 	    return NSS_STATUS_NOTFOUND;
 	  else
@@ -848,7 +871,7 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
 
 enum nss_status
 _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
-			char *buffer, size_t buflen)
+			char *buffer, size_t buflen, int *errnop)
 {
   ent_t ent = {0, 0, NULL, 0, NULL, NULL, {NULL, 0, 0}};
   enum nss_status status;
@@ -862,7 +885,7 @@ _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  status = internal_getgrgid_r (gid, grp, &ent, buffer, buflen);
+  status = internal_getgrgid_r (gid, grp, &ent, buffer, buflen, errnop);
 
   internal_endgrent (&ent);
 

@@ -47,19 +47,24 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   /* First try the RT signals.  */
   if (__libc_have_rt_sigs)
     {
-      struct sigaction nact;
+      struct sigaction nact, *nactp;
 
-      nact.sa_handler = act->sa_handler;
-      memcpy (&nact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-      nact.sa_flags = act->sa_flags;
+      if (act)
+	{
+	  nact.sa_handler = act->sa_handler;
+	  memcpy (&nact.sa_mask, &act->sa_mask, sizeof (sigset_t));
+	  nact.sa_flags = act->sa_flags;
 
-      nact.sa_restorer = ((act->sa_flags & SA_NOMASK)
-			  ? &&restore_nomask : &&restore);
+	  nact.sa_restorer = ((act->sa_flags & SA_NOMASK)
+			      ? &&restore_nomask : &&restore);
+	  nactp = &nact;
+	}
+      else
+	nactp = NULL;
 
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      result = __syscall_rt_sigaction (sig, &nact, oact,
-				       _NSIG / (8 * sizeof (long int)));
+      result = __syscall_rt_sigaction (sig, nactp, oact, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;

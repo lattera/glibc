@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <shadow.h>
 #include <stdio.h>
 
@@ -28,7 +29,7 @@
 #define	EXTERN_PARSER	1
 struct spent_data {};
 
-#include "../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 
 
 /* Read one shadow entry from the given stream.  */
@@ -53,7 +54,8 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
     } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (buffer, (void *) resbuf, NULL, 0));
+	     ! parse_line (buffer, (void *) resbuf, NULL, 0,
+			   __errno_location ()));
 
   *result = resbuf;
   return 0;

@@ -81,13 +81,14 @@ _nss_hesiod_endpwent (void)
 
 static enum nss_status
 lookup (const char *name, const char *type, struct passwd *pwd,
-	char *buffer, size_t buflen)
+	char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status;
   struct parser_data *data = (void *) buffer;
   size_t linebuflen;
   char **list;
   int parse_res;
+  size_t len;
 
   status = internal_setpwent ();
   if (status != NSS_STATUS_SUCCESS)
@@ -98,17 +99,18 @@ lookup (const char *name, const char *type, struct passwd *pwd,
     return errno == ENOENT ? NSS_STATUS_NOTFOUND : NSS_STATUS_UNAVAIL;
 
   linebuflen = buffer + buflen - data->linebuffer;
-  if (linebuflen < strlen (*list) + 1)
+  len = strlen (*list) + 1;
+  if (linebuflen < len)
     {
       hesiod_free_list (context, list);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
-  strcpy (data->linebuffer, *list);
+  memcpy (data->linebuffer, *list, len);
   hesiod_free_list (context, list);
 
-  parse_res = _nss_files_parse_pwent (buffer, pwd, data, buflen);
+  parse_res = _nss_files_parse_pwent (buffer, pwd, data, buflen, errnop);
   if (parse_res < 1)
     return parse_res == -1 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_NOTFOUND;
 
@@ -117,13 +119,13 @@ lookup (const char *name, const char *type, struct passwd *pwd,
 
 enum nss_status
 _nss_hesiod_getpwnam_r (const char *name, struct passwd *pwd,
-			char *buffer, size_t buflen)
+			char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = lookup (name, "passwd", pwd, buffer, buflen);
+  status = lookup (name, "passwd", pwd, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -132,7 +134,7 @@ _nss_hesiod_getpwnam_r (const char *name, struct passwd *pwd,
 
 enum nss_status
 _nss_hesiod_getpwuid_r (uid_t uid, struct passwd *pwd,
-			char *buffer, size_t buflen)
+			char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status = NSS_STATUS_UNAVAIL;
   char uidstr[21];	/* We will probably never have a gid_t with more
@@ -142,7 +144,7 @@ _nss_hesiod_getpwuid_r (uid_t uid, struct passwd *pwd,
 
   __libc_lock_lock (lock);
 
-  status = lookup (uidstr, "uid", pwd, buffer, buflen);
+  status = lookup (uidstr, "uid", pwd, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 

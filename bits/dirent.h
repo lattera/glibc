@@ -26,3 +26,12 @@ struct dirent
     char d_name[1];		/* Variable length.  */
     int d_fileno;
   };
+
+#ifdef __USE_LARGEFILE64
+struct dirent64
+  {
+    char d_name[1];		/* Variable length.  */
+    int d_fileno;
+  };
+#endif
+

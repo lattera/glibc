@@ -78,7 +78,8 @@ _nss_nis_endpwent (void)
 }
 
 static enum nss_status
-internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
+internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen,
+			 int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   char *domain, *result, *outkey;
@@ -104,14 +105,14 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
       if (retval != NSS_STATUS_SUCCESS)
         {
           if (retval == NSS_STATUS_TRYAGAIN)
-            __set_errno (EAGAIN);
+            *errnop = errno;
           return retval;
         }
 
       if ((size_t) (len + 1) > buflen)
         {
           free (result);
-          __set_errno (ERANGE);
+	  *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
 
@@ -121,9 +122,11 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      if ((parse_res = _nss_files_parse_pwent (p, pwd, data, buflen)) == -1)
+      parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  free (outkey);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -138,13 +141,14 @@ internal_nis_getpwent_r (struct passwd *pwd, char *buffer, size_t buflen)
 }
 
 enum nss_status
-_nss_nis_getpwent_r (struct passwd *result, char *buffer, size_t buflen)
+_nss_nis_getpwent_r (struct passwd *result, char *buffer, size_t buflen,
+		     int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getpwent_r (result, buffer, buflen);
+  status = internal_nis_getpwent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -153,7 +157,7 @@ _nss_nis_getpwent_r (struct passwd *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -175,14 +179,14 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -192,8 +196,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
-
+  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
   if (parse_res < 1)
     {
       if (parse_res == -1)
@@ -207,7 +210,7 @@ _nss_nis_getpwnam_r (const char *name, struct passwd *pwd,
 
 enum nss_status
 _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -226,14 +229,14 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -243,8 +246,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen);
-
+  parse_res = _nss_files_parse_pwent (p, pwd, data, buflen, errnop);
   if (parse_res < 1)
     {
       if (parse_res == -1)

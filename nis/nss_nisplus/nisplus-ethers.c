@@ -53,7 +53,7 @@ struct etherent_data {};
 
 static int
 _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   char *p = buffer;
   size_t room_left = buflen;
@@ -61,18 +61,18 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_len != 1 ||
-      __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ ||
-      strcmp(NIS_RES_OBJECT (result)->EN_data.en_type,
-             "ethers_tbl") != 0 ||
-      NIS_RES_OBJECT(result)->EN_data.en_cols.en_cols_len < 2)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || result->objects.objects_len != 1
+      || __type_of (NIS_RES_OBJECT (result)) != NIS_ENTRY_OBJ
+      || strcmp (NIS_RES_OBJECT (result)->EN_data.en_type,
+		 "ethers_tbl") != 0
+      || NIS_RES_OBJECT (result)->EN_data.en_cols.en_cols_len < 2)
     return 0;
 
   /* Generate the ether entry format and use the normal parser */
   if (NISENTRYLEN (0, 0, result) +1 > room_left)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
   strncpy (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
@@ -85,7 +85,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
 }
 
 static enum nss_status
-_nss_create_tablename (void)
+_nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -96,7 +96,10 @@ _nss_create_tablename (void)
       p = __stpcpy (p, nis_local_directory ());
       tablename_val = __strdup (buf);
       if (tablename_val == NULL)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       tablename_len = strlen (tablename_val);
     }
   return NSS_STATUS_SUCCESS;
@@ -107,6 +110,7 @@ enum nss_status
 _nss_nisplus_setetherent (void)
 {
   enum nss_status status;
+  int err;
 
   status = NSS_STATUS_SUCCESS;
 
@@ -116,7 +120,7 @@ _nss_nisplus_setetherent (void)
     nis_freeresult (result);
   result = NULL;
 
-  if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
+  if (_nss_create_tablename (&err) != NSS_STATUS_SUCCESS)
     status = NSS_STATUS_UNAVAIL;
 
   __libc_lock_unlock (lock);
@@ -140,13 +144,17 @@ _nss_nisplus_endetherent (void)
 
 static enum nss_status
 internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
-				size_t buflen)
+				size_t buflen, int *errnop)
 {
   int parse_res;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   /* Get the next entry until we found a correct one. */
   do
@@ -156,7 +164,7 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
       if (result == NULL)
 	{
 	  saved_result = NULL;
-	  result = nis_first_entry(tablename_val);
+	  result = nis_first_entry (tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
 	}
@@ -174,10 +182,12 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_etherent (result, ether, buffer,
-						    buflen)) == -1)
+      parse_res = _nss_nisplus_parse_etherent (result, ether, buffer,
+					       buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (result);
+	  *errnop = ERANGE;
 	  result = saved_result;
 	  return NSS_STATUS_TRYAGAIN;
 	}
@@ -194,13 +204,13 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 
 enum nss_status
 _nss_nisplus_getetherent_r (struct etherent *result, char *buffer,
-			    size_t buflen)
+			    size_t buflen, int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nisplus_getetherent_r (result, buffer, buflen);
+  status = internal_nisplus_getetherent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -209,22 +219,26 @@ _nss_nisplus_getetherent_r (struct etherent *result, char *buffer,
 
 enum nss_status
 _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   int parse_res;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   if (name != NULL)
     {
       nis_result *result;
       char buf[strlen (name) + 40 + tablename_len];
 
-      sprintf(buf, "[name=%s],%s", name, tablename_val);
+      sprintf (buf, "[name=%s],%s", name, tablename_val);
 
-      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
@@ -233,10 +247,12 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 	  return status;
 	}
 
-      if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
-						    buflen)) == -1)
+      parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
+					       buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (result);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -249,15 +265,19 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 enum nss_status
 _nss_nisplus_getntohost_r (const struct ether_addr *addr,
 			   struct etherent *eth,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   if (addr == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
   else
@@ -267,12 +287,12 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
       char buf[255 + tablename_len];
 
       memset (&buf, '\0', sizeof (buf));
-      sprintf(buf, "[addr=%x:%x:%x:%x:%x:%x],ethers.org_dir",
-	      addr->ether_addr_octet[0], addr->ether_addr_octet[1],
-	      addr->ether_addr_octet[2], addr->ether_addr_octet[3],
-	      addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
+      sprintf (buf, "[addr=%x:%x:%x:%x:%x:%x],ethers.org_dir",
+	       addr->ether_addr_octet[0], addr->ether_addr_octet[1],
+	       addr->ether_addr_octet[2], addr->ether_addr_octet[3],
+	       addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
 
-      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
@@ -281,10 +301,12 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
 	  return status;
 	}
 
-      if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
-						    buflen)) == -1)
+      parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
+					       buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (result);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -36,7 +36,7 @@ static int oldkeylen = 0;
 
 static int
 _nss_nis_parse_aliasent (const char *key, char *alias, struct aliasent *result,
-			 char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer + strlen (alias) + 1;
   size_t room_left =
@@ -53,7 +53,7 @@ _nss_nis_parse_aliasent (const char *key, char *alias, struct aliasent *result,
     {
       /* The line is too long for our buffer.  */
     no_more_room:
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
 
@@ -138,7 +138,7 @@ _nss_nis_endaliasent (void)
 
 static enum nss_status
 internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
-			    size_t buflen)
+			    size_t buflen, int *errnop)
 {
   char *domain;
   char *result;
@@ -168,14 +168,14 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
       if (retval != NSS_STATUS_SUCCESS)
 	{
 	  if (retval == NSS_STATUS_TRYAGAIN)
-            __set_errno (EAGAIN);
+            *errnop = errno;
           return retval;
         }
 
       if ((size_t) (len + 1) > buflen)
         {
 	  free (result);
-          __set_errno (ERANGE);
+          *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
       p = strncpy (buffer, result, len);
@@ -184,11 +184,12 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
         ++p;
       free (result);
 
-      if ((parse_res = _nss_nis_parse_aliasent (outkey, p, alias, 
-						buffer, buflen)) == -1)
+      parse_res = _nss_nis_parse_aliasent (outkey, p, alias, buffer, buflen,
+					   errnop);
+      if (parse_res == -1)
 	{
 	  free (outkey);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -203,13 +204,14 @@ internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
 }
 
 enum nss_status
-_nss_nis_getaliasent_r (struct aliasent *alias, char *buffer, size_t buflen)
+_nss_nis_getaliasent_r (struct aliasent *alias, char *buffer, size_t buflen,
+			int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getaliasent_r (alias, buffer, buflen);
+  status = internal_nis_getaliasent_r (alias, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -218,7 +220,7 @@ _nss_nis_getaliasent_r (struct aliasent *alias, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status retval;
   int parse_res;
@@ -241,14 +243,14 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-	__set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -259,10 +261,10 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   free (result);
 
   alias->alias_local = 0;
-  if ((parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, 
-					    buflen)) == -1)
+  parse_res = _nss_nis_parse_aliasent (name, p, alias, buffer, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
-  
+
   if (parse_res)
     return NSS_STATUS_SUCCESS;
   else

@@ -16,16 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <unistd.h>
 
 /* Sleep USECONDS microseconds, or until a previously set timer goes off.  */
-unsigned int
+void
 usleep (useconds)
      unsigned int useconds;
 {
-  __set_errno (ENOSYS);
-  return -1;
 }
 
 stub_warning (usleep)

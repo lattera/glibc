@@ -40,7 +40,7 @@ static char *cursor = NULL;;
 
 extern enum nss_status
 _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
-			 char *buffer, size_t buflen);
+			 char *buffer, size_t buflen, int *errnop);
 
 enum nss_status
 _nss_nis_setnetgrent (char *group)
@@ -111,7 +111,8 @@ _nss_nis_endnetgrent (void)
 }
 
 enum nss_status
-_nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen)
+_nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,
+			int *errnop)
 {
   enum nss_status status;
 
@@ -120,7 +121,7 @@ _nss_nis_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen)
 
   __libc_lock_lock (lock);
 
-  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen);
+  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 

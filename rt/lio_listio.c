@@ -20,9 +20,18 @@
 
 #include <aio.h>
 #include <errno.h>
-#include <semaphore.h>
+#include <stdlib.h>
 
 #include "aio_misc.h"
+
+
+/* We need this special structure to handle asynchronous I/O.  */
+struct async_waitlist
+  {
+    int counter;
+    struct sigevent sigev;
+    struct waitlist list[0];
+  };
 
 
 int
@@ -32,8 +41,9 @@ lio_listio (mode, list, nent, sig)
      int nent;
      struct sigevent *sig;
 {
+  struct requestlist *requests[nent];
   int cnt;
-  int total = 0;
+  volatile int total = 0;
   int result = 0;
 
   /* Check arguments.  */
@@ -43,26 +53,100 @@ lio_listio (mode, list, nent, sig)
       return -1;
     }
 
-  /* Request the semaphore.  */
-  sem_wait (&__aio_requests_sema);
+  /* Request the mutex.  */
+  pthread_mutex_lock (&__aio_requests_mutex);
 
   /* Now we can enqueue all requests.  Since we already acquired the
-     semaphore the enqueue function need not do this.  */
+     mutex the enqueue function need not do this.  */
   for (cnt = 0; cnt < nent; ++cnt)
     if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
-      if (__aio_enqueue_request ((aiocb_union *) list[cnt],
-				 list[cnt]->aio_lio_opcode, 0) >= 0)
-	/* Successfully enqueued.  */
-	++total;
+      {
+	requests[cnt] =  __aio_enqueue_request ((aiocb_union *) list[cnt],
+						list[cnt]->aio_lio_opcode);
+
+	if (requests[cnt] != NULL)
+	  /* Successfully enqueued.  */
+	  ++total;
+	else
+	  /* Signal that we've seen an error.  `errno' and the error code
+	     of the aiocb will tell more.  */
+	  result = -1;
+      }
+
+  if (total == 0)
+    {
+      /* We don't have anything to do except signalling if we work
+	 asynchronously.  */
+      if (mode == LIO_NOWAIT)
+	__aio_notify_only (sig);
+    }
+  else if (mode == LIO_WAIT)
+    {
+      pthread_cond_t cond;
+      struct waitlist waitlist[nent];
+      int oldstate;
+
+      total = 0;
+      for (cnt = 0; cnt < nent; ++cnt)
+	if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP
+	    && requests[cnt] != NULL)
+	  {
+	    waitlist[cnt].cond = &cond;
+	    waitlist[cnt].next = requests[cnt]->waiting;
+	    waitlist[cnt].counterp = NULL;
+	    waitlist[cnt].sigevp = NULL;
+	    requests[cnt]->waiting = &waitlist[cnt];
+	    ++total;
+	  }
+
+      /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
+	 points we must be careful.  We added entries to the waiting lists
+	 which we must remove.  So defer cancelation for now.  */
+      pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
+
+      while (total > 0)
+	if (pthread_cond_wait (&cond, &__aio_requests_mutex) == 0)
+	  --total;
+
+      /* Now it's time to restore the cancelation state.  */
+      pthread_setcancelstate (oldstate, NULL);
+    }
+  else
+    {
+      struct async_waitlist *waitlist;
+
+      waitlist = (struct async_waitlist *)
+	malloc (sizeof (struct async_waitlist)
+		+ (nent * sizeof (struct waitlist)));
+
+      if (waitlist == NULL)
+	{
+	  __set_errno (EAGAIN);
+	  result = -1;
+	}
       else
-	/* Signal that we've seen an error.  `errno' and the error code
-	   of the aiocb will tell more.  */
-	result = -1;
+	{
+	  total = 0;
 
+	  for (cnt = 0; cnt < nent; ++cnt)
+	    if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP
+		&& requests[cnt] != NULL)
+	      {
+		waitlist->list[cnt].cond = NULL;
+		waitlist->list[cnt].next = requests[cnt]->waiting;
+		waitlist->list[cnt].counterp = &waitlist->counter;
+		waitlist->list[cnt].sigevp = &waitlist->sigev;
+		requests[cnt]->waiting = &waitlist->list[cnt];
+		++total;
+	      }
 
+	  waitlist->counter = total;
+	  waitlist->sigev = *sig;
+	}
+    }
 
-  /* Release the semaphore.  */
-  sem_post (&__aio_requests_sema);
+  /* Release the mutex.  */
+  pthread_mutex_unlock (&__aio_requests_mutex);
 
   return result;
 }

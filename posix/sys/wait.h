@@ -51,7 +51,7 @@ __BEGIN_DECLS
    allowed without complaint.  __WAIT_STATUS_DEFN is the type used in
    the actual function definitions.  */
 
-# if !defined __GNUC__ || __GNUC__ < 2
+# if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
 #  define __WAIT_STATUS		__ptr_t
 #  define __WAIT_STATUS_DEFN	__ptr_t
 # else

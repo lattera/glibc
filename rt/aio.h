@@ -43,8 +43,6 @@ struct aiocb
   struct sigevent aio_sigevent;	/* Signal number and value.  */
 
   /* Internal members.  */
-  struct aiocb *__last_fd;
-  struct aiocb *__next_fd;
   struct aiocb *__next_prio;
   int __abs_prio;
   int __policy;
@@ -53,10 +51,11 @@ struct aiocb
 
 #ifndef __USE_FILE_OFFSET64
   __off_t aio_offset;		/* File offset.  */
+  char __pad[sizeof (__off64_t) - sizeof (__off_t)];
 #else
   __off64_t aio_offset;		/* File offset.  */
 #endif
-  int __unused[32];
+  char __unused[32];
 };
 
 /* The same for the 64bit offsets.  */
@@ -71,17 +70,30 @@ struct aiocb64
   struct sigevent aio_sigevent;	/* Signal number and value.  */
 
   /* Internal members.  */
-  struct aiocb64 *__last_fd;
-  struct aiocb64 *__next_fd;
-  struct aiocb64 *__next_prio;
   int __abs_prio;
   int __policy;
   int __error_code;
   __ssize_t __return_value;
 
   __off64_t aio_offset;		/* File offset.  */
-  int __unused[32];
+  char __unused[32];
 };
+#endif
+
+
+#ifdef __USE_GNU
+/* To customize the implementation one can use the following struct.
+   This implementation follows the one in Irix.  */
+struct aioinit
+  {
+    int aio_threads;		/* Maximal number of threads.  */
+    int aio_num;		/* Number of expected simultanious requests. */
+    int aio_locks;		/* Not used.  */
+    int aio_usedba;		/* Not used.  */
+    int aio_debug;		/* Not used.  */
+    int aio_numusers;		/* Not used.  */
+    int aio_reserved[2];
+  };
 #endif
 
 
@@ -104,12 +116,8 @@ enum
 #define LIO_READ LIO_READ
   LIO_WRITE,
 #define LIO_WRITE LIO_WRITE
-  LIO_NOP,
+  LIO_NOP
 #define LIO_NOP LIO_NOP
-  __LIO_DSYNC,
-  __LIO_SYNC,
-  __LIO_READ64 = LIO_READ | 128,
-  __LIO_WRITE64 = LIO_WRITE | 128
 };
 
 
@@ -121,6 +129,13 @@ enum
   LIO_NOWAIT
 #define LIO_NOWAIT LIO_NOWAIT
 };
+
+
+/* Allow user to specify optimization.  */
+#ifdef __USE_GNU
+extern void __aio_init __P ((__const struct aioinit *__init));
+extern void aio_init __P ((__const struct aioinit *__init));
+#endif
 
 
 /* Enqueue read request for given number of bytes and the given priority.  */

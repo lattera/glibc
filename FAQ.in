@@ -469,7 +469,7 @@ catalog files to the XPG4 form:
 ??	I have set up /etc/nis.conf, and the Linux libc 5 with NYS
 	works great.  But the glibc NIS+ doesn't seem to work.
 
-{??} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
+{TK} The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
 file for storing information about the NIS+ server and their public
 keys, because the nis.conf file does not contain all the necessary
 information.  You have to copy a NIS_COLD_START file from a Solaris
@@ -780,6 +780,7 @@ Answers were given by:
 {PB} Phil Blundell, <Philip.Blundell@pobox.com>
 {MK} Mark Kettenis, <kettenis@phys.uva.nl>
 {ZW} Zack Weinberg, <zack@rabi.phys.columbia.edu>
+{TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
 
 Local Variables:
  mode:outline

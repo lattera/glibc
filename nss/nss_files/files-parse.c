@@ -69,7 +69,7 @@ struct parser_data
 
 /* The parser is defined in a different module.  */
 extern int parse_line (char *line, struct STRUCTURE *result,
-		       struct parser_data *data, size_t datalen);
+		       struct parser_data *data, size_t datalen, int *errnop);
 
 # define LINE_PARSER(EOLSET, BODY) /* Do nothing */
 
@@ -80,7 +80,7 @@ extern int parse_line (char *line, struct STRUCTURE *result,
 # define LINE_PARSER(EOLSET, BODY)					      \
 parser_stclass int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
-	    struct parser_data *data, size_t datalen)			      \
+	    struct parser_data *data, size_t datalen, int *errnop)	      \
 {									      \
   ENTDATA_DECL (data)							      \
   char *p = strpbrk (line, EOLSET "\n");				      \
@@ -148,7 +148,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
 
 #  define TRAILING_LIST_PARSER						      \
 {									      \
-  char **list = parse_list (line, data, datalen);			      \
+  char **list = parse_list (line, data, datalen, errnop);		      \
   if (list)								      \
     result->TRAILING_LIST_MEMBER = list;				      \
   else 									      \
@@ -156,7 +156,7 @@ parse_line (char *line, struct STRUCTURE *result,			      \
 }
 
 static inline char **
-parse_list (char *line, struct parser_data *data, size_t datalen)
+parse_list (char *line, struct parser_data *data, size_t datalen, int *errnop)
 {
   char *eol, **list, **p;
 
@@ -183,7 +183,7 @@ parse_list (char *line, struct parser_data *data, size_t datalen)
       if ((size_t) ((char *) &p[1] - (char *) data) > datalen)
 	{
 	  /* We cannot fit another pointer in the buffer.  */
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NULL;
 	}
       if (*line == '\0')

@@ -38,8 +38,7 @@ __sigreturn (scp)
     {
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      int result = __syscall_rt_sigreturn (scp,
-					   _NSIG / (8 * sizeof (long int)));
+      int result = __syscall_rt_sigreturn (scp, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;

@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include "nsswitch.h"
 
 /*******************************************************************\
@@ -71,8 +72,8 @@
 
 
 /* Type of the lookup function we need here.  */
-typedef int (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *, size_t
-				H_ERRNO_PARM);
+typedef int (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *, size_t,
+				int * H_ERRNO_PARM);
 
 /* Some usages of this file might use this variable.  */
 extern struct __res_state _res;
@@ -129,7 +130,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
   while (no_more == 0)
     {
-      status = (*fct) (ADD_VARIABLES, resbuf, buffer, buflen H_ERRNO_VAR);
+      status = (*fct) (ADD_VARIABLES, resbuf, buffer, buflen,
+		       __errno_location () H_ERRNO_VAR);
 
       no_more = __nss_next (&nip, REENTRANT_NAME_STRING,
 			    (void **) &fct, status, 0);

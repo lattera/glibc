@@ -1,3 +1,202 @@
+1997-12-08 03:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Define $(rt) to rt if linuxthreads is available.
+	* Makefile (subdirs): Replace rt by $(rt).
+
+	* shlib-versions: Use version .2 for NSS modules.
+
+	* grp/fgetgrent_r.c (LINE_PARSER): Call parse_line with extra
+	argument.
+	* pwd/fgetpwent_r.c: Likewise.
+	* spwd/fgetspent_r.c: Likewise.
+	* spwd/sgetspent_r.c: Likewise.
+	* hesiod/nss_hesiod/hesiod-grp.c (lookup): Add new argument.
+	Store error number in *ERRNOP.  Little optimization.
+	* hesiod/nss_hesiod/hesiod-pwd.c: Likewise.
+	* hesiod/nss_hesiod/hesiod-service.c: Likewise.
+	* inet/getnetgrent_r.c (__internal_setnetgrent_reuse): Likewise.
+	(__internal_getnetgrent_r): New argument.
+	Call __internal_setnetgrent_reuse with new argument.
+	(__getnetgrent_r): Call __internal_getnetgrent_r with new argument.
+	* inet/netgroup.h: Add argument to prototypes.
+	* nis/nisplus-parser.h: Likewise.
+	* nis/nss_compat/compat-grp.c: Change everything to store error
+	code through provided pointer and not use errno.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-ethers.c: Likewise.
+	* nis/nss_nis/nis-grp.c: Likewise.
+	* nis/nss_nis/nis-hosts.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-publickey.c: Likewise.
+	* nis/nss_nis/nis-pwd.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/nss_nis/nis-spwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-alias.c: Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-parser.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+	* nss/nss_db/db-XXX.c: Likewise.
+	* nss/nss_db/db-alias.c: Likewise.
+	* nss/nss_db/db-netgrp.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise
+	* nss/nss_files/files-alias.c: Likewise
+	* nss/nss_files/files-netgrp.c: Likewise
+	* nss/nss_files/files-parse.c: Likewise
+	* nss/getXXbyYY_r.c: Call with __errno_location() as value for new
+	parameter of get functions.
+	* nss/getXXent_r.c: Likewise.
+
+	* localedata/tst-fmon.c: Print debug info if test fails.
+
+	* rt/Makefile (routines): Add aio_notify.
+	* rt/aio.h: Remove non-public definitions.  Add aioinit stuff.
+	* rt/aio_cancel.c: Rewrite to support lio_listio and aio_suspend.
+	* rt/aio_fsync.c: Likewise.
+	* rt/aio_misc.c: Likewise.
+	* rt/aio_misc.h: Likewise.
+	* rt/aio_read.c: Likewise.
+	* rt/aio_read64.c: Likewise.
+	* rt/aio_suspend.c: Likewise.
+	* rt/aio_write.c: Likewise.
+	* rt/aio_write64.c: Likewise.
+	* rt/lio_listio.c: Likewise.
+	* rt/lio_listio64.c: Likewise.
+	* rt/aio_notify.c: New file.
+
+	* sysdeps/generic/bits/sigset.h: Pretty print.
+
+	* sysdeps/posix/pwrite.c: Define weak alias only if function is
+	really defined as __pwrite.
+
+	* sysdeps/unix/sysv/linux/pread.c: Rewrite to use syscall directly
+	instead of pread64.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=signal]
+	(sysdep_routines): Add rt_sigpending and rt_sigreturn.
+	* sysdeps/unix/sysv/linux/sigaction.c: Use correct value for sigset_t
+	size in syscall.
+	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigreturn.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.  Take care
+	for ACT being NULL.
+	* sysdeps/unix/sysv/linux/syscalls.list: Don't mention user for
+	RT signals.
+	* sysdeps/unix/sysv/linux/i386/s_pread64.s: Return ENOSYS if
+	__NR_pread is not defined.
+	* sysdeps/unix/sysv/linux/i386/s_pwrite64.s: Return ENOSYS if
+	__NR_pwrite is not defined.
+
+1997-12-07 11:15  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: If buffer is to small, set the file
+	handle for /etc/group back in some more cases.
+	* nis/nss_compat/compat-pwd.c: If buffer is to small, set the file
+	handle for /etc/passwd back in some more cases.
+	* nis/nss_compat/compat-spwd.c: If buffer is to small, set the file
+	handle for /etc/shadow back in some more cases.
+
+1997-12-06 17:00  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/posix/sigblock.c (__sigblock): Don't check int mask
+	beyound its size.
+	* sysdeps/posix/sigsetmask.c (__sigsetmask): Ditto.
+	* sysdeps/posix/sigvec.c (convert_mask, __sigvec): Ditto.
+
+1997-12-06 04:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/wordsize-32/inttypes.h: Rewrite {str,wcs}to{i,u}max
+	handling.  Don't use macros, we need functions.  Use inline functions
+	for optimization.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	* sysdeps/wordsize-32/Makefile: Add strtoimax, stroumax, wcstoimax,
+	and wcstoumax.
+	* sysdeps/wordsize-64/Makefile: Likewise.
+	* sysdeps/wordsize-32/Dist: Likewise.
+	* sysdeps/wordsize-64/Dist: Likewise.
+	* sysdeps/wordsize-32/strtoimax.c: New file.
+	* sysdeps/wordsize-32/strtoumax.c: New file.
+	* sysdeps/wordsize-32/wcstoimax.c: New file.
+	* sysdeps/wordsize-32/wcstoumax.c: New file.
+	* sysdeps/wordsize-64/strtoimax.c: New file.
+	* sysdeps/wordsize-64/strtoumax.c: New file.
+	* sysdeps/wordsize-64/wcstoimax.c: New file.
+	* sysdeps/wordsize-64/wcstoumax.c: New file.
+
+1997-12-04 10:40  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/generic/wait3.c (__wait3): Use ANSI-style definition so
+	that transparent union works.
+	* sysdeps/generic/wait4.c (__wait4): Likewise.
+	* sysdeps/generic/wait.c (__wait): Likewise.
+
+	* sysdeps/generic/getpeername.c (getpeername): Use socklen_t not
+	size_t.
+
+	* sysdeps/generic/syscall.c (syscall): Return value and arg are
+	long, to match prototype.
+
+	* malloc/malloc.c (HAVE_MREMAP): Set to 0 for ARM, as we don't
+	have mremap() yet.
+
+	* sysdeps/generic/usleep.c (usleep): Returns void, to match prototype.
+
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: New file.
+
+	* sysdeps/generic/bits/time.h: Use __time_t not time_t.
+
+	* sysdeps/generic/bits/resource.h: Include <bits/types.h> for
+	__rlim_t.
+
+	* sysdeps/standalone/arm/bits/errno.h (ENOTTY): Added.
+
+	* sysdeps/generic/bits/dirent.h (struct dirent64): Added.
+
+	* io/sys/stat.h (S_ISLNK): Always false if we don't have
+	__S_IFLNK.
+
+	* sysdeps/standalone/close.c (_STDIO_H): Define before including
+	<bits/stdio_lim.h>.
+	* sysdeps/standalone/filedesc.h (_STDIO_H): Likewise.
+
+1997-12-06 01:09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/sys/wait.h: Don't use transparent unions in C++.
+
+1997-12-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/time.h: Add strfxtime.
+
+	* libc.map: Add tcgetsid, strcasestr, wmemrtombs, wmemrtowcs,
+	sysv_signal, strfxtime, pread64, pwrite64.
+
+1997-11-30 21:57  Richard Henderson  <rth@cygnus.com>
+
+	Alpha changes for EGCS:
+	* config.h.in (ASM_ALPHA_NG_SYMBOL_PREFIX): New entry.
+	* configure.in (libc_cv_gcc_alpha_ng_prefix): New check.
+	* sysdeps/alpha/dl-machine.h (_dl_runtime_resolve): Care for prefix.
+	(_start): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/init-first.h: Likewise.
+
 1997-12-05 00:01  Ulrich Drepper  <drepper@cygnus.com>
 
 	The kernel expects the arguments in a different order.

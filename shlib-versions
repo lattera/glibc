@@ -56,22 +56,14 @@ alpha-.*-linux.*	libresolv=2.1
 # Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
 # in nss/nsswitch.h, which determines the library names used for service
 # names given in /etc/nsswitch.conf.
-alpha-.*-linux.*	libnss_files=1.1
-alpha-.*-linux.*	libnss_dns=1.1
-alpha-.*-linux.*	libnss_db=1.1
-alpha-.*-linux.*	libnss_compat=1.1
-alpha-.*-linux.*	libnss_nis=1.1
-alpha-.*-linux.*	libnss_nisplus=1.1
-alpha-.*-linux.*	libnss_ldap=1.1
-alpha-.*-linux.*	libnss_hesiod=1.1
-.*-.*-.*		libnss_files=1
-.*-.*-.*		libnss_dns=1
-.*-.*-.*		libnss_db=1
-.*-.*-.*		libnss_compat=1
-.*-.*-.*		libnss_nis=1
-.*-.*-.*		libnss_nisplus=1
-.*-.*-.*		libnss_ldap=1
-.*-.*-.*		libnss_hesiod=1
+.*-.*-.*		libnss_files=2
+.*-.*-.*		libnss_dns=2
+.*-.*-.*		libnss_db=2
+.*-.*-.*		libnss_compat=2
+.*-.*-.*		libnss_nis=2
+.*-.*-.*		libnss_nisplus=2
+.*-.*-.*		libnss_ldap=2
+.*-.*-.*		libnss_hesiod=2
 
 # Version for libnsl with YP and NIS+ functions.
 alpha-.*-linux.*	libnsl=1.1

@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <grp.h>
 #include <stdio.h>
 
@@ -29,7 +30,7 @@ struct grent_data {};
 
 #define TRAILING_LIST_MEMBER		gr_mem
 #define TRAILING_LIST_SEPARATOR_P(c)	((c) == ',')
-#include "../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 LINE_PARSER
 (,
  STRING_FIELD (result->gr_name, ISCOLON, 0);
@@ -74,7 +75,8 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
 	     || ! (parse_result = parse_line (p, resbuf,
-					      (void *) buffer, buflen)));
+					      (void *) buffer, buflen,
+					      __errno_location ())));
 
   if (parse_result == -1)
     {

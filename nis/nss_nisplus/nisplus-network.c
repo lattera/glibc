@@ -43,7 +43,7 @@ static u_long tablename_len = 0;
 
 static int
 _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
-			    char *buffer, size_t buflen)
+			    char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
@@ -53,24 +53,24 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
-      strcmp(result->objects.objects_val[0].EN_data.en_type,
-             "networks_tbl") != 0 ||
-      result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+      || strcmp (result->objects.objects_val[0].EN_data.en_type,
+		 "networks_tbl") != 0
+      || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
     return 0;
 
   if (NISENTRYLEN(0, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
 
   strncpy (first_unused, NISENTRYVAL(0, 0, result),
            NISENTRYLEN (0, 0, result));
-  first_unused[NISENTRYLEN(0, 0, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   network->n_name = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
@@ -142,7 +142,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
 }
 
 static enum nss_status
-_nss_create_tablename (void)
+_nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -153,7 +153,10 @@ _nss_create_tablename (void)
       p = __stpcpy (p, nis_local_directory ());
       tablename_val = __strdup (buf);
       if (tablename_val == NULL)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       tablename_len = strlen (tablename_val);
     }
   return NSS_STATUS_SUCCESS;
@@ -163,6 +166,7 @@ enum nss_status
 _nss_nisplus_setnetent (void)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
+  int err;
 
   __libc_lock_lock (lock);
 
@@ -171,8 +175,7 @@ _nss_nisplus_setnetent (void)
   result = NULL;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      status = NSS_STATUS_UNAVAIL;
+    status = _nss_create_tablename (&err);
 
   __libc_lock_unlock (lock);
 
@@ -195,7 +198,7 @@ _nss_nisplus_endnetent (void)
 
 static enum nss_status
 internal_nisplus_getnetent_r (struct netent *network, char *buffer,
-			       size_t buflen, int *herrnop)
+			       size_t buflen, int *errnop, int *herrnop)
 {
   int parse_res;
 
@@ -209,10 +212,14 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	  saved_res = NULL;
 
 	  if (tablename_val == NULL)
-	    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
-	      return NSS_STATUS_UNAVAIL;
+	    {
+	      enum nss_status status = _nss_create_tablename (errnop);
 
-	  result = nis_first_entry(tablename_val);
+	      if (status != NSS_STATUS_SUCCESS)
+		return status;
+	    }
+
+	  result = nis_first_entry (tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      int retval;
@@ -223,7 +230,7 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	      if (retval == NSS_STATUS_TRYAGAIN)
 		{
 		  *herrnop = NETDB_INTERNAL;
-		  __set_errno (EAGAIN);
+		  *errnop = errno;
 		  return retval;
 		}
 	      else
@@ -234,7 +241,7 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	{
 	  nis_result *res;
 
-	  res = nis_next_entry(tablename_val, &result->cookie);
+	  res = nis_next_entry (tablename_val, &result->cookie);
 	  saved_res = result;
 	  result = res;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
@@ -247,14 +254,15 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	      if (retval == NSS_STATUS_TRYAGAIN)
 		{
 		  *herrnop = NETDB_INTERNAL;
-		  __set_errno (EAGAIN);
+		  *errnop = errno;
 		}
 	      return retval;
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_netent (result, network, buffer,
-						  buflen)) == -1)
+      parse_res = _nss_nisplus_parse_netent (result, network, buffer,
+					     buflen, errnop);
+      if (parse_res == -1)
         {
           *herrnop = NETDB_INTERNAL;
           return NSS_STATUS_TRYAGAIN;
@@ -267,13 +275,14 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 
 enum nss_status
 _nss_nisplus_getnetent_r (struct netent *result, char *buffer,
-			   size_t buflen, int *herrnop)
+			   size_t buflen, int *errnop, int *herrnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nisplus_getnetent_r (result, buffer, buflen, herrnop);
+  status = internal_nisplus_getnetent_r (result, buffer, buflen, errnop,
+					 herrnop);
 
   __libc_lock_unlock (lock);
 
@@ -282,17 +291,22 @@ _nss_nisplus_getnetent_r (struct netent *result, char *buffer,
 
 enum nss_status
 _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
-			      char *buffer, size_t buflen, int *herrnop)
+			      char *buffer, size_t buflen, int *errnop,
+			     int *herrnop)
 {
   int parse_res, retval;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   if (name == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       *herrnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
@@ -303,38 +317,38 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 
       /* Search at first in the alias list, and use the correct name
 	 for the next search */
-      sprintf(buf, "[name=%s],%s", name, tablename_val);
-      result = nis_list(buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+      sprintf (buf, "[name=%s],%s", name, tablename_val);
+      result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
       /* If we do not find it, try it as original name. But if the
 	 database is correct, we should find it in the first case, too */
-      if ((result->status != NIS_SUCCESS &&
-	   result->status != NIS_S_SUCCESS) ||
-	  __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
-	  strcmp(result->objects.objects_val[0].EN_data.en_type,
-		 "networks_tbl") != 0 ||
-	  result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
-	sprintf(buf, "[cname=%s],%s", name, tablename_val);
+      if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	  || strcmp (result->objects.objects_val[0].EN_data.en_type,
+		     "networks_tbl") != 0
+	  || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
+	sprintf (buf, "[cname=%s],%s", name, tablename_val);
       else
-	sprintf(buf, "[cname=%s],%s", NISENTRYVAL(0, 0, result),
-		tablename_val);
+	sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
+		 tablename_val);
 
       nis_freeresult (result);
-      result = nis_list(buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+      result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
 
       retval = niserr2nss (result->status);
       if (retval != NSS_STATUS_SUCCESS)
 	{
 	  if (retval == NSS_STATUS_TRYAGAIN)
 	    {
-	      __set_errno (EAGAIN);
+	      *errnop = errno;
 	      *herrnop = NETDB_INTERNAL;
 	    }
 	  nis_freeresult (result);
 	  return retval;
 	}
 
-      parse_res = _nss_nisplus_parse_netent (result, network, buffer, buflen);
+      parse_res = _nss_nisplus_parse_netent (result, network, buffer, buflen,
+					     errnop);
 
       nis_freeresult (result);
 
@@ -343,7 +357,10 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 
       *herrnop = NETDB_INTERNAL;
       if (parse_res == -1)
-	return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       else
 	return NSS_STATUS_NOTFOUND;
     }
@@ -352,12 +369,16 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 /* XXX type is ignored, SUN's NIS+ table doesn't support it */
 enum nss_status
 _nss_nisplus_getnetbyaddr_r (const unsigned long addr, const int type,
-			     struct netent *network,
-			     char *buffer, size_t buflen, int *herrnop)
+			     struct netent *network, char *buffer,
+			     size_t buflen, int *errnop, int *herrnop)
 {
   if (tablename_val == NULL)
-    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   {
     int parse_res, retval;
@@ -368,21 +389,22 @@ _nss_nisplus_getnetbyaddr_r (const unsigned long addr, const int type,
     in = inet_makeaddr (addr, 0);
     sprintf (buf, "[addr=%s],%s", inet_ntoa (in), tablename_val);
 
-    result = nis_list(buf, EXPAND_NAME, NULL, NULL);
+    result = nis_list (buf, EXPAND_NAME, NULL, NULL);
 
     retval = niserr2nss (result->status);
     if (retval != NSS_STATUS_SUCCESS)
       {
 	if (retval == NSS_STATUS_TRYAGAIN)
 	  {
-	    __set_errno (EAGAIN);
+	    *errnop = errno;
 	    *herrnop = NETDB_INTERNAL;
 	  }
 	nis_freeresult (result);
 	return retval;
       }
 
-    parse_res = _nss_nisplus_parse_netent (result, network, buffer, buflen);
+    parse_res = _nss_nisplus_parse_netent (result, network, buffer, buflen,
+					   errnop);
 
     nis_freeresult (result);
 
@@ -391,7 +413,10 @@ _nss_nisplus_getnetbyaddr_r (const unsigned long addr, const int type,
 
     *herrnop = NETDB_INTERNAL;
     if (parse_res == -1)
-      return NSS_STATUS_TRYAGAIN;
+      {
+	*errnop = ERANGE;
+	return NSS_STATUS_TRYAGAIN;
+      }
     else
       return NSS_STATUS_NOTFOUND;
   }

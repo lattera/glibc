@@ -162,7 +162,7 @@ _nss_files_endnetgrent (struct __netgrent *result)
 
 enum nss_status
 _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
-			 char *buffer, int buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status;
   const char *host, *user, *domain;
@@ -227,7 +227,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
      to the private buffer we have to make sure it is big enough.  */
   if (cp - host > buflen)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       status = NSS_STATUS_UNAVAIL;
     }
   else
@@ -258,11 +258,13 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 
 
 enum nss_status
-_nss_files_getnetgrent_r (struct __netgrent *result, char *buffer, int buflen)
+_nss_files_getnetgrent_r (struct __netgrent *result, char *buffer,
+			  size_t buflen, int *errnop)
 {
   enum nss_status status;
 
-  status = _nss_netgroup_parseline (&result->cursor, result, buffer, buflen);
+  status = _nss_netgroup_parseline (&result->cursor, result, buffer, buflen,
+				    errnop);
 
   return status;
 }

@@ -25,7 +25,7 @@ int
 getpeername (fd, addr, len)
      int fd;
      __SOCKADDR_ARG addr;
-     size_t *len;
+     socklen_t *len;
 {
   __set_errno (ENOSYS);
   return -1;

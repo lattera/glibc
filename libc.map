@@ -192,7 +192,7 @@ GLIBC_2.0 {
 
     # g*
     gai_strerror; gcvt; get_avphys_pages; get_current_dir_name;
-    get_kernel_syms; get_myaddress; get_nprocs; get_nprocs_conf;
+    get_myaddress; get_nprocs; get_nprocs_conf;
     get_phys_pages; getaddrinfo; getaliasbyname; getaliasbyname_r;
     getaliasent; getaliasent_r; getc; getc_unlocked; getchar;
     getchar_unlocked; getcontext;
@@ -285,8 +285,8 @@ GLIBC_2.0 {
     parse_printf_format; passwd2des; pathconf; pause; pciconfig_read;
     pciconfig_write; pclose; perror;
     personality; pipe; pmap_getmaps; pmap_getport; pmap_rmtcall; pmap_set;
-    pmap_unset; poll; popen; prctl; pread; printf; printf_size;
-    printf_size_info; profil; profil_counter; pwrite; pselect; psignal;
+    pmap_unset; poll; popen; prctl; pread; pread64; printf; printf_size;
+    printf_size_info; profil; profil_counter; pwrite; pwrite64; pselect; psignal;
 
     pthread_attr_destroy;
     pthread_attr_getdetachstate; pthread_attr_getinheritsched;
@@ -351,9 +351,10 @@ GLIBC_2.0 {
 
     sleep; snprintf; socket; socketpair; sprintf; srand; srand48;
     srand48_r; srandom; srandom_r; sscanf; ssignal; sstk; statfs; statfs64;
-    step; stime; stpcpy; stpncpy; strcasecmp; strcat; strchr; strcmp; strcoll;
+    step; stime; stpcpy; stpncpy; strcasecmp; strcasestr; strcat;
+    strchr; strcmp; strcoll;
     strcpy; strcspn; strdup; strerror; strerror_r; strfmon; strfry;
-    strftime; strlen; strncasecmp; strncat; strncmp; strncpy; strndup;
+    strftime; strfxtime; strlen; strncasecmp; strncat; strncmp; strncpy; strndup;
     strnlen; strpbrk; strptime; strrchr; strsep; strsignal; strspn;
     strstr; strtod; strtof; strtok; strtok_r; strtol; strtold; strtoll;
     strtoq; strtoul; strtoull; strtouq; strverscmp; strxfrm; stty;
@@ -366,10 +367,10 @@ GLIBC_2.0 {
 
     swab; swapoff; swapon; symlink; sync;
     syscall; sysconf; sysctl; sysinfo; syslog; sysmips;
-    system;
+    system; sysv_signal;
 
     # t*
-    tcdrain; tcflow; tcflush; tcgetattr; tcgetpgrp; tcsendbreak;
+    tcdrain; tcflow; tcflush; tcgetattr; tcgetpgrp; tcgetsid; tcsendbreak;
     tcsetattr; tcsetpgrp; tdelete; tdestroy; telldir; tempnam; textdomain;
     tfind; time; timegm; timelocal; times; tmpfile; tmpfile64; tmpnam;
     tmpnam_r;
@@ -398,7 +399,7 @@ GLIBC_2.0 {
     wcstoul; wcstoull; wcstouq; wcswcs; wcswidth; wcsxfrm; wctob; wctomb;
     wctrans; wctype; wcwidth;
 
-    wmemchr; wmemcmp; wmemcpy; wmemmove; wmemset;
+    wmemchr; wmemcmp; wmemcpy; wmemmove; wmemrtombs; wmemrtowcs; wmemset;
 
     wordexp; wordfree;
 

@@ -27,5 +27,5 @@ int
 aio_write64 (aiocbp)
      struct aiocb64 *aiocbp;
 {
-  return __aio_enqueue_request ((aiocb_union *) aiocbp, __LIO_WRITE64, 1);
+  return __aio_enqueue_request ((aiocb_union *) aiocbp, LIO_WRITE64) != NULL;
 }

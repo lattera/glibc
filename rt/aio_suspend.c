@@ -40,16 +40,89 @@ aio_suspend (list, nent, timeout)
      int nent;
      const struct timespec *timeout;
 {
+  pthread_cond_t cond;
+  struct waitlist waitlist[nent];
+  struct requestlist *requestlist[nent];
   int cnt;
+  int result = 0;
+
+  /* Request the mutex.  */
+  pthread_mutex_lock (&__aio_requests_mutex);
 
   /* First look whether there is already a terminated request.  */
   for (cnt = 0; cnt < nent; ++cnt)
     if (list[cnt] != NULL && list[cnt]->__error_code != EINPROGRESS)
-      return 0;
+      break;
 
-  /* XXX We have to write code which waits.  */
+  if (cnt == nent)
+    {
+      int oldstate;
 
-  return -1;
+      /* There is not yet a finished request.  Signal the request that
+	 we are working for it.  */
+      for (cnt = 0; cnt < nent; ++cnt)
+	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
+	  {
+	    requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
+
+	    if (requestlist[cnt] != NULL)
+	      {
+		waitlist[cnt].cond = &cond;
+		waitlist[cnt].next = requestlist[cnt]->waiting;
+		waitlist[cnt].counterp = NULL;
+		waitlist[cnt].sigevp = NULL;
+		requestlist[cnt]->waiting = &waitlist[cnt];
+	      }
+	  }
+
+      /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
+	 points we must be careful.  We added entries to the waiting lists
+	 which we must remove.  So defer cancelation for now.  */
+      pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
+
+      if (timeout == NULL)
+	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
+      else
+	result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
+					 timeout);
+
+      /* Now remove the entry in the waiting list for all requests
+	 which didn't terminate  */
+      for (cnt = 0; cnt < nent; ++cnt)
+	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS
+	    && requestlist[cnt] != NULL)
+	  {
+	    struct waitlist **listp = &requestlist[cnt]->waiting;
+
+	    /* There is the chance that we cannot find our entry anymore.
+	       This could happen if the request terminated and restarted
+	       again.  */
+	    while (*listp != NULL && *listp != &waitlist[cnt])
+	      listp = &(*listp)->next;
+
+	    if (*listp != NULL)
+	      *listp = (*listp)->next;
+	  }
+
+      /* Now it's time to restore the cancelation state.  */
+      pthread_setcancelstate (oldstate, NULL);
+
+      if (result != 0)
+	{
+	  /* An error occurred.  Possibly it's EINTR.  We have to translate
+	     the timeout error report of `pthread_cond_timedwait' to the
+	     form expected from `aio_suspend'.  */
+	  if (result == ETIMEDOUT)
+	    __set_errno (EAGAIN);
+
+	  result = -1;
+	}
+    }
+
+  /* Release the mutex.  */
+  pthread_mutex_unlock (&__aio_requests_mutex);
+
+  return result;
 }
 
 weak_alias (aio_suspend, aio_suspend64)

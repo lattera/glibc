@@ -32,7 +32,7 @@ extern int xdecrypt (char *, char *);
 
 /* If we haven't found the entry, we give a SUCCESS and an empty key back. */
 enum nss_status
-_nss_nis_getpublickey (const char *netname, char *pkey)
+_nss_nis_getpublickey (const char *netname, char *pkey, int *errnop)
 {
   enum nss_status retval;
   char *domain, *result;
@@ -57,7 +57,7 @@ _nss_nis_getpublickey (const char *netname, char *pkey)
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-	__set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
@@ -72,7 +72,8 @@ _nss_nis_getpublickey (const char *netname, char *pkey)
 }
 
 enum nss_status
-_nss_nis_getsecretkey (const char *netname, char *skey, char *passwd)
+_nss_nis_getsecretkey (const char *netname, char *skey, char *passwd,
+		       int *errnop)
 {
   enum nss_status retval;
   char buf[1024];
@@ -98,7 +99,7 @@ _nss_nis_getsecretkey (const char *netname, char *skey, char *passwd)
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-	__set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
@@ -178,7 +179,7 @@ parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
 
 enum nss_status
 _nss_nis_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
-		       gid_t *gidp, int *gidlenp, gid_t *gidlist)
+		       gid_t *gidp, int *gidlenp, gid_t *gidlist, int *errnop)
 {
   char *domain;
   int yperr;

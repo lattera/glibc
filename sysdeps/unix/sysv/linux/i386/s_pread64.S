@@ -18,12 +18,20 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
+#include <asm/errno.h>
 
 /* Please consult the file sysdeps/unix/sysv/linux/i386/sysdep.h for
    more information about the value -4095 used below.*/
 
 	.text
 ENTRY (__syscall_pread64)
+
+#ifndef __NR_pread
+	movl	$-ENOSYS,%eax
+# ifndef PIC
+	jmp	syscall_error
+# endif
+#else
 
 	PUSHARGS_5		/* Save register contents.  */
 
@@ -41,5 +49,6 @@ ENTRY (__syscall_pread64)
 	cmpl	$-4095, %eax	/* Check %eax for error.  */
 	jae	syscall_error	/* Jump to error handler if error.  */
 	ret			/* Return to caller.  */
+#endif
 
 PSEUDO_END (__syscall_pread64)

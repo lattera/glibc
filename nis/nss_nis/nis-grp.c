@@ -78,7 +78,8 @@ _nss_nis_endgrent (void)
 }
 
 static enum nss_status
-internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
+internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen,
+			 int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   char *domain, *result, *outkey;
@@ -104,14 +105,14 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
       if (retval != NSS_STATUS_SUCCESS)
         {
           if (retval == NSS_STATUS_TRYAGAIN)
-            __set_errno (EAGAIN);
+            *errnop = errno;
           return retval;
         }
 
       if ((size_t) (len + 1) > buflen)
         {
           free (result);
-          __set_errno (ERANGE);
+          *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
 
@@ -121,9 +122,11 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
         ++p;
       free (result);
 
-      if ((parse_res = _nss_files_parse_grent (p, grp, data, buflen)) == -1)
+      parse_res = _nss_files_parse_grent (p, grp, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  free (outkey);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -138,13 +141,14 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
 }
 
 enum nss_status
-_nss_nis_getgrent_r (struct group *result, char *buffer, size_t buflen)
+_nss_nis_getgrent_r (struct group *result, char *buffer, size_t buflen,
+		     int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getgrent_r (result, buffer, buflen);
+  status = internal_nis_getgrent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -153,7 +157,7 @@ _nss_nis_getgrent_r (struct group *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_getgrnam_r (const char *name, struct group *grp,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -175,14 +179,14 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+        *errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -192,7 +196,8 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
     ++p;
   free (result);
 
-  if ((parse_res = _nss_files_parse_grent (p, grp, data, buflen)) == -1)
+  parse_res = _nss_files_parse_grent (p, grp, data, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
 
   if (parse_res)
@@ -203,7 +208,7 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
 
 enum nss_status
 _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -222,14 +227,14 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-        __set_errno (EAGAIN);
+        *errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -239,7 +244,8 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
     ++p;
   free (result);
 
-  if ((parse_res = _nss_files_parse_grent (p, grp, data, buflen)) == -1)
+  parse_res = _nss_files_parse_grent (p, grp, data, buflen, errnop);
+  if (parse_res == -1)
     return NSS_STATUS_TRYAGAIN;
 
   if (parse_res)

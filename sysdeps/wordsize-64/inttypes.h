@@ -373,53 +373,80 @@ typedef unsigned long int uint_fast64_t;
 /* Macros for string conversion.  */
 
 /* Like `strtol' but convert to `intmax_t'.  */
-#define strtoimax(nptr, endptr, base) \
-    __strtol_internal (nptr, endptr, base, 0)
+extern intmax_t strtoimax __P ((__const char *__restrict __nptr,
+				char **__restrict __endptr, int __base));
 
-#ifndef __strtol_internal_defined
+/* Like `strtoul' but convert to `uintmax_t'.  */
+extern uintmax_t strtoumax __P ((__const char * __restrict __nptr,
+				 char ** __restrict __endptr, int __base));
+
+/* Like `wcstol' but convert to `intmax_t'.  */
+extern intmax_t wcstoimax __P ((__const wchar_t * __restrict __nptr,
+				wchar_t **__restrict __endptr, int __base));
+
+/* Like `wcstoul' but convert to `uintmax_t'.  */
+extern uintmax_t wcstoumax __P ((__const wchar_t * __restrict __nptr,
+				 wchar_t ** __restrict __endptr, int __base));
+
+#if defined __GNUC__ && __GNUC__ >= 2 && defined __OPTIMIZE__
+
+/* Like `strtol' but convert to `intmax_t'.  */
+# ifndef __strtol_internal_defined
 extern long int __strtol_internal __P ((__const char *__restrict __nptr,
 					char **__restrict __endptr,
 					int __base, int __group));
-# define __strtol_internal_defined	1
-#endif
-
+#  define __strtol_internal_defined	1
+# endif
+extern __inline intmax_t
+strtoimax (__const char *__restrict nptr, char **__restrict endptr, int base)
+{
+  return __strtol_internal (nptr, endptr, base, 0);
+}
 
 /* Like `strtoul' but convert to `uintmax_t'.  */
-#define strtoumax(nptr, endptr, base) \
-    __strtoul_internal (nptr, endptr, base, 0)
-
-#ifndef __strtoul_internal_defined
+# ifndef __strtoul_internal_defined
 extern unsigned long int __strtoul_internal __P ((__const char *
 						  __restrict __nptr,
-						  char **__restrict __endptr,
+						  char ** __restrict __endptr,
 						  int __base, int __group));
-# define __strtoul_internal_defined	1
-#endif
-
+#  define __strtoul_internal_defined	1
+# endif
+extern __inline uintmax_t
+strtoumax (__const char *__restrict nptr, char **__restrict endptr, int base)
+{
+  return __strtoul_internal (nptr, endptr, base, 0);
+}
 
 /* Like `wcstol' but convert to `intmax_t'.  */
-#define wcstoimax(nptr, endptr, base) \
-    __wcstol_internal (nptr, endptr, base, 0)
-
-#ifndef __wcstol_internal_defined
-extern long int __wcstol_internal __P ((__const wchar_t *__restrict __nptr,
+# ifndef __wcstol_internal_defined
+extern long int __wcstol_internal __P ((__const wchar_t * __restrict __nptr,
 					wchar_t **__restrict __endptr,
 					int __base, int __group));
-# define __wcstol_internal_defined	1
-#endif
+#  define __wcstol_internal_defined	1
+# endif
+extern __inline intmax_t
+wcstoimax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
+	   int base)
+{
+  return __wcstol_internal (nptr, endptr, base, 0);
+}
 
 
 /* Like `wcstoul' but convert to `uintmax_t'.  */
-#define wcstoumax(nptr, endptr, base) \
-    __wcstoul_internal (nptr, endptr, base, 0)
-
-#ifndef __wcstoul_internal_defined
+# ifndef __wcstoul_internal_defined
 extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
 						  __restrict __nptr,
 						  wchar_t **
 						  __restrict __endptr,
 						  int __base, int __group));
-# define __wcstoul_internal_defined	1
-#endif
+#  define __wcstoul_internal_defined	1
+# endif
+extern __inline uintmax_t
+wcstoumax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
+	   int base)
+{
+  return __wcstoul_internal (nptr, endptr, base, 0);
+}
+#endif	/* GCC and Optimization.  */
 
 #endif /* inttypes.h */

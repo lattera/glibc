@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <shadow.h>
 #include <stdio.h>
 #include <string.h>
@@ -91,7 +92,7 @@ __sgetspent_r (const char *string, struct spwd *resbuf, char *buffer,
 	       size_t buflen, struct spwd **result)
 {
   int parse_result = parse_line (strncpy (buffer, string, buflen),
-				 resbuf, NULL, 0);
+				 resbuf, NULL, 0, __errno_location ());
   *result = parse_result > 0 ? resbuf : NULL;
 
   return *result == NULL ? errno : 0;

@@ -26,6 +26,7 @@
 #ifndef __FILEDESC_h
 #define __FILEDESC_h
 
+#define _STDIO_H
 #include <bits/stdio_lim.h>
 
 #ifndef __DECLARE_FILE_DESCRIPTORS__

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <bits/libc-lock.h>
 
 #include "nsswitch.h"
@@ -90,7 +91,8 @@ typedef int (*set_function) (STAYOPEN);
 typedef int (*end_function) (void);
 
 /* Prototype for the setXXXent functions we use here.  */
-typedef int (*get_function) (LOOKUP_TYPE *, char *, size_t H_ERRNO_PARM);
+typedef int (*get_function) (LOOKUP_TYPE *, char *, size_t, int *
+			     H_ERRNO_PARM);
 
 
 /* This handle for the NSS data base is shared between all
@@ -244,7 +246,8 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
       int is_last_nip = nip == last_nip;
       service_user *current_nip = nip;
 
-      status = (*fct) (resbuf, buffer, buflen H_ERRNO_VAR);
+      status = (*fct) (resbuf, buffer, buflen, __errno_location ()
+		       H_ERRNO_VAR);
 
       no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
 			    status, 0);

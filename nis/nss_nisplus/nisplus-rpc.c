@@ -41,7 +41,7 @@ static u_long tablename_len = 0;
 
 static int
 _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
@@ -52,25 +52,25 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
-      strcmp(result->objects.objects_val[0].EN_data.en_type,
-             "rpc_tbl") != 0 ||
-      result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+      || strcmp (result->objects.objects_val[0].EN_data.en_type,
+		 "rpc_tbl") != 0
+      || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 3)
     return 0;
 
   if (NISENTRYLEN (0, 0, result) >= room_left)
     {
     no_more_room:
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
   strncpy (first_unused, NISENTRYVAL (0, 0, result),
            NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   rpc->r_name = first_unused;
-  room_left -= (strlen (first_unused) +1);
-  first_unused += strlen (first_unused) +1;
+  room_left -= strlen (first_unused) + 1;
+  first_unused += strlen (first_unused) + 1;
   rpc->r_number = atoi (NISENTRYVAL (0, 2, result));
   p = first_unused;
 
@@ -98,7 +98,7 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
   rpc->r_aliases = (char **) first_unused;
   if (room_left < sizeof (char *))
     goto no_more_room;
-  room_left -= (sizeof (char *));
+  room_left -= sizeof (char *);
   rpc->r_aliases[0] = NULL;
 
   i = 0;
@@ -137,7 +137,7 @@ _nss_nisplus_parse_rpcent (nis_result *result, struct rpcent *rpc,
 }
 
 static enum nss_status
-_nss_create_tablename (void)
+_nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -148,7 +148,10 @@ _nss_create_tablename (void)
       p = __stpcpy (p, nis_local_directory ());
       tablename_val = __strdup (buf);
       if (tablename_val == NULL)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       tablename_len = strlen (tablename_val);
     }
   return NSS_STATUS_SUCCESS;
@@ -159,6 +162,7 @@ enum nss_status
 _nss_nisplus_setrpcent (void)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
+  int err;
 
   __libc_lock_lock (lock);
 
@@ -167,7 +171,7 @@ _nss_nisplus_setrpcent (void)
   result = NULL;
 
   if (tablename_val == NULL)
-    status = _nss_create_tablename ();
+    status = _nss_create_tablename (&err);
 
   __libc_lock_unlock (lock);
 
@@ -190,7 +194,7 @@ _nss_nisplus_endrpcent (void)
 
 static enum nss_status
 internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
-			      size_t buflen)
+			      size_t buflen, int *errnop)
 {
   int parse_res;
 
@@ -203,10 +207,14 @@ internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
 	{
 	  saved_res = NULL;
           if (tablename_val == NULL)
-            if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-              return NSS_STATUS_UNAVAIL;
+	    {
+	      enum nss_status status =  _nss_create_tablename (errnop);
 
-	  result = nis_first_entry(tablename_val);
+	      if (status != NSS_STATUS_SUCCESS)
+		return status;
+	    }
+
+	  result = nis_first_entry (tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
 	}
@@ -224,11 +232,13 @@ internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer,
-						  buflen)) == -1)
+      parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer,
+					     buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (result);
 	  result = saved_res;
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
@@ -243,13 +253,13 @@ internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
 
 enum nss_status
 _nss_nisplus_getrpcent_r (struct rpcent *result, char *buffer,
-			  size_t buflen)
+			  size_t buflen, int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nisplus_getrpcent_r (result, buffer, buflen);
+  status = internal_nisplus_getrpcent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -258,13 +268,17 @@ _nss_nisplus_getrpcent_r (struct rpcent *result, char *buffer,
 
 enum nss_status
 _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
-			     char *buffer, size_t buflen)
+			     char *buffer, size_t buflen, int *errnop)
 {
   int parse_res;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   if (name == NULL)
     return NSS_STATUS_NOTFOUND;
@@ -280,19 +294,18 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
       /* If we do not find it, try it as original name. But if the
          database is correct, we should find it in the first case, too */
-      if ((result->status != NIS_SUCCESS &&
-           result->status != NIS_S_SUCCESS) ||
-          __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
-          strcmp (result->objects.objects_val->EN_data.en_type,
-		  "rpc_tbl") != 0 ||
-          result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
+      if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+	  || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+	  || strcmp (result->objects.objects_val->EN_data.en_type,
+		     "rpc_tbl") != 0
+	  || result->objects.objects_val->EN_data.en_cols.en_cols_len < 3)
         sprintf (buf, "[cname=%s],%s", name, tablename_val);
       else
-        sprintf (buf, "[cname=%s],%s", NISENTRYVAL(0, 0, result),
+        sprintf (buf, "[cname=%s],%s", NISENTRYVAL (0, 0, result),
 		 tablename_val);
 
       nis_freeresult (result);
-      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS , NULL, NULL);
+      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS , NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	{
@@ -302,12 +315,16 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 	  return status;
 	}
 
-      parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, buflen);
+      parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, buflen,
+					     errnop);
 
       nis_freeresult (result);
 
       if (parse_res == -1)
-	return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
@@ -318,11 +335,15 @@ _nss_nisplus_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
 enum nss_status
 _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
-				char *buffer, size_t buflen)
+			       char *buffer, size_t buflen, int *errnop)
 {
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   {
     int parse_res;
@@ -341,12 +362,16 @@ _nss_nisplus_getrpcbynumber_r (const int number, struct rpcent *rpc,
 	return status;
       }
 
-    parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, buflen);
+    parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, buflen,
+					   errnop);
 
     nis_freeresult (result);
 
     if (parse_res == -1)
-      return NSS_STATUS_TRYAGAIN;
+      {
+	*errnop = ERANGE;
+	return NSS_STATUS_TRYAGAIN;
+      }
 
     if (parse_res)
       return NSS_STATUS_SUCCESS;

@@ -63,6 +63,8 @@ __BEGIN_DECLS
 #ifdef	__USE_BSD
 # ifdef __S_IFLNK
 #  define S_ISLNK(mode)	 __S_ISTYPE((mode), __S_IFLNK)
+# else
+#  define S_ISLNK(mode)  0
 # endif
 # ifdef __S_IFSOCK
 #  define S_ISSOCK(mode) __S_ISTYPE((mode), __S_IFSOCK)

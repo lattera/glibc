@@ -34,7 +34,7 @@
 
 int
 _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
-			  char *buffer, size_t buflen)
+			  char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
@@ -42,35 +42,35 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_len != 1 ||
-      __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ ||
-      strcmp(result->objects.objects_val->EN_data.en_type,
-	     "passwd_tbl") != 0 ||
-      result->objects.objects_val->EN_data.en_cols.en_cols_len < 7)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || result->objects.objects_len != 1
+      || __type_of (result->objects.objects_val) != NIS_ENTRY_OBJ
+      || strcmp (result->objects.objects_val->EN_data.en_type,
+		 "passwd_tbl") != 0
+      || result->objects.objects_val->EN_data.en_cols.en_cols_len < 7)
     return 0;
 
   if (NISENTRYLEN (0, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
 
-  strncpy (first_unused, NISENTRYVAL(0, 0, result),
+  strncpy (first_unused, NISENTRYVAL (0, 0, result),
 	   NISENTRYLEN (0, 0, result));
-  first_unused[NISENTRYLEN(0, 0, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   pw->pw_name = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
 
-  if (NISENTRYLEN(0, 1, result) >= room_left)
+  if (NISENTRYLEN (0, 1, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL(0, 1, result),
+  strncpy (first_unused, NISENTRYVAL (0, 1, result),
 	   NISENTRYLEN (0, 1, result));
-  first_unused[NISENTRYLEN(0, 1, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 1, result)] = '\0';
   pw->pw_passwd = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
@@ -80,17 +80,17 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 
   strncpy (first_unused, NISENTRYVAL (0, 2, result),
 	   NISENTRYLEN (0, 2, result));
-  first_unused[NISENTRYLEN(0, 2, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 2, result)] = '\0';
   pw->pw_uid = atoi (first_unused);
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
 
-  if (NISENTRYLEN(0, 3, result) >= room_left)
+  if (NISENTRYLEN (0, 3, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL(0, 3, result),
+  strncpy (first_unused, NISENTRYVAL (0, 3, result),
 	   NISENTRYLEN (0, 3, result));
-  first_unused[NISENTRYLEN(0, 3, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 3, result)] = '\0';
   pw->pw_gid = atoi (first_unused);
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
@@ -98,24 +98,24 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
   if (NISENTRYLEN(0, 4, result) >= room_left)
     goto no_more_room;
 
-  strncpy (first_unused, NISENTRYVAL(0, 4, result),
+  strncpy (first_unused, NISENTRYVAL (0, 4, result),
 	   NISENTRYLEN (0, 4, result));
-  first_unused[NISENTRYLEN(0, 4, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 4, result)] = '\0';
   pw->pw_gecos = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
 
-  if (NISENTRYLEN(0, 5, result) >= room_left)
+  if (NISENTRYLEN (0, 5, result) >= room_left)
     goto no_more_room;
 
   strncpy (first_unused, NISENTRYVAL (0, 5, result),
 	   NISENTRYLEN (0, 5, result));
-  first_unused[NISENTRYLEN(0, 5, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 5, result)] = '\0';
   pw->pw_dir = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
 
-  if (NISENTRYLEN(0, 6, result) >= room_left)
+  if (NISENTRYLEN (0, 6, result) >= room_left)
     goto no_more_room;
 
   strncpy (first_unused, NISENTRYVAL (0, 6, result),
@@ -129,8 +129,8 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 }
 
 int
-_nss_nisplus_parse_grent (nis_result *result, u_long entry,
-			  struct group *gr, char *buffer, size_t buflen)
+_nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
+			  char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
@@ -140,18 +140,18 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of(result->objects.objects_val) != NIS_ENTRY_OBJ ||
-      strcmp (result->objects.objects_val[entry].EN_data.en_type,
-	      "group_tbl") != 0 ||
-      result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 4)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || __type_of(result->objects.objects_val) != NIS_ENTRY_OBJ
+      || strcmp (result->objects.objects_val[entry].EN_data.en_type,
+		 "group_tbl") != 0
+      || result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 4)
     return 0;
 
   if (NISENTRYLEN (entry, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
 
@@ -240,7 +240,7 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry,
 
 int
 _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
-			  char *buffer, size_t buflen)
+			  char *buffer, size_t buflen, int *errnop)
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
@@ -248,35 +248,35 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_len != 1 ||
-      __type_of(result->objects.objects_val) != NIS_ENTRY_OBJ ||
-      strcmp (result->objects.objects_val->EN_data.en_type,
-	      "passwd_tbl") != 0 ||
-      result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 8)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || result->objects.objects_len != 1
+      || __type_of(result->objects.objects_val) != NIS_ENTRY_OBJ
+      || strcmp (result->objects.objects_val->EN_data.en_type,
+		 "passwd_tbl") != 0
+      || result->objects.objects_val[0].EN_data.en_cols.en_cols_len < 8)
     return 0;
 
-  if (NISENTRYLEN(0, 0, result) >= room_left)
+  if (NISENTRYLEN (0, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return -1;
     }
 
   strncpy (first_unused, NISENTRYVAL (0, 0, result),
 	   NISENTRYLEN (0, 0, result));
-  first_unused[NISENTRYLEN(0, 0, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 0, result)] = '\0';
   sp->sp_namp = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
 
-  if (NISENTRYLEN(0, 1, result) >= room_left)
+  if (NISENTRYLEN (0, 1, result) >= room_left)
     goto no_more_room;
 
   strncpy (first_unused, NISENTRYVAL (0, 1, result),
 	   NISENTRYLEN (0, 1, result));
-  first_unused[NISENTRYLEN(0, 1, result)] = '\0';
+  first_unused[NISENTRYLEN (0, 1, result)] = '\0';
   sp->sp_pwdp = first_unused;
   room_left -= (strlen (first_unused) +1);
   first_unused += strlen (first_unused) +1;
@@ -300,40 +300,40 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
       if (cp == NULL)
 	return 0;
       *cp++ = '\0';
-      sp->sp_min = atol(line);
+      sp->sp_min = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
 	return 0;
       *cp++ = '\0';
-      sp->sp_max = atol(line);
+      sp->sp_max = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
 	return 0;
       *cp++ = '\0';
-      sp->sp_warn = atol(line);
+      sp->sp_warn = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
 	return 0;
       *cp++ = '\0';
-      sp->sp_inact = atol(line);
+      sp->sp_inact = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
 	return 0;
       *cp++ = '\0';
-      sp->sp_expire = atol(line);
+      sp->sp_expire = atol (line);
 
       line = cp;
       if (line == NULL)
 	return 0;
-      sp->sp_flag = atol(line);
+      sp->sp_flag = atol (line);
     }
 
   return 1;

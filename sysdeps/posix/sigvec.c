@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ convert_mask (set, mask)
       if (__sigemptyset (set) < 0)
 	return -1;
 
-      for (sig = 1; sig < NSIG; ++sig)
+      for (sig = 1; sig < NSIG && sig <= sizeof (mask) * 8; ++sig)
 	if ((mask & sigmask (sig)) && __sigaddset (set, sig) < 0)
 	  return -1;
     }
@@ -138,9 +138,9 @@ __sigvec (sig, vec, ovec)
       else if (sizeof (unsigned long int) == sizeof (sigset_t))
 	mask = *(unsigned long int *) &old.sa_mask;
       else
-	for (i = 1; i < NSIG; ++i)
-	  if (__sigismember(&old.sa_mask, i))
-	    mask |= sigmask(i);
+	for (i = 1; i < NSIG && i <= sizeof (mask) * 8; ++i)
+	  if (__sigismember (&old.sa_mask, i))
+	    mask |= sigmask (i);
 
       ovec->sv_mask = mask;
       ovec->sv_flags = 0;

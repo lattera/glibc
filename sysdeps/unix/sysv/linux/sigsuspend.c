@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
-extern int __syscall_rt_sigsuspend (sigset_t *, size_t);
+extern int __syscall_rt_sigsuspend (const sigset_t *, size_t);
 
 
 /* The variable is shared between all wrappers around signal handling
@@ -40,8 +40,7 @@ __sigsuspend (set)
     {
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      int result = __syscall_rt_sigsuspend (set,
-					    _NSIG / (8 * sizeof (long int)));
+      int result = __syscall_rt_sigsuspend (set, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;

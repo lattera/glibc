@@ -154,7 +154,7 @@ _nss_nis_endrpcent (void)
 
 static enum nss_status
 internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
-			  intern_t *data)
+			  int *errnop, intern_t *data)
 {
   struct parser_data *pdata = (void *) buffer;
   int parse_res;
@@ -172,7 +172,8 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
       while (isspace (*p))
         ++p;
 
-      if ((parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen)) == -1)
+      parse_res = _nss_files_parse_rpcent (p, rpc, pdata, buflen, errnop);
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
       data->next = data->next->next;
     }
@@ -182,13 +183,14 @@ internal_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen)
+_nss_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen,
+		      int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getrpcent_r (rpc, buffer, buflen, &intern);
+  status = internal_nis_getrpcent_r (rpc, buffer, buflen, errnop, &intern);
 
   __libc_lock_unlock (lock);
 
@@ -197,7 +199,7 @@ _nss_nis_getrpcent_r (struct rpcent *rpc, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
-			 char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   intern_t data = {NULL, NULL};
   enum nss_status status;
@@ -215,8 +217,8 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
   found = 0;
   while (!found &&
-         ((status = internal_nis_getrpcent_r (rpc, buffer, buflen, &data))
-          == NSS_STATUS_SUCCESS))
+         ((status = internal_nis_getrpcent_r (rpc, buffer, buflen, errnop,
+					      &data)) == NSS_STATUS_SUCCESS))
     {
       if (strcmp (rpc->r_name, name) == 0)
 	found = 1;
@@ -247,7 +249,7 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
 
 enum nss_status
 _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
-			   char *buffer, size_t buflen)
+			   char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   enum nss_status retval;
@@ -266,14 +268,14 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-	__set_errno (EAGAIN);
+	*errnop = errno;
       return retval;
     }
 
   if ((size_t) (len + 1) > buflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -283,7 +285,7 @@ _nss_nis_getrpcbynumber_r (int number, struct rpcent *rpc,
     ++p;
   free (result);
 
-  parse_res = _nss_files_parse_rpcent (p, rpc, data, buflen);
+  parse_res = _nss_files_parse_rpcent (p, rpc, data, buflen, errnop);
 
   if (parse_res < 1)
     {

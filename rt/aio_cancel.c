@@ -30,7 +30,6 @@
 #undef aio_cancel64
 
 #include <errno.h>
-#include <pthread.h>
 
 #include "aio_misc.h"
 
@@ -43,128 +42,106 @@ aio_cancel (fildes, aiocbp)
      int fildes;
      struct aiocb *aiocbp;
 {
-  struct aiocb *firstp;
+  struct requestlist *req = NULL;
   int result = AIO_ALLDONE;
 
-  /* Request the semaphore.  */
-  sem_wait (&__aio_requests_sema);
+  /* Request the mutex.  */
+  pthread_mutex_lock (&__aio_requests_mutex);
 
-  /* Search for the list of requests associated with the given file
-     descriptor.  */
-  for (firstp = (struct aiocb *) __aio_requests; firstp != NULL;
-       firstp = firstp->__next_fd)
-    if (firstp->aio_fildes == fildes)
-      break;
-
-  /* If the file descriptor is not found all work seems to done
-     already.  Otherwise try to cancel the request(s).  */
-  if (firstp != NULL)
+  /* We are asked to cancel a specific AIO request.  */
+  if (aiocbp != NULL)
     {
-      if (aiocbp != NULL)
+      /* If the AIO request is not for this descriptor it has no value
+	 to look for the request block.  */
+      if (aiocbp->aio_fildes == fildes)
 	{
-	  /* Locate the entry corresponding to the AIOCBP parameter.  */
-	  if (aiocbp == firstp)
-	    /* The requests is currently handled, therefore don't
-	       cancel it and signal this to the user.  */
+	  struct requestlist *last = NULL;
+
+	  req = __aio_find_req_fd (fildes);
+
+	  while (req->aiocbp != (aiocb_union *) aiocbp)
+	    {
+	      last = req;
+	      req = req->next_prio;
+	    }
+
+	  /* Don't remove the entry if a thread is already working on it.  */
+	  if (req->running == allocated)
 	    result = AIO_NOTCANCELED;
 	  else
 	    {
-	      while (firstp->__next_prio != NULL
-		     && aiocbp != firstp->__next_prio)
-		firstp = firstp->__next_prio;
+	      /* We can remove the entry.  */
+	      if (last != NULL)
+		last->next_prio = req->next_prio;
+	      else
+		if (req->next_prio == NULL)
+		  {
+		    if (req->last_fd != NULL)
+		      req->last_fd->next_fd = req->next_fd;
+		    if (req->next_fd != NULL)
+		      req->next_fd->last_fd = req->last_fd;
+		  }
+		else
+		  {
+		    if (req->last_fd != NULL)
+		      req->last_fd->next_fd = req->next_prio;
+		    if (req->next_fd != NULL)
+		      req->next_fd->last_fd = req->next_prio;
+		    req->next_prio->last_fd = req->last_fd;
+		    req->next_prio->next_fd = req->next_fd;
 
-	      if (firstp->__next_prio != NULL)
-		{
-		  /* The request the user wants to cancel is in the
-		     queue.  Simply remove it.  */
-		  firstp->__next_prio = aiocbp->__next_prio;
+		    /* Mark this entry as runnable.  */
+		    req->next_prio->running = yes;
+		  }
 
-		  /* Mark as canceled.  */
-		  aiocbp->__error_code = ECANCELED;
-		  aiocbp->__return_value = -1;
-
-		  /* Send the signal to notify about canceled
-		     processing of the request.  */
-		  if (aiocbp->aio_sigevent.sigev_notify == SIGEV_THREAD)
-		    {
-		      /* We have to start a thread.  */
-		      pthread_t tid;
-		      pthread_attr_t attr, *pattr;
-
-		      pattr = (pthread_attr_t *)
-			aiocbp->aio_sigevent.sigev_notify_attributes;
-		      if (pattr == NULL)
-			{
-			  pthread_attr_init (&attr);
-			  pthread_attr_setdetachstate (&attr,
-						       PTHREAD_CREATE_DETACHED);
-			  pattr = &attr;
-			}
-
-		      pthread_create (&tid, pattr,
-				      (void *(*) (void *))
-				      aiocbp->aio_sigevent.sigev_notify_function,
-				      aiocbp->aio_sigevent.sigev_value.sival_ptr);
-		    }
-		  else if (aiocbp->aio_sigevent.sigev_notify == SIGEV_SIGNAL)
-		    /* We have to send a signal.  */
-		    __aio_sigqueue (aiocbp->aio_sigevent.sigev_signo,
-				    aiocbp->aio_sigevent.sigev_value);
-
-		  result = AIO_CANCELED;
-		}
-	    }
-	}
-      else
-	{
-	  /* First dequeue all waiting requests.  */
-	  aiocbp = firstp;
-
-	  while ((firstp = firstp->__next_prio) != NULL)
-	    {
-	      firstp->__error_code = ECANCELED;
-	      firstp->__return_value = -1;
-
-
-	      /* Send the signal to notify about canceled processing
-		 of the request.  */
-	      if (firstp->aio_sigevent.sigev_notify == SIGEV_THREAD)
-		{
-		  /* We have to start a thread.  */
-		  pthread_t tid;
-		  pthread_attr_t attr, *pattr;
-
-		  pattr = (pthread_attr_t *)
-		    aiocbp->aio_sigevent.sigev_notify_attributes;
-		  if (pattr == NULL)
-		    {
-		      pthread_attr_init (&attr);
-		      pthread_attr_setdetachstate (&attr,
-						   PTHREAD_CREATE_DETACHED);
-		      pattr = &attr;
-		    }
-
-		  pthread_create (&tid, pattr,
-				  (void *(*) (void *))
-				  firstp->aio_sigevent.sigev_notify_function,
-				  firstp->aio_sigevent.sigev_value.sival_ptr);
-		}
-	      else if (firstp->aio_sigevent.sigev_notify == SIGEV_SIGNAL)
-		/* We have to send a signal.  */
-		__aio_sigqueue (firstp->aio_sigevent.sigev_signo,
-				firstp->aio_sigevent.sigev_value);
+	      result = AIO_CANCELED;
 	    }
 
-	  /* We have to signal that not all requests could be canceled
-	     since the first requests is currently processed.  */
-	  result = AIO_NOTCANCELED;
-
-	  aiocbp->__next_prio = NULL;
+	  req->next_prio = NULL;
 	}
     }
+  else
+    {
+      /* Find the beginning of the list of all requests for this
+	 desriptor.  */
+      req = __aio_find_req_fd (fildes);
 
-  /* Release the semaphore.  */
-  sem_post (&__aio_requests_sema);
+      /* If any request is worked on by a thread it must be the first.
+	 So either we can delete all requests or all but the first.  */
+      if (req != NULL)
+	if (req->running == allocated)
+	  {
+	    struct requestlist *old = req;
+	    req = req->next_prio;
+	    old->next_prio = NULL;
+
+	    result = AIO_NOTCANCELED;
+	  }
+	else
+	  {
+	    /* Remove entry from the file descriptor list.  */
+	    if (req->last_fd != NULL)
+	      req->last_fd->next_fd = req->next_fd;
+	    if (req->next_fd != NULL)
+	      req->next_fd->last_fd = req->last_fd;
+
+	    result = AIO_CANCELED;
+	  }
+    }
+
+  /* Mark requests as canceled and send signal.  */
+  while (req != NULL)
+    {
+      struct requestlist *old = req;
+      req->aiocbp->aiocb.__error_code = ECANCELED;
+      req->aiocbp->aiocb.__return_value = -1;
+      __aio_notify (req);
+      req = req->next_prio;
+      __aio_free_request (old);
+    }
+
+  /* Release the mutex.  */
+  pthread_mutex_unlock (&__aio_requests_mutex);
 
   return result;
 }

@@ -19,7 +19,19 @@
 #ifndef _AIO_MISC_H
 #define _AIO_MISC_H	1
 
-#include <semaphore.h>
+#include <aio.h>
+#include <pthread.h>
+
+
+/* Extend the operation enum.  */
+enum
+{
+  LIO_DSYNC = LIO_READ + 1,
+  LIO_SYNC,
+  LIO_READ64 = LIO_READ | 128,
+  LIO_WRITE64 = LIO_WRITE | 128
+};
+
 
 /* Union of the two request types.  */
 typedef union
@@ -28,18 +40,73 @@ typedef union
     struct aiocb64 aiocb64;
   } aiocb_union;
 
-/* List of enqueued requests.  */
-extern aiocb_union *__aio_requests;
+
+/* Used to synchronize.  */
+struct waitlist
+  {
+    struct waitlist *next;
+
+    pthread_cond_t *cond;
+    volatile int *counterp;
+    /* The next field is used in asynchronous `lio_listio' operations.  */
+    struct sigevent *sigevp;
+  };
+
+
+/* Status of a request.  */
+enum
+{
+  no,
+  queued,
+  yes,
+  allocated
+};
+
+
+/* Used to queue requests..  */
+struct requestlist
+  {
+    int running;
+
+    struct requestlist *last_fd;
+    struct requestlist *next_fd;
+    struct requestlist *next_prio;
+    struct requestlist *next_run;
+
+    /* Pointer to the actual data.  */
+    aiocb_union *aiocbp;
+
+    /* List of waiting processes.  */
+    struct waitlist *waiting;
+  };
+
 
 /* Lock for global I/O list of requests.  */
-extern sem_t __aio_requests_sema;
+extern pthread_mutex_t __aio_requests_mutex;
 
 
 /* Enqueue request.  */
-extern int __aio_enqueue_request (aiocb_union *aiocbp, int operation,
-				  int require_lock);
+extern struct requestlist *__aio_enqueue_request (aiocb_union *aiocbp,
+						  int operation)
+     internal_function;
+
+/* Find request entry for given AIO control block.  */
+extern struct requestlist *__aio_find_req (aiocb_union *elem)
+     internal_function;
+
+/* Find request entry for given file descriptor.  */
+extern struct requestlist *__aio_find_req_fd (int fildes) internal_function;
+
+/* Release the entry for the request.  */
+extern void __aio_free_request (struct requestlist *req) internal_function;
+
+/* Notify initiator of request and tell this everybody listening.  */
+extern void __aio_notify (struct requestlist *req) internal_function;
+
+/* Notify initiator of request.  */
+extern int __aio_notify_only (struct sigevent *sigev) internal_function;
 
 /* Send the signal.  */
-extern int __aio_sigqueue (int sig, const union sigval val);
+extern int __aio_sigqueue (int sig, const union sigval val) internal_function;
 
 #endif /* aio_misc.h */

@@ -23,9 +23,9 @@
 /* Do system call CALLNO, passing it the remaining arguments.
    This only makes sense in certain operating systems.  */
 
-int
+long int
 syscall (callno)
-     int callno;
+     long int callno;
 {
   __set_errno (ENOSYS);
   return -1;

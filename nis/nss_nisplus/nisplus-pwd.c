@@ -33,10 +33,10 @@ static nis_name tablename_val = NULL;
 static u_long tablename_len = 0;
 
 extern int _nss_nisplus_parse_pwent (nis_result *res, struct passwd *pw,
-				     char *buffer, size_t buflen);
+				     char *buffer, size_t buflen, int *errnop);
 
 static enum nss_status
-_nss_create_tablename (void)
+_nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -47,7 +47,10 @@ _nss_create_tablename (void)
       p = __stpcpy (p, nis_local_directory ());
       tablename_val = __strdup (buf);
       if (tablename_val == NULL)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       tablename_len = strlen (tablename_val);
     }
   return NSS_STATUS_SUCCESS;
@@ -58,6 +61,7 @@ enum nss_status
 _nss_nisplus_setpwent (void)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
+  int err;
 
   __libc_lock_lock (lock);
 
@@ -66,7 +70,7 @@ _nss_nisplus_setpwent (void)
   result = NULL;
 
   if (tablename_val == NULL)
-    status = _nss_create_tablename ();
+    status = _nss_create_tablename (&err);
 
   __libc_lock_unlock (lock);
 
@@ -88,7 +92,8 @@ _nss_nisplus_endpwent (void)
 }
 
 static enum nss_status
-internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
+internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen,
+			     int *errnop)
 {
   int parse_res;
 
@@ -101,10 +106,14 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
 	{
 	  saved_res = NULL;
           if (tablename_val == NULL)
-            if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-              return NSS_STATUS_UNAVAIL;
+	    {
+	      enum nss_status status = _nss_create_tablename (errnop);
 
-	  result = nis_first_entry(tablename_val);
+	      if (status != NSS_STATUS_SUCCESS)
+		return status;
+	    }
+
+	  result = nis_first_entry (tablename_val);
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    return niserr2nss (result->status);
 	}
@@ -113,7 +122,7 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
 	  nis_result *res;
 
 	  saved_res = result;
-	  res = nis_next_entry(tablename_val, &result->cookie);
+	  res = nis_next_entry (tablename_val, &result->cookie);
 	  result = res;
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
@@ -122,11 +131,13 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_pwent (result, pw, buffer,
-						 buflen)) == -1)
+      parse_res = _nss_nisplus_parse_pwent (result, pw, buffer,
+					    buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (result);
 	  result = saved_res;
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
@@ -140,13 +151,14 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
 }
 
 enum nss_status
-_nss_nisplus_getpwent_r (struct passwd *result, char *buffer, size_t buflen)
+_nss_nisplus_getpwent_r (struct passwd *result, char *buffer, size_t buflen,
+			 int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nisplus_getpwent_r (result, buffer, buflen);
+  status = internal_nisplus_getpwent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -155,13 +167,17 @@ _nss_nisplus_getpwent_r (struct passwd *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
-		     char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   int parse_res;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   if (name == NULL || strlen (name) > 8)
     return NSS_STATUS_NOTFOUND;
@@ -170,7 +186,7 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
       nis_result *result;
       char buf[strlen (name) + 24 + tablename_len];
 
-      sprintf(buf, "[name=%s],%s", name, tablename_val);
+      sprintf (buf, "[name=%s],%s", name, tablename_val);
 
       result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
@@ -182,12 +198,16 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
 	  return status;
 	}
 
-      parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen);
+      parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen,
+					    errnop);
 
       nis_freeresult (result);
 
       if (parse_res == -1)
-	return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
@@ -198,17 +218,22 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
 
 enum nss_status
 _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
-		     char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
+
   {
     int parse_res;
     nis_result *result;
     char buf[100 + tablename_len];
 
-    sprintf(buf, "[uid=%d],%s", uid, tablename_val);
+    sprintf (buf, "[uid=%d],%s", uid, tablename_val);
 
     result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
@@ -220,12 +245,15 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
 	return status;
       }
 
-    parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen);
+    parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, buflen, errnop);
 
     nis_freeresult (result);
 
     if (parse_res == -1)
-      return NSS_STATUS_TRYAGAIN;
+      {
+	*errnop = ERANGE;
+	return NSS_STATUS_TRYAGAIN;
+      }
 
     if (parse_res)
       return NSS_STATUS_SUCCESS;

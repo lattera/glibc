@@ -41,7 +41,7 @@ static u_long tablename_len = 0;
         ((res)->objects.objects_val[(idx)].EN_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
 static enum nss_status
-_nss_create_tablename (void)
+_nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -52,7 +52,10 @@ _nss_create_tablename (void)
       p = __stpcpy (p, nis_local_directory ());
       tablename_val = __strdup (buf);
       if (tablename_val == NULL)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       tablename_len = strlen (tablename_val);
     }
   return NSS_STATUS_SUCCESS;
@@ -61,38 +64,38 @@ _nss_create_tablename (void)
 static int
 _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
 			     struct aliasent *alias, char *buffer,
-			     size_t buflen)
+			     size_t buflen, int *errnop)
 {
   if (result == NULL)
     return 0;
 
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      __type_of (&result->objects.objects_val[entry]) != NIS_ENTRY_OBJ ||
-      strcmp(result->objects.objects_val[entry].EN_data.en_type,
-	     "mail_aliases") != 0 ||
-      result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 2)
+  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS)
+      || __type_of (&result->objects.objects_val[entry]) != NIS_ENTRY_OBJ
+      || strcmp (result->objects.objects_val[entry].EN_data.en_type,
+		 "mail_aliases") != 0
+      || result->objects.objects_val[entry].EN_data.en_cols.en_cols_len < 2)
     return 0;
   else
     {
-      char *first_unused = buffer + NISENTRYLEN(0, 1, result) + 1;
+      char *first_unused = buffer + NISENTRYLEN (0, 1, result) + 1;
       size_t room_left =
 	buflen - (buflen % __alignof__ (char *)) -
-	NISENTRYLEN(0, 1, result) - 2;
+	NISENTRYLEN (0, 1, result) - 2;
       char *line;
       char *cp;
 
-      if (NISENTRYLEN(entry, 1, result) >= buflen)
+      if (NISENTRYLEN (entry, 1, result) >= buflen)
 	{
 	  /* The line is too long for our buffer.  */
 	no_more_room:
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return -1;
 	}
       else
 	{
-	  strncpy (buffer, NISENTRYVAL(entry, 1, result),
-		   NISENTRYLEN(entry, 1, result));
-	  buffer[NISENTRYLEN(entry, 1, result)] = '\0';
+	  strncpy (buffer, NISENTRYVAL (entry, 1, result),
+		   NISENTRYLEN (entry, 1, result));
+	  buffer[NISENTRYLEN (entry, 1, result)] = '\0';
 	}
 
       if (NISENTRYLEN(entry, 0, result) >= room_left)
@@ -102,8 +105,8 @@ _nss_nisplus_parse_aliasent (nis_result *result, unsigned long entry,
       alias->alias_members_len = 0;
       *first_unused = '\0';
       ++first_unused;
-      strcpy (first_unused, NISENTRYVAL(entry, 0, result));
-      first_unused[NISENTRYLEN(entry, 0, result)] = '\0';
+      strcpy (first_unused, NISENTRYVAL (entry, 0, result));
+      first_unused[NISENTRYLEN (entry, 0, result)] = '\0';
       alias->alias_name = first_unused;
 
       /* Terminate the line for any case.  */
@@ -153,16 +156,17 @@ static enum nss_status
 internal_setaliasent (void)
 {
   enum nss_status status;
+  int err;
 
   if (result)
     nis_freeresult (result);
   result = NULL;
 
-  if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
+  if (_nss_create_tablename (&err) != NSS_STATUS_SUCCESS)
     return NSS_STATUS_UNAVAIL;
 
   next_entry = 0;
-  result = nis_list(tablename_val, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  result = nis_list (tablename_val, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
   status = niserr2nss (result->status);
   if (status != NSS_STATUS_SUCCESS)
     {
@@ -203,7 +207,7 @@ _nss_nisplus_endaliasent (void)
 
 static enum nss_status
 internal_nisplus_getaliasent_r (struct aliasent *alias,
-				char *buffer, size_t buflen)
+				char *buffer, size_t buflen, int *errnop)
 {
   int parse_res;
 
@@ -222,8 +226,9 @@ internal_nisplus_getaliasent_r (struct aliasent *alias,
       if (next_entry >= result->objects.objects_len)
 	return NSS_STATUS_NOTFOUND;
 
-      if ((parse_res = _nss_nisplus_parse_aliasent (result, next_entry, alias,
-						    buffer, buflen)) == -1)
+      parse_res = _nss_nisplus_parse_aliasent (result, next_entry, alias,
+					       buffer, buflen, errnop);
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
 
       ++next_entry;
@@ -234,13 +239,13 @@ internal_nisplus_getaliasent_r (struct aliasent *alias,
 
 enum nss_status
 _nss_nisplus_getaliasent_r (struct aliasent *result, char *buffer,
-			    size_t buflen)
+			    size_t buflen, int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nisplus_getaliasent_r (result, buffer, buflen);
+  status = internal_nisplus_getaliasent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -249,28 +254,32 @@ _nss_nisplus_getaliasent_r (struct aliasent *result, char *buffer,
 
 enum nss_status
 _nss_nisplus_getaliasbyname_r (const char *name, struct aliasent *alias,
-			    char *buffer, size_t buflen)
+			    char *buffer, size_t buflen, int *errnop)
 {
   int parse_res;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
-  if (name != NULL || strlen(name) <= 8)
+  if (name != NULL || strlen (name) <= 8)
     {
       nis_result *result;
       char buf[strlen (name) + 30 + tablename_len];
 
-      sprintf(buf, "[name=%s],%s", name, tablename_val);
+      sprintf (buf, "[name=%s],%s", name, tablename_val);
 
-      result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+      result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 
       if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	return niserr2nss (result->status);
 
-      if ((parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
-						    buffer, buflen)) == -1)
+      parse_res = _nss_nisplus_parse_aliasent (result, 0, alias,
+					       buffer, buflen, errnop);
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
 
       if (parse_res)

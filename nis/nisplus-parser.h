@@ -17,18 +17,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __NISPLUS_PARSER_H_
-#define __NISPLUS_PARSER_H_ 1
+#ifndef __NISPLUS_PARSER_H
+#define __NISPLUS_PARSER_H	1
 
 #include <pwd.h>
 #include <grp.h>
 #include <shadow.h>
 
 extern int _nss_nisplus_parse_pwent (nis_result *, struct passwd *,
-				     char *, size_t);
+				     char *, size_t, int *);
 extern int _nss_nisplus_parse_grent (nis_result *, u_long, struct group *,
-				     char *, size_t);
+				     char *, size_t, int *);
 extern int _nss_nisplus_parse_spent (nis_result *, struct spwd *,
-				     char *, size_t);
+				     char *, size_t, int *);
 
 #endif

@@ -51,6 +51,7 @@
 # define ESTALE		23
 # define EISDIR		24
 # define EOPNOTSUPP	25	/* Operation not supported.  */
+# define ENOTTY		26
 #endif
 
 #define __set_errno(val) errno = (val)

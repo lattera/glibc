@@ -131,7 +131,7 @@ _nss_files_endaliasent (void)
 /* Parsing the database file into `struct aliasent' data structures.  */
 static enum nss_status
 get_next_alias (const char *match, struct aliasent *result,
-		char *buffer, size_t buflen)
+		char *buffer, int *errnop, size_t buflen)
 {
   enum nss_status status = NSS_STATUS_NOTFOUND;
   int ignore = 0;
@@ -159,7 +159,7 @@ get_next_alias (const char *match, struct aliasent *result,
 	{
 	  /* The line is too long for our buffer.  */
 	no_more_room:
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  status = NSS_STATUS_TRYAGAIN;
 	  break;
 	}
@@ -364,7 +364,8 @@ get_next_alias (const char *match, struct aliasent *result,
 
 
 enum nss_status
-_nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen)
+_nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
+			  int *errnop)
 {
   /* Return next entry in host file.  */
   enum nss_status status = NSS_STATUS_SUCCESS;
@@ -391,7 +392,7 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen)
 
 	  /* Read lines until we get a definite result.  */
 	  do
-	    status = get_next_alias (NULL, result, buffer, buflen);
+	    status = get_next_alias (NULL, result, buffer, buflen, errnop);
 	  while (status == NSS_STATUS_RETURN);
 
 	  /* If we successfully read an entry remember this position.  */
@@ -410,7 +411,7 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
-			     char *buffer, size_t buflen)
+			     char *buffer, size_t buflen, int *errnop)
 {
   /* Return next entry in host file.  */
   enum nss_status status = NSS_STATUS_SUCCESS;
@@ -433,7 +434,7 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
 
       /* Read lines until we get a definite result.  */
       do
-	status = get_next_alias (name, result, buffer, buflen);
+	status = get_next_alias (name, result, buffer, buflen, errnop);
       while (status == NSS_STATUS_RETURN);
     }
 

@@ -510,7 +510,7 @@ do {                                                                          \
 */
 
 #ifndef HAVE_MREMAP
-#define HAVE_MREMAP defined(__linux__)
+#define HAVE_MREMAP defined(__linux__) && !defined(__arm__)
 #endif
 
 #if HAVE_MMAP

@@ -111,7 +111,8 @@ endif
 
 ifeq ($(subdir),signal)
 sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
-		   rt_sigqueueinfo rt_sigaction
+		   rt_sigqueueinfo rt_sigaction rt_sigpending	\
+		   rt_sigreturn
 endif
 
 common-generated += bits/stdio_lim.h bits/stdio_lim.d

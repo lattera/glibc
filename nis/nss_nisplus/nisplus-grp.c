@@ -36,7 +36,7 @@ static nis_name tablename_val = NULL;
 static u_long tablename_len = 0;
 
 static enum nss_status
-_nss_create_tablename (void)
+_nss_create_tablename (int *errnop)
 {
   if (tablename_val == NULL)
     {
@@ -47,7 +47,10 @@ _nss_create_tablename (void)
       p = __stpcpy (p, nis_local_directory ());
       tablename_val = __strdup (buf);
       if (tablename_val == NULL)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       tablename_len = strlen (tablename_val);
     }
   return NSS_STATUS_SUCCESS;
@@ -57,6 +60,7 @@ static enum nss_status
 internal_setgrent (void)
 {
   enum nss_status status;
+  int err;
 
   if (result)
     nis_freeresult (result);
@@ -64,7 +68,7 @@ internal_setgrent (void)
   next_entry = 0;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename () != NSS_STATUS_SUCCESS)
+    if (_nss_create_tablename (&err) != NSS_STATUS_SUCCESS)
       return NSS_STATUS_UNAVAIL;
 
   result = nis_list (tablename_val, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
@@ -106,7 +110,8 @@ _nss_nisplus_endgrent (void)
 }
 
 static enum nss_status
-internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen)
+internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen,
+			     int *errnop)
 {
   int parse_res;
 
@@ -125,8 +130,9 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen)
       if (next_entry >= result->objects.objects_len)
 	return NSS_STATUS_NOTFOUND;
 
-      if ((parse_res = _nss_nisplus_parse_grent (result, next_entry, gr,
-						 buffer, buflen)) == -1)
+      parse_res = _nss_nisplus_parse_grent (result, next_entry, gr,
+					    buffer, buflen, errnop);
+      if (parse_res == -1)
 	return NSS_STATUS_TRYAGAIN;
 
       ++next_entry;
@@ -137,13 +143,14 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen)
 }
 
 enum nss_status
-_nss_nisplus_getgrent_r (struct group *result, char *buffer, size_t buflen)
+_nss_nisplus_getgrent_r (struct group *result, char *buffer, size_t buflen,
+			 int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nisplus_getgrent_r (result, buffer, buflen);
+  status = internal_nisplus_getgrent_r (result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -152,13 +159,17 @@ _nss_nisplus_getgrent_r (struct group *result, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
-			 char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   int parse_res;
 
   if (tablename_val == NULL)
-    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   if (name == NULL || strlen (name) > 8)
     return NSS_STATUS_NOTFOUND;
@@ -179,11 +190,15 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 	  return status;
 	}
 
-      parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen);
+      parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen,
+					    errnop);
       nis_freeresult (result);
 
       if (parse_res == -1)
-	return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = ERANGE;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
 
@@ -193,11 +208,15 @@ _nss_nisplus_getgrnam_r (const char *name, struct group *gr,
 
 enum nss_status
 _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
-			 char *buffer, size_t buflen)
+			 char *buffer, size_t buflen, int *errnop)
 {
   if (tablename_val == NULL)
-    if (_nss_create_tablename() != NSS_STATUS_SUCCESS)
-      return NSS_STATUS_UNAVAIL;
+    {
+      enum nss_status status = _nss_create_tablename (errnop);
+
+      if (status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   {
     int parse_res;
@@ -216,12 +235,16 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
 	return status;
       }
 
-    parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen);
+    parse_res = _nss_nisplus_parse_grent (result, 0, gr, buffer, buflen,
+					  errnop);
 
     nis_freeresult (result);
 
     if (parse_res == -1)
-      return NSS_STATUS_TRYAGAIN;
+      {
+	*errnop = ERANGE;
+	return NSS_STATUS_TRYAGAIN;
+      }
 
     if (parse_res)
       return NSS_STATUS_SUCCESS;

@@ -17,12 +17,36 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
 
+extern ssize_t __syscall_pwrite64 (int fd, const void *buf, size_t count,
+				   off_t offset_hi, off_t offset_lo);
+
+static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
+				 off_t offset) internal_function;
+
+
 ssize_t
-__pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
+__pwrite (fd, buf, count, offset)
+     int fd;
+     const void *buf;
+     size_t count;
+     off_t offset;
 {
-  return __pwrite64 (fd, buf, nbytes, (off64_t) offset);
+  ssize_t result;
+
+  /* First try the syscall.  */
+  result = __syscall_pwrite64 (fd, buf, count, 0, offset);
+  if (result == -1 && errno == ENOSYS)
+    /* No system call available.  Use the emulation.  */
+    result = __emulate_pwrite (fd, buf, count, offset);
+
+  return result;
 }
 
 weak_alias (__pwrite, pwrite)
+
+#define __pwrite(fd, buf, count, offset) \
+     static internal_function __emulate_pwrite (fd, buf, count, offset)
+#include <sysdeps/posix/pwrite.c>

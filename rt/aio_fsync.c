@@ -36,7 +36,7 @@ int
 aio_fsync (int op, struct aiocb *aiocbp)
 {
   return __aio_enqueue_request ((aiocb_union *) aiocbp,
-				op == O_SYNC ? __LIO_SYNC : __LIO_DSYNC, 1);
+				op == O_SYNC ? LIO_SYNC : LIO_DSYNC) != NULL;
 }
 
 weak_alias (aio_fsync, aio_fsync64)

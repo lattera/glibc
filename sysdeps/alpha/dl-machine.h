@@ -166,7 +166,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	mov	$26, $18
 	addq	$17, $17, $17
 	/* Do the fixup */
-	bsr	$26, " #fixup_name "..ng
+	bsr	$26, " ASM_ALPHA_NG_SYMBOL_PREFIX #fixup_name "..ng
 	/* Move the destination address into position.  */
 	mov	$0, $27
 	/* Restore program registers.  */
@@ -221,7 +221,7 @@ _start:
 0:	ldgp	$gp, 0($gp)
 	/* Pass pointer to argument block to _dl_start.  */
 	mov	$sp, $16
-	bsr	$26, _dl_start..ng
+	bsr	$26, "ASM_ALPHA_NG_SYMBOL_PREFIX"_dl_start..ng
 	.end _start
 	/* FALLTHRU */
 	.globl _dl_start_user

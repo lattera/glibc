@@ -192,6 +192,17 @@ extern size_t strftime __P ((char *__restrict __s, size_t __maxsize,
 			     __const char *__restrict __format,
 			     __const struct tm *__restrict __tp));
 
+#ifdef __USE_ISOC9X
+/* Format TP into S according to FORMAT.
+   Write no more than MAXSIZE characters and return the number
+   of characters written, or 0 if it would exceed MAXSIZE.  */
+extern size_t strfxtime __P ((char *__restrict __s, size_t __maxsize,
+			      __const char *__restrict __format,
+			      __const struct tmx *__restrict __tp));
+
+
+#endif
+
 # ifdef __USE_XOPEN
 /* Parse S according to FORMAT and store binary time information in TP.
    The return value is a pointer to the first unparsed character in S.  */

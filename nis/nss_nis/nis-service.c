@@ -31,7 +31,7 @@
 
 /* The parser is defined in a different module.  */
 extern int _nss_files_parse_servent (char *line, struct servent *result,
-				     char *data, size_t datalen);
+				     char *data, size_t datalen, int *errnop);
 
 
 
@@ -155,7 +155,7 @@ _nss_nis_endservent (void)
 
 static enum nss_status
 internal_nis_getservent_r (struct servent *serv, char *buffer,
-			   size_t buflen, intern_t *data)
+			   size_t buflen, int *errnop, intern_t *data)
 {
   int parse_res;
   char *p;
@@ -172,8 +172,8 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
            while (isspace (*p))
         ++p;
 
-      if ((parse_res = _nss_files_parse_servent (p, serv, buffer, 
-						 buflen)) == -1)
+      parse_res = _nss_files_parse_servent (p, serv, buffer, buflen, errnop);
+      if (parse_res == -1)
         return NSS_STATUS_TRYAGAIN;
       data->next = data->next->next;
     }
@@ -183,13 +183,14 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
 }
 
 enum nss_status
-_nss_nis_getservent_r (struct servent *serv, char *buffer, size_t buflen)
+_nss_nis_getservent_r (struct servent *serv, char *buffer, size_t buflen,
+		       int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_getservent_r (serv, buffer, buflen, &intern);
+  status = internal_nis_getservent_r (serv, buffer, buflen, errnop, &intern);
 
   __libc_lock_unlock (lock);
 
@@ -198,7 +199,8 @@ _nss_nis_getservent_r (struct servent *serv, char *buffer, size_t buflen)
 
 enum nss_status
 _nss_nis_getservbyname_r (const char *name, char *protocol,
-			  struct servent *serv, char *buffer, size_t buflen)
+			  struct servent *serv, char *buffer, size_t buflen,
+			  int *errnop)
 {
   intern_t data = { NULL, NULL };
   enum nss_status status;
@@ -216,8 +218,8 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
 
   found = 0;
   while (!found &&
-         ((status = internal_nis_getservent_r (serv, buffer, buflen, &data))
-          == NSS_STATUS_SUCCESS))
+         ((status = internal_nis_getservent_r (serv, buffer, buflen, errnop,
+					       &data)) == NSS_STATUS_SUCCESS))
     {
       if (protocol == NULL || strcmp (serv->s_proto, protocol) == 0)
 	{
@@ -242,7 +244,7 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
 
 enum nss_status
 _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
-			  char *buffer, size_t buflen)
+			  char *buffer, size_t buflen, int *errnop)
 {
   intern_t data = { NULL, NULL };
   enum nss_status status;
@@ -260,17 +262,11 @@ _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
 
   found = 0;
   while (!found &&
-         ((status = internal_nis_getservent_r (serv, buffer, buflen, &data))
-          == NSS_STATUS_SUCCESS))
-    {
-      if (htons (serv->s_port) == port)
-        {
-          if  (strcmp (serv->s_proto, protocol) == 0)
-            {
-              found = 1;
-            }
-        }
-    }
+         ((status = internal_nis_getservent_r (serv, buffer, buflen, errnop,
+					       &data)) == NSS_STATUS_SUCCESS))
+    if (htons (serv->s_port) == port
+	&&  strcmp (serv->s_proto, protocol) == 0)
+      found = 1;
 
   internal_nis_endservent (&data);
 

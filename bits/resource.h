@@ -21,6 +21,8 @@
 # error "Never use <bits/resource.h> directly; include <sys/resource.h> instead."
 #endif
 
+#include <bits/types.h>
+
 /* These are the values for 4.4 BSD and GNU.  Earlier BSD systems have a
    subset of these kinds of resource limit.  In systems where `getrlimit'
    and `setrlimit' are not system calls, these are the values used by the C

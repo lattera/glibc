@@ -32,7 +32,7 @@ extern int xdecrypt (char *, char *);
 
 /* If we haven't found the entry, we give a SUCCESS and an empty key back. */
 enum nss_status
-_nss_nisplus_getpublickey (const char *netname, char *pkey)
+_nss_nisplus_getpublickey (const char *netname, char *pkey, int *errnop)
 {
   nis_result *res;
   enum nss_status retval;
@@ -45,7 +45,7 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
 
   if (netname == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -72,7 +72,7 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-	__set_errno (EAGAIN);
+	*errnop = errno;
       if (res->status == NIS_NOTFOUND)
 	retval = NSS_STATUS_SUCCESS;
       nis_freeresult (res);
@@ -103,7 +103,8 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
 }
 
 enum nss_status
-_nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
+_nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd,
+			   int *errnop)
 {
   nis_result *res;
   enum nss_status retval;
@@ -116,7 +117,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 
   if (netname == NULL)
     {
-      __set_errno (EINVAL);
+      *errnop = EINVAL;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -143,7 +144,7 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
   if (retval != NSS_STATUS_SUCCESS)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
-	__set_errno (EAGAIN);
+	*errnop = errno;
       nis_freeresult (res);
       return retval;
     }
@@ -183,7 +184,8 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 /* Parse information from the passed string.
    The format of the string passed is gid,grp,grp, ...  */
 static enum nss_status
-parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist)
+parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
+	       int *errnop)
 {
   int gidlen;
 
@@ -209,7 +211,7 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist)
 
 enum nss_status
 _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
-		       gid_t *gidp, int *gidlenp, gid_t *gidlist)
+		       gid_t *gidp, int *gidlenp, gid_t *gidlist, int *errnop)
 {
   char *domain;
   nis_result *res;
@@ -223,7 +225,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
   if (! domain)
     return NSS_STATUS_UNAVAIL;
 
-  domain++;  /* skip '@' */
+  ++domain;  /* skip '@' */
 
   /* 2.  Get user's nisplus principal name.  */
   if ((strlen (netname) + strlen (domain)+45) >
@@ -260,6 +262,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
 	      nis_sperrno (res->status));
       nis_freeresult (res);
+      *errnop = errno;
       return NSS_STATUS_TRYAGAIN;
     default:
       syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
@@ -269,16 +272,14 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
     }
 
   if (res->objects.objects_len > 1)
-    {
-      /*
-       * A netname belonging to more than one principal?
-       * Something wrong with cred table. should be unique.
-       * Warn user and continue.
-       */
-      syslog (LOG_ALERT,
-	      _("netname2user: DES entry for %s in directory %s not unique"),
-	      netname, domain);
-    }
+    /*
+     * A netname belonging to more than one principal?
+     * Something wrong with cred table. should be unique.
+     * Warn user and continue.
+     */
+    syslog (LOG_ALERT,
+	    _("netname2user: DES entry for %s in directory %s not unique"),
+	    netname, domain);
 
   len = ENTRY_LEN (res->objects.objects_val, 0);
   strncpy (principal, ENTRY_VAL (res->objects.objects_val, 0), len);
@@ -326,6 +327,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
       syslog (LOG_ERR, _("netname2user: (nis+ lookup): %s\n"),
 	      nis_sperrno (res->status));
       nis_freeresult (res);
+      *errnop = errno;
       return NSS_STATUS_TRYAGAIN;
     case NIS_SUCCESS:
     case NIS_S_SUCCESS:
@@ -338,16 +340,14 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
     }
 
   if (res->objects.objects_len > 1)
-    {
-      /*
-       * A principal can have more than one LOCAL entry?
-       * Something wrong with cred table.
-       * Warn user and continue.
-       */
-      syslog (LOG_ALERT,
-	      _("netname2user: LOCAL entry for %s in directory %s not unique"),
-	      netname, domain);
-    }
+    /*
+     * A principal can have more than one LOCAL entry?
+     * Something wrong with cred table.
+     * Warn user and continue.
+     */
+    syslog (LOG_ALERT,
+	    _("netname2user: LOCAL entry for %s in directory %s not unique"),
+	    netname, domain);
   /* Fetch the uid */
   *uidp = atoi (ENTRY_VAL (res->objects.objects_val, 2));
 
@@ -358,7 +358,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
     }
 
   parse_grp_str (ENTRY_VAL (res->objects.objects_val, 3),
-		 gidp, gidlenp, gidlist);
+		 gidp, gidlenp, gidlist, errnop);
 
   nis_freeresult (res);
   return NSS_STATUS_SUCCESS;

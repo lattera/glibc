@@ -147,9 +147,10 @@ CONCAT(_nss_db_end,ENTNAME) (void)
 /* Do a database lookup for KEY.  */
 static enum nss_status
 lookup (const DBT *key, struct STRUCTURE *result,
-	void *buffer, int buflen H_ERRNO_PROTO)
+	void *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)
 {
   enum nss_status status;
+  int err;
   DBT value;
 
   /* Open the database.  */
@@ -158,9 +159,12 @@ lookup (const DBT *key, struct STRUCTURE *result,
     return status;
 
   /* Succeed iff it matches a value that parses correctly.  */
-  status = (((*db->get) (db, key, &value, 0) == 0 &&
-	     parse_line (value.data, result, buffer, buflen))
-	    ? NSS_STATUS_SUCCESS : NSS_STATUS_NOTFOUND);
+  err = ((*db->get) (db, key, &value, 0) == 0 &&
+	 parse_line (value.data, result, buffer, buflen, errnop));
+  if (err == 0)
+    status = NSS_STATUS_SUCCESS;
+  else
+    status = err < 0 ? NSS_STATUS_TRYAGAIN : NSS_STATUS_NOTFOUND;
 
   if (! keep_db)
     internal_endent ();
@@ -188,7 +192,7 @@ lookup (const DBT *key, struct STRUCTURE *result,
 enum nss_status								      \
 _nss_db_get##name##_r (proto,						      \
 		       struct STRUCTURE *result,			      \
-		       char *buffer, size_t buflen H_ERRNO_PROTO)	      \
+		       char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)\
 {									      \
   DBT key;								      \
   enum nss_status status;						      \
@@ -196,7 +200,7 @@ _nss_db_get##name##_r (proto,						      \
   key.data = __alloca (size);						      \
   key.size = KEYPRINTF keypattern;					      \
   __libc_lock_lock (lock);						      \
-  status = lookup (&key, result, buffer, buflen H_ERRNO_ARG);		      \
+  status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);	      \
   __libc_lock_unlock (lock);						      \
   return status;							      \
 }
@@ -208,8 +212,8 @@ _nss_db_get##name##_r (proto,						      \
 
 /* Return the next entry from the database file, doing locking.  */
 enum nss_status
-CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result,
-			       char *buffer, size_t buflen H_ERRNO_PROTO)
+CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
+			       size_t buflen, int *errnop H_ERRNO_PROTO)
 {
   /* Return next entry in host file.  */
   enum nss_status status;
@@ -218,7 +222,7 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result,
 
   __libc_lock_lock (lock);
   key.size = 1 + snprintf (key.data = buf, sizeof buf, "0%u", entidx++);
-  status = lookup (&key, result, buffer, buflen H_ERRNO_ARG);
+  status = lookup (&key, result, buffer, buflen, errnop H_ERRNO_ARG);
   __libc_lock_unlock (lock);
 
   return status;

@@ -97,7 +97,7 @@ _nss_hesiod_endservent (void)
 
 static enum nss_status
 lookup (const char *name, const char *protocol, struct servent *serv,
-	char *buffer, size_t buflen)
+	char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status;
   struct parser_data *data = (void *) buffer;
@@ -120,16 +120,18 @@ lookup (const char *name, const char *protocol, struct servent *serv,
   found = 0;
   do
     {
-      if (linebuflen < strlen (*item) + 1)
+      size_t len = strlen (*item) + 1;
+
+      if (linebuflen < len)
 	{
 	  hesiod_free_list (context, list);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
-      strcpy (data->linebuffer, *item);
+      memcpy (data->linebuffer, *item, len);
 
-      parse_res = parse_line (buffer, serv, data, buflen);
+      parse_res = parse_line (buffer, serv, data, buflen, errnop);
       if (parse_res == -1)
 	{
 	  hesiod_free_list (context, list);
@@ -151,13 +153,13 @@ lookup (const char *name, const char *protocol, struct servent *serv,
 enum nss_status
 _nss_hesiod_getservbyname_r (const char *name, const char *protocol,
 			     struct servent *serv,
-			     char *buffer, size_t buflen)
+			     char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status status;
 
   __libc_lock_lock (lock);
 
-  status = lookup (name, protocol, serv, buffer, buflen);
+  status = lookup (name, protocol, serv, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 

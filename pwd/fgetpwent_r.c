@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <pwd.h>
 
@@ -27,7 +28,7 @@
 #define ENTNAME		pwent
 struct pwent_data {};
 
-#include "../nss/nss_files/files-parse.c"
+#include <nss/nss_files/files-parse.c>
 LINE_PARSER
 (,
  STRING_FIELD (result->pw_name, ISCOLON, 0);
@@ -86,7 +87,8 @@ __fgetpwent_r (FILE *stream, struct passwd *resbuf, char *buffer,
     } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (p, resbuf, (void *) buffer, buflen));
+	     ! parse_line (p, resbuf, (void *) buffer, buflen,
+			   __errno_location ()));
 
   *result = resbuf;
   return 0;

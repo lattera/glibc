@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ __sigblock (mask)
   else if (sizeof (unsigned long int) == sizeof (set))
     *(unsigned long int *) &set = (unsigned int) mask;
   else
-    for (sig = 1; sig < NSIG; ++sig)
+    for (sig = 1; sig < NSIG && sig <= sizeof (mask) * 8; ++sig)
       if ((mask & sigmask (sig)) && __sigaddset (&set, sig) < 0)
 	return -1;
 
@@ -47,7 +47,7 @@ __sigblock (mask)
   else if (sizeof (unsigned long int) == sizeof (oset))
     mask = *(unsigned long int*) &oset;
   else
-    for (sig = 1, mask = 0; sig < NSIG; ++sig)
+    for (sig = 1, mask = 0; sig < NSIG && sig <= sizeof (mask) * 8; ++sig)
       if (__sigismember (&oset, sig))
 	mask |= sigmask (sig);
 

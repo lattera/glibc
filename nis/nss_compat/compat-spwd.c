@@ -291,7 +291,7 @@ _nss_compat_endspent (void)
 
 static enum nss_status
 getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
-			 char *group, char *buffer, size_t buflen)
+			 char *group, char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   char *ypdomain, *host, *user, *domain, *outval, *p, *p2;
@@ -320,7 +320,8 @@ getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
 
       saved_cursor = ent->netgrdata.cursor;
       status = __internal_getnetgrent_r (&host, &user, &domain,
-					 &ent->netgrdata, buffer, buflen);
+					 &ent->netgrdata, buffer, buflen,
+					 errnop);
       if (status != 1)
 	{
 	  __internal_endnetgrent (&ent->netgrdata);
@@ -348,7 +349,7 @@ getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
       p2len = spwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
 	{
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       p2 = buffer + (buflen - p2len);
@@ -357,7 +358,8 @@ getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
       while (isspace (*p))
 	p++;
       free (outval);
-      if ((parse_res = _nss_files_parse_spent (p, result, data, buflen)) == -1)
+      parse_res = _nss_files_parse_spent (p, result, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  ent->netgrdata.cursor = saved_cursor;
 	  return NSS_STATUS_TRYAGAIN;
@@ -379,7 +381,7 @@ getspent_next_nis_netgr (const char *name, struct spwd *result, ent_t *ent,
 static enum nss_status
 getspent_next_nisplus_netgr (const char *name, struct spwd *result,
 			     ent_t *ent, char *group, char *buffer,
-			     size_t buflen)
+			     size_t buflen, int *errnop)
 {
   char *ypdomain, *host, *user, *domain, *p2;
   int status, parse_res;
@@ -409,7 +411,8 @@ getspent_next_nisplus_netgr (const char *name, struct spwd *result,
 
       saved_cursor = ent->netgrdata.cursor;
       status = __internal_getnetgrent_r (&host, &user, &domain,
-                                         &ent->netgrdata, buffer, buflen);
+                                         &ent->netgrdata, buffer, buflen,
+					 errnop);
       if (status != 1)
         {
           __internal_endnetgrent (&ent->netgrdata);
@@ -432,25 +435,27 @@ getspent_next_nisplus_netgr (const char *name, struct spwd *result,
       p2len = spwd_need_buflen (&ent->pwd);
       if (p2len > buflen)
         {
-          __set_errno (ERANGE);
+          *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
       p2 = buffer + (buflen - p2len);
       buflen -= p2len;
       {
         char buf[strlen (user) + 30 + pwdtablelen];
-        sprintf(buf, "[name=%s],%s", user, pwdtable);
-        nisres = nis_list(buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+        sprintf (buf, "[name=%s],%s", user, pwdtable);
+        nisres = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
       }
       if (niserr2nss (nisres->status) != NSS_STATUS_SUCCESS)
         {
           nis_freeresult (nisres);
           continue;
         }
-      if ((parse_res = _nss_nisplus_parse_spent (nisres, result, buffer,
-						 buflen)) == -1)
+      parse_res = _nss_nisplus_parse_spent (nisres, result, buffer,
+					    buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (nisres);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       nis_freeresult (nisres);
@@ -470,7 +475,7 @@ getspent_next_nisplus_netgr (const char *name, struct spwd *result,
 
 static enum nss_status
 getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
-                       size_t buflen)
+                       size_t buflen, int *errnop)
 {
   int parse_res;
   size_t p2len;
@@ -479,7 +484,7 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
   p2len = spwd_need_buflen (&ent->pwd);
   if (p2len > buflen)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
   p2 = buffer + (buflen - p2len);
@@ -494,7 +499,7 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
 	  saved_first = TRUE;
 	  saved_res = ent->result;
 
-          ent->result = nis_first_entry(pwdtable);
+          ent->result = nis_first_entry (pwdtable);
           if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
             {
               ent->nis = 0;
@@ -510,7 +515,7 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
 	  saved_first = FALSE;
 	  saved_res = ent->result;
 
-          res = nis_next_entry(pwdtable, &ent->result->cookie);
+          res = nis_next_entry (pwdtable, &ent->result->cookie);
           ent->result = res;
           if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
             {
@@ -520,13 +525,14 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
 	      return niserr2nss (ent->result->status);
             }
         }
-      if ((parse_res = _nss_nisplus_parse_spent (ent->result, result, buffer,
-						 buflen)) == -1)
+      parse_res = _nss_nisplus_parse_spent (ent->result, result, buffer,
+					    buflen, errnop);
+      if (parse_res == -1)
 	{
 	  ent->first = saved_first;
 	  nis_freeresult (ent->result);
 	  ent->result = saved_res;
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
@@ -548,7 +554,7 @@ getspent_next_nisplus (struct spwd *result, ent_t *ent, char *buffer,
 
 static enum nss_status
 getspent_next_nis (struct spwd *result, ent_t *ent,
-		   char *buffer, size_t buflen)
+		   char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   char *domain, *outkey, *outval, *p, *p2;
@@ -565,7 +571,7 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
   p2len = spwd_need_buflen (&ent->pwd);
   if (p2len > buflen)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
   p2 = buffer + (buflen - p2len);
@@ -618,13 +624,14 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 
       while (isspace (*p))
 	++p;
-      if ((parse_res = _nss_files_parse_spent (p, result, data, buflen)) == -1)
+      parse_res = _nss_files_parse_spent (p, result, data, buflen, errnop);
+      if (parse_res == -1)
 	{
 	  free (ent->oldkey);
 	  ent->oldkey = saved_oldkey;
 	  ent->oldkeylen = saved_oldlen;
 	  ent->first = saved_first;
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       else
@@ -646,7 +653,7 @@ getspent_next_nis (struct spwd *result, ent_t *ent,
 /* This function handle the +user entrys in /etc/shadow */
 static enum nss_status
 getspnam_plususer (const char *name, struct spwd *result, char *buffer,
-		   size_t buflen)
+		   size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   struct spwd pwd;
@@ -661,7 +668,7 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
   plen = spwd_need_buflen (&pwd);
   if (plen > buflen)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
   p = buffer + (buflen - plen);
@@ -681,10 +688,12 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
           nis_freeresult (res);
           return status;
         }
-      if ((parse_res = _nss_nisplus_parse_spent (res, result, buffer,
-						 buflen)) == -1)
+      parse_res = _nss_nisplus_parse_spent (res, result, buffer,
+					    buflen, errnop);
+      if (parse_res == -1)
 	{
 	  nis_freeresult (res);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       nis_freeresult (res);
@@ -695,24 +704,27 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
 
       if (yp_match (domain, "shadow.byname", name, strlen (name),
 		    &outval, &outvallen)
           != YPERR_SUCCESS)
-        return NSS_STATUS_TRYAGAIN;
+	{
+	  *errnop = errno;
+	  return NSS_STATUS_TRYAGAIN;
+	}
       ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
 		     buflen : (size_t) outvallen);
       buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
       free (outval);
       while (isspace (*ptr))
         ptr++;
-      if ((parse_res = _nss_files_parse_spent (ptr, result, data, buflen))
-	  == -1)
-	{
-	  __set_errno (ERANGE);
-	  return NSS_STATUS_TRYAGAIN;
-	}
+      parse_res = _nss_files_parse_spent (ptr, result, data, buflen, errnop);
+      if (parse_res == -1)
+	return NSS_STATUS_TRYAGAIN;
     }
 
   if (parse_res)
@@ -733,7 +745,7 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
 
 static enum nss_status
 getspent_next_file (struct spwd *result, ent_t *ent,
-		    char *buffer, size_t buflen)
+		    char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
   while (1)
@@ -760,13 +772,13 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       /* Parse the line.  If it is invalid, loop to
          get the next line of the file to parse.  */
 	     || !(parse_res = _nss_files_parse_spent (p, result, data,
-						      buflen)));
+						      buflen, errnop)));
 
       if (parse_res == -1)
         {
           /* The parser ran out of space.  */
           fsetpos (ent->stream, &pos);
-          __set_errno (ERANGE);
+          *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
 
@@ -778,6 +790,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '-' && result->sp_namp[1] == '@'
 	  && result->sp_namp[2] != '\0')
 	{
+	  /* XXX Do not use fixed length buffers.  */
           char buf2[1024];
  	  char *user, *host, *domain;
           struct __netgrent netgrdata;
@@ -785,7 +798,8 @@ getspent_next_file (struct spwd *result, ent_t *ent,
           bzero (&netgrdata, sizeof (struct __netgrent));
           __internal_setnetgrent (&result->sp_namp[2], &netgrdata);
 	  while (__internal_getnetgrent_r (&host, &user, &domain,
-					   &netgrdata, buf2, sizeof (buf2)))
+					   &netgrdata, buf2, sizeof (buf2),
+					   errnop))
 	    {
 	      if (user != NULL && user[0] != '-')
 		blacklist_store_name (user, ent);
@@ -807,11 +821,11 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  if (use_nisplus)
 	    status = getspent_next_nisplus_netgr (NULL, result, ent,
 						  &result->sp_namp[2],
-						  buffer, buflen);
+						  buffer, buflen, errnop);
 	  else
 	    status = getspent_next_nis_netgr (NULL, result, ent,
 					      &result->sp_namp[2],
-					      buffer, buflen);
+					      buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN)
 	    continue;
 	  else
@@ -836,14 +850,21 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	     /etc/passwd */
 	  blacklist_store_name (&result->sp_namp[1], ent);
           status = getspnam_plususer (&result->sp_namp[1], result, buffer,
-				      buflen);
+				      buflen, errnop);
           if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
             break;
           else
             if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
               continue;
             else
-              return status;
+	      {
+		if (status == NSS_STATUS_TRYAGAIN)
+		  {
+		    fsetpos (ent->stream, &pos);
+		    *errnop = ERANGE;
+		  }
+		return status;
+	      }
 	}
 
       /* +:... */
@@ -854,9 +875,9 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 	  copy_spwd_changes (&ent->pwd, result, NULL, 0);
 
 	  if (use_nisplus)
-	    return getspent_next_nisplus (result, ent, buffer, buflen);
+	    return getspent_next_nisplus (result, ent, buffer, buflen, errnop);
 	  else
-	    return getspent_next_nis (result, ent, buffer, buflen);
+	    return getspent_next_nis (result, ent, buffer, buflen, errnop);
 	}
     }
 
@@ -866,7 +887,7 @@ getspent_next_file (struct spwd *result, ent_t *ent,
 
 static enum nss_status
 internal_getspent_r (struct spwd *pw, ent_t *ent,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   if (ent->netgroup)
     {
@@ -876,11 +897,12 @@ internal_getspent_r (struct spwd *pw, ent_t *ent,
       /* Since this is not the first call, we don't need the group name */
       if (use_nisplus)
 	status = getspent_next_nisplus_netgr (NULL, pw, ent, NULL, buffer,
-					      buflen);
+					      buflen, errnop);
       else
-	status = getspent_next_nis_netgr (NULL, pw, ent, NULL, buffer, buflen);
+	status = getspent_next_nis_netgr (NULL, pw, ent, NULL, buffer, buflen,
+					  errnop);
       if (status == NSS_STATUS_RETURN)
-	return getspent_next_file (pw, ent, buffer, buflen);
+	return getspent_next_file (pw, ent, buffer, buflen, errnop);
       else
 	return status;
     }
@@ -888,16 +910,17 @@ internal_getspent_r (struct spwd *pw, ent_t *ent,
     if (ent->nis)
       {
 	if (use_nisplus)
-	  return getspent_next_nisplus (pw, ent, buffer, buflen);
+	  return getspent_next_nisplus (pw, ent, buffer, buflen, errnop);
 	else
-	  return getspent_next_nis (pw, ent, buffer, buflen);
+	  return getspent_next_nis (pw, ent, buffer, buflen, errnop);
       }
     else
-      return getspent_next_file (pw, ent, buffer, buflen);
+      return getspent_next_file (pw, ent, buffer, buflen, errnop);
 }
 
 enum nss_status
-_nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen)
+_nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen,
+			int *errnop)
 {
   enum nss_status status = NSS_STATUS_SUCCESS;
 
@@ -914,7 +937,7 @@ _nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen)
     status = internal_setspent (&ext_ent);
 
   if (status == NSS_STATUS_SUCCESS)
-    status = internal_getspent_r (pwd, &ext_ent, buffer, buflen);
+    status = internal_getspent_r (pwd, &ext_ent, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 
@@ -924,7 +947,7 @@ _nss_compat_getspent_r (struct spwd *pwd, char *buffer, size_t buflen)
 /* Searches in /etc/passwd and the NIS/NIS+ map for a special user */
 static enum nss_status
 internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
-		     char *buffer, size_t buflen)
+		     char *buffer, size_t buflen, int *errnop)
 {
   struct parser_data *data = (void *) buffer;
 
@@ -951,13 +974,14 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
       while (*p == '\0' || *p == '#' || /* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_spent (p, result, data, buflen)));
+	     !(parse_res = _nss_files_parse_spent (p, result, data, buflen,
+						   errnop)));
 
       if (parse_res == -1)
 	{
 	  /* The parser ran out of space.  */
 	  fsetpos (ent->stream, &pos);
-	  __set_errno (ERANGE);
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
 
@@ -974,14 +998,15 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '-' && result->sp_namp[1] == '@'
 	  && result->sp_namp[2] != '\0')
 	{
+	  /* XXX Do not use fixed length buffers.  */
 	  char buf2[1024];
 	  char *user, *host, *domain;
 	  struct __netgrent netgrdata;
 
 	  bzero (&netgrdata, sizeof (struct __netgrent));
 	  __internal_setnetgrent (&result->sp_namp[2], &netgrdata);
-	  while (__internal_getnetgrent_r (&host, &user, &domain,
-					   &netgrdata, buf2, sizeof (buf2)))
+	  while (__internal_getnetgrent_r (&host, &user, &domain, &netgrdata,
+					   buf2, sizeof (buf2), errnop))
 	    {
 	      if (user != NULL && user[0] != '-')
 		if (strcmp (user, name) == 0)
@@ -995,10 +1020,9 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '+' && result->sp_namp[1] == '@'
 	  && result->sp_namp[2] != '\0')
 	{
-	  char buf[strlen (result->sp_namp)];
+	  char *buf = strdupa (&result->sp_namp[2]);
 	  int status;
 
-	  strcpy (buf, &result->sp_namp[2]);
 	  ent->netgroup = TRUE;
 	  ent->first = TRUE;
 	  copy_spwd_changes (&ent->pwd, result, NULL, 0);
@@ -1007,15 +1031,15 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	    {
 	      if (use_nisplus)
 		status = getspent_next_nisplus_netgr (name, result, ent, buf,
-						      buffer, buflen);
+						      buffer, buflen, errnop);
 	      else
 		status = getspent_next_nis_netgr (name, result, ent, buf,
-						  buffer, buflen);
+						  buffer, buflen, errnop);
 	      if (status == NSS_STATUS_RETURN)
 		continue;
 
-	      if (status == NSS_STATUS_SUCCESS &&
-		  strcmp (result->sp_namp, name) == 0)
+	      if (status == NSS_STATUS_SUCCESS
+		  && strcmp (result->sp_namp, name) == 0)
 		return NSS_STATUS_SUCCESS;
 	    } while (status == NSS_STATUS_SUCCESS);
 	  continue;
@@ -1039,7 +1063,8 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	    {
 	      enum nss_status status;
 
-	      status = getspnam_plususer (name, result, buffer, buflen);
+	      status = getspnam_plususer (name, result, buffer, buflen,
+					  errnop);
 	      if (status == NSS_STATUS_RETURN)
 		/* We couldn't parse the entry */
 		return NSS_STATUS_NOTFOUND;
@@ -1053,7 +1078,7 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	{
 	  enum nss_status status;
 
-	  status = getspnam_plususer (name, result, buffer, buflen);
+	  status = getspnam_plususer (name, result, buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
 	    return NSS_STATUS_NOTFOUND;
 	  else
@@ -1065,7 +1090,7 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 
 enum nss_status
 _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
-			char *buffer, size_t buflen)
+			char *buffer, size_t buflen, int *errnop)
 {
   ent_t ent = {0, 0, 0, NULL, 0, NULL, NULL, {NULL, 0, 0},
 	       {NULL, NULL, 0, 0, 0, 0, 0, 0, 0}};
@@ -1084,7 +1109,7 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
-  status = internal_getspnam_r (name, pwd, &ent, buffer, buflen);
+  status = internal_getspnam_r (name, pwd, &ent, buffer, buflen, errnop);
 
   internal_endspent (&ent);
 

@@ -112,16 +112,18 @@ _nss_db_endnetgrent (void)
 
 extern enum nss_status _nss_netgroup_parseline (char **cursor,
 						struct __netgrent *result,
-						char *buffer, int buflen);
+						char *buffer, size_t buflen,
+						int *errnop);
 
 enum nss_status
-_nss_db_getnetgrent_r (struct __netgrent *result, char *buffer, int buflen)
+_nss_db_getnetgrent_r (struct __netgrent *result, char *buffer, size_t buflen,
+		       int *errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen);
+  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen, errnop);
 
   __libc_lock_unlock (lock);
 

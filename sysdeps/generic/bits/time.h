@@ -39,8 +39,8 @@
    microsecond but also has a range of years.  */
 struct timeval
   {
-    time_t tv_sec;		/* Seconds.  */
-    time_t tv_usec;		/* Microseconds.  */
+    __time_t tv_sec;		/* Seconds.  */
+    __time_t tv_usec;		/* Microseconds.  */
   };
 # endif	/* struct timeval */
 #endif	/* need timeval */

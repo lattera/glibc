@@ -34,7 +34,7 @@ typedef unsigned long int __sigset_t;
    trouble can be caused by functions being defined (e.g., any global
    register vars declared later will cause compilation errors).  */
 
-#if !defined (_SIGSET_H_fns) && defined (_SIGNAL_H)
+#if !defined _SIGSET_H_fns && defined _SIGNAL_H
 #define _SIGSET_H_fns 1
 
 #ifndef _EXTERN_INLINE

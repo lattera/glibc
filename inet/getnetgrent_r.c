@@ -92,7 +92,8 @@ free_memory (struct __netgrent *data)
 
 static int
 internal_function
-__internal_setnetgrent_reuse (const char *group, struct __netgrent *datap)
+__internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
+			      int *errnop)
 {
   enum nss_status (*fct) (const char *, struct __netgrent *);
   enum nss_status status = NSS_STATUS_UNAVAIL;
@@ -115,7 +116,8 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap)
     {
       if (new_elem != NULL)
 	free (new_elem);
-      status = NSS_STATUS_UNAVAIL;
+      *errnop = errno;
+      status = NSS_STATUS_TRYAGAIN;
     }
   else
     {
@@ -132,7 +134,7 @@ __internal_setnetgrent (const char *group, struct __netgrent *datap)
   /* Free list of all netgroup names from last run.  */
   free_memory (datap);
 
-  return __internal_setnetgrent_reuse (group, datap);
+  return __internal_setnetgrent_reuse (group, datap, __errno_location ());
 }
 
 int
@@ -190,7 +192,7 @@ endnetgrent (void)
 int
 __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 			  struct __netgrent *datap,
-			  char *buffer, size_t buflen)
+			  char *buffer, size_t buflen, int *errnop)
 {
   enum nss_status (*fct) (struct __netgrent *, char *, size_t);
   int no_more;
@@ -219,7 +221,7 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 	      datap->known_groups = tmp;
 
 	      found = __internal_setnetgrent_reuse (datap->known_groups->name,
-						    datap);
+						    datap, errnop);
 	    }
 
 	  if (found)
@@ -280,7 +282,7 @@ __getnetgrent_r (char **hostp, char **userp, char **domainp,
   __libc_lock_lock (lock);
 
   status = __internal_getnetgrent_r (hostp, userp, domainp, &dataset,
-				     buffer, buflen);
+				     buffer, buflen, __errno_location ());
 
   __libc_lock_unlock (lock);
 

@@ -133,7 +133,7 @@ _nss_nis_endhostent (void)
 
 static enum nss_status
 internal_nis_gethostent_r (struct hostent *host, char *buffer,
-			   size_t buflen, int *h_errnop)
+			   size_t buflen, int *errnop, int *h_errnop)
 {
   char *domain;
   char *result;
@@ -148,7 +148,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 
   if (buflen < sizeof *data + 1)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
@@ -172,7 +172,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	  switch (retval)
 	    {
 	    case NSS_STATUS_TRYAGAIN:
-	      __set_errno (EAGAIN);
+	      *errnop = errno;
 	      *h_errnop = TRY_AGAIN;
 	      break;
 	    case NSS_STATUS_NOTFOUND:
@@ -189,7 +189,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
         {
           free (result);
 	  *h_errnop = NETDB_INTERNAL;
-          __set_errno (ERANGE);
+          *errnop = ERANGE;
           return NSS_STATUS_TRYAGAIN;
         }
 
@@ -199,10 +199,11 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	++p;
       free (result);
 
-      if ((parse_res = parse_line (p, host, data, buflen)) == -1)
+      if ((parse_res = parse_line (p, host, data, buflen, errnop)) == -1)
 	{
 	  free (outkey);
-	  *h_errnop = NETDB_INTERNAL;;
+	  *h_errnop = NETDB_INTERNAL;
+	  *errnop = ERANGE;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       free (oldkey);
@@ -218,13 +219,13 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 
 int
 _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
-		       int *h_errnop)
+		       int *errnop, int *h_errnop)
 {
   int status;
 
   __libc_lock_lock (lock);
 
-  status = internal_nis_gethostent_r (host, buffer, buflen, h_errnop);
+  status = internal_nis_gethostent_r (host, buffer, buflen, errnop, h_errnop);
 
   __libc_lock_unlock (lock);
 
@@ -233,7 +234,8 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
 
 enum nss_status
 _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
-			  char *buffer, size_t buflen, int *h_errnop)
+			   char *buffer, size_t buflen, int *errnop,
+			   int *h_errnop)
 {
   enum nss_status retval;
   char *domain, *result, *p;
@@ -253,7 +255,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
   if (buflen < sizeof *data + 1)
     {
       *h_errnop = NETDB_INTERNAL;
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
   retval = yperr2nss (yp_match (domain, "hosts.byname", name,
@@ -264,7 +266,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *h_errnop = TRY_AGAIN;
-	  __set_errno (EAGAIN);
+	  *errnop = errno;
 	}
       if (retval == NSS_STATUS_NOTFOUND)
 	*h_errnop = HOST_NOT_FOUND;
@@ -275,7 +277,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
     {
       free (result);
       *h_errnop = NETDB_INTERNAL;
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -285,7 +287,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
     ++p;
   free (result);
 
-  parse_res = parse_line (p, host, data, buflen);
+  parse_res = parse_line (p, host, data, buflen, errnop);
 
   if (parse_res < 1 || host->h_addrtype != af)
     {
@@ -306,27 +308,27 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 }
 
 enum nss_status
-_nss_nis_gethostbyname_r (const char *name, struct hostent *host,
-			  char *buffer, size_t buflen, int *h_errnop)
+_nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
+			  size_t buflen, int *errnop, int *h_errnop)
 {
   if (_res.options & RES_USE_INET6)
     {
       enum nss_status status;
 
       status = _nss_nis_gethostbyname2_r (name, AF_INET6, host, buffer, buflen,
-					  h_errnop);
+					  errnop, h_errnop);
       if (status == NSS_STATUS_SUCCESS)
 	return status;
     }
 
   return _nss_nis_gethostbyname2_r (name, AF_INET, host, buffer, buflen,
-				    h_errnop);
+				    errnop, h_errnop);
 }
 
 enum nss_status
 _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
 			  struct hostent *host, char *buffer, size_t buflen,
-			  int *h_errnop)
+			  int *errnop, int *h_errnop)
 {
   enum nss_status retval;
   char *domain, *result, *p;
@@ -340,7 +342,7 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
 
   if (buflen < sizeof *data + 1)
     {
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
@@ -355,7 +357,7 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
       if (retval == NSS_STATUS_TRYAGAIN)
 	{
 	  *h_errnop = TRY_AGAIN;
-	  __set_errno (EAGAIN);
+	  *errnop = errno;
 	}
       if (retval == NSS_STATUS_NOTFOUND)
 	*h_errnop = HOST_NOT_FOUND;
@@ -365,7 +367,7 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
   if ((size_t) (len + 1) > linebuflen)
     {
       free (result);
-      __set_errno (ERANGE);
+      *errnop = ERANGE;
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_TRYAGAIN;
     }
@@ -376,7 +378,7 @@ _nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
     ++p;
   free (result);
 
-  parse_res = parse_line (p, host, data, buflen);
+  parse_res = parse_line (p, host, data, buflen, errnop);
   if (parse_res < 1)
     {
       if (parse_res == -1)
