@@ -1,3 +1,7 @@
+2000-07-28  Andreas Jaeger  <aj@suse.de>
+
+	* tst-langinfo.c: Include <string.h> for strcmp prototype.
+
 2000-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/BIG5: New file.

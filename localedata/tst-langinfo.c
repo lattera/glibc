@@ -21,6 +21,7 @@
 #include <langinfo.h>
 #include <locale.h>
 #include <stdio.h>
+#include <string.h>
 
 
 struct map
