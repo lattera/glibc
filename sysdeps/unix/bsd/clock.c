@@ -28,7 +28,7 @@ static clock_t
 DEFUN(timeval_to_clock_t, (tv), CONST struct timeval *tv)
 {
   return (clock_t) ((tv->tv_sec * CLK_TCK) +
-		    (tv->tv_usec * CLK_TCK / 1000));
+		    (tv->tv_usec * CLK_TCK / 1000000));
 }
 
 /* Return the time used by the program so far (user time + system time).  */
@@ -41,5 +41,5 @@ DEFUN_VOID(clock)
     return (clock_t) -1;
 
   return (timeval_to_clock_t(&usage.ru_stime) +
-	  timeval_to_clock_t(&usage.ru_utime)) * CLOCKS_PER_SEC;
+	  timeval_to_clock_t(&usage.ru_utime));
 }

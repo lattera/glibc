@@ -38,5 +38,5 @@ DEFUN(ualarm, (value, interval),
   if (setitimer(ITIMER_REAL, &timer, &otimer) < 0)
     return -1;
 
-  return (otimer.it_value.tv_sec * 1000) + otimer.it_value.tv_usec;
+  return (otimer.it_value.tv_sec * 1000000) + otimer.it_value.tv_usec;
 }

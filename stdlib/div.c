@@ -57,7 +57,6 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Return the `div_t' representation of NUMER over DENOM.  */
-__CONSTVALUE
 div_t
 DEFUN(div, (numer, denom), int numer AND int denom)
 {

@@ -9,6 +9,62 @@ Sun Jan 14 17:51:09 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	memory_error): Add cast to void to avoid gcc warning.
 	(vfscanf): Rewrite character class parsing to make it more efficient.
 
+	* misc/efgcvt_r.c (ecvt_r): Handle negative values.
+
+	* stdlib/stdlib.h: Replace __CONSTVALUE by attribute.
+	* stdlib/abs.c, stdlib/div.c, stdlib/labs.c, stdlib/ldiv.c,
+	sysdeps/generic/hypot.c: Remove obsolete __CONSTVALUE.
+
+	* stdio-common/printf_fp.c (__printf_fp): Fix parameter
+	declaration.
+
+	* sysdeps/generic/putenv.c (putenv): Fix second argument of
+	setenv.
+
+	* sysdeps/ieee754/hypot.c: New file, extracted out of cabs.c.
+	* sysdeps/ieee754/cabs.c: Don't define hypot here.
+
+	* sysdeps/ieee754/ieee754.h (union ieee854_long_double): Fix
+	definition of ieee_nan alternative.
+
+	* sysdeps/m68k/__longjmp.c, sysdeps/m68k/setjmp.c: Add register
+ 	prefix spec.
+
+	* sysdeps/m68k/ffs.c (ffs): Fix register constraint.
+
+	* sysdeps/m68k/fpu/__math.h: Include <errno.h>.  Replace obsolete
+	__CONSTVALUE by attribute.
+	(floor): Round to negative infinity.
+	(rint, expm1) [__NO_MATH_INLINES]: Don't define, to avoid type
+	clash when compiling source.
+	(pow): Handle x == 0 and x < 0.
+	(ceil, __isinf, __isnan): Fix register constraints.
+	(__isinfl, __isnanl): Added.
+	* sysdeps/m68k/fpu/acos.c, sysdeps/m68k/fpu/atan2.c,
+	sysdeps/m68k/fpu/fmod.c, sysdeps/m68k/fpu/ldexp.c,
+	sysdeps/m68k/fpu/pow.c: Remove obsolete __CONSTVALUE.
+
+	* sysdeps/m68k/bsd-_setjmp.S, sysdeps/m68k/bsd-setjmp.S: Fix
+	assembler syntax.
+
+	* sysdeps/unix/bsd/bsd4.4/fchdir.S (fchdir): Take only one
+ 	argument.
+
+	* sysdeps/unix/bsd/clock.c (timeval_to_clock_t): Fix timeval to
+	clock_t conversion.
+	(clock): Don't multiply by CLOCKS_PER_SEC.
+
+	* sysdeps/unix/bsd/poll.c (poll): Fix msec to timeval conversion.
+
+	* sysdeps/unix/bsd/sun/m68k/brk.S (brk): Compare with address of
+	__end.
+
+	* sysdeps/unix/bsd/sun/m68k/vfork.S: Fix assembler syntax.
+
+	* sysdeps/unix/bsd/ualarm.c (ualarm): Fix timeval calculation.
+
+	* sysdeps/unix/bsd/vax/vfork.S: Remove duplicate label.
+
 Sun Jan 14 01:01:10 1996  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* stdlib/strtol.c: Return correct pointer for strings

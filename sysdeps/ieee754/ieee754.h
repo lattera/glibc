@@ -135,14 +135,16 @@ union ieee854_long_double
 	unsigned int negative:1;
 	unsigned int exponent:15;
 	unsigned int empty:16;
+	unsigned int one:1;
 	unsigned int quiet_nan:1;
-	unsigned int mantissa0:31;
+	unsigned int mantissa0:30;
 	unsigned int mantissa1:32;
 #endif
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
 	unsigned int mantissa1:32;
-	unsigned int mantissa0:31;
+	unsigned int mantissa0:30;
 	unsigned int quiet_nan:1;
+	unsigned int one:1
 	unsigned int exponent:15;
 	unsigned int negative:1;
 	unsigned int empty:16;

@@ -29,22 +29,21 @@ __longjmp (__jmp_buf env, int val)
 
 #if	defined(__HAVE_68881__) || defined(__HAVE_FPU__)
   /* Restore the floating-point registers.  */
-  asm volatile("fmovem%.x %0, fp0-fp7" :
-	       /* No outputs.  */ : "g" (env[0].__fpregs[0]) :
-	       "fp0", "fp1", "fp2", "fp3", "fp4", "fp5", "fp6", "fp7");
+  asm volatile("fmovem%.x %0, %/fp0-%/fp7" :
+	       /* No outputs.  */ : "g" (env[0].__fpregs[0]));
 #endif
 
   /* Put VAL in D0.  */
-  asm volatile("move%.l %0, d0" : /* No outputs.  */ :
+  asm volatile("move%.l %0, %/d0" : /* No outputs.  */ :
 	       "g" (val == 0 ? 1 : val) : "d0");
 
   asm volatile(/* Restore the data and address registers.  */
-	       "movem%.l %0, d1-d7/a0-a7\n"
+	       "movem%.l %0, %/d1-%/d7/%/a0-%/a7\n"
 	       /* Return to setjmp's caller.  */
 #ifdef __motorola__
-	       "jmp (a0)"
+	       "jmp (%/a0)"
 #else
-	       "jmp a0@"
+	       "jmp %/a0@"
 #endif
 	       : /* No outputs.  */ : "g" (env[0].__dregs[0])
 	       /* We don't bother with the clobbers,

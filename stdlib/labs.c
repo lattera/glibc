@@ -23,7 +23,6 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Return the absolute value of I.  */
-__CONSTVALUE
 long int
 DEFUN(labs, (i), long int i)
 {

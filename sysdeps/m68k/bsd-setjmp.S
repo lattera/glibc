@@ -26,8 +26,8 @@ Cambridge, MA 02139, USA.  */
 #ifdef MOTOROLA_SYNTAX
 #define d0 %d0
 #define d1 %d1
-#define PUSH(reg)	move.l reg, -(%esp)
-#define POP(reg)	move.l (%esp)+, reg
+#define PUSH(reg)	move.l reg, -(%sp)
+#define POP(reg)	move.l (%sp)+, reg
 #else
 #define PUSH(reg)	movel reg, sp@-
 #define POP(reg)	movel sp@+, reg
@@ -36,7 +36,11 @@ Cambridge, MA 02139, USA.  */
 ENTRY (setjmp)
 	POP (d0)		/* Pop return PC.  */
 	POP (d1)		/* Pop jmp_buf argument.  */
-	PUSH (#1)		/* Push second argument of one.  */
+	pea 1			/* Push second argument of one.  */
 	PUSH (d1)		/* Push back first argument.  */
 	PUSH (d0)		/* Push back return PC.  */
+#ifdef PIC
+	bra.l C_SYMBOL_NAME (__sigsetjmp@PLTPC)
+#else
 	jmp C_SYMBOL_NAME (__sigsetjmp)
+#endif

@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #define	__NO_MATH_INLINES
 #include <math.h>
 
-__CONSTVALUE double
+double
 DEFUN(pow, (x, y), double x AND double y)
 {
   return __pow(x, y);

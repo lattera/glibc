@@ -18,5 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL (fchdir, 2)
+SYSCALL (fchdir, 1)
 	ret

@@ -31,10 +31,6 @@
  * SUCH DAMAGE.
  */
 
-#ifndef lint
-static char sccsid[] = "@(#)cabs.c	5.6 (Berkeley) 10/9/90";
-#endif /* not lint */
-
 /* HYPOT(X,Y)
  * RETURN THE SQUARE ROOT OF X^2 + Y^2  WHERE Z=X+iY
  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)
@@ -88,8 +84,6 @@ static char sccsid[] = "@(#)cabs.c	5.6 (Berkeley) 10/9/90";
  * shown.
  */
 #include "mathimpl.h"
-
-#if 0 /* Moved to separate file.  */
 
 vc(r2p1hi, 2.4142135623730950345E0   ,8279,411a,ef32,99fc,   2, .9A827999FCEF32)
 vc(r2p1lo, 1.4349369327986523769E-17 ,597d,2484,754b,89b3, -55, .84597D89B3754B)
@@ -157,35 +151,6 @@ double x, y;
 	else if(y!=y) return(y);  /* x and y is NaN */
 #endif	/* !defined(vax)&&!defined(tahoe) */
 	else return(copysign(y,one));   /* y is INF */
-}
-
-#endif /* 0 */
-
-/* CABS(Z)
- * RETURN THE ABSOLUTE VALUE OF THE COMPLEX NUMBER  Z = X + iY
- * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)
- * CODED IN C BY K.C. NG, 11/28/84.
- * REVISED BY K.C. NG, 7/12/85.
- *
- * Required kernel function :
- *	hypot(x,y)
- *
- * Method :
- *	cabs(z) = hypot(x,y) .
- */
-
-double
-cabs(z)
-struct __cabs_complex z;
-{
-	return hypot(z.__x,z.__y);
-}
-
-double
-z_abs(z)
-struct __cabs_complex *z;
-{
-	return hypot(z->__x,z->__y);
 }
 
 /* A faster but less accurate version of cabs(x,y) */

@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <math.h>
 
 /* Return `sqrt(x*x + y*y)'.  */
-__CONSTVALUE double
+double
 DEFUN(hypot, (x, y), double x AND double y)
 {
   return sqrt(x*x + y*y);

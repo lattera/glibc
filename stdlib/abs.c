@@ -22,7 +22,6 @@ Cambridge, MA 02139, USA.  */
 #undef	abs
 
 /* Return the absolute value of I.  */
-__CONSTVALUE
 int
 DEFUN(abs, (i), int i)
 {

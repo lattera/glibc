@@ -131,7 +131,7 @@ int
 __printf_fp (fp, info, args)
      FILE *fp;
      const struct printf_info *info;
-     const **const args;
+     const *const *args;
 {
   /* The floating-point value to output.  */
   union

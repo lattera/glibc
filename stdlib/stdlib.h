@@ -368,26 +368,16 @@ extern void qsort __P ((__ptr_t __base, size_t __nmemb, size_t __size,
 			__compar_fn_t __compar));
 
 
-#ifndef	__CONSTVALUE
-#ifdef	__GNUC__
-/* The `const' keyword tells GCC that a function's return value is
-   based solely on its arguments, and there are no side-effects.  */
-#define	__CONSTVALUE	__const
-#else
-#define	__CONSTVALUE
-#endif /* GCC.  */
-#endif /* __CONSTVALUE not defined.  */
-
 /* Return the absolute value of X.  */
-extern __CONSTVALUE int abs __P ((int __x));
-extern __CONSTVALUE long int labs __P ((long int __x));
+extern int abs __P ((int __x)) __attribute__ ((__const__));
+extern long int labs __P ((long int __x)) __attribute__ ((__const__));
 
 
 /* Return the `div_t' or `ldiv_t' representation
    of the value of NUMER over DENOM. */
 /* GCC may have built-ins for these someday.  */
-extern __CONSTVALUE div_t div __P ((int __numer, int __denom));
-extern __CONSTVALUE ldiv_t ldiv __P ((long int __numer, long int __denom));
+extern div_t div __P ((int __numer, int __denom)) __attribute__ ((__const__));
+extern ldiv_t ldiv __P ((long int __numer, long int __denom)) __attribute__ ((__const__));
 
 
 #ifdef __USE_SVID

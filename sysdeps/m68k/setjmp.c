@@ -23,13 +23,15 @@ int
 __sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save data registers D1 through D7.  */
-  asm volatile ("movem%.l d1-d7, %0" : : "m" (env[0].__jmpbuf[0].__dregs[0]));
+  asm volatile ("movem%.l %/d1-%/d7, %0"
+		: : "m" (env[0].__jmpbuf[0].__dregs[0]));
 
   /* Save return address in place of register A0.  */
   env[0].__jmpbuf[0].__aregs[0] = ((void **) &env)[-1];
 
   /* Save address registers A1 through A5.  */
-  asm volatile ("movem%.l a1-a5, %0" : : "m" (env[0].__jmpbuf[0].__aregs[1]));
+  asm volatile ("movem%.l %/a1-%/a5, %0"
+		: : "m" (env[0].__jmpbuf[0].__aregs[1]));
 
   /* Save caller's FP, not our own.  */
   env[0].__jmpbuf[0].__fp = ((void **) &env)[-2];
@@ -39,7 +41,7 @@ __sigsetjmp (jmp_buf env, int savemask)
 
 #if	defined(__HAVE_68881__) || defined(__HAVE_FPU__)
   /* Save floating-point (68881) registers FP0 through FP7.  */
-  asm volatile ("fmovem%.x fp0-fp7, %0"
+  asm volatile ("fmovem%.x %/fp0-%/fp7, %0"
 		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
 #endif
 

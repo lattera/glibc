@@ -66,7 +66,7 @@ ecvt_r (value, ndigit, decpt, sign, buf, len)
      char *buf;
      size_t len;
 {
-  ndigit -= (int) floor (log10 (value));
+  ndigit -= (int) floor (log10 (value < 0.0 ? -value : value));
   if (ndigit < 0)
     ndigit = 0;
   return fcvt_r (value, ndigit, decpt, sign, buf, len);

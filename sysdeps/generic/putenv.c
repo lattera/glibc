@@ -61,7 +61,7 @@ putenv (string)
       char *name = alloca (name_end - string + 1);
       memcpy (name, string, name_end - string);
       name[name_end - string] = '\0';
-      return setenv (name, string + 1, 1);
+      return setenv (name, name_end + 1, 1);
     }
 
   unsetenv (string);

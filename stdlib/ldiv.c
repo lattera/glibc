@@ -57,7 +57,6 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Return the `ldiv_t' representation of NUMER over DENOM.  */
-__CONSTVALUE
 ldiv_t
 DEFUN(ldiv, (numer, denom), long int numer AND long int denom)
 {

@@ -27,7 +27,6 @@ Cambridge, MA 02139, USA.  */
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 .globl ___vfork
-error:	jmp syscall_error
 ___vfork:
 	.word 0
 	/* Save our return address in R2, and return to code below.  */
