@@ -1,3 +1,8 @@
+1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile: Call rpcgen program which -Y parameter so that
+	it can find the preprocessor.
+
 1998-12-09  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Use sys/user.h not

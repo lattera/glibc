@@ -149,7 +149,7 @@ $(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
 	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -h $< -o ${@:stmp=T}
+	$(rpcgen-cmd) -Y `$(CC) -print-file-name=.` -h $< -o ${@:stmp=T}
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 
@@ -158,7 +158,7 @@ $(rpcsvc:%.x=$(objpfx)x%.c): $(objpfx)x%.c: $(objpfx)x%.stmp
 	@:
 $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -c $< -o ${@:stmp=T}
+	$(rpcgen-cmd) -Y `$(CC) -print-file-name=.` -c $< -o ${@:stmp=T}
 	$(move-if-change) $(@:stmp=T) $(@:stmp=c)
 	touch $@
 
