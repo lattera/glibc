@@ -105,6 +105,7 @@ __getcwd (char *buf, size_t size)
 	{
 	  if (buf == NULL && size == 0)
 	    {
+	      /* Ensure that the buffer is only as large as necessary.  */
 	      buf = realloc (path, (size_t) retval);
 	      if (buf == NULL)
 		/* `realloc' failed but we still have the original string.  */
@@ -115,7 +116,7 @@ __getcwd (char *buf, size_t size)
 
 # if __ASSUME_GETCWD_SYSCALL
       /* It should never happen that the `getcwd' syscall failed because
-	 the buffer is too small if we allocated the buffer outselves
+	 the buffer is too small if we allocated the buffer ourselves
 	 large enough.  */
       assert (errno != ERANGE || buf != NULL || size != 0);
 
