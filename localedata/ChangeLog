@@ -1,3 +1,13 @@
+2000-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/sr_YU (yesexpr): Fix "*." -> ".*".
+	(enoexpr): Likewise.
+	* locales/hr_HR: Likewise.
+	Patches by GOTO Masanori <gotom@debian.or.jp>.
+
+	* locales/i18n (yesexpr): Add U005E at the beginning.
+	(noexpr): Likewise.
+
 2000-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ja_JP (yesexpr): U0060 should be U005E.

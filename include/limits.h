@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,11 +92,7 @@
 #  define INT_MAX	2147483647
 
 /* Maximum value an `unsigned int' can hold.  (Minimum is 0.)  */
-#  ifdef __STDC__
-#   define UINT_MAX	4294967295U
-#  else
-#   define UINT_MAX	4294967295
-#  endif
+#  define UINT_MAX	4294967295U
 
 /* Minimum and maximum values a `signed long int' can hold.  */
 #  ifdef __alpha__
@@ -110,12 +106,19 @@
 #  ifdef __alpha__
 #   define ULONG_MAX	18446744073709551615UL
 #  else
-#   ifdef __STDC__
-#    define ULONG_MAX	4294967295UL
-#   else
-#    define ULONG_MAX	4294967295L
-#   endif
+#   define ULONG_MAX	4294967295UL
 #  endif
+
+#  ifdef __USE_ISOC99
+
+/* Minimum and maximum values a `signed long long int' can hold.  */
+#   define LLONG_MAX	9223372036854775807LL
+#   define LLONG_MIN	(-LLONG_MAX - 1LL)
+
+/* Maximum value an `unsigned long long int' can hold.  (Minimum is 0.)  */
+#   define ULLONG_MAX	18446744073709551615ULL
+
+#  endif /* ISO C99 */
 
 # endif	/* limits.h  */
 #endif	/* GCC 2.  */

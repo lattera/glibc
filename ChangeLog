@@ -1,3 +1,11 @@
+2000-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-639.def: Some errors corrected.
+	Patch by Keld Simonsen.
+
+	* include/limits.h: Update non-gcc portion.
+	Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 2000-07-22  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/brk.c (_hurd_set_brk): When shrinking the
