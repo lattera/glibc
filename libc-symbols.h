@@ -46,6 +46,9 @@ Cambridge, MA 02139, USA.  */
    itself is being compiled, or just some generator program.  */
 #define _LIBC	1
 
+/* Enable declarations of GNU extensions, since we are compiling them.  */
+#define _GNU_SOURCE	1
+
 #include <config.h>
 
 /* This disables sccsid/rcsid strings in lots of code of non-GNU origin.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ Cambridge, MA 02139, USA.  */
    _GNU_SOURCE		All of the above, plus GNU extensions.
 
    The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
-   If none of these are defined, the default is _GNU_SOURCE.
+   If none of these are defined, the default is all but _GNU_SOURCE.
    If more than one of these are defined, they accumulate.
    For example __STRICT_ANSI__, _POSIX_SOURCE and _POSIX_C_SOURCE
    together give you ANSI C, 1003.1, and 1003.2, but nothing else.
@@ -69,20 +69,14 @@ Cambridge, MA 02139, USA.  */
 #undef	__FAVOR_BSD
 
 
-/* If nothing is defined, define _GNU_SOURCE.  */
-#if (!defined(_GNU_SOURCE) && !defined(__STRICT_ANSI__) && \
-     !defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE) && \
-     !defined(_BSD_SOURCE) && !defined(_SVID_SOURCE))
-#define	_GNU_SOURCE	1
-#endif
-
-
 /* Always use ANSI things.  */
 #define	__USE_ANSI	1
 
 
 /* If _BSD_SOURCE was defined by the user, favor BSD over POSIX.  */
-#ifdef	_BSD_SOURCE
+#if defined (_BSD_SOURCE) && \
+    !(defined (_POSIX_SOURCE) || defined (_POSIX_C_SOURCE) ||
+      defiend (_GNU_SOURCE) || defined (_SVID_SOURCE))
 #define	__FAVOR_BSD	1
 #endif
 

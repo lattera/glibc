@@ -7,6 +7,10 @@ Please send GNU C library bug reports to bug-glibc@prep.ai.mit.edu.
 
 Version 1.10
 
+* GNU extensions are no longer declared by default.  To enable them you
+  must define the macro `_GNU_SOURCE' in your program or compile with
+  `-D_GNU_SOURCE'.
+
 * The library has changed from using GNU ld symbol aliases to using weak
   symbols where available.  The ELF object file format supports weak
   symbols; GNU ld also supports weak symbols in the a.out format.  (There
@@ -34,8 +38,9 @@ Version 1.10
 
 * The C library now provides the run-time support code for profiling
   executables compiled with `-pg'.  Programs can control the profiling code
-  through the interface in <sys/gmon.h>.  The profiling code was adapted
-  from 4.4 BSD-Lite.
+  through the interface in <sys/gmon.h>.  The `gmon.out' files written by
+  the GNU C library can be read only by GNU `gprof' (from GNU binutils);
+  the support for this file format was contributed by David Mosberger-Tang.
 
 * The math code has been replaced with a math library based on fdlibm from
   Sun, and modified by JT Conklin with i387 support and by Ian Taylor with
@@ -141,6 +146,10 @@ Version 1.10
   on work done in Hongjiu Lu's version of GNU libc for Linux.
   The GNU library now supports Linux versions 1.3.29 and later,
   using the ELF object file format (i[345]86-*-linux).
+
+* Andreas Schwab has ported the C library to Linux/m68k (m68k-*-linux).
+
+* David Mosberger-Tang has ported the C library to Linux/Alpha (alpha-*-linux).
 
 * Ulrich Drepper has contributed a new set of message catalog functions to
   support multiple languages, for use with his new package GNU gettext.
