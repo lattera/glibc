@@ -1,3 +1,15 @@
+2002-10-03  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/stxncpy.S: Don't access memory beyond the source
+	buffer.
+	* sysdeps/alpha/alphaev6/stxncpy.S: Likewise.
+
+2002-10-02  Andreas Jaeger  <aj@suse.de>
+	    Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/mips/fpu/fraiseexcpt.c: Add internal definition.
+	* sysdeps/mips/fpu/fesetenv.c: Likewise.
+
 2002-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/net/route.h: Include bits/wordsize.h.
