@@ -1,4 +1,4 @@
-/* Copyright (C) 1995,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1997,1999-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,11 +64,11 @@ _IO_vasprintf (result_ptr, format, args)
       free (sf._sbf._f._IO_buf_base);
       return ret;
     }
-  /* Only use realloc if the size we need is of the same order of
-     magnitude then the memory we allocated.  */
+  /* Only use realloc if the size we need is of the same (binary)
+     order of magnitude then the memory we allocated.  */
   needed = sf._sbf._f._IO_write_ptr - sf._sbf._f._IO_write_base + 1;
   allocated = sf._sbf._f._IO_write_end - sf._sbf._f._IO_write_base;
-  if ((allocated << 1) <= needed)
+  if ((allocated >> 1) <= needed)
     *result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base, needed);
   else
     {

@@ -1,5 +1,9 @@
 2004-09-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/vasprintf.c (_IO_vasprintf): Fix condition to decide
+	whether to realloc or not.
+	Reported by Pavel Kankovsky <peak@argo.troja.mff.cuni.cz> [BZ #346].
+
 	* intl/dcigettext.c (DCIGETTEXT): Protect tfind/tsearch calls.
 	* intl/dcigettext.c (_nl_find_msg): Call _nl_load_domain also if
 	decided < 0.
