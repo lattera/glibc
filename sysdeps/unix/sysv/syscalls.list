@@ -10,7 +10,7 @@ setrlimit	-	setrlimit	i:ip	setrlimit
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 signal		-	signal		i:ii	signal
 stime		-	stime		i:p	stime
-time		-	time		i:p	time
+time		-	time		i:P	time
 times		-	times		i:p	__times	times
 ulimit		-	ulimit		i:ii	ulimit
-utime		-	utime		i:pp	utime
+utime		-	utime		i:sP	utime

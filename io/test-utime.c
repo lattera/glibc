@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <utime.h>
+#include <time.h>
 
 int
 main (int argc, char *argv[])
@@ -29,6 +30,8 @@ main (int argc, char *argv[])
   char file[L_tmpnam];
   struct utimbuf ut;
   struct stat st;
+  struct stat stnow;
+  time_t now1, now2;
   int fd;
 
   if (tmpnam (file) == 0)
@@ -45,6 +48,7 @@ main (int argc, char *argv[])
     }
   close (fd);
 
+  /* Test utime with arg */
   ut.actime = 500000000;
   ut.modtime = 500000001;
   if (utime (file, &ut))
@@ -55,6 +59,39 @@ main (int argc, char *argv[])
     }
 
   if (stat (file, &st))
+    {
+      perror ("stat");
+      remove (file);
+      exit (1);
+    }
+
+  /* Test utime with NULL.
+     Since there's a race condition possible here, we check
+     the time before and after the call to utime.  */
+  now1 = time (NULL);
+  if (now1 == (time_t)-1)
+    {
+      perror ("time");
+      remove (file);
+      exit (1);
+    }
+
+  if (utime (file, NULL))
+    {
+      perror ("utime NULL");
+      remove (file);
+      exit (1);
+    }
+
+  now2 = time (NULL);
+  if (now2 == (time_t)-1)
+    {
+      perror ("time");
+      remove (file);
+      exit (1);
+    }
+
+  if (stat (file, &stnow))
     {
       perror ("stat");
       remove (file);
@@ -72,6 +109,18 @@ main (int argc, char *argv[])
   if (st.st_atime != ut.actime)
     {
       printf ("actime %ld != %ld\n", st.st_atime, ut.actime);
+      exit (1);
+    }
+
+  if (stnow.st_mtime < now1 || stnow.st_mtime > now2)
+    {
+      printf ("modtime %ld <%ld >%ld\n", st.st_mtime, now1, now2);
+      exit (1);
+    }
+
+  if (stnow.st_atime < now1 || stnow.st_atime > now2)
+    {
+      printf ("actime %ld <%ld >%ld\n", st.st_atime, now1, now2);
       exit (1);
     }
 
