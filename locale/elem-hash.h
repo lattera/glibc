@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -24,10 +24,10 @@ elem_hash (const char *str, int_fast32_t n)
 {
   int32_t result = n;
 
-  while (n > 0)
+  while (n-- > 0)
     {
-      n <<= 3;
-      n += *str++;
+      result <<= 3;
+      result += *str++;
     }
 
   return result;

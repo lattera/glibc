@@ -1,5 +1,12 @@
 2001-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/elem-hash.h (elem_hash): Correct stupid mistake and
+	create real hash values now.
+	Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
+	* libio/iofgetpos.c (_IO_new_fgetpos): Correct a few problems in
+	the handling of wide streams.
+
 	* libio/ioungetwc.c (ungetwc): Orient stream first.
 	* libio/Makefile (tests): Add tst-ungetwc1.
 	* libio/tst-ungetwc1.c: New file.
