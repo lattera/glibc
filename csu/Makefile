@@ -216,7 +216,9 @@ all-Banner-files = $(wildcard $(addsuffix /Banner, \
 $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 	$(make-target-directory)
 	(case $(config-os) in \
-	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
+	   linux*) version=`(printf '%s\n%s\n' \
+				    '#include <linux/version.h>' \
+				    UTS_RELEASE \
 			     | $(CC) $(CPPFLAGS) -E -P - -DNOT_IN_libc=1 | \
 			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
 		   if [ -z "$$version" ]; then \
@@ -231,8 +233,8 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 		   if [ -z "$$os" ]; then \
 		     os=Linux; \
 		   fi; \
-		   echo "\"Compiled on a $$os $$version system" \
-			"on `date +%Y-%m-%d`.\\n\"" ;; \
+		   printf '"Compiled on a %s %s system on %s.\\n"\n' \
+			  "$$os" "$$version" "`date +%Y-%m-%d`";; \
 	   *) ;; \
 	 esac; \
 	 files="$(all-Banner-files)";				\
