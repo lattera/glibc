@@ -1,3 +1,7 @@
+1998-10-04  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* mach/mach.h: Remove __mach_msg decl; <mach/message.h> now does it.
+
 1998-10-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.97.
