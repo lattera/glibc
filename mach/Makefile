@@ -68,7 +68,7 @@ vpath %.defs $(mach-srcdir)
 # Install all .h and .defs files we find in some of the kernel's source
 # directories and their subdirectories (in MK82, max one level deep).
 mach-src-headers := $(wildcard $(foreach dir,mach device mach_debug \
-					     $(config-machine),\
+					     $(base-machine),\
 					 $(addprefix $(mach-srcdir)/$(dir)/,\
 						     *.defs *.h \
 						     */*.defs */*.h)))
@@ -91,7 +91,7 @@ $(includedir)/%: $(mach-srcdir)/%; $(do-install)
 install-others += $(includedir)/mach/machine $(includedir)/machine
 $(includedir)/mach/machine $(includedir)/machine: $(common-objpfx)config.make
 	-rm -f $@
-	cd $(@D); ln -s $(config-machine) $(@F)
+	cd $(@D); ln -s $(base-machine) $(@F)
 
 # Install Mach's <sys/version.h> as <mach/version.h>.
 install-others += $(includedir)/mach/version.h

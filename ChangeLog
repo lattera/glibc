@@ -1,5 +1,21 @@
 Wed May  8 12:08:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Makerules (install-lib.so rules): Undouble $s in target and dep
+ 	parts of o-iterator-doit defns.
+	(unversioned libraries install rule): Fix pattern.
+
+	* mach/Makefile (mach-src-headers): Use $(base-machine) instead of
+	$(config-machine).
+	($(includedir)/machine): Likewise.
+
+	* config.make.in (base-machine): New variable.
+	* configure.in (machine): Move case stmt to set $machine out of sysdep
+	dirs AC_CACHE_CHECK.
+	(base_machine): New variable, set in that switch and AC_SUBST'd.
+
+	* Makerules (stub-$(subdir)): Use file name in directory as output,
+	since cmd is cd'd.
+
 	* configure.in (MSGFMT): Use : if none found.
 
 	* po/Makefile: Include ../Rules instead of ../Makerules.

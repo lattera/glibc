@@ -8,6 +8,7 @@ exec_prefix = @exec_prefix@
 
 # System configuration.
 config-machine = @host_cpu@
+base-machine = @base_machine@
 config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@

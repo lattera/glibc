@@ -558,7 +558,7 @@ versioned := $(foreach so,$(install-lib.so),\
 
 # Install all the unversioned shared libraries.
 $(addprefix $(libdir)/,$(filter-out $(versioned),$(install-lib.so))): \
-$(libdir)/%: $(objpfx)lib%.so; $(do-install-program)
+$(libdir)/%.so: $(objpfx)%.so; $(do-install-program)
 
 make-link = cd $(@D); rm -f $(@F); $(LN_S) $(<F) $(@F)
 
@@ -581,19 +581,19 @@ ifneq (,$(versioned))
 # Produce three sets of rules as above for all the smaller versioned libraries.
 
 define o-iterator-doit
-$$(libdir)/$o: $$(libdir)/$o$$($o-version); $$(make-link)
+$(libdir)/$o: $(libdir)/$o$($o-version); $$(make-link)
 endef
 object-suffixes-left := $(versioned)
 include $(..)o-iterator.mk
 
 define o-iterator-doit
-$$(libdir)/$o$$($o-version): $$(libdir)/$(o:.so=)-$$(version).so; $$(make-link)
+$(libdir)/$o$($o-version): $(libdir)/$(o:.so=)-$(version).so; $$(make-link)
 endef
 object-suffixes-left := $(versioned)
 include $(..)o-iterator.mk
 
 define o-iterator-doit
-$$(libdir)/$(o:.so=)-$$(version).so: $$(objpfx)$o; $$(do-install-program)
+$(libdir)/$(o:.so=)-$(version).so: $(objpfx)$o; $$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
 include $(..)o-iterator.mk
@@ -744,7 +744,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 	sed -n 's/^stub_warning *(\([^)]*\).*$$/#define __stub_\1/p' \
 	    `sed -n 's@^.*$s/\([a-z0-9_-]*\.c\).*$$@'"$$s"/'\1@p' \
 		 $(patsubst $(objpfx)%,%,$^) /dev/null` \
-	    /dev/null > $@T
+	    /dev/null > $(@F)T
 	mv -f $@T $@
 
 # Make the distribution tar file.
