@@ -1,3 +1,7 @@
+2000-08-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/Versions: Remove libnss_db information.
+
 2000-08-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/fpu/fedisblxcpt.c: New file.
