@@ -214,6 +214,11 @@ static const char *longnames[] =
   "zero", "one", "two", "three", "four",
   "five", "six", "seven", "eight", "nine"
 };
+static const char *uninames[] =
+{
+  "U00000030", "U00000031", "U00000032", "U00000033", "U00000034",
+  "U00000035", "U00000036", "U00000037", "U00000038", "U00000039"
+};
 static const unsigned char digits[] = "0123456789";
 
 
@@ -537,7 +542,7 @@ character '%s' in class `%s' must not be in class `%s'"),
   if (space_seq == NULL)
     space_seq = charmap_find_value (charmap, "space", 5);
   if (space_seq == NULL)
-    space_seq = charmap_find_value (charmap, "U00000020", 5);
+    space_seq = charmap_find_value (charmap, "U00000020", 9);
   if (space_seq == NULL || space_seq->nbytes != 1)
     {
       if (!be_quiet)
@@ -3116,45 +3121,30 @@ character `%s' not defined while needed as default value"),
 							 digits + cnt, 1);
 
 	  if (ctype->mboutdigits[cnt] == NULL)
-	    {
-	      ctype->mboutdigits[cnt] = charmap_find_symbol (charmap,
-							     longnames[cnt],
-							     strlen (longnames[cnt]));
+	    ctype->mboutdigits[cnt] = charmap_find_symbol (charmap,
+							   longnames[cnt],
+							   strlen (longnames[cnt]));
 
-	      if (ctype->mboutdigits[cnt] == NULL)
-		{
-		  /* Provide a replacement.  */
-		  error (0, 0, _("\
+	  if (ctype->mboutdigits[cnt] == NULL)
+	    ctype->mboutdigits[cnt] = charmap_find_symbol (charmap,
+							   uninames[cnt], 9);
+
+	  if (ctype->mboutdigits[cnt] == NULL)
+	    {
+	      /* Provide a replacement.  */
+	      error (0, 0, _("\
 no output digits defined and none of the standard names in the charmap"));
 
-		  ctype->mboutdigits[cnt] = obstack_alloc (&charmap->mem_pool,
-							   sizeof (struct charseq) + 1);
+	      ctype->mboutdigits[cnt] = obstack_alloc (&charmap->mem_pool,
+						       sizeof (struct charseq)
+						       + 1);
 
-		  /* This is better than nothing.  */
-		  ctype->mboutdigits[cnt]->bytes[0] = digits[cnt];
-		  ctype->mboutdigits[cnt]->nbytes = 1;
-		}
+	      /* This is better than nothing.  */
+	      ctype->mboutdigits[cnt]->bytes[0] = digits[cnt];
+	      ctype->mboutdigits[cnt]->nbytes = 1;
 	    }
 
-	  ctype->wcoutdigits[cnt] = repertoire_find_value (repertoire,
-							   digits + cnt, 1);
-
-	  if (ctype->wcoutdigits[cnt] == ILLEGAL_CHAR_VALUE)
-	    {
-	      ctype->wcoutdigits[cnt] = repertoire_find_value (repertoire,
-							       longnames[cnt],
-							       strlen (longnames[cnt]));
-
-	      if (ctype->wcoutdigits[cnt] == ILLEGAL_CHAR_VALUE)
-		{
-		  /* Provide a replacement.  */
-		  error (0, 0, _("\
-no output digits defined and none of the standard names in the repertoire"));
-
-		  /* This is better than nothing.  */
-		  ctype->wcoutdigits[cnt] = (uint32_t) digits[cnt];
-		}
-	    }
+	  ctype->wcoutdigits[cnt] = L'0' + cnt;
 	}
 
       ctype->outdigits_act = 10;

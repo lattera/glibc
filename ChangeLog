@@ -1,3 +1,16 @@
+2000-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (insert_value): Now take string and
+	length instead of struct token* parameter.  Adjust use of token.
+	(handle_ellipsis): Likewise.
+	(collate_read): Allow <Uxxxx> names and transform them into names
+	to be passed to insert_value and handle_ellipsis.
+
+	* locale/programs/ld-ctype.c (uninames): New array with names of
+	digits in <Uxxxxxxxx> format.
+	(ctype_finish): Correct search for space character value.  Likewise
+	for default outdigits values.
+
 2000-06-20  Greg McGary  <greg@mcgary.org>
 
 	* Makerules (objects): Add BP thunks.
