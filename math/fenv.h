@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@
    The following macros are defined iff the implementation supports this
    kind of exception.
    FE_INEXACT		inexact result
-   FE_DIVBYZERO		devision by zero
+   FE_DIVBYZERO		division by zero
    FE_UNDERFLOW		result not representable due to underflow
    FE_OVERFLOW		result not representable due to overflow
    FE_INVALID		invalid operation

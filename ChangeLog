@@ -1,5 +1,7 @@
 2000-12-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/fenv.h: Fix typo in comment.
+
 	* math/test-misc.c (main): Add a few more over and underflow tests
 	for scalb.
 
