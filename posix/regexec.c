@@ -148,12 +148,12 @@ static reg_errcode_t get_subexp_sub (const regex_t *preg,
 				     re_sub_match_last_t *sub_last,
 				     int bkref_node, int bkref_str);
 static int find_subexp_node (const re_dfa_t *dfa, const re_node_set *nodes,
-			     int subexp_idx, int fl_open);
+			     int subexp_idx, int type);
 static reg_errcode_t check_arrival (const regex_t *preg,
 				    re_match_context_t *mctx,
 				    state_array_t *path, int top_node,
 				    int top_str, int last_node, int last_str,
-				    int fl_open);
+				    int type);
 static reg_errcode_t check_arrival_add_next_nodes (const regex_t *preg,
 						   re_dfa_t *dfa,
 						   re_match_context_t *mctx,
@@ -162,16 +162,16 @@ static reg_errcode_t check_arrival_add_next_nodes (const regex_t *preg,
 						   re_node_set *next_nodes);
 static reg_errcode_t check_arrival_expand_ecl (re_dfa_t *dfa,
 					       re_node_set *cur_nodes,
-					       int ex_subexp, int fl_open);
+					       int ex_subexp, int type);
 static reg_errcode_t check_arrival_expand_ecl_sub (re_dfa_t *dfa,
 						   re_node_set *dst_nodes,
 						   int target, int ex_subexp,
-						   int fl_open);
+						   int type);
 static reg_errcode_t expand_bkref_cache (const regex_t *preg,
 					 re_match_context_t *mctx,
 					 re_node_set *cur_nodes, int cur_str,
 					 int last_str, int subexp_num,
-					 int fl_open);
+					 int type);
 static re_dfastate_t **build_trtable (const regex_t *dfa,
 				      re_dfastate_t *state);
 #ifdef RE_ENABLE_I18N
@@ -2574,7 +2574,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 	    continue;
 	  /* Does this state have a ')' of the sub expression?  */
 	  nodes = &mctx->state_log[sl_str]->nodes;
-	  cls_node = find_subexp_node (dfa, nodes, subexp_num, 0);
+	  cls_node = find_subexp_node (dfa, nodes, subexp_num, OP_CLOSE_SUBEXP);
 	  if (cls_node == -1)
 	    continue; /* No.  */
 	  if (sub_top->path == NULL)
@@ -2587,7 +2587,7 @@ get_subexp (preg, mctx, bkref_node, bkref_str_idx)
 	  /* Can the OP_OPEN_SUBEXP node arrive the OP_CLOSE_SUBEXP node
 	     in the current context?  */
 	  err = check_arrival (preg, mctx, sub_top->path, sub_top->node,
-			       sub_top->str_idx, cls_node, sl_str, 0);
+			       sub_top->str_idx, cls_node, sl_str, OP_CLOSE_SUBEXP);
 	  if (err == REG_NOMATCH)
 	      continue;
 	  if (BE (err != REG_NOERROR, 0))
@@ -2622,7 +2622,7 @@ get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node, bkref_str)
   int to_idx;
   /* Can the subexpression arrive the back reference?  */
   err = check_arrival (preg, mctx, &sub_last->path, sub_last->node,
-		       sub_last->str_idx, bkref_node, bkref_str, 1);
+		       sub_last->str_idx, bkref_node, bkref_str, OP_OPEN_SUBEXP);
   if (err != REG_NOERROR)
     return err;
   err = match_ctx_add_entry (mctx, bkref_node, bkref_str, sub_top->str_idx,
@@ -2643,18 +2643,17 @@ get_subexp_sub (preg, mctx, sub_top, sub_last, bkref_node, bkref_str)
 	 E.g. RE: (a){2}  */
 
 static int
-find_subexp_node (dfa, nodes, subexp_idx, fl_open)
+find_subexp_node (dfa, nodes, subexp_idx, type)
      const re_dfa_t *dfa;
      const re_node_set *nodes;
-     int subexp_idx, fl_open;
+     int subexp_idx, type;
 {
   int cls_idx;
   for (cls_idx = 0; cls_idx < nodes->nelem; ++cls_idx)
     {
       int cls_node = nodes->elems[cls_idx];
       const re_token_t *node = dfa->nodes + cls_node;
-      if (((fl_open && node->type == OP_OPEN_SUBEXP)
-	  || (!fl_open && node->type == OP_CLOSE_SUBEXP))
+      if (node->type == type
 	  && node->opr.idx == subexp_idx)
 	return cls_node;
     }
@@ -2668,11 +2667,11 @@ find_subexp_node (dfa, nodes, subexp_idx, fl_open)
 
 static reg_errcode_t
 check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
-	       fl_open)
+	       type)
      const regex_t *preg;
      re_match_context_t *mctx;
      state_array_t *path;
-     int top_node, top_str, last_node, last_str, fl_open;
+     int top_node, top_str, last_node, last_str, type;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   reg_errcode_t err;
@@ -2716,7 +2715,7 @@ check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
       err = re_node_set_init_1 (&next_nodes, top_node);
       if (BE (err != REG_NOERROR, 0))
 	return err;
-      err = check_arrival_expand_ecl (dfa, &next_nodes, subexp_num, fl_open);
+      err = check_arrival_expand_ecl (dfa, &next_nodes, subexp_num, type);
       if (BE (err != REG_NOERROR, 0))
 	{
 	  re_node_set_free (&next_nodes);
@@ -2740,7 +2739,7 @@ check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
       if (next_nodes.nelem)
 	{
 	  err = expand_bkref_cache (preg, mctx, &next_nodes, str_idx, last_str,
-				    subexp_num, fl_open);
+				    subexp_num, type);
 	  if (BE ( err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
@@ -2782,15 +2781,14 @@ check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
       ++str_idx;
       if (next_nodes.nelem)
 	{
-	  err = check_arrival_expand_ecl (dfa, &next_nodes, subexp_num,
-					  fl_open);
+	  err = check_arrival_expand_ecl (dfa, &next_nodes, subexp_num, type);
 	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
 	      return err;
 	    }
 	  err = expand_bkref_cache (preg, mctx, &next_nodes, str_idx, last_str,
-				    subexp_num, fl_open);
+				    subexp_num, type);
 	  if (BE ( err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&next_nodes);
@@ -2923,10 +2921,10 @@ check_arrival_add_next_nodes (preg, dfa, mctx, str_idx, cur_nodes, next_nodes)
 */
 
 static reg_errcode_t
-check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, fl_open)
+check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, type)
      re_dfa_t *dfa;
      re_node_set *cur_nodes;
-     int ex_subexp, fl_open;
+     int ex_subexp, type;
 {
   reg_errcode_t err;
   int idx, outside_node;
@@ -2944,7 +2942,7 @@ check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, fl_open)
     {
       int cur_node = cur_nodes->elems[idx];
       re_node_set *eclosure = dfa->eclosures + cur_node;
-      outside_node = find_subexp_node (dfa, eclosure, ex_subexp, fl_open);
+      outside_node = find_subexp_node (dfa, eclosure, ex_subexp, type);
       if (outside_node == -1)
 	{
 	  /* There are no problematic nodes, just merge them.  */
@@ -2959,7 +2957,7 @@ check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, fl_open)
 	{
 	  /* There are problematic nodes, re-calculate incrementally.  */
 	  err = check_arrival_expand_ecl_sub (dfa, &new_nodes, cur_node,
-					      ex_subexp, fl_open);
+					      ex_subexp, type);
 	  if (BE (err != REG_NOERROR, 0))
 	    {
 	      re_node_set_free (&new_nodes);
@@ -2977,22 +2975,20 @@ check_arrival_expand_ecl (dfa, cur_nodes, ex_subexp, fl_open)
    problematic append it to DST_NODES.  */
 
 static reg_errcode_t
-check_arrival_expand_ecl_sub (dfa, dst_nodes, target, ex_subexp, fl_open)
+check_arrival_expand_ecl_sub (dfa, dst_nodes, target, ex_subexp, type)
      re_dfa_t *dfa;
-     int target, ex_subexp, fl_open;
+     int target, ex_subexp, type;
      re_node_set *dst_nodes;
 {
-  int cur_node, type;
+  int cur_node;
   for (cur_node = target; !re_node_set_contains (dst_nodes, cur_node);)
     {
       int err;
-      type = dfa->nodes[cur_node].type;
 
-      if (((type == OP_OPEN_SUBEXP && fl_open)
-	   || (type == OP_CLOSE_SUBEXP && !fl_open))
+      if (dfa->nodes[cur_node].type == type
 	  && dfa->nodes[cur_node].opr.idx == ex_subexp)
 	{
-	  if (!fl_open)
+	  if (type == OP_CLOSE_SUBEXP)
 	    {
 	      err = re_node_set_insert (dst_nodes, cur_node);
 	      if (BE (err == -1, 0))
@@ -3009,7 +3005,7 @@ check_arrival_expand_ecl_sub (dfa, dst_nodes, target, ex_subexp, fl_open)
 	{
 	  err = check_arrival_expand_ecl_sub (dfa, dst_nodes,
 					      dfa->edests[cur_node].elems[1],
-					      ex_subexp, fl_open);
+					      ex_subexp, type);
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
 	}
@@ -3025,10 +3021,10 @@ check_arrival_expand_ecl_sub (dfa, dst_nodes, target, ex_subexp, fl_open)
 
 static reg_errcode_t
 expand_bkref_cache (preg, mctx, cur_nodes, cur_str, last_str, subexp_num,
-		    fl_open)
+		    type)
      const regex_t *preg;
      re_match_context_t *mctx;
-     int cur_str, last_str, subexp_num, fl_open;
+     int cur_str, last_str, subexp_num, type;
      re_node_set *cur_nodes;
 {
   reg_errcode_t err;
@@ -3060,8 +3056,7 @@ expand_bkref_cache (preg, mctx, cur_nodes, cur_str, last_str, subexp_num,
 	  if (re_node_set_contains (cur_nodes, next_node))
 	    continue;
 	  err = re_node_set_init_1 (&new_dests, next_node);
-	  err2 = check_arrival_expand_ecl (dfa, &new_dests, subexp_num,
-					   fl_open);
+	  err2 = check_arrival_expand_ecl (dfa, &new_dests, subexp_num, type);
 	  err3 = re_node_set_merge (cur_nodes, &new_dests);
 	  re_node_set_free (&new_dests);
 	  if (BE (err != REG_NOERROR || err2 != REG_NOERROR
@@ -3363,7 +3358,7 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	  if (dfa->mb_cur_max > 1)
 	    bitset_merge (accepts, dfa->sb_char);
 	  else
-#endif	  
+#endif
 	    bitset_set_all (accepts);
 	  if (!(preg->syntax & RE_DOT_NEWLINE))
 	    bitset_clear (accepts, '\n');
