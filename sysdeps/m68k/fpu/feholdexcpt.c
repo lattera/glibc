@@ -26,7 +26,7 @@ feholdexcept (fenv_t *envp)
   fexcept_t fpcr, fpsr;
 
   /* Store the environment.  */
-  __asm__ ("fmovem%.l %/fpcr/%/fpsr,%0" : "=m" (*envp));
+  __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*envp));
 
   /* Now clear all exceptions.  */
   fpsr = envp->status_register & ~FE_ALL_EXCEPT;

@@ -23,5 +23,5 @@
 void
 fegetenv (fenv_t *envp)
 {
-  __asm__ ("fmovem%.l %/fpcr/%/fpsr,%0" : "=m" (*envp));
+  __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*envp));
 }
