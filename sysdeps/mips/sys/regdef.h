@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
 
@@ -31,10 +31,17 @@
 #define a1      $5
 #define a2      $6
 #define a3      $7
+#if _MIPS_SIM != _MIPS_SIM_ABI32
+#define a4	$8
+#define a5	$9
+#define a6	$10
+#define a7	$11
+#else /* if _MIPS_SIM == _MIPS_SIM_ABI32 */
 #define t0      $8      /* caller saved */
 #define t1      $9
 #define t2      $10
 #define t3      $11
+#endif /* _MIPS_SIM == _MIPS_SIM_ABI32 */
 #define t4      $12
 #define t5      $13
 #define t6      $14

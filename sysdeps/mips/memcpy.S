@@ -40,6 +40,19 @@
 #  define SWLO	swl		/* low part is left in little-endian	*/
 #endif
 
+#ifndef t0
+# define t0 a4
+#endif
+#ifndef t1
+# define t1 a5
+#endif
+#ifndef t2
+# define t2 a6
+#endif
+#ifndef t3
+# define t3 a7
+#endif
+
 ENTRY (memcpy)
 	.set	noreorder
 
