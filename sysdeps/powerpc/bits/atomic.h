@@ -68,13 +68,13 @@ typedef uintmax_t uatomic_max_t;
 #ifdef __powerpc64__
 
 /*
- * The 32-bit exchange_bool is different on powerpc64 because the subf 
- * does signed 64-bit arthmatic while the lwarx is 32-bit unsigned 
+ * The 32-bit exchange_bool is different on powerpc64 because the subf
+ * does signed 64-bit arthmatic while the lwarx is 32-bit unsigned
  * (a load word and zero (high 32) form).
  * In powerpc64 register values are 64-bit by default,  including oldval.
  * Net we need to extend sign word the result of lwarx to 64-bit so the
  * 64-bit subtract from gives the expected result and sets the condition
- * correctly. 
+ * correctly.
  */
 # define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
 ({									      \
@@ -134,7 +134,7 @@ typedef uintmax_t uatomic_max_t;
 			: "cr0");					      \
       __val;								      \
     })
-      
+
 # define __arch_atomic_decrement_if_positive_64(mem) \
   ({ int __val, __tmp;							      \
      __asm __volatile ("1:	ldarx	%0,0,%3\n"			      \
@@ -175,7 +175,7 @@ typedef uintmax_t uatomic_max_t;
 # define __arch_atomic_exchange_and_add_64(mem, value) \
     ({ abort (); (*mem) = (value); })
 # define __arch_atomic_decrement_if_positive_64(mem) \
-    ({ abort (); (*mem) = (value); })
+    ({ abort (); (*mem)--; })
 #endif
 
 #define __arch_atomic_exchange_32(mem, value)				      \
@@ -203,8 +203,8 @@ typedef uintmax_t uatomic_max_t;
 		      : "cr0");						      \
     __val;								      \
   })
-  
-#define __arch_atomic_decrement_if_positive_32(mem) \
+
+#define __arch_atomic_decrement_if_positive_32(mem)			      \
   ({ int __val, __tmp;							      \
      __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
 		       "	cmpwi	0,%0,0\n"			      \
@@ -246,13 +246,13 @@ typedef uintmax_t uatomic_max_t;
 
 
 /* Decrement *MEM if it is > 0, and return the old value.  */
-#define atomic_decrement_if_positive(mem) \
-  ({ __typeof (*(mem)) __result;						      \
+#define atomic_decrement_if_positive(mem)				      \
+  ({ __typeof (*(mem)) __result;					      \
     if (sizeof (*mem) == 4)						      \
-      __result = __arch_atomic_decrement_if_positive_32 (mem);	      \
+      __result = __arch_atomic_decrement_if_positive_32 (mem);		      \
     else if (sizeof (*mem) == 8)					      \
-      __result = __arch_atomic_decrement_if_positive_64 (mem);	      \
-    else 								      \
+      __result = __arch_atomic_decrement_if_positive_64 (mem);		      \
+    else								      \
        abort ();							      \
     __result;								      \
   })
