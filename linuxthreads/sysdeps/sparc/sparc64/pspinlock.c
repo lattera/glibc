@@ -21,10 +21,24 @@
 #include <pthread.h>
 
 
+/* This implementation is similar to the one used in the Linux kernel.  */
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
-  XXX
+  asm volatile
+    ("1: ldstub  [%0], %%g5\n"
+     "   brnz,pn %%g5, 2f\n"
+     "    membar #StoreLoad | #StoreStore\n"
+     ".subsection 2\n"
+     "2: ldub    [%0], %%g5\n"
+     "   brnz,pt 2b\n"
+     "    membar #LoadLoad\n"
+     "   b,a,pt  %%xcc, 1b\n"
+     ".previous"
+     : /* no outputs */
+     : "r" (lock)
+     : "g5", "memory");
+  return 0;
 }
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
 
@@ -32,7 +46,14 @@ weak_alias (__pthread_spin_lock, pthread_spin_lock)
 int
 __pthread_spin_trylock (pthread_spinlock_t *lock)
 {
-  XXX
+  int result;
+  asm volatile
+    ("ldstub [%1], %0\n"
+     "membar #StoreLoad | #StoreStore"
+     : "=r" (result)
+     : "r" (lock)
+     : "memory");
+  return result == 0 ? 0 : EBUSY;
 }
 weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 
@@ -40,7 +61,13 @@ weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 int
 __pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  XXX
+  asm volatile
+    ("membar #StoreStore | #LoadStore\n"
+     "stb    %%g0, [%0]"
+     :
+     : "r" (lock)
+     : "memory");
+  return 0;
 }
 weak_alias (__pthread_spin_unlock, pthread_spin_unlock)
 
@@ -51,7 +78,7 @@ __pthread_spin_init (pthread_spinlock_t *lock, int pshared)
   /* We can ignore the `pshared' parameter.  Since we are busy-waiting
      all processes which can access the memory location `lock' points
      to can use the spinlock.  */
-  XXX
+  *lock = 0;
   return 0;
 }
 weak_alias (__pthread_spin_init, pthread_spin_init)

@@ -1,3 +1,9 @@
+2000-06-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/pspinlock.c: Implement spinlocks.
+	* sysdeps/sparc/sparc32/sparcv9/pspinlock.c: New.
+	* sysdeps/sparc/sparc64/pspinlock.c: Implement spinlocks.
+
 2000-05-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/pspinlock.c: Implement spinlocks.

@@ -1,4 +1,4 @@
-/* POSIX spinlock implementation.  SPARC32 version.
+/* POSIX spinlock implementation.  SPARC v9 version.
    Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,19 +26,18 @@ int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
   asm volatile
-    ("1: ldstub [%0], %%g2\n"
-     "   orcc   %%g2, 0x0, %%g0\n"
-     "   bne,a  2f\n"
-     "   ldub   [%0], %%g2\n"
+    ("1: ldstub  [%0], %%g2\n"
+     "   brnz,pn %%g2, 2f\n"
+     "    membar #StoreLoad | #StoreStore\n"
      ".subsection 2\n"
-     "2: orcc   %%g2, 0x0, %%g0\n"
-     "   bne,a  2b\n"
-     "   ldub   [%0], %%g2\n"
-     "   b,a    1b\n"
+     "2: ldub    [%0], %%g2\n"
+     "   brnz,pt 2b\n"
+     "    membar #LoadLoad\n"
+     "   b,a,pt  %%xcc, 1b\n"
      ".previous"
      : /* no outputs */
      : "r" (lock)
-     : "g2", "memory", "cc");
+     : "g2", "memory");
   return 0;
 }
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
@@ -49,7 +48,8 @@ __pthread_spin_trylock (pthread_spinlock_t *lock)
 {
   int result;
   asm volatile
-    ("ldstub [%1], %0"
+    ("ldstub [%1], %0\n"
+     "membar #StoreLoad | #StoreStore"
      : "=r" (result)
      : "r" (lock)
      : "memory");
@@ -61,7 +61,12 @@ weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 int
 __pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  *lock = 0;
+  asm volatile
+    ("membar #StoreStore | #LoadStore\n"
+     "stb    %%g0, [%0]"
+     :
+     : "r" (lock)
+     : "memory");
   return 0;
 }
 weak_alias (__pthread_spin_unlock, pthread_spin_unlock)
