@@ -1,5 +1,31 @@
 2002-11-14  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/errno.c [! USE___THREAD]
+	[HAVE_ELF && SHARED && DO_VERSIONING] (errno, _errno): Declare these
+	with compat_symbol so they are not link-time visible.
+	[! USE___THREAD] (__libc_errno): New alias for errno.
+	* csu/Versions [!(USE_TLS && HAVE___THREAD)] (libc: GLIBC_PRIVATE):
+	Add __libc_errno here.
+	* inet/herrno.c [USE___THREAD]: Use this conditional
+	in place of [USE_TLS && HAVE___THREAD].
+	[! USE___THREAD] [HAVE_ELF && SHARED && DO_VERSIONING]
+	(h_errno, _h_errno): Declare these with compat_symbol so they are not
+	link-time visible.
+	[! USE___THREAD] (__libc_h_errno): New alias for h_errno.
+	* resolv/res_libc.c [! USE___THREAD]
+	[HAVE_ELF && SHARED && DO_VERSIONING] (_res): Likewise.
+	(_res): Use __attribute__ ((section (".bss"))) so we can have an alias.
+	(__libc_res): Define as alias for _res.
+	* resolv/Versions [!(USE_TLS && HAVE___THREAD)] (libc: GLIBC_PRIVATE):
+	Add __libc_h_errno and __libc_res here.
+
+2002-11-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* csu/Versions (errno): Move STT_TLS symbol to GLIBC_PRIVATE for now.
+	* resolv/Versions (h_errno, _res): Likewise.
+
+2002-11-14  Roland McGrath  <roland@redhat.com>
+
 	* Makerules (%.dynsym): Remove $(objpfx) from target and dep.
 	(%.symlist): Likewise.
 

@@ -25,7 +25,7 @@
 /* We need to have the error status variable of the resolver
    accessible in the libc.  */
 
-#if USE_TLS && HAVE___THREAD
+#if USE___THREAD
 __thread int h_errno;
 extern __thread int __libc_h_errno __attribute__ ((alias ("h_errno")))
   attribute_hidden;
@@ -33,6 +33,17 @@ extern __thread int __libc_h_errno __attribute__ ((alias ("h_errno")))
 #else
 int h_errno = 0;
 weak_alias (h_errno, _h_errno)
+
+/* This alias is needed by libpthread.  */
+strong_alias (h_errno, __libc_h_errno)
+
+/* We declare these with compat_symbol so that they are not
+   visible at link time.  Programs must use the accessor functions.  */
+# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+#  include <shlib-compat.h>
+compat_symbol (libc, h_errno, h_errno, GLIBC_2_0);
+compat_symbol (libc, _h_errno, _h_errno, GLIBC_2_0);
+# endif
 #endif
 
 /* When threaded, h_errno may be a per-thread variable.  */

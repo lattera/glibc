@@ -29,14 +29,17 @@ libc {
     # r*
     __res_state; __res_init; __res_nclose; __res_ninit; _res_hconf;
   }
-  GLIBC_2.3 {
+  GLIBC_PRIVATE {
+    __gai_sigqueue;
+
 %if USE_TLS && HAVE___THREAD
     # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
     h_errno; _res;
+%else
+    # These internal aliases are solely to give libpthread access
+    # to the variables that are not directly user-visible.
+    __libc_h_errno; __libc_res;
 %endif
-  }
-  GLIBC_PRIVATE {
-    __gai_sigqueue;
   }
 }
 

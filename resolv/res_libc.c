@@ -31,8 +31,22 @@ extern __thread struct __res_state __libc_res __attribute__ ((alias ("_res")))
   attribute_hidden;
 # define _res __libc_res
 #else
-/* The resolver state for use by single-threaded programs.  */
-struct __res_state _res;
+/* The resolver state for use by single-threaded programs.
+
+   This differs from a plain uninitialized definition in that it doesn't
+   create a common definition, but a plain symbol that resides in .bss,
+   which can have an alias.  */
+struct __res_state _res __attribute__ ((section (".bss")));
+
+/* This alias is needed by libpthread.  */
+strong_alias (_res, __libc_res)
+
+/* We declare this with compat_symbol so that it's not
+   visible at link time.  Programs must use the accessor functions.  */
+# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+#  include <shlib-compat.h>
+compat_symbol (libc, _res, _res, GLIBC_2_0);
+# endif
 #endif
 
 /* This function is used to access the resolver state in
