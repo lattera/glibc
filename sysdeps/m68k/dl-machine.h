@@ -136,6 +136,10 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
     }
 }
 
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_pltrel_p(type) ((type) == R_68K_JMP_SLOT)
+
 /* The m68k never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
