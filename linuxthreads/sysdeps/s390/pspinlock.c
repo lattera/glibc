@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  S/390 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -39,7 +39,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
 	       "    cs    0,1,%1\n"
 	       "    jl    0b\n"
 	       : "=m" (*lock)
-	       : "0" (*lock) : "0", "1", "cc" );
+	       : "m" (*lock) : "0", "1", "cc" );
   return 0;
 }
 weak_alias (__pthread_spin_lock, pthread_spin_lock)
@@ -53,7 +53,7 @@ __pthread_spin_trylock (pthread_spinlock_t *lock)
 	       "    basr  1,0\n"
 	       "0:  cs    %1,1,%0"
 	       : "=m" (*lock), "=&d" (oldval)
-	       : "0" (*lock) : "1", "cc" );
+	       : "m" (*lock) : "1", "cc" );
   return oldval == 0 ? 0 : EBUSY;
 }
 weak_alias (__pthread_spin_trylock, pthread_spin_trylock)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,3 +48,4 @@ ENTRY(__ffs)
 END(__ffs)
 
 weak_alias (__ffs, ffs)
+libc_hidden_builtin_def (ffs)

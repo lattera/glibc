@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2004 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
    This file is part of the GNU C Library.
 
@@ -86,5 +86,6 @@ $ffsl..ng:
 END(ffsl)
 
 weak_alias (__ffs, ffs)
+libc_hidden_builtin_def (ffs)
 weak_extern (ffsl)
 weak_alias (ffsl, ffsll)

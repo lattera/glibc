@@ -1191,7 +1191,7 @@ define check-abi
 	LC_ALL=C \
 	$(AWK) -f $< -v 'config=$(check-abi-config)' \
 	       $(filter %.abilist,$^) \
-	| { diff -pu0 - $(filter %.symlist,$^) $(check-abi-warn) ; }
+	| { diff -p -U 0 - $(filter %.symlist,$^) $(check-abi-warn) ; }
 endef
 ifeq ($(enable-check-abi),warn)
 check-abi-warn = || echo '*** WARNING: $*.so failed ABI check'

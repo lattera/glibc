@@ -89,7 +89,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
        ("mov ar.ccv=%4;;\n\t"
 	"cmpxchg8.acq %0=%1,%2,ar.ccv"
 	: "=r" (readval), "=m" (__atomic_fool_gcc (p))
-	: "r"(newval), "1" (__atomic_fool_gcc (p)), "r" (oldval)
+	: "r"(newval), "m" (__atomic_fool_gcc (p)), "r" (oldval)
 	: "memory");
   return readval == oldval;
 }
@@ -105,7 +105,7 @@ __compare_and_swap_with_release_semantics (long int *p,
        ("mov ar.ccv=%4;;\n\t"
 	"cmpxchg8.rel %0=%1,%2,ar.ccv"
 	: "=r" (readval), "=m" (__atomic_fool_gcc (p))
-	: "r"(newval), "1" (__atomic_fool_gcc (p)), "r" (oldval)
+	: "r"(newval), "m" (__atomic_fool_gcc (p)), "r" (oldval)
 	: "memory");
   return readval == oldval;
 }
@@ -121,7 +121,7 @@ testandset (int *spinlock)
   __asm__ __volatile__(
        "xchg4 %0=%1,%2"
        : "=r"(ret), "=m"(__atomic_fool_gcc (spinlock))
-       : "r"(1), "1"(__atomic_fool_gcc (spinlock))
+       : "r"(1), "m"(__atomic_fool_gcc (spinlock))
        : "memory");
 
   return ret;

@@ -272,7 +272,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 			      ".previous\n"				      \
 			      "2:"					      \
 			      : "=m" (futex), "=&D" (ignore)		      \
-			      : "0" (futex)				      \
+			      : "m" (futex)				      \
 			      : "ax", "cx", "r11", "cc", "memory"); })
 #endif
 

@@ -36,6 +36,7 @@ __ffs (int x)
   return 32 - cnt;
 }
 weak_alias (__ffs, ffs)
+libc_hidden_builtin_def (ffs)
 #if ULONG_MAX == UINT_MAX
 #undef ffsl
 weak_alias (__ffs, ffsl)

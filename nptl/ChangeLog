@@ -1,5 +1,8 @@
 2004-07-05  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_unlock): Use
+	constraint "m" instead of "0" for futex.
+
 	* shlib-versions: Add powerpc64-.*-linux.*.
 
 2004-07-04  Jakub Jelinek  <jakub@redhat.com>

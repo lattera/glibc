@@ -1,3 +1,12 @@
+2004-07-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/pspinlock.c (__pthread_spin_lock,
+	__pthread_spin_trylock): Use constraint "m" instead of "0" for
+	futex.
+	* sysdeps/ia64/pt-machine.h (__compare_and_swap,
+	__compare_and_swap_with_release_semantic, testandset): Use
+	constraint "m" instead of "0" for futex.
+
 2004-06-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (CENABLE): Fix

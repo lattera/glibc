@@ -100,6 +100,7 @@ libc_hidden_builtin_proto (stpcpy)
 libc_hidden_builtin_proto (strrchr)
 libc_hidden_builtin_proto (strspn)
 libc_hidden_builtin_proto (strstr)
+libc_hidden_builtin_proto (ffs)
 
 # ifndef _ISOMAC
 #  ifndef index

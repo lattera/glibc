@@ -1,5 +1,22 @@
 2004-07-05  Jakub Jelinek  <jakub@redhat.com>
 
+	* include/string.h (ffs): Add libc_hidden_builtin_proto.
+	* sysdeps/rs6000/ffs.c (ffs): Add libc_hidden_builtin_def.
+	* sysdeps/alpha/alphaev67/ffs.S (ffs): Likewise.
+	* sysdeps/alpha/ffs.S (ffs): Likewise.
+	* sysdeps/s390/ffs.c (ffs): Likewise.
+	* sysdeps/powerpc/ffs.c (ffs): Likewise.
+	* sysdeps/i386/ffs.c (ffs): Likewise.
+	* sysdeps/i386/i686/ffs.c (ffs): Likewise.
+	* sysdeps/m68k/ffs.c (ffs): Likewise.
+	* sysdeps/generic/ffs.c (ffs): Likewise.
+	* sysdeps/m88k/ffs.c (ffs): Likewise.
+	* sysdeps/am29k/ffs.c (ffs): Likewise.
+	* sysdeps/i960/ffs.c (ffs): Likewise.
+	* sysdeps/x86_64/ffs.c (ffs): Likewise.
+
+	* Makerules (check-abi): Use diff -p -U 0 instead of diff -pu0.
+
 	* sysdeps/powerpc/novmx-longjmp.c (__libc_longjmp,
 	__libc_siglongjmp): Remove symbol_version.
 	* sysdeps/powerpc/longjmp.c (__libc_longjmp, __libc_siglongjmp):
