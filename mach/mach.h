@@ -1,5 +1,5 @@
 /* Standard header for all Mach programs.
-   Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,10 @@
 #ifndef	_MACH_H
 
 #define	_MACH_H	1
+
+/* We must include this before using __need_FILE with <stdio.h> below.  */
+#include <features.h>
+
 
 /* Get the basic types used by Mach.  */
 #include <mach/mach_types.h>

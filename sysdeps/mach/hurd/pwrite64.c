@@ -34,7 +34,6 @@ __libc_pwrite64 (int fd, const void *buf, size_t nbytes, off64_t offset)
 }
 
 #ifndef __libc_pwrite64
-libc_hidden_def (__libc_pwrite64)
 weak_alias (__libc_pwrite64, __pwrite64)
 libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)

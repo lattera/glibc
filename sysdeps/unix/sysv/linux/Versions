@@ -1,4 +1,9 @@
 libc {
+  # The comment lines with "#errlist-compat" are magic; see errlist-compat.awk.
+  # When you get an error from errlist-compat.awk, you need to add a new
+  # version here.  Don't do this blindly, since this means changing the ABI
+  # for all GNU/Linux configurations.
+
   GLIBC_2.0 {
     # functions used in inline functions or macros
     __cmsg_nxthdr;
@@ -50,6 +55,9 @@ libc {
 
     # u*
     umount; uselib;
+
+    #errlist-compat	123
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.1 {
     # functions used in inline functions or macros
@@ -75,6 +83,9 @@ libc {
 
     # u*
     umount2;
+
+    #errlist-compat	125
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.2 {
     # needed in other libraries.
@@ -90,6 +101,9 @@ libc {
   GLIBC_2.3 {
     # r*
     readahead;
+
+    #errlist-compat	126
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_PRIVATE {
     # needed by libpthread.

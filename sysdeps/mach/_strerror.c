@@ -1,5 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000
-   Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -118,4 +117,5 @@ __strerror_r (int errnum, char *buf, size_t buflen)
 
   return (char *) _(es->subsystem[sub].codes[code]);
 }
+libc_hidden_def (__strerror_r)
 weak_alias (__strerror_r, strerror_r)

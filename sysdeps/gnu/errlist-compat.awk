@@ -52,6 +52,11 @@ $1 == "#errlist-compat" {
 }
 
 END {
+  if (! highest_version) {
+    print "/* No sys_errlist/sys_nerr symbols defined on this platform.  */";
+    exit 0;
+  }
+
   count = maxerr + 1;
 
   if (highest != count) {

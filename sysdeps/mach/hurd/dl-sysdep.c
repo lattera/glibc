@@ -602,6 +602,10 @@ abort (void)
     /* Try for ever and ever.  */
     ABORT_INSTRUCTION;
 }
+
+/* We need this alias to satisfy references from libc_pic.a objects
+   that were affected by the libc_hidden_proto declaration for abort.  */
+strong_alias (abort, __GI_abort)
 
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is

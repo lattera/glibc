@@ -1,5 +1,23 @@
 2002-08-29  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/mach/_strerror.c (__strerror_r): Add libc_hidden_def.
+
+	* sysdeps/mach/hurd/pwrite64.c: No libc_hidden_def (__libc_pwrite64).
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__GI_abort): Define alias for abort.
+
+	* include/assert.h (__assert_perror_fail): Declare it, do hidden_proto.
+	* assert/assert-perr.c: Add libc_hidden_def.
+	* elf/dl-minimal.c [! NDEBUG] (__assert_perror_fail): New function.
+
+	* sysdeps/gnu/errlist-compat.awk: Don't fail if there are no versions
+	found at all.
+	* sysdeps/gnu/Versions: File removed.  Moved all #errlist-compat
+	sys_errlist stuff to ...
+	* sysdeps/unix/sysv/linux/Versions: ... here.
+
+	* mach/mach.h: Include <features.h>.
+
 	* elf/dl-runtime.c (IN_DL_RUNTIME): Define this macro first thing.
 	* sysdeps/i386/dl-machine.h: Only declare fixup, profile_fixup and
 	define ELF_MACHINE_RUNTIME_TRAMPOLINE under #ifdef IN_DL_RUNTIME.

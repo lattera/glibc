@@ -83,3 +83,4 @@ __assert_perror_fail (int errnum,
 
   abort ();
 }
+libc_hidden_def (__assert_perror_fail)
