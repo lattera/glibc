@@ -1,3 +1,7 @@
+2004-08-11  Roland McGrath  <roland@redhat.com>
+
+	* posix/tst-waitid.c (do_test): Ignore SIGCHLD before cleanup SIGKILL.
+
 2004-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzset.c (tzset_internal): Add new parameter which is
