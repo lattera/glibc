@@ -1,4 +1,4 @@
-/* O_*, F_*, FD_* bit values for SunOS 4.
+/* O_*, F_*, FD_* bit values for Ultrix 4.
 Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -32,25 +32,22 @@ Cambridge, MA 02139, USA.  */
 #define	O_CREAT		0x0200	/* Create file if it doesn't exist.  */
 #define	O_EXCL		0x0800	/* Fail if file already exists.  */
 #define	O_TRUNC		0x0400	/* Truncate file to zero length.  */
-#define	O_NOCTTY	0x8000	/* Don't assign a controlling terminal.  */
-#if	defined (__USE_BSD) || defined (__USE_SVID)
+#ifdef	__USE_MISC
 #define	O_ASYNC		0x0040	/* Send SIGIO to owner when data is ready.  */
-#define	O_FSYNC		0x2000	/* Synchronous writes.  */
+#define	O_FSYNC		0x8000	/* Synchronous writes.  */
 #define	O_SYNC		O_FSYNC
+#define	O_BLKINUSE	0x1000	/* Block if "in use".  */
+#define	O_BLKANDSET	0x3000	/* Block, test and set "in use" flag.  */
+#define	O_TERMIO	0x40000	/* "termio style program".  */
 #endif
+#define	O_NOCTTY	0x80000	/* Don't assign a controlling terminal.  */
 
 /* File status flags for `open' and `fcntl'.  */
 #define	O_APPEND	0x0008	/* Writes append to the file.  */
-#define	O_NONBLOCK	0x4000	/* Non-blocking I/O.  */
+#define	O_NONBLOCK	0x20000	/* Non-blocking I/O.  */
 
-/* Sun defines O_NDELAY one way for BSD behavior and another for System V
-   behavior.  In the GNU C library, you get the BSD behavior unless you
-   define _USG_SOURCE without also defining _BSD_SOURCE or _GNU_SOURCE.  */
 #ifdef __USE_BSD
 #define	O_NDELAY	0x0004
-#endif
-#if !defined (O_NDELAY) && defined (__USE_SVID)
-#define	O_NDELAY	0x1000
 #endif
 
 #ifdef __USE_BSD
@@ -61,7 +58,7 @@ Cambridge, MA 02139, USA.  */
 #define FREAD		1
 #define	FWRITE		2
 
-/* Traditional Unix names the O_* bits.  */
+/* Traditional BSD names the O_* bits.  */
 #define FASYNC		O_ASYNC
 #define FCREAT		O_CREAT
 #define FEXCL		O_EXCL
@@ -71,9 +68,13 @@ Cambridge, MA 02139, USA.  */
 #define FSYNC		O_SYNC
 #define FAPPEND		O_APPEND
 #define FNONBLOCK	O_NONBLOCK
-#define FNONBIO		O_NONBLOCK
-#define FNDELAY		0x0004	/* BSD O_NDELAY.  */
-#define	FNBIO		0x1000	/* System V O_NDELAY.  */
+#define FNDELAY		O_NDELAY
+#define	FNBLOCK		O_NONBLOCK
+#define	FTERMIO		O_TERMIO
+#define	FNOCTTY		O_NOCTTY
+#define	FSYNCRON	O_FSYNC
+#define	FBLKINUSE	O_BLKINUSE
+#define FBLKANDSET	O_BLKANDSET
 #endif
 
 /* Mask for file access modes.  This is system-dependent in case
@@ -93,11 +94,9 @@ Cambridge, MA 02139, USA.  */
 #define	F_GETLK		7	/* Get record locking info.  */
 #define	F_SETLK		8	/* Set record locking info (non-blocking).  */
 #define	F_SETLKW	9	/* Set record locking info (blocking).  */
-#ifdef	__USE_BSD
-#define	F_RGETLK	10	/* Get remote record locking info.  */
-#define	F_RSETLK	11	/* Set remote locking info (non-blocking).  */
-#define	F_CNVT		12	/* Convert a fhandle to an open fd.  */
-#define	F_RSETLKW	13	/* Set remote locking info (blocking).  */
+#ifdef	__USE_MISC
+#define	F_SETSYN	10	/* Set synchronous writing.  */
+#define	F_CLRSYN	10	/* Clear synchronous writing.  */
 #endif
 
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
@@ -114,27 +113,8 @@ struct flock
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
-    short int l_pid;	/* Process holding the lock.  */
-    short int l_xxx;	/* Reserved for future use.  */
+    __pid_t l_pid;	/* Process holding the lock.  */
   };
-
-#ifdef	__USE_BSD
-/* The structure describing a remote advisory lock.  This is the type of the
-   third arg to `fcntl' for the F_RGETLK, F_RSETLK, and F_RSETLKW requests.  */
-struct eflock
-  {
-    short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.  */
-    short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
-    __off_t l_start;	/* Offset where the lock begins.  */
-    __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
-    short int l_pid;	/* Process holding the lock.  */
-    short int l_xxx;	/* Reserved for future use.  */
-    long int l_rpid;	/* Remote process ID wanting this lock.  */
-    long int l_rsys;	/* Remote system ID wanting this lock.  */
-  };
-
-#endif
-
 
 /* Values for the `l_type' field of a `struct flock'.  */
 #define	F_RDLCK	1	/* Read lock.  */
