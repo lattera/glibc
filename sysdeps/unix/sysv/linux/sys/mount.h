@@ -1,5 +1,5 @@
 /* Header file for mounting/unmount Linux filesystems.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,8 +55,10 @@ enum
 #define S_IMMUTABLE	S_IMMUTABLE
   MS_NOATIME = 1024,		/* Do not update access times.  */
 #define MS_NOATIME	MS_NOATIME
-  MS_NODIRATIME = 2048		/* Do not update directory access times.  */
+  MS_NODIRATIME = 2048,		/* Do not update directory access times.  */
 #define MS_NODIRATIME	MS_NODIRATIME
+  MS_BIND = 4096,		/* Bind directory at different place.  */
+#define MS_BIND		MS_BIND
 };
 
 /* Flags that can be altered by MS_REMOUNT  */

@@ -1,5 +1,12 @@
 2000-09-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/gnu/netinet/tcp.h: Add tcp_info defines and types. 
+
+	* sysdeps/unix/sysv/linux/sys/mount.h (enum): New flag MS_BIND.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (F_SETLKW64,
+	F_GETLK64, F_SETLK64): Update from Linux-2.4.0-test9-pre4.
+
 	* elf/ldconfig.c (search_dir): Allow unlimited path length.
 	(create_links): Likewise.
 

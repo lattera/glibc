@@ -161,8 +161,63 @@ enum
 #define TCP_LINGER2	0x08	/* Life time of orphaned FIN-WAIT-2 state */
 #define TCP_DEFER_ACCEPT 0x09	/* Wake up listener only when data arrive */
 #define TCP_WINDOW_CLAMP 0x10	/* Bound advertised window */
+#define TCP_INFO	 0x11	/* Information about this connection. */
 
 #define SOL_TCP		6	/* TCP level */
+
+
+#define TCPI_OPT_TIMESTAMPS	1
+#define TCPI_OPT_SACK		2
+#define TCPI_OPT_WSCALE		4
+#define TCPI_OPT_ECN		8
+
+/* Values for tcpi_state.  */
+enum tcp_ca_state
+{
+  TCP_CA_Open = 0,
+  TCP_CA_Disorder = 1,
+  TCP_CA_CWR = 2,
+  TCP_CA_Recovery = 3,
+  TCP_CA_Loss = 4
+};
+
+struct tcp_info
+{
+  uint8_t	tcpi_state;
+  uint8_t	tcpi_ca_state;
+  uint8_t	tcpi_retransmits;
+  uint8_t	tcpi_probes;
+  uint8_t	tcpi_backoff;
+  uint8_t	tcpi_options;
+  uint8_t	tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
+
+  uint32_t	tcpi_rto;
+  uint32_t	tcpi_ato;
+  uint32_t	tcpi_snd_mss;
+  uint32_t	tcpi_rcv_mss;
+
+  uint32_t	tcpi_unacked;
+  uint32_t	tcpi_sacked;
+  uint32_t	tcpi_lost;
+  uint32_t	tcpi_retrans;
+  uint32_t	tcpi_fackets;
+
+  /* Times. */
+  uint32_t	tcpi_last_data_sent;
+  uint32_t	tcpi_last_ack_sent;	/* Not remembered, sorry.  */
+  uint32_t	tcpi_last_data_recv;
+  uint32_t	tcpi_last_ack_recv;
+
+  /* Metrics. */
+  uint32_t	tcpi_pmtu;
+  uint32_t	tcpi_rcv_ssthresh;
+  uint32_t	tcpi_rtt;
+  uint32_t	tcpi_rttvar;
+  uint32_t	tcpi_snd_ssthresh;
+  uint32_t	tcpi_snd_cwnd;
+  uint32_t	tcpi_advmss;
+  uint32_t	tcpi_reordering;
+};
 
 __END_DECLS
 
