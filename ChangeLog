@@ -1,3 +1,8 @@
+1999-04-15  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/strcat.S: Avoid using register g6.
+	* sysdeps/sparc/sparc32/strcpy.S: Likewise.
+
 1999-04-15  Scott Bambrough  <scottb@netwinder.org>
 
 	* sysdeps/unix/sysv/linux/arm/sigaction.c: Fix typo in preventing

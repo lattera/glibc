@@ -125,12 +125,12 @@ ENTRY(strcpy)
 	srl		%o5, 8, %g5
 	sth		%g5, [%o0 + 2]
 1:	add		%o0, 4, %o0
-4:	sll		%o5, 24, %g6
+4:	sll		%o5, 24, %g7
 	ld		[%o1], %o5
 	add		%o1, 4, %o1
 	srl		%o5, 8, %g5
 	sub		%o5, %o2, %o4
-	or		%g5, %g6, %g5
+	or		%g5, %g7, %g5
 	andcc		%o4, %o3, %g0
 	be,a		1b
 	 st		%g5, [%o0]
@@ -184,12 +184,12 @@ ENTRY(strcpy)
 	sth		%g5, [%o0]
 	sub		%o0, 2, %o0
 1:	add		%o0, 4, %o0
-4:	sll		%o5, 16, %g6
+4:	sll		%o5, 16, %g7
 	ld		[%o1], %o5
 	add		%o1, 4, %o1
 	srl		%o5, 16, %g5
 	sub		%o5, %o2, %o4
-	or		%g5, %g6, %g5
+	or		%g5, %g7, %g5
 	andcc		%o4, %o3, %g0
 	be,a		1b
 	 st		%g5, [%o0]
@@ -234,12 +234,12 @@ ENTRY(strcpy)
 	stb		%g5, [%o0]
 	sub		%o0, 3, %o0
 1:	add		%o0, 4, %o0
-4:	sll		%o5, 8, %g6
+4:	sll		%o5, 8, %g7
 	ld		[%o1], %o5
 	add		%o1, 4, %o1
 	srl		%o5, 24, %g5
 	sub		%o5, %o2, %o4
-	or		%g5, %g6, %g5
+	or		%g5, %g7, %g5
 	andcc		%o4, %o3, %g0
 	be		1b
 	 st		%g5, [%o0]
