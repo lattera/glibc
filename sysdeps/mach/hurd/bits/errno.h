@@ -212,14 +212,14 @@ enum __error_t_codes
 #define	EPROTO          _HURD_ERRNO (116)/* Protocol error */
 	ETIME           = _HURD_ERRNO (117),
 #define	ETIME           _HURD_ERRNO (117)/* Timer expired */
+	ECANCELED       = _HURD_ERRNO (118),
+#define	ECANCELED       _HURD_ERRNO (118)/* Operation canceled */
 
 	/* Errors from <mach/message.h>.  */
 	EMACH_SEND_IN_PROGRESS          = 0x10000001,
 	EMACH_SEND_INVALID_DATA         = 0x10000002,
 	EMACH_SEND_INVALID_DEST         = 0x10000003,
 	EMACH_SEND_TIMED_OUT            = 0x10000004,
-	EMACH_SEND_WILL_NOTIFY          = 0x10000005,
-	EMACH_SEND_NOTIFY_IN_PROGRESS   = 0x10000006,
 	EMACH_SEND_INTERRUPTED          = 0x10000007,
 	EMACH_SEND_MSG_TOO_SMALL        = 0x10000008,
 	EMACH_SEND_INVALID_REPLY        = 0x10000009,
@@ -227,9 +227,13 @@ enum __error_t_codes
 	EMACH_SEND_INVALID_NOTIFY       = 0x1000000b,
 	EMACH_SEND_INVALID_MEMORY       = 0x1000000c,
 	EMACH_SEND_NO_BUFFER            = 0x1000000d,
-	EMACH_SEND_NO_NOTIFY            = 0x1000000e,
 	EMACH_SEND_INVALID_TYPE         = 0x1000000f,
 	EMACH_SEND_INVALID_HEADER       = 0x10000010,
+	EMACH_SEND_INVALID_TRAILER      = 0x10000011,
+	EMACH_SEND_TRANSPORT_ERROR      = 0x10000012,
+	EMACH_SEND_PORT_MIGRATED        = 0x10000013,
+	EMACH_SEND_RESEND_FAILED        = 0x10000014,
+	EMACH_SEND_INVALID_RT_OOL_SIZE  = 0x10000015,
 	EMACH_RCV_IN_PROGRESS           = 0x10004001,
 	EMACH_RCV_INVALID_NAME          = 0x10004002,
 	EMACH_RCV_TIMED_OUT             = 0x10004003,
@@ -242,6 +246,11 @@ enum __error_t_codes
 	EMACH_RCV_IN_SET                = 0x1000400a,
 	EMACH_RCV_HEADER_ERROR          = 0x1000400b,
 	EMACH_RCV_BODY_ERROR            = 0x1000400c,
+	EMACH_RCV_INVALID_TYPE          = 0x1000400d,
+	EMACH_RCV_SCATTER_SMALL         = 0x1000400e,
+	EMACH_RCV_INVALID_TRAILER       = 0x1000400f,
+	EMACH_RCV_TRANSPORT_ERROR       = 0x10004010,
+	EMACH_RCV_IN_PROGRESS_TIMED     = 0x10004011,
 
 	/* Errors from <mach/kern_return.h>.  */
 	EKERN_INVALID_ADDRESS           = 1,
@@ -266,8 +275,33 @@ enum __error_t_codes
 	EKERN_RIGHT_EXISTS              = 21,
 	EKERN_INVALID_HOST              = 22,
 	EKERN_MEMORY_PRESENT            = 23,
-	EKERN_WRITE_PROTECTION_FAILURE  = 24,
-	EKERN_TERMINATED                = 26,
+	EKERN_MEMORY_DATA_MOVED         = 24,
+	EKERN_MEMORY_RESTART_COPY       = 25,
+	EKERN_INVALID_PROCESSOR_SET     = 26,
+	EKERN_POLICY_LIMIT              = 27,
+	EKERN_INVALID_POLICY            = 28,
+	EKERN_INVALID_OBJECT            = 29,
+	EKERN_ALREADY_WAITING           = 30,
+	EKERN_DEFAULT_SET               = 31,
+	EKERN_EXCEPTION_PROTECTED       = 32,
+	EKERN_INVALID_LEDGER            = 33,
+	EKERN_INVALID_MEMORY_CONTROL    = 34,
+	EKERN_INVALID_SECURITY          = 35,
+	EKERN_NOT_DEPRESSED             = 36,
+	EKERN_TERMINATED                = 37,
+	EKERN_LOCK_SET_DESTROYED        = 38,
+	EKERN_LOCK_UNSTABLE             = 39,
+	EKERN_LOCK_OWNED                = 40,
+	EKERN_LOCK_OWNED_SELF           = 41,
+	EKERN_SEMAPHORE_DESTROYED       = 42,
+	EKERN_RPC_SERVER_TERMINATED     = 43,
+	EKERN_RPC_TERMINATE_ORPHAN      = 44,
+	EKERN_RPC_CONTINUE_ORPHAN       = 45,
+	EKERN_NO_THREAD                 = 46,
+	EKERN_NODE_DOWN                 = 47,
+	EKERN_NOT_WAITING               = 48,
+	EKERN_OPERATION_TIMED_OUT       = 49,
+	EKERN_RETURN_MAX                = 0x100,
 
 	/* Errors from <mach/mig_errors.h>.  */
 	EMIG_TYPE_ERROR         = -300  /* client type check failure */,
@@ -275,11 +309,11 @@ enum __error_t_codes
 	EMIG_REMOTE_ERROR       = -302  /* server detected error */,
 	EMIG_BAD_ID             = -303  /* bad request message ID */,
 	EMIG_BAD_ARGUMENTS      = -304  /* server type check failure */,
-	EMIG_NO_REPLY           = -305  /* no reply should be sent */,
+	EMIG_NO_REPLY           = -305  /* no reply should be send */,
 	EMIG_EXCEPTION          = -306  /* server raised exception */,
 	EMIG_ARRAY_TOO_LARGE    = -307  /* array not large enough */,
 	EMIG_SERVER_DIED        = -308  /* server died */,
-	EMIG_DESTROY_REQUEST    = -309  /* destroy request with no reply */,
+	EMIG_TRAILER_ERROR      = -309  /* trailer has an unknown format */,
 
 	/* Errors from <device/device_types.h>.  */
 	ED_IO_ERROR             = 2500  /* hardware IO error */,
@@ -291,7 +325,9 @@ enum __error_t_codes
 	ED_INVALID_RECNUM       = 2506  /* invalid record (block) number */,
 	ED_INVALID_SIZE         = 2507  /* invalid IO size */,
 	ED_NO_MEMORY            = 2508  /* memory allocation failure */,
-	ED_READ_ONLY            = 2509  /* device cannot be written to */
+	ED_READ_ONLY            = 2509  /* device cannot be written to */,
+	ED_OUT_OF_BAND          = 2510  /* out-of-band condition on device */,
+	ED_NOT_CLONED           = 2511  /* device cannot be cloned */
 
 };
 

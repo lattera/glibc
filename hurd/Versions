@@ -152,6 +152,10 @@ libc {
     _hurdsig_interrupt_timeout;
     _hurdsig_fault_preemptor; _hurdsig_fault_env;
   }
+  GLIBC_2.2.6 {
+    # functions used in macros & inline functions
+    __errno_location;
+  }
 
 %if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
   HURD_CTHREADS_0.3 {

@@ -1,4 +1,5 @@
-# Copyright (C) 1991,92,93,94,95,96,97,2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,2000,01,02
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -153,11 +154,14 @@ END \
     print "#define __error_t_defined\t1"
     print "#endif";
     print "";
-    print "/* errno is a per-thread variable.  */";
-    print "#include <hurd/threadvar.h>";
-    print "#define errno	(*__hurd_errno_location ())";
-    print "#define __set_errno(val) errno = (val)";
-    print "";
+    print "\
+/* Return the current thread's location for `errno'.\n\
+   The syntax of this function allows redeclarations like `int errno'.  */\n\
+extern int *__errno_location (void) __THROW __attribute__ ((__const__));\n\
+\n\
+#define errno			(*__errno_location ())\n\
+#define __set_errno(val)	(errno = (val))\n\
+";
     print "#endif /* <errno.h> included.  */";
     print "";
     print "#if !defined (_ERRNO_H) && defined (__need_Emath)";

@@ -59,6 +59,7 @@ routines = hurdstartup hurdinit \
 	   fopenport \
 	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
+	   errno \
 	   $(sig) $(dtable) $(inlines) port-cleanup report-wait
 sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 	  trampoline longjmp-ts catch-exc exc2signal hurdkill sigunwind \
