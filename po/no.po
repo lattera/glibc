@@ -1,0 +1,4454 @@
+# Norwegian messages for GNU libc.  (bokmål dialect)
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# Karl Anders Øygard <karl.oygard@fou.telenor.no>, 1997.
+#
+# Eivind Tagseth <eivindt@multinet.no>, 1999.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libc 2.1\n"
+"POT-Creation-Date: 1998-11-28 09:29-0800\n"
+"PO-Revision-Date: 1999-01-16 14:00+0100\n"
+"Last-Translator: Eivind Tagseth <eivindt@multinet.no>\n"
+"Language-Team: Norwegian <no@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: nis/nis_print.c:273
+msgid "\t\tAccess Rights : "
+msgstr "\t\tTilgangsrettigheter :"
+
+#: nis/nis_print.c:271
+msgid "\t\tAttributes    : "
+msgstr "\t\tAttrbiutter         :"
+
+#: sunrpc/rpc_main.c:1416
+#, c-format
+msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
+msgstr "\t%s [-abkCLNTM] [-Dnavn[=verdi]] [-i størrelse] [-I [-K sekunder]] [-Y søkesti] innfil\n"
+
+#: sunrpc/rpc_main.c:1418
+#, c-format
+msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
+msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o utfil] [innfil]\n"
+
+#: sunrpc/rpc_main.c:1421
+#, c-format
+msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
+msgstr "\t%s [-n nettid]* [-o utfil] [innfil]\n"
+
+#: sunrpc/rpc_main.c:1420
+#, c-format
+msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
+msgstr "\t%s [-s nettype]* [-o utfil] [innfil]\n"
+
+#: nis/nis_print.c:235
+msgid "\tAccess rights: "
+msgstr "\tTilgangsrettigheter: "
+
+#: nis/nis_print.c:293
+#, c-format
+msgid "\tEntry data of type %s\n"
+msgstr "\tInnslagsdata av type %s\n"
+
+#: nis/nis_print.c:171
+#, c-format
+msgid "\tName       : %s\n"
+msgstr "\tNavn            : %s\n"
+
+#: nis/nis_print.c:172
+msgid "\tPublic Key : "
+msgstr "\tOffentlig nøkkel: "
+
+#: nis/nis_print.c:234
+#, c-format
+msgid "\tType         : %s\n"
+msgstr "\tType            : %s\n"
+
+#: nis/nis_print.c:201
+#, c-format
+msgid "\tUniversal addresses (%u)\n"
+msgstr "\tUniversale adresser (%u)\n"
+
+#: nis/nis_print.c:269
+#, c-format
+msgid "\t[%d]\tName          : %s\n"
+msgstr "\t[%d]\tNavn          : %s\n"
+
+#: nis/nis_print.c:296
+#, c-format
+msgid "\t[%u] - [%u bytes] "
+msgstr "\t[%u] - [%u bytes] "
+
+#: nscd/nscd_stat.c:153
+msgid ""
+"\n"
+"%s cache:\n"
+"\n"
+"%15s  cache is enabled\n"
+"%15Zd  suggested size\n"
+"%15ld  seconds time to live for positive entries\n"
+"%15ld  seconds time to live for negative entries\n"
+"%15ld  cache hits on positive entries\n"
+"%15ld  cache hits on negative entries\n"
+"%15ld  cache misses on positive entries\n"
+"%15ld  cache misses on negative entries\n"
+"%15ld%% cache hit rate\n"
+"%15s  check /etc/%s for changes\n"
+msgstr ""
+"\n"
+"%s hurtigbuffer (cache):\n"
+"\n"
+"%15s  hurtigbuffer er på\n"
+"%15Zd  foreslått størrelse\n"
+"%15ld  sekunders levetid for positive innslag\n"
+"%15ld  sekunders levetid for negative innslag\n"
+"%15ld  treff i hurtigbuffer for positive innslag\n"
+"%15ld  treff i hurtigbuffer for negative innslag\n"
+"%15ld  bom i hurtigbuffer for positive innslag\n"
+"%15ld  bom i hurtigbuffer for negative innslag\n"
+"%15ld%% treffrate for hurtigbuffer\n"
+"%15s  sjekk /etc/%s for endringer\n"
+
+#: nis/nis_print.c:251
+msgid "\nGroup Members :\n"
+msgstr "\nGruppemedlemmer :\n"
+
+#: nis/nis_print.c:320
+msgid "\nTime to Live  : "
+msgstr "\nLevetid         : "
+
+#: sunrpc/rpcinfo.c:679
+msgid "       rpcinfo -b prognum versnum\n"
+msgstr "       rpcinfo -b prognr versnr\n"
+
+#: sunrpc/rpcinfo.c:680
+msgid "       rpcinfo -d prognum versnum\n"
+msgstr "       rpcinfo -d prognr versnr\n"
+
+#: sunrpc/rpcinfo.c:678
+msgid "       rpcinfo -p [ host ]\n"
+msgstr "       rpcinfo -p [ vert ]\n"
+
+#: sunrpc/rpcinfo.c:676
+msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
+msgstr "       rpcinfo [ -n portnr ] -t vert prognr [ versnr ]\n"
+
+#: nscd/nscd_stat.c:145 nscd/nscd_stat.c:147
+msgid "      no"
+msgstr "      nei"
+
+#: nscd/nscd_stat.c:145 nscd/nscd_stat.c:147
+msgid "     yes"
+msgstr "     ja"
+
+#: nis/nis_print.c:344
+#, c-format
+msgid "    Data Length = %u\n"
+msgstr "    Datalengde = %u\n"
+
+#: nis/nis_print_group_entry.c:121
+msgid "    Explicit members:\n"
+msgstr "    Eksplisitte medlemmer:\n"
+
+#: nis/nis_print_group_entry.c:145 nis/nis_print_group_entry.c:161
+msgid "    Explicit nonmembers:\n"
+msgstr "    Eksplisitte ikke-medlemmer:\n"
+
+#: nis/nis_print_group_entry.c:129
+msgid "    Implicit members:\n"
+msgstr "    Implisitte medlemmer:\n"
+
+#: nis/nis_print_group_entry.c:153
+msgid "    Implicit nonmembers:\n"
+msgstr "    Implisitte ikke-medlemmer:\n"
+
+#: nis/nis_print_group_entry.c:126
+msgid "    No explicit members\n"
+msgstr "    Ingen eksplisitte medlemmer\n"
+
+#: nis/nis_print_group_entry.c:150
+msgid "    No explicit nonmembers\n"
+msgstr "    Ingen eksplisitte ikke-medlemmer\n"
+
+#: nis/nis_print_group_entry.c:134
+msgid "    No implicit members\n"
+msgstr "    Ingen implisitte medlemmer\n"
+
+#: nis/nis_print_group_entry.c:158
+msgid "    No implicit nonmembers\n"
+msgstr "    Ingen implisitte ikke-medlemmer\n"
+
+#: nis/nis_print_group_entry.c:142
+msgid "    No recursive members\n"
+msgstr "    Ingen rekursive medlemmer\n"
+
+#: nis/nis_print_group_entry.c:166
+msgid "    No recursive nonmembers\n"
+msgstr "    Ingen rekursive ikke-medlemmer\n"
+
+#: nis/nis_print_group_entry.c:137
+msgid "    Recursive members:\n"
+msgstr "    Rekursive medlemmer:\n"
+
+#: sunrpc/rpcinfo.c:574
+msgid "   program vers proto   port\n"
+msgstr "   program vers proto   port\n"
+
+#: argp/argp-help.c:1571
+msgid "  or: "
+msgstr "  eller: "
+
+#: timezone/zic.c:421
+#, c-format
+msgid " (rule from \"%s\", line %d)"
+msgstr " (regel fra «%s», linje %d)"
+
+#: argp/argp-help.c:1583
+msgid " [OPTION...]"
+msgstr " [FLAGG...]"
+
+#: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1291
+msgid " done\n"
+msgstr " ferdig\n"
+
+#: timezone/zic.c:418
+#, c-format
+msgid "\"%s\", line %d: %s"
+msgstr "«%s», linje %d: %s"
+
+#: timezone/zic.c:958
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr "«Zone %s»-linje og flagget -l utelukker hverandre"
+
+#: timezone/zic.c:966
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr "«Zone %s»-linje og flagget -p utelukker hverandre"
+
+#: sunrpc/rpc_main.c:1401
+msgid "\"infile\" is required for template generation flags.\n"
+msgstr "«innfil» er nødvendig for flagg for malgenerering.\n"
+
+#: argp/argp-help.c:210
+#, c-format
+msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
+msgstr "%.*s: ARGP_HELP_FMT-parameteren krever en verdi"
+
+#: argp/argp-help.c:219
+#, c-format
+msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
+msgstr "%.*s: Ukjent ARGP_HELP_FMT-parameter"
+
+#: timezone/zic.c:768
+#, c-format
+msgid "%s in ruleless zone"
+msgstr "%s i sone uten regel"
+
+#: assert/assert.c:51
+#, c-format
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sForutsetningen (assertion) «%s» feilet.\n"
+
+#: assert/assert-perr.c:52
+#, c-format
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sUventet feil: %s.\n"
+
+#: stdio-common/psignal.c:47
+#, c-format
+msgid "%s%sUnknown signal %d\n"
+msgstr "%s%sUkjent signal %d\n"
+
+#: timezone/zic.c:2201
+#, c-format
+msgid "%s: %d did not sign extend correctly\n"
+msgstr "%s: fortegnsutvidelsen av %d ble feil\n"
+
+#: locale/programs/charmap.c:261
+#, c-format
+msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
+msgstr "%s: <mb_cur_max> må være større enn <mb_cur_min>\n"
+
+#: sunrpc/rpc_main.c:422
+#, c-format
+msgid "%s: C preprocessor failed with exit code %d\n"
+msgstr "%s: C-preprosessoren feilet med sluttkode %d\n"
+
+#: sunrpc/rpc_main.c:419
+#, c-format
+msgid "%s: C preprocessor failed with signal %d\n"
+msgstr "%s: C-preprosessoren feilet med signal %d\n"
+
+#: timezone/zic.c:1469
+#, c-format
+msgid "%s: Can't create %s: %s\n"
+msgstr "%s: Kan ikke opprette %s: %s\n"
+
+#: timezone/zic.c:2179
+#, c-format
+msgid "%s: Can't create directory %s: %s\n"
+msgstr "%s: Kan ikke opprette filkatalog %s: %s\n"
+
+#: timezone/zic.c:620
+#, c-format
+msgid "%s: Can't link from %s to %s: %s\n"
+msgstr "%s: Kan ikke opprette link fra %s til %s: %s\n"
+
+#: timezone/zic.c:794
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr "%s: Kan ikke åpne %s: %s\n"
+
+#: timezone/zic.c:1459
+#, c-format
+msgid "%s: Can't remove %s: %s\n"
+msgstr "%s: Kan ikke fjerne %s: %s\n"
+
+#: timezone/zic.c:863
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr "%s: Feil ved lukking av %s: %s\n"
+
+#: timezone/zic.c:856
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr "%s: Feil ved lesing fra %s\n"
+
+#: timezone/zic.c:1535
+#, c-format
+msgid "%s: Error writing %s\n"
+msgstr "%s: Feil ved skriving til %s\n"
+
+#: timezone/zdump.c:266
+#, c-format
+msgid "%s: Error writing standard output "
+msgstr "%s: Feil ved skriving til standard ut "
+
+#: timezone/zic.c:841
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr "%s: «Leap»-linje i fil %s som ikke er skuddsekundsfil\n"
+
+#: timezone/zic.c:359
+#, c-format
+msgid "%s: Memory exhausted: %s\n"
+msgstr "%s: Minnet oppbrukt: %s\n"
+
+#: timezone/zic.c:524
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr "%s: Mer enn ett -L-flagg spesifisert\n"
+
+#: timezone/zic.c:484
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr "%s: Mer enn ett -d-flagg spesifisert\n"
+
+#: timezone/zic.c:494
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr "%s: Mer enn ett -l-flagg spesifisert\n"
+
+#: timezone/zic.c:504
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr "%s: Mer enn ett -p-flagg spesifisert\n"
+
+#: timezone/zic.c:514
+#, c-format
+msgid "%s: More than one -y option specified\n"
+msgstr "%s: Mer enn ett -y-flagg spesifisert\n"
+
+#: argp/argp-parse.c:640
+#, c-format
+msgid "%s: Too many arguments\n"
+msgstr "%s: For mange argumenter\n"
+
+#: login/programs/database.c:129
+#, c-format
+msgid "%s: cannot get modification time"
+msgstr "%s: kan ikke finne modifiseringstid"
+
+#: timezone/zic.c:1900
+#, c-format
+msgid "%s: command was '%s', result was %d\n"
+msgstr "%s: kommandoen var '%s', resultatet ble %d\n"
+
+#: locale/programs/charmap.c:677 locale/programs/locfile.c:1008
+#, c-format
+msgid "%s: error in state machine"
+msgstr "%s: feil i tilstandsmaskinen"
+
+#: posix/getopt.c:784
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr "%s: ulovlig flagg -- %c\n"
+
+#: posix/getopt.c:787
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr "%s: ugyldig flagg -- %c\n"
+
+#: posix/getopt.c:707
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr "%s: flagget «%c%s» tar ikke argumenter\n"
+
+#: posix/getopt.c:677
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr "%s: flagget «%s» er flertydig\n"
+
+#: posix/getopt.c:725 posix/getopt.c:898
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr "%s: flagget «%s» må ha et argument\n"
+
+#: posix/getopt.c:702
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr "%s: flagget «--%s» tar ikke argumenter\n"
+
+#: posix/getopt.c:882
+#, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr "%s: flagget «-W %s» tar ikke argumenter\n"
+
+#: posix/getopt.c:864
+#, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr "%s: flagget «-W %s» er flertydig\n"
+
+#: posix/getopt.c:817 posix/getopt.c:947
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr "%s: flagget må ha et argument -- %c\n"
+
+#: sunrpc/rpc_main.c:287
+#, c-format
+msgid "%s: output would overwrite %s\n"
+msgstr "%s: utskrift wille overskrive %s\n"
+
+#: timezone/zic.c:848 timezone/zic.c:1262 timezone/zic.c:1287
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr "%s: panikk: ugyldig l_value %d\n"
+
+#: locale/programs/charmap.c:684 locale/programs/repertoire.c:289
+#, c-format
+msgid "%s: premature end of file"
+msgstr "%s: for tidlig slutt på filen"
+
+#: sunrpc/rpc_main.c:294
+#, c-format
+msgid "%s: unable to open "
+msgstr "%s: kan ikke åpne "
+
+#: posix/getopt.c:758
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr "%s: ukjent flagg «%c%s»\n"
+
+#: posix/getopt.c:754
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr "%s: ukjent flagg «--%s»\n"
+
+#: timezone/zic.c:443
+#, c-format
+msgid ""
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
+"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+msgstr ""
+"%s: bruk er %s [ -s ] [ -v ] [ -l lokaltid ] [ -p posixregler ] [ -d katalog ]\n"
+"\t[ -L skuddsekunder ] [ -y årkontrollprogram ] [ filnavn ... ]\n"
+
+#: timezone/zdump.c:174
+#, c-format
+msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
+msgstr "%s: bruk er %s [ -v ] [ -c grense ] sonenavn ...\n"
+
+#: sunrpc/rpc_main.c:307
+#, c-format
+msgid "%s: while writing output: "
+msgstr "%s: under skriving av utdata: "
+
+#: argp/argp-parse.c:164
+msgid "(PROGRAM ERROR) No version known!?"
+msgstr "(PROGRAMFEIL) Ingen versjon kjent!?"
+
+#: argp/argp-parse.c:781
+msgid "(PROGRAM ERROR) Option should have been recognized!?"
+msgstr "(PROGRAMFEIL) Flagg skulle ha blitt gjenkjent!?"
+
+#: nis/nis_print.c:129
+msgid "(Unknown object)\n"
+msgstr "(Ukjent objekt)\n"
+
+#: sunrpc/clnt_perr.c:124
+#, c-format
+msgid "(unknown authentication error - %d)"
+msgstr "(ukjent feil ved autentisering - %d)"
+
+#: sunrpc/rpcinfo.c:613
+msgid "(unknown)"
+msgstr "(ukjent)"
+
+#: elf/sprof.c:574
+#, c-format
+msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
+msgstr "*** Filen «%s» er strippet: ingen detaljert analyse mulig\n"
+
+#: catgets/gencat.c:266
+msgid "*standard input*"
+msgstr "*standard inn*"
+
+#: catgets/gencat.c:120
+msgid ""
+"-o OUTPUT-FILE [INPUT-FILE]...\n"
+"[OUTPUT-FILE [INPUT-FILE]...]"
+msgstr ""
+"-o UTFIL [INNFIL]...\n"
+"[UTFIL [INNFIL]...]"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:778
+msgid ".lib section in a.out corrupted"
+msgstr ".lib-seksjon i a.out skadet"
+
+#: sunrpc/clnt_perr.c:110 sunrpc/clnt_perr.c:131
+#, c-format
+msgid "; low version = %lu, high version = %lu"
+msgstr "; nedre versjon = %lu, øvre versjon = %lu"
+
+#: sunrpc/clnt_perr.c:117
+msgid "; why = "
+msgstr "; hvorfor = "
+
+#: locale/programs/charset.c:98
+#, c-format
+msgid "<%s> and <%s> are illegal names for range"
+msgstr "<%s> og <%s> er ulovlige navn for tegnområde"
+
+#: locale/programs/ld-ctype.c:342
+#, c-format
+msgid "<SP> character must not be in class `%s'"
+msgstr "tegnet <SP> kan ikke være i klassen «%s»"
+
+#: locale/programs/ld-ctype.c:330
+#, c-format
+msgid "<SP> character not in class `%s'"
+msgstr "tegnet <SP> er ikke i klassen «%s»"
+
+#. TRANS The experienced user will know what is wrong.
+#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
+#. TRANS @c Don't change it.
+#: stdio-common/../sysdeps/gnu/errlist.c:603
+msgid "?"
+msgstr "?"
+
+#: sysdeps/unix/sysv/linux/siglist.h:27
+msgid "Aborted"
+msgstr "Avbrutt (SIGABRT)"
+
+#: nis/nis_print.c:318
+msgid "Access Rights : "
+msgstr "Tilgangsrettigheter: "
+
+#: stdio-common/../sysdeps/gnu/errlist.c:774
+msgid "Accessing a corrupted shared library"
+msgstr "Aksesserer et skadet delt bibliotek"
+
+#. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
+#: stdio-common/../sysdeps/gnu/errlist.c:366
+msgid "Address already in use"
+msgstr "Adressen er allerede i bruk"
+
+#: posix/../sysdeps/posix/gai_strerror.c:30
+msgid "Address family for hostname not supported"
+msgstr "Adressefamilien for vertsnavn er ikke støttet"
+
+#. TRANS The address family specified for a socket is not supported; it is
+#. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
+#: stdio-common/../sysdeps/gnu/errlist.c:361
+msgid "Address family not supported by protocol"
+msgstr "Adressefamilien er ikke støttet av protokollen"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:742
+msgid "Advertise error"
+msgstr "Annonseringsfeil"
+
+#: stdio-common/../sysdeps/unix/siglist.c:39
+#: sysdeps/unix/sysv/linux/siglist.h:33
+msgid "Alarm clock"
+msgstr "Alarmen gikk"
+
+#. TRANS Argument list too long; used when the arguments passed to a new program
+#. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
+#. TRANS File}) occupy too much memory space.  This condition never arises in the
+#. TRANS GNU system.
+#: stdio-common/../sysdeps/gnu/errlist.c:69
+msgid "Argument list too long"
+msgstr "Argumentlisten er for lang"
+
+#: nis/nis_error.c:65
+msgid "Attempt to remove a non-empty table"
+msgstr "Forsøk på å fjerne en tabell som ikke er tom"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:782
+msgid "Attempting to link in too many shared libraries"
+msgstr "Forsøker å linke inn for mange delte biblioteker"
+
+#: sunrpc/clnt_perr.c:273
+msgid "Authentication OK"
+msgstr "Autentisering OK"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:561
+msgid "Authentication error"
+msgstr "Autentiseringsfeil"
+
+#: nis/nis_print.c:105
+msgid "BOGUS OBJECT\n"
+msgstr "FALSKT OBJEKT\n"
+
+#. TRANS Bad address; an invalid pointer was detected.
+#. TRANS In the GNU system, this error never happens; you get a signal instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:114
+msgid "Bad address"
+msgstr "Ugyldig adresse"
+
+#. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
+#. TRANS closed or reading from a descriptor open only for writing (or vice
+#. TRANS versa).
+#: stdio-common/../sysdeps/gnu/errlist.c:82
+msgid "Bad file descriptor"
+msgstr "Ugyldig fildeskriptor"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:730
+msgid "Bad font file format"
+msgstr "Ugyldig format på typesnittsfil"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:622
+msgid "Bad message"
+msgstr "Ugyldig melding"
+
+#: stdio-common/../sysdeps/unix/siglist.c:37
+#: sysdeps/unix/sysv/linux/siglist.h:56
+msgid "Bad system call"
+msgstr "Ugyldig systemkall"
+
+#: posix/../sysdeps/posix/gai_strerror.c:32
+msgid "Bad value for ai_flags"
+msgstr "Ugyldig verdi for ai_flags"
+
+#: locale/programs/localedef.c:104
+msgid "Be strictly POSIX conform"
+msgstr "Vær strengt POSIX-konform"
+
+#: nis/nis_print.c:301
+msgid "Binary data\n"
+msgstr "Binære data\n"
+
+#. TRANS A file that isn't a block special file was given in a situation that
+#. TRANS requires one.  For example, trying to mount an ordinary file as a file
+#. TRANS system in Unix gives this error.
+#: stdio-common/../sysdeps/gnu/errlist.c:121
+msgid "Block device required"
+msgstr "Blokk-enhet kreves"
+
+#: sunrpc/pmap_rmt.c:347
+#, fuzzy
+msgid "Broadcast poll problem"
+msgstr "Problem med «polling» ved kringkasting"
+
+#. TRANS Broken pipe; there is no process reading from the other end of a pipe.
+#. TRANS Every library function that returns this error code also generates a
+#. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
+#. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
+#. TRANS unless it has handled or blocked @code{SIGPIPE}.
+#: stdio-common/../sysdeps/gnu/errlist.c:234
+#: stdio-common/../sysdeps/unix/siglist.c:38
+#: sysdeps/unix/sysv/linux/siglist.h:32
+msgid "Broken pipe"
+msgstr "Røret ble brutt"
+
+#: stdio-common/../sysdeps/unix/siglist.c:35
+#: sysdeps/unix/sysv/linux/siglist.h:30
+msgid "Bus error"
+msgstr "Bussfeil"
+
+#: nis/nis_print.c:45
+msgid "CDS"
+msgstr "CDS"
+
+#: stdio-common/../sysdeps/unix/siglist.c:49
+#: sysdeps/unix/sysv/linux/siglist.h:43
+msgid "CPU time limit exceeded"
+msgstr "Begrensning av CPU-tid overskredet"
+
+#: nis/nis_error.c:32
+msgid "Cache expired"
+msgstr "Tidsgrense for hurtigbuffer løp ut"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:770
+msgid "Can not access a needed shared library"
+msgstr "Kan ikke aksessere et nødvendig delt bibliotek"
+
+# nis/ypclnt.c:637+
+#: nis/ypclnt.c:769
+msgid "Can't bind to server which serves this domain"
+msgstr "Kan ikke koble til tjener for dette domenet"
+
+#: nis/ypclnt.c:781
+msgid "Can't communicate with portmapper"
+msgstr "Kan ikke kommunisere med portmapper"
+
+#: nis/ypclnt.c:783
+msgid "Can't communicate with ypbind"
+msgstr "Kan ikke kommunisere med ypbind"
+
+#: nis/ypclnt.c:785
+msgid "Can't communicate with ypserv"
+msgstr "Kan ikke kommunisere med ypserv"
+
+#. TRANS No memory available.  The system cannot allocate more virtual memory
+#. TRANS because its capacity is full.
+#: stdio-common/../sysdeps/gnu/errlist.c:103
+msgid "Cannot allocate memory"
+msgstr "Kan ikke tildele minne"
+
+#. TRANS The requested socket address is not available; for example, you tried
+#. TRANS to give a socket a name that doesn't match the local host name.
+#. TRANS @xref{Socket Addresses}.
+#: stdio-common/../sysdeps/gnu/errlist.c:373
+msgid "Cannot assign requested address"
+msgstr "Kan ikke benytte den ønskede adressen"
+
+#: sunrpc/pmap_rmt.c:264
+msgid "Cannot create socket for broadcast rpc"
+msgstr "Kan ikke opprette socket for kringkastings-rpc"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:786
+msgid "Cannot exec a shared library directly"
+msgstr "Kan ikke eksekvere et delt bibliotek direkte"
+
+#: sunrpc/rpc_main.c:1406
+msgid "Cannot have more than one file generation flag!\n"
+msgstr "Kan ikke ha mer enn ett fil-genereringsflagg!\n"
+
+#: sunrpc/pmap_rmt.c:360
+msgid "Cannot receive reply to broadcast"
+msgstr "Kan ikke ta imot svar på kringkasting"
+
+#: sunrpc/pmap_clnt.c:74
+msgid "Cannot register service"
+msgstr "Kan ikke registrere tjeneste"
+
+#. TRANS The socket has already been shut down.
+#: stdio-common/../sysdeps/gnu/errlist.c:434
+msgid "Cannot send after transport endpoint shutdown"
+msgstr "Kan ikke sende etter at transportendepunktet har koblet ned"
+
+#: sunrpc/pmap_rmt.c:322
+msgid "Cannot send broadcast packet"
+msgstr "Kan ikke sende kringkastingspakke"
+
+#: sunrpc/pmap_rmt.c:271
+msgid "Cannot set socket option SO_BROADCAST"
+msgstr "Kan ikke sette socket-flagg SO_BROADCAST"
+
+#: sunrpc/rpc_main.c:1193
+msgid "Cannot specify more than one input file!\n"
+msgstr "Kan ikke spesifisere mer enn en innfil!\n"
+
+#: sunrpc/rpc_main.c:1363
+msgid "Cannot use netid flag with inetd flag!\n"
+msgstr "Kan ikke bruke nettid-flagg med inetd-flagg!\n"
+
+#: sunrpc/rpc_main.c:1375
+msgid "Cannot use netid flag without TIRPC!\n"
+msgstr "Kan ikke bruke nettid-flagg uten TIRPC!\n"
+
+#: sunrpc/rpc_main.c:1382
+msgid "Cannot use table flags with newstyle!\n"
+msgstr "Kan ikke bruke tabellflagg med ny stil!\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:670
+msgid "Channel number out of range"
+msgstr "Kanalnummer utenfor gyldig intervall"
+
+#: nis/nis_print.c:264
+#, c-format
+msgid "Character Separator : %c\n"
+msgstr "Tegn-separator      : %c\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:45
+#: sysdeps/unix/sysv/linux/siglist.h:39
+msgid "Child exited"
+msgstr "Barnet avsluttet"
+
+#: sunrpc/clnt_perr.c:283
+msgid "Client credential too weak"
+msgstr "Klientens referanser er for svake"
+
+#: nis/nis_print.c:266
+msgid "Columns             :\n"
+msgstr "Kolonner            :\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:750
+msgid "Communication error on send"
+msgstr "Kommunikasjonsfeil ved sending"
+
+#: locale/programs/localedef.c:112
+msgid "Compile locale specification"
+msgstr "Kompiler lokal-spesifikasjon"
+
+#. TRANS Go home and have a glass of warm, dairy-fresh milk.
+#: stdio-common/../sysdeps/gnu/errlist.c:613
+msgid "Computer bought the farm"
+msgstr "Datamaskinen tok ferie"
+
+#: locale/programs/ld-ctype.c:1253
+msgid "Computing table size for character classes might take a while..."
+msgstr "Beregning av tabellstørrelse for tegnklasser kan ta en stund..."
+
+#: locale/programs/ld-collate.c:336
+msgid "Computing table size for collation information might take a while..."
+msgstr "Beregning av tabellstørrelse for sammenligningsinformasjon kan ta en stund..."
+
+#. TRANS A remote host refused to allow the network connection (typically because
+#. TRANS it is not running the requested service).
+#: stdio-common/../sysdeps/gnu/errlist.c:451
+msgid "Connection refused"
+msgstr "Oppkobling nektes"
+
+#. TRANS A network connection was closed for reasons outside the control of the
+#. TRANS local host, such as by the remote machine rebooting or an unrecoverable
+#. TRANS protocol violation.
+#: stdio-common/../sysdeps/gnu/errlist.c:401
+msgid "Connection reset by peer"
+msgstr "Forbindelsen brutt i den andre enden"
+
+#. TRANS A socket operation with a specified timeout received no response during
+#. TRANS the timeout period.
+#: stdio-common/../sysdeps/gnu/errlist.c:445
+msgid "Connection timed out"
+msgstr "Oppkoblingen overskred tidsgrensen"
+
+#: stdio-common/../sysdeps/unix/siglist.c:44
+#: sysdeps/unix/sysv/linux/siglist.h:38
+msgid "Continued"
+msgstr "Fortsetter"
+
+#: iconv/iconv_prog.c:66
+msgid "Convert encoding of given files from one encoding to another."
+msgstr "Konverter innkoding av gitte filer fra en innkoding til en annen."
+
+#: db2/makedb.c:58
+msgid "Convert key to lower case"
+msgstr "Konverter nøkkel til små bokstaver"
+
+#: catgets/gencat.c:236 db2/makedb.c:242 elf/sprof.c:359
+#: iconv/iconv_prog.c:294 locale/programs/locale.c:267
+#: locale/programs/localedef.c:403 nscd/nscd.c:223 nss/getent.c:65
+#: posix/getconf.c:624
+#, c-format
+msgid ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+msgstr ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"Dette er gratis programvare.  Se kildekoden for kopieringsbetingelser.\n"
+"Programvaren har ingen garanti, ikke en gang for SALGBARHET eller EGNETHET\n"
+"TIL NOEN SPESIELL OPPGAVE.\n"
+
+#: nscd/nscd_conf.c:167
+#, c-format
+msgid "Could not create log file \"%s\""
+msgstr "Kunne ikke opprette loggfil «%s»"
+
+#: catgets/gencat.c:107
+#, fuzzy
+msgid "Create C header file NAME containing symbol definitions"
+msgstr "Opprett C-headerfil NAVN som inneholder symboldefinisjoner"
+
+#: locale/programs/localedef.c:103
+msgid "Create output even if warning messages were issued"
+msgstr "Lag utdata selv om advarsler ble gitt"
+
+#: db2/makedb.c:68
+msgid "Create simple DB database from textual input."
+msgstr "Lag en enkel DB-database fra tekst-input."
+
+#: nis/nis_print.c:322
+#, c-format
+msgid "Creation Time : %s"
+msgstr "Opprettelsestid: %s"
+
+#: nis/nss_nisplus/nisplus-publickey.c:89
+#: nis/nss_nisplus/nisplus-publickey.c:159
+#, c-format
+msgid "DES entry for netname %s not unique\n"
+msgstr "DES-innslag for nettnavn %s er ikke unikt\n"
+
+#: nis/nis_print.c:111
+msgid "DIRECTORY\n"
+msgstr "KATALOG\n"
+
+#: nis/nis_print.c:41
+msgid "DNANS"
+msgstr "DNANS"
+
+#: nis/nis_print.c:37
+msgid "DNS"
+msgstr "DNS"
+
+#: nis/nis_error.c:51
+msgid "Database for table does not exist"
+msgstr "Database for tabell eksisterer ikke"
+
+#: nis/ypclnt.c:795
+msgid "Database is busy"
+msgstr "Databasen er opptatt"
+
+#: nis/nis_print.c:225
+msgid "Default Access rights :\n"
+msgstr "Forvalgte tilgangsrettigheter:\n"
+
+#. TRANS No default destination address was set for the socket.  You get this
+#. TRANS error when you try to transmit data over a connectionless socket,
+#. TRANS without first specifying a destination for the data with @code{connect}.
+#: stdio-common/../sysdeps/gnu/errlist.c:429
+msgid "Destination address required"
+msgstr "Måladresse kreves"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:650
+msgid "Device not a stream"
+msgstr "Enheten er ikke en stream"
+
+#. TRANS No such device or address.  The system tried to use the device
+#. TRANS represented by a file you specified, and it couldn't find the device.
+#. TRANS This can mean that the device file was installed incorrectly, or that
+#. TRANS the physical device is missing or not correctly attached to the
+#. TRANS computer.
+#: stdio-common/../sysdeps/gnu/errlist.c:61
+msgid "Device not configured"
+msgstr "Enheten er ikke konfigurert"
+
+#. TRANS Resource busy; a system resource that can't be shared is already in use.
+#. TRANS For example, if you try to delete a file that is the root of a currently
+#. TRANS mounted filesystem, you get this error.
+#: stdio-common/../sysdeps/gnu/errlist.c:128
+msgid "Device or resource busy"
+msgstr "Enheten eller ressursen opptatt"
+
+#: nis/nis_print.c:179
+#, c-format
+msgid "Diffie-Hellmann (%d bits)\n"
+msgstr "Diffie-Hellmannn (%d bits)\n"
+
+#: nis/nis_print.c:315
+#, c-format
+msgid "Directory     : %s\n"
+msgstr "Katalog       : %s\n"
+
+#. TRANS Directory not empty, where an empty directory was expected.  Typically,
+#. TRANS this error occurs when you are trying to delete a directory.
+#: stdio-common/../sysdeps/gnu/errlist.c:480
+msgid "Directory not empty"
+msgstr "Filkatalogen er ikke tom"
+
+#. TRANS The user's disk quota was exceeded.
+#: stdio-common/../sysdeps/gnu/errlist.c:498
+msgid "Disc quota exceeded"
+msgstr "Diskkvoten er overskredet"
+
+#: nscd/nscd.c:80
+msgid "Do not fork and display messages on the current tty"
+msgstr "Ikke spalt ut ny prossess og vis meldinger på nåværende tty"
+
+#: db2/makedb.c:61
+msgid "Do not print messages while building database"
+msgstr "Ikke skriv meldinger under bygging av databasen"
+
+#: catgets/gencat.c:109
+msgid "Do not use existing catalog, force new output file"
+msgstr "Ikke bruk eksisterende katalog, tving opprettelse av ny utfil"
+
+#: nis/ypclnt.c:841
+msgid "Domain not bound"
+msgstr "Domenet er ikke bundet"
+
+#: stdio-common/../sysdeps/unix/siglist.c:32
+#: sysdeps/unix/sysv/linux/siglist.h:53
+msgid "EMT trap"
+msgstr "Emulatorfelle"
+
+#: nis/nis_print.c:120
+msgid "ENTRY\n"
+msgstr "INNSLAG\n"
+
+#: nis/nis_print.c:299
+msgid "Encrypted data\n"
+msgstr "Kryptert data\n"
+
+#: nis/nis_error.c:52
+msgid "Entry/Table type mismatch"
+msgstr "Innslag-/tabell-type stemmer ikke overens"
+
+#: nis/nis_error.c:56
+msgid "Error in RPC subsystem"
+msgstr "Feil i undersystem til RPC"
+
+#: nis/nis_error.c:66
+msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
+msgstr "Feil ved aksessering av NIS+ kaldstartfil. Er NIS+ installert?"
+
+#: string/../sysdeps/mach/_strerror.c:56
+#: sysdeps/mach/hurd/mips/dl-machine.c:67
+msgid "Error in unknown error system: "
+msgstr "Feil i ukjent feilsystem: "
+
+#: nis/nis_error.c:59
+#, fuzzy
+msgid "Error while talking to callback proc"
+msgstr "Feil ved snakking til tilbakekallsprosess"
+
+#: inet/ruserpass.c:161
+msgid "Error: .netrc file is readable by others."
+msgstr "Feil: .netrc kan leses av andre."
+
+#: stdio-common/../sysdeps/gnu/errlist.c:710
+msgid "Exchange full"
+msgstr "Veksel full"
+
+#. TRANS Invalid executable file format.  This condition is detected by the
+#. TRANS @code{exec} functions; see @ref{Executing a File}.
+#: stdio-common/../sysdeps/gnu/errlist.c:75
+msgid "Exec format error"
+msgstr "Ugyldig format på eksekverbar fil"
+
+#: locale/programs/localedef.c:190
+msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
+msgstr "FATALT: systemet definerer ikke «_POSIX2_LOCALEDEF»"
+
+#: locale/programs/localedef.c:99
+msgid "FILE contains mapping from symbolic names to UCS4 values"
+msgstr "FIL inneholder mapping fra symbolske navn til UCS4-verdier"
+
+#: sunrpc/clnt_perr.c:287
+msgid "Failed (unspecified error)"
+msgstr "Feilet (uspesifisert feil)"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:762
+msgid "File descriptor in bad state"
+msgstr "Fildeskriptor i ugyldig tilstand"
+
+#. TRANS File exists; an existing file was specified in a context where it only
+#. TRANS makes sense to specify a new file.
+#: stdio-common/../sysdeps/gnu/errlist.c:134
+msgid "File exists"
+msgstr "Filen eksisterer"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:726
+msgid "File locking deadlock error"
+msgstr "Fillåsing feilet på grunn av vranglås"
+
+#. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
+#. TRANS Files}) or host name too long (in @code{gethostname} or
+#. TRANS @code{sethostname}; @pxref{Host Identification}).
+#: stdio-common/../sysdeps/gnu/errlist.c:464
+msgid "File name too long"
+msgstr "For langt filnavn"
+
+#: stdio-common/../sysdeps/unix/siglist.c:50
+#: sysdeps/unix/sysv/linux/siglist.h:44
+msgid "File size limit exceeded"
+msgstr "Grense for filstørrelse overskredet"
+
+#. TRANS File too big; the size of a file would be larger than allowed by the system.
+#: stdio-common/../sysdeps/gnu/errlist.c:202
+msgid "File too large"
+msgstr "For stor fil"
+
+#: nis/nis_error.c:37
+msgid "First/Next chain broken"
+msgstr "Første/neste-kjede ødelagt"
+
+#: stdio-common/../sysdeps/unix/siglist.c:33
+#: sysdeps/unix/sysv/linux/siglist.h:28
+msgid "Floating point exception"
+msgstr "Unntakstilfelle ved flyttallsoperasjon"
+
+#: nis/nis_error.c:67
+msgid "Full resync required for directory"
+msgstr "Full resynkoronisering trengs for katalog"
+
+#. TRANS Function not implemented.  Some functions have commands or options defined
+#. TRANS that might not be supported in all implementations, and this is the kind
+#. TRANS of error you get if you request them and they are not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:573
+msgid "Function not implemented"
+msgstr "Funksjonen er ikke implementert"
+
+#: nis/nis_print.c:114
+msgid "GROUP\n"
+msgstr "GRUPPE\n"
+
+#: argp/argp-help.c:231
+#, c-format
+msgid "Garbage in ARGP_HELP_FMT: %s"
+msgstr "Søppel i ARGP_HELP_FMT: %s"
+
+#: catgets/gencat.c:115
+msgid ""
+"Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+"Generer meldingskatalog.\\vHvis INNFIL er - lese inndata fra standard inn.  Hvis UTFIL\n"
+"er - skrives utdata til standard ut.\n"
+
+#: nis/nis_error.c:36
+msgid "Generic system error"
+msgstr "Generell systemfeil"
+
+#: locale/programs/locale.c:75
+msgid "Get locale-specific information."
+msgstr "Hent informasjon spesifikk for lokalet."
+
+#: argp/argp-parse.c:88
+msgid "Give a short usage message"
+msgstr "Gi en kort bruksmelding"
+
+#: argp/argp-parse.c:87
+msgid "Give this help list"
+msgstr "Gi denne hjelpelisten"
+
+#. TRANS This error code has no purpose.
+#: stdio-common/../sysdeps/gnu/errlist.c:618
+msgid "Gratuitous error"
+msgstr "Umotivert feil"
+
+#: nis/nis_print.c:317
+#, c-format
+msgid "Group         : %s\n"
+msgstr "Gruppe        : %s\n"
+
+#: nis/nis_print.c:248
+msgid "Group Flags :"
+msgstr "Gruppeflagg :"
+
+#: nis/nis_print_group_entry.c:113
+#, c-format
+msgid "Group entry for \"%s.%s\" group:\n"
+msgstr "Gruppeinnslag for «%s.%s»-gruppen:\n"
+
+#: argp/argp-parse.c:91
+msgid "Hang for SECS seconds (default 3600)"
+msgstr "Heng i SEK sekunder (forvalgt 3600)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:26
+#: sysdeps/unix/sysv/linux/siglist.h:22
+msgid "Hangup"
+msgstr "Legg på (SIGHUP)"
+
+#: nscd/grpcache.c:238
+#, c-format
+msgid "Haven't found \"%d\" in group cache!"
+msgstr "Har ikke funnet «%d» i gruppe-nærbuffer!"
+
+#: nscd/pwdcache.c:235
+#, c-format
+msgid "Haven't found \"%d\" in password cache!"
+msgstr "Har ikke funnet «%d» i passord-nærbuffer!"
+
+#: nscd/grpcache.c:210
+#, c-format
+msgid "Haven't found \"%s\" in group cache!"
+msgstr "Har ikke funnet «%s» i gruppe-nærbuffer!"
+
+#: nscd/hstcache.c:297 nscd/hstcache.c:328 nscd/hstcache.c:359
+#: nscd/hstcache.c:390
+#, c-format
+msgid "Haven't found \"%s\" in hosts cache!"
+msgstr "Har ikke funnet «%s» i verts-nærbuffer!"
+
+#: nscd/pwdcache.c:207
+#, c-format
+msgid "Haven't found \"%s\" in password cache!"
+msgstr "Har ikke funnet «%s» i passord-nærbuffer!"
+
+#. TRANS The remote host for a requested network connection is down.
+#: stdio-common/../sysdeps/gnu/errlist.c:469
+msgid "Host is down"
+msgstr "Vertsmaskin er nede"
+
+#: resolv/herror.c:75
+msgid "Host name lookup failure"
+msgstr "Oppslag av vertsnavn feilet"
+
+#: stdio-common/../sysdeps/unix/siglist.c:48
+#: sysdeps/unix/sysv/linux/siglist.h:42
+msgid "I/O possible"
+msgstr "I/O mulig"
+
+#: db2/makedb.c:71
+msgid ""
+"INPUT-FILE OUTPUT-FILE\n"
+"-o OUTPUT-FILE INPUT-FILE\n"
+"-u INPUT-FILE"
+msgstr ""
+"INNFIL UTFIL\n"
+"-o UTFIL INNFIL\n"
+"-u INNFIL"
+
+#: stdio-common/../sysdeps/unix/siglist.c:31
+msgid "IOT trap"
+msgstr "IOT-felle"
+
+#: nis/nis_print.c:35
+msgid "IVY"
+msgstr "IVY"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:626
+msgid "Identifier removed"
+msgstr "Identifikator tatt bort"
+
+#: stdio-common/../sysdeps/unix/siglist.c:29
+#: sysdeps/unix/sysv/linux/siglist.h:25
+msgid "Illegal instruction"
+msgstr "Ulovlig instruksjon (SIGILL)"
+
+#: nis/nis_error.c:61
+msgid "Illegal object type for operation"
+msgstr "Ulovlig objekttype for operasjon"
+
+#. TRANS Invalid seek operation (such as on a pipe).
+#: stdio-common/../sysdeps/gnu/errlist.c:213
+msgid "Illegal seek"
+msgstr "Ulovlig søkeoperasjon"
+
+#. TRANS Inappropriate file type or format.  The file was the wrong type for the
+#. TRANS operation, or a data file had the wrong format.
+#. TRANS
+#. TRANS On some systems @code{chmod} returns this error if you try to set the
+#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
+#: stdio-common/../sysdeps/gnu/errlist.c:556
+msgid "Inappropriate file type or format"
+msgstr "Uegnet filtype eller format"
+
+#. TRANS Inappropriate I/O control operation, such as trying to set terminal
+#. TRANS modes on an ordinary file.
+#: stdio-common/../sysdeps/gnu/errlist.c:188
+msgid "Inappropriate ioctl for device"
+msgstr "Uegnet «ioctl» for enhet"
+
+#. TRANS In the GNU system, servers supporting the @code{term} protocol return
+#. TRANS this error for certain operations when the caller is not in the
+#. TRANS foreground process group of the terminal.  Users do not usually see this
+#. TRANS error because functions such as @code{read} and @code{write} translate
+#. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
+#. TRANS for information on process groups and these signals.
+#: stdio-common/../sysdeps/gnu/errlist.c:589
+msgid "Inappropriate operation for background process"
+msgstr "Uegnet operasjon for bakgrunnsprosess"
+
+#: sysdeps/unix/sysv/linux/siglist.h:62
+msgid "Information request"
+msgstr "Informasjonsforespørsel (SIGINFO)"
+
+#: iconv/iconv_prog.c:57
+msgid "Information:"
+msgstr "Informasjon:"
+
+#: locale/programs/localedef.c:94
+msgid "Input Files:"
+msgstr "Innfiler:"
+
+#: iconv/iconv_prog.c:54
+msgid "Input/Output format specification:"
+msgstr "Inn-/ut-formatspesifikasjon:"
+
+#. TRANS Input/output error; usually used for physical read or write errors.
+#: stdio-common/../sysdeps/gnu/errlist.c:52
+msgid "Input/output error"
+msgstr "Inn/ut-feil"
+
+#: nis/ypclnt.c:775
+msgid "Internal NIS error"
+msgstr "Intern NIS-feil"
+
+#: nis/ypclnt.c:839
+msgid "Internal ypbind error"
+msgstr "Intern ypbind-feil"
+
+#: stdio-common/../sysdeps/unix/siglist.c:27
+#: sysdeps/unix/sysv/linux/siglist.h:23
+msgid "Interrupt"
+msgstr "Avbrutt"
+
+#. TRANS Interrupted function call; an asynchronous signal occurred and prevented
+#. TRANS completion of the call.  When this happens, you should try the call
+#. TRANS again.
+#. TRANS
+#. TRANS You can choose to have functions resume after a signal that is handled,
+#. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
+#. TRANS Primitives}.
+#: stdio-common/../sysdeps/gnu/errlist.c:47
+msgid "Interrupted system call"
+msgstr "Avbrutt systemkall"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:666
+msgid "Interrupted system call should be restarted"
+msgstr "Avbrutt systemkall burde startes om"
+
+#: nis/nis_error.c:44
+msgid "Invalid Object for operation"
+msgstr "Ugyldig objekt for operasjon"
+
+#. TRANS Invalid argument.  This is used to indicate various kinds of problems
+#. TRANS with passing the wrong argument to a library function.
+#: stdio-common/../sysdeps/gnu/errlist.c:164
+msgid "Invalid argument"
+msgstr "Ugyldig argument"
+
+#: posix/regex.c:1018
+msgid "Invalid back reference"
+msgstr "Ugyldig bak-referanse"
+
+#: posix/regex.c:1016
+msgid "Invalid character class name"
+msgstr "Ugyldig tegnklassenavn"
+
+#: sunrpc/clnt_perr.c:275
+msgid "Invalid client credential"
+msgstr "Ugyldige klientreferanser"
+
+#: sunrpc/clnt_perr.c:279
+msgid "Invalid client verifier"
+msgstr "Ugyldig klientverifikator"
+
+#: posix/regex.c:1015
+msgid "Invalid collation character"
+msgstr "Ugyldig sammenligningstegn"
+
+#: posix/regex.c:1022
+msgid "Invalid content of \\{\\}"
+msgstr "Ugyldig bruk av \\{\\}"
+
+#. TRANS An attempt to make an improper link across file systems was detected.
+#. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
+#. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
+#: stdio-common/../sysdeps/gnu/errlist.c:141
+msgid "Invalid cross-device link"
+msgstr "Ugyldig link over adskilte enheter"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:702
+msgid "Invalid exchange"
+msgstr "Ugyldig veksel"
+
+#. TRANS While decoding a multibyte character the function came along an invalid
+#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
+#: stdio-common/../sysdeps/gnu/errlist.c:579
+msgid "Invalid or incomplete multibyte or wide character"
+msgstr "Ugyldig eller ufullstendig multibyte eller bredt tegn"
+
+#: posix/regex.c:1025
+msgid "Invalid preceding regular expression"
+msgstr "Ugyldig foregående regulært uttrykk"
+
+#: posix/regex.c:1023
+msgid "Invalid range end"
+msgstr "Ugyldig intervallslutt"
+
+#: posix/regex.c:1014
+msgid "Invalid regular expression"
+msgstr "Ugyldig regulært uttrykk"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:718
+msgid "Invalid request code"
+msgstr "Ugyldig tilgangskode"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:706
+msgid "Invalid request descriptor"
+msgstr "Ugyldig forespørseldeskriptor"
+
+#: sunrpc/clnt_perr.c:285
+msgid "Invalid server verifier"
+msgstr "Ugyldig tjenerverifikator"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:722
+msgid "Invalid slot"
+msgstr "Ugyldig plass"
+
+#. TRANS File is a directory; you cannot open a directory for writing,
+#. TRANS or create or remove hard links to it.
+#: stdio-common/../sysdeps/gnu/errlist.c:158
+msgid "Is a directory"
+msgstr "Er en filkatalog"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:806
+msgid "Is a named type file"
+msgstr "Er en navngitt filtype"
+
+#: nis/nis_print.c:187
+msgid "Kerberos.\n"
+msgstr "Kerberos.\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:34
+#: sysdeps/unix/sysv/linux/siglist.h:29
+msgid "Killed"
+msgstr "Drept"
+
+#: nis/nis_print.c:123
+msgid "LINK\n"
+msgstr "LINK\n"
+
+#: nis/nis_local_names.c:125
+#, c-format
+msgid "LOCAL entry for UID %d in directory %s not unique\n"
+msgstr "LOKALT innslag for UID %d i katalog %s er ikke unikt\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:698
+msgid "Level 2 halted"
+msgstr "Nivå 2 stoppet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:674
+msgid "Level 2 not synchronized"
+msgstr "Nivå 2 ikke synkronisert"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:678
+msgid "Level 3 halted"
+msgstr "Nivå 3 stoppet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:682
+msgid "Level 3 reset"
+msgstr "Nivå 3 startet om"
+
+#: nis/nis_error.c:53
+msgid "Link Points to illegal name"
+msgstr "Link peker til ugyldig navn"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:638
+msgid "Link has been severed"
+msgstr "Linken har blitt skadet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:686
+msgid "Link number out of range"
+msgstr "Linknummer utenfor gyldig område"
+
+#: nis/nis_print.c:282
+msgid "Linked Object Type : "
+msgstr "Linket objekttype: "
+
+#: nis/nis_print.c:284
+#, c-format
+msgid "Linked to : %s\n"
+msgstr "Linket til: %s\n"
+
+#: nis/ypclnt.c:787
+msgid "Local domain name not set"
+msgstr "Lokalt domenenavn er ikke satt"
+
+#: nis/ypclnt.c:777
+msgid "Local resource allocation failure"
+msgstr "Tildelingsfeil for lokal ressurs"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:734
+msgid "Machine is not on the network"
+msgstr "Maskinen er ikke på nettverket"
+
+#: nis/nis_error.c:45
+msgid "Malformed Name, or illegal name"
+msgstr "Feilaktig eller ulovlig navn"
+
+#: argp/argp-help.c:1182
+msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
+msgstr "Obligatoriske eller frivillige argumenter til lange flagg er også obligatoriske eller frivillige for tilsvarende korte flagg."
+
+#: nis/nis_print.c:168
+#, fuzzy
+msgid "Master Server :\n"
+msgstr "Hovedtjener: \n"
+
+#: nis/nis_error.c:75
+#, fuzzy
+msgid "Master server busy, full dump rescheduled."
+msgstr "Hovedtjener opptatt, full lagring utsatt."
+
+#: posix/../sysdeps/posix/gai_strerror.c:35
+msgid "Memory allocation failure"
+msgstr "Minneallokeringsfeil"
+
+#: posix/regex.c:1024
+msgid "Memory exhausted"
+msgstr "Minnet oppbrukt"
+
+#. TRANS The size of a message sent on a socket was larger than the supported
+#. TRANS maximum size.
+#: stdio-common/../sysdeps/gnu/errlist.c:317
+msgid "Message too long"
+msgstr "For lang melding"
+
+#: nis/nis_error.c:57
+msgid "Missing or malformed attribute"
+msgstr "Atributt mangler eller er feilaktig"
+
+#: nis/nis_print.c:323
+#, c-format
+msgid "Mod. Time     : %s"
+msgstr "Endringstid   : %s"
+
+#: nis/nis_error.c:50
+msgid "Modification failed"
+msgstr "Endring feilet"
+
+#: nis/nis_error.c:63
+msgid "Modify operation failed"
+msgstr "Endringsoperasjon feilet"
+
+#: locale/programs/locale.c:68
+msgid "Modify output format:"
+msgstr "Endre format for utdata:"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:630
+msgid "Multihop attempted"
+msgstr "Forsøkte viderehopp"
+
+#: catgets/gencat.c:106 catgets/gencat.c:110 db2/makedb.c:59
+#: locale/programs/localedef.c:115 nscd/nscd.c:77
+msgid "NAME"
+msgstr "NAVN"
+
+#: locale/programs/locale.c:78
+msgid ""
+"NAME\n"
+"[-a|-m]"
+msgstr ""
+"NAVN\n"
+"[-a|-m]"
+
+#: nis/nis_print.c:31
+msgid "NIS"
+msgstr "NIS"
+
+#: nis/ypclnt.c:791
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr "NIS klient/tjener versjonsforskjell - kan ikke betjene"
+
+#: nis/ypclnt.c:789
+msgid "NIS map database is bad"
+msgstr "NIS' kart-database er korrupt"
+
+#: nis/nis_error.c:68
+msgid "NIS+ operation failed"
+msgstr "NIS+-operasjon feilet"
+
+#: nis/nis_error.c:33
+msgid "NIS+ servers unreachable"
+msgstr "NIS+-tjenere er ikke tilgjengelige"
+
+#: nis/nis_error.c:69
+msgid "NIS+ service is unavailable or not installed"
+msgstr "NIS+-tjeneste er utilgjengelig eller ikke installert"
+
+#: nis/nis_print.c:108
+msgid "NO OBJECT\n"
+msgstr "IKKE NOE OBJEKT\n"
+
+#: nscd/nscd.c:81
+msgid "NUMBER"
+msgstr "NUMMER"
+
+#: nis/nis_print.c:162
+#, c-format
+msgid "Name : '%s'\n"
+msgstr "Navn : «%s»\n"
+
+#: nscd/nscd.c:88
+#, fuzzy
+msgid "Name Service Cache Daemon."
+msgstr "Demon for buffring av navnetjeneste"
+
+#: nis/nis_error.c:40
+#, fuzzy
+msgid "Name not served by this server"
+msgstr "Navn ikke tilbudt av denne tjeneren"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:758
+msgid "Name not unique on network"
+msgstr "Navnet er ikke unikt på nettverket"
+
+#: posix/../sysdeps/posix/gai_strerror.c:37
+msgid "Name or service not known"
+msgstr "Navn eller tjeneste ukjent"
+
+#: nis/nis_error.c:49
+msgid "Name/entry isn't unique"
+msgstr "Navn/innslag er ikke unikt"
+
+#: nis/nis_error.c:58
+#, fuzzy
+msgid "Named object is not searchable"
+msgstr "Nanvgitt objekt er ikke søkbart"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:566
+msgid "Need authenticator"
+msgstr "Må ha noen til å autentisere"
+
+#. TRANS A network connection was reset because the remote host crashed.
+#: stdio-common/../sysdeps/gnu/errlist.c:389
+msgid "Network dropped connection on reset"
+msgstr "Nettverket tok ned forbindelsen ved omstart"
+
+#. TRANS A socket operation failed because the network was down.
+#: stdio-common/../sysdeps/gnu/errlist.c:378
+msgid "Network is down"
+msgstr "Nettverket er nede"
+
+#. TRANS A socket operation failed because the subnet containing the remote host
+#. TRANS was unreachable.
+#: stdio-common/../sysdeps/gnu/errlist.c:384
+msgid "Network is unreachable"
+msgstr "Nettverket er ikke tilgjengelig"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:694
+msgid "No CSI structure available"
+msgstr "Ingen CSI-strukturer tilgjengelige"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:802
+msgid "No XENIX semaphores available"
+msgstr "Ingen XENIX-semaforer tilgjengelige"
+
+#: posix/../sysdeps/posix/gai_strerror.c:36
+msgid "No address associated with hostname"
+msgstr "Ingen adresse assosiert med vertsnavn"
+
+#: resolv/herror.c:77
+msgid "No address associated with name"
+msgstr "Ingen adresse assosiert med navnet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:714
+msgid "No anode"
+msgstr "Ingen anode"
+
+#. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
+#. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
+#. TRANS other from network operations.
+#: stdio-common/../sysdeps/gnu/errlist.c:408
+msgid "No buffer space available"
+msgstr "Ikke mer buffer-plass tilgjengelig"
+
+#. TRANS There are no child processes.  This error happens on operations that are
+#. TRANS supposed to manipulate child processes, when there aren't any processes
+#. TRANS to manipulate.
+#: stdio-common/../sysdeps/gnu/errlist.c:89
+msgid "No child processes"
+msgstr "Ingen barneprosesser"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:634
+msgid "No data available"
+msgstr "Ingen data er tilgjengelige"
+
+#: nis/nis_error.c:73
+msgid "No file space on server"
+msgstr "Ikke mer plass på enheten"
+
+#. TRANS No locks available.  This is used by the file locking facilities; see
+#. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
+#. TRANS it can result from an operation to an NFS server running another
+#. TRANS operating system.
+#: stdio-common/../sysdeps/gnu/errlist.c:547
+msgid "No locks available"
+msgstr "Ingen låser tilgjengelige"
+
+#: posix/regex.c:1013
+msgid "No match"
+msgstr "Ingen treff"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:814
+msgid "No medium found"
+msgstr "Medium ikke funnet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:642
+msgid "No message of desired type"
+msgstr "Ingen meldinger av ønsket type"
+
+#: nis/ypclnt.c:779
+msgid "No more records in map database"
+msgstr "Ingen flere poster i tabellen"
+
+#: posix/regex.c:5515
+msgid "No previous regular expression"
+msgstr "Intet foregående regulært uttrykk"
+
+#: sunrpc/rpcinfo.c:570
+msgid "No remote programs registered.\n"
+msgstr "Ingen fjernprogram registrerte.\n"
+
+#. TRANS The remote host for a requested network connection is not reachable.
+#: stdio-common/../sysdeps/gnu/errlist.c:474
+msgid "No route to host"
+msgstr "Ingen rute til vertsmaskinen"
+
+#. TRANS No space left on device; write operation on a file failed because the
+#. TRANS disk is full.
+#: stdio-common/../sysdeps/gnu/errlist.c:208
+msgid "No space left on device"
+msgstr "Ikke mer plass på enheten"
+
+#. TRANS The wrong type of device was given to a function that expects a
+#. TRANS particular sort of device.
+#: stdio-common/../sysdeps/gnu/errlist.c:147
+msgid "No such device"
+msgstr "Ingen slik enhet"
+
+#. TRANS No such file or directory.  This is a ``file doesn't exist'' error
+#. TRANS for ordinary files that are referenced in contexts where they are
+#. TRANS expected to already exist.
+#: stdio-common/../sysdeps/gnu/errlist.c:31
+msgid "No such file or directory"
+msgstr "Ingen slik fil eller filkatalog"
+
+#: nis/ypclnt.c:773
+msgid "No such key in map"
+msgstr "Ingen slik nøkkel i tabellen"
+
+#: nis/ypclnt.c:771
+msgid "No such map in server's domain"
+msgstr "Ingen slik tabell i tjenerens domene"
+
+#. TRANS No process matches the specified process ID.
+#: stdio-common/../sysdeps/gnu/errlist.c:36
+msgid "No such process"
+msgstr "Ingen slik prosess"
+
+#: nis/nis_error.c:60
+#, fuzzy
+msgid "Non NIS+ namespace encountered"
+msgstr "Støtte på navneområde som ikke tilhører NIS+"
+
+#: posix/../sysdeps/posix/gai_strerror.c:33
+msgid "Non-recoverable failure in name resolution"
+msgstr "Uoverkommelig feil i navneoppslag"
+
+#: nis/nis_print.c:176
+msgid "None.\n"
+msgstr "Ingen.\n"
+
+#: nis/nis_error.c:48
+msgid "Not Found, no such name"
+msgstr "Ikke funnet, ikke noe slikt navn"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:798
+msgid "Not a XENIX named type file"
+msgstr "Ikke en XENIX navngitt fil"
+
+#. TRANS A file that isn't a directory was specified when a directory is required.
+#: stdio-common/../sysdeps/gnu/errlist.c:152
+msgid "Not a directory"
+msgstr "Ikke en filkatalog"
+
+#: nis/nis_error.c:30
+msgid "Not found"
+msgstr "Ikke funnet"
+
+#: nis/nis_error.c:43
+#, fuzzy
+msgid "Not master server for this domain"
+msgstr "Ingen hovedtjener for dette domenet"
+
+#: nis/nis_error.c:39
+msgid "Not owner"
+msgstr "Ikke eier"
+
+#: nis/nis_print.c:263
+#, c-format
+msgid "Number of Columns   : %d\n"
+msgstr "Antall kolonner     : %d\n"
+
+#: nis/nis_print.c:358
+#, c-format
+msgid "Number of objects : %u\n"
+msgstr "Antall objekter   : %u\n"
+
+#. TRANS Domain error; used by mathematical functions when an argument value does
+#. TRANS not fall into the domain over which the function is defined.
+#: stdio-common/../sysdeps/gnu/errlist.c:240
+msgid "Numerical argument out of domain"
+msgstr "Numerisk argument er utenfor definert område"
+
+#. TRANS Range error; used by mathematical functions when the result value is
+#. TRANS not representable because of overflow or underflow.
+#: stdio-common/../sysdeps/gnu/errlist.c:246
+msgid "Numerical result out of range"
+msgstr "Numerisk resultat er utenfor gyldig område"
+
+#: nis/nis_print.c:362
+#, c-format
+msgid "Object #%d:\n"
+msgstr "Objekt #%d:\n"
+
+#: nis/nis_print.c:314
+#, c-format
+msgid "Object Name   : %s\n"
+msgstr "Objektnavn    : %s\n"
+
+#: nis/nis_print.c:324
+msgid "Object Type   : "
+msgstr "Objekttype    : "
+
+#. TRANS An attempt was made to NFS-mount a remote file system with a file name that
+#. TRANS already specifies an NFS-mounted file.
+#. TRANS (This is an error on some operating systems, but we expect it to work
+#. TRANS properly on the GNU system, making this error code impossible.)
+#: stdio-common/../sysdeps/gnu/errlist.c:514
+msgid "Object is remote"
+msgstr "Er et fjernobjekt"
+
+#: nis/nis_error.c:42
+msgid "Object with same name exists"
+msgstr "Objekt med samme navn eksisterer"
+
+#: timezone/zic.c:1995
+msgid "Odd number of quotation marks"
+msgstr "Odde antall siteringstegn"
+
+#: nscd/nscd.c:185
+msgid "Only root is allowed to use this option!"
+msgstr "Bare root har lov til å bruke dette flagget!"
+
+#. TRANS An operation is already in progress on an object that has non-blocking
+#. TRANS mode selected.
+#: stdio-common/../sysdeps/gnu/errlist.c:306
+msgid "Operation already in progress"
+msgstr "Operasjonen er allerede under utførelse"
+
+#. TRANS Operation not permitted; only the owner of the file (or other resource)
+#. TRANS or processes with special privileges can perform the operation.
+#: stdio-common/../sysdeps/gnu/errlist.c:24
+msgid "Operation not permitted"
+msgstr "Operasjonen er ikke tillatt"
+
+#. TRANS The operation you requested is not supported.  Some socket functions
+#. TRANS don't make sense for all types of sockets, and others may not be
+#. TRANS implemented for all communications protocols.  In the GNU system, this
+#. TRANS error can happen for many calls when the object does not support the
+#. TRANS particular operation; it is a generic indication that the server knows
+#. TRANS nothing to do for that call.
+#: stdio-common/../sysdeps/gnu/errlist.c:350
+msgid "Operation not supported"
+msgstr "Operasjonen er ikke støttet"
+
+#. TRANS An operation that cannot complete immediately was initiated on an object
+#. TRANS that has non-blocking mode selected.  Some functions that must always
+#. TRANS block (such as @code{connect}; @pxref{Connecting}) never return
+#. TRANS @code{EAGAIN}.  Instead, they return @code{EINPROGRESS} to indicate that
+#. TRANS the operation has begun and will take some time.  Attempts to manipulate
+#. TRANS the object before the call completes return @code{EALREADY}.  You can
+#. TRANS use the @code{select} function to find out when the pending operation
+#. TRANS has completed; @pxref{Waiting for I/O}.
+#: stdio-common/../sysdeps/gnu/errlist.c:300
+msgid "Operation now in progress"
+msgstr "Operasjonen er nå under bearbeiding"
+
+#. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
+#. TRANS The values are always the same, on every operating system.
+#. TRANS
+#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+#. TRANS separate error code.
+#: stdio-common/../sysdeps/gnu/errlist.c:288
+msgid "Operation would block"
+msgstr "Operasjonen ville ha blokkert"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:646
+msgid "Out of streams resources"
+msgstr "Ikke flere streams-ressurser"
+
+#: iconv/iconv_prog.c:59 locale/programs/localedef.c:101
+#, fuzzy
+msgid "Output control:"
+msgstr "Utskriftskontroll:"
+
+#: elf/sprof.c:76
+#, fuzzy
+msgid "Output selection:"
+msgstr "Utskriftsvalg:"
+
+#: nis/nis_print.c:316
+#, c-format
+msgid "Owner         : %s\n"
+msgstr "Eier          : %s\n"
+
+#: nis/nis_print.c:126
+msgid "PRIVATE\n"
+msgstr "PRIVAT\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:738
+msgid "Package not installed"
+msgstr "Pakken er ikke installert"
+
+#: nscd/nscd_conf.c:84
+#, c-format
+msgid "Parse error: %s"
+msgstr "Feil under tolkning: %s"
+
+#: nis/nis_error.c:54
+msgid "Partial Success"
+msgstr "Delvis suksess"
+
+#: nis/nis_error.c:62
+msgid "Passed object is not the same object on server"
+msgstr "Overført objekt er ikke det samme objektet på tjeneren"
+
+#. TRANS Permission denied; the file permissions do not allow the attempted operation.
+#: nis/nis_error.c:38 nis/ypclnt.c:793
+#: stdio-common/../sysdeps/gnu/errlist.c:108
+msgid "Permission denied"
+msgstr "Ikke tilgang"
+
+#: sysdeps/unix/sysv/linux/siglist.h:64
+msgid "Power failure"
+msgstr "Strømmen gikk"
+
+#: posix/regex.c:1026
+msgid "Premature end of regular expression"
+msgstr "For tidlig slutt på regulært uttrykk"
+
+#: db2/makedb.c:63
+msgid "Print content of database file, one entry a line"
+msgstr "Skriv ut innholdet av en databasefil, ett innslag per linje"
+
+#: nscd/nscd.c:83
+msgid "Print current configuration statistic"
+msgstr "Skriv ut nåværende konfigurasjonsstatistikk"
+
+#: locale/programs/localedef.c:107
+msgid "Print more messages"
+msgstr "Skriv flere meldinger"
+
+#: argp/argp-parse.c:148
+msgid "Print program version"
+msgstr "Skriv programversjon"
+
+#: nis/nis_error.c:29
+#, fuzzy
+msgid "Probable success"
+msgstr "Sannsynlig suksess"
+
+#: nis/nis_error.c:31
+msgid "Probably not found"
+msgstr "Sannsynligvis ikke funnet"
+
+#: stdio-common/../sysdeps/unix/siglist.c:52
+#: sysdeps/unix/sysv/linux/siglist.h:46
+msgid "Profiling timer expired"
+msgstr "Profileringstiden tok slutt"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:690
+msgid "Protocol driver not attached"
+msgstr "Protokolldriver er ikke tilkoblet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:658
+msgid "Protocol error"
+msgstr "Protokollfeil"
+
+#. TRANS The socket communications protocol family you requested is not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:355
+msgid "Protocol family not supported"
+msgstr "Protokoll-familien er ikke støttet"
+
+#. TRANS You specified a socket option that doesn't make sense for the
+#. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
+#: stdio-common/../sysdeps/gnu/errlist.c:328
+msgid "Protocol not available"
+msgstr "Protokollen er ikke tilgjengelig"
+
+#. TRANS The socket domain does not support the requested communications protocol
+#. TRANS (perhaps because the requested protocol is completely invalid).
+#. TRANS @xref{Creating a Socket}.
+#: stdio-common/../sysdeps/gnu/errlist.c:335
+msgid "Protocol not supported"
+msgstr "Protokollen er ikke tilgjengelig"
+
+#. TRANS The socket type does not support the requested communications protocol.
+#: stdio-common/../sysdeps/gnu/errlist.c:322
+msgid "Protocol wrong type for socket"
+msgstr "Protokollen er ikke riktig type for socket"
+
+#: nis/nis_error.c:64
+#, fuzzy
+msgid "Query illegal for named table"
+msgstr "Spørring ulovlig for gitte tabell"
+
+#: stdio-common/../sysdeps/unix/siglist.c:28
+#: sysdeps/unix/sysv/linux/siglist.h:24
+msgid "Quit"
+msgstr "Avsluttet"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:754
+msgid "RFS specific error"
+msgstr "RFS-spesifikk feil"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:539
+msgid "RPC bad procedure for program"
+msgstr "RPC: ugyldig prosedyre for program"
+
+#: nis/ypclnt.c:767
+msgid "RPC failure on NIS operation"
+msgstr "RPC-feil ved NIS-operasjon"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:529
+msgid "RPC program not available"
+msgstr "RPC-programmet er ikke tilgjengelig"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:534
+msgid "RPC program version wrong"
+msgstr "RPC: feil programversjon"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:519
+msgid "RPC struct is bad"
+msgstr "RPC-strukturen er ugyldig"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:524
+msgid "RPC version wrong"
+msgstr "feil RPC-versjon"
+
+#: sunrpc/clnt_perr.c:215
+msgid "RPC: (unknown error code)"
+msgstr "RPC: (ukjent feilkode)"
+
+#: sunrpc/clnt_perr.c:176
+msgid "RPC: Authentication error"
+msgstr "RPC: Feil ved autentisering"
+
+#: sunrpc/clnt_perr.c:166
+msgid "RPC: Can't decode result"
+msgstr "RPC: Kan ikke dekode resultatet"
+
+#: sunrpc/clnt_perr.c:164
+msgid "RPC: Can't encode arguments"
+msgstr "RPC: Kan ikke kode argumentet"
+
+#: sunrpc/clnt_perr.c:196
+msgid "RPC: Failed (unspecified error)"
+msgstr "RPC: Feilet (uspesifisert feil)"
+
+#: sunrpc/clnt_perr.c:174
+msgid "RPC: Incompatible versions of RPC"
+msgstr "RPC: Inkompatible versjoner av RPC"
+
+#: sunrpc/clnt_perr.c:192
+msgid "RPC: Port mapper failure"
+msgstr "RPC: Feil i portmapper"
+
+#: sunrpc/clnt_perr.c:182
+msgid "RPC: Procedure unavailable"
+msgstr "RPC: Prosedyre ikke tilgjengelig"
+
+#: sunrpc/clnt_perr.c:194
+msgid "RPC: Program not registered"
+msgstr "RPC: Programmet ikke registrert"
+
+#: sunrpc/clnt_perr.c:178
+msgid "RPC: Program unavailable"
+msgstr "RPC: Programmet utilgjengelig"
+
+#: sunrpc/clnt_perr.c:180
+msgid "RPC: Program/version mismatch"
+msgstr "RPC: Program/versjon-uoverensstemmelse"
+
+#: sunrpc/clnt_perr.c:186
+msgid "RPC: Remote system error"
+msgstr "RPC: Systemfeil hos mottaker"
+
+#: sunrpc/clnt_perr.c:184
+msgid "RPC: Server can't decode arguments"
+msgstr "RPC: Tjener kan ikke dekode argumentene"
+
+#: sunrpc/clnt_perr.c:162
+msgid "RPC: Success"
+msgstr "RPC: Suksess"
+
+#: sunrpc/clnt_perr.c:172
+msgid "RPC: Timed out"
+msgstr "RPC: Tidsgrensen overskredet"
+
+#: sunrpc/clnt_perr.c:170
+msgid "RPC: Unable to receive"
+msgstr "RPC: Kan ikke ta imot"
+
+#: sunrpc/clnt_perr.c:168
+msgid "RPC: Unable to send"
+msgstr "RPC: Kan ikke sende"
+
+#: sunrpc/clnt_perr.c:188
+msgid "RPC: Unknown host"
+msgstr "RPC: Ukjent vertsmaskin"
+
+#: sunrpc/clnt_perr.c:190
+msgid "RPC: Unknown protocol"
+msgstr "RPC: Ukjent protokoll"
+
+#: nis/nis_print.c:184
+#, c-format
+msgid "RSA (%d bits)\n"
+msgstr "RSA (%d bits)\n"
+
+#: elf/dlsym.c:59 elf/dlvsym.c:62
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr "RTLD_NEXT brukt i kode som ikke er dynamisk lastet"
+
+#: elf/sprof.c:88
+msgid "Read and display shared object profiling data"
+msgstr "Led og vis profileringsdata for delt objekt"
+
+#: nscd/nscd.c:78
+msgid "Read configuration data from NAME"
+msgstr "Led konfigurasjonsdata fra NAME"
+
+#. TRANS An attempt was made to modify something on a read-only file system.
+#: stdio-common/../sysdeps/gnu/errlist.c:218
+msgid "Read-only file system"
+msgstr "Filsystem med kun lesetilgang"
+
+#: string/strsignal.c:66
+#, c-format
+#, fuzzy
+msgid "Real-time signal %d"
+msgstr "Real-time-signal %d"
+
+#: posix/regex.c:1027
+msgid "Regular expression too big"
+msgstr "Regulært uttrykk for stort"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:810
+msgid "Remote I/O error"
+msgstr "I/O-feil på fjern maskin"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:766
+msgid "Remote address changed"
+msgstr "Fjernadresse endret"
+
+#: inet/ruserpass.c:162
+msgid "Remove password or make file unreadable by others."
+msgstr "Ta bort passord, eller gjør filen ulesbar for andre."
+
+#: elf/sprof.c:537
+#, c-format
+msgid "Reopening shared object `%s' failed"
+msgstr "Gjenåpning av delt objekt «%s» feilet"
+
+#: nis/nis_print.c:170
+msgid "Replicate :\n"
+msgstr "Replikér:\n"
+
+#: argp/argp-help.c:1638
+#, c-format
+msgid "Report bugs to %s.\n"
+msgstr "Rapporter bugs til %s.\n"
+
+#: catgets/gencat.c:223 db2/makedb.c:229 iconv/iconv_prog.c:280
+#: locale/programs/locale.c:254 locale/programs/localedef.c:389
+msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
+msgstr "Rapporter feil ved å bruke skriptet «glibcbug» til <bugs@gnu.org>.\n"
+
+#: nis/ypclnt.c:765
+msgid "Request arguments bad"
+msgstr "Argumenter for forespørsel er ugyldige"
+
+#: resolv/herror.c:73
+msgid "Resolver Error 0 (no error)"
+msgstr "Navnetjeneste-feil 0 (ingen feil)"
+
+#: resolv/herror.c:117
+msgid "Resolver internal error"
+msgstr "Intern feil i navnetjenesten"
+
+#. TRANS Deadlock avoided; allocating a system resource would have resulted in a
+#. TRANS deadlock situation.  The system does not guarantee that it will notice
+#. TRANS all such situations.  This error means you got lucky and the system
+#. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
+#: stdio-common/../sysdeps/gnu/errlist.c:97
+msgid "Resource deadlock avoided"
+msgstr "Klarte å unngå vranglås ved tildeling av ressurs"
+
+#: stdio-common/../sysdeps/unix/siglist.c:54
+msgid "Resource lost"
+msgstr "Ressurs tapt"
+
+#. TRANS Resource temporarily unavailable; the call might work if you try again
+#. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
+#. TRANS they are always the same in the GNU C library.
+#. TRANS
+#. TRANS This error can happen in a few different situations:
+#. TRANS
+#. TRANS @itemize @bullet
+#. TRANS @item
+#. TRANS An operation that would block was attempted on an object that has
+#. TRANS non-blocking mode selected.  Trying the same operation again will block
+#. TRANS until some external condition makes it possible to read, write, or
+#. TRANS connect (whatever the operation).  You can use @code{select} to find out
+#. TRANS when the operation will be possible; @pxref{Waiting for I/O}.
+#. TRANS
+#. TRANS @strong{Portability Note:} In many older Unix systems, this condition
+#. TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
+#. TRANS different from @code{EAGAIN}.  To make your program portable, you should
+#. TRANS check for both codes and treat them the same.
+#. TRANS
+#. TRANS @item
+#. TRANS A temporary resource shortage made an operation impossible.  @code{fork}
+#. TRANS can return this error.  It indicates that the shortage is expected to
+#. TRANS pass, so your program can try the call again later and it may succeed.
+#. TRANS It is probably a good idea to delay for a few seconds before trying it
+#. TRANS again, to allow time for other processes to release scarce resources.
+#. TRANS Such shortages are usually fairly serious and affect the whole system,
+#. TRANS so usually an interactive program should report the error to the user
+#. TRANS and return to its command loop.
+#. TRANS @end itemize
+#: stdio-common/../sysdeps/gnu/errlist.c:279
+msgid "Resource temporarily unavailable"
+msgstr "Ressursen midlertidig utilgjengelig"
+
+#: nis/nis_error.c:47
+#, fuzzy
+msgid "Results Sent to callback proc"
+msgstr "Resultat sendt til tilbakekalls-prosess"
+
+#: elf/sprof.c:91
+#, fuzzy
+msgid "SHOBJ [PROFDATA]"
+msgstr "SHOBJ [PROFDATA]"
+
+#: nis/nis_print.c:33
+msgid "SUNYP"
+msgstr "SUNYP"
+
+#: nis/nis_print.c:265
+#, c-format
+msgid "Search Path         : %s\n"
+msgstr "Søkesti             : %s\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:36
+#: sysdeps/unix/sysv/linux/siglist.h:31
+msgid "Segmentation fault"
+msgstr "Minnesegmentsfeil"
+
+#: nis/nis_error.c:35
+msgid "Server busy, try again"
+msgstr "Tjener opptatt, prøv igjen"
+
+#: nis/nis_error.c:41
+msgid "Server out of memory"
+msgstr "Tjener tom for minne"
+
+#: sunrpc/clnt_perr.c:277
+msgid "Server rejected credential"
+msgstr "Tjener forkastet referansene"
+
+#: sunrpc/clnt_perr.c:281
+msgid "Server rejected verifier"
+msgstr "Tjener forkastet verifikator"
+
+#: posix/../sysdeps/posix/gai_strerror.c:38
+msgid "Servname not supported for ai_socktype"
+msgstr "Servname ikke støttet for ai_socktype"
+
+#: argp/argp-parse.c:89
+msgid "Set the program name"
+msgstr "Sett programnavnet"
+
+#: nscd/nscd.c:82
+msgid "Shut the server down"
+msgstr "Slå av tjeneren"
+
+#: stdio-common/../sysdeps/unix/siglist.c:25
+msgid "Signal 0"
+msgstr "Signal 0"
+
+#. TRANS A file that isn't a socket was specified when a socket is required.
+#: stdio-common/../sysdeps/gnu/errlist.c:311
+msgid "Socket operation on non-socket"
+msgstr "Socket-operasjon på noe som ikke er en socket"
+
+#. TRANS The socket type is not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:340
+msgid "Socket type not supported"
+msgstr "Socket-typen er ikke støttet"
+
+#. TRANS A network connection was aborted locally.
+#: stdio-common/../sysdeps/gnu/errlist.c:394
+msgid "Software caused connection abort"
+msgstr "Programvare forårsaket forbindelsesbrudd"
+
+#: sunrpc/rpcinfo.c:658
+msgid "Sorry. You are not root\n"
+msgstr "Beklager.  Du er ikke root\n"
+
+#: locale/programs/localedef.c:97
+msgid "Source definitions are found in FILE"
+msgstr "Kildedefinisjoner ikke funnet i FIL"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:746
+msgid "Srmount error"
+msgstr "Srmount-feil"
+
+#: sysdeps/unix/sysv/linux/siglist.h:59
+msgid "Stack fault"
+msgstr "Stakkfeil"
+
+#. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
+#. TRANS system which is due to file system rearrangements on the server host.
+#. TRANS Repairing this condition usually requires unmounting and remounting
+#. TRANS the NFS file system on the local host.
+#: stdio-common/../sysdeps/gnu/errlist.c:506
+msgid "Stale NFS file handle"
+msgstr "Foreldet NFS-filhåndtak"
+
+#: nscd/nscd.c:81
+msgid "Start NUMBER threads"
+msgstr "Start ANTALL tråder"
+
+#: nis/nis_print.c:357
+#, c-format
+msgid "Status            : %s\n"
+msgstr "Status            : %s\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:43
+#: sysdeps/unix/sysv/linux/siglist.h:37
+msgid "Stopped"
+msgstr "Stoppet"
+
+#: stdio-common/../sysdeps/unix/siglist.c:42
+#: sysdeps/unix/sysv/linux/siglist.h:36
+msgid "Stopped (signal)"
+msgstr "Stoppet (signal)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:46
+#: sysdeps/unix/sysv/linux/siglist.h:40
+msgid "Stopped (tty input)"
+msgstr "Stoppet (ville lese fra tty)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:47
+#: sysdeps/unix/sysv/linux/siglist.h:41
+msgid "Stopped (tty output)"
+msgstr "Stoppet (ville skrive til tty)"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:790
+msgid "Streams pipe error"
+msgstr "Streams-rørfeil"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:794
+msgid "Structure needs cleaning"
+msgstr "Strukturen trenger opprydding"
+
+#: nis/nis_error.c:28 nis/ypclnt.c:763 nis/ypclnt.c:837 posix/regex.c:1012
+#: stdio-common/../sysdeps/gnu/errlist.c:19
+msgid "Success"
+msgstr "Suksess"
+
+#: locale/programs/localedef.c:106
+msgid "Suppress warnings and information messages"
+msgstr "Undertrykk advarsler og informasjonsmeldinger"
+
+#: locale/programs/localedef.c:96
+msgid "Symbolic character names defined in FILE"
+msgstr "Symbolske tegnnavn definert i FIL"
+
+#: posix/../sysdeps/posix/gai_strerror.c:40
+msgid "System error"
+msgstr "Systemfeil"
+
+#: locale/programs/locale.c:63
+msgid "System information:"
+msgstr "Systeminformasjon:"
+
+#: nis/ypclnt.c:843
+msgid "System resource allocation failure"
+msgstr "Kunne ikke tildele systemressurs"
+
+#: locale/programs/localedef.c:384
+#, c-format
+#, fuzzy
+msgid ""
+"System's directory for character maps : %s\n"
+"                       repertoire maps: %s\n"
+"                       locale path    : %s\n"
+"%s"
+msgstr ""
+"Systemets katalog for tegnkart: %s\n"
+"                ferdighetskart: %s\n"
+"                     lokal-sti: %s\n"
+"%s"
+
+#: nis/nis_print.c:117
+msgid "TABLE\n"
+msgstr "TABELL\n"
+
+#: nis/nis_print.c:262
+#, c-format
+msgid "Table Type          : %s\n"
+msgstr "Tabelltype          : %s\n"
+
+#: posix/../sysdeps/posix/gai_strerror.c:31
+msgid "Temporary failure in name resolution"
+msgstr "Midlertidig feil i navneoppslag"
+
+#: stdio-common/../sysdeps/unix/siglist.c:40
+#: sysdeps/unix/sysv/linux/siglist.h:34
+msgid "Terminated"
+msgstr "Terminert"
+
+#. TRANS An attempt to execute a file that is currently open for writing, or
+#. TRANS write to a file that is currently being executed.  Often using a
+#. TRANS debugger to run a program is considered having it open for writing and
+#. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
+#. TRANS is not an error in the GNU system; the text is copied as necessary.
+#: stdio-common/../sysdeps/gnu/errlist.c:197
+msgid "Text file busy"
+msgstr "Programfil opptatt"
+
+#: iconv/iconv_prog.c:536
+msgid ""
+"The following list contain all the coded character sets known.  This does\n"
+"not necessarily mean that all combinations of these names can be used for\n"
+"the FROM and TO command line parameters.  One coded character set can be\n"
+"listed with several different names (aliases).\n"
+"  Some of the names are no plain strings but instead regular expressions and\n"
+"they match a variety of names which can be given as parameters to the\n"
+"program.\n"
+"\n"
+"  "
+msgstr ""
+"Den følgende listen inneholder alle de kjente kodede tegnsettene.  Dette\n"
+"betyr ikke nødvendigvis at alle kombinasjoner av disse navnene kan bli brukt\n"
+"som FRA- og TIL-kommandolinjeparametre.  Et kodet tegnsett kan være listet\n"
+"med flere forskjellige navn (alias).\n"
+"  Noen av navnene er ikke vanlige strenger men er isteden regulære uttrykk\n"
+"og de tilsvarer en variasjon av navn som kan bli gitt som parametre til\n"
+"programmet.\n"
+"\n"
+"  "
+
+#: nis/nis_print.c:223
+msgid "Time to live : "
+msgstr "Levetid: "
+
+#: stdio-common/../sysdeps/gnu/errlist.c:662
+msgid "Timer expired"
+msgstr "Tidsgrense løp ut"
+
+#: nis/nis_error.c:55
+msgid "Too Many Attributes"
+msgstr "For mange attributter"
+
+#. TRANS Too many levels of symbolic links were encountered in looking up a file name.
+#. TRANS This often indicates a cycle of symbolic links.
+#: stdio-common/../sysdeps/gnu/errlist.c:457
+msgid "Too many levels of symbolic links"
+msgstr "For mange nivåer med symbolske linker"
+
+#. TRANS Too many links; the link count of a single file would become too large.
+#. TRANS @code{rename} can cause this error if the file being renamed already has
+#. TRANS as many links as it can take (@pxref{Renaming Files}).
+#: stdio-common/../sysdeps/gnu/errlist.c:225
+msgid "Too many links"
+msgstr "For mange linker"
+
+#. TRANS The current process has too many files open and can't open any more.
+#. TRANS Duplicate descriptors do count toward this limit.
+#. TRANS
+#. TRANS In BSD and GNU, the number of open files is controlled by a resource
+#. TRANS limit that can usually be increased.  If you get this error, you might
+#. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
+#. TRANS @pxref{Limits on Resources}.
+#: stdio-common/../sysdeps/gnu/errlist.c:175
+msgid "Too many open files"
+msgstr "For mange åpne filer"
+
+#. TRANS There are too many distinct file openings in the entire system.  Note
+#. TRANS that any number of linked channels count as just one file opening; see
+#. TRANS @ref{Linked Channels}.  This error never occurs in the GNU system.
+#: stdio-common/../sysdeps/gnu/errlist.c:182
+msgid "Too many open files in system"
+msgstr "For mange åpne filer i systemet"
+
+#. TRANS This means that the per-user limit on new process would be exceeded by
+#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
+#. TRANS the @code{RLIMIT_NPROC} limit.
+#: stdio-common/../sysdeps/gnu/errlist.c:487
+msgid "Too many processes"
+msgstr "For mange prosesser"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:439
+msgid "Too many references: cannot splice"
+msgstr "For mange referanser: kan ikke spleise sammen"
+
+#. TRANS The file quota system is confused because there are too many users.
+#. TRANS @c This can probably happen in a GNU system when using NFS.
+#: stdio-common/../sysdeps/gnu/errlist.c:493
+msgid "Too many users"
+msgstr "For mange brukere"
+
+#: stdio-common/../sysdeps/unix/siglist.c:30
+#: sysdeps/unix/sysv/linux/siglist.h:26
+msgid "Trace/breakpoint trap"
+msgstr "Sporings-/stoppunkts-felle"
+
+#: posix/regex.c:1017
+msgid "Trailing backslash"
+msgstr "Etterfølgende backslash"
+
+#. TRANS In the GNU system, opening a file returns this error when the file is
+#. TRANS translated by a program and the translator program dies while starting
+#. TRANS up, before it has connected to the file.
+#: stdio-common/../sysdeps/gnu/errlist.c:596
+msgid "Translator died"
+msgstr "Tolken døde"
+
+#. TRANS You tried to connect a socket that is already connected.
+#. TRANS @xref{Connecting}.
+#: stdio-common/../sysdeps/gnu/errlist.c:414
+msgid "Transport endpoint is already connected"
+msgstr "Transport-endepunktene er allerede sammenkoblet"
+
+#. TRANS The socket is not connected to anything.  You get this error when you
+#. TRANS try to transmit data over a socket, without first specifying a
+#. TRANS destination for the data.  For a connectionless socket (for datagram
+#. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:422
+msgid "Transport endpoint is not connected"
+msgstr "Transport-endepunktene er ikke sammenkoblet"
+
+#: argp/argp-help.c:1610
+#, c-format
+msgid "Try `%s --help' or `%s --usage' for more information.\n"
+msgstr "Prøv «%s --help» eller «%s --usage» for mer informasjon.\n"
+
+#: inet/rcmd.c:143
+#, c-format
+msgid "Trying %s...\n"
+msgstr "Prøver %s...\n"
+
+#: nis/nis_print.c:163
+#, c-format
+msgid "Type : %s\n"
+msgstr "Type: %s\n"
+
+#: nis/nis_print.c:47
+msgid "UNKNOWN"
+msgstr "UKJENT"
+
+#: nis/nis_error.c:72
+msgid "Unable to authenticate NIS+ client"
+msgstr "Ikke i stand til å autentisere NIS+-klient"
+
+#: nis/nis_error.c:71
+msgid "Unable to authenticate NIS+ server"
+msgstr "Ikke i stand til å autentisere NIS+-tjener"
+
+#: nis/nis_error.c:46
+msgid "Unable to create callback"
+msgstr "Ikke i stand til å lage tilbakekall"
+
+#: nis/nis_error.c:74
+msgid "Unable to create process on server"
+msgstr "Ikke i stand til å opprette prosess på tjeneren"
+
+#: nis/nis_print.c:190
+#, c-format
+msgid "Unknown (type = %d, bits = %d)\n"
+msgstr "Ukjent (type = %d, bits = %d)\n"
+
+#: inet/ruserpass.c:248
+#, c-format
+msgid "Unknown .netrc keyword %s"
+msgstr "Ukjent .netrc-nøkkelord %s"
+
+#: nis/ypclnt.c:797
+msgid "Unknown NIS error code"
+msgstr "Ukjent NIS-feilkode"
+
+#: nss/getent.c:505
+#, c-format
+msgid "Unknown database: %s\n"
+msgstr "Ukjent database: %s\n"
+
+#: posix/../sysdeps/posix/gai_strerror.c:51
+msgid "Unknown error"
+msgstr "Ukjent feil"
+
+#: string/../sysdeps/generic/_strerror.c:48
+#: string/../sysdeps/mach/_strerror.c:86
+#: sysdeps/mach/hurd/mips/dl-machine.c:82
+msgid "Unknown error "
+msgstr "Ukjent feil "
+
+#: resolv/herror.c:74
+msgid "Unknown host"
+msgstr "Ukjent vert"
+
+#: nis/nis_error.c:34
+msgid "Unknown object"
+msgstr "Ukjent objekt"
+
+#: nscd/nscd_conf.c:181
+#, c-format
+msgid "Unknown option: %s %s %s"
+msgstr "Ukjent flagg: %s %s %s"
+
+#: resolv/herror.c:120
+msgid "Unknown resolver error"
+msgstr "Ukjent navnetjeneste-feil"
+
+#: resolv/herror.c:76
+msgid "Unknown server error"
+msgstr "Ukjent tjener-feil"
+
+#: string/strsignal.c:70
+#, c-format
+msgid "Unknown signal %d"
+msgstr "Ukjent signal %d"
+
+#: misc/error.c:107
+msgid "Unknown system error"
+msgstr "Ukjent systemfeil"
+
+#: nis/ypclnt.c:845
+msgid "Unknown ypbind error"
+msgstr "Ukjent ypbind-feil"
+
+#: posix/regex.c:1020
+msgid "Unmatched ( or \\("
+msgstr "Ubalansert ( eller \\("
+
+#: posix/regex.c:1028
+msgid "Unmatched ) or \\)"
+msgstr "Ubalansert ) eller \\)"
+
+#: posix/regex.c:1019
+msgid "Unmatched [ or [^"
+msgstr "Ubalansert [ eller [^"
+
+#: posix/regex.c:1021
+msgid "Unmatched \\{"
+msgstr "Ubalansert \\{"
+
+#: posix/getconf.c:692
+#, c-format
+msgid "Unrecognized variable `%s'"
+msgstr "Ukjent variabel «%s»"
+
+#: stdio-common/../sysdeps/unix/siglist.c:41
+#: sysdeps/unix/sysv/linux/siglist.h:35
+msgid "Urgent I/O condition"
+msgstr "Kritisk I/O-tilstand"
+
+#: argp/argp-help.c:1567
+msgid "Usage:"
+msgstr "Bruk:"
+
+#: posix/getconf.c:604
+#, c-format
+msgid "Usage: %s variable_name [pathname]\n"
+msgstr "Bruk: %s variabelnavn [søkesti]\n"
+
+#: sunrpc/rpcinfo.c:674
+msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
+msgstr "Bruk: rpcinfo [ -n portnr ] -u vert prognr [ versnr ]\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:55
+#: sysdeps/unix/sysv/linux/siglist.h:48
+msgid "User defined signal 1"
+msgstr "Brukerdefinert signal 1"
+
+#: stdio-common/../sysdeps/unix/siglist.c:56
+#: sysdeps/unix/sysv/linux/siglist.h:49
+msgid "User defined signal 2"
+msgstr "Brukerdefinert signal 2"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:654
+msgid "Value too large for defined data type"
+msgstr "Verdien er for stor for den definerte datatypen"
+
+#: stdio-common/../sysdeps/unix/siglist.c:51
+#: sysdeps/unix/sysv/linux/siglist.h:45
+msgid "Virtual timer expired"
+msgstr "Virtuell tidsgrense overskredet"
+
+#: timezone/zic.c:1899
+msgid "Wild result from command execution"
+msgstr "Vilt resultat fra eksekvering av kommando"
+
+#: stdio-common/../sysdeps/unix/siglist.c:53
+#: sysdeps/unix/sysv/linux/siglist.h:47
+msgid "Window changed"
+msgstr "Vinduet ble endret"
+
+#: locale/programs/locale.c:67
+#, fuzzy
+msgid "Write names of available charmaps"
+msgstr "Skriv navnene til tilgjengelige tegnkart"
+
+#: locale/programs/locale.c:65
+msgid "Write names of available locales"
+msgstr "Skriv navnene til tilgjengelige lokaler"
+
+#: locale/programs/locale.c:69
+msgid "Write names of selected categories"
+msgstr "Skriv navnene til valgte kategorier"
+
+#: locale/programs/locale.c:70
+msgid "Write names of selected keywords"
+msgstr "Skriv navnene til valgte nøkkelord"
+
+#: catgets/gencat.c:110 db2/makedb.c:59
+msgid "Write output to file NAME"
+msgstr "Skriv utdata til fil NAVN"
+
+#: catgets/gencat.c:241 db2/makedb.c:247 elf/sprof.c:365
+#: iconv/iconv_prog.c:299 locale/programs/locale.c:272
+#: locale/programs/localedef.c:408 nscd/nscd.c:228 nss/getent.c:70
+#: posix/getconf.c:629
+#, c-format
+msgid "Written by %s.\n"
+msgstr "Skrevet av %s.\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:818
+msgid "Wrong medium type"
+msgstr "Gal mediatype"
+
+#: nis/nis_print.c:39
+msgid "X500"
+msgstr "X500"
+
+#: nis/nis_print.c:43
+msgid "XCHS"
+msgstr "XCHS"
+
+#: nis/ypclnt.c:185
+#, c-format
+msgid "YPBINDPROC_DOMAIN: %s\n"
+msgstr "YPBINDPROC_DOMAIN: %s\n"
+
+#: nis/nis_error.c:70
+msgid "Yes, 42 is the meaning of life"
+msgstr "Ja, 42 er meningen med livet"
+
+#. TRANS You did @strong{what}?
+#: stdio-common/../sysdeps/gnu/errlist.c:608
+msgid "You really blew it this time"
+msgstr "Denne gangen rotet du det virkelig til"
+
+#: timezone/zic.c:1063
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "Sluttiden på fortsetningslinjen til en sone kommer før sluttiden på foregående linje"
+
+#: iconv/iconv_prog.c:70
+msgid "[FILE...]"
+msgstr "[FIL...]"
+
+#: locale/programs/charmap.c:481 locale/programs/locfile.c:471
+#: locale/programs/repertoire.c:278
+#, c-format
+msgid "`%1$s' definition does not end with `END %1$s'"
+msgstr "«%1$s» definisjon slutter ikke med «END %1$s»"
+
+#: elf/sprof.c:766
+#, c-format
+msgid "`%s' is no correct profile data file for `%s'"
+msgstr "«%s» er ikke korrekt profildatafil for «%s»"
+
+#: locale/programs/ld-monetary.c:369 locale/programs/ld-numeric.c:193
+#, c-format
+msgid "`-1' must be last entry in `%s' field in `%s' category"
+msgstr "«-1» må være siste post i felt «%s» i kategori «%s»"
+
+#: locale/programs/ld-collate.c:1666
+msgid "`...' must only be used in `...' and `UNDEFINED' entries"
+msgstr "«...» kan bare brukes i postene «...» og «UNDEFINED»"
+
+#: locale/programs/locfile.c:668
+msgid "`from' expected after first argument to `collating-element'"
+msgstr "«from» forventet etter første argument til «collating-element»"
+
+#: locale/programs/ld-collate.c:1118
+msgid "`from' string in collation element declaration contains unknown character"
+msgstr "«from»-streng i deklarasjon av sammenligningsselement inneholder ukjent tegn"
+
+#: posix/../sysdeps/posix/gai_strerror.c:34
+msgid "ai_family not supported"
+msgstr "ai_family er ikke støttet"
+
+#: posix/../sysdeps/posix/gai_strerror.c:39
+msgid "ai_socktype not supported"
+msgstr "ai_socktype er ikke støttet"
+
+#: nscd/nscd.c:121
+msgid "already running"
+msgstr "kjører allerede"
+
+#: locale/programs/charmap.c:352 locale/programs/repertoire.c:152
+#, c-format
+msgid "argument to <%s> must be a single character"
+msgstr "argument til <%s> må være ett enkelt tegn"
+
+#: locale/programs/locfile.c:240
+#, c-format
+msgid "argument to `%s' must be a single character"
+msgstr "argument til «%s» må være ett enkelt tegn"
+
+#: sunrpc/auth_unix.c:321
+msgid "auth_none.c - Fatal marshalling problem"
+msgstr "auth_none.c - Fatal kodingsfeil"
+
+#: sunrpc/auth_unix.c:116 sunrpc/auth_unix.c:122 sunrpc/auth_unix.c:151
+msgid "authunix_create: out of memory\n"
+msgstr "authunix_create: ikke mer minne\n"
+
+#: locale/programs/charmap.c:297 locale/programs/locfile.c:234
+#: locale/programs/locfile.c:261 locale/programs/repertoire.c:144
+msgid "bad argument"
+msgstr "ugyldig argument"
+
+#: inet/rcmd.c:318
+msgid "bad owner"
+msgstr "feil eier"
+
+#: timezone/zic.c:1185
+msgid "blank FROM field on Link line"
+msgstr "tomt «FROM»-felt på «Link»-linje"
+
+#: timezone/zic.c:1189
+msgid "blank TO field on Link line"
+msgstr "tomt «TO»-felt på «Link»-linje"
+
+#: malloc/mcheck.c:208
+msgid "block freed twice\n"
+msgstr "blokk frigjort to ganger\n"
+
+#: malloc/mcheck.c:211
+msgid "bogus mcheck_status, library is buggy\n"
+msgstr "feilaktig mcheck_status, biblioteket er bugget\n"
+
+#: sunrpc/pmap_rmt.c:185
+msgid "broadcast: ioctl (get interface configuration)"
+msgstr "broadcast: ioctl (hent grensesnittkonfigurasjon)"
+
+#: sunrpc/pmap_rmt.c:194
+msgid "broadcast: ioctl (get interface flags)"
+msgstr "broadcast: ioctl (hent grensesnittsflagg)"
+
+#: login/programs/request.c:167
+#, fuzzy
+msgid "buffer overflow"
+msgstr "overflyt av buffer"
+
+#: sunrpc/svc_udp.c:446
+msgid "cache_set: could not allocate new rpc_buffer"
+msgstr "cache_set: kunne ikke allokere nytt rpc-buffer"
+
+#: sunrpc/svc_udp.c:440
+msgid "cache_set: victim alloc failed"
+msgstr "cache_set: offer-allokering feilet"
+
+#: sunrpc/svc_udp.c:429
+msgid "cache_set: victim not found"
+msgstr "cache_set: offer ikke funnet"
+
+#: timezone/zic.c:1726
+msgid "can't determine time zone abbreviation to use just after until time"
+msgstr "kan ikke avgjøre tidssoneforkortning for bruk rett etter «until»-tid"
+
+#: sunrpc/svc_simple.c:75
+#, c-format
+msgid "can't reassign procedure number %d\n"
+msgstr "kan ikke omfordele prosedyrenummer %d\n"
+
+#: locale/programs/localedef.c:279
+#, c-format
+msgid "cannot `stat' locale file `%s'"
+msgstr "kan ikke utføre «stat» på lokalefil «%s»"
+
+#: elf/sprof.c:935 elf/sprof.c:987
+msgid "cannot allocate symbol data"
+msgstr "kan ikke allokere symboldata"
+
+#: elf/sprof.c:719 elf/sprof.c:777
+msgid "cannot create internal descriptor"
+msgstr "kan ikke opprette intern deskriptor"
+
+#: elf/sprof.c:417
+msgid "cannot create internal descriptors"
+msgstr "kan ikke opprette interne deskriptorer"
+
+#: nscd/connections.c:180
+#, c-format
+msgid "cannot enable socket to accept connections: %s"
+msgstr "kan ikke få socket til å akseptere forbindelser: %s"
+
+#: sunrpc/rpc_main.c:342
+#, c-format
+msgid "cannot find C preprocessor: %s \n"
+msgstr "kan ikke finn C-preprosessor: %s \n"
+
+#: sunrpc/rpc_main.c:350
+msgid "cannot find any C preprocessor (cpp)\n"
+msgstr "kan ikek finne noen C-preprosessor (cpp)\n"
+
+#: nscd/connections.c:205
+#, c-format
+msgid "cannot handle old request version %d; current version is %d"
+msgstr "kan ikke håndtere gammel forespørsel av versjon %d. Nåværende versjon er %d"
+
+#: locale/programs/ld-collate.c:1324
+#, c-format
+msgid "cannot insert collation element `%.*s'"
+msgstr "kan ikke sette inn sammenligningselement «%.*s»"
+
+#: locale/programs/ld-collate.c:1503 locale/programs/ld-collate.c:1510
+msgid "cannot insert into result table"
+msgstr "kan ikke sette inn i resultattabell"
+
+#: locale/programs/ld-collate.c:1175 locale/programs/ld-collate.c:1218
+#, c-format
+msgid "cannot insert new collating symbol definition: %s"
+msgstr "kan ikke sette inn ny definisjon av sammenligningssymbol: %s"
+
+#: elf/sprof.c:674
+msgid "cannot load profiling data"
+msgstr "kan ikke laste inn profileringsdata"
+
+#: inet/rcmd.c:314
+msgid "cannot open"
+msgstr "kan ikke åpne"
+
+#: sysdeps/unix/sysv/linux/lddlibc4.c:64
+#, c-format
+msgid "cannot open `%s'"
+msgstr "kan ikke åpne «%s»"
+
+#: db2/makedb.c:146
+#, c-format
+msgid "cannot open database file `%s': %s"
+msgstr "kan ikke åpne databasefil «%s»: %s"
+
+#: catgets/gencat.c:272 db2/makedb.c:167 iconv/iconv_prog.c:177
+#, c-format
+msgid "cannot open input file `%s'"
+msgstr "kan ikke åpne innfil «%s»"
+
+#: locale/programs/localedef.c:198
+#, c-format
+msgid "cannot open locale definition file `%s'"
+msgstr "kan ikke åpne lokaledefinisjonsfil «%s»"
+
+#: iconv/iconv_prog.c:155
+msgid "cannot open output file"
+msgstr "kan ikke åpne utfil"
+
+#: catgets/gencat.c:774 catgets/gencat.c:815 db2/makedb.c:181
+#, c-format
+msgid "cannot open output file `%s'"
+msgstr "kan ikke åpne utfil «%s»"
+
+#: locale/programs/locfile.c:1129
+#, c-format
+msgid "cannot open output file `%s' for category `%s'"
+msgstr "kan ikke åpne utfil «%s» for kategori «%s»"
+
+#: nscd/connections.c:162
+#, c-format
+msgid "cannot open socket: %s"
+msgstr "kan ikke åpne socket: %s"
+
+#: locale/programs/ld-collate.c:1370
+msgid "cannot process order specification"
+msgstr "kan ikke behandle spesifikasjon av rekkefølge"
+
+#: locale/programs/locale.c:449
+#, c-format
+msgid "cannot read character map directory `%s'"
+msgstr "kan ikke lese filkatalogen for tegnkart, «%s»"
+
+#: nscd/connections.c:122
+msgid "cannot read configuration file; this is fatal"
+msgstr "kan ikke lese konfigurasjonsfil; dette er fatalt"
+
+#: login/programs/request.c:91
+msgid "cannot read from client"
+msgstr "kan ikke lese fra klient"
+
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
+#, c-format
+msgid "cannot read header from `%s'"
+msgstr "kan ikke lese hode fra «%s»"
+
+#: locale/programs/locale.c:306
+#, c-format
+msgid "cannot read locale directory `%s'"
+msgstr "kan ikke lese filkatalogen for lokaler, «%s»"
+
+#: locale/programs/localedef.c:303
+#, c-format
+msgid "cannot read locale file `%s'"
+msgstr "kan ikke lese lokalefil «%s»"
+
+#: locale/programs/locfile.c:288 locale/programs/locfile.c:306
+#: locale/programs/locfile.c:324 locale/programs/locfile.c:342
+#: locale/programs/locfile.c:360 locale/programs/locfile.c:378
+#, c-format
+#, fuzzy
+msgid "cannot read repertoire map `%s'"
+msgstr "kan ikke lese ferdighetskart «%s»"
+
+#: nscd/nscd_stat.c:127
+msgid "cannot read statistics data"
+msgstr "kan ikke lese statisitkkdata"
+
+#: nscd/cache.c:141 nscd/connections.c:148
+#, c-format
+msgid "cannot stat() file `%s': %s"
+msgstr "kan ikke utføre stat() på fil «%s»: %s"
+
+#: locale/programs/localedef.c:328
+#, c-format
+msgid "cannot write output files to `%s'"
+msgstr "kan ikke skrive utfiler til «%s»"
+
+#: nscd/connections.c:229 nscd/connections.c:250
+#, c-format
+msgid "cannot write result: %s"
+msgstr "kan ikke skrive ut resultat: «%s»"
+
+#: nscd/nscd_stat.c:86
+#, c-format
+msgid "cannot write statistics: %s"
+msgstr "kan ikke skrive ut statistikk: «%s»"
+
+#: login/programs/request.c:120
+msgid "cannot write to client"
+msgstr "kan ikke skrive til klient"
+
+#: locale/programs/localedef.c:442
+msgid "category data requested more than once: should not happen"
+msgstr "kategoridata forespurt mer enn en gang: burde ikke skje"
+
+#: locale/programs/ld-ctype.c:269
+#, c-format
+msgid "character %s'%s' in class `%s' must be in class `%s'"
+msgstr "tegnet %s'%s' i klassen «%s» må være i klassen «%s»"
+
+#: locale/programs/ld-ctype.c:294
+#, c-format
+msgid "character %s'%s' in class `%s' must not be in class `%s'"
+msgstr "tegnet %s'%s' i klassen «%s» kan ikke være i klassen «%s»"
+
+#: locale/programs/ld-ctype.c:320
+msgid "character <SP> not defined in character map"
+msgstr "tegnet <SP> ikke definert i tegnkartet"
+
+#: locale/programs/ld-ctype.c:964 locale/programs/ld-ctype.c:1029
+#: locale/programs/ld-ctype.c:1040 locale/programs/ld-ctype.c:1051
+#: locale/programs/ld-ctype.c:1062 locale/programs/ld-ctype.c:1073
+#: locale/programs/ld-ctype.c:1084 locale/programs/ld-ctype.c:1113
+#: locale/programs/ld-ctype.c:1124 locale/programs/ld-ctype.c:1165
+#: locale/programs/ld-ctype.c:1194 locale/programs/ld-ctype.c:1206
+#, c-format
+msgid "character `%s' not defined while needed as default value"
+msgstr "tegnet «%s» ikke definert, men behøves som standardverdi"
+
+#: locale/programs/ld-ctype.c:825
+#, c-format
+msgid "character class `%s' already defined"
+msgstr "tegnklassen «%s» allerede definert"
+
+#: locale/programs/ld-ctype.c:857
+#, c-format
+msgid "character map `%s' already defined"
+msgstr "tegnkartet «%s» allerede definert"
+
+#: locale/programs/charmap.c:83
+#, c-format
+msgid "character map file `%s' not found"
+msgstr "tegnkartfilen «%s» ikke funnet"
+
+#: sunrpc/clnt_raw.c:110
+msgid "clnt_raw.c - Fatal header serialization error."
+msgstr "clnt_raw.c - Fatal feil ved serialisering av hode."
+
+#: sunrpc/clnt_tcp.c:125 sunrpc/clnt_tcp.c:133
+msgid "clnttcp_create: out of memory\n"
+msgstr "cnlttcp_create: ikke mer minne\n"
+
+#: sunrpc/clnt_udp.c:124 sunrpc/clnt_udp.c:134
+msgid "clntudp_create: out of memory\n"
+msgstr "cnltudp_create: ikke mer minne\n"
+
+#: sunrpc/clnt_unix.c:123 sunrpc/clnt_unix.c:131
+msgid "clntunix_create: out of memory\n"
+msgstr "cnlsunix_create: ikke mer minne\n"
+
+#: locale/programs/ld-collate.c:1339
+#, c-format
+msgid "collation element `%.*s' appears more than once: ignore line"
+msgstr "sammenligningselement «%.*s» finnes mer enn en gang: linje ignorert"
+
+#: locale/programs/ld-collate.c:1357
+#, c-format
+msgid "collation symbol `%.*s' appears more than once: ignore line"
+msgstr "sammenligningssymbol «%.*s» finnes mer enn en gang: linje ignorert"
+
+#: locale/programs/locfile.c:652
+#, c-format
+msgid "collation symbol expected after `%s'"
+msgstr "sammenligningssymbol forventet etter «%s»"
+
+#: inet/rcmd.c:136
+#, c-format
+msgid "connect to address %s: "
+msgstr "koble til adresse %s: "
+
+#: sunrpc/rpc_scan.c:115
+msgid "constant or identifier expected"
+msgstr "konstant eller identifikator ventet"
+
+#: iconv/iconv_prog.c:144
+#, c-format
+msgid "conversion from `%s' to `%s' not supported"
+msgstr "konvertering fra «%s» til «%s» ikke støttet"
+
+#: iconv/iconv_prog.c:326
+msgid "conversion stopped due to problem in writing the output"
+msgstr "konvertering stoppet på grunn av problem ved skriving av utdata"
+
+#: sunrpc/svc_simple.c:83
+msgid "couldn't create an rpc server\n"
+msgstr "kunne ikke opprette en rpc-tjener\n"
+
+#: sunrpc/svc_simple.c:91
+#, c-format
+msgid "couldn't register prog %d vers %d\n"
+msgstr "kunne ikke registrere prog %d vers %d\n"
+
+#: nss/getent.c:49
+msgid "database [key ...]"
+msgstr "database [nøkkel ...]"
+
+#: locale/programs/charmap.c:170
+#, c-format
+msgid "default character map file `%s' not found"
+msgstr "standard tegnkart «%s» ikke funnet"
+
+#: locale/programs/ld-time.c:163
+#, c-format
+msgid "direction flag in string %d in `era' field in category `%s' is not '+' nor '-'"
+msgstr ""
+"retningsflagg i streng %d i «era»-felt i kategori «%s» er\n"
+"ikke «+» eller «-»"
+
+#: locale/programs/ld-time.c:174
+#, c-format
+msgid "direction flag in string %d in `era' field in category `%s' is not a single character"
+msgstr ""
+"retningsflagg i streng %d i «era»-felt i kategori «%s» er\n"
+"ikke ett enkelt tegn"
+
+#: locale/programs/charset.c:64 locale/programs/charset.c:118
+#, c-format
+msgid "duplicate character name `%s'"
+msgstr "duplisert tegnnavn «%s»"
+
+#: locale/programs/ld-collate.c:1150
+msgid "duplicate collating element definition"
+msgstr "duplisert definisjon av sammenligningselement"
+
+#: locale/programs/ld-collate.c:1297
+#, c-format
+msgid "duplicate definition for character `%.*s'"
+msgstr "duplisert definisjon av tegn «%.*s»"
+
+#: db2/makedb.c:328
+msgid "duplicate key"
+msgstr "duplisert nøkkel"
+
+#: catgets/gencat.c:388
+msgid "duplicate set definition"
+msgstr "duplisert definition av sett"
+
+#: timezone/zic.c:978
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr "duplisert sonenavn %s (fil «%s», linje %d)"
+
+#: catgets/gencat.c:551
+msgid "duplicated message identifier"
+msgstr "duplisert meldingsidentifikator"
+
+#: catgets/gencat.c:524
+msgid "duplicated message number"
+msgstr "duplisert meldingsnummer"
+
+#: sunrpc/rpc_scan.c:382
+msgid "empty char string"
+msgstr "tom tegnstreng"
+
+#: locale/programs/ld-collate.c:1710
+msgid "empty weight name: line ignored"
+msgstr "tomt vektnavn: linje ignorert"
+
+#: sunrpc/svc_udp.c:372
+msgid "enablecache: cache already enabled"
+msgstr "enablecache: cache/hurtigminne allerede slått på"
+
+#: sunrpc/svc_udp.c:378
+msgid "enablecache: could not allocate cache"
+msgstr "enablecache: kunne ikke tildele cache/hurtigminne"
+
+#: sunrpc/svc_udp.c:386
+msgid "enablecache: could not allocate cache data"
+msgstr "enablecache: kunne ikke tildele cache/hurtigminne-data"
+
+#: sunrpc/svc_udp.c:393
+msgid "enablecache: could not allocate cache fifo"
+msgstr "enablecache: kunne ikke tildele cache/hurtigminne-fifo"
+
+#: iconv/iconv_prog.c:56
+msgid "encoding for output"
+msgstr "innkoding for utdata"
+
+#: iconv/iconv_prog.c:55
+msgid "encoding of original text"
+msgstr "innkoding av original tekst"
+
+#: locale/programs/ld-collate.c:1429
+msgid "end point of ellipsis range is bigger then start"
+msgstr "sluttverdien for ellipseintervallet er større enn startverdien"
+
+#: iconv/iconv_prog.c:193
+#, c-format
+msgid "error while closing input `%s'"
+msgstr "feil ved lukking av input «%s»"
+
+#: iconv/iconv_prog.c:239
+msgid "error while closing output file"
+msgstr "feil ved lukking av utfil"
+
+#: elf/sprof.c:710
+msgid "error while closing the profiling data file"
+msgstr "feil ved lukking av datafilen for profilering"
+
+#: locale/programs/ld-collate.c:1158
+msgid "error while inserting collation element into hash table"
+msgstr "feil ved innsetting av sammenligningselement i hashtabellen"
+
+#: locale/programs/ld-collate.c:1170
+msgid "error while inserting to hash table"
+msgstr "feil ved innsetting i hashtabellen"
+
+#: iconv/iconv_prog.c:389 iconv/iconv_prog.c:420
+msgid "error while reading the input"
+msgstr "feil under lesing av inndata"
+
+#: locale/programs/locfile.c:595
+msgid "expect string argument for `copy'"
+msgstr "forventet strengargument for «copy»"
+
+#: timezone/zic.c:868
+msgid "expected continuation line not found"
+msgstr "forventet fortsettelseslinje ikke funnet"
+
+#: elf/sprof.c:408
+#, c-format
+msgid "failed to load shared object `%s'"
+msgstr "klarte ikke å laste delt objekt «%s»"
+
+#: elf/sprof.c:604
+msgid "failed to load symbol data"
+msgstr "klarte ikke å laste symboldata"
+
+#: elf/sprof.c:702
+msgid "failed to mmap the profiling data file"
+msgstr "klarte ikke å mmap'e filen med profileringsdata"
+
+#: iconv/iconv_prog.c:147
+msgid "failed to start conversion processing"
+msgstr "klarte ikke å starte konverteringsprosessering"
+
+#: locale/programs/locfile.c:1154
+#, c-format
+msgid "failure while writing data for category `%s'"
+msgstr "feil ved skriving av data for kategori «%s»"
+
+#: nis/nis_call.c:155
+msgid "fcntl: F_SETFD"
+msgstr "fcntl: F_SETFD"
+
+#: locale/programs/ld-monetary.c:163 locale/programs/ld-numeric.c:98
+#, c-format
+msgid "field `%s' in category `%s' not defined"
+msgstr "felt «%s» i kategori «%s» ikke definert"
+
+#: locale/programs/ld-messages.c:86 locale/programs/ld-messages.c:110
+#, c-format
+msgid "field `%s' in category `%s' undefined"
+msgstr "felt «%s» i kategori «%s» udefinert"
+
+#: sunrpc/rpc_main.c:1148
+#, c-format
+msgid "file '%s' already exists and may be overwritten\n"
+msgstr "filen «%s» eksisterer fra før og kan bli overskrevet\n"
+
+#: locale/programs/locfile.c:677
+msgid "from-value of `collating-element' must be a string"
+msgstr "fra-verdi for «collating-element» må være en streng"
+
+#: inet/rcmd.c:316
+msgid "fstat failed"
+msgstr "fstat feilet"
+
+#: locale/programs/linereader.c:333
+msgid "garbage at end of character code specification"
+msgstr "søppel på slutten av tegnkodespesifikasjon"
+
+#: locale/programs/linereader.c:219
+msgid "garbage at end of number"
+msgstr "søppel på slutten av tall"
+
+#: locale/programs/ld-time.c:195
+#, c-format
+msgid "garbage at end of offset value in string %d in `era' field in category `%s'"
+msgstr "søppel på slutten av tilleggsverdi i streng %d i «era»-felt i kategori «%s»"
+
+#: locale/programs/ld-time.c:252
+#, c-format
+msgid "garbage at end of starting date in string %d in `era' field in category `%s'"
+msgstr "søppel på slutten av startdato i streng %d i «era»-felt i kategori «%s»"
+
+#: locale/programs/ld-time.c:328
+#, c-format
+msgid "garbage at end of stopping date in string %d in `era' field in category `%s'"
+msgstr "søppel på slutten av sluttdato i streng %d i «era»-felt i kategori «%s»"
+
+#: elf/sprof.c:81
+msgid "generate call graph"
+msgstr "generer kall-graf"
+
+#: elf/sprof.c:80
+#, fuzzy
+msgid "generate flat profile with counts and ticks"
+msgstr "generer flat profil med tellere og klokketikk"
+
+#: sunrpc/get_myaddr.c:77
+msgid "get_myaddress: ioctl (get interface configuration)"
+msgstr "get_myaddress: ioctl (hent grensesnittskonfigurasjon)"
+
+#: nss/getent.c:53
+msgid "getent - get entries from administrative database."
+msgstr "getent - hent innslag fra administrativ database."
+
+#: nscd/connections.c:200
+#, c-format
+msgid "handle_request: request received (Version = %d)"
+msgstr "handle_request: forespørsel mottatt (versjon = %d)"
+
+#: timezone/zic.c:613
+msgid "hard link failed, symbolic link used"
+msgstr "hard link feilet, symbolsk link brukt"
+
+#: inet/rcmd.c:322
+msgid "hard linked somewhere"
+msgstr "hardlinket et eller annet sted"
+
+#: timezone/zic.c:1162
+msgid "illegal CORRECTION field on Leap line"
+msgstr "ulovlig «CORRECTION»-felt på «Leap»-linje"
+
+#: timezone/zic.c:1166
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr "ulovlig «Rolling/Stationary»-felt på «Leap»-linje"
+
+#: locale/programs/ld-collate.c:1782
+msgid "illegal character constant in string"
+msgstr "ulovlig tegnkonstant i streng"
+
+#: sunrpc/rpc_scan.c:311
+msgid "illegal character in file: "
+msgstr "ulovlig tegn i file: "
+
+#: locale/programs/ld-collate.c:1125
+msgid "illegal collation element"
+msgstr "ulovlig sammenligningselement"
+
+#: locale/programs/charmap.c:281
+msgid "illegal definition"
+msgstr "ulovlig definisjon"
+
+#: locale/programs/charmap.c:434
+msgid "illegal encoding given"
+msgstr "ulovlig koding gitt"
+
+#: locale/programs/linereader.c:551
+msgid "illegal escape sequence at end of string"
+msgstr "ulovlig tegnsekvens ved slutt av streng"
+
+#: iconv/iconv_prog.c:342
+#, c-format
+msgid "illegal input sequence at position %ld"
+msgstr "ulovlig inndatasekvens ved posisjon %ld"
+
+#: locale/programs/charset.c:78
+msgid "illegal names for character range"
+msgstr "ulovlig navn for tegnområde"
+
+#: sunrpc/rpc_main.c:462
+#, c-format
+msgid "illegal nettype :'%s'\n"
+msgstr "ulovlig nettype: «%s»\n"
+
+#: locale/programs/ld-time.c:187
+#, c-format
+msgid "illegal number for offset in string %d in `era' field in category `%s'"
+msgstr "ulovlig tall for tilleggsverdi i streng %d i «era»-felt i kategori «%s»"
+
+#: catgets/gencat.c:361 catgets/gencat.c:438
+msgid "illegal set number"
+msgstr "ulovlig sett-nummer"
+
+#: locale/programs/ld-time.c:243
+#, c-format
+msgid "illegal starting date in string %d in `era' field in category `%s'"
+msgstr "ulovlig startdato i streng %d i «era»-felt i kategori «%s»"
+
+#: locale/programs/ld-time.c:319
+#, c-format
+msgid "illegal stopping date in string %d in `era' field in category `%s'"
+msgstr "ulovlig sluttdato i streng %d i «era»-felt i kategori «%s»"
+
+#: locale/programs/ld-ctype.c:831
+#, c-format
+msgid "implementation limit: no more than %d character classes allowed"
+msgstr "implementasjonsbegrensning: ikke flere enn %d tegnklasser tillatt"
+
+#: locale/programs/ld-ctype.c:863
+#, c-format
+msgid "implementation limit: no more than %d character maps allowed"
+msgstr "implementasjonsbegrensning: ikke flere enn %d tegnkart tillatt"
+
+#: iconv/iconv_prog.c:346
+#, fuzzy
+msgid "incomplete character or shift sequence at end of buffer"
+msgstr "ufullstendig tegn- eller shift-sekvens ved slutten av buffer"
+
+#: db2/makedb.c:148
+msgid "incorrectly formatted file"
+msgstr "feilaktig formattert fil"
+
+#: timezone/zic.c:825
+msgid "input line of unknown type"
+msgstr "innlinje av ukjent type"
+
+#: iconv/iconv_prog.c:350
+msgid "internal error (illegal descriptor)"
+msgstr "intern feil (ulovlig deskriptor)"
+
+#: timezone/zic.c:1788
+msgid "internal error - addtype called with bad isdst"
+msgstr "intern feil - addtype kalt med feilaktig isdst"
+
+#: timezone/zic.c:1796
+msgid "internal error - addtype called with bad ttisgmt"
+msgstr "intern feil - addtype kalt med feilaktig ttisgmt"
+
+#: timezone/zic.c:1792
+msgid "internal error - addtype called with bad ttisstd"
+msgstr "intern feil - addtype kalt med feilaktig ttisstd"
+
+#: locale/programs/ld-ctype.c:307
+#, c-format
+msgid "internal error in %s, line %u"
+msgstr "intern feil i %s, linje %u"
+
+#: timezone/zic.c:1034
+msgid "invalid UTC offset"
+msgstr "ugyldig UTC-forskyvning"
+
+#: timezone/zic.c:1037
+msgid "invalid abbreviation format"
+msgstr "ugyldig forkortningsformat"
+
+#: timezone/zic.c:1127 timezone/zic.c:1339 timezone/zic.c:1353
+msgid "invalid day of month"
+msgstr "ugyldig dag i måneden"
+
+#: timezone/zic.c:1291
+msgid "invalid ending year"
+msgstr "ugyldig sluttår"
+
+#: timezone/zic.c:1099
+msgid "invalid leaping year"
+msgstr "ugyldig skuddår"
+
+#: elf/dl-open.c:159
+msgid "invalid mode for dlopen()"
+msgstr "ugyldig modus for dlopen()"
+
+#: timezone/zic.c:1114 timezone/zic.c:1217
+msgid "invalid month name"
+msgstr "ugyldig månedsnavn"
+
+#: timezone/zic.c:933
+msgid "invalid saved time"
+msgstr "ugyldig lagret tid"
+
+#: timezone/zic.c:1266
+msgid "invalid starting year"
+msgstr "ugyldig startår"
+
+#: timezone/zic.c:1143 timezone/zic.c:1246
+msgid "invalid time of day"
+msgstr "ugyldig tid på dagen"
+
+#: timezone/zic.c:1344
+msgid "invalid weekday name"
+msgstr "ugyldig ukedagsnavn"
+
+#: nscd/connections.c:375
+#, c-format
+msgid "key length in request too long: %Zd"
+msgstr "nøkkellengde i forespørsel for lang: %Zd"
+
+#: locale/programs/ld-collate.c:1422
+msgid "line after ellipsis must contain character definition"
+msgstr "linje etter ... må inneholde tegndefinisjon"
+
+#: locale/programs/ld-collate.c:1401
+msgid "line before ellipsis does not contain definition for character constant"
+msgstr "linje foran ... inneholder ikke definisjon for tegnkonstant"
+
+#: timezone/zic.c:805
+msgid "line too long"
+msgstr "for lang linje"
+
+#: iconv/iconv_prog.c:58
+msgid "list all known coded character sets"
+msgstr "list opp alle kjente kodede tegnsett"
+
+#: locale/programs/localedef.c:273
+#, c-format
+msgid "locale file `%s', used in `copy' statement, not found"
+msgstr "lokalefil «%s», brukt i «copy», ikke funnet"
+
+#: inet/rcmd.c:307
+msgid "lstat failed"
+msgstr "lstat feilet"
+
+#: catgets/gencat.c:619
+msgid "malformed line ignored"
+msgstr "feilaktig linje ignorert"
+
+#: elf/sprof.c:554
+#, fuzzy
+msgid "mapping of section header string table failed"
+msgstr "mapping av tabell med seksjonsoverskriftstrenger feilet"
+
+#: elf/sprof.c:544
+msgid "mapping of section headers failed"
+msgstr "mapping av seksjonsoverskrifter feilet"
+
+#: malloc/mcheck.c:202
+msgid "memory clobbered before allocated block\n"
+msgstr "området foran tildelt minneblokk tilgriset\n"
+
+#: malloc/mcheck.c:205
+msgid "memory clobbered past end of allocated block\n"
+msgstr "området etter tildelt minneblokk tilgriset\n"
+
+#: locale/programs/ld-collate.c:170 locale/programs/ld-collate.c:176
+#: locale/programs/ld-collate.c:180 locale/programs/ld-collate.c:1449
+#: locale/programs/ld-collate.c:1478 locale/programs/locfile.c:1082
+#: locale/programs/xmalloc.c:70 login/programs/database.c:62
+#: login/programs/database.c:79 login/programs/database.c:95
+#: posix/getconf.c:682
+msgid "memory exhausted"
+msgstr "minnet oppbrukt"
+
+#: malloc/obstack.c:471
+msgid "memory exhausted\n"
+msgstr "minnet oppbrukt\n"
+
+#: malloc/mcheck.c:199
+msgid "memory is consistent, library is buggy\n"
+msgstr "minnet er konsistent, biblioteket er bugget\n"
+
+#: locale/programs/ld-time.c:370
+#, c-format
+msgid "missing era format in string %d in `era' field in category `%s'"
+msgstr "eraformat i streng %d i «era»-felt i kategori «%s» mangler"
+
+#: locale/programs/ld-time.c:358
+#, c-format
+msgid "missing era name in string %d in `era' field in category `%s'"
+msgstr "eranavn i streng %d i «era»-felt i kategori «%s» mangler"
+
+#: timezone/zic.c:928
+msgid "nameless rule"
+msgstr "navnløs regel"
+
+#: iconv/iconv_prog.c:133
+msgid "neither original nor target encoding specified"
+msgstr "verken original- eller mål-innkoding spesifisert"
+
+#: nis/nss_nisplus/nisplus-publickey.c:262
+#: nis/nss_nisplus/nisplus-publickey.c:268
+#: nis/nss_nisplus/nisplus-publickey.c:327
+#: nis/nss_nisplus/nisplus-publickey.c:336
+#, c-format
+msgid "netname2user: (nis+ lookup): %s\n"
+msgstr "netname2user: (nis+-oppslag): %s\n"
+
+#: nis/nss_nisplus/nisplus-publickey.c:281
+#, c-format
+msgid "netname2user: DES entry for %s in directory %s not unique"
+msgstr "netname2user: DES-innslag for %s i katalog %s er ikke unikt"
+
+#: nis/nss_nisplus/nisplus-publickey.c:349
+#, c-format
+msgid "netname2user: LOCAL entry for %s in directory %s not unique"
+msgstr "netname2user: LOKAL-innslag for %s i katalog %s er ikke unikt"
+
+#: nis/nss_nisplus/nisplus-publickey.c:194
+#, c-format
+msgid "netname2user: missing group id list in '%s'."
+msgstr "netname2user: manglende gruppeid-liste i «%s»."
+
+#: nis/nss_nisplus/nisplus-publickey.c:299
+#, c-format
+#, fuzzy
+msgid "netname2user: principal name '%s' too long"
+msgstr "netname2user: navn på «principal» «%s» for langt"
+
+#: nis/nss_nisplus/nisplus-publickey.c:356
+msgid "netname2user: should not have uid 0"
+msgstr "netname2user: skulle ikke ha uid 0"
+
+#: sunrpc/svc_simple.c:158
+#, c-format
+msgid "never registered prog %d\n"
+msgstr "aldri registrert prog %d\n"
+
+#: locale/programs/repertoire.c:238
+msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
+msgstr "ingen <Uxxxx>- eller <Uxxxxxxxx>-verdi gitt"
+
+#: locale/programs/ld-messages.c:101 locale/programs/ld-messages.c:125
+#, c-format
+msgid "no correct regular expression for field `%s' in category `%s': %s"
+msgstr "feilaktig regulært uttrykk for felt «%s» i kategori «%s»: %s"
+
+#: timezone/zic.c:2115
+msgid "no day in month matches rule"
+msgstr "ingen dag i måneden passer til regelen"
+
+#: locale/programs/ld-collate.c:267
+msgid "no definition of `UNDEFINED'"
+msgstr "ingen definisjon av «UNDEFINED»"
+
+#: elf/sprof.c:276
+#, c-format
+#, fuzzy
+msgid "no filename for profiling data given and shared object `%s' has no soname"
+msgstr "ikke noe filnavn for profileringsdata gitt, og delt objekt «%s» har ikke noe sonavn"
+
+#: locale/programs/locfile.c:609
+msgid "no other keyword shall be specified when `copy' is used"
+msgstr "ingen andre nøkkelord skal angis når «copy» brukes"
+
+#: locale/programs/localedef.c:334
+msgid "no output file produced because warning were issued"
+msgstr "på grunn av advarsler ble ingen utfil opprettet"
+
+#: locale/programs/locfile.c:283 locale/programs/locfile.c:301
+#: locale/programs/locfile.c:319 locale/programs/locfile.c:337
+#: locale/programs/locfile.c:355 locale/programs/locfile.c:373
+#, fuzzy
+msgid "no repertoire map specified: cannot proceed"
+msgstr "ferdighetskart ikke spesifisert: kan ikke fortsette"
+
+#: locale/programs/charmap.c:400 locale/programs/charmap.c:550
+#: locale/programs/charmap.c:629 locale/programs/repertoire.c:199
+msgid "no symbolic name given"
+msgstr "ikke noe symbolsk navn gitt"
+
+#: locale/programs/charmap.c:465 locale/programs/charmap.c:596
+#: locale/programs/charmap.c:662 locale/programs/repertoire.c:261
+msgid "no symbolic name given for end of range"
+msgstr "ikke noe symbolsk navn gitt for slutten på området"
+
+#: locale/programs/ld-collate.c:249
+#, c-format
+msgid "no weight defined for symbol `%s'"
+msgstr "ingen vekt definert for symbol «%s»"
+
+#: inet/rcmd.c:309
+msgid "not regular file"
+msgstr "ikke en vanlig fil"
+
+#: nscd/nscd_stat.c:130
+#, c-format
+msgid ""
+"nscd configuration:\n"
+"\n"
+"%15d  server debug level\n"
+msgstr ""
+"nscd-konfigurasjon:\n"
+"\n"
+"%15d  debugnivå for tjener\n"
+
+#: nscd/nscd_stat.c:104
+msgid "nscd not running!\n"
+msgstr "nscd kjører ikke!\n"
+
+#: locale/programs/charmap.c:514
+msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
+msgstr "bare definisjon av «WIDTH» får komme etter definisjon av «CHARMAP»"
+
+#: iconv/iconv_prog.c:135
+msgid "original encoding not specified using `-f'"
+msgstr "original innkoding ikke spesifisert med «-f»"
+
+#: iconv/iconv_prog.c:60
+msgid "output file"
+msgstr "utfil"
+
+#: sunrpc/pm_getmaps.c:73
+msgid "pmap_getmaps rpc problem"
+msgstr "pmap_getmaps rpc-problem"
+
+#: inet/rcmd.c:179
+#, fuzzy
+msgid "poll: protocol failure in circuit setup\n"
+msgstr "poll: protokollfeil i oppsetting av forbindelse\n"
+
+#: sunrpc/rpc_scan.c:523 sunrpc/rpc_scan.c:533
+msgid "preprocessor error"
+msgstr "preprosessorfeil"
+
+#: elf/sprof.c:78
+#, fuzzy
+msgid "print list of count paths and their number of use"
+msgstr "skriv ut liste med tellestier og deres bruksantall"
+
+#: iconv/iconv_prog.c:61
+msgid "print progress information"
+msgstr "skriv framdriftsinformasjon"
+
+#: db2/makedb.c:345
+#, c-format
+msgid "problems while reading `%s'"
+msgstr "problem ved lesing av «%s»"
+
+#: elf/sprof.c:691
+#, c-format
+msgid "profiling data file `%s' does not match shared object `%s'"
+msgstr "profileringsdatafil «%s» passer ikke med del objekt «%s»"
+
+#: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:383
+#, c-format
+msgid "program %lu is not available\n"
+msgstr "program %lu er ikke tilgjengelig\n"
+
+#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333
+#: sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476
+#: sunrpc/rpcinfo.c:510
+#, c-format
+msgid "program %lu version %lu is not available\n"
+msgstr "program %lu versjon %lu er ikke tilgjengelig\n"
+
+#: sunrpc/rpcinfo.c:515
+#, c-format
+msgid "program %lu version %lu ready and waiting\n"
+msgstr "program %lu versjon %lu klar og venter\n"
+
+#: inet/rcmd.c:176
+#, c-format
+msgid "rcmd: poll (setting up stderr): %m\n"
+msgstr "rcmd: poll (setter opp stderr): %m\n"
+
+#: inet/rcmd.c:110
+msgid "rcmd: socket: All ports in use\n"
+msgstr "rcmd: socket: Alle porter i bruk\n"
+
+#: inet/rcmd.c:166
+#, c-format
+msgid "rcmd: write (setting up stderr): %m\n"
+msgstr "rcmd: write: (setter opp standard error): %m\n"
+
+#: sunrpc/svc_simple.c:98
+msgid "registerrpc: out of memory\n"
+msgstr "registerrpc: ikke mer minne\n"
+
+#: timezone/zic.c:1849
+msgid "repeated leap second moment"
+msgstr "repetert skuddsekundstidspunkt"
+
+#: locale/programs/repertoire.c:95
+#, fuzzy, c-format
+msgid "repertoire map file `%s' not found"
+msgstr "ferdighetskartfilen «%s» ikke funnet"
+
+#: sunrpc/rpc_main.c:1117
+#, fuzzy
+msgid "rpcgen: arglist coding error\n"
+msgstr "rpcgen: arglist code-feil"
+
+#: sunrpc/rpc_main.c:1105
+msgid "rpcgen: too many defines\n"
+msgstr "rpcgen: for mange definisjoner\n"
+
+#: sunrpc/rpcinfo.c:732
+#, c-format
+msgid "rpcinfo: %s is unknown host\n"
+msgstr "rpcinfo: %s er en ukjent vert\n"
+
+#: sunrpc/rpcinfo.c:695
+#, c-format
+msgid "rpcinfo: %s is unknown service\n"
+msgstr "rpcinfo: %s er en ukjent tjeneste\n"
+
+#: sunrpc/rpcinfo.c:665
+#, c-format
+msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
+msgstr "rpcinfo: Kunne ikke ta bort registrering av prog %s versjon %s\n"
+
+#: sunrpc/rpcinfo.c:637
+#, c-format
+msgid "rpcinfo: broadcast failed: %s\n"
+msgstr "rpcinfo: broadcast feilet: %s\n"
+
+#: sunrpc/rpcinfo.c:556 sunrpc/rpcinfo.c:563
+msgid "rpcinfo: can't contact portmapper"
+msgstr "rpcinfo: kan ikke kontakte portmapper"
+
+#: timezone/zic.c:718 timezone/zic.c:720
+msgid "same rule name in multiple files"
+msgstr "samme regel i flere filer"
+
+#: nscd/connections.c:387
+#, c-format
+#, fuzzy
+msgid "short read while reading request key: %s"
+msgstr "avkortet lesing under lesing av forespørsel-nøkkel: %s"
+
+#: nscd/connections.c:364
+#, c-format
+msgid "short read while reading request: %s"
+msgstr "avkortet lesing ved lesing av forespørsel: %s"
+
+#: nscd/grpcache.c:191 nscd/hstcache.c:278 nscd/pwdcache.c:188
+#, c-format
+msgid "short write in %s: %s"
+msgstr "avkortet skriving i %s: %s"
+
+#: inet/rcmd.c:197
+msgid "socket: protocol failure in circuit setup\n"
+msgstr "socket: protokollfeil i oppsetting av forbindelse\n"
+
+#: locale/programs/locfile.c:730
+msgid "sorting order `forward' and `backward' are mutually exclusive"
+msgstr "sorteringsrekkefølge «forward» og «backward» utelukker hverandre"
+
+#: locale/programs/ld-collate.c:1582 locale/programs/ld-collate.c:1628
+msgid "specification of sorting weight for collation symbol does not make sense"
+msgstr "spesifikasjon av sorteringsvekter for sammenligningssymbol gir ikke mening"
+
+#: timezone/zic.c:789
+msgid "standard input"
+msgstr "standard innkanal"
+
+#: timezone/zdump.c:268
+msgid "standard output"
+msgstr "standard utkanal"
+
+#: locale/programs/ld-time.c:272
+#, c-format
+msgid "starting date is illegal in string %d in `era' field in category `%s'"
+msgstr "startdato er ikke tillatt i streng %d i «era»-felt i kategori «%s»"
+
+#: timezone/zic.c:1300
+msgid "starting year greater than ending year"
+msgstr "startår er større enn sluttår"
+
+#: timezone/zic.c:1272 timezone/zic.c:1297
+msgid "starting year too high to be represented"
+msgstr "startår for høyt til å bli representert"
+
+#: timezone/zic.c:1270 timezone/zic.c:1295
+msgid "starting year too low to be represented"
+msgstr "startår for lavt til å bli representert"
+
+#: locale/programs/ld-time.c:348
+#, c-format
+msgid "stopping date is illegal in string %d in `era' field in category `%s'"
+msgstr "sluttdato er ikke tillatt i streng %d i «era»-felt i kategori «%s»"
+
+#: sunrpc/svc_run.c:81
+msgid "svc_run: - select failed"
+msgstr "svc_run: - select feilet"
+
+#: sunrpc/svc_tcp.c:160
+msgid "svc_tcp.c - cannot getsockname or listen"
+msgstr "svc_tcp.c - kan ikke kalle getsockname eller listen"
+
+#: sunrpc/svc_tcp.c:145
+msgid "svc_tcp.c - tcp socket creation problem"
+msgstr "svc_tcp.c - problem med oppretting av tdp-socket"
+
+#: sunrpc/svc_tcp.c:209 sunrpc/svc_tcp.c:215
+msgid "svc_tcp: makefd_xprt: out of memory\n"
+msgstr "svc_tcp: makefd_xprt: ikke mer minne\n"
+
+#: sunrpc/svc_unix.c:135
+msgid "svc_unix.c - AF_UNIX socket creation problem"
+msgstr "svc_unix.c - problem med oppretting av AF_UNIX-socket"
+
+#: sunrpc/svc_unix.c:151
+msgid "svc_unix.c - cannot getsockname or listen"
+msgstr "svc_unix.c - kan ikke kalle getsockname eller listen"
+
+#: sunrpc/svc_unix.c:201 sunrpc/svc_unix.c:207
+msgid "svc_unix: makefd_xprt: out of memory\n"
+msgstr "svc_unix: makefd_xprt: ikke mer minne\n"
+
+#: sunrpc/svc_tcp.c:168 sunrpc/svc_tcp.c:176
+msgid "svctcp_create: out of memory\n"
+msgstr "svctcp_create: ikke mer minne\n"
+
+#: sunrpc/svc_udp.c:135
+msgid "svcudp_create - cannot getsockname"
+msgstr "svcudp_create - kan ikke kalle getsockname"
+
+#: sunrpc/svc_udp.c:143 sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155
+msgid "svcudp_create: out of memory\n"
+msgstr "svcudp_create: ikke mer minne\n"
+
+#: sunrpc/svc_udp.c:121
+msgid "svcudp_create: socket creation problem"
+msgstr "svcudp_create: problem ved oppretting av socket"
+
+#: sunrpc/svc_unix.c:160 sunrpc/svc_unix.c:168
+msgid "svcunix_create: out of memory\n"
+msgstr "svcunix_create: ikke mer minne\n"
+
+#: locale/programs/ld-collate.c:1201
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates element definition"
+msgstr "symbol for flertegnssammenligningselement «%.*s» dupliserer elementdefinisjon"
+
+#: locale/programs/ld-collate.c:1073
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates other element definition"
+msgstr ""
+"symbol for flertegnssammenligningsselement «%.*s» dupliserer en annen\n"
+"elementdefinisjon"
+
+#: locale/programs/ld-collate.c:1210
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates other symbol definition"
+msgstr ""
+"symbol for flertegnssammenligningselement «%.*s» dupliserer en annen\n"
+"symboldefinisjon"
+
+#: locale/programs/ld-collate.c:1082
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates symbol definition"
+msgstr ""
+"symbol for flertegnssammenligningselement «%.*s» dupliserer\n"
+"symboldefinisjon"
+
+#: locale/programs/ld-collate.c:1064 locale/programs/ld-collate.c:1192
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates symbolic name in charset"
+msgstr ""
+"symbol for flertegnssammenligningselement «%.*s» dupliserer\n"
+"symbolnavn i tegnsett"
+
+#: locale/programs/charmap.c:399 locale/programs/charmap.c:433
+#: locale/programs/charmap.c:463 locale/programs/charmap.c:549
+#: locale/programs/charmap.c:595 locale/programs/charmap.c:628
+#: locale/programs/charmap.c:660
+#, c-format
+msgid "syntax error in %s definition: %s"
+msgstr "syntaksfeil i definisjon av %s: %s"
+
+#: locale/programs/locfile.c:750
+msgid "syntax error in `order_start' directive"
+msgstr "syntaksfeil i nøkkelordet «order_start»"
+
+#: locale/programs/locfile.c:492
+msgid "syntax error in character class definition"
+msgstr "syntaksfeil i definisjon av tegnklasse"
+
+#: locale/programs/locfile.c:550
+msgid "syntax error in character conversion definition"
+msgstr "syntaksfeil i definisjon av tegnkonvertering"
+
+#: locale/programs/locfile.c:792
+msgid "syntax error in collating order definition"
+msgstr "syntaksfeil i definisjon av sammenligningssortering"
+
+#: locale/programs/locfile.c:642
+msgid "syntax error in collation definition"
+msgstr "syntaksfeil i definisjon av sammenligning"
+
+#: locale/programs/locfile.c:465
+msgid "syntax error in definition of LC_CTYPE category"
+msgstr "syntaksfeil i definisjon av kategorien LC_CTYPE"
+
+#: locale/programs/locfile.c:408
+msgid "syntax error in definition of new character class"
+msgstr "syntaksfeil i definisjon av ny tegnklasse"
+
+#: locale/programs/locfile.c:418
+msgid "syntax error in definition of new character map"
+msgstr "syntaksfeil i definisjon av nytt tegnkart"
+
+#: locale/programs/locfile.c:1003
+msgid "syntax error in message locale definition"
+msgstr "syntaksfeil i definisjon av meldingslokale"
+
+#: locale/programs/locfile.c:914
+msgid "syntax error in monetary locale definition"
+msgstr "syntaksfeil i definisjon av monetærlokale"
+
+#: locale/programs/locfile.c:941
+msgid "syntax error in numeric locale definition"
+msgstr "syntaksfeil i definisjon av numerisk lokale"
+
+#: locale/programs/locfile.c:852
+msgid "syntax error in order specification"
+msgstr "syntaksfeil i sorteringsspesifikasjon"
+
+#: locale/programs/charmap.c:280 locale/programs/charmap.c:296
+#: locale/programs/repertoire.c:143
+#, c-format
+msgid "syntax error in prolog: %s"
+msgstr "syntaksfeil i prolog: %s"
+
+#: locale/programs/repertoire.c:198 locale/programs/repertoire.c:237
+#: locale/programs/repertoire.c:260
+#, c-format
+msgid "syntax error in repertoire map definition: %s"
+msgstr "syntaksfeil i ferdeighetskart-definisjon: %s"
+
+#: locale/programs/locfile.c:979
+msgid "syntax error in time locale definition"
+msgstr "syntaksfeil i definisjon av tidslokale"
+
+#: locale/programs/locfile.c:385
+msgid "syntax error: not inside a locale definition section"
+msgstr "syntaksfeil: ikke inne i en lokaledefinisjon"
+
+#: iconv/iconv_prog.c:137
+msgid "target encoding not specified using `-t'"
+msgstr "mål-innkoding ikke spesifisert med «-t»"
+
+#: catgets/gencat.c:390 catgets/gencat.c:526 catgets/gencat.c:553
+msgid "this is the first definition"
+msgstr "dette er den første definisjonen"
+
+#: timezone/zic.c:1132
+msgid "time before zero"
+msgstr "tid før null"
+
+#: timezone/zic.c:1140 timezone/zic.c:2015 timezone/zic.c:2034
+msgid "time overflow"
+msgstr "for stor tidsverdi"
+
+#: locale/programs/charmap.c:443
+msgid "too few bytes in character encoding"
+msgstr "for få bytes i tegnkoding"
+
+#: locale/programs/charmap.c:445
+msgid "too many bytes in character encoding"
+msgstr "for mange tegn i tegnkoding"
+
+#: locale/programs/locales.h:92
+msgid "too many character classes defined"
+msgstr "for mange tegnklasser definert"
+
+#: timezone/zic.c:1843
+msgid "too many leap seconds"
+msgstr "for mange skuddsekunder"
+
+#: timezone/zic.c:1815
+msgid "too many local time types"
+msgstr "for mange lokale tidstyper"
+
+#: timezone/zic.c:1769
+msgid "too many transitions?!"
+msgstr "for mange overganger?!"
+
+#: locale/programs/ld-collate.c:1637
+msgid "too many weights"
+msgstr "for mange vekter"
+
+#: timezone/zic.c:2138
+msgid "too many, or too long, time zone abbreviations"
+msgstr "for mange eller for lange tidssoneforkortelser"
+
+#: locale/programs/linereader.h:146
+msgid "trailing garbage at end of line"
+msgstr "etterfølgende søppel på slutten av linjen"
+
+#: sunrpc/svc_simple.c:150
+#, c-format
+msgid "trouble replying to prog %d\n"
+msgstr "problem med å svare prog %d\n"
+
+#: locale/programs/ld-collate.c:1393
+msgid "two lines in a row containing `...' are not allowed"
+msgstr "to linjer etter hverandre med «...» er ikke tillatt"
+
+#: timezone/zic.c:1307
+msgid "typed single year"
+msgstr "satte type på bare ett år"
+
+#: iconv/iconv_prog.c:406
+msgid "unable to allocate buffer for input"
+msgstr "ikke istand til å allokere buffer to inndata"
+
+#: nis/nis_callback.c:187
+msgid "unable to free arguments"
+msgstr "kan ikke frigjøre argumenter"
+
+#: posix/getconf.c:654 posix/getconf.c:670
+msgid "undefined"
+msgstr "udefinert"
+
+#: locale/programs/charmap.c:701 locale/programs/charmap.c:712
+#, c-format
+msgid "unknown character `%s'"
+msgstr "ukjent tegn «%s»"
+
+#: locale/programs/ld-messages.c:202 locale/programs/ld-messages.c:213
+#: locale/programs/ld-messages.c:224 locale/programs/ld-messages.c:235
+#: locale/programs/ld-time.c:718
+#, c-format
+msgid "unknown character in field `%s' of category `%s'"
+msgstr "ukjent tegn i felt «%s» i kategori «%s»"
+
+#: locale/programs/locfile.c:715
+msgid "unknown collation directive"
+msgstr "ukjent sammenligningssnøkkelord"
+
+#: catgets/gencat.c:487
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr "ukjent nøkkelord «%s»: linje ignorert"
+
+#: iconv/iconv_prog.c:353
+#, c-format
+msgid "unknown iconv() error %d"
+msgstr "ukjent iconv()-feil %d"
+
+#: catgets/gencat.c:466
+#, c-format
+msgid "unknown set `%s'"
+msgstr "ukjent sett «%s»"
+
+#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:1572
+#: locale/programs/ld-collate.c:1747
+#, c-format
+msgid "unknown symbol `%.*s': line ignored"
+msgstr "ukjent symbol «%.*s»: linje ignorert"
+
+#: timezone/zic.c:761
+msgid "unruly zone"
+msgstr "vanskelig sone"
+
+#: catgets/gencat.c:971
+msgid "unterminated message"
+msgstr "uavsluttet melding"
+
+#: locale/programs/linereader.c:520 locale/programs/linereader.c:555
+msgid "unterminated string"
+msgstr "uavsluttet streng"
+
+#: sunrpc/rpc_scan.c:350 sunrpc/rpc_scan.c:376
+msgid "unterminated string constant"
+msgstr "uavsluttet strengkonstant"
+
+#: locale/programs/linereader.c:390
+msgid "unterminated symbolic name"
+msgstr "uavsluttet symbolisk navn"
+
+#: locale/programs/ld-collate.c:1699
+msgid "unterminated weight name"
+msgstr "uavsluttet vektnavn"
+
+#: locale/programs/charset.c:104
+msgid "upper limit in range is not smaller then lower limit"
+msgstr "øvre grense i område er ikke mindre enn nedre grense"
+
+#: sunrpc/rpc_main.c:1415
+#, c-format
+msgid "usage:  %s infile\n"
+msgstr "bruk:   %s innfil\n"
+
+#: timezone/zic.c:2081
+msgid "use of 2/29 in non leap-year"
+msgstr "bruker 29/2 i ikke-skuddår"
+
+#: locale/programs/charmap.c:522 locale/programs/charmap.c:576
+#, c-format
+msgid "value for %s must be an integer"
+msgstr "verdien på %s må være heltall"
+
+#: locale/programs/charmap.c:318
+#, c-format
+msgid "value for <%s> must lie between 1 and 4"
+msgstr "verdien på <%s> må være mellom 1 og 4"
+
+#: locale/programs/ld-monetary.c:157 locale/programs/ld-numeric.c:92
+#, c-format
+msgid "value for field `%s' in category `%s' must not be the empty string"
+msgstr "verdien på felt «%s» i kategori «%s» kan ikke være en tom streng"
+
+#: locale/programs/charmap.c:330
+msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
+msgstr "verdien på <mb_cur_max> må være større enn verdien på <mb_cur_min>"
+
+#: locale/programs/ld-monetary.c:147
+msgid "value of field `int_curr_symbol' in category `LC_MONETARY' does not correspond to a valid name in ISO 4217"
+msgstr "verdien på feltet «int_curr_symbol» i kategorien LC_MONETARY er ikke gyldig i henhold til ISO 4217"
+
+#: locale/programs/ld-monetary.c:139
+msgid "value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"
+msgstr "verdien på feltet «int_curr_symbol» i kategorien LC_MONETARY har feil lengde"
+
+#: locale/programs/ld-monetary.c:383 locale/programs/ld-numeric.c:207
+#, c-format
+msgid "values for field `%s' in category `%s' must be smaller than 127"
+msgstr "verdien på feltet «%s» i kategorien «%s» må være lavere enn 127"
+
+#: nscd/connections.c:355
+#, c-format
+msgid "while accepting connection: %s"
+msgstr "under akseptering av forbindelse: %s"
+
+#: nscd/grpcache.c:149 nscd/hstcache.c:168 nscd/pwdcache.c:142
+msgid "while allocating cache entry"
+msgstr "under allokering av nærbuffer-innslag"
+
+#: nscd/cache.c:85
+msgid "while allocating hash table entry"
+msgstr "under allokering av hashtabell-innslag"
+
+#: nscd/grpcache.c:99 nscd/hstcache.c:109 nscd/pwdcache.c:105
+msgid "while allocating key copy"
+msgstr "under allokering av nøkkelkopi"
+
+#: catgets/gencat.c:1001
+msgid "while opening old catalog file"
+msgstr "da den gamle katalogfilen ble åpnet"
+
+#: locale/programs/locale.c:346
+msgid "while preparing output"
+msgstr "da utdata ble forberedt"
+
+#: db2/makedb.c:365 db2/makedb.c:382
+msgid "while reading database"
+msgstr "da databasen ble lest"
+
+#: elf/sprof.c:683
+msgid "while stat'ing profiling data file"
+msgstr "under stat() av profileringsdatafil"
+
+#: db2/makedb.c:334
+msgid "while writing database file"
+msgstr "under skriving til databasefil"
+
+#: nscd/nscd_stat.c:115
+msgid "write incomplete"
+msgstr "skriving ufullstendig"
+
+#: inet/rcmd.c:320
+msgid "writeable by other than owner"
+msgstr "skrivbar av andre enn eier"
+
+#: db2/makedb.c:124 nscd/nscd.c:114 nss/getent.c:392
+msgid "wrong number of arguments"
+msgstr "feil antall argumenter"
+
+#: timezone/zic.c:1090
+msgid "wrong number of fields on Leap line"
+msgstr "feil antall felt på «Leap»-linje"
+
+#: timezone/zic.c:1181
+msgid "wrong number of fields on Link line"
+msgstr "feil antall felt på «Link»-linje"
+
+#: timezone/zic.c:924
+msgid "wrong number of fields on Rule line"
+msgstr "feil antall felt på «Rule»-linje"
+
+#: timezone/zic.c:994
+msgid "wrong number of fields on Zone continuation line"
+msgstr "feil antall felt på «Zone»-fortsettelseslinje"
+
+#: timezone/zic.c:952
+msgid "wrong number of fields on Zone line"
+msgstr "feil antall felt på «Zone»-linje"
+
+#: sunrpc/xdr_ref.c:84
+msgid "xdr_reference: out of memory\n"
+msgstr "xdr_reference: ikke mer minne\n"
+
+#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+msgid "xdrrec_create: out of memory\n"
+msgstr "xdrrec_create: ikke mer minne\n"
+
+#: nis/ypclnt.c:884
+msgid "yp_update: cannot convert host to netname\n"
+msgstr "yp_update: kan ikke konvertere vert til nettnavn\n"
+
+#: nis/ypclnt.c:896
+msgid "yp_update: cannot get server address\n"
+msgstr "yp_update: kan ikke hente tjeneradresse\n"
+
+#~ msgid "Cputime limit exceeded"
+#~ msgstr "Begrensning av CPU-tid overskredet"
+
+#~ msgid "Error %d"
+#~ msgstr "Feil %d"
+
+#~ msgid "Filesize limit exceeded"
+#~ msgstr "Grense for filstørrelse overskredet"
+
+#~ msgid "Illegal Instruction"
+#~ msgstr "Ulovlig instruksjon (SIGILL)"
+
+#~ msgid "Trace/BPT trap"
+#~ msgstr "Sporings-/stoppunkts-felle"
+
+#~ msgid ""
+#~ "Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
+#~ "       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
+#~ "Mandatory arguments to long options are mandatory for short options too.\n"
+#~ "  -H, --header=NAME   create C header file NAME containing symbol definitions\n"
+#~ "  -h, --help          display this help and exit\n"
+#~ "      --new           do not use existing catalog, force new output file\n"
+#~ "  -o, --output=NAME   write output to file NAME\n"
+#~ "  -V, --version       output version information and exit\n"
+#~ "If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+#~ "is -, output is written to standard output.\n"
+#~ msgstr ""
+#~ "Bruk: %s [FLAGG]... -o UTFIL [INNFIL]...\n"
+#~ "      %s [FLAGG]... [UTFIL [INNFIL]...]\n"
+#~ "Obligatoriske argument til lange flagg er obligatoriske også for de korte\n"
+#~ "  -H, --header=NAVN   opprett en C-headerfil med symboldefinisjoner kalt NAVN\n"
+#~ "  -h, --help          vis denne hjelpeteksten og avslutt\n"
+#~ "      --new           bruk ikke eksisterende katalog, lag en ny utfil\n"
+#~ "  -o, --output=NAVN   skriv resultatet til filen NAVN\n"
+#~ "  -V, --version       vis programversjon og avslutt\n"
+#~ "Dersom INNFIL er -, leses inndata fra standard inn.  Om UTFIL er -, skrives\n"
+#~ "resultatet til standard ut.\n"
+
+#~ msgid ""
+#~ "Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n"
+#~ "       %s [OPTION]... -o OUTPUT-FILE INPUT-FILE\n"
+#~ "       %s [OPTION]... -u INPUT-FILE\n"
+#~ "Mandatory arguments to long options are mandatory for short options too.\n"
+#~ "  -f, --fold-case     convert key to lower case\n"
+#~ "  -h, --help          display this help and exit\n"
+#~ "  -o, --output=NAME   write output to file NAME\n"
+#~ "      --quiet         don't print messages while building database\n"
+#~ "  -u, --undo          print content of database file, one entry a line\n"
+#~ "  -V, --version       output version information and exit\n"
+#~ "If INPUT-FILE is -, input is read from standard input.\n"
+#~ msgstr ""
+#~ "Bruk: %s [FLAGG]... INNFIL UTFIL\n"
+#~ "      %s [FLAGG]... -o UTFIL INNFIL\n"
+#~ "      %s [FLAGG]... -u INNFIL\n"
+#~ "Obligatoriske argument til lange flagg er obligatoriske også for korte\n"
+#~ "  -f, --fold-case     gjør nøkkel om til små bokstaver\n"
+#~ "  -h, --help          vis denne hjelpeteksten og avslutt\n"
+#~ "  -o, --output=NAVN   skriv resultatet til filen NAVN\n"
+#~ "      --quiet         ikke gi meldinger når databasen bygges opp\n"
+#~ "  -u, --undo          skriv innholdet i databasen, en post per linje\n"
+#~ "  -V, --version       vis programversjon og avslutt\n"
+#~ "Dersom INNFIL er -, leses inndata fra standard inn\n"
+
+#~ msgid ""
+#~ "Usage: %s [OPTION]... name\n"
+#~ "Mandatory arguments to long options are mandatory for short options too.\n"
+#~ "  -c, --force               create output even if warning messages were issued\n"
+#~ "  -h, --help                display this help and exit\n"
+#~ "  -f, --charmap=FILE        symbolic character names defined in FILE\n"
+#~ "  -i, --inputfile=FILE      source definitions are found in FILE\n"
+#~ "  -u, --code-set-name=NAME  specify code set for mapping ISO 10646 elements\n"
+#~ "  -v, --verbose             print more messages\n"
+#~ "  -V, --version             output version information and exit\n"
+#~ "      --posix               be strictly POSIX conform\n"
+#~ "\n"
+#~ "System's directory for character maps: %s\n"
+#~ "                       locale files  : %s\n"
+#~ msgstr ""
+#~ "Bruk: %s [FLAGG]... navn\n"
+#~ "Obligatoriske argument til lange flagg er obligatoriske også for de korte\n"
+#~ "  -c, --force               opprett resultatfil selv om advarsler ble gitt\n"
+#~ "  -h, --help                vis denne hjelpeteksten og avslutt\n"
+#~ "  -f, --charmap=FIL         symbolske tegnnavn defineres i FIL\n"
+#~ "  -i, --inputfile=FIL       kildedefinisjoner finnes i FIL\n"
+#~ "  -u, --code-set-name=NAVN  angi kodesett for oversetting av ISO 10646-\n"
+#~ "                            elementer\n"
+#~ "  -v, --verbose             skriv flere meldinger\n"
+#~ "  -V, --version             vis programversjon og avslutt\n"
+#~ "      --posix               følg POSIX strengt\n"
+#~ "\n"
+#~ "Systemets filkatalog for tegnkart     : %s\n"
+#~ "                         meldingsfiler: %s\n"
+
+#~ msgid ""
+#~ "Usage: %s [OPTION]... name\n"
+#~ "Mandatory arguments to long options are mandatory for short options too.\n"
+#~ "  -h, --help            display this help and exit\n"
+#~ "  -V, --version         output version information and exit\n"
+#~ "\n"
+#~ "  -a, --all-locales     write names of available locales\n"
+#~ "  -m, --charmaps        write names of available charmaps\n"
+#~ "\n"
+#~ "  -c, --category-name   write names of selected categories\n"
+#~ "  -k, --keyword-name    write names of selected keywords\n"
+#~ msgstr ""
+#~ "Bruk: %s [FLAGG]... navn\n"
+#~ "Obligatoriske argument til lange flagg er obligatoriske også for de korte\n"
+#~ "  -h, --help            vis denne hjelpeteksten og avslutt\n"
+#~ "  -V, --version         vis programversjon og avslutt\n"
+#~ "\n"
+#~ "  -a, --all-locales     skriv navn på tilgjengelige lokaler\n"
+#~ "  -m, --charmaps        skriv navn på tilgjengelige tegnkart\n"
+#~ "\n"
+#~ "  -c, --category-name   skriv navn på valgte kategorier\n"
+#~ "  -k, --keyword-name    skriv navn på valgte nøkkelord\n"
+
+#~ msgid "rpcinfo: can't contact portmapper: "
+#~ msgstr "rpcinfo: kan ikke kontakte portmapper: "
+
+#~ msgid "values for field `%s' in category `%s' must not be zero"
+#~ msgstr "verdien på feltet «%s» i kategorien «%s» kan ikke være null"
+
+#~ msgid "while opening UTMP file"
+#~ msgstr "da UTMP-filen ble åpnet"

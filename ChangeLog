@@ -1,5 +1,7 @@
 1999-01-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/no.po: Update from norwegian translation team.
+
 	* iconvdata/iso-2022-jp.c: Correct handling of G2 set.
 	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
