@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,9 +74,10 @@ enum
 {
   ST_RDONLY = 1,		/* Mount read-only.  */
 #define ST_RDONLY	ST_RDONLY
-  ST_NOSUID = 2,		/* Ignore suid and sgid bits.  */
+  ST_NOSUID = 2			/* Ignore suid and sgid bits.  */
 #define ST_NOSUID	ST_NOSUID
 #ifdef __USE_GNU
+  ,
   ST_NODEV = 4,			/* Disallow access to device special files.  */
 # define ST_NODEV	ST_NODEV
   ST_NOEXEC = 8,		/* Disallow program execution.  */

@@ -1,5 +1,13 @@
 2002-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/statvfs.h: Avoid warning about comma at
+	end of enum for !_GNU_SOURCE.
+	* sysdeps/unix/sysv/linux/alpha/bits/statvfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/statvfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/statvfs.h: Likewise.
+	* sysdeps/mach/hurd/bits/statvfs.h: Don't define non-standard ST_*
+	values unless _GNU_SOURCE.
+
 	* iconvdata/tcvn5712-1.c: Minor cleanups.
 
 2002-01-18  Andreas Schwab  <schwab@suse.de>
