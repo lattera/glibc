@@ -1,6 +1,11 @@
+2002-08-07  Jakub Jelinek  <jakub@redhat.com>
+
+        * malloc/malloc.c (public_cALLOc): Check ELEM_SIZE != 0 before
+	division.
+
 2002-08-06  Roland McGrath  <roland@redhat.com>
 
-	* include/getopt.h: But private decls inside [_GETOPT_H].
+	* include/getopt.h: Put private decls inside [_GETOPT_H].
 	Use libc_hidden_proto for getopt_long, getopt_long_only.
 	* posix/getopt1.c [_LIBC]: Include <getopt.h> instead of "getopt.h".
 	Add libc_hidden_def.
