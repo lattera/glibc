@@ -1022,11 +1022,15 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ldouble: 1
+ildouble: 1
 Test "y1 (8.0) == -0.15806046173124749426":
 float: 2
 ifloat: 2
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 
 # yn
 Test "yn (0, 0.1) == -1.5342386513503668441":
@@ -1599,6 +1603,8 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ldouble: 1
+ildouble: 1
 
 Function: "yn":
 double: 6

@@ -659,12 +659,16 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 2
+ildouble: 2
 Test "j1 (2.0) == 0.57672480775687338720":
 double: 1
 idouble: 1
 Test "j1 (8.0) == 0.23463634685391462438":
 float: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 
 # jn
 Test "jn (0, 10.0) == -0.24593576445134833520":
@@ -928,6 +932,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "y1 (0.7) == -1.1032498719076333697":
 double: 1
 idouble: 1
@@ -947,9 +953,13 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ldouble: 1
+ildouble: 1
 Test "y1 (8.0) == -0.15806046173124749426":
 float: 2
 ifloat: 2
+ldouble: 2
+ildouble: 2
 
 # yn
 Test "yn (0, 0.1) == -1.5342386513503668441":
@@ -1395,6 +1405,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ldouble: 2
+ildouble: 2
 
 Function: "jn":
 double: 4
@@ -1495,6 +1507,8 @@ double: 3
 float: 2
 idouble: 3
 ifloat: 2
+ldouble: 2
+ildouble: 2
 
 Function: "yn":
 double: 6

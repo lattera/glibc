@@ -1,5 +1,15 @@
 2001-02-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/ldbl-96/e_j1l.c: New file.
+	Contributed by Stephen L. Moshier <moshier@na-net.ornl.gov>.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust error values for j1 and y1.
+	* sysdeps/ia64/fpu/libm-test-ulps: Adjust error values for y1.
+	* math/libm-test.inc (j1_test): Mark constants as long double.
+	(jn_test): Likewise.
+	(y1_test): Likewise.
+	(yn_test): Likewise.
+
 	* libio/iogetline.c: Move return until after last statement.
 
 	* localedata/show-ucs-data.c: Don't show < > for better readability.
