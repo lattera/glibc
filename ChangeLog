@@ -1,5 +1,8 @@
 2003-07-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/feenablxcpt.c (feenableexcept): Reverse use of
+	stmxcsr and ldmxcsr.
+
 	* Makerules (build-module-helper): Add -z defs unless explicitly said
 	not to do it.
 	* dlfcn/Makefile: Define various *-no-z-defs variables for test DSOs

@@ -44,11 +44,11 @@ feenableexcept (int excepts)
       unsigned int xnew_exc;
 
       /* Get the current control word.  */
-      __asm__ ("ldmxcsr %0" : "=m" (*&xnew_exc));
+      __asm__ ("stmxcsr %0" : "=m" (*&xnew_exc));
 
       xnew_exc &= ~(excepts << 7);
 
-      __asm__ ("stmxcsr %0" : : "m" (*&xnew_exc));
+      __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
     }
 
   return old_exc;
