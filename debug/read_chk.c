@@ -31,8 +31,8 @@ __read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
     __chk_fail ();
 
 #ifdef HAVE_INLINED_SYSCALLS
-  return = INLINE_SYSCALL (read, 3, fd, buf, nbytes);
+  return INLINE_SYSCALL (read, 3, fd, buf, nbytes);
 #else
-  return = __read (fd, buf, nbytes);
+  return __read (fd, buf, nbytes);
 #endif
 }

@@ -8,6 +8,11 @@
 
 	* posix/bits/unistd.h: Avoid calling __*_chk variants if we can
 	determine the call will never trigger a failure.
+	* debug/read_chk.c (__read_chk): Always fail if the buffer is too
+	small.
+	* debug/readlink_chk.c (__readlink_chk): Likewise.
+	* debug/pread64_chk.c (__pread64_chk): Likewise.
+	* debug/pread_chk.c (__pread_chk): Likewise.
 
 	* sysdeps/i386/i686/memset_chk.S: Remove alias and warning.
 	* sysdeps/x86_64/memset_chk.S: Likewise.
