@@ -37,8 +37,8 @@ ifeq (yes,$(have-protected))
 CPPFLAGS-divdi3.c = -DHAVE_DOT_HIDDEN
 CPPFLAGS-libgcc-compat.S = -DHAVE_DOT_HIDDEN
 endif
-sysdep_routines += divdi3 libgcc-compat
-shared-only-routines += divdi3 libgcc-compat
+sysdep_routines += libgcc-compat
+shared-only-routines += libgcc-compat
 endif
 endif
 
