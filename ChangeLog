@@ -1,3 +1,9 @@
+2000-02-23  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* string/argz-stringify.c (__argz_stringify): Fix loop termination
+	conditions so as not to clobber the final '\0' when there is only one
+	element in the vector.
+
 2000-03-09  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* io/sys/stat.h: Fix inverted sense of `defined __S_IFSOCK' test,
