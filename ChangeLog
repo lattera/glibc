@@ -1,3 +1,8 @@
+2003-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makeconfig (CFLAGS-.oS): Use PIC-ccflag instead of pic-ccflag.
+	(PIC-ccflag): Define.
+
 2003-07-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/s390/s390-32/elf/start.S: Emit position independent code

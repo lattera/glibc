@@ -669,6 +669,8 @@ CFLAGS-.os = $(filter %frame-pointer,$(+cflags)) $(pic-ccflag)
 libtype.os := lib%_pic.a
 # This can be changed by a sysdep makefile
 pic-ccflag = -fPIC
+# This one should always stay like this unless there is a very good reason.
+PIC-ccflag = -fPIC
 endif
 ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
@@ -711,7 +713,7 @@ object-suffixes-for-libc += .oS
 # Must build the routines as PIC, though, because they can end up in (users')
 # shared objects.  We don't want to use CFLAGS-os because users may, for
 # example, make that processor-specific.
-CFLAGS-.oS = $(CFLAGS-.o) $(pic-ccflag)
+CFLAGS-.oS = $(CFLAGS-.o) $(PIC-ccflag)
 CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC -DLIBC_NONSHARED=1
 libtype.oS = lib%_nonshared.a
 endif
