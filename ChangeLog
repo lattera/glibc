@@ -1,3 +1,35 @@
+2001-01-05  Ben Collins  <bcollins@debian.org>
+
+	* manual/string.texi (Finding Tokens in a String): Document XPG
+	basename() and dirname(), as well as GNU basename().
+
+2001-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makeconfig (preprocess-version): Replace -traditional with
+	-x assembler-with-cpp.
+
+2001-01-05  Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* math/bits/cmathcalls.h: Don't define inline cimag, creal or conj
+	for GCC 2.97 or later.
+
+2001-01-05  Ben Collins  <bcollins@debian.org>
+
+	* manual/stdio.texi (getline): Clarify the return value in the
+	case of EOF being reached before a newline.
+
+2001-01-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sunrpc/pmap_clnt.c (__get_myaddress): Return TRUE if successful,
+	FALSE otherwise.
+	(pmap_set, pmap_unset): Check __get_myaddress return value.
+
+2001-01-05  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/generic/netinet/if_ether.h: Include <sys/types.h>.
+	(struct ether_addr): Declare ether_addr_octet member as
+	`u_int8_t'.  Add __attribute__ ((__packed__)).
+
 2001-01-06  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/readdir64.c: New file.
