@@ -1,6 +1,7 @@
 1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/th_TH: New file.  Thai locale description.
+	* th_TH.in: New file.
 	Contributed by Theppitak Karoonboonyanan <thep@links.nectec.or.th>.
 
 1999-04-14  Cristian Gafton  <gafton@redhat.com>
