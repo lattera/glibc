@@ -16,11 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
 
 #include <linux/posix_types.h>
 
+#include <sysdep.h>
 #include <sys/syscall.h>
 #ifdef __NR_getresgid
 
@@ -31,14 +33,18 @@ int
 getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
 {
   __kernel_gid_t k_rgid, k_egid, k_sgid;
+  int result;
 
-  if (__syscall_getresgid (&k_rgid, &k_egid, &k_sgid) < 0)
-    return -1;
+  result = INLINE_SYSCALL (getresgid, 3, &k_rgid, &k_egid, &k_sgid);
 
-  *rgid = (gid_t) k_rgid;
-  *egid = (gid_t) k_egid;
-  *sgid = (gid_t) k_sgid;
-  return 0;
+  if (result == 0)
+    {
+      *rgid = (gid_t) k_rgid;
+      *egid = (gid_t) k_egid;
+      *sgid = (gid_t) k_sgid;
+    }
+
+  return result;
 }
 #else
 # include <sysdeps/generic/getresgid.c>

@@ -17,9 +17,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <sys/types.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 #include <linux/posix_types.h>
 
@@ -35,6 +37,6 @@ __setuid (uid_t uid)
       return -1;
     }
 
-  return __syscall_setuid (uid);
+  return INLINE_SYSCALL (setuid, 1, uid);
 }
 weak_alias (__setuid, setuid)

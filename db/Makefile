@@ -50,23 +50,14 @@ CFLAGS-hash_func.c := -Wno-unused
 # The db code outsmarts the compiler frequently.
 override CFLAGS += -Wno-uninitialized
 
-# We are in an ugly situation here.  The library is called libdb1 but the
-# SONAME for compatibility reasons should be libdb.  Therefore we duplicate
-# shared library generating rule here.
+# Force the soname to be libdb.so for compatibility.
+LDFLAGS-db1.so = -Wl,-soname=lib$(libprefix)db.so$($(@F)-version)
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libdb1.so: $(objpfx)libdb1_pic.a $(+preinit) $(+postinit) $(+interp) \
 		    $(common-objpfx)libc.so
-	$(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-		  -B$(csu-objpfx) $(load-map-file) \
-		  -Wl,-soname=lib$(libprefix)db.so$($(@F)-version) \
-		  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-		  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)\
-		  -Wl,--whole-archive \
-		  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
-		  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 
 #subdir_install: $(inst_libdir)/libndbm.a
 #$(inst_libdir)/libndbm.a: $(inst_libdir)/libdb1.a $(+force)

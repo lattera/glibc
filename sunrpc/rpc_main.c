@@ -47,6 +47,7 @@ const char main_rcsid[] =
 #include <sys/param.h>
 #include <sys/file.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include "rpc_parse.h"
 #include "rpc_util.h"
 #include "rpc_scan.h"
@@ -82,6 +83,7 @@ static int cppDefined = 0;	/* explicit path for C preprocessor */
 static const char *CPP = SUNOS_CPP;
 static char CPPFLAGS[] = "-C";
 static char *pathbuf;
+static int cpp_pid;
 static const char *allv[] =
 {
   "rpcgen", "-s", "udp", "-s", "tcp",
@@ -296,6 +298,18 @@ open_output (const char *infile, const char *outfile)
   record_open (outfile);
 }
 
+/* Close the output file and check for write errors.  */
+static void
+close_output (const char *outfile)
+{
+  if (fclose (fout) == EOF)
+    {
+      fprintf (stderr, _("%s: while writing output: "), cmdname);
+      perror (outfile ?: "<stdout>");
+      crash ();
+    }
+}
+
 static void
 add_warning (void)
 {
@@ -354,7 +368,8 @@ open_input (const char *infile, const char *define)
       perror ("pipe");
       exit (1);
     }
-  switch (fork ())
+  cpp_pid = fork ();
+  switch (cpp_pid)
     {
     case 0:
       find_cpp ();
@@ -380,6 +395,32 @@ open_input (const char *infile, const char *define)
     {
       fprintf (stderr, "%s: ", cmdname);
       perror (infilename);
+      crash ();
+    }
+}
+
+/* Close the connection to the C-preprocessor and check for successfull
+   termination.  */
+static void
+close_input (void)
+{
+  int status;
+
+  fclose (fin);
+  /* Check the termination status.  */
+  if (waitpid (cpp_pid, &status, 0) < 0)
+    {
+      perror ("waitpid");
+      crash ();
+    }
+  if (WIFSIGNALED (status) || WEXITSTATUS (status) != 0)
+    {
+      if (WIFSIGNALED (status))
+	fprintf (stderr, _("%s: C preprocessor failed with signal %d\n"),
+		 cmdname, WTERMSIG (status));
+      else
+	fprintf (stderr, _("%s: C preprocessor failed with exit code %d\n"),
+		 cmdname, WEXITSTATUS (status));
       crash ();
     }
 }
@@ -454,6 +495,8 @@ c_output (const char *infile, const char *define, int extend,
 
   if (extend && tell == ftell (fout))
     unlink (outfilename);
+  close_input ();
+  close_output (outfilename);
 }
 
 void
@@ -620,6 +663,8 @@ h_output (const char *infile, const char *define, int extend,
     }
 
   fprintf (fout, "\n#endif /* !_%s */\n", guard);
+  close_input ();
+  close_output (outfilename);
 }
 
 /*
@@ -750,6 +795,8 @@ s_output (int argc, const char *argv[], const char *infile, const char *define,
 	}
       write_rest ();
     }
+  close_input ();
+  close_output (outfilename);
 }
 
 /*
@@ -787,6 +834,8 @@ l_output (const char *infile, const char *define, int extend,
       return;
     }
   write_stubs ();
+  close_input ();
+  close_output (outfilename);
 }
 
 /*
@@ -814,6 +863,8 @@ t_output (const char *infile, const char *define, int extend,
       return;
     }
   write_tables ();
+  close_input ();
+  close_output (outfilename);
 }
 
 /* sample routine for the server template */
@@ -851,6 +902,8 @@ svc_output (const char *infile, const char *define, int extend,
     {
       unlink (outfilename);
     }
+  close_input ();
+  close_output (outfilename);
 }
 
 
@@ -893,6 +946,8 @@ clnt_output (const char *infile, const char *define, int extend,
     {
       unlink (outfilename);
     }
+  close_input ();
+  close_output (outfilename);
 }
 
 static char *
@@ -995,6 +1050,7 @@ $(LDLIBS) \n\n");
   f_print (fout, "\t$(LINK.c) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)\n\n ");
   f_print (fout, "clean:\n\t $(RM) core $(TARGETS) $(OBJECTS_CLNT) \
 $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n");
+  close_output (mkfilename);
 }
 
 /*

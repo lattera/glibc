@@ -36,28 +36,6 @@ pipe		-	pipe		1	__pipe		pipe
 prctl		EXTRA	prctl		5	prctl
 query_module	EXTRA	query_module	5	query_module
 quotactl	EXTRA	quotactl	4	quotactl
-rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
-rt_sigpending	-	rt_sigpending	2	__syscall_rt_sigpending
-rt_sigprocmask	-	rt_sigprocmask	4	__syscall_rt_sigprocmask
-rt_sigqueueinfo	-	rt_sigqueueinfo	3	__syscall_rt_sigqueueinfo
-rt_sigsuspend	-	rt_sigsuspend	2	__syscall_rt_sigsuspend
-rt_sigtimedwait	-	rt_sigtimedwait	4	__syscall_rt_sigtimedwait
-s_getcwd	getcwd	getcwd		2	__syscall_getcwd
-s_getdents	getdents getdents	3	__getdents
-s_getpriority	getpriority getpriority	2	__syscall_getpriority
-s_getresgid	getresgid getresgid	3	__syscall_getresgid
-s_getresuid	getresuid getresuid	3	__syscall_getresuid
-s_poll		poll	poll		3	__syscall_poll
-s_pread64	pread64	pread		5	__syscall_pread64
-s_ptrace	ptrace	ptrace		4	__syscall_ptrace
-s_pwrite64	pwrite64 pwrite		5	__syscall_pwrite64
-s_reboot	reboot	reboot		3	__syscall_reboot
-s_sigaction	sigaction sigaction	3	__syscall_sigaction
-s_sigpending	sigpending sigpending	1	__syscall_sigpending
-s_sigprocmask	sigprocmask sigprocmask	3	__syscall_sigprocmask
-s_sigsuspend	sigsuspend sigsuspend	3	__syscall_sigsuspend
-s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
-s_ustat		ustat	ustat		2	__syscall_ustat
 sched_getp	-	sched_getparam	2	__sched_getparam	sched_getparam
 sched_gets	-	sched_getscheduler	1	__sched_getscheduler	sched_getscheduler
 sched_primax	-	sched_get_priority_max	1	__sched_get_priority_max	sched_get_priority_max
@@ -74,12 +52,6 @@ setpgid		-	setpgid		2	__setpgid	setpgid
 setresuid	EXTRA	setresuid	3	__setresuid	setresuid
 setresgid	EXTRA	setresgid	3	setresgid
 sigaltstack	-	sigaltstack	2	__sigaltstack	sigaltstack
-sys_fstat	fxstat	fstat		2	__syscall_fstat
-sys_lstat	lxstat	lstat		2	__syscall_lstat
-sys_mknod	xmknod	mknod		3	__syscall_mknod
-sys_readv	readv	readv		3	__syscall_readv
-sys_stat	xstat	stat		2	__syscall_stat
-sys_writev	writev	writev		3	__syscall_writev
 sysinfo		EXTRA	sysinfo		1	sysinfo
 swapon		-	swapon		2	__swapon	swapon
 swapoff		-	swapoff		1	__swapoff	swapoff

@@ -20,12 +20,12 @@
 #include <errno.h>
 #include <sys/poll.h>
 
+#include <sysdep.h>
 #include <sys/syscall.h>
 #ifdef __NR_poll
 
 extern int __syscall_poll __P ((struct pollfd *fds, unsigned int nfds,
 				int timeout));
-weak_extern (__syscall_poll)
 
 static int __emulate_poll __P ((struct pollfd *fds, unsigned long int nfds,
 				int timeout)) internal_function;
@@ -38,21 +38,16 @@ __poll (fds, nfds, timeout)
      int timeout;
 {
   static int must_emulate = 0;
-  int (*syscall) __P ((struct pollfd *, unsigned int, int)) = __syscall_poll;
 
   if (!must_emulate)
     {
-      if (syscall)
-	{
-	  int errno_saved = errno;
-	  int retval = __syscall_poll (fds, nfds, timeout);
+      int errno_saved = errno;
+      int retval = INLINE_SYSCALL (poll, 3, fds, nfds, timeout);
 
-	  if (retval >= 0 || errno != ENOSYS)
-	    return retval;
+      if (retval >= 0 || errno != ENOSYS)
+	return retval;
 
-	  __set_errno (errno_saved);
-	}
-
+      __set_errno (errno_saved);
       must_emulate = 1;
     }
 

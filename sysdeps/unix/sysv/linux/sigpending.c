@@ -20,6 +20,9 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 extern int __syscall_sigpending (sigset_t *);
 extern int __syscall_rt_sigpending (sigset_t *, size_t);
 
@@ -41,7 +44,7 @@ sigpending (set)
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
       int saved_errno = errno;
-      int result = __syscall_rt_sigpending (set, _NSIG / 8);
+      int result = INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -50,5 +53,5 @@ sigpending (set)
       __libc_missing_rt_sigs = 1;
     }
 
-  return __syscall_sigpending (set);
+  return INLINE_SYSCALL (sigpending, 1, set);
 }

@@ -17,35 +17,26 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
-
-#include <linux/posix_types.h>
+#include <unistd.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#ifdef __NR_getresuid
 
-extern int __syscall_getresuid (__kernel_uid_t *ruid, __kernel_uid_t *euid,
-				__kernel_uid_t *suid);
+#include <linux/posix_types.h>
+
+extern int __syscall_setregid (__kernel_gid_t, __kernel_gid_t);
 
 int
-getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
+__setregid (gid_t rgid, gid_t egid)
 {
-  __kernel_uid_t k_ruid, k_euid, k_suid;
-  int result;
-
-  result = INLINE_SYSCALL (getresuid, 3, &k_ruid, &k_euid, &k_suid);
-
-  if (result == 0)
+  if ((rgid != (gid_t) -1 && rgid != (gid_t) (__kernel_gid_t) rgid)
+      || (egid != (gid_t) -1 && egid != (gid_t) (__kernel_gid_t) egid))
     {
-      *ruid = (uid_t) k_ruid;
-      *euid = (uid_t) k_euid;
-      *suid = (uid_t) k_suid;
+      __set_errno (EINVAL);
+      return -1;
     }
 
-  return result;
+  return INLINE_SYSCALL (setregid, 2, rgid, egid);
 }
-#else
-# include <sysdeps/generic/getresuid.c>
-#endif
+weak_alias (__setregid, setregid)

@@ -17,9 +17,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <sys/types.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 #include <linux/posix_types.h>
 
@@ -35,6 +37,6 @@ __setgid (gid_t gid)
       return -1;
     }
 
-  return __syscall_setgid (gid);
+  return INLINE_SYSCALL (setgid, 1, gid);
 }
 weak_alias (__setgid, setgid)

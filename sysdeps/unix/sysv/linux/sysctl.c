@@ -1,5 +1,5 @@
-/* sysctl - Read or write system information.  Linux version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Read or write system information.  Linux version.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/sysctl.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern int __syscall__sysctl (struct __sysctl_args *args);
 
@@ -36,5 +39,5 @@ sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
     newlen: newlen
   };
 
-  return __syscall__sysctl (&args);
+  return INLINE_SYSCALL (_sysctl, 1, &args);
 }

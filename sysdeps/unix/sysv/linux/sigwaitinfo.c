@@ -16,9 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <signal.h>
 #define __need_NULL
 #include <stddef.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern int __syscall_rt_sigtimedwait (const sigset_t *, siginfo_t *,
 				      const struct timespec *, size_t);
@@ -32,6 +36,6 @@ __sigwaitinfo (set, info)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return __syscall_rt_sigtimedwait (set, info, NULL, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, NULL, _NSIG / 8);
 }
 weak_alias (__sigwaitinfo, sigwaitinfo)

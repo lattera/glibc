@@ -1,5 +1,5 @@
 /* writev supports all Linux kernels >= 2.0.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,9 @@
 #include <stddef.h>
 #include <sys/param.h>
 #include <sys/uio.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern ssize_t __syscall_writev __P ((int, const struct iovec *, int));
 static ssize_t __atomic_writev_replacement __P ((int, const struct iovec *,
@@ -44,7 +47,7 @@ __writev (fd, vector, count)
   int errno_saved = errno;
   ssize_t bytes_written;
 
-  bytes_written = __syscall_writev (fd, vector, count);
+  bytes_written = INLINE_SYSCALL (writev, 3, fd, vector, count);
 
   if (bytes_written >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_written;

@@ -22,6 +22,7 @@
 
 #include <linux/posix_types.h>
 
+#include <sysdep.h>
 #include <sys/syscall.h>
 #ifdef __NR_setresgid
 
@@ -31,14 +32,14 @@ extern int __syscall_setresgid (__kernel_gid_t rgid, __kernel_gid_t egid,
 int
 setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 {
-  if ((rgid != (gid_t) ((__kernel_gid_t) rgid))
-      || (egid != (gid_t) ((__kernel_gid_t) egid))
-      || (sgid != (gid_t) ((__kernel_gid_t) sgid)))
+  if ((rgid != (gid_t) -1 && rgid != (gid_t) (__kernel_gid_t) rgid)
+      || (egid != (gid_t) -1 && egid != (gid_t) (__kernel_gid_t) egid)
+      || (sgid != (gid_t) -1 && sgid != (gid_t) (__kernel_gid_t) sgid))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  return __syscall_setresgid (rgid, egid, sgid);
+  return INLINE_SYSCALL (setresgid, 3, rgid, egid, sgid);
 }
 #endif

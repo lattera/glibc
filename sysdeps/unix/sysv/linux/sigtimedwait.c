@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <signal.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern int __syscall_rt_sigtimedwait (const sigset_t *, siginfo_t *,
 				      const struct timespec *, size_t);
@@ -31,6 +35,6 @@ __sigtimedwait (set, info, timeout)
 {
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return __syscall_rt_sigtimedwait (set, info, timeout, _NSIG / 8);
+  return INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, timeout, _NSIG / 8);
 }
 weak_alias (__sigtimedwait, sigtimedwait)

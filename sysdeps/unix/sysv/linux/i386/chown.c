@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <unistd.h>
+
+#include <sysdep.h>
 #include <sys/syscall.h>
 
 /*
@@ -45,7 +47,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
   if (!__libc_old_chown)
     {
       int saved_errno = errno;
-      result = __syscall_chown (file, owner, group);
+      result = INLINE_SYSCALL (chown, 3, file, owner, group);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -64,7 +66,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 int
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)
 {
-  return __syscall_chown (file, owner, group);
+  return INLINE_SYSCALL (chown, 3, file, owner, group);
 }
 #elif defined HAVE_ELF && defined PIC && defined DO_VERSIONING
 /* Compiling for compatibiity.  */

@@ -16,8 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <signal.h>
 #include <unistd.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
@@ -39,6 +43,6 @@ __sigqueue (pid, sig, val)
   info.si_uid = __getuid ();
   info.si_value = val;
 
-  return __syscall_rt_sigqueueinfo (pid, sig, &info);
+  return INLINE_SYSCALL (rt_sigqueueinfo, 3, pid, sig, &info);
 }
 weak_alias (__sigqueue, sigqueue)

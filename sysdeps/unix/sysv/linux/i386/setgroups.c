@@ -17,9 +17,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
-#include <unistd.h>
 #include <grp.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 #include <linux/posix_types.h>
 
@@ -45,5 +48,6 @@ setgroups (n, groups)
 	  return -1;
 	}
     }
-  return __syscall_setgroups (n, kernel_groups);
+
+  return INLINE_SYSCALL (setgroups, 2, n, kernel_groups);
 }

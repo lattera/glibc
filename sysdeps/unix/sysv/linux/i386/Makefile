@@ -1,6 +1,5 @@
 ifeq ($(subdir),misc)
-sysdep_routines += ioperm iopl vm86 s_pread64 s_pwrite64 setfsgid setfsuid \
-		   setresgid setresuid
+sysdep_routines += ioperm iopl vm86 setfsgid setfsuid setresgid setresuid
 sysdep_headers += sys/elf.h sys/perm.h sys/reg.h sys/vm86.h sys/debugreg.h
 endif
 

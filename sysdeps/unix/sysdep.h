@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,3 +47,7 @@
 #ifndef PSEUDO_END
 #define PSEUDO_END(sym)
 #endif
+
+/* Wrappers around system calls should normally inline the system call code.
+   But sometimes it is not possible or implemented and we use this code.  */
+#define INLINE_SYSCALL(name, nr, args...) __syscall_##name (args)

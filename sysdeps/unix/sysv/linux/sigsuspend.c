@@ -20,6 +20,9 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
 extern int __syscall_rt_sigsuspend (const sigset_t *, size_t);
 
@@ -41,7 +44,7 @@ __sigsuspend (set)
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
       int saved_errno = errno;
-      int result = __syscall_rt_sigsuspend (set, _NSIG / 8);
+      int result = INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -50,6 +53,6 @@ __sigsuspend (set)
       __libc_missing_rt_sigs = 1;
     }
 
-  return __syscall_sigsuspend (0, 0, set->__val[0]);
+  return INLINE_SYSCALL (sigsuspend, 3, 0, 0, set->__val[0]);
 }
 weak_alias (__sigsuspend, sigsuspend)

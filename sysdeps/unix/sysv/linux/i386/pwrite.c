@@ -1,5 +1,6 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,34 +19,37 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <linux/posix_types.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#ifdef __NR_getresuid
 
-extern int __syscall_getresuid (__kernel_uid_t *ruid, __kernel_uid_t *euid,
-				__kernel_uid_t *suid);
+#ifdef __NR_pwrite
 
-int
-getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
+static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
+				 off_t offset) internal_function;
+
+
+ssize_t
+__pwrite (fd, buf, count, offset)
+     int fd;
+     const void *buf;
+     size_t count;
+     off_t offset;
 {
-  __kernel_uid_t k_ruid, k_euid, k_suid;
-  int result;
+  ssize_t result;
 
-  result = INLINE_SYSCALL (getresuid, 3, &k_ruid, &k_euid, &k_suid);
-
-  if (result == 0)
-    {
-      *ruid = (uid_t) k_ruid;
-      *euid = (uid_t) k_euid;
-      *suid = (uid_t) k_suid;
-    }
+  /* First try the syscall.  */
+  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, offset, 0);
+  if (result == -1 && errno == ENOSYS)
+    /* No system call available.  Use the emulation.  */
+    result = __emulate_pwrite (fd, buf, count, offset);
 
   return result;
 }
-#else
-# include <sysdeps/generic/getresuid.c>
+
+weak_alias (__pwrite, pwrite)
+
+#define __pwrite(fd, buf, count, offset) \
+     static internal_function __emulate_pwrite (fd, buf, count, offset)
 #endif
+#include <sysdeps/posix/pwrite.c>

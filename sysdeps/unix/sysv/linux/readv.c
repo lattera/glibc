@@ -1,5 +1,5 @@
 /* readv supports all Linux kernels >= 2.0.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,9 @@
 #include <stddef.h>
 #include <sys/param.h>
 #include <sys/uio.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern ssize_t __syscall_readv __P ((int, __const struct iovec *, int));
 static ssize_t __atomic_readv_replacement __P ((int, __const struct iovec *,
@@ -44,7 +47,7 @@ __readv (fd, vector, count)
   int errno_saved = errno;
   ssize_t bytes_read;
 
-  bytes_read = __syscall_readv (fd, vector, count);
+  bytes_read = INLINE_SYSCALL (readv, 3, fd, vector, count);
 
   if (bytes_read >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_read;

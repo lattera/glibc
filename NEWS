@@ -61,24 +61,26 @@ Version 2.1
   Missing a better place here are some numbers on improvements.  Under
   Linux 2.1.125 un-tar-ing the kernel sources takes
 
-				user	system	wall
+				  user	system	   wall
 
-    using local files		12.19s	 6.88s	22.91s
+    using local files		12.19s	 6.88s	 22.91s
 
-    using NIS			13.92s	 8.91s	26.34s
+    using NIS			13.92s	 8.91s	 26.34s
 
-    using NIS & nscd		10.37s	 7.34s	25.30s
+    using NIS & nscd		10.37s	 7.34s	 25.30s
 
-    using NIS & old nscd [1]	13.83s	 8.32s	29.60s
+    using NIS+			27.57s	30.37s  640.46s
 
-  When NIS+ is used instead of NIS the benefit from using nscd is much bigger.
+    using NIS+ & nscd           10.25s   7.83s   26.51s
+
+    using NIS & old nscd [1]	13.83s	 8.32s	 29.60s
+
   Keep in mind that non-namelookup related operations dominate above times.
   It was just a common complain that using NIS+ unpacking the kernel is
-  horribly slow.  When using nscd unpacking is now even faster than using
-  NIS.
+  horribly slow.
 
-  [1] The old nscd implementation is not anymore available since it was
-  distributed with glibc up to version 2.0.98.
+  [1] The old nscd implementation is not available anymore since it was
+  distributed with glibc up to version 2.0.98 and thus is now replaced.
 
 * Tim Waugh provided an implementation of the POSIX.2 wordexp function family.
 

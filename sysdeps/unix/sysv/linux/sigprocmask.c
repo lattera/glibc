@@ -20,6 +20,9 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 extern int __syscall_sigprocmask (int, const sigset_t *, sigset_t *);
 extern int __syscall_rt_sigprocmask (int, const sigset_t *, sigset_t *,
 				     size_t);
@@ -42,7 +45,8 @@ __sigprocmask (how, set, oset)
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
       int saved_errno = errno;
-      int result = __syscall_rt_sigprocmask (how, set, oset, _NSIG / 8);
+      int result = INLINE_SYSCALL (rt_sigprocmask, 4, how, set, oset,
+				   _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
 	return result;
@@ -51,6 +55,6 @@ __sigprocmask (how, set, oset)
       __libc_missing_rt_sigs = 1;
     }
 
-  return __syscall_sigprocmask (how, set, oset);
+  return INLINE_SYSCALL (sigprocmask, 3, how, set, oset);
 }
 weak_alias (__sigprocmask, sigprocmask)

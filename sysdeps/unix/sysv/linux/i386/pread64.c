@@ -23,36 +23,38 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#ifdef __NR_pwrite
+#ifdef __NR_pread
 
-extern ssize_t __syscall_pwrite64 (int fd, const void *buf, size_t count,
-				   off_t offset_hi, off_t offset_lo);
+extern ssize_t __syscall_pread64 (int fd, void *buf, size_t count,
+				  off_t offset_hi, off_t offset_lo);
 
-static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
-				 off_t offset) internal_function;
+static ssize_t __emulate_pread64 (int fd, void *buf, size_t count,
+				  off64_t offset) internal_function;
 
 
 ssize_t
-__pwrite (fd, buf, count, offset)
+__pread64 (fd, buf, count, offset)
      int fd;
-     const void *buf;
+     void *buf;
      size_t count;
-     off_t offset;
+     off64_t offset;
 {
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, 0, offset);
+  result = INLINE_SYSCALL (pread, 5, fd, buf, count,
+			   (off_t) (offset & 0xffffffff),
+			   (off_t) (offset >> 32));
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
-    result = __emulate_pwrite (fd, buf, count, offset);
+    result = __emulate_pread64 (fd, buf, count, offset);
 
   return result;
 }
 
-weak_alias (__pwrite, pwrite)
+weak_alias (__pread64, pread64)
 
-#define __pwrite(fd, buf, count, offset) \
-     static internal_function __emulate_pwrite (fd, buf, count, offset)
+#define __pread64(fd, buf, count, offset) \
+     static internal_function __emulate_pread64 (fd, buf, count, offset)
 #endif
-#include <sysdeps/posix/pwrite.c>
+#include <sysdeps/posix/pread64.c>

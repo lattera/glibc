@@ -17,9 +17,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <sys/types.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 #include <linux/posix_types.h>
 
@@ -35,13 +37,6 @@ setfsgid (gid_t gid)
       return -1;
     }
 
-  return __syscall_setfsgid (gid);
-}
-#else
-int
-setfsgid (gid_t gid)
-{
-  __set_errno (ENOSYS);
-  return -1;
+  return INLINE_SYSCALL (setfsgid, 1, gid);
 }
 #endif

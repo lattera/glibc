@@ -19,6 +19,8 @@
 
 #include <errno.h>
 #include <unistd.h>
+
+#include <sysdep.h>
 #include <sys/syscall.h>
 
 #ifdef __NR_pread
@@ -40,7 +42,7 @@ __pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = __syscall_pread64 (fd, buf, count, 0, offset);
+  result = INLINE_SYSCALL (pread, 5, fd, buf, count, 0, offset);
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pread (fd, buf, count, offset);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
+#include <errno.h>
 #include <dirent.h>
 #include <stddef.h>
 #include <string.h>
@@ -24,19 +25,22 @@
 #include <sys/param.h>
 #include <sys/types.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 #include <linux/posix_types.h>
 
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
 
-extern int __getdents __P ((int fd, char *buf, size_t nbytes));
+extern int __syscall_getdents __P ((int fd, char *buf, size_t nbytes));
 
 /* For Linux we need a special version of this file since the
    definition of `struct dirent' is not the same for the kernel and
    the libc.  There is one additional field which might be introduced
    in the kernel structure in the future.
 
-   He is the kernel definition of `struct dirent' as of 2.1.20:  */
+   Here is the kernel definition of `struct dirent' as of 2.1.20:  */
 
 struct kernel_dirent
   {
@@ -76,7 +80,7 @@ __getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
   dp = (struct dirent *) buf;
   skdp = kdp = __alloca (red_nbytes);
 
-  retval = __getdents (fd, (char *) kdp, red_nbytes);
+  retval = INLINE_SYSCALL (getdents, 3, fd, (char *) kdp, red_nbytes);
 
   while ((char *) kdp < (char *) skdp + retval)
     {

@@ -22,6 +22,8 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#include <sysdep.h>
 #include <sys/syscall.h>
 
 
@@ -83,7 +85,7 @@ __getcwd (char *buf, size_t size)
     {
       int retval;
 
-      retval = __syscall_getcwd (path, alloc_size);
+      retval = INLINE_SYSCALL (getcwd, 2, path, alloc_size);
       if (retval >= 0)
 	{
 	  if (buf == NULL)

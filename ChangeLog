@@ -1,3 +1,113 @@
+1998-10-21 14:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysdep.h (INLINE_SYSCALL): New macro.  Simply call
+	__syscall_* function.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Use INLINE_SYSCALL instead
+	of calling __syscall_* function.
+	* sysdeps/unix/sysv/linux/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/getcwd.c: Likewise.
+	* sysdeps/unix/sysv/linux/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpriority.c: Likewise.
+	* sysdeps/unix/sysv/linux/getresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/getresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/ptrace.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/reboot.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/siglist.h: Likewise.
+	* sysdeps/unix/sysv/linux/sigpending.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/ustat.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknod.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define INLINE_SYSCALL using
+	inline assembler.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Remove various
+	__syscall_* definitions.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Move various __syscall_*
+	definitions to...
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: ...here...
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: ...and here...
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: ...and here...
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: ...and here...
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: ...and here...
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: ...and here...
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: ...and here.
+
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=misc]
+	(sysdep_routines): Remove s_pread64 and s_pwrite64.
+
+	* sysdeps/unix/sysv/linux/i386/pread.c: New file.
+	* sysdeps/unix/sysv/linux/i386/pread64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/pwrite.c: New file.
+	* sysdeps/unix/sysv/linux/i386/pwrite64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/s_pread64.S: Removed.
+	* sysdeps/unix/sysv/linux/i386/s_pwrite64.S: Removed.
+
+1998-10-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/siglist.h: Fix some typos in these files
+	and bring them in synch.
+	* sysdeps/unix/siglist.c: Likewise.
+	Reported by Vladimir Michl <michlv@risc.upol.cz> [PR libc/832].
+
+1998-10-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Allow -1 as arguments.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setreuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setreuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setreuid.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setregid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add s_setreuid and
+	s_setregid.
+	* sysdeps/unix/sysv/linux/m68k/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Likewise.
+
+1998-10-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sunrpc/rpc_main.c (close_output, close_input): New functions.
+	(c_output, h_output, s_output, l_output, t_output, svc_output,
+	clnt_output, mkfile_output): Call them at the end.
+
+1998-10-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* db/Makefile (LDFLAGS-db1.so): New variable, to avoid duplicating
+	link command.
+
 1998-10-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/setfsuid.c: Add real contents.
@@ -13,16 +123,16 @@
 	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: New file.
 	Patch by Geoffrey KEATING <geoffk@discus.anu.edu.au>.
 
-1998-10-18  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
- 
-        * sysdeps/unix/opendir.c: Check at runtime for kernel support for 
-        O_DIRECTORY.
- 
-1998-10-20  H.J. Lu  <hjl@gnu.org> 
- 
-        * sysdeps/unix/sysv/linux/i386/setresuid.c (__setresuid): Fix 
-        argument types.
- 
+1998-10-18  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/opendir.c: Check at runtime for kernel support for
+	O_DIRECTORY.
+
+1998-10-20  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/setresuid.c (__setresuid): Fix
+	argument types.
+
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/tgmath.h: Make nested function calls work.

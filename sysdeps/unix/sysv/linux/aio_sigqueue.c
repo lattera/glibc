@@ -17,8 +17,12 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <aio.h>
+#include <errno.h>
 #include <signal.h>
 #include <unistd.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 #include "aio_misc.h"
 
@@ -41,5 +45,5 @@ __aio_sigqueue (sig, val)
   info.si_uid = getuid ();
   info.si_value = val;
 
-  return __syscall_rt_sigqueueinfo (info.si_pid, sig, &info);
+  return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
 }

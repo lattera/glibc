@@ -19,6 +19,8 @@
 
 #include <errno.h>
 #include <unistd.h>
+
+#include <sysdep.h>
 #include <sys/syscall.h>
 
 #ifdef __NR_pwrite
@@ -40,8 +42,8 @@ __pwrite64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = __syscall_pwrite64 (fd, buf, count, (off_t) (offset >> 32),
-			       (off_t) (offset & 0xffffffff));
+  result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, (off_t) (offset >> 32),
+			   (off_t) (offset & 0xffffffff));
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pwrite64 (fd, buf, count, offset);

@@ -1,5 +1,5 @@
 /* lxstat64 using old-style Unix lstat system call.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,9 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 #include <xstatconv.c>
 
 extern int __syscall_lstat (const char *, struct kernel_stat *);
@@ -33,7 +36,7 @@ __lxstat64 (int vers, const char *name, struct stat64 *buf)
   struct kernel_stat kbuf;
   int result;
 
-  result =  __syscall_lstat (name, &kbuf);
+  result = INLINE_SYSCALL (lstat, 2, name, &kbuf);
   if (result == 0)
     result = xstat64_conv (vers, &kbuf, buf);
 

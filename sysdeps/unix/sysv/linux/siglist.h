@@ -22,7 +22,7 @@
   init_sig (SIGHUP, "HUP", N_("Hangup"))
   init_sig (SIGINT, "INT", N_("Interrupt"))
   init_sig (SIGQUIT, "QUIT", N_("Quit"))
-  init_sig (SIGILL, "ILL", N_("Illegal Instruction"))
+  init_sig (SIGILL, "ILL", N_("Illegal instruction"))
   init_sig (SIGTRAP, "TRAP", N_("Trace/breakpoint trap"))
   init_sig (SIGABRT, "ABRT", N_("Aborted"))
   init_sig (SIGFPE, "FPE", N_("Floating point exception"))

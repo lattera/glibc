@@ -22,6 +22,7 @@
 
 #include <linux/posix_types.h>
 
+#include <sysdep.h>
 #include <sys/syscall.h>
 #ifdef __NR_setresuid
 
@@ -31,15 +32,15 @@ extern int __syscall_setresuid (__kernel_uid_t rgid, __kernel_uid_t egid,
 int
 __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 {
-  if ((ruid != (uid_t) ((__kernel_uid_t) ruid))
-      || (euid != (uid_t) ((__kernel_uid_t) euid))
-      || (suid != (uid_t) ((__kernel_uid_t) suid)))
+  if ((ruid != (uid_t) -1 && ruid != (uid_t) (__kernel_uid_t) ruid)
+      || (euid != (uid_t) -1 && euid != (uid_t) (__kernel_uid_t) euid)
+      || (suid != (uid_t) -1 && suid != (uid_t) (__kernel_uid_t) suid))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  return __syscall_setresuid (ruid, euid, suid);
+  return INLINE_SYSCALL (setresuid, 3, ruid, euid, suid);
 }
 weak_alias (__setresuid, setresuid)
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/reboot.h>
+
+#include <sysdep.h>
+#include <sys/syscall.h>
 
 extern int __syscall_reboot (int magic, int magic_too, int flag);
 
@@ -24,5 +28,5 @@ extern int __syscall_reboot (int magic, int magic_too, int flag);
 int
 reboot (int howto)
 {
-  return __syscall_reboot (0xfee1dead, 672274793, howto);
+  return INLINE_SYSCALL (reboot, 3, 0xfee1dead, 672274793, howto);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <sysdep.h>
 #include <linux/posix_types.h>
 
 extern int __syscall_getgroups __P ((int, __kernel_gid_t *));
@@ -33,7 +35,7 @@ __getgroups (n, groups)
   int i, ngids;
   __kernel_gid_t kernel_groups[n];
 
-  ngids = __syscall_getgroups (n, kernel_groups);
+  ngids = INLINE_SYSCALL (getgroups, 2, n, kernel_groups);
   if (n != 0 && ngids > 0)
     for (i = 0; i < ngids; i++)
       groups[i] = kernel_groups[i];

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,9 @@
 #include <sys/ptrace.h>
 #include <stdarg.h>
 
+#include <sysdep.h>
+#include <sys/syscall.h>
+
 extern long int __syscall_ptrace (int, pid_t, void *, void *);
 
 long int
@@ -40,17 +43,12 @@ ptrace (enum __ptrace_request request, ...)
   if (request > 0 && request < 4)
     data = &ret;
 
-  res = __syscall_ptrace (request, pid, addr, data);
-
-  if (res >= 0)
+  res = INLINE_SYSCALL (ptrace, 4, request, pid, addr, data);
+  if (res >= 0 && request > 0 && request < 4)
     {
-      if (request > 0 && request < 4)
-	{
-	  __set_errno (0);
-	  return ret;
-	}
-      return res;
+      __set_errno (0);
+      return ret;
     }
 
-  return -1;
+  return res;
 }
