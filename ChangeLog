@@ -1,3 +1,26 @@
+Tue May 14 19:42:04 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/generic/strrchr.c: Deansideclized.
+
+	* elf/Makefile (ldd): Depend on Makefile.
+	Find ld.so in $(slibdir) instead of $(libdir).
+
+	* sysdeps/i386/strrchr.S: Use `testl $3, %esi' instead of `testb $3,
+	%esi'; gas misassembles the latter into `testb $3, %dh'.
+
+	* mach/Machrules (%.udeps rule): Do $(make-target-directory) first.
+
+Tue May 14 16:38:44 1996  David Mosberger-Tang <davidm@AZStarNet.com>
+
+	* sunrpc/getrpcent.c (interpret): Declare args.  Rewrite parsing using
+	strpbrk.
+
+Tue May 14 20:18:38 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/Makefile (routines): Add strptime.
+	* time/time.h: Add prototype for strptime.
+	* time/strptime.c: New file.  Implementation according to XPG4.
+
 Tue May 14 14:07:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* libc-symbols.h (lint): Macro removed.  The sunrpc code does some

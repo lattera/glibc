@@ -95,7 +95,7 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
 $(slibdir)/ld-linux.so.1: $(objpfx)ld-linux.so.1; $(do-install-program)
 
-$(objpfx)ldd: ldd.sh.in
-	sed 's%@RTLD@%$(libdir)/$(rtld-installed-name)%g' < $< > $@.new
+$(objpfx)ldd: ldd.sh.in Makefile
+	sed 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@

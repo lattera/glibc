@@ -16,25 +16,23 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
-
 
 /* Find the last ocurrence of C in S.  */
 char *
-DEFUN(strrchr, (s, c), CONST char *s AND int c)
+strrchr (const char *s, int c)
 {
-  register CONST char *found, *p;
+  register const char *found, *p;
 
   c = (unsigned char) c;
 
   /* Since strchr is fast, we use it rather than the obvious loop.  */
-  
+
   if (c == '\0')
-    return strchr(s, '\0');
+    return strchr (s, '\0');
 
   found = NULL;
-  while ((p = strchr(s, c)) != NULL)
+  while ((p = strchr (s, c)) != NULL)
     {
       found = p;
       s = p + 1;

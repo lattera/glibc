@@ -163,13 +163,15 @@ getrpcent()
 		return(NULL);
 	if (d->rpcf == NULL && (d->rpcf = fopen(RPCDB, "r")) == NULL)
 		return (NULL);
-    if (fgets(d->line, BUFSIZ, d->rpcf) == NULL)
+	if (fgets(d->line, BUFSIZ, d->rpcf) == NULL)
 		return (NULL);
 	return interpret(d->line, strlen(d->line));
 }
 
 static struct rpcent *
 interpret(val, len)
+	char * val;
+	size_t len;
 {
 	register struct rpcdata *d = _rpcdata();
 	char *p;
@@ -182,21 +184,13 @@ interpret(val, len)
 	d->line[len] = '\n';
 	if (*p == '#')
 		return (getrpcent());
-	cp = index(p, '#');
+	cp = strpbrk(p, "#\n");
 	if (cp == NULL)
-    {
-		cp = index(p, '\n');
-		if (cp == NULL)
-			return (getrpcent());
-	}
+		return (getrpcent());
 	*cp = '\0';
-	cp = index(p, ' ');
+	cp = strpbrk(p, " \t");
 	if (cp == NULL)
-    {
-		cp = index(p, '\t');
-		if (cp == NULL)
-			return (getrpcent());
-	}
+		return (getrpcent());
 	*cp++ = '\0';
 	/* THIS STUFF IS INTERNET SPECIFIC */
 	d->rpc.r_name = d->line;
@@ -204,15 +198,9 @@ interpret(val, len)
 		cp++;
 	d->rpc.r_number = atoi(cp);
 	q = d->rpc.r_aliases = d->rpc_aliases;
-	cp = index(p, ' ');
+	cp = strpbrk(p, " \t");
 	if (cp != NULL)
 		*cp++ = '\0';
-	else
-    {
-		cp = index(p, '\t');
-		if (cp != NULL)
-			*cp++ = '\0';
-	}
 	while (cp && *cp) {
 		if (*cp == ' ' || *cp == '\t') {
 			cp++;
@@ -220,15 +208,9 @@ interpret(val, len)
 		}
 		if (q < &(d->rpc_aliases[MAXALIASES - 1]))
 			*q++ = cp;
-		cp = index(p, ' ');
+		cp = strpbrk(p, " \t");
 		if (cp != NULL)
 			*cp++ = '\0';
-		else
-	    {
-			cp = index(p, '\t');
-			if (cp != NULL)
-				*cp++ = '\0';
-		}
 	}
 	*q = NULL;
 	return (&d->rpc);

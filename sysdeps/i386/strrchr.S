@@ -58,7 +58,7 @@ ENTRY (strrchr)
 	      implementation (this is because all processor inherant
 	      boundaries are multiples of 4.  */
 
-	testb $3, %esi		/* correctly aligned ? */
+	testl $3, %esi		/* correctly aligned ? */
 	jz L19			/* yes => begin loop */
 	movb (%esi), %dl	/* load byte in question (we need it twice) */
 	cmpb %dl, %cl		/* compare byte */
@@ -68,7 +68,7 @@ L11:	orb %dl, %dl		/* is NUL? */
 	jz L2			/* yes => return NULL */
 	incl %esi		/* increment pointer */
 
-	testb $3, %esi		/* correctly aligned ? */
+	testl $3, %esi		/* correctly aligned ? */
 	jz L19			/* yes => begin loop */
 	movb (%esi), %dl	/* load byte in question (we need it twice) */
 	cmpb %dl, %cl		/* compare byte */
@@ -78,7 +78,7 @@ L12:	orb %dl, %dl		/* is NUL? */
 	jz L2			/* yes => return NULL */
 	incl %esi		/* increment pointer */
 
-	testb $3, %esi		/* correctly aligned ? */
+	testl $3, %esi		/* correctly aligned ? */
 	jz L19			/* yes => begin loop */
 	movb (%esi), %dl	/* load byte in question (we need it twice) */
 	cmpb %dl, %cl		/* compare byte */

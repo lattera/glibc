@@ -116,6 +116,7 @@ $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 	touch $@
 -include $(patsubst %,$(objpfx)%.udeps,$(user-interfaces))
 $(patsubst %,$(objpfx)%.udeps,$(user-interfaces)): $(objpfx)%.udeps:
+	$(make-target-directory)
 	echo '#include <$*.defs>' | \
 	$(CC) $(CPPFLAGS) -M -x c - | \
 	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) \
