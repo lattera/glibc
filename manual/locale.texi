@@ -31,6 +31,7 @@ will follow the conventions preferred by the user.
 * Standard Locales::            Locale names available on all systems.
 * Locale Information::          How to access the information for the locale.
 * Formatting Numbers::          A dedicated function to format numbers.
+* Yes-or-No Questions::         Check a Response against the locale.
 @end menu
 
 @node Effects of Locale, Choosing Locale,  , Locales
@@ -64,7 +65,8 @@ What language to use for output, including error messages
 (@pxref{Message Translation}).
 
 @item
-What language to use for user answers to yes-or-no questions.
+What language to use for user answers to yes-or-no questions
+(@pxref{Yes-or-No Questions}).
 
 @item
 What language to use for more complex user input.
@@ -164,7 +166,8 @@ This category applies to formatting date and time values; see
 @item LC_MESSAGES
 This category applies to selecting the language used in the user
 interface for message translation (@pxref{The Uniforum approach};
-@pxref{Message catalogs a la X/Open}).
+@pxref{Message catalogs a la X/Open})  and contains regular expressions
+for affirmative and negative responses.
 
 @comment locale.h
 @comment ISO
@@ -876,7 +879,8 @@ The same as the value returned by @code{localeconv} in the
 @item YESEXPR
 The return value is a regular expression which can be used with the
 @code{regex} function to recognize a positive response to a yes/no
-question.
+question.  The GNU C library provides the @code{rpmatch} function for
+easier handling in applications.
 @item NOEXPR
 The return value is a regular expression which can be used with the
 @code{regex} function to recognize a negative response to a yes/no
@@ -947,7 +951,7 @@ selected when the program runs.  If the user selects the locale
 correctly there should never be a misunderstanding over the time and
 date format.
 
-@node Formatting Numbers, , Locale Information, Locales
+@node Formatting Numbers, Yes-or-No Questions, Locale Information, Locales
 @section A dedicated function to format numbers
 
 We have seen that the structure returned by @code{localeconv} as well as
@@ -1155,3 +1159,72 @@ currency symbol is used.  This is a four letter string, in this case
 decimal point is selected to be three, the first and second numbers are
 printed with an extra zero at the end and the third number is printed
 without rounding.
+
+@node Yes-or-No Questions,  , Formatting Numbers , Locales
+@section Yes-or-No Questions
+
+Some non GUI programs ask a yes-or-no question.  If the messages
+(especially the questions) are translated into foreign languages, be
+sure that you localize the answers too.  It would be very bad habit to
+ask a question in one language and request the answer in another, often
+English.
+
+The GNU C library contains @code{rpmatch} to give applications easy
+access to the corresponding locale definitions.
+
+@comment GNU
+@comment stdlib.h
+@deftypefun int rpmatch (const char *@var{response})
+The function @code{rpmatch} checks the string in @var{response} whether
+or not it is a correct yes-or-no answer and if yes, which one.  The
+check uses the @code{YESEXPR} and @code{NOEXPR} data in the
+@code{LC_MESSAGES} category of the currently selected locale.  The
+return value is as follows:
+
+@table @code
+@item 1
+The user entered an affirmative answer.
+
+@item 0
+The user entered a negative answer.
+
+@item -1
+The answer matched neither the @code{YESEXPR} nor the @code{NOEXPR}
+regular expression.
+@end table
+
+This function is not standardized but available beside in GNU libc at
+least also in the IBM AIX library.
+@end deftypefun
+
+@noindent
+This function would normally be used like this:
+
+@smallexample
+  ...
+  /* @r{Use a safe default.}  */
+  _Bool doit = false;
+
+  fputs (gettext ("Do you really want to do this? "), stdout);
+  fflush (stdout);
+  /* @r{Prepare the @code{getline} call.}  */
+  line = NULL;
+  len = 0;
+  while (getline (&line, &len, stdout) >= 0)
+    @{
+      /* @r{Check the response.}  */
+      int res = rpmatch (line);
+      if (res >= 0)
+        @{
+          /* @r{We got a definitive answer.}  */
+          if (res > 0)
+            doit = true;
+          break;
+        @}
+    @}
+  /* @r{Free what @code{getline} allocated.}  */
+  free (line);
+@end smallexample
+
+Note that the loop continues until an read error is detected or until a
+definitive (positive or negative) answer is read.

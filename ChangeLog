@@ -1,3 +1,8 @@
+2001-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/locale.texi: Add documentation of rpmatch.
+	Patch by Jochen Hein <jochen@jochen.org>.
+
 2001-08-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* stdlib/strtod.c (STRTOF): Skip whole infinity, not just inf.
