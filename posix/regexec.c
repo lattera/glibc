@@ -807,6 +807,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
       for (reg_idx = 0; reg_idx < nmatch; ++reg_idx)
 	if (pmatch[reg_idx].rm_so != -1)
 	  {
+#ifdef RE_ENABLE_I18N
 	    if (BE (input.offsets_needed != 0, 0))
 	      {
 		if (pmatch[reg_idx].rm_so == input.valid_len)
@@ -818,6 +819,9 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 		else
 		  pmatch[reg_idx].rm_eo = input.offsets[pmatch[reg_idx].rm_eo];
 	      }
+#else
+	    assert (input.offsets_needed == 0);
+#endif
 	    pmatch[reg_idx].rm_so += match_first;
 	    pmatch[reg_idx].rm_eo += match_first;
 	  }
@@ -2815,12 +2819,11 @@ check_arrival (preg, mctx, path, top_node, top_str, last_node, last_str,
   mctx->state_log = backup_state_log;
   mctx->input->cur_idx = backup_cur_idx;
 
-  if (cur_nodes == NULL)
-    return REG_NOMATCH;
   /* Then check the current node set has the node LAST_NODE.  */
-  return (re_node_set_contains (cur_nodes, last_node)
-	  || re_node_set_contains (cur_nodes, last_node) ? REG_NOERROR
-	  : REG_NOMATCH);
+  if (cur_nodes != NULL && re_node_set_contains (cur_nodes, last_node))
+    return REG_NOERROR;
+
+  return REG_NOMATCH;
 }
 
 /* Helper functions for check_arrival.  */
@@ -3365,6 +3368,7 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	  if (preg->syntax & RE_DOT_NOT_NULL)
 	    bitset_clear (accepts, '\0');
 	}
+#ifdef RE_ENABLE_I18N
       else if (type == OP_UTF8_PERIOD)
         {
 	  memset (accepts, 255, sizeof (unsigned int) * BITSET_UINTS / 2);
@@ -3373,6 +3377,7 @@ group_nodes_into_DFAstates (preg, state, dests_node, dests_ch)
 	  if (preg->syntax & RE_DOT_NOT_NULL)
 	    bitset_clear (accepts, '\0');
         }
+#endif
       else
 	continue;
 
@@ -3820,10 +3825,12 @@ check_node_accept (preg, node, mctx, idx)
       return node->opr.c == ch;
     case SIMPLE_BRACKET:
       return bitset_contain (node->opr.sbcset, ch);
+#ifdef RE_ENABLE_I18N
     case OP_UTF8_PERIOD:
       if (ch >= 0x80)
         return 0;
       /* FALLTHROUGH */
+#endif
     case OP_PERIOD:
       return !((ch == '\n' && !(preg->syntax & RE_DOT_NEWLINE))
 	       || (ch == '\0' && (preg->syntax & RE_DOT_NOT_NULL)));

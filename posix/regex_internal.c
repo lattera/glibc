@@ -786,7 +786,7 @@ re_string_peek_byte_case (const re_string_t *pstr,
 static unsigned char
 re_string_fetch_byte_case (re_string_t *pstr)
 {
-  int ch, off;
+  int ch;
 
   if (BE (!pstr->icase, 1))
     return re_string_fetch_byte (pstr);
@@ -794,6 +794,8 @@ re_string_fetch_byte_case (re_string_t *pstr)
 #ifdef RE_ENABLE_I18N
   if (pstr->offsets_needed)
     {
+      int off;
+
       /* For tr_TR.UTF-8 [[:islower:]] there is
 	 [[: CAPITAL LETTER I WITH DOT lower:]] in mbs.  Skip
 	 in that case the whole multi-byte character and return

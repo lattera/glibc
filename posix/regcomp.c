@@ -406,8 +406,11 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	    }
 	}
 #endif /* RE_ENABLE_I18N */
-      else if (type == END_OF_RE || type == OP_PERIOD
-	       || type == OP_UTF8_PERIOD)
+      else if (type == OP_PERIOD
+#ifdef RE_ENABLE_I18N
+	       || type == OP_UTF8_PERIOD
+#endif /* RE_ENABLE_I18N */
+	       || type == END_OF_RE)
 	{
 	  memset (fastmap, '\1', sizeof (char) * SBC_MAX);
 	  if (type == END_OF_RE)

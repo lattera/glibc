@@ -1,5 +1,16 @@
 2003-12-14  Paolo Bonzini  <bonzini@gnu.org>
 
+	* posix/regexec.c (check_arrival): Remove duplicate test.
+
+2003-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c: Make !RE_ENABLE_I18N work again.
+	* posix/regex_internal.c: Likewise.
+	* posix/regexec.c: Likewise.
+	Patch by Paolo Bonzini.
+
+2003-12-14  Paolo Bonzini  <bonzini@gnu.org>
+
 	* posix/regex_internal.c (re_acquire_state_context):
         Compare the node sets after all the other comparisons.
 
