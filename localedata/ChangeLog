@@ -6,6 +6,10 @@
 	* gen-locale.sh: Generate only one locale which is described in a
 	command line parameter.
 
+	* tests-mbwc/dat_strfmon.c: Remove #ifdefs introduced to work
+	around DEM problem.
+	* tst-fmon.data: Change back entries with DEM.
+
 	* gen-locale.sh: Print that it might take a while to finish.
 
 2000-06-30  Jakub Jelinek  <jakub@redhat.com>
