@@ -60,7 +60,7 @@ __ioctl (int fd, unsigned long int request, ...)
 		_IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
     } msg;
   mach_msg_header_t *const m = &msg.header.Head;
-  mach_msg_type_t *t = &msg.header.RetCodeType;
+  mach_msg_type_t *t;
   mach_msg_id_t msgid;
   unsigned int reply_size;
 
@@ -73,6 +73,44 @@ __ioctl (int fd, unsigned long int request, ...)
   error_t send_rpc (io_t ioport)
     {
       error_t err;
+      mach_msg_type_t *t = &msg.header.RetCodeType;
+
+      /* Marshal the request arguments into the message buffer.
+	 We must redo this work each time we retry the RPC after a SIGTTOU,
+	 because the reply message containing the EBACKGROUND error code
+	 clobbers the same message buffer also used for the request.  */
+
+      if (_IOC_INOUT (request) & IOC_IN)
+	{
+	  /* Pack an argument into the message buffer.  */
+	  void in (unsigned int count, enum __ioctl_datum type)
+	    {
+	      if (count > 0)
+		{
+		  void *p = &t[1];
+		  const size_t len = count * typesize ((unsigned int) type);
+		  *t = io2mach_type (count, type);
+		  memcpy (p, arg, len);
+		  arg += len;
+		  p += len;
+		  p = (void *) (((unsigned long int) p + sizeof (*t) - 1)
+				& ~(sizeof (*t) - 1));
+		  t = p;
+		}
+	    }
+
+	  /* Pack the argument data.  */
+	  in (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
+	  in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
+	  in (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
+	}
+      else if (_IOC_INOUT (request) == IOC_VOID)
+	{
+	  /* The RPC takes a single integer_t argument.
+	     Rather than pointing to the value, ARG is the value itself.  */
+	  *t++ = io2mach_type (1, _IOTS (int));
+	  *((int *) t)++ = (int) arg;
+	}
 
       m->msgh_size = (char *) t - (char *) &msg;
       m->msgh_remote_port = ioport;
@@ -148,38 +186,6 @@ __ioctl (int fd, unsigned long int request, ...)
      parts of the ioctl request.  */
   msgid = IOC_MSGID (request);
 
-  if (_IOC_INOUT (request) & IOC_IN)
-    {
-      /* Pack an argument into the message buffer.  */
-      void in (unsigned int count, enum __ioctl_datum type)
-	{
-	  if (count > 0)
-	    {
-	      void *p = &t[1];
-	      const size_t len = count * typesize ((unsigned int) type);
-	      *t = io2mach_type (count, type);
-	      memcpy (p, arg, len);
-	      arg += len;
-	      p += len;
-	      p = (void *) (((unsigned long int) p + sizeof (*t) - 1)
-			    & ~(sizeof (*t) - 1));
-	      t = p;
-	    }
-	}
-
-      /* Pack the argument data.  */
-      in (_IOT_COUNT0 (type), _IOT_TYPE0 (type));
-      in (_IOT_COUNT1 (type), _IOT_TYPE1 (type));
-      in (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
-    }
-  else if (_IOC_INOUT (request) == IOC_VOID)
-    {
-      /* The RPC takes a single integer_t argument.
-	 Rather than pointing to the value, ARG is the value itself.  */
-      *t++ = io2mach_type (1, _IOTS (int));
-      *((int *) t)++ = (int) arg;
-    }
-
   /* Compute the expected size of the reply.  There is a standard header
      consisting of the message header and the reply code.  Then, for out
      and in/out ioctls, there come the data with their type headers.  */
@@ -203,6 +209,9 @@ __ioctl (int fd, unsigned long int request, ...)
       figure_reply (_IOT_COUNT2 (type), _IOT_TYPE2 (type));
     }
 
+  /* Marshal the arguments into the request message and make the RPC.
+     This wrapper function handles EBACKGROUND returns, turning them
+     into either SIGTTOU or EIO.  */
   err = HURD_DPORT_USE (fd, _hurd_ctty_output (port, ctty, send_rpc));
 
   t = (mach_msg_type_t *) msg.data;
