@@ -1,3 +1,8 @@
+Mon Feb 19 18:31:59 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* time/zic.c, time/scheck.c, time/private.h, time/tzfile.h:
+	Updated from ADO 96d.
+
 Sun Feb 18 14:08:04 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* csu/initfini.c (_init): Remove bogus volatile declarations and

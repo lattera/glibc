@@ -16,7 +16,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.33";
+static char	privatehid[] = "@(#)private.h	7.39";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -37,6 +37,10 @@ static char	privatehid[] = "@(#)private.h	7.33";
 #define HAVE_UNISTD_H		1
 #endif /* !defined HAVE_UNISTD_H */
 
+#ifndef HAVE_UTMPX_H
+#define HAVE_UTMPX_H		0
+#endif /* !defined HAVE_UTMPX_H */
+
 #ifndef LOCALE_HOME
 #define LOCALE_HOME		"/usr/lib/locale"
 #endif /* !defined LOCALE_HOME */
@@ -47,7 +51,6 @@ static char	privatehid[] = "@(#)private.h	7.33";
 
 #include "sys/types.h"	/* for time_t */
 #include "stdio.h"
-#include "ctype.h"
 #include "errno.h"
 #include "string.h"
 #include "limits.h"	/* for CHAR_BIT */
@@ -66,6 +69,9 @@ static char	privatehid[] = "@(#)private.h	7.33";
 #define R_OK	4
 #endif /* !defined R_OK */
 #endif /* !(HAVE_UNISTD_H - 0) */
+
+/* Unlike <ctype.h>'s isdigit, this also works if c < 0 | c > UCHAR_MAX.  */
+#define is_digit(c) ((unsigned)(c) - '0' <= 9)
 
 /*
 ** Workarounds for compilers/systems.
@@ -152,15 +158,23 @@ extern int	unlink P((const char * filename));
 #define FALSE	0
 #endif /* !defined FALSE */
 
+#ifndef TYPE_BIT
+#define TYPE_BIT(type)	(sizeof (type) * CHAR_BIT)
+#endif /* !defined TYPE_BIT */
+
+#ifndef TYPE_SIGNED
+#define TYPE_SIGNED(type) (((type) -1) < 0)
+#endif /* !defined TYPE_SIGNED */
+
 #ifndef INT_STRLEN_MAXIMUM
 /*
 ** 302 / 1000 is log10(2.0) rounded up.
-** Subtract one for the sign bit;
+** Subtract one for the sign bit if the type is signed;
 ** add one for integer division truncation;
-** add one more for a minus sign.
+** add one more for a minus sign if the type is signed.
 */
 #define INT_STRLEN_MAXIMUM(type) \
-	((sizeof(type) * CHAR_BIT - 1) * 302 / 1000 + 2)
+    ((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 100 + 1 + TYPE_SIGNED(type))
 #endif /* !defined INT_STRLEN_MAXIMUM */
 
 /*

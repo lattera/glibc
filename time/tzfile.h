@@ -16,7 +16,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	tzfilehid[] = "@(#)tzfile.h	7.6";
+static char	tzfilehid[] = "@(#)tzfile.h	7.7";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -153,7 +153,7 @@ struct tzhead {
 ** that will probably do.
 */
 
-#define isleap(y) ((((y) % 4) == 0 && ((y) % 100) != 0) || ((y) % 400) == 0)
+#define isleap(y) (((y) % 4) == 0 && (((y) % 100) != 0 || ((y) % 400) == 0))
 
 #ifndef USG
 

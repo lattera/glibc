@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)scheck.c	8.12";
+static char	elsieid[] = "@(#)scheck.c	8.13";
 #endif /* !defined lint */
 #endif /* !defined NOID */
 
@@ -42,7 +42,7 @@ char * const		format;
 		*tp++ = '*';
 		if (*fp == '*')
 			++fp;
-		while (isascii(*fp) && isdigit(*fp))
+		while (is_digit(*fp))
 			*tp++ = *fp++;
 		if (*fp == 'l' || *fp == 'h')
 			*tp++ = *fp++;
