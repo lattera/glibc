@@ -514,8 +514,11 @@ struct map_args
 {
   /* Argument to map_doit.  */
   char *str;
+  struct link_map *loader;
+  int is_preloaded;
+  int mode;
   /* Return value of map_doit.  */
-  struct link_map *main_map;
+  struct link_map *map;
 };
 
 /* Arguments to version_check_doit.  */
@@ -537,8 +540,9 @@ static void
 map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
-  args->main_map = INTUSE(_dl_map_object) (NULL, args->str, 0, lt_library, 0,
-					   __RTLD_OPENEXEC);
+  args->map = INTUSE(_dl_map_object) (args->loader, args->str,
+				      args->is_preloaded, lt_library, 0,
+				      args->mode);
 }
 
 static void
@@ -798,6 +802,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  struct map_args args;
 
 	  args.str = rtld_progname;
+	  args.loader = NULL;
+	  args.is_preloaded = 0;
+	  args.mode = __RTLD_OPENEXEC;
 	  (void) INTUSE(_dl_catch_error) (&objname, &err_str, map_doit, &args);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    /* We don't free the returned string, the programs stops
@@ -1084,7 +1091,8 @@ of this helper program; chances are you did not intend to run this program.\n\
     }
 
   /* Read the contents of the file.  */
-  file = _dl_sysdep_read_whole_file ("/etc/ld.so.preload", &file_size,
+  const char preload_file[] = "/etc/ld.so.preload";
+  file = _dl_sysdep_read_whole_file (preload_file, &file_size,
 				     PROT_READ | PROT_WRITE);
   if (__builtin_expect (file != MAP_FAILED, 0))
     {
@@ -1139,11 +1147,26 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    if (p[0] != '\0')
 	      {
-		struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded),
-								   p, 1,
-								   lt_library,
-								   0, 0);
-		if (++new_map->l_opencount == 1)
+		const char *objname;
+		const char *err_str = NULL;
+		struct map_args args;
+
+		args.str = p;
+		args.loader = GL(dl_loaded);
+		args.is_preloaded = 1;
+		args.mode = 0;
+
+		(void) INTUSE(_dl_catch_error) (&objname, &err_str, map_doit,
+						&args);
+		if (__builtin_expect (err_str != NULL, 0))
+		  {
+		    _dl_error_printf ("\
+ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
+				      p, preload_file);
+		    /* No need to call free, this is still before the libc's
+		       malloc is used.  */
+		  }
+		else if (++args.map->l_opencount == 1)
 		  /* It is no duplicate.  */
 		  ++npreloads;
 	      }

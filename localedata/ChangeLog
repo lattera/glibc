@@ -1,3 +1,8 @@
+2004-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/tr_TR: Correct sorting order of the normal and dotless I
+	[BZ #19].
+
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/fa_IR: Add to_outpunct info and change decimal_point and

@@ -1,5 +1,8 @@
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/rtld.c (dl_main): Don't fail execution if file named in
+	ld.so.preload is not present.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Undo unintended
 	changes in last patch.
 
