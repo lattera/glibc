@@ -1,3 +1,12 @@
+2005-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile: Add rules to build and run order2.
+	* elf/order2.c: New file.
+	* elf/order2mod1.c: New file.
+	* elf/order2mod2.c: New file.
+	* elf/order2mod3.c: New file.
+	* elf/order2mod4.c: New file.
+
 2005-03-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Print exact l_direct_opencount value,

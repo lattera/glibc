@@ -86,7 +86,8 @@ distribute	:= rtld-Rules \
 		   tst-deep1mod1.c tst-deep1mod2.c tst-deep1mod3.c \
 		   unload3mod1.c unload3mod2.c unload3mod3.c unload3mod4.c \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
-		   tst-auditmod1.c
+		   tst-auditmod1.c \
+		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -161,7 +162,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
 	 tst-align2 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount \
 	 tst-dlopenrpath tst-deep1 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
-	 unload3 unload4 unload5 tst-audit1 tst-global1
+	 unload3 unload4 unload5 tst-audit1 tst-global1 order2
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -198,7 +199,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
 		tst-dlmopen1mod tst-auditmod1 \
 		unload3mod1 unload3mod2 unload3mod3 unload3mod4 \
-		unload4mod1 unload4mod2 unload4mod3 unload4mod4
+		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
+		order2mod1 order2mod2 order2mod3 order2mod4
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep
 endif
@@ -816,3 +818,15 @@ tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
+
+$(objpfx)order2: $(libdl)
+$(objpfx)order2.out: $(objpfx)order2 $(objpfx)order2mod1.so \
+		     $(objpfx)order2mod2.so
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)order2 > $@
+	(echo "12345" | cmp $@ -) > /dev/null
+$(objpfx)order2mod1.so: $(objpfx)order2mod4.so
+$(objpfx)order2mod4.so: $(objpfx)order2mod3.so
+$(objpfx)order2mod2.so: $(objpfx)order2mod3.so
+order2mod2.so-no-z-defs = yes
