@@ -1,3 +1,7 @@
+2000-12-28  Andreas Jaeger  <aj@suse.de>
+
+	* dlfcn/errmsg1mod.c: Add prototype for foo to shut up GCC.
+
 2000-12-27  Ben Collins  <bcollins@debian.org>
 
 	* elf/dl-open.c (_dl_open): Correctly set the new objname pointer
