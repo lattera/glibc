@@ -596,11 +596,11 @@ _dl_init_paths (const char *llp)
 			     l, "RUNPATH");
 
 	  /* The RPATH is ignored.  */
-	  l->l_rpath_dirs = NULL;
+	  l->l_rpath_dirs = (void *) -1;
 	}
       else
 	{
-	  l->l_runpath_dirs = NULL;
+	  l->l_runpath_dirs = (void *) -1;
 
 	  if (l->l_info[DT_RPATH])
 	    /* Allocate room for the search path and fill in information
@@ -610,7 +610,7 @@ _dl_init_paths (const char *llp)
 					       + l->l_info[DT_RPATH]->d_un.d_val),
 			       l, "RPATH");
 	  else
-	    l->l_rpath_dirs = NULL;
+	    l->l_rpath_dirs = (void *) -1;
 	}
     }
 #endif	/* SHARED */
@@ -639,6 +639,8 @@ _dl_init_paths (const char *llp)
       (void) fillin_rpath (local_strdup (llp), env_path_list, ":;",
 			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
     }
+  else
+    env_path_list = (void *) -1;
 }
 
 
@@ -1159,18 +1161,14 @@ print_search_path (struct r_search_path_elem **list,
 
 static int
 open_path (const char *name, size_t namelen, int preloaded,
-	   struct r_search_path_elem **dirs,
+	   struct r_search_path_elem ***dirsp,
 	   char **realname)
 {
+  struct r_search_path_elem **dirs = *dirsp;
   char *buf;
   int fd = -1;
   const char *current_what = NULL;
-
-  if (dirs == NULL || *dirs == NULL)
-    {
-      __set_errno (ENOENT);
-      return -1;
-    }
+  int any = 0;
 
   buf = alloca (max_dirnamelen + max_capstrlen + namelen);
   do
@@ -1228,6 +1226,9 @@ open_path (const char *name, size_t namelen, int preloaded,
 		}
 	    }
 
+	  /* Remember whether we found any existing directory.  */
+	  any |= this_dir->status[cnt] == existing;
+
 	  if (fd != -1 && preloaded && __libc_enable_secure)
 	    {
 	      /* This is an extra security effort to make sure nobody can
@@ -1271,6 +1272,13 @@ open_path (const char *name, size_t namelen, int preloaded,
 	return -1;
     }
   while (*++dirs != NULL);
+
+  /* Remove the whole path if none of the directories exists.  */
+  if (! any)
+    {
+      free (*dirsp);
+      *dirsp = (void *) -1;
+    }
 
   return -1;
 }
@@ -1340,50 +1348,68 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  /* First try the DT_RPATH of the dependent object that caused NAME
 	     to be loaded.  Then that object's dependent, and on up.  */
 	  for (l = loader; fd == -1 && l; l = l->l_loader)
-	    if (l->l_info[DT_RPATH])
-	      {
-		/* Make sure the cache information is available.  */
-		if (l->l_rpath_dirs == NULL)
-		  {
-		    size_t ptrval = (D_PTR (l, l_info[DT_STRTAB])
-				     + l->l_info[DT_RPATH]->d_un.d_val);
-		    l->l_rpath_dirs =
-		      decompose_rpath ((const char *) ptrval, l, "RPATH");
-		  }
+	    {
+	      if (l->l_rpath_dirs == NULL)
+		{
+		  if (l->l_info[DT_RPATH] == NULL)
+		    /* There is no path.  */
+		    l->l_rpath_dirs = (void *) -1;
+		  else
+		    {
+		      /* Make sure the cache information is available.  */
+		      size_t ptrval = (D_PTR (l, l_info[DT_STRTAB])
+				       + l->l_info[DT_RPATH]->d_un.d_val);
+		      l->l_rpath_dirs =
+			decompose_rpath ((const char *) ptrval, l,
+					 "RPATH");
 
-		if (l->l_rpath_dirs != NULL)
-		  fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
-				  &realname);
-	      }
+		      if (l->l_rpath_dirs != (void *) -1)
+			fd = open_path (name, namelen, preloaded,
+					&l->l_rpath_dirs, &realname);
+		    }
+		}
+	      else if (l->l_rpath_dirs != (void *) -1)
+		fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
+				&realname);
+	    }
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
              itself.  */
 	  l = _dl_loaded;
 	  if (fd == -1 && l && l->l_type != lt_loaded && l != loader
-	      && l->l_rpath_dirs != NULL)
-	    fd = open_path (name, namelen, preloaded, l->l_rpath_dirs,
+	      && l->l_rpath_dirs != (void *) -1)
+	    fd = open_path (name, namelen, preloaded, &l->l_rpath_dirs,
 			    &realname);
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
-      if (fd == -1 && env_path_list != NULL)
-	fd = open_path (name, namelen, preloaded, env_path_list, &realname);
+      if (fd == -1 && env_path_list != (void *) -1)
+	fd = open_path (name, namelen, preloaded, &env_path_list, &realname);
 
       /* Look at the RUNPATH informaiton for this binary.  */
-      if (loader != NULL && loader->l_info[DT_RUNPATH])
+      if (loader != NULL && loader->l_runpath_dirs != (void *) -1)
 	{
-	  /* Make sure the cache information is available.  */
-	   if (loader->l_runpath_dirs == NULL)
-	      {
-		size_t ptrval = (D_PTR (loader, l_info[DT_STRTAB])
-				 + loader->l_info[DT_RUNPATH]->d_un.d_val);
-		loader->l_runpath_dirs =
-		  decompose_rpath ((const char *) ptrval, loader, "RUNPATH");
-	      }
+	  if (loader->l_runpath_dirs == NULL)
+	    {
+	      if (loader->l_info[DT_RUNPATH] == NULL)
+		/* No RUNPATH.  */
+		loader->l_runpath_dirs = (void *) -1;
+	      else
+		{
+		  /* Make sure the cache information is available.  */
+		  size_t ptrval = (D_PTR (loader, l_info[DT_STRTAB])
+				   + loader->l_info[DT_RUNPATH]->d_un.d_val);
+		  loader->l_runpath_dirs =
+		    decompose_rpath ((const char *) ptrval, loader, "RUNPATH");
 
-	   if (loader->l_runpath_dirs != NULL)
-	      fd = open_path (name, namelen, preloaded, loader->l_runpath_dirs,
-			      &realname);
+		  if (loader->l_runpath_dirs != (void *) -1)
+		    fd = open_path (name, namelen, preloaded,
+				    &loader->l_runpath_dirs, &realname);
+		}
+	    }
+	  else if (loader->l_runpath_dirs != (void *) -1)
+	    fd = open_path (name, namelen, preloaded,
+			    &loader->l_runpath_dirs, &realname);
 	}
 
       if (fd == -1)
@@ -1409,7 +1435,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Finally, try the default path.  */
       if (fd == -1)
-	fd = open_path (name, namelen, preloaded, rtld_search_dirs, &realname);
+	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
+			&realname);
 
       /* Add another newline when we a tracing the library loading.  */
       if (__builtin_expect (_dl_debug_libs, 0))

@@ -1,3 +1,14 @@
+2000-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_init_paths): Use (void*) -1 to signal non-existing
+	RUNPATH, RPATH, and LD_LIBRARY_PATH.
+	(open_path): Change type of fourth parameter.  Make pointer to array
+	of pointers.  Create variable dirs with original type.
+	Track whether any directory for the object exists and if not,
+	change *DIRSP to (void*) -1 to signal there is no such search path.
+	(_dl_map_object): Change all calls of open_path.
+	Rewrite decompose_rpath calls.
+
 2000-03-31  Andreas Schwab  <schwab@suse.de>
 
 	* string/strfry.c: Declare STATE as array of char instead of int
