@@ -38,6 +38,9 @@ struct td_thragent
 
   /* Sizeof struct _pthread_descr_struct.  */
   int sizeof_descr;
+
+  /* Pointer to the `__pthread_threads_events' variable in the target.  */
+  psaddr_t pthread_threads_eventsp;
 };
 
 

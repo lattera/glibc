@@ -28,12 +28,16 @@ td_thr_getfpregs (const td_thrhandle_t *th, prfpregset_t *regset)
 
   LOG (__FUNCTION__);
 
-  /* We have to get the PID for this thread.  */
+  /* We have to get the state and the PID for this thread.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
 		 sizeof (struct _pthread_descr_struct)) != PS_OK)
     return TD_ERR;
 
-  if (ps_lgetfpregs (th->th_ta_p->ph, pds.p_pid, regset) != PS_OK)
+  /* If the thread already terminated we return all zeroes.  */
+  if (pds.p_terminated)
+    memset (regset, '\0', sizeof (*regset));
+  /* Otherwise get the register content through the callback.  */
+  else if (ps_lgetfpregs (th->th_ta_p->ph, pds.p_pid, regset) != PS_OK)
     return TD_ERR;
 
   return TD_OK;

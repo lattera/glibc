@@ -39,6 +39,26 @@ void pthread_exit(void * retval)
   THREAD_SETMEM(self, p_retval, retval);
   /* Say that we've terminated */
   THREAD_SETMEM(self, p_terminated, 1);
+  /* See whether we have to signal the death.  */
+  if (THREAD_GETMEM(self, p_report_events))
+    {
+      /* See whether TD_DEATH is in any of the mask.  */
+      int idx = __td_eventword (TD_DEATH);
+      uint32_t mask = __td_eventmask (TD_DEATH);
+
+      if ((mask & (__pthread_threads_events.event_bits[idx]
+		   | THREAD_GETMEM(self,
+				   p_eventbuf.eventmask).event_bits[idx]))
+	  != 0)
+	{
+	  /* Yep, we have to signal the death.  */
+	  THREAD_SETMEM(self, p_eventbuf.eventnum, TD_DEATH);
+	  THREAD_SETMEM(self, p_eventbuf.eventdata, self);
+
+	  /* Now call the function to signal the event.  */
+	  __linuxthreads_death_event();
+	}
+    }
   /* See if someone is joining on us */
   joining = THREAD_GETMEM(self, p_joining);
   __pthread_unlock(THREAD_GETMEM(self, p_lock));

@@ -1,7 +1,6 @@
-/* Set a thread's floating-point register set.
+/* Event functions used while debugging.
    Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,25 +17,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include "thread_dbP.h"
+/* The functions contained here do nothing, they just return.  */
 
-
-td_err_e
-td_thr_setfpregs (const td_thrhandle_t *th, const prfpregset_t *fpregs)
+void
+__linuxthreads_create_event (void)
 {
-  struct _pthread_descr_struct pds;
+}
 
-  LOG (__FUNCTION__);
+void
+__linuxthreads_death_event (void)
+{
+}
 
-  /* We have to get the state and the PID for this thread.  */
-  if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
-                 sizeof (struct _pthread_descr_struct)) != PS_OK)
-    return TD_ERR;
-
-  /* Only set the registers if the thread hasn't yet terminated.  */
-  if (pds.p_terminated == 0
-      && ps_lsetfpregs (th->th_ta_p->ph, pds.p_pid, fpregs) != PS_OK)
-    return TD_ERR;
-
-  return TD_OK;
+void
+__linuxthreads_reap_event (void)
+{
 }

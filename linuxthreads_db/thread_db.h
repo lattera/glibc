@@ -200,6 +200,14 @@ typedef struct td_event_msg
   } msg;
 } td_event_msg_t;
 
+/* Structure containing event data available in each thread structure.  */
+typedef struct
+{
+  td_thr_events_t eventmask;	/* Mask of enabled events.  */
+  td_event_e eventnum;		/* Number of last event.  */
+  void *eventdata;		/* Data associated with event.  */
+} td_eventbuf_t;
+
 
 /* Gathered statistics about the process.  */
 typedef struct td_ta_stats
@@ -228,10 +236,10 @@ typedef pthread_key_t thread_key_t;
 
 
 /* Callback for iteration over threads.  */
-typedef int td_thr_iter_f __P ((const td_thrhandle_t *, void *));
+typedef int td_thr_iter_f (const td_thrhandle_t *, void *);
 
 /* Callback for iteration over thread local data.  */
-typedef int td_key_iter_f __P ((thread_key_t, void (*) (void *), void *));
+typedef int td_key_iter_f (thread_key_t, void (*) (void *), void *);
 
 
 
@@ -323,6 +331,10 @@ extern td_err_e td_ta_tsd_iter (const td_thragent_t *__ta, td_key_iter_f *__ki,
 extern td_err_e td_ta_event_addr (const td_thragent_t *__ta,
 				  td_event_e __event, td_notify_t *__ptr);
 
+/* Enable EVENT for all threads.  */
+extern td_err_e td_ta_set_event (const td_thragent_t *__ta,
+				 td_thr_events_t *__event);
+
 
 /* Set suggested concurrency level for process associated with TA.  */
 extern td_err_e td_ta_setconcurrency (const td_thragent_t *__ta, int __level);
@@ -348,11 +360,11 @@ extern td_err_e td_thr_get_info (const td_thrhandle_t *__th,
 
 /* Retrieve floating-point register contents of process running thread TH.  */
 extern td_err_e td_thr_getfpregs (const td_thrhandle_t *__th,
-				  fpregset_t *__regset);
+				  prfpregset_t *__regset);
 
 /* Retrieve general register contents of process running thread TH.  */
 extern td_err_e td_thr_getgregs (const td_thrhandle_t *__th,
-				 gregset_t __gregs);
+				 prgregset_t __gregs);
 
 /* Retrieve extended register contents of process running thread TH.  */
 extern td_err_e td_thr_getxregs (const td_thrhandle_t *__th, void *__xregs);
@@ -362,11 +374,11 @@ extern td_err_e td_thr_getxregsize (const td_thrhandle_t *__th, int *__sizep);
 
 /* Set floating-point register contents of process running thread TH.  */
 extern td_err_e td_thr_setfpregs (const td_thrhandle_t *__th,
-				  const fpregset_t *__fpregs);
+				  const prfpregset_t *__fpregs);
 
 /* Set general register contents of process running thread TH.  */
 extern td_err_e td_thr_setgregs (const td_thrhandle_t *__th,
-				 gregset_t __gregs);
+				 prgregset_t __gregs);
 
 /* Set extended register contents of process running thread TH.  */
 extern td_err_e td_thr_setxregs (const td_thrhandle_t *__th,

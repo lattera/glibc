@@ -32,9 +32,11 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
 
   LOG (__FUNCTION__);
 
-  /* See whether the library contains the necessary symbols.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_threads_debug",
-		         &addr) != PS_OK)
+  /* Get the global event mask.  This is one of the variables which
+     are new in the thread library to enable debugging.  If it is
+     not available we cannot debug.  */
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
+			 "__pthread_threads_events", &addr) != PS_OK)
     return TD_NOLIBTHREAD;
 
   /* Fill in the appropriate information.  */
@@ -45,6 +47,9 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   /* Store the proc handle which we will pass to the callback functions
      back into the debugger.  */
   (*ta)->ph = ps;
+
+  /* Remember the address.  */
+  (*ta)->pthread_threads_eventsp = (td_thr_events_t *) addr;
 
   /* See whether the library contains the necessary symbols.  */
   if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_handles",

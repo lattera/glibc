@@ -1,4 +1,4 @@
-/* Enable event reporting.
+/* Enable event process-wide.
    Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
@@ -18,13 +18,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stddef.h>
+
 #include "thread_dbP.h"
 
 
 td_err_e
-td_thr_event_enable (const td_thrhandle_t *th, int event)
+td_thr_event_enable (th, onoff)
+     const td_thrhandle_t *th;
+     int onoff;
 {
-  /* XXX We have to figure out what has to be done.  */
   LOG (__FUNCTION__);
-  return TD_NOCAPAB;
+
+  /* Write the new value into the thread data structure.  */
+  if (ps_pdwrite (th->th_ta_p->ph,
+		  ((char *) th->th_unique
+		   + offsetof (struct _pthread_descr_struct, p_report_events)),
+		  &onoff, sizeof (int)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  return TD_OK;
 }

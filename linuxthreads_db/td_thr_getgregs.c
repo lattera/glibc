@@ -28,12 +28,16 @@ td_thr_getgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   LOG (__FUNCTION__);
 
-  /* We have to get the PID for this thread.  */
+  /* We have to get the state and the PID for this thread.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
 		 sizeof (struct _pthread_descr_struct)) != PS_OK)
     return TD_ERR;
 
-  if (ps_lgetregs (th->th_ta_p->ph, pds.p_pid, gregs) != PS_OK)
+  /* If the thread already terminated we return all zeroes.  */
+  if (pds.p_terminated)
+    memset (gregs, '\0', sizeof (gregs));
+  /* Otherwise get the register content through the callback.  */
+  else if (ps_lgetregs (th->th_ta_p->ph, pds.p_pid, gregs) != PS_OK)
     return TD_ERR;
 
   return TD_OK;

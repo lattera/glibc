@@ -28,12 +28,14 @@ td_thr_setgregs (const td_thrhandle_t *th, prgregset_t gregs)
 
   LOG (__FUNCTION__);
 
-  /* We have to get the PID for this thread.  */
+  /* We have to get the state and the PID for this thread.  */
   if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
                  sizeof (struct _pthread_descr_struct)) != PS_OK)
     return TD_ERR;
 
-  if (ps_lsetregs (th->th_ta_p->ph, pds.p_pid, gregs) != PS_OK)
+  /* Only set the registers if the thread hasn't yet terminated.  */
+  if (pds.p_terminated == 0
+      && ps_lsetregs (th->th_ta_p->ph, pds.p_pid, gregs) != PS_OK)
     return TD_ERR;
 
   return TD_OK;

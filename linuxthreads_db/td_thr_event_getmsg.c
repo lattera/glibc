@@ -18,13 +18,43 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stddef.h>
+#include <string.h>
+
 #include "thread_dbP.h"
 
 
 td_err_e
 td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
 {
-  /* XXX We have to figure out what has to be done.  */
+  td_eventbuf_t event;
+
   LOG (__FUNCTION__);
-  return TD_NOCAPAB;
+
+  /* Read the even structure from the target.  */
+  if (ps_pdread (th->th_ta_p->ph,
+		 ((char *) th->th_unique
+		  + offsetof (struct _pthread_descr_struct, p_eventbuf)),
+		 &event, sizeof (td_eventbuf_t)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  /* Check whether an event occurred.  */
+  if (event.eventnum == TD_EVENT_NONE)
+    /* Nothing.  */
+    return TD_NOMSG;
+
+  /* Fill the user's data structure.  */
+  msg->event = event.eventnum;
+  msg->th_p = th;
+  msg->msg.data = (uintptr_t) event.eventdata;
+
+  /* And clear the event message in the target.  */
+  memset (&event, '\0', sizeof (td_eventbuf_t));
+  if (ps_pdwrite (th->th_ta_p->ph,
+		  ((char *) th->th_unique
+		   + offsetof (struct _pthread_descr_struct, p_eventbuf)),
+		  &event, sizeof (td_eventbuf_t)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  return TD_OK;
 }

@@ -1,3 +1,21 @@
+1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (libpthread-routines): Add events.
+	* events.c: New file.
+	* internals.h: Protect against multiple inclusion.
+	Include thread_dbP.h header.
+	(struct _pthread_descr_struct): Add new fields p_report_events and
+	p_eventbuf.
+	Declare event reporting functions.
+	* join.c (pthread_exit): Signal event if this is wanted.
+	* manager.c (__pthread_threads_events): New variable.
+	(pthread_handle_create): Take new parameters with event information.
+	Signal TD_CREATE event if wanted.
+	(__pthread_manager): Adjust pthread_handle_create call.
+	(pthread_start_thread_event): New function.  Block until manager is
+	finished and then call pthread_start_thread.
+	(pthread_exited): Signal TD_REAP event if wanted.
+
 1999-10-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* restart.h (suspend_with_cancellation): Rewrite as a macro.

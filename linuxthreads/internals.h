@@ -12,6 +12,9 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        */
 /* GNU Library General Public License for more details.                 */
 
+#ifndef _INTERNALS_H
+#define _INTERNALS_H	1
+
 /* Internal data structures */
 
 /* Includes */
@@ -25,6 +28,7 @@
 
 #include "pt-machine.h"
 #include "semaphore.h"
+#include "../linuxthreads_db/thread_dbP.h"
 
 #ifndef THREAD_GETMEM
 # define THREAD_GETMEM(descr, member) descr->member
@@ -115,6 +119,9 @@ struct _pthread_descr_struct {
   size_t p_guardsize;		/* size of guard area */
   pthread_descr p_self;		/* Pointer to this structure */
   int p_nr;                     /* Index of descriptor in __pthread_handles */
+  /* New elements must be added at the end.  */
+  int p_report_events;		/* Nonzero if events must be reported.  */
+  td_eventbuf_t p_eventbuf;     /* Data for event.  */
 } __attribute__ ((aligned(32))); /* We need to align the structure so that
 				    doubles are aligned properly.  This is 8
 				    bytes on MIPS and 16 bytes on MIPS64.
@@ -218,6 +225,9 @@ extern int __pthread_exit_requested, __pthread_exit_code;
 /* Set to 1 by gdb if we're debugging */
 
 extern volatile int __pthread_threads_debug;
+
+/* Globally enabled events.  */
+extern volatile td_thr_events_t __pthread_threads_events;
 
 /* Return the handle corresponding to a thread id */
 
@@ -364,3 +374,10 @@ extern ssize_t __libc_write (int fd, const void *buf, size_t count);
 
 /* Prototypes for some of the new semaphore functions.  */
 extern int __new_sem_post (sem_t * sem);
+
+/* The functions called the signal events.  */
+extern void __linuxthreads_create_event (void);
+extern void __linuxthreads_death_event (void);
+extern void __linuxthreads_reap_event (void);
+
+#endif /* internals.h */

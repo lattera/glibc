@@ -1,4 +1,4 @@
-/* Set a thread's floating-point register set.
+/* Globally enable events.
    Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
@@ -22,21 +22,16 @@
 
 
 td_err_e
-td_thr_setfpregs (const td_thrhandle_t *th, const prfpregset_t *fpregs)
+td_ta_set_event (ta, event)
+     const td_thragent_t *ta;
+     td_thr_events_t *event;
 {
-  struct _pthread_descr_struct pds;
-
   LOG (__FUNCTION__);
 
-  /* We have to get the state and the PID for this thread.  */
-  if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
-                 sizeof (struct _pthread_descr_struct)) != PS_OK)
-    return TD_ERR;
-
-  /* Only set the registers if the thread hasn't yet terminated.  */
-  if (pds.p_terminated == 0
-      && ps_lsetfpregs (th->th_ta_p->ph, pds.p_pid, fpregs) != PS_OK)
-    return TD_ERR;
+  /* Write the new value into the thread data structure.  */
+  if (ps_pdwrite (ta->ph, ta->pthread_threads_eventsp,
+		  event, sizeof (td_thrhandle_t)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
 
   return TD_OK;
 }

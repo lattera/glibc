@@ -18,13 +18,25 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stddef.h>
+
 #include "thread_dbP.h"
 
 
 td_err_e
-td_thr_set_event (const td_thrhandle_t *th, td_thr_events_t *event)
+td_thr_set_event (th, event)
+     const td_thrhandle_t *th;
+     td_thr_events_t *event;
 {
-  /* XXX We have to figure out what has to be done.  */
   LOG (__FUNCTION__);
-  return TD_NOCAPAB;
+
+  /* Write the new value into the thread data structure.  */
+  if (ps_pdwrite (th->th_ta_p->ph,
+		  ((char *) th->th_unique
+		   + offsetof (struct _pthread_descr_struct,
+			       p_eventbuf.eventmask)),
+		  event, sizeof (td_thrhandle_t)) != PS_OK)
+    return TD_ERR;	/* XXX Other error value?  */
+
+  return TD_OK;
 }

@@ -1,16 +1,28 @@
+1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* td_ta_new.c: Don't test for __pthread_threads_debug.  Get address
+	of __pthread_threads_events and fail if this is not possible.
+	* td_ta_event_addr.c: Implement.
+	* td_thr_event_enable.c: Implement.
+	* td_thr_event_getmsg.c: Implement.
+	* td_thr_set_event.c: Implement.
+	* td_ta_set_event.c: New file.
+	* thread_db.h (td_eventbuf_t): Define.
+	Declare td_ta_set_event.
+	* thread_dbP.h (struct td_thragent): Add pthread_threads_eventsp.
+
+	* td_thr_getfpregs.c: For terminated threads return empty structure.
+	* td_thr_getgregs.c: Likewise.
+	* td_thr_setfpregs.c: Likewise.
+	* td_thr_setgregs.c: Likewise.
+
 1999-11-01  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Add more pr* types used
-	by the debugger.
-	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Likewise.
-	* sysdeps/unix/sysv/linux/i386/sys/procfs.h: Likewise.
-	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Likewise.
-	* sysdeps/unix/sysv/linux/sys/procfs.h: Likewise.
 	* thread_db.h: Shuffle types around to make things work for gdb.
 	* thread_dbP.h: Include proc_service.h before thread_db.h.
 
-	* td_ta_new.c: It's TD_NOLIBTHREAD, not TD_LIBTHREAD.
+	* thread_db.h: It's TD_NOLIBTHREAD, not TD_LIBTHREAD.
+	* td_ta_new.c: Likewise.
 
 1999-10-14  Ulrich Drepper  <drepper@cygnus.com>
 

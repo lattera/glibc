@@ -35,7 +35,7 @@ extra-libs-others := $(extra-libs)
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
 		       semaphore spinlock wrapsyscall rwlock pt-machine \
-		       oldsemaphore
+		       oldsemaphore events
 
 vpath %.c Examples
 tests = ex1 ex2 ex3 ex4 ex5 ex6

@@ -43,14 +43,17 @@ const int __linuxthreads_pthread_threads_max = PTHREAD_THREADS_MAX;
 
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
-int __pthread_nonstandard_stacks = 0;
+int __pthread_nonstandard_stacks;
 
 /* Number of active entries in __pthread_handles (used by gdb) */
 volatile int __pthread_handles_num = 2;
 
 /* Whether to use debugger additional actions for thread creation
    (set to 1 by gdb) */
-volatile int __pthread_threads_debug = 0;
+volatile int __pthread_threads_debug;
+
+/* Globally enabled events.  */
+volatile td_thr_events_t __pthread_threads_events;
 
 /* Mapping from stack segment to thread descriptor. */
 /* Stack segment numbers are also indices into the __pthread_handles array. */
@@ -80,7 +83,9 @@ static pthread_t pthread_threads_counter = 0;
 
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
                                  void * (*start_routine)(void *), void *arg,
-                                 sigset_t *mask, int father_pid);
+                                 sigset_t *mask, int father_pid,
+				 int report_events,
+				 td_thr_events_t *event_maskp);
 static void pthread_handle_free(pthread_t th_id);
 static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode);
 static void pthread_reap_children(void);
@@ -141,7 +146,9 @@ int __pthread_manager(void *arg)
                                 request.req_args.create.fn,
                                 request.req_args.create.arg,
                                 &request.req_args.create.mask,
-                                request.req_thread->p_pid);
+                                request.req_thread->p_pid,
+				request.req_thread->p_report_events,
+				&request.req_thread->p_eventbuf.eventmask);
         restart(request.req_thread);
         break;
       case REQ_FREE:
@@ -218,6 +225,19 @@ static int pthread_start_thread(void *arg)
   /* Exit with the given return value */
   pthread_exit(outcome);
   return 0;
+}
+
+static int pthread_start_thread_event(void *arg)
+{
+  pthread_descr self = thread_self ();
+
+  /* Get the lock the manager will free once all is correctly set up.  */
+  __pthread_lock (THREAD_GETMEM(self, p_lock), NULL);
+  /* Free it immediately.  */
+  __pthread_unlock (THREAD_GETMEM(self, p_lock));
+
+  /* Continue with the real function.  */
+  return pthread_start_thread (arg);
 }
 
 static int pthread_allocate_stack(const pthread_attr_t *attr,
@@ -297,7 +317,9 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 				 void * (*start_routine)(void *), void *arg,
-				 sigset_t * mask, int father_pid)
+				 sigset_t * mask, int father_pid,
+				 int report_events,
+				 td_thr_events_t *event_maskp)
 {
   size_t sseg;
   int pid;
@@ -372,10 +394,47 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_start_args.mask = *mask;
   /* Raise priority of thread manager if needed */
   __pthread_manager_adjust_prio(new_thread->p_priority);
-  /* Do the cloning */
-  pid = __clone(pthread_start_thread, (void **) new_thread,
-                CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
-		__pthread_sig_cancel, new_thread);
+  /* Do the cloning.  We have to use two different functions depending
+     on whether we are debugging or not.  */
+  pid = 0;	/* Note that the thread never can have PID zero.  */
+  if (report_events)
+    {
+      /* See whether the TD_CREATE event bit is set in any of the
+         masks.  */
+      int idx = __td_eventword (TD_CREATE);
+      uint32_t mask = __td_eventmask (TD_CREATE);
+
+      if ((mask & (__pthread_threads_events.event_bits[idx]
+		   | event_maskp->event_bits[idx])) != 0)
+	{
+	  /* Lock the mutex the child will use now so that it will stop.  */
+	  __pthread_lock(new_thread->p_lock, NULL);
+
+	  /* We have to report this event.  */
+	  pid = __clone(pthread_start_thread_event, (void **) new_thread,
+			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+			__pthread_sig_cancel, new_thread);
+	  if (pid != -1)
+	    {
+	      /* Now fill in the information about the new thread in
+		 the newly created thread's data structure.  We cannot let
+		 the new thread do this since we don't know whether it was
+		 already scheduled when we send the event.  */
+	      new_thread->p_eventbuf.eventdata = new_thread;
+	      new_thread->p_eventbuf.eventnum = TD_CREATE;
+
+	      /* Now call the function which signals the event.  */
+	      __linuxthreads_create_event ();
+
+	      /* Now restart the thread.  */
+	      __pthread_unlock(new_thread->p_lock);
+	    }
+	}
+    }
+  if (pid == 0)
+    pid = __clone(pthread_start_thread, (void **) new_thread,
+		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+		  __pthread_sig_cancel, new_thread);
   /* Check if cloning succeeded */
   if (pid == -1) {
     /* Free the stack if we allocated it */
@@ -451,6 +510,24 @@ static void pthread_exited(pid_t pid)
       /* Mark thread as exited, and if detached, free its resources */
       __pthread_lock(th->p_lock, NULL);
       th->p_exited = 1;
+      /* If we have to signal this event do it now.  */
+      if (th->p_report_events)
+	{
+	  /* See whether TD_DEATH is in any of the mask.  */
+	  int idx = __td_eventword (TD_REAP);
+	  uint32_t mask = __td_eventmask (TD_REAP);
+
+	  if ((mask & (__pthread_threads_events.event_bits[idx]
+		       | th->p_eventbuf.eventmask.event_bits[idx])) != 0)
+	    {
+	      /* Yep, we have to signal the death.  */
+	      th->p_eventbuf.eventnum = TD_DEATH;
+	      th->p_eventbuf.eventdata = th;
+
+	      /* Now call the function to signal the event.  */
+	      __linuxthreads_reap_event();
+	    }
+	}
       detached = th->p_detached;
       __pthread_unlock(th->p_lock);
       if (detached)
