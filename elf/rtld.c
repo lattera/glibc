@@ -1572,7 +1572,7 @@ cannot allocate TLS data structures for initial thread");
 	    if (l->l_faked)
 	      /* The library was not found.  */
 	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
-	    else if (l->l_libname->name[0] == '/')
+	    else if (strcmp (l->l_libname->name, l->l_name) == 0)
 	      _dl_printf ("\t%s (0x%0*Zx)\n", l->l_libname->name,
 			  (int) sizeof l->l_map_start * 2,
 			  (size_t) l->l_map_start);
