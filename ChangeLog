@@ -1,3 +1,100 @@
+2002-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/examples/mkfsock.c: Include <string.h> as well.
+	Patch by Alain De Carolis <alaind@wseurope.com>.
+
+2002-03-06  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regexec.c (re_match): Fix incorrect register sizes.
+	(re_search): Likewise.
+
+2002-03-05  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (regfree): Remove a disused condition.
+	* posix/regex_internal.c (re_acquire_state): Likewise.
+	(re_acquire_state_context): Likewise.
+	(register_state): Remove a redundant malloc invocation.
+	* posix/regex_internal.h: (re_state_table_entry): Simplify
+	the structure.
+
+2002-03-05  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (regcomp): Add __builtin_expect to error
+	handling conditions.
+	(regerror): Likewise.
+	(regfree): Likewise.
+	(re_compile_internal): Likewise.
+	(init_dfa): Likewise.
+	(init_word_char): Likewise.
+	(create_initial_state): Likewise.
+	(analyze): Likewise.
+	(analyze_tree): Likewise.
+	(duplicate_node): Likewise.
+	(calc_eclosure): Likewise.
+	(calc_eclosure_iter): Likewise.
+	(parse): Likewise.
+	(parse_reg_exp): Likewise.
+	(parse_branch): Likewise.
+	(parse_expression): Likewise.
+	(parse_subexp): Likewise.
+	(parse_dup_op): Likewise.
+	(parse_bracket_exp): Likewise.
+	(build_equiv_class): Likewise.
+	(build_charclass): Likewise.
+	(build_word_op): Likewise.
+	(fetch_number): Likewise.
+	(create_tree): Likewise.
+	(duplicate_tree): Likewise.
+	* posix/regex.c (BE): New macro.
+	* posix/regexec.c (re_match): Add __builtin_expect to error
+	handling conditions.
+	(re_match_2): Likewise.
+	(re_search): Likewise.
+	(re_search_internal): Likewise.
+	(check_matching): Likewise.
+	(proceed_next_node): Likewise.
+	(set_regs): Likewise.
+	(sift_states_backward): Likewise.
+	(add_epsilon_backreference): Likewise.
+	(transit_state): Likewise.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(transit_state_bkref): Likewise.
+	(transit_state_bkref_loop): Likewise.
+	(build_trtable): Likewise.
+	(group_nodes_into_DFAstates): Likewise.
+	(match_ctx_init): Likewise.
+	(match_ctx_add_entry): Likewise.
+	* posix/regex_internal.c (re_string_construct): Add __builtin_expect
+	to error handling conditions.
+	(re_string_construct_toupper): Likewise.
+	(build_wcs_buffer): Likewise.
+	(build_wcs_upper_buffer): Likewise.
+	(build_upper_buffer): Likewise.
+	(re_string_translate_buffer): Likewise.
+	(re_node_set_alloc): Likewise.
+	(re_node_set_init_1): Likewise.
+	(re_node_set_init_2): Likewise.
+	(re_node_set_init_copy): Likewise.
+	(re_node_set_intersect): Likewise.
+	(re_node_set_init_union): Likewise.
+	(re_node_set_merge): Likewise.
+	(re_node_set_insert): Likewise.
+	(re_dfa_add_node): Likewise.
+	(re_acquire_state): Likewise.
+	(re_acquire_state_context): Likewise.
+	(create_new_state_common): Likewise.
+	(register_state): Likewise.
+	(create_ci_new_state): Likewise.
+	(create_cd_new_state): Likewise.
+	(re_string_context_at): Remove redundant condition.
+
+2002-01-16  Roger Sayle  <roger@eyesopen.com>
+
+	* sysdeps/i386/i686/strcmp.S: Avoid unconditional jump to a ret.
+
+	* sysdeps/i386/i586/strlen.S: Fix typo in comment.
+
 2002-03-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/elf/configure.in: Fix comment.

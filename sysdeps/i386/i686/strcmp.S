@@ -1,5 +1,5 @@
 /* Highly optimized version for ix86, x>=6.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -49,7 +49,8 @@ L(oop):	movb	(%ecx), %al
 	   the end of the NUL terminators.  */
 	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jbe)
 	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jbe)
-	jmp	L(out)
+	LEAVE
+	ret
 
 #ifndef __BOUNDED_POINTERS__
 L(neq):	movl	$1, %eax
@@ -65,6 +66,6 @@ L(chk):	CHECK_BOUNDS_HIGH (%ecx, STR1(%esp), jb)
 	CHECK_BOUNDS_HIGH (%edx, STR2(%esp), jb)
 #endif
 
-L(out):	LEAVE
+	LEAVE
 	ret
 END (BP_SYM (strcmp))

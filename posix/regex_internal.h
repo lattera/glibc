@@ -360,11 +360,7 @@ struct re_state_table_entry
 {
   int num;
   int alloc;
-  union
-  {
-    re_dfastate_t *state;
-    re_dfastate_t **array;
-  } entry;
+  re_dfastate_t **array;
 };
 
 struct re_dfa_t

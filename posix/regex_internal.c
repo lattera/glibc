@@ -96,7 +96,7 @@ re_string_construct (pstr, str, len, trans)
   if (MB_CUR_MAX >1 && pstr->len > 0)
     {
       ret = build_wcs_buffer (pstr);
-      if (ret != REG_NOERROR)
+      if (BE (ret != REG_NOERROR, 0))
         return ret;
     }
 #endif /* RE_ENABLE_I18N  */
@@ -104,7 +104,7 @@ re_string_construct (pstr, str, len, trans)
   if (trans != NULL)
     {
       ret = re_string_translate_buffer (pstr, trans);
-      if (ret != REG_NOERROR)
+      if (BE (ret != REG_NOERROR, 0))
         return ret;
     }
   return REG_NOERROR;
@@ -126,20 +126,20 @@ re_string_construct_toupper (pstr, str, len, trans)
 #ifdef RE_ENABLE_I18N
   if (MB_CUR_MAX >1)
     {
-      if (pstr->len > 0)
+      if (BE (pstr->len > 0, 1))
         {
           ret = build_wcs_upper_buffer (pstr);
-          if (ret != REG_NOERROR)
+          if (BE (ret != REG_NOERROR, 0))
             return ret;
         }
     }
   else
 #endif /* RE_ENABLE_I18N  */
     {
-      if (pstr->len > 0)
+      if (BE (pstr->len > 0, 1))
         {
           ret = build_upper_buffer (pstr);
-          if (ret != REG_NOERROR)
+          if (BE (ret != REG_NOERROR, 0))
             return ret;
         }
     }
@@ -147,7 +147,7 @@ re_string_construct_toupper (pstr, str, len, trans)
   if (trans != NULL)
     {
       ret = re_string_translate_buffer (pstr, trans);
-      if (ret != REG_NOERROR)
+      if (BE (ret != REG_NOERROR, 0))
         return ret;
     }
   return REG_NOERROR;
@@ -190,7 +190,7 @@ build_wcs_buffer (pstr)
   int char_idx, char_len, mbclen;
 
   pstr->wcs = re_malloc (wchar_t, pstr->len + 1);
-  if (pstr->wcs == NULL)
+  if (BE (pstr->wcs == NULL, 0))
     return REG_ESPACE;
 
   memset (&state, '\0', sizeof (mbstate_t));
@@ -200,7 +200,7 @@ build_wcs_buffer (pstr)
       int next_idx, remain_len = char_len - char_idx;
       prev_st = state;
       mbclen = mbrtowc (&wc, pstr->mbs + char_idx, remain_len, &state);
-      if (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0)
+      if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0, 0))
         /* We treat these cases as a singlebyte character.  */
         {
           mbclen = 1;
@@ -226,7 +226,7 @@ build_wcs_upper_buffer (pstr)
 
   pstr->wcs = re_malloc (wchar_t, pstr->len + 1);
   mbs_upper = re_malloc (unsigned char, pstr->len + 1);
-  if (pstr->wcs == NULL || mbs_upper == NULL)
+  if (BE (pstr->wcs == NULL || mbs_upper == NULL, 0))
     {
       pstr->wcs = NULL;
       return REG_ESPACE;
@@ -247,7 +247,8 @@ build_wcs_upper_buffer (pstr)
           else
             mbs_upper[char_idx] = pstr->mbs[char_idx];
         }
-      else if (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0)
+      else if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1
+                   || mbclen == 0, 0))
         /* We treat these cases as a singlebyte character.  */
         {
           mbclen = 1;
@@ -280,7 +281,7 @@ build_upper_buffer (pstr)
   int char_idx, char_len;
 
   mbs_upper = re_malloc (unsigned char, pstr->len + 1);
-  if (mbs_upper == NULL)
+  if (BE (mbs_upper == NULL, 0))
     return REG_ESPACE;
 
   char_len = pstr->len;
@@ -313,14 +314,14 @@ re_string_translate_buffer (pstr, trans)
     {
       transed_buf = (unsigned char *) pstr->mbs;
       transed_case_buf = re_malloc (unsigned char, pstr->len + 1);
-      if (transed_case_buf == NULL)
+      if (BE (transed_case_buf == NULL, 0))
         return REG_ESPACE;
       pstr->mbs_case_alloc = 1;
     }
   else
     {
       transed_buf = re_malloc (unsigned char, pstr->len + 1);
-      if (transed_buf == NULL)
+      if (BE (transed_buf == NULL, 0))
         return REG_ESPACE;
       transed_case_buf = NULL;
       pstr->mbs_alloc = 1;
@@ -381,7 +382,7 @@ re_string_context_at (input, idx, eflags, newline_anchor)
       unsigned int context = 0;
       if (idx < 0)
         context = CONTEXT_BEGBUF;
-      else if (idx == input->len)
+      else /* (idx == input->len) */
         context = CONTEXT_ENDBUF;
 
       if ((idx < 0 && !(eflags & REG_NOTBOL))
@@ -406,7 +407,7 @@ re_node_set_alloc (set, size)
   set->alloc = size;
   set->nelem = 0;
   set->elems = re_malloc (int, size);
-  if (set->elems == NULL)
+  if (BE (set->elems == NULL, 0))
     return REG_ESPACE;
   return REG_NOERROR;
 }
@@ -419,7 +420,7 @@ re_node_set_init_1 (set, elem)
   set->alloc = 1;
   set->nelem = 1;
   set->elems = re_malloc (int, 1);
-  if (set->elems == NULL)
+  if (BE (set->elems == NULL, 0))
     return REG_ESPACE;
   set->elems[0] = elem;
   return REG_NOERROR;
@@ -432,7 +433,7 @@ re_node_set_init_2 (set, elem1, elem2)
 {
   set->alloc = 2;
   set->elems = re_malloc (int, 2);
-  if (set->elems == NULL)
+  if (BE (set->elems == NULL, 0))
     return REG_ESPACE;
   if (elem1 == elem2)
     {
@@ -466,7 +467,7 @@ re_node_set_init_copy (dest, src)
     {
       dest->alloc = dest->nelem;
       dest->elems = re_malloc (int, dest->alloc);
-      if (dest->elems == NULL)
+      if (BE (dest->elems == NULL, 0))
         return REG_ESPACE;
       memcpy (dest->elems, src->elems, src->nelem * sizeof (int));
     }
@@ -491,7 +492,7 @@ re_node_set_intersect (dest, src1, src2)
         {
           dest->alloc = src1->nelem + src2->nelem;
           dest->elems = re_realloc (dest->elems, int, dest->alloc);
-          if (dest->elems == NULL)
+          if (BE (dest->elems == NULL, 0))
             return REG_ESPACE;
         }
     }
@@ -535,7 +536,7 @@ re_node_set_add_intersect (dest, src1, src2)
         {
           dest->alloc = src1->nelem + src2->nelem + dest->nelem;
           dest->elems = re_realloc (dest->elems, int, dest->alloc);
-          if (dest->elems == NULL)
+          if (BE (dest->elems == NULL, 0))
             return REG_ESPACE;
         }
     }
@@ -581,7 +582,7 @@ re_node_set_init_union (dest, src1, src2)
     {
       dest->alloc = src1->nelem + src2->nelem;
       dest->elems = re_malloc (int, dest->alloc);
-      if (dest->elems == NULL)
+      if (BE (dest->elems == NULL, 0))
         return REG_ESPACE;
     }
   else
@@ -632,18 +633,11 @@ re_node_set_merge (dest, src)
   int si, di;
   if (src == NULL || src->nelem == 0)
     return REG_NOERROR;
-  else if (dest == NULL)
-    {
-      dest = re_malloc (re_node_set, 1);
-      if (dest == NULL)
-        return REG_ESPACE;
-      return re_node_set_init_copy (dest, src);
-    }
   if (dest->alloc < src->nelem + dest->nelem)
     {
       dest->alloc = 2 * (src->nelem + dest->alloc);
       dest->elems = re_realloc (dest->elems, int, dest->alloc);
-      if (dest->elems == NULL)
+      if (BE (dest->elems == NULL, 0))
         return REG_ESPACE;
     }
 
@@ -709,7 +703,7 @@ re_node_set_insert (set, elem)
   /* In case of the set is empty.  */
   if (set->elems == NULL || set->alloc == 0)
     {
-      if (re_node_set_init_1 (set, elem) == REG_NOERROR)
+      if (BE (re_node_set_init_1 (set, elem) == REG_NOERROR, 1))
         return 1;
       else
         return -1;
@@ -733,7 +727,7 @@ re_node_set_insert (set, elem)
       int *new_array;
       set->alloc = set->alloc * 2;
       new_array = re_malloc (int, set->alloc);
-      if (new_array == NULL)
+      if (BE (new_array == NULL, 0))
         return -1;
       /* Copy the elements they are followed by the new element.  */
       if (idx > 0)
@@ -826,7 +820,7 @@ re_dfa_add_node (dfa, token, mode)
       re_token_t *new_array;
       dfa->nodes_alloc *= 2;
       new_array = re_realloc (dfa->nodes, re_token_t, dfa->nodes_alloc);
-      if (new_array == NULL)
+      if (BE (new_array == NULL, 0))
         return -1;
       else
         dfa->nodes = new_array;
@@ -842,8 +836,8 @@ re_dfa_add_node (dfa, token, mode)
                                       dfa->nodes_alloc);
           new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
                                          dfa->nodes_alloc);
-          if (new_firsts == NULL || new_nexts == NULL || new_edests == NULL
-              || new_eclosures == NULL || new_inveclosures == NULL)
+          if (BE (new_firsts == NULL || new_nexts == NULL || new_edests == NULL
+                  || new_eclosures == NULL || new_inveclosures == NULL, 0))
             return -1;
           dfa->firsts = new_firsts;
           dfa->nexts = new_nexts;
@@ -888,7 +882,7 @@ re_acquire_state (err, dfa, nodes)
   re_dfastate_t *new_state;
   struct re_state_table_entry *spot;
   int i;
-  if (nodes->nelem == 0)
+  if (BE (nodes->nelem == 0, 0))
     {
       *err = REG_NOERROR;
       return NULL;
@@ -896,26 +890,18 @@ re_acquire_state (err, dfa, nodes)
   hash = calc_state_hash (nodes, 0);
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
 
-  if (spot->alloc == 0)
+  for (i = 0 ; i < spot->num ; i++)
     {
-      /* Currently there are only one state in this spot.  */
-      if (spot->entry.state != NULL && hash == spot->entry.state->hash
-          && re_node_set_compare (&spot->entry.state->nodes, nodes))
-        return spot->entry.state;
+      re_dfastate_t *state = spot->array[i];
+      if (hash != state->hash)
+        continue;
+      if (re_node_set_compare (&state->nodes, nodes))
+        return state;
     }
-  else
-    for (i = 0 ; i < spot->num ; i++)
-      {
-        re_dfastate_t *state = spot->entry.array[i];
-        if (hash != state->hash)
-          continue;
-        if (re_node_set_compare (&state->nodes, nodes))
-          return state;
-      }
 
   /* There are no appropriate state in the dfa, create the new one.  */
   new_state = create_ci_newstate (dfa, nodes, hash);
-  if (new_state != NULL)
+  if (BE (new_state != NULL, 1))
     return new_state;
   else
     {
@@ -953,27 +939,18 @@ re_acquire_state_context (err, dfa, nodes, context)
   hash = calc_state_hash (nodes, context);
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
 
-  if (spot->alloc == 0)
+  for (i = 0 ; i < spot->num ; i++)
     {
-      /* Currently there are only one state in this spot.  */
-      if (spot->entry.state != NULL && hash == spot->entry.state->hash
-          && re_node_set_compare (&spot->entry.state->nodes, nodes)
-          && spot->entry.state->context == context)
-        return spot->entry.state;
+      re_dfastate_t *state = spot->array[i];
+      if (hash != state->hash)
+        continue;
+      if (re_node_set_compare (state->entrance_nodes, nodes)
+          && state->context == context)
+        return state;
     }
-  else
-    for (i = 0 ; i < spot->num ; i++)
-      {
-        re_dfastate_t *state = spot->entry.array[i];
-        if (hash != state->hash)
-          continue;
-        if (re_node_set_compare (state->entrance_nodes, nodes)
-            && state->context == context)
-          return state;
-      }
   /* There are no appropriate state in `dfa', create the new one.  */
   new_state = create_cd_newstate (dfa, nodes, context, hash);
-  if (new_state != NULL)
+  if (BE (new_state != NULL, 1))
     return new_state;
   else
     {
@@ -993,7 +970,7 @@ create_newstate_common (dfa, nodes, hash)
 {
   re_dfastate_t *newstate;
   newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
-  if (newstate == NULL)
+  if (BE (newstate == NULL, 0))
     return NULL;
   re_node_set_init_copy (&newstate->nodes, nodes);
   newstate->trtable = NULL;
@@ -1016,27 +993,12 @@ register_state (dfa, newstate, hash)
 
   if (spot->alloc <= spot->num)
     {
-      re_dfastate_t **new_array;
-
-      /* XXX Is spot->entry.array == NULL if spot->alloc == 0?  If yes
-	 the if can go away and only realloc is needed.  */
-      if (spot->alloc == 0)
-        {
-          spot->alloc = 4;
-          new_array = re_malloc (re_dfastate_t *, spot->alloc);
-	  if (new_array == NULL)
-            return REG_ESPACE;
-          new_array[0] = spot->entry.state;
-        }
-      else
-        {
-          spot->alloc = 2 * spot->num;
-          new_array = re_realloc (spot->entry.array, re_dfastate_t *,
-                                  spot->alloc);
-        }
-      spot->entry.array = new_array;
+      spot->alloc = 2 * spot->num + 2;
+      spot->array = re_realloc (spot->array, re_dfastate_t *, spot->alloc);
+      if (BE (spot->array == NULL, 0))
+        return REG_ESPACE;
     }
-  spot->entry.array[spot->num++] = newstate;
+  spot->array[spot->num++] = newstate;
   return REG_NOERROR;
 }
 
@@ -1053,7 +1015,7 @@ create_ci_newstate (dfa, nodes, hash)
   reg_errcode_t err;
   re_dfastate_t *newstate;
   newstate = create_newstate_common (dfa, nodes, hash);
-  if (newstate == NULL)
+  if (BE (newstate == NULL, 0))
     return NULL;
   newstate->entrance_nodes = &newstate->nodes;
 
@@ -1098,7 +1060,7 @@ create_cd_newstate (dfa, nodes, context, hash)
   re_dfastate_t *newstate;
 
   newstate = create_newstate_common (dfa, nodes, hash);
-  if (newstate == NULL)
+  if (BE (newstate == NULL, 0))
     return NULL;
   newstate->context = context;
   newstate->entrance_nodes = &newstate->nodes;
@@ -1139,7 +1101,7 @@ create_cd_newstate (dfa, nodes, context, hash)
           if (newstate->entrance_nodes == &newstate->nodes)
             {
               newstate->entrance_nodes = re_malloc (re_node_set, 1);
-	      if (newstate->entrance_nodes == NULL)
+	      if (BE (newstate->entrance_nodes == NULL, 0))
 		return NULL;
               re_node_set_init_copy (newstate->entrance_nodes, nodes);
               nctx_nodes = 0;
