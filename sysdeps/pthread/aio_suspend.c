@@ -1,5 +1,5 @@
 /* Suspend until termination of a requests.
-   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -31,7 +31,6 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
@@ -50,7 +49,6 @@ aio_suspend (list, nent, timeout)
   int cnt;
   int result = 0;
   int dummy;
-  bool any = false;
 
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);
@@ -72,7 +70,6 @@ aio_suspend (list, nent, timeout)
 		waitlist[cnt].sigevp = NULL;
 		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
 		requestlist[cnt]->waiting = &waitlist[cnt];
-		any = true;
 	      }
 	    else
 	      /* We will never suspend.  */
@@ -83,9 +80,9 @@ aio_suspend (list, nent, timeout)
 	  break;
       }
 
-  /* If there is no finished request wait for it.  In any case we have
-     to dequeue the requests if we enqueued them.  */
-  if (any)
+
+  /* Only if none of the entries is NULL or finished to be wait.  */
+  if (cnt == nent)
     {
       int oldstate;
 
@@ -94,70 +91,65 @@ aio_suspend (list, nent, timeout)
 	 which we must remove.  So defer cancelation for now.  */
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
-      /* Only if none of the entries is NULL or finished to be wait.  */
-      if (cnt == nent)
+      if (timeout == NULL)
+	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
+      else
 	{
-	  if (timeout == NULL)
-	    result = pthread_cond_wait (&cond, &__aio_requests_mutex);
-	  else
+	  /* We have to convert the relative timeout value into an
+	     absolute time value with pthread_cond_timedwait expects.  */
+	  struct timeval now;
+	  struct timespec abstime;
+
+	  __gettimeofday (&now, NULL);
+	  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
+	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
+	  if (abstime.tv_nsec >= 1000000000)
 	    {
-	      /* We have to convert the relative timeout value into an
-		 absolute time value with pthread_cond_timedwait expects.  */
-	      struct timeval now;
-	      struct timespec abstime;
-
-	      __gettimeofday (&now, NULL);
-	      abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
-	      abstime.tv_sec = timeout->tv_sec + now.tv_sec;
-	      if (abstime.tv_nsec >= 1000000000)
-		{
-		  abstime.tv_nsec -= 1000000000;
-		  abstime.tv_sec += 1;
-		}
-
-	      result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
-					       &abstime);
+	      abstime.tv_nsec -= 1000000000;
+	      abstime.tv_sec += 1;
 	    }
+
+	  result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
+					   &abstime);
 	}
 
-      /* Now remove the entry in the waiting list for all requests
-	 which didn't terminate.  */
-      while (cnt-- > 0)
-	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
-	  {
-	    struct waitlist **listp;
-
-	    assert (requestlist[cnt] != NULL);
-
-	    /* There is the chance that we cannot find our entry anymore.
-	       This could happen if the request terminated and restarted
-	       again.  */
-	    listp = &requestlist[cnt]->waiting;
-	    while (*listp != NULL && *listp != &waitlist[cnt])
-	      listp = &(*listp)->next;
-
-	    if (*listp != NULL)
-	      *listp = (*listp)->next;
-	  }
-
-      /* Now it's time to restore the cancelation state.  */
+      /* Now it's time to restore the cancellation state.  */
       pthread_setcancelstate (oldstate, NULL);
+    }
 
-      /* Release the conditional variable.  */
-      if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
-	/* This must never happen.  */
-	abort ();
+  /* Now remove the entry in the waiting list for all requests
+     which didn't terminate.  */
+  while (cnt-- > 0)
+    if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
+      {
+	struct waitlist **listp;
 
-      if (result != 0)
-	{
-	  /* An error occurred.  Possibly it's EINTR.  We have to translate
-	     the timeout error report of `pthread_cond_timedwait' to the
-	     form expected from `aio_suspend'.  */
-	  if (result == ETIMEDOUT)
-	    __set_errno (EAGAIN);
+	assert (requestlist[cnt] != NULL);
 
-	  result = -1;
-	}
+	/* There is the chance that we cannot find our entry anymore. This
+	   could happen if the request terminated and restarted again.  */
+	listp = &requestlist[cnt]->waiting;
+	while (*listp != NULL && *listp != &waitlist[cnt])
+	  listp = &(*listp)->next;
+
+	if (*listp != NULL)
+	  *listp = (*listp)->next;
+      }
+
+  /* Release the conditional variable.  */
+  if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
+    /* This must never happen.  */
+    abort ();
+
+  if (result != 0)
+    {
+      /* An error occurred.  Possibly it's EINTR.  We have to translate
+	 the timeout error report of `pthread_cond_timedwait' to the
+	 form expected from `aio_suspend'.  */
+      if (result == ETIMEDOUT)
+	__set_errno (EAGAIN);
+
+      result = -1;
     }
 
   /* Release the mutex.  */
