@@ -34,7 +34,7 @@ extern int _test_and_set (int *p, int v) __THROW;
 # endif
 
 _EXTERN_INLINE int
-_test_and_set (int *p, int v) __THROW
+__NTH (_test_and_set (int *p, int v))
 {
   int r, t;
 
