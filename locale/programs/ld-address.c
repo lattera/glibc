@@ -127,7 +127,9 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (address == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"), "LC_ADDRESS");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"),
+		   "LC_ADDRESS");
 	  address_startup (NULL, locale, 0);
 	  address = locale->categories[LC_ADDRESS].address;
 	  nothing = 1;

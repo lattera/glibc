@@ -90,8 +90,9 @@ telephone_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (telephone == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"),
-		 "LC_TELEPHONE");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"),
+		   "LC_TELEPHONE");
 	  telephone_startup (NULL, locale, 0);
 	  telephone = locale->categories[LC_TELEPHONE].telephone;
 	  nothing = 1;

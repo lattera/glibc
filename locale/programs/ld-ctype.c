@@ -346,7 +346,8 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (ctype == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"), "LC_CTYPE");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"), "LC_CTYPE");
 	  ctype_startup (NULL, locale, charmap, 0);
 	  ctype = locale->categories[LC_CTYPE].ctype;
 	}
@@ -1217,7 +1218,7 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
     invalid_range:
       lr_error (ldfile,
 		_("`%s' and `%.*s' are no valid names for symbolic range"),
-		last_str, now->val.str.lenmb, nowstr);
+		last_str, (int) now->val.str.lenmb, nowstr);
       return;
     }
 

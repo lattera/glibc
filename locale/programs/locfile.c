@@ -329,7 +329,7 @@ write_locale_data (const char *output_path, const char *category,
   int fd;
   char *fname;
 
-  fname = malloc (strlen (output_path) + 2 * strlen (category) + 6);
+  fname = malloc (strlen (output_path) + 2 * strlen (category) + 7);
   if (fname == NULL)
     error (5, errno, _("memory exhausted"));
 

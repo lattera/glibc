@@ -97,7 +97,9 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (numeric == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"), "LC_NUMERIC");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"),
+		   "LC_NUMERIC");
 	  numeric_startup (NULL, locale, 0);
 	  numeric = locale->categories[LC_NUMERIC].numeric;
 	  nothing = 1;

@@ -22,7 +22,7 @@ common_objpfx=$1
 
 # Generate the necessary locale data.
 I18NPATH=. \
-${common_objpfx}elf/ld-linux --library-path $common_objpfx \
+${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${common_objpfx}locale/localedef --quiet \
 -i tests/trans.def -f ISO-8859-1 -u mnemonic.ds \
 ${common_objpfx}localedata/tt_TT ||
@@ -30,7 +30,7 @@ exit 1
 
 # Run the test program.
 LOCPATH=${common_objpfx}localedata LC_ALL=tt_TT \
-${common_objpfx}elf/ld-linux --library-path $common_objpfx \
+${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${common_objpfx}localedata/tst-trans
 
 exit $?

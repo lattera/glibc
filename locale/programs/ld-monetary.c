@@ -187,8 +187,9 @@ monetary_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (monetary == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"),
-		 "LC_MONETARY");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"),
+		   "LC_MONETARY");
 	  monetary_startup (NULL, locale, 0);
 	  monetary = locale->categories[LC_MONETARY].monetary;
 	  nothing = 1;
@@ -196,9 +197,9 @@ monetary_finish (struct localedef_t *locale, struct charmap_t *charmap)
     }
 
 #define TEST_ELEM(cat) \
-  if (monetary->cat == NULL && !be_quiet)				      \
+  if (monetary->cat == NULL)						      \
     {									      \
-      if (! nothing)							      \
+      if (! be_quiet && ! nothing)					      \
 	error (0, 0, _("%s: field `%s' not defined"),			      \
 	       "LC_MONETARY", #cat);					      \
       monetary->cat = "";						      \
@@ -234,7 +235,14 @@ not correspond to a valid name in ISO 4217"),
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
-  if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
+  if (monetary->mon_decimal_point == NULL)
+    {
+      if (! be_quiet && ! nothing)
+	error (0, 0, _("%s: field `%s' not defined"),
+	       "LC_MONETARY", "mon_decimal_point");
+      monetary->mon_decimal_point = "";
+    }
+  else if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
       error (0, 0, _("\
 %s: value for field `%s' must not be the empty string"),
@@ -253,12 +261,15 @@ not correspond to a valid name in ISO 4217"),
 
 #undef TEST_ELEM
 #define TEST_ELEM(cat, min, max) \
-  if (monetary->cat == -2 && ! be_quiet && ! nothing)			      \
-    error (0, 0, _("%s: field `%s' not defined"),			      \
-	   "LC_MONETARY", #cat);					      \
+  if (monetary->cat == -2)						      \
+    {									      \
+       if (! be_quiet && ! nothing)					      \
+	 error (0, 0, _("%s: field `%s' not defined"),			      \
+	        "LC_MONETARY", #cat);					      \
+    }									      \
   else if ((monetary->cat < min || monetary->cat > max) && !be_quiet	      \
 	   && !nothing)							      \
-    error (0, 0, _("\
+    error (0, 0, _("							      \
 %s: value for field `%s' must be in range %d...%d"),			      \
 	   "LC_MONETARY", #cat, min, max)
 

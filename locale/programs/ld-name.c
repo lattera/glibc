@@ -90,7 +90,8 @@ name_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (name == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"), "LC_NAME");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"), "LC_NAME");
 	  name_startup (NULL, locale, 0);
 	  name = locale->categories[LC_NAME].name;
 	  nothing = 1;

@@ -94,8 +94,9 @@ messages_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (messages == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"),
-		 "LC_MESSAGES");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"),
+		   "LC_MESSAGES");
 	  messages_startup (NULL, locale, 0);
 	  messages = locale->categories[LC_MESSAGES].messages;
 	  nothing = 1;

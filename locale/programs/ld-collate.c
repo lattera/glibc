@@ -1376,6 +1376,14 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
   struct section_list *sect;
   int ruleidx;
 
+  if (collate == NULL)
+    {
+      /* No data, no check.  */
+      if (! be_quiet)
+	error (0, 0, _("No definition for %s category found"), "LC_COLLATE");
+      return;
+    }
+
   /* If this assertion is hit change the type in `element_t'.  */
   assert (nrules <= sizeof (runp->used_in_level) * 8);
 
@@ -1624,10 +1632,6 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct section_list *sect;
   int i;
 
-  obstack_init (&weightpool);
-  obstack_init (&extrapool);
-  obstack_init (&indirectpool);
-
   data.magic = LIMAGIC (LC_COLLATE);
   data.n = nelems;
   iov[0].iov_base = (void *) &data;
@@ -1644,6 +1648,28 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
+
+  /* If we have no LC_COLLATE data emit only the number of rules as zero.  */
+  if (collate == NULL)
+    {
+      while (cnt < _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE))
+	{
+	  iov[2 + cnt].iov_base = (char *) "";
+	  iov[2 + cnt].iov_len = 0;
+	  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+	  ++cnt;
+	}
+
+      assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
+
+      write_locale_data (output_path, "LC_COLLATE", 2 + cnt, iov);
+
+      return;
+    }
+
+  obstack_init (&weightpool);
+  obstack_init (&extrapool);
+  obstack_init (&indirectpool);
 
   /* Prepare the ruleset table.  */
   for (sect = collate->sections, i = 0; sect != NULL; sect = sect->next)

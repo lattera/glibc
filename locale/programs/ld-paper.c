@@ -87,7 +87,8 @@ paper_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (paper == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"), "LC_PAPER");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"), "LC_PAPER");
 	  paper_startup (NULL, locale, 0);
 	  paper = locale->categories[LC_PAPER].paper;
 	  nothing = 1;

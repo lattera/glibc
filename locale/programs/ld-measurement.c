@@ -89,8 +89,9 @@ measurement_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	 empty one.  */
       if (measurement == NULL)
 	{
-	  error (0, 0, _("No definition for %s category found"),
-		 "LC_MEASUREMENT");
+	  if (! be_quiet)
+	    error (0, 0, _("No definition for %s category found"),
+		   "LC_MEASUREMENT");
 	  measurement_startup (NULL, locale, 0);
 	  measurement = locale->categories[LC_MEASUREMENT].measurement;
 	  nothing = 1;
