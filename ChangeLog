@@ -8,10 +8,10 @@
 
 2001-04-23  Paul Eggert  <eggert@twinsun.com>
 
-        * posix/getopt.h (getopt_long, getopt_long_only, _getopt_internal):
-        Rename __argc to ___argc in prototypes to avoid compatibility
-        problems with systems that reserve the identifier "__argc".
-        Similarly for __argv.
+	* posix/getopt.h (getopt_long, getopt_long_only, _getopt_internal):
+	Rename __argc to ___argc in prototypes to avoid compatibility
+	problems with systems that reserve the identifier "__argc".
+	Similarly for __argv.
 
 2001-08-21  Roland McGrath  <roland@frob.com>
 
