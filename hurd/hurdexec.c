@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,8 +49,12 @@ _hurd_exec (task_t task, file_t file,
   mach_port_t *please_dealloc, *pdp;
 
   /* XXX needs to be hurdmalloc XXX */
-  if (err = __argz_create (argv, &args, &argslen))
+  if (argv == NULL)
+    args = NULL, argslen = 0;
+  else if (err = __argz_create (argv, &args, &argslen))
     return err;
+  if (envp == NULL)
+    env = NULL, envlen = 0;
   if (err = __argz_create (envp, &env, &envlen))
     goto outargs;
 
