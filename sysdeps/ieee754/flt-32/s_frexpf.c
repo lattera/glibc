@@ -47,7 +47,7 @@ two25 =  3.3554432000e+07; /* 0x4c000000 */
 	}
 	*eptr += (ix>>23)-126;
 	hx = (hx&0x807fffff)|0x3f000000;
-	*(int*)&x = hx;
+	SET_FLOAT_WORD(x,hx);
 	return x;
 }
 weak_alias (__frexpf, frexpf)

@@ -1,3 +1,7 @@
+2000-09-30  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/ieee754/flt-32/s_frexpf.c: Make it aliasing safe.
+
 2000-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/cache.c (save_cache): Initialize __unused field in new cache
