@@ -8,6 +8,10 @@
 	* login/programs/xtmp.h: Removed.
 	* login/Makefile: Remove rules for utmpd.
 	* login/README.utmpd: Removed.
+	* login/utmp_daemon.c: Removed.
+	* login/getutent_r.c: Remove references to daemon functions.
+	* login/utmp-private.h (__libc_utmp_daemon_functions): Remove
+	declaration.
 
 2000-04-18  Andreas Jaeger  <aj@suse.de>
 

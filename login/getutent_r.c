@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -58,16 +58,9 @@ setutent_unknown (void)
 {
   int result;
 
-  /* See whether utmpd is running.  */
-  result = (*__libc_utmp_daemon_functions.setutent) ();
+  result = (*__libc_utmp_file_functions.setutent) ();
   if (result)
-    __libc_utmp_jump_table = &__libc_utmp_daemon_functions;
-  else
-    {
-      result = (*__libc_utmp_file_functions.setutent) ();
-      if (result)
-	__libc_utmp_jump_table = &__libc_utmp_file_functions;
-    }
+    __libc_utmp_jump_table = &__libc_utmp_file_functions;
 
   return result;
 }
