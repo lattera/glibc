@@ -1,4 +1,4 @@
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -29,5 +29,6 @@ endif
 
 ifeq ($(subdir),posix)
 CFLAGS-fork.c = -D_IO_MTSAFE_IO
-CFLAGS-getpid.c = -fomit-frame-pointer
+CFLAGS-getpid.o = -fomit-frame-pointer
+CFLAGS-getpid.os = -fomit-frame-pointer
 endif
