@@ -1,3 +1,7 @@
+1999-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/connections.c (nscd_run): Use correct type for optlen variable.
+
 1999-06-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h (strnlen): Remove extra prototype.

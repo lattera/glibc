@@ -410,7 +410,7 @@ nscd_run (void *p)
 	  if (secure_in_use)
 	    {
 	      struct ucred caller;
-	      int optlen = sizeof (caller);
+	      socklen_t optlen = sizeof (caller);
 
 	      if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED,
 			      &caller, &optlen) < 0)
