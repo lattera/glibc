@@ -293,6 +293,9 @@ extern uint16_t htons (uint16_t __hostshort)
 /* Bind socket to a privileged IP port.  */
 extern int bindresvport (int __sockfd, struct sockaddr_in *__sock_in) __THROW;
 
+/* The IPv6 version of this function.  */
+extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
+     __THROW;
 
 
 #define IN6_IS_ADDR_MC_NODELOCAL(a) \

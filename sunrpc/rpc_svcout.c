@@ -1056,7 +1056,7 @@ write_inetd_register (const char *transp)
     sp = "\t";
   else
     sp = "";
-  if (streq (transp, "udp"))
+  if (streq (transp, "udp") || streq (transp, "udp6"))
     isudp = 1;
   else
     isudp = 0;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,7 @@
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 off_t
-__lseek (fd, offset, whence)
-     int fd;
-     off_t offset;
-     int whence;
+__libc_lseek (int fd, off_t offset, int whence)
 {
   error_t err;
   if (err = HURD_DPORT_USE (fd, __io_seek (port, offset, whence, &offset)))
@@ -34,4 +31,5 @@ __lseek (fd, offset, whence)
   return offset;
 }
 
-weak_alias (__lseek, lseek)
+weak_alias (__libc_lseek, __lseek)
+weak_alias (__libc_lseek, lseek)

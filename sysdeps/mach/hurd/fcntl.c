@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 
 /* Perform file control operations on FD.  */
 int
-__fcntl (int fd, int cmd, ...)
+__libc_fcntl (int fd, int cmd, ...)
 {
   va_list ap;
   struct hurd_fd *d;
@@ -198,4 +198,5 @@ __fcntl (int fd, int cmd, ...)
   return result;
 }
 
-weak_alias (__fcntl, fcntl)
+weak_alias (__libc_fcntl, __fcntl)
+weak_alias (__libc_fcntl, fcntl)

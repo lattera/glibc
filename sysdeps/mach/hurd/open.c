@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
 int
-__open (const char *file, int oflag, ...)
+__libc_open (const char *file, int oflag, ...)
 {
   mode_t mode;
   io_t port;
@@ -47,4 +47,5 @@ __open (const char *file, int oflag, ...)
   return _hurd_intern_fd (port, oflag, 1);
 }
 
-weak_alias (__open, open)
+weak_alias (__libc_open, __open)
+weak_alias (__libc_open, open)

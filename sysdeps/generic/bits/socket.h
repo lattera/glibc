@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Generic/4.3 BSD version.
-   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ enum __socket_type
 #define SOCK_RAW SOCK_RAW
   SOCK_RDM = 4,			/* Reliably-delivered messages.  */
 #define SOCK_RDM SOCK_RDM
-  SOCK_SEQPACKET = 5,		/* Sequenced, reliable, connection-based,
+  SOCK_SEQPACKET = 5		/* Sequenced, reliable, connection-based,
 				   datagrams of fixed maximum length.  */
 #define SOCK_SEQPACKET SOCK_SEQPACKET
 };
@@ -133,17 +133,17 @@ struct sockaddr
 /* Structure large enough to hold any socket address (with the historical
    exception of AF_UNIX).  We reserve 128 bytes.  */
 #if ULONG_MAX > 0xffffffff
-# define __ss_align	__uint64_t
+# define __ss_aligntype	__uint64_t
 #else
-# define __ss_align	__uint32_t
+# define __ss_aligntype	__uint32_t
 #endif
 #define _SS_SIZE	128
-#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_align)))
+#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_aligntype)))
 
 struct sockaddr_storage
   {
     __SOCKADDR_COMMON (__ss_);	/* Address family, etc.  */
-    __ss_align __ss_align;	/* Force desired alignment.  */
+    __ss_aligntype __ss_align;	/* Force desired alignment.  */
     char __ss_padding[_SS_PADSIZE];
   };
 
@@ -165,7 +165,7 @@ enum
 #define MSG_CTRUNC MSG_CTRUNC
     MSG_WAITALL		= 0x40,	/* Wait for full request or error.  */
 #define MSG_WAITALL MSG_WAITALL
-    MSG_DONTWAIT	= 0x80,	/* This message should be nonblocking.  */
+    MSG_DONTWAIT	= 0x80	/* This message should be nonblocking.  */
 #define MSG_DONTWAIT MSG_DONTWAIT
   };
 
@@ -234,7 +234,7 @@ enum
 #define SO_ERROR SO_ERROR
     SO_STYLE = 0x1008,		/* Get socket connection style.  */
 #define SO_STYLE SO_STYLE
-    SO_TYPE = SO_STYLE,		/* Compatible name for SO_STYLE.  */
+    SO_TYPE = SO_STYLE		/* Compatible name for SO_STYLE.  */
 #define SO_TYPE SO_TYPE
   };
 

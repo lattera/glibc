@@ -1,3 +1,62 @@
+2000-01-23  Philip Blundell  <philb@gnu.org>
+
+	Add basic support for RPC over IPv6:
+	* sunrpc/rpc/svc.h (struct SVCXPRT): Use `struct sockaddr_storage'
+	for remote address.
+	(svcudp6_create, svcudp6_bufcreate, svctcp6_create): New
+	prototypes.
+	* sunrpc/rpc/clnt.h (clnttcp6_create, clntudp6_create,
+	clntudp6_bufcreate): New prototypes.
+	* inet/netinet/in.h (bindresport6): Likewise.
+	* sunrpc/Makefile (routines): Add svc_tcp6, svc_udp6, bindrsvprt6.
+	* sunrpc/Versions: Add svcfd6_create, svctcp6_create,
+	svcudp6_create, svcudp6_bufcreate, svcudp6_enablecache,
+	bindresvport6 for GLIBC_2.2.
+	* sunrpc/rpc_main.c: Support `tcp6' and `udp6' transport types.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/svc_tcp.c (rendezvous_request): Use memcpy rather than
+	simple assignment when copying addresses.
+	* sunrpc/svc_udp.c (cache_get): Likewise.
+	* sunrpc/svc_unix.c (rendezvous_request): Likewise.
+	* sunrpc/bindrsvprt6.c, sunrpc/clnt_tcp6.c, sunrpc/clnt_udp6.c,
+	sunrpc/svc_tcp6.c, sunrpc/svc_udp6.c: New files.
+
+2000-01-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/mmap64.S: Correct check for ENOSYS.
+
+2000-01-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/fxstat.c (__fxstat): Pass right
+	parameter to fstat calls.
+
+2000-01-18  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/bits/socket.h
+	(__ss_aligntype, struct sockaddr_storage): Make these like Linux
+	version, replacing old type name `__ss_align'.
+
+2000-01-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/lseek64.c (__libc_lseek64): Renamed from __lseek64.
+	(__lseek64, lseek64): Make these weak aliases for __libc_lseek64.
+	* sysdeps/mach/hurd/lseek.c (__libc_lseek): Renamed from __lseek.
+	(__lseek, lseek): Make these weak aliases for __libc_lseek.
+	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Renamed from __fcntl.
+	(__fcntl, fcntl): Make these weak aliases for __libc_fcntl.
+	* sysdeps/mach/hurd/open.c (__libc_open): Renamed from __open.
+	(__open, open): Make these weak aliases for __libc_open.
+
+	* sysdeps/generic/bits/socket.h (enum __socket_type): Remove
+	trailing comma.
+	(anonymous enum for MSG_*): Likewise.
+	(anonymous enum for SO_*): Likewise.
+
+2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Fix typo (__GNU_SOURCE -> __USE_GNU)
+	(PR libc/1553).
+
 2000-01-08  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/setitimer.c (quantize_timeval): New function.

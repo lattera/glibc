@@ -42,10 +42,10 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <libintl.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <errno.h>
-#include <libintl.h>
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
@@ -57,21 +57,21 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #define MAX(a, b)     ((a > b) ? a : b)
 #endif
 
-static bool_t svcudp_recv (SVCXPRT *, struct rpc_msg *);
-static bool_t svcudp_reply (SVCXPRT *, struct rpc_msg *);
-static enum xprt_stat svcudp_stat (SVCXPRT *);
-static bool_t svcudp_getargs (SVCXPRT *, xdrproc_t, caddr_t);
-static bool_t svcudp_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
-static void svcudp_destroy (SVCXPRT *);
+static bool_t svcudp6_recv (SVCXPRT *, struct rpc_msg *);
+static bool_t svcudp6_reply (SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat svcudp6_stat (SVCXPRT *);
+static bool_t svcudp6_getargs (SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t svcudp6_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
+static void svcudp6_destroy (SVCXPRT *);
 
-static const struct xp_ops svcudp_op =
+static const struct xp_ops svcudp6_op =
 {
-  svcudp_recv,
-  svcudp_stat,
-  svcudp_getargs,
-  svcudp_reply,
-  svcudp_freeargs,
-  svcudp_destroy
+  svcudp6_recv,
+  svcudp6_stat,
+  svcudp6_getargs,
+  svcudp6_reply,
+  svcudp6_freeargs,
+  svcudp6_destroy
 };
 
 static int cache_get (SVCXPRT *, struct rpc_msg *, char **replyp,
@@ -105,19 +105,19 @@ struct svcudp_data
  * The routines returns NULL if a problem occurred.
  */
 SVCXPRT *
-svcudp_bufcreate (sock, sendsz, recvsz)
+svcudp6_bufcreate (sock, sendsz, recvsz)
      int sock;
      u_int sendsz, recvsz;
 {
   bool_t madesock = FALSE;
   SVCXPRT *xprt;
   struct svcudp_data *su;
-  struct sockaddr_in addr;
-  socklen_t len = sizeof (struct sockaddr_in);
+  struct sockaddr_in6 addr;
+  socklen_t len = sizeof (struct sockaddr_in6);
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+      if ((sock = __socket (AF_INET6, SOCK_DGRAM, IPPROTO_UDP)) < 0)
 	{
 	  perror (_("svcudp_create: socket creation problem"));
 	  return (SVCXPRT *) NULL;
@@ -125,10 +125,10 @@ svcudp_bufcreate (sock, sendsz, recvsz)
       madesock = TRUE;
     }
   __bzero ((char *) &addr, sizeof (addr));
-  addr.sin_family = AF_INET;
-  if (bindresvport (sock, &addr))
+  addr.sin6_family = AF_INET6;
+  if (bindresvport6 (sock, &addr))
     {
-      addr.sin_port = 0;
+      addr.sin6_port = 0;
       (void) bind (sock, (struct sockaddr *) &addr, len);
     }
   if (getsockname (sock, (struct sockaddr *) &addr, &len) != 0)
@@ -160,23 +160,23 @@ svcudp_bufcreate (sock, sendsz, recvsz)
   su->su_cache = NULL;
   xprt->xp_p2 = (caddr_t) su;
   xprt->xp_verf.oa_base = su->su_verfbody;
-  xprt->xp_ops = &svcudp_op;
-  xprt->xp_port = ntohs (addr.sin_port);
+  xprt->xp_ops = &svcudp6_op;
+  xprt->xp_port = ntohs (addr.sin6_port);
   xprt->xp_sock = sock;
   xprt_register (xprt);
   return xprt;
 }
 
 SVCXPRT *
-svcudp_create (sock)
+svcudp6_create (sock)
      int sock;
 {
 
-  return svcudp_bufcreate (sock, UDPMSGSIZE, UDPMSGSIZE);
+  return svcudp6_bufcreate (sock, UDPMSGSIZE, UDPMSGSIZE);
 }
 
 static enum xprt_stat
-svcudp_stat (xprt)
+svcudp6_stat (xprt)
      SVCXPRT *xprt;
 {
 
@@ -184,7 +184,7 @@ svcudp_stat (xprt)
 }
 
 static bool_t
-svcudp_recv (xprt, msg)
+svcudp6_recv (xprt, msg)
      SVCXPRT *xprt;
      struct rpc_msg *msg;
 {
@@ -197,7 +197,7 @@ svcudp_recv (xprt, msg)
 
 again:
   /* FIXME -- should xp_addrlen be a size_t?  */
-  len = (socklen_t) sizeof(struct sockaddr_in);
+  len = (socklen_t) sizeof(struct sockaddr_in6);
   rlen = recvfrom (xprt->xp_sock, rpc_buffer (xprt), (int) su->su_iosz, 0,
 		   (struct sockaddr *) &(xprt->xp_raddr), &len);
   xprt->xp_addrlen = len;
@@ -223,7 +223,7 @@ again:
 }
 
 static bool_t
-svcudp_reply (xprt, msg)
+svcudp6_reply (xprt, msg)
      SVCXPRT *xprt;
      struct rpc_msg *msg;
 {
@@ -253,7 +253,7 @@ svcudp_reply (xprt, msg)
 }
 
 static bool_t
-svcudp_getargs (xprt, xdr_args, args_ptr)
+svcudp6_getargs (xprt, xdr_args, args_ptr)
      SVCXPRT *xprt;
      xdrproc_t xdr_args;
      caddr_t args_ptr;
@@ -263,7 +263,7 @@ svcudp_getargs (xprt, xdr_args, args_ptr)
 }
 
 static bool_t
-svcudp_freeargs (xprt, xdr_args, args_ptr)
+svcudp6_freeargs (xprt, xdr_args, args_ptr)
      SVCXPRT *xprt;
      xdrproc_t xdr_args;
      caddr_t args_ptr;
@@ -275,7 +275,7 @@ svcudp_freeargs (xprt, xdr_args, args_ptr)
 }
 
 static void
-svcudp_destroy (xprt)
+svcudp6_destroy (xprt)
      SVCXPRT *xprt;
 {
   struct svcudp_data *su = su_data (xprt);
@@ -321,7 +321,7 @@ struct cache_node
     u_long cache_proc;
     u_long cache_vers;
     u_long cache_prog;
-    struct sockaddr_in cache_addr;
+    struct sockaddr_in6 cache_addr;
     /*
      * The cached reply and length
      */
@@ -347,7 +347,7 @@ struct udp_cache
     u_long uc_prog;		/* saved program number */
     u_long uc_vers;		/* saved version number */
     u_long uc_proc;		/* saved procedure number */
-    struct sockaddr_in uc_addr;	/* saved caller's address */
+    struct sockaddr_in6 uc_addr;	/* saved caller's address */
   };
 
 
@@ -363,7 +363,7 @@ struct udp_cache
  * Note: there is no disable.
  */
 int
-svcudp_enablecache (SVCXPRT *transp, u_long size)
+svcudp6_enablecache (SVCXPRT *transp, u_long size)
 {
   struct svcudp_data *su = su_data (transp);
   struct udp_cache *uc;

@@ -59,21 +59,21 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 /*
  * Ops vector for TCP/IP based rpc service handle
  */
-static bool_t svctcp_recv (SVCXPRT *, struct rpc_msg *);
-static enum xprt_stat svctcp_stat (SVCXPRT *);
-static bool_t svctcp_getargs (SVCXPRT *, xdrproc_t, caddr_t);
-static bool_t svctcp_reply (SVCXPRT *, struct rpc_msg *);
-static bool_t svctcp_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
-static void svctcp_destroy (SVCXPRT *);
+static bool_t svctcp6_recv (SVCXPRT *, struct rpc_msg *);
+static enum xprt_stat svctcp6_stat (SVCXPRT *);
+static bool_t svctcp6_getargs (SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t svctcp6_reply (SVCXPRT *, struct rpc_msg *);
+static bool_t svctcp6_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
+static void svctcp6_destroy (SVCXPRT *);
 
-static const struct xp_ops svctcp_op =
+static const struct xp_ops svctcp6_op =
 {
-  svctcp_recv,
-  svctcp_stat,
-  svctcp_getargs,
-  svctcp_reply,
-  svctcp_freeargs,
-  svctcp_destroy
+  svctcp6_recv,
+  svctcp6_stat,
+  svctcp6_getargs,
+  svctcp6_reply,
+  svctcp6_freeargs,
+  svctcp6_destroy
 };
 
 /*
@@ -82,19 +82,19 @@ static const struct xp_ops svctcp_op =
 static bool_t rendezvous_request (SVCXPRT *, struct rpc_msg *);
 static enum xprt_stat rendezvous_stat (SVCXPRT *);
 
-static const struct xp_ops svctcp_rendezvous_op =
+static const struct xp_ops svctcp6_rendezvous_op =
 {
   rendezvous_request,
   rendezvous_stat,
   (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) abort,
   (bool_t (*) (SVCXPRT *, struct rpc_msg *)) abort,
   (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) abort,
-  svctcp_destroy
+  svctcp6_destroy
 };
 
 static int readtcp (char*, char *, int);
 static int writetcp (char *, char *, int);
-static SVCXPRT *makefd_xprt (int, u_int, u_int) internal_function;
+static SVCXPRT *makefd6_xprt (int, u_int, u_int) internal_function;
 
 struct tcp_rendezvous
   {				/* kept in xprt->xp_p1 */
@@ -131,17 +131,17 @@ struct tcp_conn
  * 0 => use the system default.
  */
 SVCXPRT *
-svctcp_create (int sock, u_int sendsize, u_int recvsize)
+svctcp6_create (int sock, u_int sendsize, u_int recvsize)
 {
   bool_t madesock = FALSE;
   SVCXPRT *xprt;
   struct tcp_rendezvous *r;
-  struct sockaddr_in addr;
-  socklen_t len = sizeof (struct sockaddr_in);
+  struct sockaddr_in6 addr;
+  socklen_t len = sizeof (struct sockaddr_in6);
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+      if ((sock = __socket (AF_INET6, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	{
 	  perror (_("svc_tcp.c - tcp socket creation problem"));
 	  return (SVCXPRT *) NULL;
@@ -149,10 +149,10 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
       madesock = TRUE;
     }
   __bzero ((char *) &addr, sizeof (addr));
-  addr.sin_family = AF_INET;
-  if (bindresvport (sock, &addr))
+  addr.sin6_family = AF_INET6;
+  if (bindresvport6 (sock, &addr))
     {
-      addr.sin_port = 0;
+      addr.sin6_port = 0;
       (void) bind (sock, (struct sockaddr *) &addr, len);
     }
   if ((getsockname (sock, (struct sockaddr *) &addr, &len) != 0) ||
@@ -180,8 +180,8 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
   xprt->xp_p2 = NULL;
   xprt->xp_p1 = (caddr_t) r;
   xprt->xp_verf = _null_auth;
-  xprt->xp_ops = &svctcp_rendezvous_op;
-  xprt->xp_port = ntohs (addr.sin_port);
+  xprt->xp_ops = &svctcp6_rendezvous_op;
+  xprt->xp_port = ntohs (addr.sin6_port);
   xprt->xp_sock = sock;
   xprt_register (xprt);
   return xprt;
@@ -192,14 +192,14 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
  * descriptor as its first input.
  */
 SVCXPRT *
-svcfd_create (int fd, u_int sendsize, u_int recvsize)
+svcfd6_create (int fd, u_int sendsize, u_int recvsize)
 {
-  return makefd_xprt (fd, sendsize, recvsize);
+  return makefd6_xprt (fd, sendsize, recvsize);
 }
 
 static SVCXPRT *
 internal_function
-makefd_xprt (int fd, u_int sendsize, u_int recvsize)
+makefd6_xprt (int fd, u_int sendsize, u_int recvsize)
 {
   SVCXPRT *xprt;
   struct tcp_conn *cd;
@@ -225,7 +225,7 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
   xprt->xp_p1 = (caddr_t) cd;
   xprt->xp_verf.oa_base = cd->verf_body;
   xprt->xp_addrlen = 0;
-  xprt->xp_ops = &svctcp_op;	/* truly deals with calls */
+  xprt->xp_ops = &svctcp6_op;	/* truly deals with calls */
   xprt->xp_port = 0;		/* this is a connection, not a rendezvouser */
   xprt->xp_sock = fd;
   xprt_register (xprt);
@@ -238,12 +238,12 @@ rendezvous_request (SVCXPRT *xprt, struct rpc_msg *errmsg)
 {
   int sock;
   struct tcp_rendezvous *r;
-  struct sockaddr_in addr;
+  struct sockaddr_in6 addr;
   socklen_t len;
 
   r = (struct tcp_rendezvous *) xprt->xp_p1;
 again:
-  len = sizeof (struct sockaddr_in);
+  len = sizeof (struct sockaddr_in6);
   if ((sock = accept (xprt->xp_sock, (struct sockaddr *) &addr, &len)) < 0)
     {
       if (errno == EINTR)
@@ -253,7 +253,7 @@ again:
   /*
    * make a new transporter (re-uses xprt)
    */
-  xprt = makefd_xprt (sock, r->sendsize, r->recvsize);
+  xprt = makefd6_xprt (sock, r->sendsize, r->recvsize);
   memcpy (&xprt->xp_raddr, &addr, sizeof (addr));
   xprt->xp_addrlen = len;
   return FALSE;		/* there is never an rpc msg to be processed */
@@ -266,7 +266,7 @@ rendezvous_stat (SVCXPRT *xprt)
 }
 
 static void
-svctcp_destroy (SVCXPRT *xprt)
+svctcp6_destroy (SVCXPRT *xprt)
 {
   struct tcp_conn *cd = (struct tcp_conn *) xprt->xp_p1;
 
@@ -351,7 +351,7 @@ writetcp (char *xprtptr, char * buf, int len)
 }
 
 static enum xprt_stat
-svctcp_stat (SVCXPRT *xprt)
+svctcp6_stat (SVCXPRT *xprt)
 {
   struct tcp_conn *cd =
   (struct tcp_conn *) (xprt->xp_p1);
@@ -364,7 +364,7 @@ svctcp_stat (SVCXPRT *xprt)
 }
 
 static bool_t
-svctcp_recv (SVCXPRT *xprt, struct rpc_msg *msg)
+svctcp6_recv (SVCXPRT *xprt, struct rpc_msg *msg)
 {
   struct tcp_conn *cd = (struct tcp_conn *) (xprt->xp_p1);
   XDR *xdrs = &(cd->xdrs);
@@ -381,14 +381,14 @@ svctcp_recv (SVCXPRT *xprt, struct rpc_msg *msg)
 }
 
 static bool_t
-svctcp_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+svctcp6_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
   return ((*xdr_args) (&(((struct tcp_conn *)
 			  (xprt->xp_p1))->xdrs), args_ptr));
 }
 
 static bool_t
-svctcp_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+svctcp6_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 {
   XDR *xdrs = &(((struct tcp_conn *) (xprt->xp_p1))->xdrs);
 
@@ -397,7 +397,7 @@ svctcp_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
 }
 
 static bool_t
-svctcp_reply (SVCXPRT *xprt, struct rpc_msg *msg)
+svctcp6_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 {
   struct tcp_conn *cd = (struct tcp_conn *) (xprt->xp_p1);
   XDR *xdrs = &(cd->xdrs);

@@ -249,7 +249,7 @@ again:
   memset (&in_addr, '\0', sizeof (in_addr));
   in_addr.sin_family = AF_UNIX;
   xprt = makefd_xprt (sock, r->sendsize, r->recvsize);
-  xprt->xp_raddr = in_addr;
+  memcpy (&xprt->xp_raddr, &in_addr, sizeof (in_addr));
   xprt->xp_addrlen = len;
   return FALSE;		/* there is never an rpc msg to be processed */
 }

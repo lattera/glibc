@@ -19,6 +19,7 @@
 #include <sysdep.h>
 
 #define	EINVAL		22
+#define	ENOSYS		38
 
 	/* The mmap2 system call takes six arguments, all in registers.  */
 	.text
@@ -38,7 +39,7 @@ ENTRY (__mmap64)
 	swi	SYS_ify (mmap2)
 	cmn	r0, $4096
 	LOADREGS(ccfd, sp!, {r4, r5, pc})
-	teq	r0, $-ENOSYS
+	cmn	r0, $(ENOSYS - 1)
 	ldmnefd	sp!, {r4, r5, lr}
 	bne	PLTJMP(syscall_error)
 	/* The current kernel does not support mmap2.  Fall back to plain

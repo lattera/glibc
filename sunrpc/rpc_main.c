@@ -87,7 +87,7 @@ static char *pathbuf;
 static int cpp_pid;
 static const char *allv[] =
 {
-  "rpcgen", "-s", "udp", "-s", "tcp",
+  "rpcgen", "-s", "udp", "-s", "tcp", "-s", "udp6", "-s", "tcp6"
 };
 static int allc = sizeof (allv) / sizeof (allv[0]);
 static const char *allnv[] =
@@ -437,6 +437,8 @@ static const char *valid_ti_nettypes[] =
   "udp",
   "tcp",
   "raw",
+  "udp6",
+  "tcp6",
   NULL
 };
 
@@ -445,6 +447,8 @@ static const char *valid_i_nettypes[] =
 {
   "udp",
   "tcp",
+  "udp6",
+  "tcp6",
   NULL
 };
 
@@ -1300,7 +1304,9 @@ parseargs (int argc, const char *argv[], struct commandline *cmd)
 		  if (c == 's')
 		    {
 		      if (!streq (argv[i], "udp") &&
-			  !streq (argv[i], "tcp"))
+			  !streq (argv[i], "tcp") &&
+			  !streq (argv[i], "udp6") &&
+			  !streq (argv[i], "tcp6"))
 			return 0;
 		    }
 		  else if (c == 'o')
