@@ -1,5 +1,5 @@
 /* Environment handling for dynamic loader.
-   Copyright (C) 1995-1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,23 +53,30 @@ _dl_next_ld_env_entry (char ***position)
 int
 unsetenv (const char *name)
 {
-  const size_t len = strlen (name);
   char **ep;
 
   ep = __environ;
   while (*ep != NULL)
-    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
-      {
-	/* Found it.  Remove this pointer by moving later ones back.  */
-	char **dp = ep;
+    {
+      size_t cnt;
 
-	do
-	  dp[0] = dp[1];
-	while (*dp++);
-	/* Continue the loop in case NAME appears again.  */
-      }
-    else
-      ++ep;
+      while ((*ep)[cnt] == name[cnt] && name[cnt] != '\0')
+	++cnt;
+
+      if ((*ep)[cnt] == '=')
+	{
+	  /* Found it.  Remove this pointer by moving later ones to
+	     the front.  */
+	  char **dp = ep;
+
+	  do
+	    dp[0] = dp[1];
+	  while (*dp++);
+	  /* Continue the loop in case NAME appears again.  */
+	}
+      else
+	++ep;
+    }
 
   return 0;
 }

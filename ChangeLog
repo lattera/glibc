@@ -1,3 +1,15 @@
+2002-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-environ.c (unsetenv): Optimize.  Don't use
+	strncmp.
+	* elf/dl-load.c (is_dst): Optimize.  Don't call strncmp twice.
+	* elf/rtld.c (process_dl_debug): Optimize. Avoid calls to strncmp,
+	strspn, and strcspn.
+	(process_envvars): Don't use strcspn.
+
+	* elf/dl-load.c (_dl_dst_count): Fix possible endless loop.
+	(_dl_dst_substitute): Likewise.
+
 2002-02-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-rel.h (elf_dynamic_do_rel): Help the compiler recognize

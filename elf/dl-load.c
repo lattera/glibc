@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <libintl.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -147,22 +148,38 @@ local_strdup (const char *s)
 
 
 static size_t
-is_dst (const char *start, const char *name, const char *str, size_t cmplen,
+is_dst (const char *start, const char *name, const char *str,
 	int is_path, int secure)
 {
   size_t len;
+  bool is_curly = false;
 
-  if (strncmp (name, str, cmplen) == 0)
-    len = cmplen + 1;
-  else if (strncmp (name, str + 1, cmplen - 2) == 0
-	   && (name[cmplen - 2] == '\0' || name[cmplen - 2] == '/'
-	       || (is_path && name[cmplen - 2] == ':')))
-    len = cmplen - 1;
-  else
+  if (name[0] == '{')
+    {
+      is_curly = true;
+      ++name;
+    }
+
+  len = 0;
+  while (name[len] == str[len] && name[len] != '\0')
+    ++len;
+
+  if (is_curly)
+    {
+      if (name[len] != '}')
+	return 0;
+
+      /* Point again at the beginning of the name.  */
+      --name;
+      /* Skip over closing curly brace and adjust for the --name.  */
+      len += 2;
+    }
+  else if (name[len] != '\0' && name[len] != '/'
+	   && (!is_path || name[len] != ':'))
     return 0;
 
   if (__builtin_expect (secure, 0)
-      && ((name[len - 1] != '\0' && (!is_path || name[len - 1] != ':'))
+      && ((name[len] != '\0' && (!is_path || name[len] != ':'))
 	  || (name != start + 1 && (!is_path || name[-2] != ':'))))
     return 0;
 
@@ -178,17 +195,14 @@ _dl_dst_count (const char *name, int is_path)
 
   do
     {
-      size_t len = 1;
+      size_t len;
 
       /* $ORIGIN is not expanded for SUID/GUID programs (except if it
-	 is $ORIGIN alone) and it must always appear first in path.
-
-	 Note that it is no bug that the string in the second and
-	 fourth `strncmp' call is longer than the sequence which is
-	 actually tested.  */
-      if ((len = is_dst (start, name + 1, "{ORIGIN}", 8, is_path,
+	 is $ORIGIN alone) and it must always appear first in path.  */
+      ++name;
+      if ((len = is_dst (start, name, "ORIGIN", is_path,
 			 __libc_enable_secure)) != 0
-	  || ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path, 0))
+	  || ((len = is_dst (start, name, "PLATFORM", is_path, 0))
 	      != 0))
 	++cnt;
 
@@ -218,15 +232,13 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
       if (__builtin_expect (*name == '$', 0))
 	{
 	  const char *repl = NULL;
-	  size_t len = 1;
+	  size_t len;
 
-	  /* Note that it is no bug that the string in the second and
-	     fourth `strncmp' call is longer than the sequence which
-	     is actually tested.  */
-	  if ((len = is_dst (start, name + 1, "{ORIGIN}", 8, is_path,
+	  ++name;
+	  if ((len = is_dst (start, name, "ORIGIN", is_path,
 			     __libc_enable_secure)) != 0)
 	    repl = l->l_origin;
-	  else if ((len = is_dst (start, name + 1, "{PLATFORM}", 10, is_path,
+	  else if ((len = is_dst (start, name, "PLATFORM", is_path,
 				  0)) != 0)
 	    repl = GL(dl_platform);
 
@@ -246,7 +258,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	    }
 	  else
 	    /* No DST we recognize.  */
-	    *wp++ = *name++;
+	    *wp++ = '$';
 	}
       else
 	{

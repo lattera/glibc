@@ -1286,49 +1286,50 @@ process_dl_debug (const char *dl_debug)
      is correctly handled in the LD_DEBUG_HELP code below.  */
   static const struct
   {
-    const char name[11];
+    unsigned char len;
+    const char name[10];
     const char helptext[41];
     unsigned short int mask;
   } debopts[] =
     {
-      { "libs", "display library search paths",
+#define LEN_AND_STR(str) sizeof (str) - 1, str
+      { LEN_AND_STR ("libs"), "display library search paths",
 	DL_DEBUG_LIBS | DL_DEBUG_IMPCALLS },
-      { "reloc", "display relocation processing",
+      { LEN_AND_STR ("reloc"), "display relocation processing",
 	DL_DEBUG_RELOC | DL_DEBUG_IMPCALLS },
-      { "files", "display progress for input file",
+      { LEN_AND_STR ("files"), "display progress for input file",
 	DL_DEBUG_FILES | DL_DEBUG_IMPCALLS },
-      { "symbols", "display symbol table processing",
+      { LEN_AND_STR ("symbols"), "display symbol table processing",
 	DL_DEBUG_SYMBOLS | DL_DEBUG_IMPCALLS },
-      { "bindings", "display information about symbol binding",
+      { LEN_AND_STR ("bindings"), "display information about symbol binding",
 	DL_DEBUG_BINDINGS | DL_DEBUG_IMPCALLS },
-      { "versions", "display version dependencies",
+      { LEN_AND_STR ("versions"), "display version dependencies",
 	DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
-      { "all", "all previous options combined",
+      { LEN_AND_STR ("all"), "all previous options combined",
 	DL_DEBUG_LIBS | DL_DEBUG_RELOC | DL_DEBUG_FILES | DL_DEBUG_SYMBOLS
 	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
-      { "statistics", "display relocation statistics",
+      { LEN_AND_STR ("statistics"), "display relocation statistics",
 	DL_DEBUG_STATISTICS },
-      { "help", "display this help message and exit",
+      { LEN_AND_STR ("help"), "display this help message and exit",
 	DL_DEBUG_HELP },
     };
 #define ndebopts (sizeof (debopts) / sizeof (debopts[0]))
-  size_t len;
 
-#define separators " ,:"
-  do
+  /* Skip separating white spaces and commas.  */
+  while (*dl_debug != '\0')
     {
-      len = 0;
-      /* Skip separating white spaces and commas.  */
-      dl_debug += strspn (dl_debug, separators);
-      if (*dl_debug != '\0')
+      if (*dl_debug != ' ' && *dl_debug != ',' && *dl_debug != ':')
 	{
 	  size_t cnt;
+	  size_t len = 1;
 
-	  len = strcspn (dl_debug, separators);
+	  while (dl_debug[len] != '\0' && dl_debug[len] != ' '
+		 && dl_debug[len] != ',' && dl_debug[len] != ':')
+	    ++len;
 
 	  for (cnt = 0; cnt < ndebopts; ++cnt)
-	    if (strncmp (dl_debug, debopts[cnt].name, len) == 0
-		&& debopts[cnt].name[len] == '\0')
+	    if (debopts[cnt].len == len
+		&& memcmp (dl_debug, debopts[cnt].name, len) == 0)
 	      {
 		GL(dl_debug_mask) |= debopts[cnt].mask;
 		any_debug = 1;
@@ -1342,11 +1343,14 @@ process_dl_debug (const char *dl_debug)
 	      char *copy = strndupa (dl_debug, len);
 	      _dl_error_printf ("\
 warning: debug option `%s' unknown; try LD_DEBUG=help\n", copy);
-	      break;
-	  }
+	    }
+
+	  dl_debug += len;
+	  continue;
 	}
+
+      ++dl_debug;
     }
-  while (*(dl_debug += len) != '\0');
 
   if (GL(dl_debug_mask) & DL_DEBUG_HELP)
     {
@@ -1387,7 +1391,10 @@ process_envvars (enum mode *modep)
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
-      size_t len = strcspn (envline, "=");
+      size_t len = 0;
+
+      while (envline[len] != '\0' && envline[len] != '=')
+	++len;
 
       if (envline[len] != '=')
 	/* This is a "LD_" variable at the end of the string without
