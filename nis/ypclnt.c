@@ -54,8 +54,8 @@ static dom_binding *__ypbindlist = NULL;
 
 
 static void
-__yp_bind_client_create (const char *domain, dom_binding *ysd,
-			 struct ypbind_resp *ypbr)
+yp_bind_client_create (const char *domain, dom_binding *ysd,
+		       struct ypbind_resp *ypbr)
 {
   ysd->dom_server_addr.sin_family = AF_INET;
   memcpy (&ysd->dom_server_addr.sin_port,
@@ -79,8 +79,9 @@ __yp_bind_client_create (const char *domain, dom_binding *ysd,
     }
 }
 
+#if USE_BINDINGDIR
 static void
-__yp_bind_file (const char *domain, dom_binding *ysd)
+yp_bind_file (const char *domain, dom_binding *ysd)
 {
   struct ypbind_resp ypbr;
   char path[sizeof (BINDINGDIR) + strlen (domain) + 10];
@@ -99,14 +100,15 @@ __yp_bind_file (const char *domain, dom_binding *ysd)
       vec[1].iov_len = sizeof (ypbr);
 
       if (readv (fd, vec, 2) == sizeof (port) + sizeof (ypbr))
-	__yp_bind_client_create (domain, ysd, &ypbr);
+	yp_bind_client_create (domain, ysd, &ypbr);
 
       close (fd);
     }
 }
+#endif
 
 static int
-__yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
+yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
 {
   struct sockaddr_in clnt_saddr;
   struct ypbind_resp ypbr;
@@ -150,7 +152,7 @@ __yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
     }
   memset (&ysd->dom_server_addr, '\0', sizeof ysd->dom_server_addr);
 
-  __yp_bind_client_create (domain, ysd, &ypbr);
+  yp_bind_client_create (domain, ysd, &ypbr);
 
   return YPERR_SUCCESS;
 }
@@ -183,12 +185,12 @@ __yp_bind (const char *domain, dom_binding **ypdb)
 #if USE_BINDINGDIR
       /* Try binding dir at first if we have no binding */
   if (ysd->dom_client == NULL)
-	__yp_bind_file (domain, ysd);
+	yp_bind_file (domain, ysd);
 #endif /* USE_BINDINGDIR */
 
   if (ysd->dom_client == NULL)
     {
-      int retval = __yp_bind_ypbindprog (domain, ysd);
+      int retval = yp_bind_ypbindprog (domain, ysd);
       if (retval != YPERR_SUCCESS)
 	{
 	  if (is_new)
@@ -333,10 +335,8 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 	     invalid. unbind now and create a new binding */
 	  yp_unbind_locked (domain);
 	}
-      __libc_lock_unlock (ypbindlist_lock);
     }
-  else
-    __libc_lock_unlock (ypbindlist_lock);
+  __libc_lock_unlock (ypbindlist_lock);
 
   /* First try with cached data failed. Now try to get
      current data from the system.  */
@@ -354,7 +354,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
   if (status != YPERR_SUCCESS)
     {
       ydb = calloc (1, sizeof (dom_binding));
-      if (__yp_bind_ypbindprog (domain, ydb) == YPERR_SUCCESS)
+      if (yp_bind_ypbindprog (domain, ydb) == YPERR_SUCCESS)
 	{
 	  status = __ypclnt_call (domain, prog, xargs, req, xres,
 				  resp, &ydb, 1);
