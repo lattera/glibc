@@ -28,27 +28,37 @@ verbose_free (void *buf)
 int
 main (void)
 {
-  struct obstack obs;
-  int i;
   int result = 0;
+  int align = 2;
 
-  obstack_init (&obs);
-  obstack_alignment_mask (&obs) = ALIGN_MASK;
-  /* finish an empty object to take alignment into account */
-  obstack_finish (&obs);
-
-  /* let's allocate some objects and print their addresses */
-  for (i = 15; i > 0; --i)
+  while (align <= 64)
     {
-      void *obj = obstack_alloc (&obs, OBJECT_SIZE);
+      struct obstack obs;
+      int i;
+      int align_mask = align - 1;
 
-      printf ("obstack_alloc (%u) => %p \t%s\n", OBJECT_SIZE, obj,
-	      ((uintptr_t) obj & ALIGN_MASK) ? "(not aligned)" : "");
-      result |= ((uintptr_t) obj & ALIGN_MASK) != 0;
-  }
+      printf ("\n Alignment mask: %d\n", align_mask);
 
-  /* clean up */
-  obstack_free (&obs, 0);
+      obstack_init (&obs);
+      obstack_alignment_mask (&obs) = align_mask;
+      /* finish an empty object to take alignment into account */
+      obstack_finish (&obs);
+
+      /* let's allocate some objects and print their addresses */
+      for (i = 15; i > 0; --i)
+	{
+	  void *obj = obstack_alloc (&obs, OBJECT_SIZE);
+
+	  printf ("obstack_alloc (%u) => %p \t%s\n", OBJECT_SIZE, obj,
+		  ((uintptr_t) obj & align_mask) ? "(not aligned)" : "");
+	  result |= ((uintptr_t) obj & align_mask) != 0;
+	}
+
+      /* clean up */
+      obstack_free (&obs, 0);
+
+      align <<= 1;
+    }
 
   return result;
 }
