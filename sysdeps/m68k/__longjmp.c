@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,8 +47,12 @@ DEFUN(__longjmp, (env, val), CONST jmp_buf env AND int val)
   asm volatile(/* Restore the data and address registers.  */
 	       "movem%.l %0, d1-d7/a0-a7\n"
 	       /* Return to setjmp's caller.  */
-	       "jmp a0@" :
-	       /* No outputs.  */ : "g" (env[0].__dregs[0])
+#ifdef __motorola__
+	       "jmp (a0)"
+#else
+	       "jmp a0@"
+#endif
+	       : /* No outputs.  */ : "g" (env[0].__dregs[0])
 	       /* We don't bother with the clobbers,
 		  because this code always jumps out anyway.  */
 	       );

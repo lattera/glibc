@@ -19,7 +19,12 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL__ (pipe, 1)
+#ifdef	__motorola__
+	move.l 4(sp), a0
+	movem.l d0-d1, (a0)
+#else
 	movel sp@(4), a0
 	moveml d0-d1, a0@
+#endif
 	clrl d0
 	rts

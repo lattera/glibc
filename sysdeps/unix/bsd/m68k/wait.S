@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,15 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 SYSCALL__ (wait, 1)
+#ifdef __motorola__
+	tst.l 4(sp)
+	beq 1f
+	movea.l 4(sp), a0
+	move.l d1, (a0)
+#else
 	tstl sp@(4)
 	beq 1f
 	moveal sp@(4), a0
 	movel d1, a0@
+#endif
 1:	rts
