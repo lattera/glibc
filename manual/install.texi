@@ -23,14 +23,6 @@ Support for POSIX threads is maintained by someone else, so it's in a
 separate package.  It is only available for Linux systems, but this will
 change in the future.  Get it from the same place you got the main
 bundle; the file is @file{glibc-linuxthreads-@var{VERSION}.tar.gz}.
-Support for the @code{crypt} function is distributed separately because
-of United States export restrictions.  If you are outside the US or
-Canada, you must get @code{crypt} support from a site outside the US,
-such as @samp{ftp.gwdg.de}.  @samp{ftp.gwdg.de} has the crypt
-distribution in @code{pub/linux/glibc}.
-@c Check this please someone:
-(Most non-US mirrors of @samp{ftp.gnu.org} will have it too.)  The file
-you need is @file{glibc-crypt-@var{VERSION}.tar.gz}.
 
 You will need recent versions of several GNU tools: definitely GCC and
 GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
@@ -111,7 +103,7 @@ Enable add-on packages in your source tree.  If this option is specified
 with no list, it enables all the add-on packages it finds.  If you do
 not wish to use some add-on package that you have present in your source
 tree, give this option a list of the add-ons that you @emph{do} want
-used, like this: @samp{--enable-add-ons=crypt,linuxthreads}
+used, like this: @samp{--enable-add-ons=linuxthreads}
 
 @item --with-binutils=@var{directory}
 Use the binutils (assembler and linker) in @file{@var{directory}}, not
@@ -253,7 +245,7 @@ from underneath.
 
 If you're upgrading from Linux libc5 or some other C library, you need to
 replace the @file{/usr/include} with a fresh directory before installing it.
-The new @file{/usr/include} should contain the Linux headers, but nothing else.  
+The new @file{/usr/include} should contain the Linux headers, but nothing else.
 
 You must first build the library (@samp{make}), optionally check it
 (@samp{make check}), switch the include directories and then install
@@ -261,11 +253,11 @@ You must first build the library (@samp{make}), optionally check it
 the directory before install will result in an unusable mixture of header
 files from both libraries, but configuring, building, and checking the
 library requires the ability to compile and run programs against the old
-library. 
+library.
 
 If you are upgrading from a previous installation of glibc 2.0 or 2.1,
-@samp{make install} will do the entire job.  You do not need to remove 
-the old includes -- if you want to do so anyway you must then follow the 
+@samp{make install} will do the entire job.  You do not need to remove
+the old includes -- if you want to do so anyway you must then follow the
 order given above.
 
 You may also need to reconfigure GCC to work with the new library.  The
@@ -273,7 +265,7 @@ easiest way to do that is to figure out the compiler switches to make it
 work again (@samp{-Wl,--dynamic-linker=/lib/ld-linux.so.2} should work on
 Linux systems) and use them to recompile gcc.  You can also edit the specs
 file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but that
-is a bit of a black art. 
+is a bit of a black art.
 
 You can install glibc somewhere other than where you configured it to go
 by setting the @code{install_root} variable on the command line for
