@@ -1,5 +1,5 @@
 /* dlerror -- Return error detail for failing <dlfcn.h> functions.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,6 +58,7 @@ dlerror (void)
 	   ? NULL : buf);
 
   /* Reset the error indicator.  */
+  free (last_errstring);
   last_errstring = NULL;
   return ret;
 }
@@ -65,6 +66,11 @@ dlerror (void)
 int
 _dlerror_run (void (*operate) (void))
 {
+  if (last_errstring != NULL)
+    /* Free the error string from the last failed command.  This can
+       happen if `dlerror' was not run after an error was found.  */
+    free (last_errstring);
+
   last_errcode = _dl_catch_error (&last_errstring, &last_object_name,
 				  operate);
   return last_errstring != NULL;

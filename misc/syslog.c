@@ -96,6 +96,7 @@ vsyslog(pri, fmt, ap)
 	register const char *fmt;
 	va_list ap;
 {
+	struct tm now_tm;
 	time_t now;
 	int fd;
 	FILE *f;
@@ -126,10 +127,11 @@ vsyslog(pri, fmt, ap)
 #ifdef USE_IN_LIBIO
         f->_IO_write_ptr += strftime (f->_IO_write_ptr,
                                       f->_IO_write_end - f->_IO_write_ptr,
-                                      "%h %e %T ", localtime (&now));
+                                      "%h %e %T ",
+				      __localtime_r (&now, &now_tm));
 #else
 	f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
-			       "%h %e %T ", localtime (&now));
+			       "%h %e %T ", __localtime_r (&now, &mow_tm));
 #endif
 	msgoff = ftell (f);
 	if (LogTag == NULL)

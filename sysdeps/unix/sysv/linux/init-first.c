@@ -36,21 +36,30 @@ weak_extern (_dl_starting_up)
    used in the process.  Safe assumption if initializer never runs.  */
 int __libc_multiple_libcs = 1;
 
+/* Remember the command line argument and enviroment contents for
+   later calls of initializers for dynamic libraries.  */
+int __libc_argc;
+char **__libc_argv;
+char **__libc_envp;
+
+
 static void
 init (void *data)
 {
   extern int __personality (int);
 
-  int argc = *(long *)data;
-  char **argv = (char **)data + 1;
-  char **envp = &argv[argc + 1];
-
-
   __libc_multiple_libcs = &_dl_starting_up && ! _dl_starting_up;
+
 
   /* We must not call `personality' twice.  */
   if (!__libc_multiple_libcs)
     {
+      /* The argument we got points to the values describing the
+	 command line argument etc.  */
+      __libc_argc = *(int *)data;
+      __libc_argv = (char **)data + 1;
+      __libc_envp = &__libc_argv[__libc_argc + 1];
+
       /* The `personality' system call takes one argument that chooses
 	 the "personality", i.e. the set of system calls and such.  We
 	 must make this call first thing to disable emulation of some
@@ -61,9 +70,17 @@ init (void *data)
       /* Set the FPU control word to the proper default value.  */
       __setfpucw (__fpu_control);
     }
+  else
+    {
+      /* The argument we got points to the values describing the
+	 command line argument etc.  */
+      __libc_argc = *((int *)data)++;
+      __libc_argv = *((char ***)data)++;
+      __libc_envp = *(char ***)data;
+    }
 
-  __environ = envp;
-  __libc_init (argc, argv, envp);
+  __environ = __libc_envp;
+  __libc_init (__libc_argc, __libc_argv, __libc_envp);
 
 #ifdef PIC
   __libc_global_ctors ();

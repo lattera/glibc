@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,19 +25,18 @@ ftime (timebuf)
      struct timeb *timebuf;
 {
   int save = errno;
-  struct tm *tp;
+  struct tm tp;
 
   errno = 0;
   if (time (&timebuf->time) == (time_t) -1 && errno != 0)
     return -1;
   timebuf->millitm = 0;
-  
-  tp = localtime (&timebuf->time);
-  if (tp == NULL)
+
+  if (__localtime_r (&timebuf->time, &tp) == NULL)
     return -1;
 
-  timebuf->timezone = tp->tm_gmtoff / 60;
-  timebuf->dstflag = tp->tm_isdst;
+  timebuf->timezone = tp.tm_gmtoff / 60;
+  timebuf->dstflag = tp.tm_isdst;
 
   errno = save;
   return 0;

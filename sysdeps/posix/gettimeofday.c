@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <time.h>
 #include <sys/time.h>
@@ -32,8 +31,9 @@ Cambridge, MA 02139, USA.  */
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
    Returns 0 on success, -1 on errors.  */
 int
-DEFUN(__gettimeofday, (tv, tz),
-      struct timeval *tv AND struct timezone *tz)
+__gettimeofday (tv, tz)
+     struct timeval *tv;
+     struct timezone *tz;
 {
   if (tv == NULL)
     {
@@ -46,16 +46,17 @@ DEFUN(__gettimeofday, (tv, tz),
 
   if (tz != NULL)
     {
-      CONST time_t timer = tv->tv_sec;
-      CONST struct tm *tm;
+      const time_t timer = tv->tv_sec;
+      struct tm tm;
+      const struct tm *tmp;
 
-      CONST long int save_timezone = __timezone;
-      CONST long int save_daylight = __daylight;
+      const long int save_timezone = __timezone;
+      const long int save_daylight = __daylight;
       char *save_tzname[2];
       save_tzname[0] = __tzname[0];
       save_tzname[1] = __tzname[1];
 
-      tm = localtime (&timer);
+      tmp = localtime (&timer, &tm);
 
       tz->tz_minuteswest = __timezone / 60;
       tz->tz_dsttime = __daylight;
@@ -65,7 +66,7 @@ DEFUN(__gettimeofday, (tv, tz),
       __tzname[0] = save_tzname[0];
       __tzname[1] = save_tzname[1];
 
-      if (tm == NULL)
+      if (tmp == NULL)
 	return -1;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stddef.h>
 #include <time.h>
 
@@ -25,16 +24,19 @@ extern struct tm _tmbuf;
 
 /* Return the `struct tm' representation of *T in UTC.	*/
 struct tm *
-DEFUN(gmtime, (t), CONST time_t *t)
+gmtime (t)
+     const time_t *t;
 {
   return __gmtime_r (t, &_tmbuf);
 }
 
+
 /* Return the `struct tm' representation of *T in UTC,
    using *TP to store the result.  */
 struct tm *
-DEFUN(__gmtime_r, (t, tp),
-      CONST time_t *t AND struct tm *tp)
+__gmtime_r (t, tp)
+     const time_t *t;
+     struct tm *tp;
 {
   __offtime (t, 0L, tp);
 

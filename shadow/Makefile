@@ -23,7 +23,8 @@ subdir	:= shadow
 
 headers		= shadow.h
 routines	= getspent getspnam sgetspent fgetspent putspent \
-		  getspent_r getspnam_r sgetspent_r fgetspent_r
+		  getspent_r getspnam_r sgetspent_r fgetspent_r \
+		  lckpwdf
 
 
 include ../Rules

@@ -29,5 +29,8 @@ __setfpucw (fpu_control_t set)
 
   /* Preserve the reserved bits, and set the rest as the user
      specified (or the default, if the user gave zero).  */
-  _FPU_SETCW ((cw & _FPU_RESERVED) | (set & ~_FPU_RESERVED));
+  cw &= _FPU_RESERVED;
+  cw |= set & ~_FPU_RESERVED;
+
+  _FPU_SETCW (cw);
 }

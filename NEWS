@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  24 June 1996
+GNU C Library NEWS -- history of user-visible changes.  25 August 1996
 
 Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -20,8 +20,8 @@ Version 2.0
   of many files which contained only symbol aliases, reducing the size of
   the source and the compiled library; many other files were renamed to
   less cryptic names previously occupied by the symbol alias files.
-  There is a new header file <elf.h> and new library `-lelf' for
-  programs which operate on files in the ELF format.
+  There is a new header file <elf.h> for programs which operate on
+  files in the ELF format.
 
 * Converted to Autoconf version 2, so `configure' has more options.
   Run `configure --help' to see the details.
@@ -104,7 +104,7 @@ Version 2.0
 * The new header file <fts.h> and suite of functions simplify programs that
   operate on directory trees.  This code comes from 4.4 BSD.
 
-* The resolver code has been updated from the BIND 4.9.4-T3B release.
+* The resolver code has been updated from the BIND 4.9.5-T1A release.
 
 * The new function `malloc_find_object_address' finds the starting address
   of a malloc'd block, given any address within the block;

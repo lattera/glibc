@@ -46,8 +46,13 @@ _dl_signal_error (int errcode,
 
   if (catch)
     {
-      /* We are inside _dl_catch_error.  Return to it.  */
-      catch->errstring = errstring;
+      /* We are inside _dl_catch_error.  Return to it.  We have to
+	 duplicate the error string since it might be allocated on the
+	 stack.  */
+      size_t len = strlen (errstring) + 1;
+      catch->errstring = malloc (len);
+      if (catch->errstring != NULL)
+	memcpy (catch->errstring, errstring, len);
       catch->objname = objname;
       longjmp (catch->env, errcode ?: -1);
     }

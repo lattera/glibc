@@ -27,6 +27,11 @@ extern void _dl_start (void); weak_extern (_dl_start)
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
+extern int __libc_argc;
+extern char **__libc_argv;
+extern char **__libc_envp;
+
+
 size_t _dl_global_scope_alloc;
 
 struct link_map *
@@ -136,7 +141,8 @@ _dl_open (const char *file, int mode)
 
   /* Run the initializer functions of new objects.  */
   while (init = _dl_init_next (new))
-    (*(void (*) (void)) init) ();
+    (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
+						__libc_envp);
 
   if (dl_start_ptr == NULL)
     /* We must be the static _dl_open in libc.a because ld.so.1 is not

@@ -46,8 +46,8 @@ struct spwd
 				   the password.  */
   __time_t sp_inact;		/* Number of days the account may be
 				   inactive.  */
-  __time_t sp_expire;		/* Number of days since 700101 until account
-				   expires.  */
+  __time_t sp_expire;		/* Number of days since 1970-01-01 until
+				   account expires.  */
   unsigned long int sp_flag;	/* Reserved.  */
 };
 
@@ -102,6 +102,15 @@ extern struct spwd *fgetspent_r __P ((FILE *__stream,
 				      struct spwd *__result_buf,
 				      char *__buffer, int __buflen));
 #endif	/* reentrant */
+
+
+/* Protect password file against multi writers.  */
+extern int __lckpwdf __P ((void));
+extern int lckpwdf __P ((void));
+
+/* Unlock password file.  */
+extern int __ulckpwdf __P ((void));
+extern int ulckpwdf __P ((void));
 
 __END_DECLS
 

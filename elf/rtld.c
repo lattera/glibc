@@ -204,12 +204,15 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    {
 	      l = _dl_map_object (NULL, _dl_argv[0], lt_library);
 	    }
-	  const char *err_str = NULL;
+	  char *err_str = NULL;
 	  const char *obj_name __attribute__ ((unused));
 
 	  (void) _dl_catch_error (&err_str, &obj_name, doit);
 	  if (err_str != NULL)
-	    _exit (EXIT_FAILURE);
+	    {
+	      free (err_str);
+	      _exit (EXIT_FAILURE);
+	    }
 	}
       else
 	l = _dl_map_object (NULL, _dl_argv[0], lt_library);
@@ -395,7 +398,8 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    const ElfW(Sym) *ref = NULL;
 	    ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
 						     &_dl_default_scope[2],
-						     "argument", 0);
+						     "argument",
+						     DL_LOOKUP_NOPLT);
 	    char buf[20], *bp;
 	    buf[sizeof buf - 1] = '\0';
 	    bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
@@ -488,8 +492,9 @@ of this helper program; chances are you did not intend to run this program.\n",
 	 dynamic linker.  There is no additional initialization
 	 required for the ABI-compliant dynamic linker.  */
 
-      (*(void (*) (void)) (_dl_rtld_map.l_addr +
-			   _dl_rtld_map.l_info[DT_INIT]->d_un.d_ptr)) ();
+      (*(void (*) (int, char **, char**))
+       (_dl_rtld_map.l_addr + _dl_rtld_map.l_info[DT_INIT]->d_un.d_ptr))
+	(0, NULL, NULL);
 
       /* Clear the field so a future dlopen won't run it again.  */
       _dl_rtld_map.l_info[DT_INIT] = NULL;
