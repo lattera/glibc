@@ -624,7 +624,7 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	      continue;
 	    }
 
-	  if (nowtok != tok_bsymbol)
+	  if (nowtok != tok_bsymbol && nowtok != tok_ucs4)
 	    {
 	      lr_error (cmfile, _("syntax error in %s definition: %s"),
 			"WIDTH", _("no symbolic name given"));
@@ -636,9 +636,18 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	  if (from_name != NULL)
 	    obstack_free (&result->mem_pool, from_name);
 
-	  from_name = (char *) obstack_copy0 (&result->mem_pool,
-					      now->val.str.startmb,
-					      now->val.str.lenmb);
+	  if (nowtok == tok_bsymbol)
+	    from_name = (char *) obstack_copy0 (&result->mem_pool,
+						now->val.str.startmb,
+						now->val.str.lenmb);
+	  else
+	    {
+	      obstack_printf (&result->mem_pool, "U%08X",
+			      cmfile->token.val.ucs4);
+	      obstack_1grow (&result->mem_pool, '\0');
+	      from_name = (char *) obstack_finish (&result->mem_pool);
+	    }
+
 	  to_name = NULL;
 
 	  state = 94;
@@ -670,7 +679,7 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	  continue;
 
 	case 95:
-	  if (nowtok != tok_bsymbol)
+	  if (nowtok != tok_bsymbol && nowtok != tok_ucs4)
 	    {
 	      lr_error (cmfile, _("syntax error in %s definition: %s"),
 			"WIDTH", _("no symbolic name given for end of range"));
@@ -681,9 +690,17 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	      continue;
 	    }
 
-	  to_name = (char *) obstack_copy0 (&result->mem_pool,
-					    now->val.str.startmb,
-					    now->val.str.lenmb);
+	  if (nowtok == tok_bsymbol)
+	    to_name = (char *) obstack_copy0 (&result->mem_pool,
+					      now->val.str.startmb,
+					      now->val.str.lenmb);
+	  else
+	    {
+	      obstack_printf (&result->mem_pool, "U%08X",
+			      cmfile->token.val.ucs4);
+	      obstack_1grow (&result->mem_pool, '\0');
+	      to_name = (char *) obstack_finish (&result->mem_pool);
+	    }
 
 	  state = 96;
 	  continue;
