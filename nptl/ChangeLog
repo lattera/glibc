@@ -1,3 +1,16 @@
+2004-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S (__vfork): Use jgnl
+	instead of jnl instruction to jump to SYSCALL_ERROR_LABEL.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-vfork.S (__vfork): Likewise.
+
+2004-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* forward.c (__pthread_cond_broadcast_2_0,
+	__pthread_cond_destroy_2_0, __pthread_cond_init_2_0,
+	__pthread_cond_signal_2_0, __pthread_cond_wait_2_0,
+	__pthread_cond_timedwait_2_0): Use return 0 as defaction instead of 0.
+
 2004-03-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/tcb-offsets.sym: Add PID.

@@ -89,7 +89,7 @@ FORWARD (pthread_condattr_init, (pthread_condattr_t *attr), (attr), 0)
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_broadcast_2_0, int attribute_compat_text_section,
-	  (pthread_cond_2_0_t *cond), (cond), 0)
+	  (pthread_cond_2_0_t *cond), (cond), return 0)
 compat_symbol (libc, __pthread_cond_broadcast_2_0, pthread_cond_broadcast,
 	       GLIBC_2_0);
 #endif
@@ -99,7 +99,7 @@ versioned_symbol (libc, __pthread_cond_broadcast, pthread_cond_broadcast,
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_destroy_2_0, int attribute_compat_text_section,
-	  (pthread_cond_2_0_t *cond), (cond), 0)
+	  (pthread_cond_2_0_t *cond), (cond), return 0)
 compat_symbol (libc, __pthread_cond_destroy_2_0, pthread_cond_destroy,
 	       GLIBC_2_0);
 #endif
@@ -110,7 +110,7 @@ versioned_symbol (libc, __pthread_cond_destroy, pthread_cond_destroy,
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_init_2_0, int attribute_compat_text_section,
 	  (pthread_cond_2_0_t *cond, const pthread_condattr_t *cond_attr),
-	  (cond, cond_attr), 0)
+	  (cond, cond_attr), return 0)
 compat_symbol (libc, __pthread_cond_init_2_0, pthread_cond_init, GLIBC_2_0);
 #endif
 FORWARD (__pthread_cond_init,
@@ -120,7 +120,7 @@ versioned_symbol (libc, __pthread_cond_init, pthread_cond_init, GLIBC_2_3_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_signal_2_0, int attribute_compat_text_section,
-	  (pthread_cond_2_0_t *cond), (cond), 0)
+	  (pthread_cond_2_0_t *cond), (cond), return 0)
 compat_symbol (libc, __pthread_cond_signal_2_0, pthread_cond_signal,
 	       GLIBC_2_0);
 #endif
@@ -130,7 +130,8 @@ versioned_symbol (libc, __pthread_cond_signal, pthread_cond_signal,
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_wait_2_0, int attribute_compat_text_section,
-	  (pthread_cond_2_0_t *cond, pthread_mutex_t *mutex), (cond, mutex), 0)
+	  (pthread_cond_2_0_t *cond, pthread_mutex_t *mutex), (cond, mutex),
+	  return 0)
 compat_symbol (libc, __pthread_cond_wait_2_0, pthread_cond_wait,
 	       GLIBC_2_0);
 #endif
@@ -142,7 +143,8 @@ versioned_symbol (libc, __pthread_cond_wait, pthread_cond_wait,
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_timedwait_2_0, int attribute_compat_text_section,
 	  (pthread_cond_2_0_t *cond, pthread_mutex_t *mutex,
-	   const struct timespec *abstime), (cond, mutex, abstime), 0)
+	   const struct timespec *abstime), (cond, mutex, abstime),
+	  return 0)
 compat_symbol (libc, __pthread_cond_timedwait_2_0, pthread_cond_timedwait,
 	       GLIBC_2_0);
 #endif
