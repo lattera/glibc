@@ -54,4 +54,12 @@ libc {
     # i*
     if_freenameindex; if_indextoname; if_nameindex; if_nametoindex;
   }
+  GLIBC_2.1.2 {
+    # g*
+    getaliasbyname_r; getaliasent_r; gethostbyaddr_r; gethostbyname2_r;
+    gethostbyname_r; gethostent_r; getnetbyaddr_r; getnetbyname_r;
+    getnetent_r; getnetgrent_r; getprotobyname_r; getprotobynumber_r;
+    getprotoent_r; getrpcbyname_r; getrpcbynumber_r; getrpcent_r;
+    getservbyname_r;
+  }
 }

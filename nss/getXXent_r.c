@@ -290,5 +290,33 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
   return status == NSS_STATUS_SUCCESS ? 0 : errno;
 }
+#if defined SHARED && DO_VERSIONING
+#define OLD(name) OLD1 (name)
+#define OLD1(name) __old_##name
+
+int
+OLD (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
+			 LOOKUP_TYPE **result H_ERRNO_PARM)
+{
+  int ret = INTERNAL (REENTRANT_GETNAME) (resbuf, buffer, buflen,
+					  result H_ERRNO_VAR);
+
+  if (ret != 0)
+    ret = -1;
+
+  return ret;
+}
+
+#define do_symbol_version(real, name, version) \
+  symbol_version(real, name, version)
+do_symbol_version(OLD (REENTRANT_GETNAME), REENTRANT_GETNAME,
+		  GLIBC_2.0);
+
+#define do_default_symbol_version(real, name, version) \
+  default_symbol_version(real, name, version)
+do_default_symbol_version(INTERNAL (REENTRANT_GETNAME),
+			  REENTRANT_GETNAME, GLIBC_2.1.2);
+#else
 #define do_weak_alias(n1, n2) weak_alias (n1, n2)
 do_weak_alias (INTERNAL (REENTRANT_GETNAME), REENTRANT_GETNAME)
+#endif

@@ -24,4 +24,8 @@ libc {
     # u*
     ulckpwdf;
   }
+  GLIBC_2.1.2 {
+    # g*
+    getspent_r; getspnam_r;
+  }
 }

@@ -20,4 +20,8 @@ libc {
     # p*
     putgrent;
   }
+  GLIBC_2.1.2 {
+    # g*
+    getgrent_r; getgrgid_r; getgrnam_r;
+  }
 }

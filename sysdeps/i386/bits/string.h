@@ -122,17 +122,18 @@ __memcpy_c (void *__dest, __const void *__src, size_t __n)
     {
     case 0:
       __COMMON_CODE ("");
-      return __dest;
+      break;
     case 1:
       __COMMON_CODE ("\n\tmovsb");
-      return __dest;
+      break;
     case 2:
       __COMMON_CODE ("\n\tmovsw");
-      return __dest;
+      break;
     case 3:
       __COMMON_CODE ("\n\tmovsw\n\tmovsb");
-      return __dest;
-    }
+      break;
+  }
+  return __dest;
 #undef __COMMON_CODE
 }
 
@@ -214,17 +215,18 @@ __memset_cc (void *__s, unsigned long int __pattern, size_t __n)
     {
     case 0:
       __COMMON_CODE ("");
-      return __s;
+      break;
     case 1:
       __COMMON_CODE ("\n\tstosb");
-      return __s;
+      break;
     case 2:
       __COMMON_CODE ("\n\tstosw");
-      return __s;
+      break;
     case 3:
       __COMMON_CODE ("\n\tstosw\n\tstosb");
-      return __s;
+      break;
     }
+  return __s;
 #undef __COMMON_CODE
 }
 

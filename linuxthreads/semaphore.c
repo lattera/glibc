@@ -22,7 +22,7 @@
 #include "restart.h"
 #include "queue.h"
 
-int sem_init(sem_t *sem, int pshared, unsigned int value)
+int __new_sem_init(sem_t *sem, int pshared, unsigned int value)
 {
   if (value > SEM_VALUE_MAX) {
     errno = EINVAL;
@@ -38,7 +38,7 @@ int sem_init(sem_t *sem, int pshared, unsigned int value)
   return 0;
 }
 
-int sem_wait(sem_t * sem)
+int __new_sem_wait(sem_t * sem)
 {
   volatile pthread_descr self = thread_self();
 
@@ -65,7 +65,7 @@ int sem_wait(sem_t * sem)
   return 0;
 }
 
-int sem_trywait(sem_t * sem)
+int __new_sem_trywait(sem_t * sem)
 {
   int retval;
 
@@ -81,7 +81,7 @@ int sem_trywait(sem_t * sem)
   return retval;
 }
 
-int sem_post(sem_t * sem)
+int __new_sem_post(sem_t * sem)
 {
   pthread_descr self = thread_self();
   pthread_descr th;
@@ -120,13 +120,13 @@ int sem_post(sem_t * sem)
   return 0;
 }
 
-int sem_getvalue(sem_t * sem, int * sval)
+int __new_sem_getvalue(sem_t * sem, int * sval)
 {
   *sval = sem->__sem_value;
   return 0;
 }
 
-int sem_destroy(sem_t * sem)
+int __new_sem_destroy(sem_t * sem)
 {
   if (sem->__sem_waiting != NULL) {
     __set_errno (EBUSY);
@@ -152,3 +152,22 @@ int sem_unlink(const char *name)
   __set_errno (ENOSYS);
   return -1;
 }
+
+#if defined PIC && DO_VERSIONING
+default_symbol_version (__new_sem_init, sem_init, GLIBC_2.1);
+default_symbol_version (__new_sem_wait, sem_wait, GLIBC_2.1);
+default_symbol_version (__new_sem_trywait, sem_trywait, GLIBC_2.1);
+default_symbol_version (__new_sem_post, sem_post, GLIBC_2.1);
+default_symbol_version (__new_sem_getvalue, sem_getvalue, GLIBC_2.1);
+default_symbol_version (__new_sem_destroy, sem_destroy, GLIBC_2.1);
+#else
+# ifdef weak_alias
+weak_alias (__new_sem_init, sem_init)
+weak_alias (__new_sem_wait, sem_wait)
+weak_alias (__new_sem_trywait, sem_trywait)
+weak_alias (__new_sem_post, sem_post)
+weak_alias (__new_sem_getvalue, sem_getvalue)
+weak_alias (__new_sem_destroy, sem_destroy)
+# endif
+#endif
+    

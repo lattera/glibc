@@ -1,3 +1,17 @@
+1999-07-09  Cristian Gafton  <gafton@redhat.com>
+
+	* Makefile (libpthread-routines): Add oldsemaphore routine.
+	* Versions: Add sem_destroy; sem_getvalue; sem_init; sem_post;
+	sem_trywait; sem_wait; to GLIBC_2.1.
+	* oldsemaphore.c: New file.
+	* semaphore.c: Add default_symbol_versions for the changed functions.
+	(__new_sem_init): Rename from sem_init.
+	(__new_sem_post): Rename from sem_post.
+	(__new_sem_wait): Rename from sem_wait.
+	(__new_sem_trywait): Rename from sem_trywait.
+	(__new_sem_getvalue): Rename from sem_getvalue.
+	(__new_sem_destroy): Rename from sem_destroy.
+
 1999-06-23  Robey Pointer  <robey@netscape.com>
 
 	* internals.h: Added p_nextlock entry to separate queueing for a

@@ -97,6 +97,8 @@ libpthread {
 
     pthread_mutexattr_gettype; pthread_mutexattr_settype;
 
+    sem_destroy; sem_getvalue; sem_init; sem_post; sem_trywait; sem_wait;
+
     # helper functions
     __libc_current_sigrtmin; __libc_current_sigrtmax;
     __libc_allocate_rtsig;

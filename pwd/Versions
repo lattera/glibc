@@ -12,4 +12,8 @@ libc {
     # p*
     putpwent; setpwent;
   }
+  GLIBC_2.1.2 {
+    # g*
+    getpwent_r; getpwuid_r;
+  }
 }

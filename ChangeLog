@@ -1,4 +1,13 @@
+1999-07-09  Cristian Gafton  <gafton@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Make sure
+	resultbuf->h_addr_list addresses are correctly aligned.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/bits/string.h (__memcpy_c): Help some stupid old
+	compilers.
+	(__memset_cc): Likewise.
 
 	* sysdeps/generic/libc-start.c: For SUID binaries check whether
 	the standard file descriptors are open.
