@@ -672,10 +672,6 @@ extern int pthread_atfork (void (*__prepare) (void),
 
 extern void pthread_kill_other_threads_np (void) __THROW;
 
-
-/* This function is called to initialize the pthread library.  */
-extern void __pthread_initialize (void) __THROW;
-
 __END_DECLS
 
 #endif	/* pthread.h */

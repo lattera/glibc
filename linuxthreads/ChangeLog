@@ -1,3 +1,9 @@
+2001-02-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/pthread/pthread.h: Move __pthread_initialize from here
+	to...
+	* internals.h: ...here.
+
 2001-02-05  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: New file.

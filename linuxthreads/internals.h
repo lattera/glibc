@@ -539,4 +539,7 @@ extern void __linuxthreads_create_event (void);
 extern void __linuxthreads_death_event (void);
 extern void __linuxthreads_reap_event (void);
 
+/* This function is called to initialize the pthread library.  */
+extern void __pthread_initialize (void);
+
 #endif /* internals.h */
