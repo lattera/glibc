@@ -1,3 +1,27 @@
+Sun Jan 21 00:55:25 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/shmat.c: Include sys/shm.h instead of
+	sys/sem.h.
+
+	* stdlib/stdlib.h [__USE_SVID]: Declare a64l, l64a.
+
+	* stdlib/l64a.c: Use 6-bit numbers as indices in CONV_TABLE, not
+	literal byte values.
+
+	* misc/bsd-compat.c (getpgrp): Define with prototype.
+
+	* misc/init-misc.c (__progname_full): New variable.
+	(program_invocation_name, program_invocation_short_name): New aliases.
+	(__init_misc): Define with prototype.  Set __progname_full.
+	* misc/progname.c: File removed.
+	* misc/Makefile (aux): Remove progname.
+
+	* misc/hsearch_r.c (isprime): Define with prototype.
+
+	* sysdeps/unix/sysv/linux/seteuid.c: Just include unix/bsd version.
+	* sysdeps/unix/bsd/seteuid.c: Disallow arg of -1.
+	* sysdeps/unix/bsd/setegid.c: Likewise.
+
 Fri Jan 19 13:28:59 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/tcdrain.c: Define tcdrain, not

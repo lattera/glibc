@@ -1,6 +1,6 @@
 /* BSD-compatible versions of functions where BSD and POSIX.1 conflict.
 
-Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,7 @@ Cambridge, MA 02139, USA.  */
 extern pid_t __getpgid __P ((pid_t));
 
 pid_t
-getpgrp (pid)
-     pid_t pid;
+getpgrp (pid_t pid)
 {
   return __getpgid (pid);
 }

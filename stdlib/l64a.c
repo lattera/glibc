@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -43,7 +43,7 @@ l64a (n)
 
   for (cnt = 5; cnt >= 0; --cnt)
     {
-      result[cnt] = n & 0x3f;
+      result[cnt] = conv_table[n & 0x3f];
       n >>= 6;
     }
 

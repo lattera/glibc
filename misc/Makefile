@@ -53,7 +53,7 @@ routines := brk sbrk sstk ioctl \
 	    efgcvt efgcvt_r \
 	    hsearch hsearch_r tsearch \
 	    err error
-aux := progname init-misc
+aux := init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
 install-lib := libbsd-compat.a libg.a

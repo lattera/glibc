@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -154,6 +154,17 @@ extern __inline int atoi (__const char *__nptr)
 extern __inline long int atol (__const char *__nptr)
 { return strtol (__nptr, (char **) NULL, 10); }
 #endif /* Optimizing GCC >=2.  */
+
+
+#ifdef __USE_SVID
+/* Convert N to base 64 using the digits "./0-9A-Za-z", least-significant
+   digit first.  Returns a pointer to static storage overwritten by the
+   next call.  */
+extern char *l64a __P ((long int __n));
+
+/* Read a number from a string in base 64 as above.  */
+extern long int a64l __P ((const char *));
+#endif
 
 
 /* Return a random integer between 0 and RAND_MAX inclusive.  */

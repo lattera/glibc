@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 This file is part of the GNU C Library.
 
@@ -31,7 +31,7 @@ Boston, MA 02111-1307, USA.  */
    Instead the interface of all functions is extended to take an argument
    which describes the current status.  */
 typedef struct _ENTRY
-{ 
+{
   int   used;
   ENTRY entry;
 }
@@ -44,8 +44,7 @@ _ENTRY;
    a)  the code is (most probably) called a few times per program run and
    b)  the number is small because the table must fit in the core  */
 static int
-isprime (number)
-     unsigned int number;
+isprime (unsigned int number)
 {
   /* no even number will be passed */
   unsigned int div = 3;
@@ -61,7 +60,7 @@ isprime (number)
    Test for an existing table are done. We allocate one element
    more as the found prime number says. This is done for more effective
    indexing as explained in the comment for the hsearch function.
-   The contents of the table is zeroed, especially the field used 
+   The contents of the table is zeroed, especially the field used
    becomes zero.  */
 int
 hcreate_r (nel, htab)
@@ -114,7 +113,7 @@ hdestroy_r (htab)
     /* free used memory */
     free (htab->table);
 
-  /* the sign for an existing table is an value != NULL in htable */ 
+  /* the sign for an existing table is an value != NULL in htable */
   htab->table = NULL;
 }
 
@@ -124,7 +123,7 @@ hdestroy_r (htab)
    probably strings of chars. The function for generating a number of the
    strings is simple but fast. It can be replaced by a more complex function
    like ajw (see [Aho,Sethi,Ullman]) if the needs are shown.
-  
+
    We use an trick to speed up the lookup. The table is created by hcreate
    with one more element available. This enables us to use the index zero
    special. This index will never be used because we store the first hash
@@ -144,7 +143,7 @@ hsearch_r (item, action, retval, htab)
   unsigned int len = strlen (item.key);
   unsigned int idx;
 
-  /* If table is full and another entry should be entered return with 
+  /* If table is full and another entry should be entered return with
      error.  */
   if (action == ENTER && htab->filled == htab->size)
     {
@@ -178,7 +177,7 @@ hsearch_r (item, action, retval, htab)
       if (htab->table[idx].used == hval
 	  && strcmp (item.key, htab->table[idx].entry.key) == 0)
 	{
-          if (action == ENTER) 
+          if (action == ENTER)
 	    htab->table[idx].entry.data = item.data;
 
 	  *retval = &htab->table[idx].entry;
@@ -187,7 +186,7 @@ hsearch_r (item, action, retval, htab)
 
       /* Second hash function, as suggested in [Knuth] */
       hval2 = 1 + hval % (htab->size - 2);
-	
+
       do
 	{
 	  /* Because SIZE is prime this guarantees to step through all
@@ -201,7 +200,7 @@ hsearch_r (item, action, retval, htab)
           if (htab->table[idx].used == hval
 	      && strcmp (item.key, htab->table[idx].entry.key) == 0)
 	    {
-              if (action == ENTER) 
+              if (action == ENTER)
 	        htab->table[idx].entry.data = item.data;
 
 	      *retval = &htab->table[idx].entry;

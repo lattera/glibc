@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
 
 int
-DEFUN(setegid, (gid), gid_t gid)
+setegid (gid)
+     gid_t gid;
 {
+  if (gid == (gid_t) ~0)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   return __setregid (-1, gid);
 }

@@ -1,5 +1,5 @@
 /* Define and initialize `__progname'.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,14 +18,15 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <string.h>
+#include <errno.h>
 
+char *__progname_full = (char *) "";
 char *__progname = (char *) "";
+weak_alias (__progname_full, program_invocation_name)
+weak_alias (__progname, program_invocation_short_name)
 
 void
-__init_misc (argc, argv, envp)
-     int argc;
-     char **argv;
-     char **envp;
+__init_misc (int argc, char **argv, char **envp)
 {
   if (argv && argv[0])
     {
@@ -34,9 +35,6 @@ __init_misc (argc, argv, envp)
 	__progname = argv[0];
       else
 	__progname = p + 1;
+      __progname_full = argv[0];
     }
 }
-
-#ifdef HAVE_GNU_LD
-text_set_element (__libc_subinit, __init_misc);
-#endif
