@@ -1,5 +1,7 @@
 1999-06-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Add warnings about broken code.
+
 	* Versions.def: Add GLIBC_2.2 for libc.
 
 	* iconv/gconv.h: Make header suitable for inclusion in public header
