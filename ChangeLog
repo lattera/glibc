@@ -1,3 +1,8 @@
+2001-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/glob64.c: Moved to ...
+	* sysdeps/gnu/glob64.c: ...here.  New file.
+
 2001-01-07  Ben Collins  <bcollins@debian.org>
 
 	* manual/examples/longopt.c: Make the "struct option" a little
