@@ -1,9 +1,15 @@
+2003-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/iconv_prog.c (process_block): Don't print message about
+	invalid input if the -c option is used.
+	(main): Correctly append IGNORE string for -c option.
+
 2002-04-06  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/bits/atomic.h: Moved to ...
 	* sysdeps/unix/sysv/linux/sh/bits/atomic.h: ... here.  Add comments.
 	(__arch_compare_and_exchange_val_*_acq): Add parens around macro
-        arguments.
+	arguments.
 	(atomic_bit_set, atomic_bit_test_set): Likewise.
 	(atomic_exchange_and_add): Likewise.  Don't evaluate VALUE argument
 	twice.
