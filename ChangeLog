@@ -18,6 +18,12 @@ Tue Jan 16 17:37:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 Sun Jan 14 17:51:09 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
+	* MakeTAGS (all-sources, all-headers): Always search the
+	current directory first.
+
+	* db/btree/bt_seq.c (__bt_first): Return RET_SPECIAL when key not
+	found.
+
 	* stdio-common/vfscanf.c (inchar, conv_error, input_error,
 	memory_error): Add cast to void to avoid gcc warning.
 	(vfscanf): Rewrite character class parsing to make it more efficient.

@@ -83,13 +83,13 @@ all-dist := $(filter-out %.h %.c %.s %.S,$(all-dist))
 
 # All different versions of $(sources), preserving the configured sysdep
 # directory order.
-all-sources = $(shell find $(all-dirs) -maxdepth 1 \( -name fnord \
+all-sources = $(shell find . $(all-dirs) -maxdepth 1 \( -name fnord \
 			   $(foreach file,$(sort $(sources) $(sources:.c=.S) \
 						 $(sources:.c=.s)),\
 				     -o -name $(file)) \
 			   \) -print)
 
-all-headers = $(shell find $(all-dirs) -maxdepth 1 \( -name fnord \
+all-headers = $(shell find . $(all-dirs) -maxdepth 1 \( -name fnord \
 			   $(foreach file,$(headers),-o -name $(file)) \
 			   \) -print)
 
