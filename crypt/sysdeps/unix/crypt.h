@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+ * Copyright (C) 1991, 92, 93, 96, 97, 98, 2000 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -30,14 +30,14 @@
 __BEGIN_DECLS
 
 /* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
-extern char *crypt __P ((__const char *__key, __const char *__salt));
+extern char *crypt (__const char *__key, __const char *__salt);
 
 /* Setup DES tables according KEY.  */
-extern void setkey __P ((__const char *__key));
+extern void setkey (__const char *__key);
 
 /* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
    block in place.  */
-extern void encrypt __P ((char *__block, int __edflag));
+extern void encrypt (char *__block, int __edflag);
 
 #ifdef __USE_GNU
 /* Reentrant versions of the functions above.  The additional argument
@@ -56,14 +56,14 @@ struct crypt_data
     int  direction, initialized;
   };
 
-extern char *crypt_r __P ((__const char *__key, __const char *__salt,
-			   struct crypt_data * __restrict __data));
+extern char *crypt_r (__const char *__key, __const char *__salt,
+		      struct crypt_data * __restrict __data);
 
-extern void setkey_r __P ((__const char *__key,
-			   struct crypt_data * __restrict __data));
+extern void setkey_r (__const char *__key,
+		      struct crypt_data * __restrict __data);
 
-extern void encrypt_r __P ((char *__block, int __edflag,
-			    struct crypt_data * __restrict __data));
+extern void encrypt_r (char *__block, int __edflag,
+		       struct crypt_data * __restrict __data);
 #endif
 
 __END_DECLS
