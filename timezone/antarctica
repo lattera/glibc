@@ -1,4 +1,4 @@
-# @(#)antarctica	7.13
+# @(#)antarctica	7.14
 
 # From Paul Eggert (1997-03-28):
 # To keep things manageable, we list only locations occupied year-round;
@@ -41,17 +41,23 @@ Rule	ChileAQ	1970	max	-	Mar	Sun>=9	0:00	0	-
 #
 # year-round bases
 # Casey, Bailey Peninsula, since 1969
-# Davis, Vestfold Hills, since 1957-01-13 (except 1965-01 -  1969-02)
+# Davis, Vestfold Hills, since 1957-01-13 (except 1964-11 - 1969-02)
 # Mawson, Holme Bay, since 1954-02-13
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Antarctica/Casey	0	-	___	1969
 			8:00	-	WST	# Western (Aus) Standard Time
-#Zone Antartica/Davis	unknown
+Zone Antarctica/Davis	0	-	___	1957 Jan 13
+			7:00	-	DAVT	1964 Nov # Davis Time
+			0	-	___	1969 Feb
+			7:00	-	DAVT
 Zone Antarctica/Mawson	0	-	___	1954 Feb 13
 			6:00	-	MAWT	# Mawson Time
 # References:
 # <a href="http://www.antdiv.gov.au/aad/exop/sfo/casey/casey_aws.html">
 # Casey Weather (1998-02-26)
+# </a>
+# <a href="http://www.antdiv.gov.au/aad/exop/sfo/davis/video.html">
+# Davis Station, Antarctica (1998-02-26)
 # </a>
 # <a href="http://www.antdiv.gov.au/aad/exop/sfo/mawson/video.html">
 # Mawson Station, Antarctica (1998-02-25)

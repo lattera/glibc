@@ -1,4 +1,4 @@
-# @(#)australasia	7.41
+# @(#)australasia	7.43
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -158,9 +158,6 @@ Zone Australia/Lord_Howe 10:36:20 -	LMT	1895 Feb
 			10:30	LH	LHST
 
 # Australian miscellany
-# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone Indian/Christmas	7:02:52 -	LMT	1895 Feb
-			7:00	-	CXT	# Christmas Island Time
 #
 # Ashmore Is, Cartier
 # no indigenous inhabitants; only seasonal caretakers
@@ -178,6 +175,10 @@ Zone Indian/Christmas	7:02:52 -	LMT	1895 Feb
 # Manihiki, Penrhyn, Rakehanga
 # no information
 
+# Christmas
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone Indian/Christmas	7:02:52 -	LMT	1895 Feb
+			7:00	-	CXT	# Christmas Island Time
 
 # Cook Is
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
@@ -207,6 +208,8 @@ Zone	Pacific/Marquesas -9:18:00 -	LMT	1912 Oct
 			 -9:30	-	MART	# Marquesas Time
 Zone	Pacific/Tahiti	 -9:58:16 -	LMT	1912 Oct	# Papeete
 			-10:00	-	TAHT	# Tahiti Time
+# Clipperton (near North America) is administered from French Polynesia;
+# it is uninhabited.
 
 # Guam
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -401,6 +404,12 @@ Zone Pacific/Johnston	-10:00	-	HST
 
 # Kingman
 # uninhabited
+
+# Midway
+Zone Pacific/Midway	-11:49:28 -	LMT	1901
+			-11:00	-	NST	1967 Apr	# N=Nome
+			-11:00	-	BST	1983 Nov 30	# B=Bering
+			-11:00	-	SST			# S=Samoa
 
 # Palmyra
 # uninhabited since World War II; was probably like Pacific/Kiritimati

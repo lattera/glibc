@@ -1,4 +1,4 @@
-# @(#)asia	7.38
+# @(#)asia	7.39
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -880,6 +880,14 @@ Zone	Asia/Karachi	4:28:12 -	LMT	1907
 # for parts of the West Bank as they transitioned from Israel's rules
 # to Palestine's rules.  If you have more info about this, please
 # send it to tz@elsie.nci.nih.gov for incorporation into future editions.
+
+# From IINS News Service - Israel - 1998-03-23 10:38:07 Israel time,
+# forwarded by Ephraim Silverberg:
+#
+# Despite the fact that Israel changed over to daylight savings time
+# last week, the PLO Authority (PA) has decided not to turn its clocks
+# one-hour forward at this time.  As a sign of independence from Israeli rule,
+# the PA has decided to implement DST in April.
 
 # These rules for Egypt are stolen from the `africa' file.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S

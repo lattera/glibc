@@ -1,4 +1,4 @@
-# %W%
+# @(#)europe	7.54
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -147,7 +147,7 @@
 # time of sunrise and sunset in The Times, when BDST was in effect, and
 # if you find a zone reference it will say, "All times B.D.S.T."
 
-# From Peter Ilieve <peter@aldie.co.uk> (1998-01-12):
+# From Peter Ilieve <peter@aldie.co.uk> (1998-04-19):
 # The following list attempts to show the complete history of Summer Time
 # legislation in the United Kingdom, and has quite a bit to say about
 # the Isle of Man and the Channel Islands as well.
@@ -200,7 +200,7 @@
 # seen it I don't know if it used Greenwich mean time, some other definition,
 # or just said that Isle of Man time would be the same as in Great Britain.
 #
-# - The Isle of Man (War Legislation) Act, 1914 (4 & 5 Geo. 5. c. 62) (???)
+# - The Isle of Man (War Legislation) Act, 1914 (4 & 5 Geo. 5. c. 62)
 #
 # Gives the power, by Order in Council, to extend wartime legislation
 # to the Isle of Man.
@@ -258,6 +258,14 @@
 #
 # The matching Isle of Man Order for 1918 with the same dates and times.
 #
+# - The Termination of the Present War (Definition) Act, 1918
+#   (8 & 9 Geo. 5. c. 59)
+#
+# This gave power to specify a legal end date for the war just ended,
+# which would affect things like the Summer Time Act, 1916, which applied
+# only in wartime. This date was to be close to the date of formal
+# ratification of the treaty or treaties of peace.
+#
 # - S.R.&O. 1919, No. 297
 #
 # An Order made under the Summer Time Act, 1916 giving dates
@@ -285,12 +293,12 @@
 # Monday 25 October (the time remaining 02:00 GMT). The 1989 Green
 # Paper (Cm 722) says this was done because of a coal strike.
 #
-# - The War Emergency Laws (Continuance) Act, 1920 (10 & 11 Geo. 5. c. 5) (???)
+# - The War Emergency Laws (Continuance) Act, 1920 (10 Geo. 5. c. 5)
 #
 # This extends the power to make Orders under the Summer Time Act, 1916
 # for a period of 12 months after the termination of the war.
-# I haven't seen this one so I don't know when it came into force, or
-# when the law deemed the termination of the war to have been.
+# Came into force on 31 March 1920. Although the war had been over for more
+# than 12 months by then the legal end date had not yet been set.
 #
 # - S.R.&O. 1921, No. 363
 #
@@ -302,11 +310,16 @@
 #
 # The matching Isle of Man Order for 1921 with the same dates and times.
 #
-# - S.R.&O. 1922, No. 264 (???)
+# - S.R.&O. 1922, No. 264
 #
-# This probably defines Summer Time for 1922 as the Summer Time Act, 1922
-# was passed after the start date. Dates from Cm 722:
-#   1922: 26 March to 8 October
+# An Order made under the Summer Time Act, 1916 and the War
+# Emergency Laws (Continuance) Act, 1920 giving dates for Summer Time
+# in 1921 of Sunday 26 March to Sunday 8 October, both at 02:00 GMT.
+# It also mentions the arrangements for defining the legal end date
+# for the late war. An Order was made on 10 August 1921, under the
+# Termination of the Present War (Definition) Act, 1918, setting
+# a date of 31 August 1921. This means the powers of the Summer Time
+# Act, 1916 would finally expire on 31 August 1922.
 #
 # - S.R.&O. 1922, No. 290 (???)
 #
@@ -327,7 +340,7 @@
 # dated 13 October 1922. It revokes (among other things) the Order extending
 # the Summer Time Act, 1916 to the Isle of Man.
 #
-# - The Expiring Laws Continuance Act, 1923 (13 & 14 Geo. 5. c. 37) (jsm)
+# - The Expiring Laws Continuance Act, 1923 (13 & 14 Geo. 5. c. 37)
 #
 # This extended the Summer Time Act, 1922 (among other things) until
 # 31 December 1924.
@@ -359,15 +372,16 @@
 # These were made under the Emergency Powers (Defence) Act, 1939.
 # They change the end date to be the day after the third Saturday in November.
 #
-# - S.R.&O. 1940, No. 1883
+# - S.R.&O. 1940, No. 172
 #
 # An Order in Council amending the Defence (Summer Time) Regulations, 1939.
+# It changed the start date to the day after the fourth Saturday in February
+# (ie. 25 Feb 1940).
+#
+# - S.R.&O. 1940, No. 1883
+#
+# Another Order amending the Defence (Summer Time) Regulations, 1939.
 # This continues summer time throughout the year after it starts in 1940.
-# There was another Order (S.R.&O. 1940, No. 172) that I assume had merely
-# changed the dates, to start on 4 February, and was then superseded by this
-# one. I haven't seen No. 172 so I don't know what end date it would have
-# specified. The dates from Cm 722:
-#   1940: Summer Time starts on 4 February
 #
 # - S.R.&O. 1941, No. 476
 #
@@ -385,15 +399,20 @@
 #
 # - S.R.&O. 1944, No. 932
 #
-# This changed the end date of Double Summer Time to 17 September 1944.
-# (I don't have the text of this, just a note of what it did, the text almost
-# certainly had the `day after the nth Saturday' form.)
+# Another Order amending the Defence (Summer Time) Regulations, 1939.
+# This changed the end date of Double Summer Time to the day after the
+# third Saturday in September (ie. 17 September 1944).
 #
-# - S.R.&O. 1945, No. 312 (???)
+# - S.R.&O. 1945, No. 312
 #
-# Probably defines the dates of Double Summer Time in 1945.
-# I do have this quote from Hansard (the official record of the United Kingdom
-# Parliament), Oral Answers, 1 March 1945, cols 1559--60:
+# Another Order amending the Defence (Summer Time) Regulations, 1939.
+# This changes the start and end dates of Double Summer Time to the
+# day after the first Sunday in April and the day after the second Saturday
+# in July (ie. Mon 2 April to Sun 15 July).
+#
+# I have this quote from Hansard (the official record of the United Kingdom
+# Parliament), Oral Answers, 1 March 1945, cols 1559--60, explaining the
+# unusual start on a Monday:
 #
 #  `58. Major Sir Goronwy Owen asked the Secretary of State for the Home
 #   Department if he is now able to state the Government's proposals
@@ -410,15 +429,13 @@
 #   Sunday, but in the night of Sunday-Monday so that it will operate from
 #   Monday, 2nd April.'
 #
-# Cm 722 gives dates of:
-#   1945: Double Summer time: 2 April to 15 July
-#   1945: Summer Time ends on 7 October
-#
 # - S.R.&O. 1945, No. 1208
 #
 # An Order under the Emergency Powers (Defence) Acts, 1939 and 1940 revoking
 # a long list of things, including the Defence (Summer Time) Regulations, 1939.
 # This meant that Summer Time reverted to being set by the 1922 and 1925 Acts.
+# It was made on 28 September, early enough to end Summer Time on the
+# date defined by the 1925 Act: 7 October.
 #
 # - The Summer Time Act, 1947 (10 & 11 Geo. 6. c. 16)
 #
@@ -431,21 +448,36 @@
 # both to vary the dates and to continue Double Summer Time. It applied
 # to the Isle of Man and the Channel Islands.
 #
-# - Summer Time Order, 1948 (S.I. 1948/495) (???)
-# - Summer Time Order, 1949 (S.I. 1949/373) (???)
-# - Summer Time Order, 1950 (S.I. 1950/518) (???)
-# - Summer Time Order, 1951 (S.I. 1951/430) (???)
-# - Summer Time Order, 1952 (S.I. 1952/451) (???)
+# - Summer Time Order, 1948 (S.I. 1948/495)
 #
-# These presumably give the dates of Summer Time for the relevent years.
-# There was no Double Summer Time. The dates given in the 1989 Green Paper
-# for these years are:
-#   1948: 14 March to 31 October
-#   1949: 3 April to 30 October
-#   1950: 16 April to 22 October
-#   1951: 15 April to 21 October
-#   1952: 20 April to 26 October
-# After 1952 things revert back to the 1922 and 1925 Acts.
+# An Order made under the Summer Time Act, 1947. Gave dates for 1948 of
+# 14 March and 31 October, both at 02:00 GMT.
+#
+# Although the 1947 Act had legislated for Double Summer Time, this was
+# not continued after 1947.
+#
+# - Summer Time Order, 1949 (S.I. 1949/373)
+#
+# Another Order made under the Summer Time Act, 1947. Gave dates for 1949
+# of 3 April and 30 October, both at 02:00 GMT.
+#
+# - Summer Time Order, 1950 (S.I. 1950/518)
+#
+# Another Order made under the Summer Time Act, 1947. Gave dates for 1950
+# of 16 April and 22 October, both at 02:00 GMT.
+#
+# - Summer Time Order, 1951 (S.I. 1951/430)
+#
+# Another Order made under the Summer Time Act, 1947. Gave dates for 1951
+# of 15 April and 21 October, both at 02:00 GMT.
+#
+# - Summer Time Order, 1952 (S.I. 1952/451)
+#
+# Another Order made under the Summer Time Act, 1947. Gave dates for 1952
+# of 20 April and 26 October, both at 02:00 GMT.
+#
+# This is the last of this run of Orders, so for 1953 things reverted
+# to the 1922 and 1925 Acts.
 #
 # - The Interpretation Act (Northern Ireland), 1954 (1954 c. 33 (N.I.)) (???)
 #
@@ -659,7 +691,9 @@
 #   2000: 26 March to 29 October
 #   2001: 25 March to 28 October
 #
+# <a href="http://www.hmso.gov.uk/si/si1997/97298201.htm">
 # - Summer Time Order 1997 (S.I. 1997/2982)
+# </a>
 #
 # Implements the eighth Directive. Has the same text about the Isle of Man,
 # Guernsey and Jersey as the 1994 Order.
@@ -757,7 +791,7 @@ Rule	GB-Eire	1939	only	-	Apr	Sun>=16	2:00s	1:00	BST
 # S.R.&O. 1939, No. 1379
 Rule	GB-Eire	1939	only	-	Nov	Sun>=16	2:00s	0	GMT
 # S.R.&O. 1940, No. 172 and No. 1883
-Rule	GB-Eire	1940	only	-	Feb	25	2:00s	1:00	BST
+Rule	GB-Eire	1940	only	-	Feb	Sun>=23	2:00s	1:00	BST
 # S.R.&O. 1941, No. 476
 Rule	GB-Eire	1941	only	-	May	Sun>=2	1:00s	2:00	BDST
 Rule	GB-Eire	1941	1943	-	Aug	Sun>=9	1:00s	1:00	BST
@@ -766,9 +800,9 @@ Rule	GB-Eire	1942	1944	-	Apr	Sun>=2	1:00s	2:00	BDST
 # S.R.&O. 1944, No. 932
 Rule	GB-Eire	1944	only	-	Sep	Sun>=16	1:00s	1:00	BST
 # S.R.&O. 1945, No. 312
-Rule	GB-Eire	1945	only	-	Apr	 2	1:00s	2:00	BDST
+Rule	GB-Eire	1945	only	-	Apr	Mon>=2	1:00s	2:00	BDST
+Rule	GB-Eire	1945	only	-	Jul	Sun>=9	1:00s	1:00	BST
 # S.R.&O. 1945, No. 1208
-Rule	GB-Eire	1945	only	-	Jul	15	1:00s	1:00	BST
 Rule	GB-Eire	1945	1946	-	Oct	Sun>=2	2:00s	0	GMT
 Rule	GB-Eire	1946	only	-	Apr	Sun>=9	2:00s	1:00	BST
 # The Summer Time Act, 1947
@@ -778,9 +812,10 @@ Rule	GB-Eire	1947	only	-	Aug	10	1:00s	1:00	BST
 Rule	GB-Eire	1947	only	-	Nov	 2	2:00s	0	GMT
 # Summer Time Order, 1948 (S.I. 1948/495)
 Rule	GB-Eire	1948	only	-	Mar	14	2:00s	1:00	BST
-Rule	GB-Eire	1948	1949	-	Oct	lastSun	2:00s	0	GMT
+Rule	GB-Eire	1948	only	-	Oct	31	2:00s	0	GMT
 # Summer Time Order, 1949 (S.I. 1949/373)
 Rule	GB-Eire	1949	only	-	Apr	 3	2:00s	1:00	BST
+Rule	GB-Eire	1949	only	-	Oct	30	2:00s	0	GMT
 # Summer Time Order, 1950 (S.I. 1950/518)
 # Summer Time Order, 1951 (S.I. 1951/430)
 # Summer Time Order, 1952 (S.I. 1952/451)

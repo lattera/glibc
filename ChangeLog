@@ -2,6 +2,16 @@
 
 	* manual/texinfo.tex: Update to last available version.
 
+	* timezone/africa: Update from tzdata1998e.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zone.tab: Likewise.
+
 1998-05-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/chown.c: Fix comment.

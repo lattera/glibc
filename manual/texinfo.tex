@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.214 1998/04/13 16:40:45 drepper Exp $
+% $Id: texinfo.tex,v 2.215 1998/05/29 09:03:23 drepper Exp $
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -27,7 +27,7 @@
 % reports; you can get the latest version from:
 % /home/gd/gnu/doc/texinfo.tex on the GNU machines.
 % ftp://ftp.gnu.org/pub/gnu/texinfo.tex
-% (and all GNU mirrors)
+% (and all GNU mirrors, see ftp://ftp.gnu.org/pub/gnu/README.mirrors)
 % ftp://tug.org/tex/texinfo.tex
 % ftp://ctan.org/macros/texinfo/texinfo.tex
 % (and all CTAN mirrors, finger ctan@tug.org for a list).
@@ -60,7 +60,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.214 $
+\deftexinfoversion$Revision: 2.215 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -98,18 +98,20 @@
 % starts a new line in the output.
 \newlinechar = `^^J
 
-% Set up fixed words for English.
-\ifx\putwordChapter\undefined{\gdef\putwordChapter{Chapter}}\fi%
-\def\putwordInfo{Info}%
-\ifx\putwordSee\undefined{\gdef\putwordSee{See}}\fi%
-\ifx\putwordsee\undefined{\gdef\putwordsee{see}}\fi%
-\ifx\putwordfile\undefined{\gdef\putwordfile{file}}\fi%
-\ifx\putwordpage\undefined{\gdef\putwordpage{page}}\fi%
-\ifx\putwordsection\undefined{\gdef\putwordsection{section}}\fi%
-\ifx\putwordSection\undefined{\gdef\putwordSection{Section}}\fi%
-\ifx\putwordTableofContents\undefined{\gdef\putwordTableofContents{Table of Contents}}\fi%
-\ifx\putwordShortContents\undefined{\gdef\putwordShortContents{Short Contents}}\fi%
-\ifx\putwordAppendix\undefined{\gdef\putwordAppendix{Appendix}}\fi%
+% Set up fixed words for English if not already set.
+\ifx\putwordAppendix\undefined \gdef\putwordAppendix{Appendix}\fi
+\ifx\putwordChapter\undefined  \gdef\putwordChapter{Chapter}\fi
+\ifx\putwordfile\undefined     \gdef\putwordfile{file}\fi
+\ifx\putwordInfo\undefined     \gdef\putwordfile{Info}\fi
+\ifx\putwordMethodon\undefined \gdef\putwordMethodon{Method on}\fi
+\ifx\putwordon\undefined       \gdef\putwordon{on}\fi
+\ifx\putwordpage\undefined     \gdef\putwordpage{page}\fi
+\ifx\putwordsection\undefined  \gdef\putwordsection{section}\fi
+\ifx\putwordSection\undefined  \gdef\putwordSection{Section}\fi
+\ifx\putwordsee\undefined      \gdef\putwordsee{see}\fi
+\ifx\putwordSee\undefined      \gdef\putwordSee{See}\fi
+\ifx\putwordShortContents\undefined  \gdef\putwordShortContents{Short Contents}\fi
+\ifx\putwordTableofContents\undefined\gdef\putwordTableofContents{Table of Contents}\fi
 
 % Ignore a token.
 %
@@ -963,13 +965,24 @@ where each line of input produces a line of output.}
 \def\value{\begingroup
   \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
   \valuexxx}
-\def\valuexxx#1{%
+\def\valuexxx#1{\expandablevalue{#1}\endgroup}
+
+% We have this subroutine so that we can handle at least some @value's
+% properly in indexes (we \let\value to this in \indexdummies).  Ones
+% whose names contain - or _ still won't work, but we can't do anything
+% about that.  The command has to be fully expandable, since the result
+% winds up in the index file.  This means that if the variable's value
+% contains other Texinfo commands, it's almost certain it will fail
+% (although perhaps we could fix that with sufficient work to do a
+% one-level expansion on the result, instead of complete).
+% 
+\def\expandablevalue#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
-    {\{No value for ``#1''\}}%
+    {[No value for ``#1'']v}%
   \else
     \csname SET#1\endcsname
   \fi
-\endgroup}
+}
 
 % @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
 % with @set.
@@ -1077,12 +1090,21 @@ where each line of input produces a line of output.}
 % @refill is a no-op.
 \let\refill=\relax
 
+% If working on a large document in chapters, it is convenient to
+% be able to disable indexing, cross-referencing, and contents, for test runs.
+% This is done with @novalidate (before @setfilename).
+%
+\newif\iflinks \linkstrue % by default we want the aux files.
+\let\novalidate = \linksfalse
+
 % @setfilename is done at the beginning of every texinfo file.
 % So open here the files we need to have open while reading the input.
 % This makes it possible to make a .fmt file for texinfo.
 \def\setfilename{%
-   \readauxfile
-   \opencontents
+   \iflinks 
+     \readauxfile
+     \opencontents
+   \fi % \openindices needs to do some work in any case.
    \openindices
    \fixbackslash  % Turn off hack to swallow `\input texinfo'.
    \global\let\setfilename=\comment % Ignore extra @setfilename cmds.
@@ -1896,7 +1918,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\itemize{\parsearg\itemizezzz}
 
 \def\itemizezzz #1{%
-  \begingroup % ended by the @end itemsize
+  \begingroup % ended by the @end itemize
   \itemizey {#1}{\Eitemize}
 }
 
@@ -2262,12 +2284,14 @@ width0pt\relax} \fi
 % the file that accumulates this index.  The file's extension is foo.
 % The name of an index should be no more than 2 characters long
 % for the sake of vms.
-
-\def\newindex #1{
-\expandafter\newwrite \csname#1indfile\endcsname% Define number for output file
-\openout \csname#1indfile\endcsname \jobname.#1 % Open the file
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\doindex {#1}}
+%
+\def\newindex#1{%
+  \iflinks
+    \expandafter\newwrite \csname#1indfile\endcsname
+    \openout \csname#1indfile\endcsname \jobname.#1 % Open the file
+  \fi
+  \expandafter\xdef\csname#1index\endcsname{%     % Define @#1index
+    \noexpand\doindex{#1}}
 }
 
 % @defindex foo  ==  \newindex{foo}
@@ -2276,11 +2300,13 @@ width0pt\relax} \fi
 
 % Define @defcodeindex, like @defindex except put all entries in @code.
 
-\def\newcodeindex #1{
-\expandafter\newwrite \csname#1indfile\endcsname% Define number for output file
-\openout \csname#1indfile\endcsname \jobname.#1 % Open the file
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\docodeindex {#1}}
+\def\newcodeindex#1{%
+  \iflinks
+    \expandafter\newwrite \csname#1indfile\endcsname
+    \openout \csname#1indfile\endcsname \jobname.#1
+  \fi
+  \expandafter\xdef\csname#1index\endcsname{%
+    \noexpand\docodeindex{#1}}
 }
 
 \def\defcodeindex{\parsearg\newcodeindex}
@@ -2325,6 +2351,7 @@ width0pt\relax} \fi
 \def\singlecodeindexer #1{\doind{\indexname}{\code{#1}}}
 
 \def\indexdummies{%
+\def\ { }%
 % Take care of the plain tex accent commands.
 \def\"{\realbackslash "}%
 \def\`{\realbackslash `}%
@@ -2366,7 +2393,6 @@ width0pt\relax} \fi
 \def\gtr{\realbackslash gtr}%
 \def\less{\realbackslash less}%
 \def\hat{\realbackslash hat}%
-%\def\char{\realbackslash char}%
 \def\TeX{\realbackslash TeX}%
 \def\dots{\realbackslash dots }%
 \def\result{\realbackslash result}%
@@ -2393,7 +2419,12 @@ width0pt\relax} \fi
 \def\kbd##1{\realbackslash kbd {##1}}%
 \def\dfn##1{\realbackslash dfn {##1}}%
 \def\emph##1{\realbackslash emph {##1}}%
-\def\value##1{\realbackslash value {##1}}%
+%
+% Handle some cases of @value -- where the variable name does not
+% contain - or _, and the value does not contain any
+% (non-fully-expandable) commands.
+\let\value = \expandablevalue
+%
 \unsepspaces
 }
 
@@ -2466,14 +2497,24 @@ width0pt\relax} \fi
 % so we do not become unable to do a definition.
 
 {\catcode`\@=0 \catcode`\\=\other
-@gdef@realbackslash{\}}
+ @gdef@realbackslash{\}}
 
 \let\indexbackslash=0  %overridden during \printindex.
+\let\SETmarginindex=\relax % put index entries in margin (undocumented)?
 
-\let\SETmarginindex=\relax %initialize!
-% workhorse for all \fooindexes
-% #1 is name of index, #2 is stuff to put there
-\def\doind #1#2{%
+% For \ifx comparisons.
+\def\emptymacro{\empty}
+
+% Most index entries go through here, but \dosubind is the general case.
+% 
+\def\doind#1#2{\dosubind{#1}{#2}\empty}
+
+% Workhorse for all \fooindexes.
+% #1 is name of index, #2 is stuff to put there, #3 is subentry --
+% \empty if called from \doind, as we usually are.  The main exception
+% is with defuns, which call us directly.
+% 
+\def\dosubind#1#2#3{%
   % Put the index entry in the margin if desired.
   \ifx\SETmarginindex\relax\else
     \insert\margin{\hbox{\vrule height8pt depth3pt width0pt #2}}%
@@ -2484,13 +2525,22 @@ width0pt\relax} \fi
       \indexdummies % Must do this here, since \bf, etc expand at this stage
       \escapechar=`\\
       {%
-        \let\folio=0% We will expand all macros now EXCEPT \folio.
+        \let\folio = 0% We will expand all macros now EXCEPT \folio.
         \def\rawbackslashxx{\indexbackslash}% \indexbackslash isn't defined now
         % so it will be output as is; and it will print as backslash.
         %
+        \def\thirdarg{#3}%
+        %
+        % If third arg is present, precede it with space in sort key.
+        \ifx\thirdarg\emptymacro
+          \let\subentry = \empty
+        \else
+          \def\subentry{ #3}%
+        \fi
+        %
         % First process the index-string with all font commands turned off
         % to get the string to sort by.
-        {\indexnofonts \xdef\indexsorttmp{#2}}%
+        {\indexnofonts \xdef\indexsorttmp{#2\subentry}}%
         %
         % Now produce the complete index entry, with both the sort key and the
         % original text, including any font commands.
@@ -2499,32 +2549,34 @@ width0pt\relax} \fi
           \write\csname#1indfile\endcsname{%
             \realbackslash entry{\indexsorttmp}{\folio}{\the\toks0}}%
         }%
-        \temp
+        %
+        % If third (subentry) arg is present, add it to the index string.
+        \ifx\thirdarg\emptymacro \else
+          \toks0 = {#3}%
+          \edef\temp{\temp{\the\toks0}}%
+        \fi
+        %
+        % If a skip is the last thing on the list now, preserve it
+        % by backing up by \lastskip, doing the \write, then inserting
+        % the skip again.  Otherwise, the whatsit generated by the
+        % \write will make \lastskip zero.  The result is that sequences
+        % like this:
+        % @end defun
+        % @tindex whatever
+        % @defun ...
+        % will have extra space inserted, because the \medbreak in the
+        % start of the @defun won't see the skip inserted by the @end of
+        % the previous defun.
+        \iflinks
+          \skip0 = \lastskip \ifdim\lastskip = 0pt \else \vskip-\lastskip \fi
+          \temp
+          \ifdim\skip0 = 0pt \else \vskip\skip0 \fi
+        \fi
       }%
     }%
     \penalty\count255
   }%
 }
-
-\def\dosubind #1#2#3{%
-{\count10=\lastpenalty %
-{\indexdummies % Must do this here, since \bf, etc expand at this stage
-\escapechar=`\\%
-{\let\folio=0%
-\def\rawbackslashxx{\indexbackslash}%
-%
-% Now process the index-string once, with all font commands turned off,
-% to get the string to sort the index by.
-{\indexnofonts
-\xdef\temp1{#2 #3}%
-}%
-% Now produce the complete index entry.  We process the index-string again,
-% this time with font commands expanded, to get what to print in the index.
-\edef\temp{%
-\write \csname#1indfile\endcsname{%
-\realbackslash entry {\temp1}{\folio}{#2}{#3}}}%
-\temp }%
-}\penalty\count10}}
 
 % The index entry written in the file actually looks like
 %  \entry {sortstring}{page}{topic}
@@ -2949,7 +3001,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash chapentry{\the\toks0}{\the\chapno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp  %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \global\let\section = \numberedsec
 \global\let\subsection = \numberedsubsec
@@ -2970,7 +3022,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash chapentry{\the\toks0}%
   {\putwordAppendix{} \appendixletter}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp  %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \global\let\section = \appendixsec
 \global\let\subsection = \appendixsubsec
@@ -3005,7 +3057,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbchapentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp  %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \global\let\section = \unnumberedsec
 \global\let\subsection = \unnumberedsubsec
@@ -3022,7 +3074,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash secentry %
 {\the\toks0}{\the\chapno}{\the\secno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \penalty 10000 %
 }}
@@ -3038,7 +3090,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash secentry %
 {\the\toks0}{\appendixletter}{\the\secno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \penalty 10000 %
 }}
@@ -3051,7 +3103,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbsecentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \penalty 10000 %
 }}
@@ -3066,7 +3118,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash subsecentry %
 {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \penalty 10000 %
 }}
@@ -3081,7 +3133,7 @@ width0pt\relax} \fi
 \edef\temp{{\realbackslash subsecentry %
 {\the\toks0}{\appendixletter}{\the\secno}{\the\subsecno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \penalty 10000 %
 }}
@@ -3094,7 +3146,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbsubsecentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \penalty 10000 %
 }}
@@ -3111,7 +3163,7 @@ width0pt\relax} \fi
   {\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}
   {\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \donoderef %
 \penalty 10000 %
 }}
@@ -3128,7 +3180,7 @@ width0pt\relax} \fi
   {\appendixletter}
   {\the\secno}{\the\subsecno}{\the\subsubsecno}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \appendixnoderef %
 \penalty 10000 %
 }}
@@ -3141,7 +3193,7 @@ width0pt\relax} \fi
 \toks0 = {#1}%
 \edef\temp{{\realbackslash unnumbsubsubsecentry{\the\toks0}{\noexpand\folio}}}%
 \escapechar=`\\%
-\write \contentsfile \temp %
+\iflinks \write\contentsfile\temp \fi
 \unnumbnoderef %
 \penalty 10000 %
 }}
@@ -3924,7 +3976,12 @@ width0pt\relax} \fi
 \catcode 61=\active % 61 is `='
 \obeylines\activeparens\spacesplit#3}
 
-\def\defmethparsebody #1#2#3#4 {\begingroup\inENV %
+% #1 is the \E... control sequence to end the definition (which we define).
+% #2 is the \...x control sequence for consecutive fns (which we define).
+% #3 is the control sequence to call to resume processing.
+% #4, delimited by the space, is the class name.
+% 
+\def\defmethparsebody#1#2#3#4 {\begingroup\inENV %
 \medbreak %
 % Define the end token that this defining construct specifies
 % so that it will exit this group.
@@ -3934,6 +3991,24 @@ width0pt\relax} \fi
 \advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
 \exdentamount=\defbodyindent
 \begingroup\obeylines\activeparens\spacesplit{#3{#4}}}
+
+% @deftypemethod has an extra argument that nothing else does.  Sigh.
+% #1 is the \E... control sequence to end the definition (which we define).
+% #2 is the \...x control sequence for consecutive fns (which we define).
+% #3 is the control sequence to call to resume processing.
+% #4, delimited by the space, is the class name.
+% #5 is the method's return type.
+% 
+\def\deftypemethparsebody#1#2#3#4 #5 {\begingroup\inENV %
+\medbreak %
+% Define the end token that this defining construct specifies
+% so that it will exit this group.
+\def#1{\endgraf\endgroup\medbreak}%
+\def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
+\parindent=0in
+\advance\leftskip by \defbodyindent \advance \rightskip by \defbodyindent
+\exdentamount=\defbodyindent
+\begingroup\obeylines\activeparens\spacesplit{#3{#4}{#5}}}
 
 \def\defopparsebody #1#2#3#4#5 {\begingroup\inENV %
 \medbreak %
@@ -4152,39 +4227,46 @@ width0pt\relax} \fi
 \def\defspecx #1 {\errmessage{@defspecx in invalid context}}
 \def\deftypefnx #1 {\errmessage{@deftypefnx in invalid context}}
 \def\deftypemethodx #1 {\errmessage{@deftypemethodx in invalid context}}
-\def\deftypeunx #1 {\errmessage{@deftypeunx in invalid context}}
+\def\deftypefunx #1 {\errmessage{@deftypeunx in invalid context}}
 
 % @defmethod, and so on
 
-% @defop {Funny Method} foo-class frobnicate argument
+% @defop CATEGORY CLASS OPERATION ARG...
 
 \def\defop #1 {\def\defoptype{#1}%
 \defopparsebody\Edefop\defopx\defopheader\defoptype}
 
 \def\defopheader #1#2#3{%
-\dosubind {fn}{\code{#2}}{on #1}% Make entry in function index
+\dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
 \begingroup\defname {#2}{\defoptype{} on #1}%
 \defunargs {#3}\endgroup %
 }
 
-% @deftypemethod foo-class return-type foo-method args
+% @deftypemethod CLASS RETURN-TYPE METHOD ARG...
 %
 \def\deftypemethod{%
-  \defmethparsebody\Edeftypemethod\deftypemethodx\deftypemethodheader}
+  \deftypemethparsebody\Edeftypemethod\deftypemethodx\deftypemethodheader}
 %
 % #1 is the class name, #2 the data type, #3 the method name, #4 the args.
 \def\deftypemethodheader#1#2#3#4{%
-  \deftypefnheaderx{Method on #1}{#2}#3 #4\relax
+  \dosubind{fn}{\code{#3}}{\putwordon\ \code{#1}}% entry in function index
+  \begingroup
+    \defname{\defheaderxcond#2\relax$$$#3}{\putwordMethodon\ \code{#1}}%
+    \deftypefunargs{#4}%
+  \endgroup
 }
 
 % @defmethod == @defop Method
-
+%
 \def\defmethod{\defmethparsebody\Edefmethod\defmethodx\defmethodheader}
-
-\def\defmethodheader #1#2#3{%
-\dosubind {fn}{\code{#2}}{on #1}% entry in function index
-\begingroup\defname {#2}{Method on #1}%
-\defunargs {#3}\endgroup %
+%
+% #1 is the class name, #2 the method name, #3 the args.
+\def\defmethodheader#1#2#3{%
+  \dosubind{fn}{\code{#2}}{\putwordon\ \code{#1}}% entry in function index
+  \begingroup
+    \defname{#2}{\putwordMethodon\ \code{#1}}%
+    \defunargs{#3}%
+  \endgroup
 }
 
 % @defcv {Class Option} foo-class foo-flag
@@ -4301,7 +4383,205 @@ width0pt\relax} \fi
 \def\deftpx #1 {\errmessage{@deftpx in invalid context}}
 
 
-\message{cross reference,}
+\message{macros,}
+% @macro.
+% The basic scheme is as follows:
+% We read the first line and split it up into macro name and parameter
+% list.  We then walk the parameter list defining control sequences
+% named \MAC@<macro name><parameter name>.  Each expands to another
+% control sequence named \MAC@<macro name>.<parameter number>.  Those
+% control sequences will be defined at macro runtime to be the
+% parameter expansion text.
+%
+% The body is then read in as a single argument in a context where \
+% is an active character, and the cs \MACb.<macro name> is defined as
+% the macro body.  The active character \ takes one argument delimited
+% by another \, and uses it to index the table of macro arguments
+% described above.
+%
+% Finally, we define a control sequence \<macro name> which calls one
+% of the six (!) macro execution commands.  These six commands
+% correspond to recursive and nonrecursive macros with no, one, and
+% many arguments.  They all take one argument, <macro name>, set up
+% the environment appropriately, and call the real macro.
+%
+% \macsave@<macro name> holds the old definition of \<macro name>.  
+
+\newcount\paramno
+\newtoks\macname
+
+% This does \let #1 = #2, except with \csnames.
+\def\cslet#1#2{%
+\expandafter\expandafter\expandafter
+\let
+\expandafter\expandafter
+\csname#1\endcsname
+\csname#2\endcsname}
+
+% We have to play lots of games with the catcodes.  Initially { and }
+% are made `other' so that \splitarg (below) can use them as argument
+% delimiters.  Then - is made a letter so that \iimacro can recognize
+% @allow-recursion.
+\def\macro{\bgroup\catcode`\{=\other\catcode`\}=\other\parsearg\imacro}
+\def\imacro#1{\egroup  % started in \macro
+  \splitarg{#1}%         now \macname is the macname and \toks0 the arglist
+  \paramno=0%
+  \edef\tmp{\the\toks0}%
+  \ifx\tmp\empty       % no arguments
+  \else
+     \expandafter\parsemargdef \the\toks0;% 
+  \fi
+  \bgroup\catcode`\-=11\global\futurelet\nxt\iimacro}
+
+% \imacro has noted whether the macro takes one, two, or many
+% arguments (in \paramno). \iimacro figures out whether it's
+% recursive, and then uses the argument count and the recursivity to
+% select one of the six macro execution sequences.  Then we save the
+% original definition of @foo in \macsave@foo, and define @foo to call
+% the selected execution sequence.  \edef conveniently just expands
+% the token registers, not the deep structure.
+\def\iimacro{%
+  \egroup % started in \imacro
+  \ifx\nxt\allowrecur
+    \let\next\parserbody
+    \toks0=\expandafter{\csname dormacro\ifcase\paramno na\or oa\fi\endcsname}%
+  \else
+    \let\next\parsebody
+    \toks0=\expandafter{\csname domacro\ifcase\paramno na\or oa\fi\endcsname}%
+  \fi
+  \expandafter\ifx \csname macsave@\the\macname\endcsname \relax
+    \cslet{macsave@\the\macname}{\the\macname}%
+  \else
+    \errmessage{warning: redefining macro \the\macname}%
+  \fi
+  \expandafter\edef\csname\the\macname\endcsname{\the\toks0{\the\macname}}%
+\next}
+
+% @allow-recursion is noticed and handled by \iimacro.  It should
+% never actually be executed.  It has two names so we don't need
+% strange catcodes while defining \iimacro.
+\def\allowrecur{\errmessage{Internal error: \noexpand\allowrecur executed}}
+{\catcode`\-=11\global\let\allow-recursion\allowrecur}
+
+% unmacro just restores the old meaning; the MAC@<macname> macros
+% remain defined.  (Memory leak!)  \norecurse is defined below, near
+% the execution commands.
+\def\unmacro{\parsearg\iunmacro}
+\def\iunmacro#1{\macname={#1} \norecurse}
+
+% We need {} to be ordinary inside these commands. [] are temporary
+% grouping symbols.
+\begingroup
+\catcode`\{=\other \catcode`\}=\other
+\catcode`\[=1  \catcode`\]=2
+
+% @macro can be called with or without a brace-surrounded macro
+% argument list.  These three sequences extract the macro name and arg
+% list in hopefully all cases.  *Note, anything on the line after the
+% first pair of braces will be thrown out.
+\gdef\splitarg#1[\isplitarg|#1 {}|]
+\gdef\isplitarg|#1 {#2}#3|[%
+  \toks0=[#2]%
+  \edef\tmp[\the\toks0]%
+  \ifx\tmp\empty
+     \isplitargnospaces|#1{}|%
+  \else
+     \macname=[#1]%
+  \fi]
+\gdef\isplitargnospaces|#1{#2}#3|[\macname=[#1] \toks0=[#2]]
+
+% \parsebrace gets around the situation produced by \braceorline
+% (below) where the { has the wrong catcode because of \futurelet.
+% The \egroup matches a \bgroup in \braceorline.
+\gdef\parsebrace#1{#2}[\egroup\let\next=#1\next[#2]]
+
+\global\let\brace={ % used by \braceorline, below
+
+\endgroup
+
+
+% Argument parsing.
+% These routines iterate over a comma-separated list defining
+% tokens that map macro formal to actual parameters.
+% \parsemargdef sets the formal -> positional correspondence at macro
+% definition time; \parsemarg sets positional -> actual at runtime.
+%
+% The definitions are not symmetric because the callers have the
+% argument list in different places (token register and #arg)
+\def\parsemargdef#1;{\paramno=0\iparsemargdef#1,;,}
+\def\iparsemargdef#1,{%
+  \if#1;\let\next=\relax
+  \else \let\next=\iparsemargdef
+    \advance\paramno by 1%
+    \expandafter\edef\csname MAC@\the\macname#1\endcsname
+      {\csname MAC@\the\macname.\the\paramno\endcsname}%
+  \fi\next}
+
+\def\parsemarg#1{\paramno=1\iparsemarg#1,;,}
+\def\iparsemarg#1,{%
+  \if#1;\let\next=\relax
+  \else \let\next=\iparsemarg
+    \expandafter\def\csname MAC@\the\macname.\the\paramno\endcsname{#1}%
+    \advance\paramno by 1%
+  \fi\next}
+
+% Argument substitution.
+% \ is active when the body is read and tokenized; it converts its
+% argument to a macro-argument name and expands it.  We use | as a
+% temporary escape character.
+{
+\catcode`\|=0 |catcode`|\=|active
+|gdef\#1\{|csname MAC@|the|macname#1|endcsname}
+}
+
+% These sequences read and save the macro body.  \parserbody absorbs
+% the @allow-recursion in its argument, and then falls through to
+% \parsebody.
+\def\parsebody{\begingroup\catcode`\\=\active\iparsebody}
+\def\parserbody#1{\parsebody}
+
+% \iparsebody reads the entire macro in as an argument.  \ was made
+% active by \parsebody while the reading occurs.
+\long\def\iparsebody#1 \end macro% The space eats the final CR.
+{\endgroup % started in \parsebody
+\expandafter\def\csname MACb.\the\macname \endcsname{#1}}
+
+% These six sequences execute recursive and nonrecursive macros of no,
+% one, and many arguments.  We need to distinguish one arg from many
+% args because a one-argument macro invoked with no arguments gets the
+% rest of the line as its argument.
+%
+% Please note that all macros are executed inside a group, so any
+% changes made by a macro (@set, etc.) won't stick.
+\def\dormacrona#1{\begingroup\macname={#1}\idomacro{}}
+\def\dormacrooa#1{\begingroup\macname={#1}\braceorline}
+\def\dormacro#1{\begingroup\macname={#1}\idomacro}
+
+\def\domacrona#1{\begingroup\macname={#1}\norecurse\idomacro{}}
+\def\domacrooa#1{\begingroup\macname={#1}\norecurse\braceorline}
+\def\domacro#1{\begingroup\macname={#1}\norecurse\idomacro}
+
+% some helpers:
+\def\norecurse{\cslet{\the\macname}{macsave@\the\macname}}
+\def\idomacro#1{\parsemarg{#1}\csname MACb.\the\macname\endcsname\endgroup}
+
+% \braceorline decides whether the next nonwhitespace character is a
+% {.  If so it reads up to the closing }, if not, it reads the whole
+% line.  Whatever was read is then fed to \idomacro.  \parsebrace is
+% defined above, near \splitarg, in a strange catcode environment;
+% this is necessary because \futurelet freezes the catcode of the
+% peeked-at character.
+\def\braceorline{\bgroup
+\catcode`\{=\other\catcode`\}=\other \futurelet\nxt\ibraceorline}
+\def\ibraceorline{%
+\ifx\nxt\brace
+    \expandafter\parsebrace 
+  \else
+    \egroup \expandafter\parsearg 
+  \fi \idomacro}
+
+
+\message{cross references,}
 \newwrite\auxfile
 
 \newif\ifhavexrefs    % True if xref values are known.
@@ -4394,7 +4674,9 @@ width0pt\relax} \fi
   {\let\folio=0
    \normalturnoffactive
    \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
-   \next
+   \iflinks
+     \next
+   \fi
   }%
 }
 
@@ -4448,12 +4730,14 @@ width0pt\relax} \fi
   \expandafter\ifx\csname X#1\endcsname\relax
     % If not defined, say something at least.
     \angleleft un\-de\-fined\angleright
-    \ifhavexrefs
-      \message{\linenumber Undefined cross reference `#1'.}%
-    \else
-      \ifwarnedxrefs\else
-        \global\warnedxrefstrue
-        \message{Cross reference values unknown; you must run TeX again.}%
+    \iflinks
+      \ifhavexrefs
+        \message{\linenumber Undefined cross reference `#1'.}%
+      \else
+        \ifwarnedxrefs\else
+          \global\warnedxrefstrue
+          \message{Cross reference values unknown; you must run TeX again.}%
+        \fi
       \fi
     \fi
   \else
@@ -4696,7 +4980,9 @@ width0pt\relax} \fi
 \openin 1 = epsf.tex
 \ifeof 1 \else
   \closein 1
-  \def\epsfannounce{\toks0 = }% do not bother showing banner
+  % Do not bother showing banner with post-v2.7 epsf.tex (available in
+  % doc/epsf.tex until it shows up on ctan).
+  \def\epsfannounce{\toks0 = }%
   \input epsf.tex
 \fi
 %
@@ -4726,7 +5012,12 @@ width0pt\relax} \fi
   % \epsfbox itself resets \epsf?size at each figure.
   \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
   \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-  \epsfbox{#1.eps}%
+  % If the image is by itself, center it.
+  \ifvmode
+    \centerline{\epsfbox{#1.eps}}%
+  \else
+    \epsfbox{#1.eps}%
+  \fi
 }
 
 % End of control word definitions.

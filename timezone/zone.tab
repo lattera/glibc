@@ -33,6 +33,7 @@ AQ	-7750+16636	Antarctica/McMurdo	McMurdo Station, Ross Island
 AQ	-9000+00000	Antarctica/South_Pole	Amundsen-Scott Station, South Pole
 AQ	-6448-06406	Antarctica/Palmer	Palmer Station, Anvers Island
 AQ	-6736+06253	Antarctica/Mawson	Mawson Station, Holme Bay
+AQ	-6835+07758	Antarctica/Davis	Davis Station, Vestfold Hills
 AQ	-6617+11031	Antarctica/Casey	Casey Station, Bailey Peninsula
 AQ	-6640+14001	Antarctica/DumontDUrville	Dumont-d'Urville Base, Terre Adelie
 AR	-3436-05827	America/Buenos_Aires	E Argentina (BA, DF, SC, TF)
@@ -178,8 +179,7 @@ ID	-0610+10648	Asia/Jakarta	Java & Sumatra
 ID	-0507+11924	Asia/Ujung_Pandang	Borneo & Celebes
 ID	-0232+14042	Asia/Jayapura	Irian Jaya & the Moluccas
 IE	+5320-00615	Europe/Dublin
-IL	+3146+03514	Asia/Jerusalem	most locations
-IL	+3130+03428	Asia/Gaza	Gaza Strip
+IL	+3146+03514	Asia/Jerusalem
 IN	+2232+08822	Asia/Calcutta
 IO	-0720+07225	Indian/Chagos
 IQ	+3321+04425	Asia/Baghdad
@@ -255,7 +255,7 @@ NP	+2743+08519	Asia/Katmandu
 NR	-0031+16655	Pacific/Nauru
 NU	-1901+16955	Pacific/Niue
 NZ	-3652+17446	Pacific/Auckland	most locations
-NZ	-4355+17630	Pacific/Chatham	Chatham Island
+NZ	-4355-17630	Pacific/Chatham	Chatham Islands
 OM	+2336+05835	Asia/Muscat
 PA	+0858-07932	America/Panama
 PE	-1203-07703	America/Lima
@@ -269,6 +269,7 @@ PL	+5215+02100	Europe/Warsaw
 PM	+4703-05620	America/Miquelon
 PN	-2504-13005	Pacific/Pitcairn
 PR	+182806-0660622	America/Puerto_Rico
+PS	+3130+03428	Asia/Gaza
 PT	+3843-00908	Europe/Lisbon	mainland
 PT	+3238-01654	Atlantic/Madeira	Madeira Islands
 PT	+3744-02540	Atlantic/Azores	Azores

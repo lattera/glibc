@@ -1,4 +1,4 @@
-# @(#)africa	7.23
+# @(#)africa	7.24
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -104,9 +104,6 @@ Zone	Africa/Algiers	0:12:12 -	LMT	1891 Mar 15 0:01
 Zone	Africa/Luanda	0:52:56	-	LMT	1892
 			0:52:04	-	LMT	1911 May 26 # Luanda Mean Time?
 			1:00	-	WAT
-
-# Bassas da India
-# uninhabited
 
 # Benin
 # Whitman says they switched to 1:00 in 1946, not 1934; go with Shanks.
@@ -240,9 +237,6 @@ Zone Africa/Addis_Ababa	2:34:48 -	LMT	1870
 			2:35:20	-	ADMT	1936 May 5    # Adis Dera MT
 			3:00	-	EAT
 
-# Europa Island
-# uninhabited
-
 # Gabon
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Africa/Libreville	0:37:48 -	LMT	1912
@@ -264,9 +258,6 @@ Rule	Ghana	1936	1942	-	Dec	31	0:00	0	GMT
 Zone	Africa/Accra	-0:00:52 -	LMT	1918
 			 0:00	Ghana	%s
 
-# Glorioso Is
-# uninhabited
-
 # Guinea
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Africa/Conakry	-0:54:52 -	LMT	1912
@@ -279,9 +270,6 @@ Zone	Africa/Conakry	-0:54:52 -	LMT	1912
 Zone	Africa/Bissau	-1:02:20 -	LMT	1911 May 26
 			-1:00	-	WAT	1975
 			 0:00	-	GMT
-
-# Juan de Nova
-# uninhabited
 
 # Kenya
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -450,6 +438,19 @@ Zone	Africa/Lagos	0:13:36 -	LMT	1919 Sep
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Indian/Reunion	3:41:52 -	LMT	1911 Jun	# Saint-Denis
 			4:00	-	RET	# Reunion Time
+#
+# Scattered Islands (Iles Eparses) administered from Reunion are as follows.
+# The following information about them is taken from
+# <a href="http://www.outre-mer.gouv.fr/domtom/ile.htm">
+# Iles Eparses
+# </a>
+# (1997-07-22, in French).  We have no info about their time zone histories.
+#
+# Bassas da India - uninhabited
+# Europa Island - inhabited from 1905 to 1910 by two families
+# Glorioso Is - inhabited until at least 1958
+# Juan de Nova - uninhabited
+# Tromelin - inhabited until at least 1958
 
 # Rwanda
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -552,9 +553,6 @@ Zone Africa/Dar_es_Salaam 2:37:08 -	LMT	1931
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Africa/Lome	0:04:52 -	LMT	1893
 			0:00	-	GMT
-
-# Tromelin
-# uninhabited
 
 # Tunisia
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
