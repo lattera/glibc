@@ -69,12 +69,12 @@ nrl_domainname (void)
   static char *domain;
   static int not_first;
 
-  if (not_first)
+  if (! not_first)
     {
       __libc_lock_define_initialized (static, lock);
       __libc_lock_lock (lock);
 
-      if (not_first)
+      if (! not_first)
 	{
 	  char *c;
 	  struct hostent *h, th;

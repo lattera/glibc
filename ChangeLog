@@ -1,3 +1,7 @@
+1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getnameinfo.c (nrl_domainname): Fix last patch.
+
 1999-04-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nss/digits_dots.c: Use inet_aton to parse IPv4 numbers.
