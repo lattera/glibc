@@ -1,5 +1,9 @@
 2000-11-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/Makefile (tests): Add test-vfprintf.
+	(test-vfprintf-ENV): New variable.
+	* stdio-common/test-vfprintf.c: New file.
+
 	* wcsmbs/mbrtowc.c (__mbrtowc): Do not only flush if input is '\0'.
 
 	* wcsmbs/Makefile (tests): Add tst-mbrtowc and tst-wcrtomb.
