@@ -404,7 +404,7 @@ extern td_err_e td_thr_setxregs (const td_thrhandle_t *__th,
 
 /* Get address of thread local variable.  */
 extern td_err_e td_thr_tls_get_addr (const td_thrhandle_t *__th,
-				     struct link_map *__map, size_t __offset,
+				     void *__map_address, size_t __offset,
 				     void **__address);
 
 
