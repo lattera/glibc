@@ -147,7 +147,8 @@ struct lc_time_data
 
   const char **alt_digits;
   const wchar_t **walt_digits;
-  int alt_digits_initialized, walt_digits_initialized;
+  int alt_digits_initialized;
+  int walt_digits_initialized;
 };
 
 

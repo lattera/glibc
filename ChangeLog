@@ -1,3 +1,10 @@
+2002-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/localeinfo.h: Pretty printing.
+
+	* stdio-common/vfprintf.c (vfprintf): Remove duplicate ifs in
+	form_number handling.
+
 2002-08-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps: Add ulps for float and long
@@ -1280,13 +1287,13 @@
 
 	* sysdeps/powerpc/elf/libc-start.c
 	(__cache_line_size): Declare.
-	(__aux_init_cache): New.
+	(__aux_init_cache): New function.
 	(__libc_start_main): Change type of `auxvec' parameter to
 	`ElfW(auxv_t) *'.  Correct walking of aux vector.  Call
 	__aux_init_cache.
 	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
 	(__cache_line_size): Declare.
-	(__aux_init_cache): New.
+	(__aux_init_cache): New function.
 	(DL_PLATFORM_INIT): Define.
 	* sysdeps/powerpc/memset.S: Define __cache_line_size and use its
 	value to select the correct stride for dcbz.
@@ -1607,8 +1614,8 @@
 
 2002-08-14  Jakub Jelinek  <jakub@redhat.com>
 
-	* locale/programs/locarchive.c (struct oldlocrecent): New.
-	(oldlocrecentcmp): New.
+	* locale/programs/locarchive.c (struct oldlocrecent): New type.
+	(oldlocrecentcmp): New function.
 	(enlarge_archive): Re-add locales in the order they were added
 	to the archive.
 	(add_locale): Put all the small locale files together, if the small
@@ -3894,17 +3901,17 @@
 
 2002-07-06  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/x86_64/fpu/bits/mathinline.h: New.
-	* sysdeps/x86_64/fpu/s_copysign.S: New.
-	* sysdeps/x86_64/fpu/s_copysignf.S: New.
-	* sysdeps/x86_64/fpu/s_copysignl.S: New.
-	* sysdeps/x86_64/fpu/s_finitel.S: New.
-	* sysdeps/x86_64/fpu/s_fmax.S: New.
-	* sysdeps/x86_64/fpu/s_fmaxf.S: New.
-	* sysdeps/x86_64/fpu/s_fmaxl.S: New.
-	* sysdeps/x86_64/fpu/s_fmin.S: New.
-	* sysdeps/x86_64/fpu/s_fminf.S: New.
-	* sysdeps/x86_64/fpu/s_fminl.S: New.
+	* sysdeps/x86_64/fpu/bits/mathinline.h: New file.
+	* sysdeps/x86_64/fpu/s_copysign.S: New file.
+	* sysdeps/x86_64/fpu/s_copysignf.S: New file.
+	* sysdeps/x86_64/fpu/s_copysignl.S: New file.
+	* sysdeps/x86_64/fpu/s_finitel.S: New file.
+	* sysdeps/x86_64/fpu/s_fmax.S: New file.
+	* sysdeps/x86_64/fpu/s_fmaxf.S: New file.
+	* sysdeps/x86_64/fpu/s_fmaxl.S: New file.
+	* sysdeps/x86_64/fpu/s_fmin.S: New file.
+	* sysdeps/x86_64/fpu/s_fminf.S: New file.
+	* sysdeps/x86_64/fpu/s_fminl.S: New file.
 
 2002-06-05  Brian Youmans <3diff@gnu.org>
 
@@ -4966,7 +4973,8 @@
 	* locale/programs/localedef.h (show_archive_content): Add verbose
 	argument.
 	* locale/programs/localedef.c (main): Adjust caller.
-	* locale/programs/locarchive.c (struct nameent, struct dataent): New.
+	* locale/programs/locarchive.c (struct nameent, struct dataent): New
+	types.
 	(nameentcmp, dataentcmp): New functions.
 	(xstrcmp): Remove.
 	(show_archive_content): Print verbose listing with --list-archive -v.
@@ -5021,7 +5029,7 @@
 
 2002-05-09  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: New file.
 	* sysdeps/unix/sysv/linux/x86_64/Dist: Add it.
 	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_headers): Add it.
 
@@ -6022,12 +6030,12 @@
 
 	* sysdeps/unix/sysv/linux/x86_64/ldd-rewrite.sed: Fix rewrite rule.
 
-	* sysdeps/x86_64/fpu/s_llrint.S: New.
-	* sysdeps/x86_64/fpu/s_llrintf.S: New.
-	* sysdeps/x86_64/fpu/s_llrintl.S: New.
-	* sysdeps/x86_64/fpu/s_lrint.S: New.
-	* sysdeps/x86_64/fpu/s_lrintf.S: New
-	* sysdeps/x86_64/fpu/s_lrintl.S: New.
+	* sysdeps/x86_64/fpu/s_llrint.S: New file.
+	* sysdeps/x86_64/fpu/s_llrintf.S: New file.
+	* sysdeps/x86_64/fpu/s_llrintl.S: New file.
+	* sysdeps/x86_64/fpu/s_lrint.S: New file.
+	* sysdeps/x86_64/fpu/s_lrintf.S: New file.
+	* sysdeps/x86_64/fpu/s_lrintl.S: New file.
 
 2002-04-08  Roland McGrath  <roland@frob.com>
 
@@ -6567,8 +6575,8 @@
 	* sysdeps/mips/fpu/fclrexcpt.c (__feclearexcept): Clear also cause
 	bits.
 
-	* sysdeps/mips/fpu/fenv_libc.h (CAUSE_MASK): New.
-	(CAUSE_SHIFT): New.
+	* sysdeps/mips/fpu/fenv_libc.h (CAUSE_MASK): New macro.
+	(CAUSE_SHIFT): New macro.
 	Patch by Hartvig Ekner <hartvige@mips.com>.
 
 	* sysdeps/generic/unwind-dw2-fde-glibc.c: Add prototypes.
@@ -7131,7 +7139,7 @@
 
 	* sysdeps/i386/elf/configure.in: Fix comment.
 
-	* sysdeps/sparc/sparc64/configure.in: New.
+	* sysdeps/sparc/sparc64/configure.in: New file.
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address): Fix
 	if .dynamic comes before .got.
 	* config.h.in (SPARC64_DYNAMIC_BEFORE_GOT): Add.
@@ -7220,22 +7228,22 @@
 
 2002-03-04  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/readelflib.c: New.
+	* sysdeps/unix/sysv/linux/x86_64/readelflib.c: New file.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Add defines for
 	x86-64.
 
-	* sysdeps/unix/sysv/linux/x86_64/bits/socket.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/bits/socket.h: New file.
 
-	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h: New file.
 
-	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: New file.
 
-	* sysdeps/x86_64/bits/setjmp.h: New.
+	* sysdeps/x86_64/bits/setjmp.h: New file.
 
-	* sysdeps/unix/sysv/linux/x86_64/bits/sem.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/bits/sem.h: New file.
 
-	* sysdeps/unix/sysv/linux/x86_64/bits/resource.h: New.
+	* sysdeps/unix/sysv/linux/x86_64/bits/resource.h: New file.
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Add compatibilty
 	for x86.
@@ -7911,7 +7919,7 @@
 	(collate_read): Don't crash on unknown symbol [PR libc/2952].
 	Patches by Alastair McKinstry <alastair@pdd.3com.com>.
 
-	* elf/tst-tls1.c: Move #include "tls-macros.h" instead #ifdef USE_TLS.
+	* elf/tst-tls1.c: Move #include "tls-macros.h" inside #ifdef USE_TLS.
 	* elf/tst-tls2.c: Likewise.
 	* elf/tst-tls3.c: Likewise.
 
@@ -8108,7 +8116,7 @@
 	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Don't include
 	<signal.h>, <sys/ucontext.h> nor <asm/elf.h>. Updated for gdb.
 
-	* sysdeps/unix/sysv/linux/mips/sys/user.h: New.
+	* sysdeps/unix/sysv/linux/mips/sys/user.h: New file.
 
 2002-02-07  H.J. Lu  <hjl@gnu.org>
 
@@ -8143,7 +8151,7 @@
 
 2002-02-06  H.J. Lu  <hjl@gnu.org>
 
-	* config.h.in (HAVE_BUILTIN_MEMSET): New.
+	* config.h.in (HAVE_BUILTIN_MEMSET): New macro.
 	* configure.in: Check if __builtin_memset really works.
 	* elf/rtld.c (_dl_start): Check HAVE_BUILTIN_MEMSET instead of
 	__GNUC_PREREQ (2, 96) before using __builtin_memset.
@@ -9420,7 +9428,7 @@
 	(ld.so): Add _begin local symbol.
 	* elf/elf.h (DT_VALTAGIDX, DT_VALNUM, DT_ADDRTAGIDX, DT_ADDRNUM):
 	Define.
-	* elf/dl-deps.c (_dl_build_local_scope): New.
+	* elf/dl-deps.c (_dl_build_local_scope): New function.
 	(_dl_map_object_deps): If LD_TRACE_PRELINKING, compute local scopes
 	of all libraries.
 	* elf/do-rel.h (VALIDX): Define.
@@ -9428,7 +9436,7 @@
 	lazy binding for RELA.  If DT_GNU_PRELINKED, DT_RELACOUNT relocations
 	can be skipped.
 	* elf/dl-conflict.c: New file.
-	* elf/dl-lookup.c (_dl_debug_bindings): New.
+	* elf/dl-lookup.c (_dl_debug_bindings): New function.
 	(_dl_lookup_symbol): Use _dl_debug_bindings.  Reference_name is always
 	non-NULL.
 	(_dl_lookup_symbol_skip): Likewise.
@@ -9465,7 +9473,7 @@
 	content of .got[1].
 	(ELF_MACHINE_NO_RELA): Only define if RTLD_BOOTSTRAP.
 	(ELF_MACHINE_PLT_REL): Define.
-	(elf_machine_rela, elf_machine_rela_relative): New.
+	(elf_machine_rela, elf_machine_rela_relative): New functions.
 	(elf_machine_lazy_rel): Reinitialize R_ARM_JUMP_SLOT address instead
 	of adjusting it if prelinked and prelinking cannot be used.
 	* sysdeps/i386/bits/link.h: New file.
@@ -9473,7 +9481,7 @@
 	content of .got[1].
 	(ELF_MACHINE_NO_RELA): Only define if RTLD_BOOTSTRAP.
 	(ELF_MACHINE_PLT_REL): Define.
-	(elf_machine_rela, elf_machine_rela_relative): New.
+	(elf_machine_rela, elf_machine_rela_relative): New functions.
 	(elf_machine_lazy_rel): Reinitialize R_386_JUMP_SLOT address instead
 	of adjusting it if prelinked and prelinking cannot be used.
 	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): If relocating
@@ -11568,7 +11576,8 @@
 
 2001-08-23  Jakub Jelinek  <jakub@redhat.com>
 
-	* elf/dl-lookup.c (lookup_cache, lookup_cache_versioned): New.
+	* elf/dl-lookup.c (lookup_cache, lookup_cache_versioned): New
+	functions.
 	(_dl_lookup_symbol): Lookup relocations in cache and store successfull
 	lookups in cache.
 	(_dl_lookup_versioned_symbol): Likewise.
