@@ -101,9 +101,7 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 	}								      \
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
-# define flockfile(S) _IO_flockfile (S)
 /* This macro must be without parameter!  Don't change it.  */
-# define funlockfile _IO_funlockfile
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
@@ -125,8 +123,8 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
     }									      \
    while (0)
 # define UNBUFFERED_P(s) ((s)->__buffer == NULL)
-# define flockfile(S) /* nothing */
-# define funlockfile(S) /* nothing */
+# define __flockfile(S) /* nothing */
+# define __funlockfile(S) /* nothing */
 #endif /* USE_IN_LIBIO */
 
 
@@ -849,8 +847,15 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   f = lead_str_end = find_spec (format, &mbstate);
 
   /* Lock stream.  */
-  __libc_cleanup_region_start ((void (*) (void *)) &funlockfile, s);
-  flockfile (s);
+#ifdef USE_IN_LIBIO
+  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
+#else
+#if 0
+  /* XXX For now stdio has no locking.  */
+  __libc_cleanup_region_start ((void (*) (void *)) &__funlockfile, s);
+#endif
+#endif
+  __flockfile (s);
 
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,

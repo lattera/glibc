@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifndef	_TIME_H
 
-#if	(! defined (__need_time_t) && !defined(__need_clock_t) && \
+#if	(! defined (__need_time_t) && !defined (__need_clock_t) && \
 	 ! defined (__need_timespec))
 #define	_TIME_H		1
 #include <features.h>
@@ -54,8 +54,8 @@ __BEGIN_DECLS
 #endif /* <time.h> included.  */
 
 
-#if	!defined(__clock_t_defined) &&			\
-	(defined(_TIME_H) || defined(__need_clock_t))
+#if	!defined (__clock_t_defined) &&			\
+	(defined (_TIME_H) || defined (__need_clock_t))
 #define	__clock_t_defined	1
 
 #include <gnu/types.h>
@@ -66,8 +66,8 @@ typedef __clock_t clock_t;
 #endif /* clock_t not defined and <time.h> or need clock_t.  */
 #undef	__need_clock_t
 
-#if	!defined(__time_t_defined) &&			\
-	(defined(_TIME_H) || defined(__need_time_t))
+#if	!defined (__time_t_defined) &&			\
+	(defined (_TIME_H) || defined (__need_time_t))
 #define	__time_t_defined	1
 
 #include <gnu/types.h>
@@ -79,7 +79,7 @@ typedef __time_t time_t;
 #undef	__need_time_t
 
 
-#if	! defined(__timespec_defined) &&			\
+#if	! defined (__timespec_defined) &&			\
 	((defined (_TIME_H) && defined (__USE_POSIX)) ||	\
 	 defined (__need_timespec))
 #define	__timespec_defined	1
@@ -101,7 +101,7 @@ struct timespec
 /* Used by other time functions.  */
 struct tm
 {
-  int tm_sec;			/* Seconds.	[0-61] (2 leap seconds) */
+  int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
   int tm_min;			/* Minutes.	[0-59] */
   int tm_hour;			/* Hours.	[0-23] */
   int tm_mday;			/* Day.		[1-31] */
@@ -110,8 +110,14 @@ struct tm
   int tm_wday;			/* Day of week.	[0-6] */
   int tm_yday;			/* Days in year.[0-365]	*/
   int tm_isdst;			/* DST.		[-1/0/1]*/
-  long int tm_gmtoff;		/* Seconds west of UTC.  */
+
+#ifdef	__USE_BSD
+  long int tm_gmtoff;		/* Seconds east of UTC.  */
   __const char *tm_zone;	/* Timezone abbreviation.  */
+#else
+  long int __tm_gmtoff;		/* Seconds east of UTC.  */
+  __const char *__tm_zone;	/* Timezone abbreviation.  */
+#endif
 };
 
 #endif /* <time.h> included.  */
@@ -190,7 +196,7 @@ extern void __offtime __P ((__const time_t *__timer,
    that is the representation of TP in this format.  */
 extern char *asctime __P ((__const struct tm *__tp));
 
-/* Equivalent to `asctime(localtime(timer))'.  */
+/* Equivalent to `asctime (localtime (timer))'.  */
 extern char *ctime __P ((__const time_t *__timer));
 
 #ifdef	__USE_REENTRANT
@@ -201,14 +207,14 @@ extern char *ctime __P ((__const time_t *__timer));
 extern char *__asctime_r __P ((__const struct tm *__tp, char *__buf));
 extern char *asctime_r __P ((__const struct tm *__tp, char *__buf));
 
-/* Equivalent to `asctime_r(localtime_r(timer, *TMP*), buf)'.  */
+/* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
 extern char *ctime_r __P ((__const time_t *__timer, char *__buf));
 #endif	/* reentrant */
 
 
 /* Defined in localtime.c.  */
 extern char *__tzname[2];	/* Current timezone names.  */
-extern int __daylight;		/* If it is daylight savings time.  */
+extern int __daylight;		/* If daylight-saving time is ever in use.  */
 extern long int __timezone;	/* Seconds west of UTC.  */
 
 /* Set time conversion information from the TZ environment variable.

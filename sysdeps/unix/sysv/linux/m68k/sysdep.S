@@ -33,8 +33,9 @@ errno:	.space 4
 _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
 	.text
 
-/* The following code is not used at all in the shared library.
-   The PIC system call stubs set errno themselves.  */
+/* The following code is only used in the shared library when we
+   compile the reentrant version.  Otherwise each system call defines
+   each own version.  */
 
 #ifndef	PIC
 
@@ -42,30 +43,34 @@ _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
 #define _ERRNO_H
 #include <errnos.h>
 
-.globl errno
-.globl __syscall_error
-
 /* The syscall stubs jump here when they detect an error.  */
 
 .globl __syscall_error
 __syscall_error:
 	neg.l %d0
-
-#if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
-	/* We translate the system's EWOULDBLOCK error into EAGAIN.
-	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
-	   EWOULDBLOCK_sys is the original number.  */
-	move.l #EWOULDBLOCK_sys, %d1
-	cmp.l %d0, %d1
-	jne 1f
-	move.l #EAGAIN, %d0
-1:
-#endif
-
 	move.l %d0, errno
+#ifdef _LIBC_REENTRANT
+	move.l %d0, -(%sp)
+	jbsr __errno_location
+	move.l (%sp)+, (%a0)
+#endif
 	move.l #-1, %d0
 	/* Copy return value to %a0 for syscalls that are declared to
 	   return a pointer.  */
 	move.l %d0, %a0
 	rts
+	.size	__syscall_error, . - __syscall_error
 #endif /* PIC */
+
+#ifdef	_LIBC_REENTRANT
+	.globl	__errno_location
+	.type	__errno_location, @function
+__errno_location:
+#ifdef PIC
+	move.l	(%pc, errno@GOTPC), %a0
+#else
+	lea	errno, %a0
+#endif
+	rts
+	.size	__errno_location, . - __errno_location
+#endif

@@ -316,6 +316,15 @@ else
 no-whole-archive =
 endif
 
+interp-obj = $(common-objpfx)interp.so
+$(interp-obj): $(common-objpfx)%.so: $(..)%.c
+	$(compile-command.c)
+common-generated += interp.so
+CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'
+
+$(common-objpfx)libc.so: $(interp-obj)
+$(patsubst %,$(objpfx)%.so,$(extra-libs)): $(interp-obj)
+
 define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -B$(csu-objpfx) \

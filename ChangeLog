@@ -1,3 +1,110 @@
+Thu Sep 12 03:35:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/Dist: Remove init-first.h.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/Dist: Add init-first.h.
+
+1996-09-11  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (strftime):
+	Handle E and O modifiers, required for POSIX.2 and XPG4.
+	Don't use sprintf to format numbers; this way, we can handle time_t
+	correctly regardless of whether it's signed.
+	Don't dump core if format ends in %.
+	In default %c format, use %e instead of %d, for POSIX.2 compatibility.
+	For %z:
+		Use tm_gmtoff if available.
+		Output nothing if tm_isdst is negative.
+		Output correct value even if arg is 1969-12-31 23:59:59 UTC.
+		Don't assume that UTC offset is less than 24 hours;
+		Posix requires support for 24 hours, and there's no point
+		limiting it at all.
+	(HAVE_TM_GMTOFF, TYPE_SIGNED, INT_STRLEN_BOUND): New macros.
+	(CHAR_BIT): Define if <limits.h> doesn't.
+	(tm_diff): New function.
+	(fmt, <stdio.h>): Remove; no longer used.
+
+Thu Sep 12 02:21:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/Makefile: Add extra-libs-others variable so that shared
+	library is built in `others' pass.
+	* elf/Makefile: Likewise.
+	* math/Makefile: Likewise.
+	* resolv/Makefile: Likewise.
+
+	* Makefile (generated): Add version.info.h.
+
+	* time/checktab.awk: New file.  From ADO 96k.
+	* time/iso3166.tab: Likewise.
+	* time/tzselect.ksh: Likewise.
+	* time/zone.tab: Likewise.
+
+	* stdio-common/vfprintf.c: Correct cleanup registration.  We
+	cannot use a macro
+
+1996-09-11  Paul Eggert  <eggert@twinsun.com>
+
+	* time/time.h (tm_gmtoff, tm_zone): Prefix with `__' unless
+	__USE_BSD; this is required for ANSI C compatibility.
+	* manual/time.texi: Replace GMT by UTC, daylight savings by
+ 	daylight saving, timezone by time zone.
+	Rewrite description of %V to match ISO 8601.
+	Fix TZ Posix string example for US Eastern time.
+	Explain tzname[1] when DST isn't used.
+	Explain tzname when multiple abbreviations used (e.g. EST/EWT/EDT).
+	Explain that timezone's sign is opposite from tm_gmtoff, and that
+	timezone lacks DST adjustment whereas tm_gmtoff has it.
+	Deprecate tzname and timezone.
+
+Tue Sep 10 14:46:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	Implement Roland McGrath's idea of how to put an .interp into
+	shared libraries.
+	* interp.c: New file.
+	* Makerules (interp-obj): New object, linked into every shared
+	library.
+	(common-generated): Add interp.so.
+	(CFLAGS-interp.c): Pass name of interpreter.
+
+Tue Sep 10 21:09:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* db/Makefile: Fix typo.
+
+Tue Sep 10 19:29:53 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/db-Makefile ($(VAR_DB)/passwd.db): Look for multiple
+	occurences of the same uid, and only generate a mapping for the
+	first one.
+
+Tue Sep 10 03:14:59 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/system.c: New file, to override
+	sysdeps/unix/system.c.
+
+Tue Sep 10 15:05:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (before-compile): Add version-info.h, needed to build
+	version.d.
+
+Tue Sep 10 14:14:33 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Remove check for
+	EWOULDBLOCK, never true on Linux.
+	(__errno_location): New function.
+	[_LIBC_REENTRANT]: Set errno using __errno_location function.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h [PIC]: Add second
+ 	syscall_error handler for reentrant libc.
+
+Tue Sep 10 13:27:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile (extra-objs): Add eval.so to get dependencies.
+
+Wed Sep 11 04:40:57 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/tzset.c (__tzname_cur_max): Use type `size_t' to avoid
+ 	warning.
+	* time/tzfile.c (compute_tzname_max): Likewise.
+
 Wed Sep 11 02:57:31 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Quote $add_ons argument in loop to generated

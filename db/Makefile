@@ -9,6 +9,7 @@ subdir-dirs = btree db hash mpool recno
 vpath %.c $(subdir-dirs)
 
 extra-libs := libdb
+extra-libs-others := $(extra-libs)
 libdb-routines := bt_close bt_conv bt_debug bt_delete bt_get \
 		  bt_open bt_overflow bt_page bt_put bt_search \
 		  bt_seq bt_split bt_utils \
@@ -39,7 +40,7 @@ CFLAGS-hash_func.c := -Wno-unused
 # The db code outsmarts the compiler frequently.
 override CFLAGS += -Wno-uninitialized
 
-ifeq ($(build_shared),yes)
+ifeq ($(build-shared),yes)
 $(objpfx)makedb: $(objpfx)libdb.so$(libdb.so-version)
 else
 $(objpfx)makedb: $(objpfx)libdb.a

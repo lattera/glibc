@@ -49,7 +49,7 @@ routines = hurdstartup hurdinit \
 	   privports \
 	   msgportdemux \
 	   fopenport \
- 	   vpprintf \
+	   vpprintf \
 	   ports-get ports-set hurdports hurdmsg \
 	   $(sig) $(dtable) hurdinline port-cleanup report-wait
 sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \

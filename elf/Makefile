@@ -37,7 +37,8 @@ rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  soinit.c sofini.c ldd.sh.in eval.c
 
-extra-libs	= libdl
+extra-libs	 = libdl
+extra-libs-others = $(extra-libs)
 libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
 
 
@@ -46,7 +47,7 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
+extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so eval.so
 generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd

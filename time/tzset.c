@@ -358,7 +358,7 @@ DEFUN_VOID(__tzset)
 /* Maximum length of a timezone name.  __tz_compute keeps this up to date
    (never decreasing it) when ! __use_tzfile.
    tzfile.c keeps it up to date when __use_tzfile.  */
-long int __tzname_cur_max;
+size_t __tzname_cur_max;
 
 long int
 DEFUN_VOID(__tzname_max)

@@ -13,7 +13,8 @@ $(VAR_DB)/passwd.db: /etc/passwd
 	@echo -n "$(patsubst %.db,%,$(@F))... "
 	@$(AWK) 'BEGIN { FS=":"; OFS=":" } \
 		 /^[^#]/ { printf ".%s ", $$1; print; \
-			   printf "=%s ", $$3; print }' $^ | \
+			   if (!uids[$$3]++) \
+			     { printf "=%s ", $$3; print } }' $^ | \
 	$(MAKEDB) -o $@ -
 	@echo "done."
 

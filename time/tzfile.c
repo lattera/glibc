@@ -402,7 +402,7 @@ DEFUN(__tzfile_compute, (timer, leap_correct, leap_hit),
 void
 DEFUN(compute_tzname_max, (chars), size_t chars)
 {
-  extern long int __tzname_cur_max; /* Defined in __tzset.c. */
+  extern size_t __tzname_cur_max; /* Defined in __tzset.c. */
 
   const char *p;
 

@@ -237,12 +237,10 @@ extern int putchar_unlocked __P ((int));
 # ifndef _LIBC
 #  define getc_unlocked(fp) _IO_getc_unlocked (fp)
 #  define getc_locked(fp) fgetc (fp)
-#  define getchar_unlocked() getc_unlocked (stdin)
-#  define getchar_locked() getc_locked (stdin)
-#  define getc(fp) getc_locked (fp)
-#  define putchar_unlocked(c) putc_unlocked (c, stdout)
-#  define putchar_locked(c) putc_locked (c, stdout)
-#  define putc(c, fp) putc_locked (c, fp)
+#  define getchar_unlocked() _IO_getc_unlocked (stdin)
+#  define getchar_locked() getc (stdin)
+#  define putchar_unlocked(c) _IO_putc_unlocked (c, stdout)
+#  define putchar_locked(c) putc (c, stdout)
 # endif
 
 #endif /* __USE_REENTRANT */

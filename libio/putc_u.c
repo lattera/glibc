@@ -29,3 +29,7 @@ putc_unlocked (c, fp)
   CHECK_FILE (fp, EOF);
   return _IO_putc_unlocked (c, fp);
 }
+
+#ifdef _LIBC_REENTRANT
+weak_alias (putc_unlocked, _IO_putc_unlocked)
+#endif

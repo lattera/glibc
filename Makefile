@@ -84,6 +84,7 @@ subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 headers := errno.h sys/errno.h errnos.h limits.h values.h	\
 	   features.h gnu-versions.h libc-lock.h
 aux	 = sysdep $(libc-init) version
+before-compile = $(objpfx)version-info.h
 
 echo-headers: subdir_echo-headers
 
@@ -251,12 +252,12 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
-	       autolock.sh munch-tmpl.c munch.awk			\
+	       autolock.sh munch-tmpl.c munch.awk interp.c		\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
 	       rpm/Makefile rpm/template rpm/rpmrc
 
 distribute := $(strip $(distribute))
-generated := $(generated) stubs.h
+generated := $(generated) stubs.h version-info.h
 
 README: README.template version.c ; # Make-dist should update README.
 

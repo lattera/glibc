@@ -318,10 +318,10 @@ about the local time zone.  It has the following members:
 
 @table @code
 @item int tz_minuteswest
-This is the number of minutes west of GMT.
+This is the number of minutes west of UTC.
 
 @item int tz_dsttime
-If nonzero, daylight savings time applies during some part of the year.
+If nonzero, daylight saving time applies during some part of the year.
 @end table
 
 The @code{struct timezone} type is obsolete and should never be used.
@@ -504,15 +504,17 @@ information is not available.
 
 @item long int tm_gmtoff
 This field describes the time zone that was used to compute this
-broken-down time value; it is the amount you must add to the local time
-in that zone to get GMT, in units of seconds.  The value is like that of
-the variable @code{timezone} (@pxref{Time Zone Functions}).  You can
-also think of this as the ``number of seconds west'' of GMT.  The
-@code{tm_gmtoff} field is a GNU library extension.
+broken-down time value, including any adjustment for daylight saving; it
+is the number of seconds that you must add to UTC to get local time.
+You can also think of this as the number of seconds east of UTC.  For
+example, for U.S. Eastern Standard Time, the value is @code{-5*60*60}.
+The @code{tm_gmtoff} field is derived from BSD and is a GNU library
+extension; it is not visible in a strict ANSI C environment.
 
 @item const char *tm_zone
-This field is the name for the time zone that was used to
-compute this broken-down time value.  It is a GNU library extension.
+This field is the name for the time zone that was used to compute this
+broken-down time value.  Like @code{tm_gmtoff}, this field is a BSD and
+GNU extension, and is not visible in a strict ANSI C environment.
 @end table
 @end deftp
 
@@ -538,7 +540,7 @@ Zone Functions}.
 @deftypefun {struct tm *} gmtime (const time_t *@var{time})
 This function is similar to @code{localtime}, except that the broken-down
 time is expressed as Coordinated Universal Time (UTC)---that is, as
-Greenwich Mean Time (GMT) rather than relative to the local time zone.
+Greenwich Mean Time (GMT)---rather than relative to the local time zone.
 
 Recall that calendar times are @emph{always} expressed in coordinated
 universal time.
@@ -728,10 +730,9 @@ The hour and minute in decimal numbers using the format @code{%H:%M}.
 This format is a GNU extension.
 
 @item %s
-The seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC.  Note
+The seconds since the epoch, i.e., 1970-01-01 00:00:00 UTC.  Note
 that this value is the number of seconds between the epoch and the
-current date as defined by the @code{localtime} system call.  It is not
-changed by the @code{--date} option.
+current date as defined by the @code{localtime} system call.
 
 This format is a GNU extension.
 
@@ -754,11 +755,14 @@ the first Sunday as the first day of the first week.  All days preceding
 the first Sunday in the year are considered to be in week @code{0}.
 
 @item %V
-The week number of the current year as a decimal number, starting with
-the first Monday as the first day of the first week.  If the week
-containing January 1 has four or more days in the new year it is
-considered to be week @code{1}.  Otherwise it is week @code{53} of the
-previous year.  This is standardized in @w{ISO 8601:1988}.
+The @w{ISO 8601:1988} week number as a decimal number (range @code{00}
+to @code{53}).  ISO weeks start with Monday and end with Sunday.  Week
+01 of a year is the first week which has the majority of its days in
+that year; this is equivalent to the week containing the year's first
+Thursday, and it is also equivalent to the week containing January 4.
+Week 01 of a year can contain days from the previous year.  The week
+before week 01 of a year is the last week (52 or 53) of the previous
+year even if it contains days from the new year.
 
 @item %w
 The day of the week as a decimal number, Sunday being @code{0}.
@@ -783,10 +787,9 @@ The year as a decimal number, but without a century (range @code{00} to
 The year as a decimal number, including the century.
 
 @item %z
-@w{RFC 822}/@w{ISO 8601:1988} style numeric time zone (e.g., -0600 or
-+0100), or nothing if no time zone is determinable.  This value reflects
-the @emph{current} time zone.  It is not changed by the @code{--date}
-option.
+@w{RFC 822}/@w{ISO 8601:1988} style numeric time zone (e.g.,
+@code{-0600} or @code{+0100}), or nothing if no time zone is
+determinable.
 
 @item %Z
 The time zone or name or abbreviation (empty if the time zone can't be
@@ -822,9 +825,9 @@ for accessing the time zone are declared in @file{time.h}.
 @cindex time zone
 
 You should not normally need to set @code{TZ}.  If the system is
-configured properly, the default timezone will be correct.  You might
+configured properly, the default time zone will be correct.  You might
 set @code{TZ} if you are using a computer over the network from a
-different timezone, and would like times reported to you in the timezone
+different time zone, and would like times reported to you in the time zone
 that local for you, rather than what is local for the computer.
 
 In POSIX.1 systems the value of the @code{TZ} variable can be of one of
@@ -858,7 +861,7 @@ negative if it is east.  The hour must be between @code{0} and
 @code{23}, and the minute and seconds between @code{0} and @code{59}.
 
 For example, here is how we would specify Eastern Standard Time, but
-without any daylight savings time alternative:
+without any daylight saving time alternative:
 
 @smallexample
 EST+5
@@ -872,11 +875,11 @@ The second format is used when there is Daylight Saving Time:
 
 The initial @var{std} and @var{offset} specify the standard time zone, as
 described above.  The @var{dst} string and @var{offset} specify the name
-and offset for the corresponding daylight savings time time zone; if the
+and offset for the corresponding daylight saving time time zone; if the
 @var{offset} is omitted, it defaults to one hour ahead of standard time.
 
-The remainder of the specification describes when daylight savings time is
-in effect.  The @var{start} field is when daylight savings time goes into
+The remainder of the specification describes when daylight saving time is
+in effect.  The @var{start} field is when daylight saving time goes into
 effect and the @var{end} field is when the change is made back to standard
 time.  The following formats are recognized for these fields:
 
@@ -904,16 +907,16 @@ effect, the change to the other time occurs.  If omitted, the default is
 
 For example, here is how one would specify the Eastern time zone in the
 United States, including the appropriate daylight saving time and its dates
-of applicability.  The normal offset from GMT is 5 hours; since this is
+of applicability.  The normal offset from UTC is 5 hours; since this is
 west of the prime meridian, the sign is positive.  Summer time begins on
 the first Sunday in April at 2:00am, and ends on the last Sunday in October
 at 2:00am.
 
 @smallexample
-EST+5EDT,M4.1.0/M10.5.0
+EST+5EDT,M4.1.0/2,M10.5.0/2
 @end smallexample
 
-The schedule of daylight savings time in any particular jurisdiction has
+The schedule of daylight saving time in any particular jurisdiction has
 changed over the years.  To be strictly correct, the conversion of dates
 and times in the past should be based on the schedule that was in effect
 then.  However, this format has no facilities to let you specify how the
@@ -967,15 +970,25 @@ community of volunteers and put in the public domain.
 @deftypevar char * tzname [2]
 The array @code{tzname} contains two strings, which are the standard
 names of the pair of time zones (standard and daylight
-savings) that the user has selected.  @code{tzname[0]} is the name of
+saving) that the user has selected.  @code{tzname[0]} is the name of
 the standard time zone (for example, @code{"EST"}), and @code{tzname[1]}
-is the name for the time zone when daylight savings time is in use (for
+is the name for the time zone when daylight saving time is in use (for
 example, @code{"EDT"}).  These correspond to the @var{std} and @var{dst}
-strings (respectively) from the @code{TZ} environment variable.
+strings (respectively) from the @code{TZ} environment variable.  If
+daylight saving time is never used, @code{tzname[1]} is the empty string.
 
 The @code{tzname} array is initialized from the @code{TZ} environment
 variable whenever @code{tzset}, @code{ctime}, @code{strftime},
-@code{mktime}, or @code{localtime} is called.
+@code{mktime}, or @code{localtime} is called.  If multiple abbreviations
+have been used (e.g. @code{"EWT"} and @code{"EDT"} for U.S. Eastern War
+Time and Eastern Daylight Time), the array contains the most recent
+abbreviation.
+
+The @code{tzname} array is required for POSIX.1 compatibility, but in
+GNU programs it is better to use the @code{tm_zone} member of the
+broken-down time structure, since @code{tm_zone} reports the correct
+abbreviation even when it is not the latest one.
+
 @end deftypevar
 
 @comment time.h
@@ -989,14 +1002,19 @@ depend on the time zone.
 @end deftypefun
 
 The following variables are defined for compatibility with System V
-Unix.  These variables are set by calling @code{tzset}.
+Unix.  Like @code{tzname}, these variables are set by calling
+@code{tzset} or the other time conversion functions.
 
 @comment time.h
 @comment SVID
 @deftypevar {long int} timezone
-This contains the difference between GMT and local standard time, in
-seconds.  For example, in the U.S. Eastern time zone, the value is
-@code{5*60*60}.
+This contains the difference between UTC and the latest local standard
+time, in seconds west of UTC.  For example, in the U.S. Eastern time
+zone, the value is @code{5*60*60}.  Unlike the @code{tm_gmtoff} member
+of the broken-down time structure, this value is not adjusted for
+daylight saving, and its sign is reversed.  In GNU programs it is better
+to use @code{tm_gmtoff}, since it contains the correct offset even when
+it is not the latest one.
 @end deftypevar
 
 @comment time.h
