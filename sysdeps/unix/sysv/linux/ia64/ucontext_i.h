@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
      Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -35,7 +35,7 @@
 #define SC_BR	0x088
 #define SC_GR	0x0c8
 #define SC_FR	0x1d0
-#define SC_MASK	0x9d0
+#define SC_MASK	0xa50
 
 
 #define rTMP	r16

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
      Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -32,7 +32,7 @@
   other than the PRESERVED state.  */
 
 ENTRY(__setcontext)
-	alloc r16 = ar.pfs, 1, 0, 3, 0
+	alloc r16 = ar.pfs, 1, 0, 4, 0
 
 	// sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL):
 
@@ -42,6 +42,7 @@ ENTRY(__setcontext)
 	mov out0 = SIG_SETMASK
 	add out1 = r2, in0
 	mov out2 = 0
+	mov out3 = 8	// sizeof kernel sigset_t
 
 	invala
 	break __BREAK_SYSCALL
