@@ -1464,7 +1464,7 @@ spirit to the GNU version, but may modify the @var{path} by removing
 trailing '/' characters.  If the @var{path} is made up entirely of '/'
 characters, then "/" will be returned.  Also, if @var{path} is
 @code{NULL} or an empty string, then "." is returned.  The prototype for
-the XPG version can be found in @file{string.h}.
+the XPG version can be found in @file{libgen.h}.
 
 Example of using XPG @code{basename}:
 

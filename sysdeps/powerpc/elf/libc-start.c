@@ -76,6 +76,7 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
       while (*(char *__unbounded *__unbounded) auxvec != NULL)
 	++auxvec;
       ++auxvec;
+      _dl_aux_init ((ElfW(auxv_t) *) auxvec);
       rtld_fini = NULL;
     }
 

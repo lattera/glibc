@@ -59,6 +59,10 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 #endif
 
 #ifndef SHARED
+# ifdef HAVE_AUX_VECTOR
+  void *__unbounded *__unbounded auxvec;
+# endif
+
   /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
      If the address would be taken inside the expression the optimizer
      would try to be too smart and throws it away.  Grrr.  */
@@ -85,6 +89,13 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
      loader did the work already.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
+
+# ifdef HAVE_AUX_VECTOR
+  for (auxvec = (void *__unbounded *__unbounded) ubp_ev;
+       *auxvec; auxvec++);
+  ++auxvec;
+  _dl_aux_init ((ElfW(auxv_t) *) auxvec);
+# endif
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */

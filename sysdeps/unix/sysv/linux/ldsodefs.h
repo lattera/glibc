@@ -24,15 +24,10 @@
 
 /* Now define our stuff.  */
 
-/* Locating the auxiliary vector.  */
-#ifndef DL_FIND_AUXV
-# define DL_FIND_AUXV(auxp, envp) \
-  do { \
-    void **_tmp; \
-    for (_tmp = (void **) (envp); *_tmp; ++_tmp) \
-      continue; \
-    (auxp) = (void *) ++_tmp; \
-  } while (0)
-#endif
+/* We have the auxiliary vector.  */
+#define HAVE_AUX_VECTOR
+
+/* Used by static binaries to check the auxiliary vector.  */
+extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
 
 #endif /* ldsodefs.h */

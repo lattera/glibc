@@ -1,3 +1,20 @@
+2001-01-05  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-support.c (non_dynamic_init): Move the auxiliary
+	vector checking to ...
+	(_dl_aux_init): Here. New function. Defined only if
+	HAVE_AUX_VECTOR is defined.
+
+	* sysdeps/generic/libc-start.c (__libc_start_main): Call
+	_dl_aux_init for static binaries if HAVE_AUX_VECTOR is defined.
+
+	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main): Call
+	_dl_aux_init.
+
+	* sysdeps/unix/sysv/linux/ldsodefs.h (DL_FIND_AUXV): Removed.
+	(HAVE_AUX_VECTOR): Defined.
+	(_dl_aux_init): Declared.
+
 2001-01-05  Ben Collins  <bcollins@debian.org>
 
 	* manual/string.texi (Finding Tokens in a String): Document XPG

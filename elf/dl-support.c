@@ -108,34 +108,31 @@ int _dl_starting_up = 1;
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 
+#ifdef HAVE_AUX_VECTOR
 extern int _dl_clktck;
 
-static void non_dynamic_init (int argc, char **argv, char **envp)
-  __attribute__ ((unused));
-
-static void
-non_dynamic_init (int argc, char **argv, char **envp)
+void
+internal_function
+_dl_aux_init (ElfW(auxv_t) *av)
 {
-#ifdef DL_FIND_AUXV
-  ElfW(auxv_t) *av;
-
-  DL_FIND_AUXV (av, envp);
-
   for (; av->a_type != AT_NULL; ++av)
     switch (av->a_type)
       {
       case AT_PAGESZ:
 	_dl_pagesize = av->a_un.a_val;
 	break;
-      case AT_PLATFORM:
-	_dl_platform = av->a_un.a_ptr;
-	break;
       case AT_CLKTCK:
 	_dl_clktck = av->a_un.a_val;
 	break;
       }
+}
 #endif
 
+static void non_dynamic_init (void) __attribute__ ((unused));
+
+static void
+non_dynamic_init (void)
+{
   if (!_dl_pagesize)
     _dl_pagesize = __getpagesize ();
 
