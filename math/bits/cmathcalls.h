@@ -151,7 +151,7 @@ __MATH_PRECNAME(creal) (_Mdouble_complex_ __z) __THROW
 extern __inline _Mdouble_complex_
 __MATH_PRECNAME(conj) (_Mdouble_complex_ __z) __THROW
 {
-  return ~__z;
+  return __extension__ ~__z;
 }
 
 #endif

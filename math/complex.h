@@ -33,15 +33,16 @@ __BEGIN_DECLS
 /* We might need to add support for more compilers here.  But since ISO
    C99 is out hopefully all maintained compilers will soon provide the data
    types `float complex' and `double complex'.  */
-#if __GNUC_PREREQ (2, 7)
+#if __GNUC_PREREQ (2, 7) && !__GNUC_PREREQ (3, 0)
 # define _Complex __complex__
 #endif
 
+#define complex		_Complex
 
 /* Narrowest imaginary unit.  This depends on the floating-point
    evaluation method.
    XXX This probably has to go into a gcc related file.  */
-#define _Complex_I	(1.0iF)
+#define _Complex_I	(__extension__ 1.0iF)
 
 /* Another more descriptive name is `I'.
    XXX Once we have the imaginary support switch this to _Imaginary_I.  */
