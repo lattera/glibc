@@ -32,19 +32,41 @@
 /* Note that while it's better structurally, going back to call syscall_error
    can make things confusing if you're debugging---it looks like it's jumping
    backwards into the previous fn.  */
+#ifdef __PIC__
+ #define PSEUDO(name, syscall_name, args) \
+  .align 2;								      \
+  99: la t9,syscall_error;						      \
+  jr t9;								      \
+  ENTRY(name)								      \
+  .set noreorder;							      \
+  .cpload t9;								      \
+  li v0, SYS_##syscall_name;						      \
+  syscall;								      \
+  .set reorder;								      \
+  bne a3, zero, 99b;							      \
+syse1:
+#else
 #define PSEUDO(name, syscall_name, args) \
   .set noreorder;							      \
   .align 2;								      \
   99: j syscall_error;							      \
-  nop;							      		      \
   ENTRY(name)								      \
+  .set noreorder;							      \
   li v0, SYS_##syscall_name;						      \
   syscall;								      \
+  .set reorder;								      \
   bne a3, zero, 99b;							      \
-  nop;									      \
 syse1:
+#endif
+
+#undef PSEUDO_END
+#define PSEUDO_END(sym) .end sym
 
 #define ret	j ra ; nop
+
+#undef END
+#define END(sym)        .end sym
+
 #define r0	v0
 #define r1	v1
 /* The mips move insn is d,s.  */

@@ -21,10 +21,23 @@
 #define _ERRNO_H
 #include <bits/errno.h>
 
-/* .globl errno */
-.set noreorder
+	.comm errno, 4
+#ifdef __ELF__
+	.type errno, @object
+#endif
 
-ENTRY(syscall_error)
+	.set noreorder
+
+ENTRY(__syscall_error)
+#ifdef __PIC__
+	.set	noat
+	move	$1, $31
+	bltzal	$0, 0f
+	nop
+0:	.cpload	$31
+	move	$31, $1
+	.set	at
+#endif
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN
 	/* We translate the system's EWOULDBLOCK error into EAGAIN.
 	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
@@ -40,4 +53,8 @@ skip:
 	/* And just kick back a -1.  */
 	j ra
 	li v0, -1
-	.end syscall_error
+	END(__syscall_error)
+
+/* We provide this alias for compatilility with other Unices
+   like IRIX 5  */
+weak_alias (__syscall_error, syscall_error)

@@ -24,46 +24,24 @@
 #endif
 
 #ifndef       HAVE_GNU_LD
-#define __end           end
+#define _end           end
 #endif
 
-.data
-.sdata
+	.data
 ENTRY(__curbrk)
-	.word __end
+	.word 0
 	.end __curbrk
-.text
-.set noreorder
-.set noat
 
-ENTRY(__brk)
-	/* Minimum is one page.  */
-	lui v0, 4096
-	lw v0, __end
-	nop
-
-	/* If they ask for less than a page, givvem the whole
-	   thing anyway.  */
-	sltu AT, a0, v0
-	beq AT, zero, down1
-	nop
-	move a0, v0
-down1:
-	li v0, SYS_brk
-	syscall
-	bne a3, zero, error
-
-	/* Update __curbrk and exit cleanly.  */
-	lui AT, 4096
+	.text
+SYSCALL__(brk, 1)
+	.set	reorder
+	/* Handle the query case.  */
+	bnez a0, 1f
+	move a0,v0
+1:	/* Update __curbrk and exit cleanly.  */
 	sw a0, __curbrk
-	j ra
 	move v0, zero
-
-	/* What a horrible way to die.  */
-error:	j syscall_error
-	nop
-	nop
-	nop
+	jr ra
 	.end __brk
 
 weak_alias (__brk, brk)

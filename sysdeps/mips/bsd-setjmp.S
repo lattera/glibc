@@ -23,14 +23,19 @@
 
 #include <sysdep.h>
 
+/* XXX Must this be __PIC__ ? --drepper */
 #ifdef PIC
 	.option pic2
 #endif
 ENTRY (setjmp)
+	.set	noreorder
 #ifdef PIC
 	.cpload t9
+	la	t9, C_SYMBOL_NAME (__sigsetjmp)
+	jr	t9
+#else
+	j	C_SYMBOL_NAME (__sigsetjmp)
 #endif
-	la t9, C_SYMBOL_NAME (__sigsetjmp)
-	nop
-	jr t9
-	li a1, 1		/* Pass a second argument of one.  */
+	li	a1, 1		/* Pass a second argument of one.  */
+	.set	reorder
+	.end	setjmp

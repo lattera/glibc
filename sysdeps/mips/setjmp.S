@@ -26,10 +26,20 @@
 #endif
 ENTRY (__sigsetjmp)
 #ifdef PIC
-	.cpload t9
+	.set	noreorder
+	.cpload	t9
+	.set	reorder
 #endif
-	move a2, sp
-	move a3, fp
-	la t9, __sigsetjmp_aux
-	nop
-	jr t9
+	move	a2, sp
+#ifdef fp
+	move	a3, fp
+#else
+	move	a3, $fp
+#endif
+#ifdef PIC
+	la	t9, __sigsetjmp_aux
+	jr	t9
+#else
+	j	__sigsetjmp_aux
+#endif
+	.end __sigsetjmp

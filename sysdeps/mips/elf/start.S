@@ -17,6 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <entry.h>
+
+#ifndef ENTRY_POINT
+#error ENTRY_POINT needs to be defined for start.S on MIPS/ELF.
+#endif
+
 /* This is the canonical entry point, usually the first thing in the text
    segment.  The SVR4/Mips ABI (pages 3-31, 3-32) says that when the entry
    point runs, most registers' values are unspecified, except for:
@@ -53,8 +59,8 @@
 #endif
 
 	.text
-	.globl _start
-_start:
+	.globl ENTRY_POINT
+ENTRY_POINT:
 #ifdef PIC
 	SET_GP
 #endif
@@ -81,20 +87,9 @@ nofini:
 	   the prologue of __libc_init_first, we preload them to
 	   prevent clobbering the stack tops. In Hurd case, stack pointer
 	   ($29) may be VM_MAX_ADDRESS here. If so, we must modify it.  */
-#if (__mips64)
-	dli $4, 0x10000000000
-	bne $29, $4, 1f
-	dsubu $29, 32
-	sd $0, 0($29)
-	sd $0, 8($29)
-	sd $0, 16($29)
-	sd $0, 24($29)
-1:
-	ld $4, 0($29)
-	ld $5, 8($29)
-	ld $6, 16($29)
-	ld $7, 24($29)
-#else  /* __mips64 */
+#if 0
+	jal mach_host_self
+#endif
 	li $4, 0x80000000
 	bne $29, $4, 1f
 	subu $29, 16
@@ -107,23 +102,14 @@ nofini:
 	lw $5, 4($29)
 	lw $6, 8($29)
 	lw $7, 12($29)
-#endif  /* __mips64 */
-
 	jal __libc_init_first
 #ifdef PIC
 	SET_GP
 #endif
-#if (__mips64)
-	ld $4, 0($29)
-	ld $5, 8($29)
-	ld $6, 16($29)
-	ld $7, 24($29)
-#else  /* __mips64 */
 	lw $4, 0($29)
 	lw $5, 4($29)
 	lw $6, 8($29)
 	lw $7, 12($29)
-#endif  /* __mips64 */
 
 	/* Call `_init', which is the entry point to our own `.init'
 	   section; and register with `atexit' to have `exit' call
@@ -145,19 +131,11 @@ nofini:
 
 	/* Extract the arguments and environment as encoded on the stack
 	   and set up the arguments for `main': argc, argv, envp.  */
-#if (__mips64)
-	ld $4, 0($29)		/* argc */
-	daddu $5, $29, 8	/* argv */
-	dsll $6, $4, 3
-	daddu $6, $6, 8
-	daddu $6, $5, $6	/* envp = &argv[argc + 1] */
-#else  /* __mips64 */
 	lw $4, 0($29)		/* argc */
 	addu $5, $29, 4		/* argv */
 	sll $6, $4, 2
 	addu $6, $6, 4
 	addu $6, $5, $6		/* envp = &argv[argc + 1] */
-#endif  /* __mips64 */
 
 	/* Call the user's main function, and exit with its value.  */
 	jal main
@@ -172,10 +150,11 @@ hlt:	b hlt			/* Crash if somehow it does return.  */
 	.data
 	.globl __data_start
 __data_start:
-#if (__mips64)
-	.dword 0
-#else  /* __mips64 */
-	.word 0
-#endif  /* __mips64 */
+	.long 0
 	.weak data_start
 	data_start = __data_start
+
+	.comm errno, 4, 4
+#ifdef __ELF__
+	.type errno, @object
+#endif
