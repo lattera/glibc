@@ -1,3 +1,13 @@
+2000-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: Add %F format support.
+
+	* locale/programs/ld-ctype.c (ctype_output): Make sure
+	_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN and
+	_NL_CTYPE_TRANSLIT_IGNORE_LEN are aligned.
+	(ctype_read): Enable returning of wide character strings for reading
+	transliteration information.
+
 2000-08-23  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/ld-ctype.c (ctype_read): Fix parameter for
