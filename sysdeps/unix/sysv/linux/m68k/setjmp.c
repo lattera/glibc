@@ -76,8 +76,6 @@ __setjmp (jmp_buf env)
 		: : "m" (env[0].__jmpbuf[0].__fpregs[0]));
 #endif
 
-  /* Don't save the signal mask.  */
-  env[0].__mask_was_saved = 0;
-
+  /* The signal mask has already been dealt with.  */
   return 0;
 }
