@@ -1,5 +1,7 @@
 1999-01-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/arm/Dist: Add sys/user.h.
+
 	* manual/Makefile (examples): Filter out the example code from
 	add-ons.
 

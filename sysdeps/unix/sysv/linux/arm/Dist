@@ -7,3 +7,4 @@ setfsuid.c
 setfsgid.c
 bits/armsigctx.h
 sys/io.h
+sys/user.h
