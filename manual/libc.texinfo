@@ -22,7 +22,7 @@ This file documents the GNU C library.
 This is Edition @value{EDITION}, last updated @value{UPDATED},
 of @cite{The GNU C Library Reference Manual}, for Version @value{VERSION}.
 
-Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -66,10 +66,10 @@ Foundation.
 @center for version @value{VERSION}
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1993, 1994 Free Software Foundation, Inc.
+Copyright @copyright{} 1993, 1994, 1995 Free Software Foundation, Inc.
 @sp 2
 Published by the Free Software Foundation @*
-675 Massachusetts Avenue, @*
+675 Massachusetts Avenue @*
 Cambridge, MA 02139 USA @*
 Printed copies are available for $50 each. @*
 ISBN @value{ISBN} @*

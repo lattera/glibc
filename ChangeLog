@@ -1,3 +1,8 @@
+Sun May 21 05:05:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/Makefile (ld.so): Use -nostartfiles in addition to
+ 	-nostdlib.
+
 Sun May 21 02:01:29 1995  Jim Meyering  (meyering@comco.com)
 
 	* sysdeps/generic/memchr.c: Don't include <string.h> at all.
