@@ -1,3 +1,39 @@
+1999-11-13  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/Versions (GLIBC_2.1.3): Define, adding directory_name_split and
+	hurd_directory_name_split.
+	* Versions.def (libc): Add GLIBC_2.1.3.
+
+1999-11-09  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/report-wait.c (describe_port): Return char * and use __stpcpy
+	to return the location of the null byte written into the string.
+	(describe_number): Likewise.
+	(describe_number): Remove assert, not always used with #.
+	If FLAVOR is null, don't use it.
+	(describe_number): Take signed argument and print a - if negative.
+	(_S_msg_report_wait): Report system call number for system calls that
+	aren't mach_msg.  Soup up reporting for mach_msg: If destination port
+	matches SS->intr_port, bracket port description with [...] to indicate
+	a Hurd interruptible RPC; if destination port is null, examine the
+	receive port and report that state; if receive port is also null,
+	check for timeout and report its value.
+	* sysdeps/mach/hurd/i386/intr-msg.h (MSG_EXAMINE): Return int that is
+	zero iff we managed to examine the stack; take new args RCV_NAME,
+	SEND_NAME, OPTION, and TIMEOUT to fill in with mach_msg args.
+
+	* hurd/report-wait.c (describe_port): Recognize MACH_PORT_NULL and
+	MACH_PORT_DEAD specially.
+
+1999-10-04  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdlookup.c (__hurd_directory_name_split): New function.
+	(__directory_name_split): New function.
+	* hurd/hurd.h: Declare them.
+	* sysdeps/mach/hurd/rmdir.c: Use __directory_name_split instead of
+	__file_name_split, so we ignore trailing slashes properly.
+	* sysdeps/mach/hurd/rename.c: Likewise.
+
 1999-11-13  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/signum.h: Add SIGPWR define
