@@ -41,8 +41,8 @@ static struct builtin_map
 
 } map[] =
 {
-#define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
-			       Fct, Init, End, MinF, MaxF, MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
+			       MaxF, MinT, MaxT) \
   {									      \
     .name = Name,							      \
     .fct = Fct,								      \
