@@ -1,10 +1,14 @@
+2001-09-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wchar.h: Add __attribute_pure__ to mbsinit prototype.
+
 2001-09-20  H.J. Lu  <hjl@gnu.org>
 
 	* include/dlfcn.h (__RTLD_SPROF): New definiton.
 	* elf/dl-open.c (dl_open_worker): Return immediately after loading
 	for __RTLD_SPROF.
 	* elf/sprof.c (main): Default to the filename if soname doesn't exist.
-	(load_shobj): Call dlopen with `RTLD_LAZY | __RTLD_SPROF.
+	(load_shobj): Call dlopen with `RTLD_LAZY | __RTLD_SPROF'.
 
 2001-09-20  H.J. Lu  <hjl@gnu.org>
 

@@ -266,7 +266,7 @@ extern int wctob (wint_t __c) __THROW;
 
 /* Determine whether PS points to an object representing the initial
    state.  */
-extern int mbsinit (__const mbstate_t *__ps) __THROW;
+extern int mbsinit (__const mbstate_t *__ps) __THROW __attribute_pure__;
 
 /* Write wide character representation of multibyte character pointed
    to by S to PWC.  */
