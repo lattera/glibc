@@ -31,7 +31,7 @@ endif
 
 ifeq ($(subdir),login)
 sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
-                   pututxline utmpxname updwtmpx
+                   pututxline utmpxname updwtmpx getutmpx getutmp
 
 sysdep_headers += utmpx.h bits/utmpx.h
 endif

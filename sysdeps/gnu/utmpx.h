@@ -60,6 +60,14 @@ extern int utmpxname __P ((__const char *__file));
 /* Append entry UTMP to the wtmpx-like file WTMPX_FILE.  */
 extern void updwtmpx __P ((__const char *__wtmpx_file,
 			   __const struct utmpx *__utmpx));
+
+/* Copy the information in UTMPX to UTMP. */
+extern void getutmp __P ((__const struct utmpx *__utmpx,
+			  struct utmp *__utmp));
+
+/* Copy the information in UTMP to UTMPX. */
+extern void getutmpx __P ((__const struct utmp *__utmp,
+			   struct utmpx *__utmpx));
 #endif
 
 __END_DECLS

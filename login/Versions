@@ -32,6 +32,10 @@ libc {
     # u*
     unlockpt; updwtmpx; utmpxname;
   }
+  GLIBC_2.1.1 {
+    # g*
+    getutmpx; getutmp;
+  }
 }
 
 libutil {

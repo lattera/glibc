@@ -1,3 +1,18 @@
+1999-05-13  H.J. Lu  <hjl@gnu.org>
+
+	* login/Versions (getutmpx): Added to GLIBC_2.1.1.
+	(getutmp): Likewise.
+
+	* sysdeps/gnu/Makefile (sysdep_routines): Add getutmp and
+	getutmpx for login.
+
+	* sysdeps/gnu/utmpx.h (getutmp): Added.
+	(getutmpx): Likewise.
+
+	* sysdeps/generic/getutmp.c: New file.
+
+	* sysdeps/generic/getutmpx.c: New file.
+
 1999-05-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* glibcbug.in (BUGGLIBC): Change address to
