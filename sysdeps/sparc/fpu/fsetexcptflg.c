@@ -19,6 +19,7 @@
 
 #include <fenv.h>
 #include <math.h>
+#include <shlib-compat.h>
 
 int
 __fesetexceptflag (const fexcept_t *flagp, int excepts)
@@ -35,6 +36,10 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
   /* Success.  */
   return 0;
 }
+
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-symbol_version (__old_fesetexceptflag, fesetexceptflag, GLIBC_2.1);
-default_symbol_version (__fesetexceptflag, fesetexceptflag, GLIBC_2.2);
+compat_symbol (libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);

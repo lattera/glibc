@@ -19,6 +19,7 @@
 
 #include <fenv.h>
 #include <math.h>
+#include <shlib-compat.h>
 
 int
 __feraiseexcept (int excepts)
@@ -59,6 +60,10 @@ __feraiseexcept (int excepts)
   /* Success.  */
   return 0;
 }
+
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__feraiseexcept, __old_feraiseexcept)
-symbol_version (__old_feraiseexcept, feraiseexcept, GLIBC_2.1);
-default_symbol_version (__feraiseexcept, feraiseexcept, GLIBC_2.2);
+compat_symbol (libm, __old_feraiseexcept, feraiseexcept, GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, __feraiseexcept, feraiseexcept, GLIBC_2_2);

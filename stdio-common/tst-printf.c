@@ -188,7 +188,7 @@ I am ready for my first lesson today.";
 
   printf ("%#03x\n", 1);
 
-  printf ("something really insane: %.10000f", 1.0);
+  printf ("something really insane: %.10000f\n", 1.0);
 
   {
     double d = FLT_MIN;

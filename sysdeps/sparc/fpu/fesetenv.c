@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
+#include <shlib-compat.h>
 
 int
 __fesetenv (const fenv_t *envp)
@@ -44,6 +45,10 @@ __fesetenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
+
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetenv, __old_fesetenv)
-symbol_version (__old_fesetenv, fesetenv, GLIBC_2.1);
-default_symbol_version (__fesetenv, fesetenv, GLIBC_2.2);
+compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);

@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
+#include <shlib-compat.h>
 
 int
 __fegetexceptflag (fexcept_t *flagp, int excepts)
@@ -32,6 +33,10 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
   /* Success.  */
   return 0;
 }
+
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fegetexceptflag, __old_fegetexceptflag)
-symbol_version (__old_fegetexceptflag, fegetexceptflag, GLIBC_2.1);
-default_symbol_version (__fegetexceptflag, fegetexceptflag, GLIBC_2.2);
+compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);

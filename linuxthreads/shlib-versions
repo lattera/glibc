@@ -1,4 +1,5 @@
 # Xavier Leroy's Linux clone based thread library.
 mips.*-.*-linux.*	libpthread=0		GLIBC_2.0 GLIBC_2.2
+sparc64-.*-linux.*	libpthread=0		GLIBC_2.2
 sh.*-.*-linux.*		libpthread=0		GLIBC_2.2
 .*-.*-linux.*		libpthread=0
