@@ -66,7 +66,7 @@
 #else
 #define CALL_MCOUNT \
   lgr 0,14 ; larl 1,0f ; brasl 14,_mcount ; lgr 14,0 ; \
-  .data ; .align 4 ; 0: .long 0 ; .text ; 
+  .data ; .align 4 ; 0: .long 0 ; .text ;
 #endif
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
@@ -104,8 +104,7 @@ lose: SYSCALL_PIC_SETUP			\
 
 /* Local label name for asm code. */
 #ifndef L
-#define L(name)		name
+#define L(name)		.L##name
 #endif
 
 #endif	/* __ASSEMBLER__ */
-

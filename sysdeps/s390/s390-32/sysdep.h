@@ -111,7 +111,7 @@ lose: SYSCALL_PIC_SETUP				\
 
 /* Local label name for asm code. */
 #ifndef L
-#define L(name)		name
+#define L(name)		.L##name
 #endif
 
 #endif	/* __ASSEMBLER__ */
