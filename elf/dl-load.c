@@ -1,5 +1,5 @@
 /* _dl_map_object -- Map in a shared object's segments from the file.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -246,10 +246,19 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
   header = map (0, sizeof *header);
 
   /* Check the header for basic validity.  */
-  if (*(Elf32_Word *) &header->e_ident != ((ELFMAG0 << (EI_MAG0 * 8)) |
-					   (ELFMAG1 << (EI_MAG1 * 8)) |
-					   (ELFMAG2 << (EI_MAG2 * 8)) |
-					   (ELFMAG3 << (EI_MAG3 * 8))))
+  if (*(Elf32_Word *) &header->e_ident !=
+#if BYTE_ORDER == LITTLE_ENDIAN
+      ((ELFMAG0 << (EI_MAG0 * 8)) |
+       (ELFMAG1 << (EI_MAG1 * 8)) |
+       (ELFMAG2 << (EI_MAG2 * 8)) |
+       (ELFMAG3 << (EI_MAG3 * 8)))
+#else
+      ((ELFMAG0 << (EI_MAG3 * 8)) |
+       (ELFMAG1 << (EI_MAG2 * 8)) |
+       (ELFMAG2 << (EI_MAG1 * 8)) |
+       (ELFMAG3 << (EI_MAG0 * 8)))
+#endif
+      )
     LOSE ("invalid ELF header");
   if (header->e_ident[EI_CLASS] != ELFCLASS32)
     LOSE ("ELF file class not 32-bit");
@@ -318,8 +327,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	  {
 	    struct loadcmd *c = &loadcmds[nloadcmds++];
 	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-	    c->mapend = ((ph->p_vaddr + ph->p_filesz + ph->p_align - 1)
-			 & ~(ph->p_align - 1));
+	    c->mapend = ((ph->p_vaddr + ph->p_filesz + pagesize - 1)
+			 & ~(pagesize - 1));
 	    c->dataend = ph->p_vaddr + ph->p_filesz;
 	    c->allocend = ph->p_vaddr + ph->p_memsz;
 	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
