@@ -21,17 +21,12 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef	__GNUC__
 
-static CONST double 
-PIo4   =  7.8539816339744827900E-1    , /*Hex  2^ -1   *  1.921FB54442D18 */
-PIo2   =  1.5707963267948965580E0     , /*Hex  2^  0   *  1.921FB54442D18 */
-PI     =  3.1415926535897931160E0     ; /*Hex  2^  1   *  1.921FB54442D18 */
-
 double
 DEFUN(atan2, (y, x), double y AND double x)
 {
   static CONST double one = 1.0, zero = 0.0;
   double signx, signy;
-  double pi;
+  double pi, PIo4, PIo2;
 
   if (__isnan(x))
     return x;
@@ -42,6 +37,8 @@ DEFUN(atan2, (y, x), double y AND double x)
   signx = __copysign(one, x);
 
   asm("fmovecr%.x %1, %0" : "=f" (pi) : "i" (0));
+  PIo2 = pi / 2;
+  PIo4 = pi / 4;
 
   if (y == zero)
     return signx == one ? y : __copysign(pi, signy);
