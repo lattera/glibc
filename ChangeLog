@@ -1,5 +1,8 @@
 2004-09-27  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/bits/waitstatus.h (__WIFSIGNALED): Simplify bit
+	twiddling in last change.
+
 	* posix/tst-waitid.c (do_test): Add tests for waitpid with WCONTINUED.
 
 	* posix/sys/wait.h [__WIFCONTINUED] (WIFCONTINUED): New macro.
