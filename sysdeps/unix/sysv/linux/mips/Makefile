@@ -7,5 +7,5 @@ endif
 ifeq ($(subdir),misc)
 sysdep_routines += cachectl cacheflush sysmips _test_and_set
 
-headers += sys/cachectl.h sys/sysmips.h sys/tas.h
+sysdep_headers += sys/cachectl.h sys/sysmips.h sys/tas.h
 endif
