@@ -36,7 +36,7 @@ register double
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
 void
-__longjmp (const __jmp_buf env, int val)
+__longjmp (__jmp_buf env, int val)
 {
   /* Restore the integer registers.  */
   r9 = env[0].__9;
