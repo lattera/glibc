@@ -654,7 +654,7 @@ padded, since there is no natural width for them.
 
 Following the flag an optional specification of the width is possible.
 This is specified in decimal notation.  If the natural size of the
-output is of the field has less than the specifed number of character,
+output is of the field has less than the specified number of characters,
 the result is written right adjusted and space padded to the given
 size.
 

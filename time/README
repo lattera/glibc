@@ -1,11 +1,11 @@
-The sources files
+The source files
 	`zic.c'
 	`zdump.c'
 	`tzselect.ksh'
 	`checktab.awk'
-files come from the tzcode1997a package by Arthur David Olsen et.al.
+come from the tzcode1997a package by Arthur David Olsen et.al.
 
-The file
+The files
 	`africa'
 	`antarctica'
 	`asia'
@@ -25,4 +25,4 @@ The file
 	`zone.tab'
 	`leapseconds'
 	`yearistype'
-files come from the tzdata1997a package by Arthur David Olsen et.al.
+come from the tzdata1997a package by Arthur David Olsen et.al.

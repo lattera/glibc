@@ -99,7 +99,7 @@ ___syy:
 	ld	[%fp + REGWIN_SZ + 4],%o1         /* Load subcode */
 	ld      [%fp + REGWIN_SZ + 8],%o2         /* pointer to sigcontext */
 	call	%o4
-	ld      [%fp + REGWIN_SZ + 12],%o3        /* Address where signal ocurred */
+	ld      [%fp + REGWIN_SZ + 12],%o3        /* Address where signal occurred */
 
 	/* handler returned, restore state */
 	tst	%l0

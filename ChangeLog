@@ -1,3 +1,26 @@
+Sat Jan 25 02:05:19 1997  Eirik Fuller  <eirik@netcom.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Rename T2_SPARSE_BASE and
+	T2_DENSE_BASE to T2_SPARSE_MEM and T2_DENSE_MEM resp.
+
+Thu Jan 23 11:13:46 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/usleep.c: Normalize the time
+	specification.
+
+Fri Jan 24 14:33:45 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/socketbits.h: Also make SOCK_* constants available
+	as macros so that #ifdef works.
+	* sysdeps/unix/sysv/linux/socketbits.h: Likewise.
+
+1997-01-23  Paul Eggert  <eggert@twinsun.com>
+
+	* login/utmp_db.c, manual/time.texi, shlib-versions, sunrpc/rpc/svc.h,
+	sunrpc/rpcsvc/sm_inter.x, sysdeps/generic/abort.c,
+	sysdeps/libm-ieee754/e_sinhl.c, sysdeps/unix/sysv/linux/net/route.h,
+	sysdeps/unix/sysv/linux/sparc/__sigtrampoline.S: Spell fixes.
+
 1997-01-23  Paul Eggert  <eggert@twinsun.com>
 
 	* mktime.c (mktime): Invoke __tzset, not __tzset_internal, to set tz,

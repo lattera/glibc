@@ -1,5 +1,5 @@
 /* Implementation of the BSD usleep function using nanosleep.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -24,8 +24,8 @@
 void
 usleep (unsigned int useconds)
 {
-  struct timespec ts = { tv_sec: 0,
-			 tv_nsec: (long int) useconds * 1000ul };
+  struct timespec ts = { tv_sec: (long int) (useconds / 1000000),
+			 tv_nsec: (long int) (useconds % 1000000) * 1000ul };
 
   __nanosleep (&ts, NULL);
 }

@@ -38,7 +38,7 @@ static const char *file_name = (const char *) default_file_name;
 
 /* Descriptor for database.  */
 #if 0
-/* XXX One day this will become menaingful again.  */
+/* XXX One day this will become meaningful again.  */
 static DB *db_fd;
 static char last_date[16];
 #endif

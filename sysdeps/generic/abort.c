@@ -74,7 +74,7 @@ abort (void)
       /* This stage is special: we must allow repeated calls of
 	 `abort' when a user defined handler for SIGABRT is installed.
 	 This is risky since the `raise' implementation might also
-	 fail but I don't see another possiblity.  */
+	 fail but I don't see another possibility.  */
       int save_stage = stage;
 
       stage = 0;

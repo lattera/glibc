@@ -24,7 +24,7 @@
 #define P2(a, b) a##b
 
 	.text
-/* The socket-oriented system calls are handled unusally in Linux.
+/* The socket-oriented system calls are handled unusually in Linux.
    They are all gated through the single `socketcall' system call number.
    `socketcall' takes two arguments: the first is the subcode, specifying
    which socket function is being called; and the second is a pointer to

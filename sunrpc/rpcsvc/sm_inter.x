@@ -67,7 +67,7 @@ struct sm_name {
 };
 
 struct my_id {
-	string	 my_name<SM_MAXSTRLEN>;		/* name of the site iniating the monitoring request*/
+	string	 my_name<SM_MAXSTRLEN>;		/* name of the site initiating the monitoring request*/
 	int	my_prog;			/* rpc program # of the requesting process */
 	int	my_vers;			/* rpc version # of the requesting process */
 	int	my_proc;			/* rpc procedure # of the requesting process */

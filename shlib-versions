@@ -61,5 +61,5 @@ i.86-.*-linux.*		ld=ld-linux.so.2
 # This defines the shared library version numbers we will install.
 .*-.*-.*		libcrypt=1
 
-# The gross patch for programs assuming broken locale implemenations.
+# The gross patch for programs assuming broken locale implementations.
 .*-.*-.*		libBrokenLocale=1

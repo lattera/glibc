@@ -77,7 +77,7 @@ static long double one = 1.0, shuge = 1.0e4931L;
 	if (ix < 0x400c || (ix == 0x400c && i0 < 0xb17217f7))
 		return h*__ieee754_expl(fabsl(x));
 
-    /* |x| in [log(maxdouble), overflowthresold] */
+    /* |x| in [log(maxdouble), overflowthreshold] */
 	if (ix<0x400c || (ix == 0x400c && (i0 < 0xb174ddc0
 					   || (i0 == 0xb174ddc0
 					       && i1 <= 0x31aec0ea)))) {
@@ -86,6 +86,6 @@ static long double one = 1.0, shuge = 1.0e4931L;
 	    return t*w;
 	}
 
-    /* |x| > overflowthresold, sinhl(x) overflow */
+    /* |x| > overflowthreshold, sinhl(x) overflow */
 	return x*shuge;
 }

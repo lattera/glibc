@@ -77,7 +77,7 @@ struct rtentry
 #define RTF_NEXTHOP	0x8000		/* Non gateway route with nexthop.  */
 
 
-#define RTF_MAGIC	0x10000		/* Route added/deleted authomatically,
+#define RTF_MAGIC	0x10000		/* Route added/deleted automatically,
 					   when interface changes its state. */
 
 #define RTCF_VALVE	0x00200000

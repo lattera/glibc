@@ -33,7 +33,7 @@ vdprintf (int d, const char *format, va_list arg)
   struct hurd_fd *fd;
 
   HURD_CRITICAL_BEGIN;
-  fd = _hurd_fd_get (fd);
+  fd = _hurd_fd_get (d);
   HURD_CRITICAL_END;
 
   if (!fd)
