@@ -1,3 +1,7 @@
+2004-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (pthread_funtions): Make array const.
+
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (__make_stacks_executable): Change interface.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -71,7 +71,7 @@ extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 
 
 #ifdef SHARED
-static struct pthread_functions pthread_functions =
+static const struct pthread_functions pthread_functions =
   {
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
 # if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
