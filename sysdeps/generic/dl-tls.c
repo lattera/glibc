@@ -18,8 +18,12 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <signal.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/param.h>
 
+#include <abort-instr.h>
 #include <tls.h>
 
 /* We don't need any of this if TLS is not supported.  */
@@ -29,7 +33,31 @@
 #include <ldsodefs.h>
 
 /* Value used for dtv entries for which the allocation is delayed.  */
-# define TLS_DTV_UNALLOCATE	((void *) -1l)
+# define TLS_DTV_UNALLOCATED	((void *) -1l)
+
+
+/* Out-of-memory handler.  */
+static void
+__attribute__ ((__noreturn__))
+oom (void)
+{
+  static const char msg[] = "\
+cannot allocate memory for thread-local data: ABORT\n";
+
+  __libc_write (STDERR_FILENO, msg, sizeof (msg) - 1);
+
+  /* Kill ourself.  */
+  __kill (__getpid (), SIGKILL);
+
+  /* Just in case something goes wrong with the kill.  */
+  while (1)
+    {
+# ifdef ABORT_INSTRUCTION
+      ABORT_INSTRUCTION;
+# endif
+    }
+}
+
 
 
 size_t
@@ -40,38 +68,49 @@ _dl_next_tls_modid (void)
 
   if (__builtin_expect (GL(dl_tls_dtv_gaps), false))
     {
-      /* XXX If this method proves too costly we can optimize
-	 it to use a constant time method.  But I don't think
-	 it's a problem.  */
-      struct link_map *runp = GL(dl_initimage_list);
-      bool used[GL(dl_tls_max_dtv_idx)];
+      size_t disp = 0;
+      struct dtv_slotinfo_list *runp = GL(dl_tls_dtv_slotinfo_list);
 
-      assert (runp != NULL);
+      /* Note that this branch will never be executed during program
+	 start since there are no gaps at that time.  Therefore it
+	 does not matter that the dl_tls_dtv_slotinfo is not allocated
+	 yet when the function is called for the first times.  */
+      result = GL(dl_tls_static_nelem);
+      assert (result < GL(dl_tls_max_dtv_idx));
       do
 	{
-	  assert (runp->l_tls_modid > 0
-		  && runp->l_tls_modid <= GL(dl_tls_max_dtv_idx));
-	  used[runp->l_tls_modid - 1] = true;
-	}
-      while ((runp = runp->l_tls_nextimage) != GL(dl_initimage_list));
+	  while (result - disp < runp->len)
+	    if (runp->slotinfo[result - disp].map == NULL)
+	      break;
 
-      result = 0;
-      do
-	/* The information about the gaps is pessimistic.  It might be
-	   there are actually none.  */
-	if (result >= GL(dl_tls_max_dtv_idx))
-	  {
-	    /* Now we know there is actually no gap.  Bump the maximum
-	       ID number and remember that there are no gaps.  */
-	    result = ++GL(dl_tls_max_dtv_idx);
-	    GL(dl_tls_dtv_gaps) = false;
+	  ++result;
+	  assert (result <= GL(dl_tls_max_dtv_idx) + 1);
+
+	  if (result - disp < runp->len)
 	    break;
-	  }
-      while (used[result++]);
+
+	  disp += runp->len;
+	}
+      while ((runp = runp->next) != NULL);
+
+      if (result >= GL(dl_tls_max_dtv_idx) + 1)
+	{
+	  /* The new index must indeed be exactly one higher than the
+	     previous high.  */
+	  assert (result == GL(dl_tls_max_dtv_idx) + 1);
+
+	  /* There is no gap anymore.  */
+	  GL(dl_tls_dtv_gaps) = false;
+
+	  goto nogaps;
+	}
     }
   else
-    /* No gaps, allocate a new entry.  */
-    result = ++GL(dl_tls_max_dtv_idx);
+    {
+      /* No gaps, allocate a new entry.  */
+    nogaps:
+      result = ++GL(dl_tls_max_dtv_idx);
+    }
 
   return result;
 }
@@ -79,41 +118,39 @@ _dl_next_tls_modid (void)
 
 void
 internal_function
-_dl_determine_tlsoffset (struct link_map *lastp)
+_dl_determine_tlsoffset (void)
 {
-  struct link_map *runp;
-  size_t max_align = 0;
+  struct dtv_slotinfo *slotinfo;
+  size_t max_align = __alignof__ (void *);
   size_t offset;
+  size_t cnt;
 
-  if (lastp == NULL)
-    {
-      /* None of the objects used at startup time uses TLS.  We still
-	 have to allocate the TCB and dtv.  */
-      GL(dl_tls_static_size) = TLS_TCB_SIZE;
-      GL(dl_tls_static_align) = TLS_TCB_ALIGN;
-
-      return;
-    }
+  /* The first element of the dtv slot info list is allocated.  */
+  assert (GL(dl_tls_dtv_slotinfo_list) != NULL);
+  /* There is at this point only one element in the
+     dl_tls_dtv_slotinfo_list list.  */
+  assert (GL(dl_tls_dtv_slotinfo_list)->next == NULL);
 
 # if TLS_TCB_AT_TP
   /* We simply start with zero.  */
   offset = 0;
 
-  runp = lastp->l_tls_nextimage;
-  do
+  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
+  for (cnt = 1; slotinfo[cnt].map != NULL; ++cnt)
     {
-      max_align = MAX (max_align, runp->l_tls_align);
+      assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
+
+      max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
 
       /* Compute the offset of the next TLS block.  */
-      offset = roundup (offset + runp->l_tls_blocksize, runp->l_tls_align);
+      offset = roundup (offset + slotinfo[cnt].map->l_tls_blocksize,
+			slotinfo[cnt].map->l_tls_align);
 
       /* XXX For some architectures we perhaps should store the
 	 negative offset.  */
-      runp->l_tls_offset = offset;
+      slotinfo[cnt].map->l_tls_offset = offset;
     }
-  while ((runp = runp->l_tls_nextimage) != lastp->l_tls_nextimage);
 
-#if 0
   /* The thread descriptor (pointed to by the thread pointer) has its
      own alignment requirement.  Adjust the static TLS size
      and TLS offsets appropriately.  */
@@ -121,34 +158,44 @@ _dl_determine_tlsoffset (struct link_map *lastp)
   // XXX after the first (closest to the TCB) TLS block since this
   // XXX would invalidate the offsets the linker creates for the LE
   // XXX model.
-  if (offset % TLS_TCB_ALIGN != 0)
-    abort ();
-#endif
 
   GL(dl_tls_static_size) = offset + TLS_TCB_SIZE;
 # elif TLS_DTV_AT_TP
-  struct link_map *prevp;
+  /* The TLS blocks start right after the TCB.  */
+  offset = TLS_TCB_SIZE;
 
   /* The first block starts right after the TCB.  */
-  offset = TLS_TCB_SIZE;
-  max_align = runp->l_tls_align;
-  runp = lastp->l_tls_nextimage;
-  runp->l_tls_offset = offset;
-  prevp = runp;
-
-  while ((runp = runp->l_tls_nextimage) != firstp)
+  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
+  if (slotinfo[1].map != NULL)
     {
-      max_align = MAX (max_align, runp->l_tls_align);
+      size_t prev_size
 
-      /* Compute the offset of the next TLS block.  */
-      offset = roundup (offset + prevp->l_tls_blocksize, runp->l_tls_align);
+      offset = roundup (offset, slotinfo[1].map->l_tls_align);
+      slotinfo[1].map->l_tls_offset = offset;
+      max_align = slotinfo[1].map->l_tls_align;
+      prev_size = slotinfo[1].map->l_tls_blocksize;
 
-      runp->l_tls_offset = offset;
+      for (cnt = 2; slotinfo[cnt].map != NULL; ++cnt)
+	{
+	  assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
 
-      prevp = runp;
+	  max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
+
+	  /* Compute the offset of the next TLS block.  */
+	  offset = roundup (offset + prev_size,
+			    slotinfo[cnt].map->l_tls_align);
+
+	  /* XXX For some architectures we perhaps should store the
+	     negative offset.  */
+	  slotinfo[cnt].map->l_tls_offset = offset;
+
+	  prev_size = slotinfo[cnt].map->l_tls_blocksize;
+	}
+
+      offset += prev_size;
     }
 
-  GL(dl_tls_static_size) = offset + prevp->l_tls_blocksize;
+  GL(dl_tls_static_size) = offset;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
@@ -164,59 +211,100 @@ _dl_allocate_tls (void)
 {
   void *result;
   dtv_t *dtv;
+  size_t dtv_length;
 
   /* Allocate a correctly aligned chunk of memory.  */
   /* XXX For now */
   assert (GL(dl_tls_static_align) <= GL(dl_pagesize));
-#ifdef MAP_ANON
-# define _dl_zerofd (-1)
-#else
-# define _dl_zerofd GL(dl_zerofd)
+# ifdef MAP_ANON
+#  define _dl_zerofd (-1)
+# else
+#  define _dl_zerofd GL(dl_zerofd)
   if ((dl_zerofd) == -1)
     GL(dl_zerofd) = _dl_sysdep_open_zero_fill ();
-# define MAP_ANON 0
-#endif
+#  define MAP_ANON 0
+# endif
   result = __mmap (0, GL(dl_tls_static_size), PROT_READ|PROT_WRITE,
 		   MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
 
-  dtv = (dtv_t *) malloc ((GL(dl_tls_max_dtv_idx) + 1) * sizeof (dtv_t));
+  /* We allocate a few more elements in the dtv than are needed for the
+     initial set of modules.  This should avoid in most cases expansions
+     of the dtv.  */
+  dtv_length = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
+  dtv = (dtv_t *) malloc ((dtv_length + 2) * sizeof (dtv_t));
   if (result != MAP_FAILED && dtv != NULL)
     {
-      struct link_map *runp;
+      struct dtv_slotinfo_list *listp;
+      bool first_block = true;
+      size_t total = 0;
 
 # if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  */
       result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
 # endif
 
-      /* XXX Fill in an correct generation number.  */
-      dtv[0].counter = 0;
+      /* This is the initial length of the dtv.  */
+      dtv[0].counter = dtv_length;
+      /* Fill in the generation number.  */
+      dtv[1].counter = GL(dl_tls_generation) = 0;
+      /* Initialize all of the rest of the dtv with zero to indicate
+	 nothing there.  */
+      memset (dtv + 2, '\0', dtv_length * sizeof (dtv_t));
 
-      /* Initialize the memory from the initialization image list and clear
-	 the BSS parts.  */
-      if (GL(dl_initimage_list) != NULL)
+      /* We have to look prepare the dtv for all currently loaded
+	 modules using TLS.  For those which are dynamically loaded we
+	 add the values indicating deferred allocation.  */
+      listp = GL(dl_tls_dtv_slotinfo_list);
+      while (1)
 	{
-	  runp = GL(dl_initimage_list)->l_tls_nextimage;
-	  do
+	  size_t cnt;
+
+	  for (cnt = first_block ? 1 : 0; cnt < listp->len; ++cnt)
 	    {
-	      assert (runp->l_tls_modid > 0);
-	      assert (runp->l_tls_modid <= GL(dl_tls_max_dtv_idx));
+	      struct link_map *map;
+	      void *dest;
+
+	      /* Check for the total number of used slots.  */
+	      if (total + cnt >= GL(dl_tls_max_dtv_idx))
+		break;
+
+	      map = listp->slotinfo[cnt].map;
+	      if (map == NULL)
+		/* Unused entry.  */
+		continue;
+
+	      if (map->l_type == lt_loaded)
+		{
+		  /* For dynamically loaded modules we simply store
+		     the value indicating deferred allocation.  */
+		  dtv[1 + map->l_tls_modid].pointer = TLS_DTV_UNALLOCATED;
+		  continue;
+		}
+
+	      assert (map->l_tls_modid == cnt);
+	      assert (map->l_tls_blocksize >= map->l_tls_initimage_size);
 # if TLS_TCB_AT_TP
-	      dtv[runp->l_tls_modid].pointer = result - runp->l_tls_offset;
+	      assert (map->l_tls_offset >= map->l_tls_blocksize);
+	      dest = (char *) result - map->l_tls_offset;
 # elif TLS_DTV_AT_TP
-	      dtv[runp->l_tls_modid].pointer = result + runp->l_tls_offset;
+	      dest = (char *) result + map->l_tls_offset;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-	      memset (__mempcpy (dtv[runp->l_tls_modid].pointer,
-				 runp->l_tls_initimage,
-				 runp->l_tls_initimage_size),
-		      '\0',
-		      runp->l_tls_blocksize - runp->l_tls_initimage_size);
+	      /* We don't have to clear the BSS part of the TLS block
+		 since mmap is used to allocate the memory which
+		 guarantees it is initialized to zero.  */
+	      dtv[1 + cnt].pointer = memcpy (dest, map->l_tls_initimage,
+					     map->l_tls_initimage_size);
 	    }
-	  while ((runp = runp->l_tls_nextimage)
-		 !=  GL(dl_initimage_list)->l_tls_nextimage);
+
+	  total += cnt;
+	  if (total >= GL(dl_tls_max_dtv_idx))
+	    break;
+
+	  listp = listp->next;
+	  assert (listp != NULL);
 	}
 
       /* Add the dtv to the thread data structures.  */
@@ -232,6 +320,7 @@ _dl_allocate_tls (void)
 }
 
 
+# ifdef SHARED
 /* The __tls_get_addr function has two basic forms which differ in the
    arguments.  The IA-64 form takes two parameters, the module ID and
    offset.  The form used, among others, on IA-32 takes a reference to
@@ -239,26 +328,227 @@ _dl_allocate_tls (void)
    form seems to be more often used (in the moment) so we default to
    it.  Users of the IA-64 form have to provide adequate definitions
    of the following macros.  */
-# ifndef GET_ADDR_ARGS
-#  define GET_ADDR_ARGS tls_index *ti
-# endif
-# ifndef GET_ADDR_MODULE
-#  define GET_ADDR_MODULE ti->ti_module
-# endif
-# ifndef GET_ADDR_OFFSET
-#  define GET_ADDR_OFFSET ti->ti_offset
-# endif
+#  ifndef GET_ADDR_ARGS
+#   define GET_ADDR_ARGS tls_index *ti
+#  endif
+#  ifndef GET_ADDR_MODULE
+#   define GET_ADDR_MODULE ti->ti_module
+#  endif
+#  ifndef GET_ADDR_OFFSET
+#   define GET_ADDR_OFFSET ti->ti_offset
+#  endif
+/* Systems which do not have tls_index also probably have to define
+   DONT_USE_TLS_INDEX.  */
+
+#  ifndef __TLS_GET_ADDR
+#   define __TLS_GET_ADDR __tls_get_addr
+#  endif
 
 
+/* Return the symbol address given the map of the module it is in and
+   the symbol record.  This is used in dl-sym.c.  */
+void *
+internal_function
+_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
+{
+#  ifndef DONT_USE_TLS_INDEX
+  tls_index tmp =
+    {
+      .ti_module = map->l_tls_modid,
+      .ti_offset = ref->st_value
+    };
+
+  return __TLS_GET_ADDR (&tmp);
+#  else
+  return __TLS_GET_ADDR (map->l_tls_modid, ref->st_value);
+#  endif
+}
+
+
+static void *
+allocate_and_init (struct link_map *map)
+{
+  void *newp;
+
+  newp = __libc_memalign (map->l_tls_align, map->l_tls_blocksize);
+  if (newp == NULL)
+    oom ();
+
+  /* Initialize the memory.  */
+  memset (__mempcpy (newp, map->l_tls_initimage, map->l_tls_initimage_size),
+	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
+
+  return newp;
+}
+
+
+/* The generic dynamic and local dynamic model cannot be used in
+   statically linked applications.  */
 void *
 __tls_get_addr (GET_ADDR_ARGS)
 {
   dtv_t *dtv = THREAD_DTV ();
+  struct link_map *the_map = NULL;
+  void *p;
 
-  if (dtv[GET_ADDR_MODULE].pointer == TLS_DTV_UNALLOCATE)
-    /* XXX */;
+  if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))
+    {
+      struct dtv_slotinfo_list *listp;
+      size_t idx;
 
-  return (char *) dtv[GET_ADDR_MODULE].pointer + GET_ADDR_OFFSET;
+      /* The global dl_tls_dtv_slotinfo array contains for each module
+	 index the generation counter current when the entry was
+	 created.  This array never shrinks so that all module indices
+	 which were valid at some time can be used to access it.
+	 Before the first use of a new module index in this function
+	 the array was extended appropriately.  Access also does not
+	 have to be guarded against modifications of the array.  It is
+	 assumed that pointer-size values can be read atomically even
+	 in SMP environments.  It is possible that other threads at
+	 the same time dynamically load code and therefore add to the
+	 slotinfo list.  This is a problem since we must not pick up
+	 any information about incomplete work.  The solution to this
+	 is to ignore all dtv slots which were created after the one
+	 we are currently interested.  We know that dynamic loading
+	 for this module is completed and this is the last load
+	 operation we know finished.  */
+      idx = GET_ADDR_MODULE;
+      listp = GL(dl_tls_dtv_slotinfo_list);
+      while (idx >= listp->len)
+	{
+	  idx -= listp->len;
+	  listp = listp->next;
+	}
+
+      if (dtv[0].counter < listp->slotinfo[idx].gen)
+	{
+	  /* The generation counter for the slot is higher than what
+	     the current dtv implements.  We have to update the whole
+	     dtv but only those entries with a generation counter <=
+	     the one for the entry we need.  */
+	  size_t new_gen = listp->slotinfo[idx].gen;
+	  size_t total = 0;
+
+	  /* We have to look through the entire dtv slotinfo list.  */
+	  listp =  GL(dl_tls_dtv_slotinfo_list);
+	  do
+	    {
+	      size_t cnt;
+
+	      for (cnt = total = 0 ? 1 : 0; cnt < listp->len; ++cnt)
+		{
+		  size_t gen = listp->slotinfo[cnt].gen;
+		  struct link_map *map;
+		  size_t modid;
+
+		  if (gen > new_gen)
+		    /* This is a slot for a generation younger than
+		       the one we are handling now.  It might be
+		       incompletely set up so ignore it.  */
+		    continue;
+
+		  /* If the entry is older than the current dtv layout
+		     we know we don't have to handle it.  */
+		  if (gen <= dtv[0].counter)
+		    continue;
+
+		  /* If there is no map this means the entry is empty.  */
+		  map = listp->slotinfo[cnt].map;
+		  if (map == NULL)
+		    {
+		      /* If this modid was used at some point the memory
+			 might still be allocated.  */
+		      if (dtv[total + cnt].pointer != TLS_DTV_UNALLOCATED)
+			free (dtv[total + cnt].pointer);
+
+		      continue;
+		    }
+
+		  /* Check whether the current dtv array is large enough.  */
+		  modid = map->l_tls_modid;
+		  assert (total + cnt == modid);
+		  if (dtv[-1].counter < modid)
+		    {
+		      /* Reallocate the dtv.  */
+		      dtv_t *newp;
+		      size_t newsize = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
+		      size_t oldsize = dtv[-1].counter;
+
+		      assert (map->l_tls_modid <= newsize);
+
+		      newp = (dtv_t *) realloc (&dtv[-1],
+						(2 + newsize)
+						* sizeof (dtv_t));
+		      if (newp == NULL)
+			oom ();
+
+		      newp[0].counter = newsize;
+
+		      /* Clear the newly allocate part.  */
+		      memset (newp + 2 + oldsize, '\0',
+			      (newsize - oldsize) * sizeof (dtv_t));
+
+		      /* Point dtv to the generation counter.  */
+		      dtv = &newp[1];
+
+		      /* Install this new dtv in the thread data
+			 structures.  */
+		      INSTALL_NEW_DTV (dtv);
+		    }
+
+		  /* If there is currently memory allocate for this
+		     dtv entry free it.  */
+		  /* XXX Ideally we will at some point create a memory
+		     pool.  */
+		  if (dtv[modid].pointer != TLS_DTV_UNALLOCATED)
+		    /* Note that free is called for NULL is well.  We
+		       deallocate even if it is this dtv entry we are
+		       supposed to load.  The reason is that we call
+		       memalign and not malloc.  */
+		    free (dtv[modid].pointer);
+
+		  /* This module is loaded dynamically- We defer
+		     memory allocation.  */
+		  dtv[modid].pointer = TLS_DTV_UNALLOCATED;
+
+		  if (modid == GET_ADDR_MODULE)
+		    the_map = map;
+		}
+
+	      total += listp->len;
+	    }
+	  while ((listp = listp->next) != NULL);
+
+	  /* This will be the new maximum generation counter.  */
+	  dtv[0].counter = new_gen;
+	}
+    }
+
+  p = dtv[GET_ADDR_MODULE].pointer;
+
+  if (__builtin_expect (p == TLS_DTV_UNALLOCATED, 0))
+    {
+      /* The allocation was deferred.  Do it now.  */
+      if (the_map == NULL)
+	{
+	  /* Find the link map for this module.  */
+	  size_t idx = GET_ADDR_MODULE;
+	  struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
+
+	  while (idx >= listp->len)
+	    {
+	      idx -= listp->len;
+	      listp = listp->next;
+	    }
+
+	  the_map = listp->slotinfo[idx].map;
+	}
+
+      p = dtv[GET_ADDR_MODULE].pointer = allocate_and_init (the_map);
+    }
+
+  return (char *) p + GET_ADDR_OFFSET;
 }
+# endif
 
 #endif	/* use TLS */

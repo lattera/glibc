@@ -62,6 +62,8 @@ extern void __cxa_finalize (void *d);
 
 extern int __posix_memalign (void **memptr, size_t alignment, size_t size)
      __attribute_malloc__;
+extern void *__libc_memalign (size_t alignment, size_t size)
+     __attribute_malloc__;
 
 extern int __libc_system (const char *line);
 

@@ -119,7 +119,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	restest2 next dblload dblunload reldep5 reldep6 tst-tls1 tst-tls2 \
-	tst-tls3
+	tst-tls3 tst-tls4 tst-tls5
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -137,7 +137,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj \
 		dblloadmod1 dblloadmod2 dblloadmod3 reldepmod5 reldepmod6 \
 	        reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
-		tst-tlsmod1
+		tst-tlsmod1 tst-tlsmod2
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod nodlopenmod2
@@ -442,3 +442,9 @@ $(objpfx)reldep6: $(libdl)
 $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
 
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
+
+$(objpfx)tst-tls4: $(libdl)
+$(objpfx)tst-tls4.out: $(objpfx)tst-tlsmod2.so
+
+$(objpfx)tst-tls5: $(libdl)
+$(objpfx)tst-tls5.out: $(objpfx)tst-tlsmod2.so

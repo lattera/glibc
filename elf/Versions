@@ -27,7 +27,7 @@ libc {
 ld {
   GLIBC_2.0 {
     # Function from libc.so which must be shared with libc.
-    calloc; free; malloc; realloc;
+    calloc; free; malloc; realloc; __libc_memalign;
 
     _r_debug;
   }
@@ -49,6 +49,6 @@ ld {
     _dl_map_object; _dl_map_object_deps; _dl_out_of_memory;
     _dl_relocate_object; _dl_signal_error; _dl_start_profile; _dl_starting_up;
     _dl_unload_cache;
-    _rtld_global;
+    _rtld_global; _dl_tls_symaddr;
   }
 }

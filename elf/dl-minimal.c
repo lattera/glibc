@@ -21,8 +21,9 @@
 #include <limits.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
 #include <sys/mman.h>
+#include <sys/param.h>
+#include <sys/types.h>
 #include <ldsodefs.h>
 #include <stdio-common/_itoa.h>
 
@@ -119,6 +120,15 @@ realloc (void *ptr, size_t n)
   new = malloc (n);
   assert (new == ptr);
   return new;
+}
+
+/* Return alligned memory block.  */
+void * weak_function
+__libc_memalign (size_t align, size_t n)
+{
+  void *newp = malloc (n + align - 1);
+
+  return (void *) roundup ((uintptr_t) newp, align);
 }
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */

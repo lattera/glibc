@@ -31,6 +31,7 @@
 #include <bp-sym.h>
 
 #include <dl-dst.h>
+#include <dl-tls.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
@@ -353,6 +354,73 @@ dl_open_worker (void *a)
 	imap->l_scope[cnt++] = &new->l_searchlist;
 	imap->l_scope[cnt] = NULL;
       }
+#if USE_TLS
+    else if (new->l_searchlist.r_list[i]->l_opencount == 1
+	     /* Only if the module defines thread local data.  */
+	     && __builtin_expect (new->l_searchlist.r_list[i]->l_tls_blocksize
+				  > 0, 0))
+      {
+	/* Now that we know the object is loaded successfully add
+	   modules containing TLS data to the dtv info table.  We
+	   might have to increase its size.  */
+	struct dtv_slotinfo_list *listp;
+	struct dtv_slotinfo_list *prevp;
+	size_t idx = new->l_searchlist.r_list[i]->l_tls_modid;
+
+	assert (new->l_searchlist.r_list[i]->l_type == lt_loaded);
+
+	/* Find the place in the stv slotinfo list.  */
+	listp = GL(dl_tls_dtv_slotinfo_list);
+	prevp = NULL;		/* Needed to shut up gcc.  */
+	do
+	  {
+	    /* Does it fit in the array of this list element?  */
+	    if (idx <= listp->len)
+	      break;
+	    prevp = listp;
+	  }
+	while ((listp = listp->next) != NULL);
+
+	if (listp == NULL)
+	  {
+	    /* When we come here it means we have to add a new element
+	       to the slotinfo list.  And the new module must be in
+	       the first slot.  */
+	    assert (idx == 0);
+
+	    listp = prevp->next = (struct dtv_slotinfo_list *)
+	      malloc (sizeof (struct dtv_slotinfo_list)
+		      + TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
+	    if (listp == NULL)
+	      {
+		/* We ran out of memory.  We will simply fail this
+		   call but don't undo anything we did so far.  The
+		   application will crash or be terminated anyway very
+		   soon.  */
+
+		/* We have to do this since some entries in the dtv
+		   slotinfo array might already point to this
+		   generation.  */
+		++GL(dl_tls_generation);
+
+		_dl_signal_error (ENOMEM, "dlopen", NULL,
+				  N_("cannot create TLS data structures"));
+	      }
+
+	    listp->len = TLS_SLOTINFO_SURPLUS;
+	    listp->next = NULL;
+	    memset (listp->slotinfo, '\0',
+		    TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
+	  }
+
+	/* Add the information into the slotinfo data structure.  */
+	listp->slotinfo[idx].map = new->l_searchlist.r_list[i];
+	listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+      }
+
+  /* Bump the generation number.  */
+  ++GL(dl_tls_generation);
+#endif
 
   /* Run the initializer functions of new objects.  */
   _dl_init (new, __libc_argc, __libc_argv, __environ);
@@ -424,10 +492,18 @@ _dl_open (const char *file, int mode, const void *caller)
 	{
 	  unsigned int i;
 
-	  /* Increment open counters for all objects since this has
-	     not happened yet.  */
-	  for (i = 0; i < args.map->l_searchlist.r_nlist; ++i)
-	    ++args.map->l_searchlist.r_list[i]->l_opencount;
+	  /* Increment open counters for all objects since this
+	     sometimes has not happened yet.  */
+	  if (args.map->l_searchlist.r_list[0]->l_opencount == 0)
+	    for (i = 0; i < args.map->l_searchlist.r_nlist; ++i)
+	      ++args.map->l_searchlist.r_list[i]->l_opencount;
+
+	  /* Maybe some of the modules which were loaded uses TLS.
+	     Since it will be removed in the folowing _dl_close call
+	     we have to mark the dtv array as having gaps to fill
+	     the holes.  This is a pessimistic assumption which won't
+	     hurt if not true.  */
+	  GL(dl_tls_dtv_gaps) = true;
 
 	  _dl_close (args.map);
 	}

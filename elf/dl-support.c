@@ -138,20 +138,22 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 #ifdef USE_TLS
-/* Beginning of the list of link maps for objects which contain
-   thread-local storage sections.  This will be traversed to
-   initialize new TLS blocks.  */
-struct link_map *_dl_initimage_list;
 
 /* Highest dtv index currently needed.  */
 size_t _dl_tls_max_dtv_idx;
 /* Flag signalling whether there are gaps in the module ID allocation.  */
 bool _dl_tls_dtv_gaps;
-
+/* Information about the dtv slots.  */
+struct dtv_slotinfo_list *_dl_tls_dtv_slotinfo_list;
+/* Number of modules in the static TLS block.  */
+size_t _dl_tls_static_nelem;
 /* Size of the static TLS block.  */
 size_t _dl_tls_static_size;
 /* Alignment requirement of the static TLS block.  */
 size_t _dl_tls_static_align;
+
+/* Generation counter for the dtv.  */
+size_t _dl_tls_generation;
 #endif
 
 

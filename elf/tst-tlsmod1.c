@@ -4,10 +4,12 @@
 #include "tls-macros.h"
 
 
+#ifdef USE_TLS
 /* One define int variable, two externs.  */
 COMMON_INT_DEF(foo);
 VAR_INT_DEF(bar);
 VAR_INT_DECL(baz);
+#endif
 
 
 int

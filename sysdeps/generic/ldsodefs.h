@@ -289,23 +289,40 @@ struct rtld_global
 #endif
 
 #ifdef USE_TLS
-  /* Beginning of the list of link maps for objects which contain
-     thread-local storage sections.  This will be traversed to
-     initialize new TLS blocks.  */
-  EXTERN struct link_map *_dl_initimage_list;
-
   /* Highest dtv index currently needed.  */
   EXTERN size_t _dl_tls_max_dtv_idx;
   /* Flag signalling whether there are gaps in the module ID allocation.  */
   EXTERN bool _dl_tls_dtv_gaps;
-
+  /* Information about the dtv slots.  */
+  EXTERN struct dtv_slotinfo_list
+  {
+    size_t len;
+    struct dtv_slotinfo_list *next;
+    struct dtv_slotinfo
+    {
+      size_t gen;
+      struct link_map *map;
+    } slotinfo[0];
+  } *_dl_tls_dtv_slotinfo_list;
+  /* Number of modules in the static TLS block.  */
+  EXTERN size_t _dl_tls_static_nelem;
   /* Size of the static TLS block.  */
   EXTERN size_t _dl_tls_static_size;
   /* Alignment requirement of the static TLS block.  */
   EXTERN size_t _dl_tls_static_align;
 
+/* Number of additional entries in the slotinfo array of each slotinfo
+   list element.  A large number makes it almost certain take we never
+   have to iterate beyond the first element in the slotinfo list.  */
+# define TLS_SLOTINFO_SURPLUS (62)
+
+/* Number of additional slots in the dtv allocated.  */
+# define DTV_SURPLUS	(14)
+
   /* True if the dtv for the initial thread was malloc()ed.  */
   EXTERN bool _dl_initial_dtv_malloced;
+  /* Generation counter for the dtv.  */
+  EXTERN size_t _dl_tls_generation;
 #endif
 
   /* Name of the shared object to be profiled (if any).  */
@@ -667,11 +684,15 @@ extern void _dl_sysdep_start_cleanup (void)
 extern size_t _dl_next_tls_modid (void) internal_function;
 
 /* Calculate offset of the TLS blocks in the static TLS block.  */
-extern void _dl_determine_tlsoffset (struct link_map *firstp)
-     internal_function;
+extern void _dl_determine_tlsoffset (void) internal_function;
 
 /* Allocate memory for static TLS block and dtv.  */
 extern void *_dl_allocate_tls (void) internal_function;
+
+/* Return the symbol address given the map of the module it is in and
+   the symbol record.  */
+extern void *_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
+     internal_function;
 
 __END_DECLS
 

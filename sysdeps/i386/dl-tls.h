@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+
 /* Type used for the representation of TLS information in the GOT.  */
 typedef struct
 {
@@ -25,6 +26,7 @@ typedef struct
 } tls_index;
 
 
+#ifdef SHARED
 /* This is the prototype for the GNU version.  */
 extern void *___tls_get_addr (tls_index *ti)
      __attribute__ ((__regparm__ (1)));
@@ -46,5 +48,7 @@ __tls_get_addr (tls_index *ti)
 
 /* Prepare using the definition of __tls_get_addr in the generic
    version of this file.  */
-#define __tls_get_addr __attribute__ ((__regparm__ (1))) ___tls_get_addr
+# define __tls_get_addr __attribute__ ((__regparm__ (1))) ___tls_get_addr
 strong_alias (___tls_get_addr, ___tls_get_addr_internal)
+# define __TLS_GET_ADDR ___tls_get_addr
+#endif

@@ -5,13 +5,16 @@
 #include "tls-macros.h"
 
 
+#ifdef USE_TLS
 /* Two 'int' variables in TLS.  */
 VAR_INT_DEF(foo);
 VAR_INT_DEF(bar);
+#endif
 
 
-int
-main (void)
+#define TEST_FUNCTION do_test ()
+static int
+do_test (void)
 {
 #ifdef USE_TLS
   int result = 0;
@@ -82,3 +85,6 @@ main (void)
   return 0;
 #endif
 }
+
+
+#include "../test-skeleton.c"

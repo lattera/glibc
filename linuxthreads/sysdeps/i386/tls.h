@@ -67,9 +67,15 @@ typedef struct
 # define TLS_TCB_AT_TP	1
 
 
-/* Install the dtv pointer.  */
+/* Install the dtv pointer.  The pointer passed is to the element with
+   index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) descr)->dtv = dtvp
+  ((tcbhead_t *) descr)->dtv = dtvp + 1
+
+/* Install new dtv for current thread.  */
+# define INSTALL_NEW_DTV(dtv) \
+  ({ struct _pthread_descr_struct *__descr;				      \
+     THREAD_SETMEM (__descr, p_header.data.dtvp, dtv); })
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the

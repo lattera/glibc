@@ -223,7 +223,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
   ElfW(Ehdr) *ehdr;
   ElfW(Phdr) *phdr;
   size_t cnt;
-  dtv_t initdtv[2];
+  dtv_t initdtv[3];
 #endif
 
   if (HP_TIMING_AVAIL)
@@ -291,16 +291,18 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 	tlsblock = (void *) (((uintptr_t) tlsblock + max_align - 1)
 			     & ~(max_align - 1));
 
-	/* Initialize the dtv.  */
+	/* Initialize the dtv.  [0] is the length, [1] the generation
+	   counter.  */
 	initdtv[0].counter = 1;
+	initdtv[1].counter = 0;
 
 	/* Initialize the TLS block.  */
 # if TLS_TCB_AT_TP
-	initdtv[1].pointer = tlsblock;
+	initdtv[2].pointer = tlsblock;
 # elif TLS_DTV_AT_TP
 	GL(dl_rtld_map).l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
 						GL(dl_rtld_map).l_tls_align);
-	initdtv[1].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
+	initdtv[2].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
@@ -723,22 +725,20 @@ of this helper program; chances are you did not intend to run this program.\n\
 	break;
 #ifdef USE_TLS
       case PT_TLS:
-	/* Note that in the case the dynamic linker we duplicate work
-	   here since we read the PT_TLS entry already in
-	   _dl_start_final.  But the result is repeatable so do not
-	   check for this special but unimportant case.  */
-	GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
-	GL(dl_loaded)->l_tls_align = ph->p_align;
-	GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
-	GL(dl_loaded)->l_tls_initimage = (void *) ph->p_vaddr;
-	/* This is the first element of the initialization image list.
-	   We create the list as circular since we have to append at
-	   the end.  */
-	GL(dl_initimage_list) = GL(dl_loaded)->l_tls_nextimage
-	  = GL(dl_loaded)->l_tls_previmage = GL(dl_loaded);
+	if (ph->p_memsz > 0)
+	  {
+	    /* Note that in the case the dynamic linker we duplicate work
+	       here since we read the PT_TLS entry already in
+	       _dl_start_final.  But the result is repeatable so do not
+	       check for this special but unimportant case.  */
+	    GL(dl_loaded)->l_tls_blocksize = ph->p_memsz;
+	    GL(dl_loaded)->l_tls_align = ph->p_align;
+	    GL(dl_loaded)->l_tls_initimage_size = ph->p_filesz;
+	    GL(dl_loaded)->l_tls_initimage = (void *) ph->p_vaddr;
 
-	/* This image gets the ID one.  */
-	GL(dl_tls_max_dtv_idx) = GL(dl_loaded)->l_tls_modid = 1;
+	    /* This image gets the ID one.  */
+	    GL(dl_tls_max_dtv_idx) = GL(dl_loaded)->l_tls_modid = 1;
+	  }
 	break;
 #endif
       }
@@ -1188,43 +1188,66 @@ of this helper program; chances are you did not intend to run this program.\n\
      use the static model.  First add the dynamic linker to the list
      if it also uses TLS.  */
   if (GL(dl_rtld_map).l_tls_blocksize != 0)
+    /* Assign a module ID.  */
+    GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+
+# ifndef SHARED
+  /* If dynamic loading of modules with TLS is impossible we do not
+     have to initialize any of the TLS functionality unless any of the
+     initial modules uses TLS.  */
+  if (GL(dl_tls_max_dtv_idx) > 0)
+# endif
     {
-      /* At to the list.  */
-      if (GL(dl_initimage_list) == NULL)
-	GL(dl_initimage_list) = GL(dl_rtld_map).l_tls_nextimage
-	  = GL(dl_rtld_map).l_tls_previmage = &GL(dl_rtld_map);
-	  else
-	    {
-	      GL(dl_rtld_map).l_tls_nextimage
-		= GL(dl_initimage_list)->l_tls_nextimage;
-	      GL(dl_rtld_map).l_tls_nextimage->l_tls_previmage
-		= &GL(dl_rtld_map);
-	      GL(dl_rtld_map).l_tls_previmage = GL(dl_initimage_list);
-	      GL(dl_rtld_map).l_tls_previmage->l_tls_nextimage
-		= &GL(dl_rtld_map);
-	      GL(dl_initimage_list) = &GL(dl_rtld_map);
-	    }
+      struct link_map *l;
+      size_t nelem;
+      struct dtv_slotinfo *slotinfo;
 
-      /* Assign a module ID.  */
-      GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+      /* Number of elements in the static TLS block.  */
+      GL(dl_tls_static_nelem) = GL(dl_tls_max_dtv_idx);
+
+      /* Allocate the array which contains the information about the
+	 dtv slots.  We allocate a few entries more than needed to
+	 avoid the need for reallocation.  */
+      nelem = GL(dl_tls_max_dtv_idx) + 1 + TLS_SLOTINFO_SURPLUS;
+
+      /* Allocate.  */
+      GL(dl_tls_dtv_slotinfo_list) = (struct dtv_slotinfo_list *)
+	malloc (sizeof (struct dtv_slotinfo_list)
+		+ nelem * sizeof (struct dtv_slotinfo));
+      /* No need to check the return value.  If memory allocation failed
+	 the program would have been terminated.  */
+
+      slotinfo = memset (GL(dl_tls_dtv_slotinfo_list)->slotinfo, '\0',
+			 nelem * sizeof (struct dtv_slotinfo));
+      GL(dl_tls_dtv_slotinfo_list)->len = nelem;
+      GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+
+      /* Fill in the information from the loaded modules.  */
+      for (l = GL(dl_loaded), i = 0; l != NULL; l = l->l_next)
+	if (l->l_tls_blocksize != 0)
+	  /* This is a module with TLS data.  Store the map reference.
+	     The generation counter is zero.  */
+	  slotinfo[++i].map = l;
+      assert (i == GL(dl_tls_max_dtv_idx));
+
+      /* Computer the TLS offsets for the various blocks.  We call this
+	 function even if none of the modules available at startup time
+	 uses TLS to initialize some variables.  */
+      _dl_determine_tlsoffset ();
+
+      /* Construct the static TLS block and the dtv for the initial
+	 thread.  For some platforms this will include allocating memory
+	 for the thread descriptor.  The memory for the TLS block will
+	 never be freed.  It should be allocated accordingly.  The dtv
+	 array can be changed if dynamic loading requires it.  */
+      tcbp = _dl_allocate_tls ();
+      if (tcbp == NULL)
+	_dl_fatal_printf ("\
+cannot allocate TLS data structures for inital thread");
+
+      /* And finally install it for the main thread.  */
+      TLS_INIT_TP (tcbp);
     }
-
-  /* Computer the TLS offsets for the various blocks.  We call this
-     function even if none of the modules available at startup time
-     uses TLS to initialize some variables.  */
-    _dl_determine_tlsoffset (GL(dl_initimage_list));
-
-  /* Construct the static TLS block and the dtv for the initial
-     thread.  For some platforms this will include allocating memory
-     for the thread descriptor.  The memory for the TLS block will
-     never be freed.  It should be allocated accordingly.  The dtv
-     array can be changed if dynamic loading requires it.  */
-  tcbp = _dl_allocate_tls ();
-  if (tcbp == NULL)
-    _dl_fatal_printf ("cannot allocate TLS data structures for inital thread");
-
-  /* And finally install it for the main thread.  */
-  TLS_INIT_TP (tcbp);
 #endif
 
   if (GL(dl_loaded)->l_info [ADDRIDX (DT_GNU_LIBLIST)]

@@ -1,7 +1,63 @@
+2002-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (TLS_DTV_UNALLOCATED): Renamed from
+	TLS_DTV_UNALLOCATE.
+	(oom): New function.
+	(_dl_next_tls_modid): Rewrite to handle dl_tls_dtv_slotinfo_list.
+	(_dl_determine_tlsoffset): Likewise.
+	(_dl_allocate_tls): Likewise.
+	(__TLS_GET_ADDR): Define if not already defined.
+	(_dl_tls_symaddr): New function.
+	(allocate_and_init): New function.
+	(__tls_get_addr): Actually implement handling of generation counter
+	and deferred allocation.
+	* sysdeps/generic/ldsodefs.h (_rtld_global): Remove _dl_initimage_list,
+	add _dl_tls_dtv_slotinfo_list, _dl_tls_static_nelem, and
+	_dl_tls_generation.
+	Define TLS_SLOTINFO_SURPLUS and DTV_SURPLUS.
+	Declare _dl_tls_symaddr.
+	* sysdeps/i386/dl-tls.h: Disable __tls_get_addr handling unless
+	SHARED.
+	* include/link.h (struct link_map):  Remove l_tls_nextimage and
+	l_tls_previmage.
+	* elf/dl-sym.c (_dl_sym): After successful lookup call _dl_tls_symaddr
+	instead of DL_SYMBOL_ADDRESS for STT_TLS symbols.
+	(_dl_vsym): Likewise.
+	* elf/rtld.c (_dl_start_final): Adjust initdtv initialization for new
+	layout.
+	(dl_main): Allow PT_TLS be present for empty segment.  Remove
+	nextimage list handling.  Instead add all modules using TLS to
+	dl_tls_dtv_slotinfo_list.
+	* elf/dl-open.c (dl_open_worker): After successfully loading all
+	objects add those with TLS to the dl_tls_dtv_slotinfo_list list.
+	* elf/dl-load.c (_dl_map_object_from_fd): If PT_TLS entry is for an
+	empty segment don't do anything.  Remove handling of initimage list.
+	* elf/Versions [ld] (GLIBC_2.0): Add __libc_memalign.
+	(GLIBC_PRIVATE): Add _dl_tls_symaddr.
+	* elf/dl-minimal.c: Define __libc_memalign.
+	* elf/dl-support.c: Remove _dl_initimage_list.  Add
+	_dl_tls_dtv_slotinfo_list, _dl_tls_static_nelem, and
+	_dl_tls_generation.
+	* include/stdlib.h: Declare __libc_memalign.
+
+	* elf/Makefile: Add rules to build and run tst-tls4 and tst-tls5.
+	* elf/tst-tls4.c: New file.
+	* elf/tst-tls5.c: New file.
+	* elf/tst-tlsmod2.c: New file.
+
+	* elf/tls-macros.h: asms using ___tls_get_addr destroy %ecx and %edx.
+
+	* elf/tst-tlsmod1.c: Don't define variables unles USE_TLS.
+
+	* elf/tst-tls1.c: Use test-skeleton.c.
+	* elf/tst-tls2.c: Likewise.
+	* elf/tst-tls3.c: Likewise.
+
+	* elf/dl-conflict.c (RESOLVE_MAP): Return NULL not 0.
+
 2002-02-08  Daniel Jacobowitz  <drow@mvista.com>
 
-	* sysdeps/mips/machine-gmon.h: Update MCOUNT for current GCC
-	behavior.
+	* sysdeps/mips/machine-gmon.h: Update MCOUNT for current GCC behavior.
 
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 

@@ -259,10 +259,6 @@ struct link_map
 #ifdef USE_TLS
     /* Thread-local storage related info.  */
 
-    /* Next module in list of initialization images.  */
-    struct link_map *l_tls_nextimage;
-    /* Previous module in list of initialization images.  */
-    struct link_map *l_tls_previmage;
     /* Start of the initialization image.  */
     void *l_tls_initimage;
     /* Size of the initialization image.  */

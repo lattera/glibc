@@ -83,7 +83,16 @@ RTLD_NEXT used in code not dynamically loaded"));
     }
 
   if (ref != NULL)
-    return DL_SYMBOL_ADDRESS (result, ref);
+    {
+#if defined USE_TLS && defined SHARED
+      if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
+	/* The found symbol is a thread-local storage variable.
+	   Return the address for to the current thread.  */
+	return _dl_tls_symaddr (result, ref);
+#endif
+
+      return DL_SYMBOL_ADDRESS (result, ref);
+    }
 
   return NULL;
 }
@@ -152,7 +161,16 @@ RTLD_NEXT used in code not dynamically loaded"));
     }
 
   if (ref != NULL)
-    return DL_SYMBOL_ADDRESS (result, ref);
+    {
+#if defined USE_TLS && defined SHARED
+      if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
+	/* The found symbol is a thread-local storage variable.
+	   Return the address for to the current thread.  */
+	return _dl_tls_symaddr (result, ref);
+#endif
+
+      return DL_SYMBOL_ADDRESS (result, ref);
+    }
 
   return NULL;
 }

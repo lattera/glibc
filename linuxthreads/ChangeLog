@@ -1,8 +1,13 @@
+2002-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/tls.c (INSTALL_NEW_DTV): Define.
+	(INSTALL_DTV): Adjust for being passed pointer to element with length.
+
 2002-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/tls.h (TLS_INIT_TP): Also initialize %gs.
 
-2002-02-08  Richard Henderson  <rth@twiddle.net>
+2002-02-08  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/elf/pt-initfini.c: Use \n\ for multiline string.
 

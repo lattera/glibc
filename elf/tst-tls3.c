@@ -5,17 +5,20 @@
 #include "tls-macros.h"
 
 
+#ifdef USE_TLS
 /* One define int variable, two externs.  */
 COMMON_INT_DECL(foo);
 VAR_INT_DECL(bar);
 VAR_INT_DEF(baz);
+#endif
 
 
 extern int in_dso (void);
 
 
-int
-main (void)
+#define TEST_FUNCTION do_test ()
+static int
+do_test (void)
 {
 #ifdef USE_TLS
   int result = 0;
@@ -67,3 +70,6 @@ main (void)
   return 0;
 #endif
 }
+
+
+#include "../test-skeleton.c"
