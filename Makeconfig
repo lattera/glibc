@@ -33,3 +33,9 @@ $(..)ports/sysdeps/%/preconfigure: $(..)ports/sysdeps/%/preconfigure.in \
 	$(autoconf-it)
 
 endif # $(AUTOCONF) = no
+
+# This allows e.g. `make ports/dist' from a build directory.
+ifndef subdir
+ports/%:
+	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+endif
