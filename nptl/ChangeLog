@@ -4,6 +4,11 @@
 
 2003-03-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/tcb-offsets.sym: Add CLEANUP and CLEANUP_PREV.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Inline
+	__pthread_cleanup_pop functionality.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+
 	* descr.h (struct pthread): Move tid field to the front now that
 	it is often used.
 

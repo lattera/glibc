@@ -197,10 +197,8 @@ __pthread_cond_timedwait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	leal	28(%esp), %edx
-	movl	$0, 4(%esp)
-	movl	%edx, (%esp)
-	call	__pthread_cleanup_pop
+11:	movl	20+CLEANUP_PREV(%esp), %edx
+	movl	%edx, %gs:CLEANUP
 
 	/* Trick ahead:	 8(%esp) contains the address of the mutex.  */
 	addl	$8, %esp
