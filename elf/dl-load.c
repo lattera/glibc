@@ -1604,7 +1604,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      if (l && __builtin_expect (l->l_flags_1 & DF_1_NODEFLIB, 0))
 		{
 		  const char *dirp = system_dirs;
-		  int cnt = 0;
+		  unsigned int cnt = 0;
 
 		  do
 		    {

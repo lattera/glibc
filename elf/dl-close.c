@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -182,7 +182,7 @@ _dl_close (void *_map)
 	  if (__builtin_expect (imap->l_global, 0))
 	    {
 	      /* This object is in the global scope list.  Remove it.  */
-	      int cnt = _dl_main_searchlist->r_nlist;
+	      unsigned int cnt = _dl_main_searchlist->r_nlist;
 
 	      do
 		--cnt;

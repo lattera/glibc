@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1996-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993, 1996-2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This library is free software; you can redistribute it and/or
@@ -438,7 +438,7 @@ FCT (pattern, string, no_leading_period, flags)
 			    const int32_t *symb_table;
 # ifdef WIDE_CHAR_VERSION
 			    char str[c1];
-			    int strcnt;
+			    unsigned int strcnt;
 # else
 #  define str (startp + 1)
 # endif
@@ -643,7 +643,7 @@ FCT (pattern, string, no_leading_period, flags)
 				const int32_t *symb_table;
 # ifdef WIDE_CHAR_VERSION
 				char str[c1];
-				int strcnt;
+				unsigned int strcnt;
 # else
 #  define str (startp + 1)
 # endif

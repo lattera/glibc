@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -382,7 +382,7 @@ do_parse_glob (const char *glob_word, char **word, size_t *word_length,
 	       const char *ifs_white)
 {
   int error;
-  int match;
+  unsigned int match;
   glob_t globbuf;
 
   error = glob (glob_word, GLOB_NOCHECK, NULL, &globbuf);

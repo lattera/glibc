@@ -462,7 +462,7 @@ process_fd (iconv_t cd, int fd, FILE *output)
 
   while (actlen < maxlen)
     {
-      size_t n = read (fd, inptr, maxlen - actlen);
+      ssize_t n = read (fd, inptr, maxlen - actlen);
 
       if (n == 0)
 	/* No more text to read.  */
@@ -482,7 +482,7 @@ process_fd (iconv_t cd, int fd, FILE *output)
   if (actlen == maxlen)
     while (1)
       {
-	size_t n;
+	ssize_t n;
 
 	/* Increase the buffer.  */
 	maxlen += 32768;
