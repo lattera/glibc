@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -56,10 +56,10 @@ static-only-routines = atexit
 
 distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh
 test-srcs	:= tst-fmtmsg
-tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
-		   test-canon test-canon2 tst-strtoll tst-environ	  \
-		   tst-xpg-basename tst-random tst-bsearch tst-limits	  \
-		   tst-rand48 bug-strtod tst-setcontext test-a64l
+tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv  \
+		   test-canon test-canon2 tst-strtoll tst-environ	   \
+		   tst-xpg-basename tst-random tst-bsearch tst-limits	   \
+		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort
 
 
 # Several mpn functions from GNU MP are used by the strtod function.

@@ -1,5 +1,8 @@
 2002-01-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/Makefile (tests): Add tst-qsort.
+	* stdlib/tst-qsort.c: New file.  Written by Paul Eggert.
+
 	* manual/signal.texi (Process Signal Mask): Document that
 	pthread_sigmask, not sigprocmask, must be used in MT programs.
 	Patch by Bertold Kolics <Bertold.Kolics@Sun.COM>.
