@@ -1,3 +1,14 @@
+2004-07-07  Roland McGrath  <roland@frob.com>
+
+	* Makefile (dist-separate): New variable.
+	(glibc-%.tar rule): Make separate tar files for add-ons listed there.
+	Depend on their configure files.
+	(dist-do-separate-dirs): New canned sequence to do that.
+	(dist-separate-libidn, dist-separate-linuxthreads): New variables.
+	(dist): Depend on add-on tar files based on $(dist-separate).
+	(dist-version): New variable, default to $(version).
+	(tag-for-dist, dist): Use that in place of $(version) in deps.
+
 2004-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-fini.c (_dl_fini): Move the unlock of the ld.so lock
