@@ -87,6 +87,7 @@ enum __socket_type
 #define	PF_SNA		22	/* Linux SNA Project */
 #define	PF_IRDA		23	/* IRDA sockets.  */
 #define	PF_PPPOX	24	/* PPPoX sockets.  */
+#define	PF_WANPIPE	25	/* Wanpipe API sockets.  */
 #define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
@@ -117,6 +118,7 @@ enum __socket_type
 #define	AF_SNA		PF_SNA
 #define	AF_IRDA		PF_IRDA
 #define	AF_PPPOX	PF_PPPOX
+#define	AF_WANPIPE	PF_WANPIPE
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -199,8 +201,10 @@ enum
 #define	MSG_RST		MSG_RST
     MSG_ERRQUEUE	= 0x2000, /* Fetch message from error queue.  */
 #define	MSG_ERRQUEUE	MSG_ERRQUEUE
-    MSG_NOSIGNAL	= 0x4000  /* Do not generate SIGPIPE.  */
+    MSG_NOSIGNAL	= 0x4000, /* Do not generate SIGPIPE.  */
 #define	MSG_NOSIGNAL	MSG_NOSIGNAL
+    MSG_MORE		= 0x8000  /* Sender will send more.  */
+#define	MSG_MORE	MSG_MORE
   };
 
 
