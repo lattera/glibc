@@ -32,9 +32,9 @@ ENTRY (sethostid)
 	sethi %hi(___errno), %g1
 	st %o0, [%g1 + %lo(___errno)]
 	retl
-	sub 0, 1, %o0
+	sub %g0, 1, %o0
 
-#ifdef	__GNU_STAB__
+#ifdef	HAVE_GNU_LD
 
 .stabs "warning: sethostid is not implemented and will always fail",30,0,0,0
 .stabs "_sethostid",1,0,0,0
