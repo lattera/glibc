@@ -189,7 +189,7 @@ __hash_open(file, flags, mode, info, dflags)
 		__buf_init(hashp, DEF_BUFSIZE);
 
 	hashp->new_file = new_table;
-	hashp->save_file = file && (hashp->flags & O_RDWR);
+	hashp->save_file = file && (hashp->flags & O_ACCMODE) != O_RDONLY;
 	hashp->cbucket = -1;
 	if (!(dbp = (DB *)malloc(sizeof(DB)))) {
 		save_errno = errno;
