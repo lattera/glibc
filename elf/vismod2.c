@@ -80,28 +80,28 @@ int
 const char *protvarlocal = __FILE__;
 asm (".protected protvarlocal");
 
-const char *
+const char **
 getvarlocal2 (void)
 {
-  return protvarlocal;
+  return &protvarlocal;
 }
 
 const char *protvarinmod = __FILE__;
 asm (".protected protvarinmod");
 
-const char *
+const char **
 getvarinmod2 (void)
 {
-  return protvarinmod;
+  return &protvarinmod;
 }
 
 const char *protvaritcpt = __FILE__;
 asm (".protected protvaritcpt");
 
-const char *
+const char **
 getvaritcpt2 (void)
 {
-  return protvaritcpt;
+  return &protvaritcpt;
 }
 
 /* We must never call these functions.  */
@@ -117,7 +117,7 @@ int
   abort ();
 }
 
-const char *
+const char **
 getvaritcpt3 (void)
 {
   abort ();

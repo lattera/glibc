@@ -40,8 +40,8 @@ int
 const char *protvaritcpt = __FILE__;
 asm (".protected protvaritcpt");
 
-const char *
+const char **
 getvaritcpt3 (void)
 {
-  return protvaritcpt;
+  return &protvaritcpt;
 }

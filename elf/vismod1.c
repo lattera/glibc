@@ -79,26 +79,26 @@ int
 const char *protvarlocal = __FILE__;
 asm (".protected protvarlocal");
 
-const char *
+const char **
 getvarlocal1 (void)
 {
-  return protvarlocal;
+  return &protvarlocal;
 }
 
 const char *protvarinmod = __FILE__;
 asm (".protected protvarinmod");
 
-const char *
+const char **
 getvarinmod1 (void)
 {
-  return protvarinmod;
+  return &protvarinmod;
 }
 
 const char *protvaritcpt = __FILE__;
 asm (".protected protvaritcpt");
 
-const char *
+const char **
 getvaritcpt1 (void)
 {
-  return protvaritcpt;
+  return &protvaritcpt;
 }
