@@ -156,13 +156,13 @@ typedef struct
 # define THREAD_GETMEM(descr, member) \
   ({ __typeof (descr->member) __value;					      \
      if (sizeof (__value) == 1)						      \
-       asm ("movb %%fs:%P2,%b0"						      \
-	    : "=q" (__value)						      \
-	    : "0" (0), "i" (offsetof (struct pthread, member)));	      \
+       asm volatile ("movb %%fs:%P2,%b0"				      \
+		     : "=q" (__value)					      \
+		     : "0" (0), "i" (offsetof (struct pthread, member)));     \
      else if (sizeof (__value) == 4)					      \
-       asm ("movl %%fs:%P1,%0"						      \
-	    : "=r" (__value)						      \
-	    : "i" (offsetof (struct pthread, member)));			      \
+       asm volatile ("movl %%fs:%P1,%0"					      \
+		     : "=r" (__value)					      \
+		     : "i" (offsetof (struct pthread, member)));	      \
      else								      \
        {								      \
 	 if (sizeof (__value) != 8)					      \
@@ -170,9 +170,9 @@ typedef struct
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm ("movq %%fs:%P1,%q0"					      \
-	      : "=r" (__value)						      \
-	      : "i" (offsetof (struct pthread, member)));		      \
+	 asm volatile ("movq %%fs:%P1,%q0"				      \
+		       : "=r" (__value)					      \
+		       : "i" (offsetof (struct pthread, member)));	      \
        }								      \
      __value; })
 
@@ -181,14 +181,14 @@ typedef struct
 # define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      if (sizeof (__value) == 1)						      \
-       asm ("movb %%fs:%P2(%q3),%b0"					      \
-	    : "=q" (__value)						      \
-	    : "0" (0), "i" (offsetof (struct pthread, member[0])),	      \
-	      "r" (idx));						      \
+       asm volatile ("movb %%fs:%P2(%q3),%b0"				      \
+		     : "=q" (__value)					      \
+		     : "0" (0), "i" (offsetof (struct pthread, member[0])),   \
+		       "r" (idx));					      \
      else if (sizeof (__value) == 4)					      \
-       asm ("movl %%fs:%P1(,%q2,4),%0"					      \
-	    : "=r" (__value)						      \
-	    : "i" (offsetof (struct pthread, member[0])), "r" (idx));	      \
+       asm volatile ("movl %%fs:%P1(,%q2,4),%0"				      \
+		     : "=r" (__value)					      \
+		     : "i" (offsetof (struct pthread, member[0])), "r" (idx));\
      else								      \
        {								      \
 	 if (sizeof (__value) != 8)					      \
@@ -196,9 +196,10 @@ typedef struct
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm ("movq %%fs:%P1(,%q2,8),%q0"				      \
-	      : "=r" (__value)						      \
-	      : "i" (offsetof (struct pthread, member[0])), "r" (idx));	      \
+	 asm volatile ("movq %%fs:%P1(,%q2,8),%q0"			      \
+		       : "=r" (__value)					      \
+		       : "i" (offsetof (struct pthread, member[0])),	      \
+			 "r" (idx));					      \
        }								      \
      __value; })
 
