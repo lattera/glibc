@@ -1,7 +1,7 @@
 2002-01-14  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-	* linuxthreads/Makefile (CFLAGS-tst-cancel.c): Add
-	-fno-inline-functions to prevent automatic inline.
+	* Makefile (CFLAGS-tst-cancel.c): Add -fno-inline-functions to prevent
+	automatic inline.
 
 2002-01-12  Andreas Schwab  <schwab@suse.de>
 
