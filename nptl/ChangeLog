@@ -1,3 +1,7 @@
+2004-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* nptl/sysdeps/i386/tcb-offsets.sym: Add PID.
+
 2004-03-08  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/Versions: Remove leading tabs.
