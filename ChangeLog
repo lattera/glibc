@@ -1,5 +1,7 @@
 2001-01-15  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: Fix typo.
+
 	* stdio-common/tstscanf.c (main): Add two testcases for '*'
 	modifier.
 
