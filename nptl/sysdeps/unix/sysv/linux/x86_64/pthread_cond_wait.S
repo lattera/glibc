@@ -342,7 +342,8 @@ versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 	.byte	0x40+.Lsubq-.Lpush_r12		# DW_CFA_advance_loc+N
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 80
-	.byte	0x40+.Laddq-.Lsubq		# DW_CFA_advance_loc+N
+	.byte	2				# DW_CFA_advance_loc1
+	.byte	.Laddq-.Lsubq
 	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
 	.byte	0x40+.Lpop_r12-.Laddq		# DW_CFA_advance_loc+N
