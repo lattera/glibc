@@ -314,10 +314,6 @@ extern char* getenv();
 # endif
 #endif
 
-#ifndef _LIBC
-# define __secure_getenv(Str) getenv (Str)
-#endif
-
 /* Macros for handling mutexes and thread-specific data.  This is
    included early, because some thread-related header files (such as
    pthread.h) should be included before any others. */
@@ -1680,6 +1676,7 @@ ptmalloc_init __MALLOC_P((void))
   char* s;
 # endif
 #endif
+  int secure;
 
   if(__malloc_initialized >= 0) return;
   __malloc_initialized = 0;
@@ -1708,20 +1705,24 @@ ptmalloc_init __MALLOC_P((void))
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
   thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_init_all);
 #if defined _LIBC || defined MALLOC_HOOKS
-  if((s = __secure_getenv("MALLOC_TRIM_THRESHOLD_")))
-    mALLOPt(M_TRIM_THRESHOLD, atoi(s));
-  if((s = __secure_getenv("MALLOC_TOP_PAD_")))
-    mALLOPt(M_TOP_PAD, atoi(s));
-  if((s = __secure_getenv("MALLOC_MMAP_THRESHOLD_")))
-    mALLOPt(M_MMAP_THRESHOLD, atoi(s));
-  if((s = __secure_getenv("MALLOC_MMAP_MAX_")))
-    mALLOPt(M_MMAP_MAX, atoi(s));
-  s = getenv("MALLOC_CHECK_");
 #ifndef NO_THREADS
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
 #endif
-  if(s && (! __libc_enable_secure || access ("/etc/suid-debug", F_OK) == 0)) {
+  secure = __libc_enable_secure;
+  if (! secure)
+    {
+      if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
+	mALLOPt(M_TRIM_THRESHOLD, atoi(s));
+      if((s = getenv("MALLOC_TOP_PAD_")))
+	mALLOPt(M_TOP_PAD, atoi(s));
+      if((s = getenv("MALLOC_MMAP_THRESHOLD_")))
+	mALLOPt(M_MMAP_THRESHOLD, atoi(s));
+      if((s = getenv("MALLOC_MMAP_MAX_")))
+	mALLOPt(M_MMAP_MAX, atoi(s));
+    }
+  s = getenv("MALLOC_CHECK_");
+  if(s && (! secure || access ("/etc/suid-debug", F_OK) == 0)) {
     if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     __malloc_check_init();
   }
