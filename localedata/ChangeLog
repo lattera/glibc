@@ -1,3 +1,8 @@
+1998-12-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/ISO-8859-14: New file.
+	* charmaps/ISO-8859-15: New file.
+
 1998-12-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* SUPPORTED: Add en_AU.
