@@ -47,7 +47,7 @@
 	* sysdeps/libm-ieee754/w_jnf.c: Likewise.
 	* sysdeps/libm-ieee754/w_jnl.c: Likewise.
 
-	* stdio-common.c: Correct typos.
+	* stdio-common/vfprintf.c: Correct typos.
 
 	* math/libm-test.c (jn_test): Adjust delta.
 	(y1_test): Likewise.
