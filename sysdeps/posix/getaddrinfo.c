@@ -37,6 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <assert.h>
 #include <errno.h>
+#include <ifaddrs.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <stdio.h>
@@ -111,12 +112,17 @@ struct gaih
 		const struct addrinfo *req, struct addrinfo **pai);
   };
 
-#if PF_UNSPEC == 0
-static const struct addrinfo default_hints;
-#else
 static const struct addrinfo default_hints =
-	{ 0, PF_UNSPEC, 0, 0, 0, NULL, NULL, NULL };
-#endif
+  {
+    .ai_flags = AI_DEFAULT,
+    .ai_family = PF_UNSPEC,
+    .ai_socktype = 0,
+    .ai_protocol = 0,
+    .ai_addrlen = 0,
+    .ai_addr = NULL,
+    .ai_canonname = NULL,
+    .ai_next = NULL
+  };
 
 
 #if 0
@@ -265,93 +271,137 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   return 0;
 }
 
-#define gethosts(_family, _type)				\
- {								\
-  int i, herrno;						\
-  size_t tmpbuflen;						\
-  struct hostent th;						\
-  char *tmpbuf = NULL;						\
-  tmpbuflen = 512;						\
-  no_data = 0;							\
-  do {								\
-    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);	\
-    rc = __gethostbyname2_r (name, _family, &th, tmpbuf,	\
-         tmpbuflen, &h, &herrno);				\
-  } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
-  if (rc != 0)							\
-    {								\
-      if (herrno == NETDB_INTERNAL)				\
-	{							\
-	  __set_h_errno (herrno);				\
-	  return -EAI_SYSTEM;					\
-	}							\
-      if (herrno == TRY_AGAIN)					\
-	no_data = EAI_AGAIN;					\
-      else							\
-	no_data = herrno == NO_DATA;				\
-    }								\
-  else if (h != NULL)						\
-    {								\
-      for (i = 0; h->h_addr_list[i]; i++)			\
-	{							\
-	  if (*pat == NULL) {					\
-	    *pat = __alloca (sizeof (struct gaih_addrtuple));	\
-	    (*pat)->scopeid = 0;				\
-	  }							\
-	  (*pat)->next = NULL;					\
-	  (*pat)->family = _family;				\
-	  memcpy ((*pat)->addr, h->h_addr_list[i],		\
-		 sizeof(_type));				\
-	  pat = &((*pat)->next);				\
-	}							\
-    }								\
+#define gethosts(_family, _type) \
+ {									      \
+  int i, herrno;							      \
+  size_t tmpbuflen;							      \
+  struct hostent th;							      \
+  char *tmpbuf = NULL;							      \
+  tmpbuflen = 512;							      \
+  no_data = 0;								      \
+  do {									      \
+    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
+    rc = __gethostbyname2_r (name, _family, &th, tmpbuf,		      \
+         tmpbuflen, &h, &herrno);					      \
+  } while (rc == ERANGE && herrno == NETDB_INTERNAL);			      \
+  if (rc != 0)								      \
+    {									      \
+      if (herrno == NETDB_INTERNAL)					      \
+	{								      \
+	  __set_h_errno (herrno);					      \
+	  return -EAI_SYSTEM;						      \
+	}								      \
+      if (herrno == TRY_AGAIN)						      \
+	no_data = EAI_AGAIN;						      \
+      else								      \
+	no_data = herrno == NO_DATA;					      \
+    }									      \
+  else if (h != NULL)							      \
+    {									      \
+      for (i = 0; h->h_addr_list[i]; i++)				      \
+	{								      \
+	  if (*pat == NULL) {						      \
+	    *pat = __alloca (sizeof (struct gaih_addrtuple));		      \
+	    (*pat)->scopeid = 0;					      \
+	  }								      \
+	  (*pat)->next = NULL;						      \
+	  (*pat)->family = _family;					      \
+	  memcpy ((*pat)->addr, h->h_addr_list[i],			      \
+		 sizeof(_type));					      \
+	  pat = &((*pat)->next);					      \
+	}								      \
+      if (_family == AF_INET6)						      \
+	got_ipv6 = true;						      \
+    }									      \
+  else if (_family == AF_INET6 && (req->ai_flags & AI_V4MAPPED))	      \
+    {									      \
+      /* We have to add V4 mapped addresses.  Maybe we discard them	      \
+         later again but we get them anyhow for now.  */		      \
+      while ((rc = __gethostbyname2_r (name, AF_INET6, &th, tmpbuf,	      \
+				       tmpbuflen, &h, &herrno)) == ERANGE     \
+	     && herrno == NETDB_INTERNAL)				      \
+	tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);	      \
+									      \
+      if (rc != 0)							      \
+	{								      \
+	  if (herrno == NETDB_INTERNAL)					      \
+	    {								      \
+	      __set_h_errno (herrno);					      \
+	      return -EAI_SYSTEM;					      \
+	    }								      \
+	  if (herrno == TRY_AGAIN)					      \
+	    no_data = EAI_AGAIN;					      \
+	  else								      \
+	    no_data = herrno == NO_DATA;				      \
+	}								      \
+      else if (h != NULL)						      \
+	{								      \
+	  for (i = 0; h->h_addr_list[i]; ++i)				      \
+	    {								      \
+	      if (*pat == NULL)						      \
+		{							      \
+		  *pat = __alloca (sizeof (struct gaih_addrtuple));	      \
+		  (*pat)->scopeid = 0;					      \
+		}							      \
+	      uint32_t *addr = (uint32_t *) (*pat)->addr;		      \
+	      (*pat)->next = NULL;					      \
+	      (*pat)->family = _family;					      \
+	      addr[3] = *(uint32_t *) h->h_addr_list[i];		      \
+	      addr[2] = htonl (0xffff);					      \
+	      addr[1] = 0;						      \
+	      addr[0] = 0;						      \
+	      pat = &((*pat)->next);					      \
+	    }								      \
+	}								      \
+    }									      \
  }
 
-#define gethosts2(_family, _type)				\
- {								\
-  int i, herrno;						\
-  size_t tmpbuflen;						\
-  struct hostent th;						\
-  char *tmpbuf = NULL;						\
-  tmpbuflen = 512;						\
-  no_data = 0;							\
-  do {								\
-    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);	\
-    rc = 0;							\
-    status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,	\
-           tmpbuflen, &rc, &herrno));			        \
-  } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
-  if (status == NSS_STATUS_SUCCESS && rc == 0)			\
-    h = &th;							\
-  else								\
-    h = NULL;							\
-  if (rc != 0)							\
-    {								\
-      if (herrno == NETDB_INTERNAL)				\
-	{							\
-	  __set_h_errno (herrno);				\
-	  return -EAI_SYSTEM;					\
-	}							\
-      if (herrno == TRY_AGAIN)					\
-	no_data = EAI_AGAIN;					\
-      else							\
-	no_data = herrno == NO_DATA;				\
-    }								\
-  else if (h != NULL)						\
-    {								\
-      for (i = 0; h->h_addr_list[i]; i++)			\
-	{							\
-	  if (*pat == NULL) {					\
-	    *pat = __alloca (sizeof (struct gaih_addrtuple));	\
-	    (*pat)->scopeid = 0;				\
-	  }							\
-	  (*pat)->next = NULL;					\
-	  (*pat)->family = _family;				\
-	  memcpy ((*pat)->addr, h->h_addr_list[i],		\
-		 sizeof(_type));				\
-	  pat = &((*pat)->next);				\
-	}							\
-    }								\
+
+#define gethosts2(_family, _type) \
+ {									      \
+  int i, herrno;							      \
+  size_t tmpbuflen;							      \
+  struct hostent th;							      \
+  char *tmpbuf = NULL;							      \
+  tmpbuflen = 512;							      \
+  no_data = 0;								      \
+  do {									      \
+    tmpbuf = extend_alloca (tmpbuf, tmpbuflen, 2 * tmpbuflen);		      \
+    rc = 0;								      \
+    status = DL_CALL_FCT (fct, (name, _family, &th, tmpbuf,		      \
+           tmpbuflen, &rc, &herrno));					      \
+  } while (rc == ERANGE && herrno == NETDB_INTERNAL);			      \
+  if (status == NSS_STATUS_SUCCESS && rc == 0)				      \
+    h = &th;								      \
+  else									      \
+    h = NULL;								      \
+  if (rc != 0)								      \
+    {									      \
+      if (herrno == NETDB_INTERNAL)					      \
+	{								      \
+	  __set_h_errno (herrno);					      \
+	  return -EAI_SYSTEM;						      \
+	}								      \
+      if (herrno == TRY_AGAIN)						      \
+	no_data = EAI_AGAIN;						      \
+      else								      \
+	no_data = herrno == NO_DATA;					      \
+    }									      \
+  else if (h != NULL)							      \
+    {									      \
+      for (i = 0; h->h_addr_list[i]; i++)				      \
+	{								      \
+	  if (*pat == NULL) {						      \
+	    *pat = __alloca (sizeof (struct gaih_addrtuple));		      \
+	    (*pat)->scopeid = 0;					      \
+	  }								      \
+	  (*pat)->next = NULL;						      \
+	  (*pat)->family = _family;					      \
+	  memcpy ((*pat)->addr, h->h_addr_list[i],			      \
+		 sizeof(_type));					      \
+	  pat = &((*pat)->next);					      \
+	}								      \
+    }									      \
  }
 
 typedef enum nss_status (*nss_gethostbyname2_r)
@@ -368,6 +418,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
   struct gaih_addrtuple *at = NULL;
   int rc;
+  bool got_ipv6 = false;
 
   if (req->ai_protocol || req->ai_socktype)
     {
@@ -490,6 +541,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	{
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    at->family = AF_INET;
+	  else if (req->ai_flags & AI_V4MAPPED)
+	    {
+	      ((uint32_t *) at->addr)[3] = *(uint32_t *) at->addr;
+	      ((uint32_t *) at->addr)[2] = htonl (0xffff);
+	      ((uint32_t *) at->addr)[1] = 0;
+	      ((uint32_t *) at->addr)[0] = 0;
+	    }
 	  else
 	    return -EAI_ADDRFAMILY;
 	}
@@ -507,6 +565,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    {
 	      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 		at->family = AF_INET6;
+	      else if (IN6_IS_ADDR_V4MAPPED (at->addr))
+		*(uint32_t *) at->addr = ((uint32_t *) at->addr)[3];
 	      else
 		return -EAI_ADDRFAMILY;
 
@@ -747,6 +807,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  {
 	    family = AF_INET6;
 	    socklen = sizeof (struct sockaddr_in6);
+
+	    /* If we looked up IPv4 mapped address discard them here if
+	       the caller isn't interested in all address and we have
+	       found at least one IPv6 address.  */
+	    if (! got_ipv6
+		&& (req->ai_flags & (AI_V4MAPPED|AI_ALL)) == AI_V4MAPPED
+		&& IN6_IS_ADDR_V4MAPPED (at2->addr))
+	      goto ignore;
 	  }
 	else
 	  {
@@ -765,7 +833,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    (*pai)->ai_socktype = st2->socktype;
 	    (*pai)->ai_protocol = st2->protocol;
 	    (*pai)->ai_addrlen = socklen;
-	    (*pai)->ai_addr = (void *) (*pai) + sizeof(struct addrinfo);
+	    (*pai)->ai_addr = (void *) (*pai) + sizeof (struct addrinfo);
 #if SALEN
 	    (*pai)->ai_addr->sa_len = socklen;
 #endif /* SALEN */
@@ -805,6 +873,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    pai = &((*pai)->ai_next);
 	  }
 
+      ignore:
 	at2 = at2->next;
       }
   }
@@ -829,6 +898,7 @@ getaddrinfo (const char *name, const char *service,
   struct addrinfo *p = NULL, **end;
   struct gaih *g = gaih, *pg = NULL;
   struct gaih_service gaih_service, *pservice;
+  struct addrinfo local_hints;
 
   if (name != NULL && name[0] == '*' && name[1] == 0)
     name = NULL;
@@ -842,11 +912,61 @@ getaddrinfo (const char *name, const char *service,
   if (hints == NULL)
     hints = &default_hints;
 
-  if (hints->ai_flags & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST))
+  if (hints->ai_flags
+      & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG|AI_V4MAPPED
+	  |AI_ALL))
     return EAI_BADFLAGS;
 
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
+
+  if (hints->ai_flags & AI_ADDRCONFIG)
+    {
+      /* Determine whether we have IPv4 or IPv6 interfaces or both.
+	 We cannot cache the results since new interfaces could be
+	 added at any time.
+
+	 XXX We are using getifaddrs here which is more costly than
+	 it is really necessary.  Once things are stable we will have
+	 a special function which performs the task with less overhead.  */
+      struct ifaddrs* ifa = NULL;
+
+      if (getifaddrs (&ifa) != 0)
+	/* Cannot get the interface list, very bad.  */
+	return EAI_SYSTEM;
+
+      bool seen_ipv4 = false;
+      bool seen_ipv6 = false;
+
+      while (ifa != NULL)
+	{
+	  if (ifa->ifa_addr->sa_family == PF_INET)
+	    seen_ipv4 = true;
+	  else if (ifa->ifa_addr->sa_family == PF_INET6)
+	    seen_ipv6 = true;
+
+	  ifa = ifa->ifa_next;
+	}
+
+      (void) freeifaddrs (ifa);
+
+      /* Now make a decision on what we return, if anything.  */
+      if (hints->ai_family == PF_UNSPEC)
+	{
+	  /* If we haven't seen both IPv4 and IPv6 interfaces we can
+	     narrow down the search.  */
+	  if (! seen_ipv4 || ! seen_ipv6)
+	    {
+	      local_hints = *hints;
+	      local_hints.ai_family = seen_ipv4 ? PF_INET : PF_INET6;
+	      hints = &local_hints;
+	    }
+	}
+      else if ((hints->ai_family == PF_INET && ! seen_ipv4)
+	       || (hints->ai_family == PF_INET6 && ! seen_ipv6))
+	/* We cannot possibly return a valid answer.  */
+	return EAI_NONAME;
+    }
 
   if (service && service[0])
     {

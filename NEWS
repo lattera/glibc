@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2003-3-15
+GNU C Library NEWS -- history of user-visible changes.  2003-4-24
 Copyright (C) 1992-2002,2003 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -12,6 +12,12 @@ Version 2.3.3
 
 * ELF thread-local storage support (TLS) now works on PowerPC and PowerPC64;
   implemented by Paul Mackerras, Steven Munroe, and Roland McGrath.
+
+* getifaddrs new uses on Linux the netlink interface to get the information.
+  Implemented by Thorsten Kukuk.
+
+* getaddrinfo now implements AI_V4MAPPED, AI_ALL, and AI_ADDRCONF.
+  Implemented by Ulrich Drepper.
 
 Version 2.3.2
 

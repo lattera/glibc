@@ -181,13 +181,9 @@ extern int ruserpass (const char *host, const char **aname,
 libc_hidden_proto (ruserpass)
 
 
-/* The following declarations and definitions have been removed from
-   the public header since we don't want people to use them.  */
+/* The following definition has been removed from the public header
+   since we don't want people to use them.  */
 
-#define AI_V4MAPPED	0x0008	/* IPv4-mapped addresses are acceptable.  */
-#define AI_ALL		0x0010	/* Return both IPv4 and IPv6 addresses.	 */
-#define AI_ADDRCONFIG	0x0020	/* Use configuration of this host to choose
-				  returned address type.  */
 #define AI_DEFAULT    (AI_V4MAPPED | AI_ADDRCONFIG)
 
 #include <inet/netgroup.h>

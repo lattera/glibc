@@ -796,6 +796,7 @@ getifaddrs (struct ifaddrs **ifap)
 
   return result;
 }
+libc_hidden_def (getifaddrs)
 
 
 #if __ASSUME_NETLINK_SUPPORT != 0
@@ -804,4 +805,5 @@ freeifaddrs (struct ifaddrs *ifa)
 {
   free (ifa);
 }
+libc_hidden_def (freeifaddrs)
 #endif
