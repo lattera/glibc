@@ -1,5 +1,8 @@
 1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/genops.c (_IO_un_link, _IO_link_in): Don't use locking if
+	_IO_MTSAFE_IO is not defined.
+
 	* iconv/gconv_db.c (free_modules_db): Don't free memory of
 	internal modules.
 

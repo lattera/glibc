@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -31,7 +31,9 @@
 #endif
 #include <string.h>
 
+#ifdef _IO_MTSAFE_IO
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
+#endif
 
 void
 _IO_un_link (fp)
@@ -39,8 +41,10 @@ _IO_un_link (fp)
 {
   if (fp->_flags & _IO_LINKED)
     {
+#ifdef _IO_MTSAFE_IO
       _IO_FILE **f;
       _IO_lock_lock (list_all_lock);
+#endif
       for (f = &_IO_list_all; *f != NULL; f = &(*f)->_chain)
 	{
 	  if (*f == fp)
@@ -49,7 +53,9 @@ _IO_un_link (fp)
 	      break;
 	    }
 	}
+#ifdef _IO_MTSAFE_IO
       _IO_lock_unlock (list_all_lock);
+#endif
       fp->_flags &= ~_IO_LINKED;
     }
 }
@@ -61,10 +67,14 @@ _IO_link_in (fp)
     if ((fp->_flags & _IO_LINKED) == 0)
       {
 	fp->_flags |= _IO_LINKED;
+#ifdef _IO_MTSAFE_IO
 	_IO_lock_lock (list_all_lock);
+#endif
 	fp->_chain = _IO_list_all;
 	_IO_list_all = fp;
+#ifdef _IO_MTSAFE_IO
 	_IO_lock_unlock (list_all_lock);
+#endif
       }
 }
 
