@@ -484,6 +484,11 @@ static void
 __attribute__ ((noreturn))
 print_and_abort ()
 {
+  /* Don't change any of these strings.  Yes, it would be possible to add
+     the newline to the string and use fputs or so.  But this must not
+     happen because the "memory exhausted" message appears in other places
+     like this and the translation should be reused instead of creating
+     a very similar string which requires a separate translation.  */
 #if defined _LIBC && defined USE_IN_LIBIO
   if (_IO_fwide (stderr, 0) > 0)
     __fwprintf (stderr, L"%s\n", _("memory exhausted"));
@@ -500,7 +505,7 @@ print_and_abort ()
 /* Now define the functional versions of the obstack macros.
    Define them to simply use the corresponding macros to do the job.  */
 
-#if defined (__STDC__) && __STDC__
+#if defined __STDC__ && __STDC__
 /* These function definitions do not work with non-ANSI preprocessors;
    they won't pass through the macro names in parentheses.  */
 
