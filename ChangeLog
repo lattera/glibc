@@ -1,3 +1,9 @@
+2000-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/rcmd.c (__checkhost_sa): If getnameinfo succeeds but the
+	names don't match don't return.
+	Patch by Olaf Kirch <okir@flash.lst.de>.
+
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/strftime.c (my_strftime): Handle # flag for %b as well.

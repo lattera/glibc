@@ -615,8 +615,9 @@ __checkhost_sa (struct sockaddr *ra, size_t ralen, char *lhost,
 	/* XXX */
 	if (getnameinfo(ra, ralen,
 			raddr, sizeof(raddr), NULL, 0,
-			NI_NUMERICHOST) == 0)
-		return negate * (strcmp(raddr, lhost) == 0);
+			NI_NUMERICHOST) == 0
+	    && strcmp(raddr, lhost) == 0)
+		return negate;
 
 	/* Better be a hostname. */
 	match = 0;

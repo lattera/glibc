@@ -78,9 +78,9 @@ reorder-after <z>
 % words or names are only to be distinguished by 'v' or % 'w', 'v' is
 % placed before 'w'.
 reorder-after <U0056>
-<U0057> <v>;<BAS>;<CAP>;<w> # W
+<U0057> <v>;<BAS>;<CAP>;<w> % W
 reorder-after <U0076>
-<U0077> <w>;<BAS>;<MIN>;<w> # w
+<U0077> <v>;<BAS>;<MIN>;<w> % w
 
 reorder-after <U00E3>
 <U00E4> <ae>;<REU>;<MIN>;IGNORE % ä
