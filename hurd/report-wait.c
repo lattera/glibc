@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 #include "intr-msg.h"
 
 static void
-describe_number (string_t description, const char *flavor, int i)
+describe_number (string_t description, const char *flavor, unsigned long i)
 {
   int j;
   char *p = __stpcpy (description, flavor);
