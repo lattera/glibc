@@ -17,15 +17,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <libio.h>
+#include <bits/stdio-lock.h>
 
 
 int
 ftrylockfile (stream)
      FILE *stream;
 {
-  return pthread_mutex_trylock (stream->_lock);
+  return _IO_lock_trylock (*stream->_lock);
 }
 strong_alias (ftrylockfile, _IO_ftrylockfile)

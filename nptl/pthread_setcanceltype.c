@@ -23,7 +23,7 @@
 
 
 int
-pthread_setcanceltype (type, oldtype)
+__pthread_setcanceltype (type, oldtype)
      int type;
      int *oldtype;
 {
@@ -69,3 +69,4 @@ pthread_setcanceltype (type, oldtype)
 
   return 0;
 }
+strong_alias (__pthread_setcanceltype, pthread_setcanceltype)

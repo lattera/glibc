@@ -1,4 +1,4 @@
-/* libc-internal interface for mutex locks.  LinuxThreads version.
+/* libc-internal interface for mutex locks.  NPTL version.
    Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -254,8 +254,8 @@ typedef pthread_key_t __libc_key_t;
 
 /* Try to lock the recursive named lock variable.  */
 #if defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)
-# define __libc_lock_trylock_recursive(NAME)				      \
-  do {									      \
+# define __libc_lock_trylock_recursive(NAME) \
+  ({									      \
     int result = 0;							      \
     void *self = THREAD_SELF;						      \
     if ((NAME).owner != self)						      \
@@ -270,7 +270,8 @@ typedef pthread_key_t __libc_key_t;
       }									      \
     else								      \
       ++(NAME).cnt;							      \
-  } while (0)
+    result;								      \
+  })
 #else
 # define __libc_lock_trylock_recursive(NAME) \
   __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)

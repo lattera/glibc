@@ -38,9 +38,6 @@ _pthread_cleanup_push (buffer, routine, arg)
 
   THREAD_SETMEM (self, cleanup, buffer);
 }
-extern void _GI_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
-				      void (*routine) (void *), void *arg)
-     attribute_hidden;
 strong_alias (_pthread_cleanup_push, _GI_pthread_cleanup_push)
 
 
@@ -58,6 +55,4 @@ _pthread_cleanup_pop (buffer, execute)
   if (execute)
     buffer->__routine (buffer->__arg);
 }
-extern void _GI_pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
-				     int execute) attribute_hidden;
 strong_alias (_pthread_cleanup_pop, _GI_pthread_cleanup_pop)

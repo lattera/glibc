@@ -75,3 +75,4 @@ __pthread_mutex_lock (mutex)
   return 0;
 }
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
+INTDEF(__pthread_mutex_lock)

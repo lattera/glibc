@@ -157,6 +157,7 @@ CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
 
 CFLAGS-flockfile.c = -D_IO_MTSAFE_IO
+CFLAGS-ftrylockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
 
 ifeq ($(build-static),yes)

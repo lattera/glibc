@@ -80,10 +80,10 @@ extern int __pthread_debug attribute_hidden;
 
 /* Set cancellation mode to asynchronous.  */
 #define CANCEL_ASYNC(oldtype) \
-  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, &oldtype)
+  __pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, &oldtype)
 /* Reset to previous cancellation mode.  */
 #define CANCEL_RESET(oldtype) \
-  pthread_setcanceltype (oldtype, NULL)
+  __pthread_setcanceltype (oldtype, NULL)
 
 /* Function performing the cancellation.  */
 extern void __do_cancel (char *currentframe)
@@ -147,7 +147,9 @@ extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_lock_internal (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_unlock_internal (pthread_mutex_t *__mutex);
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
@@ -179,7 +181,26 @@ extern void *__pthread_getspecific (pthread_key_t key);
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
 extern int __pthread_once (pthread_once_t *once_control,
 			   void (*init_routine) (void));
+extern int __pthread_once_internal (pthread_once_t *once_control,
+				    void (*init_routine) (void));
 extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 			     void (*child) (void));
+extern int __pthread_kill (pthread_t threadid, int signo);
+extern int __pthread_setcanceltype (int type, int *oldtype);
+
+/* Special versions which use non-exported functions.  */
+extern void _GI_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
+				      void (*routine) (void *), void *arg)
+     attribute_hidden;
+#undef pthread_cleanup_push
+#define pthread_cleanup_push(routine,arg) \
+  { struct _pthread_cleanup_buffer _buffer;				      \
+    _GI_pthread_cleanup_push (&_buffer, (routine), (arg));
+
+extern void _GI_pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
+				     int execute) attribute_hidden;
+#undef pthread_cleanup_pop
+#define pthread_cleanup_pop(execute) \
+    _GI_pthread_cleanup_pop (&_buffer, (execute)); }
 
 #endif	/* pthreadP.h */

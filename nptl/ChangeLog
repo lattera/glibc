@@ -1,5 +1,46 @@
 2002-12-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (CFLAGS-ftrylockfile.c): Add -D_IO_MTSAFE_IO.
+
+	* cleanup.c: Move declarations of _GI_pthread_cleanup_push and
+	_GI_pthread_cleanup_pop to pthreadP.h.
+
+	* ftrylockfile.c: Use _IO_lock_trylock instead of
+	pthread_mutex_trylock.
+
+	* pthreadP.h (CANCEL_ASYNC): Use __pthread_setcanceltype.
+	(CANCEL_RESET): Likewise.
+	(__pthread_setcanceltype_): Declare.
+	(__pthread_mutex_lock_internal): Declare.
+	(__pthread_mutex_unlock_internal): Declare.
+	(__pthread_once_internal): Declare.
+	(pthread_cleanup_push): Redefine using _GI_pthread_cleanup_push.
+	(pthread_cleanup_pop): Redefine using _GI_pthread_cleanup_pop.
+
+	* pthread_cond_timedwait.c: Use INTUSE is calls to pthread_mutex_lock
+	and pthread_mutex_unlock.
+	* pthread_cond_wait.c: Likewise.
+	* pthread_mutex_lock.c: Use INTDEF to define alias if needed.
+	* pthread_mutex_unlock.c: Likewise.
+
+	* pthread_setcanceltype.c: Add additional alias
+	__pthread_setcanceltype.
+
+	* sem_unlink.c (sem_unlink): Use __pthread_once with INTDEF.
+	* sem_open.c (sem_open): Likewise.
+	Use __libc_open, __libc_write, and __libc_close instead of
+	open, write, and close respectively.
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_trylock_internal):
+	Rewrite as statement expression since it must return a value.
+
+	* pthread_cancel.c: Use __pthread_kill instead of pthread_kill.
+	* sysdeps/unix/sysv/linux/pthread_kill.c: Define additional alias
+	__pthread_kill.
+
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Define additional
+	alias __pthread_once_internal.
+
 	* sysdeps/unix/sysv/linux/raise.c: Use libc_hidden_def for raise.
 
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>

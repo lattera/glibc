@@ -1,3 +1,7 @@
+2002-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/stdio-lock.h (_IO_lock_trylock): New define.
+
 2002-12-07  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Reintroduce changes

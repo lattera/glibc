@@ -1,5 +1,5 @@
 /* Thread package specific definitions of stream lock type.  Generic version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,7 @@ __libc_lock_define_recursive (typedef, _IO_lock_t)
 #define _IO_lock_init(_name)	__libc_lock_init_recursive (_name)
 #define _IO_lock_fini(_name)	__libc_lock_fini_recursive (_name)
 #define _IO_lock_lock(_name)	__libc_lock_lock_recursive (_name)
+#define _IO_lock_trylock(_name)	__libc_lock_trylock_recursive (_name)
 #define _IO_lock_unlock(_name)	__libc_lock_unlock_recursive (_name)
 
 

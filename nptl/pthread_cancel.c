@@ -46,7 +46,7 @@ pthread_cancel (th)
 	{
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */
-	  pthread_kill (th, SIGCANCEL);
+	  __pthread_kill (th, SIGCANCEL);
 
 	  break;
 	}

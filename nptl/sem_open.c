@@ -131,7 +131,7 @@ sem_open (const char *name, int oflag, ...)
   int fd;
 
   /* Determine where the shmfs is mounted.  */
-  pthread_once (&__namedsem_once, __where_is_shmfs);
+  INTUSE(__pthread_once) (&__namedsem_once, __where_is_shmfs);
 
   /* If we don't know the mount points there is nothing we can do.  Ever.  */
   if (mountpoint.dir == NULL)
@@ -160,7 +160,7 @@ sem_open (const char *name, int oflag, ...)
   /* If the semaphore object has to exist simply open it.  */
   if ((oflag & O_CREAT) == 0)
     {
-      fd = open (finalname, oflag | O_NOFOLLOW);
+      fd = __libc_open (finalname, oflag | O_NOFOLLOW);
 
       if (fd == -1)
 	/* Return.  errno is already set.  */
@@ -210,7 +210,7 @@ sem_open (const char *name, int oflag, ...)
       memset ((char *) &initsem + sizeof (struct sem), '\0',
 	      sizeof (sem_t) - sizeof (struct sem));
 
-      if (TEMP_FAILURE_RETRY (write (fd, &initsem, sizeof (sem_t)))
+      if (TEMP_FAILURE_RETRY (__libc_write (fd, &initsem, sizeof (sem_t)))
 	  != sizeof (sem_t)
 	  /* Adjust the permission.  */
 	  || fchmod (fd, mode) != 0)
@@ -252,7 +252,7 @@ sem_open (const char *name, int oflag, ...)
     }
 
   /* We don't need the file descriptor anymore.  */
-  close (fd);
+  __libc_close (fd);
 
   return result;
 }

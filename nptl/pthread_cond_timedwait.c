@@ -40,7 +40,7 @@ pthread_cond_timedwait (cond, mutex, abstime)
   lll_mutex_lock (cond->__data.__lock);
 
   /* Release the mutex.  This might fail.  */
-  err = pthread_mutex_unlock (mutex);
+  err = INTUSE(__pthread_mutex_unlock) (mutex);
   if (__builtin_expect (err != 0, 0))
     {
       lll_mutex_unlock (cond->__data.__lock);
@@ -61,7 +61,7 @@ pthread_cond_timedwait (cond, mutex, abstime)
   lll_mutex_unlock (cond->__data.__lock);
 
   /* We have to get the mutex before returning.  */
-  err = pthread_mutex_lock (mutex);
+  err = INTUSE(__pthread_mutex_lock) (mutex);
   if (err != 0)
     /* XXX Unconditionally overwrite the result of the wait?  */
     result = err;
