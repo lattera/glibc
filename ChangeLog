@@ -1,3 +1,8 @@
+2002-11-24  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Support inline syscall
+	with six arguments.
+
 2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	* time/mktime.c (__mon_yday, __mktime_internal) [!_LIBC]: Declare
