@@ -299,9 +299,6 @@ $(foreach dir,$(dist-separate),
 )
 endef
 
-%.bz2: %; bzip2 -9vk $<
-%.gz: %; gzip -9vnc $< > $@.new && mv -f $@.new $@
-
 # Do `make dist dist-version=X.Y.Z' to make tar files of an older version.
 dist-version = $(version)
 

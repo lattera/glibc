@@ -1328,6 +1328,8 @@ FORCE:
 echo-headers:
 	@echo $(headers)
 
+%.bz2: %; bzip2 -9vk $<
+%.gz: %; gzip -9vnc $< > $@.new && mv -f $@.new $@
 
 # Common cleaning targets.
 
