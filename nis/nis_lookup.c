@@ -56,7 +56,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 	      req.ns_object.ns_object_val = NULL;
 	      memset (res, '\0', sizeof (nis_result));
 
-	      if ((status = __do_niscall (NULL, 0, NIS_LOOKUP,
+	      if ((status = __do_niscall (req.ns_name, NIS_LOOKUP,
 					  (xdrproc_t) xdr_ns_request,
 					  (caddr_t) & req,
 					  (xdrproc_t) xdr_nis_result,
@@ -113,7 +113,7 @@ nis_lookup (const_nis_name name, const u_long flags)
 	  req.ns_object.ns_object_val = NULL;
 	  memset (res, '\0', sizeof (nis_result));
 
-	  if ((status = __do_niscall (NULL, 0, NIS_LOOKUP,
+	  if ((status = __do_niscall (req.ns_name, NIS_LOOKUP,
 				      (xdrproc_t) xdr_ns_request,
 				      (caddr_t) &req,
 				      (xdrproc_t) xdr_nis_result,

@@ -53,11 +53,10 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
   args.stamp = utime;
 
   for (i = 0; i < obj->DI_data.do_servers.do_servers_len; ++i)
-    __do_niscall (&obj->DI_data.do_servers.do_servers_val[i], 1,
-		  NIS_PING, (xdrproc_t) xdr_ping_args,
-		  (caddr_t) &args, (xdrproc_t) xdr_void,
-		  (caddr_t) NULL, 0);
-
+    __do_niscall2 (&obj->DI_data.do_servers.do_servers_val[i], 1,
+		   NIS_PING, (xdrproc_t) xdr_ping_args,
+		   (caddr_t) &args, (xdrproc_t) xdr_void,
+		   (caddr_t) NULL, 0);
   if (res)
     nis_freeresult (res);
 }

@@ -41,10 +41,13 @@ poll (fds, nfds, timeout)
     {
       if (syscall)
 	{
+	  int errno_saved = errno;
 	  int retval = __syscall_poll (fds, nfds, timeout);
 
 	  if (retval >= 0 || errno != ENOSYS)
 	    return retval;
+
+	  __set_errno (errno_saved);
 	}
 
       must_emulate = 1;

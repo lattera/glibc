@@ -197,9 +197,9 @@ nis_list (const_nis_name name, u_long flags,
     {
       memset (res, '\0', sizeof (nis_result));
 
-      if ((result = __do_niscall (NULL, 0, NIS_IBLIST,
+      if ((result = __do_niscall (ibreq.ibr_name, NIS_IBLIST,
 				  (xdrproc_t) xdr_ib_request,
-			      (caddr_t) & ibreq, (xdrproc_t) xdr_nis_result,
+				  (caddr_t) &ibreq, (xdrproc_t) xdr_nis_result,
 				  (caddr_t) res, flags)) != RPC_SUCCESS)
 	{
 	  res->status = result;
@@ -276,9 +276,9 @@ nis_add_entry (const_nis_name name, const nis_object *obj,
   ibreq.ibr_obj.ibr_obj_val = nis_clone_object (obj, NULL);
   ibreq.ibr_obj.ibr_obj_len = 1;
 
-  if ((status = __do_niscall (NULL, 0, NIS_IBADD,
+  if ((status = __do_niscall (ibreq.ibr_name, NIS_IBADD,
 			      (xdrproc_t) xdr_ib_request,
-			      (caddr_t) & ibreq,
+			      (caddr_t) &ibreq,
 			      (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;
@@ -308,7 +308,7 @@ nis_modify_entry (const_nis_name name, const nis_object *obj,
   ibreq.ibr_obj.ibr_obj_val = nis_clone_object (obj, NULL);
   ibreq.ibr_obj.ibr_obj_len = 1;
 
-  if ((status = __do_niscall (NULL, 0, NIS_IBMODIFY,
+  if ((status = __do_niscall (ibreq.ibr_name, NIS_IBMODIFY,
 			      (xdrproc_t) xdr_ib_request,
 			      (caddr_t) & ibreq, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
@@ -342,7 +342,7 @@ nis_remove_entry (const_nis_name name, const nis_object *obj,
       ibreq.ibr_obj.ibr_obj_len = 1;
     }
 
-  if ((status = __do_niscall (NULL, 0, NIS_IBREMOVE,
+  if ((status = __do_niscall (ibreq.ibr_name, NIS_IBREMOVE,
 			      (xdrproc_t) xdr_ib_request,
 			      (caddr_t) & ibreq, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
@@ -368,8 +368,9 @@ nis_first_entry (const_nis_name name)
       return res;
     }
 
-  if ((status = __do_niscall (NULL, 0, NIS_IBFIRST, (xdrproc_t) xdr_ib_request,
-			      (caddr_t) & ibreq, (xdrproc_t) xdr_nis_result,
+  if ((status = __do_niscall (ibreq.ibr_name, NIS_IBFIRST,
+			      (xdrproc_t) xdr_ib_request,
+			      (caddr_t) &ibreq, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;
 
@@ -406,8 +407,9 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
       ibreq.ibr_cookie.n_len = cookie->n_len;
     }
 
-  if ((status = __do_niscall (NULL, 0, NIS_IBNEXT, (xdrproc_t) xdr_ib_request,
-			      (caddr_t) & ibreq, (xdrproc_t) xdr_nis_result,
+  if ((status = __do_niscall (ibreq.ibr_name, NIS_IBNEXT,
+			      (xdrproc_t) xdr_ib_request,
+			      (caddr_t) &ibreq, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;
 

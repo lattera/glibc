@@ -37,16 +37,16 @@ nis_servstate (const nis_server *serv, const nis_tag *tags,
 
   if (serv == NULL)
     {
-      if (__do_niscall (NULL, 0, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
+      if (__do_niscall (NULL, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
 			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
 			(caddr_t) &tagres, 0) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
   else
     {
-      if (__do_niscall (serv, 1, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
-			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
-			(caddr_t) &tagres, 0) != RPC_SUCCESS)
+      if (__do_niscall2 (serv, 1, NIS_SERVSTATE, (xdrproc_t) xdr_nis_taglist,
+			 (caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+			 (caddr_t) &tagres, 0) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
   if (tagres.tags.tags_len > 0)
@@ -84,16 +84,16 @@ nis_stats (const nis_server *serv, const nis_tag *tags,
 
   if (serv == NULL)
     {
-      if (__do_niscall (NULL, 0, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
+      if (__do_niscall (NULL, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
 			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
 			(caddr_t) &tagres, 0) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
   else
     {
-      if (__do_niscall (serv, 1, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
-			(caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
-			(caddr_t) &tagres, 0) != RPC_SUCCESS)
+      if (__do_niscall2 (serv, 1, NIS_STATUS, (xdrproc_t) xdr_nis_taglist,
+			 (caddr_t) &taglist, (xdrproc_t) xdr_nis_taglist,
+			 (caddr_t) &tagres, 0) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
   if (tagres.tags.tags_len > 0)

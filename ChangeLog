@@ -1,3 +1,33 @@
+1997-05-10 11:46  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/rpcsvc/nis_callback.x: New, from tirpcsrc-2.3.
+
+	* nis/nis_call.c (__nis_docall): Rewritten for navigation in NIS+
+	namespace hierachy.
+	* nis/nis_intern.h: Add new __nis_docall function prototypes.
+	* nis/nis_add.c: Change __nis_docall/__nis_docall2 parameters for new
+	rewritten functions.
+	* nis/nis_checkpoint.c: Likewise.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_mkdir.c: Likewise.
+	* nis/nis_modify.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_remove.c: Likewise.
+	* nis/nis_rmdir.c: Likewise.
+	* nis/nis_server.c: Likewise.
+	* nis/nis_table.c: Likewise.
+
+1997-05-09 16:09  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp-eexst.c: Include <sysexits.h>.
+	(argp_err_exit_status): Initialize to EX_USAGE.
+	* argp/argp.h, argp/argp-help.c: Doc fixes.
+
+1997-05-08 17:15  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp/argp.h [!__error_t_defined] (__error_t_defined): Define.
+	* argp/argp-help.c (canon_doc_option): Correct ctype tests.
+
 1997-05-08 07:53  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/poll.c: Save errno.

@@ -29,7 +29,7 @@
 #include <assert.h>
 
 jmp_buf _hurdsig_fault_env;
-struct hurd_signal_preemptor _hurdsig_fault_preemptor;
+struct hurd_signal_preemptor _hurdsig_fault_preemptor = {0};
 
 /* XXX temporary to deal with spelling fix */
 weak_alias (_hurdsig_fault_preemptor, _hurdsig_fault_preempter)

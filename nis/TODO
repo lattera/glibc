@@ -1,12 +1,6 @@
 
  * nss_nisplus: When using parser form nss_files, rewrite parser
 
- * nss_nisplus: Search the data in the complete NIS+ namespace
-		specified by NIS_PATH
- 
- * What does nis_list give back, if rpc.nisd is not running or
-   if /var/nis/NIS_START_FILE does not exist ?
-
  * nis_table.c: nis_list(): 
 	Missing flags: FOLLOW_PATH, ALL_RESULTS
 	callback: Don't simulate it, use server callback thread

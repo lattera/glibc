@@ -50,7 +50,7 @@ nis_checkpoint(const_nis_name dirname)
 	   i < res2->objects.objects_val[0].DI_data.do_servers.do_servers_len;
 	   ++i)
 	{
-	  if (__do_niscall (&res2->objects.objects_val[0].DI_data.do_servers.do_servers_val[i],
+	  if (__do_niscall2 (&res2->objects.objects_val[0].DI_data.do_servers.do_servers_val[i],
 			    1, NIS_CHECKPOINT, (xdrproc_t) xdr_nis_name,
 			    (caddr_t) &dirname, (xdrproc_t) xdr_cp_result,
 			    (caddr_t) &cpres, 0) != RPC_SUCCESS)

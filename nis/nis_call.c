@@ -160,35 +160,18 @@ __nis_dobind (const nis_server *server, u_long flags)
 }
 
 nis_error
-__do_niscall (const nis_server *serv, int serv_len, u_long prog,
-	      xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
-	      u_long flags)
+__do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
+	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
+	       u_long flags)
 {
   CLIENT *clnt;
-  directory_obj *dir = NULL;
-  const nis_server *server;
   int try, result;
-  unsigned int server_len;
-
-  if (serv == NULL || serv_len == 0)
-    {
-      dir = readColdStartFile ();
-      if (dir == NULL) /* No /var/nis/NIS_COLD_START -> no NIS+ installed */
-	return NIS_UNAVAIL;
-      server = dir->do_servers.do_servers_val;
-      server_len = dir->do_servers.do_servers_len;
-    }
-  else
-    {
-      server = serv;
-      server_len = serv_len;
-    }
-
-  if (((flags & MASTER_ONLY) == MASTER_ONLY) && server_len > 1)
-    server_len = 1; /* The first entry is the master */
 
   try = 0;
   result = NIS_NAMEUNREACHABLE;
+
+  if (((flags & MASTER_ONLY) == MASTER_ONLY) && server_len > 1)
+    server_len = 1; /* The first entry is the master */
 
   while (try < MAXTRIES && result != RPC_SUCCESS)
     {
@@ -215,7 +198,191 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
 	}
     }
 
+  return result;
+}
+
+static directory_obj *
+dir_lookup (const_nis_name name, nis_server *serv, u_long flags)
+{
+  CLIENT *clnt;
+  int try, result;
+  nis_result *res;
+  struct ns_request req;
+  directory_obj *dir;
+
+  res = calloc (1, sizeof (nis_result));
+  req.ns_name = (char *)name;
+  req.ns_object.ns_object_len = 0;
+  req.ns_object.ns_object_val = NULL;
+  try = 0;
+  result = NIS_NAMEUNREACHABLE;
+
+  while (try < MAXTRIES && result != RPC_SUCCESS)
+    {
+      if ((clnt = __nis_dobind (serv, flags)) == NULL)
+	continue;
+
+      result = clnt_call (clnt, NIS_LOOKUP, (xdrproc_t) xdr_ns_request,
+			  (caddr_t) &req, (xdrproc_t) xdr_nis_result,
+			  (caddr_t) res, TIMEOUT);
+
+      if (result != RPC_SUCCESS)
+	{
+	  clnt_perror (clnt, "do_niscall: clnt_call");
+	  clnt_destroy (clnt);
+	  result = NIS_RPCERROR;
+	}
+      else
+	clnt_destroy (clnt);
+    }
+  if (result != RPC_SUCCESS || res->status != NIS_SUCCESS)
+    return NULL;
+
+  dir = nis_clone_directory (&res->objects.objects_val->DI_data, NULL);
+  nis_freeresult (res);
+
+  return dir;
+}
+
+static directory_obj *
+rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
+{
+  char domain [strlen (name) + 3];
+
+  nis_domain_of_r (name, domain, sizeof (domain));
+  if (strncmp (domain, "org_dir.", 8) == 0)
+    {
+      char tmp[strlen (name) + 3];
+
+      nis_domain_of_r (domain, tmp, sizeof (tmp));
+      strcpy (domain, tmp);
+    }
+  else
+    if (strncmp (domain, "groups_dir.", 11) == 0)
+      {
+	char tmp[strlen (name) + 3];
+
+	nis_domain_of_r (domain, tmp, sizeof (tmp));
+	strcpy (domain, tmp);
+      }
+    else
+      {
+	/* We have no grous_dir or org_dir, so try the complete name */
+	strcpy (domain, name);
+      }
+
+  switch (nis_dir_cmp (domain, dir->do_name))
+    {
+    case SAME_NAME:
+      return dir;
+    case NOT_SEQUENTIAL:
+      /* NOT_SEQUENTIAL means, go one up and try it there ! */
+    case HIGHER_NAME:
+      { /* We need data from a parent domain */
+	directory_obj *obj;
+	char ndomain [strlen (name) + 3];
+
+	nis_domain_of_r (dir->do_name, ndomain, sizeof (ndomain));
+
+	/* The root server of our domain is a replica of the parent
+	   domain ! (Now I understand why a root server must be a
+	   replica of the parent domain) */
+	obj = dir_lookup (ndomain, dir->do_servers.do_servers_val,
+			  flags);
+	if (obj != NULL)
+	  {
+	    /* We have found a NIS+ server serving ndomain, now
+	       let us search for "name" */
+	    nis_free_directory (dir);
+	    return rec_dirsearch (name, obj, flags);
+	  }
+	else
+	  {
+	    /* Ups, very bad. Are we already the root server ? */
+	    nis_free_directory (dir);
+	    return NULL;
+	  }
+      }
+      break;
+    case LOWER_NAME:
+      {
+	directory_obj *obj;
+	char leaf [strlen (name) + 3];
+	char ndomain [strlen (name) + 3];
+	u_int i;
+
+	do
+	  {
+	    if (strlen (domain) == 0)
+	      {
+		nis_free_directory (dir);
+		return NULL;
+	      }
+	    nis_leaf_of_r (domain, leaf, sizeof (leaf));
+	    nis_domain_of_r (domain, ndomain, sizeof (ndomain));
+	    strcpy (domain, ndomain);
+	  }
+	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
+	strcat (leaf, ".");
+	strcat (leaf, domain);
+
+	for (i = 0; i < dir->do_servers.do_servers_len; ++i)
+	  {
+	    obj = dir_lookup (leaf, &dir->do_servers.do_servers_val[i],
+			      flags);
+	    if (obj != NULL)
+	      {
+		/* We have found a NIS+ server serving ndomain, now
+		   let us search for "name" */
+		nis_free_directory (dir);
+		return rec_dirsearch (name, obj, flags);
+	      }
+	  }
+      }
+      break;
+    case BAD_NAME:
+      nis_free_directory (dir);
+      return NULL;
+    }
+  nis_free_directory (dir);
+  return NULL;
+}
+
+nis_error
+__do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
+	      caddr_t req, xdrproc_t xres, caddr_t resp, u_long flags)
+{
+  nis_error result;
+  directory_obj *dir = NULL;
+  const nis_server *server;
+  u_int server_len;
+
+
+  dir = readColdStartFile ();
+  if (dir == NULL) /* No /var/nis/NIS_COLD_START -> no NIS+ installed */
+    return NIS_UNAVAIL;
+
+  if (name != NULL)
+    {
+      dir = rec_dirsearch (name, dir, flags);
+      if (dir == NULL)
+	{
+	  if (nis_dir_cmp (nis_local_directory(), name) == NOT_SEQUENTIAL)
+	    return NIS_NAMEUNREACHABLE;
+	  else
+	    return NIS_NOTFOUND;
+	}
+    }
+  server = dir->do_servers.do_servers_val;
+  server_len = dir->do_servers.do_servers_len;
+
+  if (((flags & MASTER_ONLY) == MASTER_ONLY) && server_len > 1)
+    server_len = 1; /* The first entry is the master */
+
+  result = __do_niscall2 (server, server_len, prog, xargs, req, xres,
+			  resp, flags);
   if (dir != NULL)
     nis_free_directory (dir);
+
   return result;
 }

@@ -39,7 +39,7 @@
  */
 
 /*
- * System wide defaults for terminal state.
+ * System wide defaults for terminal state.  Linux version.
  */
 #ifndef _SYS_TTYDEFAULTS_H_
 #define	_SYS_TTYDEFAULTS_H_
@@ -48,15 +48,7 @@
  * Defaults on "first" open.
  */
 #define	TTYDEF_IFLAG	(BRKINT | ISTRIP | ICRNL | IMAXBEL | IXON | IXANY)
-#ifdef OXTABS
-# define TTYDEF_OFLAG	(OPOST | ONLCR | OXTABS)
-#else
-# if defined TAB3
-#  define TTYDEF_OFLAG	(OPOST | ONLCR | TAB3)
-# else
-#  define TTYDEF_OFLAG	(OPOST | ONLCR)
-# endif
-#endif
+#define TTYDEF_OFLAG	(OPOST | ONLCR | XTABS)
 #define TTYDEF_LFLAG	(ECHO | ICANON | ISIG | IEXTEN | ECHOE|ECHOKE|ECHOCTL)
 #define TTYDEF_CFLAG	(CREAD | CS7 | PARENB | HUPCL)
 #define TTYDEF_SPEED	(B9600)

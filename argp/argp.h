@@ -34,6 +34,7 @@
 
 #ifndef __error_t_defined
 typedef int error_t;
+#define __error_t_defined
 #endif
 
 #ifndef __P
@@ -397,7 +398,8 @@ extern void (*argp_program_version_hook) __P ((FILE *__stream,
 __const extern char *argp_program_bug_address;
 
 /* The exit status that argp will use when exiting due to a parsing error.
-   If not defined or set by the user program, this defaults to 1.  */
+   If not defined or set by the user program, this defaults to EX_USAGE from
+   <sysexits.h>.  */
 extern error_t argp_err_exit_status;
 
 /* Flags for argp_help.  */

@@ -24,9 +24,12 @@
 
 __BEGIN_DECLS
 
-extern nis_error __do_niscall (__const nis_server *server, int server_len,
-			       u_long prog, xdrproc_t xargs, caddr_t req,
-			       xdrproc_t xres, caddr_t resp, u_long flags);
+extern nis_error __do_niscall2 (const nis_server *server, u_int server_len,
+				u_long prog, xdrproc_t xargs, caddr_t req,
+				xdrproc_t xres, caddr_t resp, u_long flags);
+extern nis_error __do_niscall (const_nis_name name, u_long prog,
+			       xdrproc_t xargs, caddr_t req, xdrproc_t xres,
+			       caddr_t resp, u_long flags);
 #if defined (HAVE_SECURE_RPC)
 extern AUTH *authdes_pk_create (const char *, const netobj *, u_int,
 				struct sockaddr *, des_block *);

@@ -658,12 +658,12 @@ canon_doc_option (const char **name)
 {
   int non_opt;
   /* Skip initial whitespace.  */
-  while (isspace (*name))
+  while (isspace (**name))
     (*name)++;
   /* Decide whether this looks like an option (leading `-') or not.  */
   non_opt = (**name != '-');
   /* Skip until part of name used for sorting.  */
-  while (**name && !isalnum (*name))
+  while (**name && !isalnum (**name))
     (*name)++;
   return non_opt;
 }
@@ -1612,7 +1612,7 @@ weak_alias (__argp_state_help, argp_state_help)
 
 /* If appropriate, print the printf string FMT and following args, preceded
    by the program name and `:', to stderr, and followed by a `Try ... --help'
-   message, then exit (ARGP_ERR_EXIT_STATUS).  */
+   message, then exit (1).  */
 void
 __argp_error (const struct argp_state *state, const char *fmt, ...)
 {

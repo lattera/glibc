@@ -426,7 +426,7 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
       }
 }
 
-struct hurd_signal_preemptor *_hurdsig_preemptors;
+struct hurd_signal_preemptor *_hurdsig_preemptors = 0;
 sigset_t _hurdsig_preempted_set;
 
 /* XXX temporary to deal with spelling fix */

@@ -28,17 +28,17 @@ nis_mkdir (const_nis_name dir, const nis_server *server)
 
   if (server == NULL)
     {
-      if (__do_niscall (NULL, 0, NIS_MKDIR, (xdrproc_t) xdr_nis_name,
+      if (__do_niscall (dir, NIS_MKDIR, (xdrproc_t) xdr_nis_name,
 			(caddr_t) &dir, (xdrproc_t) xdr_nis_error,
 			(caddr_t) &res, 0) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
   else
     {
-      if (__do_niscall (server, 1, NIS_MKDIR,
-			(xdrproc_t) xdr_nis_name,
-			(caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-			(caddr_t) &res, 0) != RPC_SUCCESS)
+      if (__do_niscall2 (server, 1, NIS_MKDIR,
+			 (xdrproc_t) xdr_nis_name,
+			 (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+			 (caddr_t) &res, 0) != RPC_SUCCESS)
 	return NIS_RPCERROR;
     }
 
