@@ -199,6 +199,13 @@ extern void addhstai (struct database_dyn *db, int fd, request_header *req,
 extern void readdhstai (struct database_dyn *db, struct hashentry *he,
 			struct datahead *dh);
 
+
+/* initgrcache.c */
+extern void addinitgroups (struct database_dyn *db, int fd,
+			   request_header *req, void *key, uid_t uid);
+extern void readdinitgroups (struct database_dyn *db, struct hashentry *he,
+			     struct datahead *dh);
+
 /* mem.c */
 extern void *mempool_alloc (struct database_dyn *db, size_t len);
 extern void gc (struct database_dyn *db);
