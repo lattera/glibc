@@ -1,6 +1,10 @@
+1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/PTESTS: Fix typo.
+
 1998-12-10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
-	* nis/nss_compat/compat-pwd.c: fix handling of +/- entries.
+	* nis/nss_compat/compat-pwd.c: Fix handling of +/- entries.
 
 1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
