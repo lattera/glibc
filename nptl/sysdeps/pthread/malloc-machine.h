@@ -28,8 +28,6 @@
 
 __libc_lock_define (typedef, mutex_t)
 
-/* Assume NPTL.  */
-
 #define mutex_init(m)		__libc_lock_init (*(m))
 #define mutex_lock(m)		__libc_lock_lock (*(m))
 #define mutex_trylock(m)	__libc_lock_trylock (*(m))
