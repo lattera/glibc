@@ -487,7 +487,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	}
     }
 #ifndef RTLD_BOOTSTRAP
-  else if (__builtin_expect (r_type != R_SH_NONE, 0))
+  else if (__builtin_expect (r_type == R_SH_NONE, 0))
     return;
 #endif
   else
@@ -561,6 +561,8 @@ static inline void
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   Elf32_Addr *const reloc_addr)
 {
+  Elf32_Addr value;
+
   if (reloc->r_addend)
     value = l_addr + reloc->r_addend;
   else

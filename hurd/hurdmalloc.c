@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define bcopy(s,d,n)	memcpy ((d), (s), (n)) /* No overlap handling.  */
-
 #include "hurdmalloc.h"		/* XXX see that file */
 
 #include <mach.h>
@@ -37,6 +35,10 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.15  2001/09/19 03:04:09  drepper
+ * (bcopy): Removed.
+ * (realloc): Replace bcopy with memcpy.
+ *
  * Revision 1.14  2001/04/01 05:03:14  roland
  * 2001-03-11  Roland McGrath  <roland@frob.com>
  *
@@ -422,8 +424,8 @@ realloc(old_base, new_size)
 	 */
 	new_base = malloc(new_size);
 	if (new_base)
-	  bcopy(old_base, new_base,
-		(int) (old_size < new_size ? old_size : new_size));
+	  memcpy (new_base, old_base,
+		  (int) (old_size < new_size ? old_size : new_size));
 
 	if (new_base || new_size == 0)
 	  /* Free OLD_BASE, but only if the malloc didn't fail.  */

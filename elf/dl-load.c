@@ -1136,7 +1136,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
       /* Now move the existing entries one back.  */
       memmove (&l->l_scope[1], &l->l_scope[0],
-	       sizeof (l->l_scope) - sizeof (l->l_scope[0]));
+	       (l->l_scope_max - 1) * sizeof (l->l_scope[0]));
 
       /* Now add the new entry.  */
       l->l_scope[0] = &l->l_symbolic_searchlist;

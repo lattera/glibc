@@ -1,3 +1,48 @@
+2001-09-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (ptmalloc_init): Handle _environ==NULL.
+	Reported by B. D. Elliott <bde@nwlink.com> [PR libc/2541].
+
+2001-09-18  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Update handling of scope
+	list, now that l_scope is a pointer.
+
+	* elf/dl-open.c (dl_open_worker): Fix thinko when enlarging the
+	scope list.
+
+2001-09-18  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Fix reverse condition.
+	(elf_machine_rela_relative): Add a missing declaration.
+
+2001-09-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed: New.
+	* sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed: New.
+	* sysdeps/unix/sysv/linux/configure.in: Add ia64 and s390
+	ldd-rewrite scripts.
+
+2001-09-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/ldd.bash.in: Update copyright message.
+
+2001-09-17  H.J. Lu  <hjl@gnu.org>
+
+	* hurd/hurdmalloc.c (bcopy): Removed.
+	(realloc): Replace bcopy with memcpy.
+	* hurd/path-lookup.c (file_name_path_scan): Likewise.
+	* resolv/gethnamaddr.c (map_v4v6_address): Likewise.
+	* sunrpc/rpcinfo.c (pmapdump): Likewise.
+
+	* resolv/gethnamaddr.c (getanswer): Replace bcopy with memmove.
+	(gethostbyaddr): Likewise.
+	* sunrpc/rpcinfo.c (get_inet_address): Likewise.
+
+2001-09-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/eval.c: Removed.
+
 2001-09-18  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/s_logbl.S: Move to ...

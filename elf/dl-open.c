@@ -312,7 +312,7 @@ dl_open_worker (void *a)
 	    ++runp;
 	  }
 
-	if (__builtin_expect (cnt + 1 < imap->l_scope_max, 0))
+	if (__builtin_expect (cnt + 1 >= imap->l_scope_max, 0))
 	  {
 	    /* The 'r_scope' array is too small.  Allocate a new one
 	       dynamically.  */
@@ -327,7 +327,7 @@ dl_open_worker (void *a)
 		  _dl_signal_error (ENOMEM, "dlopen", NULL,
 				    N_("cannot create scope list"));
 		imap->l_scope = memcpy (newp, imap->l_scope,
-					cnt * imap->l_scope_max);
+					cnt * sizeof (imap->l_scope[0]));
 	      }
 	    else
 	      {
@@ -339,10 +339,10 @@ dl_open_worker (void *a)
 				    N_("cannot create scope list"));
 		imap->l_scope = newp;
 	      }
-
-	    imap->l_scope[cnt++] = &new->l_searchlist;
-	    imap->l_scope[cnt] = NULL;
 	  }
+
+	imap->l_scope[cnt++] = &new->l_searchlist;
+	imap->l_scope[cnt] = NULL;
       }
 
   /* Run the initializer functions of new objects.  */

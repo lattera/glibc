@@ -55,10 +55,10 @@ file_name_path_scan (const char *file_name, const char *path,
 	  if (pfx_len == 0)
 	    pfxed_name[pfx_len++] = '.';
 	  else
-	    bcopy (path, pfxed_name, pfx_len);
+	    memcpy (pfxed_name, path, pfx_len);
 	  if (pfxed_name[pfx_len - 1] != '/')
 	    pfxed_name[pfx_len++] = '/';
-	  bcopy (file_name, pfxed_name + pfx_len, file_name_len + 1);
+	  memcpy (pfxed_name + pfx_len, file_name, file_name_len + 1);
 
 	  err = (*fun)(pfxed_name);
 	  if (err == 0)

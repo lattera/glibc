@@ -441,7 +441,7 @@ getanswer(answer, anslen, qname, qtype)
 				cp += n;
 				continue;
 			}
-			bcopy(cp, *hap++ = bp, n);
+			memmove(*hap++ = bp, cp, n);
 			bp += n;
 			buflen -= n;
 			cp += n;
@@ -738,7 +738,7 @@ gethostbyaddr(addr, len, af)
 #endif /*SUNSECURITY*/
 	hp->h_addrtype = af;
 	hp->h_length = len;
-	bcopy(addr, host_addr, len);
+	memmove(host_addr, addr, len);
 	h_addr_ptrs[0] = (char *)host_addr;
 	h_addr_ptrs[1] = NULL;
 	if (af == AF_INET && (_res.options & RES_USE_INET6)) {
@@ -899,14 +899,14 @@ map_v4v6_address(src, dst)
 	int i;
 
 	/* Stash a temporary copy so our caller can update in place. */
-	bcopy(src, tmp, INADDRSZ);
+	memcpy(tmp, src, INADDRSZ);
 	/* Mark this ipv6 addr as a mapped ipv4. */
 	for (i = 0; i < 10; i++)
 		*p++ = 0x00;
 	*p++ = 0xff;
 	*p++ = 0xff;
 	/* Retrieve the saved copy and we're done. */
-	bcopy(tmp, (void*)p, INADDRSZ);
+	memcpy((void*)p, tmp, INADDRSZ);
 }
 
 static void
