@@ -1,7 +1,18 @@
+2004-07-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/libintl.h: Don't define macros for C++.
+	Patch by Goto Masanori.
+
+2004-07-22  GOTO Masanori  <gotom@debian.or.jp>
+
+	[BZ #276]
+	* include/arpa/inet.h: Change inet_aton type from in_addr_t to int.
+	* inet/arpa/inet.h: Likewise.
+	* resolv/inet_addr.c: Likewise.
+
 2004-07-21  Alexandre Oliva  <aoliva@redhat.com>
 
-	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Add
-	semtimedop.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Add semtimedop.
 
 2004-07-20  Roland McGrath  <roland@redhat.com>
 
@@ -13,7 +24,6 @@
 	(libc_config_ok): New variable, set to no.  If an add-on fragment sets
 	it to yes, skip the  tuple sanity check as if --enable-hacker-mode.
 	(sysnames): Try appending add-on names after machine as well.
-	* configure: Regenerated.
 	* config.make.in (add-ons): Set from @add_ons@ instead of @subdirs@.
 	* Makeconfig ($(common-objpfx)config.status): Also depend on configure
 	files in $(add_ons) dirs.
@@ -55,7 +65,6 @@
 	Likewise.
 	* sysdeps/unix/sysv/linux/mips/configure.in (asm-unistd.h):
 	Likewise.
-	* sysdeps/unix/sysv/linux/mips/configure: Rebuilt.
 
 	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Update to use
 	_dl_lookup_symbol_x.

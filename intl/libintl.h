@@ -1,5 +1,5 @@
 /* Message catalogs for internationalization.
-   Copyright (C) 1995-1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    This file is derived from the file libgettext.h in the GNU gettext package.
 
@@ -92,7 +92,7 @@ extern char *bind_textdomain_codeset (__const char *__domainname,
 
 
 /* Optimized version of the function above.  */
-#if defined __OPTIMIZE__
+#if defined __OPTIMIZE__ && !defined __cplusplus
 
 /* We need NULL for `gettext'.  */
 # define __need_NULL
