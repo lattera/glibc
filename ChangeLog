@@ -1,3 +1,8 @@
+2003-11-30  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (PSEUDO_ERRVAL)
+	(PSEUDO_END_ERRVAL, ret_ERRVAL): Define.
+
 2003-11-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/mntent_r.c (decode_name): Be compatible with util-linux and
