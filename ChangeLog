@@ -1,7 +1,17 @@
+2001-02-27  Philip Blundell  <pb@futuretv.com>
+
+	* elf/elf.h: Add new ARM definitions from latest (B-01)
+	specification.  Correct naming of EF_ARM_ALIGN8 et al.
+
+2001-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tst-printf.sh: Remove bashisms.
+	Patch by Matthew Clarke <Matthew_Clarke@mindlink.bc.ca>.
+
 2001-03-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions.def: Add libanl definition.
-	* shlig-versions: Add entry for libanl.
+	* shlib-versions: Add entry for libanl.
 	* resolv/Makefile (distribute): Add gai_misc.h and ga_test.c.
 	(routines): Add gai_sigqueue.
 	(extra-libs): Add libanl.

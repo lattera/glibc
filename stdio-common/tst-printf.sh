@@ -138,7 +138,7 @@ printf ("%hhu", 257) = 1
 printf ("%hu", 65537) = 1
 --- Should be no further output. ---
 EOF
-cmp - ${common_objpfx}stdio-common/tst-printf.out >& /dev/null ||
+cmp - ${common_objpfx}stdio-common/tst-printf.out > /dev/null 2>&1 ||
 cat <<'EOF' |
 %.4x:	`0012'
 %04x:	`0012'
@@ -249,7 +249,7 @@ printf ("%hhu", 257) = 1
 printf ("%hu", 65537) = 1
 --- Should be no further output. ---
 EOF
-cmp - ${common_objpfx}stdio-common/tst-printf.out >& /dev/null ||
+cmp - ${common_objpfx}stdio-common/tst-printf.out > /dev/null 2>&1 ||
 {
   status=1
   echo "*** output comparison failed"

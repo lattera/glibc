@@ -9,7 +9,7 @@ Please send GNU C library bug reports using the `glibcbug' script to
 
 Version 2.2.3
 
-* Intel's IA-64 math library is large integrated.  It provides fast and
+* Intel's IA-64 math library is largely integrated.  It provides fast and
   accurate implementatations for most basic and standard math functions
   in float, double, and long double format.
 

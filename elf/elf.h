@@ -1772,9 +1772,21 @@ typedef Elf32_Addr Elf32_Conflict;
 #define EF_ARM_APCS_26     0x08
 #define EF_ARM_APCS_FLOAT  0x10
 #define EF_ARM_PIC         0x20
-#define EF_ALIGN8          0x40		/* 8-bit structure alignment is in use */
-#define EF_NEW_ABI         0x80
-#define EF_OLD_ABI         0x100
+#define EF_ARM_ALIGN8      0x40		/* 8-bit structure alignment is in use */
+#define EF_ARM_NEW_ABI     0x80
+#define EF_ARM_OLD_ABI     0x100
+
+/* Other constants defined in the ARM ELF spec. version B-01.  */
+/* NB. These conflict with values defined above.  */
+#define EF_ARM_SYMSARESORTED	0x04
+#define EF_ARM_DYNSYMSUSESEGIDX 0x08
+#define EF_ARM_MAPSYMSFIRST	0x10
+#define EF_ARM_EABIMASK		0XFF000000
+
+#define EF_ARM_EABI_VERSION(flags) ((flags) & EF_ARM_EABIMASK)
+#define EF_ARM_EABI_UNKNOWN  0x00000000
+#define EF_ARM_EABI_VER1     0x01000000
+#define EF_ARM_EABI_VER2     0x02000000
 
 /* Additional symbol types for Thumb */
 #define STT_ARM_TFUNC      0xd
@@ -1814,6 +1826,12 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_GOTPC		25	/* 32 bit PC relative offset to GOT */
 #define R_ARM_GOT32		26	/* 32 bit GOT entry */
 #define R_ARM_PLT32		27	/* 32 bit PLT address */
+#define R_ARM_ALU_PCREL_7_0	32
+#define R_ARM_ALU_PCREL_15_8	33
+#define R_ARM_ALU_PCREL_23_15	34
+#define R_ARM_LDR_SBREL_11_0	35
+#define R_ARM_ALU_SBREL_19_12	36
+#define R_ARM_ALU_SBREL_27_20	37
 #define R_ARM_GNU_VTENTRY	100
 #define R_ARM_GNU_VTINHERIT	101
 #define R_ARM_THM_PC11		102	/* thumb unconditional branch */
