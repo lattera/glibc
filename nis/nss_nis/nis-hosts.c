@@ -261,7 +261,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
       /* Convert name to lowercase.  */
       size_t namlen = strlen (name);
       char name2[namlen + 1];
-      int i;
+      size_t i;
 
       for (i = 0; i < namlen; ++i)
 	name2[i] = tolower (name[i]);

@@ -214,7 +214,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
   char *p;
   size_t namlen = strlen (name);
   char name2[namlen + 1];
-  int i;
+  size_t i;
 
   if (name == NULL)
     {

@@ -1,5 +1,10 @@
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
+	* nis/nss_nis/nis-hosts.c (internal_gethostbyname2_r): int -> size_t
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyname_r): Likewise.
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Likewise.
+	* nis/nis_table.c (__create_ib_request): Likewise.
+
 	* posix/fnmatch_loop.c: Add casts for signedness.
 	* nss/nss_files/files-hosts.c: Likewise.
 	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.

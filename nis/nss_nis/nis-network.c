@@ -181,7 +181,7 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
       /* Convert name to lowercase.  */
       size_t namlen = strlen (name);
       char name2[namlen + 1];
-      int i;
+      size_t i;
 
       for (i = 0; i < namlen; ++i)
 	name2[i] = _tolower (name[i]);

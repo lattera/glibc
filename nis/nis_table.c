@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -30,7 +30,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
   struct ib_request *ibreq = calloc (1, sizeof (ib_request));
   char buf[strlen (name) + 1];
   nis_attr *search_val = NULL;
-  int search_len = 0;
+  size_t search_len = 0;
   char *cptr;
   size_t size = 0;
 

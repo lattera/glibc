@@ -1,3 +1,8 @@
+2003-03-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/configure.in: New file.
+	* sysdeps/pthread/configure: New file (generated).
+
 2003-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* allocatestack.c (allocate_stack): Store the exact stack size of
