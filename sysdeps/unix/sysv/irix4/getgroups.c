@@ -25,7 +25,7 @@ extern int __syssgi __P ((int, ...));
 
 /* Set the group set for the current user to GROUPS (N of them).  */
 int
-DEFUN(getgroups, (n, groups), size_t n AND gid_t *groups)
+DEFUN(__getgroups, (n, groups), size_t n AND gid_t *groups)
 {
   return __syssgi (SGI_GETGROUPS, n, groups);
 }   
