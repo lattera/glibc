@@ -266,7 +266,7 @@ struct link_map
     size_t l_tls_initimage_size;
     /* Size of the TLS block.  */
     size_t l_tls_blocksize;
-    /* Alignment rquirement of the TLS block.  */
+    /* Alignment requirement of the TLS block.  */
     size_t l_tls_align;
     /* For objects present at startup time: offset in the static TLS block.  */
     ptrdiff_t l_tls_offset;
