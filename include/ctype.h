@@ -2,6 +2,8 @@
 
 # include <ctype/ctype.h>
 
+extern int __isctype (int __c, int __mask);
+
 # ifndef NOT_IN_libc
 
 /* The optimized macros are not defined for users because they can't see
