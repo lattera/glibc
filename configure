@@ -6335,8 +6335,8 @@ for dir in $sysnames; do
     *)  dest=$srcdir/$dir ;;
   esac
   if test -r $dest/configure; then
-    echo "$as_me:$LINENO: result: running configure fragment for $dest" >&5
-echo "${ECHO_T}running configure fragment for $dest" >&6
+    echo "$as_me:$LINENO: result: running configure fragment for $dir" >&5
+echo "${ECHO_T}running configure fragment for $dir" >&6
     . $dest/configure
   fi
 

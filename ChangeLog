@@ -1,5 +1,9 @@
 2003-03-01  Roland McGrath  <roland@redhat.com>
 
+	* configure.in: In "running configure fragment for" message,
+	omit $srcdir from the name if we prepended it.
+	* configure: Regenerated.
+
 	* elf/dl-reloc.c (allocate_static_tls): Fix calculations.
 	From Jakub Jelinek <jakub@redhat.com>.
 

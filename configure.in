@@ -1732,7 +1732,7 @@ for dir in $sysnames; do
     *)  dest=$srcdir/$dir ;;
   esac
   if test -r $dest/configure; then
-    AC_MSG_RESULT(running configure fragment for $dest)
+    AC_MSG_RESULT(running configure fragment for $dir)
     . $dest/configure
   fi
 [

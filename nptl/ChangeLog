@@ -1,3 +1,7 @@
+2003-03-01  Roland McGrath  <roland@redhat.com>
+
+	* sem_open.c (sem_open): Braino fix.
+
 2003-03-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h (struct pthread): Move tid field to the front now that

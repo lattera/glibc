@@ -126,8 +126,8 @@ sem_t *
 sem_open (const char *name, int oflag, ...)
 {
   char *finalname;
-  size_t namelen = SEM_FAILED;
-  sem_t *result;
+  size_t namelen;
+  sem_t *result = SEM_FAILED;
   int fd;
 
   /* Determine where the shmfs is mounted.  */
