@@ -30,8 +30,8 @@ const char *_sys_errlist[] =
     "Not a directory",                  /* 20 = ENOTDIR */
     "Is a directory",                   /* 21 = EISDIR */
     "Invalid argument",                 /* 22 = EINVAL */
-    "Too many open files",              /* 23 = EMFILE */
-    "Too many open files in system",    /* 24 = ENFILE */
+    "Too many open files in system",    /* 23 = ENFILE */
+    "Too many open files",              /* 24 = EMFILE */
     "Inappropriate ioctl for device",   /* 25 = ENOTTY */
     "Text file busy",                   /* 26 = ETXTBSY */
     "File too large",                   /* 27 = EFBIG */
@@ -42,7 +42,7 @@ const char *_sys_errlist[] =
     "Broken pipe",                      /* 32 = EPIPE */
     "Numerical argument out of domain", /* 33 = EDOM */
     "Numerical result out of range",    /* 34 = ERANGE */
-    "Operation would block",            /* 35 = EWOULDBLOCK */
+    "Resource temporarily unavailable", /* 35 = EAGAIN */
     "Operation now in progress",        /* 36 = EINPROGRESS */
     "Operation already in progress",    /* 37 = EALREADY */
     "Socket operation on non-socket",   /* 38 = ENOTSOCK */
@@ -66,28 +66,59 @@ const char *_sys_errlist[] =
     "Socket is already connected",      /* 56 = EISCONN */
     "Socket is not connected",          /* 57 = ENOTCONN */
     "Can't send after socket shutdown", /* 58 = ESHUTDOWN */
-    "Connection timed out",             /* 59 = ETIMEDOUT */
-    "Connection refused",               /* 60 = ECONNREFUSED */
-    "Too many levels of symbolic links",/* 61 = ELOOP */
-    "File name too long",               /* 62 = ENAMETOOLONG */
-    "Host is down",                     /* 63 = EHOSTDOWN */
-    "No route to host",                 /* 64 = EHOSTUNREACH */
-    "Directory not empty",              /* 65 = ENOTEMPTY */
-    "Too many users",                   /* 66 = EUSERS */
-    "Disc quota exceeded",              /* 67 = EDQUOT */
-    "Stale NFS file handle",            /* 68 = ESTALE */
-    "Too many levels of remote in path",/* 69 = EREMOTE */
-    "No locks available",               /* 70 = ENOLCK */
-    "Function not implemented",         /* 71 = ENOSYS */
-    "Inappropriate operation for background process",/* 72 = EBACKGROUND */
-    "?",                                /* 73 = ED */
-    "You really blew it this time",     /* 74 = EGREGIOUS */
-    "Computer bought the farm",         /* 75 = EIEIO */
-    "Gratuitous error",                 /* 76 = EGRATUITOUS */
+    "Too many references: can't splice",/* 59 = ETOOMANYREFS */
+    "Connection timed out",             /* 60 = ETIMEDOUT */
+    "Connection refused",               /* 61 = ECONNREFUSED */
+    "Too many levels of symbolic links",/* 62 = ELOOP */
+    "File name too long",               /* 63 = ENAMETOOLONG */
+    "Host is down",                     /* 64 = EHOSTDOWN */
+    "No route to host",                 /* 65 = EHOSTUNREACH */
+    "Directory not empty",              /* 66 = ENOTEMPTY */
+    "Too many processes",               /* 67 = EPROCLIM */
+    "Too many users",                   /* 68 = EUSERS */
+    "Disc quota exceeded",              /* 69 = EDQUOT */
+    "Stale NFS file handle",            /* 70 = ESTALE */
+    "Too many levels of remote in path",/* 71 = EREMOTE */
+    "RPC struct is bad",                /* 72 = EBADRPC */
+    "RPC version wrong",                /* 73 = ERPCMISMATCH */
+    "RPC program not available",        /* 74 = EPROGUNAVAIL */
+    "RPC program version wrong",        /* 75 = EPROGMISMATCH */
+    "RPC bad procedure for program",    /* 76 = EPROCUNAVAIL */
+    "No locks available",               /* 77 = ENOLCK */
+    "Function not implemented",         /* 78 = ENOSYS */
+    "Inappropriate file type or format",/* 79 = EFTYPE */
+    "Authentication error",             /* 80 = EAUTH */
+    "Need authenticator",               /* 81 = ENEEDAUTH */
+    "Reserved error 82",
+    "Reserved error 83",
+    "Reserved error 84",
+    "Reserved error 85",
+    "Reserved error 86",
+    "Reserved error 87",
+    "Reserved error 88",
+    "Reserved error 89",
+    "Reserved error 90",
+    "Reserved error 91",
+    "Reserved error 92",
+    "Reserved error 93",
+    "Reserved error 94",
+    "Reserved error 95",
+    "Reserved error 96",
+    "Reserved error 97",
+    "Reserved error 98",
+    "Reserved error 99",
+    "Inappropriate operation for background process",/* 100 = EBACKGROUND */
+    "Translator died",                  /* 101 = EDIED */
+    "?",                                /* 102 = ED */
+    "You really blew it this time",     /* 103 = EGREGIOUS */
+    "Computer bought the farm",         /* 104 = EIEIO */
+    "Gratuitous error",                 /* 105 = EGRATUITOUS */
   };
 
 #include <errno.h>
-#if _HURD_ERRNOS != 77
+#if _HURD_ERRNOS != 106
 #error errlist/errnos generation bug
 #endif
-const int _sys_nerr = 77;
+const int _sys_nerr = 106;
+weak_alias (_sys_errlist, sys_errlist)
+weak_alias (_sys_nerr, sys_nerr)

@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <mach/mach_interface.h>
 
 mach_port_t __mach_task_self_;
-vm_size_t __vm_page_size;
+vm_size_t __vm_page_size = 0;	/* Must be data not bss for weak alias.  */
 weak_alias (__vm_page_size, vm_page_size)
 
 void
