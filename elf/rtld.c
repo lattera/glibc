@@ -776,7 +776,7 @@ of this helper program; chances are you did not intend to run this program.\n\
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
   HP_TIMING_NOW (start);
-  _dl_map_object_deps (_dl_loaded, preloads, npreloads, mode == trace, 0);
+  _dl_map_object_deps (_dl_loaded, preloads, npreloads, mode == trace);
   HP_TIMING_NOW (stop);
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);

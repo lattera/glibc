@@ -1,5 +1,11 @@
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-deps.c (_dl_map_object_deps): Change return type and remove
+	last parameter.  Move code to add map to global scope from here...
+	* elf/dl-open.c (dl_open_worker): ...here.
+	* elf/ldsodefs.h: Adjust declaration of _dl_map_object_deps.
+	* elf/rtld.c: Adjust call to _dl_map_object_deps.
+
 	* locale/programs/ld-collate.c (collate_read): Fix warning.
 
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Prepend REG_ to enum

@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -238,10 +238,9 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
    loaded objects that will be inserted into MAP->l_searchlist after MAP
    but before its dependencies.  */
-extern unsigned int _dl_map_object_deps (struct link_map *map,
-					 struct link_map **preloads,
-					 unsigned int npreloads,
-					 int trace_mode, int global_scope)
+extern void _dl_map_object_deps (struct link_map *map,
+				 struct link_map **preloads,
+				 unsigned int npreloads, int trace_mode)
      internal_function;
 
 /* Cache the locations of MAP's hash table.  */
