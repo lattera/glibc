@@ -65,7 +65,7 @@
 # define CHAR_CLASS_SIZE ((__alignof__(wctype_t)+sizeof(wctype_t))/sizeof(CHAR_TYPE)+1)
 # define PUT_CHAR(c) \
   do {									      \
-    if (MC_CUR_MAX == 1)						      \
+    if (MB_CUR_MAX == 1)						      \
       putchar (c);							      \
     else								      \
       printf ("%C", (wint_t) c); /* Should we use wide stream??  */	      \
@@ -2338,7 +2338,8 @@ regex_compile (pattern, size, syntax, bufp)
 
 #ifdef MBS_SUPPORT
   /* Initialize the wchar_t PATTERN and offset_buffer.  */
-  p = pend = pattern = TALLOC(csize, CHAR_TYPE);
+  p = pend = pattern = TALLOC(csize + 1, CHAR_TYPE);
+  p[csize] = L'\0';	/* sentinel */
   mbs_offset = TALLOC(csize + 1, int);
   is_binary = TALLOC(csize + 1, char);
   if (pattern == NULL || mbs_offset == NULL || is_binary == NULL)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -157,7 +157,7 @@ shm_open (const char *name, int oflag, mode_t mode)
      file on the shmfs.  If this is what should be done the whole function
      should be revamped since we can determine whether shmfs is available
      while trying to open the file, all in one turn.  */
-  fd = open (fname, oflag, mode);
+  fd = open (fname, oflag | O_NOFOLLOW, mode);
   if (fd != -1)
     {
       /* We got a descriptor.  Now set the FD_CLOEXEC bit.  */

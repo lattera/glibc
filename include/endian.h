@@ -1,6 +1,6 @@
 #include <string/endian.h>
 
-#ifdef _LIBC
+#if defined _LIBC && !defined _ISOMAC
 # if __FLOAT_WORD_ORDER == __BIG_ENDIAN
 #  define BIG_ENDI 1
 #  undef LITTLE_ENDI

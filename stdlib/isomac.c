@@ -176,7 +176,7 @@ static char *macros[] =
 /* Format string to build command to invoke compiler.  */
 static const char fmt[] = "\
 echo \"#include <%s>\" |\
-%s -E -dM -ansi -pedantic %s -I. \
+%s -E -dM -ansi -pedantic %s -D_LIBC -D_ISOMAC -I. \
 -isystem `%s --print-prog-name=include` - 2> /dev/null > %s";
 
 

@@ -1,3 +1,22 @@
+2001-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/bits/mathcalls.h: Remove infnan declaration.
+
+2001-03-29  H.J. Lu  <hjl@gnu.org>
+
+	* include/endian.h: Define BIG_ENDI, LITTLE_ENDI, HIGH_HALF,
+	and LOW_HALF only if _LIBC is defined and _ISOMAC is not defined.
+	* stdlib/isomac.c (fmt): Define _LIBC and _ISOMAC.
+	.
+2001-03-29  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regex.c: Fix typo and add a sentinel.
+
+2001-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c: Open new file always with
+	O_NOFOLLOW.  Suggested by Christoph Roland.
+
 2001-03-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/bits/string.h: New unified 31/64 bit string.h.
