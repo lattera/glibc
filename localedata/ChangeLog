@@ -1,3 +1,9 @@
+2003-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/lo_LA: New file.
+	Contributed by Anousak Souphavanh <anousak@muanglao.com>.
+	* SUPPORTED (SUPPORTED-LOCALES): Add lo_LA.UTF8.
+
 2003-05-29  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/uk_UA: Correct mail address of Denys Dmytriyenko.

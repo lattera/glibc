@@ -1,3 +1,18 @@
+2003-02-28  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (parse_expression): Deliver translation to
+	build_word_op, and build_charclass.
+	(build_charclass): Apply translation for character classes too.
+	(build_word_op): Deliver translation to build_charclass.
+	* posux/transbug.c: New file.
+	* posix/Makefile (tests): Add transbug.
+
+2003-06-04  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (group_nodes_into_DFAstates): Check for
+	NEXT_ENDBUF_CONSTRAINT.  Move check for constraints which do a
+	'continue' before the others.
+
 2003-06-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* dirent/scandir.c (SCANDIR): Reset errno after calling selector
