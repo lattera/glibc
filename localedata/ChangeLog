@@ -1,3 +1,9 @@
+2000-05-15  Andreas Jaeger  <aj@suse.de>
+
+	* locales/de_DE: Fix currency placement to use "12.345,68 DM".
+	Reported by Christopher Creutzig <ccr@nescio.foebud.org>, closes
+	PR libc/1713.
+
 2000-05-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/ISO-8859-15: Remove incorrect definitions of <So> and <OR>.
