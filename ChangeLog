@@ -1,3 +1,14 @@
+2002-09-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/gmp-mparam.h: Include <bits/wordsize.h>.
+	(BITS_PER_MP_LIMB, BYTES_PER_MP_LIMB, BITS_PER_LONGINT): Define in
+	terms of __WORDSIZE.
+	* sysdeps/x86_64/gmp-mparam.h: File removed.
+	* sysdeps/sparc/gmp-mparam.h: File removed.
+	* sysdeps/mips/mips64/gmp-mparam.h: File removed.
+	* sysdeps/ia64/gmp-mparam.h: File removed.
+	* sysdeps/alpha/gmp-mparam.h: File removed.
+
 2002-09-20  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/elf/libc-start.c: Use long in place of int for argc
