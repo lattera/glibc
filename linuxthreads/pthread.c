@@ -884,7 +884,7 @@ void __pthread_reset_main_thread()
   if (getrlimit (RLIMIT_STACK, &limit) == 0
       && limit.rlim_cur != limit.rlim_max) {
     limit.rlim_cur = limit.rlim_max;
-    setrlimit (STACK_SIZE, &limit);
+    setrlimit(RLIMIT_STACK, &limit);
   }
 }
 
