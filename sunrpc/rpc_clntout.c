@@ -268,14 +268,14 @@ printbody (proc_list * proc)
       else
 	fprintf (fout, "\t if ");
       fprintf (fout,
-	       "(clnt_call (clnt, %s, (xdrproc_t) xdr_void", proc->proc_name);
+	       "(clnt_call (clnt, %s, (xdrproc_t) xdr_void, ", proc->proc_name);
 
       fprintf (fout,
 	       "(caddr_t) NULL,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,",
 	       stringfix(proc->res_type), (mtflag)?"":ampr(proc->res_type),
 	       RESULT);
       if (mtflag)
-	fprintf (fout, "\n\t\tTIMEOUT));\n}\n");
+	fprintf (fout, "\n\t\tTIMEOUT));\n\n");
       else
 	fprintf (fout, "\n\t\tTIMEOUT) != RPC_SUCCESS) {\n");
     }
