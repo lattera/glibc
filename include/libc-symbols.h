@@ -615,7 +615,7 @@
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 #    ifdef HAVE_ASM_GLOBAL_DOT_NAME
 #     define __hidden_dot_weak1(original, alias)	ASM_LINE_SEP	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
+  .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
 #    else
 #     define __hidden_dot_weak1(original, alias)
