@@ -34,14 +34,15 @@ please let me know.
 [Q7]	``When I run `nm -u libc.so' on the produced library I still
 	  find unresolved symbols?  Can this be ok?''
 
-[Q8]	``I expect GNU libc to be 100% source code compatible with
+[Q8]	``Can I replace the libc on my Linux system with GNU libc?''
+
+[Q9]	``I expect GNU libc to be 100% source code compatible with
 	  the old Linux based GNU libc.  Why isn't it like this?''
 
-[Q9]	``Why does getlogin() always return NULL on my Linux box?''
+[Q10]	``Why does getlogin() always return NULL on my Linux box?''
 
-[Q10]	``Where are the DST_* constants found in <sys/time.h> on many
+[Q11]	``Where are the DST_* constants found in <sys/time.h> on many
 	  systems?''
-
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -137,8 +138,8 @@ Library.
   You should avoid compiling on a NFS mounted device.  This is very
   slow.
 
-* plenty of time (approx 1h for i386-linux on i586@133 or 2.5h or
-  i486@66).
+* plenty of time (approx 1h for i386-linux on i586@133 or 2.5h on
+  i486@66 or 4.5h on i486@33).
 
   If you have some more measurements let me know.
 
@@ -179,10 +180,27 @@ errors while linking before deciding there is a problem.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q8]	``I expect GNU libc to be 100% source code compatible with
+[Q8]	``Can I replace the libc on my Linux system with GNU libc?''
+
+[A8] {UD} You cannot replace any existing libc for Linux with GNU
+libc.  There are different versions of C libraries and you can run
+libcs with different major version independently.
+
+For Linux there are today two libc versions:
+	libc-4		old a.out libc
+	libc-5		current ELF libc
+
+GNU libc will have the major number 6 and therefore you can have this
+additionally installed.  For more information consult documenation for
+shared library handling.  The Makefiles of GNU libc will automatically
+generate the needed symbolic links which the linker will use.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q9]	``I expect GNU libc to be 100% source code compatible with
 	  the old Linux based GNU libc.  Why isn't it like this?''
 
-[A8] {DMT,UD} Not every extension in Linux libc's history was well
+[A9] {DMT,UD} Not every extension in Linux libc's history was well
 thought-out.  In fact it had a lot of problems with standards compliance
 and with cleanliness.  With the introduction of a new version number these
 errors now can be corrected.  Here is a list of the known source code
@@ -246,11 +264,16 @@ incompatibilities:
   upgrading to a newer lpd should fix this problem (e.g., the 4.4BSD
   lpd is known to be working).
 
+* resolver functions/BIND: like on many other systems the functions of
+  the resolver library are not included in the libc itself.  There is
+  a separate library libresolv.  If you find some symbols starting with
+  `res_*' undefined simply add -lresolv to your call of the linker.
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-[Q9]	``Why does getlogin() always return NULL on my Linux box?''
+[Q10]	``Why does getlogin() always return NULL on my Linux box?''
 
-[A9] {UD} The GNU C library has a format for the UTMP and WTMP file
+[A10] {UD} The GNU C library has a format for the UTMP and WTMP file
 which differs from what your system currently has.  It was extended to
 fulfill the needs of the next years when IPv6 is introduced.  So the
 record size is different, fields might have a different position and
@@ -262,12 +285,12 @@ means to support the new techniques later.
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-[Q10]	``Where are the DST_* constants found in <sys/time.h> on many
+[Q11]	``Where are the DST_* constants found in <sys/time.h> on many
 	  systems?''
 
-[A10] {UD} These constants come from the old BSD days and are not used
+[A11] {UD} These constants come from the old BSD days and are not used
 today anymore (even the Linux based glibc does not implement the handling
-although the cosntants are defined).
+although the constants are defined).
 
 Instead GNU libc contains the zone database handling and compatibility
 code for POSIX TZ environment variable handling.

@@ -205,7 +205,8 @@ Version 2.0
 * We have incorporated the 4.4 BSD `db' library (version 1.85).  New header
   files <db.h> and <mpool.h> provide a rich set of functions for several
   types of simple databases stored in memory and in files, and <ndbm.h> is
-  an old `ndbm'-compatbile interface using the `db' functions.
+  an old `ndbm'-compatbile interface using the `db' functions.  Link with
+  `-ldb' to get these functions.
 
 * New macro `strdupa' copies a string like `strdup', but uses local stack
   space from `alloca' instead of dynamic heap space from `malloc'.

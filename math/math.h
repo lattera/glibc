@@ -62,19 +62,26 @@ __BEGIN_DECLS
 
 #ifdef __USE_MISC
 
-/* Include the file of declarations again, this type using `float'
+
+/* Include the file of declarations again, this time using `float'
    instead of `double' and appending f to each function name.  */
 
-#define _Mdouble_ 		float
+#ifndef _Mfloat_
+#define _Mfloat_		float
+#endif
+#define _Mdouble_ 		_Mfloat_
 #define __MATH_PRECNAME(name,r)	name##f##r
 #include <mathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
-/* Include the file of declarations again, this type using `long double'
+/* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
 
-#define _Mdouble_ 		long double
+#ifndef _Mlong_double_
+#define _Mlong_double_		long double
+#endif
+#define _Mdouble_ 		_Mlong_double_
 #define __MATH_PRECNAME(name,r)	name##l##r
 #include <mathcalls.h>
 #undef	_Mdouble_

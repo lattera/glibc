@@ -1,7 +1,20 @@
+Mon Jul  8 13:37:40 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* math/math.h (_Mfloat_, _Mlong_double_): New macros, defined iff not
+	already defined to float, long double.  Use those macros for _Mdouble_
+	defns when including mathcalls.h.
+	* math/Makefile [$(long-double-fcts) != yes] (CPPFLAGS): Append
+	-D_Mlong_double_=double.
+
+	Add more -lm functions to -lc because ldexp uses them.
+	* math/Makefile (calls): Add s_finite, s_copysign, s_scalbn, s_modf.
+	(routines): Remove s_modf, add s_frexpf, s_ldexpf; all but frexp and
+	ldexp have both f and l code, and those have f though not l code.
+
 Mon Jul  8 13:10:50 1996  Michael I. Bushnell p/BSG  <mib@psilocin.gnu.ai.mit.edu>
 
 	* string/argz-delete.c (argz_delete): Use memmove instead of
- 	memcpy for possbly overlapping strings.
+ 	memcpy for possibly overlapping strings.
 
 Mon Jul  8 02:14:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
