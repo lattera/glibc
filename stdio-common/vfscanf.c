@@ -36,6 +36,13 @@
 # define LONGLONG	long
 #endif
 
+/* Determine whether we have to handle `long long' at all.  */
+#if LONG_MAX == LONG_LONG_MAX
+# define need_longlong	0
+#else
+# define need_longlong	1
+#endif
+
 /* Those are flags in the conversion format. */
 # define LONG		0x001	/* l: long or double */
 # define LONGDBL	0x002	/* L: long long or long double */
@@ -439,7 +446,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* A double `l' is equivalent to an `L'.  */
 	      ++f;
-	      flags |= LONGDBL;
+	      flags |= need_longlong ? LONGDBL | LONG;
 	    }
 	  else
 	    /* ints are long ints.  */
@@ -448,7 +455,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'q':
 	case 'L':
 	  /* doubles are long doubles, and ints are long long ints.  */
-	  flags |= LONGDBL;
+	  flags |= need_longlong ? LONGDBL | LONG;
 	  break;
 	case 'a':
 	  /* The `a' is used as a flag only if followed by `s', `S' or
@@ -463,19 +470,19 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  flags |= MALLOC;
 	  break;
 	case 'z':
-	  if (sizeof (size_t) > sizeof (unsigned long int))
+	  if (need_longlong && sizeof (size_t) > sizeof (unsigned long int))
 	    flags |= LONGDBL;
 	  else if (sizeof (size_t) > sizeof (unsigned int))
 	    flags |= LONG;
 	  break;
 	case 'j':
-	  if (sizeof (uintmax_t) > sizeof (unsigned long int))
+	  if (need_longlong && sizeof (uintmax_t) > sizeof (unsigned long int))
 	    flags |= LONGDBL;
 	  else if (sizeof (uintmax_t) > sizeof (unsigned int))
 	    flags |= LONG;
 	  break;
 	case 't':
-	  if (sizeof (ptrdiff_t) > sizeof (long int))
+	  if (need_longlong && sizeof (ptrdiff_t) > sizeof (long int))
 	    flags |= LONGDBL;
 	  else if (sizeof (ptrdiff_t) > sizeof (int))
 	    flags |= LONG;
@@ -525,7 +532,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (!(flags & SUPPRESS))
 	    {
 	      /* Don't count the read-ahead.  */
-	      if (flags & LONGDBL)
+	      if (need_longlong && (flags & LONGDBL))
 		*ARG (long long int *) = read_in;
 	      else if (flags & LONG)
 		*ARG (long int *) = read_in;
@@ -916,7 +923,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  /* Convert the number.  */
 	  ADDW ('\0');
-	  if (flags & LONGDBL)
+	  if (need_longlong && (flags & LONGDBL))
 	    {
 	      if (number_signed)
 		num.q = __strtoll_internal (wp, &tw, base, flags & GROUP);
@@ -937,7 +944,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      if (! number_signed)
 		{
-		  if (flags & LONGDBL)
+		  if (need_longlong && (flags & LONGDBL))
 		    *ARG (unsigned LONGLONG int *) = num.uq;
 		  else if (flags & LONG)
 		    *ARG (unsigned long int *) = num.ul;
@@ -951,7 +958,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		}
 	      else
 		{
-		  if (flags & LONGDBL)
+		  if (need_longlong && (flags & LONGDBL))
 		    *ARG (LONGLONG int *) = num.q;
 		  else if (flags & LONG)
 		    *ARG (long int *) = num.l;

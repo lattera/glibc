@@ -2,6 +2,7 @@
 
 	* stdio-common/vfprintf.c (vfprintf): Don't implement special
 	handling for long long if it is the same as long.
+	* stdio-common/vfscanf.c (_IO_vfscanf): Likewise.
 
 	* stdlib/strtol.c: Moved to ...
 	* sysdeps/generic/strtol.c: ...here.
