@@ -508,16 +508,22 @@
    are defined by its normal name and we need to create the
    __GI_* alias to it, in C __REDIRECT causes the function definition
    to use __GI_* name and we need to add alias to the real name.
-   hidden_proto and hidden_weak don't make sense for assembly.  */
-#  define hidden_def(name) strong_alias (name, __GI_##name)
-#  define hidden_weak(name) weak_alias (name, __GI_##name)
+   There is no reason to use hidden_weak over hidden_def in assembly,
+   but we provide it for consistency with the C usage.
+   hidden_proto doesn't make sense for assembly but the equivalent
+   is to call via the HIDDEN_JUMPTARGET macro einstead of JUMPTARGET.  */
+#  define hidden_def(name)	strong_alias (name, __GI_##name)
+#  define hidden_weak(name)	hidden_def (name)
 #  define hidden_ver(local, name) strong_alias (local, __GI_##name)
+#  define HIDDEN_JUMPTARGET(name) __GI_##name
 # endif
 #else
-# ifndef __ASSEMBLY__
+# ifndef __ASSEMBLER__
 #  define hidden_proto(name)
-#  define hidden_weak(name)
-# endif
+# else
+#  define HIDDEN_JUMPTARGET(name) JUMPTARGET(name)
+# endif /* Not  __ASSEMBLER__ */
+# define hidden_weak(name)
 # define hidden_def(name)
 # define hidden_ver(local, name)
 #endif

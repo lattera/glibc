@@ -1,5 +1,5 @@
 /* Create new context.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -104,7 +104,7 @@ L(exitcode):
 	   exit the program with the return error value (-1).  */
 
 2:	pushl	%eax
-	call	JUMPTARGET(exit)
+	call	HIDDEN_JUMPTARGET(exit)
 	/* The 'exit' call should never return.  In case it does cause
 	   the process to terminate.  */
 	hlt
