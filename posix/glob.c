@@ -65,7 +65,7 @@ Cambridge, MA 02139, USA.  */
 #endif
 #endif
 
-#ifndef _AMIGA
+#if !defined (_AMIGA) && !defined (VMS)
 #include <pwd.h>
 #endif
 
