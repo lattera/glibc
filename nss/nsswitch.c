@@ -83,7 +83,10 @@ __nss_database_lookup (const char *database, const char *defconfig,
   /* Reconsider database variable in case some other thread called
      `__nss_configure_lookup' while we waited for the lock.  */
   if (*ni != NULL)
-    return 0;
+    {
+      __libc_lock_unlock (lock);
+      return 0;
+    }
 
   if (nss_initialized == 0 && service_table == NULL)
     /* Read config file.  */
@@ -99,10 +102,7 @@ __nss_database_lookup (const char *database, const char *defconfig,
 	 only requested once and so this might not be critical.  */
       for (entry = service_table->entry; entry != NULL; entry = entry->next)
 	if (strcmp (database, entry->name) == 0)
-	  {
-	    *ni = entry->service;
-	    return 0;
-	  }
+	  *ni = entry->service;
     }
 
   /* No configuration data is available, either because nsswitch.conf
@@ -110,7 +110,9 @@ __nss_database_lookup (const char *database, const char *defconfig,
 
      DEFCONFIG specifies the default service list for this database,
      or null to use the most common default.  */
-  *ni = nss_parse_service_list (defconfig ?: "compat [NOTFOUND=return] files");
+  if (*ni == NULL)
+    *ni = nss_parse_service_list (defconfig
+				  ?: "compat [NOTFOUND=return] files");
 
   __libc_lock_unlock (lock);
 
