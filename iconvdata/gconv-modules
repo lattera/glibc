@@ -1045,6 +1045,20 @@ module	IBM1162//		INTERNAL		IBM1162		1
 module	INTERNAL		IBM1162//		IBM1162		1
 
 #	from			to			module		cost
+alias	IBM-1163//		IBM1163//
+alias	CP1163//		IBM1163//
+alias	CSIBM1163//		IBM1163//
+module	IBM1163//		INTERNAL		IBM1163		1
+module	INTERNAL		IBM1163//		IBM1163		1
+
+#	from			to			module		cost
+alias	IBM-1164//		IBM1164//
+alias	CP1164//		IBM1164//
+alias	CSIBM1164//		IBM1164//
+module	IBM1164//		INTERNAL		IBM1164		1
+module	INTERNAL		IBM1164//		IBM1164		1
+
+#	from			to			module		cost
 alias	EUCKR//			EUC-KR//
 alias	CSEUCKR//		EUC-KR//
 alias	OSF0004000a//		EUC-KR//
@@ -1485,3 +1499,7 @@ module	INTERNAL		ISO-IR-209//		ISO-IR-209	1
 #	from			to			module		cost
 module	MAC-SAMI//		INTERNAL		MAC-SAMI	1
 module	INTERNAL		MAC-SAMI//		MAC-SAMI	1
+
+#	from			to			module		cost
+module	ARMSCII-8//		INTERNAL		ARMSCII-8	1
+module	INTERNAL		ARMSCII-8//		ARMSCII-8	1
