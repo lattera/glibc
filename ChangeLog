@@ -1,3 +1,16 @@
+2000-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/genops.c (__overflow): Use _IO_fwide to orient the stream.
+	(__uflow): Likewise.
+	(__underflow): Likewise.
+	* libio/wgenops.c (__wunderflow): Likewise.
+	* stdio-common/tst-unbputc.c: New file.
+	* stdio-common/tst-unbputc.sh: New file.
+	* stdio-common/Makefile: Add rules to build and run tst-unbputc.
+
+	* po/en_GB.po: New file.
+	Contributed by Robert Brady <rwb197@ecs.soton.ac.uk>.
+
 2000-07-01  Andreas Jaeger  <aj@suse.de>
 
 	* intl/Makefile (generated-dirs): New.

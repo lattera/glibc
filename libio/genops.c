@@ -194,6 +194,9 @@ __overflow (f, ch)
      _IO_FILE *f;
      int ch;
 {
+  /* This is a single-byte stream.  */
+  if (f->_mode == 0)
+    _IO_fwide (f, -1);
   return _IO_OVERFLOW (f, ch);
 }
 
@@ -285,6 +288,8 @@ __underflow (fp)
   if (fp->_vtable_offset == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
 
+  if (fp->_mode == 0)
+    _IO_fwide (fp, -1);
   if (_IO_in_put_mode (fp))
     if (_IO_switch_to_get_mode (fp) == EOF)
       return EOF;
@@ -313,6 +318,8 @@ __uflow (fp)
   if (fp->_vtable_offset == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
 
+  if (fp->_mode == 0)
+    _IO_fwide (fp, -11);
   if (_IO_in_put_mode (fp))
     if (_IO_switch_to_get_mode (fp) == EOF)
       return EOF;
