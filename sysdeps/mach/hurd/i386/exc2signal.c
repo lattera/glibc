@@ -1,5 +1,5 @@
 /* Translate Mach exception codes into signal numbers.  i386 version.
-   Copyright (C) 1991, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991,1992,1994,1996,1997,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,9 @@ _hurd_exception2signal (struct hurd_signal_detail *detail, int *signo)
       break;
 
     case EXC_BAD_ACCESS:
-      if (detail->exc_code == KERN_PROTECTION_FAILURE)
+      if (detail->exc_code == KERN_INVALID_ADDRESS
+	  || detail->exc_code == KERN_PROTECTION_FAILURE
+	  || detail->exc_code == KERN_WRITE_PROTECTION_FAILURE)
 	*signo = SIGSEGV;
       else
 	*signo = SIGBUS;
