@@ -25,6 +25,7 @@
 #include <ldsodefs.h>
 #include <elf/dynamic-link.h>
 #include <dl-machine.h>
+#include <stdio-common/_itoa.h>
 
 /* Because ld.so is now versioned, these functions can be in their own file;
    no relocations need to be done to call them.
@@ -364,6 +365,20 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
   return finaladdr;
 }
 
+static void
+dl_reloc_overflow (struct link_map *map,
+		   const char *name,
+		   Elf32_Addr *const reloc_addr)
+{
+  char buffer[128];
+  char *t;
+  t = stpcpy (buffer, name);
+  t = stpcpy (t, " relocation at 0x00000000");
+  _itoa_word ((unsigned) reloc_addr, t, 16, 0);
+  t = stpcpy (t, " out of range");
+  _dl_signal_error (0, map->l_name, buffer);
+}
+
 void
 __process_machine_rela (struct link_map *map,
 			const Elf32_Rela *reloc,
@@ -387,16 +402,14 @@ __process_machine_rela (struct link_map *map,
 
     case R_PPC_ADDR24:
       if (finaladdr > 0x01fffffc && finaladdr < 0xfe000000)
-	_dl_signal_error (0, map->l_name,
-			  "R_PPC_ADDR24 relocation out of range");
+	dl_reloc_overflow (map,  "R_PPC_ADDR24", reloc_addr);
       *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
     case R_PPC_UADDR16:
       if (finaladdr > 0x7fff && finaladdr < 0x8000)
-	_dl_signal_error (0, map->l_name,
-			  "R_PPC_ADDR16 relocation out of range");
+	dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr);
       *(Elf32_Half*) reloc_addr = finaladdr;
       break;
 
@@ -416,8 +429,7 @@ __process_machine_rela (struct link_map *map,
     case R_PPC_ADDR14_BRTAKEN:
     case R_PPC_ADDR14_BRNTAKEN:
       if (finaladdr > 0x7fff && finaladdr < 0x8000)
-	_dl_signal_error (0, map->l_name,
-			  "R_PPC_ADDR14 relocation out of range");
+	dl_reloc_overflow (map,  "R_PPC_ADDR14", reloc_addr);
       *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
 	*reloc_addr = ((*reloc_addr & 0xffdfffff)
@@ -429,8 +441,7 @@ __process_machine_rela (struct link_map *map,
       {
 	Elf32_Sword delta = finaladdr - (Elf32_Word) reloc_addr;
 	if (delta << 6 >> 6 != delta)
-	  _dl_signal_error (0, map->l_name,
-			    "R_PPC_REL24 relocation out of range");
+	  dl_reloc_overflow (map,  "R_PPC_REL14", reloc_addr);
 	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;

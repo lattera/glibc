@@ -1,3 +1,12 @@
+2000-10-17  Geoffrey Keating  <geoffk@cygnus.com>
+
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Add versions
+	of the unordered comparison functions that use the GCC builtins.
+
+	* sysdeps/powerpc/dl-machine.c (dl_reloc_overflow): New function.
+	(__process_machine_rela): Print the address of an overflowing
+	reloc.
+
 2000-10-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/shm_open.c: Correct default mount point
