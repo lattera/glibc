@@ -37,8 +37,8 @@ CFLAGS-gmon-start.o = -G0
 endif
 ifeq (yes,$(build-shared))
 # Compatibility
-sysdep_routines += divdi3 cmpdi2 shdi3 fixdfdi fixsfdi
-shared-only-routines += divdi3 cmpdi2 shdi3 fixdfdi fixsfdi
+sysdep_routines += divdi3 libgcc-compat
+shared-only-routines += divdi3 libgcc-compat
 endif
 endif
 

@@ -1,3 +1,14 @@
+2002-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/Makefile (sysdeps_routines): Use libgcc-compat
+	instead of cmpdi2, shdi3, fixdfdi, fixsfdi in csu dir.
+	(shared-only-routines): Likewise.
+	* sysdeps/powerpc/libgcc-compat.c: New file.
+	* sysdeps/wordsize-32/cmpdi2.c: Removed.
+	* sysdeps/wordsize-32/fixdfdi.c: Removed.
+	* sysdeps/wordsize-32/fixsfdi.c: Removed.
+	* sysdeps/wordsize-32/shdi3.c: Removed.
+
 2002-05-16  Bruno Haible  <bruno@clisp.org>
 
 	* MakeTAGS (libc.pot): Don't sort the output.
