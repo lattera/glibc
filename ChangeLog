@@ -1,9 +1,18 @@
 2003-02-21  Roland McGrath  <roland@redhat.com>
 
-	* malloc/Versions (GLIBC_PRIVATE): Add __libc_thread_freeres.
+	* malloc/thread-freeres.c: Conditionalize on _LIBC_REENTRANT.
+	* sunrpc/rpc_thread.c: Likewise for text_set_element use.
+	(__rpc_thread_destroy): Add it to __libc_subfreeres too.
+
+	* include/resolv.h: Add libc_hidden_proto for __res_nclose.
+	* resolv/res_init.c (__res_nclose): Add libc_hidden_def.
+	(res_thread_freeres): New function, on __libc_thread_subfreeres and
+	__libc_subfreeres.
+
+	* malloc/Versions (libc: GLIBC_PRIVATE): Add __libc_thread_freeres.
 	* malloc/thread-freeres.c: New file.
 	* malloc/Makefile (aux): Add it.
-	* sunrpc/Versions (GLIBC_PRIVATE): Removed.
+	* sunrpc/Versions (libc: GLIBC_PRIVATE): Removed.
 	* sunrpc/rpc_thread.c (__rpc_thread_destroy): Put in special section
 	"__libc_thread_freeres_fn" and add to __libc_thread_subfreeres set.
 

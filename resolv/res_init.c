@@ -528,6 +528,7 @@ res_randomid(void) {
 libc_hidden_def (__res_randomid)
 #endif
 
+
 /*
  * This routine is for closing the socket if a virtual circuit is used and
  * the program wants to close it.  This provides support for endhostent()
@@ -556,3 +557,26 @@ res_nclose(res_state statp) {
 		}
 	statp->_u._ext.nsinit = 0;
 }
+#ifdef _LIBC
+libc_hidden_def (__res_nclose)
+#endif
+
+#ifdef _LIBC
+# ifdef _LIBC_REENTRANT
+/* This is called when a thread is exiting to free resources held in _res.  */
+static void __attribute__ ((section ("__libc_thread_freeres_fn")))
+res_thread_freeres (void)
+{
+  __res_nclose (&_res);		/* Close any VC sockets.  */
+
+  for (int ns = 0; ns < MAXNS; ns++)
+    if (_res._u._ext.nsaddrs[ns] != NULL)
+      {
+	free (_res._u._ext.nsaddrs[ns]);
+	_res._u._ext.nsaddrs[ns] = NULL;
+      }
+}
+text_set_element (__libc_thread_subfreeres, res_thread_freeres);
+text_set_element (__libc_subfreeres, res_thread_freeres);
+# endif
+#endif

@@ -21,6 +21,7 @@
 #include <libc-internal.h>
 #include <set-hooks.h>
 
+#ifdef _LIBC_REENTRANT
 DEFINE_HOOK (__libc_thread_subfreeres, (void));
 
 void __attribute__ ((section ("__libc_thread_freeres_fn")))
@@ -28,3 +29,4 @@ __libc_thread_freeres (void)
 {
   RUN_HOOK (__libc_thread_subfreeres, ());
 }
+#endif

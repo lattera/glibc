@@ -30,9 +30,13 @@ __rpc_thread_destroy (void)
 		free (tvp->authdes_cache_s);
 		free (tvp->authdes_lru_s);
 		free (tvp);
+		__libc_tsd_set (RPC_VARS, NULL);
 	}
 }
+#ifdef _LIBC_REENTRANT
 text_set_element (__libc_thread_subfreeres, __rpc_thread_destroy);
+#endif
+text_set_element (__libc_subfreeres, __rpc_thread_destroy);
 
 
 /*
