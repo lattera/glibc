@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,12 +19,8 @@
 #ifndef _SYS_ELF_H
 #define _SYS_ELF_H	1
 
-#include <sys/user.h>
+#warning "This header is obsolete; use <sys/procfs.h> instead."
 
-typedef unsigned long int elf_greg_t;
-#define ELF_NGREG (sizeof (struct pt_regs) / sizeof(elf_greg_t))
-
-typedef elf_greg_t elf_gregset_t[ELF_NGREG];
-typedef struct user_fp 	elf_fpregset_t;
+#include <sys/procfs.h>
 
 #endif	/* sys/elf.h */
