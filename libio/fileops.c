@@ -287,6 +287,8 @@ _IO_new_file_setbuf (fp, p, len)
     return fp;
 }
 
+static int new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
+
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */
 
@@ -296,9 +298,18 @@ _IO_new_do_write (fp, data, to_do)
      const char *data;
      _IO_size_t to_do;
 {
+  return (to_do == 0 || new_do_write (fp, data, to_do) == to_do)
+  	 ? 0 : EOF;
+}
+
+static
+int
+new_do_write (fp, data, to_do)
+     _IO_FILE *fp;
+     const char *data;
+     _IO_size_t to_do;
+{
   _IO_size_t count;
-  if (to_do == 0)
-    return 0;
   if (fp->_flags & _IO_IS_APPENDING)
     /* On a system without a proper O_APPEND implementation,
        you would need to sys_seek(0, SEEK_END) here, but is
@@ -311,17 +322,17 @@ _IO_new_do_write (fp, data, to_do)
       _IO_fpos64_t new_pos
 	= _IO_SYSSEEK (fp, fp->_IO_write_base - fp->_IO_read_end, 1);
       if (new_pos == _IO_pos_BAD)
-	return EOF;
+	return 0;
       fp->_offset = new_pos;
     }
   count = _IO_SYSWRITE (fp, data, to_do);
-  if (fp->_cur_column)
-    fp->_cur_column = _IO_adjust_column (fp->_cur_column - 1, data, to_do) + 1;
+  if (fp->_cur_column && count)
+    fp->_cur_column = _IO_adjust_column (fp->_cur_column - 1, data, count) + 1;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_buf_base;
   fp->_IO_write_end = ((fp->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
 		       ? fp->_IO_buf_base : fp->_IO_buf_end);
-  return count != to_do ? EOF : 0;
+  return count;
 }
 
 int
@@ -786,7 +797,7 @@ _IO_new_file_xsputn (f, data, n)
     }
   if (to_do + must_flush > 0)
     {
-      _IO_size_t block_size, dont_write;
+      _IO_size_t block_size, do_write;
       /* Next flush the (full) buffer. */
       if (__overflow (f, EOF) == EOF)
 	return n - to_do;
@@ -794,18 +805,21 @@ _IO_new_file_xsputn (f, data, n)
       /* Try to maintain alignment: write a whole number of blocks.
 	 dont_write is what gets left over. */
       block_size = f->_IO_buf_end - f->_IO_buf_base;
-      dont_write = block_size >= 128 ? to_do % block_size : 0;
+      do_write = to_do - (block_size >= 128 ? to_do % block_size : 0);
 
-      count = to_do - dont_write;
-      if (_IO_new_do_write (f, s, count) == EOF)
-	return n - to_do;
-      to_do = dont_write;
+      if (do_write)
+        {
+	  count = new_do_write (f, s, do_write);
+	  to_do -= count;
+	  if (count < do_write)
+	    return n - to_do;
+        }
 
       /* Now write out the remainder.  Normally, this will fit in the
 	 buffer, but it's somewhat messier for line-buffered files,
 	 so we let _IO_default_xsputn handle the general case. */
-      if (dont_write)
-	to_do -= _IO_default_xsputn (f, s+count, dont_write);
+      if (to_do)
+	to_do -= _IO_default_xsputn (f, s+do_write, to_do);
     }
   return n - to_do;
 }
