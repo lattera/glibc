@@ -1,5 +1,8 @@
 2003-03-26  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/m68k/m68020/bits/atomic.h: Fix typos.
+	* include/atomic.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Define ret_NOERRNO.
 
 2003-03-25  Roland McGrath  <roland@redhat.com>

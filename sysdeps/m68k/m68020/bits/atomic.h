@@ -99,7 +99,7 @@ typedef uintmax_t uatomic_max_t;
 	 __asm __volatile ("1: cas2%.l %0:%R0,%1:%R1,(%2):(%3);"	      \
 			   "   jbne 1b"					      \
 			   : "=d" (__result)				      \
-			   : "d" (newval), "r" (__memp),		      \
+			   : "d" (newvalue), "r" (__memp),		      \
 			     "r" ((char *) __memp + 4), "0" (__result)	      \
 			   : "memory");					      \
        }								      \
@@ -195,7 +195,7 @@ typedef uintmax_t uatomic_max_t;
 			 : "1" (*(mem)));				      \
      else								      \
        {								      \
-	 __typef (mem) __memp = (mem);					      \
+	 __typeof (mem) __memp = (mem);					      \
 	 __typeof (*(mem)) __oldval = *__memp;				      \
 	 __typeof (*(mem)) __temp;					      \
 	 __asm __volatile ("1: move%.l %1,%2;"				      \

@@ -190,7 +190,7 @@
 #ifndef atomic_add_negative
 # define atomic_add_negative(mem, value) \
   ({ __typeof (value) __value = (value);				      \
-     atomic_exchange_and_add ((mem), __value) < -__value); })
+     atomic_exchange_and_add ((mem), __value) < -__value; })
 #endif
 
 
