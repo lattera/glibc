@@ -1,5 +1,17 @@
 2001-07-06  Andreas Jaeger  <aj@suse.de>
 
+	* config.make.in (sysconfdir): Replace correctly.
+	Closes PR libc/2369, reported by Peter Simons <simons@cryp.to>.
+
+	* sysdeps/unix/sysv/linux/alpha/configure.in: Removed, it's no
+	longer needed.
+
+	* sysdeps/unix/sysv/linux/configure.in (libc_cv_linuxVER): Add
+	case for alpha.
+	Rework handling of missing linuxthreads add-on.
+
+	* configure.in: Remove unused sysconfdir substitution.
+
 	* manual/Makefile (texis): Add fdl.texi.
 	* manual/fdl.texi: New.
 	* manual/socket.texi (Host Names): Improve grammar, fix overflow hbox.
