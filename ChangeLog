@@ -1,3 +1,8 @@
+2005-02-27  Denis Barbier  <barbier@debian.org>
+
+	[BZ #38]
+	* locale/iso-4217.def: Add CSD currency.
+
 2005-03-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/test-ifaddrs.c: Use test-skeleton.
