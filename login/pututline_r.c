@@ -26,9 +26,29 @@ Boston, MA 02111-1307, USA.  */
 #include <sys/file.h>
 
 
+/* XXX An alternative solution would be to call a SUID root program
+   which write the new value.  */
+
 int
 pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
 {
+  struct stat st;
+  int result = 0;
+
+#if _HAVE_UT_TYPE - 0
+  /* Test whether ID has any of the legal types because we have to
+     prevent illegal entries.  */
+  if (id->ut_type != RUN_LVL && id->ut_type != BOOT_TIME
+      && id->ut_type != OLD_TIME && id->ut_type != NEW_TIME
+      && id->ut_type != INIT_PROCESS && id->ut_type != LOGIN_PROCESS
+      && id->ut_type != USER_PROCESS && id->ut_type != DEAD_PROCESS)
+    /* No, using '<' and '>' for the test is not possible.  */
+    {
+      errno = EINVAL;
+      return -1;
+    }
+#endif
+
   /* Open utmp file if not already done.  */
   if (utmp_data->ut_fd == -1)
     {
@@ -37,12 +57,14 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
 	return -1;
     }
 
+#if _HAVE_UT_TYPE - 0
   /* Seek position to write.  */
   if (utmp_data->ubuf.ut_type != utmp_ptr->ut_type)
     {
       /* We must not overwrite the data in UTMP_DATA.  */
       struct utmp_data *data_tmp = alloca (sizeof (utmp_data));
       struct utmp *dummy;
+      off_t new_pos;
 
       *data_tmp = *utmp_data;
       utmp_data = data_tmp;
@@ -50,22 +72,24 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
       if (getutid_r (utmp_ptr, &dummy, utmp_data) < 0)
 	{
 	  if (errno != ESRCH)
+	    /* Some error occured.  If no entry was found, the position
+	       pointer now is at the end of the file.  */
 	    return -1;
 
-	  utmp_data->loc_utmp = lseek (utmp_data->ut_fd, 0, SEEK_END);
-	  if (utmp_data->loc_utmp == -1)
-	    return -1;
-	}
+	  /* Set position pointer to position after adding of the record.  */
+	  utmp_data->loc_utmp += sizeof (struct utmp);
     }
+#endif
+
+  /* Find out how large the file is.  */
+  if (fstat (utmp_data->ut_fd, &st) < 0)
+    return -1;
 
   /* Position file correctly.  */
-  if (utmp_data->loc_utmp > 0
+  if (utmp_data->loc_utmp <= st.st_size
       && lseek (utmp_data->ut_fd, utmp_data->loc_utmp - sizeof (struct utmp),
 		SEEK_SET) < 0)
     return -1;
-
-  /* XXX An alternative solution would be to call an SUID root program
-     which write the new value.  */
 
   /* Try to lock the file.  */
   if (flock (utmp_data->ut_fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
@@ -78,12 +102,22 @@ pututline_r (const struct utmp *utmp_ptr, struct utmp_data *utmp_data)
     }
 
   /* Write the new data.  */
-  if (write (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
+  if (write (utmp_data->ut_fd, utmp_ptr, sizeof (struct utmp))
       != sizeof (struct utmp))
-    return -1;
+    {
+      /* If we appended a new record this is only partially written.
+	 Remove it.  */
+      if (utmp_data->loc_utmp > st.st_size)
+	{
+	  (void) ftruncate (utmp_data->ut_fd, st.st_size);
+	  utmp_data->loc_utmp = st.st_size;
+	}
+
+      result = -1;
+    }
 
   /* And unlock the file.  */
   (void) flock (utmp_data->ut_fd, LOCK_UN);
 
-  return 0;
+  return result;
 }

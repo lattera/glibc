@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -59,9 +59,8 @@ Cambridge, MA 02139, USA.  */
 /* Number of bits in a `char'.	*/
 #define	CHAR_BIT	8
 
-/* Maximum length of any multibyte character in any locale.
-   Locale-writers should change this as necessary.  */
-#define	MB_LEN_MAX	1
+/* Maximum length of any multibyte character in any locale.  */
+#define	MB_LEN_MAX	6
 
 /* Minimum and maximum values a `signed char' can hold.  */
 #define	SCHAR_MIN	(-128)

@@ -136,10 +136,8 @@ extern int errno;
 # define INTERNAL(x) INTERNAL1(x)
 # define INTERNAL1(x) __##x##_internal
 # define WEAKNAME(x) WEAKNAME1(x)
-# define WEAKNAME1(x) __##x
 #else
 # define INTERNAL(x) __/**/x/**/_internal
-# define WEAKNAME(x) __/**/x
 #endif
 
 #ifdef USE_NUMBER_GROUPING
@@ -322,7 +320,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 
 noconv:
   /* We must handle a special case here: the base is 0 or 16 and the
-     first two characters and '0' and 'x', but the rest are no
+     first two characters are '0' and 'x', but the rest are no
      hexadecimal digits.  This is no error case.  We return 0 and
      ENDPTR points to the `x`.  */
   if (endptr != NULL)
@@ -337,24 +335,18 @@ noconv:
 }
 
 /* External user entry point.  */
-
-/* Prototype.  */
-INT WEAKNAME (strtol) __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
-			    int base));
-
-
 INT
-WEAKNAME (strtol) (nptr, endptr, base)
+strtol (nptr, endptr, base)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0);
 }
-
-#ifdef weak_alias
-/* We need this indirection when `strtol' is defined as a macro
-   for one of the other names.  */
-#define weak1(x, y) weak_alias (x, y)
-weak1 (WEAKNAME (strtol), strtol)
+#ifdef weak_symbol
+/* We need to weaken this symbol because some the the defined
+   functions do not come from ANSI.  The indirection is necessary
+   because `strtol' might be a macro.  */
+#define weak_this(x) weak_symbol (x)
+weak_this (strtol)
 #endif

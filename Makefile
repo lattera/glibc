@@ -222,8 +222,8 @@ parent_echo-distinfo:
 
 # Make the distribution tarfile.
 
-distribute  := README INSTALL FAQ NOTES COPYING.LIB COPYING NEWS	\
-	       ChangeLog ChangeLog.[0-9]				\
+distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
+	        COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk				\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\

@@ -119,6 +119,7 @@ typedef struct
 #define EM_SPARC64     11		/* SPARC v9 (not official) 64-bit */
 
 #define EM_PARISC      15		/* HPPA */
+#define EM_PPC         20		/* PowerPC */
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
@@ -255,6 +256,10 @@ typedef struct
 #define ELF32_R_TYPE(val)		((val) & 0xff)
 #define ELF32_R_INFO(sym, type)		(((sym) << 8) + ((type) & 0xff))
 
+#define ELF64_R_SYM(i)			((i) >> 32)
+#define ELF64_R_TYPE(i)			((i) & 0xffffffff)
+#define ELF64_R_INFO(sym,type)		(((sym) << 32) + (type))
+
 /* Program segment header.  */
 
 typedef struct {
@@ -287,6 +292,17 @@ typedef struct {
 #define PF_W		(1 << 1)	/* Segment is writable */
 #define PF_R		(1 << 2)	/* Segment is readable */
 #define PF_MASKPROC	0xf0000000	/* Processor-specific */
+
+/* Legal values for note segment descriptor types for core files. */
+
+#define NT_PRSTATUS	1		/* Contains copy of prstatus struct */
+#define NT_FPREGSET	2		/* Contains copy of fpregset struct */
+#define NT_PRPSINFO	3		/* Contains copy of prpsinfo struct */
+
+/* Legal values for the  note segment descriptor types for object files.  */
+
+#define NT_VERSION	1		/* Contains a version string.  */
+
 
 /* Dynamic section entry.  */
 
@@ -521,9 +537,17 @@ typedef struct
 #define EF_MIPS_CPIC	  4		/* Uses PIC calling sequence */
 #define EF_MIPS_ARCH	  0xf0000000	/* MIPS architecture level */
 
+/* Legal values for MIPS architecture level.  */
+
+#define E_MIPS_ARCH_1	  0x00000000	/* -mips1 code.  */
+#define E_MIPS_ARCH_2	  0x10000000	/* -mips2 code.  */
+#define E_MIPS_ARCH_3	  0x20000000	/* -mips3 code.  */
+
 /* Special section indices.  */
 
 #define SHN_MIPS_ACOMMON 0xff00		/* Allocated common symbols */
+#define SHN_MIPS_TEXT	 0xff01		/* Allocated test symbol.  */
+#define SHN_MIPS_DATA	 0xff02		/* Allocated data symbol.  */
 #define SHN_MIPS_SCOMMON 0xff03		/* Small common symbols */
 #define SHN_MIPS_SUNDEFINED 0xff04	/* Small undefined symbols */
 
@@ -535,6 +559,9 @@ typedef struct
 #define SHT_MIPS_UCODE	  0x70000004	/* Reserved for SGI/MIPS compilers */
 #define SHT_MIPS_DEBUG	  0x70000005	/* MIPS ECOFF debugging information */
 #define SHT_MIPS_REGINFO  0x70000006	/* Register usage information */
+#define SHT_MIPS_OPTIONS  0x7000000d	/* Miscellaneous options.  */
+#define SHT_MIPS_DWARF    0x7000001e	/* DWARF debugging information.  */
+#define SHT_MIPS_EVENTS	  0x70000021	/* Event section.  */
 
 /* Legal values for sh_flags field of Elf32_Shdr.  */
 
@@ -602,7 +629,8 @@ typedef struct
 #define DT_MIPS_UNREFEXTNO   0x70000012	/* First external DYNSYM */
 #define DT_MIPS_GOTSYM	     0x70000013	/* First GOT entry in DYNSYM */
 #define DT_MIPS_HIPAGENO     0x70000014	/* Number of GOT page table entries */
-#define DT_MIPS_NUM	     0x15
+#define DT_MIPS_RLD_MAP	     0x70000016	/* Address of run time loader map.  */
+#define DT_MIPS_NUM	     0x17
 
 /* Legal values for DT_MIPS_FLAG Elf32_Dyn entry.  */
 
@@ -630,6 +658,30 @@ typedef struct
 /* Entries found in sections of type SHT_MIPS_CONFLICT.  */
 
 typedef Elf32_Addr Elf32_Conflict;
+
+
+/* HPPA specific definitions.  */
+
+/* Legal values for sh_type field of Elf32_Shdr.  */
+
+#define SHT_PARISC_GOT		0x70000000 /* GOT for external data.  */
+#define SHT_PARISC_ARCH		0x70000001 /* Architecture extensions.  */
+#define SHT_PARISC_GLOBAL	0x70000002 /* Definition of $global$.  */
+#define SHT_PARISC_MILLI	0x70000003 /* Millicode routines.  */
+#define SHT_PARISC_UNWIND	0x70000004 /* Unwind information.  */
+#define SHT_PARISC_PLT		0x70000005 /* Procedure linkage table.  */
+#define SHT_PARISC_SDATA	0x70000006 /* Short initialized data.  */
+#define SHT_PARISC_SBSS		0x70000007 /* Short uninitialized data.  */
+#define SHT_PARISC_SYMEXTN	0x70000008 /* Argument/relocation info.  */
+#define SHT_PARISC_STUBS	0x70000009 /* Linker stubs.  */
+
+/* Legal values for sh_flags field of Elf32_Shdr.  */
+
+#define SHF_PARISC_SHORT	0x20000000 /* Section with short addressing. */
+
+/* Legal values for ST_TYPE subfield of st_info (symbol type).  */
+
+#define STT_PARISC_MILLICODE	13	/* Millicode function entry point.  */
 
 
 #endif	/* elf.h */

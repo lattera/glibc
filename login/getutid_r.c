@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <string.h>
 #include <unistd.h>
 #include <utmp.h>
 
@@ -28,6 +29,18 @@ int
 getutid_r (const struct utmp *id, struct utmp **utmp,
 	   struct utmp_data *utmp_data)
 {
+#if (_HAVE_UT_ID - 0) && (_HAVE_UT_TYPE - 0)
+  /* Test whether ID has any of the legal types.  */
+  if (id->ut_type != RUN_LVL && id->ut_type != BOOT_TIME
+      && id->ut_type != OLD_TIME && id->ut_type != NEW_TIME
+      && id->ut_type != INIT_PROCESS && id->ut_type != LOGIN_PROCESS
+      && id->ut_type != USER_PROCESS && id->ut_type != DEAD_PROCESS)
+    /* No, using '<' and '>' for the test is not possible.  */
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   /* Open utmp file if not already done.  */
   if (utmp_data->ut_fd == -1)
     {
@@ -40,7 +53,7 @@ getutid_r (const struct utmp *id, struct utmp **utmp,
   if (lseek (utmp_data->ut_fd, utmp_data->loc_utmp, SEEK_SET) == -1)
     return -1;
 
-  do
+  while (1)
     {
       /* Read the next entry.  */
       if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
@@ -52,10 +65,27 @@ getutid_r (const struct utmp *id, struct utmp **utmp,
 
       /* Update position pointer.  */
       utmp_data->loc_utmp += sizeof (struct utmp);
+
+      if ((id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
+	   || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
+	  && id->ut_type != utmp_data->ubuf.ut_type)
+	/* Stop at the next entry with type RUN_LVL, BOOT_TIME,
+	   OLD_TIME, or NEW_TIME.  */
+	break;
+
+      if ((id->ut_type == INIT_PROCESS || id->ut_type == LOGIN_PROCESS
+	   || id->ut_type == USER_PROCESS || id->ut_type == DEAD_PROCESS)
+	  && strncmp (id->ut_id, utmp_data->ubuf.ut_id, sizeof id->ut_id) == 0)
+	/* Stop at the next entry with the specified ID and with type
+	   INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
+	break;
     }
-  while (id->ut_type != utmp_data->ubuf.ut_type);
 
   *utmp = &utmp_data->ubuf;
 
   return 0;
+#else	/* !_HAVE_UT_ID && !_HAVE_UT_TYPE */
+  errno = ENOSYS;
+  return -1;
+#endif
 }

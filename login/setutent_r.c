@@ -52,7 +52,9 @@ setutent_r (struct utmp_data *utmp_data)
 
   /* Remember we are at beginning of file.  */
   utmp_data->loc_utmp = 0;
-  utmp_data->ubuf.ut_type = -1;
+#if _HAVE_UT_TYPE - 0
+  utmp_data->ubuf.ut_type = UT_UNKNOWN;
+#endif
 }
 
 

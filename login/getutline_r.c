@@ -18,9 +18,9 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <string.h>
 #include <unistd.h>
 #include <utmp.h>
-#include <string.h>
 
 
 /* For implementing this function we don't use the getutent_r function
@@ -41,7 +41,7 @@ getutline_r (const struct utmp *line, struct utmp **utmp,
   if (lseek (utmp_data->ut_fd, utmp_data->loc_utmp, SEEK_SET) == -1)
     return -1;
 
-  do
+  while (1)
     {
       /* Read the next entry.  */
       if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
@@ -53,9 +53,24 @@ getutline_r (const struct utmp *line, struct utmp **utmp,
 
       /* Update position pointer.  */
       utmp_data->loc_utmp += sizeof (struct utmp);
+
+#if _HAVE_UT_TYPE - 0
+      if (utmp_data->ubuf.ut_type == USER_PROCESS
+	  && strncmp (line->ut_line, utmp_data->ubuf.ut_line,
+		      sizeof line->ut_line) == 0)
+	/* Stop if we found an user entry.  */
+	break;
+
+      if (utmp_data->ubuf.ut_type == LOGIN_PROCESS)
+	/* Stop if we found a login entry.  */
+	break;
+#else	/* !_HAVE_UT_TYPE */
+      if (strncmp (line->ut_line, utmp_data->ubuf.ut_line,
+		      sizeof line->ut_line) == 0)
+	/* Stop if the line match.  */
+	break;
+#endif
     }
-  while (strncmp (line->ut_line, utmp_data->ubuf.ut_line,
-		  sizeof line->ut_line));
 
   *utmp = &utmp_data->ubuf;
 

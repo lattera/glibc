@@ -1,63 +1,101 @@
-/*
- * Copyright (c) 1988, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)login.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-#include <sys/types.h>
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-#include <fcntl.h>
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
+
+#include <errno.h>
+#include <limits.h>
+#include <string.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <utmp.h>
-#include <stdio.h>
+
 
 void
-login(ut)
-	const struct utmp *ut;
+login (const struct utmp *ut)
 {
-	register int fd;
-	int tty;
+  char tty[PATH_MAX + UT_LINESIZE];
+  int found_tty;
+  const char *ttyp;
+  struct utmp_data data;
 
-	tty = ttyslot();
-	if (tty > 0 && (fd = open(_PATH_UTMP, O_WRONLY|O_CREAT, 0644)) >= 0) {
-		(void)lseek(fd, (off_t)(tty * sizeof(struct utmp)), L_SET);
-		(void)write(fd, ut, sizeof(struct utmp));
-		(void)close(fd);
+  /* Seek tty.  */
+  found_tty = ttyname_r (STDIN_FILENO, tty, sizeof tty);
+  if (found_tty < 0)
+    found_tty = ttyname_r (STDOUT_FILENO, tty, sizeof tty);
+  if (found_tty < 0)
+    found_tty = ttyname_r (STDERR_FILENO, tty, sizeof tty);
+
+  if (found_tty >= 0)
+    {
+      /* Tell that we want to use the UTMP file.  */
+      if (utmpname (_PATH_UTMP) != 0)
+	{
+	  struct utmp tmp;
+	  struct utmp *old;
+
+	  /* Open UTMP file.  */
+	  setutent_r (&data);
+
+	  /* We only want to insert the name of the tty without path.  */
+	  ttyp = basename (tty);
+
+	  /* Position to record for this tty.  */
+#if _HAVE_UT_TYPE - 0
+	  tmp.ut_type = USER_PROCESS;
+#endif
+	  strncpy (tmp.ut_line, ttyp, UT_LINESIZE);
+
+	  /* Read the record.  */
+	  if (getutline_r (&tmp, &old, &data) >= 0 || errno == ESRCH)
+	    {
+#if _HAVE_UT_TYPE - 0
+	      /* We have to fake the old entry because this `login'
+		 function does not fit well into the UTMP file
+		 handling scheme.  */
+	      old->ut_type = ut->ut_type;
+#endif
+	      pututline_r (ut, &data);
+	    }
+
+	  /* Close UTMP file.  */
+	  endutent_r (&data);
 	}
-	if ((fd = open(_PATH_WTMP, O_WRONLY|O_APPEND, 0)) >= 0) {
-		(void)write(fd, ut, sizeof(struct utmp));
-		(void)close(fd);
+    }
+
+  /* Update the WTMP file.  Here we have to add a new entry.  */
+  if (utmpname (_PATH_WTMP) != 0)
+    {
+      /* Open the WTMP file.  */
+      setutent_r (&data);
+
+      /* Position at end of file.  */
+      data.loc_utmp = lseek (data.ut_fd, 0, SEEK_END);
+      if (data.loc_utmp != -1)
+	{
+#if _HAVE_UT_TYPE - 0
+	  /* We have to fake the old entry because this `login'
+	     function does not fit well into the UTMP file handling
+	     scheme.  */
+	  data.ubuf.ut_type = ut->ut_type;
+#endif
+	  pututline_r (ut, &data);
 	}
+
+      /* Close WTMP file.  */
+      endutent_r (&data);
+    }
 }

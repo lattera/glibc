@@ -1,72 +1,67 @@
-/*
- * Copyright (c) 1988, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)logout.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-#include <sys/types.h>
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
+
+#include <errno.h>
+#include <string.h>
+#include <utmp.h>
 #include <sys/time.h>
 
-#include <fcntl.h>
-#include <utmp.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-
-typedef struct utmp UTMP;
-
 int
-logout(line)
-	register const char *line;
+logout (const char *line)
 {
-	register int fd;
-	UTMP ut;
-	int rval;
+  struct utmp_data data;
+  struct utmp tmp;
+  struct utmp *ut;
+  int result = 0;
 
-	if ((fd = open(_PATH_UTMP, O_RDWR, 0)) < 0)
-		return(0);
-	rval = 0;
-	while (read(fd, &ut, sizeof(UTMP)) == sizeof(UTMP)) {
-		if (!ut.ut_name[0] || strncmp(ut.ut_line, line, UT_LINESIZE))
-			continue;
-		bzero(ut.ut_name, UT_NAMESIZE);
-		bzero(ut.ut_host, UT_HOSTSIZE);
-		(void)time(&ut.ut_time);
-		(void)lseek(fd, -(off_t)sizeof(UTMP), L_INCR);
-		(void)write(fd, &ut, sizeof(UTMP));
-		rval = 1;
-	}
-	(void)close(fd);
-	return(rval);
+  /* Tell that we want to use the UTMP file.  */
+  if (utmpname (_PATH_UTMP) == 0)
+    return 0;
+
+  /* Open UTMP file.  */
+  setutent_r (&data);
+
+  /* Fill in search information.  */
+#if _HAVE_UT_TYPE - 0
+  tmp.ut_type = USER_PROCESS;
+#endif
+  strncpy (tmp.ut_line, line, UT_LINESIZE);
+
+  /* Read the record.  */
+  if (getutline_r (&tmp, &ut, &data) >= 0 || errno == ESRCH)
+    {
+      /* Clear information about who & from where.  */
+      bzero (ut->ut_name, UT_NAMESIZE);
+      bzero (ut->ut_host, UT_HOSTSIZE);
+
+#if _HAVE_UT_TV - 0
+      gettimeofday (&ut->ut_tv, NULL);
+#else
+      time (&ut->ut_time);
+#endif
+
+      if (pututline_r (ut, &data) >= 0)
+	result = 1;
+    }
+
+  /* Close UTMP file.  */
+  endutent_r (&data);
+
+  return result;
 }

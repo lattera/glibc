@@ -898,7 +898,7 @@ const struct locale_data _nl_C_LC_CTYPE =
 {
   _nl_C_name,
   NULL, 0, /* no file mapped */
-  13,
+  14,
   {
     { string: _nl_C_LC_CTYPE_class },
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -919,6 +919,7 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
 	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0" },
     { string: "tolower\0" "toupper\0" },
-    { string: _nl_C_LC_CTYPE_width }
+    { string: _nl_C_LC_CTYPE_width },
+    { word: 2 }
   }
 };

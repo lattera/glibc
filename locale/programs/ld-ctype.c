@@ -108,6 +108,7 @@ struct locale_ctype_t
   u_int32_t *class_name_ptr;
   u_int32_t *map_name_ptr;
   unsigned char *width;
+  u_int32_t mb_cur_max;
 };
 
 
@@ -470,6 +471,9 @@ ctype_output (struct localedef_t *locale, struct charset_t *charset,
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
 		      ctype->width, ctype->plane_size * ctype->plane_cnt);
+
+	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
+		      &ctype->mb_cur_max, sizeof (u_int32_t));
 
 	  default:
 	    assert (! "unknown CTYPE element");
@@ -1372,4 +1376,10 @@ Computing table size for character classes might take a while..."),
 		= charset->width_rules[cnt].width;
 	    }
     }
+
+  /* Compute MB_CUR_MAX.  Please note the value mb_cur_max in the
+     character set definition gives the number of bytes in the wide
+     character representation.  We compute the number of bytes used
+     for the UTF-8 encoded form.  */
+  ctype->mb_cur_max = ((int []) { 2, 3, 5, 6 }) [charset->mb_cur_max - 1];
 }

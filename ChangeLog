@@ -1,4 +1,72 @@
+Tue May 28 04:38:10 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* limits.h: Change MB_LEN_MAX to 6.  A 31-bit ISO 10646
+	character in UTF-8 encoding has that many bytes.
+
+	* locale/langinfo.h: New element _NL_CTYPE_MB_CUR_MAX.
+	* locale/categories.def: Add description of field _NL_CTYPE_MB_CUR_MAX.
+	* locale/Makefile (routines): Add mb_cur_max.
+	* locale/mb_cur_max.c: New file.  This function gets called
+	when the macro MB_CUR_MAX is used.
+	* locale/C-ctype.c: Initialize new mb_cur_max field.
+	* locale/localeinfo.h: Change magic value because of incompatible
+        change.
+	* locale/programs/ld-ctype.c: Determine value of mb_cur_max
+        according to current character set and write it out with the rest.
+	* stdlib/stdlib.h (MB_CUR_MAX): Not constant anymore.  Get value
+        according to currently used locale for catefory LC_CTYPE by
+        calling the function __ctype_get_mb_cur_max.
+
+Tue May 28 03:27:46 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* FAQ:  Fix some typos.
+	Tell that for Linux the kernel header files are necessary.
+
+	* PROJECTS: New file.  List of open jobs for glibc.
+	* Makefile (distribute): Add PROJECTS.
+
+	* crypt/GNUmakefile (headers): New variable.  Mention crypt.h.
+	* crypt/crypt.h: Header for crypt functions.
+
+	* elf/elf.h: Add some new constants from recent Cygnus ELF
+	header files.
+
+	* login/getutid_r.c: Test for correct type.
+	Don't depend on ut_type and ut_id unless _HAVE_UT_TYPE and
+	_HAVE_UT_ID resp. are defined.
+	Make really compliant with specification.
+
+	* login/getutline_r.c, login/pututline_r.c: Don't depend on
+	ut_type and ut_id unless _HAVE_UT_TYPE and _HAVE_UT_ID resp. are
+	defined.
+	Make really compliant with specification.
+
+	* login/setutent_r.c: Don't depend on ut_type and ut_id unless
+	_HAVE_UT_TYPE and _HAVE_UT_ID resp. are defined.
+
+	* login/login.c, login/logout.c, login/logwtmp.c: Complete
+	rewrite.  Now based on getut*/setut* functions.
+
+	* stdlib/strtol.c: Undo changes of Wed May 22 01:48:54 1996.
+	This prevented using this file in other GNU packages.
+
+	* sysdeps/gnu/utmpbits.h: Define _HAVE_UT_TYPE, _HAVE_UT_ID,
+	and _HAVE_UT_TV because struct utmp has these members.
+
+	* sysdeps/libm-i387/e_exp.S: Correct exp(+-Inf) case.
+
+	* utmp.h: New file.  Wrapper around login/utmp.h.
+
 Tue May 28 13:11:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-error.c (struct catch): New type.
+	(catch): New static variable, struct catch *.
+	(catch_env, signalled_errstring, signalled_objname): Variables removed.
+	(_dl_signal_error): If CATCH is non-null, set its errstring and
+	objname members and jump to CATCH->env.  If it is null, call
+	_dl_sysdep_fatal with a standard message.
+	* elf/rtld.c (dl_main): Explode `doit' function into dl_main's body.
+	No longer use _dl_catch_error.
 
 	* Makerules (sed-remove-objpfx): Avoid extra space in regexp due to
 	continuation line.

@@ -70,9 +70,9 @@ typedef struct
 #define	EXIT_SUCCESS	0	/* Successful exit status.  */
 
 
-/* Maximum length of a multibyte character in the current locale.
-   This is just one until the fancy locale support is finished.  */
-#define	MB_CUR_MAX	1
+/* Maximum length of a multibyte character in the current locale.  */
+#define	MB_CUR_MAX	(__ctype_get_mb_cur_max ())
+extern int __ctype_get_mb_cur_max __P ((void));
 
 
 /* Convert a string to a floating-point number.  */

@@ -28,7 +28,8 @@ distribute	= localeinfo.h categories.def \
 		  charmap-kw.gperf charmap-kw.h locfile-token.h \
 		  locfile-kw.gperf locfile-kw.h linereader.h \
 		  locales.h locfile.h stringtrans.h
-routines	= setlocale findlocale loadlocale localeconv nl_langinfo
+routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
+		  mb_cur_max
 categories	= ctype messages monetary numeric time collate
 aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
 others		= localedef locale

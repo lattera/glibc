@@ -1,0 +1,98 @@
+Open jobs for finishing GNU libc:
+---------------------------------
+Status: May 1996
+
+If you have time and talent to take over any of the jobs below please
+contact <bug-glibc@prep.ai.mit.edu>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[ 1] Port to new platforms or test current version on formerly supported
+     platforms.
+
+
+[ 2] Test compliance with standards.  If you have access to recent
+     standards (IEEE, ISO, ANSI, X/Open, ...) and/or test suites you
+     could do some checks as the goal is to be compliant with all
+     standards if they do not contradict each other.
+
+
+[ 3] Write translations for the GNU libc message for the so far
+     unsupported languages.  GNU libc is fully internationalized and
+     users can immediately benefit from this.
+
+     Take a look at the matrix in
+	ftp://prep.ai.mit.edu/pub/gnu/ABOUT-NLS
+     for the current status (of course better use a mirror of prep).
+
+
+[ 4] Write wordexp() function; this is described in POSIX.2, The
+     header <wordexp.h> already exists.
+
+     Implementation idea: use some functions from bash.
+
+
+[ 5] Write reentrent versions of crypt() et.al.
+
+     Implementation idea: Define in <crypt.h>
+
+	struct crypt_data
+	{
+	  <... all the needed data ...>
+	};
+
+     and define additional functions
+
+	char *crypt_r (__const char *__key, __const char *__salt,
+		       struct crypt_data *__data);
+
+	void setkey_r (__const char *__key, struct crypt_data *__data);
+
+	void encrypt_r (char *__block, int __edflag,
+			struct crypt_data *__data);
+
+     If possible the non-reentrent functions should use the reentrent
+     ones.
+
+     Because of the US export restrictions it might be a good idea if
+     some non-american person does this job.
+
+
+[ 6] Write `long double' versions of the math functions.  This should be
+     done in collaboration with the NetBSD and FreeBSD people.
+
+     The libm is in fact fdlibm (not the same as in Linux libc).
+
+
+[ 7] If you enjoy assembler programming (as I do --drepper :-) you might
+     be interested in writing optimized versions for some functions.
+     Especially the string handling functions can be optimized a lot.
+
+     Take a look at
+
+	Faster String Functions
+	Henry Spencer, University of Toronto
+	Usenix Winter '92, pp. 419--428
+
+     or just ask.  Currently mostly i?86 optimized versions exist.
+
+
+[ 8] Write nftw() function.  Perhaps it might be good to reimplement the
+     ftw() function as well to share most of the code.
+
+
+[ 9] Write AVL-tree based tsearch() et.al. functions.  Currently only
+     a very simple algorithm is used.
+
+
+[10] Extend regex and/or rx to work with wide characters.
+
+
+[11] Add mmap() support to malloc().
+     Doug Lea's malloc implementation might give some ideas.  Perhaps
+     switching completly to his implementation is an option if it
+     a) can work without mmap() support (not all system GNU libc
+	is running on have mmap)
+     b) is without mmap support at least as fast as the current
+	implementation
+     c) will be extended with the current hooks and additional functions

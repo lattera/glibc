@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,18 +20,47 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <link.h>
 #include <setjmp.h>
+#include <string.h>
 
-static jmp_buf catch_env;
-static const char *signalled_errstring, *signalled_objname;
+/* This structure communicates state between _dl_catch_error and
+   _dl_signal_error.  */
+struct catch
+  {
+    const char *errstring, *objname; /* Error detail filled in here.  */
+    jmp_buf env;		/* longjmp here on error.  */
+  };
+
+/* This points to such a structure during a call to _dl_catch_error.
+   During implicit startup and run-time work for needed shared libraries,
+   this is null.  */
+static struct catch *catch;
+
 
 void
 _dl_signal_error (int errcode,
 		  const char *objname,
 		  const char *errstring)
 {
-  signalled_errstring = errstring ?: "DYNAMIC LINKER BUG!!!";
-  signalled_objname = objname;
-  longjmp (catch_env, errcode ?: -1);
+  if (! errstring)
+    errstring = "DYNAMIC LINKER BUG!!!";
+
+  if (catch)
+    {
+      /* We are inside _dl_catch_error.  Return to it.  */
+      catch->errstring = errstring;
+      catch->objname = objname;
+      longjmp (catch->env, errcode ?: -1);
+    }
+  else
+    {
+      /* Lossage while resolving the program's own symbols is always fatal.  */
+      extern char **_dl_argv;	/* Set in rtld.c at startup.  */
+      _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
+			": error in loading shared libraries\n",
+			objname ?: "", objname ? ": " : "",
+			errstring, errcode ? ": " : "",
+			errcode ? strerror (errcode) : "", "\n", NULL);
+    }
 }
 
 int
@@ -40,18 +69,20 @@ _dl_catch_error (const char **errstring,
 		 void (*operate) (void))
 {
   int errcode;
+  struct catch c = { errstring: NULL, objname: NULL };
 
-  signalled_errstring = signalled_objname = NULL;
-  errcode = setjmp (catch_env);
+  errcode = setjmp (c.env);
   if (errcode == 0)
     {
+      catch = &c;
       (*operate) ();
+      catch = NULL;
       *errstring = *objname = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
-  *errstring = signalled_errstring;
-  *objname = signalled_objname;
+  *errstring = c.errstring;
+  *objname = c.objname;
   return errcode == -1 ? 0 : errcode;
 }
