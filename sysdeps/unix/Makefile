@@ -287,8 +287,7 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	for dir in $(+sysdep_dirs); do \
 	  test -f $$dir/syscalls.list && \
-	  { $(SHELL) $(dir $<)$(notdir $<) \
-		     $$dir $(object-suffixes) || exit 1; }; \
+	  { $(SHELL) $(dir $<)$(notdir $<) $$dir || exit 1; }; \
 	  test $$dir = $(..)sysdeps/unix && break; \
 	done > $@T
 	mv -f $@T $@

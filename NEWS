@@ -7,6 +7,25 @@ Please send GNU C library bug reports using the `glibcbug' script to
 <bugs@gnu.ai.mit.edu>.  Questions and suggestions should be send to
 <bug-glibc@prep.ai.mit.edu>.
 
+Version 2.0.2
+
+* more bug fixes
+
+* add atoll function
+
+* fix complex problems in Berkeley DB code
+
+Version 2.0.1
+
+* fixed lots of header problems (especially Linux/GNU specific)
+
+* dynamic loader preserves all registers
+
+* Roland McGrath provided support for handling of auxiliary objects in
+  the ELF dynamic loader.
+
+* support for parallel builds is improved
+
 Version 2.0
 
 * GNU extensions are no longer declared by default.  To enable them you

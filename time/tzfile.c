@@ -119,6 +119,7 @@ __tzfile_read (const char *file)
 	 directory hierachy starting at TZDIR.  */
       if (__libc_enable_secure
 	  && ((*file == '/'
+	       && (memcmp(file, TZDEFAULT, sizeof(TZDEFAULT) -1))
 	       && memcmp (file, default_tzdir, sizeof (default_tzdir) - 1))
 	      || strstr (file, "../") != NULL))
 	/* This test a certainly a bit too restrictive but it should

@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Usage: make-syscalls.sh ../sysdeps unix/common
+# Usage: make-syscalls.sh ../sysdeps/unix/common
 # Expects $sysdirs in environment.
 
 thisdir=$1; shift
@@ -57,7 +57,8 @@ EOF
 
   # Emit a compilation rule for this syscall.
   echo "\
-\$(foreach o,\$(object-suffixes),\$(objpfx)$file\$o): \$(common-objpfx)s-proto.d
+\$(foreach o,\$(all-object-suffixes),\$(objpfx)$file\$o): \\
+\$(common-objpfx)s-proto.d
 	(echo '#include <sysdep.h>'; \\
 	 echo 'PSEUDO ($strong, $syscall, $nargs)'; \\
 	 echo '	ret'; \\

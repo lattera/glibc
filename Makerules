@@ -238,7 +238,7 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	     /*) dir=$$sysdir ;; \
 	     *)  dir="\$$(..)$$sysdir" ;; \
 	   esac; \
-	   for o in $(object-suffixes); do \
+	   for o in $(all-object-suffixes); do \
 	     $(open-check-inhibit-asm) \
 	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \
 		  \$$(compile-command.S)";				      \
@@ -292,7 +292,8 @@ define +make-deps
 $(make-target-directory)
 -@rm -f $@
 $(+mkdep) $< $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
-sed -e 's,$(subst .,\.,$*)\.o,$(foreach o,$(object-suffixes),$(@:.d=$o)) $@,' \
+sed \
+-e 's,$(subst .,\.,$*)\.o,$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) > $(@:.d=.T)
 mv -f $(@:.d=.T) $@
 endef

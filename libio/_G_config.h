@@ -8,6 +8,7 @@
 
 #include <gnu/types.h>
 #define __need_size_t
+#define __need_wint_t
 #include <stddef.h>
 #define _G_size_t	size_t
 #define _G_fpos_t	__off_t
@@ -15,6 +16,7 @@
 #define _G_off_t	__off_t
 #define	_G_pid_t	__pid_t
 #define	_G_uid_t	__uid_t
+#define _G_wint_t	wint_t
 
 typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
 typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));

@@ -151,7 +151,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   if (strchr (name, '.') == NULL && (cp = __hostalias (name)) != NULL)
     name = cp;
 
-  n = res_search (name, C_IN, type, host_buffer.buf, sizeof (host_buffer));
+  n = res_search (name, C_IN, type, host_buffer.buf, sizeof (host_buffer.buf));
   if (n < 0)
     return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
 

@@ -160,11 +160,11 @@ struct ypresp_key_val {
      implementation somehow must change the order internally.  We
      don't want to follow this bad example since the user should be
      able to use rpcgen on this file.  */
-  keydat key;
-  valdat val;
+  keydat keydat;
+  valdat valdat;
 #else
-  valdat val;
-  keydat key;
+  valdat valdat;
+  keydat keydat;
 #endif
 };
 

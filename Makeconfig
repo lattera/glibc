@@ -481,6 +481,7 @@ endif
 # to pass different flags for each flavor.
 libtypes = $(foreach o,$(object-suffixes),$(libtype$o))
 object-suffixes := .o
+all-object-suffixes := .o .so .po .go
 libtype.o := lib%.a
 ifeq (yes,$(build-shared))
 # Under --enable-shared, we will build a shared library of PIC objects.

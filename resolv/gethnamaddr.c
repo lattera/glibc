@@ -539,7 +539,7 @@ gethostbyname2(name, af)
 				break;
 		}
 
-	if ((n = res_search(name, C_IN, type, buf.buf, sizeof(buf))) < 0) {
+	if ((n = res_search(name, C_IN, type, buf.buf, sizeof(buf.buf))) < 0) {
 		dprintf("res_search failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyname2(name, af));

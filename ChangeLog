@@ -1,3 +1,56 @@
+1997-02-13 02:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/time.h (__nanosleep): Define only when struct timespec is
+	also available.
+	Reported by Ross Alexander <rossa@stimpy.cs.auckland.ac.nz>.
+
+1997-02-12 21:34  a sun  <asun@zoology.washington.edu>
+
+	* sysdeps/unix/sysv/linux/netinet/udp.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add netinet/udp.h.
+
+1997-02-12 21:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname_r): Follow patch
+	of 1997-02-09 in resolv/gethnamaddr.c.
+
+1997-02-11 18:52  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/_G_config.h (_G_wint_t): New.
+
+1997-02-09 11:31  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* resolv/gethnamaddr.c (gethostbyname2): Change sizeof (buf)
+	to sizeof (buf.buf) while calling res_search ().
+
+1997-02-03 20:01  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* nis/rpcsvc/yp_prot.h (ypresp_key_val): Change key to keydat,
+	val to keydat, stat to status.
+
+1997-02-12 20:45  Andreas Jaeger  <jaeger@informatik.uni-kl.de>
+
+	* time/tzfile.c (__tzfile_read): Fix problem with SUID programs.
+
+1997-02-12 19:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/btree/bt_split.c (bt_psplit): Apply official patches #2 and #4
+	by Keith Bostic.
+
+1997-02-11 14:49  Andreas Jaeger  <jaeger@informatik.uni-kl.de>
+
+	* stdlib/atoll.c: Undefined atoll, not atol.
+
+1997-02-08 09:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/Makefile ($(common-objpfx)sysd-syscalls): Remove
+	unused arguments of shell script.
+
+	* Makeconfig (all-object-suffixes): New variable.
+	* Makerules ($(+sysdir_pfx)sysd-rules, +make-deps): Use it instead
+	of $(object-suffixes).
+	* sysdeps/unix/make-syscalls.sh: Likewise.  Fix comment.
+
 1997-02-11 05:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/weight.h (collate_rules): It's an u_int32_t array.

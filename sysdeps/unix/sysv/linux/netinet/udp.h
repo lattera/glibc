@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stdlib.h>
+#ifndef _NETINET_UDP_H
+#define _NETINET_UDP_H	1
 
-#undef	atoll
+#include <sys/types.h>
 
+/* The Internet RFC 768 specifies this format for the UDP protocol.  */
+struct udphdr
+  {
+    u_short uh_sport;		/* Source port.  */
+    u_short uh_dport;		/* Destination port.  */
+    u_short uh_ulen;		/* UDP length.  */
+    u_short uh_sum;		/* UDP checksum.  */
+  };
 
-/* Convert a string to a long int.  */
-long long int
-atoll (const char *nptr)
-{
-  return strtoll (nptr, (char **) NULL, 10);
-}
+#define SOL_UDP		17	/* UDP level.  */
+
+#endif /* netinet/udp.h */
