@@ -24,6 +24,14 @@
 
 #include <sys/param.h>
 
+#define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+#define VALID_ELF_OSABI(osabi) \
+  (osabi == ELFOSABI_SYSV || osabi == ELFOSABI_ARM)
+#define VALID_ELF_HEADER(hdr,exp,size) \
+  memcmp (hdr,exp,size-2) == 0 \
+  && VALID_ELF_OSABI (hdr[EI_OSABI]) \
+  && VALID_ELF_ABIVERSION (hdr[EI_ABIVERSION])
+
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int __attribute__ ((unused))
 elf_machine_matches_host (Elf32_Half e_machine)
