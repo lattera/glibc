@@ -1,3 +1,7 @@
+1998-09-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locales/sr_YU: Add repertoiremap.
+
 1998-09-23  Cristian Gafton  <gafton@redhat.com>
 
 	* locales/sr_YU: New file.

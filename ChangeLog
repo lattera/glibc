@@ -1,3 +1,8 @@
+1998-09-27  Geoff Keating  <geoffk@ozemail.com.au> 
+ 
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: New file, use 
+	correct struct ipc_perm definition.  
+ 
 1998-09-29  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
  
 	* nis/ypclnt.c (yp_all): Close UDP socket und give CLIENT handle free. 
