@@ -23,7 +23,7 @@ klogctl		EXTRA	syslog		3	klogctl
 lchown		-	lchown		3	__lchown	lchown
 mlock		EXTRA	mlock		2	__mlock	mlock
 mlockall	EXTRA	mlockall	1	__mlockall	mlockall
-mmap		-	mmap		6	__mmap		mmap mmap64
+mmap		-	mmap		6	__mmap		mmap
 mount		EXTRA	mount		5	__mount	mount
 mremap		EXTRA	mremap		4	__mremap	mremap
 munlock		EXTRA	munlock		2	__munlock	munlock

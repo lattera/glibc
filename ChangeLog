@@ -1,5 +1,10 @@
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove mmap64 alias for mmap.
+	* sysdeps/unix/sysv/linux/mmap64.c: Test whether mapped area is in
+	range of mmap.  If not fail.
+	Patches by Daniel Jacobowitz <dan@debian.org>.
+
 	* elf/rtld.c: Split _dl_start in two pieces to prevent GOT usage
 	before the relocation happened.
 	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
