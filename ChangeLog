@@ -1,3 +1,9 @@
+2003-04-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c: Revert 2003-03-14 change.
+	* elf/dl-conflict.c (_dl_resolve_conflicts): Move
+	#if ! ELF_MACHINE_NO_RELA conditional into the routine.
+
 2003-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/xdr.c (xdr_string): Catch nodesize == 0 [PR libc/4999].

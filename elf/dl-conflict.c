@@ -28,11 +28,11 @@
 #include <sys/types.h>
 #include "dynamic-link.h"
 
-#if ! ELF_MACHINE_NO_RELA
 void
 _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
 		       ElfW(Rela) *conflictend)
 {
+#if ! ELF_MACHINE_NO_RELA
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
     _dl_printf ("\nconflict processing: %s\n",
 		l->l_name[0] ? l->l_name : rtld_progname);
@@ -64,5 +64,5 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
     for (; conflict < conflictend; ++conflict)
       elf_machine_rela (l, conflict, NULL, NULL, (void *) conflict->r_offset);
   }
-}
 #endif
+}
