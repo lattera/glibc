@@ -73,13 +73,13 @@ $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
 localepath = "$(localedir):$(i18ndir)"
 
-CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
-	    -DLOCALEDIR='"$(localedir)"' \
-	    -DLOCALE_ALIAS_PATH='"$(localedir):$(i18ndir)"' \
-	    -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
-	    -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
-	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
-	    -Iprograms $(CPPFLAGS)
+locale-CPPFLAGS := -DLOCALE_PATH='$(localepath)' \
+		   -DLOCALEDIR='"$(localedir)"' \
+		   -DLOCALE_ALIAS_PATH='"$(localedir):$(i18ndir)"' \
+		   -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
+		   -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
+		   -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
+		   -Iprograms
 
 CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts

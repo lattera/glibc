@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sysdep.h>
+#include <set-hooks.h>
 #include "hurdstartup.h"
-#include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
 
 extern void __mach_init (void);
+extern void __libc_init_secure (void);
 extern void __libc_init (int, char **, char **);
 extern void __getopt_clean_environment (char **);
 extern void __libc_global_ctors (void);
@@ -40,7 +42,7 @@ extern int __libc_argc;
 extern char **__libc_argv;
 
 /* We often need the PID.  Cache this value.  */
-pid_t __libc_pid;
+pid_t __libc_pid = 0xf00baa;
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
@@ -59,6 +61,7 @@ init1 (int argc, char *arg0, ...)
   __libc_argc = argc;
   __libc_argv = argv;
   __environ = envp;
+
   while (*envp)
     ++envp;
   d = (void *) ++envp;
@@ -105,6 +108,10 @@ init1 (int argc, char *arg0, ...)
     _hurd_init (d->flags, argv,
 		d->portarray, d->portarraysize,
 		d->intarray, d->intarraysize);
+
+#ifndef PIC
+  __libc_init_secure ();
+#endif
 
   __libc_init (argc, argv, __environ);
 
@@ -214,8 +221,6 @@ init (int *data)
    pointer in the dynamic section based solely on that.  It is convention
    for this function to be in the `.init' section, but the symbol name is
    the only thing that really matters!!  */
-/*void _init (int argc, ...) __attribute__ ((unused, section (".init")));*/
-
 void
 _init (int argc, ...)
 {
@@ -231,6 +236,12 @@ _init (int argc, ...)
 
 void
 __libc_init_first (int argc __attribute__ ((unused)), ...)
+{
+}
+
+
+void
+_hurd_stack_setup (int argc __attribute__ ((unused)), ...)
 {
 #ifndef PIC
   void doinit (int *data)

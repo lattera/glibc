@@ -1,3 +1,47 @@
+1998-06-25 19:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (CPPFLAGS): Use $($(subdir)-CPPFLAGS) if defined first.
+	* locale/Makefile: Define locale-CPPFLAGS instead of redefining
+	CPPFLAGS.
+
+	* libc.map: Export __sigaction.
+
+1998-06-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/sched.h (CLONE_PTRACE): Add it
+	(from Linux 2.1.107).
+
+1998-06-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-XXX.c (_nss_files_get,ENTNAME_r): Initialize
+	position when file was opened here.
+	Reported by Howard Chu <hyc@platinum.com>.
+
+	* sysdeps/generic/glob.c: Also protect FNM_* macros from being
+	undefined in a second inclusion.
+
+1998-06-20  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/i386/Makefile: New file.
+	* sysdeps/mach/hurd/i386/init-first.c [!PIC] (init1): Call
+	__libc_init_secure.
+	(_hurd_stack_setup): Renamed
+	from __libc_init_first.
+	(__libc_init_first): New function.
+	* sysdeps/mach/hurd/i386/static-start.S: New file.
+
+1998-05-30  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/i386/init-first.c
+
+1998-06-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* grp/initgroups.c: Use _CALL_DL_FCT.
+
+1998-06-23  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Add missing cast.
+
 1998-06-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/terminal.texi (Pseudo-Terminals): Correct typos.

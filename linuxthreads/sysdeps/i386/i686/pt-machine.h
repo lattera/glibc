@@ -1,5 +1,5 @@
 /* Machine-dependent pthreads configuration and inline functions.
-   i386 version.
+   i686 version.
    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
@@ -40,12 +40,8 @@ testandset (int *spinlock)
 register char * stack_pointer __asm__ ("%esp");
 
 
-/* Compare-and-swap for semaphores.
-   Available on the 486 and above, but not on the 386.
-   We test dynamically whether it's available or not. */
-
+/* Compare-and-swap for semaphores.  It's always available on i686.  */
 #define HAS_COMPARE_AND_SWAP
-#define TEST_FOR_COMPARE_AND_SWAP
 
 extern inline int
 __compare_and_swap (long int *p, long int oldval, long int newval)
@@ -73,21 +69,4 @@ extern inline void
 set_eflags (int newflags)
 {
   __asm__ __volatile__ ("pushl %0; popfl" : : "r" (newflags) : "cc");
-}
-
-
-extern inline int
-compare_and_swap_is_available (void)
-{
-  int oldflags = get_eflags ();
-  int changed;
-  /* Flip AC bit in EFLAGS.  */
-  set_eflags (oldflags ^ 0x40000);
-  /* See if bit changed.  */
-  changed = (get_eflags () ^ oldflags) & 0x40000;
-  /* Restore EFLAGS.  */
-  set_eflags (oldflags);
-  /* If the AC flag did not change, it's a 386 and it lacks cmpxchg.
-     Otherwise, it's a 486 or above and it has cmpxchg.  */
-  return changed != 0;
 }

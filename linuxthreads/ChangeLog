@@ -20,8 +20,7 @@
 	* sysdeps/pthread/pthread.h: Likewise.
 	Patches by Xavier leroy.
 
-	* sysdeps/i386/pt-machine.h: When compiling for i686 don't test for
-	xchgcmp instruction, it is available.
+	* sysdeps/i386/i686/pt-machine.h: New file.
 
 1998-06-25  Ulrich Drepper  <drepper@cygnus.com>
 
