@@ -1,3 +1,8 @@
+2003-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Add correct
+	cleanup support and unwind info.
+
 2003-06-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/pthread_once.S (__pthread_once):

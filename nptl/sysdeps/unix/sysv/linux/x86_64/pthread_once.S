@@ -35,6 +35,7 @@
 	.type	__pthread_once,@function
 	.align	16
 __pthread_once:
+.LSTARTCODE:
 	testl	$2, (%rdi)
 	jz	1f
 	xorl	%eax, %eax
@@ -42,6 +43,7 @@ __pthread_once:
 
 	/* Preserve the function pointer.  */
 1:	pushq	%rsi
+.Lpush_rsi:
 	xorq	%r10, %r10
 
 	/* Not yet initialized or initialization in progress.
@@ -79,28 +81,15 @@ __pthread_once:
 
 	/* Preserve the pointer to the control variable.  */
 3:	pushq	%rdi
+.Lpush_rdi:
 
-	/* Call the initializer function after setting up the
-	   cancellation handler.  */
-	subq	$32, %rsp
-
-	/* Push the cleanup handler.  */
-	leaq	clear_once_control(%rip), %rsi
-	movq	%rdi, %rdx
-	movq	%rsp, %rdi
-	callq	__pthread_cleanup_push	/* Note: no @PLT.  */
-
-	callq	*40(%rsp)
-
-	/* Pop the cleanup handler.  */
-	movq	%rsp, %rdi
-	xorq	%rsi, %rsi
-	callq	__pthread_cleanup_pop	/* Note: no @PLT.  */
-
-	addq	$32, %rsp
+.LcleanupSTART:
+	callq	*8(%rsp)
+.LcleanupEND:
 
 	/* Get the control variable address back.  */
 	popq	%rdi
+.Lpop_rdi:
 
 	/* Sucessful run of the initializer.  Signal that we are done.  */
 	LOCK
@@ -113,6 +102,7 @@ __pthread_once:
 	syscall
 
 4:	addq	$8, %rsp
+.Ladd:
 	xorq	%rax, %rax
 	retq
 
@@ -129,6 +119,8 @@ pthread_once = __pthread_once
 	.type	clear_once_control,@function
 	.align	16
 clear_once_control:
+	movq	(%rsp), %rdi
+	movq	%rax, %r8
 	movl	$0, (%rdi)
 
 	movl	$0x7fffffff, %edx
@@ -136,5 +128,126 @@ clear_once_control:
 	movq	$SYS_futex, %rax
 	syscall
 
-	retq
+	movq	%r8, %rdi
+.LcallUR:
+	call	_Unwind_Resume@PLT
+	hlt
+.LENDCODE:
 	.size	clear_once_control,.-clear_once_control
+
+
+	.section .gcc_except_table,"a",@progbits
+.LexceptSTART:
+	.byte	0xff				# @LPStart format (omit)
+	.byte	0xff				# @TType format (omit)
+	.byte	0x01				# call-site format
+						# DW_EH_PE_uleb128
+	.uleb128 .Lcstend-.Lcstbegin
+.Lcstbegin:
+	.uleb128 .LcleanupSTART-.LSTARTCODE
+	.uleb128 .LcleanupEND-.LcleanupSTART
+	.uleb128 clear_once_control-.LSTARTCODE
+	.uleb128  0
+	.uleb128 .LcallUR-.LSTARTCODE
+	.uleb128 .LENDCODE-.LcallUR
+	.uleb128 0
+	.uleb128  0
+.Lcstend:
+
+
+	.section .eh_frame,"a",@progbits
+.LSTARTFRAME:
+	.long	.LENDCIE-.LSTARTCIE		# Length of the CIE.
+.LSTARTCIE:
+	.long	0				# CIE ID.
+	.byte	1				# Version number.
+#ifdef SHARED
+	.string	"zPLR"				# NUL-terminated augmentation
+						# string.
+#else
+	.string	"zPL"				# NUL-terminated augmentation
+						# string.
+#endif
+	.uleb128 1				# Code alignment factor.
+	.sleb128 -8				# Data alignment factor.
+	.byte	16				# Return address register
+						# column.
+#ifdef SHARED
+	.uleb128 7				# Augmentation value length.
+	.byte	0x9b				# Personality: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4
+						# + DW_EH_PE_indirect
+	.long	DW.ref.__gcc_personality_v0-.
+	.byte	0x1b				# LSDA Encoding: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4.
+	.byte	0x1b				# FDE Encoding: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4.
+#else
+	.uleb128 10				# Augmentation value length.
+	.byte	0x0				# Personality: absolute
+	.quad	__gcc_personality_v0
+	.byte	0x0				# LSDA Encoding: absolute
+#endif
+	.byte 0x0c				# DW_CFA_def_cfa
+	.uleb128 7
+	.uleb128 8
+	.byte	0x90				# DW_CFA_offset, column 0x10
+	.uleb128 1
+	.align 8
+.LENDCIE:
+
+	.long	.LENDFDE-.LSTARTFDE		# Length of the FDE.
+.LSTARTFDE:
+	.long	.LSTARTFDE-.LSTARTFRAME		# CIE pointer.
+#ifdef SHARED
+	.long	.LSTARTCODE-.			# PC-relative start address
+						# of the code.
+	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
+	.uleb128 4				# Augmentation size
+	.long	.LexceptSTART-.
+#else
+	.quad	.LSTARTCODE			# Start address of the code.
+	.quad	.LENDCODE-.LSTARTCODE		# Length of the code.
+	.uleb128 8				# Augmentation size
+	.quad	.LexceptSTART
+#endif
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Lpush_rsi-.LSTARTCODE
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 16
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Lpush_rdi-.Lpush_rsi
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 24
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Lpop_rdi-.Lpush_rdi
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 16
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Ladd-.Lpop_rdi
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 8
+	.byte	4				# DW_CFA_advance_loc4
+	.long	clear_once_control-.Ladd
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 24
+#if 0
+	.byte	4				# DW_CFA_advance_loc4
+	.long	.Lpop_rdi2-clear_once_control
+	.byte	14				# DW_CFA_def_cfa_offset
+	.uleb128 16
+#endif
+	.align	8
+.LENDFDE:
+
+
+#ifdef SHARED
+	.hidden	DW.ref.__gcc_personality_v0
+	.weak	DW.ref.__gcc_personality_v0
+	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
+	.align	8
+	.type	DW.ref.__gcc_personality_v0, @object
+	.size	DW.ref.__gcc_personality_v0, 8
+DW.ref.__gcc_personality_v0:
+	.quad	__gcc_personality_v0
+#endif
