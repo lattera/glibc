@@ -37,8 +37,10 @@ static void *alloc_ptr, *alloc_end, *alloc_last_block;
 /* Declarations of global functions.  */
 extern void weak_function free (void *ptr);
 extern void * weak_function realloc (void *ptr, size_t n);
-extern unsigned long int weak_function __strtoul_internal
-(const char *nptr, char **endptr, int base, int group);
+extern unsigned long int weak_function __strtoul_internal (const char *nptr,
+							   char **endptr,
+							   int base,
+							   int group);
 extern unsigned long int weak_function strtoul (const char *nptr,
 						char **endptr, int base);
 
@@ -59,7 +61,7 @@ malloc (size_t n)
   if (alloc_end == 0)
     {
       /* Consume any unused space in the last page of our data segment.  */
-      extern int _end;
+      extern int _end attribute_hidden;
       alloc_ptr = &_end;
       alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0)
 				 + GL(dl_pagesize) - 1)
@@ -350,3 +352,14 @@ strong_alias (__strsep, __strsep_g)
    up to 36.  We don't need this here.  */
 const char INTUSE(_itoa_lower_digits)[16] attribute_hidden
   = "0123456789abcdef";
+
+
+#undef errno
+/* The 'errno' in ld.so is not exported.  */
+extern int errno attribute_hidden;
+
+int *
+__errno_location (void)
+{
+  return &errno;
+}
