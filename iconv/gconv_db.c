@@ -739,7 +739,8 @@ free_mem (void)
   if (__gconv_alias_db != NULL)
     __tdestroy (__gconv_alias_db, free);
 
-  free_modules_db (__gconv_modules_db);
+  if (__gconv_modules_db != NULL)
+    free_modules_db (__gconv_modules_db);
 
   if (known_derivations != NULL)
     __tdestroy (known_derivations, free_derivation);
