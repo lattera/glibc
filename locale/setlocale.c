@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -391,3 +391,25 @@ setlocale (int category, const char *locale)
       return (char *) newname[0];
     }
 }
+
+
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  int category;
+
+  for (category = 0; category < LC_ALL; ++category)
+    {
+      struct locale_data *here = *_nl_current[category];
+
+      /* We have to be prepared that sometime later me still might
+	 need the locale information.  */
+      *_nl_current[category] = _nl_C[category];
+      setname (category, _nl_C_name);
+
+      _nl_unload_locale (here);
+    }
+
+  setname (LC_ALL, _nl_C_name);
+}
+text_set_element (__libc_subfreeres, free_mem);

@@ -1,6 +1,6 @@
 /* Handle list of needed message catalogs
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-   Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -212,6 +212,7 @@ free_mem (void)
       if (runp->data != NULL)
 	_nl_unload_domain ((struct loaded_domain *) runp->data);
       runp = runp->next;
+      free ((char *) here->filename);
       free (here);
     }
 }

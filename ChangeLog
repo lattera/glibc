@@ -1,5 +1,11 @@
 1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/finddomain.c (free_mem): Also free filename.
+	* locale/findlocale.c (free_mem): Likewise.
+	(_nl_find_locale): Duplicate loc_name with strdupa not strdup.
+	* locale/setlocale.c (free_mem): New function.  Free current locale
+	data and set current locale to "C".
+
 	* libio/genops.c (_IO_un_link): Move #ifdef introduced in last
 	change in right place.
 
