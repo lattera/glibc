@@ -48,7 +48,7 @@ __ieee754_exp2 (double x)
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
-      static const double TWO43 = 8796093022208.0;
+      static const double THREEp42 = 13194139533312.0;
       int tval, unsafe;
       double rx, x22, result;
       union ieee754_double ex2_u, scale_u;
@@ -66,16 +66,8 @@ __ieee754_exp2 (double x)
 	 x = ex + t/512 + x1.
 
 	 First, calculate rx = ex + t/512.  */
-      if (x >= 0)
-	{
-	  rx = x + TWO43;
-	  rx -= TWO43;
-	}
-      else
-	{
-	  rx = x - TWO43;
-	  rx += TWO43;
-	}
+      rx = x + THREEp42;
+      rx -= THREEp42;
       x -= rx;  /* Compute x=x1. */
       /* Compute tval = (ex*512 + t)+256.
 	 Now, t = (tval mod 512)-256 and ex=tval/512  [that's mod, NOT %; and

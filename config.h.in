@@ -59,9 +59,13 @@
    with static variable. */
 #undef	HAVE_DWARF2_UNWIND_INFO_STATIC
 
-/* Define is the regparm attribute shall be used for local functions
+/* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */
 #undef	USE_REGPARMS
+
+/* Defined on PowerPC if the GCC being used has a problem with clobbering
+   certain registers (CR0, MQ, CTR, LR) in asm statements.  */
+#undef	BROKEN_PPC_ASM_CR0
 
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports

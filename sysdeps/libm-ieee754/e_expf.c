@@ -71,8 +71,8 @@ __ieee754_expf (float x)
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
-      static const float TWO43 = 8796093022208.0;
-      static const float TWO23 = 8388608.0;
+      static const float THREEp42 = 13194139533312.0;
+      static const float THREEp22 = 12582912.0;
       /* 1/ln(2).  */
 #undef M_1_LN2
       static const float M_1_LN2 = 1.44269502163f;
@@ -90,40 +90,22 @@ __ieee754_expf (float x)
       fesetround (FE_TONEAREST);
 
       /* Calculate n.  */
-      if (x >= 0)
-	{
-	  n = x * M_1_LN2 + TWO23;
-	  n -= TWO23;
-	}
-      else
-	{
-	  n = x * M_1_LN2 - TWO23;
-	  n += TWO23;
-	}
+      n = x * M_1_LN2 + THREEp22;
+      n -= THREEp22;
       dx = x - n*M_LN2;
-      if (dx >= 0)
-	{
-	  /* Calculate t/512.  */
-	  t = dx + TWO43;
-	  t -= TWO43;
-	  dx -= t;
 
-	  /* Compute tval = t.  */
-	  tval = (int) (t * 512.0);
+      /* Calculate t/512.  */
+      t = dx + THREEp42;
+      t -= THREEp42;
+      dx -= t;
 
-	  delta = - __exp_deltatable[tval];
-	}
+      /* Compute tval = t.  */
+      tval = (int) (t * 512.0);
+
+      if (t >= 0)
+	delta = - __exp_deltatable[tval];
       else
-	{
-	  /* As above, but x is negative.  */
-	  t = dx - TWO43;
-	  t += TWO43;
-	  dx -= t;
-
-	  tval = (int) (t * 512.0);
-
-	  delta = __exp_deltatable[-tval];
-	}
+	delta = __exp_deltatable[-tval];
 
       /* Compute ex2 = 2^n e^(t/512+delta[t]).  */
       ex2_u.d = __exp_atable[tval+177];

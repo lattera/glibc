@@ -3,4 +3,3 @@ clone.S
 kernel_stat.h
 kernel_termios.h
 init-first.h
-syscall.h

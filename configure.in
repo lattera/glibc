@@ -921,6 +921,18 @@ else
 fi
 fi
 
+if test "$host_cpu" = powerpc ; then
+# Check for a bug present in at least versions 2.8.x of GCC
+# and versions 1.0.x of EGCS.
+AC_CACHE_CHECK(whether clobbering cr0 causes problems,libc_cv_c_asmcr0_bug,[dnl
+AC_TRY_COMPILE([int tester(int x) { asm ("" : : : "cc"); return x & 123; }],,
+	       libc_cv_c_asmcr0_bug='no',
+	       libc_cv_c_asmcr0_bug='yes')])
+if test "$libc_cv_c_asmcr0_bug" != 'no'; then
+  AC_DEFINE(BROKEN_PPC_ASM_CR0)
+fi
+fi
+
 AC_CACHE_CHECK(for DWARF2 unwind info support, libc_cv_gcc_dwarf2_unwind_info,
 [cat > conftest.c <<EOF
 #line __oline__ "configure"

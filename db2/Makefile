@@ -111,9 +111,11 @@ endif
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 $(objpfx)libdb.so: $(common-objpfx)libc.so
 
+ifeq ($(build-static),yes)
 subdir_install: $(inst_libdir)/libndbm.a
 $(inst_libdir)/libndbm.a: $(inst_libdir)/libdb.a $(+force)
 	$(make-link)
+endif
 
 ifeq ($(build-shared),yes)
 subdir_install: $(inst_libdir)/libndbm.so

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    powerpc version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -32,7 +32,12 @@
 #endif
 
 /* Spinlock implementation; required.  */
-extern inline int
+#if BROKEN_PPC_ASM_CR0
+static
+#else
+extern inline
+#endif
+int
 testandset (int *spinlock)
 {
   int ret;
@@ -63,7 +68,12 @@ register char * stack_pointer __asm__ ("r1");
 /* note that test-and-set(x) is the same as compare-and-swap(x, 0, 1) */
 
 #define HAS_COMPARE_AND_SWAP
-extern inline int
+#if BROKEN_PPC_ASM_CR0
+static
+#else
+extern inline
+#endif
+int
 __compare_and_swap (int *p, int oldval, int newval)
 {
   int ret;

@@ -1,3 +1,35 @@
+1998-04-16 07:42  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* Makeconfig [!build-static]: Link `static' binaries with libc_pic.a.
+	Still need *FLAGS-.o because we still sometimes build .o files.
+	* db2/Makefile: Don't build libndbm.a if !build-static.
+
+1998-04-16 07:42  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* configure.in: New test for broken gcc on PowerPC.
+	* sysdeps/powerpc/atomicity.h: Use result of test.
+	* linuxthreads/sysdeps/powerpc/pt-machine.h: Use result of test.
+
+	* math/libm-test.c: Update many of the epsilon to match actual
+	performance.
+
+	* sysdeps/libm-ieee754/e_exp.c: Reduce the number of branches.
+	* sysdeps/libm-ieee754/e_expf.c: Likewise.
+	* sysdeps/libm-ieee754/s_exp2.c: Likewise.
+	* sysdeps/libm-ieee754/s_exp2f.c: Likewise.
+
+	* sysdeps/libm-ieee754/e_pow.c: Correct typo.
+
+	* sysdeps/powerpc/elf/libc-start.c: New file.
+	* sysdeps/powerpc/elf/start.S: New file, use libc-start.
+	* sysdeps/powerpc/elf/start.c: Delete.
+
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Remove syscall.h
+	* sysdeps/unix/sysv/linux/powerpc/syscall.h: Delete.  It was unused.
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Correct previous
+	few patches.
+
 1998-05-06 12:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (pow): Use long long int for

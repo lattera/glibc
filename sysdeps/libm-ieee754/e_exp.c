@@ -76,8 +76,8 @@ __ieee754_exp (double x)
   /* Check for usual case.  */
   if (isless (x, himark) && isgreater (x, lomark))
     {
-      static const double TWO43 = 8796093022208.0;
-      static const double TWO52 = 4503599627370496.0;
+      static const double THREEp42 = 13194139533312.0;
+      static const double THREEp51 = 6755399441055744.0;
       /* 1/ln(2).  */
       static const double M_1_LN2 = 1.442695040888963387;
       /* ln(2), part 1 */
@@ -94,40 +94,22 @@ __ieee754_exp (double x)
       fesetround (FE_TONEAREST);
 
       /* Calculate n.  */
-      if (x >= 0)
-	{
-	  n = x * M_1_LN2 + TWO52;
-	  n -= TWO52;
-	}
-      else
-	{
-	  n = x * M_1_LN2 - TWO52;
-	  n += TWO52;
-	}
+      n = x * M_1_LN2 + THREEp51;
+      n -= THREEp51;
       x = x - n*M_LN2_0;
-      if (x >= 0)
-	{
-	  /* Calculate t/512.  */
-	  t = x + TWO43;
-	  t -= TWO43;
-	  x -= t;
 
-	  /* Compute tval = t.  */
-	  tval = (int) (t * 512.0);
+      /* Calculate t/512.  */
+      t = x + THREEp42;
+      t -= THREEp42;
+      x -= t;
 
-	  x -= __exp_deltatable[tval];
-	}
+      /* Compute tval = t.  */
+      tval = (int) (t * 512.0);
+
+      if (t >= 0)
+	x -= __exp_deltatable[tval];
       else
-	{
-	  /* As above, but x is negative.  */
-	  t = x - TWO43;
-	  t += TWO43;
-	  x -= t;
-
-	  tval = (int) (t * 512.0);
-
-	  x += __exp_deltatable[-tval];
-	}
+	x += __exp_deltatable[-tval];
 
       /* Now, the variable x contains x + n*ln(2)_1.  */
       dely = n*M_LN2_1;

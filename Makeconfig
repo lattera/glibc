@@ -440,8 +440,16 @@ endif
 endif
 
 # The static libraries.
+ifeq (yes,$(build-static))
 link-libc-static = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 link-extra-libs-static = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib).a)
+else
+ifeq (yes,$(build-shared))
+# We can try to link the programs with lib*_pic.a...
+link-libc-static = $(link-libc) $(common-objpfx)libc_pic.a
+link-extra-libs-static = $(link-extra-libs)
+endif
+endif
 
 ifndef gnulib
 gnulib := -lgcc
@@ -584,9 +592,9 @@ endif
 libtypes = $(foreach o,$(object-suffixes-for-libc),$(libtype$o))
 all-object-suffixes := .o .os .op .og .ob .oS
 object-suffixes :=
-ifeq (yes,$(build-static))
 CPPFLAGS-.o = $(pic-default)
 CFLAGS-.o = $(filter %frame-pointer,$(+cflags))
+ifeq (yes,$(build-static))
 libtype.o := lib%.a
 object-suffixes += .o
 endif

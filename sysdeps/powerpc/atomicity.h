@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations.  PowerPC version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,13 @@
 
 #include <inttypes.h>
 
-static inline int
+#if BROKEN_PPC_ASM_CR0
+# define __ATOMICITY_INLINE /* nothing */
+#else
+# define __ATOMICITY_INLINE inline
+#endif
+
+static __ATOMICITY_INLINE int
 __attribute__ ((unused))
 exchange_and_add (volatile uint32_t *mem, int val)
 {
@@ -36,7 +42,7 @@ exchange_and_add (volatile uint32_t *mem, int val)
   return result;
 }
 
-static inline void
+static __ATOMICITY_INLINE void
 __attribute__ ((unused))
 atomic_add (volatile uint32_t *mem, int val)
 {
@@ -49,7 +55,7 @@ atomic_add (volatile uint32_t *mem, int val)
 " : "=&r"(tmp) : "r" (mem), "r"(val) : "cr0");
 }
 
-static inline int
+static __ATOMICITY_INLINE int
 __attribute__ ((unused))
 compare_and_swap (volatile long int *p, long int oldval, long int newval)
 {
@@ -66,7 +72,7 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
   return result;
 }
 
-static inline long int
+static __ATOMICITY_INLINE long int
 __attribute__ ((unused))
 always_swap (volatile long int *p, long int newval)
 {
@@ -79,7 +85,7 @@ always_swap (volatile long int *p, long int newval)
   return result;
 }
 
-static inline int
+static __ATOMICITY_INLINE int
 __attribute__ ((unused))
 test_and_set (volatile long int *p, long int oldval, long int newval)
 {
