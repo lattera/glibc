@@ -36,10 +36,10 @@
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/sys/user.h: Likewise.
 
-	* sysdeps/mips/sgidefs.h: Prevent <asm/sgidefs.h> from being 
-	included by kernel headers and undo its settings if already 
-	included.  Define _ABIO32, _ABIN32 and _ABI64 if missing and use 
-	them to define _MIPS_SIM_ABI32, _MIPS_SIM_NABI32 and 
+	* sysdeps/mips/sgidefs.h: Prevent <asm/sgidefs.h> from being
+	included by kernel headers and undo its settings if already
+	included.  Define _ABIO32, _ABIN32 and _ABI64 if missing and use
+	them to define _MIPS_SIM_ABI32, _MIPS_SIM_NABI32 and
 	_MIPS_SIM_ABI64 for compatibility.
 	* sysdeps/unix/sysv/linux/mips/Makefile: Use _ABIO32, _ABIN32 and
 	_ABI64 for ABI selection in generated syscall-list.h
