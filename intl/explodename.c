@@ -1,6 +1,8 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -14,13 +16,28 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "loadinfo.h"
+
+/* On some strange systems still no definition of NULL is found.  Sigh!  */
+#ifndef NULL
+# if defined __STDC__ && __STDC__
+#  define NULL ((void *) 0)
+# else
+#  define NULL 0
+# endif
+#endif
+
+/* @@ end of prolog @@ */
 
 int
 _nl_explode_name (name, language, modifier, territory, codeset,
@@ -38,7 +55,7 @@ _nl_explode_name (name, language, modifier, territory, codeset,
   enum { undecided, xpg, cen } syntax;
   char *cp;
   int mask;
-  
+
   *modifier = NULL;
   *territory = NULL;
   *codeset = NULL;

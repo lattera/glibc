@@ -19,9 +19,9 @@ Boston, MA 02111-1307, USA.  */
 
 /*	POSIX 1003.1g: 6.2 Select from File Descriptor Sets <sys/select.h>  */
 
-#ifndef __SYS_SELECT_H
+#ifndef _SYS_SELECT_H
 
-#define __SYS_SELECT_H	1
+#define _SYS_SELECT_H	1
 #include <features.h>
 
 /* Get definition of needed basic types.  */
@@ -29,7 +29,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* Get definition of timer specification structures.  */
 #define __need_timespec
-#include <sys/time.h>
+#include <time.h>
 
 __BEGIN_DECLS
 

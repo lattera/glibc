@@ -22,5 +22,6 @@ Boston, MA 02111-1307, USA.  */
 #define LOOKUP_TYPE	struct netent
 #define	GETFUNC_NAME	getnetent
 #define BUFLEN		1024
+#define NEED_H_ERRNO	1
 
 #include "../nss/getXXent.c"

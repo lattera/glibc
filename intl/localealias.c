@@ -56,6 +56,9 @@ void free ();
 #endif
 
 #if defined HAVE_STRING_H || defined _LIBC
+# ifndef _GNU_SOURCE
+#  define _GNU_SOURCE	1
+# endif
 # include <string.h>
 #else
 # include <strings.h>
@@ -110,6 +113,8 @@ struct block_list
       free (old);							      \
     }									      \
   } while (0)
+# undef alloca
+# define alloca(size) (malloc (size))
 #endif	/* have alloca */
 
 
@@ -188,7 +193,7 @@ read_alias_file (fname, fname_len)
      int fname_len;
 {
 #ifndef HAVE_ALLOCA
-  struct block_list *alloca_list = NULL;
+  struct block_list *block_list = NULL;
 #endif
   FILE *fp;
   char *full_fname;

@@ -26,5 +26,6 @@ Boston, MA 02111-1307, USA.  */
 #define ADD_PARAMS	unsigned long int net, int type
 #define ADD_VARIABLES	net, type
 #define NEED__RES	1
+#define NEED_H_ERRNO	1
 
 #include "../nss/getXXbyYY_r.c"

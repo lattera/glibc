@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <sys/time.h>
 #include <sys/select.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read

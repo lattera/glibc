@@ -1,5 +1,17 @@
 Thu Jul 11 20:09:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* inet/getnetent_r.c: Define NEED_H_ERRNO.
+	* inet/getnetbynm_r.c: Likewise.
+	* inet/getnetent.c: Likewise.
+	* inet/getnetbyad_r.c: Likewise.
+	* inet/getnetbyad.c: Likewise.
+	* inet/getnetbynm.c: Likewise.
+
+	* sysdeps/generic/pselect.c: Include <sys/time.h>.
+
+	* misc/sys/select.h: Include <time.h> instead of <sys/time.h> for
+	`struct timespec'.
+
 	* math/Makefile (calls): Add s_frexp, s_ldexp.
 	(routines): Remove them and &f from here.
 

@@ -27,5 +27,6 @@ Boston, MA 02111-1307, USA.  */
 #define STAYOPEN	int stayopen
 #define STAYOPEN_VAR	stayopen
 #define NEED__RES	1
+#define NEED_H_ERRNO	1
 
 #include "../nss/getXXent_r.c"
