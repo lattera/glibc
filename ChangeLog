@@ -1,3 +1,10 @@
+2002-02-17  Andreas Schwab  <schwab@suse.de>
+
+	* reldep7.c: New file.
+	* reldep7mod1.c: New file.
+	* reldep7mod2.c: New file.
+	* Makefile: Add rules to build and run reldep7.
+
 2002-04-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Move add_dependency call to
