@@ -227,7 +227,7 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  nlen = sprintf (buf, "%d", gid);
+  nlen = sprintf (buf, "%lu", (unsigned long int) gid);
 
   retval = yperr2nss (yp_match (domain, "group.bygid", buf,
 				nlen, &result, &len));

@@ -1,3 +1,7 @@
+2001-11-21  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/ISO-8859-16: Swap 0xa5 and 0xab entries.
+
 2001-11-15  Børre Gaup  <boerre.gaup@pc.nu>
 
 	* locales/se_NO: New file.

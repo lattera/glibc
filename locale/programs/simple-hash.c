@@ -1,5 +1,5 @@
 /* Implement simple hashing table with string based keys.
-   Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, October 1994.
 
@@ -163,9 +163,11 @@ insert_entry_2 (htab, key, keylen, hval, idx, data)
     }
 
   ++htab->filled;
-  if (100 * htab->filled > 90 * htab->size)
+  if (100 * htab->filled > 75 * htab->size)
     {
-      /* Table is filled more than 90%.  Resize the table.  */
+      /* Table is filled more than 75%.  Resize the table.
+	 Experiments have shown that for best performance, this threshold
+	 must lie between 40% and 85%.  */
       unsigned long int old_size = htab->size;
 
       htab->size = next_prime (htab->size * 2);
@@ -346,22 +348,18 @@ compute_hashval (key, keylen)
      size_t keylen;
 {
   size_t cnt;
-  unsigned long int hval, g;
+  unsigned long int hval;
 
   /* Compute the hash value for the given string.  The algorithm
-     is taken from [Aho,Sethi,Ullman].  */
+     is taken from [Aho,Sethi,Ullman], modified to reduce the number of
+     collisions for short strings with very varied bit patterns.
+     See http://www.clisp.org/haible/hashfunc.html.  */
   cnt = 0;
   hval = keylen;
   while (cnt < keylen)
     {
-      hval <<= 4;
+      hval = (hval << 9) | (hval >> (LONGBITS - 9));
       hval += (unsigned long int) *(((char *) key) + cnt++);
-      g = hval & ((unsigned long) 0xf << (LONGBITS - 4));
-      if (g != 0)
-	{
-	  hval ^= g >> (LONGBITS - 8);
-	  hval ^= g;
-	}
     }
   return hval != 0 ? hval : ~((unsigned long) 0);
 }

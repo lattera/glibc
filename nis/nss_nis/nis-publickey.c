@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -143,7 +143,7 @@ static enum nss_status
 parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
 		 gid_t *gidlist)
 {
-  char *p;
+  char *p, *ep;
   int gidlen;
 
   if (!s || !isdigit (*s))
@@ -153,7 +153,7 @@ parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
     }
 
   /* Fetch the uid */
-  *uidp = (atoi (s));
+  *uidp = strtoul (s, NULL, 10);
 
   if (*uidp == 0)
     {
@@ -175,14 +175,17 @@ parse_netid_str (const char *s, uid_t *uidp, gid_t *gidp, int *gidlenp,
       return NSS_STATUS_NOTFOUND;
     }
 
-  *gidp = (atoi (p));
+  *gidp = strtoul (p, &ep, 10);
 
   gidlen = 0;
 
-  while ((p = strchr (p, ',')) != NULL)
+  /* After strtoul() ep should point to the first invalid character.
+     This is the marker "," we search for the next value.  */ 
+  while (ep != NULL && *ep == ',')
     {
-      p++;
-      gidlist[gidlen++] = atoi (p);
+      ep++;
+      p = ep;
+      gidlist[gidlen++] = strtoul (p, &ep, 10);
     }
 
   *gidlenp = gidlen;

@@ -329,7 +329,7 @@ _nss_nis_getpwuid_r (uid_t uid, struct passwd *pwd,
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  nlen = sprintf (buf, "%d", uid);
+  nlen = sprintf (buf, "%lu", (unsigned long int) uid);
 
   retval = yperr2nss (yp_match (domain, "passwd.byuid", buf,
 				nlen, &result, &len));

@@ -89,7 +89,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
   len = strlen (first_unused);
   if (len == 0) /* If we don't have a uid, it's an invalid shadow entry */
     return 0;
-  pw->pw_uid = atoi (first_unused);
+  pw->pw_uid = strtoul (first_unused, NULL, 10);
   room_left -= (len + 1);
   first_unused += (len + 1);
 
@@ -102,7 +102,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
   len = strlen (first_unused);
   if (len == 0) /* If we don't have a gid, it's an invalid shadow entry */
     return 0;
-  pw->pw_gid = atoi (first_unused);
+  pw->pw_gid = strtoul (first_unused, NULL, 10);
   room_left -= (len + 1);
   first_unused += (len + 1);
 
@@ -200,7 +200,7 @@ _nss_nisplus_parse_grent (nis_result *result, u_long entry, struct group *gr,
   len = strlen (first_unused);
   if (len == 0) /* We should always have an gid */
     return 0;
-  gr->gr_gid = atoi (first_unused);
+  gr->gr_gid = strtoul (first_unused, NULL, 10);
   room_left -= (strlen (first_unused) + 1);
   first_unused += strlen (first_unused) + 1;
 

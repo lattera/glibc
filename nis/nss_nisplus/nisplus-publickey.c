@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
@@ -200,6 +200,7 @@ static enum nss_status
 parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
 	       int *errnop)
 {
+  char *ep;
   int gidlen;
 
   if (!s || (!isdigit (*s)))
@@ -208,14 +209,17 @@ parse_grp_str (const char *s, gid_t *gidp, int *gidlenp, gid_t *gidlist,
       return NSS_STATUS_NOTFOUND;
     }
 
-  *gidp = atoi (s);
+  *gidp = strtoul (s, &ep, 10);
 
   gidlen = 0;
 
-  while ((s = strchr (s, ',')) != NULL)
+  /* After strtoul() ep should point to the marker ',', which means
+     here starts a new value. */
+  while (ep != NULL && *ep == ',')
     {
-      s++;
-      gidlist[gidlen++] = atoi (s);
+      ep++;
+      s = ep;
+      gidlist[gidlen++] = strtoul (s, &ep, 10);
     }
   *gidlenp = gidlen;
 
@@ -368,7 +372,7 @@ _nss_nisplus_netname2user (char netname[MAXNETNAMELEN + 1], uid_t *uidp,
 	    _("netname2user: LOCAL entry for %s in directory %s not unique"),
 	    netname, domain);
   /* Fetch the uid */
-  *uidp = atoi (ENTRY_VAL (res->objects.objects_val, 2));
+  *uidp = strtoul (ENTRY_VAL (res->objects.objects_val, 2), NULL, 10);
 
   if (*uidp == 0)
     {

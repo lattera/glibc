@@ -764,7 +764,7 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
       nis_result *res;
       char buf[24 + grptablelen];
 
-      sprintf(buf, "[gid=%d],%s", gid, grptable);
+      sprintf(buf, "[gid=%lu],%s", (unsigned long int) gid, grptable);
       res = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
       if (niserr2nss (res->status) != NSS_STATUS_SUCCESS)
         {
@@ -794,7 +794,7 @@ getgrgid_plusgroup (gid_t gid, struct group *result, char *buffer,
 	  return NSS_STATUS_NOTFOUND;
 	}
 
-      snprintf (buf, sizeof (buf), "%d", gid);
+      snprintf (buf, sizeof (buf), "%lu", (unsigned long int) gid);
 
       if (yp_match (domain, "group.bygid", buf, strlen (buf),
 		    &outval, &outvallen) != YPERR_SUCCESS)

@@ -235,7 +235,7 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
     nis_result *result;
     char buf[100 + tablename_len];
 
-    sprintf (buf, "[uid=%d],%s", uid, tablename_val);
+    sprintf (buf, "[uid=%lu],%s", (unsigned long int) uid, tablename_val);
 
     result = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 

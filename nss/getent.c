@@ -207,7 +207,15 @@ group_keys (int number, char *key[])
   for (i = 0; i < number; ++i)
     {
       if (isdigit (key[i][0]))
-	grp = getgrgid (atol (key[i]));
+	{
+           char *ep;
+           gid_t arg_gid = strtoul (key[i], &ep, 10); 
+
+           if (*key[i] != '\0' && *ep == '\0')  /* valid numeric uid */
+             grp = getgrgid (arg_gid);
+           else
+             grp = NULL;
+	}
       else
 	grp = getgrnam (key[i]);
 
@@ -404,7 +412,15 @@ passwd_keys (int number, char *key[])
   for (i = 0; i < number; ++i)
     {
       if (isdigit (key[i][0]))
-	pwd = getpwuid (atol (key[i]));
+        {
+	   char *ep;
+	   uid_t arg_uid = strtoul (key[i], &ep, 10); 
+
+           if (*key[i] != '\0' && *ep == '\0')  /* valid numeric uid */
+	     pwd = getpwuid (arg_uid);
+           else
+             pwd = NULL;
+        }
       else
 	pwd = getpwnam (key[i]);
 

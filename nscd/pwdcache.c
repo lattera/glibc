@@ -242,8 +242,18 @@ addpwbyuid (struct database *db, int fd, request_header *req,
   char *buffer = alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
-  uid_t uid = atol (key);
   uid_t oldeuid = 0;
+  char *ep;
+  uid_t uid = strtoul ((char*) key, &ep, 10); 
+  
+  if (*(char*)key == '\0' || *ep != '\0')  /* invalid numeric uid */
+    {
+      if (debug_level > 0) 
+        dbg_log (_("Invalid numeric uid \"%s\"!"), (char *)key);
+
+      errno = EINVAL;
+      return;
+    }
 
   if (debug_level > 0)
     dbg_log (_("Haven't found \"%d\" in password cache!"), uid);

@@ -227,7 +227,7 @@ _nss_nisplus_getgrgid_r (const gid_t gid, struct group *gr,
     nis_result *result;
     char buf[36 + tablename_len];
 
-    sprintf (buf, "[gid=%d],%s", gid, tablename_val);
+    sprintf (buf, "[gid=%lu],%s", (unsigned long int) gid, tablename_val);
 
     result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
 

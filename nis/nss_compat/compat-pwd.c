@@ -1353,8 +1353,9 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
       nis_result *res;
       char buf[1024 + pwdtablelen];
 
-      snprintf(buf, sizeof (buf), "[uid=%d],%s", uid, pwdtable);
-      res = nis_list(buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+      snprintf (buf, sizeof (buf), "[uid=%lu],%s", (unsigned long int) uid,
+                pwdtable);
+      res = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
       if (niserr2nss (res->status) != NSS_STATUS_SUCCESS)
         {
           enum nss_status status =  niserr2nss (res->status);
@@ -1383,7 +1384,7 @@ getpwuid_plususer (uid_t uid, struct passwd *result, char *buffer,
           return NSS_STATUS_NOTFOUND;
         }
 
-      sprintf (buf, "%d", uid);
+      sprintf (buf, "%lu", (unsigned long int) uid);
       if (yp_match (domain, "passwd.byuid", buf, strlen (buf),
                     &outval, &outvallen)
           != YPERR_SUCCESS)
