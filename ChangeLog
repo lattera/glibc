@@ -1,11 +1,13 @@
 1999-11-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/setrlimit.c: New file.
+
 	* sysdeps/unix/sysv/linux/bits/resource.h (RLIM_INFINITY): Adjust
 	for kernel changes.
 	* sysdeps/unix/sysv/linux/bits/types.h (__rlim_t, __rlim64_t): Make
 	unsigned.
 
-1999-10-04  Tim Waugh <twaugh@redhat.com>
+1999-10-04  Tim Waugh  <twaugh@redhat.com>
 
 	* posix/wordexp-test.c: More tests.
 
