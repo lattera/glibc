@@ -22,6 +22,9 @@
 #include <tls.h>
 #include <unistd.h>
 
+#ifdef SHARED
+ #error makefile bug, this file is for static only
+#endif
 
 #ifdef USE_TLS
 extern ElfW(Phdr) *_dl_phdr;
@@ -45,6 +48,23 @@ static struct
 
 /* Fake link map for the application.  */
 static struct link_map static_map;
+
+
+/* Highest dtv index currently needed.  */
+size_t _dl_tls_max_dtv_idx;
+/* Flag signalling whether there are gaps in the module ID allocation.  */
+bool _dl_tls_dtv_gaps;
+/* Information about the dtv slots.  */
+struct dtv_slotinfo_list *_dl_tls_dtv_slotinfo_list;
+/* Number of modules in the static TLS block.  */
+size_t _dl_tls_static_nelem;
+/* Size of the static TLS block.  */
+size_t _dl_tls_static_size;
+/* Alignment requirement of the static TLS block.  */
+size_t _dl_tls_static_align;
+
+/* Generation counter for the dtv.  */
+size_t _dl_tls_generation;
 
 
 /* Additional definitions needed by TLS initialization.  */

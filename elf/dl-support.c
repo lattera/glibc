@@ -140,25 +140,6 @@ size_t _dl_phnum;
    At this time it is not anymore a problem to modify the tables.  */
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
-#ifdef USE_TLS
-
-/* Highest dtv index currently needed.  */
-size_t _dl_tls_max_dtv_idx;
-/* Flag signalling whether there are gaps in the module ID allocation.  */
-bool _dl_tls_dtv_gaps;
-/* Information about the dtv slots.  */
-struct dtv_slotinfo_list *_dl_tls_dtv_slotinfo_list;
-/* Number of modules in the static TLS block.  */
-size_t _dl_tls_static_nelem;
-/* Size of the static TLS block.  */
-size_t _dl_tls_static_size;
-/* Alignment requirement of the static TLS block.  */
-size_t _dl_tls_static_align;
-
-/* Generation counter for the dtv.  */
-size_t _dl_tls_generation;
-#endif
-
 
 #ifdef HAVE_AUX_VECTOR
 int _dl_clktck;

@@ -4,6 +4,7 @@ dnl Each sysdep configure.in does GLIBC_PROVIDES first, to avoid any
 dnl AC_REQUIREs or AC_BEFOREs duplicating their code.
 dnl
 define([GLIBC_PROVIDES], [dnl
+AC_PROVIDE([_AS_ECHO_N_PREPARE])dnl
 AC_PROVIDE([AC_PROG_INSTALL])dnl
 AC_PROVIDE([AC_PROG_RANLIB])dnl
 AC_PROVIDE([AC_PROG_CC])dnl
@@ -13,7 +14,7 @@ define([AS_MESSAGE_FD],6)dnl
 AS_INIT()dnl
 m4_divert_text([HEADER-COMMENT],
 [@%:@ This file is generated from configure.in by Autoconf.  DO NOT EDIT!])
-AC_LANG(C)dnl
+define([_AC_LANG], [C])dnl
 ])dnl
 dnl
 dnl Check for a symbol

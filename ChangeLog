@@ -1,3 +1,15 @@
+2002-10-17  Roland McGrath  <roland@redhat.com>
+
+	* aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDE([_AS_ECHO_N_PREPARE]).
+	Remove AC_LANG(C) call, instead just define([_AC_LANG], [C]).
+
+	* elf/dl-support.c: Move _dl_tls_* variables to ...
+	* sysdeps/generic/libc-tls.c: ... here.
+
+	* elf/dl-close.c (remove_slotinfo): Take new argument.  If false,
+	allow IDX to be one past the current last slotinfo entry.
+	(_dl_close): Pass IMAP->l_init_called for that parameter.
+
 2002-10-07  Andreas Schwab  <schwab@suse.de>
 
 	* aclocal.m4: Fix for autoconf 2.53.
