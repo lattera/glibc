@@ -122,7 +122,7 @@ name_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		if (*++cp == 'R')
 		  /* Romanize-flag.  */
 		  ++cp;
-		if (strchr ("fFgGlomMpsSt", *cp) == NULL)
+		if (strchr ("dfFgGlomMpsSt", *cp) == NULL)
 		  {
 		    error (0, 0, _("\
 %s: invalid escape sequence in field `%s'"),

@@ -271,6 +271,6 @@ CHARMAP
 END CHARMAP
 
 WIDTH
-<SP>...<'?>		1
-<NS>...<y:>		1
+<U0020>...<U007E>	1
+<U00A0>...<U00FF>	1
 END WIDTH
