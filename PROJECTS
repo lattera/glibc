@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: March 1997
+Status: April 1997
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@prep.ai.mit.edu>
@@ -57,7 +57,6 @@ contact <bug-glibc@prep.ai.mit.edu>
 [ 7] Several math functions have to be written:
 
      - exp2
-     - log2
      - nearbyint
      - ceil
      - round
@@ -138,7 +137,9 @@ contact <bug-glibc@prep.ai.mit.edu>
      + tcgetid() and waitid()			from XPG4.2
      + grantpt(), ptsname(), unlockpt()		from XPG4.2
      + getdate()				from XPG4.2
+	*** Probably underway
      + fmtmsg()					from SVID
+	*** Probably underway
 
      More information are available on request.
 
@@ -147,3 +148,14 @@ contact <bug-glibc@prep.ai.mit.edu>
      of text.  In fact, this would be a recode-library (you know, GNU recode).
      This is needed in several places in the GNU libc and I already have
      rather concrete plans but so far no possibility to start this.
+
+
+[15] Cleaning up the header files.  Ideally, each header style should
+     follow the "good examples".  Each variable and function should have
+     a short description of the function and its parameters.  The prototypes
+     should always contain variable names which can help to identify their
+     meaning; better than
+
+		int foo __P ((int, int, int, int));
+
+     Blargh!

@@ -69,20 +69,20 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)
-    return -1;
+    return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
       strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
              "networks_tbl") != 0 ||
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 3)
-    return -1;
+    return 0;
 
   /* Generate the network entry format and use the normal parser */
   if (NISENTRYLEN (0, 0, result) +1 > room_left)
     {
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
 
   memset (p, '\0', room_left);
@@ -93,7 +93,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
   if (NISENTRYLEN (0, 2, result) +1 > room_left)
     {
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
   strcat (p, "\t");
   strncat (p, NISENTRYVAL (0, 2, result), NISENTRYLEN (0, 2, result));
@@ -101,12 +101,11 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
                                         /* + 1: We overwrite the last \0 */
 
   for (i = 1; i < result->objects.objects_len; i++)
-    /* XXX should we start with i = 0 or with i = 1 ? */
     {
       if (NISENTRYLEN (i, 1, result) +1 > room_left)
 	{
 	  __set_errno (ERANGE);
-	  return -1;
+	  return 0;
 	}
       strcat (p, " ");
       strncat (p, NISENTRYVAL (i, 1, result), NISENTRYLEN (i, 1, result));

@@ -572,6 +572,10 @@ cbrt_test (void)
   check ("cbrt (+0) == +0", FUNC(cbrt) (0.0), 0.0);
   check ("cbrt (-0) == -0", FUNC(cbrt) (minus_zero), minus_zero);
 
+  check_isinfp ("cbrt (+inf) == +inf", FUNC(cbrt) (plus_infty));
+  check_isinfn ("cbrt (-inf) == -inf", FUNC(cbrt) (minus_infty));
+  check_isnan ("cbrt (NaN) == NaN", FUNC(cbrt) (nan_value));
+
   check ("cbrt (8) == 2", FUNC(cbrt) (8), 2);
   check ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0);
 }

@@ -30,8 +30,8 @@ nis_mkdir (const nis_name dir, const nis_server *server)
     {
       int result;
       if ((result = __do_niscall (NULL, 0, NIS_MKDIR, (xdrproc_t) xdr_nis_name,
-				  (caddr_t) dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) & res, 0)) != RPC_SUCCESS)
+				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+				  (caddr_t) &res, 0)) != RPC_SUCCESS)
 	{
 	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
 	  return NIS_RPCERROR;
@@ -42,8 +42,8 @@ nis_mkdir (const nis_name dir, const nis_server *server)
       int result;
       if ((result = __do_niscall (server, 1, NIS_MKDIR,
 				  (xdrproc_t) xdr_nis_name,
-				  (caddr_t) dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) & res, 0)) != RPC_SUCCESS)
+				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+				  (caddr_t) &res, 0)) != RPC_SUCCESS)
 	{
 	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
 	  return NIS_RPCERROR;
@@ -62,8 +62,8 @@ nis_rmdir (const nis_name dir, const nis_server *server)
     {
       int result;
       if ((result = __do_niscall (NULL, 0, NIS_RMDIR, (xdrproc_t) xdr_nis_name,
-				  (caddr_t) dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) & res, 0)) != RPC_SUCCESS)
+				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+				  (caddr_t) &res, 0)) != RPC_SUCCESS)
 	{
 	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
 	  return NIS_RPCERROR;
@@ -74,8 +74,8 @@ nis_rmdir (const nis_name dir, const nis_server *server)
       int result;
       if ((result = __do_niscall (server, 1, NIS_RMDIR,
 				  (xdrproc_t) xdr_nis_name,
-				  (caddr_t) dir, (xdrproc_t) xdr_nis_error,
-				  (caddr_t) & res, 0)) != RPC_SUCCESS)
+				  (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
+				  (caddr_t) &res, 0)) != RPC_SUCCESS)
 	{
 	  fprintf (stderr, _("__do_niscall: Error #%d\n"), result);
 	  return NIS_RPCERROR;

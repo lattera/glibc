@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 1.98\n"
-"POT-Creation-Date: 1996-12-03 13:50+0100\n"
-"PO-Revision-Date: 1997-01-24 20:13 -0500\n"
+"Project-Id-Version: GNU libc 2.0.3\n"
+"POT-Creation-Date: 1997-03-30 19:08+0200\n"
+"PO-Revision-Date: 1997-04-02 23:02 -0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,31 +33,31 @@ msgstr "       rpcinfo [ -n no_de_port ] -t hôte no_program [ no_version ]\n"
 msgid "   program vers proto   port\n"
 msgstr "   program no_version protocole  no_port\n"
 
-#: time/zic.c:424
+#: time/zic.c:419
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (règles de \"%s\", ligne %d)"
 
-#: locale/programs/ld-collate.c:360 locale/programs/ld-ctype.c:1234
+#: locale/programs/ld-collate.c:363 locale/programs/ld-ctype.c:1242
 msgid " done\n"
 msgstr " complété.\n"
 
-#: time/zic.c:421
+#: time/zic.c:416
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr "\"%s\", ligne %d: %s."
 
-#: time/zic.c:945
+#: time/zic.c:943
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "La ligne \"Zone %s\" et l'option -l sont mutuellement exclusives."
 
-#: time/zic.c:953
+#: time/zic.c:951
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "La ligne \"Zone %s\" et l'option -p sont mutuellement exclusives."
 
-#: time/zic.c:758
+#: time/zic.c:754
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s est dans une zone sans règle."
@@ -77,7 +77,7 @@ msgstr "%s%s%s:%u: %s%s erreur imprévue: %s.\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%ssignal inconnu %d.\n"
 
-#: time/zic.c:2139
+#: time/zic.c:2172
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr "%s: %d n'a pas fait correctement l'expansion de la valeur signée.\n"
@@ -87,139 +87,144 @@ msgstr "%s: %d n'a pas fait correctement l'expansion de la valeur signée.\n"
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max> doit être plus grande que <mb_cur_min>.\n"
 
-#: time/zic.c:1430
+#: time/zic.c:1443
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: ne peut créer %s: %s.\n"
 
-#: time/zic.c:2118
+#: time/zic.c:2150
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: ne peut créer le répertoire %s: %s.\n"
 
-#: time/zic.c:612
+#: time/zic.c:608
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr "%s: ne peut établir un lien entre %s et %s: %s.\n"
 
-#: time/zic.c:783
+#: time/zic.c:780
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: ne peut ouvrir %s: %s.\n"
 
-#: time/zic.c:851
+#: time/zic.c:1433
+#, c-format
+msgid "%s: Can't remove %s: %s\n"
+msgstr "%s: ne peut enlever %s: %s.\n"
+
+#: time/zic.c:849
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: erreur lors de la fermeture de %s: %s.\n"
 
-#: time/zic.c:845
+#: time/zic.c:842
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: erreur de lecture de %s.\n"
 
-#: time/zic.c:1494
+#: time/zic.c:1507
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: erreur d'écriture de %s.\n"
 
-#: time/zdump.c:258
+#: time/zdump.c:266
 #, c-format
 msgid "%s: Error writing standard output "
 msgstr "%s: erreur d'écriture sur la sortie standard."
 
-#: time/zic.c:830
+#: time/zic.c:827
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr ""
 "%s: ligne de type `Leap' dans un fichier qui n'a pas\n"
 "de délai en secondes %s.\n"
 
-#: time/zic.c:362
+#: time/zic.c:357
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: mémoire épuisée: %s.\n"
 
-#: time/zic.c:527
+#: time/zic.c:522
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: option -L spécifiée plus d'une fois.\n"
 
-#: time/zic.c:487
+#: time/zic.c:482
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: option -d spécifiée plus d'une fois.\n"
 
-#: time/zic.c:497
+#: time/zic.c:492
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: option -l spécifiée plus d'une fois.\n"
 
-#: time/zic.c:507
+#: time/zic.c:502
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: option -p spécifiée plus d'une fois.\n"
 
-#: time/zic.c:517
+#: time/zic.c:512
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: option -y spécifiée plus d'une fois.\n"
 
-#: time/zic.c:1845
+#: time/zic.c:1872
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: la commande était '%s', le résultat était %d.\n"
 
-#: locale/programs/charmap.c:593 locale/programs/locfile.c:878
+#: locale/programs/charmap.c:593 locale/programs/locfile.c:900
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: erreur de l'automate à états finis."
 
-#: posix/getopt.c:687
+#: posix/getopt.c:783
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: option illégale -- %c.\n"
 
-#: posix/getopt.c:690
+#: posix/getopt.c:786
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: option invalide -- %c.\n"
 
-#: posix/getopt.c:611
+#: posix/getopt.c:707
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: l'option `%c%s' ne permet pas de paramètre.\n"
 
-#: posix/getopt.c:582
+#: posix/getopt.c:678
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: l'option `%s' est ambiguë.\n"
 
-#: posix/getopt.c:628 posix/getopt.c:801
+#: posix/getopt.c:724 posix/getopt.c:897
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: l'option `%s' requiert un paramètre.\n"
 
-#: posix/getopt.c:606
+#: posix/getopt.c:702
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: l'option `--%s' ne permet pas de paramètre.\n"
 
-#: posix/getopt.c:786
+#: posix/getopt.c:881
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'option `-W %s' ne permet pas de paramètre.\n"
 
-#: posix/getopt.c:767
+#: posix/getopt.c:863
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: l'option `-W %s' est ambiguë.\n"
 
-#: posix/getopt.c:721 posix/getopt.c:850
+#: posix/getopt.c:816 posix/getopt.c:946
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: l'option requiert un paramètre -- %c.\n"
 
-#: time/zic.c:837 time/zic.c:1248 time/zic.c:1268
+#: time/zic.c:834 time/zic.c:1246 time/zic.c:1266
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panique: valeur %d de type `l_value' invalide.\n"
@@ -229,17 +234,17 @@ msgstr "%s: panique: valeur %d de type `l_value' invalide.\n"
 msgid "%s: premature end of file"
 msgstr "%s: fin prématurée de fichier."
 
-#: posix/getopt.c:661
+#: posix/getopt.c:757
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: option non reconnue `%c%s'.\n"
 
-#: posix/getopt.c:657
+#: posix/getopt.c:753
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: option non reconnue `--%s'.\n"
 
-#: time/zic.c:446
+#: time/zic.c:441
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
@@ -250,7 +255,7 @@ msgstr ""
 "\t[ -d répertoire ]\n"
 "\t[ -L secondes_écoulées ] [ -y type_année ] [ fichier ... ]\n"
 
-#: time/zdump.c:165
+#: time/zdump.c:174
 #, c-format
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: usage: %s [ -v ] [ -c seuil ] nom_de_zone ...\n"
@@ -264,7 +269,7 @@ msgstr "(erreur inconnue d'authentification - %d)"
 msgid "(unknown)"
 msgstr "(inconnu)"
 
-#: catgets/gencat.c:253
+#: catgets/gencat.c:254
 msgid "*standard input*"
 msgstr "*entrée standard*"
 
@@ -272,19 +277,19 @@ msgstr "*entrée standard*"
 msgid ".lib section in a.out corrupted"
 msgstr "La section .lib dans a.out est corrompue."
 
-#: inet/rcmd.c:358
+#: inet/rcmd.c:363
 msgid ".rhosts fstat failed"
 msgstr "Échec d'évaluation fstat() de .rhosts."
 
-#: inet/rcmd.c:354
+#: inet/rcmd.c:359
 msgid ".rhosts lstat failed"
 msgstr "Échec d'évaluation lstat() de .rhosts."
 
-#: inet/rcmd.c:356
+#: inet/rcmd.c:361
 msgid ".rhosts not regular file"
 msgstr ".rhosts n'est pas un fichier régulier."
 
-#: inet/rcmd.c:362
+#: inet/rcmd.c:367
 msgid ".rhosts writeable by other than owner"
 msgstr ".rhosts accessible en écriture par d'autres que le propriétaire."
 
@@ -297,12 +302,12 @@ msgstr "; version basse = %lu, version haute = %lu"
 msgid "; why = "
 msgstr "; pourquoi = "
 
-#: locale/programs/ld-ctype.c:326
+#: locale/programs/ld-ctype.c:331
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "Le caractère <SP> ne doit pas être dans la classe `%s'."
 
-#: locale/programs/ld-ctype.c:317
+#: locale/programs/ld-ctype.c:321
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "Le caractère <SP> n'est pas dans la classe `%s'."
@@ -313,6 +318,10 @@ msgstr "Le caractère <SP> n'est pas dans la classe `%s'."
 #: stdio-common/../sysdeps/gnu/errlist.c:591
 msgid "?"
 msgstr "?"
+
+#: sysdeps/unix/sysv/linux/siglist.h:27
+msgid "Aborted"
+msgstr "Abandon"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:762
 msgid "Accessing a corrupted shared library"
@@ -333,6 +342,8 @@ msgstr "Famille d'adresses non supportée par le protocole."
 msgid "Advertise error"
 msgstr "Erreur d'annonce."
 
+#: stdio-common/../sysdeps/unix/siglist.c:43
+#: sysdeps/unix/sysv/linux/siglist.h:33
 msgid "Alarm clock"
 msgstr "Minuterie d'alerte"
 
@@ -378,6 +389,11 @@ msgstr "Mauvais format du fichier de fontes."
 msgid "Bad message"
 msgstr "Message invalide."
 
+#: stdio-common/../sysdeps/unix/siglist.c:41
+#: sysdeps/unix/sysv/linux/siglist.h:56
+msgid "Bad system call"
+msgstr "Appel système erroné."
+
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
@@ -385,7 +401,7 @@ msgstr "Message invalide."
 msgid "Block device required"
 msgstr "Bloc de périphérique requis."
 
-#: sunrpc/pmap_rmt.c:337
+#: sunrpc/pmap_rmt.c:338
 msgid "Broadcast select problem"
 msgstr "Problème de sélection durant la diffusion."
 
@@ -395,12 +411,17 @@ msgstr "Problème de sélection durant la diffusion."
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
 #: stdio-common/../sysdeps/gnu/errlist.c:222
+#: stdio-common/../sysdeps/unix/siglist.c:42
+#: sysdeps/unix/sysv/linux/siglist.h:32
 msgid "Broken pipe"
 msgstr "Relais brisé (pipe)"
 
+#: stdio-common/../sysdeps/unix/siglist.c:39
+#: sysdeps/unix/sysv/linux/siglist.h:30
 msgid "Bus error"
 msgstr "Erreur du BUS."
 
+#: sysdeps/unix/sysv/linux/siglist.h:43
 msgid "CPU time limit exceeded"
 msgstr "Temps limite expiré."
 
@@ -408,19 +429,19 @@ msgstr "Temps limite expiré."
 msgid "Can not access a needed shared library"
 msgstr "Ne peut accéder à la librairie partagée demandée."
 
-#: nis/ypclnt.c:637
+#: nis/ypclnt.c:695
 msgid "Can't bind to server which serves this domain"
 msgstr "Ne peut établir un lien avec le serveur qui dessert ce domaine."
 
-#: nis/ypclnt.c:649
+#: nis/ypclnt.c:707
 msgid "Can't communicate with portmapper"
 msgstr "Ne peut communiquer avec le convertisseur de ports."
 
-#: nis/ypclnt.c:651
+#: nis/ypclnt.c:709
 msgid "Can't communicate with ypbind"
 msgstr "Ne peut communiquer par ypbind."
 
-#: nis/ypclnt.c:653
+#: nis/ypclnt.c:711
 msgid "Can't communicate with ypserv"
 msgstr "Ne peut communiquer par ypserv."
 
@@ -445,7 +466,7 @@ msgstr "Ne peut créer un socket pour une diffusion de type rpc."
 msgid "Cannot exec a shared library directly"
 msgstr "Ne peut exécuter une librairie partagée directement."
 
-#: sunrpc/pmap_rmt.c:349
+#: sunrpc/pmap_rmt.c:350
 msgid "Cannot receive reply to broadcast"
 msgstr "Ne peut recevoir l'accusé réception à la requête faite par diffusion."
 
@@ -470,6 +491,8 @@ msgstr "Ne peut initialiser l'option `SO_BROADCAST' de socket."
 msgid "Channel number out of range"
 msgstr "Numéro de canal en dehors des limites."
 
+#: stdio-common/../sysdeps/unix/siglist.c:49
+#: sysdeps/unix/sysv/linux/siglist.h:39
 msgid "Child exited"
 msgstr "Le processus `enfant' a terminé."
 
@@ -486,13 +509,13 @@ msgstr "Erreur de communication lors de la transmission."
 msgid "Computer bought the farm"
 msgstr "Allez à la maison et buvez un verre de lait."
 
-#: locale/programs/ld-ctype.c:1197
+#: locale/programs/ld-ctype.c:1204
 msgid "Computing table size for character classes might take a while..."
 msgstr ""
 "Le calcul de la taille de la table des classes de caractères\n"
 "peut prendre un certain temps..."
 
-#: locale/programs/ld-collate.c:327
+#: locale/programs/ld-collate.c:329
 msgid "Computing table size for collation information might take a while..."
 msgstr ""
 "Le calcul de la taille de la table pour le fusionnement des informations\n"
@@ -517,11 +540,13 @@ msgstr "Connexion ré-initialisée par le correspondant."
 msgid "Connection timed out"
 msgstr "Connexion terminée par expiration du délai d'inactivité."
 
+#: stdio-common/../sysdeps/unix/siglist.c:48
+#: sysdeps/unix/sysv/linux/siglist.h:38
 msgid "Continued"
 msgstr "Poursuite."
 
 #: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:187
-#: locale/programs/localedef.c:177
+#: locale/programs/localedef.c:180
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -533,7 +558,11 @@ msgstr ""
 "reproduction. AUCUNE garantie n'est donnée; tant pour des raisons\n"
 "COMMERÇIALES que pour RÉPONDRE À UN BESOIN PARTICULIER.\n"
 
-#: nis/ypclnt.c:663
+#: stdio-common/../sysdeps/unix/siglist.c:53
+msgid "Cputime limit exceeded"
+msgstr "Temps d'exécution CPU limite expiré."
+
+#: nis/ypclnt.c:721
 msgid "Database is busy"
 msgstr "La base de données est occupée."
 
@@ -575,9 +604,14 @@ msgstr "Le répertoire n'est pas vide."
 msgid "Disc quota exceeded"
 msgstr "Débordement du quota du disque."
 
-#: nis/ypclnt.c:709
+#: nis/ypclnt.c:767
 msgid "Domain not bound"
 msgstr "Le domaine n'est fixé."
+
+#: stdio-common/../sysdeps/unix/siglist.c:36
+#: sysdeps/unix/sysv/linux/siglist.h:53
+msgid "EMT trap"
+msgstr "Trappe EMT."
 
 #: sunrpc/clnt_perr.c:254
 #, c-format
@@ -602,7 +636,7 @@ msgstr "L'échangeur est plein."
 msgid "Exec format error"
 msgstr "Erreur de format pour exec()."
 
-#: locale/programs/localedef.c:213
+#: locale/programs/localedef.c:216
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "ERREUR FATALE: le système ne peut définir `_POSIX2_LOCALEDEF'"
 
@@ -631,6 +665,7 @@ msgstr "Erreur de verrou bloquant l'accès au fichier"
 msgid "File name too long"
 msgstr "Nom de fichier trop long."
 
+#: sysdeps/unix/sysv/linux/siglist.h:44
 msgid "File size limit exceeded"
 msgstr "Débordement de la taille permise pour un fichier."
 
@@ -639,6 +674,12 @@ msgstr "Débordement de la taille permise pour un fichier."
 msgid "File too large"
 msgstr "Fichier trop gros."
 
+#: stdio-common/../sysdeps/unix/siglist.c:54
+msgid "Filesize limit exceeded"
+msgstr "Taille limite de fichier débordée."
+
+#: stdio-common/../sysdeps/unix/siglist.c:37
+#: sysdeps/unix/sysv/linux/siglist.h:28
 msgid "Floating point exception"
 msgstr "Exception en point flottant."
 
@@ -654,6 +695,8 @@ msgstr "Fonction non implantée."
 msgid "Gratuitous error"
 msgstr "Erreur gratuite."
 
+#: stdio-common/../sysdeps/unix/siglist.c:30
+#: sysdeps/unix/sysv/linux/siglist.h:22
 msgid "Hangup"
 msgstr "Fin de la connexion (raccroché)."
 
@@ -666,9 +709,12 @@ msgstr "L'hôte cible est arrêté ou en panne."
 msgid "Host name lookup failure"
 msgstr "Erreur de repérage du nom de l'hôte cible."
 
+#: stdio-common/../sysdeps/unix/siglist.c:52
+#: sysdeps/unix/sysv/linux/siglist.h:42
 msgid "I/O possible"
 msgstr "E/S possible."
 
+#: stdio-common/../sysdeps/unix/siglist.c:35
 msgid "IOT trap"
 msgstr "Trappe IOT."
 
@@ -676,7 +722,12 @@ msgstr "Trappe IOT."
 msgid "Identifier removed"
 msgstr "Identificateur éliminé."
 
+#: sysdeps/unix/sysv/linux/siglist.h:25
 msgid "Illegal Instruction"
+msgstr "Instruction illégale."
+
+#: stdio-common/../sysdeps/unix/siglist.c:33
+msgid "Illegal instruction"
 msgstr "Instruction illégale."
 
 #. TRANS Invalid seek operation (such as on a pipe).
@@ -709,23 +760,29 @@ msgstr "Ioctl() inappropré pour un périphérique."
 msgid "Inappropriate operation for background process"
 msgstr "Opération inappropriée pour un processus d'arrière-plan."
 
+#: sysdeps/unix/sysv/linux/siglist.h:62
+msgid "Information request"
+msgstr "Requête d'information."
+
 #. TRANS Input/output error; usually used for physical read or write errors.
 #: stdio-common/../sysdeps/gnu/errlist.c:40
 msgid "Input/output error"
 msgstr "Erreur d'entrée/sortie."
 
-#: nis/ypclnt.c:643
+#: nis/ypclnt.c:701
 msgid "Internal NIS error"
 msgstr "Erreur interne de NIS."
 
-#: nis/ypclnt.c:707
+#: nis/ypclnt.c:765
 msgid "Internal ypbind error"
 msgstr "Erreur interne de ypbind."
 
+#: stdio-common/../sysdeps/unix/siglist.c:31
+#: sysdeps/unix/sysv/linux/siglist.h:23
 msgid "Interrupt"
 msgstr "Interruption."
 
-#. TRANS Interrupted function call; an asynchronous signal occured and prevented
+#. TRANS Interrupted function call; an asynchronous signal occurred and prevented
 #. TRANS completion of the call.  When this happens, you should try the call
 #. TRANS again.
 #. TRANS
@@ -746,11 +803,11 @@ msgstr "Appel système interrompu, il aurait dû être relancé."
 msgid "Invalid argument"
 msgstr "Paramètre invalide."
 
-#: posix/regex.c:946
+#: posix/regex.c:960
 msgid "Invalid back reference"
 msgstr "Référence arrière invalide."
 
-#: posix/regex.c:944
+#: posix/regex.c:958
 msgid "Invalid character class name"
 msgstr "Nom de classe de caractères invalide."
 
@@ -762,11 +819,11 @@ msgstr "Identité du client invalide."
 msgid "Invalid client verifier"
 msgstr "Vérificateur du client invalide."
 
-#: posix/regex.c:943
+#: posix/regex.c:957
 msgid "Invalid collation character"
 msgstr "Caractère de fusionnement invalide."
 
-#: posix/regex.c:950
+#: posix/regex.c:964
 msgid "Invalid content of \\{\\}"
 msgstr "Contenu invalide de \\{\\}"
 
@@ -787,15 +844,15 @@ msgstr "Échange invalide."
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Chaîne multi-octets ou étendue de caractères invalide ou incomplète."
 
-#: posix/regex.c:953
+#: posix/regex.c:967
 msgid "Invalid preceding regular expression"
 msgstr "Expression régulière précédente invalide."
 
-#: posix/regex.c:951
+#: posix/regex.c:965
 msgid "Invalid range end"
 msgstr "Fin d'intervalle invalide."
 
-#: posix/regex.c:942
+#: posix/regex.c:956
 msgid "Invalid regular expression"
 msgstr "Expression régulière invalide."
 
@@ -825,6 +882,8 @@ msgstr "est un répertoire."
 msgid "Is a named type file"
 msgstr "est un type de fichier nommé (named)."
 
+#: stdio-common/../sysdeps/unix/siglist.c:38
+#: sysdeps/unix/sysv/linux/siglist.h:29
 msgid "Killed"
 msgstr "Processus arrêté."
 
@@ -852,11 +911,11 @@ msgstr "Le lien a été endommagé."
 msgid "Link number out of range"
 msgstr "Numéro du lien hors intervalle."
 
-#: nis/ypclnt.c:655
+#: nis/ypclnt.c:713
 msgid "Local domain name not set"
 msgstr "Le nom du domaine local n'est pas initialisé."
 
-#: nis/ypclnt.c:645
+#: nis/ypclnt.c:703
 msgid "Local resource allocation failure"
 msgstr "Échec d'allocation de ressources locales."
 
@@ -864,7 +923,7 @@ msgstr "Échec d'allocation de ressources locales."
 msgid "Machine is not on the network"
 msgstr "La machine cible n'est pas sur le réseau."
 
-#: posix/regex.c:952
+#: posix/regex.c:966
 msgid "Memory exhausted"
 msgstr "Mémoire épuisée."
 
@@ -879,11 +938,13 @@ msgstr "Message trop long."
 msgid "Multihop attempted"
 msgstr "Connexion par liens par noeuds multiples de relais tentée."
 
-#: nis/ypclnt.c:659
+#: nis/ypclnt.c:717
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr "Non concordance de la version client/serveur NIS - ne peut fournir le service."
+msgstr ""
+"Non concordance de la version client/serveur NIS - ne peut fournir le "
+"service."
 
-#: nis/ypclnt.c:657
+#: nis/ypclnt.c:715
 msgid "NIS map data base is bad"
 msgstr "La table de la base de données NIS est corrompue."
 
@@ -955,7 +1016,7 @@ msgstr "Aucune donnée disponible."
 msgid "No locks available"
 msgstr "Aucun verrou disponible."
 
-#: posix/regex.c:941
+#: posix/regex.c:955
 msgid "No match"
 msgstr "Pas de concordance."
 
@@ -963,11 +1024,11 @@ msgstr "Pas de concordance."
 msgid "No message of desired type"
 msgstr "Aucun message du type désiré."
 
-#: nis/ypclnt.c:647
+#: nis/ypclnt.c:705
 msgid "No more records in map database"
 msgstr "Aucun autre enregistrement dans la table de la base de données."
 
-#: posix/regex.c:5204
+#: posix/regex.c:5324
 msgid "No previous regular expression"
 msgstr "Aucune expression régulière ne précède."
 
@@ -993,11 +1054,11 @@ msgstr "Aucun espace disponible sur le périphérique."
 msgid "No such file or directory"
 msgstr "Aucun fichier ou répertoire de ce type."
 
-#: nis/ypclnt.c:641
+#: nis/ypclnt.c:699
 msgid "No such key in map"
 msgstr "Cette clé n'est pas dans la table."
 
-#: nis/ypclnt.c:639
+#: nis/ypclnt.c:697
 msgid "No such map in server's domain"
 msgstr "Cette table n'est pas dans le domaine du serveur."
 
@@ -1035,7 +1096,7 @@ msgstr "Le résultat numérique est en dehors de l'intervalle."
 msgid "Object is remote"
 msgstr "L'objet est télé-accessible."
 
-#: time/zic.c:1939
+#: time/zic.c:1966
 msgid "Odd number of quotation marks"
 msgstr "Nombre impair de caractères apostrophe."
 
@@ -1097,17 +1158,20 @@ msgid "Package not installed"
 msgstr "Le package n'est pas installé."
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/ypclnt.c:661 stdio-common/../sysdeps/gnu/errlist.c:96
+#: nis/ypclnt.c:719 stdio-common/../sysdeps/gnu/errlist.c:96
 msgid "Permission denied"
 msgstr "Permission non accordée."
 
+#: sysdeps/unix/sysv/linux/siglist.h:64
 msgid "Power failure"
 msgstr "Panne d'alimentation."
 
-#: posix/regex.c:954
+#: posix/regex.c:968
 msgid "Premature end of regular expression"
 msgstr "Fin prématurée de l'expression régulière."
 
+#: stdio-common/../sysdeps/unix/siglist.c:56
+#: sysdeps/unix/sysv/linux/siglist.h:46
 msgid "Profiling timer expired"
 msgstr "Expiration de la minuterie durant l'établissement du profile."
 
@@ -1142,6 +1206,8 @@ msgstr "Protocole non supporté."
 msgid "Protocol wrong type for socket"
 msgstr "Mauvais type pour un socket de protocole."
 
+#: stdio-common/../sysdeps/unix/siglist.c:32
+#: sysdeps/unix/sysv/linux/siglist.h:24
 msgid "Quit"
 msgstr "Quitter."
 
@@ -1154,7 +1220,7 @@ msgstr "Erreur spécifique à RFS."
 msgid "RPC bad procedure for program"
 msgstr "Mauvaise procédure RPC du programme."
 
-#: nis/ypclnt.c:635
+#: nis/ypclnt.c:693
 msgid "RPC failure on NIS operation"
 msgstr "Échec RPC durant l'opération NIS."
 
@@ -1263,7 +1329,7 @@ msgstr "Le RTLD_NEXT utilisé dans le code n'est pas chargé dynamiquement."
 msgid "Read-only file system"
 msgstr "Système de fichiers accessible en lecture seulement."
 
-#: posix/regex.c:955
+#: posix/regex.c:969
 msgid "Regular expression too big"
 msgstr "Expression régulière trop grosse."
 
@@ -1281,11 +1347,13 @@ msgstr ""
 "Retirer le mot de passe ou rendre les fichiers illisibles par les autres."
 
 #: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:257
-#: locale/programs/localedef.c:408
-msgid "Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
-msgstr "Rapporter toutes anomalies à l'adresse: <bug-glibc@prep.ai.mit.edu>.\n"
+#: locale/programs/localedef.c:412
+msgid "Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"
+msgstr ""
+"Rapporter toutes anomalies via le script `glibcbug' à l'adresse:\n"
+"<bugs@gnu.ai.mit.edu>.\n"
 
-#: nis/ypclnt.c:633
+#: nis/ypclnt.c:691
 msgid "Request arguments bad"
 msgstr "Le paramètre de la requête est invalide."
 
@@ -1304,6 +1372,10 @@ msgstr "Erreur interne du `resolver'."
 #: stdio-common/../sysdeps/gnu/errlist.c:85
 msgid "Resource deadlock avoided"
 msgstr "Blocage évité des accès aux ressources."
+
+#: stdio-common/../sysdeps/unix/siglist.c:58
+msgid "Resource lost"
+msgstr "Ressource perdue"
 
 #. TRANS Resource temporarily unavailable; the call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -1338,6 +1410,8 @@ msgstr "Blocage évité des accès aux ressources."
 msgid "Resource temporarily unavailable"
 msgstr "Ressource temporairement non disponible."
 
+#: stdio-common/../sysdeps/unix/siglist.c:40
+#: sysdeps/unix/sysv/linux/siglist.h:31
 msgid "Segmentation fault"
 msgstr "Erreur de segmentation."
 
@@ -1348,6 +1422,10 @@ msgstr "Le serveur a rejeté l'identité."
 #: sunrpc/clnt_perr.c:284
 msgid "Server rejected verifier"
 msgstr "Le server a rejeté la vérification."
+
+#: stdio-common/../sysdeps/unix/siglist.c:29
+msgid "Signal 0"
+msgstr "Signal 0"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:299
@@ -1368,6 +1446,10 @@ msgstr "Le logiciel a provoqué l'abandon de la connexion."
 msgid "Srmount error"
 msgstr "Erreur srmount()."
 
+#: sysdeps/unix/sysv/linux/siglist.h:59
+msgid "Stack fault"
+msgstr "Erreur sur la pile."
+
 #. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
 #. TRANS system which is due to file system rearrangements on the server host.
 #. TRANS Repairing this condition usually requires unmounting and remounting
@@ -1376,15 +1458,23 @@ msgstr "Erreur srmount()."
 msgid "Stale NFS file handle"
 msgstr "Panne d'accès au fichier NFS."
 
+#: stdio-common/../sysdeps/unix/siglist.c:47
+#: sysdeps/unix/sysv/linux/siglist.h:37
 msgid "Stopped"
 msgstr "Arrêté."
 
+#: stdio-common/../sysdeps/unix/siglist.c:46
+#: sysdeps/unix/sysv/linux/siglist.h:36
 msgid "Stopped (signal)"
 msgstr "Signal d'arrêt."
 
+#: stdio-common/../sysdeps/unix/siglist.c:50
+#: sysdeps/unix/sysv/linux/siglist.h:40
 msgid "Stopped (tty input)"
 msgstr "Arrêté (via l'entrée sur tty)."
 
+#: stdio-common/../sysdeps/unix/siglist.c:51
+#: sysdeps/unix/sysv/linux/siglist.h:41
 msgid "Stopped (tty output)"
 msgstr "Arrêté (via la sortie sur tty)."
 
@@ -1396,15 +1486,17 @@ msgstr "Erreur de relais de type streams."
 msgid "Structure needs cleaning"
 msgstr "La structure a besoin d'un nettoyage."
 
-#: nis/ypclnt.c:631 nis/ypclnt.c:705 posix/regex.c:940
+#: nis/ypclnt.c:689 nis/ypclnt.c:763 posix/regex.c:954
 #: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
 msgstr "Succès."
 
-#: nis/ypclnt.c:711
+#: nis/ypclnt.c:769
 msgid "System resource allocation failure"
 msgstr "Échec d'allocation de ressources système."
 
+#: stdio-common/../sysdeps/unix/siglist.c:44
+#: sysdeps/unix/sysv/linux/siglist.h:34
 msgid "Terminated"
 msgstr "Complété."
 
@@ -1470,10 +1562,15 @@ msgstr "Trop de références: ne peut segmenter."
 msgid "Too many users"
 msgstr "Trop d'usagers."
 
+#: stdio-common/../sysdeps/unix/siglist.c:34
+msgid "Trace/BPT trap"
+msgstr "Trappe de point d'arrêt lors de trace."
+
+#: sysdeps/unix/sysv/linux/siglist.h:26
 msgid "Trace/breakpoint trap"
 msgstr "Trappe pour point d'arrêt et de trace."
 
-#: posix/regex.c:945
+#: posix/regex.c:959
 msgid "Trailing backslash"
 msgstr "Barre oblique en suffixe."
 
@@ -1499,12 +1596,12 @@ msgid "Transport endpoint is not connected"
 msgstr "Le noeud final de transport n'est pas connecté."
 
 #: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:241
-#: locale/programs/localedef.c:389
+#: locale/programs/localedef.c:393
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Pour en savoir davantage, faites: `%s --help'.\n"
 
-#: inet/rcmd.c:136
+#: inet/rcmd.c:137
 #, c-format
 msgid "Trying %s...\n"
 msgstr "On tente %s...\n"
@@ -1514,7 +1611,7 @@ msgstr "On tente %s...\n"
 msgid "Unknown .netrc keyword %s"
 msgstr "Mot clé inconnu %s dans .netrc."
 
-#: nis/ypclnt.c:665
+#: nis/ypclnt.c:723
 msgid "Unknown NIS error code"
 msgstr "Code d'erreur NIS inconnu."
 
@@ -1540,27 +1637,27 @@ msgstr "Erreur du serveur inconnu."
 msgid "Unknown signal %d"
 msgstr "Signal inconnu %d"
 
-#: misc/error.c:95
+#: misc/error.c:100
 msgid "Unknown system error"
 msgstr "Erreur système inconnue."
 
-#: nis/ypclnt.c:713
+#: nis/ypclnt.c:771
 msgid "Unknown ypbind error"
 msgstr "Erreur inconnue de ypbind."
 
-#: posix/regex.c:948
+#: posix/regex.c:962
 msgid "Unmatched ( or \\("
 msgstr "Échec du pairage de ( ou de \\("
 
-#: posix/regex.c:956
+#: posix/regex.c:970
 msgid "Unmatched ) or \\)"
 msgstr "Échec du pairage de ) ou de \\)"
 
-#: posix/regex.c:947
+#: posix/regex.c:961
 msgid "Unmatched [ or [^"
 msgstr "Échec du pairage de [ ou de [^"
 
-#: posix/regex.c:949
+#: posix/regex.c:963
 msgid "Unmatched \\{"
 msgstr "Échec du pairage de \\{."
 
@@ -1569,6 +1666,8 @@ msgstr "Échec du pairage de \\{."
 msgid "Unrecognized variable `%s'"
 msgstr "Variable non reconnue `%s'."
 
+#: stdio-common/../sysdeps/unix/siglist.c:45
+#: sysdeps/unix/sysv/linux/siglist.h:35
 msgid "Urgent I/O condition"
 msgstr "Condition d'E/S urgente."
 
@@ -1630,7 +1729,7 @@ msgstr ""
 "  -V, --version        afficher le nom et la version du logiciel\n"
 "Si le FICHIER_D_ENTRÉE est -, la lecture se fait l'entrée standard.\n"
 
-#: locale/programs/localedef.c:393
+#: locale/programs/localedef.c:397
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... name\n"
@@ -1704,9 +1803,13 @@ msgstr "Usage: %s nom_de_variable [chemin_d_accès]\n"
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
 msgstr "Usage: rpcinfo [ -n no_port ] -u hôte no_prog [ no_version ]\n"
 
+#: stdio-common/../sysdeps/unix/siglist.c:59
+#: sysdeps/unix/sysv/linux/siglist.h:48
 msgid "User defined signal 1"
 msgstr "Signal #1 défini par l'usager."
 
+#: stdio-common/../sysdeps/unix/siglist.c:60
+#: sysdeps/unix/sysv/linux/siglist.h:49
 msgid "User defined signal 2"
 msgstr "Signal #2 défini par l'usager."
 
@@ -1714,36 +1817,40 @@ msgstr "Signal #2 défini par l'usager."
 msgid "Value too large for defined data type"
 msgstr "Valeur trop grande pour le type défini de données."
 
+#: stdio-common/../sysdeps/unix/siglist.c:55
+#: sysdeps/unix/sysv/linux/siglist.h:45
 msgid "Virtual timer expired"
 msgstr "Expiration de la minuterie virtuelle."
 
-#: time/zic.c:1844
+#: time/zic.c:1871
 msgid "Wild result from command execution"
 msgstr "Résultat anarchique résultant de l'exécution de la commande."
 
+#: stdio-common/../sysdeps/unix/siglist.c:57
+#: sysdeps/unix/sysv/linux/siglist.h:47
 msgid "Window changed"
 msgstr "La fenêtre a changée."
 
 #: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:192
-#: locale/programs/localedef.c:182
+#: locale/programs/localedef.c:185
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Écrits par %s.\n"
 
-#: nis/ypclnt.c:146
+#: nis/ypclnt.c:142
 msgid "YPBINDPROC_DOMAIN: Internal error\n"
 msgstr "YPBINDPROC_DOMAIN: erreur interne.\n"
 
-#: nis/ypclnt.c:150
+#: nis/ypclnt.c:146
 #, c-format
 msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
 msgstr "YPBINDPROC_DOMAIN: échec d'allocation de ressources %s.\n"
 
-#: nis/ypclnt.c:154
+#: nis/ypclnt.c:150
 msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
 msgstr "YPBINDPROC_DOMAIN: échec d'allocation de ressources.\n"
 
-#: nis/ypclnt.c:158
+#: nis/ypclnt.c:154
 msgid "YPBINDPROC_DOMAIN: Unknown error\n"
 msgstr "YPBINDPROC_DOMAIN: erreur inconnue.\n"
 
@@ -1752,32 +1859,32 @@ msgstr "YPBINDPROC_DOMAIN: erreur inconnue.\n"
 msgid "You really blew it this time"
 msgstr "Vous avez vraiment tout gâcher cette fois-ci."
 
-#: time/zic.c:1050
+#: time/zic.c:1048
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 "Temps final de la ligne de la zone de continuation est antérieur\n"
 "au temps final de la ligne précédente."
 
-#: locale/programs/charmap.c:397 locale/programs/locfile.c:341
+#: locale/programs/charmap.c:397 locale/programs/locfile.c:363
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "`%1$s' la définition ne se termine pas par `END %1$s'."
 
-#: locale/programs/ld-monetary.c:358 locale/programs/ld-numeric.c:190
+#: locale/programs/ld-monetary.c:359 locale/programs/ld-numeric.c:190
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
 msgstr "`-1' doit être la dernière entrée du champ `%s' de catégorie `%s'."
 
-#: locale/programs/ld-collate.c:1652
+#: locale/programs/ld-collate.c:1655
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 msgstr ""
 "`...' doit être utilisé seulement avec les entrées `...' et  `UNDEFINED'."
 
-#: locale/programs/locfile.c:538
+#: locale/programs/locfile.c:560
 msgid "`from' expected after first argument to `collating-element'"
 msgstr "`from' attendu après le premier paramètre de `collating-element'"
 
-#: locale/programs/ld-collate.c:1109
+#: locale/programs/ld-collate.c:1112
 msgid ""
 "`from' string in collation element declaration contains unknown character"
 msgstr ""
@@ -1789,36 +1896,36 @@ msgstr ""
 msgid "argument to <%s> must be a single character"
 msgstr "Le paramètre de <%s> doit être un caractère simple."
 
-#: locale/programs/locfile.c:215
+#: locale/programs/locfile.c:237
 #, c-format
 msgid "argument to `%s' must be a single character"
 msgstr "Le paramètre de `%s' doit être un caractère simple."
 
-#: sunrpc/auth_unix.c:322
+#: sunrpc/auth_unix.c:323
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - problème fatal de mise en ordre."
 
-#: inet/rcmd.c:360
+#: inet/rcmd.c:365
 msgid "bad .rhosts owner"
 msgstr "Mauvais propriétaire du fichier .rhosts."
 
-#: locale/programs/charmap.c:212 locale/programs/locfile.c:209
+#: locale/programs/charmap.c:212 locale/programs/locfile.c:231
 msgid "bad argument"
 msgstr "Mauvais paramètre."
 
-#: time/zic.c:1172
+#: time/zic.c:1170
 msgid "blank FROM field on Link line"
 msgstr "Champ `FROM' vide dans la ligne de type `Link'."
 
-#: time/zic.c:1176
+#: time/zic.c:1174
 msgid "blank TO field on Link line"
 msgstr "Champ `TO' vide dans la ligne de type `Link'."
 
-#: malloc/mcheck.c:189
+#: malloc/mcheck.c:191
 msgid "block freed twice"
 msgstr "Bloc libéré deux fois."
 
-#: malloc/mcheck.c:192
+#: malloc/mcheck.c:194
 msgid "bogus mcheck_status, library is buggy"
 msgstr "Statut de `mcheck_status' erroné, la librarie est erronée."
 
@@ -1834,32 +1941,32 @@ msgstr "Diffusion: ioctl (a obtenu la valeur des fanions de l'interface)"
 msgid "cache_set: victim not found"
 msgstr "cache_set: victime non repérée."
 
-#: time/zic.c:1685
-msgid "can't determine time zone abbrevation to use just after until time"
+#: time/zic.c:1698
+msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
-"Ne peut déterminer le nom abrégé du fuseau horaire à utiliser\n"
-"pour rencontrer la condition `jusqu'au temps voulue'."
+"Ne peut déterminer l'abréviation du fuseau horaire à utiliser\n"
+"juste après le champ date."
 
 #: sunrpc/svc_simple.c:64
 #, c-format
 msgid "can't reassign procedure number %d\n"
 msgstr "Ne peut réassigner le numéro de procédure %d.\n"
 
-#: locale/programs/localedef.c:287
+#: locale/programs/localedef.c:291
 #, c-format
 msgid "cannot `stat' locale file `%s'"
 msgstr "Ne peut effectuer l'évaluation `stat' du fichier local `%s'."
 
-#: locale/programs/ld-collate.c:1314
+#: locale/programs/ld-collate.c:1317
 #, c-format
 msgid "cannot insert collation element `%.*s'"
 msgstr "Ne peut insérer l'élément de fusionnement `%.*s'."
 
-#: locale/programs/ld-collate.c:1493 locale/programs/ld-collate.c:1498
+#: locale/programs/ld-collate.c:1496 locale/programs/ld-collate.c:1501
 msgid "cannot insert into result table"
 msgstr "Ne peut effectuer une insertion dans la table des résultats."
 
-#: locale/programs/ld-collate.c:1166 locale/programs/ld-collate.c:1208
+#: locale/programs/ld-collate.c:1169 locale/programs/ld-collate.c:1211
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
 msgstr ""
@@ -1870,86 +1977,86 @@ msgstr ""
 msgid "cannot open database file `%s': %s"
 msgstr "Ne peut ouvrir le fichier de base de données `%s': %s."
 
-#: catgets/gencat.c:259 db/makedb.c:180
+#: catgets/gencat.c:260 db/makedb.c:180
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "Ne peut ouvrir le fichier d'entrée `%s'."
 
-#: locale/programs/localedef.c:221
+#: locale/programs/localedef.c:224
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "Ne peut ouvrir le fichier des localisations `%s'."
 
-#: catgets/gencat.c:764 catgets/gencat.c:805 db/makedb.c:189
+#: catgets/gencat.c:765 catgets/gencat.c:806 db/makedb.c:189
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "Ne peut ouvrir le fichier de sortie `%s'."
 
-#: locale/programs/locfile.c:986
+#: locale/programs/locfile.c:1008
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "Ne peut ouvrir le fichier de sortie `%s' de catégorie `%s'."
 
-#: locale/programs/ld-collate.c:1360
+#: locale/programs/ld-collate.c:1363
 msgid "cannot process order specification"
 msgstr "Ne peut traiter la spécification d'ordonnancement."
 
-#: locale/programs/locale.c:303
+#: locale/programs/locale.c:304
 #, c-format
 msgid "cannot read character map directory `%s'"
 msgstr "Ne peut lire via le répertoire de la table des caractères `%s'."
 
-#: locale/programs/locale.c:278
+#: locale/programs/locale.c:279
 #, c-format
 msgid "cannot read locale directory `%s'"
 msgstr "Ne peut lire via le répertoire des définitions localisées `%s'."
 
-#: locale/programs/localedef.c:309
+#: locale/programs/localedef.c:313
 #, c-format
 msgid "cannot read locale file `%s'"
 msgstr "Ne peut lire le fichier des définitions localisées `%s'."
 
-#: locale/programs/localedef.c:334
+#: locale/programs/localedef.c:338
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "Ne peut écrire dans les fichiers de sortie vers `%s'."
 
-#: locale/programs/localedef.c:377
+#: locale/programs/localedef.c:381
 msgid "category data requested more than once: should not happen"
 msgstr ""
 "Catégorie de données requises plus d'une fois: n'aurait pas dû se produire."
 
-#: locale/programs/ld-ctype.c:265
+#: locale/programs/ld-ctype.c:266
 #, c-format
 msgid "character %s'%s' in class `%s' must be in class `%s'"
 msgstr "Caractère %s'%s' de la classe `%s' doit être dans la classe `%s'."
 
-#: locale/programs/ld-ctype.c:289
+#: locale/programs/ld-ctype.c:291
 #, c-format
 msgid "character %s'%s' in class `%s' must not be in class `%s'"
 msgstr ""
 "Caractère %s'%s' de la classe `%s' ne doit pas être dans la classe `%s'."
 
-#: locale/programs/ld-ctype.c:310
+#: locale/programs/ld-ctype.c:313
 msgid "character <SP> not defined in character map"
 msgstr "Caractère <SP> non défini dans la table des caractères."
 
-#: locale/programs/ld-ctype.c:939 locale/programs/ld-ctype.c:1002
-#: locale/programs/ld-ctype.c:1010 locale/programs/ld-ctype.c:1018
-#: locale/programs/ld-ctype.c:1026 locale/programs/ld-ctype.c:1034
-#: locale/programs/ld-ctype.c:1042 locale/programs/ld-ctype.c:1068
-#: locale/programs/ld-ctype.c:1076 locale/programs/ld-ctype.c:1114
-#: locale/programs/ld-ctype.c:1141 locale/programs/ld-ctype.c:1152
+#: locale/programs/ld-ctype.c:944 locale/programs/ld-ctype.c:1007
+#: locale/programs/ld-ctype.c:1015 locale/programs/ld-ctype.c:1023
+#: locale/programs/ld-ctype.c:1031 locale/programs/ld-ctype.c:1039
+#: locale/programs/ld-ctype.c:1047 locale/programs/ld-ctype.c:1073
+#: locale/programs/ld-ctype.c:1081 locale/programs/ld-ctype.c:1119
+#: locale/programs/ld-ctype.c:1146 locale/programs/ld-ctype.c:1157
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr "Caractère `%s' non défini alors qu'attendu comme valeur par défaut."
 
-#: locale/programs/ld-ctype.c:801
+#: locale/programs/ld-ctype.c:806
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "Classe de caractères `%s' déjà définie."
 
-#: locale/programs/ld-ctype.c:833
+#: locale/programs/ld-ctype.c:838
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "Table de caractères `%s' déjà définie."
@@ -1963,23 +2070,24 @@ msgstr "Fichier de la table des caractères `%s' non repérable."
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - erreur fatale de sérialisation d'en-tête."
 
-#: locale/programs/ld-collate.c:1329
+#: locale/programs/ld-collate.c:1332
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
 msgstr ""
 "Élément de fusionnement `%.*s' apparaît plus d'une fois: ligne ignorée."
 
-#: locale/programs/ld-collate.c:1347
+#: locale/programs/ld-collate.c:1350
 #, c-format
 msgid "collation symbol `%.*s' appears more than once: ignore line"
-msgstr "Symbole de fusionnement `%.*s' apparaît plus d'une fois: ligne ignorée."
+msgstr ""
+"Symbole de fusionnement `%.*s' apparaît plus d'une fois: ligne ignorée."
 
-#: locale/programs/locfile.c:522
+#: locale/programs/locfile.c:544
 #, c-format
 msgid "collation symbol expected after `%s'"
 msgstr "Symbole de fusionnement attendu après `%s'."
 
-#: inet/rcmd.c:129
+#: inet/rcmd.c:130
 #, c-format
 msgid "connect to address %s: "
 msgstr "Connexion établie à l'adresse %s: "
@@ -2021,37 +2129,37 @@ msgstr ""
 msgid "duplicate character name `%s'"
 msgstr "Duplicité du nom de caractère `%s'."
 
-#: locale/programs/ld-collate.c:1141
+#: locale/programs/ld-collate.c:1144
 msgid "duplicate collating element definition"
 msgstr "Duplicité de la définition d'élément de fusionnement."
 
-#: locale/programs/ld-collate.c:1287
+#: locale/programs/ld-collate.c:1290
 #, c-format
 msgid "duplicate definition for character `%.*s'"
 msgstr "Duplicité de la définition du caractère `%.*s'."
 
-#: db/makedb.c:310
+#: db/makedb.c:311
 msgid "duplicate key"
 msgstr "Duplicité de clé."
 
-#: catgets/gencat.c:378
+#: catgets/gencat.c:379
 msgid "duplicate set definition"
 msgstr "Duplicité de la définition d'ensemble."
 
-#: time/zic.c:965
+#: time/zic.c:963
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "Duplicité du nom de zone  %s (fichier \"%s\", ligne %d)."
 
-#: catgets/gencat.c:541
+#: catgets/gencat.c:542
 msgid "duplicated message identifier"
 msgstr "Duplicité de l'identificateur de message."
 
-#: catgets/gencat.c:514
+#: catgets/gencat.c:515
 msgid "duplicated message number"
 msgstr "Duplicité du numéro de message"
 
-#: locale/programs/ld-collate.c:1696
+#: locale/programs/ld-collate.c:1699
 msgid "empty weight name: line ignored"
 msgstr "Nom du poids vide: ligne ignorée."
 
@@ -2071,34 +2179,38 @@ msgstr "enablecache: ne peut allouer une cache de données."
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: ne peut allouer une cache de type fifo."
 
-#: locale/programs/ld-collate.c:1419
+#: locale/programs/ld-collate.c:1422
 msgid "end point of ellipsis range is bigger then start"
 msgstr "Le noeud final de l'intervalle d'ellipse est plus grand que l'initial."
 
-#: locale/programs/ld-collate.c:1149
+#: locale/programs/ld-collate.c:1152
 msgid "error while inserting collation element into hash table"
 msgstr ""
 "Erreur durant l'insertion d'un élément de fusionnement dans la table de "
 "hachage."
 
-#: locale/programs/ld-collate.c:1161
+#: locale/programs/ld-collate.c:1164
 msgid "error while inserting to hash table"
 msgstr "Erreur lors de l'insertion dans la table de hachage."
 
-#: locale/programs/locfile.c:465
+#: locale/programs/locfile.c:487
 msgid "expect string argument for `copy'"
 msgstr "Chaîne attendue pour le paramètre de `copy'."
 
-#: time/zic.c:856
+#: time/zic.c:854
 msgid "expected continuation line not found"
 msgstr "Ligne de continuation attendue, non repérée."
 
-#: locale/programs/locfile.c:1010
+#: locale/programs/locfile.c:1032
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr "Échec durant l'écriture des données de catégorie `%s'."
 
-#: locale/programs/ld-monetary.c:154 locale/programs/ld-numeric.c:95
+#: nis/ypclnt.c:187
+msgid "fcntl: F_SETFD"
+msgstr "fcntl: F_SETFD"
+
+#: locale/programs/ld-monetary.c:155 locale/programs/ld-numeric.c:95
 #, c-format
 msgid "field `%s' in category `%s' not defined"
 msgstr "Champ `%s' de catégorie `%s' n'est pas défini."
@@ -2108,7 +2220,7 @@ msgstr "Champ `%s' de catégorie `%s' n'est pas défini."
 msgid "field `%s' in category `%s' undefined"
 msgstr "Champ `%s' de catégorie `%s' indéfini."
 
-#: locale/programs/locfile.c:547
+#: locale/programs/locfile.c:569
 msgid "from-value of `collating-element' must be a string"
 msgstr "La valeur de départ de `collating-element' doit être une chaîne."
 
@@ -2117,7 +2229,7 @@ msgid "garbage at end of character code specification"
 msgstr "Rebut à la fin du caractère du code de spécification."
 
 #: locale/programs/linereader.c:214
-msgid "garbage at end of digit"
+msgid "garbage at end of number"
 msgstr "Rebut à la fin des chiffres."
 
 #: locale/programs/ld-time.c:183
@@ -2136,7 +2248,7 @@ msgstr ""
 "Rebut à la fin de la date finale dans la chaîne %d du champ `era'\n"
 "de catégorie `%s'."
 
-#: locale/programs/ld-time.c:310
+#: locale/programs/ld-time.c:311
 #, c-format
 msgid ""
 "garbage at end of stopping date in string %d in `era' field in category `%s'"
@@ -2148,19 +2260,19 @@ msgstr ""
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr "get_myaddress: ioctl (a obtenu la configuration de l'interface)."
 
-#: time/zic.c:1149
+#: time/zic.c:1147
 msgid "illegal CORRECTION field on Leap line"
 msgstr "CORRECTION illégale du champ dans la ligne de type `Leap'."
 
-#: time/zic.c:1153
+#: time/zic.c:1151
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "Champ `Rolling/Stationary' illégal sur la ligne de type `Leap'."
 
-#: locale/programs/ld-collate.c:1767
+#: locale/programs/ld-collate.c:1770
 msgid "illegal character constant in string"
 msgstr "Caractère illégal de constante dans la chaîne."
 
-#: locale/programs/ld-collate.c:1116
+#: locale/programs/ld-collate.c:1119
 msgid "illegal collation element"
 msgstr "Élément de fusionnement illégal."
 
@@ -2187,7 +2299,7 @@ msgstr ""
 "Nombre illégal pour la valeur de saut dans la chaîne %d du champ `era'\n"
 "de catégorie `%s'."
 
-#: catgets/gencat.c:351 catgets/gencat.c:428
+#: catgets/gencat.c:352 catgets/gencat.c:429
 msgid "illegal set number"
 msgstr "Numéro d'ensemble illégal."
 
@@ -2198,20 +2310,20 @@ msgstr ""
 "Date finale illégale dans la chaîne %d du champ `era'\n"
 "de catégorie `%s'."
 
-#: locale/programs/ld-time.c:302
+#: locale/programs/ld-time.c:303
 #, c-format
 msgid "illegal stopping date in string %d in `era' field in category `%s'"
 msgstr ""
 "Date finale illégale dans la chaîne %d du champ `era'\n"
 "de catégorie `%s'."
 
-#: locale/programs/ld-ctype.c:807
+#: locale/programs/ld-ctype.c:812
 #, c-format
 msgid "implementation limit: no more than %d character classes allowed"
 msgstr ""
 "Limite d'impantation: pas plus de %d classes de caractères sont permises."
 
-#: locale/programs/ld-ctype.c:839
+#: locale/programs/ld-ctype.c:844
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr ""
@@ -2221,60 +2333,60 @@ msgstr ""
 msgid "incorrectly formatted file"
 msgstr "Fichier incorrectement formaté."
 
-#: time/zic.c:814
+#: time/zic.c:811
 msgid "input line of unknown type"
 msgstr "Ligne d'entrée de type inconnu."
 
-#: time/zic.c:1733
+#: time/zic.c:1760
 msgid "internal error - addtype called with bad isdst"
 msgstr "Erreur interne - addtype appellé avec un mauvais bloc isdst."
 
-#: time/zic.c:1741
+#: time/zic.c:1768
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "Erreur interne - addtype appellé avec un mauvais bloc ttisgmt."
 
-#: time/zic.c:1737
+#: time/zic.c:1764
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "Erreur interne - addtype appellé avec un mauvais bloc ttisstd."
 
-#: locale/programs/ld-ctype.c:301
+#: locale/programs/ld-ctype.c:304
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "Erreur interne dans %s, ligne %u."
 
-#: time/zic.c:1021
+#: time/zic.c:1019
 msgid "invalid GMT offset"
 msgstr "Décalage relatif GMT invalide."
 
-#: time/zic.c:1024
+#: time/zic.c:1022
 msgid "invalid abbreviation format"
 msgstr "Format d'abréviation invalide."
 
-#: time/zic.c:1114 time/zic.c:1313 time/zic.c:1327
+#: time/zic.c:1112 time/zic.c:1313 time/zic.c:1327
 msgid "invalid day of month"
 msgstr "Jour du mois invalide."
 
-#: time/zic.c:1272
+#: time/zic.c:1270
 msgid "invalid ending year"
 msgstr "Année finale invalide."
 
-#: time/zic.c:1086
+#: time/zic.c:1084
 msgid "invalid leaping year"
 msgstr "Année bissextile invalide."
 
-#: time/zic.c:1101 time/zic.c:1204
+#: time/zic.c:1099 time/zic.c:1202
 msgid "invalid month name"
 msgstr "Nom de mois invalide."
 
-#: time/zic.c:920
+#: time/zic.c:918
 msgid "invalid saved time"
 msgstr "Temps sauvegardé invalide."
 
-#: time/zic.c:1252
+#: time/zic.c:1250
 msgid "invalid starting year"
 msgstr "Année initiale invalide."
 
-#: time/zic.c:1130 time/zic.c:1232
+#: time/zic.c:1128 time/zic.c:1230
 msgid "invalid time of day"
 msgstr "Heure du jour invalide."
 
@@ -2282,68 +2394,66 @@ msgstr "Heure du jour invalide."
 msgid "invalid weekday name"
 msgstr "Nom du jour de semaine invalide."
 
-#: locale/programs/ld-collate.c:1412
+#: locale/programs/ld-collate.c:1415
 msgid "line after ellipsis must contain character definition"
 msgstr "La ligne après l'ellipse doit contenir la définition d'un caractère."
 
-#: locale/programs/ld-collate.c:1391
+#: locale/programs/ld-collate.c:1394
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr ""
 "La ligne avant l'ellipse ne doit pas contenir la définition d'une constante "
 "de caractères."
 
-#: time/zic.c:794
+#: time/zic.c:791
 msgid "line too long"
 msgstr "Ligne trop longue."
 
-#: locale/programs/localedef.c:281
+#: locale/programs/localedef.c:285
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr ""
 "Fichier localisé `%s', utilisé dans la déclaration de `copy', non repéré."
 
-#: catgets/gencat.c:609
+#: catgets/gencat.c:610
 msgid "malformed line ignored"
 msgstr "Ligne incorrecte ignorée."
 
-#: malloc/mcheck.c:183
+#: malloc/mcheck.c:185
 msgid "memory clobbered before allocated block"
 msgstr "Mémoire écrasée avant le bloc alloué."
 
-#: malloc/mcheck.c:186
+#: malloc/mcheck.c:188
 msgid "memory clobbered past end of allocated block"
 msgstr "Mémoire écrasée après la fin du bloc alloué."
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
-#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1439
-#: locale/programs/ld-collate.c:1468 locale/programs/locfile.c:940
+#: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1442
+#: locale/programs/ld-collate.c:1471 locale/programs/locfile.c:962
 #: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
 msgstr "Mémoire épuisée."
 
-#: malloc/obstack.c:425
+#: malloc/obstack.c:462
 msgid "memory exhausted\n"
 msgstr "Mémoire épuisée.\n"
 
-#: malloc/mcheck.c:180
+#: malloc/mcheck.c:182
 msgid "memory is consistent, library is buggy"
 msgstr "Mémoire consistente, la librairie est fautive."
 
-#: locale/programs/ld-time.c:348
+#: locale/programs/ld-time.c:350
 #, c-format
 msgid "missing era format in string %d in `era' field in category `%s'"
 msgstr ""
 "Format de type era manquant dans la chaîne %d du champ `era'\n"
 "de catégorie `%s'."
 
-#: locale/programs/ld-time.c:337
+#: locale/programs/ld-time.c:339
 #, c-format
-msgid "missing era name in string %d in `era' fieldin category `%s'"
-msgstr ""
-"Nom de type era manquant dans la chaîne %d du champ `era'\n"
-"de catégorie `%s'."
+msgid "missing era name in string %d in `era' field in category `%s'"
+msgstr "Nom manquant dans la chaîne %d du champ `era' de catégorie `%s'."
 
-#: time/zic.c:915
+#: time/zic.c:913
 msgid "nameless rule"
 msgstr "Règle sans nom."
 
@@ -2357,19 +2467,19 @@ msgstr "Le programme %d n'a jamais été enregistré.\n"
 msgid "no correct regular expression for field `%s' in category `%s': %s"
 msgstr "Expression reguliere incorrecte du champ `%s' de catégorie `%s': %s"
 
-#: time/zic.c:2059
+#: time/zic.c:2086
 msgid "no day in month matches rule"
 msgstr "Pas de jour dans les règles de concordance."
 
-#: locale/programs/ld-collate.c:259
+#: locale/programs/ld-collate.c:260
 msgid "no definition of `UNDEFINED'"
 msgstr "Pas de définition de type `UNDEFINED'."
 
-#: locale/programs/locfile.c:479
+#: locale/programs/locfile.c:501
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "Aucun autre mot clé ne doit être spécifié lorsque `copy' est utilisé."
 
-#: locale/programs/localedef.c:340
+#: locale/programs/localedef.c:344
 msgid "no output file produced because warning were issued"
 msgstr "Aucun fichier de sortie généré en raison d'un avertissement déjà émis."
 
@@ -2394,7 +2504,7 @@ msgstr ""
 "Seules les définitions de type `WIDTH' sont autorisées à suivre\n"
 "la définition de `CHARMAP'."
 
-#: db/makedb.c:326
+#: db/makedb.c:327
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "Problèmes lors de la lecture de `%s'"
@@ -2415,16 +2525,16 @@ msgstr "Le programme %lu de version %lu n'est pas disponible.\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "Le programme %lu de version %lu est prêt et en attente.\n"
 
-#: inet/rcmd.c:171
+#: inet/rcmd.c:172
 #, c-format
 msgid "rcmd: select (setting up stderr): %m\n"
 msgstr "rcmd: sélection (configuration de stderr): %m.\n"
 
-#: inet/rcmd.c:103
+#: inet/rcmd.c:104
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: tous les ports sont occupés.\n"
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:160
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: écriture (configuration de stderr): %m.\n"
@@ -2433,7 +2543,7 @@ msgstr "rcmd: écriture (configuration de stderr): %m.\n"
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: mémoire épuisée.\n"
 
-#: time/zic.c:1794
+#: time/zic.c:1821
 msgid "repeated leap second moment"
 msgstr "Répétition du délai une seconde fois."
 
@@ -2466,50 +2576,50 @@ msgstr "rpcinfo: ne peut contacter le convertisseur de ports."
 msgid "rpcinfo: can't contact portmapper: "
 msgstr "rpcinfo: ne peut contacter le convertisseur de ports."
 
-#: time/zic.c:708 time/zic.c:710
+#: time/zic.c:704 time/zic.c:706
 msgid "same rule name in multiple files"
 msgstr "Même nom de règle dans plusieurs fichiers."
 
-#: inet/rcmd.c:174
+#: inet/rcmd.c:175
 msgid "select: protocol failure in circuit setup\n"
 msgstr "select: échec de protocole dans la configuration du circuit.\n"
 
-#: inet/rcmd.c:192
+#: inet/rcmd.c:193
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: échec de protocole dans la configuration du circuit.\n"
 
-#: locale/programs/locfile.c:600
+#: locale/programs/locfile.c:622
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr ""
 "Les options de tri `forward' et `backward' sont mutuellement exclusives."
 
-#: locale/programs/ld-collate.c:1568 locale/programs/ld-collate.c:1614
+#: locale/programs/ld-collate.c:1571 locale/programs/ld-collate.c:1617
 msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
 "La spécification de tri par le poids des symboles de\n"
 "fusionnement n'a aucun sens."
 
-#: time/zic.c:779
+#: time/zic.c:775
 msgid "standard input"
 msgstr "entrée standard"
 
-#: time/zdump.c:260
+#: time/zdump.c:268
 msgid "standard output"
 msgstr "sortie standard"
 
-#: locale/programs/ld-time.c:256
+#: locale/programs/ld-time.c:257
 #, c-format
 msgid "starting date is illegal in string %d in `era' field in category `%s'"
 msgstr ""
 "Date initiale illégale dans la chaîne %d du champ `era'\n"
 "de catégorie `%s'."
 
-#: time/zic.c:1276
+#: time/zic.c:1274
 msgid "starting year greater than ending year"
 msgstr "Année initiale plus grande que l'année finale."
 
-#: locale/programs/ld-time.c:328
+#: locale/programs/ld-time.c:330
 #, c-format
 msgid "stopping date is illegal in string %d in `era' field in category `%s'"
 msgstr ""
@@ -2541,7 +2651,7 @@ msgstr "svcudp_create - ne peut trouver le nom du socket par getsockname()."
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: problème de création du socket."
 
-#: locale/programs/ld-collate.c:1191
+#: locale/programs/ld-collate.c:1194
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates element "
@@ -2550,7 +2660,7 @@ msgstr ""
 "Le symbole d'un élément de fusionnement multi-caractères `%.*s' \n"
 "provoque la duplication de la définition d'un élément."
 
-#: locale/programs/ld-collate.c:1064
+#: locale/programs/ld-collate.c:1067
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other element "
@@ -2559,7 +2669,7 @@ msgstr ""
 "Le symbole d'un élément de fusionnement multi-caractères `%.*s' \n"
 "provoque la duplication d'autres définitions d'éléments."
 
-#: locale/programs/ld-collate.c:1200
+#: locale/programs/ld-collate.c:1203
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other symbol "
@@ -2568,7 +2678,7 @@ msgstr ""
 "Le symbole d'un élément de fusionnement multi-caractères `%.*s' \n"
 "provoque la duplication d'autres définitions de symboles."
 
-#: locale/programs/ld-collate.c:1073
+#: locale/programs/ld-collate.c:1076
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbol "
@@ -2577,7 +2687,7 @@ msgstr ""
 "Le symbole d'un élément de fusionnement multi-caractères `%.*s' \n"
 "provoque la duplication de la définition d'un symbole."
 
-#: locale/programs/ld-collate.c:1055 locale/programs/ld-collate.c:1182
+#: locale/programs/ld-collate.c:1058 locale/programs/ld-collate.c:1185
 #, c-format
 msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbolic name "
@@ -2594,55 +2704,55 @@ msgstr ""
 msgid "syntax error in %s definition: %s"
 msgstr "Erreur de syntaxe dans la définition de %s: %s."
 
-#: locale/programs/locfile.c:620
+#: locale/programs/locfile.c:642
 msgid "syntax error in `order_start' directive"
 msgstr "Erreur de syntaxe dans la directive `order_start'."
 
-#: locale/programs/locfile.c:362
+#: locale/programs/locfile.c:384
 msgid "syntax error in character class definition"
 msgstr "Erreur de syntaxe dans la définition de la classe de caractères."
 
-#: locale/programs/locfile.c:420
+#: locale/programs/locfile.c:442
 msgid "syntax error in character conversion definition"
 msgstr "Erreur de syntaxe dans la définition du caractère de conversion."
 
-#: locale/programs/locfile.c:662
+#: locale/programs/locfile.c:684
 msgid "syntax error in collating order definition"
 msgstr "Erreur de syntaxe dans l'ordre de la définition du fusionnement."
 
-#: locale/programs/locfile.c:512
+#: locale/programs/locfile.c:534
 msgid "syntax error in collation definition"
 msgstr "Erreur de syntaxe dans la définition du fusionnement."
 
-#: locale/programs/locfile.c:335
+#: locale/programs/locfile.c:357
 msgid "syntax error in definition of LC_CTYPE category"
 msgstr ""
 "Erreur de syntaxe dans la définition d'une catégorie de type `LC_CTYPE'."
 
-#: locale/programs/locfile.c:278
+#: locale/programs/locfile.c:300
 msgid "syntax error in definition of new character class"
 msgstr ""
 "Erreur de syntaxe dans la définition d'une nouvelle classe de caractères."
 
-#: locale/programs/locfile.c:288
+#: locale/programs/locfile.c:310
 msgid "syntax error in definition of new character map"
 msgstr ""
 "Erreur de syntaxe dans la définition d'une nouvelle table de caractères."
 
-#: locale/programs/locfile.c:873
+#: locale/programs/locfile.c:895
 msgid "syntax error in message locale definition"
 msgstr "Erreur de syntaxe dans la définition localisée du message."
 
-#: locale/programs/locfile.c:784
+#: locale/programs/locfile.c:806
 msgid "syntax error in monetary locale definition"
 msgstr "Erreur de syntaxe dans la définition localisée des valeurs monétaires."
 
-#: locale/programs/locfile.c:811
+#: locale/programs/locfile.c:833
 msgid "syntax error in numeric locale definition"
 msgstr ""
 "Erreur de syntaxe dans la définition localisée de représentation numérique."
 
-#: locale/programs/locfile.c:722
+#: locale/programs/locfile.c:744
 msgid "syntax error in order specification"
 msgstr "Erreur de syntaxe dans la spéficication de l'ordonnancement."
 
@@ -2651,27 +2761,27 @@ msgstr "Erreur de syntaxe dans la spéficication de l'ordonnancement."
 msgid "syntax error in prolog: %s"
 msgstr "Erreur de syntaxe du prologue: %s."
 
-#: locale/programs/locfile.c:849
+#: locale/programs/locfile.c:871
 msgid "syntax error in time locale definition"
 msgstr ""
 "Erreur de syntaxe dans la définition localisée de la représentation du temps."
 
-#: locale/programs/locfile.c:255
+#: locale/programs/locfile.c:277
 msgid "syntax error: not inside a locale definition section"
 msgstr ""
 "Erreur de syntaxe: pas à l'intérieur d'une section de définition localisée."
 
-#: catgets/gencat.c:380 catgets/gencat.c:516 catgets/gencat.c:543
+#: catgets/gencat.c:381 catgets/gencat.c:517 catgets/gencat.c:544
 msgid "this is the first definition"
 msgstr "Ceci est la première définition."
 
 # time/zic.c:1120A
 # mro: à investiguer dans le code source
-#: time/zic.c:1119
+#: time/zic.c:1117
 msgid "time before zero"
 msgstr "Temps défini avant le zéro."
 
-#: time/zic.c:1127 time/zic.c:1959 time/zic.c:1978
+#: time/zic.c:1125 time/zic.c:1986 time/zic.c:2005
 msgid "time overflow"
 msgstr "Débordement du temps alloué."
 
@@ -2687,23 +2797,23 @@ msgstr "Trop d'octets pour l'encodage des caractères."
 msgid "too many character classes defined"
 msgstr "Trop de définitions de classes de caractères."
 
-#: time/zic.c:1788
+#: time/zic.c:1815
 msgid "too many leap seconds"
 msgstr "Trop de délai en secondes."
 
-#: time/zic.c:1760
+#: time/zic.c:1787
 msgid "too many local time types"
 msgstr "Trop de types localisés pour la représentation du temps."
 
-#: time/zic.c:1714
+#: time/zic.c:1741
 msgid "too many transitions?!"
 msgstr "Trop de transitions définies?!"
 
-#: locale/programs/ld-collate.c:1623
+#: locale/programs/ld-collate.c:1626
 msgid "too many weights"
 msgstr "Trop de poids définis."
 
-#: time/zic.c:2082
+#: time/zic.c:2109
 msgid "too many, or too long, time zone abbreviations"
 msgstr "Trop ou de trop longues abréviations de fuseaux horaires."
 
@@ -2716,11 +2826,11 @@ msgstr "Suffixe en rebut à la fin de la ligne."
 msgid "trouble replying to prog %d\n"
 msgstr "Problème à répondre au programme %d.\n"
 
-#: locale/programs/ld-collate.c:1383
+#: locale/programs/ld-collate.c:1386
 msgid "two lines in a row containing `...' are not allowed"
 msgstr "Deux lignes consécutives contenant `...' ne sont pas permises."
 
-#: time/zic.c:1283
+#: time/zic.c:1281
 msgid "typed single year"
 msgstr "Une seule année fournie."
 
@@ -2735,39 +2845,36 @@ msgstr "Caractère inconnu `%s'."
 
 #: locale/programs/ld-messages.c:193 locale/programs/ld-messages.c:204
 #: locale/programs/ld-messages.c:215 locale/programs/ld-messages.c:226
-#: locale/programs/ld-time.c:696
+#: locale/programs/ld-time.c:698
 #, c-format
 msgid "unknown character in field `%s' of category `%s'"
 msgstr "Caractère inconnu dans le champ `%s' de catégorie `%s'."
 
-#: locale/programs/locfile.c:585
+#: locale/programs/locfile.c:607
 msgid "unknown collation directive"
 msgstr "Directive de fusionnement inconnue."
 
-#: catgets/gencat.c:477
+#: catgets/gencat.c:478
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "Directive inconnue `%s': ligne ignorée."
 
-#: catgets/gencat.c:456
+#: catgets/gencat.c:457
 #, c-format
 msgid "unknown set `%s'"
 msgstr "Ensemble inconnu `%s'."
 
-msgid "unknown signal"
-msgstr "Signal inconnu."
-
-#: locale/programs/ld-collate.c:1367 locale/programs/ld-collate.c:1558
-#: locale/programs/ld-collate.c:1732
+#: locale/programs/ld-collate.c:1370 locale/programs/ld-collate.c:1561
+#: locale/programs/ld-collate.c:1735
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
 msgstr "Symbole inconnu `%.*s': ligne ignorée."
 
-#: time/zic.c:751
+#: time/zic.c:747
 msgid "unruly zone"
 msgstr "Zone sans règle."
 
-#: catgets/gencat.c:961
+#: catgets/gencat.c:962
 msgid "unterminated message"
 msgstr "Message incomplet."
 
@@ -2779,7 +2886,7 @@ msgstr "Chaîne incomplète."
 msgid "unterminated symbolic name"
 msgstr "Nom symbolique incomplet."
 
-#: locale/programs/ld-collate.c:1685
+#: locale/programs/ld-collate.c:1688
 msgid "unterminated weight name"
 msgstr "Nom de poids incomplet."
 
@@ -2789,7 +2896,7 @@ msgstr ""
 "Limite supérieure de l'intervalle n'est pas plus petite que la limite "
 "inférieure."
 
-#: time/zic.c:2025
+#: time/zic.c:2052
 msgid "use of 2/29 in non leap-year"
 msgstr "Utiliser 2/29 pour les années non-bissextiles."
 
@@ -2803,7 +2910,7 @@ msgstr "La valeur de %s doit être un entier."
 msgid "value for <%s> must lie between 1 and 4"
 msgstr "La valeur de <%s> doit être comprise entre 1 et 4."
 
-#: locale/programs/ld-monetary.c:148 locale/programs/ld-numeric.c:89
+#: locale/programs/ld-monetary.c:149 locale/programs/ld-numeric.c:89
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
 msgstr ""
@@ -2815,7 +2922,7 @@ msgstr ""
 "La valeur de <mb_cur_max> doit être plus grande que la valeur de "
 "<mb_cur_min>."
 
-#: locale/programs/ld-monetary.c:138
+#: locale/programs/ld-monetary.c:139
 msgid ""
 "value of field `int_curr_symbol' in category `LC_MONETARY' does not "
 "correspond to a valid name in ISO 4217"
@@ -2830,13 +2937,13 @@ msgstr ""
 "La valeur du champ `int_curr_symbol' de catégorie `LC_MONETARY' n'a pas la "
 "bonne longueur."
 
-#: locale/programs/ld-monetary.c:370 locale/programs/ld-numeric.c:199
+#: locale/programs/ld-monetary.c:371 locale/programs/ld-numeric.c:199
 #, c-format
 msgid "values for field `%s' in category `%s' must be smaller than 127"
 msgstr ""
 "Les valeurs du champ `%s' de catégorie `%s' doivent être plus petite que 127."
 
-#: locale/programs/ld-monetary.c:366
+#: locale/programs/ld-monetary.c:367
 #, c-format
 msgid "values for field `%s' in category `%s' must not be zero"
 msgstr ""
@@ -2846,15 +2953,15 @@ msgstr ""
 msgid "while opening UTMP file"
 msgstr "durant l'ouverture du fichier UTMP."
 
-#: catgets/gencat.c:988
+#: catgets/gencat.c:989
 msgid "while opening old catalog file"
 msgstr "durant l'ouverture du vieux fichier du catalogue."
 
-#: db/makedb.c:353
+#: db/makedb.c:354
 msgid "while reading database"
 msgstr "durant la lecture de la base de données."
 
-#: db/makedb.c:315
+#: db/makedb.c:316
 msgid "while writing data base file"
 msgstr "durant l'écriture dans le fichier de la base de données."
 
@@ -2862,37 +2969,40 @@ msgstr "durant l'écriture dans le fichier de la base de données."
 msgid "wrong number of arguments"
 msgstr "Mauvais nombre de paramètres."
 
-#: time/zic.c:1077
+#: time/zic.c:1075
 msgid "wrong number of fields on Leap line"
 msgstr "Mauvais nombre de champs sur la ligne de type `Leap'."
 
-#: time/zic.c:1168
+#: time/zic.c:1166
 msgid "wrong number of fields on Link line"
 msgstr "Mauvais nombre de champs sur la ligne de type `Link'."
 
-#: time/zic.c:911
+#: time/zic.c:909
 msgid "wrong number of fields on Rule line"
 msgstr "Mauvais nombre de champs sur la ligne de type `Rule'."
 
-#: time/zic.c:981
+#: time/zic.c:979
 msgid "wrong number of fields on Zone continuation line"
 msgstr "Mauvais nombre de champs sur la ligne de type continuation de `Zone'."
 
-#: time/zic.c:939
+#: time/zic.c:937
 msgid "wrong number of fields on Zone line"
 msgstr "Mauvais nombre de champs sur la ligne de type `Zone'."
 
-#: nis/ypclnt.c:570
-msgid "yp_all: clnttcp_create failed"
-msgstr "yp_all: échec de la fonction clnttcp_create()."
-
-#: nis/ypclnt.c:772
+#: nis/ypclnt.c:811
 msgid "yp_update: cannot convert host to netname\n"
-msgstr "yp_update: ne peut convertir le nom de l'hôte à un nom réseau (netname).\n"
+msgstr ""
+"yp_update: ne peut convertir le nom de l'hôte à un nom réseau (netname).\n"
 
-#: nis/ypclnt.c:784
+#: nis/ypclnt.c:823
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: ne peut obtenir l'adresse du serveur.\n"
+
+#~ msgid "unknown signal"
+#~ msgstr "Signal inconnu."
+
+#~ msgid "yp_all: clnttcp_create failed"
+#~ msgstr "yp_all: échec de la fonction clnttcp_create()."
 
 #~ msgid "character `%c' not defined while needed as default value"
 #~ msgstr "Caractère `%c' non défini alors qu'attendu comme valeur par défaut."

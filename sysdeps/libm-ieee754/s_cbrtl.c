@@ -1,122 +1,76 @@
-/* s_cbrtl.c -- long double version of s_cbrt.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
- */
+/* Compute cubic root of double value.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Dirk Alboth <dirka@uni-paderborn.de> and
+   Ulrich Drepper <drepper@cygnus.com>, 1997.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include "math.h"
 #include "math_private.h"
 
-/* cbrtl(x)
- * Return cube root of x
- */
-#ifdef __STDC__
-static const u_int32_t
-#else
-static u_int32_t
-#endif
-	B1_EXP = 10921,		/* = Int(B1) */
-	B1_MANT = 0x7bc4b064,	/* = Int(1.0-0.03306235651)*2**31 */
 
-	B2_EXP = 10900,
-	B2_MANT = 0x7bc4b064;	/* = Int(1.0-0.03306235651)*2**31 */
+#define CBRT2 1.2599210498948731648		/* 2^(1/3) */
+#define SQR_CBRT2 1.5874010519681994748		/* 2^(2/3) */
 
-#ifdef __STDC__
-static const long double
-#else
-static long double
-#endif
-C =  5.42857142857142815906e-01L, /* 19/35 */
-D = -7.05306122448979611050e-01L, /* -864/1225 */
-E =  1.41428571428571436819e+00L, /* 99/70 */
-F =  1.60714285714285720630e+00L, /* 45/28 */
-G =  3.57142857142857150787e-01L; /* 5/14 */
-
-#ifdef __STDC__
-	long double __cbrtl(long double x)
-#else
-	long double __cbrtl(x)
-	long double x;
-#endif
+/* We don't use long double values here since U need not be computed
+   with full precision.  */
+static const double factor[5] =
 {
-	long double r,s,t=0.0,w;
-	u_int32_t sign, se, x0, x1;
-
-	GET_LDOUBLE_WORDS(se,x0,x1,x);
-	sign=se&0x8000; 		/* sign= sign(x) */
-	se ^= sign;
-	if(se==0x7fff) return(x+x); /* cbrt(NaN,INF) is itself */
-	if((se|x0|x1)==0)
-	    return(x);		/* cbrt(0) is itself */
-
-	SET_LDOUBLE_EXP(x,se);	/* x <- |x| */
-
-/* XXX I don't know whether the numbers for correct are correct.  The
-   precalculation is extended from 20 bits to 32 bits.  This hopefully
-   gives us the needed bits to get us still along with one iteration
-   step.  */
-
-    /* rough cbrt to 5 bits */
-	if(se==0) 		/* subnormal number */
-	  {
-	    u_int64_t xxl;
-	    u_int32_t set,t0,t1;
-	    SET_LDOUBLE_EXP(t,0x4035);	/* set t= 2**54 */
-	    SET_LDOUBLE_MSW(t,0x80000000);
-	    t*=x;
-	    GET_LDOUBLE_WORDS(set,t0,t1,t);
-	    xxl = ((u_int64_t) set) << 32 | t0;
-	    xxl /= 3;
-	    xxl += B2_EXP << 16 | B2_MANT;
-	    t0 = xxl & 0xffffffffu;
-	    set = xxl >> 32;
-	    SET_LDOUBLE_WORDS(t,set,t0,t1);
-	  }
-	else
-	  {
-	    u_int64_t xxl = ((u_int64_t) se) << 32 | x0;
-	    xxl /= 3;
-	    xxl += ((u_int64_t) B1_EXP) << 32 | B1_MANT;
-	    SET_LDOUBLE_MSW(t,xxl&0xffffffffu);
-	    xxl >>= 32;
-	    SET_LDOUBLE_EXP(t,xxl);
-	  }
+  1.0 / SQR_CBRT2,
+  1.0 / CBRT2,
+  1.0,
+  CBRT2,
+  SQR_CBRT2
+};
 
 
-    /* new cbrt to 23 bits, may be implemented in single precision */
-	r=t*t/x;
-	s=C+r*t;
-	t*=G+F/(s+E+D/s);
+long double
+__cbrtl (long double x)
+{
+  long double xm, ym, u, t2;
+  int xe;
 
-    /* chopped to 32 bits and make it larger than cbrt(x) */
-	GET_LDOUBLE_WORDS(se,x0,x1,t);
-	SET_LDOUBLE_WORDS(t,se,x0+1,0);
+  /* Reduce X.  XM now is an range 1.0 to 0.5.  */
+  xm = __frexpl (fabs (x), &xe);
 
+  /* If X is not finite or is null return it (with raising exceptions
+     if necessary.  */
+  if (xe == 0)
+    return x + x;
 
-    /* one step newton iteration to 53 bits with error less than 0.667 ulps */
-	s=t*t;		/* t*t is exact */
-	r=x/s;
-	w=t+t;
-	r=(r-t)/(w+r);	/* r-s is exact */
-	t=t+t*r;
+  u = (0.338058687610520237
+       + (1.67595307700780102
+	  + (-2.82414939754975962
+	     + (4.09559907378707839 +
+		(-4.11151425200350531
+		 + (2.65298938441952296 +
+		    (-0.988553671195413709
+		     + 0.161617097923756032 * xm)
+		    * xm)
+		 * xm)
+		* xm)
+	     * xm)
+	  * xm)
+       *xm);
 
-    /* retore the sign bit */
-	GET_LDOUBLE_EXP(se,t);
-	SET_LDOUBLE_EXP(t,se|sign);
-	return(t);
+  t2 = u * u * u;
+
+  ym = u * (t2 + 2.0 * xm) / (2.0 * t2 + xm) * factor[2 + xe % 3];
+
+  return __ldexpl (x > 0.0 ? ym : -ym, xe / 3);
 }
 weak_alias (__cbrtl, cbrtl)

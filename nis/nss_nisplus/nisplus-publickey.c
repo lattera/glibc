@@ -23,15 +23,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <syslog.h>
-#include <rpc/key_prot.h>
+#include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
+#ifdef HAVE_SECURE_RPC
+#include <rpc/key_prot.h>
+extern int xdecrypt (char *, char *);
+#endif
 
 #include <nss-nisplus.h>
 
-extern int xdecrypt (char *, char *);
-
-/* If we found the entry, we give a SUCCESS and an empty key back. */
+/* If we haven't found the entry, we give a SUCCESS and an empty key back. */
 enum nss_status
 _nss_nisplus_getpublickey (const char *netname, char *pkey)
 {
@@ -70,6 +72,8 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
     {
       if (retval == NSS_STATUS_TRYAGAIN)
 	__set_errno (EAGAIN);
+      if (res->status == NIS_NOTFOUND)
+	retval = NSS_STATUS_SUCCESS;
       nis_freeresult (res);
       return retval;
     }
@@ -100,6 +104,7 @@ _nss_nisplus_getpublickey (const char *netname, char *pkey)
 enum nss_status
 _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 {
+#ifdef HAVE_SECURE_RPC
   nis_result *res;
   enum nss_status retval;
   char buf[NIS_MAXNAMELEN+2];
@@ -167,6 +172,9 @@ _nss_nisplus_getsecretkey (const char *netname, char *skey, char *passwd)
 
   buf[HEXKEYBYTES] = 0;
   strcpy (skey, buf);
+#else
+  skey[0] = 0;
+#endif
 
   return NSS_STATUS_SUCCESS;
 }

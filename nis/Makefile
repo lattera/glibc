@@ -27,7 +27,7 @@ distribute		:= nss-nis.h nss-nisplus.h
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
 databases		= proto service hosts network grp pwd rpc ethers \
-			  spwd netgrp alias
+			  spwd netgrp alias publickey
 
 # Specify rules for the nss_* modules.
 services		:= nis compat nisplus
@@ -55,57 +55,12 @@ libnss_nis-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases))
 libnss_nisplus-inhibit-o = $(filter-out .so,$(object-suffixes))
 
-# Sun's header files are not too clean.
-CFLAGS-compat-pwd.c = -Wno-strict-prototypes
-CFLAGS-compat-spwd.c = -Wno-strict-prototypes
-CFLAGS-compat-grp.c = -Wno-strict-prototypes
-CFLAGS-nis-alias.c = -Wno-strict-prototypes
-CFLAGS-nis-ethers.c = -Wno-strict-prototypes
-CFLAGS-nis-grp.c = -Wno-strict-prototypes
-CFLAGS-nis-hosts.c = -Wno-strict-prototypes
-CFLAGS-nis-netgrp.c = -Wno-strict-prototypes
-CFLAGS-nis-network.c = -Wno-strict-prototypes
-CFLAGS-nis-proto.c = -Wno-strict-prototypes
-CFLAGS-nis-publickey.c = -Wno-strict-prototypes
-CFLAGS-nis-pwd.c = -Wno-strict-prototypes
-CFLAGS-nis-rpc.c = -Wno-strict-prototypes
-CFLAGS-nis-service.c = -Wno-strict-prototypes
-CFLAGS-nis-spwd.c = -Wno-strict-prototypes
-CFLAGS-ypclnt.c = -Wno-strict-prototypes -Wno-write-strings -Irpcsvc
-CFLAGS-yp_xdr.c = -Wno-strict-prototypes -Irpcsvc
-CFLAGS-ypupdate_xdr.c = -Wno-strict-prototypes -Irpcsvc
-# For the NIS+ Code
-CFLAGS-nis_call.c = -DNO_DES_RPC -Wno-strict-prototypes
-CFLAGS-nis_subr.c = -Wno-strict-prototypes
-CFLAGS-nis_local_names.c = -Wno-strict-prototypes
-CFLAGS-nis_free.c = -Wno-strict-prototypes
-CFLAGS-nis_file.c = -Wno-strict-prototypes
-CFLAGS-nis_print.c = -Wno-strict-prototypes
-CFLAGS-nis_error.c = -Wno-strict-prototypes
-CFLAGS-nis_names.c = -Wno-strict-prototypes
-CFLAGS-nis_clone.c = -Wno-strict-prototypes
-CFLAGS-nis_table.c = -Wno-strict-prototypes
-CFLAGS-nis_server.c = -Wno-strict-prototypes
-CFLAGS-nis_xdr.c = -Wno-strict-prototypes
-CFLAGS-nis_intern.c = -Wno-strict-prototypes
-CFLAGS-nisplus-alias.c = -Wno-strict-prototypes
-CFLAGS-nisplus-ethers.c = -Wno-strict-prototypes
-CFLAGS-nisplus-grp.c = -Wno-strict-prototypes
-CFLAGS-nisplus-hosts.c = -Wno-strict-prototypes
-CFLAGS-nisplus-netgrp.c = -Wno-strict-prototypes
-CFLAGS-nisplus-network.c = -Wno-strict-prototypes
-CFLAGS-nisplus-proto.c = -Wno-strict-prototypes
-CFLAGS-nisplus-publickey.c = -Wno-strict-prototypes
-CFLAGS-nisplus-pwd.c = -Wno-strict-prototypes
-CFLAGS-nisplus-rpc.c = -Wno-strict-prototypes
-CFLAGS-nisplus-service.c = -Wno-strict-prototypes
-CFLAGS-nisplus-spwd.c = -Wno-strict-prototypes
-
 include ../Rules
 
 
 $(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version) \
-			   $(common-objpfx)nss/libnss_files.so
+			   $(common-objpfx)nss/libnss_files.so \
+			   $(common-objpfx)nis/libnss_nisplus.so
 $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
 			$(common-objpfx)nss/libnss_files.so
 $(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)

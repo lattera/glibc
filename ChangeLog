@@ -1,3 +1,104 @@
+1997-04-05 03:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/arpa/inet.h: Rewrite.  Don't use the ugly BSD way to write
+	headers but instead add comments and parameter names.
+	Don't use BSD specific types in prototypes.
+
+	* manual/nss.texi: Correct a few typos and errors.
+
+	* sysdeps/libm-ieee754/s_cbrt.c: Complete rewrite based on better
+	algorithm.
+	* sysdeps/libm-ieee754/s_cbrtf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Likewise.
+
+	* sysdeps/libm-i387/s_cbrt.S: New file.  Optimized assembler version
+	with new algorithm.
+	* sysdeps/libm-i387/s_cbrtf.S: New file.
+	* sysdeps/libm-i387/s_cbrtl.S: New file.
+
+	* sysdeps/libm-i387/s_frexp.S: Optimize even more.
+	* sysdeps/libm-i387/s_frexpf.S: Likewise.
+	* sysdeps/libm-i387/s_frexpl.S: Likewise.
+
+1997-04-04 18:55  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/Makefile: Remove CFLAGS-*, add publickey to databases.
+
+	* nis/nis_call.c: Add MASTER_ONLY and HARD_LOOKUP flags, compile
+	DES part only with secure RPC add-on.
+
+	* nis/nis_names.c (nis_modify): Fix rpc function number.
+
+	* nis/nis_server.c: Fix typos.
+
+	* nis/nss_compat/compat-grp.c: Add NIS+ support.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
+	* nis/nss_nis/nis-grp.c: Only a return value > 0 from parse_line
+	signals success.
+
+	* nis/nss_nis/nis-publickey.c: Changes for compiling with/without
+	secure RPC.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	* nis/nis_intern.h: Likewise.
+
+	* nis/nss_nisplus/nisplus-alias.c: Correct parser return code.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+
+	* nis/nss_nisplus/nisplus-grp.c: Rewrite parser for fixing errors
+	and speedup.
+	* nis/nss_nisplus/nisplus-netgrp.c: Likewise.
+
+1997-04-04 17:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c (cbrt_test): Add tests for +-inf and NaN
+	arguments.
+
+1997-04-03 19:24  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/sigset.h (__sigisemptyset): Fix a
+	typo.
+
+1997-04-03 16:10  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* sysdeps/libm-ieee754/s_nanf.c:
+	* sysdeps/libm-ieee754/s_nan.c:
+	* sysdeps/libm-ieee754/s_nanl.c: Include <stdio.h> for
+	declaration of sprintf.
+
+1997-04-03 13:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_cexp.c: Fix type: string_alias ->
+	strong_alias.
+	Reported by sun <asun@zoology.washington.edu>.
+
+	* rpc/auth.h: Removed.
+	* rpc/auth_des.h: Removed.
+	* sunrpc/rpc/auth.h: Moved to ...
+	* sysdeps/generic/rpc/auth.h: ...here.
+	* sunrpc/rpc/auth_des.h: Moved to ...
+	* sysdeps/generic/rpc/auth_des.h: ...here.
+
+1997-04-03 04:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/s_frexp.S: New file.  ix87 optimized version.
+	* sysdeps/libm-i387/s_frexpf.S: New file.
+	* sysdeps/libm-i387/s_frexpl.S: New file.
+
+1997-04-01 10:11  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet]
+	(sysdep_headers): Remove netinet/icmp.h.
+
 1997-04-02 16:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/socket.texi: Document behaviour of inet_ntoa in multi-
@@ -12,7 +113,7 @@
 	* manual/arith.texi: Add description of lldiv_t, lldiv, and atoll.
 	Change description of strtoll and strtoull to make clear these
 	are the preferred names.
-	Describe `inf', `inifinity', `nan', `nan(...)' inputs for strtod
+	Describe `inf', `infinity', `nan', `nan(...)' inputs for strtod
 	and friends.
 	Change references to HUGE_VALf and HUGE_VALl to HUGE_VALF and
 	HUGE_VALL.
@@ -146,7 +247,7 @@
 	* sysdeps/i386/addmul_1.S: Likewise.
 	* sysdeps/i386/lshift.S: Likewise.
 	* sysdeps/i386/memchr.S: Likewise.
-	* sysdeps/i386/memset.S: Likewise.
+	* sysdeps/i386/memcmp.S: Likewise.
 	* sysdeps/i386/mul_1.S: Likewise.
 	* sysdeps/i386/rshift.S: Likewise.
 	* sysdeps/i386/stpcpy.S: Likewise.
@@ -176,9 +277,9 @@
 	* sysdeps/stub/s_log2l.c: Correct function name.
 
 	* time/africa: Updated from ADO tzdata1997e.
-	* time/aantarctica: Likewise.
+	* time/antarctica: Likewise.
 	* time/asia: Likewise.
-	* time/australia: Likewise.
+	* time/australasia: Likewise.
 	* time/europe: Likewise.
 	* time/northamerica: Likewise.
 	* time/southamerica: Likewise.

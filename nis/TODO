@@ -1,8 +1,9 @@
 
  * nss_nisplus: When using parser form nss_files, rewrite parser
- 
- * compat could use data from nisplus, too. Implement this
 
+ * nss_nisplus: Search the data in the complete NIS+ namespace
+		specified by NIS_PATH
+ 
  * nis_server: implement nis_getservlist, nis_stats, nis_servstate
 
  * nis_groups: implement it
@@ -22,10 +23,10 @@
  * Possible flags:
 	- FOLLOW_LINKS	(nis_list, nis_lookup)
 	- FOLLOW_PATH	(nis_list, not supported)
-	- HARD_LOOKUP	(__do_niscall, not supported)
+	- HARD_LOOKUP	(__do_niscall)
 	- ALL_RESULTS	(nis_list, not supported, needs server callback)
 	- NO_CACHE	(__do_niscall, cache not supported yet)
-	- MASTER_ONLY	(__do_niscall, not supported)
+	- MASTER_ONLY	(__do_niscall)
 	- EXPAND_NAME	(nis_lookup, nis_list)
 	- RETURN_RESULT (nis_table.c)
 	- ADD_OVERWRITE	(nis_table.c)
@@ -36,5 +37,4 @@
 	- MOD_EXCLUSIVE	(nis_table.c)
 	- USE_DGRAM	(__do_niscall)
 	- NO_AUTHINFO 	(__do_niscall)
-	
 	

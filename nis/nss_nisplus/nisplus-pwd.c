@@ -38,7 +38,7 @@ static nis_name *names = NULL;
 #define NISENTRYLEN(idx,col,res) \
         ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
-static int
+int
 _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 			  char *buffer, size_t buflen)
 {
@@ -46,7 +46,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
   size_t room_left = buflen;
 
   if (result == NULL)
-    return -1;
+    return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_len != 1 ||
@@ -54,14 +54,14 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
       strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
 	     "passwd_tbl") != 0 ||
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 7)
-    return -1;
+    return 0;
 
   if (NISENTRYLEN(0, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
 
   strncpy (first_unused, NISENTRYVAL(0, 0, result),

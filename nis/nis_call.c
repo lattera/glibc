@@ -60,13 +60,11 @@ __nis_dobind (const nis_server *server, u_long flags)
   int clnt_sock;
   size_t i;
   CLIENT *client = NULL;
-  /* XXX What is this variable for?  */
-  void *out = NULL;
 
+  memset (&clnt_saddr, '\0', sizeof clnt_saddr);
+  clnt_saddr.sin_family = AF_INET;
   for (i = 0; i < server->ep.ep_len; i++)
     {
-      memset (&clnt_saddr, '\0', sizeof clnt_saddr);
-      clnt_saddr.sin_family = AF_INET;
       if (strcmp (server->ep.ep_val[i].family,"loopback") == 0)
 	{
 	  if (server->ep.ep_val[i].uaddr[i] == '-')
@@ -79,14 +77,14 @@ __nis_dobind (const nis_server *server, u_long flags)
 		else
 		  continue;
 	      }
-	  else
-	    if (strcmp (server->ep.ep_val[i].proto,"tcp") == 0)
-	      {
-		if ((flags & USE_DGRAM) == USE_DGRAM)
-		  continue;
-		else
-		  clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
-	      }
+	    else
+	      if (strcmp (server->ep.ep_val[i].proto,"tcp") == 0)
+		{
+		  if ((flags & USE_DGRAM) == USE_DGRAM)
+		    continue;
+		  else
+		    clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
+		}
 	}
       else
 	if (strcmp (server->ep.ep_val[i].family,"inet") == 0)
@@ -115,7 +113,7 @@ __nis_dobind (const nis_server *server, u_long flags)
 	  }
 	else
 	  continue;
-
+      
       clnt_sock = RPC_ANYSOCK;
       if ((flags & USE_DGRAM) == USE_DGRAM)
 	client = clntudp_create (&clnt_saddr, NIS_PROG, NIS_VERSION,
@@ -123,42 +121,41 @@ __nis_dobind (const nis_server *server, u_long flags)
       else
 	client = clnttcp_create (&clnt_saddr, NIS_PROG, NIS_VERSION,
 				 &clnt_sock, 0, 0);
-
+      
       if (client == NULL)
 	continue;
-#if 1
       if (clnt_call (client, 0, (xdrproc_t) xdr_void, NULL,
-		     (xdrproc_t) xdr_void, out, TIMEOUT) != RPC_SUCCESS)
+		     (xdrproc_t) xdr_void, NULL, TIMEOUT) != RPC_SUCCESS)
 	{
 	  clnt_destroy (client);
 	  continue;
 	}
-#endif
-      if ((flags & NO_AUTHINFO) != NO_AUTHINFO)
-	  {
-#if !defined(NO_DES_RPC)
-	    if (server->key_type == NIS_PK_DH)
-	      {
-		char netname[MAXNETNAMELEN+1];
-		char *p;
 
-		strcpy (netname, "unix.");
-		strncat (netname, server->name,MAXNETNAMELEN-5);
-		netname[MAXNETNAMELEN-5] = '\0';
-		p = strchr (netname, '.');
-		*p = '@';
-		client->cl_auth =
-		  authdes_pk_create (netname, &server->pkey, 300, NULL, NULL);
-		if (!client->cl_auth)
-		  client->cl_auth = authunix_create_default ();
-	      }
-	    else
+      if ((flags & NO_AUTHINFO) != NO_AUTHINFO)
+	{
+#if defined(HAVE_SECURE_RPC)
+	  if (server->key_type == NIS_PK_DH)
+	    {
+	      char netname[MAXNETNAMELEN+1];
+	      char *p;
+	      
+	      p = stpcpy (netname, "unix.");
+	      strncpy (p, server->name,MAXNETNAMELEN-5);
+	      netname[MAXNETNAMELEN] = '\0';
+	      p = strchr (netname, '.');
+	      *p = '@';
+	      client->cl_auth =
+		authdes_pk_create (netname, &server->pkey, 300, NULL, NULL);
+	      if (!client->cl_auth)
+		client->cl_auth = authunix_create_default ();
+	    }
+	  else
 #endif
-	      client->cl_auth = authunix_create_default ();
-	  }
+	    client->cl_auth = authunix_create_default ();
+	}
       return client;
     }
-
+  
   return NULL;
 }
 
@@ -189,14 +186,19 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
       server_len = serv_len;
     }
 
+  if (((flags & MASTER_ONLY) == MASTER_ONLY) && server_len > 1)
+    server_len = 1; /* The first entry is the master */
+
   try = 0;
   result = NIS_NAMEUNREACHABLE;
 
   while (try < MAXTRIES && result != RPC_SUCCESS)
     {
       unsigned int i;
-
-      ++try;
+      
+      if ((flags & HARD_LOOKUP) == 0)
+	++try;
+      
       for (i = 0; i < server_len; i++)
 	{
 	  if ((clnt = __nis_dobind (&server[i], flags)) == NULL)
@@ -206,9 +208,7 @@ __do_niscall (const nis_server *serv, int serv_len, u_long prog,
 
 	  if (result != RPC_SUCCESS)
 	    {
-	      /* XXX Grrr.  The cast is needed for now since Sun code does
-		 note know about `const'.  */
-	      clnt_perror (clnt, (char *) "do_niscall: clnt_call");
+	      clnt_perror (clnt, "do_niscall: clnt_call");
 	      clnt_destroy (clnt);
 	      result = NIS_RPCERROR;
 	    }

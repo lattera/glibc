@@ -68,6 +68,9 @@ The databases available in the NSS are
 @cindex services
 @cindex shadow
 @vtable @code
+@item aliases
+Mail aliases
+@comment @pxref{Mail Aliases}.
 @item ethers
 Ethernet numbers,
 @comment @pxref{Ethernet Numbers}.
@@ -94,8 +97,8 @@ Shadow user passwords,
 @end vtable
 
 @noindent
-There will be some more added later (@code{aliases}, @code{automount},
-@code{bootparams}, @code{netmasks}, and @code{publickey}).
+There will be some more added later (@code{automount}, @code{bootparams},
+@code{netmasks}, and @code{publickey}).
 
 @node NSS Configuration File, NSS Module Internals, NSS Basics, Name Service Switch
 @section The NSS Configuration File
@@ -123,7 +126,7 @@ different items:
 @item
 the service specification like @code{files}, @code{db}, or @code{nis}.
 @item
-the reaction on lookup result line @code{[NOTFOUND=return]}.
+the reaction on lookup result like @code{[NOTFOUND=return]}.
 @end itemize
 
 @menu
@@ -346,8 +349,9 @@ functions.  I.e., if the user would call the @code{gethostbyname_r}
 function this also would end in the above function.  For all user
 interface functions the C library maps this call to a call to the
 reentrant function.  For reentrant functions this is trivial since the
-interface is (nearly) the same.  For the non-reentrant version pointers
-to static buffers are used to replace the user supplied buffers.
+interface is (nearly) the same.  For the non-reentrant version The
+library keeps internal buffers which are used to replace the user
+supplied buffer.
 
 I.e., the reentrant functions @emph{can} have counterparts.  No service
 module is forced to have functions for all databases and all kinds to
@@ -399,9 +403,9 @@ enum nss_status _nss_files_gethostbyname_r (const char *name,
 @end smallexample
 
 I.e., the interface function is in fact the reentrant function with the
-change of the return value.  While the user-level function returns a
-pointer to the result the reentrant function return an @code{enum
-nss_status} value:
+change of the return value and the omission of the @var{result}
+parameter.  While the user-level function returns a pointer to the
+result the reentrant function return an @code{enum nss_status} value:
 
 @vindex NSS_STATUS_TRYAGAIN
 @vindex NSS_STATUS_UNAVAIL
@@ -458,13 +462,13 @@ function;
 the next three arguments are:
 
 @table @code
-@item STRUCT_TYPE result_buf
+@item STRUCT_TYPE *result_buf
 pointer to buffer where the result is stored.  @code{STRUCT_TYPE} is
 normally a struct which corresponds to the database.
 @item char *buffer
 pointer to a buffer where the function can store additional adata for
 the result etc.
-@item int buflen
+@item size_t buflen
 length of the buffer pointed to by @var{buffer}.
 @end table
 

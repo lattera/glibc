@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <libc-lock.h>
+#include <rpc/rpc.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 #include <rpcsvc/ypupd.h>
@@ -781,7 +782,7 @@ int
 yp_update (char *domain, char *map, unsigned ypop,
 	   char *key, int keylen, char *data, int datalen)
 {
-#if 0
+#if defined (HAVE_SECURE_RPC)
   union
     {
       ypupdate_args update_args;
@@ -847,8 +848,8 @@ yp_update (char *domain, char *map, unsigned ypop,
     clnt->cl_auth = authunix_create_default ();
 
 again:
-  r = clnt_call (clnt, ypop, xdr_argument, &args,
-		 (xdrproc_t) xdr_u_int, &res, TIMEOUT);
+  r = clnt_call (clnt, ypop, xdr_argument, (caddr_t) &args,
+		 (xdrproc_t) xdr_u_int, (caddr_t) &res, TIMEOUT);
 
   if (r == RPC_AUTHERROR)
     {

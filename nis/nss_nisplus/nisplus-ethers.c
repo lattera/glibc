@@ -86,7 +86,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)
-    return -1;
+    return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_len != 1 ||
@@ -94,7 +94,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
       strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
              "ethers_tbl") != 0 ||
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 2)
-    return -1;
+    return 0;
 
   memset (p, '\0', room_left);
 
@@ -102,7 +102,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
   if (NISENTRYLEN (0, 0, result) +1 > room_left)
     {
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
   strncpy (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
   room_left -= (NISENTRYLEN (0, 0, result) +1);
@@ -110,7 +110,7 @@ _nss_nisplus_parse_etherent (nis_result *result, struct etherent *ether,
   if (NISENTRYLEN (0, 1, result) +1 > room_left)
     {
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
   strcat (p, "\t");
   strncat (p, NISENTRYVAL (0, 1, result), NISENTRYLEN (0, 1, result));

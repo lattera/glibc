@@ -1,62 +1,95 @@
-/*
- * Copyright (c) 1983, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)inet.h	8.1 (Berkeley) 6/2/93
- */
+/* Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-#ifndef _INET_H_
-#define	_INET_H_
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-/* External definitions for functions in inet(3) */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-#include <sys/cdefs.h>
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#ifndef _ARPA_INET_H
+
+#define	_ARPA_INET_H	1
+#include <features.h>
+
 #include <sys/types.h>
 #include <netinet/in.h>		/* To define `struct in_addr'.  */
 
 __BEGIN_DECLS
-u_long		 inet_addr __P((const char *));
-int		 inet_aton __P((const char *, struct in_addr *));
-u_int32_t	 inet_lnaof __P((struct in_addr));
-struct in_addr	 inet_makeaddr __P((u_int32_t , u_int32_t));
-char *		 inet_neta __P((u_long, char *, size_t));
-u_int32_t	 inet_netof __P((struct in_addr));
-u_int32_t	 inet_network __P((const char *));
-char		*inet_net_ntop __P((int, const void *, int, char *, size_t));
-int		 inet_net_pton __P((int, const char *, void *, size_t));
-char		*inet_ntoa __P((struct in_addr));
-int		 inet_pton __P((int, const char *, void *));
-const char	*inet_ntop __P((int, const void *, char *, size_t));
-u_int		 inet_nsap_addr __P((const char *, u_char *, int));
-char		*inet_nsap_ntoa __P((int, const u_char *, char *));
+
+/* Convert Internet host address from numbers-and-dots notation in CP
+   into binary data in network byte order.  */
+extern unsigned long int inet_addr __P ((__const char *__cp));
+
+/* Convert Internet host address from numbers-and-dots notation in CP
+   into binary data and store the result in the structure INP.  */
+extern int inet_aton __P ((__const char *__cp, struct in_addr *__inp));
+
+/* Return the local host address part of the Internet address in IN.  */
+extern u_int32_t inet_lnaof __P ((struct in_addr __in));
+
+/* Make Internet host address in network byte order by combining the
+   network number NET with the local address HOST.  */
+extern struct in_addr inet_makeaddr __P ((u_int32_t __net, u_int32_t __host));
+
+/* Format a network number NET into presentation format and place result
+   in buffer starting at BUF with length of LEN bytes.  */
+extern char *inet_neta __P ((u_long __net, char *__buf, size_t __len));
+
+/* Return network number part of the Internet address IN.  */
+extern u_int32_t inet_netof __P ((struct in_addr __in));
+
+/* Extract the network number in network byte order from the address
+   in numbers-and-dots natation starting at CP.  */
+extern u_int32_t inet_network __P ((__const char *__cp));
+
+/* Convert network number for interface type AF in buffer starting at
+   CP to presentation format.  The result will specifiy BITS bits of
+   the number.  */
+extern char *inet_net_ntop __P((int __af, __const void *__cp, int __bits,
+				char *__buf, size_t __len));
+
+/* Convert network number for interface type AF from presentation in
+   buffer starting at CP to network format and store result int
+   buffer starting at BUF of size LEN.  */
+extern int inet_net_pton __P ((int __af, __const char *__cp,
+			       void *__buf, size_t __len));
+
+/* Convert Internet number in IN to ASCII representation.  The return value
+   is a pointer to an internal array containing the string.  */
+extern char *inet_ntoa __P ((struct in_addr __in));
+
+/* Convert from presentation format of an Internet number in buffer
+   starting at CP to the binary network format and store result for
+   interface type AF in buffer starting at BUF.  */
+extern int inet_pton __P ((int __af, __const char *__cp, void *__buf));
+
+/* Convert a Internet address in binary network format for interface
+   type AF in buffer starting at CP to presentation form and place
+   result in buffer of length LEN astarting at BUF.  */
+extern __const char *inet_ntop __P ((int __af, __const void *__cp,
+				     char *__buf, size_t __len));
+
+/* Convert ASCII representation in hexadecimal form of the Internet
+   address to binary form and place result in buffer of length LEN
+   starting at BUF.  */
+extern unsigned int inet_nsap_addr __P ((__const char *__cp,
+					 unsigned char *__buf, int __len));
+
+/* Convert internet address in binary form in LEN bytes starting at CP
+   a presentation form and place result in BUF.  */
+extern char *inet_nsap_ntoa __P ((int __len, __const unsigned char *__cp,
+				  char *__buf));
+
 __END_DECLS
 
-#endif /* !_INET_H_ */
+#endif /* arpa/inet.h */

@@ -1,84 +1,62 @@
-/* s_cbrtf.c -- float version of s_cbrt.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- */
+/* Compute cubic root of float value.
+   Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Dirk Alboth <dirka@uni-paderborn.de> and
+   Ulrich Drepper <drepper@cygnus.com>, 1997.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_cbrtf.c,v 1.4 1995/05/10 20:46:51 jtc Exp $";
-#endif
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include "math.h"
 #include "math_private.h"
 
-/* cbrtf(x)
- * Return cube root of x
- */
-#ifdef __STDC__
-static const unsigned 
-#else
-static unsigned 
-#endif
-	B1 = 709958130, /* B1 = (84+2/3-0.03306235651)*2**23 */
-	B2 = 642849266; /* B2 = (76+2/3-0.03306235651)*2**23 */
 
-#ifdef __STDC__
-static const float
-#else
-static float
-#endif
-C =  5.4285717010e-01, /* 19/35     = 0x3f0af8b0 */
-D = -7.0530611277e-01, /* -864/1225 = 0xbf348ef1 */
-E =  1.4142856598e+00, /* 99/70     = 0x3fb50750 */
-F =  1.6071428061e+00, /* 45/28     = 0x3fcdb6db */
-G =  3.5714286566e-01; /* 5/14      = 0x3eb6db6e */
+#define CBRT2 1.2599210498948731648		/* 2^(1/3) */
+#define SQR_CBRT2 1.5874010519681994748		/* 2^(2/3) */
 
-#ifdef __STDC__
-	float __cbrtf(float x) 
-#else
-	float __cbrtf(x) 
-	float x;
-#endif
+static const double factor[5] =
 {
-	float r,s,t;
-	int32_t hx;
-	u_int32_t sign;
-	u_int32_t high;
-
-	GET_FLOAT_WORD(hx,x);
-	sign=hx&0x80000000; 		/* sign= sign(x) */
-	hx  ^=sign;
-	if(hx>=0x7f800000) return(x+x); /* cbrt(NaN,INF) is itself */
-	if(hx==0) 
-	    return(x);		/* cbrt(0) is itself */
-
-	SET_FLOAT_WORD(x,hx);	/* x <- |x| */
-    /* rough cbrt to 5 bits */
-	if(hx<0x00800000) 		/* subnormal number */
-	  {SET_FLOAT_WORD(t,0x4b800000); /* set t= 2**24 */
-	   t*=x; GET_FLOAT_WORD(high,t); SET_FLOAT_WORD(t,high/3+B2);
-	  }
-	else
-	  SET_FLOAT_WORD(t,hx/3+B1);
+  1.0 / SQR_CBRT2,
+  1.0 / CBRT2,
+  1.0,
+  CBRT2,
+  SQR_CBRT2
+};
 
 
-    /* new cbrt to 23 bits */
-	r=t*t/x;
-	s=C+r*t;
-	t*=G+F/(s+E+D/s);	
+float
+__cbrtf (float x)
+{
+  float xm, ym, u, t2;
+  int xe;
 
-    /* retore the sign bit */
-	GET_FLOAT_WORD(high,t);
-	SET_FLOAT_WORD(t,high|sign);
-	return(t);
+  /* Reduce X.  XM now is an range 1.0 to 0.5.  */
+  xm = __frexpf (fabsf (x), &xe);
+
+  /* If X is not finite or is null return it (with raising exceptions
+     if necessary.  */
+  if (xe == 0)
+    return x + x;
+
+  u = (0.492659620528969547 + (0.697570460207922770
+			       - 0.191502161678719066 * xm) * xm);
+
+  t2 = u * u * u;
+
+  ym = u * (t2 + 2.0 * xm) / (2.0 * t2 + xm) * factor[2 + xe % 3];
+
+  return __ldexpf (x > 0.0 ? ym : -ym, xe / 3);
 }
 weak_alias (__cbrtf, cbrtf)

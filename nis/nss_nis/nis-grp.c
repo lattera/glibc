@@ -122,7 +122,7 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
       free (result);
 
       parse_res = _nss_files_parse_grent (p, grp, data, buflen);
-      if (!parse_res && errno == ERANGE)
+      if (parse_res < 1 && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
 
       free (oldkey);
@@ -130,7 +130,7 @@ internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen)
       oldkeylen = keylen;
       new_start = 0;
     }
-  while (!parse_res);
+  while (parse_res < 1);
 
   return NSS_STATUS_SUCCESS;
 }
@@ -192,7 +192,7 @@ _nss_nis_getgrnam_r (const char *name, struct group *grp,
 
   parse_res = _nss_files_parse_grent (p, grp, data, buflen);
 
-  if (!parse_res)
+  if (parse_res < 1)
     {
       if (errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
@@ -243,7 +243,7 @@ _nss_nis_getgrgid_r (gid_t gid, struct group *grp,
 
   parse_res = _nss_files_parse_grent (p, grp, data, buflen);
 
-  if (!parse_res)
+  if (parse_res < 1)
     {
       if (errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;

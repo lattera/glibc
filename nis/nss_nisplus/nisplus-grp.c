@@ -39,63 +39,34 @@ static nis_name *names = NULL;
 #define NISENTRYLEN(idx,col,res) \
   ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
-#define STRUCTURE       group
-#define ENTNAME         grent
-struct grent_data {};
-
-#define TRAILING_LIST_MEMBER            gr_mem
-#define TRAILING_LIST_SEPARATOR_P(c)    ((c) == ',')
-#include "../../nss/nss_files/files-parse.c"
-LINE_PARSER
-(,
- STRING_FIELD (result->gr_name, ISCOLON, 0);
- if (line[0] == '\0'
-     && (result->gr_name[0] == '+' || result->gr_name[0] == '-'))
-   {
-     result->gr_passwd = NULL;
-     result->gr_gid = 0;
-   }
- else
-   {
-     STRING_FIELD (result->gr_passwd, ISCOLON, 0);
-     if (result->gr_name[0] == '+' || result->gr_name[0] == '-')
-       INT_FIELD_MAYBE_NULL (result->gr_gid, ISCOLON, 0, 10, , 0)
-     else
-       INT_FIELD (result->gr_gid, ISCOLON, 0, 10,)
-   }
- )
-
-static int
+int
 _nss_nisplus_parse_grent (nis_result * result, struct group *gr,
 			  char *buffer, size_t buflen)
 {
-#if 0
-  /* XXX here is a bug, sometimes we get some special characters at the
-     end of a line */
   char *first_unused = buffer;
   size_t room_left = buflen;
   char *line;
   int count;
-
+  
   if (result == NULL)
-    return -1;
-
+    return 0;
+  
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_len != 1 ||
       result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
-   strcmp (result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
-	   "group_tbl") != 0 ||
+      strcmp (result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
+	      "group_tbl") != 0 ||
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 4)
-    return -1;
+    return 0;
 
   if (NISENTRYLEN (0, 0, result) >= room_left)
     {
       /* The line is too long for our buffer.  */
     no_more_room:
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
-
+  
   strncpy (first_unused, NISENTRYVAL (0, 0, result),
 	   NISENTRYLEN (0, 0, result));
   first_unused[NISENTRYLEN (0, 0, result)] = '\0';
@@ -158,8 +129,11 @@ _nss_nisplus_parse_grent (nis_result * result, struct group *gr,
 
       if (line != gr->gr_mem[count])
 	{
-	  *line = '\0';
-	  ++line;
+	  if (*line != '\0')
+	    {
+	      *line = '\0';
+	      ++line;
+	    }
 	  ++count;
 	}
       else
@@ -171,59 +145,6 @@ _nss_nisplus_parse_grent (nis_result * result, struct group *gr,
   gr->gr_mem[count] = NULL;
 
   return 1;
-#else
-  char *p = buffer;
-  size_t room_left = buflen;
-  struct parser_data *data = (void *) buffer;
-
-  if (result == NULL)
-    return -1;
-
-  if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
-      result->objects.objects_len != 1 ||
-      result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
-   strcmp (result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
-	   "group_tbl") != 0 ||
-      result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 4)
-    return -1;
-
-  memset (p, '\0', room_left);
-
-  if (NISENTRYLEN (0, 0, result) + 1 > room_left)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
-  strncpy (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
-  room_left -= (NISENTRYLEN (0, 0, result) + 1);
-  strcat (p, ":");
-
-  if (NISENTRYLEN (0, 1, result) + 1 > room_left)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
-  strncat (p, NISENTRYVAL (0, 1, result), NISENTRYLEN (0, 1, result));
-  room_left -= (NISENTRYLEN (0, 1, result) + 1);
-  strcat (p, ":");
-  if (NISENTRYLEN (0, 2, result) + 1 > room_left)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
-  strncat (p, NISENTRYVAL (0, 2, result), NISENTRYLEN (0, 2, result));
-  room_left -= (NISENTRYLEN (0, 2, result) + 1);
-  strcat (p, ":");
-  if (NISENTRYLEN (0, 3, result) + 1 > room_left)
-    {
-      __set_errno (ERANGE);
-      return -1;
-    }
-  strncat (p, NISENTRYVAL (0, 3, result), NISENTRYLEN (0, 3, result));
-  room_left -= (NISENTRYLEN (0, 3, result) + 1);
-
-  return _nss_files_parse_grent (p, gr, data, buflen);
-#endif
 }
 
 enum nss_status

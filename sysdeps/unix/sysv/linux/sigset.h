@@ -75,7 +75,7 @@ typedef struct
 		    int __ret = __set->__val[--__cnt];			      \
 		    while (!__ret && --__cnt >= 0)			      \
 			__ret = __set->__val[__cnt];			      \
-		    __ret; }))
+		    __ret == 0; }))
 # define __sigandset(dest, left, right) \
   (__extension__ ({ int __cnt = _SIGSET_NWORDS;				      \
 		    sigset_t *__dest = (dest);				      \

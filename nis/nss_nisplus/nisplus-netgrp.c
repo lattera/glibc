@@ -31,13 +31,9 @@
 
 __libc_lock_define_initialized (static, lock)
 
-static char *data = NULL;
-static size_t data_size = 0;
-static char *cursor = NULL;;
-
-extern enum nss_status
-_nss_netgroup_parseline (char **cursor, struct __netgrent *result,
-                         char *buffer, size_t buflen);
+static nis_result *data = NULL;
+static unsigned long data_size = 0;
+static unsigned long position = 0;
 
 #define NISENTRYVAL(idx,col,res) \
         ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_val)
@@ -45,15 +41,103 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 #define NISENTRYLEN(idx,col,res) \
         ((res)->objects.objects_val[(idx)].zo_data.objdata_u.en_data.en_cols.en_cols_val[(col)].ec_value.ec_value_len)
 
+static enum nss_status
+_nss_nisplus_parse_netgroup (struct __netgrent *result, char *buffer, 
+			     size_t buflen)
+{
+  enum nss_status status;
+
+  /* Some sanity checks.  */
+  if (data == NULL || data_size == 0)
+    /* User bug.  setnetgrent() wasn't called before.  */
+    abort ();
+  
+  if (position == data_size)
+    return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+  
+  if (NISENTRYLEN (position, 1, data) > 0)
+    {
+      /* We have a list of other netgroups.  */
+      
+      result->type = group_val;
+      if (NISENTRYLEN (position, 1, data) >= buflen)
+	{
+	  __set_errno (ERANGE);
+	  return NSS_STATUS_TRYAGAIN;
+	}
+      strncpy (buffer, NISENTRYVAL (position, 1, data),
+	       NISENTRYLEN (position, 1, data));
+      buffer[NISENTRYLEN (position, 1, data)] = '\0';
+      result->val.group = buffer;
+      ++position;
+      result->first = 0;
+      
+      return NSS_STATUS_SUCCESS;
+    }
+
+  /* Before we can copy the entry to the private buffer we have to make 
+     sure it is big enough.  */
+  if (NISENTRYLEN (position, 2, data) + NISENTRYLEN (position, 3, data) + 
+      NISENTRYLEN (position, 4, data) + 6 > buflen)
+    {
+      __set_errno (ERANGE);
+      status = NSS_STATUS_UNAVAIL;
+    }
+  else
+    {
+      char *cp = buffer;
+      
+      result->type = triple_val;
+      
+      if (NISENTRYLEN (position, 2, data) == 0)
+	result->val.triple.host = NULL;
+      else
+	{
+	  result->val.triple.host = cp;
+	  cp = stpncpy (cp, NISENTRYVAL (position, 2, data),
+			NISENTRYLEN (position, 2, data));
+	  *cp = '\0';
+	  ++cp;
+	}
+
+      if (NISENTRYLEN (position, 3, data) == 0)
+	result->val.triple.user = NULL;
+      else
+	{
+	  result->val.triple.user = cp;
+	  cp = stpncpy (cp, NISENTRYVAL (position, 3, data),
+			NISENTRYLEN (position, 3, data));
+	  *cp = '\0';
+	  ++cp;
+	}
+
+      if (NISENTRYLEN (position, 4, data) == 0)
+	result->val.triple.domain = NULL;
+      else
+	{
+	  result->val.triple.domain = cp;
+	  cp = stpncpy (cp, NISENTRYVAL (position, 4, data),
+			NISENTRYLEN (position, 4, data));
+	  *cp = '\0';
+	}
+
+      status = NSS_STATUS_SUCCESS;
+
+      /* Remember where we stopped reading.  */
+      ++position;
+
+      result->first = 0;
+    }
+
+  return status;
+}
+
 enum nss_status
 _nss_nisplus_setnetgrent (char *group)
 
 {
   enum nss_status status;
-  nis_result *result;
   char buf[strlen (group) + 30];
-  int i;
-  size_t len;
 
   if (group == NULL || group[0] == '\0')
     return NSS_STATUS_UNAVAIL;
@@ -64,43 +148,27 @@ _nss_nisplus_setnetgrent (char *group)
 
   if (data != NULL)
     {
-      free (data);
+      nis_freeresult (data);
       data = NULL;
       data_size = 0;
-      cursor = NULL;
+      position = 0;
     }
 
   sprintf(buf, "[name=%s],netgroup.org_dir", group);
 
-  result = nis_list(buf, EXPAND_NAME, NULL, NULL);
+  data = nis_list(buf, EXPAND_NAME, NULL, NULL);
 
-  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
-    status = niserr2nss (result->status);
-
-  len = 0;
-  for (i = 0; i < result->objects.objects_len; i++)
-    len += 1 + NISENTRYLEN (i, 1, result) + 1 + NISENTRYLEN(i,2,result)
-      + 1 + NISENTRYLEN(i,3,result) + 1 + NISENTRYLEN(i,4,result) + 2;
-
-  data = malloc (len+1);
-  memset (data, '\0', len+1);
-
-  for (i = 0; i < result->objects.objects_len; i++)
+  if (niserr2nss (data->status) != NSS_STATUS_SUCCESS)
     {
-      strncat (data, NISENTRYVAL (i, 1, result), NISENTRYLEN (i, 1, result));
-      strcat (data," (");
-      strncat (data, NISENTRYVAL(i,2,result), NISENTRYLEN (i, 2, result));
-      strcat (data, ",");
-      strncat (data, NISENTRYVAL(i,3,result), NISENTRYLEN (i, 3, result));
-      strcat (data, ",");
-      strncat (data, NISENTRYVAL(i,4,result), NISENTRYLEN (i, 4, result));
-      strcat (data, ") ");
+      status = niserr2nss (data->status);
+      nis_freeresult (data);
+      data = NULL;
     }
-
-  nis_freeresult (result);
-
+  else
+    data_size = data->objects.objects_len;
+  
   __libc_lock_unlock (lock);
-
+  
   return status;
 }
 
@@ -111,10 +179,10 @@ _nss_nisplus_endnetgrent (void)
 
   if (data != NULL)
     {
-      free (data);
+      nis_freeresult (data);
       data = NULL;
       data_size = 0;
-      cursor = NULL;
+      position = 0;
     }
 
   __libc_lock_unlock (lock);
@@ -128,12 +196,9 @@ _nss_nisplus_getnetgrent_r (struct __netgrent *result,
 {
   enum nss_status status;
 
-  if (cursor == NULL)
-    return NSS_STATUS_NOTFOUND;
-
   __libc_lock_lock (lock);
 
-  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen);
+  status = _nss_nisplus_parse_netgroup (result, buffer, buflen);
 
   __libc_lock_unlock (lock);
 

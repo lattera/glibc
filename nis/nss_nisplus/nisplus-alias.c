@@ -44,7 +44,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
 			  char *buffer, size_t buflen)
 {
   if (result == NULL)
-    return -1;
+    return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_len != 1 ||
@@ -52,7 +52,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
       strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
 	     "mail_aliases") != 0 ||
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 2)
-    return -1;
+    return 0;
   else
     {
       char *first_unused = buffer + NISENTRYLEN(0, 1, result) + 1;
@@ -67,7 +67,7 @@ _nss_nisplus_parse_aliasent (nis_result *result, struct aliasent *alias,
 	  /* The line is too long for our buffer.  */
 	no_more_room:
 	  __set_errno (ERANGE);
-	  return -1;
+	  return 0;
 	}
       else
 	{

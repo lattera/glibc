@@ -25,6 +25,14 @@
 #include <string.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
+#include <rpcsvc/nis.h>
+#include <rpcsvc/nislib.h>
+#include <nsswitch.h>
+
+#include "nss-nisplus.h"
+
+static service_user *ni = NULL;
+static bool_t use_nisplus = FALSE; /* default: group_compat: nis */
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
@@ -32,7 +40,7 @@
 #define EXTERN_PARSER
 #include "../../nss/nss_files/files-parse.c"
 
-/* Structure for remembering -@netgroup and -user members ... */
+/* Structure for remembering -group members ... */
 #define BLACKLIST_INITIAL_SIZE 512
 #define BLACKLIST_INCREMENT 256
 struct blacklist_t
@@ -48,12 +56,15 @@ struct ent_t
     bool_t nis_first;
     char *oldkey;
     int oldkeylen;
+    nis_result *result;
+    nis_name *names;
+    u_long names_nr;
     FILE *stream;
     struct blacklist_t blacklist;
-  };
+};
 typedef struct ent_t ent_t;
 
-static ent_t ext_ent = {0, 0, NULL, 0, NULL, {NULL, 0, 0}};
+static ent_t ext_ent = {0, 0, NULL, 0, NULL, NULL, 0, NULL, {NULL, 0, 0}};
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -61,6 +72,8 @@ __libc_lock_define_initialized (static, lock)
 /* Prototypes for local functions.  */
 static void blacklist_store_name (const char *, ent_t *);
 static int in_blacklist (const char *, int, ent_t *);
+extern int _nss_nisplus_parse_grent (nis_result *, struct group *,
+				     char *, size_t);
 
 static enum nss_status
 internal_setgrent (ent_t *ent)
@@ -75,15 +88,27 @@ internal_setgrent (ent_t *ent)
       ent->oldkey = NULL;
       ent->oldkeylen = 0;
     }
-
+  
+  if (ent->result != NULL)
+    {
+      nis_freeresult (ent->result);
+      ent->result = NULL;
+    }
+  
+  if (ent->names != NULL)
+    {
+      nis_freenames (ent->names);
+      ent->names = NULL;
+    }
+  ent->names_nr = 0;
   ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
     ent->blacklist.data[0] = '\0';
-
+  
   if (ent->stream == NULL)
     {
       ent->stream = fopen ("/etc/group", "r");
-
+      
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
     }
@@ -100,6 +125,12 @@ _nss_compat_setgrent (void)
   enum nss_status result;
 
   __libc_lock_lock (lock);
+
+  if (ni == NULL)
+    {
+      __nss_database_lookup ("group_compat", NULL, "nis", &ni);
+      use_nisplus = (strcmp (ni->name, "nisplus") == 0);
+    }
 
   result = internal_setgrent (&ext_ent);
 
@@ -127,6 +158,18 @@ internal_endgrent (ent_t *ent)
       ent->oldkeylen = 0;
     }
 
+  if (ent->result != NULL)
+    {
+      nis_freeresult (ent->result);
+      ent->result = NULL;
+    }
+  
+  if (ent->names != NULL)
+    {
+      nis_freenames (ent->names);
+      ent->names = NULL;
+    }
+  ent->names_nr = 0;
   ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
     ent->blacklist.data[0] = '\0';
@@ -155,7 +198,7 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
   struct parser_data *data = (void *) buffer;
   char *domain;
   char *outkey, *outval;
-  int outkeylen, outvallen;
+  int outkeylen, outvallen, parse_res;
   char *p;
 
   if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
@@ -202,13 +245,133 @@ getgrent_next_nis (struct group *result, ent_t *ent, char *buffer,
 
       while (isspace (*p))
 	++p;
+      
+      parse_res = _nss_files_parse_grent (p, result, data, buflen);
+      
+      if (parse_res && 
+	  in_blacklist (result->gr_name, strlen (result->gr_name), ent))
+	parse_res = 0; /* if result->gr_name in blacklist,search next entry */
     }
-  while (!_nss_files_parse_grent (p, result, data, buflen));
+  while (!parse_res);
+  
+  return NSS_STATUS_SUCCESS;
+}
 
-  if (!in_blacklist (result->gr_name, strlen (result->gr_name), ent))
+static enum nss_status
+getgrent_next_nisplus (struct group *result, ent_t *ent, char *buffer,
+                       size_t buflen)
+{
+  int parse_res;
+  
+  if (ent->names == NULL)
+    {
+      ent->names = nis_getnames ("group.org_dir");
+      if (ent->names == NULL || ent->names[0] == NULL)
+        {
+          ent->nis = 0;
+          return NSS_STATUS_UNAVAIL;
+        }
+    }
+  
+  do
+    {
+      if (ent->nis_first)
+        {
+	next_name:
+          ent->result = nis_first_entry(ent->names[ent->names_nr]);
+          if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
+            {
+              ent->nis = 0;
+              return niserr2nss (ent->result->status);
+            }
+          ent->nis_first = FALSE;
+        }
+      else
+        {
+          nis_result *res;
+          
+          res = nis_next_entry(ent->names[ent->names_nr], 
+                               &ent->result->cookie);
+          nis_freeresult (ent->result);
+          ent->result = res;
+          if (niserr2nss (ent->result->status) != NSS_STATUS_SUCCESS)
+            {
+              if ((ent->result->status == NIS_NOTFOUND) &&
+                  ent->names[ent->names_nr + 1] != NULL)
+                {
+                  nis_freeresult (ent->result);
+                  ent->names_nr += 1;
+                  goto next_name;
+                }
+              else
+                {
+                  ent->nis = 0;
+                  return niserr2nss (ent->result->status);
+                }
+            }
+        }
+      parse_res = _nss_nisplus_parse_grent (ent->result, result, buffer, 
+                                            buflen);
+      if (parse_res && 
+          in_blacklist (result->gr_name, strlen (result->gr_name), ent))
+        parse_res = 0; /* if result->gr_name in blacklist,search next entry */
+    }
+  while (!parse_res);
+  
+  return NSS_STATUS_SUCCESS;
+}
+
+/* This function handle the +group entrys in /etc/group */
+static enum nss_status
+getgrent_next_file_plusgroup (struct group *result, char *buffer,
+			      size_t buflen)
+{
+  struct parser_data *data = (void *) buffer;
+  int parse_res;
+      
+  if (use_nisplus) /* Do the NIS+ query here */
+    {
+      nis_result *res;
+      char buf[strlen (result->gr_name) + 24];
+
+      sprintf(buf, "[name=%s],group.org_dir",
+              &result->gr_name[1]);
+      res = nis_list(buf, EXPAND_NAME, NULL, NULL);
+      if (niserr2nss (res->status) != NSS_STATUS_SUCCESS)
+        {
+          enum nss_status status =  niserr2nss (res->status);
+	  
+          nis_freeresult (res);
+          return status;
+        }
+      parse_res = _nss_nisplus_parse_grent (res, result, buffer, buflen);
+      nis_freeresult (res);
+    }
+  else /* Use NIS */
+    {
+      char *domain, *outval, *p;
+      int outvallen;
+
+      if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
+        return NSS_STATUS_TRYAGAIN;
+      
+      if (yp_match (domain, "group.byname", &result->gr_name[1],
+                    strlen (result->gr_name) - 1, &outval, &outvallen)
+          != YPERR_SUCCESS)
+        return NSS_STATUS_TRYAGAIN;
+      p = strncpy (buffer, outval,
+                   buflen < outvallen ? buflen : outvallen);
+      free (outval);
+      while (isspace (*p))
+        p++;
+      parse_res = _nss_files_parse_grent (p, result, data, buflen);
+    }
+
+  if (parse_res)
+    /* We found the entry.  */
     return NSS_STATUS_SUCCESS;
   else
-    return NSS_STATUS_NOTFOUND;
+    return NSS_STATUS_RETURN;
 }
 
 
@@ -256,27 +419,16 @@ getgrent_next_file (struct group *result, ent_t *ent,
       if (result->gr_name[0] == '+' && result->gr_name[1] != '\0'
 	  && result->gr_name[1] != '@')
 	{
-	  char *domain;
-	  char *outval;
-	  int outvallen;
-
-	  if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	    /* XXX Should we regard this as an fatal error?  I don't
-	       think so.  Just continue working.  --drepper@gnu  */
-	    continue;
-
-	  if (yp_match (domain, "group.byname", &result->gr_name[1],
-			strlen (result->gr_name) - 1, &outval, &outvallen)
-	      != YPERR_SUCCESS)
-	    continue;
-
-	  p = strncpy (buffer, outval, buflen);
-	  while (isspace (*p))
-	    p++;
-	  free (outval);
-	  if (_nss_files_parse_grent (p, result, data, buflen))
-	    /* We found the entry.  */
-	    break;
+          enum nss_status status;
+	  
+          status = getgrent_next_file_plusgroup (result, buffer, buflen);
+          if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
+            break;
+          else
+            if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+              continue;
+            else
+              return status;
 	}
 
       /* +:... */
@@ -285,7 +437,10 @@ getgrent_next_file (struct group *result, ent_t *ent,
 	  ent->nis = TRUE;
 	  ent->nis_first = TRUE;
 
-	  return getgrent_next_nis (result, ent, buffer, buflen);
+	  if (use_nisplus)
+	    return getgrent_next_nisplus (result, ent, buffer, buflen);
+	  else
+	    return getgrent_next_nis (result, ent, buffer, buflen);
 	}
     }
 
@@ -298,7 +453,12 @@ internal_getgrent_r (struct group *gr, ent_t *ent, char *buffer,
 		     size_t buflen)
 {
   if (ent->nis)
-    return getgrent_next_nis (gr, ent, buffer, buflen);
+    {
+      if (use_nisplus)
+	return getgrent_next_nisplus (gr, ent, buffer, buflen);
+      else
+	return getgrent_next_nis (gr, ent, buffer, buflen);
+    }
   else
     return getgrent_next_file (gr, ent, buffer, buflen);
 }
@@ -309,6 +469,12 @@ _nss_compat_getgrent_r (struct group *grp, char *buffer, size_t buflen)
   enum nss_status status = NSS_STATUS_SUCCESS;
 
   __libc_lock_lock (lock);
+
+  if (ni == NULL)
+    {
+      __nss_database_lookup ("group_compat", NULL, "nis", &ni);
+      use_nisplus = (strcmp (ni->name, "nisplus") == 0);
+    }
 
   /* Be prepared that the setgrent function was not called before.  */
   if (ext_ent.stream == NULL)
@@ -327,12 +493,21 @@ enum nss_status
 _nss_compat_getgrnam_r (const char *name, struct group *grp,
 			char *buffer, size_t buflen)
 {
-  ent_t ent = {0, 0, NULL, 0, NULL, {NULL, 0, 0}};
+  ent_t ent = {0, 0, NULL, 0, NULL, NULL, 0, NULL, {NULL, 0, 0}};
   enum nss_status status;
 
   if (name[0] == '-' || name[0] == '+')
     return NSS_STATUS_NOTFOUND;
 
+  __libc_lock_lock (lock);
+
+  if (ni == NULL)
+    {
+      __nss_database_lookup ("group_compat", NULL, "nis", &ni);
+      use_nisplus = (strcmp (ni->name, "nisplus") == 0);
+    }
+  
+  __libc_lock_unlock (lock);
 
   status = internal_setgrent (&ent);
   if (status != NSS_STATUS_SUCCESS)
@@ -352,8 +527,18 @@ enum nss_status
 _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
 			char *buffer, size_t buflen)
 {
-  ent_t ent = {0, 0, NULL, 0, NULL, {NULL, 0, 0}};
+  ent_t ent = {0, 0, NULL, 0, NULL, NULL, 0, NULL, {NULL, 0, 0}};
   enum nss_status status;
+
+  __libc_lock_lock (lock);
+  
+  if (ni == NULL)
+    {
+      __nss_database_lookup ("group_compat", NULL, "nis", &ni);
+      use_nisplus = (strcmp (ni->name, "nisplus") == 0);
+    }
+  
+  __libc_lock_unlock (lock);
 
   status = internal_setgrent (&ent);
   if (status != NSS_STATUS_SUCCESS)

@@ -84,6 +84,9 @@ please let me know.
 
 [Q23]	``When compiling GNU libc I get lots of errors saying functions
 	  in glibc are duplicated in libgcc.''
+
+[Q24]	``I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+	  works great.  But the glibc NIS+ doesn't seem to work.''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -673,6 +676,21 @@ you first delete config.cache.
 {UD} Starting with glibc-2.0.3 there should be a better test to avoid
 some problems of this kind.  The setting of CFLAGS is checked at the
 very beginning and if it is not usable `configure' will bark.
+
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q24]	``I have set up /etc/nis.conf, and the Linux libc 5 with NYS
+	  works great.  But the glibc NIS+ doesn't seem to work.''
+
+[A24]	The glibc NIS+ implementation uses a /var/nis/NIS_COLD_START
+	file for storing information about the NIS+ server and their
+	public keys, because the nis.conf file do not contain all
+	necessary information.  You have to copy a NIS_COLD_START file
+	from a Solaris client (the NIS_COLD_START file is byte order
+	independend) or generate it new with nisinit from the nis-tools
+	(look at http://www-vt.uni-paderborn.de/~kukuk/linux/nisplus.html).
+
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 

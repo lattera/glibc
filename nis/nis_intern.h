@@ -27,11 +27,10 @@ __BEGIN_DECLS
 extern nis_error __do_niscall (__const nis_server *server, int server_len,
 			       u_long prog, xdrproc_t xargs, caddr_t req,
 			       xdrproc_t xres, caddr_t resp, u_long flags);
-#if !defined(NO_DES_RPC)
-extern AUTH *authdes_pk_create (char *, netobj *, u_int,
+#if defined (HAVE_SECURE_RPC)
+extern AUTH *authdes_pk_create (const char *, const netobj *, u_int,
 				struct sockaddr *, des_block *);
 #endif
-
 extern nis_name *__nis_expandname (__const nis_name);
 
 __END_DECLS

@@ -227,7 +227,7 @@ nis_modify (const nis_name name, const nis_object *obj)
   req.ns_object.ns_object_len = 1;
   req.ns_object.ns_object_val = nis_clone_object (obj, NULL);
 
-  if ((status = __do_niscall (NULL, 0, NIS_REMOVE, (xdrproc_t) xdr_ns_request,
+  if ((status = __do_niscall (NULL, 0, NIS_MODIFY, (xdrproc_t) xdr_ns_request,
 			      (caddr_t) & req, (xdrproc_t) xdr_nis_result,
 			      (caddr_t) res, 0)) != RPC_SUCCESS)
     res->status = status;

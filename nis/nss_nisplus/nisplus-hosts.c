@@ -121,14 +121,14 @@ _nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
   struct parser_data *data = (void *) buffer;
 
   if (result == NULL)
-    return -1;
+    return 0;
 
   if ((result->status != NIS_SUCCESS && result->status != NIS_S_SUCCESS) ||
       result->objects.objects_val[0].zo_data.zo_type != ENTRY_OBJ ||
       strcmp(result->objects.objects_val[0].zo_data.objdata_u.en_data.en_type,
              "hosts_tbl") != 0 ||
       result->objects.objects_val[0].zo_data.objdata_u.en_data.en_cols.en_cols_len < 4)
-    return -1;
+    return 0;
 
   memset (p, '\0', room_left);
 
@@ -136,7 +136,7 @@ _nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
   if (NISENTRYLEN (0, 2, result) + 1 > room_left)
     {
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
   strncpy (p, NISENTRYVAL (0, 2, result),
 	   NISENTRYLEN (0, 2, result));
@@ -145,7 +145,7 @@ _nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
   if (NISENTRYLEN (0, 0, result) + 1 > room_left)
     {
       __set_errno (ERANGE);
-      return -1;
+      return 0;
     }
   strcat (p, "\t");
   strncat (p, NISENTRYVAL (0, 0, result), NISENTRYLEN (0, 0, result));
@@ -157,7 +157,7 @@ _nss_nisplus_parse_hostent (nis_result *result, struct hostent *host,
       if (NISENTRYLEN (i, 1, result) + 1 > room_left)
 	{
 	  __set_errno (ERANGE);
-	  return -1;
+	  return 0;
 	}
       strcat (p, " ");
       strcat (p, NISENTRYVAL (i, 1, result));
