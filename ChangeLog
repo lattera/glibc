@@ -1,3 +1,9 @@
+1998-03-10 19:43  Matthias Urlichs <urlichs@noris.de>
+
+	* sysdeps/unix/readdir_r.c: zero out *result on EOF.
+	* sysdeps/unix/sysv/linux/readdir64_r.c: Likewise.
+	* manual/filesys/texi: document this.
+
 1998-03-10 10:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/filesys.texi: Document the change below.
