@@ -1,6 +1,12 @@
+Sun Jul  7 18:42:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/jmp-unwind.c (_longjmp_unwind): Don't unlock the
+	critical section lock before unlinking dying active resources.
+	The unlock just before return is right (i.e. old code unlocked twice).
+
 Sun Jun  2 22:28:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* linewrap.c (lwupdate): Update D->point_offs when done.
+	* stdio/linewrap.c (lwupdate): Update D->point_offs when done.
 	Use memmove instead of memcpy where overlap is possible (not
  	necessary using current implementation of memcpy, but...).
 	(__line_wrap_update): Don't update D->point_offs (lwupdate does it).
