@@ -1,3 +1,14 @@
+1998-11-17  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/pwrite.c: Prototype the syscall
+	under the right name (squish warning).
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c: Likewise.
+
+1998-11-17  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* stdio-common/_itoa.c (_itoa): Add redundant parentheses to
+	prevent warnings.
+
 1998-11-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/locale.alias: Change `japanese' alais to match X11R6's.

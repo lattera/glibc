@@ -25,7 +25,7 @@
 
 #ifdef __NR_pwrite
 
-extern ssize_t __syscall_pwrite64 (int fd, const void *buf, size_t count,
+extern ssize_t __syscall_pwrite (int fd, const void *buf, size_t count,
 				   off64_t offset);
 
 static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,

@@ -278,8 +278,8 @@ _itoa (value, buflim, base, upper_case)
 		if (big_normalization_steps == 0)
 		  xh = 0;
 		else
-		  xh = (mp_limb_t) (value >> 64 - big_normalization_steps);
-		xl = (mp_limb_t) (value >> 32 - big_normalization_steps);
+		  xh = (mp_limb_t) (value >> (64 - big_normalization_steps));
+		xl = (mp_limb_t) (value >> (32 - big_normalization_steps));
 		udiv_qrnnd_preinv (x1hi, r, xh, xl, big_base_norm,
 				   brec->big.base_ninv);
 
@@ -292,7 +292,7 @@ _itoa (value, buflim, base, upper_case)
 		  xh = x1hi;
 		else
 		  xh = ((x1hi << big_normalization_steps)
-			| (x1lo >> 32 - big_normalization_steps));
+			| (x1lo >> (32 - big_normalization_steps)));
 		xl = x1lo << big_normalization_steps;
 		udiv_qrnnd_preinv (t[0], x, xh, xl, big_base_norm,
 				   big_normalization_steps);
