@@ -17,15 +17,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <hurd.h>
 #include <unistd.h>
 
 extern void __libc_init (int, char **, char **);
 
 #ifdef PIC
-static void soinit (int argc, char *arg0, ...)
-     __attribute__ ((unused, section (".init")));
-
 void
 __libc_init_first (void)
 {
@@ -33,7 +29,11 @@ __libc_init_first (void)
 #endif
 
 #ifdef PIC
-static void soinit 
+/* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT
+   pointer in the dynamic section based solely on that.  It is convention
+   for this function to be in the `.init' section, but the symbol name is
+   the only thing that really matters!!  */
+void _init
 #else
 void __libc_init_first
 #endif
