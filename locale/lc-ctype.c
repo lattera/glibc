@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,9 +43,9 @@ _nl_postload_ctype (void)
   extern const uint32_t *__ctype32_b;
   extern const uint32_t *__ctype32_toupper;
   extern const uint32_t *__ctype32_tolower;
-  extern const char *__ctype32_wctype[12];
-  extern const char *__ctype32_wctrans[2];
-  extern const char *__ctype32_width;
+  extern const char *__ctype32_wctype[12] attribute_hidden;
+  extern const char *__ctype32_wctrans[2] attribute_hidden;
+  extern const char *__ctype32_width attribute_hidden;
 
   size_t offset, cnt;
 

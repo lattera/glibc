@@ -1,5 +1,18 @@
 2002-03-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/locale.h (_nl_C_locobj): Declare as hidden.
+
+	* time/asctime.c (_nl_C_LC_TIME): Declare as hidden.
+	* time/strptime.c (_nl_C_LC_TIME): Likewise.
+
+	* include/netinet/in.h (in6addr_any_internal): Mark as hidden.
+
+	* include/sys/gmon.h: Declare _gmonparam as hidden.
+
+	* locale/lc-ctype.c (__ctype32_wctype): Declare as hidden.
+	(__ctype32_wctrans): Likewise.
+	(__ctype32_width): Likewise.
+
 	* sysdeps/unix/sysv/linux/ttyname.c: Comment out definition and
 	use of __ttyname.
 

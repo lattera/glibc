@@ -133,7 +133,7 @@ localtime_r (t, tp)
 
 #ifdef _LIBC
 /* This is defined in locale/C-time.c in the GNU libc.  */
-extern const struct locale_data _nl_C_LC_TIME;
+extern const struct locale_data _nl_C_LC_TIME attribute_hidden;
 
 # define weekday_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (DAY_1)].string)
 # define ab_weekday_name \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1995,1996,1997,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995-1997,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <time.h>
 
 /* This is defined in locale/C-time.c in the GNU libc.  */
-extern const struct locale_data _nl_C_LC_TIME;
+extern const struct locale_data _nl_C_LC_TIME attribute_hidden;
 #define ab_day_name(DAY) (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABDAY_1)+(DAY)].string)
 #define ab_month_name(MON) (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABMON_1)+(MON)].string)
 
