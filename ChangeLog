@@ -1,5 +1,7 @@
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/nl.po: Update from translation team.
+
 	* sysdeps/libm-i387/s_asinhf.S: Correct computing absolute value.
 
 	* Makefile: Allow calling goals for po subdir.
