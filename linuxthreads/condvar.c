@@ -60,6 +60,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   volatile pthread_descr self = thread_self();
   pthread_extricate_if extr;
   int already_canceled = 0;
+  int spurious_wakeup_count;
 
   /* Check whether the mutex is locked and owned by this thread.  */
   if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP
@@ -72,6 +73,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   extr.pu_extricate_func = cond_extricate_func;
 
   /* Register extrication interface */
+  THREAD_SETMEM(self, p_condvar_avail, 0);
   __pthread_set_own_extricate_if(self, &extr);
 
   /* Atomically enqueue thread for waiting, but only if it is not
@@ -96,7 +98,20 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 
   pthread_mutex_unlock(mutex);
 
-  suspend(self);
+  spurious_wakeup_count = 0;
+  while (1)
+    {
+      suspend(self);
+      if (THREAD_GETMEM(self, p_condvar_avail) == 0
+	  && THREAD_GETMEM(self, p_woken_by_cancel) == 0)
+	{
+	  /* Count resumes that don't belong to us. */
+	  spurious_wakeup_count++;
+	  continue;
+	}
+      break;
+    }
+
   __pthread_set_own_extricate_if(self, 0);
 
   /* Check for cancellation again, to provide correct cancellation
@@ -108,6 +123,10 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     pthread_mutex_lock(mutex);
     pthread_exit(PTHREAD_CANCELED);
   }
+
+  /* Put back any resumes we caught that don't belong to us. */
+  while (spurious_wakeup_count--)
+    restart(self);
 
   pthread_mutex_lock(mutex);
   return 0;
@@ -121,6 +140,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   volatile pthread_descr self = thread_self();
   int already_canceled = 0;
   pthread_extricate_if extr;
+  int spurious_wakeup_count;
 
   /* Check whether the mutex is locked and owned by this thread.  */
   if (mutex->__m_kind != PTHREAD_MUTEX_TIMED_NP
@@ -133,6 +153,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   extr.pu_extricate_func = cond_extricate_func;
 
   /* Register extrication interface */
+  THREAD_SETMEM(self, p_condvar_avail, 0);
   __pthread_set_own_extricate_if(self, &extr);
 
   /* Enqueue to wait on the condition and check for cancellation. */
@@ -151,25 +172,38 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
 
   pthread_mutex_unlock(mutex);
 
-  if (!timedsuspend(self, abstime)) {
-    int was_on_queue;
+  spurious_wakeup_count = 0;
+  while (1)
+    {
+      if (!timedsuspend(self, abstime)) {
+	int was_on_queue;
 
-    /* __pthread_lock will queue back any spurious restarts that
-       may happen to it. */
+	/* __pthread_lock will queue back any spurious restarts that
+	   may happen to it. */
 
-    __pthread_lock(&cond->__c_lock, self);
-    was_on_queue = remove_from_queue(&cond->__c_waiting, self);
-    __pthread_unlock(&cond->__c_lock);
+	__pthread_lock(&cond->__c_lock, self);
+	was_on_queue = remove_from_queue(&cond->__c_waiting, self);
+	__pthread_unlock(&cond->__c_lock);
 
-    if (was_on_queue) {
-      __pthread_set_own_extricate_if(self, 0);
-      pthread_mutex_lock(mutex);
-      return ETIMEDOUT;
+	if (was_on_queue) {
+	  __pthread_set_own_extricate_if(self, 0);
+	  pthread_mutex_lock(mutex);
+	  return ETIMEDOUT;
+	}
+
+	/* Eat the outstanding restart() from the signaller */
+	suspend(self);
+      }
+
+      if (THREAD_GETMEM(self, p_condvar_avail) == 0
+	  && THREAD_GETMEM(self, p_woken_by_cancel) == 0)
+	{
+	  /* Count resumes that don't belong to us. */
+	  spurious_wakeup_count++;
+	  continue;
+	}
+      break;
     }
-
-    /* Eat the outstanding restart() from the signaller */
-    suspend(self);
-  }
 
   __pthread_set_own_extricate_if(self, 0);
 
@@ -182,6 +216,10 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     pthread_mutex_lock(mutex);
     pthread_exit(PTHREAD_CANCELED);
   }
+
+  /* Put back any resumes we caught that don't belong to us. */
+  while (spurious_wakeup_count--)
+    restart(self);
 
   pthread_mutex_lock(mutex);
   return 0;
@@ -201,7 +239,11 @@ int pthread_cond_signal(pthread_cond_t *cond)
   __pthread_lock(&cond->__c_lock, NULL);
   th = dequeue(&cond->__c_waiting);
   __pthread_unlock(&cond->__c_lock);
-  if (th != NULL) restart(th);
+  if (th != NULL) {
+    th->p_condvar_avail = 1;
+    WRITE_MEMORY_BARRIER();
+    restart(th);
+  }
   return 0;
 }
 
@@ -215,7 +257,11 @@ int pthread_cond_broadcast(pthread_cond_t *cond)
   cond->__c_waiting = NULL;
   __pthread_unlock(&cond->__c_lock);
   /* Now signal each process in the queue */
-  while ((th = dequeue(&tosignal)) != NULL) restart(th);
+  while ((th = dequeue(&tosignal)) != NULL) {
+    th->p_condvar_avail = 1;
+    WRITE_MEMORY_BARRIER();
+    restart(th);
+  }
   return 0;
 }
 
