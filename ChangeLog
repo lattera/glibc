@@ -1,3 +1,13 @@
+2002-03-02  Thorsten Kukuk  <kukuk@suse.de>
+
+        * sysdeps/unix/nice.c (nice): Use getpriority() for the return value.
+
+2002-09-28  Jeff Bailey  <jbailey@gnu.org>
+
+	* sysdeps/unix/sysv/sysv4/solaris2/configure.in: Delete.
+	* sysdeps/unix/sysv/aix/configure.in: Update comment and remove
+	stdio=libio setting.
+
 2002-09-28  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_important_hwcaps): Use INTUSE for
@@ -22,9 +32,8 @@
 
 2002-09-27  Roland McGrath  <roland@redhat.com>
 
-	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
-	(__NR_pread, __NR_pwrite): Define these to __NR_pread64, __NR_pwrite64
-	if not defined.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (__NR_pread, __NR_pwrite):
+	Define these to __NR_pread64, __NR_pwrite64 if not defined.
 
 	* sysdeps/unix/sysv/linux/powerpc/lchown.S
 	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)]: Use this condition
