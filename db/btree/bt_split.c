@@ -688,7 +688,7 @@ bt_psplit(t, h, l, r, pskip, ilen)
 			memmove((char *)l + l->upper, src, nbytes);
 		}
 
-		sed += nbytes + sizeof(indx_t);
+		used += nbytes + sizeof(indx_t);
 		if (used >= half) {
 			if (!isbigkey || bigkeycnt == 3)
 				break;

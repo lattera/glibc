@@ -1,4 +1,4 @@
-/* msort -- an alternative to qsort, with an identical interface.
+/* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
    Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
@@ -109,7 +109,7 @@ qsort (b, n, s, cmp)
 	{
 	  /* Couldn't get space, so use the slower algorithm
 	     that doesn't need a temporary array.  */
-	  extern void _quicksort __P ((void *__base,
+	  extern void _quicksort __P ((void *const __base,
 				       size_t __nmemb, size_t __size,
 				       __compar_fn_t __compar));
 	  _quicksort (b, n, s, cmp);

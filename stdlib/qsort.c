@@ -20,6 +20,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern void _quicksort __P ((void *const pbase, size_t total_elems,
+			     size_t size, __compar_fn_t cmp));
+
 /* Byte-wise swap two items of size SIZE. */
 #define SWAP(a, b, size)						      \
   do									      \

@@ -1,3 +1,30 @@
+1997-02-13 11:44  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdlib/qsort.c: Add prototype for _quicksort.
+
+	* stdlib/msort.c (qsort): Correct prototype for _quicksort.
+
+	* sysdeps/i386/Makefile (CFLAGS-rtld.c): Change to prevent warning
+	from dl-machine.h.
+
+1997-02-13 18:18  Marcus G. Daniels  <marcus@sysc.pdx.edu>
+
+	* sysdeps/generic/dl-cache.c: Don't hardwire name of cache file.
+	Allow user to overwrite it.
+
+1997-02-13 17:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/_G_config.h: Make sure win_t is also defined for old gcc
+	versions.  Reported by Andreas Jaeger.
+
+1997-02-13 11:44  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* db/btree/bt_split.c (bt_psplit): Fix typo in  change of
+	1997-02-12.
+
+	* time/tzfile.c (__tzfile_read): Change comment to follow
+	change of 1997-02-12.
+
 1997-02-13 02:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/time.h (__nanosleep): Define only when struct timespec is

@@ -1,5 +1,5 @@
 /* Support for reading /etc/ld.so.cache files written by Linux ldconfig.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,10 @@
 extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 size_t *filesize_ptr,
 					 int mmap_prot);
+
+#ifndef LD_SO_CACHE
+#define LD_SO_CACHE "/etc/ld.so.cache"
+#endif
 
 #define CACHEMAGIC "ld.so-1.7.0"
 
@@ -57,7 +61,7 @@ _dl_load_cache_lookup (const char *name)
   if (cache == NULL)
     {
       /* Read the contents of the file.  */
-      void *file = _dl_sysdep_read_whole_file ("/etc/ld.so.cache", &cachesize,
+      void *file = _dl_sysdep_read_whole_file (LD_SO_CACHE, &cachesize,
 					       PROT_READ);
       if (file && cachesize > sizeof *cache &&
 	  !memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1))

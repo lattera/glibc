@@ -116,14 +116,15 @@ __tzfile_read (const char *file)
     {
       /* We must not allow to read an arbitrary file in a setuid
 	 program.  So we fail for any file which is not in the
-	 directory hierachy starting at TZDIR.  */
+	 directory hierachy starting at TZDIR
+	 and which is not the system wide default TZDEFAULT.  */
       if (__libc_enable_secure
 	  && ((*file == '/'
-	       && (memcmp(file, TZDEFAULT, sizeof(TZDEFAULT) -1))
+	       && memcmp (file, TZDEFAULT, sizeof (TZDEFAULT) - 1)
 	       && memcmp (file, default_tzdir, sizeof (default_tzdir) - 1))
 	      || strstr (file, "../") != NULL))
-	/* This test a certainly a bit too restrictive but it should
-	   catch all critical case.  */
+	/* This test is certainly a bit too restrictive but it should
+	   catch all critical cases.  */
 	return;
     }
 

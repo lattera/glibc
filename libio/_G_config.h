@@ -10,6 +10,14 @@
 #define __need_size_t
 #define __need_wint_t
 #include <stddef.h>
+#ifndef _WINT_T
+/* Integral type unchanged by default argument promotions that can
+   hold any value corresponding to members of the extended character
+   set, as well as at least one value that does not correspond to any
+   member of the extended character set.  */
+#define _WINT_T
+typedef unsigned int wint_t;
+#endif
 #define _G_size_t	size_t
 #define _G_fpos_t	__off_t
 #define _G_ssize_t	__ssize_t
