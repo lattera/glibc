@@ -277,3 +277,9 @@ END LC_PAPER
 LC_MEASUREMENT
 measurement 1
 END LC_MEASUREMENT
+
+LC_ADDRESS
+country_ab2 "<U0041><U005A>"
+country_ab3 "<U0041><U005A><U0045>"
+country_num 031
+END LC_ADDRESS

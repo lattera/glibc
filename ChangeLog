@@ -1,3 +1,10 @@
+2003-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locarchive.c (enlarge_archive): Print size info
+	only in verbose mode.
+
+	* locale/iso-3166.def: Three letter code of Romania changed.
+
 2003-12-02  Roland McGrath  <roland@redhat.com>
 
 	* scripts/config.sub: Update from master, timestamp='2003-10-20'.

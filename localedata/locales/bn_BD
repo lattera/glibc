@@ -165,13 +165,14 @@ END LC_NAME
 LC_ADDRESS
 postal_fmt   "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068><U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0054><U0020><U0025><U007A><U0025><U004E><U0025><U0063><U0025><U004E>"
 country_name   "<U09AC><U09BE><U0982><U09B2><U09BE><U09A6><U09C7><U09B6>"
-country_ab2     "BD"
-lang_ab         "bn"
+country_ab2     "<U0042><U0044>"
+country_ab3     "<U0042><U0047><U0044>"
+lang_ab         "<U0062><U006E>"
 %lang_ab3_term   "ben"
 lang_name       "<U09ac><U09be><U0982><U09b2><U09be>"
 % todo
 %country_post    ""
-%country_num     ""
+country_num     050
 %country_car     ""
 %country_isbn    ""
 %lang_term       ""

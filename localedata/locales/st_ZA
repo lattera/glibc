@@ -250,5 +250,6 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 % "country designation for the <country_post> keyword",
 % "end of line
 %
+country_num 710
 END LC_ADDRESS
 
