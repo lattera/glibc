@@ -1,5 +1,12 @@
 2000-11-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/time.h (CLK_TCK): Cast sysconf result
+	to __clock_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/time.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (CMSG_ALIGN): Cast result
 	of unary ~ to size_t.Update.
 
