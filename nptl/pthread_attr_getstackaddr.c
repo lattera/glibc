@@ -33,7 +33,7 @@ __pthread_attr_getstackaddr (attr, stackaddr)
   iattr = (struct pthread_attr *) attr;
 
   /* Some code assumes this function to work even if no stack address
-     has been set.  Let them figure it our for themselves what the
+     has been set.  Let them figure it out for themselves what the
      value means.  Simply store the result.  */
   *stackaddr = iattr->stackaddr;
 
