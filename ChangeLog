@@ -1,3 +1,8 @@
+Tue Jun 13 12:13:18 1995  Brendan Kehoe  (brendan@zen.org)
+
+	* sysdeps/unix/bsd/osf/alpha/sysdep.h (HAVE_ASM_SET_DIRECTIVE):
+	Put in #undef.
+
 Mon Jun 12 13:15:45 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makerules (lib%.so: lib%_pic.a): Moved this rule to after

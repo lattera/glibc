@@ -19,6 +19,9 @@ Cambridge, MA 02139, USA.  */
 /* OSF/1 does not precede the asm names of C symbols with a `_'. */
 #define	NO_UNDERSCORES
 
+/* We really can't handle the .set directive for weak aliases.  */
+#undef HAVE_ASM_SET_DIRECTIVE
+
 #include <sysdeps/unix/sysdep.h>
 
 #ifdef	ASSEMBLER
