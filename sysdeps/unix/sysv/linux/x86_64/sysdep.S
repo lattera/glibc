@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <tls.h>
 
 /* The Linux version is in fact x86-64/ELF and the start.? file for this
    system (sysdeps/x86_64/elf/start.S) is also used by The Hurd.  This file
@@ -24,13 +25,22 @@
    define it somewhere else.
 
    ...and this place is here.  */
+#if USE_TLS && HAVE___THREAD
+	.section .tbss
+#else
 	.bss
+#endif
 	.globl	errno
 	.type errno,@object
 	.size errno,4
+	.globl	_errno
+	.type _errno,@object
+	.size _errno,4
+	.align 4
 errno:
+_errno:
 	.space	4
-weak_alias (errno, _errno)
+
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines
