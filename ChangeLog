@@ -1,3 +1,8 @@
+2003-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/mbsinit.c: Undef mbsinit and __mbsinit.
+	* include/wchar.h: Provide inline versions of mbsinit and __mbsinit.
+
 2003-11-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/tst-rxspencer.c (check_match): @ without any following

@@ -113,5 +113,12 @@ extern int __vfwprintf (__FILE *__restrict __s,
 /* Internal functions.  */
 extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,
 			     mbstate_t *ps, __locale_t l) attribute_hidden;
+
+/* Special version.  We know that all uses of mbsinit inside the libc
+   have a non-NULL parameter.  And certainly we can access the
+   internals of the data structure directly.  */
+#  define mbsinit(state) ((state)->__count == 0)
+#  define __mbsinit(state) ((state)->__count == 0)
+
 # endif
 #endif
