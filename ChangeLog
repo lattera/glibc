@@ -1,3 +1,16 @@
+Sun Apr  9 01:24:33 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makerules (+depfiles): Translate %.so to %.o in $(extra-objs).
+
+	* malloc/free.c [emacs] (__malloc_safe_bcopy): Define to safe_bcopy.
+	* malloc/realloc.c (__malloc_safe_bcopy): Undefine before defining.
+
+	* malloc/free.c (memmove, __malloc_safe_bcopy): Do include these
+ 	#ifdef emacs, but only #ifndef memmove.
+	* malloc/realloc.c [emacs] (__malloc_safe_bcopy): Just #define to
+ 	safe_bcopy.
+	(memmove): Define only if undefined.
+
 Sat Apr  8 00:40:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* extra-lib.mk (install-lib, extra-objs, alltypes-$(lib)): Make
@@ -21,6 +34,8 @@ Sat Apr  8 00:40:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
  	#ifdef emacs.
 	* malloc/realloc.c: Likewise.
 
+	* stdio/_itoa.h (_EXTERN_INLINE): Define if undefined.
+	(_itoa): Use it in defn.
 	* stdio/_itoa.c (_EXTERN_INLINE): Define to empty before #include
  	"_itoa.h".
 	(_itoa): Function removed.

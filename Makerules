@@ -281,7 +281,7 @@ include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
 endif
 
 +depfiles := $(strip $(sources:.c=.d) \
-		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs))) \
+		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.so=.o))) \
 		     $(addsuffix .d,$(others) $(tests)))
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
