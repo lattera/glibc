@@ -1,5 +1,7 @@
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
+	* NEWS: Added 2.2.6 text from 2.2 branch version.
+
 	* time/strptime.c (strptime_internal): Remove spurious const.
 
 	* locale/lc-time.c (_nl_init_era_entries, _nl_get_era_entry,

@@ -51,6 +51,14 @@ Version 2.3
 * Startup times are significantly reduced by not using exported functions
   inside the library itself.  Changes by Jakub Jelinek, Roland McGrath,
   and Ulrich Drepper.
+o
+Version 2.2.6
+
+* The Hurd now uses the GNU libio implementation of stdio rather than the
+  old GNU stdio implementation, and uses a new ABI (libc.so.0.3).
+
+* The Hurd on x86 now has the `ioperm' function and <sys/io.h> header file
+  with the same behavior as the Linux system call of the same name.
 
 Version 2.2.5
 
@@ -67,8 +75,8 @@ Version 2.2.5
 * libc functions using I/O streams now can handle wide-oriented streams
   as well.
 
-* optimizations in the dynamic linker.  binaries created by recent binutils
-  versions start up quicker due to reduced time spend on relocations.
+* optimizations in the dynamic linker.  Binaries created by recent binutils
+  versions start up quicker due to reduced time spent on relocations.
 
 * Support for use of gcc3 added by Jakub Jelinek and HJ Lu.
 
@@ -1367,7 +1375,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
+Copyright (C) 1992-1999,2000,01,02 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

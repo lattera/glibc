@@ -490,7 +490,7 @@ __timer_thread_start (struct thread_node *thread)
   thread->exists = 1;
 
   if (pthread_create (&thread->id, &thread->attr,
-		      (void (*) (void *)) thread_func, thread) != 0)
+		      (void *(*) (void *)) thread_func, thread) != 0)
     {
       thread->exists = 0;
       retval = -1;
