@@ -1,3 +1,89 @@
+1998-05-15 14:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp-test.c: Avoid duplicate messages.
+
+	* sysdeps/generic/setenv.c: Use __tfind and __tsearch, not tfind and
+	tsearch.  Correctly interpret values returned by those functions.
+	(unsetenv): Store pointer to string, not pointer to string pointer.
+
+	* time/tzfile.c (__tzfile_compute): Take new arguments.  Store
+	DST information and offset in them.
+	* time/tzset.c (__tz_convert): Pass extra parameters to
+	__tzfile_compute.  Compute equivalent values for use of tz_rules.
+
+1998-05-15 00:49:11  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* iconvdata/Makefile (gen-8bit-table): Use move-if-change and
+	stamp files to avoid unnecessary recompilation.
+	(gen-8bit-gap-table): Likewise.
+	(move-if-change): New variable.
+	(all generated .h rules): Change to be .stmp rules.
+	(%.h): New rule; depend on %.stmp; no commands.
+	(distribute): Add gen-8bit.sh, gen-8bit-gap.sh,
+	gen-8bit-gap-1.sh.
+
+1998-05-15 01:09  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makerules (libc-map): Deleted.
+	(load-map-file): Set to the appropriate compiler switch, not
+	just the file name.  If libfoo-map is not set, look for a
+	libfoo.map in the current directory and $(..).
+	(map-file): New variable, contains just the mapfile name.
+	(build-shlib): Adjust for new value of load-map-file.
+	(libc.so): Correct dependencies.
+
+	* extra-lib.mk: Correct shlib dependencies since libfoo-map
+	may not be set anymore.
+
+	* elf/Makefile: Set ld-map to $(..)libc.map, not $(libc-map).
+	Delete libdl-map.  Tweak ld.so link rule to work with changed
+	variable settings in Makerules.
+	* iconvdata/Makefile: Tweak build-module to work with changed
+	variable settings in Makerules.
+
+	* db/Makefile: Delete libdb-map.
+	* hesiod/Makefile: Delete libnss_hesiod-map.
+	* linuxthreads/Makefile: Delete libpthread-map.
+	* locale/Makefile: Delete libBrokenLocale-map.
+	* login/Makefile: Delete libutil-map.
+	* math/Makefile: Delete libm-map.
+	* md5-crypt/Makefile: Delete libcrypt-map.
+	* nis/Makefile: Delete libnsl-map, libnss_nis-map,
+	libnss_nisplus-map, and libnss_compat-map.
+	* nss/Makefile: Delete libnss_files-map, libnss_db-map, and
+	libnss_ldap-map.
+	* resolv/Makefile: Delete libresolv-map and libnss_dns-map.
+	* rt/Makefile: Delete librt-map.
+
+1998-05-15 01:06  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Instead of substituting `yes' or `no' for whether
+	--no-whole-archive is available, set @no_whole_archive@ to the
+	appropriate gcc switch or the empty string.  Likewise for
+	-fno-exceptions.
+	* config.make.in: Replace have-no-whole-archive with
+	no-whole-archive and have-no-exceptions with no-exceptions.
+	* Makerules: Delete stanzas setting no-whole-archive and
+	no-exceptions.
+
+	* sunrpc/Makefile: Use move-if-change to update generated .h
+	and .c files.
+
+1998-05-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* wcsmbs/wcsmbsload.c (extract_charset_name): Use strcspn instead
+	of strchr loop.
+
+1998-05-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/tzfile.c (__tzfile_read): Remove unused variable info.
+	(__tzfile_compute): Likewise.
+
+1998-05-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (AF_SNA,PF_SNA): Add new
+	defines from Linux 2.1.102.
+
 1998-05-14 23:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c: Write correct mb_cur_max value.

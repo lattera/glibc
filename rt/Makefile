@@ -28,8 +28,6 @@ librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
 		  aio_notify
 
-librt-map := librt.map
-
 # Make sure that everything is distributed independent of configuration.
 distribute := aio_misc.h $(librt-routines:=.c) $(librt-map)
 

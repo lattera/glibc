@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,6 @@ extra-libs-others := $(extra-libs)
 
 md5-routines := crypt-entry md5-crypt md5
 libcrypt-routines := $(md5-routines)
-libcrypt-map := libcrypt.map
 
 onlymd5-routines := onlymd5-entry md5-crypt md5
 distribute += onlymd5-entry.c

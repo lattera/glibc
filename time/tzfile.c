@@ -90,7 +90,6 @@ __tzfile_read (const char *file)
   struct tzhead tzhead;
   size_t chars;
   register size_t i;
-  struct ttinfo *info;
 
   __use_tzfile = 0;
 
@@ -415,13 +414,14 @@ find_transition (time_t timer)
 
 int
 __tzfile_compute (time_t timer, int use_localtime,
-		  long int *leap_correct, int *leap_hit)
+		  long int *leap_correct, int *leap_hit,
+		  int *isdst, long int *offset)
 {
+  struct ttinfo *info = find_transition (timer);
   register size_t i;
 
   if (use_localtime)
     {
-      struct ttinfo *info = find_transition (timer);
       __daylight = rule_stdoff != rule_dstoff;
       __timezone = -rule_stdoff;
       __tzname[1] = NULL;
@@ -433,6 +433,9 @@ __tzfile_compute (time_t timer, int use_localtime,
 	/* There is no daylight saving time.  */
 	__tzname[1] = __tzname[0];
     }
+
+  *isdst = info->isdst;
+  *offset = info->offset;
 
   *leap_correct = 0L;
   *leap_hit = 0;

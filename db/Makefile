@@ -19,7 +19,6 @@ libdb-routines := bt_close bt_conv bt_debug bt_delete bt_get \
 		  mpool \
 		  rec_close rec_delete rec_get rec_open rec_put rec_search \
 		  rec_seq rec_utils
-libdb-map	:= libdb.map
 
 headers		:= db.h mpool.h ndbm.h
 distribute	:= compat.h					\

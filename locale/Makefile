@@ -46,7 +46,6 @@ extra-libs	= libBrokenLocale
 extra-libs-others = $(extra-libs)
 
 libBrokenLocale-routines = broken_cur_max
-libBrokenLocale-map = libBrokenLocale.map
 
 subdir-dirs	= programs
 vpath %.c programs

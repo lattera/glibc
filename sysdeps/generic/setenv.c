@@ -61,6 +61,8 @@ __libc_lock_define_initialized (static, envlock)
 # define setenv __setenv
 # define unsetenv __unsetenv
 # define clearenv __clearenv
+# define tfind __tfind
+# define tsearch __tsearch
 #endif
 
 /* In the GNU C library implementation we try to be more clever and
@@ -75,8 +77,20 @@ __libc_lock_define_initialized (static, envlock)
    values.  */
 static void *known_values;
 
-# define KNOWN_VALUE(Str) tfind (Str, &known_values, (__compar_fn_t) strcmp)
-# define STORE_VALUE(Str) tsearch (Str, &known_values, (__compar_fn_t) strcmp)
+# define KNOWN_VALUE(Str) \
+  ({									      \
+    void **value = tfind (Str, &known_values, (__compar_fn_t) strcmp);	      \
+    if (value != NULL)							      \
+      value = *(const char **) value;					      \
+    value;								      \
+  })
+# define STORE_VALUE(Str) \
+  ({									      \
+    void **value = tsearch (Str, &known_values, (__compar_fn_t) strcmp);      \
+    if (value != NULL)							      \
+      value = *(const char **) value;					      \
+    value;								      \
+  })
 
 #else
 # undef USE_TSEARCH
@@ -240,7 +254,7 @@ unsetenv (name)
 	char **dp = ep;
 
 	/* Store the value so that we can reuse it later.  */
-	STORE_VALUE (ep);
+	STORE_VALUE (*ep);
 
 	do
 	  dp[0] = dp[1];

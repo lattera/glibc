@@ -883,7 +883,10 @@ else
   libc_cv_ld_no_whole_archive=no
 fi
 rm -f conftest*])
-AC_SUBST(libc_cv_ld_no_whole_archive)dnl
+if test $libc_cv_ld_no_whole_archive = yes; then
+  no_whole_archive=-Wl,--no-whole-archive
+fi
+AC_SUBST(no_whole_archive)dnl
 
 AC_CACHE_CHECK(for gcc -fno-exceptions, libc_cv_gcc_no_exceptions, [dnl
 cat > conftest.c <<\EOF
@@ -900,7 +903,10 @@ else
   libc_cv_gcc_no_exceptions=no
 fi
 rm -f conftest*])
-AC_SUBST(libc_cv_gcc_no_exceptions)dnl
+if test $libc_cv_ld_no_whole_archive = yes; then
+  no_exceptions=-fno-exceptions
+fi
+AC_SUBST(no_exceptions)dnl
 
 if test "$base_machine" = alpha ; then
 AC_CACHE_CHECK(for function ..ng prefix, libc_cv_gcc_alpha_ng_prefix, [dnl

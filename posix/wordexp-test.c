@@ -205,9 +205,6 @@ main (int argc, char *argv[])
     {
       struct test_case_struct ts;
 
-      printf ("Test %d (~root): ", ++tests);
-      fflush (stdout);
-
       ts.retval = 0;
       ts.env = NULL;
       ts.words = "~root";
@@ -217,12 +214,7 @@ main (int argc, char *argv[])
       ts.ifs = IFS;
 
       if (testit (&ts))
-	{
-	  printf ("FAILED\n");
-	  ++fail;
-	}
-      else
-	printf ("OK\n");
+	++fail;
     }
 
   puts ("tests completed, now cleaning up");

@@ -54,18 +54,15 @@ vpath %.c $(subdir-dirs)
 
 
 libnss_files-routines	:= $(addprefix files-,$(filter-out key, $(databases)))
-libnss_files-map	:= libnss_files.map
 distribute		+= files-XXX.c files-parse.c
 
 libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
 							$(databases)))
-libnss_db-map		:= libnss_db.map
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-routines)))
 distribute		+= db-XXX.c
 
 libnss_ldap-routines	:= $(addprefix ldap-,proto) util ldap-nss
-libnss_ldap-map		:= libnss_ldap.map
 
 
 # Build static module if requested

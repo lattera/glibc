@@ -36,13 +36,11 @@ extra-libs-others = $(extra-libs)
 libresolv-routines := gethnamaddr res_comp res_debug	\
 		      res_data res_mkquery res_query res_send		\
 		      inet_net_ntop inet_net_pton inet_neta base64
-libresolv-map := libresolv.map
 
 subdir-dirs = nss_dns
 vpath %.c nss_dns
 
 libnss_dns-routines	:= dns-host dns-network
-libnss_dns-map		:= libnss_dns.map
 ifneq ($(build-static-nss),yes)
 libnss_dns-inhibit-o	= $(filter-out .os,$(object-suffixes))
 endif

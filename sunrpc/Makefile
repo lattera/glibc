@@ -134,15 +134,14 @@ $(inst_sysconfdir)/rpc: etc.rpc $(+force)
 # Generate the rpcsvc headers with rpcgen.
 # We use a stamp file to avoid unnessary recompilation each time rpcgen is
 # relinked.
+move-if-change = ./$(..)scripts/move-if-change
 $(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
 	@:
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
 	-@rm -f ${@:stmp=T} $@
 	$(rpcgen-cmd) -h $< -o ${@:stmp=T}
-	if test -r ${@:stmp=h} && cmp -s ${@:stmp=h} ${@:stmp=T}; \
-	then rm -f ${@:stmp=T}; \
-	else mv -f ${@:stmp=T} ${@:stmp=h}; fi
+	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 
 # Generate the rpcsvc XDR functions with rpcgen.
@@ -151,9 +150,7 @@ $(rpcsvc:%.x=$(objpfx)x%.c): $(objpfx)x%.c: $(objpfx)x%.stmp
 $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	-@rm -f ${@:stmp=T} $@
 	$(rpcgen-cmd) -c $< -o ${@:stmp=T}
-	if test -r ${@:stmp=c} && cmp -s ${@:stmp=c} ${@:stmp=T}; \
-	then rm -f ${@:stmp=T}; \
-	else mv -f ${@:stmp=T} ${@:stmp=c}; fi
+	$(move-if-change) $(@:stmp=T) $(@:stmp=c)
 	touch $@
 
 # The generated source files depend on the corresponding generated headers.

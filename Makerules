@@ -325,9 +325,9 @@ ifeq (yes,$(build-shared))
 # Reference map file only when versioning is selected and a map file name
 # is given.
 ifeq ($(versioning),yes)
-load-map-file = $($(@F:%.so=%)-map)
-else
-load-map-file =
+map-file = $(firstword $(wildcard \
+		$($(@F:.so=-map)) $(@F:.so=.map) $(..)$(@F:.so=.map)))
+load-map-file = $(map-file:%=-Wl,--version-script=%)
 endif
 
 # Pattern rule to build a shared object from an archive of PIC objects.
@@ -338,12 +338,6 @@ endif
 lib%.so: lib%_pic.a $(+preinit) $(+postinit)
 	$(build-shlib)
 
-ifeq ($(have-no-whole-archive),yes)
-no-whole-archive = -Wl,--no-whole-archive
-else
-no-whole-archive =
-endif
-
 ifeq ($(elf),yes)
 interp-obj = $(common-objpfx)elf/interp.os
 $(common-objpfx)libc.so: $(interp-obj)
@@ -352,12 +346,12 @@ endif
 
 define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -B$(csu-objpfx) $(load-map-file:%=-Wl,--version-script=%) \
+	  -B$(csu-objpfx) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive \
-	  $(filter-out $($(@F:.so=)-map) $(+preinit) $(+postinit),$^) \
+	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -385,8 +379,6 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 LDLIBS-c.so = $(gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
-# We have a versioning file for libc.so.
-libc-map = $(..)libc.map
 # Pre-link the objects of libc_pic.a so that we can locally resolve
 # COMMON symbols before we link against ld.so.  This is because ld.so
 # contains some of libc_pic.a already, which will prevent the COMMONs
@@ -399,7 +391,7 @@ $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \
 			 $(elfobjdir)/sofini.os $(elfobjdir)/ld.so \
-			 $(libc-map)
+			 $(..)libc.map
 	$(build-shlib)
 common-generated += libc.so libc_pic.os
 ifdef libc.so-version
@@ -407,15 +399,6 @@ $(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
 	$(make-link)
 common-generated += libc.so$(libc.so-version)
 endif
-endif
-
-# Some files must not be compiled with the exception handler mechanism
-# enabled (introduced in gcc-2.8).  Use $(no-exceptions) in the
-# appropriate CFLAGS definition.
-ifeq ($(have-no-exceptions),yes)
-no-exceptions = -fno-exceptions
-else
-no-exceptions =
 endif
 
 # Figure out the source filenames in this directory.

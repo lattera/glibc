@@ -48,7 +48,6 @@ extra-libs      := libutil
 extra-libs-others := $(extra-libs)
 
 libutil-routines:= login login_tty logout logwtmp openpty forkpty
-libutil-map	:= libutil.map
 
 include ../Rules
 

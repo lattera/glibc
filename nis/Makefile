@@ -57,15 +57,12 @@ libnsl-map	= libnsl.map
 
 libnss_compat-routines	:= $(addprefix compat-,grp pwd spwd) nisplus-parser
 libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
-libnss_compat-map	:= libnss_compat.map
 
 libnss_nis-routines	:= $(addprefix nis-,$(databases))
 libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
-libnss_nis-map		:= libnss_nis.map
 
 libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser
 libnss_nisplus-inhibit-o = $(filter-out .os,$(object-suffixes))
-libnss_nisplus-map	:= libnss_nisplus.map
 
 include ../Rules
 

@@ -195,7 +195,8 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      ibm880.c ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c	    \
 	      ibm1004.c ibm1026.c ibm1047.c cp1250.c cp1251.c cp1252.c	    \
 	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp874.c cp874.h  \
-	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c
+	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c   \
+	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -204,11 +205,11 @@ ifeq (yes,$(build-shared))
 # and it does not depend on the destination name to start with `lib'.
 define build-module
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
-	  -B$(csu-objpfx) $(load-map-file:%=-Wl,--version-script=%) \
+	  -B$(csu-objpfx) $(load-map-file) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive \
-	  $(filter-out $($(@F:.so=)-map) $(+preinit) $(+postinit),$^) \
+	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:%.so=%).so)
 endef
 
@@ -223,11 +224,13 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 
 # If we have the localedata add-on available we can build the conversion
 # tables for numerous charsets.
+move-if-change = ./$(..)scripts/move-if-change
+
 define generate-8bit-table
 $(make-target-directory)
-rm -f $@.new
-$(SHELL) ./gen-8bit.sh $< > $@.new
-mv -f $@.new $@
+$(SHELL) ./gen-8bit.sh $< > $(@:stmp=T)
+$(move-if-change) $(@:stmp=T) $(@:stmp=h)
+touch $@
 endef
 
 sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-6.h \
@@ -243,9 +246,9 @@ sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-6.h \
 
 define generate-8bit-gap-table
 $(make-target-directory)
-rm -f $@.new
-PERL="$(PERL)" $(SHELL) ./gen-8bit-gap.sh $< > $@.new
-mv -f $@.new $@
+PERL="$(PERL)" $(SHELL) ./gen-8bit-gap.sh $< > $(@:stmp=T)
+$(move-if-change) $(@:stmp=T) $(@:stmp=h)
+touch $@
 endef
 
 perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h	 \
@@ -271,184 +274,190 @@ ifneq ($(PERL),no)
 before-compile += $(addprefix $(objpfx),$(perl-generated-headers))
 endif
 
-
 # Rules to generate the headers.
-$(objpfx)iso8859-2.h: ../localedata/charmaps/ISO-8859-2 gen-8bit.sh
+$(sed-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
+	@:
+
+$(objpfx)iso8859-2.stmp: ../localedata/charmaps/ISO-8859-2 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)iso8859-3.h: ../localedata/charmaps/ISO-8859-3 gen-8bit.sh
+$(objpfx)iso8859-3.stmp: ../localedata/charmaps/ISO-8859-3 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)iso8859-4.h: ../localedata/charmaps/ISO-8859-4 gen-8bit.sh
+$(objpfx)iso8859-4.stmp: ../localedata/charmaps/ISO-8859-4 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)iso8859-6.h: ../localedata/charmaps/ISO-8859-6 gen-8bit.sh
+$(objpfx)iso8859-6.stmp: ../localedata/charmaps/ISO-8859-6 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)iso8859-9.h: ../localedata/charmaps/ISO-8859-9 gen-8bit.sh
+$(objpfx)iso8859-9.stmp: ../localedata/charmaps/ISO-8859-9 gen-8bit.sh
 	$(generate-8bit-table)
 
-$(objpfx)koi-8.h: ../localedata/charmaps/KOI-8 gen-8bit.sh
+$(objpfx)koi-8.stmp: ../localedata/charmaps/KOI-8 gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)hp-roman8.stmp: ../localedata/charmaps/HP-ROMAN8 gen-8bit.sh
 	$(generate-8bit-table)
 
-$(objpfx)hp-roman8.h: ../localedata/charmaps/HP-ROMAN8 gen-8bit.sh
+$(objpfx)ebcdic-at-de.stmp: ../localedata/charmaps/EBCDIC-AT-DE gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-at-de-a.stmp: ../localedata/charmaps/EBCDIC-AT-DE-A gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-ca-fr.stmp: ../localedata/charmaps/EBCDIC-CA-FR gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-dk-no.stmp: ../localedata/charmaps/EBCDIC-DK-NO gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-dk-no-a.stmp: ../localedata/charmaps/EBCDIC-DK-NO-A gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-es.stmp: ../localedata/charmaps/EBCDIC-ES gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-es-a.stmp: ../localedata/charmaps/EBCDIC-ES-A gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-es-s.stmp: ../localedata/charmaps/EBCDIC-ES-S gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-fi-se.stmp: ../localedata/charmaps/EBCDIC-FI-SE gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-fi-se-a.stmp: ../localedata/charmaps/EBCDIC-FI-SE-A gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-fr.stmp: ../localedata/charmaps/EBCDIC-FR gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-is-friss.stmp: ../localedata/charmaps/EBCDIC-IS-FRISS gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-it.stmp: ../localedata/charmaps/EBCDIC-IT gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-pt.stmp: ../localedata/charmaps/EBCDIC-PT gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-uk.stmp: ../localedata/charmaps/EBCDIC-UK gen-8bit.sh
+	$(generate-8bit-table)
+$(objpfx)ebcdic-us.stmp: ../localedata/charmaps/EBCDIC-US gen-8bit.sh
 	$(generate-8bit-table)
 
-$(objpfx)ebcdic-at-de.h: ../localedata/charmaps/EBCDIC-AT-DE gen-8bit.sh
+$(objpfx)ibm037.stmp: ../localedata/charmaps/IBM037 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-at-de-a.h: ../localedata/charmaps/EBCDIC-AT-DE-A gen-8bit.sh
+$(objpfx)ibm038.stmp: ../localedata/charmaps/IBM038 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-ca-fr.h: ../localedata/charmaps/EBCDIC-CA-FR gen-8bit.sh
+$(objpfx)ibm274.stmp: ../localedata/charmaps/IBM274 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-dk-no.h: ../localedata/charmaps/EBCDIC-DK-NO gen-8bit.sh
+$(objpfx)ibm275.stmp: ../localedata/charmaps/IBM275 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-dk-no-a.h: ../localedata/charmaps/EBCDIC-DK-NO-A gen-8bit.sh
+$(objpfx)ibm423.stmp: ../localedata/charmaps/IBM423 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-es.h: ../localedata/charmaps/EBCDIC-ES gen-8bit.sh
+$(objpfx)ibm500.stmp: ../localedata/charmaps/IBM500 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-es-a.h: ../localedata/charmaps/EBCDIC-ES-A gen-8bit.sh
+$(objpfx)ibm870.stmp: ../localedata/charmaps/IBM870 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-es-s.h: ../localedata/charmaps/EBCDIC-ES-S gen-8bit.sh
+$(objpfx)ibm871.stmp: ../localedata/charmaps/IBM871 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-fi-se.h: ../localedata/charmaps/EBCDIC-FI-SE gen-8bit.sh
+$(objpfx)ibm891.stmp: ../localedata/charmaps/IBM891 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-fi-se-a.h: ../localedata/charmaps/EBCDIC-FI-SE-A gen-8bit.sh
+$(objpfx)ibm903.stmp: ../localedata/charmaps/IBM903 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-fr.h: ../localedata/charmaps/EBCDIC-FR gen-8bit.sh
+$(objpfx)ibm904.stmp: ../localedata/charmaps/IBM904 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-is-friss.h: ../localedata/charmaps/EBCDIC-IS-FRISS gen-8bit.sh
+$(objpfx)ibm905.stmp: ../localedata/charmaps/IBM905 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-it.h: ../localedata/charmaps/EBCDIC-IT gen-8bit.sh
+$(objpfx)ibm1047.stmp: ../localedata/charmaps/IBM1047 gen-8bit.sh
 	$(generate-8bit-table)
-$(objpfx)ebcdic-pt.h: ../localedata/charmaps/EBCDIC-PT gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-uk.h: ../localedata/charmaps/EBCDIC-UK gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-us.h: ../localedata/charmaps/EBCDIC-US gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm037.h: ../localedata/charmaps/IBM037 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm038.h: ../localedata/charmaps/IBM038 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm274.h: ../localedata/charmaps/IBM274 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm275.h: ../localedata/charmaps/IBM275 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm423.h: ../localedata/charmaps/IBM423 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm500.h: ../localedata/charmaps/IBM500 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm870.h: ../localedata/charmaps/IBM870 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm871.h: ../localedata/charmaps/IBM871 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm891.h: ../localedata/charmaps/IBM891 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm903.h: ../localedata/charmaps/IBM903 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm904.h: ../localedata/charmaps/IBM904 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm905.h: ../localedata/charmaps/IBM905 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm1047.h: ../localedata/charmaps/IBM1047 gen-8bit.sh
-	$(generate-8bit-table)
-
 
 ifneq ($(PERL),no)
-$(objpfx)iso8859-7jp.h: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap-1.sh
+$(perl-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
+	@:
+
+$(objpfx)iso8859-5.stmp: ../localedata/charmaps/ISO-8859-5 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-7.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso8859-7jp.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap-1.sh
 	$(make-target-directory)
-	rm -f $@.new
-	PERL="$(PERL)" $(SHELL) ./gen-8bit-gap-1.sh $< >$@.new
-	mv -f $@.new $@
+	PERL="$(PERL)" $(SHELL) ./gen-8bit-gap-1.sh $< >$(@:stmp=T)
+	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
+	touch $@
 
-$(objpfx)iso8859-5.h: ../localedata/charmaps/ISO-8859-5 gen-8bit-gap.sh
+$(objpfx)iso8859-8.stmp: ../localedata/charmaps/ISO-8859-8 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)iso8859-7.h: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-8.h: ../localedata/charmaps/ISO-8859-8 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-10.h: ../localedata/charmaps/ISO-8859-10 gen-8bit-gap.sh
+$(objpfx)iso8859-10.stmp: ../localedata/charmaps/ISO-8859-10 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 
-$(objpfx)koi8-r.h: ../localedata/charmaps/KOI8-R gen-8bit-gap.sh
+$(objpfx)koi8-r.stmp: ../localedata/charmaps/KOI8-R gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)latin-greek.h: ../localedata/charmaps/LATIN-GREEK gen-8bit-gap.sh
+$(objpfx)latin-greek.stmp: ../localedata/charmaps/LATIN-GREEK gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)latin-greek-1.h: ../localedata/charmaps/LATIN-GREEK-1 gen-8bit-gap.sh
+$(objpfx)latin-greek-1.stmp: ../localedata/charmaps/LATIN-GREEK-1 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm256.h: ../localedata/charmaps/IBM256 gen-8bit-gap.sh
+
+$(objpfx)ibm256.stmp: ../localedata/charmaps/IBM256 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm273.h: ../localedata/charmaps/IBM273 gen-8bit-gap.sh
+$(objpfx)ibm273.stmp: ../localedata/charmaps/IBM273 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm277.h: ../localedata/charmaps/IBM277 gen-8bit-gap.sh
+$(objpfx)ibm277.stmp: ../localedata/charmaps/IBM277 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm278.h: ../localedata/charmaps/IBM278 gen-8bit-gap.sh
+$(objpfx)ibm278.stmp: ../localedata/charmaps/IBM278 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm280.h: ../localedata/charmaps/IBM280 gen-8bit-gap.sh
+$(objpfx)ibm280.stmp: ../localedata/charmaps/IBM280 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm281.h: ../localedata/charmaps/IBM281 gen-8bit-gap.sh
+$(objpfx)ibm281.stmp: ../localedata/charmaps/IBM281 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm284.h: ../localedata/charmaps/IBM284 gen-8bit-gap.sh
+$(objpfx)ibm284.stmp: ../localedata/charmaps/IBM284 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm285.h: ../localedata/charmaps/IBM285 gen-8bit-gap.sh
+$(objpfx)ibm285.stmp: ../localedata/charmaps/IBM285 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm290.h: ../localedata/charmaps/IBM290 gen-8bit-gap.sh
+$(objpfx)ibm290.stmp: ../localedata/charmaps/IBM290 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm297.h: ../localedata/charmaps/IBM297 gen-8bit-gap.sh
+$(objpfx)ibm297.stmp: ../localedata/charmaps/IBM297 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm420.h: ../localedata/charmaps/IBM420 gen-8bit-gap.sh
+$(objpfx)ibm420.stmp: ../localedata/charmaps/IBM420 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm424.h: ../localedata/charmaps/IBM424 gen-8bit-gap.sh
+$(objpfx)ibm424.stmp: ../localedata/charmaps/IBM424 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm437.h: ../localedata/charmaps/IBM437 gen-8bit-gap.sh
+$(objpfx)ibm437.stmp: ../localedata/charmaps/IBM437 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm850.h: ../localedata/charmaps/IBM850 gen-8bit-gap.sh
+$(objpfx)ibm850.stmp: ../localedata/charmaps/IBM850 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm851.h: ../localedata/charmaps/IBM851 gen-8bit-gap.sh
+$(objpfx)ibm851.stmp: ../localedata/charmaps/IBM851 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm852.h: ../localedata/charmaps/IBM852 gen-8bit-gap.sh
+$(objpfx)ibm852.stmp: ../localedata/charmaps/IBM852 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm855.h: ../localedata/charmaps/IBM855 gen-8bit-gap.sh
+$(objpfx)ibm855.stmp: ../localedata/charmaps/IBM855 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm857.h: ../localedata/charmaps/IBM857 gen-8bit-gap.sh
+$(objpfx)ibm857.stmp: ../localedata/charmaps/IBM857 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm860.h: ../localedata/charmaps/IBM860 gen-8bit-gap.sh
+$(objpfx)ibm860.stmp: ../localedata/charmaps/IBM860 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm861.h: ../localedata/charmaps/IBM861 gen-8bit-gap.sh
+$(objpfx)ibm861.stmp: ../localedata/charmaps/IBM861 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm862.h: ../localedata/charmaps/IBM862 gen-8bit-gap.sh
+$(objpfx)ibm862.stmp: ../localedata/charmaps/IBM862 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm863.h: ../localedata/charmaps/IBM863 gen-8bit-gap.sh
+$(objpfx)ibm863.stmp: ../localedata/charmaps/IBM863 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm864.h: ../localedata/charmaps/IBM864 gen-8bit-gap.sh
+$(objpfx)ibm864.stmp: ../localedata/charmaps/IBM864 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm865.h: ../localedata/charmaps/IBM865 gen-8bit-gap.sh
+$(objpfx)ibm865.stmp: ../localedata/charmaps/IBM865 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm868.h: ../localedata/charmaps/IBM868 gen-8bit-gap.sh
+$(objpfx)ibm868.stmp: ../localedata/charmaps/IBM868 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm869.h: ../localedata/charmaps/IBM869 gen-8bit-gap.sh
+$(objpfx)ibm869.stmp: ../localedata/charmaps/IBM869 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm875.h: ../localedata/charmaps/IBM875 gen-8bit-gap.sh
+$(objpfx)ibm875.stmp: ../localedata/charmaps/IBM875 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm880.h: ../localedata/charmaps/IBM880 gen-8bit-gap.sh
+$(objpfx)ibm880.stmp: ../localedata/charmaps/IBM880 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm918.h: ../localedata/charmaps/IBM918 gen-8bit-gap.sh
+$(objpfx)ibm918.stmp: ../localedata/charmaps/IBM918 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm1004.h: ../localedata/charmaps/IBM1004 gen-8bit-gap.sh
+$(objpfx)ibm1004.stmp: ../localedata/charmaps/IBM1004 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)ibm1026.h: ../localedata/charmaps/IBM1026 gen-8bit-gap.sh
+$(objpfx)ibm1026.stmp: ../localedata/charmaps/IBM1026 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1250.h: ../localedata/charmaps/CP1250 gen-8bit-gap.sh
+
+$(objpfx)cp1250.stmp: ../localedata/charmaps/CP1250 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1251.h: ../localedata/charmaps/CP1251 gen-8bit-gap.sh
+$(objpfx)cp1251.stmp: ../localedata/charmaps/CP1251 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1252.h: ../localedata/charmaps/CP1252 gen-8bit-gap.sh
+$(objpfx)cp1252.stmp: ../localedata/charmaps/CP1252 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1253.h: ../localedata/charmaps/CP1253 gen-8bit-gap.sh
+$(objpfx)cp1253.stmp: ../localedata/charmaps/CP1253 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1254.h: ../localedata/charmaps/CP1254 gen-8bit-gap.sh
+$(objpfx)cp1254.stmp: ../localedata/charmaps/CP1254 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1255.h: ../localedata/charmaps/CP1255 gen-8bit-gap.sh
+$(objpfx)cp1255.stmp: ../localedata/charmaps/CP1255 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1256.h: ../localedata/charmaps/CP1256 gen-8bit-gap.sh
+$(objpfx)cp1256.stmp: ../localedata/charmaps/CP1256 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
-$(objpfx)cp1257.h: ../localedata/charmaps/CP1257 gen-8bit-gap.sh
+$(objpfx)cp1257.stmp: ../localedata/charmaps/CP1257 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 endif
 

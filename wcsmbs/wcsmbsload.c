@@ -96,8 +96,7 @@ getfct (const char *to, const char *from)
     const char *cp = str;						      \
     char *result = NULL;						      \
 									      \
-    while (strchr ("@.+,", *cp) == NULL)				      \
-      ++cp;								      \
+    cp += strcspn (cp, "@.+,");						      \
     if (*cp == '.')							      \
       {									      \
 	const char *endp = ++cp;					      \

@@ -1,7 +1,8 @@
 With the introduction of version 2 of the GNU C Library the format of
-the UTMP and WTMP files changed for some configurations (see Q&A 10 of
-the FAQ).  This version of the GNU C Library contains a solution for
-the problems this may cause, by providing an UTMP daemon `utmpd'.
+the UTMP and WTMP files changed for some configurations (see Q&A `Why
+does getlogin() always return NULL on my Linux box?' of the FAQ).
+This version of the GNU C Library contains a solution for the problems
+this may cause, by providing an UTMP daemon `utmpd'.
 
 Do I need it?
 =============

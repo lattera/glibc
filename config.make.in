@@ -37,9 +37,9 @@ need-nopic-initfini = @nopic_initfini@
 with-cvs = @with_cvs@
 
 versioning = @VERSIONING@
+no-whole-archive = @no_whole_archive@
+no-exceptions = @no_exceptions@
 
-have-no-whole-archive = @libc_cv_ld_no_whole_archive@
-have-no-exceptions = @libc_cv_gcc_no_exceptions@
 have-bash2 = @libc_cv_have_bash2@
 have-ksh = @libc_cv_have_ksh@
 

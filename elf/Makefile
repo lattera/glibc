@@ -35,7 +35,7 @@ elide-routines.os = $(dl-routines) dl-support enbl-secure
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
-ld-map		= $(libc-map)
+ld-map		= $(..)libc.map
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
@@ -44,7 +44,6 @@ distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
-libdl-map	:= libdl.map
 
 before-compile = $(objpfx)trusted-dirs.h $(objpfx)rtldtbl.h
 
@@ -112,14 +111,10 @@ endif
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript)) \
 		$(ld-map)
-	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
-
-define rtld-link
-$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
-	  -Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld) \
-	  $(filter-out $(rtld-ldscript) $($(@F:.so=)-map),$^) \
-	  $(load-map-file:%=-Wl,--version-script=%)
-endef
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@		\
+		-Wl,-rpath=$(default-rpath) $(LDFLAGS-rtld)	\
+		$(filter-out $(rtld-ldscript) $(map-file),$^)	\
+		$(load-map-file) -Wl,-soname=$(rtld-installed-name)
 
 # The dl code in the static libc needs a default library path.
 CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
