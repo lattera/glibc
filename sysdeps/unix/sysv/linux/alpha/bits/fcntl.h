@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -133,9 +133,19 @@ struct flock64
 /* Define some more compatibility macros to be backward compatible with
    BSD systems which did not managed to hide these kernel macros.  */
 #ifdef	__USE_BSD
-# define FAPPEND		O_APPEND
+# define FAPPEND	O_APPEND
 # define FFSYNC		O_FSYNC
 # define FASYNC		O_ASYNC
 # define FNONBLOCK	O_NONBLOCK
-# define FNDELAY		O_NDELAY
+# define FNDELAY	O_NDELAY
 #endif /* Use BSD.  */
+
+/* Advise to `posix_fadvise'.  */
+#ifdef __USE_XOPEN2K
+# define POSIX_FADV_NORMAL	0 /* No further special treatment.  */
+# define POSIX_FADV_RANDOM	1 /* Expect random page references.  */
+# define POSIX_FADV_SEQUENTIAL	2 /* Expect sequential page references.  */
+# define POSIX_FADV_WILLNEED	3 /* Will need these pages.  */
+# define POSIX_FADV_DONTNEED	6 /* Don't need these pages.  */
+# define POSIX_FADV_NOREUSE	7 /* Data will be accessed once.  */
+#endif
