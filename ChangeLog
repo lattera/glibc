@@ -1,3 +1,9 @@
+2002-10-21  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (s_execve): Set
+	caller to EXTRA instead of execve, since the latter has a
+	higher-priority implementation in linuxthreads.
+
 2002-10-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/locarchive.c (enlarge_archive): Make sure
