@@ -57,4 +57,4 @@ Cambridge, MA 02139, USA.  */
 #define	ret	rts
 #define	r0	d0
 #define	r1	d1
-#define	movl	movel
+#define	MOVE(x,y)	movel x , y
