@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <stdbool.h>
 #include "nsswitch.h"
 #ifdef USE_NSCD
 # include <nscd/nscd_proto.h>
@@ -135,6 +136,9 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #ifdef USE_NSCD
   int nscd_status;
 #endif
+#ifdef NEED_H_ERRNO
+  bool any_service = false;
+#endif
 
 #ifdef PREPROCESS
   PREPROCESS;
@@ -203,6 +207,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
   while (no_more == 0)
     {
+#ifdef NEED_H_ERRNO
+      any_service = true;
+#endif
+
       status = DL_CALL_FCT (fct, (ADD_VARIABLES, resbuf, buffer, buflen,
 				   &errno H_ERRNO_VAR));
 
@@ -226,6 +234,11 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 done:
 #endif
   *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
+#ifdef NEED_H_ERRNO
+  if (status != NSS_STATUS_SUCCESS && ! any_service)
+    /* We were not able to use any service.  */
+    *h_errnop = NO_RECOVERY;
+#endif
 #ifdef POSTPROCESS
   POSTPROCESS;
 #endif
