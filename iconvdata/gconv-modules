@@ -324,7 +324,7 @@ module	INTERNAL		ISO-8859-9//		ISO8859-9	1
 
 #	from			to			module		cost
 alias	ISO-IR-157//		ISO-8859-10//
-alias	ISO_8859-10:1993//	ISO-8859-10//
+alias	ISO_8859-10:1992//	ISO-8859-10//
 alias	ISO_8859-10//		ISO-8859-10//
 alias	LATIN6//		ISO-8859-10//
 alias	L6//			ISO-8859-10//
