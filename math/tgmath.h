@@ -283,7 +283,9 @@
 #define remainder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, remainder)
 
 /* Return X times (2 to the Nth power).  */
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 #define scalb(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, scalb)
+#endif
 
 /* Return X times (2 to the Nth power).  */
 #define scalbn(Val1, Val2) __TGMATH_BINARY_FIRST_REAL_ONLY (Val1, Val2, scalbn)

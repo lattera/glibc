@@ -1,3 +1,8 @@
+1998-09-07 09:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/tgmath.h (scalb): Only define for __USE_MISC or
+	__USE_XOPEN_EXTENDED.  Patch by Zack Weinberg.
+
 1998-09-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* libio/stdio.h: Fix comment.
