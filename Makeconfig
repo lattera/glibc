@@ -685,7 +685,9 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	       $(wildcard $(patsubst %,$(..)%/shlib-versions,$(subdirs))) \
 	       $(..)shlib-versions"; \
 	 for f in $$file; do \
-	   sed 's/#.*$$//' $$f | while read conf versions; do \
+	   sed 's/#.*$$//;s/^[ 	]*%/#/' $$f \
+	   | $(CC) -include $(common-objpfx)config.h -E -x c - \
+	   | while read conf versions; do \
 	     test -n "$$versions" && \
 	     test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 			: "$$conf"` != 0 || continue; \

@@ -5,6 +5,9 @@
 # list is processed, with earlier entries taking precedence over later
 # entries.  So loose patterns at the end of the list can give defaults.
 
+# This file can use cpp-style conditionals starting with % instead of #
+# to test the symbols defined in config.h by configure.
+
 # Configuration		Library versions
 # -------------		------- --------
 
@@ -29,7 +32,11 @@ alpha.*-.*-linux.*	libc=6.1
 .*-.*-gnu-gnu*		libhurduser=0.0
 
 # libc.so.0.2 is for the Hurd alpha release 0.2.
+%ifdef USE_IN_LIBIO /* experimental only! */
+.*-.*-gnu-gnu*		libc=0.2.90.libio
+%else
 .*-.*-gnu-gnu*		libc=0.2
+%endif
 
 # The dynamic loader also requires different names.
 i.86-.*-linux.*		ld=ld-linux.so.2
