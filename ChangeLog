@@ -1,3 +1,8 @@
+2001-07-03  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/sysv4/solaris2/configure.in: Remove check for
+	crypt add-on.
+
 2001-07-01  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/if_index.c: Redone to use new interfaces in
