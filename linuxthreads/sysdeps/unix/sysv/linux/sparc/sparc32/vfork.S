@@ -23,7 +23,11 @@
 ENTRY(__vfork)
 	ld	[%g6 + MULTIPLE_THREADS_OFFSET], %o0
 	cmp	%o0, 0
+#ifdef SHARED
 	bne	HIDDEN_JUMPTARGET(__fork)
+#else
+	bne	1f
+#endif
 	 mov	__NR_vfork, %g1
 	ta 0x10;
 	bcs	__syscall_error_handler
@@ -31,6 +35,11 @@ ENTRY(__vfork)
 	sub	%o1, 1, %o1
 	retl
 	 and	%o0, %o1, %o0
+#ifndef SHARED
+1:	mov	%o7, %g1
+	call	HIDDEN_JUMPTARGET(__fork)
+	 mov	%g1, %o7
+#endif
 	SYSCALL_ERROR_HANDLER
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)

@@ -1,3 +1,8 @@
+2003-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (CFLAGS-pthread_self.os): Define this, not
+	CFLAGS-pthread_self.c.
+
 2003-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/libc-lowlevellock.S: Don't export

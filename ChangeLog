@@ -1,3 +1,18 @@
+2003-01-14  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/sysdep.h (INTERNAL_SYSCALL,
+	INTERNAL_SYSCALL_DECL, INTERNAL_SYSCALL_ERRNO,
+	INTERNAL_SYSCALL_ERROR_P, INLINE_SYSCALL): Define.
+
+2003-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(INTERNAL_SYSCALL): Make use of ERR parameter.
+	(INTERNAL_SYSCALL_DECL, INTERNAL_SYSCALL_ERRNO,
+	INTERNAL_SYSCALL_ERROR_P): Adjust accordingly.
+	(INLINE_SYSCALL): Make use of INTERNAL_SYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: New file.
+
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/pm_getport.c (pmap_getport): Open TCP socket if protocol
@@ -21,10 +36,10 @@
 	source pointer before dereferencing.
 	(__STRING_SMALLL_GET32): Likewise.
 	(__memset_gc): Add missing parenthesis around macro arguments.
-	Patch by Denis Zaitsev<zzz@cd-club.ru>.
+	Patch by Denis Zaitsev <zzz@cd-club.ru>.
 
 	* sysdeps/i386/i486/bits/string.h (__strspn_cg): Tell the compiler
-	that %eax is modified.  Reported by Denis Zaitsev<zzz@cd-club.ru>.
+	that %eax is modified.  Reported by Denis Zaitsev <zzz@cd-club.ru>.
 
 2003-01-14  Jakub Jelinek  <jakub@redhat.com>
 

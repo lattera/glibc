@@ -82,9 +82,9 @@ C["__xpg_sigpause"]=1
 {
   if (C[$1] && $2 ~ /^[TW]$/)
     seen=$1
-  else if ($1 ~ /^__(libc|pthread)_enable_asynccancel$/ && $2 == "U")
+  else if ($1 ~ /^([.]|)__(libc|pthread)_enable_asynccancel$/ && $2 == "U")
     seen_enable=1
-  else if ($1 ~ /^__(libc|pthread)_disable_asynccancel$/ && $2 == "U")
+  else if ($1 ~ /^([.]|)__(libc|pthread)_disable_asynccancel$/ && $2 == "U")
     seen_disable=1
 }
 END {

@@ -116,12 +116,33 @@ typedef pthread_key_t __libc_key_t;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
+#if defined _LIBC && !defined NOT_IN_libc && defined SHARED
+#define __libc_lock_init(NAME) \
+  ({									      \
+    (NAME).__m_count = 0;						      \
+    (NAME).__m_owner = NULL;						      \
+    (NAME).__m_kind = PTHREAD_MUTEX_TIMED_NP;				      \
+    (NAME).__m_lock.__status = 0;					      \
+    (NAME).__m_lock.__spinlock = __LT_SPINLOCK_INIT;			      \
+    0; })
+#else
 #define __libc_lock_init(NAME) \
   (__libc_maybe_call2 (pthread_mutex_init, (&(NAME), NULL), 0))
+#endif
 #define __libc_rwlock_init(NAME) \
   (__libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0));
 
 /* Same as last but this time we initialize a recursive mutex.  */
+#if defined _LIBC && !defined NOT_IN_libc && defined SHARED
+#define __libc_lock_init_recursive(NAME) \
+  ({									      \
+    (NAME).mutex.__m_count = 0;						      \
+    (NAME).mutex.__m_owner = NULL;					      \
+    (NAME).mutex.__m_kind = PTHREAD_MUTEX_RECURSIVE_NP;			      \
+    (NAME).mutex.__m_lock.__status = 0;					      \
+    (NAME).mutex.__m_lock.__spinlock = __LT_SPINLOCK_INIT;		      \
+    0; })
+#else
 #define __libc_lock_init_recursive(NAME) \
   do {									      \
     if (__pthread_mutex_init != NULL)					      \
@@ -133,6 +154,7 @@ typedef pthread_key_t __libc_key_t;
 	__pthread_mutexattr_destroy (&__attr);				      \
       }									      \
   } while (0);
+#endif
 #define __rtld_lock_init_recursive(NAME) \
   __libc_lock_init_recursive (NAME)
 

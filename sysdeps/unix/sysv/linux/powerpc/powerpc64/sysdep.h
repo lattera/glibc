@@ -74,36 +74,14 @@
    behave like function calls as far as register saving.  */
 #define INLINE_SYSCALL(name, nr, args...)			\
   ({								\
-    register long r0 __asm__ ("r0");				\
-    register long r3 __asm__ ("r3");				\
-    register long r4 __asm__ ("r4");				\
-    register long r5 __asm__ ("r5");				\
-    register long r6 __asm__ ("r6");				\
-    register long r7 __asm__ ("r7");				\
-    register long r8 __asm__ ("r8");				\
-    long ret, err;						\
-    LOADARGS_##nr(name, args);					\
-    __asm __volatile ("sc\n\t"					\
-		      "mfcr	%7\n\t"				\
-		      : "=r" (r0), "=r" (r3), "=r" (r4),	\
-		        "=r" (r5), "=r" (r6), "=r" (r7),	\
-		        "=r" (r8), "=r" (err)			\
-		      : ASM_INPUT_##nr				\
-		      : "r9", "r10", "r11", "r12",		\
-		        "fr0", "fr1", "fr2", "fr3",		\
-			      "fr4", "fr5", "fr6", "fr7",		\
-            "fr8", "fr9", "fr10", "fr11",		\
-            "fr12", "fr13",				\
-            "ctr", "lr",				\
-            "cr0", "cr1", "cr5", "cr6", "cr7",	\
-            "memory");				\
-    ret = r3;							\
-    if (__builtin_expect ((err & (1 << 28)), 0))  \
-      {								\
-        __set_errno (ret);					\
-        ret = -1L;						\
-      }								\
-    ret;							\
+    INTERNAL_SYSCALL_DECL (sc_err);					\
+    long sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);		\
+    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			\
+      {									\
+        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		\
+        sc_ret = -1L;							\
+      }									\
+    sc_ret;								\
   })
 
 /* Define a macro which expands inline into the wrapper code for a system
@@ -113,7 +91,7 @@
    the negation of the return value in the kernel gets reverted.  */
 
 # undef INTERNAL_SYSCALL
-# define INTERNAL_SYSCALL(name, nr, args...)				\
+# define INTERNAL_SYSCALL(name, err, nr, args...)				\
   ({									\
     register long r0  __asm__ ("r0");					\
     register long r3  __asm__ ("r3");					\
@@ -125,8 +103,7 @@
     LOADARGS_##nr(name, args);						\
     __asm__ __volatile__						\
       ("sc\n\t"								\
-       "bns+	0f\n\t"							\
-       "neg	%1,%1\n"						\
+       "mfcr  %0\n\t"							\
        "0:"								\
        : "=&r" (r0),							\
          "=&r" (r3), "=&r" (r4), "=&r" (r5),  \
@@ -134,14 +111,19 @@
        : ASM_INPUT_##nr							\
        : "r9", "r10", "r11", "r12",		\
          "cr0", "ctr", "memory");					\
-    (int) r3;								\
+	  err = r0;  \
+    (int) r3;  \
   })
+
+# undef INTERNAL_SYSCALL_DECL
+# define INTERNAL_SYSCALL_DECL(err) long err
   
 # undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val)   ((unsigned long) (val) >= 0xfffffffffffff001u)
-  
+# define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  (__builtin_expect (err & (1 << 28), 0))
+
 # undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
+# define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
 
 #define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name

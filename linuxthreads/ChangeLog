@@ -1,3 +1,29 @@
+2003-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h (__libc_lock_init,
+	__libc_lock_init_recursive): Initialize fields directly.
+
+2003-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/vfork.S (__vfork): Allow
+	__fork to be far away from __vfork ifndef SHARED.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S (__vfork): Likewise.
+	Add a missing instruction.
+	* sysdeps/unix/sysv/linux/arm/vfork.S (__vfork): Conditionally
+	branch to __fork even if __NR_vfork is not defined.
+
+2003-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel-wrappers.sh: Allow .__*_asynccancel functions names
+	as well.
+
+2003-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: New file.
+
 2003-01-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/vfork.S (JUMPTARGET): Remove.

@@ -27,11 +27,25 @@ __LABEL(__vfork)
 	.prologue 1
 	PSEUDO_PROF
 	SINGLE_THREAD_P(t0)
+#ifdef SHARED
 	bne	t0, HIDDEN_JUMPTARGET (__fork) !samegp
+#else
+	bne	t0, $hidden_fork
+#endif
 	lda	v0, SYS_ify(vfork)
 	call_pal PAL_callsys
+#ifdef SHARED
 	bne	a3, __syscall_error !samegp
+#else
+	bne	a3, $syscall_error
+#endif
 	ret
+#ifndef SHARED
+$hidden_fork:
+	jmp	zero, HIDDEN_JUMPTARGET (__fork)
+$syscall_error:
+	jmp	zero, __syscall_error
+#endif
 PSEUDO_END(__vfork)
 libc_hidden_def (__vfork)
 

@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep-cancel.h>
+#include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <kernel-features.h>
@@ -30,26 +30,15 @@ ENTRY (__vfork)
 
 #ifdef __NR_vfork
 
-	SINGLE_THREAD_P
-# ifdef SHARED
-	bne-	HIDDEN_JUMPTARGET(__fork)
-# else
-	bne-	.Lhidden_fork
-# endif
-
-	DO_CALL (SYS_ify (vfork));
+	DO_CALL (SYS_ify (vfork))
 
 # ifdef __ASSUME_VFORK_SYSCALL
 	PSEUDO_RET
 # else
 	bnslr+
 	/* Check if vfork syscall is known at all.  */
-	cmpwi	r3,ENOSYS
-#  ifdef SHARED
+	cmpdi	r3,ENOSYS
 	bne	JUMPTARGET(__syscall_error)
-#  else
-	bne	.Lsyscall_error
-#  endif
 
 # endif
 #endif
@@ -57,16 +46,9 @@ ENTRY (__vfork)
 #ifndef __ASSUME_VFORK_SYSCALL
 	/* If we don't have vfork, fork is close enough.  */
 
-	DO_CALL (SYS_ify (fork));
+	DO_CALL (SYS_ify (fork))
 	PSEUDO_RET
 #endif
-
-# ifndef SHARED
-.Lhidden_fork:
-	b	HIDDEN_JUMPTARGET(__fork)
-.Lsyscall_error:
-	b	JUMPTARGET(__syscall_error)
-# endif
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
