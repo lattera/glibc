@@ -1,4 +1,3 @@
-clk_tck.c
 cthreads.c
 errlist.c
 errnos.awk
