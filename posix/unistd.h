@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -488,7 +488,7 @@ extern int nice __P ((int __inc));
 
 
 /* Terminate program execution with the low-order 8 bits of STATUS.  */
-extern void _exit __P ((int __status)) __attribute__ ((__noreturn__));
+extern void _exit __PMT ((int __status)) __attribute__ ((__noreturn__));
 
 
 /* Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
