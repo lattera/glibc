@@ -904,6 +904,9 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	}
     }
 
+  /* Presumed absent PT_GNU_STACK.  */
+  uint_fast16_t stack_flags = PF_R|PF_W|PF_X;
+
   {
     /* Scan the program header table, collecting its load commands.  */
     struct loadcmd
@@ -1057,6 +1060,10 @@ cannot allocate TLS data structures for initial thread");
 	  errval = 0;
 	  errstring = N_("cannot handle TLS data");
 	  goto call_lose;
+	  break;
+
+	case PT_GNU_STACK:
+	  stack_flags = ph->p_flags;
 	  break;
 	}
 
@@ -1333,6 +1340,19 @@ cannot allocate TLS data structures for initial thread");
   /* Finally the file information.  */
   l->l_dev = st.st_dev;
   l->l_ino = st.st_ino;
+
+  if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
+    {
+      /* The stack is presently not executable, but this module
+	 requires that it be executable.  */
+      errval = (*GL(dl_make_stack_executable_hook)) ();
+      if (errval)
+	{
+	  errstring = N_("\
+cannot enable executable stack as shared object requires");
+	  goto call_lose;
+	}
+    }
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */

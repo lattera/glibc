@@ -98,6 +98,8 @@ struct rtld_global _rtld_global =
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
+    /* Default presumption without further information is executable stack.  */
+    ._dl_stack_flags = PF_R|PF_W|PF_X,
 #ifdef _LIBC_REENTRANT
     ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER
 #endif
@@ -249,7 +251,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
-  start_addr =  _dl_sysdep_start (arg, &dl_main);
+  start_addr = _dl_sysdep_start (arg, &dl_main);
 
 #ifndef HP_TIMING_NONAVAIL
   if (HP_TIMING_AVAIL)
@@ -903,6 +905,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  }
 	break;
 #endif
+      case PT_GNU_STACK:
+	GL(dl_stack_flags) = ph->p_flags;
+	break;
       }
 #ifdef USE_TLS
     /* Adjust the address of the TLS initialization image in case
@@ -948,6 +953,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 #endif
       _exit (has_interp ? 0 : 2);
     }
+
+  /* The explicit initialization here is cheaper than processing the reloc
+     in the _rtld_local definition's initializer.  */
+  GL(dl_make_stack_executable_hook) = &_dl_make_stack_executable;
 
   if (! rtld_is_main)
     /* Initialize the data structures for the search paths for shared

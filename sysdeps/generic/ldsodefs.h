@@ -355,6 +355,14 @@ struct rtld_global
   EXTERN void (*_dl_rtld_unlock_recursive) (void *);
 #endif
 
+  /* Prevailing state of the stack, PF_X indicating it's executable.  */
+  EXTERN ElfW(Word) _dl_stack_flags;
+
+  /* If loading a shared object requires that we make the stack executable
+     when it was not, we do it by calling this function.
+     It returns an errno code or zero on success.  */
+  EXTERN int (*_dl_make_stack_executable_hook) (void) internal_function;
+
   /* Keep the conditional TLS members at the end so the layout of the
      structure used by !USE_TLS code matches the prefix of the layout in
      the USE_TLS rtld.  Note that `struct link_map' is conditionally
@@ -437,6 +445,11 @@ extern struct rtld_global _rtld_global __rtld_global_attribute__;
 extern void **_dl_initial_error_catch_tsd (void) __attribute__ ((const))
      attribute_hidden;
 #endif
+
+/* This is the initial value of GL(dl_make_stack_executable_hook).
+   A threads library can change it.  */
+extern int _dl_make_stack_executable (void) internal_function;
+rtld_hidden_proto (_dl_make_stack_executable)
 
 /* Parameters passed to the dynamic linker.  */
 extern int _dl_argc attribute_hidden;
