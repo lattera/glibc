@@ -83,6 +83,7 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #ifdef USE_IN_LIBIO
 # include <wchar.h>
 #endif
+#include <sys/uio.h>
 
 
 int __ivaliduser (FILE *, u_int32_t, const char *, const char *);
@@ -323,7 +324,8 @@ poll: protocol failure in circuit setup\n")) >= 0))
 			(void)__close(s2);
 			goto bad;
 		}
-		s3 = accept(s2, (struct sockaddr *)&from, &len);
+		s3 = TEMP_FAILURE_RETRY (accept(s2, (struct sockaddr *)&from,
+						&len));
 		switch (from.ss_family) {
 		case AF_INET:
 			rport = ntohs(((struct sockaddr_in *)&from)->sin_port);
@@ -367,10 +369,17 @@ socket: protocol failure in circuit setup\n")) >= 0)
 			goto bad2;
 		}
 	}
-	(void)__write(s, locuser, strlen(locuser)+1);
-	(void)__write(s, remuser, strlen(remuser)+1);
-	(void)__write(s, cmd, strlen(cmd)+1);
-	n = __read(s, &c, 1);
+	struct iovec iov[3] =
+	  {
+	    [0] = { .iov_base = (void *) locuser,
+		    .iov_len = strlen (locuser) + 1 },
+	    [1] = { .iov_base = (void *) remuser,
+		    .iov_len = strlen (remuser) + 1 },
+	    [2] = { .iov_base = (void *) cmd,
+		    .iov_len = strlen (cmd) + 1 }
+	  };
+	(void) TEMP_FAILURE_RETRY (__writev (s, iov, 3));
+	n = TEMP_FAILURE_RETRY (__read(s, &c, 1));
 	if (n != 1) {
 		char *buf = NULL;
 
