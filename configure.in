@@ -292,7 +292,7 @@ changequote(,)dnl
 case "$machine" in
 a29k | am29000)	base_machine=a29k machine=a29k ;;
 alpha*)		base_machine=alpha machine=alpha/$machine ;;
-arm*)		base_machine=arm machine=arm/$machine ;;
+arm*)		base_machine=arm machine=arm/arm32/$machine ;;
 c3[012])	base_machine=cx0 machine=cx0/c30 ;;
 c4[04])		base_machine=cx0 machine=cx0/c40 ;;
 hppa*64*)	base_machine=hppa machine=hppa/hppa64 ;;
@@ -319,6 +319,7 @@ sparcv8plus | sparcv8plusa | sparcv9)
 		base_machine=sparc machine=sparc/sparc32/sparcv9 ;;
 sparc64 | ultrasparc)
 		base_machine=sparc machine=sparc/sparc64 ;;
+thumb*)		base_machine=thumb machine=arm/thumb/$machine ;;
 esac
 changequote([,])dnl
 AC_SUBST(base_machine)

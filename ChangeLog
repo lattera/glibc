@@ -1,3 +1,12 @@
+2001-02-04  Philip Blundell  <philb@gnu.org>
+
+	* configure.in: Distinguish ARM from Thumb.
+
+2001-02-04  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Correct handling of
+	PC24 relocs with negative value.
+
 2001-02-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/Makefile (iconv_prog-modules): Define.  Add vpath to find
