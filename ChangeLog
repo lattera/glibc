@@ -1,3 +1,24 @@
+Wed Aug  9 14:25:35 1995  Miles Bader  <miles@geech.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/setuid.c (__setuid): Switch the port-type and
+	port-count parameters to __auth_makeauth.
+	* sysdeps/mach/hurd/setgid.c (__setgid): Ditto.
+
+Tue Aug  8 12:22:59 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/sigunwind.c: Remove _hurd_longjmp_thread_state decl.
+
+	* inet/netinet/tcp.h: New file, incorporated from 4.4BSD-Lite.
+
+Tue Aug  8 12:06:04 1995  Michael I. Bushnell, p/BSG  <mib@duality.gnu.ai.mit.edu>
+
+	* inet/netinet/in.h (IP_MULTICAST_TTL, IP_MULTICAST_LOOP,
+ 	IP_MULTICAST_IP, IP_ADD_MEMBERSHIP, IP_DROP_MEMBERSHIP): New IP
+ 	layer socket options.
+	(IPPROTO_GGP): Delete obsolote protocol.
+	(IPPROTO_IGMP): Add new protocol (with same value [2] as old GGP).
+	(struct ip_mreq): New type.
+
 Mon Aug  7 14:04:36 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/strtol.c: Use #ifdef, not #if, for HAVE_LIMITS_H.
