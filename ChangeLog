@@ -1,3 +1,8 @@
+1999-11-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add STT_REGISTER, STT_HP_OPAQUE, and STT_ST_STUB
+	definitions.
+
 1999-11-08  Andreas Jaeger  <aj@suse.de>
 
 	* locale/findlocale.c (_nl_find_locale): Free normalized_codeset;

@@ -943,6 +943,10 @@ typedef struct
 
 /* SUN SPARC specific definitions.  */
 
+/* Legal values for ST_TYPE subfield of st_info (symbol type).  */
+
+#define STT_REGISTER	13		/* Global register reserved to app. */
+
 /* Values for Elf64_Ehdr.e_flags.  */
 
 #define EF_SPARCV9_MM		3
@@ -1426,6 +1430,9 @@ typedef Elf32_Addr Elf32_Conflict;
 /* Legal values for ST_TYPE subfield of st_info (symbol type).  */
 
 #define STT_PARISC_MILLICODE	13	/* Millicode function entry point.  */
+
+#define STT_HP_OPAQUE		(STT_LOOS + 0x1)
+#define STT_HP_STUB		(STT_LOOS + 0x2)
 
 /* HPPA relocs.  */
 
