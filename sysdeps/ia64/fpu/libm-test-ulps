@@ -216,13 +216,13 @@ ldouble: 447
 
 # cbrt
 Test "cbrt (-0.001) == -0.1":
-ildouble: 716
-ldouble: 716
+ildouble: 717
+ldouble: 717
 Test "cbrt (-27.0) == -3.0":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ildouble: 948
+ldouble: 948
 Test "cbrt (0.7) == 0.8879040017426007084":
 double: 1
 idouble: 1
@@ -233,6 +233,9 @@ double: 1
 idouble: 1
 ildouble: 306
 ldouble: 306
+Test "cbrt (8) == 2":
+ildouble: 191
+ldouble: 191
 
 # ccos
 Test "Real part of: ccos (-2 - 3 i) == -4.1896256909688072301 - 9.1092278937553365979 i":
@@ -1302,8 +1305,8 @@ ldouble: 447
 Function: "cbrt":
 double: 1
 idouble: 1
-ildouble: 716
-ldouble: 716
+ildouble: 948
+ldouble: 948
 
 Function: Real part of "ccos":
 double: 1

@@ -1,3 +1,11 @@
+2000-09-29  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Updated for long double.
+
+2000-09-29  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/bits/huge_val.h: New file.
+
 2000-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/chroot_canon.c: Don't report a failure if the last path
