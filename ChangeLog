@@ -1,5 +1,7 @@
 2001-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/wordexp-test.c (testit): Remove warnings.
+
 	* dlfcn/Makefile (distribute): Add modatexit.c and modcxaatexit.c.
 	(tests): Add tstatexit and tstcxaatexit.
 	(module-names): Add modatexit and modcxaatexit.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ struct test_case_struct
   const char *env;
   const char *words;
   int flags;
-  int wordc;
+  size_t wordc;
   const char *wordv[10];
   const char *ifs;
 } test_case[] =
@@ -399,11 +399,11 @@ testit (struct test_case_struct *tc)
   if (bzzzt)
     {
       printf ("FAILED\n");
-      printf ("Test words: <%s>, need retval %d, wordc %d\n",
+      printf ("Test words: <%s>, need retval %d, wordc %Zd\n",
 	      tc->words, tc->retval, tc->wordc);
       if (start_offs != 0)
 	printf ("(preceded by %d NULLs)\n", start_offs);
-      printf ("Got retval %d, wordc %d: ", retval, we.we_wordc);
+      printf ("Got retval %d, wordc %Zd: ", retval, we.we_wordc);
       if (retval == 0 || retval == WRDE_NOSPACE)
 	{
 	  for (i = 0; i < we.we_wordc + start_offs; ++i)
