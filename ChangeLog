@@ -10,7 +10,7 @@
 	* elf/rtld.c: Likewise.
 	* elf/dl-misc.c (_dl_debug_vdprintf): Use writev syscall directly
 	if HAVE_INLINED_SYSCALLS is defined.
-	* sysdeps/powerpc/powerpc64/dl-machine.h: Don't rest _dl_starting_up
+	* sysdeps/powerpc/powerpc64/dl-machine.h: Don't reset _dl_starting_up
 	here.
 	* sysdeps/powerpc/powerpc32/dl-start.S: Likewise.
 	* sysdeps/unix/sysv/linux/configure.in: Define HAVE_INLINED_SYSCALLS.
