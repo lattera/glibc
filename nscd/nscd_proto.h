@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,15 +17,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _NSCD_PROTO_H
+#define _NSCD_PROTO_H 1
+
+#include <grp.h>
 #include <pwd.h>
 
+extern int __nscd_getpwnam_r __P ((const char *name, struct passwd *resultbuf,
+				   char *buffer, size_t buflen));
+extern int __nscd_getpwuid_r __P ((uid_t uid, struct passwd *resultbuf,
+				   char *buffer,  size_t buflen));
+extern int __nscd_getgrnam_r __P ((const char *name, struct group *resultbuf,
+				   char *buffer, size_t buflen));
+extern int __nscd_getgrgid_r __P ((uid_t uid, struct group *resultbuf,
+				   char *buffer,  size_t buflen));
 
-#define LOOKUP_TYPE	struct passwd
-#define FUNCTION_NAME	getpwuid
-#define DATABASE_NAME	passwd
-#define ADD_PARAMS	uid_t uid
-#define ADD_VARIABLES	uid
-#define BUFLEN		NSS_BUFLEN_PASSWD
-#define USE_NSCD	1
-
-#include <nss/getXXbyYY_r.c>
+#endif /* _NSCD_PROTO_H */

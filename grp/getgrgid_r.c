@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -26,5 +26,6 @@
 #define ADD_PARAMS	gid_t gid
 #define ADD_VARIABLES	gid
 #define BUFLEN		NSS_BUFLEN_GROUP
+#define USE_NSCD	1
 
-#include "../nss/getXXbyYY_r.c"
+#include <nss/getXXbyYY_r.c>

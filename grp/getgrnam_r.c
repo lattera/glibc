@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,5 +25,6 @@
 #define DATABASE_NAME	group
 #define ADD_PARAMS	const char *name
 #define ADD_VARIABLES	name
+#define USE_NSCD	1
 
-#include "../nss/getXXbyYY_r.c"
+#include <nss/getXXbyYY_r.c>

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include "nsswitch.h"
+#include <nscd/nscd_proto.h>
 
 /*******************************************************************\
 |* Here we assume several symbols to be defined:		   *|
@@ -50,6 +51,12 @@
 #define APPEND_R1(name) name##_r
 #define INTERNAL(name) INTERNAL1 (name)
 #define INTERNAL1(name) __##name
+
+#ifdef USE_NSCD
+# define NSCD_NAME ADD_NSCD (REENTRANT_NAME)
+# define ADD_NSCD(name) ADD_NSCD1 (name)
+# define ADD_NSCD1(name) __nscd_##name
+#endif
 
 #define FUNCTION_NAME_STRING STRINGIZE (FUNCTION_NAME)
 #define REENTRANT_NAME_STRING STRINGIZE (REENTRANT_NAME)
@@ -93,11 +100,23 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
   lookup_function fct;
   int no_more;
   enum nss_status status = NSS_STATUS_UNAVAIL;
+#ifdef USE_NSCD
+  int nscd_status;
+#endif
 
 #ifdef HANDLE_DIGITS_DOTS
 # define resbuf (*resbuf)
 # include "digits_dots.c"
 # undef resbuf
+#endif
+
+#ifdef USE_NSCD
+  nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen H_ERRNO_VAR);
+  if (nscd_status < 1)
+    {
+      *result = nscd_status == 0 ? resbuf : NULL;
+      return nscd_status;
+    }
 #endif
 
   if (startp == NULL)

@@ -3,4 +3,5 @@ resolv
 hesiod
 sunrpc
 nis
+nscd
 streams

@@ -21,11 +21,10 @@
 
 
 #define LOOKUP_TYPE	struct passwd
-#define FUNCTION_NAME	getpwuid
+#define FUNCTION_NAME	getpwnam
 #define DATABASE_NAME	passwd
-#define ADD_PARAMS	uid_t uid
-#define ADD_VARIABLES	uid
+#define ADD_PARAMS	const char *name
+#define ADD_VARIABLES	name
 #define BUFLEN		NSS_BUFLEN_PASSWD
-#define USE_NSCD	1
 
 #include <nss/getXXbyYY_r.c>

@@ -1,3 +1,48 @@
+1998-01-31  Phil Blundell  <philb@gnu.org>
+
+	* configure.in: Add --without-cvs option to suppress automatic
+	checkin of regenerated files.
+	* config.make: Likewise.
+	* Makefile: Respect with-cvs setting.
+	* Makerules: Likewise.
+
+	* configure.in: Allow the standalone ARM port to be configured.
+
+1998-01-31  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* grp/getgrgid_r.c: Define USE_NSCD.
+	* grp/getgrnam_r.c: Likewise.
+	* pwd/getpwuid_r.c: Likewise.
+	* pwd/getpwnam_r.c: Likewise.
+
+	* sysdeps/unix/inet/Subdirs: Add nscd subdir.
+
+	* nss/getXXbyYY_r.c: Try at first nscd.
+
+	* nscd/Makefile: New, for the Name Switch Cache Daemon (nscd).
+	* nscd/connections.c: New file.
+	* nscd/dbg_log.c: New file.
+	* nscd/dbg_log.h: New file.
+	* nscd/grpcache.c: New file.
+	* nscd/nscd.c: New file.
+	* nscd/nscd.h: New file.
+	* nscd/nscd_conf.c: New file.
+	* nscd/nscd_stat.c: New file.
+	* nscd/pwdcache.c: New file.
+
+	* nscd/nscd_getgr_r.c: New, client code, linked into libc.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_proto.h: New, prototypes for client functions.
+
+	* nscd/nscd.conf: New, example for a configuration file.
+	* nscd/nscd.init: New, example for a startup script.
+
+	* nscd/getgrgid_r.c: Old grp/getgrgid_r version, used from nscd to
+	avoid deadlocks.
+	* nscd/getgrnam_r.c: Likewise.
+	* nscd/getpwnam_r.c: Likewise.
+	* nscd/getpwuid_r.c: Likewise.
+
 1998-01-31 11:44  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/Makefile: Use CVSOPTS in cvs invocation.
@@ -520,9 +565,9 @@
 
 	* nis/Makefile: Distribute nis_cache2.h, add nis cache functions
 	to routines.
-	* nis/nis_cache.c: New.
-	* nis/nis_cache2.h: New.
-	* nis/nis_cache2_xdr.c: New.
+	* nis/nis_cache.c: New file.
+	* nis/nis_cache2.h: New file.
+	* nis/nis_cache2_xdr.c: New file.
 	* nis/nis_call.c: Changes for cache2_info parameter.
 	* nis/nis_checkpoint.c: Likewise.
 	* nis/nis_intern.h: Likewise.

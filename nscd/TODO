@@ -1,0 +1,7 @@
+
+* We should use readv/writev for group entries, too
+
+* If we have reached the max. # of process, close accept socket.
+  ! THIS COULD CAUSE THE KERNEL TO HANG ! BE CAREFUL !
+
+* Implement cache for hosts

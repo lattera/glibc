@@ -26,6 +26,5 @@
 #define ADD_PARAMS	uid_t uid
 #define ADD_VARIABLES	uid
 #define BUFLEN		NSS_BUFLEN_PASSWD
-#define USE_NSCD	1
 
 #include <nss/getXXbyYY_r.c>

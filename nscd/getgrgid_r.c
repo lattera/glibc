@@ -17,15 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <pwd.h>
+#include <grp.h>
 
 
-#define LOOKUP_TYPE	struct passwd
-#define FUNCTION_NAME	getpwuid
-#define DATABASE_NAME	passwd
-#define ADD_PARAMS	uid_t uid
-#define ADD_VARIABLES	uid
-#define BUFLEN		NSS_BUFLEN_PASSWD
-#define USE_NSCD	1
+#define LOOKUP_TYPE	struct group
+#define FUNCTION_NAME	getgrgid
+#define DATABASE_NAME	group
+#define ADD_PARAMS	gid_t gid
+#define ADD_VARIABLES	gid
+#define BUFLEN		NSS_BUFLEN_GROUP
 
 #include <nss/getXXbyYY_r.c>
