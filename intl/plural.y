@@ -36,7 +36,7 @@
 
 %{
 /* Prototypes for local functions.  */
-static struct expression *new_exp (enum operator op, ...);
+static struct expression *new_exp (enum operator op, int n, ...);
 static int yylex (YYSTYPE *lval, const char **pexp);
 static void yyerror (const char *str);
 %}
@@ -60,62 +60,62 @@ start:	  exp
 
 exp:	  exp '?' exp ':' exp
 	  {
-	    if (($$ = new_exp (qmop, $1, $3, $5, NULL)) == NULL)
+	    if (($$ = new_exp (qmop, 3, $1, $3, $5)) == NULL)
 	      YYABORT
 	  }
 	| exp '|' exp
 	  {
-	    if (($$ = new_exp (lor, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (lor, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '&' exp
 	  {
-	    if (($$ = new_exp (land, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (land, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '=' exp
 	  {
-	    if (($$ = new_exp (equal, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (equal, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '!' exp
 	  {
-	    if (($$ = new_exp (not_equal, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (not_equal, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '+' exp
 	  {
-	    if (($$ = new_exp (plus, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (plus, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '-' exp
 	  {
-	    if (($$ = new_exp (minus, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (minus, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '*' exp
 	  {
-	    if (($$ = new_exp (mult, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (mult, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '/' exp
 	  {
-	    if (($$ = new_exp (divide, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (divide, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| exp '%' exp
 	  {
-	    if (($$ = new_exp (module, $1, $3, NULL)) == NULL)
+	    if (($$ = new_exp (module, 2, $1, $3)) == NULL)
 	      YYABORT
 	  }
 	| 'n'
 	  {
-	    if (($$ = new_exp (var, NULL)) == NULL)
+	    if (($$ = new_exp (var, 0)) == NULL)
 	      YYABORT
 	  }
 	| NUMBER
 	  {
-	    if (($$ = new_exp (num, NULL)) == NULL)
+	    if (($$ = new_exp (num, 0)) == NULL)
 	      YYABORT;
 	    $$->val.num = $1
 	  }
@@ -128,31 +128,33 @@ exp:	  exp '?' exp ':' exp
 %%
 
 static struct expression *
-new_exp (enum operator op, ...)
+new_exp (enum operator op, int n, ...)
 {
-  struct expression *newp = (struct expression *) malloc (sizeof (*newp));
+  struct expression *newp = (struct expression *) calloc (1, sizeof (*newp));
   va_list va;
-  struct expression *next;
 
-  va_start (va, op);
+  va_start (va, n);
 
   if (newp == NULL)
-    while ((next = va_arg (va, struct expression *)) != NULL)
-      __gettext_free_exp (next);
+    while (n-- > 0)
+      __gettext_free_exp (va_arg (va, struct expression *));
   else
     {
       newp->operation = op;
-      next = va_arg (va, struct expression *);
-      if (next != NULL)
+      if (n > 0)
 	{
-	  newp->val.args3.bexp = next;
-	  next = va_arg (va, struct expression *);
-	  if (next != NULL)
+	  newp->val.args3.bexp = va_arg (va, struct expression *);
+	  newp->val.args3.tbranch = va_arg (va, struct expression *);
+
+	  if (n > 2)
+	    newp->val.args3.fbranch = va_arg (va, struct expression *);
+
+	  if (newp->val.args3.bexp == NULL
+	      || newp->val.args3.tbranch == NULL
+	      || (n > 2 && newp->val.args3.fbranch == NULL))
 	    {
-	      newp->val.args3.tbranch = next;
-	      next = va_arg (va, struct expression *);
-	      if (next != NULL)
-		newp->val.args3.fbranch = next;
+	      __gettext_free_exp (newp);
+	      newp = NULL;
 	    }
 	}
     }
@@ -210,7 +212,14 @@ yylex (YYSTYPE *lval, const char **pexp)
 	  exp += 2;
 	  continue;
 	}
-      if (exp[0] != '\0' && exp[0] != ' ' && exp[0] != '\t')
+
+      if (exp[0] == '\0')
+	{
+	  *pexp = exp;
+	  return YYEOF;
+	}
+
+      if (exp[0] != ' ' && exp[0] != '\t')
 	break;
 
       ++exp;
@@ -262,6 +271,7 @@ yylex (YYSTYPE *lval, const char **pexp)
       /* Nothing, just return the character.  */
       break;
 
+    case ';':
     case '\n':
     case '\0':
       /* Be safe and let the user call this function again.  */

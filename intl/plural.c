@@ -39,18 +39,19 @@
 #include "gettext.h"
 #include "gettextP.h"
 
+#define YYDEBUG 1
 #define YYLEX_PARAM	&((struct parse_args *) arg)->cp
 #define YYPARSE_PARAM	arg
 
-#line 32 "plural.y"
+#line 33 "plural.y"
 typedef union {
   unsigned long int num;
   struct expression *exp;
 } YYSTYPE;
-#line 37 "plural.y"
+#line 38 "plural.y"
 
 /* Prototypes for local functions.  */
-static struct expression *new_exp (enum operator op, ...);
+static struct expression *new_exp (enum operator op, int n, ...);
 static int yylex (YYSTYPE *lval, const char **pexp);
 static void yyerror (const char *str);
 #include <stdio.h>
@@ -117,8 +118,8 @@ static const short yyrhs[] = {    19,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    55,    61,    66,    71,    76,    81,    86,    91,    96,   101,
-   106,   111,   116,   122
+    56,    62,    67,    72,    77,    82,    87,    92,    97,   102,
+   107,   112,   117,   123
 };
 #endif
 
@@ -191,7 +192,7 @@ static const short yycheck[] = {     3,
 #define YYPURE 1
 
 /* -*-C-*-  Note some compilers choke on comments on `#line' lines.  */
-#line 3 "/usr/share/bison.simple"
+#line 3 "/usr/lib/bison.simple"
 /* This file comes from bison-1.28.  */
 
 /* Skeleton output parser for bison,
@@ -405,7 +406,7 @@ __yy_memcpy (char *to, char *from, unsigned int count)
 #endif
 #endif
 
-#line 217 "/usr/share/bison.simple"
+#line 217 "/usr/lib/bison.simple"
 
 /* The user can define YYPARSE_PARAM as the name of an argument to be passed
    into yyparse.  The argument should have type void *.
@@ -734,105 +735,105 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 56 "plural.y"
+#line 57 "plural.y"
 {
 	    ((struct parse_args *) arg)->res = yyvsp[0].exp;
 	  ;
     break;}
 case 2:
-#line 62 "plural.y"
+#line 63 "plural.y"
 {
-	    if ((yyval.exp = new_exp (qmop, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (qmop, 3, yyvsp[-4].exp, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 3:
-#line 67 "plural.y"
+#line 68 "plural.y"
 {
-	    if ((yyval.exp = new_exp (lor, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (lor, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 4:
-#line 72 "plural.y"
+#line 73 "plural.y"
 {
-	    if ((yyval.exp = new_exp (land, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (land, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 5:
-#line 77 "plural.y"
+#line 78 "plural.y"
 {
-	    if ((yyval.exp = new_exp (equal, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 6:
-#line 82 "plural.y"
+#line 83 "plural.y"
 {
-	    if ((yyval.exp = new_exp (not_equal, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (not_equal, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 7:
-#line 87 "plural.y"
+#line 88 "plural.y"
 {
-	    if ((yyval.exp = new_exp (plus, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (plus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 8:
-#line 92 "plural.y"
+#line 93 "plural.y"
 {
-	    if ((yyval.exp = new_exp (minus, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (minus, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 9:
-#line 97 "plural.y"
+#line 98 "plural.y"
 {
-	    if ((yyval.exp = new_exp (mult, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (mult, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 10:
-#line 102 "plural.y"
+#line 103 "plural.y"
 {
-	    if ((yyval.exp = new_exp (divide, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (divide, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 11:
-#line 107 "plural.y"
+#line 108 "plural.y"
 {
-	    if ((yyval.exp = new_exp (module, yyvsp[-2].exp, yyvsp[0].exp, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (module, 2, yyvsp[-2].exp, yyvsp[0].exp)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 12:
-#line 112 "plural.y"
+#line 113 "plural.y"
 {
-	    if ((yyval.exp = new_exp (var, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (var, 0)) == NULL)
 	      YYABORT
 	  ;
     break;}
 case 13:
-#line 117 "plural.y"
+#line 118 "plural.y"
 {
-	    if ((yyval.exp = new_exp (num, NULL)) == NULL)
+	    if ((yyval.exp = new_exp (num, 0)) == NULL)
 	      YYABORT;
 	    yyval.exp->val.num = yyvsp[0].num
 	  ;
     break;}
 case 14:
-#line 123 "plural.y"
+#line 124 "plural.y"
 {
 	    yyval.exp = yyvsp[-1].exp
 	  ;
     break;}
 }
    /* the action file gets copied in in place of this dollarsign */
-#line 543 "/usr/share/bison.simple"
+#line 543 "/usr/lib/bison.simple"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1052,35 +1053,37 @@ yyerrhandle:
     }
   return 1;
 }
-#line 128 "plural.y"
+#line 129 "plural.y"
 
 
 static struct expression *
-new_exp (enum operator op, ...)
+new_exp (enum operator op, int n, ...)
 {
-  struct expression *newp = (struct expression *) malloc (sizeof (*newp));
+  struct expression *newp = (struct expression *) calloc (1, sizeof (*newp));
   va_list va;
-  struct expression *next;
 
-  va_start (va, op);
+  va_start (va, n);
 
   if (newp == NULL)
-    while ((next = va_arg (va, struct expression *)) != NULL)
-      __gettext_free_exp (next);
+    while (n-- > 0)
+      __gettext_free_exp (va_arg (va, struct expression *));
   else
     {
       newp->operation = op;
-      next = va_arg (va, struct expression *);
-      if (next != NULL)
+      if (n > 0)
 	{
-	  newp->val.args3.bexp = next;
-	  next = va_arg (va, struct expression *);
-	  if (next != NULL)
+	  newp->val.args3.bexp = va_arg (va, struct expression *);
+	  newp->val.args3.tbranch = va_arg (va, struct expression *);
+
+	  if (n > 2)
+	    newp->val.args3.fbranch = va_arg (va, struct expression *);
+
+	  if (newp->val.args3.bexp == NULL
+	      || newp->val.args3.tbranch == NULL
+	      || (n > 2 && newp->val.args3.fbranch == NULL))
 	    {
-	      newp->val.args3.tbranch = next;
-	      next = va_arg (va, struct expression *);
-	      if (next != NULL)
-		newp->val.args3.fbranch = next;
+	      __gettext_free_exp (newp);
+	      newp = NULL;
 	    }
 	}
     }
@@ -1131,6 +1134,8 @@ yylex (YYSTYPE *lval, const char **pexp)
   const char *exp = *pexp;
   int result;
 
+  yydebug = 1;
+
   while (1)
     {
       if (exp[0] == '\\' && exp[1] == '\n')
@@ -1138,7 +1143,14 @@ yylex (YYSTYPE *lval, const char **pexp)
 	  exp += 2;
 	  continue;
 	}
-      if (exp[0] != '\0' && exp[0] != ' ' && exp[0] != '\t')
+
+      if (exp[0] == '\0')
+	{
+	  *pexp = exp;
+	  return YYEOF;
+	}
+
+      if (exp[0] != ' ' && exp[0] != '\t')
 	break;
 
       ++exp;
@@ -1190,6 +1202,7 @@ yylex (YYSTYPE *lval, const char **pexp)
       /* Nothing, just return the character.  */
       break;
 
+    case ';':
     case '\n':
     case '\0':
       /* Be safe and let the user call this function again.  */

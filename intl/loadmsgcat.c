@@ -386,21 +386,17 @@ _nl_unload_domain (domain)
   if (domain->plural != &germanic_plural)
     __gettext_free_exp (domain->plural);
 
-#ifdef _LIBC
+  if (domain->conv_tab != NULL && domain->conv_tab != (char **) -1)
+    free (domain->conv_tab);
+
   if (domain->conv != (__gconv_t) -1)
     __gconv_close (domain->conv);
-#else
-# if HAVE_ICONV
-  if (domain->conv != (iconv_t) -1)
-    iconv_close (domain->conv);
-# endif
-#endif
 
-#ifdef _POSIX_MAPPED_FILES
+# ifdef _POSIX_MAPPED_FILES
   if (domain->use_mmap)
     munmap ((caddr_t) domain->data, domain->mmap_size);
   else
-#endif	/* _POSIX_MAPPED_FILES */
+# endif	/* _POSIX_MAPPED_FILES */
     free ((void *) domain->data);
 
   free (domain);

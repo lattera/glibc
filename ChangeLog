@@ -1,3 +1,12 @@
+2000-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/loadmsgcat.c (_nl_unload_domain): Also free conv_tab element.
+	Pretty printing.
+	* intl/plural.y (new_exp): Take number of optional parameters in
+	second parameter.  Test for correct number of parameters and free
+	correctly in case of failure.  Adjust all callers.
+	(yylex): Allow ';' as terminator character.
+
 2000-08-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/lc-time.c (free_mem): New function.  Free alt_digits and
