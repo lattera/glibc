@@ -21,14 +21,19 @@ Cambridge, MA 02139, USA.  */
 #include <sys/cdefs.h>
 
 #ifdef	__NO_MATH_INLINES
+/* This is used when defining the functions themselves.  Define them with
+   __ names, and with `static inline' instead of `extern inline' so the
+   bodies will always be used, never an external function call.  */
 #define	__m81_u(x)	__CONCAT(__,x)
+#define __m81_inline	static __inline
 #else
 #define	__m81_u(x)	x
+#define __m81_inline	exter __inline
 #define	__MATH_INLINES	1
 #endif
 
 #define	__inline_mathop2(func, op)					      \
-  extern __inline __CONSTVALUE double					      \
+  __m81_inline __CONSTVALUE double					      \
   __m81_u(func)(double __mathop_x)					      \
   {									      \
     double __result;							      \
@@ -63,7 +68,7 @@ __inline_mathop2(log1p, lognp1)
 __inline_mathop(atanh)
 #endif
 
-extern __inline __CONSTVALUE double
+__m81_inline __CONSTVALUE double
 __m81_u(__drem)(double __x, double __y)
 {
   double __result;
@@ -71,7 +76,7 @@ __m81_u(__drem)(double __x, double __y)
   return __result;
 }
 
-extern __inline __CONSTVALUE double
+__m81_inline __CONSTVALUE double
 __m81_u(ldexp)(double __x, int __e)
 {
   double __result;
@@ -80,7 +85,7 @@ __m81_u(ldexp)(double __x, int __e)
   return __result;
 }
 
-extern __inline __CONSTVALUE double
+__m81_inline __CONSTVALUE double
 __m81_u(fmod)(double __x, double __y)
 {
   double __result;
@@ -88,7 +93,7 @@ __m81_u(fmod)(double __x, double __y)
   return __result;
 }
 
-extern __inline double
+__m81_inline double
 __m81_u(frexp)(double __value, int *__expptr)
 {
   double __mantissa, __exponent;
@@ -98,7 +103,7 @@ __m81_u(frexp)(double __value, int *__expptr)
   return __mantissa;
 }
 
-extern __inline __CONSTVALUE double
+__m81_inline __CONSTVALUE double
 __m81_u(pow)(double __x, double __y)
 {
   double __result;
@@ -117,7 +122,7 @@ __m81_u(pow)(double __x, double __y)
   return __result;
 }
 
-extern __inline __CONSTVALUE double
+__m81_inline __CONSTVALUE double
 __m81_u(ceil)(double __x)
 {
   double __result;
@@ -132,7 +137,7 @@ __m81_u(ceil)(double __x)
   return __result;
 }
 
-extern __inline double
+__m81_inline double
 __m81_u(modf)(double __value, double *__iptr)
 {
   double __modf_int = __m81_u(floor)(__value);
@@ -140,7 +145,7 @@ __m81_u(modf)(double __value, double *__iptr)
   return __value - __modf_int;
 }
 
-extern __inline __CONSTVALUE int
+__m81_inline __CONSTVALUE int
 __m81_u(__isinf)(double __value)
 {
   /* There is no branch-condition for infinity,
@@ -151,7 +156,7 @@ __m81_u(__isinf)(double __value)
   return (__fpsr & (2 << (3 * 8))) ? (__value < 0 ? -1 : 1) : 0;
 }
 
-extern __inline __CONSTVALUE int
+__m81_inline __CONSTVALUE int
 __m81_u(__isnan)(double __value)
 {
   char __result;
