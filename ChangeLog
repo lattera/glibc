@@ -1,3 +1,8 @@
+2001-05-30  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: greg_t
+	needs to have the same aligment as the kernel structure.
+
 2001-05-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/rpc/types.h (u_char, u_short, u_int, u_long, quad_t,
