@@ -1,3 +1,8 @@
+2001-06-10  Roland McGrath  <roland@frob.com>
+
+	* elf/reldep4mod2.c: Use fully typed decls to avoid warnings.
+	* elf/reldep4mod4.c: Likewise.
+
 2001-06-10  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/hurd/threadvar.h: Add prototype for __hurd_errno_location.
