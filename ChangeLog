@@ -1,3 +1,8 @@
+2001-12-07  Geoff Keating  <geoffk@redhat.com>
+
+	* sysdeps/powerpc/Dist: Update for recent FP changes.
+	* sysdeps/powerpc/fpu/Dist: Likewise.
+
 2001-12-07  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/opensock.c: Include <string.h>.

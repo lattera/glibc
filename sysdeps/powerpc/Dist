@@ -1,9 +1,6 @@
 dl-machine.c
 dl-start.S
 ppc-mcount.S
-fe_nomask.c
-fprrest.S
-fprsave.S
 gprsave1.S
 gprsave0.S
 gprrest1.S

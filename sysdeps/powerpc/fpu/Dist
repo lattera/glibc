@@ -1,3 +1,6 @@
+fe_nomask.c
+fprrest.S
+fprsave.S
 fenv_const.c
 fenv_libc.h
 t_sqrt.c
