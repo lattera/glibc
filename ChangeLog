@@ -1,3 +1,9 @@
+2004-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use __nss_not_use_nscd_hosts
+	in all places, not __nss_not_use_nscd_group.
+	Reported by Philippe Gregoire.
+
 2004-06-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i486/bits/atomic.h: Optimize a bit.

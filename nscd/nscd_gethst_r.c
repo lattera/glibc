@@ -131,7 +131,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
   if (sock == -1)
     {
-      __nss_not_use_nscd_group = 1;
+      __nss_not_use_nscd_hosts = 1;
       return -1;
     }
 
