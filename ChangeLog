@@ -1,3 +1,8 @@
+2001-03-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/readelflib.c (process_elf_file):
+	Use EM_X86_64 instead of EM_X8664. 
+
 2001-03-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/dbl-64/upow.h: Define nZERO and nINF.
