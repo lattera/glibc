@@ -4,82 +4,88 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2001-01-21 08:03-0800\n"
-"PO-Revision-Date: 2001-06-16 00:45+09:00\n"
+"Project-Id-Version: libc 2.2.4\n"
+"POT-Creation-Date: 2001-08-13 15:08-0700\n"
+"PO-Revision-Date: 2001-08-24 00:31+09:00\n"
 "Last-Translator: GOTO Masanori <gotom@debian.or.jp>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-JP\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: nis/nis_print.c:274
+#: locale/programs/ld-monetary.c:278
+#, c-format
+msgid "\t\t\t\t\t\t\t      %s: value for field `%s' must be in range %d...%d"
+msgstr "\t\t\t\t\t\t\t       %s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÎÃÍ¤Ï %d...%d ¤ÎÈÏ°Ï¤Ë¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
+
+#: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
 msgstr "\t\t¥¢¥¯¥»¥¹¸¢¸Â  : "
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:275
 msgid "\t\tAttributes    : "
 msgstr "\t\tÂ°À­          : "
 
-#: sunrpc/rpc_main.c:1425
+#: sunrpc/rpc_main.c:1427
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-DÌ¾Á°[=ÃÍ]] [-i ¥µ¥¤¥º] [-I [-K ÉÃ¿ô]] [-Y ¥Ñ¥¹] ÆþÎÏ¥Õ¥¡¥¤¥ë\n"
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o ½ÐÎÏ¥Õ¥¡¥¤¥ë] [ÆþÎÏ¥Õ¥¡¥¤¥ë]\n"
 
-#: sunrpc/rpc_main.c:1430
+#: sunrpc/rpc_main.c:1432
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n netid]* [-o ½ÐÎÏ¥Õ¥¡¥¤¥ë] [ÆþÎÏ¥Õ¥¡¥¤¥ë]\n"
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s ¥Í¥Ã¥È¥¿¥¤¥×]* [-o ½ÐÎÏ¥Õ¥¡¥¤¥ë] [ÆþÎÏ¥Õ¥¡¥¤¥ë]\n"
 
-#: nis/nis_print.c:236
+#: nis/nis_print.c:239
 msgid "\tAccess rights: "
 msgstr "\t¥¢¥¯¥»¥¹¸¢¸Â : "
 
-#: nis/nis_print.c:294
+#: nis/nis_print.c:297
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr "\t¥¨¥ó¥È¥ê¥Ç¡¼¥¿¤Î·¿ %s\n"
 
-#: nis/nis_print.c:172
+#: nis/nis_print.c:175
 #, c-format
 msgid "\tName       : %s\n"
 msgstr "\tÌ¾Á°       : %s\n"
 
-#: nis/nis_print.c:173
+#: nis/nis_print.c:176
 msgid "\tPublic Key : "
 msgstr "\t¸ø³«¸°     : "
 
-#: nis/nis_print.c:235
+#: nis/nis_print.c:238
 #, c-format
 msgid "\tType         : %s\n"
 msgstr "\t·¿           : %s\n"
 
-#: nis/nis_print.c:202
+#: nis/nis_print.c:205
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr "\t¥æ¥Ë¥Ð¡¼¥µ¥ë¥¢¥É¥ì¥¹ (%u)\n"
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:273
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr "\t[%d]\tÌ¾Á°          : %s\n"
 
-#: nis/nis_print.c:297
+#: nis/nis_print.c:300
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr "\t[%u] - [%u¥Ð¥¤¥È] "
 
 #: nscd/nscd_stat.c:154
+#, c-format
 msgid ""
 "\n"
 "%s cache:\n"
@@ -109,11 +115,11 @@ msgstr ""
 "%15ld%% ¥­¥ã¥Ã¥·¥å¤Î¥Ò¥Ã¥ÈÎ¨\n"
 "%15s  /etc/%s¤ÎÊÑ¹¹¤ò¥Á¥§¥Ã¥¯¤¹¤ë\n"
 
-#: nis/nis_print.c:252
+#: nis/nis_print.c:255
 msgid "\nGroup Members :\n"
 msgstr "\n¥°¥ë¡¼¥×¥á¥ó¥Ð :\n"
 
-#: nis/nis_print.c:323
+#: nis/nis_print.c:326
 msgid "\nTime to Live  : "
 msgstr "\nÀ¸Â¸»þ´Ö      : "
 
@@ -141,7 +147,7 @@ msgstr "  ¤¤¤¤¤¨"
 msgid "     yes"
 msgstr "    ¤Ï¤¤"
 
-#: nis/nis_print.c:349
+#: nis/nis_print.c:352
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "    ¥Ç¡¼¥¿Ä¹    = %u\n"
@@ -198,15 +204,15 @@ msgstr "   ¥×¥í¥°¥é¥à ¥Ð¡¼¥¸¥ç¥ó ¥×¥í¥È¥³¥ë ¥Ý¡¼¥È\n"
 msgid "  or: "
 msgstr " Ëô¤Ï: "
 
-#: elf/ldconfig.c:448
+#: elf/ldconfig.c:457
 msgid " (SKIPPED)\n"
 msgstr " (¥¹¥­¥Ã¥×)\n"
 
-#: elf/ldconfig.c:446
+#: elf/ldconfig.c:455
 msgid " (changed)\n"
 msgstr " (ÊÑ¹¹)\n"
 
-#: timezone/zic.c:421
+#: timezone/zic.c:427
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (\"%s\"¤«¤é¤Îµ¬Â§, %d¹Ô)"
@@ -215,22 +221,22 @@ msgstr " (\"%s\"¤«¤é¤Îµ¬Â§, %d¹Ô)"
 msgid " [OPTION...]"
 msgstr " [¥ª¥×¥·¥ç¥ó...]"
 
-#: timezone/zic.c:418
+#: timezone/zic.c:424
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr "\"%s\", %d¹Ô: %s"
 
-#: timezone/zic.c:983
+#: timezone/zic.c:989
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Zone %s\"¹Ô¤È -l ¥ª¥×¥·¥ç¥ó¤ÏÆ±»þ»ØÄê¤Ç¤­¤Þ¤»¤ó"
 
-#: timezone/zic.c:991
+#: timezone/zic.c:997
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\"¹Ô¤È -p ¥ª¥×¥·¥ç¥ó¤ÏÆ±»þ»ØÄê¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/rpc_main.c:1410
+#: sunrpc/rpc_main.c:1412
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "¥Æ¥ó¥×¥ì¡¼¥ÈÀ¸À®¥Õ¥é¥°¤Ë¤Ï\"ÆþÎÏ¥Õ¥¡¥¤¥ë\"¤¬É¬Í×¤Ç¤¹.\n"
 
@@ -244,58 +250,58 @@ msgstr "%.*s: ARGP_HELP_FMT ¥Ñ¥é¥á¡¼¥¿¤Ë¤ÏÃÍ¤¬É¬Í×¤Ç¤¹"
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: ÉÔÌÀ¤Ê ARGP_HELP_FMT ¥Ñ¥é¥á¡¼¥¿"
 
-#: locale/programs/ld-address.c:576 locale/programs/ld-collate.c:2593
-#: locale/programs/ld-collate.c:3719 locale/programs/ld-ctype.c:2110
-#: locale/programs/ld-ctype.c:2847 locale/programs/ld-identification.c:440
-#: locale/programs/ld-measurement.c:232 locale/programs/ld-messages.c:326
-#: locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:300
-#: locale/programs/ld-numeric.c:370 locale/programs/ld-paper.c:233
-#: locale/programs/ld-telephone.c:308 locale/programs/ld-time.c:1172
+#: locale/programs/ld-address.c:581 locale/programs/ld-collate.c:2612
+#: locale/programs/ld-collate.c:3740 locale/programs/ld-ctype.c:2112
+#: locale/programs/ld-ctype.c:2849 locale/programs/ld-identification.c:448
+#: locale/programs/ld-measurement.c:237 locale/programs/ld-messages.c:331
+#: locale/programs/ld-monetary.c:936 locale/programs/ld-name.c:305
+#: locale/programs/ld-numeric.c:375 locale/programs/ld-paper.c:238
+#: locale/programs/ld-telephone.c:313 locale/programs/ld-time.c:1199
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: ÄêµÁ¤¬ `END %1$s' ¤Ç½ª¤Ã¤Æ¤¤¤Þ¤»¤ó"
 
-#: elf/cache.c:165 elf/cache.c:175
+#: elf/cache.c:190 elf/cache.c:200
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d ¥é¥¤¥Ö¥é¥ê¤¬¥­¥ã¥Ã¥·¥å `%s ¤Ç¸«¤Ä¤«¤ê¤Þ¤·¤¿\n"
 
-#: timezone/zic.c:793
+#: timezone/zic.c:799
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s in ruleless zone"
 
-#: elf/../sysdeps/generic/readelflib.c:65
+#: elf/../sysdeps/generic/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s ¤Ï32¥Ó¥Ã¥ÈELF¥Õ¥¡¥¤¥ë¤Ç¤¹.\n"
 
-#: elf/../sysdeps/generic/readelflib.c:67
+#: elf/../sysdeps/generic/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s ¤Ï64¥Ó¥Ã¥ÈELF¥Õ¥¡¥¤¥ë¤Ç¤¹.\n"
 
-#: elf/../sysdeps/unix/sysv/linux/i386/readelflib.c:48
+#: elf/../sysdeps/unix/sysv/linux/i386/readelflib.c:49
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s ¤ÏÌ¤ÃÎ¤Î¥Þ¥·¥ó %d ¤ËÂÐ¤¹¤ë¤â¤Î¤Ç¤¹.\n"
 
-#: elf/ldconfig.c:329
+#: elf/ldconfig.c:326
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s ¤ÏÌ¤ÃÎ¤Î¥é¥¤¥Ö¥é¥ê¥¿¥¤¥×¤Ç¤¹"
 
-#: elf/../sysdeps/generic/readelflib.c:76
+#: elf/../sysdeps/generic/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s ¤Ï¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¥Õ¥¡¥¤¥ë¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó (¥¿¥¤¥×: %d).\n"
 
-#: elf/ldconfig.c:415
+#: elf/ldconfig.c:424
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ¤Ï¥·¥ó¥Ü¥ê¥Ã¥¯¥ê¥ó¥¯¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó\n"
 
-#: elf/readlib.c:157
+#: elf/readlib.c:155
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s ¤ÏELF¥Õ¥¡¥¤¥ë¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó - ´Ö°ã¤Ã¤¿magic¥Ð¥¤¥È¤ò¥Õ¥¡¥¤¥ë¤ÎÀèÆ¬¤Ë»ý¤Ã¤Æ¤¤¤Þ¤¹.\n"
@@ -315,12 +321,12 @@ msgstr "%s%s%s:%u: %s%sÍ½´ü¤·¤Ê¤¤¥¨¥é¡¼: %s.\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sÌ¤ÃÎ¤Î¥·¥°¥Ê¥ë %d ¤Ç¤¹\n"
 
-#: timezone/zic.c:2228
+#: timezone/zic.c:2234
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr "%s: %d ¤ÏÀµ¤·¤¯µ­¹æ¤ò³ÈÄ¥¤·¤Þ¤»¤ó¤Ç¤·¤¿\n"
 
-#: locale/programs/charmap.c:326
+#: locale/programs/charmap.c:331
 #, c-format
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max>¤Ï<mb_cur_min>¤è¤êÂç¤­¤¯¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó\n"
@@ -335,87 +341,82 @@ msgstr "%s: C ¥×¥ê¥×¥í¥»¥Ã¥µ¤Ï½ªÎ»¥³¡¼¥É %d ¤Ç¼ºÇÔ¤·¤Þ¤·¤¿\n"
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr "%s: C ¥×¥ê¥×¥í¥»¥Ã¥µ¤Ï¥·¥°¥Ê¥ë %d ¤Ç¼ºÇÔ¤·¤Þ¤·¤¿\n"
 
-#: timezone/zic.c:1494
+#: timezone/zic.c:1500
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: %s¤òºîÀ®¤Ç¤­¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:2206
+#: timezone/zic.c:2212
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: ¥Ç¥£¥ì¥¯¥È¥ê%s¤òºîÀ®¤Ç¤­¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:645
+#: timezone/zic.c:651
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr "%s: %s¤«¤é%s¤Ø¥ê¥ó¥¯¤òÄ¥¤ì¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:819
+#: timezone/zic.c:825
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: %s¤ò³«¤±¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:1484
+#: timezone/zic.c:1490
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: %s¤òºï½ü¤Ç¤­¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:630
+#: timezone/zic.c:636
 #, c-format
 msgid "%s: Can't unlink  %s: %s\n"
 msgstr "%s: %s¤ò¥¢¥ó¥ê¥ó¥¯¤Ç¤­¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:888
+#: timezone/zic.c:894
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: %s¤ò¥¯¥í¡¼¥ºÃæ¤Ë¥¨¥é¡¼: %s\n"
 
-#: timezone/zic.c:881
+#: timezone/zic.c:887
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: %s¤ÎÆÉ¤ß¹þ¤ß¥¨¥é¡¼\n"
 
-#: timezone/zdump.c:267
-#, c-format
-msgid "%s: Error writing "
-msgstr "%s: ½ñ¤­¹þ¤ß¥¨¥é¡¼ "
-
-#: timezone/zic.c:1560
+#: timezone/zic.c:1566
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: %s¤Î½ñ¤­¹þ¤ß¥¨¥é¡¼¤Ç¤¹\n"
 
-#: timezone/zic.c:866
+#: timezone/zic.c:872
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr "%s: ±¼ÉÃ¥Õ¥¡¥¤¥ë¤Ç¤Ê¤¤¥Õ¥¡¥¤¥ë %s ¤Ë Leap ¹Ô¤¬¤¢¤ê¤Þ¤¹\n"
 
-#: timezone/zic.c:359
+#: timezone/zic.c:365
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó: %s\n"
 
-#: timezone/zic.c:525
+#: timezone/zic.c:531
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: -L ¥ª¥×¥·¥ç¥ó¤¬Ê£¿ô»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤¹\n"
 
-#: timezone/zic.c:485
+#: timezone/zic.c:491
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: -d ¥ª¥×¥·¥ç¥ó¤¬Ê£¿ô»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤¹\n"
 
-#: timezone/zic.c:495
+#: timezone/zic.c:501
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: -l ¥ª¥×¥·¥ç¥ó¤¬Ê£¿ô»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤¹\n"
 
-#: timezone/zic.c:505
+#: timezone/zic.c:511
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: -p ¥ª¥×¥·¥ç¥ó¤¬Ê£¿ô»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤¹\n"
 
-#: timezone/zic.c:515
+#: timezone/zic.c:521
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: -y ¥ª¥×¥·¥ç¥ó¤¬Ê£¿ô»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤¹\n"
@@ -431,7 +432,7 @@ msgstr "%s: °ú¿ô¤¬Â¿¤¹¤®¤Þ¤¹\n"
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr "%s: `%s'¤Ï½Å¤ßÄêµÁ %d Ãæ¤ÇÊ£¿ô²ó»È¤ï¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:1323
+#: locale/programs/ld-collate.c:1336
 #, c-format
 msgid "%s: `%s' must be a character"
 msgstr "%s: `%s'¤ÏÃ±°ì¤Î¥­¥ã¥é¥¯¥¿¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
@@ -442,7 +443,7 @@ msgstr "%s: `%s'¤ÏÃ±°ì¤Î¥­¥ã¥é¥¯¥¿¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 msgid "%s: `%s' value does not match `%s' value"
 msgstr "%s: `%s'ÃÍ¤Ï`%s'¤ÎÃÍ¤Ë¥Þ¥Ã¥Á¤·¤Þ¤»¤ó"
 
-#: locale/programs/ld-monetary.c:835 locale/programs/ld-numeric.c:313
+#: locale/programs/ld-monetary.c:837 locale/programs/ld-numeric.c:318
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr "%s: `-1'¤Ï`%s'¥Õ¥£¡¼¥ë¥É¤Î¡¢ºÇ¸å¤Î¹àÌÜ¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
@@ -452,100 +453,100 @@ msgstr "%s: `-1'¤Ï`%s'¥Õ¥£¡¼¥ë¥É¤Î¡¢ºÇ¸å¤Î¹àÌÜ¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 msgid "%s: `forward' and `backward' are mutually excluding each other"
 msgstr "%s: `forward' ¤È `backward' ¤ÏÇÓÂ¾Åª¤Ç¤¹"
 
-#: locale/programs/ld-collate.c:1515
+#: locale/programs/ld-collate.c:1528
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: `position'¤ÏÆÃÄê¥ì¥Ù¥ë¤ËÂÐ¤·¡¢Á´¥»¥¯¥·¥ç¥ó¤Ç»ÈÍÑ¤«Ì¤»ÈÍÑ¤«¤Î¤É¤Á¤é¤«¤Ç¤¹"
 
-#: locale/programs/ld-ctype.c:2635 locale/programs/ld-ctype.c:2775
+#: locale/programs/ld-ctype.c:2637 locale/programs/ld-ctype.c:2777
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: `translit_start' ¥»¥¯¥·¥ç¥ó¤¬ `translit_end' ¤Ç½ª¤Ã¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1123
+#: locale/programs/ld-collate.c:1136
 #, c-format
 msgid "%s: byte sequence of first character of sequence is not lower than that of the last character"
 msgstr "%s: ¥·¡¼¥±¥ó¥¹Ãæ¤ÎºÇ½é¤ÎÊ¸»ú¤Î¥Ð¥¤¥È¥·¡¼¥±¥ó¥¹¤ÏºÇ¸å¤ÎÊ¸»ú¤Î¤è¤ê¤âlower¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1081
+#: locale/programs/ld-collate.c:1094
 #, c-format
 msgid "%s: byte sequences of first and last character must have the same length"
 msgstr "%s: ºÇ½é¤ÈºÇ¸å¤ÎÊ¸»ú¤Î¥Ð¥¤¥È¥·¡¼¥±¥ó¥¹¤ÏÆ±°ìÄ¹¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3642
+#: locale/programs/ld-collate.c:3663
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: ¾ÊÎ¬µ­¹æ¤ÎÈÏ°Ï¤Î½ª¤ï¤ê¤Ë`%s'¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3308
+#: locale/programs/ld-collate.c:3327
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: %.*s¤Î¸å¤ÇºÆÊÂ¤ÓÂØ¤¨¤¬¤Ç¤­¤Þ¤»¤ó: Ì¤ÃÎ¤Î¥·¥ó¥Ü¥ë¤Ç¤¹"
 
-#: locale/programs/ld-ctype.c:2910 locale/programs/ld-ctype.c:2994
-#: locale/programs/ld-ctype.c:3014 locale/programs/ld-ctype.c:3035
-#: locale/programs/ld-ctype.c:3056 locale/programs/ld-ctype.c:3077
-#: locale/programs/ld-ctype.c:3098 locale/programs/ld-ctype.c:3138
-#: locale/programs/ld-ctype.c:3159 locale/programs/ld-ctype.c:3226
+#: locale/programs/ld-ctype.c:2912 locale/programs/ld-ctype.c:2996
+#: locale/programs/ld-ctype.c:3016 locale/programs/ld-ctype.c:3037
+#: locale/programs/ld-ctype.c:3058 locale/programs/ld-ctype.c:3079
+#: locale/programs/ld-ctype.c:3100 locale/programs/ld-ctype.c:3140
+#: locale/programs/ld-ctype.c:3161 locale/programs/ld-ctype.c:3228
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: ¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ãæ¤ÎÊ¸»ú`%s'¤Ï1¥Ð¥¤¥È¤ÇÉ½¸½¤Ç¤­¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:3270 locale/programs/ld-ctype.c:3295
+#: locale/programs/ld-ctype.c:3272 locale/programs/ld-ctype.c:3297
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr "%s: ¥Ç¥Õ¥©¥ë¥ÈÃÍ¤È¤·¤ÆÉ¬Í×¤Ê¥­¥ã¥é¥¯¥¿`%s'¤Ï1¥Ð¥¤¥È¤ÇÉ½¸½¤Ç¤­¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:2905
+#: locale/programs/ld-ctype.c:2907
 #, c-format
 msgid "%s: character `%s' not defined in charmap while needed as default value"
 msgstr "%s: ¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ãæ¤ÇÊ¸»ú`%s'¤¬Ì¤ÄêµÁ¤Ç¤¹¤¬¥Ç¥Õ¥©¥ë¥ÈÃÍ¤È¤·¤ÆÉ¬Í×¤Ç¤¹"
 
-#: locale/programs/ld-ctype.c:2989 locale/programs/ld-ctype.c:3009
-#: locale/programs/ld-ctype.c:3051 locale/programs/ld-ctype.c:3072
-#: locale/programs/ld-ctype.c:3093 locale/programs/ld-ctype.c:3133
-#: locale/programs/ld-ctype.c:3154 locale/programs/ld-ctype.c:3221
-#: locale/programs/ld-ctype.c:3263 locale/programs/ld-ctype.c:3288
+#: locale/programs/ld-ctype.c:2991 locale/programs/ld-ctype.c:3011
+#: locale/programs/ld-ctype.c:3053 locale/programs/ld-ctype.c:3074
+#: locale/programs/ld-ctype.c:3095 locale/programs/ld-ctype.c:3135
+#: locale/programs/ld-ctype.c:3156 locale/programs/ld-ctype.c:3223
+#: locale/programs/ld-ctype.c:3265 locale/programs/ld-ctype.c:3290
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: ¥­¥ã¥é¥¯¥¿`%s'¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó¤¬¡¢¥Ç¥Õ¥©¥ë¥ÈÃÍ¤È¤·¤ÆÉ¬Í×¤Ç¤¹"
 
-#: timezone/zic.c:1927
+#: timezone/zic.c:1933
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: ¥³¥Þ¥ó¥É¤Ï'%s', ·ë²Ì¤Ï %d¤Ç¤·¤¿\n"
 
-#: locale/programs/ld-time.c:225
+#: locale/programs/ld-time.c:246
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÃæ¤ÎÊ¸»úÎó %Zd Æâ¤ÎÊý¸þ¥Õ¥é¥°¤¬'+'¤Ç¤â'-'¤Ç¤â¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-time.c:237
+#: locale/programs/ld-time.c:258
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÆâ¤ÎÊ¸»úÎó %Zd ¤ÎÊý¸þ¥Õ¥é¥°¤¬Ã±°ìÊ¸»ú¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:2727
+#: locale/programs/ld-ctype.c:2729
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: `default_missing'ÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-identification.c:423
+#: locale/programs/ld-identification.c:431
 #, c-format
 msgid "%s: duplicate category version definition"
 msgstr "%s: ¥«¥Æ¥´¥ê¥Ð¡¼¥¸¥ç¥ó¤ÎÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:2711
+#: locale/programs/ld-collate.c:2730
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: ¥»¥¯¥·¥ç¥ó`%s'¤Îµ­½Ò¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:2675
+#: locale/programs/ld-collate.c:2694
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: `%s'¤ÎÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:3691
+#: locale/programs/ld-collate.c:3712
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: ¶õ¤Î¥«¥Æ¥´¥êµ­½Ò¤Ïµö¤µ¤ì¤Æ¤Þ¤»¤ó"
@@ -555,19 +556,27 @@ msgstr "%s: ¶õ¤Î¥«¥Æ¥´¥êµ­½Ò¤Ïµö¤µ¤ì¤Æ¤Þ¤»¤ó"
 msgid "%s: empty weight string not allowed"
 msgstr "%s: ¶õ¤Î½Å¤ßÊ¸»úÎó¤Ïµö¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:831
+#: locale/programs/charmap.c:836
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: ¾õÂÖµ¡³£Ãæ¤Ç¥¨¥é¡¼"
 
-#: locale/programs/ld-ctype.c:2483
+#: locale/programs/ld-address.c:489 locale/programs/ld-address.c:526
+#: locale/programs/ld-address.c:564 locale/programs/ld-ctype.c:2485
+#: locale/programs/ld-identification.c:360
+#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:300
+#: locale/programs/ld-monetary.c:694 locale/programs/ld-monetary.c:729
+#: locale/programs/ld-monetary.c:770 locale/programs/ld-name.c:278
+#: locale/programs/ld-numeric.c:263 locale/programs/ld-paper.c:221
+#: locale/programs/ld-telephone.c:288 locale/programs/ld-time.c:1104
+#: locale/programs/ld-time.c:1146
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤¬Ê£¿ô²óÀë¸À¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-ctype.c:1525 locale/programs/ld-ctype.c:1650
-#: locale/programs/ld-ctype.c:1756 locale/programs/ld-ctype.c:2346
-#: locale/programs/ld-ctype.c:3329
+#: locale/programs/ld-ctype.c:1526 locale/programs/ld-ctype.c:1651
+#: locale/programs/ld-ctype.c:1757 locale/programs/ld-ctype.c:2348
+#: locale/programs/ld-ctype.c:3331
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤Ï¤­¤Ã¤«¤ê10¹àÌÜÊ¬´Þ¤ó¤Ç¤¤¤Þ¤»¤ó"
@@ -579,14 +588,18 @@ msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤Ï¤­¤Ã¤«¤ê10¹àÌÜÊ¬´Þ¤ó¤Ç¤¤¤Þ¤»¤ó"
 msgid "%s: field `%s' must not be empty"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤Ï¶õ¤Ç¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:197
-#: locale/programs/ld-address.c:224 locale/programs/ld-address.c:284
-#: locale/programs/ld-address.c:303 locale/programs/ld-address.c:315
-#: locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:244
-#: locale/programs/ld-monetary.c:260 locale/programs/ld-name.c:104
-#: locale/programs/ld-numeric.c:113 locale/programs/ld-numeric.c:127
-#: locale/programs/ld-paper.c:101 locale/programs/ld-paper.c:109
-#: locale/programs/ld-telephone.c:105
+#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:180
+#: locale/programs/ld-address.c:197 locale/programs/ld-address.c:224
+#: locale/programs/ld-address.c:284 locale/programs/ld-address.c:303
+#: locale/programs/ld-address.c:315 locale/programs/ld-identification.c:145
+#: locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:206
+#: locale/programs/ld-monetary.c:244 locale/programs/ld-monetary.c:260
+#: locale/programs/ld-monetary.c:272 locale/programs/ld-name.c:104
+#: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:113
+#: locale/programs/ld-numeric.c:127 locale/programs/ld-paper.c:101
+#: locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:105
+#: locale/programs/ld-telephone.c:163 locale/programs/ld-time.c:175
+#: locale/programs/ld-time.c:195
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÏÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
@@ -596,39 +609,40 @@ msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÏÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 msgid "%s: field `%s' undefined"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÏÌ¤ÄêµÁ¤Ç¤¹"
 
-#: locale/programs/ld-time.c:258
+#: locale/programs/ld-time.c:279
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÃæ¤ÎÊ¸»úÎó %Zd Æâ¤Î¥ª¥Õ¥»¥Ã¥ÈÃÍ¤ÎºÇ¸å¤Ë¥´¥ß¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-time.c:318
+#: locale/programs/ld-time.c:339
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÃæ¤ÎÊ¸»úÎó %Zd Æâ¤Î³«»ÏÆüÉÕ¤ÎºÇ¸å¤Ë¥´¥ß¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-time.c:395
+#: locale/programs/ld-time.c:416
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÃæ¤ÎÊ¸»úÎó %Zd Æâ¤Î½ªÎ»ÆüÉÕ¤ÎºÇ¸å¤Ë¥´¥ß¤¬¤¢¤ê¤Þ¤¹"
 
-#: posix/getopt.c:795
+#: posix/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: ÉÔÀµ¤Ê¥ª¥×¥·¥ç¥ó¤Ç¤¹ -- %c\n"
 
-#: locale/programs/ld-address.c:573 locale/programs/ld-collate.c:3717
-#: locale/programs/ld-ctype.c:2844 locale/programs/ld-identification.c:437
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:324
-#: locale/programs/ld-monetary.c:932 locale/programs/ld-name.c:298
-#: locale/programs/ld-numeric.c:368 locale/programs/ld-paper.c:231
-#: locale/programs/ld-telephone.c:306 locale/programs/ld-time.c:1170
+#: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738
+#: locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445
+#: locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329
+#: locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:303
+#: locale/programs/ld-numeric.c:373 locale/programs/ld-paper.c:236
+#: locale/programs/ld-telephone.c:311 locale/programs/ld-time.c:1197
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: ÉÔ´°Á´¤Ê`END'¹Ô¤Ç¤¹"
 
 #: locale/programs/ld-address.c:166
+#, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
-msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'Ãæ¤ÇÉÔÀµ¤Ê¥¨¥¹¥±¡¼¥×¥·¡¼¥±¥ó¥¹`%%%c'¤Ç¤¹"
+msgstr "%s: ÉÔÀµ¤Ê¥¨¥¹¥±¡¼¥×¥·¡¼¥±¥ó¥¹`%%%c'¤¬¥Õ¥£¡¼¥ë¥É`%s'Ãæ¤Ë¤¢¤ê¤Þ¤¹"
 
 #: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126
 #: locale/programs/ld-telephone.c:150
@@ -636,27 +650,27 @@ msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'Ãæ¤ÇÉÔÀµ¤Ê¥¨¥¹¥±¡¼¥×¥·¡¼¥±¥ó¥¹`%%%c'¤Ç¤¹"
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'Ãæ¤ÎÉÔÀµ¤Ê¥¨¥¹¥±¡¼¥×¥·¡¼¥±¥ó¥¹¤Ç¤¹"
 
-#: locale/programs/ld-time.c:250
+#: locale/programs/ld-time.c:271
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÆâ¤ÎÊ¸»úÎó %Zd Æâ¤Î¥ª¥Õ¥»¥Ã¥È¤ËÂÐ¤¹¤ëÈÖ¹æ¤¬ÉÔÀµ¤Ç¤¹"
 
-#: locale/programs/ld-collate.c:3143
+#: locale/programs/ld-collate.c:3162
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: ÊÂ¤ÓÂØ¤¨µ¬Â§¤ÎÈÖ¹æ¤¬ÉÔÀµ¤Ç¤¹"
 
-#: posix/getopt.c:798
+#: posix/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó¤¬°ã¤¤¤Þ¤¹ -- %c\n"
 
-#: locale/programs/ld-time.c:309
+#: locale/programs/ld-time.c:330
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥ÉÃæ¤Ë¤¢¤ëÊ¸»úÎó %Zd Æâ¤Î³«»ÏÆüÉÕ¤¬ÉÔÀµ¤Ç¤¹"
 
-#: locale/programs/ld-time.c:386
+#: locale/programs/ld-time.c:407
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥É¤Ë¤¢¤ëÊ¸»úÎó %Zd Æâ¤Î½ªÎ»ÆüÉÕ¤¬ÉÔÀµ¤Ç¤¹"
@@ -671,38 +685,38 @@ msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ËÂÐ¤¹¤ëÉÔÀµ¤ÊÃÍ¤Ç¤¹"
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: ¸À¸ìÌ¾¾ÊÎ¬·Á `%s'¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3223 locale/programs/ld-collate.c:3346
-#: locale/programs/ld-collate.c:3695
+#: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
+#: locale/programs/ld-collate.c:3716
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: `order_end'¥­¡¼¥ï¡¼¥É¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3360 locale/programs/ld-collate.c:3707
+#: locale/programs/ld-collate.c:3379 locale/programs/ld-collate.c:3728
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: `reorder-end'¥­¡¼¥ï¡¼¥É¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3710
+#: locale/programs/ld-collate.c:3731
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: `reorder-sections-end'¥­¡¼¥ï¡¼¥É¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-time.c:435
+#: locale/programs/ld-time.c:456
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥É¤Ë¤¢¤ëÊ¸»úÎó %Zd Æâ¤Îera¥Õ¥©¡¼¥Þ¥Ã¥È¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-time.c:423
+#: locale/programs/ld-time.c:444
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥É¤Ë¤¢¤ëÊ¸»úÎó %Zd Æâ¤ÎeraÌ¾¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3119
+#: locale/programs/ld-collate.c:3138
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: ¥»¥¯¥·¥ç¥ó`%s'¤ËÂÐ¤¹¤ëÊÂ¤ÓÂØ¤¨ÄêµÁ¤¬Ê£¿ô¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:3169
+#: locale/programs/ld-collate.c:3188
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: Ì¾Á°¤Î¤Ê¤¤¥»¥¯¥·¥ç¥ó¤ËÂÐ¤¹¤ëÊÂ¤ÓÂØ¤¨ÄêµÁ¤¬Ê£¿ô¤¢¤ê¤Þ¤¹"
@@ -717,7 +731,7 @@ msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ËÂÐ¤¹¤ëÀµµ¬É½¸½¤ÏÀµ¤·¤¯¤¢¤ê¤Þ¤»¤ó: %s"
 msgid "%s: no identification for category `%s'"
 msgstr "%s: ¥«¥Æ¥´¥ê`%s'¤ËÂÐ¤¹¤ëidentification¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:2753
+#: locale/programs/ld-ctype.c:2755
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: É½¸½²ÄÇ½¤Ê`default_missing'ÄêµÁ¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
@@ -732,52 +746,52 @@ msgstr "%s: ÊÂ¤ÓÂØ¤¨µ¬Â§¤¬ÉÔ½½Ê¬¤Ç¤¹"
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: ¹ñ¥³¡¼¥ÉÈÖ¹æ`%d'¤ÏÉÔÀµ¤Ç¤¹"
 
-#: posix/getopt.c:718
+#: posix/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó`%c%s'¤Ï°ú¿ô¤ò¤È¤ê¤Þ¤»¤ó\n"
 
-#: posix/getopt.c:688
+#: posix/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó`%s'¤ÏÛ£Ëæ¤Ç¤¹\n"
 
-#: posix/getopt.c:736 posix/getopt.c:909
+#: posix/getopt.c:729 posix/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó`%s'¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹\n"
 
-#: posix/getopt.c:713
+#: posix/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó`--%s'¤Ï°ú¿ô¤ò¤È¤ê¤Þ¤»¤ó\n"
 
-#: posix/getopt.c:893
+#: posix/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó`-W %s'¤Ï°ú¿ô¤ò¤È¤ê¤Þ¤»¤ó\n"
 
-#: posix/getopt.c:875
+#: posix/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó `-W %s' ¤¬Û£Ëæ¤Ç¤¹\n"
 
-#: posix/getopt.c:828 posix/getopt.c:958
+#: posix/getopt.c:821 posix/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: ¥ª¥×¥·¥ç¥ó¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹ -- %c\n"
 
-#: locale/programs/ld-collate.c:1314 locale/programs/ld-collate.c:3654
+#: locale/programs/ld-collate.c:1327 locale/programs/ld-collate.c:3675
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: `%.*s'¤ËÂÐ¤¹¤ëÊÂ¤ÙÂØ¤¨¤Ï¤¹¤Ç¤Ë %s:%Zu ¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:3297
+#: locale/programs/ld-collate.c:3316
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: ¾È¹çÍ×ÁÇ %.*s ¤ËÂÐ¤¹¤ëÊÂ¤ÙÂØ¤¨¤¬¤Þ¤ÀÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:3281
+#: locale/programs/ld-collate.c:3300
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: ¾È¹ç¥·¥ó¥Ü¥ë %.*s ¤ËÂÐ¤¹¤ëÊÂ¤ÙÂØ¤¨¤¬¤Þ¤ÀÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
@@ -787,84 +801,84 @@ msgstr "%s: ¾È¹ç¥·¥ó¥Ü¥ë %.*s ¤ËÂÐ¤¹¤ëÊÂ¤ÙÂØ¤¨¤¬¤Þ¤ÀÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 msgid "%s: output would overwrite %s\n"
 msgstr "%s: ½ÐÎÏ¤Ï %s ¤ò¾å½ñ¤­¤·¤Æ¤·¤Þ¤¦¤«¤â¤·¤ì¤Þ¤»¤ó\n"
 
-#: timezone/zic.c:873 timezone/zic.c:1287 timezone/zic.c:1312
+#: timezone/zic.c:879 timezone/zic.c:1293 timezone/zic.c:1318
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: ¥Ñ¥Ë¥Ã¥¯: ÉÔÅö¤Ê l_value(%d)¤Ç¤¹\n"
 
-#: locale/programs/charmap.c:838 locale/programs/ld-address.c:592
-#: locale/programs/ld-collate.c:2590 locale/programs/ld-collate.c:3735
-#: locale/programs/ld-ctype.c:2107 locale/programs/ld-ctype.c:2864
-#: locale/programs/ld-identification.c:456
-#: locale/programs/ld-measurement.c:248 locale/programs/ld-messages.c:342
-#: locale/programs/ld-monetary.c:950 locale/programs/ld-name.c:316
-#: locale/programs/ld-numeric.c:386 locale/programs/ld-paper.c:249
-#: locale/programs/ld-telephone.c:324 locale/programs/ld-time.c:1188
+#: locale/programs/charmap.c:843 locale/programs/ld-address.c:597
+#: locale/programs/ld-collate.c:2609 locale/programs/ld-collate.c:3756
+#: locale/programs/ld-ctype.c:2109 locale/programs/ld-ctype.c:2866
+#: locale/programs/ld-identification.c:464
+#: locale/programs/ld-measurement.c:253 locale/programs/ld-messages.c:347
+#: locale/programs/ld-monetary.c:952 locale/programs/ld-name.c:321
+#: locale/programs/ld-numeric.c:391 locale/programs/ld-paper.c:254
+#: locale/programs/ld-telephone.c:329 locale/programs/ld-time.c:1215
 #: locale/programs/locfile.h:103 locale/programs/repertoire.c:325
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s ¥Õ¥¡¥¤¥ë½ªÃ¼¤¬Áá¤¹¤®¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:3394 locale/programs/ld-collate.c:3580
+#: locale/programs/ld-collate.c:3413 locale/programs/ld-collate.c:3601
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: ¥»¥¯¥·¥ç¥ó`%.*s'¤ÏÌ¤ÃÎ¤Ç¤¹"
 
-#: locale/programs/ld-time.c:337
+#: locale/programs/ld-time.c:358
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥É¤Ë¤¢¤ëÊ¸»úÎó %Zd Ãæ¤Î³«»ÏÆü¤ÏÉÔÀµ¤Ç¤¹"
 
-#: locale/programs/ld-time.c:414
+#: locale/programs/ld-time.c:435
 #, c-format
 msgid "%s: stopping date is invalid in string %Zd in `era' field"
 msgstr "%s: `era'¥Õ¥£¡¼¥ë¥É¤Ë¤¢¤ëÊ¸»úÎó %Zd Ãæ¤Î½ªÎ»Ç¯¤ÏÉÔÀµ¤Ç¤¹"
 
-#: locale/programs/ld-collate.c:1248
+#: locale/programs/ld-collate.c:1261
 #, c-format
-msgid "%s: symbolic range ellipsis must not be direct followed by `order_end'"
-msgstr "%s: ¥·¥ó¥Ü¥ë¤ÎÈÏ°Ï¤Î¾ÊÎ¬¤Ï`order_end'¤Î¤¹¤°¸å¤ËÂ³¤¤¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
+msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
+msgstr "%s: ¥·¥ó¥Ü¥ëÈÏ°Ï¾ÊÎ¬µ­¹æ¤Ï`order_end'¤Î¤¹¤°¸å¤ËÂ³¤¤¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1244
+#: locale/programs/ld-collate.c:1257
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
 msgstr "%s: ¥·¥ó¥Ü¥ë¤ÎÈÏ°Ï¤Î¾ÊÎ¬¤Ï`order_start'¤Î¤¹¤°¸å¤ËÃÖ¤¤¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-address.c:583 locale/programs/ld-collate.c:518
+#: locale/programs/ld-address.c:588 locale/programs/ld-collate.c:518
 #: locale/programs/ld-collate.c:570 locale/programs/ld-collate.c:865
-#: locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2581
-#: locale/programs/ld-collate.c:3726 locale/programs/ld-ctype.c:1840
-#: locale/programs/ld-ctype.c:2098 locale/programs/ld-ctype.c:2673
-#: locale/programs/ld-ctype.c:2855 locale/programs/ld-identification.c:447
-#: locale/programs/ld-measurement.c:239 locale/programs/ld-messages.c:333
-#: locale/programs/ld-monetary.c:941 locale/programs/ld-name.c:307
-#: locale/programs/ld-numeric.c:377 locale/programs/ld-paper.c:240
-#: locale/programs/ld-telephone.c:315 locale/programs/ld-time.c:1179
+#: locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2599
+#: locale/programs/ld-collate.c:3747 locale/programs/ld-ctype.c:1841
+#: locale/programs/ld-ctype.c:2099 locale/programs/ld-ctype.c:2675
+#: locale/programs/ld-ctype.c:2857 locale/programs/ld-identification.c:455
+#: locale/programs/ld-measurement.c:244 locale/programs/ld-messages.c:338
+#: locale/programs/ld-monetary.c:943 locale/programs/ld-name.c:312
+#: locale/programs/ld-numeric.c:382 locale/programs/ld-paper.c:245
+#: locale/programs/ld-telephone.c:320 locale/programs/ld-time.c:1206
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: Ê¸Ë¡¥¨¥é¡¼"
 
-#: locale/programs/ld-ctype.c:2178
+#: locale/programs/ld-ctype.c:2180
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: ¿·¤·¤¤¥­¥ã¥é¥¯¥¿¥¯¥é¥¹¤ÎÄêµÁÃæ¤ËÊ¸Ë¡¥¨¥é¡¼¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-ctype.c:2193
+#: locale/programs/ld-ctype.c:2195
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: ¿·¤·¤¤¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¤ÎÄêµÁÃæ¤ËÊ¸Ë¡¥¨¥é¡¼¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-ctype.c:3735
+#: locale/programs/ld-ctype.c:3737
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes\n"
 msgstr "%s: ¥¯¥é¥¹ \"%s\" ¤ËÂÐ¤¹¤ë¥Æ¡¼¥Ö¥ë: %lu ¥Ð¥¤¥È\n"
 
-#: locale/programs/ld-ctype.c:3803
+#: locale/programs/ld-ctype.c:3805
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes\n"
 msgstr "%s: ¥Þ¥Ã¥× \"%s\" ¤ËÂÐ¤¹¤ë¥Æ¡¼¥Ö¥ë: %lu ¥Ð¥¤¥È\n"
 
-#: locale/programs/ld-ctype.c:3935
+#: locale/programs/ld-ctype.c:3937
 #, c-format
 msgid "%s: table for width: %lu bytes\n"
 msgstr "%s: width ¤ËÂÐ¤¹¤ë¥Æ¡¼¥Ö¥ë: %lu ¥Ð¥¤¥È\n"
@@ -874,15 +888,20 @@ msgstr "%s: width ¤ËÂÐ¤¹¤ë¥Æ¡¼¥Ö¥ë: %lu ¥Ð¥¤¥È\n"
 msgid "%s: terminology language code `%s' not defined"
 msgstr "%s: terminology¸À¸ì¥³¡¼¥É`%s'¤ÏÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1054
+#: locale/programs/ld-collate.c:1067
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
 msgstr "%s: ¤¢¤ëÈÏ°Ï¤Î³«»Ï¡¦½ªÎ»¥·¥ó¥Ü¥ë¤Ï¥­¥ã¥é¥¯¥¿¤Ë´ð¤Å¤«¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-time.c:464
+#: locale/programs/ld-time.c:485
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÎÃÍ¤ËÂÐ¤¹¤ë£³ÈÖÌÜ¤Î¥ª¥Ú¥é¥ó¥É¤Ï %d ¤è¤ê¤âÂç¤­¤¯¤¢¤Ã¤Æ¤Ï¤Ê¤ê¤Þ¤»¤ó"
+
+#: locale/programs/ld-time.c:983
+#, c-format
+msgid "%s: too few values for field `%s'"
+msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ËÂÐ¤·¤Æ¾¯¤Ê¤¹¤®¤ëÃÍ¤Ç¤¹"
 
 #: locale/programs/ld-collate.c:555
 #, c-format
@@ -894,7 +913,12 @@ msgstr "%s: µ¬Â§¤¬Â¿¤¹¤®¤Þ¤¹; ºÇ½é¤Î¥¨¥ó¥È¥ê¤Ï %d ¤ò»ý¤Ã¤Æ¤¤¤Þ¤¹"
 msgid "%s: too many values"
 msgstr "%s: °ú¿ô¤¬Â¿¤¹¤®¤Þ¤¹"
 
-#: locale/programs/ld-ctype.c:3639
+#: locale/programs/ld-time.c:1030
+#, c-format
+msgid "%s: too many values for field `%s'"
+msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ËÂÐ¤·¤ÆÂ¿¤¹¤®¤ëÃÍ¤Ç¤¹"
+
+#: locale/programs/ld-ctype.c:3641
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: ¥í¥±¡¼¥ë`%s'¤Ç¤Îtransliteration¥Ç¡¼¥¿¤ÏÍøÍÑ²ÄÇ½¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
@@ -904,47 +928,52 @@ msgstr "%s: ¥í¥±¡¼¥ë`%s'¤Ç¤Îtransliteration¥Ç¡¼¥¿¤ÏÍøÍÑ²ÄÇ½¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 msgid "%s: unable to open %s: %m\n"
 msgstr "%s: %s ¤ò³«¤±¤Þ¤»¤ó: %m\n"
 
-#: locale/programs/ld-collate.c:2849
+#: locale/programs/ld-collate.c:2868
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: ¾È¹ç¥·¥ó¥Ü¥ëÌ¾Ãæ¤ËÌ¤ÃÎ¤ÎÊ¸»ú¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:2981
+#: locale/programs/ld-collate.c:3000
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: Åù²Á¤ÊÄêµÁÌ¾Ãæ¤ËÌ¤ÃÎ¤ÎÊ¸»ú¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:2994
+#: locale/programs/ld-collate.c:3013
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: Åù²Á¤ÊÄêµÁÃÍÃæ¤ËÌ¤ÃÎ¤ÎÊ¸»ú¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-time.c:1040
+#: locale/programs/ld-address.c:493 locale/programs/ld-address.c:531
+#: locale/programs/ld-identification.c:364 locale/programs/ld-messages.c:310
+#: locale/programs/ld-monetary.c:698 locale/programs/ld-monetary.c:733
+#: locale/programs/ld-name.c:282 locale/programs/ld-numeric.c:267
+#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:999
+#: locale/programs/ld-time.c:1067 locale/programs/ld-time.c:1109
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'Ãæ¤ËÌ¤ÃÎ¤ÎÊ¸»ú¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:3091
+#: locale/programs/ld-collate.c:3110
 #, c-format
 msgid "%s: unknown section name `%s'"
 msgstr "%s: Ì¤ÃÎ¤Î¥»¥¯¥·¥ç¥óÌ¾`%s'¤Ç¤¹"
 
-#: locale/programs/ld-collate.c:3004
+#: locale/programs/ld-collate.c:3023
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: Åù²Á¤ÊÄêµÁÃæ¤ÇÌ¤ÃÎ¤Î¥·¥ó¥Ü¥ë`%s'¤¬¤¢¤ê¤Þ¤·¤¿"
 
-#: posix/getopt.c:769
+#: posix/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: Ç§¼±¤Ç¤­¤Ê¤¤¥ª¥×¥·¥ç¥ó`%c%s'¤Ç¤¹\n"
 
-#: posix/getopt.c:765
+#: posix/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: Ç§¼±¤Ç¤­¤Ê¤¤¥ª¥×¥·¥ç¥ó`--%s'¤Ç¤¹\n"
 
-#: timezone/zic.c:443
+#: timezone/zic.c:449
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -957,6 +986,16 @@ msgstr ""
 #, c-format
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: »ÈÍÑË¡ %s [ -v ] [ -c ¥«¥Ã¥È¥ª¥Õ ] ¥¾¡¼¥óÌ¾ ¡Å¡Å\n"
+
+#: locale/programs/ld-monetary.c:740 locale/programs/ld-numeric.c:274
+#, c-format
+msgid "%s: value for field `%s' must be a single character"
+msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÎÃÍ¤Ï¥·¥ó¥°¥ë¥­¥ã¥é¥¯¥¿¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
+
+#: locale/programs/ld-monetary.c:308
+#, c-format
+msgid "%s: value for field `%s' must be in range %d...%d"
+msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÎÃÍ¤Ï %d...%d ¤ÎÈÏ°Ï¤Ë¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
 #: locale/programs/ld-messages.c:121 locale/programs/ld-messages.c:154
 #, c-format
@@ -978,17 +1017,17 @@ msgstr "%s: ¥Õ¥£¡¼¥ë¥É`int_curr_symbol'¤ÎÃÍ¤ÏISO 4217Ãæ¤Ë½¾¤Ã¤¿Å¬ÀÚ¤ÊÌ¾Á°¤ËÂÐ±þ¤
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`int_curr_symbol'¤ÎÃÍ¤ÎÄ¹¤µ¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-monetary.c:857 locale/programs/ld-numeric.c:334
+#: locale/programs/ld-monetary.c:859 locale/programs/ld-numeric.c:339
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ËÂÐ¤¹¤ëÃÍ¤Ï127°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-time.c:488
+#: locale/programs/ld-time.c:509
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÎÃÍ¤Ï %d °Ê¾å¤Ç¤¢¤Ã¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-time.c:472 locale/programs/ld-time.c:480
+#: locale/programs/ld-time.c:493 locale/programs/ld-time.c:501
 #, c-format
 msgid "%s: values of field `%s' must not be larger than %d"
 msgstr "%s: ¥Õ¥£¡¼¥ë¥É`%s'¤ÎÃÍ¤Ï %d °Ê¾å¤Ç¤¢¤Ã¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
@@ -1011,11 +1050,11 @@ msgstr "(¥×¥í¥°¥é¥à¥¨¥é¡¼) Ì¤ÃÎ¤Î¥Ð¡¼¥¸¥ç¥ó!?"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(¥×¥í¥°¥é¥à¥¨¥é¡¼) ¥ª¥×¥·¥ç¥ó¤ÏÇ§¼±¤µ¤ì¤Æ¤¤¤ë¤Ù¤­¤Ç¤¹!?"
 
-#: nis/nis_print.c:130
+#: nis/nis_print.c:133
 msgid "(Unknown object)\n"
 msgstr "(ÉÔÌÀ¤Ê¥ª¥Ö¥¸¥§¥¯¥È¤Ç¤¹)\n"
 
-#: sunrpc/clnt_perr.c:125
+#: sunrpc/clnt_perr.c:132
 #, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(ÉÔÌÀ¤ÊÇ§¾Ú¥¨¥é¡¼ - %d)"
@@ -1033,6 +1072,11 @@ msgstr "*** ¥Õ¥¡¥¤¥ë `%s' ¤Ï strip ¤µ¤ì¤Æ¤¤¤Þ¤¹: ¾ÜºÙ¤Ê²òÀÏ¤¬½ÐÍè¤Þ¤»¤ó\n"
 msgid "*standard input*"
 msgstr "*É¸½àÆþÎÏ*"
 
+#: elf/cache.c:105
+#, c-format
+msgid ", OS ABI: %s %d.%d.%d"
+msgstr ", OS ABI: %s %d.%d.%d"
+
 #: catgets/gencat.c:125
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
@@ -1046,16 +1090,16 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr "a.out Ãæ¤Î .lib ¥»¥¯¥·¥ç¥ó¤¬²õ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: sunrpc/clnt_perr.c:111 sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; low ¥Ð¡¼¥¸¥ç¥ó = %lu, high ¥Ð¡¼¥¸¥ç¥ó = %lu"
 
-#: sunrpc/clnt_perr.c:118
+#: sunrpc/clnt_perr.c:125
 msgid "; why = "
 msgstr "; ÍýÍ³ = "
 
-#: locale/programs/charmap.c:999
+#: locale/programs/charmap.c:1004
 #, c-format
 msgid "<%s> and <%s> are illegal names for range"
 msgstr "<%s> ¤È <%s> ¤ÏÈÏ°Ï¤È¤·¤ÆÉÔÀµ¤ÊÌ¾Á°¤Ç¤¹"
@@ -1065,12 +1109,12 @@ msgstr "<%s> ¤È <%s> ¤ÏÈÏ°Ï¤È¤·¤ÆÉÔÀµ¤ÊÌ¾Á°¤Ç¤¹"
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s> ¤È <%s> ¤ÏÈÏ°Ï¤È¤·¤ÆÉÔÀµ¤ÊÌ¾Á°¤Ç¤¹"
 
-#: locale/programs/ld-ctype.c:565 locale/programs/ld-ctype.c:600
+#: locale/programs/ld-ctype.c:573 locale/programs/ld-ctype.c:608
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "<SP> Ê¸»ú¤Ï¥¯¥é¥¹ `%s' ¤Ë¤¢¤Ã¤Æ¤Ï¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:553 locale/programs/ld-ctype.c:589
+#: locale/programs/ld-ctype.c:561 locale/programs/ld-ctype.c:597
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "<SP> Ê¸»ú¤Ï¥¯¥é¥¹ `%s' ¤Ë¤¢¤ê¤Þ¤»¤ó"
@@ -1086,7 +1130,7 @@ msgstr "?"
 msgid "Aborted"
 msgstr "¥¢¥Ü¡¼¥È¤·¤Þ¤·¤¿"
 
-#: nis/nis_print.c:321
+#: nis/nis_print.c:324
 msgid "Access Rights : "
 msgstr "¥¢¥¯¥»¥¹¸¢¸Â  : "
 
@@ -1124,6 +1168,10 @@ msgstr "Advertise¥¨¥é¡¼"
 msgid "Alarm clock"
 msgstr "¥¢¥é¡¼¥à¥¯¥í¥Ã¥¯"
 
+#: posix/../sysdeps/posix/gai_strerror.c:45
+msgid "All requests done"
+msgstr "Á´¤Æ¤ÎÍ×µá¤Ï´°Î»¤·¤Þ¤·¤¿"
+
 #: malloc/memusagestat.c:57
 msgid "Also draw graph for total memory consumption"
 msgstr "¥È¡¼¥¿¥ë¥á¥â¥ê¤Î¾ÃÈñ¤ËÂÐ¤¹¤ë¥°¥é¥Õ¤âÉÁ¤­¤Þ¤¹"
@@ -1132,7 +1180,7 @@ msgstr "¥È¡¼¥¿¥ë¥á¥â¥ê¤Î¾ÃÈñ¤ËÂÐ¤¹¤ë¥°¥é¥Õ¤âÉÁ¤­¤Þ¤¹"
 msgid "Anode table overflow"
 msgstr "¥¢¥Î¡¼¥É¥Æ¡¼¥Ö¥ë¥ª¡¼¥Ð¡¼¥Õ¥í¡¼"
 
-#: intl/tst-gettext2.c:37
+#: intl/tst-gettext2.c:38
 msgid "Another string for testing."
 msgstr "¥Æ¥¹¥È¤Î¤¿¤á¤ÎÂ¾¤ÎÊ¸»úÎó."
 
@@ -1164,7 +1212,7 @@ msgstr "¥·¥¹¥Æ¥à¤ÎÀ©¸Â°Ê¾å¤Î¶¦Í­¥é¥¤¥Ö¥é¥ê¤Ø¥ê¥ó¥¯¤·¤è¤¦¤È¤·¤Æ¤¤¤Þ¤¹"
 msgid "Attempting to link in too many shared libraries"
 msgstr "¤¢¤Þ¤ê¤ËÂ¿²á¤®¤ë¶¦Í­¥é¥¤¥Ö¥é¥ê¤Ø¥ê¥ó¥¯¤·¤è¤¦¤È¤·¤Æ¤¤¤Þ¤¹"
 
-#: sunrpc/clnt_perr.c:329
+#: sunrpc/clnt_perr.c:338
 msgid "Authentication OK"
 msgstr "Ç§¾Ú OK"
 
@@ -1173,7 +1221,7 @@ msgstr "Ç§¾Ú OK"
 msgid "Authentication error"
 msgstr "Ç§¾Ú¥¨¥é¡¼¤Ç¤¹"
 
-#: nis/nis_print.c:106
+#: nis/nis_print.c:109
 msgid "BOGUS OBJECT\n"
 msgstr "BOGUS OBJECT\n"
 
@@ -1228,7 +1276,7 @@ msgstr "ai_flags ¤ÎÃÍ¤¬ÉÔÀµ¤Ç¤¹"
 msgid "Be strictly POSIX conform"
 msgstr "¸·Ì©¤ËPOSIXµ¬³Ê¤Ë½¾¤¦"
 
-#: nis/nis_print.c:302
+#: nis/nis_print.c:305
 msgid "Binary data\n"
 msgstr "¥Ð¥¤¥Ê¥ê¥Ç¡¼¥¿\n"
 
@@ -1260,10 +1308,6 @@ msgstr "¥Ñ¥¤¥×¤¬ÀÚÃÇ¤µ¤ì¤Þ¤·¤¿"
 msgid "Bus error"
 msgstr "¥Ð¥¹¥¨¥é¡¼"
 
-#: nis/nis_print.c:46
-msgid "CDS"
-msgstr "CDS"
-
 #: stdio-common/../sysdeps/unix/siglist.c:50 sysdeps/generic/siglist.h:50
 msgid "CPU time limit exceeded"
 msgstr "CPU»þ´ÖÀ©¸Â¤òÄ¶²á¤·¤Þ¤·¤¿"
@@ -1281,77 +1325,82 @@ msgstr "É¬Í×¤Ê¶¦Í­¥é¥¤¥Ö¥é¥ê¤Ë¥¢¥¯¥»¥¹¤Ç¤­¤Þ¤»¤ó"
 msgid "Can not exec a shared library directly"
 msgstr "¶¦Í­¥é¥¤¥Ö¥é¥ê¤ÏÄ¾ÀÜ¼Â¹Ô¤Ç¤­¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:792
+#: nis/ypclnt.c:794
 msgid "Can't bind to server which serves this domain"
 msgstr "¤³¤Î¥É¥á¥¤¥ó¤ò°·¤¦¥µ¡¼¥Ð¤Ø¥Ð¥¤¥ó¥É¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:934
+#: elf/ldconfig.c:1008
 msgid "Can't chdir to /"
 msgstr "/ ¤Ëchdir¤Ç¤­¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:804
+#: nis/ypclnt.c:806
 msgid "Can't communicate with portmapper"
 msgstr "¥Ý¡¼¥È¥Þ¥Ã¥Ñ¡¼¤ÈÄÌ¿®¤Ç¤­¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:806
+#: nis/ypclnt.c:808
 msgid "Can't communicate with ypbind"
 msgstr "ypbind¤ÈÄÌ¿®¤Ç¤­¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:808
+#: nis/ypclnt.c:810
 msgid "Can't communicate with ypserv"
 msgstr "ypserv¤ÈÄÌ¿®¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/cache.c:359
+#: elf/cache.c:394
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "¥Æ¥ó¥Ý¥é¥ê¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë %s ¤¬ºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:502
+#: elf/ldconfig.c:512
 #, c-format
 msgid "Can't find %s"
 msgstr "%s ¤ò¸«¤Ä¤±¤é¤ì¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:440
+#: elf/ldconfig.c:449
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "%s ¤«¤é %s ¤Ø¥ê¥ó¥¯¤òÄ¥¤ì¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:518 elf/ldconfig.c:672
+#: elf/ldconfig.c:528
 #, c-format
 msgid "Can't lstat %s"
 msgstr "lstat %s ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/cache.c:108 elf/ldconfig.c:955
+#: elf/cache.c:131 elf/ldconfig.c:1029
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë %s ¤ò³«¤±¤Þ¤»¤ó\n"
 
-#: elf/ldconfig.c:976
+#: elf/ldconfig.c:1050
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë¥Ç¥£¥ì¥¯¥È¥ê %s ¤ò³«¤±¤Þ¤»¤ó\n"
 
-#: elf/ldconfig.c:865
+#: elf/ldconfig.c:924
 #, c-format
 msgid "Can't open configuration file %s"
 msgstr "ÀßÄê¥Õ¥¡¥¤¥ë %s ¤ò³«¤±¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:634
 #, c-format
 msgid "Can't open directory %s"
 msgstr "¥Ç¥£¥ì¥¯¥È¥ê %s ¤ò³«¤±¤Þ¤»¤ó"
 
-#: elf/cache.c:353
+#: elf/cache.c:387
 #, c-format
 msgid "Can't remove old temporary cache file %s"
 msgstr "¸Å¤¤¥Æ¥ó¥Ý¥é¥ê¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë %s ¤òºï½ü¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:405
+#: elf/ldconfig.c:344
+#, c-format
+msgid "Can't stat %s"
+msgstr "stat %s ¤¬¤Ç¤­¤Þ¤»¤ó"
+
+#: elf/ldconfig.c:414
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "stat %s ¤¬¤Ç¤­¤Þ¤»¤ó\n"
 
-#: elf/ldconfig.c:434
+#: elf/ldconfig.c:443
 #, c-format
 msgid "Can't unlink %s"
 msgstr "%s ¤ò¥¢¥ó¥ê¥ó¥¯¤Ç¤­¤Þ¤»¤ó"
@@ -1378,16 +1427,21 @@ msgstr "¥Ö¥í¡¼¥É¥­¥ã¥¹¥ÈRPC¤Î¤¿¤á¤Î¥½¥±¥Ã¥È¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 msgid "Cannot exec a shared library directly"
 msgstr "¶¦Í­¥é¥¤¥Ö¥é¥ê¤ÏÄ¾ÀÜ¼Â¹Ô¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/readlib.c:98
+#: elf/readlib.c:99
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "¥Õ¥¡¥¤¥ë %s ¤ò fstat ¤Ç¤­¤Þ¤»¤ó.\n"
 
-#: sunrpc/rpc_main.c:1415
+#: sunrpc/rpc_main.c:1417
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "¥Õ¥¡¥¤¥ëÀ¸À®¥Õ¥é¥°¤ÏÊ£¿ô»ØÄê¤Ç¤­¤Þ¤»¤ó!\n"
 
-#: elf/readlib.c:117
+#: elf/ldconfig.c:689 elf/ldconfig.c:732
+#, c-format
+msgid "Cannot lstat %s"
+msgstr "lstat %s ¤Ç¤­¤Þ¤»¤ó"
+
+#: elf/readlib.c:118
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "¥Õ¥¡¥¤¥ë %s ¤òmmap¤Ç¤­¤Þ¤»¤ó.\n"
@@ -1421,33 +1475,38 @@ msgstr "¥½¥±¥Ã¥È¥ª¥×¥·¥ç¥ó SO_BROADCAST ¤òÀßÄê¤Ç¤­¤Þ¤»¤ó"
 msgid "Cannot specify more than one input file!\n"
 msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë¤òÊ£¿ô»ØÄê¤Ç¤­¤Þ¤»¤ó!\n"
 
-#: sunrpc/rpc_main.c:1372
+#: elf/ldconfig.c:701
+#, c-format
+msgid "Cannot stat %s"
+msgstr "stat %s ¤¬¤Ç¤­¤Þ¤»¤ó"
+
+#: sunrpc/rpc_main.c:1374
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "inetd ¥Õ¥é¥°¤È¤È¤â¤Ë netid ¥Õ¥é¥°¤Ï»È¤¨¤Þ¤»¤ó!\n"
 
-#: sunrpc/rpc_main.c:1384
+#: sunrpc/rpc_main.c:1386
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "TIRPC ¤Ê¤·¤Ë netid ¥Õ¥é¥°¤Ï»È¤¨¤Þ¤»¤ó!\n"
 
-#: sunrpc/rpc_main.c:1391
+#: sunrpc/rpc_main.c:1393
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "¿··Á¼°¤ò¤â¤Ä¥Æ¡¼¥Ö¥ë¥Õ¥é¥°¤Ï»È¤¨¤Þ¤»¤ó!\n"
 
-#: elf/ldconfig.c:131
+#: elf/ldconfig.c:126
 msgid "Change to and use ROOT as root directory"
 msgstr "¥ë¡¼¥È¥Ç¥£¥ì¥¯¥È¥ê¤È¤·¤ÆROOT¤ò»ÈÍÑ¤·¡¢¤½¤³¤ØÊÑ¹¹¤·¤Þ¤¹"
 
-#: elf/cache.c:390
+#: elf/cache.c:426
 #, c-format
-msgid "Changing access rights of %s to 0644 failed"
-msgstr "%s ¤Î¥¢¥¯¥»¥¹¸¢¸Â¤ò 0644 ¤ØÊÑ¹¹¤¹¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
+msgid "Changing access rights of %s to %#o failed"
+msgstr "%s ¤Î¥¢¥¯¥»¥¹¸¢¸Â¤ò %#o ¤ØÊÑ¹¹¤¹¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:689
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
 msgid "Channel number out of range"
 msgstr "¥Á¥ã¥ó¥Í¥ëÈÖ¹æ¤¬ÈÏ°Ï³°¤Ç¤¹"
 
-#: nis/nis_print.c:265
+#: nis/nis_print.c:268
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr "Ê¸»ú¥»¥Ñ¥ì¡¼¥¿      : %c\n"
@@ -1456,11 +1515,11 @@ msgstr "Ê¸»ú¥»¥Ñ¥ì¡¼¥¿      : %c\n"
 msgid "Child exited"
 msgstr "»Ò¥×¥í¥»¥¹¤¬½ªÎ»¤·¤Þ¤·¤¿"
 
-#: sunrpc/clnt_perr.c:348
+#: sunrpc/clnt_perr.c:357
 msgid "Client credential too weak"
 msgstr "¥¯¥é¥¤¥¢¥ó¥È¤Î¿®Ç¤¤¬¼å¤¹¤®¤Þ¤¹"
 
-#: nis/nis_print.c:267
+#: nis/nis_print.c:270
 msgid "Columns             :\n"
 msgstr "¥«¥é¥à              :\n"
 
@@ -1478,7 +1537,7 @@ msgstr "¥í¥±¡¼¥ë»ÅÍÍ¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë"
 msgid "Computer bought the farm"
 msgstr "¥³¥ó¥Ô¥å¡¼¥¿¤¬¡ÖÀï»à¡×¤·¤Þ¤·¤¿"
 
-#: elf/ldconfig.c:141
+#: elf/ldconfig.c:136
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "¥À¥¤¥Ê¥ß¥Ã¥¯¥ê¥ó¥«¤Î¥é¥ó¥¿¥¤¥à¥Ð¥¤¥ó¥Ç¥£¥ó¥°¤òÀßÄê¤·¤Þ¤¹."
 
@@ -1508,14 +1567,14 @@ msgstr "ÀÜÂ³¥¿¥¤¥à¥¢¥¦¥È¤Ç¤¹"
 msgid "Continued"
 msgstr "·ÑÂ³"
 
-#: iconv/iconv_prog.c:69
+#: iconv/iconv_prog.c:73
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Í¿¤¨¤é¤ì¤¿¥Õ¥¡¥¤¥ë¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤òÊÑ´¹¤¹¤ë."
 
-#: catgets/gencat.c:246 elf/ldconfig.c:264 elf/sprof.c:355
-#: iconv/iconv_prog.c:351 locale/programs/locale.c:269
+#: catgets/gencat.c:246 elf/ldconfig.c:259 elf/sprof.c:355
+#: iconv/iconv_prog.c:393 iconv/iconvconfig.c:335 locale/programs/locale.c:281
 #: locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90
-#: nss/getent.c:63 posix/getconf.c:751
+#: nss/getent.c:63 posix/getconf.c:904
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -1537,6 +1596,10 @@ msgstr "¥í¥°¥Õ¥¡¥¤¥ë\"%s\"¤òºîÀ®¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿"
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "¥·¥ó¥Ü¥ëÄêµÁ¤ò´Þ¤ó¤À C ¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë NAME ¤òºîÀ®"
 
+#: iconv/iconvconfig.c:110
+msgid "Create fastloading iconv module configuration file."
+msgstr "¹âÂ®ÆÉ¹þ¤ßÍÑ iconv ¥â¥¸¥å¡¼¥ëÀßÄê¥Õ¥¡¥¤¥ë¤òºîÀ®¤·¤Þ¤¹."
+
 #: locale/programs/localedef.c:102
 msgid "Create old-style tables"
 msgstr "¸Å¤¤·Á¼°¤Î¥Æ¡¼¥Ö¥ë¤òºîÀ®"
@@ -1545,7 +1608,7 @@ msgstr "¸Å¤¤·Á¼°¤Î¥Æ¡¼¥Ö¥ë¤òºîÀ®"
 msgid "Create output even if warning messages were issued"
 msgstr "·Ù¹ð¥á¥Ã¥»¡¼¥¸¤¬¤¢¤Ã¤Æ¤â½ÐÎÏ¤òºîÀ®"
 
-#: nis/nis_print.c:326
+#: nis/nis_print.c:329
 #, c-format
 msgid "Creation Time : %s"
 msgstr "ºîÀ®Æü»þ      : %s"
@@ -1564,19 +1627,11 @@ msgstr "¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë [½ÐÎÏ¥Õ¥¡¥¤¥ë]"
 msgid "DES entry for netname %s not unique\n"
 msgstr "¥Í¥Ã¥ÈÌ¾ %s ¤Î DES ¥¨¥ó¥È¥ê¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹\n"
 
-#: nis/nis_print.c:112
+#: nis/nis_print.c:115
 msgid "DIRECTORY\n"
 msgstr "¥Ç¥£¥ì¥¯¥È¥ê\n"
 
-#: nis/nis_print.c:42
-msgid "DNANS"
-msgstr "DNANS"
-
-#: nis/nis_print.c:38
-msgid "DNS"
-msgstr "DNS"
-
-#: elf/dl-open.c:189
+#: elf/dl-deps.c:101 elf/dl-open.c:188
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST¤ÏSUID/SGID¥×¥í¥°¥é¥àÃæ¤Ç¤Ïµö¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
@@ -1588,7 +1643,7 @@ msgstr "¥À¥¤¥Ê¥ß¥Ã¥¯¥ê¥ó¥«¤Î¥Ð¥°!!!"
 msgid "Database for table does not exist"
 msgstr "¥Æ¡¼¥Ö¥ë¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹¤¬Â¸ºß¤·¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:818
+#: nis/ypclnt.c:820
 msgid "Database is busy"
 msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¤¬¥Ó¥¸¡¼¾õÂÖ¤Ç¤¹"
 
@@ -1596,7 +1651,7 @@ msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¤¬¥Ó¥¸¡¼¾õÂÖ¤Ç¤¹"
 msgid "Deadlock situation detected/avoided"
 msgstr "¥Ç¥Ã¥É¥í¥Ã¥¯¾õÂÖ¤ò¸¡ÃÎ/²óÈò¤·¤Þ¤·¤¿"
 
-#: nis/nis_print.c:226
+#: nis/nis_print.c:229
 msgid "Default Access rights :\n"
 msgstr "¥Ç¥Õ¥©¥ë¥È¥¢¥¯¥»¥¹¸¢¸Â :\n"
 
@@ -1623,12 +1678,12 @@ msgstr "¥Ç¥Ð¥¤¥¹¤Ï¥¹¥È¥ê¡¼¥à·¿¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 msgid "Device or resource busy"
 msgstr "¥Ç¥Ð¥¤¥¹¤â¤·¤¯¤Ï¥ê¥½¡¼¥¹¤¬¥Ó¥¸¡¼¾õÂÖ¤Ç¤¹"
 
-#: nis/nis_print.c:180
+#: nis/nis_print.c:183
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Diffie-Hellmann (%d ¥Ó¥Ã¥È)\n"
 
-#: nis/nis_print.c:318
+#: nis/nis_print.c:321
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "¥Ç¥£¥ì¥¯¥È¥ê  : %s\n"
@@ -1657,15 +1712,15 @@ msgstr "¥Õ¥©¡¼¥¯¤·¤Ê¤¤¤Ç¸½ºß¤Îtty¤Ë¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤¹¤ë"
 msgid "Do not use existing catalog, force new output file"
 msgstr "´ûÂ¸¤Î¥«¥¿¥í¥°¤ò»ÈÍÑ¤»¤º¡¢¶¯À©Åª¤Ë¿·¤·¤¤½ÐÎÏ¥Õ¥¡¥¤¥ë¤Ë¤·¤Þ¤¹"
 
-#: nis/ypclnt.c:864
+#: nis/ypclnt.c:866
 msgid "Domain not bound"
 msgstr "¥É¥á¥¤¥ó¤Ï¥Ð¥¤¥ó¥É¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:129
+#: elf/ldconfig.c:124
 msgid "Don't build cache"
 msgstr "¥­¥ã¥Ã¥·¥å¤Î¹½ÃÛ¤ò¹Ô¤ï¤Ê¤¤"
 
-#: elf/ldconfig.c:130
+#: elf/ldconfig.c:125
 msgid "Don't generate links"
 msgstr "¥ê¥ó¥¯¤òÀ¸À®¤·¤Ê¤¤"
 
@@ -1673,31 +1728,31 @@ msgstr "¥ê¥ó¥¯¤òÀ¸À®¤·¤Ê¤¤"
 msgid "Dump information generated by PC profiling."
 msgstr "PC¥×¥í¥Õ¥¡¥¤¥ê¥ó¥°¤Ë¤è¤Ã¤ÆÀ¸À®¤µ¤ì¤ë¾ðÊó¤ò¥À¥ó¥×."
 
-#: elf/dl-load.c:1290
+#: elf/dl-load.c:1293
 msgid "ELF file ABI version invalid"
 msgstr "ELF¥Õ¥¡¥¤¥ë¤ÎABI¥Ð¡¼¥¸¥ç¥ó¤¬ÉÔÀµ¤Ç¤¹."
 
-#: elf/dl-load.c:1287
+#: elf/dl-load.c:1290
 msgid "ELF file OS ABI invalid"
 msgstr "ELF¥Õ¥¡¥¤¥ë¤ÎOS ABI¤¬ÉÔÀµ¤Ç¤¹."
 
-#: elf/dl-load.c:1296
+#: elf/dl-load.c:1299
 msgid "ELF file version does not match current one"
 msgstr "ELF¥Õ¥¡¥¤¥ë¤Î¥Ð¡¼¥¸¥ç¥óÈÖ¹æ¤¬¸½ºß¤Î¥Õ¥¡¥¤¥ë¤Ë°ìÃ×¤·¤Æ¤¤¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1283
+#: elf/dl-load.c:1286
 msgid "ELF file version ident does not match current one"
 msgstr "ELF¥Õ¥¡¥¤¥ë¤Î¥Ð¡¼¥¸¥ç¥ó¼±ÊÌ»Ò¤Ï¸½ºß¤Î¥Õ¥¡¥¤¥ë¤Ë°ìÃ×¤·¤Æ¤¤¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1307
+#: elf/dl-load.c:1305
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF¥Õ¥¡¥¤¥ë¤Îphentsize¤Ï´üÂÔ¤µ¤ì¤ë¥µ¥¤¥º¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: elf/dl-load.c:876
+#: elf/dl-load.c:884
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF¥í¡¼¥É¥³¥Þ¥ó¥É¤Î¥¢¥É¥ì¥¹/¥ª¥Õ¥»¥Ã¥È¤ÏÅ¬ÀÚ¤Ë¥¢¥é¥¤¥ó¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: elf/dl-load.c:873
+#: elf/dl-load.c:881
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF¥í¡¼¥É¥³¥Þ¥ó¥É¤Î¥¢¥é¥¤¥ó¥á¥ó¥È¤Ï¥Ú¡¼¥¸¥¢¥é¥¤¥ó¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
@@ -1705,11 +1760,11 @@ msgstr "ELF¥í¡¼¥É¥³¥Þ¥ó¥É¤Î¥¢¥é¥¤¥ó¥á¥ó¥È¤Ï¥Ú¡¼¥¸¥¢¥é¥¤¥ó¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 msgid "EMT trap"
 msgstr "EMT ¥È¥é¥Ã¥×"
 
-#: nis/nis_print.c:121
+#: nis/nis_print.c:124
 msgid "ENTRY\n"
 msgstr "¥¨¥ó¥È¥ê\n"
 
-#: nis/nis_print.c:300
+#: nis/nis_print.c:303
 msgid "Encrypted data\n"
 msgstr "°Å¹æ²½¥Ç¡¼¥¿\n"
 
@@ -1863,7 +1918,11 @@ msgstr "ÉÔÌÀ¤Ê¥¨¥é¡¼¥·¥¹¥Æ¥à¤Ç¤Î¥¨¥é¡¼:"
 msgid "Error while talking to callback proc"
 msgstr "¥³¡¼¥ë¥Ð¥Ã¥¯¥×¥í¥·¡¼¥¸¥ã¤ÈÄÌ¿®Ãæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Þ¤·¤¿"
 
-#: inet/ruserpass.c:181
+#: timezone/zdump.c:268
+msgid "Error writing standard output"
+msgstr "¥¨¥é¡¼¤òÉ¸½à½ÐÎÏ¤Ë½ñ¤­½Ð¤·Ãæ"
+
+#: inet/ruserpass.c:184
 msgid "Error: .netrc file is readable by others."
 msgstr "¥¨¥é¡¼: ¥Õ¥¡¥¤¥ë.netrc¤¬Â¾¼Ô¤Ë¤è¤Ã¤ÆÆÉ¤ß¹þ¤ßµö²Ä¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
@@ -1886,7 +1945,7 @@ msgstr "Ã×Ì¿Åª¥¨¥é¡¼: ¥·¥¹¥Æ¥à¤Ï`_POSIX2_LOCALEDEF'¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "¥Õ¥¡¥¤¥ë¤Ï¥·¥ó¥Ü¥ëÌ¾¤«¤éUCS4ÃÍ¤Ø¤Î¥Þ¥Ã¥Ô¥ó¥°¤ò´Þ¤ó¤Ç¤¤¤Þ¤¹"
 
-#: sunrpc/clnt_perr.c:356
+#: sunrpc/clnt_perr.c:365
 msgid "Failed (unspecified error)"
 msgstr "¼ºÇÔ¤·¤Þ¤·¤¿(¸¶°øÉÔÆÃÄê¤Î¥¨¥é¡¼)"
 
@@ -1895,7 +1954,7 @@ msgstr "¼ºÇÔ¤·¤Þ¤·¤¿(¸¶°øÉÔÆÃÄê¤Î¥¨¥é¡¼)"
 msgid "Failed to look up user '%s' to run server as"
 msgstr "¥µ¡¼¥Ð¡¼¤ò¼Â¹Ô¤µ¤»¤ë¤¿¤á¤Î¥æ¡¼¥¶'%s'¤Î¸¡º÷¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: elf/readlib.c:108
+#: elf/readlib.c:109
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "¥Õ¥¡¥¤¥ë %s ¤Ï¾®¤µ¤¹¤®¤Þ¤¹, ¥Á¥§¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤»¤ó."
@@ -1912,7 +1971,7 @@ msgstr "¥Õ¥¡¥¤¥ëµ­½Ò»Ò¤¬ÉÔÀµ¤Î¾õÂÖ¤Ë¤¢¤ê¤Þ¤¹"
 msgid "File exists"
 msgstr "¥Õ¥¡¥¤¥ë¤¬Â¸ºß¤·¤Þ¤¹"
 
-#: elf/cache.c:124 elf/cache.c:134
+#: elf/cache.c:147 elf/cache.c:157
 msgid "File is not a cache file.\n"
 msgstr "¥Õ¥¡¥¤¥ë¤Ï¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó.\n"
 
@@ -1946,7 +2005,7 @@ msgstr "¥Õ¥¡¥¤¥ë¥Æ¡¼¥Ö¥ë¥ª¡¼¥Ð¡¼¥Õ¥í¡¼"
 msgid "File too large"
 msgstr "¥Õ¥¡¥¤¥ë¤¬Âç¤­¤¹¤®¤Þ¤¹"
 
-#: intl/tst-gettext2.c:36
+#: intl/tst-gettext2.c:37
 msgid "First string for testing."
 msgstr "¥Æ¥¹¥È¤Î¤¿¤á¤ÎºÇ½é¤ÎÊ¸»úÎó."
 
@@ -1958,7 +2017,7 @@ msgstr "ºÇ½é/¼¡¤Î¥Á¥§¥¤¥ó¤¬²õ¤ì¤Æ¤¤¤Þ¤¹"
 msgid "Floating point exception"
 msgstr "ÉâÆ°¾®¿ôÅÀ±é»»Îã³°¤Ç¤¹"
 
-#: elf/ldconfig.c:136
+#: elf/ldconfig.c:131
 msgid "Format to use: new, old or compat (default)"
 msgstr "»ÈÍÑ¥Õ¥©¡¼¥Þ¥Ã¥È: ¿·, µì, ¸ß´¹ (¥Ç¥Õ¥©¥ë¥È)"
 
@@ -1975,7 +2034,7 @@ msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤ËÂÐ¤¹¤ë´°Á´ºÆsync¤¬Í×µá¤µ¤ì¤Þ¤·¤¿"
 msgid "Function not implemented"
 msgstr "´Ø¿ô¤Ï¼ÂÁõ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: nis/nis_print.c:115
+#: nis/nis_print.c:118
 msgid "GROUP\n"
 msgstr "¥°¥ë¡¼¥×\n"
 
@@ -2000,7 +2059,7 @@ msgstr ""
 msgid "Generate output linear to time (default is linear to number of function calls)"
 msgstr "»þ¹ï½ç¤Ë½ÐÎÏ¤òÀ¸À® (¥Ç¥Õ¥©¥ë¥È¤Ï´Ø¿ô¸Æ¤Ó½Ð¤·¤ÎÃÍ½ç)"
 
-#: elf/ldconfig.c:128
+#: elf/ldconfig.c:123
 msgid "Generate verbose messages"
 msgstr "¾ÜºÙ¤Ê¥á¥Ã¥»¡¼¥¸¤ÎÉ½¼¨"
 
@@ -2008,7 +2067,7 @@ msgstr "¾ÜºÙ¤Ê¥á¥Ã¥»¡¼¥¸¤ÎÉ½¼¨"
 msgid "Generic system error"
 msgstr "°ìÈÌÅª¤Ê¥·¥¹¥Æ¥à¥¨¥é¡¼"
 
-#: locale/programs/locale.c:77
+#: locale/programs/locale.c:86
 msgid "Get locale-specific information."
 msgstr "¥í¥±¡¼¥ë¸ÇÍ­¾ðÊó¤òÆÀ¤ë."
 
@@ -2025,12 +2084,12 @@ msgstr "¤³¤Î¥Ø¥ë¥×¤ÎÉ½¼¨"
 msgid "Gratuitous error"
 msgstr "ÉÔÉ¬Í×¤Ê¥¨¥é¡¼"
 
-#: nis/nis_print.c:320
+#: nis/nis_print.c:323
 #, c-format
 msgid "Group         : %s\n"
 msgstr "¥°¥ë¡¼¥×      : %s\n"
 
-#: nis/nis_print.c:249
+#: nis/nis_print.c:252
 msgid "Group Flags :"
 msgstr "¥°¥ë¡¼¥×¥Õ¥é¥°:"
 
@@ -2095,16 +2154,12 @@ msgstr "I/O²ÄÇ½¤Ç¤¹"
 msgid "IOT trap"
 msgstr "IOT¥È¥é¥Ã¥×"
 
-#: nis/nis_print.c:36
-msgid "IVY"
-msgstr "IVY"
-
 #: stdio-common/../sysdeps/gnu/errlist.c:645
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
 msgid "Identifier removed"
 msgstr "¼±ÊÌ»Ò¤ò½üµî¤·¤Þ¤·¤¿"
 
-#: elf/ldconfig.c:525
+#: elf/ldconfig.c:535
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Àµµ¬¤Î¥Õ¥¡¥¤¥ë¤Ç¤Ï¤Ê¤¤¤¿¤á¥Õ¥¡¥¤¥ë %s ¤òÌµ»ë¤·¤Þ¤¹"
@@ -2157,7 +2212,7 @@ msgstr "¥Ð¥Ã¥¯¥°¥é¥¦¥ó¥É¥×¥í¥»¥¹¤ËÂÐ¤¹¤ëÉÔÅ¬ÀÚ¤ÊÁàºî¤Ç¤¹"
 msgid "Information request"
 msgstr "¾ðÊóÍ×µá"
 
-#: iconv/iconv_prog.c:58
+#: iconv/iconv_prog.c:62
 msgid "Information:"
 msgstr "¾ðÊó:"
 
@@ -2165,12 +2220,12 @@ msgstr "¾ðÊó:"
 msgid "Input Files:"
 msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë:"
 
-#: elf/ldconfig.c:698 elf/readlib.c:92
+#: elf/ldconfig.c:754 elf/readlib.c:93
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë %s ¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó.\n"
 
-#: iconv/iconv_prog.c:55
+#: iconv/iconv_prog.c:59
 msgid "Input/Output format specification:"
 msgstr "ÆþÎÏ/½ÐÎÏ¥Õ¥©¡¼¥Þ¥Ã¥È¤Î»ÅÍÍ:"
 
@@ -2179,17 +2234,21 @@ msgstr "ÆþÎÏ/½ÐÎÏ¥Õ¥©¡¼¥Þ¥Ã¥È¤Î»ÅÍÍ:"
 msgid "Input/output error"
 msgstr "ÆþÎÏ/½ÐÎÏ¥¨¥é¡¼¤Ç¤¹"
 
-#: nis/ypclnt.c:798
+#: nis/ypclnt.c:800
 msgid "Internal NIS error"
 msgstr "NISÆâÉô¥¨¥é¡¼"
 
-#: nis/ypclnt.c:862
+#: nis/ypclnt.c:864
 msgid "Internal ypbind error"
 msgstr "ypbindÆâÉô¥¨¥é¡¼"
 
 #: stdio-common/../sysdeps/unix/siglist.c:28 sysdeps/generic/siglist.h:30
 msgid "Interrupt"
 msgstr "³ä¤ê¹þ¤ß"
+
+#: posix/../sysdeps/posix/gai_strerror.c:46
+msgid "Interrupted by a signal"
+msgstr "¥·¥°¥Ê¥ë¤Ë¤è¤ë³ä¤ê¹þ¤ß"
 
 #. TRANS Interrupted function call; an asynchronous signal occurred and prevented
 #. TRANS completion of the call.  When this happens, you should try the call
@@ -2214,27 +2273,27 @@ msgstr "³ä¤ê¹þ¤Þ¤ì¤¿¥·¥¹¥Æ¥à¥³¡¼¥ë¤ÏºÆ¥¹¥¿¡¼¥È¤µ¤»¤ë¤Ù¤­¤Ç¤¹"
 msgid "Invalid argument"
 msgstr "Ìµ¸ú¤Ê°ú¿ô¤Ç¤¹"
 
-#: posix/regex.c:1102
+#: posix/regex.c:1380
 msgid "Invalid back reference"
 msgstr "Ìµ¸ú¤Ê¸åÊý»²¾È¤Ç¤¹"
 
-#: posix/regex.c:1096
+#: posix/regex.c:1374
 msgid "Invalid character class name"
 msgstr "Ìµ¸ú¤Ê¥­¥ã¥é¥¯¥¿¥¯¥é¥¹Ì¾¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:332
+#: sunrpc/clnt_perr.c:341
 msgid "Invalid client credential"
 msgstr "Ìµ¸ú¤Ê¥¯¥é¥¤¥¢¥ó¥È¤Î¿®Ç¤¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:340
+#: sunrpc/clnt_perr.c:349
 msgid "Invalid client verifier"
 msgstr "Ìµ¸ú¤Ê¥¯¥é¥¤¥¢¥ó¥È³ÎÇ§¤Ç¤¹"
 
-#: posix/regex.c:1093
+#: posix/regex.c:1371
 msgid "Invalid collation character"
 msgstr "Ìµ¸ú¤Ê¾È¹çÊ¸»ú¤Ç¤¹"
 
-#: posix/regex.c:1114
+#: posix/regex.c:1392
 msgid "Invalid content of \\{\\}"
 msgstr "Ìµ¸ú¤Ê \\{\\} ¤ÎÆâÍÆ¤Ç¤¹"
 
@@ -2259,15 +2318,15 @@ msgstr "Áàºî¤ËÂÐ¤¹¤ëÌµ¸ú¤Ê¥ª¥Ö¥¸¥§¥¯¥È¤Ç¤¹"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ìµ¸ú¤Þ¤¿¤ÏÉÔ´°Á´¤Ê¥Þ¥ë¥Á¥Ð¥¤¥È¤Þ¤¿¤Ï¥ï¥¤¥ÉÊ¸»ú¤Ç¤¹"
 
-#: posix/regex.c:1123
+#: posix/regex.c:1401
 msgid "Invalid preceding regular expression"
 msgstr "Ìµ¸ú¤ÊÁ°½Ò¤ÎÀµµ¬É½¸½¤Ç¤¹"
 
-#: posix/regex.c:1117
+#: posix/regex.c:1395
 msgid "Invalid range end"
 msgstr "Ìµ¸ú¤Ê½ªÃ¼ÈÏ°Ï¤Ç¤¹"
 
-#: posix/regex.c:1090
+#: posix/regex.c:1368
 msgid "Invalid regular expression"
 msgstr "Ìµ¸ú¤ÊÀµµ¬É½¸½¤Ç¤¹"
 
@@ -2279,7 +2338,7 @@ msgstr "Ìµ¸ú¤Ê¥ê¥¯¥¨¥¹¥È¥³¡¼¥É¤Ç¤¹"
 msgid "Invalid request descriptor"
 msgstr "Ìµ¸ú¤Ê¥ê¥¯¥¨¥¹¥Èµ­½Ò»Ò¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:352
+#: sunrpc/clnt_perr.c:361
 msgid "Invalid server verifier"
 msgstr "Ìµ¸ú¤Ê¥µ¡¼¥Ð¡¼Ç§¾Ú¼Ô¤Ç¤¹"
 
@@ -2307,7 +2366,7 @@ msgstr "Ì¾Á°¥Õ¥¡¥¤¥ë¤Ç¤¹"
 msgid "Is a named type file"
 msgstr "Ì¾Á°ÉÕ¤­¥Õ¥¡¥¤¥ë¤Ç¤¹"
 
-#: nis/nis_print.c:188
+#: nis/nis_print.c:191
 msgid "Kerberos.\n"
 msgstr "Kerberos.\n"
 
@@ -2315,7 +2374,7 @@ msgstr "Kerberos.\n"
 msgid "Killed"
 msgstr "¶¯À©½ªÎ»"
 
-#: nis/nis_print.c:124
+#: nis/nis_print.c:127
 msgid "LINK\n"
 msgstr "LINK\n"
 
@@ -2358,20 +2417,20 @@ msgstr "¥ê¥ó¥¯¿ô¤¬ÈÏ°Ï³°¤Ç¤¹"
 msgid "Link points to illegal name"
 msgstr "¥ê¥ó¥¯¤¬ÉÔÀµ¤ÊÌ¾Á°¤ò»Ø¤·¤Æ¤¤¤Þ¤¹"
 
-#: nis/nis_print.c:283
+#: nis/nis_print.c:286
 msgid "Linked Object Type : "
 msgstr "¥ê¥ó¥¯¤µ¤ì¤¿¥ª¥Ö¥¸¥§¥¯¥È·¿ : "
 
-#: nis/nis_print.c:285
+#: nis/nis_print.c:288
 #, c-format
 msgid "Linked to : %s\n"
 msgstr "¥ê¥ó¥¯Àè : %s\n"
 
-#: nis/ypclnt.c:810
+#: nis/ypclnt.c:812
 msgid "Local domain name not set"
 msgstr "¥í¡¼¥«¥ë¥É¥á¥¤¥óÌ¾¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:800
+#: nis/ypclnt.c:802
 msgid "Local resource allocation failure"
 msgstr "¥í¡¼¥«¥ë¥ê¥½¡¼¥¹³ÎÊÝ¤Î¼ºÇÔ¤·¤Þ¤·¤¿"
 
@@ -2388,11 +2447,11 @@ msgstr "ÉÔÅö, ¤Þ¤¿¤ÏÉÔÀµ¤ÊÌ¾Á°¤Ç¤¹"
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr "¥í¥ó¥°¥ª¥×¥·¥ç¥ó¤ÇÉ¬¿Ü¤Þ¤¿¤ÏÇ¤°Õ¤Î°ú¿ô¤Ï¡¢¤½¤ì¤ËÂÐ±þ¤¹¤ë¥·¥ç¡¼¥È¥ª¥×¥·¥ç¥ó¤Ç¤âÉ¬¿Ü¤Þ¤¿¤ÏÇ¤°Õ¤Ç¤¹."
 
-#: elf/ldconfig.c:135
+#: elf/ldconfig.c:130
 msgid "Manually link individual libraries."
 msgstr "¸Ä¡¹¤Î¥é¥¤¥Ö¥é¥ê¤Ë¼êÆ°¤Ç¥ê¥ó¥¯¤·¤Æ¤¯¤À¤µ¤¤."
 
-#: nis/nis_print.c:169
+#: nis/nis_print.c:172
 msgid "Master Server :\n"
 msgstr "¥Þ¥¹¥¿¡¼¥µ¡¼¥Ð:\n"
 
@@ -2404,7 +2463,7 @@ msgstr "¥Þ¥¹¥¿¡¼¥µ¡¼¥Ð¤¬¥Ó¥¸¡¼¤Ç¤¹, ¥Õ¥ë¥À¥ó¥×¤ÏºÆ¥¹¥±¥¸¥å¡¼¥ë¤·¤Þ¤·¤¿."
 msgid "Memory allocation failure"
 msgstr "¥á¥â¥ê³ÎÊÝ¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: posix/regex.c:1120
+#: posix/regex.c:1398
 msgid "Memory exhausted"
 msgstr "¥á¥â¥ê¤ò»È¤¤¿Ô¤·¤Þ¤·¤¿"
 
@@ -2423,7 +2482,7 @@ msgstr "¥á¥Ã¥»¡¼¥¸¤¬Ä¹¤¹¤®¤Þ¤¹"
 msgid "Missing or malformed attribute"
 msgstr "Â°À­¤¬¸«Åö¤¿¤é¤Ê¤¤¤«ÉÔÅö¤Ç¤¹"
 
-#: nis/nis_print.c:328
+#: nis/nis_print.c:331
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "¹¹¿·»þ¹ï      : %s"
@@ -2436,7 +2495,7 @@ msgstr "¹¹¿·¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 msgid "Modify operation failed"
 msgstr "¹¹¿·Áàºî¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: locale/programs/locale.c:70
+#: locale/programs/locale.c:78
 msgid "Modify output format:"
 msgstr "½ÐÎÏ·Á¼°¤Î¹¹¿·:"
 
@@ -2454,7 +2513,7 @@ msgstr "¥µ¡¼¥Ð¥æ¡¼¥¶¥ª¥×¥·¥ç¥ó¤ËÂÐ¤·¤Æ¥æ¡¼¥¶Ì¾¤ò»ØÄê¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹"
 msgid "NAME"
 msgstr "Ì¾Á°"
 
-#: locale/programs/locale.c:80
+#: locale/programs/locale.c:89
 msgid ""
 "NAME\n"
 "[-a|-m]"
@@ -2462,15 +2521,11 @@ msgstr ""
 "Ì¾Á°\n"
 "[-a|-m]"
 
-#: nis/nis_print.c:32
-msgid "NIS"
-msgstr "NIS"
-
-#: nis/ypclnt.c:814
+#: nis/ypclnt.c:816
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "NIS¥¯¥é¥¤¥¢¥ó¥È¤È¥µ¡¼¥Ð¤Î¥Ð¡¼¥¸¥ç¥ó¤¬°ìÃ×¤·¤Þ¤»¤ó - ¥µ¡¼¥Ó¥¹¤òÄó¶¡¤Ç¤­¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:812
+#: nis/ypclnt.c:814
 msgid "NIS map database is bad"
 msgstr "NIS¥Þ¥Ã¥×¥Ç¡¼¥¿¥Ù¡¼¥¹¤¬ÉÔÀµ¤Ç¤¹"
 
@@ -2486,7 +2541,7 @@ msgstr "NIS+ ¥µ¡¼¥Ð¤ËÆÏ¤­¤Þ¤»¤ó"
 msgid "NIS+ service is unavailable or not installed"
 msgstr "NIS+ ¥µ¡¼¥Ó¥¹¤¬ÍøÍÑÉÔÇ½¤«¡¢¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: nis/nis_print.c:109
+#: nis/nis_print.c:112
 msgid "NO OBJECT\n"
 msgstr "¥ª¥Ö¥¸¥§¥¯¥È¤¬¤¢¤ê¤Þ¤»¤ó\n"
 
@@ -2494,7 +2549,7 @@ msgstr "¥ª¥Ö¥¸¥§¥¯¥È¤¬¤¢¤ê¤Þ¤»¤ó\n"
 msgid "NUMBER"
 msgstr "ÈÖ¹æ"
 
-#: nis/nis_print.c:163
+#: nis/nis_print.c:166
 #, c-format
 msgid "Name : `%s'\n"
 msgstr "Ì¾Á° : `%s'\n"
@@ -2584,7 +2639,7 @@ msgstr "¥¢¥Î¡¼¥É¤¬¤¢¤ê¤Þ¤»¤ó"
 msgid "No buffer space available"
 msgstr "ÍøÍÑ²ÄÇ½¤Ê¶õ¤­¥Ð¥Ã¥Õ¥¡¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:425
+#: locale/programs/ld-ctype.c:433
 msgid "No character set name specified in charmap"
 msgstr "¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ãæ¤ÇÊ¸»ú½¸¹çÌ¾¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
@@ -2601,8 +2656,8 @@ msgstr "»Ò¥×¥í¥»¥¹¤¬¤¢¤ê¤Þ¤»¤ó"
 msgid "No data available"
 msgstr "ÍøÍÑ²ÄÇ½¤Ê¥Ç¡¼¥¿¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1500
-#: locale/programs/ld-ctype.c:407 locale/programs/ld-identification.c:132
+#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1513
+#: locale/programs/ld-ctype.c:415 locale/programs/ld-identification.c:132
 #: locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98
 #: locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94
 #: locale/programs/ld-numeric.c:99 locale/programs/ld-paper.c:91
@@ -2615,7 +2670,7 @@ msgstr "%s ¥«¥Æ¥´¥ê¤ËÂÐ¤¹¤ëÄêµÁ¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 msgid "No file space on server"
 msgstr "¥µ¡¼¥Ð¤Ë¥Õ¥¡¥¤¥ë¤ÎÎÎ°è¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:532
+#: elf/ldconfig.c:543
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "%s ¤ËÂÐ¤¹¤ë soname ¤¬¸«¤Ä¤«¤é¤Ê¤¤¤¿¤á¥ê¥ó¥¯¤¬ºîÀ®¤µ¤ì¤Þ¤»¤ó"
@@ -2628,7 +2683,7 @@ msgstr "%s ¤ËÂÐ¤¹¤ë soname ¤¬¸«¤Ä¤«¤é¤Ê¤¤¤¿¤á¥ê¥ó¥¯¤¬ºîÀ®¤µ¤ì¤Þ¤»¤ó"
 msgid "No locks available"
 msgstr "¥í¥Ã¥¯¤¬ÍøÍÑ¤Ç¤­¤Þ¤»¤ó"
 
-#: posix/regex.c:1087
+#: posix/regex.c:1365
 msgid "No match"
 msgstr "°ìÃ×¤·¤Þ¤»¤ó"
 
@@ -2641,11 +2696,11 @@ msgstr "¥á¥Ç¥£¥¢¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 msgid "No message of desired type"
 msgstr "Í×µá¤·¤¿·Á¼°¤Î¥á¥Ã¥»¡¼¥¸¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:802
+#: nis/ypclnt.c:804
 msgid "No more records in map database"
 msgstr "¥Þ¥Ã¥×¥Ç¡¼¥¿¥Ù¡¼¥¹¤Ë¤³¤ì°Ê¾åµ­Ï¿¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: posix/regex.c:5955
+#: posix/regex.c:7919
 msgid "No previous regular expression"
 msgstr "°ÊÁ°¤ËÀµµ¬É½¸½¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
@@ -2695,11 +2750,11 @@ msgstr "¤½¤Î¤è¤¦¤Ê¥Ç¥Ð¥¤¥¹¤ä¥¢¥É¥ì¥¹¤Ï¤¢¤ê¤Þ¤»¤ó"
 msgid "No such file or directory"
 msgstr "¤½¤Î¤è¤¦¤Ê¥Õ¥¡¥¤¥ë¤ä¥Ç¥£¥ì¥¯¥È¥ê¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:796
+#: nis/ypclnt.c:798
 msgid "No such key in map"
 msgstr "¥Þ¥Ã¥×¤Ë¤½¤Î¤è¤¦¤Ê¥­¡¼¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: nis/ypclnt.c:794
+#: nis/ypclnt.c:796
 msgid "No such map in server's domain"
 msgstr "¥µ¡¼¥Ð¥É¥á¥¤¥ó¤Ë¤½¤Î¤è¤¦¤Ê¥Þ¥Ã¥×¤Ï¤¢¤ê¤Þ¤»¤ó"
 
@@ -2717,7 +2772,7 @@ msgstr "NIS+ Ì¾Á°¶õ´Ö¤ËÁø¶ø¤·¤Æ¤¤¤Þ¤»¤ó"
 msgid "Non-recoverable failure in name resolution"
 msgstr "Ì¾Á°¤Î²ò·è»þ¤Ë²óÉüÉÔ²ÄÇ½¤Ê¼ºÇÔ"
 
-#: nis/nis_print.c:177
+#: nis/nis_print.c:180
 msgid "None.\n"
 msgstr "½ªÎ».\n"
 
@@ -2784,12 +2839,12 @@ msgstr "½êÍ­¼Ô¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 msgid "Not supported"
 msgstr "¥µ¥Ý¡¼¥È¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: nis/nis_print.c:264
+#: nis/nis_print.c:267
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr "¥«¥é¥à¿ô            : %d\n"
 
-#: nis/nis_print.c:363
+#: nis/nis_print.c:366
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "¥ª¥Ö¥¸¥§¥¯¥È¿ô    : %u\n"
@@ -2810,17 +2865,17 @@ msgstr "¿ôÃÍ¤Î°ú¿ô¤Ï¥É¥á¥¤¥ó³°¤Ç¤¹"
 msgid "Numerical result out of range"
 msgstr "·×»»·ë²Ì¤ÏÈÏ°Ï³°¤ÎÃÍ¤Ç¤¹"
 
-#: nis/nis_print.c:367
+#: nis/nis_print.c:370
 #, c-format
 msgid "Object #%d:\n"
 msgstr "¥ª¥Ö¥¸¥§¥¯¥È #%d:\n"
 
-#: nis/nis_print.c:317
+#: nis/nis_print.c:320
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "¥ª¥Ö¥¸¥§¥¯¥ÈÌ¾: %s\n"
 
-#: nis/nis_print.c:329
+#: nis/nis_print.c:332
 msgid "Object Type   : "
 msgstr "¥ª¥Ö¥¸¥§¥¯¥È·¿: "
 
@@ -2837,11 +2892,11 @@ msgstr "¥ª¥Ö¥¸¥§¥¯¥È¤Ï¥ê¥â¡¼¥È¤Ë¤¢¤ê¤Þ¤¹"
 msgid "Object with same name exists"
 msgstr "Æ±¤¸Ì¾Á°¤ò»ý¤Ä¥ª¥Ö¥¸¥§¥¯¥È¤¬Â¸ºß¤·¤Þ¤¹"
 
-#: timezone/zic.c:2022
+#: timezone/zic.c:2028
 msgid "Odd number of quotation marks"
 msgstr "¥¯¥©¡¼¥È¤¹¤ë¥Þ¡¼¥¯¤¬´ñ¿ô¸ÄÊ¬¤·¤«¤¢¤ê¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:134
+#: elf/ldconfig.c:129
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "¥³¥Þ¥ó¥É¥é¥¤¥ó¤Ë»ØÄê¤µ¤ì¤¿¥Ç¥£¥ì¥¯¥È¥ê¤Î¤ß½èÍý¤·¤Þ¤¹. ¥­¥ã¥Ã¥·¥å¤ò¹½ÃÛ¤·¤Þ¤»¤ó."
 
@@ -2923,7 +2978,7 @@ msgstr "¥¹¥È¥ê¡¼¥à¥ê¥½¡¼¥¹³°¤Ç¤¹"
 msgid "Out of streams resources"
 msgstr "¥¹¥È¥ê¡¼¥à¥ê¥½¡¼¥¹³°¤Ç¤¹"
 
-#: iconv/iconv_prog.c:60 locale/programs/localedef.c:99
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:99
 msgid "Output control:"
 msgstr "½ÐÎÏÀ©¸æ:"
 
@@ -2931,12 +2986,12 @@ msgstr "½ÐÎÏÀ©¸æ:"
 msgid "Output selection:"
 msgstr "½ÐÎÏÁªÂò:"
 
-#: nis/nis_print.c:319
+#: nis/nis_print.c:322
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "½êÍ­¼Ô        : %s\n"
 
-#: nis/nis_print.c:127
+#: nis/nis_print.c:130
 msgid "PRIVATE\n"
 msgstr "PRIVATE\n"
 
@@ -2958,13 +3013,13 @@ msgstr "ÉôÊ¬Åª¤ËÀ®¸ù"
 msgid "Passed object is not the same object on server"
 msgstr "¥Ñ¥¹¤µ¤ì¤¿¥ª¥Ö¥¸¥§¥¯¥È¤Ï¥µ¡¼¥Ð¾å¤Î¤½¤ì¤ÈÆ±°ì¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: elf/ldconfig.c:287
+#: elf/ldconfig.c:282
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "1²ó°Ê¾åÍ¿¤¨¤é¤ì¤¿¥Ñ¥¹`%s'"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:39 nis/ypclnt.c:816
+#: nis/nis_error.c:39 nis/ypclnt.c:818
 #: stdio-common/../sysdeps/gnu/errlist.c:109
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
 msgid "Permission denied"
@@ -2974,17 +3029,21 @@ msgstr "µö²Ä¤¬¤¢¤ê¤Þ¤»¤ó"
 msgid "Power failure"
 msgstr "ÅÅ¸»¸Î¾ã"
 
-#: posix/regex.c:1126
+#: posix/regex.c:1404
 msgid "Premature end of regular expression"
 msgstr "Àµµ¬É½¸½¤Î½ªÃ¼¤¬Áá¤¹¤®¤Þ¤¹"
 
-#: elf/ldconfig.c:127
+#: elf/ldconfig.c:122
 msgid "Print cache"
 msgstr "¥­¥ã¥Ã¥·¥å¤ÎÉ½¼¨"
 
 #: nscd/nscd.c:89
 msgid "Print current configuration statistic"
 msgstr "¸½ºß¤Î¥³¥ó¥Õ¥£¥®¥å¥ì¡¼¥·¥ç¥ó¤ÎÅý·×¤òÉ½¼¨¤¹¤ë"
+
+#: locale/programs/locale.c:81
+msgid "Print more information"
+msgstr "¾ÜºÙ¾ðÊó¤ÎÉ½¼¨"
 
 #: locale/programs/localedef.c:107
 msgid "Print more messages"
@@ -3001,6 +3060,10 @@ msgstr "¤ª¤½¤é¤¯À®¸ù"
 #: nis/nis_error.c:32
 msgid "Probably not found"
 msgstr "¤ª¤½¤é¤¯¸«¤Ä¤«¤ê¤Þ¤»¤ó"
+
+#: posix/../sysdeps/posix/gai_strerror.c:42
+msgid "Processing request in progress"
+msgstr "Í×µá¤Ï¤¹¤Ç¤Ë½èÍýÃæ¤Ç¤¹"
 
 #: stdio-common/../sysdeps/unix/siglist.c:53 sysdeps/generic/siglist.h:53
 msgid "Profiling timer expired"
@@ -3059,7 +3122,7 @@ msgstr "RFSÆÃÄê¥¨¥é¡¼"
 msgid "RPC bad procedure for program"
 msgstr "¥×¥í¥°¥é¥à¤ËÂÐ¤·¤ÆÉÔÀµ¤ÊRPC¤Î¼êÂ³¤­¤Ç¤¹"
 
-#: nis/ypclnt.c:790
+#: nis/ypclnt.c:792
 msgid "RPC failure on NIS operation"
 msgstr "NISÁàºî¤Ë¤ª¤±¤ëRPC¤Î¼ºÇÔ¤Ç¤¹"
 
@@ -3083,88 +3146,88 @@ msgstr "RPC¹½Â¤¤¬ÉÔÀµ¤Ç¤¹"
 msgid "RPC version wrong"
 msgstr "RPC¥Ð¡¼¥¸¥ç¥ó¤¬°ã¤¤¤Þ¤¹"
 
-#: sunrpc/clnt_perr.c:271
+#: sunrpc/clnt_perr.c:278
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (Ì¤ÃÎ¤Î¥¨¥é¡¼¥³¡¼¥É)"
 
-#: sunrpc/clnt_perr.c:190
+#: sunrpc/clnt_perr.c:197
 msgid "RPC: Authentication error"
 msgstr "RPC: Ç§¾Ú¥¨¥é¡¼"
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:177
 msgid "RPC: Can't decode result"
 msgstr "RPC: ¥Ç¥³¡¼¥É¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:166
+#: sunrpc/clnt_perr.c:173
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: °ú¿ô¤ò¥¨¥ó¥³¡¼¥É¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:230
+#: sunrpc/clnt_perr.c:237
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: ¼ºÇÔ¤·¤Þ¤·¤¿ (¸¶°øÉÔÆÃÄê¤Î¥¨¥é¡¼)"
 
-#: sunrpc/clnt_perr.c:186
+#: sunrpc/clnt_perr.c:193
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: RPC¤Î¥Ð¡¼¥¸¥ç¥ó¤¬Èó¸ß´¹¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:222
+#: sunrpc/clnt_perr.c:229
 msgid "RPC: Port mapper failure"
 msgstr "RPC: ¥Ý¡¼¥È¥Þ¥Ã¥Ñ¡¼¤Î¼ºÇÔ¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:202
+#: sunrpc/clnt_perr.c:209
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: ¼êÂ³¤­¤¬ÍøÍÑ¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:226
+#: sunrpc/clnt_perr.c:233
 msgid "RPC: Program not registered"
 msgstr "RPC: ¥×¥í¥°¥é¥à¤¬ÅÐÏ¿¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:194
+#: sunrpc/clnt_perr.c:201
 msgid "RPC: Program unavailable"
 msgstr "RPC: ¥×¥í¥°¥é¥à¤ÏÍøÍÑ¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:198
+#: sunrpc/clnt_perr.c:205
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: ¥×¥í¥°¥é¥à¤È¥Ð¡¼¥¸¥ç¥ó¤¬°ìÃ×¤·¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:210
+#: sunrpc/clnt_perr.c:217
 msgid "RPC: Remote system error"
 msgstr "RPC: ±ó³Ö¥·¥¹¥Æ¥à¥¨¥é¡¼"
 
-#: sunrpc/clnt_perr.c:206
+#: sunrpc/clnt_perr.c:213
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: ¥µ¡¼¥Ð¤¬°ú¿ô¤ò¥Ç¥³¡¼¥É¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:163
+#: sunrpc/clnt_perr.c:170
 msgid "RPC: Success"
 msgstr "RPC: À®¸ù¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:182
+#: sunrpc/clnt_perr.c:189
 msgid "RPC: Timed out"
 msgstr "RPC: ¥¿¥¤¥à¥¢¥¦¥È¤·¤Þ¤·¤¿"
 
-#: sunrpc/clnt_perr.c:178
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Unable to receive"
 msgstr "RPC: ¼õ¤±¼è¤ì¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:174
+#: sunrpc/clnt_perr.c:181
 msgid "RPC: Unable to send"
 msgstr "RPC: Á÷¿®¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:214
+#: sunrpc/clnt_perr.c:221
 msgid "RPC: Unknown host"
 msgstr "RPC: ÉÔÌÀ¤Ê¥Û¥¹¥È¤Ç¤¹"
 
-#: sunrpc/clnt_perr.c:218
+#: sunrpc/clnt_perr.c:225
 msgid "RPC: Unknown protocol"
 msgstr "RPC: ÉÔÌÀ¤Ê¥×¥í¥È¥³¥ë¤Ç¤¹"
 
-#: nis/nis_print.c:185
+#: nis/nis_print.c:188
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr "RSA (%d ¥Ó¥Ã¥È)\n"
 
-#: elf/dl-sym.c:68 elf/dl-sym.c:125
+#: elf/dl-sym.c:72 elf/dl-sym.c:134
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "¥³¡¼¥ÉÃæ¤Ç»È¤ï¤ì¤Æ¤¤¤ëRTLD_NEXT¤òÆ°Åª¤ËÆÉ¤ß¹þ¤á¤Þ¤»¤ó"
 
@@ -3187,7 +3250,7 @@ msgstr "ÆÉ¤ß¹þ¤ßÀìÍÑ¥Õ¥¡¥¤¥ë¥·¥¹¥Æ¥à¤Ç¤¹"
 msgid "Real-time signal %d"
 msgstr "¥ê¥¢¥ë¥¿¥¤¥à¥·¥°¥Ê¥ë %d ¤Ç¤¹"
 
-#: posix/regex.c:1129
+#: posix/regex.c:1407
 msgid "Regular expression too big"
 msgstr "Àµµ¬É½¸½¤¬Ä¹¤¹¤®¤Þ¤¹"
 
@@ -3201,11 +3264,11 @@ msgstr "±ó³ÖI/O¥¨¥é¡¼¤Ç¤¹"
 msgid "Remote address changed"
 msgstr "±ó³Ö¥¢¥É¥ì¥¹¤¬ÊÑ¹¹¤µ¤ì¤Þ¤·¤¿"
 
-#: inet/ruserpass.c:182
+#: inet/ruserpass.c:185
 msgid "Remove password or make file unreadable by others."
 msgstr "¥Ñ¥¹¥ï¡¼¥É¤¬ºï½ü, ¤Þ¤¿¤Ï¥Õ¥¡¥¤¥ë¤¬Âè»°¼Ô¤Ë¤è¤Ã¤ÆÆÉ¤ß¹þ¤ß¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/cache.c:394
+#: elf/cache.c:431
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s ¤«¤é %s ¤Ø¤ÎÌ¾Á°ÊÑ¹¹¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
@@ -3215,7 +3278,7 @@ msgstr "%s ¤«¤é %s ¤Ø¤ÎÌ¾Á°ÊÑ¹¹¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 msgid "Reopening shared object `%s' failed"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È`%s'¤ÎºÆ¥ª¡¼¥×¥ó¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: nis/nis_print.c:171
+#: nis/nis_print.c:174
 msgid "Replicate :\n"
 msgstr "Ê£À½ :\n"
 
@@ -3224,15 +3287,23 @@ msgstr "Ê£À½ :\n"
 msgid "Report bugs to %s.\n"
 msgstr "¥Ð¥°¤òÈ¯¸«¤·¤¿¤é %s °¸¤ËÊó¹ð¤·¤Æ²¼¤µ¤¤.\n"
 
-#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:337
-#: locale/programs/locale.c:256 locale/programs/localedef.c:297
-#: malloc/memusagestat.c:602
+#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:379
+#: iconv/iconvconfig.c:321 locale/programs/locale.c:268
+#: locale/programs/localedef.c:297 malloc/memusagestat.c:602
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr "¥Ð¥°¤Ï¥¹¥¯¥ê¥×¥È`glibcbug'¤òÍÑ¤¤¤Æ<bugs@gnu.org>¤Þ¤ÇÊó¹ð¤·¤Æ¤¯¤À¤µ¤¤.\n"
 
-#: nis/ypclnt.c:788
+#: nis/ypclnt.c:790
 msgid "Request arguments bad"
 msgstr "Í×µá°ú¿ô¤¬ÉÔÀµ¤Ç¤¹"
+
+#: posix/../sysdeps/posix/gai_strerror.c:43
+msgid "Request canceled"
+msgstr "Í×µá¤ÏÃæÃÇ¤µ¤ì¤Þ¤·¤¿"
+
+#: posix/../sysdeps/posix/gai_strerror.c:44
+msgid "Request not canceled"
+msgstr "Í×µá¤ÏÃæÃÇ¤µ¤ì¤Þ¤»¤ó¤Ç¤·¤¿"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:171
 msgid "Reserved for future use"
@@ -3304,11 +3375,7 @@ msgstr "¥³¡¼¥ë¥Ð¥Ã¥¯¥×¥í¥·¡¼¥¸¥ã¤Ë·ë²Ì¤òÁ÷¤ê¤Þ¤·¤¿"
 msgid "SHOBJ [PROFDATA]"
 msgstr "SHOBJ [PROFDATA]"
 
-#: nis/nis_print.c:34
-msgid "SUNYP"
-msgstr "SUNYP"
-
-#: nis/nis_print.c:266
+#: nis/nis_print.c:269
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr "¸¡º÷¥Ñ¥¹            : %s\n"
@@ -3325,11 +3392,11 @@ msgstr "¥µ¡¼¥Ð¤¬¥Ó¥¸¡¼¾õÂÖ¤Ç¤¹, ºÆ»î¹Ô¤·¤Æ¤¯¤À¤µ¤¤"
 msgid "Server out of memory"
 msgstr "¥µ¡¼¥Ð¤Î¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó"
 
-#: sunrpc/clnt_perr.c:336
+#: sunrpc/clnt_perr.c:345
 msgid "Server rejected credential"
 msgstr "¥µ¡¼¥Ð¤¬¾ÚÌÀ¤òµñÈÝ¤·¤Þ¤·¤¿"
 
-#: sunrpc/clnt_perr.c:344
+#: sunrpc/clnt_perr.c:353
 msgid "Server rejected verifier"
 msgstr "¥µ¡¼¥Ð¤¬³ÎÇ§¤òµñÈÝ¤·¤Þ¤·¤¿"
 
@@ -3397,7 +3464,7 @@ msgstr "¼Â¸úÀ­¤Î¤Ê¤¤NFS¥Õ¥¡¥¤¥ë¥Ï¥ó¥É¥ë¤Ç¤¹"
 msgid "Start NUMBER threads"
 msgstr "NUMBER¥¹¥ì¥Ã¥É¤Çµ¯Æ°¤¹¤ë"
 
-#: nis/nis_print.c:362
+#: nis/nis_print.c:365
 #, c-format
 msgid "Status            : %s\n"
 msgstr "¥¹¥Æ¡¼¥¿¥¹        : %s\n"
@@ -3427,7 +3494,7 @@ msgstr "¥¹¥È¥ê¡¼¥à¥Ñ¥¤¥×¥¨¥é¡¼"
 msgid "Structure needs cleaning"
 msgstr "¹½Â¤ÂÎ¤òÆâÍÆ¾Ãµî¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹"
 
-#: nis/nis_error.c:29 nis/ypclnt.c:786 nis/ypclnt.c:860 posix/regex.c:1084
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1362
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "À®¸ù¤Ç¤¹"
@@ -3448,11 +3515,11 @@ msgstr "¥·¥ó¥Ü¥ë¥­¥ã¥é¥¯¥¿Ì¾¤Ï FILE Ãæ¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 msgid "System error"
 msgstr "¥·¥¹¥Æ¥à¥¨¥é¡¼"
 
-#: locale/programs/locale.c:65
+#: locale/programs/locale.c:73
 msgid "System information:"
 msgstr "¥·¥¹¥Æ¥à¾ðÊó:"
 
-#: nis/ypclnt.c:866
+#: nis/ypclnt.c:868
 msgid "System resource allocation failure"
 msgstr "¥·¥¹¥Æ¥à¥ê¥½¡¼¥¹¤Î³ÎÊÝ¤Ë¼ºÇÔ"
 
@@ -3473,7 +3540,7 @@ msgstr ""
 msgid "TABLE"
 msgstr "¥Æ¡¼¥Ö¥ë"
 
-#: nis/nis_print.c:118
+#: nis/nis_print.c:121
 msgid "TABLE\n"
 msgstr "¥Æ¡¼¥Ö¥ë\n"
 
@@ -3481,7 +3548,7 @@ msgstr "¥Æ¡¼¥Ö¥ë\n"
 msgid "TABLE,yes"
 msgstr "¥Æ¡¼¥Ö¥ë,¤Ï¤¤"
 
-#: nis/nis_print.c:263
+#: nis/nis_print.c:266
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr "¥Æ¡¼¥Ö¥ë·¿          : %s\n"
@@ -3504,7 +3571,7 @@ msgstr "½ªÎ»¤·¤Þ¤·¤¿"
 msgid "Text file busy"
 msgstr "¥Æ¥­¥¹¥È¥Õ¥¡¥¤¥ë¤¬¥Ó¥¸¡¼¾õÂÖ¤Ç¤¹"
 
-#: iconv/iconv_prog.c:627
+#: iconv/iconv_prog.c:680
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -3520,11 +3587,11 @@ msgstr ""
 "\n"
 "  "
 
-#: sunrpc/rpc_main.c:1364
+#: sunrpc/rpc_main.c:1365
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 msgstr "¤³¤Î¼ÂÁõ¤Ï¿··Á¼°¤Þ¤¿¤ÏMT¥»¡¼¥Õ¤Ê¥³¡¼¥É¤ò¥µ¥Ý¡¼¥È¤·¤Æ¤¤¤Þ¤»¤ó!\n"
 
-#: nis/nis_print.c:224
+#: nis/nis_print.c:227
 msgid "Time to live : "
 msgstr "À¸Â¸»þ´Ö : "
 
@@ -3598,9 +3665,9 @@ msgstr "¥æ¡¼¥¶¤¬Â¿¤¹¤®¤Þ¤¹"
 msgid "Trace/breakpoint trap"
 msgstr "¥È¥ì¡¼¥¹/¥Ö¥ì¥¤¥¯¥Ý¥¤¥ó¥È ¥È¥é¥Ã¥×"
 
-#: posix/regex.c:1099
+#: posix/regex.c:1377
 msgid "Trailing backslash"
-msgstr "¥Ð¥Ã¥¯¥¹¥é¥Ã¥·¥å¤ò°ú¤­¤º¤Ã¤Æ¤¤¤ë"
+msgstr "¥Ð¥Ã¥¯¥¹¥é¥Ã¥·¥å¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹"
 
 #. TRANS In the GNU system, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
@@ -3630,12 +3697,12 @@ msgstr "Å¾Á÷Àè¤¬ÀÜÂ³¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "¾ÜºÙ¤Ï`%s --help'¤Þ¤¿¤Ï`%s --usage'¤ò¼Â¹Ô¤·¤Æ²¼¤µ¤¤.\n"
 
-#: nis/nis_print.c:164
+#: nis/nis_print.c:167
 #, c-format
 msgid "Type : %s\n"
 msgstr "·¿   : %s\n"
 
-#: nis/nis_print.c:48
+#: nis/nis_print.c:51
 msgid "UNKNOWN"
 msgstr "Ì¤ÃÎ"
 
@@ -3655,31 +3722,35 @@ msgstr "¥³¡¼¥ë¥Ð¥Ã¥¯¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 msgid "Unable to create process on server"
 msgstr "¥µ¡¼¥Ð¾å¤Ë¥×¥í¥»¥¹¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: nis/nis_print.c:191
+#: nis/nis_print.c:194
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "Ì¤ÃÎ (·¿ = %d, ¥Ó¥Ã¥È = %d)\n"
 
-#: inet/ruserpass.c:274
+#: inet/ruserpass.c:277
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr "Ì¤ÃÎ¤Î .netrc ¥­¡¼¥ï¡¼¥É %s"
 
-#: elf/../sysdeps/generic/readelflib.c:69
+#: elf/../sysdeps/generic/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "¥Õ¥¡¥¤¥ë %s Ãæ¤ÇÌ¤ÃÎ¤ÎELFCLASS.\n"
 
-#: nis/ypclnt.c:820
+#: nis/ypclnt.c:822
 msgid "Unknown NIS error code"
 msgstr "Ì¤ÃÎ¤ÎNIS¥¨¥é¡¼¥³¡¼¥É"
+
+#: elf/cache.c:101
+msgid "Unknown OS"
+msgstr "Ì¤ÃÎ¤ÎOS"
 
 #: nss/getent.c:771
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Ì¤ÃÎ¤Î¥Ç¡¼¥¿¥Ù¡¼¥¹: %s\n"
 
-#: posix/../sysdeps/posix/gai_strerror.c:52
+#: posix/../sysdeps/posix/gai_strerror.c:57
 msgid "Unknown error"
 msgstr "Ì¤ÃÎ¤Î¥¨¥é¡¼"
 
@@ -3715,31 +3786,31 @@ msgstr "ÉÔÌÀ¤Ê¥µ¡¼¥Ð¥¨¥é¡¼"
 msgid "Unknown signal %d"
 msgstr "Ì¤ÃÎ¤Î¥·¥°¥Ê¥ë(%d)"
 
-#: misc/error.c:114 timezone/zic.c:384
+#: misc/error.c:113 timezone/zic.c:390
 msgid "Unknown system error"
 msgstr "Ì¤ÃÎ¤Î¥·¥¹¥Æ¥à¥¨¥é¡¼"
 
-#: nis/ypclnt.c:868
+#: nis/ypclnt.c:870
 msgid "Unknown ypbind error"
 msgstr "ÉÔÌÀ¤Êypbind¥¨¥é¡¼"
 
-#: posix/regex.c:1108
+#: posix/regex.c:1386
 msgid "Unmatched ( or \\("
 msgstr "( ¤â¤·¤¯¤Ï \\( ¤¬°ìÃ×¤·¤Þ¤»¤ó"
 
-#: posix/regex.c:1132
+#: posix/regex.c:1410
 msgid "Unmatched ) or \\)"
 msgstr ") ¤â¤·¤¯¤Ï \\) ¤¬°ìÃ×¤·¤Þ¤»¤ó"
 
-#: posix/regex.c:1105
+#: posix/regex.c:1383
 msgid "Unmatched [ or [^"
 msgstr "[ ¤â¤·¤¯¤Ï [^ ¤¬°ìÃ×¤·¤Þ¤»¤ó"
 
-#: posix/regex.c:1111
+#: posix/regex.c:1389
 msgid "Unmatched \\{"
 msgstr "\\{ ¤¬°ìÃ×¤·¤Þ¤»¤ó"
 
-#: posix/getconf.c:819
+#: posix/getconf.c:1006
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "ÊÑ¿ô`%s'¤òÇ§¼±¤Ç¤­¤Þ¤»¤ó"
@@ -3752,10 +3823,10 @@ msgstr "¶ÛµÞ¤ÎI/O¾õ¶·¤Ç¤¹"
 msgid "Usage:"
 msgstr "»ÈÍÑË¡:"
 
-#: posix/getconf.c:731
+#: posix/getconf.c:883
 #, c-format
-msgid "Usage: %s variable_name [pathname]\n"
-msgstr "»ÈÍÑË¡: %s ÊÑ¿ôÌ¾ [¥Ñ¥¹Ì¾]\n"
+msgid "Usage: %s [-v specification] variable_name [pathname]\n"
+msgstr "»ÈÍÑË¡: %s [-v »ÅÍÍ] ÊÑ¿ôÌ¾ [¥Ñ¥¹Ì¾]\n"
 
 #: sunrpc/rpcinfo.c:674
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
@@ -3763,11 +3834,11 @@ msgstr ""
 "»ÈÍÑË¡: rpcinfo [ -n ¥Ý¡¼¥ÈÈÖ¹æ ] -u ¥Û¥¹¥È\n"
 "                              ¥×¥í¥°¥é¥àÈÖ¹æ [ ¥Ð¡¼¥¸¥ç¥óÈÖ¹æ ]\n"
 
-#: elf/ldconfig.c:132
+#: elf/ldconfig.c:127
 msgid "Use CACHE as cache file"
 msgstr "¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë¤È¤·¤Æ CACHE ¤ò»ÈÍÑ¤·¤Þ¤¹"
 
-#: elf/ldconfig.c:133
+#: elf/ldconfig.c:128
 msgid "Use CONF as configuration file"
 msgstr "ÀßÄê¥Õ¥¡¥¤¥ë¤È¤·¤Æ CONF ¤ò»ÈÍÑ¤·¤Þ¤¹"
 
@@ -3792,7 +3863,7 @@ msgstr "ÄêµÁ¤µ¤ì¤¿¥Ç¡¼¥¿·¿¤ËÂÐ¤·¤ÆÃÍ¤¬Âç¤­¤¹¤®¤Þ¤¹"
 msgid "Virtual timer expired"
 msgstr "²¾ÁÛ¥¿¥¤¥Þ¤¬½ªÎ»¤·¤Þ¤·¤¿"
 
-#: timezone/zic.c:1926
+#: timezone/zic.c:1932
 msgid "Wild result from command execution"
 msgstr "¥³¥Þ¥ó¥É¼Â¹Ô¤«¤é¤ÎÁÆ¤¤·ë²Ì"
 
@@ -3800,19 +3871,19 @@ msgstr "¥³¥Þ¥ó¥É¼Â¹Ô¤«¤é¤ÎÁÆ¤¤·ë²Ì"
 msgid "Window changed"
 msgstr "¥¦¥£¥ó¥É¥¦¤¬ÊÑ¹¹¤µ¤ì¤Þ¤·¤¿"
 
-#: locale/programs/locale.c:69
+#: locale/programs/locale.c:77
 msgid "Write names of available charmaps"
 msgstr "ÍøÍÑ²ÄÇ½¤Ê¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ì¾¤Î½ÐÎÏ"
 
-#: locale/programs/locale.c:67
+#: locale/programs/locale.c:75
 msgid "Write names of available locales"
 msgstr "ÍøÍÑ²ÄÇ½¤Ê¥í¥±¡¼¥ëÌ¾¤Î½ÐÎÏ"
 
-#: locale/programs/locale.c:71
+#: locale/programs/locale.c:79
 msgid "Write names of selected categories"
 msgstr "ÁªÂò¤·¤¿¥«¥Æ¥´¥êÌ¾¤Î½ÐÎÏ"
 
-#: locale/programs/locale.c:72
+#: locale/programs/locale.c:80
 msgid "Write names of selected keywords"
 msgstr "ÁªÂò¤·¤¿¥­¡¼¥ï¡¼¥ÉÌ¾¤Î½ÐÎÏ"
 
@@ -3820,18 +3891,18 @@ msgstr "ÁªÂò¤·¤¿¥­¡¼¥ï¡¼¥ÉÌ¾¤Î½ÐÎÏ"
 msgid "Write output to file NAME"
 msgstr "¥Õ¥¡¥¤¥ë NAME ¤Ø½ÐÎÏ¤ò½ñ¤­¹þ¤à"
 
-#: elf/cache.c:366 elf/cache.c:375 elf/cache.c:379
+#: elf/cache.c:402 elf/cache.c:411 elf/cache.c:415
 msgid "Writing of cache data failed"
 msgstr "¥­¥ã¥Ã¥·¥å¥Ç¡¼¥¿¤Î½ñ¹þ¤ß¤Ë¼ºÇÔ"
 
-#: elf/cache.c:383
+#: elf/cache.c:419
 msgid "Writing of cache data failed."
 msgstr "¥­¥ã¥Ã¥·¥å¥Ç¡¼¥¿¤Î½ñ¹þ¤ß¤Ë¼ºÇÔ¤·¤Þ¤·¤¿."
 
-#: catgets/gencat.c:251 elf/ldconfig.c:269 elf/sprof.c:361
-#: iconv/iconv_prog.c:356 locale/programs/locale.c:274
+#: catgets/gencat.c:251 elf/ldconfig.c:264 elf/sprof.c:361
+#: iconv/iconv_prog.c:398 iconv/iconvconfig.c:340 locale/programs/locale.c:286
 #: locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95
-#: nss/getent.c:68 posix/getconf.c:756
+#: nss/getent.c:68 posix/getconf.c:909
 #, c-format
 msgid "Written by %s.\n"
 msgstr "%s¤Ë¤è¤ë½ñ¤­¹þ¤ß.\n"
@@ -3839,14 +3910,6 @@ msgstr "%s¤Ë¤è¤ë½ñ¤­¹þ¤ß.\n"
 #: stdio-common/../sysdeps/gnu/errlist.c:837
 msgid "Wrong medium type"
 msgstr "ÉÔÀµ¤Ê¥á¥Ç¥£¥¢·Á¼°¤Ç¤¹"
-
-#: nis/nis_print.c:40
-msgid "X500"
-msgstr "X500"
-
-#: nis/nis_print.c:44
-msgid "XCHS"
-msgstr "XCHS"
 
 #: nis/ypclnt.c:174
 #, c-format
@@ -3862,11 +3925,15 @@ msgstr "¤Ï¤¤¡¢42¤Ï¿ÍÀ¸¤ÎÊ¿¶Ñ¤Ç¤¹"
 msgid "You really blew it this time"
 msgstr "You really blew it this time"
 
-#: timezone/zic.c:1088
+#: timezone/zic.c:1094
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "¥¾¡¼¥óÏ¢Â³¹Ô end time ¤ÏÁ°¤Î¹Ô¤Î end time ¤è¤ê¤â¸å¤Ç¤¢¤Ã¤Æ¤Ï¤Ê¤ê¤Þ¤»¤ó"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconvconfig.c:114
+msgid "[DIR...]"
+msgstr "[¥Ç¥£¥ì¥¯¥È¥ê...]"
+
+#: iconv/iconv_prog.c:77
 msgid "[FILE...]"
 msgstr "[¥Õ¥¡¥¤¥ë...]"
 
@@ -3898,13 +3965,13 @@ msgstr "`%.*s'¤Ï´û¤Ë charmap Ãæ¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 msgid "`%.*s' already defined in repertoire"
 msgstr "`%.*s' ¤Ï´û¤Ë¥ì¥Ñ¡¼¥È¥êÃæ¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/charmap.c:599 locale/programs/locfile.h:96
+#: locale/programs/charmap.c:604 locale/programs/locfile.h:96
 #: locale/programs/repertoire.c:314
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "ÄêµÁ`%1$s' ¤¬ `END %1$s' ¤Ç½ª¤Ã¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1268 locale/programs/ld-ctype.c:1454
+#: locale/programs/ld-collate.c:1281 locale/programs/ld-ctype.c:1455
 #, c-format
 msgid "`%s' and `%.*s' are no valid names for symbolic range"
 msgstr "`%s' ¤È `%.*s' ¤Ï¥·¥ó¥Ü¥ë¤ÎÈÏ°Ï¤È¤·¤ÆÉÔÀµ¤ÊÌ¾Á°¤Ç¤¹"
@@ -3914,7 +3981,7 @@ msgstr "`%s' ¤È `%.*s' ¤Ï¥·¥ó¥Ü¥ë¤ÎÈÏ°Ï¤È¤·¤ÆÉÔÀµ¤ÊÌ¾Á°¤Ç¤¹"
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "%s'¤Ï`%s'¤ËÂÐ¤¹¤ëÀµ¤·¤¤¥×¥í¥Õ¥¡¥¤¥ë¥Ç¡¼¥¿¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:691
+#: locale/programs/ld-ctype.c:699
 msgid "`digit' category has not entries in groups of ten"
 msgstr "`digit' ¥«¥Æ¥´¥ê¤Ï¥°¥ë¡¼¥×Ãæ¤Ë10¸Ä¤Î¥¨¥ó¥È¥ê¤ò»ý¤Ã¤Æ¤¤¤Þ¤»¤ó"
 
@@ -3930,12 +3997,12 @@ msgstr "ai_socktype ¤Ï¥µ¥Ý¡¼¥È¤·¤Æ¤¤¤Þ¤»¤ó"
 msgid "already running"
 msgstr "´û¤Ëµ¯Æ°¤·¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/charmap.c:434 locale/programs/repertoire.c:184
+#: locale/programs/charmap.c:439 locale/programs/repertoire.c:184
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr "°ú¿ô <%s> ¤Ï¥·¥ó¥°¥ë¥­¥ã¥é¥¯¥¿¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/locfile.c:124
+#: locale/programs/locfile.c:126
 #, c-format
 msgid "argument to `%s' must be a single character"
 msgstr "°ú¿ô `%s' ¤Ï¥·¥ó¥°¥ë¥­¥ã¥é¥¯¥¿¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
@@ -3948,28 +4015,28 @@ msgstr "auth_none.c - Ã×Ì¿Åª¤ÊÀ°Îó¤ÎÌäÂê"
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: locale/programs/charmap.c:364 locale/programs/locfile.c:118
-#: locale/programs/locfile.c:145 locale/programs/repertoire.c:176
+#: locale/programs/charmap.c:369 locale/programs/locfile.c:120
+#: locale/programs/locfile.c:147 locale/programs/repertoire.c:176
 msgid "bad argument"
 msgstr "ÉÔÀµ¤Ê°ú¿ô¤Ç¤¹"
 
-#: inet/rcmd.c:424
+#: inet/rcmd.c:425
 msgid "bad owner"
 msgstr "ÉÔÀµ¤Ê½êÍ­¼Ô¤Ç¤¹"
 
-#: timezone/zic.c:1210
+#: timezone/zic.c:1216
 msgid "blank FROM field on Link line"
 msgstr "Link ¹Ô¤Î FROM ¥Õ¥£¡¼¥ë¥É¤¬¶õÍó¤Ç¤¹"
 
-#: timezone/zic.c:1214
+#: timezone/zic.c:1220
 msgid "blank TO field on Link line"
 msgstr "Link ¹Ô¤Î TO ¥Õ¥£¡¼¥ë¥É¤¬¶õÍó¤Ç¤¹"
 
-#: malloc/mcheck.c:291
+#: malloc/mcheck.c:302
 msgid "block freed twice\n"
 msgstr "¥Ö¥í¥Ã¥¯¤Î²òÊü¤¬2ÅÙ¹Ô¤ï¤ì¤Þ¤·¤¿\n"
 
-#: malloc/mcheck.c:294
+#: malloc/mcheck.c:305
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "mcheck_status ¤¬¤¢¤¤¤Þ¤¤¤Ç¤¹¡£¥é¥¤¥Ö¥é¥ê¤Î¥Ð¥°¤Ç¤¹¡£\n"
 
@@ -3993,11 +4060,11 @@ msgstr "cache_set: µ¾À·ÎÎ°è³ÎÊÝ¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 msgid "cache_set: victim not found"
 msgstr "cache_set: µ¾À·ÎÎ°è¤¬¤ß¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: timezone/zic.c:1751
+#: timezone/zic.c:1757
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "¤Á¤ç¤¦¤É¤½¤Î»þ¹ï¤ò»ÈÍÑ¤¹¤ë¥¿¥¤¥à¥¾¡¼¥ó¤Î¾ÊÎ¬·Á¤ò·èÄê¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/svc_simple.c:76
+#: sunrpc/svc_simple.c:85
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "¼êÂ³¤­ÈÖ¹æ %ld ¤òºÆ³ä¤êÅö¤Æ¤Ç¤­¤Þ¤»¤ó\n"
@@ -4011,15 +4078,15 @@ msgstr "ºÆ³ÎÊÝ¸å¤Ë¥»¥°¥á¥ó¥Èprot¤òºÆ³ÊÇ¼¤Ç¤­¤Þ¤»¤ó"
 msgid "cannot add already read locale `%s' a second time"
 msgstr "ÆÉ¹þºÑ¤ß¤Î¥í¥±¡¼¥ë`%s'¤Ï2²ó¤âÄÉ²Ã¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-deps.c:470
+#: elf/dl-deps.c:454
 msgid "cannot allocate dependency list"
 msgstr "°ÍÂ¸¥ê¥¹¥È¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1031
+#: elf/dl-load.c:1039
 msgid "cannot allocate memory for program header"
 msgstr "¥×¥í¥°¥é¥à¥Ø¥Ã¥À¤ËÂÐ¤¹¤ë¥á¥â¥ê¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:339
+#: elf/dl-load.c:348
 msgid "cannot allocate name record"
 msgstr "Ì¾Á°¥ì¥³¡¼¥É¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 
@@ -4027,30 +4094,26 @@ msgstr "Ì¾Á°¥ì¥³¡¼¥É¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 msgid "cannot allocate symbol data"
 msgstr "¥·¥ó¥Ü¥ë¾ðÊó¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-deps.c:501
+#: elf/dl-deps.c:484
 msgid "cannot allocate symbol search list"
 msgstr "¥·¥ó¥Ü¥ëÃµº÷¥ê¥¹¥È¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-version.c:291
+#: elf/dl-version.c:292
 msgid "cannot allocate version reference table"
 msgstr "¥Ð¡¼¥¸¥ç¥ó»²¾È¥ê¥¹¥È¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1000
+#: elf/dl-load.c:1008
 msgid "cannot change memory protections"
 msgstr "¥á¥â¥êÊÝ¸î¤òÊÑ¹¹¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:533
+#: elf/dl-load.c:540
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "RUNPATH/RPATH¤Î¥³¥Ô¡¼¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:418 elf/dl-load.c:518 elf/dl-load.c:546 elf/dl-load.c:593
-#: elf/dl-load.c:685
+#: elf/dl-load.c:456 elf/dl-load.c:525 elf/dl-load.c:553 elf/dl-load.c:600
+#: elf/dl-load.c:693
 msgid "cannot create cache for search path"
 msgstr "¥µ¡¼¥Á¥Ñ¥¹¤ËÂÐ¤¹¤ë¥­¥ã¥Ã¥·¥å¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
-
-#: elf/dl-support.c:191
-msgid "cannot create capability list"
-msgstr "¥±¡¼¥Ñ¥Ó¥ê¥Æ¥£¥ê¥¹¥È¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
 #: elf/sprof.c:715 elf/sprof.c:773
 msgid "cannot create internal descriptor"
@@ -4060,23 +4123,28 @@ msgstr "ÆâÉôµ­½Ò»Ò¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 msgid "cannot create internal descriptors"
 msgstr "ÆâÉôµ­½Ò»Ò¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:583
+#: locale/programs/locfile.c:693
+#, c-format
+msgid "cannot create output file `%s' for category `%s'"
+msgstr "¥«¥Æ¥´¥ê`%2$s'ÍÑ¤Î½ÐÎÏ¥Õ¥¡¥¤¥ë`%1$s'¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
+
+#: elf/dl-load.c:590
 msgid "cannot create search path array"
 msgstr "¥µ¡¼¥Á¥Ñ¥¹¥¢¥ì¥¤¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1137
+#: elf/dl-load.c:1125
 msgid "cannot create searchlist"
 msgstr "¥µ¡¼¥Á¥ê¥¹¥È¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:822 elf/dl-load.c:1682
+#: elf/dl-load.c:830 elf/dl-load.c:1724
 msgid "cannot create shared object descriptor"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥Èµ­½Ò»Ò¤òºîÀ®¤Ç¤­¤Þ¤»¤ó"
 
-#: catgets/gencat.c:1316
+#: catgets/gencat.c:1315
 msgid "cannot determine escape character"
 msgstr "¥¨¥¹¥±¡¼¥×¥­¥ã¥é¥¯¥¿¤ò·èÄê¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:950
+#: elf/dl-load.c:958
 msgid "cannot dynamically load executable"
 msgstr "¼Â¹Ô¥Õ¥¡¥¤¥ë¤òÆ°Åª¤Ë¥í¡¼¥É¤Ç¤­¤Þ¤»¤ó"
 
@@ -4098,7 +4166,11 @@ msgstr "C ¥×¥ê¥×¥í¥»¥Ã¥µ¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó: %s \n"
 msgid "cannot find any C preprocessor (cpp)\n"
 msgstr "¤É¤Î¤è¤¦¤Ê C ¥×¥ê¥×¥í¥»¥Ã¥µ¤â¸«¤Ä¤«¤ê¤Þ¤»¤ó (cpp)\n"
 
-#: nscd/connections.c:225
+#: iconv/iconvconfig.c:1159
+msgid "cannot generate output file"
+msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë¤òÀ¸À®¤Ç¤­¤Þ¤»¤ó"
+
+#: nscd/connections.c:227
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "Í×µá¤µ¤ì¤¿¸Å¤¤¥Ð¡¼¥¸¥ç¥ó %d ¤ò°·¤¦¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¡£¸½ºß¤Î¥Ð¡¼¥¸¥ç¥ó¤Ï %d ¤Ç¤¹"
@@ -4107,19 +4179,15 @@ msgstr "Í×µá¤µ¤ì¤¿¸Å¤¤¥Ð¡¼¥¸¥ç¥ó %d ¤ò°·¤¦¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¡£¸½ºß¤Î¥Ð¡¼¥¸¥ç¥ó¤Ï %
 msgid "cannot load profiling data"
 msgstr "¥×¥í¥Õ¥¡¥¤¥ê¥ó¥°¥Ç¡¼¥¿¤ò¥í¡¼¥É¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-deps.c:586
-msgid "cannot load shared object file"
-msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¥Õ¥¡¥¤¥ë¤ò³«¤±¤Þ¤»¤ó"
-
-#: elf/dl-reloc.c:63
+#: elf/dl-reloc.c:62
 msgid "cannot make segment writable for relocation"
 msgstr "ºÆ³ÎÊÝÍÑ¤Î¥»¥°¥á¥ó¥È¤ò½ñ¹þ¤ß²ÄÇ½¤Ë¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1016
+#: elf/dl-load.c:1024
 msgid "cannot map zero-fill pages"
 msgstr "¥¼¥í¤ÇËä¤á¤é¤ì¤¿¥Ú¡¼¥¸¤ò¥Þ¥Ã¥×¤Ç¤­¤Þ¤»¤ó"
 
-#: inet/rcmd.c:420
+#: inet/rcmd.c:421
 msgid "cannot open"
 msgstr "³«¤±¤Þ¤»¤ó"
 
@@ -4132,7 +4200,7 @@ msgstr "`%s'¤ò³«¤±¤Þ¤»¤ó"
 msgid "cannot open input file"
 msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë¤ò³«¤±¤Þ¤»¤ó"
 
-#: catgets/gencat.c:288 iconv/iconv_prog.c:225
+#: catgets/gencat.c:288 iconv/iconv_charmap.c:159 iconv/iconv_prog.c:265
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë`%s'¤ò³«¤±¤Þ¤»¤ó"
@@ -4143,21 +4211,21 @@ msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë`%s'¤ò³«¤±¤Þ¤»¤ó"
 msgid "cannot open locale definition file `%s'"
 msgstr "¥í¥±¡¼¥ëÄêµÁ¥Õ¥¡¥¤¥ë`%s'¤ò³«¤±¤Þ¤»¤ó"
 
-#: iconv/iconv_prog.c:194
+#: iconv/iconv_prog.c:209
 msgid "cannot open output file"
 msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë¤ò³«¤±¤Þ¤»¤ó"
 
-#: catgets/gencat.c:944 catgets/gencat.c:985
+#: catgets/gencat.c:949 catgets/gencat.c:990
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë`%s'¤ò³«¤±¤Þ¤»¤ó"
 
-#: locale/programs/locfile.c:381
+#: locale/programs/locfile.c:571
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "¥«¥Æ¥´¥ê`%2$s'ÍÑ¤Î½ÐÎÏ¥Õ¥¡¥¤¥ë`%1$s'¤ò³«¤±¤Þ¤»¤ó"
 
-#: elf/dl-load.c:1695
+#: elf/dl-load.c:1737
 msgid "cannot open shared object file"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¥Õ¥¡¥¤¥ë¤ò³«¤±¤Þ¤»¤ó"
 
@@ -4166,7 +4234,7 @@ msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¥Õ¥¡¥¤¥ë¤ò³«¤±¤Þ¤»¤ó"
 msgid "cannot open socket: %s"
 msgstr "¥½¥±¥Ã¥È¤ò³«¤±¤Þ¤»¤ó: %s"
 
-#: elf/dl-load.c:814
+#: elf/dl-load.c:822
 msgid "cannot open zero fill device"
 msgstr "¥¼¥í¤ÇËä¤á¤é¤ì¤¿¥Ç¥Ð¥¤¥¹¤ò³«¤±¤Þ¤»¤ó"
 
@@ -4179,7 +4247,7 @@ msgstr "¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¥Ç¥£¥ì¥¯¥È¥ê`%s'¤òÆÉ¤ß¹þ¤á¤Þ¤»¤ó"
 msgid "cannot read configuration file; this is fatal"
 msgstr "ÀßÄê¥Õ¥¡¥¤¥ë¤òÆÉ¤ß¹þ¤á¤Þ¤»¤ó¡£¤³¤ì¤ÏÃ×Ì¿Åª¤Ç¤¹"
 
-#: elf/dl-load.c:838 elf/dl-load.c:1244
+#: elf/dl-load.c:846 elf/dl-load.c:1247 elf/dl-load.c:1319 elf/dl-load.c:1333
 msgid "cannot read file data"
 msgstr "¥Õ¥¡¥¤¥ë¥Ç¡¼¥¿¤¬ÆÉ¤á¤Þ¤»¤ó"
 
@@ -4192,11 +4260,6 @@ msgstr "¥Ø¥Ã¥À¤¬ÆÉ¤á¤Þ¤»¤ó"
 msgid "cannot read header from `%s'"
 msgstr "`%s'¤Î¥Ø¥Ã¥À¤òÆÉ¤á¤Þ¤»¤ó"
 
-#: locale/programs/locale.c:308
-#, c-format
-msgid "cannot read locale directory `%s'"
-msgstr "¥í¥±¡¼¥ë¥Ç¥£¥ì¥¯¥È¥ê`%s'¤òÆÉ¤ß¹þ¤á¤Þ¤»¤ó"
-
 #: nscd/nscd_stat.c:128
 msgid "cannot read statistics data"
 msgstr "Åý·×¾ðÊó¤òÆÉ¤ß¹þ¤á¤Þ¤»¤ó"
@@ -4205,7 +4268,7 @@ msgstr "Åý·×¾ðÊó¤òÆÉ¤ß¹þ¤á¤Þ¤»¤ó"
 msgid "cannot safe new repertoire map"
 msgstr "¿·¤·¤¤¥ì¥Ñ¡¼¥È¥ê¥Þ¥Ã¥×¤Ï°ÂÁ´¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: elf/dl-load.c:776
+#: elf/dl-load.c:784
 msgid "cannot stat shared object"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¤òstat¤Ç¤­¤Þ¤»¤ó"
 
@@ -4219,7 +4282,7 @@ msgstr "¥Õ¥¡¥¤¥ë`%s'¤¬ stat() ¤Ç¤­¤Þ¤»¤ó: %s"
 msgid "cannot write output files to `%s'"
 msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë`%s'¤Ø½ñ¤­¹þ¤á¤Þ¤»¤ó"
 
-#: nscd/connections.c:261 nscd/connections.c:282
+#: nscd/connections.c:265 nscd/connections.c:287
 #, c-format
 msgid "cannot write result: %s"
 msgstr "·ë²Ì¤ò½ñ¤­¹þ¤á¤Þ¤»¤ó: %s"
@@ -4229,76 +4292,80 @@ msgstr "·ë²Ì¤ò½ñ¤­¹þ¤á¤Þ¤»¤ó: %s"
 msgid "cannot write statistics: %s"
 msgstr "Åý·×¤ò½ñ¤­¹þ¤á¤Þ¤»¤ó: %s"
 
-#: locale/programs/ld-ctype.c:509
+#: locale/programs/ld-ctype.c:517
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
 msgstr "¥¯¥é¥¹`%2$s'¤ÎÊ¸»ú`%1$s'¤Ï¥¯¥é¥¹`%3$s'¤Ë¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:524
+#: locale/programs/ld-ctype.c:532
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
 msgstr "¥¯¥é¥¹`%2$s'¤ÎÊ¸»ú`%1$s'¤Ï¥¯¥é¥¹`%3$s'¤Ë¤¢¤Ã¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:579
+#: locale/programs/ld-ctype.c:587
 msgid "character <SP> not defined in character map"
 msgstr "Ê¸»ú <SP> ¤¬¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¤ÇÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:453
+#: locale/programs/ld-ctype.c:461
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
 msgstr "Ê¸»ú L'\\u%0*x' (¥¯¥é¥¹`%s'Æâ) ¤Ï¥¯¥é¥¹`%s'¤Ë¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:467
+#: locale/programs/ld-ctype.c:475
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
 msgstr "Ê¸»ú L'\\u%0*x' (¥¯¥é¥¹`%s'Æâ) ¤Ï¥¯¥é¥¹`%s'¤Ë¤¢¤Ã¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:3030
+#: locale/programs/ld-ctype.c:3032
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr "¥Ç¥Õ¥©¥ë¥ÈÃÍ¤È¤·¤ÆÉ¬Í×¤Ê¥­¥ã¥é¥¯¥¿`%s'¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:1215
+#: locale/programs/ld-ctype.c:1223
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "¥­¥ã¥é¥¯¥¿¥¯¥é¥¹`%s'¤Ï¤¹¤Ç¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-ctype.c:1247
+#: locale/programs/ld-ctype.c:1255
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×`%s'¤Ï¤¹¤Ç¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/charmap.c:249
+#: locale/programs/charmap.c:254
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
 msgstr "¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥× `%s' ¤Ï ASCII ¸ß´¹¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó, ¥í¥±¡¼¥ë¤Ï ISO C ¤Ë½¾¤Ã¤Æ¤¤¤Þ¤»¤ó\n"
 
-#: locale/programs/charmap.c:135
+#: locale/programs/charmap.c:140
 #, c-format
 msgid "character map file `%s' not found"
 msgstr "¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¥Õ¥¡¥¤¥ë `%s' ¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:460
+#: locale/programs/charmap.c:465
 msgid "character sets with locking states are not supported"
 msgstr "¥í¥Ã¥¯¾õÂÖ¤ò»ý¤Ä¥­¥ã¥é¥¯¥¿½¸¹ç¤¬¥µ¥Ý¡¼¥È¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
+
+#: intl/tst-codeset.c:40 intl/tst-codeset.c:50
+msgid "cheese"
+msgstr "cheese"
 
 #: locale/programs/localedef.c:482
 msgid "circular dependencies between locale definitions"
 msgstr "¥í¥±¡¼¥ëÄêµÁÃæ¤Ç°ÍÂ¸´Ø·¸¤Î¥ë¡¼¥×¤¬¤¢¤ê¤Þ¤¹"
 
-#: sunrpc/clnt_raw.c:111
+#: sunrpc/clnt_raw.c:115
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - ¥Ø¥Ã¥À¤ÎÄ¾Îó²½¤ÇÃ×Ì¿Åª¥¨¥é¡¼."
 
-#: sunrpc/clnt_tcp.c:126 sunrpc/clnt_tcp.c:134
+#: sunrpc/clnt_tcp.c:127 sunrpc/clnt_tcp.c:136
 msgid "clnttcp_create: out of memory\n"
 msgstr "clnttcp_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: sunrpc/clnt_udp.c:131 sunrpc/clnt_udp.c:141
+#: sunrpc/clnt_udp.c:132 sunrpc/clnt_udp.c:143
 msgid "clntudp_create: out of memory\n"
 msgstr "clntudp_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: sunrpc/clnt_unix.c:124 sunrpc/clnt_unix.c:132
+#: sunrpc/clnt_unix.c:125 sunrpc/clnt_unix.c:134
 msgid "clntunix_create: out of memory\n"
 msgstr "clntunix_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
@@ -4306,28 +4373,28 @@ msgstr "clntunix_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 msgid "constant or identifier expected"
 msgstr "Äê¿ô¤Þ¤¿¤Ï¼±ÊÌ»Ò¤¬Å¬Åö¤Ç¤¹"
 
-#: iconv/iconv_prog.c:182
+#: iconv/iconv_prog.c:231
 #, c-format
 msgid "conversion from `%s' to `%s' not supported"
 msgstr "`%s'¤«¤é`%s'¤Ø¤ÎÊÑ´¹¤Ï¥µ¥Ý¡¼¥È¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: catgets/gencat.c:1290
+#: catgets/gencat.c:1289
 msgid "conversion modules not available"
 msgstr "ÊÑ´¹¥â¥¸¥å¡¼¥ë¤¬ÍøÍÑ¤Ç¤­¤Þ¤»¤ó"
 
-#: locale/programs/ld-monetary.c:900
+#: locale/programs/ld-monetary.c:902
 msgid "conversion rate value cannot be zero"
 msgstr "ÊÑ´¹¥ì¡¼¥ÈÃÍ¤Ï¥¼¥í¤Ë¤Ï¤Ç¤­¤Þ¤»¤ó"
 
-#: iconv/iconv_prog.c:385 iconv/iconv_prog.c:410
+#: iconv/iconv_prog.c:427 iconv/iconv_prog.c:452
 msgid "conversion stopped due to problem in writing the output"
 msgstr "½ÐÎÏ½ñ¤­½Ð¤·Ãæ¤ËÌäÂê¤¬¤¢¤Ã¤¿¤¿¤áÊÑ´¹¤òÃæ»ß¤·¤Þ¤·¤¿"
 
-#: sunrpc/svc_simple.c:84
+#: sunrpc/svc_simple.c:93
 msgid "couldn't create an rpc server\n"
 msgstr "RPC¥µ¡¼¥Ð¤òºîÀ®¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿\n"
 
-#: sunrpc/svc_simple.c:92
+#: sunrpc/svc_simple.c:101
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "¥×¥í¥°¥é¥à %ld ¥Ð¡¼¥¸¥ç¥ó %ld ¤òÅÐÏ¿¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿\n"
@@ -4336,17 +4403,17 @@ msgstr "¥×¥í¥°¥é¥à %ld ¥Ð¡¼¥¸¥ç¥ó %ld ¤òÅÐÏ¿¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿\n"
 msgid "database [key ...]"
 msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹ [¥­¡¼ ...]"
 
-#: locale/programs/charmap.c:192
+#: locale/programs/charmap.c:197
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "É¸½à¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¥Õ¥¡¥¤¥ë`%s'¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:392
+#: locale/programs/charmap.c:397
 #, c-format
 msgid "duplicate definition of <%s>"
 msgstr "<%s> ¤ÎÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:3043
+#: locale/programs/ld-collate.c:3062
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "¥¹¥¯¥ê¥×¥È `%s' ¤ÎÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
@@ -4355,12 +4422,12 @@ msgstr "¥¹¥¯¥ê¥×¥È `%s' ¤ÎÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 msgid "duplicate set definition"
 msgstr "ÀßÄê¤ÎÄêµÁ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:1003
+#: timezone/zic.c:1009
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "¥¾¡¼¥óÌ¾ %s ¤¬½ÅÊ£¤·¤Æ¤¤¤Þ¤¹(¥Õ¥¡¥¤¥ë\"%s\", %d ¹Ô)"
 
-#: locale/programs/ld-ctype.c:2557
+#: locale/programs/ld-ctype.c:2559
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "½ÅÊ£¤·¤¿¥Þ¥Ã¥Ô¥ó¥° `%s' ¤ÎÄêµÁ"
@@ -4373,7 +4440,7 @@ msgstr "½ÅÊ£¤·¤¿¥á¥Ã¥»¡¼¥¸¼±ÊÌ»Ò"
 msgid "duplicated message number"
 msgstr "½ÅÊ£¤·¤¿¥á¥Ã¥»¡¼¥¸ÈÖ¹æ"
 
-#: locale/programs/ld-ctype.c:2368
+#: locale/programs/ld-ctype.c:2370
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "¾ÊÎ¬¤ÎÈÏ°Ï¤ÏÆ±¤¸·¿¤Î2¤Ä¤Î¥ª¥Ú¥é¥ó¥É¤Ë¤è¤Ã¤Æ¥Þ¡¼¥¯¤Å¤±¤µ¤ì¤Æ¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
@@ -4381,8 +4448,12 @@ msgstr "¾ÊÎ¬¤ÎÈÏ°Ï¤ÏÆ±¤¸·¿¤Î2¤Ä¤Î¥ª¥Ú¥é¥ó¥É¤Ë¤è¤Ã¤Æ¥Þ¡¼¥¯¤Å¤±¤µ¤ì¤Æ¤Ê¤±¤ì¤Ð¤Ê¤ê¤
 msgid "empty char string"
 msgstr "¶õ¤Î char Ê¸»úÎó"
 
-#: elf/dl-open.c:223
+#: elf/dl-open.c:219
 msgid "empty dynamic string token substitution"
+msgstr "¶õ¤ÊÆ°ÅªÊ¸»úÎó¥È¡¼¥¯¥ó¤ÎÂåÆþ"
+
+#: elf/dl-deps.c:113
+msgid "empty dynamics string token substitution"
 msgstr "¶õ¤ÊÆ°ÅªÊ¸»úÎó¥È¡¼¥¯¥ó¤ÎÂåÆþ"
 
 #: sunrpc/svc_udp.c:454
@@ -4401,29 +4472,29 @@ msgstr "enablecache: ¥­¥ã¥Ã¥·¥å¥Ç¡¼¥¿¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿"
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: ¥­¥ã¥Ã¥·¥åfifo¤ò³ÎÊÝ¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿"
 
-#: iconv/iconv_prog.c:57
+#: iconv/iconv_prog.c:61
 msgid "encoding for output"
 msgstr "½ÐÎÏ»þ¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°"
 
-#: iconv/iconv_prog.c:56
+#: iconv/iconv_prog.c:60
 msgid "encoding of original text"
 msgstr "¸µ¤Î¥Æ¥­¥¹¥È¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°"
 
-#: nscd/connections.c:361 nscd/connections.c:453
+#: nscd/connections.c:366 nscd/connections.c:460
 #, c-format
 msgid "error getting callers id: %s"
 msgstr "¸Æ¤Ó½Ð¤·ID¤Î¼èÆÀ¤Ç¥¨¥é¡¼: %s"
 
-#: locale/programs/ld-collate.c:3013
+#: locale/programs/ld-collate.c:3032
 msgid "error while adding equivalent collating symbol"
 msgstr "Åù²Á¤Ê¾È¹ç¥·¥ó¥Ü¥ëÄÉ²ÃÃæ¤Ç¥¨¥é¡¼"
 
-#: iconv/iconv_prog.c:242
+#: iconv/iconv_charmap.c:177 iconv/iconv_prog.c:283
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "ÆþÎÏ¥Õ¥¡¥¤¥ë `%s' ¤òÊÄ¤¸¤Æ¤¤¤ë´Ö¤Î¥¨¥é¡¼"
 
-#: iconv/iconv_prog.c:288
+#: iconv/iconv_prog.c:330
 msgid "error while closing output file"
 msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤Æ¤¤¤ë´Ö¤Î¥¨¥é¡¼"
 
@@ -4431,7 +4502,8 @@ msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤Æ¤¤¤ë´Ö¤Î¥¨¥é¡¼"
 msgid "error while closing the profiling data file"
 msgstr "¥×¥í¥Õ¥¡¥¤¥ë¾ðÊó¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤Æ¤¤¤ë´Ö¤Î¥¨¥é¡¼"
 
-#: iconv/iconv_prog.c:474 iconv/iconv_prog.c:505
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:538 iconv/iconv_prog.c:516
+#: iconv/iconv_prog.c:547
 msgid "error while reading the input"
 msgstr "ÆþÎÏÆÉ¤ß¹þ¤ßÃæ¤Î¥¨¥é¡¼"
 
@@ -4439,9 +4511,13 @@ msgstr "ÆþÎÏÆÉ¤ß¹þ¤ßÃæ¤Î¥¨¥é¡¼"
 msgid "expect string argument for `copy'"
 msgstr "`copy'¤Ë¤ÏÊ¸»úÎó°ú¿ô¤¬´üÂÔ¤µ¤ì¤Þ¤¹"
 
-#: timezone/zic.c:893
+#: timezone/zic.c:899
 msgid "expected continuation line not found"
 msgstr "·ÑÂ³¹Ô¤¬´üÂÔ¤µ¤ì¤Þ¤·¤¿¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
+
+#: locale/programs/ld-time.c:1027
+msgid "extra trailing semicolon"
+msgstr "Í¾·×¤Ê¥»¥ß¥³¥í¥ó¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹"
 
 #: elf/sprof.c:404
 #, c-format
@@ -4452,7 +4528,7 @@ msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È`%s' ¤ÎÆÉ¤ß¹þ¤ß¤Ë¼ºÇÔ"
 msgid "failed to load symbol data"
 msgstr "¥·¥ó¥Ü¥ë¾ðÊó¤ÎÆÉ¤ß¹þ¤ß¤Ë¼ºÇÔ"
 
-#: elf/dl-load.c:763
+#: elf/dl-load.c:771
 msgid "failed to map segment from shared object"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¤Î¥»¥°¥á¥ó¥È¤ò¥Þ¥Ã¥×¤¹¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
@@ -4460,18 +4536,19 @@ msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¤Î¥»¥°¥á¥ó¥È¤ò¥Þ¥Ã¥×¤¹¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 msgid "failed to mmap the profiling data file"
 msgstr "¥×¥í¥Õ¥¡¥¤¥ë¾ðÊó¥Õ¥¡¥¤¥ë¤Îmmap¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: iconv/iconv_prog.c:186
+#: iconv/iconv_prog.c:235
 msgid "failed to start conversion processing"
 msgstr "ÊÑ´¹½èÍý¤Î³«»Ï¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: locale/programs/locfile.c:406
+#: locale/programs/locfile.c:596
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr "¥«¥Æ¥´¥ê`%s'¤Î¥Ç¡¼¥¿¤ò½ñ¤­¹þ¤ßÃæ¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: nis/nis_call.c:156
-msgid "fcntl: F_SETFD"
-msgstr "fcntl: F_SETFD"
+#: elf/../sysdeps/generic/readelflib.c:35
+#, c-format
+msgid "file %s is truncated\n"
+msgstr "¥Õ¥¡¥¤¥ë %s ¤Ï¥È¥é¥ó¥±¡¼¥È(Ã»¤¯)¤µ¤ì¤Þ¤·¤¿\n"
 
 #. TRANS: the file will not be removed; this is an
 #. TRANS: informative message.
@@ -4480,19 +4557,19 @@ msgstr "fcntl: F_SETFD"
 msgid "file `%s' already exists and may be overwritten\n"
 msgstr "¥Õ¥¡¥¤¥ë`%s'¤Ï´û¤ËÂ¸ºß¤·¤Þ¤¹¡£¾å½ñ¤­¤µ¤ì¤ë¤«¤â¤·¤ì¤Þ¤»¤ó\n"
 
-#: elf/dl-load.c:1244
+#: elf/dl-load.c:1247
 msgid "file too short"
 msgstr "¥Õ¥¡¥¤¥ë¤¬¾®¤µ¤¹¤®¤Þ¤¹"
 
-#: inet/rcmd.c:422
+#: inet/rcmd.c:423
 msgid "fstat failed"
 msgstr "fstat¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: locale/programs/linereader.c:383
+#: locale/programs/linereader.c:388
 msgid "garbage at end of character code specification"
 msgstr "¥­¥ã¥é¥¯¥¿¥³¡¼¥É»ØÄê¤Î½ª¤ï¤ê¤Ë¥´¥ß¤¬¤¢¤ê¤Þ¤¹"
 
-#: locale/programs/linereader.c:271
+#: locale/programs/linereader.c:276
 msgid "garbage at end of number"
 msgstr "¿ô»ú¤Î½ª¤ï¤ê¤Ë¥´¥ß¤¬¤¢¤ê¤Þ¤¹"
 
@@ -4512,28 +4589,28 @@ msgstr "get_myaddress: ioctl (¥¤¥ó¥¿¡¼¥Õ¥§¡¼¥¹¤ÎÀßÄê¤ò¼èÆÀ¤·¤Þ¤¹)"
 msgid "getent - get entries from administrative database."
 msgstr "getent - ´ÉÍý¥Ç¡¼¥¿¥Ù¡¼¥¹¤«¤é¥¨¥ó¥È¥ê¤òÆÀ¤ë"
 
-#: nscd/connections.c:220
+#: nscd/connections.c:221
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: Í×µá¤¬ÅþÃå¤·¤Þ¤·¤¿ (¥Ð¡¼¥¸¥ç¥ó = %d)"
 
-#: timezone/zic.c:637
+#: timezone/zic.c:643
 msgid "hard link failed, symbolic link used"
 msgstr "¥Ï¡¼¥É¥ê¥ó¥¯¤Ë¼ºÇÔ¤·¤¿¤¿¤á¡¢¥·¥ó¥Ü¥ê¥Ã¥¯¥ê¥ó¥¯¤ò»È¤¤¤Þ¤¹"
 
-#: inet/rcmd.c:428
+#: inet/rcmd.c:429
 msgid "hard linked somewhere"
 msgstr "¤É¤³¤«¤Ç¥Ï¡¼¥É¥ê¥ó¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/charmap.c:981 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:986 locale/programs/repertoire.c:430
 msgid "hexadecimal range format should use only capital characters"
 msgstr "16¿Ê¿ô¤ÎÈÏ°Ï¥Õ¥©¡¼¥Þ¥Ã¥È¤Ï±ÑÂçÊ¸»ú¤Ç¤Î¤ß»ÈÍÑ¤¹¤Ù¤­¤Ç¤¹"
 
-#: timezone/zic.c:1187
+#: timezone/zic.c:1193
 msgid "illegal CORRECTION field on Leap line"
 msgstr "Leap ¹Ô¤ËÉÔÀµ¤Ê CORRECTION ¥Õ¥£¡¼¥ë¥É¤¬¤¢¤ê¤Þ¤¹"
 
-#: timezone/zic.c:1191
+#: timezone/zic.c:1197
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "Leap ¹Ô¤ËÉÔÀµ¤Ê Rolling/Stationary ¥Õ¥£¡¼¥ë¥É¤¬¤¢¤ê¤Þ¤¹"
 
@@ -4541,11 +4618,16 @@ msgstr "Leap ¹Ô¤ËÉÔÀµ¤Ê Rolling/Stationary ¥Õ¥£¡¼¥ë¥É¤¬¤¢¤ê¤Þ¤¹"
 msgid "illegal character in file: "
 msgstr "¥Õ¥¡¥¤¥ëÃæ¤ËÉÔÀµ¤Ê¥­¥ã¥é¥¯¥¿¤¬¤¢¤ê¤Þ¤¹: "
 
-#: locale/programs/linereader.c:595
+#: locale/programs/linereader.c:600
 msgid "illegal escape sequence at end of string"
 msgstr "Ê¸»úÎó¤Î½ª¤ï¤ê¤ËÉÔÀµ¤Ê¥¨¥¹¥±¡¼¥×¥·¡¼¥±¥ó¥¹¤¬¤¢¤ê¤Þ¤·¤¿"
 
-#: iconv/iconv_prog.c:427
+#: iconv/iconv_charmap.c:443
+#, c-format
+msgid "illegal input sequence at position %Zd"
+msgstr "°ÌÃÖ %Zd ¤ÇÉÔÀµ¤ÊÆþÎÏ¥·¡¼¥±¥ó¥¹¤¬¤¢¤ê¤Þ¤·¤¿"
+
+#: iconv/iconv_prog.c:469
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "°ÌÃÖ %ld ¤ÇÉÔÀµ¤ÊÆþÎÏ¥·¡¼¥±¥ó¥¹¤¬¤¢¤ê¤Þ¤·¤¿"
@@ -4559,102 +4641,102 @@ msgstr "ÉÔÀµ¤Ê nettype ¤Ç¤¹:`%s'\n"
 msgid "illegal set number"
 msgstr "ÉÔÀµ¤ÊÀßÄêÃÍ¤Ç¤¹"
 
-#: locale/programs/ld-ctype.c:1221
+#: locale/programs/ld-ctype.c:1229
 #, c-format
 msgid "implementation limit: no more than %Zd character classes allowed"
 msgstr "¼ÂÁõ¾å¤ÎÀ©¸Â: %Zd °Ê¾å¤Î¥­¥ã¥é¥¯¥¿¥¯¥é¥¹¤Ïµö¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:1253
+#: locale/programs/ld-ctype.c:1261
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "¼ÂÁõ¾å¤ÎÀ©¸Â: %d °Ê¾å¤Î¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¤Ïµö¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: iconv/iconv_prog.c:431
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:473
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "¥Ð¥Ã¥Õ¥¡¤ÎºÇ¸å¤Ç¤Î°ìÃ×¤·¤Ê¤¤Ê¸»ú¤Þ¤¿¤Ï¥·¥Õ¥È¥·¡¼¥±¥ó¥¹¤Ç¤¹"
 
-#: timezone/zic.c:850
+#: timezone/zic.c:856
 msgid "input line of unknown type"
 msgstr "ÉÔÌÀ¤Ê·Á¼°¤ÎÆþÎÏ¥é¥¤¥ó¹Ô¤Ç¤¹"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1294
 msgid "internal error"
 msgstr "ÆâÉô¥¨¥é¡¼"
 
-#: iconv/iconv_prog.c:435
+#: iconv/iconv_prog.c:477
 msgid "internal error (illegal descriptor)"
 msgstr "ÆâÉô¥¨¥é¡¼ (ÉÔÀµ¤Êµ­½Ò»Ò¤Ç¤¹)"
 
-#: timezone/zic.c:1813
+#: timezone/zic.c:1819
 msgid "internal error - addtype called with bad isdst"
 msgstr "ÆâÉô¥¨¥é¡¼ - ´Ö°ã¤Ã¤¿ isdst ¤È¤È¤â¤Ë addtype ¤¬¸Æ¤Ð¤ì¤Þ¤·¤¿"
 
-#: timezone/zic.c:1821
+#: timezone/zic.c:1827
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "ÆâÉô¥¨¥é¡¼ - ´Ö°ã¤Ã¤¿ ttisgmt ¤È¤È¤â¤Ë addtype ¤¬¸Æ¤Ð¤ì¤Þ¤·¤¿"
 
-#: timezone/zic.c:1817
+#: timezone/zic.c:1823
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "ÆâÉô¥¨¥é¡¼ - ´Ö°ã¤Ã¤¿ ttisstd ¤È¤È¤â¤Ë addtype ¤¬¸Æ¤Ð¤ì¤Þ¤·¤¿"
 
-#: locale/programs/ld-ctype.c:480 locale/programs/ld-ctype.c:536
+#: locale/programs/ld-ctype.c:488 locale/programs/ld-ctype.c:544
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "%sÃæ(%u¹Ô)¤Ç¡¢ÆâÉô¥¨¥é¡¼¤¬µ¯¤³¤ê¤Þ¤·¤¿"
 
-#: elf/dl-load.c:1264
+#: elf/dl-load.c:1267
 msgid "invalid ELF header"
 msgstr "ÉÔÅö¤ÊELF¥Ø¥Ã¥À"
 
-#: timezone/zic.c:1059
+#: timezone/zic.c:1065
 msgid "invalid UTC offset"
 msgstr "ÉÔÅö¤ÊUTC¥ª¥Õ¥»¥Ã¥È"
 
-#: timezone/zic.c:1062
+#: timezone/zic.c:1068
 msgid "invalid abbreviation format"
 msgstr "ÉÔÅö¤Ê¾ÊÎ¬·Á"
 
-#: catgets/gencat.c:687
+#: catgets/gencat.c:688
 msgid "invalid character: message ignored"
 msgstr "Ìµ¸ú¤Ê¥­¥ã¥é¥¯¥¿: ¥á¥Ã¥»¡¼¥¸¤òÌµ»ë¤·¤Þ¤¹"
 
-#: timezone/zic.c:1152 timezone/zic.c:1364 timezone/zic.c:1378
+#: timezone/zic.c:1158 timezone/zic.c:1370 timezone/zic.c:1384
 msgid "invalid day of month"
 msgstr "ÉÔÅö¤Ê1¥ö·îÃæ¤ÎÆü¤Ë¤Á¤Ç¤¹"
 
-#: locale/programs/charmap.c:347
+#: locale/programs/charmap.c:352
 msgid "invalid definition"
 msgstr "ÉÔÀµ¤ÊÄêµÁ¤Ç¤¹"
 
-#: locale/programs/charmap.c:542
+#: locale/programs/charmap.c:547
 msgid "invalid encoding given"
 msgstr "ÉÔÀµ¤Ê¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤¬Í¿¤¨¤é¤ì¤Þ¤·¤¿"
 
-#: timezone/zic.c:1316
+#: timezone/zic.c:1322
 msgid "invalid ending year"
 msgstr "ÉÔÅö¤Ê½ªÎ»Ç¯"
 
-#: catgets/gencat.c:1147 locale/programs/linereader.c:533
+#: catgets/gencat.c:1152 locale/programs/linereader.c:538
 msgid "invalid escape sequence"
 msgstr "ÉÔÅö¤ÊÊÝÂ¸»þ¹ï¤Ç¤¹"
 
-#: timezone/zic.c:1124
+#: timezone/zic.c:1130
 msgid "invalid leaping year"
 msgstr "ÉÔÅö¤Ê¤¦¤ë¤¦Ç¯¤Ç¤¹"
 
-#: catgets/gencat.c:726
+#: catgets/gencat.c:731
 msgid "invalid line"
 msgstr "ÉÔÅö¤Ê¹Ô¤Ç¤¹"
 
-#: elf/dl-open.c:371
+#: elf/dl-open.c:349
 msgid "invalid mode for dlopen()"
 msgstr "dlopen()¤ËÂÐ¤¹¤ëÉÔÀµ¤Ê¥â¡¼¥É¤Ç¤¹"
 
-#: timezone/zic.c:1139 timezone/zic.c:1242
+#: timezone/zic.c:1145 timezone/zic.c:1248
 msgid "invalid month name"
 msgstr "ÉÔÅö¤Ê·îÌ¾¤Ç¤¹"
 
-#: locale/programs/charmap.c:969 locale/programs/ld-collate.c:2869
+#: locale/programs/charmap.c:974 locale/programs/ld-collate.c:2888
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "¥­¥ã¥é¥¯¥¿ÈÏ°Ï¤È¤·¤ÆÉÔÀµ¤ÊÌ¾Á°"
@@ -4667,52 +4749,52 @@ msgstr "ÉÔÀµ¤Ê¥Ý¥¤¥ó¥¿¥µ¥¤¥º"
 msgid "invalid quote character"
 msgstr "ÉÔÀµ¤Ê¥¯¥©¡¼¥È¥­¥ã¥é¥¯¥¿¤Ç¤¹"
 
-#: timezone/zic.c:958
+#: timezone/zic.c:964
 msgid "invalid saved time"
 msgstr "ÉÔÀµ¤ÊÊÝÂ¸»þ¹ï"
 
-#: timezone/zic.c:1291
+#: timezone/zic.c:1297
 msgid "invalid starting year"
 msgstr "ÉÔÅö¤Ê³«»ÏÇ¯"
 
-#: timezone/zic.c:1168 timezone/zic.c:1271
+#: timezone/zic.c:1174 timezone/zic.c:1277
 msgid "invalid time of day"
 msgstr "1ÆüÊÕ¤ê¤Î»þ´Ö¤¬ÉÔÀµ"
 
-#: timezone/zic.c:1369
+#: timezone/zic.c:1375
 msgid "invalid weekday name"
 msgstr "¤ª¤«¤·¤ÊÍËÆüÌ¾"
 
-#: nscd/connections.c:470
+#: nscd/connections.c:479
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "Í×µá¤µ¤ì¤¿¥­¡¼Ä¹¤ÏÄ¹¤¹¤®¤Þ¤¹: %d"
 
-#: elf/ldconfig.c:738
+#: elf/ldconfig.c:794
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "¸í¤Ã¤¿¥Ç¥£¥ì¥¯¥È¥êÆâ¤Îlibc4¥é¥¤¥Ö¥é¥ê %s "
 
-#: elf/ldconfig.c:732
+#: elf/ldconfig.c:788
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "¸í¤Ã¤¿¥Ç¥£¥ì¥¯¥È¥êÆâ¤Îlibc5¥é¥¤¥Ö¥é¥ê %s"
 
-#: elf/ldconfig.c:735
+#: elf/ldconfig.c:791
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "¸í¤Ã¤¿¥Ç¥£¥ì¥¯¥È¥êÆâ¤Îlibc6¥é¥¤¥Ö¥é¥ê %s"
 
-#: elf/ldconfig.c:765
+#: elf/ldconfig.c:821
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "¥Ç¥£¥ì¥¯¥È¥ê %3$s Æâ¤Ë¤¢¤ë¥é¥¤¥Ö¥é¥ê %1$s ¤È %2$s ¤ÏÆ±°ì¤Î soname ¤Ç¤¹¤¬°Û¤Ê¤Ã¤¿¥¿¥¤¥×¤Ç¤¹."
 
-#: timezone/zic.c:830
+#: timezone/zic.c:836
 msgid "line too long"
 msgstr "¹Ô¤¬Ä¹¤¹¤®¤Þ¤¹"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:63
 msgid "list all known coded character sets"
 msgstr "´ûÃÎ¤ÎÁ´¥­¥ã¥é¥¯¥¿¥»¥Ã¥È¤òÉ½¼¨¤¹¤ë"
 
@@ -4720,7 +4802,7 @@ msgstr "´ûÃÎ¤ÎÁ´¥­¥ã¥é¥¯¥¿¥»¥Ã¥È¤òÉ½¼¨¤¹¤ë"
 msgid "locale name should consist only of portable characters"
 msgstr "¥í¥±¡¼¥ëÌ¾¤Ï¥Ý¡¼¥¿¥Ö¥ëÊ¸»ú¤À¤±¤Ç¹½À®¤¹¤Ù¤­¤Ç¤¹"
 
-#: inet/rcmd.c:413
+#: inet/rcmd.c:414
 msgid "lstat failed"
 msgstr "lstat¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
@@ -4732,7 +4814,11 @@ msgstr "½ÐÎÏ¥°¥é¥Õ¥£¥Ã¥¯ÃÍ¤Î¥Ô¥¯¥»¥ë¤ò¹â¤¯¤·¤Þ¤¹"
 msgid "make output graphic VALUE pixel wide"
 msgstr "½ÐÎÏ¥°¥é¥Õ¥£¥Ã¥¯ÃÍ¤Î¥Ô¥¯¥»¥ë¤ò¹­¤¯¤·¤Þ¤¹"
 
-#: catgets/gencat.c:780
+#: stdlib/../sysdeps/unix/sysv/linux/ia64/makecontext.c:63
+msgid "makecontext: does not know how to handle more than 8 arguments\n"
+msgstr "makecontext: 8°ú¿ô°Ê¾å¤ò°·¤¦ÊýË¡¤¬¤ï¤«¤ê¤Þ¤»¤ó\n"
+
+#: catgets/gencat.c:785
 msgid "malformed line ignored"
 msgstr "ÉÔÅö¤Ê¹Ô¤òÌµ»ë¤·¤Þ¤·¤¿"
 
@@ -4744,38 +4830,33 @@ msgstr "¥»¥¯¥·¥ç¥ó¥Ø¥Ã¥À¤ÎÊ¸»úÎó¥Æ¡¼¥Ö¥ë¤Î¥Þ¥Ã¥Ô¥ó¥°¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 msgid "mapping of section headers failed"
 msgstr "¥»¥¯¥·¥ç¥ó¥Ø¥Ã¥À¤Î¥Þ¥Ã¥Ô¥ó¥°¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: malloc/mcheck.c:285
+#: malloc/mcheck.c:296
 msgid "memory clobbered before allocated block\n"
 msgstr "¥Ö¥í¥Ã¥¯³ÎÊÝÁ°¤Ë¥á¥â¥ê¤òÍøÍÑ¤·¤Þ¤·¤¿\n"
 
-#: malloc/mcheck.c:288
+#: malloc/mcheck.c:299
 msgid "memory clobbered past end of allocated block\n"
 msgstr "¥Ö¥í¥Ã¥¯³ÎÊÝ¤ÎºÇ¸å¤è¤ê°Ê¸å¤Ë¥á¥â¥ê¤òÍøÍÑ¤·¤Þ¤·¤¿\n"
 
-#: locale/programs/locfile.c:334 locale/programs/xmalloc.c:70
-#: malloc/obstack.c:477 posix/getconf.c:809
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:484 posix/getconf.c:996
 msgid "memory exhausted"
 msgstr "¥á¥â¥ê¤ò»È¤¤²Ì¤¿¤·¤Þ¤·¤¿"
 
-#: malloc/mcheck.c:282
+#: malloc/mcheck.c:293
 msgid "memory is consistent, library is buggy\n"
 msgstr "¥á¥â¥ê¤Ï°ì´ÓÀ­¤ò»ý¤Ã¤Æ¤¤¤Þ¤¹¤¬¡¢¥é¥¤¥Ö¥é¥ê¤¬¥Ð¥®¡¼¤Ç¤¹\n"
 
-#: elf/cache.c:120
+#: elf/cache.c:143
 msgid "mmap of cache file failed.\n"
 msgstr "¥­¥ã¥Ã¥·¥å¥Õ¥¡¥¤¥ë¤Îmmap¤Ë¼ºÇÔ¤·¤Þ¤·¤¿.\n"
 
-#: elf/../sysdeps/generic/readelflib.c:108
+#: elf/../sysdeps/generic/readelflib.c:110
 msgid "more than one dynamic segment\n"
 msgstr "Ê£¿ô¤ÎÆ°Åª¥»¥°¥á¥ó¥È\n"
 
-#: timezone/zic.c:953
+#: timezone/zic.c:959
 msgid "nameless rule"
 msgstr "Ì¾Á°¤¬¤Ê¤¤¥ë¡¼¥ë¤Ç¤¹"
-
-#: iconv/iconv_prog.c:139
-msgid "neither original nor target encoding specified"
-msgstr "¥ª¥ê¥¸¥Ê¥ë¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤â¥¿¡¼¥²¥Ã¥È¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤â»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
 #: nis/nss_nisplus/nisplus-publickey.c:281
 #: nis/nss_nisplus/nisplus-publickey.c:287
@@ -4809,7 +4890,7 @@ msgstr "netname2user: principalÌ¾ `%s' ¤¬Ä¹¤¹¤®¤Þ¤¹"
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: uid 0 ¤ò»È¤Ã¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
-#: sunrpc/svc_simple.c:159
+#: sunrpc/svc_simple.c:168
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "¥×¥í¥°¥é¥à %d ¤ÏÅÐÏ¿¤µ¤ì¤Æ¤¤¤Þ¤»¤ó\n"
@@ -4818,11 +4899,11 @@ msgstr "¥×¥í¥°¥é¥à %d ¤ÏÅÐÏ¿¤µ¤ì¤Æ¤¤¤Þ¤»¤ó\n"
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "<Uxxxx> ¤Þ¤¿¤Ï <Uxxxxxxxx> ÃÍ¤¬Í¿¤¨¤é¤ì¤Þ¤»¤ó¤Ç¤·¤¿"
 
-#: timezone/zic.c:2142
+#: timezone/zic.c:2148
 msgid "no day in month matches rule"
 msgstr "·î¤ÎÃæ¤ÎÆü¤Ë¤Á¤Ï¥ë¡¼¥ë¤Ë¥Þ¥Ã¥Á¤·¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1757
+#: locale/programs/ld-collate.c:1770
 msgid "no definition of `UNDEFINED'"
 msgstr "`UNDEFINED'¤ÏÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
@@ -4831,7 +4912,7 @@ msgstr "`UNDEFINED'¤ÏÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 msgid "no filename for profiling data given and shared object `%s' has no soname"
 msgstr "¥×¥í¥Õ¥¡¥¤¥ê¥ó¥°¥Ç¡¼¥¿¤Î¥Õ¥¡¥¤¥ëÌ¾¤¬Í¿¤¨¤é¤ì¤Æ¤¤¤Ê¤¤¤«¡¢¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È`%s' ¤¬soname¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:739
+#: locale/programs/ld-ctype.c:747
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "ÆþÎÏ·å¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Ê¤¤¤«¡¢¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ãæ¤ËÉ¸½àÌ¾¤¬¤¢¤ê¤Þ¤»¤ó"
 
@@ -4839,37 +4920,37 @@ msgstr "ÆþÎÏ·å¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Ê¤¤¤«¡¢¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ãæ¤ËÉ¸½àÌ¾¤¬¤¢¤ê¤Þ¤»¤ó"
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "`copy' ¤ò»ÈÍÑ¤·¤¿¤È¤­¤ËÂ¾¤Î¤¤¤«¤Ê¤ë¥­¡¼¥ï¡¼¥É¤â»ØÄê¤µ¤ì¤Þ¤»¤ó¤Ç¤·¤¿"
 
-#: locale/programs/ld-ctype.c:3349
+#: locale/programs/ld-ctype.c:3351
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "½ÐÎÏ·å¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Ê¤¤¤«¡¢¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×Ãæ¤ËÉ¸½àÌ¾¤¬¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/localedef.c:236
+#: iconv/iconvconfig.c:308 locale/programs/localedef.c:236
 msgid "no output file produced because warning were issued"
 msgstr "·Ù¹ð¤¬½Ð¤µ¤ì¤¿¤¿¤á¥Õ¥¡¥¤¥ë¤Ë½ÐÎÏ¤µ¤ì¤Þ¤»¤ó¤Ç¤·¤¿"
 
-#: locale/programs/charmap.c:488 locale/programs/charmap.c:668
-#: locale/programs/charmap.c:764 locale/programs/repertoire.c:231
+#: locale/programs/charmap.c:493 locale/programs/charmap.c:673
+#: locale/programs/charmap.c:769 locale/programs/repertoire.c:231
 msgid "no symbolic name given"
 msgstr "¥·¥ó¥Ü¥ëÌ¾¤¬Í¿¤¨¤é¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:575 locale/programs/charmap.c:723
-#: locale/programs/charmap.c:806 locale/programs/repertoire.c:297
+#: locale/programs/charmap.c:580 locale/programs/charmap.c:728
+#: locale/programs/charmap.c:811 locale/programs/repertoire.c:297
 msgid "no symbolic name given for end of range"
 msgstr "ÎÎ°è¤ÎºÇ¸å¤Ë¥·¥ó¥Ü¥ëÌ¾¤¬Í¿¤¨¤é¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/linereader.c:641
+#: locale/programs/linereader.c:646
 msgid "non-symbolic character value should not be used"
 msgstr "Èó¥·¥ó¥Ü¥ë¥­¥ã¥é¥¯¥¿ÃÍ¤Ï»ÈÍÑ¤¹¤Ù¤­¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:804
+#: locale/programs/ld-ctype.c:812
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "`outdigit'¤Ç»ÈÍÑÃæ¤ÎÊ¸»ú¤Î°ìÉô¤Ï¥­¥ã¥é¥¯¥¿¥Þ¥Ã¥×¤ÇÍøÍÑ²ÄÇ½¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:821
+#: locale/programs/ld-ctype.c:829
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "`outdigit'¤Ç»ÈÍÑÃæ¤ÎÊ¸»ú¤Î°ìÉô¤Ï¥ì¥Ñ¡¼¥È¥ê¥Þ¥Ã¥×¤ÇÍøÍÑ²ÄÇ½¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
-#: inet/rcmd.c:415
+#: inet/rcmd.c:416
 msgid "not regular file"
 msgstr "ÄÌ¾ï¤Î¥Õ¥¡¥¤¥ë¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
 
@@ -4888,36 +4969,32 @@ msgstr ""
 msgid "nscd not running!\n"
 msgstr "nscd¤Ïµ¯Æ°¤·¤Æ¤¤¤Þ¤»¤ó!\n"
 
-#: elf/dl-load.c:1051
+#: elf/dl-load.c:1059
 msgid "object file has no dynamic section"
 msgstr "¥ª¥Ö¥¸¥§¥¯¥È¥Õ¥¡¥¤¥ë¤ÏÆ°Åª¥»¥¯¥·¥ç¥ó¤ò»ý¤Ã¤Æ¤¤¤Þ¤»¤ó"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:65
 msgid "omit invalid characters from output"
 msgstr "½ÐÎÏ¤«¤éÉÔÀµ¤ÊÊ¸»ú¤òÈ´¤«¤·¤Þ¤·¤¿"
 
-#: elf/dl-load.c:1311
+#: elf/dl-load.c:1309
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN ¤È ET_EXEC ¤À¤±¤¬¥í¡¼¥É¤Ç¤­¤Þ¤·¤¿"
 
-#: locale/programs/charmap.c:632
+#: locale/programs/charmap.c:637
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "WIDTH ÄêµÁ¤Ï CHARMAP ÄêµÁ¤Ë½¾¤¦¤³¤È¤Î¤ßµö¤µ¤ì¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:1005 locale/programs/ld-collate.c:1175
+#: locale/programs/ld-collate.c:1018 locale/programs/ld-collate.c:1188
 #, c-format
 msgid "order for `%.*s' already defined at %s:%Zu"
 msgstr "`%.*s'¤ËÂÐ¤¹¤ë¥ª¡¼¥À¡¼¤Ï %s:%Zu ¤Ç´û¤ËÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤¹"
 
-#: iconv/iconv_prog.c:141
-msgid "original encoding not specified using `-f'"
-msgstr "¥ª¥ê¥¸¥Ê¥ë¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤Ï`-f'¤ò»È¤Ã¤Æ»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
-
-#: inet/ruserpass.c:167 inet/ruserpass.c:190
+#: inet/ruserpass.c:170 inet/ruserpass.c:193
 msgid "out of memory"
 msgstr "¥á¥â¥êÉÔÂ­"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:66
 msgid "output file"
 msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë"
 
@@ -4925,19 +5002,19 @@ msgstr "½ÐÎÏ¥Õ¥¡¥¤¥ë"
 msgid "pmap_getmaps rpc problem"
 msgstr "pmap_getmaps rpc ¤¬ÌäÂê¤Ç¤¹"
 
-#: inet/rcmd.c:233
+#: inet/rcmd.c:234
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: ²óÀþ¤Î¥»¥Ã¥È¥¢¥Ã¥×Ãæ¤Ç¥×¥í¥È¥³¥ë¤¬¼ºÇÔ¤·¤Þ¤·¤¿\n"
 
-#: locale/programs/ld-ctype.c:1949 locale/programs/ld-ctype.c:2000
+#: locale/programs/ld-ctype.c:1950 locale/programs/ld-ctype.c:2001
 msgid "premature end of `translit_ignore' definition"
 msgstr "`translit_ignore'ÄêµÁ¤Î½ªÃ¼¤¬Áá¤¹¤®¤Þ¤¹"
 
-#: sunrpc/rpc_scan.c:524 sunrpc/rpc_scan.c:534
+#: sunrpc/rpc_scan.c:525 sunrpc/rpc_scan.c:535
 msgid "preprocessor error"
 msgstr "¥×¥ê¥×¥í¥»¥Ã¥µ¥¨¥é¡¼"
 
-#: locale/programs/ld-ctype.c:2731
+#: locale/programs/ld-ctype.c:2733
 msgid "previous definition was here"
 msgstr "Á°¤ÎÄêµÁ¤¬¤³¤³¤Ë¤¢¤ê¤Þ¤·¤¿"
 
@@ -4945,7 +5022,7 @@ msgstr "Á°¤ÎÄêµÁ¤¬¤³¤³¤Ë¤¢¤ê¤Þ¤·¤¿"
 msgid "print list of count paths and their number of use"
 msgstr "¥«¥¦¥ó¥È¤·¤¿·ÐÏ©¤È¤½¤ì¤é¤Î»ÈÍÑ¿ô¤Î¥ê¥¹¥È¤òÉ½¼¨"
 
-#: iconv/iconv_prog.c:64
+#: iconv/iconv_prog.c:68
 msgid "print progress information"
 msgstr "·Ð²á¾ðÊó¤ÎÉ½¼¨"
 
@@ -4971,30 +5048,30 @@ msgstr "¥×¥í¥°¥é¥à%lu¥Ð¡¼¥¸¥ç¥ó%lu¤ÏÍøÍÑ¤Ç¤­¤Þ¤»¤ó\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "¥×¥í¥°¥é¥à %lu ¥Ð¡¼¥¸¥ç¥ó %lu ¤Î½àÈ÷¤¬´°Î»¤·ÂÔµ¡Ãæ¤Ç¤¹\n"
 
-#: inet/rcmd.c:270
+#: inet/rcmd.c:271
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: Ã»¤¤ÆÉ¹þ¤ß"
 
-#: inet/rcmd.c:230
+#: inet/rcmd.c:231
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (stderr ¤òÀßÄêÃæ¤Ç¤¹): %m\n"
 
-#: inet/rcmd.c:158
+#: inet/rcmd.c:159
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Á´¥Ý¡¼¥È¤¬»ÈÍÑÃæ¤Ç¤¹\n"
 
-#: inet/rcmd.c:220
+#: inet/rcmd.c:221
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (stderr ¤òÀßÄêÃæ¤Ç¤¹): %m\n"
 
-#: sunrpc/svc_simple.c:99
+#: sunrpc/svc_simple.c:108
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: timezone/zic.c:1874
+#: timezone/zic.c:1880
 msgid "repeated leap second moment"
 msgstr "½Û´Ä±¼ÉÃ¤Î½Ö´Ö"
 
@@ -5003,7 +5080,7 @@ msgstr "½Û´Ä±¼ÉÃ¤Î½Ö´Ö"
 msgid "repertoire map file `%s' not found"
 msgstr "¥ì¥Ñ¡¼¥È¥ê¥Þ¥Ã¥×¥Õ¥¡¥¤¥ë`%s'¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:1063
+#: locale/programs/charmap.c:1068
 msgid "resulting bytes for range not representable."
 msgstr "ÈÏ°ÏÆâ¤Î·ë²Ì¥Ð¥¤¥È¤ÏÉ½¸½²ÄÇ½¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó."
 
@@ -5039,24 +5116,24 @@ msgstr "rpcinfo: ¥Ö¥í¡¼¥É¥­¥ã¥¹¥È¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s\n"
 msgid "rpcinfo: can't contact portmapper"
 msgstr "rpcinfo: ¥Ý¡¼¥È¥Þ¥Ã¥Ñ¤ÈÀÜÂ³¤Ç¤­¤Þ¤»¤ó"
 
-#: timezone/zic.c:743 timezone/zic.c:745
+#: timezone/zic.c:749 timezone/zic.c:751
 msgid "same rule name in multiple files"
 msgstr "Ê£¿ô¥Õ¥¡¥¤¥ë¤ËÆ±¤¸¥ë¡¼¥ëÌ¾¤¬¤¢¤ê¤Þ¤¹"
 
-#: elf/dl-load.c:1116
+#: elf/dl-load.c:1104
 msgid "shared object cannot be dlopen()ed"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¤Ï dlopen() ¤Ç¤­¤Þ¤»¤ó"
 
-#: elf/dl-close.c:63
+#: elf/dl-close.c:61
 msgid "shared object not open"
 msgstr "¶¦Í­¥ª¥Ö¥¸¥§¥¯¥È¤¬³«¤±¤Þ¤»¤ó"
 
-#: nscd/connections.c:482
+#: nscd/connections.c:493
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "¥ê¥¯¥¨¥¹¥È¥­¡¼: %s ¤òÆÉ¹þ¤ßÃæ¤ÎÃ»¤¤ÆÉ¹þ¤ß¤Ç¤¹"
 
-#: nscd/connections.c:436
+#: nscd/connections.c:443
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "¥ê¥¯¥¨¥¹¥È: %s ¤òÆÉ¹þ¤ßÃæ¤ÎÃ»¤¤ÆÉ¹þ¤ß¤Ç¤¹"
@@ -5066,35 +5143,31 @@ msgstr "¥ê¥¯¥¨¥¹¥È: %s ¤òÆÉ¹þ¤ßÃæ¤ÎÃ»¤¤ÆÉ¹þ¤ß¤Ç¤¹"
 msgid "short write in %s: %s"
 msgstr "%s ¤Ç¤ÎÃ»¤¤½ñ¤­¹þ¤ß: %s"
 
-#: inet/rcmd.c:260
+#: inet/rcmd.c:261
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: ²óÀþ¤Î¥»¥Ã¥È¥¢¥Ã¥×Ãæ¤Ç¥×¥í¥È¥³¥ë¤¬¼ºÇÔ¤·¤Þ¤·¤¿\n"
 
-#: timezone/zic.c:814
+#: timezone/zic.c:820
 msgid "standard input"
 msgstr "É¸½àÆþÎÏ"
 
-#: timezone/zdump.c:269
-msgid "standard output"
-msgstr "É¸½à½ÐÎÏ"
-
-#: locale/programs/ld-ctype.c:1680
+#: locale/programs/ld-ctype.c:1681
 msgid "start and end character sequence of range must have the same length"
 msgstr "ÈÏ°ÏÆâ¤Î³«»Ï½ªÎ»¥­¥ã¥é¥¯¥¿¥·¡¼¥±¥ó¥¹¤ÏÆ±°ìÄ¹¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: timezone/zic.c:1325
+#: timezone/zic.c:1331
 msgid "starting year greater than ending year"
 msgstr "³«»ÏÇ¯¤¬½ªÎ»Ç¯¤è¤êÂç¤­¤¯¤Ê¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:1297 timezone/zic.c:1322
+#: timezone/zic.c:1303 timezone/zic.c:1328
 msgid "starting year too high to be represented"
 msgstr "³«»ÏÇ¯¤ÎÃÍ¤¬Âç¤­¤¹¤®¤ë¤¿¤áÉ½¸½¤Ç¤­¤Þ¤»¤ó"
 
-#: timezone/zic.c:1295 timezone/zic.c:1320
+#: timezone/zic.c:1301 timezone/zic.c:1326
 msgid "starting year too low to be represented"
 msgstr "³«»ÏÇ¯¤ÎÃÍ¤¬¾®¤µ¤¹¤®¤ë¤¿¤áÉ½¸½¤Ç¤­¤Þ¤»¤ó"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:67
 msgid "suppress warnings"
 msgstr "·Ù¹ð¤ÎÍÞÀ©"
 
@@ -5102,31 +5175,31 @@ msgstr "·Ù¹ð¤ÎÍÞÀ©"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - poll¤Ë¼ºÇÔ¤·¤Þ¤·¤¿"
 
-#: sunrpc/svc_tcp.c:161
+#: sunrpc/svc_tcp.c:170
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr "svc_tcp.c - getsockname¤â¤·¤¯¤Ïlisten¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/svc_tcp.c:146
+#: sunrpc/svc_tcp.c:155
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr "svc_tcp.c - tcp¥½¥±¥Ã¥ÈºîÀ®¤ËÌäÂê¤¬¤¢¤ê¤Þ¤¹"
 
-#: sunrpc/svc_tcp.c:210 sunrpc/svc_tcp.c:216
+#: sunrpc/svc_tcp.c:219 sunrpc/svc_tcp.c:225
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr "svc_tcp: makefd_xprt: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: sunrpc/svc_unix.c:137
+#: sunrpc/svc_unix.c:146
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - AF_UNIX¥½¥±¥Ã¥ÈºîÀ®¤ËÌäÂê¤¬¤¢¤ê¤Þ¤¹"
 
-#: sunrpc/svc_unix.c:153
+#: sunrpc/svc_unix.c:162
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - getsockname¤â¤·¤¯¤Ïlisten¤Ç¤­¤Þ¤»¤ó"
 
-#: sunrpc/svc_unix.c:203 sunrpc/svc_unix.c:209
+#: sunrpc/svc_unix.c:212 sunrpc/svc_unix.c:218
 msgid "svc_unix: makefd_xprt: out of memory\n"
 msgstr "svc_unix: makefd_xprt: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: sunrpc/svc_tcp.c:169 sunrpc/svc_tcp.c:177
+#: sunrpc/svc_tcp.c:178 sunrpc/svc_tcp.c:186
 msgid "svctcp_create: out of memory\n"
 msgstr "svctcp_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
@@ -5146,49 +5219,49 @@ msgstr "svcudp_create: ¥½¥±¥Ã¥È¤ÎºîÀ®¤ËÌäÂê¤¬¤¢¤ê¤Þ¤¹"
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr "svcudp_create: xp_pad¤ÏIP_PKTINFO¤ËÂÐ¤·¤Æ¾®¤µ¤¹¤®¤Þ¤¹\n"
 
-#: sunrpc/svc_unix.c:162 sunrpc/svc_unix.c:170
+#: sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:179
 msgid "svcunix_create: out of memory\n"
 msgstr "svcunix_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: locale/programs/linereader.c:745
+#: locale/programs/linereader.c:750
 #, c-format
 msgid "symbol `%.*s' not in charmap"
 msgstr "ÉÔÌÀ¤Ê¥·¥ó¥Ü¥ë`%.*s'¤¬¤¢¤ê¤Þ¤·¤¿: ¤³¤Î¹Ô¤ÏÌµ»ë¤·¤Þ¤¹"
 
-#: locale/programs/linereader.c:766
+#: locale/programs/linereader.c:771
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
 msgstr "¥·¥ó¥Ü¥ë `%.*s' ¤¬¥ì¥Ñ¡¼¥È¥ê¥Þ¥Ã¥×Ãæ¤Ë¤¢¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-collate.c:1617 locale/programs/ld-collate.c:1716
+#: locale/programs/ld-collate.c:1630 locale/programs/ld-collate.c:1729
 #, c-format
 msgid "symbol `%s'"
 msgstr "¥·¥ó¥Ü¥ë `%s'"
 
-#: locale/programs/ld-collate.c:1614 locale/programs/ld-collate.c:1713
+#: locale/programs/ld-collate.c:1627 locale/programs/ld-collate.c:1726
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "¥·¥ó¥Ü¥ë `%s' ¤Ï°Ê²¼¤ÈÆ±¤¸¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤ò»ý¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/ld-collate.c:1539
+#: locale/programs/ld-collate.c:1552
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "¥·¥ó¥Ü¥ë`%s'¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:1955 locale/programs/ld-ctype.c:2006
-#: locale/programs/ld-ctype.c:2048
+#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
+#: locale/programs/ld-ctype.c:2049
 msgid "syntax error"
 msgstr "Ê¸Ë¡¥¨¥é¡¼"
 
-#: locale/programs/charmap.c:487 locale/programs/charmap.c:541
-#: locale/programs/charmap.c:573 locale/programs/charmap.c:667
-#: locale/programs/charmap.c:722 locale/programs/charmap.c:763
-#: locale/programs/charmap.c:804
+#: locale/programs/charmap.c:492 locale/programs/charmap.c:546
+#: locale/programs/charmap.c:578 locale/programs/charmap.c:672
+#: locale/programs/charmap.c:727 locale/programs/charmap.c:768
+#: locale/programs/charmap.c:809
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "%s¤ÎÄêµÁÃæ¤ËÊ¸Ë¡¥¨¥é¡¼¤¬¤¢¤ê¤Þ¤¹: %s"
 
-#: locale/programs/charmap.c:346 locale/programs/charmap.c:363
+#: locale/programs/charmap.c:351 locale/programs/charmap.c:368
 #: locale/programs/repertoire.c:175
 #, c-format
 msgid "syntax error in prolog: %s"
@@ -5200,73 +5273,69 @@ msgstr "prolog Ãæ¤ÇÊ¸Ë¡¥¨¥é¡¼¤Ç¤¹: %s"
 msgid "syntax error in repertoire map definition: %s"
 msgstr "¥ì¥Ñ¡¼¥È¥ê¥Þ¥Ã¥×¤ÎÄêµÁÃæ¤ËÊ¸Ë¡¥¨¥é¡¼¤¬¤¢¤ê¤Þ¤¹: %s"
 
-#: locale/programs/locfile.c:243
+#: locale/programs/locfile.c:245
 msgid "syntax error: not inside a locale definition section"
 msgstr "Ê¸Ë¡¥¨¥é¡¼: ¥í¥±¡¼¥ëÄêµÁ¥»¥¯¥·¥ç¥óÆâÉô¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
-
-#: iconv/iconv_prog.c:143
-msgid "target encoding not specified using `-t'"
-msgstr "¥¿¡¼¥²¥Ã¥È¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤¬`-t'¤ò»È¤Ã¤Æ»ØÄê¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
 
 #: catgets/gencat.c:432 catgets/gencat.c:605 catgets/gencat.c:634
 msgid "this is the first definition"
 msgstr "¤³¤ì¤¬ºÇ½é¤ÎÄêµÁ¤Ç¤¹"
 
-#: timezone/zic.c:1157
+#: timezone/zic.c:1163
 msgid "time before zero"
 msgstr "¥¼¥íÁ°¤Î»þ¹ï"
 
-#: timezone/zic.c:1165 timezone/zic.c:2042 timezone/zic.c:2061
+#: timezone/zic.c:1171 timezone/zic.c:2048 timezone/zic.c:2067
 msgid "time overflow"
 msgstr "»þ´Ö¥ª¡¼¥Ð¡¼¥Õ¥í¡¼"
 
-#: locale/programs/ld-ctype.c:1553 locale/programs/ld-ctype.c:2029
+#: locale/programs/ld-ctype.c:1554 locale/programs/ld-ctype.c:2030
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "ÈÏ°ÏÆâ¤Îto¤ÎÃÍ <U%0*X> ¤Ïfrom¤ÎÃÍ <U%0*X> ¤è¤ê¤â¾®¤µ¤¹¤®¤Þ¤¹"
 
-#: locale/programs/ld-ctype.c:1687
+#: locale/programs/ld-ctype.c:1688
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "toÃÍ¤ÎÊ¸»ú¥·¡¼¥±¥ó¥¹¤ÏfromÃÍ¤ÎÊ¸»ú¥·¡¼¥±¥ó¥¹¤è¤ê¤â¾®¤µ¤¹¤®¤Þ¤¹"
 
-#: locale/programs/charmap.c:551
+#: locale/programs/charmap.c:556
 msgid "too few bytes in character encoding"
 msgstr "Ê¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°Ãæ¤Ç¤Î¥Ð¥¤¥È¿ô¤¬¾¯¤Ê¤¹¤®¤Þ¤¹"
 
-#: locale/programs/charmap.c:553
+#: locale/programs/charmap.c:558
 msgid "too many bytes in character encoding"
 msgstr "Ê¸»ú¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°Ãæ¤Ç¤Î¥Ð¥¤¥È¿ô¤¬Â¿¤¹¤®¤Þ¤¹"
 
-#: timezone/zic.c:1868
+#: timezone/zic.c:1874
 msgid "too many leap seconds"
 msgstr "¤¦¤ë¤¦ÉÃ¤¬Âç¤­¤¹¤®¤Þ¤¹"
 
-#: timezone/zic.c:1840
+#: timezone/zic.c:1846
 msgid "too many local time types"
 msgstr "¥í¡¼¥«¥ë»þ´Ö·Á¼°¤¬Â¿¤¹¤®¤Þ¤¹"
 
-#: timezone/zic.c:1794
+#: timezone/zic.c:1800
 msgid "too many transitions?!"
 msgstr "Á«°ÜÀè¤¬Â¿¤¹¤®¤Þ¤¹?!"
 
-#: timezone/zic.c:2165
+#: timezone/zic.c:2171
 msgid "too many, or too long, time zone abbreviations"
 msgstr "¥¿¥¤¥à¥¾¡¼¥ó¤Î¾ÊÎ¬Ì¾¤¬Â¿¤¹¤®¤ë¤«Ä¹¤¹¤®¤Þ¤¹"
 
-#: locale/programs/linereader.h:157
+#: locale/programs/linereader.h:160
 msgid "trailing garbage at end of line"
 msgstr "¹ÔËö¤Ë¥´¥ß¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: sunrpc/svc_simple.c:151
+#: sunrpc/svc_simple.c:160
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "¥×¥í¥°¥é¥à %d ¤Ø¤Î±þÅúÃæ¤ËÌäÂê¤¬µ¯¤­¤Þ¤·¤¿\n"
 
-#: timezone/zic.c:1332
+#: timezone/zic.c:1338
 msgid "typed single year"
 msgstr "typed single year"
 
-#: iconv/iconv_prog.c:491
+#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:533
 msgid "unable to allocate buffer for input"
 msgstr "ÆþÎÏÍÑ¥Ð¥Ã¥Õ¥¡¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó"
 
@@ -5274,11 +5343,15 @@ msgstr "ÆþÎÏÍÑ¥Ð¥Ã¥Õ¥¡¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó"
 msgid "unable to free arguments"
 msgstr "°ú¿ô¤ò²òÊü¤Ç¤­¤Þ¤»¤ó"
 
-#: posix/getconf.c:781 posix/getconf.c:797
+#: posix/getconf.c:968 posix/getconf.c:984
 msgid "undefined"
 msgstr "Ì¤ÄêµÁ"
 
-#: locale/programs/charmap.c:856 locale/programs/charmap.c:867
+#: elf/cache.c:69
+msgid "unknown"
+msgstr "ÉÔÌÀ"
+
+#: locale/programs/charmap.c:861 locale/programs/charmap.c:872
 #, c-format
 msgid "unknown character `%s'"
 msgstr "ÉÔÌÀ¤ÊÊ¸»ú`%s'"
@@ -5288,7 +5361,7 @@ msgstr "ÉÔÌÀ¤ÊÊ¸»ú`%s'"
 msgid "unknown directive `%s': line ignored"
 msgstr "ÉÔÌÀ¤Ê»Ø¼¨`%s'¤¬¤¢¤ê¤Þ¤·¤¿: ¤³¤Î¹Ô¤ÏÌµ»ë¤·¤Þ¤¹"
 
-#: iconv/iconv_prog.c:438
+#: iconv/iconv_prog.c:480
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "ÉÔÌÀ¤Ê iconv() ¥¨¥é¡¼ %d"
@@ -5298,15 +5371,20 @@ msgstr "ÉÔÌÀ¤Ê iconv() ¥¨¥é¡¼ %d"
 msgid "unknown set `%s'"
 msgstr "ÉÔÌÀ¤Ê¥»¥Ã¥È`%s'¤Ç¤¹"
 
-#: timezone/zic.c:786
+#: posix/getconf.c:941
+#, c-format
+msgid "unknown specification \"%s\""
+msgstr "Ì¤ÃÎ¤Î»ÅÍÍ \"%s\" ¤Ç¤¹"
+
+#: timezone/zic.c:792
 msgid "unruly zone"
 msgstr "unruly zone"
 
-#: catgets/gencat.c:1169
+#: catgets/gencat.c:1174
 msgid "unterminated message"
 msgstr "¥á¥Ã¥»¡¼¥¸¤¬½ªÎ»¤·¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/linereader.c:599 locale/programs/linereader.c:784
+#: locale/programs/linereader.c:604 locale/programs/linereader.c:789
 msgid "unterminated string"
 msgstr "Ê¸»úÎó¤¬½ªÎ»¤·¤Æ¤¤¤Þ¤»¤ó"
 
@@ -5314,11 +5392,11 @@ msgstr "Ê¸»úÎó¤¬½ªÎ»¤·¤Æ¤¤¤Þ¤»¤ó"
 msgid "unterminated string constant"
 msgstr "Ê¸»úÎóÄê¿ô¤¬½ªÎ»¤·¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/linereader.c:469
+#: locale/programs/linereader.c:474
 msgid "unterminated symbolic name"
 msgstr "¥·¥ó¥Ü¥ëÌ¾¤¬½ªÎ»¤·¤Æ¤¤¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:1005
+#: locale/programs/charmap.c:1010
 msgid "upper limit in range is not higher then lower limit"
 msgstr "ÈÏ°ÏÆâ¤Î¾å¸Â¤Ï²¼¸Â¤è¤êÂç¤­¤¯¤¢¤ê¤Þ¤»¤ó"
 
@@ -5326,35 +5404,35 @@ msgstr "ÈÏ°ÏÆâ¤Î¾å¸Â¤Ï²¼¸Â¤è¤êÂç¤­¤¯¤¢¤ê¤Þ¤»¤ó"
 msgid "upper limit in range is not smaller then lower limit"
 msgstr "ÈÏ°ÏÆâ¤Î¾å¸Â¤Ï²¼¸Â¤è¤ê¾®¤µ¤¯¤¢¤ê¤Þ¤»¤ó"
 
-#: sunrpc/rpc_main.c:1424
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "usage: %s infile\n"
 msgstr "»ÈÍÑË¡: %s ÆþÎÏ¥Õ¥¡¥¤¥ë\n"
 
-#: timezone/zic.c:2108
+#: timezone/zic.c:2114
 msgid "use of 2/29 in non leap-year"
 msgstr "±¼Ç¯¤Ç¤Ï¤Ê¤¤¤Î¤Ë2/29¤ò»È¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: locale/programs/charmap.c:640 locale/programs/charmap.c:703
+#: locale/programs/charmap.c:645 locale/programs/charmap.c:708
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "%s¤ÎÃÍ¤ÏÀ°¿ô¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:399
+#: locale/programs/charmap.c:404
 #, c-format
 msgid "value for <%s> must be 1 or greater"
 msgstr "<%s> ¤ÎÃÍ¤Ï1°Ê¾å¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/charmap.c:411
+#: locale/programs/charmap.c:416
 #, c-format
 msgid "value of <%s> must be greater or equal than the value of <%s>"
 msgstr "<%s> ¤ÎÃÍ¤Ï <%s> ¤ÎÃÍ°Ê¾å¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Þ¤»¤ó"
 
-#: timezone/zic.c:433
+#: timezone/zic.c:439
 msgid "warning: "
 msgstr "·Ù¹ð: "
 
-#: nscd/connections.c:427
+#: nscd/connections.c:432
 #, c-format
 msgid "while accepting connection: %s"
 msgstr "¼õÉÕ¥³¥Í¥¯¥·¥ç¥óÃæ: %s"
@@ -5371,11 +5449,15 @@ msgstr "¥Ï¥Ã¥·¥å¥Æ¡¼¥Ö¥ë¥¨¥ó¥È¥ê³ä¤êÅö¤ÆÃæ"
 msgid "while allocating key copy"
 msgstr "¥­¡¼¥³¥Ô¡¼³ä¤êÅö¤ÆÃæ"
 
-#: catgets/gencat.c:1199
+#: iconv/iconvconfig.c:369
+msgid "while inserting in search tree"
+msgstr "¸¡º÷ÌÚ¤ØÁÞÆþÃæ¤Ç¤¹"
+
+#: catgets/gencat.c:1198
 msgid "while opening old catalog file"
 msgstr "¸Å¤¤¥«¥¿¥í¥°¥Õ¥¡¥¤¥ë¥ª¡¼¥×¥óÃæ"
 
-#: locale/programs/locale.c:361
+#: locale/programs/locale.c:353
 msgid "while preparing output"
 msgstr "Á°½èÍý½ÐÎÏÃæ"
 
@@ -5383,15 +5465,15 @@ msgstr "Á°½èÍý½ÐÎÏÃæ"
 msgid "while stat'ing profiling data file"
 msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹¥Õ¥¡¥¤¥ë½ñ¤­¹þ¤ßÃæ"
 
-#: locale/programs/ld-ctype.c:2392
+#: locale/programs/ld-ctype.c:2394
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr "UCS ¤ÎÃÍ¤ÎÈÏ°Ï¤È¤·¤Æ16¿Ê¥·¥ó¥Ü¥ë¾ÊÎ¬ `..' ¤ò»ÈÍÑ¤·¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:2406
+#: locale/programs/ld-ctype.c:2408
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr "Ê¸»ú¥³¡¼¥É¤ÎÃÍ¤ÎÈÏ°Ï¤È¤·¤ÆÀäÂÐ¾ÊÎ¬ `...' ¤ò»ÈÍÑ¤·¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó"
 
-#: locale/programs/ld-ctype.c:2377
+#: locale/programs/ld-ctype.c:2379
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "¥·¥ó¥Ü¥ëÌ¾¤ÎÃÍ¤ÎÈÏ°Ï¤È¤·¤ÆÀäÂÐ¾ÊÎ¬ `...' ¤Ï»ÈÍÑ¤·¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 
@@ -5399,7 +5481,7 @@ msgstr "¥·¥ó¥Ü¥ëÌ¾¤ÎÃÍ¤ÎÈÏ°Ï¤È¤·¤ÆÀäÂÐ¾ÊÎ¬ `...' ¤Ï»ÈÍÑ¤·¤Æ¤Ï¤¤¤±¤Þ¤»¤ó"
 msgid "write incomplete"
 msgstr "½ñ¹þ¤ß¤¬ÉÔ´°Á´¤Ç¤¹"
 
-#: inet/rcmd.c:426
+#: inet/rcmd.c:427
 msgid "writeable by other than owner"
 msgstr "½êÍ­¼Ô°Ê³°¤¬½ñ¤­¹þ¤ß¤¬²ÄÇ½¤Ç¤¹"
 
@@ -5407,23 +5489,23 @@ msgstr "½êÍ­¼Ô°Ê³°¤¬½ñ¤­¹þ¤ß¤¬²ÄÇ½¤Ç¤¹"
 msgid "wrong number of arguments"
 msgstr "°ú¿ô¤Î¿ô¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:1115
+#: timezone/zic.c:1121
 msgid "wrong number of fields on Leap line"
 msgstr "Leap¹Ô¤Î¥Õ¥£¡¼¥ë¥É¿ô¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:1206
+#: timezone/zic.c:1212
 msgid "wrong number of fields on Link line"
 msgstr "Link¹Ô¤Î¥Õ¥£¡¼¥ë¥É¿ô¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:949
+#: timezone/zic.c:955
 msgid "wrong number of fields on Rule line"
 msgstr "Rule¹Ô¤Î¥Õ¥£¡¼¥ë¥É¿ô¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:1019
+#: timezone/zic.c:1025
 msgid "wrong number of fields on Zone continuation line"
 msgstr "Zone continuation¹Ô¤Î¥Õ¥£¡¼¥ë¥É¿ô¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
-#: timezone/zic.c:977
+#: timezone/zic.c:983
 msgid "wrong number of fields on Zone line"
 msgstr "Zone¹Ô¤Î¥Õ¥£¡¼¥ë¥É¿ô¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹"
 
@@ -5435,31 +5517,10 @@ msgstr "xdr_reference: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 msgid "xdrrec_create: out of memory\n"
 msgstr "xdrrec_create: ¥á¥â¥ê¤¬Â­¤ê¤Þ¤»¤ó\n"
 
-#: nis/ypclnt.c:907
+#: nis/ypclnt.c:909
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: ¥Û¥¹¥È¤ò¥Í¥Ã¥ÈÌ¾¤ØÊÑ´¹¤Ç¤­¤Þ¤»¤ó\n"
 
-#: nis/ypclnt.c:919
+#: nis/ypclnt.c:921
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: ¥µ¡¼¥Ð¥¢¥É¥ì¥¹¤òÆÀ¤é¤ì¤Þ¤»¤ó\n"
-
-#~ msgid "%s: only one `include' instruction allowed"
-#~ msgstr "%d ¤ÏÌ¤ÃÎ¤Î¥Þ¥·¥ó %d ¤ËÂÐ¤¹¤ë¤â¤Î¤Ç¤¹.\n"
-
-#~ msgid "Can't chroot to %s"
-#~ msgstr "%s ¤Ëchroot¤Ç¤­¤Þ¤»¤ó"
-
-#~ msgid "Device not configured"
-#~ msgstr "¥Ç¥Ð¥¤¥¹¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Þ¤»¤ó"
-
-#~ msgid "ELF file class not 32-bit"
-#~ msgstr "ELF¥Õ¥¡¥¤¥ë¥¯¥é¥¹¤Ï32-bit¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
-
-#~ msgid "ELF file class not 64-bit"
-#~ msgstr "ELF¥Õ¥¡¥¤¥ë¥¯¥é¥¹¤Ï64-bit¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó"
-
-#~ msgid "ELF file machine architecture does not match"
-#~ msgstr "ELF¥Õ¥¡¥¤¥ë¤Î¥Þ¥·¥ó¥¢¡¼¥­¥Æ¥¯¥Á¥ã¤Ï°ìÃ×¤·¤Æ¤¤¤Þ¤»¤ó"
-
-#~ msgid "buffer for snprintf too small for %s/%s--file is ignored\n"
-#~ msgstr "snprintf¤ËÂÐ¤¹¤ë¥Ð¥Ã¥Õ¥¡¤Ï %s/%s ¤ËÂÐ¤·¤Æ¾®¤µ¤¹¤®¤Þ¤¹ -- ¥Õ¥¡¥¤¥ë¤òÌµ»ë¤·¤Þ¤¹\n"
