@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,93,96,97,98,99,2000 Free Software Foundation, Inc.
+/* Open a stdio stream on an anonymous temporary file.  Generic/POSIX version.
+   Copyright (C) 1991,93,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

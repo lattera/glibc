@@ -101,7 +101,10 @@ closeio (void *cookie)
   return 0;
 }
 
-#ifndef USE_IN_LIBIO
+#ifdef USE_IN_LIBIO
+#include "../libio/libioP.h"
+#define fopencookie _IO_fopencookie
+#else
 #define cookie_io_functions_t __io_functions
 #endif
 static const cookie_io_functions_t funcsio =
@@ -111,7 +114,7 @@ static const cookie_io_functions_t funcsio =
 /* Open a stream on PORT.  MODE is as for fopen.  */
 
 FILE *
-fopenport (mach_port_t port, const char *mode)
+__fopenport (mach_port_t port, const char *mode)
 {
   int pflags;
   int needflags;
@@ -150,3 +153,4 @@ fopenport (mach_port_t port, const char *mode)
 
   return fopencookie ((void *) port, mode, funcsio);
 }
+weak_alias (__fopenport, fopenport)

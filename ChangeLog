@@ -1,3 +1,16 @@
+2001-11-13  Roland McGrath  <roland@frob.com>
+
+	* stdio-common/tmpfile.c: Moved to ...
+	* sysdeps/generic/tmpfile.c: ... here.
+	* sysdeps/mach/hurd/tmpfile.c: New file.
+
+	* hurd/fopenport.c (__fopenport): Renamed from fopenport.
+	[USE_IN_LIBIO] (fopencookie): #define as _IO_fopencookie.
+	(fopenport): Define as weak alias.
+
+	* libio/iofopncook.c (_IO_fopencookie): Move forward declaration ...
+	* libio/libioP.h: ... to here.
+
 2001-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-reloc.c (_dl_relocate_object): Avoid iterating over
