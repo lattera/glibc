@@ -1,5 +1,7 @@
 1998-04-02  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list: Add s_getcwd entry.
+
 	* stdlib/isomac.c: Use -isystem instead of -I for system include
 	dir.
 

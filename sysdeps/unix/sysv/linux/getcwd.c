@@ -37,7 +37,7 @@ static char *generic_getcwd (char *buf, size_t size) internal_function;
    directory: a syscall.  We've got to be careful that even when
    compiling under 2.1.92+ the libc still runs under older kernels. */
 extern int __syscall_getcwd (char *buf, unsigned long size);
-static no_syscall_getcwd;
+static int no_syscall_getcwd;
 static int no_new_dcache = 1;
 #else
 static int no_new_dcache;
@@ -52,7 +52,7 @@ __getcwd (char *buf, size_t size)
   char *result;
   size_t alloc_size = size;
 
-  if (no_new_dcache)
+  if (no_syscall_getcwd && no_new_dcache)
     return generic_getcwd (buf, size);
 
   if (size == 0)
@@ -82,7 +82,6 @@ __getcwd (char *buf, size_t size)
     {
       int retval;
 
-      do
       retval = __syscall_getcwd (path, alloc_size);
       if (retval >= 0)
 	{
