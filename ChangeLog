@@ -1,3 +1,7 @@
+2000-10-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (R_IA64_GPREL32MSB, R_IA64_GPREL32LSB): New definitions.
+
 2000-10-22  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/big5hkscs.c (big5hkscs_to_ucs): Add irreversible mappings

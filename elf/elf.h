@@ -1857,6 +1857,8 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_IA64_DIR64LSB		0x27	/* symbol + addend, data8 LSB */
 #define R_IA64_GPREL22		0x2a	/* @gprel(sym + add), add imm22 */
 #define R_IA64_GPREL64I		0x2b	/* @gprel(sym + add), mov imm64 */
+#define R_IA64_GPREL32MSB	0x2c	/* @gprel(sym + add), data4 MSB */
+#define R_IA64_GPREL32LSB	0x2d	/* @gprel(sym + add), data4 LSB */
 #define R_IA64_GPREL64MSB	0x2e	/* @gprel(sym + add), data8 MSB */
 #define R_IA64_GPREL64LSB	0x2f	/* @gprel(sym + add), data8 LSB */
 #define R_IA64_LTOFF22		0x32	/* @ltoff(sym + add), add imm22 */
