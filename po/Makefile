@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,12 @@
 
 subdir := po
 
+# List of languages that are currently broken (just run msgfmt from
+# GNU gettext 0.10.36 on them to see why)
+BROKEN_LINGUAS = el
+
 # List of languages for which we have message catalogs of translations.
-ALL_LINGUAS := $(basename $(wildcard *.po))
+ALL_LINGUAS := $(filter-out $(BROKEN_LINGUAS),$(basename $(wildcard *.po)))
 
 # You can override this in configparms or the make command line to limit
 # the languages which get installed.

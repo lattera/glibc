@@ -3,6 +3,12 @@
 # Mavroyanopoulos Nikos <nmav@hellug.gr>, 1999, 2000.
 # Simos Xenitellis <S.Xenitellis@rhbnc.ac.uk>, 1999, 2000.
 #
+# This file is currently not installed since it contains illegal
+# multibyte characters.  Just run either of these:
+# $ iconv -f iso-8859-7 -t utf-8 < el.po > /dev/null
+# $ msgfmt el.po -o el.gmo
+# to see the errors.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.1.3\n"
