@@ -26,6 +26,9 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
+#define CLONE_VM	0x00000100
+#define CLONE_THREAD	0x00010000
+
 /* The userland implementation is:
    int clone (int (*fn)(void *arg), void *child_stack, int flags, void *arg),
    the kernel entry is:
@@ -80,15 +83,28 @@ ENTRY (BP_SYM (__clone))
 
 	testq	%rax,%rax
 	jl	SYSCALL_ERROR_LABEL
-	jz	thread_start
+	jz	L(thread_start)
 
 L(pseudo_end):
 	ret
 
-thread_start:
+L(thread_start):
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
 	xorq	%rbp, %rbp
+
+#ifdef RESET_PID
+	testq	$CLONE_THREAD, %rdi
+	jne	1f
+	testq	$CLONE_VM, %rdi
+	movl	$-1, %eax
+	jne	2f
+	movq	$SYS_ify(getpid), %rax
+	syscall
+2:	movl	%eax, %fs:PID
+	movl	%eax, %fs:TID
+1:
+#endif
 
 	/* Set up arguments for the function call.  */
 	popq	%rax		/* Function to call.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,98,99,2000,02,03 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,98,99,2000,02,03,04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -42,6 +42,9 @@
 #define __NR_clone 120
 #define SYS_clone 120
 
+#define CLONE_VM	0x00000100
+#define CLONE_THREAD	0x00010000
+
         .text
 ENTRY (BP_SYM (__clone))
 	/* Sanity check arguments.  */
@@ -74,7 +77,9 @@ ENTRY (BP_SYM (__clone))
 	movl	%eax,8(%ecx)
 	/* Don't leak any information.  */
 	movl	$0,4(%ecx)
+#ifndef RESET_PID
 	movl	$0,(%ecx)
+#endif
 
 	/* Do the system call */
 	pushl	%ebx
@@ -85,6 +90,12 @@ ENTRY (BP_SYM (__clone))
 	movl	FLAGS+12(%esp),%ebx
 	movl	CTID+12(%esp),%edi
 	movl	$SYS_ify(clone),%eax
+
+#ifdef RESET_PID
+	/* Remember the flag value.  */
+	movl	%ebx, (%ecx)
+#endif
+
 	int	$0x80
 	popl	%edi
 	popl	%esi
@@ -98,7 +109,13 @@ L(pseudo_end):
 	ret
 
 L(thread_start):
-	subl	%ebp,%ebp	/* terminate the stack frame */
+	/* Note: %esi is zero.  */
+	movl	%esi,%ebp	/* terminate the stack frame */
+#ifdef RESET_PID
+	testl	$CLONE_THREAD, %edi
+	je	L(newpid)
+L(haspid):
+#endif
 	call	*%ebx
 #ifdef PIC
 	call	L(here)
@@ -109,6 +126,21 @@ L(here):
 	movl	%eax, %ebx
 	movl	$SYS_ify(exit), %eax
 	int	$0x80
+
+#ifdef RESET_PID
+	.subsection 2
+L(newpid):
+	testl	$CLONE_VM, %edi
+	movl	$-1, %eax
+	jne	L(nomoregetpid)
+	movl	$SYS_ify(getpid), %eax
+	ENTER_KERNEL
+L(nomoregetpid):
+	movl	%eax, %gs:PID
+	movl	%eax, %gs:TID
+	jmp	L(haspid)
+	.previous
+#endif
 
 PSEUDO_END (BP_SYM (__clone))
 
