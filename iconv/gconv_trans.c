@@ -44,12 +44,13 @@ __gconv_transliterate (struct __gconv_step *step,
   uint32_t *winbufend;
   uint_fast32_t low;
   uint_fast32_t high;
+  uint32_t *default_missing;
 
   /* If there is no transliteration information in the locale don't do
      anything and return the error.  */
   size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_HASH_SIZE);
   if (size == 0)
-    return __GCONV_ILLEGAL_INPUT;
+    goto no_rules;
 
   /* Get the rest of the values.  */
   layers = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_TRANSLIT_HASH_LAYERS);
@@ -139,6 +140,38 @@ __gconv_transliterate (struct __gconv_step *step,
 	low = idx;
       else
 	high = idx;
+    }
+
+  /* One last chance: use the default replacement.  */
+ no_rules:
+  default_missing = (uint32_t *)
+    _NL_CURRENT (LC_CTYPE, _NL_CTYPE_TRANSLIT_DEFAULT_MISSING);
+  if (default_missing[0] != L'\0')
+    {
+      const unsigned char *toinptr = (const unsigned char *) default_missing;
+      uint32_t len = _NL_CURRENT_WORD (LC_CTYPE,
+				       _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN);
+      int res;
+
+      res = DL_CALL_FCT (step->__fct,
+			 (step, step_data, &toinptr,
+			  (const unsigned char *) (default_missing + len),
+			  (unsigned char **) outbufstart,
+			  irreversible, 0, 0));
+
+      if (res != __GCONV_ILLEGAL_INPUT)
+	{
+	  /* If the conversion succeeds we have to increment the
+	     input buffer.  */
+	  if (res == __GCONV_EMPTY_INPUT)
+	    {
+	      /* We consuming one character.  */
+	      ++*inbufp;
+	      ++*irreversible;
+	    }
+
+	  return res;
+	}
     }
 
   /* Haven't found a match.  */

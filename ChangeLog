@@ -1,5 +1,16 @@
 2000-06-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/langinfo.h: Add entries for default_missing information.
+	* locale/C-ctype.c: Add initializers for new fields.
+	* iconv/gconv_trans.c: If nothing matched, try to use default_missing
+	information.
+	* locale/categories.h: Add entries for all LC_CTYPE values.
+	* locale/programs/ld-ctype.c (ctype_output): Write out default_missing
+	information.
+
+	* localedata/tst-trans.c: Write out an error message if class is
+	not found.
+
 	* iconv/gconv_int.h (norm_add_slashes): Optionally add given suffix.
 	* iconv/gconv_open.c: Remove error handling specification from `from'
 	character set name.

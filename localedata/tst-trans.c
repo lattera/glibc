@@ -1,5 +1,5 @@
 /* Test program for user-defined character maps.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
@@ -33,7 +33,10 @@ main (void)
 
   t = wctrans ("test");
   if (t == (wctrans_t) 0)
-    exit (1);
+    {
+      puts ("locale data files probably not loaded");
+      exit (1);
+    }
 
   wch = towctrans (L'A', t);
   printf ("towctrans (L'A', t) = %c\n", wch);

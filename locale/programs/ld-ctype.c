@@ -788,6 +788,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		  + ctype->map_collection_nr];
   struct locale_file data;
   uint32_t idx[nelems + 1];
+  uint32_t default_missing_len;
   size_t elem, cnt, offset, total;
   char *cp;
 
@@ -814,8 +815,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  case _NL_ITEM_INDEX (name):					      \
 	    iov[2 + elem + offset].iov_base = (base);			      \
 	    iov[2 + elem + offset].iov_len = (len);			      \
-	    if (elem + 1 < nelems)					      \
-	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;     \
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;	      \
 	    break
 
 	  CTYPE_DATA (_NL_CTYPE_CLASS,
@@ -1005,6 +1005,26 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    iov[2 + elem + offset].iov_base = &ctype->wcoutdigits[cnt];
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    break;
+
+	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING):
+	    iov[2 + elem + offset].iov_base =
+	      ctype->default_missing ?: (uint32_t *) L"";
+	    iov[2 + elem + offset].iov_len =
+	      wcslen (iov[2 + elem + offset].iov_base);
+	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
+	    break;
+
+	  case _NL_ITEM_INDEX(_NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN):
+	    default_missing_len = (ctype->default_missing
+				   ? wcslen ((wchar_t *)ctype->default_missing)
+				   : 1);
+	    iov[2 + elem + offset].iov_base = &default_missing_len;
+	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
+	    /* Remove the following line in case a new entry is added
+	       after _NL_CTYPE_TRANSLIT_DEFAULT_MISSING_LEN.  */
+	    if (elem < nelems)
+	      idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
 	  default:
