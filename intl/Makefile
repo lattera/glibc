@@ -67,6 +67,8 @@ $(objpfx)msgs.h: po2test.sed ../po/de.po
 CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"
 CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
 
+$(objpfx)tst-translit.out: $(objpfx)tst-gettext.out
+
 CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(msgcatdir):$(i18ndir)"'
 YFLAGS = --name-prefix=__gettext --output

@@ -349,9 +349,12 @@ const struct locale_data _nl_C_LC_CTYPE =
   {
     { string: _nl_C_LC_CTYPE_class },
     { string: (const char *) _nl_C_LC_CTYPE_toupper },
+    { string: NULL },
     { string: (const char *) _nl_C_LC_CTYPE_tolower },
+    { string: NULL },
     { string: _nl_C_LC_CTYPE_class32 },
     { string: (const char *) _nl_C_LC_CTYPE_names },
+    { string: NULL },
     { word: 256 },
     { word: 1 },
     { string: "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"

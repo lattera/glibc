@@ -1,3 +1,11 @@
+2000-07-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/Makefile: Make sure tst-translit is run after tst-gettext.
+
+	* locale/C-ctype.c: Add initializers for gap elements.
+	* locale/programs/ld-ctype.c (ctype_output): Write out index entries
+	for gap elements.
+
 2000-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.c (print_version): Update copyright year.

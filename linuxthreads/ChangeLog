@@ -1,3 +1,8 @@
+2000-07-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread.c (__pthread_initialize_manager): Lock
+	__pthread_manager_thread.p_lock before calling clone.
+
 2000-05-05  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ia64/pt-machine.h (__compare_and_swap): Change it to

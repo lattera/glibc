@@ -864,6 +864,17 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
       if (elem < _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE))
 	switch (elem)
 	  {
+#define CTYPE_EMPTY(name) \
+	  case name:							      \
+	    iov[2 + elem + offset].iov_base = "";			      \
+	    iov[2 + elem + offset].iov_len = 0;				      \
+	    idx[elem + 1] = idx[elem];					      \
+	    break
+
+	  CTYPE_EMPTY(_NL_CTYPE_GAP1);
+	  CTYPE_EMPTY(_NL_CTYPE_GAP2);
+	  CTYPE_EMPTY(_NL_CTYPE_GAP3);
+
 #define CTYPE_DATA(name, base, len)					      \
 	  case _NL_ITEM_INDEX (name):					      \
 	    iov[2 + elem + offset].iov_base = (base);			      \
