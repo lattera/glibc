@@ -1,3 +1,10 @@
+Mon Mar  9 12:16:42 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Readd lost negate.
+
+	* sysdeps/m68k/sysdep.h: Remove the stabs stuff again.
+
 1998-03-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-support.c: Add definition of _dl_debug_impcalls.

@@ -61,6 +61,7 @@
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
 syscall_error:								      \
+    neg.l %d0;								      \
     move.l %d0, -(%sp);							      \
     jbsr __errno_location@PLTPC;					      \
     move.l (%sp)+, (%a0);						      \
