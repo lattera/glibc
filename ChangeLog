@@ -1,3 +1,27 @@
+2003-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Remove internal_statvfs.c.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add internal_statvfs.
+	* sysdeps/unix/sysv/linux/fstatvfs.c: Call __internal_statvfs
+	instead of including "internal_statvfs.c".
+	* sysdeps/unix/sysv/linux/statvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Make it a real function.
+	Add code to avoid the stat calls on all the reported mount points
+	when we can determine mismatch in advance.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Add AUTOFS_SUPER_MAGIC and
+	USBDEVFS_SUPER_MAGIC.
+
+2003-09-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/Versions (sched_getaffinity, sched_setaffinity): Change
+	from GLIBC_2.3.2 to GLIBC_2.3.3 symbol version.
+
+2003-09-16  Bruno Haible  <bruno@clisp.org>
+
+	* intl/tst-gettext2.sh: Set GCONV_PATH and LOCPATH only after
+	invoking msgfmt, not before.
+
 2003-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* argp/argp.h (argp_parse, __argp_parse): Remove __THROW.

@@ -17,29 +17,46 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <mntent.h>
+#include <paths.h>
+#include <stdbool.h>
+#include <stdio_ext.h>
+#include <string.h>
+#include <sys/mount.h>
+#include <sys/stat.h>
+#include <sys/statfs.h>
+#include <sys/statvfs.h>
+#include "linux_fsinfo.h"
+
+
+void
+__internal_statvfs (const char *name, struct statvfs *buf,
+		    struct statfs *fsbuf, struct stat64 *st)
+{
   /* Now fill in the fields we have information for.  */
-  buf->f_bsize = fsbuf.f_bsize;
+  buf->f_bsize = fsbuf->f_bsize;
   /* Linux has the f_frsize size only in later version of the kernel.
      If the value is not filled in use f_bsize.  */
-  buf->f_frsize = fsbuf.f_frsize ?: fsbuf.f_bsize;
-  buf->f_blocks = fsbuf.f_blocks;
-  buf->f_bfree = fsbuf.f_bfree;
-  buf->f_bavail = fsbuf.f_bavail;
-  buf->f_files = fsbuf.f_files;
-  buf->f_ffree = fsbuf.f_ffree;
-  if (sizeof (buf->f_fsid) == sizeof (fsbuf.f_fsid))
-    buf->f_fsid = (fsbuf.f_fsid.__val[0]
-		   | ((unsigned long int) fsbuf.f_fsid.__val[1]
+  buf->f_frsize = fsbuf->f_frsize ?: fsbuf->f_bsize;
+  buf->f_blocks = fsbuf->f_blocks;
+  buf->f_bfree = fsbuf->f_bfree;
+  buf->f_bavail = fsbuf->f_bavail;
+  buf->f_files = fsbuf->f_files;
+  buf->f_ffree = fsbuf->f_ffree;
+  if (sizeof (buf->f_fsid) == sizeof (fsbuf->f_fsid))
+    buf->f_fsid = (fsbuf->f_fsid.__val[0]
+		   | ((unsigned long int) fsbuf->f_fsid.__val[1]
 		      << (8 * (sizeof (buf->f_fsid)
-			       - sizeof (fsbuf.f_fsid.__val[0])))));
+			       - sizeof (fsbuf->f_fsid.__val[0])))));
   else
     /* We cannot help here.  The statvfs element is not large enough to
        contain both words of the statfs f_fsid field.  */
-    buf->f_fsid = fsbuf.f_fsid.__val[0];
+    buf->f_fsid = fsbuf->f_fsid.__val[0];
 #ifdef _STATVFSBUF_F_UNUSED
   buf->__f_unused = 0;
 #endif
-  buf->f_namemax = fsbuf.f_namelen;
+  buf->f_namemax = fsbuf->f_namelen;
   memset (buf->__f_spare, '\0', 6 * sizeof (int));
 
   /* What remains to do is to fill the fields f_favail and f_flag.  */
@@ -52,10 +69,40 @@
      file.  The way we can test for matching filesystem is using the
      device number.  */
   buf->f_flag = 0;
-  if (STAT (&st) >= 0)
+  if (st != NULL)
     {
       struct mntent mntbuf;
       FILE *mtab;
+      const char *fsname = NULL;
+      const char *fsname2 = NULL;
+      bool success = false;
+
+      /* Map the filesystem type we got from the statfs call to a string.  */
+      switch (fsbuf->f_type)
+	{
+	case EXT2_SUPER_MAGIC:
+	  fsname = "ext3";
+	  fsname2 = "ext2";
+	  break;
+	case DEVPTS_SUPER_MAGIC:
+	  fsname= "devpts";
+	  break;
+	case SHMFS_SUPER_MAGIC:
+	  fsname = "tmpfs";
+	  break;
+	case PROC_SUPER_MAGIC:
+	  fsname = "proc";
+	  break;
+	case USBDEVFS_SUPER_MAGIC:
+	  fsname = "usbdevfs";
+	  break;
+	case AUTOFS_SUPER_MAGIC:
+	  fsname = "autofs";
+	  break;
+	case NFS_SUPER_MAGIC:
+	  fsname = "nfs";
+	  break;
+	}
 
       mtab = __setmntent ("/proc/mounts", "r");
       if (mtab == NULL)
@@ -68,13 +115,25 @@
 	  /* No locking needed.  */
 	  (void) __fsetlocking (mtab, FSETLOCKING_BYCALLER);
 
+	again:
 	  while (__getmntent_r (mtab, &mntbuf, tmpbuf, sizeof (tmpbuf)))
 	    {
-	      struct stat64 fsst;
+	      /* In a first round we look for a given mount point, if
+		 we have a name.  */
+	      if (name != NULL && strcmp (name, mntbuf.mnt_dir) != 0)
+		continue;
+	      /* We need to look at the entry only if the filesystem
+		 name matches.  If we have a filesystem name.  */
+	      else if (fsname != NULL
+		  && strcmp (fsname, mntbuf.mnt_type) != 0
+		  && (fsname2 == NULL
+		      || strcmp (fsname2, mntbuf.mnt_type) != 0))
+		continue;
 
 	      /* Find out about the device the current entry is for.  */
+	      struct stat64 fsst;
 	      if (stat64 (mntbuf.mnt_dir, &fsst) >= 0
-		  && st.st_dev == fsst.st_dev)
+		  && st->st_dev == fsst.st_dev)
 		{
 		  /* Bingo, we found the entry for the device FD is on.
 		     Now interpret the option string.  */
@@ -100,11 +159,34 @@
 		      buf->f_flag |= ST_NODIRATIME;
 
 		  /* We can stop looking for more entries.  */
+		  success = true;
 		  break;
 		}
+	    }
+	  /* Maybe the kernel names for the filesystems changed or the
+	     statvfs call got a name which was not the mount point.
+	     Check again, this time without checking for name matches
+	     first.  */
+	  if (! success)
+	    {
+	      if (name != NULL)
+		/* Try without a mount point name.  */
+		name = NULL;
+	      else if (fsname != NULL)
+		/* Try without a filesystem name.  */
+		fsname = fsname2 = NULL;
+
+	      /* It is not strictly allowed to use rewind here.  But
+		 this code is part of the implementation so it is
+		 acceptable.  */
+	      rewind (mtab);
+
+	      goto again;
 	    }
 
 	  /* Close the file.  */
 	  __endmntent (mtab);
+
 	}
     }
+}

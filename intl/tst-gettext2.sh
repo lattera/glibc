@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test of gettext functions.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 
@@ -22,10 +22,6 @@
 common_objpfx=$1
 objpfx=$2
 
-GCONV_PATH=${common_objpfx}iconvdata
-export GCONV_PATH
-LOCPATH=${objpfx}domaindir
-export LOCPATH
 LC_ALL=C
 export LC_ALL
 
@@ -64,6 +60,10 @@ msgfmt -o ${objpfx}domaindir/lang1/LC_MESSAGES/tstlang.mo \
 msgfmt -o ${objpfx}domaindir/lang2/LC_MESSAGES/tstlang.mo \
        tstlang2.po
 
+GCONV_PATH=${common_objpfx}iconvdata
+export GCONV_PATH
+LOCPATH=${objpfx}domaindir
+export LOCPATH
 
 # Now run the test.
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \

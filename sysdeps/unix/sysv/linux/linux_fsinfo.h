@@ -31,6 +31,9 @@
 /* Constants that identify the `affs' filesystem.  */
 #define AFFS_SUPER_MAGIC	0xadff
 
+/* Constants that identify the `autofs' filesystem.  */
+#define AUTOFS_SUPER_MAGIC	0x187
+
 /* Constants that identify the `bfs' filesystem.  */
 #define BFS_MAGIC		0x1BADFACE
 
@@ -93,6 +96,9 @@
 
 /* Constants that identify the `proc' filesystem.  */
 #define PROC_SUPER_MAGIC	0x9fa0
+
+/* Constant that identifies the `usbdevfs' filesystem.  */
+#define USBDEVFS_SUPER_MAGIC	0x9fa2
 
 /* Constants that identify the `qnx4' filesystem.  */
 #define QNX4_SUPER_MAGIC	0x002f

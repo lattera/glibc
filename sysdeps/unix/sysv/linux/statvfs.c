@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -17,15 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <mntent.h>
-#include <paths.h>
-#include <stdio_ext.h>
-#include <string.h>
-#include <sys/mount.h>
+#include <stddef.h>
 #include <sys/stat.h>
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
+
+extern void __internal_statvfs (const char *name, struct statvfs *buf,
+				struct statfs *fsbuf, struct stat64 *st);
 
 
 int
@@ -38,8 +36,9 @@ statvfs (const char *file, struct statvfs *buf)
   if (__statfs (file, &fsbuf) < 0)
     return -1;
 
-#define STAT(st) stat64 (file, st)
-#include "internal_statvfs.c"
+  /* Convert the result.  */
+  __internal_statvfs (file, buf, &fsbuf,
+		      stat64 (file, &st) == -1 ? NULL : &st);
 
   /* We signal success if the statfs call succeeded.  */
   return 0;
