@@ -1,5 +1,8 @@
 2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/machine-gmon.h (MCOUNT): Define for N32 and N64 as
+	well.
+
 	* sysdeps/unix/sysv/linux/mips/configure.in: New.  Pre-process
 	asm/unistd.h into asm-unistd.h.
 	* sysdeps/unix/sysv/linux/mips/configure: Generated.
@@ -8,8 +11,6 @@
 	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: New file.
 	* sysdeps/unix/sysv/linux/mips/clone.S: Don't include
 	asm/unistd.h.
-
-2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/sys/ptrace.h: New file.
 	* sysdeps/unix/sysv/linux/mips/ptrace.c: New file.  Use long
