@@ -29,6 +29,7 @@ __sigsetjmp_aux (jmp_buf env, int savemask, long long sp, long long fp,
 		 long long gp)
 {
   /* Store the floating point callee-saved registers...  */
+#if defined _ABI64 && _MIPS_SIM == _ABI64
   asm volatile ("s.d $f24, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[0]));
   asm volatile ("s.d $f25, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[1]));
   asm volatile ("s.d $f26, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[2]));
@@ -37,6 +38,14 @@ __sigsetjmp_aux (jmp_buf env, int savemask, long long sp, long long fp,
   asm volatile ("s.d $f29, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[5]));
   asm volatile ("s.d $f30, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[6]));
   asm volatile ("s.d $f31, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[7]));
+#else
+  asm volatile ("s.d $f20, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[0]));
+  asm volatile ("s.d $f22, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[1]));
+  asm volatile ("s.d $f24, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[2]));
+  asm volatile ("s.d $f26, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[3]));
+  asm volatile ("s.d $f28, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[4]));
+  asm volatile ("s.d $f30, %0" : : "m" (env[0].__jmpbuf[0].__fpregs[5]));
+#endif
 
   /* .. and the PC;  */
   asm volatile ("sd $31, %0" : : "m" (env[0].__jmpbuf[0].__pc));

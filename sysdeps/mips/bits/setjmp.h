@@ -60,10 +60,10 @@ typedef struct
     int __fpc_csr;
 
     /* Callee-saved floating point registers.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI32
-    double __fpregs[6];
-#else
+#if defined _ABI64 && _MIPS_SIM == _ABI64
     double __fpregs[8];
+#else
+    double __fpregs[6];
 #endif
   } __jmp_buf[1];
 
