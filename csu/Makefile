@@ -87,7 +87,7 @@ CFLAGS-initfini.s = -g0 -fPIC -fno-inline-functions
 
 $(objpfx)initfini.s: initfini.c
 	$(compile.c) -S $(CFLAGS-initfini.s) -finhibit-size-directive \
-		$(no-exceptions) -o $@
+		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
 
 # We only have one kind of startup code files.  Static binaries and
 # shared libraries are build using the PIC version.

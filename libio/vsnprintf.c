@@ -122,11 +122,11 @@ _IO_vsnprintf (string, maxlen, format, args)
       maxlen = sizeof (sf.overflow_buf);
     }
 
-  _IO_no_init ((_IO_FILE *) &sf, 0, -1, NULL, NULL);
-  _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_strn_jumps;
+  _IO_no_init (&sf.f._sbf._f, 0, -1, NULL, NULL);
+  _IO_JUMPS (&sf.f._sbf._f) = &_IO_strn_jumps;
   string[0] = '\0';
-  _IO_str_init_static ((_IO_FILE *) &sf, string, maxlen - 1, string);
-  ret = _IO_vfprintf ((_IO_FILE *) &sf, format, args);
+  _IO_str_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
+  ret = _IO_vfprintf (&sf.f._sbf._f, format, args);
 
   if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._IO_write_ptr = '\0';

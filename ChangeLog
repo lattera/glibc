@@ -1,3 +1,24 @@
+1999-08-19  Andreas Schwab  <schwab@suse.de>
+
+	* libio/iovswscanf.c (vswscanf): Make stream unoriented initially
+	and call _IO_fwide, to get the wide stream state initialized
+	correctly.  Don't set _IO_JUMPS.
+	* libio/vsnprintf.c (_IO_vsnprintf): Avoid casts to _IO_FILE *.
+	* libio/vswprintf.c (_IO_vswprintf): Likewise.  Pass
+	_IO_wstrn_jumps to _IO_no_init instead of setting _IO_WIDE_JUMPS
+	directly.
+
+1999-08-19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (jn_test): Fix typo in description.
+	(erfc_test): Add some more tests.
+	(erf_test): Add some more tests.
+
+1999-08-19  Andreas Schwab  <schwab@suse.de>
+
+	* csu/Makefile ($(objpfx)initfini.s): Replace $(no-exceptions) by
+	expression using $(exceptions).
+
 1999-08-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/setenv.c: Avoid warning about uninitialized variable.

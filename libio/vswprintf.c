@@ -126,12 +126,11 @@ _IO_vswprintf (string, maxlen, format, args)
       maxlen = sizeof (sf.overflow_buf) / sizeof (wchar_t);
     }
 
-  _IO_no_init ((_IO_FILE *) &sf, 0, 0, &wd, NULL);
-  _IO_WIDE_JUMPS ((_IO_FILE *) &sf) = &_IO_wstrn_jumps;
+  _IO_no_init (&sf.f._sbf._f, 0, 0, &wd, &_IO_wstrn_jumps);
   _IO_fwide (&sf.f._sbf._f, 1);
   string[0] = L'\0';
-  _IO_wstr_init_static ((_IO_FILE *) &sf, string, maxlen - 1, string);
-  ret = _IO_vfwprintf ((_IO_FILE *) &sf, format, args);
+  _IO_wstr_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
+  ret = _IO_vfwprintf (&sf.f._sbf._f, format, args);
 
   if (sf.f._sbf._f._wide_data->_IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._wide_data->_IO_write_ptr = '\0';
