@@ -1,5 +1,137 @@
 2000-06-29  Andreas Jaeger  <aj@suse.de>
 
+	* sort-test.sh: Set LC_ALL to full locale name.
+
+	* Makefile (do-tst-ctype): Don't depend on do-tst-mbswcs.sh
+	anymore.
+	(LOCALES): New.
+	($(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite)))): 
+	Depend on locale files
+	(LOCALE_FILES): New.
+	(ALL_LC_FILES): New.
+	(ALL_OBJ_LC_FILES): New
+	($(ALL_OBJ_LC_FILES)): Generate locales automatically.
+
+	* tst-ctype.sh: Don't generate locales here.
+	* tst-mbswcs.sh: Likewise.
+	* sort-test.sh: Likewise.
+
+	* gen-locale.sh: New file to generate locales.
+
+2000-06-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/en_GB: Update RAP address.
+	* locales/fr_FR: Likewise.
+	* locales/en_NZ: Likewise.
+	* locales/de_BE: Likewise.
+	* locales/de_CH: Likewise.
+	* locales/de_LU: Likewise.
+	* locales/en_AU: Likewise.
+	* locales/en_IE: Likewise.
+	* locales/eu_ES: Likewise.
+	* locales/fr_BE: Likewise.
+	* locales/fr_CH: Likewise.
+	* locales/fr_LU: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/nl_NL: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/pt_PT: Likewise.
+	* locales/sv_FI: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/sv_SE: Likewise.
+
+2000-06-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/af_ZA: Update for new format.
+	* locales/ar_SA: Likewise.
+	* locales/be_BY: Likewise.
+	* locales/bg_BG: Likewise.
+	* locales/ca_ES: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/en_BW: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_ZW: Likewise.
+	* locales/es_AR: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_EC: Likewise.
+	* locales/es_ES: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PE: Likewise.
+	* locales/es_PY: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/es_US: Likewise.
+	* locales/es_UY: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/et_EE: Likewise.
+	* locales/fa_IR: Likewise.
+	* locales/fr_CA: Likewise.
+	* locales/en_CA,2.5: Likewise.
+	* locales/fr_CA,2.13: Likewise.
+	* locales/gl_ES: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/ko_KR: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+	* locales/no_NO: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/sk_SK: Likewise.
+	* locales/sl_SI: Likewise.
+	* locales/sr_YU: Likewise.
+	* locales/th_TH: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/uk_UA: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/mk_MK: Likewise.
+
+2000-06-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/cs_CZ: Comment out fields I'm not sure about.
+	* locales/de_DE (int_currency_symbol): Pad to 4 chars.
+	* locales/en_NZ: Update for new format.
+	* locales/de_BE: Likewise.
+	* locales/de_CH: Likewise.
+	* locales/de_LU: Likewise.
+	* locales/en_AU: Likewise.
+	* locales/en_IE: Likewise.
+	* locales/en_ZA: Likewise.
+	* locales/eu_ES: Likewise.
+	* locales/fo_FO: Likewise.
+	* locales/fr_BE: Likewise.
+	* locales/fr_CH: Likewise.
+	* locales/fr_LU: Likewise.
+	* locales/ga_IE: Likewise.
+	* locales/gv_GB: Likewise.
+	* locales/he_IL: Likewise.
+	* locales/id_ID: Likewise.
+	* locales/in_ID: Likewise.
+	* locales/it_CH: Likewise.
+	* locales/it_IT: Likewise.
+	* locales/iw_IL: Likewise.
+	* locales/kl_GL: Likewise.
+	* locales/kw_GB: Likewise.
+	* locales/nl_BE: Likewise.
+	* locales/nl_NL: Likewise.
+	* locales/pt_BR: Likewise.
+	* locales/pt_PT: Likewise.
+	* locales/sv_FI: Likewise.
+	* locales/da_DK: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/sv_SE: Likewise.
+
+2000-06-29  Andreas Jaeger  <aj@suse.de>
+
 	* Makefile (locale_test_suite): Add new test files.
 	(tst_mblen-ENV): New.
 	(tst_mbtowc-ENV): New.

@@ -4,6 +4,8 @@
 	we later need to calling free().
 	Patch by Matt Wilson <msw@redhat.com>.
 
+	* stdio-common/tst-printf.c: Add test for above problem.
+
 2000-06-27  David Mosberger-Tang  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/ipc.h: New file.
