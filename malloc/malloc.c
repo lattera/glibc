@@ -1,5 +1,5 @@
   /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -5508,6 +5508,8 @@ int mALLOPt(param_number, value) int param_number; int value;
 
 /* Helper code.  */
 
+extern char **__libc_argv attribute_hidden;
+
 static void
 malloc_printerr(int action, const char *str, void *ptr)
 {
@@ -5522,8 +5524,8 @@ malloc_printerr(int action, const char *str, void *ptr)
 
       __libc_message (action & 2,
 		      action & 4
-		      ? "%s\n" : "*** glibc detected *** %s: 0x%s ***\n",
-		      str, cp);
+		      ? "%s\n" : "*** glibc detected *** %s: %s: 0x%s ***\n",
+		      __libc_argv[0] ?: "<unknown>", str, cp);
     }
   else if (action & 2)
     abort ();

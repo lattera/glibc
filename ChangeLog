@@ -1,5 +1,8 @@
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (malloc_printerr): Print program name as part of
+	error message.
+
 	* misc/sys/cdefs.h (__attribute_warn_unused_result__): Define.
 	* stdlib/stdlib.h: Make realloc with
 	__attribute_warn_unused_result__ instead of __wur.
