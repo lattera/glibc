@@ -1,5 +1,8 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/data/spawn.h-data: Correct posix_spawnattr_setflags
+	prototype.
+
 	* conform/conformtest.pl: Define $mustprepend{"signal.h"}.
 	* conform/data/signal.h-data: Fix sigev_notify_function entry.
 	Fix typo (SIGVALRM -> SIGVTALRM).
