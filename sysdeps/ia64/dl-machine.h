@@ -546,12 +546,11 @@ elf_machine_rela (struct link_map *map,
 # endif
         value += map->l_addr;
     }
-# ifndef RTLD_BOOTSTRAP
-  else if (r_type == R_IA64_NONE)
-    return;
-# endif
   else
 #endif
+    if (__builtin_expect (r_type == R_IA64_NONE, 0))
+      return;
+  else
     {
       struct link_map *sym_map;
 
