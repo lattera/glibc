@@ -4145,7 +4145,7 @@ y0_test (void)
   /* y0 is the Bessel function of the second kind of order 0 */
   START (y0);
 
-  TEST_f_f (y0, -1.0, minus_infty);
+  TEST_f_f (y0, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y0, 0.0, minus_infty);
   TEST_f_f (y0, nan_value, nan_value);
   TEST_f_f (y0, plus_infty, 0);
@@ -4179,7 +4179,7 @@ y1_test (void)
   /* y1 is the Bessel function of the second kind of order 1 */
   START (y1);
 
-  TEST_f_f (y1, -1.0, minus_infty);
+  TEST_f_f (y1, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_f_f (y1, 0.0, minus_infty);
   TEST_f_f (y1, plus_infty, 0);
   TEST_f_f (y1, nan_value, nan_value);
@@ -4214,7 +4214,7 @@ yn_test (void)
   START (yn);
 
   /* yn (0, x) == y0 (x)  */
-  TEST_ff_f (yn, 0, -1.0, minus_infty);
+  TEST_ff_f (yn, 0, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_ff_f (yn, 0, 0.0, minus_infty);
   TEST_ff_f (yn, 0, nan_value, nan_value);
   TEST_ff_f (yn, 0, plus_infty, 0);
@@ -4228,7 +4228,7 @@ yn_test (void)
   TEST_ff_f (yn, 0, 10.0, 0.0556711672835993914244598774101900481L);
 
   /* yn (1, x) == y1 (x)  */
-  TEST_ff_f (yn, 1, -1.0, minus_infty);
+  TEST_ff_f (yn, 1, -1.0, minus_infty, INVALID_EXCEPTION);
   TEST_ff_f (yn, 1, 0.0, minus_infty);
   TEST_ff_f (yn, 1, plus_infty, 0);
   TEST_ff_f (yn, 1, nan_value, nan_value);
