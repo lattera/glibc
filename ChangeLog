@@ -1,5 +1,8 @@
 1999-07-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/ksc5601.h (ksc5601_to_ucs4): Avoid invalid memory
+	accesses.
+
 	* resolv/res_send.c: Add locks for res_send and res_close use.
 
 	* elf/Makefile (dl-routines): Add preinit.

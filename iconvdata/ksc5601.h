@@ -46,7 +46,7 @@ extern const struct map __ksc5601_hanja_from_ucs[KSC5601_HANJA];
 static inline uint32_t
 ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
 {
-  unsigned char ch = *(*s);
+  unsigned char ch = **s;
   unsigned char ch2;
   int idx;
 
@@ -68,17 +68,19 @@ ksc5601_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   /* 1410 = 15 * 94 , 3760 = 40 * 94
      Hangul in KS C 5601 : row 16 - row 40 */
 
-  (*s) += 2;
+  *s += 2;
 
-  if (idx >= 1410 && idx < 3760)
+  if (idx >= 1410 && idx < 1410 + KSC5601_HANGUL)
     return (__ksc5601_hangul_to_ucs[idx - 1410]
 	    ?: ((*s) -= 2, __UNKNOWN_10646_CHAR));
   else if (idx >= 3854)
     /* Hanja : row 42 - row 93 : 3854 = 94 * (42-1) */
    return (__ksc5601_hanja_to_ucs[idx - 3854]
 	   ?: ((*s) -= 2, __UNKNOWN_10646_CHAR));
-  else
+  else if (idx <= 1114)
     return __ksc5601_sym_to_ucs[idx] ?: ((*s) -= 2, __UNKNOWN_10646_CHAR);
+
+  return __UNKNOWN_10646_CHAR;
 }
 
 static inline size_t
