@@ -25,13 +25,21 @@
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
    The first word in the comment at the right is the data type used;
    "bool" means a boolean value stored in an `int'.  */
-#define IP_TOS             1	/* int; IP type of service and precedence.  */
-#define IP_TTL             2	/* int; IP time to live.  */
-#define IP_HDRINCL         3	/* int; Header is included with data.  */
-#define IP_OPTIONS         4	/* ip_opts; IP per-packet options.  */
+#define        IP_OPTIONS      4       /* ip_opts; IP per-packet options.  */
+#define        IP_HDRINCL      3       /* int; Header is included with data.  */
+#define        IP_TOS          1       /* int; IP type of service and precedence.  */
+#define        IP_TTL          2       /* int; IP time to live.  */
+#define        IP_RECVOPTS     6       /* bool; Receive all IP options w/datagram.  */
+/* For BSD compatibility.  */
+#define        IP_RECVRETOPTS  IP_RETOPTS       /* bool; Receive IP options for response.  */
+#define        IP_RETOPTS      7       /* ip_opts; Set/get IP per-packet options.  */
+#define IP_MULTICAST_IF 32      /* in_addr; set/get IP multicast i/f */
+#define IP_MULTICAST_TTL 33    /* u_char; set/get IP multicast ttl */
+#define IP_MULTICAST_LOOP 34   /* i_char; set/get IP multicast loopback */
+#define IP_ADD_MEMBERSHIP 35   /* ip_mreq; add an IP group membership */
+#define IP_DROP_MEMBERSHIP 36  /* ip_mreq; drop an IP group membership */
+
 #define IP_ROUTER_ALERT    5	/* bool */
-#define IP_RECVOPTS        6	/* bool */
-#define IP_RETOPTS         7	/* bool */
 #define IP_PKTINFO         8	/* bool */
 #define IP_PKTOPTIONS      9
 #define IP_PMTUDISC        10	/* obsolete name? */
@@ -39,14 +47,7 @@
 #define IP_RECVERR         11	/* bool */
 #define IP_RECVTTL         12	/* bool */
 #define IP_RECVTOS         13	/* bool */
-#define IP_MULTICAST_IF    32	/* in_addr; set/get IP multicast i/f */
-#define IP_MULTICAST_TTL   33	/* u_char; set/get IP multicast ttl */
-#define IP_MULTICAST_LOOP  34	/* i_char; set/get IP multicast loopback */
-#define IP_ADD_MEMBERSHIP  35	/* ip_mreq; add an IP group membership */
-#define IP_DROP_MEMBERSHIP 36	/* ip_mreq; drop an IP group membership */
 
-/* For BSD compatibility.  */
-#define IP_RECVRETOPTS	IP_RETOPTS
 
 /* IP_MTU_DISCOVER arguments.  */
 #define IP_PMTUDISC_DONT   0	/* Never send DF frames.  */
@@ -60,9 +61,9 @@
 #define IP_DEFAULT_MULTICAST_LOOP       1
 #define IP_MAX_MEMBERSHIPS              20
 
-/* Structure used to describe IP options for IP_OPTIONS. The `ip_dst'
-   field is used for the first-hop gateway when using a source route
-   (this gets put into the header proper).  */
+/* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
+   The `ip_dst' field is used for the first-hop gateway when using a
+   source route (this gets put into the header proper).  */
 struct ip_opts
   {
     struct in_addr ip_dst;	/* First hop; zero without source route.  */
@@ -103,6 +104,9 @@ struct in_pktinfo
 #define IPV6_PKTOPTIONS		6
 #define IPV6_CHECKSUM		7
 #define IPV6_HOPLIMIT		8
+
+#define SCM_SRCRT		IPV6_RXSRCRT
+
 #define IPV6_NEXTHOP		9
 #define IPV6_AUTHHDR		10
 #define IPV6_UNICAST_HOPS	16
@@ -121,14 +125,11 @@ struct in_pktinfo
 #define IPV6_IPSEC_POLICY	34
 #define IPV6_XFRM_POLICY	35
 
-#define SCM_SRCRT		IPV6_RXSRCRT
-
 /* Obsolete synonyms for the above.  */
-#define IPV6_RXHOPOPTS		IPV6_HOPOPTS
-#define IPV6_RXDSTOPTS		IPV6_DSTOPTS
 #define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
 #define IPV6_DROP_MEMBERSHIP	IPV6_LEAVE_GROUP
-
+#define IPV6_RXHOPOPTS		IPV6_HOPOPTS
+#define IPV6_RXDSTOPTS		IPV6_DSTOPTS
 
 /* IPV6_MTU_DISCOVER values.  */
 #define IPV6_PMTUDISC_DONT	0	/* Never send DF frames.  */

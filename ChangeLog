@@ -1,3 +1,8 @@
+2004-04-10  Robert Millan  <robertmh@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Cosmetic fixes to get in sync
+	with sysdeps/generic/bits/in.h.
+
 2004-05-25  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/unwind-dw2-fde-glibc.c: Change copyright terms from
