@@ -76,12 +76,20 @@ main (int argc, char *argv[])
       return 1;
     }
 
+  /* The clocks used to set the modification time and that used in the
+     time() call need not be the same.  They need not have the same
+     precision.  Therefore we delay the following operation by one
+     second which makes sure we can compare with second precision.  */
+  sleep (1);
+
   if (utime (file, NULL))
     {
       perror ("utime NULL");
       remove (file);
       return 1;
     }
+
+  sleep (1);
 
   now2 = time (NULL);
   if (now2 == (time_t)-1)
@@ -112,12 +120,7 @@ main (int argc, char *argv[])
       return 1;
     }
 
-#ifdef _STATBUF_ST_NSEC
-# define CORR (stnow.st_mtim.tv_nsec == 0 ? 0 : 1)
-#else
-# define CORR 0
-#endif
-  if (stnow.st_mtime + CORR < now1 || stnow.st_mtime > now2)
+  if (stnow.st_mtime < now1 || stnow.st_mtime > now2)
     {
       printf ("modtime %ld <%ld >%ld\n", stnow.st_mtime, now1, now2);
       return 1;

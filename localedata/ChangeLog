@@ -1,3 +1,10 @@
+2003-07-13  Petter Reinholdtsen  <pere@hungry.com>
+
+	* collate-test.c (main): Correct handling of files with more then
+	100 lines.  Print error message if argument is missing, instead of
+	segfaulting.
+	* xfrm-test.c: Likewise.
+
 2003-07-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/lo_LA: Update collation info for U0EAF and U0EC6.

@@ -1,5 +1,5 @@
 /* Test collation function using real data.
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,8 +27,8 @@
 
 struct lines
 {
-  const char *key;
-  const char *line;
+  char *key;
+  char *line;
 };
 
 static int xstrcoll (const void *, const void *);
@@ -42,6 +42,9 @@ main (int argc, char *argv[])
   char *line = NULL;
   size_t len = 0;
   size_t n;
+
+  if (argc < 2)
+    error (1, 0, "usage: %s <random seed>", argv[0]);
 
   setlocale (LC_ALL, "");
 
@@ -63,8 +66,8 @@ main (int argc, char *argv[])
       if (nstrings == nstrings_max)
 	{
 	  strings = (struct lines *) realloc (strings,
-					      (nstrings_max *= 2
-					       * sizeof (*strings)));
+					      (nstrings_max *= 2)
+					       * sizeof (*strings));
 	  if (strings == NULL)
 	    {
 	      perror (argv[0]);
@@ -78,6 +81,7 @@ main (int argc, char *argv[])
       strings[nstrings].key = strndup (line, l);
       ++nstrings;
     }
+  free (line);
 
   /* First shuffle.  */
   srandom (atoi (argv[1]));
@@ -105,7 +109,12 @@ main (int argc, char *argv[])
 
   /* Print the result.  */
   for (n = 0; n < nstrings; ++n)
-    fputs (strings[n].line, stdout);
+    {
+      fputs (strings[n].line, stdout);
+      free (strings[n].line);
+      free (strings[n].key);
+    }
+  free (strings);
 
   return result;
 }

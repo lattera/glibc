@@ -1,3 +1,7 @@
+2003-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/test-utime.c (main): Make test yet more robust.
+
 2003-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	More cancellation handling fixups.
