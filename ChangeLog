@@ -1,5 +1,8 @@
 1999-05-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/fstatvfs.c (fstatvfs): Set f_frsize to
+	f_bsize to help some broken programs.
+
 	* stdio-common/tst-printf.c: Add test case for last _itoa problem.
 
 	* stdio-common/vfprintf.c: Fix typo.

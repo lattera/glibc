@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -39,6 +39,8 @@ fstatvfs (int fd, struct statvfs *buf)
 
   /* Now fill in the fields we have information for.  */
   buf->f_bsize = fsbuf.f_bsize;
+  /* Linux does not support f_frsize, so set it to the full block size.  */
+  buf->f_frsize = fsbuf.f_bsize;
   buf->f_blocks = fsbuf.f_blocks;
   buf->f_bfree = fsbuf.f_bfree;
   buf->f_bavail = fsbuf.f_bavail;
@@ -48,11 +50,7 @@ fstatvfs (int fd, struct statvfs *buf)
   buf->f_namemax = fsbuf.f_namelen;
   memset (buf->f_spare, '\0', 6 * sizeof (int));
 
-  /* What remains to do is to fill the fields f_frsize, f_favail,
-     and f_flag.  */
-
-  /* Linux does not support f_frsize, so set it to zero.  */
-  buf->f_frsize = 0;
+  /* What remains to do is to fill the fields f_favail and f_flag.  */
 
   /* XXX I have no idea how to compute f_favail.  Any idea???  */
   buf->f_favail = buf->f_ffree;
