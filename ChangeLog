@@ -1,3 +1,7 @@
+2000-04-03  Andreas Jaeger  <aj@suse.de>
+
+	* include/arpa/inet.h (__inet_aton): Add protoype.
+
 2000-04-01  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mach/hurd/mips/init-first.c: Use SHARED instead of PIC.
