@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -44,22 +44,31 @@ nis_removemember (const_nis_name member, const_nis_name group)
           stpcpy (cp, cp2);
         }
       res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
-      if (NIS_RES_STATUS (res) != NIS_SUCCESS)
+      if (res == NULL || NIS_RES_STATUS (res) != NIS_SUCCESS)
         {
-          status = NIS_RES_STATUS (res);
-          nis_freeresult (res);
+	  if (res)
+	    {
+	      status = NIS_RES_STATUS (res);
+	      nis_freeresult (res);
+	    }
+	  else
+	    return NIS_NOMEMORY;
           return status;
         }
 
       if ((res->objects.objects_len != 1) ||
           (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
-        return NIS_INVALIDOBJ;
+	{
+	  nis_freeresult (res);
+	  return NIS_INVALIDOBJ;
+	}
 
       newmem =
-	calloc (1, NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len *
+	calloc (NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len,
 		sizeof (char *));
       if (newmem == NULL)
 	return NIS_NOMEMORY;
+
       k = NIS_RES_OBJECT (res)[0].GR_data.gr_members.gr_members_len;
       j = 0;
       for (i = 0; i < NIS_RES_OBJECT(res)->GR_data.gr_members.gr_members_len;
@@ -81,6 +90,7 @@ nis_removemember (const_nis_name member, const_nis_name group)
       newmem = realloc (newmem, k * sizeof (char*));
       if (newmem == NULL)
 	return NIS_NOMEMORY;
+
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_val = newmem;
       NIS_RES_OBJECT (res)->GR_data.gr_members.gr_members_len = k;
 

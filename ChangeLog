@@ -1,3 +1,19 @@
+1999-05-16  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/etc.rpc: Add portmapper, rstat_svc and pcnfs.
+	* sunrpc/key_call.c: Fix memory leak, close file handle.
+	* nis/nis_creategroup.c: Use malloc instead of calloc,
+	set ctime and mtime.
+	* nis/nis_subr.c: Check for realloc result.
+	* nis/nis_file.c: Fix memory leak.
+	* nis/nis_table.c: Pretty print.
+	* nis/nis_getservlist.c: Likewise.
+	* nis/nis_ismember.c: Likewise.
+	* nis/nis_lookup.c: Likewise.
+	* nis/nis_ping.c: Likewise.
+	* nis/nis_removemember.c: Likewise.
+	* nis/nis_util.c: Likewise, check calloc result.
+
 1999-05-16  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/unix/sysv/linux/sys/socketvar.h: Moved to ...

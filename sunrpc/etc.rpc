@@ -2,8 +2,8 @@
 #
 #	rpc
 #
-rpcbind		100000	portmap sunrpc rpcbind
-rstatd		100001	rstat rup perfmeter
+portmapper	100000	portmap sunrpc rpcbind
+rstatd		100001	rstat rup perfmeter rstat_svc
 rusersd		100002	rusers
 nfs		100003	nfsprog
 ypserv		100004	ypprog
@@ -26,9 +26,9 @@ nlockmgr	100021
 x25.inr		100022
 statmon		100023
 status		100024
+bootparam	100026
 ypupdated	100028	ypupdate
 keyserv		100029	keyserver
-bootparam	100026
 sunlink_mapper	100033
 tfsd		100037
 nsed		100038
@@ -62,7 +62,7 @@ sadmind		100232
 nisd		100300	rpc.nisd
 nispasswd	100303	rpc.nispasswdd
 ufsd		100233	ufsd
-pcnfsd		150001
+pcnfsd		150001	pcnfs
 amd		300019  amq
 bwnfsd		545580417
 fypxfrd		600100069 freebsd-ypxfrd

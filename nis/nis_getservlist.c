@@ -31,7 +31,7 @@ nis_getservlist (const_nis_name dir)
 
   res = nis_lookup (dir, FOLLOW_LINKS);
 
-  if (NIS_RES_STATUS (res) == NIS_SUCCESS)
+  if (res != NULL && NIS_RES_STATUS (res) == NIS_SUCCESS)
     {
       unsigned long i;
       nis_server *server;
@@ -41,6 +41,7 @@ nis_getservlist (const_nis_name dir)
 		(NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len + 1));
       if (serv == NULL)
 	return NULL;
+
       for (i = 0; i < NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_len;
 	   ++i)
 	{
@@ -48,7 +49,11 @@ nis_getservlist (const_nis_name dir)
 	    &NIS_RES_OBJECT (res)->DI_data.do_servers.do_servers_val[i];
 	  serv[i] = calloc (1, sizeof (nis_server));
 	  if (server->name != NULL)
-            serv[i]->name = strdup (server->name);
+	    {
+	      serv[i]->name = strdup (server->name);
+	      if (serv[i]->name == NULL)
+		return NULL;
+	    }
 
           serv[i]->ep.ep_len = server->ep.ep_len;
           if (serv[i]->ep.ep_len > 0)
@@ -96,8 +101,6 @@ nis_getservlist (const_nis_name dir)
             serv[i]->pkey.n_bytes = NULL;
         }
       serv[i] = NULL;
-
-      nis_freeresult (res);
     }
   else
     {
@@ -105,6 +108,10 @@ nis_getservlist (const_nis_name dir)
       if (serv != NULL)
 	serv[0] = NULL;
     }
+
+  if (res != NULL)
+    nis_freeresult (res);
+
   return serv;
 }
 

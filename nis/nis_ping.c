@@ -1,6 +1,6 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -37,8 +37,12 @@ nis_ping (const_nis_name dirname, unsigned int utime,
   if (dirobj == NULL)
     {
       res = nis_lookup (dirname, MASTER_ONLY);
-      if (NIS_RES_STATUS (res) != NIS_SUCCESS)
-	return;
+      if (res == NULL || NIS_RES_STATUS (res) != NIS_SUCCESS)
+	{
+	  if (res)
+	    nis_freeresult (res);
+	  return;
+	}
       obj = res->objects.objects_val;
     }
   else

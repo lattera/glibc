@@ -121,14 +121,14 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 			++count_links;
 			req.ns_name =
 			  strdup (NIS_RES_OBJECT (res)->LI_data.li_name);
+			if (req.ns_name == NULL)
+			  return NULL;
+
 			nis_freeresult (res);
 			res = calloc (1, sizeof (nis_result));
 			if (res == NULL)
-			  {
-			    __nisbind_destroy (&bptr);
-			    nis_free_directory (dir);
-			    return NULL;
-			  }
+			  return NULL;
+
 			link_first_try = 1; /* Try at first the old binding */
 			goto again;
 		      }

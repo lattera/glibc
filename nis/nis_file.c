@@ -1,6 +1,6 @@
 /* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -82,14 +82,18 @@ nis_read_obj (const char *name)
   XDR xdrs;
   FILE *in;
   bool_t status;
-  nis_object *obj = calloc (1, sizeof (nis_object));
-
-  if (obj == NULL)
-    return NULL;
+  nis_object *obj;
 
   in = fopen (name, "rb");
   if (in == NULL)
     return NULL;
+
+  obj = calloc (1, sizeof (nis_object));
+  if (obj == NULL)
+    {
+      fclose (in);
+      return NULL;
+    }
 
   xdrstdio_create (&xdrs, in, XDR_DECODE);
   status =_xdr_nis_object (&xdrs, obj);

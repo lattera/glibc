@@ -1,6 +1,6 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -30,9 +30,11 @@ __nis_finddirectory (directory_obj *dir, const_nis_name name)
   fd_args fd_args;
   fd_result *fd_res;
 
-  fd_args.dir_name = strdup (name);
+  fd_args.dir_name = (char *)name;
   fd_args.requester = nis_local_host();
   fd_res = calloc (1, sizeof (fd_result));
+  if (fd_res == NULL)
+    return NULL;
 
   status = __do_niscall2 (dir->do_servers.do_servers_val,
 			  dir->do_servers.do_servers_len,

@@ -1,4 +1,4 @@
-/* Copyright (c) 1997 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -52,8 +52,8 @@ nis_leaf_of_r (const_nis_name name, char *buffer, size_t buflen)
 	  errno = ERANGE;
 	  return NULL;
 	}
-      strncpy (buffer, name, i);
-      buffer[i] = 0;
+
+      *((char *) __mempcpy (buffer, name, i)) = '\0';
     }
 
   return buffer;
@@ -87,8 +87,8 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
       errno = ERANGE;
       return NULL;
     }
-  memcpy (buffer, name, diff - 1);
-  buffer[diff - 1] = '\0';
+
+  *((char *) __mempcpy (buffer, name, diff - 1)) = '\0';
 
   if (diff - 1 == 0)
     return NULL;
@@ -109,6 +109,9 @@ count_dots (const_nis_name str)
   return count;
 }
 
+/* If we run out of memory, we don't give already allocated memory
+   free. The overhead for bringing getnames back in a safe state to
+   free it is to big. */
 nis_name *
 nis_getnames (const_nis_name name)
 {
@@ -116,22 +119,22 @@ nis_getnames (const_nis_name name)
   char local_domain[NIS_MAXNAMELEN + 1];
   char *path, *cp;
   int count, pos, have_point;
+  char *saveptr;
 
   strncpy (local_domain, nis_local_directory (), NIS_MAXNAMELEN);
   local_domain[NIS_MAXNAMELEN] = '\0';
 
   count = 1;
-  if ((getnames = malloc ((count + 1) * sizeof (char *))) == NULL)
+  getnames = malloc ((count + 1) * sizeof (char *));
+  if (getnames == NULL)
       return NULL;
 
   /* Do we have a fully qualified NIS+ name ? If yes, give it back */
   if (name[strlen (name) - 1] == '.')
     {
       if ((getnames[0] = strdup (name)) == NULL)
-	{
-	  free (getnames);
-	  return NULL;
-	}
+	return NULL;
+
       getnames[1] = NULL;
 
       return getnames;
@@ -148,7 +151,7 @@ nis_getnames (const_nis_name name)
 
   pos = 0;
 
-  cp = strtok (path, ":");
+  cp = __strtok_r (path, ":", &saveptr);
   while (cp)
     {
       if (strcmp (cp, "$") == 0)
@@ -162,6 +165,8 @@ nis_getnames (const_nis_name name)
 		{
 		  count += 5;
 		  getnames = realloc (getnames, (count + 1) * sizeof (char *));
+		  if (getnames == NULL)
+		    return NULL;
 		}
 	      tmp = malloc (strlen (cptr) + strlen (local_domain) +
 			    strlen (name) + 2);
@@ -188,35 +193,35 @@ nis_getnames (const_nis_name name)
       else
 	{
 	  char *tmp;
+	  size_t cplen = strlen (cp);
 
-	  if (cp[strlen (cp) - 1] == '$')
+	  if (cp[cplen - 1] == '$')
 	    {
 	      char *p;
 
-	      tmp = malloc (strlen (cp) + strlen (local_domain) +
-			    strlen (name) + 2);
+	      tmp = malloc (cplen + strlen (local_domain) + strlen (name) + 2);
 	      if (tmp == NULL)
 		return NULL;
 
-	      p = stpcpy (tmp, name);
+	      p = __stpcpy (tmp, name);
 	      *p++ = '.';
-	      p = stpcpy (p, cp);
+	      p = __mempcpy (p, cp, cplen);
 	      --p;
 	      if (p[-1] != '.')
 		*p++ = '.';
-	      stpcpy (p, local_domain);
+	      __stpcpy (p, local_domain);
 	    }
 	  else
 	    {
 	      char *p;
 
-	      tmp = malloc (strlen (cp) + strlen (name) + 2);
+	      tmp = malloc (cplen + strlen (name) + 2);
 	      if (tmp == NULL)
 		return NULL;
 
-	      p = stpcpy (tmp, name);
+	      p = __stpcpy (tmp, name);
 	      *p++ = '.';
-	      stpcpy (p, cp);
+	      memcpy (p, cp, cplen + 1);
 	    }
 
 	  if (pos >= count)
@@ -229,7 +234,7 @@ nis_getnames (const_nis_name name)
 	  getnames[pos] = tmp;
 	  ++pos;
 	}
-      cp = strtok (NULL, ":");
+      cp = __strtok_r (NULL, ":", &saveptr);
     }
 
   getnames[pos] = NULL;

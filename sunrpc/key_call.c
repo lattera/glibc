@@ -491,7 +491,7 @@ key_call_door (u_long proc, xdrproc_t xdr_arg, char *arg,
 	       xdrproc_t xdr_rslt, char *rslt)
 {
   XDR xdrs;
-  int fd;
+  int fd, ret;
   door_arg_t args;
   char *data_ptr;
   u_long data_len = 0;
@@ -525,11 +525,12 @@ key_call_door (u_long proc, xdrproc_t xdr_arg, char *arg,
   args.rbuf = res;
   args.rsize = sizeof (res);
 
-  if (__door_call (fd, &args) < 0)
-    return 0;
-
+  ret = __door_call (fd, &args);
   free (data_ptr);
   close (fd);
+
+  if (ret < 0)
+    return 0;
 
   memcpy (&data_len, args.data_ptr, sizeof (u_long));
   if (data_len != 0)

@@ -43,10 +43,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
 
   /* Not of "[key=value,key=value,...],foo.." format? */
   if (cptr[0] != '[')
-    {
-      ibreq->ibr_name = strdup (cptr);
-      return ibreq;
-    }
+    return (ibreq->ibr_name = strdup (cptr)) == NULL ? NULL : ibreq;
 
   /* "[key=value,...],foo" format */
   ibreq->ibr_name = strchr (cptr, ']');
@@ -64,6 +61,8 @@ __create_ib_request (const_nis_name name, unsigned int flags)
     ibreq->ibr_name[0] = '\0';
   ibreq->ibr_name += 2;
   ibreq->ibr_name = strdup (ibreq->ibr_name);
+  if (ibreq->ibr_name == NULL)
+    return NULL;
 
   ++cptr; /* Remove "[" */
 
@@ -87,31 +86,17 @@ __create_ib_request (const_nis_name name, unsigned int flags)
           size += 1;
           search_val = realloc (search_val, size * sizeof (nis_attr));
 	  if (search_val == NULL)
-	    {
-	      nis_free_request (ibreq);
-	      return NULL;
-	    }
+	    return NULL;
 	}
       search_val[search_len].zattr_ndx = strdup (key);
       if ((search_val[search_len].zattr_ndx) == NULL)
-        {
-	  /* Let nis_free_request do the job for freeing search_val */
-	  ibreq->ibr_srch.ibr_srch_val = search_val;
-	  ibreq->ibr_srch.ibr_srch_len = search_len;
-	  nis_free_request (ibreq);
-	  return NULL;
-        }
+	return NULL;
+
       search_val[search_len].zattr_val.zattr_val_len = strlen (val) + 1;
       search_val[search_len].zattr_val.zattr_val_val = strdup (val);
       if (search_val[search_len].zattr_val.zattr_val_val == NULL)
-        {
-	  /* Let nis_free_request do the job for freeing search_val */
-	  search_val[search_len].zattr_val.zattr_val_len = 0;
-	  ibreq->ibr_srch.ibr_srch_val = search_val;
-	  ibreq->ibr_srch.ibr_srch_len = search_len + 1;
-	  nis_free_request (ibreq);
-          return NULL;
-        }
+	return NULL;
+
       ++search_len;
     }
 
@@ -629,16 +614,19 @@ nis_first_entry (const_nis_name name)
       return res;
     }
 
-  if ((ibreq =__create_ib_request (name, 0)) == NULL)
+  ibreq = __create_ib_request (name, 0);
+  if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
     }
 
-  if ((status = __do_niscall (ibreq->ibr_name, NIS_IBFIRST,
-			      (xdrproc_t) _xdr_ib_request,
-			      (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, 0, NULL)) != NIS_SUCCESS)
+  status = __do_niscall (ibreq->ibr_name, NIS_IBFIRST,
+			 (xdrproc_t) _xdr_ib_request,
+			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
+			 (caddr_t) res, 0, NULL);
+
+  if (status != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
 
   nis_free_request (ibreq);
@@ -663,7 +651,8 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
       return res;
     }
 
-  if (( ibreq =__create_ib_request (name, 0)) == NULL)
+  ibreq = __create_ib_request (name, 0);
+  if (ibreq == NULL)
     {
       NIS_RES_STATUS (res) = NIS_BADNAME;
       return res;
@@ -675,10 +664,12 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
       ibreq->ibr_cookie.n_len = cookie->n_len;
     }
 
-  if ((status = __do_niscall (ibreq->ibr_name, NIS_IBNEXT,
-			      (xdrproc_t) _xdr_ib_request,
-			      (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, 0, NULL)) != NIS_SUCCESS)
+  status = __do_niscall (ibreq->ibr_name, NIS_IBNEXT,
+			 (xdrproc_t) _xdr_ib_request,
+			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
+			 (caddr_t) res, 0, NULL);
+
+  if (status != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
 
   if (cookie != NULL)
