@@ -1,5 +1,29 @@
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c: Implement r/o sharing of nscd's cache with client
+	processes via shared memory.
+	* nscd/nscd-client.h: Likewise.
+	* nscd/nscd.h: Likewise.
+	* nscd/nscd_conf.c: Likewise.
+	* nscd/nscd_getgr_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd_gethst_r.c: Likewise.
+	* nscd/nscd.conf: Add new config parameters.
+	* nscd/Makefile (aux): Add nscd_helper.
+	* nscd/nscd_helper.c: New file.
+	* nscd/mem.c (gc): Indicate beginning and end of the gc cycle.
+
+	* nscd/hstcache.c: Simplify a lot.  We cache only the request itself,
+	no derived information.
+	* connections.c (nscd_init): Fix bug in testing size of the persistent.
+
+	* nis/Makefile (aux): Add nis_hash.
+	* nis/nis_hash.c: New file.  Split out from nis_util.c.
+	* nis/nis_util.c: Move __nis_hash code in separate file.
+
+	* csu/tst-atomic.c: Improve atomic_increment_val test which would
+	not have found a ppc bug.
+
 	* sysdeps/s390/fpu/bits/mathinline.h: Remove unnecessary includes.
 
 	* malloc/arena.c: Remove __MALLOC_P uses.

@@ -77,7 +77,7 @@ static const hst_response_header notfound =
 
 static void
 cache_addhst (struct database_dyn *db, int fd, request_header *req,
-	      const void *key, struct hostent *hst, uid_t owner, int add_addr,
+	      const void *key, struct hostent *hst, uid_t owner,
 	      struct hashentry *he, struct datahead *dh, int errval)
 {
   ssize_t total;
@@ -208,7 +208,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	 the current cache handling cannot handle and it is more than
 	 questionable whether it is worthwhile complicating the cache
 	 handling just for handling such a special case. */
-      if (he == NULL && (add_addr || hst->h_addr_list[1] == NULL))
+      if (he == NULL && hst->h_addr_list[1] == NULL)
 	{
 	  dataset = (struct dataset *) mempool_alloc (db,
 						      total + req->key_len);
@@ -269,10 +269,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	 itself.  This is the case if the resolver is used and the name
 	 is extended by the domainnames from /etc/resolv.conf.  Therefore
 	 we explicitly add the name here.  */
-      if (req->type == GETHOSTBYNAME || req->type == GETHOSTBYNAMEv6)
-	key_copy = memcpy (cp, key, req->key_len);
-      else
-	memset (cp, '\0', req->key_len);
+      key_copy = memcpy (cp, key, req->key_len);
 
       /* Now we can determine whether on refill we have to create a new
 	 record or not.  */
@@ -349,141 +346,21 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	     problem is that we always must add the hash table entry
 	     with the FIRST flag set first.  Otherwise we get dangling
 	     pointers in case memory allocation fails.  */
-	  assert (add_addr || hst->h_addr_list[1] == NULL);
+	  assert (hst->h_addr_list[1] == NULL);
 
-	  /* Add the normal addresses.  */
-	  if (add_addr)
-	    {
-	      for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
-		{
-		  if (cache_add (addr_list_type, addresses, hst->h_length,
-				 &dataset->head, cnt == 0, db, owner) < 0)
-		    {
-		      /* Ensure the data can be recovered.  */
-		      if (cnt == 0)
-			dataset->head.usable = false;
-		      goto out;
-		    }
-		  addresses += hst->h_length;
-		}
-
-	      /* If necessary the IPv6 addresses.  */
-	      if (addr_list_type == GETHOSTBYADDR)
-		for (cnt = 0; cnt < h_addr_list_cnt; ++cnt)
-		  {
-		    if (cache_add (GETHOSTBYADDRv6, addresses, IN6ADDRSZ,
-				   &dataset->head, false, db, owner) < 0)
-		      goto out;
-
-		    addresses += IN6ADDRSZ;
-		  }
-	    }
 	  /* Avoid adding names if more than one address is available.  See
 	     above for more info.  */
-	  else
-	    {
-	      assert (req->type == GETHOSTBYNAME
-		      || req->type == GETHOSTBYNAMEv6
-		      || req->type == GETHOSTBYADDR
-		      || req->type == GETHOSTBYADDRv6);
+	  assert (req->type == GETHOSTBYNAME
+		  || req->type == GETHOSTBYNAMEv6
+		  || req->type == GETHOSTBYADDR
+		  || req->type == GETHOSTBYADDRv6);
 
-	      /* If necessary add the key for this request.  */
-	      if (req->type == GETHOSTBYNAME)
-		{
-		  bool first = true;
-		  if (addr_list_type == GETHOSTBYADDR)
-		    {
-		      if (cache_add (GETHOSTBYNAME, key_copy, req->key_len,
-				     &dataset->head, true, db, owner) < 0)
-			{
-			  /* Could not allocate memory.  Make sure the
-			     data gets discarded.  */
-			  dataset->head.usable = false;
-			  goto out;
-			}
+	  if (cache_add (req->type, key_copy, req->key_len,
+			 &dataset->head, true, db, owner) < 0)
+	    /* Could not allocate memory.  Make sure the
+	       data gets discarded.  */
+	    dataset->head.usable = false;
 
-		      first = false;
-		    }
-		  if (cache_add (GETHOSTBYNAMEv6, key_copy, req->key_len,
-				 &dataset->head, first, db, owner) < 0)
-		    {
-		      /* Could not allocate memory.  Make sure the
-			 data gets discarded.  */
-		      if (first)
-			dataset->head.usable = false;
-		      goto out;
-		    }
-		}
-	      else if (req->type == GETHOSTBYNAMEv6)
-		{
-		  if (cache_add (GETHOSTBYNAMEv6, key_copy, req->key_len,
-				 &dataset->head, true, db, owner) < 0)
-		    {
-		      /* Could not allocate memory.  Make sure the
-			 data gets discarded.  */
-		      dataset->head.usable = false;
-		      goto out;
-		    }
-
-		  if (addr_list_type == GETHOSTBYADDR
-		      && cache_add (GETHOSTBYNAME, key_copy, req->key_len,
-				    &dataset->head, false, db, owner) < 0)
-		    goto out;
-		}
-
-	      /* And finally the name.  We mark this as the last entry.  */
-	      if (addr_list_type == GETHOSTBYADDR
-		  && req->type == GETHOSTBYADDR
-		  && cache_add (GETHOSTBYNAME, dataset->strdata, h_name_len,
-				&dataset->head, true, db, owner) < 0)
-		{
-		  /* Could not allocate memory.  Make sure the
-		     data gets discarded.  */
-		  dataset->head.usable = false;
-		  goto out;
-		}
-
-	      if (cache_add (GETHOSTBYNAMEv6, dataset->strdata,
-			     h_name_len, &dataset->head,
-			     ((req->type == GETHOSTBYADDR
-			       && addr_list_type != GETHOSTBYADDR)
-			      || req->type == GETHOSTBYADDRv6), db,
-			     owner) < 0)
-		{
-		  /* Could not allocate memory.  Make sure the
-		     data gets discarded.  */
-		  if ((req->type == GETHOSTBYADDR
-		       && addr_list_type != GETHOSTBYADDR)
-		      || req->type == GETHOSTBYADDRv6)
-		    dataset->head.usable = false;
-		  goto out;
-		}
-
-	      if (addr_list_type == GETHOSTBYADDR
-		  && req->type != GETHOSTBYADDR
-		  && cache_add (GETHOSTBYNAME, dataset->strdata, h_name_len,
-				&dataset->head, false, db, owner) < 0)
-		goto out;
-
-	      /* First add all the aliases.  */
-	      for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
-		{
-		  if (addr_list_type == GETHOSTBYADDR)
-		    if (cache_add (GETHOSTBYNAME, aliases,
-				   h_aliases_len[cnt], &dataset->head,
-				   false, db, owner) < 0)
-		      break;
-
-		  if (cache_add (GETHOSTBYNAMEv6, aliases,
-				 h_aliases_len[cnt], &dataset->head,
-				 false, db, owner) < 0)
-		    break;
-
-		  aliases += h_aliases_len[cnt];
-		}
-	    }
-
-	out:
 	  pthread_rwlock_unlock (&db->lock);
 	}
     }
@@ -534,10 +411,18 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 
   if (__builtin_expect (debug_level > 0, 0))
     {
-      if (he == NULL)
-	dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *) key);
+      const char *str;
+      char buf[INET6_ADDRSTRLEN + 1];
+      if (req->type == GETHOSTBYNAME || req->type == GETHOSTBYNAMEv6)
+	str = key;
       else
-	dbg_log (_("Reloading \"%s\" in hosts cache!"), (char *) key);
+	str = inet_ntop (req->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
+			 key, buf, sizeof (buf));
+
+      if (he == NULL)
+	dbg_log (_("Haven't found \"%s\" in hosts cache!"), (char *) str);
+      else
+	dbg_log (_("Reloading \"%s\" in hosts cache!"), (char *) str);
     }
 
   if (db->secure)
@@ -583,7 +468,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
   if (db->secure)
     seteuid (oldeuid);
 
-  cache_addhst (db, fd, req, key, hst, uid, 0, he, dh,
+  cache_addhst (db, fd, req, key, hst, uid, he, dh,
 		h_errno == TRY_AGAIN ? errval : 0);
 
   if (use_malloc)

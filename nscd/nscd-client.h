@@ -23,6 +23,7 @@
 #ifndef _NSCD_CLIENT_H
 #define _NSCD_CLIENT_H	1
 
+#include <atomic.h>
 #include <nscd-types.h>
 
 /* Version number of the daemon interface */
@@ -53,6 +54,9 @@ typedef enum
   SHUTDOWN,		/* Shut the server down.  */
   GETSTAT,		/* Get the server statistic.  */
   INVALIDATE,           /* Invalidate one special cache.  */
+  GETFDPW,
+  GETFDGR,
+  GETFDHST,
   LASTREQ
 } request_type;
 
@@ -110,9 +114,151 @@ typedef struct
 } hst_response_header;
 
 
+/* Type for offsets in data part of database.  */
+typedef uint32_t ref_t;
+/* Value for invalid/no reference.  */
+#define ENDREF	UINT32_MAX
+
+/* Alignment requirement of the beginning of the data region.  */
+#define ALIGN 16
+
+
+/* Head of record in data part of database.  */
+struct datahead
+{
+  size_t allocsize;	/* Allocated Bytes.  */
+  size_t recsize;	/* Size of the record.  */
+  time_t timeout;	/* Time when this entry becomes invalid.  */
+  bool notfound;	/* Nonzero if data for key has not been found.  */
+  uint8_t nreloads;	/* Reloads without use.  */
+  bool usable;		/* False if the entry must be ignored.  */
+
+  /* We need to have the following element aligned for the response
+     header data types and their use in the 'struct dataset' types
+     defined in the XXXcache.c files.  */
+  union
+  {
+    pw_response_header pwdata;
+    gr_response_header grdata;
+    hst_response_header hstdata;
+    ssize_t align1;
+    time_t align2;
+  } data[0];
+};
+
+
+/* Structure for one hash table entry.  */
+struct hashentry
+{
+  request_type type:8;		/* Which type of dataset.  */
+  bool first;			/* True if this was the original key.  */
+  size_t len;			/* Length of key.  */
+  ref_t key;			/* Pointer to key.  */
+  uid_t owner;			/* If secure table, this is the owner.  */
+  ref_t next;			/* Next entry in this hash bucket list.  */
+  ref_t packet;			/* Records for the result.  */
+  union
+  {
+    struct hashentry *dellist;	/* Next record to be deleted.  This can be a
+				   pointer since only nscd uses this field.  */
+    ref_t *prevp;		/* Pointer to field containing forward
+				   reference.  */
+  };
+};
+
+
+/* Current persistent database version.  */
+#define DB_VERSION	1
+
+/* Maximum time allowed between updates of the timestamp.  */
+#define MAPPING_TIMEOUT (5 * 60)
+
+
+/* Header of persistent database file.  */
+struct database_pers_head
+{
+  int version;
+  int header_size;
+  int gc_cycle;
+  volatile time_t timestamp;
+
+  size_t module;
+  size_t data_size;
+
+  size_t first_free;		/* Offset of first free byte in data area.  */
+
+  size_t nentries;
+  size_t maxnentries;
+  size_t maxnsearched;
+
+  uintmax_t poshit;
+  uintmax_t neghit;
+  uintmax_t posmiss;
+  uintmax_t negmiss;
+
+  uintmax_t rdlockdelayed;
+  uintmax_t wrlockdelayed;
+
+  uintmax_t addfailed;
+
+  ref_t array[0];
+};
+
+
+/* Mapped database record.  */
+struct mapped_database
+{
+  const struct database_pers_head *head;
+  const char *data;
+  size_t mapsize;
+  int counter;		/* > 0 indicates it isusable.  */
+};
+#define NO_MAPPING ((struct mapped_database *) -1l)
+
+struct locked_map_ptr
+{
+  int lock;
+  struct mapped_database *mapped;
+};
+#define libc_locked_map_ptr(name) static struct locked_map_ptr name
+
+
 /* Open socket connection to nscd server.  */
 extern int __nscd_open_socket (const char *key, size_t keylen,
 			       request_type type, void *response,
 			       size_t responselen) attribute_hidden;
+
+/* Get reference of mapping.  */
+extern struct mapped_database *__nscd_get_map_ref (request_type type,
+						   const char *name,
+						   struct locked_map_ptr *mapptr,
+						   int *gc_cyclep);
+
+/* Unmap database.  */
+extern void __nscd_unmap (struct mapped_database *mapped);
+
+/* Drop reference of mapping.  */
+static inline int __nscd_drop_map_ref (struct mapped_database *map,
+				       int gc_cycle)
+{
+  if (map != NO_MAPPING)
+    {
+      if (__builtin_expect (map->head->gc_cycle != gc_cycle, 0))
+	/* We might have read inconsistent data.  */
+	return -1;
+
+      if (atomic_decrement_val (&map->counter) == 0)
+	__nscd_unmap (map);
+    }
+
+  return 0;
+}
+
+
+/* Search the mapped database.  */
+extern const struct datahead * __nscd_cache_search (request_type type,
+						    const char *key,
+						    size_t keylen,
+						    const struct mapped_database *mapped);
 
 #endif /* nscd.h */

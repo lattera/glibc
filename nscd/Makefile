@@ -22,6 +22,7 @@
 subdir	:= nscd
 
 routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r
+aux	:= nscd_helper
 
 include ../Makeconfig
 

@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <grp.h>
 #include <stdint.h>
@@ -25,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/un.h>
@@ -64,36 +66,82 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 }
 
 
+libc_locked_map_ptr (map_handle);
+/* Note that we only free the structure if necessary.  The memory
+   mapping is not removed since it is not visible to the malloc
+   handling.  */
+libc_freeres_fn (gr_map_free)
+{
+
+  if (map_handle.mapped != NO_MAPPING)
+    free (map_handle.mapped);
+}
+
+
 static int
 internal_function
 nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group *resultbuf, char *buffer, size_t buflen,
 	      struct group **result)
 {
-  gr_response_header gr_resp;
-  int sock = __nscd_open_socket (key, keylen, type, &gr_resp,
-				 sizeof (gr_resp));
-  if (sock == -1)
+  const gr_response_header *gr_resp = NULL;
+  const uint32_t *len = NULL;
+  const char *gr_name = NULL;
+  size_t gr_name_len = 0;
+  int retval = -1;
+  int gc_cycle;
+  const char *recend = (const char *) ~UINTMAX_C (0);
+
+  /* If the mapping is available, try to search there instead of
+     communicating with the nscd.  */
+  struct mapped_database *mapped = __nscd_get_map_ref (GETFDGR, "group",
+						       &map_handle, &gc_cycle);
+ retry:
+  if (mapped != NO_MAPPING)
     {
-      __nss_not_use_nscd_group = 1;
-      return -1;
+      const struct datahead *found = __nscd_cache_search (type, key, keylen,
+							  mapped);
+      if (found != NULL)
+	{
+	  gr_resp = &found->data[0].grdata;
+	  len = (const uint32_t *) (gr_resp + 1);
+	  /* The alignment is always sufficient.  */
+	  assert (((uintptr_t) len & (__alignof__ (*len) - 1)) == 0);
+	  gr_name = ((const char *) len
+		     + gr_resp->gr_mem_cnt * sizeof (uint32_t));
+	  gr_name_len = gr_resp->gr_name_len + gr_resp->gr_passwd_len;
+	  recend = (const char *) found->data + found->recsize;
+	}
+    }
+
+  gr_response_header gr_resp_mem;
+  int sock = -1;
+  if (gr_resp == NULL)
+    {
+      sock = __nscd_open_socket (key, keylen, type, &gr_resp_mem,
+				 sizeof (gr_resp_mem));
+      if (sock == -1)
+	{
+	  __nss_not_use_nscd_group = 1;
+	  goto out;
+	}
+
+      gr_resp = &gr_resp_mem;
     }
 
   /* No value found so far.  */
-  int retval = -1;
   *result = NULL;
 
-  if (gr_resp.found == -1)
+  if (__builtin_expect (gr_resp->found == -1, 0))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_group = 1;
-      goto out;
+      goto out_close;
     }
 
-  if (gr_resp.found == 1)
+  if (gr_resp->found == 1)
     {
       struct iovec vec[2];
-      uint32_t *len;
       char *p = buffer;
       size_t total_len;
       uintptr_t align;
@@ -103,71 +151,90 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	 align the pointer.  */
       align = ((__alignof__ (char *) - (p - ((char *) 0)))
 	       & (__alignof__ (char *) - 1));
-      total_len = align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
-		  + gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+      total_len = (align + (1 + gr_resp->gr_mem_cnt) * sizeof (char *)
+		   + gr_resp->gr_name_len + gr_resp->gr_passwd_len);
       if (__builtin_expect (buflen < total_len, 0))
 	{
 	no_room:
 	  __set_errno (ERANGE);
 	  retval = ERANGE;
-	  goto out;
+	  goto out_close;
 	}
       buflen -= total_len;
 
       p += align;
       resultbuf->gr_mem = (char **) p;
-      p += (1 + gr_resp.gr_mem_cnt) * sizeof (char *);
+      p += (1 + gr_resp->gr_mem_cnt) * sizeof (char *);
 
       /* Set pointers for strings.  */
       resultbuf->gr_name = p;
-      p += gr_resp.gr_name_len;
+      p += gr_resp->gr_name_len;
       resultbuf->gr_passwd = p;
-      p += gr_resp.gr_passwd_len;
+      p += gr_resp->gr_passwd_len;
 
       /* Fill in what we know now.  */
-      resultbuf->gr_gid = gr_resp.gr_gid;
+      resultbuf->gr_gid = gr_resp->gr_gid;
 
-      /* Allocate array to store lengths.  */
-      len = (uint32_t *) alloca (gr_resp.gr_mem_cnt * sizeof (uint32_t));
+      /* Read the length information, group name, and password.  */
+      if (len == NULL)
+	{
+	  /* Allocate array to store lengths.  */
+	  len = (uint32_t *) alloca (gr_resp->gr_mem_cnt * sizeof (uint32_t));
 
-      total_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
-      vec[0].iov_base = len;
-      vec[0].iov_len = total_len;
-      vec[1].iov_base = resultbuf->gr_name;
-      vec[1].iov_len = gr_resp.gr_name_len + gr_resp.gr_passwd_len;
-      total_len += gr_resp.gr_name_len + gr_resp.gr_passwd_len;
+	  vec[0].iov_base = (void *) len;
+	  vec[0].iov_len = gr_resp->gr_mem_cnt * sizeof (uint32_t);
+	  vec[1].iov_base = resultbuf->gr_name;
+	  vec[1].iov_len = gr_resp->gr_name_len + gr_resp->gr_passwd_len;
+	  total_len = vec[0].iov_len + vec[1].iov_len;
 
-      /* Get this data.  */
-      size_t n = TEMP_FAILURE_RETRY (__readv (sock, vec, 2));
-      if (__builtin_expect (n != total_len, 0))
-	goto out;
+	  /* Get this data.  */
+	  size_t n = TEMP_FAILURE_RETRY (__readv (sock, vec, 2));
+	  if (__builtin_expect (n != total_len, 0))
+	    goto out_close;
+	}
+      else
+	/* We already have the data.  Just copy the group name and
+	   password.  */
+	memcpy (resultbuf->gr_name, gr_name, gr_name_len);
 
       /* Clear the terminating entry.  */
-      resultbuf->gr_mem[gr_resp.gr_mem_cnt] = NULL;
+      resultbuf->gr_mem[gr_resp->gr_mem_cnt] = NULL;
 
       /* Prepare reading the group members.  */
       total_len = 0;
-      for (cnt = 0; cnt < gr_resp.gr_mem_cnt; ++cnt)
+      for (cnt = 0; cnt < gr_resp->gr_mem_cnt; ++cnt)
 	{
 	  resultbuf->gr_mem[cnt] = p;
 	  total_len += len[cnt];
 	  p += len[cnt];
 	}
 
+      if (__builtin_expect (gr_name + gr_name_len + total_len > recend, 0))
+	goto out_close;
       if (__builtin_expect (total_len > buflen, 0))
 	goto no_room;
 
       retval = 0;
-      n = TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
-					     total_len));
-      if (__builtin_expect (n != total_len, 0))
+      if (gr_name == NULL)
 	{
-	  /* The `errno' to some value != ERANGE.  */
-	  __set_errno (ENOENT);
-	  retval = ENOENT;
+	  size_t n = TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
+						 total_len));
+	  if (__builtin_expect (n != total_len, 0))
+	    {
+	      /* The `errno' to some value != ERANGE.  */
+	      __set_errno (ENOENT);
+	      retval = ENOENT;
+	    }
+	  else
+	    *result = resultbuf;
 	}
       else
-	*result = resultbuf;
+	{
+	  /* Copy the group member names.  */
+	  memcpy (resultbuf->gr_mem[0], gr_name + gr_name_len, total_len);
+
+	  *result = resultbuf;
+	}
     }
   else
     {
@@ -177,8 +244,15 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       retval = 0;
     }
 
+ out_close:
+  if (sock != -1)
+    close_not_cancel_no_status (sock);
  out:
-  close_not_cancel_no_status (sock);
+  if (__nscd_drop_map_ref (mapped, gc_cycle) != 0)
+    /* When we come here this means there has been a GC cycle while we
+       were looking for the data.  This means the data might have been
+       inconsistent.  Retry.  */
+    goto retry;
 
   return retval;
 }

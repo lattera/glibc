@@ -42,30 +42,6 @@ typedef enum
 } dbtype;
 
 
-/* Head of record in data part of database.  */
-struct datahead
-{
-  size_t allocsize;	/* Allocated Bytes.  */
-  size_t recsize;	/* Size of the record.  */
-  time_t timeout;	/* Time when this entry becomes invalid.  */
-  bool notfound;	/* Nonzero if data for key has not been found.  */
-  uint8_t nreloads;	/* Reloads without use.  */
-  bool usable;		/* False if the entry must be ignored.  */
-
-  /* We need to have the following element aligned for the response
-     header data types and their use in the 'struct dataset' types
-     defined in the XXXcache.c files.  */
-  union
-  {
-    pw_response_header pwdata;
-    gr_response_header grdata;
-    hst_response_header hstdata;
-    ssize_t align1;
-    time_t align2;
-  } data[0];
-};
-
-
 /* Default limit on the number of times a value gets reloaded without
    being used in the meantime.  NSCD does not throw a value out as
    soon as it times out.  It tries to reload the value from the
@@ -73,63 +49,6 @@ struct datahead
    is removed.  */
 #define DEFAULT_RELOAD_LIMIT 5
 
-
-/* Type for offsets in data part of database.  */
-typedef uint32_t ref_t;
-/* Value for invalid/no reference.  */
-#define ENDREF	UINT32_MAX
-
-
-/* Structure for one hash table entry.  */
-struct hashentry
-{
-  request_type type:8;		/* Which type of dataset.  */
-  bool first;			/* True if this was the original key.  */
-  size_t len;			/* Length of key.  */
-  ref_t key;			/* Pointer to key.  */
-  uid_t owner;			/* If secure table, this is the owner.  */
-  ref_t next;			/* Next entry in this hash bucket list.  */
-  ref_t packet;			/* Records for the result.  */
-  union
-  {
-    struct hashentry *dellist;	/* Next record to be deleted.  This can be a
-				   pointer since only nscd uses this field.  */
-    ref_t *prevp;		/* Pointer to field containing forward
-				   reference.  */
-  };
-};
-
-
-/* Current persistent database version.  */
-#define DB_VERSION	1
-
-/* Header of persistent database file.  */
-struct database_pers_head
-{
-  int version;
-  int header_size;
-
-  size_t module;
-  size_t data_size;
-
-  size_t first_free;		/* Offset of first free byte in data area.  */
-
-  size_t nentries;
-  size_t maxnentries;
-  size_t maxnsearched;
-
-  uintmax_t poshit;
-  uintmax_t neghit;
-  uintmax_t posmiss;
-  uintmax_t negmiss;
-
-  uintmax_t rdlockdelayed;
-  uintmax_t wrlockdelayed;
-
-  uintmax_t addfailed;
-
-  ref_t array[0];
-};
 
 /* Structure describing dynamic part of one database.  */
 struct database_dyn
@@ -139,6 +58,7 @@ struct database_dyn
   int enabled;
   int check_file;
   int persistent;
+  int shared;
   const char *filename;
   const char *db_filename;
   time_t file_mtime;

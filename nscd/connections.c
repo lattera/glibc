@@ -80,7 +80,10 @@ const char *serv2str[LASTREQ] =
   [GETHOSTBYADDRv6] = "GETHOSTBYADDRv6",
   [SHUTDOWN] = "SHUTDOWN",
   [GETSTAT] = "GETSTAT",
-  [INVALIDATE] = "INVALIDATE"
+  [INVALIDATE] = "INVALIDATE",
+  [GETFDPW] = "GETFDPW",
+  [GETFDGR] = "GETFDGR",
+  [GETFDHST] = "GETFDHST"
 };
 
 /* The control data structures for the services.  */
@@ -91,6 +94,7 @@ struct database_dyn dbs[lastdb] =
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .shared = 0,
     .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
@@ -105,6 +109,7 @@ struct database_dyn dbs[lastdb] =
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .shared = 0,
     .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
@@ -119,6 +124,7 @@ struct database_dyn dbs[lastdb] =
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
+    .shared = 0,
     .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
@@ -132,7 +138,7 @@ struct database_dyn dbs[lastdb] =
 
 
 /* Mapping of request type to database.  */
-static struct database_dyn *const serv2db[LASTDBREQ + 1] =
+static struct database_dyn *const serv2db[LASTREQ] =
 {
   [GETPWBYNAME] = &dbs[pwddb],
   [GETPWBYUID] = &dbs[pwddb],
@@ -141,7 +147,10 @@ static struct database_dyn *const serv2db[LASTDBREQ + 1] =
   [GETHOSTBYNAME] = &dbs[hstdb],
   [GETHOSTBYNAMEv6] = &dbs[hstdb],
   [GETHOSTBYADDR] = &dbs[hstdb],
-  [GETHOSTBYADDRv6] = &dbs[hstdb]
+  [GETHOSTBYADDRv6] = &dbs[hstdb],
+  [GETFDPW] = &dbs[pwddb],
+  [GETFDGR] = &dbs[grpdb],
+  [GETFDHST] = &dbs[hstdb],
 };
 
 
@@ -157,9 +166,6 @@ static int sock;
 
 /* Number of times clients had to wait.  */
 unsigned long int client_queued;
-
-/* Alignment requirement of the beginning of the data region.  */
-#define ALIGN 16
 
 
 /* Initialize database information structures.  */
@@ -224,11 +230,10 @@ nscd_init (void)
 		    dbs[cnt].persistent = 0;
 		  }
 		else if ((total = (sizeof (head)
-				   + roundup (head.module
-					      * sizeof (struct hashentry),
+				   + roundup (head.module * sizeof (ref_t),
 					      ALIGN)
 				   + head.data_size))
-			 < st.st_size)
+			 > st.st_size)
 		  {
 		    dbg_log (_("invalid persistent database file \"%s\": %s"),
 			     dbs[cnt].db_filename,
@@ -253,6 +258,7 @@ nscd_init (void)
 			       dbnames[cnt]);
 
 		    dbs[cnt].wr_fd = fd;
+		    dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
 		    fd = -1;
 		    /* We also need a read-only descriptor.  */
 		    dbs[cnt].ro_fd = open (dbs[cnt].db_filename, O_RDONLY);
@@ -439,6 +445,9 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 					* dbs[cnt].head->module);
 	    dbs[cnt].data = xmalloc (dbs[cnt].head->data_size);
 	    dbs[cnt].head->first_free = 0;
+
+	    dbs[cnt].shared = 0;
+	    assert (dbs[cnt].ro_fd == -1);
 	  }
 
 	if (dbs[cnt].check_file)
@@ -529,6 +538,43 @@ invalidate_cache (char *key)
 }
 
 
+#ifdef SCM_RIGHTS
+static void
+send_ro_fd (struct database_dyn *db, char *key, int fd)
+{
+  /* If we do not have an read-only file descriptor do nothing.  */
+  if (db->ro_fd == -1)
+    return;
+
+  /* We need to send some data along with the descriptor.  */
+  struct iovec iov[1];
+  iov[0].iov_base = key;
+  iov[0].iov_len = strlen (key) + 1;
+
+  /* Prepare the control message to transfer the descriptor.  */
+  char buf[CMSG_SPACE (sizeof (int))];
+  struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 1,
+			.msg_control = buf, .msg_controllen = sizeof (buf) };
+  struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
+
+  cmsg->cmsg_level = SOL_SOCKET;
+  cmsg->cmsg_type = SCM_RIGHTS;
+  cmsg->cmsg_len = CMSG_LEN (sizeof (int));
+
+  *(int *) CMSG_DATA (cmsg) = db->ro_fd;
+
+  msg.msg_controllen = cmsg->cmsg_len;
+
+  /* Send the control message.  We repeat when we are interrupted but
+     everything else is ignored.  */
+  (void) TEMP_FAILURE_RETRY (sendmsg (fd, &msg, 0));
+
+  if (__builtin_expect (debug_level > 0, 0))
+    dbg_log (_("provide access to FD %d, for %s"), db->ro_fd, key);
+}
+#endif	/* SCM_RIGHTS */
+
+
 /* Handle new request.  */
 static void
 handle_request (int fd, request_header *req, void *key, uid_t uid)
@@ -614,7 +660,7 @@ cannot handle old request version %d; current version is %d"),
   else if (__builtin_expect (debug_level, 0) > 0)
     {
       if (req->type == INVALIDATE)
-	dbg_log ("\t%s (%s)", serv2str[req->type], (char *)key);
+	dbg_log ("\t%s (%s)", serv2str[req->type], (char *) key);
       else
 	dbg_log ("\t%s", serv2str[req->type]);
     }
@@ -697,6 +743,14 @@ cannot handle old request version %d; current version is %d"),
 	}
       break;
 
+    case GETFDPW:
+    case GETFDGR:
+    case GETFDHST:
+#ifdef SCM_RIGHTS
+      send_ro_fd (serv2db[req->type], key, fd);
+#endif
+      break;
+
     default:
       /* Ignore the command, it's nothing we know.  */
       break;
@@ -733,7 +787,9 @@ nscd_run (void *p)
 	  int timeout = -1;
 	  if (run_prune)
 	    {
-	      now = time (NULL);
+	      /* NB: we do not flush the timestamp update using msync since
+		 this value doesnot matter on disk.  */
+	      dbs[my_number].head->timestamp = now = time (NULL);
 	      timeout = now < next_prune ? 1000 * (next_prune - now) : 0;
 	    }
 

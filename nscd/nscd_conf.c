@@ -216,6 +216,20 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	  if (cnt == lastdb)
 	    dbg_log ("database %s is not supported\n", arg1);
 	}
+      else if (strcmp (entry, "shared") == 0)
+	{
+	  for (cnt = 0; cnt < lastdb; ++cnt)
+	    if (strcmp (arg1, dbnames[cnt]) == 0)
+	      {
+		if (strcmp (arg2, "no") == 0)
+		  dbs[cnt].shared = 0;
+		else if (strcmp (arg2, "yes") == 0)
+		  dbs[cnt].shared = 1;
+		break;
+	      }
+	  if (cnt == lastdb)
+	    dbg_log ("database %s is not supported\n", arg1);
+	}
       else if (strcmp (entry, "reload-count") == 0)
 	{
 	  if (strcasecmp (arg1, "unlimited") == 0)

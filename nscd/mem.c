@@ -230,6 +230,12 @@ gc (struct database_dyn *db)
     ++next_data;
 
 
+  /* Now we start modifying the data.  Make sure all readers of the
+     data are aware of this and temporarily don't use the data.  */
+  ++db->head->gc_cycle;
+  assert ((db->head->gc_cycle & 1) == 1);
+
+
   /* We do not perform the move operations right away since the
      he_data array is not sorted by the address of the data.  */
   struct moveinfo
@@ -444,6 +450,11 @@ gc (struct database_dyn *db)
   if (db->persistent)
     msync (db->head, db->data + db->head->first_free - (char *) db->head,
 	   MS_ASYNC);
+
+
+  /* Now we are done modifying the data.  */
+  ++db->head->gc_cycle;
+  assert ((db->head->gc_cycle & 1) == 0);
 
   /* We are done.  */
  out:

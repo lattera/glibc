@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <pwd.h>
 #include <stdint.h>
@@ -24,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/un.h>
@@ -64,70 +66,124 @@ __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf, char *buffer,
 }
 
 
+libc_locked_map_ptr (map_handle);
+/* Note that we only free the structure if necessary.  The memory
+   mapping is not removed since it is not visible to the malloc
+   handling.  */
+libc_freeres_fn (gr_map_free)
+{
+
+  if (map_handle.mapped != NO_MAPPING)
+    free (map_handle.mapped);
+}
+
+
 static int
 internal_function
 nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	      struct passwd *resultbuf, char *buffer, size_t buflen,
 	      struct passwd **result)
 {
-  pw_response_header pw_resp;
-  int sock = __nscd_open_socket (key, keylen, type, &pw_resp,
-				 sizeof (pw_resp));
-  if (sock == -1)
+  const pw_response_header *pw_resp = NULL;
+  const char *pw_name = NULL;
+  int retval = -1;
+  int gc_cycle;
+  const char *recend = (const char *) ~UINTMAX_C (0);
+
+  /* If the mapping is available, try to search there instead of
+     communicating with the nscd.  */
+  struct mapped_database *mapped = __nscd_get_map_ref (GETFDPW, "passwd",
+						       &map_handle, &gc_cycle);
+ retry:
+  if (mapped != NO_MAPPING)
     {
-      __nss_not_use_nscd_passwd = 1;
-      return -1;
+      const struct datahead *found = __nscd_cache_search (type, key, keylen,
+							  mapped);
+      if (found != NULL)
+	{
+	  pw_resp = &found->data[0].pwdata;
+	  pw_name = (const char *) (pw_resp + 1);
+	  recend = (const char *) found->data + found->recsize;
+	}
+    }
+
+  pw_response_header pw_resp_mem;
+  int sock = -1;
+  if (pw_resp == NULL)
+    {
+      sock = __nscd_open_socket (key, keylen, type, &pw_resp_mem,
+				 sizeof (pw_resp_mem));
+      if (sock == -1)
+	{
+	  __nss_not_use_nscd_passwd = 1;
+	  goto out;
+	}
+
+      pw_resp = &pw_resp_mem;
     }
 
   /* No value found so far.  */
-  int retval = -1;
   *result = NULL;
 
-  if (__builtin_expect (pw_resp.found == -1, 0))
+  if (__builtin_expect (pw_resp->found == -1, 0))
     {
       /* The daemon does not cache this database.  */
       __nss_not_use_nscd_passwd = 1;
-      goto out;
+      goto out_close;
     }
 
-  if (pw_resp.found == 1)
+  if (pw_resp->found == 1)
     {
-      char *p = buffer;
-      size_t total = (pw_resp.pw_name_len + pw_resp.pw_passwd_len
-		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
-		      + pw_resp.pw_shell_len);
+      /* Set the information we already have.  */
+      resultbuf->pw_uid = pw_resp->pw_uid;
+      resultbuf->pw_gid = pw_resp->pw_gid;
 
+      char *p = buffer;
+      /* get pw_name */
+      resultbuf->pw_name = p;
+      p += pw_resp->pw_name_len;
+      /* get pw_passwd */
+      resultbuf->pw_passwd = p;
+      p += pw_resp->pw_passwd_len;
+      /* get pw_gecos */
+      resultbuf->pw_gecos = p;
+      p += pw_resp->pw_gecos_len;
+      /* get pw_dir */
+      resultbuf->pw_dir = p;
+      p += pw_resp->pw_dir_len;
+      /* get pw_pshell */
+      resultbuf->pw_shell = p;
+      p += pw_resp->pw_shell_len;
+
+      ssize_t total = p - buffer;
+      if (__builtin_expect (pw_name + total > recend, 0))
+	goto out_close;
       if (__builtin_expect (buflen < total, 0))
 	{
 	  __set_errno (ERANGE);
 	  retval = ERANGE;
-	  goto out;
+	  goto out_close;
 	}
 
-      /* Set the information we already have.  */
-      resultbuf->pw_uid = pw_resp.pw_uid;
-      resultbuf->pw_gid = pw_resp.pw_gid;
-
-      /* get pw_name */
-      resultbuf->pw_name = p;
-      p += pw_resp.pw_name_len;
-      /* get pw_passwd */
-      resultbuf->pw_passwd = p;
-      p += pw_resp.pw_passwd_len;
-      /* get pw_gecos */
-      resultbuf->pw_gecos = p;
-      p += pw_resp.pw_gecos_len;
-      /* get pw_dir */
-      resultbuf->pw_dir = p;
-      p += pw_resp.pw_dir_len;
-      /* get pw_pshell */
-      resultbuf->pw_shell = p;
-
-      ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
-
-      if (nbytes == (ssize_t) total)
+      retval = 0;
+      if (pw_name == NULL)
 	{
-	  retval = 0;
+	  ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
+
+	  if (__builtin_expect (nbytes != total, 0))
+	    {
+	      /* The `errno' to some value != ERANGE.  */
+	      __set_errno (ENOENT);
+	      retval = ENOENT;
+	    }
+	  else
+	    *result = resultbuf;
+	}
+      else
+	{
+	  /* Copy the various strings.  */
+	  memcpy (resultbuf->pw_name, pw_name, total);
+
 	  *result = resultbuf;
 	}
     }
@@ -139,8 +195,15 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       retval = 0;
     }
 
+ out_close:
+  if (sock != -1)
+    close_not_cancel_no_status (sock);
  out:
-  close_not_cancel_no_status (sock);
+  if (__nscd_drop_map_ref (mapped, gc_cycle) != 0)
+    /* When we come here this means there has been a GC cycle while we
+       were looking for the data.  This means the data might have been
+       inconsistent.  Retry.  */
+    goto retry;
 
   return retval;
 }
