@@ -20,6 +20,9 @@ Boston, MA 02111-1307, USA.  */
 #include <errno.h>
 #include <wchar.h>
 
+#ifndef EILSEQ
+#define EILSEQ EINVAL
+#endif
 
 size_t
 wcrtomb (s, wc, ps)
