@@ -70,8 +70,8 @@ do_close (int s)
 }
 
 int
-rtime (struct sockaddr_in *addrp, struct timeval *timep,
-       struct timeval *timeout)
+rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
+       struct rpc_timeval *timeout)
 {
   int s;
   struct pollfd fd;

@@ -18,24 +18,62 @@
 #include <features.h>
 #include <sys/types.h>
 
-#include <limits.h>
+#ifndef _PTHREAD_DESCR_DEFINED
+/* Thread descriptors.  Needed for `sem_t' definition.  */
+typedef struct _pthread_descr_struct *_pthread_descr;
+# define _PTHREAD_DESCR_DEFINED
+#endif
 
-#define SEM_VALUE_MAX INT_MAX
-
-typedef struct {
-  struct { long status; int spinlock; } sem_lock;
-  int sem_value;
-  _pthread_descr sem_waiting;
+/* System specific semaphore definition.  */
+typedef struct
+{
+  struct
+  {
+    long int status;
+    int spinlock;
+  } __sem_lock;
+  int __sem_value;
+  _pthread_descr __sem_waiting;
 } sem_t;
+
+
+
+/* Value returned if `sem_open' failed.  */
+#define SEM_FAILED	((sem_t *) NULL)
+
+/* Maximum value the semaphore can have.  */
+#define SEM_VALUE_MAX 	((int) ((~0u) >> 1))
+
 
 __BEGIN_DECLS
 
-extern int sem_init __P((sem_t *__sem, int __pshared, unsigned int __value));
-extern int sem_destroy __P((sem_t *__sem));
-extern int sem_wait __P((sem_t *__sem));
-extern int sem_trywait __P((sem_t *__sem));
-extern int sem_post __P((sem_t *__sem));
-extern int sem_getvalue __P((sem_t *__sem, int *__sval));
+/* Initialize semaphore object SEM to VALUE.  If PSHARED then share it
+   with other processes.  */
+extern int sem_init __P ((sem_t *__sem, int __pshared, unsigned int __value));
+
+/* Free resources associated with semaphore object SEM.  */
+extern int sem_destroy __P ((sem_t *__sem));
+
+/* Open a named semaphore NAME with open flaot OFLAG.  */
+extern sem_t *sem_open __P ((__const char *__name, int __oflag, ...));
+
+/* Close descriptor for named semaphore SEM.  */
+extern int sem_close __P ((sem_t *__sem));
+
+/* Remove named semaphore NAME.  */
+extern int sem_unlink __P ((__const char *__name));
+
+/* Wait for SEM being posted.  */
+extern int sem_wait __P ((sem_t *__sem));
+
+/* Test whether SEM is posted.  */
+extern int sem_trywait __P ((sem_t *__sem));
+
+/* Post SEM.  */
+extern int sem_post __P ((sem_t *__sem));
+
+/* Get current value of SEM and store it in *SVAL.  */
+extern int sem_getvalue __P ((sem_t *__sem, int *__sval));
 
 __END_DECLS
 

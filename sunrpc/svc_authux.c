@@ -1,4 +1,3 @@
-/* @(#)svc_auth_unix.c	2.3 88/08/01 4.0 RPCSRC; from 1.28 88/02/08 SMI */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,9 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)svc_auth_unix.c 1.28 88/02/08 Copyr 1984 Sun Micro";
-#endif
 
 /*
  * svc_auth_unix.c
@@ -56,7 +52,7 @@ _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg)
   enum auth_stat stat;
   XDR xdrs;
   struct authunix_parms *aup;
-  long *buf;
+  int32_t *buf;
   struct area
     {
       struct authunix_parms area_aup;
@@ -78,7 +74,7 @@ _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg)
   if (buf != NULL)
     {
       aup->aup_time = IXDR_GET_LONG (buf);
-      str_len = IXDR_GET_U_LONG (buf);
+      str_len = IXDR_GET_U_INT32 (buf);
       if (str_len > MAX_MACHINE_NAME)
 	{
 	  stat = AUTH_BADCRED;
@@ -87,10 +83,10 @@ _svcauth_unix (struct svc_req *rqst, struct rpc_msg *msg)
       bcopy ((caddr_t) buf, aup->aup_machname, (u_int) str_len);
       aup->aup_machname[str_len] = 0;
       str_len = RNDUP (str_len);
-      buf = (u_long *) ((char *) buf + str_len);
+      buf = (int32_t *) ((char *) buf + str_len);
       aup->aup_uid = IXDR_GET_LONG (buf);
       aup->aup_gid = IXDR_GET_LONG (buf);
-      gid_len = IXDR_GET_U_LONG (buf);
+      gid_len = IXDR_GET_U_INT32 (buf);
       if (gid_len > NGRPS)
 	{
 	  stat = AUTH_BADCRED;

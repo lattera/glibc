@@ -1,4 +1,3 @@
-/* @(#)xdr_mem.c	2.1 88/07/29 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,9 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)xdr_mem.c 1.19 87/08/11 Copyr 1984 Sun Micro";
-#endif
 
 /*
  * xdr_mem.h, XDR implementation using memory buffers.
@@ -42,7 +38,6 @@ static char sccsid[] = "@(#)xdr_mem.c 1.19 87/08/11 Copyr 1984 Sun Micro";
  *
  */
 
-
 #include <string.h>
 #include <rpc/rpc.h>
 
@@ -52,7 +47,7 @@ static bool_t xdrmem_getbytes (XDR *, caddr_t, u_int);
 static bool_t xdrmem_putbytes (XDR *, const char *, u_int);
 static u_int xdrmem_getpos (const XDR *);
 static bool_t xdrmem_setpos (XDR *, u_int);
-static long *xdrmem_inline (XDR *, int);
+static int32_t *xdrmem_inline (XDR *, int);
 static void xdrmem_destroy (XDR *);
 static bool_t xdrmem_getint32 (XDR *, int32_t *);
 static bool_t xdrmem_putint32 (XDR *, const int32_t *);
@@ -76,13 +71,8 @@ static const struct xdr_ops xdrmem_ops =
  * memory buffer.
  */
 void
-xdrmem_create (xdrs, addr, size, op)
-     XDR *xdrs;
-     const caddr_t addr;
-     u_int size;
-     enum xdr_op op;
+xdrmem_create (XDR *xdrs, const caddr_t addr, u_int size, enum xdr_op op)
 {
-
   xdrs->x_op = op;
   /* We have to add the const since the `struct xdr_ops' in `struct XDR'
      is not `const'.  */
@@ -107,11 +97,8 @@ xdrmem_destroy (XDR *xdrs)
  * point at the next element.  Neither object pointed to is const
  */
 static bool_t
-xdrmem_getlong (xdrs, lp)
-     XDR *xdrs;
-     long *lp;
+xdrmem_getlong (XDR *xdrs, long *lp)
 {
-
   if ((xdrs->x_handy -= 4) < 0)
     return FALSE;
   *lp = (int32_t) ntohl ((*((int32_t *) (xdrs->x_private))));
@@ -125,11 +112,8 @@ xdrmem_getlong (xdrs, lp)
  * long pointed at is const
  */
 static bool_t
-xdrmem_putlong (xdrs, lp)
-     XDR *xdrs;
-     const long *lp;
+xdrmem_putlong (XDR *xdrs, const long *lp)
 {
-
   if ((xdrs->x_handy -= 4) < 0)
     return FALSE;
   *(int32_t *) xdrs->x_private = htonl (*lp);
@@ -144,12 +128,8 @@ xdrmem_putlong (xdrs, lp)
  * a good idea.  None of the things pointed to are const.
  */
 static bool_t
-xdrmem_getbytes (xdrs, addr, len)
-     XDR *xdrs;
-     caddr_t addr;
-     u_int len;
+xdrmem_getbytes (XDR *xdrs, caddr_t addr, u_int len)
 {
-
   if ((xdrs->x_handy -= len) < 0)
     return FALSE;
   bcopy (xdrs->x_private, addr, len);
@@ -162,12 +142,8 @@ xdrmem_getbytes (xdrs, addr, len)
  * unaligned data.  The source address is const.
  */
 static bool_t
-xdrmem_putbytes (xdrs, addr, len)
-     XDR *xdrs;
-     const char *addr;
-     u_int len;
+xdrmem_putbytes (XDR *xdrs, const char *addr, u_int len)
 {
-
   if ((xdrs->x_handy -= len) < 0)
     return FALSE;
   bcopy (addr, xdrs->x_private, len);
@@ -180,10 +156,8 @@ xdrmem_putbytes (xdrs, addr, len)
  * of xdrs.  **FIXME** does this not assume u_int == u_long?
  */
 static u_int
-xdrmem_getpos (xdrs)
-     const XDR *xdrs;
+xdrmem_getpos (const XDR *xdrs)
 {
-
   return (u_long) xdrs->x_private - (u_long) xdrs->x_base;
 }
 
@@ -208,17 +182,15 @@ xdrmem_setpos (xdrs, pos)
 /*
  * xdrs modified
  */
-static long *
-xdrmem_inline (xdrs, len)
-     XDR *xdrs;
-     int len;
+static int32_t *
+xdrmem_inline (XDR *xdrs, int len)
 {
-  long *buf = 0;
+  int32_t *buf = 0;
 
   if (xdrs->x_handy >= len)
     {
       xdrs->x_handy -= len;
-      buf = (long *) xdrs->x_private;
+      buf = (int32_t *) xdrs->x_private;
       xdrs->x_private += len;
     }
   return buf;
@@ -232,7 +204,6 @@ xdrmem_inline (xdrs, len)
 static bool_t
 xdrmem_getint32 (XDR *xdrs, int32_t *ip)
 {
-
   if ((xdrs->x_handy -= 4) < 0)
     return FALSE;
   *ip = ntohl ((*((int32_t *) (xdrs->x_private))));
@@ -248,7 +219,6 @@ xdrmem_getint32 (XDR *xdrs, int32_t *ip)
 static bool_t
 xdrmem_putint32 (XDR *xdrs, const int32_t *ip)
 {
-
   if ((xdrs->x_handy -= 4) < 0)
     return FALSE;
   *(int32_t *) xdrs->x_private = htonl (*ip);

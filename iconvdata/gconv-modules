@@ -1139,3 +1139,7 @@ alias	TIS620.2533-0//		TIS-620//
 alias	ISO-IR-166//		TIS-620//
 module	TIS-620//		INTERNAL		TIS-620		1
 module	INTERNAL		TIS-620//		TIS-620		1
+
+#	from			to			module		cost
+module	KOI8-U//		INTERNAL		KOI8-U		1
+module	INTERNAL		KOI8-U//		KOI8-U		1

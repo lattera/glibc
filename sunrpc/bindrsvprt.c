@@ -26,17 +26,14 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC 1.8 88/02/08 SMI";
-#endif
 /*
  * Copyright (c) 1987 by Sun Microsystems, Inc.
  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/errno.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
@@ -49,9 +46,6 @@ bindresvport (int sd, struct sockaddr_in *sin)
   int res;
   static short port;
   struct sockaddr_in myaddr;
-#ifndef errno
-  extern int errno;
-#endif
   int i;
 
 #define STARTPORT 600
@@ -69,13 +63,15 @@ bindresvport (int sd, struct sockaddr_in *sin)
       __set_errno (EPFNOSUPPORT);
       return -1;
     }
+
   if (port == 0)
     {
       port = (__getpid () % NPORTS) + STARTPORT;
     }
   res = -1;
   __set_errno (EADDRINUSE);
-  for (i = 0; i < NPORTS && res < 0 && errno == EADDRINUSE; i++)
+
+  for (i = 0; i < NPORTS && res < 0 && errno == EADDRINUSE; ++i)
     {
       sin->sin_port = htons (port++);
       if (port > ENDPORT)
@@ -84,5 +80,6 @@ bindresvport (int sd, struct sockaddr_in *sin)
 	}
       res = bind (sd, sin, sizeof (struct sockaddr_in));
     }
+
   return res;
 }

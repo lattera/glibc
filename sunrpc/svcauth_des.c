@@ -1,11 +1,3 @@
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)svcauth_des.c	2.3 89/07/11 4.0 RPCSRC; from 1.15 88/02/08 SMI";
-#endif
-
-/*
- * Copyright (c) 1988 by Sun Microsystems, Inc.
- */
-
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -34,7 +26,9 @@ static char sccsid[] = "@(#)svcauth_des.c	2.3 89/07/11 4.0 RPCSRC; from 1.15 88/
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-
+/*
+ * Copyright (c) 1988 by Sun Microsystems, Inc.
+ */
 /*
  * svcauth_des.c, server-side des authentication
  *
@@ -62,7 +56,7 @@ static char sccsid[] = "@(#)svcauth_des.c	2.3 89/07/11 4.0 RPCSRC; from 1.15 88/
 
 #define debug(msg)		/*printf("svcauth_des: %s\n", msg) */
 
-#define USEC_PER_SEC ((u_long) 1000000L)
+#define USEC_PER_SEC ((uint32_t) 1000000L)
 #define BEFORE(t1, t2) timercmp(t1, t2, <)
 
 /*
@@ -74,16 +68,16 @@ struct cache_entry
     des_block key;		/* conversation key */
     char *rname;		/* client's name */
     u_int window;		/* credential lifetime window */
-    struct timeval laststamp;	/* detect replays of creds */
+    struct rpc_timeval laststamp;	/* detect replays of creds */
     char *localcred;		/* generic local credential */
   };
 static struct cache_entry *authdes_cache /* [AUTHDES_CACHESZ] */ ;
-static short *authdes_lru /* [AUTHDES_CACHESZ] */ ;
+static int *authdes_lru /* [AUTHDES_CACHESZ] */ ;
 
 static void cache_init (void) internal_function; /* initialize the cache */
-static short cache_spot (des_block *, char *, struct timeval *)
+static short cache_spot (des_block *, char *, struct rpc_timeval *)
      internal_function;		/* find an entry in the cache */
-static void cache_ref (short sid) internal_function;
+static void cache_ref (uint32_t sid) internal_function;
 				/* note that sid was ref'd */
 
 static void invalidate (char *cred) internal_function;
@@ -106,18 +100,18 @@ svcauthdes_stats;
 enum auth_stat
 _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 {
-  register long *ixdr;
+  register uint32_t *ixdr;
   des_block cryptbuf[2];
   register struct authdes_cred *cred;
   struct authdes_verf verf;
   int status;
   register struct cache_entry *entry;
-  short sid = 0;
+  uint32_t sid = 0;
   des_block *sessionkey;
   des_block ivec;
   u_int window;
-  struct timeval timestamp;
-  u_long namelen;
+  struct rpc_timeval timestamp;
+  uint32_t namelen;
   struct area
     {
       struct authdes_cred area_cred;
@@ -127,6 +121,8 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 
   if (authdes_cache == NULL)
     cache_init ();
+  if (authdes_cache == NULL) /* No free memory */
+    return AUTH_FAILED;
 
   area = (struct area *) rqst->rq_clntcred;
   cred = (struct authdes_cred *) &area->area_cred;
@@ -134,27 +130,30 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * Get the credential
    */
-  ixdr = (long *) msg->rm_call.cb_cred.oa_base;
+  if (msg->rm_call.cb_cred.oa_length <= 0 ||
+      msg->rm_call.cb_cred.oa_length > MAX_AUTH_BYTES)
+    return AUTH_BADCRED;
+
+  ixdr = (uint32_t *) msg->rm_call.cb_cred.oa_base;
   cred->adc_namekind = IXDR_GET_ENUM (ixdr, enum authdes_namekind);
   switch (cred->adc_namekind)
     {
     case ADN_FULLNAME:
-      namelen = IXDR_GET_U_LONG (ixdr);
+      namelen = IXDR_GET_U_INT32 (ixdr);
       if (namelen > MAXNETNAMELEN)
 	{
 	  return AUTH_BADCRED;
 	}
       cred->adc_fullname.name = area->area_netname;
-      bcopy ((char *) ixdr, cred->adc_fullname.name,
-	     (u_int) namelen);
+      bcopy ((char *) ixdr, cred->adc_fullname.name, namelen);
       cred->adc_fullname.name[namelen] = 0;
       ixdr += (RNDUP (namelen) / BYTES_PER_XDR_UNIT);
-      cred->adc_fullname.key.key.high = (u_long) * ixdr++;
-      cred->adc_fullname.key.key.low = (u_long) * ixdr++;
-      cred->adc_fullname.window = (u_long) * ixdr++;
+      cred->adc_fullname.key.key.high = *ixdr++;
+      cred->adc_fullname.key.key.low = *ixdr++;
+      cred->adc_fullname.window = *ixdr++;
       break;
     case ADN_NICKNAME:
-      cred->adc_nickname = (u_long) * ixdr++;
+      cred->adc_nickname = *ixdr++;
       break;
     default:
       return AUTH_BADCRED;
@@ -163,11 +162,14 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * Get the verifier
    */
-  ixdr = (long *) msg->rm_call.cb_verf.oa_base;
-  verf.adv_xtimestamp.key.high = (u_long) * ixdr++;
-  verf.adv_xtimestamp.key.low = (u_long) * ixdr++;
-  verf.adv_int_u = (u_long) * ixdr++;
+  if (msg->rm_call.cb_verf.oa_length <= 0 ||
+      msg->rm_call.cb_verf.oa_length > MAX_AUTH_BYTES)
+    return AUTH_BADCRED;
 
+  ixdr = (uint32_t *) msg->rm_call.cb_verf.oa_base;
+  verf.adv_xtimestamp.key.high = *ixdr++;
+  verf.adv_xtimestamp.key.low = *ixdr++;
+  verf.adv_int_u = *ixdr++;
 
   /*
    * Get the conversation key
@@ -194,12 +196,18 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
     }
   else
     {				/* ADN_NICKNAME */
-      sid = (short) cred->adc_nickname;
-      if (sid >= AUTHDES_CACHESZ)
+      if (cred->adc_nickname >= AUTHDES_CACHESZ)
 	{
 	  debug ("bad nickname");
 	  return AUTH_BADCRED;	/* garbled credential */
 	}
+      else
+	sid = cred->adc_nickname;
+
+      /* XXX This could be wrong, but else we have a
+	 security problem */
+      if (authdes_cache[sid].rname == NULL)
+	return AUTH_BADCRED;
       sessionkey = &authdes_cache[sid].key;
     }
 
@@ -218,10 +226,9 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 			  (char *) &ivec);
     }
   else
-    {
-      status = ecb_crypt ((char *) sessionkey, (char *) cryptbuf,
-			  sizeof (des_block), DES_DECRYPT | DES_HW);
-    }
+    status = ecb_crypt ((char *) sessionkey, (char *) cryptbuf,
+			sizeof (des_block), DES_DECRYPT | DES_HW);
+
   if (DES_FAILED (status))
     {
       debug ("decryption failure");
@@ -231,9 +238,9 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * XDR the decrypted timestamp
    */
-  ixdr = (long *) cryptbuf;
-  timestamp.tv_sec = IXDR_GET_LONG (ixdr);
-  timestamp.tv_usec = IXDR_GET_LONG (ixdr);
+  ixdr = (uint32_t *) cryptbuf;
+  timestamp.tv_sec = IXDR_GET_INT32 (ixdr);
+  timestamp.tv_usec = IXDR_GET_INT32 (ixdr);
 
   /*
    * Check for valid credentials and verifiers.
@@ -248,20 +255,23 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 
     if (cred->adc_namekind == ADN_FULLNAME)
       {
-	window = IXDR_GET_U_LONG (ixdr);
-	winverf = IXDR_GET_U_LONG (ixdr);
+	short tmp_spot;
+
+	window = IXDR_GET_U_INT32 (ixdr);
+	winverf = IXDR_GET_U_INT32 (ixdr);
 	if (winverf != window - 1)
 	  {
 	    debug ("window verifier mismatch");
 	    return AUTH_BADCRED;	/* garbled credential */
 	  }
-	sid = cache_spot (sessionkey, cred->adc_fullname.name,
-			  &timestamp);
-	if (sid < 0)
+	tmp_spot = cache_spot (sessionkey, cred->adc_fullname.name,
+			       &timestamp);
+	if (tmp_spot < 0 || tmp_spot > AUTHDES_CACHESZ)
 	  {
 	    debug ("replayed credential");
 	    return AUTH_REJECTEDCRED;		/* replay */
 	  }
+	sid = tmp_spot;
 	nick = 0;
       }
     else
@@ -270,17 +280,16 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 	nick = 1;
       }
 
-    if ((u_long) timestamp.tv_usec >= USEC_PER_SEC)
+    if (timestamp.tv_usec >= USEC_PER_SEC)
       {
 	debug ("invalid usecs");
 	/* cached out (bad key), or garbled verifier */
 	return nick ? AUTH_REJECTEDVERF : AUTH_BADVERF;
       }
-    if (nick && BEFORE (&timestamp,
-			&authdes_cache[sid].laststamp))
+    if (nick && BEFORE (&timestamp, &authdes_cache[sid].laststamp))
       {
 	debug ("timestamp before last seen");
-	return (AUTH_REJECTEDVERF);	/* replay */
+	return AUTH_REJECTEDVERF;	/* replay */
       }
     __gettimeofday (&current, (struct timezone *) NULL);
     current.tv_sec -= window;	/* allow for expiration */
@@ -295,14 +304,14 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * Set up the reply verifier
    */
-  verf.adv_nickname = (u_long) sid;
+  verf.adv_nickname = sid;
 
   /*
    * xdr the timestamp before encrypting
    */
-  ixdr = (long *) cryptbuf;
-  IXDR_PUT_LONG (ixdr, timestamp.tv_sec - 1);
-  IXDR_PUT_LONG (ixdr, timestamp.tv_usec);
+  ixdr = (int32_t *) cryptbuf;
+  IXDR_PUT_INT32 (ixdr, timestamp.tv_sec - 1);
+  IXDR_PUT_INT32 (ixdr, timestamp.tv_usec);
 
   /*
    * encrypt the timestamp
@@ -319,10 +328,10 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
   /*
    * Serialize the reply verifier, and update rqst
    */
-  ixdr = (long *) msg->rm_call.cb_verf.oa_base;
-  *ixdr++ = (long) verf.adv_xtimestamp.key.high;
-  *ixdr++ = (long) verf.adv_xtimestamp.key.low;
-  *ixdr++ = (long) verf.adv_int_u;
+  ixdr = (uint32_t *) msg->rm_call.cb_verf.oa_base;
+  *ixdr++ = verf.adv_xtimestamp.key.high;
+  *ixdr++ = verf.adv_xtimestamp.key.low;
+  *ixdr++ = verf.adv_int_u;
 
   rqst->rq_xprt->xp_verf.oa_flavor = AUTH_DES;
   rqst->rq_xprt->xp_verf.oa_base = msg->rm_call.cb_verf.oa_base;
@@ -341,20 +350,17 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
       size_t full_len;
 
       cred->adc_fullname.window = window;
-      cred->adc_nickname = (u_long) sid;	/* save nickname */
+      cred->adc_nickname = sid;	/* save nickname */
       if (entry->rname != NULL)
-	{
-	  mem_free (entry->rname, strlen (entry->rname) + 1);
-	}
+	mem_free (entry->rname, strlen (entry->rname) + 1);
       full_len = strlen (cred->adc_fullname.name) + 1;
       entry->rname = mem_alloc ((u_int) full_len);
       if (entry->rname != NULL)
-	{
-	  memcpy (entry->rname, cred->adc_fullname.name, full_len);
-	}
+	memcpy (entry->rname, cred->adc_fullname.name, full_len);
       else
 	{
 	  debug ("out of memory");
+	  return AUTH_FAILED; /* out of memory is bad */
 	}
       entry->key = *sessionkey;
       entry->window = window;
@@ -385,17 +391,17 @@ cache_init (void)
 
   authdes_cache = (struct cache_entry *)
     mem_alloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ);
+  if (authdes_cache == NULL)
+    return;
   __bzero ((char *) authdes_cache,
 	   sizeof (struct cache_entry) * AUTHDES_CACHESZ);
 
-  authdes_lru = (short *) mem_alloc (sizeof (short) * AUTHDES_CACHESZ);
+  authdes_lru = (int *) mem_alloc (sizeof (int) * AUTHDES_CACHESZ);
   /*
    * Initialize the lru list
    */
-  for (i = 0; i < AUTHDES_CACHESZ; i++)
-    {
-      authdes_lru[i] = i;
-    }
+  for (i = 0; i < AUTHDES_CACHESZ; ++i)
+    authdes_lru[i] = i;
 }
 
 
@@ -405,7 +411,7 @@ cache_init (void)
 static short
 cache_victim (void)
 {
-  return (authdes_lru[AUTHDES_CACHESZ - 1]);
+  return authdes_lru[AUTHDES_CACHESZ - 1];
 }
 
 /*
@@ -413,22 +419,21 @@ cache_victim (void)
  */
 static void
 internal_function
-cache_ref (register short sid)
+cache_ref (register uint32_t sid)
 {
   register int i;
-  register short curr;
-  register short prev;
+  register int curr;
+  register int prev;
 
   prev = authdes_lru[0];
   authdes_lru[0] = sid;
-  for (i = 1; prev != sid; i++)
+  for (i = 1; prev != sid; ++i)
     {
       curr = authdes_lru[i];
       authdes_lru[i] = prev;
       prev = curr;
     }
 }
-
 
 /*
  * Find a spot in the cache for a credential containing
@@ -437,14 +442,15 @@ cache_ref (register short sid)
  */
 static short
 internal_function
-cache_spot (register des_block * key, char *name, struct timeval *timestamp)
+cache_spot (register des_block *key, char *name,
+	    struct rpc_timeval *timestamp)
 {
   register struct cache_entry *cp;
   register int i;
-  register u_long hi;
+  register uint32_t hi;
 
   hi = key->key.high;
-  for (cp = authdes_cache, i = 0; i < AUTHDES_CACHESZ; i++, cp++)
+  for (cp = authdes_cache, i = 0; i < AUTHDES_CACHESZ; ++i, ++cp)
     {
       if (cp->key.key.high == hi &&
 	  cp->key.key.low == key->key.low &&
@@ -453,17 +459,16 @@ cache_spot (register des_block * key, char *name, struct timeval *timestamp)
 	{
 	  if (BEFORE (timestamp, &cp->laststamp))
 	    {
-	      svcauthdes_stats.ncachereplays++;
+	      ++svcauthdes_stats.ncachereplays;
 	      return -1;	/* replay */
 	    }
-	  svcauthdes_stats.ncachehits++;
+	  ++svcauthdes_stats.ncachehits;
 	  return i;		/* refresh */
 	}
     }
-  svcauthdes_stats.ncachemisses++;
+  ++svcauthdes_stats.ncachemisses;
   return cache_victim ();	/* new credential */
 }
-
 
 /*
  * Local credential handling stuff.
@@ -527,10 +532,8 @@ authdes_getucred (const struct authdes_cred *adc, uid_t * uid, gid_t * gid,
       *uid = cred->uid = i_uid;
       *gid = cred->gid = i_gid;
       *grouplen = cred->grouplen = i_grouplen;
-      for (i = i_grouplen - 1; i >= 0; i--)
-	{
-	  cred->groups[i] = groups[i];	/* int to short */
-	}
+      for (i = i_grouplen - 1; i >= 0; --i)
+	cred->groups[i] = groups[i];	/* int to short */
       return 1;
     }
   else if (cred->grouplen == UNKNOWN)
@@ -547,10 +550,8 @@ authdes_getucred (const struct authdes_cred *adc, uid_t * uid, gid_t * gid,
   *uid = cred->uid;
   *gid = cred->gid;
   *grouplen = cred->grouplen;
-  for (i = cred->grouplen - 1; i >= 0; i--)
-    {
-      groups[i] = cred->groups[i];	/* short to int */
-    }
+  for (i = cred->grouplen - 1; i >= 0; --i)
+    groups[i] = cred->groups[i];	/* short to int */
   return 1;
 }
 
@@ -559,8 +560,6 @@ internal_function
 invalidate (char *cred)
 {
   if (cred == NULL)
-    {
-      return;
-    }
+    return;
   ((struct bsdcred *) cred)->grouplen = INVALID;
 }

@@ -1,4 +1,3 @@
-/* @(#)auth_unix.c	2.2 88/08/01 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,20 +26,16 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)auth_unix.c 1.19 87/08/11 Copyr 1984 Sun Micro";
-#endif
-
+/*
+ * Copyright (C) 1984, Sun Microsystems, Inc.
+ */
 /*
  * auth_unix.c, Implements UNIX style authentication parameters.
- *
- * Copyright (C) 1984, Sun Microsystems, Inc.
  *
  * The system is very weak.  The client uses no encryption for it's
  * credentials and only sends null verifiers.  The server sends backs
  * null verifiers or optionally a verifier that suggests a new short hand
  * for the credentials.
- *
  */
 
 #include <limits.h>
@@ -63,8 +58,7 @@ static bool_t authunix_validate (AUTH *, struct opaque_auth *);
 static bool_t authunix_refresh (AUTH *);
 static void authunix_destroy (AUTH *);
 
-static struct auth_ops auth_unix_ops =
-{
+static struct auth_ops auth_unix_ops = {
   authunix_nextverf,
   authunix_marshal,
   authunix_validate,
@@ -75,14 +69,13 @@ static struct auth_ops auth_unix_ops =
 /*
  * This struct is pointed to by the ah_private field of an auth_handle.
  */
-struct audata
-  {
-    struct opaque_auth au_origcred;	/* original credentials */
-    struct opaque_auth au_shcred;	/* short hand cred */
-    u_long au_shfaults;		/* short hand cache faults */
-    char au_marshed[MAX_AUTH_BYTES];
-    u_int au_mpos;		/* xdr pos at end of marshed */
-  };
+struct audata {
+  struct opaque_auth au_origcred;	/* original credentials */
+  struct opaque_auth au_shcred;	/* short hand cred */
+  u_long au_shfaults;		/* short hand cache faults */
+  char au_marshed[MAX_AUTH_BYTES];
+  u_int au_mpos;		/* xdr pos at end of marshed */
+};
 #define	AUTH_PRIVATE(auth)	((struct audata *)auth->ah_private)
 
 static bool_t marshal_new_auth (AUTH *) internal_function;
@@ -93,12 +86,8 @@ static bool_t marshal_new_auth (AUTH *) internal_function;
  * Returns an auth handle with the given stuff in it.
  */
 AUTH *
-authunix_create (machname, uid, gid, len, aup_gids)
-     char *machname;
-     uid_t uid;
-     gid_t gid;
-     int len;
-     gid_t *aup_gids;
+authunix_create (char *machname, uid_t uid, gid_t gid, int len,
+		 gid_t *aup_gids)
 {
   struct authunix_parms aup;
   char mymem[MAX_AUTH_BYTES];
@@ -146,12 +135,13 @@ authunix_create (machname, uid, gid, len, aup_gids)
     abort ();
   au->au_origcred.oa_length = len = XDR_GETPOS (&xdrs);
   au->au_origcred.oa_flavor = AUTH_UNIX;
-  if ((au->au_origcred.oa_base = mem_alloc ((u_int) len)) == NULL)
+  au->au_origcred.oa_base = mem_alloc ((u_int) len);
+  if (au->au_origcred.oa_base == NULL)
     {
-      (void) fprintf (stderr, _("authunix_create: out of memory\n"));
+      (void) fputs (_("authunix_create: out of memory\n"), stderr);
       return NULL;
     }
-  bcopy (mymem, au->au_origcred.oa_base, (u_int) len);
+  memcpy(au->au_origcred.oa_base, mymem, (u_int) len);
 
   /*
    * set auth handle to reflect new cred.
@@ -317,13 +307,10 @@ marshal_new_auth (AUTH *auth)
   xdrmem_create (xdrs, au->au_marshed, MAX_AUTH_BYTES, XDR_ENCODE);
   if ((!xdr_opaque_auth (xdrs, &(auth->ah_cred))) ||
       (!xdr_opaque_auth (xdrs, &(auth->ah_verf))))
-    {
-      perror (_("auth_none.c - Fatal marshalling problem"));
-    }
+    perror (_("auth_none.c - Fatal marshalling problem"));
   else
-    {
-      au->au_mpos = XDR_GETPOS (xdrs);
-    }
+    au->au_mpos = XDR_GETPOS (xdrs);
+
   XDR_DESTROY (xdrs);
 
   return TRUE;

@@ -1,4 +1,3 @@
-/* @(#)xdr_rec.c	2.2 88/08/01 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,9 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro";
-#endif
 
 /*
  * xdr_rec.c, Implements TCP/IP based XDR streams with a "record marking"
@@ -64,7 +60,7 @@ static bool_t xdrrec_getbytes (XDR *, caddr_t, u_int);
 static bool_t xdrrec_putbytes (XDR *, const char *, u_int);
 static u_int xdrrec_getpos (const XDR *);
 static bool_t xdrrec_setpos (XDR *, u_int);
-static long *xdrrec_inline (XDR *, int);
+static int32_t *xdrrec_inline (XDR *, int);
 static void xdrrec_destroy (XDR *);
 static bool_t xdrrec_getint32 (XDR *, int32_t *);
 static bool_t xdrrec_putint32 (XDR *, const int32_t *);
@@ -204,9 +200,7 @@ xdrrec_create (XDR *xdrs, u_int sendsize,
  */
 
 static bool_t
-xdrrec_getlong (xdrs, lp)
-     XDR *xdrs;
-     long *lp;
+xdrrec_getlong (XDR *xdrs, long *lp)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   int32_t *buflp = (int32_t *) rstrm->in_finger;
@@ -231,9 +225,7 @@ xdrrec_getlong (xdrs, lp)
 }
 
 static bool_t
-xdrrec_putlong (xdrs, lp)
-     XDR *xdrs;
-     const long *lp;
+xdrrec_putlong (XDR *xdrs, const long *lp)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   int32_t *dest_lp = (int32_t *) rstrm->out_finger;
@@ -283,10 +275,7 @@ xdrrec_getbytes (XDR *xdrs, caddr_t addr, u_int len)
 }
 
 static bool_t
-xdrrec_putbytes (xdrs, addr, len)
-     XDR *xdrs;
-     const char *addr;
-     u_int len;
+xdrrec_putbytes (XDR *xdrs, const char *addr, u_int len)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   u_int current;
@@ -336,9 +325,7 @@ xdrrec_getpos (const XDR *xdrs)
 }
 
 static bool_t
-xdrrec_setpos (xdrs, pos)
-     XDR *xdrs;
-     u_int pos;
+xdrrec_setpos (XDR *xdrs, u_int pos)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   u_int currpos = xdrrec_getpos (xdrs);
@@ -377,11 +364,11 @@ xdrrec_setpos (xdrs, pos)
   return FALSE;
 }
 
-static long *
+static int32_t *
 xdrrec_inline (XDR *xdrs, int len)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
-  long *buf = NULL;
+  int32_t *buf = NULL;
 
   switch (xdrs->x_op)
     {
@@ -389,7 +376,7 @@ xdrrec_inline (XDR *xdrs, int len)
     case XDR_ENCODE:
       if ((rstrm->out_finger + len) <= rstrm->out_boundry)
 	{
-	  buf = (long *) rstrm->out_finger;
+	  buf = (int32_t *) rstrm->out_finger;
 	  rstrm->out_finger += len;
 	}
       break;
@@ -398,7 +385,7 @@ xdrrec_inline (XDR *xdrs, int len)
       if ((len <= rstrm->fbtbc) &&
 	  ((rstrm->in_finger + len) <= rstrm->in_boundry))
 	{
-	  buf = (long *) rstrm->in_finger;
+	  buf = (int32_t *) rstrm->in_finger;
 	  rstrm->fbtbc -= len;
 	  rstrm->in_finger += len;
 	}
@@ -411,8 +398,7 @@ xdrrec_inline (XDR *xdrs, int len)
 }
 
 static void
-xdrrec_destroy (xdrs)
-     XDR *xdrs;
+xdrrec_destroy (XDR *xdrs)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
 

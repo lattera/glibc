@@ -1,4 +1,3 @@
-/* @(#)xdr_stdio.c	2.1 88/07/29 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,9 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)xdr_stdio.c 1.16 87/08/11 Copyr 1984 Sun Micro";
-#endif
 
 /*
  * xdr_stdio.c, XDR implementation on standard i/o file.
@@ -59,7 +55,7 @@ static bool_t xdrstdio_getbytes (XDR *, caddr_t, u_int);
 static bool_t xdrstdio_putbytes (XDR *, const char *, u_int);
 static u_int xdrstdio_getpos (const XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
-static long *xdrstdio_inline (XDR *, int);
+static int32_t *xdrstdio_inline (XDR *, int);
 static void xdrstdio_destroy (XDR *);
 static bool_t xdrstdio_getint32 (XDR *, int32_t *);
 static bool_t xdrstdio_putint32 (XDR *, const int32_t *);
@@ -87,12 +83,8 @@ static const struct xdr_ops xdrstdio_ops =
  * Operation flag is set to op.
  */
 void
-xdrstdio_create (xdrs, file, op)
-     XDR *xdrs;
-     FILE *file;
-     enum xdr_op op;
+xdrstdio_create (XDR *xdrs, FILE *file, enum xdr_op op)
 {
-
   xdrs->x_op = op;
   /* We have to add the const since the `struct xdr_ops' in `struct XDR'
      is not `const'.  */
@@ -107,17 +99,14 @@ xdrstdio_create (xdrs, file, op)
  * Cleans up the xdr stream handle xdrs previously set up by xdrstdio_create.
  */
 static void
-xdrstdio_destroy (xdrs)
-     XDR *xdrs;
+xdrstdio_destroy (XDR *xdrs)
 {
   (void) fflush ((FILE *) xdrs->x_private);
   /* xx should we close the file ?? */
 };
 
 static bool_t
-xdrstdio_getlong (xdrs, lp)
-     XDR *xdrs;
-     long *lp;
+xdrstdio_getlong (XDR *xdrs, long *lp)
 {
   int32_t mycopy;
 
@@ -130,7 +119,6 @@ xdrstdio_getlong (xdrs, lp)
 static bool_t
 xdrstdio_putlong (XDR *xdrs, const long *lp)
 {
-
   long mycopy = htonl (*lp);
   lp = &mycopy;
   if (fwrite ((caddr_t) lp, 4, 1, (FILE *) xdrs->x_private) != 1)
@@ -139,13 +127,10 @@ xdrstdio_putlong (XDR *xdrs, const long *lp)
 }
 
 static bool_t
-xdrstdio_getbytes (xdrs, addr, len)
-     XDR *xdrs;
-     const caddr_t addr;
-     u_int len;
+xdrstdio_getbytes (XDR *xdrs, const caddr_t addr, u_int len)
 {
-
-  if ((len != 0) && (fread (addr, (int) len, 1, (FILE *) xdrs->x_private) != 1))
+  if ((len != 0) && (fread (addr, (int) len, 1,
+			    (FILE *) xdrs->x_private) != 1))
     return FALSE;
   return TRUE;
 }
@@ -153,7 +138,8 @@ xdrstdio_getbytes (xdrs, addr, len)
 static bool_t
 xdrstdio_putbytes (XDR *xdrs, const char *addr, u_int len)
 {
-  if ((len != 0) && (fwrite (addr, (int) len, 1, (FILE *) xdrs->x_private) != 1))
+  if ((len != 0) && (fwrite (addr, (int) len, 1,
+			     (FILE *) xdrs->x_private) != 1))
     return FALSE;
   return TRUE;
 }
@@ -170,10 +156,9 @@ xdrstdio_setpos (XDR *xdrs, u_int pos)
   return fseek ((FILE *) xdrs->x_private, (long) pos, 0) < 0 ? FALSE : TRUE;
 }
 
-static long *
+static int32_t *
 xdrstdio_inline (XDR *xdrs, int len)
 {
-
   /*
    * Must do some work to implement this: must insure
    * enough data in the underlying stdio buffer,

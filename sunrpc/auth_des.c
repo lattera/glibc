@@ -1,6 +1,3 @@
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)auth_des.c	2.2 88/07/29 4.0 RPCSRC; from 1.9 88/02/08 SMI";
-#endif
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -55,7 +52,6 @@ static char sccsid[] = "@(#)auth_des.c	2.2 88/07/29 4.0 RPCSRC; from 1.9 88/02/0
 
 #define debug(msg)		/* printf("%s\n", msg) */
 
-extern int rtime (struct sockaddr_in *, struct timeval *, struct timeval *);
 extern bool_t xdr_authdes_cred (XDR *, struct authdes_cred *);
 extern bool_t xdr_authdes_verf (XDR *, struct authdes_verf *);
 
@@ -67,7 +63,7 @@ static bool_t authdes_marshal (AUTH *, XDR *);
 static bool_t authdes_validate (AUTH *, struct opaque_auth *);
 static bool_t authdes_refresh (AUTH *);
 static void authdes_destroy (AUTH *);
-static bool_t synchronize (struct sockaddr *, struct timeval *)
+static bool_t synchronize (struct sockaddr *, struct rpc_timeval *)
      internal_function;
 
 static struct auth_ops authdes_ops = {
@@ -90,11 +86,11 @@ struct ad_private {
   uint32_t ad_window;		/* client specified window */
   bool_t ad_dosync;		/* synchronize? */
   struct sockaddr ad_syncaddr;	/* remote host to synch with */
-  struct timeval ad_timediff;	/* server's time - client's time */
-  u_long ad_nickname;		/* server's nickname for client */
+  struct rpc_timeval ad_timediff;	/* server's time - client's time */
+  uint32_t ad_nickname;		/* server's nickname for client */
   struct authdes_cred ad_cred;	/* storage for credential */
   struct authdes_verf ad_verf;	/* storage for verifier */
-  struct timeval ad_timestamp;	/* timestamp sent */
+  struct rpc_timeval ad_timestamp;	/* timestamp sent */
   des_block ad_xkey;		/* encrypted conversation key */
   u_char ad_pkey[1024];	        /* Servers actual public key */
 };
@@ -115,7 +111,7 @@ authdes_create (const char *servername, u_int window,
   netobj pkey;
 
   if (!getpublickey (servername, pkey_data))
-    return (NULL);
+    return NULL;
 
   pkey.n_bytes = (char *) pkey_data;
   pkey.n_len = strlen ((char *) pkey_data) + 1;
@@ -135,6 +131,13 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
    */
   auth = ALLOC (AUTH);
   ad = ALLOC (struct ad_private);
+
+  if (auth == NULL || ad == NULL)
+    {
+      debug ("authdes_create: out of memory");
+      goto failed;
+    }
+
   memset (ad, 0, sizeof (struct ad_private));
   memcpy (ad->ad_pkey, pkey->n_bytes, pkey->n_len);
   if (!getnetname (namebuf))
@@ -145,8 +148,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
   ad->ad_servernamelen = strlen (servername);
   ad->ad_servername = mem_alloc (ad->ad_servernamelen + 1);
 
-  if (auth == NULL || ad == NULL || ad->ad_fullname == NULL ||
-      ad->ad_servername == NULL)
+  if (ad->ad_fullname == NULL || ad->ad_servername == NULL)
     {
       debug ("authdes_create: out of memory");
       goto failed;
@@ -155,8 +157,8 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
   /*
    * Set up private data
    */
-  bcopy (namebuf, ad->ad_fullname, ad->ad_fullnamelen + 1);
-  bcopy (servername, ad->ad_servername, ad->ad_servernamelen + 1);
+  memcpy (ad->ad_fullname, namebuf, ad->ad_fullnamelen + 1);
+  memcpy (ad->ad_servername, servername, ad->ad_servernamelen + 1);
   ad->ad_timediff.tv_sec = ad->ad_timediff.tv_usec = 0;
   if (syncaddr != NULL)
     {
@@ -172,7 +174,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
       if (key_gendes (&auth->ah_key) < 0)
 	{
 	  debug ("authdes_create: unable to gen conversation key");
-	  return (NULL);
+	  return NULL;
 	}
     }
   else
@@ -189,7 +191,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
   if (!authdes_refresh (auth))
     goto failed;
 
-  return (auth);
+  return auth;
 
 failed:
   if (auth != NULL)
@@ -202,7 +204,7 @@ failed:
 	FREE (ad->ad_servername, ad->ad_servernamelen + 1);
       FREE (ad, sizeof (struct ad_private));
     }
-  return (NULL);
+  return NULL;
 }
 
 /*
@@ -215,7 +217,7 @@ failed:
  */
 /*ARGSUSED */
 static void
-authdes_nextverf (AUTH * auth)
+authdes_nextverf (AUTH *auth)
 {
   /* what the heck am I supposed to do??? */
 }
@@ -226,7 +228,7 @@ authdes_nextverf (AUTH * auth)
  * 2. Marshal
  */
 static bool_t
-authdes_marshal (AUTH * auth, XDR * xdrs)
+authdes_marshal (AUTH *auth, XDR *xdrs)
 {
   struct ad_private *ad = AUTH_PRIVATE (auth);
   struct authdes_cred *cred = &ad->ad_cred;
@@ -235,15 +237,16 @@ authdes_marshal (AUTH * auth, XDR * xdrs)
   des_block ivec;
   int status;
   unsigned int len;
-  register long *ixdr;
+  register int32_t *ixdr;
+  struct timeval tval;
 
   /*
    * Figure out the "time", accounting for any time difference
    * with the server if necessary.
    */
-  __gettimeofday (&ad->ad_timestamp, (struct timezone *) NULL);
-  ad->ad_timestamp.tv_sec += ad->ad_timediff.tv_sec;
-  ad->ad_timestamp.tv_usec += ad->ad_timediff.tv_usec;
+  __gettimeofday (&tval, (struct timezone *) NULL);
+  ad->ad_timestamp.tv_sec = tval.tv_sec + ad->ad_timediff.tv_sec;
+  ad->ad_timestamp.tv_usec = tval.tv_usec + ad->ad_timediff.tv_usec;
   if (ad->ad_timestamp.tv_usec >= MILLION)
     {
       ad->ad_timestamp.tv_usec -= MILLION;
@@ -255,9 +258,9 @@ authdes_marshal (AUTH * auth, XDR * xdrs)
    * encrypt them.
    * XXX We have a real Year 2038 problem here.
    */
-  ixdr = (long *) cryptbuf;
-  IXDR_PUT_LONG (ixdr, ad->ad_timestamp.tv_sec);
-  IXDR_PUT_LONG (ixdr, ad->ad_timestamp.tv_usec);
+  ixdr = (int32_t *) cryptbuf;
+  IXDR_PUT_INT32 (ixdr, ad->ad_timestamp.tv_sec);
+  IXDR_PUT_INT32 (ixdr, ad->ad_timestamp.tv_usec);
   if (ad->ad_cred.adc_namekind == ADN_FULLNAME)
     {
       IXDR_PUT_U_INT32 (ixdr, ad->ad_window);
@@ -267,14 +270,13 @@ authdes_marshal (AUTH * auth, XDR * xdrs)
 	      2 * sizeof (des_block), DES_ENCRYPT | DES_HW, (char *) &ivec);
     }
   else
-    {
-      status = ecb_crypt ((char *) &auth->ah_key, (char *) cryptbuf,
-			  sizeof (des_block), DES_ENCRYPT | DES_HW);
-    }
+    status = ecb_crypt ((char *) &auth->ah_key, (char *) cryptbuf,
+			sizeof (des_block), DES_ENCRYPT | DES_HW);
+
   if (DES_FAILED (status))
     {
       debug ("authdes_marshal: DES encryption failure");
-      return (FALSE);
+      return FALSE;
     }
   ad->ad_verf.adv_xtimestamp = cryptbuf[0];
   if (ad->ad_cred.adc_namekind == ADN_FULLNAME)
@@ -293,13 +295,9 @@ authdes_marshal (AUTH * auth, XDR * xdrs)
    * authentication data.
    */
   if (ad->ad_cred.adc_namekind == ADN_FULLNAME)
-    {
-      len = ((1 + 1 + 2 + 1) * BYTES_PER_XDR_UNIT + ad->ad_fullnamelen);
-    }
+    len = ((1 + 1 + 2 + 1) * BYTES_PER_XDR_UNIT + ad->ad_fullnamelen);
   else
-    {
-      len = (1 + 1) * BYTES_PER_XDR_UNIT;
-    }
+    len = (1 + 1) * BYTES_PER_XDR_UNIT;
 
   if ((ixdr = xdr_inline (xdrs, 2 * BYTES_PER_XDR_UNIT)) != NULL)
     {
@@ -325,6 +323,7 @@ authdes_marshal (AUTH * auth, XDR * xdrs)
       ATTEMPT (xdr_putint32 (xdrs, &len));
     }
   ATTEMPT (xdr_authdes_verf (xdrs, verf));
+
   return TRUE;
 }
 
@@ -338,15 +337,15 @@ authdes_validate (AUTH *auth, struct opaque_auth *rverf)
   struct ad_private *ad = AUTH_PRIVATE (auth);
   struct authdes_verf verf;
   int status;
-  register u_long *ixdr;
+  register uint32_t *ixdr;
 
   if (rverf->oa_length != (2 + 1) * BYTES_PER_XDR_UNIT)
-    return (FALSE);
+    return FALSE;
 
-  ixdr = (u_long *) rverf->oa_base;
-  verf.adv_xtimestamp.key.high = (u_long) * ixdr++;
-  verf.adv_xtimestamp.key.low = (u_long) * ixdr++;
-  verf.adv_int_u = (u_long) * ixdr++;	/* nickname not XDR'd ! */
+  ixdr = (uint32_t *) rverf->oa_base;
+  verf.adv_xtimestamp.key.high = *ixdr++;
+  verf.adv_xtimestamp.key.low = *ixdr++;
+  verf.adv_int_u = *ixdr++;	/* nickname not XDR'd ! */
 
   /*
    * Decrypt the timestamp
@@ -363,15 +362,15 @@ authdes_validate (AUTH *auth, struct opaque_auth *rverf)
   /*
    * xdr the decrypted timestamp
    */
-  ixdr = (u_long *) verf.adv_xtimestamp.c;
-  verf.adv_timestamp.tv_sec = IXDR_GET_LONG (ixdr) + 1;
-  verf.adv_timestamp.tv_usec = IXDR_GET_LONG (ixdr);
+  ixdr = (uint32_t *) verf.adv_xtimestamp.c;
+  verf.adv_timestamp.tv_sec = IXDR_GET_U_INT32 (ixdr) + 1;
+  verf.adv_timestamp.tv_usec = IXDR_GET_U_INT32 (ixdr);
 
   /*
    * validate
    */
   if (memcmp ((char *) &ad->ad_timestamp, (char *) &verf.adv_timestamp,
-	      sizeof (struct timeval)) != 0)
+	      sizeof (struct rpc_timeval)) != 0)
     {
       debug ("authdes_validate: verifier mismatch\n");
       return FALSE;
@@ -395,8 +394,7 @@ authdes_refresh (AUTH *auth)
   struct ad_private *ad = AUTH_PRIVATE (auth);
   struct authdes_cred *cred = &ad->ad_cred;
 
-  if (ad->ad_dosync &&
-      !synchronize (&ad->ad_syncaddr, &ad->ad_timediff))
+  if (ad->ad_dosync && !synchronize (&ad->ad_syncaddr, &ad->ad_timediff))
     {
       /*
        * Hope the clocks are synced!
@@ -438,10 +436,10 @@ authdes_destroy (AUTH *auth)
  */
 static bool_t
 internal_function
-synchronize (struct sockaddr *syncaddr, struct timeval *timep)
+synchronize (struct sockaddr *syncaddr, struct rpc_timeval *timep)
 {
   struct timeval mytime;
-  struct timeval timeout;
+  struct rpc_timeval timeout;
 
   timeout.tv_sec = RTIME_TIMEOUT;
   timeout.tv_usec = 0;

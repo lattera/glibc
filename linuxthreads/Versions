@@ -101,4 +101,7 @@ libpthread {
     __libc_current_sigrtmin; __libc_current_sigrtmax;
     __libc_allocate_rtsig;
   }
+  GLIBC_2.1.1 {
+    sem_close; sem_open; sem_unlink;
+  }
 }

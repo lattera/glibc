@@ -24,7 +24,7 @@ subdir	:= linuxthreads
 linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 				    Banner)
 
-headers := pthread.h semaphore.h bits/semaphore.h
+headers := pthread.h semaphore.h
 distribute := internals.h queue.h restart.h spinlock.h
 
 routines := weaks no-tsd

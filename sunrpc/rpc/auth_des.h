@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,12 +48,19 @@ struct authdes_cred
     uint32_t adc_nickname;
   };
 
+/* A timeval replacement for !32bit platforms */
+struct rpc_timeval
+  {
+    uint32_t tv_sec;            /* Seconds.  */
+    uint32_t tv_usec;           /* Microseconds.  */
+  };
+
 /* A des authentication verifier */
 struct authdes_verf
   {
     union
       {
-	struct timeval adv_ctime;	/* clear time */
+	struct rpc_timeval adv_ctime;	/* clear time */
 	des_block adv_xtime;		/* crypt time */
       }
     adv_time_u;
@@ -96,8 +103,9 @@ extern int getpublickey __P ((__const char *__name, char *__key));
 extern int getsecretkey __P ((__const char *__name, char *__key,
 			      __const char *__passwd));
 
-extern int rtime __P ((struct sockaddr_in *__addrp,  struct timeval *__timep,
-		       struct timeval *__timeout));
+extern int rtime __P ((struct sockaddr_in *__addrp,
+		       struct rpc_timeval *__timep,
+		       struct rpc_timeval *__timeout));
 
 __END_DECLS
 

@@ -1,5 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Conversion from and to KOI8-U.
+   Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,11 +18,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SEMAPHORE_H
-# error "Never include <bits/semaphore.h> directly; use <semaphore.h> instead."
-#endif
+#include <stdint.h>
 
+/* Specify the conversion table.  */
+#define TABLES <koi8-u.h>
 
-typedef struct {
-  long int sem_status;
-} sem_t;
+#define CHARSET_NAME	"KOI8-U//"
+#define HAS_HOLES	0	/* All 256 character are defined.  */
+
+#include <8bit-gap.c>

@@ -1,5 +1,35 @@
 1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Versions.def: Add GLIBC_2.1.1 to libpthread.
+
+	* iconvdata/Makefile (modules): Add KOI8-U.
+	(distribute): Add koi8-u.c.
+	(gen-8bit-gap-modules): Add koi8-u.
+	* iconvdata/gconv-modules: Add KOI8-U entries.
+	* iconvdata/koi8-u.c: New file.
+
+1999-04-13  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/auth_des.c: 64bit fixes, security fixes.
+	* sunrpc/auth_none.c: Pretty print.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc/auth_des.h: Add rpc_timeval struct.
+	* sunrpc/rpc_cmsg.c: Don't use *long pointers.
+	* sunrpc/rtime.c: Use new rpc_timeval.
+	* sunrpc/svc_authux.c: Don't use *long pointers.
+	* sunrpc/svcauth_des.c: Likewise + security fixes.
+	* sunrpc/xdr_mem.c: Don't use *long pointers.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
+1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sunrpc/clnt_udp.c (clntudp_call): Move initialization of anyup
 	so that it is redone for each sending.
 

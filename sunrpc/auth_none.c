@@ -1,4 +1,3 @@
-/* @(#)auth_none.c	2.1 88/07/29 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,16 +26,13 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)auth_none.c 1.19 87/08/11 Copyr 1984 Sun Micro";
-#endif
-
+/*
+ * Copyright (C) 1984, Sun Microsystems, Inc.
+ */
 /*
  * auth_none.c
  * Creates a client authentication handle for passing "null"
  * credentials and verifiers to remote systems.
- *
- * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
 #include <rpc/types.h>
@@ -53,8 +49,7 @@ static bool_t authnone_marshal (AUTH *, XDR *);
 static bool_t authnone_validate (AUTH *, struct opaque_auth *);
 static bool_t authnone_refresh (AUTH *);
 
-static struct auth_ops ops =
-{
+static struct auth_ops ops = {
   authnone_verf,
   authnone_marshal,
   authnone_validate,
@@ -63,12 +58,11 @@ static struct auth_ops ops =
 };
 
 static struct authnone_private
-  {
-    AUTH no_client;
-    char marshalled_client[MAX_MARSHEL_SIZE];
-    u_int mcnt;
-  }
- *authnone_private;
+{
+  AUTH no_client;
+  char marshalled_client[MAX_MARSHEL_SIZE];
+  u_int mcnt;
+} *authnone_private;
 
 AUTH *
 authnone_create (void)
@@ -106,9 +100,8 @@ authnone_marshal (AUTH *client, XDR *xdrs)
   struct authnone_private *ap = authnone_private;
 
   if (ap == 0)
-    return (0);
-  return ((*xdrs->x_ops->x_putbytes) (xdrs,
-				      ap->marshalled_client, ap->mcnt));
+    return 0;
+  return (*xdrs->x_ops->x_putbytes) (xdrs, ap->marshalled_client, ap->mcnt);
 }
 
 static void

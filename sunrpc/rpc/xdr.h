@@ -1,4 +1,3 @@
-/* @(#)xdr.h	2.2 88/07/29 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,7 +26,6 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-/*      @(#)xdr.h 1.19 87/04/22 SMI      */
 
 /*
  * xdr.h, External Data Representation Serialization Routines.
@@ -130,7 +128,7 @@ struct XDR
 	/* returns bytes off from beginning */
 	bool_t (*x_setpostn) __PMT ((XDR *__xdrs, u_int pos));
 	/* lets you reposition the stream */
-	long *(*x_inline) __PMT ((XDR *__xdrs, int len));
+	int32_t *(*x_inline) __PMT ((XDR *__xdrs, int len));
 	/* buf quick ptr to buffered data */
 	void (*x_destroy) __PMT ((XDR *__xdrs));
 	/* free privates of this xdr_stream */
@@ -162,6 +160,7 @@ typedef bool_t (*xdrproc_t) __PMT ((XDR *, void *,...));
  * Operations defined on a XDR handle
  *
  * XDR          *xdrs;
+ * int32_t      *int32p;
  * long         *longp;
  * caddr_t       addr;
  * u_int         len;
