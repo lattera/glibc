@@ -1,5 +1,11 @@
 Wed Jun 10 10:32:11 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
+	* sysdeps/m68k/fpu/bits/mathinline.h: Define __ieee754_exp10 as
+ 	inline.
+	* sysdeps/m68k/fpu/e_exp10.c: New file.
+	* sysdeps/m68k/fpu/e_exp10f.c: New file.
+	* sysdeps/m68k/fpu/e_exp10l.c: New file.
+
 	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Set
 	_dl_profile_map only if the name matches.
 	(_dl_start_user): Remember stack address.
