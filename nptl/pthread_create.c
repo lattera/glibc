@@ -224,7 +224,11 @@ start_thread (void *arg)
   if (__builtin_expect (setjmp (pd->cancelbuf) == 0, 1))
     {
       /* Run the code the user provided.  */
+#ifdef CALL_THREAD_FCT
+      THREAD_SETMEM (pd, result, CALL_THREAD_FCT (pd));
+#else
       THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
+#endif
     }
 
   /* Clean up any state libc stored in thread-local variables.  */
