@@ -82,15 +82,13 @@ error:
 
 /* Load up the arguments to the function.  Put this block of code in
    its own function so that we can terminate the stack trace with our
-   debug info.
-
-   At this point we have s0=arg, s1=fn.  */
+   debug info.  */
 
 ENTRY(__thread_start)
 	/* cp is already loaded.  */
 	.cprestore	16
 	/* The stackframe has been created on entry of clone().  */
-	/* Resort the arg for user's function.  */
+	/* Restore the arg for user's function.  */
 	lw		t9,0(sp)	/* Function pointer.  */
 	lw		a0,4(sp)	/* Argument pointer.  */
 
