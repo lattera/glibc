@@ -370,6 +370,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 	}
 
       *offset = i - 1;
+      free (user);
     }
   return *word ? 0 : WRDE_NOSPACE;
 }
