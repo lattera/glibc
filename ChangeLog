@@ -1,3 +1,7 @@
+2002-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
 2002-10-11  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (re_compile_fastmap_iter): Remove the handling
