@@ -29,8 +29,8 @@ weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 
+#include <tls.h>
 #ifndef SHARED
-# include <tls.h>
 extern void __pthread_initialize_minimal (void)
 # if !(USE_TLS - 0)
      __attribute__ ((weak))
@@ -63,17 +63,15 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 # define argv ubp_av
 #endif
 
+  /* Result of the 'main' function.  */
+  int result;
+
 #ifndef SHARED
 # ifdef HAVE_AUX_VECTOR
   void *__unbounded *__unbounded auxvec;
 # endif
 
-  /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
-     If the address would be taken inside the expression the optimizer
-     would try to be too smart and throws it away.  Grrr.  */
-  int *dummy_addr = &_dl_starting_up;
-
-  __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
+  __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
 #endif
 
   INIT_ARGV_and_ENVIRON;
@@ -137,5 +135,23 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
     _dl_debug_printf ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 
-  exit ((*main) (argc, argv, __environ));
+#ifdef HAVE_CANCELBUF
+  if (setjmp (THREAD_SELF->cancelbuf) == 0)
+#endif
+    {
+      /* XXX This is where the try/finally handling must be used.  */
+
+      result = main (argc, argv, __environ);
+    }
+#ifdef HAVE_CANCELBUF
+  else
+    {
+      /* XXX We should free the thread-specific data.  */
+
+      /* Not much left to do but to exit the thread, not the process.  */
+      __exit_thread (0);
+    }
+#endif
+
+  exit (result);
 }

@@ -88,6 +88,8 @@ endif
 
 ifeq ($(subdir),posix)
 sysdep_headers += bits/pthreadtypes.h bits/initspin.h
+
+sysdep_routines += exit-thread
 endif
 
 ifeq ($(subdir),inet)

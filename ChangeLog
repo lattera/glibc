@@ -1,3 +1,16 @@
+2002-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/unistd.h: Declare __exit_thread.
+	* sysdeps/generic/libc-start.c: Remove dummy_addr.
+	Wrap call to main in setjmp if HAVE_CANCELBUF is defined.
+	* sysdeps/unix/sysv/linux/exit-thread.S: New file.
+	* sysdeps/unix/sysv/linux/_exit.c: New file.
+	* sysdeps/unix/sysv/linux/i386/_exit.S: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir==posix] (sysdep_routines):
+	Add exit-thread.
+
+	* configure.in: Add dl_iterate_phdr to test using -nostdlib.
+
 2002-09-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/dl-machine.h (elf_machine_rel)

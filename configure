@@ -3526,17 +3526,18 @@ memset () {}
 free () {}
 abort () {}
 __bzero () {}
+dl_iterate_phdr () {}
 EOF
 if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame_info
 			    -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3533: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3534: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_dwarf2_unwind_info=static
 else
   libc_cv_gcc_dwarf2_unwind_info=no
 fi
 if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame_info
                             -nostdlib -nostartfiles
-                            -o conftest conftest.c -lgcc -lgcc_eh >&5'; { (eval echo configure:3540: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+                            -o conftest conftest.c -lgcc -lgcc_eh >&5'; { (eval echo configure:3541: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   if ${CC-cc} $CFLAGS -DCHECK__register_frame_info -nostdlib -nostartfiles \
      -o conftest conftest.c -lgcc -lgcc_eh -v 2>&1 >/dev/null \
      | grep -q -- --eh-frame-hdr; then
@@ -3550,7 +3551,7 @@ fi
 if test $libc_cv_gcc_dwarf2_unwind_info = no; then
   if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame
 			      -nostdlib -nostartfiles
-			      -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3554: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			      -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3555: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
     libc_cv_gcc_dwarf2_unwind_info=yes
   else
     libc_cv_gcc_dwarf2_unwind_info=no
@@ -3580,12 +3581,12 @@ EOF
 esac
 
 echo $ac_n "checking for __builtin_expect""... $ac_c" 1>&6
-echo "configure:3584: checking for __builtin_expect" >&5
+echo "configure:3585: checking for __builtin_expect" >&5
 if eval "test \"`echo '$''{'libc_cv_gcc_builtin_expect'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.c <<EOF
-#line 3589 "configure"
+#line 3590 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -3593,7 +3594,7 @@ int foo (int a)
 }
 EOF
 if { ac_try='${CC-cc} $CFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3597: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3598: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_builtin_expect=yes
 else
   libc_cv_gcc_builtin_expect=no
@@ -3610,7 +3611,7 @@ EOF
 fi
 
 echo $ac_n "checking for __builtin_memset""... $ac_c" 1>&6
-echo "configure:3614: checking for __builtin_memset" >&5
+echo "configure:3615: checking for __builtin_memset" >&5
 if eval "test \"`echo '$''{'libc_cv_gcc_builtin_memset'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3620,7 +3621,7 @@ void zero (void *x)
   __builtin_memset (x, 0, 1000);
 }
 EOF
-if { ac_try='${CC-cc} -O3 -S conftest.c -o - | fgrep "memset" > /dev/null'; { (eval echo configure:3624: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; };
+if { ac_try='${CC-cc} -O3 -S conftest.c -o - | fgrep "memset" > /dev/null'; { (eval echo configure:3625: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; };
 then
   libc_cv_gcc_builtin_memset=no
 else
@@ -3638,12 +3639,12 @@ EOF
 fi
 
 echo $ac_n "checking for local label subtraction""... $ac_c" 1>&6
-echo "configure:3642: checking for local label subtraction" >&5
+echo "configure:3643: checking for local label subtraction" >&5
 if eval "test \"`echo '$''{'libc_cv_gcc_subtract_local_labels'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.c <<EOF
-#line 3647 "configure"
+#line 3648 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
@@ -3656,7 +3657,7 @@ int foo (int a)
 }
 EOF
 if { ac_try='${CC-cc} $CFLAGS -nostdlib -nostartfiles
-			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3660: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+			    -o conftest conftest.c -lgcc >&5'; { (eval echo configure:3661: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc_subtract_local_labels=yes
 else
   libc_cv_gcc_subtract_local_labels=no
@@ -3673,14 +3674,14 @@ EOF
 fi
 
 echo $ac_n "checking for __thread""... $ac_c" 1>&6
-echo "configure:3677: checking for __thread" >&5
+echo "configure:3678: checking for __thread" >&5
 if eval "test \"`echo '$''{'libc_cv_gcc___thread'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.c <<EOF
 __thread int a = 42;
 EOF
-if { ac_try='${CC-cc} $CFLAGS -c conftest.c >&5'; { (eval echo configure:3684: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} $CFLAGS -c conftest.c >&5'; { (eval echo configure:3685: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_gcc___thread=yes
 else
   libc_cv_gcc___thread=no
@@ -3698,7 +3699,7 @@ fi
 
 
 echo $ac_n "checking for libgd""... $ac_c" 1>&6
-echo "configure:3702: checking for libgd" >&5
+echo "configure:3703: checking for libgd" >&5
 if test "$with_gd" != "no"; then
   old_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS $libgd_include"
@@ -3707,14 +3708,14 @@ if test "$with_gd" != "no"; then
   old_LIBS="$LIBS"
   LIBS="$LIBS -lgd -lpng -lz -lm"
   cat > conftest.$ac_ext <<EOF
-#line 3711 "configure"
+#line 3712 "configure"
 #include "confdefs.h"
 #include <gd.h>
 int main() {
 gdImagePng (0, 0)
 ; return 0; }
 EOF
-if { (eval echo configure:3718: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:3719: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   LIBGD=yes
 else
@@ -3734,7 +3735,7 @@ echo "$ac_t""$LIBGD" 1>&6
 
 
 echo $ac_n "checking size of long double""... $ac_c" 1>&6
-echo "configure:3738: checking size of long double" >&5
+echo "configure:3739: checking size of long double" >&5
 if eval "test \"`echo '$''{'ac_cv_sizeof_long_double'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3742,7 +3743,7 @@ else
   ac_cv_sizeof_long_double=0
 else
   cat > conftest.$ac_ext <<EOF
-#line 3746 "configure"
+#line 3747 "configure"
 #include "confdefs.h"
 #include <stdio.h>
 int main()
@@ -3753,7 +3754,7 @@ int main()
   return(0);
 }
 EOF
-if { (eval echo configure:3757: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+if { (eval echo configure:3758: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
 then
   ac_cv_sizeof_long_double=`cat conftestval`
 else
@@ -3831,7 +3832,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:3835: checking OS release for uname" >&5
+echo "configure:3836: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3853,7 +3854,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:3857: checking OS version for uname" >&5
+echo "configure:3858: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3882,7 +3883,7 @@ EOF
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
 echo $ac_n "checking for old glibc 2.0.x headers""... $ac_c" 1>&6
-echo "configure:3886: checking for old glibc 2.0.x headers" >&5
+echo "configure:3887: checking for old glibc 2.0.x headers" >&5
 if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
 then
   old_glibc_headers=yes
@@ -3943,7 +3944,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:3947: checking whether -fPIC is default" >&5
+echo "configure:3948: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
