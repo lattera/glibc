@@ -17,9 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifdef __ASSEMBLER__
-
 #include <sysdeps/powerpc/sysdep.h>
+
+#ifdef __ASSEMBLER__
 
 #ifdef __ELF__
 /* If compiled for profiling, call `_mcount' at the start of each function.
@@ -28,7 +28,6 @@
 /* The mcount code relies on a the return address being on the stack
    to locate our caller and so it can restore it; so store one just
    for its benefit.  */
-#ifdef PIC
 #ifdef SYSV_ELF_PROFILING
 #define CALL_MCOUNT      \
   .pushsection;          \
@@ -51,30 +50,6 @@ __mcount:            \
   std   r0,16(r1);       \
   bl    JUMPTARGET(_mcount);
 #endif /* SYSV_ELF_PROFILING */
-#else  /* PIC */
-#ifdef SYSV_ELF_PROFILING
-#define CALL_MCOUNT      \
-  .pushsection;          \
-  .section ".data";      \
-  .align ALIGNARG(2);    \
-__mcount:            \
-  .long  0;            \
-  .previous;              \
-	.section	".toc","aw";  \
-.LC__mcount:; \
-	.tc __mcount[TC],__mcount; \
-  .previous;              \
-  mflr  r0;              \
-  std   r0,16(r1);        \
-  ld    r0,.LC__mcount@toc(r2);    \
-  bl    JUMPTARGET(_mcount);
-#else /* SYSV_ELF_PROFILING */
-#define CALL_MCOUNT  \
-  mflr  r0;          \
-  std   r0,16(r1);    \
-  bl    JUMPTARGET(_mcount);
-#endif /* SYSV_ELF_PROFILING */
-#endif /* PIC */
 #else  /* PROF */
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif /* PROF */
@@ -88,6 +63,8 @@ __mcount:            \
 	.type DOT_LABEL(name),@function ; \
 	.globl name; \
 	.section	".opd","aw"; \
+	.align 3; \
+	.size name,24; \
 name##: ; \
 	.quad DOT_LABEL(name) ; \
 	.quad .TOC.@tocbase, 0; \
@@ -113,6 +90,8 @@ DOT_LABEL(name):
 	.type DOT_LABEL(name),@function ; \
 	.globl name; \
 	.section	".opd","aw"; \
+	.align 3; \
+	.size name,24; \
 name##: ; \
 	.quad DOT_LABEL(name) ; \
 	.quad .TOC.@tocbase, 0; \
@@ -132,6 +111,8 @@ DOT_LABEL(name):		\
 	.type DOT_LABEL(name),@function ; \
 	.globl name; \
 	.section	".opd","aw"; \
+	.align 3; \
+	.size name,24; \
 name##: ; \
 	.quad DOT_LABEL(name) ; \
 	.quad .TOC.@tocbase, 0; \
@@ -204,12 +185,12 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #undef	END
 #define END(name) \
   TRACEBACK(name)	\
-  ASM_SIZE_DIRECTIVE(name)
+  ASM_SIZE_DIRECTIVE(DOT_LABEL(name))
 
 /* This form supports more informative traceback tables */
 #define END_GEN_TB(name,mask)	\
   TRACEBACK_MASK(name,mask)	\
-  ASM_SIZE_DIRECTIVE(name)
+  ASM_SIZE_DIRECTIVE(DOT_LABEL(name))
 
 
 #define DO_CALL(syscall) \

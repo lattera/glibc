@@ -1,3 +1,25 @@
+2004-05-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* malloc/obstack.h (_obstack_free, obstack_1grow, obstack_1grow_fast,
+	obstack_alignment_mask, obstack_alloc, obstack_base,
+	obstack_blank, obstack_blank_fast, obstack_chunk_size,
+	obstack_copy, obstack_copy0, obstack_finish, obstack_grow,
+	obstack_grow0, obstack_init, obstack_int_grow,
+	obstack_int_grow_fast, obstack_make_room, obstack_memory_used,
+	obstack_next_free, obstack_object_size, obstack_ptr_grow,
+	obstack_ptr_grow_fast, obstack_room): Remove declarations of
+	nonexistent functions.
+
+2004-05-18  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h [__ASSEMBLER__]: Include
+	<sysdeps/powerpc/sysdep.h> independent of __ASSEMBLER__.
+	[PIC]: Redundent for powerpc64, removed.
+	(ENTRY): Generate size and alignment for opd entry.
+	(EALIGN): Generate size and alignment for opd entry.
+	(END): Use DOT_LABEL in ASM_SIZE_DIRECTIVE.
+	(END_GEN_TB): Use DOT_LABEL in ASM_SIZE_DIRECTIVE.
+
 2004-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/regexp.h: Say the functions have been withdrawn.
