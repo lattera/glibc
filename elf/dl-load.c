@@ -755,10 +755,14 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
   if (l != NULL)
     {
       /* Remove the stillborn object from the list and free it.  */
-      if (l->l_prev)
-	l->l_prev->l_next = l->l_next;
-      if (l->l_next)
-	l->l_next->l_prev = l->l_prev;
+      assert (l->l_next == NULL);
+#ifndef SHARED
+      if (l->l_prev == NULL)
+	/* No other module loaded.  */
+	_dl_loaded = NULL;
+      else
+#endif
+	l->l_prev->l_next = NULL;
       --_dl_nloaded;
       free (l);
     }
