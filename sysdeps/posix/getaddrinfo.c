@@ -775,8 +775,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  while (!no_more)
 	    {
-	      nss_gethostbyname3_r fct
-		= __nss_lookup_function (nip, "gethostbyname3_r");
+	      nss_gethostbyname3_r fct = NULL;
+	      if (req->ai_flags & AI_CANONNAME)
+		/* No need to use this function if we do not look for
+		   the canonical name.  The function does not exist in
+		   all NSS modules and therefore the lookup would
+		   often fail.  */
+		fct = __nss_lookup_function (nip, "gethostbyname3_r");
 	      if (fct == NULL)
 		/* We are cheating here.  The gethostbyname2_r function does
 		   not have the same interface as gethostbyname3_r but the

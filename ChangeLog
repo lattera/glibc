@@ -1,5 +1,8 @@
 2004-09-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Do not use
+	gethostbyname3_r if we are not looking for the canonical name.
+
 	* resolv/res_mkquery.c (res_nmkquery): Randomize request ID every
 	time.
 
