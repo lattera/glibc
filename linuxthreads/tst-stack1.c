@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -17,11 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Test whether pthread_create/pthread_join with user defined stacks
-   doesn't leak memory.  */
+/* Test pthread_create/pthread_join with user defined stacks.  */
 
 #include <limits.h>
-#include <mcheck.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,13 +35,13 @@ tf (void *p)
   return NULL;
 }
 
+#define N 16
+
 static int
 do_test (void)
 {
-  mtrace ();
-
   void *stack;
-  int res = posix_memalign (&stack, getpagesize (), 4 * PTHREAD_STACK_MIN);
+  int res = posix_memalign (&stack, getpagesize (), N * 4 * PTHREAD_STACK_MIN);
   if (res)
     {
       printf ("malloc failed %s\n", strerror (res));
@@ -54,15 +52,17 @@ do_test (void)
   pthread_attr_init (&attr);
 
   int result = 0;
-  res = pthread_attr_setstack (&attr, stack, 4 * PTHREAD_STACK_MIN);
-  if (res)
+  for (int i = 0; i < N; ++i)
     {
-      printf ("pthread_attr_setstack failed %d\n", res);
-      result = 1;
-    }
+      res = pthread_attr_setstack (&attr, stack + i * 4 * PTHREAD_STACK_MIN,
+				   4 * PTHREAD_STACK_MIN);
+      if (res)
+	{
+	  printf ("pthread_attr_setstack failed %d\n", res);
+	  result = 1;
+	  continue;
+	}
 
-  for (int i = 0; i < 16; ++i)
-    {
       /* Create the thread.  */
       pthread_t th;
       res = pthread_create (&th, &attr, tf, NULL);
@@ -84,13 +84,12 @@ do_test (void)
 
   pthread_attr_destroy (&attr);
 
-  if (seen != 16)
+  if (seen != N)
     {
-      printf ("seen %d != 16\n", seen);
+      printf ("seen %d != %d\n", seen, N);
       result = 1;
     }
 
-  free (stack);
   return result;
 }
 

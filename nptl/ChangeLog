@@ -1,5 +1,9 @@
 2004-05-04  Jakub Jelinek  <jakub@redhat.com>
 
+	* tst-stack3.c: Note testing functionality beyond POSIX.
+
+2004-05-04  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (USE___THREAD):
 	Change conditional from ifdef to if.
 

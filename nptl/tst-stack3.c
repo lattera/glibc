@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -18,7 +18,10 @@
    02111-1307 USA.  */
 
 /* Test whether pthread_create/pthread_join with user defined stacks
-   doesn't leak memory.  */
+   doesn't leak memory.
+   NOTE: this tests functionality beyond POSIX.  In POSIX user defined
+   stacks cannot be ever freed once used by pthread_create nor they can
+   be reused for other thread.  */
 
 #include <limits.h>
 #include <mcheck.h>

@@ -1,5 +1,9 @@
 2004-04-22  David Mosberger  <davidm@hpl.hp.com>
 
+	* sysdeps/unix/sysv/linux/ia64/Makefile (librt-routines): Mention
+	  rt-sysdep.
+	* sysdeps/unix/sysv/linux/ia64/rt-sysdep.S: New file.
+
 	* sysdeps/ia64/strcat.c: New file.
 	* sysdeps/ia64/strcat.S: Delete.
 

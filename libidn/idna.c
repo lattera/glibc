@@ -778,6 +778,8 @@ idna_to_unicode_lzlz (const char *input, char **output, int flags)
  * @IDNA_ICONV_ERROR: Could not convert string in locale encoding.
  * @IDNA_MALLOC_ERROR: Could not allocate buffer (this is typically a
  *   fatal error).
+ * @IDNA_DLOPEN_ERROR: Could not dlopen the libcidn DSO (only used
+ *   internally in libc).
  *
  * Enumerated return codes of idna_to_ascii_4i(),
  * idna_to_unicode_44i() functions (and functions derived from those

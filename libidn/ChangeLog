@@ -1,3 +1,9 @@
+2004-04-22  Simon Josefsson  <jas@extundo.com>
+
+	* stringprep.h: Update to latest libidn version.
+	* stringprep.c: Likewise.
+	* idna.c: Likewise.
+
 2004-03-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* idn-stub.c (__idna_to_unicode_lzlz): Use __strchrnul, not strchrnul.
