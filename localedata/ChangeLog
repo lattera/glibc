@@ -1,3 +1,8 @@
+2002-08-28  Roland McGrath  <roland@redhat.com>
+
+	* tst-xlocale1.c (main): Remove __ from function names.
+	* tst-xlocale2.c: Likewise.
+
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests-mbwc/tst_mbrlen.c: Use correct format in test result printing

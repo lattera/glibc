@@ -1,5 +1,5 @@
 /* Tests of C and POSIX locale contents.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -35,7 +35,7 @@ run_test (const char *locname)
   const char *str;
   const wchar_t *wstr;
   int result = 0;
-  __locale_t loc;
+  locale_t loc;
 
   /* ISO C stuff.  */
   lc = localeconv ();
@@ -223,7 +223,7 @@ run_test (const char *locname)
   STRTEST (NOSTR, "");
 
   /* Test the new locale mechanisms.  */
-  loc = __newlocale (LC_ALL, locname, NULL);
+  loc = newlocale (LC_ALL, locname, NULL);
   if (loc == NULL)
     {
       printf ("cannot create locale object for locale %s\n", locname);
@@ -235,19 +235,19 @@ run_test (const char *locname)
 
 #undef STRTEST
 #define STRTEST(name, exp) \
-      str = __nl_langinfo_l (name, loc);				      \
+      str = nl_langinfo_l (name, loc);				      \
       if (strcmp (str, exp) != 0)					      \
 	{								      \
-	  printf ("__nl_langinfo_l(" #name ") in locale %s wrong "	      \
+	  printf ("nl_langinfo_l(" #name ") in locale %s wrong "	      \
 		  "(is \"%s\", should be \"%s\")\n", locname, str, exp);      \
 	  result = 1;							      \
 	}
 #undef WSTRTEST
 #define WSTRTEST(name, exp) \
-      wstr = (wchar_t *) __nl_langinfo_l (name, loc);			      \
+      wstr = (wchar_t *) nl_langinfo_l (name, loc);			      \
       if (wcscmp (wstr, exp) != 0)					      \
 	{								      \
-	  printf ("__nl_langinfo_l(" #name ") in locale %s wrong "	      \
+	  printf ("nl_langinfo_l(" #name ") in locale %s wrong "	      \
 		  "(is \"%S\", should be \"%S\")\n", locname, wstr, exp);     \
 	  result = 1;							      \
 	}
@@ -369,9 +369,9 @@ run_test (const char *locname)
       for (c = 0; c < 128; ++c)
 	{
 #define CLASSTEST(name) \
-	  if (is##name (c) != __is##name##_l (c, loc))			      \
+	  if (is##name (c) != is##name##_l (c, loc))			      \
 	    {								      \
-	      printf ("is%s('\\%o') != __is%s_l('\\%o')\n",		      \
+	      printf ("is%s('\\%o') != is%s_l('\\%o')\n",		      \
 		      #name, c, #name, c);				      \
 	      result = 1;						      \
 	    }
@@ -390,11 +390,11 @@ run_test (const char *locname)
 
 	  /* Character mapping tests.  */
 #define MAPTEST(name) \
-	  if (to##name (c) != __to##name##_l (c, loc))			      \
+	  if (to##name (c) != to##name##_l (c, loc))			      \
 	    {								      \
-	      printf ("to%s('\\%o') != __to%s_l('\\%o'): '\\%o' vs '\\%o'\n", \
+	      printf ("to%s('\\%o') != to%s_l('\\%o'): '\\%o' vs '\\%o'\n", \
 		      #name, c, #name, c,				      \
-		      to##name (c), __to##name##_l (c, loc));		      \
+		      to##name (c), to##name##_l (c, loc));		      \
 	      result = 1;						      \
 	    }
 	  MAPTEST (lower);
@@ -408,9 +408,9 @@ run_test (const char *locname)
 	{
 #undef CLASSTEST
 #define CLASSTEST(name) \
-	  if (isw##name (c) != __isw##name##_l (c, loc))		      \
+	  if (isw##name (c) != isw##name##_l (c, loc))		      \
 	    {								      \
-	      printf ("isw%s('\\%o') != __isw%s_l('\\%o')\n",		      \
+	      printf ("isw%s('\\%o') != isw%s_l('\\%o')\n",		      \
 		      #name, c, #name, c);				      \
 	      result = 1;						      \
 	    }
@@ -432,18 +432,18 @@ run_test (const char *locname)
 	     UCS4.  */
 #undef MAPTEST
 #define MAPTEST(name) \
-	  if (tow##name (c) != __tow##name##_l (c, loc))		      \
+	  if (tow##name (c) != tow##name##_l (c, loc))		      \
 	    {								      \
-	      printf ("tow%s('\\%o') != __tow%s_l('\\%o'): '\\%o' vs '\\%o'\n",\
+	      printf ("tow%s('\\%o') != tow%s_l('\\%o'): '\\%o' vs '\\%o'\n",\
 		      #name, c, #name, c,				      \
-		      tow##name (c), __tow##name##_l (c, loc));		      \
+		      tow##name (c), tow##name##_l (c, loc));		      \
 	      result = 1;						      \
 	    }
 	  MAPTEST (lower);
 	  MAPTEST (upper);
 	}
 
-      __freelocale (loc);
+      freelocale (loc);
     }
 
   return result;
