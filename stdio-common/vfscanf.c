@@ -2090,18 +2090,17 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      size_t n;
 
 		      /* Convert it into a wide character.  */
-		      n = __mbrtowc (wstr, buf, cnt, &cstate);
+		      buf[0] = c;
+		      n = __mbrtowc (wstr, buf, 1, &cstate);
 
 		      if (n == (size_t) -2)
 			{
 			  /* Possibly correct character, just not enough
 			     input.  */
+			  ++cnt;
 			  assert (cnt < MB_CUR_MAX);
 			  continue;
 			}
-
-		      if (n != cnt)
-			encode_error ();
 
 		      ++wstr;
 		      if ((flags & MALLOC)
