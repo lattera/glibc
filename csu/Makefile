@@ -1,6 +1,6 @@
 # Makefile for csu code for GNU C library.
 
-# Copyright (C) 1995 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ start-installed-name = crt0.o
 
 else
 
-# In the ELF universe, crt0.o is called crt1.o, and there are 
+# In the ELF universe, crt0.o is called crt1.o, and there are
 # some additional bizarre files.
 start-installed-name = crt1.o
 have-initfini = yes
@@ -56,6 +56,8 @@ have-initfini = yes
 endif
 
 ifeq (yes,$(have-initfini))
+
+CPPFLAGS += -DHAVE_INITFINI
 
 # These are the special initializer/finalizer files.  They are always the
 # first and last file in the link.  crti.o ... crtn.o define the global
@@ -77,7 +79,7 @@ define initfini
 -rm -f $(objpfx)crtcommon.tmp
 (echo 'cat > crtcommon.tmp <<\EOF_common'; \
  $(CC) $< $(CPPFLAGS) $(CFLAGS) \
-       -finhibit-size-directive -g0 -S -o -; \
+       -fPIC -finhibit-size-directive -g0 -S -o -; \
  echo 'EOF_common') | (cd $(@D); $(SHELL))
 cat $(objpfx)crtcommon.tmp >> $(objpfx)crti.s-new
 cat $(objpfx)crtcommon.tmp >> $(objpfx)crtn.s-new
