@@ -832,6 +832,33 @@ passwd_compat: nis
 group_compat: nis
 shadow_compat: nis
 
+??	What needs to be recompiled when upgrading from glibc 2.0 to glibc
+	2.1?
+
+{AJ,CG} If you just upgrade the glibc from 2.0.x (x <= 7) to 2.1, binaries
+that have been linked against glibc 2.0 will continue to work.
+
+If you compile your own binaries against glibc 2.1, you also need to
+recompile some other libraries.  The problem is that libio had to be
+changed and therefore libraries that are based or depend on the libio
+of glibc, e.g. ncurses or slang, need to be recompiled.  If you
+experience strange segmentation faults in your programs linked against
+glibc 2.1, you might need to recompile your libraries.
+
+Another problem is that older binaries that were linked statically against
+glibc 2.0 will reference the older nss modules (libnss_files.so.1 instead of
+libnss_files.so.2), so don't remove them.  Also, the old glibc-2.0 compiled
+static libraries (libfoo.a) which happen to depend on the older libio
+behavior will be broken by the glibc 2.1 upgrade.  The idea is to produce a
+libcompat.a that people will be able to use to link in if they want to
+compile a static library generated against glibc 2.0 into a program on a
+glibc 2.1 system.  You should just add -lcompat and you should be fine.
+
+The glibc-compat add-on will provide the libnss_* files and other stuff so
+that it is possible to use static library compiled against glibc 2.0 for
+development on a glibc 2.1 based system.  Please note that this is currently
+just an experiment, although the nss modules part should work.
+
 
 ? Source and binary incompatibilities, and what to do about them
 
@@ -1275,6 +1302,7 @@ Answers were given by:
 {TK} Thorsten Kukuk, <kukuk@vt.uni-paderborn.de>
 {GK} Geoffrey Keating, <geoffk@ozemail.com.au>
 {HJ} H.J. Lu, <hjl@gnu.org>
+{CG} Cristian Gafton, <gafton@redhat.com>
 
 Local Variables:
  mode:outline

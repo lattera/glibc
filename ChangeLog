@@ -1,5 +1,10 @@
 1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/Makefile (modules): Add SAMI-WS2 and ISO-IR-197.
+	* iconvdata/gconv-modules: Add entries for above charsets.
+	* iconvdata/iso-ir-197.c: New file.
+	* iconvdata/same-ws2.c: New file.
+
 	* sysdeps/unix/sysv/linux/vfork.c: Once again use generic version.
 
 1999-01-18  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>

@@ -1,5 +1,5 @@
 # GNU libc iconv configuration.
-# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 #
@@ -1120,3 +1120,12 @@ alias	ISO-IR-8-1//		NATS-SEFI//
 alias	CSNATSSEFI//		NATS-SEFI//
 module	NATS-SEFI//		INTERNAL		NATS-SEFI	1
 module	INTERNAL		NATS-SEFI//		NATS-SEFI	1
+
+#	from			to			module		cost
+alias	WS2//			WIN-SAMI-2//
+module	WIN-SAMI-2//		INTERNAL		SAMI-WS2	1
+module	INTERNAL		WIN-SAMI-2//		SAMI-WS2	1
+
+#	from			to			module		cost
+module	ISO-IR-197//		INTERNAL		ISO-IR-197	1
+module	INTERNAL		ISO-IR-197//		ISO-IR-197	1
