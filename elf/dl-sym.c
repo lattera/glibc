@@ -90,9 +90,9 @@ do_sym (void *handle, const char *name, void *who,
     {
       if (__builtin_expect (match == GL(dl_loaded), 0))
 	{
-	  if (! GL(dl_loaded)
-	      || caller < GL(dl_loaded)->l_map_start
-	      || caller >= GL(dl_loaded)->l_map_end)
+	  if (match == NULL
+	      || caller < match->l_map_start
+	      || caller >= match->l_map_end)
 	    GLRO(dl_signal_error) (0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 	}

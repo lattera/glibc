@@ -1,3 +1,9 @@
+2004-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sym.c (do_sym): Avoid using global variable.
+
+	* elf/dl-addr.c (_dl_addr): Really use match everywhere.
+
 2004-10-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/memcopy.h (WORD_COPY_BWD): Remove use of cast as
