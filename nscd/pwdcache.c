@@ -224,7 +224,7 @@ addpwbyname (struct database *db, int fd, request_header *req,
     }
 
   if (secure[pwddb])
-    seteuid (c_uid);
+    seteuid (oldeuid);
 
   cache_addpw (db, fd, req, key, pwd, c_uid);
 }

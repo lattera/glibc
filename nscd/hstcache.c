@@ -315,7 +315,7 @@ addhstbyname (struct database *db, int fd, request_header *req,
     }
 
   if (secure[hstdb])
-    seteuid (uid);
+    seteuid (oldeuid);
 
   cache_addhst (db, fd, req, key, hst, uid);
 }
