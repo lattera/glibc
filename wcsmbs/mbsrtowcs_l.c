@@ -102,18 +102,36 @@ __mbsrtowcs_l (dst, src, len, ps, l)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
+      const unsigned char *srcp = (const unsigned char *) *src;
       const unsigned char *srcend;
-
-      srcend = (const unsigned char *) (*src
-					+ __strnlen (*src, len * MB_CUR_MAX)
-					+ 1);
 
       data.__outbuf = (unsigned char *) dst;
       data.__outbufend = data.__outbuf + len * sizeof (wchar_t);
 
-      status = DL_CALL_FCT (towc->__fct,
-			    (towc, &data, (const unsigned char **) src, srcend,
-			     NULL, &non_reversible, 0, 1));
+      status = __GCONV_FULL_OUTPUT;
+
+      while (len > 0)
+	{
+	  /* Pessimistic guess as to how much input we can use.  In the
+	     worst case we need one input byte for one output wchar_t.  */
+	  srcend = srcp + __strnlen (srcp, len) + 1;
+
+	  status = DL_CALL_FCT (towc->__fct,
+				(towc, &data, &srcp, srcend, NULL,
+				 &non_reversible, 0, 1));
+	  if ((status != __GCONV_EMPTY_INPUT
+	       && status != __GCONV_INCOMPLETE_INPUT)
+	      /* Not all input read.  */
+	      || srcp != srcend
+	      /* Reached the end of the input.  */
+	      || srcend[-1] == '\0')
+	    break;
+
+	  len = (wchar_t *) data.__outbufend - (wchar_t *) data.__outbuf;
+	}
+
+      /* Make the end if the input known to the caller.  */
+      *src = srcp;
 
       result = (wchar_t *) data.__outbuf - dst;
 
