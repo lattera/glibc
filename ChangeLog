@@ -1,5 +1,14 @@
 1999-03-15  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/mach/hurd/Versions (ld.so) [GLIBC_2.0]: Add
+	__hurd_sigthread_stack_base, __hurd_sigthread_stack_end,
+	__hurd_sigthread_variables, __hurd_threadvar_stack_mask,
+	__hurd_threadvar_stack_offset, __close, __fxstat, __getcwd,
+	__getpid, __libc_read, __libc_write, __lseek, __mmap, __open,
+	__xstat, _exit, _hurd_intr_rpc_mach_msg and abort.
+
+1999-03-15  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/hurd/poll.c (__poll): Correctly pass NULL to
 	_hurd_select if TIMEMOUT is -1.
 
