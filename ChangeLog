@@ -1,3 +1,7 @@
+2002-04-29  Roland McGrath  <roland@frob.com>
+
+	* include/libc-symbols.h (link_warning): Use `unused' attribute.
+
 2002-04-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/tls.h: Describe would must be defined.
