@@ -4,7 +4,7 @@
 % automatically generated from the charDB
 
 % alias CP866
-% alias 866  
+% alias 866
 CHARMAP
 <NU>                   /x00     <U0000> NULL
 <NUL>                  /x00     <U0000> NULL
@@ -83,7 +83,6 @@ CHARMAP
 <dollar-sign>          /x24     <U0024> DOLLAR SIGN
 <%>                    /x25     <U0025> PERCENT SIGN
 <percent-sign>         /x25     <U0025> PERCENT SIGN
-<percent-sign/>>       /x25     <U0025> PERCENT SIGN
 <&>                    /x26     <U0026> AMPERSAND
 <ampersand>            /x26     <U0026> AMPERSAND
 <'>                    /x27     <U0027> APOSTROPHE

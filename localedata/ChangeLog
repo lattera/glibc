@@ -1,3 +1,13 @@
+1999-08-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/CP1258: Remove spurious <percent-sign/> entry.
+	* charmaps/IBM866: Likewise.
+	* charmaps/IBM874: Likewise.
+	* charmaps/ISO-8859-13: Likewise.
+	* charmaps/ISO-8859-14: Likewise.
+	* charmaps/ISO-8859-15: Likewise.
+	* charmaps/MAC-UK: Likewise.
+
 1999-08-16  Andreas Schwab  <schwab@suse.de>
 
 	* charmaps/UTF8: Add entries for /x00.  Remove spurious
