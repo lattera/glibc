@@ -1722,7 +1722,7 @@ ptmalloc_init __MALLOC_P((void))
   __malloc_hook = save_malloc_hook;
   __free_hook = save_free_hook;
 #endif
-  if(s) {
+  if(s && (! __libc_enable_secure || access ("/etc/suid-debug", F_OK) == 0)) {
     if(s[0]) mALLOPt(M_CHECK_ACTION, (int)(s[0] - '0'));
     __malloc_check_init();
   }

@@ -52,6 +52,9 @@ extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 size_t *filesize_ptr,
 					 int mmap_prot);
 
+/* Protec SUID program against misuse of file descriptors.  */
+extern void __libc_check_standard_fds (void);
+
 /* Helper function to handle errors while resolving symbols.  */
 static void print_unresolved (int errcode, const char *objname,
 			      const char *errsting);
@@ -396,6 +399,12 @@ dl_main (const ElfW(Phdr) *phdr,
   hp_timing_t diff;
 #endif
 
+  /* First thing, if this is a SUID program we make sure that FDs 0,
+     1, and 2 are allocated.  If necessary we are doing it ourself.
+     If it is not possible we stop the program.  */
+  if (__builtin_expect (__libc_enable_secure, 0))
+    __libc_check_standard_fds ();
+
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode, &_dl_lazy);
 
@@ -673,7 +682,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   preloads = NULL;
   npreloads = 0;
 
-  if (preloadlist)
+  if (__builtin_expect (preloadlist != NULL, 0))
     {
       /* The LD_PRELOAD environment variable gives list of libraries
 	 separated by white space or colons that are loaded before the
@@ -687,7 +696,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       while ((p = strsep (&list, " :")) != NULL)
 	if (p[0] != '\0'
-	    && (! __libc_enable_secure || strchr (p, '/') == NULL))
+	    && (__builtin_expect (! __libc_enable_secure, 1)
+		|| strchr (p, '/') == NULL))
 	  {
 	    struct link_map *new_map = _dl_map_object (_dl_loaded, p, 1,
 						       lt_library, 0);
@@ -704,7 +714,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Read the contents of the file.  */
   file = _dl_sysdep_read_whole_file ("/etc/ld.so.preload", &file_size,
 				     PROT_READ | PROT_WRITE);
-  if (file)
+  if (__builtin_expect (file != NULL, 0))
     {
       /* Parse the file.  It contains names of libraries to be loaded,
 	 separated by white spaces or `:'.  It may also contain
@@ -783,7 +793,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       __munmap (file, file_size);
     }
 
-  if (npreloads != 0)
+  if (__builtin_expect (npreloads, 0) != 0)
     {
       /* Set up PRELOADS with a vector of the preloaded libraries.  */
       struct link_map *l;
@@ -1072,7 +1082,7 @@ of this helper program; chances are you did not intend to run this program.\n\
        this has to go here because the calls it makes should use the
        rtld versions of the functions (particularly calloc()), but it
        needs to have _dl_profile_map set up by the relocator.  */
-    if (_dl_profile_map != NULL)
+    if (__builtin_expect (_dl_profile_map != NULL, 0))
       /* We must prepare the profiling.  */
       _dl_start_profile (_dl_profile_map, _dl_profile_output);
 

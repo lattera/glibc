@@ -1,5 +1,14 @@
 2000-05-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* csu/Makefile (routines): Add check_fds.
+	* elf/rtld.c (dl_main): Call __libc_check_standard_fds for SUID
+	binaries.  Add various __builtin_expect.
+	* sysdeps/generic/libc-start.c: Move check_fds and helper functions...
+	* sysdeps/generic/check_fds.c: ...here.  New file.
+
+	* malloc/malloc.c (ptmalloc_init): Only enable debugging for SUID
+	binaries if file /etc/suid-debug is available.
+
 	* locale/programs/ld-collate.c (struct element_t): Add mbseqorder
 	and wcseqorder members.
 	(struct locale_collate_t): Likewise.
