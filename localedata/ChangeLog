@@ -1,3 +1,13 @@
+1999-11-27  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
+
+     * locales/ja_JP: Add JIS X 0201 kana and JIS X 0212 definitions.
+     * charmaps/EUC-JP: Likewise.
+     * repertoiremaps/mnemonic.ja: Likewise.
+
+     * locales/ja_JP: Add extra CLASS and MAP definisions.
+
+     * charmaps/EUC-JP: Add WIDTH definitions.
+
 1999-11-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Don't run tests for now.
