@@ -1,5 +1,7 @@
 2004-05-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/regexp.h: Say the functions have been withdrawn.
+
 	* wcsmbs/tst-wcpncpy.c: Add more tests.
 
 2004-05-18  Roland McGrath  <roland@frob.com>

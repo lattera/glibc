@@ -27,7 +27,7 @@ main (void)
   int result = 0;
 
   const wchar_t src[] = L"0";
-  wchar_t dest[10];
+  wchar_t dest[21];
   wmemset (dest, L'\0', 10);
   wchar_t *endp = wcpncpy (dest, src, 2);
   if (wcscmp (dest, src) != 0)
@@ -63,6 +63,14 @@ main (void)
     {
       result = 1;
       puts ("return value of long string call incorrect");
+    }
+
+  const wchar_t src5[] = L"ab";
+  endp = wcpncpy (dest, src5, 20);
+  if (endp != dest + 2)
+    {
+      result = 1;
+      puts ("return value of large limit call incorrect");
     }
 
   return result;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -22,7 +22,8 @@
 
 /* The contents of this header file was first standardized in X/Open
    System Interface and Headers Issue 2, originally coming from SysV.
-   In issue 4, version 2, it is marked as TO BE WITDRAWN.
+   In issue 4, version 2, it is marked as TO BE WITDRAWN, and it has
+   been withdrawn in SUSv3.
 
    This code shouldn't be used in any newly written code.  It is
    included only for compatibility reasons.  Use the POSIX definition
