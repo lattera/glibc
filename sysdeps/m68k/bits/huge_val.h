@@ -30,7 +30,7 @@
 
 #ifdef	__GNUC__
 
-# if __GNUC_PREREQ(2,95)
+# if __GNUC_PREREQ(2,96)
 
 #  define HUGE_VAL (__extension__ 0x1.0p2047)
 
@@ -56,7 +56,7 @@ static union { unsigned char __c[8]; double __d; } __huge_val =
 
 #ifdef __USE_ISOC99
 
-# if __GNUC_PREREQ(2,95)
+# if __GNUC_PREREQ(2,96)
 
 #  define HUGE_VALF (__extension__ 0x1.0p255f)
 #  define HUGE_VALL (__extension__ 0x1.0p32767L)
