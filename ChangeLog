@@ -1,3 +1,16 @@
+2002-10-08  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (AUTOCONF): New check to set it.  Set to "no" if the
+	one found doesn't work on our configure.in.
+	* configure: Regenerated.
+	* config.make.in (AUTOCONF): New substituted variable.
+	* Makefile (autoconf-it-cvs): New canned sequence, broken out of ...
+	(autoconf-it): ... here, use that instead of defining conditionally.
+	Use $(AUTOCONF) instead of literal autoconf.
+	[$(AUTOCONF) != no] (configure, %/configure): Protect these rules
+	with this condition.
+	* Make-dist (autoconf-it, configure, %/configure): Copy those changes.
+
 2002-10-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* Make-dist (dist): Cleanup a bit.  We are not interested in the
@@ -26,5 +39,6 @@
 2002-10-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* glibc 2.3 released.
+
 
 See ChangeLog.13 for earlier changes.
