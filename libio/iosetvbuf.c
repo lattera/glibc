@@ -92,8 +92,8 @@ _IO_setvbuf (fp, buf, mode, size)
   result = _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
   if (result == 0 && fp->_vtable_offset == 0 && fp->_mode == 0)
     /* We also have to set the buffer using the wide char function.  */
-    result = ((*fp->_wide_data->_wide_vtable->__setbuf) (fp, buf, size) == NULL
-	      ? EOF : 0);
+    result = _IO_WSETBUF (fp, buf, size) == NULL ? EOF : 0;
+
 unlock_return:
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);

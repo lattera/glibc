@@ -40,7 +40,7 @@ _IO_setbuffer (fp, buf, size)
   (void) _IO_SETBUF (fp, buf, size);
   if (fp->_vtable_offset == 0 && fp->_mode == 0)
     /* We also have to set the buffer using the wide char function.  */
-    (*fp->_wide_data->_wide_vtable->__setbuf) (fp, buf, size);
+    (void) _IO_WSETBUF (fp, buf, size);
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
 }

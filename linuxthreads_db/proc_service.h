@@ -61,3 +61,10 @@ extern ps_err_e ps_lsetfpregs(struct ps_prochandle *,
                         lwpid_t, const prfpregset_t *);
 
 extern pid_t ps_getpid (struct ps_prochandle *);
+
+
+extern ps_err ps_pstop (const struct ps_prochandle *);
+extern ps_err ps_pcontinue (const struct ps_prochandle *);
+
+extern ps_err ps_lstop (const struct ps_prochandle *, lwpid_t);
+extern ps_err ps_lcontinue (const struct ps_prochandle *, lwpid_t);
