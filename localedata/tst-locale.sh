@@ -44,8 +44,7 @@ test_locale tests/test1.cm tests/test1.def test1 mnemonic.ds
 test_locale tests/test2.cm tests/test2.def test2 mnemonic.ds
 test_locale tests/test3.cm tests/test3.def test3 mnemonic.ds
 test_locale tests/test4.cm tests/test4.def test4 mnemonic.ds
-# I know that multi-byte charsets do not yet work. --drepper
-# test_locale tests/test5.cm tests/test5.def test5 mnemonic.ds
+test_locale tests/test5.cm tests/test5.def test5 tests/test5.ds
 
 exit 0
 

@@ -2000,7 +2000,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   for (ch = 1; ch < 256; ++ch)
     if (collate->mbheads[ch]->mbnext == NULL
-	&& collate->mbheads[ch]->nmbs == 1)
+	&& collate->mbheads[ch]->nmbs <= 1)
       {
 	tablemb[ch] = output_weight (&weightpool, collate,
 				     collate->mbheads[ch]);
@@ -2024,6 +2024,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	   consecutive entries since they are also consecutive in the list.  */
 	struct element_t *runp = collate->mbheads[ch];
 	struct element_t *lastp;
+
+	assert ((obstack_object_size (&extrapool)
+		 & (__alignof__ (int32_t) - 1)) == 0);
 
 	tablemb[ch] = -obstack_object_size (&extrapool);
 
@@ -2081,6 +2084,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		/* Now walk backward from here to the beginning.  */
 		curp = runp;
 
+		assert (runp->nmbs <= 256);
 		obstack_1grow_fast (&extrapool, curp->nmbs - 1);
 		for (i = 1; i < curp->nmbs; ++i)
 		  obstack_1grow_fast (&extrapool, curp->mbs[i]);
@@ -2125,13 +2129,17 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		added = ((sizeof (int32_t) + 1 + runp->nmbs - 1
 			  + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
+		assert ((obstack_object_size (&extrapool)
+			 & (__alignof__ (int32_t) - 1)) == 0);
 		obstack_make_room (&extrapool, added);
 
 		if (sizeof (int32_t) == sizeof (int))
 		  obstack_int_grow_fast (&extrapool, weightidx);
 		else
 		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		assert (runp->nmbs <= 256);
 		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
+
 		for (i = 1; i < runp->nmbs; ++i)
 		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
 	      }
@@ -2147,11 +2155,14 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  }
 	while (runp != NULL);
 
+	assert ((obstack_object_size (&extrapool)
+		 & (__alignof__ (int32_t) - 1)) == 0);
+
 	/* If the final entry in the list is not a single character we
            add an UNDEFINED entry here.  */
 	if (lastp->nmbs != 1)
 	  {
-	    int added = ((sizeof (int32_t) + 1 + 1 + __alignof__ (int32_t))
+	    int added = ((sizeof (int32_t) + 1 + 1 + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
 	    obstack_make_room (&extrapool, added);
 

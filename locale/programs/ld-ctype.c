@@ -379,6 +379,17 @@ ctype_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	ctype->repertoire = repertoire_read (repertoire_name);
     }
 
+  /* We need the name of the currently used 8-bit character set to
+     make correct conversion between this 8-bit representation and the
+     ISO 10646 character set used internally for wide characters.  */
+  ctype->codeset_name = charmap->code_set_name;
+  if (ctype->codeset_name == NULL)
+    {
+      if (! be_quiet)
+	error (0, 0, "no character set name specified in charmap");
+      ctype->codeset_name = "//UNKNOWN//";
+    }
+
   /* Set default value for classes not specified.  */
   set_class_defaults (ctype, charmap, ctype->repertoire);
 
@@ -3303,11 +3314,6 @@ Computing table size for character classes might take a while..."),
 
   /* Set MB_CUR_MAX.  */
   ctype->mb_cur_max = charmap->mb_cur_max;
-
-  /* We need the name of the currently used 8-bit character set to
-     make correct conversion between this 8-bit representation and the
-     ISO 10646 character set used internally for wide characters.  */
-  ctype->codeset_name = charmap->code_set_name;
 
   /* Now determine the table for the transliteration information.
 

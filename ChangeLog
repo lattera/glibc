@@ -1,5 +1,13 @@
 2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (collate_output): Also handle
+	IGNOREd characters in the simple way when generating the multibyte
+	table.
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Move codeset_name
+	handling to ...
+	(ctype_finish): ...here.  Check for missing codeset name.
+
 	* sysdeps/unix/sysv/linux/Dist: Add ipc_priv.h.
 	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
 
