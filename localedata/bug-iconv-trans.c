@@ -33,7 +33,10 @@ main (void)
   n = iconv (cd, &inptr, &inlen, &outptr, &outlen);
   if (n != 7)
     {
-      printf ("iconv() returned %Zd, expected 7\n", n);
+      if (n == (size_t) -1)
+	printf ("iconv() returned error: %m\n");
+      else
+	printf ("iconv() returned %Zd, expected 7\n", n);
       result = 1;
     }
   if (inlen != 0)

@@ -1,3 +1,10 @@
+2001-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build and run tst-xlocale1.
+	* tst-xlocale1.c: New file.
+
+	* bug-iconv-trans.c: Improve error messages.
+
 2001-08-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/ISO-IR-209: New file.
