@@ -126,7 +126,7 @@ typedef int lll_lock_t;
 #define LLL_LOCK_INITIALIZER_LOCKED	(0)
 
 
-extern int __lll_lock_wait (int val, int *__futex) attribute_hidden;
+extern int __lll_lock_wait (int *__futex, int val) attribute_hidden;
 extern int __lll_unlock_wake (int *__futex) attribute_hidden;
 extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
@@ -256,7 +256,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
-     __attribute__ ((regparm (2))) attribute_hidden;
+     attribute_hidden;
 #define lll_timedwait_tid(tid, abstime) \
   ({									      \
     int __result = 0;							      \

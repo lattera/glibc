@@ -1,5 +1,11 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (__lll_lock_wait):
+	Reverse order of parameters.
+	(__lll_timedwait_tid): Remove regparms attribute.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: New file.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevellock.S: New file.
+
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
 	(__lll_timedwait_tid): Remove one unnecessary instruction.
 
