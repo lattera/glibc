@@ -1,5 +1,8 @@
 2000-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/charmap.c (charmap_read): Remove erronous free
+	call.
+
 	* sysdeps/i386/fpu/s_cosf.S: Domain of opcode is not large enough
 	so test for overflow and handle it.
 	* sysdeps/i386/fpu/s_sinf.S: Likewise.
@@ -15,7 +18,7 @@
 	* iconv/gconv_simple.c: Remove conversion functions to and from UTF-16.
 	PR libc/1580 and libc/1581.
 
-	* iconv/skeleton.c: Increment __invocation_coounter after every call
+	* iconv/skeleton.c: Increment __invocation_counter after every call
 	to the loops.
 
 2000-02-12  Andreas Jaeger  <aj@suse.de>

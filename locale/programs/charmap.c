@@ -177,8 +177,6 @@ charmap_read (const char *filename)
 			result = (cmfile == NULL
 				  ? NULL : parse_charmap (cmfile));
 
-			free (buf);
-
 			if (result)
 			  return result;
 
