@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,11 +30,11 @@ ENTRY (syscall)
 
 	ta	0x6d
 
-	bcc,pt %xcc,1f
+	bcs,pn %xcc,__syscall_error_handler
 	 nop
-	SYSCALL_ERROR_HANDLER
+	retl
+	 nop
 
-1:	retl
-	 nop
+	SYSCALL_ERROR_HANDLER
 
 PSEUDO_END (syscall)

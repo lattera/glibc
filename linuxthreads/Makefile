@@ -74,8 +74,12 @@ endif
 librt-tests = ex10 ex11
 tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	tststack $(tests-nodelete-$(have-z-nodelete)) ecmutex ex14 ex15 ex16 \
-	ex17 ex18 tst-cancel tst-context bug-sleep
+	ex17 ex18 tst-cancel tst-context bug-sleep \
+	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
+	tst-cancel6
 test-srcs = tst-signal
+# These tests are linked with libc before libpthread
+tests-reverse += tst-cancel5
 
 ifeq ($(build-static),yes)
 tests += tststatic tst-static-locale
@@ -149,8 +153,12 @@ $(objpfx)libpthread.so: $(libc-link.so) $(common-objpfx)libc_nonshared.a
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
-  $(filter-out $(tests-static) unload, \
+  $(filter-out $(tests-static) $(tests-reverse) unload, \
     $(tests) $(test-srcs))): $(objpfx)libpthread.so
+# $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
+# since otherwise libpthread.so comes before libc.so when linking.
+$(addprefix $(objpfx), $(tests-reverse)): \
+  $(objpfx)../libc.so $(objpfx)libpthread.so
 $(addprefix $(objpfx),$(librt-tests)): $(common-objpfx)rt/librt.so
 $(objpfx)unload: $(common-objpfx)dlfcn/libdl.so
 $(objpfx)unload.out: $(objpfx)libpthread.so

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,23 +19,17 @@
 #include <sysdep.h>
 	.text
 ENTRY (syscall)
-	or	%o0,%g0,%g1
-	or	%o1,%g0,%o0
-	or	%o2,%g0,%o1
-	or	%o3,%g0,%o2
-	or	%o4,%g0,%o3
-	or	%o5,%g0,%o4
+	mov	%o0, %g1
+	mov	%o1, %o0
+	mov	%o2, %o1
+	mov	%o3, %o2
+	mov	%o4, %o3
+	mov	%o5, %o4
 	ta	0x10
-	bcc	1f
-	nop
-	save %sp, -96, %sp
-	call __errno_location
-	nop
-	st %i0,[%o0]
-	restore
+	bcs	__syscall_error_handler
+	 nop
 	retl
-	mov -1, %o0
-1:
-	ret
+	 nop
+	SYSCALL_ERROR_HANDLER
 
 PSEUDO_END (syscall)

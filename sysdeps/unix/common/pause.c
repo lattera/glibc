@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #include <signal.h>
 #include <unistd.h>
-
+#include <sysdep-cancel.h>
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets errno to EINTR.  */
@@ -26,6 +26,12 @@
 int
 __libc_pause (void)
 {
-  return __sigpause (__sigblock (0), 0);
+  if (SINGLE_THREAD_P)
+    return __sigpause (__sigblock (0), 0);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+  int result = __sigpause (__sigblock (0), 0);
+  LIBC_CANCEL_RESET (oldtype);
+  return result;
 }
 weak_alias (__libc_pause, pause)

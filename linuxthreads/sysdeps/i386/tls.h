@@ -20,10 +20,12 @@
 #ifndef _TLS_H
 #define _TLS_H
 
+# include <dl-sysdep.h>
 # include <pt-machine.h>
 
 #ifndef __ASSEMBLER__
 # include <stddef.h>
+# include <stdint.h>
 
 /* Type for the dtv.  */
 typedef union dtv
@@ -39,9 +41,17 @@ typedef struct
 			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
+  int multiple_threads;
+#ifdef NEED_DL_SYSINFO
+  uintptr_t sysinfo;
+#endif
 } tcbhead_t;
 #endif
 
+#ifdef NEED_DL_SYSINFO
+/* Offset of the SYSINFO element in tcbhead_t.  */
+# define SYSINFO_OFFSET 24
+#endif
 
 /* We can support TLS only if the floating-stack support is available.
    However, we want to compile in the support and test at runtime whether
@@ -174,6 +184,12 @@ TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
   TLS_DO_MODIFY_LDT ((descr), 0)
 #  endif
 
+#if defined NEED_DL_SYSINFO && defined SHARED
+# define INIT_SYSINFO \
+  head->sysinfo = GL(dl_sysinfo)
+#else
+# define INIT_SYSINFO
+#endif
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
@@ -189,9 +205,14 @@ TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
     /* For now the thread descriptor is at the same address.  */	      \
     head->self = _descr;						      \
 									      \
+    INIT_SYSINFO;							      \
     TLS_SETUP_GS_SEGMENT (_descr, secondcall);				      \
   })
 
+/* Indicate that dynamic linker shouldn't try to initialize TLS even
+   when no PT_TLS segments are found in the program and libraries
+   it is linked against.  */
+#  define TLS_INIT_TP_EXPENSIVE 1
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \

@@ -24,7 +24,7 @@
 #include <sysdeps/unix/i386/sysdep.h>
 #include <bp-sym.h>
 #include <bp-asm.h>
-/* Defines RTLD_PRIVATE_ERRNO and NEED_DL_SYSINFO.  */
+/* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
 #include <dl-sysdep.h>
 #include <tls.h>
 
@@ -36,7 +36,8 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-#if defined NEED_DL_SYSINFO && !defined IS_IN_rtld
+#if defined USE_DL_SYSINFO \
+    && (!defined NOT_IN_libc || defined IS_IN_libpthread)
 # define I386_USE_SYSENTER	1
 #else
 # undef I386_USE_SYSENTER

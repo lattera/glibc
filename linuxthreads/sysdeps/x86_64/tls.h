@@ -109,6 +109,11 @@ typedef struct
     _result ? "cannot set %fs base address for thread-local storage" : 0;     \
   })
 
+/* Indicate that dynamic linker shouldn't try to initialize TLS even
+   when no PT_TLS segments are found in the program and libraries
+   it is linked against.  */
+#  define TLS_INIT_TP_EXPENSIVE 1
+
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
   ({ struct _pthread_descr_struct *__descr;				      \

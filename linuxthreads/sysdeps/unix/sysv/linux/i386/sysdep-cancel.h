@@ -25,7 +25,7 @@
 #endif
 
 #if defined FLOATING_STACKS && USE___THREAD
-# define MULTIPLE_THREADS_OFFSET	12
+# define MULTIPLE_THREADS_OFFSET	20
 #endif
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread

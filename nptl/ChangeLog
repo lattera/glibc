@@ -1,3 +1,29 @@
+2002-12-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* descr.h (struct pthread): Move header.data.list to the back of the
+	struct.
+	* sysdeps/i386/tls.h (tcbhead_t): Move list to the back of the struct.
+	(MULTIPLE_THREADS_OFFSET): Adjust offset.
+	(SYSINFO_OFFSEET): Likewise.
+
+2002-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i686/dl-sysdep.h (USE_DL_SYSINFO):
+	Define.
+	(DL_SYSINFO_DEFAULT): Cast to uintptr_t to avoid warnings.
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h (NEED_DL_SYSINFO,
+	DL_SYSINFO_DEFAULT, DL_SYSINFO_IMPLEMENTATION): Define.
+	(USE_DL_SYSINFO): Undef.
+
+2002-12-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests-reverse): Use $(objpfx)../libc.so instead of
+	$(common-objpfx)libc.so.
+	* tst-cancel4.c (tf_write, tf_writev): Increase buf sizes so that
+	it is bigger than pipe buffer size even on arches with bigger
+	page size.
+	(tf_usleep): Cast usleep argument to useconds_t to avoid warnings.
+
 2002-12-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelsem.S: Implement

@@ -1,4 +1,4 @@
-/* System-specific settings for dynamic linker code.  Generic version.
+/* System-specific settings for dynamic linker code.  IA-32 version.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -49,10 +49,11 @@
    find the code the kernel passes an AT_SYSINFO value in the
    auxiliary vector to the application.  */
 #define NEED_DL_SYSINFO	1
+#define USE_DL_SYSINFO	1
 
 #if defined NEED_DL_SYSINFO && !defined __ASSEMBLER__
 extern void _dl_sysinfo_int80 (void) attribute_hidden;
-# define DL_SYSINFO_DEFAULT _dl_sysinfo_int80
+# define DL_SYSINFO_DEFAULT (uintptr_t) _dl_sysinfo_int80
 # define DL_SYSINFO_IMPLEMENTATION \
   asm (".type _dl_sysinfo_int80,@function\n\t"				      \
        ".hidden _dl_sysinfo_int80\n"					      \

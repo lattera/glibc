@@ -34,15 +34,6 @@
 # define RTLD_PRIVATE_ERRNO 0
 #endif
 
-/* This configuration has in libc.so cancellable functions and other
-   functions which have to behave differently if the application uses
-   threads.  It is not necessary that the thread library's definitions
-   are used.  Therefore we can finally enabled the correct handling
-   of weak definitions in ld.so.  See rtld.c.  */
-
-#define RTLD_CORRECT_DYNAMIC_WEAK	1
-
-
 /* Traditionally system calls have been made using int $0x80.  A
    second method was introduced which, if possible, will use the
    sysenter/syscall instructions.  To signal the presence and where to

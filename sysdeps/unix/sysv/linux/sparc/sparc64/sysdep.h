@@ -31,11 +31,7 @@
 
 #ifdef __ASSEMBLER__
 
-#ifdef DONT_LOAD_G1
-# define LOADSYSCALL(x)
-#else
-# define LOADSYSCALL(x) mov __NR_##x, %g1
-#endif
+#define LOADSYSCALL(x) mov __NR_##x, %g1
 
 /* Linux/SPARC uses a different trap number */
 #undef PSEUDO
@@ -47,6 +43,21 @@
 	C_LABEL(name);							\
 	.type name,@function;
 
+#ifdef LINKER_HANDLES_R_SPARC_WDISP22
+/* Unfortunately, we cannot do this yet.  Linker doesn't seem to
+   handle R_SPARC_WDISP22 against non-STB_LOCAL symbols properly .  */
+# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
+	.section .gnu.linkonce.t.handler,"ax",@progbits;		\
+	.globl handler;							\
+	.hidden handler;						\
+	.type handler,@function;					\
+handler:
+#else
+# define SYSCALL_ERROR_HANDLER_ENTRY(handler)				\
+	.subsection 3;							\
+handler:
+#endif
+
 #if RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_HANDLER						\
 	.section .gnu.linkonce.t.__sparc64.get_pic.l7,"ax",@progbits;	\
@@ -57,6 +68,7 @@ __sparc64.get_pic.l7:							\
 	retl;								\
 	 add	%o7, %l7, %l7;						\
 	.previous;							\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	save	%sp, -192, %sp;						\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
 	call	__sparc64.get_pic.l7;					\
@@ -64,17 +76,20 @@ __sparc64.get_pic.l7:							\
 	ldx	[%l7 + errno], %l0;					\
 	st	%i0, [%l0];						\
 	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0;
+	 restore %g0, -1, %o0;						\
+	.previous;
 #else
-# define SYSCALL_ERROR_HANDLER					\
-	.global __errno_location;				\
-	.type   __errno_location,@function;			\
-	save	%sp, -192, %sp;					\
-	call	__errno_location;				\
-	 nop;							\
-	st	%i0, [%o0];					\
-	jmpl	%i7+8, %g0;					\
-	 restore %g0, -1, %o0;
+# define SYSCALL_ERROR_HANDLER						\
+SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
+	.global __errno_location;					\
+	.type   __errno_location,@function;				\
+	save	%sp, -192, %sp;						\
+	call	__errno_location;					\
+	 nop;								\
+	st	%i0, [%o0];						\
+	jmpl	%i7+8, %g0;						\
+	 restore %g0, -1, %o0;						\
+	.previous;
 #endif
 
 #define PSEUDO(name, syscall_name, args)				\
@@ -82,10 +97,9 @@ __sparc64.get_pic.l7:							\
 	ENTRY(name);							\
 	LOADSYSCALL(syscall_name);					\
 	ta	0x6d;							\
-	bcc,pt	%xcc, 1f;						\
+	bcs,pn	%xcc, __syscall_error_handler;				\
 	 nop;								\
-	SYSCALL_ERROR_HANDLER;						\
-1:
+	SYSCALL_ERROR_HANDLER
 
 #undef PSEUDO_END
 #define PSEUDO_END(name)						\

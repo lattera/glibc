@@ -1150,6 +1150,10 @@ of this helper program; chances are you did not intend to run this program.\n\
     /* Assign a module ID.  */
     GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
 
+# ifndef TLS_INIT_TP_EXPENSIVE
+#  define TLS_INIT_TP_EXPENSIVE 0
+# endif
+
   /* We do not initialize any of the TLS functionality unless any of the
      initial modules uses TLS.  This makes dynamic loading of modules with
      TLS impossible, but to support it requires either eagerly doing setup
@@ -1157,7 +1161,7 @@ of this helper program; chances are you did not intend to run this program.\n\
      an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
      used.  Trying to do it lazily is too hairy to try when there could be
      multiple threads (from a non-TLS-using libpthread).  */
-  if (GL(dl_tls_max_dtv_idx) > 0)
+  if (GL(dl_tls_max_dtv_idx) > 0 || !TLS_INIT_TP_EXPENSIVE)
     {
       struct link_map *l;
       size_t nelem;
@@ -1565,8 +1569,12 @@ cannot allocate TLS data structures for initial thread");
      we need it in the memory handling later.  */
   GL(dl_initial_searchlist) = *GL(dl_main_searchlist);
 
+#ifndef NONTLS_INIT_TP
+# define NONTLS_INIT_TP do { } while (0)
+#endif
+
 #ifdef USE_TLS
-  if (GL(dl_tls_max_dtv_idx) > 0 || USE___THREAD)
+  if (GL(dl_tls_max_dtv_idx) > 0 || USE___THREAD || !TLS_INIT_TP_EXPENSIVE)
     {
       /* Now that we have completed relocation, the initializer data
 	 for the TLS blocks has its final values and we can copy them
@@ -1579,7 +1587,9 @@ cannot allocate TLS data structures for initial thread");
       if (__builtin_expect (lossage != NULL, 0))
 	_dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
     }
+  else
 #endif
+    NONTLS_INIT_TP;
 
   {
     /* Initialize _r_debug.  */

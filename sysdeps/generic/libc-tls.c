@@ -135,8 +135,13 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 	}
 
   if (memsz == 0 && tcbsize <= TLS_INIT_TCB_SIZE)
-    /* We do not need a TLS block and no thread descriptor.  */
-    return;
+    {
+      /* We do not need a TLS block and no thread descriptor.  */
+#ifdef NONTLS_INIT_TP
+      NONTLS_INIT_TP;
+#endif
+      return;
+    }
 
 
   /* We have to set up the TCB block which also (possibly) contains
@@ -249,4 +254,16 @@ __pthread_initialize_minimal (void)
 {
   __libc_setup_tls (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN);
 }
+
+#elif defined NONTLS_INIT_TP
+
+/* This is the minimal initialization function used when libpthread is
+   not used.  */
+void
+__attribute__ ((weak))
+__pthread_initialize_minimal (void)
+{
+  NONTLS_INIT_TP;
+}
+
 #endif

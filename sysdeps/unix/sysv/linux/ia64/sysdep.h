@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jes Sorensen, <Jes.Sorensen@cern.ch>, April 1999.
    Based on code originally written by David Mosberger-Tang
@@ -83,7 +83,7 @@
 #define	PSEUDO(name, syscall_name, args)	\
   ENTRY(name)					\
     DO_CALL (SYS_ify(syscall_name));		\
-	cmp.eq p6,p0=-1,r10;;			\
+	cmp.eq p6,p0=-1,r10;			\
 (p6)	br.cond.spnt.few __syscall_error;
 
 #define DO_CALL(num)				\
@@ -102,11 +102,98 @@
 
 #else /* not __ASSEMBLER__ */
 
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-#if 0
+/* On IA-64 we have stacked registers for passing arguments.  The
+   "out" registers end up being the called function's "in"
+   registers.
+
+   Also, since we have plenty of registers we have two return values
+   from a syscall.  r10 is set to -1 on error, whilst r8 contains the
+   (non-negative) errno on error or the return value on success.
+ */
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)	__##name (args)
-#endif
+#define INLINE_SYSCALL(name, nr, args...)			\
+  ({								\
+    register long _r8 asm ("r8");				\
+    register long _r10 asm ("r10");				\
+    register long _r15 asm ("r15") = __NR_##name;		\
+    long _retval;						\
+    LOAD_ARGS_##nr (args);					\
+    __asm __volatile ("break %3;;\n\t"				\
+                      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
+                      : "i" (__BREAK_SYSCALL), "2" (_r15)	\
+			ASM_ARGS_##nr				\
+                      : "memory" ASM_CLOBBERS_##nr);		\
+    _retval = _r8;						\
+    if (_r10 == -1)						\
+      {								\
+        __set_errno (_retval);					\
+        _retval = -1;						\
+      }								\
+    _retval; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...)			\
+  ({								\
+    register long _r8 asm ("r8");				\
+    register long _r10 asm ("r10");				\
+    register long _r15 asm ("r15") = __NR_##name;		\
+    long _retval;						\
+    LOAD_ARGS_##nr (args);					\
+    __asm __volatile ("break %3;;\n\t"				\
+                      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
+                      : "i" (__BREAK_SYSCALL), "2" (_r15)	\
+			ASM_ARGS_##nr				\
+                      : "memory" ASM_CLOBBERS_##nr);		\
+    _retval = _r8;						\
+    if (_r10 == -1)						\
+      _retval = -_retval;					\
+    _retval; })
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned long) (val) >= -4095UL)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+
+#define LOAD_ARGS_0()   do { } while (0)
+#define LOAD_ARGS_1(out0)				\
+  register long _out0 asm ("out0") = (long) (out0);	\
+  LOAD_ARGS_0 ()
+#define LOAD_ARGS_2(out0, out1)				\
+  register long _out1 asm ("out1") = (long) (out1);	\
+  LOAD_ARGS_1 (out0)
+#define LOAD_ARGS_3(out0, out1, out2)			\
+  register long _out2 asm ("out2") = (long) (out2);	\
+  LOAD_ARGS_2 (out0, out1)
+#define LOAD_ARGS_4(out0, out1, out2, out3)		\
+  register long _out3 asm ("out3") = (long) (out3);	\
+  LOAD_ARGS_3 (out0, out1, out2)
+#define LOAD_ARGS_5(out0, out1, out2, out3, out4)	\
+  register long _out4 asm ("out4") = (long) (out4);	\
+  LOAD_ARGS_4 (out0, out1, out2, out3)
+
+#define ASM_ARGS_0
+#define ASM_ARGS_1      ASM_ARGS_0, "r" (_out0)
+#define ASM_ARGS_2      ASM_ARGS_1, "r" (_out1)
+#define ASM_ARGS_3      ASM_ARGS_2, "r" (_out2)
+#define ASM_ARGS_4      ASM_ARGS_3, "r" (_out3)
+#define ASM_ARGS_5      ASM_ARGS_4, "r" (_out4)
+
+#define ASM_CLOBBERS_0	ASM_CLOBBERS_1, "out0"
+#define ASM_CLOBBERS_1	ASM_CLOBBERS_2, "out1"
+#define ASM_CLOBBERS_2	ASM_CLOBBERS_3, "out2"
+#define ASM_CLOBBERS_3	ASM_CLOBBERS_4, "out3"
+#define ASM_CLOBBERS_4	ASM_CLOBBERS_5, "out4"
+#define ASM_CLOBBERS_5	, "out5", "out6", "out7",			\
+  /* Non-stacked integer registers, minus r8, r10, r15.  */		\
+  "r2", "r3", "r9", "r11", "r12", "r13", "r14", "r16", "r17", "r18",	\
+  "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27",	\
+  "r28", "r29", "r30", "r31",						\
+  /* Predicate registers.  */						\
+  "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15",	\
+  /* Non-rotating fp registers.  */					\
+  "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",	\
+  /* Branch registers.  */						\
+  "b6", "b7"
 
 #endif /* not __ASSEMBLER__ */

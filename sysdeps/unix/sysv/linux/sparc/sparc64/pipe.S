@@ -23,14 +23,13 @@ ENTRY (__libc_pipe)
 	mov	%o0, %o2		/* Save PIPEDES. */
 	LOADSYSCALL(pipe)
 	ta	0x6d
-	bcc,pt	%xcc, 2f
+	bcs,pn	%xcc, __syscall_error_handler
 	 nop
-	SYSCALL_ERROR_HANDLER
-
-2:	st	%o0, [%o2]		/* PIPEDES[0] = %o0; */
+	st	%o0, [%o2]		/* PIPEDES[0] = %o0; */
 	st	%o1, [%o2 + 4]		/* PIPEDES[1] = %o1; */
 	retl
 	 clr	%o0
+	SYSCALL_ERROR_HANDLER
 PSEUDO_END (__libc_pipe)
 
 weak_alias (__libc_pipe, __pipe)

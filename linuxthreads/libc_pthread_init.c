@@ -17,9 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <locale.h>
+#include <stdlib.h>
 #include <string.h>
 #include <tls.h>
-#include <locale.h>
 #include "internals.h"
 #include <sysdep-cancel.h>
 

@@ -42,9 +42,9 @@ typedef struct
 			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
-  list_t list;
   int multiple_threads;
   uintptr_t sysinfo;
+  list_t list;
 } tcbhead_t;
 #endif
 
@@ -62,11 +62,11 @@ typedef struct
 #define STACK_ALIGN	16
 
 /* Offset of the MULTIPLE_THREADS element in tcbhead_t.  */
-#define MULTIPLE_THREADS_OFFSET 20
+#define MULTIPLE_THREADS_OFFSET 12
 
 #ifdef NEED_DL_SYSINFO
 /* Offset of the SYSINFO element in tcbhead_t.  */
-# define SYSINFO_OFFSET 24
+# define SYSINFO_OFFSET 16
 #endif
 
 

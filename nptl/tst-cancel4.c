@@ -113,7 +113,7 @@ tf_write  (void *arg)
       exit (1);
     }
 
-  char buf[10000];
+  char buf[100000];
   memset (buf, '\0', sizeof (buf));
   ssize_t s = write (fds[1], buf, sizeof (buf));
 
@@ -133,7 +133,7 @@ tf_writev  (void *arg)
       exit (1);
     }
 
-  char buf[10000];
+  char buf[100000];
   memset (buf, '\0', sizeof (buf));
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
   ssize_t s = writev (fds[1], iov, 1);
@@ -172,7 +172,7 @@ tf_usleep (void *arg)
       exit (1);
     }
 
-  usleep (ULONG_MAX);
+  usleep ((useconds_t) ULONG_MAX);
 
   printf ("%s: usleep returns\n", __FUNCTION__);
 

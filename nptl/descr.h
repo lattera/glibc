@@ -66,11 +66,11 @@ struct pthread
                                    the address of this thread descriptor.  */
       union dtv *dtvp;
       struct pthread *self;       /* Pointer to this structure */
-      list_t list;
       int multiple_threads;
 #ifdef NEED_DL_SYSINFO
       uintptr_t sysinfo;
 #endif
+      list_t list;
     } data;
     void *__padding[16];
   } header;

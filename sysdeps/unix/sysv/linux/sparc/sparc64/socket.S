@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
 
@@ -68,12 +68,12 @@ ENTRY (__socket)
 	LOADSYSCALL(socketcall)
 	ta	0x6d
 
-        bcs,pn	%xcc, 1f
+	bcs,pn	%xcc, __syscall_error_handler
 	 nop
 	retl
 	 nop
 
-1:	SYSCALL_ERROR_HANDLER
+	SYSCALL_ERROR_HANDLER
 
 END (__socket)
 

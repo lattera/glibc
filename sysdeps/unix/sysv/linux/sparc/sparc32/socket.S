@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
 
@@ -67,13 +67,12 @@ ENTRY (__socket)
 	add %sp, 68, %o1		/* arg 2: parameter block */
 	LOADSYSCALL(socketcall)
 	t 0x10
-
-        bcs,a 1f
+        bcs __syscall_error_handler
 	 nop
 	retl
 	 nop
 
-1:	SYSCALL_ERROR_HANDLER
+	SYSCALL_ERROR_HANDLER
 
 END (__socket)
 

@@ -97,7 +97,7 @@ typedef pthread_key_t __libc_key_t;
 #if defined _LIBC && defined IS_IN_libpthread
 # define __libc_maybe_call(FUNC, ARGS, ELSE) FUNC ARGS
 #else
-# ifdef __PIC__
+# if defined __PIC__ || (defined _LIBC && defined SHARED)
 #  define __libc_maybe_call(FUNC, ARGS, ELSE) \
   (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
                     _fn != NULL ? (*_fn) ARGS : ELSE; }))
@@ -106,7 +106,7 @@ typedef pthread_key_t __libc_key_t;
   (FUNC != NULL ? FUNC ARGS : ELSE)
 # endif
 #endif
-#if defined _LIBC && !defined NOT_IN_libc && defined __PIC__
+#if defined _LIBC && !defined NOT_IN_libc && defined SHARED
 # define __libc_maybe_call2(FUNC, ARGS, ELSE) \
   ({__libc_pthread_functions.ptr_##FUNC != NULL \
     ? __libc_pthread_functions.ptr_##FUNC ARGS : ELSE; })
