@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,17 +47,8 @@
 
 # define __inline		/* No inline functions.  */
 
-# if (defined __STDC__ && __STDC__) || defined __cplusplus
-
-#  define __P(args)	args
-#  define __PMT(args)	args
-
-# else	/* Not ANSI C or C++.  */
-
-#  define __P(args)	()	/* No prototypes.  */
-#  define __PMT(args)	()
-
-# endif	/* ANSI C or C++.  */
+# define __P(args)	args
+# define __PMT(args)	args
 
 # define __const	const
 # define __signed	signed
@@ -68,34 +59,12 @@
 /* For these things, GCC behaves the ANSI way normally,
    and the non-ANSI way under -traditional.  */
 
-#if defined __STDC__ && __STDC__
-
-# define __CONCAT(x,y)	x ## y
-# define __STRING(x)	#x
+#define __CONCAT(x,y)	x ## y
+#define __STRING(x)	#x
 
 /* This is not a typedef so `const __ptr_t' does the right thing.  */
-# define __ptr_t void *
-# define __long_double_t  long double
-
-#else
-
-# define __CONCAT(x,y)	x/**/y
-# define __STRING(x)	"x"
-
-# define __ptr_t char *
-# define __long_double_t  long double
-
-/* The BSD header files use the ANSI keywords unmodified (this means that
-   old programs may lose if they use the new keywords as identifiers), but
-   those names are not available under -traditional.  We define them to
-   their __ versions, which are taken care of above.  */
-# ifdef	__USE_BSD
-#  define const		__const
-#  define signed		__signed
-#  define volatile	__volatile
-# endif
-
-#endif	/* __STDC__ */
+#define __ptr_t void *
+#define __long_double_t  long double
 
 
 /* C++ needs to know that types and declarations are C, not C++.  */
@@ -135,9 +104,7 @@
    `__attribute__' syntax.  All of the ways we use this do fine if
    they are omitted for compilers that don't understand it. */
 #if !defined __GNUC__ || __GNUC__ < 2
-
 # define __attribute__(xyz)	/* Ignore */
-
 #endif
 
 /* At some point during the gcc 2.96 development the `malloc' attribute

@@ -307,16 +307,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	 beginning, either don't have the minimal number of bytes as a divisor
 	 of the maximum length or have a minimum length of 1.  This is true
 	 for all known and supported encodings.  */
-      int unaligned;
-
-      unaligned = ((FROM_DIRECTION
-		    && ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
-			|| (data->__is_last
-			    && (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
-		   || (!FROM_DIRECTION
-		       && ((data->__is_last
-			    && (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
-			   || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
+      int unaligned = ((FROM_DIRECTION
+			&& ((uintptr_t) inptr % MIN_NEEDED_FROM != 0
+			    || (data->__is_last
+				&& (uintptr_t) outbuf % MIN_NEEDED_TO != 0)))
+		       || (!FROM_DIRECTION
+			   && ((data->__is_last
+				&& (uintptr_t) outbuf % MIN_NEEDED_FROM != 0)
+			       || (uintptr_t) inptr % MIN_NEEDED_TO != 0)));
 # define GEN_unaligned(name) GEN_unaligned2 (name)
 # define GEN_unaligned2(name) name##_unaligned
 #endif
