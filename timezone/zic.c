@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.93";
+static char	elsieid[] = "@(#)zic.c	7.94";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -601,23 +601,20 @@ const char * const	tofile;
 	if (!itsdir(toname))
 		(void) remove(toname);
 	if (link(fromname, toname) != 0) {
-		int failure = errno;
-		if (failure == ENOENT)
-			if (mkdirs(toname) != 0)
-				failure = errno;
-			else if (link(fromname, toname) == 0)
-				failure = 0;
-			else
-				failure = errno;
-#ifndef MISSING_SYMLINK
-		if (failure == EXDEV)
-			if (symlink(fromname, toname) != 0)
-				failure = errno;
-			else
-				failure = 0;
+		int	result;
+
+		if (mkdirs(toname) != 0)
+			(void) exit(EXIT_FAILURE);
+		result = link(fromname, toname);
+#if (HAVE_SYMLINK - 0) 
+		if (result != 0) {
+			result = symlink(fromname, toname);
+			if (result == 0)
+warning(_("hard link failed, symbolic link used"));
+		}
 #endif
-		if (failure) {
-			const char *e = strerror(failure);
+		if (result != 0) {
+			const char *e = strerror(errno);
 
 			(void) fprintf(stderr,
 				_("%s: Can't link from %s to %s: %s\n"),

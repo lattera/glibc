@@ -1,5 +1,5 @@
 /* Pentium optimized __mpn_lshift --
-   Copyright (C) 1992, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or modify
@@ -29,9 +29,7 @@
 #include "asm-syntax.h"
 
 .text
-	ALIGN (3)
-	.globl C_SYMBOL_NAME(__mpn_lshift)
-C_SYMBOL_NAME(__mpn_lshift:)
+ENTRY(__mpn_lshift)
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
@@ -219,3 +217,4 @@ L(L1):	movl	%edx,(%edi)		/* store last limb */
 	popl	%esi
 	popl	%edi
 	ret
+END(__mpn_lshift)

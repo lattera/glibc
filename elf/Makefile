@@ -60,6 +60,9 @@ install-bin	= ldd
 generated      += ldd
 endif
 
+others		= sprof
+install-bin	= sprof
+
 ifeq (yes,$(has-ldconfig))
 others-static	+= ldconfig
 others		+= ldconfig
@@ -177,6 +180,12 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)version.mk \
 	    -e 's%@TEXTDOMAINDIR@%$(localedir)%g' < $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
+endif
+
+ifeq ($(build-shared),yes)
+$(objpfx)sprof: $(objpfx)libdl.so$(libdl.so-version)
+else
+$(objpfx)sprof: $(objpfx)libdl.a
 endif
 
 # muwahaha

@@ -1,6 +1,6 @@
 /* i80386 __mpn_addmul_1 -- Multiply a limb vector with a limb and add
    the result to a second limb vector.
-   Copyright (C) 1992, 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -34,11 +34,8 @@
 #define sizeP ecx
 #define s2_limb ebp
 
-	TEXT
-	ALIGN (3)
-	GLOBL	C_SYMBOL_NAME(__mpn_addmul_1)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__mpn_addmul_1),@function)
-C_SYMBOL_NAME(__mpn_addmul_1:)
+	.text
+ENTRY(__mpn_addmul_1)
 
 	INSN1(push,l	,R(edi))
 	INSN1(push,l	,R(esi))
@@ -73,5 +70,4 @@ L(oop):
 	INSN1(pop,l	,R(esi))
 	INSN1(pop,l	,R(edi))
 	ret
-
-	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__mpn_addmul_1))
+END(__mpn_addmul_1)

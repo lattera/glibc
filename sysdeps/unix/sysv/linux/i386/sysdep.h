@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -49,7 +49,8 @@
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
     cmpl $-4095, %eax;							      \
-    jae syscall_error;
+    jae syscall_error;							      \
+  L(pseudo_end):
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
@@ -78,7 +79,7 @@ syscall_error:								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
-  ret;									      \
+  jmp L(pseudo_end);							      \
   .size syscall_error,.-syscall_error;
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
@@ -94,7 +95,7 @@ syscall_error:								      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
-  ret;									      \
+  jmp L(pseudo_end);							      \
   .size syscall_error,.-syscall_error;
 #endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */

@@ -270,6 +270,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 				}
 			} else
 				connected = 1;
+		}
 		break;
 	}
 }

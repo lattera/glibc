@@ -1,6 +1,6 @@
 /* Pentium __mpn_addmul_1 -- Multiply a limb vector with a limb and add
    the result to a second limb vector.
-   Copyright (C) 1992, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 94, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -34,10 +34,8 @@
 #define size ecx
 #define s2_limb ebp
 
-	TEXT
-	ALIGN (3)
-	GLOBL	C_SYMBOL_NAME(__mpn_addmul_1)
-C_SYMBOL_NAME(__mpn_addmul_1:)
+	.text
+ENRTY(__mpn_addmul_1)
 
 	INSN1(push,l	,R(edi))
 	INSN1(push,l	,R(esi))
@@ -79,3 +77,5 @@ L(oop):	INSN2(adc,l	,R(ebx),$0)
 	INSN1(pop,l	,R(esi))
 	INSN1(pop,l	,R(edi))
 	ret
+#undef size
+END(__mpn_addmul_1)

@@ -60,7 +60,7 @@ GLIBC_2.0 {
     _LIB_VERSION; signgam;
 
     # functions used in inline functions or macros
-    __log1p;
+    __log1p; __atan2;
 
   local:
     *;

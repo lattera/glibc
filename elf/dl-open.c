@@ -133,6 +133,7 @@ _dl_open (const char *file, int mode)
 	  _dl_global_scope[3] = new;
 	  _dl_global_scope[4] = NULL;
 	  _dl_global_scope[5] = NULL;
+	  _dl_global_scope_end = &_dl_global_scope [4];
 	}
       else
 	{

@@ -1,5 +1,5 @@
 /* i80386 __mpn_lshift --
-   Copyright (C) 1992, 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -28,11 +28,8 @@
 #include "sysdep.h"
 #include "asm-syntax.h"
 
-.text
-	ALIGN (3)
-	.globl C_SYMBOL_NAME(__mpn_lshift)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__mpn_lshift),@function)
-C_SYMBOL_NAME(__mpn_lshift:)
+	.text
+ENTRY(__mpn_lshift)
 	pushl	%edi
 	pushl	%esi
 	pushl	%ebx
@@ -82,5 +79,4 @@ L(end):	shll	%cl,%ebx		/* compute least significant limb */
 	popl	%esi
 	popl	%edi
 	ret
-
-	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__mpn_lshift))
+END(__mpn_lshift)

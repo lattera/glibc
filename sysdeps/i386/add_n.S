@@ -1,6 +1,6 @@
 /* Add two limb vectors of the same length > 0 and store sum in a third
    limb vector.
-   Copyright (C) 1992, 1994, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 94, 95, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -29,11 +29,8 @@
 #include "sysdep.h"
 #include "asm-syntax.h"
 
-.text
-	ALIGN (3)
-	.globl C_SYMBOL_NAME(__mpn_add_n)
-	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__mpn_add_n),@function)
-C_SYMBOL_NAME(__mpn_add_n:)
+	.text
+ENTRY(__mpn_add_n)
 	pushl %edi
 	pushl %esi
 
@@ -103,5 +100,4 @@ L(oop):	movl	(%esi),%eax
 	popl %esi
 	popl %edi
 	ret
-
-	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__mpn_add_n))
+END(__mpn_add_n)

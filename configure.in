@@ -291,7 +291,9 @@ for d in $add_ons_pfx ''; do
   for b in $base ''; do
     for m0 in $mach ''; do
       for v in /$vendor ''; do
+	test "$v" = / && continue
 	for o in /$ostry ''; do
+	  test "$o" = / && continue
 	  for m in $mach ''; do
 	    if test "$m0$b$v$o$m"; then
 	      try="${d}sysdeps$m0$b$v$o$m"
@@ -422,6 +424,18 @@ if test "$INSTALL" = "${srcdir}/install-sh -c"; then
 fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
+if test "$MSGFMT" != ":"; then
+changequote(,)dnl Need [] for regexps.
+  if $MSGFMT --version 2>&1 | grep 'GNU gettext.*0\.[1-9][0-9]' >/dev/null 2>&1
+changequote([,])dnl
+  then : # msgfmt from gettext 0.10 or greater, works.
+  else
+    AC_MSG_WARN([
+*** (g)msgfmt is too old or wrong version (need gettext 0.10 or better).])
+    MSGFMT=":"
+  fi
+fi
+
 AC_CHECK_PROG(MAKEINFO, makeinfo, makeinfo)
 if test "$MAKEINFO"; then
 changequote(,)dnl Need [] for regexps.

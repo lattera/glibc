@@ -1,5 +1,5 @@
 /* Assembler macros for i386.
-   Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 93, 95, 96, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #define ALIGNARG(log2) 1<<log2
 /* For ELF we need the `.type' directive to make shared libs work right.  */
 #define ASM_TYPE_DIRECTIVE(name,typearg) .type name,typearg;
-#define ASM_SIZE_DIRECTIVE(name) .size name,.-name
+#define ASM_SIZE_DIRECTIVE(name) .size name,.-name;
 
 /* In ELF C symbols are asm symbols.  */
 #undef	NO_UNDERSCORES
@@ -44,17 +44,39 @@
 #endif
 
 
-/* Define an entry point visible from C.  */
+/* Define an entry point visible from C.
+
+   There is currently a bug in gdb which prevents us from specifying
+   incomplete stabs information.  Fake some entries here which specify
+   the current source file.  */
 #define	ENTRY(name)							      \
+  STABS_CURRENT_FILE1("")						      \
+  STABS_CURRENT_FILE(name)						      \
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				      \
   ASM_TYPE_DIRECTIVE (C_SYMBOL_NAME(name),@function)			      \
   .align ALIGNARG(4);							      \
+  STABS_FUN(name)							      \
   C_LABEL(name)								      \
   CALL_MCOUNT
 
 #undef	END
 #define END(name)							      \
-  ASM_SIZE_DIRECTIVE(name)
+  ASM_SIZE_DIRECTIVE(name)						      \
+  STABS_FUN_END(name)
+
+/* Remove the following two lines once the gdb bug is fixed.  */
+#define STABS_CURRENT_FILE(name)					      \
+  STABS_CURRENT_FILE1 (#name)
+#define STABS_CURRENT_FILE1(name)					      \
+  1: .stabs name,100,0,0,1b;
+/* Emit stabs definition lines.  We use F(0,1) and define t(0,1) as `int',
+   the same way gcc does it.  */
+#define STABS_FUN(name) STABS_FUN2(name, name##:F(0,1))
+#define STABS_FUN2(name, namestr)					      \
+  .stabs "int:t(0,1)=r(0,1);-2147483648;2147483647;",128,0,0,0;		      \
+  .stabs #namestr,36,0,0,name;
+#define STABS_FUN_END(name)						      \
+  1: .stabs "",36,0,0,1b-name;
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF

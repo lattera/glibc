@@ -1,6 +1,6 @@
 /* i80386 __mpn_mul_1 -- Multiply a limb vector with a limb and store
    the result in a second limb vector.
-   Copyright (C) 1992, 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
    s2_limb	(sp + 16)
 */
 
-#include "sysdep.h"
+#include <sysdep.h>
 #include "asm-syntax.h"
 
 #define res_ptr edi
@@ -34,10 +34,8 @@
 #define size ecx
 #define s2_limb ebp
 
-	TEXT
-	ALIGN (3)
-	GLOBL	C_SYMBOL_NAME(__mpn_mul_1)
-C_SYMBOL_NAME(__mpn_mul_1:)
+	.text
+ENTRY(__mpn_mul_1)
 
 	INSN1(push,l	,R(edi))
 	INSN1(push,l	,R(esi))
@@ -71,3 +69,5 @@ L(oop):
 	INSN1(pop,l	,R(esi))
 	INSN1(pop,l	,R(edi))
 	ret
+#undef size
+END(__mpn_mul_1)

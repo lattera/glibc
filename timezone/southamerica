@@ -1,4 +1,4 @@
-# @(#)southamerica	7.22
+# @(#)southamerica	7.23
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -274,8 +274,25 @@ Rule	Brazil	1992	only	-	Feb	 9	 0:00	0	S
 Rule	Brazil	1993	1995	-	Oct	Sun>=11	 0:00	1:00	D
 Rule	Brazil	1993	only	-	Jan	31	 0:00	0	S
 Rule	Brazil	1994	1995	-	Feb	Sun>=15	 0:00	0	S
-Rule	Brazil	1996	max	-	Feb	Sun>=11	 0:00	0	S
-Rule	Brazil	1996	max	-	Oct	Sun>=1	 0:00	1:00	D
+Rule	Brazil	1996	only	-	Feb	Sun>=11	 0:00	0	S
+Rule	Brazil	1996	only	-	Oct	Sun>=1	 0:00	1:00	D
+# From Daniel C. Sobral <dcs@gns.com.br> (1998-02-12):
+# In 1997, the DS began on October 6. The stated reason was that
+# because international television networks ignored Brazil's policy on DS,
+# they bought the wrong times on satellite for coverage of Pope's visit.
+# This year, the ending date of DS was postponed to March 1
+# to help dealing with the shortages of electric power.
+#
+# From Paul Eggert (1998-02-25):
+# Reference for 1997-10-06 change:
+# <a href="http://churchnet.ucsm.ac.uk/news/files2/news165.htm">
+# Brazil Prepares for Papal Visit
+# </a>,
+# Church Net UK (1997-10-02).
+Rule	Brazil	1997	only	-	Oct	 6	 0:00	1:00	D
+Rule	Brazil	1998	only	-	Mar	 1	 0:00	0	S
+Rule	Brazil	1998	max	-	Oct	Sun>=1	 0:00	1:00	D
+Rule	Brazil	1999	max	-	Feb	Sun>=11	 0:00	0	S
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 #

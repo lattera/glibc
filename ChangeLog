@@ -1,3 +1,88 @@
+1998-03-02 17:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/add_n.S: Change to use ENTRY and END macro.
+	* sysdeps/i386/addmul_1.S: Likewise.
+	* sysdeps/i386/lshift.S: Likewise.
+	* sysdeps/i386/mul_1.S: Likewise.
+	* sysdeps/i386/rshift.S: Likewise.
+	* sysdeps/i386/sub_n.S: Likewise.
+	* sysdeps/i386/submul_1.S: Likewise.
+	* sysdeps/i386/i586/add_n.S: Likewise.
+	* sysdeps/i386/i586/addmul_1.S: Likewise.
+	* sysdeps/i386/i586/lshift.S: Likewise.
+	* sysdeps/i386/i586/mul_1.S: Likewise.
+	* sysdeps/i386/i586/rshift.S: Likewise.
+	* sysdeps/i386/i586/sub_n.S: Likewise.
+	* sysdeps/i386/i586/submul_1.S: Likewise.
+
+	* sysdeps/i386/sysdep.h: Extend last change.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Follow Intel's advice
+	to have only one exit point for functions.
+
+1998-03-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Fix msgfmt test.  Fix handling of //s in sysdeps
+	search.
+
+1998-03-02 13:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Generate libc.so with absolute paths for the used
+	shared objects.
+
+	* config.make.in: Add MAKEINFO definition.
+
+1998-03-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/sysdep.h (ASM_SIZE_DIRECTIVE): Add ; at the end.
+	(ENTRY): Use STABS_FUN.
+	(END): Use STABS_FUN_END.
+	(STABS_FUN, STABS_FUN2, STABS_FUN_END): New macro to emit stabs info.
+
+	* elf/Makefile: Add rules to build sprof program.
+	* elf/sprof.c: New file.
+
+1998-02-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/syslog.c (openlog_internal): Insert missing closing brace.
+
+1998-02-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Check for working msgfmt version (from GNU gettext
+	0.10 or later).
+
+1998-03-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Avoid //s in sysdirs.
+	Patch by Roland McGrath.
+
+	* stdlib/a64l.c (a64l): Rewrite by Joe Keane <jgk@jgk.org>.
+
+1998-03-02 07:17  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-open.c (_dl_open): Update _dl_global_scope_end when
+	setting _dl_global_scope for RTLD_GLOBAL.
+
+1998-02-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/make-syscalls.sh: Fix last change so that all
+	possible lists of object-suffixes are taken care of.
+
+1998-03-02 10:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/private.h: Update from tzcode1998c.
+	* timezone/zic.c: Likewise.
+	* timezone/antarctica: Updated from tzdata1998c.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/southamerica: Likewise.
+
+1998-03-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c (glob_in_dir): Add support for cases insensitive
+	VMS.  Patch by John W. Eaton <jwe@bevo.che.wisc.edu>.
+
 1998-03-01 19:05  H.J. Lu  (hjl@gnu.org)
 
 	* sysdeps/libm-ieee754/e_exp.c (__ieee754_exp): Use __isinf.

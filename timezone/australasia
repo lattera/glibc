@@ -1,4 +1,4 @@
-# @(#)australasia	7.39
+# @(#)australasia	7.40
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -213,21 +213,6 @@ Zone	Pacific/Tahiti	 -9:58:16 -	LMT	1912 Oct	# Papeete
 Zone	Pacific/Guam	 9:39:00 -	LMT	1901		# Agana
 			10:00	-	GST
 
-# Howland, Baker
-# uninhabited since World War II
-# no information; was probably like Pacific/Pago_Pago
-
-# Jarvis
-# uninhabited since 1958
-# no information; was probably like Pacific/Kiritimati
-
-# Johnston
-# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone Pacific/Johnston	-10:00	-	HST
-
-# Kingman
-# uninhabited
-
 # Kiribati
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Tarawa	 11:32:04 -	LMT	1901		# Bairiki
@@ -352,9 +337,6 @@ Zone	Pacific/Norfolk	11:11:52 -	LMT	1901		# Kingston
 Zone Pacific/Palau	8:57:56 -	LMT	1901		# Koror
 			9:00	-	PWT	# Palau Time
 
-# Palmyra
-# uninhabited since World War II; was probably like Pacific/Kiritimati
-
 # Papua New Guinea
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Port_Moresby 9:48:40 -	LMT	1880
@@ -402,6 +384,33 @@ Zone Pacific/Tongatapu	12:19:20 -	LMT	1901
 Zone Pacific/Funafuti	11:56:52 -	LMT	1901
 			12:00	-	TVT	# Tuvalu Time
 
+
+# US minor outlying islands
+
+# Howland, Baker
+# uninhabited since World War II
+# no information; was probably like Pacific/Pago_Pago
+
+# Jarvis
+# uninhabited since 1958
+# no information; was probably like Pacific/Kiritimati
+
+# Johnston
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone Pacific/Johnston	-10:00	-	HST
+
+# Kingman
+# uninhabited
+
+# Palmyra
+# uninhabited since World War II; was probably like Pacific/Kiritimati
+
+# Wake
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone	Pacific/Wake	11:06:28 -	LMT	1901
+			12:00	-	WAKT	# Wake Time
+
+
 # Vanuatu
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Vanuatu	1983	only	-	Sep	25	0:00	1:00	S
@@ -413,11 +422,6 @@ Rule	Vanuatu	1992	only	-	Oct	Sun>=23	0:00	1:00	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Pacific/Efate	11:13:16 -	LMT	1912 Jan 13		# Vila
 			11:00	Vanuatu	VU%sT	# Vanuatu Time
-
-# Wake
-# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Pacific/Wake	11:06:28 -	LMT	1901
-			12:00	-	WAKT	# Wake Time
 
 # Wallis and Futuna
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -517,16 +521,15 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # 
 # NSW (including LHI and Broken Hill):
 # <a href="http://www.austlii.edu.au/au/legis/nsw/consol_act/sta1987137/index.html">
-# http://www.austlii.edu.au/au/legis/nsw/consol_act/sta1987137/index.html
+# Standard Time Act 1987 (updated 1995-04-04)
 # </a>
 # ACT
-# <a href="http://www.austlii.edu.au/au/legis/act/consol_act/consol_act/stasta1972279/i">
-# http://www.austlii.edu.au/au/legis/act/consol_act/consol_act/stasta1972279/i
+# <a href="http://www.austlii.edu.au/au/legis/act/consol_act/consol_act/stasta1972279/index.html">
+# Standard Time and Summer Time Act 1972
 # </a>
-# ndex.html
 # SA
 # <a href="http://www.austlii.edu.au/au/legis/sa/consol_act/sta1898137/index.html">
-# http://www.austlii.edu.au/au/legis/sa/consol_act/sta1898137/index.html
+# Standard Time Act, 1898
 # </a>
 
 # Northern Territory
