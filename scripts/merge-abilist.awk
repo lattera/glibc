@@ -131,15 +131,22 @@ END {
     # S[I] is a sorted, comma-separated list of SET:CONFIG pairs.
     # All we have to do is pretty-print them.
     nc = split(s[i], c, ",");
-    lastvers = "";
+    lastvers = lastconf = "";
     for (j = 1; j <= nc; ++j) {
       split(c[j], temp, ":");
       version = temp[1];
       conf = temp[2];
       if (version != lastvers)
 	printf "%s%s", (lastvers != "" ? "\n| " : ""), version;
+      # Hack: if CONF is foo.*/bar and LASTCONF was foo.*,
+      # then we can omit the foo.*/bar since foo.* matches already.
+      # Note we don't update LASTCONF, so foo.*/baz next time will match too.
+      else if ((slash = index(conf, ".*/")) > 0 && \
+	       substr(conf, 1, slash + 2 - 1) == lastconf)
+        continue;
       printf " %s", conf;
       lastvers = version;
+      lastconf = conf;
     }
     print "";
     outpipe = "sort";
