@@ -37,7 +37,7 @@ endif
 ifdef as-pipe-ok
 
 define compile-command.S
-$(CC) $(CPPFLAGS) $(asm-CPPFLAGS) -E $< \
+$(CC) $(CPPFLAGS) $(m68k-syntax-flag) $(asm-CPPFLAGS) -E $< \
 | sed 's/(@@@Hash-Here@@@)/#/g' | $(AS) $(ASFLAGS) -o $@
 endef
 
@@ -45,7 +45,7 @@ else
 
 define compile-command.S
 @-rm -f $@s
-$(CC) $(CPPFLAGS) $(asm-CPPFLAGS) -E $< \
+$(CC) $(CPPFLAGS) $(m68k-syntax-flag) $(asm-CPPFLAGS) -E $< \
 | sed 's/(@@@Hash-Here@@@)/#/g' > $@s
 $(AS) $(ASFLAGS) $@s -o $@
 -rm -f $@s
@@ -53,3 +53,9 @@ endef
 
 endif
 
+# The mpn functions need this.  All existing 68k ports use MIT syntax.  If
+# a new port wants to use Motorola or Sony syntax, it can redefine this
+# variable.
+ifndef m68k-syntax-flag
+m68k-syntax-flag = -DMIT_SYNTAX
+endif
