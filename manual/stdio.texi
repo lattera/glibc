@@ -1943,9 +1943,19 @@ The @var{arginfo-function} is the function called by
 template string.  @xref{Parsing a Template String}, for information
 about this.
 
-Normally, you install both functions for a conversion at the same time,
-but if you are never going to call @code{parse_printf_format}, you do
-not need to define an arginfo function.
+@c The following is not true anymore.  The `parse_printf_format' function
+@c is now also called from `vfprintf' via `parse_one_spec'.
+@c --drepper@gnu, 1996/11/14
+@c
+@c Normally, you install both functions for a conversion at the same time,
+@c but if you are never going to call @code{parse_printf_format}, you do
+@c not need to define an arginfo function.
+
+@strong{Attention:} In the GNU C library version before 2.0 the
+@var{arginfo-function} function did not need to be installed unless
+the user uses the @code{parse_printf_format} function.  This changed.
+Now a call to any of the @code{printf} functions will call this
+function when this format specifier appears in the format string.
 
 The return value is @code{0} on success, and @code{-1} on failure
 (which occurs if @var{spec} is out of range).
@@ -1995,7 +2005,7 @@ actual value retrieved from the argument list.  But the structure passed
 to the arginfo function contains a value of @code{INT_MIN}, since the
 actual value is not known.
 
-@item char spec
+@item wchar_t spec
 This is the conversion specifier character specified.  It's stored in
 the structure so that you can register the same handler function for
 multiple characters, but still have a way to tell them apart when the
@@ -2028,7 +2038,13 @@ This is a boolean that is true if the @samp{+} flag was specified.
 @item unsigned int group
 This is a boolean that is true if the @samp{'} flag was specified.
 
-@item char pad
+@item unsigned int extra
+This flag has a special meaning depending on the context.  It could
+be used freely by the user-defined handlers but when called from
+the @code{printf} function this variable always contains the value
+@code{0}.
+
+@item wchar_t pad
 This is the character to use for padding the output to the minimum field
 width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 @code{' '} otherwise.
@@ -2042,32 +2058,42 @@ width.  The value is @code{'0'} if the @samp{0} flag was specified, and
 Now let's look at how to define the handler and arginfo functions
 which are passed as arguments to @code{register_printf_function}.
 
+@strong{Compatibility Note:} The interface change in the GNU libc
+version 2.0.  Previously the third argument was of type
+@code{va_list *}.
+
 You should define your handler functions with a prototype like:
 
 @smallexample
 int @var{function} (FILE *stream, const struct printf_info *info,
-                    va_list *ap_pointer)
+                    const void *const *args)
 @end smallexample
 
-The @code{stream} argument passed to the handler function is the stream to
+The @var{stream} argument passed to the handler function is the stream to
 which it should write output.
 
-The @code{info} argument is a pointer to a structure that contains
+The @var{info} argument is a pointer to a structure that contains
 information about the various options that were included with the
 conversion in the template string.  You should not modify this structure
 inside your handler function.  @xref{Conversion Specifier Options}, for
 a description of this data structure.
 
-The @code{ap_pointer} argument is used to pass the tail of the variable
-argument list containing the values to be printed to your handler.
-Unlike most other functions that can be passed an explicit variable
-argument list, this is a @emph{pointer} to a @code{va_list}, rather than
-the @code{va_list} itself.  Thus, you should fetch arguments by
-means of @code{va_arg (*ap_pointer, @var{type})}.
+@c The following changes some time back.  --drepper@gnu, 1996/11/14
+@c
+@c The @code{ap_pointer} argument is used to pass the tail of the variable
+@c argument list containing the values to be printed to your handler.
+@c Unlike most other functions that can be passed an explicit variable
+@c argument list, this is a @emph{pointer} to a @code{va_list}, rather than
+@c the @code{va_list} itself.  Thus, you should fetch arguments by
+@c means of @code{va_arg (*ap_pointer, @var{type})}.
+@c
+@c (Passing a pointer here allows the function that calls your handler
+@c function to update its own @code{va_list} variable to account for the
+@c arguments that your handler processes.  @xref{Variadic Functions}.)
 
-(Passing a pointer here allows the function that calls your handler
-function to update its own @code{va_list} variable to account for the
-arguments that your handler processes.  @xref{Variadic Functions}.)
+The @var{args} is a vector of pointers to the arguments data.
+The number of arguments were determined by calling the argument
+information function provided by the user.
 
 Your handler function should return a value just like @code{printf}
 does: it should return the number of characters it has written, or a
@@ -2080,11 +2106,11 @@ This is the data type that a handler function should have.
 @end deftp
 
 If you are going to use @w{@code{parse_printf_format}} in your
-application, you should also define a function to pass as the
+application, you must also define a function to pass as the
 @var{arginfo-function} argument for each new conversion you install with
 @code{register_printf_function}.
 
-You should define these functions with a prototype like:
+You have to define these functions with a prototype like:
 
 @smallexample
 int @var{function} (const struct printf_info *info,

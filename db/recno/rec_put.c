@@ -170,7 +170,7 @@ einval:		errno = EINVAL;
 
 	if (flags == R_SETCURSOR)
 		t->bt_cursor.rcursor = nrec;
-	
+
 	F_SET(t, R_MODIFIED);
 	return (__rec_ret(t, NULL, nrec, key, NULL));
 }
@@ -256,7 +256,7 @@ __rec_iput(t, nrec, data, flags)
 	 * the offset array, shift the pointers up.
 	 */
 	nbytes = NRLEAFDBT(data->size);
-	if (h->upper - h->lower < nbytes + sizeof(indx_t)) {
+	if ((u_int32_t) (h->upper - h->lower) < nbytes + sizeof(indx_t)) {
 		status = __bt_split(t, h, NULL, data, dflags, nbytes, index);
 		if (status == RET_SUCCESS)
 			++t->bt_nrecs;

@@ -157,7 +157,8 @@ __hash_open(file, flags, mode, info, dflags)
 		if (hashp->VERSION != HASHVERSION &&
 		    hashp->VERSION != OLDHASHVERSION)
 			RETURN_ERROR(EFTYPE, error1);
-		if (hashp->hash(CHARKEY, sizeof(CHARKEY)) != hashp->H_CHARKEY)
+		if (hashp->hash(CHARKEY, sizeof(CHARKEY))
+		    != (u_int32_t) hashp->H_CHARKEY)
 			RETURN_ERROR(EFTYPE, error1);
 		/*
 		 * Figure out how many segments we need.  Max_Bucket is the
@@ -744,7 +745,7 @@ hash_seq(dbp, key, data, flag)
 	for (bp = NULL; !bp || !bp[0]; ) {
 		if (!(bufp = hashp->cpage)) {
 			for (bucket = hashp->cbucket;
-			    bucket <= hashp->MAX_BUCKET;
+			    bucket <= (u_int32_t) hashp->MAX_BUCKET;
 			    bucket++, hashp->cndx = 1) {
 				bufp = __get_buf(hashp, bucket, NULL, 0);
 				if (!bufp)
@@ -848,7 +849,7 @@ __expand_table(hashp)
 		hashp->OVFL_POINT = spare_ndx;
 	}
 
-	if (new_bucket > hashp->HIGH_MASK) {
+	if (new_bucket > (u_int32_t) hashp->HIGH_MASK) {
 		/* Starting a new doubling */
 		hashp->LOW_MASK = hashp->HIGH_MASK;
 		hashp->HIGH_MASK = new_bucket | hashp->LOW_MASK;

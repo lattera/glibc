@@ -262,13 +262,15 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 
 	    if (! no_more)
 	      status = (*sfct) (STAYOPEN_TMPVAR);
+	    else
+	      status = NSS_STATUS_NOTFOUND;
 	  }
 	while (! no_more && status != NSS_STATUS_SUCCESS);
     }
 
   __libc_lock_unlock (lock);
 
-  *result = NSS_STATUS_SUCCESS ? resbuf : NULL;
+  *result = status == NSS_STATUS_SUCCESS ? resbuf : NULL;
   return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }
 #define do_weak_alias(n1, n2) weak_alias (n1, n2)

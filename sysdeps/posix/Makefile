@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 $(common-objpfx)stdio_lim.h: $(common-objpfx)mk-stdiolim
 	$(dir $<)$(notdir $<) > $@-t
@@ -25,7 +25,7 @@ cded-objdir-includes = $(patsubst -I$$cwd//%,-I/%,\
 				  $(patsubst -I%,-I$$cwd/%,$(+includes)))
 # $(BUILD_CFLAGS) needs to come last because it contains unwanted -Is.
 $(common-objpfx)mk-stdiolim: $(sysdep_dir)/posix/mk-stdiolim.c \
-			     ../posix/posix1_lim.h local_lim.h
+			     $(..)posix/posix1_lim.h local_lim.h
 	cwd=`pwd`; cd $(objpfx).; \
 	$(BUILD_CC) $(cded-objdir-includes) $(BUILD_CFLAGS) \
 	  $$cwd/$< -o $(patsubst $(common-objpfx)%,$(..)%,$@)

@@ -56,7 +56,7 @@
 /* Sometimes we need to store error codes in the `h_errno' variable.  */
 #ifdef NEED_H_ERRNO
 # define H_ERRNO_PARM , int *h_errnop
-# define H_ERRNO_VAR , &h_errno
+# define H_ERRNO_VAR , &h_errno_tmp
 #else
 # define H_ERRNO_PARM
 # define H_ERRNO_VAR
@@ -80,6 +80,9 @@ FUNCTION_NAME (ADD_PARAMS)
   static LOOKUP_TYPE resbuf;
   LOOKUP_TYPE *result;
   int save;
+#ifdef NEED_H_ERRNO
+  int h_errno_tmp = 0;
+#endif
 
   /* Get lock.  */
   __libc_lock_lock (lock);
@@ -109,6 +112,11 @@ FUNCTION_NAME (ADD_PARAMS)
   save = errno;
   __libc_lock_unlock (lock);
   __set_errno (save);
+
+#ifdef NEED_H_ERRNO
+  if (h_errno_tmp != 0)
+    __set_h_errno (h_errno_tmp);
+#endif
 
   return result;
 }

@@ -1,27 +1,29 @@
 /* This file defines standard ELF types, structures, and macros.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Contributed by Ian Lance Taylor (ian@cygnus.com).
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ian Lance Taylor <ian@cygnus.com>.
 
-This file is part of the GNU C Library.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
-
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _ELF_H
-#define	_ELF_H 1
 
+#define	_ELF_H 1
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 /* Standard ELF types.  Using __attribute__ mode ensures that GCC
    will choose the right number of bits for these types.  */
@@ -773,5 +775,6 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ALPHA_JMP_SLOT	26	/* Create PLT entry */
 #define R_ALPHA_RELATIVE	27	/* Adjust by program base */
 
+__END_DECLS
 
 #endif	/* elf.h */

@@ -20,6 +20,7 @@
 
 #include <aliases.h>
 #include <ctype.h>
+#include <errno.h>
 #include <libc-lock.h>
 #include <stdlib.h>
 #include <stdio.h>

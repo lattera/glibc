@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
  *	POSIX Standard: 5.1.2 Directory Operations	<dirent.h>
@@ -106,15 +106,15 @@ extern DIR *opendir __P ((__const char *__name));
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */
-extern int __closedir __P ((DIR * __dirp));
-extern int closedir __P ((DIR * __dirp));
+extern int __closedir __P ((DIR *__dirp));
+extern int closedir __P ((DIR *__dirp));
 
 /* Read a directory entry from DIRP.
    Return a pointer to a `struct dirent' describing the entry,
    or NULL for EOF or error.  The storage returned may be overwritten
    by a later readdir call on the same DIR stream.  */
-extern struct dirent *__readdir __P ((DIR * __dirp));
-extern struct dirent *readdir __P ((DIR * __dirp));
+extern struct dirent *__readdir __P ((DIR *__dirp));
+extern struct dirent *readdir __P ((DIR *__dirp));
 
 #ifdef __USE_REENTRANT
 /* Reentrant versio of `readdir'.  Return in RESULT a pointer to the
@@ -124,7 +124,7 @@ extern int readdir_r __P ((DIR *__dirp, struct dirent *entry,
 #endif
 
 /* Rewind DIRP to the beginning of the directory.  */
-extern void rewinddir __P ((DIR * __dirp));
+extern void rewinddir __P ((DIR *__dirp));
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
 
@@ -152,10 +152,10 @@ extern int dirfd __P ((DIR *__dirp));
 #include <stddef.h>
 
 /* Seek to position POS on DIRP.  */
-extern void seekdir __P ((DIR * __dirp, __off_t __pos));
+extern void seekdir __P ((DIR *__dirp, __off_t __pos));
 
 /* Return the current position of DIRP.  */
-extern __off_t telldir __P ((DIR * __dirp));
+extern __off_t telldir __P ((DIR *__dirp));
 
 /* Scan the directory DIR, calling SELECT on each directory entry.
    Entries for which SELECT returns nonzero are individually malloc'd,

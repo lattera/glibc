@@ -9,7 +9,7 @@ typedef struct
   } Widget;
 /*@end group*/
 
-int 
+int
 print_widget (FILE *stream, const struct printf_info *info, va_list *app)
 {
   Widget *w;
@@ -34,6 +34,18 @@ print_widget (FILE *stream, const struct printf_info *info, va_list *app)
 
 
 int
+print_widget_arginfo (const struct printf_info *info, size_t n,
+                      int *argtypes)
+{
+  /* We always take exactly one argument and this is a pointer to the
+     structure..  */
+  if (n > 0)
+    argtypes[0] = PA_POINTER;
+  return 1;
+}
+
+
+int
 main (void)
 {
   /* Make a widget to print. */
@@ -41,7 +53,7 @@ main (void)
   mywidget.name = "mywidget";
 
   /* Register the print function for widgets. */
-  register_printf_function ('W', print_widget, NULL); /* No arginfo.  */
+  register_printf_function ('W', print_widget, print_widget_arginfo);
 
   /* Now print the widget. */
   printf ("|%W|\n", &mywidget);

@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef	_PRINTF_H
 
@@ -44,7 +44,7 @@ struct printf_info
   unsigned int showsign:1;	/* + flag.  */
   unsigned int group:1;		/* ' flag.  */
   unsigned int extra:1;		/* For special use.  */
-  char pad;			/* Padding character.  */
+  wchar_t pad;			/* Padding character.  */
 };
 
 
@@ -66,15 +66,14 @@ typedef int printf_function __P ((FILE *__stream,
    INFO gives information about the format specification.
    N, ARGTYPES, and return value are as for printf_parse_format.  */
 
-typedef int printf_arginfo_function __P ((__const struct printf_info * __info,
+typedef int printf_arginfo_function __P ((__const struct printf_info *__info,
 					  size_t __n,
 					  int *__argtypes));
 
 
 /* Register FUNC to be called to format SPEC specifiers; ARGINFO must be
    specified to determine how many arguments a SPEC conversion requires and
-   what their types are, even if your program never calls
-   `parse_printf_format'.  */
+   what their types are.  */
 
 extern int register_printf_function __P ((int __spec, printf_function __func,
 					  printf_arginfo_function __arginfo));

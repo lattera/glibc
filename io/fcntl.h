@@ -1,20 +1,20 @@
 /* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*
  *	POSIX Standard: 6.5 File Control Operations	<fcntl.h>
@@ -59,7 +59,7 @@ extern int open __P ((__const char *__file, int __oflag, ...));
    what `mode_t' will be widened to.  */
 extern int creat __P ((__const char *__file, __mode_t __mode));
 
-#if defined (__USE_MISC) && !defined (F_LOCK)
+#if !defined(F_LOCK) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED))
 /* NOTE: These declarations also appear in <unistd.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */

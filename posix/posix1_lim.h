@@ -31,7 +31,7 @@
 #define	_POSIX_ARG_MAX		4096
 
 /* Maximum simultaneous processes per real user ID.  */
-#define	_POSIX_CHILD_MAX	25
+#define	_POSIX_CHILD_MAX	6
 
 /* Maximum link count of a file.  */
 #define	_POSIX_LINK_MAX		8
@@ -47,7 +47,7 @@
 #define	_POSIX_NGROUPS_MAX	0
 
 /* Number of files one process can have open at once.  */
-#define	_POSIX_OPEN_MAX		20
+#define	_POSIX_OPEN_MAX		16
 
 /* Number of descriptors that a process may examine with `pselect' or
    `select'.  */

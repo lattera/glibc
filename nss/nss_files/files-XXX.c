@@ -201,7 +201,7 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
   if (stream == NULL)
     status = internal_setent (0);
 
-  if (status != NSS_STATUS_SUCCESS)
+  if (status == NSS_STATUS_SUCCESS)
     {
       /* If the last use was not by the getent function we need the
 	 position the stream.  */

@@ -109,7 +109,7 @@ mpool_filter(mp, pgin, pgout, pgcookie)
 	mp->pgout = pgout;
 	mp->pgcookie = pgcookie;
 }
-	
+
 /*
  * mpool_new --
  *	Get a new page of memory.
@@ -205,7 +205,8 @@ mpool_get(mp, pgno, flags)
 	off = mp->pagesize * pgno;
 	if (lseek(mp->fd, off, SEEK_SET) != off)
 		return (NULL);
-	if ((nr = read(mp->fd, bp->page, mp->pagesize)) != mp->pagesize) {
+	if ((u_long) (nr = read(mp->fd, bp->page, mp->pagesize))
+	    != mp->pagesize) {
 		if (nr >= 0)
 			errno = EFTYPE;
 		return (NULL);
@@ -380,7 +381,7 @@ mpool_write(mp, bp)
 	off = mp->pagesize * bp->pgno;
 	if (lseek(mp->fd, off, SEEK_SET) != off)
 		return (RET_ERROR);
-	if (write(mp->fd, bp->page, mp->pagesize) != mp->pagesize)
+	if ((u_long) write(mp->fd, bp->page, mp->pagesize) != mp->pagesize)
 		return (RET_ERROR);
 
 	bp->flags &= ~MPOOL_DIRTY;
@@ -436,7 +437,7 @@ mpool_stat(mp)
 	    mp->pagealloc, mp->pageflush);
 	if (mp->cachehit + mp->cachemiss)
 		(void)fprintf(stderr,
-		    "%.0f%% cache hit rate (%lu hits, %lu misses)\n", 
+		    "%.0f%% cache hit rate (%lu hits, %lu misses)\n",
 		    ((double)mp->cachehit / (mp->cachehit + mp->cachemiss))
 		    * 100, mp->cachehit, mp->cachemiss);
 	(void)fprintf(stderr, "%lu page reads, %lu page writes\n",
@@ -456,7 +457,7 @@ mpool_stat(mp)
 			cnt = 0;
 		} else
 			sep = ", ";
-			
+
 	}
 	(void)fprintf(stderr, "\n");
 }
