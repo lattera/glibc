@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1996, 1998, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1998, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -95,7 +96,7 @@ __syscall_error:
 	PROLOGUE
 
 	/* Find our per-thread errno address  */
-#ifdef PIC
+#if defined PIC && !defined IS_IN_librt
 	bsr	ra, __errno_location	!samegp
 #else
 	jsr	ra, __errno_location
