@@ -362,13 +362,15 @@ if test x"$add_ons" != x; then
     fi
   done
 
-  for f in $add_ons; do
-    frag=$srcdir/$f/configure
-    if test -r $frag; then
-      AC_MSG_RESULT(running configure fragment for add-on $f)
-      . $frag
+  # Now source each add-on's configure fragment.
+  # The fragments can use $srcdir/$libc_add_on to find themselves.
+  for libc_add_on in $add_ons; do
+    libc_add_on_frag=$srcdir/$libc_add_on/configure
+    if test -r $libc_add_on_frag; then
+      AC_MSG_RESULT(running configure fragment for add-on $libc_add_on)
+      . $libc_add_on_frag
     else
-      AC_MSG_WARN(add-on fragment $frag missing)
+      AC_MSG_WARN(add-on fragment $libc_add_on_frag missing)
     fi
   done
 fi

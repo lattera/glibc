@@ -1,3 +1,15 @@
+2004-08-04  Roland McGrath  <roland@frob.com>
+
+	* Makeconfig ($(common-objpfx)config.status):
+	Fix typo: $(add_ons) -> $(add-ons).
+	(Makeconfig-add-on): New variable.  When doing $(sysdep-makeconfigs)
+	include, use black magic to get it set to an add-on's name during the
+	include of the add-on's Makeconfig.
+
+	* configure.in: Use variable name `libc_add_on' when sourcing add-on
+	configure fragments, so they can refer to this.
+	* configure: Regenerated.
+
 2004-08-04  Roland McGrath  <roland@redhat.com>
 
 	* posix/tst-waitid.c (test_child): Sleep a second before stopping.

@@ -120,7 +120,7 @@ $(common-objpfx)config.status: $(..)version.h $(..)configure \
 						    $(firstword $(wildcard \
  $(addprefix $(dir)/,configure configure.in))))) \
 			       $(patsubst %.in,%,\
-					  $(foreach dir,$(add_ons),\
+					  $(foreach dir,$(add-ons),\
 						    $(firstword $(wildcard \
  $(addprefix $(..)$(dir)/,configure configure.in)))))
 	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
@@ -980,11 +980,24 @@ sysdep-makeconfigs := $(wildcard $(patsubst %,$(..)%/Makeconfig,\
 					    $(config-sysdirs) $(add-ons)))
 
 ifneq (,$(sysdep-makeconfigs))
-include $(sysdep-makeconfigs)
+Makeconfig-doing-sysdep := $(sysdep-makeconfigs)
+# Before each one, include ourselves again to do the bit below that
+# will set `Makeconfig-add-on' in an add-on's Makeconfig fragment.
+include $(foreach M,$(sysdep-makeconfigs),$(..)Makeconfig $M)
 endif
 
 
 endif # Makeconfig not yet included
+
+# The whole body above didn't run when we are included as a subroutine
+# of ourselves in the sysdep-makeconfigs include line.  This bit runs.
+ifneq (,$(Makeconfig-doing-sysdep))
+sysdep-Makeconfig := $(firstword $(Makeconfig-doing-sysdep))
+Makeconfig-doing-sysdep := $(filter-out $(sysdep-Makeconfig),\
+					$(Makeconfig-doing-sysdep))
+Makeconfig-add-on := $(filter $(add-ons),$(patsubst $(..)%/Makeconfig,%,\
+						    $(sysdep-Makeconfig)))
+endif
 
 # Local Variables:
 # mode: makefile
