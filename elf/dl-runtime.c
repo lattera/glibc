@@ -52,7 +52,7 @@
    function.  */
 
 #ifndef ELF_MACHINE_NO_PLT
-ElfW(Addr)
+DL_FIXUP_VALUE_TYPE
 __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
@@ -71,7 +71,7 @@ _dl_fixup (
   const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
   lookup_t result;
-  ElfW(Addr) value;
+  DL_FIXUP_VALUE_TYPE value;
 
   /* Sanity check that we're really looking at a PLT relocation.  */
   assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
@@ -99,13 +99,15 @@ _dl_fixup (
       /* Currently result contains the base load address (or link map)
 	 of the object that defines sym.  Now add in the symbol
 	 offset.  */
-      value = (sym ? LOOKUP_VALUE_ADDRESS (result) + sym->st_value : 0);
+      value = DL_FIXUP_MAKE_VALUE (result,
+				   sym ? LOOKUP_VALUE_ADDRESS (result)
+					 + sym->st_value : 0);
     }
   else
     {
       /* We already found the symbol.  The module (and therefore its load
 	 address) is also known.  */
-      value = l->l_addr + sym->st_value;
+      value = DL_FIXUP_MAKE_VALUE (l, l->l_addr + sym->st_value);
       result = l;
     }
 
@@ -122,7 +124,7 @@ _dl_fixup (
 
 #if !defined PROF && !defined ELF_MACHINE_NO_PLT && !__BOUNDED_POINTERS__
 
-ElfW(Addr)
+DL_FIXUP_VALUE_TYPE
 __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
 _dl_profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
@@ -137,10 +139,10 @@ _dl_profile_fixup (
      relocations.  */
   struct reloc_result *reloc_result
     = &l->l_reloc_result[reloc_offset / sizeof (PLTREL)];
-  ElfW(Addr) *resultp = &reloc_result->addr;
+  DL_FIXUP_VALUE_TYPE *resultp = &reloc_result->addr;
 
-  ElfW(Addr) value = *resultp;
-  if (value == 0)
+  DL_FIXUP_VALUE_TYPE value = *resultp;
+  if (DL_FIXUP_VALUE_CODE_ADDR (value) == 0)
     {
       /* This is the first time we have to relocate this object.  */
       const ElfW(Sym) *const symtab
@@ -180,14 +182,16 @@ _dl_profile_fixup (
 	  /* Currently result contains the base load address (or link map)
 	     of the object that defines sym.  Now add in the symbol
 	     offset.  */
-	  value = (defsym != NULL
-		   ? LOOKUP_VALUE_ADDRESS (result) + defsym->st_value : 0);
+	  value = DL_FIXUP_MAKE_VALUE (result,
+				       defsym != NULL
+				       ? LOOKUP_VALUE_ADDRESS (result)
+					 + defsym->st_value : 0);
 	}
       else
 	{
 	  /* We already found the symbol.  The module (and therefore its load
 	     address) is also known.  */
-	  value = l->l_addr + refsym->st_value;
+	  value = DL_FIXUP_MAKE_VALUE (l, l->l_addr + refsym->st_value);
 	  result = l;
 	}
       /* And now perhaps the relocation addend.  */
@@ -215,7 +219,7 @@ _dl_profile_fixup (
 	      /* Synthesize a symbol record where the st_value field is
 		 the result.  */
 	      ElfW(Sym) sym = *defsym;
-	      sym.st_value = value;
+	      sym.st_value = DL_FIXUP_VALUE_ADDR (value);
 
 	      /* Keep track whether there is any interest in tracing
 		 the call in the lower two bits.  */
@@ -268,7 +272,7 @@ _dl_profile_fixup (
 		}
 
 	      reloc_result->flags = altvalue;
-	      value = sym.st_value;
+	      value = DL_FIXUP_ADDR_VALUE (sym.st_value);
 	    }
 	  else
 	    /* Set all bits since this symbol binding is not interesting.  */
@@ -287,7 +291,7 @@ _dl_profile_fixup (
 #ifdef SHARED
   /* Auditing checkpoint: report the PLT entering and allow the
      auditors to change the value.  */
-  if (value != 0 && GLRO(dl_naudit) > 0
+  if (DL_FIXUP_VALUE_CODE_ADDR (value) != 0 && GLRO(dl_naudit) > 0
       /* Don't do anything if no auditor wants to intercept this call.  */
       && (reloc_result->enterexit & LA_SYMB_NOPLTENTER) == 0)
     {
@@ -297,7 +301,7 @@ _dl_profile_fixup (
 
       /* Set up the sym parameter.  */
       ElfW(Sym) sym = *defsym;
-      sym.st_value = value;
+      sym.st_value = DL_FIXUP_VALUE_ADDR (value);
 
       /* Get the symbol name.  */
       const char *strtab = (const void *) D_PTR (reloc_result->bound,
@@ -352,14 +356,14 @@ _dl_profile_fixup (
 	  afct = afct->next;
 	}
 
-      value = sym.st_value;
+      value = DL_FIXUP_ADDR_VALUE (sym.st_value);
     }
 #endif
 
   /* Store the frame size information.  */
   *framesizep = framesize;
 
-  (*mcount_fct) (retaddr, value);
+  (*mcount_fct) (retaddr, DL_FIXUP_VALUE_CODE_ADDR (value));
 
   return value;
 }
