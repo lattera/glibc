@@ -343,6 +343,9 @@ __tzfile_default (const char *std, const char *dst,
     }
   __mempcpy (__mempcpy (zone_names, std, stdlen), dst, dstlen);
 
+  /* Now there are only two zones, regardless of what the file contained.  */
+  num_types = 2;
+
   /* Now correct the transition times for the user-specified standard and
      daylight offsets from GMT.  */
   isdst = 0;
