@@ -40,8 +40,13 @@
    type is used in `struct utmpx' below.  */
 struct __exit_status
   {
+#ifdef __USE_GNU
+    short int e_termination;	/* Process termination status.  */
+    short int e_exit;		/* Process exit status.  */
+#else
     short int __e_termination;	/* Process termination status.  */
     short int __e_exit;		/* Process exit status.  */
+#endif
   };
 
 

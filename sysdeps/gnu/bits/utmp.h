@@ -1,5 +1,5 @@
 /* The `struct utmp' type, describing entries in the utmp file.  GNU version.
-   Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -42,29 +42,34 @@ struct lastlog
 
 /* The structure describing the status of a terminated process.  This
    type is used in `struct utmp' below.  */
-struct exit_status
+struct __exit_status
   {
+#ifdef __USE_GNU
     short int e_termination;	/* Process termination status.  */
     short int e_exit;		/* Process exit status.  */
+#else
+    short int __e_termination;	/* Process termination status.  */
+    short int __e_exit;		/* Process exit status.  */
+#endif
   };
 
 
 /* The structure describing an entry in the user accounting database.  */
 struct utmp
-  {
-    short int ut_type;		/* Type of login.  */
-    pid_t ut_pid;		/* Process ID of login process.  */
-    char ut_line[UT_LINESIZE];	/* Devicename.  */
-    char ut_id[4];		/* Inittab ID.  */
-    char ut_user[UT_NAMESIZE];	/* Username.  */
-    char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
-    struct exit_status ut_exit;	/* Exit status of a process marked
+{
+  short int ut_type;		/* Type of login.  */
+  pid_t ut_pid;			/* Process ID of login process.  */
+  char ut_line[UT_LINESIZE];	/* Devicename.  */
+  char ut_id[4];		/* Inittab ID.  */
+  char ut_user[UT_NAMESIZE];	/* Username.  */
+  char ut_host[UT_HOSTSIZE];	/* Hostname for remote login.  */
+  struct __exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
-    long ut_session;		/* Session ID, used for windowing.  */
-    struct timeval ut_tv;	/* Time entry was made.  */
-    int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-    char __unused[20];		/* Reserved for future use.  */
-  };
+  long int ut_session;		/* Session ID, used for windowing.  */
+  struct timeval ut_tv;		/* Time entry was made.  */
+  int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
+  char __unused[20];		/* Reserved for future use.  */
+};
 
 /* Backwards compatibility hacks.  */
 #define ut_name		ut_user

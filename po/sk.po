@@ -1,0 +1,4280 @@
+# Slovak translation of the GNU-libc-messages.
+# Copyright (C) 1998 Free Software Foundation, Inc.
+# Stanislav Meduna <stano@eunet.sk>, 1998.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libc 2.1\n"
+"POT-Creation-Date: 1998-11-28 09:29-0800\n"
+"PO-Revision-Date: 1998-12-02 22:02+01:00\n"
+"Last-Translator: Stanislav Meduna <stano@eunet.sk>\n"
+"Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: nis/nis_print.c:273
+msgid "\t\tAccess Rights : "
+msgstr "\t\tPrístupové práva : "
+
+#: nis/nis_print.c:271
+msgid "\t\tAttributes    : "
+msgstr "\t\tAtribúty         : "
+
+#: sunrpc/rpc_main.c:1416
+#, c-format
+msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
+msgstr "\t%s [-abkCLNTM][-Dnázov[=hodnota]] [-i veµkos»] [-I [-K sekundy]] [-Y cesta] vst_súbor\n"
+
+#: sunrpc/rpc_main.c:1418
+#, c-format
+msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
+msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o výst_súbor] [vst_súbor]\n"
+
+#: sunrpc/rpc_main.c:1421
+#, c-format
+msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
+msgstr "\t%s [-n netid]* [-o výst_súbor] [vst_súbor]\n"
+
+#: sunrpc/rpc_main.c:1420
+#, c-format
+msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
+msgstr "\t%s [-s nettype]* [-o výst_súbor] [vst_súbor]\n"
+
+#: nis/nis_print.c:235
+msgid "\tAccess rights: "
+msgstr "\tPrístupové práva: "
+
+#: nis/nis_print.c:293
+#, c-format
+msgid "\tEntry data of type %s\n"
+msgstr "\tVstupné údaje typu %s\n"
+
+#: nis/nis_print.c:171
+#, c-format
+msgid "\tName       : %s\n"
+msgstr "\tNázov         : %s\n"
+
+#: nis/nis_print.c:172
+msgid "\tPublic Key : "
+msgstr "\tVerejný kµúè  : "
+
+#: nis/nis_print.c:234
+#, c-format
+msgid "\tType         : %s\n"
+msgstr "\tTyp             : %s\n"
+
+#: nis/nis_print.c:201
+#, c-format
+msgid "\tUniversal addresses (%u)\n"
+msgstr "\tUniverzálne adresy (%u)\n"
+
+#: nis/nis_print.c:269
+#, c-format
+msgid "\t[%d]\tName          : %s\n"
+msgstr "\t[%d]\tNázov            : %s\n"
+
+#: nis/nis_print.c:296
+#, c-format
+msgid "\t[%u] - [%u bytes] "
+msgstr "\t[%u] - [%u bajtov] "
+
+#: nscd/nscd_stat.c:153
+msgid ""
+"\n"
+"%s cache:\n"
+"\n"
+"%15s  cache is enabled\n"
+"%15Zd  suggested size\n"
+"%15ld  seconds time to live for positive entries\n"
+"%15ld  seconds time to live for negative entries\n"
+"%15ld  cache hits on positive entries\n"
+"%15ld  cache hits on negative entries\n"
+"%15ld  cache misses on positive entries\n"
+"%15ld  cache misses on negative entries\n"
+"%15ld%% cache hit rate\n"
+"%15s  check /etc/%s for changes\n"
+msgstr ""
+"\n"
+"%s cache:\n"
+"\n"
+"%15s  cache je povolená\n"
+"%15Zd  navrhovaná veµkos»\n"
+"%15ld  sekúnd ¾ivotnos» pozitívnych záznamov\n"
+"%15ld  sekúnd ¾ivotnos» negatívnych záznamov\n"
+"%15ld  úspechov cache pre pozitívne záznamy\n"
+"%15ld  úspechov cache pre negatívne záznamy\n"
+"%15ld  neúspechov cache pre pozitívne záznamy\n"
+"%15ld  neúspechov cache pre negatívne záznamy\n"
+"%15ld%% úspe¹nos» cache\n"
+"%15s  skontrolujte /etc/%s na zmeny\n"
+
+#: nis/nis_print.c:251
+msgid "\nGroup Members :\n"
+msgstr "\nÈlenovia skupín  :\n"
+
+#: nis/nis_print.c:320
+msgid "\nTime to Live  : "
+msgstr "\n®ivotnos»        : "
+
+#: sunrpc/rpcinfo.c:679
+msgid "       rpcinfo -b prognum versnum\n"
+msgstr "       rpcinfo -b èíslo_programu èíslo_verzie\n"
+
+#: sunrpc/rpcinfo.c:680
+msgid "       rpcinfo -d prognum versnum\n"
+msgstr "       rpcinfo -d èíslo_programu èíslo_verzie\n"
+
+#: sunrpc/rpcinfo.c:678
+msgid "       rpcinfo -p [ host ]\n"
+msgstr "       rpcinfo -p [ poèítaè ]\n"
+
+#: sunrpc/rpcinfo.c:676
+msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
+msgstr "       rpcinfo [ -n èíslo_portu ] -t poèítaè èíslo_programu [ èíslo_verzie ]\n"
+
+#: nscd/nscd_stat.c:145 nscd/nscd_stat.c:147
+msgid "      no"
+msgstr "      nie"
+
+#: nscd/nscd_stat.c:145 nscd/nscd_stat.c:147
+msgid "     yes"
+msgstr "     áno"
+
+#: nis/nis_print.c:344
+#, c-format
+msgid "    Data Length = %u\n"
+msgstr "    Då¾ka údajov = %u\n"
+
+#: nis/nis_print_group_entry.c:121
+msgid "    Explicit members:\n"
+msgstr "    Explicitní èlenovia:\n"
+
+#: nis/nis_print_group_entry.c:145 nis/nis_print_group_entry.c:161
+msgid "    Explicit nonmembers:\n"
+msgstr "    Explicitní neèlenovia:\n"
+
+#: nis/nis_print_group_entry.c:129
+msgid "    Implicit members:\n"
+msgstr "    Implicitní èlenovia:\n"
+
+#: nis/nis_print_group_entry.c:153
+msgid "    Implicit nonmembers:\n"
+msgstr "    Implicitní neèlenovia:\n"
+
+#: nis/nis_print_group_entry.c:126
+msgid "    No explicit members\n"
+msgstr "    ®iadni explicitní èlenovia\n"
+
+#: nis/nis_print_group_entry.c:150
+msgid "    No explicit nonmembers\n"
+msgstr "    ®iadni explicitní neèlenovia\n"
+
+#: nis/nis_print_group_entry.c:134
+msgid "    No implicit members\n"
+msgstr "    ®iadni implicitní èlenovia\n"
+
+#: nis/nis_print_group_entry.c:158
+msgid "    No implicit nonmembers\n"
+msgstr "    ®iadni implicitní neèlenovia\n"
+
+#: nis/nis_print_group_entry.c:142
+msgid "    No recursive members\n"
+msgstr "    ®iadni rekurzívni èlenovia\n"
+
+#: nis/nis_print_group_entry.c:166
+msgid "    No recursive nonmembers\n"
+msgstr "    ®iadni rekurzívni neèlenovia\n"
+
+#: nis/nis_print_group_entry.c:137
+msgid "    Recursive members:\n"
+msgstr "    Rekurzívni èlenovia:\n"
+
+#: sunrpc/rpcinfo.c:574
+msgid "   program vers proto   port\n"
+msgstr "   program verz proto   port\n"
+
+#: argp/argp-help.c:1571
+msgid "  or: "
+msgstr "  alebo: "
+
+#: timezone/zic.c:421
+#, c-format
+msgid " (rule from \"%s\", line %d)"
+msgstr " (pravidlo z \"%s\", riadok %d)"
+
+#: argp/argp-help.c:1583
+msgid " [OPTION...]"
+msgstr " [VO¥BA...]"
+
+#: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1291
+msgid " done\n"
+msgstr " hotovo\n"
+
+#: timezone/zic.c:418
+#, c-format
+msgid "\"%s\", line %d: %s"
+msgstr "\"%s\", riadok %d: %s"
+
+#: timezone/zic.c:958
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr "Riadok \"Zone %s\" a voµba -l sa navzájom vyluèujú"
+
+#: timezone/zic.c:966
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr "Riadok \"Zone %s\" a voµba -p sa navzájom vyluèujú"
+
+#: sunrpc/rpc_main.c:1401
+msgid "\"infile\" is required for template generation flags.\n"
+msgstr "\"vst_súbor\" je vy¾adovaný pri pou¾ití príznakov tvorby vzoru.\n"
+
+#: argp/argp-help.c:210
+#, c-format
+msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
+msgstr "%.*s: Parameter ARGP_HELP_FMT vy¾aduje hodnotu"
+
+#: argp/argp-help.c:219
+#, c-format
+msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
+msgstr "%.*s: Neznámy parameter ARGP_HELP_FMT"
+
+#: timezone/zic.c:768
+#, c-format
+msgid "%s in ruleless zone"
+msgstr "%s v zóne bez pravidiel"
+
+#: assert/assert.c:51
+#, c-format
+msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+msgstr "%s%s%s:%u: %s%sPredpoklad `%s' nesplnený.\n"
+
+#: assert/assert-perr.c:52
+#, c-format
+msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+msgstr "%s%s%s:%u: %s%sNeoèakávaná chyba: %s.\n"
+
+#: stdio-common/psignal.c:47
+#, c-format
+msgid "%s%sUnknown signal %d\n"
+msgstr "%s%sNeznámy signál %d\n"
+
+#: timezone/zic.c:2201
+#, c-format
+msgid "%s: %d did not sign extend correctly\n"
+msgstr "%s: nesprávne roz¹írenie znamienka pre %d\n"
+
+#: locale/programs/charmap.c:261
+#, c-format
+msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
+msgstr "%s: <mb_cur_max> musí by» väè¹ie ako <mb_cur_min>\n"
+
+#: sunrpc/rpc_main.c:422
+#, c-format
+msgid "%s: C preprocessor failed with exit code %d\n"
+msgstr "%s: C preprocesor zlyhal s výstupným kódom %d\n"
+
+#: sunrpc/rpc_main.c:419
+#, c-format
+msgid "%s: C preprocessor failed with signal %d\n"
+msgstr "%s: C preprocesor zlyhal so signálom %d\n"
+
+#: timezone/zic.c:1469
+#, c-format
+msgid "%s: Can't create %s: %s\n"
+msgstr "%s: Nie je mo¾né vytvori» %s: %s\n"
+
+#: timezone/zic.c:2179
+#, c-format
+msgid "%s: Can't create directory %s: %s\n"
+msgstr "%s: Nie je mo¾né vytvori» adresár %s: %s\n"
+
+#: timezone/zic.c:620
+#, c-format
+msgid "%s: Can't link from %s to %s: %s\n"
+msgstr "%s: Nie je mo¾né vytvori» prepojenie z %s na %s: %s\n"
+
+#: timezone/zic.c:794
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr "%s: Nie je mo¾né otvori» %s: %s\n"
+
+#: timezone/zic.c:1459
+#, c-format
+msgid "%s: Can't remove %s: %s\n"
+msgstr "%s: Nie je mo¾né odstráni» %s: %s\n"
+
+#: timezone/zic.c:863
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr "%s: Chyba pri uzatváraní %s: %s\n"
+
+#: timezone/zic.c:856
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr "%s: Chyba pri èítaní %s\n"
+
+#: timezone/zic.c:1535
+#, c-format
+msgid "%s: Error writing %s\n"
+msgstr "%s: Chyba pri zápise %s\n"
+
+#: timezone/zdump.c:266
+#, c-format
+msgid "%s: Error writing standard output "
+msgstr "%s: Chyba pri zápise na ¹tandardný výstup "
+
+#: timezone/zic.c:841
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr "%s: Priestupný riadok v súbore nepriestupných sekúnd %s\n"
+
+#: timezone/zic.c:359
+#, c-format
+msgid "%s: Memory exhausted: %s\n"
+msgstr "%s: Nedostatok pamäti: %s\n"
+
+#: timezone/zic.c:524
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr "%s: Voµba -L zadaná viac ako raz\n"
+
+#: timezone/zic.c:484
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr "%s: Voµba -d zadaná viac ako raz\n"
+
+#: timezone/zic.c:494
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr "%s: Voµba -l zadaná viac ako raz\n"
+
+#: timezone/zic.c:504
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr "%s: Voµba -p zadaná viac ako raz\n"
+
+#: timezone/zic.c:514
+#, c-format
+msgid "%s: More than one -y option specified\n"
+msgstr "%s: Voµba -y zadaná viac ako raz\n"
+
+#: argp/argp-parse.c:640
+#, c-format
+msgid "%s: Too many arguments\n"
+msgstr "%s: Priveµa argumentov\n"
+
+#: login/programs/database.c:129
+#, c-format
+msgid "%s: cannot get modification time"
+msgstr "%s: nie je mo¾né zisti» èas zmeny"
+
+#: timezone/zic.c:1900
+#, c-format
+msgid "%s: command was '%s', result was %d\n"
+msgstr "%s: príkaz bol '%s', výsledok bol %d\n"
+
+#: locale/programs/charmap.c:677 locale/programs/locfile.c:1008
+#, c-format
+msgid "%s: error in state machine"
+msgstr "%s: chyba v stavovom automate"
+
+#: posix/getopt.c:784
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr "%s: neprípustná voµba -- %c\n"
+
+#: posix/getopt.c:787
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr "%s: chybná voµba -- %c\n"
+
+#: posix/getopt.c:707
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr "%s: voµba `%c%s' nedovoµuje pou¾i» argument\n"
+
+#: posix/getopt.c:677
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr "%s: voµba `%s' nie je jednoznaèná\n"
+
+#: posix/getopt.c:725 posix/getopt.c:898
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr "%s: voµba `%s' vy¾aduje argument\n"
+
+#: posix/getopt.c:702
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr "%s: voµba `--%s' nedovoµuje pou¾i» argument\n"
+
+#: posix/getopt.c:882
+#, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr "%s: voµba `-W %s' nedovoµuje pou»i» argument\n"
+
+#: posix/getopt.c:864
+#, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr "%s: voµba `-W %s' nie je jednoznaèná\n"
+
+#: posix/getopt.c:817 posix/getopt.c:947
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr "%s: voµba vy¾aduje argument -- %c\n"
+
+#: sunrpc/rpc_main.c:287
+#, c-format
+msgid "%s: output would overwrite %s\n"
+msgstr "%s: výstup by prepísal %s\n"
+
+#: timezone/zic.c:848 timezone/zic.c:1262 timezone/zic.c:1287
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr "%s: fatálna chyba: Neprípustná l_hodnota %d\n"
+
+#: locale/programs/charmap.c:684 locale/programs/repertoire.c:289
+#, c-format
+msgid "%s: premature end of file"
+msgstr "%s: predèasný koniec súboru"
+
+#: sunrpc/rpc_main.c:294
+#, c-format
+msgid "%s: unable to open "
+msgstr "%s: Nie je mo¾né otvori» "
+
+#: posix/getopt.c:758
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr "%s: nerozpoznaná voµba `%c%s'\n"
+
+#: posix/getopt.c:754
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr "%s: nerozpoznaná voµba `--%s'\n"
+
+#: timezone/zic.c:443
+#, c-format
+msgid ""
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
+"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+msgstr ""
+"%s: Pou¾itie: %s [ -s ] [ -v ] [ -l lokálny_èas ] [ -p posix_pravidlá ]\n"
+"\t[ -d adresár ] [ -L priestupné_sekundy ] [ -y typ_roku ] [ súbor ... ]\n"
+
+#: timezone/zdump.c:174
+#, c-format
+msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
+msgstr "%s: Pou¾itie: %s [ -v ] [ -c limit ] meno_zóny ...\n"
+
+#: sunrpc/rpc_main.c:307
+#, c-format
+msgid "%s: while writing output: "
+msgstr "%s: poèas zápisu výstupu: "
+
+#: argp/argp-parse.c:164
+msgid "(PROGRAM ERROR) No version known!?"
+msgstr "(CHYBA PROGRAMU) Verzia neznáma!?"
+
+#: argp/argp-parse.c:781
+msgid "(PROGRAM ERROR) Option should have been recognized!?"
+msgstr "(CHYBA PROGRAMU) Voµba by mala by» rozpoznaná!?"
+
+#: nis/nis_print.c:129
+msgid "(Unknown object)\n"
+msgstr "(Neznámy objekt)\n"
+
+#: sunrpc/clnt_perr.c:124
+#, c-format
+msgid "(unknown authentication error - %d)"
+msgstr "(neznáma chyba pri overovaní toto¾nosti - %d)"
+
+#: sunrpc/rpcinfo.c:613
+msgid "(unknown)"
+msgstr "(neznámy)"
+
+#: elf/sprof.c:574
+#, c-format
+msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
+msgstr "*** Zo súboru `%s' boli odstránené ladiace informácie: podrobná analýza nie je mo¾ná\n"
+
+#: catgets/gencat.c:266
+msgid "*standard input*"
+msgstr "*¹tandardný vstup*"
+
+#: catgets/gencat.c:120
+msgid ""
+"-o OUTPUT-FILE [INPUT-FILE]...\n"
+"[OUTPUT-FILE [INPUT-FILE]...]"
+msgstr ""
+"-o VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...\n"
+"[ VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...]"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:778
+msgid ".lib section in a.out corrupted"
+msgstr "Po¹kodená sekcia .lib v a.out"
+
+#: sunrpc/clnt_perr.c:110 sunrpc/clnt_perr.c:131
+#, c-format
+msgid "; low version = %lu, high version = %lu"
+msgstr "; ni¾¹ia verzia = %lu, vy¹¹ia verzia = %lu"
+
+#: sunrpc/clnt_perr.c:117
+msgid "; why = "
+msgstr "; dôvod = "
+
+#: locale/programs/charset.c:98
+#, c-format
+msgid "<%s> and <%s> are illegal names for range"
+msgstr "<%s> and <%s> sú neprípustné názvy pre rozsah"
+
+#: locale/programs/ld-ctype.c:342
+#, c-format
+msgid "<SP> character must not be in class `%s'"
+msgstr "<SP> znak nesmie by» v triede `%s'"
+
+#: locale/programs/ld-ctype.c:330
+#, c-format
+msgid "<SP> character not in class `%s'"
+msgstr "<SP> znak nie je v triede `%s'"
+
+#. TRANS The experienced user will know what is wrong.
+#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
+#. TRANS @c Don't change it.
+#: stdio-common/../sysdeps/gnu/errlist.c:603
+msgid "?"
+msgstr "?"
+
+#: sysdeps/unix/sysv/linux/siglist.h:27
+msgid "Aborted"
+msgstr "Zru¹ené"
+
+#: nis/nis_print.c:318
+msgid "Access Rights : "
+msgstr "Prístupové práva : "
+
+#: stdio-common/../sysdeps/gnu/errlist.c:774
+msgid "Accessing a corrupted shared library"
+msgstr "Prístup k po¹kodenej zdieµanej kni¾nici"
+
+#. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
+#: stdio-common/../sysdeps/gnu/errlist.c:366
+msgid "Address already in use"
+msgstr "Adresa je pou¾ívaná"
+
+#: posix/../sysdeps/posix/gai_strerror.c:30
+msgid "Address family for hostname not supported"
+msgstr "Trieda adries nie je podporovaná poèítaèom"
+
+#. TRANS The address family specified for a socket is not supported; it is
+#. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
+#: stdio-common/../sysdeps/gnu/errlist.c:361
+msgid "Address family not supported by protocol"
+msgstr "Trieda adries nie je podporovaná protokolom"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:742
+msgid "Advertise error"
+msgstr "Chyba pri zverejnení"
+
+#: stdio-common/../sysdeps/unix/siglist.c:39
+#: sysdeps/unix/sysv/linux/siglist.h:33
+msgid "Alarm clock"
+msgstr "Budík"
+
+#. TRANS Argument list too long; used when the arguments passed to a new program
+#. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
+#. TRANS File}) occupy too much memory space.  This condition never arises in the
+#. TRANS GNU system.
+#: stdio-common/../sysdeps/gnu/errlist.c:69
+msgid "Argument list too long"
+msgstr "Príli¹ dlhý zoznam argumentov"
+
+#: nis/nis_error.c:65
+msgid "Attempt to remove a non-empty table"
+msgstr "Pokus o odstránenie neprázdnej tabuµky"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:782
+msgid "Attempting to link in too many shared libraries"
+msgstr "Pokus o pou¾itie priveµa zdieµaných kni¾níc"
+
+#: sunrpc/clnt_perr.c:273
+msgid "Authentication OK"
+msgstr "Overenie práv úspe¹né"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:561
+msgid "Authentication error"
+msgstr "Overenie práv neúspe¹né"
+
+#: nis/nis_print.c:105
+msgid "BOGUS OBJECT\n"
+msgstr "POCHYBNÝ OBJEKT\n"
+
+#. TRANS Bad address; an invalid pointer was detected.
+#. TRANS In the GNU system, this error never happens; you get a signal instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:114
+msgid "Bad address"
+msgstr "Chybná adresa"
+
+#. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
+#. TRANS closed or reading from a descriptor open only for writing (or vice
+#. TRANS versa).
+#: stdio-common/../sysdeps/gnu/errlist.c:82
+msgid "Bad file descriptor"
+msgstr "Chybný deskriptor súboru"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:730
+msgid "Bad font file format"
+msgstr "Chybný formát súboru rezov písma"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:622
+msgid "Bad message"
+msgstr "Chybná správa"
+
+#: stdio-common/../sysdeps/unix/siglist.c:37
+#: sysdeps/unix/sysv/linux/siglist.h:56
+msgid "Bad system call"
+msgstr "Chybné volanie systému"
+
+#: posix/../sysdeps/posix/gai_strerror.c:32
+msgid "Bad value for ai_flags"
+msgstr "Chybná hodnota ai_flags"
+
+#: locale/programs/localedef.c:104
+msgid "Be strictly POSIX conform"
+msgstr "Presný súlad s POSIX"
+
+#: nis/nis_print.c:301
+msgid "Binary data\n"
+msgstr "Binárne údaje\n"
+
+#. TRANS A file that isn't a block special file was given in a situation that
+#. TRANS requires one.  For example, trying to mount an ordinary file as a file
+#. TRANS system in Unix gives this error.
+#: stdio-common/../sysdeps/gnu/errlist.c:121
+msgid "Block device required"
+msgstr "Vy¾adované blokové zariadenie"
+
+#: sunrpc/pmap_rmt.c:347
+msgid "Broadcast poll problem"
+msgstr "Problém pri volaní poll pre v¹eobecné vysielanie"
+
+#. TRANS Broken pipe; there is no process reading from the other end of a pipe.
+#. TRANS Every library function that returns this error code also generates a
+#. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
+#. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
+#. TRANS unless it has handled or blocked @code{SIGPIPE}.
+#: stdio-common/../sysdeps/gnu/errlist.c:234
+#: stdio-common/../sysdeps/unix/siglist.c:38
+#: sysdeps/unix/sysv/linux/siglist.h:32
+msgid "Broken pipe"
+msgstr "Preru¹ená rúra"
+
+#: stdio-common/../sysdeps/unix/siglist.c:35
+#: sysdeps/unix/sysv/linux/siglist.h:30
+msgid "Bus error"
+msgstr "Chyba na zbernici"
+
+#: nis/nis_print.c:45
+msgid "CDS"
+msgstr "CDS"
+
+#: stdio-common/../sysdeps/unix/siglist.c:49
+#: sysdeps/unix/sysv/linux/siglist.h:43
+msgid "CPU time limit exceeded"
+msgstr "Prekroèený èasový limit pre procesor"
+
+#: nis/nis_error.c:32
+msgid "Cache expired"
+msgstr "®ivotnos» cache vypr¹ala"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:770
+msgid "Can not access a needed shared library"
+msgstr "Prístup k potrebnej zdieµanej kni¾nici nie je mo¾ný"
+
+#: nis/ypclnt.c:769
+msgid "Can't bind to server which serves this domain"
+msgstr "Pripojenie k serveru obsluhujúcemu túto doménu nie je mo¾né"
+
+#: nis/ypclnt.c:781
+msgid "Can't communicate with portmapper"
+msgstr "Komunikácia s portmapperom nie je mo¾ná"
+
+#: nis/ypclnt.c:783
+msgid "Can't communicate with ypbind"
+msgstr "Komunikácia s ypbind nie je mo¾ná"
+
+#: nis/ypclnt.c:785
+msgid "Can't communicate with ypserv"
+msgstr "Komunikácia s ypserv nie je mo¾ná"
+
+#. TRANS No memory available.  The system cannot allocate more virtual memory
+#. TRANS because its capacity is full.
+#: stdio-common/../sysdeps/gnu/errlist.c:103
+msgid "Cannot allocate memory"
+msgstr "Nie je mo¾né prideli» pamä»"
+
+#. TRANS The requested socket address is not available; for example, you tried
+#. TRANS to give a socket a name that doesn't match the local host name.
+#. TRANS @xref{Socket Addresses}.
+#: stdio-common/../sysdeps/gnu/errlist.c:373
+msgid "Cannot assign requested address"
+msgstr "Priradenie po¾adovanej adresy nie je mo¾né"
+
+#: sunrpc/pmap_rmt.c:264
+msgid "Cannot create socket for broadcast rpc"
+msgstr "Nie je mo¾né vytvori» zásuvku pre broadcast rpc"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:786
+msgid "Cannot exec a shared library directly"
+msgstr "Nie je mo¾né priamo spusti» zdieµanú kni¾nicu"
+
+#: sunrpc/rpc_main.c:1406
+msgid "Cannot have more than one file generation flag!\n"
+msgstr "Nie je mo¾né pou¾i» viac ako jeden príznak tvorby súboru!\n"
+
+#: sunrpc/pmap_rmt.c:360
+msgid "Cannot receive reply to broadcast"
+msgstr "Nie je mo¾né prija» odpoveï na broadcast"
+
+#: sunrpc/pmap_clnt.c:74
+msgid "Cannot register service"
+msgstr "Nie je mo¾né zaregistrova» slu¾bu"
+
+#. TRANS The socket has already been shut down.
+#: stdio-common/../sysdeps/gnu/errlist.c:434
+msgid "Cannot send after transport endpoint shutdown"
+msgstr "Nie je mo¾né vysiela» po ukonèení èinnosti komunikaèného bodu"
+
+#: sunrpc/pmap_rmt.c:322
+msgid "Cannot send broadcast packet"
+msgstr "Nie je mo¾né vysla» broadcast balík"
+
+#: sunrpc/pmap_rmt.c:271
+msgid "Cannot set socket option SO_BROADCAST"
+msgstr "Nie je mo¾né nastavi» pre socket voµbu SO_BROADCAST"
+
+#: sunrpc/rpc_main.c:1193
+msgid "Cannot specify more than one input file!\n"
+msgstr "Nie je mo¾né zada» viac ako jeden vstupný súbor!\n"
+
+#: sunrpc/rpc_main.c:1363
+msgid "Cannot use netid flag with inetd flag!\n"
+msgstr "Príznaky netid a inetd nie je mo¾né pou¾i» súèasne!\n"
+
+#: sunrpc/rpc_main.c:1375
+msgid "Cannot use netid flag without TIRPC!\n"
+msgstr "Nie je mo¾né pou¾i» príznak netid bez TIRPC!\n"
+
+#: sunrpc/rpc_main.c:1382
+msgid "Cannot use table flags with newstyle!\n"
+msgstr "Pri pou¾ití nového ¹týlu nie je mo¾né pou¾i» príznaky tabuµky!\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:670
+msgid "Channel number out of range"
+msgstr "Èíslo kanálu mimo povoleného rozsahu"
+
+#: nis/nis_print.c:264
+#, c-format
+msgid "Character Separator : %c\n"
+msgstr "Oddeµovaè znakov       : %c\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:45
+#: sysdeps/unix/sysv/linux/siglist.h:39
+msgid "Child exited"
+msgstr "Detský proces skonèil"
+
+#: sunrpc/clnt_perr.c:283
+msgid "Client credential too weak"
+msgstr "Oprávnenia klienta sú nepostaèujúce"
+
+#: nis/nis_print.c:266
+msgid "Columns             :\n"
+msgstr "Ståpce                 :\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:750
+msgid "Communication error on send"
+msgstr "Chyba komunikácie pri vysielaní"
+
+#: locale/programs/localedef.c:112
+msgid "Compile locale specification"
+msgstr "Kompilácia ¹pecifikácie národného prostredia"
+
+#. TRANS Go home and have a glass of warm, dairy-fresh milk.
+#: stdio-common/../sysdeps/gnu/errlist.c:613
+msgid "Computer bought the farm"
+msgstr "Poèítaè kúpil farmu"
+
+#: locale/programs/ld-ctype.c:1253
+msgid "Computing table size for character classes might take a while..."
+msgstr "Výpoèet veµkosti tabuµky pre triedy znakov (mô¾e chvíµu trva»)..."
+
+#: locale/programs/ld-collate.c:336
+msgid "Computing table size for collation information might take a while..."
+msgstr "Výpoèet veµkosti tabuµky pre informácie o triedení (mô¾e chvíµu trva»)..."
+
+#. TRANS A remote host refused to allow the network connection (typically because
+#. TRANS it is not running the requested service).
+#: stdio-common/../sysdeps/gnu/errlist.c:451
+msgid "Connection refused"
+msgstr "Spojenie odmietnuté"
+
+#. TRANS A network connection was closed for reasons outside the control of the
+#. TRANS local host, such as by the remote machine rebooting or an unrecoverable
+#. TRANS protocol violation.
+#: stdio-common/../sysdeps/gnu/errlist.c:401
+msgid "Connection reset by peer"
+msgstr "Spojenie zru¹ené druhou stranou"
+
+#. TRANS A socket operation with a specified timeout received no response during
+#. TRANS the timeout period.
+#: stdio-common/../sysdeps/gnu/errlist.c:445
+msgid "Connection timed out"
+msgstr "Èasový limit pre spojenie vypr¹al"
+
+#: stdio-common/../sysdeps/unix/siglist.c:44
+#: sysdeps/unix/sysv/linux/siglist.h:38
+msgid "Continued"
+msgstr "Pokraèovanie"
+
+#: iconv/iconv_prog.c:66
+msgid "Convert encoding of given files from one encoding to another."
+msgstr "Konverzia kódovania zadaných súborov na iné."
+
+#: db2/makedb.c:58
+msgid "Convert key to lower case"
+msgstr "Zmeni» kµúè na malé písmená"
+
+#: catgets/gencat.c:236 db2/makedb.c:242 elf/sprof.c:359
+#: iconv/iconv_prog.c:294 locale/programs/locale.c:267
+#: locale/programs/localedef.c:403 nscd/nscd.c:223 nss/getent.c:65
+#: posix/getconf.c:624
+#, c-format
+msgid ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+msgstr ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"Toto je voµne ¹íriteµný software; pre podmienky kopírovania pozri\n"
+"zdrojový kód.Na software nie je poskytovaná ®IADNA záruka.\n"
+
+#: nscd/nscd_conf.c:167
+#, c-format
+msgid "Could not create log file \"%s\""
+msgstr "Nie je mo¾né vytvori» ¾urnálový súbor \"%s\""
+
+#: catgets/gencat.c:107
+msgid "Create C header file NAME containing symbol definitions"
+msgstr "Vytvori» C hlavièkový súbor NÁZOV obsahujúci definície symbolov"
+
+#: locale/programs/localedef.c:103
+msgid "Create output even if warning messages were issued"
+msgstr "Vytvori» výstupný súbor aj pri výskyte varovaní"
+
+#: db2/makedb.c:68
+msgid "Create simple DB database from textual input."
+msgstr "Vytvorenie jednoduchej DB databázy z textového vstupu."
+
+#: nis/nis_print.c:322
+#, c-format
+msgid "Creation Time : %s"
+msgstr "Èas vytvorenia   : %s"
+
+#: nis/nss_nisplus/nisplus-publickey.c:89
+#: nis/nss_nisplus/nisplus-publickey.c:159
+#, c-format
+msgid "DES entry for netname %s not unique\n"
+msgstr "DES záznam pre sie»ový názov %s nie je jednoznaèný\n"
+
+#: nis/nis_print.c:111
+msgid "DIRECTORY\n"
+msgstr "ADRESÁR\n"
+
+#: nis/nis_print.c:41
+msgid "DNANS"
+msgstr "DNANS"
+
+#: nis/nis_print.c:37
+msgid "DNS"
+msgstr "DNS"
+
+#: nis/nis_error.c:51
+msgid "Database for table does not exist"
+msgstr "Databáza pre tabuµku neexistuje"
+
+#: nis/ypclnt.c:795
+msgid "Database is busy"
+msgstr "Databáza je pou¾ívaná"
+
+#: nis/nis_print.c:225
+msgid "Default Access rights :\n"
+msgstr "Implicitné príst. práva  :\n"
+
+#. TRANS No default destination address was set for the socket.  You get this
+#. TRANS error when you try to transmit data over a connectionless socket,
+#. TRANS without first specifying a destination for the data with @code{connect}.
+#: stdio-common/../sysdeps/gnu/errlist.c:429
+msgid "Destination address required"
+msgstr "Je potrebné zada» cieµovú hodnotu"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:650
+msgid "Device not a stream"
+msgstr "Zariadenie nie je prúd"
+
+#. TRANS No such device or address.  The system tried to use the device
+#. TRANS represented by a file you specified, and it couldn't find the device.
+#. TRANS This can mean that the device file was installed incorrectly, or that
+#. TRANS the physical device is missing or not correctly attached to the
+#. TRANS computer.
+#: stdio-common/../sysdeps/gnu/errlist.c:61
+msgid "Device not configured"
+msgstr "Zariadenie nie je nakonfigurované"
+
+#. TRANS Resource busy; a system resource that can't be shared is already in use.
+#. TRANS For example, if you try to delete a file that is the root of a currently
+#. TRANS mounted filesystem, you get this error.
+#: stdio-common/../sysdeps/gnu/errlist.c:128
+msgid "Device or resource busy"
+msgstr "Zariadenie alebo iný zdroj je pou¾ívané"
+
+#: nis/nis_print.c:179
+#, c-format
+msgid "Diffie-Hellmann (%d bits)\n"
+msgstr "Diffie-Hellmann (%d bitov)\n"
+
+#: nis/nis_print.c:315
+#, c-format
+msgid "Directory     : %s\n"
+msgstr "Adresár          : %s\n"
+
+#. TRANS Directory not empty, where an empty directory was expected.  Typically,
+#. TRANS this error occurs when you are trying to delete a directory.
+#: stdio-common/../sysdeps/gnu/errlist.c:480
+msgid "Directory not empty"
+msgstr "Adresár nie je prázdny"
+
+#. TRANS The user's disk quota was exceeded.
+#: stdio-common/../sysdeps/gnu/errlist.c:498
+msgid "Disc quota exceeded"
+msgstr "Disková kvóta prekroèená"
+
+#: nscd/nscd.c:80
+msgid "Do not fork and display messages on the current tty"
+msgstr "Nespú¹»a» samostatný proces a zobrazova» správy na aktuálnom termináli"
+
+#: db2/makedb.c:61
+msgid "Do not print messages while building database"
+msgstr "Poèas tvorby databázy nevypisova» správy"
+
+#: catgets/gencat.c:109
+msgid "Do not use existing catalog, force new output file"
+msgstr "Nepou¾íva» existujúci katalóg, vnúti» nový výstupný súbor"
+
+#: nis/ypclnt.c:841
+msgid "Domain not bound"
+msgstr "Doména nie je pripojená"
+
+#: stdio-common/../sysdeps/unix/siglist.c:32
+#: sysdeps/unix/sysv/linux/siglist.h:53
+msgid "EMT trap"
+msgstr "EMT preru¹enie"
+
+#: nis/nis_print.c:120
+msgid "ENTRY\n"
+msgstr "ZÁZNAM\n"
+
+#: nis/nis_print.c:299
+msgid "Encrypted data\n"
+msgstr "©ifrované údaje\n"
+
+#: nis/nis_error.c:52
+msgid "Entry/Table type mismatch"
+msgstr "Nesúlad záznamu s tabuµkou"
+
+#: nis/nis_error.c:56
+msgid "Error in RPC subsystem"
+msgstr "Chyba v RPC subsystéme"
+
+#: nis/nis_error.c:66
+msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
+msgstr "Chyba pri prístupe NIS+ súboru studeného ¹tartu. Je NIS+ nain¹talované?"
+
+#: string/../sysdeps/mach/_strerror.c:56
+#: sysdeps/mach/hurd/mips/dl-machine.c:67
+msgid "Error in unknown error system: "
+msgstr "Chyba v neznámom chybovom systéme: "
+
+#: nis/nis_error.c:59
+msgid "Error while talking to callback proc"
+msgstr "Chyba poèas komunikácie s procedúrou spätného volania"
+
+#: inet/ruserpass.c:161
+msgid "Error: .netrc file is readable by others."
+msgstr "Chyba: súbor .netrc je èitateµný pre ostatných."
+
+#: stdio-common/../sysdeps/gnu/errlist.c:710
+msgid "Exchange full"
+msgstr "Stredisko plné"
+
+#. TRANS Invalid executable file format.  This condition is detected by the
+#. TRANS @code{exec} functions; see @ref{Executing a File}.
+#: stdio-common/../sysdeps/gnu/errlist.c:75
+msgid "Exec format error"
+msgstr "Chybný formát spustiteµného súboru"
+
+#: locale/programs/localedef.c:190
+msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
+msgstr "FATÁLNA CHYBA: systém nedefinuje `_POSIX2_LOCALEDEF'"
+
+#: locale/programs/localedef.c:99
+msgid "FILE contains mapping from symbolic names to UCS4 values"
+msgstr "SÚBOR obsahuje mapovanie symbolických názvov na UCS4 hodnoty"
+
+#: sunrpc/clnt_perr.c:287
+msgid "Failed (unspecified error)"
+msgstr "Zlyhalo (ne¹pecifikovaná chyba)"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:762
+msgid "File descriptor in bad state"
+msgstr "Deskriptor súboru v chybnom stave"
+
+#. TRANS File exists; an existing file was specified in a context where it only
+#. TRANS makes sense to specify a new file.
+#: stdio-common/../sysdeps/gnu/errlist.c:134
+msgid "File exists"
+msgstr "Súbor existuje"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:726
+msgid "File locking deadlock error"
+msgstr "Vzájomné zablokovanie pri zamykaní súboru"
+
+#. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
+#. TRANS Files}) or host name too long (in @code{gethostname} or
+#. TRANS @code{sethostname}; @pxref{Host Identification}).
+#: stdio-common/../sysdeps/gnu/errlist.c:464
+msgid "File name too long"
+msgstr "Meno súboru príli¹ dlhé"
+
+#: stdio-common/../sysdeps/unix/siglist.c:50
+#: sysdeps/unix/sysv/linux/siglist.h:44
+msgid "File size limit exceeded"
+msgstr "Prekroèený limit då¾ky súboru"
+
+#. TRANS File too big; the size of a file would be larger than allowed by the system.
+#: stdio-common/../sysdeps/gnu/errlist.c:202
+msgid "File too large"
+msgstr "Súbor je príli¹ veµký"
+
+#: nis/nis_error.c:37
+msgid "First/Next chain broken"
+msgstr "Chyba zre»azenia prvý/ïal¹í"
+
+#: stdio-common/../sysdeps/unix/siglist.c:33
+#: sysdeps/unix/sysv/linux/siglist.h:28
+msgid "Floating point exception"
+msgstr "Výnimka pohyblivej rádovej èiarky"
+
+#: nis/nis_error.c:67
+msgid "Full resync required for directory"
+msgstr "Adresár vy¾aduje úplnú resynchronizáciu"
+
+#. TRANS Function not implemented.  Some functions have commands or options defined
+#. TRANS that might not be supported in all implementations, and this is the kind
+#. TRANS of error you get if you request them and they are not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:573
+msgid "Function not implemented"
+msgstr "Funkcia nie je implementovaná"
+
+#: nis/nis_print.c:114
+msgid "GROUP\n"
+msgstr "SKUPINA\n"
+
+#: argp/argp-help.c:231
+#, c-format
+msgid "Garbage in ARGP_HELP_FMT: %s"
+msgstr "Nezmysly v ARGP_HELP_FMT: %s"
+
+#: catgets/gencat.c:115
+msgid ""
+"Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+"Tvorba katalógu správ.\\vAk je VSTUPNÝ_SÚBOR -, vstup je naèítaný zo ¹tandardného vstupu. Ak je\n"
+"VÝSTUPNÝ_SÚBOR -, výstup je zapísaný na ¹tandardný výstup.\n"
+
+#: nis/nis_error.c:36
+msgid "Generic system error"
+msgstr "V¹eobecná chyba systému"
+
+#: locale/programs/locale.c:75
+msgid "Get locale-specific information."
+msgstr "Získa» informáciu ¹pecifickú pre národné prostredie."
+
+#: argp/argp-parse.c:88
+msgid "Give a short usage message"
+msgstr "Vypísa» krátky návod na pou¾itie"
+
+#: argp/argp-parse.c:87
+msgid "Give this help list"
+msgstr "Vypísa» túto pomoc"
+
+#. TRANS This error code has no purpose.
+#: stdio-common/../sysdeps/gnu/errlist.c:618
+msgid "Gratuitous error"
+msgstr "Vïaèná chyba"
+
+#: nis/nis_print.c:317
+#, c-format
+msgid "Group         : %s\n"
+msgstr "Skupina          : %s\n"
+
+#: nis/nis_print.c:248
+msgid "Group Flags :"
+msgstr "Príznaky skupiny :"
+
+#: nis/nis_print_group_entry.c:113
+#, c-format
+msgid "Group entry for \"%s.%s\" group:\n"
+msgstr "Záznam skupiny pre skupinu \"%s.%s\":\n"
+
+#: argp/argp-parse.c:91
+msgid "Hang for SECS seconds (default 3600)"
+msgstr "Poèka» SECS sekúnd (implicitne 3600)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:26
+#: sysdeps/unix/sysv/linux/siglist.h:22
+msgid "Hangup"
+msgstr "Zavesenie"
+
+#: nscd/grpcache.c:238
+#, c-format
+msgid "Haven't found \"%d\" in group cache!"
+msgstr "Nenájdené \"%d\" v cache skupín!"
+
+#: nscd/pwdcache.c:235
+#, c-format
+msgid "Haven't found \"%d\" in password cache!"
+msgstr "Nenájdené \"%d\" v cache hesiel!"
+
+#: nscd/grpcache.c:210
+#, c-format
+msgid "Haven't found \"%s\" in group cache!"
+msgstr "Nenájdené \"%s\" v cache skupín!"
+
+#: nscd/hstcache.c:297 nscd/hstcache.c:328 nscd/hstcache.c:359
+#: nscd/hstcache.c:390
+#, c-format
+msgid "Haven't found \"%s\" in hosts cache!"
+msgstr "Nenájdené \"%s\" v cache poèítaèov!"
+
+#: nscd/pwdcache.c:207
+#, c-format
+msgid "Haven't found \"%s\" in password cache!"
+msgstr "Nenájdené \"%s\" v cache hesiel!"
+
+#. TRANS The remote host for a requested network connection is down.
+#: stdio-common/../sysdeps/gnu/errlist.c:469
+msgid "Host is down"
+msgstr "Poèítaè je vypnutý"
+
+#: resolv/herror.c:75
+msgid "Host name lookup failure"
+msgstr "Nepodarilo sa nájs» meno poèítaèa"
+
+#: stdio-common/../sysdeps/unix/siglist.c:48
+#: sysdeps/unix/sysv/linux/siglist.h:42
+msgid "I/O possible"
+msgstr "V/V mo¾ný"
+
+#: db2/makedb.c:71
+msgid ""
+"INPUT-FILE OUTPUT-FILE\n"
+"-o OUTPUT-FILE INPUT-FILE\n"
+"-u INPUT-FILE"
+msgstr ""
+"VSTUPNÝ_SÚBOR VÝSTUPNÝ_SÚBOR\n"
+"-o VÝSTUPNÝ_SÚBOR VSTUPNÝ_SÚBOR\n"
+"-u VSTUPNÝ_SÚBOR"
+
+#: stdio-common/../sysdeps/unix/siglist.c:31
+msgid "IOT trap"
+msgstr "IOT preru¹enie"
+
+#: nis/nis_print.c:35
+msgid "IVY"
+msgstr "IVY"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:626
+msgid "Identifier removed"
+msgstr "Identifikátor odstránený"
+
+#: stdio-common/../sysdeps/unix/siglist.c:29
+#: sysdeps/unix/sysv/linux/siglist.h:25
+msgid "Illegal instruction"
+msgstr "Neprípustná in¹trukcia"
+
+#: nis/nis_error.c:61
+msgid "Illegal object type for operation"
+msgstr "Neprípustný typ objektu pre operáciu"
+
+#. TRANS Invalid seek operation (such as on a pipe).
+#: stdio-common/../sysdeps/gnu/errlist.c:213
+msgid "Illegal seek"
+msgstr "Neprípustné nastavenie pozície"
+
+#. TRANS Inappropriate file type or format.  The file was the wrong type for the
+#. TRANS operation, or a data file had the wrong format.
+#. TRANS
+#. TRANS On some systems @code{chmod} returns this error if you try to set the
+#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
+#: stdio-common/../sysdeps/gnu/errlist.c:556
+msgid "Inappropriate file type or format"
+msgstr "Nevhodný typ alebo formát súboru"
+
+#. TRANS Inappropriate I/O control operation, such as trying to set terminal
+#. TRANS modes on an ordinary file.
+#: stdio-common/../sysdeps/gnu/errlist.c:188
+msgid "Inappropriate ioctl for device"
+msgstr "Nevhodný ioctl pre toto zariadenie"
+
+#. TRANS In the GNU system, servers supporting the @code{term} protocol return
+#. TRANS this error for certain operations when the caller is not in the
+#. TRANS foreground process group of the terminal.  Users do not usually see this
+#. TRANS error because functions such as @code{read} and @code{write} translate
+#. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
+#. TRANS for information on process groups and these signals.
+#: stdio-common/../sysdeps/gnu/errlist.c:589
+msgid "Inappropriate operation for background process"
+msgstr "Nevhodná operácia pre proces v pozadí"
+
+#: sysdeps/unix/sysv/linux/siglist.h:62
+msgid "Information request"
+msgstr "®iados» o informáciu"
+
+#: iconv/iconv_prog.c:57
+msgid "Information:"
+msgstr "Informácia:"
+
+#: locale/programs/localedef.c:94
+msgid "Input Files:"
+msgstr "Vstupné súbory:"
+
+#: iconv/iconv_prog.c:54
+msgid "Input/Output format specification:"
+msgstr "©pecifikácia vstupno/výstupného formátu:"
+
+#. TRANS Input/output error; usually used for physical read or write errors.
+#: stdio-common/../sysdeps/gnu/errlist.c:52
+msgid "Input/output error"
+msgstr "Chyba vstupu/výstupu"
+
+#: nis/ypclnt.c:775
+msgid "Internal NIS error"
+msgstr "Interná chyba NIS"
+
+#: nis/ypclnt.c:839
+msgid "Internal ypbind error"
+msgstr "Interná chyba ypbind"
+
+#: stdio-common/../sysdeps/unix/siglist.c:27
+#: sysdeps/unix/sysv/linux/siglist.h:23
+msgid "Interrupt"
+msgstr "Preru¹enie"
+
+#. TRANS Interrupted function call; an asynchronous signal occurred and prevented
+#. TRANS completion of the call.  When this happens, you should try the call
+#. TRANS again.
+#. TRANS
+#. TRANS You can choose to have functions resume after a signal that is handled,
+#. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
+#. TRANS Primitives}.
+#: stdio-common/../sysdeps/gnu/errlist.c:47
+msgid "Interrupted system call"
+msgstr "Preru¹ené volanie systému"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:666
+msgid "Interrupted system call should be restarted"
+msgstr "Preru¹ené volanie systému by malo by» znovu spustené"
+
+#: nis/nis_error.c:44
+msgid "Invalid Object for operation"
+msgstr "Neplatný objekt pre operáciu"
+
+#. TRANS Invalid argument.  This is used to indicate various kinds of problems
+#. TRANS with passing the wrong argument to a library function.
+#: stdio-common/../sysdeps/gnu/errlist.c:164
+msgid "Invalid argument"
+msgstr "Neprípustný argument"
+
+#: posix/regex.c:1018
+msgid "Invalid back reference"
+msgstr "Neprípustný spätný odkaz"
+
+#: posix/regex.c:1016
+msgid "Invalid character class name"
+msgstr "Neprípustný názov triedy znakov"
+
+#: sunrpc/clnt_perr.c:275
+msgid "Invalid client credential"
+msgstr "Neplatné oprávnenie klienta"
+
+#: sunrpc/clnt_perr.c:279
+msgid "Invalid client verifier"
+msgstr "Neplatné overenie klienta"
+
+#: posix/regex.c:1015
+msgid "Invalid collation character"
+msgstr "Neprípustný znak triedenia"
+
+#: posix/regex.c:1022
+msgid "Invalid content of \\{\\}"
+msgstr "Neprípustný obsah \\{\\}"
+
+#. TRANS An attempt to make an improper link across file systems was detected.
+#. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
+#. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
+#: stdio-common/../sysdeps/gnu/errlist.c:141
+msgid "Invalid cross-device link"
+msgstr "Neprípustný odkaz medzi zariadeniami"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:702
+msgid "Invalid exchange"
+msgstr "Neprípustná výmena"
+
+#. TRANS While decoding a multibyte character the function came along an invalid
+#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
+#: stdio-common/../sysdeps/gnu/errlist.c:579
+msgid "Invalid or incomplete multibyte or wide character"
+msgstr "Neprípustný alebo nekompletný viacbajtový alebo ¹iroký znak"
+
+#: posix/regex.c:1025
+msgid "Invalid preceding regular expression"
+msgstr "Neprípustný predchádzajúci regulérny výraz"
+
+#: posix/regex.c:1023
+msgid "Invalid range end"
+msgstr "Neprípustný koniec rozsahu"
+
+#: posix/regex.c:1014
+msgid "Invalid regular expression"
+msgstr "Neprípustný regulérny výraz"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:718
+msgid "Invalid request code"
+msgstr "Neprípustný kód ¾iadosti"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:706
+msgid "Invalid request descriptor"
+msgstr "Neprípustný deskriptor ¾iadosti"
+
+#: sunrpc/clnt_perr.c:285
+msgid "Invalid server verifier"
+msgstr "Neplatné overenie servera"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:722
+msgid "Invalid slot"
+msgstr "Neplatná priehradka"
+
+#. TRANS File is a directory; you cannot open a directory for writing,
+#. TRANS or create or remove hard links to it.
+#: stdio-common/../sysdeps/gnu/errlist.c:158
+msgid "Is a directory"
+msgstr "Je adresár"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:806
+msgid "Is a named type file"
+msgstr "Je pomenovaný súbor"
+
+#: nis/nis_print.c:187
+msgid "Kerberos.\n"
+msgstr "Kerberos.\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:34
+#: sysdeps/unix/sysv/linux/siglist.h:29
+msgid "Killed"
+msgstr "Zabitý"
+
+#: nis/nis_print.c:123
+msgid "LINK\n"
+msgstr "ODKAZ\n"
+
+#: nis/nis_local_names.c:125
+#, c-format
+msgid "LOCAL entry for UID %d in directory %s not unique\n"
+msgstr "LOCAL záznam pre UID %d v adresári %s nie je jednoznaèný\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:698
+msgid "Level 2 halted"
+msgstr "Úroveò 2 zastavená"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:674
+msgid "Level 2 not synchronized"
+msgstr "Úroveò 2 nie je synchronizovaná"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:678
+msgid "Level 3 halted"
+msgstr "Úroveò 3 zastavená"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:682
+msgid "Level 3 reset"
+msgstr "Úroveò 3 nastavená na východzie hodnoty"
+
+#: nis/nis_error.c:53
+msgid "Link Points to illegal name"
+msgstr "Odkaz odkazuje na neprípustný názov"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:638
+msgid "Link has been severed"
+msgstr "Odkaz bol znièený"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:686
+msgid "Link number out of range"
+msgstr "Èíslo odkazu mimo rozsahu"
+
+#: nis/nis_print.c:282
+msgid "Linked Object Type : "
+msgstr "Typ odkazovaného objektu : "
+
+#: nis/nis_print.c:284
+#, c-format
+msgid "Linked to : %s\n"
+msgstr "Odkazuje na : %s\n"
+
+#: nis/ypclnt.c:787
+msgid "Local domain name not set"
+msgstr "Meno miestnej domény nie je nastavené"
+
+#: nis/ypclnt.c:777
+msgid "Local resource allocation failure"
+msgstr "Chyba pri pridelení miestnych zdrojov"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:734
+msgid "Machine is not on the network"
+msgstr "Poèítaè nie je zapojený v sieti"
+
+#: nis/nis_error.c:45
+msgid "Malformed Name, or illegal name"
+msgstr "Chybne formované alebo neprípustný názov"
+
+#: argp/argp-help.c:1182
+msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
+msgstr "Povinné alebo voliteµné argumenty dlhých tvarov volieb sú povinné alebo voliteµné pre µubovoµné zodpovedajúce krátke voµby."
+
+#: nis/nis_print.c:168
+msgid "Master Server :\n"
+msgstr "Hlavný server :\n"
+
+#: nis/nis_error.c:75
+msgid "Master server busy, full dump rescheduled."
+msgstr "Hlavný server zaneprázdnený, úplný prenos preplánovaný."
+
+#: posix/../sysdeps/posix/gai_strerror.c:35
+msgid "Memory allocation failure"
+msgstr "Pridelenie pamäti zlyhalo"
+
+#: posix/regex.c:1024
+msgid "Memory exhausted"
+msgstr "Pamä» vyèerpaná"
+
+#. TRANS The size of a message sent on a socket was larger than the supported
+#. TRANS maximum size.
+#: stdio-common/../sysdeps/gnu/errlist.c:317
+msgid "Message too long"
+msgstr "Príli¹ dlhá správa"
+
+#: nis/nis_error.c:57
+msgid "Missing or malformed attribute"
+msgstr "Chýbajúci alebo chybne formovaný atribút"
+
+#: nis/nis_print.c:323
+#, c-format
+msgid "Mod. Time     : %s"
+msgstr "Èas zmeny        :%s"
+
+#: nis/nis_error.c:50
+msgid "Modification failed"
+msgstr "Modifikácia zlyhala"
+
+#: nis/nis_error.c:63
+msgid "Modify operation failed"
+msgstr "Operácia zmeny zlyhala"
+
+#: locale/programs/locale.c:68
+msgid "Modify output format:"
+msgstr "Modifikova» výstupný formát:"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:630
+msgid "Multihop attempted"
+msgstr "Pokus o spojenie cez viac uzlov"
+
+#: catgets/gencat.c:106 catgets/gencat.c:110 db2/makedb.c:59
+#: locale/programs/localedef.c:115 nscd/nscd.c:77
+msgid "NAME"
+msgstr "NÁZOV"
+
+#: locale/programs/locale.c:78
+msgid ""
+"NAME\n"
+"[-a|-m]"
+msgstr ""
+"NÁZOV\n"
+"[-a|-m]"
+
+#: nis/nis_print.c:31
+msgid "NIS"
+msgstr "NIS"
+
+#: nis/ypclnt.c:791
+msgid "NIS client/server version mismatch - can't supply service"
+msgstr "Rozdielne verzie NIS klienta a serveru - nie je mo¾né poskytnú» slu¾bu"
+
+#: nis/ypclnt.c:789
+msgid "NIS map database is bad"
+msgstr "Databáza máp NIS je chybná"
+
+#: nis/nis_error.c:68
+msgid "NIS+ operation failed"
+msgstr "NIS+ operácia zlyhala"
+
+#: nis/nis_error.c:33
+msgid "NIS+ servers unreachable"
+msgstr "NIS+ server nie je dostupný"
+
+#: nis/nis_error.c:69
+msgid "NIS+ service is unavailable or not installed"
+msgstr "Slu¾ba NIS+ nie je dostupná alebo nain¹talovaná"
+
+#: nis/nis_print.c:108
+msgid "NO OBJECT\n"
+msgstr "®IADNY OBJEKT\n"
+
+#: nscd/nscd.c:81
+msgid "NUMBER"
+msgstr "POÈET"
+
+#: nis/nis_print.c:162
+#, c-format
+msgid "Name : '%s'\n"
+msgstr "Názov : '%s'\n"
+
+#: nscd/nscd.c:88
+msgid "Name Service Cache Daemon."
+msgstr "Démon cache slu¾by názvov."
+
+#: nis/nis_error.c:40
+msgid "Name not served by this server"
+msgstr "Názov nie je obsluhovaný týmto serverom"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:758
+msgid "Name not unique on network"
+msgstr "Meno nie je v sieti jednoznaèné"
+
+#: posix/../sysdeps/posix/gai_strerror.c:37
+msgid "Name or service not known"
+msgstr "Názov alebo slu¾ba neznáme"
+
+#: nis/nis_error.c:49
+msgid "Name/entry isn't unique"
+msgstr "Názov/záznam nie sú jednoznaèné"
+
+#: nis/nis_error.c:58
+msgid "Named object is not searchable"
+msgstr "Zadaný objekt nie je prehµadávateµný"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:566
+msgid "Need authenticator"
+msgstr "Potrebuje overovací objekt"
+
+#. TRANS A network connection was reset because the remote host crashed.
+#: stdio-common/../sysdeps/gnu/errlist.c:389
+msgid "Network dropped connection on reset"
+msgstr "Sie» zru¹ila spojenie (problém so vzdialeným poèítaèom)"
+
+#. TRANS A socket operation failed because the network was down.
+#: stdio-common/../sysdeps/gnu/errlist.c:378
+msgid "Network is down"
+msgstr "Sie» je nefunkèná"
+
+#. TRANS A socket operation failed because the subnet containing the remote host
+#. TRANS was unreachable.
+#: stdio-common/../sysdeps/gnu/errlist.c:384
+msgid "Network is unreachable"
+msgstr "Sie» nie je dostupná"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:694
+msgid "No CSI structure available"
+msgstr "CSI ¹truktúra nedostupná"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:802
+msgid "No XENIX semaphores available"
+msgstr "XENIX semafóry nedostupné"
+
+#: posix/../sysdeps/posix/gai_strerror.c:36
+msgid "No address associated with hostname"
+msgstr "Názov poèítaèa nemá priradenú adresu"
+
+#: resolv/herror.c:77
+msgid "No address associated with name"
+msgstr "Názov nemá priradenú adresu"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:714
+msgid "No anode"
+msgstr "®iadny anode"
+
+#. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
+#. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
+#. TRANS other from network operations.
+#: stdio-common/../sysdeps/gnu/errlist.c:408
+msgid "No buffer space available"
+msgstr "Nie je mo¾né prideli» pamä» pre V/V operácie"
+
+#. TRANS There are no child processes.  This error happens on operations that are
+#. TRANS supposed to manipulate child processes, when there aren't any processes
+#. TRANS to manipulate.
+#: stdio-common/../sysdeps/gnu/errlist.c:89
+msgid "No child processes"
+msgstr "Detské procesy neexistujú"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:634
+msgid "No data available"
+msgstr "Dáta nie sú k dispozícii"
+
+#: nis/nis_error.c:73
+msgid "No file space on server"
+msgstr "Na serveri u¾ nie je ¾iadne miesto pre súbory"
+
+#. TRANS No locks available.  This is used by the file locking facilities; see
+#. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
+#. TRANS it can result from an operation to an NFS server running another
+#. TRANS operating system.
+#: stdio-common/../sysdeps/gnu/errlist.c:547
+msgid "No locks available"
+msgstr "Zámky nie sú k dispozícii"
+
+#: posix/regex.c:1013
+msgid "No match"
+msgstr "®iadna zhoda"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:814
+msgid "No medium found"
+msgstr "Nenájdené ¾iadne médium"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:642
+msgid "No message of desired type"
+msgstr "®iadna správa ¾elaného typu"
+
+#: nis/ypclnt.c:779
+msgid "No more records in map database"
+msgstr "®iadne ïal¹ie záznamy v databáze"
+
+#: posix/regex.c:5515
+msgid "No previous regular expression"
+msgstr "®iadny predchádzajúci regulérny výraz"
+
+#: sunrpc/rpcinfo.c:570
+msgid "No remote programs registered.\n"
+msgstr "Nie sú registrované ¾iadne vzdialené programy\n"
+
+#. TRANS The remote host for a requested network connection is not reachable.
+#: stdio-common/../sysdeps/gnu/errlist.c:474
+msgid "No route to host"
+msgstr "Cesta k poèítaèu neexistuje"
+
+#. TRANS No space left on device; write operation on a file failed because the
+#. TRANS disk is full.
+#: stdio-common/../sysdeps/gnu/errlist.c:208
+msgid "No space left on device"
+msgstr "Na zariadení u¾ nie je ¾iadne miesto"
+
+#. TRANS The wrong type of device was given to a function that expects a
+#. TRANS particular sort of device.
+#: stdio-common/../sysdeps/gnu/errlist.c:147
+msgid "No such device"
+msgstr "Také zariadenie neexistuje"
+
+#. TRANS No such file or directory.  This is a ``file doesn't exist'' error
+#. TRANS for ordinary files that are referenced in contexts where they are
+#. TRANS expected to already exist.
+#: stdio-common/../sysdeps/gnu/errlist.c:31
+msgid "No such file or directory"
+msgstr "Adresár alebo súbor neexistuje"
+
+#: nis/ypclnt.c:773
+msgid "No such key in map"
+msgstr "Tento kµúè v databáze neexistuje"
+
+#: nis/ypclnt.c:771
+msgid "No such map in server's domain"
+msgstr "Táto mapa sa v doméne servera nenachádza"
+
+#. TRANS No process matches the specified process ID.
+#: stdio-common/../sysdeps/gnu/errlist.c:36
+msgid "No such process"
+msgstr "Tento proces neexistuje"
+
+#: nis/nis_error.c:60
+msgid "Non NIS+ namespace encountered"
+msgstr "Zaznamenaný priestor názvov mimo NIS+"
+
+#: posix/../sysdeps/posix/gai_strerror.c:33
+msgid "Non-recoverable failure in name resolution"
+msgstr "Neopraviteµná chyba pri rie¹ení názvu"
+
+#: nis/nis_print.c:176
+msgid "None.\n"
+msgstr "®iadne.\n"
+
+#: nis/nis_error.c:48
+msgid "Not Found, no such name"
+msgstr "Nenájdené, takýto názov neexistuje"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:798
+msgid "Not a XENIX named type file"
+msgstr "Nejde o pomenovaný XENIX súbor"
+
+#. TRANS A file that isn't a directory was specified when a directory is required.
+#: stdio-common/../sysdeps/gnu/errlist.c:152
+msgid "Not a directory"
+msgstr "Nie je adresár"
+
+#: nis/nis_error.c:30
+msgid "Not found"
+msgstr "Nenájdené"
+
+#: nis/nis_error.c:43
+msgid "Not master server for this domain"
+msgstr "Nie je hlavný server pre túto doménu"
+
+#: nis/nis_error.c:39
+msgid "Not owner"
+msgstr "Nie je vlastníkom"
+
+#: nis/nis_print.c:263
+#, c-format
+msgid "Number of Columns   : %d\n"
+msgstr "Poèet ståpcov          : %d\n"
+
+#: nis/nis_print.c:358
+#, c-format
+msgid "Number of objects : %u\n"
+msgstr "Poèet objektov       : %u\n"
+
+#. TRANS Domain error; used by mathematical functions when an argument value does
+#. TRANS not fall into the domain over which the function is defined.
+#: stdio-common/../sysdeps/gnu/errlist.c:240
+msgid "Numerical argument out of domain"
+msgstr "Èíselný rozsah mimo domény definície funkcie"
+
+#. TRANS Range error; used by mathematical functions when the result value is
+#. TRANS not representable because of overflow or underflow.
+#: stdio-common/../sysdeps/gnu/errlist.c:246
+msgid "Numerical result out of range"
+msgstr "Èíselný výsledok mimo povoleného rozsahu"
+
+#: nis/nis_print.c:362
+#, c-format
+msgid "Object #%d:\n"
+msgstr "Objekt #%d:\n"
+
+#: nis/nis_print.c:314
+#, c-format
+msgid "Object Name   : %s\n"
+msgstr "Názov objektu    : %s\n"
+
+#: nis/nis_print.c:324
+msgid "Object Type   : "
+msgstr "Typ objektu      : "
+
+#. TRANS An attempt was made to NFS-mount a remote file system with a file name that
+#. TRANS already specifies an NFS-mounted file.
+#. TRANS (This is an error on some operating systems, but we expect it to work
+#. TRANS properly on the GNU system, making this error code impossible.)
+#: stdio-common/../sysdeps/gnu/errlist.c:514
+msgid "Object is remote"
+msgstr "Objekt je vzdialený"
+
+#: nis/nis_error.c:42
+msgid "Object with same name exists"
+msgstr "Existuje objekt s rovnakým názvom"
+
+#: timezone/zic.c:1995
+msgid "Odd number of quotation marks"
+msgstr "Nepárny poèet úvodzoviek"
+
+#: nscd/nscd.c:185
+msgid "Only root is allowed to use this option!"
+msgstr "Táto voµba je dostupná iba superu¾ívateµovi!"
+
+#. TRANS An operation is already in progress on an object that has non-blocking
+#. TRANS mode selected.
+#: stdio-common/../sysdeps/gnu/errlist.c:306
+msgid "Operation already in progress"
+msgstr "Operácia je u¾ rozpracovaná"
+
+#. TRANS Operation not permitted; only the owner of the file (or other resource)
+#. TRANS or processes with special privileges can perform the operation.
+#: stdio-common/../sysdeps/gnu/errlist.c:24
+msgid "Operation not permitted"
+msgstr "Operácia nie je povolená"
+
+#. TRANS The operation you requested is not supported.  Some socket functions
+#. TRANS don't make sense for all types of sockets, and others may not be
+#. TRANS implemented for all communications protocols.  In the GNU system, this
+#. TRANS error can happen for many calls when the object does not support the
+#. TRANS particular operation; it is a generic indication that the server knows
+#. TRANS nothing to do for that call.
+#: stdio-common/../sysdeps/gnu/errlist.c:350
+msgid "Operation not supported"
+msgstr "Operácia nie je podporovaná"
+
+#. TRANS An operation that cannot complete immediately was initiated on an object
+#. TRANS that has non-blocking mode selected.  Some functions that must always
+#. TRANS block (such as @code{connect}; @pxref{Connecting}) never return
+#. TRANS @code{EAGAIN}.  Instead, they return @code{EINPROGRESS} to indicate that
+#. TRANS the operation has begun and will take some time.  Attempts to manipulate
+#. TRANS the object before the call completes return @code{EALREADY}.  You can
+#. TRANS use the @code{select} function to find out when the pending operation
+#. TRANS has completed; @pxref{Waiting for I/O}.
+#: stdio-common/../sysdeps/gnu/errlist.c:300
+msgid "Operation now in progress"
+msgstr "Operácia prebieha"
+
+#. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
+#. TRANS The values are always the same, on every operating system.
+#. TRANS
+#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+#. TRANS separate error code.
+#: stdio-common/../sysdeps/gnu/errlist.c:288
+msgid "Operation would block"
+msgstr "Operácia by blokovala"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:646
+msgid "Out of streams resources"
+msgstr "Prúdové zdroje vyèerpané"
+
+#: iconv/iconv_prog.c:59 locale/programs/localedef.c:101
+msgid "Output control:"
+msgstr "Riadenie výstupu:"
+
+#: elf/sprof.c:76
+msgid "Output selection:"
+msgstr "Výber výstupu:"
+
+#: nis/nis_print.c:316
+#, c-format
+msgid "Owner         : %s\n"
+msgstr "Vlastník         : %s\n"
+
+#: nis/nis_print.c:126
+msgid "PRIVATE\n"
+msgstr "SÚKROMNÝ\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:738
+msgid "Package not installed"
+msgstr "Balík nie je nain¹talovaný"
+
+#: nscd/nscd_conf.c:84
+#, c-format
+msgid "Parse error: %s"
+msgstr "Chyba analýzy: %s"
+
+#: nis/nis_error.c:54
+msgid "Partial Success"
+msgstr "Èiastoèný úspech"
+
+#: nis/nis_error.c:62
+msgid "Passed object is not the same object on server"
+msgstr "Odovzdaný objekt nie je na serveri tým istým objektom"
+
+#. TRANS Permission denied; the file permissions do not allow the attempted operation.
+#: nis/nis_error.c:38 nis/ypclnt.c:793
+#: stdio-common/../sysdeps/gnu/errlist.c:108
+msgid "Permission denied"
+msgstr "Prístup odmietnutý"
+
+#: sysdeps/unix/sysv/linux/siglist.h:64
+msgid "Power failure"
+msgstr "Výpadok napájania"
+
+#: posix/regex.c:1026
+msgid "Premature end of regular expression"
+msgstr "Predèasný koniec regulérneho výrazu"
+
+#: db2/makedb.c:63
+msgid "Print content of database file, one entry a line"
+msgstr "Vypísa» obsah databázového súboru, jeden záznam na riadok"
+
+#: nscd/nscd.c:83
+msgid "Print current configuration statistic"
+msgstr "Vypísa» ¹tatistiku aktuálnej konfigurácie"
+
+#: locale/programs/localedef.c:107
+msgid "Print more messages"
+msgstr "Vypísa» viac správ"
+
+#: argp/argp-parse.c:148
+msgid "Print program version"
+msgstr "Vypísa» verziu programu"
+
+#: nis/nis_error.c:29
+msgid "Probable success"
+msgstr "Pravdepodobný úspech"
+
+#: nis/nis_error.c:31
+msgid "Probably not found"
+msgstr "Pravdepodobne nenájdené"
+
+#: stdio-common/../sysdeps/unix/siglist.c:52
+#: sysdeps/unix/sysv/linux/siglist.h:46
+msgid "Profiling timer expired"
+msgstr "Profilovací èasovaè vypr¹al"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:690
+msgid "Protocol driver not attached"
+msgstr "Ovládaè protokolu nepripojený"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:658
+msgid "Protocol error"
+msgstr "Chyba protokolu"
+
+#. TRANS The socket communications protocol family you requested is not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:355
+msgid "Protocol family not supported"
+msgstr "Rodina protokolov nie je podporovaná"
+
+#. TRANS You specified a socket option that doesn't make sense for the
+#. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
+#: stdio-common/../sysdeps/gnu/errlist.c:328
+msgid "Protocol not available"
+msgstr "Protokol nie je k dispozícii"
+
+#. TRANS The socket domain does not support the requested communications protocol
+#. TRANS (perhaps because the requested protocol is completely invalid).
+#. TRANS @xref{Creating a Socket}.
+#: stdio-common/../sysdeps/gnu/errlist.c:335
+msgid "Protocol not supported"
+msgstr "Protokol nie je podporovaný"
+
+#. TRANS The socket type does not support the requested communications protocol.
+#: stdio-common/../sysdeps/gnu/errlist.c:322
+msgid "Protocol wrong type for socket"
+msgstr "Protokol nie je socketom podporovaný"
+
+#: nis/nis_error.c:64
+msgid "Query illegal for named table"
+msgstr "Neprípustná otázka pre danú tabuµku"
+
+#: stdio-common/../sysdeps/unix/siglist.c:28
+#: sysdeps/unix/sysv/linux/siglist.h:24
+msgid "Quit"
+msgstr "Koniec"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:754
+msgid "RFS specific error"
+msgstr "RFS-¹pecifická chyba"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:539
+msgid "RPC bad procedure for program"
+msgstr "Chybná RPC procedúra pre program"
+
+#: nis/ypclnt.c:767
+msgid "RPC failure on NIS operation"
+msgstr "Zlyhal RPC pri NIS operácii"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:529
+msgid "RPC program not available"
+msgstr "RPC program nie je k dispozícii"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:534
+msgid "RPC program version wrong"
+msgstr "Chybná verzia RPC programu"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:519
+msgid "RPC struct is bad"
+msgstr "RPC ¹truktúra je chybná"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:524
+msgid "RPC version wrong"
+msgstr "Chybná verzia RPC"
+
+#: sunrpc/clnt_perr.c:215
+msgid "RPC: (unknown error code)"
+msgstr "RPC: (neznámny chybový kód)"
+
+#: sunrpc/clnt_perr.c:176
+msgid "RPC: Authentication error"
+msgstr "RPC: Chyba pri overení práv"
+
+#: sunrpc/clnt_perr.c:166
+msgid "RPC: Can't decode result"
+msgstr "RPC: Nie je mo¾né dekódova» výsledok"
+
+#: sunrpc/clnt_perr.c:164
+msgid "RPC: Can't encode arguments"
+msgstr "RPC: Nie je mo¾né zakódova» argumenty"
+
+#: sunrpc/clnt_perr.c:196
+msgid "RPC: Failed (unspecified error)"
+msgstr "RPC: Zlyhalo (ne¹pecifikovaná chyba)"
+
+#: sunrpc/clnt_perr.c:174
+msgid "RPC: Incompatible versions of RPC"
+msgstr "RPC: Nekompatibilné verzie RPC"
+
+#: sunrpc/clnt_perr.c:192
+msgid "RPC: Port mapper failure"
+msgstr "RPC: Chyba portmappera"
+
+#: sunrpc/clnt_perr.c:182
+msgid "RPC: Procedure unavailable"
+msgstr "RPC: Procedúra nie je k dispozícii"
+
+#: sunrpc/clnt_perr.c:194
+msgid "RPC: Program not registered"
+msgstr "RPC: Program nie je registrovaný"
+
+#: sunrpc/clnt_perr.c:178
+msgid "RPC: Program unavailable"
+msgstr "RPC: Program nie je k dispozícii"
+
+#: sunrpc/clnt_perr.c:180
+msgid "RPC: Program/version mismatch"
+msgstr "RPC: Nesúhlasí program alebo verzia"
+
+#: sunrpc/clnt_perr.c:186
+msgid "RPC: Remote system error"
+msgstr "RPC: Chyba vzdialeného systému"
+
+#: sunrpc/clnt_perr.c:184
+msgid "RPC: Server can't decode arguments"
+msgstr "RPC: Server nemô¾e dekódova» argumenty"
+
+#: sunrpc/clnt_perr.c:162
+msgid "RPC: Success"
+msgstr "RPC: Úspech"
+
+#: sunrpc/clnt_perr.c:172
+msgid "RPC: Timed out"
+msgstr "RPC: Èasovaè vypr¹al"
+
+#: sunrpc/clnt_perr.c:170
+msgid "RPC: Unable to receive"
+msgstr "RPC: Nie je mo¾né prijíma»"
+
+#: sunrpc/clnt_perr.c:168
+msgid "RPC: Unable to send"
+msgstr "RPC: Nie je mo¾né vysiela»"
+
+#: sunrpc/clnt_perr.c:188
+msgid "RPC: Unknown host"
+msgstr "RPC: Neznámy poèítaè"
+
+#: sunrpc/clnt_perr.c:190
+msgid "RPC: Unknown protocol"
+msgstr "RPC: Neznámy protokol"
+
+#: nis/nis_print.c:184
+#, c-format
+msgid "RSA (%d bits)\n"
+msgstr "RSA (%d bitov)\n"
+
+#: elf/dlsym.c:59 elf/dlvsym.c:62
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr "RTLD_NEXT je pou¾ité pre kód, ktorý nie je dynamicky zavedený"
+
+#: elf/sprof.c:88
+msgid "Read and display shared object profiling data"
+msgstr "Preèíta» a vypísa» profilovacie údaje zdieµaného objektu"
+
+#: nscd/nscd.c:78
+msgid "Read configuration data from NAME"
+msgstr "Naèíta» údaje o konfigurácii z NÁZOV"
+
+#. TRANS An attempt was made to modify something on a read-only file system.
+#: stdio-common/../sysdeps/gnu/errlist.c:218
+msgid "Read-only file system"
+msgstr "Súborový systém dovoµuje len èítanie"
+
+#: string/strsignal.c:66
+#, c-format
+msgid "Real-time signal %d"
+msgstr "Signál reálneho èasu %d"
+
+#: posix/regex.c:1027
+msgid "Regular expression too big"
+msgstr "Regulérny výraz príli¹ veµký"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:810
+msgid "Remote I/O error"
+msgstr "Vzdialená V/V chyba"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:766
+msgid "Remote address changed"
+msgstr "Vzdialená adresa sa zmenila"
+
+#: inet/ruserpass.c:162
+msgid "Remove password or make file unreadable by others."
+msgstr "Odstráòte heslo alebo zaká¾te èítanie súboru ostatnými."
+
+#: elf/sprof.c:537
+#, c-format
+msgid "Reopening shared object `%s' failed"
+msgstr "Znovuotvorenie zdieµaného objektu `%s' zlyhalo"
+
+#: nis/nis_print.c:170
+msgid "Replicate :\n"
+msgstr "Replika      :\n"
+
+#: argp/argp-help.c:1638
+#, c-format
+msgid "Report bugs to %s.\n"
+msgstr "Chyby hláste na adrese %s.\n"
+
+#: catgets/gencat.c:223 db2/makedb.c:229 iconv/iconv_prog.c:280
+#: locale/programs/locale.c:254 locale/programs/localedef.c:389
+msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
+msgstr "Chyby hláste na adrese <bugs@gnu.org> - pou¾ite skript `glibcbug'.\n"
+
+#: nis/ypclnt.c:765
+msgid "Request arguments bad"
+msgstr "Chybné argumenty ¾iadosti"
+
+#: resolv/herror.c:73
+msgid "Resolver Error 0 (no error)"
+msgstr "Chyba resolvera 0 (¾iadna chyba)"
+
+#: resolv/herror.c:117
+msgid "Resolver internal error"
+msgstr "Vnútorná chyba resolvera"
+
+#. TRANS Deadlock avoided; allocating a system resource would have resulted in a
+#. TRANS deadlock situation.  The system does not guarantee that it will notice
+#. TRANS all such situations.  This error means you got lucky and the system
+#. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
+#: stdio-common/../sysdeps/gnu/errlist.c:97
+msgid "Resource deadlock avoided"
+msgstr "Bolo zabránené vzájomnému zablokovaniu"
+
+#: stdio-common/../sysdeps/unix/siglist.c:54
+msgid "Resource lost"
+msgstr "Zdroj bol stratený"
+
+#. TRANS Resource temporarily unavailable; the call might work if you try again
+#. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
+#. TRANS they are always the same in the GNU C library.
+#. TRANS
+#. TRANS This error can happen in a few different situations:
+#. TRANS
+#. TRANS @itemize @bullet
+#. TRANS @item
+#. TRANS An operation that would block was attempted on an object that has
+#. TRANS non-blocking mode selected.  Trying the same operation again will block
+#. TRANS until some external condition makes it possible to read, write, or
+#. TRANS connect (whatever the operation).  You can use @code{select} to find out
+#. TRANS when the operation will be possible; @pxref{Waiting for I/O}.
+#. TRANS
+#. TRANS @strong{Portability Note:} In many older Unix systems, this condition
+#. TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
+#. TRANS different from @code{EAGAIN}.  To make your program portable, you should
+#. TRANS check for both codes and treat them the same.
+#. TRANS
+#. TRANS @item
+#. TRANS A temporary resource shortage made an operation impossible.  @code{fork}
+#. TRANS can return this error.  It indicates that the shortage is expected to
+#. TRANS pass, so your program can try the call again later and it may succeed.
+#. TRANS It is probably a good idea to delay for a few seconds before trying it
+#. TRANS again, to allow time for other processes to release scarce resources.
+#. TRANS Such shortages are usually fairly serious and affect the whole system,
+#. TRANS so usually an interactive program should report the error to the user
+#. TRANS and return to its command loop.
+#. TRANS @end itemize
+#: stdio-common/../sysdeps/gnu/errlist.c:279
+msgid "Resource temporarily unavailable"
+msgstr "Zdroj je doèasne neprístupný"
+
+#: nis/nis_error.c:47
+msgid "Results Sent to callback proc"
+msgstr "Výsledky poslané procedúre spätného volania"
+
+#: elf/sprof.c:91
+msgid "SHOBJ [PROFDATA]"
+msgstr "ZDIE¥_OBJEKT [PROF_ÚDAJE]"
+
+#: nis/nis_print.c:33
+msgid "SUNYP"
+msgstr "SUNYP"
+
+#: nis/nis_print.c:265
+#, c-format
+msgid "Search Path         : %s\n"
+msgstr "Prehµadávaná cesta     : %s\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:36
+#: sysdeps/unix/sysv/linux/siglist.h:31
+msgid "Segmentation fault"
+msgstr "Chyba segmentácie"
+
+#: nis/nis_error.c:35
+msgid "Server busy, try again"
+msgstr "Server zaneprázdnený, skúste znovu"
+
+#: nis/nis_error.c:41
+msgid "Server out of memory"
+msgstr "Vyèerpaná pamä» servera"
+
+#: sunrpc/clnt_perr.c:277
+msgid "Server rejected credential"
+msgstr "Server odmietol oprávnenie"
+
+#: sunrpc/clnt_perr.c:281
+msgid "Server rejected verifier"
+msgstr "Server odmietol overenie"
+
+#: posix/../sysdeps/posix/gai_strerror.c:38
+msgid "Servname not supported for ai_socktype"
+msgstr "Servname nie je pre ai_socktype podporovaná"
+
+#: argp/argp-parse.c:89
+msgid "Set the program name"
+msgstr "Nastavi» názov programu"
+
+#: nscd/nscd.c:82
+msgid "Shut the server down"
+msgstr "Zastavi» server"
+
+#: stdio-common/../sysdeps/unix/siglist.c:25
+msgid "Signal 0"
+msgstr "Signál 0"
+
+#. TRANS A file that isn't a socket was specified when a socket is required.
+#: stdio-common/../sysdeps/gnu/errlist.c:311
+msgid "Socket operation on non-socket"
+msgstr "Socketová operácia na objekte, ktorý nie je socket"
+
+#. TRANS The socket type is not supported.
+#: stdio-common/../sysdeps/gnu/errlist.c:340
+msgid "Socket type not supported"
+msgstr "Typ socketu nie je podporovaný"
+
+#. TRANS A network connection was aborted locally.
+#: stdio-common/../sysdeps/gnu/errlist.c:394
+msgid "Software caused connection abort"
+msgstr "Software spôsobil zru¹enie spojenia"
+
+#: sunrpc/rpcinfo.c:658
+msgid "Sorry. You are not root\n"
+msgstr "Bohu¾iaµ - nie ste superu¾ívateµ\n"
+
+#: locale/programs/localedef.c:97
+msgid "Source definitions are found in FILE"
+msgstr "Zdrojové definície sa nachádzajú v SÚBORe"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:746
+msgid "Srmount error"
+msgstr "Chyba srmount"
+
+#: sysdeps/unix/sysv/linux/siglist.h:59
+msgid "Stack fault"
+msgstr "Chyba zásobníka"
+
+#. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
+#. TRANS system which is due to file system rearrangements on the server host.
+#. TRANS Repairing this condition usually requires unmounting and remounting
+#. TRANS the NFS file system on the local host.
+#: stdio-common/../sysdeps/gnu/errlist.c:506
+msgid "Stale NFS file handle"
+msgstr "Zastaralý odkaz na NFS súbor"
+
+#: nscd/nscd.c:81
+msgid "Start NUMBER threads"
+msgstr "Spusti» POÈET vlákien"
+
+#: nis/nis_print.c:357
+#, c-format
+msgid "Status            : %s\n"
+msgstr "Stav                 : %s\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:43
+#: sysdeps/unix/sysv/linux/siglist.h:37
+msgid "Stopped"
+msgstr "Zastavené"
+
+#: stdio-common/../sysdeps/unix/siglist.c:42
+#: sysdeps/unix/sysv/linux/siglist.h:36
+msgid "Stopped (signal)"
+msgstr "Zastavené (signál)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:46
+#: sysdeps/unix/sysv/linux/siglist.h:40
+msgid "Stopped (tty input)"
+msgstr "Zastavené (vstup z terminálu)"
+
+#: stdio-common/../sysdeps/unix/siglist.c:47
+#: sysdeps/unix/sysv/linux/siglist.h:41
+msgid "Stopped (tty output)"
+msgstr "Zastavené (výstup na terminál)"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:790
+msgid "Streams pipe error"
+msgstr "Chyba rúry prúdov"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:794
+msgid "Structure needs cleaning"
+msgstr "©truktúra potrebuje opravu"
+
+#: nis/nis_error.c:28 nis/ypclnt.c:763 nis/ypclnt.c:837 posix/regex.c:1012
+#: stdio-common/../sysdeps/gnu/errlist.c:19
+msgid "Success"
+msgstr "Úspech"
+
+#: locale/programs/localedef.c:106
+msgid "Suppress warnings and information messages"
+msgstr "Potlaèi» varovné a informaèné správy"
+
+#: locale/programs/localedef.c:96
+msgid "Symbolic character names defined in FILE"
+msgstr "Symbolické názvy znakov sú definované v SÚBORe"
+
+#: posix/../sysdeps/posix/gai_strerror.c:40
+msgid "System error"
+msgstr "Chyba systému"
+
+#: locale/programs/locale.c:63
+msgid "System information:"
+msgstr "Systémové informácie:"
+
+#: nis/ypclnt.c:843
+msgid "System resource allocation failure"
+msgstr "Pridelenie systémových zdrojov zlyhalo"
+
+#: locale/programs/localedef.c:384
+#, c-format
+msgid ""
+"System's directory for character maps : %s\n"
+"                       repertoire maps: %s\n"
+"                       locale path    : %s\n"
+"%s"
+msgstr ""
+"Systémový adresár pre mapy znakov:    : %s\n"
+"                      mapy repertoárov: %s\n"
+"                      cestu locale    : %s\n"
+"%s"
+
+#: nis/nis_print.c:117
+msgid "TABLE\n"
+msgstr "TABU¥KA\n"
+
+#: nis/nis_print.c:262
+#, c-format
+msgid "Table Type          : %s\n"
+msgstr "Typ tabuµky            : %s\n"
+
+#: posix/../sysdeps/posix/gai_strerror.c:31
+msgid "Temporary failure in name resolution"
+msgstr "Doèasná chyba pri rie¹ení názvu"
+
+#: stdio-common/../sysdeps/unix/siglist.c:40
+#: sysdeps/unix/sysv/linux/siglist.h:34
+msgid "Terminated"
+msgstr "Ukonèené"
+
+#. TRANS An attempt to execute a file that is currently open for writing, or
+#. TRANS write to a file that is currently being executed.  Often using a
+#. TRANS debugger to run a program is considered having it open for writing and
+#. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
+#. TRANS is not an error in the GNU system; the text is copied as necessary.
+#: stdio-common/../sysdeps/gnu/errlist.c:197
+msgid "Text file busy"
+msgstr "Spustiteµný súbor je pou¾ívaný"
+
+#: iconv/iconv_prog.c:536
+msgid ""
+"The following list contain all the coded character sets known.  This does\n"
+"not necessarily mean that all combinations of these names can be used for\n"
+"the FROM and TO command line parameters.  One coded character set can be\n"
+"listed with several different names (aliases).\n"
+"  Some of the names are no plain strings but instead regular expressions and\n"
+"they match a variety of names which can be given as parameters to the\n"
+"program.\n"
+"\n"
+"  "
+msgstr ""
+"Nasledujúci zoznam obsahuje v¹etky známe znakové sady. To nutne neznamená,\n"
+"¾e v¹etky kombinácie týchto názvov mô¾u by» pou¾ité pre argumenty Z a DO.\n"
+"Jedna sada znakov mô¾e by» uvedená pod viacerými názvami (aliasmi).\n"
+"  Niektoré z názvov nie sú obyèajné re»azce, ale regulárne výrazy, ktoré\n"
+"¹pecifikujú mo¾né parametre programu.\n"
+"\n"
+"  "
+
+#: nis/nis_print.c:223
+msgid "Time to live : "
+msgstr "®ivotnos»       : "
+
+#: stdio-common/../sysdeps/gnu/errlist.c:662
+msgid "Timer expired"
+msgstr "Èasovaè vypr¹al"
+
+#: nis/nis_error.c:55
+msgid "Too Many Attributes"
+msgstr "Priveµa atribútov"
+
+#. TRANS Too many levels of symbolic links were encountered in looking up a file name.
+#. TRANS This often indicates a cycle of symbolic links.
+#: stdio-common/../sysdeps/gnu/errlist.c:457
+msgid "Too many levels of symbolic links"
+msgstr "Priveµa úrovní symbolických odkazov"
+
+#. TRANS Too many links; the link count of a single file would become too large.
+#. TRANS @code{rename} can cause this error if the file being renamed already has
+#. TRANS as many links as it can take (@pxref{Renaming Files}).
+#: stdio-common/../sysdeps/gnu/errlist.c:225
+msgid "Too many links"
+msgstr "Priveµa odkazov"
+
+#. TRANS The current process has too many files open and can't open any more.
+#. TRANS Duplicate descriptors do count toward this limit.
+#. TRANS
+#. TRANS In BSD and GNU, the number of open files is controlled by a resource
+#. TRANS limit that can usually be increased.  If you get this error, you might
+#. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
+#. TRANS @pxref{Limits on Resources}.
+#: stdio-common/../sysdeps/gnu/errlist.c:175
+msgid "Too many open files"
+msgstr "Priveµa otvorených súborov"
+
+#. TRANS There are too many distinct file openings in the entire system.  Note
+#. TRANS that any number of linked channels count as just one file opening; see
+#. TRANS @ref{Linked Channels}.  This error never occurs in the GNU system.
+#: stdio-common/../sysdeps/gnu/errlist.c:182
+msgid "Too many open files in system"
+msgstr "Priveµa otvorených súborov v systéme"
+
+#. TRANS This means that the per-user limit on new process would be exceeded by
+#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
+#. TRANS the @code{RLIMIT_NPROC} limit.
+#: stdio-common/../sysdeps/gnu/errlist.c:487
+msgid "Too many processes"
+msgstr "Priveµa procesov"
+
+#. TRANS ???
+#: stdio-common/../sysdeps/gnu/errlist.c:439
+msgid "Too many references: cannot splice"
+msgstr "Priveµa odkazov - nie je mo¾né rozdeli»"
+
+#. TRANS The file quota system is confused because there are too many users.
+#. TRANS @c This can probably happen in a GNU system when using NFS.
+#: stdio-common/../sysdeps/gnu/errlist.c:493
+msgid "Too many users"
+msgstr "Priveµa pou¾ívateµov"
+
+#: stdio-common/../sysdeps/unix/siglist.c:30
+#: sysdeps/unix/sysv/linux/siglist.h:26
+msgid "Trace/breakpoint trap"
+msgstr "Trasovacie/ladiace preru¹enie"
+
+#: posix/regex.c:1017
+msgid "Trailing backslash"
+msgstr "Koncové spätné lomítko"
+
+#. TRANS In the GNU system, opening a file returns this error when the file is
+#. TRANS translated by a program and the translator program dies while starting
+#. TRANS up, before it has connected to the file.
+#: stdio-common/../sysdeps/gnu/errlist.c:596
+msgid "Translator died"
+msgstr "Prekladací program skonèil"
+
+#. TRANS You tried to connect a socket that is already connected.
+#. TRANS @xref{Connecting}.
+#: stdio-common/../sysdeps/gnu/errlist.c:414
+msgid "Transport endpoint is already connected"
+msgstr "Koncový komunikaèný bod je u¾ spojený"
+
+#. TRANS The socket is not connected to anything.  You get this error when you
+#. TRANS try to transmit data over a socket, without first specifying a
+#. TRANS destination for the data.  For a connectionless socket (for datagram
+#. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:422
+msgid "Transport endpoint is not connected"
+msgstr "Koncový komunikaèný bod nie je spojený"
+
+#: argp/argp-help.c:1610
+#, c-format
+msgid "Try `%s --help' or `%s --usage' for more information.\n"
+msgstr "Pou¾ite `%s --help' alebo `%s --usage' pre viac informácií.\n"
+
+#: inet/rcmd.c:143
+#, c-format
+msgid "Trying %s...\n"
+msgstr "Skú¹am %s...\n"
+
+#: nis/nis_print.c:163
+#, c-format
+msgid "Type : %s\n"
+msgstr "Typ  : %s\n"
+
+#: nis/nis_print.c:47
+msgid "UNKNOWN"
+msgstr "NEZNAMY"
+
+#: nis/nis_error.c:72
+msgid "Unable to authenticate NIS+ client"
+msgstr "Nie je mo¾né overi» toto¾nos» NIS+ klienta"
+
+#: nis/nis_error.c:71
+msgid "Unable to authenticate NIS+ server"
+msgstr "Nie je mo¾né overi» toto¾nos» NIS+ servera"
+
+#: nis/nis_error.c:46
+msgid "Unable to create callback"
+msgstr "Nie je mo¾né vytvori» spätné volanie"
+
+#: nis/nis_error.c:74
+msgid "Unable to create process on server"
+msgstr "Nie je mo¾né vytvori» proces na serveri"
+
+#: nis/nis_print.c:190
+#, c-format
+msgid "Unknown (type = %d, bits = %d)\n"
+msgstr "Neznáme (typ = %d, bitov = %d)\n"
+
+#: inet/ruserpass.c:248
+#, c-format
+msgid "Unknown .netrc keyword %s"
+msgstr "Neznáme kµúèové slovo v .netrc: %s"
+
+#: nis/ypclnt.c:797
+msgid "Unknown NIS error code"
+msgstr "Neznámy chybový kód NIS"
+
+#: nss/getent.c:505
+#, c-format
+msgid "Unknown database: %s\n"
+msgstr "Neznáma databáza %s\n"
+
+#: posix/../sysdeps/posix/gai_strerror.c:51
+msgid "Unknown error"
+msgstr "Neznáma chyba"
+
+#: string/../sysdeps/generic/_strerror.c:48
+#: string/../sysdeps/mach/_strerror.c:86
+#: sysdeps/mach/hurd/mips/dl-machine.c:82
+msgid "Unknown error "
+msgstr "Neznáma chyba "
+
+#: resolv/herror.c:74
+msgid "Unknown host"
+msgstr "Neznámy poèítaè"
+
+#: nis/nis_error.c:34
+msgid "Unknown object"
+msgstr "Neznámy objekt"
+
+#: nscd/nscd_conf.c:181
+#, c-format
+msgid "Unknown option: %s %s %s"
+msgstr "Neznáma voµba: %s %s %s"
+
+#: resolv/herror.c:120
+msgid "Unknown resolver error"
+msgstr "Neznáma chyba resolvera"
+
+#: resolv/herror.c:76
+msgid "Unknown server error"
+msgstr "Neznáma chyba servera"
+
+#: string/strsignal.c:70
+#, c-format
+msgid "Unknown signal %d"
+msgstr "Neznámy signál %d"
+
+#: misc/error.c:107
+msgid "Unknown system error"
+msgstr "Neznáma chyba systému"
+
+#: nis/ypclnt.c:845
+msgid "Unknown ypbind error"
+msgstr "Neznáma chyba ypbind"
+
+#: posix/regex.c:1020
+msgid "Unmatched ( or \\("
+msgstr "Nepárová ( or \\("
+
+#: posix/regex.c:1028
+msgid "Unmatched ) or \\)"
+msgstr "Nepárová ) or \\)"
+
+#: posix/regex.c:1019
+msgid "Unmatched [ or [^"
+msgstr "Nepárová [ or [^"
+
+#: posix/regex.c:1021
+msgid "Unmatched \\{"
+msgstr "Nepárová \\{"
+
+#: posix/getconf.c:692
+#, c-format
+msgid "Unrecognized variable `%s'"
+msgstr "Nerozpoznaná premenná `%s'"
+
+#: stdio-common/../sysdeps/unix/siglist.c:41
+#: sysdeps/unix/sysv/linux/siglist.h:35
+msgid "Urgent I/O condition"
+msgstr "Urgentný V/V stav"
+
+#: argp/argp-help.c:1567
+msgid "Usage:"
+msgstr "Pou¾itie:"
+
+#: posix/getconf.c:604
+#, c-format
+msgid "Usage: %s variable_name [pathname]\n"
+msgstr "Pou¾itie: %s meno_premennej [cesta]\n"
+
+#: sunrpc/rpcinfo.c:674
+msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
+msgstr "Pou¾itie: rpcinfo [ -n èíslo_portu ] -u poèítaè èíslo_programu [ èíslo_verzie ]\n"
+
+#: stdio-common/../sysdeps/unix/siglist.c:55
+#: sysdeps/unix/sysv/linux/siglist.h:48
+msgid "User defined signal 1"
+msgstr "Pou¾ívateµom definovaný signál 1"
+
+#: stdio-common/../sysdeps/unix/siglist.c:56
+#: sysdeps/unix/sysv/linux/siglist.h:49
+msgid "User defined signal 2"
+msgstr "Pou¾ívateµom definovaný signál 2"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:654
+msgid "Value too large for defined data type"
+msgstr "Hodnota je pre daný dátový typ priveµká"
+
+#: stdio-common/../sysdeps/unix/siglist.c:51
+#: sysdeps/unix/sysv/linux/siglist.h:45
+msgid "Virtual timer expired"
+msgstr "Vypr¹al virtuálny èasovaè"
+
+#: timezone/zic.c:1899
+msgid "Wild result from command execution"
+msgstr "Èudný výsledok vykonania programu"
+
+#: stdio-common/../sysdeps/unix/siglist.c:53
+#: sysdeps/unix/sysv/linux/siglist.h:47
+msgid "Window changed"
+msgstr "Okno sa zmenilo"
+
+#: locale/programs/locale.c:67
+msgid "Write names of available charmaps"
+msgstr "Vypísa» názvy dostupných znakových sád"
+
+#: locale/programs/locale.c:65
+msgid "Write names of available locales"
+msgstr "Vypísa» názvy dostupných národných prostredí"
+
+#: locale/programs/locale.c:69
+msgid "Write names of selected categories"
+msgstr "Vypísa» názvy vybraných kategórií"
+
+#: locale/programs/locale.c:70
+msgid "Write names of selected keywords"
+msgstr "Vypísa» názvy vybraných kµúèových slov"
+
+#: catgets/gencat.c:110 db2/makedb.c:59
+msgid "Write output to file NAME"
+msgstr "Zapísa» výstup do súboru SÚBOR"
+
+#: catgets/gencat.c:241 db2/makedb.c:247 elf/sprof.c:365
+#: iconv/iconv_prog.c:299 locale/programs/locale.c:272
+#: locale/programs/localedef.c:408 nscd/nscd.c:228 nss/getent.c:70
+#: posix/getconf.c:629
+#, c-format
+msgid "Written by %s.\n"
+msgstr "Autor: %s.\n"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:818
+msgid "Wrong medium type"
+msgstr "Chybný typ média"
+
+#: nis/nis_print.c:39
+msgid "X500"
+msgstr "X500"
+
+#: nis/nis_print.c:43
+msgid "XCHS"
+msgstr "XCHS"
+
+#: nis/ypclnt.c:185
+#, c-format
+msgid "YPBINDPROC_DOMAIN: %s\n"
+msgstr "YPBINDPROC_DOMAIN: %s\n"
+
+#: nis/nis_error.c:70
+msgid "Yes, 42 is the meaning of life"
+msgstr "Áno, 42 je význam ¾ivota"
+
+#. TRANS You did @strong{what}?
+#: stdio-common/../sysdeps/gnu/errlist.c:608
+msgid "You really blew it this time"
+msgstr "Tentokrát si to skutoène poondial"
+
+#: timezone/zic.c:1063
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr "Koncový èas pokraèovacieho riadku zóny nie je väè¹í ako koncový èas predchádzajúceho riadku"
+
+#: iconv/iconv_prog.c:70
+msgid "[FILE...]"
+msgstr "[SÚBOR...]"
+
+#: locale/programs/charmap.c:481 locale/programs/locfile.c:471
+#: locale/programs/repertoire.c:278
+#, c-format
+msgid "`%1$s' definition does not end with `END %1$s'"
+msgstr "Definícia `%1$s' nekonèí `END %1$s'"
+
+#: elf/sprof.c:766
+#, c-format
+msgid "`%s' is no correct profile data file for `%s'"
+msgstr "`%s' nie sú správne profilovacie údaje pre `%s'"
+
+#: locale/programs/ld-monetary.c:369 locale/programs/ld-numeric.c:193
+#, c-format
+msgid "`-1' must be last entry in `%s' field in `%s' category"
+msgstr "`-1' musí by» posledným záznamom v poli `%s' kategórie `%s'"
+
+#: locale/programs/ld-collate.c:1666
+msgid "`...' must only be used in `...' and `UNDEFINED' entries"
+msgstr "`...' mô¾e by» pou¾ité iba v záznamoch `...' a `UNDEFINED'"
+
+#: locale/programs/locfile.c:668
+msgid "`from' expected after first argument to `collating-element'"
+msgstr "`from' je oèakávané po prvom argumente `collating-element'"
+
+#: locale/programs/ld-collate.c:1118
+msgid "`from' string in collation element declaration contains unknown character"
+msgstr "`from' re»azec v deklarácii elementu triedenia obsahuje neznámy znak"
+
+#: posix/../sysdeps/posix/gai_strerror.c:34
+msgid "ai_family not supported"
+msgstr "ai_family nie je podporovaná"
+
+#: posix/../sysdeps/posix/gai_strerror.c:39
+msgid "ai_socktype not supported"
+msgstr "ai_socktype nie je podporovaný"
+
+#: nscd/nscd.c:121
+msgid "already running"
+msgstr "u¾ be¾í"
+
+#: locale/programs/charmap.c:352 locale/programs/repertoire.c:152
+#, c-format
+msgid "argument to <%s> must be a single character"
+msgstr "argument pre <%s> musí by» jeden znak"
+
+#: locale/programs/locfile.c:240
+#, c-format
+msgid "argument to `%s' must be a single character"
+msgstr "argument pre `%s' musí by» jeden znak"
+
+#: sunrpc/auth_unix.c:321
+msgid "auth_none.c - Fatal marshalling problem"
+msgstr "auth_none.c - Fatálna chyba marshallingu"
+
+#: sunrpc/auth_unix.c:116 sunrpc/auth_unix.c:122 sunrpc/auth_unix.c:151
+msgid "authunix_create: out of memory\n"
+msgstr "authunix_create: nedostatok pamäti\n"
+
+#: locale/programs/charmap.c:297 locale/programs/locfile.c:234
+#: locale/programs/locfile.c:261 locale/programs/repertoire.c:144
+msgid "bad argument"
+msgstr "chybný argument"
+
+#: inet/rcmd.c:318
+msgid "bad owner"
+msgstr "chybný vlastník"
+
+#: timezone/zic.c:1185
+msgid "blank FROM field on Link line"
+msgstr "prázdne pole OD v riadku Link"
+
+#: timezone/zic.c:1189
+msgid "blank TO field on Link line"
+msgstr "prázdne pole DO v riadku Link"
+
+#: malloc/mcheck.c:208
+msgid "block freed twice\n"
+msgstr "blok uvoµnený dvakrát\n"
+
+#: malloc/mcheck.c:211
+msgid "bogus mcheck_status, library is buggy\n"
+msgstr "pochybný mcheck_status, kni¾nica má chyby\n"
+
+#: sunrpc/pmap_rmt.c:185
+msgid "broadcast: ioctl (get interface configuration)"
+msgstr "broadcast: ioctl (získanie konfigurácie rozhrania)"
+
+#: sunrpc/pmap_rmt.c:194
+msgid "broadcast: ioctl (get interface flags)"
+msgstr "broadcast: ioctl (získanie nastavení rozhrania)"
+
+#: login/programs/request.c:167
+msgid "buffer overflow"
+msgstr "preteèenie vyrovnávacej pamäti"
+
+#: sunrpc/svc_udp.c:446
+msgid "cache_set: could not allocate new rpc_buffer"
+msgstr "cache_set: nebolo mo¾né prideli» rpc vyrovnávaciu pamä»"
+
+#: sunrpc/svc_udp.c:440
+msgid "cache_set: victim alloc failed"
+msgstr "cache_set: obe» nenájdená"
+
+#: sunrpc/svc_udp.c:429
+msgid "cache_set: victim not found"
+msgstr "cache_set: obe» nenájdená"
+
+#: timezone/zic.c:1726
+msgid "can't determine time zone abbreviation to use just after until time"
+msgstr "nie je mo¾né nájs» skratku èasovej zóny pre pou¾itie hneï po koncovom èase"
+
+#: sunrpc/svc_simple.c:75
+#, c-format
+msgid "can't reassign procedure number %d\n"
+msgstr "nie je mo¾né znovu prideli» èíslo procedúry %d\n"
+
+#: locale/programs/localedef.c:279
+#, c-format
+msgid "cannot `stat' locale file `%s'"
+msgstr "nie je mo¾né vykona» `stat' pre súbor národného prostredia `%s'"
+
+#: elf/sprof.c:935 elf/sprof.c:987
+msgid "cannot allocate symbol data"
+msgstr "nie je mo¾né prideli» pamä» pre symbolické údaje"
+
+#: elf/sprof.c:719 elf/sprof.c:777
+msgid "cannot create internal descriptor"
+msgstr "nie je mo¾né vytvori» interný deskriptor"
+
+#: elf/sprof.c:417
+msgid "cannot create internal descriptors"
+msgstr "nie je mo¾né vytvori» interné deskriptory"
+
+#: nscd/connections.c:180
+#, c-format
+msgid "cannot enable socket to accept connections: %s"
+msgstr "nie je mo¾né povoli» socketu prijíma» spojenia: %s"
+
+#: sunrpc/rpc_main.c:342
+#, c-format
+msgid "cannot find C preprocessor: %s \n"
+msgstr "nie je mo¾né nájs» preprocesor: %s \n"
+
+#: sunrpc/rpc_main.c:350
+msgid "cannot find any C preprocessor (cpp)\n"
+msgstr "nie je mo¾né nájs» ¾iadny C preprocesor (cpp)\n"
+
+#: nscd/connections.c:205
+#, c-format
+msgid "cannot handle old request version %d; current version is %d"
+msgstr "nie je mo¾né spracova» starú verziu ¾iadosti %d; aktuálna verzia je %d"
+
+#: locale/programs/ld-collate.c:1324
+#, c-format
+msgid "cannot insert collation element `%.*s'"
+msgstr "nie je mo¾né vlo¾i» element triedenia `%.*s'"
+
+#: locale/programs/ld-collate.c:1503 locale/programs/ld-collate.c:1510
+msgid "cannot insert into result table"
+msgstr "nie je mo¾né vklada» do výslednej tabuµky"
+
+#: locale/programs/ld-collate.c:1175 locale/programs/ld-collate.c:1218
+#, c-format
+msgid "cannot insert new collating symbol definition: %s"
+msgstr "nie je mo¾né vlo¾i» nový symbol triedenia: %s"
+
+#: elf/sprof.c:674
+msgid "cannot load profiling data"
+msgstr "nie je mo¾né naèíta» profilovacie údaje"
+
+#: inet/rcmd.c:314
+msgid "cannot open"
+msgstr "nie je mo¾né otvori»"
+
+#: sysdeps/unix/sysv/linux/lddlibc4.c:64
+#, c-format
+msgid "cannot open"
+msgstr "nie je mo¾né otvori»"
+
+#: db2/makedb.c:146
+#, c-format
+msgid "cannot open database file `%s': %s"
+msgstr "nie je mo¾né otvori» databázový súbor `%s': %s"
+
+#: catgets/gencat.c:272 db2/makedb.c:167 iconv/iconv_prog.c:177
+#, c-format
+msgid "cannot open input file `%s'"
+msgstr "nie je mo¾né otvori» vstupný súbor `%s'"
+
+#: locale/programs/localedef.c:198
+#, c-format
+msgid "cannot open locale definition file `%s'"
+msgstr "nie je mo¾né otvori» súbor definície národného prostredia `%s'"
+
+#: iconv/iconv_prog.c:155
+msgid "cannot open output file"
+msgstr "nie je mo¾né otvori» výstupný súbor"
+
+#: catgets/gencat.c:774 catgets/gencat.c:815 db2/makedb.c:181
+#, c-format
+msgid "cannot open output file `%s'"
+msgstr "nie je mo¾né otvori» výstupný súbor `%s'"
+
+#: locale/programs/locfile.c:1129
+#, c-format
+msgid "cannot open output file `%s' for category `%s'"
+msgstr "nie je mo¾né otvori» výstupný súbor `%s' pre kategóriu `%s'"
+
+#: nscd/connections.c:162
+#, c-format
+msgid "cannot open socket: %s"
+msgstr "nie je mo¾né otvori» socket `%s'"
+
+#: locale/programs/ld-collate.c:1370
+msgid "cannot process order specification"
+msgstr "nie je mo¾né spracova» ¹pecifikáciu poradia"
+
+#: locale/programs/locale.c:449
+#, c-format
+msgid "cannot read character map directory `%s'"
+msgstr "nie je mo¾né naèíta» adresár znakových sád `%s'"
+
+#: nscd/connections.c:122
+msgid "cannot read configuration file; this is fatal"
+msgstr "nie je mo¾né naèíta» konfiguraèný súbor; to je fatálne"
+
+#: login/programs/request.c:91
+msgid "cannot read from client"
+msgstr "nie je mo¾né èíta» od klienta"
+
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
+#, c-format
+msgid "cannot read header from `%s'"
+msgstr "nie je mo¾né preèíta» hlavièku z `%s'"
+
+#: locale/programs/locale.c:306
+#, c-format
+msgid "cannot read locale directory `%s'"
+msgstr "nie je mo¾né naèíta» adresár národných prostredí `%s'"
+
+#: locale/programs/localedef.c:303
+#, c-format
+msgid "cannot read locale file `%s'"
+msgstr "nie je mo¾né preèíta» súbor národného prostredia `%s'"
+
+#: locale/programs/locfile.c:288 locale/programs/locfile.c:306
+#: locale/programs/locfile.c:324 locale/programs/locfile.c:342
+#: locale/programs/locfile.c:360 locale/programs/locfile.c:378
+#, c-format
+msgid "cannot read repertoire map `%s'"
+msgstr "nie je mo¾né naèíta» mapu repertoáru `%s'"
+
+#: nscd/nscd_stat.c:127
+msgid "cannot read statistics data"
+msgstr "nie je mo¾né naèíta» ¹tatistické údaje"
+
+#: nscd/cache.c:141 nscd/connections.c:148
+#, c-format
+msgid "cannot stat() file `%s': %s"
+msgstr "nie je mo¾né vykona» stat() súboru `%s': %s"
+
+#: locale/programs/localedef.c:328
+#, c-format
+msgid "cannot write output files to `%s'"
+msgstr "nie je mo¾né zapísa» výstupné súbory do `%s'"
+
+#: nscd/connections.c:229 nscd/connections.c:250
+#, c-format
+msgid "cannot write result: %s"
+msgstr "nie je mo¾né zapísa» výsledok: %s"
+
+#: nscd/nscd_stat.c:86
+#, c-format
+msgid "cannot write statistics: %s"
+msgstr "nie je mo¾né zapísa» ¹tatistiku: `%s'"
+
+#: login/programs/request.c:120
+msgid "cannot write to client"
+msgstr "nie je mo¾né písa» klientovi"
+
+#: locale/programs/localedef.c:442
+msgid "category data requested more than once: should not happen"
+msgstr "údaje kategórie po¾adované viac ako raz - to by sa nemalo sta»"
+
+#: locale/programs/ld-ctype.c:269
+#, c-format
+msgid "character %s'%s' in class `%s' must be in class `%s'"
+msgstr "znak %s'%s' v triede `%s' musí by» v triede `%s'"
+
+#: locale/programs/ld-ctype.c:294
+#, c-format
+msgid "character %s'%s' in class `%s' must not be in class `%s'"
+msgstr "znak %s'%s' v triede `%s' nesmie by» v triede `%s'"
+
+#: locale/programs/ld-ctype.c:320
+msgid "character <SP> not defined in character map"
+msgstr "znak <SP> nie je definovaný v znakovej sade"
+
+#: locale/programs/ld-ctype.c:964 locale/programs/ld-ctype.c:1029
+#: locale/programs/ld-ctype.c:1040 locale/programs/ld-ctype.c:1051
+#: locale/programs/ld-ctype.c:1062 locale/programs/ld-ctype.c:1073
+#: locale/programs/ld-ctype.c:1084 locale/programs/ld-ctype.c:1113
+#: locale/programs/ld-ctype.c:1124 locale/programs/ld-ctype.c:1165
+#: locale/programs/ld-ctype.c:1194 locale/programs/ld-ctype.c:1206
+#, c-format
+msgid "character `%s' not defined while needed as default value"
+msgstr "znak `%s' nie je definovaný a je potrebný ako implicitná hodnota"
+
+#: locale/programs/ld-ctype.c:825
+#, c-format
+msgid "character class `%s' already defined"
+msgstr "trieda znakov `%s' je u¾ definovaná"
+
+#: locale/programs/ld-ctype.c:857
+#, c-format
+msgid "character map `%s' already defined"
+msgstr "znaková sada `%s' je u¾ definovaná"
+
+#: locale/programs/charmap.c:83
+#, c-format
+msgid "character map file `%s' not found"
+msgstr "súbor znakovej sady `%s' nebol nájdený"
+
+#: sunrpc/clnt_raw.c:110
+msgid "clnt_raw.c - Fatal header serialization error."
+msgstr "clnt_raw.c - Fatálna chyba pri serializácii hlavièky."
+
+#: sunrpc/clnt_tcp.c:125 sunrpc/clnt_tcp.c:133
+msgid "clnttcp_create: out of memory\n"
+msgstr "clnttcp_create: nedostatok pamäti\n"
+
+#: sunrpc/clnt_udp.c:124 sunrpc/clnt_udp.c:134
+msgid "svctcp_create: out of memory\n"
+msgstr "svctcp_create: nedostatok pamäti\n"
+
+#: sunrpc/clnt_unix.c:123 sunrpc/clnt_unix.c:131
+msgid "clntunix_create: out of memory\n"
+msgstr "clntunix_create: nedostatok pamäti\n"
+
+#: locale/programs/ld-collate.c:1339
+#, c-format
+msgid "collation element `%.*s' appears more than once: ignore line"
+msgstr "element triedenia `%.*s' uvedený viac ako raz - riadok ignorovaný"
+
+#: locale/programs/ld-collate.c:1357
+#, c-format
+msgid "collation symbol `%.*s' appears more than once: ignore line"
+msgstr "symbol triedenia `%.*s' uvedený viac ako raz - riadok ignorovaný"
+
+#: locale/programs/locfile.c:652
+#, c-format
+msgid "collation symbol expected after `%s'"
+msgstr "po `%s' je oèakávaný symbol triedenia"
+
+#: inet/rcmd.c:136
+#, c-format
+msgid "connect to address %s: "
+msgstr "spojenie s adresou %s: "
+
+#: sunrpc/rpc_scan.c:115
+msgid "constant or identifier expected"
+msgstr "oèakávaná kon¹tanta alebo identifikátor"
+
+#: iconv/iconv_prog.c:144
+#, c-format
+msgid "conversion from `%s' to `%s' not supported"
+msgstr "konverzia z `%s' do `%s' nie je podporovaná"
+
+#: iconv/iconv_prog.c:326
+msgid "conversion stopped due to problem in writing the output"
+msgstr "konverzia zastavená kvôli problému pri zápise výstupu"
+
+#: sunrpc/svc_simple.c:83
+msgid "couldn't create an rpc server\n"
+msgstr "nebolo mo¾né vytvori» rpc server\n"
+
+#: sunrpc/svc_simple.c:91
+#, c-format
+msgid "couldn't register prog %d vers %d\n"
+msgstr "nebolo mo¾né zaregistrova» program %d verzie %d\n"
+
+#: nss/getent.c:49
+msgid "database [key ...]"
+msgstr "databáza [kµúè ...]"
+
+#: locale/programs/charmap.c:170
+#, c-format
+msgid "default character map file `%s' not found"
+msgstr "implicitný súbor znakovej sady `%s' nebol nájdený"
+
+#: locale/programs/ld-time.c:163
+#, c-format
+msgid "direction flag in string %d in `era' field in category `%s' is not '+' nor '-'"
+msgstr "príznak smeru v re»azci %d poµa `era' v kategórii `%s' nie je '+' ani '-'"
+
+#: locale/programs/ld-time.c:174
+#, c-format
+msgid "direction flag in string %d in `era' field in category `%s' is not a single character"
+msgstr "príznak smeru v re»azci %d poµa `era' v kategórii `%s' nie je jeden znak"
+
+#: locale/programs/charset.c:64 locale/programs/charset.c:118
+#, c-format
+msgid "duplicate character name `%s'"
+msgstr "duplicitné meno znaku `%s'"
+
+#: locale/programs/ld-collate.c:1150
+msgid "duplicate collating element definition"
+msgstr "duplicitná definícia elementu triedenia"
+
+#: locale/programs/ld-collate.c:1297
+#, c-format
+msgid "duplicate definition for character `%.*s'"
+msgstr "duplicitná definícia znaku `%.*s'"
+
+#: db2/makedb.c:328
+msgid "duplicate key"
+msgstr "duplicitný kµúè"
+
+#: catgets/gencat.c:388
+msgid "duplicate set definition"
+msgstr "duplicitná definícia sady"
+
+#: timezone/zic.c:978
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr "duplicitné meno zóny %s (súbor \"%s\", riadok %d)"
+
+#: catgets/gencat.c:551
+msgid "duplicated message identifier"
+msgstr "duplicitný identifikátor správy"
+
+#: catgets/gencat.c:524
+msgid "duplicated message number"
+msgstr "duplicitné èíslo správy"
+
+#: sunrpc/rpc_scan.c:382
+msgid "empty char string"
+msgstr "prázdny znakový re»azec"
+
+#: locale/programs/ld-collate.c:1710
+msgid "empty weight name: line ignored"
+msgstr "prázdne meno váhy - riadok ignorovaný"
+
+#: sunrpc/svc_udp.c:372
+msgid "enablecache: cache already enabled"
+msgstr "enablecache: vyrovnávacia pamä» je u¾ povolená"
+
+#: sunrpc/svc_udp.c:378
+msgid "enablecache: could not allocate cache"
+msgstr "enablecache: nebolo mo¾né prideli» vyrovnáciu pamä»"
+
+#: sunrpc/svc_udp.c:386
+msgid "enablecache: could not allocate cache data"
+msgstr "enablecache: nebolo mo¾né prideli» dáta pre vyrovnávaciu pamä»"
+
+#: sunrpc/svc_udp.c:393
+msgid "enablecache: could not allocate cache fifo"
+msgstr "enablecache: nebolo mo¾né prideli» frontu pre vyrovnávaciu pamä»"
+
+#: iconv/iconv_prog.c:56
+msgid "encoding for output"
+msgstr "kódovanie výstupu"
+
+#: iconv/iconv_prog.c:55
+msgid "encoding of original text"
+msgstr "kódovanie pôvodného textu"
+
+#: locale/programs/ld-collate.c:1429
+msgid "end point of ellipsis range is bigger then start"
+msgstr "koncový bod pokraèovania je väè¹í ako poèiatoèný"
+
+#: iconv/iconv_prog.c:193
+#, c-format
+msgid "error while closing input `%s'"
+msgstr "chyba poèas zatvárania vstupu `%s'"
+
+#: iconv/iconv_prog.c:239
+msgid "error while closing output file"
+msgstr "chyba poèas zatvárania výstupného súboru"
+
+#: elf/sprof.c:710
+msgid "error while closing the profiling data file"
+msgstr "chyba poèas zatvárania súboru profilovacích údajov"
+
+#: locale/programs/ld-collate.c:1158
+msgid "error while inserting collation element into hash table"
+msgstr "chyba poèas vkladania elementu triedenia do hash-tabuµky"
+
+#: locale/programs/ld-collate.c:1170
+msgid "error while inserting to hash table"
+msgstr "chyba poèas vkladania do hash-tabuµky"
+
+#: iconv/iconv_prog.c:389 iconv/iconv_prog.c:420
+msgid "error while reading the input"
+msgstr "poèas èítania vstupu"
+
+#: locale/programs/locfile.c:595
+msgid "expect string argument for `copy'"
+msgstr "pre `copy' je oèakávaný re»azcový argyment"
+
+#: timezone/zic.c:868
+msgid "expected continuation line not found"
+msgstr "oèakávaný pokraèovací riadok nebol nájdený"
+
+#: elf/sprof.c:408
+#, c-format
+msgid "failed to load shared object `%s'"
+msgstr "nepodarilo sa naèíta» zdieµaný objekt `%s'"
+
+#: elf/sprof.c:604
+msgid "failed to load symbol data"
+msgstr "nepodarilo sa naèíta» symbolické údaje"
+
+#: elf/sprof.c:702
+msgid "failed to mmap the profiling data file"
+msgstr "nepodarilo sa mmap-ova» súbor profilovacích údajov"
+
+#: iconv/iconv_prog.c:147
+msgid "failed to start conversion processing"
+msgstr "nepodarilo sa od¹tartova» konverziu"
+
+#: locale/programs/locfile.c:1154
+#, c-format
+msgid "failure while writing data for category `%s'"
+msgstr "chyba poèas zápisu údajov kategórie `%s'"
+
+#: nis/nis_call.c:155
+msgid "fcntl: F_SETFD"
+msgstr "fcntl: F_SETFD"
+
+#: locale/programs/ld-monetary.c:163 locale/programs/ld-numeric.c:98
+#, c-format
+msgid "field `%s' in category `%s' not defined"
+msgstr "pole `%s' ketegórie `%s' nie je definované"
+
+#: locale/programs/ld-messages.c:86 locale/programs/ld-messages.c:110
+#, c-format
+msgid "field `%s' in category `%s' undefined"
+msgstr "pole `%s' kategórie `%s' nedefinované"
+
+#: sunrpc/rpc_main.c:1148
+#, c-format
+msgid "file '%s' already exists and may be overwritten\n"
+msgstr "súbor '%s' u¾ existuje a mô¾e by» prepísaný\n"
+
+#: locale/programs/locfile.c:677
+msgid "from-value of `collating-element' must be a string"
+msgstr "hodnota od pre `collating-element' musí by» re»azec"
+
+#: inet/rcmd.c:316
+msgid "fstat failed"
+msgstr "fstat sa nepodaril"
+
+#: locale/programs/linereader.c:333
+msgid "garbage at end of character code specification"
+msgstr "smetie za koncom ¹pecifikácie kódu znaku"
+
+#: locale/programs/linereader.c:219
+msgid "garbage at end of number"
+msgstr "smetie za koncom èísla"
+
+#: locale/programs/ld-time.c:195
+#, c-format
+msgid "garbage at end of offset value in string %d in `era' field in category `%s'"
+msgstr "smetie za koncom hodnoty posunutia v re»azci %d poµa `era' kategórie `%s'"
+
+#: locale/programs/ld-time.c:252
+#, c-format
+msgid "garbage at end of starting date in string %d in `era' field in category `%s'"
+msgstr "smetie za koncom poèiatoèného dátumu v re»azci %d poµa `era' kategórie `%s'"
+
+#: locale/programs/ld-time.c:328
+#, c-format
+msgid "garbage at end of stopping date in string %d in `era' field in category `%s'"
+msgstr "smetie za koncom koncového dátumu v re»azci %d poµa `era' kategórie `%s'"
+
+#: elf/sprof.c:81
+msgid "generate call graph"
+msgstr "tvorba grafu volaní"
+
+#: elf/sprof.c:80
+msgid "generate flat profile with counts and ticks"
+msgstr "tvorba jednoduchého profilu s poètami a tikmi"
+
+#: sunrpc/get_myaddr.c:77
+msgid "get_myaddress: ioctl (get interface configuration)"
+msgstr "get_myaddress: ioctl (získanie konfigurácie rozhrania)"
+
+#: nss/getent.c:53
+msgid "getent - get entries from administrative database."
+msgstr "getent - získa» záznamy z administratívnej databázy."
+
+#: nscd/connections.c:200
+#, c-format
+msgid "handle_request: request received (Version = %d)"
+msgstr "handle_request: ¾iados» prijatá (verzia = %d)"
+
+#: timezone/zic.c:613
+msgid "hard link failed, symbolic link used"
+msgstr "pevný odkaz zlyhal, pou¾itý symbolický"
+
+#: inet/rcmd.c:322
+msgid "hard linked somewhere"
+msgstr "niekde existuje pevný odkaz"
+
+#: timezone/zic.c:1162
+msgid "illegal CORRECTION field on Leap line"
+msgstr "neprípustné pole CORRECTION v riadku Leap"
+
+#: timezone/zic.c:1166
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr "neprípustné pole Rolling/Stationary v riadku Leap"
+
+#: locale/programs/ld-collate.c:1782
+msgid "illegal character constant in string"
+msgstr "neprípustný znak v re»azci"
+
+#: sunrpc/rpc_scan.c:311
+msgid "illegal character in file: "
+msgstr "neprípustný znak v súbore: "
+
+#: locale/programs/ld-collate.c:1125
+msgid "illegal collation element"
+msgstr "neprípustný element triedenia"
+
+#: locale/programs/charmap.c:281
+msgid "illegal definition"
+msgstr "neprípustná definícia"
+
+#: locale/programs/charmap.c:434
+msgid "illegal encoding given"
+msgstr "zadané neprípustné kódovanie"
+
+#: locale/programs/linereader.c:551
+msgid "illegal escape sequence at end of string"
+msgstr "chybná escape-sekvencia na konci re»azca"
+
+#: iconv/iconv_prog.c:342
+#, c-format
+msgid "illegal input sequence at position %ld"
+msgstr "neprípustná vstupná sekvencia na pozícii %ld"
+
+#: locale/programs/charset.c:78
+msgid "illegal names for character range"
+msgstr "neprípustné mená pre rozsah znakov"
+
+#: sunrpc/rpc_main.c:462
+#, c-format
+msgid "illegal nettype :'%s'\n"
+msgstr "chybný nettype :'%s'\n"
+
+#: locale/programs/ld-time.c:187
+#, c-format
+msgid "illegal number for offset in string %d in `era' field in category `%s'"
+msgstr "neprípustné èíslo pre posunutie v re»azci %d poµa `era' kategórie `%s'"
+
+#: catgets/gencat.c:361 catgets/gencat.c:438
+msgid "illegal set number"
+msgstr "neprípustné èíslo sady"
+
+#: locale/programs/ld-time.c:243
+#, c-format
+msgid "illegal starting date in string %d in `era' field in category `%s'"
+msgstr "neprípustný poèiatoèný dátum v re»azci %d poµa `era' kategórie `%s'"
+
+#: locale/programs/ld-time.c:319
+#, c-format
+msgid "illegal stopping date in string %d in `era' field in category `%s'"
+msgstr "neprípustný koncový dátum v re»azci %d poµa `era' kategórie `%s'"
+
+#: locale/programs/ld-ctype.c:831
+#, c-format
+msgid "implementation limit: no more than %d character classes allowed"
+msgstr "limit implementácie: maximálne mno¾stvo tried znakov je %d"
+
+#: locale/programs/ld-ctype.c:863
+#, c-format
+msgid "implementation limit: no more than %d character maps allowed"
+msgstr "limit implementácie: maximálne mno¾stvo sád znakov je %d"
+
+#: iconv/iconv_prog.c:346
+msgid "incomplete character or shift sequence at end of buffer"
+msgstr "nekompletný znak alebo preraïovacia sekvencia na konci vyrovnávacej pamäti"
+
+#: db2/makedb.c:148
+msgid "incorrectly formatted file"
+msgstr "nesprávne formátovaný súbor"
+
+#: timezone/zic.c:825
+msgid "input line of unknown type"
+msgstr "vstupný riadok neznámeho typu"
+
+#: iconv/iconv_prog.c:350
+msgid "internal error (illegal descriptor)"
+msgstr "vnútorná chyba (nesprávny deskriptor)"
+
+#: timezone/zic.c:1788
+msgid "internal error - addtype called with bad isdst"
+msgstr "vnútorná chyba - addtype zavolaný s chybným isdst"
+
+#: timezone/zic.c:1796
+msgid "internal error - addtype called with bad ttisgmt"
+msgstr "vnútorná chyba - addtype zavolaný s chybným ttisgmt"
+
+#: timezone/zic.c:1792
+msgid "internal error - addtype called with bad ttisstd"
+msgstr "vnútorná chyba - addtype zavolaný s chybným ttisstd"
+
+#: locale/programs/ld-ctype.c:307
+#, c-format
+msgid "internal error in %s, line %u"
+msgstr "vnútorná chyba %s na riadku %u"
+
+#: timezone/zic.c:1034
+msgid "invalid UTC offset"
+msgstr "neprípustné posunutie voèi UTC"
+
+#: timezone/zic.c:1037
+msgid "invalid abbreviation format"
+msgstr "neprípustný formát skratky"
+
+#: timezone/zic.c:1127 timezone/zic.c:1339 timezone/zic.c:1353
+msgid "invalid day of month"
+msgstr "neprípustný deò mesiaca"
+
+#: timezone/zic.c:1291
+msgid "invalid ending year"
+msgstr "neprípustný koncový rok"
+
+#: timezone/zic.c:1099
+msgid "invalid leaping year"
+msgstr "neprípustný priestupný rok"
+
+#: elf/dl-open.c:159
+msgid "invalid mode for dlopen()"
+msgstr "neprípustný mód pre dlopen()"
+
+#: timezone/zic.c:1114 timezone/zic.c:1217
+msgid "invalid month name"
+msgstr "neprípustný názov mesiaca"
+
+#: timezone/zic.c:933
+msgid "invalid saved time"
+msgstr "neprípustný ulo¾ený èas"
+
+#: timezone/zic.c:1266
+msgid "invalid starting year"
+msgstr "neprípustný poèiatoèný rok"
+
+#: timezone/zic.c:1143 timezone/zic.c:1246
+msgid "invalid time of day"
+msgstr "neprípustný èas v dni"
+
+#: timezone/zic.c:1344
+msgid "invalid weekday name"
+msgstr "neprípustný názov dòa"
+
+#: nscd/connections.c:375
+#, c-format
+msgid "key length in request too long: %Zd"
+msgstr "då¾ka kµúèa v ¾iadosti príli¹ dlhá: %Zd"
+
+#: locale/programs/ld-collate.c:1422
+msgid "line after ellipsis must contain character definition"
+msgstr "riadok za pokraèovaním musí obsahova» definíciu znaku"
+
+#: locale/programs/ld-collate.c:1401
+msgid "line before ellipsis does not contain definition for character constant"
+msgstr "riadok pred pokraèovaním neobsahuje definíciu pre znakovú kon¹tantu"
+
+#: timezone/zic.c:805
+msgid "line too long"
+msgstr "pridlhý riadok"
+
+#: iconv/iconv_prog.c:58
+msgid "list all known coded character sets"
+msgstr "vypí¹ v¹etky známe znakové sady"
+
+#: locale/programs/localedef.c:273
+#, c-format
+msgid "locale file `%s', used in `copy' statement, not found"
+msgstr "súbor národného prostredia `%s' pou¾itý  v príkaze `copy' nebol nájdený"
+
+#: inet/rcmd.c:307
+msgid "lstat failed"
+msgstr "lstat zlyhal"
+
+#: catgets/gencat.c:619
+msgid "malformed line ignored"
+msgstr "nesprávny riadok ignorovaný"
+
+#: elf/sprof.c:554
+msgid "mapping of section header string table failed"
+msgstr "zlyhalo mapovanie tabuµky re»azcov hlavièky sekcie"
+
+#: elf/sprof.c:544
+msgid "mapping of section headers failed"
+msgstr "zlyhalo mapovanie hlavièiek sekcie"
+
+#: malloc/mcheck.c:202
+msgid "memory clobbered before allocated block\n"
+msgstr "pamä» pred prideleným blokom prepísaná\n"
+
+#: malloc/mcheck.c:205
+msgid "memory clobbered past end of allocated block\n"
+msgstr "pamä» za koncom prideleného bloku prepísaná\n"
+
+#: locale/programs/ld-collate.c:170 locale/programs/ld-collate.c:176
+#: locale/programs/ld-collate.c:180 locale/programs/ld-collate.c:1449
+#: locale/programs/ld-collate.c:1478 locale/programs/locfile.c:1082
+#: locale/programs/xmalloc.c:70 login/programs/database.c:62
+#: login/programs/database.c:79 login/programs/database.c:95
+#: posix/getconf.c:682
+msgid "memory exhausted"
+msgstr "nedostatok pamäti"
+
+#: malloc/obstack.c:471
+msgid "memory exhausted\n"
+msgstr "nedostatok pamäti\n"
+
+#: malloc/mcheck.c:199
+msgid "memory is consistent, library is buggy\n"
+msgstr "pamä» je konzistentná, kni¾nica je chybná\n"
+
+#: locale/programs/ld-time.c:370
+#, c-format
+msgid "missing era format in string %d in `era' field in category `%s'"
+msgstr "chýba formát éry v re»azci %d v poli `era' kategórie `%s'"
+
+#: locale/programs/ld-time.c:358
+#, c-format
+msgid "missing era name in string %d in `era' field in category `%s'"
+msgstr "chýba meno éry v re»azci %d v poli `era' kategórie `%s'"
+
+#: timezone/zic.c:928
+msgid "nameless rule"
+msgstr "bezmenné pravidlo"
+
+#: iconv/iconv_prog.c:133
+msgid "neither original nor target encoding specified"
+msgstr "nie je ¹pecifikované pôvodné ani cieµové kódovanie"
+
+#: nis/nss_nisplus/nisplus-publickey.c:262
+#: nis/nss_nisplus/nisplus-publickey.c:268
+#: nis/nss_nisplus/nisplus-publickey.c:327
+#: nis/nss_nisplus/nisplus-publickey.c:336
+#, c-format
+msgid "netname2user: (nis+ lookup): %s\n"
+msgstr "netname2user: (nis+ lookup): %s\n"
+
+#: nis/nss_nisplus/nisplus-publickey.c:281
+#, c-format
+msgid "netname2user: DES entry for %s in directory %s not unique"
+msgstr "netname2user: DES záznam pre %s v adresári %s nejednoznaèný"
+
+#: nis/nss_nisplus/nisplus-publickey.c:349
+#, c-format
+msgid "netname2user: LOCAL entry for %s in directory %s not unique"
+msgstr "netname2user: LOCAL záznam pre %s v adresári %s nejednoznaèný"
+
+#: nis/nss_nisplus/nisplus-publickey.c:194
+#, c-format
+msgid "netname2user: missing group id list in '%s'."
+msgstr "netname2user: chýbajúci zoznam id skupín v '%s'."
+
+#: nis/nss_nisplus/nisplus-publickey.c:299
+#, c-format
+msgid "netname2user: principal name '%s' too long"
+msgstr "netname2user: názov principála '%s' príli¹ dlhý"
+
+#: nis/nss_nisplus/nisplus-publickey.c:356
+msgid "netname2user: should not have uid 0"
+msgstr "netname2user: nemal by ma» uid 0"
+
+#: sunrpc/svc_simple.c:158
+#, c-format
+msgid "never registered prog %d\n"
+msgstr "program %d nebol nikdy registrovaný\n"
+
+#: locale/programs/repertoire.c:238
+msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
+msgstr "nezadaná <Uxxxx> alebo <Uxxxxxxxx> hodnota"
+
+#: locale/programs/ld-messages.c:101 locale/programs/ld-messages.c:125
+#, c-format
+msgid "no correct regular expression for field `%s' in category `%s': %s"
+msgstr "pre pole `%s' v kategórii `%s' neexistuje správny regulérny výraz: %s"
+
+#: timezone/zic.c:2115
+msgid "no day in month matches rule"
+msgstr "s pravidlom sa nezhoduje ¾iadny deò v mesiaci"
+
+#: locale/programs/ld-collate.c:267
+msgid "no definition of `UNDEFINED'"
+msgstr "neexistuje definícia pre `UNDEFINED'"
+
+#: elf/sprof.c:276
+#, c-format
+msgid "no filename for profiling data given and shared object `%s' has no soname"
+msgstr "nebol zadaný názov súboru pre profilovacie údaje a zdieµaný objekt `%s' nemá soname"
+
+#: locale/programs/locfile.c:609
+msgid "no other keyword shall be specified when `copy' is used"
+msgstr "pri pou¾ití `copy' nemá by» zadané ¾iadne iné kµúèové slovo"
+
+#: locale/programs/localedef.c:334
+msgid "no output file produced because warning were issued"
+msgstr "výstupný súbor nebol vytvorený kvôli výskytu varovaní"
+
+#: locale/programs/locfile.c:283 locale/programs/locfile.c:301
+#: locale/programs/locfile.c:319 locale/programs/locfile.c:337
+#: locale/programs/locfile.c:355 locale/programs/locfile.c:373
+msgid "no repertoire map specified: cannot proceed"
+msgstr "nebola zadaná mapa repertoáru: nie je mo¾né pokraèova»"
+
+#: locale/programs/charmap.c:400 locale/programs/charmap.c:550
+#: locale/programs/charmap.c:629 locale/programs/repertoire.c:199
+msgid "no symbolic name given"
+msgstr "nebolo zadané ¾iadne symbolické meno"
+
+#: locale/programs/charmap.c:465 locale/programs/charmap.c:596
+#: locale/programs/charmap.c:662 locale/programs/repertoire.c:261
+msgid "no symbolic name given for end of range"
+msgstr "nebolo zadané ¾iadne symbolické meno pre koniec rozsahu"
+
+#: locale/programs/ld-collate.c:249
+#, c-format
+msgid "no weight defined for symbol `%s'"
+msgstr "symbol `%s' nemá definovanú váhu"
+
+#: inet/rcmd.c:309
+msgid "not regular file"
+msgstr "nie je regulérny súbor"
+
+#: nscd/nscd_stat.c:130
+#, c-format
+msgid ""
+"nscd configuration:\n"
+"\n"
+"%15d  server debug level\n"
+msgstr ""
+"nscd konfigurácia:\n"
+"\n"
+"%15d  ladiaca úroveò servera\n"
+
+#: nscd/nscd_stat.c:104
+msgid "nscd not running!\n"
+msgstr "nscd nebe¾í!\n"
+
+#: locale/programs/charmap.c:514
+msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
+msgstr "po definícii CHARMAP mô¾u nasledova» iba definície WIDTH"
+
+#: iconv/iconv_prog.c:135
+msgid "original encoding not specified using `-f'"
+msgstr "pôvodné kódovanie nebolo zadané pomocou `-f'"
+
+#: iconv/iconv_prog.c:60
+msgid "output file"
+msgstr "výstupný súbor"
+
+#: sunrpc/pm_getmaps.c:73
+msgid "pmap_getmaps rpc problem"
+msgstr "pmap_getmaps rpc problém"
+
+#: inet/rcmd.c:179
+msgid "poll: protocol failure in circuit setup\n"
+msgstr "poll: chyba protokolu poèas prípravy okruhu\n"
+
+#: sunrpc/rpc_scan.c:523 sunrpc/rpc_scan.c:533
+msgid "preprocessor error"
+msgstr "chyba preprocesora"
+
+#: elf/sprof.c:78
+msgid "print list of count paths and their number of use"
+msgstr "vypísa» zoznam ciest poètov a poèet ich pou¾ití"
+
+#: iconv/iconv_prog.c:61
+msgid "print progress information"
+msgstr "vypisova» informáciu o postupe"
+
+#: db2/makedb.c:345
+#, c-format
+msgid "problems while reading `%s'"
+msgstr "problémy poèas èítania `%s'"
+
+#: elf/sprof.c:691
+#, c-format
+msgid "profiling data file `%s' does not match shared object `%s'"
+msgstr "profilovacie údaje `%s' nesúhlasia so zdieµanýmobjektom `%s'"
+
+#: sunrpc/rpcinfo.c:237 sunrpc/rpcinfo.c:383
+#, c-format
+msgid "program %lu is not available\n"
+msgstr "program %lu nie je dostupný\n"
+
+#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333
+#: sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476
+#: sunrpc/rpcinfo.c:510
+#, c-format
+msgid "program %lu version %lu is not available\n"
+msgstr "program %lu verzie %lu nie je dostupný\n"
+
+#: sunrpc/rpcinfo.c:515
+#, c-format
+msgid "program %lu version %lu ready and waiting\n"
+msgstr "program %lu verzie %lu pripravený a èakajúci\n"
+
+#: inet/rcmd.c:176
+#, c-format
+msgid "rcmd: poll (setting up stderr): %m\n"
+msgstr "rcmd: poll (nastavenie stderr): %m\n"
+
+#: inet/rcmd.c:110
+msgid "rcmd: socket: All ports in use\n"
+msgstr "rcmd: socket: V¹etky porty sú pou¾ité\n"
+
+#: inet/rcmd.c:166
+#, c-format
+msgid "rcmd: write (setting up stderr): %m\n"
+msgstr "rcmd: write (nastavenie stderr): %m\n"
+
+#: sunrpc/svc_simple.c:98
+msgid "registerrpc: out of memory\n"
+msgstr "registerrpc: nedostatok pamäti\n"
+
+#: timezone/zic.c:1849
+msgid "repeated leap second moment"
+msgstr "opakovaný moment priestupnej sekundy"
+
+#: locale/programs/repertoire.c:95
+#, c-format
+msgid "repertoire map file `%s' not found"
+msgstr "súbor mapy repertoáru `%s' nebol nájdený"
+
+#: sunrpc/rpc_main.c:1117
+msgid "rpcgen: arglist coding error\n"
+msgstr "rpcgen: chyba kódovania zoznamu argumentov\n"
+
+#: sunrpc/rpc_main.c:1105
+msgid "rpcgen: too many defines\n"
+msgstr "rpcgen: priveµa defines\n"
+
+#: sunrpc/rpcinfo.c:732
+#, c-format
+msgid "rpcinfo: %s is unknown host\n"
+msgstr "rpcinfo: %s je neznámy poèítaè\n"
+
+#: sunrpc/rpcinfo.c:695
+#, c-format
+msgid "rpcinfo: %s is unknown service\n"
+msgstr "rpcinfo: %s je neznáma slu¾ba\n"
+
+#: sunrpc/rpcinfo.c:665
+#, c-format
+msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
+msgstr "rpcinfo: Nie je mo¾né zru¹i» registráciu programu %s verzie %s\n"
+
+#: sunrpc/rpcinfo.c:637
+#, c-format
+msgid "rpcinfo: broadcast failed: %s\n"
+msgstr "rpcinfo: broadcast zlyhal: %s\n"
+
+#: sunrpc/rpcinfo.c:556 sunrpc/rpcinfo.c:563
+msgid "rpcinfo: can't contact portmapper"
+msgstr "rpcinfo: nie je mo¾né spoji» sa s portmapperom"
+
+#: timezone/zic.c:718 timezone/zic.c:720
+msgid "same rule name in multiple files"
+msgstr "rovnaké meno pravidla vo viacerých súboroch"
+
+#: nscd/connections.c:387
+#, c-format
+msgid "short read while reading request key: %s"
+msgstr "neúplné èítanie kµúèa ¾iadosti: %s"
+
+#: nscd/connections.c:364
+#, c-format
+msgid "short read while reading request: %s"
+msgstr "neúplné èítanie ¾iadosti: `%s'"
+
+#: nscd/grpcache.c:191 nscd/hstcache.c:278 nscd/pwdcache.c:188
+#, c-format
+msgid "short write in %s: %s"
+msgstr "neúplný zápis v %s: %s"
+
+#: inet/rcmd.c:197
+msgid "socket: protocol failure in circuit setup\n"
+msgstr "socket: chyba protokolu pri príprave okruhu\n"
+
+#: locale/programs/locfile.c:730
+msgid "sorting order `forward' and `backward' are mutually exclusive"
+msgstr "poradie triedenia `forward' a `backward' sa navzájom vyluèujú"
+
+#: locale/programs/ld-collate.c:1582 locale/programs/ld-collate.c:1628
+msgid "specification of sorting weight for collation symbol does not make sense"
+msgstr "¹pecifikácia váh triedenia pre symbol triedenia nedáva zmysel"
+
+#: timezone/zic.c:789
+msgid "standard input"
+msgstr "¹tandardný vstup"
+
+#: timezone/zdump.c:268
+msgid "standard output"
+msgstr "¹tandardný výstup"
+
+#: locale/programs/ld-time.c:272
+#, c-format
+msgid "starting date is illegal in string %d in `era' field in category `%s'"
+msgstr "neprípustný poèiatoèný dátum v re»azci %d v poli `era' kategórie `%s'"
+
+#: timezone/zic.c:1300
+msgid "starting year greater than ending year"
+msgstr "poèiatoèný rok väè¹í ako koncový"
+
+#: timezone/zic.c:1272 timezone/zic.c:1297
+msgid "starting year too high to be represented"
+msgstr "poèiatoèný rok priveµký pre zobrazenie"
+
+#: timezone/zic.c:1270 timezone/zic.c:1295
+msgid "starting year too low to be represented"
+msgstr "poèiatoèný rok primalý pre zobrazenie"
+
+#: locale/programs/ld-time.c:348
+#, c-format
+msgid "stopping date is illegal in string %d in `era' field in category `%s'"
+msgstr "neprípustný koncový dátum v re»azci %d v poli `era' kategórie `%s'"
+
+#: sunrpc/svc_run.c:81
+msgid "svc_run: - select failed"
+msgstr "svc_run: - select zlyhal"
+
+#: sunrpc/svc_tcp.c:160
+msgid "svc_tcp.c - cannot getsockname or listen"
+msgstr "svc_tcp.c - nie je mo¾né vykona» getsockname alebo listen"
+
+#: sunrpc/svc_tcp.c:145
+msgid "svc_tcp.c - tcp socket creation problem"
+msgstr "svc_tcp.c - problém pri vytváraní tcp socketu"
+
+#: sunrpc/svc_tcp.c:209 sunrpc/svc_tcp.c:215
+msgid "svc_tcp: makefd_xprt: out of memory\n"
+msgstr "svc_tcp: makefd_xprt: nedostatok pamäti\n"
+
+#: sunrpc/svc_unix.c:135
+msgid "svc_unix.c - AF_UNIX socket creation problem"
+msgstr "svc_unix.c - problém pri vytváraní AF_UNIX socketu"
+
+#: sunrpc/svc_unix.c:151
+msgid "svc_unix.c - cannot getsockname or listen"
+msgstr "svc_unix.c - nemô¾em vykona» getsockname alebo listen"
+
+#: sunrpc/svc_unix.c:201 sunrpc/svc_unix.c:207
+msgid "svc_unix: makefd_xprt: out of memory\n"
+msgstr "svc_unix: makefd_xprt: nedostatok pamäti\n"
+
+#: sunrpc/svc_tcp.c:168 sunrpc/svc_tcp.c:176
+msgid "svctcp_create: out of memory\n"
+msgstr "svctcp_create: nedostatok pamäti\n"
+
+#: sunrpc/svc_udp.c:135
+msgid "svcudp_create - cannot getsockname"
+msgstr "svcudp_create - nemô¾em vykona» getsockname"
+
+#: sunrpc/svc_udp.c:143 sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155
+msgid "svcudp_create: out of memory\n"
+msgstr "svcudp_create: nedostatok pamäti\n"
+
+#: sunrpc/svc_udp.c:121
+msgid "svcudp_create: socket creation problem"
+msgstr "svcudp_create: problém pri vytváraní socketu"
+
+#: sunrpc/svc_unix.c:160 sunrpc/svc_unix.c:168
+msgid "svcunix_create: out of memory\n"
+msgstr "svcunix_create: nedostatok pamäti\n"
+
+#: locale/programs/ld-collate.c:1201
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates element definition"
+msgstr "symbol pre viacznakový element triedenia `%.*s' duplikuje definíciu elementu"
+
+#: locale/programs/ld-collate.c:1073
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates other element definition"
+msgstr "symbol pre viacznakový element triedenia `%.*s' duplikuje iný element"
+
+#: locale/programs/ld-collate.c:1210
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates other symbol definition"
+msgstr "symbol pre viacznakový element triedenia `%.*s' duplikuje definíciu iného symbolu"
+
+#: locale/programs/ld-collate.c:1082
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates symbol definition"
+msgstr "symbol pre viacznakový element triedenia `%.*s' duplikuje definíciu symbolu"
+
+#: locale/programs/ld-collate.c:1064 locale/programs/ld-collate.c:1192
+#, c-format
+msgid "symbol for multicharacter collating element `%.*s' duplicates symbolic name in charset"
+msgstr "symbol pre viacznakový element triedenia `%.*s' duplikuje symbolické meno v znakovej sade"
+
+#: locale/programs/charmap.c:399 locale/programs/charmap.c:433
+#: locale/programs/charmap.c:463 locale/programs/charmap.c:549
+#: locale/programs/charmap.c:595 locale/programs/charmap.c:628
+#: locale/programs/charmap.c:660
+#, c-format
+msgid "syntax error in %s definition: %s"
+msgstr "chyba syntaxe v definícii %s: %s"
+
+#: locale/programs/locfile.c:750
+msgid "syntax error in `order_start' directive"
+msgstr "chyba syntaxe v direktíve `order_start'"
+
+#: locale/programs/locfile.c:492
+msgid "syntax error in character class definition"
+msgstr "chyba syntaxe v definícii triedy znakov"
+
+#: locale/programs/locfile.c:550
+msgid "syntax error in character conversion definition"
+msgstr "chyba syntaxe v definície konverzie znakov"
+
+#: locale/programs/locfile.c:792
+msgid "syntax error in collating order definition"
+msgstr "chyba syntaxe v definícii poradia triedenia"
+
+#: locale/programs/locfile.c:642
+msgid "syntax error in collation definition"
+msgstr "chyba syntaxe v definícii triedenia"
+
+#: locale/programs/locfile.c:465
+msgid "syntax error in definition of LC_CTYPE category"
+msgstr "chyba syntaxe v definícii kategórie LC_CTYPE"
+
+#: locale/programs/locfile.c:408
+msgid "syntax error in definition of new character class"
+msgstr "chyba syntaxe v definícii novej triedy znakov"
+
+#: locale/programs/locfile.c:418
+msgid "syntax error in definition of new character map"
+msgstr "chyba syntaxe v definícii novej znakovej sady"
+
+#: locale/programs/locfile.c:1003
+msgid "syntax error in message locale definition"
+msgstr "chyba syntaxe v definícii národného prostredia správ"
+
+#: locale/programs/locfile.c:914
+msgid "syntax error in monetary locale definition"
+msgstr "chyba syntaxe v definícii národného prostredia peòa¾ných hodnôt"
+
+#: locale/programs/locfile.c:941
+msgid "syntax error in numeric locale definition"
+msgstr "chyba syntaxe v definícii národného prostredia pre èísla"
+
+#: locale/programs/locfile.c:852
+msgid "syntax error in order specification"
+msgstr "chyba syntaxe v ¹pecifikácii poradia"
+
+#: locale/programs/charmap.c:280 locale/programs/charmap.c:296
+#: locale/programs/repertoire.c:143
+#, c-format
+msgid "syntax error in prolog: %s"
+msgstr "chyba syntaxe v prológu: %s"
+
+#: locale/programs/repertoire.c:198 locale/programs/repertoire.c:237
+#: locale/programs/repertoire.c:260
+#, c-format
+msgid "syntax error in repertoire map definition: %s"
+msgstr "chyba syntaxe v definícii mapy repertoáru: %s"
+
+#: locale/programs/locfile.c:979
+msgid "syntax error in time locale definition"
+msgstr "chyba syntaxe v definícii národného prostredia pre èas"
+
+#: locale/programs/locfile.c:385
+msgid "syntax error: not inside a locale definition section"
+msgstr "chyba syntaxe: nie je vnútri sekcie definície národného prostredia"
+
+#: iconv/iconv_prog.c:137
+msgid "target encoding not specified using `-t'"
+msgstr "kódovanie cieµa nebolo zadané pomocou `-t'"
+
+#: catgets/gencat.c:390 catgets/gencat.c:526 catgets/gencat.c:553
+msgid "this is the first definition"
+msgstr "toto je prvá definícia"
+
+#: timezone/zic.c:1132
+msgid "time before zero"
+msgstr "èas men¹í ako nula"
+
+#: timezone/zic.c:1140 timezone/zic.c:2015 timezone/zic.c:2034
+msgid "time overflow"
+msgstr "preteèenie èasu"
+
+#: locale/programs/charmap.c:443
+msgid "too few bytes in character encoding"
+msgstr "primálo bajtov v kódovaní znaku"
+
+#: locale/programs/charmap.c:445
+msgid "too many bytes in character encoding"
+msgstr "priveµa bajtov v kódovaní znaku"
+
+#: locale/programs/locales.h:92
+msgid "too many character classes defined"
+msgstr "priveµa definovaných tried znakov"
+
+#: timezone/zic.c:1843
+msgid "too many leap seconds"
+msgstr "priveµa priestupných sekúnd"
+
+#: timezone/zic.c:1815
+msgid "too many local time types"
+msgstr "priveµa lokálnych typov èasu"
+
+#: timezone/zic.c:1769
+msgid "too many transitions?!"
+msgstr "priveµa prechodov?!"
+
+#: locale/programs/ld-collate.c:1637
+msgid "too many weights"
+msgstr "priveµa váh"
+
+#: timezone/zic.c:2138
+msgid "too many, or too long, time zone abbreviations"
+msgstr "príli¹ veµa alebo príli¹ dlhé skratku èasovej zóny"
+
+#: locale/programs/linereader.h:146
+msgid "trailing garbage at end of line"
+msgstr "smetie na konci riadku"
+
+#: sunrpc/svc_simple.c:150
+#, c-format
+msgid "trouble replying to prog %d\n"
+msgstr "problémy pri odpovedi programu %d\n"
+
+#: locale/programs/ld-collate.c:1393
+msgid "two lines in a row containing `...' are not allowed"
+msgstr "dva riadky za sebou obsahujúce `...' nie sú povolené"
+
+#: timezone/zic.c:1307
+msgid "typed single year"
+msgstr "zadaný jeden rok"
+
+#: iconv/iconv_prog.c:406
+msgid "unable to allocate buffer for input"
+msgstr "nie je mo¾né prideli» vyrovnávaciu pamä» pre vstup"
+
+#: nis/nis_callback.c:187
+msgid "unable to free arguments"
+msgstr "nie je mo¾né uvoµni» argumenty"
+
+#: posix/getconf.c:654 posix/getconf.c:670
+msgid "undefined"
+msgstr "nedefinované"
+
+#: locale/programs/charmap.c:701 locale/programs/charmap.c:712
+#, c-format
+msgid "unknown character `%s'"
+msgstr "neznámy znak `%s'"
+
+#: locale/programs/ld-messages.c:202 locale/programs/ld-messages.c:213
+#: locale/programs/ld-messages.c:224 locale/programs/ld-messages.c:235
+#: locale/programs/ld-time.c:718
+#, c-format
+msgid "unknown character in field `%s' of category `%s'"
+msgstr "neznámy znak v poli `%s' kategórie `%s'"
+
+#: locale/programs/locfile.c:715
+msgid "unknown collation directive"
+msgstr "neznáma direktíva triedenia"
+
+#: catgets/gencat.c:487
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr "neznáma direktíva `%s' - riadok ignorovaný"
+
+#: iconv/iconv_prog.c:353
+#, c-format
+msgid "unknown iconv() error %d"
+msgstr "neznáma iconv() chyba %d"
+
+#: catgets/gencat.c:466
+#, c-format
+msgid "unknown set `%s'"
+msgstr "neznáma sada `%s'"
+
+#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:1572
+#: locale/programs/ld-collate.c:1747
+#, c-format
+msgid "unknown symbol `%.*s': line ignored"
+msgstr "neznámy symbol `%.*s' - riadok ignorovaný"
+
+#: timezone/zic.c:761
+msgid "unruly zone"
+msgstr "zóna bez pravidiel"
+
+#: catgets/gencat.c:971
+msgid "unterminated message"
+msgstr "neukonèená správa"
+
+#: locale/programs/linereader.c:520 locale/programs/linereader.c:555
+msgid "unterminated string"
+msgstr "neukonèený re»azec"
+
+#: sunrpc/rpc_scan.c:350 sunrpc/rpc_scan.c:376
+msgid "unterminated string constant"
+msgstr "neukonèená re»azcová kon¹tanta"
+
+#: locale/programs/linereader.c:390
+msgid "unterminated symbolic name"
+msgstr "neukonèené symbolické meno"
+
+#: locale/programs/ld-collate.c:1699
+msgid "unterminated weight name"
+msgstr "neukonèené meno váhy"
+
+#: locale/programs/charset.c:104
+msgid "upper limit in range is not smaller then lower limit"
+msgstr "horný limit rozsahu je men¹í ako dolný"
+
+#: sunrpc/rpc_main.c:1415
+#, c-format
+msgid "usage:  %s infile\n"
+msgstr "pou¾itie:  %s vstupný_súbor\n"
+
+#: timezone/zic.c:2081
+msgid "use of 2/29 in non leap-year"
+msgstr "29. február pou¾itý v nepriestupnom roku"
+
+#: locale/programs/charmap.c:522 locale/programs/charmap.c:576
+#, c-format
+msgid "value for %s must be an integer"
+msgstr "hodnota pre %s musí by» celé èíslo"
+
+#: locale/programs/charmap.c:318
+#, c-format
+msgid "value for <%s> must lie between 1 and 4"
+msgstr "honota pre <%s> musí by» medzi 1 a 4"
+
+#: locale/programs/ld-monetary.c:157 locale/programs/ld-numeric.c:92
+#, c-format
+msgid "value for field `%s' in category `%s' must not be the empty string"
+msgstr "hodnota poµa `%s' kategórie `%s' nesmie by» prázdny re»azec"
+
+#: locale/programs/charmap.c:330
+msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
+msgstr "hodnota <mb_cur_max> musí by» väè¹ia ako hodnota <mb_cur_min>"
+
+#: locale/programs/ld-monetary.c:147
+msgid "value of field `int_curr_symbol' in category `LC_MONETARY' does not correspond to a valid name in ISO 4217"
+msgstr "hodnota poµa `int_curr_symbol' kategórie `LC_MONETARY' nezodpovedá platnému menu v ISO 4217"
+
+#: locale/programs/ld-monetary.c:139
+msgid "value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"
+msgstr "hodnota poµa `int_curr_symbol' kategórie `LC_MONETARY' má chybnú då¾ku"
+
+#: locale/programs/ld-monetary.c:383 locale/programs/ld-numeric.c:207
+#, c-format
+msgid "values for field `%s' in category `%s' must be smaller than 127"
+msgstr "hodnoty poµa `%s' kategórie `%s' musia by» men¹ie ako 127"
+
+#: nscd/connections.c:355
+#, c-format
+msgid "while accepting connection: %s"
+msgstr "poèas prijatia spojenia: %s"
+
+#: nscd/grpcache.c:149 nscd/hstcache.c:168 nscd/pwdcache.c:142
+msgid "while allocating cache entry"
+msgstr "poèas pridelenia záznamu cache"
+
+#: nscd/cache.c:85
+msgid "while allocating hash table entry"
+msgstr "poèas pridelenia záznamu hash-tabuµky"
+
+#: nscd/grpcache.c:99 nscd/hstcache.c:109 nscd/pwdcache.c:105
+msgid "while allocating key copy"
+msgstr "poèas pridelenia kópie kµúèa"
+
+#: catgets/gencat.c:1001
+msgid "while opening old catalog file"
+msgstr "poèas otvárania starého katalógu"
+
+#: locale/programs/locale.c:346
+msgid "while preparing output"
+msgstr "poèas prípravy výstupu"
+
+#: db2/makedb.c:365 db2/makedb.c:382
+msgid "while reading database"
+msgstr "poèas èítania databázy"
+
+#: elf/sprof.c:683
+msgid "while stat'ing profiling data file"
+msgstr "poèas stat-u súboru profilovacích informácií"
+
+#: db2/makedb.c:334
+msgid "while writing database file"
+msgstr "poèas zápisu databázy"
+
+#: nscd/nscd_stat.c:115
+msgid "write incomplete"
+msgstr "neúplný zápis"
+
+#: inet/rcmd.c:320
+msgid "writeable by other than owner"
+msgstr "zapisovateµný nielen pre vlastníka"
+
+#: db2/makedb.c:124 nscd/nscd.c:114 nss/getent.c:392
+msgid "wrong number of arguments"
+msgstr "chybný poèet argumentov"
+
+#: timezone/zic.c:1090
+msgid "wrong number of fields on Leap line"
+msgstr "chybný poèet polí v riadku Leap"
+
+#: timezone/zic.c:1181
+msgid "wrong number of fields on Link line"
+msgstr "chybný poèet polí v riadku Link"
+
+#: timezone/zic.c:924
+msgid "wrong number of fields on Rule line"
+msgstr "chybný poè¹t polí v riadku Rule"
+
+#: timezone/zic.c:994
+msgid "wrong number of fields on Zone continuation line"
+msgstr "chybný poèet polí v pokraèovacom riadku Zone"
+
+#: timezone/zic.c:952
+msgid "wrong number of fields on Zone line"
+msgstr "chybný poèet polí v riadku Zone"
+
+#: sunrpc/xdr_ref.c:84
+msgid "xdr_reference: out of memory\n"
+msgstr "xdr_reference: nedostatok pamäti\n"
+
+#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+msgid "xdrrec_create: out of memory\n"
+msgstr "xdrrec_create: nedostatok pamäti\n"
+
+#: nis/ypclnt.c:884
+msgid "yp_update: cannot convert host to netname\n"
+msgstr "yp_update: nie je mo¾né konvertova» meno poèítaèa na meno siete\n"
+
+#: nis/ypclnt.c:896
+msgid "yp_update: cannot get server address\n"
+msgstr "yp_update: nie je mo¾né zísti» adresu servera\n"
