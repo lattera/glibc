@@ -1,5 +1,7 @@
 2001-12-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/strstr.c (strstr): Update.  New optimized version.
+
 	* crypt/md5.h: Define md5_uintptr.
 
 2001-12-13  Ulrich Drepper  <drepper@redhat.com>

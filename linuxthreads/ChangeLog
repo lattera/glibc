@@ -1,3 +1,9 @@
+2001-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* man/pthread_atfork.man: Adjust description of mutex handling
+	after fork for current implementation.
+	* linuxthreads.texi: Likewise [PR libc/2519].
+
 2001-12-13  Andreas Schwab  <schwab@suse.de>
 
 	* specific.c (pthread_key_delete): Don't contact the thread

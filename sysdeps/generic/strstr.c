@@ -1,5 +1,5 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,85 +43,80 @@ strstr (phaystack, pneedle)
      const char *phaystack;
      const char *pneedle;
 {
-  register const unsigned char *haystack, *needle;
-  register chartype b, c;
+  const unsigned char *haystack, *needle;
+  chartype b;
+  const unsigned char *rneedle;
 
   haystack = (const unsigned char *) phaystack;
-  needle = (const unsigned char *) pneedle;
 
-  b = *needle;
-  if (b != '\0')
+  if (b = *(needle = (const unsigned char *) pneedle))
     {
-      haystack--;				/* possible ANSI violation */
-      do
-	{
-	  c = *++haystack;
-	  if (c == '\0')
-	    goto ret0;
-	}
-      while (c != b);
+      chartype c;
+      haystack--;		/* possible ANSI violation */
 
-      c = *++needle;
-      if (c == '\0')
+      {
+	chartype a;
+	do
+	  if (!(a = *++haystack))
+	    goto ret0;
+	while (a != b);
+      }
+
+      if (!(c = *++needle))
 	goto foundneedle;
       ++needle;
       goto jin;
 
       for (;;)
-        {
-          register chartype a;
-	  register const unsigned char *rhaystack, *rneedle;
-
-	  do
-	    {
+	{
+	  {
+	    chartype a;
+	    if (0)
+	    jin:{
+		if ((a = *++haystack) == c)
+		  goto crest;
+	      }
+	    else
 	      a = *++haystack;
-	      if (a == '\0')
-		goto ret0;
-	      if (a == b)
-		break;
-	      a = *++haystack;
-	      if (a == '\0')
-		goto ret0;
-shloop:
-	      ;
-	    }
-          while (a != b);
-
-jin:	  a = *++haystack;
-	  if (a == '\0')
-	    goto ret0;
-
-	  if (a != c)
-	    goto shloop;
-
-	  rhaystack = haystack-- + 1;
-	  rneedle = needle;
-	  a = *rneedle;
-
-	  if (*rhaystack == a)
 	    do
 	      {
-		if (a == '\0')
-		  goto foundneedle;
-		++rhaystack;
-		a = *++needle;
-		if (*rhaystack != a)
-		  break;
-		if (a == '\0')
-		  goto foundneedle;
-		++rhaystack;
-		a = *++needle;
+		for (; a != b; a = *++haystack)
+		  {
+		    if (!a)
+		      goto ret0;
+		    if ((a = *++haystack) == b)
+		      break;
+		    if (!a)
+		      goto ret0;
+		  }
 	      }
-	    while (*rhaystack == a);
-
-	  needle = rneedle;		/* took the register-poor approach */
-
-	  if (a == '\0')
-	    break;
-        }
+	    while ((a = *++haystack) != c);
+	  }
+	crest:
+	  {
+	    chartype a;
+	    {
+	      const unsigned char *rhaystack;
+	      if (*(rhaystack = haystack-- + 1) == (a = *(rneedle = needle)))
+		do
+		  {
+		    if (!a)
+		      goto foundneedle;
+		    if (*++rhaystack != (a = *++needle))
+		      break;
+		    if (!a)
+		      goto foundneedle;
+		  }
+		while (*++rhaystack == (a = *++needle));
+	      needle = rneedle;	/* took the register-poor aproach */
+	    }
+	    if (!a)
+	      break;
+	  }
+	}
     }
 foundneedle:
-  return (char*) haystack;
+  return (char *) haystack;
 ret0:
   return 0;
 }

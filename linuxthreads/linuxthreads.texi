@@ -1395,12 +1395,10 @@ pocess image.
 To understand the purpose of @code{pthread_atfork}, recall that
 @code{fork} duplicates the whole memory space, including mutexes in
 their current locking state, but only the calling thread: other threads
-are not running in the child process. Thus, if a mutex is locked by a
-thread other than the thread calling @code{fork}, that mutex will remain
-locked forever in the child process, possibly blocking the execution of
-the child process. Or if some shared data, such as a linked list, was in the
-middle of being updated by a thread in the parent process, the child
-will get a copy of the incompletely updated data which it cannot use.
+are not running in the child process.  The mutexes are not usable after
+the @code{fork} and must be initialized with @code{pthread_mutex_init}
+in the child process.  This is a limitation of the current
+implementation and might or might not be present in future versions.
 
 To avoid this, install handlers with @code{pthread_atfork} as follows: have the
 @var{prepare} handler lock the mutexes (in locking order), and the
@@ -1627,4 +1625,3 @@ of a mapping of user threads to kernel threads.  It exists for source
 compatibility.  However, it will return the value that was set by the
 last call to @code{pthread_setconcurrency}.
 @end deftypefun
-
