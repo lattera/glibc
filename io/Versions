@@ -94,5 +94,7 @@ libc {
   GLIBC_2.2 {
     # p*
     posix_fadvise; posix_fadvise64; posix_fallocate; posix_fallocate64;
+
+    __open64;
   }
 }

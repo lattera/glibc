@@ -1,3 +1,7 @@
+2000-11-09  H.J. Lu  <hjl@gnu.org>
+
+	* io/Versions (GLIBC_2.2): Add __open64.
+
 2000-11-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/C-time.c (_nl_C_LC_TIME): Fix value for _NL_TIME_WEEK_1STWEEK.
