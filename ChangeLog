@@ -1,3 +1,9 @@
+2002-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (ASMFMT_2): Fix typo in
+	first parameters constraint string.
+	(ASMFMT_3): Likewise.  Patch by stefan.lauterbach@mincom.de.
+
 2002-11-27  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (parse_expression): Set the bit since the back
