@@ -1,3 +1,7 @@
+1998-09-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/locale.texi: Fix typos.
+
 1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/random_r.c (__setstate_r): Allow call with same state

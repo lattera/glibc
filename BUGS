@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1998-09-01T10:40:39-0700 drepper>
+Time-stamp: <1998-09-10T17:09:57-0700 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -60,6 +60,9 @@ Severity: [  *] to [***]
 [  *]  The *scanf() functions currently do not handle %l[ and %ls parameters
        correctly since the parsing of the multi-byte characters does not
        yet use mbsrtowcs().
+
+[  *]  The strftime() implementation cannot handle multibyte locales really
+       good since the TOLOWER and TOUPPER are not prepared.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper

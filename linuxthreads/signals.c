@@ -102,7 +102,8 @@ int sigaction(int sig, const struct sigaction * act,
   if (act)
     {
       newact = *act;
-      if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL)
+      if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL
+	  && sig < NSIG)
 	newact.sa_handler = pthread_sighandler;
       newactp = &newact;
     }
@@ -110,9 +111,13 @@ int sigaction(int sig, const struct sigaction * act,
     newactp = NULL;
   if (__sigaction(sig, newactp, oact) == -1)
     return -1;
-  if (oact != NULL) oact->sa_handler = sighandler[sig];
-  if (act)
-    sighandler[sig] = act->sa_handler;
+  if (sig < NSIG)
+    {
+      if (oact != NULL)
+	oact->sa_handler = sighandler[sig];
+      if (act)
+	sighandler[sig] = act->sa_handler;
+    }
   return 0;
 }
 

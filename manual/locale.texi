@@ -30,7 +30,7 @@ will follow the conventions preferred by the user.
                                  with library functions.
 * Standard Locales::            Locale names available on all systems.
 * Locale Information::          How to access the information for the locale.
-* Formatting Numbers::          A dedicated functions to format numbers.
+* Formatting Numbers::          A dedicated function to format numbers.
 @end menu
 
 @node Effects of Locale, Choosing Locale,  , Locales
@@ -380,7 +380,7 @@ as far as the system follows the Unix standards.
 
 Together with the @code{setlocale} function the @w{ISO C} people
 invented @code{localeconv} function.  It is a masterpiece of misdesign.
-It is expensive to use, it is not extendable, and does not generally
+It is expensive to use, it is not extendable, and is not generally
 usable as it provides access only to the @code{LC_MONETARY} and
 @code{LC_NUMERIC} related information.  If it is applicable for a
 certain situation it should nevertheless be used since it is very
@@ -656,12 +656,12 @@ monetary quantities will tell us what we should recommend.
 @node The Elegant and Fast Way, , The Lame Way to Locale Data, Locale Information
 @subsection Pinpoint Access to Locale Data
 
-When writing the X/Open Portability Guide the authors realized that
-implicit used added to by the @code{localeconv} function is not enough
-to provide reasonable access to the locale information.  The
-information which was meant to be available in the locale (as later
-specified in the POSIX.1 standard) requires more possibilities to access
-it.  Therefore the @code{nl_langinfo} function was introduced.
+When writing the X/Open Portability Guide the authors realized that the
+@code{localeconv} function is not enough to provide reasonable access to
+the locale information.  The information which was meant to be available
+in the locale (as later specified in the POSIX.1 standard) requires more
+possibilities to access it.  Therefore the @code{nl_langinfo} function
+was introduced.
 
 @comment langinfo.h
 @comment XOPEN
@@ -669,7 +669,7 @@ it.  Therefore the @code{nl_langinfo} function was introduced.
 The @code{nl_langinfo} function can be used to access individual
 elements of the locale categories.  I.e., unlike the @code{localeconv}
 function which always returns all the information @code{nl_langinfo}
-lets the caller select what information is necessary.  This is a very
+lets the caller select what information is necessary.  This is very
 fast and it is no problem to call this function multiple times.
 
 The second advantage is that not only the numeric and monetary
@@ -698,8 +698,8 @@ corresponds to Sunday.
 @itemx DAY_5
 @itemx DAY_6
 @itemx DAY_7
-Similar to @code{ABDAY_1} etc, but here the return value are the
-unabbreviated weekday names.
+Similar to @code{ABDAY_1} etc, but here the return value is the
+unabbreviated weekday name.
 @item ABMON_1
 @itemx ABMON_2
 @itemx ABMON_3
@@ -712,7 +712,7 @@ unabbreviated weekday names.
 @itemx ABMON_10
 @itemx ABMON_11
 @itemx ABMON_12
-The return value are abbreviated names for the month names.  @code{ABMON_1}
+The return value is abbreviated name for the month names.  @code{ABMON_1}
 corresponds to January.
 @item MON_1
 @itemx MON_2
@@ -919,9 +919,9 @@ correctly there should never be a misunderstanding over the time and
 date format.
 
 @node Formatting Numbers, , Locale Information, Locales
-@section A dedicated functions to format numbers
+@section A dedicated function to format numbers
 
-We have seen the the structure returned by @code{localeconv} as well as
+We have seen that the structure returned by @code{localeconv} as well as
 the values given to @code{nl_langinfo} allow to retrieve the various
 pieces of locale specific information to format numbers and monetary
 amounts.  But we have also seen that the rules underlying this
@@ -1026,21 +1026,21 @@ Creates a @samp{%} in the output.  There must be no flag, width
 specifier or modifier given, only @samp{%%} is allowed.
 @end table
 
-As it is done for @code{printf}, the function read the format string
-from left to right and uses the value passed to the function following
-the format string.  The value are expected to be either of type
-@code{double} or @code{long double}, depending in the presence of the
+As it is done for @code{printf}, the function reads the format string
+from left to right and uses the values passed to the function following
+the format string.  The values are expected to be either of type
+@code{double} or @code{long double}, depending on the presence of the
 modifier @samp{L}.  The result is stored in the buffer pointed to by
 @var{s}.  At most @var{maxsize} characters are stored.
 
 The return value of the function is the number of characters stored in
-@var{s}, including the terminating NUL byte..  If the number of
+@var{s}, including the terminating NUL byte.  If the number of
 characters stored would exceed @var{maxsize} the function returns
 @math{-1} and the content of the buffer @var{s} is unspecified.  In this
 case @code{errno} is set to @code{E2BIG}.
 @end deftypefun
 
-A few examples should make the clear how to use this function.  It is
+A few examples should make it clear how to use this function.  It is
 assumed that all the following pieces of code are executed in a program
 which uses the locale valid for the USA (@code{en_US}).  The simplest
 form of the format is this:
@@ -1123,8 +1123,8 @@ braces and this is what the @samp{(} flag selected.  The fill character
 is now @samp{0}.  Please note that this @samp{0} character is not
 regarded as a numeric zero and therefore the first and second number are
 not printed using a thousands separator.  Since we use in the format the
-specifier @samp{i} instead of @samp{n} no the international form of the
+specifier @samp{i} instead of @samp{n} now the international form of the
 currency symbol is used.  This is a four letter string, in this case
 @code{"USD "}.  The last point is that since the left precision is
-selected to be three the first and second number are printed with and
-extra zero and the end and the third number is printed unrounded.
+selected to be three the first and second number are printed with an
+extra zero at the end and the third number is printed unrounded.

@@ -1,3 +1,8 @@
+1998-09-02 11:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* signals.c (sigaction): Check that sig is less than NSIG to avoid
+	array index overflow.
+
 1998-09-06 10:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/pthread/semaphore.h: New file.
