@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 
-# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -104,7 +104,9 @@ while (<SOVERSIONS>) {
     # Filter out some libraries we don't want to link:
     # - nss_ldap since it's not yet available
     # - libdb1 since it conflicts with libdb
-    if ($name ne "nss_ldap" && $name ne "db1") {
+    # - libnss1_* from glibc-compat add-on
+    if ($name ne "nss_ldap" && $name ne "db1"
+	&& !($name =~/^nss1_/)) {
       $link_libs .= " -l$name";
       $versions{$name} = $version;
     }

@@ -1,5 +1,16 @@
 1999-04-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* scripts/test-installation.pl (installation_problem): Skip
+	libnss1_* libraries from glibc-compat add-on.
+
+Wed Apr  7 22:52:39 1999  H.J. Lu  <hjl@gnu.org>
+
+	* io/Versions (__dup2, __pipe): Added to GLIBC_2.0 for
+	libstdc++ 2.7.2.
+	* posix/Versions (__waitpid): Likewise.
+
+1999-04-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* manual/install.texi (Reporting Bugs): Add section about reported 
 	bugs and correct email address of glibcbug script.
 

@@ -15,6 +15,9 @@ libc {
     __sched_getparam; __sched_getscheduler; __sched_setscheduler;
     __sched_yield; __fork; __getpid; __wait;
 
+    # functions used by libstdc++ 2.7.2
+    __waitpid;
+
     # global variables
     __environ; _environ;
 

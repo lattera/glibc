@@ -9,6 +9,9 @@ libc {
     __xstat; __fxstat; __lxstat; __xmknod; __write; __close; __fcntl;
     __lseek; __open; __read;
 
+    # functions used by libstdc++ 2.7.2
+    __dup2; __pipe;
+
     # a*
     access;
 
