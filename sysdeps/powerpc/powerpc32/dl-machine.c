@@ -397,6 +397,7 @@ _dl_reloc_overflow (struct link_map *map,
 void
 __process_machine_rela (struct link_map *map,
 			const Elf32_Rela *reloc,
+			struct link_map *sym_map,
 			const Elf32_Sym *sym,
 			const Elf32_Sym *refsym,
 			Elf32_Addr *const reloc_addr,
@@ -540,6 +541,53 @@ __process_machine_rela (struct link_map *map,
 	  }
       }
       break;
+
+#ifdef USE_TLS
+#define CHECK_STATIC_TLS(map, sym_map)					      \
+    do {								      \
+      if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
+	_dl_allocate_static_tls (sym_map);				      \
+    } while (0)
+# define DO_TLS_RELOC(suffix)						      \
+    case R_PPC_DTPREL##suffix:						      \
+      /* During relocation all TLS symbols are defined and used.	      \
+	 Therefore the offset is already correct.  */			      \
+      if (sym_map != NULL)						      \
+	do_reloc##suffix ("R_PPC_DTPREL"#suffix,			      \
+			  TLS_DTPREL_VALUE (sym, reloc));		      \
+      break;								      \
+    case R_PPC_TPREL##suffix:						      \
+      if (sym_map != NULL)						      \
+	{								      \
+	  CHECK_STATIC_TLS (map, sym_map);				      \
+	  do_reloc##suffix ("R_PPC_TPREL"#suffix,			      \
+			    TLS_TPREL_VALUE (sym_map, sym, reloc));	      \
+	}								      \
+      break;
+
+    inline void do_reloc16 (const char *r_name, Elf32_Addr value)
+      {
+	if (__builtin_expect (value > 0x7fff && value < 0xffff8000, 0))
+	  _dl_reloc_overflow (map, r_name, reloc_addr, sym, refsym);
+	*(Elf32_Half *) reloc_addr = value;
+      }
+    inline void do_reloc16_LO (const char *r_name, Elf32_Addr value)
+      {
+	*(Elf32_Half *) reloc_addr = value;
+      }
+    inline void do_reloc16_HI (const char *r_name, Elf32_Addr value)
+      {
+	*(Elf32_Half *) reloc_addr = value >> 16;
+      }
+    inline void do_reloc16_HA (const char *r_name, Elf32_Addr value)
+      {
+	*(Elf32_Half *) reloc_addr = (value + 0x8000) >> 16;
+      }
+    DO_TLS_RELOC (16)
+    DO_TLS_RELOC (16_LO)
+    DO_TLS_RELOC (16_HI)
+    DO_TLS_RELOC (16_HA)
+#endif
 
     default:
       _dl_reloc_bad_type (map, rinfo, 0);

@@ -41,8 +41,8 @@
    the static TLS area already allocated for each running thread.  If this
    object's TLS segment is too big to fit, we fail.  If it fits,
    we set MAP->l_tls_offset and return.  */
-static void __attribute_noinline__
-allocate_static_tls (struct link_map *map)
+void __attribute_noinline__
+_dl_allocate_static_tls (struct link_map *map)
 {
   size_t offset, used, check;
 
@@ -209,7 +209,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
       if (__builtin_expect ((sym_map)->l_tls_offset == 0, 0))		      \
-	allocate_static_tls (sym_map);					      \
+	_dl_allocate_static_tls (sym_map);				      \
     } while (0)
 
 #include "dynamic-link.h"

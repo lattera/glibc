@@ -336,6 +336,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
    has been determined.  */
 extern void __process_machine_rela (struct link_map *map,
 				    const Elf32_Rela *reloc,
+				    struct link_map *sym_map,
 				    const Elf32_Sym *sym,
 				    const Elf32_Sym *refsym,
 				    Elf32_Addr *const reloc_addr,
@@ -361,9 +362,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   const Elf32_Sym *const refsym = sym;
   Elf32_Addr value;
   const int r_type = ELF32_R_TYPE (reloc->r_info);
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
-  struct link_map *sym_map;
-#endif
+  struct link_map *sym_map = NULL;
 
 #ifndef RESOLVE_CONFLICT_FIND_MAP
   if (r_type == R_PPC_RELATIVE)
@@ -411,71 +410,37 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       *reloc_addr = value;
       break;
 
-#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
-    case R_PPC_DTPMOD32:
-# ifdef RTLD_BOOTSTRAP
-      /* During startup the dynamic linker is always index 1.  */
-      *reloc_addr = 1;
-# else
-      /* Get the information from the link map returned by the
-	 RESOLVE_MAP function.  */
-      if (sym_map != NULL)
-	*reloc_addr = sym_map->l_tls_modid;
-# endif
-      break;
-
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD) \
+    && !defined RESOLVE_CONFLICT_FIND_MAP
 # ifdef RTLD_BOOTSTRAP
 #  define NOT_BOOTSTRAP 0
 # else
 #  define NOT_BOOTSTRAP 1
 # endif
-# define DO_TLS_RELOC(suffix)						      \
-    case R_PPC_DTPREL##suffix:						      \
-      /* During relocation all TLS symbols are defined and used.	      \
-	 Therefore the offset is already correct.  */			      \
-      if (NOT_BOOTSTRAP)						      \
-	do_reloc##suffix ("R_PPC_DTPREL"#suffix,			      \
-			  TLS_DTPREL_VALUE (sym, reloc));		      \
-      break;								      \
-    case R_PPC_TPREL##suffix:						      \
-      if (!NOT_BOOTSTRAP || sym_map)					      \
-	{								      \
-	  if (NOT_BOOTSTRAP)						      \
-	    CHECK_STATIC_TLS (map, sym_map);				      \
-	  do_reloc##suffix ("R_PPC_TPREL"#suffix,			      \
-			    TLS_TPREL_VALUE (sym_map, sym, reloc));	      \
-	}								      \
-      break;
 
-      inline void do_reloc32 (const char *r_name, Elf32_Addr value)
+    case R_PPC_DTPMOD32:
+      if (!NOT_BOOTSTRAP)
+	/* During startup the dynamic linker is always index 1.  */
+	*reloc_addr = 1;
+      else if (sym_map != NULL)
+	/* Get the information from the link map returned by the
+	   RESOLVE_MAP function.  */
+	*reloc_addr = sym_map->l_tls_modid;
+      break;
+    case R_PPC_DTPREL32:
+      /* During relocation all TLS symbols are defined and used.
+	 Therefore the offset is already correct.  */
+      if (NOT_BOOTSTRAP && sym_map != NULL)
+	*reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
+      break;
+    case R_PPC_TPREL32:
+      if (!NOT_BOOTSTRAP || sym_map != NULL)
 	{
-	  *reloc_addr = value;
+	  if (NOT_BOOTSTRAP)
+	    CHECK_STATIC_TLS (map, sym_map);
+	  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
 	}
-    DO_TLS_RELOC (32)
-# ifndef RTLD_BOOTSTRAP		/* PIC code like ld.so doesn't use these.  */
-    inline void do_reloc16 (const char *r_name, Elf32_Addr value)
-      {
-	if (__builtin_expect (value > 0x7fff && value < 0xffff8000, 0))
-	  _dl_reloc_overflow (map,  "R_PPC_ADDR16", reloc_addr, sym, refsym);
-	*(Elf32_Half *) reloc_addr = value;
-      }
-    inline void do_reloc16_LO (const char *r_name, Elf32_Addr value)
-      {
-	*(Elf32_Half *) reloc_addr = value;
-      }
-    inline void do_reloc16_HI (const char *r_name, Elf32_Addr value)
-      {
-	*(Elf32_Half *) reloc_addr = value >> 16;
-      }
-    inline void do_reloc16_HA (const char *r_name, Elf32_Addr value)
-      {
-	*(Elf32_Half *) reloc_addr = (value + 0x8000) >> 16;
-      }
-    DO_TLS_RELOC (16)
-    DO_TLS_RELOC (16_LO)
-    DO_TLS_RELOC (16_HI)
-    DO_TLS_RELOC (16_HA)
-# endif
+      break;
 #endif /* USE_TLS etc. */
 
 #ifdef RESOLVE_CONFLICT_FIND_MAP
@@ -485,7 +450,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #endif
 
     default:
-      __process_machine_rela (map, reloc, sym, refsym,
+      __process_machine_rela (map, reloc, sym_map, sym, refsym,
 			      reloc_addr, value, r_type);
     }
 }
