@@ -204,8 +204,7 @@ new_composite_name (int category, const char *newnames[LC_ALL])
 static inline void
 setname (int category, const char *name)
 {
-  if (_nl_current[category] == NULL
-      && _nl_current_names[category] != _nl_C_name)
+  if (_nl_current_names[category] != _nl_C_name)
     free ((void *) _nl_current_names[category]);
 
   _nl_current_names[category] = name;
@@ -351,6 +350,9 @@ setlocale (int category, const char *locale)
       /* Critical section left.  */
       __libc_lock_unlock (__libc_setlocale_lock);
 
+      /* Free the resources (the locale path variable.  */
+      free (locale_path);
+
       return composite;
     }
   else
@@ -394,6 +396,9 @@ setlocale (int category, const char *locale)
 
       /* Critical section left.  */
       __libc_lock_unlock (__libc_setlocale_lock);
+
+      /* Free the resources (the locale path variable.  */
+      free (locale_path);
 
       return (char *) newname;
     }

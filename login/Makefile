@@ -29,7 +29,7 @@ routines := getutent getutent_r getutid getutline getutid_r getutline_r \
 
 others = utmpd
 install-sbin = utmpd
-utmpd-routines := utmpd connection database error request xtmp
+utmpd-routines := connection database error request xtmp
 extra-objs := $(utmpd-routines:=.o)
 
 distribute := utmp-private.h programs/xtmp.h programs/utmpd.h \
@@ -43,6 +43,7 @@ extra-libs      := libutil
 extra-libs-others := $(extra-libs)
 
 libutil-routines:= login login_tty logout logwtmp pty updwtmp
+libutil-map	:= libutil.map
 
 include ../Rules
 

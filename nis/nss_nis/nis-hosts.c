@@ -55,7 +55,7 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (AF_INET6, p, entdata->host_addr) > 0)
+   if (inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
      {
        result->h_addrtype = AF_INET6;
        result->h_length = IN6ADDRSZ;

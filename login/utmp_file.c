@@ -31,11 +31,6 @@
 
 #include "utmp-private.h"
 
-#ifndef _LIBC
-#define _(msg) (msg)
-#define __set_errno(val) errno = (val)
-#endif
-
 
 /* Descriptor for the file and position.  */
 static int file_fd = INT_MIN;
@@ -230,7 +225,9 @@ proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
      &&
 #endif
 #if _HAVE_UT_ID - 0
-     strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+     (entry->ut_id[0] && match->ut_id[0]
+      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0)
 #else
      strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
 #endif

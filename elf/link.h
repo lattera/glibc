@@ -255,7 +255,7 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
-   arranges for `dlerror' to return the error details.  
+   arranges for `dlerror' to return the error details.
    ARGS is passed as argument to OPERATE.  */
 extern int _dlerror_run (void (*operate) (void *), void *args);
 

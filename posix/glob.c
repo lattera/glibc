@@ -307,7 +307,7 @@ next_brace_sub (const char *begin)
    If a directory cannot be opened or read and ERRFUNC is not nil,
    it is called with the pathname that caused the error, and the
    `errno' value from the failing call; if it returns non-zero
-   `glob' returns GLOB_ABEND; if it returns zero, the error is ignored.
+   `glob' returns GLOB_ABORTED; if it returns zero, the error is ignored.
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 int
@@ -647,7 +647,7 @@ glob (pattern, flags, errfunc, pglob)
 	      {
 		globfree (&dirs);
 		globfree (&files);
-		return GLOB_ABEND;
+		return GLOB_ABORTED;
 	      }
 	  }
 #endif /* SHELL.  */
@@ -918,7 +918,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	{
 	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
 	      (flags & GLOB_ERR))
-	    return GLOB_ABEND;
+	    return GLOB_ABORTED;
 	}
       else
 	while (1)

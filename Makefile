@@ -107,6 +107,9 @@ $(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
 generated := $(generated) munch-init.c
 endif
 
+# We have a versioning file for libc.so.
+libc-map = libc.map
+
 
 include Makerules
 
@@ -130,9 +133,6 @@ ifeq (yes,$(build-shared))
 # Build the shared object from the PIC object library.
 lib: $(common-objpfx)libc.so
 endif
-
-# We have a versioning file for libc.so.
-#libc-map = libc.map
 
 all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
 $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make $(all-Subdirs-files)
@@ -315,7 +315,7 @@ makeinfo --no-validate --no-warn --no-headers $< -o $@
 endef
 INSTALL: manual/maint.texi; $(format-me)
 NOTES: manual/creature.texi; $(format-me)
-manual/dir-add.texi: FORCE
+manual/dir-add.texi manual/dir-add.info: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
 FORCE:
 

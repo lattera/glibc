@@ -1,0 +1,11 @@
+GLIBC_2.0 {
+  global:
+    _gethtbyaddr; _gethtbyname; _gethtbyname2; _gethtent; _getlong;
+    _getshort; _res_opcodes; _res_resultcodes; _sethtent; dn_expand;
+    inet_net_ntop; inet_net_pton; inet_neta; res_gethostbyaddr;
+    res_gethostbyname; res_gethostbyname2; res_mkquery; res_query;
+    res_querydomain; res_search; res_send_setqhook; res_send_setrhook;
+
+  local:
+    *;
+};

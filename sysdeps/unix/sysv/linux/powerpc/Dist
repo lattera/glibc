@@ -1,7 +1,6 @@
 clone.S
 ioctl-types.h
 termbits.h
-termios.h
 kernel_stat.h
 kernel_termios.h
 sys/kernel_termios.h

@@ -100,8 +100,8 @@ strlen:
 	bne   done0
  # Handle second word of pair. Put addi between branches to avoid hurting
  # branch prediction.
-	addi  %r6,%r6,0xfffffeff
-	
+	addi  %r6,%r6,-0x101
+
 	bne   %cr1,loop
 	lwzu  %r8,4(%r4)
 	and   %r0,%r7,%r8
@@ -111,7 +111,7 @@ strlen:
 	bne   done0
 
  # The loop.
-	
+
 loop:	lwz   %r8,4(%r4)
 	lwzu  %r9,8(%r4)
 	add   %r0,%r6,%r8
@@ -127,12 +127,12 @@ loop:	lwz   %r8,4(%r4)
 	add   %r0,%r0,%r7
 	andc  %r8,%r12,%r0
 	b     done0
-	
+
 done1:	and   %r0,%r7,%r8
 	subi  %r4,%r4,4
 	add   %r0,%r0,%r7
 	andc  %r8,%r10,%r0
-	
+
  # When we get to here, r4 points to the first word in the string that
  # contains a zero byte, and the most significant set bit in r8 is in that
  # byte.

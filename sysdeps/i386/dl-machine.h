@@ -253,7 +253,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #endif
 	*reloc_addr += map->l_addr;
     }
-  else
+  else if (ELF32_R_TYPE (reloc->r_info) != R_386_NONE)
     {
       const Elf32_Sym *const refsym = sym;
       Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
@@ -304,8 +304,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	case R_386_PC32:
 	  *reloc_addr += (value - (Elf32_Addr) reloc_addr);
-	  break;
-	case R_386_NONE:		/* Alright, Wilbur.  */
 	  break;
 	default:
 	  assert (! "unexpected dynamic reloc type");

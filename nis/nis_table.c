@@ -78,7 +78,7 @@ splitname (const_nis_name name, nis_name *ibr_name, int *srch_len,
       if (!val)
 	{
 	  free (cptr);
-	  *srch_val = malloc (sizeof (char *));
+	  *srch_val = malloc (sizeof (nis_attr));
 	  if (*srch_val == NULL)
 	    {
 	      free (cptr);
@@ -86,8 +86,8 @@ splitname (const_nis_name name, nis_name *ibr_name, int *srch_len,
 	      *ibr_name = NULL;
 	      return;
 	    }
-	  (*srch_val)[*srch_len].zattr_val.zattr_val_len = 0;
-	  (*srch_val)[*srch_len].zattr_val.zattr_val_val = NULL;
+	  (*srch_val)[0].zattr_val.zattr_val_len = 0;
+	  (*srch_val)[0].zattr_val.zattr_val_val = NULL;
 	  return;
 	}
 

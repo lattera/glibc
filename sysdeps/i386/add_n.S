@@ -32,6 +32,7 @@
 .text
 	ALIGN (3)
 	.globl C_SYMBOL_NAME(__mpn_add_n)
+	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__mpn_add_n),@function)
 C_SYMBOL_NAME(__mpn_add_n:)
 	pushl %edi
 	pushl %esi
@@ -102,3 +103,5 @@ L(oop):	movl	(%esi),%eax
 	popl %esi
 	popl %edi
 	ret
+
+	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__mpn_add_n))

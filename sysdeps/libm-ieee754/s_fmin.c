@@ -28,6 +28,6 @@ __fmin (double x, double y)
 }
 weak_alias (__fmin, fmin)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__fmim, __fminl)
+strong_alias (__fmin, __fminl)
 weak_alias (__fmin, fminl)
 #endif

@@ -1,11 +1,11 @@
-This directory contains the version 2.0.1 test release of the GNU C Library.
+This directory contains the version 2.0.90 test release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
 As of this release, the GNU C library is known to run on the following
 configurations:
 
-		*-*-gnu			GNU Hurd
+		i[3456]86-*-gnu		GNU Hurd
 		i[3456]86-*-linux-gnu	Linux-2.0 on Intel
 		m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
 		alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
@@ -36,17 +36,18 @@ versions) used to run on the following configurations:
 		sparc-sun-solaris2
 		sparc-sun-sunos4
 
-Whether this is still true for this release is unknown.  Porting the
-library is not hard.  If you are interested in doing a port, please
-get on the mailing list by sending electronic mail to
-<bug-glibc-request@prep.ai.mit.edu>.
+Since no one has volunteered to test and fix the above configurations,
+these are not supported at the moment.  It's expected that these don't
+work anymore.  Porting the library is not hard.  If you are interested
+in doing a port, please contact the glibc maintainers by sending
+electronic mail to <bug-glibc@prep.ai.mit.edu>.
 
 The GNU C library now includes Michael Glad's Ultra Fast Crypt, which
 provides the Unix `crypt' function, plus some other entry points.
 Because of the United States export restriction on DES implementations,
 we are distributing this code separately from the rest of the C
 library.  There is an extra distribution tar file just for crypt; it is
-called `glibc-crypt-2.0.1.tar.gz'.  You can just unpack the crypt
+called `glibc-crypt-2.0.90.tar.gz'.  You can just unpack the crypt
 distribution along with the rest of the C library and build; you can
 also build the library without getting crypt.  Users outside the USA
 can get the crypt distribution via anonymous FTP from ftp.ifi.uio.no

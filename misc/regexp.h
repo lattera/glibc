@@ -38,8 +38,11 @@
    for the here included function is weird (this really is a harmless
    word).
 
-   The user has to provide five macros before this header file can be
+   The user has to provide six macros before this header file can be
    included:
+
+   INIT		Declarations vor variables which can be used by the
+		other macros.
 
    GETC()	Return the value of the next character in the regular
 		expression pattern.  Successive calls should return
@@ -98,9 +101,10 @@ compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
 {
   char *__input_buffer = NULL;
   size_t __input_size = 0;
-  size_t __current_size;
+  size_t __current_size = 0;
   int __ch;
   int __error;
+  INIT
 
   /* Align the expression buffer according to the needs for an object
      of type `regex_t'.  Then check for minimum size of the buffer for

@@ -42,7 +42,7 @@ internal_ismember (const_nis_name principal, const_nis_name group)
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
       if (cp2 != NULL && strlen (cp2) > 0)
         {
-          cp = stpcpy (cp, ".");
+	  *cp++ = '.';
           strcpy (cp, cp2);
 	}
       res = nis_lookup (buf, EXPAND_NAME|FOLLOW_LINKS);
@@ -112,9 +112,8 @@ internal_ismember (const_nis_name principal, const_nis_name group)
 		    char buf1[strlen (principal) + 2];
 		    char buf2[strlen (cp) + 2];
 
-		    strcpy (buf1, nis_domain_of (principal));
-		    strcpy (buf2, nis_domain_of (cp));
-		    if (strcmp (buf1, buf2) == 0)
+		    if (strcmp (nis_domain_of_r (principal, buf1, sizeof buf1),
+				nis_domain_of_r (cp, buf2, sizeof buf2)) == 0)
 		      return 1;
 		  }
 	    }
@@ -128,15 +127,7 @@ bool_t
 nis_ismember (const_nis_name principal, const_nis_name group)
 {
   if (group != NULL && strlen (group) > 0)
-    {
-      int status;
-
-      status = internal_ismember (principal, group);
-      if (status == 1)
-	return TRUE;
-      else
-	return FALSE;
-    }
+    return internal_ismember (principal, group) == 1 ? TRUE : FALSE;
   else
     return FALSE;
 }

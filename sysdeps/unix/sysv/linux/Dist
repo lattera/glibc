@@ -13,8 +13,7 @@ net/if_ppp.h
 net/ppp-comp.h
 net/ppp_defs.h
 net/route.h
-netatalk/atalk.h
-netinet/icmp.h
+netatalk/at.h
 netinet/if_fddi.h
 netinet/if_tr.h
 netinet/igmp.h

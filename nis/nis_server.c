@@ -33,7 +33,7 @@ nis_servstate (const nis_server *serv, const nis_tag *tags,
   tagres.tags.tags_val = NULL;
   *result = NULL;
   taglist.tags.tags_len = numtags;
-  taglist.tags.tags_val = (nis_tag *)tags;
+  taglist.tags.tags_val = (nis_tag *) tags;
 
   if (serv == NULL)
     {
@@ -80,7 +80,7 @@ nis_stats (const nis_server *serv, const nis_tag *tags,
   tagres.tags.tags_val = NULL;
   *result = NULL;
   taglist.tags.tags_len = numtags;
-  taglist.tags.tags_val = (nis_tag *)tags;
+  taglist.tags.tags_val = (nis_tag *) tags;
 
   if (serv == NULL)
     {

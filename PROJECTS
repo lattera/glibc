@@ -96,10 +96,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 
      + tcgetid() and waitid()			from XPG4.2
      + grantpt(), ptsname(), unlockpt()		from XPG4.2
-     + getdate()				from XPG4.2
-	*** Probably underway
 
-     More information are available on request.
+     More information is available on request.
 
 
 [14] We need to write a library for on-the-fly transformation of streams

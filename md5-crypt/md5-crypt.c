@@ -41,6 +41,7 @@ extern char *__md5_crypt_r __P ((const char *key, const char *salt,
 				 char *buffer, int buflen));
 extern char *md5_crypt_r __P ((const char *key, const char *salt,
 			       char *buffer, int buflen));
+extern char *__md5_crypt __P ((const char *key, const char *salt));
 extern char *md5_crypt __P ((const char *key, const char *salt));
 
 

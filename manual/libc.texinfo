@@ -4,6 +4,12 @@
 @settitle The GNU C Library
 @setchapternewpage odd
 
+@comment Tell install-info what to do.
+@dircategory GNU libraries
+@direntry
+* Libc: (libc).                 C library.
+@end direntry
+
 @c This tells texinfo.tex to use the real section titles in xrefs in
 @c place of the node name, when no section title is explicitly given.
 @set xref-automatic-section-title

@@ -41,7 +41,7 @@ nis_add (const_nis_name name, const nis_object *obj)
 
   p1 = req.ns_object.ns_object_val[0].zo_name;
   req.ns_object.ns_object_val[0].zo_name =
-    nis_name_of_r (name, buf1, sizeof (buf1));
+    nis_leaf_of_r (name, buf1, sizeof (buf1));
 
   p2 = req.ns_object.ns_object_val[0].zo_owner;
   if (p2 == NULL || strlen (p2) == 0)

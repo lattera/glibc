@@ -31,6 +31,7 @@ nis_local_group (void)
   if (__nisgroup[0] == '\0')
     {
       char *cptr;
+      char *cp;
 
       if ((cptr = getenv ("NIS_GROUP")) == NULL)
 	return __nisgroup;
@@ -38,21 +39,18 @@ nis_local_group (void)
       if (strlen (cptr) >= NIS_MAXNAMELEN)
 	return __nisgroup;
 
-      strcpy (__nisgroup, cptr);
+      cp = stpcpy (__nisgroup, cptr);
 
-      if (__nisgroup[strlen (__nisgroup) - 1] != '.')
+      if (cp[-1] != '.')
 	{
 	  cptr = nis_local_directory ();
-	  if (strlen (__nisgroup) + strlen (cptr) + 1 < NIS_MAXNAMELEN)
+	  if ((cp - __nisgroup) + strlen (cptr) + 1 < NIS_MAXNAMELEN)
 	    {
-	      strcat (__nisgroup, ".");
-	      strcat (__nisgroup, cptr);
+	      *cp++ = '.';
+	      strcpy (cp, cptr);
 	    }
 	  else
-	    {
-	      __nisgroup[0] = '\0';
-	      return __nisgroup;
-	    }
+	    __nisgroup[0] = '\0';
 	}
     }
 
@@ -64,21 +62,20 @@ nis_name
 nis_local_directory (void)
 {
   static char __nisdomainname[NIS_MAXNAMELEN + 1];
-  int len;
 
   if (__nisdomainname[0] == '\0')
     {
       if (getdomainname (__nisdomainname, NIS_MAXNAMELEN) < 0)
-	strcpy (__nisdomainname, "\0");
+	__nisdomainname[0] = '\0';
       else
 	{
-	  len = strlen (__nisdomainname);
+	  char *cp = strchr (__nisdomainname, '\0');
 
 	  /* Missing trailing dot? */
-	  if (__nisdomainname[len - 1] != '.')
+	  if (cp[-1] != '.')
 	    {
-	      __nisdomainname[len] = '.';
-	      __nisdomainname[len + 1] = '\0';
+	      *cp++ = '.';
+	      *cp = '\0';
 	    }
 	}
     }
@@ -99,28 +96,32 @@ nis_local_principal (void)
 
       if (uid != 0)
 	{
-	  snprintf (buf, NIS_MAXNAMELEN - 1,
-		    "[auth_name=%d,auth_type=LOCAL],cred.org_dir.%s",
-		    uid, nis_local_directory ());
+	  int len = snprintf (buf, NIS_MAXNAMELEN - 1,
+			      "[auth_name=%d,auth_type=LOCAL],cred.org_dir.%s",
+			      uid, nis_local_directory ());
 
-	  if (buf[strlen (buf) - 1] != '.')
-	    strcat (buf, ".");
+	  if (len >= NIS_MAXNAMELEN - 1)
+	    /* XXX The buffer is too small.  Can this happen???  */
+	    return strcpy (__principal, "nobody");
+
+	  if (buf[len - 1] != '.')
+	    {
+	      buf[len++] = '.';
+	      buf[len] = '\0';
+	    }
 
 	  res = nis_list (buf, USE_DGRAM + NO_AUTHINFO + FOLLOW_LINKS +
 			  FOLLOW_PATH, NULL, NULL);
 
 	  if (res == NULL)
-	    {
-	      strcpy (__principal, "nobody");
-	      return __principal;
-	    }
+	    return strcpy (__principal, "nobody");
 
 	  if (res->status == NIS_SUCCESS)
 	    {
 	      if (res->objects.objects_len > 1)
 		{
 		  /* More than one principal with same uid?  something
-		     wrong with cred table. Should be unique Warn user
+		     wrong with cred table.  Should be unique.  Warn user
 		     and continue.  */
 		  printf (_("\
 LOCAL entry for UID %d in directory %s not unique\n"),
@@ -133,19 +134,14 @@ LOCAL entry for UID %d in directory %s not unique\n"),
 	  else
 	    {
 	      nis_freeresult (res);
-	      strcpy (__principal, "nobody");
-	      return __principal;
+	      return strcpy (__principal, "nobody");
 	    }
 	}
       else
-	{
-	  strcpy (__principal, nis_local_host ());
-	  return __principal;
-	}
+	return strcpy (__principal, nis_local_host ());
 
       /* Should be never reached */
-      strcpy (__principal, "nobody");
-      return __principal;
+      return strcpy (__principal, "nobody");
     }
   return __principal;
 }
@@ -154,7 +150,6 @@ nis_name
 nis_local_host (void)
 {
   static char __nishostname[NIS_MAXNAMELEN + 1];
-  int len;
 
   if (__nishostname[0] == '\0')
     {
@@ -162,21 +157,19 @@ nis_local_host (void)
 	__nishostname[0] = '\0';
       else
 	{
-	  char *cp;
-	  len = strlen(__nishostname);
+	  char *cp = strchr (__nishostname, '\0');
+	  int len = cp - __nishostname;
 
 	  /* Hostname already fully qualified? */
-	  if (__nishostname[len - 1] == '.')
+	  if (cp[-1] == '.')
 	    return __nishostname;
 
-	  if ((strlen (__nishostname) + strlen (nis_local_directory ()) + 1) >
-	      NIS_MAXNAMELEN)
+	  if (len + strlen (nis_local_directory ()) + 1 > NIS_MAXNAMELEN)
 	    {
 	      __nishostname[0] = '\0';
 	      return __nishostname;
 	    }
 
-	  cp = &__nishostname[len];
 	  *cp++ = '.';
 	  strncpy (cp, nis_local_directory (), NIS_MAXNAMELEN - len -1);
 	  __nishostname[NIS_MAXNAMELEN] = '\0';

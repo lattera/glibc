@@ -39,8 +39,8 @@ nis_creategroup (const_nis_name group, u_long flags)
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
       if (cp2 != NULL && strlen (cp2) > 0)
         {
-          cp = stpcpy (cp, ".");
-          strcpy (cp, cp2);
+	  *cp++ = '.';
+          stpcpy (cp, cp2);
         }
       else
 	return NIS_BADNAME;

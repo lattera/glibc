@@ -40,7 +40,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
       obj = res->objects.objects_val;
     }
   else
-    obj = (nis_object *)dirobj;
+    obj = (nis_object *) dirobj;
 
   /* Check if obj is really a diryectory object */
   if (obj->zo_data.zo_type != DIRECTORY_OBJ)
@@ -49,7 +49,7 @@ nis_ping (const_nis_name dirname, u_long utime, const nis_object *dirobj)
   if (dirname == NULL)
     args.dir = obj->DI_data.do_name;
   else
-    args.dir = (char *)dirname;
+    args.dir = (char *) dirname;
   args.stamp = utime;
 
   for (i = 0; i < obj->DI_data.do_servers.do_servers_len; ++i)

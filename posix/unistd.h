@@ -297,7 +297,7 @@ extern int fchdir __P ((int __fd));
    directory couldn't be determined or SIZE was too small.
    If successful, returns BUF.  In GNU, if BUF is NULL,
    an array is allocated with `malloc'; the array is SIZE
-   bytes long, unless SIZE <= 0, in which case it is as
+   bytes long, unless SIZE == 0, in which case it is as
    big as necessary.  */
 extern char *__getcwd __P ((char *__buf, size_t __size));
 extern char *getcwd __P ((char *__buf, size_t __size));

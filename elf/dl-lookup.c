@@ -25,9 +25,13 @@
 
 #include "dl-hash.h"
 #include <dl-machine.h>
-#include "../stdio-common/_itoa.h"
+#include <stdio-common/_itoa.h>
 
 #define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
+
+/* We need this string more than once.  */
+static const char undefined_msg[] = "undefined symbol: ";
+
 
 struct sym_val
   {
@@ -105,16 +109,10 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	       && sym->st_shndx == SHN_UNDEF))
 	    continue;
 
-	  switch (ELFW(ST_TYPE) (sym->st_info))
-	    {
-	    case STT_NOTYPE:
-	    case STT_FUNC:
-	    case STT_OBJECT:
-	      break;
-	    default:
-	      /* Not a code/data definition.  */
-	      continue;
-	    }
+	  if (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC)
+	    /* Ignore all but STT_NOTYPE, STT_OBJECT and STT_FUNC entries
+	       since these are no code/data definitions.  */
+	    continue;
 
 	  if (sym != ref && strcmp (strtab + sym->st_name, undef_name))
 	    /* Not the symbol we are looking for.  */
@@ -129,7 +127,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      if (verstab != NULL)
 		{
 		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-		  if (map->l_versions[ndx].hash != 0)
+		  if (ndx > 2) /* map->l_versions[ndx].hash != 0) */
 		    continue;
 		}
 	    }
@@ -143,7 +141,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 		     symbol must not simply disappear.  */
 		  if (version->filename != NULL
 		      && _dl_name_match_p (version->filename, map))
-		    return -1;
+		    return -2;
 		  /* Otherwise we accept the symbol.  */
 		}
 	      else
@@ -177,11 +175,14 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      /* Local symbols are ignored.  */
 	      break;
 	    }
+
+	  /* There cannot be another entry for this symbol so stop here.  */
+	  break;
 	}
 
-      /* If this current is the one mentioned in the verneed entry it
-	 is a bug.  */
-      if (version != NULL && version->filename != NULL
+      /* If this current map is the one mentioned in the verneed entry
+	 and we have not found a weak entry, it is a bug.  */
+      if (symidx == STN_UNDEF && version != NULL && version->filename != NULL
 	  && _dl_name_match_p (version->filename, map))
 	return -1;
     }
@@ -214,7 +215,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
     /* We could find no value for a strong reference.  */
     _dl_signal_error (0, reference_name,
-		      make_string ("undefined symbol: ", undef_name));
+		      make_string (undefined_msg, undef_name));
 
   *ref = current_value.s;
   return current_value.a;
@@ -289,14 +290,16 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 				       version->name,
 				       " not defined in file ",
 				       version->filename,
-				       " with link time reference"));
+				       " with link time reference",
+				       res == -2
+				       ? " (no version symbols)" : ""));
     }
 
   if (current_value.s == NULL &&
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
     /* We could find no value for a strong reference.  */
     _dl_signal_error (0, reference_name,
-		      make_string ("undefined symbol: ", undef_name,
+		      make_string (undefined_msg, undef_name,
 				   ", version ", version->name ?: NULL));
 
   *ref = current_value.s;
@@ -337,11 +340,10 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
       (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK))
     {
       /* We could find no value for a strong reference.  */
-      static const char msg[] = "undefined symbol: ";
       const size_t len = strlen (undef_name);
-      char buf[sizeof msg + len];
-      memcpy (buf, msg, sizeof msg - 1);
-      memcpy (&buf[sizeof msg - 1], undef_name, len + 1);
+      char buf[sizeof undefined_msg + len];
+      memcpy (buf, undefined_msg, sizeof undefined_msg - 1);
+      memcpy (&buf[sizeof undefined_msg - 1], undef_name, len + 1);
       _dl_signal_error (0, reference_name, buf);
     }
 

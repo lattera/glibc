@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <getopt.h>
 #include <libintl.h>
+#include <locale.h>
 #include <pwd.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -38,10 +39,14 @@
 #include "utmpd.h"
 #include "utmpd-private.h"
 
+#ifndef DEFAULT_USER
+#define DEFAULT_USER	"daemon"
+#endif
+
 /* Get libc version number.  */
 #include "../../version.h"
 
-#define PACKAGE "libc"
+#define PACKAGE _libc_intl_domainname
 
 /* Long options.  */
 static const struct option long_options[] =
@@ -81,6 +86,12 @@ main (int argc, char *argv[])
   int do_version;
   int opt;
 
+  /* Set locale via LC_ALL.  */
+  setlocale (LC_ALL, "");
+
+  /* Set the text message domain.  */
+  textdomain (PACKAGE);
+  
   /* Initialize local variables.  */
   debug = 0;
   do_help = 0;
@@ -197,7 +208,7 @@ drop_priviliges (void)
 {
   struct passwd *pw;
 
-  pw = getpwnam ("daemon");
+  pw = getpwnam (DEFAULT_USER);
   if (pw)
     {
       seteuid (pw->pw_uid);

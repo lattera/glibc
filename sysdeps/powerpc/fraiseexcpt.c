@@ -34,9 +34,9 @@ feraiseexcept (int excepts)
 
   /* Add the exceptions */
   u.l[1] = (u.l[1]
-	    | excepts & __FPSCR_STICKY_BITS
+	    | excepts & FPSCR_STICKY_BITS
 	    /* Turn FE_INVALID into FE_INVALID_SOFTWARE.  */
-	    | excepts << (31 - 21) - (31 - 24)  &  __FE_INVALID_SOFTWARE);
+	    | excepts << (31 - 21) - (31 - 24) & FE_INVALID_SOFTWARE);
 
   /* Store the new status word (along with the rest of the environment),
      triggering any appropriate exceptions.  */

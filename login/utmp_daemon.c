@@ -29,10 +29,6 @@
 #include "utmp-private.h"
 #include "programs/utmpd.h"
 
-#ifndef _LIBC
-#define __set_errno(val) errno = (val)
-#endif
-
 
 /* Descriptor for the socket.  */
 static int daemon_sock = INT_MIN;

@@ -17,15 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if _LIBC
 #include <libc-lock.h>
-#else
-#define __libc_lock_lock(NAME)		((void) 0)
-#define __libc_lock_unlock(NAME)	((void) 0)
-#define __libc_lock_define(CLASS,NAME)
-#define weak_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))); 
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include <utmp.h>

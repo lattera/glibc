@@ -38,8 +38,8 @@ nis_print_group_entry (const_nis_name group)
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
       if (cp2 != NULL && strlen (cp2) > 0)
 	{
-	  cp = stpcpy (cp, ".");
-	  strcpy (cp, cp2);
+	  *cp++ = '.';
+	  stpcpy (cp, cp2);
 	}
       res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
 

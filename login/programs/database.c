@@ -42,7 +42,6 @@ static int replace_entry (utmp_database *database, int old_position,
 			  int new_position, const struct utmp *entry);
 static int store_entry (utmp_database *database, int position,
 			const struct utmp *entry);
-static int proc_utmp_eq (const struct utmp *entry, const struct utmp *match);
 static int get_mtime (const char *file, time_t *timer);
 
 
@@ -470,33 +469,6 @@ store_entry (utmp_database *database, int position,
     return -1;
 
   return 0;
-}
-
-
-/* This function is identical to the one in login/utmp_file.c.  */
-static int
-proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
-{
-  return
-    (
-#if _HAVE_UT_TYPE - 0
-     (entry->ut_type == INIT_PROCESS
-      || entry->ut_type == LOGIN_PROCESS
-      || entry->ut_type == USER_PROCESS
-      || entry->ut_type == DEAD_PROCESS)
-     &&
-     (match->ut_type == INIT_PROCESS
-      || match->ut_type == LOGIN_PROCESS
-      || match->ut_type == USER_PROCESS
-      || match->ut_type == DEAD_PROCESS)
-     &&
-#endif
-#if _HAVE_UT_ID - 0
-     strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
-#else
-     strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
-#endif
-     );
 }
 
 

@@ -264,7 +264,7 @@ nis_clone_entry (const entry_obj *src, entry_obj *dest)
   if (res->en_cols.en_cols_val == NULL && src->en_cols.en_cols_len > 0)
     {
       res->en_cols.en_cols_val =
-	malloc (src->en_cols.en_cols_len * sizeof (entry_col));
+	calloc (1, src->en_cols.en_cols_len * sizeof (entry_col));
       if (res->en_cols.en_cols_val == NULL)
 	return NULL;
     }
@@ -374,8 +374,13 @@ nis_clone_link (const link_obj *src, link_obj *dest)
 		       res->li_attrs.li_attrs_val,
 		       src->li_attrs.li_attrs_len);
 
-  if ((res->li_name = strdup (src->li_name)) == NULL)
-    return NULL;
+  if (src->li_name)
+    {
+      if ((res->li_name = strdup (src->li_name)) == NULL)
+	return NULL;
+    }
+  else
+    res->li_name = NULL;
 
   return res;
 }
@@ -477,15 +482,34 @@ nis_clone_object (const nis_object *src, nis_object *dest)
 
   res->zo_oid = src->zo_oid;
 
-  if ((res->zo_name = strdup (src->zo_name)) == NULL)
-    return NULL;
-  if ((res->zo_owner = strdup (src->zo_owner)) == NULL)
-    return NULL;
-  if ((res->zo_group = strdup (src->zo_group)) == NULL)
-    return NULL;
-  if ((res->zo_domain = strdup (src->zo_domain)) == NULL)
-    return NULL;
-
+  if (src->zo_name)
+    {
+      if ((res->zo_name = strdup (src->zo_name)) == NULL)
+	return NULL;
+    }
+  else
+    res->zo_name = NULL;
+  if (src->zo_owner)
+    {
+      if ((res->zo_owner = strdup (src->zo_owner)) == NULL)
+	return NULL;
+    }
+  else
+    res->zo_owner = NULL;
+  if (src->zo_group)
+    {
+      if ((res->zo_group = strdup (src->zo_group)) == NULL)
+	return NULL;
+    }
+  else
+    res->zo_group = NULL;
+  if (src->zo_domain)
+    {
+      if ((res->zo_domain = strdup (src->zo_domain)) == NULL)
+	return NULL;
+    }
+  else
+    res->zo_domain = NULL;
   res->zo_access = src->zo_access;
   res->zo_ttl = src->zo_ttl;
 

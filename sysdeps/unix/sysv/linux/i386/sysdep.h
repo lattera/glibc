@@ -62,6 +62,7 @@
 /* Store (- %eax) into errno through the GOT.  */
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
+  .type syscall_error,@function;					      \
 syscall_error:								      \
   pushl %ebx;								      \
   call 0f;								      \
@@ -77,11 +78,13 @@ syscall_error:								      \
   popl %ebx;								      \
   movl %ecx, (%eax);							      \
   movl $-1, %eax;							      \
-  ret;
+  ret;									      \
+  .size syscall_error,.-syscall_error;
 /* A quick note: it is assumed that the call to `__errno_location' does
    not modify the stack!  */
 #else
 #define SYSCALL_ERROR_HANDLER						      \
+  .type syscall_error,@function;					      \
 syscall_error:								      \
   call 0f;								      \
 0:popl %ecx;								      \
@@ -91,7 +94,8 @@ syscall_error:								      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %edx, (%ecx);							      \
   movl $-1, %eax;							      \
-  ret;
+  ret;									      \
+  .size syscall_error,.-syscall_error;
 #endif	/* _LIBC_REENTRANT */
 #endif	/* PIC */
 

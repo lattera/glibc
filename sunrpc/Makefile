@@ -23,13 +23,12 @@ subdir	:= sunrpc
 
 # The code in this subdirectory is taken from Sun's RPCSRC-4.0
 # distribution with some additional changes from the TI-RPC package
-# which is also available from Sun.  A few files needed trivial
-# modifications to compile in the GNU environment; these changes are
-# marked by comments that say `roland@gnu'.  All the code from Sun's
-# rpc, etc, and rpcgen subdirectories is in this directory; the rpc
-# subdirectory contains only the header files.  Other than that,
-# several files were renamed so as not to exceed 14-character file
-# name limits:
+# which is also available from Sun.  The files are heavily changed to
+# compile cleanly and to fit in the GNU environment.  All the code
+# from Sun's rpc, etc, and rpcgen subdirectories is in this directory;
+# the rpc subdirectory contains only the header files.  Other than
+# that, several files were renamed so as not to exceed 14-character
+# file name limits:
 #
 #	authunix_prot.c -> authuxprot.c
 #	bindresvport.c -> bindrsvprt.c

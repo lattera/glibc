@@ -31,6 +31,7 @@
 .text
 	ALIGN (3)
 	.globl C_SYMBOL_NAME(__mpn_lshift)
+	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__mpn_lshift),@function)
 C_SYMBOL_NAME(__mpn_lshift:)
 	pushl	%edi
 	pushl	%esi
@@ -81,3 +82,5 @@ L(end):	shll	%cl,%ebx		/* compute least significant limb */
 	popl	%esi
 	popl	%edi
 	ret
+
+	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__mpn_lshift))

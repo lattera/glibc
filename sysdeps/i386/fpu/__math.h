@@ -382,13 +382,17 @@ hypot (double __x, double __y)
   return sqrt (__x * __x + __y * __y);
 }
 
+/* We cannot rely on M_SQRT being defined.  So we do it for ourself
+   here.  */
+#define __M_SQRT2	_Mldbl(1.41421356237309504880)	/* sqrt(2) */
+
 __MATH_INLINE double log1p (double __x);
 __MATH_INLINE double
 log1p (double __x)
 {
   register double __value;
 
-  if (fabs (__x) >= 1.0 - 0.5 * M_SQRT2)
+  if (fabs (__x) >= 1.0 - 0.5 * __M_SQRT2)
     __value = log (1.0 + __x);
   else
     __asm __volatile__

@@ -25,7 +25,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "../stdio-common/_itoa.h"
+#include <stdio-common/_itoa.h>
 
 
 /* Set in rtld.c at startup.  */
@@ -53,13 +53,13 @@ extern char **_dl_argv;
 
 
 static inline struct link_map *
-find_needed (struct link_map *map, const char *name)
+find_needed (const char *name)
 {
   unsigned int n;
 
-  for (n = 0; n < map->l_nsearchlist; ++n)
-    if (_dl_name_match_p (name, map->l_searchlist[n]))
-      return map->l_searchlist[n];
+  for (n = 0; n < _dl_loaded->l_nsearchlist; ++n)
+    if (_dl_name_match_p (name, _dl_loaded->l_searchlist[n]))
+      return _dl_loaded->l_searchlist[n];
 
   /* Should never happen.  */
   return NULL;
@@ -72,10 +72,10 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 {
   const char *strtab = (const char *) (map->l_addr
 				       + map->l_info[DT_STRTAB]->d_un.d_ptr);
-  ElfW(Addr) def_offset = map->l_info[VERSTAG (DT_VERDEF)]->d_un.d_ptr;
+  ElfW(Addr) def_offset;
   ElfW(Verdef) *def;
 
-  if (def_offset == 0)
+  if (map->l_info[VERSTAG (DT_VERDEF)] == NULL)
     {
       /* The file has no symbol versioning.  I.e., the dependent
 	 object was linked against another version of this file.  We
@@ -87,7 +87,10 @@ no version information available (required by ",
       return 0;
     }
 
-  def = (ElfW(Verdef) *) (map->l_addr + def_offset);
+  def_offset = map->l_info[VERSTAG (DT_VERDEF)]->d_un.d_ptr;
+  assert (def_offset != 0);
+
+  def = (ElfW(Verdef) *) ((char *) map->l_addr + def_offset);
   while (1)
     {
       /* Currently the version number of the definition entry is 1.
@@ -179,7 +182,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
       while (1)
 	{
 	  ElfW(Vernaux) *aux;
-	  struct link_map *needed = find_needed (map, strtab + ent->vn_file);
+	  struct link_map *needed = find_needed (strtab + ent->vn_file);
 
 	  /* If NEEDED is NULL this means a dependency was not found
 	     and no stub entry was created.  This should never happen.  */
@@ -227,7 +230,7 @@ _dl_check_map_versions (struct link_map *map, int verbose)
   if (def != NULL)
     {
       ElfW(Verdef) *ent;
-      ent = (ElfW(Verdef)  *) (map->l_addr + def->d_un.d_ptr);
+      ent = (ElfW(Verdef) *) (map->l_addr + def->d_un.d_ptr);
       while (1)
 	{
 	  if ((unsigned int) (ent->vd_ndx & 0x7fff) > ndx_high)

@@ -222,7 +222,7 @@ the XPG specifies the requirements for systems which are intended to be
 a Unix system.
 
 The GNU C library complies to the X/Open Portability Guide, Issue 4.2,
-with the with all extensions common to XSI (X/Open System Interface)
+with all extensions common to XSI (X/Open System Interface)
 compliant systems and also all X/Open UNIX extensions.
 
 The additions on top of POSIX are mainly derived from functionality

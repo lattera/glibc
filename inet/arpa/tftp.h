@@ -44,20 +44,20 @@
 /*
  * Packet types.
  */
-#define	RRQ	01			/* read request */
-#define	WRQ	02			/* write request */
-#define	DATA	03			/* data packet */
-#define	ACK	04			/* acknowledgement */
-#define	ERROR	05			/* error code */
+#define	RRQ	01				/* read request */
+#define	WRQ	02				/* write request */
+#define	DATA	03				/* data packet */
+#define	ACK	04				/* acknowledgement */
+#define	ERROR	05				/* error code */
 
 struct	tftphdr {
-	short	th_opcode;		/* packet type */
+	short	th_opcode;			/* packet type */
 	union {
-		short	tu_block;	/* block # */
-		short	tu_code;	/* error code */
-		char	tu_stuff[1];	/* request packet stuff */
+		unsigned short	tu_block;	/* block # */
+		short	tu_code;		/* error code */
+		char	tu_stuff[1];		/* request packet stuff */
 	} th_u;
-	char	th_data[1];		/* data or error string */
+	char	th_data[1];			/* data or error string */
 };
 
 #define	th_block	th_u.tu_block

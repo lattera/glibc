@@ -35,7 +35,7 @@ nis_getservlist (const_nis_name dir)
       unsigned long i;
       nis_server *server;
 
-      serv = malloc (sizeof (nis_server *) *
+      serv = calloc (1, sizeof (nis_server *) *
 		     (res->objects.objects_val->DI_data.do_servers.do_servers_len + 1));
       if (serv == NULL)
 	return NULL;
@@ -43,10 +43,9 @@ nis_getservlist (const_nis_name dir)
 	{
 	  server =
 	    &res->objects.objects_val->DI_data.do_servers.do_servers_val[i];
+	  serv[i] = calloc (1, sizeof (nis_server));
 	  if (server->name != NULL)
             serv[i]->name = strdup (server->name);
-          else
-            serv[i]->name = NULL;
 
           serv[i]->ep.ep_len = server->ep.ep_len;
           if (serv[i]->ep.ep_len > 0)
@@ -110,6 +109,10 @@ nis_freeservlist (nis_server **serv)
 
   i = 0;
   while (serv[i] != NULL)
-    nis_free_servers (serv[i], 1);
+    {
+      nis_free_servers (serv[i], 1);
+      free (serv[i]);
+      ++i;
+    }
   free (serv);
 }

@@ -196,7 +196,7 @@ extensions.
 @section Floating-Point Number Classification Functions
 
 Instead of using the BSD specific functions from the last section it is
-better to use those in this section will are introduced in the @w{ISO C
+better to use those in this section which are introduced in the @w{ISO C
 9X} standard and are therefore widely available.
 
 @comment math.h

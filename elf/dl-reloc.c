@@ -68,7 +68,7 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
     ELF_DYNAMIC_RELOCATE (l, lazy);
   }
 
-  /* Mark the object so we know ths work has been done.  */
+  /* Mark the object so we know this work has been done.  */
   l->l_relocated = 1;
 
   if (l->l_info[DT_TEXTREL])

@@ -118,8 +118,9 @@ of wildcards convenient.  @code{glob} and the other symbols in this
 section are declared in @file{glob.h}.
 
 @menu
-* Calling Glob::        Basic use of @code{glob}.
-* Flags for Globbing::  Flags that enable various options in @code{glob}.
+* Calling Glob::             Basic use of @code{glob}.
+* Flags for Globbing::       Flags that enable various options in @code{glob}.
+* More Flags for Globbing::  GNU specific extensions to @code{glob}.
 @end menu
 
 @node Calling Glob
@@ -134,7 +135,9 @@ it fills in the structure's fields to tell you about the results.
 @comment POSIX.2
 @deftp {Data Type} glob_t
 This data type holds a pointer to a word vector.  More precisely, it
-records both the address of the word vector and its size.
+records both the address of the word vector and its size.  The GNU
+implementation contains some more fields which are non-standard
+extensions.
 
 @table @code
 @item gl_pathc
@@ -156,6 +159,47 @@ The @code{gl_offs} field is meaningful only if you use the
 @code{GLOB_DOOFFS} flag.  Otherwise, the offset is always zero
 regardless of what is in this field, and the first real element comes at
 the beginning of the vector.
+
+@item gl_closedir
+The address of an alternative implementation of the @code{closedir}
+function.  It is used if the @code{GLOB_ALTDIRFUNC} bit is set in
+the flag parameter.  The type of this field is
+@w{@code{void (*) (void *)}}.
+
+This is a GNU extension.
+
+@item gl_readdir
+The address of an alternative implementation of the @code{readdir}
+function used to read the contents of a directory.  It is used if the
+@code{GLOB_ALTDIRFUNC} bit is set in the flag parameter.  The type of
+this field is @w{@code{struct dirent *(*) (void *)}}.
+
+This is a GNU extension.
+
+@item gl_opendir
+The address of an alternative implementation of the @code{opendir}
+function.  It is used if the @code{GLOB_ALTDIRFUNC} bit is set in
+the flag parameter.  The type of this field is
+@w{@code{void *(*) (const char *)}}.
+
+This is a GNU extension.
+
+@item gl_stat
+The address of an alternative implementation of the @code{stat} function
+to get information about an object in the filesystem.  It is used if the
+@code{GLOB_ALTDIRFUNC} bit is set in the flag parameter.  The type of
+this field is @w{@code{int (*) (const char *, struct stat *)}}.
+
+This is a GNU extension.
+
+@item gl_lstat
+The address of an alternative implementation of the @code{lstat}
+function to get information about an object in the filesystems, not
+following symbolic links.  It is used if the @code{GLOB_ALTDIRFUNC} bit
+is set in the flag parameter.  The type of this field is @w{@code{int
+(*) (const char *, struct stat *)}}.
+
+This is a GNU extension.
 @end table
 @end deftp
 
@@ -317,6 +361,113 @@ If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
 repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
 @code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
 @end table
+
+@node More Flags for Globbing
+@subsection More Flags for Globbing
+
+Beside the flags descibed in the last section, the GNU implementation of
+@code{glob} allows a few more flags which are also defined in the
+@file{glob.h} file.  Some of the extensions implement functionality
+which is available in modern shell implementations.
+
+@table @code
+@comment glob.h
+@comment GNU
+@item GLOB_PERIOD
+The @code{.} character (period) is treated special.  It cannot be
+matched by wildcards.  @xref{Wildcard Matching}, @code{FNM_PERIOD}.
+
+@comment glob.h
+@comment GNU
+@item GLOB_MAGCHAR
+The @code{GLOB_MAGCHAR} value is not to be given to @code{glob} in the
+@var{flags} parameter.  Instead, @code{glob} sets this bit in the
+@var{gl_flags} element of the @var{glob_t} structure provided as the
+result if the pattern used for matching contains any wildcard character.
+
+@comment glob.h
+@comment GNU
+@item GLOB_ALTDIRFUNC
+Instead of the using the using the normal functions for accessing the
+filesystem the @code{glob} implementation uses the user-supplied
+functions specified in the structure pointed to by @var{pglob}
+parameter.  For more information about the functions refer to the
+sections about directory handling @ref{Accessing Directories} and
+@ref{Reading Attributes}.
+
+@comment glob.h
+@comment GNU
+@item GLOB_BRACE
+If this flag is given the handling of braces in the pattern is changed.
+It is now required that braces appear correctly grouped.  I.e., for each
+opening brace there must be a closing one.  Braces can be used
+recursively.  So it is possible to define one brace expression in
+another one.  It is important to note that the range of each brace
+expression is completely contained in the outer brace expression (if
+there is one).
+
+The string between the mathing braces is separated into single
+expressions by splitting at @code{,} (comma) characters.  The commas
+themself are discarded.  Please note what we said above about recursive
+brace expressions.  The commas used to separate the subexpressions must
+be at the same level.  Commas in brace subexpressions are not matched.
+They are used during expansion of the brace expression of the deeper
+level.  The example below shows this
+
+@smallexample
+glob ("@{foo/@{,bar,biz@},baz@}", GLOB_BRACE, NULL, &result)
+@end smallexample
+
+@noindent
+is equivalent to the sequence
+
+@smallexample
+glob ("foo/", GLOB_BRACE, NULL, &result)
+glob ("foo/bar", GLOB_BRACE|GLOB_APPEND, NULL, &result)
+glob ("foo/biz", GLOB_BRACE|GLOB_APPEND, NULL, &result)
+glob ("baz", GLOB_BRACE|GLOB_APPEND, NULL, &result)
+@end smallexample
+
+@noindent
+if we leave aside error handling.
+
+@comment glob.h
+@comment GNU
+@item GLOB_NOMAGIC
+If the pattern contains no wildcard constructs (it is a literal file name),
+return it as the sole ``matching'' word, even if no file exists by that name.
+
+@comment glob.h
+@comment GNU
+@item GLOB_TILDE
+If this flag is used the character @code{~} (tilde) is handled special
+if it appears at the beginning of the pattern.  Instead of being taken
+verbatim it is used to represent the home directory of a known user.
+
+If @code{~} is the only character in pattern or it is followed by a
+@code{/} (slash), the home directory of the process owner is
+substituted.  Using @code{getlogin} and @code{getpwnam} the information
+is read from the system databases.  As an example take user @code{bart}
+with his home directory at @file{/home/bart}.  For him a call like
+
+@smallexample
+glob ("~/bin/*", GLOB_TILDE, NULL, &result)
+@end smallexample
+
+@noindent
+would return the contents of the directory @file{/home/bart/bin}.
+Instead of referring to the own home directory it is also possible to
+name the home directory of other users.  To do so one has to append the
+user name after the tilde character.  So the contents of user
+@code{homer}'s @file{bin} directory can be retrieved by
+
+@smallexample
+glob ("~homer/bin/*", GLOB_TILDE, NULL, &result)
+@end smallexample
+
+This functionality is equivalent to what is available in C-shells.
+@end table
+
 
 @node Regular Expressions
 @section Regular Expression Matching

@@ -24,9 +24,6 @@
 #include <stdlib.h>
 #include <utmp.h>
 
-#ifndef _LIBC
-#define __set_errno(val) errno = (val)
-#endif
 
 /* Return the result of ttyname in the buffer pointed to by TTY, which should
    be of length BUF_LEN.  If it is too long to fit in this buffer, a

@@ -36,6 +36,8 @@ aux		:= fpu_control setfpucw
 extra-libs	:= libm
 extra-libs-others = $(extra-libs)
 
+libm-map	:= libm.map
+
 libm-support = k_standard s_lib_version s_matherr s_signgam		\
 	       s_rinttol s_rinttoll s_roundtol s_roundtoll		\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\

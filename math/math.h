@@ -300,16 +300,19 @@ extern int matherr __P ((struct exception *));
 #define	M_SQRT2		_Mldbl(1.41421356237309504880)	/* sqrt(2) */
 #define	M_SQRT1_2	_Mldbl(0.70710678118654752440)	/* 1/sqrt(2) */
 
+#endif
+
 /* Our constants might specify more precision than `double' can represent.
    Use `long double' constants in standard and GNU C, where they are
-   supported and the cast to `double'.  */
+   supported and the cast to `double'.
+
+   Please not we define the macro even if the constants are not defined.
+   This helps us to use the macros in other places.  */
 #if __STDC__ - 0 || __GNUC__ - 0
 #define _Mldbl(x) x##L
 #else	/* Traditional C.  */
 #define _Mldbl(x) x
 #endif	/* Standard or GNU C.  */
-
-#endif
 
 
 /* Get machine-dependent inline versions (if there are any).  */

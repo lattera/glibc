@@ -44,7 +44,6 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
 {
   char *first_unused = buffer;
   size_t room_left = buflen;
-  char *line, *cp;
 
   if (result == NULL)
     return 0;
@@ -85,52 +84,57 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   sp->sp_lstchg = sp->sp_min = sp->sp_max = sp->sp_warn = sp->sp_inact =
     sp->sp_expire = sp->sp_flag = -1;
 
-  line = NISENTRYVAL (0, 7, result);
-  cp = strchr (line, ':');
-  if (cp == NULL)
-    return 0;
-  *cp++ = '\0';
-  sp->sp_lstchg = atol (line);
+  if (NISENTRYVAL (0, 7, result) > 0)
+    {
+      char *line, *cp;
 
-  line = cp;
-  cp = strchr (line, ':');
-  if (cp == NULL)
-    return 0;
-  *cp++ = '\0';
-  sp->sp_min = atol(line);
+      line = NISENTRYVAL (0, 7, result);
+      cp = strchr (line, ':');
+      if (cp == NULL)
+	return 0;
+      *cp++ = '\0';
+      sp->sp_lstchg = atol (line);
 
-  line = cp;
-  cp = strchr (line, ':');
-  if (cp == NULL)
-    return 0;
-  *cp++ = '\0';
-  sp->sp_max = atol(line);
+      line = cp;
+      cp = strchr (line, ':');
+      if (cp == NULL)
+	return 0;
+      *cp++ = '\0';
+      sp->sp_min = atol(line);
 
-  line = cp;
-  cp = strchr (line, ':');
-  if (cp == NULL)
-    return 0;
-  *cp++ = '\0';
-  sp->sp_warn = atol(line);
+      line = cp;
+      cp = strchr (line, ':');
+      if (cp == NULL)
+	return 0;
+      *cp++ = '\0';
+      sp->sp_max = atol(line);
 
-  line = cp;
-  cp = strchr (line, ':');
-  if (cp == NULL)
-    return 0;
-  *cp++ = '\0';
-  sp->sp_inact = atol(line);
+      line = cp;
+      cp = strchr (line, ':');
+      if (cp == NULL)
+	return 0;
+      *cp++ = '\0';
+      sp->sp_warn = atol(line);
 
-  line = cp;
-  cp = strchr (line, ':');
-  if (cp == NULL)
-    return 0;
-  *cp++ = '\0';
-  sp->sp_expire = atol(line);
+      line = cp;
+      cp = strchr (line, ':');
+      if (cp == NULL)
+	return 0;
+      *cp++ = '\0';
+      sp->sp_inact = atol(line);
 
-  line = cp;
-  if (line == NULL)
-    return 0;
-  sp->sp_flag = atol(line);
+      line = cp;
+      cp = strchr (line, ':');
+      if (cp == NULL)
+	return 0;
+      *cp++ = '\0';
+      sp->sp_expire = atol(line);
+
+      line = cp;
+      if (line == NULL)
+	return 0;
+      sp->sp_flag = atol(line);
+    }
 
   return 1;
 }

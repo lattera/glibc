@@ -1,0 +1,53 @@
+GLIBC_2.0 {
+  global:
+    # global variables
+    _errno; _itoa_lower_digits; _itoa_upper_digits;
+    __ctype_b; __ctype_tolower; __ctype_toupper;
+    _IO_stderr_; _IO_stdin_; _IO_stdout_;
+    _nl_msg_cat_cntr; __environ; _environ;
+
+#  __libc_multiple_libcs; __libc_argc; __libc_argv; _dl_starting_up; __exit_funcs;
+
+    # helper functions
+    __errno_location; __libc_init_first;
+
+    # functions with special/multiple interfaces
+    __sigsetjmp; _setjmp; __sigaddset; __sigdelset; __sigismember;
+    __sysv_signal; __bsd_getpgrp;
+
+    # functions which have an additional interface since they are
+    # are cancelable.
+    __libc_wait; __libc_waitpid; __libc_pause; __libc_nanosleep;
+    __libc_open; __libc_close; __libc_read; __libc_write;
+    __libc_lseek; __libc_fcntl; __libc_tcdrain; __libc_fsync;
+    __libc_msync; __libc_system;
+
+    # interface of malloc functions
+    __libc_calloc; __libc_free; __libc_mallinfo; __libc_malloc;
+    __libc_mallopt; __libc_memalign; __libc_pvalloc; __libc_realloc;
+    __libc_valloc;
+
+    # functions with required interface outside normal name space
+    _exit; __ivaliduser;
+
+    # functions from the experimental locale implementation
+    __*_l; __newlocale; __duplocale; __freelocale;
+
+    # functions used in inline functions or macros
+    __strto*_internal; __wcsto*_internal; __getdelim;
+    __isnan; __isnanf; __isnanl; __finite; __finitef; __finitel;
+    __signbit; __signbitf; __signbitl; __cmsg_nxthdr;
+    _obstack_allocated_p; _obstack_begin; _obstack_begin_1;
+    _obstack_free; _obstack_memory_used; _obstack_newchunk;
+    __assert_fail; __assert_perror_fail;
+
+    # functions used in other libraries
+    __printf_fp;
+
+    # all functions and variables in the normal name space
+    a*; b*; c*; d*; e*; f*; g*; h*; i*; j*; k*; l*; m*;
+    n*; o*; p*; q*; r*; s*; t*; u*; v*; w*; x*; y*; z*;
+
+  local:
+    *;
+};

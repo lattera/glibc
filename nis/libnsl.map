@@ -1,0 +1,14 @@
+GLIBC_2.0 {
+  global:
+    nis_add; nis_add_entry; nis_addmember; nis_checkpoint; nis_clone_directory;
+    nis_clone_entry; nis_clone_group; nis_clone_link; nis_clone_nis_attr;
+    nis_clone_objdata; nis_clone_object; nis_clone_result; nis_clone_table;
+    nis_creategroup; nis_destroy_object; nis_destroygroup; nis_dir_cmp;
+    nis_domain_of; nis_domain_of_r; nis_first_entry; nis_free_attr;
+    nis_free_directory; nis_free_endpoints; nis_free_entry; nis_free_group;
+    nis_free_link; nis_free_object; nis_free_request; nis_free_servers;
+    nis_free_table;
+
+  local:
+    *;
+};

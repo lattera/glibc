@@ -19,15 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
-#if _LIBC
 #include <libc-lock.h>
-#else
-#define __libc_lock_lock(lock)		((void) 0)
-#define __libc_lock_unlock(lock)	((void) 0)
-#define __libc_lock_define_initialized(CLASS,NAME)
-#define weak_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))); 
-#endif
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>

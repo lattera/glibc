@@ -55,7 +55,8 @@ endif
 ifeq ($(subdir),inet)
 sysdep_headers += netinet/in_systm.h netinet/udp.h \
 		  netinet/if_fddi.h netinet/if_tr.h netinet/igmp.h \
-		  netinet/ip_fw.h  netinet/ip_icmp.h sys/socketvar.h
+		  netinet/ip_fw.h  netinet/ip_icmp.h netipx/ipx.h \
+		  sys/socketvar.h
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.

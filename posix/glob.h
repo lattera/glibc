@@ -65,8 +65,14 @@ extern "C"
 
 /* Error returns from `glob'.  */
 #define	GLOB_NOSPACE	1	/* Ran out of memory.  */
-#define	GLOB_ABEND	2	/* Read error.  */
+#define	GLOB_ABORTED	2	/* Read error.  */
 #define	GLOB_NOMATCH	3	/* No matches found.  */
+
+#ifdef _GNU_SOURCE
+/* Previous versions of this file defined GLOB_ABEND instead of
+   GLOB_ABORTED.  Provide a compatibility definition here.  */
+# define GLOB_ABEND GLOB_ABORTED
+#endif
 
 /* Structure describing a globbing run.  */
 #if !defined (_AMIGA) && !defined (VMS) /* Buggy compiler.   */

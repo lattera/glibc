@@ -65,12 +65,12 @@ __nis_dobind (const nis_server *server, u_long flags)
   clnt_saddr.sin_family = AF_INET;
   for (i = 0; i < server->ep.ep_len; i++)
     {
-      if (strcmp (server->ep.ep_val[i].family,"loopback") == 0)
+      if (strcmp (server->ep.ep_val[i].family, "loopback") == 0)
 	{
 	  if (server->ep.ep_val[i].uaddr[i] == '-')
 	    clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
 	  else
-	    if (strcmp (server->ep.ep_val[i].proto,"udp") == 0)
+	    if (strcmp (server->ep.ep_val[i].proto, "udp") == 0)
 	      {
 		if ((flags & USE_DGRAM) == USE_DGRAM)
 		  clnt_saddr.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
@@ -78,7 +78,7 @@ __nis_dobind (const nis_server *server, u_long flags)
 		  continue;
 	      }
 	    else
-	      if (strcmp (server->ep.ep_val[i].proto,"tcp") == 0)
+	      if (strcmp (server->ep.ep_val[i].proto, "tcp") == 0)
 		{
 		  if ((flags & USE_DGRAM) == USE_DGRAM)
 		    continue;
@@ -87,13 +87,13 @@ __nis_dobind (const nis_server *server, u_long flags)
 		}
 	}
       else
-	if (strcmp (server->ep.ep_val[i].family,"inet") == 0)
+	if (strcmp (server->ep.ep_val[i].family, "inet") == 0)
 	  {
 	    if (server->ep.ep_val[i].uaddr[i] == '-')
 	      clnt_saddr.sin_addr.s_addr =
 		inetstr2int (server->ep.ep_val[i].uaddr);
 	    else
-	      if (strcmp (server->ep.ep_val[i].proto,"udp") == 0)
+	      if (strcmp (server->ep.ep_val[i].proto, "udp") == 0)
 		{
 		  if ((flags & USE_DGRAM) == USE_DGRAM)
 		    clnt_saddr.sin_addr.s_addr =
@@ -102,7 +102,7 @@ __nis_dobind (const nis_server *server, u_long flags)
 		    continue;
 		}
 	      else
-		if (strcmp (server->ep.ep_val[i].proto,"tcp") == 0)
+		if (strcmp (server->ep.ep_val[i].proto, "tcp") == 0)
 		  {
 		    if ((flags & USE_DGRAM) == USE_DGRAM)
 		      continue;
@@ -310,6 +310,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	char leaf [strlen (name) + 3];
 	char ndomain [strlen (name) + 3];
 	u_int i;
+	char *cp;
 
 	do
 	  {
@@ -323,8 +324,9 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, u_long flags)
 	    strcpy (domain, ndomain);
 	  }
 	while (nis_dir_cmp (domain, dir->do_name) != SAME_NAME);
-	strcat (leaf, ".");
-	strcat (leaf, domain);
+	cp = strchr (leaf, '\0');
+	*cp++ = '.';
+	strcpy (cp, domain);
 
 	for (i = 0; i < dir->do_servers.do_servers_len; ++i)
 	  {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -56,4 +56,4 @@ __argz_add_sep (char **argz, size_t *argz_len, const char *string, int delim)
 
   return 0;
 }
-weak_alias (__argz_create_sep, argz_create_sep)
+weak_alias (__argz_add_sep, argz_add_sep)

@@ -90,6 +90,8 @@ struct arphdr
 #define ARPHRD_ROSE	270
 #define ARPHRD_X25	271		/* CCITT X.25.  */
 #define ARPHRD_PPP	512
+#define ARPHRD_HDLC	513		/* (Cisco) HDLC.  */
+#define ARPHRD_LAPB	516		/* LAPB.  */
 
 #define ARPHRD_TUNNEL	768		/* IPIP tunnel.  */
 #define ARPHRD_TUNNEL6	769		/* IPIP6 tunnel.  */

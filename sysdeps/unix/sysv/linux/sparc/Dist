@@ -1,6 +1,5 @@
 __sigtrampoline.S
 clone.S
-start.c
 pipe.S
 fork.S
 kernel_stat.h

@@ -34,7 +34,7 @@ ifneq (,$(wildcard ../Makeconfig))
 include ../Makeconfig
 endif
 
-# Set chapters and chapters-incl.
+# Set chapters and chapters-incl[12].
 -include chapters
 chapters: libc.texinfo
 	$(find-includes)
@@ -76,7 +76,10 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # access to the documentation of the function, variables, and other
 # definitions.
 dir-add.texi: xtract-typefun.awk $(chapters)
-	$(GAWK) -f $^ | sort > $@.new;
+	(echo "@dircategory GNU C library functions";			\
+	 echo "@direntry";						\
+	 $(GAWK) -f $^ | sort;						\
+	 echo "@end direntry";) > $@.new
 	mv -f $@.new $@
 
 # Generate Texinfo files from the C source for the example programs.
@@ -97,8 +100,8 @@ distribute = $(minimal-dist)	       					\
 	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
 			$(minimal-dist)))				\
 	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
-	     stamp-summary chapters chapters-incl			\
-	     xtract-typefun.awk
+	     stamp-summary chapters chapters-incl1 chapters-incl2	\
+	     xtract-typefun.awk dir-add.texi dir-add.info
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
@@ -127,18 +130,22 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.info*
+	-rm -f libc.dvi libc.info* dir-add.info
 clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
 realclean: distclean
 	-rm -f chapters chapters-incl summary.texi stamp-summary *.c.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
-	-rm -f libc.log libc.aux libc.toc
+	-rm -f libc.log libc.aux libc.toc dir-add.texi
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
-install: $(inst_infodir)/libc.info
+install: $(inst_infodir)/libc.info dir-add.info
+	@if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	  install-info --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
+	  install-info --info-dir=$(inst_infodir) dir-add.info;\
+	else : ; fi
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;
 

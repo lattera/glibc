@@ -922,7 +922,7 @@ filter_doc (const char *doc, int key, const struct argp *argp,
     }
   else
     /* No filter.  */
-    return (char *)doc;
+    return doc;
 }
 
 /* Prints STR as a header line, with the margin lines set appropiately, and
@@ -1319,7 +1319,8 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
 
   if (fdoc)
     {
-      nl = strchr (fdoc, '\n');
+      const char *cp = fdoc;
+      nl = strchr (cp, '\n');
       if (nl)
 	/* This is a `multi-level' args doc; advance to the correct position
 	   as determined by our state in LEVELS, and update LEVELS.  */
@@ -1327,17 +1328,17 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
 	  int i;
 	  multiple = 1;
 	  for (i = 0; i < *our_level; i++)
-	    fdoc = nl + 1, nl = strchr (fdoc, '\n');
+	    cp = nl + 1, nl = strchr (cp, '\n');
 	  (*levels)++;
 	}
       if (! nl)
-	nl = fdoc + strlen (fdoc);
+	nl = cp + strlen (cp);
 
       /* Manually do line wrapping so that it (probably) won't get wrapped at
 	 any embedded spaces.  */
-      space (stream, 1 + nl - fdoc);
+      space (stream, 1 + nl - cp);
 
-      __argp_fmtstream_write (stream, fdoc, nl - fdoc);
+      __argp_fmtstream_write (stream, cp, nl - cp);
     }
   if (fdoc && fdoc != tdoc)
     free ((char *)fdoc);	/* Free user's modified doc string.  */

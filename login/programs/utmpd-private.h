@@ -100,8 +100,11 @@ void close_connection (client_connection *connection);
 int read_data (client_connection *connection);
 int write_data (client_connection *connection);
 
+int proc_utmp_eq (const struct utmp *entry, const struct utmp *match);
+
 void error (int status, int errnum, const char *message, ...);
 void warning (int errnum, const char *message, ...);
+
 
 #endif /* utmpd-private.h  */
 

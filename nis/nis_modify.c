@@ -31,7 +31,7 @@ nis_modify (const_nis_name name, const nis_object *obj)
 
   res = calloc (1, sizeof (nis_result));
 
-  req.ns_name = (char *)name;
+  req.ns_name = (char *) name;
 
   req.ns_object.ns_object_len = 1;
   req.ns_object.ns_object_val = nis_clone_object (obj, NULL);

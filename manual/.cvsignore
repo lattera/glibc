@@ -9,4 +9,4 @@ glibc-*
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
 chapters chapters-incl1 chapters-incl2 summary.texi stamp-*
-distinfo
+distinfo dir-add.texi

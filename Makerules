@@ -95,6 +95,10 @@ o-iterator = $(patsubst %,$(..)o-iterator.mk,$(object-suffixes-left))
 vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
 				      $(+sysdep_dirs) $(..)))
 
+# The same is true for RPC source files.
+vpath %.x $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
+				      $(+sysdep_dirs) $(..)))
+
 # Some sysdep makefiles use this to distinguish being included here from
 # being included individually by a subdir makefile (hurd/Makefile needs this).
 in-Makerules := yes
@@ -332,7 +336,7 @@ ifeq (yes,$(build-shared))
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
-lib%.so: lib%_pic.a; $(build-shlib)
+lib%.so: lib%_pic.a $(lib%-map); $(build-shlib)
 
 ifeq ($(have-no-whole-archive),yes)
 no-whole-archive = -Wl,--no-whole-archive
@@ -361,8 +365,8 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -Wl,--whole-archive $^ $(no-whole-archive) \
-	  $(LDLIBS-$(@F:lib%.so=%).so)
+	  -Wl,--whole-archive $(filter-out $($(@F:%.so=%-map)),$^) \
+	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 	  test -z "$($(@F)-version)" || \
 	    (rm -f $@$($(@F)-version); $(LN_S) $(@F) $@$($(@F)-version))
 endef
@@ -378,7 +382,8 @@ LDFLAGS-c.so += -e __libc_main
 # Use our own special initializer and finalizer files for libc.so.
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
-			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so
+			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so \
+			 $(libc-map)
 	$(build-shlib)
 endif
 
@@ -910,6 +915,7 @@ dist: $(filter-out %.c %.S %.s,$(distribute))
 # the sub-make that makes the distribution (above).
 $(objpfx)distinfo: Makefile $(..)Makerules \
 		   $(wildcard $(foreach dir,$(sysdirs),$(dir)/Makefile))
+	$(make-target-directory)
 	$(distinfo-vars)
 	mv -f $@.new $@
 .PHONY: subdir_distinfo

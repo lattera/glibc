@@ -37,6 +37,7 @@
 	TEXT
 	ALIGN (3)
 	GLOBL	C_SYMBOL_NAME(__mpn_addmul_1)
+	ASM_TYPE_DIRECTIVE(C_SYMBOL_NAME(__mpn_addmul_1),@function)
 C_SYMBOL_NAME(__mpn_addmul_1:)
 
 	INSN1(push,l	,R(edi))
@@ -72,3 +73,5 @@ L(oop):
 	INSN1(pop,l	,R(esi))
 	INSN1(pop,l	,R(edi))
 	ret
+
+	ASM_SIZE_DIRECTIVE(C_SYMBOL_NAME(__mpn_addmul_1))

@@ -140,5 +140,5 @@ done:
   return status == NSS_STATUS_SUCCESS ? 0 : -1;
 }
 
-#define do_weak_alias(n1, n2) weak_alias ((n1), (n2))
+#define do_weak_alias(n1, n2) weak_alias (n1, (n2))
 do_weak_alias (INTERNAL (REENTRANT_NAME), REENTRANT_NAME)

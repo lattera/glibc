@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int
-compare (const char *a, const char *b)
+compare (const void *a, const void *b)
 {
   return strcmp (*(char **) a, *(char **) b);
 }

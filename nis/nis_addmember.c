@@ -26,7 +26,7 @@ nis_addmember (const_nis_name member, const_nis_name group)
 {
   if (group != NULL && strlen (group) > 0)
     {
-      char buf[strlen (group) + 50];
+      char buf[strlen (group) + 14 + NIS_MAXNAMELEN];
       char leafbuf[strlen (group) + 2];
       char domainbuf[strlen (group) + 2];
       nis_result *res, *res2;
@@ -38,8 +38,8 @@ nis_addmember (const_nis_name member, const_nis_name group)
       cp2 = nis_domain_of_r (group, domainbuf, sizeof (domainbuf) - 1);
       if (cp2 != NULL && strlen (cp2) > 0)
         {
-          cp = stpcpy (cp, ".");
-          strcpy (cp, cp2);
+	  *cp++ = '.';
+          stpcpy (cp, cp2);
         }
       res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
       if (res->status != NIS_SUCCESS)
@@ -53,10 +53,15 @@ nis_addmember (const_nis_name member, const_nis_name group)
         return NIS_INVALIDOBJ;
 
       res->objects.objects_val[0].GR_data.gr_members.gr_members_val
-	= realloc (res->objects.objects_val[0].GR_data.gr_members.gr_members_val, res->objects.objects_val[0].GR_data.gr_members.gr_members_len + 1);
-      ++res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
+	= realloc (res->objects.objects_val[0].GR_data.gr_members.gr_members_val,
+		   (res->objects.objects_val[0].GR_data.gr_members.gr_members_len + 1)
+		   * sizeof (char *));
       res->objects.objects_val[0].GR_data.gr_members.gr_members_val[res->objects.objects_val[0].GR_data.gr_members.gr_members_len] = strdup (member);
+      ++res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
 
+      cp = stpcpy (buf, res->objects.objects_val->zo_name);
+      *cp++ = '.';
+      strncpy (cp, res->objects.objects_val->zo_domain, NIS_MAXNAMELEN);
       res2 = nis_modify (buf, res->objects.objects_val);
       status = res2->status;
       nis_freeresult (res);

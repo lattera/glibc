@@ -1,3 +1,255 @@
+<1997-06-12 21:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (libc-map): Define before including Makerules.
+	* Makerules (lib%.so): Depend on $(lib%-map).
+	(build-shlib): Adapt rule for above change.
+	(libc.so): Depend on $(libc-map).
+	* db/Makefile (libcdb-map): New definition.
+	* elf/Makefile (libdl-map): New definition.
+	* elf/dl-lookup.c: Don't use relative include path.
+	(undefined_msg): New variable.  Use single string in all functions.
+	(do_lookup): Correctly recognize default version.
+	Return -2 if no version information is available.
+	Stop processing hash entries when string was found.
+	Don't bark about missing versioned symbol in file with original
+	reference if it is a weak symbol.
+	(_dl_lookup_symbol): Use undefined_msg.
+	(_dl_lookup_versioned_symbol): Likewise.
+	Give extra information if no verdef info is available.
+	* elf/dl-version.c (file_needed): Remove first argument.  We must
+	seek in the whole search list.
+	(match_symbol): Correct check for available verdef info.
+	(_dl_check_map_versions): Correct call of find_needed.
+	* locale/Makefile (libBrokenLocale-map): New definition.
+	* login/Makefile (libutil-map): New definition.
+	* math/Makefile (libm-map): New definition.
+	* md5-crypt/Makefile (libcrypt-map): New definition.
+	* nis/Makefile (libnsl-map, libnss_compat-map, libnss_nis-map,
+	libnss_nisplus-map): New definition.
+	* nss/Makefile (libnss_files-map, libnss_db-map): New definitions.
+	* resolv/Makefile (libresolv-map, libnss_dns-map): New definitions.
+	* libc.map: New file.
+	* db/libdb.map: New file.
+	* elf/libdl.map: New file.
+	* locale/libBrokenLocale.map: New file.
+	* login/libutil.map: New file.
+	* math/libm.map: New file.
+	* md5-crypt/libcrypt.map: New file.
+	* nis/libnss_compat.map: New file.
+	* nis/libnsl.map: New file.
+	* nis/libnss_nis.map: New file.
+	* nis/libnss_nisplus.map: New file.
+	* nss/libnss_files.map: New file.
+	* nss/libnss_db.map: New file.
+	* resolv/libnss_dns.map: New file.
+	* resolv/libresolv.map: New file.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Don't do anything
+	for R_386_NONE entries.
+
+	* Makefile (manual/dir-add.info): New rule.
+
+	* Makerules: Add vpath definition for .x files.
+
+	* Makerules (distinfo): Make sure target directory exists.
+
+	* argp/argp-help.c (argp_args_usage): Don't modify `fdoc' value
+	since it is used to distinguish filtered strings from unmodifed
+	strings.
+
+	* elf/dl-lookup.c (do_lookup): Optimize STT_* recognition.
+	* elf/dl-reloc.c: Fix typo.
+
+	* inet/arpa/tftp.h (struct tftphdr): Change type of tu_block to
+	`unsigned short'.
+
+	* manual/Makefile (dir-add.texi): Also emit wrapper text for
+	info/install-info.
+	(distribute): Add dir-add.texi and dir-add.info.
+	(mostlyclean): Add dir-add.info.
+	(realclean): Add dir-add.texi.
+	(install): Add entries in `dir' file using install-info.
+
+	* manual/libc.texinfo: Add @dircategory and @direntry text.
+	Reported by Miles Bader <miles@gnu.ai.mit.edu>.
+
+	* manual/pattern.texi: Correct description of GLOB_MAGCHAR and
+	GLOB_NOMAGIC.  Changes by Roland McGrath <roland@gnu.ai.mit.edu>.
+
+	* nis/nis_addmember.c: Little optimizations.
+	* nis/nis_call.c: Likewise.
+	* nis/nis_creategroup.c: Likewise.
+	* nis/nis_defaults.c: Likewise.
+	* nis/nis_destroygroup.c: Likewise.
+	* nis/nis_ismember.c: Likewise.
+	* nis/nis_local_names.c: Likewise.
+	* nis/nis_print_group_entry.c: Likewise.
+	* nis/nis_verifygroup.c: Likewise.
+
+	* posix/unistd.h: Fix comment for getcwd.
+
+	* stdlib/Makefile (headers): Remove inttypes.h.  It's a system
+	dependent header.
+	* sysdeps/wordsize-32/Dist: New file.
+	* sysdeps/wordsize-32/Makefile: New file.
+	* sysdeps/wordsize-64/Dist: New file.
+	* sysdeps/wordsize-64/Makefile: New file.
+
+	* sunrpc/Makefile: Adopt comment for real situation.
+
+	* sysdeps/i386/add_n.S: Add ASM_TYPE_DIRECTIVE and AS_SIZE_DIRECTIVE.
+	* sysdeps/i386/addmul_1.s: Likewise.
+	* sysdeps/i386/lshist.s: Likewise.
+	* sysdeps/i386/rshift.s: Likewise.
+	* sysdeps/i386/sub_n.s: Likewise.
+	* sysdeps/i386/submul_1.s: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Add .type and .size.
+
+1997-06-12 13:32  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* libc/sysdeps/unix/arm/brk.S: New file.
+	* libc/sysdeps/unix/arm/sysdep.S: Likewise.
+	* libc/sysdeps/unix/sysv/linux/arm/sysdep.S: Likewise.
+
+1997-06-11 11:51  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_parse_spent):
+	Check if we have shadow information.
+
+1997-06-08 19:33  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_getservlist.c (nis_getservlist): Use calloc instead of
+	malloc, alloc memory for nis_server struct.
+	* nis/nis_getservlist.c (nis_freeservlist): Give the memory for
+	the nis_server struct free, too.
+
+	* nis/nis_removemember (nis_removemember): Fix for loop.
+
+1997-06-12 12:45  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/__math.h (__M_SQRT2): Define here since we
+	cannot rely on M_SQRT2 being defined.  (log1p): Use __M_SQRT2 not
+	M_SQRT2.
+	* math/math.h (_Mldbl): Define even if M_* constants are not
+	defined.
+	Reported by corsepiu@faw.uni-ulm.de.
+
+1997-06-12 03:08  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* nss/getXXbyYY_r.c (do_weak_alias): Remove extra parentheses.
+
+1997-06-11 13:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/regexp.h (compile): Allow use of macro INIT for variable
+	declaration.  Add documentation for INIT.
+	Reported by Robert Bihlmeyer <robbe@orcus.priv.at>.
+
+1997-06-11 10:47  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Add two new hardware types.
+
+1997-06-10 11:31  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/powerpc/strlen.s: Use -0x101 instead of 0xfffffeff
+	for a signed 16-bit value.
+
+1997-06-07 07:54  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	(_dl_sysdep_read_whole_file): Deleted.
+
+	* sysdeps/powerpc/fenvbits.h (__FE_ALL_INVALID): Changed
+	to FE_ALL_INVALID.
+
+	* sysdeps/powerpc/fraiseexcpt.c (__FE_INVALID_SOFTWARE):
+	Changed to FE_INVALID_SOFTWARE.
+	(__FPSCR_STICKY_BITS): Changed to FPSCR_STICKY_BITS.
+
+	* sysdeps/libm-ieee754/s_fmin.c: Fix a typo.
+
+1997-06-07 18:48  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* shlib-versions (.*-.*-linux.*): Set libc to 6.
+
+1997-06-08 15:35  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_add.c (nis_add): Use nis_leaf_of_r instead of nis_name_of_r.
+
+	* nis/nis_addmember.c (nis_addmember): Fix a lot of pointer errors.
+	* nis/nis_clone.c: Likewise.
+	* nis/nis_removemember.c (nis_removemember): Likewise.
+	* nis/nis_table.c: Likewise.
+
+	* nis/nss_nis/nis-hosts.c: Use addr, not p for inet_pton call.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+
+	* nis/nss_nis/nis-netgrp.c (_nss_nis_setnetgrent): Check for
+	group == NULL.
+
+1997-06-08 21:21  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/login.c, login/utmp_daemon.c, login/utmp_file.c,
+	login/getutent_r.c, login/utmpname.c: Cleanup `#if _LIBC' and
+	`#ifndef _LIBC' fragments.
+
+	* login/programs/utmpd.c: Define DEFAULT_USER.
+	(drop_priviliges): Use it.
+	(main): Set locale and text domain.
+
+	* login/programs/utmpd-private.h: Declare proc_utmp_eq.
+	* login/programs/database.c (proc_utmp_eq): Removed.
+	* login/programs/request.c (proc_utmp_eq): Made global.  Only use
+	ut_id field if valid.
+
+	* login/utmp_file.c (proc_utmp_eq): Restore patch made by Miles
+	Bader that was lost when adding the daemon backend; Only use ut_id
+	field if valid.
+
+1997-06-05 23:10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Dist: Remove netatalk/atalk.h and
+	netinet/icmp.h, add netatalk/at.h.
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Remove termios.h.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Remove start.c.
+
+1997-06-04 19:22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/testsort.c (compare): Fix parameter types.
+
+1997-06-04 19:05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* md5-crypt/Makefile (distribute): Fix name of file.
+
+1997-06-04 19:02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/Makefile (utmpd-routines): Remove utmpd again, which is
+	already added implicitly through $(others).
+
+1997-06-05 13:43  Fila Kolodny  <fila@filapc.ibi.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add netipx/ipx.h.
+
+1997-06-05 13:25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* md5-crypt/md5-crypt.c: Add prototype for __md5_crypt.
+
+1997-06-05 17:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/argz-addsep.c: Correct weak alias.
+	Reported by Ben Pfaff <pfaffben@pilot.msu.edu>.
+
+	* locale/setlocale.c (setlocale): Free variable with locale path
+	before returning.
+	(setname): Don't test for _nl_current[category] being NULL before
+	freeing.
+	Reported by Ben Pfaff <pfaffben@pilot.msu.edu>.
+
+1997-06-04 12:41  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/intro.texi (XPG): Correct some typos.
+
 1997-06-04 05:09  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* argp/argp-help.c (_help): Use uparams.usage_indent instead of
@@ -36,7 +288,7 @@
 	(Parsing Program Arguments): New node.
 	(Parsing Options, Example of Getopt, Long Options, Long Option
 	Example): Nodes removed.
-	* manual/libc.texinfo: (Program Arguments): Menu updated.
+	* manual/libc.texinfo (Program Arguments): Menu updated.
 	(Parsing Program Arguments): New menu.
 
 1997-06-04 20:57  Ulrich Drepper  <drepper@cygnus.com>
@@ -3097,7 +3349,7 @@
 	* nis/nis_call.c (__do_niscall): Print message if cold start file
 	does not exist.
 	* nis/nis_file.c: Don't print error messages.
-	* nis/nis_local_name.c (nis_local_host): Fix pointer errors.
+	* nis/nis_local_names.c (nis_local_host): Fix pointer errors.
 	* nis/rpcsvc/ypclnt.h: Fix copyright and prototypes.
 	* nis/rpcsvc/nis.h: Likewise.
 	* nis/ypclnt.c: Fix prototypes.

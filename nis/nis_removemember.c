@@ -26,14 +26,14 @@ nis_removemember (const_nis_name member, const_nis_name group)
 {
   if (group != NULL && strlen (group) > 0)
     {
-      char buf[strlen (group) + 50];
+      char buf[strlen (group) + 14 + NIS_MAXNAMELEN];
       char leafbuf[strlen (group) + 2];
       char domainbuf[strlen (group) + 2];
       nis_name *newmem;
       nis_result *res, *res2;
       nis_error status;
       char *cp, *cp2;
-      u_int i, j;
+      unsigned long int i, j, k;
 
       cp = stpcpy (buf, nis_leaf_of_r (group, leafbuf, sizeof (leafbuf) - 1));
       cp = stpcpy (cp, ".groups_dir");
@@ -41,7 +41,7 @@ nis_removemember (const_nis_name member, const_nis_name group)
       if (cp2 != NULL && strlen (cp2) > 0)
         {
           cp = stpcpy (cp, ".");
-          strcpy (cp, cp2);
+          stpcpy (cp, cp2);
         }
       res = nis_lookup (buf, FOLLOW_LINKS|EXPAND_NAME);
       if (res->status != NIS_SUCCESS)
@@ -54,20 +54,35 @@ nis_removemember (const_nis_name member, const_nis_name group)
           (res->objects.objects_val[0].zo_data.zo_type != GROUP_OBJ))
         return NIS_INVALIDOBJ;
 
-      newmem = malloc (res->objects.objects_val[0].GR_data.gr_members.gr_members_len);
 
+      newmem = calloc (1, res->objects.objects_val[0].GR_data.gr_members.gr_members_len *
+		       sizeof (char *));
+
+      k = res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
       j = 0;
-      for (i = 0; i < res->objects.objects_val[0].GR_data.gr_members.gr_members_len - 1; ++i)
+      for (i = 0; i < res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
+	   ++i)
 	{
-	  if (strcmp (res->objects.objects_val[0].GR_data.gr_members.gr_members_val[j], member) != 0)
+	  if (strcmp (res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i],
+		      member) != 0)
 	    {
 	      newmem[j] = res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i];
 	      ++j;
 	    }
+	  else
+	    {
+	      free (res->objects.objects_val[0].GR_data.gr_members.gr_members_val[i]);
+	      --k;
+	    }
 	}
-      --res->objects.objects_val[0].GR_data.gr_members.gr_members_len;
       free (res->objects.objects_val[0].GR_data.gr_members.gr_members_val);
+      newmem = realloc (newmem, k * sizeof (char*));
       res->objects.objects_val[0].GR_data.gr_members.gr_members_val = newmem;
+      res->objects.objects_val[0].GR_data.gr_members.gr_members_len = k;
+
+      cp = stpcpy (buf, res->objects.objects_val->zo_name);
+      *cp++ = '.';
+      strncpy (cp, res->objects.objects_val->zo_domain, NIS_MAXNAMELEN);
       res2 = nis_modify (buf, res->objects.objects_val);
       status = res2->status;
       nis_freeresult (res);

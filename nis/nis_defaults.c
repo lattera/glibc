@@ -46,11 +46,9 @@ searchgroup (char *str)
   while (cptr[i] != '\0' && cptr[i] != ':')
     i++;
   if (i == 0)			/* only "group=" ? */
-    return (nis_name)"";
+    return (nis_name) "";
 
-  strncpy (default_group, cptr, i);
-
-  return default_group;
+  return strncpy (default_group, cptr, i);
 }
 
 static nis_name
@@ -71,9 +69,7 @@ searchowner (char *str)
   if (i == 0)			/* only "owner=" ? */
     return (nis_name)"";
 
-  strncpy (default_owner, cptr, i);
-
-  return default_owner;
+  return strncpy (default_owner, cptr, i);
 }
 
 static u_long

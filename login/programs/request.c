@@ -39,7 +39,6 @@ static int do_getutid (client_connection *connection);
 static int do_pututline (client_connection *connection);
 static int do_updwtmp (client_connection *connection);
 
-static int proc_utmp_eq (const struct utmp *entry, const struct utmp *match);
 static int internal_getut_r (client_connection *connection,
 			     const struct utmp *id, struct utmp *buffer);
 
@@ -571,7 +570,7 @@ return_error:
 
 
 /* This function is identical to the one in login/utmp_file.c.  */
-static int
+int
 proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
 {
   return
@@ -589,7 +588,9 @@ proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
      &&
 #endif
 #if _HAVE_UT_ID - 0
-     strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+     (entry->ut_id[0] && match->ut_id[0]
+      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0)
 #else
      strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
 #endif

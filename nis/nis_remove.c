@@ -31,7 +31,7 @@ nis_remove (const_nis_name name, const nis_object *obj)
 
   res = calloc (1, sizeof (nis_result));
 
-  req.ns_name = (char *)name;
+  req.ns_name = (char *) name;
 
   if (obj != NULL)
     {
