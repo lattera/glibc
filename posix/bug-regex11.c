@@ -30,7 +30,7 @@ struct
   const char *pattern;
   const char *string;
   int flags, nmatch;
-  regmatch_t rm[4];
+  regmatch_t rm[5];
 } tests[] = {
   /* Test for newline handling in regex.  */
   { "[^~]*~", "\nx~y", 0, 2, { { 0, 3 }, { -1, -1 } } },
@@ -38,14 +38,17 @@ struct
   { ".*|\\([KIO]\\)\\([^|]*\\).*|?[KIO]", "10~.~|P|K0|I10|O16|?KSb", 0, 3,
     { { 0, 21 }, { 15, 16 }, { 16, 18 } } },
   { ".*|\\([KIO]\\)\\([^|]*\\).*|?\\1", "10~.~|P|K0|I10|O16|?KSb", 0, 3,
-    { { 0, 21 }, { 8, 9 }, { 9, 10 } } }
+    { { 0, 21 }, { 8, 9 }, { 9, 10 } } },
+  { "^\\(a*\\)\\1\\{9\\}\\(a\\{0,9\\}\\)\\([0-9]*;.*[^a]\\2\\([0-9]\\)\\)",
+    "a1;;0a1aa2aaa3aaaa4aaaaa5aaaaaa6aaaaaaa7aaaaaaaa8aaaaaaaaa9aa2aa1a0", 0,
+    5, { { 0, 67 }, { 0, 0 }, { 0, 1 }, { 1, 67 }, { 66, 67 } } }
 };
 
 int
 main (void)
 {
   regex_t re;
-  regmatch_t rm[4];
+  regmatch_t rm[5];
   size_t i;
   int n, ret = 0;
 
