@@ -130,7 +130,7 @@ typedef struct
 		   to let the compiler know that we are accessing LDT_ENTRY   \
 		   here.  */						      \
 		TLS_EBX_ARG (&ldt_entry), "m" (ldt_entry));		      \
-    __builtin_expect (result, 0) == 0 ? ldt_entry.entry_number : -1;	      \
+    __builtin_expect (result, 0) == 0 ? ldt_entry.entry_number * 8 + 3 : -1;  \
 })
 
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
