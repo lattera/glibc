@@ -1,3 +1,9 @@
+2000-07-27  Andreas Jaeger  <aj@suse.de>
+
+	* rt/tst-aio64.c: Add tests for aio_fsync64 and aio_cancel64.
+	(do_wait): Test requests with aio_return64.
+	(do_test): Change callers of do_wait.
+
 2000-07-26  Andreas Jaeger  <aj@suse.de>
 
 	* rt/tst-aio.c: Add tests for aio_fsync and aio_cancel.
