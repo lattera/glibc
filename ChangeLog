@@ -1,5 +1,8 @@
 2000-03-20  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* locale/programs/ld-time.c (time_finish): Use %Z instead of %z.
+	* locale/programs/ld-ctype.c (ctype_finish, ctype_class_new): Likewise.
+
 	* scripts/versions.awk: Fixed version renaming code to distinguish
 	libraries properly.
 

@@ -219,8 +219,9 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  if (*str != '+' && *str != '-')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: direction flag in string %zd in `era' field"
-			       " is not '+' nor '-'"),
+		error (0, 0,
+		       _("%s: direction flag in string %Zd in `era' field"
+			 " is not '+' nor '-'"),
 		       "LC_TIME", idx + 1);
 	      /* Default arbitrarily to '+'.  */
 	      time->era_entries[idx].direction = '+';
@@ -230,8 +231,9 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  if (*++str != ':')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: direction flag in string %zd in `era' field"
-			       " is not a single character"),
+		error (0, 0,
+		       _("%s: direction flag in string %Zd in `era' field"
+			 " is not a single character"),
 		       "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
@@ -243,7 +245,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  if (endp == str)
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: invalid number for offset in string %zd in"
+		error (0, 0, _("%s: invalid number for offset in string %Zd in"
 			       " `era' field"),
 		       "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
@@ -252,7 +254,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	    {
 	      if (!be_quiet)
 		error (0, 0, _("%s: garbage at end of offset value in"
-			       " string %zd in `era' field"),
+			       " string %Zd in `era' field"),
 		       "LC_TIME", idx + 1);
 	      (void) strsep (&str, ":");
 	    }
@@ -302,7 +304,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		{
 		invalid_start_date:
 		  if (!be_quiet)
-		    error (0, 0, _("%s: invalid starting date in string %zd in"
+		    error (0, 0, _("%s: invalid starting date in string %Zd in"
 				   " `era' field"),
 			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
@@ -312,7 +314,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		garbage_start_date:
 		  if (!be_quiet)
 		    error (0, 0, _("%s: garbage at end of starting date "
-				   "in string %zd in `era' field "),
+				   "in string %Zd in `era' field "),
 			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
@@ -331,7 +333,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 			   && !__isleap (time->era_entries[idx].start_date[0])))
 		      && !be_quiet)
 			  error (0, 0, _("%s: starting date is invalid in"
-					 " string %zd in `era' field"),
+					 " string %Zd in `era' field"),
 				 "LC_TIME", idx + 1);
 		}
 	    }
@@ -379,7 +381,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		{
 		invalid_stop_date:
 		  if (!be_quiet)
-		    error (0, 0, _("%s: invalid stopping date in string %zd in"
+		    error (0, 0, _("%s: invalid stopping date in string %Zd in"
 				   " `era' field"),
 			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
@@ -389,7 +391,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		garbage_stop_date:
 		  if (!be_quiet)
 		    error (0, 0, _("%s: garbage at end of stopping date "
-				   "in string %zd in `era' field"),
+				   "in string %Zd in `era' field"),
 			   "LC_TIME", idx + 1);
 		  (void) strsep (&str, ":");
 		}
@@ -408,7 +410,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 			   && !__isleap (time->era_entries[idx].stop_date[0])))
 		      && !be_quiet)
 			  error (0, 0, _("%s: stopping date is invalid in"
-					 " string %zd in `era' field"),
+					 " string %Zd in `era' field"),
 				 "LC_TIME", idx + 1);
 		}
 	    }
@@ -416,7 +418,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  if (str == NULL || *str == '\0')
 	    {
 	      if (!be_quiet)
-		error (0, 0, _("%s: missing era name in string %zd in `era'"
+		error (0, 0, _("%s: missing era name in string %Zd in `era'"
 			       " field"), "LC_TIME", idx + 1);
 	      time->era_entries[idx].name =
 		time->era_entries[idx].format = "";
@@ -428,7 +430,7 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	      if (str == NULL || *str == '\0')
 		{
 		  if (!be_quiet)
-		    error (0, 0, _("%s: missing era format in string %zd"
+		    error (0, 0, _("%s: missing era format in string %Zd"
 				   " in `era' field"),
 			   "LC_TIME", idx + 1);
 		  time->era_entries[idx].name =
