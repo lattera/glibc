@@ -1,5 +1,12 @@
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Don't
+	allow SIGSETXID to be sent.
+	* sysdeps/pthread/sigaction.c (__sigaction): Don't allow action
+	for SIGSETXID to be defined.
+	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Make sure
+	SIGSETXID cannot be blocked.
+
 	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
 	Add __extension__ to long long types.
 	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.

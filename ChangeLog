@@ -11,6 +11,8 @@
 	getifaddrs call.
 	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.
 	* sunrpc/pmap_rmt.c (getbroadcastnets): Likewise.
+	* sunrpc/Makefile (xtests): Add tst-getmyaddr.
+	* sunrpc/tst-getmyaddr.c: New file.
 
 	* malloc/arena.c (ptmalloc_init): Allow MALLOC_CHECK_==0 to
 	disable all checking.
