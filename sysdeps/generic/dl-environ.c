@@ -18,10 +18,9 @@
    02111-1307 USA.  */
 
 #include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <ldsodefs.h>
-
-extern char **_environ;
-extern void unsetenv (const char *name);
 
 /* Walk through the environment of the process and return all entries
    starting with `LD_'.  */
@@ -51,13 +50,13 @@ _dl_next_ld_env_entry (char ***position)
   return result;
 }
 
-void
+int
 unsetenv (const char *name)
 {
   const size_t len = strlen (name);
   char **ep;
 
-  ep = _environ;
+  ep = __environ;
   while (*ep != NULL)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
@@ -71,4 +70,6 @@ unsetenv (const char *name)
       }
     else
       ++ep;
+
+  return 0;
 }
