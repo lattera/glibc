@@ -1,3 +1,22 @@
+2001-04-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
+	Define for Arm, PowerPC and SH if kernel is 2.4.4 or newer.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_WANPIPE): New, from
+	Linux 2.4.4.
+	(AF_WANPIPE): Likewise.
+	(MSG_MORE): New.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: Add same changes as
+	for Linux generic version.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/socket.h: Likewise.
+
+	* sysdeps/gnu/netinet/tcp.h (TCP_QUICKACK): New.
+
 2001-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss-nis.h: Correct test for invalid error number.
