@@ -1,3 +1,7 @@
+2003-08-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/elf/Makefile: New file.
+
 2003-08-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* login/programs/utmpdump.c (print_entry): Cast tv_usec to long
