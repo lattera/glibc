@@ -212,7 +212,7 @@ get_mapping (request_type type, const char *key,
 
 struct mapped_database *
 __nscd_get_map_ref (request_type type, const char *name,
-		    struct locked_map_ptr *mapptr, int *gc_cyclep)
+		    struct locked_map_ptr *mapptr, volatile int *gc_cyclep)
 {
   struct mapped_database *cur = mapptr->mapped;
   if (cur == NO_MAPPING)

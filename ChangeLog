@@ -9,6 +9,8 @@
 	* nscd/nscd.h: Declare setup_thread.
 	* nscd/nscd_helper.c (__nscd_get_map_ref): Avoid the time test if
 	nscd_certainly_running is nonzero.
+	* sysdeps/generic/nscd_setup_thread.c: New file.
+	* sysdeps/unix/sysv/linux/nscd_setup_thread.c: New file.
 
 2004-09-08  Ulrich Drepper  <drepper@redhat.com>
 
