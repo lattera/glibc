@@ -1,3 +1,10 @@
+Thu Aug 29 12:00:30 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* stdio/fseek.c (fseek): Don't assume we know the file position;
+ 	other handles may have changed it.  So set STREAM.__offset to -1
+ 	before calling __stdio_check_offset to make sure we have a correct
+ 	value.
+
 Thu Aug 29 00:28:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/printf_fp.c (__printf_fp): Use default value `.` if
