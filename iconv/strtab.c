@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/cdefs.h>
 #include <sys/param.h>
 
 
@@ -65,7 +66,7 @@ struct Strtab
 static size_t ps;
 
 
-extern void *xmalloc (size_t n) __attribute__ ((__malloc__));
+extern void *xmalloc (size_t n) __attribute_malloc__;
 
 
 struct Strtab *
