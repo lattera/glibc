@@ -34,9 +34,10 @@ main (void)
 	  printf ("count = %lu\n", count);
 	}
       /* pthread_detach (thread); */
-      if (pthread_join (thread, NULL) != 0)
+      int err = pthread_join (thread, NULL);
+      if (err != 0)
 	{
-	  printf ("join failed, count %lu\n", count);
+	  printf ("join failed (%s), count %lu\n", strerror (err), count);
 	  return 2;
 	}
       usleep (10);
