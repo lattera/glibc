@@ -18,7 +18,9 @@
    02111-1307 USA.  */
 
 #include <link.h>
+#include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define SET	0
 #define ADD	1
