@@ -1,5 +1,11 @@
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread.c (__pthread_initial_thread): Update initializer.
+	(__pthread_manager_thread): Likewise.
+	(pthread_initialize): Move setrlimit call to...
+	(__pthread_initialize_manager): ...here.
+	(__pthread_reset_main_thread): Reset also soft limit on stack size.
+
 	* condvar.c: Handle spurious wakeups.  [PR libc/1749].
 	* internals.h (struct _pthread_descr_struct): Add p_condvar_avail.
 
