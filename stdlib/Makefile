@@ -141,7 +141,11 @@ test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 tst-strtod-ENV = LOCPATH=$(common-objpfx)localedata
 
 # Run a test on the header files we use.
-tests: $(objpfx)isomac.out $(objpfx)tst-fmtmsg.out
+tests: $(objpfx)isomac.out 
+
+ifeq (no,$(cross-compiling))
+tests: $(objpfx)tst-fmtmsg.out
+endif
 
 $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \
@@ -151,4 +155,4 @@ $(objpfx)isomac: isomac.c
 	$(native-compile)
 
 $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)stdlib/
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(common-objpfx)stdlib/
