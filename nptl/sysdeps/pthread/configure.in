@@ -6,7 +6,10 @@ if test "x$libc_cv_gcc___thread" != xyes; then
 fi
 
 if test "x$libc_cv_asm_cfi_directives" != xyes; then
-  AC_MSG_ERROR(CFI directive support in assembler is required)
+  dnl We need this only for some architectures.
+  if test "x$base_machine" = xi386 || test "x$base_machine" = "xx86_86"; then
+    AC_MSG_ERROR(CFI directive support in assembler is required)
+  fi
 fi
 
 dnl Iff <unwind.h> is available, make sure it is the right one and it
