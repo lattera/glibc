@@ -748,9 +748,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
        digits we should have enough bits for the result.  The remaining
        decimal digits give us the information that more bits are following.
        This can be used while rounding.  (One added as a safety margin.)  */
-    if (dig_no - int_no > (MANT_DIG - bits + 2) / 3 + 1)
+    if (dig_no - int_no - lead_zero > (MANT_DIG - bits + 2) / 3 + 1)
       {
-        dig_no = int_no + (MANT_DIG - bits + 2) / 3 + 1;
+        dig_no = int_no + lead_zero + (MANT_DIG - bits + 2) / 3 + 1;
         more_bits = 1;
       }
     else
@@ -788,6 +788,14 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
     if (psrc == num)
       memcpy (den, num, densize * sizeof (mp_limb));
+
+    /* If we have leading zeroes now reduce the number of significant digits
+       and set the pointer to the first non-0 digit.  */
+    if (lead_zero > 0)
+      {
+	startp += lead_zero + 1;	/* +1 for radix character */
+	dig_no -= lead_zero;
+      }
 
     /* Read the fractional digits from the string.  */ 
     (void) str_to_mpn (startp, dig_no - int_no, num, &numsize, &exponent);
