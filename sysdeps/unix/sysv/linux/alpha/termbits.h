@@ -112,6 +112,10 @@ struct termios
 #define   VT1	00200000
 #define XTABS	01000000 /* Hmm.. Linux/i386 considers this part of TABDLY.. */
 
+/* On Linux there is no OXTABS bit defined.  Take it as an alias for
+   XTABS.  */
+#define OXTABS	XTABS
+
 /* c_cflag bit meaning */
 #define CBAUD	0000037
 #define  B0	0000000		/* hang up */

@@ -104,93 +104,66 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
 
-  switch (ELF32_R_TYPE (reloc->r_info))
+  if (ELF32_R_TYPE (reloc->r_info) == R_SPARC_RELATIVE)
+    *reloc_addr += map->l_addr + reloc->r_addend;
+  else
     {
-    case R_SPARC_COPY:
-      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOEXEC);
-      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
-      break;
-    case R_SPARC_GLOB_DAT:
-    case R_SPARC_32:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-		     + reloc->r_addend);
-      break;
-    case R_SPARC_JMP_SLOT:
-      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOPLT);
-      {
-	Elf32_Addr value = ((sym ? (loadbase + sym->st_value) : 0)
-			    + reloc->r_addend);
-	reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
-	reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
-      }
-      break;
-    case R_SPARC_8:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			      + reloc->r_addend);
-      break;
-    case R_SPARC_16:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			       + reloc->r_addend);
-      break;
-    case R_SPARC_RELATIVE:
-      *reloc_addr += map->l_addr + reloc->r_addend;
-      break;
-    case R_SPARC_DISP8:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			      + reloc->r_addend
-			      - (Elf32_Addr) reloc_addr);
-      break;
-    case R_SPARC_DISP16:
-      loadbase = RESOLVE (&sym, version, 0);
-      *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-			       + reloc->r_addend
-			       - (Elf32_Addr) reloc_addr);
-      break;
-    case R_SPARC_DISP32:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
-		     + reloc->r_addend
-		     - (Elf32_Addr) reloc_addr);
-      break;
-      case R_SPARC_LO10:
+      Elf32_Addr value;
+      if (sym->st_shndx != SHN_UNDEF &&
+	  ELF32_ST_BIND (sym->st_info) == STB_LOCAL)
+	value = map->l_addr;
+      else
 	{
-	  unsigned int saddr;
-
-	  loadbase = RESOLVE (&sym, version, 0);
-	  saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
-
-	  *reloc_addr = (*reloc_addr & ~0x3ff) | (saddr & 0x3ff);
+	  value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+	  if (sym)
+	    value += sym->st_value;
 	}
-       break;
-    case R_SPARC_WDISP30:
-      {
-	unsigned int saddr;
+      value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
-	loadbase = RESOLVE (&sym, version, 0);
-	saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
-	*reloc_addr = ((*reloc_addr & 0xc0000000)
-		       | ((saddr - (unsigned int) reloc_addr)>>2));
-      }
-      break;
-    case R_SPARC_HI22:
-      {
-	unsigned int saddr;
-
-	loadbase = RESOLVE (&sym, version, 0);
-	saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
-
-	*reloc_addr = (*reloc_addr & 0xffc00000)|(saddr >> 10);
-      }
-      break;
-    case R_SPARC_NONE:		/* Alright, Wilbur.  */
-      break;
-    default:
-      assert (! "unexpected dynamic reloc type");
-      break;
+      switch (ELF32_R_TYPE (reloc->r_info))
+	{
+	case R_SPARC_COPY:
+	  memcpy (reloc_addr, (void *) value, sym->st_size);
+	  break;
+	case R_SPARC_GLOB_DAT:
+	case R_SPARC_32:
+	  *reloc_addr = value;
+	  break;
+	case R_SPARC_JMP_SLOT:
+	  reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
+	  reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
+	  break;
+	case R_SPARC_8:
+	  *(char *) reloc_addr = value;
+	  break;
+	case R_SPARC_16:
+	  *(short *) reloc_addr = value;
+	  break;
+	case R_SPARC_DISP8:
+	  *(char *) reloc_addr = (value - (Elf32_Addr) reloc_addr);
+	  break;
+	case R_SPARC_DISP16:
+	  *(short *) reloc_addr = (value - (Elf32_Addr) reloc_addr);
+	  break;
+	case R_SPARC_DISP32:
+	  *reloc_addr = (value - (Elf32_Addr) reloc_addr);
+	  break;
+	case R_SPARC_LO10:
+	  *reloc_addr = (*reloc_addr & ~0x3ff) | (value & 0x3ff);
+	  break;
+	case R_SPARC_WDISP30:
+	  *reloc_addr = ((*reloc_addr & 0xc0000000)
+			 | ((value - (unsigned int) reloc_addr) >> 2));
+	  break;
+	case R_SPARC_HI22:
+	  *reloc_addr = (*reloc_addr & 0xffc00000) | (value >> 10);
+	  break;
+	case R_SPARC_NONE:		/* Alright, Wilbur.  */
+	  break;
+	default:
+	  assert (! "unexpected dynamic reloc type");
+	  break;
+	}
     }
 }
 
@@ -213,7 +186,14 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type) ((type) == R_SPARC_JMP_SLOT)
+#define elf_machine_lookup_noexec_p(type) ((type) == R_SPARC_COPY)
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_lookup_noplt_p(type) ((type) == R_SPARC_JMP_SLOT)
+
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
+#define ELF_MACHINE_RELOC_NOPLT	R_SPARC_JMP_SLOT
 
 /* The SPARC never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1

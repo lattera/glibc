@@ -102,10 +102,10 @@ static MATHTYPE plus_infty, minus_infty, nan_value;
 typedef MATHTYPE (*mathfunc) (MATHTYPE);
 
 
-#define ISINF(x)                                \
-(sizeof (x) == sizeof (float) ?                 \
- isinff (x)                                   \
- : sizeof (x) == sizeof (double) ?              \
+#define ISINF(x) \
+(sizeof (x) == sizeof (float) ?						      \
+ isinff (x)								      \
+ : sizeof (x) == sizeof (double) ?					      \
  isinf (x) : isinfl (x))
 
 
@@ -1223,6 +1223,222 @@ pow_test (void)
 
 
 static void
+fdim_test (void)
+{
+  check ("fdim (+0, +0) = +0", FUNC(fdim) (0, 0), 0);
+  check ("fdim (9, 0) = 9", FUNC(fdim) (9, 0), 9);
+  check ("fdim (0, 9) = 0", FUNC(fdim) (0, 9), 0);
+  check ("fdim (-9, 0) = 9", FUNC(fdim) (-9, 0), 0);
+  check ("fdim (0, -9) = 9", FUNC(fdim) (0, -9), 9);
+
+  check_isinfp ("fdim (+inf, 9) = +inf", FUNC(fdim) (plus_infty, 9));
+  check_isinfp ("fdim (+inf, -9) = +inf", FUNC(fdim) (plus_infty, -9));
+  check ("fdim (-inf, 9) = 0", FUNC(fdim) (minus_infty, 9), 0);
+  check ("fdim (-inf, -9) = 0", FUNC(fdim) (minus_infty, -9), 0);
+  check_isinfp ("fdim (+9, -inf) = +inf", FUNC(fdim) (9, minus_infty));
+  check_isinfp ("fdim (-9, -inf) = +inf", FUNC(fdim) (-9, minus_infty));
+  check ("fdim (9, inf) = 0", FUNC(fdim) (9, plus_infty), 0);
+  check ("fdim (-9, inf) = 0", FUNC(fdim) (-9, plus_infty), 0);
+
+  check_isnan ("fdim (0, NaN) = NaN", FUNC(fdim) (0, nan_value));
+  check_isnan ("fdim (9, NaN) = NaN", FUNC(fdim) (9, nan_value));
+  check_isnan ("fdim (-9, NaN) = NaN", FUNC(fdim) (-9, nan_value));
+  check_isnan ("fdim (NaN, 9) = NaN", FUNC(fdim) (nan_value, 9));
+  check_isnan ("fdim (NaN, -9) = NaN", FUNC(fdim) (nan_value, -9));
+  check_isnan ("fdim (+inf, NaN) = NaN", FUNC(fdim) (plus_infty, nan_value));
+  check_isnan ("fdim (-inf, NaN) = NaN", FUNC(fdim) (minus_infty, nan_value));
+  check_isnan ("fdim (NaN, +inf) = NaN", FUNC(fdim) (nan_value, plus_infty));
+  check_isnan ("fdim (NaN, -inf) = NaN", FUNC(fdim) (nan_value, minus_infty));
+  check_isnan ("fdim (NaN, NaN) = NaN", FUNC(fdim) (nan_value, nan_value));
+}
+
+
+static void
+fmin_test (void)
+{
+  check ("fmin (+0, +0) = +0", FUNC(fmin) (0, 0), 0);
+  check ("fmin (9, 0) = 0", FUNC(fmin) (9, 0), 0);
+  check ("fmin (0, 9) = 0", FUNC(fmin) (0, 9), 0);
+  check ("fmin (-9, 0) = -9", FUNC(fmin) (-9, 0), -9);
+  check ("fmin (0, -9) = -9", FUNC(fmin) (0, -9), -9);
+
+  check ("fmin (+inf, 9) = 9", FUNC(fmin) (plus_infty, 9), 9);
+  check ("fmin (9, +inf) = 9", FUNC(fmin) (9, plus_infty), 9);
+  check ("fmin (+inf, -9) = -9", FUNC(fmin) (plus_infty, -9), -9);
+  check ("fmin (-9, +inf) = -9", FUNC(fmin) (-9, plus_infty), -9);
+  check_isinfn ("fmin (-inf, 9) = -inf", FUNC(fmin) (minus_infty, 9));
+  check_isinfn ("fmin (-inf, -9) = -inf", FUNC(fmin) (minus_infty, -9));
+  check_isinfn ("fmin (+9, -inf) = -inf", FUNC(fmin) (9, minus_infty));
+  check_isinfn ("fmin (-9, -inf) = -inf", FUNC(fmin) (-9, minus_infty));
+
+  check ("fmin (0, NaN) = 0", FUNC(fmin) (0, nan_value), 0);
+  check ("fmin (9, NaN) = 9", FUNC(fmin) (9, nan_value), 9);
+  check ("fmin (-9, NaN) = 9", FUNC(fmin) (-9, nan_value), -9);
+  check ("fmin (NaN, 0) = 0", FUNC(fmin) (nan_value, 0), 0);
+  check ("fmin (NaN, 9) = NaN", FUNC(fmin) (nan_value, 9), 9);
+  check ("fmin (NaN, -9) = NaN", FUNC(fmin) (nan_value, -9), -9);
+  check_isinfp ("fmin (+inf, NaN) = +inf", FUNC(fmin) (plus_infty, nan_value));
+  check_isinfn ("fmin (-inf, NaN) = -inf", FUNC(fmin) (minus_infty, nan_value));
+  check_isinfp ("fmin (NaN, +inf) = +inf", FUNC(fmin) (nan_value, plus_infty));
+  check_isinfn ("fmin (NaN, -inf) = -inf", FUNC(fmin) (nan_value, minus_infty));
+  check_isnan ("fmin (NaN, NaN) = NaN", FUNC(fmin) (nan_value, nan_value));
+}
+
+
+static void
+fmax_test (void)
+{
+  check ("fmax (+0, +0) = +0", FUNC(fmax) (0, 0), 0);
+  check ("fmax (9, 0) = 9", FUNC(fmax) (9, 0), 9);
+  check ("fmax (0, 9) = 9", FUNC(fmax) (0, 9), 9);
+  check ("fmax (-9, 0) = 0", FUNC(fmax) (-9, 0), 0);
+  check ("fmax (0, -9) = 0", FUNC(fmax) (0, -9), 0);
+
+  check_isinfp ("fmax (+inf, 9) = +inf", FUNC(fmax) (plus_infty, 9));
+  check_isinfp ("fmax (9, +inf) = +inf", FUNC(fmax) (0, plus_infty));
+  check_isinfp ("fmax (-9, +inf) = +inf", FUNC(fmax) (-9, plus_infty));
+  check_isinfp ("fmax (+inf, -9) = +inf", FUNC(fmax) (plus_infty, -9));
+  check ("fmax (-inf, 9) = 9", FUNC(fmax) (minus_infty, 9), 9);
+  check ("fmax (-inf, -9) = -9", FUNC(fmax) (minus_infty, -9), -9);
+  check ("fmax (+9, -inf) = 9", FUNC(fmax) (9, minus_infty), 9);
+  check ("fmax (-9, -inf) = -9", FUNC(fmax) (-9, minus_infty), -9);
+
+  check ("fmax (0, NaN) = 0", FUNC(fmax) (0, nan_value), 0);
+  check ("fmax (9, NaN) = 9", FUNC(fmax) (9, nan_value), 9);
+  check ("fmax (-9, NaN) = 9", FUNC(fmax) (-9, nan_value), -9);
+  check ("fmax (NaN, 0) = 0", FUNC(fmax) (nan_value, 0), 0);
+  check ("fmax (NaN, 9) = NaN", FUNC(fmax) (nan_value, 9), 9);
+  check ("fmax (NaN, -9) = NaN", FUNC(fmax) (nan_value, -9), -9);
+  check_isinfp ("fmax (+inf, NaN) = +inf", FUNC(fmax) (plus_infty, nan_value));
+  check_isinfn ("fmax (-inf, NaN) = -inf", FUNC(fmax) (minus_infty, nan_value));
+  check_isinfp ("fmax (NaN, +inf) = +inf", FUNC(fmax) (nan_value, plus_infty));
+  check_isinfn ("fmax (NaN, -inf) = -inf", FUNC(fmax) (nan_value, minus_infty));
+  check_isnan ("fmax (NaN, NaN) = NaN", FUNC(fmax) (nan_value, nan_value));
+}
+
+
+static void
+nextafter_test (void)
+{
+  MATHTYPE x;
+
+  check ("nextafter (+0, +0) = +0", FUNC(nextafter) (0, 0), 0);
+  check ("nextafter (-0, +0) = +0", FUNC(nextafter) (minus_zero, 0), 0);
+  check ("nextafter (+0, -0) = -0", FUNC(nextafter) (0, minus_zero),
+	 minus_zero);
+  check ("nextafter (-0, -0) = -0", FUNC(nextafter) (minus_zero, minus_zero),
+	 minus_zero);
+
+  check ("nextafter (9, 9) = 9",  FUNC(nextafter) (9, 9), 9);
+  check ("nextafter (-9, -9) = -9",  FUNC(nextafter) (-9, -9), -9);
+  check_isinfp ("nextafter (+inf, +inf) = +inf",
+		FUNC(nextafter) (plus_infty, plus_infty));
+  check_isinfn ("nextafter (-inf, -inf) = -inf",
+		FUNC(nextafter) (minus_infty, minus_infty));
+
+  x = rand () * 1.1;
+  check_isnan ("nextafter (NaN, x) = NaN", FUNC(nextafter) (nan_value, x));
+  check_isnan ("nextafter (x, NaN) = NaN", FUNC(nextafter) (x, nan_value));
+  check_isnan ("nextafter (NaN, NaN) = NaN", FUNC(nextafter) (nan_value,
+							      nan_value));
+
+  /* XXX We need the hexadecimal FP number representation here for further
+     tests.  */
+}
+
+
+static void
+copysign_test (void)
+{
+  check ("copysign (0, 4) = 0", FUNC(copysign) (0, 4), 0);
+  check ("copysign (0, -4) = -0", FUNC(copysign) (0, -4), minus_zero);
+  check ("copysign (-0, 4) = 0", FUNC(copysign) (minus_zero, 4), 0);
+  check ("copysign (-0, -4) = -0", FUNC(copysign) (minus_zero, -4),
+	 minus_zero);
+
+  check_isinfp ("copysign (+inf, 0) = +inf", FUNC(copysign) (plus_infty, 0));
+  check_isinfn ("copysign (+inf, -0) = -inf", FUNC(copysign) (plus_infty,
+							      minus_zero));
+  check_isinfp ("copysign (-inf, 0) = +inf", FUNC(copysign) (minus_infty, 0));
+  check_isinfn ("copysign (-inf, -0) = -inf", FUNC(copysign) (minus_infty,
+							      minus_zero));
+
+  check ("copysign (0, +inf) = 0", FUNC(copysign) (0, plus_infty), 0);
+  check ("copysign (0, -inf) = -0", FUNC(copysign) (0, minus_zero),
+	 minus_zero);
+  check ("copysign (-0, +inf) = 0", FUNC(copysign) (minus_zero, plus_infty),
+	 0);
+  check ("copysign (-0, -inf) = -0", FUNC(copysign) (minus_zero, minus_zero),
+	 minus_zero);
+
+  /* XXX More correctly we would have to check the sign of the NaN.  */
+  check_isnan ("copysign (+NaN, 0) = +inf", FUNC(copysign) (nan_value, 0));
+  check_isnan ("copysign (+NaN, -0) = -inf", FUNC(copysign) (nan_value,
+							     minus_zero));
+  check_isnan ("copysign (-NaN, 0) = +inf", FUNC(copysign) (-nan_value, 0));
+  check_isnan ("copysign (-NaN, -0) = -inf", FUNC(copysign) (-nan_value,
+							     minus_zero));
+}
+
+
+static void
+trunc_test (void)
+{
+  check ("trunc(0) = 0", FUNC(trunc) (0), 0);
+  check ("trunc(-0) = -0", FUNC(trunc) (minus_zero), minus_zero);
+  check ("trunc(0.625) = 0", FUNC(trunc) (0.625), 0);
+  check ("trunc(-0.625) = -0", FUNC(trunc) (-0.625), minus_zero);
+  check ("trunc(1) = 1", FUNC(trunc) (1), 1);
+  check ("trunc(-1) = -1", FUNC(trunc) (-1), -1);
+  check ("trunc(1.625) = 1", FUNC(trunc) (1.625), 1);
+  check ("trunc(-1.625) = -1", FUNC(trunc) (-1.625), -1);
+
+  check ("trunc(1048580.625) = 1048580", FUNC(trunc) (1048580.625L),
+	 1048580L);
+  check ("trunc(-1048580.625) = -1048580", FUNC(trunc) (-1048580.625L),
+	 -1048580L);
+
+  check ("trunc(8388610.125) = 8388610", FUNC(trunc) (8388610.125L),
+	 8388610.0L);
+  check ("trunc(-8388610.125) = -8388610", FUNC(trunc) (-8388610.125L),
+	 -8388610.0L);
+
+  check ("trunc(4294967296.625) = 4294967296", FUNC(trunc) (4294967296.625L),
+	 4294967296.0L);
+  check ("trunc(-4294967296.625) = -4294967296",
+	 FUNC(trunc) (-4294967296.625L), -4294967296.0L);
+
+  check_isinfp ("trunc(+inf) = +inf", FUNC(trunc) (plus_infty));
+  check_isinfn ("trunc(-inf) = -inf", FUNC(trunc) (minus_infty));
+  check_isnan ("trunc(NaN) = NaN", FUNC(trunc) (nan_value));
+}
+
+
+static void
+remquo_test (void)
+{
+  int quo;
+  MATHTYPE result;
+
+  result = FUNC(remquo) (1.625, 1.0, &quo);
+  check ("remquo(1.625, 1.0, &x) == -0.375", result, -0.375);
+  check ("remquo(1.625, 1.0, &x) puts 1 in x", quo, 1);
+
+  result = FUNC(remquo) (-1.625, 1.0, &quo);
+  check ("remquo(-1.625, 1.0, &x) == 0.375", result, 0.375);
+  check ("remquo(-1.625, 1.0, &x) puts 1 in x", quo, -1);
+
+  result = FUNC(remquo) (1.625, -1.0, &quo);
+  check ("remquo(1.125, -1.0, &x) == 0.125", result, 0.125);
+  check ("remquo(1.125, -1.0, &x) puts 1 in x", quo, -1);
+
+  result = FUNC(remquo) (-1.625, -1.0, &quo);
+  check ("remquo(-1.125, -1.0, &x) == 0.125", result, 0.125);
+  check ("remquo(-1.125, -1.0, &x) puts 1 in x", quo, 1);
+}
+
+
+static void
 inverse_func_pair_test (const char *test_name,
 			mathfunc f1, mathfunc inverse,
 			MATHTYPE x, MATHTYPE epsilon)
@@ -1244,33 +1460,33 @@ inverse_func_pair_test (const char *test_name,
 static void
 inverse_functions (void)
 {
-  inverse_func_pair_test ("(asin(sin(x)) == x",
+  inverse_func_pair_test ("asin(sin(x)) == x",
 			FUNC(sin), FUNC(asin), 1.0, CHOOSE (0, 0, 1e-7L));
-  inverse_func_pair_test ("(sin(asin(x)) == x",
+  inverse_func_pair_test ("sin(asin(x)) == x",
 			  FUNC(asin), FUNC(sin), 1.0, 0.0);
 
-  inverse_func_pair_test ("(acos(cos(x)) == x",
+  inverse_func_pair_test ("acos(cos(x)) == x",
 		       FUNC(cos), FUNC(acos), 1.0, CHOOSE (0, 1e-15L, 0));
-  inverse_func_pair_test ("(cos(acos(x)) == x",
+  inverse_func_pair_test ("cos(acos(x)) == x",
 			  FUNC(acos), FUNC(cos), 1.0, 0.0);
-  inverse_func_pair_test ("(atan(tan(x)) == x",
+  inverse_func_pair_test ("atan(tan(x)) == x",
 			  FUNC(tan), FUNC(atan), 1.0, 0.0);
-  inverse_func_pair_test ("(tan(atan(x)) == x",
+  inverse_func_pair_test ("tan(atan(x)) == x",
 		       FUNC(atan), FUNC(tan), 1.0, CHOOSE (0, 1e-15L, 0));
 
-  inverse_func_pair_test ("(asinh(sinh(x)) == x",
+  inverse_func_pair_test ("asinh(sinh(x)) == x",
 		     FUNC(sinh), FUNC(asinh), 1.0, CHOOSE (1e-18L, 0, 0));
-  inverse_func_pair_test ("(sinh(asinh(x)) == x",
+  inverse_func_pair_test ("sinh(asinh(x)) == x",
 			  FUNC(asinh), FUNC(sinh), 1.0, 0.0);
 
-  inverse_func_pair_test ("(acosh(cosh(x)) == x",
+  inverse_func_pair_test ("acosh(cosh(x)) == x",
 		FUNC(cosh), FUNC(acosh), 1.0, CHOOSE (1e-18L, 1e-15L, 0));
-  inverse_func_pair_test ("(cosh(acosh(x)) == x",
+  inverse_func_pair_test ("cosh(acosh(x)) == x",
 			  FUNC(acosh), FUNC(cosh), 1.0, 0.0);
 
-  inverse_func_pair_test ("(atanh(tanh(x)) == x",
+  inverse_func_pair_test ("atanh(tanh(x)) == x",
 		     FUNC(tanh), FUNC(atanh), 1.0, CHOOSE (0, 1e-15L, 0));
-  inverse_func_pair_test ("(tanh(atanh(x)) == x",
+  inverse_func_pair_test ("tanh(atanh(x)) == x",
 			  FUNC(atanh), FUNC(tanh), 1.0, 0.0);
 
 }
@@ -1401,6 +1617,15 @@ basic_tests (void)
   check_bool ("!isinf (-NAN)", !(isinf (-NAN)));
   check_bool ("NAN != NAN", NAN != NAN);
 
+  /*
+     And again with the value returned by the `nan' function.
+   */
+  check_bool ("isnan (NAN)", isnan (FUNC(nan) ("")));
+  check_bool ("isnan (-NAN)", isnan (-FUNC(nan) ("")));
+  check_bool ("!isinf (NAN)", !(isinf (FUNC(nan) (""))));
+  check_bool ("!isinf (-NAN)", !(isinf (-FUNC(nan) (""))));
+  check_bool ("NAN != NAN", FUNC(nan) ("") != FUNC(nan) (""));
+
   /* test if EPSILON is ok */
   x1 = MATHCONST (1.0);
   x2 = x1 + CHOOSE (LDBL_EPSILON, DBL_EPSILON, FLT_EPSILON);
@@ -1520,6 +1745,16 @@ main (int argc, char *argv[])
   fpclassify_test ();
   hypot_test ();
   pow_test ();
+  fdim_test ();
+  fmin_test ();
+  fmax_test ();
+  nextafter_test ();
+  copysign_test ();
+  trunc_test ();
+#if 0
+  /* XXX I'm not sure what is the correct result.  */
+  remquo_test ();
+#endif
 
   identities ();
   inverse_functions ();

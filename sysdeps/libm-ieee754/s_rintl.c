@@ -54,7 +54,7 @@ TWO64[2]={
 	GET_LDOUBLE_WORDS(se,i0,i1,x);
 	sx = (se>>15)&1;
 	j0 = (se&0x7fff)-0x3fff;
-	if(j0<32) {
+	if(j0<31) {
 	    if(j0<0) {
 		if(((se&0x7fff)|i0|i1)==0) return x;
 		i1 |= i0;
@@ -67,7 +67,7 @@ TWO64[2]={
 		SET_LDOUBLE_EXP(t,(i0&0x7fff)|(sx<<15));
 	        return t;
 	    } else {
-		i = (0xffffffff)>>j0;
+		i = (0x7fffffff)>>j0;
 		if(((i0&i)|i1)==0) return x; /* x is integral */
 		i>>=1;
 		if(((i0&i)|i1)!=0) {

@@ -1,4 +1,93 @@
+1997-03-23 02:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/sys/time.h: Make values ITIMER_* also available as macros.
+
+	* elf/dl-support.c (_dl_sysdep_read_whole_file): Don't call
+	__fstat but instead __fxstat directly to avoid dependency on
+	libc.a when inline failed.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_read_whole_file): Likewise.
+
+	* math/Makefile (libm-routines): Add s_remquo.
+	* sysdeps/libm-i387/s_remquo.S: New file.
+	* sysdeps/libm-i387/s_remquof.S: New file.
+	* sysdeps/libm-i387/s_remquol.S: New file.
+	* sysdeps/libm-ieee754/s_remquo.c: New file.
+	* sysdeps/libm-ieee754/s_remquof.c: New file.
+	* sysdeps/libm-ieee754/s_remquol.c: New file.
+
+	* math/libm-test.c (remquo_test): New function.
+
+	* sysdeps/libm-ieee754/s_rintl.c: Handle implicit leading one
+	correctly.
+
+1997-03-22 14:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (libm-calls): Add s_nan.
+	* sysdeps/libm-ieee754/s_nan.c: New file.  Implement `nan' function.
+	* sysdeps/libm-ieee754/s_nanf.c: New file.  Implement `nanf' function.
+	* sysdeps/libm-ieee754/s_nanl.c: New file.  Implement `nanl' function.
+
+	* math/libm-test.c (basic_tests): Add tests for `nan' function.
+
+	* math/libm-test.c (copysign_test): New function.
+	(main): Call copysign_test.
+
+1997-03-22 06:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/s_nextafter.c: Return y if x == y.
+	* sysdeps/libm-ieee754/s_nextafterf.c: Likewise.
+	* sysdeps/libm-ieee754/s_nextafterl.c: Likewise.
+	* sysdeps/libm-i387/s_nextafterl.c: Likewise.
+
+	* math/libm-test.c (fdim_test, fmin_test, fmax_test, nextafter_test):
+	New functions.  Test these functions.
+	(main): Call above new functions.
+
+1997-03-22 04:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Net release 2.0.2.
+
+1997-03-22 04:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/termbits.h (OXTABS): Define as alias for
+	XTABS.
+	* sysdeps/unix/sysv/linux/alpha/termbits.h (OXTABS): Likewise.
+	* termios/sys/ttydefaults.h: Partly revert patch by Andreas Schwab
+	of Sun Dec 15 16:33:44 1996.
+	Proposed by Thomas Bushnell <thomas@gnu.ai.mit.edu>.
+
+1997-03-21 13:41  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/sparc/dl-machine.h (elf_machine_rel): Rewritten as for i386.
+	Check here for non-SHN_UNDEF STB_LOCAL symbols don't do any lookup or
+	consult their values.
+	(elf_machine_lookup_noexec_p, elf_machine_lookup_noplt_p,
+	ELF_MACHINE_RELOC_NOPLT): New macros.
+
+	* elf/rtld.c (dl_main): Pass ELF_MACHINE_RELOC_NOPLT to
+	_dl_lookup_symbol in place of DL_LOOKUP_NOPLT.
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_RELOC_NOPLT): New macro.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Rewritten to do the
+	symbol lookup before checking reloc type except for R_386_RELATIVE.
+	(elf_machine_lookup_noexec_p, elf_machine_lookup_noplt_p): New macros.
+
+	* elf/dl-reloc.c (RESOLVE): Remove STB_LOCAL check; let it be
+	per-machine since it supposedly can't happen on i386.
+
+	* elf/dl-lookup.c (do_lookup): Change arg FLAGS to RELOC_TYPE.  Use
+	elf_machine_lookup_{noexec,noplt}_p macros on it.  Remove gratuitous
+	indirection from REF arg; change callers.
+	(_dl_lookup_symbol, _dl_lookup_versioned_symbol): Change arg name.
+	(_dl_lookup_symbol_skip, _dl_lookup_versioned_symbol_skip): Remove
+	FLAGS arg altogether.
+	* elf/dlsym.c: Remove argument of FLAGS parameter.
+	* elf/dlvsym.c: Likewise.
+	* elf/link.h: Update decls.
+
 1997-03-21 20:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (distribute): Add BUGS.
 
 	* sysdeps/generic/machine-gmon.h: Update copyright.
 

@@ -290,18 +290,15 @@ extern void _dl_close (struct link_map *map);
    null-terminated list of object scopes to search; each object's
    l_searchlist (i.e. the segment of the dependency tree starting at that
    object) is searched in turn.  REFERENCE_NAME should name the object
-   containing the reference; it is used in error messages.  FLAGS is a
-   set of flags:  */
-#define DL_LOOKUP_NOEXEC 1	/* Don't search the executable for a
-				   definition; this is used for copy
-				   relocs. */
-#define DL_LOOKUP_NOPLT 2	/* The reference must not be resolved
-				   to a PLT entry.  */
+   containing the reference; it is used in error messages.
+   RELOC_TYPE is a machine-dependent reloc type, which is passed to
+   the `elf_machine_lookup_*_p' macros in dl-machine.h to affect which
+   symbols can be chosen.  */
 extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
 				     const ElfW(Sym) **sym,
 				     struct link_map *symbol_scope[],
 				     const char *reference_name,
-				     int flags);
+				     int reloc_type);
 
 /* Lookup versioned symbol.  */
 extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
@@ -309,15 +306,14 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
 					       struct link_map *symbol_scope[],
 					       const char *reference_name,
 					       const struct r_found_version *version,
-					       int flags);
+					       int reloc_type);
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
 extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
 					  const ElfW(Sym) **sym,
 					  struct link_map *symbol_scope[],
 					  const char *reference_name,
-					  struct link_map *skip_this,
-					  int flags);
+					  struct link_map *skip_this);
 
 /* For handling RTLD_NEXT with versioned symbols we must be able to
    skip shared objects.  */
@@ -326,8 +322,7 @@ extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
 						    struct link_map *symbol_scope[],
 						    const char *reference_name,
 						    const struct r_found_version *version,
-						    struct link_map *skip_this,
-						    int flags);
+						    struct link_map *skip_this);
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);

@@ -105,6 +105,10 @@ struct termios
 #define   FF0	0000000
 #define   FF1	0100000
 
+/* On Linux there is no OXTABS bit defined.  Take it as an alias for
+   XTABS.  */
+#define OXTABS	XTABS
+
 /* c_cflag bit meaning */
 #define CBAUD	0010017
 #define  B0	0000000		/* hang up */

@@ -47,7 +47,8 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     w_atan2 w_atanh w_cosh w_drem w_exp w_fmod w_gamma		\
 	     w_gamma_r w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
-	     s_signbit s_fpclassify s_fmax s_fmin s_fdim		\
+	     s_signbit s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc	\
+	     s_remquo							\
 	     conj cimag creal cabs
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\

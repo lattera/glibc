@@ -53,8 +53,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	  while (l->l_loader)
 	    l = l->l_loader;
 
-	  loadbase = _dl_lookup_symbol_skip
-	    (name, &ref, &_dl_loaded, NULL, l, 0);
+	  loadbase = _dl_lookup_symbol_skip (name, &ref, &_dl_loaded, NULL, l);
 	}
       else
 	{

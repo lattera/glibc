@@ -154,7 +154,7 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
   int fd = __open (file, O_RDONLY);
   if (fd < 0)
     return NULL;
-  if (__fstat (fd, &st) < 0)
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
     result = NULL;
   else
     {

@@ -290,7 +290,7 @@ $(objpfx)isomac: isomac.c
 
 # Make the distribution tarfile.
 
-distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
+distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk isomac.c			\

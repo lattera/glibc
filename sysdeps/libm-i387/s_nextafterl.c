@@ -49,7 +49,7 @@ static char rcsid[] = "$NetBSD: $";
 	if(((ix==0x7fff)&&(((hx|lx)|-(hx|lx))&hx)>>31!=0) ||   /* x is nan */
 	   ((iy==0x7fff)&&(((hy|ly)|-(hy|ly))&hy)>>31!=0))     /* y is nan */
 	   return x+y;
-	if(x==y) return x;		/* x=y, return x */
+	if(x==y) return y;		/* x=y, return y */
 	if((ix|hx|lx)==0) {			/* x == 0 */
 	    SET_LDOUBLE_WORDS(x,esx&0x8000,0,1);/* return +-minsubnormal */
 	    y = x*x;

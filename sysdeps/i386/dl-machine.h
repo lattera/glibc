@@ -218,7 +218,14 @@ _dl_start_user:\n\
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type) ((type) == R_386_JMP_SLOT)
+#define elf_machine_lookup_noexec_p(type) ((type) == R_386_COPY)
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_lookup_noplt_p(type) ((type) == R_386_JMP_SLOT)
+
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
+#define ELF_MACHINE_RELOC_NOPLT	R_386_JMP_SLOT
 
 /* The i386 never uses Elf32_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1
@@ -235,62 +242,63 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  Elf32_Addr loadbase;
 
-  switch (ELF32_R_TYPE (reloc->r_info))
+  if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
     {
-    case R_386_COPY:
-      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOEXEC);
-      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
-      break;
-    case R_386_GLOB_DAT:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
-      break;
-    case R_386_JMP_SLOT:
-      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOPLT);
-      *reloc_addr = sym ? (loadbase + sym->st_value) : 0;
-      break;
-    case R_386_32:
-      {
-	Elf32_Addr undo = 0;
-#ifndef RTLD_BOOTSTRAP
-	/* This is defined in rtld.c, but nowhere in the static libc.a;
-	   make the reference weak so static programs can still link.  This
-	   declaration cannot be done when compiling rtld.c (i.e.  #ifdef
-	   RTLD_BOOTSTRAP) because rtld.c contains the common defn for
-	   _dl_rtld_map, which is incompatible with a weak decl in the same
-	   file.  */
-	weak_extern (_dl_rtld_map);
-	if (map == &_dl_rtld_map)
-	  /* Undo the relocation done here during bootstrapping.  Now we will
-	     relocate it anew, possibly using a binding found in the user
-	     program or a loaded library rather than the dynamic linker's
-	     built-in definitions used while loading those libraries.  */
-	  undo = map->l_addr + sym->st_value;
-#endif
-	loadbase = RESOLVE (&sym, version, 0);
-	*reloc_addr += (sym ? (loadbase + sym->st_value) : 0) - undo;
-	break;
-      }
-    case R_386_RELATIVE:
 #ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
 #endif
 	*reloc_addr += map->l_addr;
-      break;
-    case R_386_PC32:
-      loadbase = RESOLVE (&sym, version, 0);
-      *reloc_addr += ((sym ? (loadbase + sym->st_value) : 0) -
-		      (Elf32_Addr) reloc_addr);
-      break;
-    case R_386_NONE:		/* Alright, Wilbur.  */
-      break;
-    default:
-      assert (! "unexpected dynamic reloc type");
-      break;
     }
+  else
+    {
+#ifndef RTLD_BOOTSTRAP
+      const Elf32_Sym *const refsym = sym;
+#endif
+      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      if (sym)
+	value += sym->st_value;
 
+      switch (ELF32_R_TYPE (reloc->r_info))
+	{
+	case R_386_COPY:
+	  memcpy (reloc_addr, (void *) value, sym->st_size);
+	  break;
+	case R_386_GLOB_DAT:
+	case R_386_JMP_SLOT:
+	  *reloc_addr = value;
+	  break;
+	case R_386_32:
+	  {
+#ifndef RTLD_BOOTSTRAP
+	   /* This is defined in rtld.c, but nowhere in the static
+	      libc.a; make the reference weak so static programs can
+	      still link.  This declaration cannot be done when
+	      compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP) because
+	      rtld.c contains the common defn for _dl_rtld_map, which
+	      is incompatible with a weak decl in the same file.  */
+	    weak_extern (_dl_rtld_map);
+	    if (map == &_dl_rtld_map)
+	      /* Undo the relocation done here during bootstrapping.
+		 Now we will relocate it anew, possibly using a
+		 binding found in the user program or a loaded library
+		 rather than the dynamic linker's built-in definitions
+		 used while loading those libraries.  */
+	      value -= map->l_addr + refsym->st_value;
+#endif
+	    *reloc_addr += value;
+	    break;
+	  }
+	case R_386_PC32:
+	  *reloc_addr += (value - (Elf32_Addr) reloc_addr);
+	  break;
+	case R_386_NONE:		/* Alright, Wilbur.  */
+	  break;
+	default:
+	  assert (! "unexpected dynamic reloc type");
+	  break;
+	}
+    }
 }
 
 static inline void

@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
   int fd = __open (file, O_RDONLY);
   if (fd < 0)
     return NULL;
-  if (__fstat (fd, &st) < 0)
+  if (__fxstat (_STAT_VER, fd, &st) < 0)
     result = NULL;
   else
     {

@@ -22,7 +22,8 @@
 #include <assert.h>
 #include <string.h>
 
-#include <dl-hash.h>
+#include "dl-hash.h"
+#include <dl-machine.h>
 #include "../stdio-common/_itoa.h"
 
 #define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
@@ -57,10 +58,10 @@ struct sym_val
    something bad happened.  */
 static inline int
 do_lookup (const char *undef_name, unsigned long int hash,
-	   const ElfW(Sym) **ref, struct sym_val *result,
+	   const ElfW(Sym) *ref, struct sym_val *result,
 	   struct link_map *list[], size_t i, size_t n,
 	   const char *reference_name, const struct r_found_version *version,
-	   struct link_map *skip, int flags)
+	   struct link_map *skip, int reloc_type)
 {
   struct link_map *map;
 
@@ -78,7 +79,8 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	continue;
 
       /* Don't search the executable when resolving a copy reloc.  */
-      if (flags & DL_LOOKUP_NOEXEC && map->l_type == lt_executable)
+      if (elf_machine_lookup_noexec_p (reloc_type) &&
+	  map->l_type == lt_executable)
 	continue;
 
       symtab = ((void *) map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
@@ -98,7 +100,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	  const ElfW(Sym) *sym = &symtab[symidx];
 
 	  if (sym->st_value == 0 || /* No value.  */
-	      ((flags & DL_LOOKUP_NOPLT) != 0 /* Reject PLT entry.  */
+	      (elf_machine_lookup_noplt_p (reloc_type) /* Reject PLT entry.  */
 	       && sym->st_shndx == SHN_UNDEF))
 	    continue;
 
@@ -113,7 +115,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      continue;
 	    }
 
-	  if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
+	  if (sym != ref && strcmp (strtab + sym->st_name, undef_name))
 	    /* Not the symbol we are looking for.  */
 	    continue;
 
@@ -188,16 +190,13 @@ do_lookup (const char *undef_name, unsigned long int hash,
 }
 
 /* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME.  FLAGS is a set of flags.  If DL_LOOKUP_NOEXEC is set,
-   then don't search the executable for a definition; this used for
-   copy relocs.  If DL_LOOKUP_NOPLT is set, then a PLT entry cannot
-   satisfy the reference; some different binding must be found.  */
+   UNDEF_NAME.  */
 
 ElfW(Addr)
 _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   struct link_map *symbol_scope[],
 		   const char *reference_name,
-		   int flags)
+		   int reloc_type)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
@@ -205,9 +204,9 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
-    if (do_lookup (undef_name, hash, ref, &current_value,
+    if (do_lookup (undef_name, hash, *ref, &current_value,
 		   (*scope)->l_searchlist, 0, (*scope)->l_nsearchlist,
-		   reference_name, NULL, NULL, flags))
+		   reference_name, NULL, NULL, reloc_type))
       break;
 
   if (current_value.s == NULL &&
@@ -230,8 +229,7 @@ ElfW(Addr)
 _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
 			struct link_map *symbol_scope[],
 			const char *reference_name,
-			struct link_map *skip_map,
-			int flags)
+			struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
@@ -243,13 +241,13 @@ _dl_lookup_symbol_skip (const char *undef_name, const ElfW(Sym) **ref,
   for (i = 0; (*scope)->l_dupsearchlist[i] != skip_map; ++i)
     assert (i < (*scope)->l_ndupsearchlist);
 
-  if (! do_lookup (undef_name, hash, ref, &current_value,
+  if (! do_lookup (undef_name, hash, *ref, &current_value,
 		   (*scope)->l_dupsearchlist, i, (*scope)->l_ndupsearchlist,
-		   reference_name, NULL, skip_map, flags))
+		   reference_name, NULL, skip_map, 0))
     while (*++scope)
-      if (do_lookup (undef_name, hash, ref, &current_value,
+      if (do_lookup (undef_name, hash, *ref, &current_value,
 		     (*scope)->l_dupsearchlist, 0, (*scope)->l_ndupsearchlist,
-		     reference_name, NULL, skip_map, flags))
+		     reference_name, NULL, skip_map, 0))
 	break;
 
   *ref = current_value.s;
@@ -266,7 +264,8 @@ ElfW(Addr)
 _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
 			     struct link_map *symbol_scope[],
 			     const char *reference_name,
-			     const struct r_found_version *version, int flags)
+			     const struct r_found_version *version,
+			     int reloc_type)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
@@ -275,9 +274,9 @@ _dl_lookup_versioned_symbol (const char *undef_name, const ElfW(Sym) **ref,
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     {
-      int res = do_lookup (undef_name, hash, ref, &current_value,
+      int res = do_lookup (undef_name, hash, *ref, &current_value,
 			   (*scope)->l_searchlist, 0, (*scope)->l_nsearchlist,
-			   reference_name, version, NULL, flags);
+			   reference_name, version, NULL, reloc_type);
       if (res > 0)
 	break;
 
@@ -312,8 +311,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 				  struct link_map *symbol_scope[],
 				  const char *reference_name,
 				  const struct r_found_version *version,
-				  struct link_map *skip_map,
-				  int flags)
+				  struct link_map *skip_map)
 {
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { 0, NULL };
@@ -325,13 +323,13 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->l_dupsearchlist[i] != skip_map; ++i)
     assert (i < (*scope)->l_ndupsearchlist);
 
-  if (! do_lookup (undef_name, hash, ref, &current_value,
+  if (! do_lookup (undef_name, hash, *ref, &current_value,
 		   (*scope)->l_dupsearchlist, i, (*scope)->l_ndupsearchlist,
-		   reference_name, version, skip_map, flags))
+		   reference_name, version, skip_map, 0))
     while (*++scope)
-      if (do_lookup (undef_name, hash, ref, &current_value,
+      if (do_lookup (undef_name, hash, *ref, &current_value,
 		     (*scope)->l_dupsearchlist, 0, (*scope)->l_ndupsearchlist,
-		     reference_name, version, skip_map, flags))
+		     reference_name, version, skip_map, 0))
 	break;
 
   *ref = current_value.s;
