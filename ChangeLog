@@ -1,5 +1,8 @@
 1999-11-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c: Don't predefine the character
+	classes and mappings of ISO 14652.
+
 	* locale/programs/ld-ctype.c: Punt if character class definitions
 	to not consists of tok_bsymbol (for now).
 

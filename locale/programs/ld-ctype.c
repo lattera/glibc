@@ -44,11 +44,13 @@
 #include <assert.h>
 
 
+#ifdef PREDEFINED_CLASSES
 /* These are the extra bits not in wctype.h since these are not preallocated
    classes.  */
-#define _ISwspecial1	(1 << 29)
-#define _ISwspecial2	(1 << 30)
-#define _ISwspecial3	(1 << 31)
+# define _ISwspecial1	(1 << 29)
+# define _ISwspecial2	(1 << 30)
+# define _ISwspecial3	(1 << 31)
+#endif
 
 
 /* The bit used for representing a special class.  */
@@ -231,6 +233,7 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
       ctype_class_new (lr, ctype, "cntrl");
       ctype_class_new (lr, ctype, "punct");
       ctype_class_new (lr, ctype, "alnum");
+#ifdef PREDEFINED_CLASSES
       /* The following are extensions from ISO 14652.  */
       ctype_class_new (lr, ctype, "left_to_right");
       ctype_class_new (lr, ctype, "right_to_left");
@@ -249,6 +252,7 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
       ctype_class_new (lr, ctype, "no_connect");
       ctype_class_new (lr, ctype, "no_connect-space");
       ctype_class_new (lr, ctype, "vowel_connect");
+#endif
 
       ctype->class_collection_max = charmap->mb_cur_max == 1 ? 256 : 512;
       ctype->class_collection
@@ -261,7 +265,9 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
       ctype->last_map_idx = MAX_NR_CHARMAP;
       ctype_map_new (lr, ctype, "toupper", charmap);
       ctype_map_new (lr, ctype, "tolower", charmap);
+#ifdef PREDEFINED_CLASSES
       ctype_map_new (lr, ctype, "tosymmetric", charmap);
+#endif
 
       /* Fill first 256 entries in `toXXX' arrays.  */
       for (cnt = 0; cnt < 256; ++cnt)
@@ -1762,6 +1768,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 		  break;
 	      if (cnt >= ctype->nr_charclass)
 		{
+#ifdef PREDEFINED_CLASSES
 		  if (now->val.str.lenmb == 8
 		      && memcmp ("special1", now->val.str.startmb, 8) == 0)
 		    class_bit = _ISwspecial1;
@@ -1772,6 +1779,7 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 		      && memcmp ("special3", now->val.str.startmb, 8) == 0)
 		    class_bit = _ISwspecial3;
 		  else
+#endif
 		    {
 		      lr_error (ldfile, _("\
 unknown character class `%s' in category `LC_CTYPE'"),
@@ -2263,6 +2271,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	      free (now->val.str.startmb);
 	      goto read_mapping;
             }
+#ifdef PREDEFINED_CLASSES
 	  if (strcmp (now->val.str.startmb, "special1") == 0)
 	    {
 	      class_bit = _ISwspecial1;
@@ -2286,6 +2295,7 @@ with character code range values one must use the absolute ellipsis `...'"));
 	      mapidx = 2;
 	      goto read_mapping;
 	    }
+#endif
 	  break;
 
 	case tok_end:
