@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  HPPA version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+#include <sysdep.h>
 
 /* This just does a tail-call to `__sigsetjmp (ARG, 1)'.
    We cannot do it in C because it must be a tail-call, so frame-unwinding
@@ -34,3 +36,4 @@ _setjmp:
 	ldi	0, %r25
 
 	.procend
+strong_alias (_setjmp, __GI__setjmp)
