@@ -2,8 +2,10 @@
 
 	* iconvdata/Makefile (modules): Add GBBIG5.
 	(distribute): Add gbbig5.c.
-	* iconvdata/gbbig5.c: New file.
 	* iconvdata/gconv-modules: Add entries for GBBIG5 module.
+
+	* iconvdata/gbbig5.c: New file.
+	Contributed by Yong Li <rigel863@yahoo.com>.
 
 2001-02-13  Philip Blundell  <pb@futuretv.com>
 
