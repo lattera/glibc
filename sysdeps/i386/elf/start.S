@@ -85,7 +85,7 @@ _start:
    meaningless since we don't support machines < 80386.  */
 	.section .rodata
 	.globl _fp_hw
-	.long 3
+_fp_hw:	.long 3
 	.size _fp_hw, 4
 
 /* Define a symbol for the first piece of initialized data.  */
