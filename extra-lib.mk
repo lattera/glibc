@@ -25,12 +25,10 @@ ifneq (,$(filter .so,$(object-suffixes-$(lib))))
 alltypes-$(lib) += $(objpfx)$(lib).so
 endif
 
-ifneq (0,$(MAKELEVEL))
-ifndef $(lib)-no-lib-dep
+ifeq (,$($(lib)-no-lib-dep))
 lib-noranlib: $(alltypes-$(lib))
 else
 others: $(alltypes-$(lib))
-endif
 endif
 
 # Use o-iterator.mk to generate a rule for each flavor of library.

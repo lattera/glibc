@@ -1005,7 +1005,7 @@ else
   ac_cv_prog_CC="$CC" # Let the user override the test.
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in gcc; do
+  for ac_dir in $PATH; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/$ac_word; then
       ac_cv_prog_CC="${ac_tool_prefix}gcc"
@@ -1035,7 +1035,7 @@ else
   ac_cv_prog_AR="$AR" # Let the user override the test.
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in ar; do
+  for ac_dir in $PATH; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/$ac_word; then
       ac_cv_prog_AR="${ac_tool_prefix}ar"
@@ -1095,7 +1095,7 @@ else
   ac_cv_prog_RANLIB="$RANLIB" # Let the user override the test.
 else
   IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
-  for ac_dir in :; do
+  for ac_dir in $PATH; do
     test -z "$ac_dir" && ac_dir=.
     if test -f $ac_dir/$ac_word; then
       ac_cv_prog_RANLIB="ranlib"

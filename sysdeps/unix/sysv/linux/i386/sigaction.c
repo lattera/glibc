@@ -44,7 +44,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 		"int $0x80\n"
 		"popl %%ebx"
 		: "=a" (result)
-		: "0" (SYS_ify (sigaction)), "g" (sig), "c" (act), "d" (oact));
+		: "0" (SYS_ify (sigaction)), "r" (sig), "c" (act), "d" (oact));
 
   if (result < 0)
     {
@@ -75,6 +75,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
        "	popf\n"
        "	ret"
        : : );
+
  restore_nomask:
   asm ("	addl $4, %%esp\n"
        "	popl %%eax\n"
@@ -83,7 +84,9 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
        "	popf\n"
        "	ret"
        : : );
+
   /* NOTREACHED */
+  return -1;
 }
 
 weak_alias (__sigaction, sigaction)

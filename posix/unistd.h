@@ -366,6 +366,12 @@ extern __gid_t getegid __P ((void));
 extern int __getgroups __P ((int __size, __gid_t __list[]));
 extern int getgroups __P ((int __size, __gid_t __list[]));
 
+#ifdef	__USE_GNU
+/* Return nonzero iff the calling process is in group GID.  */
+extern int __group_member __P ((__gid_t __gid));
+extern int group_member __P ((__gid_t __gid));
+#endif
+
 /* Set the user ID of the calling process to UID.
    If the calling process is the super-user, set the real
    and effective user IDs, and the saved set-user-ID to UID;

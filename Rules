@@ -55,7 +55,7 @@ endif
 include ../Makerules
 
 .PHONY: subdir_lib
-subdir_lib: objs lib-noranlib
+subdir_lib: lib-noranlib
 
 # Some subdirs need to install a dummy library.
 # They can use "$(objpfx)libfnord.a: $(dep-dummy-lib); $(make-dummy-lib)".
@@ -72,7 +72,7 @@ generated := $(generated) dummy.o dummy.c
 # This makes all the auxilliary and test programs.
 
 .PHONY: others tests
-others: $(addprefix $(objpfx),$(others))
+others: $(addprefix $(objpfx),$(others) $(extra-objs))
 ifeq ($(cross-compiling),yes)
 tests: $(addprefix $(objpfx),$(tests))
 else

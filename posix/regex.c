@@ -1159,7 +1159,7 @@ typedef struct
     /* Push the info, starting with the registers.  */			\
     DEBUG_PRINT1 ("\n");						\
 									\
-    if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
+    if (1)								\
       for (this_reg = lowest_active_reg; this_reg <= highest_active_reg; \
 	   this_reg++)							\
 	{								\
@@ -1220,7 +1220,7 @@ typedef struct
 
 /* We actually push this many items.  */
 #define NUM_FAILURE_ITEMS				\
-  (((RE_NO_POSIX_BACKTRACKING & bufp->syntax		\
+  (((0							\
      ? 0 : highest_active_reg - lowest_active_reg + 1)	\
     * NUM_REG_ITEMS)					\
    + NUM_NONREG_ITEMS)
@@ -1281,7 +1281,7 @@ typedef struct
   low_reg = (unsigned) POP_FAILURE_INT ();				\
   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\
 									\
-  if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
+  if (1)								\
     for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
       {									\
 	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\
@@ -1299,7 +1299,7 @@ typedef struct
     {									\
       for (this_reg = highest_active_reg; this_reg > high_reg; this_reg--) \
 	{								\
-	  reg_info[this_reg].word = 0;					\
+	  reg_info[this_reg].word.integer = 0;				\
 	  regend[this_reg] = 0;						\
 	  regstart[this_reg] = 0;					\
 	}								\

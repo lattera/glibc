@@ -1,3 +1,28 @@
+Tue Oct 31 00:07:29 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/group_member.c: New file.
+	* sysdeps/generic/group_member.c: New file.
+
+	* Makerules (lib-noranlib): Don't depend on $(install-lib).
+	(others): Do.
+	* extra-lib.mk: Fix test of $(lib)-no-lib-dep.
+
+Mon Oct 30 12:33:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Rules (others): Depend on $(extra-objs).
+
+	* posix/unistd.h [__USE_GNU]: Declare group_member, __group_member.
+	* posix/Makefile (routines): Add group_member.
+
+	* sysdeps/posix/euidaccess.c: New file, adapted from fileutils.
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Tighten constraint for
+	SIG operand in asm so it must be a register.
+	Add dead return to quiet gcc warning.
+
+	* Makerules (sysd-rules): Write a defn for sysd-rules-done.
+	[! sysd-rules-done]: Inhibit deps.
+
 Thu Oct 26 23:11:11 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 
 	* sysdeps/unix/sysv/linux/poll.c: Don't define as stub.  Use

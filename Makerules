@@ -75,11 +75,6 @@ vpath %.h $(subst $(empty) ,:,$(strip $(common-objpfx) \
 				      $(addprefix $(sysdep_dir)/,$(sysdirs)) \
 				      $(..)))
 
-ifeq ($(wildcard $(+sysdir_pfx)sysd-Makefile),)
-# Don't do deps until this exists, because it might change the sources list.
-no_deps=t
-endif
-
 # Some sysdep makefiles use this to distinguish being included here from
 # being included individually by a subdir makefile (hurd/Makefile needs this).
 in-Makerules := yes
@@ -103,6 +98,12 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
 	 echo 'sysd-Makefile-done=t') > $@T
 	mv -f $@T $@
 endif
+
+ifndef sysd-Makefile-done
+# Don't do deps until this exists, because it might change the sources list.
+no_deps=t
+endif
+
 
 # Reorder before-compile so that mach things come first, and hurd things
 # second, before all else.  The mach and hurd subdirectories have many
@@ -231,8 +232,15 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 	   $(close-check-inhibit-asm)	\
 	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
-	 done) > $@T
+	 done;								      \
+	 echo 'sysd-rules-done = t') > $@T
 	mv -f $@T $@
+
+ifndef sysd-rules-done
+# Don't do deps until this exists, because it provides rules to make the deps.
+no_deps=t
+endif
+
 
 ifndef compile-command.S
 compile-command.S = $(compile.S) $(OUTPUT_OPTION)
@@ -344,7 +352,8 @@ lib%.a: lib%.a(__.SYMDEF) ;
 libobjs: $(foreach o,$(object-suffixes),\
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 		   $(notdir $(objects:.o=$o))))
-lib-noranlib: libobjs $(addprefix $(objpfx),$(install-lib))
+lib-noranlib: libobjs
+others: $(addprefix $(objpfx),$(install-lib))
 
 ifdef objects
 
