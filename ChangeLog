@@ -8,6 +8,71 @@
 	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)]: Use this condition
 	on chown compatibility symbol; use compat_symbol, not symbol_version.
 
+2002-09-27  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (reg_free): Free the debug area.
+	(re_compile_internal): Allocate debug area for the input string.
+	(create_initial_state): Check the back references in initial states
+	if they are really match null string in the initial state.
+	(parse_reg_exp): Mark the dfa that the dfa can have plural matchings.
+	(parse_expression): Likewise.
+	(parse_bracket_exp): Likewise.
+	* posix/regex_internal.c (re_node_set_intersect): Remove unused
+	function.
+	(re_node_set_contains): Change to return the index of node.
+	* posix/regex_internal.h (re_backref_cache_entry): Change the members.
+	(re_match_context_t): Likewise.
+	(struct re_dfa_t): Likewise.
+	(re_sift_context_t): New structure.
+	* posix/regexec.c (match_ctx_clear_flag): New function.
+	(sift_ctx_init): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(add_epsilon_src_nodes): Likewise.
+	(sub_epsilon_src_nodes): Likewise.
+	(check_subexp_limits): Likewise.
+	(search_subexp): Likewise.
+	(sift_states_bkref): Likewise.
+	(merge_state_array): Likewise.
+	(sift_states_iter_bkref): Remove unused function.
+	(add_epsilon_backreference): Remove unused function.
+	(re_search_internal): Adapt new members and interfaces.
+	(check_matching): Check the back references in initial states
+	if they are really match null string in the initial state.
+	(proceed_next_node): Change the evaluation of back references,
+	since we have real registers here.
+	(set_regs): Adapt new interface of proceed_next_node.
+	(sift_states_backward): Add invocation of update_cur_sifted_state
+	instead of add_epsilon_backreference.
+	Add a sentinel to the outermost while loop.
+	Move the handling of back references to sift_states_bkref function,
+	since we can't handle some back references (e.g. a back reference
+	which match NULL string) here.
+	(transit_state_mb): Handle the new member max_mb_elem_len.
+	(transit_state_bkref_loop): Move the evaluation of back references to
+	search_subexp function, since we can't evaluate some back references
+	(e.g. a back reference which can have plural matchings) here.
+	(match_ctx_init): Adapt the new member.
+	(match_ctx_add_entry): Adapt the new members.
+
+2002-09-25  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/do-rel.h: Define macro DO_ELF_MACHINE_REL_RELATIVE for
+	'elf_machine_rel_relative'
+	(elf_dynamic_do_rel): Call DO_ELF_MACHINE_REL_RELATIVE macro
+	instead of 'elf_machine_rel_relative'.
+	* sysdeps/hppa/dl-machine.h:
+	Define macro DO_ELF_MACHINE_REL_RELATIVE for
+	'elf_machine_rel_relative' with extra map parameter
+	required by HPPA.
+	(elf_machine_rela_relative): Add plt relocation changes.
+
+2001-11-14  Matthew Wilcox  <willy@debian.org>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/ipc.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/msq.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/sem.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: New file.
+
 2002-09-27  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/Makefile: Fix typo in comment.
