@@ -69,7 +69,7 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
    } while (0)
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
-static inline int __attribute__ ((unused))
+static inline int __attribute_used__
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
   switch (ehdr->e_machine)
@@ -262,7 +262,7 @@ int _dl_mips_gnu_objects = 1;						      \
 /* This is called from assembly stubs below which the compiler can't see.  */ \
 static ElfW(Addr)							      \
 __dl_runtime_resolve (ElfW(Word), ElfW(Word), ElfW(Addr), ElfW(Addr))	      \
-		  __attribute__ ((unused));				      \
+		  __attribute_used__;					      \
 									      \
 static ElfW(Addr)							      \
 __dl_runtime_resolve (ElfW(Word) sym_index,				      \

@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  MIPS
-   Copyright (C) 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define _MCOUNT_DECL static void __mcount
+#define _MCOUNT_DECL(frompc,selfpc) \
+static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 
 /* Call __mcount with our the return PC for our caller,
    and the return PC our caller will return to.  */
