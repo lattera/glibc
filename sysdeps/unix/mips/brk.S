@@ -42,6 +42,6 @@ SYSCALL__(brk, 1)
 	sw a0, __curbrk
 	move v0, zero
 	jr ra
-	.end __brk
+PSEUDO_END(__brk)
 
 weak_alias (__brk, brk)
