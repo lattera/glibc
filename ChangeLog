@@ -1,3 +1,9 @@
+2003-02-20  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Add
+	missing arguments to INTERNAL_SYSCALL_ERROR_P and
+	INTERNAL_SYSCALL_ERRNO.
+
 2003-02-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c (__real_chown): Test

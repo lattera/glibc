@@ -138,10 +138,10 @@ __local_syscall_error:						\
    call.  */
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
-  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, nr, args);	\
-     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result), 0))	\
+  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, , nr, args);	\
+     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result, ), 0))	\
        {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result));		\
+	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result, ));		\
 	 _sys_result = (unsigned int) -1;				\
        }								\
      (int) _sys_result; })
