@@ -1953,8 +1953,50 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PPC64_TOC16_LO_DS    64 /* half16ds  #lo(S + A - .TOC.) >> 2.  */
 #define R_PPC64_PLTGOT16_DS    65 /* half16ds* (M + A) >> 2.  */
 #define R_PPC64_PLTGOT16_LO_DS 66 /* half16ds  #lo(M + A) >> 2.  */
+
+/* PowerPC64 relocations defined for the TLS access ABI.  */
+#define R_PPC64_TLS             67 /* none         (sym+add)@tls.  */
+#define R_PPC64_DTPMOD64        68 /* doubleword64 (sym+add)@dtpmod.  */
+#define R_PPC64_TPREL16         69 /* half16*      (sym+add)@tprel.  */
+#define R_PPC64_TPREL16_LO      60 /* half16       (sym+add)@tprel@l. */
+#define R_PPC64_TPREL16_HI      71 /* half16       (sym+add)@tprel@h.  */
+#define R_PPC64_TPREL16_HA      72 /* half16       (sym+add)@tprel@ha.  */
+#define R_PPC64_TPREL64         73 /* doubleword64 (sym+add)@tprel.  */
+#define R_PPC64_DTPREL16        74 /* half16*      (sym+add)@dtprel.  */
+#define R_PPC64_DTPREL16_LO     75 /* half16       (sym+add)@dtprel@l.  */
+#define R_PPC64_DTPREL16_HI     76 /* half16       (sym+add)@dtprel@h.  */
+#define R_PPC64_DTPREL16_HA     77 /* half16       (sym+add)@dtprel@ha.  */
+#define R_PPC64_DTPREL64        78 /* doubleword64 (sym+add)@dtprel.  */
+#define R_PPC64_GOT_TLSGD16     79 /* half16*      (sym+add)@got@tlsgd.  */
+#define R_PPC64_GOT_TLSGD16_LO  80 /* half16       (sym+add)@got@tlsgd@l.  */
+#define R_PPC64_GOT_TLSGD16_HI  81 /* half16       (sym+add)@got@tlsgd@h.  */
+#define R_PPC64_GOT_TLSGD16_HA  82 /* half16       (sym+add)@got@tlsgd@ha.  */
+#define R_PPC64_GOT_TLSLD16     83 /* half16*      (sym+add)@got@tlsld.  */
+#define R_PPC64_GOT_TLSLD16_LO  84 /* half16       (sym+add)@got@tlsld@l.  */
+#define R_PPC64_GOT_TLSLD16_HI  85 /* half16       (sym+add)@got@tlsld@h.  */
+#define R_PPC64_GOT_TLSLD16_HA  86 /* half16       (sym+add)@got@tlsld@ha.  */
+#define R_PPC64_GOT_TPREL16_DS  87 /* half16ds*    (sym+add)@got@tprel.  */
+#define R_PPC64_GOT_TPREL16_LO_DS 88 /* half16ds   (sym+add)@got@tprel@l.  */
+#define R_PPC64_GOT_TPREL16_HI  89 /* half16       (sym+add)@got@tprel@h.  */
+#define R_PPC64_GOT_TPREL16_HA  90 /* half16       (sym+add)@got@tprel@ha.  */
+#define R_PPC64_GOT_DTPREL16_DS 91 /* half16ds*    (sym+add)@got@dtprel.  */
+#define R_PPC64_GOT_DTPREL16_LO_DS 92 /* half16ds  (sym+add)@got@dtprel@l.  */
+#define R_PPC64_GOT_DTPREL16_HI 93 /* half16       (sym+add)@got@dtprel@h.  */
+#define R_PPC64_GOT_DTPREL16_HA 94 /* half16       (sym+add)@got@dtprel@ha.  */
+#define R_PPC64_TPREL16_DS      95 /* half16ds*    (sym+add)@tprel.  */
+#define R_PPC64_TPREL16_LO_DS   96 /* half16ds     (sym+add)@tprel@l.  */
+#define R_PPC64_TPREL16_HIGHER  97 /* half16       (sym+add)@tprel@higher.  */
+#define R_PPC64_TPREL16_HIGHERA 98 /* half16       (sym+add)@tprel@highera.  */
+#define R_PPC64_TPREL16_HIGHEST 99 /* half16       (sym+add)@tprel@highest.  */
+#define R_PPC64_TPREL16_HIGHESTA 100 /* half16    (sym+add)@tprel@highesta.  */
+#define R_PPC64_DTPREL16_DS    101 /* half16ds*    (sym+add)@dtprel.  */
+#define R_PPC64_DTPREL16_LO_DS 102 /* half16ds     (sym+add)@dtprel@l.  */
+#define R_PPC64_DTPREL16_HIGHER 103 /* half16      (sym+add)@dtprel@higher.  */
+#define R_PPC64_DTPREL16_HIGHERA 104 /* half16    (sym+add)@dtprel@highera.  */
+#define R_PPC64_DTPREL16_HIGHEST 105 /* half16    (sym+add)@dtprel@highest.  */
+#define R_PPC64_DTPREL16_HIGHESTA 106 /* half16  (sym+add)@dtprel@highesta.  */
 /* Keep this the last entry.  */
-#define R_PPC64_NUM		67
+#define R_PPC64_NUM		107
 
 /* The remaining relocs are from the Embedded ELF ABI, and are not
    in the SVR4 ELF ABI.  */

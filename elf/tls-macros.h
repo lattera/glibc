@@ -623,6 +623,58 @@ register void *__gp __asm__("$29");
      (int *) (__builtin_thread_pointer() + __offset); })
 # endif
 
+#elif defined __powerpc__ && defined __powerpc64__
+
+/* PowerPC64 Local Exec TLS access.  */
+# define TLS_LE(x) \
+  ({  int * __result;  \
+      asm ( \
+        "  addis %0,13," #x "@tprel@ha\n"  \
+        "  addi  %0,%0," #x "@tprel@l\n"   \
+        : "=b" (__result) );  \
+      __result;  \
+  })
+/* PowerPC64 Initial Exec TLS access.  */
+#  define TLS_IE(x) \
+  ({  int * __result;  \
+      asm (  \
+        "  ld  %0," #x "@got@tprel(2)\n"  \
+        "  add %0,%0," #x "@tls\n"   \
+        : "=b" (__result) );  \
+      __result;  \
+  })
+/* PowerPC64 Local Dynamic TLS access.  */
+#  define TLS_LD(x) \
+  ({  int * __result;  \
+      asm (  \
+        "  addi  3,2," #x "@got@tlsld\n"  \
+        "  bl    .__tls_get_addr\n"  \
+        "  nop   \n"  \
+        "  addis %0,3," #x "@dtprel@ha\n"  \
+        "  addi  %0,%0," #x "@dtprel@l\n"  \
+        : "=b" (__result) :  \
+        : "0", "3", "4", "5", "6", "7",    \
+          "8", "9", "10", "11", "12",      \
+          "lr", "ctr",  \
+          "cr0", "cr1", "cr5", "cr6", "cr7");  \
+      __result;  \
+  })
+/* PowerPC64 General Dynamic TLS access.  */
+#  define TLS_GD(x) \
+  ({  int * __result;  \
+      asm (  \
+        "  addi  3,2," #x "@got@tlsgd\n"  \
+        "  bl    .__tls_get_addr\n"  \
+        "  nop   \n"  \
+        "  mr    %0,3\n"  \
+        : "=b" (__result) :  \
+        : "0", "3", "4", "5", "6", "7",    \
+          "8", "9", "10", "11", "12",      \
+          "lr", "ctr",  \
+          "cr0", "cr1", "cr5", "cr6", "cr7");  \
+      __result;  \
+  })
+
 #else
 # error "No support for this architecture so far."
 #endif

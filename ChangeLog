@@ -1,3 +1,14 @@
+2003-02-25  Steven Munroe  <sjmunroe@us.ibm.com>
+
+        * elf/elf.h: Add new R_PPC64_* relocs for TLS.
+        * elf/tls-macros.h [__powerpc64__]
+        (TLS_LE, TLS_IE, TLS_LD, TLS_GD): Define.
+	* sysdeps/powerpc/powerpc64/elf/configure.in: New file.
+	* sysdeps/powerpc/powerpc64/elf/configure: New file (generated).
+
+        * sysdeps/powerpc/elf/libc-start.c (__libc_start_main):
+	Do DL_SYSDEP_OSCHECK here, matching 2002-12-01 change to generic file.
+
 2003-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* manual/memory.texi (Malloc Tunable Parameters): Clarify
