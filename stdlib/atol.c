@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <ansidecl.h>
 #include <stdlib.h>
 
 #undef	atol
@@ -23,8 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Convert a string to a long int.  */
 long int
-atol (nptr)
-     const char *nptr;
+DEFUN(atol, (nptr), CONST char *nptr)
 {
-  return __strtol_internal (nptr, (char **) NULL, 10, 0);
+  return(strtol(nptr, (char **) NULL, 10));
 }

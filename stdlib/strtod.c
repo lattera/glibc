@@ -405,13 +405,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
      Return current read pointer.  */
   if (!isdigit (c) && c != decimal)
     {
-      if (grouping)
-	/* Check the grouping of the digits.  */
-        tp = correctly_grouped_prefix (start_of_digits, cp, thousands,
-				       grouping);
-      else
-	tp = cp;
-
+      tp = correctly_grouped_prefix (start_of_digits, cp, thousands, grouping);
+      /* If TP is at the start of the digits, there was no correctly
+	 grouped prefix of the string; so no number found.  */
       RETURN (0.0, tp == start_of_digits ? nptr : tp);
     }
 
@@ -558,7 +554,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       assert (dig_no >= int_no);
     }
 
-  number_parsed:
+ number_parsed:
 
   /* The whole string is parsed.  Store the address of the next character.  */
   if (endptr)
