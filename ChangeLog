@@ -1,3 +1,11 @@
+2001-05-07  H.J. Lu  <hjl@gnu.org>
+
+	* elf/ldconfig.c (dir_entry): Add ino and dev.
+	(add_single_dir): Compare ino and dev to check if 2 directory
+	paths are the same or not. Free entry->path for duplicates.
+	(add_dir): Initialize ino and dev for entry.
+	(search_dir): Handle symlink to directory.
+
 2001-05-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Add ulps for new exp tests.
