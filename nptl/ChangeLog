@@ -1,3 +1,46 @@
+2003-02-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/Makefile: New file.
+	* sysdeps/sh/bits/atomic.h: New file.
+	* sysdeps/sh/pthread_spin_init.c: New file.
+	* sysdeps/sh/pthread_spin_lock.c: New file.
+	* sysdeps/sh/pthread_spin_trylock.S: New file.
+	* sysdeps/sh/pthread_spin_unlock.S: New file.
+	* sysdeps/sh/pthreaddef.h: New file.
+	* sysdeps/sh/tcb-offsets.sym: New file.
+	* sysdeps/sh/td_ta_map_lwp2thr.c: New file.
+	* sysdeps/sh/tls.h: New file.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: New file.
+	* sysdeps/unix/sysv/linux/sh/bits/semaphore.h: New file.
+	* sysdeps/unix/sysv/linux/sh/createthread.c: New file.
+	* sysdeps/unix/sysv/linux/sh/fork.c: New file.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevellock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/libc-lowlevelmutex.S: New file.
+	* sysdeps/unix/sysv/linux/sh/lowlevel-atomic.h: New file.
+	* sysdeps/unix/sysv/linux/sh/lowlevelcond.h: New file.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/sh/lowlevelmutex.S: New file.
+	* sysdeps/unix/sysv/linux/sh/lowlevelrwlock.h: New file.
+	* sysdeps/unix/sysv/linux/sh/pt-initfini.c: New file.
+	* sysdeps/unix/sysv/linux/sh/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_barrier_wait.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_signal.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_once.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_rdlock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedrdlock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_timedwrlock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_unlock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/pthread_rwlock_wrlock.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sem_post.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sem_trywait.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: New file.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: New file.
+
 2003-02-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cond2.c: Rearrange code to not rely on behavior undefined
