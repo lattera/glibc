@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-   Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -352,7 +352,9 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   result = (struct r_strlenpair *) malloc (*sz * sizeof (*result) + total);
   if (result == NULL)
     {
+#ifndef USE_TLS
     no_memory:
+#endif
       INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL,
 				N_("cannot create capability list"));
     }
