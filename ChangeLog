@@ -1,5 +1,8 @@
 2001-08-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* nss/test-netdb.c (test_hosts): Don't segfault if gethostname
+	returns NULL.
+
 	* elf/do-rel.h (elf_dynamic_do_rel): Fix problem with ld.so
 	startup.  Explicitly remove lazy part for RTLD_BOOTSTRAP since gcc
 	doesn't do it.

@@ -185,12 +185,15 @@ test_hosts (void)
   if (gethostname (name, namelen) == 0)
     {
       printf ("Hostname: %s\n", name);
-      hptr1 = gethostbyname (name);
-      output_hostent ("gethostbyname (gethostname(...))", hptr1);
+      if (name != NULL)
+	{
+	  hptr1 = gethostbyname (name);
+	  output_hostent ("gethostbyname (gethostname(...))", hptr1);
+	}
     }
 
   ip.s_addr = htonl (INADDR_LOOPBACK);
-  hptr1 = gethostbyaddr ((char *)&ip, sizeof(ip), AF_INET);
+  hptr1 = gethostbyaddr ((char *) &ip, sizeof(ip), AF_INET);
   if (hptr1 != NULL)
     {
       printf ("official name of 127.0.0.1: %s\n", hptr1->h_name);
