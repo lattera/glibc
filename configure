@@ -424,12 +424,12 @@ trap 'rm -fr conftest* confdefs* core core.* *.core $ac_clean_files; exit 1' 1 2
 # 2 errors and warnings
 # 3 some systems may open it to /dev/tty
 # 4 used on the Kubota Titan
-# 4 checking for... messages and results
+# 6 checking for... messages and results
 # 5 compiler messages saved in config.log
 if test "$silent" = yes; then
-  exec 4>/dev/null
+  exec 6>/dev/null
 else
-  exec 4>&1
+  exec 6>&1
 fi
 exec 5>./config.log
 
@@ -682,7 +682,7 @@ if $ac_config_sub sun4 >/dev/null 2>&1; then :
 else { echo "configure: error: can not run $ac_config_sub" 1>&2; exit 1; }
 fi
 
-echo $ac_n "checking host system type""... $ac_c" 1>&4
+echo $ac_n "checking host system type""... $ac_c" 1>&6
 
 host_alias=$host
 case "$host_alias" in
@@ -700,7 +700,7 @@ host=`$ac_config_sub $host_alias`
 host_cpu=`echo $host | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\1/'`
 host_vendor=`echo $host | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\2/'`
 host_os=`echo $host | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\3/'`
-echo "$ac_t""$host" 1>&4
+echo "$ac_t""$host" 1>&6
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
@@ -749,9 +749,9 @@ esac
 
 # Compute the list of sysdep directories for this configuration.
 sysdep_dir=$srcdir/sysdeps
-echo $ac_n "checking sysdep dirs""... $ac_c" 1>&4
+echo $ac_n "checking sysdep dirs""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_sysdirs'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   # Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
 os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
@@ -916,7 +916,7 @@ done
 libc_cv_sysdirs="$sysnames"
 fi
 
-echo "$ac_t""$libc_cv_sysdirs" 1>&4
+echo "$ac_t""$libc_cv_sysdirs" 1>&6
  sysnames="$libc_cv_sysdirs"
 
 # Find a good install program.  We prefer a C program (faster),
@@ -929,10 +929,10 @@ echo "$ac_t""$libc_cv_sysdirs" 1>&4
 # AFS /usr/afsws/bin/install, which mishandles nonexistent args
 # SVR4 /usr/ucb/install, which tries to use the nonexistent group "staff"
 # ./install, which can be erroneously created by make from ./install.sh.
-echo $ac_n "checking for a BSD compatible install""... $ac_c" 1>&4
+echo $ac_n "checking for a BSD compatible install""... $ac_c" 1>&6
 if test -z "$INSTALL"; then
 if eval "test \"`echo '$''{'ac_cv_path_install'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
     IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
   for ac_dir in $PATH; do
@@ -970,7 +970,7 @@ fi
     INSTALL="$ac_install_sh"
   fi
 fi
-echo "$ac_t""$INSTALL" 1>&4
+echo "$ac_t""$INSTALL" 1>&6
 
 # Use test -z because SunOS4 sh mishandles braces in ${var-val}.
 # It thinks the first close brace ends the variable substitution.
@@ -982,9 +982,9 @@ if test "$INSTALL" = "${srcdir}/install-sh"; then
   # The makefiles need to use a different form to find it in $srcdir.
   INSTALL='$(..)./install-sh'
 fi
-echo $ac_n "checking whether ln -s works""... $ac_c" 1>&4
+echo $ac_n "checking whether ln -s works""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_LN_S'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   rm -f conftestdata
 if ln -s X conftestdata 2>/dev/null
@@ -997,18 +997,18 @@ fi
 fi
 LN_S="$ac_cv_prog_LN_S"
 if test "$ac_cv_prog_LN_S" = "ln -s"; then
-  echo "$ac_t""yes" 1>&4
+  echo "$ac_t""yes" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 for ac_prog in msgfmt gmsgfmt
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_MSGFMT'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$MSGFMT"; then
   ac_cv_prog_MSGFMT="$MSGFMT" # Let the user override the test.
@@ -1026,9 +1026,9 @@ fi
 fi
 MSGFMT="$ac_cv_prog_MSGFMT"
 if test -n "$MSGFMT"; then
-  echo "$ac_t""$MSGFMT" 1>&4
+  echo "$ac_t""$MSGFMT" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 test -n "$MSGFMT" && break
@@ -1036,7 +1036,7 @@ done
 test -n "$MSGFMT" || MSGFMT=":"
 
 
-echo $ac_n "checking build system type""... $ac_c" 1>&4
+echo $ac_n "checking build system type""... $ac_c" 1>&6
 
 build_alias=$build
 case "$build_alias" in
@@ -1051,7 +1051,7 @@ build=`$ac_config_sub $build_alias`
 build_cpu=`echo $build | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\1/'`
 build_vendor=`echo $build | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\2/'`
 build_os=`echo $build | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\3/'`
-echo "$ac_t""$build" 1>&4
+echo "$ac_t""$build" 1>&6
 
 if test $host != $build; then
   ac_tool_prefix=${host_alias}-
@@ -1061,9 +1061,9 @@ fi
 
 # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
 set dummy ${ac_tool_prefix}gcc; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$CC"; then
   ac_cv_prog_CC="$CC" # Let the user override the test.
@@ -1082,21 +1082,21 @@ fi
 fi
 CC="$ac_cv_prog_CC"
 if test -n "$CC"; then
-  echo "$ac_t""$CC" 1>&4
+  echo "$ac_t""$CC" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 
 
-echo $ac_n "checking how to run the C preprocessor""... $ac_c" 1>&4
+echo $ac_n "checking how to run the C preprocessor""... $ac_c" 1>&6
 # On Suns, sometimes $CPP names a directory.
 if test -n "$CPP" && test -d "$CPP"; then
   CPP=
 fi
 if test -z "$CPP"; then
 if eval "test \"`echo '$''{'ac_cv_prog_CPP'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
     # This must be in double quotes, not single quotes, because CPP may get
   # substituted into the Makefile and "${CC-cc}" will confuse make.
@@ -1143,13 +1143,13 @@ fi
 else
   ac_cv_prog_CPP="$CPP"
 fi
-echo "$ac_t""$CPP" 1>&4
+echo "$ac_t""$CPP" 1>&6
 
 # Extract the first word of "${ac_tool_prefix}ar", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ar; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_AR'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$AR"; then
   ac_cv_prog_AR="$AR" # Let the user override the test.
@@ -1168,18 +1168,18 @@ fi
 fi
 AR="$ac_cv_prog_AR"
 if test -n "$AR"; then
-  echo "$ac_t""$AR" 1>&4
+  echo "$ac_t""$AR" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 
 
 # Extract the first word of "${ac_tool_prefix}ranlib", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ranlib; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_RANLIB'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$RANLIB"; then
   ac_cv_prog_RANLIB="$RANLIB" # Let the user override the test.
@@ -1197,9 +1197,9 @@ fi
 fi
 RANLIB="$ac_cv_prog_RANLIB"
 if test -n "$RANLIB"; then
-  echo "$ac_t""$RANLIB" 1>&4
+  echo "$ac_t""$RANLIB" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 
@@ -1207,9 +1207,9 @@ if test -z "$ac_cv_prog_RANLIB"; then
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "ranlib", so it can be a program name with args.
 set dummy ranlib; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_RANLIB'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$RANLIB"; then
   ac_cv_prog_RANLIB="$RANLIB" # Let the user override the test.
@@ -1228,9 +1228,9 @@ fi
 fi
 RANLIB="$ac_cv_prog_RANLIB"
 if test -n "$RANLIB"; then
-  echo "$ac_t""$RANLIB" 1>&4
+  echo "$ac_t""$RANLIB" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 else
@@ -1240,9 +1240,9 @@ fi
 
 # Extract the first word of "${ac_tool_prefix}objdump", so it can be a program name with args.
 set dummy ${ac_tool_prefix}objdump; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_OBJDUMP'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$OBJDUMP"; then
   ac_cv_prog_OBJDUMP="$OBJDUMP" # Let the user override the test.
@@ -1261,18 +1261,18 @@ fi
 fi
 OBJDUMP="$ac_cv_prog_OBJDUMP"
 if test -n "$OBJDUMP"; then
-  echo "$ac_t""$OBJDUMP" 1>&4
+  echo "$ac_t""$OBJDUMP" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 
 
 # Extract the first word of "${ac_tool_prefix}objcopy", so it can be a program name with args.
 set dummy ${ac_tool_prefix}objcopy; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_OBJCOPY'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$OBJCOPY"; then
   ac_cv_prog_OBJCOPY="$OBJCOPY" # Let the user override the test.
@@ -1291,9 +1291,9 @@ fi
 fi
 OBJCOPY="$ac_cv_prog_OBJCOPY"
 if test -n "$OBJCOPY"; then
-  echo "$ac_t""$OBJCOPY" 1>&4
+  echo "$ac_t""$OBJCOPY" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 
@@ -1302,9 +1302,9 @@ for ac_prog in mawk gawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
-echo $ac_n "checking for $ac_word""... $ac_c" 1>&4
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_prog_AWK'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test -n "$AWK"; then
   ac_cv_prog_AWK="$AWK" # Let the user override the test.
@@ -1322,18 +1322,18 @@ fi
 fi
 AWK="$ac_cv_prog_AWK"
 if test -n "$AWK"; then
-  echo "$ac_t""$AWK" 1>&4
+  echo "$ac_t""$AWK" 1>&6
 else
-  echo "$ac_t""no" 1>&4
+  echo "$ac_t""no" 1>&6
 fi
 
 test -n "$AWK" && break
 done
 
 
-echo $ac_n "checking for signed size_t type""... $ac_c" 1>&4
+echo $ac_n "checking for signed size_t type""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_signed_size_t'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   echo '#include <stddef.h>
 FOOBAR __SIZE_TYPE__ FOOBAR' > conftest.c
@@ -1346,7 +1346,7 @@ fi
 rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_signed_size_t" 1>&4
+echo "$ac_t""$libc_cv_signed_size_t" 1>&6
 if test $libc_cv_signed_size_t = yes; then
     cat >> confdefs.h <<\EOF
 #undef __SIZE_TYPE__
@@ -1354,9 +1354,9 @@ if test $libc_cv_signed_size_t = yes; then
 EOF
 fi
 
-echo $ac_n "checking for libc-friendly stddef.h""... $ac_c" 1>&4
+echo $ac_n "checking for libc-friendly stddef.h""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
 #line 1363 "configure"
@@ -1386,15 +1386,15 @@ rm -f conftest*
 
 fi
 
-echo "$ac_t""$libc_cv_friendly_stddef" 1>&4
+echo "$ac_t""$libc_cv_friendly_stddef" 1>&6
 if test $libc_cv_friendly_stddef = yes; then
   config_vars="$config_vars
 override stddef.h = # The installed <stddef.h> seems to be libc-friendly."
 fi
 
-echo $ac_n "checking whether we need to use -P to assemble .S files""... $ac_c" 1>&4
+echo $ac_n "checking whether we need to use -P to assemble .S files""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_need_minus_P'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.S <<EOF
 #include "confdefs.h"
@@ -1408,15 +1408,15 @@ fi
 rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_need_minus_P" 1>&4
+echo "$ac_t""$libc_cv_need_minus_P" 1>&6
 if test $libc_cv_need_minus_P = yes; then
   config_vars="$config_vars
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
-echo $ac_n "checking for assembler global-symbol directive""... $ac_c" 1>&4
+echo $ac_n "checking for assembler global-symbol directive""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_asm_global_directive'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   libc_cv_asm_global_directive=UNKNOWN
 for ac_globl in .globl .global; do
@@ -1433,7 +1433,7 @@ EOF
 done
 fi
 
-echo "$ac_t""$libc_cv_asm_global_directive" 1>&4
+echo "$ac_t""$libc_cv_asm_global_directive" 1>&6
 if test $libc_cv_asm_global_directive = UNKNOWN; then
   { echo "configure: error: cannot determine asm global directive" 1>&2; exit 1; }
 else
@@ -1443,9 +1443,9 @@ EOF
 
 fi
 
-echo $ac_n "checking for .set assembler directive""... $ac_c" 1>&4
+echo $ac_n "checking for .set assembler directive""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_asm_set_directive'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.s <<EOF
 .text
@@ -1468,7 +1468,7 @@ fi
 rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_asm_set_directive" 1>&4
+echo "$ac_t""$libc_cv_asm_set_directive" 1>&6
 if test $libc_cv_asm_set_directive = yes; then
   cat >> confdefs.h <<\EOF
 #define HAVE_ASM_SET_DIRECTIVE 1
@@ -1477,9 +1477,9 @@ EOF
 fi
 
 if test $elf != yes; then
-  echo $ac_n "checking for .init and .fini sections""... $ac_c" 1>&4
+  echo $ac_n "checking for .init and .fini sections""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
 #line 1486 "configure"
@@ -1502,7 +1502,7 @@ rm -f conftest*
 
 fi
 
-echo "$ac_t""$libc_cv_have_initfini" 1>&4
+echo "$ac_t""$libc_cv_have_initfini" 1>&6
     if test $libc_cv_have_initfini = yes; then
     cat >> confdefs.h <<\EOF
 #define HAVE_INITFINI 1
@@ -1514,9 +1514,9 @@ fi
 if test $elf = yes; then
   libc_cv_asm_underscores=no
 else
-  echo $ac_n "checking for _ prefix on C symbol names""... $ac_c" 1>&4
+  echo $ac_n "checking for _ prefix on C symbol names""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_asm_underscores'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
 #line 1523 "configure"
@@ -1538,7 +1538,7 @@ rm -f conftest*
 
 fi
 
-echo "$ac_t""$libc_cv_asm_underscores" 1>&4
+echo "$ac_t""$libc_cv_asm_underscores" 1>&6
 fi
 if test $libc_cv_asm_underscores = no; then
   cat >> confdefs.h <<\EOF
@@ -1552,9 +1552,9 @@ if test $elf = yes; then
   libc_cv_asm_weak_directive=yes
   libc_cv_asm_weakext_directive=no
 else
-  echo $ac_n "checking for assembler .weak directive""... $ac_c" 1>&4
+  echo $ac_n "checking for assembler .weak directive""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_asm_weak_directive'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.s <<EOF
 .text
@@ -1571,12 +1571,12 @@ EOF
   rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_asm_weak_directive" 1>&4
+echo "$ac_t""$libc_cv_asm_weak_directive" 1>&6
 
 if test $libc_cv_asm_weak_directive = no; then
-  echo $ac_n "checking for assembler .weakext directive""... $ac_c" 1>&4
+  echo $ac_n "checking for assembler .weakext directive""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_asm_weakext_directive'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.s <<EOF
 .text
@@ -1593,7 +1593,7 @@ EOF
   rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_asm_weakext_directive" 1>&4
+echo "$ac_t""$libc_cv_asm_weakext_directive" 1>&6
 
   fi # no .weak
 fi # not ELF
@@ -1610,9 +1610,9 @@ EOF
 
 fi
 
-echo $ac_n "checking for ld --no-whole-archive""... $ac_c" 1>&4
+echo $ac_n "checking for ld --no-whole-archive""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_ld_no_whole_archive'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.c <<\EOF
 main () { exit (0); }
@@ -1626,7 +1626,7 @@ fi
 rm -f conftest*
 fi
 
-echo "$ac_t""$libc_cv_ld_no_whole_archive" 1>&4
+echo "$ac_t""$libc_cv_ld_no_whole_archive" 1>&6
 
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
@@ -1640,7 +1640,7 @@ libc_link_sources=
 uname=
 for dir in $sysnames; do
   if test -r $sysdep_dir/$dir/configure; then
-    echo "$ac_t""running configure fragment for $dir" 1>&4
+    echo "$ac_t""running configure fragment for $dir" 1>&6
     . $sysdep_dir/$dir/configure
   fi
 
@@ -1665,9 +1665,9 @@ if test "$uname" = generic; then
     config_release=`echo $config_os | sed s/$uname_sysname//`
   fi
 
-  echo $ac_n "checking OS release for uname""... $ac_c" 1>&4
+  echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
     kernel_release=`echo "$kernel_id" | sed 's/^[^0-9.]*\([0-9.]*\).*$/\1/'`
   if test x`echo "$config_release" | sed "s/^$kernel_release//"` \
@@ -1683,12 +1683,12 @@ else
   fi
 fi
 
-echo "$ac_t""$libc_cv_uname_release" 1>&4
+echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
-  echo $ac_n "checking OS version for uname""... $ac_c" 1>&4
+  echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&4
+  echo $ac_n "(cached) $ac_c" 1>&6
 else
     kernel_version=`echo "$kernel_id" | sed 's/^[^#]*#\([0-9]*\).*$/\1/'`
   if test -n "$kernel_version"; then
@@ -1698,7 +1698,7 @@ else
   fi
 fi
 
-echo "$ac_t""$libc_cv_uname_version" 1>&4
+echo "$ac_t""$libc_cv_uname_version" 1>&6
   uname_version="$libc_cv_uname_version"
 
     config_uname=config-name.h:config-name.in
@@ -1707,7 +1707,7 @@ else
   config_uname=
 fi
 
-echo $ac_n "checking stdio selection""... $ac_c" 1>&4
+echo $ac_n "checking stdio selection""... $ac_c" 1>&6
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -1716,7 +1716,7 @@ EOF
  ;;
 default) stdio=stdio ;;
 esac
-echo "$ac_t""$stdio" 1>&4
+echo "$ac_t""$stdio" 1>&6
 
   
 if test $gnu_ld = yes; then

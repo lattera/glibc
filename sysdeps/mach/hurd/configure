@@ -5,8 +5,8 @@
 ac_help="$ac_help
   --with-hurd=DIRECTORY   find Hurd source code in DIRECTORY [../hurd]"
 # Check whether --with-hurd or --without-hurd was given.
-withval="$with_hurd"
-if test -n "$withval"; then
+if test "${with_hurd+set}" = set; then
+  withval="$with_hurd"
   case z"$with_hurd" in
 z | zno | zyes) ;; # Not specified, or specified with no value.
 z*) config_vars="$config_vars

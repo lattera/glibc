@@ -1,14 +1,15 @@
- 
+ # Local configure fragment for sysdeps/unix.
+
 if test -z "$inhibit_glue"; then
-# For signame.c, used in make_siglist.
-for ac_func in psignal
+# For make_errlist.c, used in make_errlist.
+for ac_func in strerror
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
 if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 12 "configure"
+#line 13 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char $ac_func(); below.  */
@@ -32,7 +33,7 @@ $ac_func();
 
 ; return 0; }
 EOF
-if { (eval echo configure:36: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
+if { (eval echo configure:37: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
   rm -rf conftest*
   eval "ac_cv_func_$ac_func=yes"
 else
