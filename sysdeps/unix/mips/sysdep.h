@@ -37,6 +37,7 @@
 
 #define ret	j ra ; nop
 
+#undef PSEUDO_END
 #define PSEUDO_END(sym) .end sym; .size sym,.-sym
 
 #define PSEUDO_NOERRNO(name, syscall_name, args)	\

@@ -1,3 +1,7 @@
+2003-09-09  Chris Demetriou  <cgd@broadcom.com>
+
+        * sysdeps/unix/mips/sysdep.h (PSEUDO_END): Undef before defining.
+
 2003-09-08  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/unix/sysv/linux/speed.c
