@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
@@ -39,6 +39,11 @@ __fesetexceptflag (const fexcept_t *flagp, int excepts)
   /* Success.  */
   return 0;
 }
+
+#include <shlib-compat.h>
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetexceptflag, __old_fesetexceptflag)
-symbol_version (__old_fesetexceptflag, fesetexceptflag, GLIBC_2.1);
-default_symbol_version (__fesetexceptflag, fesetexceptflag, GLIBC_2.2);
+compat_symbol (libm, __old_fesetexceptflag, fesetexceptflag, GLIBC_2_1);
+#endif
+
+versioned_symbol (libm, __fesetexceptflag, fesetexceptflag, GLIBC_2_2);
