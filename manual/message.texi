@@ -1346,7 +1346,7 @@ Polish
 The header entry would look like this:
 
 @smallexample
-nplurals=4; plural=n==1 ? 0 : n%10==2 ? 1 : n==3 || n+=4 ? 2 : 3
+nplurals=4; plural=n==1 ? 0 : n%10==2 ? 1 : n%10==3 || n%10==4 ? 2 : 3
 @end smallexample
 
 @noindent

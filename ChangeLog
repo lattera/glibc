@@ -1,5 +1,7 @@
 2000-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (collate_read): Fix warning.
+
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Prepend REG_ to enum
 	values and macros for register names.
 

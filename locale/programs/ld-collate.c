@@ -3392,7 +3392,8 @@ error while adding equivalent collating symbol"));
 	    {
 	      lr_error (ldfile,
 			_("%s: order for `%.*s' already defined at %s:%zu"),
-			"LC_COLLATE", 9, "UNDEFINED", collate->undefined.file,
+			"LC_COLLATE", 9, "UNDEFINED",
+			(int) collate->undefined.file,
 			collate->undefined.line);
 	      lr_ignore_rest (ldfile, 0);
 	    }
