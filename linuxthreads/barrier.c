@@ -110,16 +110,19 @@ int
 __pthread_barrierattr_getpshared(const pthread_barrierattr_t *attr,
 				 int *pshared)
 {
-  *pshared = attr->__pshared;
+  *pshared = PTHREAD_PROCESS_PRIVATE;
   return 0;
 }
 
 int
 pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared)
 {
+  if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
+    return EINVAL;
+
+  /* For now it is not possible to shared a conditional variable.  */
   if (pshared != PTHREAD_PROCESS_PRIVATE)
     return ENOSYS;
 
-  attr->__pshared = pshared;
   return 0;
 }

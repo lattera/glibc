@@ -1,3 +1,10 @@
+2003-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* barrier.c (__pthread_barrierattr_getpshared): Always
+	return PTHREAD_PROCESS_PRIVATE.
+	(pthread_barrierattr_setpshared): Return EINVAL if pshared
+	is neither PTHREAD_PROCESS_PRIVATE nor PTHREAD_PROCESS_SHARED.
+
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h

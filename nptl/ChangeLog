@@ -1,5 +1,9 @@
 2003-09-02  Jakub Jelinek  <jakub@redhat.com>
 
+	* pthread_condattr_setpshared.c: Include errno.h.
+	(pthread_condattr_setpshared): Return EINVAL if pshared
+	is neither PTHREAD_PROCESS_PRIVATE nor PTHREAD_PROCESS_SHARED.
+
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO): Also
 	defined symbol for entry point to avoid cancellation.
 	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO):

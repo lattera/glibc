@@ -68,9 +68,6 @@
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
-  .type __##syscall_name##_nocancel,@function;				      \
-  .globl __##syscall_name##_nocancel;					      \
-  __##syscall_name##_nocancel:						      \
     DO_CALL (syscall_name, args);					      \
     cmpl $-4095, %eax;							      \
     jae SYSCALL_ERROR_LABEL;						      \

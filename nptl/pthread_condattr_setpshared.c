@@ -17,16 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include "pthreadP.h"
+#include <errno.h>
+#include <pthreadP.h>
 
 int
 pthread_condattr_setpshared (attr, pshared)
      pthread_condattr_t *attr;
      int pshared;
 {
+  if (pshared != PTHREAD_PROCESS_PRIVATE
+      && __builtin_expect (pshared != PTHREAD_PROCESS_SHARED, 0))
+    return EINVAL;
+
   int *valuep = &((struct pthread_condattr *) attr)->value;
 
-  *valuep = (*valuep & ~1) | (pshared != 0);
+  *valuep = (*valuep & ~1) | (pshared != PTHREAD_PROCESS_PRIVATE);
 
   return 0;
 }
