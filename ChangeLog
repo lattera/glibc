@@ -1,3 +1,8 @@
+2003-06-02  Bernd Schmidt  <bernds@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (sqrt, __sqrtl, ldexp,
+	ldexpf, ldexpl): Only define if __FAST_MATH__.
+
 2003-06-02  Richard C. Bilson  <rcbilson@plg.uwaterloo.ca>
 
 	Replace hard-coded offsets into struct sigcontext with generated file.
