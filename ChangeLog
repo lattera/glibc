@@ -1,3 +1,13 @@
+2000-11-14  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/_mcount.S: Call __mcount instead of __mcount_internal.
+
+	* sysdeps/ia64/Makefile: Compile _mcount.S in subdir gmon as
+	_mcount is required by profiled binaries.
+
+	* sysdeps/unix/sysv/linux/ia64/machine-gmon.h: Moved to...
+	* sysdeps/ia64/machine-gmon.h: ...here.
+
 2000-11-28  Masahide Washizawa  <washi@jp.ibm.com>
 
 	* iconvdata/Makefile (modules): Add IBM922, IBM1124, and IBM1129.

@@ -60,7 +60,7 @@ LEAF(_mcount)
 	mov loc3 = r15	// gcc uses r15 to pass the static link to nested functions
 	mov out0 = in2
 	mov out1 = rp
-	br.call.sptk.few rp = __mcount_internal
+	br.call.sptk.few rp = __mcount
 	;;
 .here:
 {
