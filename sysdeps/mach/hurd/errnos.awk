@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,7 @@ BEGIN {
     in_math = 0;
     edom = erange = "";
     print "#undef EDOM\n#undef ERANGE";
+    lno = 0;
   }
 
 $1 == "@comment" && $2 == "errno.h" { errnoh=1; next }
@@ -56,7 +57,7 @@ errnoh == 2 && $1 == "@deftypevr"  && $2 == "Macro" && $3 == "int" \
 errnoh == 3 && $1 == "@comment" && $2 == "errno" {
     if (e == "EWOULDBLOCK")
       {
-	print "#define EWOULDBLOCK EAGAIN /* Operation would block */";
+	lines[lno++]="#define EWOULDBLOCK EAGAIN /* Operation would block */";
 	next;
       }
     errno = $3 + 0;
@@ -70,8 +71,9 @@ errnoh == 3 && $1 == "@comment" && $2 == "errno" {
       edom = x;
     else if (e == "ERANGE")
       erange = x;
-    printf "\t%-16s= _HURD_ERRNO (%d),\n", e, errno;
-    print x;
+    comma[lno] = 1;
+    lines[lno++] = sprintf("\t%-16s= _HURD_ERRNO (%d)", e, errno);
+    lines[lno++] = x;
     next;
   }
 { errnoh=0 }
@@ -79,12 +81,12 @@ errnoh == 3 && $1 == "@comment" && $2 == "errno" {
 NF == 3 && $1 == "#define" && $2 == "MACH_SEND_IN_PROGRESS" \
   {
     in_mach_errors = FILENAME;
-    print "\n\t/* Errors from <mach/message.h>.  */";
+    lines[lno++] = "\n\t/* Errors from <mach/message.h>.  */";
   }
 NF == 3 && $1 == "#define" && $2 == "KERN_SUCCESS" \
   {
     in_mach_errors = FILENAME;
-    print "\n\t/* Errors from <mach/kern_return.h>.  */";
+    lines[lno++] = "\n\t/* Errors from <mach/kern_return.h>.  */";
     next;
   }
 
@@ -95,13 +97,14 @@ in_mach_errors != "" && $2 == "MACH_IPC_COMPAT" \
 
 in_mach_errors == FILENAME && NF == 3 && $1 == "#define" \
   {
-    printf "\t%-32s= %s,\n", "E" $2, $3;
+    comma[lno] = 1;
+    lines[lno++] = sprintf("\t%-32s= %s", "E" $2, $3);
   }
 
 $1 == "#define" && $2 == "_MACH_MIG_ERRORS_H_" \
   {
     in_mig_errors = 1;
-    print "\n\t/* Errors from <mach/mig_errors.h>.  */";
+    lines[lno++] = "\n\t/* Errors from <mach/mig_errors.h>.  */";
     next;
   }
 in_mig_errors && $1 == "#endif" && $3 == "_MACH_MIG_ERRORS_H_" \
@@ -112,16 +115,17 @@ in_mig_errors && $1 == "#endif" && $3 == "_MACH_MIG_ERRORS_H_" \
 (in_mig_errors && $1 == "#define" && $3 <= -300) || \
 (in_device_errors && $1 == "#define") \
   {
-    printf "%-32s", sprintf ("\t%-24s= %s,", "E" $2, $3);
+    comment = "";
     for (i = 4; i <= NF; ++i)
-      printf " %s", $i;
-    printf "\n";
+      comment = comment " " $i;
+    comma[lno] = 1;
+    lines[lno++] = sprintf("%-32s", sprintf ("\t%-24s= %s", "E" $2, $3)) comment;
   }
 
 $1 == "#define" && $2 == "D_SUCCESS" \
   {
     in_device_errors = 1;
-    print "\n\t/* Errors from <device/device_types.h>.  */";
+    lines[lno++] = "\n\t/* Errors from <device/device_types.h>.  */";
     next;
   }
 in_device_errors && $1 == "#endif" \
@@ -132,6 +136,9 @@ in_device_errors && $1 == "#endif" \
 
 END \
   {
+    for (i = 0; i < lno - 1; ++i)
+      printf "%s%s\n", lines[i], (comma[i] ? "," : "");
+    print lines[i];
     print "";
     print "};";
     print "";

@@ -270,28 +270,28 @@ enum __error_t_codes
 	EKERN_TERMINATED                = 26,
 
 	/* Errors from <mach/mig_errors.h>.  */
-	EMIG_TYPE_ERROR         = -300, /* client type check failure */
-	EMIG_REPLY_MISMATCH     = -301, /* wrong reply message ID */
-	EMIG_REMOTE_ERROR       = -302, /* server detected error */
-	EMIG_BAD_ID             = -303, /* bad request message ID */
-	EMIG_BAD_ARGUMENTS      = -304, /* server type check failure */
-	EMIG_NO_REPLY           = -305, /* no reply should be sent */
-	EMIG_EXCEPTION          = -306, /* server raised exception */
-	EMIG_ARRAY_TOO_LARGE    = -307, /* array not large enough */
-	EMIG_SERVER_DIED        = -308, /* server died */
-	EMIG_DESTROY_REQUEST    = -309, /* destroy request with no reply */
+	EMIG_TYPE_ERROR         = -300  /* client type check failure */,
+	EMIG_REPLY_MISMATCH     = -301  /* wrong reply message ID */,
+	EMIG_REMOTE_ERROR       = -302  /* server detected error */,
+	EMIG_BAD_ID             = -303  /* bad request message ID */,
+	EMIG_BAD_ARGUMENTS      = -304  /* server type check failure */,
+	EMIG_NO_REPLY           = -305  /* no reply should be sent */,
+	EMIG_EXCEPTION          = -306  /* server raised exception */,
+	EMIG_ARRAY_TOO_LARGE    = -307  /* array not large enough */,
+	EMIG_SERVER_DIED        = -308  /* server died */,
+	EMIG_DESTROY_REQUEST    = -309  /* destroy request with no reply */,
 
 	/* Errors from <device/device_types.h>.  */
-	ED_IO_ERROR             = 2500, /* hardware IO error */
-	ED_WOULD_BLOCK          = 2501, /* would block, but D_NOWAIT set */
-	ED_NO_SUCH_DEVICE       = 2502, /* no such device */
-	ED_ALREADY_OPEN         = 2503, /* exclusive-use device already open */
-	ED_DEVICE_DOWN          = 2504, /* device has been shut down */
-	ED_INVALID_OPERATION    = 2505, /* bad operation for device */
-	ED_INVALID_RECNUM       = 2506, /* invalid record (block) number */
-	ED_INVALID_SIZE         = 2507, /* invalid IO size */
-	ED_NO_MEMORY            = 2508, /* memory allocation failure */
-	ED_READ_ONLY            = 2509, /* device cannot be written to */
+	ED_IO_ERROR             = 2500  /* hardware IO error */,
+	ED_WOULD_BLOCK          = 2501  /* would block, but D_NOWAIT set */,
+	ED_NO_SUCH_DEVICE       = 2502  /* no such device */,
+	ED_ALREADY_OPEN         = 2503  /* exclusive-use device already open */,
+	ED_DEVICE_DOWN          = 2504  /* device has been shut down */,
+	ED_INVALID_OPERATION    = 2505  /* bad operation for device */,
+	ED_INVALID_RECNUM       = 2506  /* invalid record (block) number */,
+	ED_INVALID_SIZE         = 2507  /* invalid IO size */,
+	ED_NO_MEMORY            = 2508  /* memory allocation failure */,
+	ED_READ_ONLY            = 2509  /* device cannot be written to */
 
 };
 
