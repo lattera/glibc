@@ -1,3 +1,21 @@
+1999-09-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/ap.c: Removed.  It was not used.
+	* time/date.c: Likewise.
+	* sysdeps/unix/nlist.c: Likewise.
+	* sysdeps/generic/nlist.c: Likewise.
+	* sysdeps/generic/varargs.h: Likewise.
+	* stdio-common/scanf11.c: Likewise.
+	* stdio-common/scanf6.c: Likewise.
+	* scripts/=__ify: Likewise.
+	* scripts/printsources: Likewise.
+	* resolv/getnetnamadr.c: Likewise.
+	* posix/id.c: Likewise.
+	* misc/ioctltst.c: Likewise.
+	* misc/nlist.h: Likewise.
+	* math/test-math.h: Likewise.
+	* include/nlist.h: Likewise.
+
 1999-09-06  Andreas Schwab  <schwab@suse.de>
 
 	* time/tzset.c (compute_change): Replace slow loop to compute T by
