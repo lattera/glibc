@@ -1,5 +1,17 @@
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Remove #include of
+	non-existing file with generic implementation.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+
+1998-10-19  Philip Blundell  <pb@nexus.co.uk>
+
+	* iconv/gconv_db.c: Include ELF header only if STATIC_GCONV is not
+	defined.  Avoid using _CALL_DL_FCT if it is not defined.
+	* iconv/gconv.c: Likewise.
+
+1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
+
 	* nscd/connections.c (dbs): Define defualt values for timeouts and
 	set enabled to 0 by default.
 	(CACHE_PRUNE_INTERVAL): New constant.  Use it instead of magical 15 in

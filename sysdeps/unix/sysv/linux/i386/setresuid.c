@@ -42,6 +42,4 @@ __setresuid (gid_t ruid, gid_t euid, gid_t suid)
   return __syscall_setresuid (ruid, euid, suid);
 }
 weak_alias (__setresuid, setresuid)
-#else
-# include <sysdeps/generic/setresuid.c>
 #endif

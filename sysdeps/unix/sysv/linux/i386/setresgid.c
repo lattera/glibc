@@ -41,6 +41,4 @@ setresgid (gid_t rgid, gid_t egid, gid_t sgid)
 
   return __syscall_setresgid (rgid, egid, sgid);
 }
-#else
-# include <sysdeps/generic/setresgid.c>
 #endif
