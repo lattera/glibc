@@ -1,5 +1,9 @@
 2000-01-04  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/C-ctype.c (_nl_C_LC_CTYPE_class): Clear ISNCTRL bit for
+	characters >= 0x80.
+	(_nl_C_LC_CTYPE_class32): Likewise.
+
 	* rt/aio.h (struct aioinit): Replace one aio_reserved value with
 	aio_idle_time.
 	* rt/aio_misc.c: Rewrite to not automatically terminate worker threads
