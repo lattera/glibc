@@ -70,18 +70,29 @@
 #define F_SETFD		2	/* Set file descriptor flags.  */
 #define F_GETFL		3	/* Get file status flags.  */
 #define F_SETFL		4	/* Set file status flags.  */
-#define F_GETLK		5	/* Get record locking info.  */
-#define F_SETLK		6	/* Set record locking info (non-blocking).  */
-#define F_SETLKW	7	/* Set record locking info (blocking).	*/
 #if __WORDSIZE == 64
-# define F_GETLK64	F_GETLK	/* Get record locking info.  */
-# define F_SETLK64	F_SETLK	/* Set record locking info (non-blocking).  */
-# define F_SETLKW64	F_SETLKW /* Set record locking info (blocking).	*/
+# define F_GETLK	5	/* Get record locking info.  */
+# define F_SETLK	6	/* Set record locking info (non-blocking).  */
+# define F_SETLKW	7	/* Set record locking info (blocking).	*/
+/* Not necessary, we always have 64-bit offsets.  */
+# define F_GETLK64	5	/* Get record locking info.  */
+# define F_SETLK64	6	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	7	/* Set record locking info (blocking).	*/
 #else
-#define F_GETLK64	12	/* Get record locking info.  */
-#define F_SETLK64	13	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	14	/* Set record locking info (blocking).	*/
+# ifndef __USE_FILE_OFFSET64
+#  define F_GETLK	5	/* Get record locking info.  */
+#  define F_SETLK	6	/* Set record locking info (non-blocking).  */
+#  define F_SETLKW	7	/* Set record locking info (blocking).	*/
+# else
+#  define F_GETLK	F_GETLK64  /* Get record locking info.	*/
+#  define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
+#  define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
+# endif
+# define F_GETLK64	12	/* Get record locking info.  */
+# define F_SETLK64	13	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 #endif
+
 #if defined __USE_BSD || defined __USE_UNIX98
 # define F_SETOWN	8	/* Get owner of socket (receiver of SIGIO).  */
 # define F_GETOWN	9	/* Set owner of socket (receiver of SIGIO).  */

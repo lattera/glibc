@@ -1,3 +1,14 @@
+2004-06-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/fcntl.c: Move to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fcntl.c: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/lockf64.c: Move to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/lockf64.c: ... here.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (F_GETLK, F_SETLK,
+	F_SETLKW): Fix values for -m32 -D_FILE_OFFSET_BITS=64.
+
 2004-06-21  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #231]
