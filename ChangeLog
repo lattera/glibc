@@ -1,3 +1,7 @@
+2004-04-03  Andreas Jaeger  <aj@suse.de>
+
+	* nis/nss-nis.c: Include <string.h> for strncmp.
+
 2004-03-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig (link-libc-static): Use $(static-gnulib) instead
