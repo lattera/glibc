@@ -57,13 +57,13 @@ ENTRY (BP_SYM (__sigsetjmp))
 	movl %ebx, (JB_BX*4)(%eax)
 	movl %esi, (JB_SI*4)(%eax)
 	movl %edi, (JB_DI*4)(%eax)
-	movl %ebp, (JB_BP*4)(%eax)
 	leal JMPBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
      	movl %ecx, (JB_SP*4)(%eax)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
      	movl %ecx, (JB_PC*4)(%eax)
-
 	LEAVE /* pop frame pointer to prepare for tail-call.  */
+	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */
+
 	/* Make a tail call to __sigjmp_save; it takes the same args.  */
 #ifdef	PIC
 	/* We cannot use the PLT, because it requires that %ebx be set, but

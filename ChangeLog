@@ -1,5 +1,9 @@
 2000-08-03  Greg McGary  <greg@mcgary.org>
 
+	* sysdeps/i386/setjmp.S (__sigsetjmp): Pop our
+	frame pointer early so that we save caller's frame pointer.
+	* sysdeps/i386/elf/setjmp.S: Likewise.
+
 	* sysdeps/unix/sysv/syscalls.list (time, utime): Correct signatures.
 	* io/test-utime.c: Test passing NULL as utimbuf* arg.
 
