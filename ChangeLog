@@ -1,5 +1,7 @@
 Sun Jun  9 01:11:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Version 1.90 test release.
+
 	* Makerules (make-target-directory): Use ./mkinstalldirs so we do not
 	assume . is in PATH.
 
