@@ -48,6 +48,7 @@ libc_hidden_def (__sigpause)
    standards demand it.  The version which is a bit more reasonable is
    the BSD version.  So make this the default.  */
 int
+__attribute__ ((weak))
 __default_sigpause (int mask)
 {
   return __sigpause (mask, 0);
@@ -61,6 +62,7 @@ strong_alias (__default_sigpause, __libc_sigpause)
    standards demand it.  The version which is a bit more reasonable is
    the BSD version.  So make this the default.  */
 int
+__attribute__ ((weak))
 __xpg_sigpause (int sig)
 {
   return __sigpause (sig, 1);

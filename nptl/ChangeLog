@@ -1,5 +1,8 @@
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* init.c (__pthread_initialize_minimal): Remove unneccesary
+	sigaddset call.
+
 	* Makefile (tests): We can run tst-locale2 now.
 
 2002-12-09  Ulrich Drepper  <drepper@redhat.com>

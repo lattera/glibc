@@ -1,6 +1,7 @@
 2002-12-10  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/posix/sigpause.c: Define all functions as weak.
+	* sysdeps/generic/sigpause.c: Define all functions as weak.
+	* sysdeps/posix/sigpause.c: Likewise.
 
 	* elf/tst-tls7.c (do_test): Adjustments for l_tls_modid being of
 	type size_t.

@@ -31,6 +31,7 @@ stub_warning (__sigpause)
 libc_hidden_def (__sigpause)
 
 int
+__attribute__ ((weak))
 __default_sigpause (int mask)
 {
   __set_errno (ENOSYS);
@@ -42,7 +43,8 @@ stub_warning (sigpause)
 
 
 int
-__xpg_sigpause (int sig)
+__attribute ((weak))
+__xpg___sigpause (int sig)
 {
   __set_errno (ENOSYS);
   return -1;
