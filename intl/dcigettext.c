@@ -607,7 +607,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		      /* Insert the entry in the search tree.  */
 		      foundp = (struct known_translation_t **)
 			tsearch (newp, &root, transcmp);
-		      if (__builtin_expect (&newp != foundp, 0))
+		      if (foundp == NULL
+			  || __builtin_expect (*foundp != newp, 0))
 			/* The insert failed.  */
 			free (newp);
 		    }
