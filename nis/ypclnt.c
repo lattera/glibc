@@ -680,10 +680,7 @@ yp_all (const char *indomain, const char *inmap,
       clnt_sin.sin_port = 0;
       clnt = clnttcp_create (&clnt_sin, YPPROG, YPVERS, &clnt_sock, 0, 0);
       if (clnt == NULL)
-	{
-	  puts (_("yp_all: clnttcp_create failed"));
-	  return YPERR_PMAP;
-	}
+	return YPERR_PMAP;
       req.domain = (char *) indomain;
       req.map = (char *) inmap;
 
