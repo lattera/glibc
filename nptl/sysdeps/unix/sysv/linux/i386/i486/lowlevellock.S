@@ -162,8 +162,6 @@ __lll_timedwait_tid:
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
-	movl	%eax, %edx
-
 	cmpl	$0, (%ebx)
 	jne	1f
 4:	xorl	%eax, %eax
@@ -175,7 +173,7 @@ __lll_timedwait_tid:
 	popl	%edi
 	ret
 
-1:	cmpl	$-ETIMEDOUT, %edx
+1:	cmpl	$-ETIMEDOUT, %eax
 	jne	2b
 6:	movl	$ETIMEDOUT, %eax
 	jmp	3b
