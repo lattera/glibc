@@ -22,7 +22,7 @@
 #include <features.h>
 #include <signal.h>
 
-#include <bits/sigstack.h>
+#include <bits/sigcontext.h>
 
 /*
  * These are here mostly for backwards compatibility with older Unices.

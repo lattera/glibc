@@ -1,3 +1,21 @@
+2001-05-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: New file, contributed by
+	Stephen L Moshier <moshier@mediaone.net>.
+
+2001-05-22  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/backtrace.c: Make backtrace return the
+	return addresses instead of the stack pointers.
+	* sysdeps/s390/s390-64/backtrace.c: Likewise.
+
+2001-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h: Include
+	bits/sigcontext.h instead of bits/sigstack.h.
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Add
+	multiple-inclusion guards.
+
 2001-05-21  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/ld-collate.c (handle_ellipsis): Fix message.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, July 2000
 
@@ -20,6 +20,9 @@
 #if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
+
+#ifndef _BITS_SIGCONTEXT_H
+#define _BITS_SIGCONTEXT_H 1
 
 #include <asm/fpu.h>
 #include <bits/sigstack.h>
@@ -50,3 +53,5 @@ struct sigcontext
    * include the kernel headers here. */
   unsigned long int sc_mask;	/* signal mask to restore after handler returns */
 };
+
+#endif _BITS_SIGCONTEXT_H

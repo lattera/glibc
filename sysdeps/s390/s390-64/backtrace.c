@@ -70,7 +70,7 @@ __backtrace (array, size)
 	   out of range.  */
 	break;
 
-      array[cnt++] = stack->save_grps[9];
+      array[cnt++] = stack->save_grps[8];
 
       stack = (struct layout *) stack->back_chain;
     }
@@ -78,4 +78,3 @@ __backtrace (array, size)
   return cnt;
 }
 weak_alias (__backtrace, backtrace)
-
