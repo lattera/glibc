@@ -32,7 +32,10 @@ locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
 
 test-srcs := collate-test xfrm-test tst-fmon
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1
-fmon-input := de_DE.ISO-8859-1 en_US.ISO-8859-1
+
+distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
+	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \
+	      $(charmaps) $(locales)
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
@@ -42,7 +45,7 @@ install-others := $(addprefix $(inst_i18ndir)/, $(charmaps) $(locales))
 
 include ../Rules
 
-# Install the message object files as libc.po in the language directory.
+# Install the source files in the appropriate directories.
 $(inst_i18ndir)/charmaps/%: charmaps/%; $(do-install)
 $(inst_i18ndir)/locales/%: locales/%; $(do-install)
 
@@ -50,5 +53,5 @@ $(inst_i18ndir)/locales/%: locales/%; $(do-install)
 ifeq (no,$(cross-compiling))
 tests: $(objpfx)collate-test $(objpfx)xfrm-test $(objpfx)tst-fmon
 	$(SHELL) -e sort-test.sh $(common-objpfx) $(test-input)
-	$(SHELL) -e tst-fmon.sh $(common-objpfx) $(fmon-input)
+	$(SHELL) -e tst-fmon.sh $(common-objpfx) tst-fmon.data
 endif

@@ -1,6 +1,8 @@
 <code_set_name> ISO_6937-2-ADD
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry and ISO 6937-2:1983
 
 % alias ISO-IR-142

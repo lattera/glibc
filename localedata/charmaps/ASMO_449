@@ -1,6 +1,8 @@
 <code_set_name> ASMO_449
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry
 
 % alias ISO_9036

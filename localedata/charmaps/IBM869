@@ -1,6 +1,8 @@
 <code_set_name> IBM869
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: IBM Keyboard layouts and code pages, PN 07G4586 June 1991
 
 % alias CP869

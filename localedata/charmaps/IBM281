@@ -1,6 +1,8 @@
 <code_set_name> IBM281
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: IBM 3174 Character Set Ref, GA27-3831-02, March 1990
 
 % alias EBCDIC-JP-E

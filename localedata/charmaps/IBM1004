@@ -1,6 +1,8 @@
 <code_set_name> IBM1004
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: CEN/TC304 N283, 1994-02-04
 
 % alias CP1004

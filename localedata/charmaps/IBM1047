@@ -1,6 +1,8 @@
 <code_set_name> IBM1047
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: IBM Character Data Representation Architecture
 
 %  Registry SC09-1391-00 p 150.

@@ -1,3 +1,16 @@
+1997-10-09 04:56  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/is_IS: Update from Debian version.
+
+1997-08-29 03:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* tst-fmon.c: New file.  strfmon test program.
+	* tst-fmon.sh: New file.  Script to run strfmon test.
+	* fmon-de_DE.exp: New file.  Expected result of strfmon test for de_DE.
+	* fmon-en_US.exp: New file.  Expected result of strfmon test for en_US.
+
+	* locales/cs_CZ: Update from author.
+
 1997-03-17 03:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sort-test.sh: Call localedef with additional environment variable

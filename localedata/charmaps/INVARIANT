@@ -1,6 +1,8 @@
 <code_set_name> INVARIANT
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 % alias ISO-IR-170
 CHARMAP
 <NU>                   /x00   <U0000> NULL (NUL)

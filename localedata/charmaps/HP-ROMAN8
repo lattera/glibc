@@ -1,6 +1,8 @@
 <code_set_name> HP-ROMAN8
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: LaserJet IIP Printer User's Manual,
 
 %  HP part no 33471-90901, Hewlet-Packard, June 1989.

@@ -1,6 +1,8 @@
 <code_set_name> KSC5636
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 % alias ISO646-KR
 CHARMAP
 <NU>                   /x00   <U0000> NULL (NUL)

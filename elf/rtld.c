@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -532,24 +532,27 @@ of this helper program; chances are you did not intend to run this program.\n",
       /* We have one problematic case: if we have a name at the end of
 	 the file without a trailing terminating characters, we cannot
 	 place the \0.  Handle the case separately.  */
-      if (file[file_size - 1] != ' ' && file[file_size] != '\t'
-	  && file[file_size] != '\n')
+      if (file[file_size - 1] != ' ' && file[file_size - 1] != '\t'
+	  && file[file_size - 1] != '\n' && file[file_size - 1] != ':')
 	{
 	  problem = &file[file_size];
 	  while (problem > file && problem[-1] != ' ' && problem[-1] != '\t'
-		 && problem[-1] != '\n')
+		 && problem[-1] != '\n' && problem[-1] != ':')
 	    --problem;
 
 	  if (problem > file)
 	    problem[-1] = '\0';
 	}
       else
-	problem = NULL;
+	{
+	  problem = NULL;
+	  file[file_size - 1] = '\0';
+	}
 
       if (file != problem)
 	{
 	  char *p;
-	  runp = file;
+	  runp = file + strspn (file, ": \t\n");
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    {
 	      struct link_map *new_map = _dl_map_object (NULL, p,
@@ -557,6 +560,9 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      if (new_map->l_opencount == 1)
 		/* It is no duplicate.  */
 		++npreloads;
+
+	      if (runp != NULL)
+		runp += strspn (runp, ": \t\n");
 	    }
 	}
 

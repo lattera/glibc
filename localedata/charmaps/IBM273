@@ -1,6 +1,8 @@
 <code_set_name> IBM273
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: IBM NLS RM Vol2 SE09-8002-01, March 1990
 
 % alias CP273

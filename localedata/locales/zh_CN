@@ -1,0 +1,98 @@
+comment_char %
+escape_char  /
+%
+% Chinese language locale for Peoples Republic of China
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: zh
+% Territory: CN
+% Revision: 4.3
+% Date: 1997-11-09
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: GB_2312-80
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_MONETARY
+int_curr_symbol           "<C><N><Y><SP>"
+currency_symbol           "<c5218>"
+mon_decimal_point         "<.>"
+mon_thousands_sep         "<,>"
+mon_grouping              3;0
+positive_sign             ""
+negative_sign             "<->"
+int_frac_digits           2
+frac_digits               2
+p_cs_precedes             1
+p_sep_by_space            0
+n_cs_precedes             1
+n_sep_by_space            0
+p_sign_posn               1
+n_sign_posn               4
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point             "<.>"
+thousands_sep             "<,>"
+grouping                  3;0
+END LC_NUMERIC
+
+LC_TIME
+abday   "<c4053>","<c5027>";"<c2294>";"<c4093>";/
+        "<c4336>";"<c4669>";"<c3389>"
+day     "<c4839><c3858><c4053>";/
+        "<c4839><c3858><c5027>";/
+        "<c4839><c3858><c2294>";/
+        "<c4839><c3858><c4093>";/
+        "<c4839><c3858><c4336>";/
+        "<c4839><c3858><c4669>";/
+        "<c4839><c3858><c3389>"
+abmon   "<1><c5234>";/
+        "<2><c5234>";/
+        "<3><c5234>";/
+        "<4><c5234>";/
+        "<5><c5234>";/
+        "<6><c5234>";/
+        "<7><c5234>";/
+        "<8><c5234>";/
+        "<9><c5234>";/
+        "<1><0><c5234>";/
+        "<1><1><c5234>";/
+        "<1><2><c5234>"
+mon     "<c5027><c5234>";/
+        "<c2294><c5234>";/
+        "<c4093><c5234>";/
+        "<c4336><c5234>";/
+        "<c4669><c5234>";/
+        "<c3389><c5234>";/
+        "<c3863><c5234>";/
+        "<c1643><c5234>";/
+        "<c3037><c5234>";/
+        "<c4214><c5234>";/
+        "<c4214><c5027><c5234>";/
+        "<c4214><c2294><c5234>"
+d_t_fmt "<%><Y><c3674><%><m><c5234><%><d><c4053><%><A><%><H><c4217><%><M><c2354><%><S><c3575>"
+d_fmt   "<%><Y><-><%><m><-><%><d>"
+t_fmt   "<%><T>"
+am_pm   "";""
+t_fmt_ampm ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr     "<<(><1><c0357><c0389><c4239><Y><y><)/>><.><*>"
+noexpr      "<<(><0><c0378><c0346><c2381><N><n><)/>><.><*>"
+END LC_MESSAGES

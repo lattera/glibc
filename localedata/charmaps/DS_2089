@@ -1,6 +1,8 @@
 <code_set_name> DS_2089
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: Danish Standard, DS 2089, February 1974
 
 % alias DS2089

@@ -1,6 +1,8 @@
 <code_set_name> BALTIC
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry
 
 %  &g1esc x2d56 &g2esc x2e56 &g3esc x2f56 

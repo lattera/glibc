@@ -1,6 +1,8 @@
 <code_set_name> SAMI
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry
 
 % alias LATIN-LAP

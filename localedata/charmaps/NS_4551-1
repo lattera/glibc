@@ -1,6 +1,8 @@
 <code_set_name> NS_4551-1
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry
 
 % alias ISO-IR-60

@@ -11,8 +11,8 @@ escape_char  /
 % Fax: +45 - 33256543
 % Language: fr
 % Territory: BE
-% Revision: 4.3
-% Date: 1996-10-15
+% Revision: 4.4
+% Date: 1997-03-18
 % Users: general
 % Repertoiremap: mnemonic,ds
 % Charset: ISO-8859-1
@@ -37,7 +37,7 @@ int_curr_symbol           "<B><E><F><SP>"
 currency_symbol           "<F><B>"
 mon_decimal_point         "<,>"
 mon_thousands_sep         "<.>"
-mon_grouping              3;0
+mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<->"
 int_frac_digits           2

@@ -2,18 +2,17 @@ comment_char %
 escape_char  /
 %
 % Croatian Language Locale for Croatia
-% Source: CARNet/SRCE
-% Address: Josipa Marohnica bb
-%    Zagreb, Croatia
-% Contact: Tomislav Vujec
-% Email: Tomislav.Vujec@CARNet.hr
-% Tel: +385-1-616-41-94
-% Fax: +385-1-616-41-94
-% Based on original serbo-croate locale by Borka Jerman Blaz<ic<
+% Source: USM/MZT
+% Address: Kotnikova 6,
+%    Ljubljana, Slovenia
+% Contact: Borka Jerman-Blaz<ic<
+% Email: jerman-blazic@ijs.si
+% Tel: +38 - 61 - 653225
+% Fax: none
 % Language: hr
 % Territory: HR
-% Revision: 1.0
-% Date: 1997-04-22
+% Revision: 4.4
+% Date: 1997-04-17
 % Application: general
 % Users: general
 % Repertoiremap: mnemonic,ds
@@ -81,7 +80,7 @@ collating-symbol <SMALL>
 % Latin letters. They are used 
 % to specify deltas by locales using
 % a locale as the default ordering
-% and by "reorder-after" statements
+% and by "replace-after" statements
 % specifying the changed placement
 % in an ordering of a character.
 
@@ -187,7 +186,7 @@ collating-symbol <SPECIAL>
 
 % letter;accent;case;specials
 
-order_start forward;forward/
+order_start forward;backward/
             ;forward;position
 
 % <CAPITAL> or <SMALL> letters first:
@@ -395,7 +394,7 @@ order_start forward;forward/
 <9">	IGNORE;IGNORE;IGNORE;<9">
 <//->	IGNORE;IGNORE;IGNORE;<//->
 <//=>	IGNORE;IGNORE;IGNORE;<//=>
-<sb>	IGNORE;IGNORE;IGNORE;<sb>
+<Sb>	IGNORE;IGNORE;IGNORE;<Sb>
 <..>	IGNORE;IGNORE;IGNORE;<..>
 <.3>	IGNORE;IGNORE;IGNORE;<.3>
 <%0>	IGNORE;IGNORE;IGNORE;<%0>
@@ -411,7 +410,6 @@ order_start forward;forward/
 <:X>	IGNORE;IGNORE;IGNORE;<:X>
 <!*2>	IGNORE;IGNORE;IGNORE;<!*2>
 <'->	IGNORE;IGNORE;IGNORE;<'->
-<//f>	IGNORE;IGNORE;IGNORE;<//f>
 <=S>	IGNORE;IGNORE;IGNORE;<=S>
 <0s>	IGNORE;IGNORE;IGNORE;<0s>
 <1s>	IGNORE;IGNORE;IGNORE;<1s>
@@ -511,9 +509,10 @@ order_start forward;forward/
 <-2>	IGNORE;IGNORE;IGNORE;<-2>
 <-+>	IGNORE;IGNORE;IGNORE;<-+>
 <.+>	IGNORE;IGNORE;IGNORE;<.+>
+<//f>	IGNORE;IGNORE;IGNORE;<//f>
 <*->	IGNORE;IGNORE;IGNORE;<*->
 <Ob>	IGNORE;IGNORE;IGNORE;<Ob>
-<Sb>	IGNORE;IGNORE;IGNORE;<Sb>
+<sb>	IGNORE;IGNORE;IGNORE;<sb>
 <RT>	IGNORE;IGNORE;IGNORE;<RT>
 <0(>	IGNORE;IGNORE;IGNORE;<0(>
 <00>	IGNORE;IGNORE;IGNORE;<00>
@@ -560,7 +559,6 @@ order_start forward;forward/
 <NI>	IGNORE;IGNORE;IGNORE;<NI>
 <(A>	IGNORE;IGNORE;IGNORE;<(A>
 <TR>	IGNORE;IGNORE;IGNORE;<TR>
-<88>	IGNORE;IGNORE;IGNORE;<88>
 <Iu>	IGNORE;IGNORE;IGNORE;<Iu>
 <Il>	IGNORE;IGNORE;IGNORE;<Il>
 <Vs>	IGNORE;IGNORE;IGNORE;<Vs>
@@ -634,9 +632,9 @@ order_start forward;forward/
 <20.>	IGNORE;IGNORE;IGNORE;<20.>
 <0-o>	IGNORE;IGNORE;IGNORE;<0-o>
 <hh>	IGNORE;IGNORE;IGNORE;<hh>
-<HH->	IGNORE;IGNORE;IGNORE;<HH->
+<HH>	IGNORE;IGNORE;IGNORE;<HH>
 <vv>	IGNORE;IGNORE;IGNORE;<vv>
-<VV->	IGNORE;IGNORE;IGNORE;<VV->
+<VV>	IGNORE;IGNORE;IGNORE;<VV>
 <3->	IGNORE;IGNORE;IGNORE;<3->
 <3_>	IGNORE;IGNORE;IGNORE;<3_>
 <3!>	IGNORE;IGNORE;IGNORE;<3!>
@@ -646,60 +644,60 @@ order_start forward;forward/
 <4!>	IGNORE;IGNORE;IGNORE;<4!>
 <4//>	IGNORE;IGNORE;IGNORE;<4//>
 <dr>	IGNORE;IGNORE;IGNORE;<dr>
-<dR->	IGNORE;IGNORE;IGNORE;<dR->
-<Dr->	IGNORE;IGNORE;IGNORE;<Dr->
-<DR->	IGNORE;IGNORE;IGNORE;<DR->
+<dR>	IGNORE;IGNORE;IGNORE;<dR>
+<Dr>	IGNORE;IGNORE;IGNORE;<Dr>
+<DR>	IGNORE;IGNORE;IGNORE;<DR>
 <dl>	IGNORE;IGNORE;IGNORE;<dl>
-<dL->	IGNORE;IGNORE;IGNORE;<dL->
-<Dl->	IGNORE;IGNORE;IGNORE;<Dl->
-<LD->	IGNORE;IGNORE;IGNORE;<LD->
+<dL>	IGNORE;IGNORE;IGNORE;<dL>
+<Dl>	IGNORE;IGNORE;IGNORE;<Dl>
+<LD>	IGNORE;IGNORE;IGNORE;<LD>
 <ur>	IGNORE;IGNORE;IGNORE;<ur>
-<uR->	IGNORE;IGNORE;IGNORE;<uR->
-<Ur->	IGNORE;IGNORE;IGNORE;<Ur->
-<UR->	IGNORE;IGNORE;IGNORE;<UR->
+<uR>	IGNORE;IGNORE;IGNORE;<uR>
+<Ur>	IGNORE;IGNORE;IGNORE;<Ur>
+<UR>	IGNORE;IGNORE;IGNORE;<UR>
 <ul>	IGNORE;IGNORE;IGNORE;<ul>
-<uL->	IGNORE;IGNORE;IGNORE;<uL->
-<Ul->	IGNORE;IGNORE;IGNORE;<Ul->
-<UL->	IGNORE;IGNORE;IGNORE;<UL->
+<uL>	IGNORE;IGNORE;IGNORE;<uL>
+<Ul>	IGNORE;IGNORE;IGNORE;<Ul>
+<UL>	IGNORE;IGNORE;IGNORE;<UL>
 <vr>	IGNORE;IGNORE;IGNORE;<vr>
-<vR->	IGNORE;IGNORE;IGNORE;<vR->
+<vR>	IGNORE;IGNORE;IGNORE;<vR>
 <Udr>	IGNORE;IGNORE;IGNORE;<Udr>
 <uDr>	IGNORE;IGNORE;IGNORE;<uDr>
-<Vr->	IGNORE;IGNORE;IGNORE;<Vr->
+<Vr>	IGNORE;IGNORE;IGNORE;<Vr>
 <UdR>	IGNORE;IGNORE;IGNORE;<UdR>
 <uDR>	IGNORE;IGNORE;IGNORE;<uDR>
-<VR->	IGNORE;IGNORE;IGNORE;<VR->
+<VR>	IGNORE;IGNORE;IGNORE;<VR>
 <vl>	IGNORE;IGNORE;IGNORE;<vl>
-<vL->	IGNORE;IGNORE;IGNORE;<vL->
+<vL>	IGNORE;IGNORE;IGNORE;<vL>
 <Udl>	IGNORE;IGNORE;IGNORE;<Udl>
 <uDl>	IGNORE;IGNORE;IGNORE;<uDl>
-<Vl->	IGNORE;IGNORE;IGNORE;<Vl->
+<Vl>	IGNORE;IGNORE;IGNORE;<Vl>
 <UdL>	IGNORE;IGNORE;IGNORE;<UdL>
 <uDL>	IGNORE;IGNORE;IGNORE;<uDL>
-<VL->	IGNORE;IGNORE;IGNORE;<VL->
+<VL>	IGNORE;IGNORE;IGNORE;<VL>
 <dh>	IGNORE;IGNORE;IGNORE;<dh>
 <dLr>	IGNORE;IGNORE;IGNORE;<dLr>
 <dlR>	IGNORE;IGNORE;IGNORE;<dlR>
-<dH->	IGNORE;IGNORE;IGNORE;<dH->
-<Dh->	IGNORE;IGNORE;IGNORE;<Dh->
+<dH>	IGNORE;IGNORE;IGNORE;<dH>
+<Dh>	IGNORE;IGNORE;IGNORE;<Dh>
 <DLr>	IGNORE;IGNORE;IGNORE;<DLr>
 <DlR>	IGNORE;IGNORE;IGNORE;<DlR>
-<DH->	IGNORE;IGNORE;IGNORE;<DH->
+<DH>	IGNORE;IGNORE;IGNORE;<DH>
 <uh>	IGNORE;IGNORE;IGNORE;<uh>
 <uLr>	IGNORE;IGNORE;IGNORE;<uLr>
 <ulR>	IGNORE;IGNORE;IGNORE;<ulR>
-<uH->	IGNORE;IGNORE;IGNORE;<uH->
-<Uh->	IGNORE;IGNORE;IGNORE;<Uh->
+<uH>	IGNORE;IGNORE;IGNORE;<uH>
+<Uh>	IGNORE;IGNORE;IGNORE;<Uh>
 <ULr>	IGNORE;IGNORE;IGNORE;<ULr>
 <UlR>	IGNORE;IGNORE;IGNORE;<UlR>
-<UH->	IGNORE;IGNORE;IGNORE;<UH->
+<UH>	IGNORE;IGNORE;IGNORE;<UH>
 <vh>	IGNORE;IGNORE;IGNORE;<vh>
 <vLr>	IGNORE;IGNORE;IGNORE;<vLr>
 <vlR>	IGNORE;IGNORE;IGNORE;<vlR>
-<vH->	IGNORE;IGNORE;IGNORE;<vH->
+<vH>	IGNORE;IGNORE;IGNORE;<vH>
 <Udh>	IGNORE;IGNORE;IGNORE;<Udh>
 <uDh>	IGNORE;IGNORE;IGNORE;<uDh>
-<Vh->	IGNORE;IGNORE;IGNORE;<Vh->
+<Vh>	IGNORE;IGNORE;IGNORE;<Vh>
 <UdLr>	IGNORE;IGNORE;IGNORE;<UdLr>
 <UdlR>	IGNORE;IGNORE;IGNORE;<UdlR>
 <uDLr>	IGNORE;IGNORE;IGNORE;<uDLr>
@@ -708,35 +706,6 @@ order_start forward;forward/
 <uDH>	IGNORE;IGNORE;IGNORE;<uDH>
 <VLr>	IGNORE;IGNORE;IGNORE;<VLr>
 <VlR>	IGNORE;IGNORE;IGNORE;<VlR>
-<VH->	IGNORE;IGNORE;IGNORE;<VH->
-<HH>	IGNORE;IGNORE;IGNORE;<HH>
-<VV>	IGNORE;IGNORE;IGNORE;<VV>
-<dR>	IGNORE;IGNORE;IGNORE;<dR>
-<Dr>	IGNORE;IGNORE;IGNORE;<Dr>
-<DR>	IGNORE;IGNORE;IGNORE;<DR>
-<dL>	IGNORE;IGNORE;IGNORE;<dL>
-<Dl>	IGNORE;IGNORE;IGNORE;<Dl>
-<LD>	IGNORE;IGNORE;IGNORE;<LD>
-<uR>	IGNORE;IGNORE;IGNORE;<uR>
-<Ur>	IGNORE;IGNORE;IGNORE;<Ur>
-<UR>	IGNORE;IGNORE;IGNORE;<UR>
-<uL>	IGNORE;IGNORE;IGNORE;<uL>
-<Ul>	IGNORE;IGNORE;IGNORE;<Ul>
-<UL>	IGNORE;IGNORE;IGNORE;<UL>
-<vR>	IGNORE;IGNORE;IGNORE;<vR>
-<Vr>	IGNORE;IGNORE;IGNORE;<Vr>
-<VR>	IGNORE;IGNORE;IGNORE;<VR>
-<vL>	IGNORE;IGNORE;IGNORE;<vL>
-<Vl>	IGNORE;IGNORE;IGNORE;<Vl>
-<VL>	IGNORE;IGNORE;IGNORE;<VL>
-<dH>	IGNORE;IGNORE;IGNORE;<dH>
-<Dh>	IGNORE;IGNORE;IGNORE;<Dh>
-<DH>	IGNORE;IGNORE;IGNORE;<DH>
-<uH>	IGNORE;IGNORE;IGNORE;<uH>
-<Uh>	IGNORE;IGNORE;IGNORE;<Uh>
-<UH>	IGNORE;IGNORE;IGNORE;<UH>
-<vH>	IGNORE;IGNORE;IGNORE;<vH>
-<Vh>	IGNORE;IGNORE;IGNORE;<Vh>
 <VH>	IGNORE;IGNORE;IGNORE;<VH>
 <FD>	IGNORE;IGNORE;IGNORE;<FD>
 <BD>	IGNORE;IGNORE;IGNORE;<BD>
@@ -942,8 +911,6 @@ order_start forward;forward/
 <Tel>	IGNORE;IGNORE;IGNORE;<Tel>
 <UA>	IGNORE;IGNORE;IGNORE;<UA>
 <UB>	IGNORE;IGNORE;IGNORE;<UB>
-<Mc>	IGNORE;IGNORE;IGNORE;<Mc>
-<Fl>	IGNORE;IGNORE;IGNORE;<Fl>
 UNDEFINED	IGNORE;IGNORE;IGNORE
 
 <0>	<0>;<0>;IGNORE;IGNORE
@@ -1086,8 +1053,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <d-z<>	<D-Z<>;<NONE>;<SMALL>;IGNORE
 <D//>	<D//>;<NONE>;<CAPITAL>;IGNORE
 <d//>	<D//>;<NONE>;<SMALL>;IGNORE
-<D->	<D>;<D->;<CAPITAL>;IGNORE
-<d->	<D>;<D->;<SMALL>;IGNORE
 <E>	<E>;<NONE>;<CAPITAL>;IGNORE
 <e>	<E>;<NONE>;<SMALL>;IGNORE
 <E'>	<E>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1158,8 +1123,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <g'>	<G>;<ACUTE>;<SMALL>;IGNORE
 <G(>	<G>;<BREVE>;<CAPITAL>;IGNORE
 <g(>	<G>;<BREVE>;<SMALL>;IGNORE
-<OI>	<G>;<BREVE+ACUTE>;<CAPITAL>;IGNORE
-<oi>	<G>;<BREVE+ACUTE>;<SMALL>;IGNORE
 <G/>>	<G>;<CIRCUMFLEX>;<CAPITAL>;IGNORE
 <g/>>	<G>;<CIRCUMFLEX>;<SMALL>;IGNORE
 <G<>	<G>;<CARON>;<CAPITAL>;IGNORE
@@ -1273,7 +1236,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <L-j>	<L-J>;<NONE>;<CAPITAL-SMALL>;IGNORE
 <l-J>	<L-J>;<NONE>;<SMALL-CAPITAL>;IGNORE
 <l-j>	<L-J>;<NONE>;<SMALL>;IGNORE
-<St>	<LONG>;<SPECIAL>;<SMALL>;IGNORE
 <M>	<M>;<NONE>;<CAPITAL>;IGNORE
 <m>	<M>;<NONE>;<SMALL>;IGNORE
 <M'>	<M>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1307,8 +1269,8 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <N-j>	<N-J>;<NONE>;<CAPITAL-SMALL>;IGNORE
 <n-J>	<N-J>;<NONE>;<SMALL-CAPITAL>;IGNORE
 <n-j>	<N-J>;<NONE>;<SMALL>;IGNORE
-<NG>	<N>;<NG>;<CAPITAL>;IGNORE
-<ng>	<N>;<NG>;<SMALL>;IGNORE
+<NG>	"<N><G>";"<NG><NG>";"<CAPITAL><CAPITAL>";IGNORE
+<ng>	"<N><G>";"<NG><NG>";"<SMALL><SMALL>";IGNORE
 <O>	<O>;<NONE>;<CAPITAL>;IGNORE
 <o>	<O>;<NONE>;<SMALL>;IGNORE
 <-o>	<O>;<NONE>;<-o>;IGNORE
@@ -2143,13 +2105,6 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <N6>	<N6>;<N6>;IGNORE;IGNORE
 <n5>	<N6>;<n5>;IGNORE;IGNORE
 
-% modifier letters
-
-<;S>	IGNORE;IGNORE;<;S>;IGNORE
-<1/>>	IGNORE;IGNORE;<CIRCUMFLEX>;IGNORE
-<1->	IGNORE;IGNORE;<MACRON>;IGNORE
-<1!>	IGNORE;IGNORE;<GRAVE>;IGNORE
-
 order_end
 
 END LC_COLLATE
@@ -2165,14 +2120,14 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "<H><R><K><SP>"
-currency_symbol           "<k><n>"
-mon_decimal_point         "<.>"
+currency_symbol           "<K><n>"
+mon_decimal_point         "<,>"
 mon_thousands_sep         "<SP>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<->"
-int_frac_digits           2
-frac_digits               2
+int_frac_digits           0
+frac_digits               0
 p_cs_precedes             1
 p_sep_by_space            1
 n_cs_precedes             1
@@ -2182,44 +2137,44 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<.>"
+decimal_point             "<,>"
 thousands_sep             ""
 grouping                  0;0
 END LC_NUMERIC
 
 LC_TIME
 
-abday   "<N><e><d>";"<P><o><n>";/
-        "<U><t><o>";"<S><r><i>";/
-        "<C<><e><t>";"<P><e><t>";/
-        "<S><u><b>"
-day     "<N><e><d><j><e><l><j><a>";/
-        "<P><o><n><e><d><j><e><l><j><a><k>";/
-        "<U><t><o><r><a><k>";/
-        "<S><r><i><j><e><d><a>";/
-        "<C<><e><t><v><r><t><a><k>";/
-        "<P><e><t><a><k>";/
-        "<S><u><b><o><t><a>"
-abmon   "<S><i><j>";"<V><e><l>";/
-        "<O><z><u>";"<T><r><a>";/
-        "<S><v><i>";"<L><i><p>";/
-        "<S><r><p>";"<K><o><l>";/
-        "<R><u><j>";"<L><i><s>";/
-        "<S><t><u>";"<P><r><o>"
-mon     "<S><i><j><e><c'><a><n><j>";/
-        "<V><e><l><j><a><c<><a>";/
-        "<O><z<><u><j><a><k>";/
-        "<T><r><a><v><a><n><j>";/
-        "<S><v><i><b><a><n><j>";/
-        "<L><i><p><a><n><j>";/
-        "<S><r><p><a><n><j>";/
-        "<K><o><l><o><v><o><z>";/
-        "<R><u><j><a><n>";/
-        "<L><i><s><t><o><p><a><d>";/
-        "<S><t><u><d><e><n><i>";/
-        "<P><r><o><s><i><n><a><c>"
+abday   "<n><e><d>";"<p><o><n>";/
+        "<t><o><r>";"<s><r><e>";/
+        "<c<><e><t>";"<p><e><t>";/
+        "<s><u><b>"
+day     "<n><e><d><e><l><j><a>";/
+        "<p><o><n><e><d><e><l><j><a><k>";/
+        "<u><t><o><r><a><k>";/
+        "<s><r><e><d><a>";/
+        "<c<><e><t><v><r><t><a><k>";/
+        "<p><e><t><a><k>";/
+        "<s><u><b><o><t><a>"
+abmon   "<j><a><n>";"<f><e><b>";/
+        "<m><a><r>";"<a><p><r>";/
+        "<m><a><j>";"<j><u><n>";/
+        "<j><u><l>";"<a><u><g>";/
+        "<s><e><p>";"<o><k><t>";/
+        "<n><o><v>";"<d><e><c>"
+mon     "<j><a><n><u><a><r>";/
+        "<f><e><b><r><u><a><r>";/
+        "<m><a><r><t>";/
+        "<a><p><r><i><l>";/
+        "<m><a><j>";/
+        "<j><u><n>";/
+        "<j><u><l>";/
+        "<a><u><g><u><s><t>";/
+        "<s><e><p><t><e><m><b><a><r>";/
+        "<o><k><t><o><b><a><r>";/
+        "<n><o><v><e><m><b><a><r>";/
+        "<d><e><c><e><m><b><a><r>"
 d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T>"
-d_fmt   "<%><d><.><%><m><.><%><y>"
+d_fmt   "<%><Y><-><%><m><-><%><d>"
 t_fmt   "<%><T>"
 am_pm   "";""
 t_fmt_ampm ""

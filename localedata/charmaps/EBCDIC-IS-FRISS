@@ -1,6 +1,8 @@
 <code_set_name> EBCDIC-IS-FRISS
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: Skyrsuvelar Rikisins og Reykjavikurborgar, feb 1982
 
 % alias FRISS

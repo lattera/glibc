@@ -1,6 +1,8 @@
 <code_set_name> CP1255
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: UNICODE 1.0
 
 % alias MS-HEBR

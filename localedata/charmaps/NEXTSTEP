@@ -1,6 +1,8 @@
 <code_set_name> NEXTSTEP
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: Peter Svanberg.
 
 % alias NEXT

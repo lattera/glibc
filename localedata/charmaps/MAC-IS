@@ -1,6 +1,8 @@
 <code_set_name> MAC-IS
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 CHARMAP
 <NU>                   /x00   <U0000> NULL (NUL)
 <SH>                   /x01   <U0001> START OF HEADING (SOH)

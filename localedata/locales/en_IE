@@ -1,7 +1,7 @@
 escape_char  /
 comment_char  %
 
-% English locale for Ireland
+% English language locale for Ireland
 % Source: RAP
 % Address: Sankt Jo//rgens Alle 8
 %    DK-1615 Ko//benhavn V, Danmark
@@ -11,8 +11,8 @@ comment_char  %
 % Fax: +45 - 33256543
 % Language: en
 % Territory: IE
-% Revision: 4.3
-% Date: 1996-10-15
+% Revision: 4.4
+% Date: 1997-11-05
 % Users: general
 % Repertoiremap: mnemonic,ds
 % Charset: ISO-8859-1

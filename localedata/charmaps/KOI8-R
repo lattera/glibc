@@ -1,6 +1,8 @@
 <code_set_name> KOI8-R
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: RFC1489 via Gabor Kiss <kissg@sztaki.hu>
 
 %  and Andrey A. Chernov <ache@astral.msk.su>

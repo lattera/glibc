@@ -1,6 +1,8 @@
 <code_set_name> IBM865
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: IBM DOS 3.3 Ref (Abridged), 94X9575 (Feb 1987)
 
 % alias CP865

@@ -1,6 +1,8 @@
 <code_set_name> IBM256
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: IBM Registry C-H 3-3220-050
 
 % alias EBCDIC-INT1

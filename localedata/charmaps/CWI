@@ -1,6 +1,8 @@
 <code_set_name> CWI
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: Computerworld Sza'mita'stechnika vol 3 issue 13 1988-06-29
 
 % alias CWI-2

@@ -1,6 +1,8 @@
 <code_set_name> T.61-8BIT
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 % alias T.61
 %  source: ECMA registry
 

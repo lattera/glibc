@@ -1,6 +1,8 @@
 <code_set_name> ISO-IR-90
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry
 
 % alias ISO_6937-2:1983

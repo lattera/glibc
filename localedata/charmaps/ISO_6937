@@ -1,6 +1,8 @@
 <code_set_name> ISO_6937
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry and ISO/IEC 6937:1992
 
 % alias ISO-IR-156

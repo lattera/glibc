@@ -1,6 +1,8 @@
 <code_set_name> DEC-MCS
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  VAX/VMS User's Manual, Order Number: AI-Y517A-TE, April 1986.
 
 % alias DEC

@@ -1,0 +1,2681 @@
+# Japanese language locale for Japan
+# Source: RAP and JISC
+# Address: Sankt Joergens Alle 8
+#    DK-1615 Copenhagen V
+# Contact: Keld Simonsen
+# Email: Keld.Simonsen@dkuug.dk
+# Tel: +45 - 31226543
+# Fax: +45 - 33256543
+# Language: ja
+# Territory: JP
+# Revision: 2.2
+# Date: 1997-11-07
+# Users: general
+# Repertoiremap: mnemonic,ds
+# Charset: X0201 X0208 X0212
+# Distribution and use is free, also
+# for commercial purposes.
+
+#
+#       LC_CTYPE
+#
+LC_CTYPE
+
+#
+# upper class:
+#       alphabets in portable character set,
+#       Roman letters in JIS X 0208,
+#       Greek letters in JIS X 0208,
+#       Russian letters in JIS X 0208, and
+#       Uppercase letters in JIS X 0212.
+#       Uppercase letters in udc or vdc classes may be added.
+
+upper   <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;\
+        <j0333>;...;<j0358>;\
+        <j0601>;...;<j0624>;\
+        <j0701>;...;<j0733>;\
+        <J0665>;...;<J0669>;\
+        <J0671>;\
+        <J0673>;\
+        <J0674>;\
+        <J0676>;\
+        <J0734>;...;<J0746>;\
+        <J0901>;\
+        <J0902>;\
+        <J0904>;\
+        <J0906>;\
+        <J0908>;\
+        <J0909>;\
+        <J0911>;...;<J0913>;\
+        <J0915>;\
+        <J0916>;\
+        <J1001>;...;<J1024>;\
+        <J1026>;...;<J1087>
+
+#
+# lower class:
+#       Alphabets in portable character set,
+#       Roman letters in JIS X 0208,
+#       Greek letters in JIS X 0208,
+#       Russian letters in JIS X 0208, and
+#       Lowercase letters in JIS X 0212.
+#       Lowercase letters in udc or vdc classes may be added
+
+lower   <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;\
+        <j0365>;...;<j0390>;\
+        <j0633>;...;<j0656>;\
+        <j0749>;...;<j0781>;\
+        <J0681>;...;<J0692>;\
+        <J0782>;...;<J0794>;\
+        <J0933>;...;<J0948>;\
+        <J1101>;...;<J1127>;\
+        <J1129>;...;<J1135>;\
+        <J1137>;...;<J1187>
+
+#
+# alpha class (default):
+# It includes, by default, all the characters defined to be in
+# upper or lower classes.
+#
+
+#
+# digit class
+#
+digit   <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>
+
+#
+# space class:
+#       Space characters defined in ISO DIS 9945-2 "POSIX" locale
+#       Space in JIS X 0208
+#
+
+space   <tab>;<newline>;<vertical-tab>;<form-feed>;\
+        <carriage-return>;<space>;\
+        <j0101>
+
+#
+# cntrl class: C0 and C1 control characters as per ISO 6429.
+# SS2 and SS3 may be excluded if an acompanying charmap uses them
+# as single shifts to invoke graphic characters (as in EUC). 
+# Control characters in udc or vdc may be added.
+
+cntrl   <alert>;<backspace>;<tab>;<newline>;<vertical-tab>;\
+        <form-feed>;<carriage-return>;\
+        <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;<SO>;\
+        <SI>;<DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;\
+        <ETB>;<CAN>;<EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;\
+        <IS1>;<DEL>;\
+        <BPH>;<NBH>;<NEL>;<SSA>;<ESA>;<HTS>;<HTJ>;\
+        <VTS>;<PLD>;<PLU>;<RI>;<SS2>;<SS3>;\
+        <DCS>;<PU1>;<PU2>;<STS>;<CCH>;<MW>;<SPA>;<EPA>;\
+        <SOS>;<SCI>;<CSI>;<ST>;<OSC>;<PM>;<APC>
+
+#
+# punct class:
+# Special characters in udc or vdc may be added as long as they
+# do not belong to classes cntrl, alpha, digit, jkanji, jhira,
+# jkata or jdigit.
+#
+punct   <exclamation-mark>;<quotation-mark>;<number-sign>;\
+        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
+        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
+        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
+        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
+        <greater-than-sign>;<question-mark>;\
+        <commercial-at>;\
+        <left-square-bracket>;<backslash>;<right-square-bracket>;\
+        <circumflex>;<underscore>;\
+        <grave-accent>;\
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;\
+        <kana-full-stop>;<kana-opening-bracket>;<kana-closing-bracket>;\
+        <kana-comma>;<kana-conjunctive>;\
+        <j0102>;...;<j0110>;\
+        <j0113>;...;<j0118>;\
+        <j0123>;\
+        <j0126>;\
+        <j0129>;...;<j0194>;\
+        <j0201>;...;<j0214>;\
+        <j0226>;...;<j0233>;\
+        <j0242>;...;<j0248>;\
+        <j0260>;...;<j0274>;\
+        <j0282>;...;<j0289>;\
+        <j0294>;\
+        <j0801>;...;<j0832>;\
+        <J0215>;...;<J0225>;\
+        <J0234>;...;<J0236>;\
+        <J0275>;...;<J0281>
+
+
+#
+# graph class:
+#       upper, lower, alpha, digit, xdigit
+#       JIS X 0201 printable characters
+#       JIS X 0208 printable characters
+#       JIS X 0212 printable characters
+#       Printable characters in udc or vdc classes may be added.
+
+graph   <exclamation-mark>;<quotation-mark>;<number-sign>;\
+        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
+        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
+        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
+        <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>;\
+        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
+        <greater-than-sign>;<question-mark>;\
+        <commercial-at>;\
+        <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;\
+        <left-square-bracket>;<backslash>;<right-square-bracket>;\
+        <circumflex>;<underscore>;\
+        <grave-accent>;\
+        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;\
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;\
+        <kana-full-stop>;<kana-opening-bracket>;<kana-closing-bracket>;\
+        <kana-comma>;<kana-conjunctive>;\
+        <kana-WO>;...;<kana-tsu>;\
+        <kana-prolonged-sound>;\
+        <kana-A>;...;<kana-N>;\
+        <kana-voiced-sound>;<kana-semivoiced-sound>;\
+        <j0102>;...;<j0194>;\
+        <j0201>;...;<j0214>;\
+        <j0226>;...;<j0233>;\
+        <j0242>;...;<j0248>;\
+        <j0260>;...;<j0274>;\
+        <j0282>;...;<j0289>;\
+        <j0294>;\
+        <j0316>;...;<j0325>;\
+        <j0333>;...;<j0358>;\
+        <j0365>;...;<j0390>;\
+        <j0401>;...;<j0483>;\
+        <j0501>;...;<j0586>;\
+        <j0601>;...;<j0624>;\
+        <j0633>;...;<j0656>;\
+        <j0701>;...;<j0733>;\
+        <j0749>;...;<j0781>;\
+        <j0801>;...;<j0832>;\
+        <j1601>;...;<j1694>;\
+        <j1701>;...;<j1794>;\
+        <j1801>;...;<j1894>;\
+        <j1901>;...;<j1994>;\
+        <j2001>;...;<j2094>;\
+        <j2101>;...;<j2194>;\
+        <j2201>;...;<j2294>;\
+        <j2301>;...;<j2394>;\
+        <j2401>;...;<j2494>;\
+        <j2501>;...;<j2594>;\
+        <j2601>;...;<j2694>;\
+        <j2701>;...;<j2794>;\
+        <j2801>;...;<j2894>;\
+        <j2901>;...;<j2994>;\
+        <j3001>;...;<j3094>;\
+        <j3101>;...;<j3194>;\
+        <j3201>;...;<j3294>;\
+        <j3301>;...;<j3394>;\
+        <j3401>;...;<j3494>;\
+        <j3501>;...;<j3594>;\
+        <j3601>;...;<j3694>;\
+        <j3701>;...;<j3794>;\
+        <j3801>;...;<j3894>;\
+        <j3901>;...;<j3994>;\
+        <j4001>;...;<j4094>;\
+        <j4101>;...;<j4194>;\
+        <j4201>;...;<j4294>;\
+        <j4301>;...;<j4394>;\
+        <j4401>;...;<j4494>;\
+        <j4501>;...;<j4594>;\
+        <j4601>;...;<j4694>;\
+        <j4701>;...;<j4751>;\
+        <j4801>;...;<j4894>;\
+        <j4901>;...;<j4994>;\
+        <j5001>;...;<j5094>;\
+        <j5101>;...;<j5194>;\
+        <j5201>;...;<j5294>;\
+        <j5301>;...;<j5394>;\
+        <j5401>;...;<j5494>;\
+        <j5501>;...;<j5594>;\
+        <j5601>;...;<j5694>;\
+        <j5701>;...;<j5794>;\
+        <j5801>;...;<j5894>;\
+        <j5901>;...;<j5994>;\
+        <j6001>;...;<j6094>;\
+        <j6101>;...;<j6194>;\
+        <j6201>;...;<j6294>;\
+        <j6301>;...;<j6394>;\
+        <j6401>;...;<j6494>;\
+        <j6501>;...;<j6594>;\
+        <j6601>;...;<j6694>;\
+        <j6701>;...;<j6794>;\
+        <j6801>;...;<j6894>;\
+        <j6901>;...;<j6994>;\
+        <j7001>;...;<j7094>;\
+        <j7101>;...;<j7194>;\
+        <j7201>;...;<j7294>;\
+        <j7301>;...;<j7394>;\
+        <j7401>;...;<j7494>;\
+        <j7501>;...;<j7594>;\
+        <j7601>;...;<j7694>;\
+        <j7701>;...;<j7794>;\
+        <j7801>;...;<j7894>;\
+        <j7901>;...;<j7994>;\
+        <j8001>;...;<j8094>;\
+        <j8101>;...;<j8194>;\
+        <j8201>;...;<j8294>;\
+        <j8301>;...;<j8394>;\
+        <j8401>;...;<j8406>;\
+        <J0215>;...;<J0225>;\
+        <J0234>;...;<J0236>;\
+        <J0275>;...;<J0281>;\
+        <J0665>;...;<J0669>;\
+        <J0671>;\
+        <J0673>;\
+        <J0674>;\
+        <J0676>;\
+        <J0681>;...;<J0692>;\
+        <J0734>;...;<J0746>;\
+        <J0782>;...;<J0794>;\
+        <J0901>;\
+        <J0902>;\
+        <J0904>;\
+        <J0906>;\
+        <J0908>;\
+        <J0909>;\
+        <J0911>;...;<J0913>;\
+        <J0915>;\
+        <J0916>;\
+        <J0933>;...;<J0948>;\
+        <J1001>;...;<J1024>;\
+        <J1026>;...;<J1087>;\
+        <J1101>;...;<J1127>;\
+        <J1129>;...;<J1135>;\
+        <J1137>;...;<J1187>;\
+        <J1601>;...;<J1694>;\
+        <J1701>;...;<J1794>;\
+        <J1801>;...;<J1894>;\
+        <J1901>;...;<J1994>;\
+        <J2001>;...;<J2094>;\
+        <J2101>;...;<J2194>;\
+        <J2201>;...;<J2294>;\
+        <J2301>;...;<J2394>;\
+        <J2401>;...;<J2494>;\
+        <J2501>;...;<J2594>;\
+        <J2601>;...;<J2694>;\
+        <J2701>;...;<J2794>;\
+        <J2801>;...;<J2894>;\
+        <J2901>;...;<J2994>;\
+        <J3001>;...;<J3094>;\
+        <J3101>;...;<J3194>;\
+        <J3201>;...;<J3294>;\
+        <J3301>;...;<J3394>;\
+        <J3401>;...;<J3494>;\
+        <J3501>;...;<J3594>;\
+        <J3601>;...;<J3694>;\
+        <J3701>;...;<J3794>;\
+        <J3801>;...;<J3894>;\
+        <J3901>;...;<J3994>;\
+        <J4001>;...;<J4094>;\
+        <J4101>;...;<J4194>;\
+        <J4201>;...;<J4294>;\
+        <J4301>;...;<J4394>;\
+        <J4401>;...;<J4494>;\
+        <J4501>;...;<J4594>;\
+        <J4601>;...;<J4694>;\
+        <J4701>;...;<J4794>;\
+        <J4801>;...;<J4894>;\
+        <J4901>;...;<J4994>;\
+        <J5001>;...;<J5094>;\
+        <J5101>;...;<J5194>;\
+        <J5201>;...;<J5294>;\
+        <J5301>;...;<J5394>;\
+        <J5401>;...;<J5494>;\
+        <J5501>;...;<J5594>;\
+        <J5601>;...;<J5694>;\
+        <J5701>;...;<J5794>;\
+        <J5801>;...;<J5894>;\
+        <J5901>;...;<J5994>;\
+        <J6001>;...;<J6094>;\
+        <J6101>;...;<J6194>;\
+        <J6201>;...;<J6294>;\
+        <J6301>;...;<J6394>;\
+        <J6401>;...;<J6494>;\
+        <J6501>;...;<J6594>;\
+        <J6601>;...;<J6694>;\
+        <J6701>;...;<J6794>;\
+        <J6801>;...;<J6894>;\
+        <J6901>;...;<J6994>;\
+        <J7001>;...;<J7094>;\
+        <J7101>;...;<J7194>;\
+        <J7201>;...;<J7294>;\
+        <J7301>;...;<J7394>;\
+        <J7401>;...;<J7494>;\
+        <J7501>;...;<J7594>;\
+        <J7601>;...;<J7694>;\
+        <J7701>;...;<J7767>
+
+#
+# print class:
+#       <space>, <j0101>,
+#       upper, lower, alpha, digit, xdigit
+#       JIS X 0201 printable characters
+#       JIS X 0208 printable characters
+#       JIS X 0212 printable characters
+#       Pritable characters in udc or vdc classes may be added.
+
+print   <space>;\
+        <exclamation-mark>;<quotation-mark>;<number-sign>;\
+        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
+        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
+        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
+        <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>;\
+        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
+        <greater-than-sign>;<question-mark>;\
+        <commercial-at>;\
+        <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;\
+        <left-square-bracket>;<backslash>;<right-square-bracket>;\
+        <circumflex>;<underscore>;\
+        <grave-accent>;\
+        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;\
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;\
+        <kana-full-stop>;<kana-opening-bracket>;<kana-closing-bracket>;\
+        <kana-comma>;<kana-conjunctive>;\
+        <kana-WO>;...;<kana-tsu>;\
+        <kana-prolonged-sound>;\
+        <kana-A>;...;<kana-N>;\
+        <kana-voiced-sound>;<kana-semivoiced-sound>;\
+        <j0101>;...;<j0194>;\
+        <j0201>;...;<j0214>;\
+        <j0226>;...;<j0233>;\
+        <j0242>;...;<j0248>;\
+        <j0260>;...;<j0274>;\
+        <j0282>;...;<j0289>;\
+        <j0294>;\
+        <j0316>;...;<j0325>;\
+        <j0333>;...;<j0358>;\
+        <j0365>;...;<j0390>;\
+        <j0401>;...;<j0483>;\
+        <j0501>;...;<j0586>;\
+        <j0601>;...;<j0624>;\
+        <j0633>;...;<j0656>;\
+        <j0701>;...;<j0733>;\
+        <j0749>;...;<j0781>;\
+        <j0801>;...;<j0832>;\
+        <j1601>;...;<j1694>;\
+        <j1701>;...;<j1794>;\
+        <j1801>;...;<j1894>;\
+        <j1901>;...;<j1994>;\
+        <j2001>;...;<j2094>;\
+        <j2101>;...;<j2194>;\
+        <j2201>;...;<j2294>;\
+        <j2301>;...;<j2394>;\
+        <j2401>;...;<j2494>;\
+        <j2501>;...;<j2594>;\
+        <j2601>;...;<j2694>;\
+        <j2701>;...;<j2794>;\
+        <j2801>;...;<j2894>;\
+        <j2901>;...;<j2994>;\
+        <j3001>;...;<j3094>;\
+        <j3101>;...;<j3194>;\
+        <j3201>;...;<j3294>;\
+        <j3301>;...;<j3394>;\
+        <j3401>;...;<j3494>;\
+        <j3501>;...;<j3594>;\
+        <j3601>;...;<j3694>;\
+        <j3701>;...;<j3794>;\
+        <j3801>;...;<j3894>;\
+        <j3901>;...;<j3994>;\
+        <j4001>;...;<j4094>;\
+        <j4101>;...;<j4194>;\
+        <j4201>;...;<j4294>;\
+        <j4301>;...;<j4394>;\
+        <j4401>;...;<j4494>;\
+        <j4501>;...;<j4594>;\
+        <j4601>;...;<j4694>;\
+        <j4701>;...;<j4751>;\
+        <j4801>;...;<j4894>;\
+        <j4901>;...;<j4994>;\
+        <j5001>;...;<j5094>;\
+        <j5101>;...;<j5194>;\
+        <j5201>;...;<j5294>;\
+        <j5301>;...;<j5394>;\
+        <j5401>;...;<j5494>;\
+        <j5501>;...;<j5594>;\
+        <j5601>;...;<j5694>;\
+        <j5701>;...;<j5794>;\
+        <j5801>;...;<j5894>;\
+        <j5901>;...;<j5994>;\
+        <j6001>;...;<j6094>;\
+        <j6101>;...;<j6194>;\
+        <j6201>;...;<j6294>;\
+        <j6301>;...;<j6394>;\
+        <j6401>;...;<j6494>;\
+        <j6501>;...;<j6594>;\
+        <j6601>;...;<j6694>;\
+        <j6701>;...;<j6794>;\
+        <j6801>;...;<j6894>;\
+        <j6901>;...;<j6994>;\
+        <j7001>;...;<j7094>;\
+        <j7101>;...;<j7194>;\
+        <j7201>;...;<j7294>;\
+        <j7301>;...;<j7394>;\
+        <j7401>;...;<j7494>;\
+        <j7501>;...;<j7594>;\
+        <j7601>;...;<j7694>;\
+        <j7701>;...;<j7794>;\
+        <j7801>;...;<j7894>;\
+        <j7901>;...;<j7994>;\
+        <j8001>;...;<j8094>;\
+        <j8101>;...;<j8194>;\
+        <j8201>;...;<j8294>;\
+        <j8301>;...;<j8394>;\
+        <j8401>;...;<j8406>;\
+        <J0215>;...;<J0225>;\
+        <J0234>;...;<J0236>;\
+        <J0275>;...;<J0281>;\
+        <J0665>;...;<J0669>;\
+        <J0671>;\
+        <J0673>;\
+        <J0674>;\
+        <J0676>;\
+        <J0681>;...;<J0692>;\
+        <J0734>;...;<J0746>;\
+        <J0782>;...;<J0794>;\
+        <J0901>;\
+        <J0902>;\
+        <J0904>;\
+        <J0906>;\
+        <J0908>;\
+        <J0909>;\
+        <J0911>;...;<J0913>;\
+        <J0915>;\
+        <J0916>;\
+        <J0933>;...;<J0948>;\
+        <J1001>;...;<J1024>;\
+        <J1026>;...;<J1087>;\
+        <J1101>;...;<J1127>;\
+        <J1129>;...;<J1135>;\
+        <J1137>;...;<J1187>;\
+        <J1601>;...;<J1694>;\
+        <J1701>;...;<J1794>;\
+        <J1801>;...;<J1894>;\
+        <J1901>;...;<J1994>;\
+        <J2001>;...;<J2094>;\
+        <J2101>;...;<J2194>;\
+        <J2201>;...;<J2294>;\
+        <J2301>;...;<J2394>;\
+        <J2401>;...;<J2494>;\
+        <J2501>;...;<J2594>;\
+        <J2601>;...;<J2694>;\
+        <J2701>;...;<J2794>;\
+        <J2801>;...;<J2894>;\
+        <J2901>;...;<J2994>;\
+        <J3001>;...;<J3094>;\
+        <J3101>;...;<J3194>;\
+        <J3201>;...;<J3294>;\
+        <J3301>;...;<J3394>;\
+        <J3401>;...;<J3494>;\
+        <J3501>;...;<J3594>;\
+        <J3601>;...;<J3694>;\
+        <J3701>;...;<J3794>;\
+        <J3801>;...;<J3894>;\
+        <J3901>;...;<J3994>;\
+        <J4001>;...;<J4094>;\
+        <J4101>;...;<J4194>;\
+        <J4201>;...;<J4294>;\
+        <J4301>;...;<J4394>;\
+        <J4401>;...;<J4494>;\
+        <J4501>;...;<J4594>;\
+        <J4601>;...;<J4694>;\
+        <J4701>;...;<J4794>;\
+        <J4801>;...;<J4894>;\
+        <J4901>;...;<J4994>;\
+        <J5001>;...;<J5094>;\
+        <J5101>;...;<J5194>;\
+        <J5201>;...;<J5294>;\
+        <J5301>;...;<J5394>;\
+        <J5401>;...;<J5494>;\
+        <J5501>;...;<J5594>;\
+        <J5601>;...;<J5694>;\
+        <J5701>;...;<J5794>;\
+        <J5801>;...;<J5894>;\
+        <J5901>;...;<J5994>;\
+        <J6001>;...;<J6094>;\
+        <J6101>;...;<J6194>;\
+        <J6201>;...;<J6294>;\
+        <J6301>;...;<J6394>;\
+        <J6401>;...;<J6494>;\
+        <J6501>;...;<J6594>;\
+        <J6601>;...;<J6694>;\
+        <J6701>;...;<J6794>;\
+        <J6801>;...;<J6894>;\
+        <J6901>;...;<J6994>;\
+        <J7001>;...;<J7094>;\
+        <J7101>;...;<J7194>;\
+        <J7201>;...;<J7294>;\
+        <J7301>;...;<J7394>;\
+        <J7401>;...;<J7494>;\
+        <J7501>;...;<J7594>;\
+        <J7601>;...;<J7694>;\
+        <J7701>;...;<J7767>
+
+#
+# xdigit class
+#
+xdigit  <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>;\
+        <A>;<B>;<C>;<D>;<E>;<F>;\
+        <a>;<b>;<c>;<d>;<e>;<f>
+
+#
+# blank class
+#
+blank   <space>;<tab>
+
+#
+# Non-standard character classes specific to the ja_JP locale
+#
+
+charclass       ascii;line;jdigit;paren;jparen;jisx0201;jisx0201r;\
+                jisx0208;jisx0212;udc;vdc;gaiji;jhira;jkata;jhankana;\
+                jkanji;jspace;bkinsoku;ekinsoku
+#
+# ascii class: characters for which isascii() returns true
+#       C0 control characters
+#       SPACE and DELETE characters in ASCII (or JIS X 0201 Roman)
+#       Graphic characters in ASCII (or JIS X 0201 Roman)
+
+ascii   <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;\
+        <alert>;<BEL>;<backspace>;<tab>;<newline>;\
+        <vertical-tab>;<form-feed>;<carriage-return>;\
+        <SO>;<SI>;<DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;\
+        <ETB>;<CAN>;<EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;<IS1>;\
+        <space>;\
+        <exclamation-mark>;<quotation-mark>;<number-sign>;\
+        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
+        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
+        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
+        <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>;\
+        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
+        <greater-than-sign>;<question-mark>;\
+        <commercial-at>;\
+        <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;\
+        <left-square-bracket>;<backslash>;<right-square-bracket>;\
+        <circumflex>;<underscore>;\
+        <grave-accent>;\
+        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;\
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;\
+        <DEL>
+
+#
+# line class:
+# The line drawing characters in JIS X 0208
+# Line drawing characters in udc or vdc classes may be added.
+#
+
+line    <j0801>;...;<j0832>
+ 
+#
+# jdigit class: The digit characters in JIS X 0208
+
+jdigit  <j0316>;...;<j0325>
+
+#
+# paren class:
+# Parentheses and paired symbols in JIS X 0201 and JIS X 0208.
+# Parentheses or paired symbols in udc or vdc classes may be added.
+#
+
+paren   <left-parenthesis>;<right-parenthesis>;\
+        <left-square-bracket>;<right-square-bracket>;\
+        <left-curly-bracket>;<right-curly-bracket>;\
+        <kana-opening-bracket>;<kana-closing-bracket>;\
+        <j0138>;...;<j0159>
+
+#
+# jparen class:
+# The kana bracket characters in JIS X 0201 and the parentheses in JIS X 0208.
+# Parentheses or paired symbols in udc or vdc classes may be added.
+#
+
+jparen  <kana-opening-bracket>;<kana-closing-bracket>;\
+        <j0138>;...;<j0159>
+
+#
+# jisx0201 class:
+# All the printable characters in JIS X 0201.
+# Printable characters in udc or vdc classes with their code points
+# in undefined area of JIS X 0201 may be added.
+#
+jisx0201 <alert>;<backspace>;<tab>;<newline>;<vertical-tab>;\
+        <form-feed>;<carriage-return>;\
+        <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;<SO>;\
+        <SI>;<DLE>;<DC1>;<DC2>;<DC3>;<DC4>;<NAK>;<SYN>;\
+        <ETB>;<CAN>;<EM>;<SUB>;<ESC>;<IS4>;<IS3>;<IS2>;\
+        <IS1>;\
+        <space>;\
+        <exclamation-mark>;<quotation-mark>;<number-sign>;\
+        <dollar-sign>;<percent-sign>;<ampersand>;<apostrophe>;\
+        <left-parenthesis>;<right-parenthesis>;<asterisk>;\
+        <plus-sign>;<comma>;<hyphen>;<period>;<slash>;\
+        <zero>;<one>;<two>;<three>;<four>;\
+        <five>;<six>;<seven>;<eight>;<nine>;\
+        <colon>;<semicolon>;<less-than-sign>;<equals-sign>;\
+        <greater-than-sign>;<question-mark>;\
+        <commercial-at>;\
+        <A>;<B>;<C>;<D>;<E>;<F>;<G>;<H>;<I>;<J>;<K>;<L>;<M>;\
+        <N>;<O>;<P>;<Q>;<R>;<S>;<T>;<U>;<V>;<W>;<X>;<Y>;<Z>;\
+        <left-square-bracket>;<backslash>;<right-square-bracket>;\
+        <circumflex>;<underscore>;\
+        <grave-accent>;\
+        <a>;<b>;<c>;<d>;<e>;<f>;<g>;<h>;<i>;<j>;<k>;<l>;<m>;\
+        <n>;<o>;<p>;<q>;<r>;<s>;<t>;<u>;<v>;<w>;<x>;<y>;<z>;\
+        <left-curly-bracket>;<vertical-line>;<right-curly-bracket>;<tilde>;\
+        <DEL>;\
+        <kana-full-stop>;<kana-opening-bracket>;<kana-closing-bracket>;\
+        <kana-comma>;<kana-conjunctive>;\
+        <kana-WO>;...;<kana-tsu>;\
+        <kana-prolonged-sound>;\
+        <kana-A>;...;<kana-N>;\
+        <kana-voiced-sound>;<kana-semivoiced-sound>
+
+#
+# jisx0201r class:
+# All the printable characters in the right hand side of JIS X 0201.
+# Printable characters in udc or vdc classes with their code points
+# in undefined area of JIS X 0201 right hand side may be added.
+#
+jisx0201r <kana-full-stop>;<kana-opening-bracket>;<kana-closing-bracket>;\
+        <kana-comma>;<kana-conjunctive>;\
+        <kana-WO>;...;<kana-tsu>;\
+        <kana-prolonged-sound>;\
+        <kana-A>;...;<kana-N>;\
+        <kana-voiced-sound>;<kana-semivoiced-sound>
+
+#
+# jisx0208 class:
+# All the printable characters in JIS X 0208.
+# Printable characters in udc or vdc classes whose code points are in
+# the undefined area of JIS X 0208 may be added.
+#
+
+jisx0208 <j0101>;...;<j0194>;\
+        <j0201>;...;<j0214>;\
+        <j0226>;...;<j0233>;\
+        <j0242>;...;<j0248>;\
+        <j0260>;...;<j0274>;\
+        <j0282>;...;<j0289>;\
+        <j0294>;\
+        <j0316>;...;<j0325>;\
+        <j0333>;...;<j0358>;\
+        <j0365>;...;<j0390>;\
+        <j0401>;...;<j0483>;\
+        <j0501>;...;<j0586>;\
+        <j0601>;...;<j0624>;\
+        <j0633>;...;<j0656>;\
+        <j0701>;...;<j0733>;\
+        <j0749>;...;<j0781>;\
+        <j0801>;...;<j0832>;\
+        <j1601>;...;<j1694>;\
+        <j1701>;...;<j1794>;\
+        <j1801>;...;<j1894>;\
+        <j1901>;...;<j1994>;\
+        <j2001>;...;<j2094>;\
+        <j2101>;...;<j2194>;\
+        <j2201>;...;<j2294>;\
+        <j2301>;...;<j2394>;\
+        <j2401>;...;<j2494>;\
+        <j2501>;...;<j2594>;\
+        <j2601>;...;<j2694>;\
+        <j2701>;...;<j2794>;\
+        <j2801>;...;<j2894>;\
+        <j2901>;...;<j2994>;\
+        <j3001>;...;<j3094>;\
+        <j3101>;...;<j3194>;\
+        <j3201>;...;<j3294>;\
+        <j3301>;...;<j3394>;\
+        <j3401>;...;<j3494>;\
+        <j3501>;...;<j3594>;\
+        <j3601>;...;<j3694>;\
+        <j3701>;...;<j3794>;\
+        <j3801>;...;<j3894>;\
+        <j3901>;...;<j3994>;\
+        <j4001>;...;<j4094>;\
+        <j4101>;...;<j4194>;\
+        <j4201>;...;<j4294>;\
+        <j4301>;...;<j4394>;\
+        <j4401>;...;<j4494>;\
+        <j4501>;...;<j4594>;\
+        <j4601>;...;<j4694>;\
+        <j4701>;...;<j4751>;\
+        <j4801>;...;<j4894>;\
+        <j4901>;...;<j4994>;\
+        <j5001>;...;<j5094>;\
+        <j5101>;...;<j5194>;\
+        <j5201>;...;<j5294>;\
+        <j5301>;...;<j5394>;\
+        <j5401>;...;<j5494>;\
+        <j5501>;...;<j5594>;\
+        <j5601>;...;<j5694>;\
+        <j5701>;...;<j5794>;\
+        <j5801>;...;<j5894>;\
+        <j5901>;...;<j5994>;\
+        <j6001>;...;<j6094>;\
+        <j6101>;...;<j6194>;\
+        <j6201>;...;<j6294>;\
+        <j6301>;...;<j6394>;\
+        <j6401>;...;<j6494>;\
+        <j6501>;...;<j6594>;\
+        <j6601>;...;<j6694>;\
+        <j6701>;...;<j6794>;\
+        <j6801>;...;<j6894>;\
+        <j6901>;...;<j6994>;\
+        <j7001>;...;<j7094>;\
+        <j7101>;...;<j7194>;\
+        <j7201>;...;<j7294>;\
+        <j7301>;...;<j7394>;\
+        <j7401>;...;<j7494>;\
+        <j7501>;...;<j7594>;\
+        <j7601>;...;<j7694>;\
+        <j7701>;...;<j7794>;\
+        <j7801>;...;<j7894>;\
+        <j7901>;...;<j7994>;\
+        <j8001>;...;<j8094>;\
+        <j8101>;...;<j8194>;\
+        <j8201>;...;<j8294>;\
+        <j8301>;...;<j8394>;\
+        <j8401>;...;<j8406>
+
+#
+# jisx0212 class:
+# All the printable characters in JIS X 0212.
+# Printable characters in udc or vdc classes whose code points are in
+# the undefined area of JIS X 0212 may be added.
+#
+
+jisx0212 <J0215>;...;<J0225>;\
+        <J0234>;...;<J0236>;\
+        <J0275>;...;<J0281>;\
+        <J0665>;...;<J0669>;\
+        <J0671>;\
+        <J0673>;\
+        <J0674>;\
+        <J0676>;\
+        <J0681>;...;<J0692>;\
+        <J0734>;...;<J0746>;\
+        <J0782>;...;<J0794>;\
+        <J0901>;\
+        <J0902>;\
+        <J0904>;\
+        <J0906>;\
+        <J0908>;\
+        <J0909>;\
+        <J0911>;...;<J0913>;\
+        <J0915>;\
+        <J0916>;\
+        <J0933>;...;<J0948>;\
+        <J1001>;...;<J1024>;\
+        <J1026>;...;<J1087>;\
+        <J1101>;...;<J1127>;\
+        <J1129>;...;<J1135>;\
+        <J1137>;...;<J1187>;\
+        <J1601>;...;<J1694>;\
+        <J1701>;...;<J1794>;\
+        <J1801>;...;<J1894>;\
+        <J1901>;...;<J1994>;\
+        <J2001>;...;<J2094>;\
+        <J2101>;...;<J2194>;\
+        <J2201>;...;<J2294>;\
+        <J2301>;...;<J2394>;\
+        <J2401>;...;<J2494>;\
+        <J2501>;...;<J2594>;\
+        <J2601>;...;<J2694>;\
+        <J2701>;...;<J2794>;\
+        <J2801>;...;<J2894>;\
+        <J2901>;...;<J2994>;\
+        <J3001>;...;<J3094>;\
+        <J3101>;...;<J3194>;\
+        <J3201>;...;<J3294>;\
+        <J3301>;...;<J3394>;\
+        <J3401>;...;<J3494>;\
+        <J3501>;...;<J3594>;\
+        <J3601>;...;<J3694>;\
+        <J3701>;...;<J3794>;\
+        <J3801>;...;<J3894>;\
+        <J3901>;...;<J3994>;\
+        <J4001>;...;<J4094>;\
+        <J4101>;...;<J4194>;\
+        <J4201>;...;<J4294>;\
+        <J4301>;...;<J4394>;\
+        <J4401>;...;<J4494>;\
+        <J4501>;...;<J4594>;\
+        <J4601>;...;<J4694>;\
+        <J4701>;...;<J4794>;\
+        <J4801>;...;<J4894>;\
+        <J4901>;...;<J4994>;\
+        <J5001>;...;<J5094>;\
+        <J5101>;...;<J5194>;\
+        <J5201>;...;<J5294>;\
+        <J5301>;...;<J5394>;\
+        <J5401>;...;<J5494>;\
+        <J5501>;...;<J5594>;\
+        <J5601>;...;<J5694>;\
+        <J5701>;...;<J5794>;\
+        <J5801>;...;<J5894>;\
+        <J5901>;...;<J5994>;\
+        <J6001>;...;<J6094>;\
+        <J6101>;...;<J6194>;\
+        <J6201>;...;<J6294>;\
+        <J6301>;...;<J6394>;\
+        <J6401>;...;<J6494>;\
+        <J6501>;...;<J6594>;\
+        <J6601>;...;<J6694>;\
+        <J6701>;...;<J6794>;\
+        <J6801>;...;<J6894>;\
+        <J6901>;...;<J6994>;\
+        <J7001>;...;<J7094>;\
+        <J7101>;...;<J7194>;\
+        <J7201>;...;<J7294>;\
+        <J7301>;...;<J7394>;\
+        <J7401>;...;<J7494>;\
+        <J7501>;...;<J7594>;\
+        <J7601>;...;<J7694>;\
+        <J7701>;...;<J7767>
+
+#
+# udc class: user defined characters
+#
+
+udc
+
+#
+# vdc class: vender defined characters
+#
+
+vdc
+
+#
+# gaiji class: udc or vdc
+#
+
+gaiji
+
+#
+# jhira class:
+# The Hiragana characters in JIS X 0208.
+# Hiragana characters in udc or vdc classes may be added.
+#
+
+jhira  <j0401>;...;<j0483>;\
+       <j0111>;<j0112>;\
+       <j0121>;<j0122>;<j0128>
+
+#
+# jkata class:
+# The Katakana characters in JIS X 0208 JIS X 0201.
+# The voiced, semivoiced and prolonged sound marks in JIS X 0208
+# and JIS X 0201.
+# The Katakana iteration marks in JIS X 0208.
+# Katakana characters in udc or vdc classes may be added.
+#
+
+jkata  <kana-WO>;<kana-a>;<kana-i>;<kana-u>;<kana-e>;<kana-o>;\
+       <kana-ya>;<kana-yu>;<kana-yo>;<kana-tsu>;<kana-prolonged-sound>;\
+       <kana-A>;<kana-I>;<kana-U>;<kana-E>;<kana-O>;\
+       <kana-KA>;<kana-KI>;<kana-KU>;<kana-KE>;<kana-KO>;\
+       <kana-SA>;<kana-SHI>;<kana-SU>;<kana-SE>;<kana-SO>;\
+       <kana-TA>;<kana-CHI>;<kana-TSU>;<kana-TE>;<kana-TO>;\
+       <kana-NA>;<kana-NI>;<kana-NU>;<kana-NE>;<kana-NO>;\
+       <kana-HA>;<kana-HI>;<kana-FU>;<kana-HE>;<kana-HO>;\
+       <kana-MA>;<kana-MI>;<kana-MU>;<kana-ME>;<kana-MO>;\
+       <kana-YA>;<kana-YU>;<kana-YO>;<kana-RA>;<kana-RI>;\
+       <kana-RU>;<kana-RE>;<kana-RO>;<kana-WA>;<kana-N>;\
+       <kana-voiced-sound>;<kana-semivoiced-sound>;\
+       <j0501>;...;<j0586>;\
+       <j0111>;<j0112>;\
+       <j0119>;<j0120>;<j0128>
+
+#
+# jhankana class:
+# The Katakana characters in JIS X 0201.
+# The voiced, semivoiced and prolonged sound marks in JIS X 0201.
+# Katakana characters, Katakana symbols in JIS X 0201, or udc/vdc 
+# in undefined area of JIS X 0201 may be added.
+#
+
+jhankana  <kana-WO>;<kana-a>;<kana-i>;<kana-u>;<kana-e>;<kana-o>;\
+       <kana-ya>;<kana-yu>;<kana-yo>;<kana-tsu>;<kana-prolonged-sound>;\
+       <kana-A>;<kana-I>;<kana-U>;<kana-E>;<kana-O>;\
+       <kana-KA>;<kana-KI>;<kana-KU>;<kana-KE>;<kana-KO>;\
+       <kana-SA>;<kana-SHI>;<kana-SU>;<kana-SE>;<kana-SO>;\
+       <kana-TA>;<kana-CHI>;<kana-TSU>;<kana-TE>;<kana-TO>;\
+       <kana-NA>;<kana-NI>;<kana-NU>;<kana-NE>;<kana-NO>;\
+       <kana-HA>;<kana-HI>;<kana-FU>;<kana-HE>;<kana-HO>;\
+       <kana-MA>;<kana-MI>;<kana-MU>;<kana-ME>;<kana-MO>;\
+       <kana-YA>;<kana-YU>;<kana-YO>;<kana-RA>;<kana-RI>;\
+       <kana-RU>;<kana-RE>;<kana-RO>;<kana-WA>;<kana-N>;\
+       <kana-voiced-sound>;<kana-semivoiced-sound>
+
+#
+# jkanji class: Kanji (Ideograms)
+# Kanji in JIS X 0208 and JIS X 0212.
+# Kanji Iteration mark in JIS X 0208.
+# Han-numeral zero in JIS X 0208.
+# Kanji in udc or vdc classes may be added.
+#
+
+jkanji  <j1601>;...;<j1694>;\
+        <j1701>;...;<j1794>;\
+        <j1801>;...;<j1894>;\
+        <j1901>;...;<j1994>;\
+        <j2001>;...;<j2094>;\
+        <j2101>;...;<j2194>;\
+        <j2201>;...;<j2294>;\
+        <j2301>;...;<j2394>;\
+        <j2401>;...;<j2494>;\
+        <j2501>;...;<j2594>;\
+        <j2601>;...;<j2694>;\
+        <j2701>;...;<j2794>;\
+        <j2801>;...;<j2894>;\
+        <j2901>;...;<j2994>;\
+        <j3001>;...;<j3094>;\
+        <j3101>;...;<j3194>;\
+        <j3201>;...;<j3294>;\
+        <j3301>;...;<j3394>;\
+        <j3401>;...;<j3494>;\
+        <j3501>;...;<j3594>;\
+        <j3601>;...;<j3694>;\
+        <j3701>;...;<j3794>;\
+        <j3801>;...;<j3894>;\
+        <j3901>;...;<j3994>;\
+        <j4001>;...;<j4094>;\
+        <j4101>;...;<j4194>;\
+        <j4201>;...;<j4294>;\
+        <j4301>;...;<j4394>;\
+        <j4401>;...;<j4494>;\
+        <j4501>;...;<j4594>;\
+        <j4601>;...;<j4694>;\
+        <j4701>;...;<j4751>;\
+        <j4801>;...;<j4894>;\
+        <j4901>;...;<j4994>;\
+        <j5001>;...;<j5094>;\
+        <j5101>;...;<j5194>;\
+        <j5201>;...;<j5294>;\
+        <j5301>;...;<j5394>;\
+        <j5401>;...;<j5494>;\
+        <j5501>;...;<j5594>;\
+        <j5601>;...;<j5694>;\
+        <j5701>;...;<j5794>;\
+        <j5801>;...;<j5894>;\
+        <j5901>;...;<j5994>;\
+        <j6001>;...;<j6094>;\
+        <j6101>;...;<j6194>;\
+        <j6201>;...;<j6294>;\
+        <j6301>;...;<j6394>;\
+        <j6401>;...;<j6494>;\
+        <j6501>;...;<j6594>;\
+        <j6601>;...;<j6694>;\
+        <j6701>;...;<j6794>;\
+        <j6801>;...;<j6894>;\
+        <j6901>;...;<j6994>;\
+        <j7001>;...;<j7094>;\
+        <j7101>;...;<j7194>;\
+        <j7201>;...;<j7294>;\
+        <j7301>;...;<j7394>;\
+        <j7401>;...;<j7494>;\
+        <j7501>;...;<j7594>;\
+        <j7601>;...;<j7694>;\
+        <j7701>;...;<j7794>;\
+        <j7801>;...;<j7894>;\
+        <j7901>;...;<j7994>;\
+        <j8001>;...;<j8094>;\
+        <j8101>;...;<j8194>;\
+        <j8201>;...;<j8294>;\
+        <j8301>;...;<j8394>;\
+        <j8401>;...;<j8406>;\
+        <J1601>;...;<J1694>;\
+        <J1701>;...;<J1794>;\
+        <J1801>;...;<J1894>;\
+        <J1901>;...;<J1994>;\
+        <J2001>;...;<J2094>;\
+        <J2101>;...;<J2194>;\
+        <J2201>;...;<J2294>;\
+        <J2301>;...;<J2394>;\
+        <J2401>;...;<J2494>;\
+        <J2501>;...;<J2594>;\
+        <J2601>;...;<J2694>;\
+        <J2701>;...;<J2794>;\
+        <J2801>;...;<J2894>;\
+        <J2901>;...;<J2994>;\
+        <J3001>;...;<J3094>;\
+        <J3101>;...;<J3194>;\
+        <J3201>;...;<J3294>;\
+        <J3301>;...;<J3394>;\
+        <J3401>;...;<J3494>;\
+        <J3501>;...;<J3594>;\
+        <J3601>;...;<J3694>;\
+        <J3701>;...;<J3794>;\
+        <J3801>;...;<J3894>;\
+        <J3901>;...;<J3994>;\
+        <J4001>;...;<J4094>;\
+        <J4101>;...;<J4194>;\
+        <J4201>;...;<J4294>;\
+        <J4301>;...;<J4394>;\
+        <J4401>;...;<J4494>;\
+        <J4501>;...;<J4594>;\
+        <J4601>;...;<J4694>;\
+        <J4701>;...;<J4794>;\
+        <J4801>;...;<J4894>;\
+        <J4901>;...;<J4994>;\
+        <J5001>;...;<J5094>;\
+        <J5101>;...;<J5194>;\
+        <J5201>;...;<J5294>;\
+        <J5301>;...;<J5394>;\
+        <J5401>;...;<J5494>;\
+        <J5501>;...;<J5594>;\
+        <J5601>;...;<J5694>;\
+        <J5701>;...;<J5794>;\
+        <J5801>;...;<J5894>;\
+        <J5901>;...;<J5994>;\
+        <J6001>;...;<J6094>;\
+        <J6101>;...;<J6194>;\
+        <J6201>;...;<J6294>;\
+        <J6301>;...;<J6394>;\
+        <J6401>;...;<J6494>;\
+        <J6501>;...;<J6594>;\
+        <J6601>;...;<J6694>;\
+        <J6701>;...;<J6794>;\
+        <J6801>;...;<J6894>;\
+        <J6901>;...;<J6994>;\
+        <J7001>;...;<J7094>;\
+        <J7101>;...;<J7194>;\
+        <J7201>;...;<J7294>;\
+        <J7301>;...;<J7394>;\
+        <J7401>;...;<J7494>;\
+        <J7501>;...;<J7594>;\
+        <J7601>;...;<J7694>;\
+        <J7701>;...;<J7767>;\
+        <j0124>;<j0125>;<j0127>
+
+#
+# jspace class: The space character in JIS X 0208
+#
+ 
+jspace  <j0101>
+
+# Kinsoku Processing Class (Optional): 
+#       bkinsoku (Japanese line-breaking rule for the beginning of a line)
+#       ekinsoku (Japanese line-breaking rule for the end of a line) 
+#
+
+bkinsoku        <right-parenthesis>;\
+                <comma>;\
+                <period>;\
+                <right-square-bracket>;\
+                <right-brace>;\
+                <kana-full-stop>;\
+                <kana-closing-bracket>;\
+                <kana-comma>;\
+                <kana-a>;\
+                <kana-i>;\
+                <kana-u>;\
+                <kana-e>;\
+                <kana-o>;\
+                <kana-ya>;\
+                <kana-yu>;\
+                <kana-yo>;\
+                <kana-tsu>;\
+                <kana-prolonged-sound>;\
+                <kana-voiced-sound>;\
+                <kana-semivoiced-sound>;\
+                <j0102>;...;<j0105>;\
+                <j0119>;...;<j0122>;\
+                <j0125>;\
+                <j0128>;\
+                <j0139>;\
+                <j0141>;\
+                <j0143>;\
+                <j0145>;\
+                <j0147>;\
+                <j0149>;\
+                <j0151>;\
+                <j0153>;\
+                <j0155>;\
+                <j0157>;\
+                <j0159>;\
+                <j0401>;\
+                <j0403>;\
+                <j0405>;\
+                <j0407>;\
+                <j0409>;\
+                <j0435>;\
+                <j0467>;\
+                <j0469>;\
+                <j0471>;\
+                <j0478>;\
+                <j0501>;\
+                <j0503>;\
+                <j0505>;\
+                <j0507>;\
+                <j0509>;\
+                <j0535>;\
+                <j0567>;\
+                <j0569>;\
+                <j0571>;\
+                <j0578>;\
+                <j0585>;\
+                <j0586>
+
+ekinsoku        <left-parenthesis>;\
+                <left-square-bracket>;\
+                <left-brace>;\
+                <kana-opening-bracket>;\
+                <j0138>;\
+                <j0140>;\
+                <j0142>;\
+                <j0144>;\
+                <j0146>;\
+                <j0148>;\
+                <j0150>;\
+                <j0152>;\
+                <j0154>;\
+                <j0156>;\
+                <j0158>
+
+#
+# toupper and tolower:  also handle Roman, Greek and Russian
+#                       characters in JIS X 0208 and JIS X 0212
+
+toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);\
+        (<f>,<F>);(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);\
+        (<k>,<K>);(<l>,<L>);(<m>,<M>);(<n>,<N>);(<o>,<O>);\
+        (<p>,<P>);(<q>,<Q>);(<r>,<R>);(<s>,<S>);(<t>,<T>);\
+        (<u>,<U>);(<v>,<V>);(<w>,<W>);(<x>,<X>);(<y>,<Y>);\
+        (<z>,<Z>);\
+        (<j0365>,<j0333>);(<j0366>,<j0334>);(<j0367>,<j0335>);\
+        (<j0368>,<j0336>);(<j0369>,<j0337>);(<j0370>,<j0338>);\
+        (<j0371>,<j0339>);(<j0372>,<j0340>);(<j0373>,<j0341>);\
+        (<j0374>,<j0342>);(<j0375>,<j0343>);(<j0376>,<j0344>);\
+        (<j0377>,<j0345>);(<j0378>,<j0346>);(<j0379>,<j0347>);\
+        (<j0380>,<j0348>);(<j0381>,<j0349>);(<j0382>,<j0350>);\
+        (<j0383>,<j0351>);(<j0384>,<j0352>);(<j0385>,<j0353>);\
+        (<j0386>,<j0354>);(<j0387>,<j0355>);(<j0388>,<j0356>);\
+        (<j0389>,<j0357>);(<j0390>,<j0358>);\
+        (<j0633>,<j0601>);(<j0634>,<j0602>);(<j0635>,<j0603>);\
+        (<j0636>,<j0604>);(<j0637>,<j0605>);(<j0638>,<j0606>);\
+        (<j0639>,<j0607>);(<j0640>,<j0608>);(<j0641>,<j0609>);\
+        (<j0642>,<j0610>);(<j0643>,<j0611>);(<j0644>,<j0612>);\
+        (<j0645>,<j0613>);(<j0646>,<j0614>);(<j0647>,<j0615>);\
+        (<j0648>,<j0616>);(<j0649>,<j0617>);(<j0650>,<j0618>);\
+        (<j0651>,<j0619>);(<j0652>,<j0620>);(<j0653>,<j0621>);\
+        (<j0654>,<j0622>);(<j0655>,<j0623>);(<j0656>,<j0624>);\
+        (<j0749>,<j0701>);(<j0750>,<j0702>);(<j0751>,<j0703>);\
+        (<j0752>,<j0704>);(<j0753>,<j0705>);(<j0754>,<j0706>);\
+        (<j0755>,<j0707>);(<j0756>,<j0708>);(<j0757>,<j0709>);\
+        (<j0758>,<j0710>);(<j0759>,<j0711>);(<j0760>,<j0712>);\
+        (<j0761>,<j0713>);(<j0762>,<j0714>);(<j0763>,<j0715>);\
+        (<j0764>,<j0716>);(<j0765>,<j0717>);(<j0766>,<j0718>);\
+        (<j0767>,<j0719>);(<j0768>,<j0720>);(<j0769>,<j0721>);\
+        (<j0770>,<j0722>);(<j0771>,<j0723>);(<j0772>,<j0724>);\
+        (<j0773>,<j0725>);(<j0774>,<j0726>);(<j0775>,<j0727>);\
+        (<j0776>,<j0728>);(<j0777>,<j0729>);(<j0778>,<j0730>);\
+        (<j0779>,<j0731>);(<j0780>,<j0732>);(<j0781>,<j0733>);\
+        (<J0681>,<J0665>);(<J0682>,<J0666>);(<J0683>,<J0667>);\
+        (<J0684>,<J0668>);(<J0685>,<J0669>);(<J0687>,<J0671>);\
+        (<J0689>,<J0673>);(<J0690>,<J0674>);(<J0692>,<J0676>);\
+        (<J0782>,<J0734>);(<J0783>,<J0735>);(<J0784>,<J0736>);\
+        (<J0785>,<J0737>);(<J0786>,<J0738>);(<J0787>,<J0739>);\
+        (<J0788>,<J0740>);(<J0789>,<J0741>);(<J0790>,<J0742>);\
+        (<J0791>,<J0743>);(<J0792>,<J0744>);(<J0793>,<J0745>);\
+        (<J0794>,<J0746>);(<J0933>,<J0901>);(<J0934>,<J0902>);\
+        (<J0936>,<J0904>);(<J0938>,<J0906>);(<J0940>,<J0908>);\
+        (<J0941>,<J0909>);(<J0943>,<J0911>);(<J0944>,<J0912>);\
+        (<J0945>,<J0913>);(<J0947>,<J0915>);(<J0948>,<J0916>);\
+        (<J1101>,<J1001>);(<J1102>,<J1002>);(<J1103>,<J1003>);\
+        (<J1104>,<J1004>);(<J1105>,<J1005>);(<J1106>,<J1006>);\
+        (<J1107>,<J1007>);(<J1108>,<J1008>);(<J1109>,<J1009>);\
+        (<J1110>,<J1010>);(<J1111>,<J1011>);(<J1112>,<J1012>);\
+        (<J1113>,<J1013>);(<J1114>,<J1014>);(<J1115>,<J1015>);\
+        (<J1116>,<J1016>);(<J1117>,<J1017>);(<J1118>,<J1018>);\
+        (<J1119>,<J1019>);(<J1120>,<J1020>);(<J1121>,<J1021>);\
+        (<J1122>,<J1022>);(<J1123>,<J1023>);(<J1124>,<J1024>);\
+        (<J1126>,<J1026>);(<J1127>,<J1027>);(<J1129>,<J1029>);\
+        (<J1130>,<J1030>);(<J1131>,<J1031>);(<J1132>,<J1032>);\
+        (<J1133>,<J1033>);(<J1134>,<J1034>);(<J1135>,<J1035>);\
+        (<J1137>,<J1037>);(<J1138>,<J1038>);(<J1139>,<J1039>);\
+        (<J1140>,<J1040>);(<J1141>,<J1041>);(<J1142>,<J1042>);\
+        (<J1143>,<J1043>);(<J1144>,<J1044>);(<J1145>,<J1045>);\
+        (<J1146>,<J1046>);(<J1147>,<J1047>);(<J1148>,<J1048>);\
+        (<J1149>,<J1049>);(<J1150>,<J1050>);(<J1151>,<J1051>);\
+        (<J1152>,<J1052>);(<J1153>,<J1053>);(<J1154>,<J1054>);\
+        (<J1155>,<J1055>);(<J1156>,<J1056>);(<J1157>,<J1057>);\
+        (<J1158>,<J1058>);(<J1159>,<J1059>);(<J1160>,<J1060>);\
+        (<J1161>,<J1061>);(<J1162>,<J1062>);(<J1163>,<J1063>);\
+        (<J1164>,<J1064>);(<J1165>,<J1065>);(<J1166>,<J1066>);\
+        (<J1167>,<J1067>);(<J1168>,<J1068>);(<J1169>,<J1069>);\
+        (<J1170>,<J1070>);(<J1171>,<J1071>);(<J1172>,<J1072>);\
+        (<J1173>,<J1073>);(<J1174>,<J1074>);(<J1175>,<J1075>);\
+        (<J1176>,<J1076>);(<J1177>,<J1077>);(<J1178>,<J1078>);\
+        (<J1179>,<J1079>);(<J1180>,<J1080>);(<J1181>,<J1081>);\
+        (<J1182>,<J1082>);(<J1183>,<J1083>);(<J1184>,<J1084>);\
+        (<J1185>,<J1085>);(<J1186>,<J1086>);(<J1187>,<J1087>)
+
+tolower (<A>,<a>);(<B>,<b>);(<C>,<c>);(<D>,<d>);(<E>,<e>);\
+        (<F>,<f>);(<G>,<g>);(<H>,<h>);(<I>,<i>);(<J>,<j>);\
+        (<K>,<k>);(<L>,<l>);(<M>,<m>);(<N>,<n>);(<O>,<o>);\
+        (<P>,<p>);(<Q>,<q>);(<R>,<r>);(<S>,<s>);(<T>,<t>);\
+        (<U>,<u>);(<V>,<v>);(<W>,<w>);(<X>,<x>);(<Y>,<y>);\
+        (<Z>,<z>);\
+        (<j0333>,<j0365>);(<j0334>,<j0366>);(<j0335>,<j0367>);\
+        (<j0336>,<j0368>);(<j0337>,<j0369>);(<j0338>,<j0370>);\
+        (<j0339>,<j0371>);(<j0340>,<j0372>);(<j0341>,<j0373>);\
+        (<j0342>,<j0374>);(<j0343>,<j0375>);(<j0344>,<j0376>);\
+        (<j0345>,<j0377>);(<j0346>,<j0378>);(<j0347>,<j0379>);\
+        (<j0348>,<j0380>);(<j0349>,<j0381>);(<j0350>,<j0382>);\
+        (<j0351>,<j0383>);(<j0352>,<j0384>);(<j0353>,<j0385>);\
+        (<j0354>,<j0386>);(<j0355>,<j0387>);(<j0356>,<j0388>);\
+        (<j0357>,<j0389>);(<j0358>,<j0390>);\
+        (<j0601>,<j0633>);(<j0602>,<j0634>);(<j0603>,<j0635>);\
+        (<j0604>,<j0636>);(<j0605>,<j0637>);(<j0606>,<j0638>);\
+        (<j0607>,<j0639>);(<j0608>,<j0640>);(<j0609>,<j0641>);\
+        (<j0610>,<j0642>);(<j0611>,<j0643>);(<j0612>,<j0644>);\
+        (<j0613>,<j0645>);(<j0614>,<j0646>);(<j0615>,<j0647>);\
+        (<j0616>,<j0648>);(<j0617>,<j0649>);(<j0618>,<j0650>);\
+        (<j0619>,<j0651>);(<j0620>,<j0652>);(<j0621>,<j0653>);\
+        (<j0622>,<j0654>);(<j0623>,<j0655>);(<j0624>,<j0656>);\
+        (<j0701>,<j0749>);(<j0702>,<j0750>);(<j0703>,<j0751>);\
+        (<j0704>,<j0752>);(<j0705>,<j0753>);(<j0706>,<j0754>);\
+        (<j0707>,<j0755>);(<j0708>,<j0756>);(<j0709>,<j0757>);\
+        (<j0710>,<j0758>);(<j0711>,<j0759>);(<j0712>,<j0760>);\
+        (<j0713>,<j0761>);(<j0714>,<j0762>);(<j0715>,<j0763>);\
+        (<j0716>,<j0764>);(<j0717>,<j0765>);(<j0718>,<j0766>);\
+        (<j0719>,<j0767>);(<j0720>,<j0768>);(<j0721>,<j0769>);\
+        (<j0722>,<j0770>);(<j0723>,<j0771>);(<j0724>,<j0772>);\
+        (<j0725>,<j0773>);(<j0726>,<j0774>);(<j0727>,<j0775>);\
+        (<j0728>,<j0776>);(<j0729>,<j0777>);(<j0730>,<j0778>);\
+        (<j0731>,<j0779>);(<j0732>,<j0780>);(<j0733>,<j0781>);\
+        (<J0665>,<J0681>);(<J0666>,<J0682>);(<J0667>,<J0683>);\
+        (<J0668>,<J0684>);(<J0669>,<J0685>);(<J0671>,<J0687>);\
+        (<J0673>,<J0689>);(<J0674>,<J0690>);(<J0676>,<J0692>);\
+        (<J0734>,<J0782>);(<J0735>,<J0783>);(<J0736>,<J0784>);\
+        (<J0737>,<J0785>);(<J0738>,<J0786>);(<J0739>,<J0787>);\
+        (<J0740>,<J0788>);(<J0741>,<J0789>);(<J0742>,<J0790>);\
+        (<J0743>,<J0791>);(<J0744>,<J0792>);(<J0745>,<J0793>);\
+        (<J0746>,<J0794>);(<J0901>,<J0933>);(<J0902>,<J0934>);\
+        (<J0904>,<J0936>);(<J0906>,<J0938>);(<J0908>,<J0940>);\
+        (<J0909>,<J0941>);(<J0911>,<J0943>);(<J0912>,<J0944>);\
+        (<J0913>,<J0945>);(<J0915>,<J0947>);(<J0916>,<J0948>);\
+        (<J1001>,<J1101>);(<J1002>,<J1102>);(<J1003>,<J1103>);\
+        (<J1004>,<J1104>);(<J1005>,<J1105>);(<J1006>,<J1106>);\
+        (<J1007>,<J1107>);(<J1008>,<J1108>);(<J1009>,<J1109>);\
+        (<J1010>,<J1110>);(<J1011>,<J1111>);(<J1012>,<J1112>);\
+        (<J1013>,<J1113>);(<J1014>,<J1114>);(<J1015>,<J1115>);\
+        (<J1016>,<J1116>);(<J1017>,<J1117>);(<J1018>,<J1118>);\
+        (<J1019>,<J1119>);(<J1020>,<J1120>);(<J1021>,<J1121>);\
+        (<J1022>,<J1122>);(<J1023>,<J1123>);(<J1024>,<J1124>);\
+        (<J1026>,<J1126>);(<J1027>,<J1127>);(<J1029>,<J1129>);\
+        (<J1030>,<J1130>);(<J1031>,<J1131>);(<J1032>,<J1132>);\
+        (<J1033>,<J1133>);(<J1034>,<J1134>);(<J1035>,<J1135>);\
+        (<J1037>,<J1137>);(<J1038>,<J1138>);(<J1039>,<J1139>);\
+        (<J1040>,<J1140>);(<J1041>,<J1141>);(<J1042>,<J1142>);\
+        (<J1043>,<J1143>);(<J1044>,<J1144>);(<J1045>,<J1145>);\
+        (<J1046>,<J1146>);(<J1047>,<J1147>);(<J1048>,<J1148>);\
+        (<J1049>,<J1149>);(<J1050>,<J1150>);(<J1051>,<J1151>);\
+        (<J1052>,<J1152>);(<J1053>,<J1153>);(<J1054>,<J1154>);\
+        (<J1055>,<J1155>);(<J1056>,<J1156>);(<J1057>,<J1157>);\
+        (<J1058>,<J1158>);(<J1059>,<J1159>);(<J1060>,<J1160>);\
+        (<J1061>,<J1161>);(<J1062>,<J1162>);(<J1063>,<J1163>);\
+        (<J1064>,<J1164>);(<J1065>,<J1165>);(<J1066>,<J1166>);\
+        (<J1067>,<J1167>);(<J1068>,<J1168>);(<J1069>,<J1169>);\
+        (<J1070>,<J1170>);(<J1071>,<J1171>);(<J1072>,<J1172>);\
+        (<J1073>,<J1173>);(<J1074>,<J1174>);(<J1075>,<J1175>);\
+        (<J1076>,<J1176>);(<J1077>,<J1177>);(<J1078>,<J1178>);\
+        (<J1079>,<J1179>);(<J1080>,<J1180>);(<J1081>,<J1181>);\
+        (<J1082>,<J1182>);(<J1083>,<J1183>);(<J1084>,<J1184>);\
+        (<J1085>,<J1185>);(<J1086>,<J1186>);(<J1087>,<J1187>)
+
+END LC_CTYPE
+
+LC_COLLATE
+
+# This collation table is an attempt to satisfy Japanese
+# requirements based on and within the scope of the current POSIX.2
+# DIS, and is not regarded as a common practice in Japan.
+#
+# This collation table is for sorting Japanese by pronunciation.  Only
+# Hiragana and Katakana (collectively called Kana) are sorted.
+# Kanji are sorted according to their encoding.  It is expected that
+# applications will make use of this by storing Yomi (or pronunciation)
+# with each Kanji word or name, and that the Yomi will be used for
+# sorting.  For example, a telephone number database application might
+# store the names of people in Kanji together with the Yomi.
+#
+# Portable characters are sorted according to their encoding, but
+# upper case letters and lower case letters are sorted case insensitively.
+#
+# Collation rules were derived from a dictionary.  The rules are given
+# below, together with examples.  In the examples, upper case is used to
+# denote Katakana, and lower case to denote Hiragana.
+#
+# Rule                                          Example
+#
+# Katakana before Hiragana                      GARON vs garon
+# Small before Normal                           kyaku vs kiyaku
+# Normal before Voiced before Semi-voiced       han vs ban, BANKU vs PANKU
+# ka before GA before ga                        kan vs GAN vs gan
+#
+# For ease of understanding, the symbolic character names used in this
+# definition are the ones provided by Keld Simonsen in his 10646 charmap.
+#
+# The following iteration marks and voiced sound marks are not
+# supported.
+#
+#       <*5>    HIRAGANA ITERATION MARK
+#       <+5>    HIRAGANA VOICED ITERATION MARK
+#       <*6>    KATAKANA ITERATION MARK
+#       <+6>    KATAKANA VOICED ITERATION MARK
+#       <"5>    HIRAGANA-KATAKANA VOICED SOUND MARK
+#       <05>    HIRAGANA-KATAKANA SEMI-VOICED SOUND MARK
+
+
+#----------------------------------------------------------------------
+
+
+# The following definitions are for prolonged sounds (for Katakana
+# only).
+
+
+collating-element <*-a6-6> from <a6><-6>
+collating-element <*-a6A6> from <a6><A6>
+collating-element <*-A6-6> from <A6><-6>
+collating-element <*-A6A6> from <A6><A6>
+collating-element <*-Ka-6> from <Ka><-6>
+collating-element <*-KaA6> from <Ka><A6>
+collating-element <*-Ga-6> from <Ga><-6>
+collating-element <*-GaA6> from <Ga><A6>
+collating-element <*-Sa-6> from <Sa><-6>
+collating-element <*-SaA6> from <Sa><A6>
+collating-element <*-Za-6> from <Za><-6>
+collating-element <*-ZaA6> from <Za><A6>
+collating-element <*-Ta-6> from <Ta><-6>
+collating-element <*-TaA6> from <Ta><A6>
+collating-element <*-Da-6> from <Da><-6>
+collating-element <*-DaA6> from <Da><A6>
+collating-element <*-Na-6> from <Na><-6>
+collating-element <*-NaA6> from <Na><A6>
+collating-element <*-Ha-6> from <Ha><-6>
+collating-element <*-HaA6> from <Ha><A6>
+collating-element <*-Ba-6> from <Ba><-6>
+collating-element <*-BaA6> from <Ba><A6>
+collating-element <*-Pa-6> from <Pa><-6>
+collating-element <*-PaA6> from <Pa><A6>
+collating-element <*-Ma-6> from <Ma><-6>
+collating-element <*-MaA6> from <Ma><A6>
+collating-element <*-YA-6> from <YA><-6>
+collating-element <*-YAA6> from <YA><A6>
+collating-element <*-Ya-6> from <Ya><-6>
+collating-element <*-YaA6> from <Ya><A6>
+collating-element <*-Ra-6> from <Ra><-6>
+collating-element <*-RaA6> from <Ra><A6>
+collating-element <*-WA-6> from <WA><-6>
+collating-element <*-WAA6> from <WA><A6>
+collating-element <*-Wa-6> from <Wa><-6>
+collating-element <*-WaA6> from <Wa><A6>
+collating-element <*-i6-6> from <i6><-6>
+collating-element <*-i6I6> from <i6><I6>
+collating-element <*-I6-6> from <I6><-6>
+collating-element <*-I6I6> from <I6><I6>
+collating-element <*-Ki-6> from <Ki><-6>
+collating-element <*-KiI6> from <Ki><I6>
+collating-element <*-Gi-6> from <Gi><-6>
+collating-element <*-GiI6> from <Gi><I6>
+collating-element <*-Si-6> from <Si><-6>
+collating-element <*-SiI6> from <Si><I6>
+collating-element <*-Zi-6> from <Zi><-6>
+collating-element <*-ZiI6> from <Zi><I6>
+collating-element <*-Ti-6> from <Ti><-6>
+collating-element <*-TiI6> from <Ti><I6>
+collating-element <*-Di-6> from <Di><-6>
+collating-element <*-DiI6> from <Di><I6>
+collating-element <*-Ni-6> from <Ni><-6>
+collating-element <*-NiI6> from <Ni><I6>
+collating-element <*-Hi-6> from <Hi><-6>
+collating-element <*-HiI6> from <Hi><I6>
+collating-element <*-Pi-6> from <Pi><-6>
+collating-element <*-PiI6> from <Pi><I6>
+collating-element <*-Bi-6> from <Bi><-6>
+collating-element <*-BiI6> from <Bi><I6>
+collating-element <*-Mi-6> from <Mi><-6>
+collating-element <*-MiI6> from <Mi><I6>
+collating-element <*-Ri-6> from <Ri><-6>
+collating-element <*-RiI6> from <Ri><I6>
+collating-element <*-Wi-6> from <Wi><-6>
+collating-element <*-WiI6> from <Wi><I6>
+collating-element <*-u6-6> from <u6><-6>
+collating-element <*-u6U6> from <u6><U6>
+collating-element <*-U6-6> from <U6><-6>
+collating-element <*-U6U6> from <U6><U6>
+collating-element <*-Ku-6> from <Ku><-6>
+collating-element <*-KuU6> from <Ku><U6>
+collating-element <*-Gu-6> from <Gu><-6>
+collating-element <*-GuU6> from <Gu><U6>
+collating-element <*-Su-6> from <Su><-6>
+collating-element <*-SuU6> from <Su><U6>
+collating-element <*-Zu-6> from <Zu><-6>
+collating-element <*-ZuU6> from <Zu><U6>
+collating-element <*-Tu-6> from <Tu><-6>
+collating-element <*-TuU6> from <Tu><U6>
+collating-element <*-Du-6> from <Du><-6>
+collating-element <*-DuU6> from <Du><U6>
+collating-element <*-Nu-6> from <Nu><-6>
+collating-element <*-NuU6> from <Nu><U6>
+collating-element <*-Hu-6> from <Hu><-6>
+collating-element <*-HuU6> from <Hu><U6>
+collating-element <*-Bu-6> from <Bu><-6>
+collating-element <*-BuU6> from <Bu><U6>
+collating-element <*-Pu-6> from <Pu><-6>
+collating-element <*-PuU6> from <Pu><U6>
+collating-element <*-Mu-6> from <Mu><-6>
+collating-element <*-MuU6> from <Mu><U6>
+collating-element <*-YU-6> from <YU><-6>
+collating-element <*-YUU6> from <YU><U6>
+collating-element <*-Yu-6> from <Yu><-6>
+collating-element <*-YuU6> from <Yu><U6>
+collating-element <*-Ru-6> from <Ru><-6>
+collating-element <*-RuU6> from <Ru><U6>
+collating-element <*-Vu-6> from <Vu><-6>
+collating-element <*-VuU6> from <Vu><U6>
+collating-element <*-e6-6> from <e6><-6>
+collating-element <*-e6E6> from <e6><E6>
+collating-element <*-E6-6> from <E6><-6>
+collating-element <*-E6E6> from <E6><E6>
+collating-element <*-Ke-6> from <Ke><-6>
+collating-element <*-KeE6> from <Ke><E6>
+collating-element <*-Ge-6> from <Ge><-6>
+collating-element <*-GeE6> from <Ge><E6>
+collating-element <*-Se-6> from <Se><-6>
+collating-element <*-SeE6> from <Se><E6>
+collating-element <*-Ze-6> from <Ze><-6>
+collating-element <*-ZeE6> from <Ze><E6>
+collating-element <*-Te-6> from <Te><-6>
+collating-element <*-TeE6> from <Te><E6>
+collating-element <*-De-6> from <De><-6>
+collating-element <*-DeE6> from <De><E6>
+collating-element <*-Ne-6> from <Ne><-6>
+collating-element <*-NeE6> from <Ne><E6>
+collating-element <*-He-6> from <He><-6>
+collating-element <*-HeE6> from <He><E6>
+collating-element <*-Be-6> from <Be><-6>
+collating-element <*-BeE6> from <Be><E6>
+collating-element <*-Pe-6> from <Pe><-6>
+collating-element <*-PeE6> from <Pe><E6>
+collating-element <*-Me-6> from <Me><-6>
+collating-element <*-MeE6> from <Me><E6>
+collating-element <*-Re-6> from <Re><-6>
+collating-element <*-ReE6> from <Re><E6>
+collating-element <*-We-6> from <We><-6>
+collating-element <*-WeE6> from <We><E6>
+collating-element <*-o6-6> from <o6><-6>
+collating-element <*-o6O6> from <o6><O6>
+collating-element <*-O6-6> from <O6><-6>
+collating-element <*-O6O6> from <O6><O6>
+collating-element <*-Ko-6> from <Ko><-6>
+collating-element <*-KoO6> from <Ko><O6>
+collating-element <*-Go-6> from <Go><-6>
+collating-element <*-GoO6> from <Go><O6>
+collating-element <*-So-6> from <So><-6>
+collating-element <*-SoO6> from <So><O6>
+collating-element <*-Zo-6> from <Zo><-6>
+collating-element <*-ZoO6> from <Zo><O6>
+collating-element <*-To-6> from <To><-6>
+collating-element <*-ToO6> from <To><O6>
+collating-element <*-Do-6> from <Do><-6>
+collating-element <*-DoO6> from <Do><O6>
+collating-element <*-No-6> from <No><-6>
+collating-element <*-NoO6> from <No><O6>
+collating-element <*-Ho-6> from <Ho><-6>
+collating-element <*-HoO6> from <Ho><O6>
+collating-element <*-Bo-6> from <Bo><-6>
+collating-element <*-BoO6> from <Bo><O6>
+collating-element <*-Po-6> from <Po><-6>
+collating-element <*-PoO6> from <Po><O6>
+collating-element <*-Mo-6> from <Mo><-6>
+collating-element <*-MoO6> from <Mo><O6>
+collating-element <*-YO-6> from <YO><-6>
+collating-element <*-YOO6> from <YO><O6>
+collating-element <*-Yo-6> from <Yo><-6>
+collating-element <*-YoO6> from <Yo><O6>
+collating-element <*-Ro-6> from <Ro><-6>
+collating-element <*-RoO6> from <Ro><O6>
+collating-element <*-Wo-6> from <Wo><-6>
+collating-element <*-WoO6> from <Wo><O6>
+
+
+# ---------------------------------------------------------------------
+
+
+order_start forward;forward
+<NUL>
+<SOH>
+<STX>
+<ETX>
+<EOT>
+<ENQ>
+<ACK>
+<alert>
+<backspace>
+<tab>
+<newline>
+<vertical-tab>
+<form-feed>
+<carriage-return>
+<SO>
+<SI>
+<DLE>
+<DC1>
+<DC2>
+<DC3>
+<DC4>
+<NAK>
+<SYN>
+<ETB>
+<CAN>
+<EM>
+<SUB>
+<ESC>
+<IS4>
+<IS3>
+<IS2>
+<IS1>
+#
+#	C1 control
+#
+<BPH>
+<NBH>
+<NEL>
+<SSA>
+<ESA>
+<HTS>
+<HTJ>
+<VTS>
+<PLD>
+<PLU>
+<RI>
+<SS2>
+<SS3>
+<DCS>
+<PU1>
+<PU2>
+<STS>
+<CCH>
+<MW>
+<SPA>
+<EPA>
+<SOS>
+<SCI>
+<CSI>
+<ST>
+<OSC>
+<PM>
+<APC>
+#
+<space>
+<exclamation-mark>
+<quotation-mark>
+<number-sign>
+<dollar-sign>
+<percent>
+<ampersand>
+<apostrophe>
+<left-parenthesis>
+<right-parenthesis>
+<asterisk>
+<plus-sign>
+<comma>
+<hyphen>
+<period>
+<slash>
+<zero>
+<one>
+<two>
+<three>
+<four>
+<five>
+<six>
+<seven>
+<eight>
+<nine>
+<colon>
+<semicolon>
+<less-than-sign>
+<equals-sign>
+<greater-than-sign>
+<question-mark>
+<commercial-at>
+<A>             <A>;<A>
+<a>             <A>;<a>
+<B>             <B>;<B>
+<b>             <B>;<b>
+<C>             <C>;<C>
+<c>             <C>;<c>
+<D>             <D>;<D>
+<d>             <D>;<d>
+<E>             <E>;<E>
+<e>             <E>;<e>
+<F>             <F>;<F>
+<f>             <F>;<f>
+<G>             <G>;<G>
+<g>             <G>;<g>
+<H>             <H>;<H>
+<h>             <H>;<h>
+<I>             <I>;<I>
+<i>             <I>;<i>
+<J>             <J>;<J>
+<j>             <J>;<j>
+<K>             <K>;<K>
+<k>             <K>;<k>
+<L>             <L>;<L>
+<l>             <L>;<l>
+<M>             <M>;<M>
+<m>             <M>;<m>
+<N>             <N>;<N>
+<n>             <N>;<n>
+<O>             <O>;<O>
+<o>             <O>;<o>
+<P>             <P>;<P>
+<p>             <P>;<p>
+<Q>             <Q>;<Q>
+<q>             <Q>;<q>
+<R>             <R>;<R>
+<r>             <R>;<r>
+<S>             <S>;<S>
+<s>             <S>;<s>
+<T>             <T>;<T>
+<t>             <T>;<t>
+<U>             <U>;<U>
+<u>             <U>;<u>
+<V>             <V>;<V>
+<v>             <V>;<v>
+<W>             <W>;<W>
+<w>             <W>;<w>
+<X>             <X>;<X>
+<x>             <X>;<x>
+<Y>             <Y>;<Y>
+<y>             <Y>;<y>
+<Z>             <Z>;<Z>
+<z>             <Z>;<z>
+<left-bracket>
+<backslash>
+<right-bracket>
+<circumflex>
+<underscore>
+<grave-accent>
+<left-brace>
+<vertical-line>
+<right-brace>
+<tilde>
+<DEL>
+<a6>            <a5>;<a6>
+<*-a6-6>        <a6><A6>;<a6><-6>
+<*-a6A6>        <a6><A6>;<a6><A6>
+<A5>            <a5>;<A5>
+<A6>            <a5>;<A6>
+<*-A6-6>        <A6><A6>;<A6><-6>
+<*-A6A6>        <A6><A6>;<A6><A6>
+<a5>            <a5>;<a5>
+<i6>            <i5>;<i6>
+<*-i6-6>        <i6><I6>;<i6><-6>
+<*-i6I6>        <i6><I6>;<i6><I6>
+<I5>            <i5>;<I5>
+<I6>            <i5>;<I6>
+<*-I6-6>        <I6><I6>;<I6><-6>
+<*-I6I6>        <I6><I6>;<I6><I6>
+<i5>            <i5>;<i5>
+<u6>            <u5>;<u6>
+<*-u6-6>        <u6><U6>;<u6><-6>
+<*-u6U6>        <u6><U6>;<u6><U6>
+<U5>            <u5>;<U5>
+<U6>            <u5>;<U6>
+<*-U6-6>        <U6><U6>;<U6><-6>
+<*-U6U6>        <U6><U6>;<U6><U6>
+<u5>            <u5>;<u5>
+<Vu>            <u5>;<Vu>
+<*-Vu-6>        <Vu><U6>;<Vu><-6>
+<*-VuU6>        <Vu><U6>;<Vu><U6>
+<e6>            <e5>;<e6>
+<*-e6-6>        <e6><E6>;<e6><-6>
+<*-e6E6>        <e6><E6>;<e6><E6>
+<E5>            <e5>;<E5>
+<E6>            <e5>;<E6>
+<*-E6-6>        <E6><E6>;<E6><-6>
+<*-E6E6>        <E6><E6>;<E6><E6>
+<e5>            <e5>;<e5>
+<o6>            <o5>;<o6>
+<*-o6-6>        <o6><O6>;<o6><-6>
+<*-o6O6>        <o6><O6>;<o6><O6>
+<O5>            <o5>;<O5>
+<O6>            <o5>;<O6>
+<*-O6-6>        <O6><O6>;<O6><-6>
+<*-O6O6>        <O6><O6>;<O6><O6>
+<o5>            <o5>;<o5>
+<KA>            <ka>;<KA>
+<Ka>            <ka>;<Ka>
+<*-Ka-6>        <Ka><A6>;<Ka><-6>
+<*-KaA6>        <Ka><A6>;<Ka><A6>
+<ka>            <ka>;<ka>
+<Ga>            <ka>;<Ga>
+<*-Ga-6>        <Ga><A6>;<Ga><-6>
+<*-GaA6>        <Ga><A6>;<Ga><A6>
+<ga>            <ka>;<ga>
+<Ki>            <ki>;<Ki>
+<*-Ki-6>        <Ki><I6>;<Ki><-6>
+<*-KiI6>        <Ki><I6>;<Ki><I6>
+<ki>            <ki>;<ki>
+<Gi>            <ki>;<Gi>
+<*-Gi-6>        <Gi><I6>;<Gi><-6>
+<*-GiI6>        <Gi><I6>;<Gi><I6>
+<gi>            <ki>;<gi>
+<Ku>            <ku>;<Ku>
+<*-Ku-6>        <Ku><U6>;<Ku><-6>
+<*-KuU6>        <Ku><U6>;<Ku><U6>
+<ku>            <ku>;<ku>
+<Gu>            <ku>;<Gu>
+<*-Gu-6>        <Gu><U6>;<Gu><-6>
+<*-GuU6>        <Gu><U6>;<Gu><U6>
+<gu>            <ku>;<gu>
+<KE>            <ke>;<KE>
+<Ke>            <ke>;<Ke>
+<*-Ke-6>        <Ke><E6>;<Ke><-6>
+<*-KeE6>        <Ke><E6>;<Ke><E6>
+<ke>            <ke>;<ke>
+<Ge>            <ke>;<Ge>
+<*-Ge-6>        <Ge><E6>;<Ge><-6>
+<*-GeE6>        <Ge><E6>;<Ge><E6>
+<ge>            <ke>;<ge>
+<Ko>            <ko>;<Ko>
+<*-Ko-6>        <Ko><O6>;<Ko><-6>
+<*-KoO6>        <Ko><O6>;<Ko><O6>
+<ko>            <ko>;<ko>
+<Go>            <ko>;<Go>
+<*-Go-6>        <Go><O6>;<Go><-6>
+<*-GoO6>        <Go><O6>;<Go><O6>
+<go>            <ko>;<go>
+<Sa>            <sa>;<Sa>
+<*-Sa-6>        <Sa><A6>;<Sa><-6>
+<*-SaA6>        <Sa><A6>;<Sa><A6>
+<sa>            <sa>;<sa>
+<Za>            <sa>;<Za>
+<*-Za-6>        <Za><A6>;<Za><-6>
+<*-ZaA6>        <Za><A6>;<Za><A6>
+<za>            <sa>;<za>
+<Si>            <si>;<Si>
+<*-Si-6>        <Si><I6>;<Si><-6>
+<*-SiI6>        <Si><I6>;<Si><I6>
+<si>            <si>;<si>
+<Zi>            <si>;<Zi>
+<*-Zi-6>        <Zi><I6>;<Zi><-6>
+<*-ZiI6>        <Zi><I6>;<Zi><I6>
+<zi>            <si>;<zi>
+<Su>            <su>;<Su>
+<*-Su-6>        <Su><U6>;<Su><-6>
+<*-SuU6>        <Su><U6>;<Su><U6>
+<su>            <su>;<su>
+<Zu>            <su>;<Zu>
+<*-Zu-6>        <Zu><U6>;<Zu><-6>
+<*-ZuU6>        <Zu><U6>;<Zu><U6>
+<zu>            <su>;<zu>
+<Se>            <se>;<Se>
+<*-Se-6>        <Se><E6>;<Se><-6>
+<*-SeE6>        <Se><E6>;<Se><E6>
+<se>            <se>;<se>
+<Ze>            <se>;<Ze>
+<*-Ze-6>        <Ze><E6>;<Ze><-6>
+<*-ZeE6>        <Ze><E6>;<Ze><E6>
+<ze>            <se>;<ze>
+<So>            <so>;<So>
+<*-So-6>        <So><O6>;<So><-6>
+<*-SoO6>        <So><O6>;<So><O6>
+<so>            <so>;<so>
+<Zo>            <so>;<Zo>
+<*-Zo-6>        <Zo><O6>;<Zo><-6>
+<*-ZoO6>        <Zo><O6>;<Zo><O6>
+<zo>            <so>;<zo>
+<Ta>            <ta>;<Ta>
+<*-Ta-6>        <Ta><A6>;<Ta><-6>
+<*-TaA6>        <Ta><A6>;<Ta><A6>
+<ta>            <ta>;<ta>
+<Da>            <ta>;<Da>
+<*-Da-6>        <Da><A6>;<Da><-6>
+<*-DaA6>        <Da><A6>;<Da><A6>
+<da>            <ta>;<da>
+<Ti>            <ti>;<Ti>
+<*-Ti-6>        <Ti><I6>;<Ti><-6>
+<*-TiI6>        <Ti><I6>;<Ti><I6>
+<ti>            <ti>;<ti>
+<Di>            <ti>;<Di>
+<*-Di-6>        <Di><I6>;<Di><-6>
+<*-DiI6>        <Di><I6>;<Di><I6>
+<di>            <ti>;<di>
+<TU>            <tu>;<TU>
+<tU>            <tu>;<tU>
+<Tu>            <tu>;<Tu>
+<*-Tu-6>        <Tu><U6>;<Tu><-6>
+<*-TuU6>        <Tu><U6>;<Tu><U6>
+<tu>            <tu>;<tu>
+<Du>            <tu>;<Du>
+<*-Du-6>        <Du><U6>;<Du><-6>
+<*-DuU6>        <Du><U6>;<Du><U6>
+<du>            <tu>;<du>
+<Te>            <te>;<Te>
+<*-Te-6>        <Te><E6>;<Te><-6>
+<*-TeE6>        <Te><E6>;<Te><E6>
+<te>            <te>;<te>
+<De>            <te>;<De>
+<*-De-6>        <De><E6>;<De><-6>
+<*-DeE6>        <De><E6>;<De><E6>
+<de>            <te>;<de>
+<To>            <to>;<To>
+<*-To-6>        <To><O6>;<To><-6>
+<*-ToO6>        <To><O6>;<To><O6>
+<to>            <to>;<to>
+<Do>            <to>;<Do>
+<*-Do-6>        <Do><O6>;<Do><-6>
+<*-DoO6>        <Do><O6>;<Do><O6>
+<do>            <to>;<do>
+<Na>            <na>;<Na>
+<*-Na-6>        <Na><A6>;<Na><-6>
+<*-NaA6>        <Na><A6>;<Na><A6>
+<na>            <na>;<na>
+<Ni>            <ni>;<Ni>
+<*-Ni-6>        <Ni><I6>;<Ni><-6>
+<*-NiI6>        <Ni><I6>;<Ni><I6>
+<ni>            <ni>;<ni>
+<Nu>            <nu>;<Nu>
+<*-Nu-6>        <Nu><U6>;<Nu><-6>
+<*-NuU6>        <Nu><U6>;<Nu><U6>
+<nu>            <nu>;<nu>
+<Ne>            <ne>;<Ne>
+<*-Ne-6>        <Ne><E6>;<Ne><-6>
+<*-NeE6>        <Ne><E6>;<Ne><E6>
+<ne>            <ne>;<ne>
+<No>            <no>;<No>
+<*-No-6>        <No><O6>;<No><-6>
+<*-NoO6>        <No><O6>;<No><O6>
+<no>            <no>;<no>
+<Ha>            <ha>;<Ha>
+<*-Ha-6>        <Ha><A6>;<Ha><-6>
+<*-HaA6>        <Ha><A6>;<Ha><A6>
+<ha>            <ha>;<ha>
+<Ba>            <ha>;<Ba>
+<*-Ba-6>        <Ba><A6>;<Ba><-6>
+<*-BaA6>        <Ba><A6>;<Ba><A6>
+<ba>            <ha>;<ba>
+<Pa>            <ha>;<Pa>
+<*-Pa-6>        <Pa><A6>;<Pa><-6>
+<*-PaA6>        <Pa><A6>;<Pa><A6>
+<pa>            <ha>;<pa>
+<Hi>            <hi>;<Hi>
+<*-Hi-6>        <Hi><I6>;<Hi><-6>
+<*-HiI6>        <Hi><I6>;<Hi><I6>
+<hi>            <hi>;<hi>
+<Bi>            <hi>;<Bi>
+<*-Bi-6>        <Bi><I6>;<Bi><-6>
+<*-BiI6>        <Bi><I6>;<Bi><I6>
+<bi>            <hi>;<bi>
+<Pi>            <hi>;<Pi>
+<*-Pi-6>        <Pi><I6>;<Pi><-6>
+<*-PiI6>        <Pi><I6>;<Pi><I6>
+<pi>            <hi>;<pi>
+<Hu>            <hu>;<Hu>
+<*-Hu-6>        <Hu><U6>;<Hu><-6>
+<*-HuU6>        <Hu><U6>;<Hu><U6>
+<hu>            <hu>;<hu>
+<Bu>            <hu>;<Bu>
+<*-Bu-6>        <Bu><U6>;<Bu><-6>
+<*-BuU6>        <Bu><U6>;<Bu><U6>
+<bu>            <hu>;<bu>
+<Pu>            <hu>;<Pu>
+<*-Pu-6>        <Pu><U6>;<Pu><-6>
+<*-PuU6>        <Pu><U6>;<Pu><U6>
+<pu>            <hu>;<pu>
+<He>            <he>;<He>
+<*-He-6>        <He><E6>;<He><-6>
+<*-HeE6>        <He><E6>;<He><E6>
+<he>            <he>;<he>
+<Be>            <he>;<Be>
+<*-Be-6>        <Be><E6>;<Be><-6>
+<*-BeE6>        <Be><E6>;<Be><E6>
+<be>            <he>;<be>
+<Pe>            <he>;<Pe>
+<*-Pe-6>        <Pe><E6>;<Pe><-6>
+<*-PeE6>        <Pe><E6>;<Pe><E6>
+<pe>            <he>;<pe>
+<Ho>            <ho>;<Ho>
+<*-Ho-6>        <Ho><O6>;<Ho><-6>
+<*-HoO6>        <Ho><O6>;<Ho><O6>
+<ho>            <ho>;<ho>
+<Bo>            <ho>;<Bo>
+<*-Bo-6>        <Bo><O6>;<Bo><-6>
+<*-BoO6>        <Bo><O6>;<Bo><O6>
+<bo>            <ho>;<bo>
+<Po>            <ho>;<Po>
+<*-Po-6>        <Po><O6>;<Po><-6>
+<*-PoO6>        <Po><O6>;<Po><O6>
+<po>            <ho>;<po>
+<Ma>            <ma>;<Ma>
+<*-Ma-6>        <Ma><A6>;<Ma><-6>
+<*-MaA6>        <Ma><A6>;<Ma><A6>
+<ma>            <ma>;<ma>
+<Mi>            <mi>;<Mi>
+<*-Mi-6>        <Mi><I6>;<Mi><-6>
+<*-MiI6>        <Mi><I6>;<Mi><I6>
+<mi>            <mi>;<mi>
+<Mu>            <mu>;<Mu>
+<*-Mu-6>        <Mu><U6>;<Mu><-6>
+<*-MuU6>        <Mu><U6>;<Mu><U6>
+<mu>            <mu>;<mu>
+<Me>            <me>;<Me>
+<*-Me-6>        <Me><E6>;<Me><-6>
+<*-MeE6>        <Me><E6>;<Me><E6>
+<me>            <me>;<me>
+<Mo>            <mo>;<Mo>
+<*-Mo-6>        <Mo><O6>;<Mo><-6>
+<*-MoO6>        <Mo><O6>;<Mo><O6>
+<mo>            <mo>;<mo>
+<YA>            <ya>;<YA>
+<*-YA-6>        <YA><A6>;<YA><-6>
+<*-YAA6>        <YA><A6>;<YA><A6>
+<yA>            <ya>;<yA>
+<Ya>            <ya>;<Ya>
+<*-Ya-6>        <Ya><A6>;<Ya><-6>
+<*-YaA6>        <Ya><A6>;<Ya><A6>
+<ya>            <ya>;<ya>
+<YU>            <yu>;<YU>
+<*-YU-6>        <YU><U6>;<YU><-6>
+<*-YUU6>        <YU><U6>;<YU><U6>
+<yU>            <yu>;<yU>
+<Yu>            <yu>;<Yu>
+<*-Yu-6>        <Yu><U6>;<Yu><-6>
+<*-YuU6>        <Yu><U6>;<Yu><U6>
+<yu>            <yu>;<yu>
+<YO>            <yo>;<YO>
+<*-YO-6>        <YO><O6>;<YO><-6>
+<*-YOO6>        <YO><O6>;<YO><O6>
+<yO>            <yo>;<yO>
+<Yo>            <yo>;<Yo>
+<*-Yo-6>        <Yo><O6>;<Yo><-6>
+<*-YoO6>        <Yo><O6>;<Yo><O6>
+<yo>            <yo>;<yo>
+<Ra>            <ra>;<Ra>
+<*-Ra-6>        <Ra><A6>;<Ra><-6>
+<*-RaA6>        <Ra><A6>;<Ra><A6>
+<ra>            <ra>;<ra>
+<Ri>            <ri>;<Ri>
+<*-Ri-6>        <Ri><I6>;<Ri><-6>
+<*-RiI6>        <Ri><I6>;<Ri><I6>
+<ri>            <ri>;<ri>
+<Ru>            <ru>;<Ru>
+<*-Ru-6>        <Ru><U6>;<Ru><-6>
+<*-RuU6>        <Ru><U6>;<Ru><U6>
+<ru>            <ru>;<ru>
+<Re>            <re>;<Re>
+<*-Re-6>        <Re><E6>;<Re><-6>
+<*-ReE6>        <Re><E6>;<Re><E6>
+<re>            <re>;<re>
+<Ro>            <ro>;<Ro>
+<*-Ro-6>        <Ro><O6>;<Ro><-6>
+<*-RoO6>        <Ro><O6>;<Ro><O6>
+<ro>            <ro>;<ro>
+<WA>            <wa>;<WA>
+<*-WA-6>        <WA><A6>;<WA><-6>
+<*-WAA6>        <WA><A6>;<WA><A6>
+<wA>            <wa>;<wA>
+<Wa>            <wa>;<Wa>
+<*-Wa-6>        <Wa><A6>;<Wa><-6>
+<*-WaA6>        <Wa><A6>;<Wa><A6>
+<wa>            <wa>;<wa>
+<Wi>            <wi>;<Wi>
+<*-Wi-6>        <Wi><I6>;<Wi><-6>
+<*-WiI6>        <Wi><I6>;<Wi><I6>
+<wi>            <wi>;<wi>
+<We>            <we>;<We>
+<*-We-6>        <We><E6>;<We><-6>
+<*-WeE6>        <We><E6>;<We><E6>
+<we>            <we>;<we>
+<Wo>            <wo>;<Wo>
+<*-Wo-6>        <Wo><O6>;<Wo><-6>
+<*-WoO6>        <Wo><O6>;<Wo><O6>
+<wo>            <wo>;<wo>
+<N6>            <n5>;<N6>
+<n5>            <n5>;<n5>
+
+#
+#	JIS X0208
+#
+<j0101>
+...
+<j0194>
+<j0201>
+...
+<j0214>
+<j0226>
+...
+<j0233>
+<j0242>
+...
+<J0248>
+<j0260>
+...
+<j0274>
+<j0282>
+...
+<j0289>
+<j0294>
+<j0316>
+...
+<j0325>
+<j0333>
+...
+<j0358>
+<j0365>
+...
+<j0390>
+<j0401>
+...
+<j0483>
+<j0501>
+...
+<j0586>
+<j0601>
+...
+<j0624>
+<j0633>
+...
+<j0656>
+<j0701>
+...
+<j0733>
+<j0749>
+...
+<j0781>
+<j0801>
+...
+<j0832>
+<j1601>
+...
+<j1694>
+<j1701>
+...
+<j1794>
+<j1801>
+...
+<j1894>
+<j1901>
+...
+<j1994>
+<j2001>
+...
+<j2094>
+<j2101>
+...
+<j2194>
+<j2201>
+...
+<j2294>
+<j2301>
+...
+<j2394>
+<j2401>
+...
+<j2494>
+<j2501>
+...
+<j2594>
+<j2601>
+...
+<j2694>
+<j2701>
+...
+<j2794>
+<j2801>
+...
+<j2894>
+<j2901>
+...
+<j2994>
+<j3001>
+...
+<j3094>
+<j3101>
+...
+<j3194>
+<j3201>
+...
+<j3294>
+<j3301>
+...
+<j3394>
+<j3401>
+...
+<j3494>
+<j3501>
+...
+<j3594>
+<j3601>
+...
+<j3694>
+<j3701>
+...
+<j3794>
+<j3801>
+...
+<j3894>
+<j3901>
+...
+<j3994>
+<j4001>
+...
+<j4094>
+<j4101>
+...
+<j4194>
+<j4201>
+...
+<j4294>
+<j4301>
+...
+<j4394>
+<j4401>
+...
+<j4494>
+<j4501>
+...
+<j4594>
+<j4601>
+...
+<j4694>
+<j4701>
+...
+<j4751>
+<j4801>
+...
+<j4894>
+<j4901>
+...
+<j4994>
+<j5001>
+...
+<j5094>
+<j5101>
+...
+<j5194>
+<j5201>
+...
+<j5294>
+<j5301>
+...
+<j5394>
+<j5401>
+...
+<j5494>
+<j5501>
+...
+<j5594>
+<j5601>
+...
+<j5694>
+<j5701>
+...
+<j5794>
+<j5801>
+...
+<j5894>
+<j5901>
+...
+<j5994>
+<j6001>
+...
+<j6094>
+<j6101>
+...
+<j6194>
+<j6201>
+...
+<j6294>
+<j6301>
+...
+<j6394>
+<j6401>
+...
+<j6494>
+<j6501>
+...
+<j6594>
+<j6601>
+...
+<j6694>
+<j6701>
+...
+<j6794>
+<j6801>
+...
+<j6894>
+<j6901>
+...
+<j6994>
+<j7001>
+...
+<j7094>
+<j7101>
+...
+<j7194>
+<j7201>
+...
+<j7294>
+<j7301>
+...
+<j7394>
+<j7401>
+...
+<j7494>
+<j7501>
+...
+<j7594>
+<j7601>
+...
+<j7694>
+<j7701>
+...
+<j7794>
+<j7801>
+...
+<j7894>
+<j7901>
+...
+<j7994>
+<j8001>
+...
+<j8094>
+<j8101>
+...
+<j8194>
+<j8201>
+...
+<j8294>
+<j8301>
+...
+<j8394>
+<j8401>
+...
+<j8406>
+#
+#	JIS X0212
+#
+<J0215>
+...
+<J0225>
+<J0234>
+...
+<J0236>
+<J0275>
+...
+<J0281>
+<J0665>
+...
+<J0669>
+<J0671>
+<J0673>
+<J0674>
+<J0676>
+<J0681>
+...
+<J0692>
+<J0734>
+...
+<J0746>
+<J0782>
+...
+<J0794>
+<J0901>
+<J0902>
+<J0904>
+<J0906>
+<J0908>
+<J0909>
+<J0911>
+...
+<J0913>
+<J0915>
+<J0916>
+<J0933>
+...
+<J0948>
+<J1001>
+...
+<J1024>
+<J1026>
+...
+<J1087>
+<J1101>
+...
+<J1127>
+<J1129>
+...
+<J1135>
+<J1137>
+...
+<J1187>
+<J1601>
+...
+<J1694>
+<J1701>
+...
+<J1794>
+<J1801>
+...
+<J1894>
+<J1901>
+...
+<J1994>
+<J2001>
+...
+<J2094>
+<J2101>
+...
+<J2194>
+<J2201>
+...
+<J2294>
+<J2301>
+...
+<J2394>
+<J2401>
+...
+<J2494>
+<J2501>
+...
+<J2594>
+<J2601>
+...
+<J2694>
+<J2701>
+...
+<J2794>
+<J2801>
+...
+<J2894>
+<J2901>
+...
+<J2994>
+<J3001>
+...
+<J3094>
+<J3101>
+...
+<J3194>
+<J3201>
+...
+<J3294>
+<J3301>
+...
+<J3394>
+<J3401>
+...
+<J3494>
+<J3501>
+...
+<J3594>
+<J3601>
+...
+<J3694>
+<J3701>
+...
+<J3794>
+<J3801>
+...
+<J3894>
+<J3901>
+...
+<J3994>
+<J4001>
+...
+<J4094>
+<J4101>
+...
+<J4194>
+<J4201>
+...
+<J4294>
+<J4301>
+...
+<J4394>
+<J4401>
+...
+<J4494>
+<J4501>
+...
+<J4594>
+<J4601>
+...
+<J4694>
+<J4701>
+...
+<J4794>
+<J4801>
+...
+<J4894>
+<J4901>
+...
+<J4994>
+<J5001>
+...
+<J5094>
+<J5101>
+...
+<J5194>
+<J5201>
+...
+<J5294>
+<J5301>
+...
+<J5394>
+<J5401>
+...
+<J5494>
+<J5501>
+...
+<J5594>
+<J5601>
+...
+<J5694>
+<J5701>
+...
+<J5794>
+<J5801>
+...
+<J5894>
+<J5901>
+...
+<J5994>
+<J6001>
+...
+<J6094>
+<J6101>
+...
+<J6194>
+<J6201>
+...
+<J6294>
+<J6301>
+...
+<J6394>
+<J6401>
+...
+<J6494>
+<J6501>
+...
+<J6594>
+<J6601>
+...
+<J6694>
+<J6701>
+...
+<J6794>
+<J6801>
+...
+<J6894>
+<J6901>
+...
+<J6994>
+<J7001>
+...
+<J7094>
+<J7101>
+...
+<J7194>
+<J7201>
+...
+<J7294>
+<J7301>
+...
+<J7394>
+<J7401>
+...
+<J7494>
+<J7501>
+...
+<J7594>
+<J7601>
+...
+<J7694>
+<J7701>
+...
+<J7767>
+
+UNDEFINED
+order_end
+
+END LC_COLLATE
+
+LC_MESSAGES
+
+# Any string starting with any form of Latin Y is
+# recognized as affirmative answer.
+# Any string starting with any form of Latin N is
+# recognized as negative answer.
+# Installations may add other definitions such as for
+# Hiragana and Katakana strings.
+
+yesexpr "^[<y><Y><j0389><j0357>]"
+
+noexpr  "^[<n><N><j0378><j0346>]"
+
+END LC_MESSAGES
+
+LC_NUMERIC
+
+decimal_point           "<period>"
+thousands_sep           "<comma>"
+grouping                3
+
+END LC_NUMERIC
+
+LC_TIME
+
+# abday: abbreviated weekday names
+# abday is defined as the first letters of Japanese weekday names in Kanji,
+# such as Nichi, Getsu, and Ka.
+abday   "<j3892>";"<j2378>";"<j1848>";"<j3169>";\
+        "<j4458>";"<j2266>";"<j3758>"
+
+# day: full weekday names
+# day is defined as full names of Japanese weekday names in Kanji, such as
+# Nichiyoubi, Getsuyoubi, and Kayoubi.
+day     "<j3892><j4543><j3892>";"<j2378><j4543><j3892>";\
+        "<j1848><j4543><j3892>";"<j3169><j4543><j3892>";\
+        "<j4458><j4543><j3892>";"<j2266><j4543><j3892>";\
+        "<j3758><j4543><j3892>"
+
+# abmon: abbreviated month names
+# abmon is defined as two columns digit of month number, and Gatsu
+# in Kanji.  If month number is less than ten, leading space is padded.
+# The names are " 1Gatsu", " 2Gatsu", ..., "12Gatsu".
+abmon   "<space><one><j2378>";"<space><two><j2378>";"<space><three><j2378>";\
+        "<space><four><j2378>";"<space><five><j2378>";"<space><six><j2378>";\
+        "<space><seven><j2378>";"<space><eight><j2378>";"<space><nine><j2378>";\
+        "<one><zero><j2378>";"<one><one><j2378>";\
+        "<one><two><j2378>"
+
+# mon: full month names
+# mon is defined as digit of month number, and Gatsu in Kanji.  No space
+# is padded.  The names are "1Gatsu", "2Gatsu", ..., "12Gatsu".
+mon     "<one><j2378>";"<two><j2378>";"<three><j2378>";\
+        "<four><j2378>";"<five><j2378>";"<six><j2378>";\
+        "<seven><j2378>";"<eight><j2378>";"<nine><j2378>";\
+        "<one><zero><j2378>";"<one><one><j2378>";\
+        "<one><two><j2378>"
+
+# d_t_fmt: date and time format
+# The format is defined as:
+#       "%YNen%mGatsu%dNichi %HJi%MFun%SByou"
+# which will be formatted as, for example,
+#       "1993Nen02Gatsu06Nichi 08Ji59Fun07Byou"
+d_t_fmt "%Y<j3915>%m<j2378>%d<j3892><space>%H<j2794>%M<j4212>%S<j4135>"
+
+# d_fmt: date format
+# The format is defined as:
+#       "%YNen%mGatsu%dNichi"
+# which will be formatted as, for example,
+#       "1993Nen02Gatsu06Nichi"
+d_fmt   "%Y<j3915>%m<j2378>%d<j3892>"
+
+# t_fmt: time format
+# The format is defined as:
+#       "%HJi%MFun%SByou"
+# which will be formatted as, for example,
+#       "08Ji59Fun07Byou"
+t_fmt   "%H<j2794>%M<j4212>%S<j4135>"
+
+# am_pm: ante meridiem (AM) and post meridiem (PM) strings
+# "Gozen" for AM, "Gogo" for PM
+am_pm   "<j2465><j3316>";"<j2465><j2469>"
+
+# t_fmt_ampm: time format using am_pm
+# The format is defined as:
+#       "%p%IJi%MFun%SByou"
+# which will be formatted as, for example,
+#       "Gozen08Ji59Fun07Byou"
+t_fmt_ampm "%p%I<j2794>%M<j4212>%S<j4135>"
+
+# era: year count and format for era
+# era (Gengou) is defined as follows:
+#       from 1990-01-01:                "Heisei%EyNen" (1990 is Heisei 2 Nen.)
+#       from 1989-01-08 to 1989-12-31:  "HeiseiGannen"
+#       from 1927-01-01 to 1989-01-07:  "Showa%EyNen" (1927 is Showa 2 Nen.)
+era     "+:2:1990/01/01:+*:<j4231><j3214>:%EC%Ey<j3915>";\
+        "+:1:1989/01/08:1989/12/31:<j4231><j3214>:%EC<j2421><j3915>";\
+        "+:2:1927/01/01:1989/01/07:<j3028><j4734>:%EC%Ey<j3915>"
+
+# era_d_fmt: date format using era
+# The format is defined as:
+#       "%EY%mGatsu%dNichi"
+# which will be formatted as, for example,
+#       "Heisei5Nen02Gatsu06Nichi"
+era_d_fmt "%EY%m<j2378>%d<j3892>"
+
+# era_d_t_fmt: date and time format using era
+# The format is defined as:
+#       "%EY%mGatsu%dNichi %HJi%MFun%SByou"
+# which will be formatted as, for example,
+#       "Heisei5Nen02Gatsu06Nichi 08Ji59Fun07Byou"
+era_d_t_fmt "%EY%m<j2378>%d<j3892><space>%H<j2794>%M<j4212>%S<j4135>"
+
+# era_t_fmt and alt_digits are not defined here.
+END LC_TIME

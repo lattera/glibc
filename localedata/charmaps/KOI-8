@@ -1,6 +1,8 @@
 <code_set_name> KOI-8
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: Andrey A. Chernov <ache@astral.msk.su>
 
 CHARMAP

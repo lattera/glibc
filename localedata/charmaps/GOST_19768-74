@@ -1,6 +1,8 @@
 <code_set_name> GOST_19768-74
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: ECMA registry
 
 % alias ST_SEV_358-88

@@ -1,6 +1,8 @@
 <code_set_name> MACINTOSH
 <comment_char> %
 <escape_char> /
+% version: 1.0
+% repertoiremap: mnemonic,ds
 %  source: The Unicode Standard ver 1.0, ISBN 0-201-56788-1, Oct 1991
 
 % alias MAC
