@@ -733,7 +733,7 @@ collate_startup (struct linereader *ldfile, struct localedef_t *locale,
       collate->col_weight_max = -1;
     }
 
-  ldfile->translate_strings = 1;
+  ldfile->translate_strings = 0;
   ldfile->return_widestr = 0;
 }
 
@@ -759,7 +759,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
   struct repertoire_t *repertoire = NULL;
   struct locale_collate_t *collate;
   struct token *now;
-  struct token *arg;
+  struct token *arg = NULL;
   enum token_t nowtok;
   int state = 0;
   int was_ellipsis = 0;
@@ -783,7 +783,28 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
       state = 2;
       now = lr_token (ldfile, charmap, NULL);
       if (now->tok != tok_string)
-	goto err_label;
+	{
+	  SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
+
+	  do
+	    now = lr_token (ldfile, charmap, NULL);
+	  while (now->tok != tok_eof && now->tok != tok_end);
+
+	  if (now->tok != tok_eof
+	      || (now = lr_token (ldfile, charmap, NULL), now->tok == tok_eof))
+	    lr_error (ldfile, _("%s: premature end of file"), "LC_COLLATE");
+	  else if (now->tok != tok_lc_collate)
+	    {
+	      lr_error (ldfile, _("\
+%1$s: definition does not end with `END %1$s'"), "LC_COLLATE");
+	      lr_ignore_rest (ldfile, 0);
+	    }
+	  else
+	    lr_ignore_rest (ldfile, 1);
+
+	  return;
+	}
+
       /* XXX Use the name */
       lr_ignore_rest (ldfile, 1);
 
@@ -1222,7 +1243,36 @@ error while adding equivalent collating symbol"));
 	  if (state != 2 && state != 3)
 	    goto err_label;
 	  state = 3;
-	  /* XXX get symbol */
+
+	  arg = lr_token (ldfile, charmap, repertoire);
+	  if (arg->tok == tok_bsymbol)
+	    {
+	      /* Find this symbol in the sequence table.  */
+	      struct element_t *insp;
+	      int no_error = 1;
+
+	      if (find_entry (&collate->seq_table, arg->val.str.startmb,
+			      arg->val.str.lenmb, (void **) &insp) == 0)
+		/* Yes, the symbol exists.  Simply point the cursor
+		   to it.  */
+		  collate->cursor = insp;
+	      else
+		{
+		  /* This is bad.  The symbol after which we have to
+                     insert does not exist.  */
+		  lr_error (ldfile, _("\
+%s: cannot reorder after %.*s: symbol not known"),
+			    "LC_COLLATE", arg->val.str.lenmb,
+			    arg->val.str.startmb);
+		  collate->cursor = NULL;
+		  no_error = 0;
+		}
+
+	      lr_ignore_rest (ldfile, no_error);
+	    }
+	  else
+	    /* This must not happen.  */
+	    goto err_label;
 	  break;
 
 	case tok_reorder_end:
@@ -1255,6 +1305,14 @@ error while adding equivalent collating symbol"));
 		 In this case we move the entry.  */
 	      struct element_t *seqp;
 
+	      /* If the symbol after which we have to insert was not found
+		 ignore all entries.  */
+	      if (collate->cursor == NULL)
+		{
+		  lr_ignore_rest (ldfile, 0);
+		  break;
+		}
+
 	      if (find_entry (&collate->seq_table, arg->val.str.startmb,
 			      arg->val.str.lenmb, (void **) &seqp) == 0)
 		{
@@ -1279,8 +1337,21 @@ error while adding equivalent collating symbol"));
 		  else if (seqp->section->last == seqp)
 		    seqp->section->last = seqp->last;
 
-		  seqp->last = seqp->next = NULL;
+		  /* Now insert it in the new place.  */
+		  seqp->next = collate->cursor->next;
+		  seqp->last = collate->cursor;
+		  collate->cursor->next = seqp;
+		  if (seqp->next != NULL)
+		    seqp->next->last = seqp;
+
+		  seqp->section = collate->cursor->section;
+		  if (seqp->section->last == collate->cursor)
+		    seqp->section->last = seqp;
+
+		  break;
 		}
+
+	      /* Otherwise we just add a new entry.  */
 	    }
 
 	  /* Now insert in the new place.  */

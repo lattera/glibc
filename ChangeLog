@@ -1,5 +1,8 @@
 1999-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-collate.c (collate_read): Add handling of
+	reorder-after.
+
 	* locale/programs/ld-collate.c: Many changes to implement parsing
 	of collation definition (still not complete).
 
