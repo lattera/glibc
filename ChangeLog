@@ -1,5 +1,56 @@
 Wed Jan 17 11:04:58 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* io/sys/stat.h (_STAT_VER, _MKNOD_VER): New macros.
+	(__xstat, __fxstat, __lxstat, __xmknod): Declare new functions.
+	[__GNUC__] (stat, fstat, lstat, mknod): Define these (and __ names)
+	as `extern inline's calling the `x' functions.
+	* io/fstat.c: New file.
+	* io/lstat.c: New file.
+	* io/stat.c: New file.
+	* sysdeps/generic/lstat.c: File removed.
+	* sysdeps/generic/lxstat.c: New file.
+	* sysdeps/mach/hurd/fstat.c: File removed.
+	* sysdeps/mach/hurd/fxstat.c: New file.
+	* sysdeps/mach/hurd/lstat.c: File removed.
+	* sysdeps/mach/hurd/lxstat.c: New file.
+	* sysdeps/mach/hurd/mknod.c: File removed.
+	* sysdeps/mach/hurd/stat.c: File removed.
+	* sysdeps/mach/hurd/xmknod.c: New file.
+	* sysdeps/mach/hurd/xstat.c: New file.
+	* sysdeps/stub/fstat.c: File removed.
+	* sysdeps/stub/fxstat.c: New file.
+	* sysdeps/stub/lstat.c: File removed.
+	* sysdeps/stub/lxstat.c: New file.
+	* sysdeps/stub/mknod.c: File removed.
+	* sysdeps/stub/stat.c: File removed.
+	* sysdeps/stub/xmknod.c: New file.
+	* sysdeps/stub/xstat.c: New file.
+	* sysdeps/unix/common/lstat.S: File removed.
+	* sysdeps/unix/common/lxstat.c: New file.
+	* sysdeps/unix/fstat.S: File removed.
+	* sysdeps/unix/fxstat.c: New file.
+	* sysdeps/unix/mknod.S: File removed.
+	* sysdeps/unix/stat.S: File removed.
+	* sysdeps/unix/sysv/linux/fstat.c: File removed.
+	* sysdeps/unix/sysv/linux/i386/fxstat.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/lxstat.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/xmknod.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/xstat.S: File removed.
+	* sysdeps/unix/sysv/linux/lstat.c: File removed.
+	* sysdeps/unix/sysv/linux/mknod.c: File removed.
+	* sysdeps/unix/sysv/linux/stat.c: File removed.
+	* sysdeps/unix/sysv/sysv4/i386/fstat.S: File removed.
+	* sysdeps/unix/sysv/sysv4/i386/lstat.S: File removed.
+	* sysdeps/unix/sysv/sysv4/i386/mknod.S: File removed.
+	* sysdeps/unix/sysv/sysv4/i386/stat.S: File removed.
+	* sysdeps/unix/xmknod.c: New file.
+	* sysdeps/unix/xstat.c: New file.
+	* sysdeps/unix/mkfifo.c: Use __xmknod instead of __mknod.
+	* misc/Makefile (routines): Remove mknod.
+
+	* sysdeps/ieee754/ieee754.h (union ieee854_long_double.ieee_nan):
+	Add missing ; in little-endian case.
+
 	* elf/dynamic-link.h [ELF_MACHINE_NO_REL] (ELF_DYNAMIC_DO_REL):
 	Define this instead of ELF_DYNAMIC_DO_RELA.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +16,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <stddef.h>
 #include <sys/stat.h>
 
-/* Get file information about FILE in BUF.
-   If FILE is a symbolic link, do not follow it.  */
+/* This definition is only used if inlining fails for this function; see
+   the last page of <sys/stat.h>.  The real work is done by the `x'
+   function which is passed a version number argument.  We arrange in the
+   makefile that when not inlined this function is always statically
+   linked; that way a dynamically-linked executable always encodes the
+   version number corresponding to the data structures it uses, so the `x'
+   functions in the shared library can adapt without needing to recompile
+   all callers.  */
+
 int
-DEFUN(__lstat, (file, buf), CONST char *file AND struct stat *buf)
+__stat (const char *file, struct stat *buf)
 {
-  if (file == NULL || buf == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  errno = ENOSYS;
-  return -1;
+  return __xstat (_STAT_VER, file, buf);
 }
-stub_warning (lstat)
 
-weak_alias (__lstat, lstat)
+weak_alias (__stat, stat)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,33 +16,12 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
-#include <errnos.h>
+#include <sys/stat.h>
 
-	.text
-	SYSCALL_ERROR_HANDLER	/* Error handler for PIC.  */
-ENTRY (__xstat)
-	popl %ecx		/* Pop return address into %eax.  */
-	popl %edx		/* Pop version number into %edx.  */
-	pushl %ecx		/* Push back the return address.  */
+int
+__lxstat (int version, const char *file, struct stat *buf)
+{
+  return __xstat (version, file, buf);
+}
 
-	cmpl $1, %edx		/* Version 1 xstat call?  */
-	je .L1			/* Yes, do syscall.  */
-
-	movl $-EINVAL, %eax	/* Load error code into %eax.  */
-	jmp .L2
-
-.L1:	DO_CALL (2, stat)	/* Do the syscall.   */
-
-	movl (%esp), %ecx
-	testl %eax, %eax	/* Check for error.  */
-	jl .L2
-
-	jmp *%ecx		/* Return success.  */
-
-.L2:	pushl %ecx
-	jmp syscall_error
-				/* Yes, then branch to error handling.  */
-
-/* For compatibility with Linux libc.  */
-weak_alias (__xstat, _xstat)
+weak_alias (__lxstat, _lxstat)

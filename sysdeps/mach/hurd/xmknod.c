@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <hurd.h>
@@ -34,8 +33,7 @@ Cambridge, MA 02139, USA.  */
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
 int
-DEFUN(__mknod, (file_name, mode, dev),
-      CONST char *file_name AND mode_t mode AND dev_t dev)
+__xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
 {
   error_t err;
   file_t dir, node;
@@ -43,6 +41,9 @@ DEFUN(__mknod, (file_name, mode, dev),
   char buf[100], *bp;
   const char *translator;
   size_t len;
+
+  if (vers != _MKNOD_VER)
+    return __hurd_fail (EINVAL);
 
   if (S_ISCHR (mode))
     {
@@ -64,7 +65,7 @@ DEFUN(__mknod, (file_name, mode, dev),
       errno = EINVAL;
       return -1;
     }
-  
+
   if (! S_ISFIFO (mode))
     {
       /* We set the translator to "ifmt\0major\0minor\0", where IFMT
@@ -76,14 +77,14 @@ DEFUN(__mknod, (file_name, mode, dev),
 
       bp = buf + sizeof (buf);
       *--bp = '\0';
-      bp = _itoa (minor (dev), bp, 10, 0);
+      bp = _itoa (minor (*dev), bp, 10, 0);
       *--bp = '\0';
-      bp = _itoa (major (dev), bp, 10, 0);
+      bp = _itoa (major (*dev), bp, 10, 0);
       memcpy (bp - len, translator, len);
       translator = bp - len;
       len = buf + sizeof (buf) - translator;
     }
-  
+
   dir = __file_name_split (file_name, &name);
   if (dir == MACH_PORT_NULL)
     return -1;
@@ -93,7 +94,7 @@ DEFUN(__mknod, (file_name, mode, dev),
 
   if (! err)
     /* Set the node's translator to make it a device.  */
-    err = __file_set_translator (node, 
+    err = __file_set_translator (node,
 				 FS_TRANS_EXCL | FS_TRANS_SET,
 				 FS_TRANS_EXCL | FS_TRANS_SET, 0,
 				 translator, len,

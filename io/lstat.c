@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#include <sys/stat.h>
 
-/* In SVR4 the `stat' call is actually done by the `xstat' system call,
-   which takes an additional first argument giving a version number for
-   `struct stat'.  Likewise for `fstat' and `lstat' there are `fxstat' and
-   `lxstat' system calls.  This macro gives the SVR4 version number that
-   corresponds to the definition of `struct stat' in <statbuf.h>.  */
-#define	_STAT_VER	2
+/* This definition is only used if inlining fails for this function; see
+   the last page of <sys/stat.h>.  The real work is done by the `x'
+   function which is passed a version number argument.  We arrange in the
+   makefile that when not inlined this function is always statically
+   linked; that way a dynamically-linked executable always encodes the
+   version number corresponding to the data structures it uses, so the `x'
+   functions in the shared library can adapt without needing to recompile
+   all callers.  */
 
-.globl syscall_error
-ENTRY (__lstat)
-	popl %eax		/* Pop return address into %eax.  */
-	pushl $_STAT_VER	/* Push extra first arg to syscall.  */
-	pushl %eax		/* Push back the return address.  */
-	DO_CALL (lxstat, 3)	/* Do the syscall.   */
-	jb syscall_error	/* Check for error.  */
-	ret			/* Return success.  */
+int
+__lstat (const char *file, struct stat *buf)
+{
+  return __lxstat (_STAT_VER, file, buf);
+}
 
 weak_alias (__lstat, lstat)

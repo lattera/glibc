@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,9 +16,25 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#include <errno.h>
+#include <stddef.h>
+#include <sys/stat.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
-SYSCALL__ (lstat, 2)
-	ret
+/* Get information about the file descriptor FD in BUF.  */
+int
+__fxstat (int vers, int fd, struct stat *buf)
+{
+  error_t err;
 
-weak_alias (__lstat, lstat)
+  if (vers != _STAT_VER)
+    return __hurd_fail (EINVAL);
+
+  if (err = HURD_DPORT_USE (fd, __io_stat (port, buf)))
+    return __hurd_dfail (fd, err);
+
+  return 0;
+}
+
+weak_alias (__fxstat, _fxstat)
