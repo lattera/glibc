@@ -95,12 +95,14 @@ __STRING2_COPY_TYPE (8);
 #ifndef _HAVE_STRING_ARCH_memset
 # define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
-		  ? (__builtin_constant_p (c)				      \
-		     ? __memset_gc (s, (c) * 0x01010101, n)		      \
-		     : __memset_gc (s, (n) == 1 ? (c) : (c) * 0x01010101, n)) \
+		  ? ((n) == 1						      \
+		     ? __memset_1 (s, c)				      \
+		     : __memset_gc (s, (((__uint8_t) c) * 0x1010101), n))     \
 		  : (__builtin_constant_p (c) && (c) == '\0'		      \
 		     ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
 		     : memset (s, c, n))))
+
+#define __memset_1(s, c) ({ void *__s = (s); *((__uint8_t *) __s) = c; __s; })
 
 #define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
@@ -153,6 +155,11 @@ __STRING2_COPY_TYPE (8);
        }								      \
 									      \
      __s; })
+/* GCC optimizes memset(s, 0, n) but not bzero(s, n).  */
+#if defined __GNUC__ && __GNUC__ >= 2
+# define __bzero(s, n) __builtin_memset(s, '\0', n)
+#endif
+
 #endif
 
 

@@ -1,3 +1,10 @@
+1999-04-30 09:02 -0400  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* string/bits/string2.h (memset): Avoid arithmetic overflow at
+	compile time, which produces obnoxious warnings.  If GCCv2 is
+	in use, map __bzero to __builtin_memset to enable that
+	optimization.
+
 1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* string/bits/string2.h: Add more memset optimizations.
