@@ -1261,6 +1261,13 @@
 	* sysdeps/generic/statvfs64.c: Likewise.
 	* sysdeps/unix/sysv/linux/statvfs64.c: Likewise.
 
+1998-12-25  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* crypt/sysdeps/unix/ufc-crypt.h: Use <stdint.h>.
+
+	* crypt/configure: Delete the code dealing with building the add-on
+	outside glibc, as this doesn't work.
+
 1998-12-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-hash.h: Move to...
@@ -1680,6 +1687,24 @@
 
 	* po/es.po: Update from translation team.
 	* po/fr.po: Likewise.
+
+1998-12-10  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* crypt/sysdeps/unix/crypt-entry.c: Don't include "patchlevel.h".
+
+	* crypt/sysdeps/unix/crypt.h: Move __crypt_r, __setkey_r,
+	__encrypt_r to...
+	* crypt/sysdeps/unix/crypt-private.h: ...here.
+
+	* crypt/sysdeps/unix/crypt.h: Add __restrict to the structure
+	parameters.
+	* crypt/sysdeps/unix/crypt-private.h: Likewise.  Also add const to
+	first parameter of _ufc_mk_keytab_r.
+	* crypt/sysdeps/unix/crypt.c: Update prototypes. 
+	* crypt/sysdeps/unix/crypt-entry.c: Likewise.
+	* crypt/sysdeps/unix/crypt_util.c: Likewise.
+
+	* crypt/sysdeps/unix/crypt-entry.c (crypt): Use __crypt_r not crypt_r.
 
 1998-12-10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 

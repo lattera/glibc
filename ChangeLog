@@ -1,5 +1,12 @@
 2000-04-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/wcrtomb.c (__wcrtomb): Set end of buffer correctly if s
+	== NULL.  Little optimization.
+
+	* elf/dl-init.c (_dl_init): Correct typo (DT_PREINIT_ARRAY not
+	DT_PREINIT_ARRAYSZ).
+	Reported by Jes Sorensen <Jes.Sorensen@cern.ch>.
+
 	* hesiod/nss_hesiod/hesiod-grp.c (_nss_hesiod_initgroups): Handle
 	overflows in conversion from ASCII.
 

@@ -32,7 +32,7 @@ void
 internal_function
 _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 {
-  ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAYSZ];
+  ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAY];
   struct r_debug *r;
   unsigned int i;
 

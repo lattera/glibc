@@ -43,9 +43,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   size_t result;
   size_t dummy;
 
-  /* Tell where we want the result.  */
-  data.__outbuf = s;
-  data.__outbufend = s + MB_CUR_MAX;
+  /* Set information for this step.  */
   data.__invocation_counter = 0;
   data.__internal_use = 1;
   data.__is_last = 1;
@@ -55,11 +53,15 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
      initial state.  */
   if (s == NULL)
     {
-      data.__outbuf = buf;
+      s = buf;
       wc = L'\0';
       temp_state = *data.__statep;
       data.__statep = &temp_state;
     }
+
+  /* Tell where we want to have the result.  */
+  data.__outbuf = s;
+  data.__outbufend = s + MB_CUR_MAX;
 
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
@@ -98,7 +100,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
       || status == __GCONV_FULL_OUTPUT)
-    result = data.__outbuf - (unsigned char *) (s ?: buf);
+    result = data.__outbuf - (unsigned char *) s;
   else
     {
       result = (size_t) -1;
