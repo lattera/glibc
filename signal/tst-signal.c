@@ -6,8 +6,7 @@
 int win = 0;
 
 void
-handler (sig)
-     int sig;
+handler (int sig)
 {
   printf ("Received signal %d (%s).\n", sig, strsignal(sig));
   win = 1;

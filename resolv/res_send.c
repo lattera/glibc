@@ -601,6 +601,11 @@ read_len:
 			if ((long) timeout.tv_sec <= 0)
 				timeout.tv_sec = 1;
 			timeout.tv_usec = 0;
+			if (s+1 > FD_SETSIZE) {
+				Perror(stderr, "s+1 > FD_SETSIZE", EMFILE);
+				res_close();
+				goto next_ns;
+			}
     wait:
 			FD_ZERO(&dsmask);
 			FD_SET(s, &dsmask);

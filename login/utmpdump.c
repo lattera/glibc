@@ -1,6 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* utmpdump - dump utmp-like files.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,37 +18,36 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
-#include <sys/time.h>
+#include <errno.h>
+#include <error.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 #include <utmp.h>
 
-
 void
-logwtmp (const char *line, const char *name, const char *host)
+print_entry (struct utmp *up)
 {
-  struct utmp ut;
+  printf ("[%d] [%05d] [%-4.4s] [%-8.8s] [%-12.12s] [%-15.15s] [%ld]\n",
+	  up->ut_type, up->ut_pid, up->ut_id, up->ut_user,
+	  up->ut_line, 4 + ctime (&up->ut_time), up->ut_tv.tv_usec);
+}
 
-  /* Set information in new entry.  */
-  memset (&ut, 0, sizeof (ut));
-#if _HAVE_UT_PID - 0
-  ut.ut_pid = getpid ();
-#endif
-#if _HAVE_UT_TYPE - 0
-  ut.ut_type = name[0] ? USER_PROCESS : DEAD_PROCESS;
-#endif
-  strncpy (ut.ut_line, line, sizeof ut.ut_line);
-  strncpy (ut.ut_name, name, sizeof ut.ut_name);
-#if _HAVE_UT_HOST - 0
-  strncpy (ut.ut_host, host, sizeof ut.ut_host);
-#endif
+int
+main (int argc, char *argv[])
+{
+  struct utmp *up;
 
-#if _HAVE_UT_TV - 0
-  __gettimeofday (&ut.ut_tv, NULL);
-#else
-  time (&ut.ut_time);
-#endif
+  if (argc > 1)
+    utmpname (argv[1]);
+  
+  setutent ();
 
-  updwtmp (_PATH_WTMP, &ut);
+  while ((up = getutent ()))
+    print_entry (up);
+
+  endutent ();
+  
+  return EXIT_SUCCESS;
 }

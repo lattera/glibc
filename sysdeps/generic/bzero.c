@@ -22,7 +22,7 @@
 
 /* Set N bytes of S to 0.  */
 void
-bzero (s, n)
+bzero (s, len)
      void *s;
      size_t len;
 {

@@ -191,7 +191,7 @@ compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
       }
 
   /* Everything is ok.  */
-  RETURN ((char *) (__expr_ptr->buffer + __expr->used));
+  RETURN ((char *) (__expr_ptr->buffer + __expr_ptr->used));
 }
 #endif
 

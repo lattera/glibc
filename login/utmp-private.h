@@ -34,8 +34,21 @@ struct utfuncs
   int (*getutline_r) (const struct utmp *, struct utmp *, struct utmp **);
   struct utmp *(*pututline) (const struct utmp *);
   void (*endutent) (void);
-  int (*utmpname) (const char *);
-
+  int (*updwtmp) (const char *, const struct utmp *);
 };
 
+/* The tables from the services.  */
+extern struct utfuncs __libc_utmp_file_functions;
+extern struct utfuncs __libc_utmp_daemon_functions;
+extern struct utfuncs __libc_utmp_unknown_functions;
+
+/* Currently selected backend.  */
+extern struct utfuncs *__libc_utmp_jump_table;
+
+/* Current file name.  */
+extern const char *__libc_utmp_file_name;
+
 #endif /* utmp-private.h */
+
+
+

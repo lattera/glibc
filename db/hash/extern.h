@@ -52,7 +52,7 @@ void	 __free_ovflpage __P((HTAB *, BUFHEAD *));
 BUFHEAD	*__get_buf __P((HTAB *, u_int32_t, BUFHEAD *, int));
 int	 __get_page __P((HTAB *, char *, u_int32_t, int, int, int));
 int	 __ibitmap __P((HTAB *, int, int, int));
-u_int32_t	 __log2 __P((u_int32_t));
+u_int32_t	 __hash_log2 __P((u_int32_t));
 int	 __put_page __P((HTAB *, char *, u_int32_t, int, int));
 void	 __reclaim_buf __P((HTAB *, BUFHEAD *));
 int	 __split_page __P((HTAB *, u_int32_t, u_int32_t));

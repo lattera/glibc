@@ -155,6 +155,10 @@ struct svc_req {
 	SVCXPRT	*rq_xprt;		/* associated transport */
 };
 
+#ifndef __DISPATCH_FN_T
+#define __DISPATCH_FN_T                                                 
+typedef void (*__dispatch_fn_t) __P((struct svc_req*, SVCXPRT*));
+#endif                                                               
 
 /*
  * Service registration
@@ -167,8 +171,7 @@ struct svc_req {
  *	u_long protocol;  like TCP or UDP, zero means do not register
  */
 extern bool_t	svc_register __P ((SVCXPRT *__xprt, u_long __prog,
-				   u_long __vers, void (*__dispatch)
-				   __P ((struct svc_req *, SVCXPRT *)),
+				   u_long __vers, __dispatch_fn_t __dispatch,
 				   u_long __protocol));
 
 /*

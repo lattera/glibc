@@ -1,3 +1,168 @@
+1997-05-29 12:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/ftw.c: Complete rewrite.  Add implementation of `nftw'.
+	* io/ftw.h: Update for new implementation and XPG4.2.
+
+	* login/Makefile: Update for UTMP daemon implementation.
+
+	Update resolver code to bind-4.9.6-T1A.
+	* resolv/Banner: Update.
+	* nss/digits_dots.c: Adapt text address matching to T1A.
+	* nss/nss_files/files-hosts.c: Always use inet_pton.
+	* resolv/base64.c (b64_pton): Follow T1A but don't use this code since
+	it would lead to warnings.
+	* resolv/gethnamaddr.c (getanswer): Test host name for maximal length
+	at several places.
+	* resolv/inet_net_pton.c (inet_net_pton_ipv4): Correct typo in comment.
+	* resolv/res_comp.c (dn_expand): Check for overflow.
+	(dn_comp): Likewise.
+	* resolv/res_debug.c (precsize_aton): Better implementation.
+	* resolv/res_init.c (res_init): Make `buf' of size MAXDNAME.
+	* resolv/res_send.c (res_send): Check for overflow in descriptor set.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Test host name for maximal
+	length at several places.
+
+1997-05-29 12:51  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/utmp-private.h (struct utfuncs): Add one more parameter
+	to updwtmp function.
+	Declare all three function jump tables.
+	* login/utmp.h: Declare __utmpname.
+	* login/getutent_r.c: Remove db backend and provide support for
+	utmpd backend.
+	* login/login.c: Use `updwtmp' function insteead of writing the
+	record ourself.
+	* login/logwtmp.c: Move `updwtmp' function to...
+	* login/updwtmp.c: ...here.  New file.
+	* login/utmp_db.h: Removed.
+	* login/utmp_file.c: Add updwtmp function to write to file.
+	* login/utmp_daemon.c: New file.  Daemon backend.
+	* login/utmpname.c: New file.  Implementation of utmpname function.
+	* login/utmpdump.c: New file.  Tool to dump utmp-like files.
+	* login/utmpd/connection.c: New file.
+	* login/utmpd/database.c: New file.
+	* login/utmpd/error.c: New file.
+	* login/utmpd/request.c: New file.
+	* login/utmpd/utmpd-private.h: New file.
+	* login/utmpd/utmpd.c: New file.
+	* login/utmpd/utmpd.h: New file.
+	* login/utmpd/xtmp.c: New file.
+	* login/utmpd/xtmp.h: New file.
+
+1997-05-29 12:28  Jim Meyering  <meyering@eng.ascend.com>
+
+	* time/strftime.c: Correct/normalize indentation in cpp directives.
+
+1997-05-28 20:43  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* nis/nis_error.c: Include <string.h> to fix warning.
+	* nis/nis_print.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Arg 3 of map_v4v6_hostent
+	is int* not size_t*.
+
+1997-05-28 21:56  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/cmathcalls.h: Correct typo in comment.
+
+	* inet/netinet/icmp6.h: Include <netinet/in.h> for in6_addr.
+
+	* sysdeps/unix/sysv/linux/netinet/ip_fw.h: Include <net/if.h> for
+	IFNAMSIZ.
+
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h: Include <time.h> for
+	time_t.
+
+	* login/pty.h: Include <ioctl-types.h> for definition of struct
+	winsize.
+
+	* misc/regexp.h (compile): Correct typo.
+
+	* argp/argp.h: Put extern before __const in defintion of
+	argp_program_bug_address.
+
+1997-05-29 00:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/wordsize-32/inttypes.h: Correct names of unsigned fast
+	and least types.  Correct names of ?INT_FAST*_{MIN,MAX} macros.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	Reported by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+1997-05-28 22:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/Makefile (make-ioctls-CFLAGS): Use generic
+	ttydefaults.h file instead of non-existing version in termios/sys.
+	Reported by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+	* time/strptime.c (strptime_internal, case 'Y'): Restrict year
+	number to four digits and to representable range for 4 byte time_t
+	values.
+	Patch by H.J. Lu <hjl@lucon.org>.
+
+1997-05-28 18:19  Philip Blundell  <pjb27@cam.ac.uk>
+
+	* posix/execl.c: Include <alloca.h> to avoid warning.
+
+1997-05-27 18:19  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c: Implement testing of inlined functions, make
+	output nicer, update comments.
+
+	* math/test-idouble.c: New file.  Frontend for double tests of
+	inlined functions.
+	* math/test-ildoubl.c: New file.  Frontend for long double tests of
+	inlined functions.
+	* math/test-ifloat.c: New file.  Frontend for float tests of
+	inlined functions.
+
+	* math/test-longdouble.c: Rename to...
+	* math/test-ldouble.c: ...this.
+
+	* math/Makefile: Add rules for new test programs, change rules for
+	renaming of longdouble test.
+
+1997-05-20 15:50  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sunrpc/rpc/svc.h (__dispatch_fn_t): New.
+	(svc_register): Use __dispatch_fn_t in prototype.
+
+1997-05-28 17:02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/bzero.c (bzero): Fix typo.
+	Patch by Witek Wnuk <spider@pest.waw.ids.edu.pl>.
+
+1997-05-27 12:00  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/vtimes.c: Use ISO C declaration style.
+
+	* sysdeps/unix/bsd/ualarm.c: Include <unistd.h> for prototype.
+
+	* sysdeps/generic/memccpy.c: Include <string.h> for prototype.
+
+	* signal/tst-signal.c (handler): Correct function declaration to
+	avoid warning.
+	* stdlib/testsort.c (compare): Likewise.
+	* string/tester.c: Likewise.
+
+1997-05-27 14:16  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* argp-help.c (argp_args_usage): Supply correct argp to filter_doc.
+
+1997-05-27 17:51  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* db/hash/extern.h, db/hash/hash.c, db/hash/hash.h,
+	db/hash/hash_log2.c: Rename __log2 to __hash_log2 to avoid clash
+	with libm.
+
+1997-05-27 14:47  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/e_atan2.c: Fix missing negate.  Use __m81_test
+	instead of explicit comparisons.
+
+1997-05-26 18:36  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* inet/netinet/icmp6.h: Remove use of <asm/bitops.h> which has no
+	place in a generic header and is no user include file.
+
 1997-05-27 02:20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio/obstream.c (obstack_printf): Fix bug in

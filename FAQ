@@ -432,7 +432,7 @@ ship the cryptographic function together with the libc.
 But of course we provide the code and there is an very easy way to use
 this code.  First get the extra package.  People in the US way get it
 from the same place they got the GNU libc from.  People outside the US
-should get the code from ftp.uni-c.dk [129.142.6.74], or another
+should get the code from ftp://ftp.ifi.uio.no/pub/gnu, or another
 archive site outside the USA.  The README explains how to install the
 sources.
 

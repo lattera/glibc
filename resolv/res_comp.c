@@ -94,7 +94,7 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 	register char *dn;
 	register int n, c;
 	char *eom;
-	int len = -1, checked = 0;
+	int len = -1, checked = 0, octets = 0;
 
 	dn = exp_dn;
 	cp = comp_dn;
@@ -108,6 +108,9 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 		 */
 		switch (n & INDIR_MASK) {
 		case 0:
+			octets += (n + 1);
+			if (octets > MAXCDNAME)
+				return (-1);
 			if (dn != exp_dn) {
 				if (dn >= eom)
 					return (-1);
@@ -179,6 +182,8 @@ dn_comp(exp_dn, comp_dn, length, dnptrs, lastdnptr)
 
 	dn = (u_char *)exp_dn;
 	cp = comp_dn;
+	if (length > MAXCDNAME)
+		length = MAXCDNAME;
 	eob = cp + length;
 	lpp = cpp = NULL;
 	if (dnptrs != NULL) {

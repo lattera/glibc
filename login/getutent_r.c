@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -19,49 +19,48 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <assert.h>
-#include <db.h>
-#include <fcntl.h>
+#if _LIBC
 #include <libc-lock.h>
-#include <limits.h>
+#else
+#define __libc_lock_lock(lock)		((void) 0)
+#define __libc_lock_unlock(lock)	((void) 0)
+#define __libc_lock_define_initialized(CLASS,NAME)
+#define weak_alias(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))); 
+#endif
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <utmp.h>
-#include <sys/stat.h>
 
 #include "utmp-private.h"
 
 
 /* The various backends we have.  */
-static int __setutent_unknown (int reset);
-static int __getutent_r_unknown (struct utmp *buffer, struct utmp **result);
-static struct utmp *__pututline_unknown (const struct utmp *data);
-static void __endutent_unknown (void);
+static int setutent_unknown (int reset);
+static int getutent_r_unknown (struct utmp *buffer, struct utmp **result);
+static struct utmp *pututline_unknown (const struct utmp *data);
+static void endutent_unknown (void);
 
-
-/* We have three jump tables: unknown, db, or file.  */
-static struct utfuncs unknown_functions =
+/* Initial Jump table.  */
+struct utfuncs __libc_utmp_unknown_functions =
 {
-  __setutent_unknown,
-  __getutent_r_unknown,
+  setutent_unknown,
+  getutent_r_unknown,
   NULL,
   NULL,
-  __pututline_unknown,
-  __endutent_unknown,
+  pututline_unknown,
+  endutent_unknown,
   NULL
 };
 
 /* Currently selected backend.  */
-struct utfuncs *__libc_utmp_jump_table = &unknown_functions;
-
-/* The tables from the services.  */
-extern struct utfuncs __libc_utmp_db_functions;
-extern struct utfuncs __libc_utmp_file_functions;
-
+struct utfuncs *__libc_utmp_jump_table = &__libc_utmp_unknown_functions;
 
 /* We need to protect the opening of the file.  */
 __libc_lock_define_initialized (, __libc_utmp_lock)
 
+     
 void
 __setutent (void)
 {
@@ -75,22 +74,31 @@ weak_alias (__setutent, setutent)
 
 
 static int
-__setutent_unknown (int reset)
+setutent_unknown (int reset)
 {
   /* We have to test whether it is still not decided which backend to use.  */
-  assert (__libc_utmp_jump_table == &unknown_functions);
+  assert (__libc_utmp_jump_table == &__libc_utmp_unknown_functions);
 
-  /* See whether utmp db file exists.  */
-  if ((*__libc_utmp_db_functions.setutent) (reset))
-    __libc_utmp_jump_table = &__libc_utmp_db_functions;
+  /* See whether utmpd is running.  */
+  if ((*__libc_utmp_daemon_functions.setutent) (reset))
+    __libc_utmp_jump_table = &__libc_utmp_daemon_functions;
   else
     {
-      /* Either the db file does not exist or we have other
-	 problems.  So use the normal file.  */
+      /* Use the normal file, but if the current file is _PATH_UTMP or
+         _PATH_WTMP and the corresponding extended file (with an extra
+         'x' added to the pathname) exists, we use the extended file,
+         because the original file is in a different format.  */
+      if (strcmp (__libc_utmp_file_name, _PATH_UTMP) == 0
+	  && __access (_PATH_UTMP "x", F_OK) == 0)
+	__utmpname (_PATH_UTMP "x");
+      else if (strcmp (__libc_utmp_file_name, _PATH_WTMP) == 0
+	       && __access (_PATH_WTMP "x", F_OK) == 0)
+	__utmpname (_PATH_WTMP "x");
+
       (*__libc_utmp_file_functions.setutent) (reset);
       __libc_utmp_jump_table = &__libc_utmp_file_functions;
     }
-
+  
   return 0;
 }
 
@@ -108,7 +116,7 @@ weak_alias (__endutent, endutent)
 
 
 static void
-__endutent_unknown (void)
+endutent_unknown (void)
 {
   /* Huh, how do we came here?  Nothing to do.  */
 }
@@ -131,10 +139,10 @@ weak_alias (__getutent_r, getutent_r)
 
 
 static int
-__getutent_r_unknown (struct utmp *buffer, struct utmp **result)
+getutent_r_unknown (struct utmp *buffer, struct utmp **result)
 {
   /* It is not yet initialized.  */
-  __setutent_unknown (0);
+  setutent_unknown (0);
 
   return (*__libc_utmp_jump_table->getutent_r) (buffer, result);
 }
@@ -157,43 +165,10 @@ weak_alias (__pututline, pututline)
 
 
 static struct utmp *
-__pututline_unknown (const struct utmp *data)
+pututline_unknown (const struct utmp *data)
 {
   /* It is not yet initialized.  */
-  __setutent_unknown (0);
+  setutent_unknown (0);
 
   return (*__libc_utmp_jump_table->pututline) (data);
 }
-
-
-int
-__utmpname (const char *file)
-{
-  int result = -1;
-
-  __libc_lock_lock (__libc_utmp_lock);
-
-  /* Close the old file.  */
-  (*__libc_utmp_jump_table->endutent) ();
-
-  /* Store new names.  */
-  if ((*__libc_utmp_file_functions.utmpname) (file) == 0
-      && !(*__libc_utmp_db_functions.utmpname) (file) == 0)
-    {
-      /* Try to find out whether we are supposed to work with a db
-	 file or not.  Do this by looking for the extension ".db".  */
-      const char *ext = strrchr (file, '.');
-
-      if (ext != NULL && strcmp (ext, ".db") == 0)
-	__libc_utmp_jump_table = &__libc_utmp_db_functions;
-      else
-	__libc_utmp_jump_table = &unknown_functions;
-
-      result = 0;
-    }
-
-  __libc_lock_unlock (__libc_utmp_lock);
-
-  return result;
-}
-weak_alias (__utmpname, utmpname)

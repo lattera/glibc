@@ -18,6 +18,8 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <time.h>
+#include <string.h>
+
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 

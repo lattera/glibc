@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>	/* For size_t and NULL.	*/
+#include <string.h>
 
 /*
  * Copy no more than N bytes of SRC to DEST, stopping when C is found.

@@ -281,7 +281,12 @@ b64_pton(src, target, targsize)
 
 		case 2:		/* Valid, means one byte of info */
 			/* Skip any number of spaces. */
+#ifdef _LIBC
+			/* To avoid warnings.  */
 			for ( ; ch != '\0'; ch = *src++)
+#else
+			for (NULL; ch != '\0'; ch = *src++)
+#endif
 				if (!isspace(ch))
 					break;
 			/* Make sure there is another trailing = sign. */
@@ -296,7 +301,12 @@ b64_pton(src, target, targsize)
 			 * We know this char is an =.  Is there anything but
 			 * whitespace after it?
 			 */
+#ifdef _LIBC
+			/* To avoid warnings.  */
 			for ( ; ch != '\0'; ch = *src++)
+#else
+			for (NULL; ch != '\0'; ch = *src++)
+#endif
 				if (!isspace(ch))
 					return (-1);
 

@@ -20,8 +20,7 @@ size_t errors = 0;
 
 /* Complain if condition is not true.  */
 void
-check (thing, number)
-     int thing, number;
+check (int thing, int number)
 {
   if (!thing)
     {
@@ -40,9 +39,7 @@ char one[50];
 char two[50];
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (void)
 {
   char *cp;
 

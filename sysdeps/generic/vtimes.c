@@ -29,9 +29,7 @@
 /* If VT is not NULL, write statistics for WHO into *VT.
    Return 0 for success, -1 for failure.  */
 static int
-vtimes_one (vt, who)
-     struct vtimes *vt;
-     enum __rusage_who who;
+vtimes_one (struct vtimes *vt, enum __rusage_who who)
 {
   if (vt != NULL)
     {

@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* NOTE: Because of the special way this file is used by <math.h>, this
+/* NOTE: Because of the special way this file is used by <complex.h>, this
    file must NOT be protected from multiple inclusion as header files
    usually are.
 

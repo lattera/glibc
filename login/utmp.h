@@ -49,21 +49,22 @@ extern void login __P ((__const struct utmp *__entry));
 /* Write the utmp entry to say the user on UT_LINE has logged out.  */
 extern int logout __P ((__const char *__ut_line));
 
-/* Append the given entry to a wtmp file.  */
-extern void updwtmp __P ((__const char *__wtmp_file,
-			  __const struct utmp *__entry));
-
 /* Append to wtmp an entry for the current time and the given info.  */
 extern void logwtmp __P ((__const char *__ut_line, __const char *__ut_name,
 			  __const char *__ut_host));
 
+/* Append entry UTMP to the wtmp-like file WTMP_FILE.  */
+extern void updwtmp __P ((__const char *__wtmp_file,
+			  __const struct utmp *__utmp));
+
 /* Change name of the utmp file to be examined.  */
+extern int __utmpname __P ((__const char *__file));
 extern int utmpname __P ((__const char *__file));
 
 /* Read next entry from a utmp-like file.  */
 extern struct utmp *getutent __P ((void));
 
-/* Rest the input stream to the beginning of the file.  */
+/* Reset the input stream to the beginning of the file.  */
 extern void __setutent __P ((void));
 extern void setutent __P ((void));
 

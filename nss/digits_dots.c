@@ -159,7 +159,8 @@
 	    }
 	}
 
-      if (isxdigit (name[0]) || name[0] == ':')
+      if ((isxdigit (name[0]) && strchr (name, ':') != NULL)
+	  || name[0] == ':')
 	{
 	  const char *cp;
 	  char *hostname;
@@ -237,8 +238,6 @@
 	      if (!*cp)
 		{
 		  if (*--cp == '.')
-		    break;
-		  if (!strchr (name, ':'))
 		    break;
 
 		  /* All-IPv6-legal, no dot at the end. Fake up a

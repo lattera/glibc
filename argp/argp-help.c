@@ -1315,8 +1315,7 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
   int multiple = 0;
   const struct argp_child *child = argp->children;
   const char *tdoc = gettext (argp->args_doc), *nl = 0;
-  const char *fdoc = filter_doc (tdoc, ARGP_KEY_HELP_ARGS_DOC,
-				 state ? state->root_argp : 0, state);
+  const char *fdoc = filter_doc (tdoc, ARGP_KEY_HELP_ARGS_DOC, argp, state);
 
   if (fdoc)
     {

@@ -342,6 +342,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
        * (i.e., with the succeeding search-domain tacked on).
        */
       n = strlen (bp) + 1;             /* for the \0 */
+      if (n >= MAXHOSTNAMELEN)
+	{
+	  __set_h_errno (NO_RECOVERY);
+	  return NSS_STATUS_TRYAGAIN;
+	}
       result->h_name = bp;
       bp += n;
       linebuflen -= n;
@@ -396,11 +401,16 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  /* Store alias.  */
 	  *ap++ = bp;
 	  n = strlen (bp) + 1;		/* For the \0.  */
+	  if (n >= MAXHOSTNAMELEN)
+	    {
+	      ++had_error;
+	      continue;
+	    }
 	  bp += n;
 	  linebuflen -= n;
 	  /* Get canonical name.  */
 	  n = strlen (tbuf) + 1;	/* For the \0.  */
-	  if ((size_t) n > buflen)
+	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -423,7 +433,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  cp += n;
 	  /* Get canonical name. */
 	  n = strlen (tbuf) + 1;   /* For the \0.  */
-	  if ((size_t) n > buflen)
+	  if ((size_t) n > buflen || n >= MAXHOSTNAMELEN)
 	    {
 	      ++had_error;
 	      continue;
@@ -469,6 +479,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (n != -1)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
+	      if (n >= MAXHOSTNAMELEN)
+		{
+		  ++had_error;
+		  break;
+		}
 	      bp += n;
 	      linebuflen -= n;
 	    }
@@ -478,6 +493,11 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  if (_res.options & RES_USE_INET6)
 	    {
 	      n = strlen (bp) + 1;	/* for the \0 */
+	      if (n >= MAXHOSTNAMELEN)
+		{
+		  ++had_error;
+		  break;
+		}
 	      bp += n;
 	      linebuflen -= n;
 	      map_v4v6_hostent (result, &bp, &linebuflen);
@@ -549,8 +569,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (result->h_name == NULL)
 	{
 	  n = strlen (qname) + 1;	/* For the \0.  */
-	  if (n > linebuflen)
-	    goto try_again;
+	  if (n > linebuflen || n >= MAXHOSTNAMELEN)
+	    goto no_recovery;
 	  strcpy (bp, qname);		/* Cannot overflow.  */
 	  result->h_name = bp;
 	  bp += n;
@@ -562,7 +582,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       *h_errnop = NETDB_SUCCESS;
       return NSS_STATUS_SUCCESS;
     }
-try_again:
-  *h_errnop = TRY_AGAIN;
+ no_recovery:
+  *h_errnop = NO_RECOVERY;
   return NSS_STATUS_TRYAGAIN;
 }

@@ -23,7 +23,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <utmp.h>
-
+
+#ifndef _LIBC
+#define __set_errno(val) errno = (val)
+#endif
+
 /* Return the result of ttyname in the buffer pointed to by TTY, which should
    be of length BUF_LEN.  If it is too long to fit in this buffer, a
    sufficiently long buffer is allocated using malloc, and returned in TTY.
@@ -135,20 +139,5 @@ login (const struct utmp *ut)
     }
 
   /* Update the WTMP file.  Here we have to add a new entry.  */
-  if (utmpname (_PATH_WTMP) != 0)
-    {
-      struct utmp *up;
-
-      /* Open the WTMP file.  */
-      setutent ();
-
-      /* Position at end of file.  */
-      while (! getutent_r (&utbuf, &up));
-
-      /* Write the new entry.  */
-      pututline (&copy);
-
-      /* Close WTMP file.  */
-      endutent ();
-    }
+  updwtmp (_PATH_WTMP, &copy);
 }

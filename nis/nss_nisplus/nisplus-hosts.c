@@ -101,8 +101,9 @@ LINE_PARSER
    /* If we need the host entry in IPv6 form change it now.  */
    if (_res.options & RES_USE_INET6)
      {
-        char *bufptr = data->linebuffer;
-       size_t buflen = (char *) data + datalen - bufptr;
+       char *bufptr = data->linebuffer;
+       /* This should be size_t */
+       int buflen = (char *) data + datalen - bufptr;
        map_v4v6_hostent (result, &bufptr, &buflen);
      }
 

@@ -31,18 +31,18 @@
 
 #include "utmp-private.h"
 
+#ifndef _LIBC
+#define _(msg) (msg)
+#define __set_errno(val) errno = (val)
+#endif
 
-/* This is the default name.  */
-static const char default_file_name[] = _PATH_UTMP;
-
-/* Current file name.  */
-static const char *file_name = (const char *) default_file_name;
 
 /* Descriptor for the file and position.  */
 static int file_fd = INT_MIN;
 static off_t file_offset;
 
 static struct utmp last_entry;
+
 
 /* Functions defined here.  */
 static int setutent_file (int reset);
@@ -53,8 +53,7 @@ static int getutline_r_file (const struct utmp *key, struct utmp *buffer,
 			     struct utmp **result);
 static struct utmp *pututline_file (const struct utmp *data);
 static void endutent_file (void);
-static int utmpname_file (const char *name);
-
+static int updwtmp_file (const char *file, const struct utmp *utmp);
 
 /* Jump table for file functions.  */
 struct utfuncs __libc_utmp_file_functions =
@@ -65,7 +64,7 @@ struct utfuncs __libc_utmp_file_functions =
   getutline_r_file,
   pututline_file,
   endutent_file,
-  utmpname_file
+  updwtmp_file
 };
 
 
@@ -74,11 +73,11 @@ setutent_file (int reset)
 {
   if (file_fd == INT_MIN)
     {
-      file_fd = open (file_name, O_RDWR);
+      file_fd = open (__libc_utmp_file_name, O_RDWR);
       if (file_fd == -1)
 	{
 	  /* Hhm, read-write access did not work.  Try read-only.  */
-	  file_fd = open (file_name, O_RDONLY);
+	  file_fd = open (__libc_utmp_file_name, O_RDONLY);
 	  if (file_fd == -1)
 	    {
 	      perror (_("while opening UTMP file"));
@@ -231,9 +230,7 @@ proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
      &&
 #endif
 #if _HAVE_UT_ID - 0
-     (entry->ut_id[0] && match->ut_id[0]
-      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
-      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0)
+     strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
 #else
      strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
 #endif
@@ -404,29 +401,50 @@ pututline_file (const struct utmp *data)
 
 
 static int
-utmpname_file (const char *name)
+updwtmp_file (const char *file, const struct utmp *utmp)
 {
-  if (strcmp (name, file_name) != 0)
+  int result = -1;
+  struct stat st;
+  ssize_t nbytes;
+  int fd;
+  
+  /* Open WTMP file.  */
+  fd = __open (file, O_WRONLY | O_APPEND);
+  if (fd < 0)
+    return -1;
+
+  /* Try to lock the file.  */
+  if (__flock (fd, LOCK_EX | LOCK_NB) < 0 && errno != ENOSYS)
     {
-      if (strcmp (name, default_file_name) == 0)
-	{
-	  if (file_name != default_file_name)
-	    free ((char *) file_name);
+      /* Oh, oh.  The file is already locked.  Wait a bit and try again.  */
+      sleep (1);
 
-	  file_name = default_file_name;
-	}
-      else
-	{
-	  char *new_name = __strdup (name);
-	  if (new_name == NULL)
-	    /* Out of memory.  */
-	    return -1;
-
-	  if (file_name != default_file_name)
-	    free ((char *) file_name);
-
-	  file_name = new_name;
-	}
+      /*  This time we ignore the error.  */
+      __flock (fd, LOCK_EX | LOCK_NB);
     }
-  return 0;
+
+  /* Remember original size of log file.  */
+  if (__fstat (fd, &st) < 0)
+    goto fail;
+
+  /* Write the entry.  If we can't write all the bytes, reset the file
+     size back to the original size.  That way, no partial entries
+     will remain.  */
+  nbytes = __write (fd, utmp, sizeof (struct utmp));
+  if (nbytes != sizeof (struct utmp))
+    {
+      ftruncate (fd, st.st_size);
+      goto fail;
+    }
+
+  result = 0;
+  
+fail:
+  /* And unlock the file.  */
+  __flock (fd, LOCK_UN);
+
+  /* Close WTMP file.  */
+  __close (fd);
+
+  return result;
 }

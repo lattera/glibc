@@ -170,7 +170,7 @@ typedef struct htab	 {		/* Memory resident data structure */
 #define	OADDR_OF(S,O)	((u_int32_t)((u_int32_t)(S) << SPLITSHIFT) + (O))
 
 #define BUCKET_TO_PAGE(B) \
-	(B) + hashp->HDRPAGES + ((B) ? hashp->SPARES[__log2((B)+1)-1] : 0)
+	(B) + hashp->HDRPAGES + ((B) ? hashp->SPARES[__hash_log2((B)+1)-1] : 0)
 #define OADDR_TO_PAGE(B) 	\
 	BUCKET_TO_PAGE ( (1 << SPLITNUM((B))) -1 ) + OPAGENUM((B));
 

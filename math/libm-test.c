@@ -1,6 +1,6 @@
 /* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.pfalz.de>, 1997.
+   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -39,29 +39,66 @@
  */
 
 /* This program isn't finished yet.
-   It has tests for acos, acosh, asin, asinh, atan, atan2, atanh,
+   It has tests for:
+   acos, acosh, asin, asinh, atan, atan2, atanh,
    cbrt, ceil, copysign, cos, cosh, exp, exp2, expm1,
    fabs, fdim, floor, fmin, fmax, fpclassify,
    frexp, hypot, ilogb, ldexp,
    log, log10, log1p, log2, logb, modf, nextafter,
-   pow, scalb, scalbn, sin, sinh, sqrt, tan, tanh, trunc.
-   Tests for the other libm-functions will come later.
+   pow, rint, rinttol, rinttoll, round, roundtol, roundtoll,
+   scalb, scalbn, sin, sinh, sqrt, tan, tanh, trunc
+
+   and for the following complex math functions:
+   cacos, cacosh, casin, casinh, catan, catanh,
+   ccos, ccosh, cexp, clog, cpow, csin, csinh, csqrt, ctanh.
+
+   At the moment the following functions aren't tested:
+   cabs, carg, conj, cproj, cimag, creal, drem,
+   erf, erfc, gamma, lgamma,
+   j0, j1, jn, y0, y1, yn,
+   nearbyint, remainder, remquo, signbit, significant, sincos.
 
    The routines using random variables are still under construction. I don't
    like it the way it's working now and will change it.
 
-   Exception handling has not been implemented so far so don't get fooled
-   that these tests pass.
-
    Parameter handling is primitive in the moment:
-   --verbose=[0..3] for different levels of output:
+   --verbose=[0..4] for different levels of output:
    0: only error count
-   1: basic report on failed tests
+   1: basic report on failed tests (default)
    2: full report on failed tests
-   3: full report on failed and passed tests (default)
-   -v for full output (equals --verbose=3)
+   3: full report on failed and passed tests
+   4: additional report on exceptions
+   -v for full output (equals --verbose=4)
    -s,--silent outputs only the error count (equals --verbose=0)
  */
+
+/* "Philosophy":
+
+   This suite tests the correct implementation of mathematical
+   functions in libm.  Some simple, specific parameters are tested for
+   correctness. Handling of specific inputs (e.g. infinity,
+   not-a-number) is also tested. Correct handling of exceptions is
+   checked against. These implemented tests should check all cases
+   that are specified in ISO C 9X.
+
+   Inline functions: Inlining functions should give an improvement in
+   speed - but not in precission. The inlined functions return
+   reasonable values for a reasonable range of input values. The
+   result is not necessarily correct for all values and exceptions are
+   not correctly raised in all cases. Problematic input and return
+   values are infinity, not-a-number and minus zero. This suite
+   therefore does not check these specific inputs and the exception
+   handling for inlined mathematical functions - just the "reasonable"
+   values are checked.
+
+   Beware: The tests might fail for any of the following reasons:
+   - Tests are wrong
+   - Functions are wrong
+   - Floating Point Unit not working properly
+   - Compiler has errors
+
+   With e.g. gcc 2.7.2.2 the test for cexp fails because of a compiler error.
+*/
 
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
@@ -75,11 +112,8 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include <getopt.h>
 
-/* TEST_EXCEPTION: tests if an exception as occured */
-/* for the moment: does nothing */
 /* Possible exceptions */
 #define NO_EXCEPTION             0x0
 #define INVALID_EXCEPTION        0x1
@@ -167,10 +201,38 @@ random_greater (MATHTYPE min_value)
 }
 
 /* Get a random value x with x < max_value.  */
+#ifndef TEST_INLINE
 static MATHTYPE
 random_less (MATHTYPE max_value)
 {
   return random_value (-1e6, max_value);
+}
+#endif
+
+
+static void
+output_new_test (const char *test_name)
+{
+  if (verbose > 2)
+    printf ("\nTesting: %s\n", test_name);
+}
+
+
+static void
+output_pass_value (void)
+{
+  if (verbose > 2)
+    printf ("Pass: Value Ok.\n");
+}
+
+
+static void
+output_fail_value (const char * test_name)
+{
+  if (verbose > 0 && verbose < 3)
+    printf ("Fail: %s\n", test_name);
+  if (verbose >= 3)
+    printf ("Fail:\n");
 }
 
 
@@ -182,18 +244,22 @@ test_single_exception (const char *test_name,
                        fexcept_t fe_flag,
                        const char *flag_name)
 {
+#ifndef TEST_INLINE
   if (exception & exc_flag)
     {
       if (fetestexcept (fe_flag))
         {
-          if (verbose > 2)
-            printf ("Pass: %s:\nException \"%s\" set\n", test_name, flag_name);
+          if (verbose > 3)
+            printf ("Pass: Exception \"%s\" set\n", flag_name);
         }
       else
         {
-          if (verbose)
-            printf ("Fail: %s:\nException \"%s\" not set\n",
+          if (verbose && verbose < 3)
+            printf ("Fail: %s: Exception \"%s\" not set\n",
 		    test_name, flag_name);
+          if (verbose >= 3)
+            printf ("Fail:  Exception \"%s\" not set\n",
+                    flag_name);
           ++noErrors;
         }
     }
@@ -201,18 +267,22 @@ test_single_exception (const char *test_name,
     {
       if (fetestexcept (fe_flag))
         {
-          if (verbose)
-            printf ("Fail: %s:\nException \"%s\" set\n",
+          if (verbose  && verbose < 3)
+            printf ("Fail: %s: Exception \"%s\" set\n",
 		    test_name, flag_name);
+          if (verbose >= 3)
+            printf ("Fail:  Exception \"%s\" set\n",
+                    flag_name);
           ++noErrors;
         }
       else
         {
-          if (verbose > 2)
-            printf ("Pass: %s:\nException \"%s\" not set\n",
-		    test_name, flag_name);
+          if (verbose > 3)
+            printf ("Pass: Exception \"%s\" not set\n",
+		    flag_name);
         }
     }
+#endif
 }
 
 
@@ -256,6 +326,8 @@ test_exceptions (const char *test_name, short int exception)
 static int
 check_equal (MATHTYPE computed, MATHTYPE supplied, MATHTYPE eps, MATHTYPE * diff)
 {
+  int ret_value;
+
   /* Both plus Infinity or both minus infinity.  */
   if (ISINF (computed) && (ISINF (computed) == ISINF (supplied)))
     return 1;
@@ -265,11 +337,16 @@ check_equal (MATHTYPE computed, MATHTYPE supplied, MATHTYPE eps, MATHTYPE * diff
 
   *diff = FUNC(fabs) (computed - supplied);
 
-  if (*diff <= eps && (signbit (computed) == signbit (supplied) || eps != 0.0))
-    return 1;
 
-  return 0;
+  ret_value = (*diff <= eps &&
+               (signbit (computed) == signbit (supplied) || eps != 0.0));
+
+  /* Make sure the subtraction/comparsion have no influence on the exceptions. */
+  feclearexcept (FE_ALL_EXCEPT);
+
+  return ret_value;
 }
+
 
 
 static void
@@ -277,13 +354,11 @@ output_result_bool (const char *test_name, int result)
 {
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       ++noErrors;
     }
 
@@ -297,13 +372,11 @@ output_isvalue (const char *test_name, int result,
 {
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       if (verbose > 1)
 	printf (" Value: %.20" PRINTF_EXPR "\n", value);
       noErrors++;
@@ -319,13 +392,11 @@ output_isvalue_ext (const char *test_name, int result,
 {
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       if (verbose > 1)
 	{
 	  printf (" Value:     %.20" PRINTF_EXPR "\n", value);
@@ -346,13 +417,11 @@ output_result (const char *test_name, int result,
 {
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       if (verbose > 1 && print_values)
 	{
 	  printf ("Result:\n");
@@ -377,13 +446,11 @@ output_result_ext (const char *test_name, int result,
 {
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       if (verbose > 1 && print_values)
 	{
 	  printf ("Result:\n");
@@ -399,13 +466,16 @@ output_result_ext (const char *test_name, int result,
   fpstack_test (test_name);
 }
 
-
+/*
+  check that computed and expected values are the same
+ */
 static void
 check (const char *test_name, MATHTYPE computed, MATHTYPE expected)
 {
   MATHTYPE diff;
   int result;
 
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   result = check_equal (computed, expected, 0, &diff);
   output_result (test_name, result,
@@ -413,6 +483,10 @@ check (const char *test_name, MATHTYPE computed, MATHTYPE expected)
 }
 
 
+/*
+  check that computed and expected values are the same,
+  outputs the parameter to the function
+ */
 static void
 check_ext (const char *test_name, MATHTYPE computed, MATHTYPE expected,
 	   MATHTYPE parameter)
@@ -420,6 +494,7 @@ check_ext (const char *test_name, MATHTYPE computed, MATHTYPE expected,
   MATHTYPE diff;
   int result;
 
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   result = check_equal (computed, expected, 0, &diff);
   output_result_ext (test_name, result,
@@ -427,6 +502,10 @@ check_ext (const char *test_name, MATHTYPE computed, MATHTYPE expected,
 }
 
 
+/*
+  check that computed and expected values are the same and
+  checks also for exception flags
+ */
 static void
 check_exc (const char *test_name, MATHTYPE computed, MATHTYPE expected,
 	   short exception)
@@ -434,13 +513,16 @@ check_exc (const char *test_name, MATHTYPE computed, MATHTYPE expected,
   MATHTYPE diff;
   int result;
 
+  output_new_test (test_name);
   test_exceptions (test_name, exception);
   result = check_equal (computed, expected, 0, &diff);
   output_result (test_name, result,
 		 computed, expected, diff, PRINT, PRINT);
 }
 
-
+/*
+  check that computed and expected values are close enough
+ */
 static void
 check_eps (const char *test_name, MATHTYPE computed, MATHTYPE expected,
 	   MATHTYPE epsilon)
@@ -448,38 +530,43 @@ check_eps (const char *test_name, MATHTYPE computed, MATHTYPE expected,
   MATHTYPE diff;
   int result;
 
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   result = check_equal (computed, expected, epsilon, &diff);
   output_result (test_name, result,
 		 computed, expected, diff, PRINT, PRINT);
 }
 
-
+/*
+  check a boolean condition
+ */
 static void
 check_bool (const char *test_name, int computed)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_result_bool (test_name, computed);
 }
 
-
+/*
+  check that computed and expected values are equal (long int values)
+ */
 static void
 check_long (const char *test_name, long int computed, long int expected)
 {
   long int diff = computed - expected;
   int result = diff == 0;
 
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
 
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       if (verbose > 1)
 	{
 	  printf ("Result:\n");
@@ -492,7 +579,9 @@ check_long (const char *test_name, long int computed, long int expected)
   fpstack_test (test_name);
 }
 
-
+/*
+  check that computed and expected values are equal (long long int values)
+ */
 static void
 check_longlong (const char *test_name, long long int computed,
 		long long int expected)
@@ -500,17 +589,16 @@ check_longlong (const char *test_name, long long int computed,
   long long int diff = computed - expected;
   int result = diff == 0;
 
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
 
   if (result)
     {
-      if (verbose > 2)
-	printf ("Pass: %s\n", test_name);
+      output_pass_value ();
     }
   else
     {
-      if (verbose)
-	printf ("Fail: %s\n", test_name);
+      output_fail_value (test_name);
       if (verbose > 1)
 	{
 	  printf ("Result:\n");
@@ -523,46 +611,64 @@ check_longlong (const char *test_name, long long int computed,
   fpstack_test (test_name);
 }
 
-
+/*
+  check that computed value is not-a-number
+ */
 static void
 check_isnan (const char *test_name, MATHTYPE computed)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_isvalue (test_name, isnan (computed), computed);
 }
 
 
+/*
+  check that computed value is not-a-number and test for exceptions
+ */
 static void
 check_isnan_exc (const char *test_name, MATHTYPE computed,
 		 short exception)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, exception);
   output_isvalue (test_name, isnan (computed), computed);
 }
 
 
+/*
+  check that computed value is not-a-number and test for exceptions
+ */
 static void
 check_isnan_maybe_exc (const char *test_name, MATHTYPE computed,
 		       short exception)
 {
+  output_new_test (test_name);
   test_not_exception (test_name, exception);
   output_isvalue (test_name, isnan (computed), computed);
 }
 
 
+/*
+  check that computed value is not-a-number and supply parameter
+ */
+#ifndef TEST_INLINE
 static void
 check_isnan_ext (const char *test_name, MATHTYPE computed,
 		 MATHTYPE parameter)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_isvalue_ext (test_name, isnan (computed), computed, parameter);
 }
+#endif
 
 
 /* Tests if computed is +Inf */
 static void
 check_isinfp (const char *test_name, MATHTYPE computed)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_isvalue (test_name, (ISINF (computed) == +1), computed);
 }
@@ -572,6 +678,7 @@ static void
 check_isinfp_ext (const char *test_name, MATHTYPE computed,
 		  MATHTYPE parameter)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_isvalue_ext (test_name, (ISINF (computed) == +1), computed, parameter);
 }
@@ -582,6 +689,7 @@ static void
 check_isinfp_exc (const char *test_name, MATHTYPE computed,
 		  int exception)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, exception);
   output_isvalue (test_name, (ISINF (computed) == +1), computed);
 }
@@ -590,18 +698,22 @@ check_isinfp_exc (const char *test_name, MATHTYPE computed,
 static void
 check_isinfn (const char *test_name, MATHTYPE computed)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_isvalue (test_name, (ISINF (computed) == -1), computed);
 }
 
 
+#ifndef TEST_INLINE
 static void
 check_isinfn_ext (const char *test_name, MATHTYPE computed,
 		  MATHTYPE parameter)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
   output_isvalue_ext (test_name, (ISINF (computed) == -1), computed, parameter);
 }
+#endif
 
 
 /* Tests if computed is -Inf */
@@ -609,6 +721,7 @@ static void
 check_isinfn_exc (const char *test_name, MATHTYPE computed,
 		  int exception)
 {
+  output_new_test (test_name);
   test_exceptions (test_name, exception);
   output_isvalue (test_name, (ISINF (computed) == -1), computed);
 }
@@ -621,48 +734,59 @@ check_isinfn_exc (const char *test_name, MATHTYPE computed,
 static void
 acos_test (void)
 {
+#ifndef TEST_INLINE
   MATHTYPE x;
-
-  check ("acos (1) == 0", FUNC(acos) (1), 0);
 
   x = random_greater (1);
   check_isnan_exc ("acos (x) == NaN plus invalid exception for |x| > 1",
 		   FUNC(acos) (x),
 		   INVALID_EXCEPTION);
+#endif
+
+  check ("acos (1) == 0", FUNC(acos) (1), 0);
 }
 
 static void
 acosh_test (void)
 {
+#ifndef TEST_INLINE
   MATHTYPE x;
 
-  check ("acosh(1) == 0", FUNC(acosh) (1), 0);
   check_isinfp ("acosh(+inf) == +inf", FUNC(acosh) (plus_infty));
 
   x = random_less (1);
   check_isnan_exc ("acosh(x) == NaN plus invalid exception if x < 1",
 		   FUNC(acosh) (x), INVALID_EXCEPTION);
+#endif
+
+  check ("acosh(1) == 0", FUNC(acosh) (1), 0);
 }
 
 
 static void
 asin_test (void)
 {
+#ifndef TEST_INLINE
   MATHTYPE x;
-  check ("asin (0) == 0", FUNC(asin) (0), 0);
 
   x = random_greater (1);
   check_isnan_exc ("asin x == NaN plus invalid exception for |x| > 1",
 		   FUNC(asin) (x),
 		   INVALID_EXCEPTION);
+#endif
+
+  check ("asin (0) == 0", FUNC(asin) (0), 0);
 }
+
 
 static void
 asinh_test (void)
 {
 
   check ("asinh(+0) == +0", FUNC(asinh) (0), 0);
+#ifndef TEST_INLINE
   check ("asinh(-0) == -0", FUNC(asinh) (minus_zero), minus_zero);
+#endif
 }
 
 
@@ -674,7 +798,6 @@ atan_test (void)
 
   check ("atan (+inf) == pi/2", FUNC(atan) (plus_infty), M_PI_2);
   check ("atan (-inf) == -pi/2", FUNC(atan) (minus_infty), -M_PI_2);
-
 }
 
 static void
@@ -734,11 +857,14 @@ atanh_test (void)
 {
 
   check ("atanh(+0) == +0", FUNC(atanh) (0), 0);
+#ifndef TEST_INLINE
   check ("atanh(-0) == -0", FUNC(atanh) (minus_zero), minus_zero);
+
   check_isinfp_exc ("atanh(+1) == +inf plus divide-by-zero exception",
 		    FUNC(atanh) (1), DIVIDE_BY_ZERO_EXCEPTION);
   check_isinfn_exc ("atanh(-1) == -inf plus divide-by-zero exception",
 		    FUNC(atanh) (-1), DIVIDE_BY_ZERO_EXCEPTION);
+#endif
 }
 
 
@@ -748,10 +874,11 @@ cbrt_test (void)
   check ("cbrt (+0) == +0", FUNC(cbrt) (0.0), 0.0);
   check ("cbrt (-0) == -0", FUNC(cbrt) (minus_zero), minus_zero);
 
+#ifndef TEST_INLINE
   check_isinfp ("cbrt (+inf) == +inf", FUNC(cbrt) (plus_infty));
   check_isinfn ("cbrt (-inf) == -inf", FUNC(cbrt) (minus_infty));
   check_isnan ("cbrt (NaN) == NaN", FUNC(cbrt) (nan_value));
-
+#endif
   check_eps ("cbrt (8) == 2", FUNC(cbrt) (8), 2, CHOOSE (5e-17L, 0, 0));
   check_eps ("cbrt (-27) == -3", FUNC(cbrt) (-27.0), -3.0,
 	     CHOOSE (3e-16L, 0, 0));
@@ -797,8 +924,10 @@ cosh_test (void)
   check ("cosh (+0) == 1", FUNC(cosh) (0), 1);
   check ("cosh (-0) == 1", FUNC(cosh) (minus_zero), 1);
 
+#ifndef TEST_INLINE
   check_isinfp ("cosh (+inf) == +inf", FUNC(cosh) (plus_infty));
   check_isinfp ("cosh (-inf) == +inf", FUNC(cosh) (minus_infty));
+#endif
 }
 
 
@@ -808,9 +937,10 @@ exp_test (void)
   check ("exp (+0) == 1", FUNC(exp) (0), 1);
   check ("exp (-0) == 1", FUNC(exp) (minus_zero), 1);
 
+#ifndef TEST_INLINE
   check_isinfp ("exp (+inf) == +inf", FUNC(exp) (plus_infty));
   check ("exp (-inf) == 0", FUNC(exp) (minus_infty), 0);
-
+#endif
   check_eps ("exp (1) == e", FUNC(exp) (1), M_E, CHOOSE (4e-18L, 0, 0));
 }
 
@@ -1207,10 +1337,13 @@ static void
 sinh_test (void)
 {
   check ("sinh (+0) == +0", FUNC(sinh) (0), 0);
+
+#ifndef TEST_INLINE
   check ("sinh (-0) == -0", FUNC(sinh) (minus_zero), minus_zero);
 
   check_isinfp ("sinh (+inf) == +inf", FUNC(sinh) (plus_infty));
   check_isinfn ("sinh (-inf) == -inf", FUNC(sinh) (minus_infty));
+#endif
 }
 
 
@@ -1233,10 +1366,12 @@ static void
 tanh_test (void)
 {
   check ("tanh (+0) == +0", FUNC(tanh) (0), 0);
+#ifndef TEST_INLINE
   check ("tanh (-0) == -0", FUNC(tanh) (minus_zero), minus_zero);
 
   check ("tanh (+inf) == +1", FUNC(tanh) (plus_infty), 1);
   check ("tanh (-inf) == -1", FUNC(tanh) (minus_infty), -1);
+#endif
 }
 
 
@@ -1311,6 +1446,7 @@ pow_test (void)
   check ("pow (NaN, +0) == 1", FUNC(pow) (nan_value, 0), 1);
   check ("pow (NaN, -0) == 1", FUNC(pow) (nan_value, minus_zero), 1);
 
+#ifndef TEST_INLINE
   check_isinfp ("pow (+1.1, +inf) == +inf", FUNC(pow) (1.1, plus_infty));
   check_isinfp ("pow (+inf, +inf) == +inf", FUNC(pow) (plus_infty, plus_infty));
   check_isinfp ("pow (-1.1, +inf) == +inf", FUNC(pow) (-1.1, plus_infty));
@@ -1408,14 +1544,19 @@ pow_test (void)
 		    FUNC(pow) (minus_zero, -2), DIVIDE_BY_ZERO_EXCEPTION);
   check_isinfp_exc ("pow (-0, -11.1) == +inf plus divide-by-zero exception",
 		    FUNC(pow) (minus_zero, -11.1), DIVIDE_BY_ZERO_EXCEPTION);
+#endif
 
   check ("pow (+0, 1) == +0", FUNC(pow) (0, 1), 0);
   check ("pow (+0, 11) == +0", FUNC(pow) (0, 11), 0);
+#ifndef TEST_INLINE
   check ("pow (-0, 1) == -0", FUNC(pow) (minus_zero, 1), minus_zero);
   check ("pow (-0, 11) == -0", FUNC(pow) (minus_zero, 11), minus_zero);
+#endif
 
   check ("pow (+0, 2) == +0", FUNC(pow) (0, 2), 0);
   check ("pow (+0, 11.1) == +0", FUNC(pow) (0, 11.1), 0);
+
+#ifndef TEST_INLINE
   check ("pow (-0, 2) == +0", FUNC(pow) (minus_zero, 2), 0);
   check ("pow (-0, 11.1) == +0", FUNC(pow) (minus_zero, 11.1), 0);
 
@@ -1425,11 +1566,11 @@ pow_test (void)
 
   x = random_value (-1.0, 1.0);
   check_ext ("pow (x, +inf) == +0 for |x| < 1",
-	     FUNC(pow) (x, plus_infty), 0.0, x);
+             FUNC(pow) (x, plus_infty), 0.0, x);
 
   x = random_greater (1.0);
   check_ext ("pow (x, -inf) == +0 for |x| > 1",
-	     FUNC(pow) (x, minus_infty), 0.0, x);
+             FUNC(pow) (x, minus_infty), 0.0, x);
 
   x = random_value (-1.0, 1.0);
   check_isinfp_ext ("pow (x, -inf) == +inf for |x| < 1",
@@ -1458,13 +1599,16 @@ pow_test (void)
   x = ((rand () % 1000000) + 1) * -2.0;	/* Get random even integer < 0 */
   check_ext ("pow (-inf, y) == +0 for y < 0 and not an odd integer",
 	     FUNC(pow) (minus_infty, x), 0.0, x);
+#endif
 
   x = (rand () % 1000000) * 2.0 + 1;	/* Get random odd integer > 0 */
   check_ext ("pow (+0, y) == +0 for y an odd integer > 0",
 	     FUNC(pow) (0.0, x), 0.0, x);
+#ifndef TEST_INLINE
   x = (rand () % 1000000) * 2.0 + 1;	/* Get random odd integer > 0 */
   check_ext ("pow (-0, y) == -0 for y an odd integer > 0",
 	     FUNC(pow) (minus_zero, x), minus_zero, x);
+#endif
 
   x = ((rand () % 1000000) + 1) * 2.0;	/* Get random even integer > 1 */
   check_ext ("pow (+0, y) == +0 for y > 0 and not an odd integer",
@@ -1682,6 +1826,7 @@ sqrt_test (void)
   x = random_value (0, 10000);
   check_ext ("sqrt (x*x) == x", FUNC(sqrt) (x*x), x, x);
   check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
+
 }
 
 
@@ -1741,11 +1886,18 @@ cexp_test (void)
   check ("real(cexp(-inf - 0i)) = 0", __real__ result, 0);
   check ("imag(cexp(-inf - 0i)) = -0", __imag__ result, minus_zero);
 
+
   result = FUNC(cexp) (BUILD_COMPLEX (0.0, plus_infty));
   check_isnan_exc ("real(cexp(0 + i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
   check_isnan ("imag(cexp(0 + i inf)) = NaN plus invalid exception",
 	       __imag__ result);
+
+#if defined __GNUC__ && __GNUC__ <= 2 && __GNUC_MINOR <= 7
+  if (verbose)
+    printf ("The following test for cexp might fail due to a gcc compiler error!\n");
+#endif
+
   result = FUNC(cexp) (BUILD_COMPLEX (minus_zero, plus_infty));
   check_isnan_exc ("real(cexp(-0 + i inf)) = NaN plus invalid exception",
 		   __real__ result, INVALID_EXCEPTION);
@@ -3757,6 +3909,15 @@ static void
 cpow_test (void)
 {
   __complex__ MATHTYPE result;
+
+  result = FUNC (cpow) (BUILD_COMPLEX (1, 0), BUILD_COMPLEX (0, 0));
+  check ("real(cpow (1 + i0), (0 + i0)) = 0", __real__ result, 1);
+  check ("imag(cpow (1 + i0), (0 + i0)) = 0", __imag__ result, 0);
+
+  result = FUNC (cpow) (BUILD_COMPLEX (2, 0), BUILD_COMPLEX (10, 0));
+  check ("real(cpow (2 + i0), (10 + i0)) = 1024", __real__ result, 1024);
+  check ("imag(cpow (2 + i0), (10 + i0)) = 0", __imag__ result, 0);
+
 }
 
 
@@ -3887,6 +4048,7 @@ inverse_func_pair_test (const char *test_name,
   b = inverse (a);
   (void) &b;
 
+  output_new_test (test_name);
   result = check_equal (b, x, epsilon, &difference);
   output_result (test_name, result,
 		 b, x, difference, PRINT, PRINT);
@@ -3941,6 +4103,7 @@ identities1_test (MATHTYPE x, MATHTYPE epsilon)
   res3 = res1 * res1 + res2 * res2;
   (void) &res3;
 
+  output_new_test ("sin^2 + cos^2 == 1");
   result = check_equal (res3, 1.0, epsilon, &diff);
   output_result_ext ("sin^2 + cos^2 == 1", result,
 		     res3, 1.0, diff, x, PRINT, PRINT);
@@ -3963,6 +4126,7 @@ identities2_test (MATHTYPE x, MATHTYPE epsilon)
   res4 = res1 / res2;
   (void) &res4;
 
+  output_new_test ("sin/cos == tan");
   result = check_equal (res4, res3, epsilon, &diff);
   output_result_ext ("sin/cos == tan", result,
 		     res4, res3, diff, x, PRINT, PRINT);
@@ -3983,6 +4147,7 @@ identities3_test (MATHTYPE x, MATHTYPE epsilon)
   res3 = res2 * res2 - res1 * res1;
   (void) &res3;
 
+  output_new_test ("cosh^2 - sinh^2 == 1");
   result = check_equal (res3, 1.0, epsilon, &diff);
   output_result_ext ("cosh^2 - sinh^2 == 1", result,
 		     res3, 1.0, diff, x, PRINT, PRINT);
@@ -4142,7 +4307,7 @@ parse_options (int argc, char *argv[])
 	  if (optarg)
 	    verbose = (unsigned int) strtoul (optarg, NULL, 0);
 	  else
-	    verbose = 3;
+	    verbose = 4;
 	  break;
 	case 's':
 	  verbose = 0;
@@ -4156,10 +4321,12 @@ parse_options (int argc, char *argv[])
 int
 main (int argc, char *argv[])
 {
+
   parse_options (argc, argv);
 
   initialize ();
   printf (TEST_MSG);
+
   basic_tests ();
 
   acos_test ();

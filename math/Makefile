@@ -74,19 +74,23 @@ long-c-yes = $(calls:=l)
 distribute += $(long-c-yes:=.c)
 
 # Rules for the test suite.
-tests = test-float test-double $(test-longdouble-$(long-double-fcts))
+tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
+	test-ifloat test-idouble
 # We do the `long double' tests only if this data type is available and
 # distrinct from `double'.
 #
 # XXX This test is disabled for now since the functions are too buggy.
-#test-longdouble-yes = test-longdouble
+#test-longdouble-yes = test-ldouble test-ildoubl
 
 CFLAGS-test-float.c = -fno-inline
 CFLAGS-test-double.c = -fno-inline
-CFLAGS-test-longdouble.c = -fno-inline
+CFLAGS-test-ldouble.c = -fno-inline
+LDLIBS-test-ifloat = libm
+LDLIBS-test-idouble = libm
+LDLIBS-test-ildoubl = libm
 LDLIBS-test-float = libm
 LDLIBS-test-double = libm
-LDLIBS-test-longdouble = libm
+LDLIBS-test-ldouble = libm
 
 distribute += libm-test.c
 

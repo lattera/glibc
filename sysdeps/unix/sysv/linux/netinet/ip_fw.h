@@ -53,6 +53,7 @@
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
 #include <netinet/udp.h>
+#include <net/if.h>
 
 __BEGIN_DECLS
 

@@ -303,13 +303,13 @@ init_hash(hashp, file, info)
 		if (stat(file, &statbuf))
 			return (NULL);
 		hashp->BSIZE = statbuf.st_blksize;
-		hashp->BSHIFT = __log2(hashp->BSIZE);
+		hashp->BSHIFT = __hash_log2(hashp->BSIZE);
 	}
 
 	if (info) {
 		if (info->bsize) {
 			/* Round pagesize up to power of 2 */
-			hashp->BSHIFT = __log2(info->bsize);
+			hashp->BSHIFT = __hash_log2(info->bsize);
 			hashp->BSIZE = 1 << hashp->BSHIFT;
 			if (hashp->BSIZE > MAX_BSIZE) {
 				errno = EINVAL;
@@ -358,7 +358,7 @@ init_htab(hashp, nelem)
 	 */
 	nelem = (nelem - 1) / hashp->FFACTOR + 1;
 
-	l2 = __log2(MAX(nelem, 2));
+	l2 = __hash_log2(MAX(nelem, 2));
 	nbuckets = 1 << l2;
 
 	hashp->SPARES[l2] = l2 + 1;
@@ -376,7 +376,7 @@ init_htab(hashp, nelem)
 	    hashp->BSHIFT) + 1;
 
 	nsegs = (nbuckets - 1) / hashp->SGSIZE + 1;
-	nsegs = 1 << __log2(nsegs);
+	nsegs = 1 << __hash_log2(nsegs);
 
 	if (nsegs > hashp->DSIZE)
 		hashp->DSIZE = nsegs;
@@ -843,7 +843,7 @@ __expand_table(hashp)
 	 * * increases), we need to copy the current contents of the spare
 	 * split bucket to the next bucket.
 	 */
-	spare_ndx = __log2(hashp->MAX_BUCKET + 1);
+	spare_ndx = __hash_log2(hashp->MAX_BUCKET + 1);
 	if (spare_ndx > hashp->OVFL_POINT) {
 		hashp->SPARES[spare_ndx] = hashp->SPARES[hashp->OVFL_POINT];
 		hashp->OVFL_POINT = spare_ndx;

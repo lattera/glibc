@@ -25,9 +25,15 @@ subdir	:= login
 headers	:= utmp.h utmpbits.h lastlog.h pty.h
 
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmp_db
+	    utmp_file utmp_daemon utmpname
 
-distribute := utmp-private.h
+others = utmpd
+install-sbin = utmpd
+utmpd-routines := connection database error request xtmp
+
+distribute := utmp-private.h utmpd/xtmp.h utmpd/utmpd.h utmpd/utmpd-private.h
+
+vpath %.c utmpd
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil
@@ -36,6 +42,8 @@ extra-libs-others := $(extra-libs)
 libutil-routines:= login login_tty logout logwtmp pty
 
 include ../Rules
+
+$(objpfx)utmpd: $(utmpd-routines:%=$(objpfx)%.o)
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

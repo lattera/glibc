@@ -541,7 +541,10 @@ strptime_internal (buf, format, tm, decided)
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */
-	  get_number (0, INT_MAX);
+	  if (sizeof (time_t) > 4)
+	    get_number (0, 9999);
+	  else
+	    get_number (0, 2036);
 	  tm->tm_year = val - 1900;
 	  break;
 	case 'Z':

@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/time.h>
+#include <unistd.h>
 
 /* Set an alarm to go off (generating a SIGALRM signal) in VALUE microseconds.
    If INTERVAL is nonzero, when the alarm goes off, the timer is reset to go

@@ -20,6 +20,7 @@
 #define _NETINET_ICMP6_H 1
 
 #include <sys/types.h>
+#include <netinet/in.h>
 
 #define ICMPV6_FILTER 1
 
@@ -77,21 +78,6 @@ struct icmpv6hdr
 #define ICMPV6_PARAMPROB_NEXTHEADER       1 /* unrecognized Next Header */
 #define ICMPV6_PARAMPROB_OPTION           2 /* unrecognized option */
 
-#if defined(__OPTIMIZE__)
-#include <asm/bitops.h>
-
-#define ICMPV6_FILTER_WILLPASS(type, filterp) \
-	(test_bit (type, filterp) == 0)
-
-#define ICMPV6_FILTER_WILLBLOCK(type, filterp) \
-	test_bit (type, filterp)
-
-#define ICMPV6_FILTER_SETPASS(type, filterp) \
-	clear_bit (type & 0x1f, &((filterp)->data[type >> 5]))
-
-#define ICMPV6_FILTER_SETBLOCK(type, filterp) \
-	set_bit (type & 0x1f, &((filterp)->data[type >> 5]))
-#else
 #define ICMPV6_FILTER_WILLPASS(type, filterp) \
 	((((filterp)->data[(type) >> 5]) & (1 << ((type) & 31))) == 0)
 
@@ -103,7 +89,6 @@ struct icmpv6hdr
 
 #define ICMPV6_FILTER_SETBLOCK(type, filterp) \
 	((((filterp)->data[(type) >> 5]) |=  (1 << ((type) & 31))))
-#endif
 
 #define ICMPV6_FILTER_SETPASSALL(filterp) \
 	memset (filterp, 0, sizeof (struct icmpv6_filter));
