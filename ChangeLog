@@ -1,3 +1,21 @@
+2001-04-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/send.c (__send): Return ssize_t.
+	* sysdeps/mach/hurd/send.c (__send): Likewise.
+	* sysdeps/mach/hurd/recv.c (recv): Likewise.
+	* sysdeps/mach/hurd/sendto.c (sendto): Likewise.
+	* sysdeps/generic/sendto.c (sendto): Likewise.
+	* sysdeps/generic/recvmsg.c (recvmsg): Likewise.
+	* sysdeps/mach/hurd/recvfrom.c (recvfrom): Likewise.
+	* sysdeps/generic/recvfrom.c (recvfrom): Likewise.
+	* sysdeps/generic/sendmsg.c (sendmsg): Likewise.
+
+	* socket/sys/socket.h: send* and recv* return ssize_t.
+
+	* include/sys/socket.h: send returns ssize_t.
+
+	* sysdeps/i386/fpu_control.h: Fix comments.
+
 2001-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/Dist: Add hp-timing.c.

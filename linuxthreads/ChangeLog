@@ -1,3 +1,11 @@
+2001-04-24  Andreas Jaeger  <aj@suse.de>
+
+	* wrapsyscall.c: send* and recv* return ssize_t.
+
+	* sysdeps/pthread/timer_getoverr.c (timer_getoverrun): Unlock the
+	mutex instead of double locking it.
+	Reported by Pierre Artaud <partaud@sodatec.com>.
+
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/getcpuclockid.c: Make function generic, test

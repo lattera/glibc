@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -39,7 +39,7 @@ timer_getoverrun (timerid)
   else
     retval = 0; /* TODO: overrun counting not supported */
 
-  pthread_mutex_lock (&__timer_mutex);
+  pthread_mutex_unlock (&__timer_mutex);
 
   return retval;
 }
