@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>.
 
@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <error.h>
+#include <limits.h>
 #include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -91,6 +92,19 @@ random_test (void)
 }
 
 
+static void
+null_test (void)
+{
+  /* If the size is 0 the result is implementation defined.  Just make
+     sure the program doesn't crash.  */
+  calloc (0, 0);
+  calloc (0, UINT_MAX);
+  calloc (UINT_MAX, 0);
+  calloc (0, ~((size_t) 0));
+  calloc (~((size_t) 0), 0);
+}
+
+
 int
 main (void)
 {
@@ -105,6 +119,8 @@ main (void)
   fixed_test (96);
 
   random_test ();
+
+  null_test ();
 
   return 0;
 }
