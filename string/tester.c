@@ -375,6 +375,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(memchr("abcd", 'z', 4) == NULL, 1);	/* Not found. */
   (void) strcpy(one, "abcd");
   check(memchr(one, 'c', 4) == one+2, 2);	/* Basic test. */
+  check(memchr(one, ~0xff|'c', 4) == one+2, 2);	/* ignore highorder bits. */
   check(memchr(one, 'd', 4) == one+3, 3);	/* End of string. */
   check(memchr(one, 'a', 4) == one, 4);	/* Beginning. */
   check(memchr(one, '\0', 5) == one+4, 5);	/* Finding NUL. */
@@ -384,6 +385,30 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(memchr(one, 'a', 1) == one, 8);	/* Singleton case. */
   (void) strcpy(one, "a\203b");
   check(memchr(one, 0203, 3) == one+1, 9);	/* Unsignedness. */
+
+  /* now test all possible alignment and length combinations to catch
+     bugs due to unrolled loops (assuming unrolling is limited to no
+     more than 128 byte chunks: */
+  {
+    char buf[128 + sizeof(long)];
+    long align, len, i, pos;
+
+    for (align = 0; align < sizeof(long); ++align) {
+      for (len = 0; len < sizeof(buf) - align; ++len) {
+	for (i = 0; i < len; ++i) {
+	  buf[align + i] = 'x';		/* don't depend on memset... */
+	}
+	for (pos = 0; pos < len; ++pos) {
+#if 0
+	  printf("align %d, len %d, pos %d\n", align, len, pos);
+#endif
+	  check(memchr(buf + align, 'x', len) == buf + align + pos, 10);
+	  check(memchr(buf + align, 'x', pos) == NULL, 11);
+	  buf[align + pos] = '-';
+	}
+      }
+    }
+  }
 
   /* memcpy - need not work for overlap.  */
   it = "memcpy";

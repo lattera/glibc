@@ -26,3 +26,10 @@ distribute	:= compat.h					\
 include ../Rules
 
 CPPFLAGS += -D__DBINTERFACE_PRIVATE
+
+# This file defines some static functions for alternative hash algorithms
+# that are not actually used.
+CFLAGS-hash_func.c := -Wno-unused
+
+# The db code outsmarts the compiler frequently.
+override CFLAGS += -Wno-uninitialized
