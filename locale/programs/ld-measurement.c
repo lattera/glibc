@@ -143,7 +143,7 @@ measurement_output (struct localedef_t *locale,
   iov[cnt].iov_len = 1;
   ++cnt;
 
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) charmap->code_set_name;
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;

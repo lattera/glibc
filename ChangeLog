@@ -1,5 +1,23 @@
 2002-12-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Define SHM_HUGETLB.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: Likewise.
+	Patch by William Lee Irwin <wli@holomorphy.com>.
+
+2002-12-20  Andreas Schwab  <schwab@suse.de>
+
+	* locale/programs/ld-measurement.c (measurement_output): Fix
+	index calculation.
+
+2002-12-20  Ulrich Drepper  <drepper@redhat.com>
+
 	* include/libio.h [_IO_MTSAFE_IO && _IO_lock_inexpensive]:
 	Redefine _IO_flockifle and _IO_funlockfile as inlines.
 

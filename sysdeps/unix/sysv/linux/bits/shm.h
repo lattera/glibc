@@ -70,6 +70,7 @@ struct shmid_ds
 /* shm_mode upper byte flags */
 # define SHM_DEST	01000	/* segment will be destroyed on last detach */
 # define SHM_LOCKED	02000   /* segment will not be swapped */
+# define SHM_HUGETLB	04000	/* segment is mapped via hugetlb */
 
 struct	shminfo
   {
