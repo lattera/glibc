@@ -270,7 +270,8 @@ extern void _dl_setup_hash (struct link_map *map) internal_function;
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
    the object is already opened, returns its existing map.  */
-extern struct link_map *_dl_open (const char *name, int mode)
+extern struct link_map *_dl_open (const char *name, int mode,
+				  const void *caller)
      internal_function;
 
 /* Close an object previously opened by _dl_open.  */

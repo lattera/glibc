@@ -17,13 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>		/* Check whether MAP_COPY is defined.  */
+#include <sys/param.h>
 #include <bits/libc-lock.h>
 #include <elf/ldsodefs.h>
+
+#include <dl-dst.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
@@ -57,6 +61,7 @@ static void show_scope (struct link_map *new);
    At this time it is not anymore a problem to modify the tables.  */
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
+extern size_t _dl_platformlen;
 
 /* We must be carefull not to leave us in an inconsistent state.  Thus we
    catch any error and re-raise it after cleaning up.  */
@@ -65,6 +70,7 @@ struct dl_open_args
 {
   const char *file;
   int mode;
+  const void *caller;
   struct link_map *map;
 };
 
@@ -78,6 +84,50 @@ dl_open_worker (void *a)
   ElfW(Addr) init;
   struct r_debug *r;
   unsigned int global_add;
+  const char *dst;
+
+  /* Maybe we have to expand a DST.  */
+  dst = strchr (file, '$');
+  if (dst != NULL)
+    {
+      const void *caller = args->caller;
+      size_t len = strlen (file);
+      size_t required;
+      struct link_map *call_map;
+      char *new_file;
+
+      /* We have to find out from which object the caller is calling.
+	 Find the highest-addressed object that ADDRESS is not below.  */
+      call_map = NULL;
+      for (l = _dl_loaded; l; l = l->l_next)
+	if (l->l_addr != 0 /* Make sure we do not currently set this map up
+			      in this moment.  */
+	    && caller >= (const void *) l->l_addr
+	    && (call_map == NULL || call_map->l_addr < l->l_addr))
+	  call_map = l;
+
+      if (call_map == NULL)
+	/* In this case we assume this is the main application.  */
+	call_map = _dl_loaded;
+
+      /* Determine how much space we need.  We have to allocate the
+	 memory locally.  */
+      required = DL_DST_REQUIRED (call_map, file, len, _dl_dst_count (dst, 0));
+
+      /* Get space for the new file name.  */
+      new_file = (char *) alloca (required + 1);
+
+      /* Generate the new file name.  */
+      DL_DST_SUBSTITUTE (call_map, file, new_file, 0);
+
+      /* If the substitution failed don't try to load.  */
+      if (*new_file == '\0')
+	_dl_signal_error (0, "dlopen",
+			  "empty dynamics string token substitution");
+
+      /* Now we have a new file name.  */
+      file = new_file;
+    }
 
   /* Load the named object.  */
   args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
@@ -157,7 +207,7 @@ dl_open_worker (void *a)
 
 struct link_map *
 internal_function
-_dl_open (const char *file, int mode)
+_dl_open (const char *file, int mode, const void *caller)
 {
   struct dl_open_args args;
   char *errstring;
@@ -172,6 +222,7 @@ _dl_open (const char *file, int mode)
 
   args.file = file;
   args.mode = mode;
+  args.caller = caller;
   args.map = NULL;
   errcode = _dl_catch_error (&errstring, dl_open_worker, &args);
 

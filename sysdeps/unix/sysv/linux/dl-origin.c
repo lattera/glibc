@@ -1,5 +1,5 @@
 /* Find path of executable.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,13 +18,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/param.h>
+#include <elf/ldsodefs.h>
+
+#include <dl-dst.h>
+
 /* On Linux >= 2.1 systems which have the dcache implementation we can get
    the path of the application from the /proc/self/exe symlink.  Try this
    first and fall back on the generic method if necessary.  */
 extern const char *_dl_origin_path;
 
-static inline const char *
-get_origin (void)
+const char *
+_dl_get_origin (void)
 {
   char linkval[PATH_MAX];
   char *result;

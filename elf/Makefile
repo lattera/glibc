@@ -22,7 +22,7 @@ subdir		:= elf
 
 headers		= elf.h bits/elfclass.h bits/dlfcn.h link.h dlfcn.h
 routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
-		  dl-addr enbl-secure dl-profstub
+		  dl-addr enbl-secure dl-profstub dl-origin
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -78,7 +78,7 @@ install-rootsbin += ldconfig
 endif
 
 ifeq (yes,$(build-shared))
-tests = loadtest restest1 preloadtest loadfail multiload
+tests = loadtest restest1 preloadtest loadfail multiload origtest
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj
@@ -253,6 +253,9 @@ LDFLAGS-multiload = -rdynamic
 CFLAGS-multiload.c = -DOBJDIR=\"$(elf-objpfx)\"
 
 $(objpfx)multiload.out: $(objpfx)testobj1.so
+
+$(objpfx)origtest: $(libdl)
+$(objpfx)origtest.out: $(objpfx)testobj1.so
 
 # muwahaha
 

@@ -17,13 +17,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include <elf/ldsodefs.h>
 
-#include <assert.h>
+#include <dl-dst.h>
 
 /* Whether an shared object references one or more auxiliary objects
    is signaled by the AUXTAG entry in l_info.  */
@@ -39,6 +41,7 @@
    reset if in _dl_close if the last global object is removed.  */
 size_t _dl_global_scope_alloc;
 
+extern size_t _dl_platformlen;
 
 /* When loading auxiliary objects we must ignore errors.  It's ok if
    an object is missing.  */
@@ -48,7 +51,7 @@ struct openaux_args
     struct link_map *map;
     int trace_mode;
     const char *strtab;
-    const ElfW(Dyn) *d;
+    const char *name;
 
     /* The return value of openaux.  */
     struct link_map *aux;
@@ -59,7 +62,7 @@ openaux (void *a)
 {
   struct openaux_args *args = (struct openaux_args *) a;
 
-  args->aux = _dl_map_object (args->map, args->strtab + args->d->d_un.d_val, 0,
+  args->aux = _dl_map_object (args->map, args->name, 0,
 			      (args->map->l_type == lt_executable
 			       ? lt_library : args->map->l_type),
 			      args->trace_mode);
@@ -82,6 +85,43 @@ struct list
     struct list *unique;	/* Elements for normal list.  */
     struct list *dup;		/* Elements in complete list.  */
   };
+
+
+/* Macro to expand DST.  It is an macro since we use `alloca'.  */
+#define expand_dst(l, str, fatal) \
+  ({									      \
+    const char *__str = (str);						      \
+    const char *__result = __str;					      \
+    size_t __cnt = DL_DST_COUNT(__str, 0);				      \
+									      \
+    if (__cnt != 0)							      \
+      {									      \
+	char *__newp = (char *) alloca (DL_DST_REQUIRED (l, __str,	      \
+							 strlen (__str),      \
+							 __cnt));	      \
+									      \
+	__result = DL_DST_SUBSTITUTE (l, __str, __newp, 0);		      \
+									      \
+	if (*__result == '\0')						      \
+	  {								      \
+	    /* The replacement for the DST is not known.  We can't	      \
+	       processed.  */						      \
+	    if (fatal)							      \
+	      _dl_signal_error (0, __str,				      \
+				"empty dynamics string token substitution");  \
+	    else							      \
+	      {								      \
+		/* This is for DT_AUXILIARY.  */			      \
+		if (_dl_debug_libs)					      \
+		  _dl_debug_message (1, "cannot load auxiliary `", __str,     \
+				     "' because of empty dynamic string"      \
+				     " token substitution\n", NULL);	      \
+		continue;						      \
+	      }								      \
+	  }								      \
+      }									      \
+									      \
+    __result; })
 
 
 unsigned int
@@ -166,14 +206,21 @@ _dl_map_object_deps (struct link_map *map,
 	    if (__builtin_expect (d->d_tag, DT_NEEDED) == DT_NEEDED)
 	      {
 		/* Map in the needed object.  */
-		struct link_map *dep
-		  = _dl_map_object (l, strtab + d->d_un.d_val, 0,
-				    l->l_type == lt_executable ? lt_library :
-				    l->l_type, trace_mode);
+		struct link_map *dep;
 		/* Allocate new entry.  */
-		struct list *newp = alloca (sizeof (struct list));
+		struct list *newp;
+		/* Object name.  */
+		const char *name;
+
+		/* Recognize DSTs.  */
+		name = expand_dst (l, strtab + d->d_un.d_val, 0);
+
+		dep = _dl_map_object (l, name, 0,
+				      l->l_type == lt_executable ? lt_library :
+				      l->l_type, trace_mode);
 
 		/* Add it in any case to the duplicate list.  */
+		newp = alloca (sizeof (struct list));
 		newp->map = dep;
 		newp->dup = NULL;
 		dtail->dup = newp;
@@ -202,17 +249,22 @@ _dl_map_object_deps (struct link_map *map,
 	      {
 		char *errstring;
 		struct list *newp;
+		/* Object name.  */
+		const char *name;
+
+		/* Recognize DSTs.  */
+		name = expand_dst (l, strtab + d->d_un.d_val,
+				   d->d_tag == DT_AUXILIARY);
 
 		if (d->d_tag == DT_AUXILIARY)
 		  {
 		    /* Store the tag in the argument structure.  */
-		    args.d = d;
+		    args.name = name;
 
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (_dl_debug_libs)
 		      _dl_debug_message (1, "load auxiliary object=",
-					 strtab + d->d_un.d_val,
-					 " requested by file=",
+					 name, " requested by file=",
 					 l->l_name[0]
 					 ? l->l_name : _dl_argv[0],
 					 "\n", NULL);
@@ -233,15 +285,14 @@ _dl_map_object_deps (struct link_map *map,
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (_dl_debug_libs)
-		      _dl_debug_message (1, "load filtered object=",
-					 strtab + d->d_un.d_val,
+		      _dl_debug_message (1, "load filtered object=", name,
 					 " requested by file=",
 					 l->l_name[0]
 					 ? l->l_name : _dl_argv[0],
 					 "\n", NULL);
 
 		    /* For filter objects the dependency must be available.  */
-		    args.aux = _dl_map_object (l, strtab + d->d_un.d_val, 0,
+		    args.aux = _dl_map_object (l, name, 0,
 					       (l->l_type == lt_executable
 						? lt_library : l->l_type),
 					       trace_mode);

@@ -1,5 +1,32 @@
 1999-05-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Versions.def (ld.so): Add GLIBC_2.1.1.
+	* elf/Makefile (routines): Add dl-origin.
+	(tests): Add origtest.  Add dependencies for the program.
+	* elf/Versions (ld.so) [GLIBC_2.1.1]: Add _dl_origin_path,
+	_dl_platformlen, _dl_dst_count and _dl_dst_substitute.
+	* elf/dl-deps.c (expand_dst): New macro.  Expand DSTs in filename.
+	(_dl_map_object_deps): Use expand_dst to expand DSTs in DT_NEEDED,
+	DT_AUXILIARY, and DT_FILTER filenames.
+	* elf/dl-load.c (expand_dynamic_string_token): Explode into
+	two functions and three macros.
+	(_dl_dst_count, _dl_dst_substitute): New functions.
+	* elf/dl-dst.h: New file.
+	* elf/dl-open.c (_dl_open): Take extra parameter with address of
+	caller.  Pass address in args structure.
+	(dl_open_worker): Recognize and expand DSTs in filename.
+	* elf/ldsodefs.h (_dl_open): Adapt prototype.
+	* elf/dlopen.c (dlopen_doit): Pass caller address to _dl_open.
+	(__dlopen_check): Pass caller address to dlopen_doit in args.
+	* elf/dlopendoit.c: Likewise.
+	* iconv/gconv_dl.c: Adapt call of _dl_open.
+	* nss/nsswitch.c: Likewise.
+	* elf/origtest.c: New file.
+	* sysdeps/generic/dl-origin.h: Moved to...
+	* sysdeps/generic/dl-origin.c: ...here.
+	* sysdeps/unix/sysv/linux/dl-origin.h: Moved to...
+	* sysdeps/unix/sysv/linux/dl-origin.c: ...here.
+
 	* stdio-common/_itoa.c (_itoa): Fix special 32bit platform case
 	with specific bases and only few bits set in second word.
 

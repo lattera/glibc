@@ -32,6 +32,8 @@ struct dlopen_args
   int mode;
   /* The return value of dlopen_doit.  */
   struct link_map *new;
+  /* Address of the caller.  */
+  const void *caller;
 };
 
 
@@ -40,7 +42,7 @@ dlopen_doit (void *a)
 {
   struct dlopen_args *args = (struct dlopen_args *) a;
 
-  args->new = _dl_open (args->file ?: "", args->mode);
+  args->new = _dl_open (args->file ?: "", args->mode, args->caller);
 }
 
 
@@ -49,6 +51,7 @@ __dlopen_nocheck (const char *file, int mode)
 {
   struct dlopen_args args;
   args.file = file;
+  args.caller = __builtin_return_address (0);
 
   if ((mode & RTLD_BINDING_MASK) == 0)
     /* By default assume RTLD_LAZY.  */

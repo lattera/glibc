@@ -1,5 +1,5 @@
 /* Find path of executable.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -18,12 +18,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <elf/ldsodefs.h>
+
+#include <dl-dst.h>
+
 /* Generally it is not possible to implement this.  We have to fall
    back on a solution where the user provides the information.  */
 extern const char *_dl_origin_path;
 
-static inline const char *
-get_origin (void)
+const char *
+_dl_get_origin (void)
 {
   char *result = (char *) -1;
   /* We use the environment variable LD_ORIGIN_PATH.  If it is set make

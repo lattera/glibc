@@ -31,8 +31,7 @@
 #include "dynamic-link.h"
 #include <stdio-common/_itoa.h>
 
-#include <dl-origin.h>
-
+#include <dl-dst.h>
 
 /* On some systems, no flag bits are given to specify file mapping.  */
 #ifndef MAP_FILE
@@ -146,6 +145,104 @@ local_strdup (const char *s)
   return (char *) memcpy (new, s, len);
 }
 
+
+size_t
+_dl_dst_count (const char *name, int is_path)
+{
+  size_t cnt = 0;
+
+  do
+    {
+      size_t len = 1;
+
+      /* $ORIGIN is not expanded for SUID/GUID programs.  */
+      if ((((!__libc_enable_secure
+	     && strncmp (&name[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+	    || (strncmp (&name[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	   && (name[len] == '\0' || name[len] == '/'
+	       || (is_path && name[len] == ':')))
+	  || (name[1] == '{'
+	      && ((!__libc_enable_secure
+		   && strncmp (&name[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
+		  || (strncmp (&name[2], "PLATFORM}", 9) == 0
+		      && (len = 11) != 0))))
+	++cnt;
+
+      name = strchr (name + len, '$');
+    }
+  while (name != NULL);
+
+  return cnt;
+}
+
+
+char *
+_dl_dst_substitute (struct link_map *l, const char *name, char *result,
+		    int is_path)
+{
+  char *last_elem, *wp;
+
+  /* Now fill the result path.  While copying over the string we keep
+     track of the start of the last path element.  When we come accross
+     a DST we copy over the value or (if the value is not available)
+     leave the entire path element out.  */
+  last_elem = wp = result;
+
+  do
+    {
+      if (*name == '$')
+	{
+	  const char *repl;
+	  size_t len;
+
+	  if ((((strncmp (&name[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+		|| (strncmp (&name[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	       && (name[len] == '\0' || name[len] == '/'
+		   || (is_path && name[len] == ':')))
+	      || (name[1] == '{'
+		  && ((strncmp (&name[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
+		      || (strncmp (&name[2], "PLATFORM}", 9) == 0
+			  && (len = 11) != 0))))
+	    {
+	      repl = ((len == 7 || name[2] == 'O')
+		      ? (__libc_enable_secure ? NULL : l->l_origin)
+		      : _dl_platform);
+
+	      if (repl != NULL && repl != (const char *) -1)
+		{
+		  wp = __stpcpy (wp, repl);
+		  name += len;
+		}
+	      else
+		{
+		  /* We cannot use this path element, the value of the
+		     replacement is unknown.  */
+		  wp = last_elem;
+		  name += len;
+		  while (*name != '\0' && (!is_path || *name != ':'))
+		    ++name;
+		}
+	    }
+	  else
+	    /* No DST we recognize.  */
+	    *wp++ = *name++;
+	}
+      else if (is_path && *name == ':')
+	{
+	  *wp++ = *name++;
+	  last_elem = wp;
+	}
+      else
+	*wp++ = *name++;
+    }
+  while (*name != '\0');
+
+  *wp = '\0';
+
+  return result;
+}
+
+
 /* Return copy of argument with all recognized dynamic string tokens
    ($ORIGIN and $PLATFORM for now) replaced.  On some platforms it
    might not be possible to determine the path from which the object
@@ -158,116 +255,28 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
      resulting string is and then we copy it over.  Since this is now
      frequently executed operation we are looking here not for performance
      but rather for code size.  */
-  const char *sf;
-  size_t cnt = 0;
-  size_t origin_len;
+  size_t cnt;
   size_t total;
-  char *result, *last_elem, *wp;
+  char *result;
 
-  sf = strchr (s, '$');
-  while (sf != NULL)
-    {
-      size_t len = 1;
-
-      /* $ORIGIN is not expanded for SUID/GUID programs.  */
-      if ((((!__libc_enable_secure
-	     && strncmp (&sf[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
-	    || (strncmp (&sf[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
-	   && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
-	  || (s[1] == '{'
-	      && ((!__libc_enable_secure
-		   && strncmp (&sf[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
-		  || (strncmp (&sf[2], "PLATFORM}", 9) == 0
-		      && (len = 11) != 0))))
-	++cnt;
-
-      sf = strchr (sf + len, '$');
-    }
+  /* Determine the nubmer of DST elements.  */
+  cnt = DL_DST_COUNT (s, 1);
 
   /* If we do not have to replace anything simply copy the string.  */
   if (cnt == 0)
     return local_strdup (s);
 
-  /* Now we make a guess how many extra characters on top of the length
-     of S we need to represent the result.  We know that we have CNT
-     replacements.  Each at most can use
-	MAX (strlen (ORIGIN), strlen (_dl_platform))
-     minus 7 (which is the length of "$ORIGIN").
+  /* Determine the length of the substituted string.  */
+  total = DL_DST_REQUIRED (l, s, strlen (s), cnt);
 
-     First get the origin string if it is not available yet.  This can
-     only happen for the map of the executable.  */
-  if (l->l_origin == NULL)
-    {
-      assert (l->l_name[0] == '\0');
-      l->l_origin = get_origin ();
-      origin_len = (l->l_origin && l->l_origin != (char *) -1
-		    ? strlen (l->l_origin) : 0);
-    }
-  else
-    origin_len = l->l_origin == (char *) -1 ? 0 : strlen (l->l_origin);
-
-  total = strlen (s) + cnt * (MAX (origin_len, _dl_platformlen) - 7);
+  /* Allocate the necessary memory.  */
   result = (char *) malloc (total + 1);
   if (result == NULL)
     return NULL;
 
-  /* Now fill the result path.  While copying over the string we keep
-     track of the start of the last path element.  When we come accross
-     a DST we copy over the value or (if the value is not available)
-     leave the entire path element out.  */
-  last_elem = wp = result;
-  do
-    {
-      if (*s == '$')
-	{
-	  const char *repl;
-	  size_t len;
-
-	  if ((((strncmp (&s[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
-		|| (strncmp (&s[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
-	       && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
-	      || (s[1] == '{'
-		  && ((strncmp (&s[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
-		      || (strncmp (&s[2], "PLATFORM}", 9) == 0
-			  && (len = 11) != 0))))
-	    {
-	      repl = ((len == 7 || s[2] == 'O')
-		      ? (__libc_enable_secure ? NULL : l->l_origin)
-		      : _dl_platform);
-
-	      if (repl != NULL && repl != (const char *) -1)
-		{
-		  wp = __stpcpy (wp, repl);
-		  s += len;
-		}
-	      else
-		{
-		  /* We cannot use this path element, the value of the
-		     replacement is unknown.  */
-		  wp = last_elem;
-		  s += len;
-		  while (*s != '\0' && *s != ':')
-		    ++s;
-		}
-	    }
-	  else
-	    /* No DST we recognize.  */
-	    *wp++ = *s++;
-	}
-      else if (*s == ':')
-	{
-	  *wp++ = *s++;
-	  last_elem = wp;
-	}
-      else
-	*wp++ = *s++;
-    }
-  while (*s != '\0');
-
-  *wp = '\0';
-
-  return result;
+  return DL_DST_SUBSTITUTE (l, s, result, 1);
 }
+
 
 /* Add `name' to the list of names for a particular shared object.
    `name' is expected to have been allocated with malloc and will

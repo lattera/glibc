@@ -285,7 +285,7 @@ do_open (void *a)
 {
   struct do_open_args *args = (struct do_open_args *) a;
   /* Open and relocate the shared object.  */
-  args->ni->library->lib_handle = _dl_open (args->shlib_name, RTLD_LAZY);
+  args->ni->library->lib_handle = _dl_open (args->shlib_name, RTLD_LAZY, NULL);
 }
 
 static void

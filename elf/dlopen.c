@@ -1,5 +1,5 @@
 /* Load a shared object at run time.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,8 @@ struct dlopen_args
   int mode;
   /* The return value of dlopen_doit.  */
   struct link_map *new;
+  /* Address of the caller.  */
+  const void *caller;
 };
 
 
@@ -36,7 +38,7 @@ dlopen_doit (void *a)
 {
   struct dlopen_args *args = (struct dlopen_args *) a;
 
-  args->new = _dl_open (args->file ?: "", args->mode);
+  args->new = _dl_open (args->file ?: "", args->mode, args->caller);
 }
 
 
@@ -46,6 +48,7 @@ __dlopen_check (const char *file, int mode)
   struct dlopen_args args;
   args.file = file;
   args.mode = mode;
+  args.caller = __builtin_return_address (0);
 
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
 }

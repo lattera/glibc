@@ -64,7 +64,7 @@ do_open (void *a)
 {
   struct gconv_loaded_object *args = (struct gconv_loaded_object *) a;
   /* Open and relocate the shared object.  */
-  args->handle = _dl_open (args->name, RTLD_LAZY);
+  args->handle = _dl_open (args->name, RTLD_LAZY, NULL);
 }
 
 
