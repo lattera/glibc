@@ -1,6 +1,6 @@
 #! /bin/sh
 # Generate test locale files.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000-2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -43,4 +43,5 @@ locale=`echo $locfile|sed 's|\([^.]*\)[.].*/LC_CTYPE|\1|'`
 charmap=`echo $locfile|sed 's|[^.]*[.]\(.*\)/LC_CTYPE|\1|'`
 
 echo "Generating locale $locale.$charmap: this might take a while..."
-generate_locale $charmap $locale $locale.$charmap
+generate_locale `echo $charmap | sed -e s/SJIS/SHIFT_JIS/` $locale \
+		$locale.$charmap

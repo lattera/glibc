@@ -125,7 +125,8 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP da_DK.ISO-8859-1 \
 	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1 ja_JP.SJIS fr_FR.ISO-8859-1
 LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
-CHARMAPS := $(shell echo "$(LOCALES)"|sed 's/[^ .]*[.]\([^ ]*\)/\1/g')
+CHARMAPS := $(shell echo "$(LOCALES)" | \
+		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)
 CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
 
 generated-dirs += $(LOCALES)

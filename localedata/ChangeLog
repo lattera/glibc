@@ -1,3 +1,10 @@
+2001-05-26  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/SHIFT_JIS: Renamed from charmaps/SJIS. Change code_set_name
+	to SHIFT_JIS. Add SJIS as alias.
+	* Makefile (CHARMAPS): For SJIS locale, use SHIFT_JIS charmap.
+	* gen-locale.sh: Likewise.
+
 2001-05-29  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/GB18030: Update for Unicode 3.1: Add <U03F4>..<U03F5>. Use
