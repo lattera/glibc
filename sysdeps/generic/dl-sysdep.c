@@ -140,6 +140,9 @@ _dl_sysdep_start (void **start_argptr,
 	GL(dl_sysinfo) = av->a_un.a_val;
 	break;
 #endif
+#ifdef DL_PLATFORM_AUXV
+      DL_PLATFORM_AUXV
+#endif
       }
 
 #ifdef DL_SYSDEP_OSCHECK

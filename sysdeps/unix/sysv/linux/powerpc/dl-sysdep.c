@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Linux/PPC version.
-   Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,27 +25,18 @@
 extern int __cache_line_size;
 weak_extern (__cache_line_size)
 
-#define DL_PLATFORM_INIT __aux_init_cache(_dl_auxv)
-
 /* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
    verify that the static extern __cache_line_size is defined by checking
-   for not NULL.  If it is defined then assign the cache block size 
+   for not NULL.  If it is defined then assign the cache block size
    value to __cache_line_size.  */
-static inline void
-__aux_init_cache (ElfW(auxv_t) *av)
-{
-  for (; av->a_type != AT_NULL; ++av)
-    switch (av->a_type)
-      {
-        case AT_DCACHEBSIZE:
-          {
-            int *cls = & __cache_line_size;
-            if (cls != NULL)
-              *cls = av->a_un.a_val;
-          }
-        break;
-      }
-}
+#define DL_PLATFORM_AUXV						      \
+      case AT_DCACHEBSIZE:						      \
+	{								      \
+	  int *cls = & __cache_line_size;				      \
+	  if (cls != NULL)						      \
+	    *cls = av->a_un.a_val;					      \
+	}								      \
+      break;
 
 #ifndef __ASSUME_STD_AUXV
 
@@ -78,4 +69,4 @@ __aux_init_cache (ElfW(auxv_t) *av)
   } while (0)
 #endif
 
-#include <sysdeps/unix/sysv/linux/dl-sysdep.c>
+#include_next <sysdeps/unix/sysv/linux/dl-sysdep.c>

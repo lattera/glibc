@@ -1,3 +1,28 @@
+2003-03-15  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/elf/libc-start.c (AUX_VECTOR_INIT): Define it.
+	(LIBC_START_MAIN, LIBC_START_MAIN_AUXVEC_ARG, MAIN_AUXVEC_ARG)
+	(INIT_MAIN_ARGS): Define, and #include <sysdeps/generic/libc-start.c>.
+	(__libc_start_main): Just call the generic one for most of the work.
+
+	* sysdeps/generic/libc-start.c [LIBC_START_MAIN]: If defined, define a
+	static function by that name instead of BP_SYM (__libc_start_main).
+	[LIBC_START_MAIN_AUXVEC_ARG]: Take AUXVEC as argument.
+	[MAIN_AUXVEC_ARG]: Pass 4th argument to MAIN.
+	[INIT_MAIN_ARGS]: Give INIT the same args as MAIN.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start) [DL_PLATFORM_AUXV]:
+	Use this macro for extra AT_* cases.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c (DL_PLATFORM_AUXV):
+	New macro, guts from ...
+	(__aux_init_cache): ... here, function removed.
+	(DL_PLATFORM_INIT): Don't define this.
+
+	* sysdeps/powerpc/powerpc32/memset.S: Put __cache_line_size in bss.
+	* sysdeps/powerpc/powerpc64/memset.S: Likewise.
+
+	* Versions.def (libthread_db): Add GLICB_2.3.3 set.
+
 2003-03-14  Roland McGrath  <roland@redhat.com>
 
 	* dlfcn/dlerror.c (dlerror): If objname is "", don't put ": " after it.

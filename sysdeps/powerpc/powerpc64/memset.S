@@ -1,5 +1,5 @@
 /* Optimized memset implementation for PowerPC64.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,17 +21,12 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
-/* Define a global static that can hold the cache line size.  The 
+/* Define a global static that can hold the cache line size.  The
    assumption is that startup code will access the "aux vector" to
-   to obtain the value set by the kernel and store it into this 
+   to obtain the value set by the kernel and store it into this
    variable.  */
 	.globl __cache_line_size
-	.section	".data"
-	.align 2
-	.type	__cache_line_size,@object
-	.size	__cache_line_size,4
-__cache_line_size:
-	.long	0
+	.lcomm __cache_line_size,4,4
 	.section	".toc","aw"
 .LC0:
 	.tc __cache_line_size[TC],__cache_line_size
@@ -81,7 +76,7 @@ L(b0):
 	andi.	rALIGN, rMEMP0, 7
 	mr	rMEMP, rMEMP0
 	ble-	cr1, L(small)
-	
+
 /* Align to doubleword boundary.  */
 	cmpldi	cr5, rLEN, 31
 	rlwimi	rCHR, rCHR, 8, 16, 23 /* Replicate byte to halfword.  */
@@ -108,9 +103,9 @@ L(g4):
 	bf+	31, L(g0)
 	stb	rCHR, 0(rMEMP0)
 	bt	30, L(aligned)
-L(g0):	
-	sth	rCHR, -2(rMEMP)	
-	
+L(g0):
+	sth	rCHR, -2(rMEMP)
+
 /* Handle the case of size < 31.  */
 L(aligned2):
 	rlwimi	rCHR, rCHR, 16, 0, 15 /* Replicate halfword to word.  */
@@ -138,9 +133,9 @@ L(a2):
 L(caligned):
 	cmpldi	cr1, rCHR, 0
 	clrrdi.	rALIGN, rLEN, 5
-	mtcrf	0x01, rLEN	
+	mtcrf	0x01, rLEN
 	beq	cr1, L(zloopstart) /* Special case for clearing memory using dcbz.  */
-L(nondcbz):	
+L(nondcbz):
 	srdi	rTMP, rALIGN, 5
 	mtctr	rTMP
 	beq	L(medium)	/* We may not actually get to do a full line.  */
@@ -168,21 +163,21 @@ L(cloopdone):
 	.align 5
 /* Clear lines of memory in 128-byte chunks.  */
 L(zloopstart):
-/* If the remaining length is less the 32 bytes, don't bother getting 
+/* If the remaining length is less the 32 bytes, don't bother getting
 	 the cache line size.  */
 	beq	L(medium)
 	ld	rCLS,.LC0@toc(r2)
-	lwz	rCLS,0(rCLS)	
-/* If the cache line size was not set just goto to L(nondcbz) which is 
-	 safe for any cache line size.  */	
+	lwz	rCLS,0(rCLS)
+/* If the cache line size was not set just goto to L(nondcbz) which is
+	 safe for any cache line size.  */
 	cmpldi	cr1,rCLS,0
 	beq		cr1,L(nondcbz)
-	
-	
+
+
 /* Now we know the cache line size, and it is not 32-bytes, but
-	 we may not yet be aligned to the cache line. May have a partial 
-	 line to fill, so touch it 1st.  */	
-	dcbt	0,rMEMP	
+	 we may not yet be aligned to the cache line. May have a partial
+	 line to fill, so touch it 1st.  */
+	dcbt	0,rMEMP
 	addi	rCLM,rCLS,-1
 L(getCacheAligned):
 	cmpldi	cr1,rLEN,32
@@ -196,8 +191,8 @@ L(getCacheAligned):
 	std		rCHR,-16(rMEMP)
 	std		rCHR,-8(rMEMP)
 	b		L(getCacheAligned)
-	
-/* Now we are aligned to the cache line and can use dcbz.  */	
+
+/* Now we are aligned to the cache line and can use dcbz.  */
 L(cacheAligned):
 	cmpld	cr1,rLEN,rCLS
 	blt		cr1,L(handletail32)
@@ -208,7 +203,7 @@ L(cacheAligned):
 
 /* We are here because the cache line size was set and was not 32-bytes
    and the remainder (rLEN) is less than the actual cache line size.
-   So set up the preconditions for L(nondcbz) and go there.  */			
+   So set up the preconditions for L(nondcbz) and go there.  */
 L(handletail32):
 	clrrwi.	rALIGN, rLEN, 5
 	b		L(nondcbz)
@@ -264,7 +259,7 @@ L(medium_30t):
 	bf-	29, L(medium_29f)
 L(medium_29t):
 	stwu	rCHR, -4(rMEMP)
-	blt-	cr1, L(medium_27f) 
+	blt-	cr1, L(medium_27f)
 L(medium_27t):
 	std	rCHR, -8(rMEMP)
 	stdu	rCHR, -16(rMEMP)
@@ -275,7 +270,7 @@ L(medium_28t):
 	blr
 END_GEN_TB (BP_SYM (memset),TB_TOCLESS)
 
-/* Copied from bzero.S to prevent the linker from inserting a stub 
+/* Copied from bzero.S to prevent the linker from inserting a stub
    between bzero and memset.  */
 ENTRY (BP_SYM (__bzero))
 #if __BOUNDED_POINTERS__
@@ -293,4 +288,3 @@ ENTRY (BP_SYM (__bzero))
 END_GEN_TB (BP_SYM (__bzero),TB_TOCLESS)
 
 weak_alias (BP_SYM (__bzero), BP_SYM (bzero))
-
