@@ -1,5 +1,5 @@
 /* Machine-dependent signal context structure for GNU Hurd.  HPPA version.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _SIGNAL_H
+#if !defined _SIGNAL_H && !defined _SYS_UCONTEXT_H
 # error "Never use <bits/sigcontext.h> directly; include <signal.h> instead."
 #endif
+
+#ifndef sc_parisc_thread_state
 
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
@@ -88,3 +90,5 @@ struct sigcontext
     /* Floating point registers $f0..$f31.  */
     double sc_fpregs[32];
   };
+
+#endif /* sc_parisc_thread_state */
