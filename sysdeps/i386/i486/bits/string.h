@@ -430,8 +430,8 @@ memchr (__const void *__s, int __c, size_t __n)
 
 /* Return pointer to C in S.  */
 #define _HAVE_STRING_ARCH_rawmemchr 1
-__STRING_INLINE void *__rawmemchr (const void *__s, int __c); 
- 
+__STRING_INLINE void *__rawmemchr (const void *__s, int __c);
+
 #ifndef _FORCE_INLINES
 __STRING_INLINE void *
 __rawmemchr (const void *__s, int __c)
@@ -446,13 +446,13 @@ __rawmemchr (const void *__s, int __c)
      : "cc");
   return __res - 1;
 }
-#if defined __USE_GNU && !defined _FORCE_INLINES
+# ifdef __USE_GNU
 __STRING_INLINE void *
 rawmemchr (const void *__s, int __c)
 {
   return __rawmemchr (__s, __c);
 }
-# endif	/* use GNU */ 
+# endif	/* use GNU */
 #endif
 
 
