@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -205,7 +205,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #else
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
   TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
-  strong_alias (_dl_runtime_resolve, _dl_runtime_profile, #nop);
+  extern void _dl_runtime_resolve (void);			\
+  extern void _dl_runtime_profile (void);			\
+  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
 #endif
 
 /* Initial entry point code for the dynamic linker.
