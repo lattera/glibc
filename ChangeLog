@@ -1,3 +1,8 @@
+2001-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Fix handling of failing
+	_dl_catch_error calls.
+
 2001-06-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex.c (regex_compile, re_match_2_internal): Fix comment

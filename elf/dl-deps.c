@@ -222,16 +222,18 @@ _dl_map_object_deps (struct link_map *map,
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep;
+		int err;
 
 		/* Recognize DSTs.  */
 		name = expand_dst (l, strtab + d->d_un.d_val, 0);
 		/* Store the tag in the argument structure.  */
 		args.name = name;
 
-		if (_dl_catch_error (&objname, &errstring, openaux, &args))
+		err = _dl_catch_error (&objname, &errstring, openaux, &args);
+		if (__builtin_expect (errstring != NULL, 0))
 		  {
-		    if (errno)
-		      errno_reason = errno;
+		    if (err)
+		      errno_reason = err;
 		    else
 		      errno_reason = -1;
 		    goto out;
@@ -273,6 +275,8 @@ _dl_map_object_deps (struct link_map *map,
 
 		if (d->d_tag == DT_AUXILIARY)
 		  {
+		    int err;
+
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
 		      _dl_debug_printf ("load auxiliary object=%s"
@@ -282,7 +286,9 @@ _dl_map_object_deps (struct link_map *map,
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    if (_dl_catch_error (&objname, &errstring, openaux, &args))
+		    err = _dl_catch_error (&objname, &errstring, openaux,
+					   &args);
+		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
@@ -295,6 +301,8 @@ _dl_map_object_deps (struct link_map *map,
 		  }
 		else
 		  {
+		    int err;
+
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (_dl_debug_mask & DL_DEBUG_LIBS, 0))
 		      _dl_debug_printf ("load filtered object=%s"
@@ -303,10 +311,12 @@ _dl_map_object_deps (struct link_map *map,
 					? l->l_name : _dl_argv[0]);
 
 		    /* For filter objects the dependency must be available.  */
-		    if (_dl_catch_error (&objname, &errstring, openaux, &args))
+		    err = _dl_catch_error (&objname, &errstring, openaux,
+					   &args);
+		    if (__builtin_expect (errstring != NULL, 0))
 		      {
-			if (errno)
-			  errno_reason = errno;
+			if (err)
+			  errno_reason = err;
 			else
 			  errno_reason = -1;
 			goto out;
