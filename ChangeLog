@@ -1,3 +1,9 @@
+2003-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (ELF_RTYPE_CLASS_COPY): Define to 2
+	only if DL_NO_COPY_RELOCS is not defined.
+	* sysdeps/ia64/dl-lookupcfg.h: Define DL_NO_COPY_RELOCS.
+
 2003-03-26  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/make-syscalls.sh: When an undefined syscall has

@@ -23,6 +23,9 @@
 #define ELF_FUNCTION_PTR_IS_SPECIAL
 #define DL_UNMAP_IS_SPECIAL
 
+/* We do not support copy relocations for IA-64.  */
+#define DL_NO_COPY_RELOCS
+
 /* Forward declaration.  */
 struct link_map;
 

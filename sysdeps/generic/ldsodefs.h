@@ -97,9 +97,16 @@ typedef ElfW(Addr) lookup_t;
 /* Reloc type classes as returned by elf_machine_type_class().
    ELF_RTYPE_CLASS_PLT means this reloc should not be satisfied by
    some PLT symbol, ELF_RTYPE_CLASS_COPY means this reloc should not be
-   satisfied by any symbol in the executable.  */
+   satisfied by any symbol in the executable.  Some architectures do
+   not support copy relocations.  In this case we define the macro to
+   zero so that the code for handling them gets automatically optimized
+   out.  */
 #define ELF_RTYPE_CLASS_PLT 1
-#define ELF_RTYPE_CLASS_COPY 2
+#ifndef DL_NO_COPY_RELOCS
+# define ELF_RTYPE_CLASS_COPY 2
+#else
+# define ELF_RTYPE_CLASS_COPY 0
+#endif
 
 /* ELF uses the PF_x macros to specify the segment permissions, mmap
    uses PROT_xxx.  In most cases the three macros have the values 1, 2,
