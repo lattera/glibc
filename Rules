@@ -206,7 +206,7 @@ $(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
 	$(CC) $(+includes) -E -dM -xc - -o $(@:st=hT)
 	echo '#include "$(..)misc/sys/uio.h"' |				\
 	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
-	$(CC) $(+includes) -E -dM -xc - | cat - >> $(@:st=hT)
+	$(CC) -D_LIBC=1 $(+includes) -E -dM -xc - | cat - >> $(@:st=hT)
 ifdef sed-remove-objpfx
 	sed $(sed-remove-objpfx) $(@:st=dT) > $(@:st=dt)
 	cat $(@:st=dt) >> $(@:st=d)

@@ -209,7 +209,7 @@ while read charset charmap; do
   if test "$charset" = GB18030; then echo "This might take a while" 1>&2; fi
   case ${charset} in \#*) continue;; esac
   echo -n "Testing ${charset}" 1>&2
-  if ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}; then
+  if ${SHELL} tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}; then
     echo 1>&2
   else
     echo "failed: ./tst-table.sh ${common_objpfx} ${objpfx} ${charset} ${charmap}"

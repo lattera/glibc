@@ -919,45 +919,54 @@ module	INTERNAL		EUC-TW//		EUC-TW		1
 
 #	from			to			module		cost
 alias	MS-EE//			CP1250//
+alias	WINDOWS-1250//		CP1250//
 module	CP1250//		INTERNAL		CP1250		1
 module	INTERNAL		CP1250//		CP1250		1
 
 #	from			to			module		cost
 alias	MS-CYRL//		CP1251//
+alias	WINDOWS-1251//		CP1251//
 module	CP1251//		INTERNAL		CP1251		1
 module	INTERNAL		CP1251//		CP1251		1
 
 #	from			to			module		cost
 alias	MS-ANSI//		CP1252//
+alias	WINDOWS-1252//		CP1252//
 module	CP1252//		INTERNAL		CP1252		1
 module	INTERNAL		CP1252//		CP1252		1
 
 #	from			to			module		cost
 alias	MS-GREEK//		CP1253//
+alias	WINDOWS-1253//		CP1253//
 module	CP1253//		INTERNAL		CP1253		1
 module	INTERNAL		CP1253//		CP1253		1
 
 #	from			to			module		cost
 alias	MS-TURK//		CP1254//
+alias	WINDOWS-1254//		CP1254//
 module	CP1254//		INTERNAL		CP1254		1
 module	INTERNAL		CP1254//		CP1254		1
 
 #	from			to			module		cost
 alias	MS-HEBR//		CP1255//
+alias	WINDOWS-1255//		CP1255//
 module	CP1255//		INTERNAL		CP1255		1
 module	INTERNAL		CP1255//		CP1255		1
 
 #	from			to			module		cost
 alias	MS-ARAB//		CP1256//
+alias	WINDOWS-1256//		CP1256//
 module	CP1256//		INTERNAL		CP1256		1
 module	INTERNAL		CP1256//		CP1256		1
 
 #	from			to			module		cost
 alias	WINBALTRIM//		CP1257//
+alias	WINDOWS-1257//		CP1257//
 module	CP1257//		INTERNAL		CP1257		1
 module	INTERNAL		CP1257//		CP1257		1
 
 #	from			to			module		cost
+alias	WINDOWS-1258//		CP1258//
 module	CP1258//		INTERNAL		CP1258		1
 module	INTERNAL		CP1258//		CP1258		1
 

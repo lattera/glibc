@@ -34,7 +34,7 @@ export LC_ALL
 set -e
 
 # Get the charmap.
-./tst-table-charmap.sh ${charmap:-$charset} \
+${SHELL} tst-table-charmap.sh ${charmap:-$charset} \
   < ../localedata/charmaps/${charmap:-$charset} \
   > ${objpfx}tst-${charset}.charmap.table
 
