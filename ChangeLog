@@ -1,3 +1,14 @@
+2000-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_conf.c (insert_module): Replace old entry if new one
+	hsa same names but lower cost.
+
+2000-11-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h: Ifdef out handling for relocs
+	which never occur during bootstrap.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+
 2000-11-23  Andreas Jaeger  <aj@suse.de>
 
 	* nss/nss_files/files-hosts.c: Remove getipnodebyname.

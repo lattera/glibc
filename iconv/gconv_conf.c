@@ -196,7 +196,17 @@ insert_module (struct gconv_module *newp, int tobefreed)
 
 	  if (root != NULL)
 	    {
-	      /* This is a no new conversion.  */
+	      /* This is a no new conversion.  But maybe the cost is
+		 better.  */
+	      if (newp->cost_hi < root->cost_hi
+		  || (newp->cost_hi == root->cost_hi
+		      && newp->cost_lo < root->cost_lo))
+		{
+		  root->cost_hi = newp->cost_hi;
+		  root->cost_lo = newp->cost_lo;
+		  root->module_name = newp->module_name;
+		}
+
 	      if (tobefreed)
 		free (newp);
 	      return;
