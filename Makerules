@@ -475,12 +475,14 @@ endef
 install-lib.so := $(filter %.so,$(install-lib:%_pic.a=%.so))
 install-lib := $(filter-out %.so %_pic.a,$(install-lib))
 ifeq (yes,$(build-shared))
-install: $(libdir)/libc.so$(libc.so-version)
 install-lib-nosubdir: $(foreach so,$(install-lib.so),\
   $(libdir)/$(patsubst $(libprefix)lib%,lib$(libprefix)%,\
 		       $(libprefix)$(so))$($(so)-version))
 
-install-lib.so += libc.so
+install: $(slibdir)/libc.so$(libc.so-version)
+$(slibdir)/lib$(libprefix)c.so$(libc.so-version): $(common-objpfx)libc.so
+	$(do-install-program)
+
 $(foreach v,$(sort $(foreach so,$(install-lib.so),.so$($(so)-version))),\
 	  $(libdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
 	$(do-install-program)
@@ -646,7 +648,7 @@ $(common-objpfx)stub-$(subdir): $(+depfiles)
 # Make the distribution tar file.
 
 .PHONY: dist
-dist: distinfo $(..)Make-dist 
+dist: distinfo $(..)Make-dist
 	$(MAKE) -f $< -f $(word 2,$^) $(Make-dist-args)
 
 # Avoid depending on source files found in sysdeps dirs,

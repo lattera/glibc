@@ -38,12 +38,12 @@ include ../Makeconfig
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
 generated	= librtld.so
-install-others	= $(libdir)/$(rtld-installed-name)
+install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 
 ifneq (,$(filter linux%,$(config-os)))
 extra-objs	+= linux-compat.so
-install-lib	+= ld-linux.so.1
+install-others	+= $(slibdir)/ld-linux.so.1
 endif
 endif
 
@@ -73,8 +73,10 @@ $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 		  $(LDFLAGS.so) $(LDFLAGS-dl.so) \
 		  -Wl,--whole-archive $(^:$(objpfx)%=%)
 
-$(libdir)$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
+$(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
+$(slibdir)/ld-linux.so.1: $(objpfx)ld-linux.so.1; $(do-install-program)
 
 $(objpfx)ldd: ldd.sh.in
 	sed 's%@RTLD@%$(libdir)/$(rtld-installed-name)%g' < $< > $@.new
+	chmod 555 $@.new
 	mv -f $@.new $@

@@ -1,5 +1,14 @@
 Tue Nov  7 12:29:46 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* elf/Makefile (ldd): Make it executable.
+
+	* Makeconfig (config-LDFLAGS): Find dynamic linker in $(slibdir).
+
+	* Makeconfig (slibdir): New variable.
+	* Makerules (install): Install libc.so in $(slibdir).
+	* elf/Makefile (install-others): Install ld.so and ld-linux.so.1
+	in $(slibdir).
+
 	* elf/linux-compat.c: New file.
 	* elf/Makefile (distribute): Add linux-compat.c.
 	(generated): Add librtld.so.

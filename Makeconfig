@@ -56,7 +56,7 @@ objdir = $(ARCH)
 endif
 endif
 
-# $(common-objdir) is the place to put objects and 
+# $(common-objdir) is the place to put objects and
 # such that are not specific to a single subdir.
 ifdef objdir
 objpfx = $(objdir)/
@@ -133,6 +133,11 @@ endif
 # Where to install the library and object files.
 ifndef libdir
 libdir = $(exec_prefix)/lib
+endif
+
+# Where to install the shared library and dynamic linker.
+ifndef slibdir
+slibdir = $(exec_prefix)/lib
 endif
 
 # Prefix to put on files installed in $(libdir).  For libraries `libNAME.a',
@@ -281,7 +286,7 @@ ifndef +link
 endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
-config-LDFLAGS = -Wl,-dynamic-linker=$(libdir)/$(rtld-installed-name)
+config-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
 endif
 endif
 ifndef link-libc
