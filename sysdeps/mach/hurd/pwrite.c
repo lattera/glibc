@@ -1,6 +1,6 @@
 /* Write block at given position in file without changing file pointer.
    Hurd version.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,11 @@
 ssize_t
 __pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
 {
-  error_t err = HURD_FD_USE (fd, _hurd_fd_write (descriptor,
-						 buf, &nbytes, offset));
+  error_t err;
+  if (offset < 0)
+    err = EINVAL;
+  else
+    err = HURD_FD_USE (fd, _hurd_fd_write (descriptor, buf, &nbytes, offset));
   return err ? __hurd_dfail (fd, err) : nbytes;
 }
 weak_alias (__pwrite, pwrite)

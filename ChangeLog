@@ -1,3 +1,12 @@
+2001-06-13  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/pread.c: Fail with EINVAL if OFFSET is negative.
+	* sysdeps/mach/hurd/pwrite.c: Likewise.
+
+	* shlib-versions [USE_IN_LIBIO] (.*-.*-gnu-gnu.*): libc=0.3
+	[USE_IN_LIBIO && !GLIBC_OLDEST_ABI] (.*-.*-gnu-gnu.*): Use GLIBC_2.2.4
+	as default version set.
+
 2001-06-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iolibio.h (_IO_freopen): Correct last parameter to
@@ -60,7 +69,7 @@
 	    Michael Deutschmann  <michael@talamasca.ocis.net>
 
 	* io/test-lfs.c (do_prepare): Clean up error messages.
-	(test_ftello): Check for EFBIG and ENOSP, clean up error messages.
+	(test_ftello): Check for EFBIG and ENOSPC, clean up error messages.
 	(do_test): Likewise.
 
 2001-06-11  Andreas Jaeger  <aj@suse.de>
