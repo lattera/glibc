@@ -596,7 +596,7 @@ int
 pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
 {
   attr->__lockkind = 0;
-  attr->__pshared = 0;
+  attr->__pshared = PTHREAD_PROCESS_PRIVATE;
 
   return 0;
 }
@@ -623,6 +623,10 @@ pthread_rwlockattr_setpshared (pthread_rwlockattr_t *attr, int pshared)
 {
   if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
     return EINVAL;
+
+  /* For now it is not possible to shared a conditional variable.  */
+  if (pshared != PTHREAD_PROCESS_PRIVATE)
+    return ENOSYS;
 
   attr->__pshared = pshared;
 

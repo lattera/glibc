@@ -1,3 +1,16 @@
+2000-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* condvar.c: Implement pthread_condattr_getpshared and
+	pthread_condattr_setpshared.
+	* mutex.c: Implement pthread_mutexattr_getpshared and
+	 pthread_mutexattr_setpshared.
+	* Versions: Export new functions.
+	* sysdeps/pthread/pthread.h: Add prototypes for new functions.
+
+	* rwlock.c (pthread_rwlockattr_init): Use PTHREAD_PROCESS_PRIVATE.
+	(pthread_rwlockattr_setpshared): Fail if PTHREAD_PROCESS_PRIVATE
+	is not selected.
+
 2000-07-04  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/pthread/bits/libc-lock.h: Remove BP_SYM from

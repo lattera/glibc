@@ -130,7 +130,11 @@ libpthread {
     __pthread_rwlock_tryrdlock; __pthread_rwlock_wrlock;
     __pthread_rwlock_trywrlock; __pthread_rwlock_unlock;
 
-    # New functions from IEEE Std. 10003.1-200x.
+    # No really implemented.
+    pthread_condattr_getpshared; pthread_condattr_setpshared;
+    pthread_mutexattr_getpshared; pthread_mutexattr_setpshared;
+
+    # New functions from IEEE Std. 1003.1-200x.
     sem_timedwait;
     pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;
     pthread_spin_trylock; pthread_spin_unlock;

@@ -325,6 +325,14 @@ extern int pthread_mutexattr_init (pthread_mutexattr_t *__attr) __THROW;
 /* Destroy mutex attribute object ATTR.  */
 extern int pthread_mutexattr_destroy (pthread_mutexattr_t *__attr) __THROW;
 
+/* Get the process-shared flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_getpshared (__const pthread_mutexattr_t *__attr,
+					 int *__pshared) __THROW;
+
+/* Set the process-shared flag of the mutex attribute ATTR.  */
+extern int pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
+					 int __pshared) __THROW;
+
 #ifdef __USE_UNIX98
 /* Set the mutex kind attribute in *ATTR to KIND (either PTHREAD_MUTEX_NORMAL,
    PTHREAD_MUTEX_RECURSIVE, PTHREAD_MUTEX_ERRORCHECK, or
@@ -374,6 +382,14 @@ extern int pthread_condattr_init (pthread_condattr_t *__attr) __THROW;
 
 /* Destroy condition variable attribute ATTR.  */
 extern int pthread_condattr_destroy (pthread_condattr_t *__attr) __THROW;
+
+/* Get the process-shared flag of the condition variable attribute ATTR.  */
+extern int pthread_condattr_getpshared (__const pthread_condattr_t *__attr,
+					int *__pshared) __THROW;
+
+/* Set the process-shared flag of the condition variable attribute ATTR.  */
+extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
+					int __pshared) __THROW;
 
 
 #ifdef __USE_UNIX98

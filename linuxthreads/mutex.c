@@ -220,6 +220,27 @@ weak_alias (__pthread_mutexattr_gettype, pthread_mutexattr_gettype)
 strong_alias (__pthread_mutexattr_gettype, __pthread_mutexattr_getkind_np)
 weak_alias (__pthread_mutexattr_getkind_np, pthread_mutexattr_getkind_np)
 
+int __pthread_mutexattr_getpshared (const pthread_mutexattr_t *attr,
+				   int *pshared)
+{
+  *pshared = PTHREAD_PROCESS_PRIVATE;
+  return 0;
+}
+weak_alias (__pthread_mutexattr_getpshared, pthread_mutexattr_getpshared)
+
+int __pthread_mutexattr_setpshared (pthread_mutexattr_t *attr, int pshared)
+{
+  if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
+    return EINVAL;
+
+  /* For now it is not possible to shared a conditional variable.  */
+  if (pshared != PTHREAD_PROCESS_PRIVATE)
+    return ENOSYS;
+
+  return 0;
+}
+weak_alias (__pthread_mutexattr_setpshared, pthread_mutexattr_setpshared)
+
 /* Once-only execution */
 
 static pthread_mutex_t once_masterlock = PTHREAD_MUTEX_INITIALIZER;
