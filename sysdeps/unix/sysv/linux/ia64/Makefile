@@ -4,5 +4,5 @@ endif
 
 ifeq ($(subdir),misc)
 sysdep_headers += sys/io.h
-sysdep_routines += ioperm
+sysdep_routines += ioperm clone2
 endif

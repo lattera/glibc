@@ -1,3 +1,12 @@
+2000-07-12  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/ia64/Versions (libc): Add __clone2 to
+	GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/ia64/Dist: Add clone2.S.
+	* sysdeps/unix/sysv/linux/ia64/Makefile [$(subdir)=misc]
+	(sysdep-routines): Add clone2.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: New.
+
 2000-07-13  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/clone.S: New file.

@@ -4,3 +4,9 @@ ld {
     _dl_pagesize;
   }
 }
+libc {
+  GLIBC_2.2 {
+    # linuxthreads
+    __clone2;
+  }
+}
