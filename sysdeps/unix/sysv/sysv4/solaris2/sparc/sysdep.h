@@ -17,7 +17,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /* Solaris 2 does not precede the asm names of C symbols with a `_'. */
+#ifndef NO_UNDERSCORES
 #define	NO_UNDERSCORES
+#endif
 
 #include <sysdeps/unix/sysdep.h>
 
