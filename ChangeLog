@@ -65,6 +65,23 @@
 
 	* socket/sys/socket.h: Add prototype for __socket.
 
+1998-03-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* aclocal.m4 (LIBC_PROG_FOO_GNU): Don't depend on GNU grep.
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Add various SOL_*
+	constants.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (SOL_ROSE): Remove
+	definition here.
+	* sysdeps/unix/sysv/linux/netrose/rose.h (SOL_ROSE): Add
+	definition here.
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Adds lots of missing
+	AF_* and PF_* constants.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Add PF_ASH and AF_ASH.
+
 1998-03-11 15:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c: Update help message.
