@@ -146,17 +146,6 @@ const int __pthread_offsetof_descr = offsetof(struct pthread_handle_struct,
 const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
                                             p_pid);
 
-/* Signal numbers used for the communication.  */
-#ifdef SIGRTMIN
-int __pthread_sig_restart;
-int __pthread_sig_cancel;
-int __pthread_sig_debug;
-#else
-int __pthread_sig_restart = DEFAULT_SIG_RESTART;
-int __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
-int __pthread_sig_debug = 0;    /* disabled */
-#endif
-
 /* These variables are used by the setup code.  */
 extern int _errno;
 extern int _h_errno;
@@ -172,6 +161,104 @@ static void pthread_handle_sigcancel(int sig, struct sigcontext ctx);
 static void pthread_handle_sigrestart(int sig, struct sigcontext ctx);
 #endif
 static void pthread_handle_sigdebug(int sig);
+
+/* Signal numbers used for the communication.
+   In these variables we keep track of the used variables.  If the
+   platform does not support any real-time signals we will define the
+   values to some unreasonable value which will signal failing of all
+   the functions below.  */
+#ifndef __SIGRTMIN
+static int current_rtmin = -1;
+static int current_rtmax = -1;
+int __pthread_sig_restart = SIGUSR1;
+int __pthread_sig_cancel = SIGUSR2;
+int __pthread_sig_debug = 0;
+#else
+static int current_rtmin;
+static int current_rtmax;
+
+#if __SIGRTMAX - __SIGRTMIN >= 3
+int __pthread_sig_restart = __SIGRTMIN;
+int __pthread_sig_cancel = __SIGRTMIN + 1;
+int __pthread_sig_debug = __SIGRTMIN + 2;
+#else
+int __pthread_sig_restart = SIGUSR1;
+int __pthread_sig_cancel = SIGUSR2;
+int __pthread_sig_debug = 0;
+#endif
+
+static int rtsigs_initialized;
+
+#include "testrtsig.h"
+
+static void
+init_rtsigs (void)
+{
+  if (!kernel_has_rtsig ())
+    {
+      current_rtmin = -1;
+      current_rtmax = -1;
+#if __SIGRTMAX - __SIGRTMIN >= 3
+      __pthread_sig_restart = SIGUSR1;
+      __pthread_sig_cancel = SIGUSR2;
+      __pthread_sig_debug = 0;
+#endif
+    }
+  else
+    {
+#if __SIGRTMAX - __SIGRTMIN >= 3
+      current_rtmin = __SIGRTMIN + 3;
+#else
+      current_rtmin = __SIGRTMIN;
+#endif
+
+      current_rtmax = __SIGRTMAX;
+    }
+
+  rtsigs_initialized = 1;
+}
+#endif
+
+/* Return number of available real-time signal with highest priority.  */
+int
+__libc_current_sigrtmin (void)
+{
+#ifdef __SIGRTMIN
+  if (!rtsigs_initialized)
+    init_rtsigs ();
+#endif
+  return current_rtmin;
+}
+
+/* Return number of available real-time signal with lowest priority.  */
+int
+__libc_current_sigrtmax (void)
+{
+#ifdef __SIGRTMIN
+  if (!rtsigs_initialized)
+    init_rtsigs ();
+#endif
+  return current_rtmax;
+}
+
+/* Allocate real-time signal with highest/lowest available
+   priority.  Please note that we don't use a lock since we assume
+   this function to be called at program start.  */
+int
+__libc_allocate_rtsig (int high)
+{
+#ifndef __SIGRTMIN
+  return -1;
+#else
+  if (!rtsigs_initialized)
+    init_rtsigs ();
+  if (current_rtmin == -1 || current_rtmin > current_rtmax)
+    /* We don't have anymore signal available.  */
+    return -1;
+
+  return high ? current_rtmin++ : current_rtmax--;
+#endif
+}
 
 /* Initialize the pthread library.
    Initialization is split in two functions:
@@ -219,22 +306,9 @@ static void pthread_initialize(void)
   /* The errno/h_errno variable of the main thread are the global ones.  */
   __pthread_initial_thread.p_errnop = &_errno;
   __pthread_initial_thread.p_h_errnop = &_h_errno;
-#ifdef SIGRTMIN
-  /* Allocate the signals used.  */
-  __pthread_sig_restart = __libc_allocate_rtsig (1);
-  __pthread_sig_cancel = __libc_allocate_rtsig (1);
-  __pthread_sig_debug = __libc_allocate_rtsig (1);
-  if (__pthread_sig_restart < 0 ||
-      __pthread_sig_cancel < 0 ||
-      __pthread_sig_debug < 0)
-    {
-      /* The kernel does not support real-time signals.  Use as before
-	 the available signals in the fixed set.
-         Debugging is not supported in this case. */
-      __pthread_sig_restart = DEFAULT_SIG_RESTART;
-      __pthread_sig_cancel = DEFAULT_SIG_CANCEL;
-      __pthread_sig_debug = 0;
-    }
+#ifdef __SIGRTMIN
+  /* Initialize real-time signals. */
+  init_rtsigs ();
 #endif
   /* Setup signal handlers for the initial thread.
      Since signal handlers are shared between threads, these settings

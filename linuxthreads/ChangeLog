@@ -1,3 +1,18 @@
+1999-02-12  H.J. Lu  <hjl@gnu.org>
+
+	* Versions (__libc_current_sigrtmin, __libc_current_sigrtmax,
+	__libc_allocate_rtsig): Added to GLIBC_2.1.
+
+	* internals.h (DEFAULT_SIG_RESTART): Removed.
+	(DEFAULT_SIG_CANCEL): Removed.
+
+	* pthread.c (init_rtsigs, __libc_current_sigrtmin,
+	__libc_current_sigrtmax, __libc_allocate_rtsig): New functions.
+	(__pthread_sig_restart, __pthread_sig_cancel,
+	__pthread_sig_debug): Initialized.
+	(pthread_initialize): Call init_rtsigs () to initialize
+	real-time signals.
+
 1999-02-03  H.J. Lu  <hjl@gnu.org>
 
 	* manager.c (__pthread_manager): Do block __pthread_sig_debug.

@@ -123,6 +123,7 @@ vsyslog(pri, fmt, ap)
  	struct sigaction action, oldaction;
 	struct sigaction *oldaction_ptr = NULL;
  	int sigpipe;
+	int saved_errno = errno;
 
 #define	INTERNALLOG	LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
 	/* Check for invalid bits. */
@@ -133,7 +134,7 @@ vsyslog(pri, fmt, ap)
 	}
 
 	/* Check priority against setlogmask values. */
-	if (!LOG_MASK(LOG_PRI(pri)) & LogMask)
+	if ((LOG_MASK (LOG_PRI (pri)) & LogMask) == 0)
 		return;
 
 	/* Set default facility if none specified. */
@@ -162,6 +163,9 @@ vsyslog(pri, fmt, ap)
 	  fprintf (f, "[%d]", __getpid ());
 	if (LogTag != NULL)
 	  putc_unlocked (':', f), putc_unlocked (' ', f);
+
+	/* Restore errno for %m format.  */
+	__set_errno (saved_errno);
 
 	/* We have the header.  Print the user's format into the buffer.  */
 	vfprintf (f, fmt, ap);

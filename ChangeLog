@@ -1,3 +1,8 @@
+1999-02-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* misc/syslog.c (vsyslog): Remember errno for %m format.  Fix
+	check for priority mask.
+
 1999-02-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/netdb.h (AI_NUMERICHOST): Change to 4.

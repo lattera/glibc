@@ -152,11 +152,6 @@ extern int __pthread_sig_cancel;
 
 extern int __pthread_sig_debug;
 
-/* Default signals used if we don't have realtime signals */
-
-#define DEFAULT_SIG_RESTART SIGUSR1
-#define DEFAULT_SIG_CANCEL SIGUSR2
-
 /* Global array of thread handles, used for validating a thread id
    and retrieving the corresponding thread descriptor. Also used for
    mapping the available stack segments. */

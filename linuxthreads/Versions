@@ -93,5 +93,9 @@ libpthread {
     pthread_getconcurrency; pthread_setconcurrency;
 
     pthread_mutexattr_gettype; pthread_mutexattr_settype;
+
+    # helper functions
+    __libc_current_sigrtmin; __libc_current_sigrtmax;
+    __libc_allocate_rtsig;
   }
 }
