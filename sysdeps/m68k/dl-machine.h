@@ -182,7 +182,7 @@ _dl_start_user:
 	pea 8(%sp, %d1*4)
 	pea 8(%sp)
 	move.l %d1, -(%sp)
-	move.l ([_dl_loaded@GOT.w(%a5)]), -(%sp)
+	move.l ([_dl_loaded@GOT.w, %a5]), -(%sp)
 	jbsr _dl_init@PLTPC
 	addq.l #8, %sp
 	addq.l #8, %sp
