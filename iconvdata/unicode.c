@@ -63,7 +63,7 @@
   else if (!data->__internal_use && data->__invocation_counter == 0)	      \
     {									      \
       /* Emit the Byte Order Mark.  */					      \
-      if (outbuf + 2 > outend)						      \
+      if (__builtin_expect (outbuf + 2 > outend, 0))			      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
       put16u (outbuf, BOM);						      \
@@ -149,7 +149,7 @@ gconv_end (struct __gconv_step *data)
   {									      \
     uint32_t c = get32 (inptr);						      \
 									      \
-    if (c >= 0x10000)							      \
+    if (__builtin_expect (c, 0) >= 0x10000)				      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \

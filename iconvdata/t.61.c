@@ -382,14 +382,15 @@ static const char from_ucs4[][2] =
 #define BODY \
   {									      \
     uint32_t ch = *inptr;						      \
+    int increment = 1;							      \
 									      \
-    if (ch >= 0xc1 && ch <= 0xcf)					      \
+    if (__builtin_expect (ch, 0x20) >= 0xc1 && ch <= 0xcf)		      \
       {									      \
 	/* Composed character.  First test whether the next character	      \
 	   is also available.  */					      \
 	uint32_t ch2;							      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
@@ -398,7 +399,8 @@ static const char from_ucs4[][2] =
 									      \
 	ch2 = inptr[1];							      \
 									      \
-	if (ch2 < 0x20 || ch2 >= 0x80)					      \
+	if (__builtin_expect (ch2, 0x20) < 0x20				      \
+	    || __builtin_expect (ch2, 0x20) >= 0x80)			      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -415,21 +417,17 @@ static const char from_ucs4[][2] =
 									      \
 	ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];			      \
 									      \
-	inptr += 2;							      \
+	increment = 2;							      \
       }									      \
     else								      \
-      {									      \
-	ch = to_ucs4[ch];						      \
-	++inptr;							      \
-      }									      \
+      ch = to_ucs4[ch];							      \
 									      \
-    if (ch == 0 && *inptr != '\0')					      \
+    if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
       {									      \
 	/* This is an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    --inptr;							      \
 	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
@@ -441,6 +439,7 @@ static const char from_ucs4[][2] =
 	put32 (outptr, ch);						      \
 	outptr += 4;							      \
       }									      \
+    inptr += increment;							      \
   }
 #include <iconv/loop.c>
 
@@ -456,13 +455,16 @@ static const char from_ucs4[][2] =
     uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
-    if (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]))		      \
+    if (__builtin_expect (ch, 0)					      \
+	>= sizeof (from_ucs4) / sizeof (from_ucs4[0]))			      \
       {									      \
-	if (ch == 0x2126)						      \
+	if (__builtin_expect (ch, 0) == 0x2126)				      \
 	  cp = "\xe0";							      \
-	else if (ch == 0x2c7)						      \
+	else if (__builtin_expect (ch, 0) == 0x2c7)			      \
 	  cp = "\xcf\x20";						      \
-	else if (ch < 0x2d8 || ch > 0x2dd || ch == 0x02dc)		      \
+	else if (__builtin_expect (ch, 0x2d8) < 0x2d8			      \
+		 || __builtin_expect (ch, 0x2d8) > 0x2dd		      \
+		 || __builtin_expect (ch, 0x2d8) == 0x02dc)		      \
 	  {								      \
 	    /* Illegal characters.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -489,7 +491,7 @@ static const char from_ucs4[][2] =
       {									      \
 	cp = from_ucs4[ch];						      \
 									      \
-	if (cp[0] == '\0' && ch != 0)					      \
+	if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
 	  {								      \
 	    /* Illegal.  */						      \
 	    if (! ignore_errors_p ())					      \
@@ -509,7 +511,7 @@ static const char from_ucs4[][2] =
     /* Now test for a possible second byte and write this if possible.  */    \
     if (cp[1] != '\0')							      \
       {									      \
-	if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (outptr >= outend, 0))	      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \

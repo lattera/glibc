@@ -66,7 +66,7 @@
 	   && data->__invocation_counter == 0)				      \
     {									      \
       /* Emit the Byte Order Mark.  */					      \
-      if (outbuf + 2 > outend)						      \
+      if (__builtin_expect (outbuf + 2 > outend, 0))			      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
       put16u (outbuf, BOM);						      \
@@ -140,7 +140,7 @@ gconv_init (struct __gconv_step *step)
     }
 
   result = __GCONV_NOCONV;
-  if (dir != illegal_dir)
+  if (__builtin_expect (dir, to_utf16) != illegal_dir)
     {
       new_data = (struct utf16_data *) malloc (sizeof (struct utf16_data));
 
@@ -197,9 +197,9 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (swap)								      \
       {									      \
-	if (c >= 0x10000)						      \
+	if (__builtin_expect (c, 0) >= 0x10000)				      \
 	  {								      \
-	    if (c >= 0x110000)						      \
+	    if (__builtin_expect (c, 0) >= 0x110000)			      \
 	      {								      \
 		if (! ignore_errors_p ())				      \
 		  {							      \
@@ -214,7 +214,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
-	    if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 4 > outend, 0))\
 	      {								      \
 		/* Overflow in the output buffer.  */			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -230,9 +230,9 @@ gconv_end (struct __gconv_step *data)
       }									      \
     else								      \
       {									      \
-	if (c >= 0x10000)						      \
+	if (__builtin_expect (c, 0) >= 0x10000)				      \
 	  {								      \
-	    if (c >= 0x110000)						      \
+	    if (__builtin_expect (c, 0) >= 0x110000)			      \
 	      {								      \
 		if (! ignore_errors_p ())				      \
 		  {							      \
@@ -247,7 +247,7 @@ gconv_end (struct __gconv_step *data)
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
-	    if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 4 > outend, 0))\
 	      {								      \
 		/* Overflow in the output buffer.  */			      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -282,10 +282,10 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	u1 = bswap_16 (u1);						      \
 									      \
-	if (u1 < 0xd800 || u1 > 0xdfff)					      \
+	if (__builtin_expect (u1, 0) < 0xd800 || u1 > 0xdfff)		      \
 	  {								      \
 	    /* No surrogate.  */					      \
-	    put32 (outptr, u1);				      \
+	    put32 (outptr, u1);						      \
 	    inptr += 2;							      \
 	  }								      \
 	else								      \
@@ -294,7 +294,7 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
-	    if (NEED_LENGTH_TEST && inptr + 4 > inend)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (inptr + 4 > inend, 0))  \
 	      {								      \
 		/* We don't have enough input for another complete input      \
 		   character.  */					      \
@@ -304,7 +304,8 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    inptr += 2;							      \
 	    u2 = bswap_16 (get16 (inptr));				      \
-	    if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
+	    if (__builtin_expect (u2, 0xdc00) < 0xdc00			      \
+		|| __builtin_expect (u2, 0xdc00) >= 0xdfff)		      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		if (! ignore_errors_p ())				      \
@@ -324,7 +325,7 @@ gconv_end (struct __gconv_step *data)
       }									      \
     else								      \
       {									      \
-	if (u1 < 0xd800 || u1 > 0xdfff)					      \
+	if (__builtin_expect (u1, 0) < 0xd800 || u1 > 0xdfff)		      \
 	  {								      \
 	    /* No surrogate.  */					      \
 	    put32 (outptr, u1);						      \
@@ -336,7 +337,7 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    /* It's a surrogate character.  At least the first word says      \
 	       it is.  */						      \
-	    if (NEED_LENGTH_TEST && inptr + 4 > inend)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (inptr + 4 > inend, 0))  \
 	      {								      \
 		/* We don't have enough input for another complete input      \
 		   character.  */					      \
@@ -346,7 +347,8 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    inptr += 2;							      \
 	    u2 = get16 (inptr);						      \
-	    if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
+	    if (__builtin_expect (u2, 0xdc00) < 0xdc00			      \
+		|| __builtin_expect (u2, 0xdc00) >= 0xdfff)		      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
 		if (! ignore_errors_p ())				      \

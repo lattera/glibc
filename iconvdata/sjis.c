@@ -4337,12 +4337,12 @@ static const char from_ucs4_extra[0x100][2] =
   {									      \
     uint32_t ch = *inptr;						      \
 									      \
-    if (ch == 0x5c)							      \
+    if (__builtin_expect (ch, 0) == 0x5c)				      \
       {									      \
 	ch = 0xa5;							      \
 	++inptr;							      \
       }									      \
-    else if (ch == 0x7e)						      \
+    else if (__builtin_expect (ch, 0) == 0x7e)				      \
       {									      \
 	ch = 0x203e;							      \
 	++inptr;							      \
@@ -4354,7 +4354,9 @@ static const char from_ucs4_extra[0x100][2] =
 	ch = halfkana_to_ucs4[ch - 0xa1];				      \
 	++inptr;							      \
       }									      \
-    else if (ch > 0xea || ch == 0xa0 || ch <= 0x80)			      \
+    else if (__builtin_expect (ch, 0) > 0xea				      \
+	     || __builtin_expect (ch, 0) == 0xa0			      \
+	     || __builtin_expect (ch, 0x81) <= 0x80)			      \
       {									      \
 	/* These are illegal.  */					      \
 	if (! ignore_errors_p ())					      \
@@ -4375,7 +4377,7 @@ static const char from_ucs4_extra[0x100][2] =
 	uint32_t ch2;							      \
 	uint_fast32_t idx;						      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -4385,9 +4387,11 @@ static const char from_ucs4_extra[0x100][2] =
 									      \
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
-	if (idx < 0x8140 || (idx > 0x84be && idx < 0x889f)		      \
-	    || (idx > 0x88fc && idx < 0x8940)				      \
-	    || (idx > 0x9ffc && idx < 0xe040) || idx > 0xeaa4)		      \
+	if (__builtin_expect (idx, 0x8140) < 0x8140			      \
+	    || (__builtin_expect (idx, 0x8140) > 0x84be && idx < 0x889f)      \
+	    || (__builtin_expect (idx, 0x8140) > 0x88fc && idx < 0x8940)      \
+	    || (__builtin_expect (idx, 0x8140) > 0x9ffc && idx < 0xe040)      \
+	    || __builtin_expect (idx, 0x8140) > 0xeaa4)			      \
 	  {								      \
 	    /* This is illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -4418,7 +4422,7 @@ static const char from_ucs4_extra[0x100][2] =
 	    inptr += 2;							      \
 	  }								      \
 									      \
-	if (ch == 0)							      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -4456,7 +4460,8 @@ static const char from_ucs4_extra[0x100][2] =
 	  cp = from_ucs4_greek[ch - 0x391];				      \
 	else if (ch >= 0x2010 && ch <= 0x9fa0)				      \
 	  cp = from_ucs4_cjk[ch - 0x02010];				      \
-	else if (ch >= 0xff01 && ch <= 0xffef)				      \
+	else if (__builtin_expect (ch, 0xff01) >= 0xff01		      \
+		 && __builtin_expect (ch, 0xff01) <= 0xffef)		      \
 	  cp = from_ucs4_extra[ch - 0xff00];				      \
 	else								      \
 	  {								      \
@@ -4476,7 +4481,7 @@ static const char from_ucs4_extra[0x100][2] =
     else								      \
       cp = from_ucs4_lat1[ch];						      \
 									      \
-    if (cp[0] == '\0' && ch != 0)					      \
+    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
 	if (! ignore_errors_p ())					      \
@@ -4494,7 +4499,7 @@ static const char from_ucs4_extra[0x100][2] =
 	/* Now test for a possible second byte and write this if possible.  */\
 	if (cp[1] != '\0')						      \
 	  {								      \
-	    if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr >= outend, 0))   \
 	      {								      \
 		/* The result does not fit into the buffer.  */		      \
 		result = __GCONV_FULL_OUTPUT;				      \

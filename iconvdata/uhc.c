@@ -3063,7 +3063,9 @@ static const char uhc_hangul_from_ucs[11172][2] =
 */									      \
     if (ch <= 0x7f)							      \
       ++inptr;								      \
-    else if (ch <= 0x80 || ch >= 0xfe || ch == 0xc9)			      \
+    else if (__builtin_expect (ch, 0x81) <= 0x80			      \
+	     || __builtin_expect (ch, 0x81) >= 0xfe			      \
+	     || __builtin_expect (ch, 0x81) == 0xc9)			      \
       {									      \
 	/* This is illegal.  */						      \
 	if (! ignore_errors_p ())					      \
@@ -3083,7 +3085,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	   is also available.  */					      \
 	uint32_t ch2;							      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -3113,8 +3115,11 @@ static const char uhc_hangul_from_ucs[11172][2] =
 									      \
 	if (ch < 0xa1 || ch2 < 0xa1)					      \
 	  {								      \
-	    if (ch > 0xc6 || ch2 <0x41 || (ch2 > 0x5a && ch2 < 0x61)	      \
-		|| (ch2 > 0x7a && ch2 < 0x81) || (ch == 0xc6 && ch2 > 0x52))  \
+	    if (__builtin_expect (ch, 0xc5) > 0xc6			      \
+		|| __builtin_expect (ch2, 0x41) < 0x41			      \
+		|| (__builtin_expect (ch2, 0x41) > 0x5a && ch2 < 0x61)	      \
+		|| (__builtin_expect (ch2, 0x41) > 0x7a && ch2 < 0x81)	      \
+		|| (__builtin_expect (ch, 0xc5) == 0xc6 && ch2 > 0x52))	      \
 	      {								      \
 		/* This is not legal.  */				      \
 		if (! ignore_errors_p ())				      \
@@ -3135,7 +3140,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 				     ? (ch - 0x81) * 178		      \
 				     : 5696 + (ch - 0xa1) * 84)];	      \
 									      \
-	    if (ch == 0)						      \
+	    if (__builtin_expect (ch, 1) == 0)				      \
 	      {								      \
 		/* This is an illegal character.  */			      \
 		if (! ignore_errors_p ())				      \
@@ -3155,7 +3160,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	else								      \
 	  {								      \
 	    ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);			      \
-	    if (ch == __UNKNOWN_10646_CHAR)				      \
+	    if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		/* Illegal.  */						      \
 		if (! ignore_errors_p ())				      \
@@ -3194,7 +3199,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
       {									      \
 	const char *s = uhc_hangul_from_ucs[ch - 0xac00];		      \
 									      \
-	if (NEED_LENGTH_TEST && outptr + 2 > outend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))    \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -3209,12 +3214,12 @@ static const char uhc_hangul_from_ucs[11172][2] =
 						(NEED_LENGTH_TEST	      \
 						 ? outend - outptr : 2));     \
 									      \
-	if (NEED_LENGTH_TEST && written == 0)				      \
+	if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
-	if (written == __UNKNOWN_10646_CHAR)				      \
+	if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
@@ -3241,12 +3246,12 @@ static const char uhc_hangul_from_ucs[11172][2] =
 					      (NEED_LENGTH_TEST		      \
 					       ? outend - outptr : 2));	      \
 									      \
-	if (NEED_LENGTH_TEST && written == 0)				      \
+	if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
-	if (written == __UNKNOWN_10646_CHAR)				      \
+	if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
