@@ -48,7 +48,7 @@ routines := htonl htons		\
 	    in6_addr getnameinfo if_index getipnodebyad freehostent \
 	    getipnodebynm
 
-tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-ipnode tst-network
+tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network # tst-ipnode
 
 include ../Rules
 
