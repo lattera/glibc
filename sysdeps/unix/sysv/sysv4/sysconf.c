@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -74,12 +74,112 @@ DEFUN(__sysconf, (name), int name)
 #else
       return -1;
 #endif
+
     case _SC_SAVED_IDS:
 #ifdef	_POSIX_SAVED_IDS
       return 1;
 #else
       return -1;
 #endif
+
+    case _SC_REALTIME_SIGNALS:
+#ifdef	_POSIX_REALTIME_SIGNALS
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PRIORITY_SCHEDULING:
+#ifdef	_POSIX_PRIORITY_SCHEDULING
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_TIMERS:
+#ifdef	_POSIX_TIMERS
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_ASYNCHRONOUS_IO:
+#ifdef	_POSIX_ASYNCHRONOUS_IO
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_PRIORITIZED_IO:
+#ifdef	_POSIX_PRIORITIZED_IO
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_SYNCHRONIZED_IO:
+#ifdef	_POSIX_SYNCHRONIZED_IO
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_FSYNC:
+#ifdef	_POSIX_FSYNC
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_MAPPED_FILES:
+#ifdef	_POSIX_MAPPED_FILES
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_MEMLOCK:
+#ifdef	_POSIX_MEMLOCK
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_MEMLOCK_RANGE:
+#ifdef	_POSIX_MEMLOCK_RANGE
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_MEMORY_PROTECTION:
+#ifdef	_POSIX_MEMORY_PROTECTION
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_MESSAGE_PASSING:
+#ifdef	_POSIX_MESSAGE_PASSING
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_SEMAPHORES:
+#ifdef	_POSIX_SEMAPHORES
+      return 1;
+#else
+      return -1;
+#endif
+
+    case _SC_SHARED_MEMORY_OBJECTS:
+#ifdef	_POSIX_SHARED_MEMORY_OBJECTS
+      return 1;
+#else
+      return -1;
+#endif
+
     case _SC_VERSION:
       return _POSIX_VERSION;
 
@@ -142,6 +242,12 @@ DEFUN(__sysconf, (name), int name)
       return -1;
 #endif
 
+    case _SC_CHARCLASS_NAME_MAX:
+#ifdef	CHARCLASS_NAME_MAX
+      return CHARCLASS_NAME_MAX;
+#else
+      return -1;
+#endif
 
     case _SC_2_VERSION:
       /* This is actually supposed to return the version
