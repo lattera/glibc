@@ -1632,7 +1632,7 @@ fi
 AC_CACHE_CHECK(whether CFI directives are supported, libc_cv_asm_cfi_directives, [dnl
 cat > conftest.s <<EOF
         .text
-        .type   func,@function
+        .type   func,%function
 func:
         .cfi_startproc
 	.cfi_remember_state

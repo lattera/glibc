@@ -6065,7 +6065,7 @@ if test "${libc_cv_asm_cfi_directives+set}" = set; then
 else
   cat > conftest.s <<EOF
         .text
-        .type   func,@function
+        .type   func,%function
 func:
         .cfi_startproc
 	.cfi_remember_state
