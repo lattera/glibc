@@ -32,9 +32,19 @@ ENTRY(__clone)
 	/* Sanity check arguments.  */
 	movl	$-EINVAL,%eax
 	movl	4(%esp),%ecx		/* no NULL function pointers */
+#ifdef PIC
 	jecxz	SYSCALL_ERROR_LABEL
+#else
+	testl	%ecx,%ecx
+	jz	SYSCALL_ERROR_LABEL
+#endif
 	movl	8(%esp),%ecx		/* no NULL stack pointers */
+#ifdef PIC
 	jecxz	SYSCALL_ERROR_LABEL
+#else
+	testl	%ecx,%ecx
+	jz	SYSCALL_ERROR_LABEL
+#endif
 
 	/* Insert the argument onto the new stack.  */
 	subl	$8,%ecx

@@ -1,5 +1,8 @@
 1999-01-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/clone.S: When not using PIC don't
+	use jecxz since the label might be far away.
+
 	* sysdeps/unix/sysv/linux/sigaction.c: Update comment to say the
 	__libc_missing_rt_sigs is defined here.
 	* sysdeps/unix/sysv/linux/sigpending.c: Only declare
