@@ -1,5 +1,5 @@
 /* Store current representation for exceptions.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
@@ -29,6 +29,10 @@ __fegetexceptflag (fexcept_t *flagp, int excepts)
 
   /* Get the current exceptions.  */
   _FPU_GETCW (temp);
+
+  /* It is important that the CAUSE bits are not saved here.  If they
+     were, a call to fesetexceptflag() would generate an
+     exception.  */
 
   *flagp = temp & excepts & FE_ALL_EXCEPT;
 

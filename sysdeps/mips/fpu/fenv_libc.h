@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>.
 
@@ -20,10 +20,13 @@
 #ifndef _FENV_LIBC_H
 #define _FENV_LIBC_H    1
 
-/* Mask for enabling exceptions.  */
-#define ENABLE_MASK 0xF80U
+/* Mask for enabling exceptions and for the CAUSE bits.  */
+#define ENABLE_MASK	0x00F80U
+#define CAUSE_MASK	0x1F000U
 
-/* Shift for FE_* flags.  */
-#define ENABLE_SHIFT 5
+/* Shift for FE_* flags to get up to the ENABLE bits and the CAUSE bits.  */
+#define	ENABLE_SHIFT	5
+#define	CAUSE_SHIFT	10
+
 
 #endif /* _FENV_LIBC_H */
