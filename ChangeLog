@@ -1,5 +1,6 @@
 1999-05-06  Thorsten Kukuk  <kukuk@suse.de>
 
+	* stdlib/fpioconst.c (__tens): Export also for 64bit platforms.
 	* stdlib/fpioconst.c: Move #endif before end of struct.
 
 1999-05-05  Ulrich Drepper  <drepper@cygnus.com>

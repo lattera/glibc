@@ -231,7 +231,7 @@ const mp_limb_t __tens[] =
 
 /* Table with constants of 10^(2^i), i=0..12 for 64-bit limbs.	*/
 
-static const mp_limb_t __tens[] =
+const mp_limb_t __tens[] =
 {
 #define TENS_P0_IDX	0
 #define TENS_P0_SIZE	2
