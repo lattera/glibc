@@ -1,3 +1,10 @@
+2004-03-08  Jeroen Dekkers  <jeroen@dekkers.cx>
+
+	* elf/rtld.c (_rtld_global_ro) [MAP_COPY]: Don't set _dl_unload_cache.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_important_hwcaps):
+	Don't use INTUSE with _dl_signal_error.
+
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.c (_dl_reloc_overflow):

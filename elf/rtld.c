@@ -133,7 +133,9 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_check_map_versions = _dl_check_map_versions,
     ._dl_init = _dl_init,
     ._dl_debug_state = _dl_debug_state,
+#ifndef MAP_COPY
     ._dl_unload_cache = _dl_unload_cache,
+#endif
     ._dl_debug_printf = _dl_debug_printf,
     ._dl_catch_error = _dl_catch_error,
     ._dl_signal_error = _dl_signal_error,
