@@ -251,6 +251,7 @@ fmh();				/* XXX */
 }
 
 void
+internal_function
 _dl_sysdep_start_cleanup (void)
 {
   /* Deallocate the reply port and task port rights acquired by
