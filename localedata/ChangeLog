@@ -1,3 +1,8 @@
+1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/hr_HR: Various corrections.
+	Patch by Tomislav Vujec <tvujec@CARNet.hr>.
+
 1999-03-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ru_RU (mon): Fix March and May month name translations.
