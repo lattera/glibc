@@ -2196,7 +2196,7 @@ The @code{wcstoull} function was introduced in @w{Amendment 1} of @w{ISO C90}.
 The @code{wcstouq} function is equivalent to the @code{strtouq} function
 in nearly all aspects but handles wide character strings.
 
-The @code{wcstoq} function is a GNU extension.
+The @code{wcstouq} function is a GNU extension.
 @end deftypefun
 
 @comment inttypes.h

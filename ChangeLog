@@ -1,3 +1,12 @@
+2003-12-21  Roland McGrath  <roland@redhat.com>
+
+	* manual/arith.texi (Parsing of Integers): Typo fix.
+
+2003-12-20  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/generic/ifreq.c (__ifreq) [_HAVE_SA_LEN]: Fix typo:
+	add missing dereference of IFREQS before counting loop.
+
 2003-12-21  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/m68020/bits/atomic.h: Avoid matching memory
@@ -68,7 +77,7 @@
 
 2003-12-16  Steven Munroe  <sjmunroe@us.ibm.com>
 
-	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h [!__PPC64_ELF_H]: Extent
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h [!__PPC64_ELF_H]: Extend
 	conditional to include typedef elf_vrreg_t.
 
 2002-12-17  Paolo Bonzini  <bonzini@gnu.org>
