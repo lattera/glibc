@@ -1,3 +1,11 @@
+2003-01-16  Roland McGrath  <roland@redhat.com>
+
+	Tweak merged .abilist file format to merge duplicate symbols in
+	different sets into multi-version stanzas with new "| SET regexp..."
+	header continuation lines.
+	* scripts/merge-abilist.awk: Rewritten for new format.
+	* scripts/extract-abilist.awk: Likewise.
+
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (nscd_run): Remove bogus return which isn't
