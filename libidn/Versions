@@ -1,0 +1,5 @@
+libcidn {
+  GLIBC_PRIVATE {
+    idna_to_ascii_lz;
+  }
+}

@@ -1,0 +1,20 @@
+2004-03-07  Simon Josefsson  <jas@extundo.com>
+
+	* Banner: New file.
+	* Makefile: New file.
+	* Version: New file.
+	* configure: New file.
+	* idn-stub.c: New file.
+	* gunibreak.h: New file.  Copied from Libidn.
+	* gunicomp.h: New file.  Copied from Libidn.
+	* gunidecomp.h: New file.  Copied from Libidn.
+	* idna.h: New file.  Copied from Libidn.
+	* idna.c: New file.  Copied from Libidn.
+	* nfkc.c: New file.  Copied from Libidn.
+	* profiles.c: New file.  Copied from Libidn.
+	* punycode.c: New file.  Copied from Libidn.
+	* punycode.h: New file.  Copied from Libidn.
+	* rfc3454.c: New file.  Copied from Libidn.
+	* stringprep.c: New file.  Copied from Libidn.
+	* stringprep.h: New file.  Copied from Libidn.
+	* toutf8.c: New file.  Copied from Libidn.  Modified for use in glibc.
