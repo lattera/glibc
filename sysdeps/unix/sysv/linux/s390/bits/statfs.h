@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,8 @@ struct statfs
 #endif
     __fsid_t f_fsid;
     int f_namelen;
-    int f_spare[6];
+    int f_frsize;
+    int f_spare[5];
   };
 
 #ifdef __USE_LARGEFILE64
@@ -56,7 +57,8 @@ struct statfs64
     __fsfilcnt64_t f_ffree;
     __fsid_t f_fsid;
     int f_namelen;
-    int f_spare[6];
+    int f_frsize;
+    int f_spare[5];
   };
 #endif
 
