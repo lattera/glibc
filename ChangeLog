@@ -1,3 +1,31 @@
+Fri Nov 10 14:15:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): For SIGNO == 0,
+	skip straight to pending check.  When UNTRACED, resume process
+	from suspension first.
+
+	* intl/Makefile (headers): New variable, libintl.h.
+	[gettext-srcdir]: New rules to copy source from $(gettext-srcdir)/intl.
+	* configure.in: Check for --with-gettext arg.
+
+Fri Nov 10 13:51:30 1995  Richard Stallman  <rms@gnu.ai.mit.edu>
+
+	* malloc/malloc.c (get_contiguous_space): New function.
+	(morecore): Rewrite allocating new malloc info table.
+	(_malloc_internal): Use get_contiguous_space.
+
+Fri Nov 10 13:03:40 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdexec.c (_hurd_exec): If exec'ing self, pass
+	_hurd_msgport to be destroyed.
+
+	* Makerules (installed-libcs): Filter out %_pic.a.
+
+	* hurd/hurdinit.c (_hurd_proc_init): When traced, use msg_sig_post
+	to our msgport to take SIGTRAP, instead of _hurd_raise_signal.
+
+	* hurd/Makefile (user-interfaces): Add hurd/process_request.
+
 Wed Nov  8 16:31:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* termios/Makefile (headers): Add sys/ttychars.h.

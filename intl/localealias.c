@@ -1,5 +1,5 @@
 /* localealias.c -- handle aliases for locale names
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ _nl_expand_alias (name)
 	{
 	  const char *start;
 
-	  while (locale_alias_path[0] != '\0' && locale_alias_path[0] == ':')
+	  while (locale_alias_path[0] == ':')
 	    ++locale_alias_path;
 	  start = locale_alias_path;
 
@@ -239,7 +239,7 @@ read_alias_file (fname, fname_len)
 	    }
 	}
 
-      /* Possibily not the whole line fits into the buffer.  Ignore
+      /* Possibily not the whole line fitted into the buffer.  Ignore
 	 the rest of the line.  */
       while (strchr (cp, '\n') == NULL)
 	{
@@ -305,8 +305,8 @@ alias_compare (map1, map2)
     {
       /* I know this seems to be odd but the tolower() function in
 	 some systems libc cannot handle nonalpha characters.  */
-      c1 = isalpha (*p1) ? tolower (*p1) : *p1;
-      c2 = isalpha (*p2) ? tolower (*p2) : *p2;
+      c1 = isupper (*p1) ? tolower (*p1) : *p1;
+      c2 = isupper (*p2) ? tolower (*p2) : *p2;
       if (c1 == '\0')
 	break;
     }

@@ -15,6 +15,8 @@ ac_default_prefix=/usr/local
 ac_help="$ac_help
   --with-gmp=DIRECTORY	  find GMP source code in DIRECTORY (not needed)"
 ac_help="$ac_help
+  --with-gettext=DIR	  find GNU gettext source code in DIR (not needed)"
+ac_help="$ac_help
   --with-fp		  if using floating-point hardware"
 ac_help="$ac_help
   --with-gnu-binutils	  if using GNU binutils (as and ld)"
@@ -558,6 +560,21 @@ esac
 
 fi
 
+# Check for a --with-gettext argument and set gettext-srcdir in config.make.
+# Check whether --with-gettext or --without-gettext was given.
+if test "${with_gettext+set}" = set; then
+  withval="$with_gettext"
+  case "$with_gettext" in
+yes)
+  { echo "configure: error: --with-gettext requires an argument; use --with-gettext=DIR" 1>&2; exit 1; } ;;
+''|no) ;;
+*)
+  config_vars="$config_vars
+gettext-srcdir = $withval" ;;
+esac
+
+fi
+
 
 # Check whether --with-fp or --without-fp was given.
 if test "${with_fp+set}" = set; then
@@ -768,7 +785,7 @@ ostry=$os
 while o=`echo $tail | sed 's/\.[^.]*$//'`; test $o != $tail; do
   ostry="$ostry /$o"
   tail=$o
-done  
+done
 o=`echo $tail | sed 's/[0-9]*$//'`
 if test $o != $tail; then
   ostry="$ostry /$o"
@@ -1133,7 +1150,7 @@ else
   # On the NeXT, cc -E runs the code through the compiler's parser,
   # not just through cpp.
   cat > conftest.$ac_ext <<EOF
-#line 1137 "configure"
+#line 1154 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1147,7 +1164,7 @@ else
   rm -rf conftest*
   CPP="${CC-cc} -E -traditional-cpp"
   cat > conftest.$ac_ext <<EOF
-#line 1151 "configure"
+#line 1168 "configure"
 #include "confdefs.h"
 #include <assert.h>
 Syntax Error
@@ -1201,7 +1218,7 @@ if eval "test \"`echo '$''{'libc_cv_friendly_stddef'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1205 "configure"
+#line 1222 "configure"
 #include "confdefs.h"
 #define __need_size_t
 #define __need_wchar_t
@@ -1324,7 +1341,7 @@ if eval "test \"`echo '$''{'libc_cv_have_initfini'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&4
 else
   cat > conftest.$ac_ext <<EOF
-#line 1328 "configure"
+#line 1345 "configure"
 #include "confdefs.h"
 
 int main() { return 0; }

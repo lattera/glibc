@@ -151,7 +151,7 @@ _hurd_proc_init (char **argv)
     /* This process is "traced", meaning it should stop on signals or exec.
        We are all set up now to handle signals.  Stop ourselves, to inform
        our parent (presumably a debugger) that the exec has completed.  */
-    _hurd_raise_signal (NULL, SIGTRAP, 0, 0);
+    __msg_sig_post (_hurd_msgport, SIGTRAP, __mach_task_self ());
 }
 
 /* Called when we get a message telling us to change our proc server port.  */

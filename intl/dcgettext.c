@@ -317,14 +317,13 @@ DCGETTEXT (domainname, msgid, category)
 	    {
 	      int cnt;
 
-	      for (cnt = 6; cnt >= 0 && retval == NULL; --cnt)
-		if (domain->successor[cnt] != NULL)
-		  {
-		    retval = find_msg (domain->successor[cnt], msgid);
+	      for (cnt = 0; domain->successor[cnt] != NULL; --cnt)
+		{
+		  retval = find_msg (domain->successor[cnt], msgid);
 
- 		    if (domain->successor[cnt]->data == NULL)
-		      domain->successor[cnt] = NULL;
-		  }
+		  if (retval != NULL)
+		    break;
+		}
 	    }
 
 	  if (retval != NULL)

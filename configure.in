@@ -18,6 +18,19 @@ yes) AC_MSG_ERROR(--with-gmp requires an argument; use --with-gmp=DIRECTORY) ;;
 gmp-srcdir = $withval" ;;
 esac
 ])
+# Check for a --with-gettext argument and set gettext-srcdir in config.make.
+AC_ARG_WITH(gettext, dnl
+  --with-gettext=DIR	  find GNU gettext source code in DIR (not needed),
+	    [dnl
+case "$with_gettext" in
+yes)
+  AC_MSG_ERROR(--with-gettext requires an argument; use --with-gettext=DIR) ;;
+''|no) ;;
+*)
+  config_vars="$config_vars
+gettext-srcdir = $withval" ;;
+esac
+])
 
 dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH(fp, dnl
@@ -133,7 +146,7 @@ ostry=$os
 while o=`echo $tail | sed 's/\.[^.]*$//'`; test $o != $tail; do
   ostry="$ostry /$o"
   tail=$o
-done  
+done
 o=`echo $tail | sed 's/[0-9]*$//'`
 if test $o != $tail; then
   ostry="$ostry /$o"

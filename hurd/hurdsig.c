@@ -265,11 +265,14 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
    incoming signal, returns the reply port to be received on.  Otherwise
    returns MACH_PORT_NULL.
 
+   SIGNO is used to find the applicable SA_RESTART bit.  If SIGNO is zero,
+   the RPC fails with EINTR instead of restarting (thread_cancel).
+
    *STATE_CHANGE is set nonzero if STATE->basic was modified and should
    be applied back to the thread if it might ever run again, else zero.  */
 
 mach_port_t
-_hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread, 
+_hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 		     struct machine_thread_all_state *state, int *state_change,
 		     mach_port_t *reply_port,
 		     mach_msg_type_name_t reply_port_type,
@@ -480,6 +483,52 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		 }));
       _hurd_stopped = 1;
     }
+  /* Resume the process after a suspension.  */
+  void resume (void)
+    {
+      /* Resume the process from being stopped.  */
+      thread_t *threads;
+      mach_msg_type_number_t nthreads, i;
+      error_t err;
+
+      if (! _hurd_stopped)
+	return;
+
+      /* Tell the proc server we are continuing.  */
+      __USEPORT (PROC, __proc_mark_cont (port));
+      /* Fetch ports to all our threads and resume them.  */
+      err = __task_threads (__mach_task_self (), &threads, &nthreads);
+      assert_perror (err);
+      for (i = 0; i < nthreads; ++i)
+	{
+	  if (threads[i] != _hurd_msgport_thread &&
+	      (act != handle || threads[i] != ss->thread))
+	    {
+	      err = __thread_resume (threads[i]);
+	      assert_perror (err);
+	    }
+	  err = __mach_port_deallocate (__mach_task_self (),
+					threads[i]);
+	  assert_perror (err);
+	}
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) threads,
+		       nthreads * sizeof *threads);
+      _hurd_stopped = 0;
+      /* The thread that will run the handler is already suspended.  */
+      ss_suspended = 1;
+    }
+
+  if (signo == 0)
+    {
+      if (untraced)
+	/* This is PTRACE_CONTINUE.  */
+	resume ();
+
+      /* This call is just to check for pending signals.  */
+      __spin_lock (&ss->lock);
+      goto check_pending_signals;
+    }
 
  post_signal:
 
@@ -514,8 +563,6 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
       __spin_lock (&ss->lock);
 
-      handler = ss->actions[signo].sa_handler;
-
       if (!untraced && (_hurd_exec_flags & EXEC_TRACED))
 	{
 	  /* We are being traced.  Stop to tell the debugger of the signal.  */
@@ -529,6 +576,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  reply ();
 	  return;
 	}
+
+      handler = ss->actions[signo].sa_handler;
 
       if (handler == SIG_DFL)
 	/* Figure out the default action for this signal.  */
@@ -604,35 +653,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    ss->pending &= ~STOPSIGS;
 
 	  if (_hurd_stopped && act != stop && (untraced || signo == SIGCONT))
-	    {
-	      /* Resume the process from being stopped.  */
-	      thread_t *threads;
-	      mach_msg_type_number_t nthreads, i;
-	      error_t err;
-	      /* Tell the proc server we are continuing.  */
-	      __USEPORT (PROC, __proc_mark_cont (port));
-	      /* Fetch ports to all our threads and resume them.  */
-	      err = __task_threads (__mach_task_self (), &threads, &nthreads);
-	      assert_perror (err);
-	      for (i = 0; i < nthreads; ++i)
-		{
-		  if (threads[i] != _hurd_msgport_thread &&
-		      (act != handle || threads[i] != ss->thread))
-		    {
-		      err = __thread_resume (threads[i]);
-		      assert_perror (err);
-		    }
-		  err = __mach_port_deallocate (__mach_task_self (),
-						threads[i]);
-		  assert_perror (err);
-		}
-	      __vm_deallocate (__mach_task_self (),
-			       (vm_address_t) threads,
-			       nthreads * sizeof *threads);
-	      _hurd_stopped = 0;
-	      /* The thread that will run the handler is already suspended.  */
-	      ss_suspended = 1;
-	    }
+	    resume ();
 	}
     }
 
@@ -648,10 +669,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       act = term;
     }
 
-  /* Handle receipt of a blocked signal, or any signal while stopped.
-     It matters that we test ACT first here, because we must never pass
-     SIGNO==0 to __sigismember.  */
-  if ((act != ignore && __sigismember (&ss->blocked, signo)) ||
+  /* Handle receipt of a blocked signal, or any signal while stopped.  */
+  if (__sigismember (&ss->blocked, signo) ||
       (signo != SIGKILL && _hurd_stopped))
     {
       mark_pending ();
@@ -754,7 +773,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		ss->context = &ocontext;
 	      }
 	    _hurdsig_end_catch_fault ();
-	    
+
 	    if (! machine_get_basic_state (ss->thread, &thread_state))
 	      goto sigbomb;
 	    loc = interrupted_reply_port_location (&thread_state, 1);
@@ -772,7 +791,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	else
 	  {
 	    wait_for_reply
-	      = (_hurdsig_abort_rpcs (ss, signo, 1, 
+	      = (_hurdsig_abort_rpcs (ss, signo, 1,
 				      &thread_state, &state_changed,
 				      &reply_port, reply_port_type, untraced)
 		 != MACH_PORT_NULL);
@@ -851,12 +870,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     }
 
   /* The signal has either been ignored or is now being handled.  We can
-     consider it delivered and reply to the killer.  The exception is
-     signal 0, which can be sent by a user thread to make us check for
-     pending signals.  In that case we want to deliver the pending signals
-     before replying.  */
-  if (signo != 0)
-    reply ();
+     consider it delivered and reply to the killer.  */
+  reply ();
 
   /* We get here unless the signal was fatal.  We still hold SS->lock.
      Check for pending signals, and loop to post them.  */
@@ -873,6 +888,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	  return 0;
 	return pending = ss->pending & ~ss->blocked;
       }
+
+  check_pending_signals:
+    untraced = 0;
 
     if (signals_pending ())
       {
@@ -974,7 +992,7 @@ signal_allowed (int signo, mach_port_t refport)
 	/* A continue signal can be sent by anyone in the session.  */
 	mach_port_t sessport;
 	if (! __USEPORT (PROC, __proc_getsidport (port, &sessport)))
-	  { 
+	  {
 	    __mach_port_deallocate (__mach_task_self (), sessport);
 	    if (refport == sessport)
 	      goto win;
@@ -1099,7 +1117,7 @@ _hurdsig_init (void)
 				  MACH_PORT_RIGHT_RECEIVE,
 				  &_hurd_msgport))
     __libc_fatal ("hurd: Can't create message port receive right\n");
-  
+
   /* Make a send right to the signal port.  */
   if (err = __mach_port_insert_right (__mach_task_self (),
 				      _hurd_msgport,
@@ -1135,7 +1153,7 @@ _hurdsig_init (void)
 
   if (err = __thread_resume (_hurd_msgport_thread))
     __libc_fatal ("hurd: Can't resume signal thread\n");
-    
+
 #if 0				/* Don't confuse poor gdb.  */
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),

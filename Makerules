@@ -457,6 +457,7 @@ ifdef objects
 installed-libcs := $(foreach o,$(object-suffixes),\
 			     $(libdir)/$(patsubst %,$(libtype$o),\
 						  $(libprefix)$(libc-name)))
+installed-libcs := $(filter-out %_pic.a,$(installed-libcs))
 install: $(installed-libcs)
 $(installed-libcs): $(libdir)/lib$(libprefix)%: lib
 	$(make-target-directory)

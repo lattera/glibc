@@ -75,6 +75,13 @@ _nl_load_domain (domain)
   domain->decided = 1;
   domain->data = NULL;
 
+  /* If the record does not represent a valid locale the FILENAME
+     might be NULL.  This can happen when according to the given
+     specification the locale file name is different for XPG and CEN
+     syntax.  */
+  if (domain->filename == NULL)
+    return;
+
   /* Try to open the addressed file.  */
   fd = open (domain->filename, O_RDONLY);
   if (fd == -1)

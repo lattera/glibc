@@ -19,6 +19,7 @@
 # Cambridge, MA 02139, USA.
 
 subdir = intl
+headers = libintl.h
 routines = bindtextdom dcgettext dgettext gettext	\
 	   finddomain loadmsgcat localealias textdomain
 distribute = gettext.h gettextP.h hash-string.h
@@ -27,3 +28,17 @@ include ../Rules
 
 CPPFLAGS += -D'GNULOCALEDIR="$(localedir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(localedir):$(nlsdir)"'
+
+ifdef gettext-srcdir
+
+%:: $(gettext-srcdir)/intl/%.glibc; $(copysrc)
+%:: $(gettext-srcdir)/intl/%; $(copysrc)
+
+define copysrc
+cp -f $< $@.new
+chmod a-w $@.new
+mv -f $@.new $@
+test ! -d CVS || cvs commit -m'Updated from $<' $@
+endef
+
+endif

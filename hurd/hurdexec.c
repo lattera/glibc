@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
    If TASK == mach_task_self (), some ports are dealloc'd by the exec server.
    ARGV and ENVP are terminated by NULL pointers.  */
 error_t
-_hurd_exec (task_t task, file_t file, 
+_hurd_exec (task_t task, file_t file,
 	    char *const argv[], char *const envp[])
 {
   error_t err;
@@ -129,7 +129,7 @@ _hurd_exec (task_t task, file_t file,
      in the exec, or the signal will never be delivered.  Setting the
      critical section flag avoids anything we call trying to acquire the
      sigstate lock.  */
-  
+
   ss->critical_section = 1;
   __spin_unlock (&ss->lock);
 
@@ -224,7 +224,7 @@ _hurd_exec (task_t task, file_t file,
 		       ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
 		       ints, INIT_INT_MAX,
 		       please_dealloc, pdp - please_dealloc,
-		       NULL, 0);
+		       &_hurd_msgport, task == __mach_task_self () ? 1 : 0);
   }
 
   /* Release references to the standard ports.  */

@@ -95,6 +95,11 @@ static struct loaded_domain *make_entry_rec __P ((const char *dirname,
 						  const char *domainname,
 						  int do_allocate));
 
+/* Substitution for systems lacking this function in their C library.  */
+#if !_LIBC && !HAVE_STPCPY
+static char *stpcpy __P ((char *dest, const char *src));
+#endif
+
 
 /* Return a data structure describing the message catalog described by
    the DOMAINNAME and CATEGORY parameters with respect to the currently
@@ -155,9 +160,9 @@ _nl_find_domain (dirname, locale, domainname)
       if (retval->data != NULL)
 	return retval;
 
-      for (cnt = 6; cnt >= 0; --cnt)
+      for (cnt = 0; retval->successor[cnt] != NULL; ++cnt)
 	{
-	  if (retval->successor[cnt] == 0)
+	  if (retval->successor[cnt]->decided == 0)
 	    _nl_load_domain (retval->successor[cnt]);
 
 	  if (retval->successor[cnt]->data != NULL)
@@ -279,13 +284,13 @@ _nl_find_domain (dirname, locale, domainname)
      separator character in the file name, not for XPG syntax.  */
   if (syntax == xpg)
     {
-      if (territory[0] == '\0')
+      if (territory != NULL && territory[0] == '\0')
 	mask &= ~TERRITORY;
 
-      if (codeset[0] == '\0')
+      if (codeset != NULL && codeset[0] == '\0')
 	mask &= ~XPG_CODESET;
 
-      if (modifier[0] == '\0')
+      if (modifier != NULL && modifier[0] == '\0')
 	mask &= ~XPG_MODIFIER;
     }
 
@@ -340,107 +345,110 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
      const char *domain;
      int do_allocate;
 {
-  struct loaded_domain *retval, *last;
-  char *filename, *cp;
+  char *filename = NULL;
+  struct loaded_domain *last = NULL;
+  struct loaded_domain *retval;
+  char *cp;
   size_t entries;
   int cnt;
 
-  /* Allocate room for the full file name.  */
-  filename = (char *) malloc (strlen (dirname) + 1
-			      + strlen (language)
-			      + ((mask & TERRITORY) != 0
-				 ? strlen (territory) : 0)
-			      + ((mask & XPG_CODESET) != 0
-				 ? strlen (codeset) : 0)
-			      + ((mask & XPG_MODIFIER) != 0 ?
-				 strlen (modifier) : 0)
-			      + ((mask & CEN_SPECIAL) != 0
-				 ? strlen (special) : 0)
-			      + ((mask & CEN_SPONSOR) != 0
-				 ? strlen (sponsor) : 0)
-			      + ((mask & CEN_REVISION) != 0
-				 ? strlen (revision) : 0) + 1
-			      + strlen (domain) + 1);
 
-  if (filename == NULL)
-    return NULL;
+  /* Process the current entry described by the MASK only when it is
+     valid.  Because the mask can have in the first call bits from
+     both syntaces set this is necessary to prevent constructing
+     illegal local names.  */
+  /* FIXME: Rewrite because test is necessary only in first round.  */
+  if ((mask & CEN_SPECIFIC) == 0 || (mask & XPG_SPECIFIC) == 0)
+    {
+      /* Allocate room for the full file name.  */
+      filename = (char *) malloc (strlen (dirname) + 1
+				  + strlen (language)
+				  + ((mask & TERRITORY) != 0
+				     ? strlen (territory) : 0)
+				  + ((mask & XPG_CODESET) != 0
+				     ? strlen (codeset) : 0)
+				  + ((mask & XPG_MODIFIER) != 0 ?
+				     strlen (modifier) : 0)
+				  + ((mask & CEN_SPECIAL) != 0
+				     ? strlen (special) : 0)
+				  + ((mask & CEN_SPONSOR) != 0
+				     ? strlen (sponsor) : 0)
+				  + ((mask & CEN_REVISION) != 0
+				     ? strlen (revision) : 0) + 1
+				  + strlen (domain) + 1);
 
-  retval = NULL;
-  last = NULL;
+      if (filename == NULL)
+	return NULL;
 
-  /* We don't want libintl.a to depend on any other library.  So we
-     avoid the non-standard function stpcpy.  In GNU C Library this
-     function is available, though.  Also allow the symbol HAVE_STPCPY
-     to be defined.  */
-#if !defined _LIBC && !defined HAVE_STPCPY
-# define stpcpy(p, s)							    \
-  (strcpy (p, s), strchr (p, '\0'))
-#endif
+      retval = NULL;
+      last = NULL;
 
-  /* Construct file name.  */
-  cp = stpcpy (filename, dirname);
-  *cp++ = '/';
-  cp = stpcpy (cp, language);
+      /* Construct file name.  */
+      cp = stpcpy (filename, dirname);
+      *cp++ = '/';
+      cp = stpcpy (cp, language);
 
-  if ((mask & TERRITORY) != 0)
-    {
-      *cp++ = '_';
-      cp = stpcpy (cp, territory);
-    }
-  if ((mask & XPG_CODESET) != 0)
-    {
-      *cp++ = '.';
-      cp = stpcpy (cp, codeset);
-    }
-  if ((mask & (XPG_MODIFIER | CEN_AUDIENCE)) != 0)
-    {
-      /* This component can be part of both syntaces but has different
-	 leading characters.  For CEN we use `+', else `@'.  */
-      *cp++ = (mask & CEN_AUDIENCE) != 0 ? '+' : '@';
-      cp = stpcpy (cp, modifier);
-    }
-  if ((mask & CEN_SPECIAL) != 0)
-    {
-      *cp++ = '+';
-      cp = stpcpy (cp, special);
-    }
-  if ((mask & CEN_SPONSOR) != 0)
-    {
-      *cp++ = ',';
-      cp = stpcpy (cp, sponsor);
-    }
-  if ((mask & CEN_REVISION) != 0)
-    {
-      *cp++ = '_';
-      cp = stpcpy (cp, revision);
-    }
-
-  *cp++ = '/';
-  stpcpy (cp, domain);
-
-  /* Look in list of already loaded domains whether it is already
-     available.  */
-  last = NULL;
-  for (retval = _nl_loaded_domains; retval != NULL; retval = retval->next)
-    {
-      int compare = strcmp (retval->filename, filename);
-      if (compare == 0)
-	/* We found it!  */
-	break;
-      if (compare < 0)
+      if ((mask & TERRITORY) != 0)
 	{
-	  /* It's not in the list.  */
-	  retval = NULL;
-	  break;
+	  *cp++ = '_';
+	  cp = stpcpy (cp, territory);
+	}
+      if ((mask & XPG_CODESET) != 0)
+	{
+	  *cp++ = '.';
+      cp = stpcpy (cp, codeset);
+	}
+      if ((mask & (XPG_MODIFIER | CEN_AUDIENCE)) != 0)
+	{
+	  /* This component can be part of both syntaces but has different
+	     leading characters.  For CEN we use `+', else `@'.  */
+	  *cp++ = (mask & CEN_AUDIENCE) != 0 ? '+' : '@';
+	  cp = stpcpy (cp, modifier);
+	}
+      if ((mask & CEN_SPECIAL) != 0)
+	{
+	  *cp++ = '+';
+	  cp = stpcpy (cp, special);
+	}
+      if ((mask & CEN_SPONSOR) != 0)
+	{
+	  *cp++ = ',';
+	  cp = stpcpy (cp, sponsor);
+	}
+      if ((mask & CEN_REVISION) != 0)
+	{
+	  *cp++ = '_';
+	  cp = stpcpy (cp, revision);
 	}
 
-      last = retval;
-    }
+      *cp++ = '/';
+      stpcpy (cp, domain);
 
-  if (retval != NULL || do_allocate == 0)
-    {
-      free (filename);
-      return retval;
+      /* Look in list of already loaded domains whether it is already
+	 available.  */
+      last = NULL;
+      for (retval = _nl_loaded_domains; retval != NULL; retval = retval->next)
+	if (retval->filename != NULL)
+	  {
+	    int compare = strcmp (retval->filename, filename);
+	    if (compare == 0)
+	      /* We found it!  */
+	      break;
+	    if (compare < 0)
+	      {
+		/* It's not in the list.  */
+		retval = NULL;
+		break;
+	      }
+
+	    last = retval;
+	  }
+
+      if (retval != NULL || do_allocate == 0)
+	{
+	  free (filename);
+	  return retval;
+	}
     }
 
   retval = (struct loaded_domain *) malloc (sizeof (*retval));
@@ -453,8 +461,8 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
   if (last == NULL)
     {
       retval->next = _nl_loaded_domains;
-     _nl_loaded_domains = retval;
-     }
+      _nl_loaded_domains = retval;
+    }
   else
     {
       retval->next = last->next;
@@ -474,3 +482,22 @@ make_entry_rec (dirname, mask, language, territory, codeset, modifier,
 
   return retval;
 }
+
+
+/* @@ begin of epilog @@ */
+
+/* We don't want libintl.a to depend on any other library.  So we
+   avoid the non-standard function stpcpy.  In GNU C Library this
+   function is available, though.  Also allow the symbol HAVE_STPCPY
+   to be defined.  */
+#if !_LIBC && !HAVE_STPCPY
+static char *
+stpcpy (dest, src)
+     char *dest;
+     const char *src;
+{
+  while ((*dest++ = *src++) != '\0')
+    /* Do nothing. */ ;
+  return dest - 1;
+}
+#endif

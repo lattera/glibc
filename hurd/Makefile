@@ -33,7 +33,8 @@ distribute := hurdstartup.h hurdfault.h intr-rpc.defs STATUS
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser
 user-interfaces		:= $(addprefix hurd/,\
-				       auth process startup \
+				       auth startup \
+				       process process_request \
 				       msg msg_reply msg_request \
 				       exec exec_startup crash interrupt \
 				       fs fsys io term socket ifsock)
