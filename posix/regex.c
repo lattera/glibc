@@ -416,11 +416,14 @@ static int byte_re_match_2_internal PARAMS ((struct re_pattern_buffer *bufp,
 					     struct re_registers *regs,
 					     int stop));
 static int wcs_re_match_2_internal PARAMS ((struct re_pattern_buffer *bufp,
-					    const char *string1, int size1,
-					    const char *string2, int size2,
+					    const char *cstring1, int csize1,
+					    const char *cstring2, int csize2,
 					    int pos,
 					    struct re_registers *regs,
-					    int stop));
+					    int stop,
+					    wchar_t *string1, int size1,
+					    wchar_t *string2, int size2,
+					    int *mbs_offset1, int *mbs_offset2));
 static int byte_re_search_2 PARAMS ((struct re_pattern_buffer *bufp,
 				     const char *string1, int size1,
 				     const char *string2, int size2,
@@ -1253,7 +1256,7 @@ convert_mbs_to_wcs (dest, src, len, offset_buffer, is_binary)
   size_t wc_count = 0;
 
   mbstate_t mbs;
-  int consumed;
+  int i, consumed;
   size_t mb_remain = len;
   size_t mb_count = 0;
 
@@ -1285,6 +1288,10 @@ convert_mbs_to_wcs (dest, src, len, offset_buffer, is_binary)
 
       offset_buffer[wc_count + 1] = mb_count += consumed;
     }
+
+  /* Fill remain of the buffer with sentinel.  */
+  for (i = wc_count + 1 ; i <= len ; i++)
+    offset_buffer[i] = mb_count + 1;
 
   return wc_count;
 }
@@ -5047,6 +5054,23 @@ weak_alias (__re_search_2, re_search_2)
 
 #ifdef INSIDE_RECURSION
 
+#ifdef MATCH_MAY_ALLOCATE
+# define FREE_VAR(var) if (var) REGEX_FREE (var); var = NULL
+#else
+# define FREE_VAR(var) if (var) free (var); var = NULL
+#endif
+
+#ifdef WCHAR
+# define FREE_WCS_BUFFERS()    \
+  do {                         \
+    FREE_VAR (string1);                \
+    FREE_VAR (string2);                \
+    FREE_VAR (mbs_offset1);    \
+    FREE_VAR (mbs_offset2);    \
+  } while (0)
+
+#endif
+
 static int
 PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
 		     regs, stop)
@@ -5063,6 +5087,16 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
   register RE_TRANSLATE_TYPE translate = bufp->translate;
   int total_size = size1 + size2;
   int endpos = startpos + range;
+#ifdef WCHAR
+  /* We need wchar_t* buffers correspond to cstring1, cstring2.  */
+  wchar_t *wcs_string1 = NULL, *wcs_string2 = NULL;
+  /* We need the size of wchar_t buffers correspond to csize1, csize2.  */
+  int wcs_size1 = 0, wcs_size2 = 0;
+  /* offset buffer for optimizatoin. See convert_mbs_to_wc.  */
+  int *mbs_offset1 = NULL, *mbs_offset2 = NULL;
+  /* They hold whether each wchar_t is binary data or not.  */
+  char *is_binary = NULL;
+#endif /* WCHAR */
 
   /* Check for out-of-range STARTPOS.  */
   if (startpos < 0 || startpos > total_size)
@@ -5105,6 +5139,45 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
   if (fastmap && !bufp->fastmap_accurate)
     if (re_compile_fastmap (bufp) == -2)
       return -2;
+
+#ifdef WCHAR
+  /* Allocate wchar_t array for wcs_string1 and wcs_string2 and
+     fill them with converted string.  */
+  if (size1 != 0)
+    {
+      wcs_string1 = REGEX_TALLOC (size1 + 1, CHAR_T);
+      mbs_offset1 = REGEX_TALLOC (size1 + 1, int);
+      is_binary = REGEX_TALLOC (size1 + 1, char);
+      if (!wcs_string1 || !mbs_offset1 || !is_binary)
+	{
+	  FREE_VAR (wcs_string1);
+	  FREE_VAR (mbs_offset1);
+	  FREE_VAR (is_binary);
+	  return -2;
+	}
+      wcs_size1 = convert_mbs_to_wcs(wcs_string1, string1, size1,
+				     mbs_offset1, is_binary);
+      wcs_string1[wcs_size1] = L'\0'; /* for a sentinel  */
+      FREE_VAR (is_binary);
+    }
+  if (size2 != 0)
+    {
+      wcs_string2 = REGEX_TALLOC (size2 + 1, CHAR_T);
+      mbs_offset2 = REGEX_TALLOC (size2 + 1, int);
+      is_binary = REGEX_TALLOC (size2 + 1, char);
+      if (!wcs_string2 || !mbs_offset2 || !is_binary)
+	{
+	  FREE_WCS_BUFFERS ();
+	  FREE_VAR (is_binary);
+	  return -2;
+	}
+      wcs_size2 = convert_mbs_to_wcs(wcs_string2, string2, size2,
+				     mbs_offset2, is_binary);
+      wcs_string2[wcs_size2] = L'\0'; /* for a sentinel  */
+      FREE_VAR (is_binary);
+    }
+#endif /* WCHAR */
+
 
   /* Loop through the string, looking for a place to start matching.  */
   for (;;)
@@ -5153,10 +5226,24 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
       /* If can't match the null string, and that's all we have left, fail.  */
       if (range >= 0 && startpos == total_size && fastmap
           && !bufp->can_be_null)
-	return -1;
+       {
+#ifdef WCHAR
+         FREE_WCS_BUFFERS ();
+#endif
+         return -1;
+       }
 
-    val = PREFIX(re_match_2_internal) (bufp, string1, size1, string2,
-				       size2, startpos, regs, stop);
+#ifdef WCHAR
+      val = wcs_re_match_2_internal (bufp, string1, size1, string2,
+				     size2, startpos, regs, stop,
+				     wcs_string1, wcs_size1,
+				     wcs_string2, wcs_size2,
+				     mbs_offset1, mbs_offset2);
+#else /* BYTE */
+      val = byte_re_match_2_internal (bufp, string1, size1, string2,
+				      size2, startpos, regs, stop);
+#endif /* BYTE */
+
 #ifndef REGEX_MALLOC
 # ifdef C_ALLOCA
       alloca (0);
@@ -5164,10 +5251,20 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
 #endif
 
       if (val >= 0)
-	return startpos;
+	{
+#ifdef WCHAR
+	  FREE_WCS_BUFFERS ();
+#endif
+	  return startpos;
+	}
 
       if (val == -2)
-	return -2;
+	{
+#ifdef WCHAR
+	  FREE_WCS_BUFFERS ();
+#endif
+	  return -2;
+	}
 
     advance:
       if (!range)
@@ -5183,6 +5280,9 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
           startpos--;
         }
     }
+#ifdef WCHAR
+  FREE_WCS_BUFFERS ();
+#endif
   return -1;
 }
 
@@ -5255,7 +5355,6 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
 
 /* Free everything we malloc.  */
 #ifdef MATCH_MAY_ALLOCATE
-# define FREE_VAR(var) if (var) REGEX_FREE (var); var = NULL
 # ifdef WCHAR
 #  define FREE_VARIABLES()						\
   do {									\
@@ -5269,10 +5368,13 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
     FREE_VAR (reg_info);						\
     FREE_VAR (reg_dummy);						\
     FREE_VAR (reg_info_dummy);						\
-    FREE_VAR (string1);							\
-    FREE_VAR (string2);							\
-    FREE_VAR (mbs_offset1);						\
-    FREE_VAR (mbs_offset2);						\
+    if (!cant_free_wcs_buf)						\
+      {									\
+        FREE_VAR (string1);						\
+        FREE_VAR (string2);						\
+        FREE_VAR (mbs_offset1);						\
+        FREE_VAR (mbs_offset2);						\
+      }									\
   } while (0)
 # else /* BYTE */
 #  define FREE_VARIABLES()						\
@@ -5290,14 +5392,16 @@ PREFIX(re_search_2) (bufp, string1, size1, string2, size2, startpos, range,
   } while (0)
 # endif /* WCHAR */
 #else
-# define FREE_VAR(var) if (var) free (var); var = NULL
 # ifdef WCHAR
 #  define FREE_VARIABLES()						\
   do {									\
-    FREE_VAR (string1);							\
-    FREE_VAR (string2);							\
-    FREE_VAR (mbs_offset1);						\
-    FREE_VAR (mbs_offset2);						\
+    if (!cant_free_wcs_buf)						\
+      {									\
+        FREE_VAR (string1);						\
+        FREE_VAR (string2);						\
+        FREE_VAR (mbs_offset1);						\
+        FREE_VAR (mbs_offset2);						\
+      }									\
   } while (0)
 # else /* BYTE */
 #  define FREE_VARIABLES() ((void)0) /* Do nothing!  But inhibit gcc warning. */
@@ -5331,7 +5435,8 @@ re_match (bufp, string, size, pos, regs)
 # ifdef MBS_SUPPORT
   if (MB_CUR_MAX != 1)
     result = wcs_re_match_2_internal (bufp, NULL, 0, string, size,
-				  pos, regs, size);
+				      pos, regs, size,
+				      NULL, 0, NULL, 0, NULL, NULL);
   else
 # endif
     result = byte_re_match_2_internal (bufp, NULL, 0, string, size,
@@ -5390,7 +5495,8 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 # ifdef MBS_SUPPORT
   if (MB_CUR_MAX != 1)
     result = wcs_re_match_2_internal (bufp, string1, size1, string2, size2,
-				  pos, regs, stop);
+				      pos, regs, stop,
+				      NULL, 0, NULL, 0, NULL, NULL);
   else
 # endif
     result = byte_re_match_2_internal (bufp, string1, size1, string2, size2,
@@ -5424,7 +5530,7 @@ count_mbs_length(offset_buffer, length)
      int *offset_buffer;
      int length;
 {
-  int wcs_size;
+  int upper, lower;
 
   /* Check whether the size is valid.  */
   if (length < 0)
@@ -5433,45 +5539,73 @@ count_mbs_length(offset_buffer, length)
   if (offset_buffer == NULL)
     return 0;
 
-  for (wcs_size = 0 ; offset_buffer[wcs_size] != -1 ; wcs_size++)
+  /* If there are no multibyte character, offset_buffer[i] == i.
+   Optmize for this case.  */
+  if (offset_buffer[length] == length)
+    return length;
+
+  /* Set up upper with length. (because for all i, offset_buffer[i] >= i)  */
+  upper = length;
+  lower = 0;
+
+  while (true)
     {
-      if (offset_buffer[wcs_size] == length)
-	return wcs_size;
-      if (offset_buffer[wcs_size] > length)
-	/* It is a fragment of a wide character.  */
-	return -1;
+      int middle = (lower + upper) / 2;
+      if (middle == lower || middle == upper)
+	break;
+      if (offset_buffer[middle] > length)
+	upper = middle;
+      else if (offset_buffer[middle] < length)
+	lower = middle;
+      else
+	return middle;
     }
 
-  /* We reached at the sentinel.  */
   return -1;
 }
 #endif /* WCHAR */
 
 /* This is a separate function so that we can force an alloca cleanup
    afterwards.  */
+#ifdef WCHAR
 static int
-PREFIX(re_match_2_internal) (bufp, ARG_PREFIX(string1), ARG_PREFIX(size1),
-			     ARG_PREFIX(string2), ARG_PREFIX(size2), pos,
-			     regs, stop)
+wcs_re_match_2_internal (bufp, cstring1, csize1, cstring2, csize2, pos,
+			 regs, stop, string1, size1, string2, size2,
+			 mbs_offset1, mbs_offset2)
      struct re_pattern_buffer *bufp;
-     const char *ARG_PREFIX(string1), *ARG_PREFIX(string2);
-     int ARG_PREFIX(size1), ARG_PREFIX(size2);
+     const char *cstring1, *cstring2;
+     int csize1, csize2;
      int pos;
      struct re_registers *regs;
      int stop;
+     /* string1 == string2 == NULL means string1/2, size1/2 and
+	mbs_offset1/2 need seting up in this function.  */
+     /* We need wchar_t* buffers correspond to cstring1, cstring2.  */
+     wchar_t *string1, *string2;
+     /* We need the size of wchar_t buffers correspond to csize1, csize2.  */
+     int size1, size2;
+     /* offset buffer for optimizatoin. See convert_mbs_to_wc.  */
+     int *mbs_offset1, *mbs_offset2;
+#else /* BYTE */
+static int
+byte_re_match_2_internal (bufp, string1, size1,string2, size2, pos,
+			  regs, stop)
+     struct re_pattern_buffer *bufp;
+     const char *string1, *string2;
+     int size1, size2;
+     int pos;
+     struct re_registers *regs;
+     int stop;
+#endif /* BYTE */
 {
   /* General temporaries.  */
   int mcnt;
   UCHAR_T *p1;
 #ifdef WCHAR
-  /* We need wchar_t* buffers correspond to string1, string2.  */
-  CHAR_T *string1 = NULL, *string2 = NULL;
-  /* We need the size of wchar_t buffers correspond to csize1, csize2.  */
-  int size1 = 0, size2 = 0;
-  /* offset buffer for optimization. See convert_mbs_to_wc.  */
-  int *mbs_offset1 = NULL, *mbs_offset2 = NULL;
   /* They hold whether each wchar_t is binary data or not.  */
   char *is_binary = NULL;
+  /* If true, we can't free string1/2, mbs_offset1/2.  */
+  int cant_free_wcs_buf = 1;
 #endif /* WCHAR */
 
   /* Just past the end of the corresponding string.  */
@@ -5648,41 +5782,45 @@ PREFIX(re_match_2_internal) (bufp, ARG_PREFIX(string1), ARG_PREFIX(size1),
 #ifdef WCHAR
   /* Allocate wchar_t array for string1 and string2 and
      fill them with converted string.  */
-  if (csize1 != 0)
+  if (string1 == NULL && string2 == NULL)
     {
-      string1 = REGEX_TALLOC (csize1 + 1, CHAR_T);
-      mbs_offset1 = REGEX_TALLOC (csize1 + 1, int);
-      is_binary = REGEX_TALLOC (csize1 + 1, char);
-      if (!string1 || !mbs_offset1 || !is_binary)
+      /* We need seting up buffers here.  */
+
+      /* We must free wcs buffers in this function.  */
+      cant_free_wcs_buf = 0;
+
+      if (csize1 != 0)
 	{
-	  FREE_VAR (string1);
-	  FREE_VAR (mbs_offset1);
-	  FREE_VAR (is_binary);
-	  return -2;
+	  string1 = REGEX_TALLOC (csize1 + 1, CHAR_T);
+	  mbs_offset1 = REGEX_TALLOC (csize1 + 1, int);
+	  is_binary = REGEX_TALLOC (csize1 + 1, char);
+	  if (!string1 || !mbs_offset1 || !is_binary)
+	    {
+	      FREE_VAR (string1);
+	      FREE_VAR (mbs_offset1);
+	      FREE_VAR (is_binary);
+	      return -2;
+	    }
 	}
-      size1 = convert_mbs_to_wcs(string1, cstring1, csize1,
-				 mbs_offset1, is_binary);
-      string1[size1] = L'\0'; /* for a sentinel  */
-      FREE_VAR (is_binary);
-    }
-  if (csize2 != 0)
-    {
-      string2 = REGEX_TALLOC (csize2 + 1, CHAR_T);
-      mbs_offset2 = REGEX_TALLOC (csize2 + 1, int);
-      is_binary = REGEX_TALLOC (csize2 + 1, char);
-      if (!string2 || !mbs_offset2 || !is_binary)
+      if (csize2 != 0)
 	{
-	  FREE_VAR (string1);
-	  FREE_VAR (mbs_offset1);
-	  FREE_VAR (string2);
-	  FREE_VAR (mbs_offset2);
+	  string2 = REGEX_TALLOC (csize2 + 1, CHAR_T);
+	  mbs_offset2 = REGEX_TALLOC (csize2 + 1, int);
+	  is_binary = REGEX_TALLOC (csize2 + 1, char);
+	  if (!string2 || !mbs_offset2 || !is_binary)
+	    {
+	      FREE_VAR (string1);
+	      FREE_VAR (mbs_offset1);
+	      FREE_VAR (string2);
+	      FREE_VAR (mbs_offset2);
+	      FREE_VAR (is_binary);
+	      return -2;
+	    }
+	  size2 = convert_mbs_to_wcs(string2, cstring2, csize2,
+				     mbs_offset2, is_binary);
+	  string2[size2] = L'\0'; /* for a sentinel  */
 	  FREE_VAR (is_binary);
-	  return -2;
 	}
-      size2 = convert_mbs_to_wcs(string2, cstring2, csize2,
-				 mbs_offset2, is_binary);
-      string2[size2] = L'\0'; /* for a sentinel  */
-      FREE_VAR (is_binary);
     }
 
   /* We need to cast pattern to (wchar_t*), because we casted this compiled

@@ -1,5 +1,21 @@
 2001-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile: Add rules to build and run tst-regex.
+
+2001-06-20 Isamu Hasegawa <isamu@yamato.ibm.com>
+
+	* posix/regex.c (FREE_WCS_BUFFERS): New macro to free buffers.
+	(re_search_2): invoke convert_mbs_to_wcs and FREE_WCS_BUFFERS.
+	(wcs_re_match_2_internal): Check whether the wcs buffers need
+	seting up or not, and skip seting up routin if not needed.
+
+2001-06-26 Isamu Hasegawa <isamu@yamato.ibm.com>
+
+	* posix/regex.c (count_mbs_length): Use binary search for
+	optimization.
+
+2001-06-27  Ulrich Drepper  <drepper@redhat.com>
+
 	* posix/tst-regex.c: Fix several bugs.  Add more tests.
 
 2001-06-26  Mark Kettenis  <kettenis@gnu.org>

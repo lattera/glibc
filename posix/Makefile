@@ -70,7 +70,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
 		   tst-chmod bug-regex1 bug-regex2 bug-regex3 bug-regex4 \
-		   tst-gnuglob
+		   tst-gnuglob tst-regex
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -122,6 +122,7 @@ tst-chmod-ARGS = `pwd`
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex1-ENV = LOCPATH=$(common-objpfx)localedata
+tst-regex-ENV = LOCPATH=$(common-objpfx)localedata
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
@@ -158,3 +159,9 @@ $(objpfx)bug-regex2-mem: $(objpfx)bug-regex2.out
 
 $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(SHELL) -e $< $(common-objpfx) $(elf-objpfx) $(rtld-installed-name)
+
+ifeq (yes,$(build-shared))
+$(objpfx)tst-regex: $(common-objpfx)rt/librt.so
+else
+$(objpfx)tst-regex: $(common-objpfx)rt/librt.a
+endif
