@@ -46,6 +46,12 @@ main (int argc, char **argv)
       result = 1;
     }
 
+  if (sscanf ("", "%10[a-z]", buf) != EOF)
+    {
+      fputs ("test failed!\n", stdout);
+      result = 1;
+    }
+
   sscanf ("conversion] Zero flag Ze]ro#\n", "%*[^]] %[^#]\n", buf);
   if (strcmp (buf, "] Zero flag Ze]ro") != 0)
     {

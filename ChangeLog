@@ -1,3 +1,9 @@
+2000-10-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/vfscanf.c (_IO_vfscanf): For [ conversion do
+	input_error() if EOF is seen before processing.
+	* stdio-common/tstscanf.c (main): Add testcase.
+
 2000-10-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* argp/argp-help.c: Make sure we get the correct gettext and

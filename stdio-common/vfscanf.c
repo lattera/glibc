@@ -1973,12 +1973,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      size_t now = read_in;
 #ifdef COMPILE_WSCANF
+	      if (inchar () == WEOF)
+		input_error ();
+
 	      do
 		{
 		  wchar_t *runp;
-
-		  if (inchar () == WEOF)
-		    break;
 
 		  /* Test whether it's in the scanlist.  */
 		  runp = tw;
@@ -2063,21 +2063,20 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			}
 		    }
 		}
-	      while (--width > 0);
+	      while (--width > 0 && inchar () != WEOF);
 	    out:
 #else
 	      char buf[MB_LEN_MAX];
 	      size_t cnt = 0;
 	      mbstate_t cstate;
 
+	      if (inchar () == EOF)
+		input_error ();
+
 	      memset (&cstate, '\0', sizeof (cstate));
 
 	      do
 		{
-		again:
-		  if (inchar () == EOF)
-		    break;
-
 		  if (wp[c] == not_in)
 		    {
 		      ungetc_not_eof (c, s);
@@ -2097,7 +2096,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			  /* Possibly correct character, just not enough
 			     input.  */
 			  assert (cnt < MB_CUR_MAX);
-			  goto again;
+			  continue;
 			}
 
 		      if (n != cnt)
@@ -2142,8 +2141,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			    }
 			}
 		    }
+
+		  if (--width <= 0)
+		    break;
 		}
-	      while (--width > 0);
+	      while (inchar () != EOF);
 
 	      if (cnt != 0)
 		/* We stopped in the middle of recognizing another
@@ -2175,6 +2177,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    {
 	      size_t now = read_in;
+
+	      if (inchar () == EOF)
+		input_error ();
+
 #ifdef COMPILE_WSCANF
 
 	      memset (&state, '\0', sizeof (state));
@@ -2183,9 +2189,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  wchar_t *runp;
 		  size_t n;
-
-		  if (inchar () == WEOF)
-		    break;
 
 		  /* Test whether it's in the scanlist.  */
 		  runp = tw;
@@ -2275,14 +2278,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  assert (n <= MB_CUR_MAX);
 		  str += n;
 		}
-	      while (--width > 0);
+	      while (--width > 0 && inchar () != WEOF);
 	    out2:
 #else
 	      do
 		{
-		  if (inchar () == EOF)
-		    break;
-
 		  if (wp[c] == not_in)
 		    {
 		      ungetc_not_eof (c, s);
@@ -2328,7 +2328,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 			}
 		    }
 		}
-	      while (--width > 0);
+	      while (--width > 0 && inchar () != EOF);
 #endif
 
 	      if (now == read_in)
