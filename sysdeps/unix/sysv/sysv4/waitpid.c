@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -95,5 +95,9 @@ DEFUN(__waitpid, (__pid, __stat_loc, __options),
     }
 
   *__stat_loc = infop.__status;
-  return __pid;
+
+  /* Return the PID out of the INFOP structure instead of the one we were
+     called with, to account for cases of being called with -1 to signify
+     any PID.  */
+  return infop.__pid;
 }
