@@ -273,7 +273,7 @@ extern time_t timegm (struct tm *__tp) __THROW;
 extern time_t timelocal (struct tm *__tp) __THROW;
 
 /* Return the number of days in YEAR.  */
-extern int dysize (int __year) __THROW;
+extern int dysize (int __year) __THROW  __attribute__ ((__const__));
 # endif
 
 
