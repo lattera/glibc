@@ -33,7 +33,6 @@
 #include <sys/types.h>
 #include "dynamic-link.h"
 #include <abi-tag.h>
-#include <dl-osinfo.h>
 #include <stackinfo.h>
 #include <caller.h>
 #include <sysdep.h>

@@ -43,6 +43,45 @@ dl_fatal (const char *str)
 static inline int __attribute__ ((always_inline))
 _dl_discover_osversion (void)
 {
+#if (defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO) && defined SHARED
+  if (GLRO(dl_sysinfo_map) != NULL)
+    {
+      /* If the kernel-supplied DSO contains a note indicating the kernel's
+	 version, we don't need to call uname or parse any strings.  */
+
+      static const struct
+      {
+	ElfW(Word) vendorlen;
+	ElfW(Word) datalen;
+	ElfW(Word) type;
+	char vendor[8];
+      } expected_note = { sizeof "Linux", sizeof (ElfW(Word)), 0, "Linux" };
+      const ElfW(Phdr) *const phdr = GLRO(dl_sysinfo_map)->l_phdr;
+      const ElfW(Word) phnum = GLRO(dl_sysinfo_map)->l_phnum;
+      for (uint_fast16_t i = 0; i < phnum; ++i)
+	if (phdr[i].p_type == PT_NOTE)
+	  {
+	    const ElfW(Addr) start = (phdr[i].p_vaddr
+				      + GLRO(dl_sysinfo_map)->l_addr);
+	    const struct
+	    {
+	      ElfW(Word) vendorlen;
+	      ElfW(Word) datalen;
+	      ElfW(Word) type;
+	    } *note = (const void *) start;
+	    while ((ElfW(Addr)) (note + 1) - start < phdr[i].p_memsz)
+	      {
+		if (!memcmp (note, &expected_note, sizeof expected_note))
+		  return *(const ElfW(Word) *) ((const void *) note
+						+ sizeof expected_note);
+#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
+		note = ((const void *) (note + 1)
+			+ ROUND (note->vendorlen) + ROUND (note->datalen));
+	      }
+	  }
+    }
+#endif
+
   char bufmem[64];
   char *buf = bufmem;
   unsigned int version;
