@@ -224,6 +224,8 @@ struct stat64
 /* Tell code we have these members.  */
 #define	_STATBUF_ST_BLKSIZE
 #define _STATBUF_ST_RDEV
+/* Nanosecond resolution time values are supported.  */
+#define _STATBUF_ST_NSEC
 
 /* Encoding of the file mode.  */
 
