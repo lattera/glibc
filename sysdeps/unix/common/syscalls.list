@@ -3,7 +3,7 @@
 adjtime		-	adjtime		2	__adjtime	adjtime
 fchmod		-	fchmod		2	__fchmod	fchmod
 fchown		-	fchown		3	__fchown	fchown
-ftruncate	-	ftruncate	2	ftruncate
+ftruncate	-	ftruncate	2	__ftruncate	ftruncate
 getpgid		-	getpgrp		1	__getpgid	getpgid
 getrusage	-	getrusage	2	__getrusage	getrusage
 gettimeofday	-	gettimeofday	2	__gettimeofday	gettimeofday

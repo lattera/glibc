@@ -103,14 +103,14 @@
 #  define ISXDIGIT(Ch) __iswxdigit_l ((Ch), loc)
 #  define TOLOWER(Ch) __towlower_l ((Ch), loc)
 #  define STRNCASECMP(S1, S2, N) __wcsncasecmp_l ((S1), (S2), (N), loc)
-#  define STRTOULL(S, E, B) __wcstoull_l ((S), (E), (B), loc)
+#  define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0, loc)
 # else
 #  define ISSPACE(Ch) iswspace (Ch)
 #  define ISDIGIT(Ch) iswdigit (Ch)
 #  define ISXDIGIT(Ch) iswxdigit (Ch)
 #  define TOLOWER(Ch) towlower (Ch)
 #  define STRNCASECMP(S1, S2, N) __wcsncasecmp ((S1), (S2), (N))
-#  define STRTOULL(S, E, B) wcstoull ((S), (E), (B))
+#  define STRTOULL(S, E, B) __wcstoull_internal ((S), (E), (B), 0)
 # endif
 #else
 # define STRING_TYPE char
@@ -122,14 +122,14 @@
 #  define ISXDIGIT(Ch) __isxdigit_l ((Ch), loc)
 #  define TOLOWER(Ch) __tolower_l ((Ch), loc)
 #  define STRNCASECMP(S1, S2, N) __strncasecmp_l ((S1), (S2), (N), loc)
-#  define STRTOULL(S, E, B) __strtoull_l ((S), (E), (B), loc)
+#  define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0, loc)
 # else
 #  define ISSPACE(Ch) isspace (Ch)
 #  define ISDIGIT(Ch) isdigit (Ch)
 #  define ISXDIGIT(Ch) isxdigit (Ch)
 #  define TOLOWER(Ch) tolower (Ch)
 #  define STRNCASECMP(S1, S2, N) __strncasecmp ((S1), (S2), (N))
-#  define STRTOULL(S, E, B) strtoull ((S), (E), (B))
+#  define STRTOULL(S, E, B) __strtoull_internal ((S), (E), 0, (B))
 # endif
 #endif
 

@@ -52,7 +52,7 @@ __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf, char *buffer,
   char *p = buffer;
   int plen;
 
-  plen = snprintf (buffer, buflen, "%d", uid);
+  plen = __snprintf (buffer, buflen, "%d", uid);
   if (plen == -1)
     {
       __set_errno (ERANGE);
@@ -177,7 +177,7 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
       p += pw_resp.pw_shell_len + 1;
       buflen -= (pw_resp.pw_shell_len + 1);
 
-      nbytes = readv (sock, vec, 5);
+      nbytes = __readv (sock, vec, 5);
       if (nbytes !=  (pw_resp.pw_name_len + pw_resp.pw_passwd_len
 		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
 		      + pw_resp.pw_shell_len))

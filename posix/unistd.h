@@ -887,6 +887,7 @@ extern int truncate64 __P ((__const char *__file, __off64_t __length));
 #endif
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
+extern int __ftruncate __P ((int __fd, __off_t __length));
 #ifndef __USE_FILE_OFFSET64
 extern int ftruncate __P ((int __fd, __off_t __length));
 #else

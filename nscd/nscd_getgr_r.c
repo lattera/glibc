@@ -52,7 +52,7 @@ __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
   char *p = buffer;
   int plen;
 
-  plen = snprintf (buffer, buflen, "%d", gid);
+  plen = __snprintf (buffer, buflen, "%d", gid);
   if (plen == -1)
     {
       __set_errno (ERANGE);

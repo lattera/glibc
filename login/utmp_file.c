@@ -373,7 +373,7 @@ pututline_file (const struct utmp *data)
       if (file_offset % sizeof (struct utmp) != 0)
 	{
 	  file_offset -= file_offset % sizeof (struct utmp);
-	  ftruncate (file_fd, file_offset);
+	  __ftruncate (file_fd, file_offset);
 
 	  if (lseek (file_fd, 0, SEEK_END) < 0)
 	    {
@@ -395,7 +395,7 @@ pututline_file (const struct utmp *data)
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
       if (found < 0)
-	(void) ftruncate (file_fd, file_offset);
+	(void) __ftruncate (file_fd, file_offset);
       pbuf = NULL;
     }
   else
@@ -447,7 +447,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   if (offset % sizeof (struct utmp) != 0)
     {
       offset -= offset % sizeof (struct utmp);
-      ftruncate (fd, offset);
+      __ftruncate (fd, offset);
 
       if (lseek (fd, 0, SEEK_END) < 0)
 	goto unlock_return;
@@ -458,7 +458,7 @@ updwtmp_file (const char *file, const struct utmp *utmp)
      will remain.  */
   if (write (fd, utmp, sizeof (struct utmp)) != sizeof (struct utmp))
     {
-      ftruncate (fd, offset);
+      __ftruncate (fd, offset);
       goto unlock_return;
     }
 

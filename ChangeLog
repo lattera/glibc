@@ -1,3 +1,17 @@
+1998-04-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* login/utmp_file.c: use __ftruncate not ftruncate.
+	* sysdeps/unix/common/syscalls.list: Add __ftruncate as real name
+	for system call and make ftruncate weak alias.
+	* posix/unistd.h: Add prototype for __ftruncate.
+	* login/utmp_daemon.c (open_socket): Use __socket not socket.
+	* nscd/nscd_getpw_r.c (__nscd_getpw_r): use __snprintf and __readv
+	instead of snprintf and readv.
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Use __snprintf not
+	snprintf.
+	* stdlib/strtod.c: Call strtoull/wcstoull's internal functions
+	directly.
+
 1998-04-08 20:06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_conf.c (__gconv_read_conf): Use __realpath not realpath.

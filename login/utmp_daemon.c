@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -409,7 +409,7 @@ open_socket (const char *name)
   struct sockaddr_un addr;
   int sock;
 
-  sock = socket (PF_UNIX, SOCK_STREAM, 0);
+  sock = __socket (PF_UNIX, SOCK_STREAM, 0);
   if (sock < 0)
     return -1;
 
