@@ -1,3 +1,7 @@
+2001-04-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/elf/start.S [__ASSEMBLY__]: Define it.
+
 2001-04-11  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/libm-test-ulps: Adjusted.
