@@ -56,8 +56,7 @@ getrpcport (const char *host, u_long prognum, u_long versnum, u_int proto)
 
   buflen = 1024;
   buffer = __alloca (buflen);
-  while (__gethostbyname_r (host, &hostbuf, buffer, buflen, &hp, &herr)
-	 < 0)
+  while (__gethostbyname_r (host, &hostbuf, buffer, buflen, &hp, &herr) != 0)
     if (herr != NETDB_INTERNAL || errno != ERANGE)
       return 0;
     else

@@ -80,7 +80,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	hstbuflen = 1024;
 	tmphstbuf = __alloca (hstbuflen);
 	while (__gethostbyname_r (*ahost, &hostbuf, tmphstbuf, hstbuflen,
-				  &hp, &herr) < 0)
+				  &hp, &herr) != 0)
 	  if (herr != NETDB_INTERNAL || errno != ERANGE)
 	    {
 	      __set_h_errno (herr);
@@ -469,7 +469,7 @@ __icheckhost (raddr, lhost, rhost)
 	buffer = __alloca (buflen);
 	save_errno = errno;
 	while (__gethostbyname_r (lhost, &hostbuf, buffer, buflen, &hp, &herr)
-	       < 0)
+	       != 0)
 		if (herr != NETDB_INTERNAL || errno != ERANGE)
 			return (0);
 		else {
@@ -563,10 +563,10 @@ __ivaliduser2(hostf, raddr, luser, ruser, rhost)
 
 	/* Skip lines that are too long. */
 	if (strchr (p, '\n') == NULL) {
-	    int ch = getc (hostf);
+	    int ch = getc_unlocked (hostf);
 
 	    while (ch != '\n' && ch != EOF)
-		ch = getc (hostf);
+		ch = getc_unlocked (hostf);
 	    continue;
 	}
 

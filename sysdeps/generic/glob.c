@@ -651,7 +651,8 @@ glob (pattern, flags, errfunc, pglob)
 		  pwtmpbuf = (char *) __alloca (pwbuflen);
 
 		  success = 1;
-		  while (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p) < 0)
+		  while (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p)
+			 != 0)
 		    {
 		      if (errno != ERANGE)
 			{
@@ -735,7 +736,7 @@ glob (pattern, flags, errfunc, pglob)
 	      buflen = 1024;
 	    pwtmpbuf = (char *) __alloca (buflen);
 
-	    while (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) < 0)
+	    while (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) != 0)
 	      {
 		if (errno != ERANGE)
 		  {

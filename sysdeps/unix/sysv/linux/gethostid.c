@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -91,7 +91,7 @@ gethostid ()
 
   /* To get the IP address we need to know the host name.  */
   while (__gethostbyname_r (hostname, &hostbuf, buffer, buflen, &hp, &herr)
-	 < 0)
+	 != 0)
     if (herr != NETDB_INTERNAL || errno != ERANGE)
       return 0;
     else

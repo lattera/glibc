@@ -372,6 +372,8 @@ terminated.
 
 This function is different to @code{strncpy} in that it always
 terminates the destination string.
+
+@code{strndup} is a GNU extension.
 @end deftypefun
 
 @comment string.h

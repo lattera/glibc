@@ -1,3 +1,32 @@
+1999-06-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c: Test for gethostbyname_r
+	function correctly.
+
+	* sunrpc/getrpcport.c: Test for gethostbyname_r function
+	correctly.
+
+	* sunrpc/clnt_simp.c: Test for gethostbyname_r function correctly.
+
+	* sunrpc/clnt_gen.c: Test for gethostbyname_r and getprotobyname_r
+	functions correctly.
+
+	* inet/rexec.c (rexec): Test for gethostbyname_r result correctly.
+
+	* inet/rcmd.c: Test for gethostbyname_r result correctly.  Optimize
+	file reading a bit.
+
+	* sysdeps/generic/glob.c: Test for getpwnam_r result correctly.
+
+1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/string.texi (Copying and Concatenation): Mention that
+	strndup is a GNU extension.
+
+1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/getpw.c (__getpw): Fix check for error return.
+
 1999-06-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* elf/dl-deps.c (_dl_map_object_deps): When looking for the next

@@ -78,7 +78,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
   hstbuflen = 1024;
   hsttmpbuf = __alloca (hstbuflen);
   while (__gethostbyname_r (hostname, &hostbuf, hsttmpbuf, hstbuflen,
-			    &h, &herr) < 0)
+			    &h, &herr) != 0)
     if (herr != NETDB_INTERNAL || errno != ERANGE)
       {
 	rpc_createerr.cf_stat = RPC_UNKNOWNHOST;
@@ -107,8 +107,7 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
 
   prtbuflen = 1024;
   prttmpbuf = __alloca (prtbuflen);
-  while (__getprotobyname_r (proto, &protobuf, prttmpbuf, prtbuflen, &p)
-	 < 0)
+  while (__getprotobyname_r (proto, &protobuf, prttmpbuf, prtbuflen, &p) != 0)
     if (errno != ERANGE)
       {
 	rpc_createerr.cf_stat = RPC_UNKNOWNPROTO;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ __getpw (uid, buf)
   buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
   tmpbuf = alloca (buflen);
 
-  if (__getpwuid_r (uid, &resbuf, tmpbuf, buflen, &p) < 0)
+  if (__getpwuid_r (uid, &resbuf, tmpbuf, buflen, &p) != 0)
     return -1;
 
   if (sprintf (buf, "%s:%s:%lu:%lu:%s:%s:%s", p->pw_name, p->pw_passwd,
