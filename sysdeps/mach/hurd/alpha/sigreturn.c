@@ -167,7 +167,6 @@ __sigreturn (struct sigcontext *scp)
     register const struct sigcontext *const scpreg asm ("$2") = scp;
     register integer_t *usp asm ("$3") = scpreg->sc_regs[30];
     register integer_t usp_align asm ("$4");
-    register integer_t *sp asm ("$30");
 
     /* Push an 8-word "trap frame" onto the user stack for `rei':
        registers $2..$7, the PC, and the PSW.  */
