@@ -88,7 +88,8 @@ sources += $(foreach lib,$(extra-libs),$($(lib)-routines:=.c))
 # sysdep directories, so don't bother searching them.
 sysdep-sources := $(filter-out $(wildcard $(sources)), $(sources))
 all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) $(sources:.c=.s)  \
-				$(others:=.c) $(tests:=.c) $(test-srcs:=.c))) \
+				$(others:=.c) $(tests:=.c) $(xtests:=.c) \
+				$(test-srcs:=.c))) \
 	      $(foreach dir,$(all-dirs),\
 			$(wildcard \
 			   $(addprefix $(dir)/,\

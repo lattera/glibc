@@ -943,3 +943,7 @@ endif
 
 
 endif # Makeconfig not yet included
+
+# Local Variables:
+# mode: makefile
+# End:

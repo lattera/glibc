@@ -1,3 +1,13 @@
+2002-04-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add handling of xtests and xcheck targets.
+	* MakeTAGS: Likewise.
+	* Makeconfig: Likewise.
+	* Makerules: Likewise.
+	* Rules: Likewise.
+	* sunrpc/Makefile (xtests): Add thrsvc if thread library available.
+	* sunrpc/thrsvc.c: New file.  By Zack Weinberg.
+
 2002-04-11  Zack Weinberg  <zack@codesourcery.com>
 
 	* include/rpc/rpc.h (struct rpc_thread_variables): Remove

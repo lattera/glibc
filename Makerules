@@ -599,7 +599,7 @@ endif
 
 +depfiles := $(sources:.c=.d) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
-	     $(addsuffix .d,$(tests) $(test-srcs))
+	     $(addsuffix .d,$(tests) $(xtests) $(test-srcs))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
 endif
@@ -1035,11 +1035,20 @@ ALL_BUILD_CFLAGS = $(BUILD_CFLAGS) -include $(..)config.h
 # Support the GNU standard name for this target.
 .PHONY: check
 check: tests
+# Special target to run tests which cannot be run unconditionally.
+# Maintainers should use this target.
+.PHONY: xcheck
+xcheck: xtests
 
 ifneq (,$(tests))
 cpp-srcs-left = $(tests)
 lib := tests
 include $(patsubst %,$(..)cppflags-iterator.mk,$(tests))
+endif
+ifneq (,$(xtests))
+cpp-srcs-left = $(xtests)
+lib := tests
+include $(patsubst %,$(..)cppflags-iterator.mk,$(xtests))
 endif
 
 .PHONY: TAGS
@@ -1063,19 +1072,24 @@ clean: common-clean
 mostlyclean: common-mostlyclean
 
 do-tests-clean:
-	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(test-srcs)) \
-				     $(addsuffix -bp.out,$(tests) $(test-srcs)))
+	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(xtests) \
+						      $(test-srcs)) \
+				     $(addsuffix -bp.out,$(tests) $(xtests) \
+							 $(test-srcs)))
 
 # Remove the object files.
 common-mostlyclean:
-	-rm -f $(addprefix $(objpfx),$(tests) $(test-srcs) $(others) \
-				     $(sysdep-others) stubs \
-				     $(addsuffix .o,$(tests) $(test-srcs) \
-						    $(others) \
+	-rm -f $(addprefix $(objpfx),$(tests) $(xtests) $(test-srcs) \
+				     $(others) $(sysdep-others) stubs \
+				     $(addsuffix .o,$(tests) $(xtests) \
+						    $(test-srcs) $(others) \
 						    $(sysdep-others)) \
-				     $(addsuffix -bp,$(tests) $(test-srcs)) \
-				     $(addsuffix .out,$(tests) $(test-srcs)) \
-				     $(addsuffix -bp.out,$(tests) $(test-srcs)))
+				     $(addsuffix -bp,$(tests) $(xtests) \
+						     $(test-srcs)) \
+				     $(addsuffix .out,$(tests) $(xtests) \
+						      $(test-srcs)) \
+				     $(addsuffix -bp.out,$(tests) $(xtests) \
+							 $(test-srcs)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
 				     $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
@@ -1141,8 +1155,8 @@ rm -f $@.new
 echo > $@.new 'subdir := $(subdir)'
 $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
-	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
-	      versioned \
+	      others tests xtests test-srcs extra-libs versioned \
+	      $(extra-libs:%=%-routines) \
 	      $(addprefix install-,lib lib.so data bin bin-script sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')
@@ -1161,3 +1175,7 @@ ifeq ($(with-cvs),yes)
 endif
 endif
 endif
+
+# Local Variables:
+# mode: makefile
+# End:
