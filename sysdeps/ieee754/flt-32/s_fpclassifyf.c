@@ -1,5 +1,5 @@
 /* Return classification value corresponding to argument.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,7 +33,7 @@ __fpclassifyf (float x)
   wx &= 0x7fffffff;
   if (wx == 0)
     retval = FP_ZERO;
-  else if (wx < 0x1000000)
+  else if (wx < 0x800000)
     retval = FP_SUBNORMAL;
   else if (wx >= 0x7f800000)
     retval = wx > 0x7f800000 ? FP_NAN : FP_INFINITE;

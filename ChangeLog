@@ -1,5 +1,9 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/flt-32/s_fpclassifyf.c (__fpclassifyf): Correct
+	test for subnormal.
+	Reported by Fred J. Tydeman <tydeman@tybor.com>.
+
 	* math/test-misc.c (main): Add tests for frexp.
 	Reported by Fred J. Tydeman <tydeman@tybor.com>.
 	* sysdeps/i386/fpu/s_frexpl.S: Don't overflow during the computation.
