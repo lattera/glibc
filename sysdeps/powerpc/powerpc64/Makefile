@@ -4,16 +4,20 @@
 +cflags += -Wa,-mppc64 -mpowerpc64
 asm-CPPFLAGS += -Wa,-mppc64
 
-# On PPC64, -fpic is the default so we don't need to specify it. 
-# Also early compilers would issue a warning if -fpic was specified.
-# Each TOC entry takes 8 bytes and the TOC holds up to 2^16 bytes, 
-# or 8192 entries.  If the TOC fills up try -minimal-toc.
+# Each TOC entry takes 8 bytes and the TOC holds up to 2^16 bytes,
+# or 8192 entries.
+# If -fpic is not specified, the latest gcc-3.2.1 now generates
+# different code for call stubs (without the TOC reload).
+# Shared objects need the TOC reload so specify -fpic.
+ifeq (yes,$(build-shared))
+pic-ccflag = -fpic
+endif
 
 ifeq ($(subdir),csu)
 ifneq ($(elf),no)
-# The initfini generation code doesn't work in the presence of -g1 or 
+# The initfini generation code doesn't work in the presence of -g1 or
 # higher, so we use -g0.
-CFLAGS-initfini.s = -g0 -O1
+CFLAGS-initfini.s = -g0 -fpic -O1
 endif
 endif
 
