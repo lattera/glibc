@@ -119,7 +119,11 @@ extern "C" {
 #endif
 
 #ifndef __INT_TO_PTR
+#if defined __STDC__ && __STDC__
+# define __INT_TO_PTR(P) ((void *) ((P) + (char *) 0))
+#else
 # define __INT_TO_PTR(P) ((P) + (char *) 0)
+#endif
 #endif
 
 /* We need the type of the resulting object.  If __PTRDIFF_TYPE__ is
