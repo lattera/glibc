@@ -200,7 +200,7 @@ static char const ab_month_name[][4] =
 # define HERE_T_FMT_AMPM "%I:%M:%S %p"
 # define HERE_T_FMT "%H:%M:%S"
 
-const unsigned short int __mon_yday[1][13] =
+const unsigned short int __mon_yday[2][13] =
   {
     /* Normal years.  */
     { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },

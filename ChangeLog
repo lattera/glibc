@@ -1,3 +1,8 @@
+1999-07-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/strptime.c [!_LIBC]: Fix __mon_day size.  Reported by
+	bill@taniwha.org [PR libc/1211].
+
 1999-07-19  Andreas Schwab  <schwab@suse.de>
 
 	* libio/Makefile (routines): Add fwprintf.
