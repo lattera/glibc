@@ -1,3 +1,8 @@
+2004-02-19  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/fpu/feholdexcpt.c (feholdexcept): Fix order of fp
+	status register loads.
+
 2004-02-20  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nscd/nscd.c (termination_handler): Use _exit instead of exit
