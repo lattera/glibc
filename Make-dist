@@ -135,7 +135,6 @@ foo:=$(shell echo subdir foo >&2)
 	  $(wildcard $(addsuffix .input,$(tests))	\
 	  $(addsuffix .args,$(tests)))
 +tardeps := $(strip $(+tsrcs))
-+tsrcs := $(addprefix $(tardir)/$(subdir)/,$(+tardeps))
 
 verbose = v
 
@@ -143,7 +142,8 @@ verbose = v
 dist: $(..)$(tardir) $(+tardeps)
 	@cd ..; if test -f dist.tar; then c=u; else c=c; fi;	\
 	$(+cmdecho) "cd ..; tar $${c}h$(verbose)f dist.tar ...";	\
-	tar $${c}h$(verbose)f dist.tar $(+tsrcs)
+	tar $${c}h$(verbose)f dist.tar \
+	    $(addprefix $(tardir)/$(subdir)/,$(filter-out $<,$^))
 
 else	# Parent makefile.
 

@@ -40,6 +40,7 @@ extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 subdir-dirs	= programs
 vpath %.c programs
 vpath %.h programs
+vpath %.gperf programs
 
 localedef-modules	:= $(categories:%=ld-%) charmap charset linereader \
 			   locfile stringtrans

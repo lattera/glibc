@@ -1,4 +1,21 @@
+Thu Jun  6 00:02:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* locale/Makefile: Add vpath for %.gperf to programs.
+
+	* Make-dist (+tsrcs): Variable removed.
+	(dist): Process $^ here instead of using $(+tsrcs).
+
+	* sysdeps/unix/sysv/linux/Makefile (install-others): Don't set.
+	($(includedir)/sys/syscall.h): Target removed.
+	(sysdep_headers): Add syscall-list.h.
+	($(objpfx)syscall-%.[dh]): New rule to build syscall-list.[dh].
+	(generated): Add those.
+	* sysdeps/unix/sysv/linux/syscall.h: Include <syscall-list.h>.
+
 Wed Jun  5 15:57:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* misc/sys/syscall.h: New file.
+	* misc/Makefile (headers): Add sys/syscall.h.
 
 	* time/tzfile.h, time/private.h, time/zdump.c, time/zic.c,
  	time/africa, time/asia, time/australasia, time/europe,
@@ -11,6 +28,7 @@ Wed Jun  5 15:57:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Append to
 	this instead of $(headers).
 	* sysdeps/unix/sysv/linux/alpha/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
 
 	* Make-dist [subdirs-dirs]: Don't prefix $(subdir-dirs) with
 	$(subdir); we are already there.
