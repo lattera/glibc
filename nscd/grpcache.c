@@ -152,6 +152,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
 	/* There is no reason to go on.  */
 	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
 
+      data->resp.version = NSCD_VERSION;
       data->resp.found = 1;
       data->resp.gr_name_len = gr_name_len;
       data->resp.gr_passwd_len = gr_passwd_len;

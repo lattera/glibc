@@ -1,3 +1,9 @@
+2003-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/pwdcache.c: Initialize .version element in result.
+	* nscd/grpcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 2003-04-27  Andreas Schwab  <schwab@suse.de>
 
 	* Makeconfig ($(common-objpfx)sysd-sorted): Fix for running in

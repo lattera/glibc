@@ -145,6 +145,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
 	/* There is no reason to go on.  */
 	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
 
+      data->resp.version = NSCD_VERSION;
       data->resp.found = 1;
       data->resp.pw_name_len = pw_name_len;
       data->resp.pw_passwd_len = pw_passwd_len;

@@ -167,6 +167,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	/* There is no reason to go on.  */
 	error (EXIT_FAILURE, errno, _("while allocating cache entry"));
 
+      data->resp.version = NSCD_VERSION;
       data->resp.found = 1;
       data->resp.h_name_len = h_name_len;
       data->resp.h_aliases_cnt = h_aliases_cnt;
