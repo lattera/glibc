@@ -32,6 +32,12 @@
 # define internal_function
 #endif
 
+/* Tell the compiler when a conditional or integer expression is
+   almost always true or almost always false.  */
+#ifndef HAVE_BUILTIN_EXPECT
+# define __builtin_expect(expr, val) (expr)
+#endif
+
 /* Encoding of locale name parts.  */
 #define CEN_REVISION		1
 #define CEN_SPONSOR		2
@@ -49,6 +55,7 @@
 struct loaded_l10nfile
 {
   const char *filename;
+  struct binding *domainbinding;
   int decided;
 
   const void *data;
@@ -73,7 +80,8 @@ _nl_make_l10nflist PARAMS ((struct loaded_l10nfile **l10nfile_list,
 			    const char *normalized_codeset,
 			    const char *modifier, const char *special,
 			    const char *sponsor, const char *revision,
-			    const char *filename, int do_allocate));
+			    const char *filename,
+			    struct binding *domainbinding, int do_allocate));
 
 
 extern const char *_nl_expand_alias PARAMS ((const char *name));

@@ -1,5 +1,102 @@
 2000-05-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/stdio.h: Make fseeko and ftello prototypes available is
+	__USE_LARGEFILE.  Patch by Paul Eggert <eggert@twinsun.com>.
+
+	* sysdeps/generic/dl-environ.c (unsetenv): Follow change to the
+	real unsetenv implementation from 1999-07-29 [PR libc/1714].
+
+2000-05-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (dcigettext): Do the defaulting of 'domainname'
+	before calling tfind.
+
+2000-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/resolv.h (res_querydomain): Remove redefinition to
+	__res_querydomain (reported by Owen Taylor <otaylor@redhat.com>).
+
+2000-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/gl.po: Update from translation team.
+
+	* manual/intro.texi (Program Basics): Change section title.
+	* manual/process.texi: Fix reference.
+	(Executing a File): Add reference exec in other section.
+	* manual/signal.texi: Fix reference.
+	* manual/startup.texi: Document syscall function.
+	Patches by Bryan Henderson <bryanh@giraffe-data.com>.
+
+2000-04-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/libintl.h (bind_textdomain_codeset): New declaration.
+	* intl/bindtextdom.c (set_binding_values): New function.
+	(bindtextdomain): Call it.
+	(bind_textdomain_codeset): New function.
+	* intl/dcigettext.c (dcigettext): Pass binding to _nl_find_domain.
+	(free_mem): Free each binding's codeset.
+	* intl/gettextP.h (struct binding): Add codeset field.
+	(_nl_find_domain): Add domainbinding argument.
+	* intl/finddomain.c (_nl_find_domain): Add domainbinding argument.
+	Pass it to _nl_make_l10nflist.
+	* intl/loadinfo.h (struct loaded_l10nfile): Add domainbinding field.
+	(_nl_make_l10nflist): Add domainbinding argument.
+	* intl/l10nflist.c (_nl_make_l10nflist): Add domainbinding argument.
+	* intl/loadmsgcat.c (_nl_load_domain): Look at the domainbinding's
+	codeset when determining outcharset. If !_LIBC && HAVE_ICONV, call
+	locale_charset().
+	* manual/message.texi: New node "Charset conversion in gettext".
+
+2000-04-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* catgets/open_catalog.c (__open_catalog): Use __builtin_expect where
+	appropriate.  Handle possible __read error.
+
+2000-04-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/gettextP.h (__builtin_expect): Define as empty if not a
+	compiler builtin.
+	* intl/loadinfo.h (__builtin_expect): Likewise.
+	* intl/dcigettext.c (dcigettext, _nl_find_msg): Use
+	__builtin_expect where appropriate.
+	* intl/loadmsgcat.c (_nl_load_domain): Likewise.
+	* intl/localealias.c (extend_alias_table): Return an error indicator.
+	(read_alias_file): Bail out if extend_alias_table fails.
+
+2000-04-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/loadmsgcat.c: Define _GNU_SOURCE as early as possible.
+	* intl/localealias.c: Likewise.
+
+2000-05-01  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/loadmsgcat.c (_nl_load_domain): Initialize domain->conv_tab.
+	Initialize domain->plural and domain->nplurals even if there is no
+	nullentry.
+
+2000-05-01  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (_nl_find_msg): Terminate __gconv loop if return
+	value is == __GCONV_OK or == __GCONV_EMPTY_INPUT, not != __GCONV_OK.
+	In case of failure, goto converted.
+
+2000-05-01  Bruno Haible  <haible@clisp.cons.org>
+
+	* wcsmbs/wcsmbsload.c (norm_add_slashes): Move away.
+	* iconv/gconv_int.h (norm_add_slashes): Move to here.
+	* intl/loadmsgcat.c (_nl_load_domain): Normalize strings passed to
+	__gconv_open.
+
+2000-04-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/dcigettext.c (transcmp): Compare the domains as well.
+	(dcigettext): Call strlen (msgid1) after testing msgid1 against NULL,
+	not before.
+	* intl/loadmsgcat.c (_nl_load_domain): Deal with EINTR. Include
+	<errno.h>.
+
+2000-05-03  Ulrich Drepper  <drepper@redhat.com>
+
 	* string/bits/string2.h: Declare __strdup and __strndup if necessary.
 	Reported by Bruno Haible.
 

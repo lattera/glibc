@@ -16,11 +16,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Tell glibc's <string.h> to provide a prototype for mempcpy().
+   This must come before <config.h> because <config.h> may include
+   <features.h>, and once <features.h> has been included, it's too late.  */
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE    1
+#endif
+
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -30,9 +38,6 @@
 #endif
 
 #if defined HAVE_STRING_H || defined _LIBC
-# ifndef _GNU_SOURCE
-#  define _GNU_SOURCE	1
-# endif
 # include <string.h>
 #else
 # include <strings.h>
@@ -138,9 +143,9 @@ _nl_load_domain (domain_file)
     return;
 
   /* We must know about the size of the file.  */
-  if (fstat (fd, &st) != 0
-      || (size = (size_t) st.st_size) != st.st_size
-      || size < sizeof (struct mo_file_header))
+  if (__builtin_expect (fstat (fd, &st) != 0, 0)
+      || __builtin_expect ((size = (size_t) st.st_size) != st.st_size, 0)
+      || __builtin_expect (size < sizeof (struct mo_file_header), 0))
     {
       /* Something went wrong.  */
       close (fd);
@@ -153,7 +158,7 @@ _nl_load_domain (domain_file)
   data = (struct mo_file_header *) mmap (NULL, size, PROT_READ,
 					 MAP_PRIVATE, fd, 0);
 
-  if (data != (struct mo_file_header *) -1)
+  if (__builtin_expect (data != (struct mo_file_header *) -1, 1))
     {
       /* mmap() call was successful.  */
       close (fd);
@@ -177,12 +182,15 @@ _nl_load_domain (domain_file)
       do
 	{
 	  long int nb = (long int) read (fd, read_ptr, to_read);
-	  if (nb == -1)
+	  if (nb <= 0)
 	    {
+#ifdef EINTR
+	      if (nb == -1 && errno == EINTR)
+		continue;
+#endif
 	      close (fd);
 	      return;
 	    }
-
 	  read_ptr += nb;
 	  to_read -= nb;
 	}
@@ -193,7 +201,8 @@ _nl_load_domain (domain_file)
 
   /* Using the magic number we can test whether it really is a message
      catalog file.  */
-  if (data->magic != _MAGIC && data->magic != _MAGIC_SWAPPED)
+  if (__builtin_expect (data->magic != _MAGIC && data->magic != _MAGIC_SWAPPED,
+			0))
     {
       /* The magic number is wrong: not a message catalog file.  */
 #ifdef HAVE_MMAP
@@ -254,14 +263,13 @@ _nl_load_domain (domain_file)
   domain->conv = (iconv_t) -1;
 # endif
 #endif
+  domain->conv_tab = NULL;
   nullentry = _nl_find_msg (domain_file, "", 0);
   if (nullentry != NULL)
     {
-      const char *charsetstr;
-      const char *plural;
-      const char *nplurals;
-
 #if defined _LIBC || HAVE_ICONV
+      const char *charsetstr;
+
       charsetstr = strstr (nullentry, "charset=");
       if (charsetstr != NULL)
 	{
@@ -282,12 +290,33 @@ _nl_load_domain (domain_file)
 
 	  /* The output charset should normally be determined by the
 	     locale.  But sometimes the locale is not used or not correctly
-	     set up so we provide a possibility to override this.  */
-	  outcharset = getenv ("OUTPUT_CHARSET");
-	  if (outcharset == NULL || outcharset[0] == '\0')
-	    outcharset = (*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string;
+	     set up, so we provide a possibility for the user to override
+	     this.  Moreover, the value specified through
+	     bind_textdomain_codeset overrides both.  */
+	  if (domain_file->domainbinding != NULL
+	      && domain_file->domainbinding->codeset != NULL)
+	    outcharset = domain_file->domainbinding->codeset;
+	  else
+	    {
+	      outcharset = getenv ("OUTPUT_CHARSET");
+	      if (outcharset == NULL || outcharset[0] == '\0')
+		{
+# ifdef _LIBC
+		  outcharset = (*_nl_current[LC_CTYPE])->values[_NL_ITEM_INDEX (CODESET)].string;
+# else
+#  if HAVE_ICONV
+		  extern const char *locale_charset (void);
+		  outcharset = locale_charset ();
+		  if (outcharset == NULL)
+		    outcharset = "";
+#  endif
+# endif
+		}
+	    }
 
 # ifdef _LIBC
+	  outcharset = norm_add_slashes (outcharset);
+	  charset = norm_add_slashes (charset);
 	  if (__gconv_open (outcharset, charset, &domain->conv,
 			    GCONV_AVOID_NOCONV)
 	      != __GCONV_OK)
@@ -299,19 +328,18 @@ _nl_load_domain (domain_file)
 # endif
 	}
 #endif /* _LIBC || HAVE_ICONV */
+    }
 
-      /* Also look for a plural specification.  */
+  /* Also look for a plural specification.  */
+  if (nullentry != NULL)
+    {
+      const char *plural;
+      const char *nplurals;
+
       plural = strstr (nullentry, "plural=");
       nplurals = strstr (nullentry, "nplurals=");
       if (plural == NULL || nplurals == NULL)
-	{
-	  /* By default we are using the Germanic form: singular form only
-	     for `one', the plural form otherwise.  Yes, this is also what
-	     English is using since English is a Germanic language.  */
-	no_plural:
-	  domain->plural = &germanic_plural;
-	  domain->nplurals = 2;
-	}
+	goto no_plural;
       else
 	{
 	  /* First get the number.  */
@@ -335,6 +363,15 @@ _nl_load_domain (domain_file)
 	    goto no_plural;
 	  domain->plural = args.res;
 	}
+    }
+  else
+    {
+      /* By default we are using the Germanic form: singular form only
+         for `one', the plural form otherwise.  Yes, this is also what
+         English is using since English is a Germanic language.  */
+    no_plural:
+      domain->plural = &germanic_plural;
+      domain->nplurals = 2;
     }
 }
 

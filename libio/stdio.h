@@ -1,5 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-1999, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -481,7 +481,7 @@ typedef __off64_t off64_t;
 
 
 #ifndef __USE_FILE_OFFSET64
-# ifdef __USE_UNIX98
+# ifdef __USE_LARGEFILE
 /* Seek to a certain position on STREAM.  */
 extern int fseeko (FILE *__stream, __off_t __off, int __whence) __THROW;
 /* Return the current position of STREAM.  */
@@ -495,7 +495,7 @@ extern int fgetpos (FILE *__restrict __stream, fpos_t *__restrict __pos)
 extern int fsetpos (FILE *__stream, __const fpos_t *__pos) __THROW;
 #else
 # ifdef __REDIRECT
-#  ifdef __USE_UNIX98
+#  ifdef __USE_LARGEFILE
 extern int __REDIRECT (fseeko,
 		       (FILE *__stream, __off64_t __off, int __whence) __THROW,
 		       fseeko64);
@@ -507,7 +507,7 @@ extern int __REDIRECT (fsetpos,
 		       (FILE *__stream, __const fpos_t *__pos) __THROW,
 		       fsetpos64);
 # else
-#  ifdef __USE_UNIX98
+#  ifdef __USE_LARGEFILE
 #   define fseeko fseeko64
 #   define ftello ftello64
 #  endif
@@ -517,10 +517,8 @@ extern int __REDIRECT (fsetpos,
 #endif
 
 #ifdef __USE_LARGEFILE64
-# ifdef __USE_UNIX98
 extern int fseeko64 (FILE *__stream, __off64_t __off, int __whence) __THROW;
 extern __off64_t ftello64 (FILE *__stream) __THROW;
-# endif
 extern int fgetpos64 (FILE *__restrict __stream, fpos64_t *__restrict __pos)
      __THROW;
 extern int fsetpos64 (FILE *__stream, __const fpos64_t *__pos) __THROW;

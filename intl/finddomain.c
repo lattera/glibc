@@ -67,10 +67,11 @@ static struct loaded_l10nfile *_nl_loaded_domains;
    established bindings.  */
 struct loaded_l10nfile *
 internal_function
-_nl_find_domain (dirname, locale, domainname)
+_nl_find_domain (dirname, locale, domainname, domainbinding)
      const char *dirname;
      char *locale;
      const char *domainname;
+     struct binding *domainbinding;
 {
   struct loaded_l10nfile *retval;
   const char *language;
@@ -109,7 +110,8 @@ _nl_find_domain (dirname, locale, domainname)
      be one data set in the list of loaded domains.  */
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, 0, locale, NULL, NULL,
-			       NULL, NULL, NULL, NULL, NULL, domainname, 0);
+			       NULL, NULL, NULL, NULL, NULL, domainname,
+			       domainbinding, 0);
   if (retval != NULL)
     {
       /* We know something about this locale.  */
@@ -165,7 +167,8 @@ _nl_find_domain (dirname, locale, domainname)
   retval = _nl_make_l10nflist (&_nl_loaded_domains, dirname,
 			       strlen (dirname) + 1, mask, language, territory,
 			       codeset, normalized_codeset, modifier, special,
-			       sponsor, revision, domainname, 1);
+			       sponsor, revision, domainname, domainbinding,
+			       1);
   if (retval == NULL)
     /* This means we are out of core.  */
     return NULL;

@@ -230,7 +230,7 @@ transcmp (const void *p1, const void *p2)
   result = strcmp (s1->msgid, s2->msgid);
   if (result == 0)
     {
-      result = strcmp (s1->msgid, s2->msgid);
+      result = strcmp (s1->domain, s2->domain);
       if (result == 0)
 	{
 	  result = s1->plindex - s2->plindex;
@@ -362,7 +362,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 #if defined HAVE_TSEARCH || defined _LIBC
   struct known_translation_t *search;
   struct known_translation_t **foundp = NULL;
-  size_t msgid_len = strlen (msgid1) + 1;
+  size_t msgid_len;
 #endif
   size_t domainname_len;
 
@@ -372,7 +372,15 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
   __libc_rwlock_rdlock (_nl_state_lock);
 
+  /* If DOMAINNAME is NULL, we are interested in the default domain.  If
+     CATEGORY is not LC_MESSAGES this might not make much sense but the
+     definition left this undefined.  */
+  if (domainname == NULL)
+    domainname = _nl_current_default_domain;
+
 #if defined HAVE_TSEARCH || defined _LIBC
+  msgid_len = strlen (msgid1) + 1;
+
   if (plural == 0)
     {
       /* Try to find the translation among those which we found at
@@ -398,12 +406,6 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
   /* See whether this is a SUID binary or not.  */
   DETERMINE_SECURE;
-
-  /* If DOMAINNAME is NULL, we are interested in the default domain.  If
-     CATEGORY is not LC_MESSAGES this might not make much sense but the
-     definition left this undefined.  */
-  if (domainname == NULL)
-    domainname = _nl_current_default_domain;
 
   /* First find matching binding.  */
   for (binding = _nl_domain_bindings; binding != NULL; binding = binding->next)
@@ -529,7 +531,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       /* Find structure describing the message catalog matching the
 	 DOMAINNAME and CATEGORY.  */
-      domain = _nl_find_domain (dirname, single_locale, xdomainname);
+      domain = _nl_find_domain (dirname, single_locale, xdomainname, binding);
 
       if (domain != NULL)
 	{
@@ -605,7 +607,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		      /* Insert the entry in the search tree.  */
 		      foundp = (struct known_translation_t **)
 			tsearch (newp, &root, transcmp);
-		      if (&newp != foundp)
+		      if (__builtin_expect (&newp != foundp, 0))
 			/* The insert failed.  */
 			free (newp);
 		    }
@@ -751,7 +753,7 @@ _nl_find_msg (domain_file, msgid, index)
 	/* Mark that we didn't succeed allocating a table.  */
 	domain->conv_tab = (char **) -1;
 
-      if (domain->conv_tab == (char **) -1)
+      if (__builtin_expect (domain->conv_tab == (char **) -1, 0))
 	/* Nothing we can do, no more memory.  */
 	goto converted;
 
@@ -787,59 +789,61 @@ _nl_find_msg (domain_file, msgid, index)
 
 	  __libc_lock_lock (lock);
 
+	  while (1)
+	    {
 # ifdef _LIBC
-	  {
-	    size_t written;
-	    int res;
+	      size_t non_reversible;
+	      int res;
 
-	    while ((res = __gconv (domain->conv,
-				   &inbuf, inbuf + resultlen,
-				   &outbuf, outbuf + freemem_size,
-				   &written)) == __GCONV_OK)
-	      {
-		if (res != __GCONV_FULL_OUTPUT)
-		  goto out;
+	      res = __gconv (domain->conv,
+			     &inbuf, inbuf + resultlen,
+			     &outbuf, outbuf + freemem_size,
+			     &non_reversible);
 
-		/* We must resize the buffer.  */
-		freemem_size = MAX (2 * freemem_size, 4064);
-		freemem = (char *) malloc (freemem_size);
-		if (freemem == NULL)
-		  goto out;
+	      if (res == __GCONV_OK || res == __GCONV_EMPTY_INPUT)
+		break;
 
-		inbuf = result;
-		outbuf = freemem + 4;
-	      }
-	  }
+	      if (res != __GCONV_FULL_OUTPUT)
+		{
+		  __libc_lock_unlock (lock);
+		  goto converted;
+		}
+
+	      inbuf = result;
 # else
 #  if HAVE_ICONV
-	  for (;;)
-	    {
 	      const char *inptr = (const char *) inbuf;
 	      size_t inleft = resultlen;
 	      char *outptr = (char *) outbuf;
 	      size_t outleft = freemem_size;
 
 	      if (iconv (domain->conv, &inptr, &inleft, &outptr, &outleft)
-		  != (size_t)(-1))
+		  != (size_t) (-1))
 		{
 		  outbuf = (unsigned char *) outptr;
 		  break;
 		}
 	      if (errno != E2BIG)
-		goto out;
+		{
+		  __libc_lock_unlock (lock);
+		  goto converted;
+		}
+#  endif
+# endif
 
 	      /* We must resize the buffer.  */
 	      freemem_size = 2 * freemem_size;
 	      if (freemem_size < 4064)
 		freemem_size = 4064;
 	      freemem = (char *) malloc (freemem_size);
-	      if (freemem == NULL)
-		goto out;
+	      if (__builtin_expect (freemem == NULL, 0))
+		{
+		  __libc_lock_unlock (lock);
+		  goto converted;
+		}
 
 	      outbuf = freemem + 4;
 	    }
-#  endif
-# endif
 
 	  /* We have now in our buffer a converted string.  Put this
 	     into the table of conversions.  */
@@ -848,10 +852,9 @@ _nl_find_msg (domain_file, msgid, index)
 	  /* Shrink freemem, but keep it aligned.  */
 	  freemem_size -= outbuf - freemem;
 	  freemem = outbuf;
-	  freemem += freemem_size & 3;
-	  freemem_size = freemem_size & ~3;
+	  freemem += freemem_size & (__alignof__ (nls_uint32) - 1);
+	  freemem_size = freemem_size & ~ (__alignof__ (nls_uint32) - 1);
 
-	out:
 	  __libc_lock_unlock (lock);
 	}
 
@@ -1070,15 +1073,19 @@ free_mem (void)
   struct binding *runp;
 
   for (runp = _nl_domain_bindings; runp != NULL; runp = runp->next)
-    if (runp->dirname != _nl_default_dirname)
-      /* Yes, this is a pointer comparison.  */
-      free (runp->dirname);
+    {
+      if (runp->dirname != _nl_default_dirname)
+	/* Yes, this is a pointer comparison.  */
+	free (runp->dirname);
+      if (runp->codeset != NULL)
+	free (runp->codeset);
+    }
 
   if (_nl_current_default_domain != _nl_default_default_domain)
     /* Yes, again a pointer comparison.  */
     free ((char *) _nl_current_default_domain);
 
-  /* Remove the search tree with the know translations.  */
+  /* Remove the search tree with the known translations.  */
   __tdestroy (root, free);
 }
 

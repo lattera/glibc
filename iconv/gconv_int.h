@@ -100,6 +100,34 @@ extern size_t __gconv_nmodules;
 extern struct gconv_module *__gconv_modules_db;
 
 
+/* The gconv functions expects the name to be in upper case and complete,
+   including the trailing slashes if necessary.  */
+#define norm_add_slashes(str) \
+  ({									      \
+    const char *cp = (str);						      \
+    char *result;							      \
+    char *tmp;								      \
+    size_t cnt = 0;							      \
+									      \
+    while (*cp != '\0')							      \
+      if (*cp++ == '/')							      \
+	++cnt;								      \
+									      \
+    tmp = result = alloca (cp - (str) + 3);				      \
+    cp = (str);								      \
+    while (*cp != '\0')							      \
+      *tmp++ = _toupper (*cp++);					      \
+    if (cnt < 2)							      \
+      {									      \
+	*tmp++ = '/';							      \
+	if (cnt < 1)							      \
+	  *tmp++ = '/';							      \
+      }									      \
+    *tmp = '\0';							      \
+    result;								      \
+  })
+
+
 /* Return in *HANDLE decriptor for transformation from FROMSET to TOSET.  */
 extern int __gconv_open (const char *__toset, const char *__fromset,
 			 __gconv_t *__handle, int flags)

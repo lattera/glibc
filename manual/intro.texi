@@ -674,7 +674,7 @@ signal is delivered, and how to prevent signals from arriving during
 critical sections of your program.
 
 @item
-@ref{Process Startup}, tells how your programs can access their
+@ref{Program Basics}, tells how your programs can access their
 command-line arguments and environment variables.
 
 @item

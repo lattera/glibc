@@ -3227,11 +3227,11 @@ msgstr "mcheck_status falso, a librería ten erros\n"
 
 #: sunrpc/pmap_rmt.c:185
 msgid "broadcast: ioctl (get interface configuration)"
-msgstr "multidifusión: ioctl (obte-la configuración do interfaz)"
+msgstr "multidifusión: ioctl (obte-la configuración da interface)"
 
 #: sunrpc/pmap_rmt.c:194
 msgid "broadcast: ioctl (get interface flags)"
-msgstr "multidifusión: ioctl (obte-los parámetros do interfaz)"
+msgstr "multidifusión: ioctl (obte-los parámetros da interface)"
 
 #: login/programs/request.c:167
 msgid "buffer overflow"
@@ -3739,7 +3739,7 @@ msgstr "xerar un perfil plano con contas e tempos"
 
 #: sunrpc/get_myaddr.c:77
 msgid "get_myaddress: ioctl (get interface configuration)"
-msgstr "get_myaddress: ioctl (obte-la configuración do interfaz)"
+msgstr "get_myaddress: ioctl (obte-la configuración da interface)"
 
 #: nss/getent.c:54
 msgid "getent - get entries from administrative database."

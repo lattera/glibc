@@ -1,5 +1,5 @@
-/*Environment handling for dynamic loader.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Environment handling for dynamic loader.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,8 @@ unsetenv (const char *name)
   const size_t len = strlen (name);
   char **ep;
 
-  for (ep = _environ; *ep != NULL; ++ep)
+  ep = _environ;
+  while (*ep != NULL)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
 	/* Found it.  Remove this pointer by moving later ones back.  */
@@ -66,4 +67,6 @@ unsetenv (const char *name)
 	while (*dp++);
 	/* Continue the loop in case NAME appears again.  */
       }
+    else
+      ++ep;
 }

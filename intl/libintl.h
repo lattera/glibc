@@ -78,6 +78,11 @@ extern char *textdomain (__const char *__domainname) __THROW;
 extern char *bindtextdomain (__const char *__domainname,
 			     __const char *__dirname) __THROW;
 
+/* Specify the character encoding in which the messages from the
+   DOMAINNAME message catalog will be returned.  */
+extern char *bind_textdomain_codeset (__const char *__domainname,
+				      __const char *__codeset) __THROW;
+
 
 /* Optimized version of the function above.  */
 #if defined __OPTIMIZE__

@@ -1,4 +1,4 @@
-@node Signal Handling, Process Startup, Non-Local Exits, Top
+@node Signal Handling, Program Basics, Non-Local Exits, Top
 @c %MENU% How to send, block, and handle signals
 @chapter Signal Handling
 

@@ -266,7 +266,6 @@ extern struct __res_state _res;
 #define p_query			__p_query
 #define res_close		__res_close
 #define res_isourserver		__res_isourserver
-#define res_querydomain		__res_querydomain
 #define res_send		__res_send
 
 __BEGIN_DECLS

@@ -1,4 +1,4 @@
-@node Processes, Job Control, Process Startup, Top
+@node Processes, Job Control, Program Basics, Top
 @c %MENU% How to create processes and run other programs
 @chapter Processes
 
@@ -275,6 +275,9 @@ work even if the system uses @code{fork} instead.
 This section describes the @code{exec} family of functions, for executing
 a file as a process image.  You can use these functions to make a child
 process execute a new program after it has been forked.
+
+To see the effects of @code{exec} from the point of view of the called
+program, @xref{Program Basics}.
 
 @pindex unistd.h
 The functions in this family differ in how you specify the arguments,

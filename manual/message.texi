@@ -764,13 +764,15 @@ basic functionally is equivalent.  There are functions of the following
 categories:
 
 @menu
-* Translation with gettext::    What has to be done to translate a message.
-* Locating gettext catalog::    How to determine which catalog to be used.
-* Advanced gettext functions::  Additional functions for more complicated
-                                 situations.
-* GUI program problems::        How to use @code{gettext} in GUI programs.
-* Using gettextized software::  The possibilities of the user to influence
-                                 the way @code{gettext} works.
+* Translation with gettext::       What has to be done to translate a message.
+* Locating gettext catalog::       How to determine which catalog to be used.
+* Advanced gettext functions::     Additional functions for more complicated
+                                    situations.
+* Charset conversion in gettext::  How to specify the output character set
+                                    @code{gettext} uses.
+* GUI program problems::           How to use @code{gettext} in GUI programs.
+* Using gettextized software::     The possibilities of the user to influence
+                                    the way @code{gettext} works.
 @end menu
 
 @node Translation with gettext
@@ -1045,7 +1047,7 @@ running program does not depend on the user setting an environment
 variable.
 
 The @code{bindtextdomain} function can be used several times and if the
-@var{domainname} argument is different the previously bounded domains
+@var{domainname} argument is different the previously bound domains
 will not be overwritten.
 
 If the program which wish to use @code{bindtextdomain} at some point of
@@ -1359,6 +1361,52 @@ Slovenian
 @end table
 
 
+@node Charset conversion in gettext
+@subsubsection How to specify the output character set @code{gettext} uses
+
+@code{gettext} not only looks up a translation in a message catalog.  It
+also converts the translation on the fly to the desired output character
+set.  This is useful if the user is working in a different character set
+than the translator who created the message catalog, because it avoids
+distributing variants of message catalogs which differ only in the
+character set.
+
+The output character set is, by default, the value of @code{nl_langinfo
+(CODESET)}, which depends on the @code{LC_CTYPE} part of the current
+locale.  But programs which store strings in a locale independent way
+(e.g. UTF-8) can request that @code{gettext} and related functions
+return the translations in that encoding, by use of the
+@code{bind_textdomain_codeset} function.
+
+Note that the @var{msgid} argument to @code{gettext} is not subject to
+character set conversion.  Also, when @code{gettext} does not find a
+translation for @var{msgid}, it returns @var{msgid} unchanged --
+independently of the current output character set.  It is therefore
+recommended that all @var{msgid}s be US-ASCII strings.
+
+@comment libintl.h
+@comment GNU
+@deftypefun {char *} bind_textdomain_codeset (const char *@var{domainname}, const char *@var{codeset})
+The @code{bind_textdomain_codeset} function can be used to specify the
+output character set for message catalogs for domain @var{domainname}.
+
+If the @var{codeset} parameter is the null pointer,
+@code{bind_textdomain_codeset} returns the currently selected codeset
+for the domain with the name @var{domainname}. It returns @code{NULL} if
+no codeset has yet been selected.
+
+The @code{bind_textdomain_codeset} function can be used several times. 
+If used multiple times with the same @var{domainname} argument, the
+later call overrides the settings made by the earlier one.
+
+The @code{bind_textdomain_codeset} function returns a pointer to a
+string containing the name of the selected codeset.  The string is
+allocated internally in the function and must not be changed by the
+user.  If the system went out of core during the execution of
+@code{bind_textdomain_codeset}, the return value is @code{NULL} and the
+global variable @var{errno} is set accordingly.  @end deftypefun
+
+
 @node GUI program problems
 @subsubsection How to use @code{gettext} in GUI programs
 
@@ -1589,7 +1637,7 @@ to work:
 @{
   textdomain ("test-package");
   bindtextdomain ("test-package", "/usr/local/share/locale");
-  puts (gettext ("Hello, world!");
+  puts (gettext ("Hello, world!"));
 @}
 @end smallexample
 

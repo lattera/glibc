@@ -132,34 +132,6 @@ getfct (const char *to, const char *from)
   })
 
 
-/* The gconv functions expects the name to be complete, including the
-   trailing shashes if necessary.  */
-#define norm_add_slashes(str) \
-  ({									      \
-    const char *cp = str;						      \
-    char *result;							      \
-    char *tmp;								      \
-    size_t cnt = 0;							      \
-									      \
-    while (*cp != '\0')							      \
-      if (*cp++ == '/')							      \
-	++cnt;								      \
-									      \
-    tmp = result = alloca (cp - str + 3);				      \
-    cp = str;								      \
-    while (*cp != '\0')							      \
-      *tmp++ = _toupper (*cp++);					      \
-    if (cnt < 2)							      \
-      {									      \
-	*tmp++ = '/';							      \
-	if (cnt < 1)							      \
-	  *tmp++ = '/';							      \
-      }									      \
-    *tmp = '\0';							      \
-    result;								      \
-  })
-
-
 /* We must modify global data.  */
 __libc_lock_define_initialized (static, lock)
 

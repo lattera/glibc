@@ -1,25 +1,43 @@
-@node Process Startup, Processes, Signal Handling, Top
+@node Program Basics, Processes, Signal Handling, Top
 @c %MENU% Writing the beginning and end of your program
-@chapter Process Startup and Termination
+@chapter The Basic Program/System Interface
 
 @cindex process
+@cindex program
+@cindex address space
+@cindex thread of control
 @dfn{Processes} are the primitive units for allocation of system
 resources.  Each process has its own address space and (usually) one
 thread of control.  A process executes a program; you can have multiple
 processes executing the same program, but each process has its own copy
 of the program within its own address space and executes it
-independently of the other copies.
+independently of the other copies.  Though it may have multiple threads
+of control within the same program and a program may be composed of
+multiple logically separate modules, a process always executes exactly
+one program.
 
-This chapter explains what your program should do to handle the startup
-of a process, to terminate its process, and to receive information
-(arguments and the environment) from the parent process.
+Note that we are using a specific definition of ``program'' for the
+purposes of this manual, which corresponds to a common definition in the
+context of Unix system.  In popular usage, ``program'' enjoys a much
+broader definition; it can refer for example to a system's kernel, an
+editor macro, a complex package of software, or a discrete section of
+code executing within a process.
+
+Writing the program is what this manual is all about.  This chapter
+explains the most basic interface between your program and the system
+that runs, or calls, it.  This includes passing of parameters (arguments
+and environment) from the system, requesting basic services from the
+system, and telling the system the program is done.
+
+A program starts another program with the @code{exec} family of system calls.
+This chapter looks at program startup from the execee's point of view.  To
+see the event from the execor's point of view, @xref{Executing a File}.
 
 @menu
 * Program Arguments::           Parsing your program's command-line arguments.
-* Environment Variables::       How to access parameters inherited from
-				 a parent process.
-* Program Termination::         How to cause a process to terminate and
-				 return status information to its parent.
+* Environment Variables::       Less direct parameters affecting your program
+* System Calls::                Requesting service from the system
+* Program Termination::         Telling the system you're done; return status
 @end menu
 
 @node Program Arguments
@@ -72,7 +90,7 @@ int main (int @var{argc}, char *@var{argv}[], char *@var{envp})
 @end smallexample
 
 The first two arguments are just the same.  The third argument
-@var{envp} gives the process's environment; it is the same as the value
+@var{envp} gives the program's environment; it is the same as the value
 of @code{environ}.  @xref{Environment Variables}.  POSIX.1 does not
 allow this three-argument form, so to be portable it is best to write
 @code{main} to take two arguments, and use the value of @code{environ}.
@@ -438,7 +456,7 @@ this lets the user specify the value.
 
 This is the name that the user used to log in.  Since the value in the
 environment can be tweaked arbitrarily, this is not a reliable way to
-identify the user who is running a process; a function like
+identify the user who is running a program; a function like
 @code{getlogin} (@pxref{Who Logged In}) is better for that purpose.
 
 For most purposes, it is better to use @code{LOGNAME}, precisely because
@@ -562,6 +580,113 @@ reordering of command line arguments by @code{getopt} and
 @c !!! GNU also has COREFILE, CORESERVER, EXECSERVERS
 @end table
 
+@node System Calls
+@section System Calls
+
+@cindex system call
+A system call is a request for service that a program makes of the
+kernel.  The service is generally something that only the kernel has
+the privilege to do, such as doing I/O.  Programmers don't normally
+need to be concerned with system calls because there are functions in
+the GNU C library to do virtually everything that system calls do.
+These functions work by making system calls themselves.  For example,
+there is a system call that changes the permissions of a file, but 
+you don't need to know about it because you can just use the GNU C
+library's @code{chmod} function.
+
+@cindex kernel call
+System calls are sometimes called kernel calls.
+
+However, there are times when you want to make a system call explicitly,
+and for that, the GNU C library provides the @code{syscall} function.
+@code{syscall} is harder to use and less portable than functions like
+@code{chmod}, but easier and more portable than coding the system call
+in assembler instructions.
+
+@code{syscall} is most useful when you are working with a system call
+which is special to your system or is newer than the GNU C library you
+are using.  @code{syscall} is implemented in an entirely generic way;
+the function does not know anything about what a particular system
+call does or even if it is valid.
+
+The description of @code{syscall} in this section assumes a certain
+protocol for system calls on the various platforms on which the GNU C
+library runs.  That protocol is not defined by any strong authority, but
+we won't describe it here either because anyone who is coding
+@code{syscall} probably won't accept anything less than kernel and C
+library source code as a specification of the interface between them
+anyway.
+
+
+@code{syscall} is declared in @file{unistd.h}.
+
+@comment unistd.h
+@comment ???
+@deftypefun long int syscall (long int @var{sysno}, ...)
+
+@code{syscall} performs a generic system call.
+
+@cindex system call number
+@var{sysno} is the system call number.  Each kind of system call is
+identified by a number.  Macros for all the possible system call numbers
+are defined in @file{sys/syscall.h}
+
+The remaining arguments are the arguments for the system call, in
+order, and their meanings depend on the kind of system call.  Each kind
+of system call has a definite number of arguments, from zero to five.
+If you code more arguments than the system call takes, the extra ones to
+the right are ignored.
+
+The return value is the return value from the system call, unless the
+system call failed.  In that case, @code{syscall} returns @code{-1} and
+sets @code{errno} to an error code that the system call returned.  Note
+that system calls do not return @code{-1} when they succeed.
+@cindex errno
+
+If you specify an invalid @var{sysno}, @code{syscall} returns @code{-1}
+with @code{errno} = @code{ENOSYS}.
+
+Example:
+
+@smallexample
+
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <errno.h>
+
+...
+
+int rc;
+
+rc = syscall(SYS_chmod, "/etc/passwd", 0444);
+
+if (rc == -1) 
+   fprintf(stderr, "chmod failed, errno = %d\n", errno);
+
+@end smallexample
+
+This, if all the compatibility stars are aligned, is equivalent to the
+following preferable code:
+
+@smallexample
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
+
+...
+
+int rc;
+
+rc = chmod("/etc/passwd", 0444);
+if (rc == -1)
+   fprintf(stderr, "chmod failed, errno = %d\n", errno);
+
+@end smallexample
+
+@end deftypefun
+
+
 @node Program Termination
 @section Program Termination
 @cindex program termination
@@ -595,15 +720,19 @@ a signal that kills the program.
 @node Normal Termination
 @subsection Normal Termination
 
-A process terminates normally when the program calls @code{exit}.
-Returning from @code{main} is equivalent to calling @code{exit}, and
-the value that @code{main} returns is used as the argument to @code{exit}.
+A process terminates normally when its program signals it is done by
+calling @code{exit}.  Returning from @code{main} is equivalent to
+calling @code{exit}, and the value that @code{main} returns is used as
+the argument to @code{exit}.
 
 @comment stdlib.h
 @comment ISO
 @deftypefun void exit (int @var{status})
-The @code{exit} function terminates the process with status
-@var{status}.  This function does not return.
+The @code{exit} function tells the system that the program is done, which
+causes it to terminate the process.
+
+@var{status} is the program's exit status, which becomes part of the
+process' termination status.  This function does not return.
 @end deftypefun
 
 Normal termination causes the following actions:
@@ -694,6 +823,12 @@ kinds of "non-success".  For example, @code{diff} uses status value
 @code{1} to mean that the files are different, and @code{2} or more to
 mean that there was difficulty in opening the files.
 @end deftypevr
+
+Don't confuse a program's exit status with a process' termination status.
+There are lots of ways a process can terminate besides having it's program
+finish.  In the event that the process termination @emph{is} caused by program
+termination (i.e. @code{exit}), though, the program's exit status becomes
+part of the process' termination status.
 
 @node Cleanups on Exit
 @subsection Cleanups on Exit
@@ -796,8 +931,8 @@ This function was introduced in @w{ISO C99} and is declared in
 @file{stdlib.h}.
 @end deftypefun
 
-When a process terminates for any reason---either by an explicit
-termination call, or termination as a result of a signal---the
+When a process terminates for any reason---either because the program
+terminates, or as a result of a signal---the
 following things happen:
 
 @itemize @bullet
@@ -807,9 +942,11 @@ Note that streams are not flushed automatically when the process
 terminates; see @ref{I/O on Streams}.
 
 @item
-The low-order 8 bits of the return status code are saved to be reported
-back to the parent process via @code{wait} or @code{waitpid}; see
-@ref{Process Completion}.
+A process exit status is saved to be reported back to the parent process
+via @code{wait} or @code{waitpid}; see @ref{Process Completion}.  If the
+program exited, this status includes as its low-order 8 bits the program
+exit status.
+
 
 @item
 Any child processes of the process being terminated are assigned a new

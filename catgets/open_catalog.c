@@ -50,7 +50,7 @@ __open_catalog (__nl_catd catalog)
   __libc_lock_lock (catalog->lock);
 
   /* Check whether there was no other thread faster.  */
-  if (catalog->status != closed)
+  if (__builtin_expect (catalog->status != closed, 0))
     /* While we waited some other thread tried to open the catalog.  */
     goto unlock_return;
 
@@ -60,7 +60,7 @@ __open_catalog (__nl_catd catalog)
     {
       const char *run_nlspath = catalog->nlspath;
 #define ENOUGH(n)							      \
-  if (bufact + (n) >=bufmax) 						      \
+  if (__builtin_expect (bufact + (n) >= bufmax, 0))			      \
     {									      \
       char *old_buf = buf;						      \
       bufmax += 256 + (n);						      \
@@ -251,8 +251,12 @@ __open_catalog (__nl_catd catalog)
 	{
 	  size_t now = __read (fd, (((char *) &catalog->file_ptr)
 				    + (st.st_size - todo)), todo);
-	  if (now == 0)
+	  if (now == 0 || now == (size_t) -1)
 	    {
+#ifdef EINTR
+	      if (now == (size_t) -1 && errno == EINTR)
+		continue;
+#endif
 	      free ((void *) catalog->file_ptr);
 	      catalog->status = nonexisting;
 	      goto close_unlock_return;
