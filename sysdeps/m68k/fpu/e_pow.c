@@ -27,10 +27,12 @@
 #define float_type double
 #endif
 
-#define __CONCATX(a,b) __CONCAT(a,b)
+#define CONCATX(a,b) __CONCAT(a,b)
+#define s(name) CONCATX(name,SUFF)
+#define m81(func) __m81_u(s(func))
 
 float_type
-__CONCATX(__ieee754_pow,SUFF) (float_type x, float_type y)
+s(__ieee754_pow) (float_type x, float_type y)
 {
   float_type z;
   float_type ax;
@@ -40,24 +42,24 @@ __CONCATX(__ieee754_pow,SUFF) (float_type x, float_type y)
   if (x != x || y != y)
     return x + y;
 
-  if (__m81_u(__CONCATX(__isinf,SUFF)) (y))
+  if (m81(__isinf) (y))
     {
-      ax = __CONCATX(fabs,SUFF) (x);
+      ax = s(fabs) (x);
       if (ax == 1)
-	return y - y;
+	return 0.0/0.0;
       if (ax > 1)
 	return y > 0 ? y : 0;
       else
 	return y < 0 ? -y : 0;
     }
 
-  if (__CONCATX(fabs,SUFF) (y) == 1)
+  if (s(fabs) (y) == 1)
     return y > 0 ? x : 1 / x;
 
   if (y == 2)
     return x * x;
-  if (y == 0 && x >= 0)
-    return __m81_u(__CONCATX(__ieee754_sqrt,SUFF)) (x);
+  if (y == 0.5 && x >= 0)
+    return m81(__ieee754_sqrt) (x);
 
   if (x == 10.0)
     {
@@ -70,19 +72,19 @@ __CONCATX(__ieee754_pow,SUFF) (float_type x, float_type y)
       return z;
     }
 
-  ax = __CONCATX(fabs,SUFF) (x);
-  if (__m81_u(__CONCATX(__isinf,SUFF)) (x) || x == 0 || ax == 1)
+  ax = s(fabs) (x);
+  if (m81(__isinf) (x) || x == 0 || ax == 1)
     {
       z = ax;
       if (y < 0)
 	z = 1 / z;
-      if (signbit (x))
+      if (m81(__signbit) (x))
 	{
-	  float_type temp = __m81_u (__CONCATX(__rint,SUFF)) (y);
+	  float_type temp = m81(__rint) (y);
 	  if (y != temp)
 	    {
 	      if (x == -1)
-		z = (z - z) / (z - z);
+		z = 0.0/0.0;
 	    }
 	  else
 	    {
@@ -105,12 +107,11 @@ __CONCATX(__ieee754_pow,SUFF) (float_type x, float_type y)
 
   if (x < 0.0)
     {
-      float_type temp = __m81_u (__CONCATX(__rint,SUFF)) (y);
+      float_type temp = m81(__rint) (y);
       if (y == temp)
 	{
 	  long long i = (long long) y;
-	  z = (__m81_u(__CONCATX(__ieee754_exp,SUFF))
-	       (y * __m81_u(__CONCATX(__ieee754_log,SUFF)) (-x)));
+	  z = m81(__ieee754_exp) (y * m81(__ieee754_log) (-x));
 	  if (sizeof (float_type) == sizeof (float))
 	    {
 	      long i = (long) y;
@@ -126,10 +127,9 @@ __CONCATX(__ieee754_pow,SUFF) (float_type x, float_type y)
 	    }
 	}
       else
-	z = (x - x) / (x - x);
+	z = 0.0/0.0;
     }
   else
-    z = (__m81_u(__CONCATX(__ieee754_exp,SUFF))
-	 (y * __m81_u(__CONCATX(__ieee754_log,SUFF)) (x)));
+    z = m81(__ieee754_exp) (y * m81(__ieee754_log) (x));
   return z;
 }
