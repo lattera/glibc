@@ -1,3 +1,18 @@
+2000-05-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/arm/bits/huge_val.h (HUGE_VAL, HUGE_VALF): Add
+	__extension__ to hexadecimal floating constant notation.
+	* sysdeps/i386/bits/huge_val.h (HUGE_VAL, HUGE_VALF, HUGE_VALL):
+	Likewise.
+	* sysdeps/ieee754/bits/huge_val.h (HUGE_VAL, HUGE_VALF): Likewise.
+	* sysdeps/m68k/bits/huge_val.h (HUGE_VAL, HUGE_VALF, HUGE_VALL):
+	Likewise.
+	* sysdeps/sparc/sparc64/bits/huge_val.h (HUGE_VAL, HUGE_VALF,
+	HUGE_VALL): Likewise.
+	* sysdeps/sparc/sparc32/bits/huge_val.h (HUGE_VAL, HUGE_VALF,
+	HUGE_VALL): Likewise.
+	(HUGE_VALL): Set to HUGE_VAL on sparc32.
+
 2000-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* string/envz.h: Add pure attributes if possible.

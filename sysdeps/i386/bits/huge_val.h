@@ -1,6 +1,6 @@
 /* `HUGE_VAL' constants for ix86 (where it is infinity).
    Used by <stdlib.h> and <math.h> functions for overflow.
-   Copyright (C) 1992, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 /* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
 
 #if __GNUC_PREREQ(2,95)
-# define HUGE_VAL	(0x1.0p2047)
+# define HUGE_VAL	(__extension__ 0x1.0p2047)
 #else
 # define __HUGE_VAL_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
 
@@ -48,8 +48,8 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 # if __GNUC_PREREQ(2,95)
 
-#  define HUGE_VALF (0x1.0p255f)
-#  define HUGE_VALL (0x1.0p32767L)
+#  define HUGE_VALF (__extension__ 0x1.0p255f)
+#  define HUGE_VALL (__extension__ 0x1.0p32767L)
 
 # else
 
