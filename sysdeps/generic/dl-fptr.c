@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <libintl.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/param.h>
@@ -187,7 +188,7 @@ make_fptr_table (struct link_map *map)
 		       PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE,
 		       -1, 0);
   if (fptr_table == MAP_FAILED)
-    INTUSE(_dl_signal)_error (errno, NULL, NULL,
+    INTUSE(_dl_signal_error) (errno, NULL, NULL,
 			      N_("cannot map pages for fptr table"));
 
   if (COMPARE_AND_SWAP ((ElfW(Addr) *) &map->l_mach.fptr_table,
@@ -282,7 +283,7 @@ _dl_unmap (struct link_map *map)
 	{
 	  *(struct fdesc **) ftab[i] = head;
 	  head = (struct fdesc *) ftab[i];
-	  if (tail = NULL)
+	  if (tail == NULL)
 	    tail = head;
 	}
     }
