@@ -41,7 +41,9 @@ repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
 #	  tst_iswcntrl tst_iswspace tst_wcscoll tst_wcsspn tst_iswdigit	 \
 #	  tst_iswupper tst_wcscpy tst_wcsstr tst_iswgraph tst_iswxdigit	 \
 #	  tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf tst_wcslen	 \
-#	  tst_wctob
+#	  tst_wctob tst_iswctype tst_towlower tst_wcscat tst_towupper    \
+#         tst_wcscmp tst_wcsncat tst_wcsncpy tst_wcsxfrm tst_wcwidth
+#
 
 subdir-dirs = tests-mbwc
 vpath %.c tests-mbwc
@@ -136,19 +138,28 @@ install-locales:
 			$(inst_localedir)/$$locale; \
 	done < SUPPORTED
 
-tst_iswcntrl-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_iswspace-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcscoll-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcsspn-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_iswdigit-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_iswupper-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcscpy-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcsstr-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_iswgraph-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_iswxdigit-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcscspn-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcswidth-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_iswlower-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_swscanf-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wcslen-ENV=LOCPATH=$(common-objpfx)/localedata
-tst_wctob-ENV=LOCPATH=$(common-objpfx)/localedata
+tst_iswcntrl-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswctype-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswdigit-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswgraph-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswlower-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswspace-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswupper-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_iswxdigit-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_swscanf-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_towlower-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_towupper-ENV = LOCPATH=$(common-objpfx)/localedata 
+tst_wcscat-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcscmp-ENV = LOCPATH=$(common-objpfx)/localedata 
+tst_wcscoll-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcscpy-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcscspn-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcslen-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcsncat-ENV = LOCPATH=$(common-objpfx)/localedata 
+tst_wcsncpy-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcsspn-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcsstr-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcswidth-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcsxfrm-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wctob-ENV = LOCPATH=$(common-objpfx)/localedata
+tst_wcwidth-ENV = LOCPATH=$(common-objpfx)/localedata
