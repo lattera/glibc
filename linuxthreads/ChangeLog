@@ -1,3 +1,8 @@
+2000-02-13  Andreas Jaeger  <aj@suse.de>
+
+	* condvar.c (pthread_cond_timedwait_relative_new): Fix last patch.
+	(pthread_cond_timedwait_relative_old): Likewise.
+
 2000-02-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c (pthread_cond_timedwait_relative_old): Undo last patch

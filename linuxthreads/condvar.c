@@ -194,7 +194,7 @@ pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
 	;
 #else
       /* Sleep for the required duration */
-      retsleep = __libc_nanosleep(&reltime, NULL);
+      retsleep = __libc_nanosleep(reltime, NULL);
 #endif
       /* Block the restart signal again */
       sigprocmask(SIG_SETMASK, &initial_mask, NULL);
@@ -337,7 +337,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
       ;
 #else
     /* Sleep for the required duration */
-    retsleep = __libc_nanosleep(&reltime, NULL);
+    retsleep = __libc_nanosleep(reltime, NULL);
 #endif
     /* Block the restart signal again */
     sigprocmask(SIG_SETMASK, &initial_mask, NULL);
