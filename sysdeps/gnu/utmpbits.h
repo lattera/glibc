@@ -71,9 +71,10 @@ struct utmp
 
 #define ut_time	ut_tv.tv_sec	/* Backwards compatibility.  */
 
-/* Tell the user that we have a modern system with UT_HOST, UT_TYPE, UT_ID
-   and UT_TV fields.  */
+/* Tell the user that we have a modern system with UT_HOST, UT_PID,
+   UT_TYPE, UT_ID and UT_TV fields.  */
 #define _HAVE_UT_TYPE	1
+#define _HAVE_UT_PID	1
 #define _HAVE_UT_ID	1
 #define _HAVE_UT_TV	1
 #define _HAVE_UT_HOST	1

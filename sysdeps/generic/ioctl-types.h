@@ -83,6 +83,11 @@ struct winsize
 #endif
 
 #if	defined (TIOCGSIZE) || defined (TIOCSSIZE)
+/* The BSD-style ioctl constructor macros use `sizeof', which can't be used
+   in a preprocessor conditional.  Since the commands are always unique
+   regardless of the size bits, we can safely define away `sizeof' for the
+   purpose of the conditional.  */
+#  define sizeof(type) 0
 #  if defined (TIOCGWINSZ) && TIOCGSIZE == TIOCGWINSZ
 /* Many systems that have TIOCGWINSZ define TIOCGSIZE for source
    compatibility with Sun; they define `struct ttysize' to have identical
@@ -105,6 +110,7 @@ struct ttysize
   int ts_lines, ts_cols;	/* Lines and columns, in characters.  */
 };
 #  endif
+#  undef sizeof			/* See above.  */
 #endif
 
 

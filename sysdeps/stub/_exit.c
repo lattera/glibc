@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@ Cambridge, MA 02139, USA.  */
 /* The function `_exit' should take a status argument and simply
    terminate program execution, using the low-order 8 bits of the
    given integer as status.  */
-__NORETURN void
-DEFUN(_exit, (status), int status)
+void
+_exit (status)
+     int status;
 {
   status &= 0xff;
   abort ();
 }
-
 
 stub_warning (_exit)

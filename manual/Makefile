@@ -32,7 +32,7 @@ include ../Makeconfig
 endif
 
 # Set chapters and chapters-incl.
-include chapters
+-include chapters
 chapters: libc.texinfo
 	$(find-includes)
 ifdef chapters

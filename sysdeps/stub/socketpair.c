@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
    one will be chosen automatically.  Returns 0 on success, -1 for errors.  */
 int
 DEFUN(socketpair, (domain, type, protocol, fds),
-      int domain AND enum __socket_type type AND int protocol AND int fds[2])
+      int domain AND int type AND int protocol AND int fds[2])
 {
   errno = ENOSYS;
   return -1;

@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
-static inline int
+static inline int __attribute__ ((unused))
 elf_machine_matches_host (Elf32_Half e_machine)
 {
   switch (e_machine)
@@ -41,7 +41,7 @@ elf_machine_matches_host (Elf32_Half e_machine)
 
 /* Return the run-time address of the _GLOBAL_OFFSET_TABLE_.
    Must be inlined in a function which uses global data.  */
-static inline Elf32_Addr *
+static inline Elf32_Addr * __attribute__ ((unused))
 elf_machine_got (void)
 {
   register Elf32_Addr *got asm ("%ebx");
@@ -50,7 +50,7 @@ elf_machine_got (void)
 
 
 /* Return the run-time load address of the shared object.  */
-static inline Elf32_Addr
+static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
@@ -72,7 +72,7 @@ elf_machine_load_address (void)
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
-static inline void
+static inline void __attribute__ ((unused))
 elf_machine_runtime_setup (struct link_map *l, int lazy)
 {
   Elf32_Addr *got;

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Generic asm macros used on many machines.
+Copyright (C) 1991, 92, 93, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +17,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <errno.h>
-#include <sys/socket.h>
+#ifndef C_LABEL
 
-/* Create a new socket of type TYPE in domain DOMAIN, using
-   protocol PROTOCOL.  If PROTOCOL is zero, one is chosen automatically.
-   Returns a file descriptor for the new socket, or -1 for errors.  */
-int
-DEFUN(socket, (domain, type, protocol),
-      int domain AND int type AND int protocol)
-{
-  errno = ENOSYS;
-  return -1;
-}
+/* Define a macro we can use to construct the asm name for a C symbol.  */
+#ifdef	NO_UNDERSCORES
+#ifdef	__STDC__
+#define C_LABEL(name)		name##:
+#else
+#define C_LABEL(name)		name/**/:
+#endif
+#else
+#ifdef	__STDC__
+#define C_LABEL(name)		_##name##:
+#else
+#define C_LABEL(name)		_/**/name/**/:
+#endif
+#endif
 
-
-stub_warning (socket)
+#endif

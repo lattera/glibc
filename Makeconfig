@@ -298,9 +298,9 @@ endif
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
-	      $(addprefix $(csu-objpfx),start.o $(+preinit)) \
+	      $(+preinit) \
 	      $(filter-out $(common-objpfx)libc%,$^) $(link-libc) \
-	      $(addprefix $(csu-objpfx),$(+postinit))
+	      $(+postinit)
 endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
@@ -334,8 +334,8 @@ ifndef gnulib
 gnulib := -lgcc
 endif
 ifeq ($(elf),yes)
-+preinit = crti.o
-+postinit = crtn.o
++preinit = $(addprefix $(csu-objpfx),crti.o)
++postinit = $(addprefix $(csu-objpfx),crtn.o)
 endif
 ifdef objpfx
 csu-objpfx = $(objpfx)
@@ -521,10 +521,12 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 	  test -n "$$versions" || continue; \
 	  case '$(config-machine)-$(config-vendor)-$(config-os)' in $$conf)\
 	    for v in $$versions; do \
-	      lib="$${v%%=*}"; if eval "test -z \"\$$vers_lib$$lib\""; then \
+	      lib=`echo $$v | sed 's/=.*$$//'`; \
+	      if eval "test -z \"\$$vers_lib$$lib\""; then \
 		eval vers_lib$${lib}=yes; \
-		echo $$lib.so-version=.$${v##$$lib=}; fi; \
-	  done ;; esac; done > $@T
+		echo $$v | sed "s/^.*=/$$lib.so-version=./";  \
+	      fi; \
+	  done ;; esac; done > $@T; exit 0
 	mv -f $@T $@
 
 # Get $(version) defined with the release version number.

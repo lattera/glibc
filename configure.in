@@ -74,8 +74,8 @@ AC_ARG_ENABLE(omitfp, dnl
 dnl Generic infrastructure for drop-in additions to libc.
 AC_ARG_ENABLE(add-ons, dnl
 [  --enable-add-ons=DIR... configure and build named extra directories],
-   	      add_ons=`echo "$enableval" | sed 's/,/ /g'`,
-	      add_ons=)
+   	      [add_ons=`echo "$enableval" | sed 's/,/ /g'`],
+	      [add_ons=])
 AC_CONFIG_SUBDIRS($add_ons)
 
 AC_CANONICAL_HOST

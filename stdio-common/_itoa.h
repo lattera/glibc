@@ -29,8 +29,9 @@ Cambridge, MA 02139, USA.  */
 extern char *_itoa __P ((unsigned long long int value, char *buflim,
 			 unsigned int base, int upper_case));
 
-static inline char *_itoa_word (unsigned long value, char *buflim,
-				unsigned int base, int upper_case)
+static inline char * __attribute__ ((unused))
+_itoa_word (unsigned long value, char *buflim,
+	    unsigned int base, int upper_case)
 {
   extern const char _itoa_upper_digits[], _itoa_lower_digits[];
   const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;

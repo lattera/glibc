@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +15,8 @@ You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
+
+#include <sysdeps/generic/sysdep.h>
 
 #include <syscall.h>
 #define	HAVE_SYSCALLS
@@ -33,21 +35,6 @@ Cambridge, MA 02139, USA.  */
    r0 and r1 are the system call outputs.  MOVE(x, y) should be defined as
    an instruction such that "MOVE(r1, r0)" works.  ret should be defined
    as the return instruction.  */
-
-/* Define a macro we can use to construct the asm name for a C symbol.  */
-#ifdef	NO_UNDERSCORES
-#ifdef	__STDC__
-#define C_LABEL(name)		name##:
-#else
-#define C_LABEL(name)		name/**/:
-#endif
-#else
-#ifdef	__STDC__
-#define C_LABEL(name)		_##name##:
-#else
-#define C_LABEL(name)		_/**/name/**/:
-#endif
-#endif
 
 #ifdef __STDC__
 #define SYS_ify(syscall_name) SYS_##syscall_name

@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
-static inline void
+static inline void __attribute__ ((unused))
 elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Dyn) *info[DT_NUM + DT_PROCNUM])
 {
   unsigned int i;

@@ -73,11 +73,18 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 distribute := rpc_util.h rpc_parse.h rpc_scan.h $(rpcgen-objs:.o=.c) etc.rpc
 extra-objs = $(rpcgen-objs)
 
+all: # Make this the default target; it will be defined in Rules.
+
+include ../Makeconfig
+
+ifeq (no,$(cross-compile))
+# We can only build this library if we can run the rpcgen we build.
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
 librpcsvc-inhibit-o = .so # Build no shared rpcsvc library.
 omit-deps = $(librpcsvc-routines)
+endif
 
 # Sun's code is not too clean.
 override +gccwarn := -w

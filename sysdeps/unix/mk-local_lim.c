@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,13 @@ static struct param params[] =
 #endif
 #ifdef PATH_MAX
     { "PATH_MAX", PATH_MAX },
+#endif
+
+#if !defined (SYMLOOP_MAX) && defined (MAXSYMLINKS)
+#define SYMLOOP_MAX MAXSYMLINKS
+#endif
+#ifdef SYMLOOP_MAX
+    { "SYMLOOP_MAX", SYMLOOP_MAX },
 #endif
 
     { NULL, 0 }

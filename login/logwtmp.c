@@ -39,7 +39,9 @@ logwtmp (const char *line, const char *name, const char *host)
 
   /* Set information in new entry.  */
   memset (&ut, 0, sizeof (ut));
+#if _HAVE_UT_PID - 0
   ut.ut_pid = getpid ();
+#endif
 #if _HAVE_UT_TYPE - 0
   ut.ut_type = name[0] ? USER_PROCESS : DEAD_PROCESS;
 #endif
@@ -52,7 +54,7 @@ logwtmp (const char *line, const char *name, const char *host)
 #if _HAVE_UT_TV - 0
   __gettimeofday (&ut.ut_tv, NULL);
 #else
-  __time (&ut.ut_time);
+  time (&ut.ut_time);
 #endif
 
   /* Try to lock the file.  */

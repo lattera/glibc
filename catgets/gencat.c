@@ -27,6 +27,7 @@ Boston, MA 02111-1307, USA.  */
 #include <error.h>
 #include <fcntl.h>
 #include <getopt.h>
+#include <locale.h>
 #include <libintl.h>
 #include <limits.h>
 #include <nl_types.h>
