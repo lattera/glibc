@@ -22,6 +22,7 @@
 #include <execinfo.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -67,11 +68,36 @@ extern void *__libc_stack_end;
 # define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
 #endif
 
+/* We'll use tis a lot.  */
+#define WRITE_STRING(s) write (fd, s, strlen (s))
+
+
 struct layout
 {
   void *next;
   void *return_address;
 };
+
+
+/* Name of the output file.  */
+static const char *fname;
+
+
+/* We better should not use `strerror' since it can call far too many
+   other functions which might fail.  Do it here ourselves.  */
+static void
+write_strsignal (int fd, int signal)
+{
+  if (signal < 0 || signal >= _NSIG || _sys_siglist[signal] == NULL)
+    {
+      char buf[30];
+      char *ptr = _itoa_word (signal, &buf[sizeof (buf)], 10, 0);
+      WRITE_STRING ("signal ");
+      write (fd, buf, &buf[sizeof (buf)] - ptr);
+    }
+  else
+    WRITE_STRING (_sys_siglist[signal]);
+}
 
 
 /* This function is called when a segmentation fault is caught.  The system
@@ -83,28 +109,23 @@ catch_segfault (int signal, SIGCONTEXT ctx)
   struct layout *current;
   void *top_frame;
   void *top_stack;
-  const char *fname;
   int fd;
   void **arr;
   size_t cnt;
   struct sigaction sa;
-  const char *sigstring;
 
   /* This is the name of the file we are writing to.  If none is given
      or we cannot write to this file write to stderr.  */
   fd = 2;
-  fname = getenv ("SEGFAULT_OUTPUT_NAME");
-  if (fname != NULL && fname[0] != '\0')
+  if (fname != NULL)
     {
       fd = open (fname, O_TRUNC | O_WRONLY | O_CREAT, 0666);
       if (fd == -1)
 	fd = 2;
     }
 
-#define WRITE_STRING(s) write (fd, s, strlen (s))
   WRITE_STRING ("*** ");
-  sigstring = strsignal (signal);
-  WRITE_STRING (sigstring);
+  write_strsignal (fd, signal);
   WRITE_STRING ("\n");
 
 #ifdef REGISTER_DUMP
@@ -164,6 +185,7 @@ install_handler (void)
 {
   struct sigaction sa;
   const char *sigs = getenv ("SEGFAULT_SIGNALS");
+  const char *name;
 
   sa.sa_handler = (void *) catch_segfault;
   sigemptyset (&sa.sa_mask);
@@ -214,4 +236,9 @@ install_handler (void)
       INSTALL_FOR_SIG (SIGABRT, "abrt");
       INSTALL_FOR_SIG (SIGFPE, "fpe");
     }
+
+  /* Preserve the output file name if there is any given.  */
+  name = getenv ("SEGFAULT_OUTPUT_NAME");
+  if (name != NULL && name[0] != '\0')
+    fname = __strdup (name);
 }

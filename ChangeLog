@@ -1,3 +1,8 @@
+1999-03-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/segfault.c (write_strsignal): New function.
+	(catch_segfault): Use it instead of calling strsignal.
+
 1999-03-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* iconv/gconv.c (__gconv): Change type of last_start to unsigned
