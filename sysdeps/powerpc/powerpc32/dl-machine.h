@@ -365,6 +365,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   struct link_map *sym_map;
 #endif
 
+#ifndef RESOLVE_CONFLICT_FIND_MAP
   if (r_type == R_PPC_RELATIVE)
     {
       *reloc_addr = map->l_addr + reloc->r_addend;
@@ -381,18 +382,21 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     value = map->l_addr;
   else
     {
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+# if defined USE_TLS && !defined RTLD_BOOTSTRAP
       sym_map = RESOLVE_MAP (&sym, version, r_type);
       value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-#else
+# else
       value = RESOLVE (&sym, version, r_type);
-# ifndef RTLD_BOOTSTRAP
+#  ifndef RTLD_BOOTSTRAP
       if (sym != NULL)
-# endif
+#  endif
 	value += sym->st_value;
-#endif
+# endif
     }
   value += reloc->r_addend;
+#else
+  value = reloc->r_addend;
+#endif
 
   /* A small amount of code is duplicated here for speed.  In libc,
      more than 90% of the relocs are R_PPC_RELATIVE; in the X11 shared

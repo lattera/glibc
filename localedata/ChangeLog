@@ -1,3 +1,11 @@
+2003-04-15  Petter Reinholdtsen <pere@hungry.com>
+
+	* locales/ar_SD [LC_MONETARY]: Use international currency symbol
+	'SDD' for Sudan.
+	* locales/es_EC [LC_MONETARY]: Use international currency symbol
+	'USD' for Ecuador.
+	Source is CIA World Fact book.
+
 2003-04-05  Petter Reinholdtsen  <pere@hungry.com>
 
 	* locales/sr_YU [LC_MONETARY]: Change int_curr_symbol from 'YUN'

@@ -47,7 +47,7 @@ LC_MONETARY
 % These are generated based on XML base Locale difintion file
 % for IBM Class for Unicode/Java
 %
-int_curr_symbol       "<U0053><U0044><U0050><U0020>"
+int_curr_symbol       "<U0053><U0044><U0044><U0020>"
 currency_symbol       "<U062C><U002E><U0633><U002E>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U002C>"

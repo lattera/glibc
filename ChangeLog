@@ -1,3 +1,9 @@
+2003-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Avoid
+	checking R_PPC_RELATIVE, R_PPC_NONE and whether relocation is
+	against local symbol in conflict processing.
+
 2003-04-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/bits/atomic.h
