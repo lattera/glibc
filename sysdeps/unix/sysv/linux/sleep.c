@@ -1,5 +1,5 @@
 /* Implementation of the POSIX sleep function using nanosleep.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -31,8 +31,11 @@ __sleep (unsigned int seconds)
 {
   struct timespec ts = { tv_sec: (long int) seconds, tv_nsec: 0 };
   sigset_t set, oset;
-  struct sigaction oact;
   unsigned int result;
+
+  /* This is not necessary but some buggy programs depend on this.  */
+  if (seconds == 0)
+    return 0;
 
   /* Linux will wake up the system call, nanosleep, when SIGCHLD
      arrives even if SIGCHLD is ignored.  We have to deal with it
@@ -46,6 +49,10 @@ __sleep (unsigned int seconds)
   if (!__sigismember (&oset, SIGCHLD))
     {
       int saved_errno;
+      struct sigaction oact;
+
+      if (__sigemptyset (&set) < 0 || __sigaddset (&set, SIGCHLD) < 0)
+	return -1;
 
       /* We get the signal handler for SIGCHLD.  */
       if (__sigaction (SIGCHLD, (struct sigaction *) NULL, &oact) < 0)
