@@ -23,17 +23,16 @@
    development version.  Besides the simplification, it has also been
    modified to read some other file formats.  */
 
-
+#include <a.out.h>
 #include <elf.h>
 #include <error.h>
-#include <link.h>
 #include <libintl.h>
+#include <link.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <a.out.h>
-
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/stat.h>
 #include <gnu/lib-names.h>
 
@@ -147,12 +146,10 @@ process_file (const char *real_file_name, const char *file_name,
   elf_header = (ElfW(Ehdr) *) file_contents;
   if (memcmp (elf_header->e_ident, ELFMAG, SELFMAG) != 0)
     {
-      /* The file is neither ELF nor aout.  Check if it's a linker script,
-	 like libc.so - otherwise complain.  */
-      int len = statbuf.st_size;
-      /* Only search the beginning of the file.  */
-      if (len > 512)
-	len = 512;
+      /* The file is neither ELF nor aout.  Check if it's a linker
+	 script, like libc.so - otherwise complain.  Only search the
+	 beginning of the file.  */
+      size_t len = MIN (statbuf.st_size, 512);
       if (memmem (file_contents, len, "GROUP", 5) == NULL
 	  && memmem (file_contents, len, "GNU ld script", 13) == NULL)
 	error (0, 0, _("%s is not an ELF file - it has the wrong magic bytes at the start.\n"),
