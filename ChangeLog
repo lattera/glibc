@@ -1,3 +1,11 @@
+1997-05-08 07:53  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/poll.c: Save errno.
+
+1997-05-08 16:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add nfsservctl.
+
 1997-05-07 20:27  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
 	* sys/ttydefaults.h: Removed.

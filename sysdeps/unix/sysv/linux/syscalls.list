@@ -27,6 +27,7 @@ mremap		EXTRA	mremap		4	__mremap	mremap
 munlock		EXTRA	munlock		2	__munlock	munlock
 munlockall	EXTRA	munlockall	0	__munlockall	munlockall
 nanosleep	-	nanosleep	2	__libc_nanosleep	__nanosleep nanosleep
+nfsservctl	EXTRA	nfsservctl	3	nfsservctl
 pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
@@ -57,8 +58,8 @@ sigpending	-	sigpending	1	sigpending
 sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
 sigreturn	-	sigreturn	1	__sigreturn	sigreturn
 sys_fstat	fxstat	fstat		2	__syscall_fstat
-sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_lstat	lxstat	lstat		2	__syscall_lstat
+sys_mknod	xmknod	mknod		3	__syscall_mknod
 sys_readv	readv	readv		3	__syscall_readv
 sys_stat	xstat	stat		2	__syscall_stat
 sys_writev	writev	writev		3	__syscall_writev
