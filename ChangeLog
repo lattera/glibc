@@ -1,3 +1,8 @@
+1998-04-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/mktime.c (TYPE_MAXIMUM): Add missing cast.
+	Patch by Jim Meyering.
+
 1998-04-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* rt/tst-aio.c: Add test for aio_read and lio_listio.
