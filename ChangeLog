@@ -38,7 +38,7 @@
 	(dk_main): Record times for relocations and loading.
 	(process_dl_debug): Recognize statistics.
 
-	Low-level, low-overhead, high-precision timing funcationality.
+	Low-level, low-overhead, high-precision timing functionality.
 	* sysdeps/generic/hp-timing.h: New file.
 	* sysdeps/i386/i686/Makefile: New file.
 	* sysdeps/i386/i686/hp-timing.h: New file.
@@ -80,7 +80,7 @@
 	* sysdeps/generic/dl-hash.h: ...here.  Correct parameter type (must
 	be unsigned char).  Remove conditional from inner loop and rearrange
 	binary operations (12-22% performance increase).
-	* sysdeps/i386/i686/dl-hash.h: New file.  Yet 10% faster than
+	* sysdeps/i386/i686/dl-hash.h: New file.  Another 10% faster than
 	optimized generic version.
 
 1998-12-23  Ulrich Drepper  <drepper@cygnus.com>
