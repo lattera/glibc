@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
@@ -28,7 +29,7 @@ ENTRY(__setcontext)
 	stwu	r1,-16(r1)
 	stw	r0,20(r1)
 	stw	r31,12(r1)
-	mr	r31,r3
+	lwz	r31,_UC_REGS_PTR(r3)
 
 	/*
 	 * If this ucontext refers to the point where we were interrupted
@@ -144,6 +145,20 @@ L(do_sigret):
 	sc
 	/* NOTREACHED */
 
-PSEUDO_END(__setcontext)
+PSEUDO_END (__setcontext)
 
-weak_alias(__setcontext, setcontext)
+versioned_symbol (libc, __setcontext, setcontext, GLIBC_2_3_3)
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_3)
+
+#define _ERRNO_H	1
+#include <bits/errno.h>
+
+ENTRY (__setcontext_stub)
+	li	r3,ENOSYS
+	b	JUMPTARGET(__syscall_error)
+	END (__setcontext_stub)
+
+compat_symbol (libc, __setcontext_stub, setcontext, GLIBC_2_0)
+
+#endif

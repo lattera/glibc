@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
@@ -25,6 +26,8 @@
 
 ENTRY(__swapcontext)
 	/* Save the current context */
+	addi	r3,r3,_UC_REG_SPACE
+	stw	r3,_UC_REGS_PTR - _UC_REG_SPACE(r3)
 	stw	r0,_UC_GREGS+(PT_R0*4)(r3)
 	stw	r1,_UC_GREGS+(PT_R1*4)(r3)
 	mflr	r0
@@ -115,7 +118,7 @@ ENTRY(__swapcontext)
 	stfd	fp31,_UC_FREGS+(31*8)(r3)
 	stfd	fp0,_UC_FREGS+(32*8)(r3)
 
-	addi	r5,r3,_UC_SIGMASK
+	addi	r5,r3,_UC_SIGMASK - _UC_REG_SPACE
 	addi	r4,r4,_UC_SIGMASK
 	li	r3,SIG_SETMASK
 	bl	JUMPTARGET(sigprocmask)
@@ -133,6 +136,8 @@ ENTRY(__swapcontext)
 	 * r0, xer, ctr.  We don't restore r2 since it will be used as
 	 * the TLS pointer.
 	 */
+	mr	r4,r31
+	lwz	r31,_UC_REGS_PTR(r31)
 	lwz	r0,_UC_GREGS+(PT_MSR*4)(r31)
 	cmpwi	r0,0
 	bne	L(do_sigret)
@@ -223,11 +228,25 @@ L(error_exit):
 	blr
 
 L(do_sigret):
-	addi	r1,r31,-0xd0
+	addi	r1,r4,-0xd0
 	li	r0,SYS_ify(rt_sigreturn)
 	sc
 	/* NOTREACHED */
 
 PSEUDO_END(__swapcontext)
 
-weak_alias(__swapcontext, swapcontext)
+versioned_symbol (libc, __swapcontext, swapcontext, GLIBC_2_3_3)
+
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3)
+
+#define _ERRNO_H	1
+#include <bits/errno.h>
+
+ENTRY (__swapcontext_stub)
+	li	r3,ENOSYS
+	b	JUMPTARGET(__syscall_error)
+	END (__swapcontext_stub)
+
+compat_symbol (libc, __swapcontext_stub, swapcontext, GLIBC_2_1)
+
+#endif

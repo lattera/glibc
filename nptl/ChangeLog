@@ -1,3 +1,21 @@
+2003-09-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Only add tst-execstack if have-z-execstack is yes.
+
+2003-09-23  Roland McGrath  <roland@redhat.com>
+
+	* tst-execstack.c: New file.
+	* Makefile (tests): Add it.
+	($(objpfx)tst-execstack, $(objpfx)tst-execstack.out): New targets.
+	(LDFLAGS-tst-execstack): New variable.
+
+	* allocatestack.c (allocate_stack): Use GL(dl_stack_flags) to decide
+	whether to use PROT_EXEC for stack mmap.
+	(__make_stacks_executable): New function.
+	* pthreadP.h: Declare it.
+	* init.c (__pthread_initialize_minimal_internal): Set
+	GL(dl_make_stack_executable_hook) to that.
+
 2003-09-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Adjust for latest

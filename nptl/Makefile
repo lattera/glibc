@@ -253,6 +253,9 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 endif
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1
+ifeq ($(have-z-execstack),yes)
+tests += tst-execstack
+endif
 endif
 
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
@@ -540,3 +543,7 @@ endif
 endif
 
 tst-exec4-ARGS = $(built-program-cmd)
+
+$(objpfx)tst-execstack: $(libdl)
+$(objpfx)tst-execstack.out: $(elf-objpfx)tst-execstack-mod.so
+LDFLAGS-tst-execstack = -Wl,-z,noexecstack

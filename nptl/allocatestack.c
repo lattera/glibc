@@ -351,11 +351,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
     }
   else
     {
-      /* Allocate some anonymous memory.  If possible use the
-	 cache.  */
+      /* Allocate some anonymous memory.  If possible use the cache.  */
       size_t guardsize;
       size_t reqsize;
       void *mem;
+      const int prot = (PROT_READ | PROT_WRITE
+			| ((GL(dl_stack_flags) & PF_X) ? PROT_EXEC : 0));
 
 #if COLORING_INCREMENT != 0
       /* Add one more page for stack coloring.  Don't do it for stacks
@@ -392,7 +393,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	    size += pagesize_m1 + 1;
 #endif
 
-	  mem = mmap (NULL, size, PROT_READ | PROT_WRITE | PROT_EXEC,
+	  mem = mmap (NULL, size, prot,
 		      MAP_PRIVATE | MAP_ANONYMOUS | ARCH_MAP_FLAGS, -1, 0);
 
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
@@ -546,17 +547,16 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  char *oldguard = mem + (((size - pd->guardsize) / 2) & ~pagesize_m1);
 
 	  if (oldguard < guard
-	      && mprotect (oldguard, guard - oldguard,
-			   PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+	      && mprotect (oldguard, guard - oldguard, prot) != 0)
 	    goto mprot_error;
 
 	  if (mprotect (guard + guardsize,
 			oldguard + pd->guardsize - guard - guardsize,
-			PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+			prot) != 0)
 	    goto mprot_error;
 #else
 	  if (mprotect ((char *) mem + guardsize, pd->guardsize - guardsize,
-			PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+			prot) != 0)
 	    goto mprot_error;
 #endif
 
@@ -613,6 +613,45 @@ __deallocate_stack (struct pthread *pd)
     _dl_deallocate_tls (TLS_TPADJ (pd), false);
 
   lll_unlock (stack_cache_lock);
+}
+
+
+int
+internal_function
+__make_stacks_executable (void)
+{
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  const size_t pagemask = ~(__getpagesize () - 1);
+#endif
+
+  lll_lock (stack_cache_lock);
+
+  int err = 0;
+  list_t *runp;
+  list_for_each (runp, &stack_used)
+    {
+      struct pthread *const pd = list_entry (runp, struct pthread, list);
+#ifdef NEED_SEPARATE_REGISTER_STACK
+      void *stack = (pd->stackblock
+		     + (((((pd->stackblock_size - pd->guardsize) / 2)
+			  & pagemask) + pd->guardsize) & pagemask));
+      size_t len = pd->stackblock + pd->stackblock_size - stack;
+#else
+      void *stack = pd->stackblock + pd->guardsize;
+      size_t len = pd->stackblock_size - pd->guardsize;
+#endif
+      if (mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+	{
+	  err = errno;
+	  break;
+	}
+    }
+
+  lll_unlock (stack_cache_lock);
+
+  _dl_make_stack_executable ();
+
+  return err;
 }
 
 

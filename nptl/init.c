@@ -283,6 +283,8 @@ __pthread_initialize_minimal_internal (void)
   GL(dl_load_lock).mutex.__data.__count = 0;
   while (rtld_lock_count-- > 0)
     INTUSE (__pthread_mutex_lock) (&GL(dl_load_lock).mutex);
+
+  GL(dl_make_stack_executable_hook) = &__make_stacks_executable;
 #endif
 
   GL(dl_init_static_tls) = &__pthread_init_static_tls;

@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
@@ -25,22 +26,24 @@
 
 ENTRY(__makecontext)
 	/* Set up the first 7 args to the function in its registers */
-	stw	r6,_UC_GREGS+(PT_R3*4)(r3)
-	stw	r7,_UC_GREGS+(PT_R4*4)(r3)
-	stw	r8,_UC_GREGS+(PT_R5*4)(r3)
-	stw	r9,_UC_GREGS+(PT_R6*4)(r3)
-	stw	r10,_UC_GREGS+(PT_R7*4)(r3)
+	addi	r11,r3,_UC_REG_SPACE
+	stw	r11,_UC_REGS_PTR(r3)
+	stw	r6,_UC_GREGS+(PT_R3*4)(r11)
+	stw	r7,_UC_GREGS+(PT_R4*4)(r11)
+	stw	r8,_UC_GREGS+(PT_R5*4)(r11)
+	stw	r9,_UC_GREGS+(PT_R6*4)(r11)
+	stw	r10,_UC_GREGS+(PT_R7*4)(r11)
 	lwz	r8,8(r1)
 	lwz	r9,12(r1)
-	stw	r8,_UC_GREGS+(PT_R8*4)(r3)
-	stw	r9,_UC_GREGS+(PT_R9*4)(r3)
+	stw	r8,_UC_GREGS+(PT_R8*4)(r11)
+	stw	r9,_UC_GREGS+(PT_R9*4)(r11)
 
 	/* Set the NIP to the start of the function */
-	stw	r4,_UC_GREGS+(PT_NIP*4)(r3)
+	stw	r4,_UC_GREGS+(PT_NIP*4)(r11)
 
 	/* Set the function's r31 to ucp->uc_link for the exitcode below. */
 	lwz	r7,_UC_LINK(r3)
-	stw	r7,_UC_GREGS+(PT_R31*4)(r3)
+	stw	r7,_UC_GREGS+(PT_R31*4)(r11)
 
 	/* Set the function's LR to point to the exitcode below. */
 #ifdef PIC
@@ -53,7 +56,7 @@ ENTRY(__makecontext)
 	lis	r6,L(exitcode)@ha
 	addi	r6,r6,L(exitcode)@l
 #endif
-	stw	r6,_UC_GREGS+(PT_LNK*4)(r3)
+	stw	r6,_UC_GREGS+(PT_LNK*4)(r11)
 
 	/*
 	 * Set up the stack frame for the function.
@@ -71,7 +74,7 @@ ENTRY(__makecontext)
 	cmpwi	r5,8
 	blt	2f		/* less than 8 args is easy */
 	lwz	r10,16(r1)
-	stw	r10,_UC_GREGS+(PT_R10*4)(r3)
+	stw	r10,_UC_GREGS+(PT_R10*4)(r11)
 	beq	2f		/* if exactly 8 args */
 	subi	r9,r5,3
 	subi	r5,r5,8
@@ -83,7 +86,7 @@ ENTRY(__makecontext)
 3:	lwzu	r10,4(r6)
 	stwu	r10,4(r8)
 	bdnz	3b
-2:	stw	r7,_UC_GREGS+(PT_R1*4)(r3)
+2:	stw	r7,_UC_GREGS+(PT_R1*4)(r11)
 	li	r6,0
 	stw	r6,0(r7)
 
@@ -102,4 +105,19 @@ L(exitcode):
 	b	4b
 
 END(__makecontext)
-weak_alias(__makecontext, makecontext)
+
+versioned_symbol (libc, __makecontext, makecontext, GLIBC_2_3_3)
+
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3)
+
+#define _ERRNO_H	1
+#include <bits/errno.h>
+
+ENTRY (__makecontext_stub)
+	li	r3,ENOSYS
+	b	JUMPTARGET(__syscall_error)
+	END (__makecontext_stub)
+
+compat_symbol (libc, __makecontext_stub, makecontext, GLIBC_2_1)
+
+#endif

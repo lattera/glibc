@@ -24,7 +24,11 @@
 #define _UC_LINK	4
 #define _UC_STACK_SP	8
 #define _UC_STACK_SIZE	16
-#define _UC_SIGMASK	64
-#define _UC_GREGS	192
-#define _UC_FREGS	384
-#define _UC_VREGS	656
+#define _UC_REGS_PTR	48
+#define _UC_SIGMASK	52
+#define _UC_REG_SPACE	180
+
+/* offsets within mcontext_t */
+#define _UC_GREGS	0
+#define _UC_FREGS	192
+#define _UC_VREGS	464

@@ -215,6 +215,9 @@ extern void __deallocate_stack (struct pthread *pd)
    function also re-initializes the lock for the stack cache.  */
 extern void __reclaim_stacks (void) attribute_hidden;
 
+/* Make all threads's stacks executable.  */
+int __make_stacks_executable (void) internal_function attribute_hidden;
+
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
 #if defined NOT_IN_libc && defined IS_IN_libpthread

@@ -18,12 +18,20 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 #define __ASSEMBLY__
 #include <asm/ptrace.h>
 #include "ucontext_i.h"
 
 ENTRY(__getcontext)
+	/*
+	 * Since we are not attempting to save the altivec registers,
+	 * there is no need to get the register storage space
+	 * aligned on a 16-byte boundary.
+	 */
+	addi	r3,r3,_UC_REG_SPACE
+	stw	r3,_UC_REGS_PTR - _UC_REG_SPACE(r3)
 	stw	r0,_UC_GREGS+(PT_R0*4)(r3)
 	stw	r1,_UC_GREGS+(PT_R1*4)(r3)
 	mflr	r0
@@ -112,7 +120,7 @@ ENTRY(__getcontext)
 	stfd	fp31,_UC_FREGS+(31*8)(r3)
 	stfd	fp0,_UC_FREGS+(32*8)(r3)
 
-	addi	r5,r3,_UC_SIGMASK
+	addi	r5,r3,_UC_SIGMASK - _UC_REG_SPACE
 	li	r4,0
 	li	r3,SIG_BLOCK
 	bl	JUMPTARGET(sigprocmask)
@@ -123,4 +131,18 @@ ENTRY(__getcontext)
 	blr
 PSEUDO_END(__getcontext)
 
-weak_alias(__getcontext, getcontext)
+versioned_symbol (libc, __getcontext, getcontext, GLIBC_2_3_3)
+
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3)
+
+#define _ERRNO_H	1
+#include <bits/errno.h>
+
+ENTRY (__getcontext_stub)
+	li	r3,ENOSYS
+	b	JUMPTARGET(__syscall_error)
+	END (__getcontext_stub)
+
+compat_symbol (libc, __getcontext_stub, getcontext, GLIBC_2_1)
+
+#endif

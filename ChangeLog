@@ -1,3 +1,26 @@
+2003-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions [libc]
+	(GLIBC_2.3.3): Add setcontext, getcontext, swapcontext, and
+	makecontext.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Correct change
+	for include Altivec support for PPC32.  It was not compatible.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ucontext_i.h: Adjust
+	offsets for ucontext_t change.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Adjust
+	for ucontext_t change.  Add compatibility code.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S: Likewise.
+	Patch by Paul Mackerras <paulus@samba.org>.
+
+2003-02-25  Randolph Chung  <tausq@debian.org>
+
+	* sysdeps/hppa/Makefile: Include compat code in build.
+	* sysdeps/hppa/libgcc-compat.c: New file.
+	* sysdeps/hppa/Dist: Add libgcc-compat.c.
+	* sysdeps/hppa/Versions [GLIBC_2.2]: Add __clz_tab.
+
 2003-09-23  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (dl_main): In rtld_is_main case, reinitialize

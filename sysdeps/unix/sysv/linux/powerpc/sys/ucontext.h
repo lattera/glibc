@@ -74,14 +74,40 @@ typedef struct ucontext
     struct ucontext *uc_link;
     stack_t uc_stack;
 #if __WORDSIZE == 32
-    /* These fields are for backwards compatibility. */
+    /*
+     * These fields are set up this way to maximize source and
+     * binary compatibility with code written for the old
+     * ucontext_t definition, which didn't include space for the
+     * registers.
+     *
+     * Different versions of the kernel have stored the registers on
+     * signal delivery at different offsets from the ucontext struct.
+     * Programs should thus use the uc_mcontext.uc_regs pointer to
+     * find where the registers are actually stored.  The registers
+     * will be stored within the ucontext_t struct but not necessarily
+     * at a fixed address.  As a side-effect, this lets us achieve
+     * 16-byte alignment for the register storage space if the
+     * Altivec registers are to be saved, without requiring 16-byte
+     * alignment on the whole ucontext_t.
+     *
+     * The uc_mcontext.regs field is included for source compatibility
+     * with programs written against the older ucontext_t definition,
+     * and its name should therefore not change.  The uc_pad field
+     * is for binary compatibility with programs compiled against the
+     * old ucontext_t; it ensures that uc_mcontext.regs and uc_sigmask
+     * are at the same offset as previously.
+     */
     int uc_pad[7];
-    mcontext_t *uc_regs;
-    unsigned int uc_oldsigmask[2];
-    int uc_pad2;
-#endif
+    union uc_regs_ptr {
+      struct pt_regs *regs;
+      mcontext_t *uc_regs;
+    } uc_mcontext;
+    sigset_t    uc_sigmask;
+    char uc_reg_space[sizeof(mcontext_t) + 12];  /* last for extensibility */
+#else /* 64-bit */
     sigset_t    uc_sigmask;
     mcontext_t  uc_mcontext;  /* last for extensibility */
+#endif
   } ucontext_t;
 
 #endif /* sys/ucontext.h */
