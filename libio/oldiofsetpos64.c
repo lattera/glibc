@@ -62,8 +62,8 @@ _IO_old_fsetpos64 (fp, posp)
 
 #ifdef weak_alias
 compat_symbol (libc, _IO_old_fsetpos64, _IO_fsetpos64, GLIBC_2_1);
-strong_alias (_IO_fsetpos64, __old_fsetpos64)
-compat_symbol (libc, __old_fsetpos64, _IO_fsetpos64, GLIBC_2_1);
+strong_alias (_IO_old_fsetpos64, __old_fsetpos64)
+compat_symbol (libc, __old_fsetpos64, fsetpos64, GLIBC_2_1);
 #endif
 
 #endif

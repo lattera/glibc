@@ -1,3 +1,7 @@
+2000-09-21  Andreas Jaeger  <aj@suse.de>
+
+	* libio/oldiofsetpos64.c: Fix alias names.
+
 2000-09-21  Martin Buchholz  <martin@xemacs.org>
 
 	* manual/terminal.texi (Allocation): Sample code correction.
