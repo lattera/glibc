@@ -209,7 +209,7 @@ static const CHAR_T null[] = L_("(null)");
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
 static int buffered_vfprintf __P ((FILE *stream, const CHAR_T *fmt, va_list))
-     internal_function;
+     __attribute__ ((noinline)) internal_function;
 
 /* Handle unknown format specifier.  */
 static int printf_unknown __P ((FILE *, const struct printf_info *,
