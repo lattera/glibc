@@ -1,5 +1,5 @@
 /* Bounded-pointer syscall thunk support.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Greg McGary <greg@mcgary.org>
 
@@ -20,6 +20,8 @@
 
 #ifndef _bpthunks_h_
 #define _bpthunks_h_
+
+#ifndef __ASSEMBLER__
 
 /* This header is included by the syscall BP thunks defined in
    sysd-syscalls, as created by sysdeps/unix/make-syscalls.sh.  It
@@ -62,5 +64,7 @@
 #include <sys/timex.h>
 #include <sys/utsname.h>
 #include <sys/wait.h>
+
+#endif /* Not __ASSEMBLER__.  */
 
 #endif /* _bpthunks_h_ */

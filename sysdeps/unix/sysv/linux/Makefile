@@ -29,6 +29,7 @@ install-others += $(inst_includedir)/bits/syscall.h
 # For bi-arch platforms, the CPU/Makefile defines {32,64}bit-predefine and
 # we generate a file that uses <bits/wordsize.h>.
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
+	$(make-target-directory)
 	rm -f $(@:.h=.d)-t
 	{ \
 	 echo '/* Generated at libc build time from kernel syscall list.  */';\

@@ -1,6 +1,6 @@
 # Subroutine makefile for compiling libc modules linked into dynamic linker.
 
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -81,19 +81,13 @@ else
 # The sysd-rules generated makefile already defines pattern rules for rtld-%
 # targets built from sysdeps source files.
 $(objpfx)rtld-%.os: %.S $(before-compile); $(compile-command.S)
-$(objpfx)rtld-%.d: %.S $(before-compile); $(+make-deps)
 $(objpfx)rtld-%.os: %.s $(before-compile); $(compile-command.s)
-$(objpfx)rtld-%.d: %.s $(before-compile); $(+make-deps)
 $(objpfx)rtld-%.os: %.c $(before-compile); $(compile-command.c)
-$(objpfx)rtld-%.d: %.c $(before-compile); $(+make-deps)
 
 # The rules for generated source files.
 $(objpfx)rtld-%.os: $(objpfx)%.S $(before-compile); $(compile-command.S)
-$(objpfx)rtld-%.d: $(objpfx)%.S $(before-compile); $(+make-deps)
 $(objpfx)rtld-%.os: $(objpfx)%.s $(before-compile); $(compile-command.s)
-$(objpfx)rtld-%.d: $(objpfx)%.s $(before-compile); $(+make-deps)
 $(objpfx)rtld-%.os: $(objpfx)%.c $(before-compile); $(compile-command.c)
-$(objpfx)rtld-%.d: $(objpfx)%.c $(before-compile); $(+make-deps)
 
 # The command line setting of rtld-modules (see above) tells us
 # what we need to build, and that tells us what dependency files we need.
@@ -101,9 +95,12 @@ rtld-all: $(addprefix $(objpfx),$(rtld-modules))
 
 # Figure out the dependency files we need.  After respecting the $(omit-deps)
 # list as applied to the names without the `rtld-', there may be none left.
-rtld-depfiles := $(patsubst %,$(objpfx)rtld-%.d,\
+rtld-depfiles := $(patsubst %,$(objpfx)rtld-%.os.d,\
 			    $(filter-out $(omit-deps),\
 					 $(rtld-modules:rtld-%.os=%)))
+rtld-depfiles := $(strip $(wildcard $(rtld-depfiles)) \
+			 $(patsubst %.dt,%.d,\
+				    $(wildcard $(rtld-depfiles:.d=.dt))))
 ifdef rtld-depfiles
 -include $(rtld-depfiles)
 endif

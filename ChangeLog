@@ -1,3 +1,39 @@
+2003-05-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/bp-thunks.h: Protect includes with [!__ASSEMBLER__].
+	* sysdeps/unix/sysv/linux/i386/bp-thunks.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile ($(objpfx)syscall-%.h):
+	Use $(make-target-directory).
+	* sysdeps/unix/Makefile ($(objpfx)stub-syscalls.c): Likewise.
+
+	* Makerules (compile-mkdep-flags): New variable, pass -MD -MF $@.d.
+	(compile-command.S): Don't use ifndef.  Append $(compile-mkdep-flags).
+	(compile-command.s, compile-command.c): Likewise.
+	($(objpfx)%.d): All such pattern rules removed.
+	($(+sysdir_pfx)sysd-rules): Don't generate them.
+	($(common-objpfx)dummy.d): Target removed.
+	(make-dummy-dep): Variable removed.
+	(generate-md5): Likewise.
+	(%.d: %.dt): New pattern rule.
+	(+depfiles): Use $(wildcard) function to get just existing *.d files
+	and .d files for existing *.dt files.
+	(common-clean): Remove all *.d and *.dt files.
+	(before-compile): Add $(objpfx). when it doesn't exist,
+	regardless of $(no_deps).
+	* elf/rtld-Rules ($(objpfx)rtld-%.d): All such pattern rules removed.
+	(rtld-depfiles): Use .os.d instead of .d names.
+	Include existing *.d files and .d files for existing *.dt files.
+
+	* Makerules ($(common-objpfx)%.make): Protect with [! subdir].
+	Use -MD, -MT and -MF flags instead of SUNPRO_DEPENDENCIES variable.
+
+	* sysdeps/unix/Makefile ($(common-objpfx)s-%.d): Remove compat.h hack.
+	Do s-*.d includes only if we have some syscall routines in this subdir.
+
+	* include/libc-symbols.h (libc_freeres_ptr): Use %nobits instead of
+	@nobits.  The former is accepted by gas on any ELF platform.
+
 2003-05-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/semtimedop.c: New file.

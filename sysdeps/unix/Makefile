@@ -293,6 +293,7 @@ ifdef unix-stub-syscalls
 sysdep_routines += stub-syscalls
 $(objpfx)stub-syscalls.c: $(common-objpfx)sysd-syscalls \
 			  $(..)sysdeps/unix/Makefile
+	$(make-target-directory)
 	(echo '#include <errno.h>'; \
 	 echo 'long int _no_syscall (void)'; \
 	 echo '{ __set_errno (ENOSYS); return -1L; }'; \
@@ -338,10 +339,10 @@ endif
 # The syscall objects depend on s-proto.d or s-proto-cancel.d, which
 # are generated to specify dependencies generated syscalls have on
 # headers.
-ifdef subdir
-ifndef no_deps
 # These deps use file names relative to a subdir, so don't
 # include them in the parent directory.
+ifneq (,$(filter $(unix-syscalls),$(routines) $(sysdep_routines) $(aux)))
+ifndef no_deps
 -include $(common-objpfx)s-proto.d
 -include $(common-objpfx)s-proto-bp.d
 -include $(common-objpfx)s-proto-cancel.d
@@ -350,8 +351,7 @@ endif
 
 $(common-objpfx)s-%.d: $(..)sysdeps/unix/s-%.S \
 		       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
-# Don't try to use compat.h in the db2 subdir
-	$(subst -include ./compat.h,,$(+make-deps))
+	$(+make-deps)
 
 common-generated += s-proto.d s-proto-bp.d s-proto-cancel.d
 postclean-generated += sysd-syscalls
