@@ -15,7 +15,9 @@ $2 == "l" { next }
 $2 == "g" || $2 == "w" && NF == 7 {
   weak = ($2 == "w") ? "weak" : "strong";
   type = $3;
-  size = strtonum("0x" $5);
+  size = $5;
+  sub(/^0*/, "", size);
+  size = "0x" size;
   version = $6;
   symbol = $7;
   gsub(/[()]/, "", version);

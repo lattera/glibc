@@ -1,5 +1,8 @@
 2002-11-23  Roland McGrath  <roland@redhat.com>
 
+	* scripts/abilist.awk: Avoid strtonum function, not there in mawk.
+	Just produce hex output for datum sizes.
+
 	* elf/Makefile ($(objpfx)librtld.mk): Tighten up regexp.
 	Reported by Luca Barbieri <ldb@ldb.ods.org>.
 
