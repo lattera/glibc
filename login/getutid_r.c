@@ -65,6 +65,7 @@ getutid_r (const struct utmp *id, struct utmp **utmp,
 	  if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
+	      utmp_data->loc_utmp = 0; /* Mark loc_utmp invalid. */
 	      errno = ESRCH;
 	      return -1;
 	    }
@@ -87,6 +88,7 @@ getutid_r (const struct utmp *id, struct utmp **utmp,
 	  if (read (utmp_data->ut_fd, &utmp_data->ubuf, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
+	      utmp_data->loc_utmp = 0; /* Mark loc_utmp invalid. */
 	      errno = ESRCH;
 	      return -1;
 	    }
