@@ -412,7 +412,7 @@ nscd_run (void *p)
 		  continue;
 		}
 
-	      if (req.type < GETPWBYNAME || req.type >= LASTREQ
+	      if (req.type < GETPWBYNAME || req.type > LASTDBREQ
 		  || secure[serv2db[req.type]])
 		uid = caller.uid;
 	    }

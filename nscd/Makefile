@@ -31,10 +31,10 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 
 ifeq ($(have-thread-library),yes)
 
-others := nscd
-install-sbin := nscd
+others := nscd nscd_nischeck
+install-sbin := nscd nscd_nischeck
 
-extra-objs := $(nscd-modules:=.o)
+extra-objs := $(nscd-modules:=.o) nscd_nischeck.o
 
 endif
 
@@ -44,15 +44,18 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 endif
 
 distribute := nscd.h nscd-client.h dbg_log.h \
-	      $(nscd-modules:=.c) TODO nscd.conf nscd.init \
+	      $(nscd-modules:=.c) nscd_nischeck.c TODO nscd.conf nscd.init \
 	      nscd_proto.h
 
 include ../Rules
 
 $(objpfx)nscd: $(nscd-modules:%=$(objpfx)%.o)
+$(objpfx)nscd_nischeck: $(objpfx)nscd_nischeck.o
 
 ifeq ($(build-shared),yes)
 $(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
+$(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.so
 else
 $(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
+$(objpfx)nscd_nischeck: $(common-objpfx)nis/libnsl.a
 endif
