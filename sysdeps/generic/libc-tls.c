@@ -59,35 +59,26 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   void *tlsblock;
   size_t memsz = 0;
   size_t filesz = 0;
-  size_t initimage = 0;
+  void *initimage = NULL;
   size_t align = 0;
   size_t max_align = tcbalign;
-  size_t loadaddr = ~0ul;
   size_t tcb_offset;
   ElfW(Phdr) *phdr;
 
   /* Look through the TLS segment if there is any.  */
   if (_dl_phdr != NULL)
     for (phdr = _dl_phdr; phdr < &_dl_phdr[_dl_phnum]; ++phdr)
-      {
-	if (phdr->p_type == PT_TLS)
-	  {
-	    /* Remember the values we need.  */
-	    memsz = phdr->p_memsz;
-	    filesz = phdr->p_filesz;
-	    initimage = phdr->p_vaddr;
-	    align = phdr->p_align;
-	    if (phdr->p_align > max_align)
-	      max_align = phdr->p_align;
-	  }
-	else if (phdr->p_type == PT_LOAD)
-	  {
-	    /* We have to find the load address which is not easy.
-	       Look for the load segment with the lowest address.  */
-	    if (phdr->p_vaddr < loadaddr)
-	      loadaddr = phdr->p_vaddr;
-	  }
-    }
+      if (phdr->p_type == PT_TLS)
+	{
+	  /* Remember the values we need.  */
+	  memsz = phdr->p_memsz;
+	  filesz = phdr->p_filesz;
+	  initimage = (void *) phdr->p_vaddr;
+	  align = phdr->p_align;
+	  if (phdr->p_align > max_align)
+	    max_align = phdr->p_align;
+	  break;
+	}
 
   if (memsz == 0 && tcbsize == 0)
     /* We do not need a TLS block and no thread descriptor.  */
@@ -125,8 +116,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-  memset (__mempcpy (static_dtv[2].pointer, (char *) loadaddr + initimage,
-		     filesz),
+  memset (__mempcpy (static_dtv[2].pointer, initimage, filesz),
 	  '\0', memsz - filesz);
 
   /* Install the pointer to the dtv.  */
