@@ -9,5 +9,6 @@ function int catclose (nl_catd)
 function {char*} catgets (nl_catd, int, int, const char*)
 function nl_catd catopen (const char*, int)
 
+allow NL_*
 allow *_t
 #endif

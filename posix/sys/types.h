@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,8 +97,9 @@ typedef __pid_t pid_t;
 # define __pid_t_defined
 #endif
 
-#if defined __USE_SVID || defined __USE_XOPEN
+#if (defined __USE_SVID || defined __USE_XOPEN) && !defined __id_t_defined
 typedef __id_t id_t;
+# define __id_t_defined
 #endif
 
 #ifndef __ssize_t_defined
@@ -127,7 +128,10 @@ typedef __key_t key_t;
 typedef __useconds_t useconds_t;
 #  define __useconds_t_defined
 # endif
+# ifndef __suseconds_t_defined
 typedef __suseconds_t suseconds_t;
+#  define __suseconds_t_defined
+# endif
 #endif
 
 #define	__need_size_t
@@ -218,15 +222,27 @@ typedef __blksize_t blksize_t;
 typedef __blkcnt_t blkcnt_t;	 /* Type to count number of disk blocks.  */
 #  define __blkcnt_t_defined
 # endif
+# ifndef __fsblkcnt_t_defined
 typedef __fsblkcnt_t fsblkcnt_t; /* Type to count file system blocks.  */
+#  define __fsblkcnt_t_defined
+# endif
+# ifndef __fsfilcnt_t_defined
 typedef __fsfilcnt_t fsfilcnt_t; /* Type to count file system inodes.  */
+#  define __fsfilcnt_t_defined
+# endif
 #else
 # ifndef __blkcnt_t_defined
 typedef __blkcnt64_t blkcnt_t;	   /* Type to count number of disk blocks.  */
 #  define __blkcnt_t_defined
 # endif
+# ifndef __fsblkcnt_t_defined
 typedef __fsblkcnt64_t fsblkcnt_t; /* Type to count file system blocks.  */
+#  define __fsblkcnt_t_defined
+# endif
+# ifndef __fsfilcnt_t_defined
 typedef __fsfilcnt64_t fsfilcnt_t; /* Type to count file system inodes.  */
+#  define __fsfilcnt_t_defined
+# endif
 #endif
 
 #ifdef __USE_LARGEFILE64

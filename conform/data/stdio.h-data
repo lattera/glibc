@@ -100,4 +100,6 @@ variable int optind
 variable int optopt
 
 allow-header stddef.h
+
+allow *_t
 #endif

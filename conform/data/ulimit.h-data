@@ -1,0 +1,7 @@
+constant UL_GETFSIZE
+constant UL_SETFSIZE
+
+function {long int} ulimit (int, ...)
+
+allow UL_*
+allow *_t

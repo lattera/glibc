@@ -29,3 +29,7 @@ function {char*} strtok_r (char*, const char*, char**)
 function size_t strxfrm (char*, const char*, size_t)
 
 allow-header stddef.h
+
+allow str*
+allow wcs*
+allow *_t

@@ -28,7 +28,7 @@
   buf->f_ffree = fsbuf.f_ffree;
   buf->f_fsid = fsbuf.f_fsid;
   buf->f_namemax = fsbuf.f_namelen;
-  memset (buf->f_spare, '\0', 6 * sizeof (int));
+  memset (buf->__f_spare, '\0', 6 * sizeof (int));
 
   /* What remains to do is to fill the fields f_favail and f_flag.  */
 

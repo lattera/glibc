@@ -1,0 +1,25 @@
+type wordexp_t
+
+element wordexp_t size_t we_wordc
+element wordexp_t {char**} we_wordv
+element wordexp_t size_t we_offs
+
+constant WRDE_APPEND
+constant WRDE_DOOFS
+constant WRDE_NOCMD
+constant WRDE_REUSE
+constant WRDE_SHOWERR
+constant WRDE_UNDEF
+
+constant WRDE_BADCHAR
+constant WRDE_CMDSUB
+constant WRDE_NOSPACE
+constant WRDE_NOSYS
+constant WRDE_SYNTAX
+
+function int wordexp (const char*, wordexp_t*, int)
+function void wordfree (wordexp_t*)
+
+allow WRDE_*
+allow we_*
+allow *_t

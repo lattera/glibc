@@ -19,5 +19,9 @@ constant POLLNVAL
 
 function int poll (struct pollfd[], nfsd_t, int)
 
+allow pd_*
+allow ph_*
+allow ps_*
+allow POLL*
 allow *_t
 #endif

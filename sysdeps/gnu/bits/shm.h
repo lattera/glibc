@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 # error "Never include <bits/shm.h> directly; use <sys/shm.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Permission flag for shmget.  */
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
@@ -36,6 +36,9 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 
+/* Type to count number of attaches.  */
+typedef unsigned short int shmatt_t;
+
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
   {
@@ -46,7 +49,7 @@ struct shmid_ds
     __time_t shm_ctime;			/* time of last change by shmctl() */
     __ipc_pid_t shm_cpid;		/* pid of creator */
     __ipc_pid_t shm_lpid;		/* pid of last shmop */
-    unsigned short int shm_nattch;	/* number of current attaches */
+    shmatt_t shm_nattch;		/* number of current attaches */
     unsigned short int __shm_npages;	/* size of segment (pages) */
     unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
     struct vm_area_struct *__attaches;	/* descriptors for attaches */

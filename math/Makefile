@@ -165,7 +165,7 @@ endif
 endif
 
 # The fdlibm code generates a lot of these warnings but is otherwise clean.
-override CFLAGS += -Wno-uninitialized -Wno-write-strings
+override CFLAGS += -Wno-uninitialized
 
 # The -lieee library is actually an object file.
 # The module just defines the _LIB_VERSION_ variable.

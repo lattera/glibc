@@ -3205,15 +3205,16 @@ msgstr "»%s« ist keine gültige Profiledaten-Datei für »%s«"
 #: locale/programs/ld-monetary.c:369 locale/programs/ld-numeric.c:193
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
-msgstr "»-1« muß der letzte Eintrag im »%s«-Feld in der »%s«-Kategorie sein"
+msgstr "»-1« muß der letzte Eintrag im »%s«-Feld der »%s«-Kategorie sein"
 
 #: locale/programs/ld-collate.c:1670
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
-msgstr "»...« darf nur in »...« und »UNDEFINED« Einträgen verwendet werden"
+msgstr "»...« darf nur in »...« und »UNDEFINED«-Einträgen verwendet werden"
 
+# Alternative: ... muss ... nach ... kommen
 #: locale/programs/locfile.c:674
 msgid "`from' expected after first argument to `collating-element'"
-msgstr "»from« erwartet nach dem ersten Argument von »collating-element«"
+msgstr "»from« wird nach dem ersten Argument von »collating-element«  erwartet"
 
 #: locale/programs/ld-collate.c:1122
 msgid "`from' string in collation element declaration contains unknown character"
@@ -3306,7 +3307,7 @@ msgstr "Kann die Abkürzung der Zeitzone zur Verwendung direkt nach der Ende-Zeit
 #: sunrpc/svc_simple.c:75
 #, c-format
 msgid "can't reassign procedure number %d\n"
-msgstr "Kann die Prozedurnummer %d nicht erneut zuweisen\n"
+msgstr "Kann die Nummer der Prozedur %d nicht erneut zuweisen\n"
 
 #: locale/programs/localedef.c:276
 #, c-format
@@ -3325,10 +3326,11 @@ msgstr "Kann keinen internen Deskriptor erzeugen"
 msgid "cannot create internal descriptors"
 msgstr "Kann keine internen Deskriptoren erzeugen"
 
+# ;-)
 #: nscd/connections.c:183
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
-msgstr "Der Socken kann nicht zum Annehmen von Verbindungen aktiviert werden: %s"
+msgstr "Der Socket kann nicht zum Annehmen von Verbindungen aktiviert werden: %s"
 
 #: sunrpc/rpc_main.c:341
 #, c-format
@@ -3750,12 +3752,13 @@ msgstr "Die Datei »%s« existiert bereits und würde überschrieben\n"
 
 #: locale/programs/locfile.c:683
 msgid "from-value of `collating-element' must be a string"
-msgstr "Der »From«-Wert eines Sortierelementes muß ein String sein"
+msgstr "Der »From«-Wert eines Sortierelementes muß eine Zeichenkette sein"
 
 #: inet/rcmd.c:324
 msgid "fstat failed"
 msgstr "Fehler beim Holen des Datei-Status mit »fstat«"
 
+# Gut! ;-)
 #: locale/programs/linereader.c:333
 msgid "garbage at end of character code specification"
 msgstr "Murks am Ende einer Zeichensatzspezifikation"
@@ -4073,7 +4076,7 @@ msgstr "netname2user: der Principal-Name »%s« ist zu lang"
 
 #: nis/nss_nisplus/nisplus-publickey.c:374
 msgid "netname2user: should not have uid 0"
-msgstr "netname2user: Sollte nicht die Benutzernummer 0 haben"
+msgstr "netname2user: sollte nicht die Benutzernummer 0 haben"
 
 #: sunrpc/svc_simple.c:158
 #, c-format
@@ -4178,9 +4181,10 @@ msgstr "Fehler beim Aufruf des Präprozessors"
 msgid "print list of count paths and their number of use"
 msgstr "Gib eine Liste der gezählten Pfade und der Anzahl der Benutzung aus"
 
+# So sonst oft.
 #: iconv/iconv_prog.c:61
 msgid "print progress information"
-msgstr "Gebe Informationen über den Bearbeitungsstand aus"
+msgstr "Gib Informationen über den Bearbeitungsstand aus"
 
 #: db2/makedb.c:345
 #, c-format
@@ -4466,7 +4470,7 @@ msgstr "Syntaxfehler im Prolog: %s"
 #: locale/programs/repertoire.c:272
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
-msgstr "Syntaxfehler in der »epertoire« Map-Definition: %s"
+msgstr "Syntaxfehler in der »repertoire« Map-Definition: %s"
 
 #: locale/programs/locfile.c:985
 msgid "syntax error in time locale definition"
@@ -4625,7 +4629,7 @@ msgstr "Syntax: %s Eingabedatei\n"
 
 #: timezone/zic.c:2109
 msgid "use of 2/29 in non leap-year"
-msgstr "Der 29. Februar wurde in einem nicht-Schaltjahr verwendet"
+msgstr "Der 29. Februar wurde in einem Jahr verwendet, das kein Schaltjahr ist"
 
 #: locale/programs/charmap.c:521 locale/programs/charmap.c:575
 #, c-format

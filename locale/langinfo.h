@@ -144,8 +144,10 @@ enum
 
   ERA,				/* Alternate era.  */
 #define ERA			ERA
-  ERA_YEAR,			/* Year in alternate era format.  */
-#define ERA_YEAR		ERA_YEAR
+  __ERA_YEAR,			/* Year in alternate era format.  */
+#ifdef __USE_GNU
+# define ERA_YEAR		__ERA_YEAR
+#endif
   ERA_D_FMT,			/* Date in alternate era format.  */
 #define ERA_D_FMT		ERA_D_FMT
   ALT_DIGITS,			/* Alternate symbols for digits.  */
@@ -320,36 +322,66 @@ enum
   /* LC_MONETARY category: formatting of monetary quantities.
      These items each correspond to a member of `struct lconv',
      defined in <locale.h>.  */
-  INT_CURR_SYMBOL = _NL_ITEM (LC_MONETARY, 0),
-#define INT_CURR_SYMBOL		INT_CURR_SYMBOL
-  CURRENCY_SYMBOL,
-#define CURRENCY_SYMBOL		CURRENCY_SYMBOL
-  MON_DECIMAL_POINT,
-#define MON_DECIMAL_POINT	MON_DECIMAL_POINT
-  MON_THOUSANDS_SEP,
-#define MON_THOUSANDS_SEP	MON_THOUSANDS_SEP
-  MON_GROUPING,
-#define MON_GROUPING		MON_GROUPING
-  POSITIVE_SIGN,
-#define POSITIVE_SIGN		POSITIVE_SIGN
-  NEGATIVE_SIGN,
-#define NEGATIVE_SIGN		NEGATIVE_SIGN
-  INT_FRAC_DIGITS,
-#define INT_FRAC_DIGITS		INT_FRAC_DIGITS
-  FRAC_DIGITS,
-#define FRAC_DIGITS		FRAC_DIGITS
-  P_CS_PRECEDES,
-#define P_CS_PRECEDES		P_CS_PRECEDES
-  P_SEP_BY_SPACE,
-#define P_SEP_BY_SPACE		P_SEP_BY_SPACE
-  N_CS_PRECEDES,
-#define N_CS_PRECEDES		N_CS_PRECEDES
-  N_SEP_BY_SPACE,
-#define N_SEP_BY_SPACE		N_SEP_BY_SPACE
-  P_SIGN_POSN,
-#define P_SIGN_POSN		P_SIGN_POSN
-  N_SIGN_POSN,
-#define N_SIGN_POSN		N_SIGN_POSN
+  __INT_CURR_SYMBOL = _NL_ITEM (LC_MONETARY, 0),
+#ifdef __USE_GNU
+# define INT_CURR_SYMBOL	__INT_CURR_SYMBOL
+#endif
+  __CURRENCY_SYMBOL,
+#ifdef __USE_GNU
+# define CURRENCY_SYMBOL	__CURRENCY_SYMBOL
+#endif
+  __MON_DECIMAL_POINT,
+#ifdef __USE_GNU
+# define MON_DECIMAL_POINT	__MON_DECIMAL_POINT
+#endif
+  __MON_THOUSANDS_SEP,
+#ifdef __USE_GNU
+# define MON_THOUSANDS_SEP	__MON_THOUSANDS_SEP
+#endif
+  __MON_GROUPING,
+#ifdef __USE_GNU
+# define MON_GROUPING		__MON_GROUPING
+#endif
+  __POSITIVE_SIGN,
+#ifdef __USE_GNU
+# define POSITIVE_SIGN		__POSITIVE_SIGN
+#endif
+  __NEGATIVE_SIGN,
+#ifdef __USE_GNU
+# define NEGATIVE_SIGN		__NEGATIVE_SIGN
+#endif
+  __INT_FRAC_DIGITS,
+#ifdef __USE_GNU
+# define INT_FRAC_DIGITS	__INT_FRAC_DIGITS
+#endif
+  __FRAC_DIGITS,
+#ifdef __USE_GNU
+# define FRAC_DIGITS		__FRAC_DIGITS
+#endif
+  __P_CS_PRECEDES,
+#ifdef __USE_GNU
+# define P_CS_PRECEDES		__P_CS_PRECEDES
+#endif
+  __P_SEP_BY_SPACE,
+#ifdef __USE_GNU
+# define P_SEP_BY_SPACE		__P_SEP_BY_SPACE
+#endif
+  __N_CS_PRECEDES,
+#ifdef __USE_GNU
+# define N_CS_PRECEDES		__N_CS_PRECEDES
+#endif
+  __N_SEP_BY_SPACE,
+#ifdef __USE_GNU
+# define N_SEP_BY_SPACE		__N_SEP_BY_SPACE
+#endif
+  __P_SIGN_POSN,
+#ifdef __USE_GNU
+# define P_SIGN_POSN		__P_SIGN_POSN
+#endif
+  __N_SIGN_POSN,
+#ifdef __USE_GNU
+# define N_SIGN_POSN		__N_SIGN_POSN
+#endif
   _NL_MONETARY_CRNCYSTR,
 #ifdef __USE_XOPEN
 # define CRNCYSTR		__CRNCYSTR
@@ -387,32 +419,46 @@ enum
 
   /* LC_NUMERIC category: formatting of numbers.
      These also correspond to members of `struct lconv'; see <locale.h>.  */
-  DECIMAL_POINT = _NL_ITEM (LC_NUMERIC, 0),
-#define DECIMAL_POINT		DECIMAL_POINT
+  __DECIMAL_POINT = _NL_ITEM (LC_NUMERIC, 0),
+#ifdef __USE_GNU
+# define DECIMAL_POINT		__DECIMAL_POINT
+#endif
 #ifdef __USE_XOPEN
-  RADIXCHAR = DECIMAL_POINT,
+  RADIXCHAR = __DECIMAL_POINT,
 # define RADIXCHAR		RADIXCHAR
 #endif
-  THOUSANDS_SEP,
-#define THOUSANDS_SEP		THOUSANDS_SEP
-#ifdef __USE_XOPEN
-  THOUSEP = THOUSANDS_SEP,
-# define THOUSANDS_SEP		THOUSANDS_SEP
+  __THOUSANDS_SEP,
+#ifdef __USE_GNU
+# define THOUSANDS_SEP		__THOUSANDS_SEP
 #endif
-  GROUPING,
-#define GROUPING		GROUPING
+#ifdef __USE_XOPEN
+  THOUSEP = __THOUSANDS_SEP,
+# define THOUSANDS_SEP		__THOUSANDS_SEP
+#endif
+  __GROUPING,
+#ifdef __USE_GNU
+# define GROUPING		__GROUPING
+#endif
   _NL_NUMERIC_DECIMAL_POINT_WC,
   _NL_NUMERIC_THOUSANDS_SEP_WC,
   _NL_NUM_LC_NUMERIC,
 
-  YESEXPR = _NL_ITEM (LC_MESSAGES, 0), /* Regex matching ``yes'' input.  */
-#define YESEXPR			YESEXPR
-  NOEXPR,			/* Regex matching ``no'' input.  */
-#define NOEXPR			NOEXPR
-  YESSTR,			/* Output string for ``yes''.  */
-#define YESSTR			YESSTR
-  NOSTR,			/* Output string for ``no''.  */
-#define	NOSTR			NOSTR
+  __YESEXPR = _NL_ITEM (LC_MESSAGES, 0), /* Regex matching ``yes'' input.  */
+#ifdef __USE_GNU
+# define YESEXPR		__YESEXPR
+#endif
+  __NOEXPR,			/* Regex matching ``no'' input.  */
+#ifdef __USE_GNU
+# define NOEXPR			__NOEXPR
+#endif
+  __YESSTR,			/* Output string for ``yes''.  */
+#ifdef __USE_GNU
+# define YESSTR			__YESSTR
+#endif
+  __NOSTR,			/* Output string for ``no''.  */
+#ifdef __USE_GNU
+# define	NOSTR		__NOSTR
+#endif
   _NL_NUM_LC_MESSAGES,
 
   _NL_PAPER_HEIGHT = _NL_ITEM (LC_PAPER, 0),

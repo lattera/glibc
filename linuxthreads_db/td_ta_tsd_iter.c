@@ -1,5 +1,5 @@
 /* Iterate over a process's thread-specific data.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include "thread_dbP.h"
-
+#include <alloca.h>
 
 td_err_e
 td_ta_tsd_iter (const td_thragent_t *ta, td_key_iter_f *callback,

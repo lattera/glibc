@@ -1,9 +1,6 @@
 /* Implementation of the internal dcigettext function.
    Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
 
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.
-
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
    published by the Free Software Foundation; either version 2 of the
@@ -99,6 +96,11 @@ void free ();
 /* Thread safetyness.  */
 #ifdef _LIBC
 # include <bits/libc-lock.h>
+#else
+/* Provide dummy implementation if this is outside glibc.  */
+# define __libc_lock_define_initialized (CLASS, NAME)
+# define __libc_lock_lock(NAME)
+# define __libc_lock_unlock(NAME)
 #endif
 
 /* @@ end of prolog @@ */
@@ -306,6 +308,9 @@ struct block_list
 # define DCIGETTEXT dcigettext__
 #endif
 
+/* Lock variable to protect the global data in the gettext implementation.  */
+__libc_rwlock_define_initialized (, _nl_state_lock)
+
 /* Checking whether the binaries runs SUID must be done and glibc provides
    easier methods therefore we make a difference here.  */
 #ifdef _LIBC
@@ -358,6 +363,8 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
   if (msgid1 == NULL)
     return NULL;
 
+  __libc_rwlock_rdlock (_nl_state_lock);
+
 #if defined HAVE_TSEARCH || defined _LIBC
   if (plural == 0)
     {
@@ -372,7 +379,10 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 
       foundp = (struct known_translation_t **) tfind (search, &root, transcmp);
       if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
-	return (char *) (*foundp)->translation;
+	{
+	  __libc_rwlock_unlock (_nl_state_lock);
+	  return (char *) (*foundp)->translation;
+	}
     }
 #endif
 
@@ -501,6 +511,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	  || strcmp (single_locale, "POSIX") == 0)
 	{
 	  FREE_BLOCKS (block_list);
+	  __libc_rwlock_unlock (_nl_state_lock);
 	  __set_errno (saved_errno);
 	  return (plural == 0
 		  ? (char *) msgid1
@@ -539,7 +550,10 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 	      foundp = (struct known_translation_t **) tfind (search, &root,
 							      transcmp);
 	      if (foundp != NULL && (*foundp)->counter == _nl_msg_cat_cntr)
-		return (char *) (*foundp)->translation;
+		{
+		  __libc_rwlock_unlock (_nl_state_lock);
+		  return (char *) (*foundp)->translation;
+		}
 	    }
 #endif
 
@@ -596,6 +610,7 @@ DCIGETTEXT (domainname, msgid1, msgid2, plural, n, category)
 		  (*foundp)->translation = retval;
 		}
 #endif
+	      __libc_rwlock_unlock (_nl_state_lock);
 	      return retval;
 	    }
 	}
@@ -981,12 +996,9 @@ free_mem (void)
   struct binding *runp;
 
   for (runp = _nl_domain_bindings; runp != NULL; runp = runp->next)
-    {
-      free (runp->domainname);
-      if (runp->dirname != _nl_default_dirname)
-	/* Yes, this is a pointer comparison.  */
-	free (runp->dirname);
-    }
+    if (runp->dirname != _nl_default_dirname)
+      /* Yes, this is a pointer comparison.  */
+      free (runp->dirname);
 
   if (_nl_current_default_domain != _nl_default_default_domain)
     /* Yes, again a pointer comparison.  */

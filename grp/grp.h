@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,7 +99,7 @@ extern struct group *getgrnam (__const char *__name) __THROW;
    other reentrant functions so the chances are good this is what the
    POSIX people would choose.  */
 
-# if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+# ifdef __USE_GNU
 extern int getgrent_r (struct group *__restrict __resultbuf,
 		       char *__restrict __buffer, size_t __buflen,
 		       struct group **__restrict __result) __THROW;

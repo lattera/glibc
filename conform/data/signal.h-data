@@ -189,3 +189,14 @@ allow SI_*
 allow sigev_*
 allow SIGEV_*
 allow sival_*
+allow SA_*
+allow BUS_*
+allow CLD_*
+allow FPE_*
+allow ILL_*
+allow POLL_*
+allow SEGV_*
+allow SS_*
+allow SV_*
+allow TRAP_*
+allow *_t

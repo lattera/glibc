@@ -26,3 +26,7 @@ function ssize_t msgrcv (int, void*, size_t, long int, int)
 function int msgsnd (int, const void*, size_t, int)
 
 allow-header sys/ipc.h
+
+allow msg*
+allow MSG*
+allow *_h

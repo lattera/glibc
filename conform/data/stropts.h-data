@@ -121,3 +121,17 @@ function int fattach (int, const char*)
 function int fdetach (const char*)
 
 allow-header unistd.h
+
+allow bi_*
+allow ic_*
+allow l_*
+allow sl_*
+allow str_*
+allow FLUSH*
+allow I_*
+allow M_*
+allow MUXID_R*
+allow S_*
+allow SND*
+allow STR*
+allow *_t

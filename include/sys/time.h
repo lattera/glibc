@@ -13,5 +13,5 @@ extern int __getitimer (enum __itimer_which __which,
 extern int __setitimer (enum __itimer_which __which,
 			__const struct itimerval *__new,
 			struct itimerval *__old);
-extern int __utimes (__const char *__file, struct timeval __tvp[2]);
+extern int __utimes (__const char *__file, const struct timeval __tvp[2]);
 #endif

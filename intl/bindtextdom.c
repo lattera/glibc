@@ -1,8 +1,5 @@
 /* Implementation of the bindtextdomain(3) function
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -50,6 +47,16 @@ void free ();
 #include "gettext.h"
 #include "gettextP.h"
 
+#ifdef _LIBC
+/* We have to handle multi-threaded applications.  */
+# include <bits/libc-lock.h>
+#else
+/* Provide dummy implementation if this is outside glibc.  */
+# define __libc_lock_define_initialized (CLASS, NAME)
+# define __libc_lock_lock(NAME)
+# define __libc_lock_unlock(NAME)
+#endif
+
 /* @@ end of prolog @@ */
 
 /* Contains the default location of the message catalogs.  */
@@ -57,6 +64,9 @@ extern const char _nl_default_dirname[];
 
 /* List with bindings of specific domains.  */
 extern struct binding *_nl_domain_bindings;
+
+/* Lock variable to protect the global data in the gettext implementation.  */
+__libc_rwlock_define (extern, _nl_state_lock)
 
 
 /* Names for the libintl functions are a problem.  They must not clash
@@ -80,10 +90,13 @@ BINDTEXTDOMAIN (domainname, dirname)
      const char *dirname;
 {
   struct binding *binding;
+  char *result;
 
   /* Some sanity checks.  */
   if (domainname == NULL || domainname[0] == '\0')
     return NULL;
+
+  __libc_rwlock_wrlock (_nl_state_lock);
 
   for (binding = _nl_domain_bindings; binding != NULL; binding = binding->next)
     {
@@ -101,104 +114,97 @@ BINDTEXTDOMAIN (domainname, dirname)
 
   if (dirname == NULL)
     /* The current binding has be to returned.  */
-    return binding == NULL ? (char *) _nl_default_dirname : binding->dirname;
-
-  if (binding != NULL)
+    result = binding == NULL ? (char *) _nl_default_dirname : binding->dirname;
+  else if (binding != NULL)
     {
       /* The domain is already bound.  If the new value and the old
 	 one are equal we simply do nothing.  Otherwise replace the
 	 old binding.  */
-      if (strcmp (dirname, binding->dirname) != 0)
+      result = binding->dirname;
+      if (strcmp (dirname, result) != 0)
 	{
-	  char *new_dirname;
-
 	  if (strcmp (dirname, _nl_default_dirname) == 0)
-	    new_dirname = (char *) _nl_default_dirname;
+	    result = (char *) _nl_default_dirname;
 	  else
 	    {
 #if defined _LIBC || defined HAVE_STRDUP
-	      new_dirname = strdup (dirname);
-	      if (new_dirname == NULL)
-		return NULL;
+	      result = strdup (dirname);
 #else
 	      size_t len = strlen (dirname) + 1;
-	      new_dirname = (char *) malloc (len);
-	      if (new_dirname == NULL)
-		return NULL;
-
-	      memcpy (new_dirname, dirname, len);
+	      result = (char *) malloc (len);
+	      if (result != NULL)
+		memcpy (result, dirname, len);
 #endif
 	    }
 
-	  if (binding->dirname != _nl_default_dirname)
-	    free (binding->dirname);
+	  if (result != NULL)
+	    {
+	      if (binding->dirname != _nl_default_dirname)
+		free (binding->dirname);
 
-	  binding->dirname = new_dirname;
+	      binding->dirname = result;
+	    }
 	}
     }
   else
     {
       /* We have to create a new binding.  */
-#if !defined _LIBC && !defined HAVE_STRDUP
-      size_t len;
-#endif
+      size_t len = strlen (domainname) + 1;
       struct binding *new_binding =
-	(struct binding *) malloc (sizeof (*new_binding));
+	(struct binding *) malloc (sizeof (*new_binding) + len);
 
       if (new_binding == NULL)
-	return NULL;
-
-#if defined _LIBC || defined HAVE_STRDUP
-      new_binding->domainname = strdup (domainname);
-      if (new_binding->domainname == NULL)
-	return NULL;
-#else
-      len = strlen (domainname) + 1;
-      new_binding->domainname = (char *) malloc (len);
-      if (new_binding->domainname == NULL)
-	return NULL;
-      memcpy (new_binding->domainname, domainname, len);
-#endif
-
-      if (strcmp (dirname, _nl_default_dirname) == 0)
-	new_binding->dirname = (char *) _nl_default_dirname;
+	result = NULL;
       else
 	{
+	  memcpy (new_binding->domainname, domainname, len);
+
+	  if (strcmp (dirname, _nl_default_dirname) == 0)
+	    result = new_binding->dirname = (char *) _nl_default_dirname;
+	  else
+	    {
 #if defined _LIBC || defined HAVE_STRDUP
-	  new_binding->dirname = strdup (dirname);
-	  if (new_binding->dirname == NULL)
-	    return NULL;
+	      result = new_binding->dirname = strdup (dirname);
 #else
-	  len = strlen (dirname) + 1;
-	  new_binding->dirname = (char *) malloc (len);
-	  if (new_binding->dirname == NULL)
-	    return NULL;
-	  memcpy (new_binding->dirname, dirname, len);
+	      len = strlen (dirname) + 1;
+	      result = new_binding->dirname = (char *) malloc (len);
+	      if (result != NULL)
+		memcpy (new_binding->dirname, dirname, len);
 #endif
+	    }
 	}
 
-      /* Now enqueue it.  */
-      if (_nl_domain_bindings == NULL
-	  || strcmp (domainname, _nl_domain_bindings->domainname) < 0)
+      if (result != NULL)
 	{
-	  new_binding->next = _nl_domain_bindings;
-	  _nl_domain_bindings = new_binding;
-	}
-      else
-	{
-	  binding = _nl_domain_bindings;
-	  while (binding->next != NULL
-		 && strcmp (domainname, binding->next->domainname) > 0)
-	    binding = binding->next;
+	  /* Now enqueue it.  */
+	  if (_nl_domain_bindings == NULL
+	      || strcmp (domainname, _nl_domain_bindings->domainname) < 0)
+	    {
+	      new_binding->next = _nl_domain_bindings;
+	      _nl_domain_bindings = new_binding;
+	    }
+	  else
+	    {
+	      binding = _nl_domain_bindings;
+	      while (binding->next != NULL
+		     && strcmp (domainname, binding->next->domainname) > 0)
+		binding = binding->next;
 
-	  new_binding->next = binding->next;
-	  binding->next = new_binding;
+	      new_binding->next = binding->next;
+	      binding->next = new_binding;
+	    }
 	}
-
-      binding = new_binding;
+      else if (new_binding != NULL)
+	free (new_binding);
     }
 
-  return binding->dirname;
+  /* For a succesful call we flush the caches.  */
+  if (result != NULL)
+    ++_nl_msg_cat_cntr;
+
+  __libc_rwlock_unlock (_nl_state_lock);
+
+  return result;
 }
 
 #ifdef _LIBC

@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -235,6 +235,9 @@ __MATHCALL (yn,, (int, _Mdouble_));
 __MATHCALL (erf,, (_Mdouble_));
 __MATHCALL (erfc,, (_Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
+#endif
+
+#ifdef __USE_ISOC99
 __MATHCALL (tgamma,, (_Mdouble_));
 #endif
 
@@ -270,8 +273,10 @@ __MATHCALL (remainder,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (scalb,, (_Mdouble_ __x, _Mdouble_ __n));
 # endif
 
+# if defined __USE_MISC || defined __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
+# endif
 
 /* Return the binary exponent of X, which must be nonzero.  */
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));

@@ -124,5 +124,10 @@ libpthread {
     open64; __open64;
 
     __res_state;
+
+    # Names used internally.
+    __pthread_rwlock_init; __pthread_rwlock_destroy; __pthread_rwlock_rdlock;
+    __pthread_rwlock_tryrdlock; __pthread_rwlock_wrlock;
+    __pthread_rwlock_trywrlock; __pthread_rwlock_unlock;
   }
 }

@@ -1,0 +1,11 @@
+type {struct utimbuf}
+
+element {struct utimbuf} time_t actime
+element {struct utimbuf} time_t modtime
+
+type time_t
+
+function int utime (const char*, const struct utimbuf*)
+
+allow utim_*
+allow *_t

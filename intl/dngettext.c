@@ -1,9 +1,6 @@
 /* Implementation of the dngettext(3) function.
    Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
 
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.
-
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
    published by the Free Software Foundation; either version 2 of the

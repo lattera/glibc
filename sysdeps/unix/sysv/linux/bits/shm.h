@@ -20,7 +20,7 @@
 # error "Never include <bits/shm.h> directly; use <sys/shm.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Permission flag for shmget.  */
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
@@ -36,6 +36,9 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 
+/* Type to count number of attaches.  */
+typedef unsigned long int shmatt_t;
+
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
   {
@@ -47,9 +50,9 @@ struct shmid_ds
     unsigned long int __unused2;
     __time_t shm_ctime;			/* time of last change by shmctl() */
     unsigned long int __unused3;
-    pid_t shm_cpid;			/* pid of creator */
-    pid_t shm_lpid;			/* pid of last shmop */
-    unsigned long int shm_nattch;	/* number of current attaches */
+    __pid_t shm_cpid;			/* pid of creator */
+    __pid_t shm_lpid;			/* pid of last shmop */
+    shmatt_t shm_nattch;		/* number of current attaches */
     unsigned long int __unused4;
     unsigned long int __unused5;
   };

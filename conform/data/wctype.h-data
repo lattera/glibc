@@ -1,0 +1,36 @@
+type wint_t
+type wctrans_t
+type wctype_t
+
+function int iswalnum (wint_t)
+function int iswalpha (wint_t)
+function int iswcntrl (wint_t)
+function int iswdigit (wint_t)
+function int iswgraph (wint_t)
+function int iswlower (wint_t)
+function int iswprint (wint_t)
+function int iswpunct (wint_t)
+function int iswspace (wint_t)
+function int iswupper (wint_t)
+function int iswxdigit (wint_t)
+function int iswctype (wint_t, wctype_t)
+function wint_t towctrans (wint_t, wctrans_t)
+function wint_t towlower (wint_t)
+function wint_t towupper (wint_t)
+function wctrans_t wctrans (const char*)
+function wctype_t wctype (const char*)
+
+macro WEOF
+
+allow-header ctype.h
+allow-header stdio.h
+allow-header stdarg.h
+allow-header stdlib.h
+allow-header string.h
+allow-header stddef.h
+allow-header time.h
+allow-header wchar.h
+
+allow is*
+allow to*
+allow *_t

@@ -1,5 +1,5 @@
 /* getpriority for Linux.
-   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -22,7 +22,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-extern int __syscall_getpriority (int, int);
+extern int __syscall_getpriority (int, id_t);
 
 /* The return value of __syscall_getpriority is biased by this value
    to avoid returning negative values.  */
@@ -34,7 +34,7 @@ extern int __syscall_getpriority (int, int);
    priority.  Priorities range from PRIO_MIN to PRIO_MAX.  */
 
 int
-getpriority (enum __priority_which which, int who)
+getpriority (enum __priority_which which, id_t who)
 {
   int res;
 

@@ -136,8 +136,12 @@ struct loaded_domain
 struct binding
 {
   struct binding *next;
-  char *domainname;
   char *dirname;
+#ifdef __GNUC__
+  char domainname[0];
+#else
+  char domainname[1];
+#endif
 };
 
 extern int _nl_msg_cat_cntr;

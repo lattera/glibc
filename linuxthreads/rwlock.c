@@ -183,7 +183,7 @@ rwlock_have_already(pthread_descr *pself, pthread_rwlock_t *rwlock,
 }
 
 int
-pthread_rwlock_init (pthread_rwlock_t *rwlock,
+__pthread_rwlock_init (pthread_rwlock_t *rwlock,
 		     const pthread_rwlockattr_t *attr)
 {
   __pthread_init_lock(&rwlock->__rw_lock);
@@ -205,10 +205,11 @@ pthread_rwlock_init (pthread_rwlock_t *rwlock,
 
   return 0;
 }
+strong_alias (__pthread_init_lock, pthread_init_lock)
 
 
 int
-pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
+__pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
 {
   int readers;
   _pthread_descr writer;
@@ -223,16 +224,17 @@ pthread_rwlock_destroy (pthread_rwlock_t *rwlock)
 
   return 0;
 }
+strong_alias (__pthread_rwlock_destroy, pthread_rwlock_destroy)
 
 int
-pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
+__pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 {
   pthread_descr self = NULL;
   pthread_readlock_info *existing;
   int out_of_mem, have_lock_already;
 
   have_lock_already = rwlock_have_already(&self, rwlock,
-      &existing, &out_of_mem);
+					  &existing, &out_of_mem);
 
   for (;;)
     {
@@ -262,9 +264,10 @@ pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 
   return 0;
 }
+strong_alias (__pthread_rwlock_rdlock, pthread_rwlock_rdlock)
 
 int
-pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
+__pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 {
   pthread_descr self = thread_self();
   pthread_readlock_info *existing;
@@ -303,10 +306,11 @@ pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 
   return retval;
 }
+strong_alias (__pthread_rwlock_tryrdlock, pthread_rwlock_tryrdlock)
 
 
 int
-pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
+__pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
 {
   pthread_descr self = thread_self ();
 
@@ -326,10 +330,11 @@ pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
       suspend (self); /* This is not a cancellation point */
     }
 }
+strong_alias (__pthread_rwlock_wrlock, pthread_rwlock_wrlock)
 
 
 int
-pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
+__pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
 {
   int result = EBUSY;
 
@@ -343,10 +348,11 @@ pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
 
   return result;
 }
+strong_alias (__pthread_rwlock_trywrlock, pthread_rwlock_trywrlock)
 
 
 int
-pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
+__pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
   pthread_descr torestart;
   pthread_descr th;
@@ -425,6 +431,7 @@ pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 
   return 0;
 }
+strong_alias (__pthread_rwlock_unlock, pthread_rwlock_unlock)
 
 
 
@@ -439,10 +446,11 @@ pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
 
 
 int
-pthread_rwlockattr_destroy (pthread_rwlockattr_t *attr)
+__pthread_rwlockattr_destroy (pthread_rwlockattr_t *attr)
 {
   return 0;
 }
+strong_alias (__pthread_rwlockattr_destroy, pthread_rwlockattr_destroy)
 
 
 int

@@ -50,6 +50,9 @@ function int open (const char*, int, ...)
 allow-header sys/stat.h
 allow-header unistd.h
 
-allow *_t
 allow l_*
+allow F_*
+allow O_*
+allow S_*
+allow *_t
 #endif

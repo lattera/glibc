@@ -37,3 +37,6 @@ function void closelog (void)
 function void openlog (const char*, int, int)
 function int setlogmask (int)
 function void syslog (int, const char*, ...)
+
+allow LOG_*
+allow *_t

@@ -864,15 +864,12 @@ extern int getdtablesize (void) __THROW;
    Returns zero on success and -1 for errors (with errno set).  */
 extern int brk (void *__addr) __THROW;
 
-# define __need_ptrdiff_t
-# include <stddef.h>
-
 /* Increase or decrease the end of accessible data space by DELTA bytes.
    If successful, returns the address the previous end of data space
    (i.e. the beginning of the new space, if DELTA > 0);
    returns (void *) -1 for errors (with errno set).  */
-extern void *__sbrk (ptrdiff_t __delta) __THROW;
-extern void *sbrk (ptrdiff_t __delta) __THROW;
+extern void *__sbrk (intptr_t __delta) __THROW;
+extern void *sbrk (intptr_t __delta) __THROW;
 #endif
 
 

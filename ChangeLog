@@ -1,3 +1,137 @@
+2000-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl (@headers): Add wordexp.h, wctype.h, wchar.h,
+	varargs.h, utmpx.h, utime.h, unistd.h, ulimit.h, ucontext.h, time.h,
+	termios.h, tar.h, sys/wait.h, sys/uio.h, sys/types.h, sys/times.h,
+	sys/timeb.h, sys/time.h, sys/statvfs.h, sys/stat.h, sys/shm.h,
+	sys/sem.h, and sys/resource.h.
+	Implement handling of allow-header.
+	* conform/data/fcntl.h-data: Correct various bugs.
+	* conform/data/fnmatch.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/ndbm.h-data: Likewise.
+	* conform/data/nl_types.h-data: Likewise.
+	* conform/data/poll.h-data: Likewise.
+	* conform/data/pthread.h-data: Likewise.
+	* conform/data/semaphore.h-data: Likewise.
+	* conform/data/setjmp.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/stdarg.h-data: Likewise.
+	* conform/data/stddef.h-data: Likewise.
+	* conform/data/stdio.h-data: Likewise.
+	* conform/data/stdlib.h-data: Likewise.
+	* conform/data/string.h-data: Likewise.
+	* conform/data/strings.h-data: Likewise.
+	* conform/data/stropts.h-data: Likewise.
+	* conform/data/syslog.h-data: Likewise.
+	* conform/data/sys/ipc.h-data: Likewise.
+	* conform/data/sys/mman.h-data: Likewise.
+	* conform/data/sys/msg.h-data: Likewise.
+	* conform/data/tar.h-data: New file.
+	* conform/data/termios.h-data: New file.
+	* conform/data/time.h-data: New file.
+	* conform/data/ucontext.h-data: New file.
+	* conform/data/ulimit.h-data: New file.
+	* conform/data/unistd.h-data: New file.
+	* conform/data/utime.h-data: New file.
+	* conform/data/utmpx.h-data: New file.
+	* conform/data/varargs.h-data: New file.
+	* conform/data/wchar.h-data: New file.
+	* conform/data/wctype.h-data: New file.
+	* conform/data/wordexp.h-data: New file.
+	* conform/data/sys/resource.h-data: New file.
+	* conform/data/sys/sem.h-data: New file.
+	* conform/data/sys/shm.h-data: New file.
+	* conform/data/sys/stat.h-data: New file.
+	* conform/data/sys/statvfs.h-data: New file.
+	* conform/data/sys/time.h-data: New file.
+	* conform/data/sys/timeb.h-data: New file.
+	* conform/data/sys/times.h-data: New file.
+	* conform/data/sys/types.h-data: New file.
+	* conform/data/sys/uio.h-data: New file.
+	* conform/data/sys/wait.h-data: New file.
+
+	* grp/grp.h (getgrent_r): Declare only if __USE_GNU.
+
+	* include/sys/time.h (__itimes): Fix type of second parameter.
+
+	* io/sys/stat.h (S_IFLNK): Define also if __USE_XOPEN.
+	(S_ISVTX): Likewise.
+
+	* io/sys/statvfs.h: Define fsblkcnt_t and fsfilcnt_t.
+
+	* locale/langindo.h: Make ERA_YEAR, INT_CURR_SYMBOL, CURRENCY_SYMBOL,
+	MON_DECIMAL_POINT, MON_THOUSANDS_SEP, MON_GROUPING, POSITIVE_SIGN,
+	NEGATIVE_SIGN, INT_FRAC_DIGITS, FRAC_DIGITS, P_CS_PRECEDES,
+	P_SEP_BY_SPACE, N_CS_PRECEDES, N_SEP_BY_SPACE, P_SIGN_POSN,
+	N_SIGN_POSN, DECIMAL_POINT, THOUSANDS_SEP, GROUPING, YESEXPR,
+	NOEXPR, YESSTR, and NOSTR only available if __USE_GNU.
+
+	* math/bits/mathcalls.h: Don't declare tgamma and scalbn if only
+	__USE_XOPEN.
+
+	* posix/unistd.h: Don't define ptrdiff_t.
+	(sbrk): Correct type of parameter.
+	* sysdeps/generic/sbrk.c: Likewise.
+	* sysdeps/mach/hurd/sbrk.c: Likewise.
+
+	* posix/sys/types.h: Allow id_t, suseconds_t, fsblkcnt_t, and
+	fsfilcnt_t being defined elsewhere.
+
+	* resource/sys/resource.h: Define id_t.
+	If __USE_XOPEN use int for type of first parameter if getrlimit,
+	getrlimit64, setrlimit, setrlimit64, getrusage, getpriority, and
+	setpriority.
+	* sysdeps/generic/getpriority.c: Fix type of second parameter.
+	* sysdeps/generic/setpriority.c: Likewise.
+	* sysdeps/mach/hurd/getpriority.c: Likewise.
+	* sysdeps/mach/hurd/setpriority.c: Likewise.
+	* sysdeps/unix/sysv/irix4/getpriority.c: Likewise.
+	* sysdeps/unix/sysv/irix4/setpriority.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpriority.c: Likewise.
+
+	* sysdeps/generic/utimes.c: Fix parameter of third parameter.
+	* sysdeps/mach/hurd/utimes.c: Likewise.
+	* sysdeps/posix/utimes.c: Likewise.
+
+	* sysdeps/generic/bits/shm.h: Define shmatt_t type and use it in
+	struct shmid_ds definition.
+	* sysdeps/gnu/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+
+	* sysvipc/sys/shm.h: Define time_t.
+
+	* sysvipc/sys/sem.h (struct sembuf): Make sem_num field unsigned.
+
+	* sysdeps/gnu/bits/sem.h: Rename anonymous type struct sem_queue and
+	struct sem_undo to struct __sem_queue and struct __sem_undo resp.
+
+	* time/time.h: Define suseconds_t if not already done.
+
+	* sysdeps/unix/sysv/linux/bits/statvfs.h: Rename f_spare to __f_spare.
+	* sysdeps/unix/sysv/linux/fstatvfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/statvfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Likewise.
+
+	* intl/bindtextdom.c: Use rwlock to avoid surprising results in
+	multithreaded applications.
+	* intl/dcigettext.c: Likewise.
+	* intl/textdomain.c: Likewise.
+	* intl/*.c: Update copyright.
+	* sysdeps/generic/bits/libc-lock.h: Define __libc_rwlock_* stubs.
+
+2000-02-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Treat also "/usr/" as
+	prefix especially.
+
+2000-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/de.po: Update from translation team.
+	* po/ko.po: Likewise.
+
 2000-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* math/Versions: Move fe* function to GLIBC_2.2.  The patches have

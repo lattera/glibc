@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,13 +106,11 @@ __BEGIN_DECLS
 # ifdef __S_IFIFO
 #  define S_IFIFO	__S_IFIFO
 # endif
-# if defined __USE_BSD || defined __USE_MISC
-#  ifdef __S_IFLNK
-#   define S_IFLNK	__S_IFLNK
-#  endif
-#  ifdef __S_IFSOCK
-#   define S_IFSOCK	__S_IFSOCK
-#  endif
+# ifdef __S_IFLNK
+#  define S_IFLNK	__S_IFLNK
+# endif
+# if (defined __USE_BSD || defined __USE_MISC) && !defined __S_IFSOCK
+#  define S_IFSOCK	__S_IFSOCK
 # endif
 #endif
 
@@ -127,11 +125,12 @@ __BEGIN_DECLS
 #ifdef __S_IFIFO
 # define S_ISFIFO(mode)	 __S_ISTYPE((mode), __S_IFIFO)
 #endif
+#ifdef __S_IFLNK
+# define S_ISLNK(mode)	 __S_ISTYPE((mode), __S_IFLNK)
+#endif
 
 #ifdef	__USE_BSD
-# ifdef __S_IFLNK
-#  define S_ISLNK(mode)	 __S_ISTYPE((mode), __S_IFLNK)
-# else
+# ifndef __S_IFLNK
 #  define S_ISLNK(mode)  0
 # endif
 # ifdef __S_IFSOCK
@@ -145,7 +144,7 @@ __BEGIN_DECLS
 #define	S_ISUID __S_ISUID	/* Set user ID on execution.  */
 #define	S_ISGID	__S_ISGID	/* Set group ID on execution.  */
 
-#if defined __USE_BSD || defined __USE_MISC
+#if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
 /* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
 # define S_ISVTX	__S_ISVTX
 #endif

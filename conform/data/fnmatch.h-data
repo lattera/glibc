@@ -7,5 +7,6 @@ constant FNM_NOSYS
 
 function int fnmatch (const char*, const char*, int)
 
+allow FNM_*
 allow *_t
 #endif

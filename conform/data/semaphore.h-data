@@ -20,4 +20,5 @@ allow-header sys/types.h
 
 allow sem_*
 allow SEM_*
+allow *_t
 #endif

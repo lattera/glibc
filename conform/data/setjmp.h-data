@@ -18,3 +18,5 @@ macro-function int sigsetjmp (sigjmp_buf, int)
 macro-function int _setjmp (jmp_buf)
 # endif
 #endif
+
+allow *_t

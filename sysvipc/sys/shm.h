@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,10 @@
 
 /* Get system dependent definition of `struct shmid_ds' and more.  */
 #include <bits/shm.h>
+
+/* Define types required by the standard.  */
+#define __need_time_t
+#include <time.h>
 
 
 /* Segment low boundary address multiple.  */

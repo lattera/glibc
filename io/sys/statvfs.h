@@ -1,5 +1,5 @@
 /* Definitions for getting information about a filesystem.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,26 @@
 
 /* Get the system-specific definition of `struct statfs'.  */
 #include <bits/statvfs.h>
+
+#ifndef __USE_FILE_OFFSET64
+# ifndef __fsblkcnt_t_defined
+typedef __fsblkcnt_t fsblkcnt_t; /* Type to count file system blocks.  */
+#  define __fsblkcnt_t_defined
+# endif
+# ifndef __fsfilcnt_t_defined
+typedef __fsfilcnt_t fsfilcnt_t; /* Type to count file system inodes.  */
+#  define __fsfilcnt_t_defined
+# endif
+#else
+# ifndef __fsblkcnt_t_defined
+typedef __fsblkcnt64_t fsblkcnt_t; /* Type to count file system blocks.  */
+#  define __fsblkcnt_t_defined
+# endif
+# ifndef __fsfilcnt_t_defined
+typedef __fsfilcnt64_t fsfilcnt_t; /* Type to count file system inodes.  */
+#  define __fsfilcnt_t_defined
+# endif
+#endif
 
 __BEGIN_DECLS
 

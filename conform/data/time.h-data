@@ -1,0 +1,75 @@
+type {struct tm}
+
+element {struct tm} int tm_sec
+element {struct tm} int tm_min
+element {struct tm} int tm_hour
+element {struct tm} int tm_mday
+element {struct tm} int tm_mon
+element {struct tm} int tm_year
+element {struct tm} int tm_wday
+element {struct tm} int tm_yday
+element {struct tm} int tm_isdst
+
+constant NULL
+constant CLK_TCK
+constant CLOCKS_PER_SEC
+
+type {struct timespec}
+
+element {struct timespec} time_t tv_sec
+element {struct timespec} long tv_nsec
+
+type {struct itimerspec}
+
+element {struct itimerspec} {struct timespec} it_interval
+element {struct itimerspec} {struct timespec} it_value
+
+constant CLOCK_REALTIME
+constant TIME_ABSTIME
+
+type clock_t
+type clockid_t
+type size_t
+type time_t
+type timer_t
+
+variable int getdate_err
+
+function {char*} asctime (const struct tm*)
+function {char*} asctime_r (const struct tm*, char*)
+function clock_t clock (void)
+function int clock_getres (clockid_t, struct timespec*)
+function int clock_gettime (clockid_t, struct timespec*)
+function int clock_settime (clockid_t, const struct timespec*)
+function {char*} ctime (const time_t*)
+function {char*} ctime_r (const time_t*, char*)
+function double difftime (time_t, time_t)
+function {struct tm*} getdate (const char*)
+function {struct tm*} gmtime (const time_t*)
+function {struct tm*} gmtime_t (const time_t*, struct tm*)
+function {struct tm*} localtime (const time_t*)
+function {struct tm*} localtime_r (const time_t*, struct tm*)
+function time_t mktime (struct tm*)
+function int nanosleep (const struct timespec*, struct timespec*)
+function size_t strftime (char*, size_t, const char*, const struct tm*)
+function {char*} strptime (const char*, const char*, struct tm*)
+function time_t time (time_t*)
+function int timer_create (clockid_t, struct sigevent*, timer_t*)
+function int timer_delete (timer_t)
+function int timer_gettime (timer_t, struct itimerspec*)
+function int timer_getoverrun (timer_t)
+function int timer_settime (timer_t, int, const struct itimerspec*, struct itimerspec*)
+function void tzset (void)
+
+variable int daylight
+variable {long int} timezone
+# variable {char*} tzname []
+
+allow tm_*
+allow clock_*
+allow timer_*
+allow it_*
+allow tv_*
+allow CLOCK_*
+allow TIMER_*
+allow *_t

@@ -4,7 +4,12 @@ $CC = "gcc";
 $CFLAGS = "-I. '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 
 # List of the headers we are testing.
-@headers = ("sys/msg.h", "sys/mman.h", "sys/ipc.h", "syslog.h",
+@headers = ("wordexp.h", "wctype.h", "wchar.h", "varargs.h", "utmpx.h",
+	    "utime.h", "unistd.h", "ulimit.h", "ucontext.h", "time.h",
+	    "termios.h", "tar.h", "sys/wait.h", "sys/uio.h", "sys/types.h",
+	    "sys/times.h", "sys/timeb.h", "sys/time.h", "sys/statvfs.h",
+	    "sys/stat.h", "sys/shm.h", "sys/sem.h", "sys/resource.h",
+	    "sys/msg.h", "sys/mman.h", "sys/ipc.h", "syslog.h",
 	    "stropts.h", "strings.h", "string.h", "stdlib.h", "stdio.h",
 	    "stddef.h", "stdarg.h", "signal.h", "setjmp.h", "semaphore.h",
 	    "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
@@ -240,6 +245,7 @@ while ($#headers >= 0) {
   my($fnamebase) = "$tmpdir/$hf-test";
   my($missing);
   my(@allow) = ();
+  my(@allowheader) = ();
   my($prepend) = $mustprepend{$h};
 
   printf ("Testing <$h>\n");
@@ -539,6 +545,10 @@ while ($#headers >= 0) {
       my($pattern) = $1;
       push @allow, $pattern;
       next control;
+    } elsif (/^allow-header *(.*)/) {
+      my($pattern) = $1;
+      push @allowheader, $pattern;
+      next control;
     } else {
       # printf ("line is `%s'\n", $_);
       next control;
@@ -547,6 +557,51 @@ while ($#headers >= 0) {
     printf ("\n");
   }
   close (CONTROL);
+
+  # Read the data files for the header files which are allowed to be included.
+  while ($#allowheader >= 0) {
+    my($ah) = pop @allowheader;
+
+    open (ALLOW, "$CC -E -D$dialect - < data/$ah-data |");
+    acontrol: while (<ALLOW>) {
+      next acontrol if (/^#/);
+      next acontrol if (/^[ 	]*$/);
+
+      if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
+	push @allow, $7;
+      } elsif (/^constant *([a-zA-Z0-9_]*) *([A-Za-z0-9_]*)?/) {
+	push @allow, $1;
+      } elsif (/^typed-constant *([a-zA-Z0-9_]*) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*)?/) {
+	push @allow, 1;
+      } elsif (/^type *({([^}]*)|([a-zA-Z0-9_]*))/) {
+	my($type) = "$2$3";
+
+	# Remember that this name is allowed.
+	if ($type =~ /^struct *(.*)/) {
+	  push @allow, $1;
+	} elsif ($type =~ /^union *(.*)/) {
+	  push @allow, $1;
+	} else {
+	  push @allow, $type;
+	}
+      } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
+	push @allow, $4;
+      } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+	push @allow, $4;
+      } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*)/) {
+	push @allow, $4;
+      } elsif (/^macro-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+	push @allow, $4;
+      } elsif (/^macro *([^ 	]*)/) {
+	push @allow, $1;
+      } elsif (/^allow *(.*)/) {
+	push @allow, $1;
+      } elsif (/^allow-header *(.*)/) {
+	push @allowheader, $1;
+      }
+    }
+    close (ALLOW);
+  }
 
   # Now check the namespace.
   printf ("  Checking the namespace of \"%s\"... ", $h);

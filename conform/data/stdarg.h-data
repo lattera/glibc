@@ -5,3 +5,5 @@ macro va_start
 macro va_arg
 macro va_end
 macro va_copy
+
+allow *_t

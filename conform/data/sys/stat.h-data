@@ -1,0 +1,75 @@
+type {struct stat}
+
+element {struct stat} dev_t st_dev
+element {struct stat} ino_t st_ino
+element {struct stat} mode_t st_mode
+element {struct stat} nlink_t st_nlink
+element {struct stat} uid_t st_uid
+element {struct stat} gid_t st_gid
+element {struct stat} dev_t st_rdev
+element {struct stat} off_t st_size
+element {struct stat} time_t st_atime
+element {struct stat} time_t st_mtime
+element {struct stat} time_t st_ctime
+element {struct stat} blksize_t st_blksize
+element {struct stat} blkcnt_t st_blocks
+
+type blkcnt_t
+type blksize_t
+type dev_t
+type ino_t
+type mode_t
+type nlink_t
+type uid_t
+type gid_t
+type off_t
+type time_t
+
+constant S_IFMT
+constant S_IFBLK
+constant S_IFCHR
+constant S_IFIFO
+constant S_IFREG
+constant S_IFDIR
+constant S_IFLNK
+
+constant S_IRWXU
+constant S_IRUSR
+constant S_IWUSR
+constant S_IXUSR
+constant S_IRWXG
+constant S_IWGRP
+constant S_IXGRP
+constant S_IRWXO
+constant S_IROTH
+constant S_IWOTH
+constant S_IXOTH
+constant S_ISUID
+constant S_ISGID
+constant S_ISVTX
+
+macro S_ISBLK
+macro S_ISCHR
+macro S_ISDIR
+macro S_ISFIFO
+macro S_ISREG
+macro S_ISLNK
+
+# How to represent optional tests?
+# macro S_TYPEISMQ
+# macro S_TYPEISSEM
+# macro S_TYPEISSHM
+
+function int chmod (const char*, mode_t)
+function int fchmod (int, mode_t)
+function int fstat (int, struct stat*)
+function int lstat (const char*, struct stat*)
+function int mkdir (const char*, mode_t)
+function int mkfifo (const char*, mode_t)
+function int mknod (const char*, mode_t, dev_t)
+function int stat (const char*, struct stat*)
+function mode_t umask (mode_t)
+
+allow st_*
+allow S_*
+allow *_t

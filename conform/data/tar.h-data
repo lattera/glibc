@@ -1,0 +1,29 @@
+constant TMAGIC
+constant TMAGLEN
+constant TVERSION
+constant TVERSLEN
+
+constant REGTYPE
+constant AREGTYPE
+constant LNKTYPE
+constant SYMTYPE
+constant CHRTYPE
+constant BLKTYPE
+constant DIRTYPE
+constant FIFOTYPE
+constant CONTTYPE
+
+constant TSUID
+constant TSGID
+constant TSVTX
+constant TUREAD
+constant TUWRITE
+constant TUEXEC
+constant TGREAD
+constant TGWRITE
+constant TGEXEC
+constant TOREAD
+constant TOWRITE
+constant TOEXEC
+
+allow *_t

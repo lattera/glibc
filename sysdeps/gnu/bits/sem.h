@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,9 +42,9 @@ struct semid_ds
   __time_t sem_otime;			/* last semop() time */
   __time_t sem_ctime;			/* last time changed by semctl() */
   struct sem *__sembase;		/* ptr to first semaphore in array */
-  struct sem_queue *__sem_pending;	/* pending operations */
-  struct sem_queue *__sem_pending_last; /* last pending operation */
-  struct sem_undo *__undo;		/* ondo requests on this array */
+  struct __sem_queue *__sem_pending;	/* pending operations */
+  struct __sem_queue *__sem_pending_last;/* last pending operation */
+  struct __sem_undo *__undo;		/* ondo requests on this array */
   unsigned short int sem_nsems;		/* number of semaphores in set */
 };
 

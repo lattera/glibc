@@ -62,7 +62,7 @@ fi
 # files.  I.e., when the installation prefix is "/usr" we have to place
 # shared library objects and the configuration files on the root partition
 # in /lib and /etc.
-if test "$prefix" = "/usr"; then
+if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   # 64bit libraries on sparc go to /lib64 and not /lib
   if test "$machine" = "sparc/sparc64"; then
     libc_cv_slibdir="/lib64"

@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FD resides.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ fstatvfs64 (int fd, struct statvfs64 *buf)
   buf->f_fsid = buf32.f_fsid;
   buf->f_flag = buf32.f_flag;
   buf->f_namemax = buf32.f_namemax;
-  memcpy (buf->f_spare, buf32.f_spare, sizeof (buf32.f_spare));
+  memcpy (buf->__f_spare, buf32.__f_spare, sizeof (buf32.__f_spare));
 
   return 0;
 }

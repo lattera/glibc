@@ -83,3 +83,6 @@ allow-header stddef.h
 allow-header limits.h
 allow-header math.h
 allow-header sys/wait.h
+
+allow str*
+allow *_t

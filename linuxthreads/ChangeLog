@@ -1,8 +1,15 @@
+2000-02-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* rwlock.c: Define __* variants of the functions and make old names
+	aliases.
+	* Versions [GLIBC_2.2]: Export the __pthread_rwlock_* functions.
+	* sysdeps/pthread/bits/libc-lock.h: Define __libc_rwlock_* macros.
+
 2000-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* Versions: Export pread, __pread64, pread64, pwrite, __pwrite64,
-        pwrite64, lseek64, open64, and __open64 with version 2.2.
-		
+	pwrite64, lseek64, open64, and __open64 with version 2.2.
+
 2000-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* semaphore.h (SEM_FAILED): Use 0 not NULL.

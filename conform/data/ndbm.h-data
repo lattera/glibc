@@ -22,5 +22,7 @@ function datum dbm_nextkey (DBM*)
 function {DBM*} dbm_open (const char*, int, mode_t)
 function int dbm_store (DBM*, datum, datum, int)
 
+allow dbm_*
+allow DBM_*
 allow *_t
 #endif

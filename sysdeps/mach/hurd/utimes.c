@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1995, 97, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 int
 __utimes (file, tvp)
      const char *file;
-     struct timeval tvp[2];
+     const struct timeval tvp[2];
 {
   struct timeval timevals[2];
   error_t err;

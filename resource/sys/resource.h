@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 94, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 94, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,16 +24,35 @@
 /* Get the system-dependent definitions of structures and bit values.  */
 #include <bits/resource.h>
 
+#ifndef __id_t_defined
+typedef __id_t id_t;
+# define __id_t_defined
+#endif
+
 __BEGIN_DECLS
+
+/* The X/Open standard defines that all the functions below must use
+   `int' as the type for the first argument.  When we are compiling with
+   GNU extensions we change this slightly to provide better error
+   checking.  */
+#ifdef __USE_GNU
+typedef enum __rlimit_resource __rlimit_resource_t;
+typedef enum __rusage_who __rusage_who_t;
+typedef enum __priority_which __priority_which_t;
+#else
+typedef int __rlimit_resource_t;
+typedef int __rusage_who_t;
+typedef int __priority_which_t;
+#endif
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
-extern int getrlimit (enum __rlimit_resource __resource,
+extern int getrlimit (__rlimit_resource_t __resource,
 		      struct rlimit *__rlimits) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (getrlimit, (enum __rlimit_resource __resource,
+extern int __REDIRECT (getrlimit, (__rlimit_resource_t __resource,
 				   struct rlimit *__rlimits) __THROW,
 		       getrlimit64);
 # else
@@ -41,7 +60,7 @@ extern int __REDIRECT (getrlimit, (enum __rlimit_resource __resource,
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int getrlimit64 (enum __rlimit_resource __resource,
+extern int getrlimit64 (__rlimit_resource_t __resource,
 			struct rlimit64 *__rlimits) __THROW;
 #endif
 
@@ -49,11 +68,11 @@ extern int getrlimit64 (enum __rlimit_resource __resource,
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
 #ifndef __USE_FILE_OFFSET64
-extern int setrlimit (enum __rlimit_resource __resource,
+extern int setrlimit (__rlimit_resource_t __resource,
 		      __const struct rlimit *__rlimits) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT (setrlimit, (enum __rlimit_resource __resource,
+extern int __REDIRECT (setrlimit, (__rlimit_resource_t __resource,
 				   __const struct rlimit *__rlimits) __THROW,
 		       setrlimit64);
 # else
@@ -61,23 +80,23 @@ extern int __REDIRECT (setrlimit, (enum __rlimit_resource __resource,
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int setrlimit64 (enum __rlimit_resource __resource,
+extern int setrlimit64 (__rlimit_resource_t __resource,
 			__const struct rlimit64 *__rlimits) __THROW;
 #endif
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
-extern int getrusage (enum __rusage_who __who, struct rusage *__usage) __THROW;
+extern int getrusage (__rusage_who_t __who, struct rusage *__usage) __THROW;
 
 /* Return the highest priority of any process specified by WHICH and WHO
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher
    priority.  Priorities range from PRIO_MIN to PRIO_MAX (above).  */
-extern int getpriority (enum __priority_which __which, int __who) __THROW;
+extern int getpriority (__priority_which_t __which, id_t __who) __THROW;
 
 /* Set the priority of all processes specified by WHICH and WHO (see above)
    to PRIO.  Returns 0 on success, -1 on errors.  */
-extern int setpriority (enum __priority_which __which, int __who, int __prio)
+extern int setpriority (__priority_which_t __which, id_t __who, int __prio)
      __THROW;
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,11 @@
 #define __need_timeval
 #include <bits/time.h>
 
+#ifndef __suseconds_t_defined
+typedef __suseconds_t suseconds_t;
+# define __suseconds_t_defined
+#endif
+
 
 __BEGIN_DECLS
 
@@ -49,12 +54,18 @@ struct timezone
     int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
   };
 
+#if defined __USE_GNU || defined __USE_BSD
+typedef struct timezone *__timezone_ptr_t;
+#else
+typedef void *__timezone_ptr_t;
+#endif
+
 /* Get the current time of day and timezone information,
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
    Returns 0 on success, -1 on errors.
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
-extern int gettimeofday (struct timeval *__tv, struct timezone *__tz) __THROW;
+extern int gettimeofday (struct timeval *__tv, __timezone_ptr_t __tz) __THROW;
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
@@ -94,21 +105,28 @@ struct itimerval
     struct timeval it_value;
   };
 
+#ifdef __USE_GNU
+typedef enum __itimer_which __itimer_which_t;
+#else
+typedef int __itimer_which_t;
+#endif
+
 /* Set *VALUE to the current setting of timer WHICH.
    Return 0 on success, -1 on errors.  */
-extern int getitimer (enum __itimer_which __which,
+extern int getitimer (__itimer_which_t __which,
 		      struct itimerval *__value) __THROW;
 
 /* Set the timer WHICH to *NEW.  If OLD is not NULL,
    set *OLD to the old value of timer WHICH.
    Returns 0 on success, -1 on errors.  */
-extern int setitimer (enum __itimer_which __which,
+extern int setitimer (__itimer_which_t __which,
 		      __const struct itimerval *__new,
 		      struct itimerval *__old) __THROW;
 
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
-extern int utimes (__const char *__file, struct timeval __tvp[2]) __THROW;
+extern int utimes (__const char *__file, __const struct timeval __tvp[2])
+     __THROW;
 
 
 /* Convenience macros for operations on timevals.

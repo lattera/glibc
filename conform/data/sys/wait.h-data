@@ -1,0 +1,64 @@
+constant WNOHANG
+constant WUNTRACED
+
+macro WEXITSTATUS
+macro WIFCONTINUED
+macro WIFEXITED
+macro WIFSIGNALED
+macro WIFSTOPPED
+macro WSTOPSIG
+macro WTERMSIG
+
+constant WEXITED
+constant WSTOPPED
+constant WCONTINUED
+constant WNOHANG
+constant WNOWAIT
+
+type idtype_t
+
+constant P_ALL
+constant P_PID
+constant P_PGID
+
+type id_t
+
+type siginfo_t
+
+element siginfo_t int si_signo
+element siginfo_t int si_errno
+element siginfo_t int si_code
+element siginfo_t pid_t si_pid
+element siginfo_t uid_t si_uid
+element siginfo_t {void*} si_addr
+element siginfo_t int si_status
+element siginfo_t long si_band
+element siginfo_t {union sigval} si_value
+
+type {struct rusage}
+
+element {struct rusage} {struct timeval} ru_utime
+element {struct rusage} {struct timeval} ru_stime
+
+type pid_t
+
+function pid_t wait (int*)
+function pid_t wait3 (int*, int, struct rusage*)
+function int waitid (idtype_t, id_t, siginfo_t*, int)
+function pid_t waitpid (pid_t, int*, int)
+
+allow-header signal.h
+allow-header sys/resource.h
+
+allow si_*
+allow W*
+allow P_*
+allow BUS_
+allow CLD_
+allow FPE_
+allow ILL_
+allow POLL_
+allow SEGV_
+allow SI_
+allow TRAP_
+allow *_t

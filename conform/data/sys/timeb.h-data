@@ -1,0 +1,12 @@
+type {struct timeb}
+
+element {struct timeb} time_t time
+element {struct timeb} {unsigned short} millitm
+element {struct timeb} short timezone
+element {struct timeb} short dstflag
+
+type time_t
+
+function int ftime (struct timeb*)
+
+allow *_t

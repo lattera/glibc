@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
-__utimes (const char *file, struct timeval tvp[2])
+__utimes (const char *file, const struct timeval tvp[2])
 {
   struct utimbuf buf, *times;
 

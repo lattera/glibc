@@ -22,3 +22,7 @@ constant IPC_SET
 constant IPC_STAT
 
 function key_t ftok (const char*, int)
+
+allow ipc_*
+allow IPC_*
+allow *_t

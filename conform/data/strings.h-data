@@ -8,3 +8,5 @@ function int strcasecmp (const char*, const char*)
 function int strncasecmp (const char*, const char*, size_t)
 
 type size_t
+
+allow *_t
