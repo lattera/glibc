@@ -1,3 +1,20 @@
+2000-06-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c (__printf_fp): Don't clobber pointer which
+	we later need to calling free().
+	Patch by Matt Wilson <msw@redhat.com>.
+
+2000-06-27  David Mosberger-Tang  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/ipc.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: New file.
+
+2000-06-28  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ieee754/dbl-64/s_exp2.c: Add include stdlib.h to get
+	prototype for abs().
+	* sysdeps/ieee754/flt-32/s_exp2f.c: ditto.
+
 2000-06-23  Andreas Jaeger  <aj@suse.de>
 
 	* config.h.in: Don't use regparm with bounded pointers.

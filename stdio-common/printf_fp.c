@@ -1072,6 +1072,7 @@ __printf_fp (FILE *fp,
     {
       char *buffer = NULL;
       char *cp = NULL;
+      char *tmpptr;
 
       if (! wide)
 	{
@@ -1112,7 +1113,8 @@ __printf_fp (FILE *fp,
 	      *cp++ = (char) *copywc;
 	}
 
-      PRINT (buffer, wstartp, wide ? wcp - wstartp : cp - buffer);
+      tmpptr = buffer;
+      PRINT (tmpptr, wstartp, wide ? wcp - wstartp : cp - tmpptr);
 
       /* Free the memory if necessary.  */
       if (buffer_malloced)

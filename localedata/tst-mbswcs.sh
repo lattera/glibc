@@ -20,25 +20,6 @@
 
 common_objpfx=$1; shift
 
-generate_locale ()
-{
-    charmap=$1
-    input=$2
-    out=$3
-    I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
-    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-    ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
-      ${common_objpfx}localedata/$out
-
-    if [ $? -ne 0 ]; then
-	echo "Charmap: \"${charmap}\" Inputfile: \"${input}\"" \
-	     "Outputdir: \"${out}\" failed"
-	exit 1
-    fi
-}
-
-generate_locale UTF8 de_DE de_DE.UTF-8
-
 status=0
 
 # Run the test programs.
