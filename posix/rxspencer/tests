@@ -295,7 +295,8 @@ a[[.x.		&C	EBRACK
 a[[.x.]		&C	EBRACK
 a[[.x.]]	&	ax	ax
 a[[.x,.]]	&C	ECOLLATE
-# XXX Doesn't work yet.
+# This test is invalid.  "one" is no collating symbol in any standardized
+# locale.
 # a[[.one.]]b	&	a1b	a1b
 a[[.notdef.]]b	&C	ECOLLATE
 a[[.].]]b	&	a]b	a]b
@@ -327,7 +328,8 @@ a[[=b		&C	EBRACK
 a[[=b=		&C	EBRACK
 a[[=b=]		&C	EBRACK
 a[[=b,=]]	&C	ECOLLATE
-# XXX Doesn't work yet.
+# This test is invalid.  "one" is no collating symbol in any standardized
+# locale.
 #a[[=one=]]b	&	a1b	a1b
 
 # complexities

@@ -186,7 +186,8 @@ netlink_receive (struct netlink_handle *h)
 	   NLMSG_OK (nlmh, (size_t) read_len);
 	   nlmh = (struct nlmsghdr *) NLMSG_NEXT (nlmh, read_len))
 	{
-	  if ((pid_t) nlmh->nlmsg_pid != h->pid || nlmh->nlmsg_seq != h->seq)
+	  if (nladdr.nl_pid != 0 || (pid_t) nlmh->nlmsg_pid != h->pid
+	      || nlmh->nlmsg_seq != h->seq)
 	    continue;
 
 	  if (nlmh->nlmsg_type == NLMSG_DONE)

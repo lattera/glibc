@@ -86,7 +86,7 @@ make_request (int fd, pid_t pid, bool *seen_ipv4, bool *seen_ipv6)
 	   NLMSG_OK (nlmh, (size_t) read_len);
 	   nlmh = (struct nlmsghdr *) NLMSG_NEXT (nlmh, read_len))
 	{
-	  if ((pid_t) nlmh->nlmsg_pid != pid
+	  if (nladdr.nl_pid != 0 || (pid_t) nlmh->nlmsg_pid != pid
 	      || nlmh->nlmsg_seq != req.nlh.nlmsg_seq)
 	    continue;
 
