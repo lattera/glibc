@@ -152,7 +152,7 @@ getcwd (NULL, sbs) = \"%s\", getcwd (thepath, sizeof thepath) = \"%s\"\n",
   for (i = len + 1; i < sizeof thepath; ++i)
     if (thepath[i] != '\xff')
       {
-	printf ("thepath[%d] != '\xff'\n", i);
+	printf ("thepath[%zd] != '\xff'\n", i);
 	return 1;
       }
 

@@ -91,7 +91,7 @@ main (int argc, char *argv[])
     {
       printf ("Return Value: %p\n", ret);
       for (i = 0; i < wcslen (wcs) + 1; i++)
-	printf (" wcs[%d] = %04x", i, (unsigned int)wcs[i]);
+	printf (" wcs[%zd] = %04x", i, (unsigned int)wcs[i]);
       printf ("\n");
       result = 1;
     }
@@ -127,7 +127,7 @@ main (int argc, char *argv[])
 
       printf ("Return Value: %p\n", ret);
       for (i = 0; i < wcslen (wcs) + 1; i++)
-	printf (" wcs[%d] = 0x%04x", i, (unsigned int)wcs[i]);
+	printf (" wcs[%zd] = 0x%04x", i, (unsigned int)wcs[i]);
       printf ("\n");
 
       for (i = 0; il_str2[i] != '\n'; ++i)
@@ -172,7 +172,7 @@ main (int argc, char *argv[])
     {
       printf ("Return Value: %p\n", ret);
       for (i = 0; i < wcslen (wcs) + 1; i++)
-	printf (" wcs[%d] = 0x%04x", i, (unsigned int)wcs[i]);
+	printf (" wcs[%zd] = 0x%04x", i, (unsigned int)wcs[i]);
       printf ("\n");
     }
 

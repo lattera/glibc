@@ -167,7 +167,7 @@ main (void)
       for (c = ps; c < ps + 1000; ++c)
 	if (ptr[c - ps] != '0' + (c % 10))
 	  {
-	    printf ("wrong data mapped at offset %d\n", c);
+	    printf ("wrong data mapped at offset %zd\n", c);
 	    result = 1;
 	  }
     }
@@ -187,7 +187,7 @@ main (void)
       for (c = ps; c < ps + 1000; ++c)
 	if (ptr[c - ps] != '0' + (c % 10))
 	  {
-	    printf ("wrong data mapped at offset %d\n", c);
+	    printf ("wrong data mapped at offset %zd\n", c);
 	    result = 1;
 	  }
     }

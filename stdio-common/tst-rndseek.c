@@ -117,7 +117,7 @@ do_test (void)
 
       if (ch1 != ch2)
 	{
-	  printf ("%d: '%c' vs '%c'\n", i, ch1, ch2);
+	  printf ("%zd: '%c' vs '%c'\n", i, ch1, ch2);
 	  return 1;
 	}
     }

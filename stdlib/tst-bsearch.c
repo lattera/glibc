@@ -67,7 +67,7 @@ main (void)
       res = (struct entry *) bsearch (&key, arr, narr, sizeof (arr[0]), comp);
       if (res == NULL)
 	{
-	  printf ("entry %d not found\n", cnt);
+	  printf ("entry %zd not found\n", cnt);
 	  result = 1;
 	}
       else if (res != &arr[cnt])
@@ -112,7 +112,7 @@ main (void)
 	{
 	  if (res == NULL)
 	    {
-	      printf ("entry %d not found\n", cnt);
+	      printf ("entry %zd not found\n", cnt);
 	      result = 1;
 	    }
 	  else if (res != &arr[cnt])

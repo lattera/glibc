@@ -52,7 +52,7 @@ main (void)
 	{
 	  char buf[500];
 	  regerror (n, &re, buf, sizeof (buf));
-	  printf ("regcomp %d failed: %s\n", i, buf);
+	  printf ("regcomp %zd failed: %s\n", i, buf);
 	  ret = 1;
 	  continue;
 	}
@@ -60,7 +60,7 @@ main (void)
       if (! regexec (&re, tests[i].string, tests[i].nmatch,
 		     tests[i].nmatch ? rm : NULL, 0))
 	{
-	  printf ("regexec %d incorrectly matched\n", i);
+	  printf ("regexec %zd incorrectly matched\n", i);
 	  ret = 1;
 	}
 

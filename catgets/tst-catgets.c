@@ -45,7 +45,7 @@ main (void)
 
 	  if (trans == NULL)
 	    {
-	      printf ("catgets return NULL for %d\n", cnt);
+	      printf ("catgets return NULL for %zd\n", cnt);
 	      result = 1;
 	    }
 	  else if (strcmp (trans, msgs[cnt]) != 0 && msgs[cnt][0] != '\0')

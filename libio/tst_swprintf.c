@@ -28,7 +28,7 @@ main (int argc, char *argv[])
   n = swprintf (buf, nbuf, L"Hello %s", "world");
   if (n != 11)
     {
-      printf ("incorrect return value: %d instead of 11\n", n);
+      printf ("incorrect return value: %zd instead of 11\n", n);
       result = 1;
     }
   else if (wcscmp (buf, L"Hello world") != 0)
@@ -41,7 +41,7 @@ main (int argc, char *argv[])
   n = swprintf (buf, nbuf, L"Is this >%g< 3.1?", 3.1);
   if (n != 18)
     {
-      printf ("incorrect return value: %d instead of 18\n", n);
+      printf ("incorrect return value: %zd instead of 18\n", n);
       result = 1;
     }
   else if (wcscmp (buf, L"Is this >3.1< 3.1?") != 0)

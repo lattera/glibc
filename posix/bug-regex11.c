@@ -58,14 +58,14 @@ main (void)
 	{
 	  char buf[500];
 	  regerror (n, &re, buf, sizeof (buf));
-	  printf ("regcomp %d failed: %s\n", i, buf);
+	  printf ("regcomp %zd failed: %s\n", i, buf);
 	  ret = 1;
 	  continue;
 	}
 
       if (regexec (&re, tests[i].string, tests[i].nmatch, rm, 0))
 	{
-	  printf ("regexec %d failed\n", i);
+	  printf ("regexec %zd failed\n", i);
 	  ret = 1;
 	  regfree (&re);
 	  continue;
