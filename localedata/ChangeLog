@@ -1,3 +1,7 @@
+2001-08-09  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (LOCALES): Generate en_US.UTF-8 locale.
+
 2001-08-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/GEORGIAN-PS: New file.
