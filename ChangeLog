@@ -1,3 +1,8 @@
+1999-08-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: install-sh lives now in scripts subdir.
+	PR libc/1255 (bug 4).
+
 1999-08-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/_G_config.h: Update _G_iconv_t type from Linux

@@ -444,9 +444,9 @@ AC_MSG_RESULT($default_sysnames)
 ### Locate tools.
 
 AC_PROG_INSTALL
-if test "$INSTALL" = "${srcdir}/install-sh -c"; then
+if test "$INSTALL" = "${srcdir}/scripts/install-sh -c"; then
   # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='\$(..)./install-sh -c'
+  INSTALL='\$(..)./scripts/install-sh -c'
 fi
 AC_PROG_LN_S
 
