@@ -401,9 +401,13 @@ vprintf (const char *__fmt, __gnuc_va_list __arg)
 
 #ifdef	__USE_GNU
 /* Maximum chars of output to write in MAXLEN.  */
+extern int __snprintf __P ((char *__s, size_t __maxlen,
+			    __const char *__format, ...));
 extern int snprintf __P ((char *__s, size_t __maxlen,
 			  __const char *__format, ...));
 
+extern int __vsnprintf __P ((char *__s, size_t __maxlen,
+			     __const char *__format, __gnuc_va_list __arg));
 extern int vsnprintf __P ((char *__s, size_t __maxlen,
 			   __const char *__format, __gnuc_va_list __arg));
 

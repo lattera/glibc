@@ -1,5 +1,10 @@
 Tue Oct 17 01:21:21 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* hurd/hurd/signal.h: Declare hurd_preempt_signals and
+	hurd_unpreempt_signals.
+
+	* stdio/stdio.h: Declare __snprintf and __vsnprintf.
+
 	* stdio-common/psignal.c: Translate signal description strings.
 	* string/strsignal.c: Likewise.
 	* sysdeps/generic/_strerror.c (_strerror_internal): Translate

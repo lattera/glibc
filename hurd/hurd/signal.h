@@ -357,5 +357,18 @@ struct hurd_signal_preempt
 extern struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
 extern struct mutex _hurd_signal_preempt_lock;
 
+/* Install a signal preempter for the given signal and range.
+   The caller is responsible for the storage for PREEMPTER.  */
+extern int hurd_preempt_signals (struct hurd_signal_preempt *preempter,
+				 int signo, int first_code, int last_code,
+				 sighandler_t (*handler) (thread_t,
+							  int, long int, int));
+
+/* Remove the signal preempter previously installed by calling
+   `hurd_preempt_signals' with PREEMPTER and SIGNO.  */
+extern int hurd_unpreempt_signals (struct hurd_signal_preempt *preempter,
+				   int signo);
+
+
 
 #endif	/* hurd/signal.h */

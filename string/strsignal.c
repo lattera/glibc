@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 #define	_sys_siglist	sys_siglist
 #endif
 
-/* Defined in , 1992siglist.c.  */
+/* Defined in siglist.c.  */
 extern CONST char *CONST _sys_siglist[];
 
 
@@ -37,7 +37,6 @@ DEFUN(strsignal, (signum), int signum)
   if (signum < 0 || signum > NSIG)
     {
       static char buf[512];
-      static char fmt[] = ;
       int len = __snprintf (buf, sizeof buf, _("Unknown signal %d"), signum);
       if (len < 0)
 	return NULL;
