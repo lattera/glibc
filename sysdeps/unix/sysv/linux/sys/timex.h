@@ -117,7 +117,7 @@ extern int __adjtimex __P ((struct timex *__ntx));
 extern int adjtimex __P ((struct timex *__ntx));
 
 extern int ntp_gettime __P ((struct ntptimeval *__ntv));
-extern int ntp_adjtime __P ((int __amode, struct timex *__tntx));
+extern int ntp_adjtime __P ((struct timex *__tntx));
 
 __END_DECLS
 

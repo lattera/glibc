@@ -1943,12 +1943,10 @@ exceeded the threshold.
 
 @comment sys/timex.h
 @comment GNU
-@deftypefun int ntp_adjtime (int @var{mode}, struct timex *@var{tptr})
+@deftypefun int ntp_adjtime (struct timex *@var{tptr})
 The @code{ntp_adjtime} function sets the structure specified by
 @var{tptr} to current values.  In addition, values passed in @var{tptr}
-can be used to replace existing settings.  Therefore several magic
-values can be passed in @var{mode}.  Setting @var{mode} to zero only
-reads the current state.
+can be used to replace existing settings.
 
 The return value is @code{0} on success and other values on failure.  The
 following @code{errno} error conditions are defined for this function:

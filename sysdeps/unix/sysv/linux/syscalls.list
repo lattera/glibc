@@ -1,6 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-adjtimex	adjtime	adjtimex	1	__adjtimex	adjtimex
+adjtimex	adjtime	adjtimex	1	__adjtimex	adjtimex ntp_adjtime
 bdflush		EXTRA	bdflush		2	bdflush
 capget		EXTRA	capget		2	capget
 capset		EXTRA	capset		2	capset

@@ -1,5 +1,15 @@
 1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/ntp_adjtime.c: Removed.  It's an alias
+	for adjtimex.
+	* sysdeps/unix/sysv/linux/Dist: Add ntp_gettime.c.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=time] (sysdep_routines):
+	Remove ntp_adjtime.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add alias ntp_adjtime to
+	adjtimex.
+	* sysdeps/unix/sysv/linux/sys/timex.h: Correct prototype for
+	ntp_adjtime.
+
 	* sysdeps/i386/i686/mempcpy.S: Fix typos.
 
 	* sysdeps/i386/i686/memset.S: New file.

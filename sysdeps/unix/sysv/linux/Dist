@@ -9,6 +9,7 @@ ldd-rewrite.sed
 lddlibc4.c
 linux_fsinfo.h
 llseek.c
+ntp_gettime.c
 s_pread64.c
 s_pwrite64.c
 siglist.h
