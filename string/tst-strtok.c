@@ -10,12 +10,12 @@ main (void)
 
   if (strtok (buf, " ") != NULL)
     {
-      puts ("first strtok call did return NULL");
+      puts ("first strtok call did not return NULL");
       result = 1;
     }
   else if (strtok (NULL, " ") != NULL)
     {
-      puts ("second strtok call did return NULL");
+      puts ("second strtok call did not return NULL");
       result = 1;
     }
 

@@ -1,5 +1,9 @@
 2001-02-22  Andreas Jaeger  <aj@suse.de>
 
+	* string/tst-strtok.c (main): Fix error messages.
+
+2001-02-22  Andreas Jaeger  <aj@suse.de>
+
 	* math/Makefile: Remove omit-long-double-fcts.
 
 2001-02-18  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
