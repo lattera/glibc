@@ -56,11 +56,11 @@ where_is_shmfs (void)
 
   /* The canonical place is /var/shm.  This is at least what the
      documentation tells everybody to do.  */
-  if (__statfs ("/var/shm", &f) == 0 && f.f_type == SHMFS_SUPER_MAGIC)
+  if (__statfs (defaultdir, &f) == 0 && f.f_type == SHMFS_SUPER_MAGIC)
     {
       /* It is in the normal place.  */
       mountpoint.dir = (char *) defaultdir;
-      mountpoint.dirlen = strlen ("/var/shm/");
+      mountpoint.dirlen = sizeof (defaultdir) - 1;
 
       return;
     }

@@ -1,6 +1,8 @@
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/shm_open.c (defaultdir): Change to /dev/shm/.
+	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs): Use
+	defaultdir variable instead of "/var/shm" everywhere.
+	(defaultdir): Change to /dev/shm/.
 
 2000-06-08  Greg McGary  <greg@mcgary.org>
 
