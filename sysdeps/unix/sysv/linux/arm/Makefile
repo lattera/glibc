@@ -1,6 +1,6 @@
 ifeq ($(subdir),misc)
 sysdep_routines += setfsgid setfsuid setresgid setresuid ioperm
-sysdep_headers += sys/elf.h
+sysdep_headers += sys/elf.h sys/io.h
 endif
 
 ifeq ($(subdir),signal)

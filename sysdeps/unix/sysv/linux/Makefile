@@ -16,7 +16,7 @@ ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek getresuid getresgid umount umount2
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
-		  sys/io.h sys/klog.h sys/kdaemon.h \
+		  sys/klog.h sys/kdaemon.h \
 		  sys/user.h sys/procfs.h sys/prctl.h \
 		  sys/kd.h sys/soundcard.h sys/vt.h \
 		  sys/quota.h sys/fsuid.h \

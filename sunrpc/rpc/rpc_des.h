@@ -1,4 +1,3 @@
-/*  @(#)des.h   2.2 88/08/10 4.0 RPCSRC; from 2.7 88/02/08 SMI  */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -69,15 +68,5 @@ struct desparams
 #define des_data UDES.UDES_data	/* direct data here if quick */
 #define des_buf	UDES.UDES_buf	/* otherwise, pointer to data */
   };
-
-/*
- * Encrypt an arbitrary sized buffer
- */
-#define	DESIOCBLOCK	_IOWR(d, 6, struct desparams)
-
-/* 
- * Encrypt of small amount of data, quickly
- */
-#define DESIOCQUICK	_IOWR(d, 7, struct desparams)
 
 #endif

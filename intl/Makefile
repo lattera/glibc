@@ -48,6 +48,7 @@ do-gettext-test: tst-gettext.sh $(objpfx)tst-gettext
 	$(SHELL) -e $< $(common-objpfx) $(objpfx)
 
 $(objpfx)msgs.h: po2test.sed ../po/de.po
+	$(make-target-directory)
 	sed -f $^ > $@
 
 CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"

@@ -117,7 +117,7 @@ retry:
 		listen(s2, 1);
 		sa2len = sizeof (sa2);
 		if (getsockname(s2, (struct sockaddr *)&sa2, &sa2len) < 0 ||
-		    sa2len != __libc_sa_len(sa2.__ss_family)) {
+		    sa2len != SA_LEN((struct sockaddr *)&sa2)) {
 			perror("getsockname");
 			(void) __close(s2);
 			goto bad;

@@ -66,8 +66,7 @@ static void xdrrec_destroy (XDR *);
 static bool_t xdrrec_getint32 (XDR *, int32_t *);
 static bool_t xdrrec_putint32 (XDR *, const int32_t *);
 
-static const struct xdr_ops xdrrec_ops =
-{
+static const struct xdr_ops xdrrec_ops = {
   xdrrec_getlong,
   xdrrec_putlong,
   xdrrec_getbytes,
@@ -289,7 +288,7 @@ xdrrec_putbytes (XDR *xdrs, const char *addr, u_int len)
       rstrm->out_finger += current;
       addr += current;
       len -= current;
-      if (rstrm->out_finger == rstrm->out_boundry)
+      if (rstrm->out_finger == rstrm->out_boundry && len > 0)
 	{
 	  rstrm->frag_sent = TRUE;
 	  if (!flush_out (rstrm, FALSE))
@@ -465,8 +464,7 @@ xdrrec_putint32 (XDR *xdrs, const int32_t *ip)
  * this procedure to guarantee proper record alignment.
  */
 bool_t
-xdrrec_skiprecord (xdrs)
-     XDR *xdrs;
+xdrrec_skiprecord (XDR *xdrs)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
 
@@ -488,8 +486,7 @@ xdrrec_skiprecord (xdrs)
  * after consuming the rest of the current record.
  */
 bool_t
-xdrrec_eof (xdrs)
-     XDR *xdrs;
+xdrrec_eof (XDR *xdrs)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
 
@@ -513,9 +510,7 @@ xdrrec_eof (xdrs)
  * pipelined procedure calls.)  TRUE => immediate flush to tcp connection.
  */
 bool_t
-xdrrec_endofrecord (xdrs, sendnow)
-     XDR *xdrs;
-     bool_t sendnow;
+xdrrec_endofrecord (XDR *xdrs, bool_t sendnow)
 {
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   u_long len;		/* fragment length */

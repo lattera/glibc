@@ -1,3 +1,34 @@
+2000-01-23  Mark Kettenis  <kettenis@gnu.org>
+
+	* inet/rexec.c (rexec_af): Use SA_LEN instead of __libc_sa_len.
+
+2000-01-22  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sunrpc/xdr_rec.c: Don't set frag_sent if no more data,
+	fixes part 2 of bug 1549.
+	* sunrpc/rpc_des.h: Remove unused defines.
+
+2000-01-22  Mark Kettenis  <kettenis@gnu.org>
+
+	* intl/Makefile ($(objpfx)msgs.h): Do $(make-target-directory) first.
+
+2000-01-22  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove sys/io.h.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Add sys/io.h.
+	* sysdeps/unix/sysv/linux/arm/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/sys/io.h: Move from here ...
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: ... to here, add inb, outb
+	and other inline functions for port access.
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Add prototypes for port
+	access functions.
+
+2000-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_simple.c: Fix two problems in UTF-8 decoder.
+	Patch by Bruno Haibe <haible@ilog.fr>.
+
 2000-01-05  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/errnos.awk: Rediddle to collect lines and print
