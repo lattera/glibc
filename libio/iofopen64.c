@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,31 +36,7 @@ _IO_fopen64 (filename, mode)
      const char *mode;
 {
 #ifdef _G_OPEN64
-  struct locked_FILE
-  {
-    struct _IO_FILE_plus fp;
-#ifdef _IO_MTSAFE_IO
-    _IO_lock_t lock;
-#endif
-    struct _IO_wide_data wd;
-  } *new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
-
-  if (new_f == NULL)
-    return NULL;
-#ifdef _IO_MTSAFE_IO
-  new_f->fp.file._lock = &new_f->lock;
-#endif
-  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
-  _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.vtable = NULL;
-#endif
-  if (_IO_file_fopen ((_IO_FILE *) new_f, filename, mode, 0) != NULL)
-    return (_IO_FILE *) &new_f->fp;
-  _IO_un_link (&new_f->fp);
-  free (new_f);
-  return NULL;
+  return __fopen_internal (filename, mode, 0);
 #else
   __set_errno (ENOSYS);
   return NULL;

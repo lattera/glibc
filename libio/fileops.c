@@ -556,6 +556,34 @@ _IO_new_file_underflow (fp)
   return *(unsigned char *) fp->_IO_read_ptr;
 }
 
+/* Special callback replacing the underflow callbacks if we mmap the
+   file.  */
+static int
+_IO_file_underflow_mmap (_IO_FILE *fp)
+{
+  if (fp->_IO_read_end < fp->_IO_buf_end)
+    {
+      if (
+# ifdef _G_LSEEK64
+	  _G_LSEEK64 (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base,
+		      SEEK_SET)
+# else
+	  __lseek (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base, SEEK_SET)
+# endif
+	  != fp->_IO_buf_end - fp->_IO_buf_base)
+	{
+	  fp->_flags |= _IO_ERR_SEEN;
+	  return EOF;
+	}
+
+      fp->_IO_read_end = fp->_IO_buf_end;
+      return *fp->_IO_read_ptr;
+    }
+
+  fp->_flags |= _IO_EOF_SEEN;
+  return EOF;
+}
+
 int
 _IO_new_file_overflow (f, ch)
       _IO_FILE *f;
@@ -864,6 +892,17 @@ _IO_file_stat (fp, st)
 }
 
 int
+_IO_file_close_mmap (fp)
+     _IO_FILE *fp;
+{
+  /* In addition to closing the file descriptor we have to unmap the
+     file.  */
+  (void) munmap (fp->_IO_buf_base, fp->_IO_buf_end - fp->_IO_buf_base);
+  fp->_IO_buf_base = fp->_IO_buf_end = NULL;
+  return close (fp->_fileno);
+}
+
+int
 _IO_file_close (fp)
      _IO_FILE *fp;
 {
@@ -1102,6 +1141,30 @@ struct _IO_jump_t _IO_file_jumps =
   JUMP_INIT(write, _IO_new_file_write),
   JUMP_INIT(seek, _IO_file_seek),
   JUMP_INIT(close, _IO_file_close),
+  JUMP_INIT(stat, _IO_file_stat),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
+};
+
+struct _IO_jump_t _IO_file_jumps_mmap =
+{
+  JUMP_INIT_DUMMY,
+  JUMP_INIT(finish, _IO_new_file_finish),
+  JUMP_INIT(overflow, _IO_new_file_overflow),
+  JUMP_INIT(underflow, _IO_file_underflow_mmap),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_default_pbackfail),
+  JUMP_INIT(xsputn, _IO_new_file_xsputn),
+  JUMP_INIT(xsgetn, _IO_file_xsgetn),
+  JUMP_INIT(seekoff, _IO_new_file_seekoff),
+  JUMP_INIT(seekpos, _IO_default_seekpos),
+  JUMP_INIT(setbuf, _IO_new_file_setbuf),
+  JUMP_INIT(sync, _IO_new_file_sync),
+  JUMP_INIT(doallocate, _IO_file_doallocate),
+  JUMP_INIT(read, _IO_file_read),
+  JUMP_INIT(write, _IO_new_file_write),
+  JUMP_INIT(seek, _IO_file_seek),
+  JUMP_INIT(close, _IO_file_close_mmap),
   JUMP_INIT(stat, _IO_file_stat),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)

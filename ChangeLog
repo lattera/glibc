@@ -1,3 +1,28 @@
+2002-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_file_underflow_mmap): New function.
+	(_IO_file_close_mmap): New function.
+	(_IO_file_jumps_mmap): New variable.
+	* libio/wfileops.c (_IO_wfile_underflow): Reset read pointer before
+	trying to convert rest of byte buffer.
+	(_IO_wfile_underflow_mmap): New function.
+	(_IO_wfile_jumps_mmap): New variable.
+	* libio/iofopen.c (__fopen_maybe_mmap): New function.
+	(__fopen_internal): New function.  Split out from _IO_new_fopen.
+	(_IO_new_fopen): Call __fopen_internal.
+	* libio/iofopen64.c: Just call __fopen_internal.
+	* libio/iofdopen.c: Call __fopen_maybe_mmap before returning
+	successfully.
+	* libio/iolibio.h: Declare __fopen_internal and __fopen_maybe_mmap.
+	* libio/libioP.h: Declare _IO_file_jumps_mmap, _IO_wfile_jumps_mmap,
+	_IO_file_close_mmap.
+
+	* sysdeps/gnu/_G_config.h: Define _G_MMAP64.
+	* sysdeps/unix/sysv/linux/cris/_G_config.h: Likewise.
+
+	* stdio-common/Makefile (tests): Add tst-rndseek.
+	* stdio-common/tst-rndseek.c: New file.
+
 2002-01-05  Roland McGrath  <roland@frob.com>
 
 	* config.h.in (HAVE_MIG_RETCODE): New #undef.

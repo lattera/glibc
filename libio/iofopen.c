@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #include "libioP.h"
 #ifdef __STDC__
 #include <stdlib.h>
+#include <stddef.h>
 #endif
 #ifdef _LIBC
 # include <shlib-compat.h>
@@ -36,9 +37,76 @@
 #endif
 
 _IO_FILE *
-_IO_new_fopen (filename, mode)
+__fopen_maybe_mmap (fp)
+     _IO_FILE *fp;
+{
+#ifdef _G_HAVE_MMAP
+  if (fp->_flags & _IO_NO_WRITES)
+    {
+      /* We use the file in read-only mode.  This could mean we can
+	 mmap the file and use it without any copying.  But not all
+	 file descriptors are for mmap-able objects and on 32-bit
+	 machines we don't want to map files which are too large since
+	 this would require too much virtual memory.  */
+      struct _G_stat64 st;
+
+      if (_IO_SYSSTAT (fp, &st) == 0
+	  && S_ISREG (st.st_mode) && st.st_size != 0
+	  /* Limit the file size to 1MB for 32-bit machines.  */
+	  && (sizeof (ptrdiff_t) > 4 || st.st_size < 1*1024*1024))
+	{
+	  /* Try to map the file.  */
+	  void *p;
+
+# ifdef _G_MMAP64
+	  p = _G_MMAP64 (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
+			 fp->_fileno, 0);
+# else
+	  p = __mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
+		      fp->_fileno, 0);
+# endif
+	  if (p != MAP_FAILED)
+	    {
+	      if (
+# ifdef _G_LSEEK64
+		  _G_LSEEK64 (fp->_fileno, st.st_size, SEEK_SET)
+# else
+		  __lseek (fp->_fileno, st.st_size, SEEK_SET)
+# endif
+		  != st.st_size)
+		{
+		  /* We cannot search the file.  Don't mmap then.  */
+		  __munmap (p, st.st_size);
+		  return fp;
+		}
+
+	      /* OK, we managed to map the file.  Set the buffer up
+		 and use a special jump table with simplified
+		 underflow functions which never tries to read
+		 anything from the file.  */
+	      _IO_setb (fp, p, (char *) p + st.st_size, 0);
+	      _IO_setg (fp, p, p, (char *) p + st.st_size);
+
+	      if (fp->_mode <= 0)
+		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_mmap;
+	      else
+		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps_mmap;
+	      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
+
+	      fp->_offset = st.st_size;
+	    }
+	}
+    }
+#endif
+  return fp;
+}
+
+
+_IO_FILE *
+__fopen_internal (filename, mode, is32)
      const char *filename;
      const char *mode;
+     int is32;
 {
   struct locked_FILE
   {
@@ -64,11 +132,20 @@ _IO_new_fopen (filename, mode)
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen ((_IO_FILE *) new_f, filename, mode, 1) != NULL)
-    return (_IO_FILE *) &new_f->fp;
+  if (_IO_file_fopen ((_IO_FILE *) new_f, filename, mode, is32) != NULL)
+    return __fopen_maybe_mmap (&new_f->fp.file);
+
   _IO_un_link (&new_f->fp);
   free (new_f);
   return NULL;
+}
+
+_IO_FILE *
+_IO_new_fopen (filename, mode)
+     const char *filename;
+     const char *mode;
+{
+  return __fopen_internal (filename, mode, 1);
 }
 
 #ifdef _LIBC

@@ -21,6 +21,8 @@ extern _IO_FILE *_IO_fopen __P((const char*, const char*));
 extern _IO_FILE *_IO_old_fopen __P((const char*, const char*));
 extern _IO_FILE *_IO_new_fopen __P((const char*, const char*));
 extern _IO_FILE *_IO_fopen64 __P((const char*, const char*));
+extern _IO_FILE *__fopen_internal __P((const char*, const char*, int));
+extern _IO_FILE *__fopen_maybe_mmap __P((_IO_FILE *));
 extern int _IO_fprintf __P((_IO_FILE*, const char*, ...));
 extern int _IO_fputs __P((const char*, _IO_FILE*));
 extern int _IO_fsetpos __P((_IO_FILE*, const _IO_fpos_t *));

@@ -77,6 +77,7 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 
 #define _G_OPEN64	__open64
 #define _G_LSEEK64	__lseek64
+#define _G_MMAP64	__mmap64
 #define _G_FSTAT64(fd,buf) __fxstat64 (_STAT_VER, fd, buf)
 
 /* This is defined by <bits/stat.h> if `st_blksize' exists.  */
