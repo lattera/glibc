@@ -250,6 +250,20 @@ typedef pthread_key_t __libc_key_t;
       _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
     }
 
+#define __libc_cleanup_push(fct, arg) \
+  { struct _pthread_cleanup_buffer _buffer;				      \
+    int _avail = _pthread_cleanup_push != NULL;				      \
+    if (_avail) {							      \
+      _pthread_cleanup_push (&_buffer, (fct), (arg));			      \
+    }
+
+#define __libc_cleanup_pop(execute) \
+    if (_avail) {							      \
+      _pthread_cleanup_pop (&_buffer, execute);				      \
+    }									      \
+  }
+
+
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
   (__libc_maybe_call (__pthread_key_create, (KEY, DESTRUCTOR), 1))
@@ -352,6 +366,8 @@ weak_extern (BP_SYM (__pthread_getspecific))
 weak_extern (BP_SYM (__pthread_once))
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
+weak_extern (BP_SYM (_pthread_cleanup_push))
+weak_extern (BP_SYM (_pthread_cleanup_pop))
 weak_extern (BP_SYM (_pthread_cleanup_push_defer))
 weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
 # else
@@ -377,6 +393,8 @@ weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
 #  pragma weak __pthread_atfork
 #  pragma weak _pthread_cleanup_push_defer
 #  pragma weak _pthread_cleanup_pop_restore
+#  pragma weak _pthread_cleanup_push
+#  pragma weak _pthread_cleanup_pop
 # endif
 #endif
 

@@ -1,3 +1,10 @@
+2003-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Define __libc_cleanup_push and
+	__libc_cleanup_pop.
+
+	* tst-cancel-wrappers.sh: lseek and llseek are no cancellation points.
+
 2003-07-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Fix typo

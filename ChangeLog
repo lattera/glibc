@@ -6,6 +6,8 @@
 
 2003-07-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ZERO): Fix typo.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Remove affinity syscalls.
 
 2003-07-16  Daniel Jacobowitz  <drow@mvista.com>
