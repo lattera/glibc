@@ -1,4 +1,4 @@
-# @(#)europe	7.71
+# @(#)europe	7.72
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -131,6 +131,10 @@
 # A bill was drafted in 1909 and introduced in Parliament several times,
 # but it met with ridicule and opposition, especially from farming interests.
 # One-hour Summer Time was eventually adopted as a wartime measure in 1916.
+# See:
+# <a href="http://www.the-times.co.uk/news/pages/tim/2000/05/18/x-timcrtcrt01011.html">
+# Summer Time Arrives Early, The Times (2000-05-18)
+# </a>
 
 # From Paul Eggert (1996-09-03):
 # The OED Supplement says that the English originally said ``Daylight Saving''
@@ -1856,7 +1860,8 @@ Zone Europe/Simferopol	2:16:24 -	LMT	1880
 			3:00	1:00	MSD	1996 Oct 27 3:00s
 # IATA SSIM (1997-09) says Crimea switched to EET/EEST.
 # Assume it happened in March by not changing the clocks.
-			3:00	Russia	MSK/MSD	1997 Mar lastSun 1:00u
+			3:00	Russia	MSK/MSD	1997
+			3:00	-	MSK	1997 Mar lastSun 1:00u
 			2:00	EU	EE%sT
 
 # Yugoslavia

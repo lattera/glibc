@@ -1,4 +1,4 @@
-# @(#)australasia	7.56
+# @(#)australasia	7.57
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -736,6 +736,9 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # has decided to join with most of NSW, the ACT, and most of Victoria
 # (Australia) and start daylight saving on the last Sunday in August in 2000
 # instead of the first Sunday in October.
+
+# Sim Alam (2000-07-03) reported a legal citation for the 2000/2001 rules:
+# http://www.thelaw.tas.gov.au/fragview/42++1968+GS3A@EN+2000070300
 
 # Victoria
 

@@ -1,3 +1,12 @@
+2000-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/private.h: Update from tzcode2000e.
+	* timezone/asia: Update from tzdata2000e.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/zone-tab: Likewise.
+
 2000-07-30  Ralf Baechle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/sigstack.h:  New file.  On MIPS
