@@ -21,6 +21,7 @@
 
 
 #define HAVE_VPRINTF 1
+#define HAVE_STRING_H 1
 
 
 #include_next <config.h>
