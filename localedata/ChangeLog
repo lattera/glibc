@@ -1,6 +1,11 @@
+2004-05-02  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/nn_NO: Use the same sorting order in Norwegian Nynorsk
+	(nn_NO) as in Norwegian Bokmål (nb_NO). [BZ #74]
+
 2004-05-03  Ulrich Drepper  <drepper@redhat.com>
 
-	* locales/wal_ET: New file.  Contributed by Daniel Yacob.
+	* locales/wal_ET: New file [BZ #142].  Contributed by Daniel Yacob.
 
 2004-05-02  Petter Reinholdtsen  <pere@hungry.com>
 

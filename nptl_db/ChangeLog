@@ -1,3 +1,7 @@
+2004-05-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* thread_dbP.h (LOG): Use write instead of __libc_write.
+
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_ta_set_event.c (td_ta_set_event): Initialize copy to avoid

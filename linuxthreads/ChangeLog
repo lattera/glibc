@@ -1,3 +1,7 @@
+2004-05-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* Versions (libc): Add __on_exit and __libc_sigaction.
+
 2004-04-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* semaphore.c (sem_timedwait): Return -1 and set errno instead of

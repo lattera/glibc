@@ -1,3 +1,7 @@
+2004-05-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* thread_dbP.h (LOG): Use write instead of __libc_write.
+
 2004-03-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* td_thr_tlsbase.c: Remove dl-tls.h include.  Don't use

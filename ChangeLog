@@ -15,7 +15,7 @@
 	Likewise.
 	* sysdeps/unix/sysv/linux/cris/bits/fcntl.h (F_SETOWN, F_GETOWN):
 	Likewise.
-	*sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (F_SETOWN, F_GETOWN):
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (F_SETOWN, F_GETOWN):
 	Likewise.
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (F_SETOWN, F_GETOWN):
 	Likewise.
