@@ -5,7 +5,7 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-void noop (void);
+void __attribute_noinline__ noop (void);
 
 #define NR	2	/* Exit code of the child.  */
 
