@@ -571,7 +571,7 @@ categories_write (void)
 			{
 			  data->idx[cnt] = len;
 			  ++len;
-			  iov[1 + cnt].iov_base = (char *) "";
+			  iov[1 + cnt].iov_base = "";
 			  iov[1 + cnt].iov_len = 1;
 			  ++cnt;
 			}
@@ -622,7 +622,7 @@ categories_write (void)
 			if (*first != NULL)
 			  {
 			    slen = strlen (*first) + 1;
-			    iov[1 + cnt].iov_base = first;
+			    iov[1 + cnt].iov_base = *first;
 			  }
 			else
 			  {
@@ -655,14 +655,31 @@ categories_write (void)
 	  /* Construct the output filename from the argument given to
 	     localedef on the command line.  */
 	  path = (char *) obstack_alloc (&obstk, strlen (output_path) +
-					 strlen (category[cat_no].name) + 1);
+					 2 * strlen (category[cat_no].name) + 5);
 	  t = stpcpy (path, output_path);
 	  strcpy (t, category[cat_no].name);
 
 	  fd = creat (path, 0666);
+
 	  if (fd == -1)
 	    {
-	      error (0, 0, gettext ("cannot open output file `%s': %m"), path);
+	      /* Check whether it failed because the named file is a directory.
+		 In that case we use the file .../LC_xxx/SYS_LC_xxx, as the
+		 loading functions of the C Library do.  */
+	      struct stat st;
+
+	      if (stat (path, &st) == 0 && S_ISDIR (st.st_mode))
+		{
+		  stpcpy (stpcpy (strchr (path, '\0'), "/SYS_"),
+			  category[cat_no].name);
+		  fd = creat (path, 0666);
+		}
+	    }
+
+	  if (fd == -1)
+	    {
+	      error (0, 0, gettext ("cannot open output file `%s': %m"),
+		     path);
 	      result = 1;
 	    }
 	  else
@@ -674,7 +691,7 @@ categories_write (void)
 		  result = 1;
 		}
 
-if (elems==0) write(fd, &elems, 1);
+if (elems==0) write(fd, &elems, 10);
 
 	      close (fd);
 	    }
@@ -772,7 +789,7 @@ is_locale_name (int cat_no, const char *str, int len)
 	    if (max_count == 0)
 	      locale_names = (char **) xmalloc ((max_count = 10)
 						* sizeof (char *));
-	    else
+	    else if (locale_count >= max_count)
 	      locale_names = (char **) xrealloc (locale_names,
 						 (max_count *= 2)
 						 * sizeof (char *));

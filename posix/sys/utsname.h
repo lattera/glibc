@@ -48,6 +48,11 @@ struct utsname
 
     /* Name of the hardware type the system is running on.  */
     char machine[_UTSNAME_LENGTH];
+
+#if _UTSNAME_DOMAIN_LENGTH - 0
+    /* Name of the domain of this node on the network.  */
+    char domainname[_UTSNAME_DOMAIN_LENGTH];
+#endif
   };
 
 #ifdef __USE_SVID
