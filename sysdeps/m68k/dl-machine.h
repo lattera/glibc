@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  m68k version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -92,8 +92,13 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       if (profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
-	  /* Say that we really want profiling and the timers are started.  */
-	  _dl_profile_map = l;
+
+	  if (_dl_name_match_p (_dl_profile, l))
+	    {
+	      /* This is the object we are looking for.  Say that we really
+		 want profiling and the timers are started.  */
+	      _dl_profile_map = l;
+	    }
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -161,6 +166,8 @@ _dl_start_user:
 	move.l %d0, %a4
 	| Point %a5 at the GOT.
 	lea _GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a5
+	| Remember the highest stack address.
+	move.l %sp, ([__libc_stack_end@GOT.w, %a5])
 	| See if we were run as a command with the executable file
 	| name as an extra leading argument.
 	move.l ([_dl_skip_args@GOT.w, %a5]), %d0
