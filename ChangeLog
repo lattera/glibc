@@ -1,5 +1,10 @@
 1998-04-06  Richard Henderson  <rth@cygnus.com>
 
+	* sysdeps/sparc/sparc32/elf.S: Rewrite for __libc_start_main.
+	* sysdeps/sparc/sparc64/elf.S: Likewise.
+
+1998-04-06  Richard Henderson  <rth@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S: Revert 03-01 change,
 	as the buffer is not properly aligned.
 	Reported by Juan Cespedes <cespedes@debian.org>.

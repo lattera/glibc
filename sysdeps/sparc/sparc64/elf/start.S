@@ -1,5 +1,5 @@
 /* Startup code for elf64-sparc
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,68 +26,48 @@
 	.type _start,#function
 _start:
 
-  /* First order of business is to load %g4 with our base address.  */
-	sethi	%uhi(_start), %g4
-	or	%g4, %ulo(_start), %g4
-	sllx	%g4, 32, %g4
-
   /* Terminate the stack frame, and reserve space for functions to
      drop their arguments.  */
 	mov	%g0, %fp
 	sub	%sp, 6*8, %sp
 
-  /* Save %g1.  When starting a binary via the dynamic linker, %g1
-     contains the address of the shared library termination function,
-     which we will register below with atexit() to be called by exit().
-     If we are statically linked, this will be NULL.  */
-
-  /* Do essential libc initialization (sp points to argc, argv, and envp)  */
-	call	__libc_init_first
-	 mov	%g1, %l0
-
-  /* Now that we have the proper stack frame, register library termination
-     function, if there is any:  */
-
-	brz,pn	%l0, 1f
-	 nop
-	call	atexit
-	 mov	%l0, %o0
-1:
-
   /* Extract the arguments and environment as encoded on the stack.  The
      argument info starts after one register window (16 words) past the SP,
      plus the bias we added, plus the magic v9 STACK_BIAS.  */
-	ldx	[%sp+STACK_BIAS+22*8], %o0
-	add	%sp, STACK_BIAS+23*8, %o1
-	sllx	%o0, 3, %o2
-	add	%o2, %o1, %o2
-	sethi	%hi(__environ), %g2
-	add	%o2, 8, %o2
-	add	%g2, %g4, %g2
-	stx	%o2, [%g2+%lo(__environ)]
+	ldx	[%sp+STACK_BIAS+22*8], %o1
+	add	%sp, STACK_BIAS+23*8, %o2
 
-	mov	%o0, %l0		/* tuck them away */
-	mov	%o1, %l1
+  /* Load the addresses of the user entry points.  */
+        sethi   %uhi(main), %o0
+        sethi   %uhi(_init), %o3
+        sethi   %uhi(_fini), %o4
+        or      %o0, %ulo(main), %o0
+        or      %o3, %ulo(_init), %o3
+        or      %o4, %ulo(_fini), %o4
+        sethi   %hi(main), %i0
+        sethi   %hi(_init), %i3
+        sethi   %hi(_fini), %i4
+	sllx	%o0, 32, %o0
+        or      %i0, %lo(main), %i0
+	sllx	%o3, 32, %o3
+        or      %i3, %lo(_init), %i3
+	sllx	%o4, 32, %o4
+        or      %i4, %lo(_fini), %i4
+	or	%o0, %i0, %o0
+	or	%o3, %i3, %o3
+	or	%o4, %i4, %o4
 
-  /* Call _init, the entry point to our own .init section.  */
-	call	_init
-	 mov	%o2, %l2
+  /* When starting a binary via the dynamic linker, %g1 contains the
+     address of the shared library termination function, which will be
+     registered with atexit().  If we are statically linked, this will
+     be NULL.  */
+	mov     %g1, %o5
 
-  /* Register our .fini section with atexit.  */
-	sethi	%hi(_fini), %o0
-	add	%o0, %g4, %o0
-	call	atexit
-	 add	%o0, %lo(_fini), %o0
-
-  /* Call the user's main and exit with its return value.  */
-	mov	%l0, %o0
-	mov	%l1, %o1
-	call	main
-	 mov	%l2, %o2
-	call	exit
+  /* Let libc do the rest of the initialization, and call main.  */
+	call    __libc_start_main
 	 nop
 
   /* Die very horribly if exit returns.  */
 	illtrap	0
 
-	.size _start,.-_start
+	.size _start, .-_start
