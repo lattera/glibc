@@ -63,7 +63,7 @@
 # define _POPCARGS_0	/* No arguments to pop.  */
 
 # define PUSHCARGS_1	movl %ebx, %edx; PUSHCARGS_0
-# define DOCARGS_1	_DOARGS_1 (4)
+# define DOCARGS_1	_DOARGS_1 (8)
 # define POPCARGS_1	POPCARGS_0; movl %edx, %ebx
 # define _PUSHCARGS_1	pushl %ebx; L(PUSHBX2): _PUSHCARGS_0
 # define _POPCARGS_1	_POPCARGS_0; popl %ebx; L(POPBX2):

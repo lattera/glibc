@@ -1,5 +1,5 @@
 /* Regular expression tests.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
@@ -32,7 +32,9 @@ struct
   int flags, nmatch;
 } tests[] = {
   { "^<\\([^~]*\\)\\([^~]\\)[^~]*~\\1\\(.\\).*|=.*\\3.*\\2",
-    "<,.8~2,~so-|=-~.0,123456789<><", REG_NOSUB, 0, }
+    "<,.8~2,~so-|=-~.0,123456789<><", REG_NOSUB, 0 },
+  /* In ERE, all carets must be treated as anchors.  */
+  { "a^b", "a^b", REG_EXTENDED, 0 }
 };
 
 int

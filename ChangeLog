@@ -1,3 +1,18 @@
+2003-09-26  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (parse_sub_exp): Pass RE_CARET_ANCHORS_HERE
+	for the first token in a subexpression as well.
+
+2003-10-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (peek_token): Add 2003-09-20 changes for anchor
+	handling again.
+	(parse_reg_exp): Likewise.
+	* posix/regex.h (RE_CARET_ANCHORS_HERE): Define.
+
+	* posix/bug-regex11.c (tests): Add new tests.
+	* posix/bug-regex12.c (tests): Add new test.
+
 2003-10-01  Thorsten Kukuk  <kukuk@suse.de>
 
 	* elf/dl-reloc.c (_dl_allocate_static_tls): Move definition of
