@@ -1,5 +1,13 @@
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* attr.c (pthread_getattr_np): Don't take thread descriptor size
+	into account if USE_TLS.
+	* manager.c (pthread_handle_create): Free TLS data structures if call
+	failed.  Pass correct stack to clone if USE_TLS.
+	* sysdeps/i386/pt-machine.h: Handle multiple inclusion.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+	* sysdeps/i386/tls.h: Unconditionally include <pt-machine.h>.
+
 	* descr.h (struct _pthread_descr_struct): Update p_header for TLS.
 	Add p_stackaddr element #if USE_TLS.
 	* internals.c: Include <tls.h>.

@@ -22,6 +22,8 @@
 
 #include <stddef.h>
 
+#include <pt-machine.h>
+
 /* Type for the dtv.  */
 typedef union dtv
 {

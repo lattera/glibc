@@ -593,6 +593,9 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread = _dl_allocate_tls ();
   if (new_thread == NULL)
     return EAGAIN;
+#else
+  /* Prevent warnings.  */
+  new_thread = NULL;
 #endif
 
   /* First check whether we have to change the policy and if yes, whether
@@ -605,7 +608,12 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   for (sseg = 2; ; sseg++)
     {
       if (sseg >= PTHREAD_THREADS_MAX)
-	return EAGAIN;
+	{
+#ifdef USE_TLS
+	  _dl_deallocate_tls (new_thread);
+#endif
+	  return EAGAIN;
+	}
       if (__pthread_handles[sseg].h_descr != NULL)
 	continue;
       if (pthread_allocate_stack(attr, thread_segment(sseg),
@@ -741,15 +749,15 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 #ifdef NEED_SEPARATE_REGISTER_STACK
       pid = __clone2(pthread_start_thread,
 		     (void **)new_thread_bottom,
-                     (char *)new_thread - new_thread_bottom,
+                     (char *)stack_addr - new_thread_bottom,
 		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 		     __pthread_sig_cancel, new_thread);
 #elif _STACK_GROWS_UP
-      pid = __clone(pthread_start_thread, (void **) new_thread_bottom,
+      pid = __clone(pthread_start_thread, (void *) new_thread_bottom,
 		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 		    __pthread_sig_cancel, new_thread);
 #else
-      pid = __clone(pthread_start_thread, (void **) new_thread,
+      pid = __clone(pthread_start_thread, stack_addr,
 		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 		    __pthread_sig_cancel, new_thread);
 #endif /* !NEED_SEPARATE_REGISTER_STACK */
@@ -766,13 +774,25 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	munmap((caddr_t)new_thread_bottom,
 	       2 * stacksize + new_thread->p_guardsize);
 #elif _STACK_GROWS_UP
+# ifdef USE_TLS
+	size_t stacksize = guardaddr - stack_addr;
+	munmap(stack_addr, stacksize + guardsize);
+# else
 	size_t stacksize = guardaddr - (char *)new_thread;
 	munmap(new_thread, stacksize + guardsize);
+# endif
 #else
+# ifdef USE_TLS
+	size_t stacksize = stack_addr - new_thread_bottom;
+# else
 	size_t stacksize = (char *)(new_thread+1) - new_thread_bottom;
+# endif
 	munmap(new_thread_bottom - guardsize, guardsize + stacksize);
 #endif
       }
+#ifdef USE_TLS
+    _dl_deallocate_tls (new_thread);
+#endif
     __pthread_handles[sseg].h_descr = NULL;
     __pthread_handles[sseg].h_bottom = NULL;
     __pthread_handles_num--;
