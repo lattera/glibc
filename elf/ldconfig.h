@@ -39,7 +39,7 @@ extern void init_cache (void);
 extern void save_cache (const char *cache_name);
 
 extern void add_to_cache (const char *path, const char *lib, int flags,
-			  unsigned long int hwcap);
+			  uint64_t hwcap);
 
 /* Declared in readlib.c.  */
 extern int process_file (const char *real_file_name, const char *file_name,

@@ -22,13 +22,17 @@
 #include <ldsodefs.h>
 #include <sys/mman.h>
 #include <dl-cache.h>
+#include <dl-procinfo.h>
 
+#include <stdio-common/_itoa.h>
 
 /* System-dependent function to read a file's whole contents
    in the most convenient manner available.  */
 extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 size_t *filesize_ptr,
 					 int mmap_prot);
+
+extern const char *_dl_platform;
 
 /* This is the starting address and the size of the mmap()ed file.  */
 static struct cache_file *cache;
@@ -209,6 +213,7 @@ _dl_load_cache_lookup (const char *name)
     {
       /* This file ends in static libraries where we don't have a hwcap.  */
       unsigned long int *hwcap;
+      uint64_t platform;
       weak_extern (_dl_hwcap);
 
       /* This is where the strings start.  */
@@ -218,9 +223,19 @@ _dl_load_cache_lookup (const char *name)
       cache_data_size = (const char *) cache + cachesize - cache_data;
 
       hwcap = &_dl_hwcap;
+      platform = _dl_string_platform (_dl_platform);
+      if (platform != -1)
+	platform = 1ULL << platform;
 
-#define HWCAP_CHECK							     \
-      if (hwcap && (cache_new->libs[middle].hwcap & *hwcap) > *hwcap)        \
+      /* Only accept hwcap if it's for the right platform.  */
+#define HWCAP_CHECK							       \
+      if (_DL_PLATFORMS_COUNT && platform != -1				       \
+	  && (cache_new->libs[middle].hwcap & _DL_HWCAP_PLATFORM) != 0	       \
+	  && (cache_new->libs[middle].hwcap & _DL_HWCAP_PLATFORM) != platform) \
+	continue;							       \
+      if (hwcap								       \
+	  && ((cache_new->libs[middle].hwcap & *hwcap & ~_DL_HWCAP_PLATFORM)   \
+	      > *hwcap))						       \
 	continue
       SEARCH_CACHE (cache_new);
     }

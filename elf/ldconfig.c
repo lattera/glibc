@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -53,7 +54,7 @@
 struct lib_entry
   {
     int flags;
-    unsigned long int hwcap;
+    uint64_t hwcap;
     char *lib;
     char *path;
   };
@@ -148,25 +149,31 @@ static struct argp argp =
   options, parse_opt, NULL, doc, NULL, NULL, NULL
 };
 
-/* Check if string corresponds to an important hardware capability.  */
+/* Check if string corresponds to an important hardware capability or
+   a platform.  */
 static int
-is_hwcap (const char *name)
+is_hwcap_platform (const char *name)
 {
   int hwcap_idx = _dl_string_hwcap (name);
 
   if (hwcap_idx != -1 && ((1 << hwcap_idx) & HWCAP_IMPORTANT))
     return 1;
+
+  hwcap_idx = _dl_string_platform (name);
+  if (hwcap_idx != -1)
+    return 1;
+
   return 0;
 }
 
-/* Get hwcap encoding of path.  */
-static unsigned long int
+/* Get hwcap (including platform) encoding of path.  */
+static uint64_t
 path_hwcap (const char *path)
 {
   char *str = xstrdup (path);
   char *ptr;
-  unsigned long int hwcap = 0;
-  unsigned long int h;
+  uint64_t hwcap = 0;
+  uint64_t h;
 
   size_t len;
 
@@ -182,11 +189,13 @@ path_hwcap (const char *path)
       if (ptr == NULL)
 	break;
 
-      h = _dl_string_hwcap (ptr+1);
+      h = _dl_string_hwcap (ptr + 1);
 
       if (h == -1)
+	h = _dl_string_platform (ptr + 1);
+      if (h == -1)
 	break;
-      hwcap += 1 << h;
+      hwcap += 1ULL << h;
 
       /* Search the next part of the path.  */
       *ptr = '\0';
@@ -576,7 +585,7 @@ search_dir (const struct dir_entry *entry)
   struct dlib_entry *dlib_ptr;
   struct stat64 stat_buf;
   int is_link;
-  unsigned long int hwcap = path_hwcap (entry->path);
+  uint64_t hwcap = path_hwcap (entry->path);
 
   file_name_len = PATH_MAX;
   file_name = alloca (file_name_len);
@@ -586,7 +595,7 @@ search_dir (const struct dir_entry *entry)
   if (opt_verbose)
     {
       if (hwcap != 0)
-	printf ("%s: (hwcap: 0x%lx)\n", entry->path, hwcap);
+	printf ("%s: (hwcap: 0x%Lx)\n", entry->path, hwcap);
       else
 	printf ("%s:\n", entry->path);
     }
@@ -630,7 +639,7 @@ search_dir (const struct dir_entry *entry)
       if (((strncmp (direntry->d_name, "lib", 3) != 0
 	    && strncmp (direntry->d_name, "ld-", 3) != 0)
 	   || strstr (direntry->d_name, ".so") == NULL)
-	  && !is_hwcap (direntry->d_name))
+	  && !is_hwcap_platform (direntry->d_name))
 	continue;
       len = strlen (entry->path) + strlen (direntry->d_name);
       if (len > file_name_len)
@@ -662,7 +671,7 @@ search_dir (const struct dir_entry *entry)
 	    continue;
 	  }
 
-      if (S_ISDIR (stat_buf.st_mode) && is_hwcap (direntry->d_name))
+      if (S_ISDIR (stat_buf.st_mode) && is_hwcap_platform (direntry->d_name))
 	{
 	  /* Handle subdirectory later.  */
 	  struct dir_entry *new_entry;

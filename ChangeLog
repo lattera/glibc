@@ -1,3 +1,37 @@
+2000-11-15  Andreas Jaeger  <aj@suse.de>
+
+	* elf/cache.c (struct cache_entry): Use uint64_t for hwcap.
+	(print_entry): Likewise.
+	(add_to_cache): Likewise.
+
+	* elf/ldconfig.h (add_to_cache): Change prototype for hwcap change.
+
+	* elf/ldconfig.c (struct lib_entry): Use uint64_t for hwcap.
+	(path_hwcap): Likewise.
+	(search_dir): Likewise.
+
+	* sysdeps/generic/dl-cache.c (HWCAP_CHECK): Handle platform.
+
+	* elf/cache.c (add_to_cache): Handle 64 bit hwcap entry.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h
+	(_dl_platform_string): New. 
+	(_DL_HWCAP_PLATFORM): New.
+	(_dl_string_platform): New.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: Likewise.
+
+	* sysdeps/generic/dl-procinfo.h (_DL_HWCAP_COUNT): New.
+	(_dl_string_platform): New.
+	(_DL_HWCAP_PLATFORM): New.
+	(_dl_platform_string): New.
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Added x86 platform
+	recognition.
+	(_DL_HWCAP_COUNT): New.
+	(_dl_string_platform): New.
+	(_DL_HWCAP_PLATFORM): New.
+	(_dl_platform_string): New.
+
 2000-11-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gconv-modules: Add CP936 as alias for GBK.

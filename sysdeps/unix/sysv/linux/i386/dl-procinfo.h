@@ -32,6 +32,18 @@ static const char x86_cap_flags[][7] =
   };
 #define _DL_HWCAP_COUNT 32
 
+static const char x86_platforms[][5] =
+  {
+    "i386", "i486", "i586", "i686"
+  };
+#define _DL_PLATFORMS_COUNT 	4
+
+/* Start at 48 to reserve some space.  */
+#define _DL_FIRST_PLATFORM 	48
+/* Mask to filter out platforms.  */
+#define _DL_HWCAP_PLATFORM 	(7ULL << _DL_FIRST_PLATFORM)
+
+
 static inline int
 __attribute__ ((unused))
 _dl_procinfo (int word)
@@ -58,6 +70,13 @@ _dl_hwcap_string (int idx)
   return x86_cap_flags[idx];
 };
 
+static inline const char *
+__attribute__ ((unused))
+_dl_platform_string (int idx)
+{
+  return x86_platforms [idx - _DL_FIRST_PLATFORM];
+};
+
 enum
 {
   HWCAP_I386_FPU   = 1 << 0,
@@ -82,6 +101,7 @@ enum
 
   /* XXX Which others to add here?  */
   HWCAP_IMPORTANT = (HWCAP_I386_MMX)
+
 };
 
 static inline int
@@ -95,6 +115,22 @@ _dl_string_hwcap (const char *str)
       if (strcmp (str, x86_cap_flags[i]) == 0)
 	return i;
     }
+  return -1;
+};
+
+
+static inline int
+__attribute__ ((unused))
+_dl_string_platform (const char *str)
+{
+  int i;
+
+  if (str != NULL)
+    for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
+      {
+	if (strcmp (str, x86_platforms[i]) == 0)
+	  return _DL_FIRST_PLATFORM + i;
+      }
   return -1;
 };
 
