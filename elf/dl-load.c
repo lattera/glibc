@@ -110,6 +110,8 @@ int __stack_prot attribute_hidden attribute_relro
   = PROT_GROWSDOWN;
 #elif _STACK_GROWS_UP && defined PROT_GROWSUP
   = PROT_GROWSUP;
+#else
+  = 0;
 #endif
 
 

@@ -1,3 +1,17 @@
+2005-03-01  Roland McGrath  <roland@redhat.com>
+
+	[BZ #721]
+	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Define this outside
+	of [RESOLVE_MAP].
+
+2005-03-01  Alfred M. Szmidt  <ams@gnu.org>
+
+	* elf/dl-load.c (__stack_prot) [!PROT_GROWSUP && !PROT_GROWSDOWN]:
+	Add missing initializer.
+
+	* malloc/arena.c: #include <stdbool.h> outside of [SHARED &&
+	USE_TLS && !USE___THREAD].
+
 2005-02-26  GOTO Masanori  <gotom@debian.or.jp>
 
 	* csu/Makefile: Use printf instead of echo for some shells.
