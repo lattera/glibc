@@ -1,3 +1,14 @@
+2002-10-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/net/route.h: Include bits/wordsize.h.
+	(struct rtentry): Make rt_pad4 6 bytes long if __WORDSIZE == 64.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Remove net/route.h.
+	* sysdeps/unix/sysv/linux/alpha/net/route.h: Remove.
+	* sysdeps/unix/sysv/linux/ia64/Dist: Remove net/route.h.
+	* sysdeps/unix/sysv/linux/ia64/net/route.h: Remove.
+	* sysdeps/unix/sysv/linux/s390/Dist: Remove net/route.h.
+	* sysdeps/unix/sysv/linux/s390/net/route.h: Remove.
+
 2002-10-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/freopen.c: Don't re-set _wide_data element if the stream

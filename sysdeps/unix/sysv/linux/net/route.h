@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <bits/wordsize.h>
 
 
 /* This structure gets passed by the SIOCADDRT and SIOCDELRT calls. */
@@ -39,7 +40,11 @@ struct rtentry
     unsigned long int rt_pad3;
     unsigned char rt_tos;
     unsigned char rt_class;
+#if __WORDSIZE == 64
+    short int rt_pad4[3];
+#else
     short int rt_pad4;
+#endif
     short int rt_metric;		/* +1 for binary compatibility!  */
     char *rt_dev;			/* Forcing the device at add.  */
     unsigned long int rt_mtu;		/* Per route MTU/Window.  */
