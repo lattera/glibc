@@ -5,8 +5,10 @@ int __memp_pgread __P((DB_MPOOLFILE *, BH *, int));
 int __memp_pgwrite __P((DB_MPOOLFILE *, BH *, int *, int *));
 int __memp_pg __P((DB_MPOOLFILE *, BH *, int));
 void __memp_bhfree __P((DB_MPOOL *, MPOOLFILE *, BH *, int));
-int __memp_fopen __P((DB_MPOOL *, const char *, int, int,
-   int, size_t, int, DBT *, u_int8_t *, int, DB_MPOOLFILE **));
+int __memp_fopen __P((DB_MPOOL *, MPOOLFILE *, const char *, int,
+   int, int, size_t, int, DBT *, u_int8_t *, int, DB_MPOOLFILE **));
+char * __memp_fn __P((DB_MPOOLFILE *));
+char * __memp_fns __P((DB_MPOOL *, MPOOLFILE *));
 void __memp_debug __P((DB_MPOOL *, FILE *, int));
 int __memp_ralloc __P((DB_MPOOL *, size_t, size_t *, void *));
 int __memp_ropen

@@ -38,7 +38,7 @@ __BEGIN_DECLS
 /* Lots of hair to allow traditional BSD use of `union wait'
    as well as POSIX.1 use of `int' for the status word.  */
 
-# ifdef	__GNUC__
+# if defined __GNUC__ && !defined __cplusplus
 #  define __WAIT_INT(status)						      \
   (__extension__ ({ union { __typeof(status) __in; int __i; } __u;	      \
 		    __u.__in = (status); __u.__i; }))

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_open.c	10.19 (Sleepycat) 10/28/97";
+static const char sccsid[] = "@(#)os_open.c	10.20 (Sleepycat) 11/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -38,6 +38,11 @@ __db_open(name, arg_flags, ok_flags, mode, fdp)
 		return (EINVAL);
 
 	flags = 0;
+
+	/*
+	 * DB requires the semantic that two files opened at the same time
+	 * with O_CREAT and O_EXCL set will return failure in at least one.
+	 */
 	if (arg_flags & DB_CREATE)
 		flags |= O_CREAT;
 

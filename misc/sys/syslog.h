@@ -146,10 +146,6 @@ CODE facilitynames[] =
   };
 #endif
 
-#ifdef KERNEL
-#define	LOG_PRINTF	-1	/* pseudo-priority to indicate use of printf */
-#endif
-
 /*
  * arguments to setlogmask.
  */
@@ -169,24 +165,8 @@ CODE facilitynames[] =
 #define	LOG_NOWAIT	0x10	/* don't wait for console forks: DEPRECATED */
 #define	LOG_PERROR	0x20	/* log to stderr as well */
 
-#ifndef KERNEL
-
-#if 0
-/*
- * Don't use va_list in the vsyslog() prototype.   Va_list is typedef'd in two
- * places (<machine/varargs.h> and <machine/stdarg.h>), so if we include one
- * of them here we may collide with the utility's includes.  It's unreasonable
- * for utilities to have to include one of them to include syslog.h, so we get
- * _BSD_VA_LIST_ from <machine/ansi.h> and use it.
- */
-#include <machine/ansi.h>
-#elif !defined (_BSD_VA_LIST_)
-/* In GNU we don't have a <machine/ansi.h> and it would be too painful to
-   emulate one.  */
 #define __need___va_list
 #include <stdarg.h>
-#define _BSD_VA_LIST_ __gnuc_va_list
-#endif
 
 #include <sys/cdefs.h>
 
@@ -206,10 +186,9 @@ extern int setlogmask __P ((int __mask));
 extern void syslog __P ((int __pri, __const char *__fmt, ...));
 
 /* Generate a log message using FMT and using arguments pointed to by AP.  */
-extern void vsyslog __P ((int __pri, __const char *__fmt, _BSD_VA_LIST_ __ap));
+extern void vsyslog __P ((int __pri, __const char *__fmt,
+			  __gnuc_va_list __ap));
 
 __END_DECLS
-
-#endif /* !KERNEL */
 
 #endif /* sys/syslog.h */

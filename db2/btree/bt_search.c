@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_search.c	10.8 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)bt_search.c	10.9 (Sleepycat) 11/18/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -119,12 +119,20 @@ __bam_search(dbp, key, flags, stop, recnop, exactp)
 		return (ret);
 	}
 
-	/* Decide if we need to save this page; if we do, write lock it. */
+	/*
+	 * Decide if we need to save this page; if we do, write lock it.
+	 * We deliberately don't lock-couple on this call.  If the tree
+	 * is tiny, i.e., one page, and two threads are busily updating
+	 * the root page, we're almost guaranteed deadlocks galore, as
+	 * each one gets a read lock and then blocks the other's attempt
+	 * for a write lock.
+	 */
 	if (!stack &&
 	    ((LF_ISSET(S_PARENT) && (u_int8_t)(stop + 1) >= h->level) ||
 	    (LF_ISSET(S_WRITE) && h->level == LEAFLEVEL))) {
 		(void)memp_fput(dbp->mpf, h, 0);
-		if ((ret = __bam_lget(dbp, 1, pg, DB_LOCK_WRITE, &lock)) != 0)
+		(void)__BT_LPUT(dbp, lock);
+		if ((ret = __bam_lget(dbp, 0, pg, DB_LOCK_WRITE, &lock)) != 0)
 			return (ret);
 		if ((ret = __bam_pget(dbp, &h, &pg, 0)) != 0) {
 			(void)__BT_LPUT(dbp, lock);

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_ret.c	10.8 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db_ret.c	10.10 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -116,35 +116,48 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 	dbt->size = len;
 
 	/*
-	 * Allocate any necessary memory.
+	 * Allocate memory to be owned by the application: DB_DBT_MALLOC.
 	 *
-	 * XXX: Never allocate 0 bytes.
+	 * !!!
+	 * We always allocate memory, even if we're copying out 0 bytes. This
+	 * guarantees consistency, i.e., the application can always free memory
+	 * without concern as to how many bytes of the record were requested.
+	 *
+	 * XXX
+	 * Never allocate 0 bytes, it's known to make malloc/realloc unhappy.
+	 *
+	 * Use the memory specified by the application: DB_DBT_USERMEM.
+	 *
+	 * !!!
+	 * If the length we're going to copy is 0, the application-supplied
+	 * memory pointer is allowed to be NULL.
 	 */
 	if (F_ISSET(dbt, DB_DBT_MALLOC)) {
 		dbt->data = db_malloc == NULL ?
-		    (void *)__db_malloc(len + 1) :
+		    (void *)__db_malloc(len) :
 		    (void *)db_malloc(len + 1);
 		if (dbt->data == NULL)
 			return (ENOMEM);
 	} else if (F_ISSET(dbt, DB_DBT_USERMEM)) {
-		if (dbt->ulen < len)
+		if (len != 0 && (dbt->data == NULL || dbt->ulen < len))
 			return (ENOMEM);
 	} else if (memp == NULL || memsize == NULL) {
 		return (EINVAL);
 	} else {
-		if (*memsize == 0 || *memsize < len) {
+		if (len != 0 && (*memsize == 0 || *memsize < len)) {
 			*memp = *memp == NULL ?
-			    (void *)__db_malloc(len + 1) :
-			    (void *)__db_realloc(*memp, len + 1);
+			    (void *)__db_malloc(len) :
+			    (void *)__db_realloc(*memp, len);
 			if (*memp == NULL) {
 				*memsize = 0;
 				return (ENOMEM);
 			}
-			*memsize = len + 1;
+			*memsize = len;
 		}
 		dbt->data = *memp;
 	}
 
-	memcpy(dbt->data, data, len);
+	if (len != 0)
+		memcpy(dbt->data, data, len);
 	return (0);
 }

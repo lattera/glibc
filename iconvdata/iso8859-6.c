@@ -21,4 +21,4 @@
 #include <wchar.h>
 #include <iso8859-6.h>
 #define NAME "ISO-8859-6"
-#include <iso8859-generic.c>
+#include <8bit-generic.c>

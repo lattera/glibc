@@ -44,7 +44,7 @@
 #include "charmap-kw.h"
 
 
-void *xmalloc (size_t __n);
+extern void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
 static struct charset_t *parse_charmap (const char *filename);
@@ -63,18 +63,23 @@ charmap_read (const char *filename)
     {
       if (euidaccess (filename, R_OK) >= 0)
 	pathnfile = filename;
-      else
+      else if (filename[0] != '/')
 	{
 	  char *cp = xmalloc (strlen (filename) + sizeof CHARMAP_PATH + 1);
 	  stpcpy (stpcpy (stpcpy (cp, CHARMAP_PATH), "/"), filename);
 
 	  pathnfile = (const char *) cp;
 	}
+      else
+	pathnfile = NULL;
 
-      result = parse_charmap (pathnfile);
+      if (pathnfile != NULL)
+	{
+	  result = parse_charmap (pathnfile);
 
-      if (result == NULL && !be_quiet)
-	error (0, errno, _("character map file `%s' not found"), filename);
+	  if (result == NULL && !be_quiet)
+	    error (0, errno, _("character map file `%s' not found"), filename);
+	}
     }
 
   if (result == NULL)
@@ -111,31 +116,40 @@ charmap_read (const char *filename)
 		      {
 			char junk[BUFSIZ];
 
-			if (fscanf (fp, " <code_set_name> %as", &name) == 1)
-			  break;
+			if (fscanf (fp, " <code_set_name> %as", &name) == 1
+			    || fscanf (fp, "%% alias %as", &name) == 1)
+			  {
+			    if (strcasecmp (name, filename) == 0)
+			      break;
 
-			while (fgets (junk, sizeof junk, fp) != NULL
-			       && strchr (junk, '\n') == NULL)
-			  continue;
+			    free (name);
+			    name = NULL;
+			  }
+
+			if (fgets (junk, sizeof junk, fp) != NULL)
+			  {
+			    if (strstr (junk, "CHARMAP") != NULL)
+			      /* We cannot expect more aliases from now on.  */
+			      break;
+
+			    while (strchr (junk, '\n') == NULL
+				   && fgets (junk, sizeof junk, fp) != NULL)
+			      continue;
+			  }
 		      }
 
 		    fclose (fp);
 
 		    if (name != NULL)
 		      {
-			if (strcmp (name, filename) == 0)
-			  {
-			    result = parse_charmap (buf);
+			result = parse_charmap (buf);
 
-			    free (buf);
+			free (buf);
 
-			    if (result)
-			      return result;
+			if (result)
+			  return result;
 
-			    break;
-			  }
-
-			free (name);
+			break;
 		      }
 		  }
 	      }

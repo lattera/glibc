@@ -100,7 +100,6 @@ int __bam_pg_alloc_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_pg_alloc_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_pg_alloc_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -265,7 +264,6 @@ int __bam_pg_free_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_pg_free_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_pg_free_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -460,7 +458,6 @@ int __bam_split_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_split_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -657,7 +654,6 @@ int __bam_rsplit_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_rsplit_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_rsplit_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -836,7 +832,6 @@ int __bam_adj_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_adj_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_adj_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -995,7 +990,6 @@ int __bam_cadjust_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_cadjust_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_cadjust_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1145,7 +1139,6 @@ int __bam_cdel_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_cdel_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_cdel_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1329,7 +1322,6 @@ int __bam_repl_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __bam_repl_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __bam_repl_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;

@@ -326,11 +326,12 @@ enum
 /* Values for the NAME argument to `confstr'.  */
 enum
   {
-    _CS_PATH,			/* The default search path.  */
+    _CS_PATH			/* The default search path.  */
 #define _CS_PATH		_CS_PATH
 
 #if (defined __USE_FILE_OFFSET64 || defined __USE_LARGEFILE64 \
      || defined __USE_LARGEFILE)
+    ,
     _CS_LFS_CFLAGS = 1000,
 # define _CS_LFS_CFLAGS		_CS_LFS_CFLAGS
     _CS_LFS_LDFLAGS,
@@ -345,11 +346,12 @@ enum
 # define _CS_LFS64_LDFLAGS	_CS_LFS64_LDFLAGS
     _CS_LFS64_LIBS,
 # define _CS_LFS64_LIBS		_CS_LFS64_LIBS
-    _CS_LFS64_LINTFLAGS,
+    _CS_LFS64_LINTFLAGS
 # define _CS_LFS64_LINTFLAGS	_CS_LFS64_LINTFLAGS
 #endif
 
 #ifdef __USE_UNIX98
+    ,
     _CS_XBS5_ILP32_OFF32_CFLAGS = 1100,
 # define _CS_XBS5_ILP32_OFF32_CFLAGS _CS_XBS5_ILP32_OFF32_CFLAGS
     _CS_XBS5_ILP32_OFF32_LDFLAGS,
@@ -380,7 +382,7 @@ enum
 # define _CS_XBS5_LPBIG_OFFBIG_LDFLAGS _CS_XBS5_LPBIG_OFFBIG_LDFLAGS
     _CS_XBS5_LPBIG_OFFBIG_LIBS,
 # define _CS_XBS5_LPBIG_OFFBIG_LIBS _CS_XBS5_LPBIG_OFFBIG_LIBS
-    _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS,
+    _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS
 # define _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS
 #endif
   };

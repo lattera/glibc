@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_int.h.src	10.36 (Sleepycat) 10/31/97
+ *	@(#)db_int.h.src	10.37 (Sleepycat) 11/25/97
  */
 
 #ifndef _DB_INTERNAL_H_
@@ -168,6 +168,7 @@ typedef struct _db_mutex_t {
 	off_t	off;			/* Backing file offset. */
 	u_long	pid;			/* Lock holder: 0 or process pid. */
 #endif
+	u_int32_t spins;		/* Spins before block. */
 	u_int32_t mutex_set_wait;	/* Granted after wait. */
 	u_int32_t mutex_set_nowait;	/* Granted without waiting. */
 } db_mutex_t;

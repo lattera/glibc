@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_region.c	10.15 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db_region.c	10.18 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -80,14 +80,14 @@ static int __db_rmap __P((DB_ENV *, int, size_t, void *));
  * into memory, NULL on error.
  *
  * PUBLIC: int __db_rcreate __P((DB_ENV *, APPNAME,
- * PUBLIC:    const char *, const char *, int, size_t, int *, void *));
+ * PUBLIC:    const char *, const char *, int, size_t, int, int *, void *));
  */
 int
-__db_rcreate(dbenv, appname, path, file, mode, size, fdp, retp)
+__db_rcreate(dbenv, appname, path, file, mode, size, oflags, fdp, retp)
 	DB_ENV *dbenv;
 	APPNAME appname;
 	const char *path, *file;
-	int mode, *fdp;
+	int mode, oflags, *fdp;
 	size_t size;
 	void *retp;
 {
@@ -110,12 +110,13 @@ __db_rcreate(dbenv, appname, path, file, mode, size, fdp, retp)
 	/*
 	 * Now open the file. We need to make sure that multiple processes
 	 * that attempt to create the region at the same time are properly
-	 * ordered, so we open it O_EXCL and O_CREAT so two simultaneous
+	 * ordered, so we open it DB_EXCL and DB_CREATE so two simultaneous
 	 * attempts to create the region will return failure in one of the
 	 * attempts.
 	 */
-	if (fd == -1 && (ret = __db_open(name,
-	    DB_CREATE | DB_EXCL, DB_CREATE | DB_EXCL, mode, &fd)) != 0) {
+	oflags |= DB_CREATE | DB_EXCL;
+	if (fd == -1 &&
+	    (ret = __db_open(name, oflags, oflags, mode, &fd)) != 0) {
 		if (ret != EEXIST)
 			__db_err(dbenv,
 			    "region create: %s: %s", name, strerror(ret));
@@ -398,7 +399,7 @@ __db_runlink(dbenv, appname, path, file, force)
 
 	/* If the file doesn't exist, we're done. */
 	if (__db_exists(name, NULL))
-		return (0);		/* XXX: ENOENT? */
+		goto done;
 
 	/*
 	 * If we're called with a force flag, try and unlink the file.  This
@@ -412,8 +413,7 @@ __db_runlink(dbenv, appname, path, file, force)
 	if (force) {
 		if ((ret = __db_unlink(name)) != 0 && ret != ENOENT)
 			goto err1;
-		FREES(name);
-		return (0);
+		goto done;
 	}
 
 	/* Open and lock the region. */
@@ -453,7 +453,7 @@ __db_runlink(dbenv, appname, path, file, force)
 		(void)__db_sleep(0, 250000);
 	}
 	if (ret == 0) {
-		FREES(name);
+done:		FREES(name);
 		return (0);
 	}
 
@@ -467,6 +467,7 @@ __db_runlink(dbenv, appname, path, file, force)
 err2:	(void)__db_mutex_unlock(&rp->lock, fd);
 	(void)__db_rclose(dbenv, fd, rp);
 err1:	__db_err(dbenv, "region unlink: %s: %s", name, strerror(ret));
+
 	FREES(name);
 	return (ret);
 }

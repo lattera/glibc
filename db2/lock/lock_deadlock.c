@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)lock_deadlock.c	10.25 (Sleepycat) 11/1/97";
+static const char sccsid[] = "@(#)lock_deadlock.c	10.26 (Sleepycat) 11/25/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -66,8 +66,7 @@ static void __dd_debug __P((DB_ENV *, locker_info *, u_int32_t *, u_int32_t));
 int
 lock_detect(lt, flags, atype)
 	DB_LOCKTAB *lt;
-	int flags;
-	u_int32_t atype;
+	int flags, atype;
 {
 	DB_ENV *dbenv;
 	locker_info *idmap;

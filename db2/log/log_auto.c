@@ -102,7 +102,6 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __log_register_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __log_register_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -250,7 +249,6 @@ int __log_unregister_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __log_unregister_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __log_unregister_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;

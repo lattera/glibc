@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_delete.c	10.22 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)bt_delete.c	10.23 (Sleepycat) 11/22/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -101,17 +101,20 @@ __bam_delete(argdbp, txn, key, flags)
 	h = t->bt_csp->page;
 	indx = t->bt_csp->indx;
 
-	/* Delete the key/data pair, including any duplicates. */
+	/* Delete the key/data pair, including any on-or-off page duplicates. */
 	for (cnt = 1, i = indx;; ++cnt)
 		if ((i += P_INDX) >= NUM_ENT(h) || h->inp[i] != h->inp[indx])
 			break;
 	for (; cnt > 0; --cnt, ++t->lstat.bt_deleted)
-		if (__bam_ca_delete(dbp, h->pgno, indx, NULL) != 0) {
+		if (__bam_ca_delete(dbp, h->pgno, indx, NULL, 1) == 0) {
+			if ((ret = __bam_ditem(dbp, h, indx)) != 0)
+				goto err;
+			if ((ret = __bam_ditem(dbp, h, indx)) != 0)
+				goto err;
+		} else {
 			B_DSET(GET_BKEYDATA(h, indx + O_INDX)->type);
 			indx += P_INDX;
-		} else if ((ret = __bam_ditem(dbp, h, indx)) != 0 ||
-		    (ret = __bam_ditem(dbp, h, indx)) != 0)
-			goto err;
+		}
 
 	/* If we're using record numbers, update internal page record counts. */
 	if (F_ISSET(dbp, DB_BT_RECNUM) && (ret = __bam_adjust(dbp, t, -1)) != 0)

@@ -73,7 +73,6 @@ int __txn_regop_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __txn_regop_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __txn_regop_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -202,7 +201,6 @@ int __txn_ckp_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __txn_ckp_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __txn_ckp_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;

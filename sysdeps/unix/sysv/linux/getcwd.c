@@ -110,6 +110,6 @@ __getcwd (char *buf, size_t size)
 weak_alias (__getcwd, getcwd)
 
 /* Get the code for the generic version.  */
-#define GETCWD_STORAGE_CLASS	static internal_function
+#define GETCWD_RETURN_TYPE	static char * internal_function
 #define __getcwd		generic_getcwd
 #include <sysdeps/posix/getcwd.c>

@@ -1,4 +1,5 @@
-/* Generic conversion to and from ISO 8859-XXX.
+/* Generic conversion to and from 8bit charsets,
+   converting from UCS using gaps.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -19,18 +20,30 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <gconv.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+struct gap
+{
+  uint16_t start;
+  uint16_t end;
+  int16_t idx;
+};
+
+/* Now we can include the tables.  */
+#include TABLES
 
 /* Direction of the transformation.  */
 enum direction
 {
   illegal,
-  to_iso8859,
-  from_iso8859
+  to_8bit,
+  from_8bit
 };
 
-struct iso8859_data
+struct s_8bit_data
 {
   enum direction dir;
 };
@@ -40,21 +53,21 @@ int
 gconv_init (struct gconv_step *step, struct gconv_step_data *data)
 {
   /* Determine which direction.  */
-  struct iso8859_data *new_data;
+  struct s_8bit_data *new_data;
   enum direction dir;
   int result;
 
   if (__strcasestr (step->from_name, NAME) != NULL)
-    dir = from_iso8859;
+    dir = from_8bit;
   else if (__strcasestr (step->to_name, NAME) != NULL)
-    dir = to_iso8859;
+    dir = to_8bit;
   else
     dir = illegal;
 
   result = GCONV_NOCONV;
   if (dir != illegal
       && ((new_data
-	   = (struct iso8859_data *) malloc (sizeof (struct iso8859_data)))
+	   = (struct s_8bit_data *) malloc (sizeof (struct s_8bit_data)))
 	  != NULL))
     {
       new_data->dir = dir;
@@ -106,7 +119,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      enum direction dir = ((struct iso8859_data *) data->data)->dir;
+      enum direction dir = ((struct s_8bit_data *) data->data)->dir;
 
       do_write = 0;
 
@@ -114,7 +127,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	{
 	  result = GCONV_OK;
 
-	  if (dir == from_iso8859)
+	  if (dir == from_8bit)
 	    {
 	      size_t inchars = *inbufsize;
 	      size_t outwchars = data->outbufavail;
@@ -124,7 +137,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	      while (cnt < inchars
 		     && (outwchars + sizeof (wchar_t) <= data->outbufsize))
 		{
-		  wchar_t ch = to_ucs4[(int) inbuf[cnt]];
+		  wchar_t ch = to_ucs4[(unsigned int) inbuf[cnt]];
 
 		  if (ch == L'\0' && inbuf[cnt] != '\0')
 		    {
@@ -151,13 +164,22 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	      while (inwchars >= cnt + sizeof (wchar_t)
 		     && outchars < data->outbufsize)
 		{
-		  int ch = *((wchar_t *) (inbuf + cnt));
+		  const struct gap *rp = from_idx;
+		  unsigned int ch = *((wchar_t *) (inbuf + cnt));
+		  char res;
 
-		  if (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0])
-		      || ch < 0 || (from_ucs4[ch] == '\0' && ch != 0))
+		  while (ch > rp->end)
+		    ++rp;
+		  if (ch < rp->start)
+		    /* No valid character.  */
 		    break;
 
-		  outbuf[outchars] = from_ucs4[ch];
+		  res = from_ucs4[ch + rp->idx];
+		  if (res == '\0' && ch != 0)
+		    /* No valid character.  */
+		    break;
+
+		  outbuf[outchars] = res;
 		  ++do_write;
 		  ++outchars;
 		  cnt += sizeof (wchar_t);
@@ -191,7 +213,7 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	  if (data->is_last)
 	    {
 	      /* This is the last step.  */
-	      result = (*inbufsize > (dir == from_iso8859
+	      result = (*inbufsize > (dir == from_8bit
 				      ? 0 : sizeof (wchar_t) - 1)
 			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
 	      break;

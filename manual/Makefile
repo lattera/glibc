@@ -27,9 +27,13 @@ GAWK = gawk
 INSTALL_INFO = install-info
 
 .PHONY: all dvi info
-all: dvi info
+all: dvi
 dvi: libc.dvi
+
+ifneq ($(strip $(MAKEINFO)),)
+all: info
 info: libc.info dir-add.info
+endif
 
 # Get glibc's configuration info.
 ifneq (,$(wildcard ../Makeconfig))

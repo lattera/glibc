@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_apprec.c	10.18 (Sleepycat) 9/30/97";
+static const char sccsid[] = "@(#)db_apprec.c	10.19 (Sleepycat) 11/23/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -72,10 +72,8 @@ __db_apprec(dbenv, flags)
 	if (LF_ISSET(DB_RECOVER_FATAL))
 		first_flag = DB_FIRST;
 	else {
-		if ((ret = __log_findckp(lp, &lsn)) == DB_NOTFOUND) {
-			F_SET(lp, is_thread);
-			return (0);
-		}
+		if ((ret = __log_findckp(lp, &lsn)) == DB_NOTFOUND)
+			goto out;
 		first_flag = DB_SET;
 	}
 
@@ -88,7 +86,7 @@ __db_apprec(dbenv, flags)
 			    (u_long)lsn.file, (u_long)lsn.offset);
 		else
 			__db_err(dbenv, "Retrieving first LSN");
-		goto err;
+		goto out;
 	}
 
 	first_lsn = lsn;
@@ -99,7 +97,7 @@ __db_apprec(dbenv, flags)
 		if ((ret =
 		    log_get(dbenv->lg_info, &lsn, &data, DB_NEXT)) != 0) {
 			if (ret != DB_NOTFOUND)
-				goto err;
+				goto out;
 			break;
 		}
 	}
@@ -123,7 +121,7 @@ __db_apprec(dbenv, flags)
 			goto msgerr;
 	}
 	if (ret != 0 && ret != DB_NOTFOUND)
-		goto err;
+		goto out;
 
 	for (ret = log_get(lp, &lsn, &data, DB_NEXT);
 	    ret == 0; ret = log_get(lp, &lsn, &data, DB_NEXT)) {
@@ -134,7 +132,7 @@ __db_apprec(dbenv, flags)
 			goto msgerr;
 	}
 	if (ret != DB_NOTFOUND)
-		goto err;
+		goto out;
 
 	/* Now close all the db files that are open. */
 	__log_close_files(lp);
@@ -148,7 +146,7 @@ __db_apprec(dbenv, flags)
 	dbenv->tx_info->region->last_ckp = ckp_lsn;
 	dbenv->tx_info->region->time_ckp = (u_int32_t)now;
 	if ((ret = txn_checkpoint(dbenv->tx_info, 0, 0)) != 0)
-		goto err;
+		goto out;
 
 	if (dbenv->db_verbose) {
 		__db_err(lp->dbenv, "Recovery complete at %s", ctime(&now));
@@ -160,12 +158,13 @@ __db_apprec(dbenv, flags)
 		    (u_long)dbenv->tx_info->region->last_ckp.offset);
 	}
 
-	F_SET(lp, is_thread);
-	return (0);
+	if (0) {
+msgerr:		__db_err(dbenv, "Recovery function for LSN %lu %lu failed",
+		    (u_long)lsn.file, (u_long)lsn.offset);
+	}
 
-msgerr:	__db_err(dbenv, "Recovery function for LSN %lu %lu failed",
-	    (u_long)lsn.file, (u_long)lsn.offset);
+out:	F_SET(lp, is_thread);
+	__db_txnlist_end(txninfo);
 
-err:	F_SET(lp, is_thread);
 	return (ret);
 }

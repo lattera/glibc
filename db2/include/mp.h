@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.19 (Sleepycat) 10/25/97
+ *	@(#)mp.h	10.22 (Sleepycat) 11/28/97
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -23,7 +23,6 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 #define	DB_CACHESIZE_MIN	( 20 * 1024)
 
 #define	INVALID		0		/* Invalid shared memory offset. */
-#define	TEMPORARY	"<tmp>"		/* Temporary file name. */
 
 /*
  * There are three ways we do locking in the mpool code:
@@ -122,10 +121,10 @@ struct __db_mpool {
 
 	int	    fd;			/* Underlying mmap'd fd. */
 
-
 #define	MP_ISPRIVATE	0x01		/* Private, so local memory. */
 #define	MP_LOCKHANDLE	0x02		/* Threaded, lock handles and region. */
 #define	MP_LOCKREGION	0x04		/* Concurrent access, lock region. */
+#define	MP_MALLOC	0x08		/* If region in allocated memory. */
 	u_int32_t  flags;
 };
 
@@ -157,7 +156,6 @@ struct __db_mpoolfile {
 /* These fields are not protected. */
 	TAILQ_ENTRY(__db_mpoolfile) q;	/* Linked list of DB_MPOOLFILE's. */
 
-	char	  *path;		/* Initial file path. */
 	DB_MPOOL  *dbmp;		/* Overlying DB_MPOOL. */
 	MPOOLFILE *mfp;			/* Underlying MPOOLFILE. */
 
@@ -165,11 +163,9 @@ struct __db_mpoolfile {
 	size_t	   len;			/* Length of mmap'd region. */
 
 /* These fields need to be protected for multi-threaded support. */
-#define	MP_PATH_ALLOC	0x001		/* Path is allocated memory. */
-#define	MP_PATH_TEMP	0x002		/* Backing file is a temporary. */
-#define	MP_READONLY	0x004		/* File is readonly. */
-#define	MP_UPGRADE	0x008		/* File descriptor is readwrite. */
-#define	MP_UPGRADE_FAIL	0x010		/* Upgrade wasn't possible. */
+#define	MP_READONLY	0x01		/* File is readonly. */
+#define	MP_UPGRADE	0x02		/* File descriptor is readwrite. */
+#define	MP_UPGRADE_FAIL	0x04		/* Upgrade wasn't possible. */
 	u_int32_t  flags;
 };
 
@@ -220,18 +216,21 @@ struct __mpoolfile {
 	u_int32_t ref;			/* Reference count. */
 
 	int	  ftype;		/* File type. */
-	int	  can_mmap;		/* If the file can be mmap'd. */
-
 	int	  lsn_off;		/* Page's LSN offset. */
 
 	size_t	  path_off;		/* File name location. */
-
 	size_t	  fileid_off;		/* File identification location. */
 
 	size_t	  pgcookie_len;		/* Pgin/pgout cookie length. */
 	size_t	  pgcookie_off;		/* Pgin/pgout cookie location. */
 
 	int	  lsn_cnt;		/* Checkpoint buffers left to write. */
+
+	db_pgno_t last_pgno;		/* Last page in the file. */
+
+#define	MP_CAN_MMAP	0x01		/* If the file can be mmap'd. */
+#define	MP_TEMP		0x02		/* Backing file is a temporary. */
+	u_int32_t  flags;
 
 	DB_MPOOL_FSTAT stat;		/* Per-file mpool statistics. */
 };

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fget.c	10.30 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)mp_fget.c	10.32 (Sleepycat) 11/26/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -38,13 +38,11 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	int flags;
 	void *addrp;
 {
-	BH *bhp, *tbhp;
+	BH *bhp;
 	DB_MPOOL *dbmp;
 	MPOOL *mp;
 	MPOOLFILE *mfp;
-	db_pgno_t lastpgno;
 	size_t bucket, mf_offset;
-	off_t size;
 	u_long cnt;
 	int b_incr, b_inserted, readonly_alloc, ret;
 	void *addr;
@@ -97,7 +95,7 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	mf_offset = R_OFFSET(dbmp, mfp);
 	addr = NULL;
 	bhp = NULL;
-	b_incr = b_inserted = readonly_alloc = ret = 0;
+	b_incr = b_inserted = ret = 0;
 
 	LOCKREGION(dbmp);
 
@@ -114,11 +112,10 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	 * It would be possible to do so by reference counting the open
 	 * pages from the mmap, but it's unclear to me that it's worth it.
 	 */
-	if (dbmfp->addr != NULL && dbmfp->mfp->can_mmap) {
-		lastpgno = dbmfp->len == 0 ?
-		    0 : (dbmfp->len - 1) / mfp->stat.st_pagesize;
+	if (dbmfp->addr != NULL && F_ISSET(dbmfp->mfp, MP_CAN_MMAP)) {
+		readonly_alloc = 0;
 		if (LF_ISSET(DB_MPOOL_LAST))
-			*pgnoaddr = lastpgno;
+			*pgnoaddr = mfp->last_pgno;
 		else {
 			/*
 			 * !!!
@@ -128,10 +125,10 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 			 */
 			if (LF_ISSET(DB_MPOOL_CREATE | DB_MPOOL_NEW))
 				readonly_alloc = 1;
-			else if (*pgnoaddr > lastpgno) {
+			else if (*pgnoaddr > mfp->last_pgno) {
 				__db_err(dbmp->dbenv,
 				    "%s: page %lu doesn't exist",
-				    dbmfp->path, (u_long)*pgnoaddr);
+				    __memp_fn(dbmfp), (u_long)*pgnoaddr);
 				ret = EINVAL;
 				goto err;
 			}
@@ -146,79 +143,38 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 		}
 	}
 
-	/*
-	 * If requesting the last page or a new page, find the last page.  The
-	 * tricky thing is that the user may have created a page already that's
-	 * after any page that exists in the file.
-	 */
-	if (LF_ISSET(DB_MPOOL_LAST | DB_MPOOL_NEW)) {
-		/*
-		 * Temporary files may not yet have been created.
-		 *
-		 * Don't lock -- there are no atomicity issues for stat(2).
-		 */
-		if (dbmfp->fd == -1)
-			size = 0;
-		else if ((ret =
-		    __db_ioinfo(dbmfp->path, dbmfp->fd, &size, NULL)) != 0) {
-			__db_err(dbmp->dbenv,
-			    "%s: %s", dbmfp->path, strerror(ret));
-			goto err;
-		}
+	/* Check if requesting the last page or a new page. */
+	if (LF_ISSET(DB_MPOOL_LAST))
+		*pgnoaddr = mfp->last_pgno;
 
-		*pgnoaddr = size == 0 ? 0 : (size - 1) / mfp->stat.st_pagesize;
-
-		/*
-		 * Walk the list of BH's, looking for later pages.  Save the
-		 * pointer if a later page is found so that we don't have to
-		 * search the list twice.
-		 *
-		 * If requesting a new page, return the page one after the last
-		 * page -- which we'll have to create.
-		 */
-		for (tbhp = SH_TAILQ_FIRST(&mp->bhq, __bh);
-		    tbhp != NULL; tbhp = SH_TAILQ_NEXT(tbhp, q, __bh))
-			if (tbhp->pgno >= *pgnoaddr &&
-			    tbhp->mf_offset == mf_offset) {
-				bhp = tbhp;
-				*pgnoaddr = bhp->pgno;
-			}
-		if (LF_ISSET(DB_MPOOL_NEW))
-			++*pgnoaddr;
+	if (LF_ISSET(DB_MPOOL_NEW)) {
+		*pgnoaddr = mfp->last_pgno + 1;
+		goto alloc;
 	}
 
-	/* If we already found the right buffer, return it. */
-	if (LF_ISSET(DB_MPOOL_LAST) && bhp != NULL) {
-		addr = bhp->buf;
-		goto found;
-	}
-
-	/* If we haven't checked the BH hash bucket queue, do the search. */
-	if (!LF_ISSET(DB_MPOOL_LAST | DB_MPOOL_NEW)) {
-		bucket = BUCKET(mp, mf_offset, *pgnoaddr);
-		for (cnt = 0,
-		    bhp = SH_TAILQ_FIRST(&dbmp->htab[bucket], __bh);
-		    bhp != NULL; bhp = SH_TAILQ_NEXT(bhp, hq, __bh)) {
-			++cnt;
-			if (bhp->pgno == *pgnoaddr &&
-			    bhp->mf_offset == mf_offset) {
-				addr = bhp->buf;
-				++mp->stat.st_hash_searches;
-				if (cnt > mp->stat.st_hash_longest)
-					mp->stat.st_hash_longest = cnt;
-				mp->stat.st_hash_examined += cnt;
-				goto found;
-			}
-		}
-		if (cnt != 0) {
+	/* Check the BH hash bucket queue. */
+	bucket = BUCKET(mp, mf_offset, *pgnoaddr);
+	for (cnt = 0,
+	    bhp = SH_TAILQ_FIRST(&dbmp->htab[bucket], __bh);
+	    bhp != NULL; bhp = SH_TAILQ_NEXT(bhp, hq, __bh)) {
+		++cnt;
+		if (bhp->pgno == *pgnoaddr && bhp->mf_offset == mf_offset) {
+			addr = bhp->buf;
 			++mp->stat.st_hash_searches;
 			if (cnt > mp->stat.st_hash_longest)
 				mp->stat.st_hash_longest = cnt;
 			mp->stat.st_hash_examined += cnt;
+			goto found;
 		}
 	}
+	if (cnt != 0) {
+		++mp->stat.st_hash_searches;
+		if (cnt > mp->stat.st_hash_longest)
+			mp->stat.st_hash_longest = cnt;
+		mp->stat.st_hash_examined += cnt;
+	}
 
-	/*
+alloc:	/*
 	 * Allocate a new buffer header and data space, and mark the contents
 	 * as useless.
 	 */
@@ -300,7 +256,7 @@ found:		/* Increment the reference count. */
 		if (bhp->ref == UINT16_T_MAX) {
 			__db_err(dbmp->dbenv,
 			    "%s: too many references to page %lu",
-			    dbmfp->path, bhp->pgno);
+			    __memp_fn(dbmfp), bhp->pgno);
 			ret = EINVAL;
 			goto err;
 		}
@@ -345,6 +301,14 @@ found:		/* Increment the reference count. */
 		++mp->stat.st_cache_hit;
 		++mfp->stat.st_cache_hit;
 	}
+
+	/*
+	 * If we're returning a page after our current notion of the last-page,
+	 * update our information.  Note, there's no way to un-instantiate this
+	 * page, it's going to exist whether it's returned to us dirty or not.
+	 */
+	if (bhp->pgno > mfp->last_pgno)
+		mfp->last_pgno = bhp->pgno;
 
 mapret:	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	++dbmfp->pinref;

@@ -56,6 +56,7 @@ BUILD_CC = @BUILD_CC@
 CFLAGS = @CFLAGS@
 AR = @AR@
 RANLIB = @RANLIB@
+MAKEINFO = @MAKEINFO@
 AS = $(CC) -c
 
 # Installation tools.

@@ -40,7 +40,6 @@ static mbstate_t internal;
 size_t
 __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
-  char fake[1];
   size_t written = 0;
 
   if (ps == NULL)

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.21 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)mp_bh.c	10.23 (Sleepycat) 11/26/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -40,7 +40,6 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	BH *bhp;
 	int *restartp, *wrotep;
 {
-	DBT dbt;
 	DB_MPOOLFILE *dbmfp;
 	DB_MPREG *mpreg;
 
@@ -53,7 +52,7 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	 * Walk the process' DB_MPOOLFILE list and find a file descriptor for
 	 * the file.  We also check that the descriptor is open for writing.
 	 * If we find a descriptor on the file that's not open for writing, we
-	 * try and upgrade it to make it writeable.
+	 * try and upgrade it to make it writeable.  If that fails, we're done.
 	 */
 	LOCKHANDLE(dbmp, dbmp->mutexp);
 	for (dbmfp = TAILQ_FIRST(&dbmp->dbmfq);
@@ -86,18 +85,34 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	}
 
 	/*
-	 * Try and open the file; ignore any error, assume it's a permissions
-	 * problem.
+	 * Try and open the file, attaching to the underlying shared area.
 	 *
 	 * XXX
-	 * There's no negative cache here, so we may repeatedly try and open
-	 * files that we have previously tried (and failed) to open.
+	 * Don't try to attach to temporary files.  There are two problems in
+	 * trying to do that.  First, if we have different privileges than the
+	 * process that "owns" the temporary file, we might create the backing
+	 * disk file such that the owning process couldn't read/write its own
+	 * buffers, e.g., memp_trickle() running as root creating a file owned
+	 * as root, mode 600.  Second, if the temporary file has already been
+	 * created, we don't have any way of finding out what its real name is,
+	 * and, even if we did, it was already unlinked (so that it won't be
+	 * left if the process dies horribly).  This decision causes a problem,
+	 * however: if the temporary file consumes the entire buffer cache,
+	 * and the owner doesn't flush the buffers to disk, we could end up
+	 * with resource starvation, and the memp_trickle() thread couldn't do
+	 * anything about it.  That's a pretty unlikely scenario, though.
+	 *
+	 * XXX
+	 * There's no negative cache, so we may repeatedly try and open files
+	 * that we have previously tried (and failed) to open.
+	 *
+	 * Ignore any error, assume it's a permissions problem.
 	 */
-	dbt.size = mfp->pgcookie_len;
-	dbt.data = R_ADDR(dbmp, mfp->pgcookie_off);
-	if (__memp_fopen(dbmp, R_ADDR(dbmp, mfp->path_off),
-	    mfp->ftype, 0, 0, mfp->stat.st_pagesize,
-	    mfp->lsn_off, &dbt, R_ADDR(dbmp, mfp->fileid_off), 0, &dbmfp) != 0)
+	if (F_ISSET(mfp, MP_TEMP))
+		return (0);
+
+	if (__memp_fopen(dbmp, mfp, R_ADDR(dbmp, mfp->path_off), mfp->ftype,
+	    0, 0, mfp->stat.st_pagesize, 0, NULL, NULL, 0, &dbmfp) != 0)
 		return (0);
 
 found:	return (__memp_pgwrite(dbmfp, bhp, restartp, wrotep));
@@ -144,7 +159,7 @@ __memp_pgread(dbmfp, bhp, can_create)
 			UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 			__db_err(dbmp->dbenv,
 			    "%s: page %lu doesn't exist, create flag not set",
-			    dbmfp->path, (u_long)bhp->pgno);
+			    __memp_fn(dbmfp), (u_long)bhp->pgno);
 			goto err;
 		}
 		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
@@ -270,12 +285,14 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 
 	/* Temporary files may not yet have been created. */
 	LOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (dbmfp->fd == -1 && ((ret = __db_appname(dbenv, DB_APP_TMP,
-	    NULL, NULL, &dbmfp->fd, NULL)) != 0 || dbmfp->fd == -1)) {
-		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-		__db_err(dbenv, "unable to create temporary backing file");
-		goto err;
-	}
+	if (dbmfp->fd == -1)
+		if ((ret = __db_appname(dbenv, DB_APP_TMP,
+		    NULL, NULL, &dbmfp->fd, NULL)) != 0 || dbmfp->fd == -1) {
+			UNLOCKHANDLE(dbmp, dbmfp->mutexp);
+			__db_err(dbenv,
+			    "unable to create temporary backing file");
+			goto err;
+		}
 
 	/* Write the page out. */
 	if ((ret = __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0)
@@ -350,8 +367,8 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 
 	return (0);
 
-syserr:	__db_err(dbenv,
-	    "%s: %s failed for page %lu", dbmfp->path, fail, (u_long)bhp->pgno);
+syserr:	__db_err(dbenv, "%s: %s failed for page %lu",
+	    __memp_fn(dbmfp), fail, (u_long)bhp->pgno);
 
 err:	UNLOCKBUFFER(dbmp, bhp);
 	LOCKREGION(dbmp);
@@ -416,7 +433,7 @@ __memp_pg(dbmfp, bhp, is_pgin)
 
 err:	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 	__db_err(dbmp->dbenv, "%s: %s failed for page %lu",
-	    dbmfp->path, is_pgin ? "pgin" : "pgout", (u_long)bhp->pgno);
+	    __memp_fn(dbmfp), is_pgin ? "pgin" : "pgout", (u_long)bhp->pgno);
 	return (ret);
 }
 
@@ -462,7 +479,8 @@ __memp_upgrade(dbmp, dbmfp, mfp)
 	DB_MPOOLFILE *dbmfp;
 	MPOOLFILE *mfp;
 {
-	int fd;
+	int fd, ret;
+	char *rpath;
 
 	/*
 	 * !!!
@@ -477,16 +495,24 @@ __memp_upgrade(dbmp, dbmfp, mfp)
 	if (F_ISSET(dbmfp, MP_UPGRADE_FAIL))
 		return (1);
 
-	/* Try the open. */
-	if (__db_open(R_ADDR(dbmp, mfp->path_off), 0, 0, 0, &fd) != 0) {
+	/*
+	 * Calculate the real name for this file and try to open it read/write.
+	 * We know we have a valid pathname for the file because it's the only
+	 * way we could have gotten a file descriptor of any kind.
+	 */
+	if ((ret = __db_appname(dbmp->dbenv, DB_APP_DATA,
+	    NULL, R_ADDR(dbmp, mfp->path_off), NULL, &rpath)) != 0)
+		return (ret);
+	if (__db_open(rpath, 0, 0, 0, &fd) != 0) {
 		F_SET(dbmfp, MP_UPGRADE_FAIL);
-		return (1);
+		ret = 1;
+	} else {
+		/* Swap the descriptors and set the upgrade flag. */
+		(void)__db_close(dbmfp->fd);
+		dbmfp->fd = fd;
+		F_SET(dbmfp, MP_UPGRADE);
+		ret = 0;
 	}
-
-	/* Swap the descriptors and set the upgrade flag. */
-	(void)__db_close(dbmfp->fd);
-	dbmfp->fd = fd;
-	F_SET(dbmfp, MP_UPGRADE);
-
-	return (0);
+	FREES(rpath);
+	return (ret);
 }

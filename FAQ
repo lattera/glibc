@@ -113,6 +113,9 @@ please let me know.
 [Q31]	``What's the problem with configure --enable-omitfp?''
 
 [Q32]	``Why don't signals interrupt system calls anymore?''
+
+[Q33]	``I've got errors compiling code that uses certain string
+	  functions.  Why?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -812,7 +815,7 @@ happen.  So in case of doubt report such a warning message as a problem.
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q31]	``What's the problem with configure --enable-omitfp?''
 
-{AJ} When configuring with --enable-omitfp the libraries are build
+[A31] {AJ} When configuring with --enable-omitfp the libraries are build
 without frame pointers. Some compilers produce in this situation buggy
 code and therefore we don't advise using it at the moment.
 
@@ -867,6 +870,44 @@ individually switchable on a per-signal basis with this function.
 If all you want is for one specific signal to cause system calls to fail
 and return EINTR (for example, to implement a timeout) you can do this with
 siginterrupt().
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q33]	``I've got errors compiling code that uses certain string
+	  functions.  Why?''
+
+[A33] {AJ} glibc 2.1 has the much asked for optimized string
+functions that are faster than the normal library functions. Some of
+the functions are implemented as inline functions and others as
+macros.
+The optimized string functions are only used when compiling with
+optimizations (-O1 or higher). The behaviour can be changed with two
+feature macros:
+* __NO_STRING_INLINES: Don't use string optimizations.
+* __USE_STRING_INLINES: Use also assembler inline functions (might
+  increase code use dramatically).
+
+Since some of these string functions are now additionally defined as
+macros, code like "char *strncpy();" doesn't work anymore (and is even
+unneccessary since <string.h> has the necessary declarations). Either
+change your code or define __NO_STRING_INLINES.
+
+{UD} Another problem in this area is that the gcc still has problems on
+machines with very few registers (e.g., ix86).  The inline assembler
+code sometimes requires many/all registers and the register allocator
+cannot handle these situation in all cases.
+
+If a function is also defined as a macro in the libc headers one can prevent
+the use of the macro easily.  E.g., instead of
+
+	cp = strcpy (foo, "lkj");
+
+one can write
+
+	cp = (strcpy) (foo, "lkj");
+
+Using this method one can avoid using the optimizations for selected
+function calls.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

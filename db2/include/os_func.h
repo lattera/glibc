@@ -4,12 +4,11 @@
  * Copyright (c) 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)os_func.h	10.2 (Sleepycat) 10/28/97
+ *	@(#)os_func.h	10.4 (Sleepycat) 11/28/97
  */
 
 /* Calls which can be replaced by the application. */
 struct __db_jumptab {
-	void   *(*db_calloc) __P((size_t, size_t));	/* DB_FUNC_CALLOC */
 	int	(*db_close) __P((int));			/* DB_FUNC_CLOSE */
 	void	(*db_dirfree) __P((char **, int));	/* DB_FUNC_DIRFREE */
 	int	(*db_dirlist)				/* DB_FUNC_DIRLIST */
@@ -54,7 +53,6 @@ extern struct __db_jumptab __db_jump;
  * part of DB is the only code that should use the __os_XXX names, all other
  * parts of DB should be calling __db_XXX functions.
  */
-#define	__db_calloc	__db_jump.db_calloc
 #define	__os_close	__db_jump.db_close	/* __db_close is a wrapper. */
 #define	__db_dirfree	__db_jump.db_dirfree
 #define	__db_dirlist	__db_jump.db_dirlist
@@ -62,11 +60,9 @@ extern struct __db_jumptab __db_jump;
 #define	__db_free	__db_jump.db_free
 #define	__os_fsync	__db_jump.db_fsync	/* __db_fsync is a wrapper. */
 #define	__db_ioinfo	__db_jump.db_ioinfo
-#define	__db_malloc	__db_jump.db_malloc
 #define	__db_map	__db_jump.db_map
 #define	__os_open	__db_jump.db_open	/* __db_open is a wrapper. */
 #define	__os_read	__db_jump.db_read	/* __db_read is a wrapper. */
-#define	__db_realloc	__db_jump.db_realloc
 #define	__db_seek	__db_jump.db_seek
 #define	__db_sleep	__db_jump.db_sleep
 #define	__db_strdup	__db_jump.db_strdup

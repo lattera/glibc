@@ -498,6 +498,10 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 			ch = L'\0';
 		      else
 			ch = to_ucs4_comb[inchar - 0xc1][inchar2 - 0x20];
+
+		      if (ch == L'\0')
+			/* Undo the increment for illegal characters.  */
+			--cnt;
 		    }
 		  else
 		    ch = to_ucs4[inchar];

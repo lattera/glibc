@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)lock.h	10.9 (Sleepycat) 10/25/97
+ *	@(#)lock.h	10.10 (Sleepycat) 11/13/97
  */
 
 typedef struct __db_lockobj	DB_LOCKOBJ;
@@ -85,9 +85,13 @@ struct __db_lockobj {
 	} dlinks;
 #define	DB_LOCK_OBJTYPE		1
 #define	DB_LOCK_LOCKER		2
+					/* Allocate room in the object to
+					 * hold typical DB lock structures
+					 * so that we do not have to
+					 * allocate them from shalloc. */
+	u_int8_t objdata[sizeof(struct __db_ilock)];
 	u_int8_t type;			/* Real object or locker id. */
 };
-
 
 #define dd_id	wlinks._dd_id
 #define	waiters	wlinks._waiters

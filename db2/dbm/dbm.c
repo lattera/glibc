@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)dbm.c	10.6 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)dbm.c	10.7 (Sleepycat) 11/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -198,9 +198,20 @@ dbm_open(file, oflags, mode)
 	dbinfo.h_ffactor = 40;
 	dbinfo.h_nelem = 1;
 
-	(void)snprintf(path, sizeof(path), "%s%s", file, DBM_SUFFIX);
-	if ((__set_errno(db_open(path,
-	    DB_HASH, __db_oflags(oflags), mode, NULL, &dbinfo, &dbp))) != 0)
+	/*
+	 * XXX
+	 * Don't use sprintf(3)/snprintf(3) -- the former is dangerous, and
+	 * the latter isn't standard, and we're manipulating strings handed
+	 * us by the application.
+	 */
+	if (strlen(file) + strlen(DBM_SUFFIX) + 1 > sizeof(path)) {
+		errno = ENAMETOOLONG;
+		return (NULL);
+	}
+	(void)strcpy(path, file);
+	(void)strcat(path, DBM_SUFFIX);
+	if ((errno = db_open(path,
+	    DB_HASH, __db_oflags(oflags), mode, NULL, &dbinfo, &dbp)) != 0)
 		return (NULL);
 	return ((DBM *)dbp);
 }
@@ -261,7 +272,7 @@ dbm_firstkey(db)
 	DBC *cp;
 
 	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
-		if ((__set_errno(db->cursor(db, NULL, &cp))) != 0) {
+		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
 			memset(&key, 0, sizeof(key));
 			return (key);
 		}
@@ -294,7 +305,7 @@ dbm_nextkey(db)
 	int status;
 
 	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
-		if ((__set_errno(db->cursor(db, NULL, &cp))) != 0) {
+		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
 			memset(&key, 0, sizeof(key));
 			return (key);
 		}
@@ -330,9 +341,9 @@ dbm_delete(db, key)
 	_key.size = key.dsize;
 	ret = (((DB *)db)->del)((DB *)db, NULL, &_key, 0);
 	if (ret < 0)
-		__set_errno(ENOENT);
+		errno = ENOENT;
 	else if (ret > 0) {
-		__set_errno(ret);
+		errno = ret;
 		ret = -1;
 	}
 	return (ret);

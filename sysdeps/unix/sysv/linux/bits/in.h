@@ -57,8 +57,10 @@ struct ip_mreq
 /* IPV6 socket options.  */
 #define IPV6_ADDRFORM		1
 #define IPV6_PKTINFO		2
-#define IPV6_RXHOPOPTS		3
-#define IPV6_RXDSTOPTS		4
+#define IPV6_RXHOPOPTS		3 /* obsolete name */
+#define IPV6_RXDSTOPTS		4 /* obsolete name */
+#define IPV6_HOPOPTS		IPV6_RXHOPOPTS  /* new name */
+#define IPV6_DSTOPTS		IPV6_RXDSTOPTS  /* new name */
 #define IPV6_RXSRCRT		5
 #define IPV6_PKTOPTIONS		6
 #define IPV6_CHECKSUM		7

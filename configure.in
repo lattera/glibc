@@ -408,6 +408,20 @@ if test "$INSTALL" = "${srcdir}/install-sh -c"; then
 fi
 AC_PROG_LN_S
 AC_CHECK_PROGS(MSGFMT, msgfmt gmsgfmt, :)
+AC_CHECK_PROG(MAKEINFO, makeinfo, makeinfo)
+if test "$MAKEINFO"; then
+changequote(,)dnl Need [] for regexps.
+  if $MAKEINFO --version | grep 'texinfo 3\.[1-9][1-9]' >/dev/null 2>&1
+changequote([,])dnl
+  then : # Makeinfo 3.11 or greater, works.
+  else
+    AC_MSG_WARN([
+*** makeinfo is too old (need version 3.11 or better).
+*** You should install the needed version and re-configure since otherwise
+*** you won't get the info pages installed.])
+    MAKEINFO=
+  fi
+fi
 
 AC_PROG_CC_LOCAL
 AC_CANONICAL_BUILD

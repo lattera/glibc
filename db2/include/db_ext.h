@@ -65,6 +65,7 @@ int __db_add_recovery __P((DB_ENV *,
 int __db_txnlist_init __P((void *));
 int __db_txnlist_add __P((void *, u_int32_t));
 int __db_txnlist_find __P((void *, u_int32_t));
+void __db_txnlist_end __P((void *));
 int __db_dput __P((DB *,
    DBT *, PAGE **, db_indx_t *, int (*)(DB *, u_int32_t, PAGE **)));
 int __db_drem __P((DB *,

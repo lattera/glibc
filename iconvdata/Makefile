@@ -22,11 +22,14 @@
 subdir	:= iconvdata
 
 # Names of all the shared objects which implement the transformations.
-modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5	\
-	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10	\
-	   T.61 ISO_6937
+modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		\
+	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		\
+	   T.61 ISO_6937 SJIS KOI-8 KOI8-R LATIN-GREEK LATIN-GREEK-1	\
+	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR
 modules.so := $(addsuffix .so, $(modules))
 
+
+include ../Makeconfig
 
 ISO8859-1-routines := iso8859-1
 ISO8859-2-routines := iso8859-2
@@ -40,15 +43,29 @@ ISO8859-9-routines := iso8859-9
 ISO8859-10-routines := iso8859-10
 T.61-routines := t61
 ISO_6937-routines := iso6937
+SJIS-routines := sjis
+KOI-8-routines := koi-8
+KOI8-R-routines := koi8-r
+LATIN-GREEK-routines := latin-greek
+LATIN-GREEK-1-routines := latin-greek-1
+HP-ROMAN8-routines := hp-roman8
+EBCDIC-AT-DE-routines := ebcdic-at-de
+EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
+EBCDIC-CA-FR-routines := ebcdic-ca-fr
 
-distribute := iso8859-generic.c \
+extra-libs = libJIS
+extra-libs-others = $(extra-libs)
+
+libJIS-routines := jis0201 jis0208 jis0212
+libJIS-inhibit-o := $(filter-out .os,$(object-suffixes))
+
+distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c\
-	      iso8859-2.h iso8859-3.h iso8859-4.h iso8859-5.h iso8859-6.h \
-	      iso8859-7.h iso8859-8.h iso8859-9.h iso8859-10.h t61.c	  \
-	      iso6937.c
-
-include ../Makeconfig
+	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	  \
+	      koi-8.c koi8-r.c koi8-r.h hp-roman8.c latin-greek.c	  \
+	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c\
+	      ebcdic-at-de-a.c ebcdic-ca-fr.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -76,38 +93,82 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 
 # If we have the localedata add-on available we can build the conversion
 # tables for numerous charsets.
-ifneq (,$(findstring localedata,$(add-ons)))
 define generate-8bit-table
 ( echo "static const wchar_t to_ucs4[256] = {"; \
-  sed -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\1] = 0x\2,/p' -e d $^ | sort -u; \
+  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\1] = 0x\2,/p' -e d $^ | sort -u; \
   echo "};"; \
   echo "static const char from_ucs4[] = {"; \
-  sed -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\2] = 0x\1,/p' -e d $^ | sort -u; \
+  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\2] = 0x\1,/p' -e d $^ | sort -u; \
   echo "};" ) > $@.new && rm -f $@ && mv $@.new $@
 endef
 
-iso8859-2.h: ../localedata/charmaps/ISO-8859-2
+sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-5.h \
+			 iso8859-6.h iso8859-7.h iso8859-8.h iso8859-9.h \
+			 iso8859-10.h koi-8.h hp-roman8.h ebcdic-at-de.h \
+			 ebcdic-at-de-a.h ebcdic-ca-fr.h
+
+define generate-8bit-gap-table
+( echo "static const wchar_t to_ucs4[256] = {"; \
+  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/  [0x\1] = 0x\2,/p' -e d $^ | sort -u; \
+  echo "};"; \
+  echo "static struct gap from_idx[] = {"; \
+  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/0x\2 0x\1/p' -e d $^ | sort -u | $(PERL) gap.pl; \
+  echo "  { start: 0xffff, end: 0xffff, idx:     0 }"; \
+  echo "};"; \
+  echo "static const char from_ucs4[] = {"; \
+  sed -e '/^[^[:space:]]*[[:space:]]*.x00/d' -e 's/^[^[:space:]]*[[:space:]]*.x\(..\)[[:space:]]*<U\(....\)>.*/0x\2 0x\1/p' -e d $^ | sort -u | $(PERL) gaptab.pl; \
+  echo "};" ) > $@.new && rm -f $@ && mv $@.new $@
+endef
+
+perl-generated-headers := koi8-r.h latin-greek.h latin-greek-1.h
+
+# The headers must be generated before the compilation.
+before-compile = $(sed-generated-headers) $(perl-generated-headers)
+
+
+# Rules to generate the headers.
+iso8859-2.h: ../localedata/charmaps/ISO-8859-2 Makefile
 	$(generate-8bit-table)
-iso8859-3.h: ../localedata/charmaps/ISO-8859-3
+iso8859-3.h: ../localedata/charmaps/ISO-8859-3 Makefile
 	$(generate-8bit-table)
-iso8859-4.h: ../localedata/charmaps/ISO-8859-4
+iso8859-4.h: ../localedata/charmaps/ISO-8859-4 Makefile
 	$(generate-8bit-table)
-iso8859-5.h: ../localedata/charmaps/ISO-8859-5
+iso8859-5.h: ../localedata/charmaps/ISO-8859-5 Makefile
 	$(generate-8bit-table)
-iso8859-6.h: ../localedata/charmaps/ISO-8859-6
+iso8859-6.h: ../localedata/charmaps/ISO-8859-6 Makefile
 	$(generate-8bit-table)
-iso8859-7.h: ../localedata/charmaps/ISO-8859-7
+iso8859-7.h: ../localedata/charmaps/ISO-8859-7 Makefile
 	$(generate-8bit-table)
-iso8859-8.h: ../localedata/charmaps/ISO-8859-8
+iso8859-8.h: ../localedata/charmaps/ISO-8859-8 Makefile
 	$(generate-8bit-table)
-iso8859-9.h: ../localedata/charmaps/ISO-8859-9
+iso8859-9.h: ../localedata/charmaps/ISO-8859-9 Makefile
 	$(generate-8bit-table)
-iso8859-10.h: ../localedata/charmaps/ISO-8859-10
+iso8859-10.h: ../localedata/charmaps/ISO-8859-10 Makefile
 	$(generate-8bit-table)
 
-headers: iso8859-2.h iso8859-3.h iso8859-4.h iso8859-5.h iso8859-6.h	\
-	 iso8859-7.h iso8859-8.h iso8859-9.h iso8859-10.h
+koi-8.h: ../localedata/charmaps/KOI-8 Makefile
+	$(generate-8bit-table)
+
+hp-roman8.h: ../localedata/charmaps/HP-ROMAN8 Makefile
+	$(generate-8bit-table)
+
+ebcdic-at-de.h: ../localedata/charmaps/EBCDIC-AT-DE Makefile
+	$(generate-8bit-table)
+ebcdic-at-de-a.h: ../localedata/charmaps/EBCDIC-AT-DE-A Makefile
+	$(generate-8bit-table)
+ebcdic-ca-fr.h: ../localedata/charmaps/EBCDIC-CA-FR Makefile
+	$(generate-8bit-table)
+
+ifneq ($(PERL),no)
+koi8-r.h: ../localedata/charmaps/KOI8-R Makefile
+	$(generate-8bit-gap-table)
+latin-greek.h: ../localedata/charmaps/LATIN-GREEK Makefile
+	$(generate-8bit-gap-table)
+latin-greek-1.h: ../localedata/charmaps/LATIN-GREEK-1 Makefile
+	$(generate-8bit-gap-table)
 endif
+
+headers: $(sed-generated-headers) $(perl-generated-headers)
 
 
 $(addprefix $(inst_gconvdir)/, $(modules.so)): $(inst_gconvdir)/%: $(objpfx)%

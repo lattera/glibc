@@ -11,7 +11,7 @@ int __bam_cursor __P((DB *, DB_TXN *, DBC **));
 int __bam_c_iclose __P((DB *, DBC *));
 int __bam_get __P((DB *, DB_TXN *, DBT *, DBT *, int));
 int __bam_ovfl_chk __P((DB *, CURSOR *, u_int32_t, int));
-int __bam_ca_delete __P((DB *, db_pgno_t, u_int32_t, CURSOR *));
+int __bam_ca_delete __P((DB *, db_pgno_t, u_int32_t, CURSOR *, int));
 void __bam_ca_di __P((DB *, db_pgno_t, u_int32_t, int));
 void __bam_ca_dup __P((DB *,
    db_pgno_t, u_int32_t, u_int32_t, db_pgno_t, u_int32_t));

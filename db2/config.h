@@ -114,6 +114,9 @@
 /* Define if you have the strsep function.  */
 #define HAVE_STRSEP 1
 
+/* Define if you have the sysconf function.  */
+#define HAVE_SYSCONF 1
+
 /* Define if you have the vsnprintf function.  */
 #define HAVE_VSNPRINTF 1
 

@@ -26,6 +26,9 @@
 
 __BEGIN_DECLS
 
+/* ISO 10646 value used to signal invalid value.  */
+#define UNKNOWN_10646_CHAR	((wchar_t) 0xfffd)
+
 /* Error codes for gconv functions.  */
 enum
 {

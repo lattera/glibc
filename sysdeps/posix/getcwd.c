@@ -190,8 +190,8 @@ extern char *alloca ();
 # define __getcwd getcwd
 #endif
 
-#ifndef GETCWD_STORAGE_CLASS
-# define GETCWD_STORAGE_CLASS
+#ifndef GETCWD_RETURN_TYPE
+# define GETCWD_RETURN_TYPE char *
 #endif
 
 /* Get the pathname of the current working directory, and put it in SIZE
@@ -200,8 +200,7 @@ extern char *alloca ();
    NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
    unless SIZE <= 0, in which case it is as big as necessary.  */
 
-GETCWD_STORAGE_CLASS
-char *
+GETCWD_RETURN_TYPE
 __getcwd (buf, size)
      char *buf;
      size_t size;

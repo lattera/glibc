@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_split.c	10.17 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)bt_split.c	10.18 (Sleepycat) 11/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -396,14 +396,14 @@ __bam_broot(dbp, rootp, lp, rp)
 	 * The btree comparison code guarantees that the left-most key on any
 	 * level of the tree is never used, so it doesn't need to be filled in.
 	 */
+	memset(&bi, 0, sizeof(bi));
 	bi.len = 0;
 	B_TSET(bi.type, B_KEYDATA, 0);
 	bi.pgno = lp->pgno;
 	if (F_ISSET(dbp, DB_BT_RECNUM)) {
 		bi.nrecs = __bam_total(lp);
 		RE_NREC_SET(rootp, bi.nrecs);
-	} else
-		bi.nrecs = 0;
+	}
 	hdr.data = &bi;
 	hdr.size = SSZA(BINTERNAL, data);
 	if ((ret =
@@ -591,6 +591,7 @@ __bam_pinsert(dbp, parent, lchild, rchild)
 			return (DB_NEEDSPLIT);
 
 		/* Add a new record for the right page. */
+		memset(&bi, 0, sizeof(bi));
 		bi.len = child_bi->len;
 		B_TSET(bi.type, child_bi->type, 0);
 		bi.pgno = rchild->pgno;
@@ -640,6 +641,7 @@ noprefix:			nksize = child_bk->len;
 			if (P_FREESPACE(ppage) < nbytes)
 				return (DB_NEEDSPLIT);
 
+			memset(&bi, 0, sizeof(bi));
 			bi.len = nksize;
 			B_TSET(bi.type, child_bk->type, 0);
 			bi.pgno = rchild->pgno;
@@ -661,6 +663,7 @@ noprefix:			nksize = child_bk->len;
 			if (P_FREESPACE(ppage) < nbytes)
 				return (DB_NEEDSPLIT);
 
+			memset(&bi, 0, sizeof(bi));
 			bi.len = BOVERFLOW_SIZE;
 			B_TSET(bi.type, child_bk->type, 0);
 			bi.pgno = rchild->pgno;

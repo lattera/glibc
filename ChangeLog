@@ -1,3 +1,189 @@
+1997-12-01 17:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (subdirs): Add iconvdata and localedata.
+
+	* iconv/gconv.h: Define UNKNOWN_10646_CHAR as error value.
+
+	* iconv/gconv_conf.c (read_conf_file): Little optimization.
+
+	* iconvdata/8bit-gap.c: New file.
+	* iconvdata/8bit-generic.c: Renamed from ...
+	* iconvdata/iso8859-generic.c: ...this.
+	* iconvdata/configure: Removed.
+	* iconvdata/Makefile: Add new modules and better rules.
+	* iconvdata/iso6937.c: Minor bug fixes.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/t61.c: Likewise.
+	* iconvdata/iso8859-2.c: Change to use 8bit-generic.c.
+	Minor bug fixes.
+	* iconvdata/iso8859-3.c: Likewise.
+	* iconvdata/iso8859-4.c: Likewise.
+	* iconvdata/iso8859-5.c: Likewise.
+	* iconvdata/iso8859-6.c: Likewise.
+	* iconvdata/iso8859-7.c: Likewise.
+	* iconvdata/iso8859-8.c: Likewise.
+	* iconvdata/iso8859-9.c: Likewise.
+	* iconvdata/iso8859-10.c: Likewise.
+	* iconvdata/ebcdic-at-de-a.c: New file.
+	* iconvdata/ebcdic-at-de.c: New file.
+	* iconvdata/ebcdic-ca-fr.c: New file.
+	* iconvdata/hp-roman8.c: New file.
+	* iconvdata/koi-8.c: New file.
+	* iconvdata/koi8-r.c: New file.
+	* iconvdata/koi8-h.c: New file.
+	* iconvdata/latin-greek-1.c: New file.
+	* iconvdata/latin-greek-1.h: New file.
+	* iconvdata/latin-greek.c: New file.
+	* iconvdata/latin-greek.h: New file.
+	* iconvdata/jis0201.c: New file.
+	* iconvdata/jis0201.h: New file.
+	* iconvdata/jis0208.c: New file.
+	* iconvdata/jis0208.h: New file.
+	* iconvdata/jis0212.c: New file.
+	* iconvdata/jis0212.h: New file.
+	* iconvdata/sjis.c: New file.
+	* iconvdata/gap.pl: New file.  Script to generate table header.
+	* iconvdata/gaptab.pl: New file.
+	* iconvdata/gconv-modules: Add info about new modules.
+
+	* locale/programs/charmap.c: Also examine alias names given in charmap
+	files.
+
+	* localedata/*: Add to here from add-on.  We need the information
+	to generate tables for iconv.
+
+	Update from db-2.3.14.
+	* db2/Makefile: Updated.
+	* db2/config.h: Likewise.
+	* db2/db.h: Likewise.
+	* db2/db_int.h: Likewise.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/btree/bt_delete.c: Likewise.
+	* db2/btree/bt_put.c: Likewise.
+	* db2/btree/bt_search.c: Likewise.
+	* db2/btree/bt_split.c: Likewise.
+	* db2/btree/btree_auto.c: Likewise.
+	* db2/common/db_appinit.c: Likewise.
+	* db2/common/db_apprec.c: Likewise.
+	* db2/common/db_err.c: Likewise.
+	* db2/common/db_region.c: Likewise.
+	* db2/db/db_auto.c: Likewise.
+	* db2/db/db_dispatch.c: Likewise.
+	* db2/db/db_ret.c: Likewise.
+	* db2/dbm/dbm.c: Likewise.
+	* db2/hash/hash_auto.c: Likewise.
+	* db2/include/btree_ext.h: Likewise.
+	* db2/include/common_ext.h: Likewise.
+	* db2/include/db.h.src: Likewise.
+	* db2/include/db_cxx.h: Likewise.
+	* db2/include/db_ext.h: Likewise.
+	* db2/include/db_int.h.src: Likewise.
+	* db2/include/lock.h: Likewise.
+	* db2/include/log.h: Likewise.
+	* db2/include/mp.h: Likewise.
+	* db2/include/mp_ext.h: Likewise.
+	* db2/include/os_ext.h: Likewise.
+	* db2/include/os_func.h: Likewise.
+	* db2/lock/lock.c: Likewise.
+	* db2/lock/lock_deadlock.c: Likewise.
+	* db2/log/log.c: Likewise.
+	* db2/log/log_archive.c: Likewise.
+	* db2/log/log_auto.c: Likewise.
+	* db2/log/log_get.c: Likewise.
+	* db2/log/log_put.c: Likewise.
+	* db2/mp/mp_bh.c: Likewise.
+	* db2/mp/mp_fget.c: Likewise.
+	* db2/mp/mp_fopen.c: Likewise.
+	* db2/mp/mp_fput.c: Likewise.
+	* db2/mp/mp_fset.c: Likewise.
+	* db2/mp/mp_open.c: Likewise.
+	* db2/mp/mp_pr.c: Likewise.
+	* db2/mp/mp_region.c: Likewise.
+	* db2/mp/mp_sync.c: Likewise.
+	* db2/mutex/README: Likewise.
+	* db2/mutex/mutex.c: Likewise.
+	* db2/os/os_open.c: Likewise.
+	* db2/os/os_func.c: Removed.
+	* db2/os/os_config.c: New file.
+	* db2/os/os_spin.c: New file.
+	* db2/txn/txn.c: Likewise.
+	* db2/txn/txn_auto.c: Likewise.
+
+1997-11-30 06:01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/sys/wait.h (__WAIT_INT): Don't use complex version with
+	__typeof for C++ since this fails for class members.
+	Reported by Neal Becker <neal@ctd.comsat.com>.
+
+1997-11-28 11:21  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* configure.in: Check for a working makeinfo (3.11 or better).
+	* config.make.in: Add MAKEINFO to be substituted.
+	* manual/Makefile: Don't update info if makeinfo is too old.
+
+1997-11-30 05:21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/alpha/setjmp.S: Define _ASM and _SETJMP_H to get definitions.
+	* sysdeps/alpha/__longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel_termios.h: Include <termios.h>
+	not <bits/termios.h>.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Define syscall as
+	__llseek and make llseek and lseek64 weak aliases.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	Patches by a sun <asun@zoology.washington.edu>.
+
+1997-11-29 19:19  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* misc/sys/syslog.h: Delete KERNEL preprocessor conditional.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+	* misc/sys/syslog.h: Clean up BSD header.
+
+1997-11-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Add changes from Linux 2.1.67.
+
+	* sysdeps/libm-ieee754/s_ctan.c (__ctan): Raise invalid exception
+	for ctan(+-inf,x).
+	* sysdeps/libm-ieee754/s_ctanl.c (__ctanl): Likewise.
+	* sysdeps/libm-ieee754/s_ctanf.c (__ctanf): Likewise.
+
+	* math/libm-test.c (csqrt_test): Add tests for cabs, carg, ctan,
+	csqrt (-1), ctanh(i*pi/4).
+
+1997-11-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/bits/confname.h: Fix comma in enumerator.
+
+1997-11-28 13:28  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Add more ARPHRD_ constants.
+
+1997-11-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* wcsmbs/wcrtomb.c (__wcrtomb): Remove unused variable fake.
+
+1997-11-26 21:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c (GETCWD_STORYGE_CLASS): Remove definition
+	and use.  Define GETCWD_RETURN_TYPE instead and use it.
+	* sysdeps/unix/sysv/linux/getcwd.c: Define GETCWD_RETURN_TYPE instead
+	of GETCWD_STORYGE_CLASS and put the return type and the
+	`internal_function' in the right order for gcc 2.7.2.
+
+1997-11-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/module.h: Remove file.  It's
+	incompatible with Linux 2.1.x.  Packages using modules
+	(e.g. modutils) should/do provide their own version.  Suggested by
+	Richard Henderson.
+
+	* sysdeps/unix/sysv/linux/Dist: Remove sys/module.h.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers)
+	[$(subdir)=socket]: Remove sys/module.h.
+
 1997-11-26 04:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* eld/dl-profile.c (_dl_start_profile): Avoid FP calculation when
@@ -225,7 +411,7 @@
 
 1997-11-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* libio/stdio.h: Correct comment of sys_nerr/sys_errlist
+	* libio/stdio.h: Correct comment of sys_nerr/sys_errlist.
 
 1997-11-25  Paul Eggert  <eggert@shade.twinsun.com>
 

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_open.c	10.15 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)mp_open.c	10.16 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -64,17 +64,6 @@ memp_open(path, flags, mode, dbenv, retp)
 	/* Decide if it's possible for anyone else to access the pool. */
 	if ((dbenv == NULL && path == NULL) || LF_ISSET(DB_MPOOL_PRIVATE))
 		F_SET(dbmp, MP_ISPRIVATE);
-
-	/*
-	 * XXX
-	 * HP-UX won't permit mutexes to live in anything but shared memory.
-	 * So, we have to instantiate the shared mpool region file on that
-	 * architecture, regardless.  If this turns out to be a performance
-	 * problem, we could probably use anonymous memory instead.
-	 */
-#if defined(__hppa)
-	F_CLR(dbmp, MP_ISPRIVATE);
-#endif
 
 	/*
 	 * Map in the region.  We do locking regardless, as portions of it are

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_put.c	10.31 (Sleepycat) 10/26/97";
+static const char sccsid[] = "@(#)bt_put.c	10.35 (Sleepycat) 11/22/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -64,6 +64,7 @@ static const char sccsid[] = "@(#)bt_put.c	10.31 (Sleepycat) 10/26/97";
 #include "btree.h"
 
 static int __bam_fixed __P((BTREE *, DBT *));
+static int __bam_isdeleted __P((DB *, PAGE *, u_int32_t, int *));
 static int __bam_lookup __P((DB *, DBT *, int *));
 static int __bam_ndup __P((DB *, PAGE *, u_int32_t));
 static int __bam_ovput __P((DB *, PAGE *, u_int32_t, DBT *));
@@ -89,7 +90,7 @@ __bam_put(argdbp, txn, key, data, flags)
 	DB *dbp;
 	PAGE *h;
 	db_indx_t indx;
-	int exact, iflags, newkey, replace, ret, stack;
+	int exact, iflags, isdeleted, newkey, replace, ret, stack;
 
 	DEBUG_LWRITE(argdbp, txn, "bam_put", key, data, flags);
 
@@ -114,21 +115,25 @@ retry:	/*
 	stack = 1;
 
 	/*
-	 * If an identical key is already in the tree, and DB_NOOVERWRITE is
-	 * set, an error is returned.  If an identical key is already in the
-	 * tree and DB_NOOVERWRITE is not set, the key is either added (when
-	 * duplicates are permitted) or an error is returned.  The exception
-	 * is when the item located is referenced by a cursor and marked for
-	 * deletion, in which case we permit the overwrite and flag the cursor.
+	 * If DB_NOOVERWRITE is set and there's an identical key in the tree,
+	 * return an error unless the data item has already been marked for
+	 * deletion, or, all the remaining data items have already been marked
+	 * for deletion in the case of duplicates.  If all the data items have
+	 * been marked for deletion, we do a replace, otherwise, it has to be
+	 * a set of duplicates, and we simply append a new one to the set.
 	 */
-	replace = 0;
-	if (exact && flags == DB_NOOVERWRITE) {
-		if (!B_DISSET(GET_BKEYDATA(h, indx + O_INDX)->type)) {
-			ret = DB_KEYEXIST;
+	isdeleted = replace = 0;
+	if (exact) {
+		if ((ret = __bam_isdeleted(dbp, h, indx, &isdeleted)) != 0)
 			goto err;
-		}
-		replace = 1;
-		__bam_ca_replace(dbp, h->pgno, indx, REPLACE_SETUP);
+		if (isdeleted) {
+			replace = 1;
+			__bam_ca_replace(dbp, h->pgno, indx, REPLACE_SETUP);
+		} else
+			if (flags == DB_NOOVERWRITE) {
+				ret = DB_KEYEXIST;
+				goto err;
+			}
 	}
 
 	/*
@@ -151,7 +156,7 @@ retry:	/*
 	 */
 	newkey = dbp->type == DB_BTREE && !exact;
 	if (exact) {
-		if (F_ISSET(dbp, DB_AM_DUP)) {
+		if (!isdeleted && F_ISSET(dbp, DB_AM_DUP)) {
 			/*
 			 * Make sure that we're not looking at a page of
 			 * duplicates -- if so, move to the last entry on
@@ -231,6 +236,88 @@ err:	if (stack)
 
 	PUTHANDLE(dbp);
 	return (ret);
+}
+
+/*
+ * __bam_isdeleted --
+ *	Return if the only remaining data item for the element has been
+ *	deleted.
+ */
+static int
+__bam_isdeleted(dbp, h, indx, isdeletedp)
+	DB *dbp;
+	PAGE *h;
+	u_int32_t indx;
+	int *isdeletedp;
+{
+	BKEYDATA *bk;
+	db_pgno_t pgno;
+	int ret;
+
+	*isdeletedp = 1;
+	for (;;) {
+		bk = GET_BKEYDATA(h, indx + O_INDX);
+		switch (B_TYPE(bk->type)) {
+		case B_KEYDATA:
+		case B_OVERFLOW:
+			if (!B_DISSET(bk->type)) {
+				*isdeletedp = 0;
+				return (0);
+			}
+			break;
+		case B_DUPLICATE:
+			/*
+			 * If the data item referencing the off-page duplicates
+			 * is flagged as deleted, we're done.  Else, we have to
+			 * walk the chain of duplicate pages.
+			 */
+			if (B_DISSET(bk->type))
+				return (0);
+			goto dupchk;
+		default:
+			return (__db_pgfmt(dbp, h->pgno));
+		}
+
+		/*
+		 * If there are no more on-page duplicate items, then every
+		 * data item for this key must have been deleted.
+		 */
+		if (indx + P_INDX >= (u_int32_t)NUM_ENT(h))
+			return (0);
+		if (h->inp[indx] != h->inp[indx + P_INDX])
+			return (0);
+
+		/* Check the next item. */
+		indx += P_INDX;
+	}
+	/* NOTREACHED */
+
+dupchk:	/* Check a chain of duplicate pages. */
+	pgno = ((BOVERFLOW *)bk)->pgno;
+	for (;;) {
+		/* Acquire the next page in the duplicate chain. */
+		if ((ret = memp_fget(dbp->mpf, &pgno, 0, &h)) != 0)
+			return (ret);
+
+		/* Check each item for a delete flag. */
+		for (indx = 0; indx < NUM_ENT(h); ++indx)
+			if (!B_DISSET(GET_BKEYDATA(h, indx)->type)) {
+				*isdeletedp = 0;
+				goto done;
+			}
+		/*
+		 * If we reach the end of the duplicate pages, then every
+		 * item we reviewed must have been deleted.
+		 */
+		if ((pgno = NEXT_PGNO(h)) == PGNO_INVALID)
+			goto done;
+
+		(void)memp_fput(dbp->mpf, h, 0);
+	}
+	/* NOTREACHED */
+
+done:	(void)memp_fput(dbp->mpf, h, 0);
+	return (0);
 }
 
 /*
@@ -425,10 +512,10 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 		if (op == DB_CURRENT) {
 			bk = GET_BKEYDATA(h,
 			    indx + (TYPE(h) == P_LBTREE ? O_INDX : 0));
-			if (B_TYPE(bk->type) == B_OVERFLOW)
-				have_bytes = BOVERFLOW_PSIZE;
-			else
+			if (B_TYPE(bk->type) == B_KEYDATA)
 				have_bytes = BKEYDATA_PSIZE(bk->len);
+			else
+				have_bytes = BOVERFLOW_PSIZE;
 			need_bytes = 0;
 		} else {
 			have_bytes = 0;
@@ -542,7 +629,7 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 			 * If we're dealing with offpage items, we have to 
 			 * delete and then re-add the item.
 			 */
-			if (bigdata || B_TYPE(bk->type) == B_OVERFLOW) {
+			if (bigdata || B_TYPE(bk->type) != B_KEYDATA) {
 				if ((ret = __bam_ditem(dbp, h, indx)) != 0)
 					return (ret);
 				break;
@@ -704,9 +791,9 @@ __bam_ritem(dbp, h, indx, data)
 {
 	BKEYDATA *bk;
 	DBT orig, repl;
-	db_indx_t lo, ln, min, off, prefix, suffix;
+	db_indx_t cnt, lo, ln, min, off, prefix, suffix;
 	int32_t nbytes;
-	int cnt, ret;
+	int ret;
 	u_int8_t *p, *t;
 
 	/*

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_appinit.c	10.36 (Sleepycat) 10/28/97";
+static const char sccsid[] = "@(#)db_appinit.c	10.37 (Sleepycat) 11/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -108,10 +108,23 @@ db_appinit(db_home, db_config, dbenv, flags)
 		if ((ret = __db_parse(dbenv, *p)) != 0)
 			goto err;
 
-	/* Parse the config file. */
+	/*
+	 * Parse the config file.
+	 *
+	 * XXX
+	 * Don't use sprintf(3)/snprintf(3) -- the former is dangerous, and
+	 * the latter isn't standard, and we're manipulating strings handed
+	 * us by the application.
+	 */
 	if (dbenv->db_home != NULL) {
-		(void)snprintf(buf,
-		    sizeof(buf), "%s/DB_CONFIG", dbenv->db_home);
+#define	CONFIG_NAME	"/DB_CONFIG"
+		if (strlen(dbenv->db_home) +
+		    strlen(CONFIG_NAME) + 1 > sizeof(buf)) {
+			ret = ENAMETOOLONG;
+			goto err;
+		}
+		(void)strcpy(buf, dbenv->db_home);
+		(void)strcat(buf, CONFIG_NAME);
 		if ((fp = fopen(buf, "r")) != NULL) {
 			while (fgets(buf, sizeof(buf), fp) != NULL) {
 				if ((lp = strchr(buf, '\n')) != NULL)

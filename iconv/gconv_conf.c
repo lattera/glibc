@@ -322,11 +322,8 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
       if (endp != NULL)
 	*endp = '\0';
       else
-	{
-	  endp = strchr (rp, '\n');
-	  if (endp != NULL)
-	    *endp = '\0';
-	}
+	if (rp[n - 1] == '\n')
+	  rp[n - 1] = '\0';
 
       while (isspace (*rp))
 	++rp;

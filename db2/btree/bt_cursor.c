@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_cursor.c	10.35 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)bt_cursor.c	10.37 (Sleepycat) 11/22/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -33,7 +33,7 @@ static int __bam_c_next __P((DB *, CURSOR *, int));
 static int __bam_c_physdel __P((DB *, CURSOR *, PAGE *));
 static int __bam_c_prev __P((DB *, CURSOR *));
 static int __bam_c_put __P((DBC *, DBT *, DBT *, int));
-static int __bam_c_rget __P((DB *, CURSOR *, DBT *, DBT *, int));
+static int __bam_c_rget __P((DB *, CURSOR *, DBT *, int));
 static int __bam_c_search __P((DB *, CURSOR *, const DBT *, u_int, int, int *));
 
 /* Discard the current page/lock held by a cursor. */
@@ -229,7 +229,7 @@ __bam_c_del(dbc, flags)
 		B_DSET(GET_BKEYDATA(h, indx + O_INDX)->type);
 	else
 		B_DSET(GET_BKEYDATA(h, indx)->type);
-	(void)__bam_ca_delete(dbp, pgno, indx, NULL);
+	(void)__bam_ca_delete(dbp, pgno, indx, NULL, 0);
 
 	ret = memp_fput(dbp->mpf, h, DB_MPOOL_DIRTY);
 
@@ -313,7 +313,7 @@ __bam_c_get(dbc, key, data, flags)
 	 * been rammed into the interface.
 	 */
 	if (LF_ISSET(DB_GET_RECNO)) {
-		ret = __bam_c_rget(dbp, cp, key, data, flags);
+		ret = __bam_c_rget(dbp, cp, data, flags);
 		PUTHANDLE(dbp);
 		return (ret);
 	}
@@ -441,10 +441,10 @@ err:		if (cp->page != NULL)
  *	Return the record number for a cursor.
  */
 static int
-__bam_c_rget(dbp, cp, key, data, flags)
+__bam_c_rget(dbp, cp, data, flags)
 	DB *dbp;
 	CURSOR *cp;
-	DBT *key, *data;
+	DBT *data;
 	int flags;
 {
 	BTREE *t;
@@ -1113,18 +1113,18 @@ __bam_cprint(dbp)
 
 /*
  * __bam_ca_delete --
- * 	Check if any of the cursors refer to the item we are about to delete.
- *	We'll return the number of cursors that refer to the item in question.
- *	If a cursor does refer to the item, then we set its deleted bit.
+ * 	Check if any of the cursors refer to the item we are about to delete,
+ *	returning the number of cursors that refer to the item in question.
  *
- * PUBLIC: int __bam_ca_delete __P((DB *, db_pgno_t, u_int32_t, CURSOR *));
+ * PUBLIC: int __bam_ca_delete __P((DB *, db_pgno_t, u_int32_t, CURSOR *, int));
  */
 int
-__bam_ca_delete(dbp, pgno, indx, curs)
+__bam_ca_delete(dbp, pgno, indx, curs, key_delete)
 	DB *dbp;
 	db_pgno_t pgno;
 	u_int32_t indx;
 	CURSOR *curs;
+	int key_delete;
 {
 	DBC *dbc;
 	CURSOR *cp;
@@ -1140,22 +1140,40 @@ __bam_ca_delete(dbp, pgno, indx, curs)
 	 * It's possible for multiple cursors within the thread to have write
 	 * locks on the same page, but, cursors within a thread must be single
 	 * threaded, so all we're locking here is the cursor linked list.
-	 *
-	 * indx refers to the first of what might be a duplicate set.  The
-	 * cursor passed in is the one initiating the delete, so we don't
-	 * want to count it.
 	 */
 	DB_THREAD_LOCK(dbp);
+
 	for (count = 0, dbc = TAILQ_FIRST(&dbp->curs_queue);
 	    dbc != NULL; dbc = TAILQ_NEXT(dbc, links)) {
 		cp = (CURSOR *)dbc->internal;
-		if ((curs != cp &&
-		    cp->pgno == pgno && cp->indx == indx) ||
-		    (cp->dpgno == pgno && cp->dindx == indx)) {
-			++count;
-			F_SET(cp, C_DELETED);
-		}
+
+		/*
+		 * Optionally, a cursor passed in is the one initiating the
+		 * delete, so we don't want to count it or set its deleted
+		 * flag.  Otherwise, if a cursor refers to the item, then we
+		 * set its deleted flag.
+		 */
+		if (curs == cp)
+			continue;
+
+		/*
+		 * If we're deleting the key itself and not just one of its
+		 * duplicates, repoint the cursor to the main-page key/data
+		 * pair, everything else is about to be discarded.
+		 */
+		if (key_delete || cp->dpgno == PGNO_INVALID) {
+			if (cp->pgno == pgno && cp->indx == indx) {
+				cp->dpgno = PGNO_INVALID;
+				++count;
+				F_SET(cp, C_DELETED);
+			}
+		} else
+			if (cp->dpgno == pgno && cp->dindx == indx) {
+				++count;
+				F_SET(cp, C_DELETED);
+			}
 	}
+
 	DB_THREAD_UNLOCK(dbp);
 	return (count);
 }
@@ -1440,7 +1458,7 @@ __bam_c_physdel(dbp, cp, h)
 	 * If the item is referenced by another cursor, leave it up to that
 	 * cursor to do the delete.
 	 */
-	if (__bam_ca_delete(dbp, pgno, indx, cp) != 0)
+	if (__bam_ca_delete(dbp, pgno, indx, cp, 0) != 0)
 		return (0);
 
 	/*

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fput.c	10.14 (Sleepycat) 10/5/97";
+static const char sccsid[] = "@(#)mp_fput.c	10.16 (Sleepycat) 11/26/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -54,7 +54,7 @@ memp_fput(dbmfp, pgaddr, flags)
 		if (LF_ISSET(DB_MPOOL_DIRTY) && F_ISSET(dbmfp, MP_READONLY)) {
 			__db_err(dbmp->dbenv,
 			    "%s: dirty flag set for readonly file page",
-			    dbmfp->path);
+			    __memp_fn(dbmfp));
 			return (EACCES);
 		}
 	}
@@ -64,7 +64,7 @@ memp_fput(dbmfp, pgaddr, flags)
 	if (dbmfp->pinref == 0)
 		__db_err(dbmp->dbenv,
 		    "%s: put: more blocks returned than retrieved",
-		    dbmfp->path);
+		    __memp_fn(dbmfp));
 	else
 		--dbmfp->pinref;
 	UNLOCKHANDLE(dbmp, dbmfp->mutexp);

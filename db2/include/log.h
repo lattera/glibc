@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.h	10.15 (Sleepycat) 11/2/97
+ *	@(#)log.h	10.16 (Sleepycat) 11/9/97
  */
 
 #ifndef _LOG_H_
@@ -117,20 +117,35 @@ struct __log {
 
 	SH_TAILQ_HEAD(__fq) fq;		/* List of file names. */
 
+	/*
+	 * The lsn LSN is the file offset that we're about to write and which
+	 * we will return to the user.
+	 */
 	DB_LSN	  lsn;			/* LSN at current file offset. */
-	DB_LSN	  c_lsn;		/* LSN of the last checkpoint. */
+
+	/*
+	 * The s_lsn LSN is the last LSN that we know is on disk, not just
+	 * written, by synced.
+	 */
 	DB_LSN	  s_lsn;		/* LSN of the last sync. */
-	DB_LSN	  uw_lsn;		/* LSN of 1st rec not fully on disk. */
 
 	u_int32_t len;			/* Length of the last record. */
 
-	size_t	  b_off;		/* Current offset in the buffer. */
 	u_int32_t w_off;		/* Current write offset in the file. */
 
+	DB_LSN	  c_lsn;		/* LSN of the last checkpoint. */
 	time_t	  chkpt;		/* Time of the last checkpoint. */
 
 	DB_LOG_STAT stat;		/* Log statistics. */
 
+	/*
+	 * The f_lsn LSN is the LSN (returned to the user) that "owns" the
+	 * first byte of the buffer.  If the record associated with the LSN
+	 * spans buffers, it may not reflect the physical file location of
+	 * the first byte of the buffer.
+	 */
+	DB_LSN	  f_lsn;		/* LSN of first byte in the buffer. */
+	size_t	  b_off;		/* Current offset in the buffer. */
 	u_int8_t buf[4 * 1024];		/* Log buffer. */
 };
 

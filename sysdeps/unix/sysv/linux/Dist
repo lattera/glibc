@@ -39,7 +39,6 @@ sys/io.h
 sys/kd.h
 sys/kdaemon.h
 sys/klog.h
-sys/module.h
 sys/mount.h
 sys/mtio.h
 sys/prctl.h

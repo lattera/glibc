@@ -122,7 +122,6 @@ int __db_addrem_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_addrem_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_addrem_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -312,7 +311,6 @@ int __db_split_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_split_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -507,7 +505,6 @@ int __db_big_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_big_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_big_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -678,7 +675,6 @@ int __db_ovref_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_ovref_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_ovref_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -842,7 +838,6 @@ int __db_relink_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_relink_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_relink_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1005,7 +1000,6 @@ int __db_addpage_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_addpage_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_addpage_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1180,7 +1174,6 @@ int __db_debug_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __db_debug_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_debug_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1335,7 +1328,6 @@ int __db_noop_log(logp, txnid, ret_lsnp, flags)
  * PUBLIC: int __db_noop_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __db_noop_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;

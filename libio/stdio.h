@@ -630,7 +630,7 @@ ferror_unlocked (FILE *__stream)
 /* Print a message describing the meaning of the value of errno.  */
 extern void perror __P ((__const char *__s));
 
-/* These variables normally should not be used directly.  The `strftime'
+/* These variables normally should not be used directly.  The `strerror'
    function provides all the needed functionality.  */
 #ifdef	__USE_BSD
 extern int sys_nerr;

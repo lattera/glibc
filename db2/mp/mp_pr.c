@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_pr.c	10.18 (Sleepycat) 11/1/97";
+static const char sccsid[] = "@(#)mp_pr.c	10.20 (Sleepycat) 11/26/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -100,7 +100,7 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 		    mfp = SH_TAILQ_FIRST(&dbmp->mp->mpfq, __mpoolfile);
 		    mfp != NULL;
 		    ++tfsp, mfp = SH_TAILQ_NEXT(mfp, q, __mpoolfile)) {
-			name = R_ADDR(dbmp, mfp->path_off);
+			name = __memp_fns(dbmp, mfp);
 			nlen = strlen(name);
 			len = sizeof(DB_MPOOL_FSTAT) + nlen + 1;
 			if ((*tfsp = db_malloc == NULL ?
@@ -117,6 +117,37 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 		UNLOCKREGION(dbmp);
 	}
 	return (0);
+}
+
+/*
+ * __memp_fn --
+ *	On errors we print whatever is available as the file name.
+ *
+ * PUBLIC: char * __memp_fn __P((DB_MPOOLFILE *));
+ */
+char *
+__memp_fn(dbmfp)
+	DB_MPOOLFILE *dbmfp;
+{
+	return (__memp_fns(dbmfp->dbmp, dbmfp->mfp));
+}
+
+/*
+ * __memp_fns --
+ *	On errors we print whatever is available as the file name.
+ *
+ * PUBLIC: char * __memp_fns __P((DB_MPOOL *, MPOOLFILE *));
+ *
+ */
+char *
+__memp_fns(dbmp, mfp)
+	DB_MPOOL *dbmp;
+	MPOOLFILE *mfp;
+{
+	if (mfp->path_off == 0)
+		return ((char *)"temporary");
+
+	return ((char *)R_ADDR(dbmp, mfp->path_off));
 }
 
 /*
@@ -152,7 +183,7 @@ __memp_debug(dbmp, fp, data)
 	(void)fprintf(fp, "%lu process-local files\n", cnt);
 	for (dbmfp = TAILQ_FIRST(&dbmp->dbmfq);
 	    dbmfp != NULL; dbmfp = TAILQ_NEXT(dbmfp, q)) {
-		(void)fprintf(fp, "%s\n", dbmfp->path);
+		(void)fprintf(fp, "%s\n", __memp_fn(dbmfp));
 		__memp_pdbmf(fp, dbmfp, data);
 	}
 
@@ -285,7 +316,7 @@ __memp_pmf(fp, mfp, data)
 		return;
 
 	(void)fprintf(fp, "    %d references; %s; pagesize: %lu\n", mfp->ref,
-	    mfp->can_mmap ? "mmap" : "read/write",
+	    F_ISSET(mfp, MP_CAN_MMAP) ? "mmap" : "read/write",
 	    (u_long)mfp->stat.st_pagesize);
 }
 

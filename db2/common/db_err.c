@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_err.c	10.18 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_err.c	10.19 (Sleepycat) 11/9/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -302,8 +302,11 @@ __db_cgetchk(dbp, key, data, flags, isvalid)
 		break;
 	case DB_SET:
 		break;
-	case DB_SET_RECNO:
 	case DB_GET_RECNO:
+		if (!F_ISSET(dbp, DB_BT_RECNUM))
+			goto err;
+		break;
+	case DB_SET_RECNO:
 		if (!F_ISSET(dbp, DB_BT_RECNUM))
 			goto err;
 		check_key = 1;
@@ -313,8 +316,9 @@ err:		return (__db_ferr(dbp->dbenv, "c_get", 0));
 	}
 
 	/* Check for invalid key/data flags. */
-	DB_CHECK_FLAGS(dbp->dbenv, "key", key->flags,
-	    DB_DBT_MALLOC | DB_DBT_USERMEM | DB_DBT_PARTIAL);
+	if (check_key)
+		DB_CHECK_FLAGS(dbp->dbenv, "key", key->flags,
+		    DB_DBT_MALLOC | DB_DBT_USERMEM | DB_DBT_PARTIAL);
 	DB_CHECK_FLAGS(dbp->dbenv, "data", data->flags,
 	    DB_DBT_MALLOC | DB_DBT_USERMEM | DB_DBT_PARTIAL);
 

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.h.src	10.91 (Sleepycat) 11/3/97
+ *	@(#)db.h.src	10.97 (Sleepycat) 11/28/97
  */
 
 #ifndef _DB_H_
@@ -73,8 +73,8 @@
 
 #define	DB_VERSION_MAJOR	2
 #define	DB_VERSION_MINOR	3
-#define	DB_VERSION_PATCH	12
-#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.12: (11/3/97)"
+#define	DB_VERSION_PATCH	14
+#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.14: (11/28/97)"
 
 typedef	u_int32_t	db_pgno_t;	/* Page number type. */
 typedef	u_int16_t	db_indx_t;	/* Page offset type. */
@@ -129,8 +129,10 @@ struct __db_dbt {
 };
 
 /*
- * DB configuration.  There are a set of functions which the application
- * can replace with its own versions.
+ * DB internal configuration.
+ *
+ * There are a set of functions that the application can replace with its
+ * own versions, and some other knobs which can be turned at run-time.
  */
 #define	DB_FUNC_CALLOC	 1		/* ANSI C calloc. */
 #define	DB_FUNC_CLOSE	 2		/* POSIX 1003.1 close. */
@@ -147,11 +149,12 @@ struct __db_dbt {
 #define	DB_FUNC_REALLOC	13		/* ANSI C realloc. */
 #define	DB_FUNC_SEEK	14		/* POSIX 1003.1 lseek. */
 #define	DB_FUNC_SLEEP	15		/* DB: sleep secs/usecs. */
-#define	DB_FUNC_STRDUP	16		/* ANSI C strdup. */
+#define	DB_FUNC_STRDUP	16		/* DB: strdup(3). */
 #define	DB_FUNC_UNLINK	17		/* POSIX 1003.1 unlink. */
 #define	DB_FUNC_UNMAP	18		/* DB: unmap shared memory file. */
 #define	DB_FUNC_WRITE	19		/* POSIX 1003.1 write. */
 #define	DB_FUNC_YIELD	20		/* DB: yield thread to scheduler. */
+#define	DB_TSL_SPINS	21		/* DB: initialize spin count. */
 
 /*
  * Database configuration and initialization.
@@ -211,10 +214,10 @@ struct __db_dbt {
  * locking subsystem.
  */
 #define	DB_LOCK_NORUN		0x0
-#define	DB_LOCK_DEFAULT		0x1
-#define	DB_LOCK_OLDEST		0x2
-#define	DB_LOCK_RANDOM		0x3
-#define	DB_LOCK_YOUNGEST	0x4
+#define	DB_LOCK_DEFAULT		0x1	/* Default policy. */
+#define	DB_LOCK_OLDEST		0x2	/* Abort oldest transaction. */
+#define	DB_LOCK_RANDOM		0x3	/* Abort random transaction. */
+#define	DB_LOCK_YOUNGEST	0x4	/* Abort youngest transaction. */
 
 struct __db_env {
 	int		 db_lorder;	/* Byte order. */
@@ -265,6 +268,10 @@ struct __db_env {
 /*******************************************************
  * Access methods.
  *******************************************************/
+/*
+ * XXX
+ * Changes here must be reflected in java/src/com/sleepycat/db/Db.java.
+ */
 typedef enum {
 	DB_BTREE=1,			/* B+tree. */
 	DB_HASH,			/* Extended Linear Hashing. */
@@ -347,7 +354,13 @@ struct __db_info {
 #define	DB_SET_RANGE	0x020000	/* c_get() */
 #define	DB_SET_RECNO	0x040000	/* c_get() */
 
-/* DB (user visible) error return codes. */
+/*
+ * DB (user visible) error return codes.
+ *
+ * XXX
+ * Changes to any of the user visible error return codes must be reflected
+ * in java/src/com/sleepycat/db/Db.java.
+ */
 #define	DB_INCOMPLETE		( -1)	/* Sync didn't finish. */
 #define	DB_KEYEMPTY		( -2)	/* The key/data pair was deleted or
 					   was never created by the user. */
@@ -516,6 +529,7 @@ int   db_appinit __P((const char *, char * const *, DB_ENV *, int));
 int   db_appexit __P((DB_ENV *));
 int   db_jump_set __P((void *, int));
 int   db_open __P((const char *, DBTYPE, int, int, DB_ENV *, DB_INFO *, DB **));
+int   db_value_set __P((int, int));
 char *db_version __P((int *, int *, int *));
 #if defined(__cplusplus)
 };
@@ -533,16 +547,26 @@ char *db_version __P((int *, int *, int *));
 /* Flag values for lock_detect(). */
 #define	DB_LOCK_CONFLICT	0x01	/* Run on any conflict. */
 
-/* Request types. */
+/*
+ * Request types.
+ *
+ * XXX
+ * Changes here must be reflected in java/src/com/sleepycat/db/Db.java.
+ */
 typedef enum {
-	DB_LOCK_DUMP,			/* Display held locks. */
+	DB_LOCK_DUMP=0,			/* Display held locks. */
 	DB_LOCK_GET,			/* Get the lock. */
 	DB_LOCK_PUT,			/* Release the lock. */
 	DB_LOCK_PUT_ALL,		/* Release locker's locks. */
 	DB_LOCK_PUT_OBJ			/* Release locker's locks on obj. */
 } db_lockop_t;
 
-/* Simple R/W lock modes and for multi-granularity intention locking. */
+/*
+ * Simple R/W lock modes and for multi-granularity intention locking.
+ *
+ * XXX
+ * Changes here must be reflected in java/src/com/sleepycat/db/Db.java.
+ */
 typedef enum {
 	DB_LOCK_NG=0,			/* Not granted. */
 	DB_LOCK_READ,			/* Shared/read. */
@@ -577,7 +601,7 @@ extern const u_int8_t db_riw_conflicts[];
 extern "C" {
 #endif
 int	  lock_close __P((DB_LOCKTAB *));
-int	  lock_detect __P((DB_LOCKTAB *, int, u_int32_t));
+int	  lock_detect __P((DB_LOCKTAB *, int, int));
 int	  lock_get __P((DB_LOCKTAB *,
 	    u_int32_t, int, const DBT *, db_lockmode_t, DB_LOCK *));
 int	  lock_id __P((DB_LOCKTAB *, u_int32_t *));

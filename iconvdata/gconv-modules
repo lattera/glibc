@@ -143,3 +143,44 @@ alias	ISO_6937:1992//		ISO_6937//
 alias	ISO6937//		ISO_6937//
 module	ISO_6937//		ISO-10646/UCS4/		ISO_6937	1
 module	ISO-10646/UCS4/		ISO_6937//		ISO_6937	1
+
+#	from			  to			  module	cost
+alias	SHIFT-JIS//		SJIS
+module	SJIS//			ISO-10646/UCS4/		SJIS		1
+module	ISO-10646/UCS4/		SJIS			SJIS		1
+
+#	from			  to			  module	cost
+module	KOI-8//			ISO-10646/UCS4/		KOI-8		1
+module	ISO-10646/UCS4/		KOI-8//			KOI-8		1
+
+#	from			  to			  module	cost
+module	KOI8-R//		ISO-10646/UCS4/		KOI8-R		1
+module	ISO-10646/UCS4/		KOI8-R//		KOI8-R		1
+
+#	from			  to			  module	cost
+alias	ISO-IR-19//		LATIN-GREEK//
+module	LATIN-GREEK//		ISO-10646/UCS4/		LATIN-GREEK	1
+module	ISO-10646/UCS4/		LATIN-GREEK//		LATIN-GREEK	1
+
+#	from			  to			  module	cost
+alias	ISO-IR-27//		LATIN-GREEK//
+module	LATIN-GREEK-1//		ISO-10646/UCS4/		LATIN-GREEK-1	1
+module	ISO-10646/UCS4/		LATIN-GREEK-1//		LATIN-GREEK-1	1
+
+#	from			  to			  module	cost
+alias	ROMAN8//		HP-ROMAN8//
+alias	R8//			HP-ROMAN8//
+module	HP-ROMAN8//		ISO-10646/UCS4/		HP-ROMAN8	1
+module	ISO-10646/UCS4/		HP-ROMAN8//		HP-ROMAN8	1
+
+#	from			  to			  module	cost
+module	EBCDIC-AT-DE//		ISO-10646/UCS4/		EBCDIC-AT-DE	1
+module	ISO-10646/UCS4/		EBCDIC-AT-DE//		EBCDIC-AT-DE	1
+
+#	from			  to			  module	cost
+module	EBCDIC-AT-DE-A//	ISO-10646/UCS4/		EBCDIC-AT-DE-A	1
+module	ISO-10646/UCS4/		EBCDIC-AT-DE-A//	EBCDIC-AT-DE-A	1
+
+#	from			  to			  module	cost
+module	EBCDIC-CA-FR//		ISO-10646/UCS4/		EBCDIC-CA-FR	1
+module	ISO-10646/UCS4/		EBCDIC-CA-FR//		EBCDIC-CA-FR	1

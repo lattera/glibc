@@ -4,7 +4,7 @@
  * Copyright (c) 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_cxx.h	10.12 (Sleepycat) 10/25/97
+ *	@(#)db_cxx.h	10.13 (Sleepycat) 11/25/97
  */
 
 #ifndef _DB_CXX_H_
@@ -202,7 +202,7 @@ class _exported DbLockTab
 friend DbEnv;
 public:
     int close();
-    int detect(int atype, u_int32_t flags);
+    int detect(int flags, int atype);
     int get(u_int32_t locker, int flags, const Dbt *obj,
             db_lockmode_t lock_mode, DbLock *lock);
     int id(u_int32_t *idp);

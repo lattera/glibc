@@ -119,7 +119,6 @@ int __ham_insdel_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_insdel_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_insdel_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -316,7 +315,6 @@ int __ham_newpage_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_newpage_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_newpage_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -479,7 +477,6 @@ int __ham_splitmeta_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_splitmeta_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_splitmeta_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -640,7 +637,6 @@ int __ham_splitdata_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_splitdata_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_splitdata_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -832,7 +828,6 @@ int __ham_replace_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_replace_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_replace_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1034,7 +1029,6 @@ int __ham_newpgno_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_newpgno_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_newpgno_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1203,7 +1197,6 @@ int __ham_ovfl_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_ovfl_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_ovfl_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;
@@ -1386,7 +1379,6 @@ int __ham_copypage_log(logp, txnid, ret_lsnp, flags,
  * PUBLIC: int __ham_copypage_print
  * PUBLIC:    __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
  */
-
 int
 __ham_copypage_print(notused1, dbtp, lsnp, notused3, notused4)
 	DB_LOG *notused1;

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log.c	10.33 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)log.c	10.34 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -91,7 +91,7 @@ log_open(path, flags, mode, dbenv, lpp)
 	retry_cnt = newregion = 0;
 retry:	if (LF_ISSET(DB_CREATE)) {
 		ret = __db_rcreate(dbenv, DB_APP_LOG, path,
-		    DB_DEFAULT_LOG_FILE, mode, len, &fd, &dblp->maddr);
+		    DB_DEFAULT_LOG_FILE, mode, len, 0, &fd, &dblp->maddr);
 		if (ret == 0) {
 			/* Put the LOG structure first in the region. */
 			lp = dblp->maddr;

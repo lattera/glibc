@@ -142,7 +142,8 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	      while (inwchars >= cnt + sizeof (wchar_t)
 		     && outchars < data->outbufsize)
 		{
-		  if (*((wchar_t *) (inbuf + cnt)) <= L'\377')
+		  if (*((wchar_t *) (inbuf + cnt)) >= L'\0'
+		      && *((wchar_t *) (inbuf + cnt)) <= L'\377')
 		    outbuf[outchars] = *((wchar_t *) (inbuf + cnt));
 		  else
 		    /* Here is where the transliteration would enter the

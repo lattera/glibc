@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_sync.c	10.15 (Sleepycat) 11/1/97";
+static const char sccsid[] = "@(#)mp_sync.c	10.17 (Sleepycat) 11/26/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -201,7 +201,7 @@ memp_sync(dbmp, lsnp)
 			 */
 			if (!wrote) {
 				__db_err(dbenv, "%s: unable to flush page: %lu",
-				    R_ADDR(dbmp, mfp->path_off),
+				    __memp_fns(dbmp, mfp),
 				    (u_long)bharray[next]->pgno);
 				ret = EPERM;
 				goto err;
@@ -244,16 +244,24 @@ memp_fsync(dbmfp)
 	size_t mf_offset;
 	int ar_cnt, cnt, nalloc, next, pincnt, notused, ret, wrote;
 
+	dbmp = dbmfp->dbmp;
+
 	/*
 	 * If this handle doesn't have a file descriptor that's open for
 	 * writing, or if the file is a temporary, there's no reason to
 	 * proceed further.
 	 */
-	if (F_ISSET(dbmfp, MP_READONLY | MP_PATH_TEMP))
+	if (F_ISSET(dbmfp, MP_READONLY))
 		return (0);
 
 	ret = 0;
-	dbmp = dbmfp->dbmp;
+	LOCKREGION(dbmp);
+	if (F_ISSET(dbmfp->mfp, MP_TEMP))
+		ret = 1;
+	UNLOCKREGION(dbmp);
+	if (ret)
+		return (0);
+
 	mf_offset = R_OFFSET(dbmp, dbmfp->mfp);
 
 	/*
@@ -407,18 +415,26 @@ loop:	total = mp->stat.st_page_clean + mp->stat.st_page_dirty;
 			continue;
 
 		mfp = R_ADDR(dbmp, bhp->mf_offset);
+
+		/*
+		 * We can't write to temporary files -- see the comment in
+		 * mp_bh.c:__memp_bhwrite().
+		 */
+		if (F_ISSET(mfp, MP_TEMP))
+			continue;
+
 		if ((ret =
 		    __memp_bhwrite(dbmp, mfp, bhp, &notused, &wrote)) != 0)
 			goto err;
 
 		/*
-		 * Any process syncing the shared memory buffer pool
-		 * had better be able to write to any underlying file.
-		 * Be understanding, but firm, on this point.
+		 * Any process syncing the shared memory buffer pool had better
+		 * be able to write to any underlying file.  Be understanding,
+		 * but firm, on this point.
 		 */
 		if (!wrote) {
 			__db_err(dbmp->dbenv, "%s: unable to flush page: %lu",
-			    R_ADDR(dbmp, mfp->path_off), (u_long)bhp->pgno);
+			    __memp_fns(dbmp, mfp), (u_long)bhp->pgno);
 			ret = EPERM;
 			goto err;
 		}

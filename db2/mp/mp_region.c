@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_region.c	10.16 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)mp_region.c	10.18 (Sleepycat) 11/29/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -224,17 +224,28 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 		 * the file descriptor for locking.  However, it should not
 		 * be possible for DB_THREAD to be set if HAVE_SPINLOCKS aren't
 		 * defined.
+		 *
+		 * XXX
+		 * HP-UX won't permit mutexes to live in anything but shared
+		 * memory.  So, instantiate the shared mpool region file on
+		 * that architecture, regardless.  If this turns out to be a
+		 * performance problem, we could use anonymous memory instead.
 		 */
-		if (F_ISSET(dbmp, MP_ISPRIVATE)) {
+#if !defined(__hppa)
+		if (F_ISSET(dbmp, MP_ISPRIVATE))
 			if ((dbmp->maddr = __db_malloc(rlen)) == NULL)
 				ret = ENOMEM;
-			else
+			else {
+				F_SET(dbmp, MP_MALLOC);
 				ret = __db_rinit(dbmp->dbenv,
 				    dbmp->maddr, 0, rlen, 0);
-		} else
+			}
+		else
+#endif
 			ret = __db_rcreate(dbmp->dbenv, DB_APP_NONE, path,
-			    DB_DEFAULT_MPOOL_FILE, mode, rlen, &fd,
-			    &dbmp->maddr);
+			    DB_DEFAULT_MPOOL_FILE, mode, rlen,
+			    F_ISSET(dbmp, MP_ISPRIVATE) ? DB_TEMPORARY : 0,
+			    &fd, &dbmp->maddr);
 		if (ret == 0) {
 			/* Put the MPOOL structure first in the region. */
 			mp = dbmp->maddr;
@@ -315,7 +326,7 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 	dbmp->fd = fd;
 
 	/* If we locked the region, release it now. */
-	if (!F_ISSET(dbmp, MP_ISPRIVATE))
+	if (!F_ISSET(dbmp, MP_MALLOC))
 		UNLOCKREGION(dbmp);
 	return (0);
 
@@ -339,7 +350,7 @@ int
 __memp_rclose(dbmp)
 	DB_MPOOL *dbmp;
 {
-	if (F_ISSET(dbmp, MP_ISPRIVATE)) {
+	if (F_ISSET(dbmp, MP_MALLOC)) {
 		__db_free(dbmp->maddr);
 		return (0);
 	}

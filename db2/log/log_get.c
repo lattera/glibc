@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_get.c	10.21 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)log_get.c	10.22 (Sleepycat) 11/22/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -44,24 +44,21 @@ log_get(dblp, alsn, dbt, flags)
 	/* Validate arguments. */
 #define	OKFLAGS	(DB_CHECKPOINT | \
     DB_CURRENT | DB_FIRST | DB_LAST | DB_NEXT | DB_PREV | DB_SET)
-	if (flags != 0) {
-		if ((ret =
-		    __db_fchk(dblp->dbenv, "log_get", flags, OKFLAGS)) != 0)
-			return (ret);
-		switch (flags) {
-		case DB_CHECKPOINT:
-		case DB_CURRENT:
-		case DB_FIRST:
-		case DB_LAST:
-		case DB_NEXT:
-		case DB_PREV:
-		case DB_SET:
-		case 0:
-			break;
-		default:
-			return (__db_ferr(dblp->dbenv, "log_get", 1));
-		}
+	if ((ret = __db_fchk(dblp->dbenv, "log_get", flags, OKFLAGS)) != 0)
+		return (ret);
+	switch (flags) {
+	case DB_CHECKPOINT:
+	case DB_CURRENT:
+	case DB_FIRST:
+	case DB_LAST:
+	case DB_NEXT:
+	case DB_PREV:
+	case DB_SET:
+		break;
+	default:
+		return (__db_ferr(dblp->dbenv, "log_get", 1));
 	}
+
 	if (F_ISSET(dblp, DB_AM_THREAD)) {
 		if (LF_ISSET(DB_NEXT | DB_PREV | DB_CURRENT))
 			return (__db_ferr(dblp->dbenv, "log_get", 1));

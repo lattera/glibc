@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_func.c	10.4 (Sleepycat) 10/28/97";
+static const char sccsid[] = "@(#)os_config.c	10.9 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -31,7 +31,6 @@ static const char sccsid[] = "@(#)os_func.c	10.4 (Sleepycat) 10/28/97";
 #define imported
 #endif
 
-imported extern void    *calloc __P((size_t, size_t));
 imported extern int	 close __P((int));
 imported extern void	 free __P((void *));
 imported extern int	 fsync __P((int));
@@ -42,16 +41,16 @@ imported extern char	*strdup __P((const char *));
 imported extern void    *realloc __P((void *, size_t));
 imported extern int	 unlink __P((const char *));
 imported extern ssize_t	 write __P((int, const void *, size_t));
+imported extern void	*memset __P((void *, int, size_t));
 
 /*
  * __db_jump --
  *	This list of interfaces that applications can replace.  In some
  *	cases, the user is permitted to replace the standard ANSI C or
- *	POSIX 1003.1 call, e.g., calloc or read.  In others, we provide
+ *	POSIX 1003.1 call, e.g., malloc or read.  In others, we provide
  *	a local interface to the functionality, e.g., __os_map.
  */
 struct __db_jumptab __db_jump = {
-	calloc,				/* DB_FUNC_CALLOC */
 	close,				/* DB_FUNC_CLOSE */
 	__os_dirfree,			/* DB_FUNC_DIRFREE */
 	__os_dirlist,			/* DB_FUNC_DIRLIST */
@@ -73,9 +72,11 @@ struct __db_jumptab __db_jump = {
 	NULL				/* DB_FUNC_YIELD */
 };
 
+int __db_tsl_spins;			/* DB_TSL_SPINS */
+
 /*
  * db_jump_set --
- *	Replace an interface.
+ *	Replace functions for the DB package.
  */
 int
 db_jump_set(func, which)
@@ -84,70 +85,148 @@ db_jump_set(func, which)
 {
 	switch (which) {
 	case DB_FUNC_CALLOC:
-		__db_calloc = (void *(*) __P((size_t, size_t)))func;
-		break;
+		/*
+		 * XXX
+		 * Obsolete, calloc is no longer called by DB.
+		 */
+		 break;
 	case DB_FUNC_CLOSE:
-		__os_close = (int (*) __P((int)))func;
+		__db_jump.db_close = (int (*) __P((int)))func;
 		break;
 	case DB_FUNC_DIRFREE:
-		__db_dirfree = (void (*) __P((char **, int)))func;
+		__db_jump.db_dirfree = (void (*) __P((char **, int)))func;
 		break;
 	case DB_FUNC_DIRLIST:
-		__db_dirlist =
+		__db_jump.db_dirlist =
 		    (int (*) __P((const char *, char ***, int *)))func;
 		break;
 	case DB_FUNC_EXISTS:
-		__db_exists = (int (*) __P((const char *, int *)))func;
+		__db_jump.db_exists = (int (*) __P((const char *, int *)))func;
 		break;
 	case DB_FUNC_FREE:
-		__db_free = (void (*) __P((void *)))func;
+		__db_jump.db_free = (void (*) __P((void *)))func;
 		break;
 	case DB_FUNC_FSYNC:
-		__os_fsync = (int (*) __P((int)))func;
+		__db_jump.db_fsync = (int (*) __P((int)))func;
 		break;
 	case DB_FUNC_IOINFO:
-		__db_ioinfo =
+		__db_jump.db_ioinfo =
 		    (int (*) __P((const char *, int, off_t *, off_t *)))func;
 		break;
 	case DB_FUNC_MALLOC:
-		__db_malloc = (void *(*) __P((size_t)))func;
+		__db_jump.db_malloc = (void *(*) __P((size_t)))func;
 		break;
 	case DB_FUNC_MAP:
-		__db_map = (int (*) __P((int, size_t, int, int, void **)))func;
+		__db_jump.db_map =
+		    (int (*) __P((int, size_t, int, int, void **)))func;
 		break;
 	case DB_FUNC_OPEN:
-		__os_open = (int (*) __P((const char *, int, ...)))func;
+		__db_jump.db_open = (int (*) __P((const char *, int, ...)))func;
 		break;
 	case DB_FUNC_READ:
-		__os_read = (ssize_t (*) __P((int, void *, size_t)))func;
+		__db_jump.db_read =
+		    (ssize_t (*) __P((int, void *, size_t)))func;
 		break;
 	case DB_FUNC_REALLOC:
-		__db_realloc = (void *(*) __P((void *, size_t)))func;
+		__db_jump.db_realloc = (void *(*) __P((void *, size_t)))func;
 		break;
 	case DB_FUNC_SEEK:
-		__db_seek =
+		__db_jump.db_seek =
 		    (int (*) __P((int, size_t, db_pgno_t, u_long, int)))func;
 		break;
 	case DB_FUNC_SLEEP:
-		__db_sleep = (int (*) __P((u_long, u_long)))func;
+		__db_jump.db_sleep = (int (*) __P((u_long, u_long)))func;
 		break;
 	case DB_FUNC_STRDUP:
-		__db_strdup = (char *(*) __P((const char *)))func;
+		__db_jump.db_strdup = (char *(*) __P((const char *)))func;
 		break;
 	case DB_FUNC_UNLINK:
-		__os_unlink = (int (*) __P((const char *)))func;
+		__db_jump.db_unlink = (int (*) __P((const char *)))func;
 		break;
 	case DB_FUNC_UNMAP:
-		__db_unmap = (int (*) __P((void *, size_t)))func;
+		__db_jump.db_unmap = (int (*) __P((void *, size_t)))func;
 		break;
 	case DB_FUNC_WRITE:
-		__os_write = (ssize_t (*) __P((int, const void *, size_t)))func;
+		__db_jump.db_write =
+		    (ssize_t (*) __P((int, const void *, size_t)))func;
 		break;
 	case DB_FUNC_YIELD:
-		__db_yield = (int (*) __P((void)))func;
+		__db_jump.db_yield = (int (*) __P((void)))func;
 		break;
 	default:
 		return (EINVAL);
 	}
 	return (0);
+}
+
+/*
+ * db_value_set --
+ *	Replace values for the DB package.
+ */
+int
+db_value_set(value, which)
+	int value, which;
+{
+	switch (which) {
+	case DB_TSL_SPINS:
+		if (value <= 0)
+			return (EINVAL);
+		__db_tsl_spins = value;
+		break;
+	default:
+		return (EINVAL);
+	}
+	return (0);
+}
+
+/*
+ * XXX
+ * Correct for systems that return NULL when you allocate 0 bytes of memory.
+ * There are several places in DB where we allocate the number of bytes held
+ * by the key/data item, and it can be 0.  Correct here so that malloc never
+ * returns a NULL for that reason.
+ */
+/*
+ * __db_calloc --
+ *	The calloc(3) function for DB.
+ *
+ * PUBLIC: void *__db_calloc __P((size_t, size_t));
+ */
+void *
+__db_calloc(num, size)
+	size_t num, size;
+{
+	void *p;
+
+	size *= num;
+	if ((p = __db_jump.db_malloc(size == 0 ? 1 : size)) != NULL)
+		memset(p, 0, size);
+	return (p);
+}
+
+/*
+ * __db_malloc --
+ *	The malloc(3) function for DB.
+ *
+ * PUBLIC: void *__db_malloc __P((size_t));
+ */
+void *
+__db_malloc(size)
+	size_t size;
+{
+	return (__db_jump.db_malloc(size == 0 ? 1 : size));
+}
+
+/*
+ * __db_realloc --
+ *	The realloc(3) function for DB.
+ *
+ * PUBLIC: void *__db_realloc __P((void *, size_t));
+ */
+void *
+__db_realloc(ptr, size)
+	void *ptr;
+	size_t size;
+{
+	return (__db_jump.db_realloc(ptr, size == 0 ? 1 : size));
 }

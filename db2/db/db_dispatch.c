@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dispatch.c	10.6 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)db_dispatch.c	10.7 (Sleepycat) 11/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -236,8 +236,8 @@ __db_txnlist_find(listp, txnid)
 	void *listp;
 	u_int32_t txnid;
 {
-	__db_txnlist *p;
 	__db_txnhead *hp;
+	__db_txnlist *p;
 
 	if ((hp = (struct __db_txnhead *)listp) == NULL)
 		return (DB_NOTFOUND);
@@ -255,12 +255,16 @@ __db_txnlist_find(listp, txnid)
 }
 
 #ifdef DEBUG
+/*
+ * __db_txnlist_print --
+ *	Print out the transaction list.
+ */
 void
 __db_txnlist_print(listp)
 	void *listp;
 {
-	__db_txnlist *p;
 	__db_txnhead *hp;
+	__db_txnlist *p;
 
 	hp = (struct __db_txnhead *)listp;
 	printf("Maxid: %lu\n", (u_long)hp->maxid);
@@ -268,3 +272,24 @@ __db_txnlist_print(listp)
 		printf("TXNID: %lu\n", (u_long)p->txnid);
 }
 #endif
+
+/*
+ * __db_txnlist_end --
+ *	Discard transaction linked list.
+ *
+ * PUBLIC: void __db_txnlist_end __P((void *));
+ */
+void
+__db_txnlist_end(listp)
+	void *listp;
+{
+	__db_txnhead *hp;
+	__db_txnlist *p;
+
+	hp = (struct __db_txnhead *)listp;
+	while ((p = LIST_FIRST(&hp->head)) != LIST_END(&hp->head)) {
+		LIST_REMOVE(p, links);
+		__db_free(p);
+	}
+	__db_free(listp);
+}

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mutex.c	10.28 (Sleepycat) 10/31/97";
+static const char sccsid[] = "@(#)mutex.c	10.29 (Sleepycat) 11/25/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -101,12 +101,6 @@ static const char sccsid[] = "@(#)mutex.c	10.28 (Sleepycat) 10/31/97";
 
 #endif /* HAVE_SPINLOCKS */
 
-#ifdef	MORE_THAN_ONE_PROCESSOR
-#define	TSL_DEFAULT_SPINS	5	/* Default spins before block. */
-#else
-#define	TSL_DEFAULT_SPINS	1	/* Default spins before block. */
-#endif
-
 /*
  * __db_mutex_init --
  *	Initialize a DB mutex structure.
@@ -130,6 +124,7 @@ __db_mutex_init(mp, off)
 
 #ifdef HAVE_SPINLOCKS
 	TSL_INIT(&mp->tsl_resource);
+	mp->spins = __os_spin();
 #else
 	mp->off = off;
 #endif
@@ -155,11 +150,8 @@ __db_mutex_lock(mp, fd)
 	int nspins;
 
 	for (usecs = MS(10);;) {
-		/*
-		 * Try and acquire the uncontested resource lock for
-		 * TSL_DEFAULT_SPINS.
-		 */
-		for (nspins = TSL_DEFAULT_SPINS; nspins > 0; --nspins)
+		/* Try and acquire the uncontested resource lock for N spins. */
+		for (nspins = mp->spins; nspins > 0; --nspins)
 			if (TSL_SET(&mp->tsl_resource)) {
 #ifdef DEBUG
 				if (mp->pid != 0) {

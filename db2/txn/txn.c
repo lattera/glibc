@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn.c	10.35 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)txn.c	10.37 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 
@@ -101,11 +101,9 @@ __txn_create(dbenv, path, mode)
 	maxtxns = dbenv->tx_max != 0 ? dbenv->tx_max : 1000;
 	(void)time(&now);
 
-	ret = __db_rcreate(dbenv, DB_APP_NONE, path,
-	    DEFAULT_TXN_FILE, mode, TXN_REGION_SIZE(maxtxns), &fd, &txn_region);
-
 	/* Region may have existed.  If it didn't, the open will fail. */
-	if (ret != 0)
+	if ((ret = __db_rcreate(dbenv, DB_APP_NONE, path, DEFAULT_TXN_FILE,
+	    mode, TXN_REGION_SIZE(maxtxns), 0, &fd, &txn_region)) != 0)
 		return (ret);
 
 	txn_region->magic = DB_TXNMAGIC;
@@ -315,7 +313,10 @@ err:
 	return (ret);
 }
 
-/* The db_txn(3) man page describes txn_commit. */
+/*
+ * txn_commit --
+ *	Commit a transaction.
+ */
 int
 txn_commit(txnp)
 	DB_TXN *txnp;
@@ -337,7 +338,10 @@ txn_commit(txnp)
 	return (__txn_end(txnp, 1));
 }
 
-/* The db_txn(3) man page describes txn_abort. */
+/*
+ * txn_abort --
+ *	Abort a transcation.
+ */
 int
 txn_abort(txnp)
 	DB_TXN *txnp;
@@ -395,8 +399,8 @@ txn_id(txnp)
 }
 
 /*
- * The db_txn(3) man page describes txn_close. Currently the caller should
- * arrange a checkpoint before calling txn_close.
+ * txn_close --
+ *	Close the transaction region, does not imply a checkpoint.
  */
 int
 txn_close(tmgrp)
@@ -439,8 +443,8 @@ txn_close(tmgrp)
 }
 
 /*
- * The db_txn(3) man page describes txn_unlink.  Right now it is up to
- * txn_close to write the final checkpoint record.
+ * txn_unlink --
+ *	Remove the transaction region.
  */
 int
 txn_unlink(path, force, dbenv)
@@ -666,12 +670,19 @@ do_ckp:
 	mgr->region->pending_ckp = ckp_lsn;
 	UNLOCK_TXNREGION(mgr);
 
-	ret = memp_sync(mgr->dbenv->mp_info, &ckp_lsn);
-	if (ret > 0) {
-		__db_err(mgr->dbenv,
-		    "txn_checkpoint: system failure in memp_sync %s\n",
-		    strerror(ret));
-	} else if (ret == 0 && mgr->dbenv->lg_info != NULL) {
+	if (mgr->dbenv->mp_info != NULL &&
+	    (ret = memp_sync(mgr->dbenv->mp_info, &ckp_lsn)) != 0) {
+		/*
+		 * ret < 0 means that there are still buffers to flush;
+		 * the checkpoint is not complete. Back off and try again.
+		 */
+		if (ret > 0)
+			__db_err(mgr->dbenv,
+			    "txn_checkpoint: system failure in memp_sync %s\n",
+			    strerror(ret));
+		return (ret);
+	}
+	if (mgr->dbenv->lg_info != NULL) {
 		LOCK_TXNREGION(mgr);
 		last_ckp = mgr->region->last_ckp;
 		ZERO_LSN(mgr->region->pending_ckp);
@@ -691,11 +702,7 @@ do_ckp:
 		(void)time(&mgr->region->time_ckp);
 		UNLOCK_TXNREGION(mgr);
 	}
-	/*
-	 * ret < 0 means that there are still buffers to flush; the
-	 * checkpoint is not complete. Back off and try again.
-	 */
-	return (ret);
+	return (0);
 }
 
 /*

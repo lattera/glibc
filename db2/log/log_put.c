@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_put.c	10.20 (Sleepycat) 11/2/97";
+static const char sccsid[] = "@(#)log_put.c	10.22 (Sleepycat) 11/12/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -28,10 +28,10 @@ static const char sccsid[] = "@(#)log_put.c	10.20 (Sleepycat) 11/2/97";
 #include "hash.h"
 #include "common_ext.h"
 
-static int __log_fill __P((DB_LOG *, void *, u_int32_t));
+static int __log_fill __P((DB_LOG *, DB_LSN *, void *, u_int32_t));
 static int __log_flush __P((DB_LOG *, const DB_LSN *));
 static int __log_newfd __P((DB_LOG *));
-static int __log_putr __P((DB_LOG *, const DBT *, u_int32_t));
+static int __log_putr __P((DB_LOG *, DB_LSN *, const DBT *, u_int32_t));
 static int __log_write __P((DB_LOG *, void *, u_int32_t));
 
 /*
@@ -117,11 +117,12 @@ __log_put(dblp, lsn, dbt, flags)
 
 		/* Reset the file write offset. */
 		lp->w_off = 0;
-
-		/* Reset the first-unwritten LSN for the buffer. */
-		lp->uw_lsn = lp->lsn;
 	} else
 		lastoff = 0;
+
+	/* Initialize the LSN information returned to the user. */
+	lsn->file = lp->lsn.file;
+	lsn->offset = lp->lsn.offset;
 
 	/*
 	 * Insert persistent information as the first record in every file.
@@ -131,17 +132,17 @@ __log_put(dblp, lsn, dbt, flags)
 	if (lp->lsn.offset == 0) {
 		t.data = &lp->persist;
 		t.size = sizeof(LOGP);
-		if ((ret = __log_putr(dblp,
+		if ((ret = __log_putr(dblp, lsn,
 		    &t, lastoff == 0 ? 0 : lastoff - lp->len)) != 0)
 			return (ret);
+
+		/* Update the LSN information returned to the user. */
+		lsn->file = lp->lsn.file;
+		lsn->offset = lp->lsn.offset;
 	}
 
-	/* Initialize the LSN information returned to the user. */
-	lsn->file = lp->lsn.file;
-	lsn->offset = lp->lsn.offset;
-
-	/* Put out the user's record. */
-	if ((ret = __log_putr(dblp, dbt, lp->lsn.offset - lp->len)) != 0)
+	/* Write the application's log record. */
+	if ((ret = __log_putr(dblp, lsn, dbt, lp->lsn.offset - lp->len)) != 0)
 		return (ret);
 
 	/*
@@ -184,19 +185,6 @@ __log_put(dblp, lsn, dbt, flags)
 		(void)time(&lp->chkpt);
 		lp->stat.st_wc_bytes = lp->stat.st_wc_mbytes = 0;
 	}
-
-	/*
-	 * When an application calls the log_flush routine, we need to figure
-	 * out if the current buffer needs to be flushed.  The problem is that
-	 * if a record spans buffers, it's possible for the record continued
-	 * in the current buffer to have begun in a previous buffer.  Each time
-	 * we write a buffer, we update the first-unwritten LSN to point to the
-	 * first LSN after that written buffer.  If we have a spanning record,
-	 * correct that value to be the LSN that started it all, here.
-	 */
-	if (lsn->offset < lp->w_off && lsn->offset + lp->len > lp->w_off)
-		lp->uw_lsn = *lsn;
-
 	return (0);
 }
 
@@ -205,8 +193,9 @@ __log_put(dblp, lsn, dbt, flags)
  *	Actually put a record into the log.
  */
 static int
-__log_putr(dblp, dbt, prev)
+__log_putr(dblp, lsn, dbt, prev)
 	DB_LOG *dblp;
+	DB_LSN *lsn;
 	const DBT *dbt;
 	u_int32_t prev;
 {
@@ -225,15 +214,15 @@ __log_putr(dblp, dbt, prev)
 	hdr.len = sizeof(HDR) + dbt->size;
 	hdr.cksum = __ham_func4(dbt->data, dbt->size);
 
-	if ((ret = __log_fill(dblp, &hdr, sizeof(HDR))) != 0)
+	if ((ret = __log_fill(dblp, lsn, &hdr, sizeof(HDR))) != 0)
 		return (ret);
+	lp->len = sizeof(HDR);
 	lp->lsn.offset += sizeof(HDR);
 
-	if ((ret = __log_fill(dblp, dbt->data, dbt->size)) != 0)
+	if ((ret = __log_fill(dblp, lsn, dbt->data, dbt->size)) != 0)
 		return (ret);
+	lp->len += dbt->size;
 	lp->lsn.offset += dbt->size;
-
-	lp->len = sizeof(HDR) + dbt->size;
 	return (0);
 }
 
@@ -266,7 +255,7 @@ __log_flush(dblp, lsn)
 {
 	DB_LSN t_lsn;
 	LOG *lp;
-	int ret;
+	int current, ret;
 
 	ret = 0;
 	lp = dblp->lp;
@@ -292,22 +281,26 @@ __log_flush(dblp, lsn)
 	/*
 	 * If the LSN is less than the last-sync'd LSN, we're done.  Note,
 	 * the last-sync LSN saved in s_lsn is the LSN of the first byte 
-	 * that has not yet been written to disk, so the test is <, not <=.
+	 * we absolutely know has been written to disk, so the test is <=.
 	 */
 	if (lsn->file < lp->s_lsn.file ||
-	    (lsn->file == lp->s_lsn.file && lsn->offset < lp->s_lsn.offset))
+	    (lsn->file == lp->s_lsn.file && lsn->offset <= lp->s_lsn.offset))
 		return (0);
 
 	/*
 	 * We may need to write the current buffer.  We have to write the
 	 * current buffer if the flush LSN is greater than or equal to the
-	 * first-unwritten LSN (uw_lsn).  If we write the buffer, then we
-	 * update the first-unwritten LSN.
+	 * buffer's starting LSN.
 	 */
+	current = 0;
 	if (lp->b_off != 0 &&
-	    lsn->file >= lp->uw_lsn.file && lsn->offset >= lp->uw_lsn.offset)
+	    lsn->file >= lp->f_lsn.file && lsn->offset >= lp->f_lsn.offset) {
 		if ((ret = __log_write(dblp, lp->buf, lp->b_off)) != 0)
 			return (ret);
+
+		lp->b_off = 0;
+		current = 1;
+	}
 
 	/*
 	 * It's possible that this thread may never have written to this log
@@ -323,10 +316,14 @@ __log_flush(dblp, lsn)
 	++lp->stat.st_scount;
 
 	/*
-	 * Set the last-synced LSN, the first LSN after the last record
-	 * that we know is on disk.
+	 * Set the last-synced LSN, using the LSN of the current buffer.  If
+	 * the current buffer was flushed, we know the LSN of the first byte
+	 * of the buffer is on disk, otherwise, we only know that the LSN of
+	 * the record before the one beginning the current buffer is on disk.
 	 */
-	lp->s_lsn = lp->uw_lsn;
+	lp->s_lsn = lp->f_lsn;
+	if (!current)
+		--lp->s_lsn.offset;
 
 	return (0);
 }
@@ -336,8 +333,9 @@ __log_flush(dblp, lsn)
  *	Write information into the log.
  */
 static int
-__log_fill(dblp, addr, len)
+__log_fill(dblp, lsn, addr, len)
 	DB_LOG *dblp;
+	DB_LSN *lsn;
 	void *addr;
 	u_int32_t len;
 {
@@ -348,6 +346,15 @@ __log_fill(dblp, addr, len)
 
 	/* Copy out the data. */
 	for (lp = dblp->lp; len > 0;) {
+		/*
+		 * If we're beginning a new buffer, note the user LSN to which
+		 * the first byte of the buffer belongs.  We have to know this
+		 * when flushing the buffer so that we know if the in-memory
+		 * buffer needs to be flushed.
+		 */
+		if (lp->b_off == 0)
+			lp->f_lsn = *lsn;
+
 		/*
 		 * If we're on a buffer boundary and the data is big enough,
 		 * copy as many records as we can directly from the data.
@@ -371,9 +378,12 @@ __log_fill(dblp, addr, len)
 		lp->b_off += nw;
 
 		/* If we fill the buffer, flush it. */
-		if (lp->b_off == sizeof(lp->buf) &&
-		    (ret = __log_write(dblp, lp->buf, sizeof(lp->buf))) != 0)
-			return (ret);
+		if (lp->b_off == sizeof(lp->buf)) {
+			if ((ret =
+			    __log_write(dblp, lp->buf, sizeof(lp->buf))) != 0)
+				return (ret);
+			lp->b_off = 0;
+		}
 	}
 	return (0);
 }
@@ -412,14 +422,8 @@ __log_write(dblp, addr, len)
 	if (nw != (int32_t)len)
 		return (EIO);
 
-	/*
-	 * Reset the buffer offset, update the seek offset, and update the
-	 * first-unwritten LSN.
-	 */
-	lp->b_off = 0;
+	/* Reset the buffer offset and update the seek offset. */
 	lp->w_off += len;
-	lp->uw_lsn.file = lp->lsn.file;
-	lp->uw_lsn.offset = lp->w_off;
 
 	/* Update written statistics. */
 	if ((lp->stat.st_w_bytes += len) >= MEGABYTE) {

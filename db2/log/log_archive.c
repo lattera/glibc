@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_archive.c	10.28 (Sleepycat) 10/28/97";
+static const char sccsid[] = "@(#)log_archive.c	10.29 (Sleepycat) 11/12/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -360,9 +360,9 @@ __absname(pref, name, newnamep)
  *	If the user has their own malloc routine, use it.
  */
 static int
-__usermem(listp, func)
+__usermem(listp, cmpfunc)
 	char ***listp;
-	void *(*func) __P((size_t));
+	void *(*cmpfunc) __P((size_t));
 {
 	size_t len;
 	char **array, **arrayp, **orig, *strp;
@@ -378,10 +378,10 @@ __usermem(listp, func)
 	 * XXX
 	 * Don't simplify this expression, SunOS compilers don't like it.
 	 */
-	if (func == NULL)
+	if (cmpfunc == NULL)
 		array = (char **)__db_malloc(len);
 	else
-		array = (char **)func(len);
+		array = (char **)cmpfunc(len);
 	if (array == NULL)
 		return (ENOMEM);
 	strp = (char *)(array + (orig - *listp) + 1);

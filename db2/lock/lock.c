@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock.c	10.38 (Sleepycat) 10/25/97";
+static const char sccsid[] = "@(#)lock.c	10.41 (Sleepycat) 11/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -91,7 +91,7 @@ __lock_create(path, mode, dbenv)
 	if ((ret =
 	    __db_rcreate(dbenv, DB_APP_NONE, path, DB_DEFAULT_LOCK_FILE, mode,
 	    LOCK_REGION_SIZE(lock_modes, maxlocks, __db_tablesize(maxlocks)),
-	    &fd, &lrp)) != 0)
+	    0, &fd, &lrp)) != 0)
 		return (ret);
 
 	/* Region exists; now initialize it. */
@@ -600,7 +600,9 @@ __lock_put_internal(lt, lockp, do_all)
 	if (SH_TAILQ_FIRST(&sh_obj->holders, __db_lock) == NULL) {
 		HASHREMOVE_EL(lt->hashtab, __db_lockobj,
 		    links, sh_obj, lt->region->table_size, __lock_lhash);
-		__db_shalloc_free(lt->mem, SH_DBT_PTR(&sh_obj->lockobj));
+		if (sh_obj->lockobj.size > sizeof(sh_obj->objdata))
+			__db_shalloc_free(lt->mem,
+			    SH_DBT_PTR(&sh_obj->lockobj));
 		SH_TAILQ_INSERT_HEAD(&lt->region->free_objs, sh_obj, links,
 		    __db_lockobj);
 		state_changed = 1;
@@ -633,7 +635,7 @@ __lock_get_internal(lt, locker, flags, obj, lock_mode, lockp)
 	DB_LOCKOBJ *sh_obj, *sh_locker;
 	DB_LOCKREGION *lrp;
 	size_t newl_off;
-	int ret;
+	int ihold, ret;
 
 	ret = 0;
 	/*
@@ -680,29 +682,40 @@ __lock_get_internal(lt, locker, flags, obj, lock_mode, lockp)
 	 * new lock if it does not conflict with anyone on the holders list
 	 * OR anyone on the waiters list.  The reason that we don't grant if
 	 * there's a conflict is that this can lead to starvation (a writer
-	 * waiting on a popularly read item will never ben granted).  The
+	 * waiting on a popularly read item will never be granted).  The
 	 * downside of this is that a waiting reader can prevent an upgrade
-	 * from reader to writer, which is not uncommon.  In case of conflict,
-	 * we put the new lock on the end of the waiters list.
+	 * from reader to writer, which is not uncommon.
+	 *
+	 * There is one exception to the no-conflict rule.  If a lock is held
+	 * by the requesting locker AND the new lock does not conflict with
+	 * any other holders, then we grant the lock.  The most common place
+	 * this happens is when the holder has a WRITE lock and a READ lock
+	 * request comes in for the same locker.  If we do not grant the read
+	 * lock, then we guarantee deadlock.
+	 *
+	 * In case of conflict, we put the new lock on the end of the waiters
+	 * list.
 	 */
+	ihold = 0;
 	for (lp = SH_TAILQ_FIRST(&sh_obj->holders, __db_lock);
 	    lp != NULL;
 	    lp = SH_TAILQ_NEXT(lp, links, __db_lock)) {
-		if (CONFLICTS(lt, lp->mode, lock_mode) &&
-		    locker != lp->holder)
+		if (locker == lp->holder) {
+			if (lp->mode == lock_mode &&
+			    lp->status == DB_LSTAT_HELD) {
+				/* Lock is held, just inc the ref count. */
+				lp->refcount++;
+				SH_TAILQ_INSERT_HEAD(&lrp->free_locks,
+				    newl, links, __db_lock);
+				*lockp = lp;
+				return (0);
+			} else
+				ihold = 1;
+		} else if (CONFLICTS(lt, lp->mode, lock_mode))
 			break;
-		else if (lp->holder == locker && lp->mode == lock_mode &&
-		    lp->status == DB_LSTAT_HELD) {
-			/* Lock is already held, just inc the ref count. */
-			lp->refcount++;
-			SH_TAILQ_INSERT_HEAD(&lrp->free_locks, newl, links,
-			    __db_lock);
-			*lockp = lp;
-			return (0);
-		}
     	}
 
-	if (lp == NULL)
+	if (lp == NULL && !ihold)
 		for (lp = SH_TAILQ_FIRST(&sh_obj->waiters, __db_lock);
 		    lp != NULL;
 		    lp = SH_TAILQ_NEXT(lp, links, __db_lock)) {
@@ -1261,25 +1274,37 @@ __lock_getobj(lt, locker, dbt, type, objp)
 	 */
 	if (sh_obj == NULL) {
 		/* Create new object and then insert it into hash table. */
-		if ((sh_obj = SH_TAILQ_FIRST(&lrp->free_objs, __db_lockobj))
-		    == NULL) {
+		if ((sh_obj =
+		    SH_TAILQ_FIRST(&lrp->free_objs, __db_lockobj)) == NULL) {
 			if ((ret = __lock_grow_region(lt, DB_LOCK_OBJ, 0)) != 0)
 				return (ret);
 			lrp = lt->region;
 			sh_obj = SH_TAILQ_FIRST(&lrp->free_objs, __db_lockobj);
 		}
-		if ((ret = __db_shalloc(lt->mem, obj_size, 0, &p)) != 0) {
-			if ((ret = __lock_grow_region(lt,
-			    DB_LOCK_MEM, obj_size)) != 0)
-				return (ret);
-			lrp = lt->region;
-			/* Reacquire the head of the list. */
-			sh_obj = SH_TAILQ_FIRST(&lrp->free_objs, __db_lockobj);
-			(void)__db_shalloc(lt->mem, obj_size, 0, &p);
-		}
-		sh_obj->type = type;
+
+		/*
+		 * If we can fit this object in the structure, do so instead
+		 * of shalloc-ing space for it.
+		 */
+		if (obj_size <= sizeof(sh_obj->objdata))
+			p = sh_obj->objdata;
+		else
+			if ((ret =
+			    __db_shalloc(lt->mem, obj_size, 0, &p)) != 0) {
+				if ((ret = __lock_grow_region(lt,
+				    DB_LOCK_MEM, obj_size)) != 0)
+					return (ret);
+				lrp = lt->region;
+				/* Reacquire the head of the list. */
+				sh_obj = SH_TAILQ_FIRST(&lrp->free_objs,
+				    __db_lockobj);
+				(void)__db_shalloc(lt->mem, obj_size, 0, &p);
+			}
+
 		src = type == DB_LOCK_OBJTYPE ? dbt->data : (void *)&locker;
 		memcpy(p, src, obj_size);
+
+		sh_obj->type = type;
 		SH_TAILQ_REMOVE(&lrp->free_objs, sh_obj, links, __db_lockobj);
 
 		SH_TAILQ_INIT(&sh_obj->waiters);
@@ -1329,7 +1354,8 @@ __lock_freeobj(lt, obj)
 {
 	HASHREMOVE_EL(lt->hashtab,
 	    __db_lockobj, links, obj, lt->region->table_size, __lock_lhash);
-	__db_shalloc_free(lt->mem, SH_DBT_PTR(&obj->lockobj));
+	if (obj->lockobj.size > sizeof(obj->objdata))
+		__db_shalloc_free(lt->mem, SH_DBT_PTR(&obj->lockobj));
 	SH_TAILQ_INSERT_HEAD(&lt->region->free_objs, obj, links, __db_lockobj);
 }
 

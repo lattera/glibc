@@ -1,4 +1,4 @@
-# @(#)README	10.1 (Sleepycat) 4/12/97
+# @(#)README	10.2 (Sleepycat) 11/25/97
 
 Resource locking routines: lock based on a db_mutex_t.  All this gunk
 (including trying to make assembly code portable), is necessary because
@@ -11,9 +11,9 @@ information.
 
 If HAVE_SPINLOCKS is defined (i.e. we know how to do test-and-sets for
 this compiler/architecture combination), we try and lock the resource tsl
-TSL_DEFAULT_SPINS times.  If we can't acquire the lock that way, we use
-a system call to sleep for 10ms, 20ms, 40ms, etc.  (The time is bounded
-at 1 second, just in case.)  Using the timer backoff means that there are
+__db_tsl_spins times.  If we can't acquire the lock that way, we use a
+system call to sleep for 10ms, 20ms, 40ms, etc.  (The time is bounded at
+1 second, just in case.)  Using the timer backoff means that there are
 two assumptions: that locks are held for brief periods (never over system
 calls or I/O) and that locks are not hotly contested.
 

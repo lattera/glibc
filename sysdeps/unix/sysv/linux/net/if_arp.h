@@ -92,7 +92,6 @@ struct arphdr
 #define ARPHRD_PPP	512
 #define ARPHRD_HDLC	513		/* (Cisco) HDLC.  */
 #define ARPHRD_LAPB	516		/* LAPB.  */
-#define ARPHRD_ASH	517		/* ASH.  */
 
 #define ARPHRD_TUNNEL	768		/* IPIP tunnel.  */
 #define ARPHRD_TUNNEL6	769		/* IPIP6 tunnel.  */
@@ -101,8 +100,13 @@ struct arphdr
 #define ARPHRD_LOOPBACK	772		/* Loopback device.  */
 #define ARPHRD_LOCALTLK 773		/* Localtalk device.  */
 #define ARPHRD_FDDI	774		/* Fiber Distributed Data Interface. */
-#define ARPHRD_BIF      775             /* AP1000 BIF.  */
+#define ARPHRD_BIF	775             /* AP1000 BIF.  */
 #define ARPHRD_SIT	776		/* sit0 device - IPv6-in-IPv4.  */
+#define ARPHRD_IPDDP	777		/* IP-in-DDP tunnel.  */
+#define ARPHRD_IPGRE	778		/* GRE over IP.  */
+#define ARPHRD_PIMREG	779		/* PIMSM register interface.  */
+#define ARPHRD_HIPPI	780		/* High Performance Parallel I'face. */
+#define ARPHRD_ASH	781		/* (Nexus Electronics) Ash.  */
 
 
 /* ARP ioctl request.  */
