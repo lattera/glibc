@@ -23,7 +23,7 @@ define(ADJQU,
 
 define(DOREM,
 `ifelse(BASEOP, `rem',
-`	! Compute the remainder.
+`	/* Compute the remainder.  */
 ifelse(SIZE, `l',
 `	mull t11, t12, t11
 	subl t10, t11, t12
