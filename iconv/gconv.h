@@ -84,8 +84,7 @@ typedef int (*__gconv_trans_fct) (struct __gconv_step *,
 				  size_t *);
 
 /* Function to call to provide transliteration module with context.  */
-typedef int (*__gconv_trans_context_fct) (struct __gconv_trans_data *,
-					  __const unsigned char *,
+typedef int (*__gconv_trans_context_fct) (void *, __const unsigned char *,
 					  __const unsigned char *,
 					  unsigned char *, unsigned char *);
 

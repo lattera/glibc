@@ -1,5 +1,10 @@
 2000-09-30  Bruno Haible  <haible@clisp.cons.org>
 
+	* charmaps/UTF-8: Add the correct Hangul syllable names.  Change the
+	width of format control characters to 0.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
 	* tests-mbwc/tst_wcscmp.c (tst_wcscmp): Take the sign of ret.
 	* tests-mbwc/dat_wcscmp.c (tst_wcscmp_loc): Don't expect precise
 	return values.  Only the sign matters.
