@@ -1,3 +1,8 @@
+2002-10-29  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/allocrtsig.c: Include <testrtsig.h>, not
+	"testrtsig.h".  Reported by Daniel Jacobowitz <dan@debian.org>.
+
 2002-10-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/configure.in: Fix typo in last change.
