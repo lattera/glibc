@@ -1,3 +1,10 @@
+2003-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c: Don't use strong_alias to define _rtld_local.  This
+	removes the visibility attributes which might be defined earlier
+	for some gcc versions.  Instead spell out what strong_alias does
+	plus the visibility.
+
 2003-12-16  Petter Reinholdtsen  <pere@hungry.com>
 
 	* posix/regex_internal.h: Make sure the regex code compile

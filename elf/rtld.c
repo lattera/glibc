@@ -105,7 +105,12 @@ struct rtld_global _rtld_global =
     ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER
 #endif
   };
-strong_alias (_rtld_global, _rtld_local);
+/* If we would use strong_alias here the compiler would see a
+   non-hidden definition.  This would undo the effect of the previous
+   declaration.  So spell out was strong_alias does plus add the
+   visibility attribute.  */
+extern struct rtld_global _rtld_local
+    __attribute__ ((alias ("_rtld_global"), visibility ("hidden")));
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry);
@@ -140,7 +145,7 @@ DL_SYSINFO_IMPLEMENTATION
 /* Before ld.so is relocated we must not access variables which need
    relocations.  This means variables which are exported.  Variables
    declared as static are fine.  If we can mark a variable hidden this
-   is fine, too.  The latter is impotant here.  We can avoid setting
+   is fine, too.  The latter is important here.  We can avoid setting
    up a temporary link map for ld.so if we can mark _rtld_global as
    hidden.  */
 #if defined PI_STATIC_AND_HIDDEN && defined HAVE_HIDDEN \
