@@ -2329,14 +2329,14 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		if (sizeof (int32_t) == sizeof (int))
 		  {
 		    obstack_int_grow_fast (&extrapool,
-					   obstack_object_size (&indirectpool)
-					   / sizeof (int32_t));
+					   -(obstack_object_size (&indirectpool)
+					     / sizeof (int32_t)));
 		    obstack_int_grow_fast (&extrapool, runp->nwcs - 1);
 		  }
 		else
 		  {
-		    int32_t i = (obstack_object_size (&indirectpool)
-				 / sizeof (int32_t));
+		    int32_t i = -(obstack_object_size (&indirectpool)
+				  / sizeof (int32_t));
 		    obstack_grow (&extrapool, &i, sizeof (int32_t));
 		    i = runp->nwcs - 1;
 		    obstack_grow (&extrapool, &i, sizeof (int32_t));
@@ -2367,9 +2367,10 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		  {
 		    weightidx = output_weightwc (&weightpool, collate, curp);
 		    if (sizeof (int32_t) == sizeof (int))
-		      obstack_int_grow (&extrapool, weightidx);
+		      obstack_int_grow (&indirectpool, weightidx);
 		    else
-		      obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		      obstack_grow (&indirectpool, &weightidx,
+				    sizeof (int32_t));
 
 		    curp = curp->wclast;
 		  }
@@ -2384,11 +2385,11 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
 		/* And add the end byte sequence.  Without length this
                    time.  */
-		for (i = 1; i < runp->nwcs; ++i)
+		for (i = 1; i < curp->nwcs; ++i)
 		  if (sizeof (int32_t) == sizeof (int))
-		    obstack_int_grow (&extrapool, runp->wcs[i]);
+		    obstack_int_grow (&extrapool, curp->wcs[i]);
 		  else
-		    obstack_grow (&extrapool, &runp->wcs[i], sizeof (int32_t));
+		    obstack_grow (&extrapool, &curp->wcs[i], sizeof (int32_t));
 	      }
 	    else
 	      {

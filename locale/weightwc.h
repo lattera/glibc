@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -51,8 +51,8 @@ findidx (const wint_t **cpp)
       const wint_t *usrc = *cpp;
 
       /* The first thing is the index.  */
-      i = *((int32_t *) cp);
-      cp += sizeof (int32_t);
+      i = cp;
+      ++cp;
 
       /* Next is the length of the byte sequence.  These are always
 	 short byte sequences so there is no reason to call any
@@ -87,47 +87,36 @@ findidx (const wint_t **cpp)
 	  /* This is a range of characters.  First decide whether the
 	     current byte sequence lies in the range.  */
 	  size_t cnt;
-	  size_t offset = 0;
+	  size_t offset;
 
-	  for (cnt = 0; cnt < nhere; ++cnt)
+	  for (cnt = 0; cnt < nhere - 1; ++cnt)
 	    if (cp[cnt] != usrc[cnt])
 	      break;
 
-	  if (cnt != nhere)
+	  if (cnt < nhere - 1)
 	    {
-	      if (cp[cnt] > usrc[cnt])
-		{
-		  /* Cannot be in this range.  */
-		  cp += 2 * nhere;
-		  continue;
-		}
-
-	      /* Test against the end of the range.  */
-	      for (cnt = 0; cnt < nhere; ++cnt)
-		if (cp[nhere + cnt] != usrc[cnt])
-		  break;
-
-	      if (cnt != nhere && cp[nhere + cnt] < usrc[cnt])
-		{
-		  /* Cannot be in this range.  */
-		  cp += 2 * nhere;
-		  continue;
-		}
-
-	      /* This range matches the next characters.  Now find
-		 the offset in the indirect table.  */
-	      for (cnt = 0; cp[cnt] == usrc[cnt]; ++cnt);
-
-	      do
-		{
-		  offset <<= 8;
-		  offset += usrc[cnt] - cp[cnt];
-		}
-	      while (++cnt < nhere);
+	      cp += 2 * nhere;
+	      continue;
 	    }
 
+	  if (cp[nhere - 1] > usrc[nhere -1])
+	    {
+	      cp += 2 * nhere;
+	      continue;
+	    }
+
+	  if (cp[2 * nhere - 1] < usrc[nhere -1])
+	    {
+	      cp += 2 * nhere;
+	      continue;
+	    }
+
+	  /* This range matches the next characters.  Now find
+	     the offset in the indirect table.  */
+	  offset = usrc[nhere - 1] - cp[nhere - 1];
 	  *cpp += nhere;
-	  return offset;
+
+	  return indirect[-i + offset];
 	}
     }
 

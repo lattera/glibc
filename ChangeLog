@@ -1,3 +1,13 @@
+2000-02-08  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
+
+	* locale/weightwc.h: Fix problem with collating-element.
+
+	* locale/programs/ld-collate.c (collate_finish): Output wide
+	character collating-symbol, which has no wide strings.
+
+	* locale/programs/ld-collate.c (collate_output): Fix problem with
+	wide character collating-element.
+
 2000-02-09  Andreas Jaeger  <aj@suse.de>
 
 	* time/strptime.c (strptime_internal): Fix pointer dereference.
