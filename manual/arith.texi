@@ -2561,40 +2561,44 @@ user-supplied buffer.
 
 @comment stdlib.h
 @comment GNU
-@deftypefun {char *} ecvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
+@deftypefun int ecvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
 The @code{ecvt_r} function is the same as @code{ecvt}, except
 that it places its result into the user-specified buffer pointed to by
-@var{buf}, with length @var{len}.
+@var{buf}, with length @var{len}.  The return value is @code{-1} in
+case of an error and zero otherwise.
 
 This function is a GNU extension.
 @end deftypefun
 
 @comment stdlib.h
 @comment SVID, Unix98
-@deftypefun {char *} fcvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
-The @code{fcvt_r} function is the same as @code{fcvt}, except
-that it places its result into the user-specified buffer pointed to by
-@var{buf}, with length @var{len}.
+@deftypefun int fcvt_r (double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
+The @code{fcvt_r} function is the same as @code{fcvt}, except that it
+places its result into the user-specified buffer pointed to by
+@var{buf}, with length @var{len}.  The return value is @code{-1} in
+case of an error and zero otherwise.
 
 This function is a GNU extension.
 @end deftypefun
 
 @comment stdlib.h
 @comment GNU
-@deftypefun {char *} qecvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
+@deftypefun int qecvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
 The @code{qecvt_r} function is the same as @code{qecvt}, except
 that it places its result into the user-specified buffer pointed to by
-@var{buf}, with length @var{len}.
+@var{buf}, with length @var{len}.  The return value is @code{-1} in
+case of an error and zero otherwise.
 
 This function is a GNU extension.
 @end deftypefun
 
 @comment stdlib.h
 @comment GNU
-@deftypefun {char *} qfcvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
+@deftypefun int qfcvt_r (long double @var{value}, int @var{ndigit}, int *@var{decpt}, int *@var{neg}, char *@var{buf}, size_t @var{len})
 The @code{qfcvt_r} function is the same as @code{qfcvt}, except
 that it places its result into the user-specified buffer pointed to by
-@var{buf}, with length @var{len}.
+@var{buf}, with length @var{len}.  The return value is @code{-1} in
+case of an error and zero otherwise.
 
 This function is a GNU extension.
 @end deftypefun
