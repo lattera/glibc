@@ -30,6 +30,9 @@
 
 2002-10-18  Jeff Bailey  <jbailey@gnu.org>
 
+        * configure.in: Replace obsolete AC_OUTPUT syntax with
+        AC_CONFIG_FILES, AC_CONFIG_COMMANDS, and new-type AC_OUTPUT trio.
+
         * aclocal.m4 (GLIBC_PROVIDES): Add AC_PROVIDEs for
 	_AS_PATH_SEPARATOR_PREPARE and _AS_TEST_PREPARE.
 
