@@ -885,29 +885,10 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (__builtin_expect (failure, __GCONV_OK) == __GCONV_ILLEGAL_INPUT)      \
       {									      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* Exit the loop with an error.  */				      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ++*irreversible;						      \
-	    inptr += 4;							      \
-	  }								      \
-	continue;							      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
-    else								      \
-      *outptr++ = (unsigned char) ch;					      \
+									      \
+    *outptr++ = (unsigned char) ch;					      \
     inptr += 4;								      \
   }
 #define LOOP_NEED_FLAGS

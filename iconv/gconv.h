@@ -76,21 +76,22 @@ typedef void (*__gconv_end_fct) (struct __gconv_step *);
 
 
 /* Type of a transliteration/transscription function.  */
-typedef int (*__gconv_trans_fct) (struct __gconv_step *step,
-				  struct __gconv_step_data *step_data,
+typedef int (*__gconv_trans_fct) (struct __gconv_step *,
+				  struct __gconv_step_data *, void *,
 				  __const unsigned char *,
 				  __const unsigned char **,
 				  __const unsigned char *, unsigned char **,
 				  size_t *);
 
 /* Function to call to provide transliteration module with context.  */
-typedef int (*__gconv_trans_context_fct) (struct __gconv_trans_data *data,
+typedef int (*__gconv_trans_context_fct) (struct __gconv_trans_data *,
 					  __const unsigned char *,
 					  __const unsigned char *,
 					  unsigned char *, unsigned char *);
 
 /* Function to query module about supported encoded character sets.  */
-typedef int (*__gconv_trans_query_fct) (__const char **, size_t *);
+typedef int (*__gconv_trans_query_fct) (__const char *, __const char ***,
+					size_t *);
 
 /* Constructor and destructor for local data for transliteration.  */
 typedef int (*__gconv_trans_init_fct) (void **, const char *);
@@ -103,6 +104,7 @@ struct __gconv_trans_data
   __gconv_trans_context_fct __trans_context_fct;
   __gconv_trans_end_fct __trans_end_fct;
   void *__data;
+  struct __gconv_trans_data *__next;
 };
 
 
@@ -158,7 +160,7 @@ struct __gconv_step_data
 			   any module; always use STATEP!  */
 
   /* Transliteration information.  */
-  struct __gconv_trans_data __trans;
+  struct __gconv_trans_data *__trans;
 };
 
 

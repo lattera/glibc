@@ -83,75 +83,17 @@ struct gap
     unsigned char res;							      \
 									      \
     if (__builtin_expect (ch, 0) >= 0xffff)				      \
+      rp = NULL;							      \
+    else								      \
+      while (ch > rp->end)						      \
+	++rp;								      \
+    if (__builtin_expect (rp == NULL, 0)				      \
+	|| __builtin_expect (ch < rp->start, 0)				      \
+	|| (res = from_ucs4[ch + rp->idx],				      \
+	    __builtin_expect (res, '\1') == '\0' && ch != 0))		      \
       {									      \
 	/* This is an illegal character.  */				      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++*irreversible;						      \
-	inptr += 4;							      \
-	continue;							      \
-      }									      \
-    while (ch > rp->end)						      \
-      ++rp;								      \
-    if (__builtin_expect (ch < rp->start, 0))				      \
-      {									      \
-	/* This is an illegal character.  */				      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ++*irreversible;						      \
-	    inptr += 4;							      \
-	  }								      \
-	continue;							      \
-      }									      \
-									      \
-    res = from_ucs4[ch + rp->idx];					      \
-    if (__builtin_expect (res, '\1') == '\0' && ch != 0)		      \
-      {									      \
-	/* This is an illegal character.  */				      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ++*irreversible;						      \
-	    inptr += 4;							      \
-	  }								      \
-	continue;							      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
 									      \
     *outptr++ = res;							      \

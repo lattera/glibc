@@ -396,26 +396,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	    if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
-		if (step_data->__trans.__trans_fct != NULL)		      \
-		  {							      \
-		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
-					  (step, step_data, *inptrp, &inptr,  \
- 					   inend, &outptr, irreversible));    \
-		    if (result != __GCONV_OK)				      \
-		      break;						      \
-		  }							      \
-		else if (! ignore_errors_p ())				      \
-		  {							      \
-		    /* This is an illegal character.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-		else							      \
-		  {							      \
-		    inptr += 4;						      \
-		    ++*irreversible;					      \
-		  }							      \
-		continue;						      \
+		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \
 	    outptr[0] -= 0x4a;						      \
@@ -441,26 +422,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
-		if (step_data->__trans.__trans_fct != NULL)		      \
-		  {							      \
-		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
-					  (step, step_data, *inptrp, &inptr,  \
-					   inend, &outptr, irreversible));    \
-		    if (result != __GCONV_OK)				      \
-		      break;						      \
-		  }							      \
-		else if (! ignore_errors_p ())				      \
-		  {							      \
-		    /* This is an illegal character.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-		else							      \
-		  {							      \
-		    inptr += 4;						      \
-		    ++*irreversible;					      \
-		  }							      \
-		continue;						      \
+		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \
 	    outptr[0] -= 0x4a;						      \

@@ -26,6 +26,19 @@
 __BEGIN_DECLS
 
 
+/* Type to represent search path.  */
+struct path_elem
+{
+  const char *name;
+  size_t len;
+};
+
+/* Variable with search path for `gconv' implementation.  */
+extern const struct path_elem *__gconv_path_elem;
+/* Maximum length of a single path element.  */
+extern size_t __gconv_max_path_elem_len;
+
+
 /* Structure for alias definition.  Simply to strings.  */
 struct gconv_alias
 {
@@ -80,6 +93,21 @@ struct gconv_module
   struct gconv_module *same;	/* List of entries with identical prefix.  */
   struct gconv_module *matching;/* Next node with more specific prefix.  */
   struct gconv_module *right;	/* Prefix larger.  */
+};
+
+
+/* Internal data structure to represent transliteration module.  */
+struct trans_struct
+{
+  const char *name;
+  struct trans_struct *next;
+
+  const char **csnames;
+  size_t ncsnames;
+  __gconv_trans_fct trans_fct;
+  __gconv_trans_context_fct trans_context_fct;
+  __gconv_trans_init_fct trans_init_fct;
+  __gconv_trans_end_fct trans_end_fct;
 };
 
 
@@ -161,6 +189,9 @@ extern int __gconv_find_transform (const char *toset, const char *fromset,
 /* Read all the configuration data and cache it.  */
 extern void __gconv_read_conf (void);
 
+/* Determine the directories we are looking in.  */
+extern void __gconv_get_path (void);
+
 /* Comparison function to search alias.  */
 extern int __gconv_alias_compare (const void *p1, const void *p2);
 
@@ -185,9 +216,14 @@ extern void __gconv_get_builtin_trans (const char *name,
 				       struct __gconv_step *step)
      internal_function;
 
+/* Try to load transliteration step module.  */
+extern int __gconv_translit_find (struct trans_struct *trans)
+     internal_function;
+
 /* Transliteration using the locale's data.  */
 extern int __gconv_transliterate (struct __gconv_step *step,
 				  struct __gconv_step_data *step_data,
+				  void *trans_data,
 				  __const unsigned char *inbufstart,
 				  __const unsigned char **inbufp,
 				  __const unsigned char *inbufend,

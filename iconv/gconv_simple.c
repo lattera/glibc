@@ -797,25 +797,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     /* XXX unaligned.  */						      \
     if (__builtin_expect (*((uint32_t *) inptr), 0) > 0x7f)		      \
       {									      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* This is no correct ANSI_X3.4-1968 character.  */		      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ++*irreversible;						      \
-	    inptr += 4; 						      \
-	  }								      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
@@ -1186,24 +1168,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
   {									      \
     if (__builtin_expect (*((uint32_t *) inptr), 0) >= 0x10000)		      \
       {									      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
-	  }								      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else 								      \
       *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;		      \
@@ -1253,25 +1218,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     uint32_t val = *((uint32_t *) inptr);				      \
     if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
-	  }								      \
-	continue;							      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     *((uint16_t *) outptr)++ = bswap_16 (val);				      \
     inptr += 4;								      \

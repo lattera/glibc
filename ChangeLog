@@ -1,3 +1,68 @@
+2000-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv.h (__gconv_trans_fct): Add new parameter.
+	General namespace cleanup.
+	(struct __gconv_trans_data): Add next field.
+	(struct __gconv_step_data): Make __trans a pointer.
+	* iconv/gconv_conf.c: Split out code to find gconv directories from
+	__gconv_read_conf in new functions.
+	* iconv/gconv_int.h: Define new data structure and declare new
+	functions for handling of gconv directory list.
+	* iconv/gconv_open.c: Allow more than one error handling step being
+	used.  Call function to load error handling module if it is none
+	of the builtin transformations.
+	* iconv/gconv_close.c: Add code to free transliteration data.
+	* iconv/gconv_trans.c: Add functions to load and unload modules
+	implementing transliteration etc.
+	* iconv/skeleton.c: Call all context functions now that more than
+	one module is allowed.
+	* iconv/loop.c (STANDARD_ERR_HANDLING): New macro.
+	* iconv/gconv_simple.c: Use STANDARD_ERR_HANDLING macro for places
+	where the full error handling using transliteration is needed.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/big5hkscs.c: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/euc-tw.c: Likewise.
+	* iconvdata/gbgbk.c: Likewise.
+	* iconvdata/gbk.c: Likewise.
+	* iconvdata/iso-2022-cn.c: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+	* libio/iofwide.c: Reset __trans member of __gconv_trans_data
+	structure correctly after last change.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
+	* localedata/Makefile: Set -Wno-format for some files since gcc does
+	not know all the format specifiers.
+
+2000-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/loadlocale.c (_nl_unload_locale): Remove a bit of
+	unneeded code.
+	* locale/lc-time.c (_nl_init_era_entries): Likewise.
+
 2000-06-18  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h: Always use $25 as jump register.

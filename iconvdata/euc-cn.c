@@ -141,25 +141,7 @@
 	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		/* Illegal character.  */				      \
-		if (step_data->__trans.__trans_fct != NULL)		      \
-		  {							      \
-		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
-					  (step, step_data, *inptrp, &inptr,  \
-					   inend, &outptr, irreversible));    \
-		    if (result != __GCONV_OK)				      \
-		      break;						      \
-		  }							      \
-		else if (! ignore_errors_p ())				      \
-		  {							      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-		else							      \
-		  {							      \
-		    inptr += 4;						      \
-		    ++*irreversible;					      \
-		  }							      \
-		continue;						      \
+		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \
 	    /* It's a GB 2312 character, adjust it for EUC-CN.  */	      \

@@ -75,6 +75,13 @@ $(inst_i18ndir)/charmaps/%: charmaps/% $(+force); $(do-install)
 $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
 $(inst_i18ndir)/repertoiremaps/%: repertoiremaps/% $(+force); $(do-install)
 
+# gcc does not know all the format specifiers we are using here.
+CFLAGS-tst-mbswcs1.c = -Wno-format
+CFLAGS-tst-mbswcs2.c = -Wno-format
+CFLAGS-tst-mbswcs3.c = -Wno-format
+CFLAGS-tst-mbswcs4.c = -Wno-format
+CFLAGS-tst-mbswcs5.c = -Wno-format
+CFLAGS-tst-trans.c = -Wno-format
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))

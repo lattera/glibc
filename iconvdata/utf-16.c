@@ -202,26 +202,7 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (__builtin_expect (c, 0) >= 0x110000)			      \
 	      {								      \
-		if (step_data->__trans.__trans_fct != NULL)		      \
-		  {							      \
-		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
-					  (step, step_data, *inptrp, &inptr,  \
-					   inend, &outptr, irreversible));    \
-		    if (result != __GCONV_OK)				      \
-		      break;						      \
-		  }							      \
-		else if (! ignore_errors_p ())				      \
-		  {							      \
-		    /* This is an illegal character.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-		else							      \
-		  {							      \
-		    ++*irreversible;					      \
-		    inptr += 4;						      \
-		  }							      \
-		continue;						      \
+		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
@@ -245,26 +226,7 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (__builtin_expect (c, 0) >= 0x110000)			      \
 	      {								      \
-		if (step_data->__trans.__trans_fct != NULL)		      \
-		  {							      \
-		    result = DL_CALL_FCT (step_data->__trans.__trans_fct,     \
-					  (step, step_data, *inptrp, &inptr,  \
-					   inend, &outptr, irreversible));    \
-		    if (result != __GCONV_OK)				      \
-		      break;						      \
-		  }							      \
-		else if (! ignore_errors_p ())				      \
-		  {							      \
-		    /* This is an illegal character.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-		else							      \
-		  {							      \
-		    ++*irreversible;					      \
-		    inptr += 4;						      \
-		  }							      \
-		continue;						      \
+		STANDARD_ERR_HANDLER (4);				      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \

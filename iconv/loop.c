@@ -173,6 +173,38 @@
 #define ignore_errors_p() (flags & __GCONV_IGNORE_ERRORS)
 
 
+/* Error handling with transliteration/transcription function use and
+   ignoring of errors.  Note that we cannot use the do while (0) trick
+   since `break' and `continue' must reach certain points.  */
+#define STANDARD_ERR_HANDLER(Incr) \
+  {									      \
+    struct __gconv_trans_data *trans;					      \
+									      \
+    result = __GCONV_ILLEGAL_INPUT;					      \
+    /* First try the transliteration methods.  */			      \
+    for (trans = step_data->__trans; trans != NULL; trans = trans->__next)    \
+      {									      \
+	result = DL_CALL_FCT (trans->__trans_fct,			      \
+			      (step, step_data, trans->__data, *inptrp,	      \
+			       &inptr, inend, &outptr, irreversible));	      \
+	if (result != __GCONV_ILLEGAL_INPUT)				      \
+	  break;							      \
+      }									      \
+    /* If any of them recognized the input stop.  */			      \
+    if (result != __GCONV_ILLEGAL_INPUT)				      \
+      break;								      \
+									      \
+    /* Next see whether we have to ignore the error.  If not, stop.  */	      \
+    if (! ignore_errors_p ())						      \
+      break;								      \
+    									      \
+    /* When we come here it means we ignore the character.  */		      \
+    ++*irreversible;							      \
+    inptr += Incr;							      \
+    continue;								      \
+  }
+
+
 /* The function returns the status, as defined in gconv.h.  */
 static inline int
 FCTNAME (LOOPFCT) (struct __gconv_step *step,

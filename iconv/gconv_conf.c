@@ -1,5 +1,5 @@
 /* Handle configuration data.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -33,6 +34,14 @@
 
 /* This is the default path where we look for module lists.  */
 static const char default_gconv_path[] = GCONV_PATH;
+
+/* The path element in use.   */
+const struct path_elem *__gconv_path_elem;
+/* Maximum length of a single path element.  */
+size_t __gconv_max_path_elem_len;
+
+/* We use the following struct if we couldn't allocate memory.  */
+static const struct path_elem empty_path_elem;
 
 /* Name of the file containing the module information in the directories
    along the path.  */
@@ -497,9 +506,103 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	/* Otherwise ignore the line.  */
     }
 
-  if (line != NULL)
-    free (line);
+  free (line);
+
   fclose (fp);
+}
+
+
+/* Determine the directories we are looking for data in.  */
+void
+__gconv_get_path (void)
+{
+  struct path_elem *result;
+  __libc_lock_define_initialized (static, lock);
+
+  __libc_lock_lock (lock);
+
+  /* Make sure there wasn't a second thread doing it already.  */
+  result = (struct path_elem *) __gconv_path_elem;
+  if (result == NULL)
+    {
+      /* Determine the complete path first.  */
+      const char *user_path;
+      char *gconv_path;
+      size_t gconv_path_len;
+      char *elem;
+      char *oldp;
+      char *cp;
+      int nelems;
+
+      user_path = __secure_getenv ("GCONV_PATH");
+      if (user_path == NULL)
+	{
+	  /* No user-defined path.  Make a modifiable copy of the
+	     default path.  */
+	  gconv_path = strdupa (default_gconv_path);
+	  gconv_path_len = sizeof (default_gconv_path);
+	}
+      else
+	{
+	  /* Append the default path to the user-defined path.  */
+	  size_t user_len = strlen (user_path);
+
+	  gconv_path_len = user_len + 1 + sizeof (default_gconv_path);
+	  gconv_path = alloca (gconv_path_len);
+	  __mempcpy (__mempcpy (__mempcpy (gconv_path, user_path, user_len),
+				":", 1),
+		     default_gconv_path, sizeof (default_gconv_path));
+	}
+
+      /* In a first pass we calculate the number of elements.  */
+      oldp = NULL;
+      cp = strchr (gconv_path, ':');
+      nelems = 1;
+      while (cp != NULL)
+	{
+	  if (cp != oldp + 1)
+	    ++nelems;
+	  oldp = cp;
+	  cp =  strchr (cp + 1, ':');
+	}
+
+      /* Allocate the memory for the result.  */
+      result = (struct path_elem *) malloc ((nelems + 1)
+					    * sizeof (struct path_elem)
+					    + gconv_path_len + nelems);
+      if (result != NULL)
+	{
+	  char *strspace = (char *) &result[nelems + 1];
+	  int n = 0;
+
+	  /* Separate the individual parts.  */
+	  __gconv_max_path_elem_len = 0;
+	  elem = __strtok_r (gconv_path, ":", &gconv_path);
+	  assert (elem != NULL);
+	  do
+	    {
+	      result[n].name = strspace;
+	      strspace = __stpcpy (strspace, elem);
+	      if (strspace[-1] != '/')
+		*strspace++ = '/';
+
+	      result[n].len = strspace - result[n].name;
+	      if (result[n].len > __gconv_max_path_elem_len)
+		__gconv_max_path_elem_len = result[n].len;
+
+	      *strspace++ = '\0';
+	      ++n;
+	    }
+	  while ((elem = __strtok_r (NULL, ":", &gconv_path)) != NULL);
+
+	  result[n].name = NULL;
+	  result[n].len = 0;
+	}
+
+      __gconv_path_elem = result ?: &empty_path_elem;
+    }
+
+  __libc_lock_unlock (lock);
 }
 
 
@@ -508,37 +611,20 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 void
 __gconv_read_conf (void)
 {
-  const char *user_path = __secure_getenv ("GCONV_PATH");
-  char *gconv_path, *elem;
   void *modules = NULL;
   size_t nmodules = 0;
   int save_errno = errno;
   size_t cnt;
 
-  if (user_path == NULL)
-    /* No user-defined path.  Make a modifiable copy of the default path.  */
-    gconv_path = strdupa (default_gconv_path);
-  else
+  /* Find out where we have to look.  */
+  if (__gconv_path_elem == NULL)
+    __gconv_get_path ();
+
+  for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
     {
-      /* Append the default path to the user-defined path.  */
-      size_t user_len = strlen (user_path);
+      char real_elem[__gconv_max_path_elem_len + sizeof (gconv_conf_filename)];
 
-      gconv_path = alloca (user_len + 1 + sizeof (default_gconv_path));
-      __mempcpy (__mempcpy (__mempcpy (gconv_path, user_path, user_len),
-			    ":", 1),
-		 default_gconv_path, sizeof (default_gconv_path));
-    }
-
-  elem = __strtok_r (gconv_path, ":", &gconv_path);
-  while (elem != NULL)
-    {
-#ifndef MAXPATHLEN
-      /* We define a reasonable limit.  */
-# define MAXPATHLEN 4096
-#endif
-      char real_elem[MAXPATHLEN];
-
-      if (__realpath (elem, real_elem) != NULL)
+      if (__realpath (__gconv_path_elem[cnt].name, real_elem) != NULL)
 	{
 	  size_t elem_len = strlen (real_elem);
 	  char *filename;
@@ -551,9 +637,6 @@ __gconv_read_conf (void)
 	  /* Read the next configuration file.  */
 	  read_conf_file (filename, real_elem, elem_len, &modules, &nmodules);
 	}
-
-      /* Get next element in the path.  */
-      elem = __strtok_r (NULL, ":", &gconv_path);
     }
 
   /* Add the internal modules.  */
@@ -586,3 +669,15 @@ __gconv_read_conf (void)
   /* Restore the error number.  */
   __set_errno (save_errno);
 }
+
+
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (__gconv_path_elem != NULL && __gconv_path_elem != &empty_path_elem)
+    free ((void *) __gconv_path_elem);
+}
+
+text_set_element (__libc_subfreeres, free_mem);

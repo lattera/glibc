@@ -703,26 +703,7 @@ gconv_end (struct __gconv_step *data)
 		else if (__builtin_expect (var, iso2022jp2) == iso2022jp)     \
 		  {							      \
 		    /* We have no other choice.  */			      \
-		    if (step_data->__trans.__trans_fct != NULL)		      \
-		      {							      \
-			result = DL_CALL_FCT (step_data->__trans.__trans_fct, \
-					      (step, step_data, *inptrp,      \
-					       &inptr, inend, &outptr,	      \
-					       irreversible));		      \
-			if (result != __GCONV_OK)			      \
-			  break;					      \
-		      }							      \
-		    else if (! ignore_errors_p ())			      \
-		      {							      \
-			result = __GCONV_ILLEGAL_INPUT;			      \
-			break;						      \
-		      }							      \
-		    else						      \
-		      {							      \
-			inptr += 4;					      \
-			++*irreversible;				      \
-		      }							      \
-		    continue;						      \
+		    STANDARD_ERR_HANDLER (4);				      \
 		  }							      \
 		else							      \
 		  {							      \
@@ -888,28 +869,7 @@ gconv_end (struct __gconv_step *data)
 				      }					      \
 				    else				      \
 				      {					      \
-					if (step_data->__trans.__trans_fct    \
-					    != NULL)			      \
-					  {				      \
-					    result = DL_CALL_FCT	      \
-  					      (step_data->__trans.__trans_fct,\
-					       (step, step_data, *inptrp,     \
-						&inptr, inend, &outptr,	      \
-						irreversible));		      \
-					    if (result != __GCONV_OK)	      \
-					      break;			      \
-					  }				      \
-					else if (! ignore_errors_p ())	      \
-					  {				      \
-					     result = __GCONV_ILLEGAL_INPUT;  \
-					     break;			      \
-					  }				      \
-					else				      \
-					  {				      \
-					    ++*irreversible;		      \
-					    inptr += 4;			      \
-					  }				      \
-					continue;			      \
+					STANDARD_ERR_HANDLER (4);	      \
 				      }					      \
 				  }					      \
 			      }						      \

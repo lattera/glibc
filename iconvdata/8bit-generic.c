@@ -68,30 +68,11 @@
 	|| (__builtin_expect (from_ucs4[ch], '\1') == '\0' && ch != 0))	      \
       {									      \
 	/* This is an illegal character.  */				      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ++*irreversible;						      \
-	    inptr += 4;							      \
-	  }								      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
-    else								      \
-      {									      \
-	*outptr++ = from_ucs4[ch];					      \
-	inptr += 4;							      \
-      }									      \
+									      \
+    *outptr++ = from_ucs4[ch];						      \
+    inptr += 4;								      \
   }
 #define LOOP_NEED_FLAGS
 #include <iconv/loop.c>

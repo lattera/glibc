@@ -102,31 +102,12 @@
 		&& __builtin_expect (ch, 0xa1a1) <= 0xa8c0))		      \
 	  {								      \
 	    /* One of the characters we cannot map.  */			      \
-	    if (step_data->__trans.__trans_fct != NULL)			      \
-	      {								      \
-		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				      (step, step_data, *inptrp, &inptr,      \
-				       inend, &outptr, irreversible));	      \
-		if (result != __GCONV_OK)				      \
-		  break;						      \
-	      }								      \
-	    else if (! ignore_errors_p ())				      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    else							      \
-	      {								      \
-		inptr += 2;						      \
-		++*irreversible;					      \
-	      }								      \
+	    STANDARD_ERR_HANDLER (2);					      \
 	  }								      \
-	else								      \
-	  {								      \
-	    /* Copy the two bytes.  */					      \
-	    *outptr++ = *inptr++;					      \
-	    *outptr++ = *inptr++;					      \
-	  }								      \
+									      \
+	/* Copy the two bytes.  */					      \
+	*outptr++ = *inptr++;						      \
+	*outptr++ = *inptr++;						      \
       }									      \
   }
 #define LOOP_NEED_FLAGS

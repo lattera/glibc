@@ -38,6 +38,20 @@ __gconv_close (__gconv_t cd)
   drunp = cd->__data;
   do
     {
+      struct __gconv_trans_data *transp;
+
+      transp = drunp->__trans;
+      while (transp != NULL)
+	{
+	  struct __gconv_trans_data *curp = transp;
+	  transp = transp->__next;
+
+	  if (__builtin_expect (curp->__trans_end_fct != NULL, 0))
+	    curp->__trans_end_fct (curp->__data);
+
+	  free (curp);
+	}
+
       if (!(drunp->__flags & __GCONV_IS_LAST) && drunp->__outbuf != NULL)
 	free (drunp->__outbuf);
     }

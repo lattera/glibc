@@ -4466,29 +4466,8 @@ static const char from_ucs4_extra[0x100][2] =
 		 && __builtin_expect (ch, 0xff01) <= 0xffef)		      \
 	  cp = from_ucs4_extra[ch - 0xff00];				      \
 	else								      \
-	  {								      \
-	    /* Illegal character.  */					      \
-	    if (step_data->__trans.__trans_fct != NULL)			      \
-	      {								      \
-		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				      (step, step_data, *inptrp, &inptr,      \
-				       inend, &outptr, irreversible));	      \
-		if (result != __GCONV_OK)				      \
-		  break;						      \
-	      }								      \
-	    else if (! ignore_errors_p ())				      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    else							      \
-	      {								      \
-		inptr += 4;						      \
-		++*irreversible;					      \
-	      }								      \
-	    continue;							      \
-	  }								      \
+	  /* Illegal character.  */					      \
+	  cp = "";							      \
       }									      \
     else								      \
       cp = from_ucs4_lat1[ch];						      \
@@ -4496,26 +4475,7 @@ static const char from_ucs4_extra[0x100][2] =
     if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
-	  }								      \
-	continue;							      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else								      \
       {									      \

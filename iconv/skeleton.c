@@ -379,6 +379,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
       do
 	{
+	  struct __gconv_trans_data *trans;
+
 	  /* Remember the start value for this round.  */
 	  inptr = *inptrp;
 	  /* The outbuf buffer is empty.  */
@@ -429,10 +431,10 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  /* Give the transliteration module the chance to store the
 	     original text and the result in case it needs a context.  */
-	  if (data->__trans.__trans_context_fct != NULL)
-	    DL_CALL_FCT (data->__trans.__trans_context_fct,
-			 (data->__trans.__data, inptr, *inptrp,
-			  outstart, outbuf));
+	  for (trans = data->__trans; trans != NULL; trans = trans->__next)
+	    if (trans->__trans_context_fct != NULL)
+	      DL_CALL_FCT (trans->__trans_context_fct,
+			   (trans->__data, inptr, *inptrp, outstart, outbuf));
 
 	  /* We finished one use of the loops.  */
 	  ++data->__invocation_counter;

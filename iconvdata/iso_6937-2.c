@@ -565,50 +565,17 @@ static const char from_ucs4[][2] =
 	  default:							      \
 	    /* Illegal characters.  */					      \
 	    cp = NULL;							      \
-	    if (step_data->__trans.__trans_fct != NULL)			      \
-	      {								      \
-		result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				      (step, step_data, *inptrp, &inptr,      \
-				       inend, &outptr, irreversible));	      \
-		if (result != __GCONV_OK)				      \
-		  break;						      \
-	      }								      \
-	    else if (! ignore_errors_p ())				      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    else							      \
-	      {								      \
-		inptr += 4;						      \
-		++*irreversible;					      \
-	      }								      \
-	    continue;							      \
+	    break;							      \
+	  }								      \
+	if (cp == NULL)							      \
+	  {								      \
+	    STANDARD_ERR_HANDLER (4);					      \
 	  }								      \
       }									      \
     else if (__builtin_expect (from_ucs4[ch][0], '\1') == '\0' && ch != 0)    \
       {									      \
 	/* Illegal characters.  */					      \
-	if (step_data->__trans.__trans_fct != NULL)			      \
-	  {								      \
-	    result = DL_CALL_FCT (step_data->__trans.__trans_fct,	      \
-				  (step, step_data, *inptrp, &inptr, inend,   \
-				   &outptr, irreversible));		      \
-	    if (result != __GCONV_OK)					      \
-	      break;							      \
-	  }								      \
-	else if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
-	  {								      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
-	  }								      \
-	continue;							      \
+	STANDARD_ERR_HANDLER (4);					      \
       }									      \
     else								      \
       cp = from_ucs4[ch];						      \

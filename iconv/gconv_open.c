@@ -38,6 +38,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   int conv_flags = 0;
   const char *errhand;
   const char *ignore;
+  struct trans_struct *trans = NULL;
 
   /* Find out whether any error handling method is specified.  */
   errhand = strchr (toset, '/');
@@ -51,17 +52,85 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	{
 	  /* Make copy without the error handling description.  */
 	  char *newtoset = (char *) alloca (errhand - toset + 1);
+	  char *tok;
+	  char *ptr;
 
 	  newtoset[errhand - toset] = '\0';
 	  toset = memcpy (newtoset, toset, errhand - toset);
 
-	  flags = __GCONV_IGNORE_ERRORS;
+	  /* Find the appropriate transliteration handlers.  */
+	  tok = strdupa (errhand);
 
-	  if (__strcasecmp (errhand, "IGNORE") == 0)
+	  tok = __strtok_r (tok, ",", &ptr);
+	  while (tok != NULL)
 	    {
-	      /* Found it.  This means we should ignore conversion errors.  */
-	      flags = __GCONV_IGNORE_ERRORS;
-	      errhand = NULL;
+	      if (__strcasecmp (tok, "TRANSLIT") == 0)
+		{
+		  /* It's the builtin transliteration handling.  We only
+		     support it for working on the internal encoding.  */
+		  static const char *internal_trans_names[1] = { "INTERNAL" };
+		  struct trans_struct *lastp = NULL;
+		  struct trans_struct *runp;
+
+		  for (runp = trans; runp != NULL; runp = runp->next)
+		    if (runp->trans_fct == __gconv_transliterate)
+		      break;
+		    else
+		      lastp = runp;
+
+		  if (runp == NULL)
+		    {
+		      struct trans_struct *newp;
+
+		      newp = (struct trans_struct *) alloca (sizeof (*newp));
+		      memset (newp, '\0', sizeof (*newp));
+
+		      /* We leave the `name' field zero to signal that
+			 this is an internal transliteration step.  */
+		      newp->csnames = internal_trans_names;
+		      newp->ncsnames = 1;
+		      newp->trans_fct = __gconv_transliterate;
+
+		      if (lastp == NULL)
+			trans = newp;
+		      else
+			lastp->next = newp;
+		    }
+		}
+	      else if (__strcasecmp (tok, "IGNORE") == 0)
+		/* Set the flag to ignore all errors.  */
+		flags = __GCONV_IGNORE_ERRORS;
+	      else
+		{
+		  /* `tok' is possibly a module name.  We'll see later
+		     whether we can find it.  But first see that we do
+		     not already a module of this name.  */
+		  struct trans_struct *lastp = NULL;
+		  struct trans_struct *runp;
+
+		  for (runp = trans; runp != NULL; runp = runp->next)
+		    if (runp->name != NULL
+			&& __strcasecmp (tok, runp->name) == 0)
+		      break;
+		    else
+		      lastp = runp;
+
+		  if (runp == NULL)
+		    {
+		      struct trans_struct *newp;
+
+		      newp = (struct trans_struct *) alloca (sizeof (*newp));
+		      memset (newp, '\0', sizeof (*newp));
+		      newp->name = tok;
+
+		      if (lastp == NULL)
+			trans = newp;
+		      else
+			lastp->next = newp;
+		    }
+		}
+
+	      tok = __strtok_r (NULL, ",", &ptr);
 	    }
 	}
     }
@@ -81,31 +150,18 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);
   if (res == __GCONV_OK)
     {
-      const char **csnames = NULL;
-      size_t ncsnames = 0;
-      __gconv_trans_fct trans_fct = NULL;
-      __gconv_trans_context_fct trans_context_fct = NULL;
-      __gconv_trans_init_fct trans_init_fct = NULL;
-      __gconv_trans_end_fct trans_end_fct = NULL;
+      /* Find the modules.  */
+      struct trans_struct *lastp = NULL;
+      struct trans_struct *runp;
 
-      if (errhand != NULL)
+      for (runp = trans; runp != NULL; runp = runp->next)
 	{
-	  /* Find the appropriate transliteration handling.  */
-	  if (__strcasecmp (errhand, "TRANSLIT") == 0)
-	    {
-	      /* It's the builtin transliteration handling.  We only
-                 suport for it working on the internal encoding.  */
-	      static const char *internal_trans_names[1] = { "INTERNAL" };
-
-	      csnames = internal_trans_names;
-	      ncsnames = 1;
-	      trans_fct = __gconv_transliterate;
-	      /* No context, init, or end function.  */
-	    }
-	  else if (__strcasecmp (errhand, "WORK AROUND A GCC BUG") == 0)
-	    {
-	      trans_init_fct = (__gconv_trans_init_fct) 1;
-	    }
+	  if (runp->name == NULL
+	      || __builtin_expect (__gconv_translit_find (runp), 0) == 0)
+	    lastp = runp;
+	  else
+	    /* This means we haven't found the module.  Remove it.  */
+	    (lastp == NULL ? trans : lastp->next) = runp->next;
 	}
 
       /* Allocate room for handle.  */
@@ -154,32 +210,51 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	      result->__data[cnt].__outbuf = (char *) malloc (size);
 	      if (result->__data[cnt].__outbuf == NULL)
-		{
-		  res = __GCONV_NOMEM;
-		  break;
-		}
+		goto bail;
+
 	      result->__data[cnt].__outbufend =
 		result->__data[cnt].__outbuf + size;
 
-	      /* Now see whether we can use the transliteration module
-		 for this step.  */
-	      for (n = 0; n < ncsnames; ++n)
-		if (__strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
-		  {
-		    /* Match!  Now try the initializer.  */
-		    if (trans_init_fct == NULL
-			|| (trans_init_fct (&result->__data[cnt].__trans.__data,
-					    steps[cnt].__to_name)
-			    == __GCONV_OK))
-		      {
-			result->__data[cnt].__trans.__trans_fct = trans_fct;
-			result->__data[cnt].__trans.__trans_context_fct =
-			  trans_context_fct;
-			result->__data[cnt].__trans.__trans_end_fct =
-			  trans_end_fct;
-		      }
-		    break;
-		  }
+	      /* Now see whether we can use any of the transliteration
+		 modules for this step.  */
+	      for (runp = trans; runp != NULL; runp = runp->next)
+		for (n = 0; n < runp->ncsnames; ++n)
+		  if (__strcasecmp (steps[cnt].__from_name,
+				    runp->csnames[n]) == 0)
+		    {
+		      void *data = NULL;
+
+		      /* Match!  Now try the initializer.  */
+		      if (runp->trans_init_fct == NULL
+			  || (runp->trans_init_fct (data, steps[cnt].__to_name)
+			      == __GCONV_OK))
+			{
+			  /* Append at the end of the list.  */
+			  struct __gconv_trans_data *newp;
+			  struct __gconv_trans_data *endp;
+			  struct __gconv_trans_data *lastp;
+
+			  newp = (struct __gconv_trans_data *)
+			    malloc (sizeof (struct __gconv_trans_data));
+			  if (newp == NULL)
+			    goto bail;
+
+			  newp->__trans_fct = runp->trans_fct;
+			  newp->__trans_context_fct = runp->trans_context_fct;
+			  newp->__trans_end_fct = runp->trans_end_fct;
+
+			  lastp = NULL;
+			  for (endp = result->__data[cnt].__trans;
+			       endp != NULL; endp = endp->__next)
+			    lastp = endp;
+
+			  if (lastp == NULL)
+			    result->__data[cnt].__trans = newp;
+			  else
+			    lastp->__next = newp;
+			}
+		      break;
+		    }
 	    }
 
 	  /* Now handle the last entry.  */
@@ -194,34 +269,72 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	  /* Now see whether we can use the transliteration module
 	     for this step.  */
-	  for (n = 0; n < ncsnames; ++n)
-	    if (__strcasecmp (steps[cnt].__from_name, csnames[n]) == 0)
-	      {
-		/* Match!  Now try the initializer.  */
-		if (trans_init_fct == NULL
-		    || trans_init_fct (&result->__data[cnt].__trans.__data,
-				       steps[cnt].__to_name)
-		    == __GCONV_OK)
-		  {
-		    result->__data[cnt].__trans.__trans_fct = trans_fct;
-		    result->__data[cnt].__trans.__trans_context_fct =
-		      trans_context_fct;
-		    result->__data[cnt].__trans.__trans_end_fct =
-		      trans_end_fct;
-		  }
-		break;
-	      }
+	  for (runp = trans; runp != NULL; runp = runp->next)
+	    for (n = 0; n < runp->ncsnames; ++n)
+	      if (__strcasecmp (steps[cnt].__from_name, runp->csnames[n]) == 0)
+		{
+		  void *data = NULL;
+
+		  /* Match!  Now try the initializer.  */
+		  if (runp->trans_init_fct == NULL
+		      || (runp->trans_init_fct (data, steps[cnt].__to_name)
+			  == __GCONV_OK))
+		    {
+		      /* Append at the end of the list.  */
+		      struct __gconv_trans_data *newp;
+		      struct __gconv_trans_data *endp;
+		      struct __gconv_trans_data *lastp;
+
+		      newp = (struct __gconv_trans_data *)
+			malloc (sizeof (struct __gconv_trans_data));
+		      if (newp == NULL)
+			goto bail;
+
+		      newp->__trans_fct = runp->trans_fct;
+		      newp->__trans_context_fct = runp->trans_context_fct;
+		      newp->__trans_end_fct = runp->trans_end_fct;
+
+		      lastp = NULL;
+		      for (endp = result->__data[cnt].__trans;
+			   endp != NULL; endp = endp->__next)
+			lastp = endp;
+
+		      if (lastp == NULL)
+			result->__data[cnt].__trans = newp;
+		      else
+			lastp->__next = newp;
+		    }
+		  break;
+		}
 	}
 
       if (res != __GCONV_OK)
 	{
 	  /* Something went wrong.  Free all the resources.  */
-	  int serrno = errno;
+	  int serrno;
+	bail:
+	  serrno = errno;
 
 	  if (result != NULL)
 	    {
 	      while (cnt-- > 0)
-		free (result->__data[cnt].__outbuf);
+		{
+		  struct __gconv_trans_data *transp;
+
+		  transp = result->__data[cnt].__trans;
+		  while (transp != NULL)
+		    {
+		      struct __gconv_trans_data *curp = transp;
+		      transp = transp->__next;
+
+		      if (__builtin_expect (curp->__trans_end_fct != NULL, 0))
+			curp->__trans_end_fct (curp->__data);
+
+		      free (curp);
+		    }
+
+		  free (result->__data[cnt].__outbuf);
+		}
 
 	      free (result);
 	      result = NULL;
