@@ -21,6 +21,7 @@
 #include "kernel-features.h"
 
 #define EINVAL	22
+#define ENOSYS	38
 	
 	.text
 
@@ -36,11 +37,12 @@ ENTRY (__mmap64)
 
 	movl $SYS_ify(mmap2), %eax	/* System call number in %eax.  */
 
-	movl 40(%esp), %ebp
+	movl 40(%esp), %edx
 	movl 44(%esp), %ecx
-	shrld $12, %ecx, %ebp		/* mmap2 takes the offset in pages.  */
+	shrdl $12, %ecx, %edx		/* mmap2 takes the offset in pages.  */
 	shrl $12, %ecx
 	jne L(einval)
+	movl %edx, %ebp
 
 	movl 20(%esp), %ebx
 	movl 24(%esp), %ecx
@@ -68,8 +70,8 @@ L(pseudo_end):
 
 #ifndef __ASSUME_MMAP2_SYSCALL
 2:
-	cmp $-EINVAL, %eax
-	je 2f
+	cmp $-ENOSYS, %eax
+	je 3f
 #endif
 
 	/* This means the offset value is too large.  */
@@ -88,7 +90,7 @@ L(einval):
 	/* Save registers.  */
 	movl %ebx, %edx
 # endif
-
+3:
 	cmpl $0, 44(%esp)
 	jne L(einval)
 

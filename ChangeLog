@@ -1,5 +1,8 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/readlib.c: Include a.out.h last since the Linux/Alpha
+	headers are not clean enough.
+
 	* sysdeps/unix/sysv/linux/getrlimit.c: Remove K&R compatibility.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define

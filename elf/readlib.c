@@ -24,7 +24,6 @@
    modified to read some other file formats.  */
 
 
-#include <a.out.h>
 #include <elf.h>
 #include <error.h>
 #include <link.h>
@@ -32,6 +31,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <a.out.h>
 
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -71,7 +71,7 @@ process_file (const char *file_name, const char *lib, int *flag, char **soname, 
   struct stat statbuf;
   void *file_contents;
   int ret;
-  
+
   ElfW(Ehdr) *elf_header;
   struct exec *aout_header;
 
@@ -123,7 +123,7 @@ process_file (const char *file_name, const char *lib, int *flag, char **soname, 
       *flag = FLAG_LIBC4;
       goto done;
     }
-  
+
   elf_header = (ElfW(Ehdr) *) file_contents;
   if (elf_header->e_ident [EI_MAG0] != ELFMAG0
       || elf_header->e_ident [EI_MAG1] != ELFMAG1
@@ -157,4 +157,3 @@ process_file (const char *file_name, const char *lib, int *flag, char **soname, 
 
 /* Get architecture specific version of process_elf_file.  */
 #include "readelflib.c"
-
