@@ -233,6 +233,7 @@ Sat Sep 16 17:47:19 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
 	sysdeps/stub/shmget.c, sysdeps/stub/msgctl.c, sysdeps/stub/msgget.c,
 	sysdeps/stub/msgrcv.c, sysdeps/stub/msgsnd.c: New files.
 	Add implementation of System V IPC.
+
 Fri Sep 15 21:34:28 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c: Include <hurd/crash.h> in place of <hurd/core.h>.
@@ -345,7 +346,7 @@ Fri Sep  8 16:32:12 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 Thu Sep  7 17:05:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdlib/msort.c (msort_with_tmp): Fixed alignment test.  B1 and
-	 B2 are always congruent; just test that B1 is aligned.
+	B2 are always congruent; just test that B1 is aligned.
 
 Wed Sep  6 19:41:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
