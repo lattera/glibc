@@ -289,7 +289,7 @@ with_other_locale (char *new_locale,
 
   /* @r{Copy the name so it won't be clobbered by @code{setlocale}.} */
   saved_locale = strdup (old_locale);
-  if (old_locale == NULL)
+  if (saved_locale == NULL)
     fatal ("Out of memory");
 
   /* @r{Now change the locale and do some stuff with it.} */

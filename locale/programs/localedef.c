@@ -38,27 +38,21 @@
 #include "error.h"
 #include "charset.h"
 #include "locfile.h"
+#include "locales.h"
 
 /* Undefine the following line in the production version.  */
 /* #define NDEBUG 1 */
 #include <assert.h>
 
 
-/* List of locale definition files which are used in `copy' instructions.  */
-struct copy_def_list_t
+/* This is a special entry of the copylist.  For all categories we don't
+   have a definition we use the data for the POSIX locale.  */
+struct copy_def_list_t copy_posix =
 {
-  struct copy_def_list_t *next;
-
-  const char *name;
-  int mask;
-
-  struct localedef_t *locale;
-
-  struct
-  {
-    void *data;
-    size_t len;
-  } binary[6];
+  next: NULL,
+  name: "POSIX",
+  mask: (1 << LC_ALL) - 1,
+  locale: NULL
 };
 
 
@@ -153,7 +147,6 @@ main (int argc, char *argv[])
   int remaining;
 
   /* Set initial values for global variables.  */
-  copy_list = NULL;
   posix_conformance = getenv ("POSIXLY_CORRECT") != NULL;
   error_print_progname = error_print;
 
@@ -204,6 +197,10 @@ main (int argc, char *argv[])
   if (localedef->failed != 0)
     error (4, errno, _("cannot open locale definition file `%s'"), input_file);
 
+  /* Make sure all categories are defined.  */
+  copy_posix.next = copy_list;
+  copy_list = &copy_posix;
+
   /* Perhaps we saw some `copy' instructions.  Process the given list.
      We use a very simple algorithm: we look up the list from the
      beginning every time.  */
@@ -229,8 +226,14 @@ main (int argc, char *argv[])
 	  int avail = 0;
 
 	  if (act_add_locdef->locale == NULL)
-	    act_add_locdef->locale = locfile_read (act_add_locdef->name,
-						   charset);
+	    {
+	      /* Saving the mask is an ugly trick to prevent the reader
+		 from modifying `copy_posix' if we currently process it.  */
+	      int save_mask = act_add_locdef->mask;
+	      act_add_locdef->locale = locfile_read (act_add_locdef->name,
+						     charset);
+	      act_add_locdef->mask = save_mask;
+	    }
 
 	  if (! act_add_locdef->locale->failed)
 	    {

@@ -1,3 +1,7 @@
+1998-10-19 13:31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/POSIX: Correct typo.  Add UNDEFINED symbol.
+
 1998-10-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/gr_GR: Renamed to...

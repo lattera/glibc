@@ -60,6 +60,9 @@ messages_startup (struct linereader *lr, struct localedef_t *locale,
 {
   struct locale_messages_t *messages;
 
+  /* We have a definition for LC_MESSAGES.  */
+  copy_posix.mask &= ~(1 << LC_MESSAGES);
+
   /* It is important that we always use UCS1 encoding for strings now.  */
   encoding_method = ENC_UCS1;
 

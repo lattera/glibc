@@ -84,6 +84,9 @@ monetary_startup (struct linereader *lr, struct localedef_t *locale,
 {
   struct locale_monetary_t *monetary;
 
+  /* We have a definition for LC_MONETARY.  */
+  copy_posix.mask &= ~(1 << LC_MONETARY);
+
   /* It is important that we always use UCS1 encoding for strings now.  */
   encoding_method = ENC_UCS1;
 
@@ -129,15 +132,17 @@ monetary_finish (struct localedef_t *locale)
   /* The international currency symbol must come from ISO 4217.  */
   if (monetary->int_curr_symbol != NULL)
     {
-      if (strlen (monetary->int_curr_symbol) != 4)
+      if (strlen (monetary->int_curr_symbol) != 4
+	  && monetary->int_curr_symbol[0] != '\0')
 	{
 	  if (!be_quiet)
 	    error (0, 0, _("\
 value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"));
 	}
-      else if (bsearch (monetary->int_curr_symbol, valid_int_curr,
-			NR_VALID_INT_CURR, sizeof (const char *),
-			(comparison_fn_t) curr_strcmp) == NULL
+      else if (monetary->int_curr_symbol[0] != '\0'
+	       && bsearch (monetary->int_curr_symbol, valid_int_curr,
+			   NR_VALID_INT_CURR, sizeof (const char *),
+			   (comparison_fn_t) curr_strcmp) == NULL
 	       && !be_quiet)
 	error (0, 0, _("\
 value of field `int_curr_symbol' in category `LC_MONETARY' does \
@@ -336,6 +341,8 @@ field `%s' in category `%s' declared more than once"),			      \
 	lr_error (lr, _("\
 field `%s' in category `%s' declared more than once"),			      \
 		  #cat, "LC_MONETARY");					      \
+      else if (code->tok == tok_minus1)					      \
+	monetary->cat = -1;						      \
       else								      \
 	monetary->cat = code->val.num;					      \
       break

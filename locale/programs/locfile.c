@@ -116,6 +116,7 @@ locfile_read (const char *filename, struct charset_t *charset)
 #define HANDLE_COPY(category, token, string)				      \
   if (nowtok == tok_copy)						      \
     {									      \
+      copy_posix.mask &= ~(1 << category);				      \
       copy_category = category;						      \
       expected_tok = token;						      \
       expected_str = string;						      \

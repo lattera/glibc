@@ -22,7 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
-#include <elf/ldsodefs.h>
+
+#ifndef STATIC_GCONV
+# include <elf/ldsodefs.h>
+#endif
 
 #include <gconv_int.h>
 
@@ -155,7 +158,11 @@ free_derivation (void *p)
 
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
     if (deriv->steps[cnt].end_fct)
+#ifdef _CALL_DL_FCT
       _CALL_DL_FCT (deriv->steps[cnt].end_fct, (&deriv->steps[cnt]));
+#else
+      deriv->steps[cnt].end_fct (&deriv->steps[cnt]);
+#endif
 
   free ((struct gconv_step *) deriv->steps);
   free (deriv);
@@ -221,7 +228,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 	  /* Call the init function.  */
 	  if (result[step_cnt].init_fct != NULL)
+#ifdef _CALL_DL_FCT
 	    _CALL_DL_FCT (result[step_cnt].init_fct, (&result[step_cnt]));
+#else
+	    result[step_cnt].init_fct (&result[step_cnt]);
+#endif
 
 	  current = current->last;
 	}
@@ -232,7 +243,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  while (++step_cnt < *nsteps)
 	    {
 	      if (result[step_cnt].end_fct != NULL)
+#ifdef _CALL_DL_FCT
 		_CALL_DL_FCT (result[step_cnt].end_fct, (&result[step_cnt]));
+#else
+		result[step_cnt].end_fct (&result[step_cnt]);
+#endif
 #ifndef STATIC_GCONV
 	      __gconv_release_shlib (result[step_cnt].shlib_handle);
 #endif

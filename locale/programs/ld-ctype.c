@@ -135,6 +135,9 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
   unsigned int cnt;
   struct locale_ctype_t *ctype;
 
+  /* We have a definition for LC_CTYPE.  */
+  copy_posix.mask &= ~(1 << LC_CTYPE);
+
   /* It is important that we always use UCS1 encoding for strings now.  */
   encoding_method = ENC_UCS1;
 

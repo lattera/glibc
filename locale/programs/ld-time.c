@@ -90,6 +90,9 @@ time_startup (struct linereader *lr, struct localedef_t *locale,
 {
   struct locale_time_t *time;
 
+  /* We have a definition for LC_TIME.  */
+  copy_posix.mask &= ~(1 << LC_TIME);
+
   /* It is important that we always use UCS1 encoding for strings now.  */
   encoding_method = ENC_UCS1;
 

@@ -155,6 +155,9 @@ collate_startup (struct linereader *lr, struct localedef_t *locale,
 {
   struct locale_collate_t *collate;
 
+  /* We have a definition for LC_COLLATE.  */
+  copy_posix.mask &= ~(1 << LC_COLLATE);
+
   /* It is important that we always use UCS4 encoding for strings now.  */
   encoding_method = ENC_UCS4;
 
@@ -260,7 +263,7 @@ collate_finish (struct localedef_t *locale, struct charset_t *charset)
       \**************************************************************/
       u_int32_t weight;
 
-      if (!be_quiet)
+      if (/* XXX Remove the 0 & */ 0 && !be_quiet)
 	error (0, 0, _("no definition of `UNDEFINED'"));
 
       collate->undefined.ordering_len = collate->nrules;

@@ -21,7 +21,7 @@
 # Distribution and use is free, also for
 # commercial purposes.
 
-repertoire_map mnemonic.ds
+repertoiremap mnemonic.ds
 
 LC_CTYPE
 # The following is the POSIX Locale LC_CTYPE.
@@ -206,6 +206,7 @@ order_start forward
 <right-curly-bracket>
 <tilde>
 <DEL>
+<UNDEFINED>
 order_end
 #
 END LC_COLLATE

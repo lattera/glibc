@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -53,6 +53,9 @@ numeric_startup (struct linereader *lr, struct localedef_t *locale,
 		 struct charset_t *charset)
 {
   struct locale_numeric_t *numeric;
+
+  /* We have a definition for LC_NUMERIC.  */
+  copy_posix.mask &= ~(1 << LC_NUMERIC);
 
   /* It is important that we always use UCS1 encoding for strings now.  */
   encoding_method = ENC_UCS1;

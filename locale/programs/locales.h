@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -31,6 +31,26 @@
 #include "charset.h"
 #include "locfile.h"
 #include "localeinfo.h"
+
+
+/* List of locale definition files which are used in `copy' instructions.  */
+struct copy_def_list_t
+{
+  struct copy_def_list_t *next;
+
+  const char *name;
+  int mask;
+
+  struct localedef_t *locale;
+
+  struct
+  {
+    void *data;
+    size_t len;
+  } binary[6];
+};
+
+extern struct copy_def_list_t copy_posix;
 
 
 /* Header of the locale data files.  */

@@ -1,3 +1,21 @@
+1998-10-19 13:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-collate.c (collate_startup): Clear bit for this
+	category in copy_posix.
+	(collate_finish): Don't warn about UNDEFINED not being defined.
+	* locale/programs/ld-ctype.c (ctype_startup): Clear bit for this
+	category in copy_posix.
+	* locale/programs/ld-messages.c (messages_startup): Likewise.
+	* locale/programs/ld-monetary.c (monetary_startup): Likewise.
+	* locale/programs/ld-numeric.c (numeric_startup): Likewise.
+	* locale/programs/ld-time.c (time_startup): Likewise.
+	* locale/programs/localedef.c: Move copy_def_list_t definition into
+	locales.h.  Define copy_posix variable.
+	(main): Before processing copy list add &copy_posix to copy_list.
+	* locale/programs/locales.h: Add definition of copy_def_list_t.
+	* locale/programs/locfile.c: Clear bit for appropriate category in
+	case of an copy instruction.
+
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/setresgid.c: Remove #include of
