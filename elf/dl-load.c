@@ -109,7 +109,7 @@ ELF_PREFERRED_ADDRESS_DATA;
 struct filebuf
 {
   ssize_t len;
-  char buf[1024];
+  char buf[1024] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
 };
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
