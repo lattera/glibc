@@ -1,3 +1,25 @@
+Sun Jun  9 01:11:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (make-target-directory): Use ./mkinstalldirs so we do not
+	assume . is in PATH.
+
+Sat Jun  8 22:05:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* math/Makefile (distribute): Comment out addition of
+	$(long-m-routines) sources until they are all written.
+
+	* math/Makefile (distribute): Append long double source names to this
+	instead of using elided-routines.
+
+Sat Jun  8 15:15:07 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* mach/mach_shortcuts.c: Obsolete file removed.
+	* mach/mach_syscalls.h: Likewise.
+
+	* hurd/Makefile (distribute): Consolidate defns into one.
+
+	* time/Makefile (tzfiles): Add solar87 solar88 solar89.
+
 Fri Jun  7 16:48:13 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: New file, list sys/perm.h and
@@ -57,7 +79,7 @@ Fri Jun  7 16:48:13 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* posix/Makefile (headers): Add schedbits.h.
 
 	* math/Makefile (elided-routines): Add long double routines.
-	
+
 Fri Jun  7 11:02:22 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/getpriority.c (getpriority): Use new interface

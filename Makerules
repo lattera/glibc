@@ -520,7 +520,7 @@ endef
 # Make the target directory if it doesn't exist, using the `mkinstalldirs'
 # script that does `mkdir -p' even if `mkdir' doesn't support that flag.
 define make-target-directory
-$(addprefix $(..)mkinstalldirs ,\
+$(addprefix $(..)./mkinstalldirs ,\
 	    $(filter-out $(wildcard $(@D:%/=%)),$(@D:%/=%)))
 endef
 
