@@ -33,7 +33,7 @@ __argz_next (const char *argz, size_t argz_len, const char *entry)
     }
   else
     if (argz_len > 0)
-      return argz;
+      return (char *) argz;
     else
       return NULL;
 }

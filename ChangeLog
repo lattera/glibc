@@ -1,6 +1,10 @@
 1998-09-05  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* string/argz-extract.c (__argz_extract): Add de-consting cast for
+	setting results.
+
 	* string/argz.h (argz_next): Add de-consting cast for return.
+	* string/argz-next.c (__argz_next): Likewise.
 
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=inet] (sysdep_headers):
 	Don't add netinet/udp.h, netinet/ip_icmp.h here.
