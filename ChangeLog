@@ -1,3 +1,8 @@
+2000-08-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* dirent/dirent.h (alphasort, versionsort): Move __attribute_pure__
+	out of the __REDIRECT macro.
+
 2000-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfscanf.c: Add %F format support.
