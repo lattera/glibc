@@ -1,5 +1,7 @@
 1998-10-24  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/bits/environments.h: New file.
+
 	* sysdeps/mach/hurd/dl-sysdep.c (__getcwd): New weak function.
 
 	* mach/Versions, hurd/Versions: Add numerous symbols.
