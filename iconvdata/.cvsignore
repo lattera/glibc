@@ -27,7 +27,7 @@ ibm037.h
 ibm038.h
 ibm1004.h
 ibm1026.h
-ibm1047.c
+ibm1047.h
 ibm256.h
 ibm273.h
 ibm274.h
@@ -66,7 +66,8 @@ ibm891.h
 ibm903.h
 ibm904.h
 ibm905.h
-ibm918.c
+ibm912.h
+ibm918.h
 iso8859-10.h
 iso8859-2.h
 iso8859-3.h
