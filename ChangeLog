@@ -1,5 +1,9 @@
 2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/iso-ir-165.c: New file.
+	* iconvdata/iso-ir-165.h: New file.
+	* iconvdata/Makefile: Add rules to build libISOIR165.
+
 	* Makefile (install): Correct passing -r parameter to ldconfig.
 
 	* iconvdata/gconv-modules: Add aliases ISO-IR-199 and ISO-IR-203.

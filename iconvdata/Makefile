@@ -45,7 +45,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
 	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI	 \
 	   SAMI-WS2 ISO-IR-197 TIS-620 KOI8-U GBK ISIRI-3342 GBGBK	 \
-	   ISO-2022-CN
+	   ISO-2022-CN libISOIR165
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -55,6 +55,7 @@ libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
 libCNS-routines := cns11643l1 cns11643
+libISOIR165-routines := iso-ir-165
 
 LDFLAGS-EUC-KR.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)EUC-KR.so: $(objpfx)libKSC.so
@@ -81,6 +82,7 @@ LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
 LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
 LDFLAGS-libGB.so = -Wl,-soname,$(@F)
 LDFLAGS-libCNS.so = -Wl,-soname,$(@F)
+LDFLAGS-libISOIR165.so = -Wl,-soname,$(@F)
 
 distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
