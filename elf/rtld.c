@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "../stdio/_itoa.h"
 
 
 #ifdef RTLD_START
@@ -113,6 +114,7 @@ dl_main (const Elf32_Phdr *phdr,
       struct link_map *l;
       const char *interpreter_name;
       int lazy;
+      int list_only = 0;
 
       if (*user_entry == (Elf32_Addr) &_start)
 	{
@@ -133,7 +135,7 @@ dl_main (const Elf32_Phdr *phdr,
 	     installing it.  */
 	  if (_dl_argc < 2)
 	    _dl_sysdep_fatal ("\
-Usage: ld.so EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
+Usage: ld.so [--list] EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked `ld.so', the helper program for shared library executables.\n\
 This program usually lives in the file `/lib/ld.so', and special directives\n\
 in executable files using ELF shared libraries tell the system's program\n\
@@ -147,10 +149,21 @@ file you run.  This is mostly of use for maintainers to test new versions\n\
 of this helper program; chances are you did not intend to run this program.\n",
 			      NULL);
 
-	  ++_dl_skip_args;
 	  interpreter_name = _dl_argv[0];
+
+	  if (! strcmp (_dl_argv[1], "--list"))
+	    {
+	      list_only = 1;
+
+	      ++_dl_skip_args;
+	      --_dl_argc;
+	      ++_dl_argv;
+	    }
+
+	  ++_dl_skip_args;
 	  --_dl_argc;
 	  ++_dl_argv;
+
 	  l = _dl_map_object (NULL, _dl_argv[0]);
 	  phdr = l->l_phdr;
 	  phent = l->l_phnum;
@@ -265,6 +278,22 @@ of this helper program; chances are you did not intend to run this program.\n",
       dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
       dl_r_debug.r_map = _dl_loaded;
       dl_r_debug.r_brk = (Elf32_Addr) &_dl_r_debug_state;
+
+      if (list_only)
+	{
+	  for (l = _dl_loaded->l_next; l; l = l->l_next)
+	    {
+	      char buf[20], *bp;
+	      buf[sizeof buf - 1] = '\0';
+	      bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
+	      while (&buf[sizeof buf - 1] - bp < sizeof l->l_addr * 2)
+		*--bp = '0';
+	      _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
+				  " (0x", bp, ")\n", NULL);
+	    }
+
+	  _exit (0);
+	}
     }
   const char *errstring;
   const char *errobj;

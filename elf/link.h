@@ -120,6 +120,11 @@ extern int _dl_zerofd;
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 
+/* OS-dependent function to write a message on the standard output.
+   All arguments are `const char *'; args until a null pointer
+   are concatenated to form the message to print.  */
+extern void _dl_sysdep_message (const char *string, ...);
+
 /* OS-dependent function to give a fatal error message and exit
    when the dynamic linker fails before the program is fully linked.
    All arguments are `const char *'; args until a null pointer

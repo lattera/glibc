@@ -104,3 +104,19 @@ _dl_sysdep_fatal (const char *msg, ...)
 
   _exit (127);
 }
+
+
+void
+_dl_sysdep_message (const char *msg, ...)
+{
+  va_list ap;
+
+  va_start (ap, msg);
+  do
+    {
+      size_t len = strlen (msg);
+      write (STDOUT_FILENO, msg, len);
+      msg = va_arg (ap, const char *);
+    } while (msg);
+  va_end (ap);
+}

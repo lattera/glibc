@@ -1,4 +1,13 @@
+Thu Oct  5 00:59:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/rtld.c (dl_main): Grok --list flag.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Ignore -- args.
+
 Wed Oct  4 00:21:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_message): New function.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_message): New function.
+	* elf/link.h (_dl_sysdep_message): Declare it.
 
 	* sysdeps/unix/Makefile ($(common-objpfx)ioctls): Remove NULL from
 	the list.

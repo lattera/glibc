@@ -116,7 +116,7 @@ unfmh();			/* XXX */
 	   for example "-/lib/libc.so=123" says that the contents of
 	   /lib/libc.so are found in a memory object whose port name
 	   in our task is 123.  */
-	while (_dl_argc > 2 && _dl_argv[1][0] == '-')
+	while (_dl_argc > 2 && _dl_argv[1][0] == '-' && _dl_argv[1][1] != '-')
 	  {
 	    char *lastslash, *memobjname, *p;
 	    struct link_map *l;
@@ -227,6 +227,28 @@ _dl_sysdep_fatal (const char *msg, ...)
 }
 
 
+void
+_dl_sysdep_message (const char *msg, ...)
+{
+  va_list ap;
+
+  va_start (ap, msg);
+  do
+    {
+      size_t len = strlen (msg);
+      mach_msg_type_number_t nwrote;
+      do
+	{
+	  if (__io_write (_hurd_init_dtable[1], msg, len, -1, &nwrote))
+	    break;
+	  len -= nwrote;
+	  msg += nwrote;
+	} while (nwrote > 0);
+      msg = va_arg (ap, const char *);
+    } while (msg);
+  va_end (ap);
+}
+
 /* Minimal open/close/mmap implementation sufficient for initial loading of
    shared libraries.  These are weak definitions so that when the
    dynamic linker re-relocates itself to be user-visible (for -ldl),
