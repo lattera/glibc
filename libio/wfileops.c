@@ -88,7 +88,7 @@ _IO_wdo_write (fp, data, to_do)
 	  if (_IO_new_do_write (fp, fp->_IO_write_base,
 				fp->_IO_write_ptr - fp->_IO_write_base) == EOF)
 	    /* Something went wrong.  */
-	    return EOF;
+	    return WEOF;
 
 	  to_do -= new_data - data;
 
@@ -682,12 +682,7 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
 		}
 	      while (read_ptr_copy != fp->_IO_read_ptr);
 
-	      fp->_offset = (fp->_offset
-			     - (fp->_IO_read_end - fp->_IO_read_base)
-			     + rel_offset);
-
-	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end
-		= fp->_wide_data->_IO_read_base;
+	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_base;
 
 	      _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 	      goto resync;
