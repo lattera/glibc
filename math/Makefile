@@ -75,8 +75,8 @@ distribute += $(long-c-yes:=.c)
 
 # Rules for the test suite.
 tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
-	test-ifloat test-idouble test-matherr test-fenv
-tests-static = atest-exp atest-sincos atest-exp2
+	test-ifloat test-idouble test-matherr test-fenv \
+	atest-exp atest-sincos atest-exp2
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
@@ -147,6 +147,18 @@ $(addprefix $(objpfx),$(tests)): $(objpfx)libm.so$(libm.so-version)
 else
 $(addprefix $(objpfx),$(tests)): $(objpfx)libm.a
 endif
+
+ifeq ($(build-static),yes)
+o = .o
+else
+o = .os
+endif
+gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%$o,\
+		      add_n sub_n cmp addmul_1 mul_1 mul_n divmod_1 \
+		      lshift rshift)
+$(objpfx)atest-exp: $(gmp-objs)
+$(objpfx)atest-sincos: $(gmp-objs)
+$(objpfx)atest-exp2: $(gmp-objs)
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

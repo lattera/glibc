@@ -25,6 +25,7 @@ extern void __libc_init_first (int argc, char **argv, char **envp);
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs;
+extern void *__libc_stack_end;
 
 struct startup_info
 {
@@ -67,12 +68,16 @@ __libc_start_main (int argc, char **argv, char **envp,
       rtld_fini = NULL;
     }
 
-  /* Register the destructor of the dynamic linker if there is any.  */
-  if (rtld_fini != NULL)
-    atexit (rtld_fini);
+  /* Store something that has some relationship to the end of the
+     stack, for backtraces.  This variable should be thread-specific.  */
+  __libc_stack_end = stack_on_entry + 4;
 
   /* Set the global _environ variable correctly.  */
   __environ = envp;
+
+  /* Register the destructor of the dynamic linker if there is any.  */
+  if (rtld_fini != NULL)
+    atexit (rtld_fini);
 
   /* Call the initializer of the libc.  */
 #ifdef PIC
@@ -81,15 +86,17 @@ __libc_start_main (int argc, char **argv, char **envp,
 #endif
   __libc_init_first (argc, argv, envp);
 
-  /* Call the initializer of the program.  */
+  /* Register the destructor of the program, if any.  */
+  if (stinfo->fini)
+    atexit (stinfo->fini);
+
+  /* Call the initializer of the program, if any.  */
 #ifdef PIC
   if (_dl_debug_impcalls)
     _dl_debug_message (1, "\ninitialize program: ", argv[0], "\n\n", NULL);
 #endif
-  stinfo->init (argc, argv, __environ, auxvec);
-
-  /* Register the destructor of the program.  */
-  atexit (stinfo->fini);
+  if (stinfo->init)
+    stinfo->init (argc, argv, __environ, auxvec);
 
 #ifdef PIC
   if (_dl_debug_impcalls)

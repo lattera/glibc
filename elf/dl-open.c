@@ -169,8 +169,8 @@ dl_open_worker (void *a)
 	}
       else
 	{
-	  if (_dl_global_scope_end + 2
-	      == _dl_global_scope + _dl_global_scope_alloc)
+	  if (_dl_global_scope_end + 3
+	      > _dl_global_scope + _dl_global_scope_alloc)
 	    {
 	      /* Must extend the list.  */
 	      struct link_map **new = realloc (_dl_global_scope,

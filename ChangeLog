@@ -1,3 +1,33 @@
+1998-08-26 17:48  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-close.c (_dl_close): Move map->l_nsearchlist value into local
+	variable so that map can be freed.
+	Reported by Philippe Troin <phil@fifi.org>.
+
+	* elf/dl-open.c (dl_open_worker): Correct test for extending global
+	scope array.
+	Patch by Philippe Troin <phil@fifi.org>.
+
+1998-08-26  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/register-dump.h: Rewrite.  Much nicer this way.
+	Don't call writev() with a 100-element vector.
+	* sysdeps/generic/segfault.c (catch_segfault): Skip top-level NULL
+	return address.
+
+	* sysdeps/powerpc/elf/libc-start.c: Sync up with generic version.
+	In particular, set __libc_stack_end.
+	* sysdeps/powerpc/elf/start.S: Allow _init and _fini to be
+	undefined.  Fix copyright notice.
+
+1998-08-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/Makefile (gmp-objs): New variable.
+	($(objpfx)atest-exp, $(objpfx)atest-sincos, $(objpfx)atest-exp2):
+	Depend on it.
+	(tests): Add atest-exp atest-sincos atest-exp2.
+	(tests-static): Remove atest-exp atest-sincos atest-exp2.
+
 1998-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/dl-cache.c: Move static variable cache and cachesize
@@ -5,7 +35,7 @@
 	(_dl_unload_cache): New function.
 	* elf/Versions [libc GLIBC_2.1]: Add _dl_unload_cache.
 	* elf/dl-open.c (_dl_open): Unload map file before freeing the lock.
-	* elf/rtld (dl_main): Unload map file before jumping to user code.
+	* elf/rtld.c (dl_main): Unload map file before jumping to user code.
 
 	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Define O_DIRECT.
 	Correct comment for O_LARGEFILE.

@@ -136,6 +136,10 @@ catch_segfault (int signal, SIGCONTEXT ctx)
       current = current->next;
     }
 
+  /* If the last return address was NULL, assume that it doesn't count.  */
+  if (arr[cnt-1] == NULL)
+    cnt--;
+
   /* Now generate nicely formatted output.  */
   __backtrace_symbols_fd (arr, cnt, fd);
 
