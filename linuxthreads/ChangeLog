@@ -1,3 +1,16 @@
+2000-07-27  Jes Sorensen  <jes@linuxcare.com>
+
+	* linuxthreads/sysdeps/ia64/pspinlock.c (__pthread_spin_lock): Add
+	load of spin lock to prime the cache before the atomic compare and
+	exchange operation (cmpxchg4). This avoids the spinning on the
+	cmpxchg4 instruction and reduces movement of the cache line back
+	and forth between the processors (explanation by Asis K. Mallick
+	from Intel). This basically makes the implementation operate the
+	same as the Linux kernel implementation.
+
+	* linuxthreads/shlib-versions: Use GLIBC_2_2 for Linux/ia64.
+	* linuxthreads/sysdeps/ia64/pspinlock.c: New file.
+
 2000-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c: Move definition of __pthread_set_own_extricate_if...
