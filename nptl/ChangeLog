@@ -1,3 +1,8 @@
+2002-12-12  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Use asm operand with
+	"m" constraint to refer to __libc_locking_needed.  Declare it here.
+
 2002-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork-gen.c: Renamed to...
