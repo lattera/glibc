@@ -1,5 +1,7 @@
 1999-10-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/creature.texi (Feature Test Macros): Mention _ISOC99_SOURCE.
+
 	* includes/features.h: Replace __USE_ISOC9X by __USE_ISOC99 and also
 	recognize _ISOC99_SOURCE.
 	* libio/stdio.h: Likewise.
