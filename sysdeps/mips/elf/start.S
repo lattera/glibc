@@ -73,16 +73,8 @@ ENTRY_POINT:
 	move $31, $0
 
 #if (__mips64)
-	dla $4, main		/* main */
-	lw $5, 0($29)		/* argc */
-	addu $6, $29, 4		/* argv  */
-	/* Allocate space on the stack for seven arguments and make sure
-	   the stack is aligned to double words (8 bytes).  */
-	and $29, 0xfffffff8
-	subu $29, 32
-	dla $7, _init		/* init */
-	dla $8, _fini
-#else
+# define la dla
+#endif
 	la $4, main		/* main */
 	lw $5, 0($29)		/* argc */
 	addu $6, $29, 4		/* argv  */
@@ -92,7 +84,6 @@ ENTRY_POINT:
 	subu $29, 32
 	la $7, _init		/* init */
 	la $8, _fini
-#endif
 	sw $8, 16($29)		/* fini */
 	sw $2, 20($29)		/* rtld_fini */
 	sw $29, 24($29)		/* stack_end */
