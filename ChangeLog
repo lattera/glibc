@@ -1,5 +1,8 @@
 2000-04-03  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* Makeconfig (preprocess-versions): Undo last change.
+	Instead, pass -I$(common-objdir) -I$(..)include instead of $(CPPFLAGS).
+
 	* sysdeps/mach/hurd/i386/init-first.c (init): Don't set __environ
 	here, before we might move the stack.
 	(posixland_init): Set __libc_argc, __libc_argc, and __environ here.
