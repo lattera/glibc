@@ -1,3 +1,10 @@
+1998-07-21 16:08 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/sysv/linux/sendmsg.c: If passing a SCM_CREDS
+	message, copy the buffer and resize it to what the kernel
+	wants to see.  Bug found and analyzed by Thorsten Kukuk
+	<kukuk@weber-eb.uni-paderborn.de>
+
 1998-07-20  Jose M. Moya  <josem@gnu.org>
 
 	* hurd/hurdmsg.c (_S_msg_get_env_variable): Copy getenv return

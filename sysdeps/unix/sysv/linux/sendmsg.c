@@ -18,6 +18,8 @@
 
 #include <sys/socket.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <asm/posix_types.h>
@@ -25,12 +27,24 @@
 /* The kernel expects this structure in SCM_CREDS messages.
  * Note: sizeof(struct __kernel_ucred) <= sizeof(struct cmsgcred) must hold.
  */
-struct __kernel_ucred
-{
-  __kernel_pid_t pid;
-  __kernel_uid_t uid;
-  __kernel_gid_t gid;
-};
+struct kernel_ucred
+  {
+    __kernel_pid_t pid;
+    __kernel_uid_t uid;
+    __kernel_gid_t gid;
+  };
+
+struct credmsg
+  {
+    struct cmsghdr cm;
+    struct cmsgcred cc;
+  };
+
+struct kcredmsg
+  {
+    struct cmsghdr cm;
+    struct kernel_ucred cc;
+  };
 
 extern int __syscall_sendmsg (int, const struct msghdr *, int);
 
@@ -39,51 +53,71 @@ extern int __syscall_sendmsg (int, const struct msghdr *, int);
 int
 __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 {
+  struct msghdr m;
+  char *buf, *a, *b;
+  struct credmsg *cred = 0;
+  struct kcredmsg *kcred;
   struct cmsghdr *cm;
-  struct cmsgcred *cc;
-  struct __kernel_ucred *u;
+  long int offset = 0;
   pid_t pid;
 
   /* Preprocess the message control block for SCM_CREDS. */
-  cm = CMSG_FIRSTHDR (message);
-  while (cm)
+  if (message->msg_controllen)
     {
-      if (cm->cmsg_type == SCM_CREDS)
+      cm = CMSG_FIRSTHDR (message);
+      while (cm)
 	{
-	  if (cm->cmsg_len < CMSG_SPACE (sizeof (struct cmsgcred)))
+	  if (cm->cmsg_type == SCM_CREDS)
 	    {
-	      __set_errno (EINVAL);
-	      return -1;
+	      if (cred ||
+		  cm->cmsg_len < CMSG_LEN (sizeof (struct cmsgcred)))
+		{
+		  __set_errno (EINVAL);
+		  return -1;
+		}
+	      else
+		{
+		  cred = (struct credmsg *) cm;
+		  offset = (char *) cm - (char *) message->msg_control;
+		}
 	    }
+	  cm = CMSG_NXTHDR ((struct msghdr *) message, cm);
+	}
 
-	  u = (struct __kernel_ucred *) CMSG_DATA (cm);
-	  cc = (struct cmsgcred *) CMSG_DATA (cm);
+      if (cred)
+	{
+	  buf = alloca (message->msg_controllen);
+	  memcpy (buf, message->msg_control, message->msg_controllen);
+	  kcred = (struct kcredmsg *) (buf + offset);
+	  a = (char *) kcred + CMSG_LEN (sizeof (struct kernel_ucred));
+	  b = (char *) kcred + CMSG_LEN (sizeof (struct cmsgcred));
+	  memmove (a, b, message->msg_controllen - (b - buf));
+
+	  kcred->cm.cmsg_len = CMSG_LEN (sizeof (struct kernel_ucred));
+
 	  /* Linux expects the calling process to pass in
 	     its credentials, and sanity checks them.
 	     You can send real, effective, or set- uid and gid.
 	     If the user hasn't filled in the buffer, we default to
 	     real uid and gid. */
 	  pid = __getpid ();
-	  if (cc->cmcred_pid != pid)
-	  {
-	      u->pid = pid;
-	      u->uid = __getuid ();
-	      u->gid = __getgid ();
-	  }
+	  if (cred->cc.cmcred_pid != pid)
+	    {
+	      kcred->cc.pid = pid;
+	      kcred->cc.uid = __getuid ();
+	      kcred->cc.gid = __getgid ();
+	    }
 	  else
-	  {
-	      struct __kernel_ucred v;
-	      v.pid = cc->cmcred_pid;
-	      v.uid = cc->cmcred_uid;
-	      v.gid = cc->cmcred_gid;
-	      u->pid = v.pid;
-	      u->uid = v.uid;
-	      u->gid = v.gid;
-	  }
+	    {
+	      kcred->cc.uid = cred->cc.cmcred_uid;
+	      kcred->cc.gid = cred->cc.cmcred_gid;
+	    }
+	  memcpy (&m, message, sizeof (struct msghdr));
+	  m.msg_control = buf;
+	  m.msg_controllen -= b - a;
+	  return __syscall_sendmsg (fd, &m, flags);
 	}
-      cm = CMSG_NXTHDR ((struct msghdr *) message, cm);
     }
-
   return __syscall_sendmsg (fd, message, flags);
 }
 
