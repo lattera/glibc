@@ -1,5 +1,5 @@
 /* Install given context.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -35,6 +35,7 @@
 ENTRY(__setcontext)
 	/* Save argument since syscall will destroy it.  */
 	pushq	%rdi
+	cfi_adjust_cfa_offset(8)
 
 	/* Set the signal mask with
 	   rt_sigprocmask (SIG_SETMASK, mask, NULL, _NSIG/8).  */
@@ -45,6 +46,7 @@ ENTRY(__setcontext)
 	movq	$__NR_rt_sigprocmask, %rax
 	syscall
 	popq	%rdi			/* Reload %rdi, adjust stack.  */
+	cfi_adjust_cfa_offset(-8)
 	cmpq	$-4095, %rax		/* Check %rax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 
@@ -57,6 +59,16 @@ ENTRY(__setcontext)
 
 	/* Load the new stack pointer, the preserved registers and
 	   registers used for passing args.  */
+	cfi_def_cfa(%rdi, 0)
+	cfi_offset(%rbx,oRBX)
+	cfi_offset(%rbp,oRBP)
+	cfi_offset(%r12,oR12)
+	cfi_offset(%r13,oR13)
+	cfi_offset(%r14,oR14)
+	cfi_offset(%r15,oR15)
+	cfi_offset(%rsp,oRSP)
+	cfi_offset(%rip,oRIP)
+
 	movq	oRSP(%rdi), %rsp
 	movq	oRBX(%rdi), %rbx
 	movq	oRBP(%rdi), %rbp
@@ -78,6 +90,10 @@ ENTRY(__setcontext)
 
 	/* Setup finally  %rdi.  */
 	movq	oRDI(%rdi), %rdi
+
+	/* End FDE here, we fall into another context.  */
+	cfi_endproc
+	cfi_startproc
 
 	/* Clear rax to indicate success.  */
 	xorq	%rax, %rax
