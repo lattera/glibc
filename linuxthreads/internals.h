@@ -26,9 +26,6 @@
 #include <tls.h>
 #include "descr.h"
 
-extern long int testandset (int *spinlock);
-extern int __compare_and_swap (long int *p, long int oldval, long int newval);
-
 #include "semaphore.h"
 
 #ifndef THREAD_GETMEM

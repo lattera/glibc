@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    IA-64 version.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,9 @@
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
+
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
 /* Make sure gcc doesn't try to be clever and move things around on
    us. We need to use _exactly_ the address the user gave us, not some

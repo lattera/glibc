@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    powerpc version.
-   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,9 @@
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
+
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
 /* For multiprocessor systems, we want to ensure all memory accesses
    are completed before we reset a lock.  On other systems, we still
@@ -65,7 +68,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 
 PT_EI int
-__compare_and_swap_with_release_semantics (long int *p, 
+__compare_and_swap_with_release_semantics (long int *p,
 					   long int oldval, long int newval)
 {
   int ret;

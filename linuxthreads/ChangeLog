@@ -1,3 +1,26 @@
+2002-03-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/pt-machine.h: Add testandset and __compare_and_swap
+	prototpyes.
+	* sysdeps/alpha/pt-machine.h: Likewise.
+	* sysdeps/arm/pt-machine.h: Likewise.
+	* sysdeps/cris/pt-machine.h: Likewise.
+	* sysdeps/hppa/pt-machine.h: Likewise.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+	* sysdeps/ia64/pt-machine.h: Likewise.
+	* sysdeps/m68k/pt-machine.h: Likewise.
+	* sysdeps/mips/pt-machine.h: Likewise.
+	* sysdeps/powerpc/pt-machine.h: Likewise.
+	* sysdeps/s390/s390-32/pt-machine.h: Likewise.
+	* sysdeps/s390/s390-64/pt-machine.h: Likewise.
+	* sysdeps/sh/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+	* sysdeps/x86_64/pt-machine.h: Likewise.
+
+	* internals.h: Move testandset and __compare_and_swap prototypes
+	to pt-machine.h.
+
 2002-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* errno.c: Include resolv.h to avoid warning.

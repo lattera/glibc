@@ -27,6 +27,9 @@
 # define PT_EI extern inline
 #endif
 
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+
 /* Memory barrier.  */
 #define MEMORY_BARRIER() __asm__ ("" : : : "memory")
 

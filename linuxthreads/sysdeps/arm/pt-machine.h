@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    ARM version.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -19,10 +19,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+
 #ifndef PT_EI
 # define PT_EI extern inline
 #endif
 
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
 /* This will not work on ARM1 or ARM2 because SWP is lacking on those
    machines.  Unfortunately we have no way to detect this at compile
