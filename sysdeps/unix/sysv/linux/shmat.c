@@ -43,7 +43,7 @@ shmat (shmid, shmaddr, shmflg)
   struct shmid_ds shmds;
   /* It's unfortunate that we need to make another system call to get
      the shared memory segment length...  */
-  if (shmctl (shmid, ICP_STAT, &shmds) == 0)
+  if (shmctl (shmid, IPC_STAT, &shmds) == 0)
     length = shmds.shm_segsz;
 #endif
 

@@ -92,7 +92,7 @@ extern void *__unbounded __ubp_memchr (const void *__unbounded, int, unsigned);
 
 /* Return a bounded pointer with value PTR that satisfies CHECK_N (PTR, N).  */
 # define BOUNDED_N(PTR, N) 				\
-  ({ __typeof (*(PTR)) *__bounded _p_;			\
+  ({ __typeof (PTR) __bounded _p_;			\
      __ptrvalue _p_ = __ptrlow _p_ = __ptrvalue (PTR);	\
      __ptrhigh _p_ = __ptrvalue _p_ + (N);		\
      _p_; })

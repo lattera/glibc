@@ -1,3 +1,10 @@
+2000-07-27  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/generic/bp-checks.h (BOUNDED_N): Make it work for void*.
+	* sysdeps/generic/bp-semctl.h (check_semctl): Fix syntax error
+	in union init.  Pass zero for ignored semnum arg to semctl.
+	* sysdeps/unix/sysv/linux/shmat.c (shmat): Fix typo.
+
 2000-07-26  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/gnu/bits/msq.h: Qualify kernel's

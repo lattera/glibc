@@ -43,12 +43,12 @@ check_semctl (union semun *arg, int semid, int cmd)
     case SETALL:
       {
 	struct semid_ds ds;
-	union semun un = { buf: &ds; };
+	union semun un = { buf: &ds };
 	unsigned int length = ~0;
 
 	/* It's unfortunate that we need to make a recursive
 	   system call to get the size of the semaphore set...  */
-	if (semctl (semid, semnum, IPC_STAT | ipc64, un) == 0)
+	if (semctl (semid, 0, IPC_STAT | ipc64, un) == 0)
 	  length = ds.sem_nsems;
 	(void) CHECK_N (arg->array, length);
 	break;
