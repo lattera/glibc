@@ -1,3 +1,7 @@
+1999-08-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libio/ioputs.c (_IO_puts): Add missing brace.
+
 1999-07-20  Geoff Keating  <geoffk@cygnus.com>
 
 	* math/libm-test.c: Tweak deltas for a clean run on ppc.
