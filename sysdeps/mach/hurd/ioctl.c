@@ -175,8 +175,8 @@ DEFUN(__ioctl, (fd, request),
     {
       /* The RPC takes a single integer_t argument.
 	 Rather than pointing to the value, ARG is the value itself.  */
-      *t++ = io2mach_type (_IOTS (integer_t));
-      *((integer_t *) t)++ = (integer_t) arg;
+      *t++ = io2mach_type (1, _IOTS (int));
+      *((int *) t)++ = (int) arg;
     }
 
   /* Compute the expected size of the reply.  There is a standard header

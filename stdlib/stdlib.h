@@ -337,6 +337,9 @@ extern int putenv __P ((__const char *__string));
    If REPLACE is nonzero, overwrite an existing value.  */
 extern int setenv __P ((__const char *__name, __const char *__value,
 			int __replace));
+
+/* Remove the variable NAME from the environment.  */
+extern void unsetenv __P ((__const char *__name));
 #endif
 
 /* Execute the given line as a shell command.  */

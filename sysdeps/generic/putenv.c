@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.
 
@@ -17,32 +17,36 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <errno.h>
+#if defined (_AIX) && !defined (__GNUC__)
+ #pragma alloca
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
+#if _LIBC || HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
-#if defined (__GNU_LIBRARY__) || defined (HAVE_STRING_H)
+#if _LIBC || HAVE_STRING_H
 #include <string.h>
 #endif
-#if defined (__GNU_LIBRARY__) || defined (HAVE_UNISTD_H)
-#include <unistd.h>
-#endif
 
-#if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
+#if !__GNU_LIBRARY__ && !HAVE_STRCHR
 #define strchr index
 #endif
-#if !defined (__GNU_LIBRARY__) && !defined (HAVE_MEMCPY)
-#define memcpy(d,s,n) bcopy ((s), (d), (n))
-#endif
 
-#ifndef	HAVE_GNU_LD
-#define	__environ	environ
-#endif
+#ifndef _LIBC
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+#else
+#ifdef __GNUC__
+#define alloca __builtin_alloca
+#else
+extern char *alloca ();
+#endif /* __GNUC__ */
+#endif /* HAVE_ALLOCA_H */
+#endif /* _LIBC */
 
 
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
@@ -51,51 +55,15 @@ putenv (string)
      const char *string;
 {
   const char *const name_end = strchr (string, '=');
-  register size_t size;
-  register char **ep;
 
-  if (name_end == NULL)
+  if (name_end)
     {
-      /* Remove the variable from the environment.  */
-      size = strlen (string);
-      for (ep = __environ; *ep != NULL; ++ep)
-	if (!strncmp (*ep, string, size) && (*ep)[size] == '=')
-	  {
-	    while (ep[1] != NULL)
-	      {
-		ep[0] = ep[1];
-		++ep;
-	      }
-	    *ep = NULL;
-	    return 0;
-	  }
+      char *name = alloca (name_end - string + 1);
+      memcpy (name, string, name_end - string);
+      name[name_end - string] = '\0';
+      return setenv (name, string + 1, 1);
     }
 
-  size = 0;
-  for (ep = __environ; *ep != NULL; ++ep)
-    if (!strncmp (*ep, string, name_end - string) &&
-	(*ep)[name_end - string] == '=')
-      break;
-    else
-      ++size;
-
-  if (*ep == NULL)
-    {
-      static char **last_environ = NULL;
-      char **new_environ = (char **) malloc ((size + 2) * sizeof (char *));
-      if (new_environ == NULL)
-	return -1;
-      (void) memcpy ((void *) new_environ, (void *) __environ,
-		     size * sizeof (char *));
-      new_environ[size] = (char *) string;
-      new_environ[size + 1] = NULL;
-      if (last_environ != NULL)
-	free ((void *) last_environ);
-      last_environ = new_environ;
-      __environ = new_environ;
-    }
-  else
-    *ep = (char *) string;
-
+  unsetenv (string);
   return 0;
 }

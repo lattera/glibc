@@ -640,6 +640,22 @@ extern char *mktemp __P ((char *__template));
 extern int mkstemp __P ((char *__template));
 
 
+/* Set the end of accessible data space (aka "the break") to ADDR.
+   Returns zero on success and -1 for errors (with errno set).  */
+extern int __brk __P ((__ptr_t __addr));
+extern int brk __P ((__ptr_t __addr));
+
+#define __need_ptrdiff_t
+#include <stddef.h>
+
+/* Increase or decrease the end of accessible data space by DELTA bytes.
+   If successful, returns the address the previous end of data space
+   (i.e. the beginning of the new space, if DELTA > 0);
+   returns (void *) -1 for errors (with errno set).  */
+extern __ptr_t __sbrk __P ((ptrdiff_t __delta));
+extern __ptr_t sbrk __P ((ptrdiff_t __delta));
+
+
 /* Invoke `system call' number SYSNO, passing it the remaining arguments.
    This is completely system-dependent, and not often useful.
 

@@ -575,6 +575,12 @@ $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so
 	$(build-shlib)
+
+ifdef libc.so-version
+$(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
+	rm -f $@
+	ln -s $(<F) $@ || ln $< $@
+endif
 endif
 
 

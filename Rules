@@ -80,21 +80,22 @@ tests: $(tests:%=$(objpfx)%.out)
 endif
 
 ifneq "$(strip $(others) $(tests))" ""
-$(addprefix $(objpfx),$(others) $(tests)): %: %.o $(common-objpfx)libc.a
+$(addprefix $(objpfx),$(others) $(tests)): %: %.o \
+  $(sort $(filter $(common-objpfx)libc%,$(link-libc)))
 	$(+link)
 endif
 
 ifneq "$(strip $(tests))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
-$(objpfx)%.out: $(objpfx)% %.args %.input
-	$(dir $<)$(notdir $<) `cat $(word 2,$^)` < $(word 3,$^) > $@
-$(objpfx)%.out: $(objpfx)% %.args
-	$(dir $<)$(notdir $<) `cat $(word 2,$^)` > $@
-$(objpfx)%.out: $(objpfx)% %.input
-	$(dir $<)$(notdir $<) < $(word 2,$^) > $@
-$(objpfx)%.out: $(objpfx)%
-	$(dir $<)$(notdir $<) > $@
+$(objpfx)%.out: %.args $(objpfx)% %.input
+	$(built-program-cmd) `cat $(word 1,$^)` < $(word 3,$^) > $@
+$(objpfx)%.out: %.args $(objpfx)%
+	$(built-program-cmd) `cat $(word 1,$^)` > $@
+$(objpfx)%.out: %.input $(objpfx)%
+	$(built-program-cmd) < $(word 1,$^) > $@
+$(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
+	$(built-program-cmd) > $@
 endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \

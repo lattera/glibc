@@ -25,7 +25,8 @@ subdir	:= misc
 headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
 	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h sys/cdefs.h \
 	   ttyent.h syscall.h syslog.h sys/syslog.h paths.h sys/reboot.h \
-	   sys/mman.h sys/param.h fstab.h mntent.h search.h utmp.h
+	   sys/mman.h sys/param.h fstab.h mntent.h search.h utmp.h	 \
+	   err.h error.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
@@ -50,12 +51,14 @@ routines := brk sbrk sstk ioctl \
 	    syslog syscall daemon \
 	    mmap munmap mprotect msync madvise \
 	    efgcvt efgcvt_r \
-	    hsearch hsearch_r tsearch
+	    hsearch hsearch_r tsearch \
+	    err error
 aux := progname init-misc
 distribute := bsd-compat.c
 extra-objs := bsd-compat.o
 install-lib := libbsd-compat.a libg.a
 non-lib.a := libbsd-compat.a
+gpl2lgpl := error.c error.h
 
 # Build the -lutil library with these extra functions.
 extra-libs	:= libutil

@@ -281,7 +281,7 @@ ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
 	      $(addprefix $(csu-objpfx),start.o $(+preinit)) \
-	      $(^:$(common-objpfx)libc.a=$(link-libc)) \
+	      $(^:$(common-objpfx)libc%=$(link-libc)) \
 	      $(addprefix $(csu-objpfx),$(+postinit))
 endif
 ifndef config-LDFLAGS
@@ -292,7 +292,7 @@ endif
 ifndef link-libc
 ifeq (yes,$(build-shared))
 link-libc = -Wl,-rpath-link=$(common-objdir) -Wl,-rpath=$(default-rpath) \
-	    $(common-objpfx)libc.so $(gnulib)
+	    $(common-objpfx)libc.so$(libc.so-version) $(gnulib)
 # Choose the default search path for the dynamic linker based on
 # where we will install libraries.
 ifneq ($(libdir),$(slibdir))
@@ -331,10 +331,10 @@ built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
 ifneq (yes,$(build-shared))
 built-program-cmd = $(built-program-file)
 else
-, = ,
+comma = ,
 define built-program-cmd
-LD_LIBRARY_PATH=$(common-objdir)$(patsubst -Wl$,-rpath-link=%,:%,\
-					   $(filter -Wl$,-rpath-link=%,\
+LD_LIBRARY_PATH=$(common-objdir)$(patsubst -Wl$(comma)-rpath-link=%,:%,\
+					   $(filter -Wl$(comma)-rpath-link=%,\
 						    $(sysdep-LDFLAGS))) \
 $(elf-objpfx)ld.so $(built-program-file)
 endef
