@@ -222,6 +222,7 @@ dist.tar: README $(tardir) $(+tsrcs)
 	tar chvf $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
 $(tardir).tar: dist.tar subdir_dist
+	tar xf $< -C $${TMPDIR-/tmp}
 	tar covf $@ -C $${TMPDIR-/tmp} $(tardir)
 	-rm -fr $${TMPDIR-/tmp}/$(tardir) dist.tar &
 	rm $(tardir)

@@ -55,7 +55,8 @@ routines	:=							      \
 # linked against when the shared library will be used.
 static-only-routines = atexit
 
-distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh
+distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh  \
+		   allocalim.h
 test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv  \
 		   test-canon test-canon2 tst-strtoll tst-environ	   \

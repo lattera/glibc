@@ -2,6 +2,10 @@
 
 	* version.h (VERSION): Bump to 2.3.1.
 
+	* Make-dist: Add back one of the tar invocations removed before.
+
+	* stdlib/Makefile (distribute): Add allocalim.h.
+
 	* sysdeps/generic/bits/libc-tsd.h [!(USE_TLS && HAVE___THREAD)]
 	(__libc_tsd_address): Use correct variable name.
 	Patch by Stefan Jones <stefan.jones@multigig.com>.
