@@ -1,3 +1,32 @@
+2000-10-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/sr_YU@cyrillic: New file. Based on a locale file by
+	Anton Zinoviev <anton@lml.bas.bg>.
+	* SUPPORTED: Add sr_YU@cyrillic.
+
+2000-10-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locales/ar_SA: Use Unicode aware LC_CTYPE information from "i18n".
+	* locales/be_BY: Likewise.
+	* locales/bg_BG: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/ja_JP: Likewise.
+	* locales/ko_KR: Likewise.
+	* locales/mk_MK: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/th_TH: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/uk_UA: Likewise.
+	* locales/zh_CN: Likewise.
+	* tests-mbwc/dat_iswalnum.c: Update for changed character properties
+	in the ja_JP.EUC-JP locale.
+	* tests-mbwc/dat_iswalpha.c: Likewise.
+	* tests-mbwc/dat_iswctype.c: Likewise.
+	* tests-mbwc/dat_iswgraph.c: Likewise.
+	* tests-mbwc/dat_iswprint.c: Likewise.
+	* tests-mbwc/dat_iswpunct.c: Likewise.
+
 2000-10-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* fr_CA,2.13.in: Removed.
