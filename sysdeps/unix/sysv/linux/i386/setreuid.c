@@ -45,7 +45,7 @@ __setreuid (uid_t ruid, uid_t euid)
   return INLINE_SYSCALL (setreuid32, 2, ruid, euid);
 #else
 # ifdef __NR_setreuid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

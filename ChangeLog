@@ -1,3 +1,57 @@
+2000-02-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getresgid.c: Move...
+	* sysdeps/unix/sysv/linux/i386/getresgid.c: ...here.
+	(getresgid): Use getresgid32 if __libc_missing_32bit_uids
+	is -1 or 0.
+	* sysdeps/unix/sysv/linux/getresuid.c: Move...
+	* sysdeps/unix/sysv/linux/i386/getresuid.c: ...here.
+	(getresuid): Use getresuid32 if __libc_missing_32bit_uids
+	is -1 or 0.
+	* sysdeps/unix/sysv/linux/i386/getuid.c: Document new tristate
+	__libc_missing_32bit_uids.
+	(__getuid): Use 32bit uid syscall if __libc_missing_32bit_uids is
+	-1 or 0.
+	* sysdeps/unix/sysv/linux/i386/chown.c (__real_chown): Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchown.c (__fchown): Likewise.
+	* sysdeps/unix/sysv/linux/i386/getegid.c (__getegid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/geteuid.c (__geteuid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgroups.c (__getgroups): Likewise.
+	* sysdeps/unix/sysv/linux/i386/getgid.c (__getgid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lchown.c (__lchown): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsgid.c (setfsgid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setfsuid.c (setfsuid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c (__setgid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c (__setregid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c (setresgid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c (__setresuid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c (__setreuid): Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c (__setuid): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/chown.c (__chown): Likewise.
+	* sysdeps/unix/sysv/linux/arm/getresuid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/getresgid.c: New file.
+	* sysdeps/unix/sysv/linux/arm/msgctl.c: New file.
+	* sysdeps/unix/sysv/linux/arm/semctl.c: New file.
+	* sysdeps/unix/sysv/linux/arm/shmctl.c: New file.
+	* sysdeps/unix/sysv/linux/i386/msgctl.c: New file.
+	* sysdeps/unix/sysv/linux/i386/semctl.c: New file.
+	* sysdeps/unix/sysv/linux/i386/shmctl.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getresgid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/getresuid.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/msgctl.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/semctl.c: New file.
+	* sysdeps/unix/sysv/linux/m68k/shmctl.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/msgctl.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/shmctl.c: New file.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (getresuid):
+	Make syscall directly, no stubs needed.
+	(getresgid): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list (getresuid):
+	Likewise.
+	(getresgid): Likewise.
+
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gconv-modules: Add aliases CN-GB and CN-BIG5.

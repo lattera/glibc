@@ -45,7 +45,7 @@ __setgid (gid_t gid)
   return INLINE_SYSCALL (setgid32, 1, gid);
 #else
 # ifdef __NR_setgid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

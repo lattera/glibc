@@ -46,7 +46,7 @@ setfsgid (gid_t gid)
   return INLINE_SYSCALL (setfsgid32, 1, gid);
 # else
 #  ifdef __NR_setfsgid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

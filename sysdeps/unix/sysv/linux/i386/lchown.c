@@ -46,7 +46,7 @@ __lchown (const char *file, uid_t owner, gid_t group)
   return INLINE_SYSCALL (lchown32, 3, file, owner, group);
 # else
 #  ifdef __NR_lchown32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

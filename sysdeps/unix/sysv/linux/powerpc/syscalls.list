@@ -18,8 +18,8 @@ s_getcwd	getcwd	getcwd		2	__syscall_getcwd
 s_getdents	getdents getdents	3	__syscall_getdents
 s_getpmsg	getpmsg	getpmsg		5	__syscall_getpmsg
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
-s_getresgid	getresgid getresgid	3	__syscall_getresgid
-s_getresuid	getresuid getresuid	3	__syscall_getresuid
+getresgid	-	getresgid	3	getresgid
+getresuid	-	getresuid	3	getresuid
 s_getrlimit	getrlimit getrlimit	2	__syscall_getrlimit
 s_lstat64	lxstat64 lstat64	2	__syscall_lstat64
 s_mmap2		mmap64	mmap2		6	__syscall_mmap2

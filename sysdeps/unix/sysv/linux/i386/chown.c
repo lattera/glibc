@@ -63,7 +63,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
     {
       int saved_errno = errno;
 #  ifdef __NR_chown32
-      if (!__libc_missing_32bit_uids)
+      if (__libc_missing_32bit_uids <= 0)
 	{
 	  int result;
 	  int saved_errno = errno;
@@ -99,7 +99,7 @@ __real_chown (const char *file, uid_t owner, gid_t group)
 # else
   /* !__ASSUME_32BITUIDS && ASSUME_LCHOWN_SYSCALL  */
 #  ifdef __NR_chown32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

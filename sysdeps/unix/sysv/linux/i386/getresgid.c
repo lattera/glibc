@@ -52,7 +52,7 @@ getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
   __kernel_gid_t k_rgid, k_egid, k_sgid;
   int result;
 #  ifdef __NR_getresgid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int r;
       int saved_errno = errno;

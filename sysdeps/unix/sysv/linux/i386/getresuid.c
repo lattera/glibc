@@ -51,7 +51,7 @@ getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
   __kernel_uid_t k_ruid, k_euid, k_suid;
   int result;
 #  ifdef __NR_getresuid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int r;
       int saved_errno = errno;

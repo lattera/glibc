@@ -56,7 +56,7 @@ __getgroups (int n, gid_t *groups)
       int i, ngids;
       __kernel_gid_t kernel_groups[n = MIN (n, __sysconf (_SC_NGROUPS_MAX))];
 # ifdef __NR_getgroups32
-      if (!__libc_missing_32bit_uids)
+      if (__libc_missing_32bit_uids <= 0)
 	{
 	  int result;
 	  int saved_errno = errno;

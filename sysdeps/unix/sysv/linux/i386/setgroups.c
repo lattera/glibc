@@ -57,7 +57,7 @@ setgroups (size_t n, const gid_t *groups)
       size_t i;
       __kernel_gid_t kernel_groups[n];
 # ifdef __NR_setgroups32
-      if (!__libc_missing_32bit_uids)
+      if (__libc_missing_32bit_uids <= 0)
 	{
 	  int result;
 	  int saved_errno = errno;

@@ -30,8 +30,11 @@ extern int __syscall_getuid (void);
 extern int __syscall_getuid32 (void);
 # if __ASSUME_32BITUIDS == 0
 /* This variable is shared with all files that need to check for 32bit
-   uids.  This is the definition */
-int __libc_missing_32bit_uids;
+   uids.  This is the definition.
+   -1 if libc does not know yet whether kernel has 32bit uids or not.
+   0 if it does have them.
+   1 if it does not have them.  */
+int __libc_missing_32bit_uids = -1;
 # endif
 #endif /* __NR_getuid32 */
 
@@ -42,7 +45,7 @@ __getuid (void)
   return INLINE_SYSCALL (getuid32, 0);
 #else
 # ifdef __NR_getuid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

@@ -41,7 +41,7 @@ __getegid (void)
   return INLINE_SYSCALL (getegid32, 0);
 #else
 # ifdef __NR_getegid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;

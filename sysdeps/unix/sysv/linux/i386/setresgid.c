@@ -48,7 +48,7 @@ setresgid (gid_t rgid, gid_t egid, gid_t sgid)
   return INLINE_SYSCALL (setresgid32, 3, rgid, egid, sgid);
 # else
 #  ifdef __NR_setresgid32
-  if (!__libc_missing_32bit_uids)
+  if (__libc_missing_32bit_uids <= 0)
     {
       int result;
       int saved_errno = errno;
