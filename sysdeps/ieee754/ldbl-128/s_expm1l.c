@@ -81,14 +81,6 @@ __expm1l (long double x)
   ieee854_long_double_shape_type u;
   int k;
 
-  /* Overflow.  */
-  if (x > maxlog)
-    return (big * big);
-
-  /* Minimum value.  */
-  if (x < minarg)
-    return (4.0 / big - 1.0L);
-
   /* Detect infinity and NaN.  */
   u.value = x;
   ix = u.parts32.w0;
@@ -104,9 +96,21 @@ __expm1l (long double x)
 	  else
 	    return x;
 	}
-      /* NaN.  */
-      return (x + x);
+      /* NaN. No invalid exception. */
+      return x;
     }
+
+  /* expm1(+- 0) = +- 0.  */
+  if ((ix == 0) && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
+    return x;
+ 
+  /* Overflow.  */
+  if (x > maxlog)
+    return (big * big);
+ 
+  /* Minimum value.  */
+  if (x < minarg)
+    return (4.0/big - 1.0L);
 
   /* Express x = ln 2 (k + remainder), remainder not exceeding 1/2. */
   xx = C1 + C2;			/* ln 2. */

@@ -1,3 +1,8 @@
+2001-07-23  Stephen L Moshier <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Return proper
+	sign for 0 input.  Return NaN with no exception for NaN input.
+
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_builtin.h: ISO-106464/UTF-8/ transformation must
