@@ -1,3 +1,9 @@
+Sun Feb 18 14:08:04 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* csu/initfini.c (_init): Remove bogus volatile declarations and
+	extra variable, take the address of __gmon_start__ only implicitly
+	to avoid the test being optimized out.
+
 Sun Feb 18 15:08:10 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/posix/utimes.c (__utimes): There are 1000000 usecs in a

@@ -70,13 +70,10 @@ _init (void)
      gcrt1.o to reference a symbol which would be defined by some library
      module which has a constructor; but then user code's constructors
      would come first, and not be profiled.  */
-  extern volatile void __gmon_start__ (void) __attribute__ ((weak));
-  /* This volatile variable is necessary to avoid GCC optimizing
-     out the test.  */
-  register volatile void (*g) (void) = &__gmon_start__;
+  extern void __gmon_start__ (void) __attribute__ ((weak));
   weak_symbol (__gmon_start__)
-  if (g)
-    (*g) ();
+  if (__gmon_start__)
+    __gmon_start__ ();
 
   /* End the here document containing the .init prologue code.
      Then fetch the .section directive just written and append that
