@@ -137,9 +137,6 @@ struct locale_collate_t
   /* To make handling of errors easier we have another section.  */
   struct section_list error_section;
 
-  /* Number of sorting rules given in order_start line.  */
-  uint32_t nrules;
-
   /* Start of the order list.  */
   struct element_t *start;
 
@@ -176,7 +173,7 @@ struct locale_collate_t
 
 /* We have a few global variables which are used for reading all
    LC_COLLATE category descriptions in all files.  */
-static int nrules;
+static uint32_t nrules;
 
 
 /* These are definitions used by some of the functions for handling
@@ -426,7 +423,7 @@ read_directions (struct linereader *ldfile, struct token *arg,
 	      if (! warned)
 		{
 		  lr_error (ldfile, _("\
-%s: `%s' mentioned twice in definition of weight %d in category `%s'"),
+%s: `%s' mentioned twice in definition of weight %d"),
 			    "LC_COLLATE", "position", cnt + 1);
 		}
 	    }
@@ -450,7 +447,13 @@ read_directions (struct linereader *ldfile, struct token *arg,
 
 	  /* See whether we have to increment the counter.  */
 	  if (arg->tok != tok_comma && rules[cnt] != 0)
-	    ++cnt;
+	    {
+	      /* Add the default `forward' if we have seen only `position'.  */
+	      if (rules[cnt] == sort_position)
+		rules[cnt] = sort_position | sort_forward;
+
+	      ++cnt;
+	    }
 
 	  if (arg->tok == tok_eof || arg->tok == tok_eol)
 	    /* End of line or file, so we exit the loop.  */
@@ -876,7 +879,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	      elem->nmbs = seq->nbytes;
 	    }
 
-	  if (elem->wcs == NULL && seq != ILLEGAL_CHAR_VALUE)
+	  if (elem->wcs == NULL && wc != ILLEGAL_CHAR_VALUE)
 	    {
 	      uint32_t wcs[2] = { wc, 0 };
 
@@ -1552,7 +1555,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 }
 
 
-static inline int32_t
+static int32_t
 output_weight (struct obstack *pool, struct locale_collate_t *collate,
 	       struct element_t *elem)
 {
@@ -1575,25 +1578,18 @@ output_weight (struct obstack *pool, struct locale_collate_t *collate,
       int len = 0;
       int i;
 
-      /* Add the direction.  */
-      obstack_1grow (pool, elem->section->rules[cnt]);
-
       for (i = 0; i < elem->weights[cnt].cnt; ++i)
-	/* Encode the weight value.  */
-	if (elem->weights[cnt].w[i] == NULL)
-	  {
-	    /* This entry was IGNORE.  */
-	    buf[len++] = IGNORE_CHAR;
-	  }
-	else
+	/* Encode the weight value.  We do nothing for IGNORE entries.  */
+	if (elem->weights[cnt].w[i] != NULL)
 	  len += utf8_encode (&buf[len],
 			      elem->weights[cnt].w[i]->mborder[cnt]);
 
       /* And add the buffer content.  */
+      obstack_1grow (pool, len);
       obstack_grow (pool, buf, len);
     }
 
-  return retval;
+  return retval | ((elem->section->ruleidx & 0x7f) << 24);
 }
 
 
@@ -1611,11 +1607,13 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   int32_t tablemb[256];
   struct obstack weightpool;
   struct obstack extrapool;
+  struct obstack indirectpool;
   struct section_list *sect;
   int i;
 
   obstack_init (&weightpool);
   obstack_init (&extrapool);
+  obstack_init (&indirectpool);
 
   data.magic = LIMAGIC (LC_COLLATE);
   data.n = nelems;
@@ -1629,7 +1627,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   cnt = 0;
 
   assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_NRULES));
-  iov[2 + cnt].iov_base = &collate->nrules;
+  iov[2 + cnt].iov_base = &nrules;
   iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
@@ -1638,7 +1636,12 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   for (sect = collate->sections, i = 0; sect != NULL; sect = sect->next)
     if (sect->ruleidx == i)
       {
-	obstack_grow (&weightpool, sect->rules, nrules);
+	int j;
+
+	obstack_make_room (&weightpool, nrules);
+
+	for (j = 0; j < nrules; ++j)
+	  obstack_1grow_fast (&weightpool, sect->rules[j]);
 	++i;
       }
   /* And align the output.  */
@@ -1674,7 +1677,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	&& collate->mbheads[ch]->nmbs == 1)
       {
 	tablemb[ch] = output_weight (&weightpool, collate,
-				      collate->mbheads[ch]);
+				     collate->mbheads[ch]);
       }
     else
       {
@@ -1719,38 +1722,60 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      {
 		int i;
 
-		/* More than one consecutive entry.  We mark this by having
-		   a negative index into the weight table.  */
-		weightidx = -weightidx;
-
 		/* Now add first the initial byte sequence.  */
 		added = ((sizeof (int32_t) + 1 + 1 + 2 * (runp->nmbs - 1)
 			  + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
 		obstack_make_room (&extrapool, added);
 
+		/* More than one consecutive entry.  We mark this by having
+		   a negative index into the indirect table.  */
 		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow_fast (&extrapool, weightidx);
+		  obstack_int_grow_fast (&extrapool,
+					 obstack_object_size (&indirectpool)
+					 / sizeof (int32_t));
 		else
-		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
-		obstack_1grow_fast (&extrapool, runp->section->ruleidx);
+		  {
+		    int32_t i = (obstack_object_size (&indirectpool)
+				 / sizeof (int32_t));
+		    obstack_grow (&extrapool, &i, sizeof (int32_t));
+		  }
 		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
 		for (i = 1; i < runp->nmbs; ++i)
 		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
 
-		/* Now find the end of the consecutive sequence.  */
-		do
-		  runp = runp->next;
-		while (runp->mbnext != NULL
-		       && runp->nmbs == runp->mbnext->nmbs
-		       && memcmp (runp->mbs, runp->mbnext->mbs,
-				  runp->nmbs - 1) == 0
-		       && (runp->mbs[runp->nmbs - 1] + 1
-			   == runp->mbnext->mbs[runp->nmbs - 1]));
+		/* Now find the end of the consecutive sequence and
+                   add all the indeces in the indirect pool.  */
+		while (1)
+		  {
+		    if (sizeof (int32_t) == sizeof (int))
+		      obstack_int_grow_fast (&extrapool, weightidx);
+		    else
+		      obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
 
-		/* And add the end by sequence.  Without length this time.  */
+		    runp = runp->next;
+		    if (runp->mbnext == NULL
+			|| runp->nmbs != runp->mbnext->nmbs
+			|| memcmp (runp->mbs, runp->mbnext->mbs,
+				   runp->nmbs - 1) != 0
+			|| (runp->mbs[runp->nmbs - 1] + 1
+			    != runp->mbnext->mbs[runp->nmbs - 1]))
+		      break;
+
+		    /* Insert the weight.  */
+		    weightidx = output_weight (&weightpool, collate, runp);
+		  }
+
+		/* And add the end byte sequence.  Without length this
+                   time.  */
 		for (i = 1; i < runp->nmbs; ++i)
 		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
+
+		weightidx = output_weight (&weightpool, collate, runp);
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_int_grow_fast (&extrapool, weightidx);
+		else
+		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
 	      }
 	    else
 	      {
@@ -1768,7 +1793,6 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		  obstack_int_grow_fast (&extrapool, weightidx);
 		else
 		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
-		obstack_1grow_fast (&extrapool, runp->section->ruleidx);
 		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
 		for (i = 1; i < runp->nmbs; ++i)
 		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
@@ -1835,6 +1859,12 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
   ++cnt;
 
+  assert (cnt == _NL_ITEM_INDEX (_NL_COLLATE_INDIRECTMB));
+  iov[2 + cnt].iov_len = obstack_object_size (&indirectpool);
+  iov[2 + cnt].iov_base = obstack_finish (&indirectpool);
+  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  ++cnt;
+
 
   assert (cnt == _NL_ITEM_INDEX (_NL_NUM_LC_COLLATE));
 
@@ -1842,6 +1872,7 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   obstack_free (&weightpool, NULL);
   obstack_free (&extrapool, NULL);
+  obstack_free (&indirectpool, NULL);
 }
 
 
@@ -2291,16 +2322,16 @@ error while adding equivalent collating symbol"));
 		      uint32_t cnt;
 
 		      /* This means we have exactly one rule: `forward'.  */
-		      if (collate->nrules > 1)
+		      if (nrules > 1)
 			lr_error (ldfile, _("\
 %s: invalid number of sorting rules"),
 				  "LC_COLLATE");
 		      else
-			collate->nrules = 1;
+			nrules = 1;
 		      sp->rules = obstack_alloc (&collate->mempool,
 						 (sizeof (enum coll_sort_rule)
-						  * collate->nrules));
-		      for (cnt = 0; cnt < collate->nrules; ++cnt)
+						  * nrules));
+		      for (cnt = 0; cnt < nrules; ++cnt)
 			sp->rules[cnt] = sort_forward;
 
 		      /* Next line.  */

@@ -1,3 +1,27 @@
+1999-12-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-collate.c (_nl_C_LC_COLLATE): Add one more entry for the
+	indirect table.
+	* locale/langinfo.h: Likewise.
+	* locale/categories.def: Likewise.  Remove reference to postload
+	functions.
+	* locale/lc-collate.c (_nl_postload_collate): Removed.  Also remove
+	__collate_tablemb, __collate_weightmb, and __collate_extramb.
+	* locale/localeinfo.h: Remove declaration for removed variables above.
+	Remove prototype for _nl_get_era_entry.
+	* locale/weight.h: Complete rewrite for new collate implementation.
+	* locale/programs/ld-collate.c: Many changes to make output file
+	usable in strxfrm/strcoll.
+	* string/strxfrm.c: Complete rewrite for new collate implementation.
+	* wcsmbs/wcsxfrm.c: Don't use strxfrm.c, implement dummy implementation
+	locally.
+
+1999-12-25  Shinya Hanataka  <hanataka@abyss.rim.or.jp>
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Correctly assign
+	transformation values for chars >255.
+	* wctype/wctrans.c: Return pointer unmodified.
+
 1999-12-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/system.c (__libc_system): Check whether command

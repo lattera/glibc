@@ -52,5 +52,5 @@ wctrans (const char *property)
   /* We have to search the table.  */
   result = (int32_t *) _NL_CURRENT (LC_CTYPE, _NL_NUM_LC_CTYPE + cnt - 2);
 
-  return (wctrans_t) (result + 128);
+  return (wctrans_t) result;
 }

@@ -3073,10 +3073,8 @@ Computing table size for character classes might take a while..."),
       while (idx2 < ctype->map_collection_act[idx])
 	{
 	  if (ctype->map_collection[idx][idx2] != 0)
-	    *find_idx (ctype, &ctype->map32[idx],
-		       &ctype->map_collection_max[idx],
-		       &ctype->map_collection_act[idx],
-		       ctype->names[idx2]) = ctype->map_collection[idx][idx2];
+	    ctype->map32[idx][ctype->charnames[idx2]] =
+	      ctype->map_collection[idx][idx2];
 	  ++idx2;
 	}
     }

@@ -17,191 +17,106 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <alloca.h>
-#include <errno.h>
-#include <langinfo.h>
-#include "localeinfo.h"
-
-#ifndef STRING_TYPE
-# error STRING_TYPE not defined
-#endif
-
-#ifndef USTRING_TYPE
-# error USTRING_TYPE not defined
-#endif
-
-typedef struct weight_t
+/* Find index of weight.  */
+static inline int32_t
+findidx (const unsigned char **cpp)
 {
-  struct weight_t *prev;
-  struct weight_t *next;
-  struct data_pair
-    {
-      int number;
-      const uint32_t *value;
-    } data[0];
-} weight_t;
+  int_fast32_t i = table[*(*cpp)++];
+  const unsigned char *cp;
 
+  if (i >= 0)
+    /* This is an index into the weight table.  Cool.  */
+    return i;
 
-/* The following five macros grant access to the values in the
-   collate locale file that do not depend on byte order.  */
-#ifndef USE_IN_EXTENDED_LOCALE_MODEL
-# define collate_nrules \
-  (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES))
-# define collate_hash_size \
-  (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_SIZE))
-# define collate_hash_layers \
-  (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_HASH_LAYERS))
-# define collate_undefined \
-  (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_UNDEFINED_WC))
-# define collate_rules \
-  ((uint32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULES))
-
-static __inline void get_weight (const STRING_TYPE **str, weight_t *result);
-static __inline void
-get_weight (const STRING_TYPE **str, weight_t *result)
-#else
-# define collate_nrules \
-  current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].word
-# define collate_hash_size \
-  current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_SIZE)].word
-# define collate_hash_layers \
-  current->values[_NL_ITEM_INDEX (_NL_COLLATE_HASH_LAYERS)].word
-# define collate_undefined \
-  current->values[_NL_ITEM_INDEX (_NL_COLLATE_UNDEFINED_WC)].word
-# define collate_rules \
-  ((uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULES)].string)
-
-static __inline void get_weight (const STRING_TYPE **str, weight_t *result,
-				 struct locale_data *current,
-				 const uint32_t *__collate_tablewc,
-				 const uint32_t *__collate_extrawc);
-static __inline void
-get_weight (const STRING_TYPE **str, weight_t *result,
-	    struct locale_data *current, const uint32_t *__collate_tablewc,
-	    const uint32_t *__collate_extrawc)
-#endif
-{
-  unsigned int ch = *((USTRING_TYPE *) (*str))++;
-  size_t slot;
-
-  if (sizeof (STRING_TYPE) == 1)
-    slot = ch * (collate_nrules + 1);
-  else
-    {
-      const size_t level_size = collate_hash_size * (collate_nrules + 1);
-      size_t level;
-
-      slot = (ch % collate_hash_size) * (collate_nrules + 1);
-
-      level = 0;
-      while (__collate_tablewc[slot] != (uint32_t) ch)
-	{
-	  if (__collate_tablewc[slot + 1] == 0
-	      || ++level >= collate_hash_layers)
-	    {
-	      size_t idx = collate_undefined;
-	      size_t cnt;
-
-	      for (cnt = 0; cnt < collate_nrules; ++cnt)
-		{
-		  result->data[cnt].number = __collate_extrawc[idx++];
-		  result->data[cnt].value = &__collate_extrawc[idx];
-		  idx += result->data[cnt].number;
-		}
-	      /* The Unix standard requires that a character outside
-		 the domain is signalled by setting `errno'.  */
-	      __set_errno (EINVAL);
-	      return;
-	    }
-	  slot += level_size;
-	}
-    }
-
-  if (__collate_tablewc[slot + 1] != (uint32_t) FORWARD_CHAR)
-    {
-      /* We have a simple form.  One value for each weight.  */
-      size_t cnt;
-
-      for (cnt = 0; cnt < collate_nrules; ++cnt)
-	{
-	  result->data[cnt].number = 1;
-	  result->data[cnt].value = &__collate_tablewc[slot + 1 + cnt];
-	}
-      return;
-    }
-
-  /* We now look for any collation element which starts with CH.
-     There might none, but the last list member is a catch-all case
-     because it is simple the character CH.  The value of this entry
-     might be the same as UNDEFINED.  */
-  slot = __collate_tablewc[slot + 2];
-
+  /* Oh well, more than one sequence starting with this byte.
+     Search for the correct one.  */
+  cp = &extra[-i];
   while (1)
     {
-      size_t idx;
+      size_t nhere;
+      const unsigned char *usrc = *cpp;
 
-      /* This is a comparison between a uint32_t array (aka wchar_t) and
-	 an 8-bit string.  */
-      for (idx = 0; __collate_extrawc[slot + 2 + idx] != 0; ++idx)
-	if (__collate_extrawc[slot + 2 + idx] != (uint32_t) (*str)[idx])
-	  break;
+      /* The first thing is the index.  */
+      i = *((int32_t *) cp);
+      cp += sizeof (int32_t);
 
-      /* When the loop finished with all character of the collation
-	 element used, we found the longest prefix.  */
-      if (__collate_extrawc[slot + 2 + idx] == 0)
+      /* Next is the length of the byte sequence.  These are always
+	 short byte sequences so there is no reason to call any
+	 function (even if they are inlined).  */
+      nhere = *cp++;
+
+      if (i >= 0)
 	{
+	  /* It is a single character.  If it matches we found our
+	     index.  Note that at the end of each list there is an
+	     entry of length zero which represents the single byte
+	     sequence.  The first (and here only) byte was tested
+	     already.  */
 	  size_t cnt;
 
-	  *str += idx;
-	  idx += slot + 3;
-	  for (cnt = 0; cnt < collate_nrules; ++cnt)
+	  for (cnt = 0; cnt < nhere; ++cnt)
+	    if (cp[cnt] != usrc[cnt])
+	      break;
+
+	  if (cnt == nhere)
 	    {
-	      result->data[cnt].number = __collate_extrawc[idx++];
-	      result->data[cnt].value = &__collate_extrawc[idx];
-	      idx += result->data[cnt].number;
+	      /* Found it.  */
+	      *cpp += nhere;
+	      return i;
 	    }
-	  return;
+
+	  /* Up to the next entry.  */
+	  cp += nhere;
 	}
+      else
+	{
+	  /* This is a range of characters.  First decide whether the
+	     current byte sequence lies in the range.  */
+	  size_t cnt;
+	  size_t offset = 0;
 
-      /* To next entry in list.  */
-      slot += __collate_extrawc[slot];
+	  for (cnt = 0; cnt < nhere; ++cnt)
+	    if (cp[cnt] != usrc[cnt])
+	      break;
+
+	  if (cnt != nhere)
+	    {
+	      if (cp[cnt] > usrc[cnt])
+		{
+		  /* Cannot be in this range.  */
+		  cp += 2 * nhere;
+		  continue;
+		}
+
+	      /* Test against the end of the range.  */
+	      for (cnt = 0; cnt < nhere; ++cnt)
+		if (cp[nhere + cnt] != usrc[cnt])
+		  break;
+
+	      if (cnt != nhere && cp[nhere + cnt] < usrc[cnt])
+		{
+		  /* Cannot be in this range.  */
+		  cp += 2 * nhere;
+		  continue;
+		}
+
+	      /* This range matches the next characters.  Now find
+		 the offset in the indirect table.  */
+	      for (cnt = 0; cp[cnt] == usrc[cnt]; ++cnt);
+
+	      do
+		{
+		  offset <<= 8;
+		  offset += usrc[cnt] - cp[cnt];
+		}
+	      while (++cnt < nhere);
+	    }
+
+	  *cpp += nhere;
+	  return offset;
+	}
     }
+
+  /* NOTREACHED */
+  return 0x43219876;
 }
-
-
-/* To process a string efficiently we retrieve all information about
-   the string at once.  The following macro constructs a double linked
-   list of this information.  It is a macro because we use `alloca'
-   and we use a double linked list because of the backward collation
-   order.
-
-   We have this strange extra macro since the functions which use the
-   given locale (not the global one) cannot use the global tables.  */
-#ifndef USE_IN_EXTENDED_LOCALE_MODEL
-# define call_get_weight(strp, newp) get_weight ((strp), (newp))
-#else
-# define call_get_weight(strp, newp) \
-  get_weight ((strp), (newp), current, collate_table, collate_extra)
-#endif
-
-#define get_string(str, forw, backw) \
-  do									      \
-    {									      \
-      weight_t *newp;							      \
-      while (*str != '\0')						      \
-	{								      \
-	  newp = (weight_t *) alloca (sizeof (weight_t)			      \
-				      + (collate_nrules			      \
-					 * sizeof (struct data_pair)));	      \
-									      \
-	  newp->prev = backw;						      \
-	  if (backw == NULL)						      \
-	    forw = newp;						      \
-	  else								      \
-	    backw->next = newp;						      \
-	  newp->next = NULL;						      \
-	  backw = newp;							      \
-	  call_get_weight (&str, newp);					      \
-	}								      \
-    }									      \
-  while (0)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -19,16 +19,23 @@
 
 #include <wchar.h>
 
-#define WIDE_VERSION 1
-#define STRING_TYPE wchar_t
-#define USTRING_TYPE wint_t
-#define L_(Ch) L##Ch
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
 # define STRXFRM __wcsxfrm_l
 #else
 # define STRXFRM wcsxfrm
 #endif
-#define STRLEN __wcslen
-#define STPNCPY __wcpncpy
 
-#include <string/strxfrm.c>
+
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
+size_t
+STRXFRM (wchar_t *dest, const wchar_t *src, size_t n)
+#else
+size_t
+STRXFRM (wchar_t *dest, const wchar_t *src, size_t n, __locale_t l)
+#endif
+{
+  if (n != 0)
+    __wcpncpy (dest, src, n);
+
+  return __wcslen (src);
+}

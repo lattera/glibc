@@ -165,9 +165,6 @@ extern void _nl_unload_locale (struct locale_data *locale);
 extern void _nl_remove_locale (int locale, struct locale_data *data);
 
 
-/* initialize `era' entries */
-extern void _nl_init_era_entries (void);
-
 /* Return `era' entry which corresponds to TP.  Used in strftime.  */
 extern struct era_entry *_nl_get_era_entry (const struct tm *tp);
 
@@ -179,11 +176,5 @@ extern const char *_nl_get_alt_digit (unsigned int number);
 
 /* Similar, but now for wide characters.  */
 extern const wchar_t *_nl_get_walt_digit (unsigned int number);
-
-
-/* Global variables for LC_COLLATE category data.  */
-extern const int32_t *__collate_tablemb;
-extern const unsigned char *__collate_extrweightmb;
-extern const unsigned char *__collate_extramb;
 
 #endif	/* localeinfo.h */

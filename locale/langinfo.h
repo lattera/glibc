@@ -235,6 +235,7 @@ enum
   _NL_COLLATE_TABLEMB,
   _NL_COLLATE_WEIGHTMB,
   _NL_COLLATE_EXTRAMB,
+  _NL_COLLATE_INDIRECTMB,
   _NL_NUM_LC_COLLATE,
 
   /* LC_CTYPE category: character classification.

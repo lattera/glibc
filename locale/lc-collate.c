@@ -22,21 +22,3 @@
 
 
 _NL_CURRENT_DEFINE (LC_COLLATE);
-
-const int32_t *__collate_tablemb;
-const unsigned char *__collate_weightmb;
-const unsigned char *__collate_extramb;
-
-/* We are called after loading LC_CTYPE data to load it into
-   the variables used by the collation functions and regex.  */
-void
-_nl_postload_collate (void)
-{
-#define paste(a,b) paste1(a,b)
-#define paste1(a,b) a##b
-#define current(x) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x))
-
-  __collate_tablemb = (const int32_t *) current (TABLEMB);
-  __collate_weightmb = (const unsigned char *) current (WEIGHTMB);
-  __collate_extramb = (const unsigned char *) current (EXTRAMB);
-}

@@ -17,282 +17,397 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <langinfo.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef WIDE_VERSION
-# define STRING_TYPE char
-# define USTRING_TYPE unsigned char
-# define L_(Ch) Ch
-# ifdef USE_IN_EXTENDED_LOCALE_MODEL
-#  define STRXFRM __strxfrm_l
-# else
-#  define STRXFRM strxfrm
-# endif
-# define STRLEN strlen
-# define STPNCPY __stpncpy
+#include "../locale/localeinfo.h"
+
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# define STRXFRM __strxfrm_l
+#else
+# define STRXFRM strxfrm
 #endif
 
-#ifndef USE_IN_EXTENDED_LOCALE_MODEL
-size_t
-STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
-#else
-size_t
-STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
-#endif
+
+/* These are definitions used by some of the functions for handling
+   UTF-8 encoding below.  */
+static const uint32_t encoding_mask[] =
 {
-      if (n != 0)
-	STPNCPY (dest, src, n);
+  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
+};
 
-      return STRLEN (src);
-}
-
-#if 0
-/* Include the shared helper functions.  `strxfrm'/`wcsxfrm' also use
-   these functions.  */
-#include "../locale/weight.h"
-
-
-#ifndef WIDE_VERSION
-/* Write 32 bit value UTF-8 encoded but only if enough space is left.  */
-static __inline size_t
-print_val (u_int32_t value, char *dest, size_t max, size_t act)
+static const unsigned char encoding_byte[] =
 {
-  char tmp[6];
-  int idx = 0;
+  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
+};
 
-  if (value < 0x80)
-    tmp[idx++] = (char) value;
-  else
-    {
-      tmp[idx++] = '\x80' + (char) (value & 0x3f);
-      value >>= 6;
 
-      if (value < 0x20)
-	tmp[idx++] = '\xc0' + (char) value;
-      else
-	{
-	  tmp[idx++] = '\x80' + (char) (value & 0x3f);
-	  value >>= 6;
-
-	  if (value < 0x10)
-	    tmp[idx++] = '\xe0' + (char) value;
-	  else
-	    {
-	      tmp[idx++] = '\x80' + (char) (value & 0x3f);
-	      value >>= 6;
-
-	      if (value < 0x08)
-		tmp[idx++] = '\xf0' + (char) value;
-	      else
-		{
-		  tmp[idx++] = '\x80' + (char) (value & 0x3f);
-		  value >>= 6;
-
-		  if (value < 0x04)
-		    tmp[idx++] = '\xf8' + (char) value;
-		  else
-		    {
-		      tmp[idx++] = '\x80' + (char) (value & 0x3f);
-		      tmp[idx++] = '\xfc' + (char) (value >> 6);
-		    }
-		}
-	    }
-	}
-    }
-
-  while (idx-- > 0)
-    {
-      if (act < max)
-	dest[act] = tmp[idx];
-      ++act;
-    }
-
-  return act;
-}
-#else
-static __inline size_t
-print_val (u_int32_t value, wchar_t *dest, size_t max, size_t act)
+/* We need UTF-8 encoding of numbers.  */
+static inline int
+utf8_encode (char *buf, int val)
 {
-  /* We cannot really assume wchar_t is 32 bits wide.  But it is for
-     GCC and so we don't do much optimization for the other case.  */
-  if (sizeof (wchar_t) == 4)
+  char *startp = buf;
+  int retval;
+
+  if (val < 0x80)
     {
-      if (act < max)
-	dest[act] = (wchar_t) value;
-      ++act;
+      *buf++ = (char) val;
+      retval = 1;
     }
   else
     {
-      wchar_t tmp[3];
-      size_t idx = 0;
+      int step;
 
-      if (value < 0x8000)
-	tmp[idx++] = (wchar_t) act;
-      else
+      for (step = 2; step < 6; ++step)
+	if ((val & encoding_mask[step - 2]) == 0)
+	  break;
+      retval = step;
+
+      *buf = encoding_byte[step - 2];
+      --step;
+      do
 	{
-	  tmp[idx++] = (wchar_t) (0x8000 + (value & 0x3fff));
-	  value >>= 14;
-	  if (value < 0x2000)
-	    tmp[idx++] = (wchar_t) (0xc000 + value);
-	  else
-	    {
-	      tmp[idx++] = (wchar_t) (0x8000 + (value & 0x3fff));
-	      value >>= 14;
-	      tmp[idx++] = (wchar_t) (0xe000 + value);
-	    }
+	  buf[step] = 0x80 | (val & 0x3f);
+	  val >>= 6;
 	}
-      while (idx-- > 0)
-	{
-	  if (act < max)
-	    dest[act] = tmp[idx];
-	  ++act;
-	}
+      while (--step > 0);
+      *buf |= val;
     }
-  return act;
+
+  return buf - startp;
 }
-#endif
 
 
-/* Transform SRC into a form such that the result of strcmp
-   on two strings that have been transformed by strxfrm is
-   the same as the result of strcoll on the two strings before
-   their transformation.  The transformed string is put in at
-   most N characters of DEST and its length is returned.  */
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
 size_t
-STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
+STRXFRM (char *dest, const char *src, size_t n)
 #else
 size_t
-STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
+STRXFRM (char *dest, const char *src, size_t n, __locale_t l)
 #endif
 {
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
   struct locale_data *current = l->__locales[LC_COLLATE];
-# if BYTE_ORDER == BIG_ENDIAN
-  const u_int32_t *collate_table = (const u_int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLE_EB)].string;
-  const u_int32_t *collate_extra = (const u_int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRA_EB)].string;
-# elif BYTE_ORDER == LITTLE_ENDIAN
-  const u_int32_t *collate_table = (const u_int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLE_EL)].string;
-  const u_int32_t *collate_extra = (const u_int32_t *)
-    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRA_EL)].string;
-# else
-#  error bizarre byte order
-# endif
+  uint_fast32_t nrules = *((uint32_t *) current->values[_NL_ITEM_INDEX (_NL_COLLATE_NRULES)].string);
+#else
+  uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 #endif
-  weight_t *forw = NULL;
-  weight_t *backw = NULL;
-  size_t pass;
-  size_t written;
+  /* We don't assign the following values right away since it might be
+     unnecessary in case there are no rules.  */
+  const unsigned char *rulesets;
+  const int32_t *table;
+  const unsigned char *weights;
+  const unsigned char *extra;
+  const int32_t *indirect;
+  uint_fast32_t pass;
+  size_t needed;
+  const unsigned char *usrc;
+  size_t srclen = strlen (src);
+  int32_t *idxarr;
+  unsigned char *rulearr;
+  size_t idxmax;
+  size_t idxcnt;
+  int use_malloc = 0;
 
-  /* If the current locale does not specify locale data we use normal
-     8-bit string comparison.  */
-  if (collate_nrules == 0)
+#include "../locale/weight.h"
+
+  if (nrules == 0)
     {
       if (n != 0)
-	STPNCPY (dest, src, n);
+	__stpncpy (dest, src, n);
 
-      return STRLEN (src);
+      return srclen;
     }
 
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  rulesets = (const unsigned char *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_RULESETS)].string;
+  table = (const int32_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_TABLEMB)].string;
+  weights = (const unsigned char *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_WEIGHTMB)].string;
+  extra = (const unsigned char *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_EXTRAMB)].string;
+  indirect = (const int32_t *)
+    current->values[_NL_ITEM_INDEX (_NL_COLLATE_INDIRECTMB)].string;
+#else
+  rulesets = (const unsigned char *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_RULESETS);
+  table = (const int32_t *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
+  weights = (const unsigned char *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_WEIGHTMB);
+  extra = (const unsigned char *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+  indirect = (const int32_t *)
+    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_INDIRECTMB);
+#endif
+
   /* Handle an empty string as a special case.  */
-  if (*src == '\0')
+  if (srclen == 0)
     {
       if (n != 0)
-	*dest = '\0';
+        *dest = '\0';
       return 1;
     }
 
-  /* Get full information about the string.  This means we get
-     information for all passes in a special data structure.  */
-  get_string (src, forw, backw);
+  /* We need the elements of the string as unsigned values since they
+     are used as indeces.  */
+  usrc = (const unsigned char *) src;
 
-  /* Now we have all the information.  In at most the given number of
-     passes we can finally decide about the order.  */
-  written = 0;
-  for (pass = 0; pass < collate_nrules; ++pass)
+  /* Perform the first pass over the string and while doing this find
+     and store the weights for each character.  Since we want this to
+     be as fast as possible we are using `alloca' to store the temporary
+     values.  But since there is no limit on the length of the string
+     we have to use `malloc' if the string is too long.  We should be
+     very conservative here.  */
+  if (srclen >= 16384)
     {
-      int forward = (collate_rules[pass] & sort_forward) != 0;
-      const weight_t *run = forward ? forw : backw;
-      int idx = forward ? 0 : run->data[pass].number - 1;
+      idxarr = (int32_t *) malloc (srclen * (sizeof (int32_t) + 1));
+      rulearr = (unsigned char *) &idxarr[srclen];
 
-      while (1)
+      if (idxarr == NULL)
+	/* No memory.  Well, go with the stack then.
+
+	   XXX Once this implementation is stable we will handle this
+	   differently.  Instead of precomputing the indeces we will
+	   do this in time.  This means, though, that this happens for
+	   every pass again.  */
+	goto try_stack;
+      use_malloc = 1;
+    }
+  else
+    {
+    try_stack:
+      idxarr = (int32_t *) alloca (srclen * sizeof (int32_t));
+      rulearr = (unsigned char *) alloca (srclen);
+    }
+
+  idxmax = 0;
+  do
+    {
+      int32_t tmp = findidx (&usrc);
+      rulearr[idxmax] = tmp >> 24;
+      idxarr[idxmax] = tmp & 0x80ffffff;
+
+      ++idxmax;
+    }
+  while (*usrc != '\0');
+
+  /* Now the passes over the weights.  We now use the indeces we found
+     before.  */
+  needed = 0;
+  for (pass = 0; pass < nrules; ++pass)
+    {
+      size_t backw_stop = ~0ul;
+      int rule = rulesets[rulearr[0] * nrules + pass];
+      /* We assume that if a rule has defined `position' in one section
+	 this is true for all of them.  */
+      int position = rule & sort_position;
+
+      if (position == 0)
 	{
-	  int ignore = 0;
-	  u_int32_t w = 0;
-
-	  /* Here we have to check for IGNORE entries.  If these are
-	     found we count them and go on with he next value.  */
-	  while (run != NULL
-		 && ((w = run->data[pass].value[idx])
-		     == (u_int32_t) IGNORE_CHAR))
+	  for (idxcnt = 0; idxcnt < idxmax; ++idxcnt)
 	    {
-	      ++ignore;
-	      if (forward
-		  ? ++idx >= run->data[pass].number
-		  : --idx < 0)
+	      if ((rule & sort_forward) != 0)
 		{
-		  weight_t *nextp = forward ? run->next : run->prev;
-		  if (nextp == NULL)
+		  size_t len;
+
+		  if (backw_stop != ~0ul)
 		    {
-		      w = 0;
-		      /* No more non-INGOREd elements means lowest
-			 possible value.  */
-		      ignore = -1;
+		      /* Handle the pushed elements now.  */
+		      size_t backw;
+
+		      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
+			{
+			  len = weights[idxarr[backw]++];
+
+			  if (needed + len < n)
+			    while (len-- > 0)
+			      dest[needed++] = weights[idxarr[backw]++];
+			  else
+			    {
+				/* No more characters fit into the buffer.  */
+			      needed += len;
+			      idxarr[backw] += len;
+			    }
+			}
+
+		      backw_stop = ~0ul;
+		    }
+
+		  /* Now handle the forward element.  */
+		  len = weights[idxarr[idxcnt]++];
+		  if (needed + len < n)
+		    while (len-- > 0)
+		      dest[needed++] = weights[idxarr[idxcnt]++];
+		  else
+		    {
+		      /* No more characters fit into the buffer.  */
+		      needed += len;
+		      idxarr[idxcnt] += len;
+		    }
+		}
+	      else
+		{
+		  /* Remember where the backwards series started.  */
+		  if (backw_stop == ~0ul)
+		    backw_stop = idxcnt;
+		}
+
+	      rule = rulesets[rulearr[idxcnt + 1] * nrules + pass];
+	    }
+
+
+	  if (backw_stop != ~0ul)
+	    {
+	      /* Handle the pushed elements now.  */
+	      size_t backw;
+
+	      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
+		{
+		  size_t len = weights[idxarr[backw]++];
+
+		  if (needed + len < n)
+		    while (len-- > 0)
+		      dest[needed++] = weights[idxarr[backw]++];
+		  else
+		    {
+		      /* No more characters fit into the buffer.  */
+		      needed += len;
+		      idxarr[backw] += len;
+		    }
+		}
+	    }
+	}
+      else
+	{
+	  int val = 1;
+	  char buf[7];
+	  size_t buflen;
+	  size_t i;
+
+	  for (idxcnt = 0; idxcnt < idxmax; ++idxcnt)
+	    {
+	      if ((rule & sort_forward) != 0)
+		{
+		  size_t len;
+
+		  if (backw_stop != ~0ul)
+		    {
+		     /* Handle the pushed elements now.  */
+		      size_t backw;
+
+		      for (backw = idxcnt - 1; backw >= backw_stop; --backw)
+			{
+			  len = weights[idxarr[backw]++];
+			  if (len != 0)
+			    {
+			      buflen = utf8_encode (buf, val);
+			      if (needed + buflen + len < n)
+				{
+				  for (i = 0; i < buflen; ++i)
+				    dest[needed + i] = buf[i];
+				  for (i = 0; i < len; ++i)
+				    dest[needed + buflen + i] =
+				      weights[idxarr[backw] + i];
+				}
+			      idxarr[backw] += len;
+			      needed += buflen + len;
+			      val = 1;
+			    }
+			  else
+			    ++val;
+			}
+
+		      backw_stop = ~0ul;
+		    }
+
+		  /* Now handle the forward element.  */
+		  len = weights[idxarr[idxcnt]++];
+		  if (len != 0)
+		    {
+		      buflen = utf8_encode (buf, val);
+		      if (needed + buflen + len < n)
+			{
+			  for (i = 0; i < buflen; ++i)
+			    dest[needed + i] = buf[i];
+			  for (i = 0; i < len; ++i)
+			    dest[needed + buflen + i] =
+			      weights[idxarr[idxcnt] + i];
+			}
+		      idxarr[idxcnt] += len;
+		      needed += buflen + len;
+		      val = 1;
 		    }
 		  else
-		    idx = forward ? 0 : nextp->data[pass].number - 1;
-		  run = nextp;
+		    /* Note that we don't have to increment `idxarr[idxcnt]'
+		       since the length is zero.  */
+		    ++val;
 		}
+	      else
+		{
+		  /* Remember where the backwards series started.  */
+		  if (backw_stop == ~0ul)
+		    backw_stop = idxcnt;
+		}
+
+	      rule = rulesets[rulearr[idxcnt + 1] * nrules + pass];
 	    }
 
-	  /* Stop if all characters are processed.  */
-	  if (run == NULL)
-	    break;
-
-	  /* Now we have information of the number of ignored weights
-	     and the value of the next weight.  We have to add 2
-	     because 0 means EOS and 1 is the intermediate string end.  */
-	  if ((collate_rules[pass] & sort_position) != 0)
-	    written = print_val (ignore + 2, dest, n, written);
-
-	  if (w != 0)
-	    written = print_val (w, dest, n, written);
-
-	  /* We have to increment the index counters.  */
-	  if (forward)
+	  if (backw_stop != ~0)
 	    {
-	      if (++idx >= run->data[pass].number)
+	      /* Handle the pushed elements now.  */
+	      size_t backw;
+
+	      for (backw = idxmax - 1; backw >= backw_stop; --backw)
 		{
-		  run = run->next;
-		  idx = 0;
-		}
-	    }
-	  else
-	    {
-	      if (--idx < 0)
-		{
-		  run = run->prev;
-		  if (run != NULL)
-		    idx = run->data[pass].number - 1;
+		  size_t len = weights[idxarr[backw]++];
+		  if (len != 0)
+		    {
+		      buflen = utf8_encode (buf, val);
+		      if (needed + buflen + len < n)
+			{
+			  for (i = 0; i < buflen; ++i)
+			    dest[needed + i] = buf[i];
+			  for (i = 0; i < len; ++i)
+			    dest[needed + buflen + i] =
+			      weights[idxarr[backw] + i];
+			}
+		      idxarr[backw] += len;
+		      needed += buflen + len;
+		      val = 1;
+		    }
+		  else
+		    ++val;
 		}
 	    }
 	}
 
-      /* Write marker for end of word.  */
-      if (pass + 1 < collate_nrules)
-	written = print_val (1, dest, n, written);
+      /* Finally store the byte to separate the passes or terminate
+	 the string.  */
+      if (needed < n)
+	dest[needed] = pass + 1 < nrules ? '\1' : '\0';
+      ++needed;
     }
 
-  /* Terminate string.  */
-  if (written < n)
-    dest[written] = L_('\0');
+  /* This is a little optimization: many collation specifications have
+     a `position' rule at the end and if no non-ignored character
+     is found the last \1 byte is immediately followed by a \0 byte
+     signalling this.  We can avoid the \1 byte(s).  */
+  if (needed > 2 && dest[needed - 2] == '\1')
+    {
+      /* Remove the \1 byte.  */
+      --needed;
+      dest[needed - 1] = '\0';
+    }
 
-  /* Return length without counting the terminating '\0'.  */
-  return written;
+  /* Free the memory if needed.  */
+  if (use_malloc)
+    free (idxarr);
+
+  return needed;
 }
-#endif
