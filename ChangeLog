@@ -1,3 +1,8 @@
+2001-04-07  Stephen L Moshier  <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Correct infinity and NaN
+	return values.
+
 2001-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/tst-setcontext.c (main): Add a test for setcontext.

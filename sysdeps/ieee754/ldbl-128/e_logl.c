@@ -184,16 +184,16 @@ __ieee754_logl(long double x)
   /* log(0) = -infinity. */
   if ((k | u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
     {
-      u.parts32.w0 = 0xffff;
+      u.parts32.w0 = 0xffff0000;
       return u.value;
     }
   /* log ( x < 0 ) = NaN */
   if (m & 0x80000000)
     {
-      u.parts32.w0 = 0x7fff;
-      u.parts32.w1 = 0xffff;
-      u.parts32.w2 = 0xffff;
-      u.parts32.w3 = 0xffff;
+      u.parts32.w0 = 0x7fffffff;
+      u.parts32.w1 = 0xffffffff;
+      u.parts32.w2 = 0xffffffff;
+      u.parts32.w3 = 0xffffffff;
       return u.value;
     }
   /* log (infinity or NaN) */

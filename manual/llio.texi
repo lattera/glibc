@@ -1052,6 +1052,8 @@ primitives, so they are not a portability threat.  They are defined in
 These functions are controlled with arrays of @code{iovec} structures,
 which describe the location and size of each buffer.
 
+@comment sys/uio.h
+@comment BSD
 @deftp {Data Type} {struct iovec}
 
 The @code{iovec} structure describes a buffer. It contains two fields:
@@ -1067,6 +1069,8 @@ Contains the length of the buffer.
 @end table
 @end deftp
 
+@comment sys/uio.h
+@comment BSD
 @deftypefun ssize_t readv (int @var{filedes}, const struct iovec *@var{vector}, int @var{count})
 
 The @code{readv} function reads data from @var{filedes} and scatters it
@@ -1083,6 +1087,8 @@ errors are the same as in @code{read}.
 
 @end deftypefun
 
+@comment sys/uio.h
+@comment BSD
 @deftypefun ssize_t writev (int @var{filedes}, const struct iovec *@var{vector}, int @var{count})
 
 The @code{writev} function gathers data from the buffers described in
@@ -1141,6 +1147,8 @@ size_t page_size = (size_t) sysconf (_SC_PAGESIZE);
 @noindent
 These functions are declared in @file{sys/mman.h}.
 
+@comment sys/mman.h
+@comment POSIX
 @deftypefun {void *} mmap (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
 
 The @code{mmap} function creates a new mapping, connected to bytes
@@ -1257,6 +1265,8 @@ The file is on a filesystem that doesn't support mapping.
 
 @end deftypefun
 
+@comment sys/mman.h
+@comment LFS
 @deftypefun {void *} mmap64 (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off64_t @var{offset})
 The @code{mmap64} function is equivalent to the @code{mmap} function but
 the @var{offset} parameter is of type @code{off64_t}.  On 32-bit systems
@@ -1271,6 +1281,8 @@ new, extended API using 64 bit file sizes and offsets transparently
 replaces the old API.
 @end deftypefun
 
+@comment sys/mman.h
+@comment POSIX
 @deftypefun int munmap (void *@var{addr}, size_t @var{length})
 
 @code{munmap} removes any memory maps from (@var{addr}) to (@var{addr} +
@@ -1295,6 +1307,8 @@ aligned.
 
 @end deftypefun
 
+@comment sys/mman.h
+@comment POSIX
 @deftypefun int msync (void *@var{address}, size_t @var{length}, int @var{flags})
 
 When using shared mappings, the kernel can write the file at any time
@@ -1340,6 +1354,8 @@ There is no existing mapping in at least part of the given region.
 
 @end deftypefun
 
+@comment sys/mman.h
+@comment GNU
 @deftypefun {void *} mremap (void *@var{address}, size_t @var{length}, size_t @var{new_length}, int @var{flag})
 
 This function can be used to change the size of an existing memory
