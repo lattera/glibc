@@ -1,3 +1,7 @@
+2004-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-clock2.c (tf): Don't define unless needed.
+
 2004-03-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makefile (link-libc-static): Use $(static-gnulib) instead of

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,28 +24,6 @@
 
 extern int __cache_line_size;
 weak_extern (__cache_line_size)
-
-/* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
-   verify that the static extern __cache_line_size is defined by checking
-   for not NULL.  If it is defined then assign the cache block size
-   value to __cache_line_size.  */
-static inline void
-__aux_init_cache (ElfW(auxv_t) *av)
-{
-  for (; av->a_type != AT_NULL; ++av)
-    switch (av->a_type)
-      {
-      case AT_DCACHEBSIZE:
-        {
-          int *cls = & __cache_line_size;
-          if (cls != NULL)
-            *cls = av->a_un.a_val;
-        }
-        break;
-      }
-}
-/* This is used in sysdeps/generic/libc-start.c.  */
-#define AUX_VECTOR_INIT __aux_init_cache
 
 /* The main work is done in the generic function.  */
 #define LIBC_START_MAIN generic_start_main
@@ -104,7 +82,17 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
     }
 
   /* Initialize the __cache_line_size variable from the aux vector.  */
-  __aux_init_cache (auxvec);
+  for (ElfW(auxv_t) *av = auxvec; av->a_type != AT_NULL; ++av)
+    switch (av->a_type)
+      {
+      case AT_DCACHEBSIZE:
+        {
+          int *cls = & __cache_line_size;
+          if (cls != NULL)
+            *cls = av->a_un.a_val;
+        }
+        break;
+      }
 
   return generic_start_main (stinfo->main, argc, ubp_av, auxvec,
 			     stinfo->init, stinfo->fini, rtld_fini,

@@ -1,3 +1,10 @@
+2004-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_ta_thr_iter.c (td_ta_thr_iter): Initialize list to avoid warning.
+	* td_ta_clear_event.c (td_ta_clear_event): Initialize eventmask to
+	avoid warning.
+	* td_ta_set_event.c (td_ta_set_event): Likewise.
+
 2004-03-24  Roland McGrath  <roland@redhat.com>
 
 	* fetch-value.c (_td_locate_field): Cast DB_DESC_OFFSET to int32_t.

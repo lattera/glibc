@@ -1,5 +1,8 @@
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/elf/libc-start.c: no need for a separate
+	function for __aux_init_cache.
+
 	* inet/test-ifaddrs.c: Fight warnings.
 
 	* argp/argp-help.c: Fight warnings.
