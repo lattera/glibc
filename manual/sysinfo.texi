@@ -42,7 +42,7 @@ to a more rigorous naming convention as part of the Domain Name System
 
 @enumerate
 @item
-hostname 
+hostname
 @cindex hostname
 @item
 domain name
@@ -53,16 +53,16 @@ You will note that ``hostname'' looks a lot like ``host name'', but is
 not the same thing, and that people often incorrectly refer to entire
 host names as ``domain names.''
 
-In DNS, the full host name is properly called the FQDN (Fully Qualified 
+In DNS, the full host name is properly called the FQDN (Fully Qualified
 Domain Name) and consists of the hostname, then a period, then the
 domain name.  The domain name itself usually has multiple components
 separated by periods.  So for example, a system's hostname may be
-@samp{chicken} and its domain name might be @samp{ai.mit.edu}, so 
+@samp{chicken} and its domain name might be @samp{ai.mit.edu}, so
 its FQDN (which is its host name) is @samp{chicken.ai.mit.edu}.
 @cindex FQDN
 
 Adding to the confusion, though, is that DNS is not the only name space
-in which a computer needs to be known.  Another name space is the 
+in which a computer needs to be known.  Another name space is the
 NIS (aka YP) name space.  For NIS purposes, there is another domain
 name, which is called the NIS domain name or the YP domain name.  It
 need not have anything to do with the DNS domain name.
@@ -74,7 +74,7 @@ need not have anything to do with the DNS domain name.
 Confusing things even more is the fact that in DNS, it is possible for
 multiple FQDNs to refer to the same system.  However, there is always
 exactly one of them that is the true host name, and it is called the
-canonical FQDN.  
+canonical FQDN.
 
 In some contexts, the host name is called a ``node name.''
 
@@ -83,7 +83,7 @@ For more information on DNS host naming, @xref{Host Names}.
 @pindex hostname
 @pindex hostid
 @pindex unistd.h
-Prototypes for these functions appear in @file{unistd.h}.  
+Prototypes for these functions appear in @file{unistd.h}.
 
 The programs @code{hostname}, @code{hostid}, and @code{domainname} work
 by calling these functions.
@@ -195,7 +195,7 @@ to @var{id}.  Only privileged processes are permitted to do this.  Usually
 it happens just once, at system boot time.
 
 The proper way to establish the primary IP address of a system
-is to configure the IP address resolver to associate that IP address with 
+is to configure the IP address resolver to associate that IP address with
 the system's host name as returned by @code{gethostname}.  For example,
 put a record for the system in @file{/etc/hosts}.
 
@@ -224,9 +224,9 @@ associated data type are declared in the header file
 @file{sys/utsname.h}.
 @pindex sys/utsname.h
 
-As a bonus, @code{uname} also gives some information identifying the 
+As a bonus, @code{uname} also gives some information identifying the
 particular system your program is running on.  This is the same information
-which you can get with functions targetted to this purpose described in 
+which you can get with functions targetted to this purpose described in
 @ref{Host Identification}.
 
 
@@ -284,7 +284,7 @@ see @ref{Host Identification}.
 
 @item char domainname[]
 This is the NIS or YP domain name.  It is the same value returned by
-@code{getdomainname}; see @ref{Host Identification}.  This element 
+@code{getdomainname}; see @ref{Host Identification}.  This element
 is a relatively recent invention and use of it is not as portable as
 use of the rest of the structure.
 
@@ -919,7 +919,7 @@ The file system type @var{fstype} is not known to the kernel.
 The file @var{dev} is not a block device special file.
 @item EBUSY
 
-@itemize
+@itemize @bullet
 
 @item
 The device is already mounted.
@@ -933,7 +933,7 @@ The request is to remount read-only, but there are files open for write.
 @end itemize
 
 @item EINVAL
-@itemize
+@itemize @bullet
 
 @item
 A remount was attempted, but there is no filesystem mounted over the
@@ -945,7 +945,7 @@ The supposed filesystem has an invalid superblock.
 @end itemize
 
 @item EACCESS
-@itemize
+@itemize @bullet
 
 @item
 The filesystem is inherently read-only (possibly due to a switch on the
@@ -1110,7 +1110,7 @@ returned value.
 If you don't want the parameter value returned, specify a null pointer
 for @var{oldval}.
 
-To set the parameter, specify the address and length of the new value 
+To set the parameter, specify the address and length of the new value
 as @var{newval} and @var{newlen}.  If you don't want to set the parameter,
 specify a null pointer as @var{newval}.
 
@@ -1134,10 +1134,10 @@ failures that apply to all system calls, the following are the
 
 @table @code
 @item EPERM
-The process is not permitted to access one of the components of the 
+The process is not permitted to access one of the components of the
 path of the system parameter or is not permitted to access the system parameter
 itself in the way (read or write) that it requested.
-@c There is some indication in the Linux 2.2 code that the code is trying to 
+@c There is some indication in the Linux 2.2 code that the code is trying to
 @c return EACCESS here, but the EACCESS value never actually makes it to the
 @c user.
 @item ENOTDIR
@@ -1164,7 +1164,7 @@ small.
 @end deftypefun
 
 If you have a Linux kernel with the @code{proc} filesystem, you can get
-and set most of the same parameters by reading and writing to files in 
+and set most of the same parameters by reading and writing to files in
 the @code{sys} directory of the @code{proc} filesystem.  In the @code{sys}
 directory, the directory structure represents the hierarchical structure
 of the parameters.  E.g. you can display the free page thresholds with
@@ -1190,4 +1190,3 @@ parameters are:
 @item
 @code{bdflush}
 @end itemize
-

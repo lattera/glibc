@@ -5,7 +5,7 @@
 @cindex storage allocation
 
 This chapter describes how processes manage and use memory in a system
-that uses the GNU C library.  
+that uses the GNU C library.
 
 The GNU C Library has several functions for dynamically allocating
 virtual memory in various ways.  They vary in generality and in
@@ -79,7 +79,7 @@ is at which addresses, and that process is called memory allocation.
 Allocation usually brings to mind meting out scarce resources, but in
 the case of virtual memory, that's not a major goal, because there is
 generally much more of it than anyone needs.  Memory allocation within a
-process is mainly just a matter of making sure that the same byte of 
+process is mainly just a matter of making sure that the same byte of
 memory isn't used to store two different things.
 
 Processes allocate memory in two major ways: by exec and
@@ -133,11 +133,11 @@ a contiguous range of virtual addresses.  Three important segments are:
 
 @itemize @bullet
 
-@item 
+@item
 
 The @dfn{text segment} contains a program's instructions and literals and
 static constants.  It is allocated by exec and stays the same size for
-the life of the virtual address space.  
+the life of the virtual address space.
 
 @item
 The @dfn{data segment} is working storage for the program.  It can be
@@ -145,7 +145,7 @@ preallocated and preloaded by exec and the process can extend or shrink
 it by calling functions as described in @xref{Resizing the Data
 Segment}.  Its lower end is fixed.
 
-@item 
+@item
 The @dfn{stack segment} contains a program stack.  It grows as the stack
 grows, but doesn't shrink when the stack shrinks.
 
@@ -154,7 +154,7 @@ grows, but doesn't shrink when the stack shrinks.
 
 
 @node Memory Allocation
-@section Allocating Storage For a Program's Data
+@section Allocating Storage For Program Data
 
 This section covers how ordinary programs manage storage for their data,
 including the famous @code{malloc} function and some fancier facilities
@@ -280,8 +280,7 @@ any time (or never).
 				 block and clear it.
 * Efficiency and Malloc::       Efficiency considerations in use of
 				 these functions.
-* Aligned Memory Blocks::       Allocating specially aligned memory:
-				 @code{memalign} and @code{valloc}.
+* Aligned Memory Blocks::       Allocating specially aligned memory.
 * Malloc Tunable Parameters::   Use @code{mallopt} to adjust allocation
                                  parameters.
 * Heap Consistency Checking::   Automatic checking for errors.
@@ -383,8 +382,8 @@ The block that @code{malloc} gives you is guaranteed to be aligned so
 that it can hold any type of data.  In the GNU system, the address is
 always a multiple of eight on most systems, and a multiple of 16 on
 64-bit systems.  Only rarely is any higher boundary (such as a page
-boundary) necessary; for those cases, use @code{memalign} or
-@code{valloc} (@pxref{Aligned Memory Blocks}).
+boundary) necessary; for those cases, use @code{memalign},
+@code{posix_memalign} or @code{valloc} (@pxref{Aligned Memory Blocks}).
 
 Note that the memory located after the end of the block is likely to be
 in use for something else; perhaps a block already allocated by another
@@ -617,12 +616,13 @@ after calling @code{free} wastes memory.  The size threshold for
 The address of a block returned by @code{malloc} or @code{realloc} in
 the GNU system is always a multiple of eight (or sixteen on 64-bit
 systems).  If you need a block whose address is a multiple of a higher
-power of two than that, use @code{memalign} or @code{valloc}.  These
-functions are declared in @file{stdlib.h}.
+power of two than that, use @code{memalign}, @code{posix_memalign}, or
+@code{valloc}.  These functions are declared in @file{stdlib.h}.
 
 With the GNU library, you can use @code{free} to free the blocks that
-@code{memalign} and @code{valloc} return.  That does not work in BSD,
-however---BSD does not provide any way to free such blocks.
+@code{memalign}, @code{posix_memalign}, and @code{valloc} return.  That
+does not work in BSD, however---BSD does not provide any way to free
+such blocks.
 
 @comment malloc.h stdlib.h
 @comment BSD
@@ -632,6 +632,22 @@ address is a multiple of @var{boundary}.  The @var{boundary} must be a
 power of two!  The function @code{memalign} works by allocating a
 somewhat larger block, and then returning an address within the block
 that is on the specified boundary.
+@end deftypefun
+
+@comment stdlib.h
+@comment POSIX
+@deftypefun int posix_memalign (void **@var{memptr}, size_t @var{alignment}, size_t @var{size})
+The @code{posix_memalign} function is similar to the @code{memalign}
+function in that it returns a buffer of @var{size} bytes aligned to a
+multiple of @var{alignment}.  But it adds one requirement to the
+parameter @var{alignment}: the value must be a power of two multiple of
+@code{sizeof (void *)}.
+
+If the function succeeds in allocation memory a pointer to the allocated
+memory is returned in @code{*@var{memptr}} and the return value is zero.
+Otherwise the function returns an error value indicating the problem.
+
+This function was introduced in POSIX 1003.1d.
 @end deftypefun
 
 @comment malloc.h stdlib.h
@@ -789,6 +805,14 @@ printed on @code{stderr}; if set to @code{2}, @code{abort} is called
 immediately.  This can be useful because otherwise a crash may happen
 much later, and the true cause for the problem is then very hard to
 track down.
+
+There is one problem with @code{MALLOC_CHECK_}: in SUID or SGID binaries
+it could possibly be exploited since diverging from the normal programs
+behaviour it now writes something to the standard error desriptor.
+Therefore the use of @code{MALLOC_CHECK_} is disabled by default for
+SUID and SGID binaries.  It can be enabled again by the system
+administrator by adding a file @file{/etc/suid-debug} (the content is
+not important it could be empty).
 
 So, what's the difference between using @code{MALLOC_CHECK_} and linking
 with @samp{-lmcheck}?  @code{MALLOC_CHECK_} is orthogonal with respect to
@@ -1034,7 +1058,7 @@ This is the total size of memory occupied by free (not in use) chunks.
 
 @item int keepcost
 This is the size of the top-most releasable chunk that normally
-borders the end of the heap (i.e. the high end of the virtual address 
+borders the end of the heap (i.e. the high end of the virtual address
 space's data segment).
 
 @end table
@@ -2323,7 +2347,7 @@ The function has no effect if @var{addr} is lower than the low end of
 the data segment.  (This is considered success, by the way).
 
 The function fails if it would cause the data segment to overlap another
-segment or exceed the process' data storage limit (@pxref{Limits on 
+segment or exceed the process' data storage limit (@pxref{Limits on
 Resources}).
 
 The function is named for a common historical case where data storage
@@ -2333,7 +2357,7 @@ toward it from the top of the segment and the curtain between them is
 called the @dfn{break}.
 
 The return value is zero on success.  On failure, the return value is
-@code{-1} and @code{errno} is set accordingly.  The following @code{errno} 
+@code{-1} and @code{errno} is set accordingly.  The following @code{errno}
 values are specific to this function:
 
 @table @code
@@ -2392,7 +2416,7 @@ pages.
 @subsection Why Lock Pages
 
 Because page faults cause paged out pages to be paged in transparently,
-a process rarely needs to be concerned about locking pages.  However, 
+a process rarely needs to be concerned about locking pages.  However,
 there are two reasons people sometimes are:
 
 @itemize @bullet
@@ -2457,7 +2481,7 @@ In Linux, locked pages aren't as locked as you might think.
 Two virtual pages that are not shared memory can nonetheless be backed
 by the same real frame.  The kernel does this in the name of efficiency
 when it knows both virtual pages contain identical data, and does it
-even if one or both of the virtual pages are locked.  
+even if one or both of the virtual pages are locked.
 
 But when a process modifies one of those pages, the kernel must get it a
 separate frame and fill it with the page's data.  This is known as a
@@ -2639,7 +2663,7 @@ with @code{munlockall} and @code{munlock}.
 address space and turn off @code{MCL_FUTURE} future locking mode.
 
 The return value is zero if the function succeeds.  Otherwise, it is
-@code{-1} and @code{errno} is set accordingly.  The only way this 
+@code{-1} and @code{errno} is set accordingly.  The only way this
 function can fail is for generic reasons that all functions and system
 calls can fail, so there are no specific @code{errno} values.
 

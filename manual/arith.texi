@@ -51,7 +51,7 @@ These @code{typedef}s are in @file{stdint.h}.
 If you require that an integer be represented in exactly N bits, use one
 of the following types, with the obvious mapping to bit size and signedness:
 
-@itemize
+@itemize @bullet
 @item int8_t
 @item int16_t
 @item int32_t
@@ -68,7 +68,7 @@ size, the corresponding above type does not exist.
 If you don't need a specific storage size, but want the smallest data
 structure with @emph{at least} N bits, use one of these:
 
-@itemize
+@itemize @bullet
 @item int8_least_t
 @item int16_least_t
 @item int32_least_t
@@ -84,7 +84,7 @@ that allows the fastest access while having at least N bits (and
 among data structures with the same access speed, the smallest one), use
 one of these:
 
-@itemize
+@itemize @bullet
 @item int8_fast_t
 @item int16_fast_t
 @item int32_fast_t
@@ -100,7 +100,7 @@ which it is being used, use one of the following.  If you use these,
 you should write code that takes into account the variable size and range
 of the integer.
 
-@itemize
+@itemize @bullet
 @item intmax_t
 @item uintmax_t
 @end itemize
