@@ -52,7 +52,7 @@ enum
     IPPORT_SMTP = 25,		/* Simple Mail Transfer Protocol.  */
     IPPORT_TIMESERVER = 37,	/* Timeserver service.  */
     IPPORT_NAMESERVER = 42,	/* Domain Name Service.  */
-    IPPROT_WHOIS = 43,		/* Internet Whois service.  */
+    IPPORT_WHOIS = 43,		/* Internet Whois service.  */
     IPPORT_MTP = 57,
 
     IPPORT_TFTP = 69,		/* Trivial File Transfer Protocol.  */
@@ -175,7 +175,7 @@ struct sockaddr_in
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
    source route (this gets put into the header proper).  */
-struct ip_opts 
+struct ip_opts
   {
     struct in_addr ip_dst;	/* First hop; zero without source route.  */
     char ip_opts[40];		/* Actually variable in size.  */
