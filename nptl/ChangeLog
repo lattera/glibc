@@ -1,5 +1,7 @@
 2003-03-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: New file.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Fix many
 	leftovers from the ia32 code.
 
