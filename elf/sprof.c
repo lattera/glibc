@@ -530,7 +530,8 @@ load_shobj (const char *name)
   fd = open (map->l_name, O_RDONLY);
   if (fd == -1)
     /* Dooh, this really shouldn't happen.  We know the file is available.  */
-    error (EXIT_FAILURE, errno, _("Reopening shared object `%s' failed"));
+    error (EXIT_FAILURE, errno, _("Reopening shared object `%s' failed"),
+	   map->l_name);
 
   /* Now map the section header.  */
   ptr = mmap (NULL, (ehdr->e_shnum * sizeof (ElfW(Shdr))
@@ -1206,7 +1207,7 @@ generate_call_graph (struct profdata *profdata)
 	/* Info abount the function itself.  */
 	n = printf ("[%Zu]", cnt);
 	printf ("%*s%5.1f%8.2f%8.2f%9" PRIdMAX "         %s [%Zd]\n",
-		7 - n, " ",
+		(int) (7 - n), " ",
 		total_ticks ? (100.0 * sortsym[cnt]->ticks) / total_ticks : 0,
 		sortsym[cnt]->ticks * tick_unit,
 		0.0, /* FIXME: what's time for the children, recursive */

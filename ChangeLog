@@ -1,3 +1,50 @@
+1999-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/sys/io.h: Don't include
+	<asm/io.h>; remove K&R compatibility; add missing ints.
+
+	* sysdeps/unix/sysv/linux/arm/sys/io.h: Remove K&R compatibility,
+	add missing ints.
+
+	* sysdeps/unix/sysv/linux/sys/io.h: Don't include <asm/io.h>.
+
+1999-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* manual/getopt.texi (Using Getopt): Document ordering of options.
+
+1999-12-29  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/llseek.c: Emit link time warning for llseek.
+	Requested by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+1999-12-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/scsi/scsi.h: Add new defines from Linux
+	2.3.32.
+
+1999-12-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/sprof.c (load_shobj): Fix error message.
+	(generate_call_graph): Cast %*s length argument to int.
+	* locale/programs/localedef.c (construct_output_path): Likewise.
+	* locale/programs/ld-ctype.c (ctype_finish): Use proper format
+	specifier.
+	(ctype_class_new): Likewise.
+	* locale/programs/ld-time.c (time_finish): Likewise.
+	* sunrpc/svc_simple.c (register_rpc): Likewise.
+	* nscd/connections.c (nscd_run, start_threads): Use long instead of
+	int to avoid cast warnings.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c (__ieee754_atan2l): Kill
+	warning.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c (__roundl): Remove unused
+	variable se.
+
+	* time/strftime.c (my_strftime): Provide wide era string when
+	requested.
+
+	* sysdeps/sparc/fpu/bits/mathinline.h (__signbit, __signbitl):
+	Separate into 32bit and 64bit versions.
+
 1999-12-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile (modules): Add ISO-2022-CN.

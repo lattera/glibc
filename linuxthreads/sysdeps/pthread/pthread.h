@@ -160,7 +160,7 @@ extern int pthread_join (pthread_t __th, void **__thread_return) __THROW;
 /* Indicate that the thread TH is never to be joined with PTHREAD_JOIN.
    The resources of TH will therefore be freed immediately when it
    terminates, instead of waiting for another thread to perform PTHREAD_JOIN
-   on it. */
+   on it.  */
 extern int pthread_detach (pthread_t __th) __THROW;
 
 
@@ -226,7 +226,7 @@ extern int pthread_attr_getguardsize (__const pthread_attr_t *__attr,
 #endif
 
 /* Set the starting address of the stack of the thread to be created.
-   Depending on whether the stack grows up or doen the value must either
+   Depending on whether the stack grows up or down the value must either
    be higher or lower than all the address in the memory block.  The
    minimal size of the block must be PTHREAD_STACK_SIZE.  */
 extern int pthread_attr_setstackaddr (pthread_attr_t *__attr,
@@ -246,27 +246,27 @@ extern int pthread_attr_setstacksize (pthread_attr_t *__attr,
 extern int pthread_attr_getstacksize (__const pthread_attr_t *__attr,
 				      size_t *__stacksize) __THROW;
 
-/* Functions for scheduling control. */
+/* Functions for scheduling control.  */
 
 /* Set the scheduling parameters for TARGET_THREAD according to POLICY
-   and *PARAM. */
+   and *PARAM.  */
 extern int pthread_setschedparam (pthread_t __target_thread, int __policy,
 				  __const struct sched_param *__param)
      __THROW;
 
-/* Return in *POLICY and *PARAM the scheduling parameters for TARGET_THREAD. */
+/* Return in *POLICY and *PARAM the scheduling parameters for TARGET_THREAD.  */
 extern int pthread_getschedparam (pthread_t __target_thread, int *__policy,
 				  struct sched_param *__param) __THROW;
 
 #ifdef __USE_UNIX98
-/* Determine  level of concurrency.  */
+/* Determine level of concurrency.  */
 extern int pthread_getconcurrency (void) __THROW;
 
 /* Set new concurrency level to LEVEL.  */
 extern int pthread_setconcurrency (int __level) __THROW;
 #endif
 
-/* Functions for mutex handling. */
+/* Functions for mutex handling.  */
 
 /* Initialize MUTEX using attributes in *MUTEX_ATTR, or use the
    default values if later is NULL.  */
@@ -314,7 +314,7 @@ extern int __pthread_mutexattr_settype (pthread_mutexattr_t *__attr,
 extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
      __THROW;
 
-/* Return in *KIND the mutex kind attribute in *ATTR. */
+/* Return in *KIND the mutex kind attribute in *ATTR.  */
 extern int pthread_mutexattr_gettype (__const pthread_mutexattr_t *__attr,
 				      int *__kind) __THROW;
 #endif
@@ -344,7 +344,7 @@ extern int pthread_cond_wait (pthread_cond_t *__cond,
 /* Wait for condition variable COND to be signaled or broadcast until
    ABSTIME.  MUTEX is assumed to be locked before.  ABSTIME is an
    absolute time specification; zero is the beginning of the epoch
-   (00:00:00 GMT, January 1, 1970). */
+   (00:00:00 GMT, January 1, 1970).  */
 extern int pthread_cond_timedwait (pthread_cond_t *__cond,
 				   pthread_mutex_t *__mutex,
 				   __const struct timespec *__abstime) __THROW;
@@ -411,14 +411,14 @@ extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
 #endif
 
 
-/* Functions for handling thread-specific data */
+/* Functions for handling thread-specific data.  */
 
-/* Create a key value identifying a location in the thread-specific data
-   area.  Each thread maintains a distinct thread-specific data area.
-   DESTR_FUNCTION, if non-NULL, is called with
-   the value associated to that key when the key is destroyed.
-   DESTR_FUNCTION is not called if the value associated is NULL
-   when the key is destroyed. */
+/* Create a key value identifying a location in the thread-specific
+   data area.  Each thread maintains a distinct thread-specific data
+   area.  DESTR_FUNCTION, if non-NULL, is called with the value
+   associated to that key when the key is destroyed.
+   DESTR_FUNCTION is not called if the value associated is NULL when
+   the key is destroyed.  */
 extern int __pthread_key_create (pthread_key_t *__key,
 				 void (*__destr_function) (void *)) __THROW;
 extern int pthread_key_create (pthread_key_t *__key,
@@ -438,19 +438,19 @@ extern void *__pthread_getspecific (pthread_key_t __key) __THROW;
 extern void *pthread_getspecific (pthread_key_t __key) __THROW;
 
 
-/* Functions for handling initialization */
+/* Functions for handling initialization.  */
 
 /* Guarantee that the initialization function INIT_ROUTINE will be called
    only once, even if pthread_once is executed several times with the
    same ONCE_CONTROL argument. ONCE_CONTROL must point to a static or
-   extern variable initialized to PTHREAD_ONCE_INIT. */
+   extern variable initialized to PTHREAD_ONCE_INIT.  */
 extern int __pthread_once (pthread_once_t *__once_control,
 			   void (*__init_routine) (void)) __THROW;
 extern int pthread_once (pthread_once_t *__once_control,
 			 void (*__init_routine) (void)) __THROW;
 
 
-/* Functions for handling cancellation. */
+/* Functions for handling cancellation.  */
 
 /* Set cancelability state of current thread to STATE, returning old
    state in *OLDSTATE if OLDSTATE is not NULL.  */
@@ -465,7 +465,7 @@ extern int pthread_cancel (pthread_t __thread) __THROW;
 
 /* Test for pending cancellation for the current thread and terminate
    the thread as per pthread_exit(PTHREAD_CANCELED) if it has been
-   cancelled. */
+   cancelled.  */
 extern void pthread_testcancel (void) __THROW;
 
 
@@ -494,7 +494,7 @@ extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *__buffer,
 				  int __execute) __THROW;
 
 /* Install a cleanup handler as pthread_cleanup_push does, but also
-   saves the current cancellation type and set it to deferred cancellation. */
+   saves the current cancellation type and set it to deferred cancellation.  */
 
 #ifdef __USE_GNU
 # define pthread_cleanup_push_defer_np(routine,arg) \
@@ -507,7 +507,7 @@ extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *__buffe
 
 /* Remove a cleanup handler as pthread_cleanup_pop does, but also
    restores the cancellation type that was in effect when the matching
-   pthread_cleanup_push_defer was called. */
+   pthread_cleanup_push_defer was called.  */
 
 # define pthread_cleanup_pop_restore_np(execute) \
   _pthread_cleanup_pop_restore (&_buffer, (execute)); }
@@ -516,11 +516,11 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buff
 					  int __execute) __THROW;
 #endif
 
-/* Functions for handling signals. */
+/* Functions for handling signals.  */
 #include <bits/sigthread.h>
 
 
-/* Functions for handling process creation and process execution. */
+/* Functions for handling process creation and process execution.  */
 
 /* Install handlers to be called when a new process is created with FORK.
    The PREPARE handler is called in the parent process just before performing
@@ -531,7 +531,7 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buff
    PTHREAD_ATFORK can be called several times, in which case the PREPARE
    handlers are called in LIFO order (last added with PTHREAD_ATFORK,
    first called before FORK), and the PARENT and CHILD handlers are called
-   in FIFO (first added, first called). */
+   in FIFO (first added, first called).  */
 
 extern int __pthread_atfork (void (*__prepare) (void),
 			     void (*__parent) (void),
@@ -541,12 +541,12 @@ extern int pthread_atfork (void (*__prepare) (void),
 			   void (*__child) (void)) __THROW;
 
 /* Terminate all threads in the program except the calling process.
-   Should be called just before invoking one of the exec*() functions. */
+   Should be called just before invoking one of the exec*() functions.  */
 
 extern void pthread_kill_other_threads_np (void) __THROW;
 
 
-/* This function is called to initialize the pthread library. */
+/* This function is called to initialize the pthread library.  */
 extern void __pthread_initialize (void) __THROW;
 
 __END_DECLS

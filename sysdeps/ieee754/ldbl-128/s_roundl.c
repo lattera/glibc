@@ -31,7 +31,7 @@ long double
 __roundl (long double x)
 {
   int32_t j0;
-  u_int64_t se, i1, i0;
+  u_int64_t i1, i0;
 
   GET_LDOUBLE_WORDS64 (i0, i1, x);
   j0 = ((i0 >> 48) & 0x7fff) - 0x3fff;

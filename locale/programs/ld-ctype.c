@@ -437,7 +437,7 @@ character L'\\u%0*x' in class `%s' must not be in class `%s'"),
 			  {
 			    char buf[17];
 
-			    sprintf (buf, "\\%o", cnt);
+			    sprintf (buf, "\\%zo", cnt);
 
 			    if (!be_quiet)
 			      error (0, 0, _("\
@@ -452,7 +452,7 @@ character '%s' in class `%s' must be in class `%s'"),
 			  {
 			    char buf[17];
 
-			    sprintf (buf, "\\%o", cnt);
+			    sprintf (buf, "\\%zo", cnt);
 
 			    if (!be_quiet)
 			      error (0, 0, _("\
@@ -1021,7 +1021,7 @@ ctype_class_new (struct linereader *lr, struct locale_ctype_t *ctype,
   if (ctype->nr_charclass == MAX_NR_CHARCLASS)
     /* Exit code 2 is prescribed in P1003.2b.  */
     error (2, 0, _("\
-implementation limit: no more than %d character classes allowed"),
+implementation limit: no more than %zd character classes allowed"),
 	   MAX_NR_CHARCLASS);
 
   ctype->classnames[ctype->nr_charclass++] = name;

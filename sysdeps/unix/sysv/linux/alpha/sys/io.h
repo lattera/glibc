@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,6 @@
 
 __BEGIN_DECLS
 
-/* Get constants from kernel header files. */
-#include <asm/io.h>
-
 /* If TURN_ON is TRUE, request for permission to do direct i/o on the
    port numbers in the range [FROM,FROM+NUM-1].  Otherwise, turn I/O
    permission off for that range.  This call requires root privileges.
@@ -33,39 +30,39 @@ __BEGIN_DECLS
    Portability note: not all Linux platforms support this call.  Most
    platforms based on the PC I/O architecture probably will, however.
    E.g., Linux/Alpha for Alpha PCs supports this.  */
-extern int ioperm __P ((unsigned long int __from, unsigned long int __num,
-			int __turn_on));
+extern int ioperm (unsigned long int __from, unsigned long int __num,
+		   int __turn_on) __THROW;
 
 /* Set the I/O privilege level to LEVEL.  If LEVEL>3, permission to
    access any I/O port is granted.  This call requires root
    privileges. */
-extern int iopl __P ((int __level));
+extern int iopl (int __level) __THROW;
 
 /* Return the physical address of the DENSE I/O memory or NULL if none
    is available (e.g. on a jensen).  */
-extern unsigned long _bus_base __P ((void)) __attribute__ ((const));
-extern unsigned long bus_base __P ((void)) __attribute__ ((const));
+extern unsigned long int _bus_base (void) __THROW __attribute__ ((const));
+extern unsigned long int bus_base (void) __THROW __attribute__ ((const));
 
 /* Return the physical address of the SPARSE I/O memory.  */
-extern unsigned long _bus_base_sparse __P ((void)) __attribute__ ((const));
-extern unsigned long bus_base_sparse __P ((void)) __attribute__ ((const));
+extern unsigned long _bus_base_sparse (void) __THROW __attribute__ ((const));
+extern unsigned long bus_base_sparse (void) __THROW __attribute__ ((const));
 
 /* Return the HAE shift used by the SPARSE I/O memory.  */
-extern int _hae_shift __P ((void)) __attribute__ ((const));
-extern int hae_shift __P ((void)) __attribute__ ((const));
+extern int _hae_shift (void) __THROW __attribute__ ((const));
+extern int hae_shift (void) __THROW __attribute__ ((const));
 
 /* Access PCI space protected from machine checks.  */
-extern int pciconfig_read __P ((unsigned long int __bus,
-				unsigned long int __dfn,
-				unsigned long int __off,
-				unsigned long int __len,
-				unsigned char *__buf));
+extern int pciconfig_read (unsigned long int __bus,
+			   unsigned long int __dfn,
+			   unsigned long int __off,
+			   unsigned long int __len,
+			   unsigned char *__buf) __THROW;
 
-extern int pciconfig_write __P ((unsigned long int __bus,
-				 unsigned long int __dfn,
-				 unsigned long int __off,
-				 unsigned long int __len,
-				 unsigned char *__buf));
+extern int pciconfig_write (unsigned long int __bus,
+			    unsigned long int __dfn,
+			    unsigned long int __off,
+			    unsigned long int __len,
+			    unsigned char *__buf) __THROW;
 
 __END_DECLS
 

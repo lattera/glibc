@@ -356,8 +356,8 @@ construct_output_path (char *path)
       if (normal == NULL)
 	n = asprintf (&result, "%s/%s%c", LOCALEDIR, path, '\0');
       else
-	n = asprintf (&result, "%s/%.*s%s%s%c", LOCALEDIR, startp - path, path,
-		      normal, endp, '\0');
+	n = asprintf (&result, "%s/%.*s%s%s%c", LOCALEDIR,
+		      (int) (startp - path), path, normal, endp, '\0');
 
       endp = result + n;
     }

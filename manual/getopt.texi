@@ -71,9 +71,28 @@ string can be followed by a colon (@samp{:}) to indicate that it takes a
 required argument.  If an option character is followed by two colons
 (@samp{::}), its argument is optional; this is a GNU extension.
 
+@code{getopt} has three ways to deal with options that follow
+non-options @var{argv} elements.  The special argument @samp{--} forces
+in all cases the end of option scanning.
+
+@itemize @bullet
+@item
+The default is to permute the contents of @var{argv} while scanning it
+so that eventually all the non-options are at the end.  This allows
+options to be given in any order, even with programs that were not
+written to expect this.
+
+@item
 If the @var{options} argument string begins with a hyphen (@samp{-}), this
 is treated specially.  It permits arguments that are not options to be
 returned as if they were associated with option character @samp{\0}.
+
+@item
+POSIX demands the following behaviour: The first non-option stops option
+processing.  This mode is selected by either setting the environment
+variable @code{POSIXLY_CORRECT} or beginning the @var{options} argument
+string with a plus sign (@samp{+}).
+@end itemize
 
 The @code{getopt} function returns the option character for the next
 command line option.  When no more option arguments are available, it

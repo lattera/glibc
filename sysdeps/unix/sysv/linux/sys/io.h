@@ -23,9 +23,6 @@
 
 __BEGIN_DECLS
 
-/* Get constants from kernel header files. */
-#include <asm/io.h>
-
 /* If TURN_ON is TRUE, request for permission to do direct i/o on the
    port numbers in the range [FROM,FROM+NUM-1].  Otherwise, turn I/O
    permission off for that range.  This call requires root privileges.

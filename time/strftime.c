@@ -834,8 +834,8 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  size_t len = strlen (era->era_name);
-		  cpy (len, era->era_name);
+		  size_t len = wcslen (era->era_wname);
+		  cpy (len, era->era_wname);
 # else
 		  size_t len = strlen (era->era_name);
 		  cpy (len, era->era_name);

@@ -73,7 +73,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   if (procnum == NULLPROC)
     {
       (void) fprintf (stderr,
-		      _("can't reassign procedure number %d\n"), NULLPROC);
+		      _("can't reassign procedure number %ld\n"), NULLPROC);
       return -1;
     }
   if (transp == 0)
@@ -89,7 +89,7 @@ registerrpc (u_long prognum, u_long versnum, u_long procnum,
   if (!svc_register (transp, (u_long) prognum, (u_long) versnum,
 		     universal, IPPROTO_UDP))
     {
-      (void) fprintf (stderr, _("couldn't register prog %d vers %d\n"),
+      (void) fprintf (stderr, _("couldn't register prog %ld vers %ld\n"),
 		      prognum, versnum);
       return -1;
     }

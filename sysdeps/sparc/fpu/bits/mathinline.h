@@ -110,6 +110,8 @@ __signbitf (float __x)
   return __u.__i < 0;
 }
 
+#if __WORDSIZE == 32
+
 __MATH_INLINE int
 __signbit (double __x)
 {
@@ -120,17 +122,26 @@ __signbit (double __x)
 __MATH_INLINE int
 __signbitl (long double __x)
 {
-  if (sizeof(long double) == 8)
-    {
-      __extension__ union { long double __l; int __i[2]; } __u = { __l: __x };
-      return __u.__i[0] < 0;
-    }
-  else
-    {
-      __extension__ union { long double __l; int __i[4]; } __u = { __l: __x };
-      return __u.__i[0] < 0;
-    }
+  return __signbit ((double)__x);
 }
+
+#else /* sparc64 */
+
+__MATH_INLINE int
+__signbit (double __x)
+{
+  __extension__ union { double __d; long __i; } __u = { __d: __x };
+  return __u.__i < 0;
+}
+
+__MATH_INLINE int
+__signbitl (long double __x)
+{
+  __extension__ union { long double __l; long __i[2]; } __u = { __l: __x };
+  return __u.__i[0] < 0;
+}
+
+#endif /* sparc64 */
 
 __MATH_INLINE double
 sqrt(double __x)

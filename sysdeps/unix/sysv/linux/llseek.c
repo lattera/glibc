@@ -40,3 +40,9 @@ weak_alias (__llseek, llseek)
 strong_alias (__llseek, __libc_lseek64)
 strong_alias (__llseek, __lseek64)
 weak_alias (__llseek, lseek64)
+
+/* llseek doesn't have a prototype.  Since the second parameter is a
+   64bit type, this results in wrong behaviour if no prototype is
+   provided.  */
+link_warning (llseek, "\
+the `llseek' function should not be used; use `lseek64' instead.")

@@ -73,7 +73,7 @@ pi_lo   = 8.67181013012378102479704402604335225e-35L; /* 3f8dcd129024e088a67cc74
 	if(((ix|((lx|-lx)>>63))>0x7fff000000000000LL)||
 	   ((iy|((ly|-ly)>>63))>0x7fff000000000000LL))	/* x or y is NaN */
 	   return x+y;
-	if((hx-0x3fff000000000000LL|lx)==0) return __atanl(y);   /* x=1.0L */
+	if(((hx-0x3fff000000000000LL)|lx)==0) return __atanl(y);   /* x=1.0L */
 	m = ((hy>>63)&1)|((hx>>62)&2);	/* 2*sign(x)+sign(y) */
 
     /* when y = 0 */

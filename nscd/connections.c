@@ -382,7 +382,7 @@ static void *
 __attribute__ ((__noreturn__))
 nscd_run (void *p)
 {
-  int my_number = (int) p;
+  long my_number = (long) p;
   struct pollfd conn;
   int run_prune = my_number < lastdb && dbs[my_number].enabled;
   time_t now = time (NULL);
@@ -496,7 +496,7 @@ nscd_run (void *p)
 void
 start_threads (void)
 {
-  int i;
+  long i;
   pthread_attr_t attr;
   pthread_t th;
 
