@@ -35,11 +35,8 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
     ("\t\t\t# spin_lock\n"
      "1:\n\t"
      "ll	%1,%3\n\t"
-     ".set	push\n\t"
-     ".set	noreorder\n\t"
+     "li	%2,1\n\t"
      "bnez	%1,1b\n\t"
-     " li	%2,1\n\t"
-     ".set	pop\n\t"
      "sc	%2,%0\n\t"
      "beqz	%2,1b"
      : "=m" (*lock), "=&r" (tmp1), "=&r" (tmp2)
@@ -54,7 +51,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
 int
 __pthread_spin_lock (pthread_spinlock_t *lock)
 {
-  while (_test_and_set (lock, 1));
+  while (_test_and_set ((int *) lock, 1));
   return 0;
 }
 
