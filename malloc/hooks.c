@@ -20,40 +20,6 @@
 
 /* $Id$ */
 
-#ifndef weak_variable
-#ifndef _LIBC
-#define weak_variable /**/
-#else
-/* In GNU libc we want the hook variables to be weak definitions to
-   avoid a problem with Emacs.  */
-#define weak_variable weak_function
-#endif
-#endif
-
-/* Forward declarations.  */
-static Void_t* malloc_hook_ini __MALLOC_P ((size_t sz,
-					    const __malloc_ptr_t caller));
-static Void_t* realloc_hook_ini __MALLOC_P ((Void_t* ptr, size_t sz,
-					     const __malloc_ptr_t caller));
-static Void_t* memalign_hook_ini __MALLOC_P ((size_t alignment, size_t sz,
-					      const __malloc_ptr_t caller));
-
-/* Define and initialize the hook variables.  These weak definitions must
-   appear before any use of the variables in a function.  */
-void weak_variable (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
-void weak_variable (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
-					       const __malloc_ptr_t)) = NULL;
-__malloc_ptr_t weak_variable (*__malloc_hook)
- __MALLOC_P ((size_t __size, const __malloc_ptr_t)) = malloc_hook_ini;
-__malloc_ptr_t weak_variable (*__realloc_hook)
- __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size, const __malloc_ptr_t))
-     = realloc_hook_ini;
-__malloc_ptr_t weak_variable (*__memalign_hook)
- __MALLOC_P ((size_t __alignment, size_t __size, const __malloc_ptr_t))
-     = memalign_hook_ini;
-void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
-
-
 #ifndef DEFAULT_CHECK_ACTION
 #define DEFAULT_CHECK_ACTION 1
 #endif
