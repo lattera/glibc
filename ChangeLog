@@ -1,3 +1,9 @@
+2000-08-20  Andreas Jaeger  <aj@suse.de>
+
+	* time/tst-getdate.c (main): Increase error in case of wrong
+	conversion.
+	Fix typo in test case.
+
 2000-08-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* ctype/ctype.h (isblank): Make available if ISO C99.
