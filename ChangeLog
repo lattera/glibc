@@ -1,13 +1,15 @@
-2003-09-23  Ulrich Drepper  <drepper@redhat.com>
+2003-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/Makefile: Add rules to build nscd as a PIE.
+	* configure.in: Check for -fpie and -pie compiler options.
+	* config.make.in (have-fpie): Define.
 
 2003-09-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Adjust for larger
 	kernel dev_t size.
-	* sysdeps/unix/sysv/linux/sys/alpha/sysmacros.h: Removed.
-	* sysdeps/unix/sysv/linux/sys/sparc/sysmacros.h: Removed.
+	* sysdeps/unix/sysv/linux/alpha/sys/sysmacros.h: Removed.
+	* sysdeps/unix/sysv/linux/sparc/sys/sysmacros.h: Removed.
 	* sysdeps/unix/sysv/linux/makedev.c: New file.
 	* sysdeps/unix/sysv/linux/Dist: Add makedev.c.
 	* sysdeps/unix/sysv/linux/Makefile [subdir=misc]

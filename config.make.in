@@ -54,6 +54,7 @@ have-initfini-array = @libc_cv_initfinit_array@
 have-cpp-asm-debuginfo = @libc_cv_cpp_asm_debuginfo@
 enable-check-abi = @enable_check_abi@
 have-forced-unwind = @libc_cv_forced_unwind@
+have-fpie = @libc_cv_fpie@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 

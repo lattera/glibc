@@ -261,7 +261,7 @@ endif
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf \
-		tst-_res1mod1 tst-_res1mod2
+		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod
 extra-objs += $(addsuffix .os,$(strip $(modules-names)))
 test-extras += $(modules-names)
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
@@ -545,5 +545,5 @@ endif
 tst-exec4-ARGS = $(built-program-cmd)
 
 $(objpfx)tst-execstack: $(libdl)
-$(objpfx)tst-execstack.out: $(elf-objpfx)tst-execstack-mod.so
+$(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
