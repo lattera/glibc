@@ -1,3 +1,8 @@
+1999-04-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* termios/tcgetsid.c (tcgetsid): Rename variable to
+	tiocgsid_does_not_work.
+
 1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/getnameinfo.c (nrl_domainname): Fix last patch.

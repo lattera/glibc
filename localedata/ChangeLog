@@ -1,3 +1,9 @@
+1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/zh_CN: Update.
+	* charmaps/GB2312: New file.
+	Contributed by hashao@china.com.
+
 1999-04-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* charmaps/UTF8: Fix entries for <G'>, <g'>, <1!> and <RY>, and
