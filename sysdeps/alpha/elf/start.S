@@ -1,5 +1,5 @@
 /* Startup code for Alpha/ELF.
-   Copyright (C) 1993,1995,1996,1997,1998,2000 Free Software Foundation, Inc.
+   Copyright (C) 1993,1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>
 
@@ -24,6 +24,7 @@
 	.align 3
 	.globl _start
 	.ent _start, 0
+	.type _start,@function
 _start:
 	.frame fp, 0, zero
 	mov	zero, fp

@@ -40,6 +40,7 @@
 
 	.text
 	.globl _start
+	.type _start,@function
 _start:
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */

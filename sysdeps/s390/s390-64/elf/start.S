@@ -18,7 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* 
+/*
    This is the canonical entry point, usually the first thing in the text
    segment. Most registers' values are unspecified, except for:
 
@@ -39,6 +39,7 @@
 
 	.text
 	.globl _start
+	type _start,@function
 _start:
 	/* Load argc and argv from stack.  */
 	la	%r4,8(%r15)		# get argv
@@ -69,7 +70,7 @@ _start:
 	.word	0
 
 	/* FIXME: FPU flags or what ?!?	 */
-  
+
 	.section .rodata
 	.globl _fp_hw
 	.long 3

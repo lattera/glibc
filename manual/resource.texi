@@ -1170,7 +1170,7 @@ afterward as the criterion for failure.
 Set the nice value of a set of processes to @var{niceval}; @var{class}
 and @var{id} specify which ones (see below).
 
-The return value is the nice value on success, and @code{-1} on
+The return value is @code{0} on success, and @code{-1} on
 failure.  The following @code{errno} error condition are possible for
 this function:
 
@@ -1225,7 +1225,10 @@ process group, or its owner (real uid), according to @var{class}.
 @comment BSD
 @deftypefun int nice (int @var{increment})
 Increment the nice value of the calling process by @var{increment}.
-The return value is the same as for @code{setpriority}.
+The return value is the new nice value on success, and @code{-1} on
+failure.  In the case of failure, @code{errno} will be set to the
+same values as for @code{setpriority}.
+
 
 Here is an equivalent definition of @code{nice}:
 
@@ -1233,8 +1236,12 @@ Here is an equivalent definition of @code{nice}:
 int
 nice (int increment)
 @{
-  int old = getpriority (PRIO_PROCESS, 0);
-  return setpriority (PRIO_PROCESS, 0, old + increment);
+  int result, old = getpriority (PRIO_PROCESS, 0);
+  result = setpriority (PRIO_PROCESS, 0, old + increment);
+  if (result != -1)
+      return old + increment;
+  else
+      return -1;
 @}
 @end smallexample
 @end deftypefun

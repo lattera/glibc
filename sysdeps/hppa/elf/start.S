@@ -14,7 +14,7 @@
 	
 	.globl _start
 	.export _start, ENTRY
-
+	.type _start,@function
 _start:
 
 	.proc

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -110,7 +110,7 @@ sub parse_ulps {
       next;
     }
     if (/^Function: /) {
-      if (/\Real part of/) {
+      if (/Real part of/) {
 	s/Real part of //;
 	$type = 'real';
       } elsif (/Imaginary part of/) {

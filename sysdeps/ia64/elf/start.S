@@ -37,6 +37,7 @@
 	.global _start
 
 	.proc _start
+	type _start,@function
 _start:
 	.prologue
 	{ .mlx

@@ -67,6 +67,7 @@
 
 	.text
 	.globl ENTRY_POINT
+	.type ENTRY_POINT,@function
 ENTRY_POINT:
 #ifdef __PIC__
 	SET_GP

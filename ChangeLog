@@ -1,3 +1,27 @@
+2001-06-05  Andreas Jaeger  <aj@suse.de>
+
+	* manual/libm-err-tab.pl (parse_ulps): Fix typo.
+
+2001-06-04  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/alpha/elf/start.S: Add .type for the entry point.
+	* sysdeps/arm/elf/start.S: Likewise.
+	* sysdeps/hppa/elf/start.S: Likewise.
+	* sysdeps/i386/elf/start.S: Likewise.
+	* sysdeps/m68k/elf/start.S: Likewise.
+	* sysdeps/mips/elf/start.S: Likewise.
+	* sysdeps/ia64/elf/start.S: Likewise.
+	* sysdeps/sh/elf/start.S: Likewise.
+	* sysdeps/s390/s390-32/elf/start.S: Likewise.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+	* sysdeps/cris/elf/start.S: Likewise.
+
+2001-06-04  Bruce Mitchener  <bruce@cubik.org>
+
+	* manual/resource.texi: Correct setpriority/nice documentation.
+
+	* sysdeps/unix/nice.c: Correct nice() implementation.
+
 2001-06-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/e_sinhl.c: New file, contributed by

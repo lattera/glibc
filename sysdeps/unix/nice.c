@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@
 /* Increment the scheduling priority of the calling process by INCR.
    The superuser may use a negative INCR to decrement the priority.  */
 int
-nice (incr)
-     int incr;
+nice (int incr)
 {
   int save;
   int prio;
+  int result;
 
   /* -1 is a valid priority, so we use errno to check for an error.  */
   save = errno;
@@ -41,5 +41,10 @@ nice (incr)
 	__set_errno (save);
     }
 
-  return setpriority (PRIO_PROCESS, 0, prio + incr);
+  result = setpriority (PRIO_PROCESS, 0, prio + incr);
+  if (result != -1)
+    return prio + incr;
+  else
+    return -1;
+
 }

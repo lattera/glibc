@@ -1,5 +1,5 @@
 /* Startup code for SH & ELF.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,12 +27,12 @@
 	At this entry point, most registers' values are unspecified, except:
 
    r4		Contains a function pointer to be registered with `atexit'.
-   		This is how the dynamic linker arranges to have DT_FINI
+		This is how the dynamic linker arranges to have DT_FINI
 		functions called for shared libraries that have been loaded
 		before this code runs.
 
    sp		The stack contains the arguments and environment:
-   		0(sp)			argc
+		0(sp)			argc
 		4(sp)			argv[0]
 		...
 		(4*argc)(sp)		NULL
@@ -43,6 +43,7 @@
 
 	.text
 	.globl _start
+	type _start,@function
 _start:
 	/* Clear the frame pointer since this is the outermost frame.  */
 	mov #0, r14
