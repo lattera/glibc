@@ -1,6 +1,9 @@
 1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
 
-	* db2/Makefile: Update.
+	* sysdeps/i386/i486/bits/string.h (memcmp): Correctly set flags
+	for the case N == 0.
+
+	* db2/Makefile (distribute): Add LICENSE.
 
 1999-02-03  Jeff Bailey  <jbailey@nisa.net>
 

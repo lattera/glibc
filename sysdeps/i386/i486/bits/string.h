@@ -172,6 +172,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
   register int __res;
   __asm__ __volatile__
     ("cld\n\t"
+     "testl %3,%3\n\t"
      "repe; cmpsb\n\t"
      "je	1f\n\t"
      "sbbl	%0,%0\n\t"

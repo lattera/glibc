@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ headers = db.h db_185.h
 
 distribute = db_int.h config.h compat.h clib/getlong.c btree/btree.src \
 	     db/db.src db185/db185_int.h hash/hash.src log/log.src \
-	     txn/txn.src README \
+	     txn/txn.src README LICENSE \
 	     $(addprefix include/,btree.h btree_auto.h btree_ext.h \
 				  clib_ext.h common_ext.h cxx_int.h \
 				  db.h.src db_185.h.src db_am.h db_auto.h \
