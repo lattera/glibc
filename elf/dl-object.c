@@ -50,6 +50,12 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_loader = loader;
   /* new->l_global = 0;	We use calloc therefore not necessary.  */
 
+  /* Use the 'l_scope_mem' array by default for the the 'l_scope'
+     information.  If we need more entries we will allocate a large
+     array dynamically.  */
+  new->l_scope = new->l_scope_mem;
+  new->l_scope_max = sizeof (new->l_scope_mem) / sizeof (new->l_scope_mem[0]);
+
   /* Counter for the scopes we have to handle.  */
   idx = 0;
 

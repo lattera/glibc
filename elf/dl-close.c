@@ -146,6 +146,25 @@ _dl_close (void *_map)
 	      (imap, (void *) imap->l_addr
 		     + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
+      else if (new_opencount[i] != 0 && imap->l_type == lt_loaded)
+	{
+	  /* The object is still used.  But the object we are unloading
+	     right now is responsible for loading it and therefore we
+	     have the search list of the current object in its scope.
+	     Remove it.  */
+	  struct r_scope_elem **runp = imap->l_scope;
+
+	  while (*runp != NULL)
+	    if (*runp == &map->l_searchlist)
+	      {
+		/* Copy all later elements.  */
+		while ((runp[0] = runp[1]) != NULL)
+		  ++runp;
+		break;
+	      }
+	  else
+	    ++runp;
+	}
 
       /* Store the new l_opencount value.  */
       imap->l_opencount = new_opencount[i];
@@ -240,6 +259,10 @@ _dl_close (void *_map)
 	  /* Remove the searchlists.  */
 	  if (imap != map)
 	      free (imap->l_initfini);
+
+	  /* Remove the scope array if we allocated it.  */
+	  if (imap->l_scope != imap->l_scope_mem)
+	    free (imap->l_scope);
 
 	  if (imap->l_phdr_allocated)
 	    free ((void *) imap->l_phdr);

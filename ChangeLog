@@ -1,3 +1,14 @@
+2001-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/link.h (struct link_map): Add l_scope_mem and l_scope_max
+	elements.  Change l_scope to be a pointer only.
+	* elf/dl-object.c (_dl_new_ojbect): Initialize l_scope and l_scope_max.
+	* elf/dl-open.c (dl_open_worker): If dependency wasn't just opened
+	here add searchlist of newly open file to the dependency's scope.
+	* elf/dl-close.c (_dl_close): If dependency is used otherwise remove
+	only searchlist from its scope.  Free own scope array if necessary.
+	* elf/Makefile (tests): Add dblload and dblunload now.
+
 2001-09-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: New file, contributed

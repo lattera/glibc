@@ -295,9 +295,55 @@ dl_open_worker (void *a)
       l = l->l_prev;
     }
 
-  /* Increment the open count for all dependencies.  */
+  /* Increment the open count for all dependencies.  If the file is
+     not loaded as a dependency here add the search list of the newly
+     loaded object to the scope.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
-    ++new->l_searchlist.r_list[i]->l_opencount;
+    if (++new->l_searchlist.r_list[i]->l_opencount > 1
+	&& new->l_searchlist.r_list[i]->l_type == lt_loaded)
+      {
+	struct link_map *imap = new->l_searchlist.r_list[i];
+	struct r_scope_elem **runp = imap->l_scope;
+	size_t cnt = 0;
+
+	while (*runp != NULL)
+	  {
+	    ++cnt;
+	    ++runp;
+	  }
+
+	if (__builtin_expect (cnt + 1 < imap->l_scope_max, 0))
+	  {
+	    /* The 'r_scope' array is too small.  Allocate a new one
+	       dynamically.  */
+	    struct r_scope_elem **newp;
+	    size_t new_size = imap->l_scope_max * 2;
+
+	    if (imap->l_scope == imap->l_scope_mem)
+	      {
+		newp = (struct r_scope_elem **)
+		  malloc (new_size * sizeof (struct r_scope_elem *));
+		if (newp == NULL)
+		  _dl_signal_error (ENOMEM, "dlopen", NULL,
+				    N_("cannot create scope list"));
+		imap->l_scope = memcpy (newp, imap->l_scope,
+					cnt * imap->l_scope_max);
+	      }
+	    else
+	      {
+		newp = (struct r_scope_elem **)
+		  realloc (imap->l_scope,
+			   new_size * sizeof (struct r_scope_elem *));
+		if (newp == NULL)
+		  _dl_signal_error (ENOMEM, "dlopen", NULL,
+				    N_("cannot create scope list"));
+		imap->l_scope = newp;
+	      }
+
+	    imap->l_scope[cnt++] = &new->l_searchlist;
+	    imap->l_scope[cnt] = NULL;
+	  }
+      }
 
   /* Run the initializer functions of new objects.  */
   _dl_init (new, __libc_argc, __libc_argv, __environ);
