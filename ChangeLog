@@ -1,5 +1,8 @@
 2001-11-06  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/powerpc/sysdep.h: Include sysdeps/unix/powerpc/sysdep.h
+	instead of sysdeps/powerpc/elf/sysdep.h and sysdeps/unix/sysdep.h.
+
 	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Don't include
 	sysdeps/powerpc/elf/sysdep.h.
 	Reported by Kaoru Fukui <k_fukui@highway.ne.jp>.

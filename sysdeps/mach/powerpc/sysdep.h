@@ -45,7 +45,6 @@
 #include <sysdeps/mach/sysdep.h>
 
 #undef ENTRY
-#include <sysdeps/unix/sysdep.h>
-#include <sysdeps/powerpc/elf/sysdep.h>
+#include <sysdeps/unix/powerpc/sysdep.h>
 
 #endif  /* _MACH_POWERPC_SYSDEP_H */
