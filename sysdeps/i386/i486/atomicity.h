@@ -28,7 +28,7 @@ __attribute__ ((unused))
 exchange_and_add (volatile uint32_t *mem, uint32_t val)
 {
   register uint32_t result;
-  __asm__ __volatile__ ("lock; xaddl %0,%2"
+  __asm__ __volatile__ ("lock; xaddl %0,%1"
 			: "=r" (result), "=m" (*mem) : "0" (val), "1" (*mem));
   return result;
 }
