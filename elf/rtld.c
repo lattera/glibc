@@ -261,3 +261,27 @@ void
 _dl_r_debug_state (void)
 {
 }
+
+#ifndef NDEBUG
+
+/* Define (weakly) our own assert failure function which doesn't use stdio.
+   If we are linked into the user program (-ldl), the normal __assert_fail
+   defn can override this one.  */
+
+#include "../stdio/_itoa.h"
+
+void
+__assert_fail (const char *assertion,
+	       const char *file, unsigned int line, const char *function)
+{
+  char buf[64];
+  buf[sizeof buf - 1] = '\0';
+  _dl_sysdep_fatal ("BUG IN DYNAMIC LINKER ld.so: ",
+		    file, ": ", _itoa (line, buf + sizeof buf - 1, 10, 0),
+		    ": ", function ?: "", function ? ": " : "",
+		    "Assertion `", assertion, "' failed!\n");
+
+}
+weak_symbol (__assert_fail)
+
+#endif

@@ -16,15 +16,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <string.h>
 #include <mach/error.h>
 #include <errorlib.h>
+#include "../stdio/_itoa.h"
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
+_strerror_internal (int errnum, char buf[1024])
 {
   int system; 
   int sub;
@@ -40,8 +40,12 @@ DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
 
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
-      sprintf (buf, "Unknown error system %d", system);
-      return buf;
+      static const char unk[] = "Error in unknown error system: ";
+      char *p = buf + sizeof buf;
+      *p-- = '\0';
+      p = _itoa (errnum, p, 16, 1);
+      p -= sizeof unk - 1;
+      return memcpy (p, unk, sizeof unk - 1);
     }
 
   es = &__mach_error_systems[system];
@@ -51,9 +55,14 @@ DEFUN(_strerror_internal, (errnum, buf), int errnum AND char buf[1024])
 
   if (code >= es->subsystem[sub].max_code)
     {
-      sprintf (buf, "Unknown error %d in system %d subsystem %d",
-	       code, system, sub);
-      return buf;
+      static const char unk[] = "Unknown error ";
+      char *p = buf + sizeof buf;
+      size_t len = strlen (es->subsystem[sub].subsys_name);
+      *p-- = '\0';
+      p = _itoa (errnum, p, 16, 1);
+      *p-- = ' ';
+      p = memcpy (p - len, es->subsystem[sub].subsys_name, len);
+      return memcpy (p - sizeof unk - 1, unk, sizeof unk - 1);
     }
 
   return (char *) es->subsystem[sub].codes[code];

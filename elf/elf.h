@@ -545,7 +545,7 @@ typedef struct
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
-#define PT_MIPS_REGINFO	0x70000000	/* Regiser usage information */
+#define PT_MIPS_REGINFO	0x70000000	/* Register usage information */
 
 /* Legal values for d_tag field of Elf32_Dyn.  */
 

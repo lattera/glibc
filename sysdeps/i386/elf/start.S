@@ -49,8 +49,8 @@ _start:
 	   linked, this will not be set by anything to any function
 	   pointer; hopefully it will be zero so we don't try to call
 	   random pointers.  */
-	testl %edx
-	jeq nofini
+	testl %edx,%edx
+	jz nofini
 	pushl %edx
 	call atexit
 	addl $4, %esp
@@ -84,3 +84,9 @@ nofini:
 	pushl %eax
 	call exit		/* This should never return.  */
 	hlt			/* Crash if somehow it does return.  */
+
+/* Define a symbol for the first piece of initialized data.  */
+	.data
+	.globl __data_start
+__data_start:
+	.long 0

@@ -78,11 +78,21 @@ endif
 # Get the values defined by options to `configure'.
 include $(common-objpfx)config.make
 
+# Run config.status to update config.make and config.h.  We don't show the
+# dependence of config.h to Make, because it is only touched when it
+# changes and so config.status would be run every time; the dependence of
+# config.make should suffice to force regeneration and re-exec, and the new
+# image will notice if config.h changed.
+$(common-objpfx)config.make: $(common-objpfx)config.status
+	cd $(<D); $(SHELL) $(<F)
+
 # Force the user to configure before making.
-$(common-objpfx)config.make:
-	@echo The GNU C library has not been configured. >&2
-	@echo Run \`configure\' to configure it before building. >&2
-	@exit 1
+$(common-objpfx)config.status: $(..)configure
+	@cd $(@D); if test -f $(@F); then exec $(SHELL) $(@F) --recheck; else \
+	 echo The GNU C library has not been configured. >&2; \
+	 echo Run \`configure\' to configure it before building. >&2; \
+	 echo Try \`configure --help\' for more details. >&2; \
+	 exit 1; fi
 
 # Get the user's configuration parameters.
 ifneq ($(wildcard $(..)configparms),)

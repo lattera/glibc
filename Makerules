@@ -86,9 +86,15 @@ in-Makerules := yes
 
 ifndef avoid-generated
 include $(+sysdir_pfx)sysd-Makefile
-$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules
+ifneq ($(sysd-Makefile-sysdirs),$(sysdirs))
+sysd-Makefile-force = FORCE
+FORCE:
+endif
+$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
+			     $(sysd-Makefile-force)
 	-@rm -f $@T
-	(for dir in $(sysdirs); do		   			      \
+	(echo 'sysd-Makefile-sysdirs := $(sysdirs)';			      \
+	 for dir in $(sysdirs); do		   			      \
 	   file=sysdeps/$$dir/Makefile;					      \
 	   if [ -f $(..)$$file ]; then					      \
 	     echo include "\$$(..)$$file";				      \
@@ -192,12 +198,20 @@ endif
 # contents of sysd-rules.
 ifdef sysd-Makefile-done
 include $(+sysdir_pfx)sysd-rules
+ifneq ($(sysd-rules-sysdirs),$(sysdirs))
+# The value of $(sysdirs) the sysd-rules was computed for
+# differs from the one we are using now.  So force a rebuild of sysd-rules.
+sysd-rules-force = FORCE
+FORCE:
+endif
 endif
 $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 			  $(wildcard $(foreach dir,$(sysdirs),\
-					       $(sysdep_dir)/$(dir)/Makefile))
+					       $(sysdep_dir)/$(dir)/Makefile))\
+			  $(sysd-rules-force)
 	-@rm -f $@T
-	(for sysdir in $(sysdirs); do		   			      \
+	(echo 'sysd-rules-sysdirs := $(sysdirs)';			      \
+	 for sysdir in $(sysdirs); do		   			      \
 	   dir="\$$(sysdep_dir)/$$sysdir";				      \
 	   for o in $(object-suffixes); do \
 	     $(open-check-inhibit-asm) \
@@ -351,7 +365,7 @@ lib%.so: lib%_pic.a
 # since we define our own `.init' section specially.
 LDFLAGS-c.so = -nostdlib
 # Give libc.so an entry point and make it directly runnable itself.
-LDFLAGS-c.so += -Wl,-interp -Wl,/lib/ld.so -e __libc_print_version
+LDFLAGS-c.so += -Wl,-dynamic-linker -Wl,/lib/ld.so -e __libc_print_version
 endif
 
 libobjs: $(foreach o,$(object-suffixes),\
@@ -472,23 +486,33 @@ $(installed-libcs): $(libdir)/lib$(libprefix)%: libobjs subdir_install
 	$(RANLIB) $@
 endif
 
-install-lib.so := libc.so $(filter lib%.so,$(install-lib))
-install-lib := $(filter-out lib%.so,$(install-lib))
+define do-install-program
+$(make-target-directory)
+$(INSTALL_PROGRAM) $< $@.new
+mv -f $@.new $@
+endef
+
+install-lib.so := libc.so $(filter %.so,$(install-lib))
+install-lib := $(filter-out %.so,$(install-lib))
 ifeq (yes,$(build-shared))
-install: $(foreach so,$(install-lib.so), \
-		   $(libdir)/$(so:lib%=lib$(libprefix)%).$($(so)-version))
-$(libdir)/lib$(libprefix)%.so: $(common-objpfx)lib%.so; $(do-install)
+install: $(foreach so,$(install-lib.so),\
+  $(libdir)/$(patsubst $(libprefix)lib%,lib$(libprefix)%,\
+		       $(libprefix)$(so))$($(so)-version))
+$(foreach v,$(sort $(foreach so,$(install-lib.so),.so$((so)-version))),\
+	  $(libdir)/lib$(libprefix)%$v): $(common-objpfx)lib%.so
+	$(do-install-program)
+$(foreach v,$(sort $(foreach so,$(install-lib.so),.so$((so)-version))),\
+	  $(libdir)/$(libprefix)%$v): $(common-objpfx)%.so
+	$(do-install-program)
 endif
 
 ifdef install-bin
 $(addprefix $(bindir)/,$(install-bin)): $(bindir)/%: $(objpfx)%
-	$(make-target-directory)
-	$(INSTALL_PROGRAM) $< $@
+	$(do-install-program)
 endif
 ifdef install-sbin
 $(addprefix $(sbindir)/,$(install-sbin)): $(sbindir)/%: $(objpfx)%
-	$(make-target-directory)
-	$(INSTALL_PROGRAM) $< $@
+	$(do-install-program)
 endif
 ifdef install-lib
 install-lib.a := $(filter lib%.a,$(install-lib))

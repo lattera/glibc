@@ -30,6 +30,7 @@ _dl_signal_error (int errcode,
 		  const char *errstring)
 {
   signalled_errstring = errstring ?: "DYNAMIC LINKER BUG!!!";
+  signalled_objname = objname;
   longjmp (catch_env, errcode ?: -1);
 }
 
