@@ -1,5 +1,9 @@
 2003-02-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-attr1 and tst-attr2.
+	* tst-attr1.c: New file.
+	* tst-attr2.c: New file.
+
 	* Makefile: Add rules to build and run tst-atfork2 test.
 	* tst-atfork2.c: New file.
 	* tst-atfork2mod.c: New file.

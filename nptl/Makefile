@@ -124,7 +124,8 @@ CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 omit-deps = $(unix-syscalls:%=ptw-%)
 
 
-tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
+tests = tst-attr1 tst-attr2 \
+	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 \
 	tst-spin1 tst-spin2 tst-spin3 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
