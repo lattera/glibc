@@ -48,14 +48,18 @@
 
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
-#define byteorder ELFDATA2MSB
-#define byteorder_name "big-endian"
+# define byteorder ELFDATA2MSB
+# define byteorder_name "big-endian"
 #elif BYTE_ORDER == LITTLE_ENDIAN
-#define byteorder ELFDATA2LSB
-#define byteorder_name "little-endian"
+# define byteorder ELFDATA2LSB
+# define byteorder_name "little-endian"
 #else
-#error "Unknown BYTE_ORDER " BYTE_ORDER
-#define byteorder ELFDATANONE
+# error "Unknown BYTE_ORDER " BYTE_ORDER
+# define byteorder ELFDATANONE
+#endif
+
+#ifndef PATH_MAX
+# define PATH_MAX 1024
 #endif
 
 
@@ -82,7 +86,9 @@ static const struct argp_option options[] =
 };
 
 /* Short description of program.  */
-static const char doc[] = N_("Read and display shared object profiling data");
+static const char doc[] = N_("Read and display shared object profiling data.\v\
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n");
 
 /* Strings for arguments in help texts.  */
 static const char args_doc[] = N_("SHOBJ [PROFDATA]");
@@ -93,7 +99,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state);
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-  options, parse_opt, args_doc, doc, NULL, NULL
+  options, parse_opt, args_doc, doc
 };
 
 
@@ -108,11 +114,8 @@ static enum
   DEFAULT_MODE = FLAT_MODE | CALL_GRAPH_MODE
 } mode;
 
-/* If nonzero the total number of invocations of a function is emitted.  */
-int count_total;
-
 /* Nozero for testing.  */
-int do_test;
+static int do_test;
 
 /* Strcuture describing calls.  */
 struct here_fromstruct
@@ -204,7 +207,7 @@ struct profdata
 };
 
 /* Search tree for symbols.  */
-void *symroot;
+static void *symroot;
 static struct known_symbol **sortsym;
 static size_t symidx;
 static uintmax_t total_ticks;
@@ -374,11 +377,7 @@ load_shobj (const char *name)
   ElfW(Ehdr) *ehdr;
   int fd;
   ElfW(Shdr) *shdr;
-  void *ptr;
   size_t pagesize = getpagesize ();
-  const char *shstrtab;
-  int idx;
-  ElfW(Shdr) *symtab_entry;
 
   /* Since we use dlopen() we must be prepared to work around the sometimes
      strange lookup rules for the shared objects.  If we have a file foo.so
@@ -529,39 +528,131 @@ load_shobj (const char *name)
     error (EXIT_FAILURE, errno, _("Reopening shared object `%s' failed"),
 	   map->l_name);
 
-  /* Now map the section header.  */
-  ptr = mmap (NULL, (ehdr->e_shnum * sizeof (ElfW(Shdr))
-		     + (ehdr->e_shoff & (pagesize - 1))), PROT_READ,
-	      MAP_SHARED|MAP_FILE, fd, ehdr->e_shoff & ~(pagesize - 1));
-  if (ptr == MAP_FAILED)
-    error (EXIT_FAILURE, errno, _("mapping of section headers failed"));
-  shdr = (ElfW(Shdr) *) ((char *) ptr + (ehdr->e_shoff & (pagesize - 1)));
+  /* Map the section header.  */
+  size_t size = ehdr->e_shnum * sizeof (ElfW(Shdr));
+  shdr = (ElfW(Shdr) *) alloca (size);
+  if (pread (fd, shdr, size, ehdr->e_shoff) != size)
+    error (EXIT_FAILURE, errno, _("reading of section headers failed"));
 
   /* Get the section header string table.  */
-  ptr = mmap (NULL, (shdr[ehdr->e_shstrndx].sh_size
-		     + (shdr[ehdr->e_shstrndx].sh_offset & (pagesize - 1))),
-	      PROT_READ, MAP_SHARED|MAP_FILE, fd,
-	      shdr[ehdr->e_shstrndx].sh_offset & ~(pagesize - 1));
-  if (ptr == MAP_FAILED)
+  char *shstrtab = (char *) alloca (shdr[ehdr->e_shstrndx].sh_size);
+  if (pread (fd, shstrtab, shdr[ehdr->e_shstrndx].sh_size,
+	     shdr[ehdr->e_shstrndx].sh_offset)
+      != shdr[ehdr->e_shstrndx].sh_size)
     error (EXIT_FAILURE, errno,
-	   _("mapping of section header string table failed"));
-  shstrtab = ((const char *) ptr
-	      + (shdr[ehdr->e_shstrndx].sh_offset & (pagesize - 1)));
+	   _("reading of section header string table failed"));
 
   /* Search for the ".symtab" section.  */
-  symtab_entry = NULL;
-  for (idx = 0; idx < ehdr->e_shnum; ++idx)
+  ElfW(Shdr) *symtab_entry = NULL;
+  ElfW(Shdr) *debuglink_entry = NULL;
+  for (int idx = 0; idx < ehdr->e_shnum; ++idx)
     if (shdr[idx].sh_type == SHT_SYMTAB
 	&& strcmp (shstrtab + shdr[idx].sh_name, ".symtab") == 0)
       {
 	symtab_entry = &shdr[idx];
 	break;
       }
+    else if (shdr[idx].sh_type == SHT_PROGBITS
+	     && strcmp (shstrtab + shdr[idx].sh_name, ".gnu_debuglink") == 0)
+      debuglink_entry = &shdr[idx];
 
-  /* We don't need the section header string table anymore.  */
-  munmap (ptr, (shdr[ehdr->e_shstrndx].sh_size
-		+ (shdr[ehdr->e_shstrndx].sh_offset & (pagesize - 1))));
+  /* Get the file name of the debuginfo file if necessary.  */
+  int symfd = fd;
+  if (symtab_entry == NULL && debuglink_entry != NULL)
+    {
+      size_t size = debuglink_entry->sh_size;
+      char *debuginfo_fname = (char *) alloca (size + 1);
+      debuginfo_fname[size] = '\0';
+      if (pread (fd, debuginfo_fname, size, debuglink_entry->sh_offset)
+	  != size)
+	{
+	  fprintf (stderr, _("*** Cannot read debuginfo file name: %m\n"));
+	  goto no_debuginfo;
+	}
 
+      static const char procpath[] = "/proc/self/fd/%d";
+      char origprocname[sizeof (procpath) + sizeof (int) * 3];
+      snprintf (origprocname, sizeof (origprocname), procpath, fd);
+      char *origlink = (char *) alloca (PATH_MAX + 1);
+      origlink[PATH_MAX] = '\0';
+      if (readlink (origprocname, origlink, PATH_MAX) == -1)
+	goto no_debuginfo;
+
+      /* Try to find the actual file.  There are three places:
+	 1. the same directory the DSO is in
+	 2. in a subdir named .debug of the directory the DSO is in
+	 3. in /usr/lib/debug/PATH-OF-DSO
+      */
+      char *realname = canonicalize_file_name (origlink);
+      char *cp = NULL;
+      if (realname == NULL || (cp = strrchr (realname, '/')) == NULL)
+	error (EXIT_FAILURE, errno, _("cannot determine file name"));
+
+      /* Leave the last slash in place.  */
+      *++cp = '\0';
+
+      /* First add the debuginfo file name only.  */
+      static const char usrlibdebug[]= "/usr/lib/debug/";
+      char *workbuf = (char *) alloca (sizeof (usrlibdebug)
+				       + (cp - realname)
+				       + strlen (debuginfo_fname));
+      strcpy (stpcpy (workbuf, realname), debuginfo_fname);
+
+      int fd2 = open (workbuf, O_RDONLY);
+      if (fd2 == -1)
+	{
+	  strcpy (stpcpy (stpcpy (workbuf, realname), ".debug/"),
+		  debuginfo_fname);
+	  fd2 = open (workbuf, O_RDONLY);
+	  if (fd2 == -1)
+	    {
+	      strcpy (stpcpy (stpcpy (workbuf, usrlibdebug), realname),
+		      debuginfo_fname);
+	      fd2 = open (workbuf, O_RDONLY);
+	    }
+	}
+
+      if (fd2 != -1)
+	{
+	  ElfW(Ehdr) ehdr2;
+
+	  /* Read the ELF header.  */
+	  if (pread (fd2, &ehdr2, sizeof (ehdr2), 0) != sizeof (ehdr2))
+	    error (EXIT_FAILURE, errno,
+		   _("reading of ELF header failed"));
+
+	  /* Map the section header.  */
+	  size_t size = ehdr2.e_shnum * sizeof (ElfW(Shdr));
+	  ElfW(Shdr) *shdr2 = (ElfW(Shdr) *) alloca (size);
+	  if (pread (fd2, shdr2, size, ehdr2.e_shoff) != size)
+	    error (EXIT_FAILURE, errno,
+		   _("reading of section headers failed"));
+
+	  /* Get the section header string table.  */
+	  shstrtab = (char *) alloca (shdr2[ehdr2.e_shstrndx].sh_size);
+	  if (pread (fd2, shstrtab, shdr2[ehdr2.e_shstrndx].sh_size,
+		     shdr2[ehdr2.e_shstrndx].sh_offset)
+	      != shdr2[ehdr2.e_shstrndx].sh_size)
+	    error (EXIT_FAILURE, errno,
+		   _("reading of section header string table failed"));
+
+	  /* Search for the ".symtab" section.  */
+	  for (int idx = 0; idx < ehdr2.e_shnum; ++idx)
+	    if (shdr2[idx].sh_type == SHT_SYMTAB
+		&& strcmp (shstrtab + shdr2[idx].sh_name, ".symtab") == 0)
+	      {
+		symtab_entry = &shdr2[idx];
+		shdr = shdr2;
+		symfd = fd2;
+		break;
+	      }
+
+	  if  (fd2 != symfd)
+	    close (fd2);
+	}
+    }
+
+ no_debuginfo:
   if (symtab_entry == NULL)
     {
       fprintf (stderr, _("\
@@ -591,9 +682,9 @@ load_shobj (const char *name)
 	}
 
       result->symbol_map = mmap (NULL, max_offset - min_offset,
-				 PROT_READ, MAP_SHARED|MAP_FILE, fd,
+				 PROT_READ, MAP_SHARED|MAP_FILE, symfd,
 				 min_offset);
-      if (result->symbol_map == NULL)
+      if (result->symbol_map == MAP_FAILED)
 	error (EXIT_FAILURE, errno, _("failed to load symbol data"));
 
       result->symtab
@@ -605,13 +696,10 @@ load_shobj (const char *name)
       result->symbol_mapsize = max_offset - min_offset;
     }
 
-  /* Now we also don't need the section header table anymore.  */
-  munmap ((char *) shdr - (ehdr->e_shoff & (pagesize - 1)),
-	  (ehdr->e_phnum * sizeof (ElfW(Shdr))
-	   + (ehdr->e_shoff & (pagesize - 1))));
-
   /* Free the descriptor for the shared object.  */
   close (fd);
+  if (symfd != fd)
+    close (symfd);
 
   return result;
 }
