@@ -39,7 +39,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
 	    wcsmbsload
 
-tests := tst-wcstof
+tests := tst-wcstof wcsmbs-tst1
 
 include ../Rules
 

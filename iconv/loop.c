@@ -103,10 +103,10 @@
    ? (inptr - *inptrp) : (outptr - *outptrp))
 #   endif
 #  else
-#   define COUNT_CONVERTED	(inptr - *inptrp)
+#   define COUNT_CONVERTED	((inptr - *inptrp) / MIN_NEEDED_INPUT)
 #  endif
 # elif MIN_NEEDED_OUTPUT == MAX_NEEDED_OUTPUT
-#  define COUNT_CONVERTED	(outptr - *outptrp)
+#  define COUNT_CONVERTED	((outptr - *outptrp) / MIN_NEEDED_OUTPUT)
 # endif
 #endif
 

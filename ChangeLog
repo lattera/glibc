@@ -1,3 +1,37 @@
+1998-05-21 15:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsnrtombs.c: Correct computation of result.
+	* wcsmbs/wcsrtombs.c: Likewise.
+
+	* wcsmbs/Makefile (tests): Add wcsmbs-tst1.c.
+	* wcsmbs/wcsmbs-tst1.c: New file.
+
+	* iconv/loop.c (COUNT_CONVERTED): Correct computation.
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE): Define MB_CUR_MAX for C locale
+	as 1.
+
+	* locale/setlocale.c: Don't make _nl_current_* and _nl_C_* references
+	weak.
+
+1998-05-21  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/fpu_control.h: Replace stub file with real
+	implementation.
+	* sysdeps/arm/fpu/bits/fenv.h: New file.
+	* sysdeps/arm/fpu/fesetround.c: Likewise.
+	* sysdeps/arm/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fsetexcptflag.c: Likewise.
+	* sysdeps/arm/fpu/ftestexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fegetenv.c: Likewise.
+	* sysdeps/arm/fpu/fesetenv.c: Likewise.
+
+1998-05-21 16:34  Richard Henderson  <rth@cygnus.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Get file header with
+	read instead of mmap.
+
 1998-05-21  8:16  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/glob.c: Include sysdeps/generic/glob.c

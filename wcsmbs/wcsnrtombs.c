@@ -46,7 +46,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
   struct gconv_step_data data;
   const wchar_t *srcend;
   int status;
-  size_t result = 0;
+  size_t result;
 
   /* Tell where we want the result.  */
   data.invocation_counter = 0;
@@ -66,7 +66,9 @@ __wcsnrtombs (dst, src, nwc, len, ps)
     {
       char buf[256];		/* Just an arbitrary value.  */
       const wchar_t *inbuf = *src;
+      size_t dummy;
 
+      result = 0;
       data.outbufend = buf + sizeof (buf);
 
       do
@@ -77,7 +79,10 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 						     &data,
 						     (const char **) &inbuf,
 						     (const char *) srcend,
-						     &result, 0);
+						     &dummy, 0);
+
+	  /* Count the number of bytes.  */
+	  result += data.outbuf - buf;
 	}
       while (status == GCONV_FULL_OUTPUT);
 
@@ -91,13 +96,18 @@ __wcsnrtombs (dst, src, nwc, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
+      size_t dummy;
+
       data.outbuf = dst;
       data.outbufend = dst + len;
 
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
 						 &data, (const char **) src,
 						 (const char *) srcend,
-						 &result, 0);
+						 &dummy, 0);
+
+      /* Count the number of bytes.  */
+      result = data.outbuf - dst;
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */

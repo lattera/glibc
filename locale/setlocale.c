@@ -36,8 +36,7 @@
    then nothing is using the locale data.  */
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
 extern struct locale_data *_nl_current_##category;			      \
-extern struct locale_data _nl_C_##category;				      \
-weak_extern (_nl_current_##category) weak_extern (_nl_C_##category)
+extern struct locale_data _nl_C_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
