@@ -2,12 +2,8 @@ ifeq ($(subdir),csu)
 sysdep_routines += errno-loc
 endif
 
-ifeq ($(subdir),db2)
-CPPFLAGS += -DHAVE_LLSEEK=1
-endif
-
 ifeq ($(subdir),malloc)
-CFLAGS-malloc.c = -DMORECORE_CLEARS=2
+CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif
 
 ifeq ($(subdir),misc)

@@ -1,5 +1,11 @@
 2003-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/Makefile: Remove db2 directory handling.
+
+	* malloc/Makefile (CFLAGS-malloc.c): Define DEFAULT_TOP_PAD to 128k.
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-malloc.c): Add to, not
+	replace.
+
 	* signal/Makefile (tests): Add tst-sigsimple.
 	* signal/tst-sigsimple.c: New file.
 

@@ -56,6 +56,7 @@ aux := set-freeres thread-freeres
 
 include ../Makeconfig
 
+CFLAGS-malloc.c += -DDEFAULT_TOP_PAD=131072
 CPPFLAGS-memusagestat = -DNOT_IN_libc
 
 # The Perl script to analyze the output of the mtrace functions.
