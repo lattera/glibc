@@ -1,3 +1,63 @@
+2002-10-11  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Remove the handling
+	OP_CONTEXT_NODE.
+	(regfree): Likewise.
+	(create_initial_state): Likewise.
+	(analyze): Remove the substitutions which became useless.
+	(calc_first): Likewise.
+	(calc_epsdest): Use edests of OP_BACK_REF in case that it has
+	epsilon destination.
+	(duplicate_node_closure): New function.
+	(duplicate_node): Remove the handling OP_CONTEXT_NODE.
+	(calc_inveclosure): Likewise.
+	(calc_eclosure): Likewise.
+	(calc_eclosure_iter): Invoke duplicate_node_closure instead of
+	direct invocation of duplicate_node.
+	(parse): Don't use comma operator in the return to avoid compiler
+	warning.
+	(parse_reg_exp): Likewise.
+	(parse_branch): Likewise.
+	(parse_expression): Likewise.
+	(parse_sub_exp): Likewise.
+	(parse_dup_op): Likewise.
+	* posix/regex_internal.c (re_dfa_add_node): Remove the substitutions
+	which became useless.
+	(create_ci_newstate): Remove the handling OP_CONTEXT_NODE.
+	(create_cd_newstate): Likewise.
+	* posix/regex_internal.h (re_token_type_t): Remove the obsolete type.
+	(re_token_t): Likewise.
+	(re_dfa_t): Likewise.
+	(re_node_set_remove): New macro.
+	* posix/regexec.c (check_matching): Remove the handling
+	OP_CONTEXT_NODE.
+	(check_halt_node_context): Likewise.
+	(proceed_next_node): Likewise.
+	(pop_fail_stack): Fix the memory leak.
+	(set_regs): Likewise.
+	(free_fail_stack_return): New function.
+	(sift_states_backward): Fix the memory leak.  Remove the handling
+	OP_CONTEXT_NODE.
+	(update_cur_sifted_state): Append some if clause to avoid redundant
+	call.
+	(sub_epsilon_src_nodes): Use IS_EPSILON_NODE since it might be a
+	back reference.
+	(check_dst_limits): Remove the handling OP_CONTEXT_NODE.
+	(check_subexp_limits): Likewise.
+	(search_subexp): Likewise.
+	(sift_states_bkref): Likewise.
+	(transit_state_mb): Likewise.
+	(transit_state_bkref_loop): Likewise.
+	(transit_state_bkref_loop): Likewise.
+	(group_nodes_into_DFAstates): Likewise.
+	(check_node_accept): Likewise.
+	(sift_ctx_init): Add initializing.
+
+2002-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (INLINE_SYSCALL): Use
+	__builtin_expect.
+
 2002-10-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Remove unnecessarily

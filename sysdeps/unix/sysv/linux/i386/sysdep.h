@@ -290,8 +290,8 @@ asm (".L__X'%ebx = 1\n\t"
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
-    unsigned int resultvar = INTERNAL_SYSCALL(name, nr, args);		      \
-    if (INTERNAL_SYSCALL_ERROR_P (resultvar))				      \
+    unsigned int resultvar = INTERNAL_SYSCALL (name, nr, args);		      \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar), 0))	      \
       {									      \
 	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar));		      \
 	resultvar = 0xffffffff;						      \

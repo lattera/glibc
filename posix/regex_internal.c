@@ -929,20 +929,18 @@ re_dfa_add_node (dfa, token, mode)
         dfa->nodes = new_array;
       if (mode)
         {
-          int *new_firsts, *new_nexts;
+          int *new_nexts;
           re_node_set *new_edests, *new_eclosures, *new_inveclosures;
 
-          new_firsts = re_realloc (dfa->firsts, int, dfa->nodes_alloc);
           new_nexts = re_realloc (dfa->nexts, int, dfa->nodes_alloc);
           new_edests = re_realloc (dfa->edests, re_node_set, dfa->nodes_alloc);
           new_eclosures = re_realloc (dfa->eclosures, re_node_set,
                                       dfa->nodes_alloc);
           new_inveclosures = re_realloc (dfa->inveclosures, re_node_set,
                                          dfa->nodes_alloc);
-          if (BE (new_firsts == NULL || new_nexts == NULL || new_edests == NULL
+          if (BE (new_nexts == NULL || new_edests == NULL
                   || new_eclosures == NULL || new_inveclosures == NULL, 0))
             return -1;
-          dfa->firsts = new_firsts;
           dfa->nexts = new_nexts;
           dfa->edests = new_edests;
           dfa->eclosures = new_eclosures;
@@ -951,6 +949,7 @@ re_dfa_add_node (dfa, token, mode)
     }
   dfa->nodes[dfa->nodes_len] = token;
   dfa->nodes[dfa->nodes_len].duplicated = 0;
+  dfa->nodes[dfa->nodes_len].constraint = 0;
   return dfa->nodes_len++;
 }
 
@@ -1126,7 +1125,7 @@ create_ci_newstate (dfa, nodes, hash)
     {
       re_token_t *node = dfa->nodes + nodes->elems[i];
       re_token_type_t type = node->type;
-      if (type == CHARACTER)
+      if (type == CHARACTER && !node->constraint)
         continue;
 
       /* If the state has the halt node, the state is a halt state.  */
@@ -1139,13 +1138,8 @@ create_ci_newstate (dfa, nodes, hash)
 #endif /* RE_ENABLE_I18N */
       else if (type == OP_BACK_REF)
         newstate->has_backref = 1;
-      else if (type == ANCHOR || OP_CONTEXT_NODE)
-        {
-          newstate->has_constraint = 1;
-          if (type == OP_CONTEXT_NODE
-              && dfa->nodes[node->opr.ctx_info->entity].type == END_OF_RE)
-            newstate->halt = 1;
-        }
+      else if (type == ANCHOR || node->constraint)
+        newstate->has_constraint = 1;
     }
   err = register_state (dfa, newstate, hash);
   return (err != REG_NOERROR) ? NULL : newstate;
@@ -1175,9 +1169,11 @@ create_cd_newstate (dfa, nodes, context, hash)
       unsigned int constraint = 0;
       re_token_t *node = dfa->nodes + nodes->elems[i];
       re_token_type_t type = node->type;
-      if (type == CHARACTER)
-        continue;
+      if (node->constraint)
+        constraint = node->constraint;
 
+      if (type == CHARACTER && !constraint)
+        continue;
       /* If the state has the halt node, the state is a halt state.  */
       else if (type == END_OF_RE)
         newstate->halt = 1;
@@ -1190,20 +1186,6 @@ create_cd_newstate (dfa, nodes, context, hash)
         newstate->has_backref = 1;
       else if (type == ANCHOR)
         constraint = node->opr.ctx_type;
-      else if (type == OP_CONTEXT_NODE)
-        {
-          re_token_type_t ctype = dfa->nodes[node->opr.ctx_info->entity].type;
-          constraint = node->constraint;
-          if (ctype == END_OF_RE)
-            newstate->halt = 1;
-          else if (ctype == OP_BACK_REF)
-            newstate->has_backref = 1;
-#ifdef RE_ENABLE_I18N
-          else if (ctype == COMPLEX_BRACKET
-                   || (type == OP_PERIOD && MB_CUR_MAX > 1))
-            newstate->accept_mb = 1;
-#endif /* RE_ENABLE_I18N */
-        }
 
       if (constraint)
         {

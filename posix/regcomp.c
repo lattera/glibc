@@ -85,6 +85,9 @@ static reg_errcode_t analyze_tree (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_first (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_next (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_epsdest (re_dfa_t *dfa, bin_tree_t *node);
+static reg_errcode_t duplicate_node_closure (re_dfa_t *dfa, int top_org_node,
+                                             int top_clone_node, int root_node,
+                                             unsigned int constraint);
 static reg_errcode_t duplicate_node (int *new_idx, re_dfa_t *dfa, int org_idx,
                                      unsigned int constraint);
 static reg_errcode_t calc_eclosure (re_dfa_t *dfa);
@@ -351,11 +354,6 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
     {
       int node = init_state->nodes.elems[node_cnt];
       re_token_type_t type = dfa->nodes[node].type;
-      if (type == OP_CONTEXT_NODE)
-        {
-          node = dfa->nodes[node].opr.ctx_info->entity;
-          type = dfa->nodes[node].type;
-        }
 
       if (type == CHARACTER)
         fastmap[dfa->nodes[node].opr.c] = 1;
@@ -587,18 +585,7 @@ regfree (preg)
 #endif /* RE_ENABLE_I18N */
           if (node->type == SIMPLE_BRACKET && node->duplicated == 0)
             re_free (node->opr.sbcset);
-          else if (node->type == OP_CONTEXT_NODE)
-            {
-              if (dfa->nodes[node->opr.ctx_info->entity].type == OP_BACK_REF)
-                {
-                  if (node->opr.ctx_info->bkref_eclosure != NULL)
-                    re_node_set_free (node->opr.ctx_info->bkref_eclosure);
-                  re_free (node->opr.ctx_info->bkref_eclosure);
-                }
-              re_free (node->opr.ctx_info);
-            }
         }
-      re_free (dfa->firsts);
       re_free (dfa->nexts);
       for (i = 0; i < dfa->nodes_len; ++i)
         {
@@ -883,39 +870,25 @@ create_initial_state (dfa)
         re_token_type_t type = dfa->nodes[node_idx].type;
 
         int clexp_idx;
-        int entity = (type != OP_CONTEXT_NODE ? node_idx
-                      : dfa->nodes[node_idx].opr.ctx_info->entity);
-        if ((type != OP_CONTEXT_NODE
-             || (dfa->nodes[entity].type != OP_BACK_REF))
-            && (type != OP_BACK_REF))
+        if (type != OP_BACK_REF)
           continue;
         for (clexp_idx = 0; clexp_idx < init_nodes.nelem; ++clexp_idx)
           {
             re_token_t *clexp_node;
             clexp_node = dfa->nodes + init_nodes.elems[clexp_idx];
             if (clexp_node->type == OP_CLOSE_SUBEXP
-                && clexp_node->opr.idx + 1 == dfa->nodes[entity].opr.idx)
+                && clexp_node->opr.idx + 1 == dfa->nodes[node_idx].opr.idx)
               break;
           }
         if (clexp_idx == init_nodes.nelem)
           continue;
 
-        if (type == OP_CONTEXT_NODE
-            && (dfa->nodes[dfa->nodes[node_idx].opr.ctx_info->entity].type
-                == OP_BACK_REF))
+        if (type == OP_BACK_REF)
           {
-            int prev_nelem = init_nodes.nelem;
-            re_node_set_merge (&init_nodes,
-                           dfa->nodes[node_idx].opr.ctx_info->bkref_eclosure);
-            if (prev_nelem < init_nodes.nelem)
-              i = 0;
-          }
-        else if (type == OP_BACK_REF)
-          {
-            int next_idx = dfa->nexts[node_idx];
-            if (!re_node_set_contains (&init_nodes, next_idx))
+            int dest_idx = dfa->edests[node_idx].elems[0];
+            if (!re_node_set_contains (&init_nodes, dest_idx))
               {
-                re_node_set_merge (&init_nodes, dfa->eclosures + next_idx);
+                re_node_set_merge (&init_nodes, dfa->eclosures + dest_idx);
                 i = 0;
               }
           }
@@ -959,18 +932,16 @@ analyze (dfa)
   reg_errcode_t ret;
 
   /* Allocate arrays.  */
-  dfa->firsts = re_malloc (int, dfa->nodes_alloc);
   dfa->nexts = re_malloc (int, dfa->nodes_alloc);
   dfa->edests = re_malloc (re_node_set, dfa->nodes_alloc);
   dfa->eclosures = re_malloc (re_node_set, dfa->nodes_alloc);
   dfa->inveclosures = re_malloc (re_node_set, dfa->nodes_alloc);
-  if (BE (dfa->firsts == NULL || dfa->nexts == NULL || dfa->edests == NULL
+  if (BE (dfa->nexts == NULL || dfa->edests == NULL
           || dfa->eclosures == NULL || dfa->inveclosures == NULL, 0))
     return REG_ESPACE;
   /* Initialize them.  */
   for (i = 0; i < dfa->nodes_len; ++i)
     {
-      dfa->firsts[i] = -1;
       dfa->nexts[i] = -1;
       re_node_set_init_empty (dfa->edests + i);
       re_node_set_init_empty (dfa->eclosures + i);
@@ -1083,8 +1054,6 @@ calc_first (dfa, node)
       node->first = node->left->first;
       break;
     }
-  if (node->type == 0)
-    dfa->firsts[idx] = node->first;
 }
 
 /* Calculate "next" for the node NODE.  */
@@ -1187,9 +1156,112 @@ calc_epsdest (dfa, node)
         }
       else if (dfa->nodes[idx].type == ANCHOR
                || dfa->nodes[idx].type == OP_OPEN_SUBEXP
-               || dfa->nodes[idx].type == OP_CLOSE_SUBEXP)
+               || dfa->nodes[idx].type == OP_CLOSE_SUBEXP
+               || dfa->nodes[idx].type == OP_BACK_REF)
         re_node_set_init_1 (dfa->edests + idx, node->next);
     }
+}
+
+/* Duplicate the epsilon closure of the node ROOT_NODE.
+   Note that duplicated nodes have constraint INIT_CONSTRAINT in addition
+   to their own constraint.  */
+
+static reg_errcode_t
+duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
+                        init_constraint)
+     re_dfa_t *dfa;
+     int top_org_node, top_clone_node, root_node;
+     unsigned int init_constraint;
+{
+  reg_errcode_t err;
+  int org_node, clone_node, ret;
+  unsigned int constraint = init_constraint;
+  for (org_node = top_org_node, clone_node = top_clone_node;;)
+    {
+      int org_dest, clone_dest;
+      if (dfa->nodes[org_node].type == OP_BACK_REF)
+        {
+	  /* If the back reference epsilon-transit, its destination must
+	     also have the constraint.  Then duplicate the epsilon closure
+	     of the destination of the back reference, and store it in
+	     edests of the back reference.  */
+          org_dest = dfa->nexts[org_node];
+          re_node_set_empty (dfa->edests + clone_node);
+          err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          dfa->nexts[clone_node] = dfa->nexts[org_node];
+          ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+          if (BE (ret < 0, 0))
+            return REG_ESPACE;
+        }
+      else if (dfa->edests[org_node].nelem == 0)
+        {
+	  /* In case of the node can't epsilon-transit, don't duplicate the
+	     destination and store the original destination as the
+	     destination of the node.  */
+          dfa->nexts[clone_node] = dfa->nexts[org_node];
+          break;
+        }
+      else if (dfa->edests[org_node].nelem == 1)
+        {
+	  /* In case of the node can epsilon-transit, and it has only one
+	     destination.  */
+          org_dest = dfa->edests[org_node].elems[0];
+          re_node_set_empty (dfa->edests + clone_node);
+          if (dfa->nodes[org_node].type == ANCHOR)
+            {
+	      /* In case of the node has another constraint, append it.  */
+              if (org_node == root_node && clone_node != org_node)
+                {
+		  /* ...but if the node is root_node itself, it means the
+		     epsilon closure have a loop, then tie it to the
+		     destination of the root_node.  */
+                  ret = re_node_set_insert (dfa->edests + clone_node,
+                                            org_dest);
+                  if (BE (ret < 0, 0))
+                    return REG_ESPACE;
+                  break;
+                }
+              constraint |= dfa->nodes[org_node].opr.ctx_type;
+            }
+          err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+          if (BE (ret < 0, 0))
+            return REG_ESPACE;
+        }
+      else /* dfa->edests[org_node].nelem == 2 */
+        {
+	  /* In case of the node can epsilon-transit, and it has two
+	     destinations.  */
+          org_dest = dfa->edests[org_node].elems[0];
+          re_node_set_empty (dfa->edests + clone_node);
+          err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+          if (BE (ret < 0, 0))
+            return REG_ESPACE;
+
+          err = duplicate_node_closure (dfa, org_dest, clone_dest, root_node,
+                                        constraint);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+
+          org_dest = dfa->edests[org_node].elems[1];
+          err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+          if (BE (ret < 0, 0))
+            return REG_ESPACE;
+        }
+      org_node = org_dest;
+      clone_node = clone_dest;
+    }
+  return REG_NOERROR;
 }
 
 /* Duplicate the node whose index is ORG_IDX and set the constraint CONSTRAINT.
@@ -1204,50 +1276,18 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
 {
   re_token_t dup;
   int dup_idx;
-  reg_errcode_t err;
 
-  dup.type = OP_CONTEXT_NODE;
-  if (dfa->nodes[org_idx].type == OP_CONTEXT_NODE)
-    {
-      /* If the node whose index is ORG_IDX is the same as the intended
-         node, use it.  */
-      if (dfa->nodes[org_idx].constraint == constraint)
-        {
-          *new_idx = org_idx;
-          return REG_NOERROR;
-        }
-      dup.constraint = constraint |
-        dfa->nodes[org_idx].constraint;
-    }
-  else
-    dup.constraint = constraint;
-
-  /* In case that `entity' points OP_CONTEXT_NODE,
-     we correct `entity' to real entity in calc_inveclosures(). */
-  dup.opr.ctx_info = malloc (sizeof (*dup.opr.ctx_info));
+  dup = dfa->nodes[org_idx];
   dup_idx = re_dfa_add_node (dfa, dup, 1);
-  if (BE (dup.opr.ctx_info == NULL || dup_idx == -1, 0))
+  if (BE (dup_idx == -1, 0))
     return REG_ESPACE;
-  dup.opr.ctx_info->entity = org_idx;
-  dup.opr.ctx_info->bkref_eclosure = NULL;
-
+  dfa->nodes[dup_idx].constraint = constraint;
+  if (dfa->nodes[org_idx].type == ANCHOR)
+    dfa->nodes[dup_idx].constraint |= dfa->nodes[org_idx].opr.ctx_type;
   dfa->nodes[dup_idx].duplicated = 1;
-  dfa->firsts[dup_idx] = dfa->firsts[org_idx];
-  dfa->nexts[dup_idx] = dfa->nexts[org_idx];
-  err = re_node_set_init_copy (dfa->edests + dup_idx, dfa->edests + org_idx);
-  if (BE (err != REG_NOERROR, 0))
-    return err;
-  /* Since we don't duplicate epsilon nodes, epsilon closure have
-     only itself.  */
-  err = re_node_set_init_1 (dfa->eclosures + dup_idx, dup_idx);
-  if (BE (err != REG_NOERROR, 0))
-    return err;
-  err = re_node_set_init_1 (dfa->inveclosures + dup_idx, dup_idx);
-  if (BE (err != REG_NOERROR, 0))
-    return err;
-  /* Then we must update inveclosure for this node.
-     We process them at last part of calc_eclosure(),
-     since we don't complete to calculate them here.  */
+  re_node_set_init_empty (dfa->edests + dup_idx);
+  re_node_set_init_empty (dfa->eclosures + dup_idx);
+  re_node_set_init_empty (dfa->inveclosures + dup_idx);
 
   *new_idx = dup_idx;
   return REG_NOERROR;
@@ -1257,22 +1297,13 @@ static void
 calc_inveclosure (dfa)
      re_dfa_t *dfa;
 {
-  int src, idx, dest, entity;
+  int src, idx, dest;
   for (src = 0; src < dfa->nodes_len; ++src)
     {
       for (idx = 0; idx < dfa->eclosures[src].nelem; ++idx)
         {
           dest = dfa->eclosures[src].elems[idx];
           re_node_set_insert (dfa->inveclosures + dest, src);
-        }
-
-      entity = src;
-      while (dfa->nodes[entity].type == OP_CONTEXT_NODE)
-        {
-          entity = dfa->nodes[entity].opr.ctx_info->entity;
-          re_node_set_merge (dfa->inveclosures + src,
-                             dfa->inveclosures + entity);
-          dfa->nodes[src].opr.ctx_info->entity = entity;
         }
     }
 }
@@ -1283,16 +1314,17 @@ static reg_errcode_t
 calc_eclosure (dfa)
      re_dfa_t *dfa;
 {
-  int idx, node_idx, max, incomplete = 0;
+  int node_idx, incomplete;
 #ifdef DEBUG
   assert (dfa->nodes_len > 0);
 #endif
+  incomplete = 0;
   /* For each nodes, calculate epsilon closure.  */
-  for (node_idx = 0, max = dfa->nodes_len; ; ++node_idx)
+  for (node_idx = 0; ; ++node_idx)
     {
       reg_errcode_t err;
       re_node_set eclosure_elem;
-      if (node_idx == max)
+      if (node_idx == dfa->nodes_len)
         {
           if (!incomplete)
             break;
@@ -1301,7 +1333,6 @@ calc_eclosure (dfa)
         }
 
 #ifdef DEBUG
-      assert (dfa->nodes[node_idx].type != OP_CONTEXT_NODE);
       assert (dfa->eclosures[node_idx].nelem != -1);
 #endif
       /* If we have already calculated, skip it.  */
@@ -1318,41 +1349,6 @@ calc_eclosure (dfa)
           re_node_set_free (&eclosure_elem);
         }
     }
-
-  /* for duplicated nodes.  */
-  for (idx = max; idx < dfa->nodes_len; ++idx)
-    {
-      int entity, i, constraint;
-      re_node_set *bkref_eclosure;
-      entity = dfa->nodes[idx].opr.ctx_info->entity;
-      re_node_set_merge (dfa->inveclosures + idx, dfa->inveclosures + entity);
-      if (dfa->nodes[entity].type != OP_BACK_REF)
-        continue;
-
-      /* If the node is backreference, duplicate the epsilon closure of
-         the next node. Since it may epsilon transit.  */
-      /* Note: duplicate_node() may realloc dfa->eclosures, etc.  */
-      bkref_eclosure = re_malloc (re_node_set, 1);
-      if (BE (bkref_eclosure == NULL, 0))
-	return REG_ESPACE;
-      re_node_set_init_empty (bkref_eclosure);
-      constraint = dfa->nodes[idx].constraint;
-      for (i = 0; i < dfa->eclosures[dfa->nexts[idx]].nelem; ++i)
-        {
-          int dest_node_idx = dfa->eclosures[dfa->nexts[idx]].elems[i];
-          if (!IS_EPSILON_NODE (dfa->nodes[dest_node_idx].type))
-            {
-              reg_errcode_t err;
-              err = duplicate_node (&dest_node_idx, dfa, dest_node_idx,
-                                    constraint);
-              if (BE (err != REG_NOERROR, 0))
-                return err;
-            }
-          re_node_set_insert (bkref_eclosure, dest_node_idx);
-        }
-      dfa->nodes[idx].opr.ctx_info->bkref_eclosure = bkref_eclosure;
-    }
-
   return REG_NOERROR;
 }
 
@@ -1366,8 +1362,9 @@ calc_eclosure_iter (new_set, dfa, node, root)
 {
   reg_errcode_t err;
   unsigned int constraint;
-  int i, max, incomplete = 0;
+  int i, incomplete;
   re_node_set eclosure;
+  incomplete = 0;
   err = re_node_set_alloc (&eclosure, dfa->edests[node].nelem + 1);
   if (BE (err != REG_NOERROR, 0))
     return err;
@@ -1378,9 +1375,19 @@ calc_eclosure_iter (new_set, dfa, node, root)
 
   constraint = ((dfa->nodes[node].type == ANCHOR)
                 ? dfa->nodes[node].opr.ctx_type : 0);
+  /* If the current node has constraints, duplicate all nodes.
+     Since they must inherit the constraints.  */
+  if (constraint && !dfa->nodes[dfa->edests[node].elems[0]].duplicated)
+    {
+      int org_node, cur_node;
+      org_node = cur_node = node;
+      err = duplicate_node_closure (dfa, node, node, node, constraint);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
 
   /* Expand each epsilon destination nodes.  */
-  if (dfa->edests[node].nelem != 0)
+  if (IS_EPSILON_NODE(dfa->nodes[node].type))
     for (i = 0; i < dfa->edests[node].nelem; ++i)
       {
         re_node_set eclosure_elem;
@@ -1410,28 +1417,6 @@ calc_eclosure_iter (new_set, dfa, node, root)
           {
             incomplete = 1;
             re_node_set_free (&eclosure_elem);
-          }
-      }
-
-  /* If the current node has constraints, duplicate all non-epsilon nodes.
-     Since they must inherit the constraints.  */
-  if (constraint)
-    for (i = 0, max = eclosure.nelem; i < max; ++i)
-      {
-        int dest = eclosure.elems[i];
-        if (!IS_EPSILON_NODE (dfa->nodes[dest].type))
-          {
-            int dup_dest;
-            reg_errcode_t err;
-            err = duplicate_node (&dup_dest, dfa, dest, constraint);
-            if (BE (err != REG_NOERROR, 0))
-              return err;
-            if (dest != dup_dest)
-              {
-                re_node_set_remove_at (&eclosure, i--);
-                re_node_set_insert (&eclosure, dup_dest);
-                --max;
-              }
           }
       }
 
@@ -1793,7 +1778,10 @@ parse (regexp, preg, syntax, err)
   else
     root = eor;
   if (BE (new_idx == -1 || eor == NULL || root == NULL, 0))
-    return *err = REG_ESPACE, NULL;
+    {
+      *err = REG_ESPACE;
+      return NULL;
+    }
   return root;
 }
 
@@ -1841,7 +1829,10 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
 	branch = NULL;
       tree = create_tree (tree, branch, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        {
+          *err = REG_ESPACE;
+          return NULL;
+        }
       dfa->has_plural_match = 1;
     }
   return tree;
@@ -1883,7 +1874,10 @@ parse_branch (regexp, preg, token, syntax, nest, err)
         {
           tree = create_tree (tree, exp, CONCAT, 0);
           if (tree == NULL)
-            return *err = REG_ESPACE, NULL;
+            {
+              *err = REG_ESPACE;
+              return NULL;
+            }
         }
       else if (tree == NULL)
         tree = exp;
@@ -1916,7 +1910,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       new_idx = re_dfa_add_node (dfa, *token, 0);
       tree = create_tree (NULL, NULL, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        {
+          *err = REG_ESPACE;
+          return NULL;
+        }
 #ifdef RE_ENABLE_I18N
       if (MB_CUR_MAX > 1)
 	{
@@ -1954,7 +1951,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       new_idx = re_dfa_add_node (dfa, *token, 0);
       tree = create_tree (NULL, NULL, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        {
+          *err = REG_ESPACE;
+          return NULL;
+        }
       ++dfa->nbackref;
       dfa->has_mb_node = 1;
       break;
@@ -1963,7 +1963,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
     case OP_DUP_QUESTION:
     case OP_OPEN_DUP_NUM:
       if (syntax & RE_CONTEXT_INVALID_OPS)
-        return *err = REG_BADRPT, NULL;
+        {
+          *err = REG_BADRPT;
+          return NULL;
+        }
       else if (syntax & RE_CONTEXT_INDEP_OPS)
         {
           *token = fetch_token (regexp, syntax);
@@ -1973,7 +1976,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
     case OP_CLOSE_SUBEXP:
       if ((token->type == OP_CLOSE_SUBEXP) &&
           !(syntax & RE_UNMATCHED_RIGHT_PAREN_ORD))
-        return *err = REG_ERPAREN, NULL;
+        {
+          *err = REG_ERPAREN;
+          return NULL;
+        }
       /* else fall through  */
     case OP_CLOSE_DUP_NUM:
       /* We treat it as a normal character.  */
@@ -1983,7 +1989,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       new_idx = re_dfa_add_node (dfa, *token, 0);
       tree = create_tree (NULL, NULL, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        {
+          *err = REG_ESPACE;
+          return NULL;
+        }
       break;
     case ANCHOR:
       if (dfa->word_char == NULL)
@@ -2008,7 +2017,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
           if (BE (idx_first == -1 || idx_last == -1 || new_idx == -1
                   || tree_first == NULL || tree_last == NULL
                   || tree == NULL, 0))
-            return *err = REG_ESPACE, NULL;
+            {
+              *err = REG_ESPACE;
+              return NULL;
+            }
         }
       else
         {
@@ -2027,7 +2039,10 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       new_idx = re_dfa_add_node (dfa, *token, 0);
       tree = create_tree (NULL, NULL, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        {
+          *err = REG_ESPACE;
+          return NULL;
+        }
       if (MB_CUR_MAX > 1)
         dfa->has_mb_node = 1;
       break;
@@ -2108,7 +2123,10 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
   new_idx = re_dfa_add_node (dfa, *token, 0);
   left_par = create_tree (NULL, NULL, 0, new_idx);
   if (BE (new_idx == -1 || left_par == NULL, 0))
-    return *err = REG_ESPACE, NULL;
+    {
+      *err = REG_ESPACE;
+      return NULL;
+    }
   dfa->nodes[new_idx].opr.idx = cur_nsub;
   *token = fetch_token (regexp, syntax);
 
@@ -2134,7 +2152,10 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
           : create_tree (tree, right_par, CONCAT, 0));
   tree = create_tree (left_par, tree, CONCAT, 0);
   if (BE (new_idx == -1 || right_par == NULL || tree == NULL, 0))
-    return *err = REG_ESPACE, NULL;
+    {
+      *err = REG_ESPACE;
+      return NULL;
+    }
   dfa->nodes[new_idx].opr.idx = cur_nsub;
 
   return tree;
@@ -2252,7 +2273,10 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
               work_tree = duplicate_tree (elem, dfa);
               tree = create_tree (tree, work_tree, CONCAT, 0);
               if (BE (work_tree == NULL || tree == NULL, 0))
-                return *err = REG_ESPACE, NULL;
+                {
+                  *err = REG_ESPACE;
+                  return NULL;
+                }
             }
         }
     }
@@ -2261,7 +2285,10 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
       new_idx = re_dfa_add_node (dfa, *token, 0);
       tree = create_tree (tree, NULL, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
+        {
+          *err = REG_ESPACE;
+          return NULL;
+        }
     }
   *token = fetch_token (regexp, syntax);
   return tree;

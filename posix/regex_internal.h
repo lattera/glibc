@@ -133,7 +133,6 @@ typedef enum
   OP_DUP_QUESTION,
   OP_BACK_REF,
   ANCHOR,
-  OP_CONTEXT_NODE,
 
   /* Dummy marker.  */
   END_OF_RE_TOKEN_T
@@ -198,11 +197,6 @@ typedef struct
 #endif /* RE_ENABLE_I18N */
     int idx;			/* for BACK_REF */
     re_context_type ctx_type;	/* for ANCHOR */
-    struct
-    {
-      int entity;		/* for OP_CONTEXT_NODE, index of the entity */
-      re_node_set *bkref_eclosure;
-    } *ctx_info;
   } opr;
 #if __GNUC__ >= 2
   re_token_type_t type : 8;
@@ -474,7 +468,6 @@ struct re_dfa_t
   int nodes_alloc;
   int nodes_len;
   bin_tree_t *str_tree;
-  int *firsts;
   int *nexts;
   re_node_set *edests;
   re_node_set *eclosures;
@@ -519,6 +512,8 @@ static int re_node_set_compare (const re_node_set *set1,
                                 const re_node_set *set2);
 static int re_node_set_contains (const re_node_set *set, int elem);
 static void re_node_set_remove_at (re_node_set *set, int idx);
+#define re_node_set_remove(set,id) \
+  (re_node_set_remove_at (set, re_node_set_contains (set, id) - 1))
 #define re_node_set_empty(p) ((p)->nelem = 0)
 #define re_node_set_free(set) re_free ((set)->elems)
 static int re_dfa_add_node (re_dfa_t *dfa, re_token_t token, int mode);
