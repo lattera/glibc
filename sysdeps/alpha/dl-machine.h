@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -350,8 +350,8 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
 
   /* Recover the PLT entry address by calculating reloc's index into the
      .rela.plt, and finding that entry in the .plt.  */
-  rela_plt = (void *)(l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr);
-  plte = (void *)(l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr + 32);
+  rela_plt = (void *) l->l_info[DT_JMPREL]->d_un.d_ptr;
+  plte = (void *) (l->l_info[DT_PLTGOT]->d_un.d_ptr + 32);
   plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
@@ -481,7 +481,7 @@ elf_machine_rela (struct link_map *map,
 		 than the dynamic linker's built-in definitions used
 		 while loading those libraries.  */
 	      const Elf64_Sym *const dlsymtab
-		= (void *)(map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+		= (void *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
 	      sym_value -= map->l_addr;
 	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
 	      sym_value -= reloc->r_addend;
