@@ -37,4 +37,17 @@ nop (void)
 /* Following here we need an #include for each public header file
    that uses __warndecl.  */
 
+/* Define away to avoid warnings with compilers that do not have these
+   builtins.  */
+#define __builtin___memcpy_chk(dest, src, len, bos) NULL
+#define __builtin___memmove_chk(dest, src, len, bos) NULL
+#define __builtin___mempcpy_chk(dest, src, len, bos) NULL
+#define __builtin___memset_chk(dest, ch, len, bos) NULL
+#define __builtin___stpcpy_chk(dest, src, bos) NULL
+#define __builtin___strcat_chk(dest, src, bos) NULL
+#define __builtin___strcpy_chk(dest, src, bos) NULL
+#define __builtin___strncat_chk(dest, src, len, bos) NULL
+#define __builtin___strncpy_chk(dest, src, len, bos) NULL
+#define __builtin_object_size(bos, level) 0
+
 #include <string.h>
