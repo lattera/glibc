@@ -1,3 +1,13 @@
+Tue Jan  2 00:50:10 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* misc/queue.h: New file, incorporated from 4.4BSD.
+	* misc/Makefile (headers): Add queue.h.
+
+	* posix/sys/types.h [__USE_BSD]: Include endian.h.
+
+	* io/sys/stat.h (DEFFILEMODE, ALLPERMS, ACCESSPERMS, S_BLKSIZE):
+	New macros.
+
 Thu Dec 28 10:21:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/generic/confname.h: Define all names as self-referential

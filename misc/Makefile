@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ headers	:= sys/uio.h sys/ioctl.h sys/ptrace.h ioctls.h sys/file.h	\
 	   a.out.h nlist.h stab.h stab.def sgtty.h sys/dir.h sys/cdefs.h \
 	   ttyent.h syscall.h syslog.h sys/syslog.h paths.h sys/reboot.h \
 	   sys/mman.h sys/param.h fstab.h mntent.h search.h utmp.h	 \
-	   err.h error.h
+	   err.h error.h queue.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev \
