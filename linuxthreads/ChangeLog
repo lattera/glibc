@@ -1,3 +1,9 @@
+2003-03-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/sparc/Makefile ($(objpfx)specs): Use full
+	path for crt[in].o.
+
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/pspinlock.c (__pthread_spin_lock): Don't .set

@@ -42,7 +42,7 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new32; \
 	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) \
+	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(32bit-predefine)) \
 	   $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new64; \

@@ -1,3 +1,10 @@
+2003-03-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (syscall-%.h): Fix a typo.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pause.c: Include
+	sysdeps/posix/pause.c instead of sysdeps/unix/common/pause.c.
+
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/fpu/bits/mathdef.h: New.

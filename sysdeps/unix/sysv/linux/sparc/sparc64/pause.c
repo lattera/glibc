@@ -1,1 +1,1 @@
-#include <sysdeps/unix/common/pause.c>
+#include <sysdeps/posix/pause.c>
