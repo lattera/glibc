@@ -1,3 +1,7 @@
+2003-06-24  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/libm-test-ulps: Update.
+
 2003-06-24  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/stat.h (_STAT_VER_LINUX): Avoid
