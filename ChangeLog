@@ -1,5 +1,8 @@
 2001-03-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r):
+	Handle NaN here.
+
 	* sysdeps/unix/sysv/linux/ia64/makecontext.c (__makecontext):
 	Internationalize.
 

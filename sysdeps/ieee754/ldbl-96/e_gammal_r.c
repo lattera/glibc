@@ -38,17 +38,20 @@ __ieee754_gammal_r (long double x, int *signgamp)
       *signgamp = 0;
       return x / x;
     }
-  if ((es & 0x8000) != 0 && x < 0xffffffff && __rintl (x) == x)
-    {
-      /* Return value for integer x < 0 is NaN with invalid exception.  */
-      *signgamp = 0;
-      return (x - x) / (x - x);
-    }
   if (es == 0xffffffff && ((hx & 0x7fffffff) | lx) == 0)
     {
       /* x == -Inf.  According to ISO this is NaN.  */
       *signgamp = 0;
       return x - x;
+    }
+  if ((es & 0x7fff) == 0x7fff && ((hx & 0x7fffffff) | lx) != 0)
+    /* NaN, return it.  */
+    return x;
+  if ((es & 0x8000) != 0 && x < 0xffffffff && __rintl (x) == x)
+    {
+      /* Return value for integer x < 0 is NaN with invalid exception.  */
+      *signgamp = 0;
+      return (x - x) / (x - x);
     }
 
   /* XXX FIXME.  */
