@@ -52,12 +52,12 @@ grantpt (fd)
   if (__xstat (_STAT_VER, namebuf, &st) != 0)
     return -1;
 
-  if (st.st_uid == getuid ())
+  if (st.st_uid == __getuid ())
     return 0;
 
   /* We have to do it in user space.  */
 
-  pid = fork ();
+  pid = __fork ();
   if (pid == -1)
     return -1;
   else if (pid == 0)
@@ -68,15 +68,15 @@ grantpt (fd)
 
       /* The helper does its thing on fd PTY_FD.  */
       if (fd != PTY_FD)
-	if (dup2 (fd, PTY_FD) == -1)
+	if (__dup2 (fd, PTY_FD) == -1)
 	  _exit (FAIL_EBADF);
 
-      execve (helper, (char *const *) argv, 0);
+      __execve (helper, (char *const *) argv, 0);
       _exit (FAIL_EXEC);
     }
   else
     {
-      if (waitpid (pid, &w, 0) == -1)
+      if (__waitpid (pid, &w, 0) == -1)
 	return -1;
       if (!WIFEXITED (w))
 	{

@@ -43,7 +43,7 @@ __getpt ()
   /* The new way:  */
   if (have_dev_ptmx)
     {
-      fd = open ("/dev/ptmx", O_RDWR);
+      fd = __open ("/dev/ptmx", O_RDWR);
       if (fd != -1)
 	return fd;
       else
@@ -64,7 +64,7 @@ __getpt ()
       for (j = __ptyname2; *j; ++j)
         {
 	  namebuf[9] = *j;
-	  fd = open (namebuf, O_RDWR);
+	  fd = __open (namebuf, O_RDWR);
 	  if (fd != -1)
 	    return fd;
 	  if (errno != EIO)

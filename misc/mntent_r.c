@@ -22,6 +22,11 @@
 #include <string.h>
 #include <sys/types.h>
 
+#ifdef USE_IN_LIBIO
+# define flockfile(s) _IO_flockfile (s)
+# define funlockfile(s) _IO_funlockfile (s)
+#endif
+
 /* Prepare to begin reading and/or writing mount table entries from the
    beginning of FILE.  MODE is as for `fopen'.  */
 FILE *

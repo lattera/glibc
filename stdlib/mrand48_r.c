@@ -28,5 +28,5 @@ mrand48_r (buffer, result)
   if (buffer == NULL)
    return -1;
 
-  return jrand48_r (buffer->x, buffer, result);
+  return __jrand48_r (buffer->x, buffer, result);
 }

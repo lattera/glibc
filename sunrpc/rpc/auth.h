@@ -97,12 +97,12 @@ struct AUTH {
   struct opaque_auth ah_verf;
   union des_block ah_key;
   struct auth_ops {
-    void (*ah_nextverf) __P ((AUTH *));
-    int  (*ah_marshal) __P ((AUTH *, XDR *));	/* nextverf & serialize */
-    int  (*ah_validate) __P ((AUTH *, struct opaque_auth *));
+    void (*ah_nextverf) __PMT ((AUTH *));
+    int  (*ah_marshal) __PMT ((AUTH *, XDR *));	/* nextverf & serialize */
+    int  (*ah_validate) __PMT ((AUTH *, struct opaque_auth *));
 						/* validate verifier */
-    int  (*ah_refresh) __P ((AUTH *));		/* refresh credentials */
-    void (*ah_destroy) __P ((AUTH *));     	/* destroy this structure */
+    int  (*ah_refresh) __PMT ((AUTH *));	/* refresh credentials */
+    void (*ah_destroy) __PMT ((AUTH *));     	/* destroy this structure */
   } *ah_ops;
   caddr_t ah_private;
 };

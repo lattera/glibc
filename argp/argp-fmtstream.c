@@ -1,5 +1,5 @@
 /* Word-wrapping and line-truncating streams
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -38,6 +38,10 @@
 
 #ifndef isblank
 #define isblank(ch) ((ch)==' ' || (ch)=='\t')
+#endif
+
+#if defined _LIBC && defined USE_IN_LIBIO
+# define __vsnprintf(s, l, f, a) _IO_vsnprintf (s, l, f, a)
 #endif
 
 #define INIT_BUF_SIZE 200
@@ -89,7 +93,7 @@ __argp_fmtstream_free (argp_fmtstream_t fs)
 {
   __argp_fmtstream_update (fs);
   if (fs->p > fs->buf)
-    fwrite (fs->buf, 1, fs->p - fs->buf, fs->stream);
+    fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
   free (fs->buf);
   free (fs);
 }
@@ -129,7 +133,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      /* No buffer space for spaces.  Must flush.  */
 	      size_t i;
 	      for (i = 0; i < pad; i++)
-		putc (' ', fs->stream);
+		putc_unlocked (' ', fs->stream);
 	    }
 	  fs->point_col = pad;
 	}
@@ -262,8 +266,8 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      /* Output the first line so we can use the space.  */
 	      {
 		if (nl > fs->buf)
-		  fwrite (fs->buf, 1, nl - fs->buf, fs->stream);
-		putc ('\n', fs->stream);
+		  fwrite_unlocked (fs->buf, 1, nl - fs->buf, fs->stream);
+		putc_unlocked ('\n', fs->stream);
 		len += buf - fs->buf;
 		nl = buf = fs->buf;
 	      }
@@ -279,7 +283,7 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	      *nl++ = ' ';
 	  else
 	    for (i = 0; i < fs->wmargin; ++i)
-	      putc (' ', fs->stream);
+	      putc_unlocked (' ', fs->stream);
 
 	  /* Copy the tail of the original buffer into the current buffer
 	     position.  */
@@ -316,7 +320,7 @@ __argp_fmtstream_ensure (struct argp_fmtstream *fs, size_t amount)
       /* Flush FS's buffer.  */
       __argp_fmtstream_update (fs);
 
-      wrote = fwrite (fs->buf, 1, fs->p - fs->buf, fs->stream);
+      wrote = fwrite_unlocked (fs->buf, 1, fs->p - fs->buf, fs->stream);
       if (wrote == fs->p - fs->buf)
 	{
 	  fs->p = fs->buf;

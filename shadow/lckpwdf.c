@@ -1,5 +1,5 @@
 /* Handle locking of password file.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -52,7 +52,7 @@ static void noop_handler __P ((int __sig));
   do {									      \
     if ((code) < 0 && lock_fd >= 0)					      \
       {									      \
-	close (lock_fd);						      \
+	__close (lock_fd);						      \
 	lock_fd = -1;							      \
       }									      \
     __libc_lock_unlock (lock);						      \
@@ -63,7 +63,7 @@ static void noop_handler __P ((int __sig));
   do {									      \
     /* Restore old action handler for alarm.  We don't need to know	      \
        about the current one.  */					      \
-    sigaction (SIGALRM, &saved_act, NULL);				      \
+    __sigaction (SIGALRM, &saved_act, NULL);				      \
     RETURN_CLOSE_FD (code);						      \
   } while (0)
 
@@ -73,7 +73,7 @@ static void noop_handler __P ((int __sig));
     alarm (0);								      \
     /* Restore old set of handled signals.  We don't need to know	      \
        about the current one.*/						      \
-    sigprocmask (SIG_SETMASK, &saved_set, NULL);			      \
+    __sigprocmask (SIG_SETMASK, &saved_set, NULL);			      \
     RETURN_RESTORE_HANDLER (code);					      \
   } while (0)
 
@@ -96,18 +96,18 @@ __lckpwdf ()
   /* Prevent problems caused by multiple threads.  */
   __libc_lock_lock (lock);
 
-  lock_fd = open (PWD_LOCKFILE, O_WRONLY | O_CREAT, 0600);
+  lock_fd = __open (PWD_LOCKFILE, O_WRONLY | O_CREAT, 0600);
   if (lock_fd == -1)
     /* Cannot create lock file.  */
     RETURN_CLOSE_FD (-1);
 
   /* Make sure file gets correctly closed when process finished.  */
-  flags = fcntl (lock_fd, F_GETFD, 0);
+  flags = __fcntl (lock_fd, F_GETFD, 0);
   if (flags == -1)
     /* Cannot get file flags.  */
     RETURN_CLOSE_FD (-1);
   flags |= FD_CLOEXEC;		/* Close on exit.  */
-  if (fcntl (lock_fd, F_SETFD, flags) < 0)
+  if (__fcntl (lock_fd, F_SETFD, flags) < 0)
     /* Cannot set new flags.  */
     RETURN_CLOSE_FD (-1);
 
@@ -125,14 +125,14 @@ __lckpwdf ()
   new_act.sa_flags = 0ul;
 
   /* Install new action handler for alarm and save old.  */
-  if (sigaction (SIGALRM, &new_act, &saved_act) < 0)
+  if (__sigaction (SIGALRM, &new_act, &saved_act) < 0)
     /* Cannot install signal handler.  */
     RETURN_CLOSE_FD (-1);
 
   /* Now make sure the alarm signal is not blocked.  */
   sigemptyset (&new_set);
   sigaddset (&new_set, SIGALRM);
-  if (sigprocmask (SIG_UNBLOCK, &new_set, &saved_set) < 0)
+  if (__sigprocmask (SIG_UNBLOCK, &new_set, &saved_set) < 0)
     RETURN_RESTORE_HANDLER (-1);
 
   /* Start timer.  If we cannot get the lock in the specified time we
@@ -143,7 +143,7 @@ __lckpwdf ()
   memset (&fl, '\0', sizeof (struct flock));
   fl.l_type = F_WRLCK;
   fl.l_whence = SEEK_SET;
-  result = fcntl (lock_fd, F_SETLKW, &fl);
+  result = __fcntl (lock_fd, F_SETLKW, &fl);
 
   RETURN_CLEAR_ALARM (result);
 }
@@ -163,7 +163,7 @@ __ulckpwdf ()
       /* Prevent problems caused by multiple threads.  */
       __libc_lock_lock (lock);
 
-      result = close (lock_fd);
+      result = __close (lock_fd);
 
       /* Mark descriptor as unused.  */
       lock_fd = -1;

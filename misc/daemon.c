@@ -45,7 +45,7 @@ daemon(nochdir, noclose)
 {
 	int fd;
 
-	switch (fork()) {
+	switch (__fork()) {
 	case -1:
 		return (-1);
 	case 0:
@@ -54,18 +54,18 @@ daemon(nochdir, noclose)
 		_exit(0);
 	}
 
-	if (setsid() == -1)
+	if (__setsid() == -1)
 		return (-1);
 
 	if (!nochdir)
-		(void)chdir("/");
+		(void)__chdir("/");
 
-	if (!noclose && (fd = open(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
-		(void)dup2(fd, STDIN_FILENO);
-		(void)dup2(fd, STDOUT_FILENO);
-		(void)dup2(fd, STDERR_FILENO);
+	if (!noclose && (fd = __open(_PATH_DEVNULL, O_RDWR, 0)) != -1) {
+		(void)__dup2(fd, STDIN_FILENO);
+		(void)__dup2(fd, STDOUT_FILENO);
+		(void)__dup2(fd, STDERR_FILENO);
 		if (fd > 2)
-			(void)close (fd);
+			(void)__close (fd);
 	}
 	return (0);
 }

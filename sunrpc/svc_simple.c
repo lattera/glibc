@@ -45,6 +45,10 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #include <sys/socket.h>
 #include <netdb.h>
 
+#ifdef USE_IN_LIBIO
+# define fputs(s, f) _IO_fputs (s, f)
+#endif
+
 static struct proglst
   {
     char *(*p_progname) (char *);
@@ -129,7 +133,7 @@ universal (struct svc_req *rqstp, SVCXPRT *transp)
     if (pl->p_prognum == prog && pl->p_procnum == proc)
       {
 	/* decode arguments into a CLEAN buffer */
-	bzero (xdrbuf, sizeof (xdrbuf));	/* required ! */
+	__bzero (xdrbuf, sizeof (xdrbuf));	/* required ! */
 	if (!svc_getargs (transp, pl->p_inproc, xdrbuf))
 	  {
 	    svcerr_decode (transp);

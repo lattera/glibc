@@ -82,7 +82,7 @@ nscd_open_socket (void)
   strcpy (addr.sun_path, _PATH_NSCDSOCKET);
   if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
-      close (sock);
+      __close (sock);
       __set_errno (saved_errno);
       return -1;
     }
@@ -108,31 +108,31 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
   req.version = NSCD_VERSION;
   req.type = type;
   req.key_len = strlen (key);
-  nbytes = write (sock, &req, sizeof (request_header));
+  nbytes = __write (sock, &req, sizeof (request_header));
   if (nbytes != sizeof (request_header))
     {
-      close (sock);
+      __close (sock);
       return 1;
     }
 
-  nbytes = write (sock, key, req.key_len);
+  nbytes = __write (sock, key, req.key_len);
   if (nbytes != req.key_len)
     {
-      close (sock);
+      __close (sock);
       return 1;
     }
 
-  nbytes = read (sock, &pw_resp, sizeof (pw_response_header));
+  nbytes = __read (sock, &pw_resp, sizeof (pw_response_header));
   if (nbytes != sizeof (pw_response_header))
     {
-      close (sock);
+      __close (sock);
       return 1;
     }
 
   if (pw_resp.found == -1)
     {
       /* The daemon does not cache this database.  */
-      close (sock);
+      __close (sock);
       __nss_not_use_nscd_passwd = 1;
       return 1;
     }
@@ -147,7 +147,7 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
 		    + pw_resp.pw_shell_len + 1))
 	{
 	  __set_errno (ERANGE);
-	  close (sock);
+	  __close (sock);
 	  return -1;
 	}
 
@@ -182,7 +182,7 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
 		      + pw_resp.pw_gecos_len + pw_resp.pw_dir_len
 		      + pw_resp.pw_shell_len))
 	{
-	  close (sock);
+	  __close (sock);
 	  return 1;
 	}
 
@@ -199,12 +199,12 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
       resultbuf->pw_shell = vec[4].iov_base;
       resultbuf->pw_shell[pw_resp.pw_shell_len] = '\0';
 
-      close (sock);
+      __close (sock);
       return 0;
     }
   else
     {
-      close (sock);
+      __close (sock);
       return -1;
     }
 }

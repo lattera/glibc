@@ -30,7 +30,11 @@
 #include <fcntl.h>
 
 #ifndef _IO_fcntl
+#ifdef _LIBC
+#define _IO_fcntl __fcntl
+#else
 #define _IO_fcntl fcntl
+#endif
 #endif
 
 _IO_FILE *

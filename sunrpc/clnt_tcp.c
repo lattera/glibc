@@ -155,16 +155,16 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
    */
   if (*sockp < 0)
     {
-      *sockp = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+      *sockp = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       if ((*sockp < 0)
-	  || (connect (*sockp, (struct sockaddr *) raddr,
-		       sizeof (*raddr)) < 0))
+	  || (__connect (*sockp, (struct sockaddr *) raddr,
+			 sizeof (*raddr)) < 0))
 	{
 	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
 	  rpc_createerr.cf_error.re_errno = errno;
 	  if (*sockp >= 0)
-	    (void) close (*sockp);
+	    (void) __close (*sockp);
 	  goto fooy;
 	}
       ct->ct_closeit = TRUE;
@@ -185,8 +185,8 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
   /*
    * Initialize call message
    */
-  (void) gettimeofday (&now, (struct timezone *) 0);
-  call_msg.rm_xid = getpid () ^ now.tv_sec ^ now.tv_usec;
+  (void) __gettimeofday (&now, (struct timezone *) 0);
+  call_msg.rm_xid = __getpid () ^ now.tv_sec ^ now.tv_usec;
   call_msg.rm_direction = CALL;
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = prog;
@@ -201,7 +201,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
     {
       if (ct->ct_closeit)
 	{
-	  (void) close (*sockp);
+	  (void) __close (*sockp);
 	}
       goto fooy;
     }
@@ -454,7 +454,7 @@ clnttcp_destroy (CLIENT *h)
 
   if (ct->ct_closeit)
     {
-      (void) close (ct->ct_sock);
+      (void) __close (ct->ct_sock);
     }
   XDR_DESTROY (&(ct->ct_xdrs));
   mem_free ((caddr_t) ct, sizeof (struct ct_data));
@@ -496,7 +496,7 @@ readtcp (char *ctptr, char *buf, int len)
 	}
       break;
     }
-  switch (len = read (ct->ct_sock, buf, len))
+  switch (len = __read (ct->ct_sock, buf, len))
     {
 
     case 0:
@@ -522,7 +522,7 @@ writetcp (char *ctptr, char *buf, int len)
 
   for (cnt = len; cnt > 0; cnt -= i, buf += i)
     {
-      if ((i = write (ct->ct_sock, buf, cnt)) == -1)
+      if ((i = __write (ct->ct_sock, buf, cnt)) == -1)
 	{
 	  ct->ct_error.re_errno = errno;
 	  ct->ct_error.re_status = RPC_CANTSEND;

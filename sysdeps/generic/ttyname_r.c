@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 /* Store at most BUFLEN characters the pathname of the terminal FD is
    open on in BUF.  Return 0 on success,  otherwise an error number.  */
 int
-ttyname_r (fd, buf, buflen)
+__ttyname_r (fd, buf, buflen)
      int fd;
      char *buf;
      size_t buflen;
@@ -31,7 +31,7 @@ ttyname_r (fd, buf, buflen)
   __set_errno (ENOSYS);
   return ENOSYS;
 }
-
+weak_alias (__ttyname_r, ttyname_r)
 
 stub_warning (ttyname_r)
 #include <stub-tag.h>

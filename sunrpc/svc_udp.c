@@ -46,6 +46,10 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 #include <sys/socket.h>
 #include <errno.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define fputs(s, f) _IO_fputs (s, f)
+#endif
 
 #define rpc_buffer(xprt) ((xprt)->xp_p1)
 #ifndef MAX
@@ -112,14 +116,14 @@ svcudp_bufcreate (sock, sendsz, recvsz)
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+      if ((sock = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
 	{
 	  perror (_("svcudp_create: socket creation problem"));
 	  return (SVCXPRT *) NULL;
 	}
       madesock = TRUE;
     }
-  bzero ((char *) &addr, sizeof (addr));
+  __bzero ((char *) &addr, sizeof (addr));
   addr.sin_family = AF_INET;
   if (bindresvport (sock, &addr))
     {
@@ -130,7 +134,7 @@ svcudp_bufcreate (sock, sendsz, recvsz)
     {
       perror (_("svcudp_create - cannot getsockname"));
       if (madesock)
-	(void) close (sock);
+	(void) __close (sock);
       return (SVCXPRT *) NULL;
     }
   xprt = (SVCXPRT *) mem_alloc (sizeof (SVCXPRT));
@@ -276,7 +280,7 @@ svcudp_destroy (xprt)
   struct svcudp_data *su = su_data (xprt);
 
   xprt_unregister (xprt);
-  (void) close (xprt->xp_sock);
+  (void) __close (xprt->xp_sock);
   XDR_DESTROY (&(su->su_xdrs));
   mem_free (rpc_buffer (xprt), su->su_iosz);
   mem_free ((caddr_t) su, sizeof (struct svcudp_data));
@@ -301,7 +305,7 @@ svcudp_destroy (xprt)
 	(type *) mem_alloc((unsigned) (sizeof(type) * (size)))
 
 #define BZERO(addr, type, size)	 \
-	bzero((char *) addr, sizeof(type) * (int) (size))
+	__bzero((char *) addr, sizeof(type) * (int) (size))
 
 /*
  * An entry in the cache
@@ -479,7 +483,7 @@ cache_get (xprt, msg, replyp, replylenp)
   struct svcudp_data *su = su_data (xprt);
   struct udp_cache *uc = (struct udp_cache *) su->su_cache;
 
-#define EQADDR(a1, a2)	(bcmp((char*)&a1, (char*)&a2, sizeof(a1)) == 0)
+#define EQADDR(a1, a2)	(memcmp((char*)&a1, (char*)&a2, sizeof(a1)) == 0)
 
   loc = CACHE_LOC (xprt, su->su_xid);
   for (ent = uc->uc_entries[loc]; ent != NULL; ent = ent->cache_next)

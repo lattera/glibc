@@ -69,7 +69,7 @@ waitid (idtype, id, infop, options)
       return -1;
     }
 
-  child = waitpid (pid, &status, options);
+  child = __waitpid (pid, &status, options);
 
   if (child == -1)
     /* `waitpid' set `errno' for us.  */

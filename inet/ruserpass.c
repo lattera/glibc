@@ -105,7 +105,7 @@ ruserpass(host, aname, apass)
 			warn("%s", buf);
 		return (0);
 	}
-	if (gethostname(myname, sizeof(myname)) < 0)
+	if (__gethostname(myname, sizeof(myname)) < 0)
 		myname[0] = '\0';
 	if ((mydomain = strchr(myname, '.')) == NULL)
 		mydomain = "";
@@ -125,18 +125,18 @@ next:
 			 * or official hostname.  Also allow match of
 			 * incompletely-specified host in local domain.
 			 */
-			if (strcasecmp(host, tokval) == 0)
+			if (__strcasecmp(host, tokval) == 0)
 				goto match;
-/*			if (strcasecmp(hostname, tokval) == 0)
+/*			if (__strcasecmp(hostname, tokval) == 0)
 				goto match;
 			if ((tmp = strchr(hostname, '.')) != NULL &&
-			    strcasecmp(tmp, mydomain) == 0 &&
-			    strncasecmp(hostname, tokval, tmp-hostname) == 0 &&
+			    __strcasecmp(tmp, mydomain) == 0 &&
+			    __strncasecmp(hostname, tokval, tmp-hostname) == 0 &&
 			    tokval[tmp - hostname] == '\0')
 				goto match; */
 			if ((tmp = strchr(host, '.')) != NULL &&
-			    strcasecmp(tmp, mydomain) == 0 &&
-			    strncasecmp(host, tokval, tmp - host) == 0 &&
+			    __strcasecmp(tmp, mydomain) == 0 &&
+			    __strncasecmp(host, tokval, tmp - host) == 0 &&
 			    tokval[tmp - host] == '\0')
 				goto match;
 			continue;

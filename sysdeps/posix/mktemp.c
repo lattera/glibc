@@ -53,7 +53,7 @@ mktemp (template)
 
   /* Get some more or less random data.  */
   __gettimeofday (&tv, NULL);
-  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ getpid ();
+  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ __getpid ();
 
   for (count = 0; count < TMP_MAX; ++count)
     {

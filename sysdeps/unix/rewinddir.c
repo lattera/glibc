@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ rewinddir (dirp)
      DIR *dirp;
 {
   __libc_lock_lock (dirp->lock);
-  (void) lseek (dirp->fd, (off_t) 0, SEEK_SET);
+  (void) __lseek (dirp->fd, (off_t) 0, SEEK_SET);
   dirp->offset = 0;
   dirp->size = 0;
   __libc_lock_unlock (dirp->lock);

@@ -70,7 +70,8 @@ inet_ntoa (struct in_addr in)
     }
 
   bytes = (unsigned char *) &in;
-  snprintf (buffer, 18, "%d.%d.%d.%d", bytes[0], bytes[1], bytes[2], bytes[3]);
+  __snprintf (buffer, 18, "%d.%d.%d.%d",
+	      bytes[0], bytes[1], bytes[2], bytes[3]);
 
   return buffer;
 }

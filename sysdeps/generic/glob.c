@@ -239,6 +239,13 @@ extern char *alloca ();
 # endif
 #endif
 
+#ifdef _LIBC
+# define sysconf(id) __sysconf (id)
+# define closedir(dir) __closedir (dir)
+# define opendir(name) __opendir (name)
+# define readdir(str) __readdir (str)
+#endif
+
 #if !(defined STDC_HEADERS || defined __GNU_LIBRARY__)
 # undef	size_t
 # define size_t	unsigned int

@@ -102,7 +102,7 @@ nrl_domainname (void)
 	    {
 	      /* The name contains no domain information.  Use the name
 		 now to get more information.  */
-	      while (gethostname (tmpbuf, tmpbuflen))
+	      while (__gethostname (tmpbuf, tmpbuflen))
 		{
 		  tmpbuflen *= 2;
 		  tmpbuf = alloca (tmpbuflen);
@@ -337,8 +337,8 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		break;
 	      }
 	  }
-	snprintf (serv, servlen, "%d",
-		  ntohs (((struct sockaddr_in *) sa)->sin_port));
+	__snprintf (serv, servlen, "%d",
+		    ntohs (((struct sockaddr_in *) sa)->sin_port));
 	break;
 
       case AF_LOCAL:

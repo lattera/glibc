@@ -21,6 +21,12 @@
 #include <grp.h>
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define flockfile(s) _IO_flockfile (s)
+# define funlockfile(s) _IO_funlockfile (s)
+#endif
+
 /* Define a line parsing function using the common code
    used in the nss_files module.  */
 
@@ -59,17 +65,20 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
   char *p;
   int parse_result;
 
+  flockfile (stream);
   do
     {
       buffer[buflen - 1] = '\xff';
-      p = fgets (buffer, buflen, stream);
-      if (p == NULL && feof (stream))
+      p = fgets_unlocked (buffer, buflen, stream);
+      if (p == NULL && feof_unlocked (stream))
 	{
+	  funlockfile (stream);
 	  *result = NULL;
 	  return errno;
 	}
       if (p == NULL || buffer[buflen - 1] != '\xff')
 	{
+	  funlockfile (stream);
 	  *result = NULL;
 	  return errno = ERANGE;
 	}
@@ -83,6 +92,8 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
 	     || ! (parse_result = parse_line (p, resbuf,
 					      (void *) buffer, buflen,
 					      &errno)));
+
+  funlockfile (stream);
 
   if (parse_result == -1)
     {

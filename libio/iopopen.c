@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -41,24 +41,40 @@
 #include <sys/wait.h>
 
 #ifndef _IO_fork
+#ifdef _LIBC
+#define _IO_fork __vfork
+#else
 #define _IO_fork vfork /* defined in libiberty, if needed */
+#endif
 extern _IO_pid_t _IO_fork __P ((void));
 #endif
 
 #endif /* _IO_HAVE_SYS_WAIT */
 
 #ifndef _IO_pipe
+#ifdef _LIBC
+#define _IO_pipe __pipe
+#else
 #define _IO_pipe pipe
+#endif
 extern int _IO_pipe __P ((int des[2]));
 #endif
 
 #ifndef _IO_dup2
+#ifdef _LIBC
+#define _IO_dup2 __dup2
+#else
 #define _IO_dup2 dup2
+#endif
 extern int _IO_dup2 __P ((int fd, int fd2));
 #endif
 
 #ifndef _IO_waitpid
+#ifdef _LIBC
+#define _IO_waitpid __waitpid
+#else
 #define _IO_waitpid waitpid
+#endif
 #endif
 
 #ifndef _IO_execl
@@ -69,7 +85,11 @@ extern int _IO_dup2 __P ((int fd, int fd2));
 #endif
 
 #ifndef _IO_close
+#ifdef _LIBC
+#define _IO_close __close
+#else
 #define _IO_close close
+#endif
 #endif
 
 struct _IO_proc_file

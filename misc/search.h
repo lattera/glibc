@@ -160,7 +160,7 @@ extern void twalk __PMT ((__const void *__root, __action_fn_t action));
 #ifdef __USE_GNU
 /* Callback type for function to free a tree node.  If the keys are atomic
    data this function should do nothing.  */
-typedef void (*__free_fn_t) __P ((void *__nodep));
+typedef void (*__free_fn_t) __PMT ((void *__nodep));
 
 /* Destroy the whole tree, call FREEFCT for each node or leaf.  */
 extern void __tdestroy __PMT ((void *__root, __free_fn_t freefct));

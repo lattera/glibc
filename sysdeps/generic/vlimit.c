@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ vlimit (resource, value)
 	(enum __rlimit_resource) ((int) resource - 1);
       struct rlimit lims;
 
-      if (getrlimit (rlimit_res, &lims) < 0)
+      if (__getrlimit (rlimit_res, &lims) < 0)
 	return -1;
 
       lims.rlim_cur = value;

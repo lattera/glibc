@@ -70,8 +70,8 @@ svc_run (void)
 #else
       readfds = svc_fds;
 #endif /* def FD_SETSIZE */
-      switch (select (_rpc_dtablesize (), &readfds, (fd_set *)NULL,
-		      (fd_set *)NULL, (struct timeval *) 0))
+      switch (__select (_rpc_dtablesize (), &readfds, (fd_set *)NULL,
+			(fd_set *)NULL, (struct timeval *) 0))
 	{
 	case -1:
 	  if (errno == EINTR)

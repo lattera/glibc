@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@
 
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# define fread(p, m, n, s) _IO_fread (p, m, n, s)
+#endif
 
 /* Read a word (int) from STREAM.  */
 int

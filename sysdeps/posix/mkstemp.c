@@ -53,7 +53,7 @@ mkstemp (template)
 
   /* Get some more or less random data.  */
   __gettimeofday (&tv, NULL);
-  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ getpid ();
+  value += ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec ^ __getpid ();
 
   for (count = 0; count < TMP_MAX; ++count)
     {
@@ -73,7 +73,7 @@ mkstemp (template)
       v /= 62;
       XXXXXX[5] = letters[v % 62];
 
-      fd = open (template, O_RDWR|O_CREAT|O_EXCL, 0600);
+      fd = __open (template, O_RDWR|O_CREAT|O_EXCL, 0600);
       if (fd >= 0)
 	/* The file does not exist.  */
 	return fd;

@@ -28,5 +28,5 @@ lrand48_r (buffer, result)
   if (buffer == NULL)
    return -1;
 
-  return nrand48_r (buffer->x, buffer, result);
+  return __nrand48_r (buffer->x, buffer, result);
 }

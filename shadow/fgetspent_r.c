@@ -21,6 +21,10 @@
 #include <shadow.h>
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# define flockfile(s) _IO_flockfile (s)
+#endif
+
 /* Define a line parsing function using the common code
    used in the nss_files module.  */
 
@@ -39,17 +43,20 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
 {
   char *p;
 
+  flockfile (stream);
   do
     {
       buffer[buflen - 1] = '\xff';
-      p = fgets (buffer, buflen, stream);
-      if (p == NULL && feof (stream))
+      p = fgets_unlocked (buffer, buflen, stream);
+      if (p == NULL && feof_unlocked (stream))
 	{
+	  funlockfile (stream);
 	  *result = NULL;
 	  return errno;
 	}
       if (p == NULL || buffer[buflen - 1] != '\xff')
 	{
+	  funlockfile (stream);
 	  *result = NULL;
 	  return errno = ERANGE;
 	}
@@ -61,6 +68,8 @@ __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
 	     ! parse_line (buffer, (void *) resbuf, NULL, 0, &errno));
+
+  funlockfile (stream);
 
   *result = resbuf;
   return 0;

@@ -82,7 +82,7 @@ nscd_open_socket (void)
   strcpy (addr.sun_path, _PATH_NSCDSOCKET);
   if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
-      close (sock);
+      __close (sock);
       __set_errno (saved_errno);
       return -1;
     }
@@ -108,31 +108,31 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
   req.version = NSCD_VERSION;
   req.type = type;
   req.key_len = strlen (key);
-  nbytes = write (sock, &req, sizeof (request_header));
+  nbytes = __write (sock, &req, sizeof (request_header));
   if (nbytes != sizeof (request_header))
     {
-      close (sock);
+      __close (sock);
       return 1;
     }
 
-  nbytes = write (sock, key, req.key_len);
+  nbytes = __write (sock, key, req.key_len);
   if (nbytes != req.key_len)
     {
-      close (sock);
+      __close (sock);
       return 1;
     }
 
-  nbytes = read (sock, &gr_resp, sizeof (gr_response_header));
+  nbytes = __read (sock, &gr_resp, sizeof (gr_response_header));
   if (nbytes != sizeof (gr_response_header))
     {
-      close (sock);
+      __close (sock);
       return 1;
     }
 
   if (gr_resp.found == -1)
     {
       /* The daemon does not cache this database.  */
-      close (sock);
+      __close (sock);
       __nss_not_use_nscd_group = 1;
       return 1;
     }
@@ -145,16 +145,16 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
       if (buflen < gr_resp.gr_name_len + 1)
 	{
 	  __set_errno (ERANGE);
-	  close (sock);
+	  __close (sock);
 	  return -1;
 	}
       resultbuf->gr_name = p;
       p += gr_resp.gr_name_len + 1;
       buflen -= (gr_resp.gr_name_len + 1);
-      nbytes = read (sock, resultbuf->gr_name, gr_resp.gr_name_len);
+      nbytes = __read (sock, resultbuf->gr_name, gr_resp.gr_name_len);
       if (nbytes != gr_resp.gr_name_len)
 	{
-	  close (sock);
+	  __close (sock);
 	  return 1;
 	}
       resultbuf->gr_name[gr_resp.gr_name_len] = '\0';
@@ -162,16 +162,16 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
       if (buflen < gr_resp.gr_passwd_len + 1)
 	{
 	  __set_errno (ERANGE);
-	  close (sock);
+	  __close (sock);
 	  return -1;
 	}
       resultbuf->gr_passwd = p;
       p += gr_resp.gr_passwd_len + 1;
       buflen -= (gr_resp.gr_passwd_len + 1);
-      nbytes = read (sock, resultbuf->gr_passwd, gr_resp.gr_passwd_len);
+      nbytes = __read (sock, resultbuf->gr_passwd, gr_resp.gr_passwd_len);
       if (nbytes != gr_resp.gr_passwd_len)
 	{
-	  close (sock);
+	  __close (sock);
 	  return 1;
 	}
       resultbuf->gr_passwd[gr_resp.gr_passwd_len] = '\0';
@@ -181,7 +181,7 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
       if (buflen < ((gr_resp.gr_mem_len + 1) * sizeof (char *)))
 	{
 	  __set_errno (ERANGE);
-	  close (sock);
+	  __close (sock);
 	  return -1;
 	}
       resultbuf->gr_mem = (char **)p;
@@ -193,36 +193,36 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
       for (i = 0; i < gr_resp.gr_mem_len; ++i)
 	{
 	  size_t len;
-	  nbytes = read (sock, &len, sizeof (len));
+	  nbytes = __read (sock, &len, sizeof (len));
 	  if (nbytes != sizeof (len))
 	    {
-	      close (sock);
+	      __close (sock);
 	      return 1;
 	    }
 
 	  if (buflen < (len + 1))
 	    {
 	      __set_errno (ERANGE);
-	      close (sock);
+	      __close (sock);
 	      return -1;
 	    }
 	  resultbuf->gr_mem[i] = p;
 	  p += len + 1;
 	  buflen -= (len + 1);
-	  nbytes = read (sock, resultbuf->gr_mem[i], len);
+	  nbytes = __read (sock, resultbuf->gr_mem[i], len);
 	  resultbuf->gr_mem[i][len] = '\0';
 	  if (nbytes != len)
 	    {
-	      close (sock);
+	      __close (sock);
 	      return 1;
 	    }
 	}
-      close (sock);
+      __close (sock);
       return 0;
     }
   else
     {
-      close (sock);
+      __close (sock);
       return -1;
     }
 }

@@ -76,6 +76,10 @@ unsigned int error_message_count;
 # define error __error
 # define error_at_line __error_at_line
 
+# ifdef USE_IN_LIBIO
+#  define fflush(s) _IO_fflush (s)
+# endif
+
 #else /* not _LIBC */
 
 /* The calling program should define program_name and set it to the

@@ -93,7 +93,7 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
       crp->valid = 0;
       if (crp->socket != RPC_ANYSOCK)
 	{
-	  (void) close (crp->socket);
+	  (void) __close (crp->socket);
 	  crp->socket = RPC_ANYSOCK;
 	}
       if (crp->client)

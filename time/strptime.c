@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -148,6 +148,8 @@ extern const struct locale_data _nl_C_LC_TIME;
 # define HERE_T_FMT_AMPM \
   (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (T_FMT_AMPM)].string)
 # define HERE_T_FMT (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (T_FMT)].string)
+
+# define strncasecmp(s1, s2, n) __strncasecmp (s1, s2, n)
 #else
 static char const weekday_name[][10] =
   {

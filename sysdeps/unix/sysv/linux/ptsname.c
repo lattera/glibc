@@ -75,7 +75,7 @@ __ptsname_r (fd, buf, buflen)
 #ifdef TIOCGPTN
   if (tiocgptn_works)
     {
-      if (ioctl (fd, TIOCGPTN, &ptyno) == 0)
+      if (__ioctl (fd, TIOCGPTN, &ptyno) == 0)
 	goto gotit;
       else
 	{

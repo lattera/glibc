@@ -45,7 +45,7 @@ __ulimit (int cmd, ...)
     {
     case UL_GETFSIZE:
       /* Get limit on file size.  */
-      if (getrlimit (RLIMIT_FSIZE, &limit) == 0)
+      if (__getrlimit (RLIMIT_FSIZE, &limit) == 0)
 	/* Convert from bytes to 512 byte units.  */
 	result =  limit.rlim_cur / 512;
       break;
@@ -63,7 +63,7 @@ __ulimit (int cmd, ...)
       break;
 
     case __UL_GETOPENMAX:
-      result = sysconf (_SC_OPEN_MAX);
+      result = __sysconf (_SC_OPEN_MAX);
       break;
 
     default:

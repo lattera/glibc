@@ -30,7 +30,7 @@ statvfs (const char *file, struct statvfs *buf)
   int retval;
   int fd;
 
-  fd = open (file, O_RDONLY);
+  fd = __open (file, O_RDONLY);
   if (fd < 0)
     return -1;
 
@@ -39,7 +39,7 @@ statvfs (const char *file, struct statvfs *buf)
 
   /* Close the file while preserving the error number.  */
   save_errno = errno;
-  close (fd);
+  __close (fd);
   __set_errno (save_errno);
 
   return retval;

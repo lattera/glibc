@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
-  int name (wc) wint_t wc; { return iswctype (wc, type); }
+  int name (wc) wint_t wc; { return __iswctype (wc, type); }
 
 func (iswalnum, _ISwalnum)
 func (iswalpha, _ISwalpha)
@@ -41,12 +41,12 @@ wint_t
 towlower (wc)
      wint_t wc;
 {
-  return towctrans (wc, __ctype_tolower);
+  return __towctrans (wc, __ctype_tolower);
 }
 
 wint_t
 towupper (wc)
      wint_t wc;
 {
-  return towctrans (wc, __ctype_toupper);
+  return __towctrans (wc, __ctype_toupper);
 }

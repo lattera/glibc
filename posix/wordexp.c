@@ -291,7 +291,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
       char* buffer = __alloca (buflen);
       int result;
 
-      uid = getuid ();
+      uid = __getuid ();
 
       while ((result = __getpwuid_r (uid, &pwd, buffer, buflen, &tpwd)) != 0
 	     && errno == ERANGE)
@@ -801,11 +801,11 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   if (!comm || !*comm)
     return 0;
 
-  if (pipe (fildes))
+  if (__pipe (fildes))
     /* Bad */
     return WRDE_NOSPACE;
 
-  if ((pid = fork ()) < 0)
+  if ((pid = __fork ()) < 0)
     {
       /* Bad */
       return WRDE_NOSPACE;
@@ -817,23 +817,23 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
       const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
 
       /* Redirect output.  */
-      dup2 (fildes[1], 1);
-      close (fildes[1]);
+      __dup2 (fildes[1], 1);
+      __close (fildes[1]);
 
       /* Redirect stderr to /dev/null if we have to.  */
       if ((flags & WRDE_SHOWERR) == 0)
 	{
 	  int fd;
-	  close (2);
-	  fd = open (_PATH_DEVNULL, O_WRONLY);
+	  __close (2);
+	  fd = __open (_PATH_DEVNULL, O_WRONLY);
 	  if (fd >= 0 && fd != 2)
 	    {
-	      dup2 (fd, 2);
-	      close (fd);
+	      __dup2 (fd, 2);
+	      __close (fd);
 	    }
 	}
 
-      close (fildes[0]);
+      __close (fildes[0]);
       __execve (_PATH_BSHELL, (char *const *) args, __environ);
 
       /* Bad.  What now?  */
@@ -842,7 +842,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
   /* Parent */
 
-  close (fildes[1]);
+  __close (fildes[1]);
   buffer = __alloca (bufsize);
 
   if (!pwordexp)
@@ -850,20 +850,20 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
       while (1)
 	{
-	  if ((buflen = read (fildes[0], buffer, bufsize)) < 1)
+	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	    {
 	      if (__waitpid (pid, NULL, WNOHANG) == 0)
 		continue;
-	      if ((buflen = read (fildes[0], buffer, bufsize)) < 1)
+	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 		break;
 	    }
 
 	  *word = w_addmem (*word, word_length, max_length, buffer, buflen);
 	  if (*word == NULL)
 	    {
-	      kill (pid, SIGKILL);
+	      __kill (pid, SIGKILL);
 	      __waitpid (pid, NULL, 0);
-	      close (fildes[0]);
+	      __close (fildes[0]);
 	      return WRDE_NOSPACE;
 	    }
 	}
@@ -880,11 +880,11 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
       while (1)
 	{
-	  if ((buflen = read (fildes[0], buffer, bufsize)) < 1)
+	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
 	    {
 	      if (__waitpid (pid, NULL, WNOHANG) == 0)
 		continue;
-	      if ((read (fildes[0], buffer, bufsize)) < 1)
+	      if ((__read (fildes[0], buffer, bufsize)) < 1)
 		break;
 	    }
 
@@ -932,18 +932,18 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		      *word = w_addchar (*word, word_length, max_length, 0);
 		      if (*word == NULL)
 			{
-			  kill (pid, SIGKILL);
+			  __kill (pid, SIGKILL);
 			  __waitpid (pid, NULL, 0);
-			  close (fildes[0]);
+			  __close (fildes[0]);
 			  return WRDE_NOSPACE;
 			}
 		    }
 
 		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
 		    {
-		      kill (pid, SIGKILL);
+		      __kill (pid, SIGKILL);
 		      __waitpid (pid, NULL, 0);
-		      close (fildes[0]);
+		      __close (fildes[0]);
 		      return WRDE_NOSPACE;
 		    }
 
@@ -958,9 +958,9 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 				     buffer[i]);
 		  if (*word == NULL)
 		    {
-		      kill (pid, SIGKILL);
+		      __kill (pid, SIGKILL);
 		      __waitpid (pid, NULL, 0);
-		      close (fildes[0]);
+		      __close (fildes[0]);
 		      return WRDE_NOSPACE;
 		    }
 		}
@@ -972,7 +972,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   while (*word_length > 0 && (*word)[*word_length - 1] == '\n')
     (*word)[--*word_length] = '\0';
 
-  close (fildes[0]);
+  __close (fildes[0]);
   return 0;
 }
 
@@ -1280,7 +1280,7 @@ envsubst:
       if (*env == '$')
 	{
 	  buffer[20] = '\0';
-	  value = _itoa_word (getpid (), &buffer[20], 10, 0);
+	  value = _itoa_word (__getpid (), &buffer[20], 10, 0);
 	}
       /* Is it `${#*}' or `${#@}'? */
       else if ((*env == '*' || *env == '@') && seen_hash)

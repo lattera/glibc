@@ -282,7 +282,7 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 	debug ("timestamp before last seen");
 	return (AUTH_REJECTEDVERF);	/* replay */
       }
-    gettimeofday (&current, (struct timezone *) NULL);
+    __gettimeofday (&current, (struct timezone *) NULL);
     current.tv_sec -= window;	/* allow for expiration */
     if (!BEFORE (&current, &timestamp))
       {
@@ -385,8 +385,8 @@ cache_init (void)
 
   authdes_cache = (struct cache_entry *)
     mem_alloc (sizeof (struct cache_entry) * AUTHDES_CACHESZ);
-  bzero ((char *) authdes_cache,
-	 sizeof (struct cache_entry) * AUTHDES_CACHESZ);
+  __bzero ((char *) authdes_cache,
+	   sizeof (struct cache_entry) * AUTHDES_CACHESZ);
 
   authdes_lru = (short *) mem_alloc (sizeof (short) * AUTHDES_CACHESZ);
   /*
@@ -449,7 +449,7 @@ cache_spot (register des_block * key, char *name, struct timeval *timestamp)
       if (cp->key.key.high == hi &&
 	  cp->key.key.low == key->key.low &&
 	  cp->rname != NULL &&
-	  bcmp (cp->rname, name, strlen (name) + 1) == 0)
+	  memcmp (cp->rname, name, strlen (name) + 1) == 0)
 	{
 	  if (BEFORE (timestamp, &cp->laststamp))
 	    {

@@ -77,8 +77,8 @@ static int send_request (int sock, const request_header *request,
 static int
 setutent_daemon (void)
 {
-  if (access (_PATH_UTMPD_RW, F_OK) == -1
-      && access (_PATH_UTMPD_RO, F_OK) == -1)
+  if (__access (_PATH_UTMPD_RW, F_OK) == -1
+      && __access (_PATH_UTMPD_RO, F_OK) == -1)
     return 0;
 
   if (daemon_sock < 0)
@@ -175,7 +175,7 @@ endutent_daemon (void)
   /* Send request to the daemon.  */
   do_endutent (daemon_sock);
 
-  close (daemon_sock);
+  __close (daemon_sock);
   daemon_sock = -1;
 }
 
@@ -193,11 +193,11 @@ updwtmp_daemon (const char *file, const struct utmp *utmp)
   /* Send request to the daemon.  */
   if (do_updwtmp (sock, file, utmp) < 0)
     {
-      close (sock);
+      __close (sock);
       return -1;
     }
 
-  close (sock);
+  __close (sock);
   return 0;
 }
 
@@ -417,7 +417,7 @@ open_socket (const char *name)
   strcpy (addr.sun_path, name);
   if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
-      close (sock);
+      __close (sock);
       return -1;
     }
 
@@ -433,11 +433,11 @@ send_request (int sock, const request_header *request,
   reply_header header;
   ssize_t nbytes;
 
-  nbytes = write (sock, request, request->size);
+  nbytes = __write (sock, request, request->size);
   if (nbytes != (ssize_t) request->size)
     return -1;
 
-  nbytes = read (sock, &header, sizeof (reply_header));
+  nbytes = __read (sock, &header, sizeof (reply_header));
   if (nbytes != sizeof (reply_header))
     return -1;
 
@@ -446,7 +446,7 @@ send_request (int sock, const request_header *request,
       || reply->type != header.type)
     return -1;
 
-  nbytes = read (sock, reply + 1, reply->size - sizeof (reply_header));
+  nbytes = __read (sock, reply + 1, reply->size - sizeof (reply_header));
   if (nbytes != (ssize_t) (reply->size - sizeof (reply_header)))
     return -1;
 

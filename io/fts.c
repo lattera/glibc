@@ -79,8 +79,8 @@ static u_short	 fts_stat __P((FTS *, struct dirent *, FTSENT *, int))
 #define	ISSET(opt)	(sp->fts_options & opt)
 #define	SET(opt)	(sp->fts_options |= opt)
 
-#define	CHDIR(sp, path)	(!ISSET(FTS_NOCHDIR) && chdir(path))
-#define	FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR) && fchdir(fd))
+#define	CHDIR(sp, path)	(!ISSET(FTS_NOCHDIR) && __chdir(path))
+#define	FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR) && __fchdir(fd))
 
 /* fts_build flags */
 #define	BCHILD		1		/* fts_children */
@@ -108,7 +108,7 @@ fts_open(argv, options, compar)
 	/* Allocate/initialize the stream */
 	if ((sp = malloc((u_int)sizeof(FTS))) == NULL)
 		return (NULL);
-	bzero(sp, sizeof(FTS));
+	__bzero(sp, sizeof(FTS));
 	sp->fts_compar = (int (*) __P((const void *, const void *))) compar;
 	sp->fts_options = options;
 
@@ -186,7 +186,8 @@ fts_open(argv, options, compar)
 	 * and ".." are all fairly nasty problems.  Note, if we can't get the
 	 * descriptor we run anyway, just more slowly.
 	 */
-	if (!ISSET(FTS_NOCHDIR) && (sp->fts_rfd = open(".", O_RDONLY, 0)) < 0)
+	if (!ISSET(FTS_NOCHDIR)
+	    && (sp->fts_rfd = __open(".", O_RDONLY, 0)) < 0)
 		SET(FTS_NOCHDIR);
 
 	return (sp);
@@ -254,8 +255,8 @@ fts_close(sp)
 
 	/* Return to original directory, save errno if necessary. */
 	if (!ISSET(FTS_NOCHDIR)) {
-		saved_errno = fchdir(sp->fts_rfd) ? errno : 0;
-		(void)close(sp->fts_rfd);
+		saved_errno = __fchdir(sp->fts_rfd) ? errno : 0;
+		(void)__close(sp->fts_rfd);
 	}
 
 	/* Free up the stream pointer. */
@@ -313,7 +314,7 @@ fts_read(sp)
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
 		p->fts_info = fts_stat(sp, NULL, p, 1);
 		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR))
-			if ((p->fts_symfd = open(".", O_RDONLY, 0)) < 0) {
+			if ((p->fts_symfd = __open(".", O_RDONLY, 0)) < 0) {
 				p->fts_errno = errno;
 				p->fts_info = FTS_ERR;
 			} else
@@ -327,7 +328,7 @@ fts_read(sp)
 		if (instr == FTS_SKIP ||
 		    ISSET(FTS_XDEV) && p->fts_dev != sp->fts_dev) {
 			if (p->fts_flags & FTS_SYMFOLLOW)
-				(void)close(p->fts_symfd);
+				(void)__close(p->fts_symfd);
 			if (sp->fts_child) {
 				fts_lfree(sp->fts_child);
 				sp->fts_child = NULL;
@@ -402,7 +403,7 @@ next:	tmp = p;
 			p->fts_info = fts_stat(sp, NULL, p, 1);
 			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR))
 				if ((p->fts_symfd =
-				    open(".", O_RDONLY, 0)) < 0) {
+				    __open(".", O_RDONLY, 0)) < 0) {
 					p->fts_errno = errno;
 					p->fts_info = FTS_ERR;
 				} else
@@ -446,12 +447,12 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 	} else if (p->fts_flags & FTS_SYMFOLLOW) {
 		if (FCHDIR(sp, p->fts_symfd)) {
 			saved_errno = errno;
-			(void)close(p->fts_symfd);
+			(void)__close(p->fts_symfd);
 			__set_errno (saved_errno);
 			SET(FTS_STOP);
 			return (NULL);
 		}
-		(void)close(p->fts_symfd);
+		(void)__close(p->fts_symfd);
 	} else if (!(p->fts_flags & FTS_DONTCHDIR)) {
 		if (CHDIR(sp, "..")) {
 			SET(FTS_STOP);
@@ -543,12 +544,12 @@ fts_children(sp, instr)
 	    ISSET(FTS_NOCHDIR))
 		return (sp->fts_child = fts_build(sp, instr));
 
-	if ((fd = open(".", O_RDONLY, 0)) < 0)
+	if ((fd = __open(".", O_RDONLY, 0)) < 0)
 		return (NULL);
 	sp->fts_child = fts_build(sp, instr);
-	if (fchdir(fd))
+	if (__fchdir(fd))
 		return (NULL);
-	(void)close(fd);
+	(void)__close(fd);
 	return (sp->fts_child);
 }
 
@@ -597,7 +598,7 @@ fts_build(sp, type)
 	else
 		oflag = DTF_HIDEW|DTF_NODUP|DTF_REWIND;
 #else
-# define __opendir2(path, flag) opendir(path)
+# define __opendir2(path, flag) __opendir(path)
 #endif
        if ((dirp = __opendir2 (cur->fts_accpath, oflag)) == NULL) {
 		if (type == BREAD) {
@@ -673,7 +674,7 @@ fts_build(sp, type)
 
 	/* Read the directory, attaching each entry to the `link' pointer. */
 	adjaddr = NULL;
-	for (head = tail = NULL, nitems = 0; dp = readdir(dirp);) {
+	for (head = tail = NULL, nitems = 0; dp = __readdir(dirp);) {
 		int namlen;
 
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
@@ -693,7 +694,7 @@ mem1:				saved_errno = errno;
 				if (p)
 					free(p);
 				fts_lfree(head);
-				(void)closedir(dirp);
+				(void)__closedir(dirp);
 				__set_errno (saved_errno);
 				cur->fts_info = FTS_ERR;
 				SET(FTS_STOP);
@@ -749,7 +750,7 @@ mem1:				saved_errno = errno;
 		}
 		++nitems;
 	}
-	(void)closedir(dirp);
+	(void)__closedir(dirp);
 
 	/*
 	 * If had to realloc the path, adjust the addresses for the rest
@@ -843,7 +844,7 @@ fts_stat(sp, dp, p, follow)
 		}
 	} else if (lstat(p->fts_accpath, sbp)) {
 		p->fts_errno = errno;
-err:		bzero(sbp, sizeof(struct stat));
+err:		__bzero(sbp, sizeof(struct stat));
 		return (FTS_NS);
 	}
 

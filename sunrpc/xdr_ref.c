@@ -45,6 +45,11 @@ static char sccsid[] = "@(#)xdr_reference.c 1.11 87/08/11 SMI";
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define fputs(s, f) _IO_fputs (s, f)
+#endif
+
 #define LASTUNSIGNED	((u_int)0-1)
 
 /*
@@ -79,7 +84,7 @@ xdr_reference (xdrs, pp, size, proc)
 	    (void) fputs (_("xdr_reference: out of memory\n"), stderr);
 	    return FALSE;
 	  }
-	bzero (loc, (int) size);
+	__bzero (loc, (int) size);
 	break;
       default:
 	break;

@@ -1,3 +1,179 @@
+1998-07-16 10:23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp-fmtstream.c: Unify names of used global functions.
+	* argp/argp-help.c: Likewise.
+	* assert/assert-perr.c: Likewise
+	* assert/assert.c: Likewise
+	* dirent/scandir.c: Likewise
+	* dirent/scandir64.c: Likewise
+	* dirent/versionsort.c: Likewise
+	* dirent/versionsort64.c: Likewise
+	* gmon/bb_exit_func.c: Likewise.
+	* gmon/gmon.c: Likewise.
+	* grp/initgroups.c: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* inet/getnameinfo.c: Likewise.
+	* inet/getnetgrent_r.c: Likewise.
+	* inet/inet_ntoa.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* inet/rexec.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+	* io/fts.c: Likewise.
+	* io/ftw.c: Likewise.
+	* io/ftw64.c: Likewise.
+	* io/getdirname.c: Likewise.
+	* io/getwd.c: Likewise.
+	* io/lockf.c: Likewise.
+	* libio/iofdopen.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* login/utmp_daemon.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* malloc/obstack.c
+	* misc/daemon.c: Likewise.
+	* misc/efgcvt_r.c: Likewise.
+	* misc/err.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/fstab.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* misc/getttyent.c: Likewise.
+	* misc/mntent_r.c: Likewise.
+	* misc/search.h: Likewise.
+	* misc/syslog.c: Likewise.
+	* nscd/nscd_getgr_r.c: Likewise.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* posix/getpgrp.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* pwd/fgetpwent_r.c: Likewise.
+	* pwd/getpw.c: Likewise.
+	* resolv/herror.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* shadow/fgetspent_r.c: Likewise.
+	* shadow/lckpwdf.c: Likewise.
+	* signal/sigrelse.c: Likewise.
+	* stdio-common/asprintf.c: Likewise.
+	* stdio-common/dprintf.c: Likewise.
+	* stdio-common/getw.c: Likewise.
+	* stdio-common/putw.c: Likewise.
+	* stdio-common/snprintf.c: Likewise.
+	* stdio-common/sprintf.c: Likewise.
+	* stdio-common/sscanf.c: Likewise.
+	* stdlib/lrand48_r.c: Likewise.
+	* stdlib/mrand48_r.c: Likewise.
+	* string/argz-replace.c: Likewise.
+	* string/envz.c: Likewise.
+	* sunrpc/auth_des.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/netname.c: Likewise.
+	* sunrpc/openchild.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+	* sysdeps/generic/abort.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/fstatfs64.c: Likewise.
+	* sysdeps/generic/ftruncate64.c: Likewise.
+	* sysdeps/generic/getrlimit64.c: Likewise.
+	* sysdeps/generic/glob.c: Likewise.
+	* sysdeps/generic/prof-freq.c: Likewise.
+	* sysdeps/generic/putenv.c: Likewise.
+	* sysdeps/generic/statfs64.c: Likewise.
+	* sysdeps/generic/ttyname_r.c: Likewise.
+	* sysdeps/generic/utmp_file.c: Likewise.
+	* sysdeps/generic/vlimit.c: Likewise.
+	* sysdeps/generic/vtimes.c: Likewise.
+	* sysdeps/posix/cuserid.c: Likewise.
+	* sysdeps/posix/euidaccess.c: Likewise.
+	* sysdeps/posix/mkstemp.c: Likewise.
+	* sysdeps/posix/mktemp.c: Likewise.
+	* sysdeps/posix/pread.c: Likewise.
+	* sysdeps/posix/pread64.c: Likewise.
+	* sysdeps/posix/profil.c: Likewise.
+	* sysdeps/posix/pwrite.c: Likewise.
+	* sysdeps/posix/pwrite64.c: Likewise.
+	* sysdeps/posix/sigblock.c: Likewise.
+	* sysdeps/posix/sigpause.c: Likewise.
+	* sysdeps/posix/ttyname.c: Likewise.
+	* sysdeps/posix/ttyname_r.c: Likewise.
+	* sysdeps/posix/waitid.c: Likewise.
+	* sysdeps/unix/getlogin_r.c: Likewise.
+	* sysdeps/unix/grantpt.c: Likewise.
+	* sysdeps/unix/rewinddir.c: Likewise.
+	* sysdeps/unix/sysv/linux/gethostid.c: Likewise.
+	* sysdeps/unix/sysv/linux/getpt.c: Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c: Likewise.
+	* sysdeps/unix/sysv/linux/ptsname.c: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/statvfs.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/ulimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlockpt.c: Likewise.
+	* sysvipc/sys/shm.h: Likewise.
+	* time/ctime_r.c: Likewise.
+	* time/strptime.c: Likewise.
+	* wcsmbs/mbrlen.c: Likewise.
+	* wcsmbs/wcsdup.c: Likewise.
+	* wcsmbs/wcsxfrm.c: Likewise.
+	* wctype/wcfuncs.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/socker.S: Change to honor NO_WEAK_ALIAS.
+	* sysdeps/unix/sysv/linux/accept.S: Don't generate __ name.
+	* sysdeps/unix/sysv/linux/bind.S: Likewise.
+	* sysdeps/unix/sysv/linux/getsockname.S: Likewise.
+	* sysdeps/unix/sysv/linux/listen.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	* sysdeps/unix/sysv/linux/setsockopt.S: Likewise.
+
+	* grp/fgetgrent_r.c: Use explicit locking of the stream.
+
+	* elf/Makefile (rtld-routines): Add dl-environ.
+	* sysdeps/generic/dl-environ.c: New file.
+
+	* libio/Makefile [REENTRANT] (routines): Add iofputs_u.
+	* libio/Versions: Add fputs_unlocked.
+	* libio/iofputs_u.c: New file.
+	* libio/stdio.h: Add prototype for fputs_unlocked.
+
+	* sunrpc/rpc/auth.h: Use __PMT instead of __P in type definitions.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+
+	* sysdeps/i386/memchr.S: Correct for more strict gas.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/libm-i387/i686/s_fdim.S: Likewise.
+	* sysdeps/libm-i387/i686/s_fdimf.S: Likewise.
+	* sysdeps/libm-i387/i686/s_fdiml.S: Likewise.
+
+1998-07-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* configure.in: Change message for binutils version from
+	2.8.1.0.17->2.8.1.0.23.
+
+1998-07-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sysdep.h: Define LOC.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
 1998-07-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/auth_unix.c (authunix_create_default): Use __sysconf

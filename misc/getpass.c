@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,11 @@
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
+
+#ifdef USE_IN_LIBIO
+# define flockfile(s) _IO_flockfile (s)
+# define funlockfile(s) _IO_funlockfile (s)
+#endif
 
 /* It is desirable to use this bit on systems that have it.
    The only bit of terminal state we want to twiddle is echoing, which is
@@ -52,9 +57,11 @@ getpass (prompt)
   else
     out = in;
 
+  flockfile (out);
+
   /* Turn echoing off if it is on now.  */
 
-  if (tcgetattr (fileno (in), &t) == 0)
+  if (__tcgetattr (fileno (in), &t) == 0)
     {
       /* Save the old one. */
       s = t;
@@ -66,8 +73,8 @@ getpass (prompt)
     tty_changed = 0;
 
   /* Write the prompt.  */
-  fputs (prompt, out);
-  fflush (out);
+  fputs_unlocked (prompt, out);
+  fflush_unlocked (out);
 
   /* Read the password.  */
   nread = __getline (&buf, &bufsize, in);
@@ -80,12 +87,14 @@ getpass (prompt)
 	buf[nread - 1] = '\0';
 	if (tty_changed)
 	  /* Write the newline that was not echoed.  */
-	  putc ('\n', out);
+	  putc_unlocked ('\n', out);
       }
 
   /* Restore the original setting.  */
   if (tty_changed)
     (void) tcsetattr (fileno (in), TCSAFLUSH|TCSASOFT, &s);
+
+  funlockfile (out);
 
   if (in != stdin)
     /* We opened the terminal; now close it.  */

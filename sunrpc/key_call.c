@@ -200,7 +200,7 @@ key_gendes (des_block *key)
   sin.sin_family = AF_INET;
   sin.sin_port = 0;
   sin.sin_addr.s_addr = htonl (INADDR_LOOPBACK);
-  bzero (sin.sin_zero, sizeof (sin.sin_zero));
+  __bzero (sin.sin_zero, sizeof (sin.sin_zero));
   socket = RPC_ANYSOCK;
   client = clntudp_bufcreate (&sin, (u_long) KEY_PROG, (u_long) KEY_VERS,
 			      trytimeout, &socket, RPCSMALLMSGSIZE,
@@ -211,7 +211,7 @@ key_gendes (des_block *key)
   stat = clnt_call (client, KEY_GEN, (xdrproc_t) xdr_void, NULL,
 		    (xdrproc_t) xdr_des_block, (caddr_t) key, tottimeout);
   clnt_destroy (client);
-  close (socket);
+  __close (socket);
   if (stat != RPC_SUCCESS)
     return -1;
 
@@ -286,21 +286,21 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   if (proc == KEY_ENCRYPT_PK && __key_encryptsession_pk_LOCAL)
     {
       cryptkeyres *res;
-      res = (*__key_encryptsession_pk_LOCAL) (geteuid (), arg);
+      res = (*__key_encryptsession_pk_LOCAL) (__geteuid (), arg);
       *(cryptkeyres *) rslt = *res;
       return 1;
     }
   else if (proc == KEY_DECRYPT_PK && __key_decryptsession_pk_LOCAL)
     {
       cryptkeyres *res;
-      res = (*__key_decryptsession_pk_LOCAL) (geteuid (), arg);
+      res = (*__key_decryptsession_pk_LOCAL) (__geteuid (), arg);
       *(cryptkeyres *) rslt = *res;
       return 1;
     }
   else if (proc == KEY_GEN && __key_gendes_LOCAL)
     {
       des_block *res;
-      res = (*__key_gendes_LOCAL) (geteuid (), 0);
+      res = (*__key_gendes_LOCAL) (__geteuid (), 0);
       *(des_block *) rslt = *res;
       return 1;
     }
@@ -308,7 +308,7 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   success = 1;
   sigemptyset (&mask);
   sigaddset (&mask, SIGCHLD);
-  sigprocmask (SIG_BLOCK, &mask, &oldmask);
+  __sigprocmask (SIG_BLOCK, &mask, &oldmask);
 
   /*
    * We are going to exec a set-uid program which makes our effective uid
@@ -316,15 +316,15 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
    * effective uid be the real uid for the setuid program, and
    * the real uid be the effective uid so that we can change things back.
    */
-  euid = geteuid ();
-  ruid = getuid ();
-  setreuid (euid, ruid);
+  euid = __geteuid ();
+  ruid = __getuid ();
+  __setreuid (euid, ruid);
   pid = _openchild (MESSENGER, &fargs, &frslt);
-  setreuid (ruid, euid);
+  __setreuid (ruid, euid);
   if (pid < 0)
     {
       debug ("open_streams");
-      sigprocmask(SIG_SETMASK, &oldmask, NULL);
+      __sigprocmask (SIG_SETMASK, &oldmask, NULL);
       return (0);
     }
   xdrstdio_create (&xdrargs, fargs, XDR_ENCODE);
@@ -345,23 +345,23 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
   fclose(frslt);
 
  wait_again:
-  if (wait4(pid, &status, 0, NULL) < 0)
+  if (__wait4 (pid, &status, 0, NULL) < 0)
     {
       if (errno == EINTR)
 	goto wait_again;
-      debug("wait4");
+      debug ("wait4");
       if (errno == ECHILD || errno == ESRCH)
-	perror("wait");
+	perror ("wait");
       else
 	success = 0;
     }
   else
     if (status.w_retcode)
       {
-	debug("wait4 1");
+	debug ("wait4 1");
 	success = 0;
       }
-  sigprocmask(SIG_SETMASK, &oldmask, NULL);
+  __sigprocmask (SIG_SETMASK, &oldmask, NULL);
 
-  return (success);
+  return success;
 }

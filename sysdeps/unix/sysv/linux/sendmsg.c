@@ -63,12 +63,12 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	     You can send real, effective, or set- uid and gid.
 	     If the user hasn't filled in the buffer, we default to
 	     real uid and gid. */
-	  pid = getpid ();
+	  pid = __getpid ();
 	  if (cc->cmcred_pid != pid)
 	  {
 	      u->pid = pid;
-	      u->uid = getuid ();
-	      u->gid = getgid ();
+	      u->uid = __getuid ();
+	      u->gid = __getgid ();
 	  }
 	  else
 	  {

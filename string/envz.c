@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated environment vectors
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -119,7 +119,7 @@ envz_add (char **envz, size_t *envz_len, const char *name, const char *value)
     }
   else
     /* Add a null entry.  */
-    return argz_add (envz, envz_len, name);
+    return __argz_add (envz, envz_len, name);
 }
 
 /* Adds each entry in ENVZ2 to ENVZ & ENVZ_LEN, as if with envz_add().  If
@@ -137,11 +137,11 @@ envz_merge (char **envz, size_t *envz_len, const char *envz2,
       size_t new_len = strlen (envz2) + 1;
 
       if (! old)
-	err = argz_append (envz, envz_len, envz2, new_len);
+	err = __argz_append (envz, envz_len, envz2, new_len);
       else if (override)
 	{
 	  argz_delete (envz, envz_len, old);
-	  err = argz_append (envz, envz_len, envz2, new_len);
+	  err = __argz_append (envz, envz_len, envz2, new_len);
 	}
 
       envz2 += new_len;

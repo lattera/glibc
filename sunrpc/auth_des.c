@@ -243,7 +243,7 @@ authdes_marshal (AUTH * auth, XDR * xdrs)
    * Figure out the "time", accounting for any time difference
    * with the server if necessary.
    */
-  gettimeofday (&ad->ad_timestamp, (struct timezone *) NULL);
+  __gettimeofday (&ad->ad_timestamp, (struct timezone *) NULL);
   ad->ad_timestamp.tv_sec += ad->ad_timediff.tv_sec;
   ad->ad_timestamp.tv_usec += ad->ad_timediff.tv_usec;
   if (ad->ad_timestamp.tv_usec >= MILLION)
@@ -371,8 +371,8 @@ authdes_validate (AUTH * auth, struct opaque_auth *rverf)
   /*
    * validate
    */
-  if (bcmp ((char *) &ad->ad_timestamp, (char *) &verf.adv_timestamp,
-	    sizeof (struct timeval)) != 0)
+  if (memcmp ((char *) &ad->ad_timestamp, (char *) &verf.adv_timestamp,
+	      sizeof (struct timeval)) != 0)
     {
       debug ("authdes_validate: verifier mismatch\n");
       return (FALSE);
@@ -449,7 +449,7 @@ synchronize (struct sockaddr *syncaddr, struct timeval *timep)
   if (rtime ((struct sockaddr_in *) syncaddr, timep, &timeout) < 0)
     return (FALSE);
 
-  gettimeofday (&mytime, (struct timezone *) NULL);
+  __gettimeofday (&mytime, (struct timezone *) NULL);
   timep->tv_sec -= mytime.tv_sec;
   if (mytime.tv_usec > timep->tv_usec)
     {

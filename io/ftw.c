@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -38,7 +38,7 @@
 # define INO_T ino_t
 # define STAT stat
 # define DIRENT dirent
-# define READDIR readdir
+# define READDIR __readdir
 # define LXSTAT __lxstat
 # define XSTAT __xstat
 # define FTW_FUNC_T __ftw_func_t
@@ -205,7 +205,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 	    }
 	  else
 	    {
-	      closedir (st);
+	      __closedir (st);
 	      data->dirstreams[data->actdir]->stream = NULL;
 	      data->dirstreams[data->actdir] = NULL;
 	    }
@@ -217,7 +217,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
     {
       assert (data->dirstreams[data->actdir] == NULL);
 
-      dirp->stream = opendir (data->dirbuf);
+      dirp->stream = __opendir (data->dirbuf);
       if (dirp->stream == NULL)
 	result = -1;
       else
@@ -309,7 +309,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 		    {
 		      if (data->ftw.base == 1)
 			{
-			  if (chdir ("/") < 0)
+			  if (__chdir ("/") < 0)
 			    result = -1;
 			}
 		      else
@@ -317,7 +317,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 			  /* Please note that we overwrite a slash.  */
 			  data->dirbuf[data->ftw.base - 1] = '\0';
 
-			  if (chdir (data->dirbuf) < 0)
+			  if (__chdir (data->dirbuf) < 0)
 			    result = -1;
 
 			  data->dirbuf[data->ftw.base - 1] = '/';
@@ -372,7 +372,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 	{
 	  if (errno == ENOSYS)
 	    {
-	      if (chdir (data->dirbuf) < 0)
+	      if (__chdir (data->dirbuf) < 0)
 		result = -1;
 	    }
 	  else
@@ -382,7 +382,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
       if (result != 0)
 	{
 	  int save_err = errno;
-	  closedir (dir.stream);
+	  __closedir (dir.stream);
 	  __set_errno (save_err);
 
 	  if (data->actdir-- == 0)
@@ -414,7 +414,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 
       assert (dir.content == NULL);
 
-      closedir (dir.stream);
+      __closedir (dir.stream);
       __set_errno (save_err);
 
       if (data->actdir-- == 0)
@@ -524,7 +524,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   if ((flags & FTW_CHDIR) && data.ftw.base > 0)
     {
       /* GNU extension ahead.  */
-      cwd =  getcwd (NULL, 0);
+      cwd =  __getcwd (NULL, 0);
       if (cwd == NULL)
 	result = -1;
       else
@@ -534,12 +534,12 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	     terminate it for now and change the directory.  */
 	  if (data.ftw.base == 1)
 	    /* I.e., the file is in the root directory.  */
-	    result = chdir ("/");
+	    result = __chdir ("/");
 	  else
 	    {
 	      char ch = data.dirbuf[data.ftw.base - 1];
 	      data.dirbuf[data.ftw.base - 1] = '\0';
-	      result = chdir (data.dirbuf);
+	      result = __chdir (data.dirbuf);
 	      data.dirbuf[data.ftw.base - 1] = ch;
 	    }
 	}
@@ -592,7 +592,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   if (cwd != NULL)
     {
       int save_err = errno;
-      chdir (cwd);
+      __chdir (cwd);
       free (cwd);
       __set_errno (save_err);
     }

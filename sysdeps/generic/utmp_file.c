@@ -59,23 +59,23 @@ static void timeout_handler (int signum) {};
   action.sa_handler = timeout_handler;                                  \
   sigemptyset (&action.sa_mask);                                        \
   action.sa_flags = 0;                                                  \
-  sigaction (SIGALRM, &action, &old_action);                            \
+  __sigaction (SIGALRM, &action, &old_action);                          \
                                                                         \
   alarm (TIMEOUT);                                                      \
                                                                         \
   /* Try to get the lock.  */                                           \
   memset (&fl, '\0', sizeof (struct flock));                            \
-  fl.l_type = (type);                                                 \
+  fl.l_type = (type);                                                   \
   fl.l_whence = SEEK_SET;                                               \
-  fcntl ((fd), F_SETLKW, &fl)
+  __fcntl ((fd), F_SETLKW, &fl)
 
 #define UNLOCK_FILE(fd) \
   /* Unlock the file.  */                                               \
   fl.l_type = F_UNLCK;                                                  \
-  fcntl ((fd), F_SETLKW, &fl);                                          \
+  __fcntl ((fd), F_SETLKW, &fl);                                        \
                                                                         \
   /* Reset the signal handler and alarm.  */                            \
-  sigaction (SIGALRM, &old_action, NULL);                               \
+  __sigaction (SIGALRM, &old_action, NULL);                             \
   alarm (old_timeout);                                                  \
 } while (0)
 
@@ -117,17 +117,17 @@ setutent_file (void)
 
       file_name = TRANSFORM_UTMP_FILE_NAME (__libc_utmp_file_name);
 
-      file_fd = open (file_name, O_RDWR);
+      file_fd = __open (file_name, O_RDWR);
       if (file_fd == -1)
 	{
 	  /* Hhm, read-write access did not work.  Try read-only.  */
-	  file_fd = open (file_name, O_RDONLY);
+	  file_fd = __open (file_name, O_RDONLY);
 	  if (file_fd == -1)
 	    return 0;
 	}
     }
 
-  lseek (file_fd, 0, SEEK_SET);
+  __lseek (file_fd, 0, SEEK_SET);
   file_offset = 0;
 
 #if _HAVE_UT_TYPE - 0
@@ -156,7 +156,7 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   LOCK_FILE (file_fd, F_RDLCK);
 
   /* Read the next entry.  */
-  nbytes = read (file_fd, &last_entry, sizeof (struct utmp));
+  nbytes = __read (file_fd, &last_entry, sizeof (struct utmp));
 
   UNLOCK_FILE (file_fd);
 
@@ -221,7 +221,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (read (file_fd, buffer, sizeof (struct utmp))
+	  if (__read (file_fd, buffer, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -243,7 +243,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (read (file_fd, buffer, sizeof (struct utmp))
+	  if (__read (file_fd, buffer, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -312,7 +312,7 @@ getutline_r_file (const struct utmp *line, struct utmp *buffer,
   while (1)
     {
       /* Read the next entry.  */
-      if (read (file_fd, &last_entry, sizeof (struct utmp))
+      if (__read (file_fd, &last_entry, sizeof (struct utmp))
 	  != sizeof (struct utmp))
 	{
 	  __set_errno (ESRCH);
@@ -373,13 +373,13 @@ pututline_file (const struct utmp *data)
   if (found < 0)
     {
       /* We append the next entry.  */
-      file_offset = lseek (file_fd, 0, SEEK_END);
+      file_offset = __lseek (file_fd, 0, SEEK_END);
       if (file_offset % sizeof (struct utmp) != 0)
 	{
 	  file_offset -= file_offset % sizeof (struct utmp);
 	  __ftruncate (file_fd, file_offset);
 
-	  if (lseek (file_fd, 0, SEEK_END) < 0)
+	  if (__lseek (file_fd, 0, SEEK_END) < 0)
 	    {
 	      pbuf = NULL;
 	      goto unlock_return;
@@ -390,11 +390,11 @@ pututline_file (const struct utmp *data)
     {
       /* We replace the just read entry.  */
       file_offset -= sizeof (struct utmp);
-      lseek (file_fd, file_offset, SEEK_SET);
+      __lseek (file_fd, file_offset, SEEK_SET);
     }
 
   /* Write the new data.  */
-  if (write (file_fd, data, sizeof (struct utmp)) != sizeof (struct utmp))
+  if (__write (file_fd, data, sizeof (struct utmp)) != sizeof (struct utmp))
     {
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
@@ -420,7 +420,7 @@ endutent_file (void)
 {
   assert (file_fd >= 0);
 
-  close (file_fd);
+  __close (file_fd);
   file_fd = -1;
 }
 
@@ -433,27 +433,27 @@ updwtmp_file (const char *file, const struct utmp *utmp)
   int fd;
 
   /* Open WTMP file.  */
-  fd = open (file, O_WRONLY);
+  fd = __open (file, O_WRONLY);
   if (fd < 0)
     return -1;
 
   LOCK_FILE (fd, F_WRLCK);
 
   /* Remember original size of log file.  */
-  offset = lseek (fd, 0, SEEK_END);
+  offset = __lseek (fd, 0, SEEK_END);
   if (offset % sizeof (struct utmp) != 0)
     {
       offset -= offset % sizeof (struct utmp);
       __ftruncate (fd, offset);
 
-      if (lseek (fd, 0, SEEK_END) < 0)
+      if (__lseek (fd, 0, SEEK_END) < 0)
 	goto unlock_return;
     }
 
   /* Write the entry.  If we can't write all the bytes, reset the file
      size back to the original size.  That way, no partial entries
      will remain.  */
-  if (write (fd, utmp, sizeof (struct utmp)) != sizeof (struct utmp))
+  if (__write (fd, utmp, sizeof (struct utmp)) != sizeof (struct utmp))
     {
       __ftruncate (fd, offset);
       goto unlock_return;
@@ -465,7 +465,7 @@ unlock_return:
   UNLOCK_FILE (fd);
 
   /* Close WTMP file.  */
-  close (fd);
+  __close (fd);
 
   return result;
 }

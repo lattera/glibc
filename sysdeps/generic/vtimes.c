@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ vtimes_one (struct vtimes *vt, enum __rusage_who who)
     {
       struct rusage usage;
 
-      if (getrusage (who, &usage) < 0)
+      if (__getrusage (who, &usage) < 0)
 	return -1;
 
       vt->vm_utime = TIMEVAL_TO_VTIMES (usage.ru_utime);

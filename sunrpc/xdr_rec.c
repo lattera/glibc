@@ -53,6 +53,11 @@ static char sccsid[] = "@(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #include <unistd.h>
 #include <rpc/rpc.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define fputs(s, f) _IO_fputs (s, f)
+#endif
+
 static bool_t xdrrec_getlong (XDR *, long *);
 static bool_t xdrrec_putlong (XDR *, const long *);
 static bool_t xdrrec_getbytes (XDR *, caddr_t, u_int);
@@ -309,7 +314,7 @@ xdrrec_getpos (const XDR *xdrs)
   RECSTREAM *rstrm = (RECSTREAM *) xdrs->x_private;
   long pos;
 
-  pos = lseek ((int) rstrm->tcp_handle, (long) 0, 1);
+  pos = __lseek ((int) rstrm->tcp_handle, (long) 0, 1);
   if (pos != -1)
     switch (xdrs->x_op)
       {

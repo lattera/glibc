@@ -58,6 +58,10 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <varargs.h>
 #endif
 
+#ifdef USE_IN_LIBIO
+# define ftell(s) _IO_ftell (s)
+#endif
+
 static int	LogType = SOCK_DGRAM;	/* type of socket connection */
 static int	LogFile = -1;		/* fd for log */
 static int	connected;		/* have done connect */
@@ -152,11 +156,11 @@ vsyslog(pri, fmt, ap)
 	if (LogTag == NULL)
 	  LogTag = __progname;
 	if (LogTag != NULL)
-	  fputs (LogTag, f);
+	  fputs_unlocked (LogTag, f);
 	if (LogStat & LOG_PID)
-	  fprintf (f, "[%d]", getpid ());
+	  fprintf (f, "[%d]", __getpid ());
 	if (LogTag != NULL)
-	  putc (':', f), putc (' ', f);
+	  putc_unlocked (':', f), putc_unlocked (' ', f);
 
 	/* We have the header.  Print the user's format into the buffer.  */
 	vfprintf (f, fmt, ap);
@@ -175,7 +179,7 @@ vsyslog(pri, fmt, ap)
 		++v;
 		v->iov_base = (char *) "\n";
 		v->iov_len = 1;
-		(void)writev(STDERR_FILENO, iov, 2);
+		(void)__writev(STDERR_FILENO, iov, 2);
 	}
 
 	/* Prepare for multiple users.  We have to take care: open and
@@ -188,7 +192,7 @@ vsyslog(pri, fmt, ap)
  	memset (&action, 0, sizeof (action));
  	action.sa_handler = sigpipe_handler;
  	sigemptyset (&action.sa_mask);
- 	sigpipe = sigaction (SIGPIPE, &action, &oldaction);
+ 	sigpipe = __sigaction (SIGPIPE, &action, &oldaction);
 	if (sigpipe == 0)
 	  oldaction_ptr = &oldaction;
 
@@ -210,15 +214,15 @@ vsyslog(pri, fmt, ap)
 	     * is the one from the syslogd failure.
 	     */
 	    if (LogStat & LOG_CONS &&
-		(fd = open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
+		(fd = __open(_PATH_CONSOLE, O_WRONLY|O_NOCTTY, 0)) >= 0)
 	      {
 		dprintf (fd, "%s\r\n", buf + msgoff);
-		(void)close(fd);
+		(void)__close(fd);
 	      }
 	  }
 
 	if (sigpipe == 0)
-		sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
+		__sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
 
 	/* End of critical section.  */
 	__libc_cleanup_region_end (0);
@@ -248,7 +252,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 				if ((LogFile = __socket(AF_UNIX, LogType, 0))
 				    == -1)
 					return;
-				(void)fcntl(LogFile, F_SETFD, 1);
+				(void)__fcntl(LogFile, F_SETFD, 1);
 			}
 		}
 		if (LogFile != -1 && !connected)
@@ -258,7 +262,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 			    == -1)
 			{
 				int saved_errno = errno;
-				(void)close(LogFile);
+				(void)__close(LogFile);
 				LogFile = -1;
 				if (LogType == SOCK_DGRAM
 				    && saved_errno == EPROTOTYPE)
@@ -301,7 +305,7 @@ closelog_internal()
   if (!connected)
     return;
 
-  close (LogFile);
+  __close (LogFile);
   LogFile = -1;
   connected = 0;
   LogTag = NULL;
@@ -329,7 +333,7 @@ cancel_handler (void *ptr)
   struct sigaction *oldaction = *((struct sigaction **) ptr);
 
   if (oldaction != (struct sigaction *) NULL)
-    sigaction (SIGPIPE, oldaction, (struct sigaction *) NULL);
+    __sigaction (SIGPIPE, oldaction, (struct sigaction *) NULL);
 
   /* Free the lock.  */
   __libc_lock_unlock (syslog_lock);

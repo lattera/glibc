@@ -252,52 +252,6 @@ _dl_show_auxv (void)
       }
 }
 
-/* Walk through the environment of the process and return all entries
-   starting with `LD_'.  */
-char *
-internal_function
-_dl_next_ld_env_entry (char ***position)
-{
-  char **current = *position;
-  char *result = NULL;
-
-  if (current == NULL)
-    /* We start over.  */
-    current = _environ;
-
-  while (result == NULL && *current != NULL)
-    {
-      if ((*current)[0] == 'L' && (*current)[1] == 'D' && (*current)[2] == '_')
-	result = *current;
-
-      ++current;
-    }
-
-  /* Save current position for next visit.  */
-  *position = current;
-
-  return result;
-}
-
-void
-unsetenv (const char *name)
-{
-  const size_t len = strlen (name);
-  char **ep;
-
-  for (ep = __environ; *ep != NULL; ++ep)
-    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
-      {
-	/* Found it.  Remove this pointer by moving later ones back.  */
-	char **dp = ep;
-
-	do
-	  dp[0] = dp[1];
-	while (*dp++);
-	/* Continue the loop in case NAME appears again.  */
-      }
-}
-
 
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *

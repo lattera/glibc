@@ -132,17 +132,17 @@ typedef struct CLIENT CLIENT;
 struct CLIENT {
   AUTH	*cl_auth;		 /* authenticator */
   struct clnt_ops {
-    enum clnt_stat (*cl_call) __P ((CLIENT *, u_long, xdrproc_t,
-				    caddr_t, xdrproc_t,
-				    caddr_t, struct timeval));
+    enum clnt_stat (*cl_call) __PMT ((CLIENT *, u_long, xdrproc_t,
+				      caddr_t, xdrproc_t,
+				      caddr_t, struct timeval));
 			       	/* call remote procedure */
-    void (*cl_abort) __P ((void));  /* abort a call */
-    void (*cl_geterr) __P ((CLIENT *, struct rpc_err *));
+    void (*cl_abort) __PMT ((void));  /* abort a call */
+    void (*cl_geterr) __PMT ((CLIENT *, struct rpc_err *));
 				/* get specific error code */
-    bool_t (*cl_freeres) __P ((CLIENT *, xdrproc_t, caddr_t));
+    bool_t (*cl_freeres) __PMT ((CLIENT *, xdrproc_t, caddr_t));
 				/* frees results */
-    void (*cl_destroy) __P ((CLIENT *)); /* destroy this structure */
-    bool_t (*cl_control) __P ((CLIENT *, int, char *));
+    void (*cl_destroy) __PMT ((CLIENT *)); /* destroy this structure */
+    bool_t (*cl_control) __PMT ((CLIENT *, int, char *));
 				/* the ioctl() of rpc */
   } *cl_ops;
   caddr_t cl_private;		/* private stuff */

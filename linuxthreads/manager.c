@@ -217,6 +217,12 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   void *guardaddr = NULL;
   size_t guardsize = 0;
 
+  /* First check whether we have to change the policy and if yes, whether
+     we can  do this.  Normally this should be done by examining the
+     return value of the __sched_setscheduler call in pthread_start_thread
+     but this is hard to implement.  FIXME  */
+  if (attr != NULL && attr->schedpolicy != SCHED_OTHER && geteuid () != 0)
+    return EPERM;
   /* Find a free stack segment for the current stack */
   for (sseg = 1; ; sseg++)
     {

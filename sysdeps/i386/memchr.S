@@ -1,7 +1,7 @@
 /* memchr (str, ch, n) -- Return pointer to first occurrence of CH in STR less
    than N.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -70,7 +70,7 @@ ENTRY (memchr)
 	   So process first bytes one by one until boundary is
 	   reached. Don't use a loop for better performance.  */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	je L(2)			/* yes => begin loop */
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
@@ -78,7 +78,7 @@ ENTRY (memchr)
 	decl %esi		/* decrement length counter */
 	je L(4)			/* len==0 => return NULL */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	je L(2)			/* yes => begin loop */
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
@@ -86,7 +86,7 @@ ENTRY (memchr)
 	decl %esi		/* decrement length counter */
 	je L(4)			/* len==0 => return NULL */
 
-	testb $3, %eax		/* correctly aligned ? */
+	testb $3, %al		/* correctly aligned ? */
 	je L(2)			/* yes => begin loop */
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */

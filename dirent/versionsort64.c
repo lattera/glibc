@@ -22,6 +22,6 @@
 int
 versionsort64 (const void *a, const void *b)
 {
-  return strverscmp ((*(const struct dirent64 **) a)->d_name,
-		     (*(const struct dirent64 **) b)->d_name);
+  return __strverscmp ((*(const struct dirent64 **) a)->d_name,
+		       (*(const struct dirent64 **) b)->d_name);
 }

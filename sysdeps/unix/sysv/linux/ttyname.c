@@ -72,7 +72,7 @@ getttyname (dev, fd, mydev, myino, save, dostat)
 	      {
 		*dostat = -1;
 		/* Perhaps it helps to free the directory stream buffer.  */
-		(void) closedir (dirstream);
+		(void) __closedir (dirstream);
 		return NULL;
 	      }
 	    *((char *) __mempcpy (name, dev, devlen - 1)) = '/';
@@ -86,14 +86,14 @@ getttyname (dev, fd, mydev, myino, save, dostat)
 #endif
 	   )
 	  {
-	    (void) closedir (dirstream);
+	    (void) __closedir (dirstream);
 	    __ttyname = name;
 	    __set_errno (save);
 	    return name;
 	  }
       }
 
-  (void) closedir (dirstream);
+  (void) __closedir (dirstream);
   __set_errno (save);
   return NULL;
 }

@@ -24,13 +24,17 @@
 
 extern const char *__assert_program_name; /* In assert.c.  */
 
+#ifdef USE_IN_LIBIO
+# define fflush(s) _IO_fflush (s)
+#endif
+
 /* This function, when passed an error number, a filename, and a line
    number, prints a message on the standard error stream of the form:
    	a.c:10: foobar: Unexpected error: Computer bought the farm
    It then aborts program execution via a call to `abort'.  */
 
 #ifdef FATAL_PREPARE_INCLUDE
-#include FATAL_PREPARE_INCLUDE
+# include FATAL_PREPARE_INCLUDE
 #endif
 
 void

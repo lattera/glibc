@@ -49,6 +49,11 @@ static char sccsid[] = "@(#)svc_tcp.c 1.21 87/08/11 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <stdlib.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define fputs(s, f) _IO_fputs (s, f)
+#endif
+
 /*
  * Ops vector for TCP/IP based rpc service handle
  */
@@ -134,14 +139,14 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+      if ((sock = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	{
 	  perror (_("svctcp_.c - udp socket creation problem"));
 	  return (SVCXPRT *) NULL;
 	}
       madesock = TRUE;
     }
-  bzero ((char *) &addr, sizeof (addr));
+  __bzero ((char *) &addr, sizeof (addr));
   addr.sin_family = AF_INET;
   if (bindresvport (sock, &addr))
     {
@@ -153,7 +158,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
     {
       perror (_("svctcp_.c - cannot getsockname or listen"));
       if (madesock)
-	(void) close (sock);
+	(void) __close (sock);
       return (SVCXPRT *) NULL;
     }
   r = (struct tcp_rendezvous *) mem_alloc (sizeof (*r));
@@ -237,8 +242,7 @@ rendezvous_request (SVCXPRT *xprt, struct rpc_msg *errmsg)
   r = (struct tcp_rendezvous *) xprt->xp_p1;
 again:
   len = sizeof (struct sockaddr_in);
-  if ((sock = accept (xprt->xp_sock, (struct sockaddr *) &addr,
-		      &len)) < 0)
+  if ((sock = accept (xprt->xp_sock, (struct sockaddr *) &addr, &len)) < 0)
     {
       if (errno == EINTR)
 	goto again;
@@ -265,7 +269,7 @@ svctcp_destroy (SVCXPRT *xprt)
   struct tcp_conn *cd = (struct tcp_conn *) xprt->xp_p1;
 
   xprt_unregister (xprt);
-  (void) close (xprt->xp_sock);
+  (void) __close (xprt->xp_sock);
   if (xprt->xp_port != 0)
     {
       /* a rendezvouser socket */
@@ -318,8 +322,8 @@ readtcp (char *xprtptr, char *buf, int len)
 #else
       readfds |= (1 << sock);
 #endif /* def FD_SETSIZE */
-      if (select (_rpc_dtablesize (), &readfds, (fd_set *) NULL,
-		  (fd_set *) NULL, &timeout) <= 0)
+      if (__select (_rpc_dtablesize (), &readfds, (fd_set *) NULL,
+		    (fd_set *) NULL, &timeout) <= 0)
 	{
 	  if (errno == EINTR)
 	    continue;
@@ -336,7 +340,7 @@ readtcp (char *xprtptr, char *buf, int len)
       svc_getreqset (&readfds);
     }
 
-  if ((len = read (sock, buf, len)) > 0)
+  if ((len = __read (sock, buf, len)) > 0)
     return len;
 
 fatal_err:
@@ -356,7 +360,7 @@ writetcp (char *xprtptr, char * buf, int len)
 
   for (cnt = len; cnt > 0; cnt -= i, buf += i)
     {
-      if ((i = write (xprt->xp_sock, buf, cnt)) < 0)
+      if ((i = __write (xprt->xp_sock, buf, cnt)) < 0)
 	{
 	  ((struct tcp_conn *) (xprt->xp_p1))->strm_stat =
 	    XPRT_DIED;

@@ -65,14 +65,14 @@ get_myaddress (struct sockaddr_in *addr)
   struct ifreq ifreq, *ifr;
   int len, loopback = 0;
 
-  if ((s = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+  if ((s = __socket (AF_INET, SOCK_DGRAM, 0)) < 0)
     {
       perror ("get_myaddress: socket");
       exit (1);
     }
   ifc.ifc_len = sizeof (buf);
   ifc.ifc_buf = buf;
-  if (ioctl (s, SIOCGIFCONF, (char *) &ifc) < 0)
+  if (__ioctl (s, SIOCGIFCONF, (char *) &ifc) < 0)
     {
       perror (_("get_myaddress: ioctl (get interface configuration)"));
       exit (1);
@@ -83,7 +83,7 @@ get_myaddress (struct sockaddr_in *addr)
   for (len = ifc.ifc_len; len; len -= sizeof ifreq)
     {
       ifreq = *ifr;
-      if (ioctl (s, SIOCGIFFLAGS, (char *) &ifreq) < 0)
+      if (__ioctl (s, SIOCGIFFLAGS, (char *) &ifreq) < 0)
 	{
           perror ("get_myaddress: ioctl");
           exit (1);
@@ -94,7 +94,7 @@ get_myaddress (struct sockaddr_in *addr)
 	{
 	  *addr = *((struct sockaddr_in *) &ifr->ifr_addr);
 	  addr->sin_port = htons (PMAPPORT);
-	  close (s);
+	  __close (s);
 	  return;
 	}
       ifr++;
@@ -104,5 +104,5 @@ get_myaddress (struct sockaddr_in *addr)
       loopback = 1;
       goto again;
     }
-  close (s);
+  __close (s);
 }

@@ -51,14 +51,14 @@ getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
   DIR *dirstream;
   struct dirent *d;
 
-  dirstream = opendir (dev);
+  dirstream = __opendir (dev);
   if (dirstream == NULL)
     {
       *dostat = -1;
       return errno;
     }
 
-  while ((d = readdir (dirstream)) != NULL)
+  while ((d = __readdir (dirstream)) != NULL)
     if (((ino_t) d->d_fileno == myino || *dostat)
 	&& strcmp (d->d_name, "stdin")
 	&& strcmp (d->d_name, "stdout")
@@ -70,7 +70,7 @@ getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
 	if (needed > buflen)
 	  {
 	    *dostat = -1;
-	    (void) closedir (dirstream);
+	    (void) __closedir (dirstream);
 	    __set_errno (ERANGE);
 	    return ERANGE;
 	  }
@@ -86,13 +86,13 @@ getttyname_r (fd, buf, buflen, mydev, myino, save, dostat)
 #endif
 	   )
 	  {
-	    (void) closedir (dirstream);
+	    (void) __closedir (dirstream);
 	    __set_errno (save);
 	    return 0;
 	  }
       }
 
-  (void) closedir (dirstream);
+  (void) __closedir (dirstream);
   __set_errno (save);
   /* It is not clear what to return in this case.  `isatty' says FD
      refers to a TTY but no entry in /dev has this inode.  */

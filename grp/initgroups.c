@@ -52,7 +52,7 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 	     long int *size, gid_t *groups, long int limit, int *errnop)
 {
   struct group grpbuf, *g;
-  size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
+  size_t buflen = __sysconf (_SC_GETPW_R_SIZE_MAX);
   char *tmpbuf;
   enum nss_status status;
   set_function setgrent_fct;
@@ -155,7 +155,7 @@ initgroups (user, group)
 
   size = limit;
 #else
-  long int limit = sysconf (_SC_NGROUPS_MAX);
+  long int limit = __sysconf (_SC_NGROUPS_MAX);
 
   if (limit > 0)
     size = limit;

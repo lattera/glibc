@@ -1,5 +1,5 @@
 /* err.c --- 4.4BSD utility functions for error messages.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,11 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# define flockfile(s) _IO_flockfile (s)
+# define funlockfile(s) _IO_funlockfile (s)
+#endif
+
 extern char *__progname;
 
 #define VA(call)							      \
@@ -37,11 +42,13 @@ extern char *__progname;
 void
 vwarnx (const char *format, __gnuc_va_list ap)
 {
+  flockfile (stderr);
   if (__progname)
     fprintf (stderr, "%s: ", __progname);
   if (format)
     vfprintf (stderr, format, ap);
-  putc ('\n', stderr);
+  putc_unlocked ('\n', stderr);
+  funlockfile (stderr);
 }
 
 void
@@ -49,15 +56,17 @@ vwarn (const char *format, __gnuc_va_list ap)
 {
   int error = errno;
 
+  flockfile (stderr);
   if (__progname)
     fprintf (stderr, "%s: ", __progname);
   if (format)
     {
       vfprintf (stderr, format, ap);
-      fputs (": ", stderr);
+      fputs_unlocked (": ", stderr);
     }
   __set_errno (error);
   fprintf (stderr, "%m\n");
+  funlockfile (stderr);
 }
 
 

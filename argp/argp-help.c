@@ -32,11 +32,16 @@
 
 #ifndef _
 /* This is for other GNU distributions with internationalized messages.  */
-#ifdef HAVE_LIBINTL_H
-# include <libintl.h>
-#else
-# define dgettext(domain, msgid) (msgid)
+# ifdef HAVE_LIBINTL_H
+#  include <libintl.h>
+# else
+#  define dgettext(domain, msgid) (msgid)
+# endif
 #endif
+
+#ifdef USE_IN_LIBIO
+# define flockfile(s) _IO_flockfile (s)
+# define funlockfile(s) _IO_funlockfile (s)
 #endif
 
 #include "argp.h"
@@ -1405,7 +1410,7 @@ argp_doc (const struct argp *argp, const struct argp_state *state,
     {
       if (inp_text_limit)
 	/* Copy INP_TEXT so that it's nul-terminated.  */
-	inp_text = strndup (inp_text, inp_text_limit);
+	inp_text = __strndup (inp_text, inp_text_limit);
       input = __argp_input (argp, state);
       text =
 	(*argp->help_filter) (post
@@ -1479,12 +1484,17 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
   if (! stream)
     return;
 
+  flockfile (stream);
+
   if (! uparams.valid)
     fill_in_uparams (state);
 
   fs = __argp_make_fmtstream (stream, 0, uparams.rmargin, 0);
   if (! fs)
-    return;
+    {
+      funlockfile (stream);
+      return;
+    }
 
   if (flags & (ARGP_HELP_USAGE | ARGP_HELP_SHORT_USAGE | ARGP_HELP_LONG))
     {
@@ -1590,6 +1600,8 @@ Try `%s --help' or `%s --usage' for more information.\n"),
       anything = 1;
     }
 
+  funlockfile (stream);
+
   if (hol)
     hol_free (hol);
 
@@ -1647,17 +1659,22 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
 	{
 	  va_list ap;
 
-	  fputs (state ? state->name : program_invocation_short_name, stream);
-	  putc (':', stream);
-	  putc (' ', stream);
+	  flockfile (stream);
+
+	  fputs_unlocked (state ? state->name : program_invocation_short_name,
+			  stream);
+	  putc_unlocked (':', stream);
+	  putc_unlocked (' ', stream);
 
 	  va_start (ap, fmt);
 	  vfprintf (stream, fmt, ap);
 	  va_end (ap);
 
-	  putc ('\n', stream);
+	  putc_unlocked ('\n', stream);
 
 	  __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
+
+	  funlockfile (stream);
 	}
     }
 }
@@ -1683,14 +1700,17 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
       if (stream)
 	{
-	  fputs (state ? state->name : program_invocation_short_name, stream);
+	  flockfile (stream);
+
+	  fputs_unlocked (state ? state->name : program_invocation_short_name,
+			  stream);
 
 	  if (fmt)
 	    {
 	      va_list ap;
 
-	      putc (':', stream);
-	      putc (' ', stream);
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
 
 	      va_start (ap, fmt);
 	      vfprintf (stream, fmt, ap);
@@ -1699,12 +1719,14 @@ __argp_failure (const struct argp_state *state, int status, int errnum,
 
 	  if (errnum)
 	    {
-	      putc (':', stream);
-	      putc (' ', stream);
+	      putc_unlocked (':', stream);
+	      putc_unlocked (' ', stream);
 	      fputs (strerror (errnum), stream);
 	    }
 
-	  putc ('\n', stream);
+	  putc_unlocked ('\n', stream);
+
+	  funlockfile (stream);
 
 	  if (status && (!state || !(state->flags & ARGP_NO_EXIT)))
 	    exit (status);

@@ -45,9 +45,6 @@
 extern char *alloca ();
 #  endif /* __GNUC__ */
 # endif /* HAVE_ALLOCA_H */
-
-# define setenv __setenv
-# define unsetenv __unsetenv
 #endif /* _LIBC */
 
 
@@ -67,9 +64,9 @@ putenv (string)
       memcpy (name, string, name_end - string);
       name[name_end - string] = '\0';
 #endif
-      return setenv (name, name_end + 1, 1);
+      return __setenv (name, name_end + 1, 1);
     }
 
-  unsetenv (string);
+  __unsetenv (string);
   return 0;
 }

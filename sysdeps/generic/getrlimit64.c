@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 {
   struct rlimit rlimits32;
 
-  if (getrlimit (resource, &rlimits32) < 0)
+  if (__getrlimit (resource, &rlimits32) < 0)
     return -1;
 
   if (rlimits32.rlim_cur == RLIM_INFINITY)

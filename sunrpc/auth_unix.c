@@ -130,7 +130,7 @@ authunix_create (machname, uid, gid, len, aup_gids)
   /*
    * fill in param struct from the given params
    */
-  (void) gettimeofday (&now, (struct timezone *) 0);
+  (void) __gettimeofday (&now, (struct timezone *) 0);
   aup.aup_time = now.tv_sec;
   aup.aup_machname = machname;
   aup.aup_uid = uid;
@@ -175,13 +175,13 @@ authunix_create_default (void)
   int max_nr_groups = __sysconf (_SC_NGROUPS_MAX);
   gid_t gids[max_nr_groups];
 
-  if (gethostname (machname, MAX_MACHINE_NAME) == -1)
+  if (__gethostname (machname, MAX_MACHINE_NAME) == -1)
     abort ();
   machname[MAX_MACHINE_NAME] = 0;
-  uid = geteuid ();
-  gid = getegid ();
+  uid = __geteuid ();
+  gid = __getegid ();
 
-  if ((len = getgroups (max_nr_groups, gids)) < 0)
+  if ((len = __getgroups (max_nr_groups, gids)) < 0)
     abort ();
   /* This braindamaged Sun code forces us here to truncate the
      list of groups to NGRPS members since the code in
@@ -267,7 +267,7 @@ authunix_refresh (AUTH *auth)
     goto done;
 
   /* update the time and serialize in place */
-  (void) gettimeofday (&now, (struct timezone *) 0);
+  (void) __gettimeofday (&now, (struct timezone *) 0);
   aup.aup_time = now.tv_sec;
   xdrs.x_op = XDR_ENCODE;
   XDR_SETPOS (&xdrs, 0);

@@ -57,7 +57,7 @@ __bb_exit_func (void)
     }
   memcpy (&ghdr.cookie[0], GMON_MAGIC, 4);
   memcpy (&ghdr.version, &version, sizeof (version));
-  fwrite (&ghdr, sizeof (ghdr), 1, fp);
+  fwrite_unlocked (&ghdr, sizeof (ghdr), 1, fp);
 
   for (ptr = __bb_head; ptr != 0; ptr = ptr->next)
     {
@@ -66,13 +66,14 @@ __bb_exit_func (void)
       u_int i;
 
       tag = GMON_TAG_BB_COUNT;
-      fwrite (&tag, sizeof (tag), 1, fp);
-      fwrite (&ncounts, sizeof (ncounts), 1, fp);
+      fwrite_unlocked (&tag, sizeof (tag), 1, fp);
+      fwrite_unlocked (&ncounts, sizeof (ncounts), 1, fp);
 
       for (i = 0; i < ncounts; ++i)
 	{
-	  fwrite (&ptr->addresses[i], sizeof (ptr->addresses[0]), 1, fp);
-	  fwrite (&ptr->counts[i], sizeof (ptr->counts[0]), 1, fp);
+	  fwrite_unlocked (&ptr->addresses[i], sizeof (ptr->addresses[0]), 1,
+			   fp);
+	  fwrite_unlocked (&ptr->counts[i], sizeof (ptr->counts[0]), 1, fp);
 	}
     }
   fclose (fp);

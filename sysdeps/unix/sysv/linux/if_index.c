@@ -40,7 +40,7 @@ opensock (void)
 
   if (sock_af != -1)
     {
-      fd = socket (sock_af, SOCK_DGRAM, 0);
+      fd = __socket (sock_af, SOCK_DGRAM, 0);
       if (fd != -1)
         return fd;
     }
@@ -48,19 +48,19 @@ opensock (void)
   __libc_lock_lock (lock);
 
   if (sock_af != -1)
-    fd = socket (sock_af, SOCK_DGRAM, 0);
+    fd = __socket (sock_af, SOCK_DGRAM, 0);
 
   if (fd == -1)
     {
-      fd = socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
+      fd = __socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
       if (fd < 0)
-	fd = socket (sock_af = AF_INET, SOCK_DGRAM, 0);
+	fd = __socket (sock_af = AF_INET, SOCK_DGRAM, 0);
       if (fd < 0)
-	fd = socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
+	fd = __socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
       if (fd < 0)
-	fd = socket (sock_af = AF_AX25, SOCK_DGRAM, 0);
+	fd = __socket (sock_af = AF_AX25, SOCK_DGRAM, 0);
       if (fd < 0)
-	fd = socket (sock_af = AF_APPLETALK, SOCK_DGRAM, 0);
+	fd = __socket (sock_af = AF_APPLETALK, SOCK_DGRAM, 0);
     }
 
   __libc_lock_unlock (lock);
@@ -82,15 +82,15 @@ if_nametoindex (const char *ifname)
     return 0;
 
   strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
-  if (ioctl (fd, SIOGIFINDEX, &ifr) < 0)
+  if (__ioctl (fd, SIOGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;
-      close (fd);
+      __close (fd);
       if (saved_errno == EINVAL)
 	__set_errno (ENOSYS);
       return 0;
     }
-  close (fd);
+  __close (fd);
   return ifr.ifr_ifindex;
 #endif
 }
@@ -134,7 +134,7 @@ if_nameindex (void)
     {
       ifc.ifc_buf = NULL;
       ifc.ifc_len = 0;
-      if (ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
+      if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
 	{
 	  new_siocgifconf = 0;
 	  rq_len = RQ_IFS * sizeof (struct ifreq);
@@ -149,9 +149,9 @@ if_nameindex (void)
   do
     {
       ifc.ifc_buf = alloca (ifc.ifc_len = rq_len);
-      if ((ifc.ifc_buf == NULL) || (ioctl (fd, SIOCGIFCONF, &ifc) < 0))
+      if (ifc.ifc_buf == NULL || __ioctl (fd, SIOCGIFCONF, &ifc) < 0)
 	{
-	  close (fd);
+	  __close (fd);
 	  return NULL;
 	}
       rq_len *= 2;
@@ -163,7 +163,7 @@ if_nameindex (void)
   idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));
   if (idx == NULL)
     {
-      close (fd);
+      __close (fd);
       return NULL;
     }
 
@@ -172,7 +172,7 @@ if_nameindex (void)
       struct ifreq *ifr = &ifc.ifc_req[i];
       idx[i].if_name = __strdup (ifr->ifr_name);
       if (idx[i].if_name == NULL
-	  || ioctl (fd, SIOGIFINDEX, ifr) < 0)
+	  || __ioctl (fd, SIOGIFINDEX, ifr) < 0)
 	{
 	  int saved_errno = errno;
 	  unsigned int j;
@@ -180,7 +180,7 @@ if_nameindex (void)
 	  for (j =  0; j < i; ++j)
 	    free (idx[j].if_name);
 	  free (idx);
-	  close (fd);
+	  __close (fd);
 	  if (saved_errno == EINVAL)
 	    __set_errno (ENOSYS);
 	  return NULL;
@@ -191,7 +191,7 @@ if_nameindex (void)
   idx[i].if_index = 0;
   idx[i].if_name = NULL;
 
-  close (fd);
+  __close (fd);
   return idx;
 #endif
 }
@@ -224,18 +224,18 @@ if_indextoname (unsigned int ifindex, char *ifname)
 	return NULL;
 
       ifr.ifr_ifindex = ifindex;
-      if (ioctl (fd, SIOGIFNAME, &ifr) < 0)
+      if (__ioctl (fd, SIOGIFNAME, &ifr) < 0)
 	{
 	  if (errno == EINVAL)
 	    siogifname_works = 0;   /* Don't make the same mistake twice. */
 	}
       else
 	{
-	  close (fd);
+	  __close (fd);
 	  return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 	}
 
-      close (fd);
+      __close (fd);
 
       __set_errno (serrno);
     }

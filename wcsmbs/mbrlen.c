@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
@@ -31,6 +31,6 @@ __mbrlen (s, n, ps)
      size_t n;
      mbstate_t *ps;
 {
-  return mbrtowc (NULL, s, n, ps ?: &internal);
+  return __mbrtowc (NULL, s, n, ps ?: &internal);
 }
 weak_alias (__mbrlen, mbrlen)

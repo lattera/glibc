@@ -78,18 +78,18 @@ struct SVCXPRT {
   int xp_sock;
   u_short xp_port;		/* associated port number */
   const struct xp_ops {
-    bool_t	(*xp_recv) __P ((SVCXPRT *__xprt, struct rpc_msg *__msg));
+    bool_t	(*xp_recv) __PMT ((SVCXPRT *__xprt, struct rpc_msg *__msg));
 				/* receive incoming requests */
-    enum xprt_stat (*xp_stat) __P ((SVCXPRT *__xprt));
+    enum xprt_stat (*xp_stat) __PMT ((SVCXPRT *__xprt));
 				/* get transport status */
-    bool_t	(*xp_getargs) __P ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
-				    caddr_t args_ptr)); /* get arguments */
-    bool_t	(*xp_reply) __P ((SVCXPRT *__xprt, struct rpc_msg *__msg));
+    bool_t	(*xp_getargs) __PMT ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
+				      caddr_t args_ptr)); /* get arguments */
+    bool_t	(*xp_reply) __PMT ((SVCXPRT *__xprt, struct rpc_msg *__msg));
 				/* send reply */
-    bool_t	(*xp_freeargs) __P ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
-				     caddr_t args_ptr));
+    bool_t	(*xp_freeargs) __PMT ((SVCXPRT *__xprt, xdrproc_t __xdr_args,
+				       caddr_t args_ptr));
 				/* free mem allocated for args */
-    void	(*xp_destroy) __P ((SVCXPRT *__xprt));
+    void	(*xp_destroy) __PMT ((SVCXPRT *__xprt));
 				/* destroy this struct */
   } *xp_ops;
   int		xp_addrlen;	 /* length of remote address */
@@ -156,9 +156,9 @@ struct svc_req {
 };
 
 #ifndef __DISPATCH_FN_T
-#define __DISPATCH_FN_T                                                 
-typedef void (*__dispatch_fn_t) __P((struct svc_req*, SVCXPRT*));
-#endif                                                               
+#define __DISPATCH_FN_T
+typedef void (*__dispatch_fn_t) __PMT ((struct svc_req*, SVCXPRT*));
+#endif
 
 /*
  * Service registration

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -69,7 +69,7 @@ host2netname (char netname[MAXNETNAMELEN + 1], const char *host,
   netname[0] = '\0';		/* make null first (no need for memset) */
 
   if (host == NULL)
-    gethostname (hostname, MAXHOSTNAMELEN);
+    __gethostname (hostname, MAXHOSTNAMELEN);
   else
     {
       strncpy (hostname, host, MAXHOSTNAMELEN);
@@ -122,7 +122,7 @@ getnetname (char name[MAXNETNAMELEN + 1])
   uid_t uid;
   int dummy;
 
-  uid = geteuid ();
+  uid = __geteuid ();
   if (uid == 0)
     dummy = host2netname (name, NULL, NULL);
   else

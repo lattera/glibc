@@ -1,5 +1,5 @@
-/* ctime_r - return in BUF representation of time T in form of asctime
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Return in BUF representation of time T in form of asctime
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -26,5 +26,5 @@ char *
 ctime_r (const time_t *t, char *buf)
 {
   struct tm tm;
-  return asctime_r (localtime_r (t, &tm), buf);
+  return __asctime_r (__localtime_r (t, &tm), buf);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -50,5 +50,7 @@
 #define	r0		%o0
 #define	r1		%o1
 #define	MOVE(x,y)	mov x, y
+
+#define LOC(name)	.##L##name
 
 #endif	/* __ASSEMBLER__ */

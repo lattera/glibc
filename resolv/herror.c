@@ -106,7 +106,7 @@ herror(s)
 	v++;
 	v->iov_base = "\n";
 	v->iov_len = 1;
-	writev(STDERR_FILENO, iov, (v - iov) + 1);
+	__writev(STDERR_FILENO, iov, (v - iov) + 1);
 }
 
 const char *

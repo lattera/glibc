@@ -144,7 +144,7 @@ int __pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
 }
 weak_alias (__pthread_mutexattr_destroy, pthread_mutexattr_destroy)
 
-int __pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind)
+int __pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind)
 {
   if (kind != PTHREAD_MUTEX_FAST_NP
       && kind != PTHREAD_MUTEX_RECURSIVE_NP
@@ -153,18 +153,18 @@ int __pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind)
   attr->mutexkind = kind;
   return 0;
 }
-weak_alias (__pthread_mutexattr_setkind_np, pthread_mutexattr_setkind_np)
-strong_alias (__pthread_mutexattr_setkind_np, __pthread_mutexattr_settype)
 weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
+strong_alias ( __pthread_mutexattr_settype, __pthread_mutexattr_setkind_np)
+weak_alias (__pthread_mutexattr_setkind_np, pthread_mutexattr_setkind_np)
 
-int __pthread_mutexattr_getkind_np(const pthread_mutexattr_t *attr, int *kind)
+int __pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *kind)
 {
   *kind = attr->mutexkind;
   return 0;
 }
-weak_alias (__pthread_mutexattr_getkind_np, pthread_mutexattr_getkind_np)
-strong_alias (__pthread_mutexattr_getkind_np, __pthread_mutexattr_gettype)
 weak_alias (__pthread_mutexattr_gettype, pthread_mutexattr_gettype)
+strong_alias (__pthread_mutexattr_gettype, __pthread_mutexattr_getkind_np)
+weak_alias (__pthread_mutexattr_getkind_np, pthread_mutexattr_getkind_np)
 
 /* Once-only execution */
 

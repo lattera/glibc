@@ -43,6 +43,11 @@ static char sccsid[] = "@(#)clnt_perror.c 1.15 87/10/07 Copyr 1984 Sun Micro";
 #include <rpc/auth.h>
 #include <rpc/clnt.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define fputs(s, f) _IO_fputs (s, f)
+#endif
+
 static char *auth_errmsg (enum auth_stat stat) internal_function;
 
 static char *buf;
@@ -96,8 +101,8 @@ clnt_sperror (CLIENT * rpch, const char *msg)
 
     case RPC_CANTSEND:
     case RPC_CANTRECV:
-      len = sprintf (str, "; errno = %s", strerror_r (e.re_errno,
-						      buf, sizeof buf));
+      len = sprintf (str, "; errno = %s", __strerror_r (e.re_errno,
+							buf, sizeof buf));
       str += len;
       break;
 
@@ -233,21 +238,14 @@ clnt_spcreateerror (const char *msg)
   switch (rpc_createerr.cf_stat)
     {
     case RPC_PMAPFAILURE:
-      cp = stpcpy (cp, " - ");
-      cp = stpcpy (cp, clnt_sperrno (rpc_createerr.cf_error.re_status));
+      cp = stpcpy (stpcpy (cp, " - "),
+		   clnt_sperrno (rpc_createerr.cf_error.re_status));
       break;
 
     case RPC_SYSTEMERROR:
-      cp = stpcpy (str, " - ");
-      if (rpc_createerr.cf_error.re_errno > 0
-	  && rpc_createerr.cf_error.re_errno < sys_nerr)
-	cp = stpcpy (str, strerror_r (rpc_createerr.cf_error.re_errno,
-				      buf, sizeof buf));
-      else
-	{
-	  len = sprintf (cp, _("Error %d"), rpc_createerr.cf_error.re_errno);
-	  cp += len;
-	}
+      cp = stpcpy (stpcpy (cp, " - "),
+		   __strerror_r (rpc_createerr.cf_error.re_errno,
+				 buf, sizeof buf));
       break;
     default:
       break;

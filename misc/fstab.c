@@ -102,7 +102,7 @@ endfsent ()
   state = &fstab_state;
   if (state->fs_fp != NULL)
     {
-      (void) endmntent (state->fs_fp);
+      (void) __endmntent (state->fs_fp);
       state->fs_fp = NULL;
     }
 }
@@ -134,7 +134,7 @@ fstab_init (int opt_rewind)
     }
   else
     {
-      fp = setmntent (_PATH_FSTAB, "r");
+      fp = __setmntent (_PATH_FSTAB, "r");
       if (fp == NULL)
 	return NULL;
       state->fs_fp = fp;
@@ -165,11 +165,11 @@ fstab_convert (struct fstab_state *state)
   f->fs_file = m->mnt_dir;
   f->fs_vfstype = m->mnt_type;
   f->fs_mntops = m->mnt_opts;
-  f->fs_type = (hasmntopt (m, FSTAB_RW) ? FSTAB_RW :
-		hasmntopt (m, FSTAB_RQ) ? FSTAB_RQ :
-		hasmntopt (m, FSTAB_RO) ? FSTAB_RO :
-		hasmntopt (m, FSTAB_SW) ? FSTAB_SW :
-		hasmntopt (m, FSTAB_XX) ? FSTAB_XX :
+  f->fs_type = (__hasmntopt (m, FSTAB_RW) ? FSTAB_RW :
+		__hasmntopt (m, FSTAB_RQ) ? FSTAB_RQ :
+		__hasmntopt (m, FSTAB_RO) ? FSTAB_RO :
+		__hasmntopt (m, FSTAB_SW) ? FSTAB_SW :
+		__hasmntopt (m, FSTAB_XX) ? FSTAB_XX :
 		"??");
   f->fs_freq = m->mnt_freq;
   f->fs_passno = m->mnt_passno;

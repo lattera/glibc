@@ -43,6 +43,11 @@
 #include <rpc/rpc.h>
 #include <rpc/clnt.h>
 
+#ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
+# define fflush(s) _IO_fflush (s)
+#endif
+
 /*
  * returns pid, or -1 for failure
  */
@@ -54,11 +59,11 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
   int pdto[2];
   int pdfrom[2];
 
-  if (pipe (pdto) < 0)
+  if (__pipe (pdto) < 0)
     goto error1;
-  if (pipe (pdfrom) < 0)
+  if (__pipe (pdfrom) < 0)
     goto error2;
-  switch (pid = fork ())
+  switch (pid = __fork ())
     {
     case -1:
       goto error3;
@@ -67,13 +72,13 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
       /*
        * child: read from pdto[0], write into pdfrom[1]
        */
-      close (0);
-      dup (pdto[0]);
-      close (1);
-      dup (pdfrom[1]);
+      __close (0);
+      __dup (pdto[0]);
+      __close (1);
+      __dup (pdfrom[1]);
       fflush (stderr);
       for (i = _rpc_dtablesize () - 1; i >= 3; i--)
-	close (i);
+	__close (i);
       fflush (stderr);
       execlp (command, command, 0);
       perror ("exec");
@@ -84,9 +89,9 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
        * parent: write into pdto[1], read from pdfrom[0]
        */
       *fto = fdopen (pdto[1], "w");
-      close (pdto[0]);
+      __close (pdto[0]);
       *ffrom = fdopen (pdfrom[0], "r");
-      close (pdfrom[1]);
+      __close (pdfrom[1]);
       break;
     }
   return pid;
@@ -95,11 +100,11 @@ _openchild (char *command, FILE ** fto, FILE ** ffrom)
    * error cleanup and return
    */
 error3:
-  close (pdfrom[0]);
-  close (pdfrom[1]);
+  __close (pdfrom[0]);
+  __close (pdfrom[1]);
 error2:
-  close (pdto[0]);
-  close (pdto[1]);
+  __close (pdto[0]);
+  __close (pdto[1]);
 error1:
   return -1;
 }

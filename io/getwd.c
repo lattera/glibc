@@ -1,5 +1,5 @@
 /* Obsolete function to get current working directory.
-   Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ getwd (buf)
       return NULL;
     }
 
-  if (getcwd (tmpbuf, PATH_MAX) == NULL)
+  if (__getcwd (tmpbuf, PATH_MAX) == NULL)
     {
       /* We use 1024 here since it should really be enough and because
 	 this is a safe value.  */

@@ -319,7 +319,7 @@ innetgr (const char *netgroup, const char *host, const char *user,
 	  struct __netgrent entry;
 
 	  /* Clear the space for the netgroup data.  */
-	  bzero (&entry, sizeof (entry));
+	  __bzero (&entry, sizeof (entry));
 
 	  /* Open netgroup.  */
 	  status = (*setfct) (current_group, &entry);

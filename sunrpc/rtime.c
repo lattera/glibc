@@ -65,7 +65,7 @@ do_close (int s)
   int save;
 
   save = errno;
-  close (s);
+  __close (s);
   __set_errno (save);
 }
 
@@ -87,7 +87,7 @@ rtime (struct sockaddr_in *addrp, struct timeval *timep,
   else
     type = SOCK_DGRAM;
 
-  s = socket (AF_INET, type, 0);
+  s = __socket (AF_INET, type, 0);
   if (s < 0)
     return (-1);
 
@@ -124,12 +124,12 @@ rtime (struct sockaddr_in *addrp, struct timeval *timep,
     }
   else
     {
-      if (connect (s, (struct sockaddr *) addrp, sizeof (*addrp)) < 0)
+      if (__connect (s, (struct sockaddr *) addrp, sizeof (*addrp)) < 0)
 	{
 	  do_close (s);
 	  return -1;
 	}
-      res = read (s, (char *) &thetime, sizeof (thetime));
+      res = __read (s, (char *) &thetime, sizeof (thetime));
       do_close (s);
       if (res < 0)
 	return (-1);

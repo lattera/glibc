@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,10 @@
 #ifndef ABORT_INSTRUCTION
 /* No such instruction is available.  */
 # define ABORT_INSTRUCTION
+#endif
+
+#ifdef USE_IN_LIBIO
+# define fflush(s) _IO_fflush (s)
 #endif
 
 /* We must avoid to run in circles.  Therefore we remember how far we

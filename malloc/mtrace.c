@@ -40,6 +40,10 @@ extern char *getenv ();
 #include <stdlib.h>
 #endif
 
+#if defined _LIBC && defined USE_IN_LIBIO
+# define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
+#endif
+
 #define TRACE_BUFFER_SIZE 512
 
 static FILE *mallstream;

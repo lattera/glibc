@@ -101,7 +101,7 @@ pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_p
     {
       stat = RPC_FAILED;
     }
-  /* (void)close(socket); CLNT_DESTROY already closed it */
+  /* (void)__close(socket); CLNT_DESTROY already closed it */
   addr->sin_port = 0;
   return stat;
 }
@@ -180,7 +180,7 @@ getbroadcastnets (struct in_addr *addrs, int sock, char *buf)
 
   ifc.ifc_len = UDPMSGSIZE;
   ifc.ifc_buf = buf;
-  if (ioctl (sock, SIOCGIFCONF, (char *) &ifc) < 0)
+  if (__ioctl (sock, SIOCGIFCONF, (char *) &ifc) < 0)
     {
       perror (_("broadcast: ioctl (get interface configuration)"));
       return (0);
@@ -189,7 +189,7 @@ getbroadcastnets (struct in_addr *addrs, int sock, char *buf)
   for (i = 0, n = ifc.ifc_len / sizeof (struct ifreq); n > 0; n--, ifr++)
     {
       ifreq = *ifr;
-      if (ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
+      if (__ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
 	{
 	  perror (_("broadcast: ioctl (get interface flags)"));
 	  continue;
@@ -200,7 +200,7 @@ getbroadcastnets (struct in_addr *addrs, int sock, char *buf)
 	{
 	  sin = (struct sockaddr_in *) &ifr->ifr_addr;
 #ifdef SIOCGIFBRDADDR		/* 4.3BSD */
-	  if (ioctl (sock, SIOCGIFBRDADDR, (char *) &ifreq) < 0)
+	  if (__ioctl (sock, SIOCGIFBRDADDR, (char *) &ifreq) < 0)
 	    {
 	      addrs[i++] = inet_makeaddr (inet_netof
 	      /* Changed to pass struct instead of s_addr member
@@ -259,7 +259,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
    * initialization: create a socket, a broadcast address, and
    * preserialize the arguments into a send buffer.
    */
-  if ((sock = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+  if ((sock = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
     {
       perror (_("Cannot create socket for broadcast rpc"));
       stat = RPC_CANTSEND;
@@ -276,13 +276,13 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   fd.fd = sock;
   fd.events = POLLIN;
   nets = getbroadcastnets (addrs, sock, inbuf);
-  bzero ((char *) &baddr, sizeof (baddr));
+  __bzero ((char *) &baddr, sizeof (baddr));
   baddr.sin_family = AF_INET;
   baddr.sin_port = htons (PMAPPORT);
   baddr.sin_addr.s_addr = htonl (INADDR_ANY);
 /*      baddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY); */
-  (void) gettimeofday (&t, (struct timezone *) 0);
-  msg.rm_xid = xid = getpid () ^ t.tv_sec ^ t.tv_usec;
+  (void) __gettimeofday (&t, (struct timezone *) 0);
+  msg.rm_xid = xid = __getpid () ^ t.tv_sec ^ t.tv_usec;
   t.tv_usec = 0;
   msg.rm_direction = CALL;
   msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
@@ -405,7 +405,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
 	}
     }
 done_broad:
-  (void) close (sock);
+  (void) __close (sock);
   AUTH_DESTROY (unix_auth);
   return stat;
 }

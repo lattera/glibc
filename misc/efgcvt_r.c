@@ -87,7 +87,7 @@ APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign, buf, len)
     /* Value is Inf or NaN.  */
     *sign = 0;
 
-  n = snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
+  n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", ndigit, value);
   if (n < 0)
     return -1;
 

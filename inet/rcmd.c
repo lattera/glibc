@@ -76,7 +76,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	char c;
 	int herr;
 
-	pid = getpid();
+	pid = __getpid();
 
 	hstbuflen = 1024;
 	tmphstbuf = __alloca (hstbuflen);
@@ -99,7 +99,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	pfd[1].events = POLLIN;
 
 	*ahost = hp->h_name;
-	oldmask = sigblock(sigmask(SIGURG));
+	oldmask = __sigblock(sigmask(SIGURG));
 	for (timo = 1, lport = IPPORT_RESERVED - 1;;) {
 		s = rresvport(&lport);
 		if (s < 0) {
@@ -108,23 +108,23 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 				    _("rcmd: socket: All ports in use\n"));
 			else
 				(void)fprintf(stderr, "rcmd: socket: %m\n");
-			sigsetmask(oldmask);
+			__sigsetmask(oldmask);
 			return -1;
 		}
-		fcntl(s, F_SETOWN, pid);
+		__fcntl(s, F_SETOWN, pid);
 		sin.sin_family = hp->h_addrtype;
 		bcopy(hp->h_addr_list[0], &sin.sin_addr,
 		      MIN (sizeof (sin.sin_addr), hp->h_length));
 		sin.sin_port = rport;
-		if (connect(s, (struct sockaddr *)&sin, sizeof(sin)) >= 0)
+		if (__connect(s, (struct sockaddr *)&sin, sizeof(sin)) >= 0)
 			break;
-		(void)close(s);
+		(void)__close(s);
 		if (errno == EADDRINUSE) {
 			lport--;
 			continue;
 		}
 		if (errno == ECONNREFUSED && timo <= 16) {
-			(void)sleep(timo);
+			(void)__sleep(timo);
 			timo *= 2;
 			continue;
 		}
@@ -143,12 +143,12 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			continue;
 		}
 		(void)fprintf(stderr, "%s: %m\n", hp->h_name);
-		sigsetmask(oldmask);
+		__sigsetmask(oldmask);
 		return -1;
 	}
 	lport--;
 	if (fd2p == 0) {
-		write(s, "", 1);
+		__write(s, "", 1);
 		lport = 0;
 	} else {
 		char num[8];
@@ -158,11 +158,11 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		if (s2 < 0)
 			goto bad;
 		listen(s2, 1);
-		(void)snprintf(num, sizeof(num), "%d", lport);
-		if (write(s, num, strlen(num)+1) != strlen(num)+1) {
+		(void)__snprintf(num, sizeof(num), "%d", lport);
+		if (__write(s, num, strlen(num)+1) != strlen(num)+1) {
 			(void)fprintf(stderr,
 			    _("rcmd: write (setting up stderr): %m\n"));
-			(void)close(s2);
+			(void)__close(s2);
 			goto bad;
 		}
 		pfd[0].fd = s;
@@ -175,11 +175,11 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			else
 				(void)fprintf(stderr,
 			     _("poll: protocol failure in circuit setup\n"));
-			(void)close(s2);
+			(void)__close(s2);
 			goto bad;
 		}
 		s3 = accept(s2, (struct sockaddr *)&from, &len);
-		(void)close(s2);
+		(void)__close(s2);
 		if (s3 < 0) {
 			(void)fprintf(stderr,
 			    "rcmd: accept: %m\n");
@@ -196,30 +196,30 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			goto bad2;
 		}
 	}
-	(void)write(s, locuser, strlen(locuser)+1);
-	(void)write(s, remuser, strlen(remuser)+1);
-	(void)write(s, cmd, strlen(cmd)+1);
-	if (read(s, &c, 1) != 1) {
+	(void)__write(s, locuser, strlen(locuser)+1);
+	(void)__write(s, remuser, strlen(remuser)+1);
+	(void)__write(s, cmd, strlen(cmd)+1);
+	if (__read(s, &c, 1) != 1) {
 		(void)fprintf(stderr,
 		    "rcmd: %s: %m\n", *ahost);
 		goto bad2;
 	}
 	if (c != 0) {
-		while (read(s, &c, 1) == 1) {
-			(void)write(STDERR_FILENO, &c, 1);
+		while (__read(s, &c, 1) == 1) {
+			(void)__write(STDERR_FILENO, &c, 1);
 			if (c == '\n')
 				break;
 		}
 		goto bad2;
 	}
-	sigsetmask(oldmask);
+	__sigsetmask(oldmask);
 	return s;
 bad2:
 	if (lport)
-		(void)close(*fd2p);
+		(void)__close(*fd2p);
 bad:
-	(void)close(s);
-	sigsetmask(oldmask);
+	(void)__close(s);
+	__sigsetmask(oldmask);
 	return -1;
 }
 
@@ -232,7 +232,7 @@ rresvport(alport)
 
 	sin.sin_family = AF_INET;
 	sin.sin_addr.s_addr = INADDR_ANY;
-	s = socket(AF_INET, SOCK_STREAM, 0);
+	s = __socket(AF_INET, SOCK_STREAM, 0);
 	if (s < 0)
 		return -1;
 	for (;;) {
@@ -240,12 +240,12 @@ rresvport(alport)
 		if (bind(s, (struct sockaddr *)&sin, sizeof(sin)) >= 0)
 			return s;
 		if (errno != EADDRINUSE) {
-			(void)close(s);
+			(void)__close(s);
 			return -1;
 		}
 		(*alport)--;
 		if (*alport == IPPORT_RESERVED/2) {
-			(void)close(s);
+			(void)__close(s);
 			__set_errno (EAGAIN);		/* close */
 			return -1;
 		}
@@ -382,7 +382,7 @@ iruserok (raddr, superuser, ruser, luser)
        /* Change effective uid while reading .rhosts.  If root and
 	  reading an NFS mounted file system, can't read files that
 	  are protected read/write owner only.  */
-       uid = geteuid ();
+       uid = __geteuid ();
        seteuid (pwd->pw_uid);
        hostf = iruserfopen (pbuf, pwd->pw_uid);
 
@@ -481,7 +481,7 @@ __icheckhost(raddr, lhost)
 
 	/* Spin through ip addresses. */
 	for (pp = hp->h_addr_list; *pp; ++pp)
-		if (!bcmp(&raddr, *pp, sizeof(u_int32_t)))
+		if (!memcmp(&raddr, *pp, sizeof(u_int32_t)))
 			return 1;
 
 	/* No match. */

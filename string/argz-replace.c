@@ -1,5 +1,5 @@
 /* String replacement in an argz vector
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -69,7 +69,7 @@ __argz_replace (char **argz, size_t *argz_len, const char *str, const char *with
 	    {
 	      char *from = match + str_len;
 	      size_t to_len = match - arg;
-	      char *to = strndup (arg, to_len);
+	      char *to = __strndup (arg, to_len);
 
 	      while (to && from)
 		{
@@ -98,11 +98,11 @@ __argz_replace (char **argz, size_t *argz_len, const char *str, const char *with
                        of SRC.  */
 		    {
 		      if (arg > src)
-			err = argz_append (&dst, &dst_len, src, (arg - src));
+			err = __argz_append (&dst, &dst_len, src, (arg - src));
 		      delayed_copy = 0;
 		    }
 		  if (! err)
-		    err = argz_add (&dst, &dst_len, to);
+		    err = __argz_add (&dst, &dst_len, to);
 		  free (to);
 		}
 	      else
@@ -112,7 +112,7 @@ __argz_replace (char **argz, size_t *argz_len, const char *str, const char *with
 		(*replace_count)++;
 	    }
 	  else if (! delayed_copy)
-	    err = argz_add (&dst, &dst_len, arg);
+	    err = __argz_add (&dst, &dst_len, arg);
 	}
 
       if (! err)

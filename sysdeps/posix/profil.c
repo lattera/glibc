@@ -74,7 +74,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 	/* Wasn't turned on.  */
 	return 0;
 
-      if (setitimer (ITIMER_PROF, &otimer, NULL) < 0)
+      if (__setitimer (ITIMER_PROF, &otimer, NULL) < 0)
 	return -1;
       samples = NULL;
       return sigaction (SIGPROF, &oact, NULL);
@@ -84,7 +84,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
     {
       /* Was already turned on.  Restore old timer and signal handler
 	 first.  */
-      if (setitimer (ITIMER_PROF, &otimer, NULL) < 0
+      if (__setitimer (ITIMER_PROF, &otimer, NULL) < 0
 	  || sigaction (SIGPROF, &oact, NULL) < 0)
 	return -1;
     }
@@ -103,7 +103,7 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   timer.it_value.tv_sec = 0;
   timer.it_value.tv_usec = 1;
   timer.it_interval = timer.it_value;
-  return setitimer (ITIMER_PROF, &timer, &otimer);
+  return __setitimer (ITIMER_PROF, &timer, &otimer);
 }
 weak_alias (__profil, profil)
 

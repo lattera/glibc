@@ -45,7 +45,8 @@
 
 __BEGIN_DECLS
 
-typedef bool_t (*resultproc_t) __P ((caddr_t resp, struct sockaddr_in *raddr));
+typedef bool_t (*resultproc_t) __PMT ((caddr_t resp,
+				       struct sockaddr_in *raddr));
 
 /*
  * Usage:

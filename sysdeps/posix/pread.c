@@ -1,6 +1,6 @@
 /* Read block from given position in file without changing file pointer.
    POSIX version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -29,22 +29,22 @@ __pread (int fd, void *buf, size_t nbyte, off_t offset)
      we can restore it later.  */
   int save_errno;
   ssize_t result;
-  off_t old_offset = lseek (fd, 0, SEEK_CUR);
+  off_t old_offset = __lseek (fd, 0, SEEK_CUR);
   if (old_offset == (off_t) -1)
     return -1;
 
   /* Set to wanted position.  */
-  if (lseek (fd, offset, SEEK_SET) == (off_t) -1)
+  if (__lseek (fd, offset, SEEK_SET) == (off_t) -1)
     return -1;
 
   /* Write out the data.  */
-  result = read (fd, buf, nbyte);
+  result = __read (fd, buf, nbyte);
 
   /* Now we have to restore the position.  If this fails we have to
      return this as an error.  But if the writing also failed we
      return this error.  */
   save_errno = errno;
-  if (lseek (fd, old_offset, SEEK_SET) == (off_t) -1)
+  if (__lseek (fd, old_offset, SEEK_SET) == (off_t) -1)
     {
       if (result == -1)
 	__set_errno (save_errno);

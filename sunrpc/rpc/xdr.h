@@ -117,22 +117,23 @@ struct XDR
     enum xdr_op x_op;		/* operation; fast additional param */
     struct xdr_ops
       {
-	bool_t (*x_getlong) __P ((XDR * __xdrs, long *__lp));
+	bool_t (*x_getlong) __PMT ((XDR * __xdrs, long *__lp));
 	/* get a long from underlying stream */
-	bool_t (*x_putlong) __P ((XDR * __xdrs, __const long *__lp));
+	bool_t (*x_putlong) __PMT ((XDR * __xdrs, __const long *__lp));
 	/* put a long to " */
-	bool_t (*x_getbytes) __P ((XDR * __xdrs, caddr_t __addr, u_int __len));
+	bool_t (*x_getbytes) __PMT ((XDR * __xdrs, caddr_t __addr,
+				     u_int __len));
 	/* get some bytes from " */
-	bool_t (*x_putbytes) __P ((XDR * __xdrs, __const char *__addr,
-				   u_int __len));
+	bool_t (*x_putbytes) __PMT ((XDR * __xdrs, __const char *__addr,
+				     u_int __len));
 	/* put some bytes to " */
-	u_int (*x_getpostn) __P ((__const XDR * __xdrs));
+	u_int (*x_getpostn) __PMT ((__const XDR * __xdrs));
 	/* returns bytes off from beginning */
-	bool_t (*x_setpostn) __P ((XDR * __xdrs, u_int pos));
+	bool_t (*x_setpostn) __PMT ((XDR * __xdrs, u_int pos));
 	/* lets you reposition the stream */
-	long *(*x_inline) __P ((XDR * __xdrs, int len));
+	long *(*x_inline) __PMT ((XDR * __xdrs, int len));
 	/* buf quick ptr to buffered data */
-	void (*x_destroy) __P ((XDR * __xdrs));
+	void (*x_destroy) __PMT ((XDR * __xdrs));
 	/* free privates of this xdr_stream */
       }
      *x_ops;
@@ -151,8 +152,7 @@ struct XDR
  * allocate dynamic storage of the appropriate size and return it.
  * bool_t       (*xdrproc_t)(XDR *, caddr_t *);
  */
-typedef
-bool_t (*xdrproc_t) __P ((XDR *, void *,...));
+typedef bool_t (*xdrproc_t) __PMT ((XDR *, void *,...));
 
 /*
  * Operations defined on a XDR handle

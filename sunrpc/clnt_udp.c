@@ -143,7 +143,7 @@ clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
     }
   cu->cu_outbuf = &cu->cu_inbuf[recvsz];
 
-  (void) gettimeofday (&now, (struct timezone *) 0);
+  (void) __gettimeofday (&now, (struct timezone *) 0);
   if (raddr->sin_port == 0)
     {
       u_short port;
@@ -163,7 +163,7 @@ clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
   cu->cu_total.tv_usec = -1;
   cu->cu_sendsz = sendsz;
   cu->cu_recvsz = recvsz;
-  call_msg.rm_xid = getpid () ^ now.tv_sec ^ now.tv_usec;
+  call_msg.rm_xid = __getpid () ^ now.tv_sec ^ now.tv_usec;
   call_msg.rm_direction = CALL;
   call_msg.rm_call.cb_rpcvers = RPC_MSG_VERSION;
   call_msg.rm_call.cb_prog = program;
@@ -179,7 +179,7 @@ clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
     {
       int dontblock = 1;
 
-      *sockp = socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+      *sockp = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP);
       if (*sockp < 0)
 	{
 	  rpc_createerr.cf_stat = RPC_SYSTEMERROR;
@@ -189,7 +189,7 @@ clntudp_bufcreate (raddr, program, version, wait, sockp, sendsz, recvsz)
       /* attempt to bind to prov port */
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       /* the sockets rpc controls are non-blocking */
-      (void) ioctl (*sockp, FIONBIO, (char *) &dontblock);
+      (void) __ioctl (*sockp, FIONBIO, (char *) &dontblock);
       cu->cu_closeit = TRUE;
     }
   else
@@ -511,7 +511,7 @@ clntudp_destroy (CLIENT *cl)
 
   if (cu->cu_closeit)
     {
-      (void) close (cu->cu_sock);
+      (void) __close (cu->cu_sock);
     }
   XDR_DESTROY (&(cu->cu_outxdrs));
   mem_free ((caddr_t) cu, (sizeof (*cu) + cu->cu_sendsz + cu->cu_recvsz));

@@ -33,7 +33,7 @@ unlockpt (fd)
   int serrno = errno;
   int unlock = 0;
 
-  if (ioctl (fd, TIOCSPTLCK, &unlock))
+  if (__ioctl (fd, TIOCSPTLCK, &unlock))
     {
       if (errno == EINVAL)
 	{

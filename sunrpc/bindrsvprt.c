@@ -61,7 +61,7 @@ bindresvport (int sd, struct sockaddr_in *sin)
   if (sin == (struct sockaddr_in *) 0)
     {
       sin = &myaddr;
-      bzero (sin, sizeof (*sin));
+      __bzero (sin, sizeof (*sin));
       sin->sin_family = AF_INET;
     }
   else if (sin->sin_family != AF_INET)
@@ -71,7 +71,7 @@ bindresvport (int sd, struct sockaddr_in *sin)
     }
   if (port == 0)
     {
-      port = (getpid () % NPORTS) + STARTPORT;
+      port = (__getpid () % NPORTS) + STARTPORT;
     }
   res = -1;
   __set_errno (EADDRINUSE);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ get_current_dir_name (void)
       pwdstat.st_dev == dotstat.st_dev &&
       pwdstat.st_ino == dotstat.st_ino)
     /* The PWD value is correct.  Use it.  */
-    return strdup (pwd);
+    return __strdup (pwd);
 
-  return getcwd ((char *) NULL, 0);
+  return __getcwd ((char *) NULL, 0);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -81,7 +81,7 @@ gethostid ()
 
   /* Getting from the file was not successful.  An intelligent guess for
      a unique number of a host is its IP address.  Return this.  */
-  if (gethostname (hostname, MAXHOSTNAMELEN) < 0 || hostname[0] == '\0')
+  if (__gethostname (hostname, MAXHOSTNAMELEN) < 0 || hostname[0] == '\0')
     /* This also fails.  Return and arbitrary value.  */
     return 0;
 

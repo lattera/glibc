@@ -28,7 +28,7 @@ ENTRY(__fdim)
 	fucomi	%st(1), %st
 	jp	1f
 
-	fsubp	%st(1), %st
+	fsubrp	%st, %st(1)
 	fldz
 	fcomi	%st(1), %st
 	fcmovb	%st(1), %st

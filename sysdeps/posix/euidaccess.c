@@ -1,5 +1,5 @@
 /* Check if effective user id can access file
-   Copyright (C) 1990, 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1990, 91, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -139,7 +139,7 @@ euidaccess (path, mode)
 #ifdef	_LIBC
   if (! __libc_enable_secure)
     /* If we are not set-uid or set-gid, access does the same.  */
-    return access (path, mode);
+    return __access (path, mode);
 #else
   if (have_ids == 0)
     {
@@ -171,8 +171,8 @@ euidaccess (path, mode)
   if (have_ids == 0)
     {
       have_ids = 1;
-      euid = geteuid ();
-      egid = getegid ();
+      euid = __geteuid ();
+      egid = __getegid ();
     }
 #endif
 

@@ -77,6 +77,10 @@ builtin_aliases[] =
 #include "gconv_builtin.h"
 };
 
+#ifdef USE_IN_LIBIO
+# define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
+#endif
+
 
 /* Function for searching module.  */
 static int

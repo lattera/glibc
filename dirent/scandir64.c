@@ -28,7 +28,7 @@ scandir64 (dir, namelist, select, cmp)
      int (*select) __P ((const struct dirent64 *));
      int (*cmp) __P ((const void *, const void *));
 {
-  DIR *dp = opendir (dir);
+  DIR *dp = __opendir (dir);
   struct dirent64 **v = NULL;
   size_t vsize = 0, i;
   struct dirent64 *d;
@@ -74,7 +74,7 @@ scandir64 (dir, namelist, select, cmp)
   if (errno != 0)
     {
       save = errno;
-      (void) closedir (dp);
+      (void) __closedir (dp);
       while (i > 0)
 	free (v[--i]);
       free (v);
@@ -82,7 +82,7 @@ scandir64 (dir, namelist, select, cmp)
       return -1;
     }
 
-  (void) closedir (dp);
+  (void) __closedir (dp);
   __set_errno (save);
 
   /* Sort the list if we have a comparison function to sort with.  */

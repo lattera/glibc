@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FILE resides.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ statfs64 (const char *file, struct statfs64 *buf)
 {
   struct statfs buf32;
 
-  if (statfs (file, &buf32) < 0)
+  if (__statfs (file, &buf32) < 0)
     return -1;
 
   buf->f_type = buf32.f_type;

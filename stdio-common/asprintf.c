@@ -19,6 +19,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#ifdef USE_IN_LIBIO
+# define vasprintf(s, f, a) _IO_vasprintf (s, f, a)
+#endif
+
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 /* VARARGS2 */

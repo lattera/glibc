@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,9 +36,9 @@ lockf (int fd, int cmd, off_t len)
     case F_TEST:
       /* Test the lock: return 0 if FD is unlocked or locked by this process;
 	 return -1, set errno to EACCES, if another process holds the lock.  */
-      if (fcntl (fd, F_GETLK, &fl) < 0)
+      if (__fcntl (fd, F_GETLK, &fl) < 0)
 	return -1;
-      if (fl.l_type == F_UNLCK || fl.l_pid == getpid ())
+      if (fl.l_type == F_UNLCK || fl.l_pid == __getpid ())
 	return 0;
       __set_errno (EACCES);
       return -1;
@@ -67,5 +67,5 @@ lockf (int fd, int cmd, off_t len)
 
   fl.l_len = len;
 
-  return fcntl (fd, cmd, &fl);
+  return __fcntl (fd, cmd, &fl);
 }

@@ -96,8 +96,6 @@ int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy)
 {
   if (policy != SCHED_OTHER && policy != SCHED_FIFO && policy != SCHED_RR)
     return EINVAL;
-  if (policy != SCHED_OTHER && geteuid() != 0)
-    return ENOTSUP;
   attr->schedpolicy = policy;
   return 0;
 }

@@ -386,7 +386,7 @@ res_init()
 	    (void) fclose(fp);
 	}
 	if (_res.defdname[0] == 0 &&
-	    gethostname(buf, sizeof(_res.defdname) - 1) == 0 &&
+	    __gethostname(buf, sizeof(_res.defdname) - 1) == 0 &&
 	    (cp = strchr(buf, '.')) != NULL)
 		strcpy(_res.defdname, cp + 1);
 
@@ -651,6 +651,6 @@ res_randomid()
 {
 	struct timeval now;
 
-	gettimeofday(&now, NULL);
-	return (0xffff & (now.tv_sec ^ now.tv_usec ^ getpid()));
+	__gettimeofday(&now, NULL);
+	return (0xffff & (now.tv_sec ^ now.tv_usec ^ __getpid()));
 }
