@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998, 2001, 2002 Free Software Foundation, Inc.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002.
-# Revision: 1.42
+# Revision: 1.43
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.1\n"
 "POT-Creation-Date: 2002-10-02 17:22-0700\n"
-"PO-Revision-Date: 2002-10-12 17:52+0200\n"
+"PO-Revision-Date: 2002-10-14 21:09+0200\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -361,7 +361,7 @@ msgstr "[KATALOG...]"
 
 #: iconv/iconvconfig.c:126
 msgid "Prefix used for all file accesses"
-msgstr "Prefix att använda för all filåtkomst"
+msgstr "Prefix att använda för alla filåtkomster"
 
 #: iconv/iconvconfig.c:325 locale/programs/localedef.c:292
 msgid "no output file produced because warning were issued"
@@ -1482,7 +1482,7 @@ msgstr "kan inte lägga till en redan inläst lokal \"%s\" en andra gång"
 
 #: locale/programs/locarchive.c:89 locale/programs/locarchive.c:259
 msgid "cannot create temporary file"
-msgstr "kan inte skapa temporär fil"
+msgstr "kan inte skapa temporärfil"
 
 #: locale/programs/locarchive.c:118 locale/programs/locarchive.c:302
 msgid "cannot initialize archive file"
@@ -1503,7 +1503,7 @@ msgstr "misslyckades med att skapa nytt lokalarkiv"
 
 #: locale/programs/locarchive.c:168
 msgid "cannot change mode of new locale archive"
-msgstr "kan inte ändra åtkomst på nytt lokalarkiv"
+msgstr "kan inte ändra åtkomstläge på nytt lokalarkiv"
 
 #: locale/programs/locarchive.c:253
 msgid "cannot map locale archive file"
@@ -1519,7 +1519,7 @@ msgstr "kan inte utöka lokalarkivfil"
 
 #: locale/programs/locarchive.c:386
 msgid "cannot change mode of resized locale archive"
-msgstr "kan inte ändra åtkomst på storleksändrat lokalarkiv"
+msgstr "kan inte ändra åtkomstläge på storleksändrat lokalarkiv"
 
 #: locale/programs/locarchive.c:394
 msgid "cannot rename new archive"
@@ -1553,22 +1553,22 @@ msgstr "lokal \"%s\" finns redan"
 #: locale/programs/locarchive.c:811 locale/programs/locarchive.c:823
 #: locale/programs/locfile.c:343
 msgid "cannot add to locale archive"
-msgstr "kan inte addera till lokalarkiv"
+msgstr "kan inte lägga till till lokalarkiv"
 
 #: locale/programs/locarchive.c:976
 #, c-format
 msgid "locale alias file `%s' not found"
-msgstr "aliasfil \"%s\" för lokal hittas inte"
+msgstr "fil \"%s\" för lokalalias hittas inte"
 
 #: locale/programs/locarchive.c:1118
 #, c-format
 msgid "Adding %s\n"
-msgstr "Adderar %s\n"
+msgstr "Lägger till %s\n"
 
 #: locale/programs/locarchive.c:1124
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
-msgstr "ta status på \"%s\" misslyckades, %s: ignorerad"
+msgstr "ta status på \"%s\" misslyckades: %s: ignorerad"
 
 #: locale/programs/locarchive.c:1130
 #, c-format
@@ -1707,7 +1707,7 @@ msgid ""
 "Generate message catalog.If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
-"Skapa meddelandekatalog.  Om INFIL är - så läses standard in.  Om UTFIL\n"
+"Skapa meddelandekatalog.Om INFIL är - så läses standard in.  Om UTFIL\n"
 "är - så skrivs resultatet till standard ut.\n"
 
 #: catgets/gencat.c:125
@@ -3747,7 +3747,7 @@ msgstr "databas [nyckel ...]"
 
 #: nss/getent.c:56
 msgid "Service configuration to be used"
-msgstr "Serverkonfiguration som ska användas"
+msgstr "Tjänstekonfiguration som ska användas"
 
 #: nss/getent.c:136 nss/getent.c:305
 #, c-format
@@ -5395,7 +5395,7 @@ msgstr "delat objekt är inte öppnat"
 msgid "TLS generation counter wrapped!  Please send report with the 'glibcbug' script."
 msgstr ""
 "Generationsräknare för TLS slog runt!  Var snäll och skicka felrapport med\n"
-"\"glibcbug\""
+"\"glibcbug\"-skriptet"
 
 #: elf/dl-deps.c:111 elf/dl-open.c:177
 msgid "DST not allowed in SUID/SGID programs"
