@@ -1,3 +1,20 @@
+2002-09-29  Roland McGrath  <roland@redhat.com>
+
+	* configure: Regenerated after aclocal.m4 change.
+
+	* sysdeps/x86_64/sysdep.h [HAVE_ELF] (L): Define with .L##name form.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (L): Don't define it here.
+
+	* sysdeps/generic/dl-lookupcfg.h [USE_TLS] (DL_LOOKUP_RETURNS_MAP):
+	Define it, because _dl_sym presumes it (for any platform).
+
+	* sysdeps/x86_64/dl-tls.h: New file.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Add a cast.
+
+	* sysdeps/x86_64/elf/configure.in: New file.
+	* sysdeps/x86_64/elf/configure: New generated file.
+
 2002-09-28  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (_dl_start): Fix conditional for declaring CNT.

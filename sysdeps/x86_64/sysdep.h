@@ -94,7 +94,12 @@ lose:									      \
 
 /* Local label name for asm code. */
 #ifndef L
-#define L(name)		name
+# ifdef HAVE_ELF
+/* ELF-like local names start with `.L'.  */
+#  define L(name)	.L##name
+# else
+#  define L(name)	name
+# endif
 #endif
 
 #endif	/* __ASSEMBLER__ */

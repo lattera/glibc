@@ -41,10 +41,6 @@
 # define __NR_pwrite __NR_pwrite64
 #endif
 
-/* ELF-like local names start with `.L'.  */
-#undef L
-#define L(name)	.L##name
-
 #ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors,

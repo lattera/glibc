@@ -1,4 +1,4 @@
-/* Configuration of lookup functions.
+/* Thread-local storage handling in the ELF dynamic linker.  x86-64 version.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,13 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Some platforms need more information from the symbol lookup function
-   than just the address.  But this is not generally the case.
 
-   However, because of how _dl_sym and _dl_tls_symaddr are written, every
-   platform needs it when we support TLS.  */
-#ifdef USE_TLS
-# define DL_LOOKUP_RETURNS_MAP
-#else
-# undef DL_LOOKUP_RETURNS_MAP
-#endif
+/* Type used for the representation of TLS information in the GOT.  */
+typedef struct
+{
+  unsigned long int ti_module;
+  unsigned long int ti_offset;
+} tls_index;
+
+
+extern void *__tls_get_addr (tls_index *ti);

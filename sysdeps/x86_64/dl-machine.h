@@ -378,7 +378,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #endif
 #if defined USE_TLS && !defined RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf64_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      Elf64_Addr value = (sym == NULL ? 0
+			  : (Elf64_Addr) sym_map->l_addr + sym->st_value);
 #else
       Elf64_Addr value = RESOLVE (&sym, version, r_type);
 
