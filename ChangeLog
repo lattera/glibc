@@ -1,3 +1,9 @@
+2000-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/netdb.h (getnameinfo): All lenght parameters are of type
+	socklen_t.
+	* inet/getnameinfo.c: Likewise.
+
 2000-04-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h (socklen_t): Define if it has not yet happened.

@@ -479,8 +479,8 @@ extern char *gai_strerror (int __ecode) __THROW;
 /* Translate a socket address to a location and service name.  */
 extern int getnameinfo (__const struct sockaddr *__restrict __sa,
 			socklen_t __salen, char *__restrict __host,
-			size_t __hostlen, char *__restrict __serv,
-			size_t __servlen, int __flags) __THROW;
+			socklen_t __hostlen, char *__restrict __serv,
+			socklen_t __servlen, int __flags) __THROW;
 
 #endif	/* POSIX */
 
