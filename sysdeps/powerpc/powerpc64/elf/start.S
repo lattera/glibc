@@ -1,5 +1,5 @@
 /* Startup code for programs linked with GNU libc.  PowerPC64 version.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,11 @@
 #include "bp-sym.h"
 
  /* These are the various addresses we require.  */
+#ifdef PIC
+	.section ".data.rel.ro.local"
+#else
 	.section ".rodata"
+#endif
 	.align	3
 L(start_addresses):
 	.quad	0 /* was _SDA_BASE_  but not in 64-bit ABI*/

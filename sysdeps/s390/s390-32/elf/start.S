@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF s390 ABI.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -66,19 +66,35 @@ _start:
 	l       %r6,.L2-.Llit(%r13)     # load pointer to __libc_csu_fini
 	l       %r5,.L1-.Llit(%r13)     # load pointer to __libc_csu_init
 	l       %r2,.L3-.Llit(%r13)     # load pointer to main
+	l       %r1,.L4-.Llit(%r13)	# load pointer to __libc_start_main
+#ifdef PIC
+	l       %r12,.L5-.Llit(%r13)    # load .got pointer
+	la	%r6,0(%r13,%r6)
+	la	%r5,0(%r13,%r5)
+	la	%r2,0(%r13,%r2)
+	la	%r1,0(%r13,%r1)
+	la	%r12,0(%r13,%r12)
+#endif
 
 	/* ok, now branch to the libc main routine */
-	l       %r1,.L4-.Llit(%r13)
 	basr    %r14,%r1
 
 	/* crash if __libc_start_main returns */
 	.word   0
 
 .Llit:
+#ifndef PIC
 .L1:    .long  __libc_csu_init
 .L2:    .long  __libc_csu_fini
 .L3:    .long  main
 .L4:    .long  __libc_start_main
+#else
+.L1:    .long  __libc_csu_init-.Llit
+.L2:    .long  __libc_csu_fini-.Llit
+.L3:    .long  main-.Llit
+.L4:    .long  __libc_start_main@plt-.Llit
+.L5:    .long  _GLOBAL_OFFSET_TABLE_-.Llit
+#endif
 
 /* FIXME: FPU flags or what ?!? */
 

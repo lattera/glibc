@@ -38,6 +38,11 @@ ENTRY (name)								      \
      cmp.eq p6,p0=-1,r10;						      \
 (p6) br.cond.spnt.few __syscall_error;					      \
      ret;;								      \
+     .endp name;							      \
+     .proc __GC_##name;							      \
+     .globl __GC_##name;						      \
+     .hidden __GC_##name;						      \
+__GC_##name:								      \
 .Lpseudo_cancel:							      \
      .prologue;								      \
      .regstk args, 5, args, 0;						      \
@@ -62,12 +67,13 @@ ENTRY (name)								      \
      mov ar.pfs = loc0;							      \
 .Lpseudo_end:								      \
      ret;								      \
-     .endp name;							      \
+     .endp __GC_##name;							      \
 .section .gnu.linkonce.t.__syscall_error_##args, "ax";			      \
      .align 32;								      \
      .proc __syscall_error_##args;					      \
      .global __syscall_error_##args;					      \
      .hidden __syscall_error_##args;					      \
+     .size __syscall_error_##args, 64;					      \
 __syscall_error_##args:							      \
      .prologue;								      \
      .regstk args, 5, args, 0;						      \
@@ -81,6 +87,9 @@ __syscall_error_##args:							      \
      mov rp = loc1;							      \
      mov r8 = -1;							      \
      mov ar.pfs = loc0
+
+#undef PSEUDO_END
+#define PSEUDO_END(name) .endp
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	br.call.sptk.many b0 = __pthread_enable_asynccancel
