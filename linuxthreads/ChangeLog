@@ -1,3 +1,8 @@
+2000-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancel.c (pthread_cancel): Don't do anything if cancelation is
+	disabled.
+
 2000-09-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* spinlock.h (__pthread_set_own_extricate_if): Optimize a bit.
