@@ -67,6 +67,8 @@ elf_get_dynamic_info (struct link_map *l)
     {
       ElfW(Addr) l_addr = l->l_addr;
 
+      if (info[DT_HASH] != NULL)
+	info[DT_HASH]->d_un.d_ptr += l_addr;
       if (info[DT_PLTGOT] != NULL)
 	info[DT_PLTGOT]->d_un.d_ptr += l_addr;
       if (info[DT_STRTAB] != NULL)
