@@ -1,5 +1,8 @@
 2001-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* crypt/md5-crypt.c (__md5_crypt_r): Compute used and required
+	memory correctly.
+
 	* sysdeps/unix/sysv/linux/ia64/ioperm.c (_ioperm): Use __open
 	instead of open, __close instead of close, __getpagesize instead
 	of getpagesize.

@@ -1,5 +1,5 @@
 /* One way encryption based on MD5 sum.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -179,10 +179,10 @@ __md5_crypt_r (key, salt, buffer, buflen)
   /* Now we can construct the result string.  It consists of three
      parts.  */
   cp = __stpncpy (buffer, md5_salt_prefix, MAX (0, buflen));
-  buflen -= sizeof (md5_salt_prefix);
+  buflen -= sizeof (md5_salt_prefix) - 1;
 
-  cp = __stpncpy (cp, salt, MIN ((size_t) buflen, salt_len));
-  buflen -= MIN ((size_t) buflen, salt_len);
+  cp = __stpncpy (cp, salt, MIN ((size_t) MAX (0, buflen), salt_len));
+  buflen -= MIN ((size_t) MAX (0, buflen), salt_len);
 
   if (buflen > 0)
     {
