@@ -31,9 +31,9 @@ extern const unsigned int __yperr2nss_count;
 static inline enum nss_status
 yperr2nss (int errval)
 {
-  if ((unsigned int) errval > __yperr2nss_count)
+  if ((unsigned int) errval >= __yperr2nss_count)
     return NSS_STATUS_UNAVAIL;
-  return __yperr2nss_tab[errval];
+  return __yperr2nss_tab[(unsigned int) errval];
 }
 
 #endif /* nis/nss-nis.h */
