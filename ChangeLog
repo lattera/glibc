@@ -1,3 +1,9 @@
+2002-08-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/gnu/errlist-compat.awk: Include <bits/wordsize.h> in output.
+	From Alexandre Oliva <aoliva@redhat.com>.
+	* sysdeps/gnu/errlist-compat.c: Regenerated.
+
 2002-08-27  Brian Youmans  <3diff@gnu.org>
 
 	* sysdeps/ieee754/flt-32/e_asinf.c: Modified copying permission

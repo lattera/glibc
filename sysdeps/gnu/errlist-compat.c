@@ -3,6 +3,7 @@
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+# include <bits/wordsize.h>
 extern const char *const __sys_errlist_GLIBC_2_0[];
 const int __sys_nerr_GLIBC_2_0 = 123;
 strong_alias (_sys_errlist_internal, __sys_errlist_GLIBC_2_0)
@@ -18,6 +19,7 @@ compat_symbol (libc, ___sys_nerr_GLIBC_2_0, _sys_nerr, GLIBC_2_0);
 #endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3)
+# include <bits/wordsize.h>
 extern const char *const __sys_errlist_GLIBC_2_1[];
 const int __sys_nerr_GLIBC_2_1 = 125;
 strong_alias (_sys_errlist_internal, __sys_errlist_GLIBC_2_1)

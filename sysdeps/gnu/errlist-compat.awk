@@ -72,6 +72,7 @@ END {
     new = compat[old];
     n = vcount[old];
     printf "#if SHLIB_COMPAT (libc, %s, %s)\n", old, new;
+    printf "# include <bits/wordsize.h>\n";
     printf "extern const char *const __sys_errlist_%s[];\n", old;
     printf "const int __sys_nerr_%s = %d;\n", old, n;
     printf "strong_alias (_sys_errlist_internal, __sys_errlist_%s)\n", old;
