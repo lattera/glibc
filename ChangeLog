@@ -6,6 +6,9 @@
 
 2004-10-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (public_vALLOc): Add missing use of hooks.
+	(public_pVALLOc): Likewise.
+
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Always add the
 	group the caller provided unless there is a real problem.
 
