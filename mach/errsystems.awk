@@ -1,6 +1,8 @@
 BEGIN {
-  print "#include <mach/error.h>\n#include <errorlib.h>";
-  print "#define static static const"
+  print "#include <errno.h>";
+  print "#include <mach/error.h>";
+  print "#include <errorlib.h>";
+  print "#define static static const";
   nsubs = split(subsys, subs);
   while (nsubs > 0) printf "#include \"%s\"\n", subs[nsubs--];
   print "\n\n\

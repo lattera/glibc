@@ -3,6 +3,8 @@
 	* sysdeps/mach/hurd/tls.h: New file.
 	* sysdeps/mach/hurd/i386/tls.h: New file.
 
+	* mach/errsystems.awk: Include <errno.h> in generated output.
+
 	* sysdeps/mach/Makefile (mach-before-compile rule): Pass generating=t,
 	use target mach-before-compile instead of generated.
 	(mach-before-compile): New target.

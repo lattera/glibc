@@ -28,22 +28,28 @@
 /* Indiciate that TLS support is available.  */
 # define USE_TLS	1
 
+/* The TCB can have any size and the memory following the address the
+   thread pointer points to is unspecified.  Allocate the TCB there.  */
+# define TLS_TCB_AT_TP	1
+
+# ifndef ASSEMBLER
+
 /* Use i386-specific RPCs to arrange that %gs segment register prefix
    addresses the TCB in each thread.  */
 # include <mach/i386/mach_i386.h>
 
-#ifndef HAVE_I386_SET_GDT
-# define __i386_set_gdt(thr, sel, desc) ((thr), (sel), (desc), MIG_BAD_ID)
-#endif
+# ifndef HAVE_I386_SET_GDT
+#  define __i386_set_gdt(thr, sel, desc) ((thr), (sel), (desc), MIG_BAD_ID)
+# endif
 
-static inline int _hurd_tls_init (tcbhead_t *, int secondcall)
-     __attribute__ ((unused));
+# include <errno.h>
+# include <assert.h>
 
-static inline const char *
+static inline const char * __attribute__ ((unused))
 _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 {
   const unsigned int base = (unsigned int) tcb;
-  const struct descriptor desc =
+  struct descriptor desc =
     {				/* low word: */
       0xffff			/* limit 0..15 */
       | (base << 16)		/* base 0..15 */
@@ -62,7 +68,7 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 
       /* Get the first available selector.  */
       int sel = -1;
-      error_t err = __i386_set_gdt (tcb->self, &sel, &desc);
+      error_t err = __i386_set_gdt (tcb->self, &sel, desc);
       if (err == MIG_BAD_ID)
 	{
 	  /* Old kernel, use a per-thread LDT.  */
@@ -93,7 +99,7 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 	}
       else
 	{
-	  error_t err = __i386_set_gdt (tcb->self, &sel, &desc);
+	  error_t err = __i386_set_gdt (tcb->self, &sel, desc);
 	  assert_perror (err);
 	  return "i386_set_gdt failed";
 	}
@@ -116,7 +122,7 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 # define THREAD_DTV() \
   ({ void *_dtv; __asm__ ("movl %%gs:0, %0" : "=r" (_dtv)); _dtv; })
 
-
+# endif	/* !ASSEMBLER */
 #endif /* HAVE_TLS_SUPPORT */
 
 #endif	/* i386/tls.h */

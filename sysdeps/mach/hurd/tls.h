@@ -20,7 +20,12 @@
 #ifndef _TLS_H
 #define _TLS_H
 
-#ifdef HAVE_TLS_SUPPORT
+#if defined HAVE_TLS_SUPPORT && !defined ASSEMBLER
+
+# include <stddef.h>
+# include <mach/mig_errors.h>
+# include <mach.h>
+
 
 /* Type for the dtv.  */
 typedef union dtv
@@ -38,6 +43,7 @@ typedef struct
   thread_t self;		/* This thread's control port.  */
 } tcbhead_t;
 
+
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
@@ -50,6 +56,17 @@ typedef struct
 /* Alignment requirements for the TCB.  */
 # define TLS_TCB_ALIGN TLS_INIT_TCB_ALIGN /* XXX */
 
+
+/* Install the dtv pointer.  The pointer passed is to the element with
+   index -1 which contain the length.  */
+# define INSTALL_DTV(descr, dtvp) \
+  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+
+/* Return dtv of given thread descriptor.  */
+# define GET_DTV(descr) \
+  (((tcbhead_t *) (descr))->dtv)
+
 #endif /* HAVE_TLS_SUPPORT */
+
 
 #endif /* tls.h */
