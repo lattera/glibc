@@ -472,7 +472,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
      can arrive during critical sections.  */
   __mutex_lock (&_hurd_signal_preempt_lock);
   for (pe = _hurd_signal_preempt[signo]; pe != NULL; pe = pe->next)
-    if (sigcode >= pe->first && sigcode <= pe->last)
+    if (pe->handler && sigcode >= pe->first && sigcode <= pe->last)
       {
 	preempt = pe->handler;
 	break;

@@ -1,5 +1,8 @@
 Wed Feb 22 00:44:41 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Ignore preempter
+ 	elts with null handlers.
+
 	* sysdeps/mach/hurd/i386/sigreturn.c: Restore the FPU state.
 
 Tue Feb 21 21:53:30 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
