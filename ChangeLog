@@ -1,3 +1,8 @@
+2004-10-22  Roland McGrath  <roland@frob.com>
+
+	* configure.in: Cope if there are no sysdeps/*/preconfigure files.
+	* configure: Regenerated.
+
 2004-08-16  Roland McGrath  <roland@frob.com>
 
 	* Makefile: New file.
