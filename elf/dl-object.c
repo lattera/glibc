@@ -47,7 +47,7 @@ _dl_new_object (char *realname, const char *libname, int type,
 
   newname = (struct libname_list *) (new + 1);
   newname->name = (char *) memcpy (newname + 1, libname, libname_len);
-  newname->next = NULL;
+  /* newname->next = NULL;	We use calloc therefore not necessary.  */
   newname->dont_free = 1;
 
   new->l_name = realname;

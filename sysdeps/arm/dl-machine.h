@@ -428,7 +428,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
   else
     {
       const Elf32_Sym *const refsym = sym;
-      Elf32_Addr value = RESOLVE (&sym, version, reloc->r_type);
+      Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
 

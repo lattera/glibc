@@ -1,3 +1,8 @@
+2001-09-08  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Fix thinko in
+	usage of RESOLVE() (r_type, not reloc->r_type).
+
 2001-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-object.c: Avoid allocating extra memory block for name.
