@@ -30,11 +30,13 @@ ENTRY (setjmp)
 	.set	noreorder
 #ifdef __PIC__
 	.cpload t9
+	.set	reorder
 	la	t9, C_SYMBOL_NAME (__sigsetjmp)
+#endif
+	li	a1, 1		/* Pass a second argument of one.  */
+#ifdef __PIC__
 	jr	t9
 #else
 	j	C_SYMBOL_NAME (__sigsetjmp)
 #endif
-	li	a1, 1		/* Pass a second argument of one.  */
-	.set	reorder
 	.end	setjmp

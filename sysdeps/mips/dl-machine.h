@@ -412,7 +412,6 @@ _dl_runtime_resolve:\n							      \
 	".text\n"\
 	_RTLD_PROLOGUE(ENTRY_POINT)\
 	".set noreorder\n\
-	.set noreorder\n\
 	bltzal $0, 0f\n\
 	nop\n\
 0:	.cpload $31\n\
