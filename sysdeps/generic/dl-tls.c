@@ -23,7 +23,6 @@
 #include <unistd.h>
 #include <sys/param.h>
 
-#include <abort-instr.h>
 #include <tls.h>
 
 /* We don't need any of this if TLS is not supported.  */
@@ -42,21 +41,7 @@ static void
 __attribute__ ((__noreturn__))
 oom (void)
 {
-  static const char msg[] = "\
-cannot allocate memory for thread-local data: ABORT\n";
-
-  __libc_write (STDERR_FILENO, msg, sizeof (msg) - 1);
-
-  /* Kill ourself.  */
-  __kill (__getpid (), SIGKILL);
-
-  /* Just in case something goes wrong with the kill.  */
-  while (1)
-    {
-#  ifdef ABORT_INSTRUCTION
-      ABORT_INSTRUCTION;
-#  endif
-    }
+  _dl_fatal_printf ("cannot allocate memory for thread-local data: ABORT\n");
 }
 # endif
 

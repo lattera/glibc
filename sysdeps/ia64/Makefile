@@ -9,6 +9,13 @@ ifeq ($(subdir), csu)
 CPPFLAGS-start.S = -D__ASSEMBLY__
 sysdep_routines += hp-timing
 static-only-routines += hp-timing
+
+ifeq (yes,$(build-shared))
+# Compatibility
+sysdep_routines += ia64libgcc
+shared-only-routines += ia64libgcc
+endif
+endif
 endif
 
 ifeq ($(subdir),elf)

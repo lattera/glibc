@@ -5,3 +5,10 @@ ld {
     _dl_function_address;
   }
 }
+libc {
+  GLIBC_2.2 {
+    # Functions from libgcc.
+    __divtf3; __divdf3; __divsf3; __divdi3; __moddi3; __udivdi3; __umoddi3;
+    __multi3;
+  }
+}

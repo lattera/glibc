@@ -20,8 +20,10 @@
 /* Includes */
 
 #include <limits.h>
+#include <signal.h>
 #include <unistd.h>
 #include <stackinfo.h>
+#include <sigcontextinfo.h>
 
 #include <tls.h>
 #include "descr.h"
@@ -91,6 +93,16 @@ struct pthread_request {
     } for_each;
   } req_args;
 };
+
+
+
+typedef void (*arch_sighandler_t) (int, SIGCONTEXT);
+union sighandler
+{
+  arch_sighandler_t old;
+  void (*rt) (int, struct siginfo *, struct ucontext *);
+};
+extern union sighandler __sighandler[NSIG];
 
 
 /* Signals used for suspend/restart and for cancellation notification.  */
@@ -366,5 +378,12 @@ extern void __linuxthreads_reap_event (void);
 
 /* This function is called to initialize the pthread library.  */
 extern void __pthread_initialize (void);
+
+
+/* Sighandler wrappers.  */
+extern void __pthread_sighandler(int signo, SIGCONTEXT ctx);
+extern void __pthread_sighandler_rt(int signo, struct siginfo *si,
+				    struct ucontext *uc);
+extern void __pthread_null_sighandler(int sig);
 
 #endif /* internals.h */

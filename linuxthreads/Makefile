@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+# Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
 		       semaphore spinlock wrapsyscall rwlock pt-machine \
 		       oldsemaphore events getcpuclockid pspinlock barrier \
-		       ptclock_gettime ptclock_settime
+		       ptclock_gettime ptclock_settime sighandler
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 initfirst-yes = -Wl,--enable-new-dtags,-z,initfirst
@@ -80,6 +80,7 @@ CFLAGS-pthread.c += -D__NO_WEAK_PTHREAD_ALIASES $(znodelete-$(have-z-nodelete))
 CFLAGS-ptfork.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES -D_RPC_THREAD_SAFE_
 CFLAGS-unload.c += -DPREFIX=\"$(objpfx)\"
+CFLAGS-sighandler.c += $(exceptions)
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

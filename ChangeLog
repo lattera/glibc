@@ -1,3 +1,16 @@
+2002-05-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/Makefile: Add ia64libgcc in csu subdir.
+	* sysdeps/ia64/Versions (__divtf3, __divdf3, __divsf3, __divdi3,
+	__moddi3, __udivdi3, __umoddi3, __multi3): Export at GLIBC_2.0.
+	* sysdeps/ia64/ia64libgcc.S: New file.
+
+2002-05-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (oom): Implement using _dl_fatal_printf.
+
+	* malloc/memusage.c: Distinguish anonymous mmap.
+
 2002-05-01  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/close.c: #undef __close before function defn,

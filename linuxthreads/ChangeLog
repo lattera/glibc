@@ -1,3 +1,12 @@
+2002-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* signals.c: Move sighandler functions to...
+	* sighandler.c: ...here.  New file.
+	* signals.c: Move signal handler related type definitions to...
+	* internals.h: ...here.  Add prototypes for signal handlers.
+	* Makefile (libpthread-routines): Add sighandler.
+	(CFLAGS-sighandler.c): Add $(exceptions).
+
 2002-04-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/Makefile: New file.
