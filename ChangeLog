@@ -1,5 +1,8 @@
 2000-03-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/genops.c (_IO_default_xsputn): Little optimization.  Call
+	_IO_OVERFLOW directly instead through __overflow.
+
 	* locale/programs/localedef.c (construct_output_path): If path
 	contains a / compute the end of the directory name correctly.
 

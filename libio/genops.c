@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -420,7 +420,7 @@ _IO_default_xsputn (f, data, n)
             }
 	  more -= count;
         }
-      if (more == 0 || __overflow (f, (unsigned char) *s++) == EOF)
+      if (more == 0 || _IO_OVERFLOW (f, (unsigned char) *s++) == EOF)
 	break;
       more--;
     }
