@@ -107,15 +107,6 @@ int _dl_starting_up = 1;
    At this time it is not anymore a problem to modify the tables.  */
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
-#ifndef DL_FIND_AUXV
-# define DL_FIND_AUXV(auxp, envp) \
-  do { \
-    void **_tmp; \
-    for (_tmp = (void **) (envp); *_tmp; ++_tmp) \
-      continue; \
-    (auxp) = (void *) ++_tmp; \
-  } while (0)
-#endif
 
 extern int _dl_clktck;
 
@@ -125,6 +116,7 @@ static void non_dynamic_init (int argc, char **argv, char **envp)
 static void
 non_dynamic_init (int argc, char **argv, char **envp)
 {
+#ifdef DL_FIND_AUXV
   ElfW(auxv_t) *av;
 
   DL_FIND_AUXV (av, envp);
@@ -142,6 +134,7 @@ non_dynamic_init (int argc, char **argv, char **envp)
 	_dl_clktck = av->a_un.a_val;
 	break;
       }
+#endif
 
   if (!_dl_pagesize)
     _dl_pagesize = __getpagesize ();
