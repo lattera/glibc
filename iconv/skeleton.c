@@ -332,15 +332,15 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		if (status == __GCONV_FULL_OUTPUT)
 		  status = __GCONV_OK;
 	    }
+
+	  /* We finished one use of the loops.  */
+	  ++data->__invocation_counter;
 	}
       while (status == __GCONV_OK);
 
 #ifdef END_LOOP
       END_LOOP
 #endif
-
-      /* We finished one use of this step.  */
-      ++data->__invocation_counter;
     }
 
   return status;

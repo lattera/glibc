@@ -1172,3 +1172,15 @@ module	INTERNAL		KOI8-U//		KOI8-U		1
 #	from			to			module		cost
 module	ISIRI-3342//		INTERNAL		ISIRI-3342	1
 module	INTERNAL		ISIRI-3342//		ISIRI-3342	1
+
+#	from			to			module		cost
+module	UTF-16//		INTERNAL		UTF-16		1
+module	INTERNAL		UTF-16//		UTF-16		1
+
+#	from			to			module		cost
+module	UTF-16LE//		INTERNAL		UTF-16		1
+module	INTERNAL		UTF-16LE//		UTF-16		1
+
+#	from			to			module		cost
+module	UTF-16BE//		INTERNAL		UTF-16		1
+module	INTERNAL		UTF-16BE//		UTF-16		1

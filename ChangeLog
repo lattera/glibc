@@ -1,3 +1,16 @@
+2000-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile (modules): Add UTF-16.
+	(distribute): Add utf-16.c.
+	* iconvdata/gconv-modules: Add entries for UTF-16, UTF-16BE, and
+	UTF-16LE.
+	* iconvdata/utf-16.c: New file.
+	* iconv/gconv_builtin.h: Remove UTF-16 entries here.
+	* iconv/gconv_simple.c: Remove conversion functions to and from UTF-16.
+
+	* iconv/skeleton.c: Increment __invocation_coounter after every call
+	to the loops.
+
 2000-02-12  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/msgctl.c (__new_msgctl): Move errno

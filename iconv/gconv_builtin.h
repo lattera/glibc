@@ -1,5 +1,5 @@
 /* Builtin transformations.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -80,15 +80,3 @@ BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8, "UNICODELITTLE//",
 			1, "=INTERNAL->ucs2little",
 			__gconv_transform_internal_ucs2little, NULL, NULL,
 			4, 4, 2, 2)
-
-BUILTIN_ALIAS ("UTF-16//", "UTF16//")
-
-BUILTIN_TRANSFORMATION (NULL, "INTERNAL", 8, "UTF16//",
-			1, "=INTERNAL->utf16",
-			__gconv_transform_internal_utf16, NULL, NULL,
-			4, 4, 2, 4)
-
-BUILTIN_TRANSFORMATION (NULL, "UTF16//", 7, "INTERNAL",
-			1, "=utf16->INTERNAL",
-			__gconv_transform_utf16_internal, NULL, NULL,
-			2, 4, 4, 4)
