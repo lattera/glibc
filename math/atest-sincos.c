@@ -156,7 +156,7 @@ main (void)
   memset (sin_maxerror, 0, sizeof (mp1));
   memset (cos_maxerror, 0, sizeof (mp1));
   memset (xt, 0, sizeof (mp1));
-  xt[(FRAC - N2) / mpbpl] = 1 << (FRAC - N2) % mpbpl;
+  xt[(FRAC - N2) / mpbpl] = (mp_limb_t)1 << (FRAC - N2) % mpbpl;
 
   for (i = 0; i < 1 << N2; i++)
     {
@@ -232,7 +232,7 @@ main (void)
 
    /* Check Range-Kutta against precomputed values of sin(1) and cos(1).  */
    memset (x, 0, sizeof (mp1));
-   x[FRAC / mpbpl] = 1 << FRAC % mpbpl;
+   x[FRAC / mpbpl] = (mp_limb_t)1 << FRAC % mpbpl;
    sincosx_mpn (si, co, x, ox);
 
    memset (s2, 0, sizeof (mp1));

@@ -1,5 +1,5 @@
 /* Compatibility definitions for System V `poll' interface.
-   Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,8 @@ struct pollfd
    an event to occur; if TIMEOUT is -1, block until an event occurs.
    Returns the number of file descriptors with events, zero if timed out,
    or -1 for errors.  */
-
+extern int __poll __P ((struct pollfd *__fds, unsigned long int __nfds,
+			int __timeout));
 extern int poll __P ((struct pollfd *__fds, unsigned long int __nfds,
 		      int __timeout));
 

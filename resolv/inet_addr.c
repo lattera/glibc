@@ -102,13 +102,14 @@ inet_aton(cp, addr)
 	register u_int32_t val;	/* changed from u_long --david */
 	register int base, n;
 	register char c;
-	u_int parts[4];
-	register u_int *pp = parts;
+	u_int32_t parts[4];
+	register u_int32_t *pp = parts;
+
 #ifdef _LIBC
 	int saved_errno = errno;
-
 	__set_errno (0);
 #endif
+
 	c = *cp;
 	for (;;) {
 		/*
@@ -117,7 +118,18 @@ inet_aton(cp, addr)
 		 * 0x=hex, 0=octal, isdigit=decimal.
 		 */
 		if (!isdigit(c))
-			return (0);
+			goto ret_0;
+#ifdef _LIBC
+		{
+			unsigned long ul = strtoul (cp, (char **) &cp, 0);
+			if (ul == ULONG_MAX && errno == ERANGE)
+				goto ret_0;
+			if (ul > 0xfffffffful)
+				goto ret_0;
+			val = ul;
+		}
+		c = *cp;
+#else
 		base = 10;
 		if (c == '0') {
 			c = *++cp;
@@ -126,15 +138,6 @@ inet_aton(cp, addr)
 			else
 				base = 8;
 		}
-#ifdef _LIBC
-		val = strtoul (cp, (char **) &cp, base);
-		if (val == ULONG_MAX && errno == ERANGE)
-		{
-			__set_errno (saved_errno);
-			return 0;
-		}
-		c = *cp;
-#else
 		val = 0;
 		for (;;) {
 			if (isascii(c) && isdigit(c)) {
@@ -156,7 +159,7 @@ inet_aton(cp, addr)
 			 *	a.b	(with b treated as 24 bits)
 			 */
 			if (pp >= parts + 3)
-				return (0);
+				goto ret_0;
 			*pp++ = val;
 			c = *++cp;
 		} else
@@ -166,7 +169,7 @@ inet_aton(cp, addr)
 	 * Check for trailing characters.
 	 */
 	if (c != '\0' && (!isascii(c) || !isspace(c)))
-		return (0);
+		goto ret_0;
 	/*
 	 * Concoct the address according to
 	 * the number of parts specified.
@@ -175,30 +178,40 @@ inet_aton(cp, addr)
 	switch (n) {
 
 	case 0:
-		return (0);		/* initial nondigit */
+		goto ret_0;		/* initial nondigit */
 
 	case 1:				/* a -- 32 bits */
 		break;
 
 	case 2:				/* a.b -- 8.24 bits */
 		if (val > 0xffffff)
-			return (0);
+			goto ret_0;
 		val |= parts[0] << 24;
 		break;
 
 	case 3:				/* a.b.c -- 8.8.16 bits */
 		if (val > 0xffff)
-			return (0);
+			goto ret_0;
 		val |= (parts[0] << 24) | (parts[1] << 16);
 		break;
 
 	case 4:				/* a.b.c.d -- 8.8.8.8 bits */
 		if (val > 0xff)
-			return (0);
+			goto ret_0;
 		val |= (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8);
 		break;
 	}
 	if (addr)
 		addr->s_addr = htonl(val);
+
+#ifdef _LIBC
+	__set_errno (saved_errno);
+#endif
 	return (1);
+
+ret_0:
+#ifdef _LIBC
+	__set_errno (saved_errno);
+#endif
+	return (0);
 }

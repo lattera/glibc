@@ -39,28 +39,28 @@ feraiseexcept (int excepts)
     {
       /* One example of a invalid operation is 0 * Infinity.  */
       __asm__ __volatile__("mult/sui $f31,%1,%0; trapb"
-			   : "=f"(tmp) : "f"(HUGE_VAL));
+			   : "=&f"(tmp) : "f"(HUGE_VAL));
     }
 
   /* Next: division by zero.  */
   if (FE_DIVBYZERO & excepts)
     {
       __asm__ __volatile__("cmpteq $f31,$f31,%1; divt/sui %1,$f31,%0; trapb"
-			   : "=f"(tmp), "=f"(dummy));
+			   : "=&f"(tmp), "=f"(dummy));
     }
 
   /* Next: overflow.  */
   if (FE_OVERFLOW & excepts)
     {
       __asm__ __volatile__("mult/sui %1,%1,%0; trapb"
-			   : "=f"(tmp) : "f"(DBL_MAX));
+			   : "=&f"(tmp) : "f"(DBL_MAX));
     }
 
   /* Next: underflow.  */
   if (FE_UNDERFLOW & excepts)
     {
       __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
-			   : "=f"(tmp) : "f"(DBL_MIN),
+			   : "=&f"(tmp) : "f"(DBL_MIN),
 					 "f"((double) (1UL << 60)));
     }
 
@@ -68,6 +68,6 @@ feraiseexcept (int excepts)
   if (FE_INEXACT & excepts)
     {
       __asm__ __volatile__("divt/sui %1,%2,%0; trapb"
-			   : "=f"(tmp) : "f"(1.0), "f"(M_PI));
+			   : "=&f"(tmp) : "f"(1.0), "f"(M_PI));
     }
 }

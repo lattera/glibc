@@ -497,7 +497,7 @@ GLIBC_2.1 {
     __xstat64; __fxstat64; __lxstat64;
     __pread64; __pwrite64;
     __backtrace; __backtrace_symbols;
-    _dl_mcount; _dl_mcount_wrapper;
+    _dl_mcount; _dl_mcount_wrapper; __poll;
 
     # helper functions
     __libc_current_sigrtmin; __libc_current_sigrtmax; __libc_allocate_rtsig;

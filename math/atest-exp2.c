@@ -107,9 +107,9 @@ exp_mpn (mp1 ex, mp1 x)
 
    memset (xp, 0, sizeof (mp1));
    memset (ex, 0, sizeof (mp1));
-   xp[FRAC / mpbpl] = 1 << FRAC % mpbpl;
+   xp[FRAC / mpbpl] = (mp_limb_t)1 << FRAC % mpbpl;
    memset (tol, 0, sizeof (mp1));
-   tol[(FRAC - TOL) / mpbpl] = 1 << (FRAC - TOL) % mpbpl;
+   tol[(FRAC - TOL) / mpbpl] = (mp_limb_t)1 << (FRAC - TOL) % mpbpl;
 
    n = 0;
 
@@ -170,7 +170,7 @@ main (void)
 
   memset (maxerror, 0, sizeof (mp1));
   memset (xt, 0, sizeof (mp1));
-  xt[(FRAC - N2) / mpbpl] = 1 << (FRAC - N2) % mpbpl;
+  xt[(FRAC - N2) / mpbpl] = (mp_limb_t)1 << (FRAC - N2) % mpbpl;
 
   for (i = 0; i < (1 << N2); ++i)
     {
@@ -219,7 +219,7 @@ main (void)
 
   /* Check exp_mpn against precomputed value of exp(1).  */
   memset (x, 0, sizeof (mp1));
-  x[FRAC / mpbpl] = 1 << FRAC % mpbpl;
+  x[FRAC / mpbpl] = (mp_limb_t)1 << FRAC % mpbpl;
   exp_mpn (ex, x);
   read_mpn_hex (e2, exp1);
   if (mpn_cmp (ex, e2, SZ) >= 0)

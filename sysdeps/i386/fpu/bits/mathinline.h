@@ -582,7 +582,7 @@ __MATH_INLINE int
 __finite (double __x)
 {
   return (__extension__
-	  (((((union { double __d; int __i[2]; }) {__d: __x}).i[1]
+	  (((((union { double __d; int __i[2]; }) {__d: __x}).__i[1]
 	     | 0x800fffff) + 1) >> 31));
 }
 

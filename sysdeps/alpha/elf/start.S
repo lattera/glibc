@@ -29,13 +29,14 @@ _start:
 	mov	zero, fp
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
+	subq	sp, 16, sp
 	.prologue 1
 
   /* Load address of the user's main function.  */
 	lda	a0, main
 
-	ldl	a1, 0(sp)	/* get argc */
-	lda	a2, 8(sp)	/* get argv */
+	ldl	a1, 16(sp)	/* get argc */
+	lda	a2, 24(sp)	/* get argv */
 
   /* Load address of our own entry points to .fini and .init.  */
 	lda	a3, _init
@@ -44,10 +45,12 @@ _start:
   /* Store address of the shared library termination function.  */
 	mov	v0, a5
 
+  /* Provide the highest stack address to the user code.  */
+	stq	sp, 0(sp)
+
   /* Call the user's main function, and exit with its value.
-     But let the libc call main.    */
+     But let the libc call main.  */
 	jsr	ra, __libc_start_main
-	ldgp	gp, 0(ra)
 
   /* Die very horribly if exit returns.  Call_pal hlt is callable from
      kernel mode only; this will result in an illegal instruction trap.  */
@@ -56,16 +59,3 @@ _start:
 
 /* For ECOFF backwards compatibility. */
 weak_alias(_start, __start)
-
-/* Define a symbol for the first piece of initialized data.  */
-	.data
-	.globl __data_start
-__data_start:
-	.long 0
-
-#ifdef __ELF__
-	.size __data_start, 4
-	.type __data_start, @object
-#endif
-
-weak_alias(__data_start, data_start)

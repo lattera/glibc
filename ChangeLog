@@ -1,3 +1,26 @@
+1998-06-27  7:07  Richard Henderson  <rth@cygnus.com>
+
+	* math/atest-exp.c (exp_mpn, main): Cast to mp_limb_t appropriately.
+	* math/atest-exp2.c (exp_mpn, main): Likewise.
+	* math/atest-sincos.c (main): Likewise.
+
+	* resolv/inet_addr.c (inet_aton): Check for 32-bit overflow.  Move
+	base handling away from strtoul.  Always reset errno.
+
+	* sysdeps/alpha/Makefile (elf): Kill -mno-fp-regs.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_runtime_setup): Only set
+	_dl_profile_map if _dl_name_match_p.
+	(RTLD_START): Fix .prologue.  Set __libc_stack_end.
+	* sysdeps/alpha/elf/start.S: Pass sp as arg 7.  Kill __data_start.
+
+	* sysdeps/alpha/fpu/fraiseexcpt.c (feraiseexcept): Mark tmp
+	as early-clobber.
+
+	* sysdeps/libm-ieee754/e_exp10.c: Include "math_private.h".
+	* sysdeps/libm-ieee754/e_exp10f.c: Likewise.
+	* sysdeps/libm-ieee754/e_exp10l.c: Likewise.
+
 1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/fpu/bits/mathinline.h (__finite): Use alias-safe
