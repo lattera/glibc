@@ -1,0 +1,6 @@
+ld {
+  GLIBC_2.2 {
+    # global variables needed in the libc.
+    _dl_pagesize;
+  }
+}
