@@ -1,5 +1,12 @@
 2000-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makeconfig (all-subdirs): Add conform.
+	* conform/Makefile: Include ../Rules.
+
+	* Makefile (README): Add rules to generate here as well.
+
+2000-08-02  Ulrich Drepper  <drepper@redhat.com>
+
 	* version.h (VERSION): Bump to 2.1.92.
 
 	* sysdeps/ia64/Dist: Add _mcount.S.

@@ -272,7 +272,14 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h
 
-README: README.template version.h ; # Make-dist should update README.
+README: README.template version.h
+	-rm -f $@
+	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
+# Make it unwritable so I won't change it by mistake.
+	chmod 444 $@
+ifeq ($(with-cvs),yes)
+	test ! -d CVS || cvs $(CVSOPTS) commit -m'Remade for $(release)-$(version)' $@
+endif
 
 define format-me
 @rm -f $@
