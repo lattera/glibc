@@ -1,4 +1,14 @@
+2001-12-26  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/sigwait.c (__sigwait): When returning immediately,
+	check only (SS->pending & MASK) for the signal to return.
+	From Jeroen Dekkers <jeroen@dekkers.cx>.
+
 2001-12-22  Roland McGrath  <roland@frob.com>
+
+	* iconv/skeleton.c [!RESET_INPUT_BUFFER && !SAVE_RESET_STATE]:
+	Use preprocessor #if conditionals instead of `if' to avoid
+	warnings about divide by zero in dead code.
 
 	* hurd/Versions (libc: GLIBC_2.2.5): Add _hurd_port_set,
 	_hurd_port_init, and __hurd_self_sigstate.

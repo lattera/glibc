@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ int
 __sigwait (const sigset_t *set, int *sig)
 {
   struct hurd_sigstate *ss;
-  sigset_t mask;
+  sigset_t mask, ready;
   int signo = 0;
   struct hurd_signal_preemptor preemptor;
   jmp_buf buf;
@@ -72,20 +72,21 @@ __sigwait (const sigset_t *set, int *sig)
   ss = _hurd_self_sigstate ();
   __spin_lock (&ss->lock);
 
-  /* See if one of these signals is currently pending */
-  if (ss->pending & mask)
+  /* See if one of these signals is currently pending.  */
+  ready = ss->pending & mask;
+  if (ready)
     {
       for (signo = 1; signo < NSIG; signo++)
-	if (__sigismember (&ss->pending, signo))
+	if (__sigismember (&ready, signo))
 	  {
-	    __sigdelset (&ss->pending, signo);
+	    __sigdelset (&ready, signo);
 	    goto all_done;
 	  }
       /* Huh?  Where'd it go? */
       abort ();
     }
 
-  /* Wait for one of them to show up */
+  /* Wait for one of them to show up.  */
 
   if (!setjmp (buf))
     {
