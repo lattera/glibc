@@ -154,7 +154,8 @@ tests = tst-attr1 tst-attr2 \
 	tst-sysconf \
 	tst-locale1 tst-locale2 \
 	tst-umask1 \
-	tst-popen1
+	tst-popen1 \
+	tst-clock1
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 

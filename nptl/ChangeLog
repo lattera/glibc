@@ -1,5 +1,8 @@
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-clock1.
+	* tst-clock1.c: New file.
+
 	* pthread_setconcurrency.c (pthread_setconcurrency): Fail for
 	negative arguments.
 	* Makefile (tests): Add tst-basic5.
