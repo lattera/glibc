@@ -1,3 +1,21 @@
+2000-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.c: Replace fast spinlocks by adaptive spinlocks which are
+	faster on SMP systems.  No more emulation of compare&swap for adaptive
+	spinlocks.
+	* spinlock.h: Likewise.
+	* sysdeps/pthread/pthread.h: Shuffle PTHREAD_MUTEX_* values around.
+	Replace fast with adaptive mutex.
+	* mutex.c: Rewrite for replacement of fast by adaptive mutex.
+	* condvar.c: Likewise.
+	* pthread.c: Define and initialize __pthread_smp_kernel variable.
+	* internals.h: Declare __pthread_smp_kernel.
+	* sysdeps/pthread/bits/pthreadtypes.h: Update comment of
+	_pthread_fastlock structure.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
+	* pthread.c: Remove initialization to zero from global variables.
+
 2000-06-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* shlib-versions: Make sparc64 GLIBC_2.2+ only.
