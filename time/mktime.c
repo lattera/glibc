@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -246,7 +246,11 @@ __mktime_internal (struct tm *tp,
   int mon_years = mon / 12 - negative_mon_remainder;
   int year = year_requested + mon_years;
 
-  /* The other values need not be in range:
+  /* Only years after 1970 are defined.  */
+  if (year < 70)
+    return -1;
+
+   /* The other values need not be in range:
      the remaining code handles minor overflows correctly,
      assuming int and time_t arithmetic wraps around.
      Major overflows are caught at the end.  */

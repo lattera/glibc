@@ -214,11 +214,13 @@ vsyslog(pri, fmt, ap)
 		(void)__writev(STDERR_FILENO, iov, v - iov + 1);
 	}
 
+#ifdef _LIBC_REENTRANT
 	/* Prepare for multiple users.  We have to take care: open and
 	   write are cancellation points.  */
 	__libc_cleanup_region_start (1, (void (*) (void *)) cancel_handler,
 				     &oldaction_ptr);
 	__libc_lock_lock (syslog_lock);
+#endif
 
 	/* Prepare for a broken connection.  */
  	memset (&action, 0, sizeof (action));
@@ -268,9 +270,11 @@ vsyslog(pri, fmt, ap)
 	if (sigpipe == 0)
 		__sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
 
+#ifdef _LIBC_REENTRANT
 	/* End of critical section.  */
 	__libc_cleanup_region_end (0);
 	__libc_lock_unlock (syslog_lock);
+#endif
 
 	free (buf);
 }

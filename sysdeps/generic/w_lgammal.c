@@ -38,7 +38,7 @@ static char rcsid[] = "$NetBSD: $";
 	return __ieee754_lgammal_r(x,&signgam);
 #else
         long double y;
-	int local_signgam;
+	int local_signgam = 0;
         y = __ieee754_lgammal_r(x,&local_signgam);
 	if (_LIB_VERSION != _ISOC_)
 	  /* ISO C99 does not define the global variable.  */

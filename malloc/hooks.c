@@ -21,7 +21,13 @@
 /* $Id$ */
 
 #ifndef weak_variable
+#ifndef _LIBC
 #define weak_variable /**/
+#else
+/* In GNU libc we want the hook variables to be weak definitions to
+   avoid a problem with Emacs.  */
+#define weak_variable weak_function
+#endif
 #endif
 
 #ifndef DEFAULT_CHECK_ACTION

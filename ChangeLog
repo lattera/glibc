@@ -1,3 +1,15 @@
+2002-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (charmap_read): If the charmap doesn't
+	define a code_set_name provide one based on the filename.
+
+	* malloc/hooks.c: Define weak_variable correctly for _LIBC.
+
+2001-12-28  Andreas Jaeger  <aj@suse.de>
+
+	* time/mktime.c (__mktime_internal): Check for year < 70
+	[PR libc/2738].
+
 2002-04-03  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Fix arguments for
@@ -5,6 +17,16 @@
 	Reported by Andi Kleen <ak@suse.de>.
 
 2002-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/w_lgamma.c: Initialized local_signgam.
+	* sysdeps/generic/w_lgammaf.c: Likewise.
+	* sysdeps/generic/w_lgammal.c: Likewise [PR libc/2854].
+
+	* debug/catchsegv.sh (exval): Quote [ in pattern [PR libc/2902].
+	Adjust for new output format of the backtrace functions.
+
+	* misc/syslog.c (vsyslog): Only use cleanup handler if
+	_LIBC_REENTRANT is defined [PR libc/2924].
 
 	* libio/Makefile (tests): Add bug-ungetwc2.
 	* libio/bug-ungetwc2.c: New file.
@@ -2847,7 +2869,7 @@
 	* sysdeps/ia64/bits/byteswap.h: Likewise.
 	* sysdeps/m68k/bits/byteswap.h: Likewise.
 	* sysdeps/s390/s390-32/bits/byteswap.h: Likewise.
-	* sysdeps/s390/s390-64/bits/byteswap.h: Likewise.
+	* sysdeps/s390/s390-64/bits/byteswap.h: Likewise [PR libc/2757].
 
 2002-01-02  Bruno Haible  <bruno@clisp.org>
 

@@ -38,7 +38,7 @@ if test $# -eq 0; then
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)
       echo 'catchsegv (GNU libc) @VERSION@'
-      echo 'Copyright (C) 2001 Free Software Foundation, Inc.
+      echo 'Copyright (C) 2002 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Written by Ulrich Drepper.'
@@ -87,17 +87,18 @@ if test -f "$segv_output"; then
   sed '/Backtrace/q' "$segv_output"
   sed '1,/Backtrace/d' "$segv_output" |
   (while read line; do
+     line=`echo $line | sed "s@^$prog\\(\\[.*\\)@\1@"`
      case "$line" in
-       [*) addr=`echo "$line" | sed 's/^\[\(.*\)\]$/\1/'`
-	   complete=`addr2line -f -e "$prog" $addr 2>/dev/null`
-	   if test $? -eq 0; then
-             echo "`echo "$complete"|sed 'N;s/\(.*\)\n\(.*\)/\2(\1)/;'`$line"
-           else
-             echo "$line"
-           fi
-           ;;
-        *) echo "$line"
-           ;;
+       \[*) addr=`echo "$line" | sed 's/^\[\(.*\)\]$/\1/'`
+	    complete=`addr2line -f -e "$prog" $addr 2>/dev/null`
+	    if test $? -eq 0; then
+	      echo "`echo "$complete"|sed 'N;s/\(.*\)\n\(.*\)/\2(\1)/;'`$line"
+	    else
+	      echo "$line"
+	    fi
+	    ;;
+         *) echo "$line"
+	    ;;
      esac
    done)
    rm -f "$segv_output"
