@@ -1,5 +1,5 @@
 /* Set current rounding direction.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,6 +19,9 @@
    02111-1307 USA.  */
 
 #include <fenv.h>
+#include <unistd.h>
+#include <ldsodefs.h>
+#include <dl-procinfo.h>
 
 int
 fesetround (int round)
@@ -33,6 +36,17 @@ fesetround (int round)
   cw &= ~0xc00;
   cw |= round;
   __asm__ ("fldcw %0" : : "m" (*&cw));
+
+  /* If the CPU supports SSE we set the MXCSR as well.  */
+  if ((GL(dl_hwcap_mask) & HWCAP_I386_XMM) != 0)
+    {
+      unsigned int xcw;
+
+      __asm__ ("stmxcsr %0" : "=m" (*&xcw));
+      cw &= ~0x6000;
+      cw |= round << 3;
+      __asm__ ("ldmxcsr %0" : : "m" (*&xcw));
+    }
 
   return 0;
 }
