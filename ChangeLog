@@ -1,3 +1,8 @@
+2002-04-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Use %rdi as temp
+	register instead of destroying %rbx.
+
 2002-04-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/string.h: Declare strerror_r also for XPG6.
