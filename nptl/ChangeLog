@@ -1,3 +1,8 @@
+2003-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/tst-timer.c: Check return values of the
+	functions we test.
+
 2003-03-23  Roland McGrath  <roland@redhat.com>
 
 	* tst-tls3.c (do_test) [! HAVE___THREAD]: Don't test anything.

@@ -1,3 +1,11 @@
+2003-03-24  Jon Grimm  <jgrimm@us.ibm.com>
+
+	* inet/netinet/in.h: Add IPPROTO_SCTP.
+
+2003-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/epoll.h (EPOLLET): Define.
+
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/sysdep.h (INTERNAL_SYSCALL):

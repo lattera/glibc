@@ -1,5 +1,5 @@
 /* Tests for POSIX timer implementation.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -26,9 +26,16 @@
 
 
 static void
-notify_func (union sigval sigval)
+notify_func1 (union sigval sigval)
 {
-  puts ("notify_func");
+  puts ("notify_func1");
+}
+
+
+static void
+notify_func2 (union sigval sigval)
+{
+  puts ("notify_func2");
 }
 
 
@@ -75,7 +82,7 @@ main (void)
   retval = clock_gettime (CLOCK_REALTIME, &ts);
 
   sigev2.sigev_notify = SIGEV_THREAD;
-  sigev2.sigev_notify_function = notify_func;
+  sigev2.sigev_notify_function = notify_func1;
   sigev2.sigev_notify_attributes = NULL;
 
   setvbuf (stdout, 0, _IOLBF, 0);
@@ -88,27 +95,62 @@ main (void)
   printf ("clock_getres returned %d, timespec = { %ld, %ld }\n",
 	  retval, ts.tv_sec, ts.tv_nsec);
 
-  timer_create (CLOCK_REALTIME, &sigev1, &timer_sig);
-  timer_create (CLOCK_REALTIME, &sigev2, &timer_thr1);
-  timer_create (CLOCK_REALTIME, &sigev2, &timer_thr2);
+  if (timer_create (CLOCK_REALTIME, &sigev1, &timer_sig) != 0)
+    {
+      printf ("timer_create for timer_sig failed: %m\n");
+      exit (1);
+    }
+  if (timer_create (CLOCK_REALTIME, &sigev2, &timer_thr1) != 0)
+    {
+      printf ("timer_create for timer_thr1 failed: %m\n");
+      exit (1);
+    }
+  sigev2.sigev_notify_function = notify_func2;
+  if (timer_create (CLOCK_REALTIME, &sigev2, &timer_thr2) != 0)
+    {
+      printf ("timer_create for timer_thr2 failed: %m\n");
+      exit (1);
+    }
 
-  timer_settime (timer_thr1, 0, &itimer2, &old);
-  timer_settime (timer_thr2, 0, &itimer3, &old);
+  if (timer_settime (timer_thr1, 0, &itimer2, &old) != 0)
+    {
+      printf ("timer_settime for timer_thr1 failed: %m\n");
+      exit (1);
+    }
+  if (timer_settime (timer_thr2, 0, &itimer3, &old) != 0)
+    {
+      printf ("timer_settime for timer_thr2 failed: %m\n");
+      exit (1);
+    }
 
   signal (ZSIGALRM, signal_func);
 
-  timer_settime (timer_sig, 0, &itimer1, &old);
-
-  timer_delete (-1);
-
-  intr_sleep (3);
-
-  timer_delete (timer_sig);
-  timer_delete (timer_thr1);
+  if (timer_settime (timer_sig, 0, &itimer1, &old) != 0)
+    {
+      printf ("timer_settime for timer_sig failed: %m\n");
+      exit (1);
+    }
 
   intr_sleep (3);
 
-  timer_delete (timer_thr2);
+  if (timer_delete (timer_sig) != 0)
+    {
+      printf ("timer_delete for timer_sig failed: %m\n");
+      exit (1);
+    }
+  if (timer_delete (timer_thr1) != 0)
+    {
+      printf ("timer_delete for timer_thr1 failed: %m\n");
+      exit (1);
+    }
+
+  intr_sleep (3);
+
+  if (timer_delete (timer_thr2) != 0)
+    {
+      printf ("timer_delete for timer_thr2 failed: %m\n");
+      exit (1);
+    }
 
   return 0;
 }
