@@ -791,7 +791,7 @@
 	stack.
 	* posix/execle.c: Likewise.
 	* posix/execlp.c: Likewise.
-	* posix/execlp.c: Likewise.
+	* posix/execvp.c: Likewise.
 	(script_execute): Removed.
 	(allocate_scripts_argv): New function.  Called at most once to
 	allocate memory, not every time a script is run.  Adjust caller.
