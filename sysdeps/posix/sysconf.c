@@ -938,7 +938,7 @@ __sysconf (name)
 #endif
 
     case _SC_MONOTONIC_CLOCK:
-#ifdef _POSIX_MONOTONIC_CLOCK
+#if _POSIX_MONOTONIC_CLOCK
       return _POSIX_MONOTONIC_CLOCK;
 #else
       return -1;
