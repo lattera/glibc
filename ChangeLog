@@ -1,3 +1,8 @@
+1998-10-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/mktime.c: Define _POSIX_THREAD_SAFE_FUNCTIONS to get
+	localtime_t declaration on some systems.
+
 1998-10-16 10:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/Makefile [! elf]: Define CFLAGS-gconv_simple.c to
