@@ -1,0 +1,84 @@
+/* Copyright (C) 1999, 2000 Hewlett-Packard Co.
+   Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If
+   not, write to the Free Software Foundation, Inc.,
+   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+#include <sysdep.h>
+#include <features.h>
+
+	.psr abi64
+	.psr lsb
+	.lsb
+
+	.global errno
+	.common errno,4,4
+	.type errno, @object
+	.size errno, 4
+
+	.global __errno
+__errno = errno
+
+	.global _errno
+_errno = errno
+
+	.text
+
+	.align 8
+
+	.global __syscall_error
+	.proc __syscall_error
+__syscall_error:
+#ifdef _LIBC_REENTRANT
+	alloc	r35=ar.pfs, 0, 4, 0, 0
+	mov	r32=b0
+	mov	r33=r8
+	mov	r34=r1
+	;;
+	br.call.sptk.many b0 = __errno_location#
+.Lret0:		/* force new bundle */
+	st4	[r8]=r33
+	mov	r1=r34
+	mov	b0=r32
+	mov	r8=-1
+	mov	ar.pfs=r35
+#else /* _LIBC_REENTRANT */
+	/*
+	 * Note that the gp has to be set properly for this to work.
+	 * As long as all syscalls are in the same load unit
+	 * (executable or shared library) as this routine, we should
+	 * be fine.  Otherwise, we would have to first load the global
+	 * pointer register from __gp.
+	 */
+	addl	r2=@ltoff(errno),gp
+	;;
+	ld8	r2=[r2]
+	mov	r3=r8
+	mov	r8=-1
+	;;
+	st4	[r2]=r3
+#endif /* _LIBC_REENTRANT */
+	ret			// ret is #define'd in syscall.h!
+	.endp __syscall_error
+
+
+        .global __ia64_syscall
+        .proc __ia64_syscall
+__ia64_syscall:
+        break __BREAK_SYSCALL
+        cmp.eq p6,p0=-1,r10
+(p6)    br.cond.spnt.few __syscall_error
+        ret
+        .endp __ia64_syscall
