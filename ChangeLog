@@ -1,3 +1,7 @@
+2000-07-26  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h: New file.
+
 2000-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/langinfo.h: Add entries for extra tables in CTYPE data.
