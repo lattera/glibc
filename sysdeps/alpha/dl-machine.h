@@ -314,10 +314,14 @@ $fixup_stack:
 	   involves copying everything down, since the stack pointer must
 	   always be 16-byte aligned.  */
 	ldq	$2, 0($sp)
+	ldq	$5, _dl_argv
+	subq	$31, $1, $6
 	subq	$2, $1, $2
+	s8addq	$6, $5, $5
 	mov	$sp, $4
 	s8addq	$1, $sp, $3
 	stq	$2, 0($sp)
+	stq	$5, _dl_argv
 	/* Copy down argv.  */
 0:	ldq	$5, 8($3)
 	addq	$4, 8, $4
