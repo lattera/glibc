@@ -4,6 +4,8 @@
 /* Now document the internal interfaces.  */
 extern int __gettimeofday (struct timeval *__tv,
 			   struct timezone *__tz);
+extern int __gettimeofday_internal (struct timeval *__tv,
+				    struct timezone *__tz);
 extern int __settimeofday (__const struct timeval *__tv,
 			   __const struct timezone *__tz);
 extern int __adjtime (__const struct timeval *__delta,
@@ -14,4 +16,9 @@ extern int __setitimer (enum __itimer_which __which,
 			__const struct itimerval *__restrict __new,
 			struct itimerval *__restrict __old);
 extern int __utimes (__const char *__file, const struct timeval __tvp[2]);
+
+#ifndef NOT_IN_libc
+# define __gettimeofday(tv, tz) INTUSE(__gettimeofday) (tv, tz)
+#endif
+
 #endif

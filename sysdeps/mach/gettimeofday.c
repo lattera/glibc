@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995,1996,1997,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-1997,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include <sys/time.h>
 #include <mach.h>
 
+#undef __gettimeofday
+
 /* Get the current time of day and timezone information,
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
    Returns 0 on success, -1 on errors.  */
@@ -42,4 +44,5 @@ __gettimeofday (tv, tz)
   return 0;
 }
 
+INTDEF(__gettimeofday)
 weak_alias (__gettimeofday, gettimeofday)

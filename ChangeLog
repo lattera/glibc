@@ -1,5 +1,15 @@
 2002-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/sys/time.h: Declare __gettimeofday_internal and define
+	__gettimeofday macro if not NOT_IN_libc.
+	* sysdeps/generic/gettimeofday.c: Use INTEDEF for __gettimeofday.
+	* sysdeps/mach/gettimeofday.c: Likewise.
+	* sysdeps/posix/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/aix/gettimeofday.c: Likewise.
+	* sysdeps/unix/common/syscalls.list: Define __gettimeofday alias.
+	* sysdeps/unix/sysv/linux/alpha/gettimeofday.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: Likewise.
+
 	* include/sys/stat.h: Declare __fxstat_internal and __fxstat64_internal
 	and define __fxstate and __fxstat64 macros if not NOT_IN_libc.
 	Remove __lstat and __fstat inline functions.

@@ -6,7 +6,7 @@ fchown		-	fchown		i:iii	__fchown	fchown
 ftruncate	-	ftruncate	i:ii	__ftruncate	ftruncate
 getpgid		-	getpgrp		i:i	__getpgid	getpgid
 getrusage	-	getrusage	i:ip	__getrusage	getrusage
-gettimeofday	-	gettimeofday	i:PP	__gettimeofday	gettimeofday
+gettimeofday	-	gettimeofday	i:PP	__gettimeofday	gettimeofday __gettimeofday_internal
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 setpgid		-	setpgrp		i:ii	__setpgid	setpgid
 setregid	-	setregid	i:ii	__setregid	setregid

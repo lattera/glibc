@@ -38,4 +38,5 @@ L(pseudo_end):
 	ret
 PSEUDO_END(__gettimeofday)
 
+strong_alias (__gettimeofday, __gettimeofday_internal)
 weak_alias (__gettimeofday, gettimeofday)
