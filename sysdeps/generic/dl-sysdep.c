@@ -76,6 +76,10 @@ _dl_sysdep_start (void **start_argptr,
 
   _dl_secure = uid != euid || gid != egid;
 
+#ifdef DL_SYSDEP_INIT
+  DL_SYSDEP_INIT;
+#endif
+
   (*dl_main) (phdr, phnum, &user_entry);
   return user_entry;
 }
