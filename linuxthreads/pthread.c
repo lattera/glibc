@@ -305,7 +305,7 @@ __pthread_initialize_minimal(void)
      taken care of initializing the TLS data structures.  */
   __libc_setup_tls (TLS_TCB_SIZE, TLS_TCB_ALIGN);
 # elif !USE___THREAD
-  if (__builtin_expect (GL(dl_tls_max_dtv_idx) == 0, 0))
+  if (__builtin_expect (GL(dl_tls_dtv_slotinfo_list) == NULL, 0))
     {
       tcbhead_t *tcbp;
 

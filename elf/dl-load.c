@@ -953,9 +953,9 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  /* If not loading the initial set of shared libraries,
 	     check whether we should permit loading a TLS segment.  */
 	  if (__builtin_expect (l->l_type == lt_library, 1)
-	      /* If GL(dl_tls_max_dtv_idx) == 0, then rtld.c did not
-		 set up TLS data structures, so don't use them now.  */
-	      || __builtin_expect (GL(dl_tls_max_dtv_idx), 1) != 0)
+	      /* If GL(dl_tls_dtv_slotinfo_list) == NULL, then rtld.c did
+		 not set up TLS data structures, so don't use them now.  */
+	      || __builtin_expect (GL(dl_tls_dtv_slotinfo_list) != NULL, 1))
 	    {
 	      /* Assign the next available module ID.  */
 	      l->l_tls_modid = _dl_next_tls_modid ();

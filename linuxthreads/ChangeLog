@@ -1,5 +1,11 @@
 2003-01-16  Jakub Jelinek  <jakub@redhat.com>
 
+	* pthread.c (_pthread_initialize_minimal): Use
+	GL(dl_tls_dtv_slotinfo_list) != NULL to check whether TLS has
+	been already initialized.
+
+2003-01-16  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/i386/tls.h (INIT_SYSINFO): Initialize head->sysinfo even
 	if not SHARED.
 

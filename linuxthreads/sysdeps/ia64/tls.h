@@ -32,13 +32,6 @@ typedef union dtv
   void *pointer;
 } dtv_t;
 
-
-typedef struct
-{
-  dtv_t *dtv;
-  void *private;
-} tcbhead_t;
-
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
@@ -49,6 +42,13 @@ typedef struct
 # define USE_TLS        1
 
 # ifndef __ASSEMBLER__
+
+typedef struct
+{
+  dtv_t *dtv;
+  void *private;
+} tcbhead_t;
+
 /* This is the size of the initial TCB.  */
 #  define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
@@ -106,14 +106,22 @@ typedef struct
 #else
 
 # ifndef __ASSEMBLER__
+
+typedef struct
+{
+  void *tcb;
+  dtv_t *dtv;
+  void *self;
+  int multiple_threads;
+} tcbhead_t;
+
 /* Get the thread descriptor definition.  */
 #  include <linuxthreads/descr.h>
 
 #  define NONTLS_INIT_TP \
   do { 									\
-    static struct _pthread_descr_struct nontls_init_tp			\
-      = { .p_header.data.multiple_threads = 0 };			\
-    __thread_self = ((__typeof (__thread_self)) &nontls_init_tp) + 1;	\
+    static const tcbhead_t nontls_init_tp = { .multiple_threads = 0 };	\
+    __thread_self = (__typeof (__thread_self)) &nontls_init_tp;		\
   } while (0)
 
 #endif

@@ -1,3 +1,8 @@
+2003-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h (INIT_SYSINFO): Initialize _head->sysinfo even
+	if not SHARED.
+
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sem_open.c (sem_open): Return SEM_FAILED if existing semaphore

@@ -1,3 +1,9 @@
+2003-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Use
+	GL(dl_tls_dtv_slotinfo_list) != NULL to check whether TLS has
+	been already initialized.
+
 2003-01-15  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* sysdeps/unix/sysv/linux/ptsname.c: Fix typo in comment.
