@@ -106,6 +106,10 @@ static u_int32_t net_mask __P((struct in_addr));
 # define isascii(c) (!(c & 0200))
 #endif
 
+#ifdef _LIBC
+unsigned long long int __res_initstamp attribute_hidden;
+#endif
+
 /*
  * Resolver state default settings.
  */
@@ -162,7 +166,6 @@ __res_vinit(res_state statp, int preinit) {
 	int dots;
 #endif
 #ifdef _LIBC
-	extern unsigned long long int __res_initstamp attribute_hidden;
 	statp->_u._ext.initstamp = __res_initstamp;
 #endif
 

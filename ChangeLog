@@ -1,3 +1,8 @@
+2004-08-11  Andreas Schwab  <schwab@suse.de>
+
+	* resolv/res_libc.c: Move definition of __res_initstamp ...
+	* resolv/res_init.c: ... here.
+
 2004-08-10  GOTO Masanori  <gotom@debian.or.jp>
 
 	* locale/C-time.c: Change default ERA value from NULL to "".
