@@ -1,5 +1,5 @@
 /* Startup code compliant to the ELF s390 ABI.
-   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -95,13 +95,6 @@ _start:
 .L4:    .long  __libc_start_main@plt-.Llit
 .L5:    .long  _GLOBAL_OFFSET_TABLE_-.Llit
 #endif
-
-/* FIXME: FPU flags or what ?!? */
-
-	.section .rodata
-	.globl _fp_hw
-	.long 3
-	.size _fp_hw, 4
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

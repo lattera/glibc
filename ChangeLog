@@ -1,3 +1,8 @@
+2004-07-10  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/s390/s390-32/elf/start.S: Remove symbol _fp_hw.
+	* sysdeps/s390/s390-64/elf/start.S: Likewise.
+
 2004-04-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/ia64/bits/atomic.h: Cast first argument of
