@@ -1,8 +1,8 @@
 1999-07-09  Cristian Gafton  <gafton@redhat.com>
 
 	* Makefile (libpthread-routines): Add oldsemaphore routine.
-	* Versions: Add sem_destroy; sem_getvalue; sem_init; sem_post;
-	sem_trywait; sem_wait; to GLIBC_2.1.
+	* Versions: Add sem_destroy, sem_getvalue, sem_init, sem_post,
+	sem_trywait, and sem_wait to GLIBC_2.1.
 	* oldsemaphore.c: New file.
 	* semaphore.c: Add default_symbol_versions for the changed functions.
 	(__new_sem_init): Rename from sem_init.

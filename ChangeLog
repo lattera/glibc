@@ -1,3 +1,22 @@
+1999-07-09  H.J. Lu  <hjl@gnu.org>
+
+	* Versions.def (GLIBC_2.1.2): Added.
+
+	* nss/getXXent_r.c: Make the new ABI GLIBC_2.1.2 and keep the
+	old one as GLIBC_2.0.
+	* nss/getXXbyYY_r.c: Likewise.
+
+	* grp/Versions (getgrent_r, getgrgid_r, getgrnam_r): Added to
+	GLIBC_2.1.2.
+	* inet/Versions (getaliasbyname_r, getaliasent_r,
+	gethostbyaddr_r, gethostbyname2_r, gethostbyname_r,
+	gethostent_r, getnetbyaddr_r, getnetbyname_r, getnetent_r,
+	getnetgrent_r, getprotobyname_r, getprotobynumber_r,
+	getprotoent_r, getrpcbyname_r, getrpcbynumber_r, getrpcent_r,
+	getservbyname_r): Likewise.
+	* pwd/Versions (getpwent_r, getpwuid_r): Likewise.
+	* shadow/Versions (getspent_r, getspnam_r): Likewise.
+
 1999-07-09  Cristian Gafton  <gafton@redhat.com>
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Make sure
