@@ -5,6 +5,11 @@
 
 2004-08-11  Roland McGrath  <roland@redhat.com>
 
+	* configure.in (libc_cv_cpp_asm_debuginfo): Add missing braces around
+	commands inside &&.
+	Reported by Andreas Schwab <schwab@suse.de>.
+	* configure: Regenerated.
+
 	* posix/tst-waitid.c (do_test): Ignore SIGCHLD before cleanup SIGKILL.
 
 2004-08-11  Ulrich Drepper  <drepper@redhat.com>
