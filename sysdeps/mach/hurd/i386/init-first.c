@@ -27,6 +27,7 @@ Cambridge, MA 02139, USA.  */
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
+extern void __libc_global_ctors (void);
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
@@ -93,6 +94,9 @@ init1 (int argc, char *arg0, ...)
 		d->intarray, d->intarraysize);
 
   __libc_init (argc, argv, __environ);
+#ifdef PIC
+  __libc_global_ctors ();
+#endif
 }
 
 static void

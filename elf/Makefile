@@ -31,12 +31,13 @@ LDFLAGS-dl.so	:= -e 0 # work around ld bug
 
 rtld-routines	:= rtld $(addprefix dl-,load lookup object reloc	\
 				        runtime sysdep error init fini)
-distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h
+distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h \
+		  soinit.c sofini.c
 
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(rtld-routines:=.so)
+extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so
 install-lib	= ld.so
 endif
 

@@ -36,9 +36,6 @@ Boston, MA 02111-1307, USA.  */
 
 __BEGIN_DECLS
 
-/* Data type for key value.  */
-typedef int key_t;
-
 /* Special key values.  */
 #define IPC_PRIVATE	((key_t) 0)	/* private key */
 

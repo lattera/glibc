@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Olaf Flebbe.
 
@@ -88,7 +88,7 @@ Boston, MA 02111-1307, USA.  */
 #define _FPU_IEEE     0x137f
 
 /* private namespace. It should only be used in init-first.o. */
-extern unsigned short __fpu_control;
+extern unsigned short ___fpu_control;
 
 __BEGIN_DECLS
 

@@ -1,4 +1,4 @@
-/* Initialization code run first thing by the ELF startup code.  For i386/Unix.
+/* Initialization code run first thing by the ELF startup code.  i386/Linux
 Copyright (C) 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <unistd.h>
+#include "fpu_control.h"
 
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
@@ -29,6 +30,13 @@ init (int *data)
   int argc = *data;
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
+
+  /* Make sure we are not using iBSC2 personality.  */
+  asm ("int $0x80 # syscall no %0, arg %1"
+       : : "a" (SYS_ify (personality)), "b" (0));
+
+  /* Set the FPU control word to the proper default value.  */
+  __setfpucw (___fpu_control);
 
   __environ = envp;
   __libc_init (argc, argv, envp);

@@ -476,7 +476,7 @@ install-lib.so := $(filter %.so,$(install-lib:%_pic.a=%.so))
 install-lib := $(filter-out %.so,$(install-lib))
 ifeq (yes,$(build-shared))
 install: $(libdir)/libc.so$(libc.so-version)
-install-no-libc.a: $(foreach so,$(install-lib.so),\
+install-lib-nosubdir: $(foreach so,$(install-lib.so),\
   $(libdir)/$(patsubst $(libprefix)lib%,lib$(libprefix)%,\
 		       $(libprefix)$(so))$($(so)-version))
 
@@ -550,12 +550,15 @@ ifeq (yes,$(build-shared))
 # build shared libraries in place from the installed *_pic.a files.
 # $(LDLIBS-%.so) may contain -l switches to generate run-time dependencies
 # on other shared objects.
-lib%.so: lib%_pic.a
-	$(LINK.o) -shared -o $@ -Wl,-soname \
-		  -Wl,lib$(libprefix)$(notdir $*).so$($(@F)-version) \
-		  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
-		  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
-		  $(LDLIBS-$(notdir $*).so) -Wl,--whole-archive $< \
+lib%.so: lib%_pic.a; $(build-shlib)
+
+define build-shlib
+$(LINK.o) -shared -o $@ -Wl,-soname \
+	  -Wl,lib$(libprefix)$(notdir $*).so$($(@F)-version) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(notdir $*).so) \
+	  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
+	  -Wl,--whole-archive $^ $(LDLIBS-$(notdir $*).so)
+endef
 
 # Don't try to use -lc when making libc.so itself.
 # Also omits crti.o and crtn.o, which we do not want
@@ -563,6 +566,12 @@ lib%.so: lib%_pic.a
 LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -Wl,-dynamic-linker -Wl,/lib/ld.so -e __libc_print_version
+# Use our own special initializer and finalizer files for libc.so.
+elfobjdir := $(firstword $(objdir) $(..)elf)
+$(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
+			 $(common-objpfx)libc_pic.a \
+			 $(elfobjdir)/sofini.so
+	$(build-shlib)
 endif
 
 

@@ -46,7 +46,7 @@ extern int shmctl __P ((int __shmid, int __cmd, struct shmid_ds *__buf));
 extern int shmget __P ((key_t __key, int __size, int __shmflg));
 
 /* Attach shared memory segment.  */
-extern int shmat __P ((int __shmid, char *__shmaddr, int __shmflg));
+extern char *shmat __P ((int __shmid, char *__shmaddr, int __shmflg));
 
 /* Detach shared memory segment.  */
 extern int shmdt __P ((char *__shmaddr));

@@ -48,6 +48,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #if __STDC__
 #include <stdarg.h>
@@ -94,11 +95,12 @@ vsyslog(pri, fmt, ap)
 	register const char *fmt;
 	va_list ap;
 {
-	register int cnt;
-	register char ch, *p, *t;
 	time_t now;
-	int fd, saved_errno;
-	char *stdp, tbuf[2048], fmt_cpy[1024];
+	int fd;
+	FILE *f;
+	char *buf = 0;
+	size_t bufsize = 0;
+	size_t prioff, msgoff;
 
 #define	INTERNALLOG	LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
 	/* Check for invalid bits. */
@@ -112,51 +114,42 @@ vsyslog(pri, fmt, ap)
 	if (!LOG_MASK(LOG_PRI(pri)) & LogMask)
 		return;
 
-	saved_errno = errno;
-
 	/* Set default facility if none specified. */
 	if ((pri & LOG_FACMASK) == 0)
 		pri |= LogFacility;
 
-	/* Build the message. */
-	(void)time(&now);
-	p = tbuf + sprintf(tbuf, "<%d>", pri);
-	p += strftime(p, sizeof (tbuf) - (p - tbuf), "%h %e %T ",
-	    localtime(&now));
-	if (LogStat & LOG_PERROR)
-		stdp = p;
+	/* Build the message in a memory-buffer stream.  */
+	f = open_memstream (&buf, &bufsize);
+	prioff = fprintf (f, "<%d>", pri);
+	(void) time (&now);
+	f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
+			       "%h %e %T ", localtime (&now));
+	msgoff = ftell (f);
 	if (LogTag == NULL)
-		LogTag = __progname;
+	  LogTag = __progname;
 	if (LogTag != NULL)
-		p += sprintf(p, "%s", LogTag);
+	  fputs (LogTag, f);
 	if (LogStat & LOG_PID)
-		p += sprintf(p, "[%d]", getpid());
-	if (LogTag != NULL) {
-		*p++ = ':';
-		*p++ = ' ';
-	}
+	  fprintf (f, "[%d]", getpid ());
+	if (LogTag != NULL)
+	  putc (':', f), putc (' ', f);
 
-	/* Substitute error message for %m. */
-	for (t = fmt_cpy; ch = *fmt; ++fmt)
-		if (ch == '%' && fmt[1] == 'm') {
-			++fmt;
-			t += sprintf(t, "%s", strerror(saved_errno));
-		} else
-			*t++ = ch;
-	*t = '\0';
+	/* We have the header.  Print the user's format into the buffer.  */
+	vfprintf (f, fmt, ap);
 
-	p += vsprintf(p, fmt_cpy, ap);
-	cnt = p - tbuf;
+	/* Close the memory stream; this will finalize the data
+	   into a malloc'd buffer in BUF.  */
+	fclose (f);
 
 	/* Output to stderr if requested. */
 	if (LogStat & LOG_PERROR) {
 		struct iovec iov[2];
 		register struct iovec *v = iov;
 
-		v->iov_base = stdp;
-		v->iov_len = cnt - (stdp - tbuf);
+		v->iov_base = buf + msgoff;
+		v->iov_len = bufsize - msgoff;
 		++v;
-		v->iov_base = "\n";
+		v->iov_base = (char *) "\n";
 		v->iov_len = 1;
 		(void)writev(STDERR_FILENO, iov, 2);
 	}
@@ -164,22 +157,22 @@ vsyslog(pri, fmt, ap)
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
 		openlog(LogTag, LogStat | LOG_NDELAY, 0);
-	if (send(LogFile, tbuf, cnt, 0) >= 0)
-		return;
-
-	/*
-	 * Output the message to the console; don't worry about blocking,
-	 * if console blocks everything will.  Make sure the error reported
-	 * is the one from the syslogd failure.
-	 */
-	if (LogStat & LOG_CONS &&
-	    (fd = open(_PATH_CONSOLE, O_WRONLY, 0)) >= 0) {
-		(void)strcat(tbuf, "\r\n");
-		cnt += 2;
-		p = index(tbuf, '>') + 1;
-		(void)write(fd, p, cnt - (p - tbuf));
+	if (send(LogFile, buf, bufsize, 0) < 0)
+	  {
+	    /*
+	     * Output the message to the console; don't worry about blocking,
+	     * if console blocks everything will.  Make sure the error reported
+	     * is the one from the syslogd failure.
+	     */
+	    if (LogStat & LOG_CONS &&
+		(fd = open(_PATH_CONSOLE, O_WRONLY, 0)) >= 0)
+	      {
+		dprintf (fd, "%s\r\n", buf + msgoff);
 		(void)close(fd);
-	}
+	      }
+	  }
+
+	free (buf);
 }
 
 static struct sockaddr SyslogAddr;	/* AF_UNIX address of local logger */

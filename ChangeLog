@@ -1,3 +1,36 @@
+Thu Sep 21 00:03:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/stub/sys/sem_buf.h (union semun): New type.
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1) [PIC]: Call
+	__libc_global_ctors.
+	* sysdeps/i386/init-first.c: Rewritten.
+	* sysdeps/unix/sysv/linux/i386/init-first.S: File removed.
+	* sysdeps/unix/sysv/linux/i386/init-first.c: New file.
+
+	* sysdeps/unix/sysv/linux/i386/fpu_control.h: Fix name in decl of
+	___fpu_control.
+
+	* Makerules (build-shlib): New canned sequence, broken out of
+	lib%.so rule.  Link in $^ instead of just $<.
+	(lib%.so: lib%_pic.a): Use it.
+	(libc.so): New target; use $(build-shlib) for cmds, but also depend
+	on soinit.so first and sofini.so last.
+
+	* elf/soinit.c: New file.
+	* elf/sofini.c: New file.
+	* elf/Makefile (distribute): Add soinit.c and sofini.c.
+	(extra-objs): Add soinit.so and sofini.so.
+
+	* sysvipc/sys/shm.h (shmat): Fix return type to char *.
+	* sysdeps/stub/sys/ipc_buf.h (key_t): Type removed.
+
+	* misc/syslog.c (vsyslog): Rewritten using open_memstream to
+	dynamically allocate buffers.
+
+	* Makerules (install-lib-nosubdir): Make this, rather than
+	install-no-libc.a, depend on the installed shared libraries.
+
 Wed Sep 20 18:02:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* locale/locale.c: Include errno.h.
