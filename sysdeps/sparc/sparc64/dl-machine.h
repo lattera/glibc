@@ -338,6 +338,16 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  elf_machine_fixup_plt(map, 0, reloc, reloc_addr, value);
 	  break;
 #ifndef RTLD_BOOTSTRAP
+	case R_SPARC_UA16:
+	  ((unsigned char *) reloc_addr) [0] = value >> 8;
+	  ((unsigned char *) reloc_addr) [1] = value;
+	  break;
+	case R_SPARC_UA32:
+	  ((unsigned char *) reloc_addr) [0] = value >> 24;
+	  ((unsigned char *) reloc_addr) [1] = value >> 16;
+	  ((unsigned char *) reloc_addr) [2] = value >> 8;
+	  ((unsigned char *) reloc_addr) [3] = value;
+	  break;
 	case R_SPARC_UA64:
 	  if (! ((long) reloc_addr & 3))
 	    {

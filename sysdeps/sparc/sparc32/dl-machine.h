@@ -434,6 +434,16 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_SPARC_HI22:
 	  *reloc_addr = (*reloc_addr & 0xffc00000) | (value >> 10);
 	  break;
+	case R_SPARC_UA16:
+	  ((unsigned char *) reloc_addr) [0] = value >> 8;
+	  ((unsigned char *) reloc_addr) [1] = value;
+	  break;
+	case R_SPARC_UA32:
+	  ((unsigned char *) reloc_addr) [0] = value >> 24;
+	  ((unsigned char *) reloc_addr) [1] = value >> 16;
+	  ((unsigned char *) reloc_addr) [2] = value >> 8;
+	  ((unsigned char *) reloc_addr) [3] = value;
+	  break;
 #endif
 	case R_SPARC_NONE:		/* Alright, Wilbur.  */
 	  break;

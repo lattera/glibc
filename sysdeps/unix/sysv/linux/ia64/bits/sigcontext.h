@@ -48,6 +48,7 @@ struct sigcontext
   unsigned long int sc_br[8];	/* branch registers */
   unsigned long int sc_gr[32];	/* general registers (static partition) */
   struct ia64_fpreg sc_fr[128];	/* floating-point registers */
+  unsigned long int sc_rsvd[16];/* reserved for future use */
 
   /* sc_mask is actually an sigset_t but we don't want to
    * include the kernel headers here. */

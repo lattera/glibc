@@ -1,3 +1,34 @@
+2001-07-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (RESTORE2): Put asm
+	explicitly into .text section.
+
+2001-04-16  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
+	Add 16 longwords reserved for future use to match changes in the
+	kernel.
+
+2001-07-03  Jes Sorensen  <jes@trained-monkey.org>
+
+	* sysdeps/ia64/strncpy.S: Call strnlen() when determining the
+	string length rather than strlen(). Solves the performance problem
+	of doing strlen on a 5MB string when strncpy was called with a
+	length argument of 5 bytes.
+
+2001-07-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Handle
+	R_SPARC_UA16 and R_SPARC_UA32.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+
+2001-07-01  Stephen L Moshier  <moshier@mediaone.net>
+
+	* sysdeps/ieee754/ldbl-96/e_acoshl.c (__ieee754_acoshl):
+	acosh(x) = ln(2x) if x > 2^30.
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c (__ieee754_acoshl):
+	acosh(x) = ln(2x) if x > 2^54.
+
 2001-07-07  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/i386/exc2signal.c (_hurd_exception2signal):
@@ -297,7 +328,7 @@
 
 2001-06-17  Alan Modra  <amodra@bigpond.net.au>
 
-	* sysdeps/hppa/dl-machine.h (elf_machine_rela): handle relocs
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela): Handle relocs
 	at unaligned address.
 
 2001-06-18  Ulrich Drepper  <drepper@redhat.com>

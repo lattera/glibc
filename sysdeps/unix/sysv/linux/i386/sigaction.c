@@ -163,7 +163,8 @@ weak_alias (__libc_sigaction, sigaction)
 #define RESTORE2(name, syscall) \
 asm						\
   (						\
-   ".align 16\n"				\
+   ".text\n"					\
+   "	.align 16\n"				\
    "__" #name ":\n"				\
    "	movl $" #syscall ", %eax\n"		\
    "	int  $0x80"				\
@@ -179,7 +180,8 @@ RESTORE (restore_rt, __NR_rt_sigreturn)
 # define RESTORE2(name, syscall) \
 asm						\
   (						\
-   ".align 8\n"					\
+   ".text\n"					\
+   "	.align 8\n"				\
    "__" #name ":\n"				\
    "	popl %eax\n"				\
    "	movl $" #syscall ", %eax\n"		\

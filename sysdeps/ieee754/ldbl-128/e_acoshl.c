@@ -51,7 +51,7 @@ ln2	= 0.6931471805599453094172321214581766L;
 	GET_LDOUBLE_WORDS64(hx,lx,x);
 	if(hx<0x3fff000000000000LL) {		/* x < 1 */
 	    return (x-x)/(x-x);
-	} else if(hx >=0x401b000000000000LL) {	/* x > 2**28 */
+	} else if(hx >=0x4035000000000000LL) {	/* x > 2**54 */
 	    if(hx >=0x7fff000000000000LL) {	/* x is inf of NaN */
 	        return x+x;
 	    } else

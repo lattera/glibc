@@ -25,8 +25,8 @@
         in1:    src
         in2:    char count
 
-   If n >= 24, do a memcpy(dest, src, min(strlen(src)+1, n)), followed by a
-   memset(dest + strlen(src), 0, n - strlen(src) - 1) if necessary.
+   If n >= 24, do a memcpy(dest, src, min(strnlen(src, n)+1, n)), followed by a
+   memset(dest + strlen(src, n), 0, n - strlen(src, n) - 1) if necessary.
 
    Otherwise, copy characters one by one and fill with nulls if necessary.  */
 
@@ -58,8 +58,9 @@ ENTRY(strncpy)
 	cmp.gtu	p6, p0 = 24, n
 (p6)	br.cond.spnt .cpyfew
 	mov	out0 = src
-	mov     tmp = gp ;;
-	br.call.sptk.many b0 = strlen# ;; 	// rc = strlen(src);
+	mov	out1 = n
+	mov     tmp = gp
+	br.call.sptk.many b0 = strnlen# ;; 	// rc = strnlen(src, n);
 	add	len = 1, rc			// include the null in len
         mov	gp = tmp
 	mov	out0 = dest ;;
