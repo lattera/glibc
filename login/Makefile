@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,7 @@ subdir	:= login
 headers	:= utmp.h bits/utmp.h lastlog.h pty.h
 
 routines := getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmp_daemon utmpname updwtmp \
-	    getpt grantpt unlockpt ptsname
+	    utmp_file utmpname updwtmp getpt grantpt unlockpt ptsname
 
 CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 
