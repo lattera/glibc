@@ -1,5 +1,8 @@
 2003-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-basic1.c (do_test): Add cast to avoid warning.
+	* tst-basic2.c (do_test): Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Use correct
 	amount of stack correction.
 

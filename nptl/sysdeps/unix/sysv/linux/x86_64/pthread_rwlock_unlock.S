@@ -101,7 +101,7 @@ __pthread_rwlock_unlock:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -111,7 +111,7 @@ __pthread_rwlock_unlock:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -121,7 +121,7 @@ __pthread_rwlock_unlock:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif

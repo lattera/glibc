@@ -62,7 +62,7 @@ pthread_barrier_wait:
 
 	/* Wait for the remaining threads.  The call will return immediately
 	   if the CURR_EVENT memory has meanwhile been changed.  */
-7:	xorq	%rsi, %rsi		/* movl $FUTEX_WAIT, %ecx */
+7:	xorq	%rsi, %rsi		/* movq $FUTEX_WAIT, %rsi */
 	xorq	%r10, %r10
 8:	movq	$SYS_futex, %rax
 	syscall

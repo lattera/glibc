@@ -64,7 +64,7 @@ do_test (void)
 	  exit (1);
 	}
 
-      if (pthread_create (&th[i], NULL, tf, (void *) i) != 0)
+      if (pthread_create (&th[i], NULL, tf, (void *) (long int) i) != 0)
 	{
 	  puts ("create failed");
 	  exit (1);

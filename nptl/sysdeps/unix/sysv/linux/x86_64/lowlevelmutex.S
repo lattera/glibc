@@ -30,10 +30,12 @@
 # endif
 #endif
 
-#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+
+/* For the calculation see asm/vsyscall.h.  */
+#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
 
 
 	.globl	__lll_mutex_lock_wait
@@ -48,7 +50,7 @@ __lll_mutex_lock_wait:
 
 1:
 	leaq	1(%rsi), %rdx	/* account for the preceeded xadd.  */
-	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
+	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 
@@ -73,29 +75,33 @@ __lll_mutex_lock_wait:
 	.align	16
 __lll_mutex_timedlock_wait:
 	/* Check for a valid timeout value.  */
-	cmpq	$1000000000, 4(%rdx)
+	cmpq	$1000000000, 8(%rdx)
 	jae	3f
+
+	pushq	%r12
+	pushq	%r13
 
 	/* Stack frame for the timespec and timeval structs.  */
 	subq	$16, %rsp
 
-	movq	%rdi, %r8
-	movq	%rdx, %r9
+	movq	%rdi, %r12
+	movq	%rdx, %r13
 	leaq	1(%rax), %rdx
 
 	/* Get current time.  */
-1:
-	movq	%rsp, %rdi
+1:	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
-	movq	$SYS_gettimeofday, %rax
-	syscall
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	/* This is a regular function call, all calleer-save registers
+	   might be clobbered.  */
+	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
-	movq	(%r9), %rdi
-	movq	8(%r9), %rsi
+	movq	(%r13), %rdi
+	movq	8(%r13), %rsi
 	subq	(%rsp), %rdi
 	subq	%rax, %rsi
 	jns	4f
@@ -110,7 +116,7 @@ __lll_mutex_timedlock_wait:
 
 	movq	%rsp, %r10
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
-	movq	%r8, %rdi
+	movq	%r12, %rdi
 	movq	$SYS_futex, %rax
 	syscall
 
@@ -123,7 +129,9 @@ __lll_mutex_timedlock_wait:
 	movl	$2, (%rdi)
 	xorl	%eax, %eax
 
-	addq	$16, %rsp
+8:	addq	$16, %rsp
+	popq	%r13
+	popq	%r12
 	retq
 
 	/* Check whether the time expired.  */
@@ -135,8 +143,7 @@ __lll_mutex_timedlock_wait:
 	retq
 
 5:	movl	$ETIMEDOUT, %eax
-	addq	$16, %rsp
-	retq
+	jmp	8b
 	.size	__lll_mutex_timedlock_wait,.-__lll_mutex_timedlock_wait
 #endif
 

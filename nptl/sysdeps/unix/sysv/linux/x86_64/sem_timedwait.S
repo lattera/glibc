@@ -27,8 +27,10 @@
 # define
 #endif
 
-#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
+
+/* For the calculation see asm/vsyscall.h.  */
+#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
 
 
 	.text
@@ -50,9 +52,10 @@ sem_timedwait:
 	retq
 
 	/* Check whether the timeout value is valid.  */
-1:	subq	$16, %rsp
+1:	pushq	%r12
+	pushq	%r13
+	subq	$16, %rsp
 
-	movq	%rsp, %r10
 	movq	%rdi, %r8
 	movq	%rsi, %r9
 
@@ -63,8 +66,8 @@ sem_timedwait:
 
 7:	xorq	%rsi, %rsi
 	movq	%rsp, %rdi
-	movq	$SYS_gettimeofday, %rax
-	syscall
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
@@ -84,6 +87,7 @@ sem_timedwait:
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
 	movq	%rsi, 8(%rsp)
 
+	movq	%rsp, %r10
 	movq	%r8, %rdi
 	xorq	%rsi, %rsi
 	movq	$SYS_futex, %rax
@@ -104,8 +108,10 @@ sem_timedwait:
 	cmpxchgl %ecx, (%rdi)
 	jne	8b
 
-	addq	$16, %rsp
 	xorl	%eax, %eax
+10:	addq	$16, %rsp
+	popq	%r13
+	popq	%r12
 	retq
 
 3:	negq	%rax
@@ -119,7 +125,6 @@ sem_timedwait:
 	movl	%edx, (%rax)
 #endif
 
-	addq	$16, %rsp
 	orl	$-1, %eax
-	retq
+	jmp	10b
 	.size	sem_timedwait,.-sem_timedwait

@@ -161,7 +161,7 @@ __pthread_cond_wait:
 	movq	%r12, %rdx
 	addq	$wakeup_seq-cond_lock, %rdi
 	movq	$SYS_futex, %rax
-	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
+	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	syscall
 
 	movq	(%rsp), %rdi

@@ -72,7 +72,7 @@ __pthread_once:
 	jnz	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-	movq	%r10, %rsi		/* movl $FUTEX_WAIT, %ecx */
+	movq	%r10, %rsi		/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 	jmp	6b

@@ -30,10 +30,12 @@
 # endif
 #endif
 
-#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+
+/* For the calculation see asm/vsyscall.h.  */
+#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
 
 
 	/* Modified: %rax, %rsi.  */
@@ -49,7 +51,7 @@ __lll_lock_wait:
 
 1:
 	leaq	-1(%rsi), %rdx	/* account for the preceeded xadd.  */
-	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
+	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 
@@ -112,23 +114,26 @@ __lll_unlock_wake:
 	.hidden	__lll_timedwait_tid
 	.align	16
 __lll_timedwait_tid:
-	movq	%rdi, %r8
-	movq	%rsi, %r9
+	pushq	%r12
+	pushq	%r13
+
+	movq	%rdi, %r12
+	movq	%rsi, %r13
 
 	subq	$16, %rsp
 
 	/* Get current time.  */
 2:	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
-	movq	$SYS_gettimeofday, %rax
-	syscall
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
-	movq	(%r9), %rdi
-	movq	8(%r9), %rsi
+	movq	(%r13), %rdi
+	movq	8(%r13), %rsi
 	subq	(%rsp), %rdi
 	subq	%rax, %rsi
 	jns	5f
@@ -140,13 +145,13 @@ __lll_timedwait_tid:
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
 	movq	%rsi, 8(%rsp)
 
-	movl	(%r8), %edx
+	movl	(%r12), %edx
 	testl	%edx, %edx
 	jz	4f
 
 	movq	%rsp, %r10
-	xorq	%rsi, %rsi	/* movl $FUTEX_WAIT, %ecx */
-	movq	%r8, %rdi
+	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
+	movq	%r12, %rdi
 	movq	$SYS_futex, %rax
 	syscall
 
@@ -154,14 +159,15 @@ __lll_timedwait_tid:
 	jne	1f
 4:	xorl	%eax, %eax
 
-	addq	$16, %rsp
+8:	addq	$16, %rsp
+	popq	%r13
+	popq	%r12
 	retq
 
 1:	cmpq	$-ETIMEDOUT, %rax
 	jne	2b
 
 6:	movl	$ETIMEDOUT, %eax
-	addq	$16, %rsp
-	retq
+	jmp	8b
 	.size	__lll_timedwait_tid,.-__lll_timedwait_tid
 #endif

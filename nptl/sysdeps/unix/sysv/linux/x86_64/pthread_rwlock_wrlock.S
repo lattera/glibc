@@ -92,7 +92,7 @@ __pthread_rwlock_wrlock:
 13:	decl	WRITERS_QUEUED(%rdi)
 	jmp	2b
 
-5:	xorq	%rcx, %rcx
+5:	xorq	%rdx, %rdx
 	movq	%fs:SELF, %rax
 	movq	%rax, WRITER(%rdi)
 9:	LOCK
@@ -104,14 +104,14 @@ __pthread_rwlock_wrlock:
 	jne	6f
 7:
 
-	movq	%rcx, %rax
+	movq	%rdx, %rax
 	retq
 
 1:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -119,25 +119,25 @@ __pthread_rwlock_wrlock:
 
 14:	cmpq	%fs:SELF, %rax
 	jne	3b
-	movq	$EDEADLK, %rcx
+	movq	$EDEADLK, %rdx
 	jmp	9b
 
 6:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	jmp	7b
 
 4:	decl	WRITERS_QUEUED(%rdi)
-	movl	$EAGAIN, %ecx
+	movl	$EAGAIN, %edx
 	jmp	9b
 
 10:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -147,7 +147,7 @@ __pthread_rwlock_wrlock:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif

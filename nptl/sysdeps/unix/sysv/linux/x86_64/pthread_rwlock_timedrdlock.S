@@ -22,10 +22,13 @@
 #include <pthread-errnos.h>
 
 
-#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+
+/* For the calculation see asm/vsyscall.h.  */
+#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+
 
 #ifndef UP
 # define LOCK lock
@@ -40,11 +43,12 @@
 	.type	pthread_rwlock_timedrdlock,@function
 	.align	16
 pthread_rwlock_timedrdlock:
+	pushq	%r12
+	pushq	%r13
 	subq	$16, %rsp
 
-	movq	%rdi, %r8
-	movq	%rsi, %r9
-	xorq	%r10, %r10
+	movq	%rdi, %r12
+	movq	%rsi, %r13
 
 	/* Get the lock.  */
 	movl	$1, %esi
@@ -57,44 +61,44 @@ pthread_rwlock_timedrdlock:
 	testl	%esi, %esi
 	jne	1f
 
-2:	movq	WRITER(%r8), %rax
+2:	movq	WRITER(%r12), %rax
 	testq	%rax, %rax
 	jne	14f
-	cmpl	$0, WRITERS_QUEUED(%r8)
+	cmpl	$0, WRITERS_QUEUED(%r12)
 	je	5f
-	cmpl	$0, FLAGS(%r8)
+	cmpl	$0, FLAGS(%r12)
 	je	5f
 
 	/* Check the value of the timeout parameter.  */
-3:	cmpl	$1000000000, 8(%r9)
+3:	cmpl	$1000000000, 8(%r13)
 	jae	19f
 
-	incl	READERS_QUEUED(%r8)
+	incl	READERS_QUEUED(%r12)
 	je	4f
 
-	movl	READERS_WAKEUP(%r8), %edx
+	movl	READERS_WAKEUP(%r12), %edx
 
 	/* Unlock.  */
 	LOCK
 #if MUTEX == 0
-	subl	$1, (%r8)
+	subl	$1, (%r12)
 #else
-	subl	$1, MUTEX(%r8)
+	subl	$1, MUTEX(%r12)
 #endif
 	jne	10f
 
 	/* Get current time.  */
 11:	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
-	movq	$SYS_gettimeofday, %rax
-	syscall
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
-	movq	(%r9), %rcx
-	movq	8(%r9), %rdi
+	movq	(%r13), %rcx
+	movq	8(%r13), %rdi
 	subq	(%rsp), %rcx
 	subq	%rax, %rdi
 	jns	15f
@@ -108,7 +112,8 @@ pthread_rwlock_timedrdlock:
 	movq	%rdi, 8(%rsp)
 
 	xorq	%rsi, %rsi	/* movq $FUTEX_WAIT, %rsi */
-	leaq	READERS_WAKEUP(%r8), %rdi
+	xorq	%r10, %r10
+	leaq	READERS_WAKEUP(%r12), %rdi
 	movq	$SYS_futex, %rax
 	syscall
 	movq	%rax, %rdx
@@ -118,35 +123,37 @@ pthread_rwlock_timedrdlock:
 	movl	$1, %esi
 	LOCK
 #if MUTEX == 0
-	xaddl	%esi, (%r8)
+	xaddl	%esi, (%r12)
 #else
-	xaddl	%esi, MUTEX(%r8)
+	xaddl	%esi, MUTEX(%r12)
 #endif
 	testl	%esi, %esi
 	jne	12f
 
-13:	decl	READERS_QUEUED(%r8)
+13:	decl	READERS_QUEUED(%r12)
 	cmpq	$-ETIMEDOUT, %rdx
 	jne	2b
 
-18:	movq	$ETIMEDOUT, %rcx
+18:	movq	$ETIMEDOUT, %rdx
 	jmp	9f
 
 
-5:	xorq	%rcx, %rcx
-	incl	NR_READERS(%r8)
+5:	xorq	%rdx, %rdx
+	incl	NR_READERS(%r12)
 	je	8f
 9:	LOCK
 #if MUTEX == 0
-	decl	(%r8)
+	decl	(%r12)
 #else
-	decl	MUTEX(%r8)
+	decl	MUTEX(%r12)
 #endif
 	jne	6f
 
-7:	movq	%rcx, %rax
+7:	movq	%rdx, %rax
 
 	addq	$16, %rsp
+	popq	%r13
+	popq	%r12
 	retq
 
 1:
@@ -158,49 +165,49 @@ pthread_rwlock_timedrdlock:
 
 14:	cmpq	%fs:SELF, %rax
 	jne	3b
-	movq	$EDEADLK, %rcx
+	movq	$EDEADLK, %rdx
 	jmp	9b
 
 6:
 #if MUTEX == 0
-	movq	%r8, %rdi
+	movq	%r12, %rdi
 #else
-	leal	MUTEX(%r8), %rdi
+	leal	MUTEX(%r12), %rdi
 #endif
 	callq	__lll_mutex_unlock_wake
 	jmp	7b
 
 	/* Overflow.  */
-8:	decl	NR_READERS(%r8)
-	movq	$EAGAIN, %rcx
+8:	decl	NR_READERS(%r12)
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 	/* Overflow.  */
-4:	decl	READERS_QUEUED(%r8)
-	movq	$EAGAIN, %rcx
+4:	decl	READERS_QUEUED(%r12)
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 10:
 #if MUTEX == 0
-	movq	%r8, %rdi
+	movq	%r12, %rdi
 #else
-	leaq	MUTEX(%r8), %rdi
+	leaq	MUTEX(%r12), %rdi
 #endif
 	callq	__lll_mutex_unlock_wake
 	jmp	11b
 
 12:
 #if MUTEX == 0
-	movq	%r8, %rdi
+	movq	%r12, %rdi
 #else
-	leaq	MUTEX(%r8), %rdi
+	leaq	MUTEX(%r12), %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 	jmp	13b
 
 16:	movq	$-ETIMEDOUT, %rdx
 	jmp	17b
 
-19:	movq	$EINVAL, %rcx
+19:	movq	$EINVAL, %rdx
 	jmp	9b
 	.size	pthread_rwlock_timedrdlock,.-pthread_rwlock_timedrdlock

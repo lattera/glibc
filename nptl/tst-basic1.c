@@ -48,7 +48,7 @@ do_test (void)
   int i;
 
   for (i = 0; i < N; ++i)
-    if (pthread_create (&t[i], NULL, tf, (void *) (i + 1)) != 0)
+    if (pthread_create (&t[i], NULL, tf, (void *) (long int) (i + 1)) != 0)
       {
 	write (2, "create failed\n", 14);
 	_exit (1);
@@ -65,7 +65,7 @@ do_test (void)
 	  printf ("join failed: %d\n", e);
 	  _exit (1);
 	}
-      else if (r != (void *) (i + 1))
+      else if (r != (void *) (long int) (i + 1))
 	{
 	  write (2, "result wrong\n", 13);
 	  _exit (1);

@@ -28,10 +28,12 @@
 # define LOCK lock
 #endif
 
-#define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+
+/* For the calculation see asm/vsyscall.h.  */
+#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
 
 
 	.text
@@ -98,13 +100,13 @@ __pthread_cond_timedwait:
 	jne	3f
 
 4:	movq	%rsp, %rdi
-	call	__pthread_enable_asynccancel_2
+	callq	__pthread_enable_asynccancel_2
 
 	/* Get the current time.  */
 	leaq	24(%rsp), %rdi
-	xorq	%rcx, %rcx
-	movq	$SYS_gettimeofday, %rax
-	syscall
+	xorq	%rsi, %rsi
+	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+	callq	*%rax
 
 	/* Compute relative timeout.  */
 	movq	32(%rsp), %rax
@@ -198,7 +200,7 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 	jmp	2b
 
 	/* Unlock in loop requires waekup.  */
@@ -206,7 +208,7 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	jmp	4b
 
 	/* Locking in loop failed.  */
@@ -214,7 +216,7 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if cond_lock != 0
 	subq	$cond_lock, %rdi
 #endif
@@ -225,7 +227,7 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 	jmp	11b
 
 	/* The initial unlocking of the mutex failed.  */
@@ -242,7 +244,7 @@ __pthread_cond_timedwait:
 #if cond_lock != 0
 	addq	$cond_lock, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 
 17:	movq	(%rsp), %rax
 	jmp	18b

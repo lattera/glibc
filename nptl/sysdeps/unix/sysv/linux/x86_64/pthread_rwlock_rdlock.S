@@ -74,7 +74,7 @@ __pthread_rwlock_rdlock:
 	jne	10f
 
 11:	addq	$READERS_WAKEUP-MUTEX, %rdi
-	movq	%r10, %rsi	/* movl $FUTEX_WAIT, %ecx */
+	movq	%r10, %rsi	/* movq $FUTEX_WAIT, %rsi */
 	movq	$SYS_futex, %rax
 	syscall
 
@@ -94,7 +94,7 @@ __pthread_rwlock_rdlock:
 13:	decl	READERS_QUEUED(%rdi)
 	jmp	2b
 
-5:	xorq	%rcx, %rcx
+5:	xorq	%rdx, %rdx
 	incl	NR_READERS(%rdi)
 	je	8f
 9:	LOCK
@@ -106,14 +106,14 @@ __pthread_rwlock_rdlock:
 	jne	6f
 7:
 
-	movq	%rcx, %rax
+	movq	%rdx, %rax
 	retq
 
 1:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -122,14 +122,14 @@ __pthread_rwlock_rdlock:
 14:	cmpq	%fs:SELF, %rax
 	jne	3b
 	/* Deadlock detected.  */
-	movq	$EDEADLK, %rcx
+	movq	$EDEADLK, %rdx
 	jmp	9b
 
 6:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -137,19 +137,19 @@ __pthread_rwlock_rdlock:
 
 	/* Overflow.  */
 8:	decl	NR_READERS(%rdi)
-	movq	$EAGAIN, %rcx
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 	/* Overflow.  */
 4:	decl	READERS_QUEUED(%rdi)
-	movq	$EAGAIN, %rcx
+	movq	$EAGAIN, %rdx
 	jmp	9b
 
 10:
 #if MUTEX != 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_unlock_wake
+	callq	__lll_mutex_unlock_wake
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
@@ -159,7 +159,7 @@ __pthread_rwlock_rdlock:
 #if MUTEX == 0
 	addq	$MUTEX, %rdi
 #endif
-	call	__lll_mutex_lock_wait
+	callq	__lll_mutex_lock_wait
 #if MUTEX != 0
 	subq	$MUTEX, %rdi
 #endif
