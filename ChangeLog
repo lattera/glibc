@@ -1,3 +1,10 @@
+2001-08-23  Roland McGrath  <roland@frob.com>
+
+	* libio/tst-ungetwc1.c (main): Add a const to quiet a warning.
+
+	* nss/test-netdb.c (test_hosts): Don't use MAXHOSTNAMELEN.
+	Instead, use dynamic buffer to test gethostname's ENAMETOOLONG error.
+
 2001-08-22  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/ldsodefs.h (_dl_load_lock): Declare it here with

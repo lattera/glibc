@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
@@ -40,6 +40,7 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <errno.h>
 #include "nss.h"
 
 /*
@@ -138,8 +139,8 @@ static void
 test_hosts (void)
 {
   struct hostent *hptr1, *hptr2;
-  char name[MAXHOSTNAMELEN];
-  size_t namelen = sizeof(name);
+  char *name = NULL;
+  size_t namelen = 0;
   struct in_addr ip;
 
   hptr1 = gethostbyname ("localhost");
@@ -176,6 +177,11 @@ test_hosts (void)
   hptr1 = gethostbyname2 ("localhost", AF_INET);
   output_hostent ("gethostbyname2 (\"localhost\", AF_INET)", hptr1);
 
+  while (gethostname (name, namelen) < 0 && errno == ENAMETOOLONG)
+    {
+      namelen += 2;		/* tiny increments to test a lot */
+      name = realloc (name, namelen);
+    }
   if (gethostname (name, namelen) == 0)
     {
       printf ("Hostname: %s\n", name);

@@ -11,7 +11,7 @@ int
 main (void)
 {
   FILE *fp;
-  char *str ="abcdef";
+  const char *str = "abcdef";
   wint_t ret, wc, ungetone = 0x00E4;	/* 0x00E4 means `a umlaut'. */
   char fname[] = "/tmp/tst-ungetwc1.out.XXXXXX";
   int fd;
