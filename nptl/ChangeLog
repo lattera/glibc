@@ -29,7 +29,6 @@
 	* Makefile (tests): Add tst-align.
 	* tst-align.c: New file.
 	* sysdeps/i386/Makefile: Define CFLAGS-tst-align.
-	* sysdeps/x86_64/Makefile: Likewise.
 
 	* sysdeps/i386/tls.h (CALL_THREAD_FCT): Align stack of called
 	function correctly.
