@@ -1,3 +1,13 @@
+2000-03-24  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Use D_PTR to
+	access relocated entries in l_info.
+	(elf_machine_got_rel): Likewise.
+	(elf_machine_runtime_setup): Likewise.
+	* sysdeps/mips/mips64/dl-machine.h (elf_machine_got_rel): Likewise.
+	(elf_machine_runtime_setup): Likewise.
+	(__dl_runtime_resolve): Likewise.
+
 2000-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/netdb.h (SCOPE_DELIMITER): New definitions.
