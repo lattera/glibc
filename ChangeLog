@@ -1,7 +1,7 @@
 Sun May 26 15:15:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
-	* features.h [_GNU_SOURCE || _BSD_SOURCE || _SVID_SOURCE ||
-	_POSIX_SOURCE || _POSIX_C_SOURCE]: #undef __STRICT_ANSI__.
+	* features.h [_GNU_SOURCE] (_BSD_SOURCE, _SVID_SOURCE,
+	_POSIX_SOURCE, _POSIX_C_SOURCE): Define these.
 
 	* time/Makefile (tzcompile): Add missing backslash.
 

@@ -79,22 +79,16 @@ Cambridge, MA 02139, USA.  */
 #define	__FAVOR_BSD	1
 #endif
 
-/* Explicit features turn off -ansi.  */
-#if (defined (_GNU_SOURCE) || \
-     defined (_BSD_SOURCE) || defined (_SVID_SOURCE) || \
-     defined (_POSIX_SOURCE) || defined (_POSIX_C_SOURCE))
-#undef __STRICT_ANSI__
-#endif
-
 /* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
 #ifdef _GNU_SOURCE
-/* If the user specifies some of the following without _GNU_SOURCE,
-   they are mutually exclusive.  But they all default below to on,
-   so undefine them to get all the features turned on for _GNU_SOURCE.  */
-#undef _POSIX_SOURCE
-#undef _POSIX_C_SOURCE
-#undef _BSD_SOURCE
-#undef _SVID_SOURCE
+#undef	_POSIX_SOURCE
+#define	_POSIX_SOURCE	1
+#undef	_POSIX_C_SOURCE
+#define	_POSIX_C_SOURCE	2
+#undef	_BSD_SOURCE
+#define	_BSD_SOURCE	1
+#undef	_SVID_SOURCE
+#define	_SVID_SOURCE	1
 #endif
 
 /* If nothing (other than _GNU_SOURCE) is defined,
