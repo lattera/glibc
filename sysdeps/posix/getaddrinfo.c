@@ -42,20 +42,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* This software is Copyright 1996 by Craig Metz, All Rights Reserved.  */
 
-/* getaddrinfo() v1.13 */
-
-#include <sys/types.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/utsname.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <netdb.h>
+#include <assert.h>
 #include <errno.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <sys/utsname.h>
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
@@ -85,6 +84,7 @@ struct gaih_addrtuple
     struct gaih_addrtuple *next;
     int family;
     char addr[16];
+    uint32_t scopeid;
   };
 
 struct gaih_typeproto
@@ -370,6 +370,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
       at = __alloca (sizeof (struct gaih_addrtuple));
 
       at->family = AF_UNSPEC;
+      at->scopeid = 0;
       at->next = NULL;
 
       if (inet_pton (AF_INET, name, at->addr) > 0)
@@ -380,12 +381,48 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    return -EAI_ADDRFAMILY;
 	}
 
-      if (at->family == AF_UNSPEC && inet_pton (AF_INET6, name, at->addr) > 0)
+      if (at->family == AF_UNSPEC)
 	{
-	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
-	    at->family = AF_INET6;
-	  else
-	    return -EAI_ADDRFAMILY;
+	  char *namebuf = strdupa (name);
+	  char *scope_delim;
+
+	  scope_delim = strchr (namebuf, SCOPE_DELIMITER);
+	  if (scope_delim != NULL)
+	    *scope_delim = '\0';
+
+	  if (inet_pton (AF_INET6, namebuf, at->addr) > 0)
+	    {
+	      int try_numericscope = 0;
+
+	      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
+		at->family = AF_INET6;
+	      else
+		return -EAI_ADDRFAMILY;
+
+	      if (scope_delim != NULL)
+		{
+		  int try_numericscope = 0;
+		  if (IN6_IS_ADDR_LINKLOCAL (at->addr)
+		      || IN6_IS_ADDR_MC_LINKLOCAL (at->addr))
+		    {
+		      at->scopeid = if_nametoindex (scope_delim + 1);
+		      if (at->scopeid == 0)
+			try_numericscope = 1;
+		    }
+		  else
+		    try_numericscope = 1;
+
+		  if (try_numericscope != 0)
+		    {
+		      char *end;
+		      assert (sizeof (uint32_t) <= sizeof (unsigned long));
+		      at->scopeid = (uint32_t) strtoul (scope_delim + 1, &end,
+							10);
+		      if (*end != '\0')
+			return GAIH_OKIFUNSPEC | -EAI_NONAME;
+		    }
+		}
+	    }
 	}
 
       if (at->family == AF_UNSPEC && (req->ai_flags & AI_NUMERICHOST) == 0)
@@ -519,10 +556,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    (*pai)->ai_addrlen = socklen;
 	    (*pai)->ai_addr = (void *) (*pai) + sizeof(struct addrinfo);
 #if SALEN
-	    ((struct sockaddr_in *) (*pai)->ai_addr)->sin_len = i;
+	    (*pai)->ai_addr->sa_len = socklen;
 #endif /* SALEN */
-	    ((struct sockaddr_in *) (*pai)->ai_addr)->sin_family = at2->family;
-	    ((struct sockaddr_in *) (*pai)->ai_addr)->sin_port = st2->port;
+	    (*pai)->ai_addr->sa_family = at2->family;
 
 	    if (at2->family == AF_INET6)
 	      {
@@ -532,6 +568,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		sin6p->sin6_flowinfo = 0;
 		memcpy (&sin6p->sin6_addr,
 			at2->addr, sizeof (struct in6_addr));
+		sin6p->sin6_port = st2->port;
+		sin6p->sin6_scope_id = at2->scopeid;
 	      }
 	    else
 	      {
@@ -539,6 +577,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  (struct sockaddr_in *) (*pai)->ai_addr;
 		memcpy (&sinp->sin_addr,
 			at2->addr, sizeof (struct in_addr));
+		sinp->sin_port = st2->port;
 		memset (sinp->sin_zero, '\0', sizeof (sinp->sin_zero));
 	      }
 

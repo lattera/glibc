@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -209,6 +209,7 @@ struct sockaddr_in6
     uint16_t sin6_port;		/* Transport layer port # */
     uint32_t sin6_flowinfo;	/* IPv6 flow information */
     struct in6_addr sin6_addr;	/* IPv6 address */
+    uint32_t sin6_scope_id;	/* IPv6 scope-id */
   };
 
 /* IPv6 multicast request.  */

@@ -42,20 +42,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* This software is Copyright 1996 by Craig Metz, All Rights Reserved.  */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-
+#include <alloca.h>
+#include <errno.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <net/if.h>
 #include <netinet/in.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/un.h>
 #include <sys/utsname.h>
-#include <netdb.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <alloca.h>
 #include <bits/libc-lock.h>
-#include <arpa/inet.h>
 
 #ifndef min
 # define min(x,y) (((x) > (y)) ? (y) : (x))
@@ -173,6 +174,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   char *tmpbuf = alloca (tmpbuflen);
   struct hostent th;
   socklen_t min_addrlen = 0;
+  int ok = 0;
 
   if (sa == NULL || addrlen < sizeof (sa_family_t))
     return -1;
@@ -257,36 +259,83 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 				 min(hostlen, (size_t) (c - h->h_name)));
 			host[min(hostlen - 1, (size_t) (c - h->h_name))]
 			  = '\0';
-			break;
+			ok = 1;
+		      }
+		    else
+		      {
+			strncpy (host, h->h_name, hostlen);
+			ok = 1;
 		      }
 		  }
 		strncpy (host, h->h_name, hostlen);
-		break;
+		ok = 1;
 	      }
 	  }
 
-	if (flags & NI_NAMEREQD)
+	if (!ok)
 	  {
-	    __set_errno (serrno);
-	    return -1;
-	  }
-	else
-	  {
-	    const char *c;
-	    if (sa->sa_family == AF_INET6)
-	      c = inet_ntop (AF_INET6,
-			     (void *) &(((struct sockaddr_in6 *) sa)->sin6_addr),
-			     host, hostlen);
-	    else
-	      c = inet_ntop (AF_INET,
-			     (void *) &(((struct sockaddr_in *) sa)->sin_addr),
-			     host, hostlen);
-
-	    if (c == NULL)
+	    if (flags & NI_NAMEREQD)
 	      {
 		__set_errno (serrno);
 		return -1;
 	      }
+	    else
+	      {
+		const char *c;
+		if (sa->sa_family == AF_INET6)
+		  {
+		    struct sockaddr_in6 *sin6p = (struct sockaddr_in6 *) sa;
+		    uint32_t scopeid;
+
+		    c = inet_ntop (AF_INET6,
+				   (void *) &sin6p->sin6_addr, host, hostlen);
+		    if (addrlen > sizeof (struct sockaddr_in6)
+			&& (scopeid = sin6p->sin6_scope_id))
+		      {
+			/* Buffer is >= IFNAMSIZ+1.  */
+			char scopebuf[MAXHOSTNAMELEN + 1];
+			int ni_numericscope = 0;
+
+			if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
+			    || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
+			  {
+			    if (if_indextoname (scopeid, scopebuf) == NULL)
+			      ++ni_numericscope;
+			  }
+			else
+			  ++ni_numericscope;
+
+			if (ni_numericscope)
+			  {
+			    char *scopeptr = &scopebuf[1];
+			    size_t real_hostlen;
+			    size_t scopelen;
+
+			    scopebuf[0] = SCOPE_DELIMITER;
+			    scopelen = 1 + snprintf (scopeptr,
+						     (scopebuf
+						      + sizeof scopebuf
+						      - scopeptr),
+						     "%u", scopeid);
+
+			    real_hostlen = __strnlen (host, hostlen);
+			    if (real_hostlen + scopelen + 1 > hostlen)
+			      return -1;
+			    memcpy (host + real_hostlen, scopebuf, scopelen);
+			  }
+		      }
+		  }
+		else
+		  c = inet_ntop (AF_INET,
+				 (void *) &(((struct sockaddr_in *) sa)->sin_addr),
+				 host, hostlen);
+		if (c == NULL)
+		  {
+		    __set_errno (serrno);
+		    return -1;
+		  }
+	      }
+	    ok = 1;
 	  }
 	break;
 

@@ -415,6 +415,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_start_args.start_routine = start_routine;
   new_thread->p_start_args.arg = arg;
   new_thread->p_start_args.mask = *mask;
+  /* Make the new thread ID available already now.  If any of the later
+     functions fail we return an error value and the caller must not use
+     the stored thread ID.  */
+  *thread = new_thread_id;
   /* Raise priority of thread manager if needed */
   __pthread_manager_adjust_prio(new_thread->p_priority);
   /* Do the cloning.  We have to use two different functions depending
@@ -487,8 +491,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Set pid field of the new thread, in case we get there before the
      child starts. */
   new_thread->p_pid = pid;
-  /* We're all set */
-  *thread = new_thread_id;
   return 0;
 }
 

@@ -1,3 +1,8 @@
+2000-03-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_simple.c (internal_ucs4_loop, internal_ucs4le_loop):
+	Remove no-op pointer increment.
+
 2000-03-23  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/tst-cookie.c (cookieseek): Change prototype to

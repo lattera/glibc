@@ -96,9 +96,6 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   else
     result = __GCONV_INCOMPLETE_INPUT;
 
-  if (converted != NULL)
-    converted += n_convert;
-
   return result;
 }
 
@@ -150,9 +147,6 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
     result = __GCONV_EMPTY_INPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
-
-  if (converted != NULL)
-    converted += n_convert;
 
   return result;
 }

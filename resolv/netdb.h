@@ -80,6 +80,11 @@ __set_h_errno (int __err)
 				   type.  */
 #define	NO_ADDRESS	NO_DATA	/* No address, look for MX record.  */
 
+#ifdef __USE_GNU
+/* Scope delimiter for getaddrinfo(), getnameinfo().  */
+# define SCOPE_DELIMITER	'%'
+#endif
+
 /* Print error indicated by `h_errno' variable on standard error.  STR
    if non-null is printed before the error string.  */
 extern void herror (__const char *__str) __THROW;
