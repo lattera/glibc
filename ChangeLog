@@ -1,5 +1,10 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/Makefile (tests): Add tst-mktime.
+	* time/tst-mktime.c: New file.
+
+	* posix/tst-dir.c (main): One more mkdir() test.
+
 	* sysdeps/unix/sysv/linux/ia64/getpagesize.c (__getpagesize):
 	Remove getpagesize syscall.  We assume that the pagesize is always
 	determined from the auxiliary vector.

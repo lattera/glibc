@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -516,6 +516,32 @@ main (int argc, char *argv[])
     {
       printf ("cannot remove \"and-a-file\": %m\n");
       result = 1;
+    }
+
+  /* One more test before we leave: mkdir() is supposed to fail with
+     EEXIST if the named file is a symlink.  */
+  if (symlink ("a-symlink", "a-symlink") != 0)
+    {
+      printf ("cannot create symlink \"a-symlink\": %m\n");
+      result = 1;
+    }
+  else
+    {
+      if (mkdir ("a-symlink", 0666) == 0)
+	{
+	  puts ("can make directory \"a-symlink\"");
+	  result = 1;
+	}
+      else if (errno != EEXIST)
+	{
+	  puts ("mkdir(\"a-symlink\") does not fail with EEXIST\n");
+	  result = 1;
+	}
+      if (unlink ("a-symlink") < 0)
+	{
+	  printf ("cannot unlink \"a-symlink\": %m\n");
+	  result = 1;
+	}
     }
 
   if (chdir (srcdir) < 0)

@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -658,7 +658,7 @@ _nl_find_msg (domain_file, msgid, lengthp)
      const char *msgid;
      size_t *lengthp;
 {
-  const struct loaded_domain *domain;
+  struct loaded_domain *domain;
   size_t act;
   char *result;
   size_t resultlen;
@@ -669,7 +669,7 @@ _nl_find_msg (domain_file, msgid, lengthp)
   if (domain_file->data == NULL)
     return NULL;
 
-  domain = (const struct loaded_domain *) domain_file->data;
+  domain = (struct loaded_domain *) domain_file->data;
 
   /* Locate the MSGID and its translation.  */
   if (domain->hash_size > 2 && domain->hash_tab != NULL)
