@@ -31,8 +31,7 @@
 	.size errno,4
 errno:
 	.space	4
-	.globl	_errno
-_errno = errno
+weak_alias (errno, _errno)
 
 /* The following code is only used in the shared library when we
    compile the reentrant version.  Otherwise each system call defines

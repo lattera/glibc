@@ -7,5 +7,4 @@ errno:	.space	4
 	.type errno, @object
 	.size errno, 4
 
-	.globl	_errno
-_errno	= errno
+weak_alias (errno, _errno)

@@ -30,5 +30,4 @@ errno:	.space 4
 	.globl __errno
 __errno = errno
 
-	.globl _errno
-_errno = errno
+weak_alias (errno, _errno)

@@ -5781,7 +5781,7 @@ static void
 identities (void)
 {
   identities1_test (0.2L, CHOOSE (1e-18L, 0, 2e-7));
-  identities1_test (0.9L, CHOOSE (1e-18L, 0, 1e-7));
+  identities1_test (0.9L, CHOOSE (1e-18L, 0, 2e-7));
   identities1_test (0, 0);
   identities1_test (-1, CHOOSE (1e-18L, 0, 1e-7));
 

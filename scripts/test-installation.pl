@@ -121,6 +121,7 @@ open PRG, ">/tmp/test-prg$$.c"
   or die ("Couldn't write test file /tmp/test-prg$$.c");
 
 print PRG '
+#include <stdio.h>
 #include <stdlib.h>
 int main(void) {
   printf ("Your new glibc installation seems to be ok.\n");

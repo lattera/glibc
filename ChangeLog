@@ -1,3 +1,26 @@
+1998-07-01 09:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c: Adjust delta for indentities1_test because gcc
+	became cleverer.
+
+1998-06-29  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* resolv/inet_addr.c (inet_aton): Define variable base only if needed.
+
+1998-06-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* scripts/test-installation.pl: Include <stdio.h> in test program
+	to make it strictly conforming.
+
+1998-06-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Make _errno a weak alias,
+	not a strong alias.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sysdep.S: Likewise.
+
 1998-06-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Make _errno a weak alias,
