@@ -2,6 +2,7 @@
 
 	* posix/tst-waitid.c (do_test): Kill the child process when bailing
 	out early on some failure.
+	[WCONTINUED]: Test WCONTINUED functionality.
 
 2004-08-03  Ulrich Drepper  <drepper@redhat.com>
 
