@@ -1,3 +1,10 @@
+2002-09-05  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h [__powerpc64__]
+	(__ASSUME_TRUNCATE64_SYSCALL, __ASSUME_STAT64_SYSCALL, __ASSUME_IPC64,
+	__ASSUME_FCNTL64, __ASSUME_MMAP2_SYSCALL): Don't define these.
+	PowerPC64 does not have separate 64-bit syscalls.
+
 2002-09-16  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Add a cast.

@@ -103,27 +103,44 @@
 # define __ASSUME_STAT64_SYSCALL	1
 #endif
 
-/* I know for sure that these are in 2.3.35 on powerpc.  */
+/* I know for sure that getrlimit are in 2.3.35 on powerpc.  */
 #if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__
-# define __ASSUME_TRUNCATE64_SYSCALL	1
-# define __ASSUME_STAT64_SYSCALL	1
 # define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
 #endif
 
-/* Linux 2.3.39 introduced 32bit UID/GIDs and IPC64.  Some platforms had 32
+/* I know for sure that these are in 2.3.35 on powerpc. But PowerPC64 does not 
+   support separate 64-bit syscalls, already 64-bit */
+#if __LINUX_KERNEL_VERSION >= 131875 && defined __powerpc__ \
+    && !defined __powerpc64__
+# define __ASSUME_TRUNCATE64_SYSCALL	1
+# define __ASSUME_STAT64_SYSCALL	1
+#endif
+
+/* Linux 2.3.39 introduced 32bit UID/GIDs.  Some platforms had 32
    bit type all along.  */
 #if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__ || defined __mips__
 # define __ASSUME_32BITUIDS		1
-# ifndef __powerpc__
-#  define __ASSUME_IPC64		1
-# endif
-# ifdef __sparc__
-#  define __ASSUME_SETRESUID_SYSCALL	1
-# endif
 #endif
 
-/* Linux 2.4.0 on PPC introduced a correct IPC64.  */
-#if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__
+/* Linux 2.3.39 sparc added setresuid.  */
+#if __LINUX_KERNEL_VERSION >= 131879 && defined __sparc__
+# define __ASSUME_SETRESUID_SYSCALL
+#endif
+
+/* Linux 2.3.39 introduced IPC64.  Except for powerpc.  */
+#if __LINUX_KERNEL_VERSION >= 131879 && !defined __powerpc__
+# define __ASSUME_IPC64		1
+#endif
+
+/* mips platforms had IPC64 all along.  */
+#if defined __mips__
+# define __ASSUME_IPC64		1
+#endif
+
+/* Linux 2.4.0 on PPC introduced a correct IPC64. But PowerPC64 does not 
+   support a separate 64-bit sys call, already 64-bit */
+#if __LINUX_KERNEL_VERSION >= 132096 && defined __powerpc__ \
+    && !defined __powerpc64__
 # define __ASSUME_IPC64			1
 #endif
 
@@ -147,9 +164,11 @@
 #endif
 
 /* Arm got fcntl64 in 2.4.4, PowerPC and SH have it also in 2.4.4 (I
-   don't know when it got introduced).  */
+   don't know when it got introduced).  But PowerPC64 does not support
+   separate FCNTL64 call, FCNTL is already 64-bit */
 #if __LINUX_KERNEL_VERSION >= 132100 \
-    && (defined __arm__ || defined __powerpc__ || defined __sh__)
+    && (defined __arm__ || defined __powerpc__ || defined __sh__) \
+    && !defined __powerpc64__
 # define __ASSUME_FCNTL64		1
 #endif
 
@@ -177,10 +196,15 @@
 # define __ASSUME_AT_XID		1
 #endif
 
-/* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way
-   and the mmap2 syscall made it into the official kernel.  */
+/* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way.  */
 #if __LINUX_KERNEL_VERSION >= (132096+5) && defined __powerpc__
 # define __ASSUME_STD_AUXV		1
+#endif
+
+/* Starting with 2.4.5 kernels the mmap2 syscall made it into the official
+   kernel.  But PowerPC64 does not support a separate MMAP2 call.  */
+#if __LINUX_KERNEL_VERSION >= (132096+5) && defined __powerpc__ \
+    && !defined __powerpc64__
 # define __ASSUME_MMAP2_SYSCALL		1
 #endif
 
