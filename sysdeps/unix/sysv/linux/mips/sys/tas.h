@@ -42,7 +42,8 @@ _test_and_set (int *p, int v) __THROW
   int r, t;
 
   __asm__ __volatile__
-    ("1:\n\t"
+    (".set\tmips2\n"
+     "1:\n\t"
      "ll	%0,%3\n\t"
      ".set	push\n\t"
      ".set	noreorder\n\t"
