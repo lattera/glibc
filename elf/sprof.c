@@ -357,7 +357,7 @@ Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "),
-	   "1999");
+	   "2000");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 
@@ -504,8 +504,7 @@ load_shobj (const char *name)
   if (map->l_info[DT_STRTAB] == NULL)
     result->dynstrtab = NULL;
   else
-    result->dynstrtab = (const char *) (map->l_addr
-					+ map->l_info[DT_STRTAB]->d_un.d_ptr);
+    result->dynstrtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
   if (do_test)
     printf ("string table: %p\n", result->dynstrtab);
 
@@ -514,7 +513,7 @@ load_shobj (const char *name)
     result->soname = NULL;
   else
     result->soname = result->dynstrtab + map->l_info[DT_SONAME]->d_un.d_val;
-  if (do_test)
+  if (do_test && result->soname != NULL)
     printf ("soname: %s\n", result->soname);
 
   /* Now we have to load the symbol table.
@@ -903,7 +902,6 @@ printsym (const void *node, VISIT value, int level)
 static void
 read_symbols (struct shobj *shobj)
 {
-  void *load_addr = (void *) shobj->map->l_addr;
   int n = 0;
 
   /* Initialize the obstacks.  */
@@ -960,10 +958,10 @@ read_symbols (struct shobj *shobj)
     {
       /* Blarg, the binary is stripped.  We have to rely on the
 	 information contained in the dynamic section of the object.  */
-      const ElfW(Sym) *symtab = (load_addr
-				 + shobj->map->l_info[DT_SYMTAB]->d_un.d_ptr);
-      const char *strtab = (load_addr
-			    + shobj->map->l_info[DT_STRTAB]->d_un.d_ptr);
+      const ElfW(Sym) *symtab = (ElfW(Sym) *) D_PTR (shobj->map,
+						     l_info[DT_SYMTAB]);
+      const char *strtab = (const char *) D_PTR (shobj->map,
+						 l_info[DT_STRTAB]);
 
       /* We assume that the string table follows the symbol table,
 	 because there is no way in ELF to know the size of the

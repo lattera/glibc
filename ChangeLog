@@ -1,3 +1,12 @@
+2000-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/sprof.c (print_version): Update year.
+
+	* elf/sprof.c (load_shobj): Don't always add load address to dynamic
+	table entry values.  Use D_PTR.
+	* elf/dl-reloc.c (_dl_relocate_object): Don't start profiling weird
+	binaries without PLT.  Patches by James Mathiesen <james@curl.com>.
+
 2000-06-20  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/Makefile: New file.

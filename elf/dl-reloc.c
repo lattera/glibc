@@ -94,13 +94,21 @@ cannot make segment writable for relocation"));
     if (__builtin_expect (_dl_profile != NULL, 0))
       {
 	/* Allocate the array which will contain the already found
-	   relocations.  */
+	   relocations.  If the shared object lacks a PLT (for example
+	   if it inly contains lead function) the l_info[DT_PLTRELSZ]
+	   will be NULL.  */
+	if (l->l_info[DT_PLTRELSZ] == NULL)
+	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
+			    ": profiler found no PLTREL in object ",
+			    l->l_name, "\n", NULL);
+
 	l->l_reloc_result =
 	  (ElfW(Addr) *) calloc (sizeof (ElfW(Addr)),
 				 l->l_info[DT_PLTRELSZ]->d_un.d_val);
 	if (l->l_reloc_result == NULL)
 	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
-			    "cannot allocate memory for profiling", NULL);
+			    ": profiler outof memory shadowing PLTREL of ",
+			    l->l_name, "\n", NULL);
       }
   }
 
