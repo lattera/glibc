@@ -1,5 +1,9 @@
 Wed Feb 22 00:44:41 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* posix/glob/configure.in: Put AC_ISC_POSIX before AC_CONST.
+
+	* libc-symbols.h (weak_symbol): New macro.
+
 	* hurd/hurdsig.c (_hurd_internal_post_signal): Ignore preempter
  	elts with null handlers.
 
