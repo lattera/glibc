@@ -16,11 +16,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _MATH_H
+if !defined _MATH_H && !defined _COMPLEX_H
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
-#ifdef __USE_ISOC9X
+#if defined  __USE_ISOC9X && defined _MATH_H
 /* Normally, there is no long double type and the `float' and `double'
    expressions are evaluated as `double'.  */
 typedef double float_t;		/* `float' expressions are evaluated as
@@ -44,6 +44,8 @@ typedef double double_t;	/* `double' expressions are evaluated as
 
 #endif	/* ISO C 9X */
 
+#ifndef __NO_LONG_DOUBLE_MATH
 /* Signal that we do not really have a `long double'.  The disables the
    declaration of all the `long double' function variants.  */
-#define __NO_LONG_DOUBLE_MATH	1
+# define __NO_LONG_DOUBLE_MATH	1
+#endif

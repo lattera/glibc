@@ -1,5 +1,5 @@
 /* Return real part of complex float value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,7 +21,7 @@
 #include <complex.h>
 
 float
-__crealf (float complex z)
+__crealf (float _Complex z)
 {
   return __real__ z;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,56 +16,65 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _MATH_H
+#if !defined _MATH_H && !defined _COMPLEX_H
 # error "Never use <bits/mathdef.h> directly; include <math.h> instead"
 #endif
 
 /* FIXME! This file describes properties of the compiler, not the machine;
    it should not be part of libc!  */
 
-#ifdef __GNUC__
-# if __STDC__ == 1
+#if defined __USE_ISOC9X && defined _MATH_H
+# ifdef __GNUC__
+#  if __STDC__ == 1
 
 /* In GNU or ANSI mode, gcc leaves `float' expressions as-is.  */
 typedef float float_t;
 typedef double double_t;
 
 /* Signal that types stay as they were declared.  */
-#  define FLT_EVAL_METHOD	0
+#   define FLT_EVAL_METHOD	0
 
 /* Define `INFINITY' as value of type `float'.  */
-#  define INFINITY	HUGE_VALF
+#   define INFINITY	HUGE_VALF
 
-# else
+#  else
 
 /* For `gcc -traditional', `float' expressions are evaluated as `double'. */
 typedef double float_t;
 typedef double double_t;
 
 /* Signal that both types are `double'.  */
-#  define FLT_EVAL_METHOD	1
+#   define FLT_EVAL_METHOD	1
 
 /* Define `INFINITY' as value of type `float'.  */
-#  define INFINITY	HUGE_VALF
+#   define INFINITY	HUGE_VALF
 
-# endif
-#else
+#  endif
+# else
 
 /* Wild guess at types for float_t and double_t. */
 typedef double float_t;
 typedef double double_t;
 
 /* Strange compiler, we don't know how it works.  */
-# define FLT_EVAL_METHOD	-1
+#  define FLT_EVAL_METHOD	-1
 
 /* Define `INFINITY' as value of type `float'.  */
-# define INFINITY	HUGE_VALF
+#  define INFINITY	HUGE_VALF
 
-#endif
+# endif
 
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
-#define FP_ILOGB0       0x80000001
-#define FP_ILOGBNAN     0x7fffffff
+# define FP_ILOGB0       0x80000001
+# define FP_ILOGBNAN     0x7fffffff
 
 /* Number of decimal digits for the `double' type.  */
-#define DECIMAL_DIG	15
+# define DECIMAL_DIG	15
+
+#endif	/* ISO C 9X */
+
+#ifndef __NO_LONG_DOUBLE_MATH
+/* Signal that we do not really have a `long double'.  The disables the
+   declaration of all the `long double' function variants.  */
+# define __NO_LONG_DOUBLE_MATH	1
+#endif

@@ -47,7 +47,7 @@ endif
 
 
 # Use o-iterator.mk to generate a rule for each flavor of library.
-ifneq (,$(filter-out .os,$(object-suffices-$(lib))))
+ifneq (,$(filter-out .os,$(object-suffixes-$(lib))))
 define o-iterator-doit
 $(objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
   $(patsubst %,$(objpfx)%$o,\

@@ -1,5 +1,5 @@
 /* Return the complex absolute value of float complex value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,7 +22,7 @@
 #include <math.h>
 
 float
-__cabsf (float complex z)
+__cabsf (float _Complex z)
 {
   return __hypotf (__real__ z, __imag__ z);
 }

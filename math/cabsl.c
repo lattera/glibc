@@ -1,5 +1,5 @@
 /* Return the complex absolute value of long double complex value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,7 +22,7 @@
 #include <math.h>
 
 long double
-__cabsl (long double complex z)
+__cabsl (long double _Complex z)
 {
   return __hypotl (__real__ z, __imag__ z);
 }

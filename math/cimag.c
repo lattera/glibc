@@ -1,5 +1,5 @@
 /* Return imaginary part of complex double value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -21,7 +21,7 @@
 #include <complex.h>
 
 double
-__cimag (double complex z)
+__cimag (double _Complex z)
 {
   return __imag__ z;
 }

@@ -1,4 +1,39 @@
-1998-11-09 18:16  Ulrich Drepper  <drepper@cygnus.com>
+1998-11-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/cabs.c: Replace complex by _Complex.
+	* math/cabsf.c: Likewise.
+	* math/cabsl.c: Likewise.
+	* math/cimag.c: Likewise.
+	* math/cimagf.c: Likewise.
+	* math/cimagl.c: Likewise.
+	* math/conj.c: Likewise.
+	* math/conjf.c: Likewise.
+	* math/conjl.c: Likewise.
+	* math/creal.c: Likewise.
+	* math/crealf.c: Likewise.
+	* math/creall.c: Likewise.
+
+	* sysdeps/alpha/fpu/bits/mathdef.h: Define ISO C 9X stuff only if
+	included from math.h and __USE_ISOC9X is defined.
+	* sysdeps/generic/bits/mathdef.h: Likewise.
+	* sysdeps/generic/i386/fpu/mathdef.h: Likewise.
+	* sysdeps/generic/m68k/fpu/mathdef.h: Likewise.
+	* sysdeps/generic/powerpc/bits/mathdef.h: Likewise.
+	* sysdeps/generic/sparc/fpu/bits/mathdef.h: Likewise.
+
+1998-11-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/fpu/bits/mathdef.h: Allow direct inclusion by
+	<complex.h>.
+	* sysdeps/alpha/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/generic/bits/mathdef.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Likewise.
+
+1998-11-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* extra-lib.mk: Fix typo in last change.
 
 	* math/complex.h: Include bits/mathdef.h to get __NO_LONG_DOUBLE_MATH
 	is needed.
