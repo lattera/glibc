@@ -1,5 +1,10 @@
 1999-01-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/libm-i387/s_fdim.S: Change fsubp to fsubrp for picky
+	gas.
+	* sysdeps/libm-i387/s_fdimf.S: Likewise.
+	* sysdeps/libm-i387/s_fdiml.S: Likewise.
+
 	* sysdeps/alpha/fpu/s_floor.c (__floor): Don't depend on inlining,
 	duplicate the code.
 	* sysdeps/alpha/fpu/s_floorf.c (__floorf): Likewise.

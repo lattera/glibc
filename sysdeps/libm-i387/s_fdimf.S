@@ -1,5 +1,5 @@
 /* Compute positive difference.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -30,7 +30,7 @@ ENTRY(__fdimf)
 	sahf
 	jp	1f
 
-	fsubp	%st(1), %st
+	fsubrp	%st(1), %st
 	jc	2f
 
 	fstp	%st(0)
