@@ -2,6 +2,7 @@
 
 	* tests-mbwc/dat_strfmon.c (tst_strfmon_loc): Adjust test data for
 	Euro locales.
+	* tst-fmon.data: Likewise.
 
 	* locales/br_FR: Eliminate old national currencies of countries
 	participating in Euro.  Make @euro files pure copies.
