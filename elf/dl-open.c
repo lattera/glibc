@@ -378,17 +378,19 @@ dl_open_worker (void *a)
 
 	assert (new->l_searchlist.r_list[i]->l_type == lt_loaded);
 
-	/* Find the place in the stv slotinfo list.  */
+	/* Find the place in the dtv slotinfo list.  */
 	listp = GL(dl_tls_dtv_slotinfo_list);
 	prevp = NULL;		/* Needed to shut up gcc.  */
 	do
 	  {
 	    /* Does it fit in the array of this list element?  */
-	    if (idx <= listp->len)
+	    if (idx < listp->len)
 	      break;
+	    idx -= listp->len;
 	    prevp = listp;
+	    listp = listp->next;
 	  }
-	while ((listp = listp->next) != NULL);
+	while (listp != NULL);
 
 	if (listp == NULL)
 	  {

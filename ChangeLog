@@ -1,3 +1,22 @@
+2002-10-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Initialize the static
+	slotinfo list's len member to the proper size, not just 1.
+	Initialize static_map.l_tls_initimage.
+
+	* elf/dl-open.c (dl_open_worker): Fix loop searching for
+	dtv_slotinfo_list element containing new modules' l_tls_modid.
+
+	* elf/tst-tls9.c, elf/tst-tls9-static.c: New files.
+	* elf/tst-tlsmod5.c, elf/tst-tlsmod6.c: New files.
+	* elf/Makefile (tests): Add tst-tls9.
+	(tests-static): Add tst-tls9-static.
+	(tst-tls9-static-ENV): New variable.
+	($(objpfx)tst-tls9-static, $(objpfx)tst-tls9-static.out): New targets.
+
+	* elf/dl-close.c (remove_slotinfo): Remove an assert; the number of
+	modids used by partially loaded modules being closed can't be known.
+
 2002-10-21  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/Makefile: Add a test case for the bug reported by Aharon

@@ -44,9 +44,8 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
       if (listp->next == NULL)
 	{
 	  /* The index is not actually valid in the slotinfo list,
-	     because this object was closed before it was fully setup
-	     due to some error.  */
-	  assert (idx - disp == listp->len);
+	     because this object was closed before it was fully set
+	     up due to some error.  */
 	  assert (! should_be_there);
 	}
       else

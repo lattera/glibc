@@ -39,10 +39,10 @@ static struct
 {
   struct dtv_slotinfo_list si;
   /* The dtv_slotinfo_list data structure does not include the actual
-     informatin since it is defined as an array of size zero.  We
-     define here the necessary entries.  Not that it is not important
-     whether there is padding or not since we will always access the
-     informatin through the 'si' element.  */
+     information since it is defined as an array of size zero.  We define
+     here the necessary entries.  Note that it is not important whether
+     there is padding or not since we will always access the information
+     through the 'si' element.  */
   struct dtv_slotinfo info[2 + TLS_SLOTINFO_SURPLUS];
 } static_slotinfo;
 
@@ -160,13 +160,16 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
      make the TLS routines happy.  */
   static_map.l_tls_align = align;
   static_map.l_tls_blocksize = memsz;
+  static_map.l_tls_initimage = initimage;
   static_map.l_tls_initimage_size = filesz;
   static_map.l_tls_offset = tcb_offset;
   static_map.l_type = lt_executable;
   static_map.l_tls_modid = 1;
 
   /* Create the slotinfo list.  */
-  static_slotinfo.si.len = 1;	/* Only one element.  */
+  static_slotinfo.si.len = (((char *) (&static_slotinfo + 1)
+			     - (char *) &static_slotinfo.si.slotinfo[0])
+			    / sizeof static_slotinfo.si.slotinfo[0]);
   // static_slotinfo.si.next = NULL;	already zero
 
   static_slotinfo.si.slotinfo[1].gen = 0;
