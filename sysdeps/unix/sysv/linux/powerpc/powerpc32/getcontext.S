@@ -244,12 +244,13 @@ L(no_vec):
 	addi	r1,r1,16
 	mtlr	r0
 	blr
-PSEUDO_END(__getcontext)
+END(__getcontext)
 
 versioned_symbol (libc, __getcontext, getcontext, GLIBC_2_3_4)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 
+	compat_text_section
 ENTRY(__novec_getcontext)
 	/*
 	 * Since we are not attempting to save the altivec registers,
@@ -355,7 +356,8 @@ ENTRY(__novec_getcontext)
 	addi	r1,r1,16
 	mtlr	r0
 	blr
-PSEUDO_END(__novec_getcontext)
+END(__novec_getcontext)
+	.previous
 
 compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3_3)
 
@@ -366,10 +368,12 @@ compat_symbol (libc, __novec_getcontext, getcontext, GLIBC_2_3_3)
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
+	compat_text_section
 ENTRY (__getcontext_stub)
 	li	r3,ENOSYS
 	b	JUMPTARGET(__syscall_error)
-	END (__getcontext_stub)
+END (__getcontext_stub)
+	.previous
 
 compat_symbol (libc, __getcontext_stub, getcontext, GLIBC_2_1)
 

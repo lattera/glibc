@@ -1,5 +1,6 @@
 #include <sysdep.h>
 #include <tls.h>
 
+PID			offsetof (struct pthread, pid) - sizeof (struct pthread)
 MULTIPLE_THREADS_OFFSET offsetof (struct pthread, header.multiple_threads) - sizeof (struct pthread)
 SYSINFO_OFFSET		offsetof (tcbhead_t, private)

@@ -111,6 +111,7 @@ versioned_symbol (libc, __makecontext, makecontext, GLIBC_2_3_4)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 
+	compat_text_section
 ENTRY(__novec_makecontext)
 	/* Set up the first 7 args to the function in its registers */
 	addi	r11,r3,_UC_REG_SPACE
@@ -191,7 +192,8 @@ L(novec_exitcode):
 4:	bl	HIDDEN_JUMPTARGET(exit)
 	b	4b
 
-END(__makecontext)
+END(__novec_makecontext)
+	.previous
 
 compat_symbol (libc, __novec_makecontext, makecontext, GLIBC_2_3_3)
 #endif
@@ -201,10 +203,12 @@ compat_symbol (libc, __novec_makecontext, makecontext, GLIBC_2_3_3)
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
+	compat_text_section
 ENTRY (__makecontext_stub)
 	li	r3,ENOSYS
 	b	JUMPTARGET(__syscall_error)
-	END (__makecontext_stub)
+END (__makecontext_stub)
+	.previous
 
 compat_symbol (libc, __makecontext_stub, makecontext, GLIBC_2_1)
 

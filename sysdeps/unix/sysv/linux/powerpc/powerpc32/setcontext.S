@@ -261,12 +261,13 @@ L(do_sigret):
 	sc
 	/* NOTREACHED */
 
-PSEUDO_END (__setcontext)
+END (__setcontext)
 
 versioned_symbol (libc, __setcontext, setcontext, GLIBC_2_3_4)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 
+	compat_text_section
 ENTRY(__novec_setcontext)
 	mflr	r0
 	stwu	r1,-16(r1)
@@ -388,7 +389,8 @@ L(novec_do_sigret):
 	sc
 	/* NOTREACHED */
 
-PSEUDO_END (__setcontext)
+END (__novec_setcontext)
+	.previous
 
 compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3_3)
 
@@ -399,10 +401,12 @@ compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3_3)
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
+	compat_text_section
 ENTRY (__setcontext_stub)
 	li	r3,ENOSYS
 	b	JUMPTARGET(__syscall_error)
-	END (__setcontext_stub)
+END (__setcontext_stub)
+	.previous
 
 compat_symbol (libc, __setcontext_stub, setcontext, GLIBC_2_1)
 

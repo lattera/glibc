@@ -1,3 +1,50 @@
+2004-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/libc-symbols.h [__ASSEMBLY__] (compat_text_section,
+	compat_data_section): Define.
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c (ADJTIME): Add
+	attribute_compat_text_section.
+	* sysdeps/unix/sysv/linux/alpha/wordexp.c (__old_wordexp): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/oldglob.c (__old_glob,
+	__old_globfree): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c (__chown_is_lchown):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/posix_fadvise64.c
+	(__posix_fadvise64_l32): Likewise.
+	* sysdeps/unix/sysv/linux/msgctl.c (__old_msgctl): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise64.c
+	(__posix_fadvise64_l32): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/semctl.c (__old_semctl):
+	Likewise.
+	* sysdeps/unix/sysv/linux/semctl.c (__old_semctl): Likewise.
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c (__posix_fadvise64_l32):
+	Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c (__old_shmctl): Likewise.
+	* hurd/compat-20.c (_hurd_proc_init_compat_20): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	(__swapcontext, __novec_swapcontext): Use END instead of PSEUDO_END.
+	(__novec_swapcontext, __swapcontext_stub): Add compat_text_section.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
+	(__makecontext_stub): Likewise.
+	(__novec_makecontext): Likewise.  Fix name in END () to match
+	function name.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S
+	(__setcontext): Use END instead of PSEUDO_END.
+	(__novec_setcontext): Add compat_text_section.  Use END instead of
+	PSEUDO_END, fix the name in END () to match function name.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
+	(__getcontext, __novec_getcontext): Use END instead of PSEUDO_END.
+	(__novec_getcontext, __getcontext_stub): Add compat_text_section.
+
+2004-03-10  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h: Don't use GL macro if not appropriate.
+	(COPY_UNALIGNED_WORD): Remove cast used as lvalue.
+
+2004-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-procinfo.h (HWCAP_IMPORTANT): Remove mmx, add sse2.
+
 2004-03-10  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/generic/errno.c: Disable versioning for rtld.

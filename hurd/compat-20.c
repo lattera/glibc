@@ -1,5 +1,5 @@
 /* Old-versioned functions for binary compatibility with glibc-2.0.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 void
+attribute_compat_text_section
 _hurd_proc_init_compat_20 (char **argv)
 {
   _hurd_proc_init (argv, NULL, 0);

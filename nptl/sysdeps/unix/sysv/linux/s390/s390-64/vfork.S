@@ -1,6 +1,6 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -30,21 +30,26 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
+
 	ear	%r4,%a0
-	l	%r3,PID(%r4)
+	sllg	%r4,%r4,32
+	ear	%r4,%a1
+	icm	%r3,15,PID(%r4)
+	llilh	%r1,32768
+	je	1f
 	lcr	%r1,%r3
-	st	%r1,PID(%r4)
+1:	st	%r1,PID(%r4)
 
 	/* Do vfork system call.  */
 	svc	SYS_ify (vfork)
 
-	ltr	%r2,%r2
+	ltgr	%r2,%r2
 	je	1f
 	st	%r3,PID(%r4)
 1:
 	/* Check for error.  */
-	lhi	%r4,-4095
-	clr	%r2,%r4
+	lghi	%r4,-4095
+	clgr	%r2,%r4
 	jnl	SYSCALL_ERROR_LABEL
 
 	/* Normal return.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,7 @@ typedef struct
 
 
 int
+attribute_compat_text_section
 __old_glob (const char *pattern, int flags,
 	    int (*errfunc) (const char *, int),
 	    old_glob_t *pglob)
@@ -82,6 +83,7 @@ compat_symbol (libc, __old_glob, glob, GLIBC_2_0);
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 void
+attribute_compat_text_section
 __old_globfree (old_glob_t *pglob)
 {
   glob_t correct;

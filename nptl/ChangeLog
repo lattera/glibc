@@ -1,3 +1,30 @@
+2004-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/pt-vfork.S: Include
+	tcb-offsets.h.
+	(__vfork): Negate PID if non-zero and set to INT_MIN if zero
+	before syscall, set to the old value in the parent afterwards.
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-vfork.S: Include
+	tcb-offsets.h.
+	(__vfork): Negate PID if non-zero and set to INT_MIN if zero
+	before syscall, set to the old value in the parent afterwards.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: New file.
+	* sysdeps/s390/tcb-offsets.sym: Add PID.
+
+	* sysdeps/unix/sysv/linux/sparc/pt-vfork.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pt-vfork.S: New file.
+	* sysdeps/sparc/tcb-offsets.sym: Add PID.
+
+2004-03-10  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/ia64/tcb-offsets.sym: Add PID.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S: Properly handle PID cache.
+
 2004-03-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-cancel20.c (do_one_test): Clear in_sh_body first.

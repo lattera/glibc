@@ -57,7 +57,7 @@ enum
   HWCAP_I386_AMD3D = 1 << 31,
 
   /* XXX Which others to add here?  */
-  HWCAP_IMPORTANT = (HWCAP_I386_MMX)
+  HWCAP_IMPORTANT = (HWCAP_I386_XMM2)
 
 };
 

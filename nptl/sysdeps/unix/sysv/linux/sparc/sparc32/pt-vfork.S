@@ -1,6 +1,6 @@
-/* Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,11 +18,25 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <tcb-offsets.h>
 
-PSEUDO (__vfork, vfork, 0)
+	.text
+ENTRY(__vfork)
+	ld	[%g7 + PID], %o5
+	sub	%g0, %o5, %o4
+	st	%o4, [%g7 + PID]
+
+	LOADSYSCALL(vfork)
+	ta	0x10
+	bcs,a	__syscall_error_handler
+	 st	%o5, [%g7 + PID]
+	SYSCALL_ERROR_HANDLER
 	sub	%o1, 1, %o1
-	retl
-	 and	%o0, %o1, %o0
+	andcc	%o0, %o1, %o0
+	bne,a	1f
+	 st	%o5, [%g7 + PID]
+1:	retl
+	 nop
 
 PSEUDO_END (__vfork)
 weak_alias (__vfork, vfork)

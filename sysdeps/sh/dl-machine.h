@@ -1,5 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  SH version.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -417,9 +418,9 @@ _dl_start_user:\n\
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
+  if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    GL(dl_platform) = NULL;
+    GLRO(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -460,20 +461,23 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #define COPY_UNALIGNED_WORD(swp, twp, align) \
   { \
     void *__s = (swp), *__t = (twp); \
+    unsigned char *__s1 = __s, *__t1 = __t; \
+    unsigned short *__s2 = __s, *__t2 = __t; \
+    unsigned long *__s4 = __s, *__t4 = __t; \
     switch ((align)) \
     { \
     case 0: \
-      *(unsigned long *) __t = *(unsigned long *) __s; \
+      *__t4 = *__s4; \
       break; \
     case 2: \
-      *((unsigned short *) __t)++ = *((unsigned short *) __s)++; \
-      *((unsigned short *) __t) = *((unsigned short *) __s); \
+      *__t2++ = *__s2++; \
+      *__t2 = *__s2; \
       break; \
     default: \
-      *((unsigned char *) __t)++ = *((unsigned char *) __s)++; \
-      *((unsigned char *) __t)++ = *((unsigned char *) __s)++; \
-      *((unsigned char *) __t)++ = *((unsigned char *) __s)++; \
-      *((unsigned char *) __t) = *((unsigned char *) __s); \
+      *__t1++ = *__s1++; \
+      *__t1++ = *__s1++; \
+      *__t1++ = *__s1++; \
+      *__t1 = *__s1; \
       break; \
     } \
   }
@@ -525,7 +529,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (sym->st_size < refsym->st_size && GL(dl_verbose)))
+	      || (sym->st_size < refsym->st_size && GLRO(dl_verbose)))
 	    {
 	      const char *strtab;
 
@@ -593,7 +597,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	      rtld.c contains the common defn for _dl_rtld_map, which
 	      is incompatible with a weak decl in the same file.  */
 # ifndef SHARED
-	    weak_extern (GL(dl_rtld_map));
+	    weak_extern (_dl_rtld_map);
 # endif
 	    if (map == &GL(dl_rtld_map))
 	      /* Undo the relocation done here during bootstrapping.

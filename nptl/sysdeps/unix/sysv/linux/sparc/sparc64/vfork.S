@@ -1,6 +1,6 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,37 +18,28 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
-#include <kernel-features.h>
-#include <bits/wordsize.h>
 #include <tcb-offsets.h>
 
-/* Clone the calling process, but without copying the whole address space.
-   The calling process is suspended until the new process exits or is
-   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
-   and the process ID of the new process to the old process.  */
+	.text
+ENTRY(__vfork)
+	ld	[%g7 + PID], %o5
+	sethi	%hi(0x80000000), %o3
+	cmp	%o5, 0
+	sub	%g0, %o5, %o4
+	move	%icc, %o3, %o4
+	st	%o4, [%g7 + PID]
 
-ENTRY (__vfork)
-	ear	%r4,%a0
-	l	%r3,PID(%r4)
-	lcr	%r1,%r3
-	st	%r1,PID(%r4)
+	LOADSYSCALL(vfork)
+	ta	0x6d
+	bcs,a,pn %xcc, __syscall_error_handler
+	 st	%o5, [%g7 + PID]
+	SYSCALL_ERROR_HANDLER
+	sub	%o1, 1, %o1
+	andcc	%o0, %o1, %o0
+	bne,a,pt %icc, 1f
+	 st	%o5, [%g7 + PID]
+1:	retl
+	 nop
 
-	/* Do vfork system call.  */
-	svc	SYS_ify (vfork)
-
-	ltr	%r2,%r2
-	je	1f
-	st	%r3,PID(%r4)
-1:
-	/* Check for error.  */
-	lhi	%r4,-4095
-	clr	%r2,%r4
-	jnl	SYSCALL_ERROR_LABEL
-
-	/* Normal return.  */
-	br	%r14
-PSEUDO_END(__vfork)
-
+PSEUDO_END (__vfork)
 weak_alias (__vfork, vfork)

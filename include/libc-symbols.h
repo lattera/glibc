@@ -761,9 +761,14 @@ for linking")
 
 /* Move compatibility symbols out of the way by placing them all in a
    special section.  */
-#define attribute_compat_text_section \
+#ifndef __ASSEMBLER__
+# define attribute_compat_text_section \
     __attribute__ ((section (".text.compat")))
-#define attribute_compat_data_section \
+# define attribute_compat_data_section \
     __attribute__ ((section (".data.compat")))
+#else
+# define compat_text_section .section ".text.compat", "ax";
+# define compat_data_section .section ".data.compat", "aw";
+#endif
 
 #endif /* libc-symbols.h */
