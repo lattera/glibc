@@ -1,7 +1,11 @@
+2001-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ca.po: New file.  Contributed by the translation team.
+
 2001-08-15  Ralf Baechle  <ralf@gnu.org>
 
-	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Make sysmips() prototype a
-	varargs prototype.  Remove dependency from kernel header files.
+	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Make sysmips() prototype
+	a varargs prototype.  Remove dependency from kernel header files.
 
 	* sysdeps/unix/sysv/linux/mips/bits/termios.h: General cleanup, use
 	__USE_MISC / __USE_XOPEN not __USE_BSD where appropriate.
