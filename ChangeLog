@@ -1,3 +1,10 @@
+2001-03-31  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_RAWHDLC): Added.
+	(ARPHRD_HDLC): Define as alias for ARPHRD_CISCO.
+	(ARPHRD_CISCO): New.
+	Changes from Linux 2.4.3.
+
 2001-03-30  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regex.c: Avoid an access violation if malloc failes.
