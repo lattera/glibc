@@ -1,5 +1,5 @@
 /* Handle faults in the signal thread.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -114,30 +114,33 @@ _hurdsig_fault_init (void)
   struct machine_thread_state state;
   mach_port_t sigexc;
 
-  if (err = __mach_port_allocate (__mach_task_self (),
-				  MACH_PORT_RIGHT_RECEIVE, &sigexc))
-    __libc_fatal ("hurd: Can't create receive right for signal thread exc\n");
-  if (err = __mach_port_allocate (__mach_task_self (),
-				  MACH_PORT_RIGHT_RECEIVE, &forward_sigexc))
-    __libc_fatal ("hurd: Can't create receive right for signal thread exc\n");
+  err = __mach_port_allocate (__mach_task_self (),
+			      MACH_PORT_RIGHT_RECEIVE, &sigexc);
+  assert_perror (err);
+  err = __mach_port_allocate (__mach_task_self (),
+			      MACH_PORT_RIGHT_RECEIVE, &forward_sigexc);
+  assert_perror (err);
+
+  err = __mach_port_insert_right (__mach_task_self (),
+				  sigexc, MACH_MSG_TYPE_MAKE_SEND);
+  assert_perror (err);
+  err = __thread_set_special_port (_hurd_msgport_thread,
+				   THREAD_EXCEPTION_PORT, sigexc);
+  __mach_port_deallocate (__mach_task_self (), sigexc);
+  assert_perror (err);
 
   memset (&state, 0, sizeof state);
   MACHINE_THREAD_STATE_SET_PC (&state, faulted);
   MACHINE_THREAD_STATE_SET_SP (&state, faultstack, sizeof faultstack);
 
-#if 0				/* Don't confuse gdb.  */
-  __thread_set_special_port (_hurd_msgport_thread,
-			     THREAD_EXCEPTION_PORT, sigexc);
-#endif
-
-  if (err = __USEPORT
-      (PROC,
-       __proc_handle_exceptions (port,
-				 sigexc,
-				 forward_sigexc, MACH_MSG_TYPE_MAKE_SEND,
-				 MACHINE_THREAD_STATE_FLAVOR,
-				 (natural_t *) &state,
-				 MACHINE_THREAD_STATE_COUNT)))
-    __libc_fatal ("hurd: proc won't handle signal thread exceptions\n");
+  err = __USEPORT
+    (PROC,
+     __proc_handle_exceptions (port,
+			       sigexc,
+			       forward_sigexc, MACH_MSG_TYPE_MAKE_SEND,
+			       MACHINE_THREAD_STATE_FLAVOR,
+			       (natural_t *) &state,
+			       MACHINE_THREAD_STATE_COUNT));
+  assert_perror (err);
 }
 

@@ -1,3 +1,19 @@
+Fri Nov 17 17:57:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/generic/Makefile (make_siglist): Add missing backslash.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start_cleanup): New
+	function.
+
+	* hurd/hurdfault.c: Replace __libc_fatal calls with assert_perror.
+	(_hurdsig_fault_init): Remove #if 0 from setting exception port.
+	Insert send right for SIGEXC before thread_set_special_port.
+	* hurd/hurdsig.c: Replace __libc_fatal calls with assert_perror.
+	(_hurdsig_init): Remove #if 0 from setting exception port.
+
+	* sysdeps/mach/hurd/ptrace.c (ptrace: PTRACE_CONT): Use
+	HURD_MSGPORT_RPC macro.
+
 Thu Nov 16 06:07:49 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start_cleanup): New

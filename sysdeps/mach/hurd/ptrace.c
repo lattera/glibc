@@ -106,17 +106,15 @@ ptrace (enum __ptrace_request request, ... )
       {
 	/* Send a DATA signal to PID, telling it to take the signal
 	   normally even if it's traced.  */
-	error_t err; task_t task = __pid2task (pid);
+	error_t err;
+	task_t task = __pid2task (pid);
 	if (task == MACH_PORT_NULL)
 	  return -1;
 	if (data == SIGKILL)
 	  err = __task_terminate (task);
 	else
 	  {
-	    mach_port_t msgport;
-	    err = __USEPORT (PROC, __proc_getmsgport (port, pid, &msgport));
-
-	    if (!err && addr != (void *) 1)
+	    if (addr != (void *) 1)
 	      {
 		/* Move the user thread's PC to ADDR.  */
 		thread_t thread;
@@ -135,15 +133,18 @@ ptrace (enum __ptrace_request request, ... )
 						  MACHINE_THREAD_STATE_FLAVOR,
 						  (natural_t *) &state, count);
 		      }
-		    
+
 		  }
 		__mach_port_deallocate (__mach_task_self (), thread);
 	      }
+	    else
+	      err = 0;
 
 	    if (! err)
 	      /* Tell the process to take the signal (or just resume if 0).  */
-	      err = __msg_sig_post_untraced (msgport, data, task);
-	    __mach_port_deallocate (__mach_task_self (), msgport);
+	      err = HURD_MSGPORT_RPC
+		(__USEPORT (PROC, __proc_getmsgport (port, pid, &msgport)),
+		 0, 0, __msg_sig_post_untraced (msgport, data, task));
 	  }
 	__mach_port_deallocate (__mach_task_self (), task);
 	return err ? __hurd_fail (err) : 0;
@@ -201,7 +202,7 @@ ptrace (enum __ptrace_request request, ... )
 	  }
 	__mach_port_deallocate (__mach_task_self (), task);
 	return err ? __hurd_fail (err) : 0;
-      }      
+      }
 
     case PTRACE_PEEKTEXT:
     case PTRACE_PEEKDATA:

@@ -52,7 +52,7 @@ $(objpfx)siglist.c: $(objpfx)make_siglist
 	mv $@-tmp $@
 
 $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
-	$(native-compile)
+	$(native-compile) \
 	-DSIGNUM_H=\"`cd $(dir $(firstword $(wildcard \
 			 $(+sysdep_dirs:%=%/signum.h)))); pwd`/signum.h\"
 

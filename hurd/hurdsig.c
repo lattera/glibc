@@ -1113,17 +1113,17 @@ _hurdsig_init (void)
 
   __mutex_init (&_hurd_siglock);
 
-  if (err = __mach_port_allocate (__mach_task_self (),
-				  MACH_PORT_RIGHT_RECEIVE,
-				  &_hurd_msgport))
-    __libc_fatal ("hurd: Can't create message port receive right\n");
+  err = __mach_port_allocate (__mach_task_self (),
+			      MACH_PORT_RIGHT_RECEIVE,
+			      &_hurd_msgport);
+  assert_perror (err);
 
   /* Make a send right to the signal port.  */
-  if (err = __mach_port_insert_right (__mach_task_self (),
-				      _hurd_msgport,
-				      _hurd_msgport,
-				      MACH_MSG_TYPE_MAKE_SEND))
-    __libc_fatal ("hurd: Can't create send right to message port\n");
+  err = __mach_port_insert_right (__mach_task_self (),
+				  _hurd_msgport,
+				  _hurd_msgport,
+				  MACH_MSG_TYPE_MAKE_SEND);
+  assert_perror (err);
 
   /* Set the default thread to receive task-global signals
      to this one, the main (first) user thread.  */
@@ -1131,15 +1131,15 @@ _hurdsig_init (void)
 
   /* Start the signal thread listening on the message port.  */
 
-  if (err = __thread_create (__mach_task_self (), &_hurd_msgport_thread))
-    __libc_fatal ("hurd: Can't create signal thread\n");
+  err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
+  assert_perror (err);
 
   stacksize = __vm_page_size * 4; /* Small stack for signal thread.  */
-  if (err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
-				 _hurd_msgport_receive,
-				 (vm_address_t *) &__hurd_sigthread_stack_base,
-				 &stacksize))
-    __libc_fatal ("hurd: Can't setup signal thread\n");
+  err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
+			     _hurd_msgport_receive,
+			     (vm_address_t *) &__hurd_sigthread_stack_base,
+			     &stacksize);
+  assert_perror (err);
 
   __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
   __hurd_sigthread_variables =
@@ -1151,14 +1151,12 @@ _hurdsig_init (void)
      variable for the cached reply port.  */
   __mig_init ((void *) __hurd_sigthread_stack_base);
 
-  if (err = __thread_resume (_hurd_msgport_thread))
-    __libc_fatal ("hurd: Can't resume signal thread\n");
+  err = __thread_resume (_hurd_msgport_thread);
+  assert_perror (err);
 
-#if 0				/* Don't confuse poor gdb.  */
   /* Receive exceptions on the signal port.  */
   __task_set_special_port (__mach_task_self (),
 			   TASK_EXCEPTION_PORT, _hurd_msgport);
-#endif
 }
 				/* XXXX */
 /* Reauthenticate with the proc server.  */

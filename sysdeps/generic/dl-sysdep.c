@@ -80,6 +80,11 @@ _dl_sysdep_start (void **start_argptr,
   return user_entry;
 }
 
+void
+_dl_sysdep_start_cleanup (void)
+{
+}
+
 int
 _dl_sysdep_open_zero_fill (void)
 {
