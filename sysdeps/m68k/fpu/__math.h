@@ -43,7 +43,7 @@
    suffixed with f and l for the float and long double version, resp).  OP
    is the name of the fpu operation (without leading f).  */
 
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_ISOC9X
 #define	__inline_mathop(func, op)			\
   __inline_mathop1(double, func, op)			\
   __inline_mathop1(float, __CONCAT(func,f), op)		\
@@ -81,13 +81,15 @@ __inline_mathop(__sin, sin)
 __inline_mathop(__tan, tan)
 __inline_mathop(__tanh, tanh)
 __inline_mathop(__fabs, abs)
-__inline_mathop(__sqrt, sqrt)
 
 __inline_mathop(__rint, int)
 __inline_mathop(__expm1, etoxm1)
 __inline_mathop(__log1p, lognp1)
 __inline_mathop(__logb, log2)
 __inline_mathop(__significand, getman)
+
+__inline_mathop(__log2, log2)
+__inline_mathop(__exp2, twotox)
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
@@ -96,10 +98,8 @@ __inline_mathop(cos, cos)
 __inline_mathop(sin, sin)
 __inline_mathop(tan, tan)
 __inline_mathop(tanh, tanh)
-__inline_mathop(fabs, abs)
-__inline_mathop(sqrt, sqrt)
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 __inline_mathop(rint, int)
 __inline_mathop(expm1, etoxm1)
 __inline_mathop(log1p, lognp1)
@@ -108,6 +108,11 @@ __inline_mathop(logb, log2)
 
 #ifdef __USE_MISC
 __inline_mathop(significand, getman)
+#endif
+
+#ifdef __USE_ISOC9X
+__inline_mathop(log2, log2)
+__inline_mathop(exp2, twotox)
 #endif
 
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
@@ -375,11 +380,13 @@ __inline_forward_c(int,finite, (double __value), (__value))
 __inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
 #endif
 #if defined __USE_MISC || defined __USE_XOPEN
+#ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
 __inline_forward_c(int,isnan, (double __value), (__value))
+#endif
 __inline_forward_c(int,ilogb, (double __value), (__value))
 #endif
 
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_ISOC9X
 
 __inline_forward(float,frexpf, (float __value, int *__expptr),
 		 (__value, __expptr))
@@ -387,11 +394,13 @@ __inline_forward_c(float,floorf, (float __x), (__x))
 __inline_forward_c(float,ceilf, (float __x), (__x))
 __inline_forward(float,modff, (float __value, float *__iptr),
 		 (__value, __iptr))
+#ifdef __USE_MISC
 __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
 __inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
 __inline_forward_c(int,ilogbf, (float __value), (__value))
+#endif
 
 __inline_forward(long double,frexpl, (long double __value, int *__expptr),
 		 (__value, __expptr))
@@ -400,14 +409,16 @@ __inline_forward_c(long double,ceill, (long double __x), (__x))
 __inline_forward(long double,modfl,
 		 (long double __value, long double *__iptr),
 		 (__value, __iptr))
+#ifdef __USE_MISC
 __inline_forward_c(int,isinfl, (long double __value), (__value))
 __inline_forward_c(int,finitel, (long double __value), (__value))
 __inline_forward_c(long double,scalbnl, (long double __x, int __n),
 		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
 __inline_forward_c(int,ilogbl, (long double __value), (__value))
+#endif
 
-#endif /* __USE_MISC */
+#endif /* Use misc or ISO C9X */
 
 #undef __inline_forward
 #undef __inline_forward_c
