@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,96,97,98,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,96,97,98,2000,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,10 @@
 
 #include <stddef.h>
 #include <string.h>
+
+#ifndef _LIBC
+# define __builtin_expect(expr, val)   (expr)
+#endif
 
 #undef memmem
 
