@@ -1,3 +1,8 @@
+1998-12-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* math/libm-test.c: Remove macro ISINF.  Change all usages of 
+	ISINF to isinf. 
+ 
 1998-12-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/tempname.c: Use __xstat instead of __stat.

@@ -155,14 +155,6 @@ typedef MATHTYPE (*mathfunc) (MATHTYPE);
      __imag__ __retval = (imag);					      \
      __retval; })
 
-
-#define ISINF(x) \
-(sizeof (x) == sizeof (float)						      \
- ? isinff (x)								      \
- : sizeof (x) == sizeof (double)					      \
- ? isinf (x) : isinfl (x))
-
-
 /* Test if Floating-Point stack hasn't changed */
 static void
 fpstack_test (const char *test_name)
@@ -346,7 +338,7 @@ check_equal (MATHTYPE computed, MATHTYPE supplied, MATHTYPE eps, MATHTYPE * diff
   int ret_value;
 
   /* Both plus Infinity or both minus infinity.  */
-  if (ISINF (computed) && (ISINF (computed) == ISINF (supplied)))
+  if (isinf (computed) && (isinf (computed) == isinf (supplied)))
     return 1;
 
   if (isnan (computed) && isnan (supplied))	/* isnan works for all types */
@@ -731,7 +723,7 @@ check_isinfp (const char *test_name, MATHTYPE computed)
 {
   output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
-  output_isvalue (test_name, (ISINF (computed) == +1), computed);
+  output_isvalue (test_name, (isinf (computed) == +1), computed);
 }
 
 
@@ -742,7 +734,7 @@ check_isinfp_ext (const char *test_name, MATHTYPE computed,
 {
   output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
-  output_isvalue_ext (test_name, (ISINF (computed) == +1), computed, parameter);
+  output_isvalue_ext (test_name, (isinf (computed) == +1), computed, parameter);
 }
 
 
@@ -753,7 +745,7 @@ check_isinfp_exc (const char *test_name, MATHTYPE computed,
 {
   output_new_test (test_name);
   test_exceptions (test_name, exception);
-  output_isvalue (test_name, (ISINF (computed) == +1), computed);
+  output_isvalue (test_name, (isinf (computed) == +1), computed);
 }
 
 
@@ -763,7 +755,7 @@ check_isinfn (const char *test_name, MATHTYPE computed)
 {
   output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
-  output_isvalue (test_name, (ISINF (computed) == -1), computed);
+  output_isvalue (test_name, (isinf (computed) == -1), computed);
 }
 
 
@@ -775,7 +767,7 @@ check_isinfn_ext (const char *test_name, MATHTYPE computed,
 {
   output_new_test (test_name);
   test_exceptions (test_name, NO_EXCEPTION);
-  output_isvalue_ext (test_name, (ISINF (computed) == -1), computed, parameter);
+  output_isvalue_ext (test_name, (isinf (computed) == -1), computed, parameter);
 }
 #endif
 
@@ -786,7 +778,7 @@ check_isinfn_exc (const char *test_name, MATHTYPE computed,
 {
   output_new_test (test_name);
   test_exceptions (test_name, exception);
-  output_isvalue (test_name, (ISINF (computed) == -1), computed);
+  output_isvalue (test_name, (isinf (computed) == -1), computed);
 }
 
 
@@ -5810,9 +5802,9 @@ basic_tests (void)
 
   /* test if HUGE_VALx is ok */
   x1 = CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
-  check_bool ("isinf (HUGE_VALx) == +1", ISINF (x1) == +1);
+  check_bool ("isinf (HUGE_VALx) == +1", isinf (x1) == +1);
   x1 = -CHOOSE (HUGE_VALL, HUGE_VAL, HUGE_VALF);
-  check_bool ("isinf (-HUGE_VALx) == -1", ISINF (x1) == -1);
+  check_bool ("isinf (-HUGE_VALx) == -1", isinf (x1) == -1);
 }
 
 
