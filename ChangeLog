@@ -1,3 +1,17 @@
+1999-08-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add missing
+	underscore in _llseek entry.
+
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Fix typo in execve
+	entry.
+
+	* sysdeps/unix/sysv/linux/bits/errno.h: Fix comment.
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Likewise.
+
+	* elf/Makefile ($(objpfx)ld.so): Fix rtld-ldscript dependency.
+	Patch by Ralf Baechle <ralf@uni-koblenz.de>.
+
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/Makefile (routines): Add getipnodebynm.

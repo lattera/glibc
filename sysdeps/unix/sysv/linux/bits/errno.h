@@ -1,5 +1,5 @@
 /* Error constants.  Linux specific version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,8 +52,8 @@ extern int *__errno_location __P ((void)) __attribute__ ((__const__));
 
 #if !defined _ERRNO_H && defined __need_Emath
 /* This is ugly but the kernel header is not clean enough.  We must
-   define only the values EDOM and ERANGE in case __need_Emath is
-   defined.  The value is the same for all Linux ports.  */
+   define only the values EDOM, EILSEQ and ERANGE in case __need_Emath is
+   defined.  */
 # define EDOM	33	/* Math argument out of domain of function.  */
 # define EILSEQ	84	/* Illegal byte sequence.  */
 # define ERANGE	34	/* Math result not representable.  */

@@ -37,7 +37,7 @@ socketpair	-	socketpair	4	__socketpair	socketpair
 #
 # There are defined locally because the caller is also defined in this dir.
 #
-s_llseek	llseek	_llseek		5	__syscall_llseek
+s_llseek	llseek	_llseek		5	__syscall__llseek
 s_sigaction	sigaction sigaction	3	__syscall_sigaction
 s_ustat		ustat	ustat		2	__syscall_ustat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
@@ -52,7 +52,7 @@ rt_sigprocmask	-	rt_sigprocmask	4	__syscall_rt_sigprocmask
 rt_sigqueueinfo	-	rt_sigqueueinfo	3	__syscall_rt_sigqueueinfo
 rt_sigsuspend	-	rt_sigsuspend	2	__syscall_rt_sigsuspend
 rt_sigtimedwait	-	rt_sigtimedwait	4	__syscall_rt_sigtimedwait
-s_execve	execve	execv		3	__syscall_execve
+s_execve	execve	execve		3	__syscall_execve
 s_getcwd	getcwd	getcwd		2	__syscall_getcwd
 s_getdents	getdents getdents	3	__syscall_getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority

@@ -116,8 +116,7 @@ $(rtld-ldscript): $(rtld-ldscript-in) $(rtld-parms)
 	    -e 's#@@rtld-base@@#$(rtld-base)#' $< >$@
 endif
 
-$(objpfx)ld.so: $(objpfx)librtld.os $(addprefix $(objpfx),$(rtld-ldscript)) \
-		$(ld-map)
+$(objpfx)ld.so: $(objpfx)librtld.os $(rtld-ldscript) $(ld-map)
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $(LDFLAGS-rtld) \
 		  $(filter-out $(rtld-ldscript) $(map-file),$^)		\
 		  $(load-map-file) -Wl,-soname=$(rtld-installed-name)
