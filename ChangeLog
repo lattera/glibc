@@ -1,3 +1,8 @@
+1999-09-06  Andreas Schwab  <schwab@suse.de>
+
+	* time/tzset.c (compute_change): Replace slow loop to compute T by
+	simple algorithm.
+
 1999-09-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/iso-2022-jp.c: When translating to ISO-2022-JP* write

@@ -418,16 +418,23 @@ compute_change (rule, year)
      int year;
 {
   register time_t t;
-  int y;
 
   if (year != -1 && rule->computed_for == year)
-    /* Operations on times in 1969 will be slower.  Oh well.  */
+    /* Operations on times in 2 BC will be slower.  Oh well.  */
     return 1;
 
   /* First set T to January 1st, 0:00:00 GMT in YEAR.  */
-  t = 0;
-  for (y = 1970; y < year; ++y)
-    t += SECSPERDAY * (__isleap (y) ? 366 : 365);
+  if (year > 1970)
+    t = ((year - 1970) * 365
+	 + /* Compute the number of leapdays between 1970 and YEAR
+	      (exclusive).  There is a leapday every 4th year ...  */
+	 + ((year - 1) / 4 - 1970 / 4)
+	 /* ... except every 100th year ... */
+	 - ((year - 1) / 100 - 1970 / 100)
+	 /* ... but still every 400th year.  */
+	 + ((year - 1) / 400 - 1970 / 400)) * SECSPERDAY;
+  else
+    t = 0;
 
   switch (rule->type)
     {
