@@ -1,3 +1,15 @@
+2004-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (tzfile_mtime): New variable.
+	(__tzfile_read): Reread the file if mtime is different.
+
+2004-09-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (__fdimf, __fdim, fdimf, fdim):
+	Handle +inf/+inf.
+	* sysdeps/powerpc/fpu/bits/mathinline.h (fdim, fdimf): Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h (fdim, fdimf): Likewise.
+
 2004-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use correct constant for

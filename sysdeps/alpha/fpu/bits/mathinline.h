@@ -149,25 +149,25 @@ __MATH_INLINE double __NTH (floor (double __x)) { return __floor(__x); }
 __MATH_INLINE float
 __NTH (__fdimf (float __x, float __y))
 {
-  return __x < __y ? 0.0f : __x - __y;
+  return __x <= __y ? 0.0f : __x - __y;
 }
 
 __MATH_INLINE float
 __NTH (fdimf (float __x, float __y))
 {
-  return __x < __y ? 0.0f : __x - __y;
+  return __x <= __y ? 0.0f : __x - __y;
 }
 
 __MATH_INLINE double
 __NTH (__fdim (double __x, double __y))
 {
-  return __x < __y ? 0.0 : __x - __y;
+  return __x <= __y ? 0.0 : __x - __y;
 }
 
 __MATH_INLINE double
 __NTH (fdim (double __x, double __y))
 {
-  return __x < __y ? 0.0 : __x - __y;
+  return __x <= __y ? 0.0 : __x - __y;
 }
 
 /* Test for negative number.  Used in the signbit() macro.  */

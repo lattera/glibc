@@ -32,6 +32,7 @@
 int __use_tzfile;
 static dev_t tzfile_dev;
 static ino64_t tzfile_ino;
+static time_t tzfile_mtime;
 
 struct ttinfo
   {
@@ -161,7 +162,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       fclose (f);
       goto ret_free_transitions;
     }
-  if (was_using_tzfile && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev)
+  if (was_using_tzfile && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev
+      && tzfile_mtime == st.st_mtime)
     {
       /* It's the same file.  No further work needed.  */
       fclose (f);
@@ -172,9 +174,10 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   free ((void *) transitions);
   transitions = NULL;
 
-  /* Remember the inode and device number.  */
+  /* Remember the inode and device number and modification time.  */
   tzfile_dev = st.st_dev;
   tzfile_ino = st.st_ino;
+  tzfile_mtime = st.st_mtime;
 
   /* No threads reading this stream.  */
   __fsetlocking (f, FSETLOCKING_BYCALLER);

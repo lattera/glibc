@@ -223,14 +223,14 @@ __MATH_INLINE double fdim (double __x, double __y) __THROW;
 __MATH_INLINE double
 fdim (double __x, double __y) __THROW
 {
-  return __x < __y ? 0 : __x - __y;
+  return __x <= __y ? 0 : __x - __y;
 }
 
 __MATH_INLINE float fdimf (float __x, float __y) __THROW;
 __MATH_INLINE float
 fdimf (float __x, float __y) __THROW
 {
-  return __x < __y ? 0 : __x - __y;
+  return __x <= __y ? 0 : __x - __y;
 }
 
 #  endif /* !__NO_MATH_INLINES */
