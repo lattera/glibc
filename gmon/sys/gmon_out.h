@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@cs.arizona.edu>.
 
@@ -40,30 +40,36 @@ __BEGIN_DECLS
  * always comes first in gmon.out and is then followed by a series
  * records defined below.
  */
-struct gmon_hdr {
-  char cookie[4];
-  int version;
-  int spare[3];
-};
+struct gmon_hdr
+  {
+    char cookie[4];
+    char version[4];
+    char spare[3 * 4];
+  };
 
 /* types of records in this file: */
-typedef enum {
-  GMON_TAG_TIME_HIST = 0, GMON_TAG_CG_ARC = 1, GMON_TAG_BB_COUNT = 2
-} GMON_Record_Tag;
+typedef enum
+  {
+    GMON_TAG_TIME_HIST = 0,
+    GMON_TAG_CG_ARC = 1,
+    GMON_TAG_BB_COUNT = 2
+  } GMON_Record_Tag;
 
-struct gmon_hist_hdr {
-  unsigned long low_pc;			/* base pc address of sample buffer */
-  unsigned long high_pc;		/* max pc address of sampled buffer */
-  int hist_size;			/* size of sample buffer */
-  int prof_rate;			/* profiling clock rate */
-  char dimen[15];			/* phys. dim., usually "seconds" */
-  char dimen_abbrev;			/* usually 's' for "seconds" */
-};
+struct gmon_hist_hdr
+  {
+    char low_pc[sizeof (char *)];	/* base pc address of sample buffer */
+    char high_pc[sizeof (char *)];	/* max pc address of sampled buffer */
+    char hist_size[4];			/* size of sample buffer */
+    char prof_rate[4];			/* profiling clock rate */
+    char dimen[15];			/* phys. dim., usually "seconds" */
+    char dimen_abbrev;			/* usually 's' for "seconds" */
+  };
 
-struct gmon_cg_arc_record {
-  unsigned long from_pc;		/* address within caller's body */
-  unsigned long self_pc;		/* address within callee's body */
-  int count;				/* number of arc traversals */
+struct gmon_cg_arc_record
+  {
+    char from_pc[sizeof (char *)];	/* address within caller's body */
+    char self_pc[sizeof (char *)];	/* address within callee's body */
+    char count[4];			/* number of arc traversals */
 };
 
 __END_DECLS

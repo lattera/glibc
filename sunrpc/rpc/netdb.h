@@ -50,6 +50,8 @@ struct rpcent
   int r_number;		/* RPC program number.  */
 };
 
+extern void setrpcent __P ((int _stayopen));
+extern void endrpcent __P ((void));
 extern struct rpcent *getrpcbyname __P ((__const char *__name));
 extern struct rpcent *getrpcbynumber __P ((int __number));
 extern struct rpcent *getrpcent __P ((void));

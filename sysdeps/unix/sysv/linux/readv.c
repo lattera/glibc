@@ -23,6 +23,8 @@
 #include <sys/uio.h>
 
 extern ssize_t __syscall_readv __P ((int, __const struct iovec *, int));
+static ssize_t __atomic_readv_replacement __P ((int, __const struct iovec *,
+						int));
 
 
 /* Not all versions of the kernel support the large number of records.  */
@@ -34,7 +36,7 @@ extern ssize_t __syscall_readv __P ((int, __const struct iovec *, int));
 /* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
 ssize_t
-readv (fd, vector, count)
+__readv (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
@@ -44,25 +46,15 @@ readv (fd, vector, count)
 
   bytes_read = __syscall_readv (fd, vector, count);
 
-  if (bytes_read < 0 && errno == EINVAL && count > UIO_FASTIOV)
-    {
-      int i;
+  if (bytes_read >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
+    return bytes_read;
 
-      /* Restore the old error value as if nothing happened.  */
-      __set_errno (errno_saved);
+  /* Restore the old error value as if nothing happened.  */
+  __set_errno (errno_saved);
 
-      bytes_read = 0;
-      for (i = 0; i < count; i += UIO_FASTIOV)
-	{
-	  ssize_t bytes = __syscall_readv (fd, vector + i,
-					   MIN (count - i, UIO_FASTIOV));
-
-	  if (bytes < 0)
-	    return bytes;
-
-	  bytes_read += bytes;
-	}
-    }
-
-  return bytes_read;
+  return __atomic_readv_replacement (fd, vector, count);
 }
+weak_alias (__readv, readv)
+
+#define __readv static __atomic_readv_replacement
+#include <sysdeps/posix/readv.c>

@@ -67,7 +67,7 @@ nis_free_request (ib_request *ibreq)
 }
 
 void
-nis_free_endpoints (endpoint *ep, int len)
+nis_free_endpoints (endpoint *ep, unsigned int len)
 {
   int i;
 
@@ -95,7 +95,7 @@ nis_free_endpoints (endpoint *ep, int len)
 }
 
 void
-nis_free_servers (nis_server *obj, int len)
+nis_free_servers (nis_server *obj, unsigned int len)
 {
   int i;
 

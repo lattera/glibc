@@ -23,6 +23,9 @@
 #include <rpcsvc/nis.h>
 #include <rpcsvc/nislib.h>
 
+
+static const char cold_start_file[] = "/var/nis/NIS_COLD_START";
+
 directory_obj *
 readColdStartFile (void)
 {
@@ -30,17 +33,17 @@ readColdStartFile (void)
   FILE *in;
   directory_obj obj;
 
-  in = fopen ("/var/nis/NIS_COLD_START", "rb");
+  in = fopen (cold_start_file, "rb");
   if (in == NULL)
     {
-      fputs (_("Error: Could not open /var/nis/NIS_COLD_START!\n"), stdout);
+      printf (_("Error while opening %s for reading: %m"), cold_start_file);
       return NULL;
     }
   memset (&obj, '\0', sizeof (obj));
   xdrstdio_create (&xdrs, in, XDR_DECODE);
   if (!xdr_directory_obj (&xdrs, &obj))
     {
-      fputs (("Error while reading /var/nis/NIS_COLD_START!\n"), stdout);
+      printf (_("Error while reading %s: %m"), cold_start_file);
       return NULL;
     }
 
@@ -53,16 +56,19 @@ writeColdStartFile (const directory_obj *obj)
   XDR xdrs;
   FILE *out;
 
-  out = fopen ("/var/nis/NIS_COLD_START", "wb");
+  out = fopen (cold_start_file, "wb");
   if (out == NULL)
-    return FALSE;
+    {
+      printf (_("Error while opening %s for writing: %m"), cold_start_file);
+      return FALSE;
+    }
 
   xdrstdio_create (&xdrs, out, XDR_ENCODE);
   /* XXX The following cast is bad!  Shouldn't the XDR functions take
      pointers to const objects?  */
   if (!xdr_directory_obj (&xdrs, (directory_obj *) obj))
     {
-      fputs (_("Error while reading /var/nis/NIS_COLD_START!\n"), stdout);
+      printf (_("Error while writing %s: %m"), cold_start_file);
       return FALSE;
     }
 

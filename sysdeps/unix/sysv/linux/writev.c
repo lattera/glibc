@@ -23,6 +23,9 @@
 #include <sys/uio.h>
 
 extern ssize_t __syscall_writev __P ((int, const struct iovec *, int));
+static ssize_t __atomic_writev_replacement __P ((int, const struct iovec *,
+						 int));
+
 
 /* Not all versions of the kernel support the large number of records.  */
 #ifndef UIO_FASTIOV
@@ -33,7 +36,7 @@ extern ssize_t __syscall_writev __P ((int, const struct iovec *, int));
 /* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
 ssize_t
-writev (fd, vector, count)
+__writev (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
@@ -43,23 +46,15 @@ writev (fd, vector, count)
 
   bytes_written = __syscall_writev (fd, vector, count);
 
-  if (bytes_written < 0 && errno == EINVAL && count > UIO_FASTIOV)
-    {
-      int i;
+  if (bytes_written >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
+    return bytes_written;
 
-      /* Restore the old error value as if nothing happened.  */
-      __set_errno (errno_saved);
+  /* Restore the old error value as if nothing happened.  */
+  __set_errno (errno_saved);
 
-      bytes_written = 0;
-      for (i = 0; i < count; i += UIO_FASTIOV)
-	{
-	  ssize_t bytes = __syscall_writev (fd, vector + i,
-					    MIN (count - i, UIO_FASTIOV));
-
-	  if (bytes < 0)
-	    return bytes_written > 0 ? bytes_written : bytes;
-	}
-    }
-
-  return bytes_written;
+  return __atomic_writev_replacement (fd, vector, count);
 }
+weak_alias (__writev, writev)
+
+#define __writev static __atomic_writev_replacement
+#include <sysdeps/posix/writev.c>

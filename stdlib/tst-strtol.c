@@ -106,9 +106,10 @@ main (int argc, char ** argv)
 	      expand (exp2, lt->left);
 	      printf ("  leaves '%s', expected '%s'\n", exp1, exp2);
 	    }
-	  if (errno != lt->err)
+	  if (save_errno != lt->err)
 	    printf ("  errno %d (%s)  instead of %d (%s)\n",
-		    errno, strerror (errno), lt->err, strerror (lt->err));
+		    save_errno, strerror (save_errno),
+		    lt->err, strerror (lt->err));
 	  status = 1;
 	}
     }
@@ -119,9 +120,10 @@ main (int argc, char ** argv)
 
       errno = 0;
       ul = strtoul (lt->str, &ep, lt->base);
+      save_errno = errno;
       printf ("strtoul(\"%s\", , %d) test %u",
 	      lt->str, lt->base, (unsigned int) (lt - tests));
-      if (ul == lt->expect && *ep == lt->left && errno == lt->err)
+      if (ul == lt->expect && *ep == lt->left && save_errno == lt->err)
 	puts("\tOK");
       else
 	{
@@ -136,9 +138,10 @@ main (int argc, char ** argv)
 	      expand (exp2, lt->left);
 	      printf ("  leaves '%s', expected '%s'\n", exp1, exp2);
 	    }
-	  if (errno != lt->err)
+	  if (save_errno != lt->err)
 	    printf ("  errno %d (%s) instead of %d (%s)\n",
-		    errno, strerror (errno), lt->err, strerror (lt->err));
+		    save_errno, strerror (save_errno),
+		    lt->err, strerror (lt->err));
 	  status = 1;
 	}
     }

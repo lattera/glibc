@@ -609,7 +609,7 @@ e.g. i486-linux.
                 # GNU libc version 2 does not supply these;
                 # we want them from GCC.
 -               extra_parts="crtbegin.o crtend.o"
-+               extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS..o"
++               extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
                 ;;
          i[3456]86-go32-msdos | i[3456]86-*-go32)
                cpu_type=i386

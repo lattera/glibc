@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,7 @@ main (int argc, char ** argv)
   register const struct ltest *lt;
   char *ep;
   int status = 0;
+  int save_errno;
 
   for (lt = tests; lt->str != NULL; ++lt)
     {
@@ -56,30 +57,32 @@ main (int argc, char ** argv)
 
       errno = 0;
       d = strtod(lt->str, &ep);
-      printf("strtod(\"%s\") test %u",
+      save_errno = errno;
+      printf ("strtod (\"%s\") test %u",
 	     lt->str, (unsigned int) (lt - tests));
-      if (d == lt->expect && *ep == lt->left && errno == lt->err)
-	puts("\tOK");
+      if (d == lt->expect && *ep == lt->left && save_errno == lt->err)
+	puts ("\tOK");
       else
 	{
-	  puts("\tBAD");
+	  puts ("\tBAD");
 	  if (d != lt->expect)
-	    printf("  returns %.60g, expected %.60g\n", d, lt->expect);
+	    printf ("  returns %.60g, expected %.60g\n", d, lt->expect);
 	  if (lt->left != *ep)
 	    {
 	      char exp1[5], exp2[5];
-	      expand(exp1, *ep);
-	      expand(exp2, lt->left);
-	      printf("  leaves '%s', expected '%s'\n", exp1, exp2);
+	      expand (exp1, *ep);
+	      expand (exp2, lt->left);
+	      printf ("  leaves '%s', expected '%s'\n", exp1, exp2);
 	    }
-	  if (errno != lt->err)
-	    printf("  errno %d (%s)  instead of %d (%s)\n",
-		   errno, strerror(errno), lt->err, strerror(lt->err));
+	  if (save_errno != lt->err)
+	    printf ("  errno %d (%s)  instead of %d (%s)\n",
+		    save_errno, strerror (save_errno),
+		    lt->err, strerror (lt->err));
 	  status = 1;
 	}
     }
 
-  exit(status ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (status ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 static void
@@ -87,11 +90,11 @@ expand (dst, c)
      char *dst;
      register int c;
 {
-  if (isprint(c))
+  if (isprint (c))
     {
       dst[0] = c;
       dst[1] = '\0';
     }
   else
-    (void) sprintf(dst, "%#.3o", (unsigned int) c);
+    (void) sprintf (dst, "%#.3o", (unsigned int) c);
 }

@@ -144,8 +144,8 @@ extern void nis_freeresult __P ((nis_result *));
 /* (XXX INTERNAL FUNCTIONS, SHOULD NOT BE USED !!) */
 extern void nis_free_attr __P ((nis_attr *));
 extern void nis_free_request __P ((ib_request *));
-extern void nis_free_endpoints __P ((endpoint *, int));
-extern void nis_free_servers __P ((nis_server *, int));
+extern void nis_free_endpoints __P ((endpoint *, unsigned int));
+extern void nis_free_servers __P ((nis_server *, unsigned int));
 extern void nis_free_directory __P ((directory_obj *));
 extern void nis_free_group __P ((group_obj *));
 extern void nis_free_table __P ((table_obj *));

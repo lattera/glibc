@@ -1,3 +1,81 @@
+1997-03-21 20:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/machine-gmon.h: Update copyright.
+
+	* sysdeps/i386/Makefile [$(subdir)=gmon] (sysdep_routines): Add
+	i386-mcount.
+	* sysdeps/i386/dl-machine.h [PROF] (_dl_runtime_resolve): Don't
+	use regparam mechanism for call of `fixup' call.
+	* sysdeps/i386/Dist: New file.
+	* sysdeps/i386/i386-mcount.S: New file.  `mcount' entry point.
+	* sysdeps/i386/machine-gmon.h: New file.  i386 specific version
+	of gmon definitions.
+
+1997-03-20 13:39  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdlib/tst-strtol.c (main): Save the value of errno since printf
+	may modify it, use the saved errno everywhere.
+	* stdlib/tst-strtod.c (main): Likewise.
+
+1997-03-21 05:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/glob.c (glob): Fix completely broken handling of
+	GLOB_BRACE and partly broken handling of GLOB_TILDE.
+	Reported by Dennis Henriksen <opus@flamingo.osrl.dk>.
+
+1997-03-20 20:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/readv.c: Don't emulate readv with small
+	UIO_FASTIOV value by multiple readv calls since we need atomicity.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	Reported by Matthis Urlichs.
+
+1997-03-20 04:34  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (CALL_MCOUNT): Clear this
+	macro so ENTRY(__syscall_error) doesn't insert a call to _mcount,
+	which clobbers %eax.
+
+	* Makeconfig [$(elf)=yes] (+prector, +postctor): New variables for
+	crtbegin.o/crtend.o, using gcc to find them.
+	(+link): Use them.
+
+1997-03-20 00:06  Richard Henderson  <rth@tamu.edu>
+
+	* gmon/sys/gmon.h: Revert the bulk of the 960930 changes, as they
+	affect the alignment, and therefore the end padding of the structs.
+	Reported by David Mosberger <davidm@azstarnet.com>.
+	* gmon.c: Declare the variables with aligned tags to compensate.
+	Use __writev instead of write for the I/O.
+
+	* misc/sys/uio.h: Declare __writev and __readv.
+	* sysdeps/posix/readv.c: Rename and alias readv to __readv.
+	* sysdeps/posix/writev.c: Likewise for writev.
+	* sysdeps/stub/readv.c: Likewise.
+	* sysdeps/stub/writev.c: Likewise.
+	* sysdeps/unix/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* stdlib/testdiv.c: Exit with error status when we have an error.
+	* sysdeps/alpha/div.S: Initialize `quotient' and `mask'.
+	* sysdeps/alpha/ldiv.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Include ctype.h for isdigit.
+
+1997-03-20 14:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nis_file.c: Unify error handling.
+
+1997-03-19 18:36  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_file.c (writeColdStartFile): Fix typo.
+	* nis/nis_free.c (nis_free_endpoints): Use unsigned int.
+	* nis/nis_free.c (nis_free_servers): Likewise.
+	* nis/rpcsvc/nislib.h: Likewise.
+
+	* sunrpc/rpc/netdb.h: Add setrpcent and endrpcent prototypes.
+
 1997-03-20 06:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/powerpc/dl-machine.h: Fix typo in last change.

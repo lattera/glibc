@@ -320,10 +320,10 @@ endif
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
-	      $(addprefix $(csu-objpfx),start.o) $(+preinit) \
+	      $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit) \
 		$(link-extra-libs) $(common-objpfx)libc% $(+postinit),$^) \
-	      $(link-extra-libs) $(link-libc) $(+postinit)
+	      $(link-extra-libs) $(link-libc) $(+postctor) $(+postinit)
 endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
@@ -374,6 +374,8 @@ endif
 ifeq ($(elf),yes)
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
++prector = `$(CC) --print-file-name=crtbegin.o`
++postctor = `$(CC) --print-file-name=crtend.o`
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/

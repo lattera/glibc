@@ -34,6 +34,7 @@
 #include <sys/time.h>
 #include <sys/gmon.h>
 #include <sys/gmon_out.h>
+#include <sys/uio.h>
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -165,21 +166,26 @@ static void
 write_hist (fd)
      int fd;
 {
-  const u_char tag = GMON_TAG_TIME_HIST;
-  struct gmon_hist_hdr thdr;
+  u_char tag = GMON_TAG_TIME_HIST;
+  struct gmon_hist_hdr thdr __attribute__ ((aligned (__alignof__ (char *))));
 
   if (_gmonparam.kcountsize > 0)
     {
-      thdr.low_pc = _gmonparam.lowpc;
-      thdr.high_pc = _gmonparam.highpc;
-      thdr.hist_size = _gmonparam.kcountsize / sizeof(HISTCOUNTER);
-      thdr.prof_rate = __profile_frequency();
-      strncpy(thdr.dimen, "seconds", sizeof(thdr.dimen));
+      struct iovec iov[3] =
+        {
+	  { &tag, sizeof (tag) },
+	  { &thdr, sizeof (struct gmon_hist_hdr) },
+	  { _gmonparam.kcount, _gmonparam.kcountsize }
+	};
+
+      *(char **) thdr.low_pc = (char *) _gmonparam.lowpc;
+      *(char **) thdr.high_pc = (char *) _gmonparam.highpc;
+      *(int *) thdr.hist_size = _gmonparam.kcountsize / sizeof (HISTCOUNTER);
+      *(int *) thdr.prof_rate = __profile_frequency ();
+      strncpy (thdr.dimen, "seconds", sizeof (thdr.dimen));
       thdr.dimen_abbrev = 's';
 
-      write(fd, &tag, sizeof(tag));
-      write(fd, &thdr, sizeof(thdr));
-      write(fd, _gmonparam.kcount, _gmonparam.kcountsize);
+      __writev (fd, iov, 3);
     }
 }
 
@@ -188,12 +194,19 @@ static void
 write_call_graph (fd)
      int fd;
 {
-  const u_char tag = GMON_TAG_CG_ARC;
-  struct gmon_cg_arc_record raw_arc;
+  u_char tag = GMON_TAG_CG_ARC;
+  struct gmon_cg_arc_record raw_arc
+    __attribute__ ((aligned (__alignof__ (char*))));
   int from_index, to_index, from_len;
   u_long frompc;
 
-  from_len = _gmonparam.fromssize / sizeof(*_gmonparam.froms);
+  struct iovec iov[2] =
+    {
+      { &tag, sizeof (tag) },
+      { &raw_arc, sizeof (struct gmon_cg_arc_record) }
+    };
+
+  from_len = _gmonparam.fromssize / sizeof (*_gmonparam.froms);
   for (from_index = 0; from_index < from_len; ++from_index)
     {
       if (_gmonparam.froms[from_index] == 0)
@@ -201,17 +214,16 @@ write_call_graph (fd)
 
       frompc = _gmonparam.lowpc;
       frompc += (from_index * _gmonparam.hashfraction
-		 * sizeof(*_gmonparam.froms));
+		 * sizeof (*_gmonparam.froms));
       for (to_index = _gmonparam.froms[from_index];
 	   to_index != 0;
 	   to_index = _gmonparam.tos[to_index].link)
 	{
-	  raw_arc.from_pc = frompc;
-	  raw_arc.self_pc = _gmonparam.tos[to_index].selfpc;
-	  raw_arc.count = _gmonparam.tos[to_index].count;
+	  *(char **) raw_arc.from_pc = (char *)frompc;
+	  *(char **) raw_arc.self_pc = (char *)_gmonparam.tos[to_index].selfpc;
+	  *(int *) raw_arc.count = _gmonparam.tos[to_index].count;
 
-	  write(fd, &tag, sizeof(tag));
-	  write(fd, &raw_arc, sizeof(raw_arc));
+	  __writev (fd, iov, 2);
 	}
     }
 }
@@ -222,9 +234,19 @@ write_bb_counts (fd)
      int fd;
 {
   struct __bb *grp;
-  const u_char tag = GMON_TAG_BB_COUNT;
+  u_char tag = GMON_TAG_BB_COUNT;
   int ncounts;
   int i;
+
+  struct iovec bbhead[2] =
+    {
+      { &tag, sizeof (tag) },
+      { &ncounts, sizeof (ncounts) }
+    };
+  struct iovec bbbody[2];
+
+  bbbody[0].iov_len = sizeof (grp->addresses[0]);
+  bbbody[1].iov_len = sizeof (grp->addresses[0]);
 
   /* Write each group of basic-block info (all basic-blocks in a
      compilation unit form a single group). */
@@ -232,12 +254,12 @@ write_bb_counts (fd)
   for (grp = __bb_head; grp; grp = grp->next)
     {
       ncounts = grp->ncounts;
-      write(fd, &tag, sizeof(tag));
-      write(fd, &ncounts, sizeof(ncounts));
+      __writev (fd, bbhead, 2);
       for (i = 0; i < ncounts; ++i)
 	{
-	  write(fd, &grp->addresses[i], sizeof(grp->addresses[0]));
-	  write(fd, &grp->counts[i], sizeof(grp->counts[0]));
+	  bbbody[0].iov_base = (char *) &grp->addresses[i];
+	  bbbody[1].iov_base = &grp->counts[i];
+	  __writev (fd, bbbody, 2);
 	}
     }
 }
@@ -246,31 +268,31 @@ write_bb_counts (fd)
 void
 _mcleanup ()
 {
-    struct gmon_hdr ghdr;
+    struct gmon_hdr ghdr __attribute__ ((aligned (__alignof__ (int))));
     int fd;
 
-    moncontrol(0);
-    fd = open("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
+    moncontrol (0);
+    fd = __open ("gmon.out", O_CREAT|O_TRUNC|O_WRONLY, 0666);
     if (fd < 0)
       {
-	perror("_mcleanup: gmon.out");
+	perror ("_mcleanup: gmon.out");
 	return;
       }
 
     /* write gmon.out header: */
-    memset(&ghdr, 0, sizeof(ghdr));
-    memcpy(&ghdr.cookie[0], GMON_MAGIC, sizeof(ghdr.cookie));
-    ghdr.version = GMON_VERSION;
-    write(fd, &ghdr, sizeof(ghdr));
+    memset (&ghdr, 0, sizeof (struct gmon_hdr));
+    memcpy (&ghdr.cookie[0], GMON_MAGIC, sizeof (ghdr.cookie));
+    *(int *) ghdr.version = GMON_VERSION;
+    __write (fd, &ghdr, sizeof (struct gmon_hdr));
 
     /* write PC histogram: */
-    write_hist(fd);
+    write_hist (fd);
 
     /* write call-graph: */
-    write_call_graph(fd);
+    write_call_graph (fd);
 
     /* write basic-block execution counts: */
-    write_bb_counts(fd);
+    write_bb_counts (fd);
 
-    close(fd);
+    __close (fd);
 }

@@ -31,7 +31,7 @@ profil		-	profil		4	profil
 ptrace		-	ptrace		4	ptrace
 read		-	read		3	__libc_read	__read read
 readlink	-	readlink	3	__readlink	readlink
-readv		-	readv		3	readv
+readv		-	readv		3	__readv		readv
 reboot		-	reboot		1	reboot
 rename		-	rename		2	rename
 rmdir		-	rmdir		1	__rmdir		rmdir
@@ -62,4 +62,4 @@ uname		-	uname		1	uname
 unlink		-	unlink		1	__unlink	unlink
 utimes		-	utimes		2	__utimes	utimes
 write		-	write		3	__libc_write	__write write
-writev		-	writev		3	writev
+writev		-	writev		3	__writev	writev
