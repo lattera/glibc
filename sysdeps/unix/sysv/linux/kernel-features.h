@@ -411,3 +411,8 @@
 #if __LINUX_KERNEL_VERSION >=  0x020609
 # define __ASSUME_WAITID_SYSCALL	1
 #endif
+
+/* Starting with version 2.6.9, SSI_IEEE_RAISE_EXCEPTION exists.  */
+#if __LINUX_KERNEL_VERSION >= 0x020609 && defined __alpha__
+#define __ASSUME_IEEE_RAISE_EXCEPTION	1
+#endif
