@@ -29,6 +29,7 @@
 #include <list.h>
 #include <lowlevellock.h>
 #include <pthreaddef.h>
+#include <dl-sysdep.h>
 #include "../nptl_db/thread_db.h"
 
 

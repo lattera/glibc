@@ -1,7 +1,7 @@
 2002-12-28  Ulrich Drepper  <drepper@redhat.com>
 
-	* descr.h (struct pthread): Move header.data.list to the back of the
-	struct.
+	* descr.h: Include <dl-sysdep.h>.
+	(struct pthread): Move header.data.list to the back of the struct.
 	* sysdeps/i386/tls.h (tcbhead_t): Move list to the back of the struct.
 	(MULTIPLE_THREADS_OFFSET): Adjust offset.
 	(SYSINFO_OFFSEET): Likewise.

@@ -1,3 +1,46 @@
+2002-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h: Include dl-sysdep.h and stdint.h.
+	(tcbhead_t): Add sysinfo field.
+	(SYSINFO_OFFSET, INIT_SYSINFO): Define.
+	(TLS_INIT_TP): Use INIT_SYSINFO.
+	* sysdeps/unix/sysv/linux/i386/dl-sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Adjust.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Likewise.
+	* descr.h: Include stdint.h.
+	(struct _pthread_descr_struct): Add p_header.data.sysinfo field.
+
+2002-12-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* libc_pthread_init.c: Include stdlib.h.
+	* sysdeps/i386/tls.h (tcbhead_t): Add multiple_threads member.
+	(TLS_INIT_TP_EXPENSIVE): Define.
+	* sysdeps/pthread/bits/libc-lock.h (__libc_maybe_call,
+	__libc_maybe_call2): In _LIBC check SHARED define.
+	* sysdeps/ia64/tls.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/Makefile: New file.
+	* sysdeps/x86_64/tls.h (TLS_INIT_TP_EXPENSIVE): Define.
+	* sysdeps/sparc/sparc32/tls.h: New file.
+	* sysdeps/sparc/sparc64/tls.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: New file.
+	* Makefile (tests): Add tst-cancel[1-6].
+	(tests-reverse): Add tst-cancel5.
+	Link libc.so before libpthread.so for tests-reverse.
+	* tst-cancel1.c: New file.
+	* tst-cancel2.c: New file.
+	* tst-cancel3.c: New file.
+	* tst-cancel4.c: New file.
+	* tst-cancel5.c: New file.
+	* tst-cancel6.c: New file.
+
 2002-12-27  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h: New file.

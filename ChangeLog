@@ -1,3 +1,43 @@
+2002-12-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (I386_USE_SYSENTER):
+	Only define if USE_DL_SYSINFO is defined.
+
+2002-12-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (INLINE_SYSCALL,
+	INTERNAL_SYSCALL, INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERROR):
+	Define. Patch by Richard Henderson and Jes Sorensen.
+	(PSEUDO): Remove unnecessary ;;.
+	* elf/rtld.c (dl_main): Initialize TLS even if no PT_TLS segments
+	are found unless TLS_INIT_TP_EXPENSIVE.  Use NONTLS_INIT_TP.
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Use NONTLS_INIT_TP
+	if not initializing thread pointer.
+	[!USE_TLS && NONTLS_INIT_TP] (__pthread_initialize_minimal): New.
+	* sysdeps/generic/libc-start.c (__pthread_initialize_minimal): Don't
+	make it weak also if NONTLS_INIT_TP.
+	* sysdeps/unix/common/pause.c: Handle cancellation.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h [DONT_LOAD_G1]
+	(LOADSYSCALL): Remove.
+	(SYSCALL_ERROR_HANDLER_ENTRY): Define.
+	(SYSCALL_ERROR_HANDLER): Use it.
+	(PSEUDO): Don't jump around error handler.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pipe.S (__libc_pipe): Don't
+	jump around error handler.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/socket.S (__socket): Branch
+	to __syscall_error_handler on failure.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h [DONT_LOAD_G1]
+	(LOADSYSCALL): Remove.
+	(SYSCALL_ERROR_HANDLER_ENTRY): Define.
+	(SYSCALL_ERROR_HANDLER): Use it.
+	(PSEUDO): Don't jump around error handler.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S (__libc_pipe): Don't
+	jump around error handler.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S (__socket): Branch
+	to __syscall_error_handler on failure.
+
 2002-12-27  Roland McGrath  <roland@redhat.com>
 
 	* scripts/gen-as-const.awk: New file.
