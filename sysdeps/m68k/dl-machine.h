@@ -255,8 +255,6 @@ elf_machine_rela (struct link_map *map,
       assert (! "unexpected dynamic reloc type");
       break;
     }
-
-#undef RESOLVE
 }
 
 static inline void
