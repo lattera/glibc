@@ -1,3 +1,11 @@
+1999-12-26  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Remove vm86.  Set
+	argument count for `syscall' to 7.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Add support for syscalls
+	with more than five arguments.
+	(DOARGS_5, UNDOARGS_5): Don't corrupt the calling stack frame.
+
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-collate.c (collate_output): Don't start with empty

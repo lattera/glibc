@@ -11,5 +11,4 @@ s_setresgid	setresgid setresgid	3	__syscall_setresgid
 s_setresuid	setresuid setresuid	3	__syscall_setresuid
 s_setreuid	setreuid setreuid	2	__syscall_setreuid
 s_setuid	setuid	setuid		1	__syscall_setuid
-syscall		-	syscall		5	syscall
-vm86		-	vm86		1	__vm86		vm86
+syscall		-	syscall		7	syscall
