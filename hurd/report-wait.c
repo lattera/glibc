@@ -93,6 +93,9 @@ describe_port (string_t description, mach_port_t port)
 }
 
 
+/* Common defn so we don't link in the itimer code unnecssarily.  */
+thread_t _hurd_itimer_thread; /* XXX */
+
 kern_return_t
 _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 		    string_t description, int *msgid)
@@ -102,6 +105,8 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
   if (thread == _hurd_msgport_thread)
     /* Cute.  */
     strcpy (description, "msgport");
+  else if (thread == _hurd_itimer_thread)
+    strcpy (description, "itimer");
   else
     {
       /* Make sure this is really one of our threads.  */

@@ -77,10 +77,12 @@ sources += $(filter %.c %.s %.S,$(all-dist))
 headers += $(filter %.h,$(all-dist))
 all-dist := $(filter-out %.h %.c %.s %.S,$(all-dist))
 
+sources += $(foreach lib,$(extra-libs),$($(lib)-routines:=.c))
+
 # All different versions of $(sources), preserving the configured sysdep
 # directory order.
-all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) \
-				$(sources:.c=.s))) \
+all-sources = $(wildcard $(sort $(sources) $(sources:.c=.S) $(sources:.c=.s) \
+				$(others:=.c) $(tests:=.c))) \
 	      $(foreach dir,$(all-dirs),\
 			$(wildcard \
 			   $(addprefix $(dir)/,\

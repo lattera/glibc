@@ -1,4 +1,25 @@
+Wed May 29 12:53:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* version.h (VERSION): Set to 1.90.
+
+	* Makerules (distinfo-vars): Write extra-libs and *-routines for each
+	of its elts.
+	* MakeTAGS (sources): Add those sources.
+
+	* MakeTAGS (all-sources): Add $(others:=.c) and $(tests:=.c).
+
+Wed May 29 08:53:08 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/report-wait.c (_S_msg_report_wait): Return `itimer' for the
+	itimer thread.
+
+	* hurd/hurdinit.c (_hurd_init): Set _HURDSIG_TRACED before calling
+	_hurd_proc_init.
+
 Wed May 29 00:52:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* string/tester.c (main): Fix strsep tests 6, 7, 20 to expect null
+ 	token instead of it being implicitly skipped.
 
 	* sysdeps/i386/fpu/__math.h (logb): Correct contraint from =u to =t.
 	Must operate on top of fp reg stack, not second from top.

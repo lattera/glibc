@@ -794,9 +794,10 @@ distinfo: Makefile $(..)Makerules
 define distinfo-vars
 rm -f $@.new
 $(foreach var,subdir subdir-dirs sources elided-routines headers distribute \
-	      dont_distribute generated others tests,
+	      dont_distribute generated others tests \
+	      extra-libs $(extra-libs:%=%-routines),
 echo >> $@.new '$(var)	:= $($(var))')
-echo >> $@.new 'sources := $$(sources) $$(addsuffix .c,$$(elided-routines))'
+echo >> $@.new 'sources += $$(addsuffix .c,$$(elided-routines))'
 endef
 
 ifneq (,$(strip $(gpl2lgpl)))

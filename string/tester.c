@@ -417,8 +417,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   equal(strsep(&cp, ", "), "third", 4);
   check(strsep(&cp, ", ") == NULL, 5);
   cp = strcpy(one, ", first, ");
-  equal(strsep(&cp, ", "), "first", 6);	/* Extra delims, 1 tok. */
-  check(strsep(&cp, ", ") == NULL, 7);
+  equal(strsep(&cp, ", "), "", 6);	/* null token. */
+  equal(strsep(&cp, ", "), "", 7);
   cp = strcpy(one, "1a, 1b; 2a, 2b");
   equal(strsep(&cp, ", "), "1a", 8);	/* Changing delim lists. */
   equal(strsep(&cp, "; "), "1b", 9);
@@ -435,7 +435,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   check(strsep(&cp, ", ") == NULL, 18);
   check(strsep(&cp, ", ") == NULL, 19);	/* Persistence. */
   cp = strcpy(one, ", ");
-  check(strsep(&cp, ", ") == NULL, 20);	/* No tokens. */
+  check(strsep(&cp, ", ") == one, 20);	/* Null token. */
   cp = strcpy(one, "");
   check(strsep(&cp, ", ") == NULL, 21);	/* Empty string. */
   cp = strcpy(one, "abc");
