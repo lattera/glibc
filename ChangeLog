@@ -1,3 +1,7 @@
+2001-03-20  Andreas Schwab  <schwab@suse.de>
+
+	* include/unistd.h: Adjust prototype of __gethostname.
+
 2001-03-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/stackinfo.h: New file.

@@ -1,3 +1,10 @@
+2001-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* attr.c (__pthread_attr_setstack): Fix alignment check.
+	(pthread_getattr_np): __stackaddr is top of stack, not bottom.
+	* Makefile (tests): Add ex17 test.
+	* Examples/ex17.c: New test.
+
 2001-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Define -D_RPC_THREAD_SAFE_ for cancel.c.
