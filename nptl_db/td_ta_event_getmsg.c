@@ -25,76 +25,81 @@
 
 
 td_err_e
-td_ta_event_getmsg (const td_thragent_t *ta, td_event_msg_t *msg)
+td_ta_event_getmsg (const td_thragent_t *ta_arg, td_event_msg_t *msg)
 {
+  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+  td_err_e err;
+  psaddr_t eventbuf, eventnum, eventdata;
+  psaddr_t thp, next;
+  void *copy;
+
   /* XXX I cannot think of another way but using a static variable.  */
   /* XXX Use at least __thread once it is possible.  */
   static td_thrhandle_t th;
 
-  LOG ("td_ta_event_getmsg");
+  LOG ("td_thr_event_getmsg");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))
     return TD_BADTA;
 
   /* Get the pointer to the thread descriptor with the last event.  */
-  psaddr_t addr;
-  if (ps_pdread (ta->ph, ta->pthread_last_event,
-		 &addr, sizeof (struct pthread *)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_VALUE (thp, ta, __nptl_last_event, 0);
+  if (err != TD_OK)
+    return err;
 
-  if (addr == 0)
+  if (thp == 0)
     /* Nothing waiting.  */
     return TD_NOMSG;
 
-  /* Read the event structure from the target.  */
-  td_eventbuf_t event;
-  if (ps_pdread (ta->ph, (char *) addr + offsetof (struct pthread, eventbuf),
-		 &event, sizeof (td_eventbuf_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Copy the event message buffer in from the inferior.  */
+  err = DB_GET_FIELD_ADDRESS (eventbuf, ta, thp, pthread, eventbuf, 0);
+  if (err == TD_OK)
+    err = DB_GET_STRUCT (copy, ta, eventbuf, td_eventbuf_t);
+  if (err != TD_OK)
+    return err;
 
+  /* Read the event details from the target thread.  */
+  err = DB_GET_FIELD_LOCAL (eventnum, ta, copy, td_eventbuf_t, eventnum, 0);
+  if (err != TD_OK)
+    return err;
   /* If the structure is on the list there better be an event recorded.  */
-  if (event.eventnum == TD_EVENT_NONE)
+  if ((int) (uintptr_t) eventnum == TD_EVENT_NONE)
     return TD_DBERR;
+
+  /* Fill the user's data structure.  */
+  err = DB_GET_FIELD_LOCAL (eventdata, ta, copy, td_eventbuf_t, eventdata, 0);
+  if (err != TD_OK)
+    return err;
 
   /* Generate the thread descriptor.  */
   th.th_ta_p = (td_thragent_t *) ta;
-  th.th_unique = addr;
+  th.th_unique = thp;
 
   /* Fill the user's data structure.  */
-  msg->event = event.eventnum;
+  msg->msg.data = (uintptr_t) eventdata;
+  msg->event = (uintptr_t) eventnum;
   msg->th_p = &th;
-  msg->msg.data = (uintptr_t) event.eventdata;
 
   /* And clear the event message in the target.  */
-  memset (&event, '\0', sizeof (td_eventbuf_t));
-  if (ps_pdwrite (ta->ph, (char *) addr + offsetof (struct pthread, eventbuf),
-		  &event, sizeof (td_eventbuf_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  memset (copy, 0, ta->ta_sizeof_td_eventbuf_t);
+  err = DB_PUT_STRUCT (ta, eventbuf, td_eventbuf_t, copy);
+  if (err != TD_OK)
+    return err;
 
   /* Get the pointer to the next descriptor with an event.  */
-  psaddr_t next;
-  if (ps_pdread (ta->ph, (char *) addr + offsetof (struct pthread, nextevent),
-		 &next, sizeof (struct pthread *)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
-
-  if (next == addr)
-    return TD_DBERR;
+  err = DB_GET_FIELD (next, ta, thp, pthread, nextevent, 0);
+  if (err != TD_OK)
+    return err;
 
   /* Store the pointer in the list head variable.  */
-  if (ps_pdwrite (ta->ph, ta->pthread_last_event,
-		  &next, sizeof (struct pthread *)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_PUT_VALUE (ta, __nptl_last_event, 0, next);
+  if (err != TD_OK)
+    return err;
 
-  if (next != NULL)
-    {
-      /* Clear the next pointer in the current descriptor.  */
-      next = NULL;
-      if (ps_pdwrite (ta->ph,
-		      (char *) addr + offsetof (struct pthread, nextevent),
-		      &next, sizeof (struct pthread *)) != PS_OK)
-	return TD_ERR;	/* XXX Other error value?  */
-    }
+  if (next != 0)
+    /* Clear the next pointer in the current descriptor.  */
+    err = DB_PUT_FIELD (ta, thp, pthread, nextevent, 0, 0);
 
-  return TD_OK;
+  return err;
 }

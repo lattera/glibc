@@ -56,7 +56,7 @@ typedef enum
   TD_TLSDEFER,	  /* Thread has not yet allocated TLS for given module.  */
   TD_NOTALLOC = TD_TLSDEFER,
   TD_VERSION,	  /* Version if libpthread and libthread_db do not match.  */
-  TD_NOTLS	  /* There is TLS segment in the given module.  */
+  TD_NOTLS	  /* There is no TLS segment in the given module.  */
 } td_err_e;
 
 
@@ -412,8 +412,8 @@ extern td_err_e td_thr_tlsbase (const td_thrhandle_t *__th,
 
 /* Get address of thread local variable.  */
 extern td_err_e td_thr_tls_get_addr (const td_thrhandle_t *__th,
-				     void *__map_address, size_t __offset,
-				     void **__address);
+				     psaddr_t __map_address, size_t __offset,
+				     psaddr_t *__address);
 
 
 /* Enable reporting for EVENT for thread TH.  */

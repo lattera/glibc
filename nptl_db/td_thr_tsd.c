@@ -1,5 +1,5 @@
 /* Get a thread-specific data pointer for a thread.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -24,48 +24,73 @@
 td_err_e
 td_thr_tsd (const td_thrhandle_t *th, const thread_key_t tk, void **data)
 {
+  td_err_e err;
+  psaddr_t tk_seq, level1, level2, seq, value;
+  void *copy;
+  uint32_t pthread_key_2ndlevel_size, idx1st, idx2nd;
+
   LOG ("td_thr_tsd");
 
-  /* Check correct value of key.  */
-  if (tk >= th->th_ta_p->pthread_keys_max)
-    return TD_BADKEY;
-
   /* Get the key entry.  */
-  uintptr_t seq;
-  if (ps_pdread (th->th_ta_p->ph, &th->th_ta_p->keys[tk].seq, &seq,
-		 sizeof (uintptr_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_VALUE (tk_seq, th->th_ta_p, __pthread_keys, tk);
+  if (err == TD_NOAPLIC)
+    return TD_BADKEY;
+  if (err != TD_OK)
+    return err;
 
   /* Fail if this key is not at all used.  */
-  if (KEY_UNUSED (seq))
+  if (((uintptr_t) tk_seq & 1) == 0)
     return TD_BADKEY;
 
-  /* Compute the indeces.  */
-  int pthread_key_2ndlevel_size = th->th_ta_p->pthread_key_2ndlevel_size;
-  unsigned int idx1st = tk / pthread_key_2ndlevel_size;
-  unsigned int idx2nd = tk % pthread_key_2ndlevel_size;
+  /* This makes sure we have the size information on hand.  */
+  err = DB_GET_FIELD_ADDRESS (level2, th->th_ta_p, 0, pthread_key_data_level2,
+			      data, 1);
+  if (err != TD_OK)
+    return err;
 
-  struct pthread_key_data *level1;
-  if (ps_pdread (th->th_ta_p->ph,
-		 &((struct pthread *) th->th_unique)->specific[idx1st],
-		 &level1, sizeof (level1)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Compute the indeces.  */
+  pthread_key_2ndlevel_size
+    = DB_DESC_NELEM (th->th_ta_p->ta_field_pthread_key_data_level2_data);
+  idx1st = tk / pthread_key_2ndlevel_size;
+  idx2nd = tk % pthread_key_2ndlevel_size;
+
+  /* Now fetch the first level pointer.  */
+  err = DB_GET_FIELD (level1, th->th_ta_p, th->th_unique, pthread,
+		      specific, idx1st);
+  if (err == TD_NOAPLIC)
+    return TD_DBERR;
+  if (err != TD_OK)
+    return err;
 
   /* Check the pointer to the second level array.  */
-  if (level1 == NULL)
+  if (level1 == 0)
     return TD_NOTSD;
 
-  struct pthread_key_data level2;
-  if (ps_pdread (th->th_ta_p->ph, &level1[idx2nd], &level2,
-		 sizeof (level2)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Locate the element within the second level array.  */
+  err = DB_GET_FIELD_ADDRESS (level2, th->th_ta_p,
+			      level1, pthread_key_data_level2, data, idx2nd);
+  if (err == TD_NOAPLIC)
+    return TD_DBERR;
+  if (err != TD_OK)
+    return err;
+
+  /* Now copy in that whole structure.  */
+  err = DB_GET_STRUCT (copy, th->th_ta_p, level2, pthread_key_data);
+  if (err != TD_OK)
+    return err;
 
   /* Check whether the data is valid.  */
-  if (level2.seq != seq)
+  err = DB_GET_FIELD_LOCAL (seq, th->th_ta_p, copy, pthread_key_data, seq, 0);
+  if (err != TD_OK)
+    return err;
+  if (seq != tk_seq)
     return TD_NOTSD;
 
-  if (level2.data != NULL)
-    *data = level2.data;
+  /* Finally, fetch the value.  */
+  err = DB_GET_FIELD_LOCAL (value, th->th_ta_p, copy, pthread_key_data,
+			    data, 0);
+  if (err == TD_OK)
+    *data = value;
 
-  return TD_OK;
+  return err;
 }

@@ -42,14 +42,15 @@ libthread_db-routines = td_init td_log td_ta_new td_ta_delete \
 			td_thr_clear_event td_thr_event_getmsg \
 			td_ta_set_event td_ta_event_getmsg \
 			td_ta_clear_event td_symbol_list \
-			td_thr_tlsbase td_thr_tls_get_addr
+			td_thr_tlsbase td_thr_tls_get_addr \
+			fetch-value
 
 libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 # The ps_* callback functions are not defined.
 libthread_db.so-no-z-defs = yes
 
-distribute = thread_dbP.h shlib-versions proc_service.h
+distribute = thread_dbP.h shlib-versions proc_service.h db_info.c structs.def
 include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.

@@ -24,12 +24,6 @@
 /* Internal mutex for __pthread_keys table handling.  */
 lll_lock_t __pthread_keys_lock = LLL_LOCK_INITIALIZER;
 
-
-/* For debugging purposes put the maximum number of keys in a variable.  */
-const int __pthread_pthread_keys_max = PTHREAD_KEYS_MAX;
-const int __pthread_pthread_key_2ndlevel_size = PTHREAD_KEY_2NDLEVEL_SIZE;
-
-
 int
 __pthread_key_create (key, destr)
      pthread_key_t *key;

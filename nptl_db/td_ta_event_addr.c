@@ -1,5 +1,5 @@
 /* Get event address.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -22,10 +22,12 @@
 
 
 td_err_e
-td_ta_event_addr (const td_thragent_t *ta, td_event_e event, td_notify_t *addr)
+td_ta_event_addr (const td_thragent_t *ta_arg,
+		  td_event_e event, td_notify_t *addr)
 {
-  td_err_e res = TD_NOEVENT;
-  int idx = -1;
+  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+  td_err_e err;
+  psaddr_t taddr;
 
   LOG ("td_ta_event_addr");
 
@@ -36,34 +38,24 @@ td_ta_event_addr (const td_thragent_t *ta, td_event_e event, td_notify_t *addr)
   switch (event)
     {
     case TD_CREATE:
-      idx = SYM_PTHREAD_CREATE_EVENT;
+      err = DB_GET_SYMBOL (taddr, ta, __nptl_create_event);
       break;
 
     case TD_DEATH:
-      idx = SYM_PTHREAD_DEATH_EVENT;
+      err = DB_GET_SYMBOL (taddr, ta, __nptl_death_event);
       break;
 
     default:
       /* Event cannot be handled.  */
-      break;
+      return TD_NOEVENT;
     }
 
-  /* Now get the address.  */
-  if (idx != -1)
+  if (err == TD_OK)
     {
-      psaddr_t taddr;
-
-      if (td_lookup (ta->ph, idx, &taddr) == PS_OK)
-	{
-	  /* Success, we got the address.  */
-	  addr->type = NOTIFY_BPT;
-	  addr->u.bptaddr = taddr;
-
-	  res = TD_OK;
-	}
-      else
-	res = TD_ERR;
+      /* Success, we got the address.  */
+      addr->type = NOTIFY_BPT;
+      addr->u.bptaddr = taddr;
     }
 
-  return res;
+  return err;
 }

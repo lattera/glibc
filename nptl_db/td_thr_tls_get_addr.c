@@ -22,24 +22,22 @@
 #include "thread_dbP.h"
 
 td_err_e
-td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
-		     void *map_address __attribute__ ((unused)),
-		     size_t offset __attribute__ ((unused)),
-		     void **address __attribute__ ((unused)))
+td_thr_tls_get_addr (const td_thrhandle_t *th,
+		     psaddr_t map_address, size_t offset, psaddr_t *address)
 {
-#if USE_TLS
-  /* Read the module ID from the link_map.  */
-  size_t modid;
-  if (ps_pdread (th->th_ta_p->ph,
-		 &((struct link_map *) map_address)->l_tls_modid,
-		 &modid, sizeof modid) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  td_err_e err;
+  psaddr_t modid;
 
-  td_err_e result = td_thr_tlsbase (th, modid, address);
-  if (result == TD_OK)
-    *address += offset;
-  return result;
-#else
-  return TD_ERR;
-#endif
+  /* Get the TLS module ID from the `struct link_map' in the inferior.  */
+  err = DB_GET_FIELD (modid, th->th_ta_p, map_address, link_map,
+		      l_tls_modid, 0);
+  if (err == TD_NOCAPAB)
+    return TD_NOAPLIC;
+  if (err == TD_OK)
+    {
+      err = td_thr_tlsbase (th, (uintptr_t) modid, address);
+      if (err == TD_OK)
+	*address += offset;
+    }
+  return err;
 }

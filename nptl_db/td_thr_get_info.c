@@ -26,39 +26,85 @@
 td_err_e
 td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
 {
+  td_err_e err;
+  void *copy;
+  psaddr_t tls, schedpolicy, schedprio, cancelhandling, tid, report_events;
+
   LOG ("td_thr_get_info");
 
-  /* Get the thread descriptor.  */
-  struct pthread pds;
-  if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
-		 sizeof (struct pthread)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Copy the whole descriptor in once so we can access the several
+     fields locally.  Excess copying in one go is much better than
+     multiple ps_pdread calls.  */
+  err = DB_GET_STRUCT (copy, th->th_ta_p, th->th_unique, pthread);
+  if (err != TD_OK)
+    return err;
+
+  err = DB_GET_FIELD_ADDRESS (tls, th->th_ta_p, th->th_unique,
+			      pthread, specific, 0);
+  if (err != TD_OK)
+    return err;
+
+  err = DB_GET_FIELD_LOCAL (schedpolicy, th->th_ta_p, copy, pthread,
+			    schedpolicy, 0);
+  if (err != TD_OK)
+    return err;
+  err = DB_GET_FIELD_LOCAL (schedprio, th->th_ta_p, copy, pthread,
+			    schedparam_sched_priority, 0);
+  if (err != TD_OK)
+    return err;
+  err = DB_GET_FIELD_LOCAL (tid, th->th_ta_p, copy, pthread, tid, 0);
+  if (err != TD_OK)
+    return err;
+  err = DB_GET_FIELD_LOCAL (cancelhandling, th->th_ta_p, copy, pthread,
+			    cancelhandling, 0);
+  if (err != TD_OK)
+    return err;
+  err = DB_GET_FIELD_LOCAL (report_events, th->th_ta_p, copy, pthread,
+			    report_events, 0);
+  if (err != TD_OK)
+    return err;
 
   /* Fill in information.  Clear first to provide reproducable
      results for the fields we do not fill in.  */
   memset (infop, '\0', sizeof (td_thrinfo_t));
 
-  infop->ti_tid = th->th_unique;
-  infop->ti_tls = (char *) pds.specific;
-  infop->ti_pri = (pds.schedpolicy == SCHED_OTHER
-		   ? 0 : pds.schedparam.sched_priority);
+  infop->ti_tid = (thread_t) th->th_unique;
+  infop->ti_tls = (char *) tls;
+  infop->ti_pri = ((uintptr_t) schedpolicy == SCHED_OTHER
+		   ? 0 : (uintptr_t) schedprio);
   infop->ti_type = TD_THR_USER;
 
-  if ((pds.cancelhandling & EXITING_BITMASK) == 0)
+  if ((((int) (uintptr_t) cancelhandling) & EXITING_BITMASK) == 0)
     /* XXX For now there is no way to get more information.  */
     infop->ti_state = TD_THR_ACTIVE;
-  else if ((pds.cancelhandling & TERMINATED_BITMASK) == 0)
+  else if ((((int) (uintptr_t) cancelhandling) & TERMINATED_BITMASK) == 0)
     infop->ti_state = TD_THR_ZOMBIE;
   else
     infop->ti_state = TD_THR_UNKNOWN;
 
   /* Initialization which are the same in both cases.  */
-  infop->ti_lid = pds.tid ?: ps_getpid (th->th_ta_p->ph);
   infop->ti_ta_p = th->th_ta_p;
-  infop->ti_startfunc = pds.start_routine;
-  memcpy (&infop->ti_events, &pds.eventbuf.eventmask,
-	  sizeof (td_thr_events_t));
-  infop->ti_traceme = pds.report_events != false;
+  infop->ti_lid = tid == 0 ? ps_getpid (th->th_ta_p->ph) : (uintptr_t) tid;
+  infop->ti_traceme = report_events != 0;
 
-  return TD_OK;
+  err = DB_GET_FIELD_LOCAL (infop->ti_startfunc, th->th_ta_p, copy, pthread,
+			    start_routine, 0);
+  if (err == TD_OK)
+    {
+      uint32_t idx;
+      for (idx = 0; idx < TD_EVENTSIZE; ++idx)
+	{
+	  psaddr_t word;
+	  err = DB_GET_FIELD_LOCAL (word, th->th_ta_p, copy, pthread,
+				    eventbuf_eventmask_event_bits, idx);
+	  if (err != TD_OK)
+	    break;
+	  infop->ti_events.event_bits[idx] = (uintptr_t) word;
+	}
+      if (err == TD_NOAPLIC)
+	memset (&infop->ti_events.event_bits[idx], 0,
+		(TD_EVENTSIZE - idx) * sizeof infop->ti_events.event_bits[0]);
+    }
+
+  return err;
 }

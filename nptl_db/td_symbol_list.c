@@ -25,17 +25,26 @@
 
 static const char *symbol_list_arr[] =
 {
-  [SYM_PTHREAD_THREADS_EVENTS] = "__nptl_threads_events",
-  [SYM_PTHREAD_LAST_EVENT] = "__nptl_last_event",
-  [SYM_PTHREAD_NTHREADS] = "__nptl_nthreads",
-  [SYM_PTHREAD_STACK_USED] = "stack_used",
-  [SYM_PTHREAD_STACK_USER] = "__stack_user",
-  [SYM_PTHREAD_KEYS] = "__pthread_keys",
-  [SYM_PTHREAD_KEYS_MAX] = "__pthread_pthread_keys_max",
-  [SYM_PTHREAD_SIZEOF_DESCR] = "__pthread_pthread_sizeof_descr",
-  [SYM_PTHREAD_CREATE_EVENT] = "__nptl_create_event",
-  [SYM_PTHREAD_DEATH_EVENT] = "__nptl_death_event",
-  [SYM_PTHREAD_VERSION] = "nptl_version",
+# define DB_STRUCT(type) \
+  [SYM_SIZEOF_##type] = "_thread_db_sizeof_" #type,
+# define DB_STRUCT_FIELD(type, field) \
+  [SYM_##type##_FIELD_##field] = "_thread_db_" #type "_" #field,
+# define DB_SYMBOL(name) \
+  [SYM_##name] = #name,
+# define DB_VARIABLE(name) \
+  [SYM_##name] = #name, \
+  [SYM_DESC_##name] = "_thread_db_" #name,
+# include "structs.def"
+# undef DB_STRUCT
+# undef DB_SYMBOL
+# undef DB_VARIABLE
+
+  [SYM_TH_UNIQUE_CONST_THREAD_AREA] = "_thread_db_const_thread_area",
+  [SYM_TH_UNIQUE_REGISTER64] = "_thread_db_register64",
+  [SYM_TH_UNIQUE_REGISTER32] = "_thread_db_register32",
+  [SYM_TH_UNIQUE_REGISTER32_THREAD_AREA] = "_thread_db_register32_thread_area",
+  [SYM_TH_UNIQUE_REGISTER64_THREAD_AREA] = "_thread_db_register64_thread_area",
+
   [SYM_NUM_MESSAGES] = NULL
 };
 
@@ -47,7 +56,7 @@ td_symbol_list (void)
 }
 
 
-int
+ps_err_e
 td_lookup (struct ps_prochandle *ps, int idx, psaddr_t *sym_addr)
 {
   assert (idx >= 0 && idx < SYM_NUM_MESSAGES);

@@ -22,29 +22,30 @@
 
 
 td_err_e
-td_thr_getgregs (const td_thrhandle_t *th, prgregset_t gregs)
+td_thr_getgregs (const td_thrhandle_t *th, prgregset_t regset)
 {
+  psaddr_t cancelhandling, tid;
+  td_err_e err;
+
   LOG ("td_thr_getgregs");
 
   /* We have to get the state and the PID for this thread.  */
-  int cancelhandling;
-  if (ps_pdread (th->th_ta_p->ph,
-		 &((struct pthread *) th->th_unique)->cancelhandling,
-		 &cancelhandling, sizeof (int)) != PS_OK)
-    return TD_ERR;
+  err = DB_GET_FIELD (cancelhandling, th->th_ta_p, th->th_unique, pthread,
+		      cancelhandling, 0);
+  if (err != TD_OK)
+    return err;
 
   /* If the thread already terminated we return all zeroes.  */
-  if (cancelhandling & TERMINATED_BITMASK)
-    memset (gregs, '\0', sizeof (prgregset_t));
+  if (((int) (uintptr_t) cancelhandling) & TERMINATED_BITMASK)
+    memset (regset, '\0', sizeof (*regset));
   /* Otherwise get the register content through the callback.  */
   else
     {
-      pid_t tid;
+      err = DB_GET_FIELD (tid, th->th_ta_p, th->th_unique, pthread, tid, 0);
+      if (err != TD_OK)
+	return err;
 
-      if (ps_pdread (th->th_ta_p->ph,
-		     &((struct pthread *) th->th_unique)->tid,
-		     &tid, sizeof (pid_t)) != PS_OK
-	  || ps_lgetregs (th->th_ta_p->ph, tid, gregs) != PS_OK)
+      if (ps_lgetregs (th->th_ta_p->ph, (uintptr_t) tid, regset) != PS_OK)
 	return TD_ERR;
     }
 

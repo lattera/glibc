@@ -24,24 +24,25 @@
 td_err_e
 td_thr_setfpregs (const td_thrhandle_t *th, const prfpregset_t *fpregs)
 {
+  psaddr_t cancelhandling, tid;
+  td_err_e err;
+
   LOG ("td_thr_setfpregs");
 
   /* We have to get the state and the PID for this thread.  */
-  int cancelhandling;
-  if (ps_pdread (th->th_ta_p->ph,
-		 &((struct pthread *) th->th_unique)->cancelhandling,
-		 &cancelhandling, sizeof (int)) != PS_OK)
-    return TD_ERR;
+  err = DB_GET_FIELD (cancelhandling, th->th_ta_p, th->th_unique, pthread,
+		      cancelhandling, 0);
+  if (err != TD_OK)
+    return err;
 
   /* Only set the registers if the thread hasn't yet terminated.  */
-  if ((cancelhandling & TERMINATED_BITMASK) == 0)
+  if ((((int) (uintptr_t) cancelhandling) & TERMINATED_BITMASK) == 0)
     {
-      pid_t tid;
+      err = DB_GET_FIELD (tid, th->th_ta_p, th->th_unique, pthread, tid, 0);
+      if (err != TD_OK)
+	return err;
 
-      if (ps_pdread (th->th_ta_p->ph,
-		     &((struct pthread *) th->th_unique)->tid,
-		     &tid, sizeof (pid_t)) != PS_OK
-	  || ps_lsetfpregs (th->th_ta_p->ph, tid, fpregs) != PS_OK)
+      if (ps_lsetfpregs (th->th_ta_p->ph, (uintptr_t) tid, fpregs) != PS_OK)
 	return TD_ERR;
     }
 

@@ -1,3 +1,13 @@
+2003-09-08  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/sysv/linux/speed.c
+	(cfsetospeed): Only set c_ospeed under [_HAVE_STRUCT_TERMIOS_C_OSPEED].
+	(cfsetispeed): Only set c_ispeed under [_HAVE_STRUCT_TERMIOS_C_ISPEED].
+	* sysdeps/unix/sysv/linux/bits/termios.h
+	(_HAVE_STRUCT_TERMIOS_C_ISPEED, _HAVE_STRUCT_TERMIOS_C_OSPEED): Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+
 2003-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/register-dump.h: Undo last change.

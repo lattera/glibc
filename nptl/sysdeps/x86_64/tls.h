@@ -161,6 +161,9 @@ typedef struct
 	  : "i" (offsetof (struct pthread, header.self)));	 	      \
      __self;})
 
+/* Magic for libthread_db to know how to do THREAD_SELF.  */
+# define DB_THREAD_SELF_INCLUDE  <sys/reg.h> /* For the FS constant.  */
+# define DB_THREAD_SELF CONST_THREAD_AREA (64, FS)
 
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) \

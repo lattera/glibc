@@ -251,6 +251,11 @@ union user_desc_init
 	  : "i" (offsetof (struct pthread, header.self)));		      \
      __self;})
 
+/* Magic for libthread_db to know how to do THREAD_SELF.  */
+# define DB_THREAD_SELF \
+  REGISTER_THREAD_AREA (32, offsetof (struct user_regs_struct, xgs), 3) \
+  REGISTER_THREAD_AREA (64, 26 * 8, 3) /* x86-64's user_regs_struct->gs */
+
 
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) \

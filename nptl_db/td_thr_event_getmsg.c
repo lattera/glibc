@@ -18,60 +18,71 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stddef.h>
-#include <string.h>
-
 #include "thread_dbP.h"
+#include <assert.h>
 
 
 td_err_e
 td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
 {
-  td_eventbuf_t event;
+  td_err_e err;
+  psaddr_t eventbuf, eventnum, eventdata;
+  psaddr_t thp, prevp;
+  void *copy;
 
   LOG ("td_thr_event_getmsg");
 
-  /* Read the event structure from the target.  */
-  if (ps_pdread (th->th_ta_p->ph,
-		 ((char *) th->th_unique
-		  + offsetof (struct pthread, eventbuf)),
-		 &event, sizeof (td_eventbuf_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Copy the event message buffer in from the inferior.  */
+  err = DB_GET_FIELD_ADDRESS (eventbuf, th->th_ta_p, th->th_unique, pthread,
+			      eventbuf, 0);
+  if (err == TD_OK)
+    err = DB_GET_STRUCT (copy, th->th_ta_p, eventbuf, td_eventbuf_t);
+  if (err != TD_OK)
+    return err;
 
   /* Check whether an event occurred.  */
-  if (event.eventnum == TD_EVENT_NONE)
+  err = DB_GET_FIELD_LOCAL (eventnum, th->th_ta_p, copy,
+			    td_eventbuf_t, eventnum, 0);
+  if (err != TD_OK)
+    return err;
+  if ((int) (uintptr_t) eventnum == TD_EVENT_NONE)
     /* Nothing.  */
     return TD_NOMSG;
 
   /* Fill the user's data structure.  */
-  msg->event = event.eventnum;
+  err = DB_GET_FIELD_LOCAL (eventdata, th->th_ta_p, copy,
+			    td_eventbuf_t, eventdata, 0);
+  if (err != TD_OK)
+    return err;
+
+  msg->msg.data = (uintptr_t) eventdata;
+  msg->event = (uintptr_t) eventnum;
   msg->th_p = th;
-  msg->msg.data = (uintptr_t) event.eventdata;
 
   /* And clear the event message in the target.  */
-  memset (&event, '\0', sizeof (td_eventbuf_t));
-  if (ps_pdwrite (th->th_ta_p->ph,
-		  ((char *) th->th_unique
-		   + offsetof (struct pthread, eventbuf)),
-		  &event, sizeof (td_eventbuf_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  memset (copy, 0, th->th_ta_p->ta_sizeof_td_eventbuf_t);
+  err = DB_PUT_STRUCT (th->th_ta_p, eventbuf, td_eventbuf_t, copy);
+  if (err != TD_OK)
+    return err;
 
   /* Get the pointer to the thread descriptor with the last event.
      If it doesn't match TH, then walk down the list until we find it.
      We must splice it out of the list so that there is no dangling
      pointer to it later when it dies.  */
-  psaddr_t thp, prevp = th->th_ta_p->pthread_last_event;
-  if (ps_pdread (th->th_ta_p->ph,
-		 prevp, &thp, sizeof (struct pthread *)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_SYMBOL (prevp, th->th_ta_p, __nptl_last_event);
+  if (err != TD_OK)
+    return err;
+  err = DB_GET_VALUE (thp, th->th_ta_p, __nptl_last_event, 0);
+  if (err != TD_OK)
+    return err;
 
-  psaddr_t next;
   while (thp != 0)
     {
-      if (ps_pdread (th->th_ta_p->ph,
-		     (char *) thp + offsetof (struct pthread, nextevent),
-		     &next, sizeof (struct pthread *)) != PS_OK)
-	return TD_ERR;	/* XXX Other error value?  */
+      psaddr_t next;
+      err = DB_GET_FIELD (next, th->th_ta_p, th->th_unique, pthread,
+			  nextevent, 0);
+      if (err != TD_OK)
+	return err;
 
       if (next == thp)
 	return TD_DBERR;
@@ -79,24 +90,27 @@ td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
       if (thp == th->th_unique)
 	{
 	  /* PREVP points at this thread, splice it out.  */
-	  if (prevp == (char *) next + offsetof (struct pthread, nextevent))
+	  psaddr_t next_nextp;
+	  err = DB_GET_FIELD_ADDRESS (next_nextp, th->th_ta_p, next, pthread,
+				      nextevent, 0);
+	  assert (err == TD_OK); /* We used this field before.  */
+	  if (prevp == next_nextp)
 	    return TD_DBERR;
 
-	  if (ps_pdwrite (th->th_ta_p->ph, prevp, &next, sizeof next) != PS_OK)
-	    return TD_ERR;	/* XXX Other error value?  */
+	  err = _td_store_value (th->th_ta_p,
+				 th->th_ta_p->ta_var___nptl_last_event, -1,
+				 0, prevp, next);
+	  if (err != TD_OK)
+	    return err;
 
 	  /* Now clear this thread's own next pointer so it's not dangling
 	     when the thread resumes and then chains on for its next event.  */
-	  next = NULL;
-	  if (ps_pdwrite (th->th_ta_p->ph,
-			  (char *) thp + offsetof (struct pthread, nextevent),
-			  &next, sizeof next) != PS_OK)
-	    return TD_ERR;	/* XXX Other error value?  */
-
-	  return TD_OK;
+	  return DB_PUT_FIELD (th->th_ta_p, thp, pthread, nextevent, 0, 0);
 	}
 
-      prevp = (char *) thp + offsetof (struct pthread, nextevent);
+      err = DB_GET_FIELD_ADDRESS (prevp, th->th_ta_p, thp, pthread,
+				  nextevent, 0);
+      assert (err == TD_OK); /* We used this field before.  */
       thp = next;
     }
 

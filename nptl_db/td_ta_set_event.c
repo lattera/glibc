@@ -1,5 +1,5 @@
 /* Globally enable events.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -22,31 +22,58 @@
 
 
 td_err_e
-td_ta_set_event (ta, event)
-     const td_thragent_t *ta;
+td_ta_set_event (ta_arg, event)
+     const td_thragent_t *ta_arg;
      td_thr_events_t *event;
 {
+  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+  td_err_e err;
+  psaddr_t eventmask;
+  void *copy;
+
   LOG ("td_ta_set_event");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))
     return TD_BADTA;
 
-  /* Write the new value into the thread data structure.  */
-  td_thr_events_t old_event;
-  if (ps_pdread (ta->ph, ta->pthread_threads_eventsp,
-		 &old_event, sizeof (td_thrhandle_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  /* Fetch the old event mask from the inferior and modify it in place.  */
+  err = DB_GET_SYMBOL (eventmask, ta, __nptl_threads_events);
+  if (err == TD_OK)
+    err = DB_GET_STRUCT (copy, ta, eventmask, td_thr_events_t);
+  if (err == TD_OK)
+    {
+      uint32_t idx;
+      for (idx = 0; idx < TD_EVENTSIZE; ++idx)
+	{
+	  psaddr_t word;
+	  uint32_t mask;
+	  err = DB_GET_FIELD_LOCAL (word, ta, copy,
+				    td_thr_events_t, event_bits, idx);
+	  if (err != TD_OK)
+	    break;
+	  mask = (uintptr_t) word;
+	  mask |= event->event_bits[idx];
+	  word = (psaddr_t) (uintptr_t) mask;
+	  err = DB_PUT_FIELD_LOCAL (ta, copy,
+				    td_thr_events_t, event_bits, idx, word);
+	  if (err != TD_OK)
+	    break;
+	}
+      if (err == TD_NOAPLIC)
+	{
+	  err = TD_OK;
+	  while (idx < TD_EVENTSIZE)
+	    if (event->event_bits[idx++] != 0)
+	      {
+		err = TD_NOEVENT;
+		break;
+	      }
+	}
+      if (err == TD_OK)
+	/* Now write it back to the inferior.  */
+	err = DB_PUT_STRUCT (ta, eventmask, td_thr_events_t, copy);
+    }
 
-  /* Or the new bits in.  */
-  int i;
-  for (i = 0; i < TD_EVENTSIZE; ++i)
-    old_event.event_bits[i] |= event->event_bits[i];
-
-  /* Write the new value into the thread data structure.  */
-  if (ps_pdwrite (ta->ph, ta->pthread_threads_eventsp,
-		  &old_event, sizeof (td_thrhandle_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
-
-  return TD_OK;
+  return err;
 }

@@ -137,6 +137,9 @@ typedef struct
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF ((struct pthread *) __builtin_thread_pointer ())
 
+/* Magic for libthread_db to know how to do THREAD_SELF.  */
+# define DB_THREAD_SELF REGISTER (32, 18 * 4, 0) REGISTER (64, 18 * 8, 0)
+
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) \
   descr->member

@@ -1,3 +1,27 @@
+2003-09-05  Roland McGrath  <roland@redhat.com>
+
+	* pthread_create.c (__pthread_pthread_sizeof_descr): Removed.
+	Instead, include ../nptl_db/db_info.c to do its magic.
+	* pthread_key_create.c (__pthread_pthread_keys_max): Removed.
+	(__pthread_pthread_key_2ndlevel_size): Likewise.
+	* sysdeps/alpha/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/i386/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/ia64/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/powerpc/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/s390/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/sh/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/sparc/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/x86_64/tls.h (DB_THREAD_SELF): New macro.
+	* sysdeps/alpha/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/generic/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/i386/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/ia64/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/powerpc/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/s390/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/sh/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/sparc/td_ta_map_lwp2thr.c: File removed.
+	* sysdeps/x86_64/td_ta_map_lwp2thr.c: File removed.
+
 2003-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Change type

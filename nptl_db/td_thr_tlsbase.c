@@ -19,49 +19,32 @@
 
 #include "thread_dbP.h"
 
-/* Value used for dtv entries for which the allocation is delayed.  */
-# define TLS_DTV_UNALLOCATED	((void *) -1l)
-
 td_err_e
 td_thr_tlsbase (const td_thrhandle_t *th,
 		unsigned long int modid,
 		psaddr_t *base)
 {
+  td_err_e err;
+  psaddr_t dtv, dtvptr;
+
   if (modid < 1)
     return TD_NOTLS;
 
-#if USE_TLS
-  union dtv pdtv, *dtvp;
-
-  LOG ("td_thr_tlsbase");
-
-  psaddr_t dtvpp = th->th_unique;
-#if TLS_TCB_AT_TP
-  dtvpp += offsetof (struct pthread, header.dtv);
-#elif TLS_DTV_AT_TP
-  dtvpp += TLS_PRE_TCB_SIZE + offsetof (tcbhead_t, dtv);
-#else
-# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined."
-#endif
-
   /* Get the DTV pointer from the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph, dtvpp, &dtvp, sizeof dtvp) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_FIELD (dtv, th->th_ta_p, th->th_unique, pthread, dtvp, 0);
+  if (err != TD_OK)
+    return err;
 
   /* Get the corresponding entry in the DTV.  */
-  if (ps_pdread (th->th_ta_p->ph, dtvp + modid,
-		 &pdtv, sizeof (union dtv)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_FIELD (dtvptr, th->th_ta_p, dtv, dtv, dtv, modid);
+  if (err != TD_OK)
+    return err;
 
   /* It could be that the memory for this module is not allocated for
      the given thread.  */
-  if (pdtv.pointer == TLS_DTV_UNALLOCATED)
+  if ((uintptr_t) dtvptr & 1)
     return TD_TLSDEFER;
 
-  *base = (char *) pdtv.pointer;
-
+  *base = dtvptr;
   return TD_OK;
-#else
-  return TD_ERR;
-#endif
 }

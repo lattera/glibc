@@ -1,5 +1,5 @@
 /* Get the number of threads in the process.
-   Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -21,21 +21,22 @@
 #include "thread_dbP.h"
 
 td_err_e
-td_ta_get_nthreads (const td_thragent_t *ta, int *np)
+td_ta_get_nthreads (const td_thragent_t *ta_arg, int *np)
 {
+  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+  td_err_e err;
+  psaddr_t n;
+
   LOG ("td_ta_get_nthreads");
 
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))
     return TD_BADTA;
 
-  /* Access the variable `__pthread_handles_num'.  */
-  psaddr_t addr;
-  if (td_lookup (ta->ph, SYM_PTHREAD_NTHREADS, &addr) != PS_OK)
-     return TD_ERR;	/* XXX Other error value?  */
+  /* Access the variable in the inferior that tells us.  */
+  err = DB_GET_VALUE (n, ta, __nptl_nthreads, 0);
+  if (err == TD_OK)
+    *np = (uintptr_t) n;
 
-  if (ps_pdread (ta->ph, addr, np, sizeof (int)) != PS_OK)
-     return TD_ERR;	/* XXX Other error value?  */
-
-  return TD_OK;
+  return err;
 }

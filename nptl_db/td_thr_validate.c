@@ -24,43 +24,53 @@
 static td_err_e
 check_thread_list (const td_thrhandle_t *th, psaddr_t head)
 {
-  list_t list;
-  td_err_e result = TD_NOTHR;
+  td_err_e err;
+  psaddr_t next, ofs;
 
-  if (ps_pdread (th->th_ta_p->ph, head, &list.next, sizeof (list.next))
-      != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_FIELD (next, th->th_ta_p, head, list_t, next, 0);
+  if (err == TD_OK)
+    {
+      if (next == 0)
+	return TD_NOTHR;
+      err = DB_GET_FIELD_ADDRESS (ofs, th->th_ta_p, 0, pthread, list, 0);
+    }
 
-  while (list.next != head)
-    if ((psaddr_t) list.next - offsetof (struct pthread, list)
-	== th->th_unique)
-      {
-	result = TD_OK;
-	break;
-      }
-    else if (ps_pdread (th->th_ta_p->ph, list.next, &list.next,
-			sizeof (list.next)) != PS_OK)
-      {
-	result = TD_ERR;	/* XXX Other error value?  */
-	break;
-      }
+  while (err == TD_OK)
+    {
+      if (next == head)
+	return TD_NOTHR;
 
-  return result;
+      if (next - (ofs - (psaddr_t) 0) == th->th_unique)
+	return TD_OK;
+
+      err = DB_GET_FIELD (next, th->th_ta_p, next, list_t, next, 0);
+    }
+
+  return err;
 }
 
 
 td_err_e
 td_thr_validate (const td_thrhandle_t *th)
 {
+  td_err_e err;
+  psaddr_t list;
+
   LOG ("td_thr_validate");
 
   /* First check the list with threads using user allocated stacks.  */
-  td_err_e result = check_thread_list (th, th->th_ta_p->stack_user);
+  err = DB_GET_SYMBOL (list, th->th_ta_p, __stack_user);
+  if (err == TD_OK)
+    err = check_thread_list (th, list);
 
   /* If our thread is not on this list search the list with stack
      using implementation allocated stacks.  */
-  if (result == TD_NOTHR)
-    result = check_thread_list (th, th->th_ta_p->stack_used);
+  if (err == TD_NOTHR)
+    {
+      err = DB_GET_SYMBOL (list, th->th_ta_p, stack_used);
+      if (err == TD_OK)
+	err = check_thread_list (th, list);
+    }
 
-  return result;
+  return err;
 }

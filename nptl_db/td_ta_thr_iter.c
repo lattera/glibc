@@ -19,102 +19,108 @@
    02111-1307 USA.  */
 
 #include "thread_dbP.h"
-#include <nptl/descr.h>
 
 
 static td_err_e
-iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
+iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
 		     void *cbdata_p, td_thr_state_e state, int ti_pri,
-		     psaddr_t head)
+		     psaddr_t head, int fake_empty)
 {
-  list_t list;
-  td_err_e result = TD_OK;
+  td_err_e err;
+  psaddr_t next, ofs;
+  void *copy;
 
   /* Test the state.
      XXX This is incomplete.  Normally this test should be in the loop.  */
   if (state != TD_THR_ANY_STATE)
     return TD_OK;
 
-  if (ps_pdread (ta->ph, head, &list, sizeof (list_t)) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
+  err = DB_GET_FIELD (next, ta, head, list_t, next, 0);
+  if (err != TD_OK)
+    return err;
 
-  if (list.next == 0 && list.prev == 0 && head == ta->stack_user)
+  if (next == 0 && fake_empty)
     {
       /* __pthread_initialize_minimal has not run.
 	 There is just the main thread to return.  */
       td_thrhandle_t th;
-      td_err_e err = td_ta_map_lwp2thr (ta, ps_getpid (ta->ph), &th);
-      return (err != TD_OK ? err
-	      : callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK);
+      err = td_ta_map_lwp2thr (ta, ps_getpid (ta->ph), &th);
+      if (err == TD_OK)
+	err = callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK;
+      return err;
     }
 
-  while (list.next != head)
+  /* Cache the offset from struct pthread to its list_t member.  */
+  err = DB_GET_FIELD_ADDRESS (ofs, ta, 0, pthread, list, 0);
+  if (err != TD_OK)
+    return err;
+
+  if (ta->ta_sizeof_pthread == 0)
     {
-      psaddr_t addr = ((psaddr_t) list.next - offsetof (struct pthread, list));
+      err = _td_check_sizeof (ta, &ta->ta_sizeof_pthread, SYM_SIZEOF_pthread);
+      if (err != TD_OK)
+	return err;
+    }
+  copy = __alloca (ta->ta_sizeof_pthread);
 
-      int schedpolicy;
-      if (ps_pdread (ta->ph, &((struct pthread *) addr)->schedpolicy,
-		     &schedpolicy, sizeof (int)) != PS_OK)
-	{
-	  result = TD_ERR;	/* XXX Other error value?  */
-	  break;
-	}
+  while (next != head)
+    {
+      psaddr_t addr, schedpolicy, schedprio;
 
-      struct sched_param schedparam;
-      if (ps_pdread (ta->ph, &((struct pthread *) addr)->schedparam,
-		     &schedparam, sizeof (struct sched_param)) != PS_OK)
-	{
-	  result = TD_ERR;	/* XXX Other error value?  */
-	  break;
-	}
+      addr = next - (ofs - (psaddr_t) 0);
+      if (next == 0 || addr == 0) /* Sanity check.  */
+	return TD_DBERR;
 
-      /* Now test whether this thread matches the specified
-	 conditions.  */
+      /* Copy the whole descriptor in once so we can access the several
+	 fields locally.  Excess copying in one go is much better than
+	 multiple ps_pdread calls.  */
+      if (ps_pdread (ta->ph, addr, copy, ta->ta_sizeof_pthread) != PS_OK)
+	return TD_ERR;
+
+      err = DB_GET_FIELD_LOCAL (schedpolicy, ta, copy, pthread,
+				schedpolicy, 0);
+      if (err != TD_OK)
+	break;
+      err = DB_GET_FIELD_LOCAL (schedprio, ta, copy, pthread,
+				schedparam_sched_priority, 0);
+      if (err != TD_OK)
+	break;
+
+      /* Now test whether this thread matches the specified conditions.  */
 
       /* Only if the priority level is as high or higher.  */
-      int descr_pri = (schedpolicy == SCHED_OTHER
-		       ? 0 : schedparam.sched_priority);
+      int descr_pri = ((uintptr_t) schedpolicy == SCHED_OTHER
+		       ? 0 : (uintptr_t) schedprio);
       if (descr_pri >= ti_pri)
 	{
-	  /* XXX For now we ignore threads which are not running anymore.
-	     The reason is that gdb tries to get the registers and fails.
-	     In future we should have a special mode of the thread library
-	     in which we keep the process around until the actual join
-	     operation happened.  */
-	  int cancelhandling;
-	  if (ps_pdread (ta->ph, &((struct pthread *) addr)->cancelhandling,
-			 &cancelhandling, sizeof (int)) != PS_OK)
-	    {
-	      result = TD_ERR;	/* XXX Other error value?  */
-	      break;
-	    }
-
-	  if ((cancelhandling & TERMINATED_BITMASK) == 0)
-	    {
-	      /* Yep, it matches.  Call the callback function.  */
-	      td_thrhandle_t th;
-	      th.th_ta_p = (td_thragent_t *) ta;
-	      th.th_unique = addr;
-	      if (callback (&th, cbdata_p) != 0)
-		return TD_DBERR;
-	    }
+	  /* Yep, it matches.  Call the callback function.  */
+	  td_thrhandle_t th;
+	  th.th_ta_p = (td_thragent_t *) ta;
+	  th.th_unique = addr;
+	  if (callback (&th, cbdata_p) != 0)
+	    return TD_DBERR;
 	}
 
       /* Get the pointer to the next element.  */
-      if (ps_pdread (ta->ph, &((struct pthread *) addr)->list,
-		     &list, sizeof (list_t)) != PS_OK)
-	return TD_ERR;	/* XXX Other error value?  */
+      err = DB_GET_FIELD_LOCAL (next, ta, copy + (ofs - (psaddr_t) 0), list_t,
+				next, 0);
+      if (err != TD_OK)
+	break;
     }
 
-  return result;
+  return err;
 }
 
 
 td_err_e
-td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
+td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
 		void *cbdata_p, td_thr_state_e state, int ti_pri,
 		sigset_t *ti_sigmask_p, unsigned int ti_user_flags)
 {
+  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
+  td_err_e err;
+  psaddr_t list;
+
   LOG ("td_ta_thr_iter");
 
   /* Test whether the TA parameter is ok.  */
@@ -127,13 +133,16 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
      threads for which the thread library allocated the stacks.  We
      have to iterate over both lists separately.  We start with the
      list of threads with user-defined stacks.  */
-  td_err_e result = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
-					 ta->stack_user);
+
+  err = DB_GET_SYMBOL (list, ta, __stack_user);
+  if (err == TD_OK)
+    err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri, list, 1);
 
   /* And the threads with stacks allocated by the implementation.  */
-  if (result == TD_OK)
-    result = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
-				  ta->stack_used);
+  if (err == TD_OK)
+    err = DB_GET_SYMBOL (list, ta, stack_used);
+  if (err == TD_OK)
+    err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri, list, 0);
 
-  return result;
+  return err;
 }

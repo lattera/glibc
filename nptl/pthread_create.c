@@ -60,9 +60,6 @@ struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
   __attribute__ ((nocommon));
 hidden_data_def (__pthread_keys)
 
-/* This is for libthread_db only.  */
-const int __pthread_pthread_sizeof_descr = sizeof (struct pthread);
-
 struct pthread *
 internal_function
 __find_in_stack_list (pd)
@@ -475,3 +472,7 @@ __pthread_create_2_0 (newthread, attr, start_routine, arg)
 compat_symbol (libpthread, __pthread_create_2_0, pthread_create,
 	       GLIBC_2_0);
 #endif
+
+/* Information for libthread_db.  */
+
+#include "../nptl_db/db_info.c"

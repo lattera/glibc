@@ -18,8 +18,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <stddef.h>
-
 #include "thread_dbP.h"
 
 
@@ -31,12 +29,6 @@ td_thr_event_enable (th, onoff)
   LOG ("td_thr_event_enable");
 
   /* Write the new value into the thread data structure.  */
-  const bool value = onoff != 0;
-  if (ps_pdwrite (th->th_ta_p->ph,
-		  ((char *) th->th_unique
-		   + offsetof (struct pthread, report_events)),
-		  &value, sizeof value) != PS_OK)
-    return TD_ERR;	/* XXX Other error value?  */
-
-  return TD_OK;
+  return DB_PUT_FIELD (th->th_ta_p, th->th_unique, pthread, report_events, 0,
+		       (psaddr_t) 0 + (onoff != 0));
 }

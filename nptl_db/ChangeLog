@@ -1,3 +1,64 @@
+2003-09-08  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_get_info.c (td_thr_get_info): Cast th_unique to thread_t.
+
+2003-08-22  Roland McGrath  <roland@redhat.com>
+
+	* fetch-value.c (_td_check_sizeof, _td_locate_field): Return
+	TD_NOCAPAB for PS_NOSYM, instead of vanilla TD_ERR.
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Return TD_NOAPLIC when
+	DB_GET_FIELD returns TD_NOCAPAB.
+
+	* thread_db.h (td_thr_tls_get_addr): Use psaddr_t in signature.
+	* structs.def [USE_TLS]: Add DB_STRUCT_FIELD (link_map, l_tls_modid).
+	* db_info.c (link_map): Typedef it.
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Rewritten.
+
+2003-08-14  Roland McGrath  <roland@redhat.com>
+
+	* thread_dbP.h: Mostly rewritten with many new macros and decls.
+	* td_ta_new.c (td_ta_new): Don't cache a lot of symbol values.
+	* structs.def: New file.
+	* db_info.c: New file.
+	* td_symbol_list.c (symbol_list_arr): Define with structs.def macros.
+	* td_ta_clear_event.c: Rewritten.
+	* td_ta_event_addr.c: Rewritten.
+	* td_ta_event_getmsg.c: Rewritten.
+	* td_ta_get_nthreads.c: Rewritten.
+	* td_ta_map_lwp2thr.c: New file.
+	* td_ta_set_event.c: Rewritten.
+	* td_ta_thr_iter.c: Rewritten.
+	* td_ta_tsd_iter.c: Rewritten.
+	* td_thr_clear_event.c: Rewritten.
+	* td_thr_event_enable.c: Rewritten.
+	* td_thr_event_getmsg.c: Rewritten.
+	* td_thr_get_info.c: Rewritten.
+	* td_thr_getfpregs.c: Rewritten.
+	* td_thr_getgregs.c: Rewritten.
+	* td_thr_set_event.c: Rewritten.
+	* td_thr_setfpregs.c: Rewritten.
+	* td_thr_setgregs.c: Rewritten.
+	* td_thr_tlsbase.c: Rewritten.
+	* td_thr_tsd.c: Rewritten.
+	* td_thr_validate.c: Rewritten.
+	* Makefile (distribute): Add them.
+	* fetch-value.c: New file.
+	* Makefile (libthread_db-routines): Add it.
+
+	* thread_db.h (td_err_e): Comment fix.
+
+2003-08-05  Roland McGrath  <roland@redhat.com>
+
+	* thread_dbP.h (td_lookup): Add attribute_hidden to decl.
+
+2003-08-04  Roland McGrath  <roland@redhat.com>
+
+	* td_ta_clear_event.c (td_ta_clear_event): Fix sizes in ps_* calls.
+
+2003-06-23  Roland McGrath  <roland@redhat.com>
+
+	* proc_service.h: Cosmetic and comment fixes.
+
 2003-06-19  Roland McGrath  <roland@redhat.com>
 
 	* td_thr_event_enable.c (td_thr_event_enable): Use proper type `bool'
