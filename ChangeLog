@@ -1,3 +1,14 @@
+2004-01-13  Daniel Jacobowitz  <drow@mvista.com>
+
+	* sysdeps/powerpc/nofpu/sim-full.c (__sim_exceptions)
+	(__sim_disabled_exceptions, __sim_round_mode): Declare with
+	hidden data and nocommon.
+	* sysdeps/powerpc/nofpu/soft-supp.h (__sim_exceptions)
+	(__sim_disabled_exceptions, __sim_round_mode): Use
+	libc_hidden_proto.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h (__sim_exceptions)
+	(__sim_disabled_exceptions, __sim_round_mode): Likewise.
+
 2004-01-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Define PT_IA_64_HP_OPT_ANOT, PT_IA_64_HP_HSL_ANOT, and
@@ -82,7 +93,6 @@
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h
 	(SIGCONTEXT_V_REGS_PTR, SIGCONTEXT_V_RESERVE): Defined.
-
 
 2004-01-12  Steven Munroe  <sjmunroe@us.ibm.com>
 
