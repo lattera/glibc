@@ -1,5 +1,5 @@
 /* Test for re_search_2.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2001.
 
@@ -38,7 +38,7 @@ main (void)
   s = re_compile_pattern ("ab[cde]", 7, &regex);
   if (s != NULL)
     {
-      puts ("re_compile_pattern return non-NULL value");
+      puts ("re_compile_pattern returned non-NULL value");
       result = 1;
     }
   else
@@ -48,7 +48,7 @@ main (void)
       match[2] = re_search_2 (&regex, "xya", 3, "bd", 2, 2, 6, NULL, 8);
       if (match[0] != 2 || match[1] != 0 || match[2] != 2)
 	{
-	  printf ("re_match returned %d,%d,%d, expected 2,0,2\n",
+	  printf ("re_search_2 returned %d,%d,%d, expected 2,0,2\n",
 		  match[0], match[1], match[2]);
 	  result = 1;
 	}

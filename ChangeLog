@@ -1,4 +1,17 @@
+2002-07-16  Stepan Kasal  <kasal@math.cas.cz>
+
+	* posix/bug-regex7.c: New file.
+	* posix/bug-regex8.c: New file.
+	* posix/Makefile (tests): Add bug-regex7 and bug-regex8.
+
+2002-07-16  Stepan Kasal  <kasal@math.cas.cz>
+
+	* posix/bug-regex4.c (main): Fix typos.
+	* posix/bug-regex6.c (main): Likewise.
+
 2002-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bug-regex6.c (main): Fix warnings.
 
 	* iconvdata/Makefile (CPPFLAGS): Add NOT_IN_libc.
 
@@ -452,7 +465,7 @@
 
 2002-07-03  Jakub Jelinek  <jakub@redhat.com>
 
-	* stdio-common/printf_fp.c (__printf_fp.c): If _FPIO_CONST_SHIFT is
+	* stdio-common/printf_fp.c (__printf_fp): If _FPIO_CONST_SHIFT is
 	non-zero, adjust exponent.
 	* sysdeps/ieee754/ldbl-128/s_erfl.c (__erfl, erfl, __erfcl, erfcl):
 	Remove NO_LONG_DOUBLE aliases.

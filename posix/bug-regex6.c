@@ -18,10 +18,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sys/types.h>
-#include <regex.h>
 #include <locale.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <regex.h>
+
 
 int
 main (int argc, char *argv[])
@@ -29,8 +31,8 @@ main (int argc, char *argv[])
   regex_t re;
   regmatch_t mat[10];
   int i, j, ret = 0;
-  char *locales[] = { "C", "de_DE.UTF-8" };
-  char *string = "http://www.regex.com/pattern/matching.html#intro";
+  const char *locales[] = { "C", "de_DE.UTF-8" };
+  const char *string = "http://www.regex.com/pattern/matching.html#intro";
   regmatch_t expect[10] = {
     { 0, 48 }, { 0, 5 }, { 0, 4 }, { 5, 20 }, { 7, 20 }, { 20, 42 },
     { -1, -1 }, { -1, -1 }, { 42, 48 }, { 43, 48 } };
@@ -46,7 +48,7 @@ main (int argc, char *argv[])
 			"^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?",
 			REG_EXTENDED) != REG_NOERROR)
 	{
-	  puts ("cannot compile expression \"[a-f]*\"");
+	  puts ("cannot compile the regular expression");
 	  ret = 1;
 	}
       else if (regexec (&re, string, 10, mat, 0) == REG_NOMATCH)
