@@ -233,8 +233,9 @@ LDFLAGS-restest1 = -rdynamic $(objpfx)testobj1.so $(objpfx)testobj1_1.so
 
 $(objpfx)restest1.out: $(test-modules)
 
+$(objpfx)preloadtest: $(objpfx)testobj6.so
 $(objpfx)preloadtest.out: $(test-modules)
-LDFLAGS-preloadtest = -rdynamic $(objpfx)testobj6.so
+LDFLAGS-preloadtest = -rdynamic
 preloadtest-ENV = LD_PRELOAD=testobj1.so:testobj2.so:testobj3.so:testobj4.so:testobj5.so
 
 $(objpfx)loadfail: $(objpfx)libdl.so
