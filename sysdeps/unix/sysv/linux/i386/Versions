@@ -19,8 +19,6 @@ libc {
     # a*
     alphasort64;
 
-    # g*
-    getdirentries64;
     # New rlimit interface
     getrlimit; setrlimit; getrlimit64;
 

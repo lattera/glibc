@@ -1,3 +1,22 @@
+2000-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* dirent/Versions (getdirentries64): Export at GLIBC_2.2.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_GETDENTS64_SYSCALL): Define.
+	* sysdeps/unix/sysv/linux/getdents.c (__getdents): Use getdents64
+	syscall if available to get d_type fields.
+	* sysdeps/unix/sysv/linux/alpha/getdents.c (DIRENT_TYPE): Define.
+	* sysdeps/unix/sysv/linux/arm/Versions (__xstat64, __fxstat64,
+	__lxstat64): Export at GLIBC_2.2.
+	(alphasort64, readdir64, readdir64_r, scandir64, versionsort64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/Versions (getdirentries64): Remove.
+	* sysdeps/unix/sysv/linux/i386/getdents64.c (kernel_dirent64): Define.
+	* sysdeps/unix/sysv/linux/powerpc/Versions (alphasort64,
+	getdirentries64, versionsort64): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (alphasort64,
+	getdirentries64, versionsort64): Remove.
+
 2000-08-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile: Remove rules to generate glob package.

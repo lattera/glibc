@@ -136,3 +136,9 @@
 #if __LINUX_KERNEL_VERSION >= 132097 && (defined __i386__ || defined __sparc__)
 # define __ASSUME_FCNTL64		1
 #endif
+
+/* The getdents64 syscall was introduced in 2.4.0-test7.  We test for
+   2.4.1 for the earliest version we know the syscall is available.  */
+#if __LINUX_KERNEL_VERSION >= 132097
+# define __ASSUME_GETDENTS64_SYSCALL	1
+#endif

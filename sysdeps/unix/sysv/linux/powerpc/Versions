@@ -9,11 +9,6 @@ libc {
     # functions used in other libraries
     __xstat64; __fxstat64; __lxstat64;
 
-    # a*
-    alphasort64;
-
-    # g*
-    getdirentries64;
     # New rlimit interface
     getrlimit; setrlimit; getrlimit64; setrlimit64;
 
@@ -22,8 +17,5 @@ libc {
 
     # s*
     scandir64;
-
-    # v*
-    versionsort64;
   }
 }

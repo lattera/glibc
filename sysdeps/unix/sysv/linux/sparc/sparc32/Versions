@@ -9,19 +9,10 @@ libc {
     # functions used in other libraries
     __xstat64; __fxstat64; __lxstat64;
 
-    # a*
-    alphasort64;
-
-    # g*
-    getdirentries64;
-
     # r*
     readdir64; readdir64_r;
 
     # s*
     scandir64;
-
-    # v*
-    versionsort64;
   }
 }

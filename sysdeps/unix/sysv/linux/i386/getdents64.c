@@ -36,6 +36,7 @@ versioned_symbol (libc, __getdents64, getdents64, GLIBC_2_2);
 #define __GETDENTS __old_getdents64
 #define DIRENT_TYPE struct __old_dirent64
 #define kernel_dirent old_kernel_dirent
+#define kernel_dirent64 old_kernel_dirent64
 
 #include <sysdeps/unix/sysv/linux/getdents.c>
 
