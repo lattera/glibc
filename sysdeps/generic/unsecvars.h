@@ -9,6 +9,7 @@
   "LD_PROFILE\0"							      \
   "LD_USE_LOAD_BIAS\0"							      \
   "GCONV_PATH\0"							      \
+  "GETCONF_DIR\0"							      \
   "HOSTALIASES\0"							      \
   "LOCALDOMAIN\0"							      \
   "LOCPATH\0"								      \

@@ -19,7 +19,9 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#ifndef NO_SGIDEFS_H
 #include <sgidefs.h>
+#endif
 #include <unistd.h>
 #include <endian.h>
 

@@ -1,3 +1,15 @@
+2004-11-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add GETCONF_DIR.
+
+2004-11-26  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/mips/pread.c: Include sgidefs.h only if
+	NO_SGIDEFS_H isn't defined.  Don't include sgidefs.h twice.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+
 2004-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/dlfcn.h (__libc_dlopen): Add __RTLD_DLOPEN to the mode

@@ -141,4 +141,26 @@
 /* The clock selection interfaces are not available.  */
 #define _POSIX_CLOCK_SELECTION	-1
 
+/* Advisory information interfaces are available.  */
+#define _POSIX_ADVISORY_INFO	200112L
+
+/* IPv6 support is available.  */
+#define _POSIX_IPV6	200112L
+
+/* Raw socket support is available.  */
+#define _POSIX_RAW_SOCKETS	200112L
+
+/* Neither process nor thread sporadic server interfaces is available.  */
+#define _POSIX_SPORADIC_SERVER	-1
+#define _POSIX_THREAD_SPORADIC_SERVER	-1
+
+/* trace.h is not available.  */
+#define _POSIX_TRACE	-1
+#define _POSIX_TRACE_EVENT_FILTER	-1
+#define _POSIX_TRACE_INHERIT	-1
+#define _POSIX_TRACE_LOG	-1
+
+/* Typed memory objects are not available.  */
+#define _POSIX_TYPED_MEMORY_OBJECTS	-1
+
 #endif /* posix_opt.h */
