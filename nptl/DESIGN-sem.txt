@@ -26,7 +26,8 @@ sem_wait(sem_t *sem)
 sem_post(sem_t *sem)
 {
   n = atomic_increment(sem->count);
-  futex_wake(&sem->count, n);
+  // Pass the new value of sem->count
+  futex_wake(&sem->count, n + 1);
 }
 
 sem_trywait(sem_t *sem)
