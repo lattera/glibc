@@ -1,3 +1,8 @@
+1999-09-19  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdprio.c (_hurd_priority_which_map): Rearrange the code a bit.
+	Use __munmap instead of __vm_deallocate.
+
 1999-09-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/nss_compat/compat-grp.c (getgrgid_plusgroup): Correct
@@ -214,6 +219,7 @@
 
 	* hurd/hurdprio.c (_hurd_priority_which_map): If WHO is zero default
 	it to getpid () for PRIO_PROCESS, geteuid () for PRIO_USER.
+	(_hurd_priority_which_map):
 
 1999-09-04  Ulrich Drepper  <drepper@cygnus.com>
 
