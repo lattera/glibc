@@ -220,7 +220,7 @@ __pthread_cond_timedwait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	movl	20+CLEANUP_PREV(%esp), %edx
+11:	movl	28+CLEANUP_PREV(%esp), %edx
 	movl	%edx, %gs:CLEANUP
 
 	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
