@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
-   Copyright (C) 1995,96,97,98,99,2000,01,02,03 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02,03,04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -186,7 +186,7 @@ init (int *data)
   if (_cthread_init_routine)
     {
       /* Initialize cthreads, which will allocate us a new stack to run on.  */
-      void *newsp = (*_cthread_init_routine) ();
+      int *newsp = (*_cthread_init_routine) ();
       struct hurd_startup_data *od;
 
       void switch_stacks (void);
@@ -204,12 +204,12 @@ init (int *data)
       /* And readjust the dynamic linker's idea of where the argument
          vector lives.  */
       assert (_dl_argv == argv);
-      _dl_argv = (void *) ((int *) newsp + 1);
+      _dl_argv = (void *) (newsp + 1);
 #endif
 
       /* Set up the Hurd startup data block immediately following
 	 the argument and environment pointers on the new stack.  */
-      od = (newsp + ((char *) d - (char *) data));
+      od = ((void *) newsp + ((char *) d - (char *) data));
       if ((void *) argv[0] == d)
 	/* We were started up by the kernel with arguments on the stack.
 	   There is no Hurd startup data, so zero the block.  */
@@ -221,7 +221,7 @@ init (int *data)
       /* Push the user code address on the top of the new stack.  It will
 	 be the return address for `init1'; we will jump there with NEWSP
 	 as the stack pointer.  */
-      *--(int *) newsp = data[-1];
+      *--newsp = data[-1];
       ((void **) data)[-1] = switch_stacks;
       /* Force NEWSP into %ecx and &init1 into %eax, which are not restored
 	 by function return.  */
@@ -347,7 +347,7 @@ _hurd_stack_setup (volatile int argc, ...)
       *--data = (&argc)[-1];
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
 		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
-		    "jmp *%1" : : "r" (data), "r" (&doinit1) : "sp", "bp");
+		    "jmp *%1" : : "r" (data), "r" (&doinit1) : "sp");
       /* NOTREACHED */
     }
 
