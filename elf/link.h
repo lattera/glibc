@@ -252,6 +252,7 @@ extern struct link_map *_dl_profile_map;
 extern int _dl_debug_libs;
 extern int _dl_debug_impcalls;
 extern int _dl_debug_bindings;
+extern int _dl_debug_symbols;
 
 /* File deccriptor to write debug messages to.  */
 extern int _dl_debug_fd;

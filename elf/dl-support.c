@@ -38,6 +38,7 @@ size_t _dl_platformlen;
 int _dl_debug_libs;
 int _dl_debug_impcalls;
 int _dl_debug_bindings;
+int _dl_debug_symbols;
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;

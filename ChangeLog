@@ -1,3 +1,17 @@
+1998-03-10 00:10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-lookup.c (do_lookup): Remove list and n parameter and add
+	instead scope.  If debugging display information about symbol
+	resolving.
+	(_dl_lookup_symbol): Call do_lookup with correct parameters.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+	* elf/dl-support.c: Define _dl_debug_symbols.
+	* elf/link.h: Add declaration for _dl_debug_symbols.
+	* elf/rtld.c: Define _dl_debug_symbols.
+	(process_dl_debug): Recognize symbols option.
+
 1998-03-09 23:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/init-first.c [!PIC]: Expect arguments
