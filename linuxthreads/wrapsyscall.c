@@ -208,7 +208,7 @@ CANCELABLE_SYSCALL (ssize_t, recvmsg, (int fd, struct msghdr *message, int flags
 		    (fd, message, flags))
 
 /* send(2).  */
-CANCELABLE_SYSCALL (ssize_t, send, (ssize_t fd, const __ptr_t buf, size_t n,
+CANCELABLE_SYSCALL (ssize_t, send, (int fd, const __ptr_t buf, size_t n,
 				    int flags),
 		    (fd, buf, n, flags))
 strong_alias (send, __send)
@@ -219,7 +219,7 @@ CANCELABLE_SYSCALL (ssize_t, sendmsg, (int fd, const struct msghdr *message,
 		    (fd, message, flags))
 
 /* sendto(2).  */
-CANCELABLE_SYSCALL (ssize_t, sendto, (ssize_t fd, const __ptr_t buf, size_t n,
+CANCELABLE_SYSCALL (ssize_t, sendto, (int fd, const __ptr_t buf, size_t n,
 				      int flags, __CONST_SOCKADDR_ARG addr,
 				      socklen_t addr_len),
 		    (fd, buf, n, flags, addr, addr_len))
