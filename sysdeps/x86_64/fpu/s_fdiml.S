@@ -22,8 +22,8 @@
 
 	.text
 ENTRY(__fdiml)
-	fldt	8(%esp)		// x
-	fldt	24(%esp)	// x : y
+	fldt	8(%rsp)		// x
+	fldt	24(%rsp)	// x : y
 
 	fucomi	%st(1), %st
 	jp	1f
