@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,7 @@ CFLAGS-dummy-repertoire.c = -I../locale/programs
 CFLAGS-charmap.c = -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 		   -DDEFAULT_CHARMAP=null_pointer -DNEED_NULL_POINTER
 CFLAGS-linereader.c = -DNO_TRANSLITERATION
+CFLAGS-simple-hash.c = -I../locale
 
 tests	= tst-iconv1 tst-iconv2 tst-iconv3
 

@@ -1,5 +1,7 @@
 2002-04-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/Makefile (CFLAGS-simple-hash.c): Define to find hashval.h.
+
 	* locale/programs/locfile.c (to_archive): New variable.  To collect
 	data which has to be added to the locale archive.
 	(write_all_categories): Take new third parameter with locale name.
