@@ -202,6 +202,11 @@ $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 $(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
 	$(do-install)
 
+# 'pthread_self' is a simple memory or register load.  Setting up the
+# stack frame is more work than the actual operation.  Disable the
+# frame creation entirely.  This will help applications which call the
+# function frequently to get a thread-specific handle.
+CFLAGS-pthread_self.c += -fomit-frame-pointer
 
 CFLAGS-tst-unload.c += -DPREFIX=\"$(objpfx)\"
 
