@@ -1,3 +1,12 @@
+2001-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/initspin.h: Make all names namespace clean.
+	* sysdeps/unix/sysv/linux/hppa/bits/initspin.h: Likewise.
+	* manager.c: Adjust for namespace cleanup in bits/initspin.h.
+	* pthread.c: Likewise.
+	* spinlock.h: Likewise.
+	* sysdeps/pthread/pthread.h: Likewise.
+
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/pthreadtypes.h: Define pthread_attr_t also
