@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <ctype.h>
+#include <locale.h>
 
 
 static inline void
@@ -28,8 +29,9 @@ strip (char *wp, const char *s)
 
   while (*s != '\0')
     {
-      if (isalnum (*s) || *s == '_' || *s == '-' || *s == '.')
-	*wp++ = toupper (*s);
+      if (__isalnum_l (*s, &_nl_C_locobj)
+	  || *s == '_' || *s == '-' || *s == '.')
+	*wp++ = __toupper_l (*s, &_nl_C_locobj);
       else if (*s == '/')
 	{
 	  if (++slash_count == 3)
@@ -50,7 +52,7 @@ static char * __attribute__ ((unused))
 upstr (char *dst, const char *str)
 {
   char *cp = dst;
-  while ((*cp++ = toupper (*str++)) != '\0')
+  while ((*cp++ = __toupper_l (*str++, &_nl_C_locobj)) != '\0')
     /* nothing */;
   return dst;
 }

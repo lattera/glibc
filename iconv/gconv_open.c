@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -64,7 +65,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	  tok = __strtok_r (tok, ",", &ptr);
 	  while (tok != NULL)
 	    {
-	      if (__strcasecmp (tok, "TRANSLIT") == 0)
+	      if (__strcasecmp_l (tok, "TRANSLIT", &_nl_C_locobj) == 0)
 		{
 		  /* It's the builtin transliteration handling.  We only
 		     support it for working on the internal encoding.  */
@@ -97,7 +98,7 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 			lastp->next = newp;
 		    }
 		}
-	      else if (__strcasecmp (tok, "IGNORE") == 0)
+	      else if (__strcasecmp_l (tok, "IGNORE", &_nl_C_locobj) == 0)
 		/* Set the flag to ignore all errors.  */
 		conv_flags |= __GCONV_IGNORE_ERRORS;
 	      else
@@ -110,7 +111,8 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 		  for (runp = trans; runp != NULL; runp = runp->next)
 		    if (runp->name != NULL
-			&& __strcasecmp (tok, runp->name) == 0)
+			&& __strcasecmp_l (tok, runp->name,
+					   &_nl_C_locobj) == 0)
 		      break;
 		    else
 		      lastp = runp;
@@ -205,8 +207,8 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 		 modules for this step.  */
 	      for (runp = trans; runp != NULL; runp = runp->next)
 		for (n = 0; n < runp->ncsnames; ++n)
-		  if (__strcasecmp (steps[cnt].__from_name,
-				    runp->csnames[n]) == 0)
+		  if (__strcasecmp_l (steps[cnt].__from_name,
+				      runp->csnames[n], &_nl_C_locobj) == 0)
 		    {
 		      void *data = NULL;
 

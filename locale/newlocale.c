@@ -163,10 +163,12 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
       if (result_ptr == NULL)
 	return NULL;
 
-      *result_ptr = result;
     }
   else
-    *(result_ptr = base) = result;
+    /* We modify the base structure.  */
+    result_ptr = base;
+
+  *result_ptr = result;
 
   /* Update the special members.  */
  update:

@@ -1,3 +1,9 @@
+2001-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* lockfile.c (__pthread_provide_lockfile): New variable.
+	* pthread.c (__pthread_require_lockfile): New variable.
+	* cancel.c (__pthread_require_lockfile): New variable.
+
 2001-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-context.c (threadfct): Initialize context before calling

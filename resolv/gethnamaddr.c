@@ -68,6 +68,8 @@ static char rcsid[] = "$Id$";
 #include <errno.h>
 #include <syslog.h>
 
+#define RESOLVSORT
+
 #ifndef LOG_AUTH
 # define LOG_AUTH 0
 #endif

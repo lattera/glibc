@@ -40,7 +40,8 @@ routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 tests		= tst-C-locale
 categories	= ctype messages monetary numeric time paper name \
 		  address telephone measurement identification collate
-aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name
+aux		= $(categories:%=lc-%) $(categories:%=C-%) SYS_libc C_name \
+		  xlocale
 others		= localedef locale
 #others-static	= localedef locale
 install-bin	= localedef locale

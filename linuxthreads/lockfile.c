@@ -26,6 +26,12 @@
 #include "../libio/libioP.h"
 #endif
 
+#ifndef SHARED
+/* We need a hook to force this file to be linked in when static
+   libpthread is used.  */
+const int __pthread_provide_lockfile = 0;
+#endif
+
 void
 __flockfile (FILE *stream)
 {

@@ -1,3 +1,32 @@
+2001-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (RESOLVSORT): Define.
+	(addrsort): New function.
+	* resolv/gethnamaddr.c (RESOLVSORT): Define.
+
+2001-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/strsignal.c (free_mem): Remove.
+
+2001-08-14  Andreas Jaeger  <aj@suse.de>
+
+	* inet/inet_ntoa.c (free_mem): Remove, it's not used anymore.
+	Closes PR libc/2477, reported by Dylan Alex Simon
+	<dylan@dylex.caltech.edu>.
+
+2001-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/Makefile (aux): Add xlocale.
+	* locale/xlocale.c: New file.
+	* include/locale.c (_nl_C_locobj): Declare.
+	* iconv/gconv_charset.h: Use __tolower_l, __isdigit_l, __isspace_l
+	with _nl_C_locobj instead of tolower, isdigit, isspace.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_open.c: Likewise.
+
+	* locale/newlocale.c: Minor cleanups.
+
 2001-08-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/w_expl.c: New file, copy from

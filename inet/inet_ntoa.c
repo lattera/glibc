@@ -1,5 +1,5 @@
 /* Convert Inet number to ASCII representation.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -96,11 +96,3 @@ free_key_mem (void *mem)
   free (mem);
   __libc_setspecific (key, NULL);
 }
-
-
-static void __attribute__ ((unused))
-free_mem (void)
-{
-  free (static_buf);
-}
-text_set_element (__libc_subfreeres, free_mem);
