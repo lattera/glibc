@@ -1,4 +1,4 @@
-# @(#)australasia	7.43
+# @(#)australasia	7.44
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -181,10 +181,11 @@ Zone Indian/Christmas	7:02:52 -	LMT	1895 Feb
 			7:00	-	CXT	# Christmas Island Time
 
 # Cook Is
+# From Shanks (1995):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Cook	1978	only	-	Nov	12	0:00	0:30	HS
-Rule	Cook	1979	max	-	Mar	Sun>=1	0:00	0	-
-Rule	Cook	1979	max	-	Oct	lastSun	0:00	0:30	HS
+Rule	Cook	1979	1991	-	Mar	Sun>=1	0:00	0	-
+Rule	Cook	1979	1990	-	Oct	lastSun	0:00	0:30	HS
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Rarotonga	-10:39:04 -	LMT	1901		# Avarua
 			-10:30	-	CKT	1978 Nov 12	# Cook Is Time
@@ -270,9 +271,8 @@ Zone	Pacific/Nauru	11:07:40 -	LMT	1921 Jan 15	# Uaobe
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	NC	1977	1978	-	Dec	Sun>=1	0:00	1:00	S
 Rule	NC	1978	1979	-	Feb	27	0:00	0	-
-Rule	NC	1996	only	-	Dec	1	2:00s	1:00	S
-Rule	NC	1997	max	-	Mar	Sun>=1	2:00s	0	-
-Rule	NC	1997	max	-	Nov	lastSun	2:00s	1:00	S
+Rule	NC	1996	only	-	Dec	 1	2:00s	1:00	S
+Rule	NC	1997	only	-	Mar	 2	2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Pacific/Noumea	11:05:48 -	LMT	1912 Jan 13
 			11:00	NC	NC%sT
@@ -447,8 +447,8 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # From Paul Eggert <eggert@twinsun.com> (1996-11-22):
 # A good source for time zone historical data outside the U.S. is
-# Thomas G. Shanks, The International Atlas (3rd edition),
-# San Diego: ACS Publications, Inc. (1991).
+# Thomas G. Shanks, The International Atlas (4th edition),
+# San Diego: ACS Publications, Inc. (1995).
 #
 # Gwillim Law <LAW@encmail.encompass.com> writes that a good source
 # for recent time zone data is the International Air Transport
@@ -834,7 +834,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # hour ahead of NSW time.
 
 # From Paul Eggert (1995-12-19):
-# For Lord Howe we use Shanks through its time of publication (1991).
+# For Lord Howe we use Shanks through 1991.
 # Lord Howe is part of NSW, so we'll guess it has used the same transition
 # times as NSW since 1991, even though Shanks writes that Lord Howe went
 # with Victoria when NSW and Victoria disagreed in 1982.

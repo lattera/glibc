@@ -1,4 +1,4 @@
-# @(#)europe	7.55
+# @(#)europe	7.56
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -6,8 +6,8 @@
 
 # From Paul Eggert <eggert@twinsun.com> (1996-11-22):
 # A good source for time zone historical data outside the U.S. is
-# Thomas G. Shanks, The International Atlas (3rd edition),
-# San Diego: ACS Publications, Inc. (1991).
+# Thomas G. Shanks, The International Atlas (4th edition),
+# San Diego: ACS Publications, Inc. (1995).
 #
 # Gwillim Law <LAW@encmail.encompass.com> writes that a good source
 # for recent time zone data is the International Air Transport
@@ -951,10 +951,14 @@ Rule	Russia	1921	only	-	Feb	14	23:00	1:00	S
 Rule	Russia	1921	only	-	Mar	20	23:00	2:00	DS
 Rule	Russia	1921	only	-	Sep	 1	 0:00	1:00	S
 Rule	Russia	1921	only	-	Oct	 1	 0:00	0	-
+# Act No.925 of the Council of Ministers of the USSR (1980-10-24):
 Rule	Russia	1981	1984	-	Apr	 1	 0:00	1:00	S
 Rule	Russia	1981	1983	-	Oct	 1	 0:00	0	-
+# Act No.967 of the Council of Ministers of the USSR (1984-09-13), repeated in
+# Act No.227 of the Council of Ministers of the USSR (1989-03-14):
 Rule	Russia	1984	1991	-	Sep	lastSun	 2:00s	0	-
 Rule	Russia	1985	1991	-	Mar	lastSun	 2:00s	1:00	S
+#
 Rule	Russia	1992	only	-	Mar	lastSat	 23:00	1:00	S
 Rule	Russia	1992	only	-	Sep	lastSat	 23:00	0	-
 Rule	Russia	1993	max	-	Mar	lastSun	 2:00s	1:00	S
@@ -1056,15 +1060,17 @@ Zone	Europe/Vienna	1:05:20 -	LMT	1893 Apr
 			1:00	EU	CE%sT
 
 # Belarus
+# Transitions before 1991 are from Shanks (1995).
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Minsk	1:50:16 -	LMT	1880
-			2:30:20	Russia	%s	1919 Jul 1 2:00
-			3:00	Russia	MSK/MSD	1922 Oct
+			1:50	-	MMT	1924 May 2 # Minsk Mean Time
 			2:00	-	EET	1930 Jun 21
+			3:00	-	MSK	1941 Jun 28
+			1:00	C-Eur	CE%sT	1944 Jul  3
 			3:00	Russia	MSK/MSD	1991 Mar 31 2:00s
 			2:00	1:00	EEST	1991 Sep 29 2:00s
-			2:00	-	EET	1992 Mar 29 0:00
-			2:00	1:00	EEST	1992 Sep 27 0:00
+			2:00	-	EET	1992 Mar 29 2:00s
+			2:00	1:00	EEST	1992 Sep 27 2:00s
 			2:00	Russia	EE%sT
 
 # Belgium
@@ -1244,7 +1250,8 @@ Zone	Europe/Tallinn	1:39:00	-	LMT	1880
 			1:00	C-Eur	CE%sT	1944 Sep 22
 			3:00	Russia	MSK/MSD	1989 Mar 26 2:00s
 			2:00	1:00	EEST	1989 Sep 24 2:00s
-			2:00	C-Eur	EE%sT
+			2:00	C-Eur	EE%sT	1998
+			2:00	EU	EE%sT
 
 # Finland
 # See Sweden for when the Gregorian calendar was adopted.
@@ -1570,14 +1577,45 @@ Link	Europe/Rome	Europe/Vatican
 Link	Europe/Rome	Europe/San_Marino
 
 # Latvia
-# From Paul Eggert (1996-11-22):
-# Rules after 1991 are by extension from Shanks.  They contradict
-# IATA SSIM (1992/1996), which claims Latvia uses W-Eur rules, but
-# Peter Ilieve's relative writes that Latvia switched in September this year,
-# so we'll assume that the old C-Eur-style rules still apply.
+
+# From Liene Kanepe <Liene_Kanepe@lm.gov.lv> (1998-09-17):
+
+# I asked about this matter Scientific Secretary of the Institute of Astronomy
+# of The University of Latvia Dr. paed Mr. Ilgonis Vilks. I also searched the
+# correct data in juridical acts and I found some juridical documents about
+# changes in the counting of time in Latvia from 1981....
+#
+# Act No.35 of the Council of Ministers of Latvian SSR of 1981-01-22 ...
+# according to the Act No.925 of the Council of Ministers of USSR of 1980-10-24
+# ...: all year round the time of 2nd time zone + 1 hour, in addition turning
+# the hands of the clock 1 hour forward on 1 April at 00:00 (GMT 31 March 21:00)
+# and 1 hour backward on the 1 October at 00:00 (GMT 30 September 20:00).
+#
+# Act No.592 of the Council of Ministers of Latvian SSR of 1984-09-24 ...
+# according to the Act No.967 of the Council of Ministers of USSR of 1984-09-13
+# ...: all year round the time of 2nd time zone + 1 hour, in addition turning
+# the hands of the clock 1 hour forward on the last Sunday of March at 02:00
+# (GMT 23:00 on the previous day) and 1 hour backward on the last Sunday of
+# September at 03:00 (GMT 23:00 on the previous day).
+#
+# Act No.81 of the Council of Ministers of Latvian SSR of 1989-03-22 ...
+# according to the Act No.227 of the Council of Ministers of USSR of 1989-03-14
+# ...: since the last Sunday of March 1989 in Lithuanian SSR, Latvian SSR,
+# Estonian SSR and Kaliningrad region of Russian Federation all year round the
+# time of 2nd time zone (Moscow time minus one hour). On the territory of Latvia
+# transition to summer time is performed on the last Sunday of March at 02:00
+# (GMT 00:00), turning the hands of the clock 1 hour forward.  The end of
+# daylight saving time is performed on the last Sunday of September at 03:00
+# (GMT 00:00), turning the hands of the clock 1 hour backward. Exception is
+# 1989-03-26, when we must not turn the hands of the clock....
+#
+# The Regulations of the Cabinet of Ministers of the Republic of Latvia of
+# 1997-01-21 on transition to Summer time ... established the same order of
+# daylight savings time settings as in the States of the European Union.
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	Latvia	1992	max	-	Mar	lastSun	 2:00s	1:00	S
-Rule	Latvia	1992	max	-	Sep	lastSun	 2:00s	0	-
+Rule	Latvia	1989	1996	-	Mar	lastSun	 2:00s	1:00	S
+Rule	Latvia	1989	1996	-	Sep	lastSun	 2:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Riga	1:36:24	-	LMT	1880
 			1:36:24	-	RMT	1918 Apr 15 2:00 #Riga Mean Time
@@ -1587,10 +1625,13 @@ Zone	Europe/Riga	1:36:24	-	LMT	1880
 			1:36:24	-	RMT	1926 May 11
 			2:00	-	EET	1940 Aug  5
 			3:00	-	MSK	1941 Jul
-			1:00	C-Eur	CE%sT	1944 Aug  8
-			3:00	Russia	MSK/MSD	1991 Mar 31 2:00s
-			2:00	1:00	EEST	1991 Sep 29 2:00s
-			2:00	Latvia	EE%sT
+			1:00	C-Eur	CE%sT	1944 Oct 13
+			# Shanks says 1944-08-08, but
+			# Riga fell to the Red Army on 1944-10-13.
+			3:00	Russia	MSK/MSD	1989 Mar lastSun 2:00s
+			2:00	1:00	EEST	1989 Sep lastSun 2:00s
+			2:00	Latvia	EE%sT	1997 Jan 21
+			2:00	EU	EE%sT
 
 # Liechtenstein
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -1610,8 +1651,9 @@ Zone	Europe/Vilnius	1:41:16	-	LMT	1880
 			1:00	C-Eur	CE%sT	1944 Aug
 			3:00	Russia	MSK/MSD	1991 Mar 31 2:00s
 			2:00	1:00	EEST	1991 Sep 29 2:00s
-			2:00	C-Eur	EE%sT	1998 Mar 29 2:00s
-			1:00	C-Eur	CE%sT
+			2:00	C-Eur	EE%sT	1998
+			2:00	-	EET	1998 Mar 29 1:00u
+			1:00	EU	CE%sT
 # From Paul Eggert (1996-11-22):
 # IATA SSIM (1992/1996) says Lithuania uses W-Eur rules, but since it is
 # known to be wrong about Estonia and Latvia, assume it's wrong here too.
@@ -2262,8 +2304,8 @@ Rule	Crimea	1921	only	-	Feb	14	23:00	1:00	CST
 Rule	Crimea	1921	only	-	Mar	21	23:00	2:00	CDST
 Rule	Crimea	1921	only	-	Sep	 1	 0:00	1:00	CST
 Rule	Crimea	1921	only	-	Oct	 1	 0:00	0	NMT
-Rule	Crimea	1996	max	-	Mar	lastSun	 0:00u	1:00	-
-Rule	Crimea	1996	max	-	Oct	lastSun	 0:00u	0	-
+Rule	Crimea	1996	only	-	Mar	lastSun	 0:00u	1:00	-
+Rule	Crimea	1996	only	-	Oct	lastSun	 0:00u	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Europe/Kiev	2:02:04 -	LMT	1880
 			2:02:04	Ukraine	%s	1924 May  2
@@ -2281,9 +2323,12 @@ Zone Europe/Simferopol	2:16:24 -	LMT	1880
 # from Kiev to Moscow time sometime after the January 1994 elections.
 # For now, guess it changed Feb 1.
 			2:00	C-Eur	EE%sT	1994 Feb
-# From IATA SSIM (1994/1996), which also says that Kerch is still like Kiev.
+# From IATA SSIM (1994/1997), which also says that Kerch is still like Kiev.
 			3:00	E-Eur	MSK/MSD	1996
-			3:00	Crimea	MSK/MSD
+# IATA SSIM (1997-09) says Crimea switched to EET/EEST.
+# Assume it happened in March by not changing the clocks.
+			3:00	Crimea	MSK/MSD	1997 Mar lastSun 1:00u
+			2:00	EU	EE%sT
 
 # Yugoslavia
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

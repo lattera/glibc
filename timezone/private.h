@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.47";
+static char	privatehid[] = "@(#)private.h	7.48";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -217,7 +217,7 @@ char *	scheck P((const char *string, const char *format));
 ** add one more for a minus sign if the type is signed.
 */
 #define INT_STRLEN_MAXIMUM(type) \
-    ((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 100 + 1 + TYPE_SIGNED(type))
+    ((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + 1 + TYPE_SIGNED(type))
 #endif /* !defined INT_STRLEN_MAXIMUM */
 
 /*

@@ -1,4 +1,4 @@
-# @(#)africa	7.24
+# @(#)africa	7.25
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -206,9 +206,10 @@ Rule	Egypt	1983	only	-	Jul	12	1:00	1:00	S
 Rule	Egypt	1984	1988	-	May	 1	1:00	1:00	S
 Rule	Egypt	1989	only	-	May	 6	1:00	1:00	S
 Rule	Egypt	1990	1994	-	May	 1	1:00	1:00	S
-# IATA (after 1990) says transitions are at 0:00; go with Shanks.
-Rule	Egypt	1995	max	-	Apr	lastFri	1:00	1:00	S
-Rule	Egypt	1995	max	-	Sep	lastFri	3:00	0	-
+# IATA (after 1990) says transitions are at 0:00.
+# Go with IATA starting in 1995.
+Rule	Egypt	1995	max	-	Apr	Fri>=22	 0:00s	1:00	S
+Rule	Egypt	1995	max	-	Sep	lastFri	23:00s	0	-
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Africa/Cairo	2:05:00 -	LMT	1900 Oct
@@ -323,15 +324,16 @@ Rule	Libya	1987	1990	-	Oct	 1	0:00	0	-
 Rule	Libya	1990	only	-	May	 4	0:00	1:00	S
 Rule	Libya	1996	only	-	Mar	30	2:00s	1:00	S
 Rule	Libya	1996	only	-	Sep	30	2:00s	0	-
-Rule	Libya	1997	max	-	Mar	lastThu	2:00s	1:00	S
-Rule	Libya	1997	max	-	Oct	Thu>=1	2:00s	0	-
+Rule	Libya	1997	only	-	Apr	 4	0:00	1:00	S
+Rule	Libya	1997	only	-	Oct	 4	0:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Africa/Tripoli	0:52:44 -	LMT	1920
 			1:00	Libya	CE%sT	1959
 			2:00	-	EET	1982
 			1:00	Libya	CE%sT	1991
 			2:00	-	EET	1996 Mar 30 3:00
-			1:00	Libya	CE%sT
+			1:00	Libya	CE%sT	1997 Oct  4 0:00
+			2:00	-	EET
 
 # Madagascar
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

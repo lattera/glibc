@@ -202,7 +202,7 @@ KP	+3901+12545	Asia/Pyongyang
 KR	+3733+12658	Asia/Seoul
 KW	+2920+04759	Asia/Kuwait
 KY	+1918-08123	America/Cayman
-KZ	+4315+07657	Asia/Alma-Ata	east Kazakhstan
+KZ	+4315+07657	Asia/Almaty	east Kazakhstan
 KZ	+5017+05710	Asia/Aqtobe	central Kazakhstan
 KZ	+4431+05016	Asia/Aqtau	west Kazakhstan
 LA	+1758+10236	Asia/Vientiane
@@ -236,8 +236,10 @@ MT	+3554+01431	Europe/Malta
 MU	-2010+05730	Indian/Mauritius
 MV	+0410+07330	Indian/Maldives
 MW	-1547+03500	Africa/Blantyre
+MX	+2105-08646	America/Cancun	Eastern Time
 MX	+1924-09909	America/Mexico_City	Central Time
-MX	+2313-10625	America/Mazatlan	Mountain Time
+MX	+2313-10625	America/Mazatlan	Mountain Time - most locations
+MX	+2838-10605	America/Chihuahua	Mountain Time - Chihuahua
 MX	+3152-11637	America/Ensenada	Pacific Time - most locations
 MX	+3232-11701	America/Tijuana	Pacific Time - north Baja California
 MY	+0310+10142	Asia/Kuala_Lumpur	peninsular Malaysia
@@ -354,7 +356,8 @@ US	+643004-1652423	America/Nome	Alaska Time - west Alaska
 US	+515248-1763929	America/Adak	Aleutian Islands
 US	+211825-1575130	Pacific/Honolulu	Hawaii
 UY	-3453-05611	America/Montevideo
-UZ	+4120+06918	Asia/Tashkent
+UZ	+3940+06648	Asia/Samarkand	west Uzbekistan
+UZ	+4120+06918	Asia/Tashkent	east Uzbekistan
 VA	+4154+01227	Europe/Vatican
 VC	+1309-06114	America/St_Vincent
 VE	+1030-06656	America/Caracas

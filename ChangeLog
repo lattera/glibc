@@ -1,3 +1,15 @@
+1998-09-24 10:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/private.h: Update from tzcode1998g.
+
+	* timezone/africa: Update from tzdata1998h.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
 1998-09-23 17:28 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* misc/sys/mman.h: New file.

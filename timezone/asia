@@ -1,4 +1,4 @@
-# @(#)asia	7.39
+# @(#)asia	7.40
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -7,8 +7,8 @@
 # From Paul Eggert <eggert@twinsun.com> (1996-11-22):
 #
 # A good source for time zone historical data outside the U.S. is
-# Thomas G. Shanks, The International Atlas (3rd edition),
-# San Diego: ACS Publications, Inc. (1991).
+# Thomas G. Shanks, The International Atlas (4th edition),
+# San Diego: ACS Publications, Inc. (1995).
 # Except where otherwise noted, it is the source for the data below.
 #
 # Gwillim Law <LAW@encmail.encompass.com> writes that a good source
@@ -78,24 +78,30 @@ Zone	Asia/Kabul	4:36:48 -	LMT	1890
 			4:30	-	AFT
 
 # Armenia
-# From Paul Eggert (1996-05-04):
+# From Paul Eggert (1998-??-??):
 # Shanks has Yerevan switching to 3:00 (with Russian DST) in spring 1991,
 # but usno1995 has Armenia at 4:00 (with DST), and Edgar Der-Danieliantz
-# <edd@AIC.NET> reported today that Yerevan probably won't use DST this year,
-# though it did use DST in 1995.  We guess Yerevan stayed in sync with Moscow
-# between 1990 and 1995, but stopped using DST in 1996.
-# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	Armenia	1991	1995	-	Mar	lastSun	2:00s	1:00	S
-Rule	Armenia	1991	1995	-	Sep	lastSun	2:00s	0	-
+# <edd@AIC.NET> reported (1996-05-04) that Yerevan probably wouldn't use DST
+# in 1996, though it did use DST in 1995.  IATA SSIM (1991/1998) reports that
+# Armenia switched from 3:00 to 4:00 in 1998 and observed DST after 1991,
+# but started switching at 3:00s in 1998.
+# What a mess!  We guess Yerevan DST stayed in sync with Moscow between 1990
+# and 1995, did not use DST in 1996, and started using DST again in 1997.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Yerevan	2:58:00 -	LMT	1924 May  2
 			3:00	-	YERT	1957 Mar    # Yerevan Time
 			4:00 RussiaAsia YER%sT	1991 Mar 31 2:00s
 			3:00	1:00	YERST	1991 Sep 23 # independence
-			3:00	Armenia	AM%sT	1992 Jan 19 2:00s # Armenia Time
-			4:00	Armenia	AM%sT
+			3:00	1:00	AMST	1991 Sep 29 2:00s # Armenia Time
+			3:00	-	AMT	1992 Jan 19 2:00s
+			4:00 RussiaAsia	AM%sT	1996
+			4:00	-	AMT	1997
+			4:00 RussiaAsia	AM%sT			
 
 # Azerbaijan
+# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+Rule	Azer	1997	max	-	Mar	lastSun	 1:00	1:00	S
+Rule	Azer	1997	max	-	Oct	lastSun	 1:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Baku	3:19:24 -	LMT	1924 May  2
 			3:00	-	BAKT	1957 Mar    # Baku Time
@@ -103,7 +109,8 @@ Zone	Asia/Baku	3:19:24 -	LMT	1924 May  2
 			3:00	1:00	BAKST	1991 Aug 30 # independence
 			3:00 RussiaAsia	AZ%sT	1992 Sep lastSun 2:00s
 			4:00	-	AZT	1996 # Azerbaijan time
-			4:00	EUAsia	AZ%sT
+			4:00	EUAsia	AZ%sT	1997
+			4:00	Azer	AZ%sT
 
 # Bahrain
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -183,7 +190,7 @@ Zone	Asia/Phnom_Penh	6:59:40 -	LMT	1906 Jun  9
 # note about Time magazine, though apparently _something_ happened in 1986.
 # Go with Shanks for now.  I made up names for the other pre-1980 time zones.
 
-# From Shanks (1991):
+# From Shanks (1995):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Shang	1940	only	-	Jun	 3	0:00	1:00	D
 Rule	Shang	1940	1941	-	Oct	 1	0:00	0	S
@@ -458,12 +465,7 @@ Zone	Asia/Baghdad	2:57:40	-	LMT	1890
 # ISRAEL              2 H  AHEAD OF UTC
 # ISRAEL              3 H  AHEAD OF UTC  APR 10 - SEP 3
 
-# From Paul Eggert <eggert@twinsun.com> (1993-11-18):
-#
-# Shanks gives the following rules for Jerusalem from 1918 through 1991.
-# After 1989 Shanks often disagrees with Silverberg; we go with Silverberg.
-
-# From Shanks (1991):
+# From Shanks (1995):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Zion	1940	only	-	Jun	 1	0:00	1:00	D
 Rule	Zion	1942	1944	-	Nov	 1	0:00	0	S
@@ -569,6 +571,12 @@ Rule	Zion	1997	only	-	Sep	14	0:00	0	S
 Rule	Zion	1998	only	-	Mar	20	0:00	1:00	D
 Rule	Zion	1998	only	-	Sep	 6	0:00	0	S
 
+# From Member of Knesset Avraham Poraz, as quoted in Ha'aretz (1998-09-02):
+# [The 1998-09-06 transition is to] serve the interests of a small minority
+# of ultra-Orthodox Sephardic Jews who, during the [Hebrew] month of Elul,
+# recite Slihot penitential prayers in the early morning hours
+# and thus find daylight time inconvenient.
+
 # From Paul Eggert (1998-01-12):
 # Here are guesses for rules after 1998.
 # They are probably wrong, but they are more likely than no DST at all.
@@ -644,7 +652,7 @@ Zone	Asia/Amman	2:23:44 -	LMT	1931
 # IATA SSIM mentions a third time zone in Kazakhstan.
 #
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Asia/Alma-Ata	5:07:48 -	LMT	1924 May  2 # or Almaty
+Zone	Asia/Almaty	5:07:48 -	LMT	1924 May  2 # or Alma-Ata
 			5:00	-	ALMT	1957 Mar # Alma-Ata Time
 			6:00 RussiaAsia ALM%sT	1991 Mar 31 2:00s
 			5:00	1:00	ALMST	1991 Sep 29 2:00s
@@ -666,11 +674,13 @@ Zone	Asia/Aqtau	3:21:04	-	LMT	1924 May  2 # or Aktau
 
 # Kirgizstan
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	Kirgiz	1992	max	-	Apr	Sun>=7	0:00	1:00	S
-Rule	Kirgiz	1991	max	-	Sep	lastSun	0:00	0	-
+Rule	Kirgiz	1992	1996	-	Apr	Sun>=7	0:00	1:00	S
+Rule	Kirgiz	1991	1996	-	Sep	lastSun	0:00	0	-
+Rule	Kirgiz	1997	max	-	Mar	lastSun	2:30	1:00	S
+Rule	Kirgiz	1997	max	-	Oct	lastSun	2:30	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Bishkek	4:58:24 -	LMT	1924 May  2
-			5:00	-	FRUT	1957 Mar    # Frunze Time
+			5:00	-	FRUT	1930 Jun 21 # Frunze Time
 			6:00 RussiaAsia FRU%sT	1991 Mar 31 2:00s
 			5:00	1:00	FRUST	1991 Aug 31 # independence
 			5:00	Kirgiz	KG%sT		    # Kirgizstan Time
@@ -684,7 +694,7 @@ Zone	Asia/Bishkek	4:58:24 -	LMT	1924 May  2
 # Daylight Savings Time was not observed until 1987.  He did not know
 # at what time of day DST starts or ends.
 
-# From Shanks (1991):
+# From Shanks (1995):
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	ROK	1960	only	-	May	15	0:00	1:00	D
 Rule	ROK	1960	only	-	Sep	13	0:00	0	S
@@ -957,7 +967,7 @@ Zone	Asia/Singapore	6:55:24 -	LMT	1880
 # </a>
 # reported ``the country's standard time will be put forward by one hour at
 # midnight Friday (1830 GMT) `in the light of the present power crisis'.''
-# Transitions before 1996 are from Shanks (1991).
+# Transitions before 1996 are from Shanks (1995).
 #
 # From Dharmasiri Senanayake, Sri Lanka Media Minister (1996-10-24), as quoted
 # by Shamindra in
@@ -969,7 +979,7 @@ Zone	Asia/Singapore	6:55:24 -	LMT	1880
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Colombo	5:19:24 -	LMT	1880
-			5:20	-	CEYT	1906	# Ceylon Time
+			5:19:32	-	MMT	1906	# Moratuwa Mean Time
 			5:30	-	IST	1942 Jan  5
 			5:30	0:30	IHST	1942 Sep
 			5:30	1:00	IST	1945 Oct 16 2:00
@@ -1007,7 +1017,8 @@ Rule	Syria	1991	1992	-	Oct	 1	0:00	0	-
 Rule	Syria	1992	only	-	Apr	 8	0:00	1:00	S
 Rule	Syria	1993	only	-	Mar	26	0:00	1:00	S
 Rule	Syria	1993	only	-	Sep	25	0:00	0	-
-# IATA SSIM (1996-09) says 1997-03-31; assume that it should be 1997-04-01.
+# IATA SSIM (1996-09) says 1997-03-31; (1998-02) says 1998-04-02,
+# 1999-03-29, and 1999-09-29; ignore all these claims for now.
 Rule	Syria	1994	max	-	Apr	 1	0:00	1:00	S
 Rule	Syria	1994	max	-	Oct	 1	0:00	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -1015,9 +1026,10 @@ Zone	Asia/Damascus	2:25:12 -	LMT	1920
 			2:00	Syria	EE%sT
 
 # Tajikistan
+# From Shanks (1995), who writes ``date of change uncertain'' for 1991.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Dushanbe	4:35:12 -	LMT	1924 May  2
-			5:00	-	DUST	1957 Mar    # Dushanbe Time
+			5:00	-	DUST	1930 Jun 21 # Dushanbe Time
 			6:00 RussiaAsia DUS%sT	1991 Mar 31 2:00s
 			5:00	1:00	DUSST	1991 Sep  9 # independence
 			5:00 RussiaAsia	TJ%sT	1992
@@ -1030,14 +1042,17 @@ Zone	Asia/Bangkok	6:42:04	-	LMT	1880
 			7:00	-	ICT
 
 # Turkmenistan
+# From Shanks (1995):
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Ashkhabad	3:53:32 -	LMT	1924 May  2 # or Ashgabat
-			4:00	-	ASHT	1957 Mar    # Ashkhabad Time
-			5:00 RussiaAsia ASH%sT	1991 Mar 31 2:00s
-			4:00	1:00	ASHST	1991 Sep 29 2:00s
-			4:00	-	ASHT	1991 Oct 27 # independence
-			4:00	-	TMT	1992 Jan 19 2:00s
-			5:00	-	TMT	# Turkmenistan Time
+			4:00	-	ASHT	1930 Jun 21 # Ashkhabad Time
+			5:00	-	ASHT	1981 Apr  1
+			5:00	1:00	ASHST	1981 Oct  1
+			6:00	-	ASHT	1982 Apr  1
+			5:00 RussiaAsia	ASH%sT	1991
+			5:00	-	ASHT	1991 Oct 27 # independence
+			5:00 RussiaAsia	TM%sT	1993	# Turkmenistan Time
+			5:00	-	TMT
 
 # United Arab Emirates
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -1045,14 +1060,24 @@ Zone	Asia/Dubai	3:41:12 -	LMT	1920
 			4:00	-	GST
 
 # Uzbekistan
+# From Shanks (1995):
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone	Asia/Samarkand	4:27:12 -	LMT	1924 May  2
+			4:00	-	SAMT	1930 Jun 21 # Samarkand Time
+			5:00	-	SAMT	1981 Apr  1
+			5:00	1:00	SAMST	1981 Oct  1
+			6:00 RussiaAsia TAS%sT	1991 Mar 31 2:00 # Tashkent Time
+			5:00	-	TAST	1991 Sep  1 # independence
+			5:00	-	UZT	1992
+			5:00 RussiaAsia	UZ%sT	1993
+			5:00	-	UZT
 Zone	Asia/Tashkent	4:37:12 -	LMT	1924 May  2
-			5:00	-	TAST	1957 Mar    # Tashkent Time
+			5:00	-	TAST	1930 Jun 21 # Tashkent Time
 			6:00 RussiaAsia TAS%sT	1991 Mar 31 2:00s
-			5:00	1:00	TASST	1991 Sep 29 2:00s
-			5:00	-	UZT		    # Uzbekistan Time
-# Shanks has Tashkent using DST after 1991, but usno1995 says they don't.
-# Guess no DST after 1991.
+			5:00	-	TAST	1991 Sep  1 # independence
+			5:00	-	UZT	1992
+			5:00 RussiaAsia	UZ%sT	1993
+			5:00	-	UZT
 
 # Vietnam
 # From Paul Eggert <eggert@twinsun.com> (1993-11-18):
