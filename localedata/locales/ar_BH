@@ -5,7 +5,7 @@ escape_char     /
 % Tetsuji Orita <orita@jp.ibm.com>.
 
 LC_IDENTIFICATION
-title      "Arabic language locale for Bahrein"
+title      "Arabic language locale for Bahrain"
 source     "IBM Globalization Center of Competency, Yamato Software Laboratory"
 address    "1623-14, Shimotsuruma, Yamato-shi, Kanagawa-ken, 242-8502, Japan"
 contact    ""
@@ -13,7 +13,7 @@ email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
 language   "Arabic"
-territory  "Bahrein"
+territory  "Bahrain"
 revision   "1.0"
 date       "2000-07-20"
 %
