@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,9 +17,8 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
 #include <unistd.h>
-#include <hurd.h>
+#include "hurdhost.h"
 
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */
@@ -27,8 +26,7 @@ int
 DEFUN(sethostname, (name, len),
       CONST char *name AND size_t len)
 {
-  error_t err = __USEPORT (PROC, __proc_sethostname (port, name, len));
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  /* The host name is just the contents of the file /etc/hostname.  */
+  ssize_t n = _hurd_set_host_config ("/etc/hostname", name, len);
+  return n < 0 ? -1 : 0;
 }

@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* FPU control word bits.  i387 version.
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Olaf Flebbe.
 

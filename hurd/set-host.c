@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
+/* Set a host configuration item kept as the whole contents of a file.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +17,32 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <unistd.h>
 #include <hurd.h>
 #include "hurdhost.h"
-#include "../stdio-common/_itoa.h"
 
-/* Set the current machine's Internet number to ID.
-   This call is restricted to the super-user.  */
-int
-DEFUN(sethostid, (id), long int id)
+ssize_t
+_hurd_set_host_config (const char *item, const char *value, size_t valuelen)
 {
-  char buf[8], *bp;
-  ssize_t n;
+  error_t err;
+  mach_msg_type_number_t nwrote;
+  file_t new, dir;
 
-  /* The hostid is kept in the file /etc/hostid,
-     eight characters of upper-case hexadecimal.  */
+  dir = __file_name_split (item, &item);
+  if (dir == MACH_PORT_NULL)
+    return -1;
 
-  bp = _itoa_word (id, &buf[sizeof buf], 16, 1);
-  while (bp > buf)
-    *--bp = '0';
+  /* Create a new node.  */
+  err = __dir_mkfile (dir, O_CREAT|O_TRUNC, 0600, &new);
+  if (! err)
+    {
+      /* Write the contents.  */
+      err = __io_write (new, value, valuelen, 0, &nwrote);
+      if (! err)
+	/* Atomically link the new node onto the name.  */
+	err = __dir_link (dir, item, 0);
+      __mach_port_deallocate (__mach_task_self (), new);
+    }
+  __mach_port_deallocate (__mach_task_self (), dir);
 
-  n = _hurd_set_host_config ("/etc/hostid", buf, sizeof buf);
-  return n < 0 ? -1 : 0;
+  return nread;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,19 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
-#include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
+#include "hurdhost.h"
 
 /* Return the current machine's Internet number.  */
 long int
 DEFUN_VOID(gethostid)
 {
-  int hostid;
-  error_t err;
-  if (err = __USEPORT (PROC, __proc_gethostid (port, &hostid)))
-    return __hurd_fail (err);
-  return hostid;
+  /* The hostid is just the contents of the file /etc/hostid,
+     kept as text of hexadecimal digits.  */
+  char buf[8];
+  ssize_t n = _hurd_get_host_config ("/etc/hostid", buf, sizeof buf);
+  if (n < 0)
+    return -1;
+  return strtol (buf, NULL, 16);
 }

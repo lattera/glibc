@@ -1,4 +1,4 @@
-/* Set the FPU control word.
+/* Host configuration items kept as the whole contents of a file.
 Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -14,24 +14,15 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
-#include "fpu_control.h"
+/* Fetch and atomically store the contents of the file ITEM.
+   Returns the size read or written, or -1 for errors.
+   If BUFLEN is not big enough to contain the whole contents,
+   BUFLEN bytes of BUF are filled in and we fail with ENAMETOOLONG.  */
 
-void
-__setfpucw (fpu_control_t set)
-{
-  fpu_control_t cw;
-
-  /* Fetch the current control word.  */
-  _FPU_GETCW (cw);
-
-  /* Preserve the reserved bits, and set the rest as the user
-     specified (or the default, if the user gave zero).  */
-  _FPU_SETCW ((cw & _FPU_RESERVED) | ((set ?: _FPU_DEFAULT) & ~_FPU_RESERVED));
-}
-
-/* The startup code in init-first.c calls __setfpucw (__fpu_control).  */
-
-fpu_control_t __fpu_control;
+ssize_t _hurd_get_host_config (const char *item,
+			       char *buf, size_t buflen);
+ssize_t _hurd_set_host_config (const char *item,
+			       const char *value, size_t valuelen);

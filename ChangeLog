@@ -1,5 +1,33 @@
 Sat Jun 15 18:13:43 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* hurd/Makefile (routines): Add get-host, set-host.
+	(distribute): Add hurdhost.h.
+	* hurd/hurdhost.h: New file.
+	* sysdeps/mach/hurd/gethostname.c: Use _hurd_get_host_config.
+	* sysdeps/mach/hurd/gethostid.c: Likewise.
+	* sysdeps/mach/hurd/sethostname.c: Use _hurd_set_host_config.
+	* sysdeps/mach/hurd/sethostid.c: Likewise.
+	* hurd/get-host.c: New file.
+	* hurd/set-host.c: New file.
+
+	* math/Makefile (headers): Add fpu_control.h.
+	(aux): New variable, list fpu_control and setfpucw.
+	* sysdeps/generic/fpu_control.c: New file.
+	* sysdeps/stub/fpu_control.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/fpu_control.h: Moved to ...
+	* sysdeps/m68k/fpu_control.h: here.
+	* sysdeps/unix/sysv/linux/i386/fpu_control.h: Moved to ...
+	* sysdeps/i386/fpu_control.h: here.
+	* sysdeps/unix/sysv/linux/alpha/fpu_control.h: Moved to ...
+	* sysdeps/alpha/fpu/fpu_control.h: here.  Fixed copyright.
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines): Remove
+	setfpucw, fpu_control.
+	* sysdeps/unix/sysv/linux/alpha/fpu_control.c: File removed.
+	* sysdeps/unix/sysv/linux/setfpucw.c: Moved to ...
+	* sysdeps/generic/setfpucw.c: here.
+	(__fpu_control): Variable removed.
+	(__setfpucw): Use SET even if zero.
+
 	* elf/dl-deps.c (_dl_map_object_deps): Set MAP's mark bit before loop.
 	Set mark bits of deps as opened, instead of as scanned.
 

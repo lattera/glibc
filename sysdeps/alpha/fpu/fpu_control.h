@@ -1,15 +1,23 @@
-/* Copyright (C) 1993  Olaf Flebbe
-This file is part of the Linux C Library.
+/* FPU control word bits.  Alpha version.
+Copyright (C) 1996 Free Software Foundation, Inc.
+Contributed by Olaf Flebbe.
 
-The Linux C Library is free software; you can redistribute it and/or
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
 published by the Free Software Foundation; either version 2 of the
 License, or (at your option) any later version.
 
-The Linux C Library is distributed in the hope that it will be useful,
+The GNU C Library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.  */
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 #ifndef _ALPHA_FPU_CONTROL_H
 #define _ALPHA_FPU_CONTROL_H
@@ -28,7 +36,7 @@ Library General Public License for more details.  */
  * OM: Overflow mask
  * UM: Underflow mask
  * PM: Precision (inexact result) mask
- * 
+ *
  * Mask bit is 1 means no interrupt.
  *
  * PC: Precision control
@@ -51,7 +59,7 @@ Library General Public License for more details.  */
 #include <features.h>
 
 /* masking of interrupts */
-#define _FPU_MASK_IM  0x01  
+#define _FPU_MASK_IM  0x01
 #define _FPU_MASK_DM  0x02
 #define _FPU_MASK_ZM  0x04
 #define _FPU_MASK_OM  0x08
@@ -84,7 +92,7 @@ Library General Public License for more details.  */
        one can use /d to get round to +infinity with no extra overhead
        (so long as the default isn't changed, of course...)
      - exceptions on overflow, zero divide and NaN */
-#define _FPU_DEFAULT  0x1f72 
+#define _FPU_DEFAULT  0x1f72
 
 /* IEEE:  same as above, but exceptions */
 #define _FPU_IEEE     0x1f7f

@@ -21,11 +21,13 @@
 subdir		:= math
 
 # Installed header files.
-headers		:= math.h mathcalls.h __math.h huge_val.h nan.h
+headers		:= math.h mathcalls.h __math.h huge_val.h nan.h fpu_control.h
 
 # Internal header files.
 distribute	:= math_private.h machine/asm.h machine/endian.h
 
+# FPU support code.
+aux		:= fpu_control setfpucw
 
 # Build the -lm library.
 

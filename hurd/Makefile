@@ -40,6 +40,7 @@ server-interfaces	:= hurd/msg faultexc
 
 routines = hurdstartup hurdinit \
 	   hurdid hurdlookup hurdpid hurdrlimit hurdprio hurdexec \
+	   get-host set-host \
 	   path-lookup \
 	   setauth \
 	   pid2task task2pid \
@@ -57,7 +58,8 @@ sig	= hurdsig hurdfault siginfo hurd-raise preempt-sig \
 dtable	= dtable port2fd new-fd alloc-fd intern-fd \
 	  getdport openport \
 	  fd-close fd-read fd-write hurdioctl ctty-input ctty-output
-distribute = hurdstartup.h hurdfault.h faultexc.defs intr-rpc.defs intr-rpc.h
+distribute = hurdstartup.h hurdfault.h hurdhost.h \
+	     faultexc.defs intr-rpc.defs intr-rpc.h
 
 # XXX this is a temporary hack; see hurdmalloc.h
 routines += hurdmalloc

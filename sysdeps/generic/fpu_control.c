@@ -1,5 +1,6 @@
-/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
-   Contributed by David Mosberger (davidm@azstarnet.com).
+/* Default FPU control word initialization.
+Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,5 +18,7 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <fpu_control.h>
+
+/* This module defines `__fpu_control' with the default value.  */
 
 fpu_control_t __fpu_control = _FPU_DEFAULT;
