@@ -234,7 +234,7 @@ extern void __malloc_check_init __MALLOC_P ((void));
 
 
 #ifdef __cplusplus
-}; /* end of extern "C" */
+} /* end of extern "C" */
 #endif
 
 #endif /* malloc.h */

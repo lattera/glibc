@@ -1,3 +1,8 @@
+2003-08-18  Art Haas  <ahaas@airmail.net>
+
+	* malloc/malloc.h: Remove unneeded ';' where closing the C++
+	extern block.
+
 2003-08-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/dl-fptr.h (ELF_MACHINE_LOAD_ADDRESS): Support
