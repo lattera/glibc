@@ -1,41 +1,36 @@
 comment_char %
 escape_char  /
 %
-% Persian Language Locale for Iran with ISIRI-3342 character set
+% Persian Language Locale for Iran with UTF-8 character set
 % Source: The Persian Internet Project
-% Address: Computing Center, Sharif University of Technology,
+% Address: Computing Center, Sharif University of Technology
 %    Azadi Ave, Tehran, Iran
 % Contact: Roozbeh Pournader
 % Email: roozbeh@sina.sharif.ac.ir
 % Tel: +98 21 6022378
-% Fax:
+% Fax: +98 21 6019568
 % Language: fa
 % Territory: IR
-% Revision: 0.0
-% Date: 1999-12-11
+% Revision: 2.0
+% Date: 2000-10-17
 % Users: general
 % Repertoiremap:
-% Charset: ISIRI-3342
+% Charset: UTF-8
 % Distribution and use is free, also
 % for commercial purposes.
- 
-% Note that the following can not be used for character sets
-% other than ISIRI-3342. It is dependent to the ISIRI-3342
-% BIDI behaviour which is not the same as Unicode BIDI behaviour.
-% So, another versions will be needed for UTF-8 and IRAN-SYSTEM.
  
 LC_IDENTIFICATION
 title      "Persian locale for Iran"
 source     "The Persian Internet Project"
-address    "Computing Center, Sharif University of Technology,, Azadi Ave, Tehran, Iran"
-contact    ""
-email      "bug-glibc@gnu.org"
-tel        ""
-fax        ""
+address    "Computing Center, Sharif University of Technology, Azadi Ave, Tehran, Iran"
+contact    "Roozbeh Pournader"
+email      "roozbeh@sina.sharif.ac.ir"
+tel        "+98 21 6022378"
+fax        "+98 21 6019568"
 language   "Persian"
 territory  "Iran"
-revision   "1.0"
-date       "2000-06-29"
+revision   "2.0"
+date       "2000-10-17"
 %
 category  "fa_IR:2000";LC_IDENTIFICATION
 category  "fa_IR:2000";LC_CTYPE
@@ -52,517 +47,140 @@ category  "fa_IR:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-%
-upper   <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;<U0049>;<U004A>;<U004B>;<U004C>;<U004D>;/
-        <U004E>;<U004F>;<U0050>;<U0051>;<U0052>;<U0053>;<U0054>;<U0055>;<U0056>;<U0057>;<U0058>;<U0059>;<U005A>
-%
-lower   <U0061>;<U0062>;<U0063>;<U0064>;<U0065>;<U0066>;<U0067>;<U0068>;<U0069>;<U006A>;<U006B>;<U006C>;<U006D>;/
-        <U006E>;<U006F>;<U0070>;<U0071>;<U0072>;<U0073>;<U0074>;<U0075>;<U0076>;<U0077>;<U0078>;<U0079>;<U007A>
-%
-alpha   <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;<U0047>;<U0048>;<U0049>;<U004A>;<U004B>;<U004C>;<U004D>;/
-        <U004E>;<U004F>;<U0050>;<U0051>;<U0052>;<U0053>;<U0054>;<U0055>;<U0056>;<U0057>;<U0058>;<U0059>;<U005A>;/
-        <U0061>;<U0062>;<U0063>;<U0064>;<U0065>;<U0066>;<U0067>;<U0068>;<U0069>;<U006A>;<U006B>;<U006C>;<U006D>;/
-        <U006E>;<U006F>;<U0070>;<U0071>;<U0072>;<U0073>;<U0074>;<U0075>;<U0076>;<U0077>;<U0078>;<U0079>;<U007A>;/
-        <U0622>;<U0627>;<U0621>;<U0628>;<U067E>;<U062A>;<U062B>;<U062C>;<U0686>;<U062D>;/
-        <U062E>;<U062F>;<U0630>;<U0631>;<U0632>;<U0698>;<U0633>;<U0634>;<U0635>;<U0636>;/
-        <U0637>;<U0638>;<U0639>;<U063A>;<U0641>;<U0642>;<kf>;<U06AF>;<U0644>;<U0645>;/
-        <U0646>;<U0648>;<U0647>;<yf>;<U0623>;<U0624>;<U0625>;<yh>;<U0629>;<U0643>;<U064A>
-%
-% I'm not sure how can I make Persian digits get accepted
-% as digits.
-%
-digit   <U0030>...<U0039>;/
-	<U06F0>...<U06F9>
-%
-xdigit  <U0030>;<U0031>;<U0032>;<U0033>;<U0034>;/
-        <U0035>;<U0036>;<U0037>;<U0038>;<U0039>;/
-        <U0041>;<U0042>;<U0043>;<U0044>;<U0045>;<U0046>;/
-        <U0061>;<U0062>;<U0063>;<U0064>;<U0065>;<U0066>
-%
-blank   <U0020>;<U0009>;<SP+>;<HT+>
-%
-space   <U0020>;<U000A>;<U000B>;<U000C>;<U000D>;<U0009>;/
-        <SP+>;<LF+>;<VT+>;<FF+>;<CR+>;<HT+>
-%
-cntrl   <U0000>;<U0001>;<U0002>;<U0003>;<U0004>;<U0005>;/
-        <U0006>;<U0007>;<U0008>;<U0009>;<U000A>;<U000B>;/
-        <U000C>;<U000D>;<U000E>;<U000F>;<U0010>;<U0011>;/
-        <U0012>;<U0013>;<U0014>;<U0015>;<U0016>;<U0017>;/
-        <U0018>;<U0019>;<U001A>;<U001B>;<U001C>;<U001D>;/
-        <U001E>;<U001F>;/
-        <NU+>;<SH+>;<SX+>;<EX+>;<ET+>;<EQ+>;/
-        <AK+>;<BL+>;<BS+>;<HT+>;<LF+>;<VT+>;/
-        <FF+>;<CR+>;<SO+>;<SI+>;<DL+>;<D1+>;/
-        <D2+>;<D3+>;<D4+>;<NK+>;<SY+>;<EB+>;/
-        <CN+>;<EM+>;<SB+>;<EC+>;<FS+>;<GS+>;/
-        <RS+>;<US+>;/
-        <zwnj>;<zwj>
-%
-punct   <U0021>;<U0022>;<U0023>;<U0024>;<U0025>;<U0026>;<U0027>;/
-        <U0028>;<U0029>;<U002A>;<U002B>;<U002C>;<U002D>;<U002E>;/
-        <U002F>;<U003A>;<U003B>;<U003C>;<U003D>;<U003E>;<U003F>;/
-        <U0040>;<U005B>;<U005C>;<U005D>;<U005E>;/
-        <U005F>;<U0060>;<U007B>;<U007C>;<U007D>;<U007E>;/
-        <!+>;<Rl>;<%+>;<U2214>;<,f>;<(+>;/
-        <)+>;<*X+>;<+f>;<U060C>;<-f>;<.f>;/
-        <U2044>;<:f>;<U061B>;</>f>;<=f>;/
-        <<U0066>;<U061F>;<<(+>;<)/>+>;<(!+>;/
-        <!)+>;<U00AB>;<U00BB>;<*+>;<U0640>;/
-        <!!+>;<U005C>;<U064E>;<U0650>;<U064F>;/
-        <U064B>;<U064D>;<U064C>;<U0651>;<U0652>
-%
-tolower (<U0041>,<U0061>);(<U0042>,<U0062>);(<U0043>,<U0063>);(<U0044>,<U0064>);(<U0045>,<U0065>);/
-        (<U0046>,<U0066>);(<U0047>,<U0067>);(<U0048>,<U0068>);(<U0049>,<U0069>);(<U004A>,<U006A>);/
-        (<U004B>,<U006B>);(<U004C>,<U006C>);(<U004D>,<U006D>);(<U004E>,<U006E>);(<U004F>,<U006F>);/
-        (<U0050>,<U0070>);(<U0051>,<U0071>);(<U0052>,<U0072>);(<U0053>,<U0073>);(<U0054>,<U0074>);/
-        (<U0055>,<U0075>);(<U0056>,<U0076>);(<U0057>,<U0077>);(<U0058>,<U0078>);(<U0059>,<U0079>);(<U005A>,<U007A>)
-%
-toupper (<U0061>,<U0041>);(<U0062>,<U0042>);(<U0063>,<U0043>);(<U0064>,<U0044>);(<U0065>,<U0045>);/
-        (<U0066>,<U0046>);(<U0067>,<U0047>);(<U0068>,<U0048>);(<U0069>,<U0049>);(<U006A>,<U004A>);/
-        (<U006B>,<U004B>);(<U006C>,<U004C>);(<U006D>,<U004D>);(<U006E>,<U004E>);(<U006F>,<U004F>);/
-        (<U0070>,<U0050>);(<U0071>,<U0051>);(<U0072>,<U0052>);(<U0073>,<U0053>);(<U0074>,<U0054>);/
-        (<U0075>,<U0055>);(<U0076>,<U0056>);(<U0077>,<U0057>);(<U0078>,<U0058>);(<U0079>,<U0059>);(<U007A>,<U005A>)
+copy "i18n"
 END LC_CTYPE
- 
+
 LC_COLLATE
- 
-% Based on en_DK collation specifications.
-% Many lines are deleted because ISIRI-3342 does
-% not support any Latin character not in ASCII.
-% The four part sorting is preserved to maintain
-% compatiblity with original en_DK.P
- 
-% Ordering algorithm:
-%  1. Spaces and hyphen (but not soft
-%     hyphen) before punctuation
-%     characters, punctuation characters
-%     before numbers,
-%     umbers before letters.
-%  2. A distinction is made with regards
-%     to case as noted below.
-%  3. Special characters are ignored
-%     when comparing letters, but then
-%     they are considered
-%  4. Latin script is sorted before Arabic
-%     to attract notice in index, etc.
-%
-% collating symbols
- 
-collating-symbol <CAPITAL>
-collating-symbol <SMALL>
- 
-collating-symbol <NONE>
-collating-symbol <SPECIAL>
- 
-% Latin collation order:
-%   letter;accent;case;specials
-% which becomes
-%   letter;variant;harekat;specials
-% for Persian.
- 
-order_start forward;forward;forward;position
- 
-% <CAPITAL> or <SMALL> letters first:
- 
-<CAPITAL>
-<SMALL>
- 
-% Accents:
- 
-<NONE>
-<SPECIAL>
- 
-<U0020>	IGNORE;IGNORE;IGNORE;<U0020>
-<SP+>   IGNORE;IGNORE;IGNORE;<SP+>
-<U0009>	IGNORE;IGNORE;IGNORE;<U0009>
-<HT+>   IGNORE;IGNORE;IGNORE;<HT+>
-<U000B>	IGNORE;IGNORE;IGNORE;<U000B>
-<VT+>	IGNORE;IGNORE;IGNORE;<VT+>
-<U000D>	IGNORE;IGNORE;IGNORE;<U000D>
-<CR+>	IGNORE;IGNORE;IGNORE;<CR+>
-<U000A>	IGNORE;IGNORE;IGNORE;<U000A>
-<LF+>	IGNORE;IGNORE;IGNORE;<LF+>
-<U000C>	IGNORE;IGNORE;IGNORE;<U000C>
-<FF+>	IGNORE;IGNORE;IGNORE;<FF+>
-<U005F>	IGNORE;IGNORE;IGNORE;<U005F>
-<U002D>	IGNORE;IGNORE;IGNORE;<U002D>
-<-f>	IGNORE;IGNORE;IGNORE;<-f>
-<U0640>	IGNORE;IGNORE;IGNORE;<U0640>
-<U002C>	IGNORE;IGNORE;IGNORE;<U002C>
-<U003B>	IGNORE;IGNORE;IGNORE;<U003B>
-<U003A>	IGNORE;IGNORE;IGNORE;<U003A>
-<:f>	IGNORE;IGNORE;IGNORE;<:f>
-<U0021>	IGNORE;IGNORE;IGNORE;<U0021>
-<!+>	IGNORE;IGNORE;IGNORE;<!+>
-<U003F>	IGNORE;IGNORE;IGNORE;<U003F>
-<U002F>	IGNORE;IGNORE;IGNORE;<U002F>
-<U2044>	IGNORE;IGNORE;IGNORE;<U2044>
-<U002E>	IGNORE;IGNORE;IGNORE;<U002E>
-<U2214>	IGNORE;IGNORE;IGNORE;<U2214>
-<U0060>	IGNORE;IGNORE;IGNORE;<U0060>
-<U005E>	IGNORE;IGNORE;IGNORE;<U005E>
-<U007E>	IGNORE;IGNORE;IGNORE;<U007E>
-<U0027>	IGNORE;IGNORE;IGNORE;<U0027>
-<U0022>	IGNORE;IGNORE;IGNORE;<U0022>
-<U00AB>	IGNORE;IGNORE;IGNORE;<U00AB>
-<U00BB>	IGNORE;IGNORE;IGNORE;<U00BB>
-<U0028>	IGNORE;IGNORE;IGNORE;<U0028>
-<)+>	IGNORE;IGNORE;IGNORE;<)+>
-<U0029>	IGNORE;IGNORE;IGNORE;<U0029>
-<(+>	IGNORE;IGNORE;IGNORE;<(+>
-<U005B>	IGNORE;IGNORE;IGNORE;<U005B>
-<)/>+>	IGNORE;IGNORE;IGNORE;<)/>+>
-<U005D>	IGNORE;IGNORE;IGNORE;<U005D>
-<<(+>	IGNORE;IGNORE;IGNORE;<<(+>
-<U007B>	IGNORE;IGNORE;IGNORE;<U007B>
-<!)+>	IGNORE;IGNORE;IGNORE;<!)+>
-<U007D>	IGNORE;IGNORE;IGNORE;<U007D>
-<(!+>	IGNORE;IGNORE;IGNORE;<(!+>
-<U0040>	IGNORE;IGNORE;IGNORE;<U0040>
-<U0024>	IGNORE;IGNORE;IGNORE;<U0024>
-<U002A>	IGNORE;IGNORE;IGNORE;<U002A>
-<*+>	IGNORE;IGNORE;IGNORE;<*+>
-<U005C>	IGNORE;IGNORE;IGNORE;<U005C>
-<////+>	IGNORE;IGNORE;IGNORE;<////+>
-<U0026>	IGNORE;IGNORE;IGNORE;<U0026>
-<U0023>	IGNORE;IGNORE;IGNORE;<U0023>
-<U0025>	IGNORE;IGNORE;IGNORE;<U0025>
-<U002B>	IGNORE;IGNORE;IGNORE;<U002B>
-<+f>	IGNORE;IGNORE;IGNORE;<+f>
-<*X+>	IGNORE;IGNORE;IGNORE;<*X+>
-<U003C>	IGNORE;IGNORE;IGNORE;<U003C>
-<<U0066>	IGNORE;IGNORE;IGNORE;<<U0066>
-<U003D>	IGNORE;IGNORE;IGNORE;<U003D>
-<=f>	IGNORE;IGNORE;IGNORE;<=f>
-<U003E>	IGNORE;IGNORE;IGNORE;<U003E>
-</>f>	IGNORE;IGNORE;IGNORE;</>f>
-<U007C>	IGNORE;IGNORE;IGNORE;<U007C>
-<!!+>	IGNORE;IGNORE;IGNORE;<!!+>
-<U0000>	IGNORE;IGNORE;IGNORE;<U0000>
-<U0001>	IGNORE;IGNORE;IGNORE;<U0001>
-<U0002>	IGNORE;IGNORE;IGNORE;<U0002>
-<U0003>	IGNORE;IGNORE;IGNORE;<U0003>
-<U0004>	IGNORE;IGNORE;IGNORE;<U0004>
-<U0005>	IGNORE;IGNORE;IGNORE;<U0005>
-<U0006>	IGNORE;IGNORE;IGNORE;<U0006>
-<U0007>	IGNORE;IGNORE;IGNORE;<U0007>
-<U0008>	IGNORE;IGNORE;IGNORE;<U0008>
-<U000E>	IGNORE;IGNORE;IGNORE;<U000E>
-<U000F>	IGNORE;IGNORE;IGNORE;<U000F>
-<U0010>	IGNORE;IGNORE;IGNORE;<U0010>
-<U0011>	IGNORE;IGNORE;IGNORE;<U0011>
-<U0012>	IGNORE;IGNORE;IGNORE;<U0012>
-<U0013>	IGNORE;IGNORE;IGNORE;<U0013>
-<U0014>	IGNORE;IGNORE;IGNORE;<U0014>
-<U0015>	IGNORE;IGNORE;IGNORE;<U0015>
-<U0016>	IGNORE;IGNORE;IGNORE;<U0016>
-<U0017>	IGNORE;IGNORE;IGNORE;<U0017>
-<U0018>	IGNORE;IGNORE;IGNORE;<U0018>
-<U0019>	IGNORE;IGNORE;IGNORE;<U0019>
-<U001A>	IGNORE;IGNORE;IGNORE;<U001A>
-<U001B>	IGNORE;IGNORE;IGNORE;<U001B>
-<U001C>	IGNORE;IGNORE;IGNORE;<U001C>
-<U001D>	IGNORE;IGNORE;IGNORE;<U001D>
-<U001E>	IGNORE;IGNORE;IGNORE;<U001E>
-<U001F>	IGNORE;IGNORE;IGNORE;<U001F>
-<U007F>	IGNORE;IGNORE;IGNORE;<U007F>
-<NU+>	IGNORE;IGNORE;IGNORE;<NU+>
-<SH+>	IGNORE;IGNORE;IGNORE;<SH+>
-<SX+>	IGNORE;IGNORE;IGNORE;<SX+>
-<EX+>	IGNORE;IGNORE;IGNORE;<EX+>
-<ET+>	IGNORE;IGNORE;IGNORE;<ET+>
-<EQ+>	IGNORE;IGNORE;IGNORE;<EQ+>
-<AK+>	IGNORE;IGNORE;IGNORE;<AK+>
-<BL+>	IGNORE;IGNORE;IGNORE;<BL+>
-<BS+>	IGNORE;IGNORE;IGNORE;<BS+>
-<SO+>	IGNORE;IGNORE;IGNORE;<SO+>
-<SI+>	IGNORE;IGNORE;IGNORE;<SI+>
-<DL+>	IGNORE;IGNORE;IGNORE;<DL+>
-<D1+>	IGNORE;IGNORE;IGNORE;<D1+>
-<D2+>	IGNORE;IGNORE;IGNORE;<D2+>
-<D3+>	IGNORE;IGNORE;IGNORE;<D3+>
-<D4+>	IGNORE;IGNORE;IGNORE;<D4+>
-<NK+>	IGNORE;IGNORE;IGNORE;<NK+>
-<SY+>	IGNORE;IGNORE;IGNORE;<SY+>
-<EB+>	IGNORE;IGNORE;IGNORE;<EB+>
-<CN+>	IGNORE;IGNORE;IGNORE;<CN+>
-<EM+>	IGNORE;IGNORE;IGNORE;<EM+>
-<SB+>	IGNORE;IGNORE;IGNORE;<SB+>
-<EC+>	IGNORE;IGNORE;IGNORE;<EC+>
-<FS+>	IGNORE;IGNORE;IGNORE;<FS+>
-<GS+>	IGNORE;IGNORE;IGNORE;<GS+>
-<RS+>	IGNORE;IGNORE;IGNORE;<RS+>
-<US+>	IGNORE;IGNORE;IGNORE;<US+>
-<DT+>	IGNORE;IGNORE;IGNORE;<DT+>
-<zwnj>	IGNORE;IGNORE;IGNORE;<zwnj>
-<zwj>	IGNORE;IGNORE;IGNORE;<zwj>
-UNDEFINED	IGNORE;IGNORE;IGNORE
- 
-<U0030>	<U0030>;<U0030>;IGNORE;IGNORE
-<U0031>	<U0031>;<U0031>;IGNORE;IGNORE
-<U0032>	<U0032>;<U0032>;IGNORE;IGNORE
-<U0033>	<U0033>;<U0033>;IGNORE;IGNORE
-<U0034>	<U0034>;<U0034>;IGNORE;IGNORE
-<U0035>	<U0035>;<U0035>;IGNORE;IGNORE
-<U0036>	<U0036>;<U0036>;IGNORE;IGNORE
-<U0037>	<U0037>;<U0037>;IGNORE;IGNORE
-<U0038>	<U0038>;<U0038>;IGNORE;IGNORE
-<U0039>	<U0039>;<U0039>;IGNORE;IGNORE
- 
-<U0041>	<U0041>;<NONE>;<CAPITAL>;IGNORE
-<U0061>	<U0041>;<NONE>;<SMALL>;IGNORE
-<U0042>	<U0042>;<NONE>;<CAPITAL>;IGNORE
-<U0062>	<U0042>;<NONE>;<SMALL>;IGNORE
-<U0043>	<U0043>;<NONE>;<CAPITAL>;IGNORE
-<U0063>	<U0043>;<NONE>;<SMALL>;IGNORE
-<U0044>	<U0044>;<NONE>;<CAPITAL>;IGNORE
-<U0064>	<U0044>;<NONE>;<SMALL>;IGNORE
-<U0045>	<U0045>;<NONE>;<CAPITAL>;IGNORE
-<U0065>	<U0045>;<NONE>;<SMALL>;IGNORE
-<U0046>	<U0046>;<NONE>;<CAPITAL>;IGNORE
-<U0066>	<U0046>;<NONE>;<SMALL>;IGNORE
-<U0047>	<U0047>;<NONE>;<CAPITAL>;IGNORE
-<U0067>	<U0047>;<NONE>;<SMALL>;IGNORE
-<U0048>	<U0048>;<NONE>;<CAPITAL>;IGNORE
-<U0068>	<U0048>;<NONE>;<SMALL>;IGNORE
-<U0049>	<U0049>;<NONE>;<CAPITAL>;IGNORE
-<U0069>	<U0049>;<NONE>;<SMALL>;IGNORE
-<U004A>	<U004A>;<NONE>;<CAPITAL>;IGNORE
-<U006A>	<U004A>;<NONE>;<SMALL>;IGNORE
-<U004B>	<U004B>;<NONE>;<CAPITAL>;IGNORE
-<U006B>	<U004B>;<NONE>;<SMALL>;IGNORE
-<U004C>	<U004C>;<NONE>;<CAPITAL>;IGNORE
-<U006C>	<U004C>;<NONE>;<SMALL>;IGNORE
-<U004D>	<U004D>;<NONE>;<CAPITAL>;IGNORE
-<U006D>	<U004D>;<NONE>;<SMALL>;IGNORE
-<U004E>	<U004E>;<NONE>;<CAPITAL>;IGNORE
-<U006E>	<U004E>;<NONE>;<SMALL>;IGNORE
-<U004F>	<U004F>;<NONE>;<CAPITAL>;IGNORE
-<U006F>	<U004F>;<NONE>;<SMALL>;IGNORE
-<U0050>	<U0050>;<NONE>;<CAPITAL>;IGNORE
-<U0070>	<U0050>;<NONE>;<SMALL>;IGNORE
-<U0051>	<U0051>;<NONE>;<CAPITAL>;IGNORE
-<U0071>	<U0051>;<NONE>;<SMALL>;IGNORE
-<U0052>	<U0052>;<NONE>;<CAPITAL>;IGNORE
-<U0072>	<U0052>;<NONE>;<SMALL>;IGNORE
-<U0053>	<U0053>;<NONE>;<CAPITAL>;IGNORE
-<U0073>	<U0053>;<NONE>;<SMALL>;IGNORE
-<U0054>	<U0054>;<NONE>;<CAPITAL>;IGNORE
-<U0074>	<U0054>;<NONE>;<SMALL>;IGNORE
-<U0055>	<U0055>;<NONE>;<CAPITAL>;IGNORE
-<U0075>	<U0055>;<NONE>;<SMALL>;IGNORE
-<U0056>	<U0056>;<NONE>;<CAPITAL>;IGNORE
-<U0076>	<U0056>;<NONE>;<SMALL>;IGNORE
-<U0057>	<U0057>;<NONE>;<CAPITAL>;IGNORE
-<U0077>	<U0057>;<NONE>;<SMALL>;IGNORE
-<U0058>	<U0058>;<NONE>;<CAPITAL>;IGNORE
-<U0078>	<U0058>;<NONE>;<SMALL>;IGNORE
-<U0059>	<U0059>;<NONE>;<CAPITAL>;IGNORE
-<U0079>	<U0059>;<NONE>;<SMALL>;IGNORE
-<U005A>	<U005A>;<NONE>;<CAPITAL>;IGNORE
-<U007A>	<U005A>;<NONE>;<SMALL>;IGNORE
- 
-% Persian digits have equal weight to Latin ones,
-% but sorted after them if the strings are equal.
- 
-<0f>	<U0030>;<0f>;IGNORE;IGNORE
-<1f>	<U0031>;<1f>;IGNORE;IGNORE
-<2f>	<U0032>;<2f>;IGNORE;IGNORE
-<3f>	<U0033>;<3f>;IGNORE;IGNORE
-<4f>	<U0034>;<4f>;IGNORE;IGNORE
-<5f>	<U0035>;<5f>;IGNORE;IGNORE
-<6f>	<U0036>;<6f>;IGNORE;IGNORE
-<7f>	<U0037>;<7f>;IGNORE;IGNORE
-<8f>	<U0038>;<8f>;IGNORE;IGNORE
-<9f>	<U0039>;<9f>;IGNORE;IGNORE
- 
-<U060C>	IGNORE;IGNORE;IGNORE;<U060C>
-<U061B>	IGNORE;IGNORE;IGNORE;<U061B>
-<U061F>	IGNORE;IGNORE;IGNORE;<U061F>
-<%+>	IGNORE;IGNORE;IGNORE;<%+>
- 
-% I am not sure where should I put the next two characters.
-<.f>	IGNORE;IGNORE;IGNORE;<.f>
-<,f>	IGNORE;IGNORE;IGNORE;<,f>
- 
-% Rial sign is considered as a sequence of its composing letters.
-% If equal, it comes first.
- 
-<Rl>	"<U0631><yf><U0627><U0644>";"<NONE><NONE><NONE><NONE>";IGNORE;IGNORE
- 
-<U0622>	<U0622>;<U0622>;IGNORE;IGNORE
-<U0627>	<U0627>;<U0627>;IGNORE;IGNORE
-<U0621>	<U0621>;<U0621>;IGNORE;IGNORE
-<U0623>	<U0621>;<U0623>;IGNORE;IGNORE
-<U0624>	<U0621>;<U0624>;IGNORE;IGNORE
-<U0625>	<U0621>;<U0625>;IGNORE;IGNORE
-<U0626>	<U0621>;<U0626>;IGNORE;IGNORE
-<U0628>	<U0628>;<U0628>;IGNORE;IGNORE
-<U067E>	<U067E>;<U067E>;IGNORE;IGNORE
-<U062A>	<U062A>;<U062A>;IGNORE;IGNORE
-<U062B>	<U062B>;<U062B>;IGNORE;IGNORE
-<U062C>	<U062C>;<U062C>;IGNORE;IGNORE
-<U0686>	<U0686>;<U0686>;IGNORE;IGNORE
-<U062D>	<U062D>;<U062D>;IGNORE;IGNORE
-<U062E>	<U062E>;<U062E>;IGNORE;IGNORE
-<U062F>	<U062F>;<U062F>;IGNORE;IGNORE
-<U0630>	<U0630>;<U0630>;IGNORE;IGNORE
-<U0631>	<U0631>;<U0631>;IGNORE;IGNORE
-<U0632>	<U0632>;<U0632>;IGNORE;IGNORE
-<U0698>	<U0698>;<U0698>;IGNORE;IGNORE
-<U0633>	<U0633>;<U0633>;IGNORE;IGNORE
-<U0634>	<U0634>;<U0634>;IGNORE;IGNORE
-<U0635>	<U0635>;<U0635>;IGNORE;IGNORE
-<U0636>	<U0636>;<U0636>;IGNORE;IGNORE
-<U0637>	<U0637>;<U0637>;IGNORE;IGNORE
-<U0638>	<U0638>;<U0638>;IGNORE;IGNORE
-<U0639>	<U0639>;<U0639>;IGNORE;IGNORE
-<U063A>	<U063A>;<U063A>;IGNORE;IGNORE
-<U0641>	<U0641>;<U0641>;IGNORE;IGNORE
-<U0642>	<U0642>;<U0642>;IGNORE;IGNORE
-<kf>	<kf>;<kf>;IGNORE;IGNORE
-<U0643>	<kf>;<U0643>;IGNORE;IGNORE
-<U06AF>	<U06AF>;<U06AF>;IGNORE;IGNORE
-<U0644>	<U0644>;<U0644>;IGNORE;IGNORE
-<U0645>	<U0645>;<U0645>;IGNORE;IGNORE
-<U0646>	<U0646>;<U0646>;IGNORE;IGNORE
-<U0648>	<U0648>;<U0648>;IGNORE;IGNORE
-<U0647>	<U0647>;<U0647>;IGNORE;IGNORE
-<U0629>	<U0647>;<U0629>;IGNORE;IGNORE
-<yf>	<yf>;<yf>;IGNORE;IGNORE
-<U064A>	<yf>;<U064A>;IGNORE;IGNORE
- 
-<U064E>	IGNORE;IGNORE;<U064E>;IGNORE
-<U0650>	IGNORE;IGNORE;<U0650>;IGNORE
-<U064F>	IGNORE;IGNORE;<U064F>;IGNORE
-<U064B>	IGNORE;IGNORE;<U064B>;IGNORE
-<U064D>	IGNORE;IGNORE;<U064D>;IGNORE
-<U064C>	IGNORE;IGNORE;<U064C>;IGNORE
-<U0651>	IGNORE;IGNORE;<U0651>;IGNORE
-<U0652>	IGNORE;IGNORE;<U0652>;IGNORE
- 
-order_end
- 
-END LC_COLLATE
+copy "iso14651_t1"
+END LC_COLLATE 
  
 LC_MONETARY
 int_curr_symbol   "<U0049><U0052><U0052><U0020>"
-currency_symbol   "<Rl>"
-mon_decimal_point "<.f>"
-mon_thousands_sep "<,f>"
+currency_symbol   "<U0631><U06CC><U0627><U0644>"
+mon_decimal_point "<U066B>"
+mon_thousands_sep "<U066C>"
 mon_grouping      3
 positive_sign     ""
-negative_sign     "<-f>"
+negative_sign     "<U002D>"
 int_frac_digits   0
 frac_digits       0
-%
-% The POSIX standard does not allow different formats for
-% displaying currency as local and international.
-% When they were different, following order specifies
-% the conventions of local currency display.
-%
-% The following positioning is based on ISIRI-3342 BIDI, and should not be
-% used when using Unicode BIDI.
-%
+% The following positioning is based on Unicode 3.0 bidirectional algorithm,
+% with a "base direction" of right-to-left.
 p_cs_precedes     0
-p_sep_by_space    2
+p_sep_by_space    1
 n_cs_precedes     0
-n_sep_by_space    2
-p_sign_posn       3
-n_sign_posn       3
+n_sep_by_space    1
+p_sign_posn       1
+n_sign_posn       1
+% The following positioning is based on Unicode 3.0 bidirectional algorithm,
+% with a "base direction" of left-to-right.
+int_p_cs_precedes     0
+int_p_sep_by_space    1
+int_n_cs_precedes     0
+int_n_sep_by_space    1
+int_p_sign_posn       1
+int_n_sign_posn       1
 END LC_MONETARY
  
 LC_NUMERIC
-decimal_point     "<.f>"
-thousands_sep     "<,f>"
+decimal_point     "<U066B>"
+thousands_sep     "<U066C>"
 grouping          3
 END LC_NUMERIC
  
 LC_TIME
-abday   "<yf><U2214>";"<U062F><U2214>";"<U0633><U2214>";/
-        "<U0686><U2214>";"<U067E><U2214>";"<U062C><U2214>";/
-	"<U0634><U2214>"
-%
-day     "<yf><kf><zwnj><U0634><U0646><U0628><U0647>";/
+abday   "<U06CC><U002E>";"<U062F><U002E>";"<U0633><U002E>";/
+        "<U0686><U002E>";"<U067E><U002E>";"<U062C><U002E>";/
+        "<U0634><U002E>"
+day     "<U06CC><U06A9><U200C><U0634><U0646><U0628><U0647>";/
         "<U062F><U0648><U0634><U0646><U0628><U0647>";/
-        "<U0633><U0647><zwnj><U0634><U0646><U0628><U0647>";/
+        "<U0633><U0647><U200C><U0634><U0646><U0628><U0647>";/
         "<U0686><U0647><U0627><U0631><U0634><U0646><U0628><U0647>";/
-        "<U067E><U0646><U062C><zwnj><U0634><U0646><U0628><U0647>";/
+        "<U067E><U0646><U062C><U200C><U0634><U0646><U0628><U0647>";/
         "<U062C><U0645><U0639><U0647>";/
         "<U0634><U0646><U0628><U0647>"
-%
-mon     "<U0698><U0627><U0646><U0648><yf><U0647>";/
-        "<U0641><U0648><U0631><U0648><yf><U0647>";/
+mon     "<U0698><U0627><U0646><U0648><U06CC><U0647>";/
+        "<U0641><U0648><U0631><U06CC><U0647>";/
         "<U0645><U0627><U0631><U0633>";/
-        "<U0622><U0648><U0631><yf><U0644>";/
+        "<U0622><U0648><U0631><U06CC><U0644>";/
         "<U0645><U0647>";/
         "<U0698><U0648><U0626><U0646>";/
-        "<U0698><U0648><U0626><yf><U0647>";/
+        "<U0698><U0648><U0626><U06CC><U0647>";/
         "<U0627><U0648><U062A>";/
         "<U0633><U067E><U062A><U0627><U0645><U0628><U0631>";/
         "<U0627><U0643><U062A><U0628><U0631>";/
         "<U0646><U0648><U0627><U0645><U0628><U0631>";/
         "<U062F><U0633><U0627><U0645><U0628><U0631>"
-%
 abmon   "<U0698><U0627><U0646>";"<U0641><U0648><U0631>";/
         "<U0645><U0627><U0631>";"<U0622><U0648><U0631>";/
         "<U0645><U0640><U0647>";"<U0698><U0648><U0646>";/
-        "<U0698><U0648><yf>";"<U0627><U0648><U062A>";/
+        "<U0698><U0648><U06CC>";"<U0627><U0648><U062A>";/
         "<U0633><U067E><U062A>";"<U0627><U0643><U062A>";/
         "<U0646><U0648><U0627>";"<U062F><U0633><U0627>"
-%
 am_pm   "<U0635><U0628><U062D>";"<U0639><U0635><U0631>"
-%
-% The following date and time formats are based on ISIRI-3342 BIDI, and
-% should not be used when using Unicode BIDI.
-%
-d_t_fmt "<U0025><U0053><:f><U0025><U004D><:f><U0025><U0049><SP+><U0025><U0070><SP+>/
-<U0025><U0041><SP+><U0025><U0065><SP+><U0025><U0042><SP+><U0025><U0059>"
-%
-d_fmt "<U0025><U0064><U2044><U0025><U006D><U2044><U0025><U0059>"
-%
-t_fmt "<U0025><U0053><:f><U0025><U004D><:f><U0025><U0048>"
-%
-t_fmt_ampm "<U0025><U0053><:f><U0025><U004D><:f><U0025><U0049><SP+><U0025><U0070>"
-%
+d_t_fmt "<U202B><U0025><U0041><U0020><U0025><U0065><U0020><U0025>/
+<U0042><U0020><U0025><U0059><U060C><U0020><U0025><U0049><U003A>/
+<U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U202C>"
+d_fmt   "<U0025><U0059><U002F><U0025><U006D><U002F><U0025><U0064>"
+t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt_ampm    "<U202B><U0025><U0049><U003A><U0025><U004D><U003A><U0025>/
+<U0053><U0020><U0025><U0070><U202C>"
+first_weekday 7
+first_workday 7
+cal_direction 3
+%week    7;19971206;4
+%time_zone "???"
 END LC_TIME
  
-% <U0628> for <U0628><U0644><U0647>, <U0622> for <U33C2><U0631><yf>,
-% <U062E> for <U062E><yf><U0631>, <U0646> for <U0646><U0647>.
-% <U0066> and <U006F> are placeholders for <U0628> and <U062E>
-% in Persian standard keyboard (revised ISIRI-2901).
 LC_MESSAGES
-yesexpr "<U005B><U0079><U0059><U0628><U0622><U0066><U005D><U002E><U002A>"
+yesexpr "<U005B><U0079><U0059><U0628><U0066><U005D><U002E><U002A>"
 noexpr  "<U005B><U006E><U004E><U062E><U0646><U006F><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
 height   297
-% FIXME
 width    210
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
+tel_int_fmt    "<U202A><U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
+<U0025><U006C><U202C>"
+tel_dom_fmt    "<U202A><U0025><U0041><U2012><U0025><U006C><U202C>"
+int_select     "<U0030><U0030>"
 int_prefix     "<U0039><U0038>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
 measurement    1
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_gen    ""
+name_miss   "<U062E><U0627><U0646><U0645>"
+name_ms     "<U062E><U0627><U0646><U0645>"
+name_mrs    "<U062E><U0627><U0646><U0645>"
+name_mr     "<U0622><U0642><U0627><U06CC>"
+name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0073><U0025><U0074>/
+<U0025><U0067><U0025><U0074><U0025><U006D><U0025><U0074><U0025><U0066>"
 END LC_NAME
 
 LC_ADDRESS
+% FIXME
 postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name   "<U0627><U06CC><U0631><U0627><U0646>"
+%country_post   "???"
+country_ab2    "<U0049><U0052>"
+country_ab3    "<U0049><U0052><U004E>"
+country_num    364
+% right?
+country_car    "<U0049><U0052>"
+country_isbn   "<U0039><U0036><U0034>"
+lang_name      "<U0641><U0627><U0631><U0633><U06CC>"
+lang_ab        "<U0066><U0061>"
+lang_term      "<U0066><U0061><U0073>"
+lang_lib       "<U0070><U0065><U0072>"
 END LC_ADDRESS

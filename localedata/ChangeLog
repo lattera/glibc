@@ -1,3 +1,9 @@
+2000-10-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/fa_IR: Fix many problems and change to use UTF-8.
+	Patch by Roozbeh Pournader <roozbeh@sharif.edu>.
+	* SUPPORTED: Add fa_IR.UTF-8.
+
 2000-10-22  Bruno Haible  <haible@clisp.cons.org>
 
 	* charmaps/BIG5HKSCS: Add 9 commented irreversible mappings.
