@@ -40,10 +40,14 @@ typedef struct
 #define _G_wint_t	wint_t
 #define _G_stat64	stat
 #include <gconv.h>
-typedef struct
+typedef union
 {
-  __gconv_t __cd;
-  struct __gconv_step_data __data;
+  struct __gconv_info __cd;
+  struct
+  {
+    struct __gconv_info __cd;
+    struct __gconv_step_data __data;
+  } __combined;
 } _G_iconv_t;
 
 typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));

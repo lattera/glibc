@@ -1,5 +1,8 @@
 1999-08-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/_G_config.h: Update _G_iconv_t type from Linux
+	version.
+
 	* po/fr.po: Update.
 
 1999-08-11  Thorsten Kukuk  <kukuk@suse.de>
