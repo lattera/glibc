@@ -1,5 +1,12 @@
 2003-03-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h
+	(__lll_mutex_trylock): Use atomic_compare_and_exchange_val_acq
+	instead of __lll_compare_and_swap.
+	* sysdeps/unix/sysv/linux/ia64/pthread_once.c (__pthread_once):
+	Likewise.
+	Removed definition if __lll_compare_and_swap.
+
 	* cancellation.c: Adjust for new form of compare&exchange macros.
 	* cleanup_defer.c: Likewise.
 	* init.c: Likewise.

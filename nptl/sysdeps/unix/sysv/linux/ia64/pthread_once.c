@@ -52,7 +52,8 @@ __pthread_once (once_control, init_routine)
 
 	  oldval = val;
 	  newval = (oldval & 3) | __fork_generation | 1;
-	  val = __lll_compare_and_swap (once_control, oldval, newval);
+	  val = atomic_compare_and_exchange_val_acq (once_control, newval,
+						     oldval);
 	}
       while (__builtin_expect (val != oldval, 0));
 

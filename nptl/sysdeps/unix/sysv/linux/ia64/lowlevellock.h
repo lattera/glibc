@@ -87,14 +87,11 @@
      __r10 == -1 ? -__r8 : __r8;					      \
   })
 
-#define __lll_compare_and_swap(futex, oldval, newval) \
-  __sync_val_compare_and_swap_si ((futex), (oldval), (newval))
-
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_trylock (int *futex)
 {
-  return __lll_compare_and_swap (futex, 0, 1) != 0;
+  return atomic_compare_and_exchange_val_acq (futex, 1, 0) != 0;
 }
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
