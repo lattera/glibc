@@ -140,6 +140,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 \
+	tst-eintr1 \
 	tst-tsd1 tst-tsd2 \
 	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \
@@ -158,6 +159,8 @@ tests = tst-attr1 tst-attr2 \
 	tst-umask1 \
 	tst-popen1 \
 	tst-clock1
+
+distribute = eintr.c
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 

@@ -1,5 +1,10 @@
 2003-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-eintr1.
+	(distribute): Add eintr.c.
+	* tst-eintr1.c: New file.
+	* eintr.c: New file.
+
 	* pthread_cancel.c (pthread_cancel): Use tkill directly.
 
 	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill):
