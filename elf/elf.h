@@ -153,7 +153,7 @@ typedef struct
 #define ET_EXEC		2		/* Executable file */
 #define ET_DYN		3		/* Shared object file */
 #define ET_CORE		4		/* Core file */
-#define	ET_NUM		5		/* Number of defined types.  */
+#define	ET_NUM		5		/* Number of defined types */
 #define ET_LOPROC	0xff00		/* Processor-specific */
 #define ET_HIPROC	0xffff		/* Processor-specific */
 
