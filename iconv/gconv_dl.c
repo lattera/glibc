@@ -91,7 +91,8 @@ __gconv_find_shlib (const char *name)
 	  found->counter = -TRIES_BEFORE_UNLOAD - 1;
 	  found->handle = NULL;
 
-	  if (__tsearch (found, &loaded, known_compare) == NULL)
+	  if (__builtin_expect (__tsearch (found, &loaded, known_compare)
+				== NULL, 0))
 	    {
 	      /* Something went wrong while inserting the entry.  */
 	      free (found);

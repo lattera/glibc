@@ -1,5 +1,9 @@
 2000-06-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_dl.c: Add __builtin_expect in many places.
+	* iconv/skeleton.c: Add more __builtin_expect.
+	* iconv/gconv_simple.c: Add __builtin_expect in many places.
+
 	* iconv/gconv.h (__GCONV_IS_LAST, __GCONV_IGNORE_ERRORS): Define.
 	(struct __gconv_step_data): Rename __is_last to __flags.
 	* iconv/gconv_close.c: Change all uses of __is_last.

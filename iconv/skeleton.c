@@ -221,7 +221,7 @@ gconv_init (struct __gconv_step *step)
       step->__min_needed_to = MIN_NEEDED_TO;
       step->__max_needed_to = MAX_NEEDED_TO;
     }
-  else if (strcmp (step->__to_name, CHARSET_NAME) == 0)
+  else if (__builtin_expect (strcmp (step->__to_name, CHARSET_NAME), 0) == 0)
     {
       step->__data = &to_object;
 
@@ -348,7 +348,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 				      EXTRA_LOOP_ARGS);
 # endif
 
-	  if (status != __GCONV_OK)
+	  if (__builtin_expect (status, __GCONV_OK) != __GCONV_OK)
 	    return status;
 	}
 #endif
@@ -382,7 +382,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  SAVE_RESET_STATE (1);
 #endif
 
-	  if (!unaligned)
+	  if (__builtin_expect (!unaligned, 1))
 	    {
 	      if (FROM_DIRECTION)
 		/* Run the conversion loop.  */
@@ -422,7 +422,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 	  /* If this is the last step leave the loop, there is nothing
              we can do.  */
-	  if (data->__flags & __GCONV_IS_LAST)
+	  if (__builtin_expect (data->__flags & __GCONV_IS_LAST, 0))
 	    {
 	      /* Store information about how many bytes are available.  */
 	      data->__outbuf = outbuf;
@@ -434,7 +434,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	    }
 
 	  /* Write out all output which was produced.  */
-	  if (outbuf > outstart)
+	  if (__builtin_expect (outbuf > outstart, 1))
 	    {
 	      const unsigned char *outerr = data->__outbuf;
 	      int result;
@@ -490,7 +490,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 		      /* If we haven't consumed a single byte decrement
 			 the invocation counter.  */
-		      if (outbuf == outstart)
+		      if (__builtin_expect (outbuf == outstart, 0))
 			--data->__invocation_counter;
 #endif	/* reset input buffer */
 		    }
@@ -516,7 +516,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #if MAX_NEEDED_FROM > 1 || MAX_NEEDED_TO > 1
       if (((MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
 	   || (MAX_NEEDED_TO > 1 && !FROM_DIRECTION))
-	  && consume_incomplete && status == __GCONV_INCOMPLETE_INPUT)
+	  && __builtin_expect (consume_incomplete, 0)
+	  && status == __GCONV_INCOMPLETE_INPUT)
 	{
 # ifdef STORE_REST
 	  mbstate_t *state = data->__statep;

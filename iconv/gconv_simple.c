@@ -159,7 +159,7 @@ internal_ucs4_loop_single (const unsigned char **inptrp,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (cnt < 4)
+  if (__builtin_expect (cnt, 4) < 4)
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -224,7 +224,7 @@ ucs4_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
       inval = *(uint32_t *) inptr;
 #endif
 
-      if (inval > 0x7fffffff)
+      if (__builtin_expect (inval, 0) > 0x7fffffff)
 	{
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
@@ -271,7 +271,7 @@ ucs4_internal_loop_unaligned (const unsigned char **inptrp,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4, outptr += 4)
     {
-      if (inptr[0] > 0x80)
+      if (__builtin_expect (inptr[0], 0) > 0x80)
 	{
 	  /* The value is too large.  */
 	  if (flags & __GCONV_IGNORE_ERRORS)
@@ -339,7 +339,7 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (cnt < 4)
+  if (__builtin_expect (cnt, 4) < 4)
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -348,7 +348,8 @@ ucs4_internal_loop_single (const unsigned char **inptrp,
       return __GCONV_INCOMPLETE_INPUT;
     }
 
-  if (((unsigned char *) state->__value.__wchb)[0] > 0x80)
+  if (__builtin_expect (((unsigned char *) state->__value.__wchb)[0], 0)
+      > 0x80)
     {
       /* The value is too large.  */
       if (!(flags & __GCONV_IGNORE_ERRORS))
@@ -490,7 +491,7 @@ internal_ucs4le_loop_single (const unsigned char **inptrp,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (cnt < 4)
+  if (__builtin_expect (cnt, 4) < 4)
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -553,7 +554,7 @@ ucs4le_internal_loop (const unsigned char **inptrp, const unsigned char *inend,
       inval = *(uint32_t *) inptr;
 #endif
 
-      if (inval > 0x7fffffff)
+      if (__builtin_expect (inval, 0) > 0x7fffffff)
 	{
 	  if (flags & __GCONV_IGNORE_ERRORS)
 	    {
@@ -598,7 +599,7 @@ ucs4le_internal_loop_unaligned (const unsigned char **inptrp,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     {
-      if (inptr[3] > 0x80)
+      if (__builtin_expect (inptr[3], 0) > 0x80)
 	{
 	  /* The value is too large.  */
 	  if (flags & __GCONV_IGNORE_ERRORS)
@@ -656,7 +657,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
   while (*inptrp < inend && cnt < 4)
     state->__value.__wchb[cnt++] = *(*inptrp)++;
 
-  if (cnt < 4)
+  if (__builtin_expect (cnt, 4) < 4)
     {
       /* Still not enough bytes.  Store the ones in the input buffer.  */
       state->__count &= ~7;
@@ -665,7 +666,8 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
       return __GCONV_INCOMPLETE_INPUT;
     }
 
-  if (((unsigned char *) state->__value.__wchb)[3] > 0x80)
+  if (__builtin_expect (((unsigned char *) state->__value.__wchb)[3], 0)
+      > 0x80)
     {
       /* The value is too large.  */
       if (!(flags & __GCONV_IGNORE_ERRORS))
@@ -713,7 +715,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (*inptr > '\x7f')						      \
+    if (__builtin_expect (*inptr, 0) > '\x7f')				      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
@@ -750,7 +752,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (*((uint32_t *) inptr) > 0x7f)					      \
+    if (__builtin_expect (*((uint32_t *) inptr), 0) > 0x7f)		      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
@@ -806,7 +808,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	  if ((wc & encoding_mask[step - 2]) == 0)			      \
 	    break;							      \
 									      \
-	if (outptr + step > outend)					      \
+	if (__builtin_expect (outptr + step > outend, 0))		      \
 	  {								      \
 	    /* Too long.  */						      \
 	    result = __GCONV_FULL_OUTPUT;				      \
@@ -873,25 +875,25 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	    cnt = 2;							      \
 	    ch &= 0x1f;							      \
 	  }								      \
-        else if ((ch & 0xf0) == 0xe0)					      \
+        else if (__builtin_expect (ch & 0xf0, 0xf0) == 0xe0)		      \
 	  {								      \
 	    /* We expect three bytes.  */				      \
 	    cnt = 3;							      \
 	    ch &= 0x0f;							      \
 	  }								      \
-	else if ((ch & 0xf8) == 0xf0)					      \
+	else if (__builtin_expect (ch & 0xf8, 0xf8) == 0xf0)		      \
 	  {								      \
 	    /* We expect four bytes.  */				      \
 	    cnt = 4;							      \
 	    ch &= 0x07;							      \
 	  }								      \
-	else if ((ch & 0xfc) == 0xf8)					      \
+	else if (__builtin_expect (ch & 0xfc, 0xf8) == 0xf8)		      \
 	  {								      \
 	    /* We expect five bytes.  */				      \
 	    cnt = 5;							      \
 	    ch &= 0x03;							      \
 	  }								      \
-	else if ((ch & 0xfe) == 0xfc)					      \
+	else if (__builtin_expect (ch & 0xfe, 0xfc) == 0xfc)		      \
 	  {								      \
 	    /* We expect six bytes.  */					      \
 	    cnt = 6;							      \
@@ -921,7 +923,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	     continue;							      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + cnt > inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + cnt > inend, 0))    \
 	  {								      \
 	    /* We don't have enough input.  But before we report that check   \
 	       that all the bytes are correct.  */			      \
@@ -929,7 +931,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	      if ((inptr[i] & 0xc0) != 0x80)				      \
 		break;							      \
 									      \
-	    if (inptr + i == inend)					      \
+	    if (__builtin_expect (inptr + i == inend, 1))		      \
 	      {								      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
@@ -1004,19 +1006,19 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	cnt = 2;							      \
 	ch &= 0x1f;							      \
       }									      \
-    else if ((ch & 0xf0) == 0xe0)					      \
+    else if (__builtin_expect (ch & 0xf0, 0xe0) == 0xe0)		      \
       {									      \
 	/* We expect three bytes.  */					      \
 	cnt = 3;							      \
 	ch &= 0x0f;							      \
       }									      \
-    else if ((ch & 0xf8) == 0xf0)					      \
+    else if (__builtin_expect (ch & 0xf8, 0xf8) == 0xf0)		      \
       {									      \
 	/* We expect four bytes.  */					      \
 	cnt = 4;							      \
 	ch &= 0x07;							      \
       }									      \
-    else if ((ch & 0xfc) == 0xf8)					      \
+    else if (__builtin_expect (ch & 0xfc, 0xfc) == 0xf8)		      \
       {									      \
 	/* We expect five bytes.  */					      \
 	cnt = 5;							      \
@@ -1056,17 +1058,17 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 	bytebuf[0] = 0xc0;						      \
 	ntotal = 2;							      \
       }									      \
-    else if (state->__value.__wch <= 0xffff)				      \
+    else if (__builtin_expect (state->__value.__wch, 0) <= 0xffff)	      \
       {									      \
 	bytebuf[0] = 0xe0;						      \
 	ntotal = 3;							      \
       }									      \
-    else if (state->__value.__wch <= 0x1fffff)				      \
+    else if (__builtin_expect (state->__value.__wch, 0) <= 0x1fffff)	      \
       {									      \
 	bytebuf[0] = 0xf0;						      \
 	ntotal = 4;							      \
       }									      \
-    else if (state->__value.__wch <= 0x3ffffff)				      \
+    else if (__builtin_expect (state->__value.__wch, 0) <= 0x3ffffff)	      \
       {									      \
 	bytebuf[0] = 0xf8;						      \
 	ntotal = 5;							      \
@@ -1128,7 +1130,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    if (*((uint32_t *) inptr) >= 0x10000)				      \
+    if (__builtin_expect (*((uint32_t *) inptr), 0) >= 0x10000)		      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
@@ -1184,7 +1186,7 @@ ucs4le_internal_loop_single (const unsigned char **inptrp,
 #define BODY \
   {									      \
     uint32_t val = *((uint32_t *) inptr);				      \
-    if (val >= 0x10000)							      \
+    if (__builtin_expect (val, 0) >= 0x10000)				      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
