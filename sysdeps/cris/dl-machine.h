@@ -228,12 +228,20 @@ _dl_start_user:\n\
 	.size _dl_start_user, . - _dl_start_user\n\
 	.previous");
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
-   ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
-   of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
-  ((((type) == R_CRIS_JUMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
+/* The union of reloc-type-classes where the reloc TYPE is a member.
+
+   TYPE is in the class ELF_RTYPE_CLASS_PLT if it can describe a
+   relocation for a PLT entry, that is, for which a PLT entry should not
+   be allowed to define the value.  The GNU linker for CRIS can merge a
+   .got.plt entry (R_CRIS_JUMP_SLOT) with a .got entry (R_CRIS_GLOB_DAT),
+   so we need to match both these reloc types.
+
+   TYPE is in the class ELF_RTYPE_CLASS_NOCOPY if it should not be allowed
+   to resolve to one of the main executable's symbols, as for a COPY
+   reloc.  */
+#define elf_machine_type_class(type)				\
+  ((((((type) == R_CRIS_JUMP_SLOT))				\
+     || ((type) == R_CRIS_GLOB_DAT)) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_CRIS_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
