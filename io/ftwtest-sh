@@ -16,6 +16,12 @@ if test `id | sed "s/uid=\([0-9]*\).*/\1/"` = 0; then
   exit 0
 fi
 
+# Since we use `sort' we must make sure to use the same locale everywhere.
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
 # First create our scenario:
 tmp=`echo ${TMPDIR:-/tmp} | sed 's|\(.\)/*$|\1|'`
 tmpdir=$tmp/ftwtest.d

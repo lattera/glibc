@@ -1,3 +1,15 @@
+1999-08-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* io/ftwtest-sh: Set LC_ALL and LANG to fix locale
+	dependencies in sort.
+
+1999-09-01  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/alpha/sys/user.h: New file.
+
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Include
+	<sys/user.h> instead of <asm/user.h>.
+
 1999-09-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Update PARISC-specific flags and symbolic names.
