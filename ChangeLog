@@ -1,3 +1,9 @@
+1998-04-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h: Remove unused variables.
+
+	* misc/syslog.c (closelog_internal): Set LogTag to NULL.
+
 1998-04-09 14:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/socket.texi (Interface Naming): Correct @deftypefun line

@@ -81,6 +81,8 @@ please let me know.
 	  object, consider re-linking
 	Why?  What should I do?
 2.19.	What do I need for C++ development?
+2.20.	Even statically linked programs need some shared libraries
+	which is not acceptable for me.  What can I do?
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -116,6 +118,9 @@ please let me know.
 4.2.	When I try to compile code which uses IPv6 headers and
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
+4.3.	When I set the timezone I'm by setting the TZ environment variable
+	to EST5EDT things go wrong since glibc computes the wrong time
+	from this information.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -138,6 +143,8 @@ probably in the future, are:
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 	sparc-*-linux-gnu	Linux-2.x on SPARC
 	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
+	arm-*-none		ARM standalone systems
+	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
 
 Ports to other Linux platforms are in development, and may in fact
 work already, but no one has sent us success reports for them.
@@ -597,11 +604,7 @@ probably a missing or incorrect /usr/lib/libc.so file; note that this
 is a small text file now, not a symlink to libc.so.6.  It should look
 something like this:
 
-GROUP ( libc.so.6 ld.so.1 libc.a )
-
-or in ix86/Linux and alpha/Linux:
-
-GROUP ( libc.so.6 ld-linux.so.2 libc.a )
+GROUP ( libc.so.6 libc_nonshared.a )
 
 
 2.8.	How can I compile gcc 2.7.2.1 from the gcc source code using
@@ -762,6 +765,34 @@ problem.
 If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
 libstdc++ since the library compiled for 2.0 is not compatible due to the new
 Large File Support (LFS) in version 2.1.
+
+
+2.20.	Even statically linked programs need some shared libraries
+	which is not acceptable for me.  What can I do?
+
+{AJ} NSS (for details just type `info libc "Name Service Switch"')
+won't work properly without shared libraries.  NSS allows using
+different services (e.g. NIS, files, db, hesiod) by just changing one
+configuration file (/etc/nsswitch.conf) without relinking any
+programs.  The only disadvantage is that now static libraries need to
+access shared libraries.  This is handled transparently by the GNU C
+library.
+
+A solution is to configure glibc with --enable-static-nss.  In this
+case you can create a static binary that will use only the services
+dns and files (change /etc/nsswitch.conf for this).  You need
+to link explicitly against all these services. For example:
+
+  gcc -static test-netdb.c -o test-netdb.c \
+    -lc -lnss_files -lnss_dns -lresolv
+
+The problem with this approach is that you've got to link every static
+program that uses NSS routines with all those libraries.
+
+{UD} In fact, one cannot say anymore that a libc compiled with this
+option is using NSS.  There is no switch anymore.  Therefore it is
+*highly* recommended *not* to use --enable-static-nss since this makes
+the behaviour of the programs on the system inconsistent.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -1070,6 +1101,32 @@ incompatible changes made and the libc headers have to follow.
 Also, make sure you have a suitably recent kernel.  As of the 970401
 snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
 required kernel version is at least 2.1.30.
+
+
+4.3.	When I set the timezone I'm by setting the TZ environment variable
+	to EST5EDT things go wrong since glibc computes the wrong time
+	from this information.
+
+{UD} The problem is that people still use the braindamaged POSIX
+method to select the timezone using the TZ environment variable with a
+format EST5EDT or whatever.  People, read the POSIX standard, the
+implemented behaviour is correct!  What you see is in fact the result
+of the decisions made while POSIX.1 was created.  We've only
+implemented the handling of TZ this way to be POSIX compliant.  It is
+not really meant to be used.
+
+The alternative approach to handle timezones which is implemented is
+the correct one to use: use the timezone database.  This avoids all
+the problems the POSIX method has plus it is much easier to use.
+Simply run the tzselect shell script, answer the question and use the
+name printed in the end by making a symlink to
+/usr/share/zoneinfo/NAME (NAME is the returned value from tzselect)
+from the file /etc/localtime.  That's all.  You never again have to
+worry.
+
+So, please avoid sending bug reports about time related problems if
+you use the POSIX method and you have not verified something is really
+broken by reading the POSIX standards.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

@@ -1202,7 +1202,6 @@ __strcspn_g (__const char *__s, __const char *__reject)
 {
   register unsigned long int __d0, __d1, __d2;
   register __const char *__res;
-  int __mem;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
      "movl	%4,%%edi\n\t"
@@ -1311,7 +1310,6 @@ __strspn_g (__const char *__s, __const char *__accept)
 {
   register unsigned long int __d0, __d1, __d2;
   register __const char *__res;
-  int __mem;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
      "cld\n\t"
@@ -1404,7 +1402,6 @@ __strpbrk_g (__const char *__s, __const char *__accept)
 {
   register unsigned long int __d0, __d1, __d2;
   register char *__res;
-  int __mem;
   __asm__ __volatile__
     ("pushl	%%ebx\n\t"
      "movl	%%edx,%%edi\n\t"
@@ -1508,7 +1505,6 @@ __strstr_g (__const char *__haystack, __const char *__needle)
 {
   register unsigned long int __d0, __d1, __d2;
   register char *__res;
-  int __mem;
   __asm__ __volatile__
     ("cld\n\t"
      "repne; scasb\n\t"
