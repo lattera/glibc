@@ -1,3 +1,12 @@
+2003-12-31  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/iso_6937-2.c (to_ucs4): Map 0x7E to U+007E, not U+203E.
+	Map 0xA6 to U+0023. Map 0xA8 to U+00A4.
+	(to_ucs4_comb): Map 0xC5 0x20 to U+00AF.
+	(from_ucs4): Map U+00ED to 0xC2 0x69, not 0xC2 0xE9.
+	(BODY for TO_LOOP): Don't map U+02DC. Map U+02DD to 0xCD 0x20, not
+	0x00 0x20. Don't map U+2500..U+25E3.
+
 2004-01-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (get_subexp): Remove bkref_str variable.

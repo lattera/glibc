@@ -1,5 +1,5 @@
 /* Generic conversion to and from ISO 6937-2.
-   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -39,13 +39,13 @@ static const uint32_t to_ucs4[256] =
   /* 0x60 */ 0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
   /* 0x68 */ 0x0068, 0x0069, 0x006a, 0x006b, 0x006c, 0x006d, 0x006e, 0x006f,
   /* 0x70 */ 0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
-  /* 0x78 */ 0x0078, 0x0079, 0x007a, 0x007b, 0x007c, 0x007d, 0x203e, 0x007f,
+  /* 0x78 */ 0x0078, 0x0079, 0x007a, 0x007b, 0x007c, 0x007d, 0x007e, 0x007f,
   /* 0x80 */ 0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
   /* 0x88 */ 0x0088, 0x0089, 0x008a, 0x008b, 0x008c, 0x008d, 0x008e, 0x008f,
   /* 0x90 */ 0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
   /* 0x98 */ 0x0098, 0x0099, 0x009a, 0x009b, 0x009c, 0x009d, 0x009e, 0x009f,
-  /* 0xa0 */ 0x0000, 0x00a1, 0x00a2, 0x00a3, 0x0024, 0x00a5, 0x0000, 0x00a7,
-  /* 0xa8 */ 0x0000, 0x2018, 0x201c, 0x00ab, 0x2190, 0x2191, 0x2192, 0x2193,
+  /* 0xa0 */ 0x0000, 0x00a1, 0x00a2, 0x00a3, 0x0024, 0x00a5, 0x0023, 0x00a7,
+  /* 0xa8 */ 0x00a4, 0x2018, 0x201c, 0x00ab, 0x2190, 0x2191, 0x2192, 0x2193,
   /* 0xb0 */ 0x00b0, 0x00b1, 0x00b2, 0x00b3, 0x00d7, 0x00b5, 0x00b6, 0x00b7,
   /* 0xb8 */ 0x00f7, 0x2019, 0x201d, 0x00bb, 0x00bc, 0x00bd, 0x00be, 0x00bf,
   /* 0xc0 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -124,7 +124,7 @@ static const uint32_t to_ucs4_comb[15][96] =
   },
   /* 0xc5 */
   {
-    /* 0x20 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    /* 0x20 */ 0x00af, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     /* 0x28 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     /* 0x30 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     /* 0x38 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -317,7 +317,7 @@ static const char from_ucs4[][2] =
   /* 0x00dc */ "\xc8\x55", "\xc2\x59", "\xec\x00", "\xfb\x00", "\xc1\x61",
   /* 0x00e1 */ "\xc2\x61", "\xc3\x61", "\xc4\x61", "\xc8\x61", "\xca\x61",
   /* 0x00e6 */ "\xf1\x00", "\xcb\x63", "\xc1\x65", "\xc2\x65", "\xc3\x65",
-  /* 0x00eb */ "\xc8\x65", "\xc1\x69", "\xc2\xe9", "\xc3\x69", "\xc8\x69",
+  /* 0x00eb */ "\xc8\x65", "\xc1\x69", "\xc2\x69", "\xc3\x69", "\xc8\x69",
   /* 0x00f0 */ "\xf3\x00", "\xc4\x6e", "\xc1\x6f", "\xc2\x6f", "\xc3\x6f",
   /* 0x00f5 */ "\xc4\x6f", "\xc8\x6f", "\xb8\x00", "\xf9\x00", "\xc1\x75",
   /* 0x00fa */ "\xc2\x75", "\xc3\x75", "\xc8\x75", "\xc2\x79", "\xfc\x00",
@@ -363,14 +363,6 @@ static const char from_ucs4[][2] =
      0x215b    "\xdc\x00", "\xdd\x00", "\xde\x00"
      ...
      0x2190    "\xac\x00", "\xad\x00", "\xae\x00", "\xaf\x00",
-     ...
-     0x2500    "\xd6\x00", "\x00\x00", "\xd7\x00",
-     ...
-     0x253c    "\xe5\x00",
-     ...
-     0x2571    "\xd8\x00", "\xd9\x00",
-     ...
-     0x25e2    "\xda\x00", "\xdb\x00",
      ...
      0x266a    "\xd5\x00"
 
@@ -478,9 +470,10 @@ static const char from_ucs4[][2] =
 	  case 0x2c7:							      \
 	    cp = "\xcf\x20";						      \
 	    break;							      \
-	  case 0x2d8 ... 0x2dd:						      \
+	  case 0x2d8 ... 0x2db:						      \
+	  case 0x2dd:							      \
 	    {								      \
-	      static const char map[6] = "\xc6\xc7\xca\xce\x00";	      \
+	      static const char map[6] = "\xc6\xc7\xca\xce\x00\xcd";	      \
 									      \
 	      tmp[0] = map[ch - 0x2d8];					      \
 	      tmp[1] = ' ';						      \
@@ -517,27 +510,6 @@ static const char from_ucs4[][2] =
 	    tmp[0] = 0xac + (ch - 0x2190);				      \
 	    tmp[1] = '\0';						      \
 	    cp = tmp;							      \
-	    break;							      \
-	  case 0x2500:							      \
-	    cp = "\xd6";						      \
-	    break;							      \
-	  case 0x2502:							      \
-	    cp = "\xd7";						      \
-	    break;							      \
-	  case 0x253c:							      \
-	    cp = "\xe5";						      \
-	    break;							      \
-	  case 0x2571:							      \
-	    cp = "\xd8";						      \
-	    break;							      \
-	  case 0x2572:							      \
-	    cp = "\xd9";						      \
-	    break;							      \
-	  case 0x25e2:							      \
-	    cp = "\xda";						      \
-	    break;							      \
-	  case 0x25e3:							      \
-	    cp = "\xdb";						      \
 	    break;							      \
 	  case 0x266a:							      \
 	    cp = "\xd5";						      \

@@ -1,3 +1,13 @@
+2004-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Add all kinds of UTF-8 locales.
+
+2004-01-18  Bruno Haible  <bruno@clisp.org>
+
+	* locales/lg_UG: Renamed from lug_UG, with trivial updates.
+	* locales/lug_UG: Remove file.
+	* SUPPORTED: Create lg_UG instead of lug_UG.
+
 2003-12-31  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/IBM866NAV: Fix the character values.

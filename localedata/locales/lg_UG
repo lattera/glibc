@@ -9,7 +9,7 @@ comment_char  %
 % Email: kompyuta@kizito.uklinux.net
 % Tel: +41 - (0)1772 724325
 % Fax:
-% Language: lug
+% Language: lg
 % Territory: UG
 % Revision: 1.0
 % Date: 2001-11-04
@@ -32,17 +32,17 @@ territory  "Uganda"
 revision   "1.0"
 date       "2001-11-04"
 %
-category  "lug_UG:2001";LC_IDENTIFICATION
-category  "lug_UG:2001";LC_CTYPE
-category  "lug_UG:2001";LC_COLLATE
-category  "lug_UG:2001";LC_TIME
-category  "lug_UG:2001";LC_NUMERIC
-category  "lug_UG:2001";LC_MONETARY
-category  "lug_UG:2001";LC_MESSAGES
-category  "lug_UG:2001";LC_PAPER
-category  "lug_UG:2001";LC_NAME
-category  "lug_UG:2001";LC_ADDRESS
-category  "lug_UG:2001";LC_TELEPHONE
+category  "lg_UG:2001";LC_IDENTIFICATION
+category  "lg_UG:2001";LC_CTYPE
+category  "lg_UG:2001";LC_COLLATE
+category  "lg_UG:2001";LC_TIME
+category  "lg_UG:2001";LC_NUMERIC
+category  "lg_UG:2001";LC_MONETARY
+category  "lg_UG:2001";LC_MESSAGES
+category  "lg_UG:2001";LC_PAPER
+category  "lg_UG:2001";LC_NAME
+category  "lg_UG:2001";LC_ADDRESS
+category  "lg_UG:2001";LC_TELEPHONE
 
 END LC_IDENTIFICATION
 
