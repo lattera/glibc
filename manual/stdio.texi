@@ -1618,9 +1618,16 @@ template string.
 The conversion specifications in a @code{printf} template string have
 the general form:
 
-@example
+@smallexample
 % @r{[} @var{param-no} @r{$]} @var{flags} @var{width} @r{[} . @var{precision} @r{]} @var{type} @var{conversion}
-@end example
+@end smallexample
+
+@noindent
+or
+
+@smallexample
+% @r{[} @var{param-no} @r{$]} @var{flags} @var{width} . @r{*} @r{[} @var{param-no} @r{$]} @var{type} @var{conversion}
+@end smallexample
 
 For example, in the conversion specifier @samp{%-10.8ld}, the @samp{-}
 is a flag, @samp{10} specifies the field width, the precision is
@@ -1640,13 +1647,13 @@ formats in the order of appearance in the format string.  But in some
 situations (such as message translation) this is not desirable and this
 extension allows an explicit parameter to be specified.
 
-The @var{param-no} part of the format must be an integer in the range of
+The @var{param-no} parts of the format must be integers in the range of
 1 to the maximum number of arguments present to the function call.  Some
 implementations limit this number to a certainly upper bound.  The exact
 limit can be retrieved by the following constant.
 
 @defvr Macro NL_ARGMAX
-The value of @code{ARGMAX} is the maximum value allowed for the
+The value of @code{NL_ARGMAX} is the maximum value allowed for the
 specification of an positional parameter in a @code{printf} call.  The
 actual value in effect at runtime can be retrieved by using
 @code{sysconf} using the @code{_SC_NL_ARGMAX} parameter @pxref{Sysconf
