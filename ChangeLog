@@ -1,5 +1,12 @@
 2002-07-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ldsodefs.h (HAVE_AUX_XID): Define if
+	__ASSUME_AT_XID is defined.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_AT_XID): Define
+	for 2.4.1 and up.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Optimize handling
+	of AT_UID, AT_EUID, AT_GID, and AT_EGID.
+
 	* wcsmbs/Makefile (CFLAGS-wcstod.c): Add -I../stdlib.
 	(CFLAGS-wcstof.c): Likewise.
 	(CFLAGS-wcstold.c): Likewise.

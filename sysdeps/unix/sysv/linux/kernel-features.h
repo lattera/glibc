@@ -171,6 +171,12 @@
 # define __ASSUME_AT_PAGESIZE		1
 #endif
 
+/* Starting with at least 2.4.0 the kernel passes the uid/gid unconditionally
+   up to the child.  */
+#if __LINUX_KERNEL_VERSION >= 132097
+# define __ASSUME_AT_XID		1
+#endif
+
 /* Starting with 2.4.5 kernels PPC passes the AUXV in the standard way
    and the mmap2 syscall made it into the official kernel.  */
 #if __LINUX_KERNEL_VERSION >= (132096+5) && defined __powerpc__

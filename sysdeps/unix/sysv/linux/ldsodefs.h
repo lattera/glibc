@@ -36,8 +36,10 @@ extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
 extern void _dl_non_dynamic_init (void) internal_function;
 
 /* We can assume that the kernel always provides the AT_UID, AT_EUID,
-   AT_GID, and AT_EGID values in the auxiliary vector.  */
-#define HAVE_AUX_XID
+   AT_GID, and AT_EGID values in the auxiliary vector from 2.4.0 or so on.  */
+#if __ASSUME_AT_XID
+# define HAVE_AUX_XID
+#endif
 
 /* Starting with one of the 2.4.0 pre-releases the Linux kernel passes
    up the page size information.  */
