@@ -1,5 +1,5 @@
 /* lchown system call.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 
 /* Some old kernel headers call lchown() 'chown'.  The number is
    the same.  */
-	
+
 #include <sysdep.h>
 
 #ifdef __NR_lchown
@@ -30,6 +30,10 @@
 	ret
 	PSEUDO_END(__lchown)
 	weak_alias (__lchown, lchown)
-#if defined PIC && defined DO_VERSIONING
-	symbol_version (__lchown, chown, GLIBC_2.0);
+
+#ifdef SHARED
+#include <shlib-compat.h>
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+compat_symbol (libc, __lchown, chown, GLIBC_2_0)
+# endif
 #endif
