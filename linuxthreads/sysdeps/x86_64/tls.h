@@ -20,9 +20,9 @@
 #ifndef _TLS_H
 #define _TLS_H
 
-# include <pt-machine.h>
-
 #ifndef __ASSEMBLER__
+
+# include <pt-machine.h>
 # include <stddef.h>
 
 /* Type for the dtv.  */
