@@ -41,7 +41,7 @@ _dl_sym (void *handle, const char *name, void *who)
 
   /* Find the highest-addressed object that CALLER is not below.  */
   for (l = _dl_loaded; l != NULL; l = l->l_next)
-    if (l->l_addr != 0 && caller >= l->l_map_start && caller < l->l_map_end)
+    if (caller >= l->l_map_start && caller < l->l_map_end)
       {
 	/* There must be exactly one DSO for the range of the virtual
 	   memory.  Otherwise something is really broken.  */
@@ -65,8 +65,13 @@ _dl_sym (void *handle, const char *name, void *who)
       else
 	{
 	  if (__builtin_expect (match == _dl_loaded, 0))
-	    _dl_signal_error (0, NULL, N_("\
+	    {
+	      if (! _dl_loaded
+		  || caller < _dl_loaded->l_map_start
+		  || caller >= _dl_loaded->l_map_end)
+	        _dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
+	    }
 
 	  l = match;
 	  while (l->l_loader != NULL)
@@ -107,7 +112,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 
   /* Find the highest-addressed object that CALLER is not below.  */
   for (l = _dl_loaded; l != NULL; l = l->l_next)
-    if (l->l_addr != 0 && caller >= l->l_map_start && caller < l->l_map_end)
+    if (caller >= l->l_map_start && caller < l->l_map_end)
       {
 	/* There must be exactly one DSO for the range of the virtual
 	   memory.  Otherwise something is really broken.  */
@@ -121,9 +126,14 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 					  &vers, 0, 0);
   else if (handle == RTLD_NEXT)
     {
-      if (match == _dl_loaded)
-	_dl_signal_error (0, NULL, N_("\
+      if (__builtin_expect (match == _dl_loaded, 0))
+	{
+	  if (! _dl_loaded
+	      || caller < _dl_loaded->l_map_start
+	      || caller >= _dl_loaded->l_map_end)
+	    _dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
+	}
 
       l = match;
       while (l->l_loader != NULL)

@@ -298,28 +298,93 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
      dropped.  */
   if (__builtin_expect (do_flush, 0))
     {
-      status = __GCONV_OK;
-
       /* This should never happen during error handling.  */
       assert (outbufstart == NULL);
 
+      status = __GCONV_OK;
+
 #ifdef EMIT_SHIFT_TO_INIT
-      /* Emit the escape sequence to reset the state.  */
-      EMIT_SHIFT_TO_INIT;
-#else
-      /* Clear the state object.  There might be bytes in there from
-	 previous calls with CONSUME_INCOMPLETE == 1.  */
-      memset (data->__statep, '\0', sizeof (*data->__statep));
+      if (do_flush == 1)
+	{
+	  /* We preserve the initial values of the pointer variables.  */
+	  unsigned char *outbuf = data->__outbuf;
+	  unsigned char *outstart = outbuf;
+	  unsigned char *outend = data->__outbufend;
+
+# ifdef PREPARE_LOOP
+	  PREPARE_LOOP
+# endif
+
+# ifdef SAVE_RESET_STATE
+	  SAVE_RESET_STATE (1);
+# endif
+
+	  /* Emit the escape sequence to reset the state.  */
+	  EMIT_SHIFT_TO_INIT;
+
+	  /* Call the steps down the chain if there are any but only if we
+	     successfully emitted the escape sequence.  This should only
+	     fail if the output buffer is full.  If the input is invalid
+	     it should be discarded since the user wants to start from a
+	     clean state.  */
+	  if (status == __GCONV_OK)
+	    {
+	      if (data->__flags & __GCONV_IS_LAST)
+		/* Store information about how many bytes are available.  */
+		data->__outbuf = outbuf;
+	      else
+		{
+		  /* Write out all output which was produced.  */
+		  if (outbuf > outstart)
+		    {
+		      const unsigned char *outerr = outstart;
+		      int result;
+
+		      result = DL_CALL_FCT (fct, (next_step, next_data,
+						  &outerr, outbuf, NULL,
+						  irreversible, 0,
+						  consume_incomplete));
+
+		      if (result != __GCONV_EMPTY_INPUT)
+			{
+			  if (__builtin_expect (outerr != outbuf, 0))
+			    {
+			      /* We have a problem.  Undo the conversion.  */
+			      outbuf = outstart;
+
+			      /* Restore the state.  */
+# ifdef SAVE_RESET_STATE
+			      SAVE_RESET_STATE (0);
+# endif
+			    }
+
+			  /* Change the status.  */
+			  status = result;
+			}
+		    }
+
+		  if (status == __GCONV_OK)
+		    /* Now flush the remaining steps.  */
+		    status = DL_CALL_FCT (fct, (next_step, next_data, NULL,
+						NULL, NULL, irreversible, 1,
+						consume_incomplete));
+		}
+	    }
+	}
+      else
 #endif
-      /* Call the steps down the chain if there are any but only if we
-         successfully emitted the escape sequence.  This should only
-	 fail if the output buffer is full.  If the input is invalid
-	 it should be discarded since the user wants to start from a
-	 clean slate.  */
-      if (status == __GCONV_OK && ! (data->__flags & __GCONV_IS_LAST))
-	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
-				    NULL, irreversible, 1,
-				    consume_incomplete));
+	{
+	  /* Clear the state object.  There might be bytes in there from
+	     previous calls with CONSUME_INCOMPLETE == 1.  But don't emit
+	     escape sequences.  */
+	  memset (data->__statep, '\0', sizeof (*data->__statep));
+
+	  if (! (data->__flags & __GCONV_IS_LAST))
+	    /* Now flush the remaining steps.  */
+	    status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
+					NULL, irreversible, do_flush,
+					consume_incomplete));
+	}
     }
   else
     {
@@ -499,7 +564,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		      *inptrp = inptr;
 		      outbuf = outstart;
 
-		      /* Reset the state.  */
+		      /* Restore the state.  */
 # ifdef SAVE_RESET_STATE
 		      SAVE_RESET_STATE (0);
 # endif

@@ -167,7 +167,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm297 ibm420 ibm424 ibm437 ibm850 ibm851 ibm852   \
 			ibm855 ibm857 ibm860 ibm861 ibm862 ibm863 ibm864   \
 			ibm865 ibm868 ibm869 ibm875 ibm880 ibm918 ibm1004  \
-			ibm1026 cp1250 cp1251 cp1252 cp1253 cp1254 cp1255  \
+			ibm1026 cp1250 cp1251 cp1252 cp1253 cp1254	   \
 			cp1256 cp1257 ibm866 iso8859-5 iso8859-7 iso8859-8 \
 			iso8859-10 macintosh iec_p27-1 asmo_449		   \
 			csn_369103 cwi dec-mcs ecma-cyrillic gost_19768-74 \
@@ -175,7 +175,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			inis-cyrillic iso_2033 iso_5427 iso_5427-ext	   \
 			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
-			iso-ir-197 cp1258 tis-620 koi8-u ibm874
+			iso-ir-197 tis-620 koi8-u ibm874
 
 gen-special-modules := iso8859-7jp
 

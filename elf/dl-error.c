@@ -71,6 +71,8 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
     errstring = N_("DYNAMIC LINKER BUG!!!");
 
   lcatch = tsd_getspecific ();
+  if (objname == NULL)
+    objname = "";
   if (lcatch != NULL)
     {
       /* We are inside _dl_catch_error.  Return to it.  We have to
@@ -100,7 +102,7 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
       _dl_fatal_printf ("\
 %s: error while loading shared libraries: %s%s%s%s%s\n",
 			_dl_argv[0] ?: "<program name unknown>",
-			objname ?: "", objname && *objname ? ": " : "",
+			objname, *objname ? ": " : "",
 			errstring, errcode ? ": " : "",
 			(errcode
 			 ? __strerror_r (errcode, buffer, sizeof buffer)

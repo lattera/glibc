@@ -131,11 +131,9 @@ enum
 	data->__statep->__count = ASCII_set << 3;			      \
       else								      \
 	{								      \
-	  unsigned char *outbuf = data->__outbuf;			      \
-	  								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (outbuf == data->__outbufend)				      \
+	  if (__builtin_expect (outbuf == outend, 0))			      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
@@ -144,7 +142,6 @@ enum
 	      *outbuf++ = SI;						      \
 	      if (data->__flags & __GCONV_IS_LAST)			      \
 		*irreversible += 1;					      \
-	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = ASCII_set << 3;			      \
 	    }								      \
 	}								      \

@@ -83,18 +83,15 @@ enum
 	data->__statep->__count = ASCII_set;				      \
       else								      \
 	{								      \
-	  unsigned char *outbuf = data->__outbuf;			      \
-	  								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (__builtin_expect (outbuf == data->__outbufend, 0))	      \
+	  if (__builtin_expect (outbuf == outend, 0))			      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
-	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = ASCII_set;			      \
 	    }								      \
 	}								      \

@@ -49,7 +49,8 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
     /* We just flush.  */
     result = DL_CALL_FCT (cd->__steps->__fct,
 			  (cd->__steps, cd->__data, NULL, NULL, NULL,
-			   irreversible, 1, 0));
+			   irreversible,
+			   cd->__data[last_step].__outbuf == NULL ? 2 : 1, 0));
   else
     {
       const unsigned char *last_start;

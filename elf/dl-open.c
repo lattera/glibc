@@ -188,13 +188,10 @@ dl_open_worker (void *a)
 	_dl_signal_error (0, "dlopen",
 			  N_("DST not allowed in SUID/SGID programs"));
 
-      /* We have to find out from which object the caller is calling.
-	 Find the highest-addressed object that ADDRESS is not below.  */
+      /* We have to find out from which object the caller is calling.  */
       call_map = NULL;
       for (l = _dl_loaded; l; l = l->l_next)
-	if (l->l_addr != 0 /* Make sure we do not currently set this map up
-			      in this moment.  */
-	    && caller >= (const void *) l->l_map_start
+	if (caller >= (const void *) l->l_map_start
 	    && caller < (const void *) l->l_map_end)
 	  {
 	    /* There must be exactly one DSO for the range of the virtual

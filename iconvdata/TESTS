@@ -72,10 +72,16 @@ CP1251			CP1251			Y	UTF8
 CP1252			CP1252			Y	UTF8
 CP1253			CP1253			Y	UTF8
 CP1254			CP1254			Y	UTF8
+# CP1255 and WINDOWS-1255 are the same encodings. The first test works with the
+# charmap as well. The second one tests character composition/decomposition.
 CP1255			CP1255			Y	UTF8
+WINDOWS-1255		WINDOWS-1255		N	UTF8
 CP1256			CP1256			Y	UTF8
 CP1257			CP1257			Y	UTF8
+# CP1258 and WINDOWS-1258 are the same encodings. The first test works with the
+# charmap as well. The second one tests character composition/decomposition.
 CP1258			CP1258			Y	UTF8
+WINDOWS-1258		WINDOWS-1258		N	UTF8
 ISO-2022-JP		ISO-2022-JP		N	UTF8
 ISO-2022-JP-2		ISO-2022-JP-2		N	UTF8
 ISO-2022-KR		ISO-2022-KR		N	UTF8

@@ -193,10 +193,11 @@ gconv_end (struct __gconv_step *data)
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
+  /* Avoid warning about unused variable 'var'.  */			      \
+  (void) var;								      \
+									      \
   if ((data->__statep->__count & ~7) != ASCII_set)			      \
     {									      \
-      enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;     \
-									      \
       if (dir == from_iso2022jp)					      \
 	{								      \
 	  /* It's easy, we don't have to emit anything, we just reset the     \
@@ -207,11 +208,9 @@ gconv_end (struct __gconv_step *data)
 	}								      \
       else								      \
 	{								      \
-	  unsigned char *outbuf = data->__outbuf;			      \
-									      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit the sequence `Esc ( B'.  */			      \
-	  if (__builtin_expect (outbuf + 3 > data->__outbufend, 0))	      \
+	  if (__builtin_expect (outbuf + 3 > outend, 0))		      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
@@ -220,7 +219,6 @@ gconv_end (struct __gconv_step *data)
 	      *outbuf++ = ESC;						      \
 	      *outbuf++ = '(';						      \
 	      *outbuf++ = 'B';						      \
-	      data->__outbuf = outbuf;					      \
 	      /* Note that this also clears the G2 designation.  */	      \
 	      data->__statep->__count &= ~7;				      \
 	      data->__statep->__count |= ASCII_set;			      \

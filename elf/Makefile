@@ -101,7 +101,8 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
-	neededtest3 neededtest4 unload2 lateglobal initfirst global
+	neededtest3 neededtest4 unload2 lateglobal initfirst global \
+	restest2
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -302,6 +303,9 @@ $(objpfx)neededtest4.out: $(objpfx)neededobj5.so $(objpfx)neededobj6.so
 
 $(objpfx)restest1: $(objpfx)testobj1.so $(objpfx)testobj1_1.so $(libdl)
 LDFLAGS-restest1 = -rdynamic
+
+$(objpfx)restest2: $(libdl)
+LDFLAGS-restest2 = -rdynamic
 
 $(objpfx)restest1.out: $(test-modules)
 

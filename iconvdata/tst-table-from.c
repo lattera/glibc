@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -64,9 +64,13 @@ try (iconv_t cd, unsigned char buf[], unsigned int buflen, unsigned char *out)
   size_t inbytesleft = buflen;
   char *outbuf = (char *) out;
   size_t outbytesleft = 6;
-  size_t result = iconv (cd,
-			 (char **) &inbuf, &inbytesleft,
-			 &outbuf, &outbytesleft);
+  size_t result;
+
+  iconv (cd, NULL, NULL, NULL, NULL);
+  result = iconv (cd, (char **) &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+  if (result != (size_t)(-1))
+    result = iconv (cd, NULL, NULL, &outbuf, &outbytesleft);
+
   if (result == (size_t)(-1))
     {
       if (errno == EILSEQ)
@@ -100,17 +104,68 @@ try (iconv_t cd, unsigned char buf[], unsigned int buflen, unsigned char *out)
     }
 }
 
-/* Returns the out[] buffer as a Unicode value.  */
-static unsigned int
+/* Returns the out[] buffer as a Unicode value, formatted as 0x%04X.  */
+static const char *
 utf8_decode (const unsigned char *out, unsigned int outlen)
 {
-  return (outlen==1 ? out[0] :
-	  outlen==2 ? ((out[0] & 0x1f) << 6) + (out[1] & 0x3f) :
-	  outlen==3 ? ((out[0] & 0x0f) << 12) + ((out[1] & 0x3f) << 6) + (out[2] & 0x3f) :
-	  outlen==4 ? ((out[0] & 0x07) << 18) + ((out[1] & 0x3f) << 12) + ((out[2] & 0x3f) << 6) + (out[3] & 0x3f) :
-	  outlen==5 ? ((out[0] & 0x03) << 24) + ((out[1] & 0x3f) << 18) + ((out[2] & 0x3f) << 12) + ((out[3] & 0x3f) << 6) + (out[4] & 0x3f) :
-	  outlen==6 ? ((out[0] & 0x01) << 30) + ((out[1] & 0x3f) << 24) + ((out[2] & 0x3f) << 18) + ((out[3] & 0x3f) << 12) + ((out[4] & 0x3f) << 6) + (out[5] & 0x3f) :
-	  0xfffd);
+  static char hexbuf[42];
+  char *p = hexbuf;
+
+  while (outlen > 0)
+    {
+      if (p > hexbuf)
+	*p++ = ' ';
+
+      if (out[0] < 0x80)
+	{
+	  sprintf (p, "0x%04X", out[0]);
+	  out += 1; outlen -= 1;
+	}
+      else if (out[0] >= 0xc0 && out[0] < 0xe0 && outlen >= 2)
+	{
+	  sprintf (p, "0x%04X", ((out[0] & 0x1f) << 6) + (out[1] & 0x3f));
+	  out += 2; outlen -= 2;
+	}
+      else if (out[0] >= 0xe0 && out[0] < 0xf0 && outlen >= 3)
+	{
+	  sprintf (p, "0x%04X", ((out[0] & 0x0f) << 12)
+				+ ((out[1] & 0x3f) << 6) + (out[2] & 0x3f));
+	  out += 3; outlen -= 3;
+	}
+      else if (out[0] >= 0xf0 && out[0] < 0xf8 && outlen >= 4)
+	{
+	  sprintf (p, "0x%04X", ((out[0] & 0x07) << 18)
+				+ ((out[1] & 0x3f) << 12)
+				+ ((out[2] & 0x3f) << 6) + (out[3] & 0x3f));
+	  out += 4; outlen -= 4;
+	}
+      else if (out[0] >= 0xf8 && out[0] < 0xfc && outlen >= 5)
+	{
+	  sprintf (p, "0x%04X", ((out[0] & 0x03) << 24)
+				+ ((out[1] & 0x3f) << 18)
+				+ ((out[2] & 0x3f) << 12)
+				+ ((out[3] & 0x3f) << 6) + (out[4] & 0x3f));
+	  out += 5; outlen -= 5;
+	}
+      else if (out[0] >= 0xfc && out[0] < 0xfe && outlen >= 6)
+	{
+	  sprintf (p, "0x%04X", ((out[0] & 0x01) << 30)
+				+ ((out[1] & 0x3f) << 24)
+				+ ((out[2] & 0x3f) << 18)
+				+ ((out[3] & 0x3f) << 12)
+				+ ((out[4] & 0x3f) << 6) + (out[5] & 0x3f));
+	  out += 6; outlen -= 6;
+	}
+      else
+	{
+	  sprintf (p, "0x????");
+	  out += 1; outlen -= 1;
+	}
+
+      p += strlen (p);
+    }
+
+  return hexbuf;
 }
 
 int
@@ -148,7 +203,7 @@ main (int argc, char *argv[])
 	  }
 	else if (result > 0)
 	  {
-	    printf ("0x%02X\t0x%04X\n",
+	    printf ("0x%02X\t%s\n",
 		    i0, utf8_decode (out, result));
 	  }
 	else
@@ -162,7 +217,7 @@ main (int argc, char *argv[])
 		  }
 		else if (result > 0)
 		  {
-		    printf ("0x%02X%02X\t0x%04X\n",
+		    printf ("0x%02X%02X\t%s\n",
 			    i0, i1, utf8_decode (out, result));
 		  }
 		else
@@ -176,7 +231,7 @@ main (int argc, char *argv[])
 			  }
 			else if (result > 0)
 			  {
-			    printf ("0x%02X%02X%02X\t0x%04X\n",
+			    printf ("0x%02X%02X%02X\t%s\n",
 				    i0, i1, i2, utf8_decode (out, result));
 			  }
 			else if (strcmp (charset, "UTF-8"))
@@ -190,7 +245,7 @@ main (int argc, char *argv[])
 				  }
 				else if (result > 0)
 				  {
-				    printf ("0x%02X%02X%02X%02X\t0x%04X\n",
+				    printf ("0x%02X%02X%02X%02X\t%s\n",
 					    i0, i1, i2, i3,
 					    utf8_decode (out, result));
 				  }

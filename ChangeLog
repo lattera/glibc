@@ -1,3 +1,58 @@
+2001-05-20  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/cp1255.c: Completely rewritten.
+	* iconvdata/Makefile (gen-8bit-gap-modules): Remove cp1255.
+	* iconvdata/testdata/WINDOWS-1255: New file.
+	* iconvdata/testdata/WINDOWS-1255..UTF8: New file.
+	* iconvdata/TESTS: Add WINDOWS-1255 test.
+	* iconvdata/CP1255.irreversible: New file.
+
+2001-05-20  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/cp1258.c: Completely rewritten.
+	* iconvdata/Makefile (gen-8bit-gap-modules): Remove cp1258.
+	* iconvdata/testdata/WINDOWS-1258: New file.
+	* iconvdata/testdata/WINDOWS-1258..UTF8: New file.
+	* iconvdata/TESTS: Add WINDOWS-1258 test.
+	* iconvdata/tst-table-from.c (try): Reset the iconv descriptor before
+	the main call, and flush it afterwards.
+	(utf8_decode): Return a string, possibly containing several Unicode
+	characters.
+	(main): Update all utf8_decode calls.
+	* iconvdata/CP1258.irreversible: New file.
+
+2001-05-20  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv.c (__gconv): For flush without output, pass do_flush = 2.
+	* iconv/skeleton.c: Distinguish do_flush = 1 and do_flush = 2. In the
+	first case, set outbuf, outstart, outend, and call PREPARE_LOOP before
+	EMIT_SHIFT_TO_INIT; then pass the output produced by this step down to
+	the next step. In the second case, clear the state without calling
+	EMIT_SHIFT_TO_INIT.
+	* iconvdata/ibm930.c (EMIT_SHIFT_TO_INIT): Use outbuf instead of
+	data->__outbuf, and outend instead of data->__outbufend.
+	* iconvdata/ibm933.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/ibm935.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/ibm937.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/ibm939.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/iso-2022-cn.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/iso-2022-cn-ext.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/iso-2022-jp.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/iso-2022-kr.c (EMIT_SHIFT_TO_INIT): Likewise.
+	* iconvdata/utf-7.c (EMIT_SHIFT_TO_INIT): Likewise.
+
+2001-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Compute l_map_end for the main program.
+	* elf/dl-sym.c (_dl_sym): Don't check for l_addr == 0.
+	If match == _dl_loaded, caller can still come from the main program.
+	(_dl_vsym): Likewise.
+	* elf/dl-open.c (dl_open_worker): Don't check for l_addr == 0.
+	* elf/dl-error.c (_dl_signal_error): Change NULL objname into "".
+	* elf/restest2.c: New test.
+	* elf/Makefile (tests): Add restest2.
+	(restest2, LDFLAGS-restest2): Add rules.
+
 2001-05-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* intl/Makefile: Add a few more dependencies to avoid races in the

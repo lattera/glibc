@@ -533,10 +533,9 @@ base64 (unsigned int i)
       if (state & 0x18)							      \
 	{								      \
 	  /* Deactivate base64 encoding.  */				      \
-	  unsigned char *outbuf = data->__outbuf;			      \
 	  size_t count = ((state & 0x18) >= 0x10) + 1;			      \
 									      \
-	  if (__builtin_expect (outbuf + count > data->__outbufend, 0))	      \
+	  if (__builtin_expect (outbuf + count > outend, 0))		      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
@@ -546,7 +545,6 @@ base64 (unsigned int i)
 		*outbuf++ = base64 ((state >> 3) & ~3);			      \
 	      *outbuf++ = '-';						      \
 									      \
-	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = 0;				      \
 	    }								      \
 	}								      \

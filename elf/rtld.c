@@ -542,8 +542,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 information for the program.  */
     }
 
-  /* It is not safe to load stuff after the main program.  */
-  _dl_loaded->l_map_end = ~0;
+  _dl_loaded->l_map_end = 0;
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   _dl_loaded->l_map_start = ~0;
 
@@ -591,15 +590,24 @@ of this helper program; chances are you did not intend to run this program.\n\
 	has_interp = 1;
 	break;
       case PT_LOAD:
-	/* Remember where the main program starts in memory.  */
 	{
 	  ElfW(Addr) mapstart;
+	  ElfW(Addr) allocend;
+
+	  /* Remember where the main program starts in memory.  */
 	  mapstart = _dl_loaded->l_addr + (ph->p_vaddr & ~(ph->p_align - 1));
 	  if (_dl_loaded->l_map_start > mapstart)
 	    _dl_loaded->l_map_start = mapstart;
+
+	  /* Also where it ends.  */
+	  allocend = _dl_loaded->l_addr + ph->p_vaddr + ph->p_memsz;
+	  if (_dl_loaded->l_map_end < allocend)
+	    _dl_loaded->l_map_end = allocend;
 	}
 	break;
       }
+  if (! _dl_loaded->l_map_end)
+    _dl_loaded->l_map_end = ~0;
   if (! _dl_rtld_map.l_libname && _dl_rtld_map.l_name)
     {
       /* We were invoked directly, so the program might not have a
