@@ -1,5 +1,5 @@
 /* Initial program startup for running under the GNU Hurd.
-   Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,7 +28,6 @@
 #include <unistd.h>
 #include <elf.h>
 #include "set-hooks.h"
-#include "hurdmalloc.h"		/* XXX */
 #include "hurdstartup.h"
 #include <argz.h>
 
