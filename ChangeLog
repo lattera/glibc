@@ -1,3 +1,8 @@
+2003-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathdef.h: Remove FLT_EVAL_METHOD definition.
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Likewise.
+
 2003-04-08  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/sys/regdef.h (t4,t5,t6,t7): Renamed to t0..t3 on
