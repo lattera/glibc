@@ -1,3 +1,9 @@
+Thu May 16 00:31:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules [versioned]: Make symlinks in the build directory, because
+ 	the versioned names might be referenced by a DT_NEEDED in another
+ 	library.
+
 Wed May 15 18:59:38 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* manual/examples/longopt.c: Include stdlib.h and getopt.h.
