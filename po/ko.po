@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU C Library 1.10.1\n"
-"PO-Revision-Date: 1996-04-19 22:14 KST\n"
+"PO-Revision-Date: 1996-05-26 22:59 KST\n"
 "Last-Translator: Bang Jun Young <bangjy@nownuri.nowcom.co.kr>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,7 @@ msgstr "%s: 부적절한 옵션 -- %c\n"
 #: posix/getopt.c:597
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: `%c%s' 옵션은 인자가 필요하지 않습니다\n"
+msgstr "%s: `%c%s' 옵션은 인자를 허용하지 않습니다\n"
 
 #: posix/getopt.c:568
 #, c-format
@@ -65,7 +65,7 @@ msgstr "%s: `%s' 옵션은 인자가 필요합니다\n"
 #: posix/getopt.c:592
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: `--%s' 옵션은 인자가 필요하지 않습니다\n"
+msgstr "%s: `--%s' 옵션은 인자를 허용하지 않습니다\n"
 
 #: posix/getopt.c:712
 #, c-format
@@ -180,7 +180,7 @@ msgstr "요청된 주소를 배정할 수 없습니다"
 
 #: sysdeps/mach/hurd/errlist.c:68
 msgid "Can't send after socket shutdown"
-msgstr ""
+msgstr "소켓이 닫힌 후에 보낼 수 없습니다"
 
 #: sysdeps/mach/hurd/errlist.c:22
 msgid "Cannot allocate memory"
@@ -212,7 +212,7 @@ msgstr "자식이 종료됨"
 
 #: sunrpc/clnt_perr.c:286
 msgid "Client credential too weak"
-msgstr ""
+msgstr "클라이언트 자격 부여가 너무 약함"
 
 #: sysdeps/mach/hurd/errlist.c:114
 msgid "Computer bought the farm"
@@ -252,7 +252,7 @@ msgstr "디렉토리가 비어있지 않음"
 
 #: sysdeps/mach/hurd/errlist.c:79
 msgid "Disc quota exceeded"
-msgstr ""
+msgstr "디스크 할당량이 초과됨"
 
 #: sunrpc/clnt_perr.c:254
 msgid "Error %d"
@@ -316,7 +316,7 @@ msgstr "입출력 가능"
 
 #: i486-linux/siglist.c:14
 msgid "IOT trap"
-msgstr ""
+msgstr "IOT 트랩"
 
 #: i486-linux/siglist.c:12
 msgid "Illegal Instruction"
@@ -336,7 +336,7 @@ msgstr "디바이스에 대해 부적절한 ioctl"
 
 #: sysdeps/mach/hurd/errlist.c:110
 msgid "Inappropriate operation for background process"
-msgstr ""
+msgstr "배경 프로세스로 부적합한 동작"
 
 #: sysdeps/mach/hurd/errlist.c:15
 msgid "Input/output error"
@@ -360,23 +360,23 @@ msgstr "부적절한 후방 참조"
 
 #: posix/regex.c:944
 msgid "Invalid character class name"
-msgstr ""
+msgstr "부적절한 문자 클래스 이름"
 
 #: sunrpc/clnt_perr.c:278
 msgid "Invalid client credential"
-msgstr ""
+msgstr "부적절한 클라이언트 자격 부여"
 
 #: sunrpc/clnt_perr.c:282
 msgid "Invalid client verifier"
-msgstr ""
+msgstr "부적절한 클라이언트 검증기"
 
 #: posix/regex.c:943
 msgid "Invalid collation character"
-msgstr ""
+msgstr "부적절한 대조 문자"
 
 #: posix/regex.c:950
 msgid "Invalid content of \\{\\}"
-msgstr ""
+msgstr "\\{\\}에 부적절한 내용물이 있음"
 
 #: sysdeps/mach/hurd/errlist.c:28
 msgid "Invalid cross-device link"
@@ -384,7 +384,7 @@ msgstr "잘못된 디바이스간 연결"
 
 #: posix/regex.c:953
 msgid "Invalid preceding regular expression"
-msgstr ""
+msgstr "앞선 정규식이 부적절함"
 
 #: posix/regex.c:951
 msgid "Invalid range end"
@@ -396,7 +396,7 @@ msgstr "부적절한 정규식"
 
 #: sunrpc/clnt_perr.c:288
 msgid "Invalid server verifier"
-msgstr ""
+msgstr "부적절한 서버 검증기"
 
 #: sysdeps/mach/hurd/errlist.c:31
 msgid "Is a directory"
@@ -416,7 +416,7 @@ msgstr "메시지가 너무 깁니다"
 
 #: sysdeps/mach/hurd/errlist.c:91
 msgid "Need authenticator"
-msgstr "인증자가 필요함"
+msgstr "인증기가 필요함"
 
 #: sysdeps/mach/hurd/errlist.c:62
 msgid "Network dropped connection on reset"
@@ -508,11 +508,11 @@ msgstr "허가 거부됨"
 
 #: i486-linux/siglist.c:38
 msgid "Power failure"
-msgstr ""
+msgstr "전력이 끊어짐"
 
 #: posix/regex.c:954
 msgid "Premature end of regular expression"
-msgstr ""
+msgstr "정규식이 완결되지 않은 채 끝남"
 
 #: i486-linux/siglist.c:35
 msgid "Profiling timer expired"
@@ -584,7 +584,7 @@ msgstr "RPC: 호환되지 않는 RPC 버전"
 
 #: sunrpc/clnt_perr.c:195
 msgid "RPC: Port mapper failure"
-msgstr ""
+msgstr "RPC: 포트 맵퍼 실패"
 
 #: sunrpc/clnt_perr.c:185
 msgid "RPC: Procedure unavailable"
@@ -716,11 +716,11 @@ msgstr "예약된 오류 99"
 
 #: resolv/herror.c:72
 msgid "Resolver Error 0 (no error)"
-msgstr ""
+msgstr "리졸버 오류 0 (오류아님)"
 
 #: resolv/herror.c:114
 msgid "Resolver internal error"
-msgstr "리솔버 내부 오류"
+msgstr "리졸버 내부 오류"
 
 #: sysdeps/mach/hurd/errlist.c:21
 msgid "Resource deadlock avoided"
@@ -736,11 +736,11 @@ msgstr ""
 
 #: sunrpc/clnt_perr.c:280
 msgid "Server rejected credential"
-msgstr ""
+msgstr "서버가 자격 부여를 거부했습니다"
 
 #: sunrpc/clnt_perr.c:284
 msgid "Server rejected verifier"
-msgstr ""
+msgstr "서버가 검증기를 거부했습니다"
 
 #: sysdeps/mach/hurd/errlist.c:66
 msgid "Socket is already connected"
@@ -752,7 +752,7 @@ msgstr "소켓이 연결되어 있지 않습니다"
 
 #: sysdeps/mach/hurd/errlist.c:48
 msgid "Socket operation on non-socket"
-msgstr ""
+msgstr "비소켓상의 소켓 동작"
 
 #: sysdeps/mach/hurd/errlist.c:54
 msgid "Socket type not supported"
@@ -764,7 +764,7 @@ msgstr "소프트웨어가 연결 중단을 초래했습니다"
 
 #: sysdeps/mach/hurd/errlist.c:80
 msgid "Stale NFS file handle"
-msgstr ""
+msgstr "끊어진 NFS 파일 핸들"
 
 #: i486-linux/siglist.c:28
 msgid "Stopped"
@@ -824,15 +824,15 @@ msgstr ""
 
 #: sysdeps/mach/hurd/errlist.c:78
 msgid "Too many users"
-msgstr "사용자가 너무 많습니다"
+msgstr "사용자가 너무 많음"
 
 #: i486-linux/siglist.c:13
 msgid "Trace/breakpoint trap"
-msgstr ""
+msgstr "추적/중단점 함정"
 
 #: posix/regex.c:945
 msgid "Trailing backslash"
-msgstr ""
+msgstr "따라붙는 역슬래쉬"
 
 #: sysdeps/mach/hurd/errlist.c:111
 msgid "Translator died"
@@ -852,7 +852,7 @@ msgstr "알 수 없는 호스트"
 
 #: resolv/herror.c:117
 msgid "Unknown resolver error"
-msgstr "알 수 없는 리솔버 오류"
+msgstr "알 수 없는 리졸버 오류"
 
 #: resolv/herror.c:75
 msgid "Unknown server error"
@@ -905,11 +905,11 @@ msgstr "윈도우 변경됨"
 
 #: sysdeps/mach/hurd/errlist.c:113
 msgid "You really blew it this time"
-msgstr ""
+msgstr "이번엔 정말로 날려버렸습니다"
 
 #: sunrpc/rpc_parse.c:326
 msgid "array declaration expected"
-msgstr ""
+msgstr "배열 선언이 있어야 함"
 
 #: sunrpc/auth_unix.c:314
 msgid "auth_none.c - Fatal marshalling problem"
@@ -953,7 +953,7 @@ msgstr "주소 %s에 연결: "
 
 #: sunrpc/rpc_scan.c:109
 msgid "constant or identifier expected"
-msgstr ""
+msgstr "상수나 식별자가 있어야 함"
 
 #: sunrpc/svc_simple.c:70
 msgid "couldn't create an rpc server\n"
@@ -965,7 +965,7 @@ msgstr "프로그램 %d 버전 %d를 등록할 수 없습니다\n"
 
 #: sunrpc/rpc_parse.c:77
 msgid "definition keyword expected"
-msgstr ""
+msgstr "정의 명령어가 있어야 함"
 
 #: sunrpc/svc_udp.c:344
 msgid "enablecache: cache already enabled"
@@ -985,15 +985,15 @@ msgstr "enablecache: 캐쉬 fifo를 할당할 수 없습니다"
 
 #: sunrpc/rpc_util.c:300
 msgid "expected '%s'"
-msgstr ""
+msgstr "'%s'가 있어야 함"
 
 #: sunrpc/rpc_util.c:312
 msgid "expected '%s' or '%s'"
-msgstr ""
+msgstr "'%s'나 '%s'가 있어야 함"
 
 #: sunrpc/rpc_util.c:325
 msgid "expected '%s', '%s' or '%s'"
-msgstr ""
+msgstr "'%s', '%s' 또는 '%s'가 있어야 함"
 
 #: sunrpc/rpc_parse.c:384
 msgid "expected type specifier"
@@ -1021,7 +1021,7 @@ msgstr ""
 
 #: malloc/mcheck.c:165
 msgid "memory is consistent, library is buggy"
-msgstr "메모리는 견고하지만, 라이브러리는 버그가 버글버글합니다"
+msgstr "메모리는 견고하지만, 라이브러리는 버그가 많습니다"
 
 #: sunrpc/svc_simple.c:140
 msgid "never registered prog %d\n"
@@ -1053,11 +1053,11 @@ msgstr "registerrpc: 메모리 부족"
 
 #: inet/rcmd.c:158
 msgid "select: protocol failure in circuit setup\n"
-msgstr ""
+msgstr "select: 회로 설정중 규약이 불이행됨"
 
 #: inet/rcmd.c:176
 msgid "socket: protocol failure in circuit setup.\n"
-msgstr ""
+msgstr "socket: 회로 설정중 규약이 불이행됨.\n"
 
 #: sunrpc/svc_tcp.c:199 svc_tcp.c:204
 msgid "svc_tcp: makefd_xprt: out of memory\n"
@@ -1089,7 +1089,7 @@ msgstr "파일이 너무 많습니다!\n"
 
 #: sunrpc/svc_simple.c:132
 msgid "trouble replying to prog %d\n"
-msgstr ""
+msgstr "프로그램 %d에 응답하는 데 문제가 있음\n"
 
 #: i486-linux/siglist.c:8 i486-linux/siglist.c:24 i486-linux/siglist.c:39
 msgid "unknown signal"
@@ -1105,7 +1105,7 @@ msgstr "사용법: %s 입력파일\n"
 
 #: sunrpc/rpc_parse.c:330
 msgid "variable-length array declaration expected"
-msgstr ""
+msgstr "가변 길이 배열 선언이 있어야 함"
 
 #: sunrpc/rpc_parse.c:370
 msgid "voids allowed only inside union and program definitions"
