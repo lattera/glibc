@@ -1,3 +1,8 @@
+2000-05-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__expm1_code): Avoid using ?:
+	with omitted middle operand.
+
 2003-12-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c: Remove C99-ism.
