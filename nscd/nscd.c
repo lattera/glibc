@@ -98,7 +98,8 @@ static const struct argp_option options[] =
   { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
   { "invalidate", 'i', N_("TABLE"), 0,
     N_("Invalidate the specified cache") },
-  { "secure", 'S', N_("TABLE,yes"), 0, N_("Use separate cache for each user")},
+  { "secure", 'S', N_("TABLE,yes"), OPTION_HIDDEN,
+    N_("Use separate cache for each user")},
   { NULL, 0, NULL, 0, NULL }
 };
 
@@ -356,12 +357,16 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
 
     case 'S':
+#if 0
       if (strcmp (arg, "passwd,yes") == 0)
 	secure_in_use = dbs[pwddb].secure = 1;
       else if (strcmp (arg, "group,yes") == 0)
 	secure_in_use = dbs[grpdb].secure = 1;
       else if (strcmp (arg, "hosts,yes") == 0)
 	secure_in_use = dbs[hstdb].secure = 1;
+#else
+      error (0, 0, _("secure services not implemented anymore"));
+#endif
       break;
 
     default:

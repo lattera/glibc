@@ -172,12 +172,6 @@ libpthread {
     pthread_cond_wait; pthread_cond_timedwait;
     pthread_cond_signal; pthread_cond_broadcast;
   }
-  GLIBC_2.3.4 {
-    pthread_setuid_np; pthread_seteuid_np; pthread_setreuid_np;
-    pthread_setresuid_np;
-    pthread_setgid_np; pthread_setegid_np; pthread_setregid_np;
-    pthread_setresgid_np;
-  }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
     __pthread_initialize;

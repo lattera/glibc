@@ -400,7 +400,6 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
   char *buffer = (char *) alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
-  uid_t oldeuid = 0;
   bool use_malloc = false;
   int errval = 0;
 
@@ -412,11 +411,14 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in password cache!"), keystr);
     }
 
+#if 0
+  uid_t oldeuid = 0;
   if (db->secure)
     {
       oldeuid = geteuid ();
       pthread_seteuid_np (c_uid);
     }
+#endif
 
   while (lookup (req->type, key, &resultbuf, buffer, buflen, &pwd) != 0
 	 && (errval = errno) == ERANGE)
@@ -451,8 +453,10 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
+#if 0
   if (db->secure)
     pthread_seteuid_np (oldeuid);
+#endif
 
   /* Add the entry to the cache.  */
   cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh, errval);

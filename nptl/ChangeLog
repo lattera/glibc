@@ -1,5 +1,6 @@
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions: Remove exports for pthread_set*id_np functions.
 	* sysdeps/pthread/pthread.h: Remove pthread_set*id_np prototypes
 	for now.
 	* Makefile: Don't build pthread_set*id code for now.

@@ -419,7 +419,6 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
   char *buffer = (char *) alloca (buflen);
   struct hostent resultbuf;
   struct hostent *hst;
-  uid_t oldeuid = 0;
   bool use_malloc = false;
   int errval = 0;
 
@@ -439,11 +438,14 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in hosts cache!"), (char *) str);
     }
 
+#if 0
+  uid_t oldeuid = 0;
   if (db->secure)
     {
       oldeuid = geteuid ();
       pthread_seteuid_np (uid);
     }
+#endif
 
   while (lookup (req->type, key, &resultbuf, buffer, buflen, &hst) != 0
 	 && h_errno == NETDB_INTERNAL
@@ -479,8 +481,10 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	buffer = (char *) extend_alloca (buffer, buflen, buflen + INCR);
     }
 
+#if 0
   if (db->secure)
     pthread_seteuid_np (oldeuid);
+#endif
 
   cache_addhst (db, fd, req, key, hst, uid, he, dh,
 		h_errno == TRY_AGAIN ? errval : 0);

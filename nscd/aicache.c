@@ -58,7 +58,6 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  uid_t oldeuid = 0;
 
   /* We allocate all data in one memory block: the iov vector,
      the response header and the dataset itself.  */
@@ -77,11 +76,14 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in hosts cache!"), (char *) key);
     }
 
+#if 0
+  uid_t oldeuid = 0;
   if (db->secure)
     {
       oldeuid = geteuid ();
       pthread_seteuid_np (uid);
     }
+#endif
 
   static service_user *hosts_database;
   service_user *nip = NULL;
@@ -425,8 +427,10 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
  out:
   _res.options = old_res_options;
 
+#if 0
   if (db->secure)
     pthread_seteuid_np (oldeuid);
+#endif
 
   if (dataset != NULL && !alloca_used)
     {

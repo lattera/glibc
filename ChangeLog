@@ -1,3 +1,12 @@
+2004-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.c (options): Mark S option as hidden.
+	(parse_opt): When S option is used, print warning message.
+	* nscd/grpcache.c (adgrptbyX): Don't handle secure mode.
+	* nscd/hstcache.c (addhstbyX): Don't handle secure mode.
+	* nscd/aicache.c (addhstaiX): Don't handle secure mode.
+	* nscd/pwdcache.c (addpwbyX): Don't handle secure mode.
+
 2004-09-20  Roland McGrath  <roland@frob.com>
 
 	* elf/dl-load.c (__stack_prot): Only use PROT_GROWSUP/PROT_GROWSDOWN
