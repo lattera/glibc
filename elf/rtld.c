@@ -134,9 +134,11 @@ struct libname_list _dl_rtld_libname;
 struct libname_list _dl_rtld_libname2;
 
 /* Variable for statistics.  */
+#ifndef HP_TIMING_NONAVAIL
 static hp_timing_t rtld_total_time;
 static hp_timing_t relocate_time;
 static hp_timing_t load_time;
+#endif
 extern unsigned long int _dl_num_relocations;	/* in dl-lookup.c */
 
 static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
@@ -377,9 +379,11 @@ dl_main (const ElfW(Phdr) *phdr,
   int has_interp = 0;
   unsigned int i;
   int rtld_is_main = 0;
+#ifndef HP_TIMING_NONAVAIL
   hp_timing_t start;
   hp_timing_t stop;
   hp_timing_t diff;
+#endif
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&mode, &_dl_lazy);
@@ -1177,16 +1181,24 @@ process_dl_debug (const char *dl_debug)
 	    case 4:
 	      if (memcmp (dl_debug, "help", 4) == 0)
 		{
+		  /* The `statistics' flag is not always implemented.  */
+#ifdef HP_TIMING_NONAVAIL
+# define LD_DEBUG_STATISTICS_TEXT
+#else
+# define LD_DEBUG_STATISTICS_TEXT \
+"  statistics display relocation statistics\n"
+#endif
 		  _dl_sysdep_message ("\
 Valid options for the LD_DEBUG environment variable are:\n\
 \n\
-  bindings  display information about symbol binding\n\
-  files     display processing of files and libraries\n\
-  help      display this help message and exit\n\
-  libs      display library search paths\n\
-  reloc     display relocation processing\n\
-  symbols   display symbol table processing\n\
-  versions  display version dependencies\n\
+  bindings   display information about symbol binding\n\
+  files      display processing of files and libraries\n\
+  help       display this help message and exit\n\
+  libs       display library search paths\n\
+  reloc      display relocation processing\n"
+LD_DEBUG_STATISTICS_TEXT
+"  symbols    display symbol table processing\n\
+  versions   display version dependencies\n\
 \n\
 To direct the debugging output into a file instead of standard output\n\
 a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n",

@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  Generic version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -76,5 +76,8 @@ typedef int hp_timing_t;
 #define HP_TIMING_ACCUM(Sum, Diff)
 #define HP_TIMING_ACCUM_NT(Sum, Diff)
 #define HP_TIMING_PRINT(Buf, Len, Val)
+
+/* Since this implementation is not available we tell the user about it.  */
+#define HP_TIMING_NONAVAIL	1
 
 #endif	/* hp-timing.h */

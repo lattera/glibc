@@ -1,5 +1,19 @@
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/hp-timing.h (HP_TIMING_NONAVAIL): Define to
+	signal timing is not really implemented.
+
+2000-04-17  Andreas Jaeger  <aj@suse.de>
+
+	* elf/rtld.c (process_dl_debug): Mention statistics in help message.
+
+2000-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (install): Use slibdir and libdir instead of inst_slibdir
+	and inst_libdir.
+
+2000-04-17  Ulrich Drepper  <drepper@redhat.com>
+
 	* manual/intro.texi: Change reference from System Information to
 	System Management.
 	* manual/users.texi: Likewise.
