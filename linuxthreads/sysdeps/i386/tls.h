@@ -115,13 +115,13 @@ typedef struct
   __builtin_expect (result, 0) != 0 ? -1 : nr * 8 + 7;			      \
 })
 
-#  define TLS_DO_SET_THREAD_AREA(descr, firstcall)			      \
+#  define TLS_DO_SET_THREAD_AREA(descr, secondcall)			      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { -1, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
       1, 0, 0, 0, 0, 1, 0 };						      \
   int result;								      \
-  if (!firstcall)							      \
+  if (secondcall)							      \
     ldt_entry.entry_number = ({ int _gs;				      \
 				asm ("movl %%gs, %0" : "=q" (_gs));	      \
 				_gs >> 3; });				      \
@@ -138,11 +138,11 @@ typedef struct
 })
 
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
-#   define TLS_SETUP_GS_SEGMENT(descr, firstcall) \
+#   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
   TLS_DO_SET_THREAD_AREA (descr, firstcall)
 #  elif defined __NR_set_thread_area
-#   define TLS_SETUP_GS_SEGMENT(descr, firstcall) \
-  ({ int __seg = TLS_DO_SET_THREAD_AREA (descr, firstcall); \
+#   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
+  ({ int __seg = TLS_DO_SET_THREAD_AREA (descr, secondcall); \
      __seg == -1 ? TLS_DO_MODIFY_LDT (descr, 0) : __seg; })
 #  else
 #   define TLS_SETUP_GS_SEGMENT(descr) TLS_DO_MODIFY_LDT ((descr), 0)
@@ -151,7 +151,7 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
-#  define TLS_INIT_TP(descr, firstcall)					      \
+#  define TLS_INIT_TP(descr, secondcall)				      \
   ({									      \
     void *_descr = (descr);						      \
     tcbhead_t *head = _descr;						      \
@@ -161,7 +161,7 @@ typedef struct
     /* For now the thread descriptor is at the same address.  */	      \
     head->self = _descr;						      \
 									      \
-    __gs = TLS_SETUP_GS_SEGMENT (_descr, firstcall);			      \
+    __gs = TLS_SETUP_GS_SEGMENT (_descr, secondcall);			      \
     if (__builtin_expect (__gs, 7) != -1)				      \
       {									      \
 	asm ("movl %0, %%gs" : : "q" (__gs));				      \
