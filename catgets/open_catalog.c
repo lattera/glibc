@@ -212,13 +212,9 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
     /* Some systems do not have this flag; it is superfluous.  */
 #  define MAP_FILE 0
 # endif
-# ifndef MAP_INHERIT
-    /* Some systems might lack this; they lose.  */
-#  define MAP_INHERIT 0
-# endif
   catalog->file_ptr =
     (struct catalog_obj *) __mmap (NULL, st.st_size, PROT_READ,
-				   MAP_FILE|MAP_COPY|MAP_INHERIT, fd, 0);
+				   MAP_FILE|MAP_COPY, fd, 0);
   if (__builtin_expect (catalog->file_ptr != (struct catalog_obj *) MAP_FAILED,
 			1))
     /* Tell the world we managed to mmap the file.  */
