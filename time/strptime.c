@@ -83,8 +83,9 @@ localtime_r (t, tp)
 #endif
 /* We intentionally do not use isdigit() for testing because this will
    lead to problems with the wide character version.  */
-#define get_number(from, to) \
+#define get_number(from, to, n) \
   do {									      \
+    int __n = n;							      \
     val = 0;								      \
     while (*rp == ' ')							      \
       ++rp;								      \
@@ -93,42 +94,60 @@ localtime_r (t, tp)
     do {								      \
       val *= 10;							      \
       val += *rp++ - '0';						      \
-    } while (val * 10 <= to && *rp >= '0' && *rp <= '9');		      \
+    } while (--__n > 0 && val * 10 <= to && *rp >= '0' && *rp <= '9');	      \
     if (val < from || val > to)						      \
       return NULL;							      \
   } while (0)
 #ifdef _NL_CURRENT
-# define get_alt_number(from, to) \
-  do {									      \
+# define get_alt_number(from, to, n) \
+  ({									      \
+    __label__ do_normal;						      \
     if (*decided != raw)						      \
       {									      \
 	const char *alts = _NL_CURRENT (LC_TIME, ALT_DIGITS);		      \
+	int __n = n;							      \
+	int any = 0;							      \
+	while (*rp == ' ')						      \
+	  ++rp;								      \
 	val = 0;							      \
-	while (*alts != '\0')						      \
-	  {								      \
-	    size_t len = strlen (alts);					      \
-	    if (strncasecmp (alts, rp, len) == 0)			      \
+	do {								      \
+	  val *= 10;							      \
+	  while (*alts != '\0')						      \
+	    {								      \
+	      size_t len = strlen (alts);				      \
+	      if (strncasecmp (alts, rp, len) == 0)			      \
+	        break;							      \
+	      alts += len + 1;						      \
+	      ++val;							      \
+	    }								      \
+	  if (*alts == '\0')						      \
+	    {								      \
+	      if (*decided == not && ! any)				      \
+		goto do_normal;						      \
+	      /* If we haven't read anything it's an error.  */		      \
+	      if (! any)						      \
+		return NULL;						      \
+	      /* Correct the premature multiplication.  */		      \
+	      val /= 10;						      \
 	      break;							      \
-	    alts = strchr (alts, '\0') + 1;				      \
-	    ++val;							      \
-	  }								      \
-	if (*alts == '\0')						      \
-	  {								      \
-	    if (*decided == loc && val != 0)				      \
-	      return NULL;						      \
-	  }								      \
-	else								      \
-	  {								      \
+	    }								      \
+	  else								      \
 	    *decided = loc;						      \
-	    break;							      \
-	  }								      \
+	} while (--__n > 0 && val * 10 <= to);				      \
+	if (val < from || val > to)					      \
+	  return NULL;							      \
       }									      \
-    get_number (from, to);						      \
-  } while (0)
+    else								      \
+      {									      \
+       do_normal:							      \
+        get_number (from, to, n);					      \
+      }									      \
+    0;									      \
+  })
 #else
-# define get_alt_number(from, to) \
+# define get_alt_number(from, to, n) \
   /* We don't have the alternate representation.  */			      \
-  get_number(from, to)
+  get_number(from, to, n)
 #endif
 #define recursive(new_fmt) \
   (*(new_fmt) != '\0'							      \
@@ -253,7 +272,7 @@ strptime_internal (buf, format, tm, decided)
   int have_wday, want_xday;
   int have_yday;
   int have_mon, have_mday;
-  
+
   rp = buf;
   fmt = format;
   have_I = is_pm = 0;
@@ -399,14 +418,14 @@ strptime_internal (buf, format, tm, decided)
 	  break;
 	case 'C':
 	  /* Match century number.  */
-	  get_number (0, 99);
+	  get_number (0, 99, 2);
 	  century = val;
 	  want_xday = 1;
 	  break;
 	case 'd':
 	case 'e':
 	  /* Match day of month.  */
-	  get_number (1, 31);
+	  get_number (1, 31, 2);
 	  tm->tm_mday = val;
 	  have_mday = 1;
 	  want_xday = 1;
@@ -446,32 +465,32 @@ strptime_internal (buf, format, tm, decided)
 	case 'k':
 	case 'H':
 	  /* Match hour in 24-hour clock.  */
-	  get_number (0, 23);
+	  get_number (0, 23, 2);
 	  tm->tm_hour = val;
 	  have_I = 0;
 	  break;
 	case 'I':
 	  /* Match hour in 12-hour clock.  */
-	  get_number (1, 12);
+	  get_number (1, 12, 2);
 	  tm->tm_hour = val % 12;
 	  have_I = 1;
 	  break;
 	case 'j':
 	  /* Match day number of year.  */
-	  get_number (1, 366);
+	  get_number (1, 366, 3);
 	  tm->tm_yday = val - 1;
 	  have_yday = 1;
 	  break;
 	case 'm':
 	  /* Match number of month.  */
-	  get_number (1, 12);
+	  get_number (1, 12, 2);
 	  tm->tm_mon = val - 1;
 	  have_mon = 1;
 	  want_xday = 1;
 	  break;
 	case 'M':
 	  /* Match minute.  */
-	  get_number (0, 59);
+	  get_number (0, 59, 2);
 	  tm->tm_min = val;
 	  break;
 	case 'n':
@@ -558,7 +577,7 @@ strptime_internal (buf, format, tm, decided)
 	  }
 	  break;
 	case 'S':
-	  get_number (0, 61);
+	  get_number (0, 61, 2);
 	  tm->tm_sec = val;
 	  break;
 	case 'X':
@@ -585,12 +604,12 @@ strptime_internal (buf, format, tm, decided)
 	    return NULL;
 	  break;
 	case 'u':
-	  get_number (1, 7);
+	  get_number (1, 7, 1);
 	  tm->tm_wday = val % 7;
 	  have_wday = 1;
 	  break;
 	case 'g':
-	  get_number (0, 99);
+	  get_number (0, 99, 2);
 	  /* XXX This cannot determine any field in TM.  */
 	  break;
 	case 'G':
@@ -605,19 +624,19 @@ strptime_internal (buf, format, tm, decided)
 	case 'U':
 	case 'V':
 	case 'W':
-	  get_number (0, 53);
+	  get_number (0, 53, 2);
 	  /* XXX This cannot determine any field in TM without some
 	     information.  */
 	  break;
 	case 'w':
 	  /* Match number of weekday.  */
-	  get_number (0, 6);
+	  get_number (0, 6, 1);
 	  tm->tm_wday = val;
 	  have_wday = 1;
 	  break;
 	case 'y':
 	  /* Match year within century.  */
-	  get_number (0, 99);
+	  get_number (0, 99, 2);
 	  /* The "Year 2000: The Millennium Rollover" paper suggests that
 	     values in the range 69-99 refer to the twentieth century.  */
 	  tm->tm_year = val >= 69 ? val : val + 100;
@@ -627,7 +646,7 @@ strptime_internal (buf, format, tm, decided)
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */
-	  get_number (0, 9999);
+	  get_number (0, 9999, 4);
 	  tm->tm_year = val - 1900;
 	  want_century = 0;
 	  want_xday = 1;
@@ -744,7 +763,7 @@ strptime_internal (buf, format, tm, decided)
 	    case 'd':
 	    case 'e':
 	      /* Match day of month using alternate numeric symbols.  */
-	      get_alt_number (1, 31);
+	      get_alt_number (1, 31, 2);
 	      tm->tm_mday = val;
 	      have_mday = 1;
 	      want_xday = 1;
@@ -752,50 +771,50 @@ strptime_internal (buf, format, tm, decided)
 	    case 'H':
 	      /* Match hour in 24-hour clock using alternate numeric
 		 symbols.  */
-	      get_alt_number (0, 23);
+	      get_alt_number (0, 23, 2);
 	      tm->tm_hour = val;
 	      have_I = 0;
 	      break;
 	    case 'I':
 	      /* Match hour in 12-hour clock using alternate numeric
 		 symbols.  */
-	      get_alt_number (1, 12);
+	      get_alt_number (1, 12, 2);
 	      tm->tm_hour = val - 1;
 	      have_I = 1;
 	      break;
 	    case 'm':
 	      /* Match month using alternate numeric symbols.  */
-	      get_alt_number (1, 12);
+	      get_alt_number (1, 12, 2);
 	      tm->tm_mon = val - 1;
 	      have_mon = 1;
 	      want_xday = 1;
 	      break;
 	    case 'M':
 	      /* Match minutes using alternate numeric symbols.  */
-	      get_alt_number (0, 59);
+	      get_alt_number (0, 59, 2);
 	      tm->tm_min = val;
 	      break;
 	    case 'S':
 	      /* Match seconds using alternate numeric symbols.  */
-	      get_alt_number (0, 61);
+	      get_alt_number (0, 61, 2);
 	      tm->tm_sec = val;
 	      break;
 	    case 'U':
 	    case 'V':
 	    case 'W':
-	      get_alt_number (0, 53);
+	      get_alt_number (0, 53, 2);
 	      /* XXX This cannot determine any field in TM without
 		 further information.  */
 	      break;
 	    case 'w':
 	      /* Match number of weekday using alternate numeric symbols.  */
-	      get_alt_number (0, 6);
+	      get_alt_number (0, 6, 1);
 	      tm->tm_wday = val;
 	      have_wday = 1;
 	      break;
 	    case 'y':
 	      /* Match year within century using alternate numeric symbols.  */
-	      get_alt_number (0, 99);
+	      get_alt_number (0, 99, 2);
 	      tm->tm_year = val >= 69 ? val : val + 100;
 	      want_xday = 1;
 	      break;
@@ -824,9 +843,9 @@ strptime_internal (buf, format, tm, decided)
 	      tm->tm_mon = t_mon - 1;
 	  if (!have_mday)
 	      tm->tm_mday = tm->tm_yday - __mon_yday[__isleap(1900 + tm->tm_year)][t_mon - 1] + 1;
-      } 
+      }
       day_of_the_week (tm);
-  }  
+  }
   if (want_xday && !have_yday)
     day_of_the_year (tm);
 

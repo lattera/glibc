@@ -1,3 +1,11 @@
+1999-07-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strptime.c (get_number): Handle number parsing more
+	consistent with strftime.  Only parse a given number of digits.
+	(get_alt_number):  Fix implementation.  Was broken.
+	(strptime_internal): Add third parameter to get_number and
+	get_alt_number calls.
+
 1999-07-13  Jakub Jelinek  <jj@ultra.linux.cz>
 
 	* elf/ldd.bash.in: Add support for multiple dynamic linkers.
