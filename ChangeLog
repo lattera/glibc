@@ -1,3 +1,7 @@
+2003-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/memmove.S: New file.
+
 2003-01-31  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c:
