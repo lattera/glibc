@@ -25,12 +25,12 @@ Cambridge, MA 02139, USA.  */
 #include <sys/wait.h>
 #include <unistd.h>
 
-extern pid_t __wait4_syscall __P ((pid_t pid, __WAIT_STATUS stat_loc,
+extern pid_t __wait4_syscall __P ((pid_t pid, __WAIT_STATUS_DEFN stat_loc,
 				   int options, struct rusage *usage));
 
 pid_t
 DEFUN(__wait4, (pid, stat_loc, options, usage),
-      pid_t pid AND __WAIT_STATUS stat_loc AND
+      pid_t pid AND __WAIT_STATUS_DEFN stat_loc AND
       int options AND struct rusage *usage)
 {
   switch (pid)
