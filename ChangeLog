@@ -1,5 +1,7 @@
 Sun Jun 16 03:22:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* version.h (VERSION): Update to 1.91.
+
 	* hurd/hurdinit.c (map0): Remove [!PIC] conditional.
 
 	* shlib-versions (*-*-*): Add libutil=1.
