@@ -592,8 +592,8 @@ the line from the null character inserted as a terminator.
 This function is a GNU extension, but it is the recommended way to read
 lines from a stream.  The alternative standard functions are unreliable.
 
-If an error occurs or end of file is reached, @code{getline} returns
-@code{-1}.
+If an error occurs or end of file is reached without any bytes read,
+@code{getline} returns @code{-1}.
 @end deftypefun
 
 @comment stdio.h

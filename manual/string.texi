@@ -1097,11 +1097,11 @@ specifying a null character as the value of the @var{c} argument.
 @comment ???
 @deftypefun {char *} strchrnul (const char *@var{string}, int @var{c})
 @code{strchrnul} is the same as @code{strchr} except that if it does
-not find the character, it returns a pointer to string's terminating 
+not find the character, it returns a pointer to string's terminating
 null character rather than a null pointer.
 @end deftypefun
 
-One useful, but unusual, use of the @code{strchr} 
+One useful, but unusual, use of the @code{strchr}
 function is when one wants to have a pointer pointing to the NUL byte
 terminating a string.  This is often written in this way:
 
@@ -1421,6 +1421,85 @@ token = strsep (&running, delimiters);    /* token => "" */
 token = strsep (&running, delimiters);    /* token => NULL */
 @end smallexample
 
+@comment string.h
+@comment GNU
+@deftypefun {char *} basename (const char *@var{filename})
+The GNU version of the @code{basename} function returns the last
+component of the path in @var{filename}.  This function is the prefered
+usage, since it does not modify the argument, @var{filename}, and
+respects trailing slashes.  The prototype for @code{basename} can be
+found in @file{string.h}.  Note, this function is overriden by the XPG
+version, if @file{libgen.h} is included.
+
+Example of using GNU @code{basename}:
+
+@smallexample
+#include <string.h>
+
+int
+main (int argc, char *argv[])
+@{
+  char *prog = basename (argv[0]);
+
+  if (argc < 2)
+    @{
+      fprintf (stderr, "Usage %s <arg>\n", prog);
+      exit (1);
+    @}
+
+  @dots{}
+@}
+@end smallexample
+
+@strong{Portability Note:} This function may produce different results
+on different systems.
+
+@end deftypefun
+
+@comment libgen.h
+@comment XPG
+@deftypefun {char *} basename (char *@var{path})
+This is the standard XPG defined @code{basename}. It is similar in
+spirit to the GNU version, but may modify the @var{path} by removing
+trailing '/' characters.  If the @var{path} is made up entirely of '/'
+characters, then "/" will be returned.  Also, if @var{path} is
+@code{NULL} or an empty string, then "." is returned.  The prototype for
+the XPG version can be found in @file{string.h}.
+
+Example of using XPG @code{basename}:
+
+@smallexample
+#include <libgen.h>
+
+int
+main (int argc, char *argv[])
+@{
+  char *prog;
+  char *path = strdupa (argv[0]);
+
+  prog = basename (path);
+
+  if (argc < 2)
+    @{
+      fprintf (stderr, "Usage %s <arg>\n", prog);
+      exit (1);
+    @}
+
+  @dots{}
+
+@}
+@end smallexample
+@end deftypefun
+
+@comment libgen.h
+@comment XPG
+@deftypefun {char *} dirname (char *@var{path})
+The @code{dirname} function is the compliment to the XPG version of
+@code{basename}.  It returns the parent directory of the file specified
+by @var{path}.  If @var{path} is @code{NULL}, an empty string, or
+contains no '/' characters, then "." is returned.  The prototype for this
+function can be found in @file{libgen.h}.
+@end deftypefun
 
 @node strfry
 @section strfry
@@ -1436,7 +1515,7 @@ The prototype for this function is in @file{string.h}.
 
 @comment string.h
 @comment GNU
-@deftypefun {char *} strfry (char *@var{string}) 
+@deftypefun {char *} strfry (char *@var{string})
 
 @code{strfry} creates a pseudorandom anagram of a string, replacing the
 input with the anagram in place.  For each position in the string,

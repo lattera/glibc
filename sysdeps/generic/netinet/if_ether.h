@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,11 +21,13 @@
 #define __NETINET_IF_ETHER_H	1
 #include <features.h>
 
+#include <sys/types.h>
+
 /* This is a name for the 48 bit ethernet address available on many
    systems.  */
 struct ether_addr
 {
-  unsigned char ether_addr_octet[6];
-};
+  u_int8_t ether_addr_octet[6];
+} __attribute__ ((__packed__));
 
 #endif /* netinet/if_ether.h */

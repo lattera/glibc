@@ -51,7 +51,7 @@
  * interface. portmap caches interfaces, and on DHCP clients,
  * it could be that only loopback is started at this time.
  */
-static void
+static bool_t
 __get_myaddress (struct sockaddr_in *addr)
 {
   int s;
@@ -89,7 +89,7 @@ __get_myaddress (struct sockaddr_in *addr)
           *addr = *((struct sockaddr_in *) &ifr->ifr_addr);
           addr->sin_port = htons (PMAPPORT);
           __close (s);
-          return;
+          return TRUE;
         }
       ifr++;
     }
@@ -99,6 +99,7 @@ __get_myaddress (struct sockaddr_in *addr)
       goto again;
     }
   __close (s);
+  return FALSE;
 }
 
 
@@ -118,7 +119,8 @@ pmap_set (u_long program, u_long version, int protocol, u_short port)
   struct pmap parms;
   bool_t rslt;
 
-  __get_myaddress (&myaddress);
+  if (!__get_myaddress (&myaddress))
+    return FALSE;
   client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
 			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client == (CLIENT *) NULL)
@@ -152,7 +154,8 @@ pmap_unset (u_long program, u_long version)
   struct pmap parms;
   bool_t rslt;
 
-  __get_myaddress (&myaddress);
+  if (!__get_myaddress (&myaddress))
+    return FALSE;
   client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
 			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client == (CLIENT *) NULL)
