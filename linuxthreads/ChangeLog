@@ -1,3 +1,16 @@
+2000-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* linuxthreads.texi: Changes terminology to 'type' from 'kind' when
+	discussing mutexes. (As per the Unix98 name for the API.)
+	Changes documentation for pthread_mutexattr_setkind_np() and
+	pthread_mutexattr_getkind_np() over to the Unix98 APIs for the
+	same: pthread_mutexattr_settype() and pthread_mutexattr_gettype().
+	Changes references to PTHREAD_MUTEXATTR_FAST_NP to
+	PTHREAD_MUTEXATTR_ADAPTIVE_NP.
+	Begins to introduce discussion of the ``timed'' mutex type.  This
+	discussion is currently incomplete.
+	Patch by Bruce <bruce@puremagic.com>.
+
 2000-10-26  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 	    Yutaka Niibe  <gniibe@chroot.org>
 

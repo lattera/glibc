@@ -1,3 +1,11 @@
+2000-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/big5.c: Update.
+	Patch by Tung-Han Hsieh <thhsieh@twcpro.phys.ntu.edu.tw>.
+
+	* iconvdata/Makefile (distribute): Add BIG5.irreversible.
+	* iconvdata/BIG5.irreversible: New file.
+
 2000-10-29  Greg Louis  <glouis@dynamicro.on.ca>
 
 	* posix/regex.h (__restrict_arr): Move definition out of #ifndef block.

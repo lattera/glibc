@@ -5,19 +5,22 @@
 <escape_char> /
 %
 % Chinese charmap for BIG5 (CP950)
-% version: 0.9
+% version: 0.91
 % Contact: Tung-Han Hsieh   <thhsieh@linux.org.tw>
 %	   Yuan-Chung Cheng <platin@ms31.hinet.net>
 % Distribution and use is free, even for comercial purpose.
 %
 % This charmap is converted from:
 %     ftp://ftp.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP950.TXT
-% and also merged several characters (/xc6/xa1-/xc7fc) from:
+% and also merged several characters (/xc6/xa1-/xc7/xfc) from:
 %     Aprhic Tech. CO., LTD. Big5 <==> Unicode mapping table.
 %
-% Unmapped Big5 characters:
+% Irrevsible mapping Big5 characters (using %IRREVERSIBLE% notation):
 %     /xa2/xcc, /xa2/xce, /xf9/xe9, /xf9/xea, /xf9/xeb, 
 %     /xf9/xf9, /xf9/xfa, /xf9/xfb, /xf9/xfc, /xf9/xfd
+%
+% The mapping /xa3/xe1 <==> <U20AC> is removed because only CP950.TXT contains
+%     this mapping, but not found in elsewhere. It might be a mistake.
 %
 % alias BIG5-CP950
 
@@ -417,9 +420,9 @@ CHARMAP
 <U3027>		/xa2/xc9	HANGZHOU NUMERAL SEVEN
 <U3028>		/xa2/xca	HANGZHOU NUMERAL EIGHT
 <U3029>		/xa2/xcb	HANGZHOU NUMERAL NINE
-% <U5341>		/xa2/xcc	<CJK>
+%IRREVERSIBLE%<U5341>		/xa2/xcc	<CJK>
 <U5344>		/xa2/xcd	<CJK>
-% <U5345>		/xa2/xce	<CJK>
+%IRREVERSIBLE%<U5345>		/xa2/xce	<CJK>
 <UFF21>		/xa2/xcf	FULLWIDTH LATIN CAPITAL LETTER A
 <UFF22>		/xa2/xd0	FULLWIDTH LATIN CAPITAL LETTER B
 <UFF23>		/xa2/xd1	FULLWIDTH LATIN CAPITAL LETTER C
@@ -562,7 +565,6 @@ CHARMAP
 <U02CA>		/xa3/xbd	MODIFIER LETTER ACUTE ACCENT
 <U02C7>		/xa3/xbe	CARON
 <U02CB>		/xa3/xbf	MODIFIER LETTER GRAVE ACCENT
-<U20AC>		/xa3/xe1	EURO SIGN
 <U4E00>		/xa4/x40	<CJK>
 <U4E59>		/xa4/x41	<CJK>
 <U4E01>		/xa4/x42	<CJK>
@@ -14050,9 +14052,9 @@ CHARMAP
 <U2552>		/xf9/xe6	BOX DRAWINGS DOWN SINGLE AND RIGHT DOUBLE
 <U2564>		/xf9/xe7	BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE
 <U2555>		/xf9/xe8	BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE
-% <U255E>		/xf9/xe9	BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE
-% <U256A>		/xf9/xea	BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE
-% <U2561>		/xf9/xeb	BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE
+%IRREVERSIBLE%<U255E>		/xf9/xe9	BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE
+%IRREVERSIBLE%<U256A>		/xf9/xea	BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE
+%IRREVERSIBLE%<U2561>		/xf9/xeb	BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE
 <U2558>		/xf9/xec	BOX DRAWINGS UP SINGLE AND RIGHT DOUBLE
 <U2567>		/xf9/xed	BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE
 <U255B>		/xf9/xee	BOX DRAWINGS UP SINGLE AND LEFT DOUBLE
@@ -14066,11 +14068,11 @@ CHARMAP
 <U2568>		/xf9/xf6	BOX DRAWINGS UP DOUBLE AND HORIZONTAL SINGLE
 <U255C>		/xf9/xf7	BOX DRAWINGS UP DOUBLE AND LEFT SINGLE
 <U2551>		/xf9/xf8	BOX DRAWINGS DOUBLE VERTICAL
-% <U2550>		/xf9/xf9	BOX DRAWINGS DOUBLE HORIZONTAL
-% <U256D>		/xf9/xfa	BOX DRAWINGS LIGHT ARC DOWN AND RIGHT
-% <U256E>		/xf9/xfb	BOX DRAWINGS LIGHT ARC DOWN AND LEFT
-% <U2570>		/xf9/xfc	BOX DRAWINGS LIGHT ARC UP AND RIGHT
-% <U256F>		/xf9/xfd	BOX DRAWINGS LIGHT ARC UP AND LEFT
+%IRREVERSIBLE%<U2550>		/xf9/xf9	BOX DRAWINGS DOUBLE HORIZONTAL
+%IRREVERSIBLE%<U256D>		/xf9/xfa	BOX DRAWINGS LIGHT ARC DOWN AND RIGHT
+%IRREVERSIBLE%<U256E>		/xf9/xfb	BOX DRAWINGS LIGHT ARC DOWN AND LEFT
+%IRREVERSIBLE%<U2570>		/xf9/xfc	BOX DRAWINGS LIGHT ARC UP AND RIGHT
+%IRREVERSIBLE%<U256F>		/xf9/xfd	BOX DRAWINGS LIGHT ARC UP AND LEFT
 <U2593>		/xf9/xfe	DARK SHADE
 END CHARMAP
 

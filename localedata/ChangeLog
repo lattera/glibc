@@ -1,5 +1,8 @@
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* charmaps/BIG5: Update.
+	Patch by Tung-Han Hsieh <thhsieh@twcpro.phys.ntu.edu.tw>.
+
 	* locales/mk_MK: Use iso14651_t1 file.
 	Patch by Damjan <arhiv@freemail.org.mk>.
 

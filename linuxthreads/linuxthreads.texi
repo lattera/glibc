@@ -550,15 +550,16 @@ calling thread.
 If @var{mutexattr} is @code{NULL}, default attributes are used instead.
 
 The LinuxThreads implementation supports only one mutex attribute,
-the @var{mutex kind}, which is either ``fast'', ``recursive'', or
-``error checking''. The kind of a mutex determines whether
+the @var{mutex type}, which is either ``fast'', ``recursive'', or
+``error checking''. The type of a mutex determines whether
 it can be locked again by a thread that already owns it.
-The default kind is ``fast''.
+The default type is ``fast''.
 
 Variables of type @code{pthread_mutex_t} can also be initialized
 statically, using the constants @code{PTHREAD_MUTEX_INITIALIZER} (for
-fast mutexes), @code{PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP} (for
-recursive mutexes), and @code{PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP}
+timed mutexes), @code{PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP} (for
+recursive mutexes), @code{PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP} 
+(for fast mutexes(, and @code{PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP}
 (for error checking mutexes).
 
 @code{pthread_mutex_init} always returns 0.
@@ -574,16 +575,17 @@ already locked by another thread, @code{pthread_mutex_lock} suspends the
 calling thread until the mutex is unlocked.
 
 If the mutex is already locked by the calling thread, the behavior of
-@code{pthread_mutex_lock} depends on the kind of the mutex. If the mutex
-is of the ``fast'' kind, the calling thread is suspended.  It will
+@code{pthread_mutex_lock} depends on the type of the mutex. If the mutex
+is of the ``fast'' type, the calling thread is suspended.  It will
 remain suspended forever, because no other thread can unlock the mutex.
-If  the mutex is of the ``error checking'' kind, @code{pthread_mutex_lock}
+If  the mutex is of the ``error checking'' type, @code{pthread_mutex_lock}
 returns immediately with the error code @code{EDEADLK}.  If the mutex is
-of the ``recursive'' kind, @code{pthread_mutex_lock} succeeds and
+of the ``recursive'' type, @code{pthread_mutex_lock} succeeds and
 returns immediately, recording the number of times the calling thread
 has locked the mutex. An equal number of @code{pthread_mutex_unlock}
 operations must be performed before the mutex returns to the unlocked
 state.
+@c This doesn't discuss PTHREAD_MUTEX_TIMED_NP mutex attributes. FIXME
 @end deftypefun
 
 @comment pthread.h
@@ -621,9 +623,9 @@ This function was introduced in the POSIX.1d revision of the POSIX standard.
 @deftypefun int pthread_mutex_unlock (pthread_mutex_t *@var{mutex})
 @code{pthread_mutex_unlock} unlocks the given mutex. The mutex is
 assumed to be locked and owned by the calling thread on entrance to
-@code{pthread_mutex_unlock}. If the mutex is of the ``fast'' kind,
+@code{pthread_mutex_unlock}. If the mutex is of the ``fast'' type,
 @code{pthread_mutex_unlock} always returns it to the unlocked state. If
-it is of the ``recursive'' kind, it decrements the locking count of the
+it is of the ``recursive'' type, it decrements the locking count of the
 mutex (number of @code{pthread_mutex_lock} operations performed on it by
 the calling thread), and only when this count reaches zero is the mutex
 actually unlocked.
@@ -696,45 +698,52 @@ LinuxThreads implementation.
 This function always returns 0.
 @end deftypefun
 
-LinuxThreads supports only one mutex attribute: the mutex kind, which is
-either @code{PTHREAD_MUTEX_FAST_NP} for ``fast'' mutexes,
-@code{PTHREAD_MUTEX_RECURSIVE_NP} for ``recursive'' mutexes, or
+LinuxThreads supports only one mutex attribute: the mutex type, which is
+either @code{PTHREAD_MUTEX_ADAPTIVE_NP} for ``fast'' mutexes,
+@code{PTHREAD_MUTEX_RECURSIVE_NP} for ``recursive'' mutexes, 
+@code{PTHREAD_MUTEX_TIMED_NP} for ``timed'' mutexes, or 
 @code{PTHREAD_MUTEX_ERRORCHECK_NP} for ``error checking'' mutexes.  As
 the @code{NP} suffix indicates, this is a non-portable extension to the
 POSIX standard and should not be employed in portable programs.
 
-The mutex kind determines what happens if a thread attempts to lock a
+The mutex type determines what happens if a thread attempts to lock a
 mutex it already owns with @code{pthread_mutex_lock}. If the mutex is of
-the ``fast'' kind, @code{pthread_mutex_lock} simply suspends the calling
-thread forever.  If the mutex is of the ``error checking'' kind,
+the ``fast'' type, @code{pthread_mutex_lock} simply suspends the calling
+thread forever.  If the mutex is of the ``error checking'' type,
 @code{pthread_mutex_lock} returns immediately with the error code
-@code{EDEADLK}.  If the mutex is of the ``recursive'' kind, the call to
+@code{EDEADLK}.  If the mutex is of the ``recursive'' type, the call to
 @code{pthread_mutex_lock} returns immediately with a success return
 code. The number of times the thread owning the mutex has locked it is
 recorded in the mutex. The owning thread must call
 @code{pthread_mutex_unlock} the same number of times before the mutex
 returns to the unlocked state.
 
-The default mutex kind is ``fast'', that is, @code{PTHREAD_MUTEX_FAST_NP}.
+The default mutex type is ``timed'', that is, @code{PTHREAD_MUTEX_TIMED_NP}.
+@c This doesn't describe how a ``timed'' mutex behaves. FIXME
 
 @comment pthread.h
 @comment GNU
-@deftypefun int pthread_mutexattr_setkind_np (pthread_mutexattr_t *@var{attr}, int @var{kind})
-@code{pthread_mutexattr_setkind_np} sets the mutex kind attribute in
-@var{attr} to the value specified by @var{kind}.
+@deftypefun int pthread_mutexattr_settype (pthread_mutexattr_t *@var{attr}, int @var{type})
+@code{pthread_mutexattr_settyp3} sets the mutex type attribute in
+@var{attr} to the value specified by @var{type}.
 
-If @var{kind} is not @code{PTHREAD_MUTEX_FAST_NP},
-@code{PTHREAD_MUTEX_RECURSIVE_NP}, or
+If @var{type} is not @code{PTHREAD_MUTEX_ADAPTIVE_NP},
+@code{PTHREAD_MUTEX_RECURSIVE_NP}, @code{PTHREAD_MUTEX_TIMED_NP}, or 
 @code{PTHREAD_MUTEX_ERRORCHECK_NP}, this function will return
 @code{EINVAL} and leave @var{attr} unchanged.
+
+The standard Unix98 identifiers @code{PTHREAD_MUTEX_DEFAULT}, 
+@code{PTHREAD_MUTEX_NORMAL}, @code{PTHREAD_MUTEX_RECURSIVE}, 
+and @code{PTHREAD_MUTEX_ERRORCHECK} are also permitted.
+
 @end deftypefun
 
 @comment pthread.h
 @comment GNU
-@deftypefun int pthread_mutexattr_getkind_np (const pthread_mutexattr_t *@var{attr}, int *@var{kind})
-@code{pthread_mutexattr_getkind_np} retrieves the current value of the
-mutex kind attribute in @var{attr} and stores it in the location pointed
-to by @var{kind}.
+@deftypefun int pthread_mutexattr_gettype (const pthread_mutexattr_t *@var{attr}, int *@var{type})
+@code{pthread_mutexattr_gettype} retrieves the current value of the
+mutex type attribute in @var{attr} and stores it in the location pointed
+to by @var{type}.
 
 This function always returns 0.
 @end deftypefun
