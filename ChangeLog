@@ -1,14 +1,26 @@
+1998-11-28  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/setuids.c: Renamed to ...
+	* hurd/seteuids.c: this.
+	(setuids): Renamed to seteuids.
+	* hurd/getuids.c: Renamed to ...
+	* hurd/geteuids.c: this.
+	(__getuids): Renamed to geteuids, no aliases.
+	* hurd/hurd.h (geteuids, seteuids): Declare them.
+	* hurd/Versions: Replace getuids; __getuids with geteuids; seteuids.
+	* hurd/Makefile (routines): Updated.
+
 1998-11-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/segfault.c (install_handler): Correct test for
 	SEGFAULT_HANDLER=all.
 	Patch by Zack Weinberg.
 
-1998-11-28 23:23 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
- 
-	* sysdeps/unix/sysv/linux/configure.in: Test for symlinks in 
-	$prefix/include that may be clobbered on installation. 
- 
+1998-11-28 23:23 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/sysv/linux/configure.in: Test for symlinks in
+	$prefix/include that may be clobbered on installation.
+
 1998-11-27  Philip Blundell  <pb@nexus.co.uk>
 
 	Fixes to allow compilation with static NSS:
