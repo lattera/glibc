@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +15,23 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
+
+/* Issues:
+
+   1. putenv must not use setenv since the string provided by the user
+      must be used, not a copy
+
+   2. a common function should determine the place where to insert the
+      new entry and if necessary take care of extending the array
+
+   3. It must be kept track of whether an entry was inserted via putenv
+      or setenv.  In the former case the entry must not be put into
+      the search tree since removing it could mean it will not be
+      available anymore (e.g., when allocated on the stack)
+
+      To handle this an array parallel to the __environ array must specify
+      whether the entry was added via putenv or not
+*/
 
 #if HAVE_CONFIG_H
 # include <config.h>

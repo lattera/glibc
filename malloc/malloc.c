@@ -314,6 +314,7 @@
 extern "C" {
 #endif
 
+#include <errno.h>
 #include <stdio.h>    /* needed for malloc_stats */
 
 
