@@ -1,5 +1,8 @@
 2000-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: Correct prototype for
+	__syscall_mmap2.
+
 	* sysdeps/unix/sysv/linux/execve.c: Pretty print.
 
 	* po/it.po: New file.

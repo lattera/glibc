@@ -30,7 +30,7 @@
 #include "kernel-features.h"
 
 #ifdef __NR_mmap2
-extern int __syscall_mmap2(__ptr_t, size_t, int, int, int, off_t);
+extern __ptr_t __syscall_mmap2(__ptr_t, size_t, int, int, int, off_t);
 #ifndef __ASSUME_MMAP2_SYSCALL
 static int have_no_mmap2;
 #endif
@@ -51,7 +51,7 @@ __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 #endif
       /* This will be always 12, no matter what page size is.  */
       __ptr_t result = INLINE_SYSCALL (mmap2, 6, addr, len, prot, flags,
-				   fd, (off_t) (offset >> PAGE_SHIFT));
+				       fd, (off_t) (offset >> PAGE_SHIFT));
 
 #ifndef __ASSUME_MMAP2_SYSCALL
       if (result != (__ptr_t) -1 || errno != ENOSYS)
