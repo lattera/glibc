@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <execinfo.h>
 #include <fcntl.h>
 #include <signal.h>
