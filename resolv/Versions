@@ -38,6 +38,8 @@ libc {
     # This version is for the TLS symbol, GLIBC_2.0 is the old object symbol.
     h_errno; __resp;
 %endif
+
+    __res_maybe_init;
   }
 }
 

@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2002, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -120,7 +121,7 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   char *qbuf;
   enum nss_status status;
 
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+  if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
   qbuf = strdupa (name);
@@ -171,7 +172,7 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   if (type != AF_INET)
     return NSS_STATUS_UNAVAIL;
 
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+  if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
   net2 = (u_int32_t) net;

@@ -145,7 +145,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   int olderr = errno;
   enum nss_status status;
 
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+  if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
   switch (af) {
@@ -263,7 +263,7 @@ _nss_dns_gethostbyaddr_r (const void *addr, socklen_t len, int af,
   int n, status;
   int olderr = errno;
 
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+  if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
   if (af == AF_INET6 && len == IN6ADDRSZ

@@ -182,7 +182,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #ifdef NEED__RES
 	  /* The resolver code will really be used so we have to
 	     initialize it.  */
-	  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+	  if (__res_maybe_init (&_res, 0) == -1)
 	    {
 	      *h_errnop = NETDB_INTERNAL;
 	      *result = NULL;

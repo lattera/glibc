@@ -1,4 +1,4 @@
-/* Copyright (C) 2000,02 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,8 +60,7 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
   } fct;
   int no_more;
 
-  if (res && (_res.options & RES_INIT) == 0
-      && __res_ninit (&_res) == -1)
+  if (res && __res_maybe_init (&_res, 0) == -1)
     {
       __set_h_errno (NETDB_INTERNAL);
       return;
@@ -104,8 +103,7 @@ __nss_endent (const char *func_name, db_lookup_function lookup_fct,
   } fct;
   int no_more;
 
-  if (res && (_res.options & RES_INIT) == 0
-      && __res_ninit (&_res) == -1)
+  if (res && __res_maybe_init (&_res, 0) == -1)
     {
       __set_h_errno (NETDB_INTERNAL);
       return;
@@ -145,8 +143,7 @@ __nss_getent_r (const char *getent_func_name,
   int no_more;
   enum nss_status status;
 
-  if (res && (_res.options & RES_INIT) == 0
-      && __res_ninit (&_res) == -1)
+  if (res && __res_maybe_init (&_res, 0) == -1)
     {
       *h_errnop = NETDB_INTERNAL;
       *result = NULL;

@@ -161,6 +161,10 @@ __res_vinit(res_state statp, int preinit) {
 #ifndef RFC1535
 	int dots;
 #endif
+#ifdef _LIBC
+	extern unsigned long long int __res_initstamp attribute_hidden;
+	statp->_u._ext.initstamp = __res_initstamp;
+#endif
 
 	if (!preinit) {
 		statp->retrans = RES_TIMEOUT;

@@ -15,15 +15,30 @@
  * SOFTWARE.
  */
 
+#include <limits.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <resolv.h>
+#include <bits/libc-lock.h>
 
 
 /* The following bit is copied from res_data.c (where it is #ifdef'ed
    out) since res_init() should go into libc.so but the rest of that
    file should not.  */
+
+unsigned long long int __res_initstamp attribute_hidden;
+/* We have atomic increment operations on 64-bit platforms.  */
+#if __WORDSIZE == 64
+# define atomicinclock(lock) (void) 0
+# define atomicincunlock(lock) (void) 0
+# define atomicinc(var) atomic_increment (&(var))
+#else
+__libc_lock_define_initialized (static, lock);
+# define atomicinclock(lock) __libc_lock_lock (lock)
+# define atomicincunlock(lock) __libc_lock_unlock (lock)
+# define atomicinc(var) ++var
+#endif
 
 int
 res_init(void) {
@@ -70,8 +85,45 @@ res_init(void) {
 	if (!_res.id)
 		_res.id = res_randomid();
 
+	atomicinclock (lock);
+	/* Request all threads to re-initialize their resolver states,
+	   resolv.conf might have changed.  */
+	atomicinc (__res_initstamp);
+	atomicincunlock (lock);
+
 	return (__res_vinit(&_res, 1));
 }
+
+/* Initialize resp if RES_INIT is not yet set or if res_init in some other
+   thread requested re-initializing.  */
+int
+__res_maybe_init (res_state resp, int preinit)
+{
+	if (resp->options & RES_INIT) {
+		if (__res_initstamp != resp->_u._ext.initstamp) {
+			if (resp->nscount > 0) {
+				__res_nclose (resp);
+				for (int ns = 0; ns < MAXNS; ns++) {
+					free (resp->_u._ext.nsaddrs[ns]);
+					resp->_u._ext.nsaddrs[ns] = NULL;
+				}
+				return __res_vinit (resp, 1);
+			}
+		}
+		return 0;
+	} else if (preinit) {
+		if (!resp->retrans)
+			resp->retrans = RES_TIMEOUT;
+		if (!resp->retry)
+			resp->retry = 4;
+		resp->options = RES_DEFAULT;
+		if (!resp->id)
+			resp->id = res_randomid ();
+		return __res_vinit (resp, 1);
+	} else
+		return __res_ninit (resp);
+}
+libc_hidden_def (__res_maybe_init)
 
 /* This needs to be after the use of _res in res_init, above.  */
 #undef _res

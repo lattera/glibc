@@ -134,6 +134,12 @@ struct __res_state {
 			u_int16_t		nscount6;
 			u_int16_t		nsinit;
 			struct sockaddr_in6	*nsaddrs[MAXNS];
+#ifdef _LIBC
+			unsigned long long int	initstamp
+			  __attribute__((packed));
+#else
+			unsigned int		_initstamp[2];
+#endif
 		} _ext;
 	} _u;
 };

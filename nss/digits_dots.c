@@ -43,7 +43,7 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 
   /* We have to test for the use of IPv6 which can only be done by
      examining `_res'.  */
-  if ((_res.options & RES_INIT) == 0 && __res_ninit (&_res) == -1)
+  if (__res_maybe_init (&_res, 0) == -1)
     {
       if (h_errnop)
 	*h_errnop = NETDB_INTERNAL;

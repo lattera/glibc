@@ -448,10 +448,9 @@ __hesiod_res_get(void *context) {
 
 	if (!ctx->res) {
 		struct __res_state *res;
-		res = (struct __res_state *)malloc(sizeof *res);
+		res = (struct __res_state *)calloc(1, sizeof *res);
 		if (res == NULL)
 			return (NULL);
-		memset(res, 0, sizeof *res);
 		__hesiod_res_set(ctx, res, free);
 	}
 
@@ -465,6 +464,12 @@ __hesiod_res_set(void *context, struct __res_state *res,
 
 	if (ctx->res && ctx->free_res) {
 		res_nclose(ctx->res);
+		if ((ctx->res->options & RES_INIT) && ctx->res->nscount > 0) {
+			for (int ns = 0; ns < MAXNS; ns++) {
+				free (ctx->res->_u._ext.nsaddrs[ns]);
+				ctx->res->_u._ext.nsaddrs[ns] = NULL;
+			}
+		}
 		(*ctx->free_res)(ctx->res);
 	}
 
@@ -478,8 +483,7 @@ init(struct hesiod_p *ctx) {
 	if (!ctx->res && !__hesiod_res_get(ctx))
 		return (-1);
 
-	if (((ctx->res->options & RES_INIT) == 0) &&
-	    (res_ninit(ctx->res) == -1))
+	if (__res_maybe_init (ctx->res, 0) == -1)
 		return (-1);
 
 	return (0);

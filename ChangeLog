@@ -1,13 +1,48 @@
+2004-08-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* hesiod/hesiod.c (__hesiod_res_get): Use calloc instead of malloc +
+	memset.
+	(__hesiod_res_set): Free nsaddrs.
+
+	* include/resolv.h (__res_maybe_init): Add prototype.
+	* resolv/resolv.h (struct __res_state): Add _u._ext.initstamp field.
+	* resolv/Versions (libc): Add __res_maybe_init@@GLIBC_PRIVATE.
+	* resolv/res_libc.c (__res_initstamp, lock): New variables.
+	(res_init): Increase __res_initstamp.
+	(__res_maybe_init): New function.
+	* resolv/res_init.c (__res_vinit): Initialize _u._ext.initstamp.
+	* hesiod/hesiod.c (__hesiod_res_get): Use __res_maybe_init instead
+	of RES_INIT check and {res_ninit,__res_ninit,res_init} call.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r,
+	_nss_dns_gethostbyaddr_r): Likewise.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r,
+	_nss_dns_getnetbyaddr_r): Likewise.
+	* resolv/gethnamaddr.c (gethostbyname, gethostbyname2,
+	gethostbyaddr): Likewise.
+	* resolv/res_data.c (fp_nquery, res_mkquery, res_mkupdate,
+	res_isourserver, res_sendsigned, res_update, res_search,
+	res_querydomain): Likewise.
+	* nss/getXXbyYY_r.c (INTERNAL (REENTRANT_NAME)): Likewise.
+	* nss/digits_dots.c (__nss_hostname_digits_dots): Likewise.
+	* nss/getnssent_r.c (__nss_setent, __nss_endent, __nss_getent_r):
+	Likewise.
+
 2004-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set ai_family for
+	V4-mapped IPv6 addresses and req->ai_family==AF_INET.
+	Reported by A. Guru <a.guru@sympatico.ca>.
 
 	* po/sv.po: Update from translation team.
 	* po/sk.po: Likewise.
+	* po/pl.po: Likewise.
 
 2004-08-04  Jakub Jelinek  <jakub@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/mbsrtowcs_l.c (__mbsrtowcs_l): Don't read more input
-	character than necessary.
+	characters than necessary.
 
 2004-08-05  Ulrich Drepper  <drepper@redhat.com>
 

@@ -493,10 +493,10 @@ gethostbyname(name)
 {
 	struct hostent *hp;
 
-	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1) {
+	if (__res_maybe_init (&_res, 0) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
-       }
+	}
 	if (_res.options & RES_USE_INET6) {
 		hp = gethostbyname2(name, AF_INET6);
 		if (hp)
@@ -522,7 +522,7 @@ gethostbyname2(name, af)
 	struct hostent *ret;
 	extern struct hostent *_gethtbyname2();
 
-	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1) {
+	if (__res_maybe_init (&_res, 0) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
@@ -665,7 +665,7 @@ gethostbyaddr(addr, len, af)
 #endif /*SUNSECURITY*/
 	extern struct hostent *_gethtbyaddr();
 
-	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1) {
+	if (__res_maybe_init (&_res, 0) == -1) {
 		__set_h_errno (NETDB_INTERNAL);
 		return (NULL);
 	}
