@@ -1,7 +1,10 @@
 2000-07-24  Andreas Jaeger  <aj@suse.de>
 
-	* string/Makefile ($(objpfx)tst-svc.out): Fix rule to read from
-	input from stdin and setup environment.
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Fix offset
+	& PAGE_MASK case, reformat.
+
+	* string/Makefile ($(objpfx)tst-svc.out): Fix rule to read input
+	from stdin and setup environment.
 
 2000-07-24  Andreas Schwab  <schwab@suse.de>
 

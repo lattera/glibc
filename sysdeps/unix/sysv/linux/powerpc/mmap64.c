@@ -40,32 +40,33 @@ __ptr_t
 __mmap64 (__ptr_t addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
 #ifdef __NR_mmap2
-  if (
-#ifndef __ASSUME_MMAP2_SYSCALL
-      ! have_no_mmap2 &&
-#endif
-      ! (offset & PAGE_MASK))
+  if (! (offset & PAGE_MASK))
     {
-#ifndef __ASSUME_MMAP2_SYSCALL
+      __set_errno (EINVAL);
+      return MAP_FAILED;
+    }
+      
+# ifndef __ASSUME_MMAP2_SYSCALL
+  if (! have_no_mmap2)
+    {
       int saved_errno = errno;
-#endif
+# endif
       /* This will be always 12, no matter what page size is.  */
       __ptr_t result;
       __ptrvalue (result) = INLINE_SYSCALL (mmap2, 6, __ptrvalue (addr), len, prot,
 					    flags, fd, (off_t) (offset >> PAGE_SHIFT));
-#if __BOUNDED_POINTERS__
+# if __BOUNDED_POINTERS__
       __ptrlow (result) = __ptrvalue (result);
       __ptrhigh (result) = __ptrvalue (result) + len;
-#endif
-#ifndef __ASSUME_MMAP2_SYSCALL
+# endif
+# ifndef __ASSUME_MMAP2_SYSCALL
       if (result != (__ptr_t) -1 || errno != ENOSYS)
-#endif
+# endif
 	return result;
 
-#ifndef __ASSUME_MMAP2_SYSCALL
+# ifndef __ASSUME_MMAP2_SYSCALL
       __set_errno (saved_errno);
       have_no_mmap2 = 1;
-#endif
     }
 #endif
   if (offset != (off_t) offset || (offset + len) != (off_t) (offset + len))
