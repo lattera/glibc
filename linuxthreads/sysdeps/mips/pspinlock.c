@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include <sgidefs.h>
 #include <sys/tas.h>
 #include "internals.h"
 
@@ -34,7 +35,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
     ("\t\t\t# spin_lock\n"
      "1:\n\t"
      ".set	push\n\t"
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
      ".set	mips2\n\t"
 #endif
      "ll	%1,%3\n\t"

@@ -24,9 +24,8 @@
 #ifndef _PT_MACHINE_H
 #define _PT_MACHINE_H   1
 
-#include <sys/tas.h>
-
 #include <sgidefs.h>
+#include <sys/tas.h>
 
 #ifndef PT_EI
 # define PT_EI extern inline __attribute__ ((always_inline))
@@ -63,10 +62,10 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
     ("/* Inline compare & swap */\n"
      "1:\n\t"
      ".set	push\n\t"
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
      ".set	mips2\n\t"
 #endif
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
      "lld	%1,%5\n\t"
 #else
      "ll	%1,%5\n\t"
@@ -74,7 +73,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
      "move	%0,$0\n\t"
      "bne	%1,%3,2f\n\t"
      "move	%0,%4\n\t"
-#if _MIPS_SIM == _MIPS_SIM_ABI64
+#if _MIPS_SIM == _ABI64
      "scd	%0,%2\n\t"
 #else
      "sc	%0,%2\n\t"
