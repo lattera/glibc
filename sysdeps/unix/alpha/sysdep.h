@@ -20,20 +20,42 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef ASSEMBLER
 
+#ifdef __linux__
+# include <alpha/regdef.h>
+#else
+# include <regdef.h>
+#endif
+
+#ifdef __STDC__
+#define LEAF(name, framesize)			\
+  .globl name;					\
+  .align 3;					\
+  .ent name, 0;					\
+  name##:					\
+  .frame sp, framesize, ra
+#else
+#define LEAF(name, framesize)			\
+  .globl name;					\
+  .align 3;					\
+  .ent name, 0;					\
+  name/**/:					\
+  .frame sp, framesize, ra
+#endif
+
 #ifdef __STDC__
 #define ENTRY(name)				\
   .globl name;					\
   .align 3;					\
-  .ent name,0;					\
+  .ent name, 0;					\
   name##:					\
-  .frame sp,0,ra
+  .frame sp, 0, ra
 #else
 #define ENTRY(name)				\
   .globl name;					\
   .align 3;					\
-  .ent name,0;					\
+  .ent name, 0;					\
   name/**/:					\
-  .frame sp,0,ra
+  .frame sp, 0, ra
 #endif
 
 /* Note that while it's better structurally, going back to set errno
@@ -45,17 +67,16 @@ Cambridge, MA 02139, USA.  */
     .align 3;					\
     .ent name,0;				\
 						\
-1:  br		gp,2f;				\
-2:  ldgp	gp,0(gp);			\
-    lda		pv,syscall_error;		\
-    jmp		zero,(pv);			\
+1:  br		gp, 2f;				\
+2:  ldgp	gp, 0(gp);			\
+    jmp		zero, syscall_error;		\
 						\
 name##:						\
-    ldi		v0,SYS_ify(syscall_name);	\
+    ldi		v0, SYS_ify(syscall_name);	\
     .set noat;					\
     call_pal	PAL_callsys;			\
     .set at;					\
-    bne		a3,1b;				\
+    bne		a3, 1b;				\
 3:
 #else
 #define PSEUDO(name, syscall_name, args)	\
@@ -63,17 +84,16 @@ name##:						\
     .align 3;					\
     .ent name,0;				\
 						\
-1:  br		gp,2f;				\
-2:  ldgp	gp,0(gp);			\
-    lda		pv,syscall_error;		\
-    jmp		zero,(pv);			\
+1:  br		gp, 2f;				\
+2:  ldgp	gp, 0(gp);			\
+    jmp		zero, syscall_error;		\
 						\
 name/**/:					\
-    ldi		v0,SYS_ify(syscall_name);	\
+    ldi		v0, SYS_ify(syscall_name);	\
     .set noat;					\
     call_pal	PAL_callsys;			\
     .set at;					\
-    bne		a3,1b;				\
+    bne		a3, 1b;				\
 3:
 #endif
 
