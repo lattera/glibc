@@ -17,19 +17,31 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef	_SIGSET_H
-#define	_SIGSET_H	1
+#ifndef	_SIGSET_H_types
+#define	_SIGSET_H_types	1
 
 typedef int __sig_atomic_t;
-
-/* Return a mask that includes SIG only.  */
-#define	__sigmask(sig)	(1 << ((sig) - 1))
 
 /* A `sigset_t' has a bit for each signal.  */
 typedef struct
   {
     unsigned long int __sigbits[4];
   } __sigset_t;
+
+#endif	/* ! _SIGSET_H_types */
+
+/* We only want to define these functions if <signal.h> was actually
+   included; otherwise we were included just to define the types.  Since we
+   are namespace-clean, it wouldn't hurt to define extra macros.  But
+   trouble can be caused by functions being defined (e.g., any global
+   register vars declared later will cause compilation errors).  */
+
+#if !defined (_SIGSET_H_fns) && defined (_SIGNAL_H)
+#define _SIGSET_H_fns 1
+
+/* Return a mask that includes SIG only.  */
+#define	__sigmask(sig)	(1 << ((sig) - 1))
+
 
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define	__NSSBITS	(sizeof (__sigset_t) * 8)
@@ -58,23 +70,24 @@ __sigfillset (__sigset_t *__set)
 extern __inline int
 __sigaddset (__sigset_t *__set, int __sig)
 {
-  __set->__sigbits[__SSELT (sig)] |= __SSMASK (__sig);
+  __set->__sigbits[__SSELT (__sig)] |= __SSMASK (__sig);
   return 0;
 }
 
 extern __inline int
 __sigdelset (__sigset_t *__set, int __sig)
 {
-  __set->__sigbits[__SSELT (sig)] &= ~__SSMASK (__sig);
+  __set->__sigbits[__SSELT (__sig)] &= ~__SSMASK (__sig);
   return 0;
 }
 
 extern __inline int
 __sigismember (__sigset_t *__set, int __sig)
 {
-  if (__set->__sigbits[__SSELT (sig)] & __SSMASK (__sig))
+  if (__set->__sigbits[__SSELT (__sig)] & __SSMASK (__sig))
     return 1;
   return 0;
 }
 
-#endif /* sigset.h  */
+#endif /* ! _SIGSET_H_fns */
+
