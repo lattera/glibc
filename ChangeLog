@@ -1,3 +1,9 @@
+2000-01-08  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/setitimer.c (quantize_timeval): New function.
+	(setitimer_locked): Use it to quantize the timer values.  Use
+	quantized timer values to check if the timeout changed.
+
 2000-01-22  Andreas Jaeger  <aj@suse.de>
 
 	* sunrpc/rpc/svc.h: Fix description for svc_register.
