@@ -18,6 +18,8 @@
 	* libio/stdio_ext.h: New file.
 	* libio/genops.c (_IO_flush_all_linebuffered): Add alias _flushlbf.
 	* libio/libio.h (_IO_USER_LOCK): Define.
+	[_IO_MTSAFE_IO] (_IO_flockfile, _IO_funlockfile): Add macros which
+	test _IO_USER_LOCK flag first.
 
 	* iconv/gconv_open.c (__gconv_open): Set res to __GCONV_NOMEM is
 	malloc fails.
