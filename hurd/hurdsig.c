@@ -465,6 +465,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		   __proc_dostop (port, _hurd_msgport_thread);
 		   __mutex_unlock (&_hurd_siglock);
 		   abort_all_rpcs (signo, &thread_state, 1);
+		   reply ();
 		   __proc_mark_stop (port, signo);
 		 }));
       _hurd_stopped = 1;
