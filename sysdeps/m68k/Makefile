@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +24,8 @@ m68k-syntax-flag = -DMIT_SYNTAX
 endif
 
 asm-CPPFLAGS += $(m68k-syntax-flag)
+
+pic-ccflag = -fpic
 
 # Make sure setjmp.c is compiled with a frame pointer
 CFLAGS-setjmp.c := -fno-omit-frame-pointer
