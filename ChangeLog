@@ -1,3 +1,12 @@
+2000-06-20  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/fpu/fesetenv.c (__fesetenv): Flush fpu pipeline
+	first.
+
+	* sysdeps/mips/fpu/feholdexcpt.c: New file.
+
+	* sysdeps/mips/fpu/fraiseexcpt.c: New file.
+
 2000-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_builtin.c (BUILTIN_TRANSFORMATION): Update for
