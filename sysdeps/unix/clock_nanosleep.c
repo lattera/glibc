@@ -25,15 +25,15 @@
 
 #if HP_TIMING_AVAIL
 # define CPUCLOCK_P(clock) \
-  ((clock) != CLOCK_PROCESS_CPUTIME_ID					      \
-   && (clock) != CLOCK_THREAD_CPUTIME_ID)
+  ((clock) == CLOCK_PROCESS_CPUTIME_ID					      \
+   || (clock) == CLOCK_THREAD_CPUTIME_ID)
 #else
 # define CPUCLOCK_P(clock) 0
 #endif
 
 #ifndef INVALID_CLOCK_P
 # define INVALID_CLOCK_P(cl) \
-  ((cl) < CLOCK_REALTIME || (cl) > CLOCK_THREAD_CPUTIME_ID || CPUCLOCK_P (cl))
+  ((cl) < CLOCK_REALTIME || (cl) > CLOCK_THREAD_CPUTIME_ID)
 #endif
 
 
