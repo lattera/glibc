@@ -1,3 +1,8 @@
+2002-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (new_width): Check whether byte
+	sequences for both ends of range have the same length.
+
 2002-01-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/elf.h (SHN_UNDEF): Remove duplicate definition.

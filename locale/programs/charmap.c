@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -866,6 +866,16 @@ new_width (struct linereader *cmfile, struct charmap_t *result,
       if (to_val == NULL)
 	{
 	  lr_error (cmfile, _("unknown character `%s'"), to);
+	  return;
+	}
+
+      /* Make sure the number of bytes for the end points of the range
+	 is correct.  */
+      if (from_val->nbytes != to_val->nbytes)
+	{
+	  lr_error (cmfile, _("\
+number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"),
+		    from_val->nbytes, to_val->nbytes);
 	  return;
 	}
     }
