@@ -1,5 +1,9 @@
 2005-01-11  Thorsten Kukuk  <kukuk@suse.de>
 
+	* sunrpc/svc_tcp.c (svctcp_create): Call listen with SOMAXCONN
+	as backlog.
+	* sunrpc/svc_unix.c (svcunix_create): Likewise.
+
 	* grp/putgrent.c (putgrent): Don't write 0 as group
 	ID if groupname starts with + or -.
 	* pwd/putpwent.c (putpwent): Don't write 0 as user or

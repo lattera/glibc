@@ -165,7 +165,7 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
       (void) __bind (sock, (struct sockaddr *) &addr, len);
     }
   if ((__getsockname (sock, (struct sockaddr *) &addr, &len) != 0) ||
-      (__listen (sock, 2) != 0))
+      (__listen (sock, SOMAXCONN) != 0))
     {
       perror (_("svc_tcp.c - cannot getsockname or listen"));
       if (madesock)
