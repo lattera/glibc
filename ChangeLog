@@ -1,3 +1,11 @@
+2004-03-30  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Add IUTF8.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
 2004-03-30  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/remqu.S: Detect power-of-two special case.
