@@ -1,3 +1,27 @@
+2002-08-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/utmp_file.c (UNLOCK_FILE): Clear alarm before
+	resetting handler, to avoid the possibility of a spurious SIGALRM
+	delivered to the user's handler.
+	Reported by Amit D. Chaudhary <amitc@brocade.com>,
+
+	* misc/Makefile (CFLAGS-init-misc.c): Varaible removed.  It served to
+	set -fkeep-inline-functions, which is not needed for the current file.
+
+	* sysdeps/generic/ldsodefs.h: Add attribute_hidden to *_internal decls.
+	(_dl_setup_hash): Add attribute_hidden.
+	(_dl_sysdep_start, _dl_sysdep_start_cleanup): Likewise.
+	(_dl_sysdep_read_whole_file, _dl_dprintf): Likewise.
+	(_dl_new_object, _dl_map_object_deps): Likewise.
+	(_dl_map_object_deps_internal): Remove decl.
+	* elf/rtld.c (__mempcpy, _exit): Redeclare locally as hidden.
+
+	* sysdeps/i386/dl-machine.h [PI_STATIC_AND_HIDDEN
+	&& HAVE_VISIBILITY_ATTRIBUTE && HAVE_HIDDEN
+	&& !HAVE_BROKEN_VISIBILITY_ATTRIBUTE]
+	(elf_machine_dynamic, elf_machine_load_address): Rewritten without asm,
+	instead relying on the compiler to produce only GOTOFF variable refs.
+
 2002-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c: Fix typo in comment.  Add a few more __builtin_expect.

@@ -419,7 +419,8 @@ extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 extern void _dl_debug_printf (const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));
 extern void _dl_debug_printf_internal (const char *fmt, ...)
-     __attribute__ ((__format__ (__printf__, 1, 2)));
+     __attribute__ ((__format__ (__printf__, 1, 2)))
+     attribute_hidden;
 
 /* Write message on the debug file descriptor.  The parameters are
    interpreted as for a `printf' call.  All the lines buf the first
@@ -431,7 +432,8 @@ extern void _dl_debug_printf_c (const char *fmt, ...)
 /* Write a message on the specified descriptor FD.  The parameters are
    interpreted as for a `printf' call.  */
 extern void _dl_dprintf (int fd, const char *fmt, ...)
-     __attribute__ ((__format__ (__printf__, 2, 3)));
+     __attribute__ ((__format__ (__printf__, 2, 3)))
+     attribute_hidden;
 
 /* Write a message on the specified descriptor standard output.  The
    parameters are interpreted as for a `printf' call.  */
@@ -466,8 +468,7 @@ extern void _dl_signal_error (int errcode, const char *object,
 extern void _dl_signal_error_internal (int errcode, const char *object,
 				       const char *occurred,
 				       const char *errstring)
-     internal_function
-     __attribute__ ((__noreturn__));
+     internal_function __attribute__ ((__noreturn__)) attribute_hidden;
 
 /* Like _dl_signal_error, but may return when called in the context of
    _dl_receive_error.  */
@@ -498,7 +499,7 @@ extern struct link_map *_dl_map_object_internal (struct link_map *loader,
 						 int preloaded,
 						 int type, int trace_mode,
 						 int mode)
-     internal_function;
+     internal_function attribute_hidden;
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
@@ -513,10 +514,11 @@ extern void _dl_map_object_deps_internal (struct link_map *map,
 					  struct link_map **preloads,
 					  unsigned int npreloads,
 					  int trace_mode, int open_mode)
-     internal_function;
+     internal_function attribute_hidden;
 
 /* Cache the locations of MAP's hash table.  */
-extern void _dl_setup_hash (struct link_map *map) internal_function;
+extern void _dl_setup_hash (struct link_map *map)
+     internal_function attribute_hidden;
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
@@ -537,9 +539,9 @@ extern lookup_t _dl_lookup_symbol (const char *undef,
 extern lookup_t _dl_lookup_symbol_internal (const char *undef,
 					    struct link_map *undef_map,
 					    const ElfW(Sym) **sym,
-					    struct r_scope_elem *symbol_scope[],
+					    struct r_scope_elem *symbolscope[],
 					    int type_class, int flags)
-     internal_function;
+     internal_function attribute_hidden;
 
 enum
   {
@@ -565,7 +567,7 @@ extern lookup_t _dl_lookup_versioned_symbol_internal (const char *undef,
 						      const struct r_found_version *version,
 						      int type_class,
 						      int explicit)
-     internal_function;
+     internal_function attribute_hidden;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
 extern lookup_t _dl_lookup_symbol_skip (const char *undef,
@@ -593,7 +595,7 @@ extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name)
    and enter it into the _dl_main_map list.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
 					int type, struct link_map *loader)
-     internal_function;
+     internal_function attribute_hidden;
 
 /* Relocate the given object (if it hasn't already been).
    SCOPE is passed to _dl_lookup_symbol in symbol lookups.
@@ -603,7 +605,8 @@ extern void _dl_relocate_object (struct link_map *map,
 				 int lazy, int consider_profiling);
 extern void _dl_relocate_object_internal (struct link_map *map,
 					  struct r_scope_elem *scope[],
-					  int lazy, int consider_profiling);
+					  int lazy, int consider_profiling)
+     attribute_hidden;
 
 /* Call _dl_signal_error with a message about an unhandled reloc type.
    TYPE is the result of ELFW(R_TYPE) (r_info), i.e. an R_<CPU>_* value.
@@ -660,7 +663,7 @@ extern void _dl_start_profile (struct link_map *map, const char *output_dir)
      internal_function;
 extern void _dl_start_profile_internal (struct link_map *map,
 					const char *output_dir)
-     internal_function;
+     internal_function attribute_hidden;
 
 /* The actual functions used to keep book on the calls.  */
 extern void _dl_mcount (ElfW(Addr) frompc, ElfW(Addr) selfpc);
@@ -696,14 +699,14 @@ extern const char *_dl_load_cache_lookup (const char *name)
    Therefore we provide this function to close the file and open it again
    once needed.  */
 extern void _dl_unload_cache (void);
-extern void _dl_unload_cache_internal (void);
+extern void _dl_unload_cache_internal (void) attribute_hidden;
 
 /* System-dependent function to read a file's whole contents in the
    most convenient manner available.  *SIZEP gets the size of the
    file.  On error MAP_FAILED is returned.  */
 extern void *_dl_sysdep_read_whole_file (const char *file, size_t *sizep,
 					 int prot)
-     internal_function;
+     internal_function attribute_hidden;
 
 /* System-specific function to do initial startup for the dynamic linker.
    After this, file access calls and getenv must work.  This is responsible
@@ -712,10 +715,11 @@ extern void *_dl_sysdep_read_whole_file (const char *file, size_t *sizep,
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const ElfW(Phdr) *phdr,
 						     ElfW(Word) phnum,
-						     ElfW(Addr) *user_entry));
+						     ElfW(Addr) *user_entry))
+     attribute_hidden;
 
 extern void _dl_sysdep_start_cleanup (void)
-     internal_function;
+     internal_function attribute_hidden;
 
 
 /* Determine next available module ID.  */

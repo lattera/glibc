@@ -34,6 +34,35 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
+#if defined PI_STATIC_AND_HIDDEN \
+    && defined HAVE_VISIBILITY_ATTRIBUTE && defined HAVE_HIDDEN \
+    && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+
+/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
+   first element of the GOT, a special entry that is never relocated.  */
+static inline Elf32_Addr __attribute__ ((unused, const))
+elf_machine_dynamic (void)
+{
+  /* This produces a GOTOFF reloc that resolves to zero at link time, so in
+     fact just loads from the GOT register directly.  By doing it without
+     an asm we can let the compiler choose any register.  */
+  extern const Elf32_Addr _GLOBAL_OFFSET_TABLE_[] attribute_hidden;
+  return _GLOBAL_OFFSET_TABLE_[0];
+}
+
+/* Return the run-time load address of the shared object.  */
+static inline Elf32_Addr __attribute__ ((unused))
+elf_machine_load_address (void)
+{
+  /* Compute the difference between the runtime address of _DYNAMIC as seen
+     by a GOTOFF reference, and the link-time address found in the special
+     unrelocated first GOT entry.  */
+  extern Elf32_Dyn bygotoff[] asm ("_DYNAMIC") attribute_hidden;
+  return (Elf32_Addr) &bygotoff - elf_machine_dynamic ();
+}
+
+#else  /* Without .hidden support, we can't compile the code above.  */
+
 /* Return the link-time address of _DYNAMIC.  Conveniently, this is the
    first element of the GOT.  This must be inlined in a function which
    uses global data.  */
@@ -59,6 +88,9 @@ elf_machine_load_address (void)
        : "=r" (addr) : "m" (_dl_argc) : "cc");
   return addr;
 }
+
+#endif
+
 
 #if !defined PROF && !__BOUNDED_POINTERS__
 /* We add a declaration of this function here so that in dl-runtime.c

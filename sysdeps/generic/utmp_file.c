@@ -74,9 +74,16 @@ static void timeout_handler (int signum) {};
   fl.l_type = F_UNLCK;                                                  \
   __fcntl ((fd), F_SETLKW, &fl);                                        \
                                                                         \
-  /* Reset the signal handler and alarm.  */                            \
+  /* Reset the signal handler and alarm.  We must reset the alarm	\
+     before resetting the handler so our alarm does not generate a	\
+     spurious SIGALRM seen by the user.  However, we cannot just set	\
+     the user's old alarm before restoring the handler, because then	\
+     it's possible our handler could catch the user alarm's SIGARLM	\
+     and then the user would never see the signal he expected.  */	\
+  alarm (0);								\
   __sigaction (SIGALRM, &old_action, NULL);                             \
-  alarm (old_timeout);                                                  \
+  if (old_timeout != 0)							\
+    alarm (old_timeout);                                                \
 } while (0)
 
 

@@ -40,6 +40,13 @@
 
 #include <assert.h>
 
+/* Avoid PLT use for our local calls at startup.  */
+extern __typeof (__mempcpy) __mempcpy attribute_hidden;
+
+/* GCC has mental blocks about _exit.  */
+extern __typeof (_exit) exit_internal asm ("_exit") attribute_hidden;
+#define _exit exit_internal
+
 /* Helper function to handle errors while resolving symbols.  */
 static void print_unresolved (int errcode, const char *objname,
 			      const char *errsting);
