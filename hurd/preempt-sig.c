@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,52 +16,53 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <hurd/sigpreempt.h>
 #include <hurd/signal.h>
+#include <assert.h>
 
-/* Initialize PREEMPTER with the information given and stick it in the
-   chain of preempters for SIGNO.  */
-
-int
-hurd_preempt_signals (struct hurd_signal_preempt *preempter,
-		      int signo, int first_code, int last_code,
-		      sighandler_t (*handler) (thread_t, int, long int, int))
+void
+hurd_preempt_signals (struct hurd_signal_preempter *preempter)
 {
-  if (signo <= 0 || signo >= NSIG)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-  preempter->first = first_code;
-  preempter->last = last_code;
-  preempter->handler = handler;
-  __mutex_lock (&_hurd_signal_preempt_lock);
-  preempter->next = _hurd_signal_preempt[signo];
-  _hurd_signal_preempt[signo] = preempter;
-  __mutex_unlock (&_hurd_signal_preempt_lock);
-  return 0;
+  __mutex_lock (&_hurd_siglock);
+  preempter->next = _hurdsig_preempters;
+  _hurdsig_preempters = preempter;
+  _hurdsig_preempted_set |= preempter->signals;
+  __mutex_unlock (&_hurd_siglock);
 }
 
-/* Remove PREEMPTER from the chain for SIGNO.  */
-
-int
-hurd_unpreempt_signals (struct hurd_signal_preempt *preempter, int signo)
+void
+hurd_unpreempt_signals (struct hurd_signal_preempter *preempter)
 {
-  struct hurd_signal_preempt *p, *lastp;
-  if (signo <= 0 || signo >= NSIG)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-  __mutex_lock (&_hurd_signal_preempt_lock);
-  for (p = _hurd_signal_preempt[signo], lastp = NULL;
-       p != NULL; lastp = p, p = p->next)
-    if (p == preempter)
+  struct hurd_signal_preempter **p;
+  sigset_t preempted = 0;
+
+  __mutex_lock (&_hurd_siglock);
+
+  p = &_hurdsig_preempters;
+  while (*p)
+    if (*p == preempter)
       {
-	(lastp == NULL ? _hurd_signal_preempt[signo] : lastp->next) = p->next;
-	__mutex_unlock (&_hurd_signal_preempt_lock);
-	return 0;
+	/* Found it; take it off the chain.  */
+	*p = (*p)->next;
+	if ((preempter->signals & preempted) != preempter->signals)
+	  {
+	    /* This might have been the only preempter for some
+	       of those signals, so we must collect the full mask
+	       from the others.  */
+	    struct hurd_signal_preempter *pp;
+	    for (pp = *p; pp; pp = pp->next)
+	      preempted |= pp->signals;
+	    _hurdsig_preempted_set = preempted;
+	  }
+	__mutex_unlock (&_hurd_siglock);
+	return;
       }
-  __mutex_unlock (&_hurd_signal_preempt_lock);
-  errno = ENOENT;
-  return -1;
+    else
+      {
+	preempted |= (*p)->signals;
+	p = &(*p)->next;
+      }
+
+  __mutex_unlock (&_hurd_siglock); /* Avoid deadlock during death rattle.  */
+  assert (! "removing absent preempter");
 }

@@ -1,5 +1,18 @@
 Tue Jan  2 00:50:10 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* hurd/hurd/signal.h (struct hurd_sigstate): New member `preempters'.
+	(hurd_preempt_signals, hurd_unpreempt_signals): Decls removed.
+	* hurd/hurd/sigpreempt.h: New file.
+	* hurd/preempt-sig.c: Rewritten with new interface.
+	* sysdeps/mach/hurd/jmp-unwind.c (_longjmp_unwind): Remove local signal
+	preempters being unwound past.
+
+	* db: New directory, 4.4 BSD db package incorporated from BSD db-1.85
+	release.
+
+	* sysdeps/unix/sysv/linux/sys/param.h: Several new macros for BSD
+	compatibility.
+
 	* misc/queue.h: New file, incorporated from 4.4BSD.
 	* misc/Makefile (headers): Add queue.h.
 

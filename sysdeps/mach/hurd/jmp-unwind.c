@@ -22,6 +22,11 @@ Cambridge, MA 02139, USA.  */
 #include <hurd/userlink.h>
 #include <assert.h>
 
+
+#ifndef _JMPBUF_UNWINDS
+ #error "sysdeps/MACHINE/jmp_buf.h fails to define _JMPBUF_UNWINDS"
+#endif
+
 /* This function is called by `longjmp' (with its arguments) to restore
    active resources to a sane state before the frames code using them are
    jumped out of.  */
@@ -31,17 +36,20 @@ _longjmp_unwind (jmp_buf env, int val)
 {
   struct hurd_sigstate *ss = _hurd_self_sigstate ();
   struct hurd_userlink *link;
+  struct hurd_signal_preempter **p;
 
   /* All access to SS->active_resources must take place inside a critical
      section where signal handlers cannot run.  */
   __spin_lock (&ss->lock);
   assert (! ss->critical_section);
   ss->critical_section = 1;
-  __spin_unlock (&ss->lock);
 
-#ifndef _JMPBUF_UNWINDS
- #error "sysdeps/MACHINE/jmp_buf.h fails to define _JMPBUF_UNWINDS"
-#endif
+  /* Remove local signal preempters being unwound past.  */
+  while (ss->preempters &&
+	 _JMPBUF_UNWINDS (env[0].__jmpbuf, ss->preempters))
+    ss->preempters = ss->preempters->next;
+
+  __spin_unlock (&ss->lock);
 
   /* Iterate over the current thread's list of active resources.
      Process the head portion of the list whose links reside
@@ -59,4 +67,4 @@ _longjmp_unwind (jmp_buf env, int val)
       (*link->cleanup) (link->cleanup_data, env, val);
 
   _hurd_critical_section_unlock (ss);
-}    
+}

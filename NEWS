@@ -1,6 +1,6 @@
-GNU C Library NEWS -- history of user-visible changes.  26 July 1995
+GNU C Library NEWS -- history of user-visible changes.  2 January 1996
 
-Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports to bug-glibc@prep.ai.mit.edu.
@@ -32,6 +32,11 @@ Version 1.10
   new header file <link.h> gives access to the internals of the run-time
   dynamic linker, `ld.so'.
 
+* The C library now provides the run-time support code for profiling
+  executables compiled with `-pg'.  Programs can control the profiling code
+  through the interface in <sys/gmon.h>.  The profiling code was adapted
+  from 4.4 BSD-Lite.
+
 * The new functions `strtoq' and `strtouq' parse integer values from
   strings, like `strtol' and `strtoul', but they return `long long int' and
   `unsigned long long int' values, respectively (64-bit quantities).
@@ -48,7 +53,7 @@ Version 1.10
 * The new header <langinfo.h> defines an interface for accessing
   various locale-dependent data (using the locale chosen with `setlocale').
 
-* You can now use positional parameter specifications in format strings 
+* You can now use positional parameter specifications in format strings
   for the `printf' and `scanf' families of functions.  For example,
   `printf ("Number %2$d, Mr %1$s\n", "Jones", 6);'' prints
   ``Number 6, Mr Jones''.  This is mainly useful when providing different
@@ -75,7 +80,7 @@ Version 1.10
 * The new header file <fts.h> and suite of functions simplify programs that
   operate on directory trees.  This code comes from 4.4 BSD.
 
-* The resolver code has been updated from the BIND-4.9.3-BETA26 release.
+* The resolver code has been updated from the BIND 4.9.3 release.
 
 * The new function `malloc_find_object_address' finds the starting address
   of a malloc'd block, given any address within the block.  This can be
@@ -123,13 +128,45 @@ Version 1.10
 * Ulrich Drepper has contributed new, highly-optimized versions of several
   string functions for the i486/Pentium family of processors.
 
-* Ulrich Drepper has updated the Linux-specific code, based largely 
+* Ulrich Drepper has updated the Linux-specific code, based largely
   on work done in Hongjiu Lu's version of GNU libc for Linux.
   The GNU library now supports Linux versions 1.3.29 and later,
   using the ELF object file format (i[345]86-*-linux).
 
 * Ulrich Drepper has contributed a new set of message catalog functions to
   support multiple languages, for use with his new package GNU gettext.
+
+* New header file <values.h> gives SVID-compatible names for <limits.h>
+  constants.
+
+* Various new macros, declarations, and small header files for compatibility
+  with 4.4 BSD.
+
+* New function `group_member' is a convenient way to check if a process has
+  a given effective group ID.
+
+* When using GCC 2.7 and later, the socket functions are now declared in a
+  special way so that passing an argument of type `struct sockaddr_in *',
+  `struct sockaddr_ns *', or `struct sockaddr_un *' instead of the generic
+  `struct sockaddr *' type, does not generate a type-clash warning.
+
+* New function `error' declared in header file <error.h> is a convenient
+  function for printing error messages and optionally exitting; this is the
+  canonical function used in GNU programs.  The new functions `err', `warn',
+  and friends in header file <err.h> are the canonical 4.4 BSD interface for
+  doing the same thing.
+
+* The <glob.h> interface has several new flags from 4.4 BSD that extend the
+  POSIX.2 `glob' function to do ~ and {...} expansion.
+
+* New function `unsetenv' complements `setenv' for compatibility with 4.4 BSD.
+
+* New function `getsid' returns session ID number on systems that support it.
+
+* The 4.4 BSD `db' library has been incorporated into the GNU C library.
+  New header files <db.h> and <mpool.h> provide a rich set of functions for
+  several types of simple databases stored in memory and in files, and
+  <ndbm.h> is an old `ndbm'-compatbile interface using the `db' functions.
 
 Version 1.09
 
@@ -362,7 +399,7 @@ Version 1.04
   compiler, so the C library should now work with C++ code.
 
 * The header file <bstring.h> is gone.  <string.h> now declares bcopy,
-  bcmp, bzero, and ffs.  
+  bcmp, bzero, and ffs.
 
 * Mike Haertel (of GNU e?grep and malloc fame) has written a new sorting
   function which uses the `merge sort' algorithm, and is said to be
@@ -388,7 +425,7 @@ Version 1.04
 ----------------------------------------------------------------------
 Copyright information:
 
-Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 
    Permission is granted to anyone to make or distribute verbatim copies
    of this document as received, in any medium, provided that the

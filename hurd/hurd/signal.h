@@ -1,5 +1,5 @@
 /* Implementing POSIX.1 signals under the Hurd.
-Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@ Cambridge, MA 02139, USA.  */
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include <spin-lock.h>
 #include <hurd/threadvar.h>	/* We cache sigstate in a threadvar.  */
+struct hurd_signal_preempter;	/* <hurd/sigpreempt.h> */
 
 
 /* Per-thread signal state.  */
@@ -57,6 +58,13 @@ struct hurd_sigstate
     sigset_t pending;		/* Pending signals, possibly blocked.  */
     struct sigaction actions[NSIG];
     struct sigaltstack sigaltstack;
+
+    /* Chain of thread-local signal preempters; see <hurd/sigpreempt.h>.
+       Each element of this chain is in local stack storage, and the chain
+       parallels the stack: the head of this chain is in the innermost
+       stack frame, and each next element in an outermore frame.  */
+    struct hurd_signal_preempter *preempters;
+
     struct
       {
 	/* For each signal that may be pending, the
@@ -330,45 +338,6 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
 	       __err == MIG_SERVER_DIED);				      \
     __err;								      \
 })
-
-/* Some other parts of the library need to preempt signals, to detect
-   errors that should not result in a POSIX signal.  For example, when
-   some mapped region of memory is used, an extraneous SIGSEGV might be
-   generated when the mapping server returns an error for a page fault.  */
-
-struct hurd_signal_preempt
-  {
-    /* Function to examine a thread receiving a given signal.  The handler
-       is called even for blocked signals.  This function is run in the
-       signal thread, with THREAD's sigstate locked; it should be as simple
-       and robust as possible.  THREAD is the thread which is about to
-       receive the signal.  SIGNO and SIGCODE would be passed to the normal
-       handler.
-
-       If the return value is SIG_DFL, normal signal processing continues.
-       If it is SIG_IGN, the signal is ignored.
-       Any other value is used in place of the normal handler.  */
-    sighandler_t (*handler) (thread_t thread,
-			     int signo, long int sigcode, int sigerror);
-    long int first, last;	/* Range of sigcodes this handler wants.  */
-    struct hurd_signal_preempt *next; /* Next handler on the chain. */
-  };
-
-extern struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
-extern struct mutex _hurd_signal_preempt_lock;
-
-/* Install a signal preempter for the given signal and range.
-   The caller is responsible for the storage for PREEMPTER.  */
-extern int hurd_preempt_signals (struct hurd_signal_preempt *preempter,
-				 int signo, int first_code, int last_code,
-				 sighandler_t (*handler) (thread_t,
-							  int, long int, int));
-
-/* Remove the signal preempter previously installed by calling
-   `hurd_preempt_signals' with PREEMPTER and SIGNO.  */
-extern int hurd_unpreempt_signals (struct hurd_signal_preempt *preempter,
-				   int signo);
-
 
 
 #endif	/* hurd/signal.h */

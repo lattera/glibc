@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,23 +23,41 @@ Boston, MA 02111-1307, USA.  */
 #include <linux/limits.h>
 #include <linux/param.h>
 
-#include <sys/types.h>
+/* BSD names for some <limits.h> values.  */
 
-
-#ifndef howmany
-# define howmany(x, y)	(((x)+((y)-1))/(y))
+#define	NBBY		CHAR_BIT
+#ifndef	NGROUPS
+#define	NGROUPS		NGROUPS_MAX
 #endif
-
-#ifndef roundup
-# define roundup(x, y)	((((x)+((y)-1))/(y))*(y))
-#endif
-
+#define	MAXSYMLINKS	SYMLOOP_MAX
+#define	CANBSIZ		MAX_CANON
+#define	NCARGS		ARG_MAX
 #define MAXPATHLEN      PATH_MAX
 #define NOFILE          OPEN_MAX
 
-/*  Following the information of some of the kernel people I here assume
-    that block size (i.e. the value of stat.st_blocks) for all filesystem
-    is 512 bytes.  If not tell HJ, Roland, or me.  -- drepper */
+
+#include <sys/types.h>
+
+/* Bit map related macros.  */
+#define	setbit(a,i)	((a)[(i)/NBBY] |= 1<<((i)%NBBY))
+#define	clrbit(a,i)	((a)[(i)/NBBY] &= ~(1<<((i)%NBBY)))
+#define	isset(a,i)	((a)[(i)/NBBY] & (1<<((i)%NBBY)))
+#define	isclr(a,i)	(((a)[(i)/NBBY] & (1<<((i)%NBBY))) == 0)
+
+/* Macros for counting and rounding.  */
+#ifndef howmany
+#define	howmany(x, y)	(((x)+((y)-1))/(y))
+#endif
+#define	roundup(x, y)	((((x)+((y)-1))/(y))*(y))
+#define powerof2(x)	((((x)-1)&(x))==0)
+
+/* Macros for min/max.  */
+#define	MIN(a,b) (((a)<(b))?(a):(b))
+#define	MAX(a,b) (((a)>(b))?(a):(b))
+
+
+/* Unit of `st_blocks'.  */
 #define DEV_BSIZE       512
 
-#endif
+
+#endif	/* sys/param.h */
