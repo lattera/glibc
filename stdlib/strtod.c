@@ -226,7 +226,7 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
 	  int i;
 
 	  round_limb = retval[RETURN_LIMB_SIZE - 1];
-	  round_bit = BITS_PER_MP_LIMB - 1;
+	  round_bit = (MANT_DIG - 1) % BITS_PER_MP_LIMB;
 	  for (i = 0; i < RETURN_LIMB_SIZE; ++i)
 	    more_bits |= retval[i] != 0;
 	  MPN_ZERO (retval, RETURN_LIMB_SIZE);
@@ -254,7 +254,13 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
           round_bit = shift - 1;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, shift);
 	}
-      exponent = MIN_EXP - 2;
+      /* This is a hook for the m68k long double format, where the
+	 exponent bias is the same for normalized and denormalized
+	 numbers.  */
+#ifndef DENORM_EXP
+# define DENORM_EXP (MIN_EXP - 2)
+#endif
+      exponent = DENORM_EXP;
     }
 
   if ((round_limb & (((mp_limb_t) 1) << round_bit)) != 0
@@ -273,7 +279,7 @@ round_and_return (mp_limb_t *retval, int exponent, int negative,
 	  retval[RETURN_LIMB_SIZE - 1]
 	    |= ((mp_limb_t) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB);
 	}
-      else if (exponent == MIN_EXP - 2
+      else if (exponent == DENORM_EXP
 	       && (retval[RETURN_LIMB_SIZE - 1]
 		   & (((mp_limb_t) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB)))
 	       != 0)

@@ -1,3 +1,16 @@
+1999-03-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdlib/strtod.c (round_and_return): Fix rounding of denormals.
+	(DENORM_EXP): New define.  Use it as the exponent for a denormal.
+	* stdlib/strtold.c: Moved to ...
+	* sysdeps/generic/strtold.c: ... here.
+	* sysdeps/m68k/strtold.c: New file.
+
+1999-03-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* stdio-common/printf_fphex.c (__printf_fphex): Print no decimal
+	point if the precision is zero, even if the mantissa is non-zero.
+
 1999-03-09  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/ioctl.c (__ioctl): Move the marshalling of the
