@@ -117,6 +117,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   /* Nothing added yet.  */
   while (! no_more)
     {
+      long int prev_start = start;
       enum nss_status status;
       initgroups_dyn_function fct;
       fct = __nss_lookup_function (nip, "initgroups_dyn");
@@ -132,6 +133,21 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
       else
 	status = DL_CALL_FCT (fct, (key, -1, &start, &size, &groups,
 				    limit, &errno));
+
+      /* Remove duplicates.  */
+      long int cnt = prev_start;
+      while (cnt < start)
+	{
+	  long int inner;
+	  for (inner = 0; inner < prev_start; ++inner)
+	    if (groups[inner] == groups[cnt])
+	      break;
+
+	  if (inner < prev_start)
+	    groups[cnt] = groups[--start];
+	  else
+	    ++cnt;
+	}
 
       if (status != NSS_STATUS_TRYAGAIN)
 	all_tryagain = false;

@@ -58,31 +58,42 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
           for (m = grpbuf.gr_mem; *m != NULL; ++m)
             if (strcmp (*m, user) == 0)
               {
-                /* Matches user.  Insert this group.  */
-                if (__builtin_expect (*start == *size, 0))
-                  {
-                    /* Need a bigger buffer.  */
-		    gid_t *newgroups;
-		    long int newsize;
+		/* Check whether the group is already on the list.  */
+		long int cnt;
+		for (cnt = 0; cnt < *start; ++cnt)
+		  if (groups[cnt] == grpbuf.gr_gid)
+		    break;
 
-		    if (limit > 0 && *size == limit)
-		      /* We reached the maximum.  */
-		      goto done;
+		if (cnt == *start)
+		  {
+		    /* Matches user and not yet on the list.  Insert
+		       this group.  */
+		    if (__builtin_expect (*start == *size, 0))
+		      {
+			/* Need a bigger buffer.  */
+			gid_t *newgroups;
+			long int newsize;
 
-		    if (limit <= 0)
-		      newsize = 2 * *size;
-		    else
-		      newsize = MIN (limit, 2 * *size);
+			if (limit > 0 && *size == limit)
+			  /* We reached the maximum.  */
+			  goto done;
 
-                    newgroups = realloc (groups, newsize * sizeof (*groups));
-                    if (newgroups == NULL)
-                      goto done;
-		    *groupsp = groups = newgroups;
-                    *size = newsize;
-                  }
+			if (limit <= 0)
+			  newsize = 2 * *size;
+			else
+			  newsize = MIN (limit, 2 * *size);
 
-                groups[*start] = grpbuf.gr_gid;
-                *start += 1;
+			newgroups = realloc (groups,
+					     newsize * sizeof (*groups));
+			if (newgroups == NULL)
+			  goto done;
+			*groupsp = groups = newgroups;
+			*size = newsize;
+		      }
+
+		    groups[*start] = grpbuf.gr_gid;
+		    *start += 1;
+		  }
 
                 break;
               }

@@ -73,7 +73,7 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
 
-  *groupsp[0] = group;
+  (*groupsp)[0] = group;
 
   if (__nss_group_database != NULL)
     {
@@ -86,6 +86,8 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 
   while (! no_more)
     {
+      long int prev_start = start;
+
       fct = __nss_lookup_function (nip, "initgroups_dyn");
 
       if (fct == NULL)
@@ -99,6 +101,21 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
       else
 	status = DL_CALL_FCT (fct, (user, group, &start, size, groupsp,
 				    limit, &errno));
+
+      /* Remove duplicates.  */
+      long int cnt = prev_start;
+      while (cnt < start)
+	{
+	  long int inner;
+	  for (inner = 0; inner < prev_start; ++inner)
+	    if ((*groupsp)[inner] == (*groupsp)[cnt])
+	      break;
+
+	  if (inner < prev_start)
+	    (*groupsp)[cnt] = (*groupsp)[--start];
+	  else
+	    ++cnt;
+	}
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
@@ -124,10 +141,10 @@ int
 getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
 {
   gid_t *newgroups;
-  long int size = *ngroups;
+  long int size = MAX (1, *ngroups);
   int result;
 
-  newgroups = (gid_t *) malloc (size * sizeof (gid_t));
+  newgroups = (gid_t *) malloc ((size + 1) * sizeof (gid_t));
   if (__builtin_expect (newgroups == NULL, 0))
     /* No more memory.  */
     // XXX This is wrong.  The user provided memory, we have to use
