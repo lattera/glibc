@@ -1,5 +1,5 @@
 /* Test for strptime.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -35,6 +35,8 @@ static const struct
   { "03/03/00", "%D", 5, 62 },
   { "9/9/99", "%x", 4, 251 },
   { "19990502123412", "%Y%m%d%H%M%S", 0, 121 },
+  { "2001 20 Mon", "%Y %U %a", 1, 140 },
+  { "2001 21 Mon", "%Y %W %a", 1, 140 },
 };
 
 

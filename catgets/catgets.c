@@ -114,6 +114,13 @@ catclose (nl_catd catalog_desc)
 {
   __nl_catd catalog;
 
+  /* Be generous if catalog which failed to be open is used.  */
+  if (catalog_desc == (nl_catd) -1)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+
   catalog = (__nl_catd) catalog_desc;
 
 #ifdef _POSIX_MAPPED_FILES
