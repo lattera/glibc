@@ -21,6 +21,7 @@
 #include <ldsodefs.h>
 #include <tls.h>
 #include <unistd.h>
+#include <sys/param.h>
 
 #ifdef SHARED
  #error makefile bug, this file is for static only
