@@ -1,3 +1,10 @@
+2004-10-21  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S
+	(__lll_mutex_timedlock_wait): If woken but cannot get the lock,
+	make sure 2 is stored in the futex and we looked at the old value.
+	Fix a few other problems to return the correct value.
+
 2004-10-14  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/tcb-offsets.sym (thread_offsetof): Redefine to
