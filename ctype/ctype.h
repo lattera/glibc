@@ -163,7 +163,7 @@ toupper (int __c) __THROW
 }
 #endif
 
-#if __GNUC__ >= 2 && defined __OPTIMIZE__
+#if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 # define __tobody(c, f, a) \
   ({ int __res;								      \
      if (sizeof (c) > 1)						      \
