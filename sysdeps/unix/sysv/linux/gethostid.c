@@ -49,6 +49,7 @@ sethostid (id)
 }
 
 #else
+# include <string.h>
 # include <sys/param.h>
 # include <resolv/netdb.h>
 # include <netinet/in.h>

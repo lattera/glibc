@@ -1,6 +1,30 @@
+Sat Jun 22 21:29:52 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Version 1.92 test release.
+
+Sat Jun 22 23:30:07 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list (ksyslog_ctl): Rename
+	to klogctl to match prototype in sys/klog.h.
+
+	* sysdeps/posix/libc_fatal.c: Add include of <string.h>.
+	* sysdeps/unix/sysv/linux/gethostid.c: Ditto.
+
+	* sysdeps/posix/getcwd.c (__canonicalize_directory_name_internal):
+	Remove.  Code is now part of __getcwd again.  The old function
+	never really worked for anything but THISDIR==".".
+
+	* sysdeps/alpha/Makefile (CFLAGS-rtld.c): Add -mbuild-constants
+	only when building ELF version of library.
+
+	* libio/libioP.h (_IO_vscanf): Add prototype.
+
+	* posix/unistd.h (syscall): Change sysno arg and return value
+	to int long.
+
 Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
-	* version.h (VERSION): Version 1.92 test release.
+	* version.h (VERSION): Updated to 1.92.
 
 	* misc/Makefile (headers): Add ar.h.
 	* misc/ar.h: New file.

@@ -49,7 +49,7 @@ sigprocmask	-	sigprocmask	3	__sigprocmask	sigprocmask
 s_sysctl	sysctl	_sysctl		1	__syscall__sysctl
 sysinfo		-	sysinfo		1	sysinfo
 swapon		-	swapon		2	swapon
-ksyslog_ctl	-	syslog		3	ksyslog_ctl
+klogctl		-	syslog		3	klogctl
 umount		-	umount		1	__umount	umount
 uselib		-	uselib		1	uselib
 wait4		-	wait4		4	__wait4		wait4

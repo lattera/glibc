@@ -723,7 +723,7 @@ extern __ptr_t sbrk __P ((ptrdiff_t __delta));
 
    In Mach, all system calls take normal arguments and always return an
    error code (zero for success).  */
-extern int syscall __P ((int __sysno, ...));
+extern long int syscall __P ((long int __sysno, ...));
 
 #endif	/* Use misc.  */
 

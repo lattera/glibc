@@ -1077,7 +1077,7 @@ fi
 
 
 
-if $host != $build; then
+if test $host != $build; then
   # Extract the first word of "gcc cc", so it can be a program name with args.
 set dummy gcc cc; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6

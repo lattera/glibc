@@ -308,6 +308,7 @@ extern _IO_ssize_t _IO_write __P((int, const void*, _IO_size_t));
 extern _IO_off_t _IO_lseek __P((int, _IO_off_t, int));
 extern int _IO_close __P((int));
 extern int _IO_fstat __P((int, struct stat *));
+extern int _IO_vscanf __P((const char *, _IO_va_list));
 
 /* Operations on _IO_fpos_t.
    Normally, these are trivial, but we provide hooks for configurations

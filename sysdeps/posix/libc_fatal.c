@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <errno.h>
 #include <sysdep.h>
+#include <string.h>
 
 #ifdef FATAL_PREPARE_INCLUDE
 #include FATAL_PREPARE_INCLUDE
