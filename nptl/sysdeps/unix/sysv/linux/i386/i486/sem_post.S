@@ -77,11 +77,11 @@ __new_sem_post:
 	popl	%ebx
 	ret
 	.size	__new_sem_post,.-__new_sem_post
-	.symver	__new_sem_post, sem_post@@GLIBC_2.1
+	versioned_symbol(libpthread, __new_sem_post, sem_post, GLIBC_2_1)
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 	.global	__old_sem_post
 __old_sem_post = __new_sem_post
-	.symver	__old_sem_post, sem_post@GLIBC_2.0
+	compat_symbol(libpthread, __old_sem_post, sem_post, GLIBC_2_0)
 #endif
 
 

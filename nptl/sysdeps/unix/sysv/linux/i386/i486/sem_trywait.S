@@ -69,11 +69,11 @@ __new_sem_trywait:
 	orl	$-1, %eax
 	ret
 	.size	__new_sem_trywait,.-__new_sem_trywait
-	.symver	__new_sem_trywait, sem_trywait@@GLIBC_2.1
+	versioned_symbol(libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1)
 #if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
 	.global	__old_sem_trywait
 __old_sem_trywait = __new_sem_trywait
-	.symver	__old_sem_trywait, sem_trywait@GLIBC_2.0
+	compat_symbol(libpthread, __old_sem_trywait, sem_trywait, GLIBC_2_0)
 #endif
 
 
