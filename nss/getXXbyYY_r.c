@@ -114,9 +114,6 @@ extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp)
      internal_function;
 libc_hidden_proto (DB_LOOKUP_FCT)
 
-/* Interval in which we transfer retry to contact the NSCD.  */
-#define NSS_NSCD_RETRY	100
-
 
 int
 INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,

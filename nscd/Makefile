@@ -82,6 +82,7 @@ CFLAGS-xmalloc.c = -fpie
 CFLAGS-xstrdup.c = -fpie
 CFLAGS-mem.c = -fpie
 CFLAGS-nscd_setup_thread.c = -fpie
+CFLAGS-aicache.c = -fpie
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 \

@@ -72,7 +72,7 @@ void
 __nscd_unmap (struct mapped_database *mapped)
 {
   assert (mapped->counter == 0);
-  munmap ((void *) mapped->head, mapped->mapsize);
+  __munmap ((void *) mapped->head, mapped->mapsize);
   free (mapped);
 }
 
@@ -180,7 +180,7 @@ get_mapping (request_type type, const char *key,
       if (newp == NULL)
 	{
 	  /* Ugh, after all we went through the memory allocation failed.  */
-	  munmap (result, size);
+	  __munmap (result, size);
 	  goto out_close;
 	}
 

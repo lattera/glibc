@@ -27,6 +27,7 @@
 #include <not-cancel.h>
 
 #include "nscd-client.h"
+#include "nscd_proto.h"
 
 
 /* Define in nscd_gethst_r.c.  */

@@ -55,6 +55,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nsswitch.h>
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
+#include <nscd/nscd_proto.h>
 
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
@@ -672,69 +673,76 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    }
 
 #ifdef USE_NSCD
-	  /* Try to use nscd.  */
-	  struct nscd_ai_result *air = NULL;
-	  int herrno;
-	  int err = __nscd_getai (name, &air, &herrno);
-	  if (air != NULL)
-	    {
-	      /* Transform into gaih_addrtuple list.  */
-	      bool added_canon = (req->ai_flags & AI_CANONNAME) == 0;
-	      char *addrs = air->addrs;
+	  if (__nss_not_use_nscd_hosts > 0
+	      && ++__nss_not_use_nscd_hosts > NSS_NSCD_RETRY)
+	    __nss_not_use_nscd_hosts = 0;
 
-	      for (int i = 0; i < air->naddrs; ++i)
+	  if (!__nss_not_use_nscd_hosts)
+	    {
+	      /* Try to use nscd.  */
+	      struct nscd_ai_result *air = NULL;
+	      int herrno;
+	      int err = __nscd_getai (name, &air, &herrno);
+	      if (air != NULL)
 		{
-		  socklen_t size = (air->family[i] == AF_INET
-				    ? INADDRSZ : IN6ADDRSZ);
-		  if (*pat == NULL)
-		    {
-		      *pat = __alloca (sizeof (struct gaih_addrtuple));
-		      (*pat)->scopeid = 0;
-		    }
-		  uint32_t *pataddr = (*pat)->addr;
-		  (*pat)->next = NULL;
-		  if (added_canon || air->canon == NULL)
-		    (*pat)->name = NULL;
-		  else
-		    canon = (*pat)->name = strdupa (air->canon);
+		  /* Transform into gaih_addrtuple list.  */
+		  bool added_canon = (req->ai_flags & AI_CANONNAME) == 0;
+		  char *addrs = air->addrs;
 
-		  if (air->family[i] == AF_INET
-		      && req->ai_family == AF_INET6
-		      && (req->ai_flags & AI_V4MAPPED))
+		  for (int i = 0; i < air->naddrs; ++i)
 		    {
-		      (*pat)->family = AF_INET6;
-		      pataddr[3] = *(uint32_t *) addrs;
-		      pataddr[2] = htonl (0xffff);
-		      pataddr[1] = 0;
-		      pataddr[0] = 0;
-		      pat = &((*pat)->next);
-		      added_canon = true;
+		      socklen_t size = (air->family[i] == AF_INET
+					? INADDRSZ : IN6ADDRSZ);
+		      if (*pat == NULL)
+			{
+			  *pat = __alloca (sizeof (struct gaih_addrtuple));
+			  (*pat)->scopeid = 0;
+			}
+		      uint32_t *pataddr = (*pat)->addr;
+		      (*pat)->next = NULL;
+		      if (added_canon || air->canon == NULL)
+			(*pat)->name = NULL;
+		      else
+			canon = (*pat)->name = strdupa (air->canon);
+
+		      if (air->family[i] == AF_INET
+			  && req->ai_family == AF_INET6
+			  && (req->ai_flags & AI_V4MAPPED))
+			{
+			  (*pat)->family = AF_INET6;
+			  pataddr[3] = *(uint32_t *) addrs;
+			  pataddr[2] = htonl (0xffff);
+			  pataddr[1] = 0;
+			  pataddr[0] = 0;
+			  pat = &((*pat)->next);
+			  added_canon = true;
+			}
+		      else if (req->ai_family == AF_UNSPEC
+			       || air->family[i] == req->ai_family)
+			{
+			  (*pat)->family = air->family[i];
+			  memcpy (pataddr, addrs, size);
+			  pat = &((*pat)->next);
+			  added_canon = true;
+			  if (air->family[i] == AF_INET6)
+			    got_ipv6 = true;
+			}
+		      addrs += size;
 		    }
-		  else if (req->ai_family == AF_UNSPEC
-			   || air->family[i] == req->ai_family)
-		    {
-		      (*pat)->family = air->family[i];
-		      memcpy (pataddr, addrs, size);
-		      pat = &((*pat)->next);
-		      added_canon = true;
-		      if (air->family[i] == AF_INET6)
-			got_ipv6 = true;
-		    }
-		  addrs += size;
+
+		  if (at->family == AF_UNSPEC)
+		    return (GAIH_OKIFUNSPEC | -EAI_NONAME);
+
+		  goto process_list;
 		}
-
-	      if (at->family == AF_UNSPEC)
-		return (GAIH_OKIFUNSPEC | -EAI_NONAME);
-
-	      goto process_list;
-	    }
-	  else if (err != 0)
-	    {
-	      if (herrno == NETDB_INTERNAL && errno == ENOMEM)
-		return -EAI_MEMORY;
-	      if (herrno == TRY_AGAIN)
-		return -EAI_AGAIN;
-	      return -EAI_SYSTEM;
+	      else if (err != 0 && __nss_not_use_nscd_hosts == 0)
+		{
+		  if (herrno == NETDB_INTERNAL && errno == ENOMEM)
+		    return -EAI_MEMORY;
+		  if (herrno == TRY_AGAIN)
+		    return -EAI_AGAIN;
+		  return -EAI_SYSTEM;
+		}
 	    }
 #endif
 

@@ -294,8 +294,4 @@ extern const struct datahead *__nscd_cache_search (request_type type,
 						   size_t keylen,
 						   const struct mapped_database *mapped);
 
-/* Look up in addrinfo cache.  */
-extern int __nscd_getai (const char *key, struct nscd_ai_result **result,
-			 int *h_errnop);
-
 #endif /* nscd.h */
