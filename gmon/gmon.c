@@ -43,6 +43,10 @@
 #include <unistd.h>
 #include <libc-internal.h>
 
+#ifdef USE_IN_LIBIO
+# include <wchar.h>
+#endif
+
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 
 struct gmonparam _gmonparam = { GMON_PROF_OFF };
@@ -53,7 +57,7 @@ struct gmonparam _gmonparam = { GMON_PROF_OFF };
 static int	s_scale;
 #define		SCALE_1_TO_1	0x10000L
 
-#define ERR(s) __write(2, s, sizeof(s) - 1)
+#define ERR(s) __write (STDERR_FILENO, s, sizeof (s) - 1)
 
 void moncontrol __P ((int mode));
 void __moncontrol __P ((int mode));
