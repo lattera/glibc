@@ -56,6 +56,3 @@ if test $libc_cv_powerpc64_tls = yes; then
 fi
 fi
 
-dnl It is always possible to access static and hidden symbols in an
-dnl position independent way.
-AC_DEFINE(PI_STATIC_AND_HIDDEN)
