@@ -41,7 +41,7 @@
 /* We don't know if we have NETLINK support compiled in in our
    Kernel, so include the old implementation as fallback.  */
 #if __ASSUME_NETLINK_SUPPORT == 0
-static int no_netlink_support;
+int __no_netlink_support attribute_hidden;
 
 # define getifaddrs fallback_getifaddrs
 # include "sysdeps/gnu/ifaddrs.c"
@@ -49,7 +49,7 @@ static int no_netlink_support;
 
 #else
 
-# define no_netlink_support 0
+# define __no_netlink_support 0
 
 #endif
 
@@ -297,17 +297,17 @@ getifaddrs (struct ifaddrs **ifap)
   if (ifap)
     *ifap = NULL;
 
-  if (! no_netlink_support && netlink_open (&nh) < 0)
+  if (! __no_netlink_support && netlink_open (&nh) < 0)
     {
 #if __ASSUME_NETLINK_SUPPORT == 0
-       no_netlink_support = 1;
+       __no_netlink_support = 1;
 #else
        return -1;
 #endif
     }
 
 #if __ASSUME_NETLINK_SUPPORT == 0
-  if (no_netlink_support)
+  if (__no_netlink_support)
     return fallback_getifaddrs (ifap);
 #endif
 

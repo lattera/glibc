@@ -1,5 +1,16 @@
 2003-06-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/Makefile (aux): Add check_fd.
+	* include/ifaddrs.h: Add prototype for __check_fd.
+	* sysdeps/generic/check_fd.c: New file.
+	* sysdeps/unix/sysv/linux/check_fd.c: New file.
+	* sysdeps/unix/sysv/linux/ifaddrs.h (__no_netlink_support): Renamed
+	from no_netlink_support.  Export.
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Don't call getifaddrs,
+	call __check_pf.
+
+	* sysdeps/generic/ifaddrs.h: Add libc_hidden_def.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Don't leak memory
 	from getifaddr calls.
 

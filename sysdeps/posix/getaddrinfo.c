@@ -925,32 +925,10 @@ getaddrinfo (const char *name, const char *service,
     {
       /* Determine whether we have IPv4 or IPv6 interfaces or both.
 	 We cannot cache the results since new interfaces could be
-	 added at any time.
-
-	 XXX We are using getifaddrs here which is more costly than
-	 it is really necessary.  Once things are stable we will have
-	 a special function which performs the task with less overhead.  */
-      struct ifaddrs *ifa = NULL;
-
-      if (getifaddrs (&ifa) != 0)
-	/* Cannot get the interface list, very bad.  */
-	return EAI_SYSTEM;
-
-      bool seen_ipv4 = false;
-      bool seen_ipv6 = false;
-
-      struct ifaddrs *runp = ifa;
-      while (runp != NULL)
-	{
-	  if (runp->ifa_addr->sa_family == PF_INET)
-	    seen_ipv4 = true;
-	  else if (runp->ifa_addr->sa_family == PF_INET6)
-	    seen_ipv6 = true;
-
-	  runp = runp->ifa_next;
-	}
-
-      (void) freeifaddrs (ifa);
+	 added at any time.  */
+      bool seen_ipv4;
+      bool seen_ipv6;
+      __check_pf (&seen_ipv4, &seen_ipv6);
 
       /* Now make a decision on what we return, if anything.  */
       if (hints->ai_family == PF_UNSPEC)

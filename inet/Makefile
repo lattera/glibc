@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,8 @@ routines := htonl htons		\
 	    getnetgrent_r getnetgrent \
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index ifaddrs
+
+aux := check_pf
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 	 tst-gethnm test-ifaddrs
