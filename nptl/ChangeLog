@@ -1,3 +1,8 @@
+2004-11-17  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/timer_routines.c (__start_helper_thread):
+	Make sure SIGCANCEL is blocked as well.
+
 2004-11-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/setxid.h: New file.
