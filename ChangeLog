@@ -1,3 +1,8 @@
+2001-09-04  Richard Henderson  <rth@redhat.com>
+
+	* elf/elf.h (R_ALPHA_OP_*, R_ALPHA_IMMED_*): Remove.
+	(R_ALPHA_GPREL16): Rename from R_ALPHA_IMMED_GP_16.
+
 2001-09-04  Ulrich Drepper  <drepper@redhat.com>
 
 	Correct very misleading message for error in failed runtime relocation.
