@@ -1,3 +1,10 @@
+2000-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Add --enable-all-warnings.
+	* config.make.in (all-warnings): New variable.
+	* Makeconfig (+gccwarn): Define with many more warnings if
+	all-warnings is yes.
+
 2000-11-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconvdata/bug-iconv2.c (main): Use %zd in format string.

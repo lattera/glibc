@@ -175,6 +175,14 @@ else
   fi
 fi
 
+dnl For the development we sometimes want gcc to issue even more warnings.
+dnl This is not the default since many of the extra warnings are not
+dnl appropriate.
+AC_ARG_ENABLE(all-warnings,
+[  --enable-all-warnings   enable all useful warnings gcc can issue],
+	      all_warnings=$enableval)
+AC_SUBST(all_warnings)
+
 AC_CANONICAL_HOST
 
 # The way shlib-versions is used to generate soversions.mk uses a

@@ -1,3 +1,7 @@
+2000-11-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/BALTIC: Superceded by ISO-8859-13.
+
 2000-11-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ko_KR: Changed LC_IDENTIFICATION territory field to

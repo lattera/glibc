@@ -515,7 +515,11 @@ RANLIB = ranlib
 endif
 
 # Extra flags to pass to GCC.
+ifeq ($(all-warnings),yes)
++gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes -Wcast-qual -Wbad-function-cast -Wmissing-noreturn -Wmissing-prototypes -Wmissing-declarations -Wcomment -Wcomments -Wtrigraphs -Wsign-compare -Wfloat-equal -Wmultichar
+else
 +gccwarn := -Wall -Wwrite-strings -Winline -Wstrict-prototypes
+endif
 
 # This is the program that generates makefile
 # dependencies from C source files.

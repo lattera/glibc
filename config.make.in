@@ -33,6 +33,7 @@ config-sysdirs = @sysnames@
 
 defines = @DEFINES@
 sysincludes = @SYSINCLUDES@
+all-warnings = @all_warnings@
 
 elf = @elf@
 have-protected = @libc_cv_asm_protected_directive@
