@@ -642,6 +642,7 @@ glob (pattern, flags, errfunc, pglob)
 		  size_t pwbuflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 		  char *pwtmpbuf;
 		  struct passwd pwbuf;
+		  int save = errno;
 
 		  if (pwbuflen == -1)
 		    /* `sysconf' does not support _SC_GETPW_R_SIZE_MAX.
@@ -659,7 +660,7 @@ glob (pattern, flags, errfunc, pglob)
 			}
 		      pwbuflen *= 2;
 		      pwtmpbuf = (char *) __alloca (pwbuflen);
-		      __set_errno (0);
+		      __set_errno (save);
 		    }
 #   else
 		  p = getpwnam (name);
@@ -726,6 +727,7 @@ glob (pattern, flags, errfunc, pglob)
 	    size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 	    char *pwtmpbuf;
 	    struct passwd pwbuf;
+	    int save = errno;
 
 	    if (buflen == -1)
 	      /* `sysconf' does not support _SC_GETPW_R_SIZE_MAX.  Try a
@@ -740,8 +742,9 @@ glob (pattern, flags, errfunc, pglob)
 		    p = NULL;
 		    break;
 		  }
-		pwtmpbuf = __alloca (buflen *= 2);
-		__set_errno (0);
+		buflen *= 2;
+		pwtmpbuf = __alloca (buflen);
+		__set_errno (save);
 	      }
 #  else
 	    p = getpwnam (user_name);

@@ -1,3 +1,7 @@
+1999-02-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/generic/glob.c (glob): Save previous errno.
+
 1999-02-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/glob.c (glob): Enlarge buffers for reentrant
