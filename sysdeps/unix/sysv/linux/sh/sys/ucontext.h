@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,10 +32,10 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	16
+#define NFPREG	16
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[NFPREG];
 
 #ifdef __USE_GNU
 /* Number of each register is the `gregset_t' array.  */
@@ -79,10 +79,10 @@ enum
 typedef int freg_t;
 
 /* Number of FPU registers.  */
-#define NFREG	16
+#define NFPREG	16
 
 /* Structure to describe FPU registers.  */
-typedef freg_t fpregset_t[NFREG];
+typedef freg_t fpregset_t[NFPREG];
 
 /* Context to describe whole processor state.  */
 typedef struct

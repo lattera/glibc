@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	16
+#define NFPREG	16
 
 /* Container for all general registers.  */
-typedef greg_t gregset_t[NGREG];
+typedef greg_t gregset_t[NFPREG];
 
 /* Number of each register is the `gregset_t' array.  */
 enum
