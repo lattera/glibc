@@ -131,6 +131,11 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 struct ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 
+#ifdef NEED_DL_SYSINFO
+/* Needed for improved syscall handling on at least x86/Linux.  */
+uintptr_t _dl_sysinfo = DL_SYSINFO_DEFAULT;
+#endif
+
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
    protect `_dl_open' and `_dl_close' in dl-close.c.
@@ -238,3 +243,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   *sz = 1;
   return &result;
 }
+
+
+#ifdef DL_SYSINFO_IMPLEMENTATION
+DL_SYSINFO_IMPLEMENTATION
+#endif

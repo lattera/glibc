@@ -384,6 +384,11 @@ struct rtld_global
   EXTERN size_t _dl_tls_generation;
 #endif
 
+#ifdef NEED_DL_SYSINFO
+  /* Syscall handling improvements.  This is very specific to x86.  */
+  EXTERN uintptr_t _dl_sysinfo;
+#endif
+
 #ifdef SHARED
 };
 # define __rtld_global_attribute__

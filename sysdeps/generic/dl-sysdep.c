@@ -134,6 +134,11 @@ _dl_sysdep_start (void **start_argptr,
       case AT_FPUCW:
 	GL(dl_fpu_control) = av->a_un.a_val;
 	break;
+#ifdef NEED_DL_SYSINFO
+      case AT_SYSINFO:
+	GL(dl_sysinfo) = av->a_un.a_val;
+	break;
+#endif
       }
 
 #ifdef DL_SYSDEP_OSCHECK

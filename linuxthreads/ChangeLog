@@ -1,5 +1,13 @@
 2002-12-18  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/i386/useldt.h (FLOATING_STACKS, ARCH_STACK_MAX_SIZE): Only
+	define if __ASSUME_LDT_WORKS > 0.
+	* libc-cancellation.c (THREAD_GETMEM, THREAD_SETMEM): Redefine to
+	struct member access if !FLOATING_STACKS.
+	* sysdeps/pthread/flockfile.c (flockfile): Change into weak alias.
+
+2002-12-18  Jakub Jelinek  <jakub@redhat.com>
+
 	* internals.h (__pthread_thread_self): New prototype.
 	(struct pthread_functions): Add ptr_pthread_thread_self field.
 	* pthread.c (pthread_functions): Initialize ptr_pthread_thread_self.

@@ -97,6 +97,9 @@ struct rtld_global _rtld_global =
        Bummer. --drepper  */
     ._dl_dynamic_weak = 1,
 #endif
+#ifdef NEED_DL_SYSINFO
+    ._dl_sysinfo = DL_SYSINFO_DEFAULT,
+#endif
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
@@ -130,6 +133,11 @@ static hp_timing_t start_time;
 /* Additional definitions needed by TLS initialization.  */
 #ifdef TLS_INIT_HELPER
 TLS_INIT_HELPER
+#endif
+
+/* Helper function for syscall implementation.  */
+#ifdef DL_SYSINFO_IMPLEMENTATION
+DL_SYSINFO_IMPLEMENTATION
 #endif
 
 /* Before ld.so is relocated we must not access variables which need

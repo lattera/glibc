@@ -1,3 +1,18 @@
+2002-12-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-support.c [NEED_DL_SYSINFO]: Define and initialize
+	_dl_sysinfo.
+	[DL_SYSINFO_IMPLEMENTATION]: If defined use it to generate the needed
+	code.
+	* elf/rtld.c [DL_NEED_SYSINFO]: Initialize _dl_sysinfo element of
+	_rtld_global.
+	[DL_SYSINFO_IMPLEMENTATION]: If defined use it to generate the needed
+	code.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start) [NEED_DL_SYSINFO]:
+	Check for AT_SYSINFO and set _dl_sysinfo appropriately.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global) [NEED_DL_SYSINFO]:
+	Add _dl_sysinfo.
+
 2002-12-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/Versions [libc: GLIBC_2.3.1]: Move __libc_readv and
