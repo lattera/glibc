@@ -90,9 +90,8 @@ special circumstances.
 
   For example, on rare occasions, there may be a special need to
 encourage the widest possible use of a certain library, so that it
-becomes
-a de-facto standard.  To achieve this, non-free programs must be
-allowed to use the library.  A more frequent case is that a free
+becomes a de-facto standard.  To achieve this, non-free programs must
+be allowed to use the library.  A more frequent case is that a free
 library does the same job as widely used non-free libraries.  In this
 case, there is little to gain by limiting the free library to free
 software only, so we use the Lesser General Public License.
@@ -140,8 +139,7 @@ included without limitation in the term "modification".)
 making modifications to it.  For a library, complete source code means
 all the source code for all modules it contains, plus any associated
 interface definition files, plus the scripts used to control
-compilation
-and installation of the library.
+compilation and installation of the library.
 
   Activities other than copying, distribution and modification are not
 covered by this License; they are outside its scope.  The act of
@@ -307,10 +305,10 @@ of these things:
     the user installs one, as long as the modified version is
     interface-compatible with the version that the work was made with.
 
-    c) Accompany the work with a written offer, valid for at
-    least three years, to give the same user the materials
-    specified in Subsection 6a, above, for a charge no more
-    than the cost of performing this distribution.
+    c) Accompany the work with a written offer, valid for at least
+    three years, to give the same user the materials specified in
+    Subsection 6a, above, for a charge no more than the cost of
+    performing this distribution.
 
     d) If distribution of the work is made by offering access to copy
     from a designated place, offer equivalent access to copy the above
@@ -477,14 +475,13 @@ have at least the "copyright" line and a pointer to where the full
 notice is found.
 
 
-    <one line to give the library's name and a brief idea of what it
-does.>
+    <one line to give the library's name and a brief idea of what it does.>
     Copyright (C) <year>  <name of author>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+    version 2.1 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -495,17 +492,15 @@ does.>
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 
-Also add information on how to contact you by electronic and paper
-mail.
+Also add information on how to contact you by electronic and paper mail.
 
 You should also get your employer (if you work as a programmer) or
-your
-school, if any, to sign a "copyright disclaimer" for the library, if
-necessary.  Here is a sample; alter the names:
+your school, if any, to sign a "copyright disclaimer" for the library,
+if necessary.  Here is a sample; alter the names:
 
   Yoyodyne, Inc., hereby disclaims all copyright interest in the
   library `Frob' (a library for tweaking knobs) written by James
-Random Hacker.
+  Random Hacker.
 
   <signature of Ty Coon>, 1 April 1990
   Ty Coon, President of Vice
