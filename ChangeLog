@@ -1,6 +1,17 @@
+2003-05-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_plt_conflict):
+	New function.
+	(elf_machine_rela) <case R_PPC64_JMP_SLOT>: Avoid
+	RESOLVE_CONFLICT_FIND_MAP.  If RESOLVE_CONFLICT_FIND_MAP is defined,
+	call elf_machine_plt_conflict instead of elf_machine_fixup_plt.
+
 2003-05-31  Ulrich Drepper  <drepper@redhat.com>
 
-	* csu/Makefile: Fix Makefile warnings regarding Scrt1.
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE): Add
+	CFI directives.
+
+	* csu/Makefile: Fix Makefile warnings regarding Scrt1.o.
 
 	* libio/fileops.c (_IO_file_open): Don't mark as inline.
 

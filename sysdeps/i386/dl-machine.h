@@ -168,35 +168,51 @@ static ElfW(Addr) profile_fixup (struct link_map *l, ElfW(Word) reloc_offset,
 	.text\n\
 	.globl _dl_runtime_resolve\n\
 	.type _dl_runtime_resolve, @function\n\
+	" CFI_STARTPROC "\n\
 	.align 16\n\
 _dl_runtime_resolve:\n\
+	" CFI_ADJUST_CFA_OFFSET (8) "\n\
 	pushl %eax		# Preserve registers otherwise clobbered.\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %edx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note\n\
 	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.\n\
 	call fixup		# Call resolver.\n\
 	popl %edx		# Get register content back.\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	popl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
 	ret $8			# Jump to function address.\n\
+	" CFI_ENDPROC "\n\
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 \n\
 	.globl _dl_runtime_profile\n\
 	.type _dl_runtime_profile, @function\n\
+	" CFI_STARTPROC "\n\
 	.align 16\n\
 _dl_runtime_profile:\n\
+	" CFI_ADJUST_CFA_OFFSET (8) "\n\
 	pushl %eax		# Preserve registers otherwise clobbered.\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %edx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	movl 20(%esp), %ecx	# Load return address\n\
 	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note\n\
 	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.\n\
 	call profile_fixup	# Call resolver.\n\
 	popl %edx		# Get register content back.\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	popl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
 	ret $8			# Jump to function address.\n\
+	" CFI_ENDPROC "\n\
 	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
 	.previous\n\
 ");
@@ -207,23 +223,35 @@ _dl_runtime_profile:\n\
 	.globl _dl_runtime_profile\n\
 	.type _dl_runtime_resolve, @function\n\
 	.type _dl_runtime_profile, @function\n\
+	" CFI_STARTPROC "\n\
 	.align 16\n\
 _dl_runtime_resolve:\n\
 _dl_runtime_profile:\n\
+	" CFI_ADJUST_CFA_OFFSET (8) "\n\
 	pushl %eax		# Preserve registers otherwise clobbered.\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %edx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	movl 16(%esp), %edx	# Push the arguments for `fixup'\n\
 	movl 12(%esp), %eax\n\
 	pushl %edx\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	pushl %eax\n\
+	" CFI_ADJUST_CFA_OFFSET (4) "\n\
 	call fixup		# Call resolver.\n\
 	popl %edx		# Pop the parameters\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	popl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	popl %edx		# Get register content back.\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	popl %ecx\n\
+	" CFI_ADJUST_CFA_OFFSET (-4) "\n\
 	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
 	ret $8			# Jump to function address.\n\
+	" CFI_ENDPROC "\n\
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
 	.previous\n\

@@ -506,6 +506,21 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t sym_map,
   return finaladdr;
 }
 
+static inline void
+elf_machine_plt_conflict (Elf64_Addr *reloc_addr, Elf64_Addr finaladdr)
+{
+  Elf64_FuncDesc *plt = (Elf64_FuncDesc *) reloc_addr;
+  Elf64_FuncDesc *rel = (Elf64_FuncDesc *) finaladdr;
+
+  plt->fd_func = rel->fd_func;
+  plt->fd_aux = rel->fd_aux;
+  plt->fd_toc = rel->fd_toc;
+  PPC_DCBST (&plt->fd_func);
+  PPC_DCBST (&plt->fd_aux);
+  PPC_DCBST (&plt->fd_toc);
+  PPC_SYNC;
+}
+
 /* Return the final value of a plt relocation.  */
 static inline Elf64_Addr
 elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
@@ -603,9 +618,10 @@ elf_machine_rela (struct link_map *map,
 
     case R_PPC64_JMP_SLOT:
 #ifdef RESOLVE_CONFLICT_FIND_MAP
-      RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
-#endif
+      elf_machine_plt_conflict (reloc_addr, value);
+#else
       elf_machine_fixup_plt (map, sym_map, reloc, reloc_addr, value);
+#endif
       return;
 
 #if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
