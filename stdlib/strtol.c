@@ -306,7 +306,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   /* Recognize number prefix and if BASE is zero, figure it out ourselves.  */
   if (*s == L_('0'))
     {
-      if (TOUPPER (s[1]) == L_('X'))
+      if ((base == 0 || base == 16) && TOUPPER (s[1]) == L_('X'))
 	{
 	  s += 2;
 	  base = 16;

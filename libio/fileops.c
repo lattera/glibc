@@ -34,6 +34,9 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <errno.h>
+#ifdef __STDC__
+#include <stdlib.h>
+#endif
 #ifndef errno
 extern int errno;
 #endif
@@ -341,7 +344,15 @@ _IO_new_file_underflow (fp)
     return *(unsigned char *) fp->_IO_read_ptr;
 
   if (fp->_IO_buf_base == NULL)
-    _IO_doallocbuf (fp);
+    {
+      /* Maybe we already have a push back pointer.  */
+      if (fp->_IO_save_base != NULL)
+	{
+	  free (fp->_IO_save_base);
+	  fp->_flags &= ~_IO_IN_BACKUP;
+	}
+      _IO_doallocbuf (fp);
+    }
 
   /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
@@ -493,6 +504,12 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 
   if (fp->_IO_buf_base == NULL)
     {
+      /* It could be that we already have a pushback buffer.  */
+      if (fp->_IO_read_base != NULL)
+	{
+	  free (fp->_IO_read_base);
+	  fp->_flags &= ~_IO_IN_BACKUP;
+	}
       _IO_doallocbuf (fp);
       _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
       _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
@@ -526,6 +543,10 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
     }
   /* At this point, dir==_IO_seek_set. */
 
+  /* If we are only interested in the current position we've found it now.  */
+  if (mode == 0)
+    return offset;
+
   /* If destination is within current buffer, optimize: */
   if (fp->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
       && !_IO_in_backup (fp))
@@ -544,7 +565,10 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 	      _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + rel_offset,
 			fp->_IO_read_end);
 	      _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
-	      return offset;
+	      {
+		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
+		return offset;
+	      }
 	    }
 #ifdef TODO
 	    /* If we have streammarkers, seek forward by reading ahead. */
@@ -554,6 +578,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 		  - (fp->_IO_read_ptr - fp->_IO_read_base);
 		if (ignore (to_skip) != to_skip)
 		  goto dumb;
+		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 		return offset;
 	      }
 #endif
@@ -564,6 +589,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 	  if (!_IO_in_backup (fp))
 	    _IO_switch_to_backup_area (fp);
 	  gbump (fp->_IO_read_end + rel_offset - fp->_IO_read_ptr);
+	  _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 	  return offset;
 	}
 #endif

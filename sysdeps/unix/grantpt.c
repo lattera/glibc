@@ -90,6 +90,7 @@ pts_name (int fd, char **pts, size_t buf_len)
 int
 grantpt (int fd)
 {
+  int retval = -1;
 #ifdef PATH_MAX
   char _buf[PATH_MAX];
 #else
@@ -107,9 +108,9 @@ grantpt (int fd)
 
   if (pts_name (fd, &buf, sizeof (_buf)))
     return -1;
-  
+
   if (__stat (buf, &st) < 0)
-    return -1;
+    goto cleanup;
 
   /* Make sure that we own the device.  */
   uid = __getuid ();
@@ -143,14 +144,15 @@ grantpt (int fd)
 	goto helper;
     }
 
-  return 0;
+  retval = 0;
+  goto cleanup;
 
   /* We have to use the helper program.  */
  helper:
 
   pid = __fork ();
   if (pid == -1)
-    return -1;
+    goto cleanup;
   else if (pid == 0)
     {
       /* Disable core dumps.  */
@@ -168,36 +170,38 @@ grantpt (int fd)
   else
     {
       int w;
-      
+
       if (__waitpid (pid, &w, 0) == -1)
-	return -1;
+	goto cleanup;
       if (!WIFEXITED (w))
-	{
-	  __set_errno (ENOEXEC);
-	  return -1;
-	}
+	__set_errno (ENOEXEC);
       else
 	switch (WEXITSTATUS(w))
 	  {
 	  case 0:
+	    retval = 0;
 	    break;
 	  case FAIL_EBADF:
 	    __set_errno (EBADF);
-	    return -1;
+	    break;
 	  case FAIL_EINVAL:
 	    __set_errno (EINVAL);
-	    return -1;
+	    break;
 	  case FAIL_EACCES:
 	    __set_errno (EACCES);
-	    return -1;
+	    break;
 	  case FAIL_EXEC:
 	    __set_errno (ENOEXEC);
-	    return -1;
+	    break;
 
 	  default:
 	    assert(! "getpt: internal error: invalid exit code from pt_chown");
 	  }
     }
 
-  return 0;
+ cleanup:
+  if (buf != _buf)
+    free (buf);
+
+  return retval;
 }

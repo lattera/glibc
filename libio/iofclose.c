@@ -45,6 +45,8 @@ _IO_new_fclose (fp)
   _IO_FINISH (fp);
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
+  if (_IO_have_backup (fp))
+    _IO_free_backup_area (fp);
   if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
     {
       fp->_IO_file_flags = 0;

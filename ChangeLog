@@ -1,3 +1,48 @@
+1998-09-18 17:41  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/fileops.c (_IO_new_file_underflow): Before allocating
+	buffer make sure the pushback buffer is destroyed.
+	(_IO_new_file_seekoff): Likewise.
+	If mode==0 quit early with the result.
+	Clear OEF flag after successful fseek.
+	* libio/libio.h (_IO_FILE_complete): Add _IO_save_ptr.
+	* libio/ftello.c (ftello): Add offset from original buffer if
+	stream has pushed back characters.
+	* libio/ftello64.c (ftello64): Likewise.
+	* libio/iofgetpos.c (_IO_fgetpos): Likewise.
+	* libio/iofgetpos64.c (_IO_fgetpos64): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* libio/genops.c (_IO_switch_to_main_get_area): Swap _IO_read_ptr
+	and _IO_save_ptr.
+	(_IO_switch_to_backup_area): Save _IO_read_ptr in _IO_save_ptr.
+	(_IO_default_pbackfail): Only stored push back character in original
+	buffer if it is the same as the one in the file at this position.
+	* libio/iofclose.c: Free backup buffer if one is available.
+	* libio/ioseekoff.c (_IO_seekoff): Only remove pushback buffer if
+	mode!=0.
+
+	* strdlib/strtol.c (strtol): Handle 0x... string for base!=0 correctly.
+
+	* time/strftime.c [_LIBC] (ampm): Use tp->tm_hour not hour12.
+
+1998-09-18  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/programs/pt_chown.c (more_help): Correct message that
+	describes the purpose of the program.
+
+	* login/openpty.c: Do not include pty-private.h.
+	(pts_name): New function.  Return name of slave pseudo terminal in
+	an allocated buffer if necessary.
+	(openpty): Use pts_name to get name of the slave end of the pseudo
+	terminal pair.
+
+	* sysdeps/unix/grantpt.c (grantpt): Free buffer allocated by
+	pts_name before return.
+
+1998-09-18 11:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h: Define __NO_MATH_INLINES if __STRICT_ANSI__.
+
 1998-09-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* login/openpty.c: Include pty-private.h instead of

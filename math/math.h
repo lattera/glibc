@@ -312,6 +312,13 @@ extern int matherr __P ((struct exception *__exc));
 #endif
 
 
+/* When compiling in strict ISO C compatible mode we must not use the
+   inline functions since they, among other things, do not set the
+   `errno' variable correctly.  */
+#if defined __STRICT_ANSI__ && !defined __NO_MATH_INLINES
+# define __NO_MATH_INLINES	1
+#endif
+
 /* Get machine-dependent inline versions (if there are any).  */
 #ifdef __USE_EXTERN_INLINES
 # include <bits/mathinline.h>

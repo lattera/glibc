@@ -94,8 +94,10 @@ _IO_switch_to_main_get_area (fp)
   tmp = fp->_IO_read_base;
   fp->_IO_read_base = fp->_IO_save_base;
   fp->_IO_save_base = tmp;
-
-  fp->_IO_read_ptr = fp->_IO_read_base;
+  /* Swap _IO_read_base and _IO_save_ptr. */
+  tmp = fp->_IO_read_ptr;
+  fp->_IO_read_ptr = fp->_IO_save_ptr;
+  fp->_IO_save_ptr = tmp;
 }
 
 /* Switch current get area from main get area to (end of) backup area. */
@@ -114,7 +116,8 @@ _IO_switch_to_backup_area (fp)
   tmp = fp->_IO_read_base;
   fp->_IO_read_base = fp->_IO_save_base;
   fp->_IO_save_base = tmp;
-
+  /* read _IO_read_ptr.  */
+  fp->_IO_save_ptr = fp->_IO_read_ptr;
   fp->_IO_read_ptr = fp->_IO_read_end;
 }
 
@@ -868,7 +871,10 @@ _IO_default_pbackfail (fp, c)
      _IO_FILE *fp;
      int c;
 {
-  if (fp->_IO_read_ptr <= fp->_IO_read_base)
+  if (fp->_IO_read_ptr > fp->_IO_read_base && !_IO_in_backup (fp)
+      && fp->_IO_read_ptr[-1] == c)
+    --fp->_IO_read_ptr;
+  else
     {
       /* Need to handle a filebuf in write mode (switch to read mode). FIXME!*/
       if (_IO_have_backup (fp) && !_IO_in_backup (fp))
@@ -904,11 +910,10 @@ _IO_default_pbackfail (fp, c)
 		    new_buf + new_size);
 	  fp->_IO_backup_base = fp->_IO_read_ptr;
 	}
+
+      *--fp->_IO_read_ptr = c;
     }
-  --fp->_IO_read_ptr;
-  if (c != EOF && *fp->_IO_read_ptr != c)
-    *fp->_IO_read_ptr = c;
-  return (unsigned char) *fp->_IO_read_ptr;
+  return (unsigned char) c;
 }
 
 _IO_fpos64_t

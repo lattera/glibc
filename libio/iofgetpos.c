@@ -36,6 +36,8 @@ _IO_fgetpos (fp, posp)
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
+  if (_IO_in_backup (fp))
+    pos -= fp->_IO_save_end - fp->_IO_save_base;
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   if (pos == _IO_pos_BAD)

@@ -427,7 +427,7 @@ my_strftime (s, maxsize, format, tp)
 # define f_wkday _NL_CURRENT (LC_TIME, DAY_1 + tp->tm_wday)
 # define a_month _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon)
 # define f_month _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon)
-# define ampm _NL_CURRENT (LC_TIME, hour12 > 11 ? PM_STR : AM_STR)
+# define ampm _NL_CURRENT (LC_TIME, tp->tm_hour > 11 ? PM_STR : AM_STR)
 
 # define aw_len strlen (a_wkday)
 # define am_len strlen (a_month)
@@ -475,7 +475,8 @@ my_strftime (s, maxsize, format, tp)
   if (hour12 > 12)
     hour12 -= 12;
   else
-    if (hour12 == 0) hour12 = 12;
+    if (hour12 == 0)
+      hour12 = 12;
 
   for (f = format; *f != '\0'; ++f)
     {

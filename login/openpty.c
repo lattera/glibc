@@ -17,7 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <pty.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,49 +27,112 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include "pty-private.h"
 
-int
-openpty (pmast, pslave, pname, tio, wins)
-     int *pmast;
-     int *pslave;
-     char *pname;
-     struct termios *tio;
-     struct winsize *wins;
+/* Return the result of ptsname_r in the buffer pointed to by PTS,
+   which should be of length BUF_LEN.  If it is too long to fit in
+   this buffer, a sufficiently long buffer is allocated using malloc,
+   and returned in PTS.  0 is returned upon success, -1 otherwise.  */
+static int
+pts_name (int fd, char **pts, size_t buf_len)
 {
-  int pfd, tfd;
-  char name[PTYNAMELEN];
+  int rv;
+  char *buf = *pts;
 
-  pfd = getpt ();
-  if (pfd == -1)
+  for (;;)
+    {
+      char *new_buf;
+
+      if (buf_len)
+	{
+	  rv = ptsname_r (fd, buf, buf_len);
+
+	  if (rv != 0 || memchr (buf, '\0', buf_len))
+	    /* We either got an error, or we succeeded and the
+	       returned name fit in the buffer.  */
+	    break;
+
+	  /* Try again with a longer buffer.  */
+	  buf_len += buf_len;	/* Double it */
+	}
+      else
+	/* No initial buffer; start out by mallocing one.  */
+	buf_len = 128;		/* First time guess.  */
+
+      if (buf != *pts)
+	/* We've already malloced another buffer at least once.  */
+	new_buf = realloc (buf, buf_len);
+      else
+	new_buf = malloc (buf_len);
+      if (! new_buf)
+	{
+	  rv = -1;
+	  __set_errno (ENOMEM);
+	  break;
+	}
+      buf = new_buf;
+    }
+
+  if (rv == 0)
+    *pts = buf;		/* Return buffer to the user.  */
+  else if (buf != *pts)
+    free (buf);		/* Free what we malloced when returning an error.  */
+
+  return rv;
+}
+
+/* Create pseudo tty master slave pair and set terminal attributes
+   according to TERMP and WINP.  Return handles for both ends in
+   AMASTER and ASLAVE, and return the name of the slave end in NAME.  */
+int
+openpty (int *amaster, int *aslave, char *name, struct termios *termp,
+	 struct winsize *winp)
+{
+#ifdef PATH_MAX
+  char _buf[PATH_MAX];
+#else
+  char _buf[512];
+#endif
+  char *buf = _buf;
+  int master, slave;
+
+  master = getpt ();
+  if (master == -1)
     return -1;
 
-  if (grantpt (pfd))
-    goto bail;
+  if (grantpt (master))
+    goto fail;
 
-  if (unlockpt (pfd))
-    goto bail;
+  if (unlockpt (master))
+    goto fail;
 
-  if (ptsname_r (pfd, name, PTYNAMELEN) != 0)
-    goto bail;
+  if (pts_name (master, &buf, sizeof (_buf)))
+    goto fail;
 
-  tfd = open (name, O_RDWR);
-  if (tfd == -1)
-    goto bail;
+  slave = open (buf, O_RDWR);
+  if (slave == -1)
+    {
+      if (buf != _buf)
+	free (buf);
+
+      goto fail;
+    }
 
   /* XXX Should we ignore errors here?  */
-  if(tio)
-    tcsetattr (tfd, TCSAFLUSH, tio);
-  if (wins)
-    ioctl (tfd, TIOCSWINSZ, wins);
+  if(termp)
+    tcsetattr (slave, TCSAFLUSH, termp);
+  if (winp)
+    ioctl (slave, TIOCSWINSZ, winp);
 
-  *pmast = pfd;
-  *pslave = tfd;
-  if (pname != NULL)
-    strcpy (pname, name);
+  *amaster = master;
+  *aslave = slave;
+  if (name != NULL)
+    strcpy (name, buf);
+
+  if (buf != _buf)
+    free (buf);
   return 0;
-
-bail:
-  close (pfd);
+  
+ fail:
+  close (master);
   return -1;
 }

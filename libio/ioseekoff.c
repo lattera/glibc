@@ -41,12 +41,13 @@ _IO_seekoff (fp, offset, dir, mode)
   _IO_flockfile (fp);
 
 
-  if (_IO_have_backup (fp))
+  if (mode != 0 && _IO_have_backup (fp))
     {
       if (dir == _IO_seek_cur && _IO_in_backup (fp))
 	offset -= fp->_IO_read_end - fp->_IO_read_ptr;
       _IO_free_backup_area (fp);
     }
+
   retval = _IO_SEEKOFF (fp, offset, dir, mode);
 
   _IO_funlockfile (fp);

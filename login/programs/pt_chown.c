@@ -67,15 +67,16 @@ static char *
 more_help (int key, const char *text, void *input)
 {
   char *cp;
-  
+
   switch (key)
     {
     case ARGP_KEY_HELP_PRE_DOC:
       asprintf (&cp, gettext ("\
-Set the owner, group and access permission of the terminal passed on\
- file descriptor `%d'.  This is the helper program for the `grantpt'\
- function.  It is not intended to be run directly from the command\
- line.\n"),
+Set the owner, group and access permission of the slave pseudo\
+ terminal corresponding to the master pseudo terminal passed on\
+ file descriptor `%d'.  This is the helper program for the\
+ `grantpt' function.  It is not intended to be run directly from\
+ the command line.\n"),
 		PTY_FILENO);
       return cp;
     case ARGP_KEY_HELP_EXTRA:
@@ -119,7 +120,7 @@ main (int argc, char *argv[])
 		 program_invocation_short_name);
       exit (EXIT_FAILURE);
     }
-  
+
   /* Check if we are properly installed.  */
   if (geteuid () != 0)
     error (FAIL_EXEC, 0, gettext ("needs to be installed setuid `root'"));
