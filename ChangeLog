@@ -1,3 +1,7 @@
+1998-05-19 12:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/memory.texi: Add back accidently removed line.
+
 1998-04-25  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	* sysdeps/generic/utmp_file.c (TIMEOUT): New macro.

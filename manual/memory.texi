@@ -370,6 +370,7 @@ xrealloc (void *ptr, size_t size)
 @end smallexample
 
 You can also use @code{realloc} to make a block smaller.  The reason you
+would do this is to avoid tying up a lot of memory space when only a little
 is needed.
 @comment The following is no longer true with the new malloc.
 @comment But it seems wise to keep the warning for other implementations.
