@@ -81,6 +81,11 @@ AC_ARG_WITH([elf],
                            [if using the ELF object format]),
 	    [elf=$withval],
 	    [elf=no])
+AC_ARG_WITH([selinux],
+            AC_HELP_STRING([--with-selinux],
+                           [if building with SELinux support]),
+	    [with_selinux=$withval],
+	    [with_selinux=auto])
 AC_ARG_WITH([xcoff],
             AC_HELP_STRING([--with-xcoff],
                            [if using the XCOFF object format]),
@@ -1953,6 +1958,42 @@ else
 fi
 AC_MSG_RESULT($LIBGD)
 AC_SUBST(LIBGD)
+
+# SELinux detection
+if test x$with_selinux = xno ; then
+  have_selinux=no;
+else
+  # See if we have the SELinux library
+  AC_CHECK_LIB(selinux, is_selinux_enabled,
+	       have_selinux=yes, have_selinux=no)
+  # See if we have the SELinux header with the NSCD permissions in it.
+  if test x$have_selinux = xyes ; then
+    AC_MSG_CHECKING([for NSCD Flask permissions in selinux/av_permissions.h])
+    AC_TRY_COMPILE([#include <selinux/av_permissions.h>],
+		    [#ifdef NSCD__SHMEMHOST
+		     return 0;
+		     #else
+		     #error NSCD__SHMEMHOST not defined
+		     #endif],
+		    have_selinux=yes, have_selinux=no)
+    AC_MSG_RESULT($have_selinux)
+  fi
+
+  if test x$with_selinux = xauto ; then
+    if test x$have_selinux = xno ; then
+      AC_MSG_WARN([Sufficiently new SELinux library not found])
+    fi
+  else
+    if test x$have_selinux = xno ; then
+      AC_MSG_ERROR([SELinux explicitly required, and SELinux library not found])
+    fi
+  fi
+fi
+# Check if we're building with SELinux support.
+if test "x$have_selinux" = xyes; then
+  AC_DEFINE(HAVE_SELINUX,1,[SELinux support])
+fi
+AC_SUBST(have_selinux)
 
 dnl check for the size of 'long double'.
 AC_CHECK_SIZEOF(long double, 0)
