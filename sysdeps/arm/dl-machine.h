@@ -284,6 +284,7 @@ _dl_start_user:
 	@ now we enter a _dl_init_next loop
 	ldr	r4, .L_MAIN_SEARCHLIST
 	ldr	r4, [sl, r4]
+	ldr	r4, [r4]
 	@ call _dl_init_next to get the address of an initalizer
 0:	mov	r0, r4
 	bl	_dl_init_next(PLT)
