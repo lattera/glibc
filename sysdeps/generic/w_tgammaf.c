@@ -37,8 +37,11 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
 	if(_LIB_VERSION == _IEEE_) return y;
 
 	if(!__finitef(y)&&__finitef(x)) {
-	  if(__floorf(x)==x&&x<=(float)0.0)
+	  if (x == (float)0.0)
 	    /* tgammaf pole */
+	    return (float)__kernel_standard((double)x,(double)x,150);
+	  else if(__floorf(x)==x&&x<(float)0.0)
+	    /* tgammaf domain */
 	    return (float)__kernel_standard((double)x,(double)x,141);
 	  else
 	    /* tgammaf overflow */

@@ -39,8 +39,10 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
 	if(_LIB_VERSION == _IEEE_) return y;
 
 	if(!__finite(y)&&__finite(x)) {
-	  if(__floor(x)==x&&x<=0.0)
-	    return __kernel_standard(x,x,41); /* tgamma pole */
+	  if (x == 0.0)
+	    return __kernel_standard(x,x,50); /* tgamma pole */
+	  else if(__floor(x)==x&&x<0.0)
+	    return __kernel_standard(x,x,41); /* tgamma domain */
 	  else
 	    return __kernel_standard(x,x,40); /* tgamma overflow */
 	}

@@ -4132,8 +4132,8 @@ tgamma_test (void)
   START (tgamma);
 
   TEST_f_f (tgamma, plus_infty, plus_infty);
-  TEST_f_f (tgamma, 0, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (tgamma, minus_zero, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (tgamma, 0, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_f_f (tgamma, minus_zero, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   /* tgamma (x) == NaN plus invalid exception for integer x <= 0.  */
   TEST_f_f (tgamma, -2, nan_value, INVALID_EXCEPTION);
   TEST_f_f (tgamma, minus_infty, nan_value, INVALID_EXCEPTION);

@@ -1,3 +1,24 @@
+2004-11-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/k_standard.c: Document code 50.
+	(__kernel_standard) <case 50>: Avoid raising div-by-zero
+	exception again.
+
+2004-11-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #552]
+	* math/libm-test.inc (tgamma_test): Update tgamma (0) and
+	tgamma (-0).
+	* sysdeps/generic/w_tgamma.c (__tgamma): Properly handle |x| == 0.
+	* sysdeps/generic/w_tgammaf.c (__tgammaf): Likewise.
+	* sysdeps/generic/w_tgammal.c (__tgammal): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (__ieee754_gamma_r): Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Handle
+	tgamma (0) and tgamma (-0).
+
 2004-11-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Avoid open for checking whether

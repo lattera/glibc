@@ -42,8 +42,10 @@ static char rcsid[] = "$NetBSD: $";
 	if(_LIB_VERSION == _IEEE_) return y;
 
 	if(!__finitel(y)&&__finitel(x)) {
-	  if(__floorl(x)==x&&x<=0.0)
-	    return __kernel_standard(x,x,241); /* tgamma pole */
+	  if(x==0.0)
+	    return __kernel_standard(x,x,250); /* tgamma pole */
+	  else if(__floorl(x)==x&&x<0.0)
+	    return __kernel_standard(x,x,241); /* tgamma domain */
 	  else
 	    return __kernel_standard(x,x,240); /* tgamma overflow */
 	}

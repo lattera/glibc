@@ -90,6 +90,7 @@ static double zero = 0.0;	/* used as const */
  *	47-- exp10 underflow
  *	48-- log2(0)
  *	49-- log2(x<0)
+ *	50-- tgamma(+-0)
  */
 
 
@@ -832,7 +833,7 @@ static double zero = 0.0;	/* used as const */
 	    case 40:
 	    case 140:
 	    case 240:
-		/* gamma(finite) overflow */
+		/* tgamma(finite) overflow */
 		exc.type = OVERFLOW;
 		exc.name = type < 100 ? "tgamma" : (type < 200
 						   ? "tgammaf" : "tgammal");
@@ -846,7 +847,7 @@ static double zero = 0.0;	/* used as const */
 	    case 41:
 	    case 141:
 	    case 241:
-		/* gamma(-integer) or gamma(0) */
+		/* tgamma(-integer) */
 		exc.type = SING;
 		exc.name = type < 100 ? "tgamma" : (type < 200
 						   ? "tgammaf" : "tgammal");
@@ -973,8 +974,24 @@ static double zero = 0.0;	/* used as const */
 		  __set_errno (EDOM);
 		}
 		break;
+	    case 50:
+	    case 150:
+	    case 250:
+		/* tgamma(+-0) */
+		exc.type = SING;
+		exc.name = type < 100 ? "tgamma" : (type < 200
+						    ? "tgammaf" : "tgammal");
+		exc.retval = __copysign (HUGE_VAL, x);
+		if (_LIB_VERSION == _POSIX_)
+		  __set_errno (ERANGE);
+		else if (!matherr(&exc)) {
+		  if (_LIB_VERSION == _SVID_)
+		    (void) WRITE2("tgamma: SING error\n", 18);
+		  __set_errno (ERANGE);
+		}
+		break;
 		
-		/* #### Last used is 49/149/249 ### */
+		/* #### Last used is 50/150/250 ### */
 	}
 	return exc.retval;
 }
