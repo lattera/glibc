@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Store current floating-point environment and clear exceptions.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +17,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Define the machine-dependent type `jmp_buf'.  ARM version. */
+#include <fenv.h>
+#include <fpu_control.h>
 
-#ifndef _SETJMP_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
+int
+feholdexcept (fenv_t *envp)
+{
+  unsigned long int temp;
 
-#ifndef _ASM
-/* Jump buffer contains v1-v6, sl, fp, sp and pc.  Other registers are not
-   saved.  */
-typedef int __jmp_buf[10];
-#endif
+  /* Store the environment.  */
+  _FPU_GETCW(temp);
+  envp->cw = temp;
 
-#define __JMP_BUF_SP		8
+  /* Now set all exceptions to non-stop.  */
+  temp &= ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
+  _FPU_SETCW(temp);
 
-/* Test if longjmp to JMPBUF would unwind the frame
-   containing a local variable at ADDRESS.  */
-#define _JMPBUF_UNWINDS(jmpbuf, address) \
-  ((void *) (address) < (void *) (jmpbuf[__JMP_BUF_SP]))
+  return 1;
+}

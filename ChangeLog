@@ -1,3 +1,24 @@
+1998-05-31  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.S: Use C_SYMBOL_NAME when
+	referring to errno and _errno.
+
+	* sysdeps/arm/fpu/feholdexcpt.c: New file.
+
+	* sysdeps/i386/fpu_control.h: Fix typo.
+
+	* sysdeps/arm/bits/setjmp.h (__jmp_buf): Remove floating-point support.
+	(_JMPBUF_UNWINDS): Added.
+	* sysdeps/arm/fpu/bits/setjmp.h: New file.
+
+1998-05-25  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* sysdeps/mach/hurd/Makefile: Use the `before-compile' target in
+	order to build header files, not `generated'.
+
+	* Rules (before-compile): New target which depends on all
+	$(before-compile) files.
+
 1998-06-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/nis_call.c: Make directory search faster.

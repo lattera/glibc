@@ -20,13 +20,15 @@
 
 /* We define errno here, to be consistent with Linux/i386.  */
 	.bss
-	.globl errno
-	.type errno,%object
-	.size errno,4
-errno:	.zero 4
-	.globl _errno
-	.type _errno,%object
-_errno = errno	/* This name is expected by hj's libc.so.5 startup code.  */
+	.globl C_SYMBOL_NAME(errno)
+	.type C_SYMBOL_NAME(errno),%object
+	.size C_SYMBOL_NAME(errno),4
+C_SYMBOL_NAME(errno):	.zero 4
+	.globl C_SYMBOL_NAME(_errno)
+	.type C_SYMBOL_NAME(_errno),%object
+/* This name is expected by hj's libc.so.5 startup code.  It seems to be needed
+   by pthreads as well.  */
+C_SYMBOL_NAME(_errno) = C_SYMBOL_NAME(errno)
 	.text
 
 /* The syscall stubs jump here when they detect an error.

@@ -47,13 +47,13 @@ hurd-objpfx = $(common-objpfx)hurd/
 # These are all the generated headers that <hurd.h> includes.
 before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,auth io fs process)
 $(patsubst %,$(hurd-objpfx)hurd/%.%,auth io fs process):
-	$(MAKE) -C $(..)hurd generated no_deps=t
+	$(MAKE) -C $(..)hurd before-compile no_deps=t
 endif
 
 # Hurd profil.c includes this file, so give a rule to make it.
 ifeq ($(subdir),gmon)
 $(common-objpfx)hurd/../mach/RPC_task_get_sampled_pcs.c:
-	$(MAKE) -C $(..)mach generated no_deps=t
+	$(MAKE) -C $(..)mach before-compile no_deps=t
 endif
 
 

@@ -176,6 +176,11 @@ subdir_dist: dist
 generated: $(addprefix $(common-objpfx),$(common-generated)) \
 	$(addprefix $(objpfx),$(generated))
 
+# Target required by the Hurd to ensure that all the MiG-generated
+# headers are in place before building a subdirectory.
+.PHONY: before-compile
+before-compile: $(before-compile)
+
 define o-iterator-doit
 $(common-objpfx)empty$o: $(common-objpfx)empty.c $(before-compile);
 	$$(compile-command.c)

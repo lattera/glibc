@@ -21,7 +21,7 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H	1
 
-/* Here is the dirty part. Settup up your 387 through the control word
+/* Here is the dirty part. Set up your 387 through the control word
  * (cw) register.
  *
  *     15-13    12  11-10  9-8     7-6     5    4    3    2    1    0
