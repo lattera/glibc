@@ -33,54 +33,54 @@
 
 /* The Single Unix specification says that some more types are
    available here.  */
-# ifndef dev_t
+# ifndef __dev_t_defined
 typedef __dev_t dev_t;
-#  define dev_t dev_t
+#  define __dev_t_defined
 # endif
 
-# ifndef gid_t
+# ifndef __gid_t_defined
 typedef __gid_t gid_t;
-#  define gid_t gid_t
+#  define __gid_t_defined
 # endif
 
-# ifndef ino_t
+# ifndef __ino_t_defined
 #  ifndef __USE_FILE_OFFSET64
 typedef __ino_t ino_t;
 #  else
 typedef __ino64_t ino_t;
 #  endif
-#  define ino_t ino_t
+#  define __ino_t_defined
 # endif
 
-# ifndef mode_t
+# ifndef __mode_t_defined
 typedef __mode_t mode_t;
-#  define mode_t mode_t
+#  define __mode_t_defined
 # endif
 
-# ifndef nlink_t
+# ifndef __nlink_t_defined
 typedef __nlink_t nlink_t;
-#  define nlink_t nlink_t
+#  define __nlink_t_defined
 # endif
 
-# ifndef off_t
+# ifndef __off_t_defined
 #  ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
 #  else
 typedef __off64_t off_t;
 #  endif
-#  define off_t off_t
+#  define __off_t_defined
 # endif
 
-# ifndef uid_t
+# ifndef __uid_t_defined
 typedef __uid_t uid_t;
-#  define uid_t uid_t
+#  define __uid_t_defined
 # endif
 #endif	/* X/Open */
 
 #ifdef __USE_UNIX98
-# ifndef pid_t
+# ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define pid_t pid_t
+#  define __pid_t_defined
 # endif
 #endif	/* Unix98 */
 

@@ -34,9 +34,9 @@ __BEGIN_DECLS
 
 
 /* For the Single Unix specification we must define this type here.  */
-#if defined __USE_XOPEN && !defined gid_t
+#if defined __USE_XOPEN && !defined __gid_t_defined
 typedef __gid_t gid_t;
-# define gid_t gid_t
+# define __gid_t_defined
 #endif
 
 /* The group structure.	 */

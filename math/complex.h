@@ -48,14 +48,6 @@ __BEGIN_DECLS
 #undef I
 #define I _Complex_I
 
-
-/* Optimization aids.  This is not yet implemented in gcc and once it
-   is this will probably be available in a gcc header.  */
-#define CX_LIMITED_RANGE_ON
-#define CX_LIMITED_RANGE_OFF
-#define CX_LIMITED_RANGE_DEFAULT
-
-
 /* The file <bits/cmathcalls.h> contains the prototypes for all the
    actual math functions.  These macros are used for those prototypes,
    so we can easily declare each function as both `name' and `__name',

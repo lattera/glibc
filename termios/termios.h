@@ -27,9 +27,9 @@
 #ifdef __USE_UNIX98
 /* We need `pid_t'.  */
 # include <bits/types.h>
-# ifndef pid_t
+# ifndef __pid_t_defined
 typedef __pid_t pid_t;
-#  define pid_t pid_t
+#  define __pid_t_defined
 # endif
 #endif
 

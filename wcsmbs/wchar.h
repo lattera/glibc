@@ -325,7 +325,7 @@ extern float wcstof __P ((__const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr));
 extern __long_double_t wcstold __P ((__const wchar_t *__restrict __nptr,
 				     wchar_t **__restrict __endptr));
-#endif /* GNU */
+#endif /* C9x */
 
 
 /* Convert initial portion of wide string NPTR to `long int'

@@ -114,7 +114,10 @@ typedef _G_fpos64_t fpos64_t;
 extern FILE *stdin;		/* Standard input stream.  */
 extern FILE *stdout;		/* Standard output stream.  */
 extern FILE *stderr;		/* Standard error output stream.  */
-
+/* C89/C9x say they're macros.  Make them happy.  */
+#define stdin stdin
+#define stdout stdout
+#define stderr stderr
 
 /* Remove file FILENAME.  */
 extern int remove __P ((__const char *__filename));
@@ -468,18 +471,18 @@ extern void rewind __P ((FILE *__stream));
    are originally defined in the Large File Support API.  */
 
 /* Types needed in these functions.  */
-#ifndef off_t
+#ifndef __off_t_defined
 # ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
 # else
 typedef __off64_t off_t;
 # endif
-# define off_t off_t
+# define __off_t_defined
 #endif
 
-#if defined __USE_LARGEFILE64 && !defined off64_t
+#if defined __USE_LARGEFILE64 && !defined __off64_t_defined
 typedef __off64_t off64_t;
-# define off64_t off64_t
+# define __off64_t_defined
 #endif
 
 

@@ -37,7 +37,7 @@ __BEGIN_DECLS
 #ifndef __sig_atomic_t_defined
 # if defined __need_sig_atomic_t || defined _SIGNAL_H
 #  undef __need_sig_atomic_t
-#  define __sig_atomic_t_defined 1
+#  define __sig_atomic_t_defined
 typedef __sig_atomic_t sig_atomic_t;
 # endif
 #endif
@@ -45,7 +45,7 @@ typedef __sig_atomic_t sig_atomic_t;
 #ifndef __sigset_t_defined
 # if defined __need_sigset_t || (defined _SIGNAL_H && defined __USE_POSIX)
 #  undef __need_sigset_t
-#  define __sigset_t_defined	1
+#  define __sigset_t_defined
 typedef __sigset_t sigset_t;
 # endif
 #endif
@@ -55,9 +55,9 @@ typedef __sigset_t sigset_t;
 #include <bits/types.h>
 #include <bits/signum.h>
 
-#if defined __USE_XOPEN && !defined pid_t
+#if defined __USE_XOPEN && !defined __pid_t_defined
 typedef __pid_t pid_t;
-# define pid_t pid_t
+# define __pid_t_defined
 #endif	/* Unix98 */
 
 

@@ -35,14 +35,14 @@ __BEGIN_DECLS
 #ifdef __USE_XOPEN
 /* The Single Unix specification says that some more types are
    available here.  */
-# ifndef gid_t
+# ifndef __gid_t_defined
 typedef __gid_t gid_t;
-#  define gid_t gid_t
+#  define __gid_t_defined
 # endif
 
-# ifndef uid_t
+# ifndef __uid_t_defined
 typedef __uid_t uid_t;
-#  define uid_t uid_t
+#  define __uid_t_defined
 # endif
 #endif
 

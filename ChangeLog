@@ -1,3 +1,24 @@
+1999-06-23  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* libio/stdio.h: Define stdin, stdout, stderr as macros.
+	* math/complex.h: Don't define
+	CX_LIMITED_RANGE_{ON,OFF,DEFAULT}.  These are *pragmas* not
+	macros.
+	* wcsmbs/wchar.h: Fix comment.
+
+	* grp/grp.h: Use __foo_t_defined convention to typedef things
+	only once.
+	* io/sys/stat.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* posix/sys/types.h: Likewise.
+	* posix/sys/wait.h: Likewise.
+	* pwd/pwd.h: Likewise.
+	* signal/signal.h: Likewise.
+	* sysdeps/generic/stdint.h: Likewise.
+	* sysdeps/gnu/utmpx.h: Likewise.
+	* termios/termios.h: Likewise.
+
 1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio/fputc.c: Don't define alias if fputc is defined as a

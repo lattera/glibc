@@ -29,9 +29,9 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#if defined __USE_XOPEN && !defined pid_t
+#if defined __USE_XOPEN && !defined __pid_t_defined
 typedef __pid_t pid_t;
-# define pid_t pid_t
+# define __pid_t_defined
 #endif
 
 /* This will define the `W*' macros for the flag
