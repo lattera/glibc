@@ -82,6 +82,12 @@ typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 typedef long int __clock_t;
 typedef int __key_t;			/* Type of a SYSV IPC key. */
 
+/* Clock ID used in clock and timer functions.  */
+typedef int __clockid_t;
+
+/* Timer ID returned by `timer_create'.  */
+typedef int __timer_t;
+
 /* Used in `struct shmid_ds'.  */
 typedef int __ipc_pid_t;
 

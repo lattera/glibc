@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-08-11
+GNU C Library NEWS -- history of user-visible changes.  2000-08-13
 
 Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -16,6 +16,9 @@ Version 2.2
 * Thorsten Kukuk added secure mode support to nscd.
 
 * The Berkeley db libraries have been removed.
+
+  Related, the nss_db module is now in a separate package since it
+  obviously requires a database library being available.
 
 * Wide character I/O streams implemented by Ulrich Drepper.
 

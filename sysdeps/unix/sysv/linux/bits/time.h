@@ -1,5 +1,5 @@
 /* System-dependent timing definitions.  Linux version.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,12 +38,6 @@
    presents the real value for clock ticks per second for the system.  */
 #   define CLK_TCK 100
 #  endif
-
-/* Clock ID used in clock and timer functions.  */
-typedef int __clockid_t;
-
-/* Timer ID returned by `timer_create'.  */
-typedef int __timer_t;
 
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */

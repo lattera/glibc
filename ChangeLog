@@ -1,3 +1,11 @@
+2000-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile: Remove rules to generate glob package.
+
+	* posix/Makefile (tests): Add tst-regexloc.
+	(tst-regexloc-ENV): Add LOCPATH.
+	* posix/tst-regexloc.c: New file.
+
 2000-08-12  Andreas Jaeger  <aj@suse.de>
 
 	* include/features.h (__STDC_ISO_10646__): Define.

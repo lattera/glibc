@@ -68,7 +68,7 @@ aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
-		   tst-truncate64 tst-fork tst-fnmatch
+		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -107,6 +107,7 @@ tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
+tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T
@@ -121,41 +122,6 @@ ptestcases.h: PTESTS PTESTS2C.sed
 ifeq ($(with-cvs),yes)
 	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
 endif
-
-# Make the standalone glob/fnmatch package.
-
-glob.tar: glob/ChangeLog glob/COPYING.LIB \
-	  glob/Makefile.in glob/configure glob/configure.in glob/configure.bat\
-	  glob/SCOPTIONS glob/SMakefile glob/Makefile.ami \
-	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c
-	tar cho$(verbose)f $@ $^
-glob/%.c: %.c
-	rm -f $@
-	ln -s ../$< $@
-glob/%.h: %.h
-	rm -f $@
-	ln -s ../$< $@
-
-glob/configure: glob/configure.in
-	cd glob && autoconf $(ACFLAGS)
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
-endif
-
-glob/ChangeLog: ../ChangeLog
-	changelog-extract --regexp 'posix/(glob|fnmatch).*' < $< > $@.new
-	chmod a-w $@.new
-	mv -f $@.new $@
-ifeq ($(with-cvs),yes)
-	test ! -d CVS || cvs $(CVSOPTS) commit -mRegenerated $@
-endif
-
-%.Z: %
-	compress -c $< > $@-tmp
-	mv $@-tmp $@
-%.gz: %
-	gzip -9v -c $< > $@-tmp
-	mv $@-tmp $@
 
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.
