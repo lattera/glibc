@@ -1,3 +1,11 @@
+2000-08-24  Denis Joseph Barrow    <djbarrow@de.ibm.com>
+
+	* sysdeps/s390/fpu/fedisblxcpt.c: New file.
+	* sysdeps/s390/fpu/feenablxcpt.c: New file.
+	* sysdeps/s390/fpu/fegetexcept.c: New file.
+	* sysdeps/s390/fpu/fenv_libc.h: Some reordering, new definition
+	FPC_VALID_MASK.
+
 2000-08-24  Andreas Jaeger  <aj@suse.de>
 
 	* malloc/Makefile (extra-objs): Add memusagestat.o.
