@@ -1907,6 +1907,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define	R_SH_GOTOFF		166
 #define	R_SH_GOTPC		167
 /* Keep this the last entry.  */
+#define	R_SH_NUM		256
 
 __END_DECLS
 

@@ -1,5 +1,7 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h (R_SH_NUM): Got accidently dropped.
+
 	* sysdeps/unix/sysv/linux/configure.in: Improve handling of
 	minimal kernel versions.  Add information about IA-64 kernel.
 
