@@ -450,7 +450,7 @@ ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
 # The profiled object files are named foo.po.
 object-suffixes += .po
-CFLAGS-.po = -p
+CFLAGS-.po = -pg
 libtype.po = lib%_p.a
 endif
 ifeq (yes,$(build-omitfp))

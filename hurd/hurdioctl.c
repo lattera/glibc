@@ -127,7 +127,7 @@ fioclex (int fd,
 
   return __fcntl (fd, F_SETFD, flag);
 }
-_HURD_HANDLE_IOCTL (fioclex, FIOCLEX, FIONCLEX);
+_HURD_HANDLE_IOCTLS (fioclex, FIOCLEX, FIONCLEX);
 
 #include <hurd/term.h>
 #include <hurd/tioctl.h>

@@ -1,3 +1,7 @@
+Fri Feb 16 10:14:05 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* Makeconfig (CFLAGS-.po): Use -pg instead of -p.
+
 Thu Feb 15 13:57:08 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* mach/Machrules: Use -include for $(*.ir).
