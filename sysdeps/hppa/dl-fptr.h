@@ -1,7 +1,6 @@
-/* Install given floating-point environment and raise exceptions.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+/* Function descriptors.  HPPA version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David Huggins-Daines <dhd@debian.org>, 2000
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,21 +17,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#ifndef dl_hppa_fptr_h
+#define dl_hppa_fptr_h 1
 
-int
-feupdateenv (const fenv_t *envp)
-{
-  unsigned int sw[2];
+#include <sysdeps/generic/dl-fptr.h>
 
-  /* Get the current exception status. */
-  __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
-  sw[0] &= FE_ALL_EXCEPT;
-  envp->__status_word = envp->__status_word | sw[0];
-  
-  /* Install new environment.  */
-  fesetenv (envp);
+/* There are currently 20 dynamic symbols in ld.so.
+   ELF_MACHINE_BOOT_FPTR_TABLE_LEN needs to be at least that big.  */
+#define ELF_MACHINE_BOOT_FPTR_TABLE_LEN	200
 
-  /* Success.  */
-  return 0;
-}
+#define ELF_MACHINE_LOAD_ADDRESS(var, symbol)		\
+  asm ("	addil LT%%" #symbol ", %%r19\n"		\
+       "	ldw RT%%" #symbol "(%%sr0,%%r1), %0\n"	\
+      : "=&r" (var));
+
+
+#endif /* !dl_hppa_fptr_h */

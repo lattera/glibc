@@ -1,3 +1,31 @@
+2003-12-17  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/fpu/fclrexcpt.c (feclearexcept): Right shift
+	FE_ALL_EXCEPT before complimenting.
+	* sysdeps/hppa/fpu/fegetenv.c (fegetenv): Use asm 'ma,' completer,
+	and gcc '+r' constraint.
+	* sysdeps/hppa/fpu/feholdexcpt.c (feholdexcept): Likewise.
+	* sysdeps/hppa/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/hppa/fpu/feupdateenv.c (feupdateenv): Read raised
+	exception bits, OR with envp, pass to fesetenv.
+	* sysdeps/hppa/fpu/fraiseexcpt.c (feraiseexcept): Add delayed
+	exception flushing, FE_UNDERFLOW is DBL_MIN/3.0, FE_INEXACT is
+	triggered by M_PI/69.69 converted to single precision.
+	* sysdeps/hppa/fpu/fsetexcptflg.c (fesetexceptflag): Set enable
+	bits not raised exception bits.
+
+	* sysdeps/hppa/Makefile: Add dl-symaddr and dl-fptr to the
+	correct build strings.
+	* sysdeps/hppa/dl-fptr.h: New file.
+	* sysdeps/hppa/dl-fptr.c: Removed.
+	* sysdeps/hppa/dl-symaddr.c (_dl_symbol_address): Use _dl_make_ftpr,
+	remove const qualifier for map.
+	(_dl_function_address): Removed.
+	* sysdeps/hppa/dl-lookupcfg.h: DL_LOOKUP_ADDRESS must clear
+	PLABEL32 bits, define DL_AUTO_FUNCTION_ADDRESS and
+	DL_STATIC_FUNCTION_ADDRESS, DL_DT_INIT_ADDRESS and
+	DL_DT_FINI_ADDRESS use the previous two macros.
+
 2003-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/mtrace.c (tr_old_memalign_hook): New variable.
@@ -9,7 +37,7 @@
 
 2003-12-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* misc/mntent_r.c: Change encoding to match recently change decoder.
+	* misc/mntent_r.c: Change encoding to match recently changed decoder.
 	Patch by Alexander Achenbach <xela@slit.de>.
 
 2003-12-16  Steven Munroe  <sjmunroe@us.ibm.com>

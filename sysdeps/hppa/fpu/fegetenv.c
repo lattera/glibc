@@ -24,10 +24,10 @@ int
 fegetenv (fenv_t *envp)
 {
   __asm__ (
-	   "fstd %%fr0,0(%2)\n"
-	   "fstd,ma %%fr1,8(%2)\n"
-	   "fstd,ma %%fr2,8(%2)\n"
-	   "fstd %%fr3,0(%2)\n"
-	   : "=m" (*envp), "=r" (envp) : "1" (envp));
+	   "fstd,ma %%fr0,8(%1)\n"
+	   "fstd,ma %%fr1,8(%1)\n"
+	   "fstd,ma %%fr2,8(%1)\n"
+	   "fstd %%fr3,0(%1)\n"
+	   : "=m" (*envp), "+r" (envp));
   return 0;
 }

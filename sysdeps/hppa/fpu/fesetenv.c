@@ -26,20 +26,18 @@ int
 fesetenv (const fenv_t *envp)
 {
   fenv_t temp;
+  fenv_t * _regs = &temp;
 
   /* Install the environment specified by ENVP.  But there are a few
      values which we do not want to come from the saved environment.
      Therefore, we get the current environment and replace the values
      we want to use from the environment specified by the parameter.  */
-  {
-    fenv_t * _regs = &temp;
-    __asm__ (
-	     "fstd %%fr0,0(%2)\n"
-	     "fstd,ma %%fr1,8(%2)\n"
-	     "fstd,ma %%fr2,8(%2)\n"
-	     "fstd %%fr3,0(%2)\n"
-	     : "=m" (*_regs), "=r" (_regs) : "1" (_regs));
-  }
+  __asm__ (
+	   "fstd,ma %%fr0,8(%1)\n"
+	   "fstd,ma %%fr1,8(%1)\n"
+	   "fstd,ma %%fr2,8(%1)\n"
+	   "fstd %%fr3,0(%1)\n"
+	   : "=m" (*_regs), "+r" (_regs));
 
   temp.__status_word &= ~(FE_ALL_EXCEPT
 			  | (FE_ALL_EXCEPT << 27)
@@ -55,15 +53,12 @@ fesetenv (const fenv_t *envp)
 			      | (FE_ALL_EXCEPT << 27)));
 
   /* Load the new environment. */
-  {
-    fenv_t * _regs = &temp + 1;
-    __asm__ (
-	     "fldd,mb -8(%2),%%fr3\n"
-	     "fldd,mb -8(%2),%%fr2\n"
-	     "fldd,mb -8(%2),%%fr1\n"
-	     "fldd -8(%2),%%fr0\n"
-	     : "=m" (*_regs), "=r" (_regs) : "1" (_regs));
-  }
+  __asm__ (
+	   "fldd,ma -8(%1),%%fr3\n"
+	   "fldd,ma -8(%1),%%fr2\n"
+	   "fldd,ma -8(%1),%%fr1\n"
+	   "fldd 0(%1),%%fr0\n"
+	   : "=m" (*_regs), "+r" (_regs));
 
   /* Success.  */
   return 0;

@@ -25,18 +25,16 @@ int
 feholdexcept (fenv_t *envp)
 {
   fenv_t clear;
+  fenv_t * _regs = envp;
 
   /* Store the environment.  */
-  {
-    fenv_t * _regs = envp;
-    __asm__ (
-	     "fstd %%fr0,0(%2)\n"
-	     "fstd,ma %%fr1,8(%2)\n"
-	     "fstd,ma %%fr2,8(%2)\n"
-	     "fstd %%fr3,0(%2)\n"
-	     : "=m" (*_regs), "=r" (_regs) : "1" (_regs));
-    memcpy (&clear, envp, sizeof (clear));
-  }
+  __asm__ (
+	   "fstd,ma %%fr0,8(%1)\n"
+	   "fstd,ma %%fr1,8(%1)\n"
+	   "fstd,ma %%fr2,8(%1)\n"
+	   "fstd %%fr3,0(%1)\n"
+	   : "=m" (*_regs), "+r" (_regs));
+  memcpy (&clear, envp, sizeof (clear));
 
   /* Now clear all exceptions.  */
   clear.__status_word &= ~(FE_ALL_EXCEPT << 27);
@@ -46,15 +44,13 @@ feholdexcept (fenv_t *envp)
   clear.__status_word &= ~FE_ALL_EXCEPT;
 
   /* Load the new environment. */
-  {
-    fenv_t * _regs = &clear + 1;
-    __asm__ (
-	     "fldd,mb -8(%2),%%fr3\n"
-	     "fldd,mb -8(%2),%%fr2\n"
-	     "fldd,mb -8(%2),%%fr1\n"
-	     "fldd -8(%2),%%fr0\n"
-	     : "=m" (*_regs), "=r" (_regs) : "1" (_regs));
-  }
+  _regs = &clear;
+  __asm__ (
+	   "fldd,ma -8(%1),%%fr3\n"
+	   "fldd,ma -8(%1),%%fr2\n"
+	   "fldd,ma -8(%1),%%fr1\n"
+	   "fldd 0(%1),%%fr0\n"
+	   : "=m" (*_regs), "+r" (_regs));
 
   return 0;
 }

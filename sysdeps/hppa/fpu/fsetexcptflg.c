@@ -29,8 +29,7 @@ fesetexceptflag (const fexcept_t *flagp, int excepts)
   /* Get the current status word. */
   __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
 
-  /* Install the new exception flags bits.  */
-  sw[0] &= ~(excepts & (FE_ALL_EXCEPT >> 27));
+  /* Install new enable trap bits  */
   sw[0] |= (*flagp & excepts & FE_ALL_EXCEPT) << 27;
 
   /* Store the new status word.  */
