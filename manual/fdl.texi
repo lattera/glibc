@@ -1,5 +1,4 @@
 
-@node GNU Free Documentation License
 @appendix GNU Free Documentation License
 
 @cindex FDL, GNU Free Documentation License

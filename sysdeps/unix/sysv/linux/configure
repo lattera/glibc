@@ -52,16 +52,19 @@ fi
 # kernel headers are young enough.  Additionally we have minimal
 # kernel versions for some architectures.
 case "$machine" in
-  mips*)
-    arch_minimum_kernel=2.2.15
-    ;;
-  sh*)
-    arch_minimum_kernel=2.3.99
+  alpha*)
+    arch_minimum_kernel=2.1.100
     ;;
   ia64*)
     arch_minimum_kernel=2.4.0
     ;;
   hppa*)
+    arch_minimum_kernel=2.3.99
+    ;;
+  mips*)
+    arch_minimum_kernel=2.2.15
+    ;;
+  sh*)
     arch_minimum_kernel=2.3.99
     ;;
   *)
@@ -85,11 +88,11 @@ fi
 
 if test -n "$minimum_kernel"; then
   echo $ac_n "checking for kernel header at least $minimum_kernel""... $ac_c" 1>&6
-echo "configure:89: checking for kernel header at least $minimum_kernel" >&5
+echo "configure:92: checking for kernel header at least $minimum_kernel" >&5
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat > conftest.$ac_ext <<EOF
-#line 93 "configure"
+#line 96 "configure"
 #include "confdefs.h"
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -154,27 +157,26 @@ fi
 case $add_ons in
   # It is available.  Good.
   *linuxthreads*)
-    message=
+    linuxthreads_missing=
     ;;
   *)
-    message="\
-*** WARNING: Are you sure you do not want to use the \`linuxthreads'
-*** add-on?"
+    linuxthreads_missing=yes
     ;;
 esac
 
-if test "$message"; then
+if test "$linuxthreads_missing"; then
   if test $enable_sanity = yes; then
     echo "\
-*** You should not compile the GNU libc without the \`linuxthreads'
-*** add-on.  Not using them risks being incompatible with the
-*** libraries of other systems.  Consider getting the add-on and restarting
-*** the configuration.
+*** On GNU/Linux systems it is normal to compile GNU libc with the
+*** \`linuxthreads' add-on.  Without that, the library will be
+*** incompatible with normal GNU/Linux systems.
 *** If you really mean to not use this add-on, run configure again
 *** using the extra parameter \`--disable-sanity-checks'."
     exit 1
   else
-    echo "$message"
+    echo "\
+*** WARNING: Are you sure you do not want to use the \`linuxthreads'
+*** add-on?"
   fi
 fi
 
@@ -205,7 +207,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:209: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:211: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message

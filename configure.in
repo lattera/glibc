@@ -1514,7 +1514,6 @@ AC_SUBST(old_glibc_headers)
 
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_localedir)
-AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_rootsbindir)
 
 AC_SUBST(use_ldconfig)

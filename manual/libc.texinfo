@@ -111,7 +111,7 @@ of the GNU C Library.
 @include chapters.texi
 
 @set lgpl-appendix
-@node Copying, Concept Index, Contributors, Top
+@node Copying, Documentation License, Contributors, Top
 @include lesser.texi
 
 @node Documentation License, Concept Index, Copying, Top

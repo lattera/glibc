@@ -1,5 +1,13 @@
 2001-07-06  Andreas Jaeger  <aj@suse.de>
 
+	* manual/libc-texinfo.sh: Add note for the FDL.
+
+	* manual/argp.texi (Argp Example 4): Fix texinfo warning.
+
+	* manual/libc.texinfo: Regenerated.
+
+	* manual/fdl.texi: Fix node.
+
 	* config.make.in (sysconfdir): Replace correctly.
 	Closes PR libc/2369, reported by Peter Simons <simons@cryp.to>.
 

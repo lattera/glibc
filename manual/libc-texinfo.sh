@@ -70,6 +70,8 @@ mv -f incl.$$ chapters.texi
  cat <<EOF
 * Copying::                      The GNU Lesser General Public License says
                                   how you can copy and share the GNU C Library.
+* Documentation License::        This manual is under the GNU Free
+                                  Documentation License.
 
 Indices
 

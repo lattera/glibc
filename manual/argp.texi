@@ -1101,7 +1101,7 @@ two part option string.  The @emph{headers} are entries in the options
 vector.  @xref{Argp Option Vectors}.  The first four fields are zero.  The
 two part documentation string are in the variable @code{doc}, which
 allows documentation both before and after the options.  @xref{Argp
-Parsers}; the two parts of @code{doc} are separated by a vertical-tab
+Parsers}, the two parts of @code{doc} are separated by a vertical-tab
 character (@code{'\v'}, or @code{'\013'}).  By convention, the
 documentation before the options is a short string stating what the
 program does, and after any options it is longer, describing the

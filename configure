@@ -2246,7 +2246,7 @@ else
 fi
 
 
-for ac_prog in gawk mawk nawk awk
+for ac_prog in mawk gawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3540,7 +3540,6 @@ fi
 
 
 
-
   
 if test $gnu_ld = yes; then
   cat >> confdefs.h <<\EOF
@@ -3574,7 +3573,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:3578: checking whether -fPIC is default" >&5
+echo "configure:3577: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3814,7 +3813,6 @@ s%@stdio@%$stdio%g
 s%@old_glibc_headers@%$old_glibc_headers%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_localedir@%$libc_cv_localedir%g
-s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g
 s%@use_ldconfig@%$use_ldconfig%g
 s%@ldd_rewrite_script@%$ldd_rewrite_script%g
