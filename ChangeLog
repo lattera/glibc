@@ -1,3 +1,12 @@
+2002-06-04  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/generic/ldconfig.h (FLAG_POWERPC_LIB64) New macro.
+	* elf/cache.c (print_entry): Add case for FLAG_POWERPC_LIB64.
+	Remove per-machine conditionals for FLAG_* cases.
+	* sysdeps/unix/sysv/linux/powerpc/ldconfig.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/readelflib.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/dl-cache.h: New file.
+
 2002-09-10  Alan Modra <amodra@bigpond.net.au>
 
 	* csu/gmon-start.c [!TEXT_START]: Define TEXT_START if not already

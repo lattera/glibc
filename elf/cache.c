@@ -71,24 +71,21 @@ print_entry (const char *lib, int flag, unsigned int osversion,
     }
   switch (flag & FLAG_REQUIRED_MASK)
     {
-#ifdef __sparc__
     case FLAG_SPARC_LIB64:
       fputs (",64bit", stdout);
-#endif
-#if defined __ia64__ || defined __i386__
+      break;
     case FLAG_IA64_LIB64:
       fputs (",IA-64", stdout);
       break;
-#endif
-#if defined __x86_64__ || defined __i386__
     case FLAG_X8664_LIB64:
       fputs (",x86-64", stdout);
       break;
-#endif
-#if defined __s390__ || defined __s390x__
     case FLAG_S390_LIB64:
       fputs(",64bit", stdout);
-#endif
+      break;
+    case FLAG_POWERPC_LIB64:
+      fputs(",64bit", stdout);
+      break;
     case 0:
       break;
     default:
