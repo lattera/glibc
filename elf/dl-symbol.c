@@ -28,6 +28,6 @@ _dl_symbol_value (struct link_map *map, const char *name)
 {
   const ElfW(Sym) *ref = NULL;
   lookup_t result;
-  result = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0);
+  result = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0, 1);
   return (result ? LOOKUP_VALUE_ADDRESS (result) : 0) + ref->st_value;
 }

@@ -1,3 +1,46 @@
+2000-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (distribute): Add unloadmod.c, reldepmod1.c,
+	reldepmod2.c, reldepmod3.c, and reldepmod4.c.
+	(tests): Add unload, reldep, reldep2, and reldep3.
+	(modules-names): Add unloadmod, reldepmod1, reldepmod2, reldepmod3,
+	and reldepmod4.
+	Add rules to build and run unload, reldep, reldep2, and reldep3.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Add new parameter explicit.
+	Don't create relocation dependency if it is nonzero.
+	(_dl_lookup_symbol_skip): Remove relocation dependency stuff.  This
+	can never happen here.
+	(_dl_lookup_versioned_symbol): Add new parameter explicit.
+	Don't create relocation dependency if it is nonzero.
+	(_dl_lookup_versioned_symbol_skip): Remove relocation dependency
+	stuff.  This can never happen here.
+	* sysdeps/generic/ldsodefs.h: Change prototypes.
+	* elf/dl-reloc.c (RESOLVE_MAP): Pass 0 in explicit parameter to
+	_dl_lookup_up and _dl_lookup_versioned_symbol.
+	(RESOLV): Likewise.
+	* elf/dl-runtime.c (fixup): Likewise.
+	(profile_fixup): Likewise.
+	* elf/dl-libc.c (do_dlsym): Pass 1 in explicit parameter to
+	_dl_lookup_symbol.
+	* elf/dl-symbol.c (_dl_symbol_value): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/dl-sym.c (_dl_sym): Pass 1 in explicit parameter to
+	_dl_lookup_symbol if handle is not RTLD_DEFAULT.  Always compute
+	and pass down the caller map.
+	(_dl_vsym): Likewise.
+	* elf/reldep.c: New file.
+	* elf/reldep2.c: New file.
+	* elf/reldep3.c: New file.
+	* elf/reldepmod1.c: New file.
+	* elf/reldepmod2.c: New file.
+	* elf/reldepmod3.c: New file.
+	* elf/reldepmod4.c: New file.
+	* elf/unload.c: New file.
+	* elf/unloadmod.c: New file.
+
+	* elf/do-lookup.h: Remove unused undef_name parameter.
+	* elf/dl-lookup.c: Adjust callers.
+
 2000-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/gconv_trans.c (__gconv_transliterate): Pass NULL instead of

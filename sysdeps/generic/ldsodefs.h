@@ -307,7 +307,7 @@ extern lookup_t _dl_lookup_symbol (const char *undef,
 				   struct link_map *undef_map,
 				   const ElfW(Sym) **sym,
 				   struct r_scope_elem *symbol_scope[],
-				   int reloc_type)
+				   int reloc_type, int explicit)
      internal_function;
 
 /* Lookup versioned symbol.  */
@@ -316,7 +316,7 @@ extern lookup_t _dl_lookup_versioned_symbol (const char *undef,
 					     const ElfW(Sym) **sym,
 					     struct r_scope_elem *symbol_scope[],
 					     const struct r_found_version *version,
-					     int reloc_type)
+					     int reloc_type, int explicit)
      internal_function;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */

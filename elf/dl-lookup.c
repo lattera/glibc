@@ -190,7 +190,7 @@ lookup_t
 internal_function
 _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		   int reloc_type)
+		   int reloc_type, int explicit)
 {
   const char *reference_name = undef_map ? undef_map->l_name : NULL;
   const unsigned long int hash = _dl_elf_hash (undef_name);
@@ -204,8 +204,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
-    if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		   *scope, 0, NULL, noexec, noplt))
+    if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0, NULL,
+		   noexec, noplt))
       {
 	/* We have to check whether this would bind UNDEF_MAP to an object
 	   in the global scope which was dynamically loaded.  In this case
@@ -215,12 +215,15 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	    && (__builtin_expect (current_value.m->l_type, lt_library)
 		== lt_loaded)
 	    && undef_map != current_value.m
+	    /* Don't do this for explicit lookups as opposed to implicit
+	       runtime lookups.  */
+	    && __builtin_expect (! explicit, 1)
 	    /* Add UNDEF_MAP to the dependencies.  */
 	    && add_dependency (undef_map, current_value.m) < 0)
 	  /* Something went wrong.  Perhaps the object we tried to reference
 	     was just removed.  Try finding another definition.  */
 	  return _dl_lookup_symbol (undef_name, undef_map, ref, symbol_scope,
-				    reloc_type);
+				    reloc_type, 0);
 
 	break;
       }
@@ -262,8 +265,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       struct sym_val protected_value = { NULL, NULL };
 
       for (scope = symbol_scope; *scope; ++scope)
-	if (do_lookup (undef_name, undef_map, hash, *ref,
-		       &protected_value, *scope, 0, NULL, 0, 1))
+	if (do_lookup (undef_name, hash, *ref, &protected_value, *scope, 0,
+		       NULL, 0, 1))
 	  break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -303,47 +306,13 @@ _dl_lookup_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (i < (*scope)->r_nlist
-      && do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		    *scope, i, skip_map, 0, 0))
-    {
-      /* We have to check whether this would bind UNDEF_MAP to an object
-	 in the global scope which was dynamically loaded.  In this case
-	 we have to prevent the latter from being unloaded unless the
-	 UNDEF_MAP object is also unloaded.  */
-      if (current_value.m->l_global
-	  && (__builtin_expect (current_value.m->l_type, lt_library)
-	      == lt_loaded)
-	  && undef_map != current_value.m
-	  /* Add UNDEF_MAP to the dependencies.  */
-	  && add_dependency (undef_map, current_value.m) < 0)
-	/* Something went wrong.  Perhaps the object we tried to reference
-	   was just removed.  Try finding another definition.  */
-	return _dl_lookup_symbol_skip (undef_name, undef_map, ref,
-				       symbol_scope, skip_map);
-    }
-  else
+  while (i >= (*scope)->r_nlist
+	 || ! do_lookup (undef_name, hash, *ref, &current_value, *scope, i,
+			 skip_map, 0, 0))
     while (*++scope)
-      if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		     *scope, 0, skip_map, 0, 0))
-	{
-	  /* We have to check whether this would bind UNDEF_MAP to an object
-	     in the global scope which was dynamically loaded.  In this case
-	     we have to prevent the latter from being unloaded unless the
-	     UNDEF_MAP object is also unloaded.  */
-	  if (__builtin_expect (current_value.m->l_global, 0)
-	      && (__builtin_expect (current_value.m->l_type, lt_library)
-		  == lt_loaded)
-	      && undef_map != current_value.m
-	      /* Add UNDEF_MAP to the dependencies.  */
-	      && add_dependency (undef_map, current_value.m) < 0)
-	    /* Something went wrong.  Perhaps the object we tried to reference
-	       was just removed.  Try finding another definition.  */
-	    return _dl_lookup_symbol_skip (undef_name, undef_map, ref,
-					   symbol_scope, skip_map);
-
-	  break;
-	}
+      if (do_lookup (undef_name, hash, *ref, &current_value, *scope, 0,
+		     skip_map, 0, 0))
+	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
     {
@@ -370,16 +339,16 @@ _dl_lookup_symbol_skip (const char *undef_name,
     }
   else
     {
-      /* It is very tricky. We need to figure out what value to
-         return for the protected symbol */
+      /* It is very tricky.  We need to figure out what value to
+         return for the protected symbol.  */
       struct sym_val protected_value = { NULL, NULL };
 
       if (i >= (*scope)->r_nlist
-	  || !do_lookup (undef_name, undef_map, hash, *ref, &protected_value,
-			 *scope, i, skip_map, 0, 1))
+	  || !do_lookup (undef_name, hash, *ref, &protected_value, *scope, i,
+			 skip_map, 0, 1))
 	while (*++scope)
-	  if (do_lookup (undef_name, undef_map, hash, *ref, &protected_value,
-			 *scope, 0, skip_map, 0, 1))
+	  if (do_lookup (undef_name, hash, *ref, &protected_value, *scope, 0,
+			 skip_map, 0, 1))
 	    break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -404,7 +373,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			     struct link_map *undef_map, const ElfW(Sym) **ref,
 			     struct r_scope_elem *symbol_scope[],
 			     const struct r_found_version *version,
-			     int reloc_type)
+			     int reloc_type, int explicit)
 {
   const char *reference_name = undef_map ? undef_map->l_name : NULL;
   const unsigned long int hash = _dl_elf_hash (undef_name);
@@ -419,9 +388,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     {
-      int res = do_lookup_versioned (undef_name, undef_map, hash, *ref,
-				     &current_value, *scope, 0, version, NULL,
-				     noexec, noplt);
+      int res = do_lookup_versioned (undef_name, hash, *ref, &current_value,
+				     *scope, 0, version, NULL, noexec, noplt);
       if (res > 0)
 	{
 	  /* We have to check whether this would bind UNDEF_MAP to an object
@@ -432,13 +400,16 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	      && (__builtin_expect (current_value.m->l_type, lt_library)
 		  == lt_loaded)
 	      && undef_map != current_value.m
+	      /* Don't do this for explicit lookups as opposed to implicit
+		 runtime lookups.  */
+	      && __builtin_expect (! explicit, 1)
 	      /* Add UNDEF_MAP to the dependencies.  */
 	      && add_dependency (undef_map, current_value.m) < 0)
 	    /* Something went wrong.  Perhaps the object we tried to reference
 	       was just removed.  Try finding another definition.  */
 	    return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
 						symbol_scope, version,
-						reloc_type);
+						reloc_type, 0);
 
 	  break;
 	}
@@ -502,9 +473,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
       struct sym_val protected_value = { NULL, NULL };
 
       for (scope = symbol_scope; *scope; ++scope)
-	if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
-				 &protected_value, *scope, 0, version, NULL,
-				 0, 1))
+	if (do_lookup_versioned (undef_name, hash, *ref, &protected_value,
+				 *scope, 0, version, NULL, 0, 1))
 	  break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
@@ -543,50 +513,13 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   for (i = 0; (*scope)->r_duplist[i] != skip_map; ++i)
     assert (i < (*scope)->r_nduplist);
 
-  if (i < (*scope)->r_nlist
-      && do_lookup_versioned (undef_name, undef_map, hash, *ref,
-			      &current_value, *scope, i, version, skip_map,
-			      0, 0))
-    {
-      /* We have to check whether this would bind UNDEF_MAP to an object
-	 in the global scope which was dynamically loaded.  In this case
-	 we have to prevent the latter from being unloaded unless the
-	 UNDEF_MAP object is also unloaded.  */
-      if (__builtin_expect (current_value.m->l_global, 0)
-	  && (__builtin_expect (current_value.m->l_type, lt_library)
-	      == lt_loaded)
-	  && undef_map != current_value.m
-	  /* Add UNDEF_MAP to the dependencies.  */
-	  && add_dependency (undef_map, current_value.m) < 0)
-	/* Something went wrong.  Perhaps the object we tried to reference
-	   was just removed.  Try finding another definition.  */
-	return _dl_lookup_versioned_symbol_skip (undef_name, undef_map, ref,
-						 symbol_scope, version,
-						 skip_map);
-    }
-  else
+  if (i >= (*scope)->r_nlist
+      || ! do_lookup_versioned (undef_name, hash, *ref, &current_value,
+				*scope, i, version, skip_map, 0, 0))
     while (*++scope)
-      if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
-			       &current_value, *scope, 0, version, skip_map,
-			       0, 0))
-	{
-	  /* We have to check whether this would bind UNDEF_MAP to an object
-	     in the global scope which was dynamically loaded.  In this case
-	     we have to prevent the latter from being unloaded unless the
-	     UNDEF_MAP object is also unloaded.  */
-	  if (current_value.m->l_global
-	      && (__builtin_expect (current_value.m->l_type, lt_library)
-		  == lt_loaded)
-	      && undef_map != current_value.m
-	      /* Add UNDEF_MAP to the dependencies.  */
-	      && add_dependency (undef_map, current_value.m) < 0)
-	    /* Something went wrong.  Perhaps the object we tried to reference
-	       was just removed.  Try finding another definition.  */
-	    return _dl_lookup_versioned_symbol_skip (undef_name, undef_map,
-						     ref, symbol_scope,
-						     version, skip_map);
-	  break;
-	}
+      if (do_lookup_versioned (undef_name, hash, *ref, &current_value, *scope,
+			       0, version, skip_map, 0, 0))
+	break;
 
   if (__builtin_expect (current_value.s == NULL, 0))
     {
@@ -631,13 +564,11 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
       struct sym_val protected_value = { NULL, NULL };
 
       if (i >= (*scope)->r_nlist
-	  || !do_lookup_versioned (undef_name, undef_map, hash, *ref,
-				   &protected_value, *scope, i, version,
-				   skip_map, 0, 1))
+	  || !do_lookup_versioned (undef_name, hash, *ref, &protected_value,
+				   *scope, i, version, skip_map, 0, 1))
 	while (*++scope)
-	  if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
-				   &protected_value, *scope, 0, version,
-				   skip_map, 0, 1))
+	  if (do_lookup_versioned (undef_name, hash, *ref, &protected_value,
+				   *scope, 0, version, skip_map, 0, 1))
 	    break;
 
       if (protected_value.s == NULL || protected_value.m == undef_map)

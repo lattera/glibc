@@ -75,17 +75,17 @@ cannot make segment writable for relocation"));
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((version) != NULL && (version)->hash != 0			      \
 	? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, l, (ref),    \
-				       scope, (version), (flags))	      \
+				       scope, (version), (flags), 0)	      \
 	: _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref), scope,	      \
-			     (flags)))					      \
+			     (flags), 0))				      \
      : l)
 #define RESOLVE(ref, version, flags) \
     (ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
      ? ((version) != NULL && (version)->hash != 0			      \
 	? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name, l, (ref),    \
-				       scope, (version), (flags))	      \
+				       scope, (version), (flags), 0)	      \
 	: _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref), scope,	      \
-			     (flags)))					      \
+			     (flags), 0))				      \
      : l->l_addr)
 
 #include "dynamic-link.h"

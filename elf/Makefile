@@ -41,13 +41,14 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
 		   do-lookup.h dl-lookupcfg.h sprof.c gen-trusted-dirs.awk \
 		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
-		   testobj6.c testobj1_1.c failobj.c \
+		   testobj6.c testobj1_1.c failobj.c unloadmod.c \
 		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c \
 		   dep1.c dep2.c dep3.c dep4.c dl-dtprocnum.h \
 		   vismain.c vismod1.c vismod2.c vismod3.c \
 		   constload2.c constload3.c filtmod1.c filtmod2.c \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
-		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h
+		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
+		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c
 
 include ../Makeconfig
 
@@ -87,18 +88,19 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	constload1 order $(tests-vis-$(have-protected)) noload filter \
-	$(tests-nodelete-$(have-z-nodelete)) \
+	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
+	reldep reldep2 reldep3 $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen))
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
-		testobj1_1 failobj constload2 constload3 \
+		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected)) \
 		$(modules-nodelete-$(have-z-nodelete)) \
-		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2
+		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
+		reldepmod1 reldepmod2 reldepmod3 reldepmod4
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -319,3 +321,15 @@ $(objpfx)filtmod1.so: $(objpfx)filtmod1.os $(objpfx)filtmod2.so
 		  -Wl,-rpath-link=$(rpath-link) \
 		  $< -Wl,-F,$(objpfx)filtmod2.so
 $(objpfx)filter: $(objpfx)filtmod1.so
+
+$(objpfx)unload: $(libdl)
+$(objpfx)unload.out: $(objpfx)unloadmod.so
+
+$(objpfx)reldep: $(libdl)
+$(objpfx)reldep.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod2.so
+
+$(objpfx)reldep2: $(libdl)
+$(objpfx)reldep2.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod3.so
+
+$(objpfx)reldep3: $(libdl)
+$(objpfx)reldep3.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod4.so

@@ -29,10 +29,9 @@
    found the symbol, the value 0 if nothing is found and < 0 if
    something bad happened.  */
 static inline int
-FCT (const char *undef_name, struct link_map *undef_map,
-     unsigned long int hash, const ElfW(Sym) *ref, struct sym_val *result,
-     struct r_scope_elem *scope, size_t i, ARG struct link_map *skip,
-     int noexec, int noplt)
+FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
+     struct sym_val *result, struct r_scope_elem *scope, size_t i, ARG
+     struct link_map *skip, int noexec, int noplt)
 {
   struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;

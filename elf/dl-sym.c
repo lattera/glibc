@@ -31,22 +31,21 @@ _dl_sym (void *handle, const char *name, void *who)
 {
   const ElfW(Sym) *ref = NULL;
   lookup_t result;
+  ElfW(Addr) caller = (ElfW(Addr)) who;
+  struct link_map *match;
+  struct link_map *l;
+
+  /* Find the highest-addressed object that CALLER is not below.  */
+  match = NULL;
+  for (l = _dl_loaded; l; l = l->l_next)
+    if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
+      match = l;
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    result = _dl_lookup_symbol (name, NULL, &ref, _dl_global_scope, 0);
+    result = _dl_lookup_symbol (name, match, &ref, _dl_global_scope, 0, 0);
   else
     {
-      struct link_map *l;
-      struct link_map *match;
-      ElfW(Addr) caller = (ElfW(Addr)) who;
-
-      /* Find the highest-addressed object that CALLER is not below.  */
-      match = NULL;
-      for (l = _dl_loaded; l; l = l->l_next)
-	if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
-	  match = l;
-
       if (handle != RTLD_NEXT)
 	{
 	  /* Search the scope of the given object.  */
@@ -58,7 +57,7 @@ _dl_sym (void *handle, const char *name, void *who)
 	    match = _dl_loaded;
 
 	  result = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
-				      0);
+				      0, 1);
 	}
       else
 	{
@@ -88,6 +87,9 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
   const ElfW(Sym) *ref = NULL;
   struct r_found_version vers;
   lookup_t result;
+  ElfW(Addr) caller = (ElfW(Addr)) who;
+  struct link_map *match;
+  struct link_map *l;
 
   /* Compute hash value to the version string.  */
   vers.name = version;
@@ -96,22 +98,18 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
   /* We don't have a specific file where the symbol can be found.  */
   vers.filename = NULL;
 
+  /* Find the highest-addressed object that CALLER is not below.  */
+  match = NULL;
+  for (l = _dl_loaded; l; l = l->l_next)
+    if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
+      match = l;
+
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    result = _dl_lookup_versioned_symbol (name, NULL, &ref, _dl_global_scope,
-					  &vers, 0);
+    result = _dl_lookup_versioned_symbol (name, match, &ref, _dl_global_scope,
+					  &vers, 0, 0);
   else if (handle == RTLD_NEXT)
     {
-      struct link_map *l;
-      struct link_map *match;
-      ElfW(Addr) caller = (ElfW(Addr)) who;
-
-      /* Find the highest-addressed object that CALLER is not below.  */
-      match = NULL;
-      for (l = _dl_loaded; l; l = l->l_next)
-	if (caller >= l->l_addr && (!match || match->l_addr < l->l_addr))
-	  match = l;
-
       if (! match)
 	_dl_signal_error (0, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
@@ -129,7 +127,7 @@ RTLD_NEXT used in code not dynamically loaded"));
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
       result = _dl_lookup_versioned_symbol (name, map, &ref,
-					    map->l_local_scope, &vers, 0);
+					    map->l_local_scope, &vers, 0, 1);
     }
 
   if (ref)

@@ -89,13 +89,13 @@ fixup (
 		result = _dl_lookup_versioned_symbol (strtab + sym->st_name,
 						      l, &sym, l->l_scope,
 						      version,
-						      ELF_MACHINE_JMP_SLOT);
+						      ELF_MACHINE_JMP_SLOT, 0);
 		break;
 	      }
 	  }
 	case 0:
 	  result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-				      l->l_scope, ELF_MACHINE_JMP_SLOT);
+				      l->l_scope, ELF_MACHINE_JMP_SLOT, 0);
 	}
 
       /* Currently result contains the base load address (or link map)
@@ -181,13 +181,14 @@ profile_fixup (
 		    result = _dl_lookup_versioned_symbol(strtab + sym->st_name,
 							 l, &sym, l->l_scope,
 							 version,
-							 ELF_MACHINE_JMP_SLOT);
+							 ELF_MACHINE_JMP_SLOT,
+							 0);
 		    break;
 		  }
 	      }
 	    case 0:
 	      result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-					  l->l_scope, ELF_MACHINE_JMP_SLOT);
+					  l->l_scope, ELF_MACHINE_JMP_SLOT, 0);
 	    }
 
 	  /* Currently result contains the base load address (or link map)
