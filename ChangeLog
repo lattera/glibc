@@ -1,3 +1,8 @@
+2003-12-02  Roland McGrath  <roland@redhat.com>
+
+	* scripts/config.sub: Update from master, timestamp='2003-10-20'.
+	* scripts/config.guess: Update from master, timestamp='2003-10-20'.
+
 2003-11-30  Andreas Jaeger  <aj@suse.de>
 
 	* config.make.in (fno-unit-at-a-time): Define.
