@@ -91,7 +91,7 @@ _hurd_thread_sigstate (thread_t thread)
       __sigemptyset (&ss->pending);
       memset (&ss->sigaltstack, 0, sizeof (ss->sigaltstack));
       ss->preemptors = NULL;
-      ss->suspended = 0;
+      ss->suspended = MACH_PORT_NULL;
       ss->intr_port = MACH_PORT_NULL;
       ss->context = NULL;
 
@@ -1243,7 +1243,6 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
       err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
       assert_perror (err);
 
-      stacksize = ~__hurd_threadvar_stack_mask + 1;
       stacksize = __vm_page_size * 8; /* Small stack for signal thread.  */
       err = __mach_setup_thread (__mach_task_self (), _hurd_msgport_thread,
 				 _hurd_msgport_receive,
