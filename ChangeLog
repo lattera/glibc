@@ -1,3 +1,8 @@
+2001-04-26  Andreas Jaeger  <aj@suse.de>
+
+	* po/zh_TW.po: Update.
+	Patch by Tung-Han Hsieh <thhsieh@tlug.sinica.edu.tw>.
+
 2001-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c: Allow MALLOC_ALIGNMENT to be defined on the
