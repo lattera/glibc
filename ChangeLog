@@ -1,3 +1,96 @@
+2002-04-30  Roland McGrath  <roland@frob.com>
+
+	Removed old GNU stdio implementation; GNU libio is now the only option.
+	* configure.in: Removed --enable-libio option and @stdio@ subst var.
+	Define USE_IN_LIBIO unconditionally.
+	* configure: Regenerated.
+	* Makeconfig (stdio): Set to libio by default.
+	* config.make.in (stdio): Variable removed.
+	* sysdeps/unix/sysv/linux/configure.in: Don't set $stdio.
+	* sysdeps/unix/sysv/linux/configure: Regenerated.
+	* sysdeps/mach/hurd/configure.in: Don't test $stdio.
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* stdio/.cvsignore: File removed.
+	* stdio/Makefile: File removed.
+	* stdio/Versions: File removed.
+	* stdio/__fbufsize.c: File removed.
+	* stdio/__flbf.c: File removed.
+	* stdio/__fpending.c: File removed.
+	* stdio/__fpurge.c: File removed.
+	* stdio/__freadable.c: File removed.
+	* stdio/__freading.c: File removed.
+	* stdio/__fsetlocking.c: File removed.
+	* stdio/__fwritable.c: File removed.
+	* stdio/__fwriting.c: File removed.
+	* stdio/clearerr.c: File removed.
+	* stdio/fclose.c: File removed.
+	* stdio/fcloseall.c: File removed.
+	* stdio/feof.c: File removed.
+	* stdio/ferror.c: File removed.
+	* stdio/fflush.c: File removed.
+	* stdio/fgetc.c: File removed.
+	* stdio/fgetpos.c: File removed.
+	* stdio/fgets.c: File removed.
+	* stdio/fileno.c: File removed.
+	* stdio/fmemopen.c: File removed.
+	* stdio/fopen.c: File removed.
+	* stdio/fopncook.c: File removed.
+	* stdio/fputc.c: File removed.
+	* stdio/fputs.c: File removed.
+	* stdio/fread.c: File removed.
+	* stdio/freopen.c: File removed.
+	* stdio/fseek.c: File removed.
+	* stdio/fsetpos.c: File removed.
+	* stdio/ftell.c: File removed.
+	* stdio/fwrite.c: File removed.
+	* stdio/getc.c: File removed.
+	* stdio/getchar.c: File removed.
+	* stdio/getdelim.c: File removed.
+	* stdio/gets.c: File removed.
+	* stdio/glue.c: File removed.
+	* stdio/internals.c: File removed.
+	* stdio/linewrap.c: File removed.
+	* stdio/linewrap.h: File removed.
+	* stdio/memstream.c: File removed.
+	* stdio/newstream.c: File removed.
+	* stdio/obstream.c: File removed.
+	* stdio/putc.c: File removed.
+	* stdio/putchar.c: File removed.
+	* stdio/puts.c: File removed.
+	* stdio/rewind.c: File removed.
+	* stdio/setbuf.c: File removed.
+	* stdio/setbuffer.c: File removed.
+	* stdio/setlinebuf.c: File removed.
+	* stdio/setvbuf.c: File removed.
+	* stdio/stdio.h: File removed.
+	* stdio/ungetc.c: File removed.
+	* stdio/vasprintf.c: File removed.
+	* stdio/vscanf.c: File removed.
+	* stdio/vsnprintf.c: File removed.
+	* stdio/vsprintf.c: File removed.
+	* stdio/vsscanf.c: File removed.
+	* sysdeps/generic/defs.c: File removed.
+	* sysdeps/generic/fdopen.c: File removed.
+	* sysdeps/generic/pipestream.c: File removed.
+	* sysdeps/generic/stdio_init.c: File removed.
+	* sysdeps/generic/sysd-stdio.c: File removed.
+	* sysdeps/generic/vdprintf.c: File removed.
+	* sysdeps/mach/hurd/defs.c: File removed.
+	* sysdeps/mach/hurd/fdopen.c: File removed.
+	* sysdeps/mach/hurd/pipestream.c: File removed.
+	* sysdeps/mach/hurd/stdio_init.c: File removed.
+	* sysdeps/mach/hurd/sysd-stdio.c: File removed.
+	* sysdeps/mach/hurd/vdprintf.c: File removed.
+	* sysdeps/posix/defs.c: File removed.
+	* sysdeps/posix/fdopen.c: File removed.
+	* sysdeps/posix/pipestream.c: File removed.
+	* sysdeps/posix/stdio_init.c: File removed.
+	* sysdeps/posix/vdprintf.c: File removed.
+	* sysdeps/unix/pipestream.c: File removed.
+	* sysdeps/unix/sysv/sysd-stdio.c: File removed.
+	* sysdeps/unix/sysv/sco3.2.4/pipestream.c: File removed.
+	* sysdeps/unix/sysv/sysv4/pipestream.c: File removed.
+
 2002-04-29  Roland McGrath  <roland@frob.com>
 
 	* include/libc-symbols.h (link_warning): Use `unused' attribute.
