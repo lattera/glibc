@@ -1,3 +1,8 @@
+2002-04-14  Bruno Haible  <bruno@clisp.org>
+
+	* posix/regex.c (re_max_failures): Add back symbol for binary
+	compatibility.
+
 2002-04-22  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (re_compile_internal): Adapt it to new interface
