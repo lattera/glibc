@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ static inline int
 FCT (const char *undef_name, struct link_map *undef_map,
      unsigned long int hash, const ElfW(Sym) *ref, struct sym_val *result,
      struct r_scope_elem *scope, size_t i, ARG struct link_map *skip,
-     int reloc_type)
+     int noexec, int noplt)
 {
   struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;
@@ -57,12 +57,11 @@ FCT (const char *undef_name, struct link_map *undef_map,
 	continue;
 
       /* Don't search the executable when resolving a copy reloc.  */
-      if (elf_machine_lookup_noexec_p (reloc_type)
-	  && map->l_type == lt_executable)
+      if (noexec && map->l_type == lt_executable)
 	continue;
 
       /* Print some debugging info if wanted.  */
-      if (_dl_debug_symbols)
+      if (__builtin_expect (_dl_debug_symbols, 0))
 	_dl_debug_message (1, "symbol=", undef_name, ";  lookup in file=",
 			   map->l_name[0] ? map->l_name : _dl_argv[0],
 			   "\n", NULL);
@@ -80,8 +79,7 @@ FCT (const char *undef_name, struct link_map *undef_map,
 	  sym = &symtab[symidx];
 
 	  if (sym->st_value == 0 || /* No value.  */
-	      (elf_machine_lookup_noplt_p (reloc_type) /* Reject PLT entry.  */
-	       && sym->st_shndx == SHN_UNDEF))
+	      (noplt && sym->st_shndx == SHN_UNDEF))
 	    continue;
 
 	  if (ELFW(ST_TYPE) (sym->st_info) > STT_FUNC)
@@ -154,12 +152,7 @@ FCT (const char *undef_name, struct link_map *undef_map,
       sym = num_versions == 1 ? versioned_sym : NULL;
 #endif
 
-      if (sym != NULL
-	  /* Don't allow binding if the symbol is hidden.  When processor
-	     specific definitions for STV_INTERNAL are defined we might
-	     have to extend this conditional.  */
-	  && (ELFW(ST_VISIBILITY) (sym->st_other) != STV_HIDDEN
-	      || map == undef_map))
+      if (sym != NULL)
 	{
 	found_it:
 	  switch (ELFW(ST_BIND) (sym->st_info))
