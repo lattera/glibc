@@ -203,7 +203,7 @@ _dl_map_object_deps (struct link_map *map,
 
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (_dl_debug_libs)
-		      _dl_debug_message ("load auxiliary object=",
+		      _dl_debug_message (1, "load auxiliary object=",
 					 strtab + d->d_un.d_val,
 					 " requested by file=",
 					 l->l_name[0]
@@ -226,7 +226,7 @@ _dl_map_object_deps (struct link_map *map,
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (_dl_debug_libs)
-		      _dl_debug_message ("load filtered object=",
+		      _dl_debug_message (1, "load filtered object=",
 					 strtab + d->d_un.d_val,
 					 " requested by file=",
 					 l->l_name[0]

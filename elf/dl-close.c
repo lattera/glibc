@@ -80,6 +80,7 @@ _dl_close (struct link_map *map)
 	  /* That was the last reference, and this was a dlopen-loaded
 	     object.  We can unmap it.  */
 	  const ElfW(Phdr) *ph;
+	  const ElfW(Phdr) *eph;
 
 	  if (imap->l_info[DT_FINI])
 	    /* Call its termination function.  */
@@ -99,9 +100,14 @@ _dl_close (struct link_map *map)
 	      _dl_global_scope_end[1] = NULL;
 	    }
 
+	  /* Find the first entry specifying a load command.  We have
+	     to determine this now since the table itself is also loaded.  */
+	  for (eph = imap->l_phdr; eph < imap->l_phdr + imap->l_phnum; ++eph)
+	    if (eph->p_type == PT_LOAD)
+	      break;
+
 	  /* Unmap the segments.  */
-	  for (ph = imap->l_phdr + (imap->l_phnum - 1);
-	       ph >= imap->l_phdr; --ph)
+	  for (ph = imap->l_phdr + (imap->l_phnum - 1); ph >= eph; --ph)
 	    if (ph->p_type == PT_LOAD)
 	      {
 		ElfW(Addr) mapstart = ph->p_vaddr & ~(ph->p_align - 1);

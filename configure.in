@@ -234,6 +234,8 @@ osf* | sunos* | ultrix* | newsos* | dynix* | *bsd*)
   base_os=unix/bsd ;;
 sysv* | isc* | esix* | sco* | minix* | irix4* | linux*)
   base_os=unix/sysv ;;
+irix6*)
+  base_os=unix/sysv/irix6/$os ;;
 solaris[2-9]*)
   base_os=unix/sysv/sysv4 ;;
 none)
@@ -800,8 +802,9 @@ cat > conftest.s <<EOF
 .text
 ${libc_cv_asm_global_directive} foo
 foo:
-.weakext foo
-.weakext foo, bar
+.weakext bar foo
+.weakext baz
+${libc_cv_asm_global_directive} baz
 EOF
   if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
     libc_cv_asm_weakext_directive=yes

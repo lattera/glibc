@@ -1,3 +1,18 @@
+1998-03-14 11:47  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-close.c (_dl_close): Stop unmapping the segments after
+	unmapping the last loaded segment.
+
+1998-03-14 15:54  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Set base_os for Irix6.
+	Correct test for .weakext.
+
+1998-03-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Add first parameter
+	(new_line) to _dl_debug_message call.
+
 1998-03-14 00:52  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp.c (parse_param): Perform field-splitting after
@@ -11,8 +26,7 @@
 
 1998-03-14  Ulrich Drepper  <drepper@cygnus.com>
 
-	* locale/programs/linereader.c (lr_token): Return EOF token at
-	EOF.
+	* locale/programs/linereader.c (lr_token): Return EOF token at EOF.
 	(get_toplvl_escape): Correctly terminate loop at EOF.
 	Patch by Cristian Gafton <gafton@redhat.com>.
 
