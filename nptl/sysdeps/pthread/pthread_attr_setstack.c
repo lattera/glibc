@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,25 +19,33 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <limits.h>
 #include "pthreadP.h"
 
 
 int
-__pthread_attr_setstackaddr (attr, stackaddr)
+__pthread_attr_setstack (attr, stackaddr, stacksize)
      pthread_attr_t *attr;
      void *stackaddr;
+     size_t stacksize;
 {
   struct pthread_attr *iattr;
 
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
-  iattr->stackaddr = stackaddr;
+  /* Catch invalid sizes.  */
+  if (stacksize < PTHREAD_STACK_MIN)
+    return EINVAL;
+
+#ifdef EXTRA_PARAM_CHECKS
+  EXTRA_PARAM_CHECKS;
+#endif
+
+  iattr->stacksize = stacksize;
+  iattr->stackaddr = (char *) stackaddr + stacksize;
   iattr->flags |= ATTR_FLAG_STACKADDR;
 
   return 0;
 }
-strong_alias (__pthread_attr_setstackaddr, pthread_attr_setstackaddr)
-
-link_warning (pthread_attr_setstackaddr,
-              "the use of `pthread_attr_setstackaddr' is deprecated, use `pthread_attr_setstack'")
+strong_alias (__pthread_attr_setstack, pthread_attr_setstack)

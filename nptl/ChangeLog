@@ -1,5 +1,10 @@
 2003-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_attr_setstack.c: Moved to...
+	* sysdeps/pthread/pthread_attr_setstack.c: ...here.  New file.
+	* pthread_attr_setstackaddr.c: Moved to...
+	* sysdeps/pthread/pthread_attr_setstackaddr.c: ...here.  New file.
+
 	* pthread_create.c: Define __pthread_keys using nocommon
 	attribute, not by placing it explicitly in bss.
 	Remove DEFINE_DEALLOC definition.  Not needed anymore.
