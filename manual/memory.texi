@@ -2578,7 +2578,7 @@ wouldn't know what address to tell @code{mlock}.
 @comment POSIX.1b
 @deftypefun int munlock (const void *@var{addr}, size_t @var{len})
 
-@code{mlock} unlocks a range of the calling process' virtual pages.
+@code{munlock} unlocks a range of the calling process' virtual pages.
 
 @code{munlock} is the inverse of @code{mlock} and functions completely
 analogously to @code{mlock}, except that there is no @code{EPERM}

@@ -1,3 +1,8 @@
+2004-10-17  Roland McGrath  <roland@frob.com>
+
+	* manual/memory.texi (Page Lock Functions): Typo fix.
+	Reported by Carlos Maziero <maziero@ppgia.pucpr.br>
+
 2004-10-16  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/mach/hurd/Makefile (link-libc-static): Use
