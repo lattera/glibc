@@ -1,3 +1,10 @@
+2000-10-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward): If x == y,
+	return y not x.
+	* manual/arith.texi (nextafter): Document it.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: Fix a comment.
+
 2000-10-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.1.95.

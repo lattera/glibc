@@ -50,7 +50,7 @@ static char rcsid[] = "$NetBSD: $";
 	   ((iy>=0x7fff000000000000LL)&&((iy-0x7fff000000000000LL)|ly)!=0))
 	   						    /* y is nan */
 	   return x+y;
-	if((long double) x==y) return x;	/* x=y, return x */
+	if((long double) x==y) return y;	/* x=y, return y */
 	if((ix|lx)==0) {			/* x == 0 */
 	    double x2;
 	    INSERT_WORDS(x,(u_int32_t)((hy>>32)&0x80000000),1);/* return +-minsub */

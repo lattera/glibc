@@ -19,7 +19,7 @@ static char rcsid[] = "$NetBSD: $";
 #endif
 
 /* IEEE functions
- *	nextafterx(x,y)
+ *	nexttoward(x,y)
  *	return the next machine floating-point number of x in the
  *	direction toward y.
  *   Special cases:

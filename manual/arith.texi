@@ -1640,7 +1640,7 @@ false, but @code{signbit (-0.0)} will return a nonzero value.
 The @code{nextafter} function returns the next representable neighbor of
 @var{x} in the direction towards @var{y}.  The size of the step between
 @var{x} and the result depends on the type of the result.  If
-@math{@var{x} = @var{y}} the function simply returns @var{x}.  If either
+@math{@var{x} = @var{y}} the function simply returns @var{y}.  If either
 value is @code{NaN}, @code{NaN} is returned.  Otherwise
 a value corresponding to the value of the least significant bit in the
 mantissa is added or subtracted, depending on the direction.
