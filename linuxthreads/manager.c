@@ -330,6 +330,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 #ifndef THREAD_SELF
       __pthread_nonstandard_stacks = 1;
 #endif
+      /* Clear the thread data structure.  */
+      memset (new_thread, '\0', sizeof (*new_thread));
     }
   else
     {
@@ -448,8 +450,6 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 # endif
 #endif /* !NEED_SEPARATE_REGISTER_STACK */
     }
-  /* Clear the thread data structure.  */
-  memset (new_thread, '\0', sizeof (*new_thread));
   *out_new_thread = new_thread;
   *out_new_thread_bottom = new_thread_bottom;
   *out_guardaddr = guardaddr;

@@ -1,5 +1,14 @@
 2000-08-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/big5hkscs.c: Rewritten.  Regenerate data from the
+	official file.
+	* iconvdata/TESTS: Add BIG5HKSCS entry.
+	* iconvdata/testdata/BIG5HKSCS: New file.
+	* iconvdata/testdata/BIG5HKSCS..UTF8: New file.
+
+	* iconvdata/big5.c (BODY for FROM_LOOP): Remove condition which is
+	always true.
+
 	* libio/iogetline.c: Set mode before the loop in case n==0.
 	* libio/iogetwline.c: Likewise.
 
