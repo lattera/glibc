@@ -1,5 +1,12 @@
 2003-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Fix
+	handling of cancellation and failung pthread_mutex_unlock call.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* Makefile (tests): Add tst-cond8 and tst-cond9.
+	* tst-cond8.c: New file.
+	* tst-cond9.c: New file.
+
 	* tst-cond7.c (do_test): Unlock the mutex before canceling the thread.
 
 	* sysdeps/pthread/pthread.h: Add missing initializers.  Protect

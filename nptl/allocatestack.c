@@ -465,8 +465,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 				 0))
 	{
 	  /* The old guard area is too large.  */
-	  if (mprotect ((char *) mem + guardsize,
-			pd->guardsize - guardsize,
+	  if (mprotect ((char *) mem + guardsize, pd->guardsize - guardsize,
 			PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
 	    goto mprot_error;
 

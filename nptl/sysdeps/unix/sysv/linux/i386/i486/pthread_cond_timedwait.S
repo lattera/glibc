@@ -67,6 +67,9 @@ __pthread_cond_timedwait:
 2:	pushl	24(%esp)
 	call	__pthread_mutex_unlock_internal
 
+	testl	%eax, %eax
+	jne	16f
+
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
@@ -78,18 +81,23 @@ __pthread_cond_timedwait:
 #else
 	leal	__condvar_cleanup, %eax
 #endif
-	subl	$32, %esp
-	leal	16(%esp), %edx
-	movl	%ebx, 8(%esp)
+	subl	$40, %esp
+	leal	28(%esp), %edx
+	movl	%esp, 8(%esp)
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	__pthread_cleanup_push
 
+	/* Address of the mutex.  */
+	movl	68(%esp), %ecx
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
-	movl	%edi, 12(%esp)
-	movl	%edx, 16(%esp)
+	movl	%edi, 20(%esp)
+	movl	%edx, 24(%esp)
+	/* Prepare structure passed to cancellation handler.  */
+	movl	%ebx, 4(%esp)
+	movl	%ecx, 8(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -105,19 +113,19 @@ __pthread_cond_timedwait:
 
 	/* Get the current time.  */
 	movl	%ebx, %edx
-	leal	4(%esp), %ebx
+	leal	12(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
 	ENTER_KERNEL
 	movl	%edx, %ebx
 
 	/* Compute relative timeout.  */
-	movl	8(%esp), %eax
+	movl	16(%esp), %eax
 	movl	$1000, %edx
 	mul	%edx		/* Milli seconds to nano seconds.  */
 	movl	(%ebp), %ecx
 	movl	4(%ebp), %edx
-	subl	4(%esp), %ecx
+	subl	12(%esp), %ecx
 	subl	%eax, %edx
 	jns	12f
 	addl	$1000000000, %edx
@@ -126,9 +134,9 @@ __pthread_cond_timedwait:
 	js	13f
 
 	/* Store relative timeout.  */
-	movl	%ecx, 4(%esp)
-	movl	%edx, 8(%esp)
-	leal	4(%esp), %esi
+	movl	%ecx, 12(%esp)
+	movl	%edx, 16(%esp)
+	leal	12(%esp), %esi
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%edi, %edx
 	addl	$wakeup_seq, %ebx
@@ -156,10 +164,10 @@ __pthread_cond_timedwait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	16(%esp), %ecx
+	cmpl	24(%esp), %ecx
 	ja	7f
 	jb	15f
-	cmpl	12(%esp), %eax
+	cmpl	20(%esp), %eax
 	jb	15f
 
 7:	cmpl	%ecx, %edx
@@ -189,19 +197,19 @@ __pthread_cond_timedwait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	leal	20(%esp), %edx
+11:	leal	28(%esp), %edx
 	movl	$0, 4(%esp)
 	movl	%edx, (%esp)
 	call	__pthread_cleanup_pop
 
-	movl	60(%esp), %ecx
-	movl	%ecx, (%esp)
+	/* Trick ahead:	 8(%esp) contains the address of the mutex.  */
+	addl	$8, %esp
 	call	__pthread_mutex_lock_internal
 	addl	$36, %esp
 
 	movl	%esi, %eax
 
-	popl	%ebx
+18:	popl	%ebx
 	popl	%esi
 	popl	%edi
 	popl	%ebp
@@ -248,6 +256,27 @@ __pthread_cond_timedwait:
 #endif
 	call	__lll_mutex_unlock_wake
 	jmp	11b
+
+	/* The initial unlocking of the mutex failed.  */
+16:	movl	%eax, (%esp)
+	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
+	jne	17f
+
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+
+17:	popl	%eax
+	jmp	18b
+	.size	__pthread_cond_wait, .-__pthread_cond_wait
 	.size	__pthread_cond_timedwait, .-__pthread_cond_timedwait
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2)

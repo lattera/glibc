@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <lowlevelcond.h>
+#include <tcb-offsets.h>
 
 #ifdef UP
 # define LOCK
@@ -40,9 +41,11 @@
 	.hidden	__condvar_cleanup
 __condvar_cleanup:
 	pushl	%ebx
-	movl	8(%esp), %ebx
+	pushl	%esi
+	movl	12(%esp), %esi
 
 	/* Get internal lock.  */
+	movl	4(%esi), %ebx
 	movl	$1, %eax
 	LOCK
 #if cond_lock == 0
@@ -80,7 +83,16 @@ __condvar_cleanup:
 #endif
 	call	__lll_mutex_unlock_wake
 
-2:	popl	%ebx
+	/* Lock the mutex unless asnychronous cancellation is in effect.  */
+2:	testl	$2, (%esi)
+	jne	3f
+
+	pushl	8(%esi)
+	call	__pthread_mutex_lock_internal
+	popl	%eax
+
+3:	popl	%esi
+	popl	%ebx
 	ret
 	.size	__condvar_cleanup, .-__condvar_cleanup
 
@@ -113,6 +125,9 @@ __pthread_cond_wait:
 2:	pushl	20(%esp)
 	call	__pthread_mutex_unlock_internal
 
+	testl	%eax, %eax
+	jne	12f
+
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 
@@ -124,18 +139,22 @@ __pthread_cond_wait:
 #else
 	leal	__condvar_cleanup, %eax
 #endif
-	subl	$24, %esp
-	leal	12(%esp), %edx
-	movl	%ebx, 8(%esp)
+	subl	$32, %esp
+	leal	20(%esp), %edx
+	movl	%esp, 8(%esp)
 	movl	%eax, 4(%esp)
 	movl	%edx, (%esp)
 	call	__pthread_cleanup_push
 
 	/* Get and store current wakeup_seq value.  */
+	movl	56(%esp), %ecx
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
-	movl	%edi, 4(%esp)
-	movl	%edx, 8(%esp)
+	movl	%edi, 12(%esp)
+	movl	%edx, 16(%esp)
+	/* Prepare structure passed to cancellation handler.  */
+	movl	%ebx, 4(%esp)
+	movl	%ecx, 8(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -175,10 +194,10 @@ __pthread_cond_wait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	8(%esp), %ecx
+	cmpl	16(%esp), %ecx
 	ja	7f
 	jb	8b
-	cmpl	4(%esp), %eax
+	cmpl	12(%esp), %eax
 	jb	8b
 
 7:	cmpl	%ecx, %edx
@@ -199,17 +218,17 @@ __pthread_cond_wait:
 	jne	10f
 
 	/* Remove cancellation handler.  */
-11:	leal	12(%esp), %edx
+11:	leal	20(%esp), %edx
 	movl	$0, 4(%esp)
 	movl	%edx, (%esp)
 	call	__pthread_cleanup_pop
 
-	movl	48(%esp), %eax
-	movl	%eax, (%esp)
+	/* Trick ahead:	 8(%esp) contains the address of the mutex.  */
+	addl	$8, %esp
 	call	__pthread_mutex_lock_internal
 	addl	$28, %esp
 
-	popl	%ebx
+14:	popl	%ebx
 	popl	%esi
 	popl	%edi
 
@@ -246,7 +265,7 @@ __pthread_cond_wait:
 	call	__lll_mutex_lock_wait
 	jmp	6b
 
-	/* Unlock after loop requires waekup.  */
+	/* Unlock after loop requires wakeup.  */
 10:
 #if cond_lock == 0
 	movl	%ebx, %eax
@@ -255,6 +274,26 @@ __pthread_cond_wait:
 #endif
 	call	__lll_mutex_unlock_wake
 	jmp	11b
+
+	/* The initial unlocking of the mutex failed.  */
+12:	movl	%eax, (%esp)
+	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
+	decl	cond_lock(%ebx)
+#endif
+	jne	13f
+
+#if cond_lock == 0
+	movl	%ebx, %eax
+#else
+	leal	cond_lock(%ebx), %eax
+#endif
+	call	__lll_mutex_unlock_wake
+
+13:	popl	%eax
+	jmp	14b
 	.size	__pthread_cond_wait, .-__pthread_cond_wait
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2)
