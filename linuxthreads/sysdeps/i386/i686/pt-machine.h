@@ -64,3 +64,6 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 #if __ASSUME_LDT_WORKS > 0
 #include "../useldt.h"
 #endif
+
+/* The P4 and above really want some help to prevent overheating.  */
+#define BUSY_WAIT_NOP	__asm__ ("rep; nop")

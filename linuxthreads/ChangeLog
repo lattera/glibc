@@ -1,3 +1,12 @@
+2001-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.c (__pthread_lock): Top max_count value with
+	MAX_ADAPTIVE_SPIN_COUNT.
+	* internals.h (MAX_ADAPTIVE_SPIN_COUNT): Define if not already done.
+
+	* sysdeps/i386/i686/pt-machine.h (BUSY_WAIT_NOP): New macro to
+	help P4.
+
 2001-08-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/libc-lock.h (__libc_rwlock_t): Only define to

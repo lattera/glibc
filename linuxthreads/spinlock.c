@@ -94,6 +94,9 @@ again:
   if (__pthread_smp_kernel) {
     int max_count = lock->__spinlock * 2 + 10;
 
+    if (max_count > MAX_ADAPTIVE_SPIN_COUNT)
+      max_count = MAX_ADAPTIVE_SPIN_COUNT;
+
     for (spin_count = 0; spin_count < max_count; spin_count++) {
       if (((oldstatus = lock->__status) & 1) == 0) {
 	if(__compare_and_swap(&lock->__status, oldstatus, oldstatus | 1))
@@ -104,6 +107,9 @@ again:
 	  return;
 	}
       }
+#ifdef BUSY_WAIT_NOP
+      BUSY_WAIT_NOP;
+#endif
       __asm __volatile ("" : "=m" (lock->__status) : "0" (lock->__status));
     }
 

@@ -414,6 +414,13 @@ static inline pthread_descr thread_self (void)
 #define MAX_SPIN_COUNT 50
 #endif
 
+/* Max number of times the spinlock in the adaptive mutex implementation
+   spins actively on SMP systems.  */
+
+#ifndef MAX_ADAPTIVE_SPIN_COUNT
+#define MAX_ADAPTIVE_SPIN_COUNT 100
+#endif
+
 /* Duration of sleep (in nanoseconds) when we can't acquire a spinlock
    after MAX_SPIN_COUNT iterations of sched_yield().
    With the 2.0 and 2.1 kernels, this MUST BE > 2ms.
