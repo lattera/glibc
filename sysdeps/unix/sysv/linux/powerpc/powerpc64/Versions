@@ -1,7 +1,6 @@
 libc {
   GLIBC_2.2 {
     # functions used in other libraries
-    __xstat64; __fxstat64; __lxstat64;
 
     # g*
     glob64;

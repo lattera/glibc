@@ -1,3 +1,27 @@
+2002-09-27  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h [__WORDSIZE != 32]:
+	(_STAT_VER): Define to _STAT_VER_KERNEL.
+	(stru stat, struct stat64): Define to match the PPC64 kernel.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions
+	(libc: GLIBC_2.2): Remove __xstat64, __fxstat64, and __lxstat64.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/kernel_stat.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/lxstat64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/xstat64.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Dist: Add kernel_stat.h.
+
+2002-10-02  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/xstatconv.c [STAT_IS_KERNEL_STAT]:
+	Conditionalize the function definitions on this.
+	* sysdeps/unix/sysv/linux/xstat.c (__xstat) [STAT_IS_KERNEL_STAT]:
+	Don't use xstat_conv, just fail if VERS != _STAT_VER_KERNEL.
+	* sysdeps/unix/sysv/linux/fxstat.c (__fxstat) [STAT_IS_KERNEL_STAT]:
+	Likewise.
+	* sysdeps/unix/sysv/linux/lxstat.c (__lxstat) [STAT_IS_KERNEL_STAT]:
+	Likewise.
+
 2002-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.3.
@@ -12,8 +36,7 @@
 	* iconvdata/Makefile (distribute): Add TSCII.precomposed and
 	TSCII.irreversible.
 
-	* Make-dist (dist): Create .bz2 file.  Add rule to create .bz2
-	files.
+	* Make-dist (dist): Create .bz2 file.  Add rule to create .bz2 files.
 	Also distribute xtests sources.
 
 2002-10-02  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
