@@ -46,6 +46,7 @@ struct {
   { "a./b", "*[.]/b", FNM_PATHNAME|FNM_PERIOD, 0 },
   { "a/b", "*[[:alpha:]]/*[[:alnum:]]", FNM_PATHNAME, 0 },
   { "a/b", "*[![:digit:]]*/[![:d-d]", FNM_PATHNAME, 0 },
+  { "a/[", "*[![:digit:]]*/[[:d-d]", FNM_PATHNAME, 0 },
   { "a/[", "*[![:digit:]]*/[![:d-d]", FNM_PATHNAME, FNM_NOMATCH },
 };
 

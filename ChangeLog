@@ -3,6 +3,8 @@
 	* posix/fnmatch.c (internal_fnmatch): Correctly reset string
 	pointer in case of an invalid [[: expression.
 
+	* posix/testfnm.c: Add more test cases.
+
 1999-04-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdexec.c (_hurd_exec): If SIGKILL present in _hurdsig_traced
