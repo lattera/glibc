@@ -11,6 +11,8 @@ statfs		-	statfs		i:sp	__statfs	statfs statfs64
 mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
+ftruncate	-	ftruncate	2	__ftruncate	ftruncate ftruncate64
+truncate	-	truncate	2	truncate	truncate64
 
 # semaphore and shm system calls
 msgctl		-	msgctl		i:iip	__msgctl	msgctl
