@@ -48,7 +48,7 @@ waiter_thread (void *arg)
 static int
 do_test (void)
 {
-  void *f;
+  static void *f;		/* Address of this is used in other threads. */
 
 #if USE_PTHREADS
   /* Create some threads while stacks are nonexecutable.  */
