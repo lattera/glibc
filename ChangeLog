@@ -1,3 +1,19 @@
+2001-05-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/dbl-64/e_asin.c: Include "math_private.h" for
+	internal prototypes.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_sqrt.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_remainder.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+	* sysdeps/generic/e_rem_pio2l.c: Likewise.
+	(__ieee754_rem_pio2l): Fix prototype.
+
+	* math/math_private.h (__copysign): Add internal prototype.
+
 2001-05-11  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/configure.in: Move binutils check to...

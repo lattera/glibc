@@ -39,6 +39,7 @@
 #include "powtwo.tbl"
 #include "MathLib.h"
 #include "uasncs.h"
+#include "math_private.h"
 
 void __doasin(double x, double dx, double w[]);
 void __dubsin(double x, double dx, double v[]);

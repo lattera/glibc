@@ -41,6 +41,8 @@
 #include "MathLib.h"
 #include "uatan.tbl"
 #include "atnat2.h"
+#include "math_private.h"
+
 /************************************************************************/
 /* An ultimate atan2 routine. Given two IEEE double machine numbers y,x */
 /* it computes the correctly rounded (to nearest) value of atan2(y,x).  */

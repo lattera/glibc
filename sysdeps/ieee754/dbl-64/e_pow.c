@@ -26,7 +26,7 @@
 /*             checkint                                                    */
 /* FILES NEEDED: dla.h endian.h mpa.h mydefs.h                             */
 /*               halfulp.c mpexp.c mplog.c slowexp.c slowpow.c mpa.c       */
-/*                          uexp.c  upow.c  			           */
+/*                          uexp.c  upow.c			           */
 /*               root.tbl uexp.tbl upow.tbl                                */
 /* An ultimate power routine. Given two IEEE double machine numbers y,x    */
 /* it computes the correctly rounded (to nearest) value of x^y.            */
@@ -40,6 +40,7 @@
 #include "mydefs.h"
 #include "MathLib.h"
 #include "upow.tbl"
+#include "math_private.h"
 
 
 double __exp1(double x, double xx, double error);

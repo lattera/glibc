@@ -188,6 +188,9 @@ extern double __kernel_cos (double,double);
 extern double __kernel_tan (double,double,int);
 extern int    __kernel_rem_pio2 (double*,double*,int,int,int, const int32_t*);
 
+/* internal functions.  */
+extern double __copysign (double x, double __y);
+
 
 /* ieee style elementary float functions */
 extern float __ieee754_sqrtf (float);
@@ -219,6 +222,7 @@ extern float __ieee754_ynf (int,float);
 extern float __ieee754_remainderf (float,float);
 extern int32_t __ieee754_rem_pio2f (float,float*);
 extern float __ieee754_scalbf (float,float);
+
 
 /* float versions of fdlibm kernel functions */
 extern float __kernel_sinf (float,float,int);
