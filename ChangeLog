@@ -1,3 +1,8 @@
+1998-01-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nss/nss_files/files-network.c: Correct order of parameters for
+	getnetbyaddr.
+
 1998-01-26 00:57  Ulrich Drepper  <drepper@cygnus.com>
 
 	* db2/Makefile (routines): Add os_alloc.

@@ -53,4 +53,4 @@ DB_LOOKUP (netbyaddr, ,,
 	     if (result->n_addrtype == type && result->n_net == net)
 	       /* Bingo!  */
 	       break;
-	   }, int type, unsigned long int net)
+	   }, unsigned long int net, int type)
