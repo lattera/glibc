@@ -64,6 +64,14 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
           /* It is a denormal number, meaning it has no implicit leading
   	     one bit, and its exponent is in fact the format minimum.  */
 	  int cnt;
+
+	  /* One problem with Intel's 80-bit format is that the explicit
+	     leading one in the normalized representation has to be zero
+	     for denormalized number.  If it is one, the number is according
+	     to Intel's specification an invalid number.  We make the
+	     representation unique by explicitly clearing this bit.  */
+	  res_ptr[N - 1] &= ~(1 << ((LDBL_MANT_DIG - 1) % BITS_PER_MP_LIMB));
+
 	  if (res_ptr[N - 1] != 0)
 	    {
 	      count_leading_zeros (cnt, res_ptr[N - 1]);
@@ -77,14 +85,14 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	          res_ptr[N - 1] <<= cnt;
 #endif
 		}
-	      *expt = LDBL_MIN_EXP - 2 - cnt;
+	      *expt = LDBL_MIN_EXP - 1 - cnt;
 	    }
 	  else
 	    {
 	      count_leading_zeros (cnt, res_ptr[0]);
 	      res_ptr[N - 1] = res_ptr[0] << cnt;
 	      res_ptr[0] = 0;
-	      *expt = LDBL_MIN_EXP - 2 - BITS_PER_MP_LIMB - cnt;
+	      *expt = LDBL_MIN_EXP - 1 - BITS_PER_MP_LIMB - cnt;
 	    }
 	}
     }
