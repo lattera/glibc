@@ -963,6 +963,12 @@ typedef struct
 #define AT_SYSINFO	32
 #define AT_SYSINFO_EHDR	33
 
+/* Shapes of the caches.  Bits 0-3 contains associativity; bits 4-7 contains
+   log2 of line size; mask those to get cache size.  */
+#define AT_L1I_CACHESHAPE	34
+#define AT_L1D_CACHESHAPE	35
+#define AT_L2_CACHESHAPE	36
+#define AT_L3_CACHESHAPE	37
 
 /* Note section contents.  Each entry in the note section begins with
    a header of a fixed form.  */
