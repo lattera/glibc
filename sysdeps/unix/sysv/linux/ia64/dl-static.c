@@ -49,7 +49,7 @@ static void *variables[] =
 void
 _dl_static_init (struct link_map *map)
 {
-  const ElfW(Sym) *ref;
+  const ElfW(Sym) *ref = NULL;
   lookup_t loadbase;
   void (*f) (void *[]);
 
