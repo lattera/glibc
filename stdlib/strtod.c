@@ -64,9 +64,11 @@
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1
 
+/* Include gmp-mparam.h first, such that definitions of _SHORT_LIMB
+   and _LONG_LONG_LIMB in it can take effect into gmp.h.  */
+#include <gmp-mparam.h>
 #include <gmp.h>
 #include <gmp-impl.h>
-#include <gmp-mparam.h>
 #include <longlong.h>
 #include "fpioconst.h"
 

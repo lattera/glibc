@@ -1,3 +1,7 @@
+/* Include gmp-mparam.h first, such that definitions of _SHORT_LIMB
+   and _LONG_LONG_LIMB in it can take effect into gmp.h.  */
+#include <gmp-mparam.h>
+
 #ifndef __GMP_H__
 
 #include <stdlib/gmp.h>

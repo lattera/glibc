@@ -1,5 +1,11 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* include/gmp.h: Include/gmp-mparam.h.
+	* stdlib/strtod.c: Include gmp-mparam.h before gmp.h and
+	gmp-impl.h.
+
+2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
+
 	* elf/dl-conflict.c: Don't compile _dl_resolve_conflicts if
 	ELF_MACHINE_NO_RELA is set.
 	* elf/rtld.c (dl_main): No prelink support for REL-only.
