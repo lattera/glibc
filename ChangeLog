@@ -1,5 +1,10 @@
 Sat Jul 22 01:56:03 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makefile (autoconf-it): Make it executable and unwritable.
+
+	* configure.in (sysnames): Under --enable-debug-configure, spew
+ 	potential sysnames.
+
 	* sysdeps/unix/i386/sysdep.h (JUMPTARGET): New macro; use name@PLT
  	#ifdef PIC.
 	(PSEUDO): Use JUMPTARGET(syscall_error) in jump insn.

@@ -29,7 +29,9 @@ endif
 all: lib others
 
 define autoconf-it
+@-rm -f $@.new
 autoconf $(ACFLAGS) $< > $@.new
+chmod a-w,a+x $@.new
 mv -f $@.new $@
 test ! -d CVS || cvs commit -m'Regenerated: autoconf $(ACFLAGS) $<' $@
 endef

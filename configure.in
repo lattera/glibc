@@ -166,6 +166,7 @@ for b in $base ''; do
       for o in /$ostry ''; do
 	for m in $mach ''; do
 	  try="$m0$b$v$o$m"
+	  test -n "$enable_debug_configure" && echo "$0 [DEBUG]: try $try" >&2
 	  if test -d $sysdep_dir$try; then
 	    sysnames="$sysnames $try"
 	    { test -n "$o" || test -n "$b"; } && os_used=t
