@@ -4,4 +4,8 @@ libc {
     inb; inw; inl;
     outb; outw; outl;
   }
+  GLIBC_2.1.3 {
+    # New rlimit interface
+    getrlimit; setrlimit; getrlimit64; setrlimit64;
+  }
 }
