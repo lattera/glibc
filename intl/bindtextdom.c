@@ -1,5 +1,5 @@
-/* bindtextdom.c -- implementation of the bindtextdomain(3) function
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Implementation of the bindtextdomain(3) function
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -37,6 +37,9 @@ void free ();
 # include <string.h>
 #else
 # include <strings.h>
+# ifndef memcpy
+#  define memcpy(Dst, Src, Num) bcopy (Src, Dst, Num)
+# endif
 #endif
 
 #ifdef _LIBC

@@ -166,6 +166,14 @@ fixup (
 static ElfW(Addr)
 profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+	       ELF_MACHINE_RUNTIME_FIXUP_ARGS,
+#endif
+	       struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)
+     __attribute__ ((unused));
+
+static ElfW(Addr)
+profile_fixup (
+#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
 #endif
        struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)

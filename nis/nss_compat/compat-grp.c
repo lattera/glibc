@@ -27,7 +27,6 @@
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #include <nsswitch.h>
 
 #include "nss-nisplus.h"

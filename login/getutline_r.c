@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -43,7 +43,7 @@ __getutline_r (const struct utmp *line, struct utmp *buffer,
   __libc_lock_lock (__libc_utmp_lock);
 
   /* Not yet initialized.  */
-  if ((*__libc_utmp_jump_table->setutent) (0))
+  if ((*__libc_utmp_jump_table->setutent) ())
     retval = (*__libc_utmp_jump_table->getutline_r) (line, buffer, result);
   else
     *result = NULL;

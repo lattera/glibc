@@ -87,8 +87,11 @@ static const struct severity_info infosev =
 /* Start of the list.  */
 static struct severity_info *severity_list = (struct severity_info *) &infosev;
 
+/* Mask of values we will print.  */
+static int print;
 
 /* Prototypes for local functions.  */
+static void init (void);
 static int internal_addseverity (int severity, const char *string);
 
 
@@ -96,100 +99,12 @@ int
 fmtmsg (long int classification, const char *label, int severity,
 	const char *text, const char *action, const char *tag)
 {
-  static int print = -1;
+  __libc_once_define (once);
   int result = MM_OK;
   struct severity_info *severity_rec;
 
-  if (print == -1)
-    {
-      __libc_lock_lock (lock);
-
-      if (print == -1)
-	{
-	  const char *msgverb_var = getenv ("MSGVERB");
-	  const char *sevlevel_var = getenv ("SEV_LEVEL");
-
-	  if (msgverb_var != NULL && msgverb_var[0] != '\0')
-	    {
-	      /* Using this extra variable allows us to work without
-		 locking.  */
-	      print = 0;
-
-	      do
-		{
-		  size_t cnt;
-
-		  for (cnt = 0; cnt < NKEYWORDS; ++cnt)
-		    if (memcmp (msgverb_var,
-				keywords[cnt].name, keywords[cnt].len) == 0
-			&& (msgverb_var[keywords[cnt].len] == ':'
-			    || msgverb_var[keywords[cnt].len] == '\0'))
-		      break;
-
-		  if (cnt < NKEYWORDS)
-		    {
-		      print |= 1 << cnt;
-
-		      msgverb_var += keywords[cnt].len;
-		      if (msgverb_var[0] == ':')
-			++msgverb_var;
-		    }
-		  else
-		    {
-		     /* We found an illegal keyword in the
-			environment variable.  The specifications say
-			that we print all fields.  */
-		      print = all_mask;
-		      break;
-		    }
-		}
-	      while (msgverb_var[0] != '\0');
-	    }
-	  else
-	    print = all_mask;
-
-
-	  if (sevlevel_var != NULL)
-	    while (sevlevel_var[0] != '\0')
-	      {
-		const char *end = strchr (sevlevel_var, ':');
-		int level;
-
-		if (end == NULL)
-		  end = strchr (sevlevel_var, '\0');
-
-		/* First field: keyword.  This is not used here but it
-		   must be present.  */
-		while (sevlevel_var < end)
-		  if (*sevlevel_var++ == ',')
-		    break;
-
-		if (sevlevel_var < end)
-		  {
-		    /* Second field: severity level, a number.  */
-		    char *cp;
-
-		    level = strtol (sevlevel_var, &cp, 0);
-		    if (cp != sevlevel_var && cp < end && *cp++ == ','
-			&& level > MM_INFO)
-		      {
-			const char *new_string;
-
-			new_string = __strndup (cp, end - cp);
-
-			if (new_string != NULL
-			    && (internal_addseverity (level, new_string)
-				!= MM_OK))
-			  free ((char *) new_string);
-		      }
-		  }
-
-		sevlevel_var = end + (*end == ':' ? 1 : 0);
-	      }
-	}
-
-      __libc_lock_unlock (lock);
-    }
+  /* make sure everything is initialized.  */
+  __libc_once (once, init);
 
   /* Start the real work.  First check whether the input is ok.  */
   if (label != MM_NULLLBL)
@@ -265,6 +180,94 @@ fmtmsg (long int classification, const char *label, int severity,
     }
 
   return result;
+}
+
+
+/* Initialize from environment variable content.  */
+static void
+init (void)
+{
+  const char *msgverb_var = getenv ("MSGVERB");
+  const char *sevlevel_var = getenv ("SEV_LEVEL");
+
+  if (msgverb_var != NULL && msgverb_var[0] != '\0')
+    {
+      /* Using this extra variable allows us to work without locking.  */
+      do
+	{
+	  size_t cnt;
+
+	  for (cnt = 0; cnt < NKEYWORDS; ++cnt)
+	    if (memcmp (msgverb_var,
+			keywords[cnt].name, keywords[cnt].len) == 0
+		&& (msgverb_var[keywords[cnt].len] == ':'
+		    || msgverb_var[keywords[cnt].len] == '\0'))
+	      break;
+
+	  if (cnt < NKEYWORDS)
+	    {
+	      print |= 1 << cnt;
+
+	      msgverb_var += keywords[cnt].len;
+	      if (msgverb_var[0] == ':')
+		++msgverb_var;
+	    }
+	  else
+	    {
+	      /* We found an illegal keyword in the environment
+		 variable.  The specifications say that we print all
+		 fields.  */
+	      print = all_mask;
+	      break;
+	    }
+	}
+      while (msgverb_var[0] != '\0');
+    }
+  else
+    print = all_mask;
+
+
+  if (sevlevel_var != NULL)
+    {
+      __libc_lock_lock (lock);
+
+      while (sevlevel_var[0] != '\0')
+	{
+	  const char *end = strchr (sevlevel_var, ':');
+	  int level;
+
+	  if (end == NULL)
+	    end = strchr (sevlevel_var, '\0');
+
+	  /* First field: keyword.  This is not used here but it must be
+	     present.  */
+	  while (sevlevel_var < end)
+	    if (*sevlevel_var++ == ',')
+	      break;
+
+	  if (sevlevel_var < end)
+	    {
+	      /* Second field: severity level, a number.  */
+	      char *cp;
+
+	      level = strtol (sevlevel_var, &cp, 0);
+	      if (cp != sevlevel_var && cp < end && *cp++ == ','
+		  && level > MM_INFO)
+		{
+		  const char *new_string;
+
+		  new_string = __strndup (cp, end - cp);
+
+		  if (new_string != NULL
+		      && (internal_addseverity (level, new_string)
+			  != MM_OK))
+		    free ((char *) new_string);
+		}
+	    }
+
+	  sevlevel_var = end + (*end == ':' ? 1 : 0);
+	}
+    }
 }
 
 

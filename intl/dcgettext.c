@@ -545,7 +545,8 @@ category_to_name (category)
 }
 
 /* Guess value of current locale from value of the environment variables.  */
-static const char *guess_category_value (category, categoryname)
+static const char *
+guess_category_value (category, categoryname)
      int category;
      const char *categoryname;
 {

@@ -52,6 +52,5 @@ ptrace (enum __ptrace_request request, ...)
       return res;
     }
 
-  __set_errno (-res);
   return -1;
 }

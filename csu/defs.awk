@@ -1,5 +1,5 @@
-/.end/	 { need_end = 1 }
-/.align/ { if($2 > max) max = $2; }
+/\.end/	 { need_end = 1 }
+/\.align/ { if($2 > max) max = $2; }
 
 END {
     if(need_end)

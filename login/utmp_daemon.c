@@ -35,7 +35,7 @@ static int daemon_sock = INT_MIN;
 
 
 /* Functions defined here.  */
-static int setutent_daemon (int reset);
+static int setutent_daemon (void);
 static int getutent_r_daemon (struct utmp *buffer, struct utmp **result);
 static int getutid_r_daemon (const struct utmp *line, struct utmp *buffer,
 			     struct utmp **result);
@@ -74,9 +74,13 @@ static int send_request (int sock, const request_header *request,
 
 
 static int
-setutent_daemon (int reset)
+setutent_daemon (void)
 {
-  if (daemon_sock == INT_MIN)
+  if (access (_PATH_UTMPD_RW, F_OK) == -1
+      && access (_PATH_UTMPD_RO, F_OK) == -1)
+    return 0;
+    
+  if (daemon_sock < 0)
     {
       daemon_sock = open_socket (_PATH_UTMPD_RW);
       if (daemon_sock < 0)
@@ -86,17 +90,11 @@ setutent_daemon (int reset)
 	  if (daemon_sock < 0)
 	    return 0;
 	}
+    }
 
-      /* Send request to the daemon.  */
-      if (do_setutent (daemon_sock) < 0)
-	return 0;
-    }
-  else if (reset)
-    {
-      /* Send request to the daemon.  */
-      if (do_setutent (daemon_sock) < 0)
-	return 0;
-    }
+  /* Send request to the daemon.  */
+  if (do_setutent (daemon_sock) < 0)
+    return 0;
 
   return 1;
 }
@@ -121,7 +119,7 @@ getutent_r_daemon (struct utmp *buffer, struct utmp **result)
 {
   /* Open connection if not already done.  */
   if (daemon_sock == INT_MIN)
-    setutent_daemon (1);
+    setutent_daemon ();
 
   if (daemon_sock < 0)
     {
@@ -189,9 +187,9 @@ getutid_r_daemon (const struct utmp *id, struct utmp *buffer,
 static struct utmp *
 pututline_daemon (const struct utmp *utmp)
 {
+  /* Open connection if not already done.  */
   if (daemon_sock == INT_MIN)
-    /* The connection is closed.  Open it again.  */
-    setutent_daemon (0);
+    setutent_daemon ();
 
   if (daemon_sock < 0)
     /* Something went wrong.  */
@@ -217,7 +215,10 @@ updwtmp_daemon (const char *file, const struct utmp *utmp)
 
   /* Send request to the daemon.  */
   if (do_updwtmp (sock, file, utmp) < 0)
-    return -1;
+    {
+      close (sock);
+      return -1;
+    }
 
   close (sock);
   return 0;

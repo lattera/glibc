@@ -1,4 +1,4 @@
-/* finddomain.c -- handle list of needed message catalogs
+/* Handle list of needed message catalogs
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -43,6 +43,9 @@ void free ();
 # include <string.h>
 #else
 # include <strings.h>
+# ifndef memcpy
+#  define memcpy(Dst, Src, Num) bcopy (Src, Dst, Num)
+# endif
 #endif
 #if !HAVE_STRCHR && !defined _LIBC
 # ifndef strchr

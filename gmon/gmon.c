@@ -46,6 +46,8 @@
 #include <string.h>
 #include <unistd.h>
 
+extern char *_strerror_internal __P ((int, char *buf, size_t));
+
 extern int __profile_frequency __P ((void));
 
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
@@ -162,6 +164,7 @@ __monstartup (lowpc, highpc)
 
   __moncontrol(1);
 }
+weak_alias(__monstartup, monstartup)
 
 
 static void

@@ -20,7 +20,7 @@
 #define _SYS_FSUID_H	1
 
 #include <features.h>
-#include <gnu/types.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 

@@ -83,10 +83,313 @@ GLIBC_2.0 {
     _IO_str_seekoff; _IO_str_pbackfail; _IO_list_all; _IO_file_jumps;
     _IO_peekc_locked;
     _rpc_dtablesize; _null_auth; _seterr_reply;
+    __res_randomid;
 
-    # all functions and variables in the normal name space
-    a*; b*; c*; d*; e*; f*; g*; h*; i*; j*; k*; l*; m*;
-    n*; o*; p*; q*; r*; s*; t*; u*; v*; w*; x*; y*; z*;
+    # variables in normal name space
+    argp_err_exit_status; argp_program_bug_address; argp_program_version;
+    argp_program_version_hook;
+    daylight;
+    environ;
+    errno; error_message_count; error_one_per_line; error_print_progname;
+    getdate_err;
+    h_errlist; h_errno; h_nerr;
+    in6addr_any; in6addr_loopback;
+    loc1; loc2; locs;
+    mallwatch;
+    obstack_alloc_failed_handler; obstack_exit_failure;
+    optarg; opterr; optind; optopt;
+    program_invocation_name; program_invocation_short_name;
+    re_max_failures;  re_syntax_options; rexecoptions; rpc_createerr;
+    stderr; stdin; stdout; svc_fdset; svcauthdes_stats;
+    sys_errlist; sys_nerr; sys_sigabbrev; sys_siglist;
+    timezone; tzname;
+
+    # functions in normal name space
+    # Please keep them sorted by name!
+
+    # a*
+    a64l; abort; abs; accept; access; acct; addmntent; addseverity;
+    adjtime; adjtimex; advance; alarm; alphasort;
+
+    argp_error; argp_failure; argp_fmtstream_free; argp_fmtstream_point;
+    argp_fmtstream_printf; argp_fmtstream_putc; argp_fmtstream_puts;
+    argp_fmtstream_set_lmargin; argp_fmtstream_set_rmargin;
+    argp_fmtstream_set_wmargin; argp_fmtstream_write; argp_help;
+    argp_make_fmtstream; argp_parse; argp_state_help; argp_usage;
+
+    argz_add; argz_add_sep; argz_append; argz_count; argz_create;
+    argz_create_sep; argz_delete; argz_extract; argz_insert; argz_next;
+    argz_replace; argz_stringify;
+
+    asctime; asctime_r; asprintf; atexit; atof; atoi; atol; atoll;
+    authdes_create; authdes_getucred; authdes_pk_create; authnone_create;
+    authunix_create; authunix_create_default;
+
+    # b*
+    basename; bcmp; bcopy; bdflush; bind; bindresvport;
+    bindtextdomain; brk; bsd_signal; bsearch; btowc; bzero;
+
+    # c*
+    cachectl; cacheflush; calloc; callrpc; canonicalize_file_name;
+    catclose; catgets; catopen;
+    cbc_crypt; cfgetispeed; cfgetospeed; cfmakeraw; cfree;
+    cfsetispeed; cfsetospeed; cfsetspeed; chdir; chflags; chmod; chown;
+    chroot; clearenv; clearerr; clearerr_unlocked;
+
+    clnt_broadcast; clnt_create; clnt_pcreateerror; clnt_perrno;
+    clnt_perror; clnt_spcreateerror; clnt_sperrno; clnt_sperror;
+    clntraw_create; clnttcp_create; clntudp_bufcreate; clntudp_create;
+
+    clock; clone; close; closedir; closelog; confstr; connect; copysign;
+    copysignf; copysignl; creat; create_module; ctermid; ctime; ctime_r;
+    cuserid;
+
+    # d*
+    daemon; dcgettext; delete_module; des_setparity; dgettext;
+    difftime; dirfd; dirname; div; dprintf; drand48; drand48_r; dup; dup2;
+    dysize;
+
+    # e*
+    ecb_crypt; ecvt; ecvt_r; endaliasent; endfsent; endgrent; endhostent;
+    endmntent; endnetent; endnetgrent; endprotoent; endpwent; endrpcent;
+    endservent; endspent; endttyent; endusershell; endutent; endutxent;
+    envz_add; envz_entry; envz_get; envz_merge; envz_remove;
+    envz_strip; erand48; erand48_r; err; error; error_at_line; errx;
+
+    ether_aton; ether_aton_r; ether_hostton; ether_line; ether_ntoa;
+    ether_ntoa_r; ether_ntohost;
+
+    euidaccess; execl; execle; execlp; execv; execve; execvp; exit;
+
+    # f*
+    fchdir; fchflags; fchmod; fchown; fclose; fcloseall; fcntl; fcvt;
+    fcvt_r; fdatasync; fdopen; feof; feof_unlocked; ferror;
+    ferror_unlocked; fexecve; fflush; fflush_unlocked; ffs; fgetc;
+    fgetgrent; fgetgrent_r; fgetpos; fgetpwent; fgetpwent_r; fgets;
+    fgetspent; fgetspent_r; fileno; fileno_unlocked; finite; finitef;
+    finitel; flock; flockfile; fmtmsg; fnmatch; fopen; fopencookie; fork;
+    fpathconf; fprintf; fputc; fputc_unlocked; fputs; fread; free;
+    freeaddrinfo; freopen; frexp; frexpf; frexpl; fscanf; fseek; fsetpos;
+    fstatfs; fsync; ftell; ftime; ftok; ftruncate; ftrylockfile;
+    fts_children; fts_close; fts_open; fts_read; fts_set; ftw;
+    funlockfile; fwrite;
+
+    # g*
+    gai_strerror; gcvt; get_avphys_pages; get_current_dir_name;
+    get_kernel_syms; get_myaddress; get_nprocs; get_nprocs_conf;
+    get_phys_pages; getaddrinfo; getaliasbyname; getaliasbyname_r;
+    getaliasent; getaliasent_r; getc; getc_unlocked; getchar;
+    getchar_unlocked; getcwd; getdate; getdate_r; getdelim; getdirentries;
+    getdomainname; getdtablesize; getegid; getenv; geteuid; getfsent;
+    getfsfile; getfsspec; getgid; getgrent; getgrent_r; getgrgid;
+    getgrgid_r; getgrnam; getgrnam_r; getgroups; gethostbyaddr;
+    gethostbyaddr_r; gethostbyname; gethostbyname2; gethostbyname2_r;
+    gethostbyname_r; gethostent; gethostent_r; gethostid; gethostname;
+    getitimer; getline; getlogin; getlogin_r; getmntent; getmntent_r;
+    getnameinfo; getnetbyaddr; getnetbyaddr_r; getnetbyname;
+    getnetbyname_r; getnetent; getnetent_r; getnetgrent; getnetgrent_r;
+    getnetname; getopt; getopt_long; getopt_long_only; getpagesize;
+    getpass; getpeername; getpgid; getpgrp; getpid; getppid; getpriority;
+    getprotobyname; getprotobyname_r; getprotobynumber;
+    getprotobynumber_r; getprotoent; getprotoent_r; getpublickey; getpw;
+    getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
+    getrlimit; getrpcbyname; getrpcbyname_r; getrpcbynumber;
+    getrpcbynumber_r; getrpcent; getrpcent_r; getrpcport; getrusage; gets;
+    getsecretkey; getservbyname; getservbyname_r; getservbyport;
+    getservbyport_r; getservent; getservent_r; getsid; getsockname;
+    getsockopt; getspent; getspent_r; getspnam; getspnam_r; getsubopt;
+    gettext; gettimeofday; getttyent; getttynam; getuid; getusershell;
+    getutent; getutent_r; getutid; getutid_r; getutline; getutline_r;
+    getutxent; getw; getwd; glob; glob_pattern_p; globfree; gmtime;
+    gmtime_r; group_member; gsignal; gtty;
+
+    # h*
+    hasmntopt; hcreate; hcreate_r; hdestroy; hdestroy_r; herror;
+    host2netname; hsearch; hsearch_r; hstrerror; htonl; htons;
+
+    # i*
+    if_freenameindex; if_indextoname; if_nameindex; if_nametoindex; index;
+    inet6_isipv4mapped; inet_addr; inet_aton; inet_lnaof; inet_makeaddr;
+    inet_netof; inet_network; inet_nsap_addr; inet_nsap_ntoa; inet_ntoa;
+    inet_ntop; inet_pton; init_module; initgroups; initstate; initstate_r;
+    innetgr; insque; ioctl; ioperm; iopl; iruserok;
+
+    isalnum; isalpha; isascii; isatty; isblank; iscntrl; isdigit;
+    isfdtype; isgraph; isinf; isinff; isinfl; islower; isnan; isnanf;
+    isnanl; isprint; ispunct; isspace; isupper; iswalnum; iswalpha;
+    iswblank; iswcntrl; iswctype; iswdigit; iswgraph; iswlower; iswprint;
+    iswpunct; iswspace; iswupper; iswxdigit; isxdigit;
+
+    # j*
+    jrand48; jrand48_r;
+
+    # k*
+    key_decryptsession; key_decryptsession_pk; key_encryptsession;
+    key_encryptsession_pk; key_gendes; key_get_conv; key_secretkey_is_set;
+    key_setnet; key_setsecret;
+
+    kill; killpg; klogctl;
+
+    # l*
+    l64a; labs; lchown; lckpwdf; lcong48; lcong48_r; ldexp; ldexpf;
+    ldexpl; ldiv; lfind; link; listen; llabs; lldiv; llseek; localeconv;
+    localtime; localtime_r; lockf; longjmp; lrand48; lrand48_r; lsearch;
+    lseek;
+
+    # m*
+    madvise;
+
+    mallinfo; malloc; malloc_get_state; malloc_set_state;
+    malloc_stats; malloc_trim; malloc_usable_size; mallopt;
+
+    mblen; mbrlen; mbrtowc; mbsinit; mbsnrtowcs; mbsrtowcs; mbstowcs;
+    mbtowc; mcheck; mcount;
+
+    memalign; memccpy; memchr; memcmp; memcpy; memfrob; memmem;
+    memmove; memset;
+
+    mkdir; mkfifo; mkstemp; mktemp; mktime; mlock;
+    mlockall; mmap; modf; modff; modfl; moncontrol; monstartup; mount;
+    mprobe; mprotect; mrand48; mrand48_r; mremap; msgctl; msgget; msgrcv;
+    msgsnd; msync; mtrace; munlock; munlockall; munmap; muntrace;
+
+    # n*
+    nanosleep; netname2host; netname2user; nftw; nice; nl_langinfo;
+    nrand48; nrand48_r; ntohl; ntohs;
+
+    # o*
+    obstack_free; obstack_printf; obstack_vprintf; on_exit; open;
+    open_memstream; opendir; openlog;
+
+    # p*
+    parse_printf_format; passwd2des; pathconf; pause; pclose; perror;
+    personality; pipe; pmap_getmaps; pmap_getport; pmap_rmtcall; pmap_set;
+    pmap_unset; poll; popen; printf; printf_size; printf_size_info;
+    profil; profil_counter; pselect; psignal;
+
+    pthread_attr_destroy;
+    pthread_attr_getdetachstate; pthread_attr_getinheritsched;
+    pthread_attr_getschedparam; pthread_attr_getschedpolicy;
+    pthread_attr_getscope; pthread_attr_init; pthread_attr_setdetachstate;
+    pthread_attr_setinheritsched; pthread_attr_setschedparam;
+    pthread_attr_setschedpolicy; pthread_attr_setscope;
+    pthread_cond_broadcast; pthread_cond_destroy; pthread_cond_init;
+    pthread_cond_signal; pthread_cond_wait; pthread_condattr_destroy;
+    pthread_condattr_init; pthread_equal; pthread_exit;
+    pthread_getschedparam; pthread_mutex_destroy; pthread_mutex_init;
+    pthread_mutex_lock; pthread_mutex_unlock;
+    pthread_mutexattr_getkind_np; pthread_mutexattr_setkind_np;
+    pthread_self; pthread_setcancelstate; pthread_setcanceltype;
+    pthread_setschedparam;
+
+    ptrace; putc; putc_unlocked; putchar;
+    putchar_unlocked; putenv; putpwent; puts; putspent; pututline;
+    pututxline; putw; pvalloc;
+
+    # q*
+    qecvt; qecvt_r; qfcvt; qfcvt_r; qgcvt; qsort; quotactl;
+
+    # r*
+    raise; rand; rand_r; random; random_r; rcmd;
+
+    re_comp; re_compile_fastmap; re_compile_pattern; re_exec; re_match;
+    re_match_2; re_search; re_search_2; re_set_registers; re_set_syntax;
+
+    read; readdir; readdir_r; readlink; readv; realloc; realpath; reboot;
+    recv; recvfrom; recvmsg; regcomp; regerror; regexec; regfree;
+    register_printf_function; registerrpc; remove; remque; rename;
+    res_init; revoke; rewind; rewinddir; rexec; rindex; rmdir; rpmatch;
+    rresvport; rtime; ruserok; ruserpass;
+
+    # s*
+    sbrk; scalbn; scalbnf; scalbnl; scandir; scanf;
+
+    sched_get_priority_max; sched_get_priority_min; sched_getparam;
+    sched_getscheduler; sched_rr_get_interval; sched_setparam;
+    sched_setscheduler; sched_yield;
+
+    seed48; seed48_r; seekdir; select;
+    semctl; semget; semop; send; sendmsg; sendto; setaliasent; setbuf;
+    setbuffer; setdomainname; setegid; setenv; seteuid; setfsent;
+    setfsgid; setfsuid; setgid; setgrent; setgroups; sethostent;
+    sethostid; sethostname; setitimer; setjmp; setlinebuf; setlocale;
+    setlogin; setlogmask; setmntent; setnetent; setnetgrent; setpgid;
+    setpgrp; setpriority; setprotoent; setpwent; setregid; setreuid;
+    setrlimit; setrpcent; setservent; setsid; setsockopt; setspent;
+    setstate; setstate_r; settimeofday; setttyent; setuid; setusershell;
+    setutent; setutxent; setvbuf; sgetspent; sgetspent_r; shmat; shmctl;
+    shmdt; shmget; shutdown;
+
+    sigaction; sigaddset; sigaltstack; sigandset; sigblock; sigdelset;
+    sigemptyset; sigfillset; siggetmask; siginterrupt; sigisemptyset;
+    sigismember; siglongjmp; signal; sigorset; sigpause; sigpending;
+    sigprocmask; sigreturn; sigsetmask; sigstack; sigsuspend; sigvec;
+    sigwait;
+
+    sleep; snprintf; socket; socketpair; sprintf; srand; srand48;
+    srand48_r; srandom; srandom_r; sscanf; ssignal; sstk; statfs; step;
+    stime; stpcpy; stpncpy; strcasecmp; strcat; strchr; strcmp; strcoll;
+    strcpy; strcspn; strdup; strerror; strerror_r; strfmon; strfry;
+    strftime; strlen; strncasecmp; strncat; strncmp; strncpy; strndup;
+    strnlen; strpbrk; strptime; strrchr; strsep; strsignal; strspn;
+    strstr; strtod; strtof; strtok; strtok_r; strtol; strtold; strtoll;
+    strtoq; strtoul; strtoull; strtouq; strverscmp; strxfrm; stty;
+
+    svc_exit; svc_getreq; svc_getreqset; svc_register; svc_run;
+    svc_sendreply; svc_unregister; svcerr_auth; svcerr_decode;
+    svcerr_noproc; svcerr_noprog; svcerr_progvers; svcerr_systemerr;
+    svcerr_weakauth; svcfd_create; svcraw_create; svctcp_create;
+    svcudp_bufcreate; svcudp_create; svcudp_enablecache;
+
+    swab; swapoff; swapon; symlink; sync;
+    syscall; sysconf; sysctl; sysinfo; syslog;
+    system;
+
+    # t*
+    tcdrain; tcflow; tcflush; tcgetattr; tcgetpgrp; tcsendbreak;
+    tcsetattr; tcsetpgrp; tdelete; tdestroy; telldir; tempnam; textdomain;
+    tfind; time; timegm; timelocal; times; tmpfile; tmpnam; tmpnam_r;
+
+    toascii; tolower; toupper; towctrans; towlower; towupper;
+    tr_break; truncate; tsearch; ttyname; ttyname_r; ttyslot; twalk;
+    tzset;
+
+    # u*
+    ualarm; ulckpwdf; ulimit; umask; umount; uname; ungetc; unlink;
+    unsetenv; updwtmp; uselib; user2netname; usleep; ustat; utime; utimes;
+    utmpname;
+
+    # v*
+    valloc; vasprintf; vdprintf; verr; verrx; versionsort; vfork;
+    vfprintf; vfscanf; vhangup; vlimit; vm86; vprintf; vscanf; vsnprintf;
+    vsprintf; vsscanf; vsyslog; vtimes; vwarn; vwarnx;
+
+    # w*
+    wait; wait3; wait4; waitpid; warn; warnx;
+
+    wcpcpy; wcpncpy; wcrtomb; wcscasecmp; wcscat; wcschr; wcscmp; wcscoll;
+    wcscpy; wcscspn; wcsdup; wcslen; wcsncasecmp; wcsncat; wcsncmp;
+    wcsncpy; wcsnrtombs; wcspbrk; wcsrchr; wcsrtombs; wcsspn; wcsstr;
+    wcstod; wcstof; wcstok; wcstol; wcstold; wcstoll; wcstombs; wcstoq;
+    wcstoul; wcstoull; wcstouq; wcswcs; wcswidth; wcsxfrm; wctob; wctomb;
+    wctrans; wctype; wcwidth;
+
+    wmemchr; wmemcmp; wmemcpy; wmemmove; wmemset; write; writev;
+
+    # x*
+    xdecrypt; xdr_accepted_reply; xdr_array; xdr_authdes_cred;
+    xdr_authdes_verf; xdr_authunix_parms; xdr_bool; xdr_bytes;
+    xdr_callhdr; xdr_callmsg; xdr_char; xdr_cryptkeyarg; xdr_cryptkeyarg2;
+    xdr_cryptkeyres; xdr_des_block; xdr_double; xdr_enum; xdr_float;
+    xdr_free; xdr_getcredres; xdr_int; xdr_key_netstarg; xdr_key_netstres;
+    xdr_keybuf; xdr_keystatus; xdr_long; xdr_netnamestr; xdr_netobj;
+    xdr_opaque; xdr_opaque_auth; xdr_pmap; xdr_pmaplist; xdr_pointer;
+    xdr_reference; xdr_rejected_reply; xdr_replymsg; xdr_rmtcall_args;
+    xdr_rmtcallres; xdr_short; xdr_string; xdr_u_char; xdr_u_int;
+    xdr_u_long; xdr_u_short; xdr_union; xdr_unixcred; xdr_vector;
+    xdr_void; xdr_wrapstring; xdrmem_create; xdrrec_create;
+    xdrrec_endofrecord; xdrrec_eof; xdrrec_skiprecord; xdrstdio_create;
+    xencrypt; xprt_register; xprt_unregister;
 
   local:
     *;

@@ -70,6 +70,20 @@
 /* Unlock the recursive named lock variable.  */
 #define __libc_lock_unlock_recursive(NAME)
 
+
+/* Define once control variable.  */
+#define __libc_once_define(NAME) int NAME = 0
+
+/* Call handler iff the first call.  */
+#define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
+  do {									      \
+    if ((ONCE_CONTROL) == 0) {						      \
+      INIT_FUNCTION ();							      \
+      (ONCE_CONTROL) = 1;						      \
+    }									      \
+  } while (0)
+
+
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(FCT, ARG)
 

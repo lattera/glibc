@@ -595,35 +595,6 @@ check_int (const char *test_name, int computed, int expected)
   fpstack_test (test_name);
 }
 
-static void
-check_int_exc (const char *test_name, int computed, int expected,
-	       short exception)
-{
-  int diff = computed - expected;
-  int result = diff == 0;
-
-  output_new_test (test_name);
-  test_exceptions (test_name, exception);
-
-  if (result)
-    {
-      output_pass_value ();
-    }
-  else
-    {
-      output_fail_value (test_name);
-      if (verbose > 1)
-	{
-	  printf ("Result:\n");
-	  printf (" is:         %d\n", computed);
-	  printf (" should be:  %d\n", expected);
-	}
-      noErrors++;
-    }
-
-  fpstack_test (test_name);
-}
-
 
 /*
   check that computed and expected values are equal (long int values)

@@ -24,7 +24,6 @@
 #include <string.h>
 #include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
 
@@ -205,7 +204,7 @@ internal_nisplus_getservent_r (struct servent *serv, char *buffer,
   do
     {
       nis_result *saved_res;
-      
+
       if (result == NULL)
 	{
 	  saved_res = NULL;

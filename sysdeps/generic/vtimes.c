@@ -38,8 +38,8 @@ vtimes_one (struct vtimes *vt, enum __rusage_who who)
       if (getrusage (who, &usage) < 0)
 	return -1;
 
-      vt->vm_utime = TIMEVAL_TO_VTIMES(usage.ru_utime);
-      vt->vm_stime = TIMEVAL_TO_VTIMES(usage.ru_stime);
+      vt->vm_utime = TIMEVAL_TO_VTIMES (usage.ru_utime);
+      vt->vm_stime = TIMEVAL_TO_VTIMES (usage.ru_stime);
       vt->vm_idsrss = usage.ru_idrss + usage.ru_isrss;
       vt->vm_majflt = usage.ru_majflt;
       vt->vm_minflt = usage.ru_minflt;
@@ -58,8 +58,8 @@ vtimes (current, child)
      struct vtimes *current;
      struct vtimes *child;
 {
-  if (vtimes_one(current, RUSAGE_SELF) < 0 ||
-      vtimes_one(child, RUSAGE_CHILDREN) < 0)
+  if (vtimes_one (current, RUSAGE_SELF) < 0
+      || vtimes_one (child, RUSAGE_CHILDREN) < 0)
     return -1;
   return 0;
 }

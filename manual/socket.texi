@@ -852,7 +852,7 @@ local-address-within-network numbers in host byte order.
 
 @comment arpa/inet.h
 @comment BSD
-@deftypefun {int} inet_aton (const char *@var{name}, struct in_addr *@var{addr})
+@deftypefun int inet_aton (const char *@var{name}, struct in_addr *@var{addr})
 This function converts the Internet host address @var{name}
 from the standard numbers-and-dots notation into binary data and stores
 it in the @code{struct in_addr} that @var{addr} points to.
@@ -917,8 +917,7 @@ address @var{addr}.
 
 @comment arpa/inet.h
 @comment IPv6 basic API
-@deftypefun int inet_pton (int @var{af}, const char *@var{cp}, void
-*@var{buf})
+@deftypefun int inet_pton (int @var{af}, const char *@var{cp}, void *@var{buf})
 This function converts an Internet address (either IPv4 or IPv6) from
 presentation (textual) to network (binary) format.  @var{af} should be
 either @code{AF_INET} or @code{AF_INET6}, as appropriate for the type of
@@ -929,8 +928,7 @@ responsibility to make sure the buffer is large enough.
 
 @comment arpa/inet.h
 @comment IPv6 basic API
-@deftypefun char *inet_ntop(int @var{af}, const void *@var{cp}, char
-*@var{buf}, size_t @var{len})
+@deftypefun {char *} inet_ntop (int @var{af}, const void *@var{cp}, char *@var{buf}, size_t @var{len})
 This function converts an Internet address (either IPv4 or IPv6) from
 network (binary) to presentation (textual) form.  @var{af} should be
 either @code{AF_INET} or @code{AF_INET6}, as appropriate.  @var{cp} is a

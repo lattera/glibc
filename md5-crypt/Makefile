@@ -36,6 +36,7 @@ libcrypt-map := libcrypt.map
 
 onlymd5-routines := onlymd5-entry md5-crypt md5
 distribute += onlymd5-entry.c
+extra-objs := onlymd5-entry.o
 
 include ../Makeconfig
 

@@ -23,7 +23,6 @@
 #include <string.h>
 #include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
 
@@ -97,7 +96,7 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
   do
     {
       nis_result *saved_res;
-      
+
       if (result == NULL)
 	{
 	  saved_res = NULL;
@@ -123,7 +122,7 @@ internal_nisplus_getpwent_r (struct passwd *pw, char *buffer, size_t buflen)
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_pwent (result, pw, buffer, 
+      if ((parse_res = _nss_nisplus_parse_pwent (result, pw, buffer,
 						 buflen)) == -1)
 	{
 	  nis_freeresult (result);
@@ -192,7 +191,7 @@ _nss_nisplus_getpwnam_r (const char *name, struct passwd *pw,
 
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
-      
+
       return NSS_STATUS_NOTFOUND;
     }
 }
@@ -227,7 +226,7 @@ _nss_nisplus_getpwuid_r (const uid_t uid, struct passwd *pw,
 
     if (parse_res == -1)
       return NSS_STATUS_TRYAGAIN;
-    
+
     if (parse_res)
       return NSS_STATUS_SUCCESS;
 

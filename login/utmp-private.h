@@ -24,11 +24,10 @@
 
 #include <utmp.h>
 
-/* The extra `int' argument for each function shows whether locking is
-   wanted or not.  */
+/* The structure describing the functions in a backend.  */
 struct utfuncs
 {
-  int (*setutent) (int);
+  int (*setutent) (void);
   int (*getutent_r) (struct utmp *, struct utmp **);
   int (*getutid_r) (const struct utmp *, struct utmp *, struct utmp **);
   int (*getutline_r) (const struct utmp *, struct utmp *, struct utmp **);

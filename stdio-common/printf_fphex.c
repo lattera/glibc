@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "_itoa.h"
-#include "../locale/localeinfo.h"
+#include <locale/localeinfo.h>
 
 /* #define NDEBUG 1*/		/* Undefine this for debugging assertions.  */
 #include <assert.h>

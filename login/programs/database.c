@@ -52,6 +52,7 @@ static int get_mtime (int filedes, time_t *timer);
 utmp_database *
 open_database (const char *file, const char *old_file)
 {
+  mode_t mode =  S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH;
   utmp_database *database;
 
   /* Allocate memory.  */
@@ -65,7 +66,7 @@ open_database (const char *file, const char *old_file)
   memset (database, 0, sizeof (utmp_database));
 
   /* Open database, create it if it doesn't exist already.  */
-  database->fd = open (file, O_RDWR | O_CREAT);
+  database->fd = open (file, O_RDWR | O_CREAT, mode);
   if (database->fd < 0)
     {
       error (0, errno, "%s", file);
@@ -81,7 +82,7 @@ open_database (const char *file, const char *old_file)
 
   if (old_file)
     {
-      database->old_fd = open (old_file, O_RDWR);
+      database->old_fd = open (old_file, O_RDWR|O_CREAT, mode);
       if (database->old_fd < 0)
 	{
 	  error (0, errno, "%s", old_file);

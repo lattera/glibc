@@ -23,7 +23,7 @@ subdir	:= inet
 
 headers	:= netinet/ether.h netinet/in.h netinet/if_ether.h \
 	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \
-	   aliases.h netinet/ip6.h netinet/icmp6.h netinet/inbits.h
+	   aliases.h netinet/ip6.h netinet/icmp6.h bits/in.h
 
 distribute := netgroup.h
 
@@ -46,7 +46,7 @@ routines := htonl htons		\
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index
 
-tests := htontest
+tests := htontest test_ifindex
 
 # No warnings about losing BSD code.
 CFLAGS-rcmd.c = -w

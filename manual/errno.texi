@@ -430,7 +430,7 @@ until some external condition makes it possible to read, write, or
 connect (whatever the operation).  You can use @code{select} to find out
 when the operation will be possible; @pxref{Waiting for I/O}.
 
-@strong{Portability Note:} In older Unix many systems, this condition
+@strong{Portability Note:} In older many Unix systems, this condition
 was indicated by @code{EWOULDBLOCK}, which was a distinct error code
 different from @code{EAGAIN}.  To make your program portable, you should
 check for both codes and treat them the same.

@@ -29,28 +29,30 @@
 
 __BEGIN_DECLS
 
-struct crypt_data
-{
-  char keysched[(16 * 8) / sizeof (char)];
-  char sb0[32768 / sizeof (char)];
-  char sb1[32768 / sizeof (char)];
-  char sb2[32768 / sizeof (char)];
-  char sb3[32768 / sizeof (char)];
-  /* end-of-alignment-critical-data */
-  char crypt_3_buf[14];
-  char current_salt[2];
-  long current_saltbits;
-  int  direction, initialized;
-};
-
 /* Encrypt at most 8 characters from KEY using salt to perturb DES.  */
 extern char *crypt __P ((__const char *__key, __const char *__salt));
 
 
+#ifdef __USE_GNU
 /* Reentrant versions of the functions above.  The additional argument
    points to a structure where the results are placed in.  */
+struct crypt_data
+  {
+    char keysched[16 * 8];
+    char sb0[32768];
+    char sb1[32768];
+    char sb2[32768];
+    char sb3[32768];
+    /* end-of-alignment-critical-data */
+    char crypt_3_buf[14];
+    char current_salt[2];
+    long int current_saltbits;
+    int direction, initialized;
+  };
+
 extern char *crypt_r __P ((__const char *__key, __const char *__salt,
 			   struct crypt_data *__data));
+#endif
 
 __END_DECLS
 

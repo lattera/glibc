@@ -24,7 +24,6 @@
 #include <string.h>
 #include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
 #include "nisplus-parser.h"
@@ -57,6 +56,8 @@ _nss_create_tablename (void)
 static enum nss_status
 internal_setgrent (void)
 {
+  enum nss_status status;
+
   if (result)
     nis_freeresult (result);
   result = NULL;
@@ -67,12 +68,13 @@ internal_setgrent (void)
       return NSS_STATUS_UNAVAIL;
 
   result = nis_list (tablename_val, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
-  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
+  status = niserr2nss (result->status);
+  if (status != NSS_STATUS_SUCCESS)
     {
       nis_freeresult (result);
       result = NULL;
     }
-  return niserr2nss (result->status);
+  return status;
 }
 
 enum nss_status
@@ -109,7 +111,13 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen)
   int parse_res;
 
   if (result == NULL)
-    internal_setgrent ();
+    {
+      enum nss_status status;
+
+      status = internal_setgrent ();
+      if (result == NULL || status != NSS_STATUS_SUCCESS)
+	return status;
+    }
 
   /* Get the next entry until we found a correct one. */
   do

@@ -24,7 +24,6 @@
 #include <string.h>
 #include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
 
@@ -212,7 +211,7 @@ internal_nisplus_getprotoent_r (struct protoent *proto, char *buffer,
       else
 	{
 	  nis_result *res;
-	  
+
 	  saved_res = result;
 	  res = nis_next_entry (tablename_val, &result->cookie);
 	  result = res;
@@ -224,7 +223,7 @@ internal_nisplus_getprotoent_r (struct protoent *proto, char *buffer,
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_protoent (result, proto, buffer, 
+      if ((parse_res = _nss_nisplus_parse_protoent (result, proto, buffer,
 						    buflen)) == -1)
 	{
 	  nis_freeresult (result);
@@ -346,10 +345,10 @@ _nss_nisplus_getprotobynumber_r (const int number, struct protoent *proto,
 
     if (parse_res == -1)
       return NSS_STATUS_TRYAGAIN;
-    
+
     if (parse_res)
       return NSS_STATUS_SUCCESS;
-    
+
     return NSS_STATUS_NOTFOUND;
   }
 }

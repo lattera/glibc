@@ -179,8 +179,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
 	cannot_create:
 	  errnum = errno;
 	  __close (fd);
-	  fprintf (stderr, "%s: cannot create file: %s\n", filename,
-		   _strerror_internal (errnum, buf, sizeof buf));
+	  _dl_sysdep_error (filename, ": cannot create file: ",
+			    _strerror_internal (errnum, buf, sizeof buf),
+			    "\n", NULL);
 	  return;
 	}
 
@@ -192,8 +193,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
     {
       __close (fd);
     wrong_format:
-      fprintf (stderr, "%s: file is no correct profile data file for `%s'\n",
-	       filename, _dl_profile);
+      _dl_sysdep_error (filename,
+			": file is no correct profile data file for `",
+			_dl_profile, "'\n", NULL);
       return;
     }
 
@@ -204,8 +206,9 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
       char buf[400];
       int errnum = errno;
       __close (fd);
-      fprintf (stderr, "%s: cannot map file: %s\n", filename,
-	       _strerror_internal (errnum, buf, sizeof buf));
+      _dl_sysdep_error (filename, ": cannot map file: ",
+			_strerror_internal (errnum, buf, sizeof buf),
+			"\n", NULL);
       return;
     }
 

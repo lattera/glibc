@@ -39,7 +39,7 @@ static struct utmp last_entry;
 
 
 /* Functions defined here.  */
-static int setutent_file (int reset);
+static int setutent_file (void);
 static int getutent_r_file (struct utmp *buffer, struct utmp **result);
 static int getutid_r_file (const struct utmp *key, struct utmp *buffer,
 			   struct utmp **result);
@@ -63,41 +63,40 @@ struct utfuncs __libc_utmp_file_functions =
 
 
 static int
-setutent_file (int reset)
+setutent_file (void)
 {
-  if (file_fd == INT_MIN)
+  if (file_fd < 0)
     {
-      file_fd = open (__libc_utmp_file_name, O_RDWR);
+      const char *file_name = __libc_utmp_file_name;
+      
+      if (strcmp (__libc_utmp_file_name, _PATH_UTMP) == 0
+	  && __access (_PATH_UTMP "x", F_OK) == 0)
+	file_name = _PATH_UTMP "x";
+      else if (strcmp (__libc_utmp_file_name, _PATH_WTMP) == 0
+	       && __access (_PATH_WTMP "x", F_OK) == 0)
+	file_name = _PATH_WTMP "x";
+	       
+      file_fd = open (file_name, O_RDWR);
       if (file_fd == -1)
 	{
 	  /* Hhm, read-write access did not work.  Try read-only.  */
-	  file_fd = open (__libc_utmp_file_name, O_RDONLY);
+	  file_fd = open (file_name, O_RDONLY);
 	  if (file_fd == -1)
 	    {
 	      perror (_("while opening UTMP file"));
 	      return 0;
 	    }
 	}
-      file_offset = 0;
-
-#if _HAVE_UT_TYPE - 0
-      /* Make sure the entry won't match.  */
-      last_entry.ut_type = -1;
-#endif
-    }
-  else if (reset)
-    {
-      lseek (file_fd, 0, SEEK_SET);
-
-      /* Remember we are at beginning of file.  */
-      file_offset = 0;
-
-#if _HAVE_UT_TYPE - 0
-      /* Make sure the entry won't match.  */
-      last_entry.ut_type = -1;
-#endif
     }
 
+  lseek (file_fd, 0, SEEK_SET);
+  file_offset = 0;
+
+#if _HAVE_UT_TYPE - 0
+  /* Make sure the entry won't match.  */
+  last_entry.ut_type = -1;
+#endif
+  
   return 1;
 }
 
@@ -120,7 +119,7 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
 
   /* Open utmp file if not already done.  */
   if (file_fd == INT_MIN)
-    setutent_file (1);
+    setutent_file ();
 
   if (file_fd == -1 || file_offset == -1l)
     {
@@ -348,13 +347,13 @@ pututline_file (const struct utmp *data)
   struct utmp *pbuf;
   int found;
 
-  if (file_fd < 0)
+  /* Open utmp file if not already done.  */
+  if (file_fd == INT_MIN)
+    setutent_file ();
+
+  if (file_fd == -1)
     /* Something went wrong.  */
     return NULL;
-
-  if (file_fd == INT_MIN)
-    /* The file is closed.  Open it again.  */
-    setutent_file (0);
 
   /* Find the correct place to insert the data.  */
   if (file_offset > 0

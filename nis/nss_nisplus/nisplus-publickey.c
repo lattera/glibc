@@ -25,7 +25,6 @@
 #include <syslog.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #ifdef HAVE_SECURE_RPC
 #include <rpc/key_prot.h>
 extern int xdecrypt (char *, char *);

@@ -140,7 +140,7 @@ struct in_addr
 #define	IN_LOOPBACKNET	127
 /* Address to loopback in software to local host.  */
 #ifndef INADDR_LOOPBACK
-#define	INADDR_LOOPBACK	((unsigned) 0x7f000001)	/* Inet address 127.0.0.1.  */
+# define INADDR_LOOPBACK	((unsigned) 0x7f000001)	/* Inet 127.0.0.1.  */
 #endif
 
 
@@ -208,7 +208,7 @@ struct ipv6_mreq
   };
 
 /* Get system-specific definitions.  */
-#include <netinet/inbits.h>
+#include <bits/in.h>
 
 /* Functions to convert between host and network byte order.
 
@@ -272,7 +272,7 @@ extern uint16_t htons __P ((uint16_t __hostshort));
 	 (((uint32_t *) (a))[1] == ((uint32_t *) (b))[2]) && \
 	 (((uint32_t *) (a))[2] == ((uint32_t *) (b))[1]) && \
 	 (((uint32_t *) (a))[3] == ((uint32_t *) (b))[3]))
-	
+
 /* Bind socket to a privileged IP port.  */
 extern int bindresvport __P ((int __sockfd, struct sockaddr_in *__sin));
 

@@ -29,9 +29,9 @@
 
 
 /* The various backends we have.  */
-static int setutent_unknown (int reset);
 static int getutent_r_unknown (struct utmp *buffer, struct utmp **result);
 static struct utmp *pututline_unknown (const struct utmp *data);
+static void setutent_unknown (void);
 static void endutent_unknown (void);
 
 /* Initial Jump table.  */
@@ -58,42 +58,12 @@ __setutent (void)
 {
   __libc_lock_lock (__libc_utmp_lock);
 
-  (void) (*__libc_utmp_jump_table->setutent) (1);
+  (*__libc_utmp_jump_table->setutent) ();
 
   __libc_lock_unlock (__libc_utmp_lock);
 }
 weak_alias (__setutent, setutent)
 weak_alias (__setutent, setutxent)
-
-
-static int
-setutent_unknown (int reset)
-{
-  /* We have to test whether it is still not decided which backend to use.  */
-  assert (__libc_utmp_jump_table == &__libc_utmp_unknown_functions);
-
-  /* See whether utmpd is running.  */
-  if ((*__libc_utmp_daemon_functions.setutent) (reset))
-    __libc_utmp_jump_table = &__libc_utmp_daemon_functions;
-  else
-    {
-      /* Use the normal file, but if the current file is _PATH_UTMP or
-         _PATH_WTMP and the corresponding extended file (with an extra
-         'x' added to the pathname) exists, we use the extended file,
-         because the original file is in a different format.  */
-      if (strcmp (__libc_utmp_file_name, _PATH_UTMP) == 0
-	  && __access (_PATH_UTMP "x", F_OK) == 0)
-	__utmpname (_PATH_UTMP "x");
-      else if (strcmp (__libc_utmp_file_name, _PATH_WTMP) == 0
-	       && __access (_PATH_WTMP "x", F_OK) == 0)
-	__utmpname (_PATH_WTMP "x");
-
-      (*__libc_utmp_file_functions.setutent) (reset);
-      __libc_utmp_jump_table = &__libc_utmp_file_functions;
-    }
-
-  return 0;
-}
 
 
 void
@@ -107,6 +77,20 @@ __endutent (void)
 }
 weak_alias (__endutent, endutent)
 weak_alias (__endutent, endutxent)
+
+
+static void
+setutent_unknown (void)
+{
+  /* See whether utmpd is running.  */
+  if ((*__libc_utmp_daemon_functions.setutent) ())
+    __libc_utmp_jump_table = &__libc_utmp_daemon_functions;
+  else
+    {
+      (*__libc_utmp_file_functions.setutent) ();
+      __libc_utmp_jump_table = &__libc_utmp_file_functions;
+    }
+}
 
 
 static void
@@ -136,7 +120,7 @@ static int
 getutent_r_unknown (struct utmp *buffer, struct utmp **result)
 {
   /* It is not yet initialized.  */
-  setutent_unknown (0);
+  __setutent ();
 
   return (*__libc_utmp_jump_table->getutent_r) (buffer, result);
 }
@@ -158,12 +142,12 @@ __pututline (const struct utmp *data)
 weak_alias (__pututline, pututline)
 weak_alias (__pututline, pututxline)
 
-     
+
 static struct utmp *
 pututline_unknown (const struct utmp *data)
 {
   /* It is not yet initialized.  */
-  setutent_unknown (0);
+  __setutent ();
 
   return (*__libc_utmp_jump_table->pututline) (data);
 }

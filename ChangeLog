@@ -1,3 +1,193 @@
+1997-08-02 21:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/Makefile (headers): Rename netinet/inbits.h to bits/in.h.
+	* inet/netinet/in.h: Include bits/in.h instead of netinet/inbits.h.
+	* sysdeps/generic/netinet/inbits.h: Move to...
+	* sysdeps/generic/bits/in.h: ... here.
+	* sysdeps/unix/sysv/linux/bits/inbits.h: Move to ...
+	* sysdeps/unix/sysv/linux/bits/in.h: ... here.
+
+	* nis/Makefile (headers): Add bits/nislib.h.
+	* nis/rpcsvc/nislib.h: Moved to ....
+	* nis/bits/nislib.h: ... here.
+
+	* nis/nss_compat/compat-grp.c: Don't include <rpcsvc/nislib.h>.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-alias.c: Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c: Likewise.
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c: Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c: Likewise.
+	* nis/nss_nisplus/nisplus-ntework.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-publickey.c: Likewise.
+	* nis/nss_nisplus/nisplus-pwd.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c: Likewise.
+
+	* nis/rpcsvc/nis.x: Include bits/nislib.h, not rpcsvc/nislib.h.
+	* nis/rpcsvc/nis.h: Likewise.
+
+	* inet/getnameinfo.c (nrl_domainname): Change return type to const
+	char *.
+	(getnameinfo): Change type of local variable c to const char *.
+
+	* inet/inet_ntoa.c: Rewrite to use __libc_once for initialization.
+	* stdlib/fmtmsg.c: Likewise.
+
+	* intl/bindtextdom.c: Update from latest gettext.
+	* intl/dcgettext.c: Likewise.
+	* intl/finddomain.c: Likewise.
+	* intl/l10nflist.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* intl/textdomain.c: Likewise.
+
+	* login/getutid_r.c: Remove parameter to setutent call.
+	* login/getutline_r.c: Likewise.
+
+	* posix/wordexp.c: Complete rewrite.  Not fully implemented yet,
+	though.  Patch by Tim Waugh <tim@cyberelk.demon.co.uk>.
+
+	* stdio-common/printf_fp.c: Remove relative include paths.
+	* stdio-common/printf_fphex.c: Likewise.
+
+	* sysdeps/generic/crypt.h: Cleanup.  Don't define non standard
+	elements unless __USE_GNU.
+
+	* sysdeps/generic/vlimit.c: Pretty print.
+	* sysdeps/generic/vtimes.c: Likewise.
+
+	* sysdeps/i386/elf/bsd-_setjmp.S: New file.  Empty dummy file.
+	* sysdeps/i386/elf/bsd-setjmp.S: New file.  Empty dummy file.
+	* sysdeps/i386/elf/setjmp.S: New file.  Define __setjmp and also
+	weak definitions of setjmp and _setjmp.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: More patches by John Bowman.
+
+	* sysdeps/stub/if_index.h: Set errno in all functions and add
+	stub warnings.
+
+	* sysdeps/stub/libc-lock.h: Add __libc_once.
+
+1997-08-02 01:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/ptrace.c: Don't set errno in error
+	case since the __syscall_ptrace call already did this.
+	Reported by Philip Gladstone <philip@talon.raptor.com>.
+
+1997-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/sys/fsuid.h: Change include
+	<gnu/types.h> to <sys/types.h>.
+
+1997-08-01 23:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* csu/defs.awk: Fix regexp for end and align.
+	Patch by Klaus Espenlaub <kespenla@hydra.informatik.uni-ulm.de>.
+
+	* locale/programs/localedef.c (print_escaped): New function.
+	(show_info): Use print_escaped if strings can control unprintable
+	characters.
+	Patch by Jochen Hein <jochen.hein@delphi.central.de>.
+
+1997-08-01 18:45  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_nisplus/nisplus-alias.c: Fix NULL pointer problems
+	* nis/nss_nisplus/nisplus-grp.c: Likewise.
+
+1997-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-profile.c (_dl_start_profile): Use _dl_sysdep_error
+	instead of fprintf.
+
+1997-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/socket.texi (Host Address Functions): Fix arguments of
+	@deftypefun.
+
+1997-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-runtime.c: Avoid warning about profile_fixup being
+	unused.
+
+	* sysdeps/m68k/dl-machine.h: Add support for shared library
+	profiling.
+
+1997-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* md5-crypt/Makefile (extra-objs): Add onlymd5-crypt.o for
+	dependencies.
+
+1997-07-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Make-dist (subdirs): Distribute both aout and elf.
+
+1997-07-31 23:04  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* login/utmp-private.h: Remove reset argument from backend
+	setutent.
+	* login/getutent_r.c (__setutent): Allways call the setutent
+	function in the daemon backend.
+	(setutent_unknown): Function removed.
+	(getutent_unknown, pututline_unknown): Call __setutent instead of
+	setutent_unknown.
+	* login/utmp_file.c (setutent_file): Removed reset argument.  All
+	callers changed.
+	* login/utmp_daemon.c (setutent_daemon): Removed reset
+	argument.  All callers changed.  Try to open connection even if a
+	previous connection failed, but first check if the sockets exist
+	in the filesystem.
+
+	* login/utmp_daemon.c (pututline_daemon): Try to open connection
+	before reporting failure.
+
+	* login/programs/database.c (open_database): Create compatibility
+	file if it does not already exist.  Supply mode argument in open
+	calls to guarantee that created files have the proper protection.
+
+	* login/programs/utmpd.c (main): Remove files created by a
+	previous `bind' before creating sockets.
+	Suggested by a sun <asum@zoology.washington.edu>.
+
+1997-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c: Remove unneeded function check_int_exec.
+
+	* BUGS: Correct typos.
+
+	* gmon/gmon.c: Add alias for monstartup, declare _strerror_internal.
+
+1997-07-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/socket.texi (Host Address Functions): Reformat inet_ntop
+	entry to confirm with expected behaviour of some scripts.
+
+	* libc.map: Add functions/variables in global namespace,
+	remove wildcards.
+
+1997-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* resolv/libresolv.map: Add variables and routines used by named,
+	nslookup and other bind utils.
+	* libc.map: Likewise.
+
+1997-07-31 00:35  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/if_index.c: Rewrite to avoid using /proc
+	filesystem.
+	* inet/test_ifindex.c: New file.
+	* inet/Makefile (tests): Add test_ifindex.
+
+1997-08-01 04:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nisplus/nisplus-parser.c: Fix another bug in the parser.
+	Patch by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>.
+
+	* manual/errno.texi: Fix typo.
+	Reported by Erik Talvola <etalvo@sapient.com>.
+
 1997-07-28 23:35  Ulrich Drepper  <drepper@cygnus.com>
 
 	* csu/gmon-start.c (__gmon_start__): Call __monstartup not
@@ -9,7 +199,7 @@
 
 	* gmon/bb_exit_func.c (__bb_exit_func): Use memcpy instead of bcopy.
 	* gmon/gmon.c (__monstartup): Likewise.
-	(write_hist): Remove dependency on 32 int.
+	(write_hist): Remove dependency on 32 bit int.
 	(_mcleanup): Don't call perror, use fprintf.
 
 	* elf/dl-load.c: Fix handling of current directory in search path.

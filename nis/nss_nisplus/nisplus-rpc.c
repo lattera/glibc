@@ -24,7 +24,6 @@
 #include <bits/libc-lock.h>
 #include <rpc/netdb.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
 
@@ -225,7 +224,7 @@ internal_nisplus_getrpcent_r (struct rpcent *rpc, char *buffer,
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer, 
+      if ((parse_res = _nss_nisplus_parse_rpcent (result, rpc, buffer,
 						  buflen)) == -1)
 	{
 	  nis_freeresult (result);

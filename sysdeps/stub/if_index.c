@@ -16,28 +16,36 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #define __need_NULL
 #include <stddef.h>
 
 unsigned int
 if_nametoindex (const char *ifname)
 {
+  __set_errno (ENOSYS);
   return 0;
 }
+stub_warning (if_nametoindex)
 
 char *
 if_indextoname (unsigned int ifindex, char *ifname)
 {
+  __set_errno (ENOSYS);
   return NULL;
 }
+stub_warning (if_indextoname)
 
 void
 if_freenameindex (struct if_nameindex *ifn)
 {
 }
+stub_warning (if_freenameindex)
 
 struct if_nameindex *
 if_nameindex (void)
 {
+  __set_errno (ENOSYS);
   return NULL;
 }
+stub_warning (if_nameindex)

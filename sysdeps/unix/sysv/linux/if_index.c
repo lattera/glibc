@@ -20,121 +20,158 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <net/if.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <bits/libc-lock.h>
 
-#define IF_INET6_FILENAME   "/proc/net/if_inet6"
-
-/* /proc/net/if_inet6 contains lines that look like this:
- *
- * fe8000000000000000000000836fc168 0b 00 20 80     sit7
- *
- *                               |   |  |  |  |      |
- *                     address --'   |  |  |  |      |
- *                     index --------'  |  |  |      |
- *                     prefix length ---'  |  |      |
- *                     scope --------------'  |      |
- *                     flags -----------------'      |
- *                     name -------------------------'
- *
- */
-
-static int get_one_interface(FILE *fd, char *interface, int iflen, unsigned int *index)
+/* Try to get a socket to talk to the kernel.  */
+static int
+opensock (void)
 {
-  char buffer[80];
-  static char seps[] = " \012";
-  char *c = buffer;
-  char *sp;
-  if (!fgets(buffer, 80, fd))
-    return 1;
-  if (strtok_r(buffer, seps, &sp) == NULL) return 1;
-  if (c = strtok_r(NULL, seps, &sp), c == NULL) return 1;
-  *index = strtoul(c, NULL, 16);
-  if (strtok_r(NULL, seps, &sp) == NULL) return 1;
-  if (strtok_r(NULL, seps, &sp) == NULL) return 1;
-  if (strtok_r(NULL, seps, &sp) == NULL) return 1;
-  if (c = strtok_r(NULL, seps, &sp), c == NULL) return 1;
-  strncpy(interface, c, iflen);
-  return 0;
-}
+  /* Cache the last AF that worked, to avoid many redundant calls to
+     socket().  */
+  static int sock_af = -1;
+  int fd = -1;
+  __libc_lock_define_initialized (static, lock);
 
-unsigned int if_nametoindex(const char *ifname)
-{
-  FILE *fd = fopen(IF_INET6_FILENAME, "r");
-  char this_ifname[IFNAMSIZ];
-  unsigned int this_index;
-  if (!fd) return 0;
-  while (get_one_interface(fd, this_ifname, IFNAMSIZ, &this_index) == 0) {
-    if (!strcmp(this_ifname, ifname)) {
-      fclose(fd);
-      return this_index;
+  if (sock_af != -1)
+    {
+      fd = socket (sock_af, SOCK_DGRAM, 0);
+      if (fd != -1)
+        return fd;
     }
-  }
-  fclose(fd);
-  return 0;
-}
 
-char *if_indextoname(unsigned int ifindex, char *ifname)
-{
-  FILE *fd = fopen(IF_INET6_FILENAME, "r");
-  unsigned int this_index;
-  if (!fd) return NULL;
-  while (get_one_interface(fd, ifname, IFNAMSIZ, &this_index) == 0) {
-    if (this_index == ifindex) {
-      fclose(fd);
-      return ifname;
+  __libc_lock_lock (lock);
+
+  if (sock_af != -1)
+    fd = socket (sock_af, SOCK_DGRAM, 0);
+
+  if (fd == -1)
+    {
+      fd = socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
+      if (fd < 0)
+	fd = socket (sock_af = AF_INET, SOCK_DGRAM, 0);
+      if (fd < 0)
+	fd = socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
+      if (fd < 0)
+	fd = socket (sock_af = AF_AX25, SOCK_DGRAM, 0);
+      if (fd < 0)
+	fd = socket (sock_af = AF_APPLETALK, SOCK_DGRAM, 0);
     }
-  }
-  fclose(fd);
-  return NULL;
+
+  __libc_lock_unlock (lock);
+  return fd;
 }
 
-void if_freenameindex(struct if_nameindex *ifn)
+unsigned int
+if_nametoindex (const char *ifname)
+{
+  struct ifreq ifr;
+  int fd = opensock ();
+
+  if (fd < 0)
+    return 0;
+
+  strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
+  if (ioctl (fd, SIOGIFINDEX, &ifr) < 0)
+    {
+      close (fd);
+      return 0;
+    }
+  close (fd);
+  return ifr.ifr_ifindex;
+}
+
+void
+if_freenameindex (struct if_nameindex *ifn)
 {
   struct if_nameindex *ptr = ifn;
   while (ptr->if_name || ptr->if_index)
     {
       if (ptr->if_name)
-	free(ptr->if_name);
-      ptr++;
+	free (ptr->if_name);
+      ++ptr;
     }
-  free(ifn);
+  free (ifn);
 }
 
-struct if_nameindex *if_nameindex(void)
+struct if_nameindex *
+if_nameindex (void)
 {
-  FILE *fd = fopen(IF_INET6_FILENAME, "r");
-  struct if_nameindex *ifn = NULL;
-  int nifs = 0;
-  if (!fd) return NULL;
+  int fd = opensock ();
+  struct ifconf ifc;
+  unsigned int rq_ifs = 4, nifs, i;
+  struct if_nameindex *idx = NULL;
+
+  if (fd < 0)
+    return NULL;
+
+  ifc.ifc_buf = NULL;
+
+  /* Read all the interfaces out of the kernel.  */
   do
     {
-      struct if_nameindex *newifn;
-      nifs++;
-      newifn = realloc(ifn, nifs*sizeof(struct if_nameindex));
-      if (!newifn)
+      rq_ifs *= 2;
+      ifc.ifc_len = rq_ifs * sizeof (struct ifreq);
+      ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
+      if (ifc.ifc_buf == NULL)
 	{
-	  /* We ran out of memory. */
-	  if (--nifs)
-	    {
-	      free(ifn[nifs-1].if_name);
-	      ifn[nifs-1].if_name = 0;
-	      ifn[nifs-1].if_index = 0;
-	      if_freenameindex(ifn);
-	    }
+	  close(fd);
 	  return NULL;
 	}
-      ifn = newifn;
-      ifn[nifs-1].if_index = 0;
-      ifn[nifs-1].if_name = malloc(IFNAMSIZ);
-      if (ifn[nifs-1].if_name == NULL)
-	{
-	  if_freenameindex(ifn);
-	  return NULL;
-	}
+      if (ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+	goto jump;
     }
-  while (get_one_interface(fd, ifn[nifs-1].if_name, IFNAMSIZ,
-			   &ifn[nifs-1].if_index) == 0);
-  free(ifn[nifs-1].if_name);
-  ifn[nifs-1].if_name = NULL;
-  fclose(fd);
-  return ifn;
+  while ((unsigned int) ifc.ifc_len == (rq_ifs * sizeof (struct ifreq)));
+
+  nifs = ifc.ifc_len / sizeof (struct ifreq);
+  ifc.ifc_buf = realloc (ifc.ifc_buf, ifc.ifc_len);
+
+  idx = malloc ((nifs+1) * sizeof (struct if_nameindex));
+  if (idx == NULL)
+    goto jump;
+
+  for (i = 0; i < nifs; ++i)
+    {
+      struct ifreq *ifr = &ifc.ifc_req[i];
+      if ((idx[i].if_name = malloc (strlen (ifr->ifr_name)+1)) == NULL)
+	{
+	  free (idx);
+	  idx = NULL;
+	  goto jump;
+	}
+      strcpy (idx[i].if_name, ifr->ifr_name);
+      if (ioctl (fd, SIOGIFINDEX, ifr) < 0)
+	{
+	  free (idx);
+	  idx = NULL;
+	  goto jump;
+	}
+      idx[i].if_index = ifr->ifr_ifindex;
+    }
+  idx[i].if_index = 0;
+  idx[i].if_name = NULL;
+
+jump:
+  free (ifc.ifc_buf);
+  close (fd);
+  return idx;
+}
+
+char *
+if_indextoname (unsigned int ifindex, char *ifname)
+{
+  struct if_nameindex *idx = if_nameindex ();
+  struct if_nameindex *p;
+
+  for (p = idx; p->if_index || p->if_name; ++p)
+    if (p->if_index == ifindex)
+      {
+	strncpy (ifname, p->if_name, IFNAMSIZ);
+	if_freenameindex (idx);
+	return ifname;
+      }
+
+  if_freenameindex (idx);
+  return NULL;
 }

@@ -25,7 +25,6 @@
 #include <arpa/inet.h>
 #include <bits/libc-lock.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 
 #include "nss-nisplus.h"
 
@@ -86,7 +85,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
         {
           if (NISENTRYLEN (i, 1, result) + 2 > room_left)
 	    goto no_more_room;
-	  
+
 	  *p++ = ' ';
           p = stpncpy (p, NISENTRYVAL (i, 1, result),
                        NISENTRYLEN (i, 1, result));
@@ -217,7 +216,7 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	  if (niserr2nss (result->status) != NSS_STATUS_SUCCESS)
 	    {
 	      int retval;
-	      
+
 	      retval = niserr2nss (result->status);
 	      nis_freeresult (result);
 	      result = NULL;
@@ -254,15 +253,15 @@ internal_nisplus_getnetent_r (struct netent *network, char *buffer,
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_netent (result, network, buffer, 
+      if ((parse_res = _nss_nisplus_parse_netent (result, network, buffer,
 						  buflen)) == -1)
         {
           *herrnop = NETDB_INTERNAL;
           return NSS_STATUS_TRYAGAIN;
         }
-      
+
     } while (!parse_res);
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -301,7 +300,7 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
     {
       nis_result *result;
       char buf[strlen (name) + 255 + tablename_len];
-      
+
       /* Search at first in the alias list, and use the correct name
 	 for the next search */
       sprintf(buf, "[name=%s],%s", name, tablename_val);
@@ -390,7 +389,7 @@ _nss_nisplus_getnetbyaddr_r (const unsigned long addr, const int type,
 
     if (parse_res > 0)
       return NSS_STATUS_SUCCESS;
-    
+
     *herrnop = NETDB_INTERNAL;
     if (parse_res == -1)
       return NSS_STATUS_TRYAGAIN;

@@ -43,7 +43,7 @@ vlimit (resource, value)
 	return -1;
 
       lims.rlim_cur = value;
-      return setrlimit(rlimit_res, &lims);
+      return setrlimit (rlimit_res, &lims);
     }
 
   __set_errno (EINVAL);

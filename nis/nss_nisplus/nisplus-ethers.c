@@ -25,7 +25,6 @@
 #include <netdb.h>
 #include <netinet/ether.h>
 #include <rpcsvc/nis.h>
-#include <rpcsvc/nislib.h>
 #include <netinet/if_ether.h>
 
 #include "nss-nisplus.h"
@@ -153,7 +152,7 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
   do
     {
       nis_result *saved_result;
-      
+
       if (result == NULL)
 	{
 	  saved_result = NULL;
@@ -175,7 +174,7 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 	    }
 	}
 
-      if ((parse_res = _nss_nisplus_parse_etherent (result, ether, buffer, 
+      if ((parse_res = _nss_nisplus_parse_etherent (result, ether, buffer,
 						    buflen)) == -1)
 	{
 	  nis_freeresult (result);
@@ -187,7 +186,7 @@ internal_nisplus_getetherent_r (struct etherent *ether, char *buffer,
 	  if (saved_result != NULL)
 	    nis_freeresult (saved_result);
 	}
-      
+
     } while (!parse_res);
 
   return NSS_STATUS_SUCCESS;
@@ -233,14 +232,14 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 	  nis_freeresult (result);
 	  return status;
 	}
-      
+
       if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
 						    buflen)) == -1)
 	{
 	  nis_freeresult (result);
 	  return NSS_STATUS_TRYAGAIN;
 	}
-	  
+
       if (parse_res)
         return NSS_STATUS_SUCCESS;
     }
@@ -282,16 +281,15 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr,
 	  return status;
 	}
 
-      if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer, 
+      if ((parse_res = _nss_nisplus_parse_etherent (result, eth, buffer,
 						    buflen)) == -1)
 	{
 	  nis_freeresult (result);
 	  return NSS_STATUS_TRYAGAIN;
 	}
-      
+
       if (parse_res)
 	return NSS_STATUS_SUCCESS;
     }
   return NSS_STATUS_NOTFOUND;
 }
-

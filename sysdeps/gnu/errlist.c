@@ -249,7 +249,7 @@ TRANS until some external condition makes it possible to read, write, or
 TRANS connect (whatever the operation).  You can use @code{select} to find out
 TRANS when the operation will be possible; @pxref{Waiting for I/O}.
 TRANS 
-TRANS @strong{Portability Note:} In older Unix many systems, this condition
+TRANS @strong{Portability Note:} In older many Unix systems, this condition
 TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
 TRANS different from @code{EAGAIN}.  To make your program portable, you should
 TRANS check for both codes and treat them the same.

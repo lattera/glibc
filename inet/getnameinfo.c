@@ -77,7 +77,7 @@ struct hostent *_addr2hostname_hosts (const char *, int, int);
 #endif /* min */
 
 
-static char *
+static const char *
 nrl_domainname (void)
 {
   static const char *domain = NULL;
@@ -267,7 +267,7 @@ getnameinfo (const struct sockaddr *sa, size_t addrlen, char *host,
 	      {
 		if (flags & NI_NOFQDN)
 		  {
-		    char *c;
+		    const char *c;
 		    if ((c = nrl_domainname ()) && (c = strstr(h->h_name, c))
 			&& (c != h->h_name) && (*(--c) == '.'))
 		      {

@@ -31,6 +31,9 @@
 # include <string.h>
 #else
 # include <strings.h>
+# ifndef memcpy
+#  define memcpy(Dst, Src, Num) bcopy (Src, Dst, Num)
+# endif
 #endif
 
 #ifdef _LIBC
