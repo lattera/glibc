@@ -3,4 +3,4 @@
 #define SIGNED		0
 #define FUNC_NAME	__remqu
 
-#include "divrem.S"
+#include "divrem.h"

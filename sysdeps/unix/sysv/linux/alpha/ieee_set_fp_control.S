@@ -20,10 +20,9 @@ Cambridge, MA 02139, USA.  */
 
 #define SSI_IEEE_FP_CONTROL	14
 
-	.text
-ENTRY(__ieee_set_fp_control)
+LEAF(__ieee_set_fp_control, 8)
 	lda	sp, -8(sp)
-	.prologue 1
+	.prologue 0
 
 	stq	a0, 0(sp)
 	mov	sp, a1
@@ -36,8 +35,9 @@ ENTRY(__ieee_set_fp_control)
 	bne	a3, error
 	ret
 
-error:	lda	pv, syscall_error
-	jmp	zero,(pv)
+error:	br	gp, 1f
+1:	ldgp	gp, 0(gp)
+	jmp	zero, syscall_error
 
 	.end __ieee_set_fp_control
 

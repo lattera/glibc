@@ -1,3 +1,74 @@
+Wed May 22 00:40:50 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/speed.c (speeds): Add entry for
+ 	460800 baud.
+
+	* sysdeps/unix/sysv/linux/alpha/statbuf.h: New file.
+
+	* sysdeps/unix/sysv/linux/Makefile (headers): Add
+ 	alpha/ptrace.h.
+	* sysdeps/unix/sysv/linux/alpha/alpha/ptrace.h: New file.
+
+	* sysdeps/libm-ieee754/s_scalbnf.c: Call __scalbnf instead of
+ 	scalbnf.
+
+	* sysdeps/generic/sigset.h (__sigismember, __sigaddset,
+ 	__sigdelset): Add declaration to keep ANSI compilers quiet.
+
+	* sysdeps/alpha/__math.h (cabs): Remove underscores from struct
+ 	__cabs_complex member names in call to __hypot().
+
+	* sysdeps/alpha/copysign.S, sysdeps/alpha/fabs.S: New files.
+
+	* sysdeps/alpha/divrem.h: Renamed from sysdeps/alpha/divrem.S to avoid
+ 	name collision with math library.
+
+	* sysdeps/alpha/divl.S, sysdeps/alpha/divlu.S, sysdeps/alpha/divq.S,
+	sysdeps/alpha/divqu.S, sysdeps/alpha/reml.S, sysdeps/alpha/remlu.S,
+	sysdeps/alpha/remq.S, sysdeps/alpha/remqu.S: Include divrem.h instead
+	of divrem.S.
+
+	* sysdeps/unix/alpha/sysdep.h: Include regdef.h.  Define LEAF macro
+	to simplify declaration of leaf functions.
+
+	* sysdeps/alpha/_mcount.S, sysdeps/alpha/bb_init_func.S,
+ 	sysdeps/alpha/bsd-setjmp.S, sysdeps/alpha/ffs.S,
+ 	sysdeps/alpha/htonl.S, sysdeps/alpha/htons.S, sysdeps/alpha/memchr.S,
+ 	sysdeps/alpha/setjmp.S, sysdeps/alpha/strlen.S,
+ 	sysdeps/alpha/udiv_qrnnd.S, sysdeps/unix/sysv/linux/alpha/brk.S,
+ 	sysdeps/unix/sysv/linux/alpha/ieee_get_fp_control.S,
+ 	sysdeps/unix/sysv/linux/alpha/ieee_set_fp_control.S,
+ 	sysdeps/unix/sysv/linux/alpha/pipe.S,
+ 	sysdeps/unix/sysv/linux/sigsuspend.S,
+ 	sysdeps/unix/sysv/linux/alpha/syscall.S,
+ 	sysdeps/unix/sysv/linux/alpha/sysdep.S: Remove include of regdef.h.
+  	sysdep.h includes it now. Replace ENTRY by LEAF with appropriate
+ 	framesize declaration.  Replace "lda pv,sym/jsr pv" by "jsr sym".
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (NO_UNDERSCORES): Don't
+	define.
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Added getsockopt,
+	ptrace, and sysctl.
+
+	* sysdeps/unix/sysv/linux/alpha/profil-counter.h: File removed.
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Modify to support
+ 	dynamic recognition of platform type.
+	(_bus_base): New function.
+
+	* sysdeps/unix/sysv/linux/alpha/llseek.S: New file.
+
+	* sunrpc/rpc/rpc.h, sunrpc/rpc/svc.h: Avoid nested comments since
+ 	they produce ugly warnings by gcc.
+
+	* posix/sys/types.h [__USE_MISC]: Add typedef for ulong.
+
+Wed Mar 27 10:26:21 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/alpha/setjmp.S: Must establish global pointer before
+ 	address of __sigsetjmp_aux can be loaded.
+
 Wed May 22 22:10:01 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* stdlib/canonicalize.c: New file.

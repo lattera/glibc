@@ -35,16 +35,13 @@ For correctness consider that:
 */
 
 #include <sysdep.h>
-#ifdef __linux__
-# include <alpha/regdef.h>
-#else
-#include <regdef.h>
-#endif
 
         .set noreorder
         .set noat
 
 ENTRY(memchr)
+	.prologue 0
+
 	beq	a2, not_found
         ldq_u   t0, 0(a0)       # load first quadword (a0 may be misaligned)
 	addq	a0, a2, t4

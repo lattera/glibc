@@ -42,6 +42,7 @@ static const speed_t speeds[] =
     57600,
     115200,
     230400,
+    460800,
   };
 
 

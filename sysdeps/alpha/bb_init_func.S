@@ -24,11 +24,6 @@ caller-saved (call-used) registers (except for argument registers
 a1-a5). */
 
 #include <sysdep.h>
-#ifdef __linux__
-# include <alpha/regdef.h>
-#else
-# include <regdef.h>
-#endif
 
 /*
  * These offsets should match with "struct bb" declared in gcc/libgcc2.c.
@@ -40,12 +35,19 @@ a1-a5). */
 	.set	noreorder
 
 ENTRY(__bb_init_func)
+	.prologue 0
+
 	ldq	t0, ZERO_WORD(a0)	/* t0 <- blocks->zero_word */
 	beq	t0, init		/* not initialized yet -> */
 	ret
+	
+	.end __bb_init_func
 
 
-init:	subq	sp, 0x38, sp
+LEAF(init, 0x38)
+	subq	sp, 0x38, sp
+	.prologue 0
+
 	stq	pv, 0x30(sp)
 	br	pv, 1f
 1:	ldgp	gp, 0(pv)
@@ -81,5 +83,5 @@ init:	subq	sp, 0x38, sp
 leave:	ldq	pv, 0x30(sp)
 	addq	sp, 0x38, sp
 	ret
-	
-	.end __bb_init_func
+
+	.end init

@@ -103,10 +103,29 @@ clobbered (assembly temporary), anything else must be saved.  */
 	.ent FUNC_NAME
 	.globl FUNC_NAME
 
+#define FRAME_SIZE	0x30
+
 	.align 5
 FUNC_NAME:
-#	define FRAME_SIZE	0x30
-	.frame	sp,FRAME_SIZE,ra,0
+#ifdef PROF
+	lda	sp, -0x18(sp)
+	stq	ra, 0x00(sp)
+	stq	pv, 0x08(sp)
+	stq	gp, 0x10(sp)
+
+	br	AT, 1f
+1:	ldgp	gp, 0(AT)
+	lda	AT, _mcount
+
+	mov	retaddr, ra
+	jsr	AT, (AT), _mcount
+
+	ldq	ra, 0x00(sp)
+	ldq	pv, 0x08(sp)
+	ldq	gp, 0x10(sp)
+	lda	sp, 0x18(sp)
+#endif
+	.frame	sp, FRAME_SIZE, ra, 0
 	lda	sp,-FRAME_SIZE(sp)
 	.prologue 1
 	stq	arg1,0x00(sp)

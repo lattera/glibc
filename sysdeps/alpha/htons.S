@@ -17,16 +17,12 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
-#ifdef __linux__
-# include <alpha/regdef.h>
-#else
-#include <regdef.h>
-#endif
 
 ENTRY(__htons)
-	extwh	a0,7,t1		# t1 = bb00
-	extbl	a0,1,v0		# v0 = 00aa
-	bis	v0,t1,v0	# v0 = bbaa
+	.prologue 0
+	extwh	a0, 7, t1	# t1 = bb00
+	extbl	a0, 1, v0	# v0 = 00aa
+	bis	v0, t1, v0	# v0 = bbaa
 	ret
 
 	.end	__htons

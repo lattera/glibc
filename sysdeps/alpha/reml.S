@@ -3,4 +3,4 @@
 #define SIGNED		1
 #define FUNC_NAME	__reml
 
-#include "divrem.S"
+#include "divrem.h"

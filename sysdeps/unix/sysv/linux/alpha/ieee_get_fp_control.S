@@ -21,9 +21,10 @@ Cambridge, MA 02139, USA.  */
 #define GSI_IEEE_FP_CONTROL	45
 
 	.text
-ENTRY(__ieee_get_fp_control)
+
+LEAF(__ieee_get_fp_control, 8)
 	lda	sp, -8(sp)
-	.prologue 1
+	.prologue 0
 
 	mov	sp, a1
 	ldi	a0, GSI_IEEE_FP_CONTROL
@@ -36,8 +37,9 @@ ENTRY(__ieee_get_fp_control)
 	ret
 
 error:	lda	sp, 8(sp)
-	lda	pv, syscall_error
-	jmp	zero,(pv)
+	br	gp, 1f
+1:	ldgp	gp, 0(gp)
+	jmp	zero, syscall_error
 
 	.end __ieee_get_fp_control
 

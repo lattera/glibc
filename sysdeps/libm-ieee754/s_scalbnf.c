@@ -31,9 +31,9 @@ huge   = 1.0e+30,
 tiny   = 1.0e-30;
 
 #ifdef __STDC__
-	float scalbnf (float x, int n)
+	float __scalbnf (float x, int n)
 #else
-	float scalbn (x,n)
+	float __scalbnf (x,n)
 	float x; int n;
 #endif
 {

@@ -50,6 +50,10 @@ typedef unsigned long int __sigset_t;
    call we know fails with EINVAL (kludge city!), so as to avoid referring
    to `errno' in this file (sigh).  */
 
+extern __sigismember (__const __sigset_t *, int);
+extern __sigaddset (__sigset_t *, int);
+extern __sigdelset (__sigset_t *, int);
+
 #ifndef _EXTERN_INLINE
 #define _EXTERN_INLINE extern __inline
 #endif

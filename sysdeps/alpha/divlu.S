@@ -3,4 +3,4 @@
 #define SIGNED		0
 #define FUNC_NAME	__divlu
 
-#include "divrem.S"
+#include "divrem.h"

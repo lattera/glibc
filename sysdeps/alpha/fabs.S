@@ -1,6 +1,6 @@
-/* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  Alpha version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by David Mosberger <davidm@azstarnet.com>
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,14 +17,11 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* This just does a tail-call to `__sigsetjmp (ARG, 1)'.
-   We cannot do it in C because it must be a tail-call, so frame-unwinding
-   in setjmp doesn't clobber the state restored by longjmp.  */
-
 #include <sysdep.h>
 
-ENTRY(setjmp)
-	lda	$27, __sigsetjmp	/* Load address to jump to.  */
-	bis	$31, 1, $17		/* Pass a second argument of one.  */
-	jmp	$31, ($27), __sigsetjmp /* Call __sigsetjmp.  */
-	.end setjmp
+ENTRY(fabs)
+	.prologue 0
+	cpys	$f31,$f16,$f0
+	ret
+
+	.end fabs

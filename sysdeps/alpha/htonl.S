@@ -17,22 +17,18 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
-#ifdef __linux__
-# include <alpha/regdef.h>
-#else
-#include <regdef.h>
-#endif
 
 ENTRY(__htonl)
-	extlh	a0,5,t1		# t1 = dd000000
-	zap	a0,0xfd,t2	# t2 = 0000cc00
-	sll	t2,5,t2		# t2 = 00198000
-	s8addl	t2,t1,t1	# t1 = ddcc0000
-	zap	a0,0xfb,t2	# t2 = 00bb0000
-	srl	t2,8,t2		# t2 = 0000bb00
-	extbl	a0,3,v0		# v0 = 000000aa
-	or	t1,v0,v0	# v0 = ddcc00aa
-	or	t2,v0,v0	# v0 = ddccbbaa
+	.prologue 0
+	extlh	a0, 5, t1	# t1 = dd000000
+	zap	a0, 0xfd, t2	# t2 = 0000cc00
+	sll	t2, 5, t2	# t2 = 00198000
+	s8addl	t2, t1, t1	# t1 = ddcc0000
+	zap	a0, 0xfb, t2	# t2 = 00bb0000
+	srl	t2, 8, t2	# t2 = 0000bb00
+	extbl	a0, 3, v0	# v0 = 000000aa
+	or	t1, v0, v0	# v0 = ddcc00aa
+	or	t2, v0, v0	# v0 = ddccbbaa
 	ret
 
 	.end	__htonl

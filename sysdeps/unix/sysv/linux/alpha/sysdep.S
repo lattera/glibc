@@ -20,11 +20,12 @@ Cambridge, MA 02139, USA.  */
 #define _ERRNO_H
 #include <errnos.h>
 
-ENTRY(syscall_error)
+LEAF(syscall_error, 0)
+	.prologue 1
+
 	/* Store return value in errno... */
 	ldgp	gp, 0(t12)
-	lda	t0, errno
-	stl	v0, 0(t0)
+	stl	v0, errno
 
 	/* And just kick back a -1.  */
 	ldi	v0, -1

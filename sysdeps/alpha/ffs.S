@@ -22,11 +22,6 @@ Cambridge, MA 02139, USA.  */
 architecture.  */
 
 #include <sysdep.h>
-#ifdef __linux__
-# include <alpha/regdef.h>
-#else
-#include <regdef.h>
-#endif
 
         .set noreorder
         .set noat

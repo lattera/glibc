@@ -1,7 +1,5 @@
-/* Low-level statistical profiling support function.  Mostly POSIX.1 version.
-Copyright (C) 1996 Free Software Foundation, Inc.
-Contributed by David Mosberger <davidm@azstarnet.com>
-This file is part of the GNU C Library.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
+   Contributed by David Mosberger (davidm@cs.arizona.edu).
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -18,11 +16,34 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <asm/sigcontext.h>
+/* For compatibility only: a "long" is 64 bits on the Alpha, so
+   llseek() isn't really needed.  But there are some programs out
+   there who may depend on it being around. 
+*/
 
-void
-profil_counter (int signal, long a1, long a2, long a3, long a4, long a5,
-		struct sigcontext_struct sc)
-{
-  profil_count((void *) sc.sc_pc);
-}
+#include <sysdep.h>
+
+	.text
+ENTRY(llseek)
+	.prologue 0
+
+	mov	a3, t0		/* save result address */
+
+	sll	a1, 32, a1	/* build a 64 bit ofs out of 32 bit operands */
+	zap	a2, 0xf0, a2
+	bis	a2, a1, a1
+
+	mov	a4, a2		/* shift down whence */
+
+	ldi	v0, __NR_lseek
+	call_pal PAL_callsys
+	bne	a3, error
+
+	stq	v0, 0(t0)
+	ret
+
+error:	br	gp, 1f
+1:	ldgp	gp, 0(gp)
+	jmp	zero, syscall_error
+
+	.end llseek
