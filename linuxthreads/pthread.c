@@ -236,6 +236,8 @@ const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
 const int __linuxthreads_pthread_sizeof_descr
   = sizeof(struct _pthread_descr_struct);
 
+const int __linuxthreads_initial_report_events;
+
 /* Forward declarations */
 
 static void pthread_onexit_process(int retcode, void *arg);
@@ -622,7 +624,7 @@ int __pthread_initialize_manager(void)
 
 #ifdef USE_TLS
   /* Allocate memory for the thread descriptor and the dtv.  */
-  manager_thread = tcb = _dl_allocate_tls ();
+  __pthread_handles[1].h_descr = manager_thread = tcb = _dl_allocate_tls ();
   if (tcb == NULL) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
@@ -651,8 +653,14 @@ int __pthread_initialize_manager(void)
   /* Start the thread manager */
   pid = 0;
 #ifdef USE_TLS
+  if (__linuxthreads_initial_report_events != 0)
+    THREAD_SETMEM (((pthread_descr) NULL), p_report_events,
+		   __linuxthreads_initial_report_events);
   report_events = THREAD_GETMEM (((pthread_descr) NULL), p_report_events);
 #else
+  if (__linuxthreads_initial_report_events != 0)
+    __pthread_initial_thread.p_report_events
+      = __linuxthreads_initial_report_events;
   report_events = __pthread_initial_thread.p_report_events;
 #endif
   if (__builtin_expect (report_events, 0))
