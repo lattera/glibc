@@ -56,12 +56,13 @@ compat_symbol (libpthread, __pthread_attr_init_2_0, pthread_attr_init,
 	       GLIBC_2_0);
 #endif
 
-int pthread_attr_destroy(pthread_attr_t *attr)
+int __pthread_attr_destroy(pthread_attr_t *attr)
 {
   return 0;
 }
+strong_alias (__pthread_attr_destroy, pthread_attr_destroy);
 
-int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate)
+int __pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate)
 {
   if (detachstate < PTHREAD_CREATE_JOINABLE ||
       detachstate > PTHREAD_CREATE_DETACHED)
@@ -69,15 +70,17 @@ int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate)
   attr->__detachstate = detachstate;
   return 0;
 }
+strong_alias (__pthread_attr_setdetachstate, pthread_attr_setdetachstate);
 
-int pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate)
+int __pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate)
 {
   *detachstate = attr->__detachstate;
   return 0;
 }
+strong_alias (__pthread_attr_getdetachstate, pthread_attr_getdetachstate);
 
-int pthread_attr_setschedparam(pthread_attr_t *attr,
-                               const struct sched_param *param)
+int __pthread_attr_setschedparam(pthread_attr_t *attr,
+                                 const struct sched_param *param)
 {
   int max_prio = __sched_get_priority_max(attr->__schedpolicy);
   int min_prio = __sched_get_priority_min(attr->__schedpolicy);
@@ -87,43 +90,49 @@ int pthread_attr_setschedparam(pthread_attr_t *attr,
   memcpy (&attr->__schedparam, param, sizeof (struct sched_param));
   return 0;
 }
+strong_alias (__pthread_attr_setschedparam, pthread_attr_setschedparam);
 
-int pthread_attr_getschedparam(const pthread_attr_t *attr,
-                               struct sched_param *param)
+int __pthread_attr_getschedparam(const pthread_attr_t *attr,
+                                 struct sched_param *param)
 {
   memcpy (param, &attr->__schedparam, sizeof (struct sched_param));
   return 0;
 }
+strong_alias (__pthread_attr_getschedparam, pthread_attr_getschedparam);
 
-int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy)
+int __pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy)
 {
   if (policy != SCHED_OTHER && policy != SCHED_FIFO && policy != SCHED_RR)
     return EINVAL;
   attr->__schedpolicy = policy;
   return 0;
 }
+strong_alias (__pthread_attr_setschedpolicy, pthread_attr_setschedpolicy);
 
-int pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy)
+int __pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy)
 {
   *policy = attr->__schedpolicy;
   return 0;
 }
+strong_alias (__pthread_attr_getschedpolicy, pthread_attr_getschedpolicy);
 
-int pthread_attr_setinheritsched(pthread_attr_t *attr, int inherit)
+int __pthread_attr_setinheritsched(pthread_attr_t *attr, int inherit)
 {
   if (inherit != PTHREAD_INHERIT_SCHED && inherit != PTHREAD_EXPLICIT_SCHED)
     return EINVAL;
   attr->__inheritsched = inherit;
   return 0;
 }
+strong_alias (__pthread_attr_setinheritsched, pthread_attr_setinheritsched);
 
-int pthread_attr_getinheritsched(const pthread_attr_t *attr, int *inherit)
+int __pthread_attr_getinheritsched(const pthread_attr_t *attr, int *inherit)
 {
   *inherit = attr->__inheritsched;
   return 0;
 }
+strong_alias (__pthread_attr_getinheritsched, pthread_attr_getinheritsched);
 
-int pthread_attr_setscope(pthread_attr_t *attr, int scope)
+int __pthread_attr_setscope(pthread_attr_t *attr, int scope)
 {
   switch (scope) {
   case PTHREAD_SCOPE_SYSTEM:
@@ -135,12 +144,14 @@ int pthread_attr_setscope(pthread_attr_t *attr, int scope)
     return EINVAL;
   }
 }
+strong_alias (__pthread_attr_setscope, pthread_attr_setscope);
 
-int pthread_attr_getscope(const pthread_attr_t *attr, int *scope)
+int __pthread_attr_getscope(const pthread_attr_t *attr, int *scope)
 {
   *scope = attr->__scope;
   return 0;
 }
+strong_alias (__pthread_attr_getscope, pthread_attr_getscope);
 
 int __pthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize)
 {

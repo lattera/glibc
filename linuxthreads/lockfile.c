@@ -21,80 +21,51 @@
 #include <stdio.h>
 #include <pthread.h>
 #include "internals.h"
-
-#ifdef USE_IN_LIBIO
 #include "../libio/libioP.h"
-#endif
-
-#ifndef SHARED
-/* We need a hook to force this file to be linked in when static
-   libpthread is used.  */
-const int __pthread_provide_lockfile = 0;
-#endif
 
 void
 __flockfile (FILE *stream)
 {
-#ifdef USE_IN_LIBIO
   __pthread_mutex_lock (stream->_lock);
-#else
-#endif
 }
-#ifdef USE_IN_LIBIO
 #undef _IO_flockfile
 strong_alias (__flockfile, _IO_flockfile)
-#endif
 weak_alias (__flockfile, flockfile);
 
 
 void
 __funlockfile (FILE *stream)
 {
-#ifdef USE_IN_LIBIO
   __pthread_mutex_unlock (stream->_lock);
-#else
-#endif
 }
-#ifdef USE_IN_LIBIO
 #undef _IO_funlockfile
 strong_alias (__funlockfile, _IO_funlockfile)
-#endif
 weak_alias (__funlockfile, funlockfile);
 
 
 int
 __ftrylockfile (FILE *stream)
 {
-#ifdef USE_IN_LIBIO
   return __pthread_mutex_trylock (stream->_lock);
-#else
-#endif
 }
-#ifdef USE_IN_LIBIO
 strong_alias (__ftrylockfile, _IO_ftrylockfile)
-#endif
 weak_alias (__ftrylockfile, ftrylockfile);
 
 void
 __flockfilelist(void)
 {
-#ifdef USE_IN_LIBIO
   _IO_list_lock();
-#endif
 }
 
 void
 __funlockfilelist(void)
 {
-#ifdef USE_IN_LIBIO
   _IO_list_unlock();
-#endif
 }
 
 void
 __fresetlockfiles (void)
 {
-#ifdef USE_IN_LIBIO
   _IO_ITER i;
 
   pthread_mutexattr_t attr;
@@ -108,5 +79,4 @@ __fresetlockfiles (void)
   __pthread_mutexattr_destroy (&attr);
 
   _IO_list_resetlock();
-#endif
 }

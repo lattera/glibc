@@ -21,21 +21,22 @@
 #ifndef _PT_MACHINE_H
 #define _PT_MACHINE_H   1
 
-#include <stddef.h>	/* For offsetof.  */
-#include <stdlib.h>	/* For abort().  */
-#include <asm/prctl.h>
+#ifndef __ASSEMBLER__
+# include <stddef.h>	/* For offsetof.  */
+# include <stdlib.h>	/* For abort().  */
+# include <asm/prctl.h>
 
 
-#ifndef PT_EI
-# define PT_EI extern inline
-#endif
+# ifndef PT_EI
+#  define PT_EI extern inline
+# endif
 
 extern long int testandset (int *spinlock);
 extern int __compare_and_swap (long int *p, long int oldval, long int newval);
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
+# define CURRENT_STACK_FRAME  stack_pointer
 register char * stack_pointer __asm__ ("%rsp");
 
 
@@ -56,7 +57,7 @@ testandset (int *spinlock)
 
 
 /* Compare-and-swap for semaphores.  */
-#define HAS_COMPARE_AND_SWAP
+# define HAS_COMPARE_AND_SWAP
 
 PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
@@ -77,7 +78,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
    assignments like
 	pthread_descr self = thread_self();
    do not get optimized away.  */
-#define THREAD_SELF \
+# define THREAD_SELF \
 ({									      \
   register pthread_descr __self;					      \
   __asm__ ("movq %%fs:%c1,%0" : "=r" (__self)				      \
@@ -90,14 +91,14 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 extern int __arch_prctl (int __code, unsigned long __addr);
 
 /* Initialize the thread-unique value.  */
-#define INIT_THREAD_SELF(descr, nr) \
+# define INIT_THREAD_SELF(descr, nr) \
 {									      \
   if (__arch_prctl (ARCH_SET_FS, (unsigned long)descr) != 0)		      \
     abort ();								      \
 }
 
 /* Read member of the thread descriptor directly.  */
-#define THREAD_GETMEM(descr, member) \
+# define THREAD_GETMEM(descr, member) \
 ({									      \
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
@@ -127,7 +128,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 })
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-#define THREAD_GETMEM_NC(descr, member) \
+# define THREAD_GETMEM_NC(descr, member) \
 ({									      \
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
@@ -157,7 +158,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 })
 
 /* Set member of the thread descriptor directly.  */
-#define THREAD_SETMEM(descr, member, value) \
+# define THREAD_SETMEM(descr, member, value) \
 ({									      \
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
@@ -184,7 +185,7 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 })
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-#define THREAD_SETMEM_NC(descr, member, value) \
+# define THREAD_SETMEM_NC(descr, member, value) \
 ({									      \
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
@@ -209,6 +210,8 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 					     member)));			      \
     }									      \
 })
+
+#endif /* !__ASSEMBLER__ */
 
 /* We want the OS to assign stack addresses.  */
 #define FLOATING_STACKS	1

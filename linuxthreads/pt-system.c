@@ -1,5 +1,6 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,35 +18,15 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <signal.h>
-#include <unistd.h>
-
+#include <stdlib.h>
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
-#include <bp-checks.h>
-
-extern int __syscall_rt_sigsuspend (const sigset_t *__unbounded, size_t);
 
 
-/* Change the set of blocked signals to SET,
-   wait until a signal arrives, and restore the set of blocked signals.  */
 int
-__sigsuspend (set)
-     const sigset_t *set;
+system (const char *line)
 {
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
-
   int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
-
+  int result = __libc_system (line);
   LIBC_CANCEL_RESET (oldtype);
-
   return result;
 }
-libc_hidden_def (__sigsuspend)
-weak_alias (__sigsuspend, sigsuspend)
-strong_alias (__sigsuspend, __libc_sigsuspend)

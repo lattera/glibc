@@ -25,19 +25,21 @@
 #include "queue.h"
 #include "restart.h"
 
-int pthread_cond_init(pthread_cond_t *cond,
-                      const pthread_condattr_t *cond_attr)
+int __pthread_cond_init(pthread_cond_t *cond,
+                        const pthread_condattr_t *cond_attr)
 {
   __pthread_init_lock(&cond->__c_lock);
   cond->__c_waiting = NULL;
   return 0;
 }
+strong_alias (__pthread_cond_init, pthread_cond_init)
 
-int pthread_cond_destroy(pthread_cond_t *cond)
+int __pthread_cond_destroy(pthread_cond_t *cond)
 {
   if (cond->__c_waiting != NULL) return EBUSY;
   return 0;
 }
+strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
 
 /* Function called by pthread_cancel to remove the thread from
    waiting on a condition variable queue. */
@@ -55,7 +57,7 @@ static int cond_extricate_func(void *obj, pthread_descr th)
   return did_remove;
 }
 
-int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+int __pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   volatile pthread_descr self = thread_self();
   pthread_extricate_if extr;
@@ -132,6 +134,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   pthread_mutex_lock(mutex);
   return 0;
 }
+strong_alias (__pthread_cond_wait, pthread_cond_wait)
 
 static int
 pthread_cond_timedwait_relative(pthread_cond_t *cond,
@@ -234,7 +237,7 @@ int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
   return pthread_cond_timedwait_relative(cond, mutex, abstime);
 }
 
-int pthread_cond_signal(pthread_cond_t *cond)
+int __pthread_cond_signal(pthread_cond_t *cond)
 {
   pthread_descr th;
 
@@ -248,8 +251,9 @@ int pthread_cond_signal(pthread_cond_t *cond)
   }
   return 0;
 }
+strong_alias (__pthread_cond_signal, pthread_cond_signal)
 
-int pthread_cond_broadcast(pthread_cond_t *cond)
+int __pthread_cond_broadcast(pthread_cond_t *cond)
 {
   pthread_descr tosignal, th;
 
@@ -266,16 +270,19 @@ int pthread_cond_broadcast(pthread_cond_t *cond)
   }
   return 0;
 }
+strong_alias (__pthread_cond_broadcast, pthread_cond_broadcast)
 
-int pthread_condattr_init(pthread_condattr_t *attr)
+int __pthread_condattr_init(pthread_condattr_t *attr)
 {
   return 0;
 }
+strong_alias (__pthread_condattr_init, pthread_condattr_init)
 
-int pthread_condattr_destroy(pthread_condattr_t *attr)
+int __pthread_condattr_destroy(pthread_condattr_t *attr)
 {
   return 0;
 }
+strong_alias (__pthread_condattr_destroy, pthread_condattr_destroy)
 
 int pthread_condattr_getpshared (const pthread_condattr_t *attr, int *pshared)
 {

@@ -106,6 +106,7 @@ struct _pthread_descr_struct {
 				   the address of this thread descriptor.  */
       union dtv *dtvp;
       pthread_descr self;	/* Pointer to this structure */
+      int multiple_threads;
     } data;
     void *__padding[16];
   } p_header;

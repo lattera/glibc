@@ -33,12 +33,11 @@
 #include "smp.h"
 #include <ldsodefs.h>
 #include <tls.h>
-#include <locale.h>		/* for __uselocale */
 #include <version.h>
 
 /* Sanity check.  */
-#if __ASSUME_REALTIME_SIGNALS && !defined __SIGRTMIN
-# error "This must not happen; new kernel assumed but old headers"
+#if !defined __SIGRTMIN || (__SIGRTMAX - __SIGRTMIN) < 3
+# error "This must not happen"
 #endif
 
 #if !(USE_TLS && HAVE___THREAD)
@@ -86,6 +85,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
 #define manager_thread (&__pthread_manager_thread)
 struct _pthread_descr_struct __pthread_manager_thread = {
   .p_header.data.self = &__pthread_manager_thread,
+  .p_header.data.multiple_threads = 1,
   .p_lock = &__pthread_handles[1].h_lock,
   .p_start_args = PTHREAD_START_ARGS_INITIALIZER(__pthread_manager),
 #if !(USE_TLS && HAVE___THREAD)
@@ -115,6 +115,8 @@ char *__pthread_initial_thread_bos;
 /* Initially -1, meaning that the thread manager is not running. */
 
 int __pthread_manager_request = -1;
+
+int __pthread_multiple_threads attribute_hidden;
 
 /* Other end of the pipe for sending requests to the thread manager. */
 
@@ -177,108 +179,37 @@ static void pthread_handle_sigdebug(int sig);
    platform does not support any real-time signals we will define the
    values to some unreasonable value which will signal failing of all
    the functions below.  */
-#ifndef __SIGRTMIN
-static int current_rtmin = -1;
-static int current_rtmax = -1;
-int __pthread_sig_restart = SIGUSR1;
-int __pthread_sig_cancel = SIGUSR2;
-int __pthread_sig_debug;
-#else
-static int current_rtmin;
-static int current_rtmax;
-
-#if __SIGRTMAX - __SIGRTMIN >= 3
 int __pthread_sig_restart = __SIGRTMIN;
 int __pthread_sig_cancel = __SIGRTMIN + 1;
 int __pthread_sig_debug = __SIGRTMIN + 2;
-#else
-int __pthread_sig_restart = SIGUSR1;
-int __pthread_sig_cancel = SIGUSR2;
-int __pthread_sig_debug;
-#endif
 
-static int rtsigs_initialized;
+extern int __libc_current_sigrtmin_private (void);
 
 #if !__ASSUME_REALTIME_SIGNALS
-# include "testrtsig.h"
-#endif
+static int rtsigs_initialized;
 
 static void
 init_rtsigs (void)
 {
-#if !__ASSUME_REALTIME_SIGNALS
-  if (__builtin_expect (!kernel_has_rtsig (), 0))
+  if (rtsigs_initialized)
+    return;
+
+  if (__builtin_expect (__libc_current_sigrtmin_private () == -1))
     {
-      current_rtmin = -1;
-      current_rtmax = -1;
-# if __SIGRTMAX - __SIGRTMIN >= 3
       __pthread_sig_restart = SIGUSR1;
       __pthread_sig_cancel = SIGUSR2;
       __pthread_sig_debug = 0;
-# endif
     }
   else
-#endif	/* __ASSUME_REALTIME_SIGNALS */
     {
-#if __SIGRTMAX - __SIGRTMIN >= 3
-      current_rtmin = __SIGRTMIN + 3;
-# if !__ASSUME_REALTIME_SIGNALS
       __pthread_restart = __pthread_restart_new;
       __pthread_suspend = __pthread_wait_for_restart_signal;
       __pthread_timedsuspend = __pthread_timedsuspend_new;
-# endif /* __ASSUME_REALTIME_SIGNALS */
-#else
-      current_rtmin = __SIGRTMIN;
-#endif
-
-      current_rtmax = __SIGRTMAX;
     }
 
   rtsigs_initialized = 1;
 }
 #endif
-
-/* Return number of available real-time signal with highest priority.  */
-int
-__libc_current_sigrtmin (void)
-{
-#ifdef __SIGRTMIN
-  if (__builtin_expect (!rtsigs_initialized, 0))
-    init_rtsigs ();
-#endif
-  return current_rtmin;
-}
-
-/* Return number of available real-time signal with lowest priority.  */
-int
-__libc_current_sigrtmax (void)
-{
-#ifdef __SIGRTMIN
-  if (__builtin_expect (!rtsigs_initialized, 0))
-    init_rtsigs ();
-#endif
-  return current_rtmax;
-}
-
-/* Allocate real-time signal with highest/lowest available
-   priority.  Please note that we don't use a lock since we assume
-   this function to be called at program start.  */
-int
-__libc_allocate_rtsig (int high)
-{
-#ifndef __SIGRTMIN
-  return -1;
-#else
-  if (__builtin_expect (!rtsigs_initialized, 0))
-    init_rtsigs ();
-  if (__builtin_expect (current_rtmin == -1, 0)
-      || __builtin_expect (current_rtmin > current_rtmax, 0))
-    /* We don't have anymore signal available.  */
-    return -1;
-
-  return high ? current_rtmin++ : current_rtmax--;
-#endif
-}
 
 
 /* Initialize the pthread library.
@@ -299,6 +230,52 @@ extern void *__dso_handle __attribute__ ((weak));
 extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
 #endif
 
+#ifdef SHARED
+static struct pthread_functions pthread_functions =
+  {
+    .ptr_pthread_attr_destroy = __pthread_attr_destroy,
+#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+    .ptr_pthread_attr_init_2_0 = __pthread_attr_init_2_0,
+#endif
+    .ptr_pthread_attr_init_2_1 = __pthread_attr_init_2_1,
+    .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
+    .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
+    .ptr_pthread_attr_getinheritsched = __pthread_attr_getinheritsched,
+    .ptr_pthread_attr_setinheritsched = __pthread_attr_setinheritsched,
+    .ptr_pthread_attr_getschedparam = __pthread_attr_getschedparam,
+    .ptr_pthread_attr_setschedparam = __pthread_attr_setschedparam,
+    .ptr_pthread_attr_getschedpolicy = __pthread_attr_getschedpolicy,
+    .ptr_pthread_attr_setschedpolicy = __pthread_attr_setschedpolicy,
+    .ptr_pthread_attr_getscope = __pthread_attr_getscope,
+    .ptr_pthread_attr_setscope = __pthread_attr_setscope,
+    .ptr_pthread_condattr_destroy = __pthread_condattr_destroy,
+    .ptr_pthread_condattr_init = __pthread_condattr_init,
+    .ptr_pthread_cond_broadcast = __pthread_cond_broadcast,
+    .ptr_pthread_cond_destroy = __pthread_cond_destroy,
+    .ptr_pthread_cond_init = __pthread_cond_init,
+    .ptr_pthread_cond_signal = __pthread_cond_signal,
+    .ptr_pthread_cond_wait = __pthread_cond_wait,
+    .ptr_pthread_equal = __pthread_equal,
+    .ptr_pthread_exit = __pthread_exit,
+    .ptr_pthread_getschedparam = __pthread_getschedparam,
+    .ptr_pthread_setschedparam = __pthread_setschedparam,
+    .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
+    .ptr_pthread_mutex_init = __pthread_mutex_init,
+    .ptr_pthread_mutex_lock = __pthread_mutex_lock,
+    .ptr_pthread_mutex_trylock = __pthread_mutex_trylock,
+    .ptr_pthread_mutex_unlock = __pthread_mutex_unlock,
+    .ptr_pthread_self = __pthread_self,
+    .ptr_pthread_setcancelstate = __pthread_setcancelstate,
+    .ptr_pthread_setcanceltype = __pthread_setcanceltype,
+    .ptr_pthread_do_exit = __pthread_do_exit,
+    .ptr_pthread_thread_self = __pthread_thread_self
+  };
+# define ptr_pthread_functions &pthread_functions
+#else
+# define ptr_pthread_functions NULL
+#endif
+
+static int *__libc_multiple_threads_ptr;
 
 /* Do some minimal initialization which has to be done during the
    startup of the C library.  */
@@ -413,11 +390,7 @@ cannot allocate TLS data structures for initial thread\n";
 # endif
 #endif
 
-#if !(USE_TLS && HAVE___THREAD)
-  /* Initialize thread-locale current locale to point to the global one.
-     With __thread support, the variable's initializer takes care of this.  */
-  __uselocale (LC_GLOBAL_LOCALE);
-#endif
+  __libc_multiple_threads_ptr = __libc_pthread_init (ptr_pthread_functions);
 }
 
 
@@ -520,7 +493,7 @@ static void pthread_initialize(void)
   /* Likewise for the resolver state _res.  */
   __pthread_initial_thread.p_resp = &_res;
 #endif
-#ifdef __SIGRTMIN
+#if !__ASSUME_REALTIME_SIGNALS
   /* Initialize real-time signals. */
   init_rtsigs ();
 #endif
@@ -577,6 +550,15 @@ int __pthread_initialize_manager(void)
   int report_events;
   pthread_descr tcb;
 
+  __pthread_multiple_threads = 1;
+  __pthread_main_thread->p_header.data.multiple_threads = 1;
+  * __libc_multiple_threads_ptr = 1;
+#ifdef MULTIPLE_THREADS_OFFSET
+  if (offsetof(struct _pthread_descr_struct, p_header.data.multiple_threads)
+      != MULTIPLE_THREADS_OFFSET)
+    abort ();
+#endif
+
 #ifndef HAVE_Z_NODELETE
   if (__builtin_expect (&__dso_handle != NULL, 1))
     __cxa_atexit ((void (*) (void *)) pthread_atexit_retcode, NULL,
@@ -613,6 +595,7 @@ int __pthread_initialize_manager(void)
   /* Initialize the descriptor.  */
   tcb->p_header.data.tcb = tcb;
   tcb->p_header.data.self = tcb;
+  tcb->p_header.data.multiple_threads = 1;
   tcb->p_lock = &__pthread_handles[1].h_lock;
 # ifndef HAVE___THREAD
   tcb->p_errnop = &tcb->p_errno;
@@ -797,16 +780,23 @@ compat_symbol (libpthread, __pthread_create_2_0, pthread_create, GLIBC_2_0);
 
 /* Simple operations on thread identifiers */
 
-pthread_t pthread_self(void)
+pthread_descr __pthread_thread_self(void)
+{
+  return thread_self();
+}
+
+pthread_t __pthread_self(void)
 {
   pthread_descr self = thread_self();
   return THREAD_GETMEM(self, p_tid);
 }
+strong_alias (__pthread_self, pthread_self);
 
-int pthread_equal(pthread_t thread1, pthread_t thread2)
+int __pthread_equal(pthread_t thread1, pthread_t thread2)
 {
   return thread1 == thread2;
 }
+strong_alias (__pthread_equal, pthread_equal);
 
 /* Helper function for thread_self in the case of user-provided stacks */
 
@@ -849,8 +839,8 @@ static pthread_descr thread_self_stack(void)
 
 /* Thread scheduling */
 
-int pthread_setschedparam(pthread_t thread, int policy,
-                          const struct sched_param *param)
+int __pthread_setschedparam(pthread_t thread, int policy,
+                            const struct sched_param *param)
 {
   pthread_handle handle = thread_handle(thread);
   pthread_descr th;
@@ -872,9 +862,10 @@ int pthread_setschedparam(pthread_t thread, int policy,
     __pthread_manager_adjust_prio(th->p_priority);
   return 0;
 }
+strong_alias (__pthread_setschedparam, pthread_setschedparam);
 
-int pthread_getschedparam(pthread_t thread, int *policy,
-                          struct sched_param *param)
+int __pthread_getschedparam(pthread_t thread, int *policy,
+                            struct sched_param *param)
 {
   pthread_handle handle = thread_handle(thread);
   int pid, pol;
@@ -892,6 +883,7 @@ int pthread_getschedparam(pthread_t thread, int *policy,
   *policy = pol;
   return 0;
 }
+strong_alias (__pthread_getschedparam, pthread_getschedparam);
 
 int __pthread_yield (void)
 {
@@ -1318,16 +1310,4 @@ void __pthread_message(const char * fmt, ...)
   TEMP_FAILURE_RETRY(__libc_write(2, buffer, strlen(buffer)));
 }
 
-#endif
-
-
-#ifndef SHARED
-/* We need a hook to force the cancelation wrappers and file locking
-   to be linked in when static libpthread is used.  */
-extern const int __pthread_provide_wrappers;
-static const int *const __pthread_require_wrappers =
-  &__pthread_provide_wrappers;
-extern const int __pthread_provide_lockfile;
-static const int *const __pthread_require_lockfile =
-  &__pthread_provide_lockfile;
 #endif

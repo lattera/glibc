@@ -23,6 +23,10 @@
 
 #include <pthread.h>
 
+#if defined _LIBC && !defined NOT_IN_libc
+#include <linuxthreads/internals.h>
+#endif
+
 /* Mutex type.  */
 #if defined(_LIBC) || defined(_IO_MTSAFE_IO)
 typedef pthread_mutex_t __libc_lock_t;
@@ -90,19 +94,30 @@ typedef pthread_key_t __libc_key_t;
 #define _RTLD_LOCK_RECURSIVE_INITIALIZER \
   {PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP}
 
-#ifdef __PIC__
-# define __libc_maybe_call(FUNC, ARGS, ELSE) \
+#if defined _LIBC && defined IS_IN_libpthread
+# define __libc_maybe_call(FUNC, ARGS, ELSE) FUNC ARGS
+#else
+# ifdef __PIC__
+#  define __libc_maybe_call(FUNC, ARGS, ELSE) \
   (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
                     _fn != NULL ? (*_fn) ARGS : ELSE; }))
-#else
-# define __libc_maybe_call(FUNC, ARGS, ELSE) \
+# else
+#  define __libc_maybe_call(FUNC, ARGS, ELSE) \
   (FUNC != NULL ? FUNC ARGS : ELSE)
+# endif
+#endif
+#if defined _LIBC && !defined NOT_IN_libc && defined __PIC__
+# define __libc_maybe_call2(FUNC, ARGS, ELSE) \
+  ({__libc_pthread_functions.ptr_##FUNC != NULL \
+    ? __libc_pthread_functions.ptr_##FUNC ARGS : ELSE; })
+#else
+# define __libc_maybe_call2(FUNC, ARGS, ELSE) __libc_maybe_call (__##FUNC, ARGS, ELSE)
 #endif
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
 #define __libc_lock_init(NAME) \
-  (__libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0))
+  (__libc_maybe_call2 (pthread_mutex_init, (&(NAME), NULL), 0))
 #define __libc_rwlock_init(NAME) \
   (__libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0));
 
@@ -125,7 +140,7 @@ typedef pthread_key_t __libc_key_t;
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
 #define __libc_lock_fini(NAME) \
-  (__libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0));
+  (__libc_maybe_call2 (pthread_mutex_destroy, (&(NAME)), 0));
 #define __libc_rwlock_fini(NAME) \
   (__libc_maybe_call (__pthread_rwlock_destroy, (&(NAME)), 0));
 
@@ -135,7 +150,7 @@ typedef pthread_key_t __libc_key_t;
 
 /* Lock the named lock variable.  */
 #define __libc_lock_lock(NAME) \
-  (__libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0));
+  (__libc_maybe_call2 (pthread_mutex_lock, (&(NAME)), 0));
 #define __libc_rwlock_rdlock(NAME) \
   (__libc_maybe_call (__pthread_rwlock_rdlock, (&(NAME)), 0));
 #define __libc_rwlock_wrlock(NAME) \
@@ -147,7 +162,7 @@ typedef pthread_key_t __libc_key_t;
 
 /* Try to lock the named lock variable.  */
 #define __libc_lock_trylock(NAME) \
-  (__libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0))
+  (__libc_maybe_call2 (pthread_mutex_trylock, (&(NAME)), 0))
 #define __libc_rwlock_tryrdlock(NAME) \
   (__libc_maybe_call (__pthread_rwlock_tryrdlock, (&(NAME)), 0))
 #define __libc_rwlock_trywrlock(NAME) \
@@ -160,7 +175,7 @@ typedef pthread_key_t __libc_key_t;
 
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME) \
-  (__libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0));
+  (__libc_maybe_call2 (pthread_mutex_unlock, (&(NAME)), 0));
 #define __libc_rwlock_unlock(NAME) \
   (__libc_maybe_call (__pthread_rwlock_unlock, (&(NAME)), 0));
 

@@ -633,6 +633,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
      initialized to zero already have this value.  */
   new_thread->p_header.data.tcb = new_thread;
   new_thread->p_header.data.self = new_thread;
+  new_thread->p_header.data.multiple_threads = 1;
   new_thread->p_tid = new_thread_id;
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
   new_thread->p_cancelstate = PTHREAD_CANCEL_ENABLE;

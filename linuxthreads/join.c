@@ -23,10 +23,11 @@
 #include "spinlock.h"
 #include "restart.h"
 
-void pthread_exit(void * retval)
+void __pthread_exit(void * retval)
 {
   __pthread_do_exit (retval, CURRENT_STACK_FRAME);
 }
+strong_alias (__pthread_exit, pthread_exit);
 
 void __pthread_do_exit(void *retval, char *currentframe)
 {

@@ -1,5 +1,17 @@
 2002-12-17  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgrcv, msgsnd):
+	Make cancelable.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (msgrcv, msgsnd):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (msgrcv, msgsnd):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (msgrcv, msgsnd):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (msgrcv, msgsnd):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c (__sigsuspend): Likewise.
+
 	* malloc/thread-m.h (mutex_init, mutex_lock, mutex_trylock,
 	mutex_unlock): If not building NPTL, use __libc_maybe_call2 if
 	available, otherwise __libc_maybe_call.

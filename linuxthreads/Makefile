@@ -26,20 +26,29 @@ linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 
 headers := pthread.h semaphore.h
 distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh \
-	      libc-tsd.c
+	      tst-cancel-wrappers.sh libc-tsd.c
 
-routines := weaks no-tsd
-shared-only-routines = weaks
+routines := forward no-tsd libc-cancellation libc_pthread_init
+shared-only-routines = forward
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 
 libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
-		       semaphore spinlock wrapsyscall rwlock pt-machine \
+		       semaphore spinlock rwlock pt-machine \
 		       oldsemaphore events getcpuclockid pspinlock barrier \
 		       ptclock_gettime ptclock_settime sighandler \
-		       pthandles libc-tls-loc
+		       pthandles libc-tls-loc pt-allocrtsig \
+		       ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
+		       ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg \
+		       ptw-send ptw-sendmsg ptw-sendto ptw-fsync ptw-lseek \
+		       ptw-lseek64 ptw-llseek ptw-msync ptw-nanosleep \
+		       ptw-open ptw-open64 ptw-pause ptw-pread ptw-pread64 \
+		       ptw-pwrite ptw-pwrite64 ptw-tcdrain ptw-wait \
+		       ptw-waitpid pt-system
+
+libpthread-shared-only-routines = pt-allocrtsig
 
 nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 initfirst-yes = -Wl,--enable-new-dtags,-z,initfirst
@@ -194,8 +203,13 @@ endif
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-tests: $(objpfx)tst-signal.out
+tests: $(objpfx)tst-signal.out $(objpfx)tst-cancel-wrappers.out
 $(objpfx)tst-signal.out: tst-signal.sh $(objpfx)tst-signal
 	$(SHELL) -e $< $(common-objpfx) > $@
+$(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
+	$(SHELL) $< $(common-objpfx)/libc_pic.a \
+		    $(common-objpfx)/libc.a \
+		    $(objpfx)/libpthread_pic.a \
+		    $(objpfx)/libpthread.a > $@
 endif
 endif

@@ -245,6 +245,9 @@ static inline int nonexisting_handle(pthread_handle h, pthread_t id)
 #define SPIN_SLEEP_DURATION 2000001
 #endif
 
+/* Defined and used in libc.so.  */
+extern int __libc_multiple_threads attribute_hidden;
+
 /* Debugging */
 
 #ifdef DEBUG
@@ -294,6 +297,24 @@ extern int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 				    size_t __stacksize);
 extern int __pthread_attr_getstack (const pthread_attr_t *__attr, void **__stackaddr,
 				    size_t *__stacksize);
+extern int __pthread_attr_destroy (pthread_attr_t *attr);
+extern int __pthread_attr_setdetachstate (pthread_attr_t *attr,
+					  int detachstate);
+extern int __pthread_attr_getdetachstate (const pthread_attr_t *attr,
+					  int *detachstate);
+extern int __pthread_attr_setschedparam (pthread_attr_t *attr,
+					 const struct sched_param *param);
+extern int __pthread_attr_getschedparam (const pthread_attr_t *attr,
+					 struct sched_param *param);
+extern int __pthread_attr_setschedpolicy (pthread_attr_t *attr, int policy);
+extern int __pthread_attr_getschedpolicy (const pthread_attr_t *attr,
+					  int *policy);
+extern int __pthread_attr_setinheritsched (pthread_attr_t *attr, int inherit);
+extern int __pthread_attr_getinheritsched (const pthread_attr_t *attr,
+					   int *inherit);
+extern int __pthread_attr_setscope (pthread_attr_t *attr, int scope);
+extern int __pthread_attr_getscope (const pthread_attr_t *attr, int *scope);
+
 extern int __pthread_getconcurrency (void);
 extern int __pthread_setconcurrency (int __level);
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
@@ -305,6 +326,37 @@ extern int __pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
 extern int __pthread_mutexattr_gettype (const pthread_mutexattr_t *__attr,
 					int *__kind);
 extern void __pthread_kill_other_threads_np (void);
+extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
+				 __const pthread_mutexattr_t *__mutex_attr);
+extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_trylock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+#if defined NOT_IN_libc && defined IS_IN_libpthread
+hidden_proto (__pthread_mutex_init)
+hidden_proto (__pthread_mutex_destroy)
+hidden_proto (__pthread_mutex_lock)
+hidden_proto (__pthread_mutex_trylock)
+hidden_proto (__pthread_mutex_unlock)
+#endif
+extern int __pthread_cond_init (pthread_cond_t *cond,
+				const pthread_condattr_t *cond_attr);
+extern int __pthread_cond_destroy (pthread_cond_t *cond);
+extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
+extern int __pthread_cond_signal (pthread_cond_t *cond);
+extern int __pthread_cond_broadcast (pthread_cond_t *cond);
+extern int __pthread_condattr_init (pthread_condattr_t *attr);
+extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
+extern pthread_t __pthread_self (void);
+extern pthread_descr __pthread_thread_self (void);
+extern int __pthread_equal (pthread_t thread1, pthread_t thread2);
+extern void __pthread_exit (void *retval);
+extern int __pthread_getschedparam (pthread_t thread, int *policy,
+				    struct sched_param *param);
+extern int __pthread_setschedparam (pthread_t thread, int policy,
+				    const struct sched_param *param);
+extern int __pthread_setcancelstate (int state, int * oldstate);
+extern int __pthread_setcanceltype (int type, int * oldtype);
 
 extern void __pthread_restart_old(pthread_descr th);
 extern void __pthread_suspend_old(pthread_descr self);
@@ -338,7 +390,6 @@ extern int __pthread_spin_destroy (pthread_spinlock_t *__lock);
 
 extern int __pthread_clock_gettime (hp_timing_t freq, struct timespec *tp);
 extern void __pthread_clock_settime (hp_timing_t offset);
-
 
 /* Global pointers to old or new suspend functions */
 
@@ -385,5 +436,78 @@ extern void __pthread_sighandler(int signo, SIGCONTEXT ctx);
 extern void __pthread_sighandler_rt(int signo, struct siginfo *si,
 				    struct ucontext *uc);
 extern void __pthread_null_sighandler(int sig);
+
+/* Cancellation.  */
+extern int __pthread_enable_asynccancel (void) attribute_hidden;
+extern void __pthread_disable_asynccancel (int oldtype)
+  internal_function attribute_hidden;
+
+/* The two functions are in libc.so and not exported.  */
+extern int __libc_enable_asynccancel (void) attribute_hidden;
+extern void __libc_disable_asynccancel (int oldtype)
+  internal_function attribute_hidden;
+
+#if !defined NOT_IN_libc
+# define LIBC_CANCEL_ASYNC() \
+  __libc_enable_asynccancel ()
+# define LIBC_CANCEL_RESET(oldtype) \
+  __libc_disable_asynccancel (oldtype)
+#elif defined NOT_IN_libc && defined IS_IN_libpthread
+# define LIBC_CANCEL_ASYNC() \
+  __pthread_enable_asynccancel ()
+# define LIBC_CANCEL_RESET(oldtype) \
+  __pthread_disable_asynccancel (oldtype)
+#else
+# define LIBC_CANCEL_ASYNC()    0 /* Just a dummy value.  */
+# define LIBC_CANCEL_RESET(val) ((void)(val)) /* Nothing, but evaluate it.  */
+#endif
+
+/* Data type shared with libc.  The libc uses it to pass on calls to
+   the thread functions.  */
+struct pthread_functions
+{
+  int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
+  int (*ptr_pthread_attr_init_2_0) (pthread_attr_t *);
+  int (*ptr_pthread_attr_init_2_1) (pthread_attr_t *);
+  int (*ptr_pthread_attr_getdetachstate) (const pthread_attr_t *, int *);
+  int (*ptr_pthread_attr_setdetachstate) (pthread_attr_t *, int);
+  int (*ptr_pthread_attr_getinheritsched) (const pthread_attr_t *, int *);
+  int (*ptr_pthread_attr_setinheritsched) (pthread_attr_t *, int);
+  int (*ptr_pthread_attr_getschedparam) (const pthread_attr_t *,
+					 struct sched_param *);
+  int (*ptr_pthread_attr_setschedparam) (pthread_attr_t *,
+					 const struct sched_param *);
+  int (*ptr_pthread_attr_getschedpolicy) (const pthread_attr_t *, int *);
+  int (*ptr_pthread_attr_setschedpolicy) (pthread_attr_t *, int);
+  int (*ptr_pthread_attr_getscope) (const pthread_attr_t *, int *);
+  int (*ptr_pthread_attr_setscope) (pthread_attr_t *, int);
+  int (*ptr_pthread_condattr_destroy) (pthread_condattr_t *);
+  int (*ptr_pthread_condattr_init) (pthread_condattr_t *);
+  int (*ptr_pthread_cond_broadcast) (pthread_cond_t *);
+  int (*ptr_pthread_cond_destroy) (pthread_cond_t *);
+  int (*ptr_pthread_cond_init) (pthread_cond_t *, const pthread_condattr_t *);
+  int (*ptr_pthread_cond_signal) (pthread_cond_t *);
+  int (*ptr_pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
+  int (*ptr_pthread_equal) (pthread_t, pthread_t);
+  void (*ptr_pthread_exit) (void *);
+  int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
+  int (*ptr_pthread_setschedparam) (pthread_t, int,
+				    const struct sched_param *);
+  int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
+  int (*ptr_pthread_mutex_init) (pthread_mutex_t *,
+				 const pthread_mutexattr_t *);
+  int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
+  int (*ptr_pthread_mutex_trylock) (pthread_mutex_t *);
+  int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
+  pthread_t (*ptr_pthread_self) (void);
+  int (*ptr_pthread_setcancelstate) (int, int *);
+  int (*ptr_pthread_setcanceltype) (int, int *);
+  void (*ptr_pthread_do_exit) (void *retval, char *currentframe);
+  pthread_descr (*ptr_pthread_thread_self) (void);
+};
+
+/* Variable in libc.so.  */
+extern struct pthread_functions __libc_pthread_functions attribute_hidden;
+extern int * __libc_pthread_init (const struct pthread_functions *functions);
 
 #endif /* internals.h */

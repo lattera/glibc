@@ -1,3 +1,122 @@
+2002-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* internals.h (__pthread_thread_self): New prototype.
+	(struct pthread_functions): Add ptr_pthread_thread_self field.
+	* pthread.c (pthread_functions): Initialize ptr_pthread_thread_self.
+	(__pthread_thread_self): New function.
+	* libc-cancellation.c (__pthread_thread_self): Add weak_extern.
+	(__libc_enable_asynccancel, __libc_disable_asynccancel): Don't
+	use thread_self() directly if not FLOATING_STACKS.
+
+2002-12-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/pt-machine.h: Guard most of the header
+	with #ifndef __ASSEMBLER__.
+	* pthread.c (pthread_functions): Use SHLIB_COMPAT around
+	pthread_attr_init_2_0 use.
+
+2002-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* wrapsyscall.c: Removed.
+	* weaks.c: Removed.
+	* Makefile (distribute): Add tst-cancel-wrappers.sh.
+	(routines): Remove weaks.  Add forward,
+	libc_pthread_init, libc-cancellation.
+	(shared-only-routines): Remove weaks.  Add forward.
+	(libpthread-routines): Remove wrapsyscall.
+	Add ptw-write, ptw-read, ptw-close, ptw-fcntl, ptw-accept,
+	ptw-connect, ptw-recv, ptw-recvfrom, ptw-recvmsg, ptw-send,
+	ptw-sendmsg, ptw-sendto, ptw-fsync, ptw-lseek, ptw-lseek64,
+	ptw-llseek, ptw-msync, ptw-nanosleep, ptw-open, ptw-open64,
+	ptw-pause, ptw-pread, ptw-pread64, ptw-pwrite, ptw-pwrite64,
+	ptw-tcdrain, ptw-wait, ptw-waitpid, pt-system, pt-allocrtsig.
+	(libpthread-shared-only-routines): Add pt-allocrtsig.
+	(tests): Depend on $(objpfx)tst-cancel-wrappers.out.
+	($(objpfx)tst-cancel-wrappers.out): New rule.
+	* sysdeps/pthread/bits/libc-lock.h: Include linuxthreads/internals.h
+	if in libc.
+	(__libc_maybe_call): In libpthread.* don't check for existance
+	of the function.
+	(__libc_maybe_call2): Define.
+	(__libc_lock_init, __libc_lock_fini, __libc_lock_lock,
+	__libc_lock_trylock, __libc_lock_unlock): Use it.
+	* sysdeps/pthread/flockfile.c: New file.
+	* sysdeps/pthread/ftrylockfile.c: New file.
+	* sysdeps/pthread/funlockfile.c: New file.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/allocrtsig.c: New file.
+	* libc-cancellation.c: New file.
+	* forward.c: New file.
+	* libc_pthread_init.c: New file.
+	* pt-system.c: New file.
+	* pthread.c: Remove locale.h.
+	(__pthread_manager_thread): Initialize multiple_threads.
+	(__pthread_multiple_threads): Declare.
+	(pthread_functions): New variable.
+	(__pthread_initialize_minimal): Remove __uselocale call.
+	Call __libc_pthread_init.
+	(__pthread_initialize_manager): Initialize __pthread_multiple_threads,
+	initial thread's multiple_threads and __libc_multiple_threads.
+	Check MULTIPLE_THREADS_OFFSET value. Initialize manager thread's
+	multiple_threads.
+	(pthread_setschedparam, pthread_getschedparam): Rename to __
+	prefixed variants.  Add strong_alias.
+	(current_rtmin, current_rtmax, __libc_current_sigrtmin,
+	__libc_current_sigrtmax, __libc_allocate_rtsig): Remove.
+	(init_rtsigs): Use __libc_current_sigrtmin_private.
+	(pthread_initialize): Only call init_rtsigs if
+	!__ASSUME_REALTIME_SIGNALS.
+	(__pthread_require_wrappers, __pthread_require_lockfile): Remove.
+	* internals.h (__pthread_attr_destroy, __pthread_attr_setdetachstate,
+	__pthread_attr_getdetachstate, __pthread_attr_setschedparam,
+	__pthread_attr_getschedparam, __pthread_attr_setschedpolicy,
+	__pthread_attr_getschedpolicy, __pthread_attr_setinheritsched,
+	__pthread_attr_getinheritsched, __pthread_attr_setscope,
+	__pthread_attr_getscope, __pthread_cond_init,
+	__pthread_cond_destroy, __pthread_cond_wait,
+	__pthread_cond_signal, __pthread_cond_broadcast,
+	__pthread_condattr_init, __pthread_condattr_destroy,
+	__pthread_equal, __pthread_getschedparam,
+	__pthread_setschedparam, __pthread_setcancelstate,
+	__pthread_setcanceltype, __pthread_enable_asynccancel,
+	__libc_enable_asynccancel, __libc_pthread_init): New prototype.
+	(__pthread_mutex_init, __pthread_mutex_destroy,
+	__pthread_mutex_lock, __pthread_mutex_unlock,
+	__pthread_mutex_trylock): Likewise.
+	Add hidden_proto.
+	(struct pthread_functions): New type.
+	(__libc_pthread_functions): New variable.
+	(LIBC_CANCEL_ASYNC, LIBC_CANCEL_RESET): Define.
+	* descr.h (struct _pthread_descr_struct): Add
+	p_header.data.multiple_threads field.
+	* manager.c (pthread_handle_create): Initialize multiple_threads.
+	* cancel.c (__pthread_enable_asynccancel,
+	__pthread_disable_asynccancel): New functions.
+	(__pthread_provide_wrappers): Remove.
+	(pthread_setcancelstate, pthread_setcanceltype): Rename to __
+	prefixed variants.  Add strong_alias.
+	* condvar.c (pthread_cond_init, pthread_cond_destroy,
+	pthread_cond_wait, pthread_cond_signal, pthread_cond_broadcast,
+	pthread_condattr_init, pthread_condattr_destroy): Likewise.
+	* join.c (pthread_exit): Likewise.
+	* attr.c (pthread_attr_destroy, pthread_attr_setdetachstate,
+	pthread_attr_getdetachstate, pthread_attr_setschedparam,
+	pthread_attr_getschedparam, pthread_attr_setschedpolicy,
+	pthread_attr_getschedpolicy, pthread_attr_setinheritsched,
+	pthread_attr_getinheritsched, pthread_attr_setscope,
+	pthread_attr_getscope): Likewise.
+	* mutex.c (__pthread_mutex_init, __pthread_mutex_destroy,
+	__pthread_mutex_lock, __pthread_mutex_unlock,
+	__pthread_mutex_trylock): Add hidden_def.
+	* Versions (libc): Add __libc_pthread_init,
+	__libc_current_sigrtmin_private, __libc_current_sigrtmax_private,
+	__libc_allocate_rtsig_private @@GLIBC_PRIVATE.
+	* lockfile.c: Remove some USE_IN_LIBIO guards.
+	(__pthread_provide_lockfile): Remove.
+	* pt-allocrtsig.c: New file.
+	* tst-cancel-wrappers.sh: New test.
+
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions [libpthread: GLIBC_2.3.2]: Remove creat, poll, pselect,
