@@ -40,7 +40,7 @@ DEFUN(__wait4, (pid, stat_loc, options, usage),
       break;
 
     case WAIT_MYPGRP:
-      pid = - __getpgrp (0);
+      pid = - getpgrp ();
       break;
     }
 
