@@ -1471,6 +1471,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	 allowed to follow.  */
     LABEL (mod_longlong):
       is_long_double = 1;
+      is_long = 1;
       JUMP (*++f, step4_jumps);
 
     LABEL (mod_size_t):
