@@ -49,6 +49,7 @@ typedef __u_long __dev_t;		/* Type of device numbers.  */
 typedef __u_int __uid_t;		/* Type of user identifications.  */
 typedef __u_int __gid_t;		/* Type of group identifications.  */
 typedef __u_long __ino_t;		/* Type of file serial numbers.  */
+typedef __u_long __ino64_t;		/* Type of file serial numbers.  */
 typedef __u_int __mode_t;		/* Type of file attribute bitmasks.  */
 typedef __u_int __nlink_t; 		/* Type of file link counts.  */
 typedef long int __off_t;		/* Type of file sizes and offsets.  */

@@ -17,15 +17,15 @@ void * process(void * arg)
   return NULL;
 }
 
-int main()
+int main(void)
 {
   int retcode;
   pthread_t th_a, th_b;
   void * retval;
 
-  retcode = pthread_create(&th_a, NULL, process, "a");
+  retcode = pthread_create(&th_a, NULL, process, (void *) "a");
   if (retcode != 0) fprintf(stderr, "create a failed %d\n", retcode);
-  retcode = pthread_create(&th_b, NULL, process, "b");
+  retcode = pthread_create(&th_b, NULL, process, (void *) "b");
   if (retcode != 0) fprintf(stderr, "create b failed %d\n", retcode);
   retcode = pthread_join(th_a, &retval);
   if (retcode != 0) fprintf(stderr, "join a failed %d\n", retcode);
@@ -33,4 +33,3 @@ int main()
   if (retcode != 0) fprintf(stderr, "join b failed %d\n", retcode);
   return 0;
 }
-

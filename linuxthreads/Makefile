@@ -35,9 +35,20 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptlongjmp pthread signals specific errno lockfile \
 		       semaphore spinlock wrapsyscall rwlock
 
+vpath %.c Examples
+tests = ex1 ex2 ex3 ex4 ex5 ex6
+
 include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)libpthread.so: $(common-objpfx)libc.so
+
+# Make sure we link with the thread library.
+$(objpfx)ex1: $(objpfx)libpthread.so
+$(objpfx)ex2: $(objpfx)libpthread.so
+$(objpfx)ex3: $(objpfx)libpthread.so
+$(objpfx)ex4: $(objpfx)libpthread.so
+$(objpfx)ex5: $(objpfx)libpthread.so
+$(objpfx)ex6: $(objpfx)libpthread.so

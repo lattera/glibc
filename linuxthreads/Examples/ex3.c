@@ -1,6 +1,7 @@
 /* Multi-thread searching.
    Illustrates: thread cancellation, cleanup handlers. */
 
+#include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -19,9 +20,7 @@ pthread_t threads[NUM_THREADS];
 pthread_mutex_t lock;
 int tries;
 
-int main(argc, argv)
-     int argc;
-     char ** argv;
+int main(int argc, char ** argv)
 {
   int i;
   int pid;
@@ -31,14 +30,14 @@ int main(argc, argv)
   printf("Searching for the number = %d...\n", pid);
 
   /* Initialize the mutex lock */
-  pthread_mutex_init(&lock, NULL); 
+  pthread_mutex_init(&lock, NULL);
 
   /* Create the searching threads */
   for (i=0; i<NUM_THREADS; i++)
     pthread_create(&threads[i], NULL, search, (void *)pid);
 
   /* Wait for (join) all the searching threads */
-  for (i=0; i<NUM_THREADS; i++) 
+  for (i=0; i<NUM_THREADS; i++)
     pthread_join(threads[i], NULL);
 
   printf("It took %d tries to find the number.\n", tries);
@@ -47,7 +46,7 @@ int main(argc, argv)
   return 0;
 }
 
-/* This is the cleanup function that is called 
+/* This is the cleanup function that is called
    when the threads are cancelled */
 
 void print_it(void *arg)
@@ -59,7 +58,7 @@ void print_it(void *arg)
   tid = pthread_self();
 
   /* Print where the thread was in its search when it was cancelled */
-  printf("Thread %lx was canceled on its %d try.\n", tid, *try); 
+  printf("Thread %lx was canceled on its %d try.\n", tid, *try);
 }
 
 /* This is the search routine that is executed in each thread */
@@ -82,20 +81,20 @@ void *search(void *arg)
   ntries = 0;
 
   /* Set the cancellation parameters --
-     - Enable thread cancellation 
+     - Enable thread cancellation
      - Defer the action of the cancellation */
 
   pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
   pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
 
   /* Push the cleanup routine (print_it) onto the thread
-     cleanup stack.  This routine will be called when the 
+     cleanup stack.  This routine will be called when the
      thread is cancelled.  Also note that the pthread_cleanup_push
      call must have a matching pthread_cleanup_pop call.  The
-     push and pop calls MUST be at the same lexical level 
+     push and pop calls MUST be at the same lexical level
      within the code */
 
-  /* Pass address of `ntries' since the current value of `ntries' is not 
+  /* Pass address of `ntries' since the current value of `ntries' is not
      the one we want to use in the cleanup function */
 
   pthread_cleanup_push(print_it, (void *)&ntries);
@@ -118,7 +117,7 @@ void *search(void *arg)
       printf("Thread %lx found the number!\n", tid);
 
       /* Cancel all the other threads */
-      for (j=0; j<NUM_THREADS; j++) 
+      for (j=0; j<NUM_THREADS; j++)
         if (threads[j] != tid) pthread_cancel(threads[j]);
 
       /* Break out of the while loop */
@@ -141,4 +140,3 @@ void *search(void *arg)
   pthread_cleanup_pop(0);
   return((void *)0);
 }
-

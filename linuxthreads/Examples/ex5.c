@@ -86,7 +86,7 @@ void * consumer(void * data)
   return NULL;
 }
 
-int main()
+int main(void)
 {
   pthread_t th_a, th_b;
   void * retval;

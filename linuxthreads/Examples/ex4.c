@@ -40,7 +40,7 @@ static void str_alloc_destroy_accu(void * accu);
 
 /* Thread-safe version of str_accumulate */
 
-char * str_accumulate(char * s)
+char * str_accumulate(const char * s)
 {
   char * accu;
 
@@ -97,8 +97,8 @@ int main(int argc, char ** argv)
   pthread_t th1, th2;
 
   res = str_accumulate("Result of ");
-  pthread_create(&th1, NULL, process, "first");
-  pthread_create(&th2, NULL, process, "second");
+  pthread_create(&th1, NULL, process, (void *) "first");
+  pthread_create(&th2, NULL, process, (void *) "second");
   res = str_accumulate("initial thread");
   printf("Thread %lx: \"%s\"\n", pthread_self(), res);
   pthread_join(th1, NULL);

@@ -1,3 +1,13 @@
+1998-07-07 15:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Add rules to compile and run tests.
+	* Examples/ex1.c: Little changes to fix warnings.
+	* Examples/ex2.c: Likewise.
+	* Examples/ex3.c: Likewise.
+	* Examples/ex4.c: Likewise.
+	* Examples/ex5.c: Likewise.
+	* Examples/ex6.c: New file.
+
 1998-07-05 11:54  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions: Add pthread_attr_init to GLIBC_2.1 version in libc.
