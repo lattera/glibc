@@ -1,3 +1,8 @@
+2003-02-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c (__real_chown): Test
+	for __ASSUME_32BITUIDS.
+
 2003-02-20  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: Add MADV_* and
