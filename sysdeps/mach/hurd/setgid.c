@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -46,21 +46,26 @@ DEFUN(__setgid, (gid), gid_t gid)
       gid_t *newgen, *newaux, auxbuf[2];
       size_t ngen, naux;
 
-      newaux = _hurd_id.aux.gids;
-      naux = _hurd_id.aux.ngids;
       if (_hurd_id.gen.ngids == 0)
 	{
 	  /* No effective gids now.  The new set will be just GID.  */
 	  newgen = &gid;
 	  ngen = 1;
 	}
-      else if (_hurd_id.gen.gids[0] == 0)
+      else
 	{
-	  /* We are root; set the effective, real, and saved to GID.  */
 	  _hurd_id.gen.gids[0] = gid;
 	  _hurd_id.valid = 0;
 	  newgen = _hurd_id.gen.gids;
 	  ngen = _hurd_id.gen.ngids;
+	}
+
+      newaux = _hurd_id.aux.gids;
+      naux = _hurd_id.aux.ngids;
+      if (_hurd_id.gen.nuids > 0 && _hurd_id.gen.uids[0] == 0)
+	{
+	  /* We are root; set the real and saved IDs too.  */
+	  _hurd_id.valid = 0;
 	  if (_hurd_id.aux.ngids < 2)
 	    {
 	      newaux = auxbuf;
@@ -68,20 +73,12 @@ DEFUN(__setgid, (gid), gid_t gid)
 	    }
 	  newaux[0] = newaux[1] = gid;
 	}
-      else
-	{
-	  /* We are not root; just change the effective GID.  */
-	  _hurd_id.gen.gids[0] = gid;
-	  _hurd_id.valid = 0;
-	  newgen = _hurd_id.gen.gids;
-	  ngen = _hurd_id.gen.ngids;
-	}
 
       err = __USEPORT (AUTH, __auth_makeauth
 		       (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
+			_hurd_id.gen.uids, _hurd_id.gen.nuids,
+			_hurd_id.aux.uids, _hurd_id.aux.nuids,
 			newgen, ngen, newaux, naux,
-			_hurd_id.gen.gids, _hurd_id.gen.ngids,
-			_hurd_id.aux.gids, _hurd_id.aux.ngids,
 			&newauth));
     }
   __mutex_unlock (&_hurd_id.lock);

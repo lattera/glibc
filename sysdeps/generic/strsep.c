@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,28 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 
 char *
-DEFUN(strsep, (stringp, delim),
-      char **stringp AND CONST char *delim)
+strsep (char **stringp, const char *delim)
 {
   char *begin, *end;
 
-  begin = *stringp + strspn (*stringp, delim);
-  end = *stringp + strcspn (*stringp, delim);
-
-  if (end == *stringp)
+  begin = *stringp;
+  if (! begin || *begin == '\0')
     return NULL;
 
-  if (*end != '\0')
-    *end++ = '\0';
-  *stringp = end;
+  /* Find the end of the token.  */
+  end = strpbrk (begin, delim);
+  if (end)
+    {
+      /* Terminate the token and advance *STRINGP past the delimiters.  */
+      *end++ = '\0';
+      *stringp = end + strspn (end, delim);
+    }
+  else
+    /* No more delimiters; this is the last token.  */
+    *stringp = NULL;
 
   return begin;
 }

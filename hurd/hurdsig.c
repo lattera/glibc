@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -74,10 +74,11 @@ _hurd_thread_sigstate (thread_t thread)
       ss->thread = thread;
       __spin_lock_init (&ss->lock);
 
-      /* Initialze default state.  */
+      /* Initialize default state.  */
       __sigemptyset (&ss->blocked);
       __sigemptyset (&ss->pending);
       memset (&ss->sigaltstack, 0, sizeof (ss->sigaltstack));
+      ss->preempters = NULL;
       ss->suspended = 0;
       ss->intr_port = MACH_PORT_NULL;
       ss->context = NULL;
@@ -231,6 +232,7 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
   return portloc;
 }
 
+#include <hurd/sigpreempt.h>
 #include "intr-msg.h"
 
 /* SS->thread is suspended.
@@ -404,9 +406,8 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
       }
 }
 
-
-struct hurd_signal_preempt *_hurd_signal_preempt[NSIG];
-struct mutex _hurd_signal_preempt_lock;
+struct hurd_signal_preempter *_hurdsig_preempters;
+sigset_t _hurdsig_preempted_set;
 
 /* Mask of stop signals.  */
 #define STOPSIGS (sigmask (SIGTTIN) | sigmask (SIGTTOU) | \
@@ -423,9 +424,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   error_t err;
   struct machine_thread_all_state thread_state;
   enum { stop, ignore, core, term, handle } act;
+  struct hurd_signal_preempter *pe;
   sighandler_t handler;
-  struct hurd_signal_preempt *pe;
-  sighandler_t (*preempt) (thread_t, int, long int, int) = NULL;
   sigset_t pending;
   int ss_suspended;
 
@@ -521,34 +521,36 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
   thread_state.set = 0;		/* We know nothing.  */
 
-  /* Check for a preempted signal.  Preempted signals
-     can arrive during critical sections.  */
-  __mutex_lock (&_hurd_signal_preempt_lock);
-  for (pe = _hurd_signal_preempt[signo]; pe != NULL; pe = pe->next)
-    if (pe->handler && sigcode >= pe->first && sigcode <= pe->last)
-      {
-	preempt = pe->handler;
-	break;
-      }
-  __mutex_unlock (&_hurd_signal_preempt_lock);
+  __spin_lock (&ss->lock);
 
-  handler = SIG_DFL;
-  if (preempt)
-    /* Let the preempting handler examine the thread.
-       If it returns SIG_DFL, we run the normal handler;
-       otherwise we use the handler it returns.  */
-    handler = (*preempt) (ss->thread, signo, sigcode, sigerror);
+  /* Check for a preempted signal.  Preempted signals can arrive during
+     critical sections.  */
+
+  handler = SIG_ERR;
+  for (pe = ss->preempters; pe && handler == SIG_ERR; pe = pe->next)
+    if (HURD_PREEMPT_SIGNAL_P (pe, signo, sigcode))
+      handler = (*pe->preempter) (pe, ss, &signo, &sigcode, &sigerror);
+
+  if (handler == SIG_ERR && (__sigmask (signo) & _hurdsig_preempted_set))
+    {
+      __mutex_lock (&_hurd_siglock);
+      for (pe = _hurdsig_preempters; pe && handler == SIG_ERR; pe = pe->next)
+	if (HURD_PREEMPT_SIGNAL_P (pe, signo, sigcode))
+	  handler = (*pe->preempter) (pe, ss, &signo, &sigcode, &sigerror);
+      __mutex_unlock (&_hurd_siglock);
+    }
 
   ss_suspended = 0;
 
-  if (handler != SIG_DFL)
+  if (handler == SIG_IGN)
+    /* Ignore the signal altogether.  */
+    act = ignore;
+  if (handler != SIG_ERR)
     /* Run the preemption-provided handler.  */
     act = handle;
   else
     {
       /* No preemption.  Do normal handling.  */
-
-      __spin_lock (&ss->lock);
 
       if (!untraced && (_hurd_exec_flags & EXEC_TRACED))
 	{

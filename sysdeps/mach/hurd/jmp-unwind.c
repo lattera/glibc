@@ -1,5 +1,5 @@
 /* _longjmp_unwind -- Clean up stack frames unwound by longjmp.  Hurd version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,8 +18,9 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <setjmp.h>
-#include <hurd/signal.h>
 #include <hurd/userlink.h>
+#include <hurd/signal.h>
+#include <hurd/sigpreempt.h>
 #include <assert.h>
 
 
@@ -36,7 +37,6 @@ _longjmp_unwind (jmp_buf env, int val)
 {
   struct hurd_sigstate *ss = _hurd_self_sigstate ();
   struct hurd_userlink *link;
-  struct hurd_signal_preempter **p;
 
   /* All access to SS->active_resources must take place inside a critical
      section where signal handlers cannot run.  */

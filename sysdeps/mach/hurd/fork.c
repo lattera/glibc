@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -121,7 +121,6 @@ __fork (void)
 	__spin_lock (&_hurd_ports[i].lock);
       ports_locked = 1;
 
-      *(volatile task_t *) &__mach_task_self_; /* XXX work around kernel bug */
 
       /* Stop all other threads while copying the address space,
 	 so nothing changes.  */
@@ -130,6 +129,25 @@ __fork (void)
         {
           stopped = 1;
 
+#define XXX_KERNEL_PAGE_FAULT_BUG /* XXX work around page fault bug in mk */
+
+#ifdef XXX_KERNEL_PAGE_FAULT_BUG
+	  /* Gag me with a pitchfork.
+	     The bug scenario is this:
+
+	     - The page containing __mach_task_self_ is paged out.
+	     - The signal thread was faulting on that page when we
+	       suspended it via proc_dostop.  It holds some lock, or set
+	       some busy bit, or somesuch.
+	     - Now this thread faults on that same page.
+	     - GRATUIOUS DEADLOCK
+
+	     We can break the deadlock by aborting the thread that faulted
+	     first, which if the bug happened was the signal thread because
+	     it is the only other thread and we just suspended it.
+	     */
+	  __thread_abort (_hurd_msgport_thread);
+#endif
 	  /* Create the child task.  It will inherit a copy of our memory.  */
 	  err = __task_create (__mach_task_self (), 1, &newtask);
         }
