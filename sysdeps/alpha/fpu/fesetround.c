@@ -26,7 +26,7 @@ fesetround (int round)
   unsigned long fpcr;
 
   if (round & ~3)
-    return 0;
+    return 1;
 
   /* Get the current state.  */
   __asm__ __volatile__("excb; mf_fpcr %0" : "=f"(fpcr));
@@ -37,5 +37,5 @@ fesetround (int round)
   /* Put the new state in effect.  */
   __asm__ __volatile__("mt_fpcr %0; excb" : : "f"(fpcr));
 
-  return 1;
+  return 0;
 }

@@ -28,7 +28,7 @@ fesetround (int round)
 
   if ((round & ~0x3) != 0)
     /* ROUND is no valid rounding mode.  */
-    return 0;
+    return 1;
 
   /* Get current state.  */
   _FPU_GETCW (cw);
@@ -39,5 +39,5 @@ fesetround (int round)
   /* Set new state.  */
   _FPU_SETCW (cw);
 
-  return 1;
+  return 0;
 }

@@ -27,12 +27,12 @@ fesetround (int round)
 
   if (round & ~FE_UPWARD)
     /* ROUND is no valid rounding mode.  */
-    return 0;
+    return 1;
 
   __asm__ ("fmove%.l %!,%0" : "=dm" (fpcr));
   fpcr &= ~FE_UPWARD;
   fpcr |= round;
   __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
 
-  return 1;
+  return 0;
 }

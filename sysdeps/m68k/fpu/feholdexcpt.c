@@ -35,5 +35,5 @@ feholdexcept (fenv_t *envp)
   fpcr = envp->__control_register & ~(FE_ALL_EXCEPT << 6);
   __asm__ __volatile__ ("fmove%.l %0,%!" : : "dm" (fpcr));
 
-  return 1;
+  return 0;
 }
