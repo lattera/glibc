@@ -183,7 +183,7 @@ __inet_aton(const char *cp, struct in_addr *addr) {
 			 *	a.b.c	(with c treated as 16 bits)
 			 *	a.b	(with b treated as 24 bits)
 			 */
-			if (pp > res.bytes + 3 || val > 0xff)
+			if (pp > res.bytes + 2 || val > 0xff)
 				goto ret_0;
 			*pp++ = val;
 			c = *++cp;
