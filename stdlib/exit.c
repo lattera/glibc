@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,12 +37,14 @@ exit (int status)
      the functions registered with `atexit' and `on_exit'. We call
      everyone on the list and use the status value in the last
      exit (). */
-  for (; __exit_funcs; __exit_funcs = __exit_funcs->next)
+  while (__exit_funcs != NULL)
     {
-      while ((__exit_funcs->idx)-- > 0)
+      struct exit_function_list *old;
+
+      do
 	{
 	  const struct exit_function *const f =
-	    &__exit_funcs->fns[__exit_funcs->idx];
+	    &__exit_funcs->fns[--__exit_funcs->idx];
 	  switch (f->flavor)
 	    {
 	    case ef_free:
@@ -56,6 +58,11 @@ exit (int status)
 	      break;
 	    }
 	}
+      while (__exit_funcs->idx > 0);
+
+      old = __exit_funcs;
+      __exit_funcs = __exit_funcs->next;
+      free (old);
     }
 
 #ifdef	HAVE_GNU_LD

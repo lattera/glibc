@@ -1,5 +1,5 @@
 /* Handle real-time signal allocation.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -28,8 +28,8 @@
 static int current_rtmin = -1;
 static int current_rtmax = -1;
 #else
-static int current_rtmin = __SIGRTMIN;
-static int current_rtmax = __SIGRTMAX;
+static int current_rtmin;
+static int current_rtmax;
 
 static int initialized;
 
@@ -42,6 +42,11 @@ init (void)
     {
       current_rtmin = -1;
       current_rtmax = -1;
+    }
+  else
+    {
+      current_rtmin = __SIGRTMIN;
+      current_rtmax = __SIGRTMAX;
     }
   initialized = 1;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,49 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <unistd.h>
+/* This file contains a bit of information about the stack allocation
+   of the processor.  */
 
-/* Return the session ID of FD.  */
-pid_t
-tcgetsid (fd)
-     int fd;
-{
-  pid_t pgrp;
-  pid_t sid;
-#ifdef TIOCGSID
-  static int tiocgsid_does_not_works;
+#ifndef _STACKINFO_H
+#define _STACKINFO_H	1
 
-  if (! tiocgsid_does_not_works)
-    {
-      int serrno = errno;
-      int sid;
+/* On x86 the stack grows down.  */
+#define _STACK_GROWS_DOWN	1
 
-      if (__ioctl (fd, TIOCGSID, &sid) < 0)
-	{
-	  if (errno == EINVAL)
-	    {
-	      tiocgsid_does_not_works = 1;
-	      __set_errno (serrno);
-	    }
-	  else
-	    return (pid_t) -1;
-	}
-      else
-	return (pid_t) sid;
-    }
-#endif
-
-  pgrp = tcgetpgrp (fd);
-  if (pgrp == -1)
-    return (pid_t) -1;
-
-  sid = getsid (pgrp);
-  if (sid == -1 && errno == ESRCH)
-    __set_errno (ENOTTY);
-
-  return sid;
-}
+#endif	/* stackinfo.h */

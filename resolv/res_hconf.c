@@ -334,9 +334,7 @@ _res_hconf_init (void)
       while (fgets_unlocked (buf, sizeof (buf), fp))
 	{
 	  ++line_num;
-	  end = strchr (buf, '\n');
-	  if (end)
-	    *end = '\0';
+	  *__strchrnul (buf, '\n') = '\0';
 	  parse_line (hconf_name, line_num, buf);
 	}
       fclose (fp);

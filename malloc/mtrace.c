@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
 
@@ -243,7 +243,7 @@ void
 mtrace ()
 {
 #ifdef _LIBC
-  static int added_atexit_handler = 0;
+  static int added_atexit_handler;
 #endif
   char *mallfile;
 

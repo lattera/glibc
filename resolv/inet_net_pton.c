@@ -91,9 +91,7 @@ inet_net_pton_ipv4(src, dst, size)
 	u_char *dst;
 	size_t size;
 {
-	static const char
-		xdigits[] = "0123456789abcdef",
-		digits[] = "0123456789";
+	static const char xdigits[] = "0123456789abcdef";
 	int n, ch, tmp, dirty, bits;
 	const u_char *odst = dst;
 
@@ -125,7 +123,7 @@ inet_net_pton_ipv4(src, dst, size)
 		for (;;) {
 			tmp = 0;
 			do {
-				n = strchr(digits, ch) - digits;
+				n = strchr(xdigits, ch) - xdigits;
 				assert(n >= 0 && n <= 9);
 				tmp *= 10;
 				tmp += n;
@@ -153,7 +151,7 @@ inet_net_pton_ipv4(src, dst, size)
 		ch = *src++;	/* Skip over the /. */
 		bits = 0;
 		do {
-			n = strchr(digits, ch) - digits;
+			n = strchr(xdigits, ch) - xdigits;
 			assert(n >= 0 && n <= 9);
 			bits *= 10;
 			bits += n;

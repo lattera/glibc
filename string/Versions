@@ -58,6 +58,6 @@ libc {
   }
   GLIBC_2.1.1 {
     # s*
-    __strverscmp;
+    strchrnul; __strverscmp;
   }
 }

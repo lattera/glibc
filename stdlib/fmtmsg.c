@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -39,17 +39,18 @@ enum
   all_mask = label_mask | severity_mask | text_mask | action_mask | tag_mask
 };
 
-static struct
+static const struct
 {
-  const char *name;
   size_t len;
+  /* Adjust the size if new elements are added.  */
+  const char name[9];
 } keywords[] =
   {
-    { "label", 5 },
-    { "severity", 8 },
-    { "text", 4 },
-    { "action", 6},
-    { "tag", 3 }
+    { 5, "label" },
+    { 8, "severity" },
+    { 4, "text" },
+    { 6, "action"},
+    { 3, "tag" }
   };
 #define NKEYWORDS (sizeof( keywords) / sizeof (keywords[0]))
 
@@ -234,11 +235,8 @@ init (void)
 
       while (sevlevel_var[0] != '\0')
 	{
-	  const char *end = strchr (sevlevel_var, ':');
+	  const char *end = __strchrnul (sevlevel_var, ':');
 	  int level;
-
-	  if (end == NULL)
-	    end = strchr (sevlevel_var, '\0');
 
 	  /* First field: keyword.  This is not used here but it must be
 	     present.  */

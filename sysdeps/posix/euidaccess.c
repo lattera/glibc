@@ -1,5 +1,5 @@
 /* Check if effective user id can access file
-   Copyright (C) 1990, 91, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1990, 91, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,7 +119,7 @@ static uid_t euid;
 static gid_t egid;
 
 /* Nonzero if UID, GID, EUID, and EGID have valid values. */
-static int have_ids = 0;
+static int have_ids;
 
 
 /* Return 0 if the user has permission of type MODE on file PATH;

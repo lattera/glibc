@@ -40,9 +40,8 @@ extern struct locale_data _nl_C_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
-/* Array indexed by category of pointers to _nl_current_CATEGORY slots.
-   Elements are zero for categories whose data is never used.  */
-static struct locale_data * *const _nl_current[] =
+/* Array indexed by category of pointers to _nl_current_CATEGORY slots.  */
+struct locale_data * *const _nl_current[] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
     [category] = &_nl_current_##category,
@@ -65,8 +64,12 @@ struct locale_data *const _nl_C[] =
 
 
 /* Define an array of category names (also the environment variable names),
-   indexed by integral category.  */
-const char *const _nl_category_names[] =
+   indexed by integral category.
+
+   We have entries of fixed width (12 for now) do avoid an array of
+   pointers.  Update the size of the outer array if new, longer locale
+   names are introduced.  */
+const char _nl_category_names[][12] =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
     [category] = category_name,

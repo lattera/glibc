@@ -28,7 +28,7 @@
 
 #include <stdio-common/_itoa.h>
 
-char *__ttyname = NULL;
+char *__ttyname;
 
 static char * getttyname __P ((const char *dev, dev_t mydev,
 			       ino_t myino, int save, int *dostat))
@@ -44,7 +44,7 @@ getttyname (dev, mydev, myino, save, dostat)
      int *dostat;
 {
   static char *name;
-  static size_t namelen = 0;
+  static size_t namelen;
   struct stat st;
   DIR *dirstream;
   struct dirent *d;
@@ -106,7 +106,7 @@ ttyname (fd)
      int fd;
 {
   static char *buf;
-  static size_t buflen = 0;
+  static size_t buflen;
   char procname[30];
   struct stat st, st1;
   int dostat = 0;

@@ -53,7 +53,7 @@
  * returns pid, or -1 for failure
  */
 int
-_openchild (char *command, FILE ** fto, FILE ** ffrom)
+_openchild (const char *command, FILE ** fto, FILE ** ffrom)
 {
   int i;
   int pid;

@@ -39,7 +39,7 @@ static char sccsid[] = "@(#)svc_run.c 1.1 87/10/13 Copyr 1984 Sun Micro";
 #include <errno.h>
 #include <rpc/rpc.h>
 
-static int svc_stop = 0;
+static int svc_stop;
 
 /* This function can be used as a signal handler to terminate the
    server loop.  */

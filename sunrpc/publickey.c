@@ -1,5 +1,5 @@
 /* Get public or secret key from key server.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -38,7 +38,7 @@ extern int __nss_publickey_lookup (service_user **nip, const char *name,
 int
 getpublickey (const char *name, char *key)
 {
-  static service_user *startp = NULL;
+  static service_user *startp;
   static public_function start_fct;
   service_user *nip;
   public_function fct;
@@ -76,7 +76,7 @@ getpublickey (const char *name, char *key)
 int
 getsecretkey (const char *name, char *key, const char *passwd)
 {
-  static service_user *startp = NULL;
+  static service_user *startp;
   static secret_function start_fct;
   service_user *nip;
   secret_function fct;

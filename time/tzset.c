@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ __tzstring (const char *s)
   return new->data;
 }
 
-static char *old_tz = NULL;
+static char *old_tz;
 
 /* Interpret the TZ envariable.  */
 static void
@@ -129,7 +129,7 @@ internal_function
 tzset_internal (always)
      int always;
 {
-  static int is_initialized = 0;
+  static int is_initialized;
   register const char *tz;
   register size_t l;
   char *tzbuf;
@@ -169,7 +169,7 @@ tzset_internal (always)
   old_tz = tz ? __strdup (tz) : NULL;
 
   /* Try to read a data file.  */
-  __tzfile_read (tz);
+  __tzfile_read (tz, 0, NULL);
   if (__use_tzfile)
     return;
 

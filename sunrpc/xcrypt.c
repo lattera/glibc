@@ -50,7 +50,7 @@ static char sccsid[] = "@(#)xcrypt.c 1.3 89/03/24 Copyr 1986 Sun Micro";
 #include <sys/types.h>
 #include <rpc/des_crypt.h>
 
-static char hex[16] =
+static const char hex[16] =
 {
   '0', '1', '2', '3', '4', '5', '6', '7',
   '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',

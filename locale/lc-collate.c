@@ -1,5 +1,5 @@
 /* Define current locale data for LC_COLLATE category.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,12 +28,12 @@ extern const u_int32_t _nl_C_LC_COLLATE_symbol_classes[];
 
 _NL_CURRENT_DEFINE (LC_COLLATE);
 
-const u_int32_t *__collate_table = NULL;
-const u_int32_t *__collate_extra = NULL;
+const u_int32_t *__collate_table;
+const u_int32_t *__collate_extra;
 
-const u_int32_t *__collate_element_hash = NULL;
-const char *__collate_element_strings = NULL;
-const wchar_t *__collate_element_values = NULL;
+const u_int32_t *__collate_element_hash;
+const char *__collate_element_strings;
+const wchar_t *__collate_element_values;
 
 const u_int32_t *__collate_symbol_hash = _nl_C_LC_COLLATE_symbol_hash;
 const char *__collate_symbol_strings = _nl_C_LC_COLLATE_symbol_strings;

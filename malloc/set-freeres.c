@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ __libc_freeres (void)
 {
   /* This function might be called from different places.  So better
      protect for multiple executions since these are fatal.  */
-  static int already_called = 0;
+  static int already_called;
 
   if (!already_called)
     RUN_HOOK (__libc_subfreeres, ());

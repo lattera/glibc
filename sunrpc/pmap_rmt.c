@@ -58,7 +58,7 @@ static char sccsid[] = "@(#)pmap_rmt.c 1.21 87/08/27 Copyr 1984 Sun Micro";
 
 extern u_long _create_xid (void);
 
-static struct timeval timeout = {3, 0};
+static const struct timeval timeout = {3, 0};
 
 /*
  * pmapper remote-call-service interface.

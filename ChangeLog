@@ -1,3 +1,178 @@
+1999-04-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp-ba.c (argp_program_bug_address): Don't initialize with 0.
+	* argp/argp-parse.c (_argp_hang): Likewise.
+	* argp/argp-pv.c (argp_program_version): Likewise.
+	* argp/argp-pvh.c (argp_program_version_hook): Likewise.
+	* inet/ether_hton.c (ether_hton, startp): Likewise.
+	* inet/ether_ntoh.c (ether_ntoh, startp): Likewise.
+	* inet/getnetgrent_r.c (setup, startp): Likewise.
+	* intl/loadmsgcat.c (_nl_msg_cat_cntr): Likewise.
+	* intl/localealias.c (string_space, string_space_act, string_space_max,
+	nmap, maxmap): Likewise.
+	* libio/iopopen.c (proc_file_chain): Likewise.
+	* libio/oldiopopen.c (old_proc_file_chain): Likewise.
+	* locale/lc-collate.c (__collate_table, __collate_extra,
+	__collate_element_hash, __collate_element_strings,
+	__collate_element_values): Likewise.
+	* malloc/mcheck.c (mcheck_used): Likewise.
+	* malloc/mtrace.c (added_atexit_handler): Likewise.
+	* malloc/set-freeres.c (already_called): Likewise.
+	* misc/getpass.c (getpass) [buf, bufsize]: Likewise.
+	* misc/syslog.c (LogStat, LogTag): Likewise.
+	* nss/XXX-lookup.c (DATABASE_NAME_SYMBOL): Likewise.
+	* nss/getXXbyYY_r.c (startp): Likewise.
+	* posix/getopt.c (optarg, __getopt_initialized): Likewise.
+	* posix/regex.c (init_syntax_once) [done]: Likewise.
+	(debug): Likewise.
+	* string/strfry.c (init): Likewise.
+	* sunrpc/svc_run.c (svc_top): Likewise.
+	* posix/euidaccess.c (have_ids): Likewise.
+	* sysdeps/unix/sysv/linux/poll.c (must_emulate): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c (__ttyname, namelen): Likewise.
+	* time/getdate.c (getdate_err): Likewise.
+	* time/tzfile.c (transitions, type_idxs, types, zone_names, leaps):
+	Likewise.
+	* time/tzset.c (old_tz, is_initialized): Likewise.
+
+	* inet/getnameinfo.c (nrl_domainname): Rewrite to allow initialization
+	of static data with zero.
+	* signal/allocrtsig.c (init): Likewise.
+
+	* string/Makefile (routines): Add strchrnul.
+	* string/Versions [GLIBC_2.1.1]: Add strchrnul.
+	* string/string.c: Add strchrnul prototype.
+	* include/string.h: Add __strchrnul prototype.
+	* sysdeps/generic/strchrnul.c: New file.
+	* sysdeps/i386/strchrnul.S: New file.
+	* sysdeps/i386/bits/string.c: Add strchrnul optimization.
+	* sysdeps/i386/i486/bits/string.c: Likewise.
+	* argp/argp-help.c (argp_args_usage): Use __strchrnul.
+	* inet/ether_line.c (ether_line): Likewise.
+	* nscd/nscd_conf.c (nscd_parse_file): Likewise.
+	* nss/nsswitch.c (nss_parse_file): Likewise.
+	* posix/execvp.c (execvp): Likewise.
+	* posix/fnmatch.c (internal_fnmatch): Likewise.
+	* resolv/res_hconf.c (_res_hconv_init): Likewise.
+	* resolv/res_init.c (res_init): Likewise.
+	* stdlib/fmtmsg.c (init): Likewise.
+	* stdlib/getsubopt.c (getsubopt): Likewise.
+
+	* catgets/catgets.c (catopen): Only allocate one memory block.
+	(catclose): Only one free call necessary.
+
+	* catgets/open_catalog.c (__open_catalog): Simplify handling of
+	file descriptor.
+
+	* ctype/ctype-extn.c: Make __toascii_l and __isascii_l alias instead
+	of real functions.  Simplify _tolower and _toupper.
+
+	* grp/initgroups.c (compat_call): Remove unnecessary use of pointer
+	variable.
+
+	* iconv/gconv.h (struct gconv_info): Change data element from pointer
+	to array of size 0.
+	* iconv/gconv_open.c (__gconv_open): Allocate structures accordingly.
+	* iconv/gconv_close.c (__gconv_close): Don't free data.
+
+	* iconv/gconv_conf.c (add_alias): Avoid searching in tree twice to
+	insert new alias.
+
+	* iconv/gconv_db.c (add_derivation): More efficient copying.  Check
+	for error while inserting in tree.
+
+	* include/time.h: Pretty print.
+
+	* inet/ruserpass.c: Rewrite use of toktab to avoid string pointers
+	in table and lots of relocations.
+	* posix/regex.c (regerror): Rewrite use of re_error_msgid to avoid
+	string pointers in table and lots of relocations.
+
+	* intl/finddomain.c: Remove definition of strchr macro.
+
+	* io/ftw.c (nftw_arr, ftw_arr): Make const.
+
+	* locale/loadlocale.c (_nl_load_locale): Optimize string copying.
+
+	* locale/localeinfo.h (_nl_category_names): Change into an array with
+	fixed width char string elements.
+	* locale/setlocale.c (_nl_category_names): Likewise.
+	(_nl_current): Make global.
+	* locale/nl_langinfo.c (nldata): Removed.  Use _nl_current now.
+
+	* malloc/Makefile (distribute): Add stackinfo.h.
+	* sysdeps/generic/stackinfo.h: New file.
+	* sysdeps/i386/stackinfo.h: New file.
+	* posix/execl.c: Use stackinfo.h in optimizing alloca use.
+	* posix/execle.c: Likewise.
+	* posix/execlp.c: Likewise.
+
+	* nis/nis_table.c (__create_ib_request): Always use realloc.
+
+	* posix/execvp.c (execute): Rename to script_execute and keep only
+	code to execute using shell.
+	(execvp): Call execv directly and only fall back on script_execute.
+
+	* resolv/inet_net_pton.c (inet_net_pton_ipv4): Remove digits define
+	and always use xdigits instead.
+
+	* resolv/res_init.c (res_init): Use rawmemchr instead of strchr
+	where appropriate.
+
+	* stdlib/fpioconst.h (__tens): New declaration.
+	(struct mp_power): Remove array, add arrayoff element.
+	* stdlib/fpioconst.c: Replace definitions of _ten_p* arrays by one
+	__tens array and add in _fpioconst_pow10 offsets into __tens.
+	* stdio-common/printf_fp.c: Rewrite to use new __tens array.
+	* stdlib/strtod.c: Likewise.
+
+	* stdlib/a64l.c (a64l_table): Avoid unnecessary elements.
+
+	* stdlib/exit.c: Rewrite to use __exit_funcs being as sign for end
+	of the list.
+	* stdlib/atexit.c (__exit_funcs): Don't initialize.
+
+	* stdlib/fmtmsg.c (keywords): Make name element fixed width array.
+
+	* sunrpc/clnt_perr.c: Rewrite clnt_sperrno and auth_errmsg to use
+	a single and an array with offsets.
+
+	* sunrpc/des_soft.c (partab): Make it const.
+
+	* sunrpc/key_call.c (trytimeout, tottimeout): Make const.
+	(__key_encryptsession_pk_LOCAL): Don't initialize with 0.
+	(__key_decryptsession_pk_LOCAL): Likewise.
+	(__key_gendes_LOCAL): Likewise.
+	(MESSENGER): Mark const.
+	(key_call_private_main): Don't initialize with 0.
+	(use_keyenvoy): Don't initialize with 0.
+	(key_call): Rewrite to reverse logic of use_doors variable.
+
+	* sunrpc/netname.c (OPSYS): Define as array, not pointer.
+	(startp): Don't initialize with zero.
+
+	* sunrpc/openchild.c (_openchild): Make first argument const.
+
+	* sunrpc/pmap_rmt.c (timeout): Mark const.
+	* sunrpc/xcrypt.c (hex): Likewise.
+
+	* sysdeps/unix/sysv/linux/getcwd.c: Rewrite to allow omitting
+	initialization of global variables.
+	* sysdeps/unix/sysv/linux/getpt.c: Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c: Likewise.
+	* termios/tcgetsid.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (x86_cap_flags): Change
+	fxsr to osfxsr.
+
+	* time/tzfile.c (__tzfile_read): Rewrite to allocate only one memory
+	block.  Add function to free memory if wanted.
+	* time/tzset.c (tzset_internal): Pass extra argument to __tzfile_read.
+
+	* wcsmbs/wcsmbsload.c (to_wc, to_mb): Correct initializers.
+
+	* wcsmbs/wmemset.c: Little code optimization.
+
 1999-04-23  Paul Eggert  <eggert@twinsun.com>
 
 	* stdlib/strtoull.c: Surround strong_alias and weak_alias with

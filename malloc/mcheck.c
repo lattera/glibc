@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990,91,92,93,94,95,96,97 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,92,93,94,95,96,97,99 Free Software Foundation, Inc.
    Written May 1989 by Mike Haertel.
 
    This library is free software; you can redistribute it and/or
@@ -220,7 +220,7 @@ mabort (status)
 #endif
 }
 
-static int mcheck_used = 0;
+static int mcheck_used;
 
 int
 mcheck (func)

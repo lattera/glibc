@@ -1,5 +1,5 @@
 /* User interface for extracting locale-dependent parameters.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,18 +22,6 @@
 #include <stddef.h>
 #include "localeinfo.h"
 
-/* This array duplicates `_nl_current' defined in setlocale.c; but since
-   the references here are not weak references, this guarantees that the
-   data for all the categories will be linked in.  */
-
-static struct locale_data * *const nldata[] =
-{
-#define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
-  [category] = &_nl_current_##category,
-#include "categories.def"
-#undef	DEFINE_CATEGORY
-};
-
 
 /* Return a string with the data for locale-dependent parameter ITEM.  */
 
@@ -52,7 +40,7 @@ nl_langinfo (item)
       return NULL;
     }
 
-  data = *nldata[category];
+  data = *_nl_current[category];
 
   if (index >= data->nstrings)
     {

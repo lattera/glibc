@@ -78,10 +78,7 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       if ((search_len + 1) >= size)
         {
           size += 1;
-          if (size == 1)
-            search_val = malloc (size * sizeof (nis_attr));
-          else
-            search_val = realloc (search_val, size * sizeof (nis_attr));
+          search_val = realloc (search_val, size * sizeof (nis_attr));
 	  if (search_val == NULL)
 	    {
 	      nis_free_request (ibreq);

@@ -41,9 +41,7 @@ getsubopt (optionp, tokens, valuep)
     return -1;
 
   /* Find end of next token.  */
-  endp = strchr (*optionp, ',');
-  if (endp == NULL)
-    endp = strchr (*optionp, '\0');
+  endp = __strchrnul (*optionp, ',');
 
   /* Find start of value.  */
   vstart = memchr (*optionp, '=', endp - *optionp);

@@ -63,9 +63,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
       /* Because the file format does not know any form of quoting we
 	 can search forward for the next '#' character and if found
 	 make it terminating the line.  */
-      cp = strchr (line, '#');
-      if (cp != NULL)
-	*cp = '\0';
+      *strchrnul (line, '#') = '\0';
 
       /* If the line is blank it is ignored.  */
       if (line[0] == '\0')

@@ -42,11 +42,14 @@
 #define FLT_MAX_10_EXP_LOG	5 /* = floor(log_2(FLT_MAX_10_EXP)) */
 
 
+/* The array with the number representation. */
+extern const mp_limb_t __tens[];
+
 /* Table of powers of ten.  This is used by __printf_fp and by
    strtof/strtod/strtold.  */
 struct mp_power
   {
-    const mp_limb_t *array;	/* The array with the number representation. */
+    size_t arrayoff;		/* Offset in `__tens'.  */
     mp_size_t arraysize;	/* Size of the array.  */
     int p_expo;			/* Exponent of the number 10^(2^i).  */
     int m_expo;			/* Exponent of the number 10^-(2^i-1).  */

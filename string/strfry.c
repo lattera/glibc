@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 char *
 strfry (char *string)
 {
-  static int init = 0;
+  static int init;
   static struct random_data rdata;
   size_t len, i;
 

@@ -517,6 +517,66 @@ __strchr_c (__const char *__s, int __c)
 }
 
 
+/* Find the first occurrence of C in S or the final NUL byte.  */
+#define _HAVE_STRING_ARCH_strchrnul 1
+#define __strchrnul(s, c) \
+  (__extension__ (__builtin_constant_p (c)				      \
+		  ? ((c) == '\0'					      \
+		     ? (char *) __rawmemchr (s, c)			      \
+		     : __strchrnul_c (s, ((c) & 0xff) << 8))		      \
+		  : __strchrnul_g (s, c)))
+
+__STRING_INLINE char *__strchrnul_g (__const char *__s, int __c);
+
+__STRING_INLINE char *
+__strchrnul_g (__const char *__s, int __c)
+{
+  register unsigned long int __d0;
+  register char *__res;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "movb	%%al,%%ah\n"
+     "1:\n\t"
+     "lodsb\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	2f\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne	1b\n\t"
+     "2:\n\t"
+     "movl	%1,%0"
+     : "=a" (__res), "=&S" (__d0)
+     : "0" (__c), "1" (__s)
+     : "cc");
+  return __res - 1;
+}
+
+__STRING_INLINE char *__strchrnul_c (__const char *__s, int __c);
+
+__STRING_INLINE char *
+__strchrnul_c (__const char *__s, int __c)
+{
+  register unsigned long int __d0;
+  register char *__res;
+  __asm__ __volatile__
+    ("cld\n\t"
+     "1:\n\t"
+     "lodsb\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	2f\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne	1b\n\t"
+     "2:\n\t"
+     "movl	%1,%0"
+     : "=a" (__res), "=&S" (__d0)
+     : "0" (__c), "1" (__s)
+     : "cc");
+  return __res - 1;
+}
+#ifdef __USE_GNU
+# define strchrnul(s, c) __strchrnul (s, c)
+#endif
+
+
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
 #define _HAVE_STRING_ARCH_strcspn 1

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -26,7 +26,7 @@
 
 #define	OPSYS_LEN 4
 #define	MAXIPRINT (11)		/* max length of printed integer */
-static const char *OPSYS = "unix";
+static const char OPSYS[] = "unix";
 
 int
 user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
@@ -141,7 +141,7 @@ int
 netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
 	      int *gidlenp, gid_t * gidlist)
 {
-  static service_user *startp = NULL;
+  static service_user *startp;
   static netname2user_function start_fct;
   service_user *nip;
   netname2user_function fct;

@@ -1,5 +1,5 @@
 /* localeinfo.h -- declarations for internal libc locale interfaces
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ extern struct locale_data *_nl_current_##category;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
-extern const char *const _nl_category_names[LC_ALL + 1];
+extern const char _nl_category_names[LC_ALL + 1][12];
 extern const size_t _nl_category_name_sizes[LC_ALL + 1];
 extern struct locale_data * *const _nl_current[LC_ALL + 1];
 

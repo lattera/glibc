@@ -289,8 +289,7 @@ res_init()
 		    if ((*cp == '\0') || (*cp == '\n'))
 			    continue;
 		    strncpy(_res.defdname, cp, sizeof(_res.defdname) - 1);
-		    if ((cp = strchr(_res.defdname, '\n')) != NULL)
-			    *cp = '\0';
+		    *__strchrnul (_res.defdname, '\n') = '\0';
 		    /*
 		     * Set search list to be blank-separated strings
 		     * on rest of line.
@@ -406,7 +405,7 @@ res_init()
 		while (pp < _res.dnsrch + MAXDFLSRCH) {
 			if (dots < LOCALDOMAINPARTS)
 				break;
-			cp = strchr(cp, '.') + 1;    /* we know there is one */
+			cp = __rawmemchr(cp, '.') + 1;    /* we know there is one */
 			*pp++ = cp;
 			dots--;
 		}

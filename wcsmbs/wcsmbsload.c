@@ -46,6 +46,11 @@ static struct gconv_step to_wc =
   fct: __gconv_transform_ascii_internal,
   init_fct: NULL,
   end_fct: NULL,
+  min_needed_from: 1,
+  max_needed_from: 1,
+  min_needed_to: 4,
+  max_needed_to: 4,
+  stateful: 0,
   data: NULL
 };
 
@@ -59,6 +64,11 @@ static struct gconv_step to_mb =
   fct: __gconv_transform_internal_ascii,
   init_fct: NULL,
   end_fct: NULL,
+  min_needed_from: 4,
+  max_needed_from: 4,
+  min_needed_to: 1,
+  max_needed_to: 1,
+  stateful: 0,
   data: NULL
 };
 

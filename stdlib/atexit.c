@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,8 +40,7 @@ atexit (void (*func) (void))
 __libc_lock_define_initialized (static, lock)
 
 
-static struct exit_function_list fnlist = { NULL, 0, };
-struct exit_function_list *__exit_funcs = &fnlist;
+struct exit_function_list *__exit_funcs;
 
 struct exit_function *
 __new_exitfn (void)

@@ -1,5 +1,5 @@
 /* Linux/i386 version of processor capability information handling macros.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -28,7 +28,7 @@ static const char x86_cap_flags[][7] =
     "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
     "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
     "pat", "pse36", "18", "19", "20", "21", "22", "mmx",
-    "fxsr", "25", "26", "27", "28", "29", "30", "amd3d"
+    "osfxsr", "25", "26", "27", "28", "29", "30", "amd3d"
   };
 
 static inline int

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,7 +120,7 @@ if_nameindex (void)
   unsigned int nifs, i;
   int rq_len;
   struct if_nameindex *idx = NULL;
-  static int new_siocgifconf = 1;
+  static int old_siocgifconf;
 #define RQ_IFS	4
 
   if (fd < 0)
@@ -130,13 +130,13 @@ if_nameindex (void)
 
   /* We may be able to get the needed buffer size directly, rather than
      guessing.  */
-  if (new_siocgifconf)
+  if (! old_siocgifconf)
     {
       ifc.ifc_buf = NULL;
       ifc.ifc_len = 0;
       if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0 || ifc.ifc_len == 0)
 	{
-	  new_siocgifconf = 0;
+	  old_siocgifconf = 1;
 	  rq_len = RQ_IFS * sizeof (struct ifreq);
 	}
       else
@@ -156,7 +156,7 @@ if_nameindex (void)
 	}
       rq_len *= 2;
     }
-  while (ifc.ifc_len == rq_len && new_siocgifconf == 0);
+  while (ifc.ifc_len == rq_len && old_siocgifconf);
 
   nifs = ifc.ifc_len / sizeof (struct ifreq);
 
@@ -212,9 +212,9 @@ if_indextoname (unsigned int ifindex, char *ifname)
      list.  This ioctl is not present in kernels before version 2.1.50.  */
   struct ifreq ifr;
   int fd;
-  static int siogifname_works = 1;
+  static int siogifname_works_not;
 
-  if (siogifname_works)
+  if (!siogifname_works_not)
     {
       int serrno = errno;
 
@@ -227,7 +227,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
       if (__ioctl (fd, SIOGIFNAME, &ifr) < 0)
 	{
 	  if (errno == EINVAL)
-	    siogifname_works = 0;   /* Don't make the same mistake twice. */
+	    siogifname_works_not = 1; /* Don't make the same mistake twice. */
 	}
       else
 	{

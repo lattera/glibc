@@ -66,8 +66,8 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 static int	LogType = SOCK_DGRAM;	/* type of socket connection */
 static int	LogFile = -1;		/* fd for log */
 static int	connected;		/* have done connect */
-static int	LogStat = 0;		/* status bits, set by openlog() */
-static const char *LogTag = NULL;	/* string to tag the entry with */
+static int	LogStat;		/* status bits, set by openlog() */
+static const char *LogTag;		/* string to tag the entry with */
 static int	LogFacility = LOG_USER;	/* default facility code */
 static int	LogMask = 0xff;		/* mask of priorities to be logged */
 extern char	*__progname;		/* Program name, from crt0. */

@@ -1,5 +1,5 @@
 /* Determine current working directory.  Linux version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,10 +40,10 @@ static char *generic_getcwd (char *buf, size_t size) internal_function;
    compiling under 2.1.92+ the libc still runs under older kernels. */
 extern int __syscall_getcwd (char *buf, unsigned long size);
 static int no_syscall_getcwd;
-static int no_new_dcache = 1;
+static int have_new_dcache;
 #else
 # define no_syscall_getcwd 1
-static int no_new_dcache;
+static int have_new_dcache = 1;
 #endif
 
 char *
@@ -55,7 +55,7 @@ __getcwd (char *buf, size_t size)
   char *result;
   size_t alloc_size = size;
 
-  if (no_syscall_getcwd && no_new_dcache)
+  if (no_syscall_getcwd && !have_new_dcache)
     return generic_getcwd (buf, size);
 
   if (size == 0)
@@ -101,7 +101,7 @@ __getcwd (char *buf, size_t size)
       if (errno == ENOSYS)
 	{
 	   no_syscall_getcwd = 1;
-	   no_new_dcache = 0;	/* Now we will try the /proc method.  */
+	   have_new_dcache = 1;	/* Now we will try the /proc method.  */
 	}
       else if (errno != ERANGE || buf != NULL)
 	{
@@ -137,12 +137,13 @@ __getcwd (char *buf, size_t size)
 	  return buf;
 	}
       else
-	no_new_dcache = 1;
+	have_new_dcache = 0;
     }
 
-  /* Set to no_new_dcache only if error indicates that proc doesn't exist.  */
+  /* Set to have_new_dcache only if error indicates that proc doesn't
+     exist.  */
   if (errno != EACCES && errno != ENAMETOOLONG)
-    no_new_dcache = 1;
+    have_new_dcache = 0;
 
   /* Something went wrong.  Restore the error number and use the generic
      version.  */

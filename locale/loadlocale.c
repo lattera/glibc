@@ -97,13 +97,17 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       /* LOCALE/LC_foo is a directory; open LOCALE/LC_foo/SYS_LC_foo
            instead.  */
       char *newp;
+      size_t filenamelen;
 
       __close (fd);
 
-      newp = (char *) alloca (strlen (file->filename)
+      filenamelen = strlen (file->filename);
+      newp = (char *) alloca (filenamelen
 			      + 5 + _nl_category_name_sizes[category] + 1);
-      __stpcpy (__stpcpy (__stpcpy (newp, file->filename), "/SYS_"),
-		_nl_category_names[category]);
+      __mempcpy (__mempcpy (__mempcpy (newp, file->filename, filenamelen),
+			    "/SYS_", 5),
+		 _nl_category_names[category],
+		 _nl_category_name_sizes[category] + 1);
 
       fd = __open (newp, O_RDONLY);
       if (fd < 0)

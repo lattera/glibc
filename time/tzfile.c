@@ -27,7 +27,7 @@
 #define	NOID
 #include <timezone/tzfile.h>
 
-int __use_tzfile = 0;
+int __use_tzfile;
 
 struct ttinfo
   {
@@ -48,15 +48,15 @@ static struct ttinfo *find_transition (time_t timer) internal_function;
 static void compute_tzname_max (size_t) internal_function;
 
 static size_t num_transitions;
-static time_t *transitions = NULL;
-static unsigned char *type_idxs = NULL;
+static time_t *transitions;
+static unsigned char *type_idxs;
 static size_t num_types;
-static struct ttinfo *types = NULL;
-static char *zone_names = NULL;
+static struct ttinfo *types;
+static char *zone_names;
 static long int rule_stdoff;
 static long int rule_dstoff;
 static size_t num_leaps;
-static struct leap *leaps = NULL;
+static struct leap *leaps;
 
 #include <endian.h>
 #include <byteswap.h>
@@ -84,7 +84,7 @@ decode (const void *ptr)
 }
 
 void
-__tzfile_read (const char *file)
+__tzfile_read (const char *file, size_t extra, char **extrap)
 {
   static const char default_tzdir[] = TZDIR;
   size_t num_isstd, num_isgmt;
@@ -92,24 +92,15 @@ __tzfile_read (const char *file)
   struct tzhead tzhead;
   size_t chars;
   register size_t i;
+  size_t total_size;
+  size_t types_idx;
+  size_t leaps_idx;
 
   __use_tzfile = 0;
 
   if (transitions != NULL)
     free ((void *) transitions);
   transitions = NULL;
-  if (type_idxs != NULL)
-    free ((void *) type_idxs);
-  type_idxs = NULL;
-  if (types != NULL)
-    free ((void *) types);
-  types = NULL;
-  if (zone_names != NULL)
-    free ((void *) zone_names);
-  zone_names = NULL;
-  if (leaps != NULL)
-    free ((void *) leaps);
-  leaps = NULL;
 
   if (file == NULL)
     /* No user specification; use the site-wide default.  */
@@ -151,7 +142,7 @@ __tzfile_read (const char *file)
       new = (char *) __alloca (tzdir_len + 1 + len);
       tmp = __mempcpy (new, tzdir, tzdir_len);
       *tmp++ = '/';
-      __mempcpy (tmp, file, len);
+      memcpy (tmp, file, len);
       file = new;
     }
 
@@ -169,40 +160,47 @@ __tzfile_read (const char *file)
   num_isstd = (size_t) decode (tzhead.tzh_ttisstdcnt);
   num_isgmt = (size_t) decode (tzhead.tzh_ttisgmtcnt);
 
-  if (num_transitions > 0)
-    {
-      transitions = (time_t *) malloc (num_transitions * sizeof (time_t));
-      if (transitions == NULL)
-	goto lose;
-      type_idxs = (unsigned char *) malloc (num_transitions);
-      if (type_idxs == NULL)
-	goto lose;
-    }
-  if (num_types > 0)
-    {
-      types = (struct ttinfo *) malloc (num_types * sizeof (struct ttinfo));
-      if (types == NULL)
-	goto lose;
-    }
-  if (chars > 0)
-    {
-      zone_names = (char *) malloc (chars);
-      if (zone_names == NULL)
-	goto lose;
-    }
-  if (num_leaps > 0)
-    {
-      leaps = (struct leap *) malloc (num_leaps * sizeof (struct leap));
-      if (leaps == NULL)
-	goto lose;
-    }
+  total_size = num_transitions * (sizeof (time_t) + 1);
+  total_size = ((total_size + __alignof__ (struct ttinfo) - 1)
+		& ~(__alignof__ (struct ttinfo) - 1));
+  types_idx = total_size;
+  total_size += num_types * sizeof (struct ttinfo) + chars;
+  total_size = ((total_size + __alignof__ (struct leap) - 1)
+		& ~(__alignof__ (struct leap) - 1));
+  leaps_idx = total_size;
+  total_size += num_leaps * sizeof (struct leap);
+  /* This is for the extra memory required by the caller.  */
+  total_size += extra;
+
+  transitions = (time_t *) malloc (total_size);
+  if (transitions == NULL)
+    goto lose;
+
+  type_idxs = (unsigned char *) transitions + (num_transitions
+					       * sizeof (time_t));
+  types = (struct ttinfo *) ((char *) transitions + types_idx);
+  zone_names = (char *) types + num_types * sizeof (struct ttinfo);
+  leaps = (struct leap *) ((char *) transitions + leaps_idx);
+  if (extra > 0)
+    *extrap = (char *) &leaps[num_leaps];
 
   if (sizeof (time_t) < 4)
-      abort ();
+    abort ();
 
-  if (fread_unlocked (transitions, 4, num_transitions, f) != num_transitions
-      || fread_unlocked (type_idxs, 1, num_transitions, f) != num_transitions)
-    goto lose;
+  if (sizeof (time_t) == 4)
+    {
+      if (fread_unlocked (transitions, 1, (4 + 1) * num_transitions, f)
+	  != (4 + 1) * num_transitions)
+	goto lose;
+    }
+  else
+    {
+      if (fread_unlocked (transitions, 4, num_transitions, f)
+	  != num_transitions
+	  || fread_unlocked (type_idxs, 1, num_transitions, f)
+	  != num_transitions)
+	goto lose;
+    }
 
   /* Check for bogus indices in the data file, so we can hereafter
      safely use type_idxs[T] as indices into `types' and never crash.  */
@@ -224,14 +222,17 @@ __tzfile_read (const char *file)
   for (i = 0; i < num_types; ++i)
     {
       unsigned char x[4];
-      if (fread_unlocked (x, 1, 4, f) != 4
-	  || fread_unlocked (&types[i].isdst, 1, 1, f) != 1
-	  || fread_unlocked (&types[i].idx, 1, 1, f) != 1)
+      int c;
+      if (fread_unlocked (x, 1, sizeof (x), f) != sizeof (x))
 	goto lose;
-      if (types[i].isdst > 1)
+      c = getc_unlocked (f);
+      if ((unsigned int) c > 1u)
 	goto lose;
-      if (types[i].idx >= chars) /* Bogus index in data file.  */
+      types[i].isdst = c;
+      c = getc_unlocked (f);
+      if ((size_t) c > chars) /* Bogus index in data file.  */
 	goto lose;
+      types[i].idx = c;
       types[i].offset = (long int) decode (x);
     }
 
@@ -354,10 +355,13 @@ void
 __tzfile_default (const char *std, const char *dst,
 		  long int stdoff, long int dstoff)
 {
-  size_t stdlen, dstlen, i;
+  size_t stdlen = strlen (std) + 1;
+  size_t dstlen = strlen (dst) + 1;
+  size_t i;
   int isdst;
+  char *cp;
 
-  __tzfile_read (TZDEFRULES);
+  __tzfile_read (TZDEFRULES, stdlen + dstlen, &cp);
   if (!__use_tzfile)
     return;
 
@@ -367,19 +371,10 @@ __tzfile_default (const char *std, const char *dst,
       return;
     }
 
-  /* Ignore the zone names read from the file.  */
-  free (zone_names);
-
-  /* Use the names the user specified.  */
-  stdlen = strlen (std) + 1;
-  dstlen = strlen (dst) + 1;
-  zone_names = malloc (stdlen + dstlen);
-  if (zone_names == NULL)
-    {
-      __use_tzfile = 0;
-      return;
-    }
-  __mempcpy (__mempcpy (zone_names, std, stdlen), dst, dstlen);
+  /* Ignore the zone names read from the file and use the given ones
+     instead.  */
+  __mempcpy (__mempcpy (cp, std, stdlen), dst, dstlen);
+  zone_names = cp;
 
   /* Now there are only two zones, regardless of what the file contained.  */
   num_types = 2;
@@ -554,3 +549,14 @@ compute_tzname_max (size_t chars)
     }
   while (++p < &zone_names[chars]);
 }
+
+/* This function is only called when we are checking for memory leaks.  */
+static void
+freeres (void)
+{
+  if (transitions != NULL)
+    free ((void *) transitions);
+}
+
+/* Make sure all allocated data is freed before exiting.  */
+text_set_element (__libc_subfreeres, freeres);

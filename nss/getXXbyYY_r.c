@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -104,7 +104,7 @@ int
 INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 			   size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM)
 {
-  static service_user *startp = NULL;
+  static service_user *startp;
   static lookup_function start_fct;
   service_user *nip;
   lookup_function fct;

@@ -1,7 +1,7 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -892,6 +892,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	    {
 	      if ((exponent & expbit) != 0)
 		{
+		  size_t size = ttab->arraysize - _FPIO_CONST_OFFSET;
 		  mp_limb_t cy;
 		  exponent ^= expbit;
 
@@ -901,13 +902,14 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 		     bits follow.  */
 		  if (numsize >= ttab->arraysize - _FPIO_CONST_OFFSET)
 		    cy = __mpn_mul (pdest, psrc, numsize,
-				    &ttab->array[_FPIO_CONST_OFFSET],
-				    ttab->arraysize - _FPIO_CONST_OFFSET);
+				    &__tens[ttab->arrayoff
+					   + _FPIO_CONST_OFFSET],
+				    size);
 		  else
-		    cy = __mpn_mul (pdest, &ttab->array[_FPIO_CONST_OFFSET],
-				    ttab->arraysize - _FPIO_CONST_OFFSET,
-				    psrc, numsize);
-		  numsize += ttab->arraysize - _FPIO_CONST_OFFSET;
+		    cy = __mpn_mul (pdest, &__tens[ttab->arrayoff
+						  + _FPIO_CONST_OFFSET],
+				    size, psrc, numsize);
+		  numsize += size;
 		  if (cy == 0)
 		    --numsize;
 		  SWAP (psrc, pdest);
@@ -1062,12 +1064,13 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	    if (densize == 0)
 	      {
 		densize = ttab->arraysize - _FPIO_CONST_OFFSET;
-		memcpy (psrc, &ttab->array[_FPIO_CONST_OFFSET],
+		memcpy (psrc, &__tens[ttab->arrayoff + _FPIO_CONST_OFFSET],
 			densize * sizeof (mp_limb_t));
 	      }
 	    else
 	      {
-		cy = __mpn_mul (pdest, &ttab->array[_FPIO_CONST_OFFSET],
+		cy = __mpn_mul (pdest, &__tens[ttab->arrayoff
+					      + _FPIO_CONST_OFFSET],
 				ttab->arraysize - _FPIO_CONST_OFFSET,
 				psrc, densize);
 		densize += ttab->arraysize - _FPIO_CONST_OFFSET;

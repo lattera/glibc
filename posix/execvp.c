@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,37 +24,31 @@
 #include <paths.h>
 
 
+/* The file is accessible but it is not an executable file.  Invoke
+   the shell to interpret it as a script.  */
 static void
 internal_function
-execute (const char *file, char *const argv[])
+script_execute (const char *file, char *const argv[])
 {
-  execv (file, argv);
+  /* Count the arguments.  */
+  int argc = 0;
+  while (argv[argc++])
+    ;
 
-  if (errno == ENOEXEC)
-    {
-      /* The file is accessible but it is not an executable file.
-	 Invoke the shell to interpret it as a script.  */
-
-      /* Count the arguments.  */
-      int argc = 0;
-      while (argv[argc++])
-	;
-
-      /* Construct an argument list for the shell.  */
+  /* Construct an argument list for the shell.  */
+  {
+    char *new_argv[argc + 1];
+    new_argv[0] = (char *) _PATH_BSHELL;
+    new_argv[1] = (char *) file;
+    while (argc > 1)
       {
-	char *new_argv[argc + 1];
-	new_argv[0] = (char *) _PATH_BSHELL;
-	new_argv[1] = (char *) file;
-	while (argc > 1)
-	  {
-	    new_argv[argc] = argv[argc - 1];
-	    --argc;
-	  }
-
-	/* Execute the shell.  */
-	execv (new_argv[0], new_argv);
+	new_argv[argc] = argv[argc - 1];
+	--argc;
       }
-    }
+
+    /* Execute the shell.  */
+    execv (new_argv[0], new_argv);
+  }
 }
 
 
@@ -65,8 +59,6 @@ execvp (file, argv)
      const char *file;
      char *const argv[];
 {
-  int got_eacces = 0;
-
   if (*file == '\0')
     {
       /* We check the simple case first. */
@@ -75,10 +67,16 @@ execvp (file, argv)
     }
 
   if (strchr (file, '/') != NULL)
-    /* Don't search when it contains a slash.  */
-    execute (file, argv);
+    {
+      /* Don't search when it contains a slash.  */
+      execv (file, argv);
+
+      if (errno == ENOEXEC)
+	script_execute (file, argv);
+    }
   else
     {
+      int got_eacces = 0;
       char *path, *p, *name;
       size_t len;
 
@@ -100,9 +98,7 @@ execvp (file, argv)
       do
 	{
 	  path = p;
-	  p = strchr (path, ':');
-	  if (p == NULL)
-	    p = strchr (path, '\0');
+	  p = __strchrnul (path, ':');
 
 	  if (p == path)
 	    /* Two adjacent colons, or a colon at the beginning or the end
@@ -113,11 +109,14 @@ execvp (file, argv)
 	      /* Construct the pathname to try.  */
 	      char *tmp = __mempcpy (name, path, p - path);
 	      *tmp++ = '/';
-	      (void) __mempcpy (tmp, file, len);
+	      memcpy (tmp, file, len);
 	    }
 
 	  /* Try to execute this name.  If it works, execv will not return.  */
-	  execute (name, argv);
+	  execv (name, argv);
+
+	  if (errno == ENOEXEC)
+	    script_execute (name, argv);
 
 	  switch (errno)
 	    {
@@ -142,13 +141,13 @@ execvp (file, argv)
 	    }
 	}
       while (*p++ != '\0');
+
+      /* We tried every element and none of them worked.  */
+      if (got_eacces)
+	/* At least one failure was due to permissions, so report that
+           error.  */
+	__set_errno (EACCES);
     }
-
-  /* We tried every element and none of them worked.  */
-
-  if (got_eacces)
-    /* At least one failure was due to permissions, so report that error.  */
-    __set_errno (EACCES);
 
   /* Return the error from the last attempt (probably ENOENT).  */
   return -1;

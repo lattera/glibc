@@ -147,6 +147,12 @@ extern char *strchr __P ((__const char *__s, int __c));
 /* Find the last occurrence of C in S.  */
 extern char *strrchr __P ((__const char *__s, int __c));
 
+#ifdef __USE_GNU
+/* This funciton is similar to `strchr'.  But it returns a pointer to
+   the closing NUL byte in case C is not found in S.  */
+extern char *strchrnul __P ((__const char *__s, int __c));
+#endif
+
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
 extern size_t strcspn __P ((__const char *__s, __const char *__reject));

@@ -1056,6 +1056,66 @@ __strchr_g (__const char *__s, int __c)
 }
 
 
+/* Find the first occurrence of C in S or the final NUL byte.  */
+#define _HAVE_STRING_ARCH_strchrnul 1
+#define __strchrnul(s, c) \
+  (__extension__ (__builtin_constant_p (c)				      \
+		  ? ((c) == '\0'					      \
+		     ? (char *) __rawmemchr (s, c)			      \
+		     : __strchrnul_c (s, ((c) & 0xff) << 8))		      \
+		  : __strchrnul_g (s, c)))
+
+__STRING_INLINE char *__strchrnul_c (__const char *__s, int __c);
+
+__STRING_INLINE char *
+__strchrnul_c (__const char *__s, int __c)
+{
+  register unsigned long int __d0;
+  register char *__res;
+  __asm__ __volatile__
+    ("1:\n\t"
+     "movb	(%0),%%al\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	2f\n\t"
+     "leal	1(%0),%0\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne	1b\n\t"
+     "decl	%0\n"
+     "2:"
+     : "=r" (__res), "=&a" (__d0)
+     : "0" (__s), "1" (__c)
+     : "cc");
+  return __res;
+}
+
+__STRING_INLINE char *__strchrnul_g (__const char *__s, int __c);
+
+__STRING_INLINE char *
+__strchrnul_g (__const char *__s, int __c)
+{
+  register unsigned long int __d0;
+  register char *__res;
+  __asm__ __volatile__
+    ("movb	%%al,%%ah\n"
+     "1:\n\t"
+     "movb	(%0),%%al\n\t"
+     "cmpb	%%ah,%%al\n\t"
+     "je	2f\n\t"
+     "leal	1(%0),%0\n\t"
+     "testb	%%al,%%al\n\t"
+     "jne	1b\n\t"
+     "decl	%0\n"
+     "2:"
+     : "=r" (__res), "=&a" (__d0)
+     : "0" (__s), "1" (__c)
+     : "cc");
+  return __res;
+}
+#ifdef __USE_GNU
+# define strchrnul(s, c) __strchrnul (s, c)
+#endif
+
+
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Find the first occurrence of C in S.  This is the BSD name.  */
 # define _HAVE_STRING_ARCH_index 1

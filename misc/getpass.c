@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,8 +41,8 @@ getpass (prompt)
   FILE *in, *out;
   struct termios s, t;
   int tty_changed;
-  static char *buf = NULL;
-  static size_t bufsize = 0;
+  static char *buf;
+  static size_t bufsize;
   ssize_t nread;
 
   /* Try to write to and read from the terminal if we can.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -31,10 +31,10 @@ int __bsd_getpt (void);
 int
 __getpt (void)
 {
-  static int have_dev_ptmx = 1;
+  static int have_no_dev_ptmx;
   int fd;
 
-  if (have_dev_ptmx)
+  if (!have_no_dev_ptmx)
     {
       fd = __open (_PATH_DEVPTMX, O_RDWR);
       if (fd != -1)
@@ -42,7 +42,7 @@ __getpt (void)
       else
 	{
 	  if (errno == ENOENT || errno == ENODEV)
-	    have_dev_ptmx = 0;
+	    have_no_dev_ptmx = 1;
 	  else
 	    return -1;
 	}

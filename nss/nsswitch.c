@@ -505,7 +505,6 @@ nss_parse_file (const char *fname)
     {
       name_database_entry *this;
       ssize_t n;
-      char *cp;
 
       n = __getline (&line, &len, fp);
       if (n < 0)
@@ -516,9 +515,7 @@ nss_parse_file (const char *fname)
       /* Because the file format does not know any form of quoting we
 	 can search forward for the next '#' character and if found
 	 make it terminating the line.  */
-      cp = strchr (line, '#');
-      if (cp != NULL)
-	*cp = '\0';
+      *__strchrnul (line, '#') = '\0';
 
       /* If the line is blank it is ignored.  */
       if (line[0] == '\0')

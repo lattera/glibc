@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
+
+#include <stackinfo.h>
 
 #ifndef	HAVE_GNU_LD
 # define __environ	environ
@@ -46,16 +48,21 @@ execl (const char *path, const char *arg, ...)
 	{
 	  const char **nptr = alloca ((argv_max *= 2) * sizeof (const char *));
 
+#ifndef _STACK_GROWS_UP
 	  if ((char *) nptr + argv_max == (char *) argv)
 	    {
 	      /* Stack grows down.  */
 	      argv = (const char **) memcpy (nptr, argv, i);
 	      argv_max += i;
 	    }
-	  else if ((char *) argv + i == (char *) nptr)
+	  else
+#endif
+#ifndef _STACK_GROWS_DOWN
+	    if ((char *) argv + i == (char *) nptr)
 	    /* Stack grows up.  */
 	    argv_max += i;
 	  else
+#endif
 	    /* We have a hole in the stack.  */
 	    argv = (const char **) memcpy (nptr, argv, i);
 	}

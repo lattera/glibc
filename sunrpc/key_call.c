@@ -59,14 +59,14 @@
 
 #define debug(msg)		/* turn off debugging */
 
-extern int _openchild (char *command, FILE **fto, FILE **ffrom);
+extern int _openchild (const char *command, FILE **fto, FILE **ffrom);
 
 
 static int key_call (u_long, xdrproc_t xdr_arg, char *,
 		     xdrproc_t xdr_rslt, char *) internal_function;
 
-static struct timeval trytimeout = {KEY_TIMEOUT, 0};
-static struct timeval tottimeout = {KEY_TIMEOUT *KEY_NRETRY, 0};
+static const struct timeval trytimeout = {KEY_TIMEOUT, 0};
+static const struct timeval tottimeout = {KEY_TIMEOUT *KEY_NRETRY, 0};
 
 int
 key_setsecret (char *secretkey)
@@ -268,9 +268,9 @@ key_get_conv (char *pkey, des_block *deskey)
  * implementations of these functions, and to call those in key_call().
  */
 
-cryptkeyres *(*__key_encryptsession_pk_LOCAL) (uid_t, char *) = 0;
-cryptkeyres *(*__key_decryptsession_pk_LOCAL) (uid_t, char *) = 0;
-des_block *(*__key_gendes_LOCAL) (uid_t, char *) = 0;
+cryptkeyres *(*__key_encryptsession_pk_LOCAL) (uid_t, char *);
+cryptkeyres *(*__key_decryptsession_pk_LOCAL) (uid_t, char *);
+des_block *(*__key_gendes_LOCAL) (uid_t, char *);
 
 static int
 internal_function
@@ -287,7 +287,7 @@ key_call_keyenvoy (u_long proc, xdrproc_t xdr_arg, char *arg,
   int success;
   uid_t ruid;
   uid_t euid;
-  static char MESSENGER[] = "/usr/etc/keyenvoy";
+  static const char MESSENGER[] = "/usr/etc/keyenvoy";
 
   success = 1;
   sigemptyset (&mask);
@@ -355,7 +355,7 @@ struct  key_call_private {
   pid_t   pid;            /* process-id at moment of creation */
   uid_t   uid;            /* user-id at last authorization */
 };
-static struct key_call_private *key_call_private_main = NULL;
+static struct key_call_private *key_call_private_main;
 __libc_lock_define_initialized (static, keycall_lock)
 
 /*
@@ -555,9 +555,9 @@ internal_function
 key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
 	  xdrproc_t xdr_rslt, char *rslt)
 {
-  static int use_keyenvoy = 0;
+  static int use_keyenvoy;
 #ifdef HAVE_DOORS
-  static int use_doors = 1;
+  static int not_use_doors;
 #endif
 
   if (proc == KEY_ENCRYPT_PK && __key_encryptsession_pk_LOCAL)
@@ -583,11 +583,11 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
     }
 
 #ifdef HAVE_DOORS
-  if (use_doors)
+  if (!not_use_doors)
     {
       if (key_call_door (proc, xdr_arg, arg, xdr_rslt, rslt))
 	return 1;
-      use_doors = 0;
+      not_use_doors = 1;
     }
 #endif
   if (!use_keyenvoy)

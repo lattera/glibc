@@ -211,8 +211,7 @@ internal_fnmatch (const char *pattern, const char *string,
 	    {
 	      const char *endp;
 
-	      if (!(flags & FNM_FILE_NAME) || (endp = strchr (n, '/')) == NULL)
-		endp = strchr (n, '\0');
+	      endp = __strchrnul (n, (flags & FNM_FILE_NAME) ? '/' : '\0');
 
 	      if (c == '[')
 		{

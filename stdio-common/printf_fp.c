@@ -404,7 +404,7 @@ __printf_fp (FILE *fp,
       int scaleexpo = 0;
       int explog = LDBL_MAX_10_EXP_LOG;
       int exp10 = 0;
-      const struct mp_power *tens = &_fpioconst_pow10[explog + 1];
+      const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
       int cnt_h, cnt_l, i;
 
       if ((exponent + to_shift) % BITS_PER_MP_LIMB == 0)
@@ -424,23 +424,28 @@ __printf_fp (FILE *fp,
 	}
       MPN_ZERO (frac, (exponent + to_shift) / BITS_PER_MP_LIMB);
 
-      assert (tens > &_fpioconst_pow10[0]);
+      assert (powers > &_fpioconst_pow10[0]);
       do
 	{
-	  --tens;
+	  --powers;
 
 	  /* The number of the product of two binary numbers with n and m
 	     bits respectively has m+n or m+n-1 bits.	*/
-	  if (exponent >= scaleexpo + tens->p_expo - 1)
+	  if (exponent >= scaleexpo + powers->p_expo - 1)
 	    {
 	      if (scalesize == 0)
-		MPN_ASSIGN (tmp, tens->array);
+		{
+		  tmpsize = powers->arraysize;
+		  memcpy (tmp, &__tens[powers->arrayoff],
+			  tmpsize * sizeof (mp_limb_t));
+		}
 	      else
 		{
 		  cy = __mpn_mul (tmp, scale, scalesize,
-				  &tens->array[_FPIO_CONST_OFFSET],
-				  tens->arraysize - _FPIO_CONST_OFFSET);
-		  tmpsize = scalesize + tens->arraysize - _FPIO_CONST_OFFSET;
+				  &__tens[powers->arrayoff
+					 + _FPIO_CONST_OFFSET],
+				  powers->arraysize - _FPIO_CONST_OFFSET);
+		  tmpsize = scalesize + powers->arraysize - _FPIO_CONST_OFFSET;
 		  if (cy == 0)
 		    --tmpsize;
 		}
@@ -456,7 +461,7 @@ __printf_fp (FILE *fp,
 	    }
 	  --explog;
 	}
-      while (tens > &_fpioconst_pow10[0]);
+      while (powers > &_fpioconst_pow10[0]);
       exponent = exp10;
 
       /* Optimize number representations.  We want to represent the numbers
@@ -547,7 +552,7 @@ __printf_fp (FILE *fp,
       /* |FP| < 1.0.  */
       int exp10 = 0;
       int explog = LDBL_MAX_10_EXP_LOG;
-      const struct mp_power *tens = &_fpioconst_pow10[explog + 1];
+      const struct mp_power *powers = &_fpioconst_pow10[explog + 1];
       mp_size_t used_limbs = fracsize - 1;
 
       /* Now shift the input value to its right place.	*/
@@ -558,27 +563,28 @@ __printf_fp (FILE *fp,
       expsign = 1;
       exponent = -exponent;
 
-      assert (tens != &_fpioconst_pow10[0]);
+      assert (powers != &_fpioconst_pow10[0]);
       do
 	{
-	  --tens;
+	  --powers;
 
-	  if (exponent >= tens->m_expo)
+	  if (exponent >= powers->m_expo)
 	    {
 	      int i, incr, cnt_h, cnt_l;
 	      mp_limb_t topval[2];
 
 	      /* The __mpn_mul function expects the first argument to be
 		 bigger than the second.  */
-	      if (fracsize < tens->arraysize - _FPIO_CONST_OFFSET)
-		cy = __mpn_mul (tmp, &tens->array[_FPIO_CONST_OFFSET],
-				tens->arraysize - _FPIO_CONST_OFFSET,
+	      if (fracsize < powers->arraysize - _FPIO_CONST_OFFSET)
+		cy = __mpn_mul (tmp, &__tens[powers->arrayoff
+					    + _FPIO_CONST_OFFSET],
+				powers->arraysize - _FPIO_CONST_OFFSET,
 				frac, fracsize);
 	      else
 		cy = __mpn_mul (tmp, frac, fracsize,
-				&tens->array[_FPIO_CONST_OFFSET],
-				tens->arraysize - _FPIO_CONST_OFFSET);
-	      tmpsize = fracsize + tens->arraysize - _FPIO_CONST_OFFSET;
+				&__tens[powers->arrayoff + _FPIO_CONST_OFFSET],
+				powers->arraysize - _FPIO_CONST_OFFSET);
+	      tmpsize = fracsize + powers->arraysize - _FPIO_CONST_OFFSET;
 	      if (cy == 0)
 		--tmpsize;
 
@@ -586,7 +592,7 @@ __printf_fp (FILE *fp,
 	      incr = (tmpsize - fracsize) * BITS_PER_MP_LIMB
 		     + BITS_PER_MP_LIMB - 1 - cnt_h;
 
-	      assert (incr <= tens->p_expo);
+	      assert (incr <= powers->p_expo);
 
 	      /* If we increased the exponent by exactly 3 we have to test
 		 for overflow.	This is done by comparing with 10 shifted
@@ -674,7 +680,7 @@ __printf_fp (FILE *fp,
 	    }
 	  --explog;
 	}
-      while (tens != &_fpioconst_pow10[1] && exponent > 0);
+      while (powers != &_fpioconst_pow10[1] && exponent > 0);
       /* All factors but 10^-1 are tested now.	*/
       if (exponent > 0)
 	{
