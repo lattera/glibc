@@ -12,7 +12,17 @@
 
 2000-06-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconvdata/iso-2022-kr.c: Add __builtin_expect in many places.
+	* iconvdata/utf-16.c: Add __builtin_expect in many places.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
 	* iconvdata/iso-2022-jp.c: Likewise.
 	* iconvdata/iso-2022-cn.c: Likewise.
 	* iconvdata/gbgbk.c: Likewise.
