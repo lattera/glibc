@@ -430,8 +430,7 @@ following patterns:
 @smallexample
 alpha@var{*}-@var{*}-linux
 arm-@var{*}-linux
-arm-@var{*}-linuxaout
-arm-@var{*}-none
+hppa-@var{*}-linux
 i@var{x}86-@var{*}-gnu
 i@var{x}86-@var{*}-linux
 ia64-@var{*}-linux
@@ -443,8 +442,16 @@ sparc-@var{*}-linux
 sparc64-@var{*}-linux
 @end smallexample
 
-Former releases of this library (version 1.09.1 and perhaps earlier
-versions) used to run on the following configurations:
+Former releases of this library (version 2.1 and/or 2.0) used to run on
+the following configurations:
+
+@smallexample
+arm-@var{*}-linuxaout
+arm-@var{*}-none
+@end smallexample
+
+Very early releases (version 1.09.1 and perhaps earlier versions) used
+to run on the following configurations:
 
 @smallexample
 alpha-dec-osf1

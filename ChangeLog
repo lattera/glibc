@@ -5,6 +5,7 @@
 
 	* posix/Makefile (tst-dir-ARGS): Fix problem with compiling in
 	source directory.
+	(tst-chmod-ARGS): Likewise.
 
 2000-11-09  H.J. Lu  <hjl@gnu.org>
 
