@@ -108,11 +108,13 @@ __find_in_stack_list (pd)
 /* Deallocate POSIX thread-local-storage.  */
 static void
 internal_function
-deallocate_tsd (struct pthread *pd)
+deallocate_tsd (void)
 {
+  struct pthread *self = THREAD_SELF;
+
   /* Maybe no data was ever allocated.  This happens often so we have
      a flag for this.  */
-  if (THREAD_GETMEM (pd, specific_used))
+  if (THREAD_GETMEM (self, specific_used))
     {
       size_t round;
       size_t cnt;
@@ -123,13 +125,13 @@ deallocate_tsd (struct pthread *pd)
 	  size_t idx;
 
 	  /* So far no new nonzero data entry.  */
-	  THREAD_SETMEM (pd, specific_used, false);
+	  THREAD_SETMEM (self, specific_used, false);
 
 	  for (cnt = idx = 0; cnt < PTHREAD_KEY_1STLEVEL_SIZE; ++cnt)
 	    {
 	      struct pthread_key_data *level2;
 
-	      level2 = THREAD_GETMEM_NC (pd, specific, cnt);
+	      level2 = THREAD_GETMEM_NC (self, specific, cnt);
 
 	      if (level2 != NULL)
 		{
@@ -140,50 +142,59 @@ deallocate_tsd (struct pthread *pd)
 		    {
 		      void *data = level2[inner].data;
 
-		      if (data != NULL
+		      if (data != NULL)
+			{
+			  /* Always clear the data.  */
+			  level2[inner].data = NULL;
+
 			  /* Make sure the data corresponds to a valid
 			     key.  This test fails if the key was
 			     deallocated and also if it was
 			     re-allocated.  It is the user's
 			     responsibility to free the memory in this
 			     case.  */
-			  && (level2[inner].seq
-			      == __pthread_keys[idx].seq)
-			  /* It is not necessary to register a destructor
-			     function.  */
-			  && __pthread_keys[idx].destr != NULL)
-			{
-			  level2[inner].data = NULL;
-			  __pthread_keys[idx].destr (data);
+			  if (level2[inner].seq
+			      == __pthread_keys[idx].seq
+			      /* It is not necessary to register a destructor
+				 function.  */
+			      && __pthread_keys[idx].destr != NULL)
+			    /* Call the user-provided destructor.  */
+			    __pthread_keys[idx].destr (data);
 			}
 		    }
 		}
 	      else
 		idx += PTHREAD_KEY_1STLEVEL_SIZE;
 	    }
+
+	  if (THREAD_GETMEM (self, specific_used) == 0)
+	    /* No data has been modified.  */
+	    goto just_free;
 	}
-      while (THREAD_GETMEM (pd, specific_used)
-	     && ++round < PTHREAD_DESTRUCTOR_ITERATIONS);
+      /* We only repeat the process a fixed number of times.  */
+      while (__builtin_expect (++round < PTHREAD_DESTRUCTOR_ITERATIONS, 0));
 
-      /* Clear the memory of the first block for reuse.  */
-      memset (&pd->specific_1stblock, '\0', sizeof (pd->specific_1stblock));
+      /* Just clear the memory of the first block for reuse.  */
+      memset (&THREAD_SELF->specific_1stblock, '\0',
+	      sizeof (self->specific_1stblock));
 
+    just_free:
       /* Free the memory for the other blocks.  */
       for (cnt = 1; cnt < PTHREAD_KEY_1STLEVEL_SIZE; ++cnt)
 	{
 	  struct pthread_key_data *level2;
 
-	  level2 = THREAD_GETMEM_NC (pd, specific, cnt);
+	  level2 = THREAD_GETMEM_NC (self, specific, cnt);
 	  if (level2 != NULL)
 	    {
 	      /* The first block is allocated as part of the thread
 		 descriptor.  */
 	      free (level2);
-	      THREAD_SETMEM_NC (pd, specific, cnt, NULL);
+	      THREAD_SETMEM_NC (self, specific, cnt, NULL);
 	    }
 	}
 
-      THREAD_SETMEM (pd, specific_used, false);
+      THREAD_SETMEM (self, specific_used, false);
     }
 }
 
@@ -229,9 +240,19 @@ start_thread (void *arg)
 
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
-  int not_first_call = setjmp (pd->cancelbuf);
+  struct pthread_unwind_buf unwind_buf;
+
+  /* No previous handlers.  */
+  unwind_buf.priv.data.prev = NULL;
+  unwind_buf.priv.data.cleanup = NULL;
+
+  int not_first_call;
+  not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
   if (__builtin_expect (! not_first_call, 1))
     {
+      /* Store the new cleanup handler info.  */
+      THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
+
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT
       THREAD_SETMEM (pd, result, CALL_THREAD_FCT (pd));
@@ -241,7 +262,7 @@ start_thread (void *arg)
     }
 
   /* Run the destructor for the thread-local data.  */
-  deallocate_tsd (pd);
+  deallocate_tsd ();
 
   /* Clean up any state libc stored in thread-local variables.  */
   __libc_thread_freeres ();
