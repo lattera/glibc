@@ -6,6 +6,7 @@ escape_char  /
 % By: Salvador Sabanal, LinuxLab, SAP AG <salvador.sabanal@sap.com>
 % Date: Oct. 18, 1999
 % Adjusted to glibc mnemonics --drepper 2000-02-12
+% Adjusted to glibc mnemonics --strassburger 2000-09-28
 
 LC_IDENTIFICATION
 title      "Arabic locale for Saudi Arabia"
@@ -101,8 +102,8 @@ graph	<U0021>;  <U0022>;  <U0023>;  <U0024>; /
 	<U0071>;  <U0072>;  <U0073>;  <U0074>; /
 	<U0075>;  <U0076>;  <U0077>;  <U0078>; /
 	<U0079>;  <U007A>;  <U007B>;  <U007C>; /
-	<U007D>;  <U007E>;  <currency-symbol>; /
-	<U060C>;  <soft-hyphen>;  <U061B>;  <U061F>; /
+	<U007D>;  <U007E>;  <U00A4>; /
+	<U060C>;  <U00AD>;  <U061B>;  <U061F>; /
 	<U0621>;  <U0622>;  <U0623>;  <U0624>; /
 	<U0625>;  <U0626>;  <U0627>;  <U0628>; /
 	<U0629>;  <U062A>;  <U062B>;  <U062C>; /
@@ -139,8 +140,8 @@ print	<U0020>;  <U0021>;  <U0022>;  <U0023>; /
 	<U0070>;  <U0071>;  <U0072>;  <U0073>; /
 	<U0074>;  <U0075>;  <U0076>;  <U0077>; /
 	<U0078>;  <U0079>;  <U007A>;  <U007B>; /
-	<U007C>;  <U007D>;  <U007E>;  <non-break-space>; /
-	<currency-symbol>;  <U060C>;  <soft-hyphen>;  <U061B>; /
+	<U007C>;  <U007D>;  <U007E>;  <U00A0>; /
+	<U00A4>;  <U060C>;  <U00AD>;  <U061B>; /
 	<U061F>;  <U0621>;  <U0622>;  <U0623>; /
 	<U0624>;  <U0625>;  <U0626>;  <U0627>; /
 	<U0628>;  <U0629>;  <U062A>;  <U062B>; /
@@ -169,7 +170,7 @@ punct	<U0021>;  <U0022>;  <U0023>;  <U0024>; /
 	<U003F>;  <U0040>;  <U005B>;  <U005C>; /
 	<U005D>;  <U005E>;  <U005F>;  <U0060>; /
 	<U007B>;  <U007C>;  <U007D>;  <U007E>; /
-	<currency-symbol>;  <U060C>;  <soft-hyphen>;  <U061B>; /
+	<U00A4>;  <U060C>;  <U00AD>;  <U061B>; /
 	<U061F>
 
 cntrl	<U0000>;  <U0001>;  <U0002>;  <U0003>; /
@@ -180,15 +181,15 @@ cntrl	<U0000>;  <U0001>;  <U0002>;  <U0003>; /
 	<U0014>;  <U0015>;  <U0016>;  <U0017>; /
 	<U0018>;  <U0019>;  <U001A>;  <U001B>; /
 	<U001C>;  <U001D>;  <U001E>;  <U001F>; /
-	<U007F>;  <PAD>;  <HOP>;  <BPH>; /
-	<NBH>;  <IND>;  <NEL>;  <SSA>; /
-	<ESA>;  <HTS>;  <HTJ>;  <VTS>; /
-	<PLD>;  <PLU>;  <U008D>;  <SS2>; /
-	<SS3>;  <DCS>;  <PU1>;  <PU2>; /
-	<STS>;  <CCH>;  <U0095>;  <SPS>; /
-	<EPA>;  <SOS>;  <SGCI>;  <SCI>; /
-	<CSI>;  <U009C>;  <OSC>;  <U009E>; /
-	<APC>
+	<U007F>;  <U0080>;  <U0081>;  <U0082>; /
+	<U0083>;  <U0084>;  <U0085>;  <U0086>; /
+	<U0087>;  <U0088>;  <U0089>;  <U008A>; /
+	<U008B>;  <U008C>;  <U008D>;  <U008E>; /
+	<U008F>;  <U0090>;  <U0091>;  <U0092>; /
+	<U0093>;  <U0094>;  <U0095>;  <U0096>; /
+	<U0097>;  <U0098>;  <U0099>;  <U009A>; /
+	<U009B>;  <U009C>;  <U009D>;  <U009E>; /
+	<U009F>
 
 blank	<U0009>;  <U0020>
 
@@ -331,7 +332,7 @@ order_start		forward; forward
 <U007C>	<U007C>
 <U007D>	<U007D>
 <U007E>	<U007E>
-<non-break-space>	<non-break-space>
+<U00A0>	<U00A0>
 <U0621>	<U0621>
 <U0622>	<U0622>
 <U0623>	<U0623>
@@ -368,9 +369,9 @@ order_start		forward; forward
 <U0648>	<U0648>
 <U0649>	<U0649>
 <U064A>	<U064A>
-<currency-symbol>	<currency-symbol>
-<arabic-comma>	<arabic-comma>
-<soft-hyphen>	<soft-hyphen>
+<U00A4>	<U00A4>
+<U060C>	<U060C>
+<U00AD>	<U00AD>
 <U061B>	<U061B>
 <U061F>	<U061F>
 <U0000>	<U0000>
@@ -405,38 +406,38 @@ order_start		forward; forward
 <U001D>	<U001D>
 <U001E>	<U001E>
 <U001F>	<U001F>
-<PAD>	<PAD>
-<HOP>	<HOP>
-<BPH>	<BPH>
-<NBH>	<NBH>
-<IND>	<IND>
-<NEL>	<NEL>
-<SSA>	<SSA>
-<ESA>	<ESA>
-<HTS>	<HTS>
-<HTJ>	<HTJ>
-<VTS>	<VTS>
-<PLD>	<PLD>
-<PLU>	<PLU>
+<U0080>	<U0080>
+<U0081>	<U0081>
+<U0082>	<U0082>
+<U0083>	<U0083>
+<U0084>	<U0084>
+<U0085>	<U0085>
+<U0086>	<U0086>
+<U0087>	<U0087>
+<U0088>	<U0088>
+<U0089>	<U0089>
+<U008A>	<U008A>
+<U008B>	<U008B>
+<U008C>	<U008C>
 <U008D>	<U008D>
-<SS2>	<SS2>
-<SS3>	<SS3>
-<DCS>	<DCS>
-<PU1>	<PU1>
-<PU2>	<PU2>
-<STS>	<STS>
-<CCH>	<CCH>
+<U008E>	<U008E>
+<U008F>	<U008F>
+<U0090>	<U0090>
+<U0091>	<U0091>
+<U0092>	<U0092>
+<U0093>	<U0093>
+<U0094>	<U0094>
 <U0095>	<U0095>
-<SPS>	<SPS>
-<EPA>	<EPA>
-<SOS>	<SOS>
-<SGCI>	<SGCI>
-<SCI>	<SCI>
-<CSI>	<CSI>
+<U0096>	<U0096>
+<U0097>	<U0097>
+<U0098>	<U0098>
+<U0099>	<U0099>
+<U009A>	<U009A>
+<U009B>	<U009B>
 <U009C>	<U009C>
-<OSC>	<OSC>
+<U009D>	<U009D>
 <U009E>	<U009E>
-<APC>	<APC>
+<U009F>	<U009F>
 <U007F>	<U007F>
 <U0640>	IGNORE
 <U064B>	IGNORE
