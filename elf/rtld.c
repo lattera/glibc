@@ -1173,7 +1173,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  elf_get_dynamic_info (l, dyn_temp);
 	  _dl_setup_hash (l);
 	  l->l_relocated = 1;
-	  l->l_map_start = GL(dl_sysinfo_dso);
+	  l->l_map_start = (ElfW(Addr)) GL(dl_sysinfo_dso);
 
 	  /* Now that we have the info handy, use the DSO image's soname
 	     so this object can be looked up by name.  */

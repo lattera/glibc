@@ -1,3 +1,7 @@
+2003-10-01  Roland McGrath  <roland@redhat.com>
+
+	* elf/rtld.c (dl_main): Add cast in last change.
+
 2003-09-10  Chris Demetriou  <cgd@broadcom.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Remove
