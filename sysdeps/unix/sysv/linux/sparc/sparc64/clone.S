@@ -30,7 +30,7 @@
 	.type	__clone,@function
 
 __clone:
-	save	%sp,-160,%sp
+	save	%sp, -192, %sp
 
 	/* sanity check arguments */
 	brz,pn	%i0, 99f
@@ -42,10 +42,10 @@ __clone:
 	mov	%i1, %o1
 	mov	%i2, %o0
 	set	__NR_clone, %g1
-	ta	0x11
+	ta	0x6d
 	bcs,pn	%xcc, 99f
 	 nop
-	brnz	%o0, __thread_start
+	brnz,pn	%o0, __thread_start
 	 mov	%o0, %i0
 	ret
 	 restore
@@ -62,7 +62,6 @@ __clone:
 	st	%i0, [%l7+%g2]
 #else
 	sethi	%hi(errno), %g2
-	add	%g2, %g4, %g2
 	set	EINVAL, %i0
 	st	%i0, [%g2+%lo(errno)]
 #endif

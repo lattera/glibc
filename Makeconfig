@@ -93,9 +93,7 @@ binfmt-subdir = aout
 endif
 
 # Complete path to sysdep dirs.
-full-config-sysdirs := $(filter /%, $(config-sysdirs)) \
-		       $(addprefix $(..), $(filter-out /%, $(config-sysdirs)))
-export full-config-sysdirs := $(full-config-sysdirs)
+export full-config-sysdirs := $(addprefix $(..),$(config-sysdirs))
 
 # Run config.status to update config.make and config.h.  We don't show the
 # dependence of config.h to Make, because it is only touched when it
@@ -767,7 +765,7 @@ subdirs = $(all-subdirs)
 subdirs	:= $(filter mach,$(subdirs)) $(filter hurd,$(subdirs)) \
 	   $(filter-out mach hurd,$(subdirs))
 
-all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
+all-Subdirs-files = $(wildcard $(config-sysdirs:%=$(..)%/Subdirs))
 $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 	(echo define sysdep-subdirs;				\
 	 sed 's/#.*$$//' $(all-Subdirs-files) /dev/null;	\

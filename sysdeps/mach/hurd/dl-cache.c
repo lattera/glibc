@@ -22,3 +22,8 @@ _dl_load_cache_lookup (const char *name)
 {
   return 0;
 }
+
+void
+_dl_unload_cache (void)
+{
+}

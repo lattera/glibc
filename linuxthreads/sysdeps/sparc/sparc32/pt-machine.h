@@ -52,7 +52,7 @@ register struct _pthread_descr_struct *__thread_self __asm__("%g6");
 #define THREAD_SELF  __thread_self
 
 /* Initialize the thread-unique value.  */
-#define INIT_THREAD_SELF(descr)  (__thread_self = (descr))
+#define INIT_THREAD_SELF(descr, nr)  (__thread_self = (descr))
 
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) __thread_self->member

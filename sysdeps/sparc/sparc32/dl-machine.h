@@ -101,14 +101,26 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf32_Addr *plt;
   extern void _dl_runtime_resolve (Elf32_Word);
+  extern void _dl_runtime_profile (Elf32_Word);
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
+      Elf32_Addr rfunc;
+
       /* The entries for functions in the PLT have not yet been filled in.
 	 Their initial contents will arrange when called to set the high 22
 	 bits of %g1 with an offset into the .rela.plt section and jump to
 	 the beginning of the PLT.  */
       plt = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
+      if (! profile)
+	rfunc = (Elf32_Addr) &_dl_runtime_resolve;
+      else
+	{
+	  rfunc = (Elf32_Addr) &_dl_runtime_profile;
+
+	  if (_dl_name_match_p (_dl_profile, l))
+	    _dl_profile_map = l;
+	}
 
       /* The beginning of the PLT does:
 
@@ -123,8 +135,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
       plt[0] = OPCODE_SAVE_SP;
       /* Construct PC-relative word address.  */
-      plt[1] = OPCODE_CALL | (((Elf32_Addr) &_dl_runtime_resolve -
-			       (Elf32_Addr) &plt[1]) >> 2);
+      plt[1] = OPCODE_CALL | ((rfunc - (Elf32_Addr) &plt[1]) >> 2);
       plt[2] = OPCODE_NOP;	/* Fill call delay slot.  */
       plt[3] = (Elf32_Addr) l;
     }
@@ -134,20 +145,36 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 /* This code is used in dl-runtime.c to call the `fixup' function
    and then redirect to the address it returns.  */
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.globl _dl_runtime_resolve
-	.type _dl_runtime_resolve, @function
-_dl_runtime_resolve:
+#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name)	\
+  asm ( "\
+	.text
+	.globl	" #tramp_name "
+	.type	" #tramp_name ", @function
+	.align	32
+" #tramp_name ":
 	/* Set up the arguments to fixup --
 	   %o0 = link_map out of plt0
-	   %o1 = offset of reloc entry  */
+	   %o1 = offset of reloc entry
+	   %o2 = return address  */
 	ld	[%o7 + 8], %o0
 	srl	%g1, 10, %o1
-	call	fixup
+	mov	%i7, %o2
+	call	" #fixup_name "
 	 sub	%o1, 4*12, %o1
 	jmp	%o0
 	 restore
-	.size _dl_runtime_resolve, . - _dl_runtime_resolve");
+	.size	" #tramp_name ", . - " #tramp_name "
+	.previous")
+
+#ifndef PROF
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE 			\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup);
+#else
+#define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);	\
+  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, fixup);
+#endif
 
 /* Nonzero iff TYPE should not be allowed to resolve to one of
    the main executable's symbols, as for a COPY reloc.  */
@@ -171,9 +198,10 @@ _dl_runtime_resolve:
    its return value is the user program's entry point.  */
 
 #define RTLD_START __asm__ ("\
-.text
-	.globl _start
-	.type _start,@function
+	.text
+	.globl	_start
+	.type	_start, @function
+	.align	32
 _start:
   /* Allocate space for functions to drop their arguments.  */
 	sub	%sp, 6*4, %sp
@@ -181,8 +209,8 @@ _start:
 	call	_dl_start
 	 add	%sp, 22*4, %o0
 	/* FALTHRU */
-	.globl _dl_start_user
-	.type _dl_start_user,@function
+	.globl	_dl_start_user
+	.type	_dl_start_user, @function
 _dl_start_user:
   /* Load the PIC register.  */
 1:	call	2f
@@ -191,6 +219,12 @@ _dl_start_user:
 	add	%l7, %o7, %l7
   /* Save the user entry point address in %l0 */
 	mov	%o0, %l0
+  /* Store the highest stack address.  */
+	sethi	%hi(__libc_stack_end), %g2
+	or	%g2, %lo(__libc_stack_end), %g2
+	ld	[%l7 + %g2], %l1
+	add	%sp, 6*4, %l2
+	st	%l2, [%l1]
   /* See if we were run as a command with the executable file name as an
      extra leading argument.  If so, adjust the contents of the stack.  */
 	sethi	%hi(_dl_skip_args), %g2
@@ -230,7 +264,7 @@ _dl_start_user:
 	st	%i4, [%i1+4]
 	bne	23b
 	 add	%i1, 8, %i1
-  /* Load _dl_main_searchlist to pass to _dl_init_next.  */
+  /* Load searchlist of the main object to pass to _dl_init_next.  */
 3:	sethi	%hi(_dl_main_searchlist), %g1
 	or	%g1, %lo(_dl_main_searchlist), %g1
 	ld	[%l7+%g1], %l1
@@ -242,8 +276,7 @@ _dl_start_user:
 	beq	5f
 	 nop
 	jmpl	%o0, %o7
-	 nop
-	ba,a	4b
+	 sub	%o7, 28, %o7
   /* Clear the startup flag.  */
 5:	sethi	%hi(_dl_starting_up), %g1
 	or	%g1, %lo(_dl_starting_up), %g1
@@ -256,8 +289,8 @@ _dl_start_user:
   /* Jump to the user's entry point and deallocate the extra stack we got.  */
 	jmp	%l0
 	 add	%sp, 6*4, %sp
-	.size   _dl_start_user,.-_dl_start_user
-.previous");
+	.size   _dl_start_user, . - _dl_start_user
+	.previous");
 
 static inline void
 elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
@@ -343,7 +376,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       switch (ELF32_R_TYPE (reloc->r_info))
 	{
 	case R_SPARC_COPY:
-#ifndef RTLD_BOOTSTRAP
+	  if (sym == NULL)
+	    /* This can happen in trace mode if an object could not be
+	       found.  */
+	    break;
 	  if (sym->st_size > refsym->st_size
 	      || (_dl_verbose && sym->st_size < refsym->st_size))
 	    {
@@ -359,7 +395,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	    }
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
-#endif
 	  break;
 	case R_SPARC_GLOB_DAT:
 	case R_SPARC_32:

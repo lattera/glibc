@@ -33,7 +33,7 @@
 	.global " #NAME "
 	.type " #NAME ",@function
 " #NAME ":
-	save	%sp, -128, %sp
+	save	%sp, -192, %sp
 1:	call	11f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
 11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
@@ -73,11 +73,10 @@
 	or	%g2, %lo(_dl_starting_up), %g2
 	brz,pt	%g2, 3f
 	 sethi	%hi(__libc_multiple_libcs), %g3
-	ld	[%g4+%g2], %g1
+	ld	[%g2], %g1
 	mov	%g0, %g2
 	movrz	%g1, 1, %g2
-3:	or	%g3, %lo(__libc_multiple_libcs), %g3
-	st	%g2, [%g3+%g4]
+3:	st	%g2, [%g3 + %lo(__libc_multiple_libcs)]
 	/* If so, argc et al are in %o0-%o2 already.  Otherwise, load them.  */
 	brnz,pn	%g2, " #INIT "
 	 nop

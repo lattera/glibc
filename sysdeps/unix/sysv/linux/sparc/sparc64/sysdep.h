@@ -46,49 +46,48 @@
 #ifdef PIC
 # ifdef _LIBC_REENTRANT
 #  define SYSCALL_ERROR_HANDLER						\
-	save %sp,-160,%sp;						\
-	call __errno_location;						\
+	save	%sp, -192, %sp;						\
+	call	__errno_location;					\
 	 nop;								\
-	st %i0,[%o0];							\
-	sub %g0,1,%i0;							\
-	jmpl %i7+8, %g0;						\
+	st	%i0,[%o0];						\
+	sub	%g0,1,%i0;						\
+	jmpl	%i7+8, %g0;						\
 	 restore
 # else
 #  define SYSCALL_ERROR_HANDLER						\
 	.global C_SYMBOL_NAME(errno);					\
 	.type C_SYMBOL_NAME(errno),@object;				\
-	mov %o7,%g3;							\
-  101:	call 102f;							\
-	sethi %hi(_GLOBAL_OFFSET_TABLE_-(101b-.)),%g2;			\
-  102:	or %g2,%lo(_GLOBAL_OFFSET_TABLE_-(101b-.)),%g2;			\
-	sethi %hi(errno),%o1;						\
-	add %g2,%o7,%l7;						\
-	or %o1,%lo(errno),%o1;						\
-	mov %g3,%o7;							\
-	ldx [%l7+%o1],%g2;						\
-	st %o0,[%g2];							\
+	mov	%o7, %g3;						\
+  101:	call	102f;							\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(101b-.)), %g2;		\
+  102:	or	%g2,%lo(_GLOBAL_OFFSET_TABLE_-(101b-.)), %g2;		\
+	sethi	%hi(errno), %o1;					\
+	add	%g2, %o7, %l7;						\
+	or	%o1, %lo(errno), %o1;					\
+	mov	%g3,%o7;						\
+	ldx	[%l7+%o1], %g2;						\
+	st	%o0, [%g2];						\
 	retl;								\
-	 sub %g0,1,%i0
+	 sub	%g0, 1, %i0
 # endif
 #else
 # ifdef _LIBC_REENTRANT
 #  define SYSCALL_ERROR_HANDLER						\
-	save %sp,-160,%sp;						\
-	call __errno_location;						\
+	save	%sp, -192, %sp;						\
+	call	__errno_location;					\
 	 nop;								\
-	st %i0,[%o0];							\
-	sub %g0,1,%i0;							\
-	jmpl %i7+8, %g0;						\
+	st	%i0, [%o0];						\
+	sub	%g0, 1, %i0;						\
+	jmpl	%i7+8, %g0;						\
 	 restore
 # else
 #  define SYSCALL_ERROR_HANDLER						\
 	.global C_SYMBOL_NAME(errno);					\
 	.type C_SYMBOL_NAME(errno),@object;				\
-	sethi %hi(errno),%g1;						\
-	or %g1,%lo(errno),%g1;						\
-	st %i0,[%g1+%g4];						\
+	sethi	%hi(errno), %g1;					\
+	st	%i0, [%g1 + %lo(errno)];				\
 	retl;								\
-	 sub %g0,1,%i0
+	 sub	%g0, 1, %i0
 # endif
 #endif
 
@@ -96,8 +95,8 @@
 	.text;								\
 	ENTRY(name);							\
 	LOADSYSCALL(syscall_name);					\
-	ta 0x11;							\
-	bcc,pt %xcc,1f;							\
+	ta	0x6d;							\
+	bcc,pt	%xcc, 1f;						\
 	 nop;								\
 	SYSCALL_ERROR_HANDLER;						\
 1:

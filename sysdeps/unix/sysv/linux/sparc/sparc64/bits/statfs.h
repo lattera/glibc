@@ -39,4 +39,20 @@ struct statfs
     long int f_spare[6];
   };
 
+/* We already use 64-bit types in the normal structure,
+   so this is the same as the above.  */
+struct statfs64
+  {
+    long int f_type;
+    long int f_bsize;
+    long int f_blocks;
+    long int f_bfree;
+    long int f_bavail;
+    long int f_files;
+    long int f_ffree;
+    __fsid_t f_fsid;
+    long int f_namelen;
+    long int f_spare[6];
+  };
+
 #endif	/* bits/statfs.h */

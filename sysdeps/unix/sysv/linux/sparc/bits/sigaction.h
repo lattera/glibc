@@ -40,6 +40,8 @@ struct sigaction
 
 /* Bits in `sa_flags'.  */
 #define	SA_NOCLDSTOP 0x00000008  /* Don't send SIGCHLD when children stop.  */
+#define SA_SIGINFO   0x00000200  /* Invoke signal-catching function with
+				    three arguments instead of one.  */
 #ifdef __USE_MISC
 # define SA_STACK     0x00000001 /* Use signal stack by using `sa_restorer'. */
 # define SA_RESTART   0x00000002 /* Restart syscall on signal return.  */

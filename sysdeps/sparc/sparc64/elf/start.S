@@ -38,24 +38,12 @@ _start:
 	add	%sp, STACK_BIAS+23*8, %o2
 
   /* Load the addresses of the user entry points.  */
-        sethi   %uhi(main), %o0
-        sethi   %uhi(_init), %o3
-        sethi   %uhi(_fini), %o4
-        or      %o0, %ulo(main), %o0
-        or      %o3, %ulo(_init), %o3
-        or      %o4, %ulo(_fini), %o4
-        sethi   %hi(main), %i0
-        sethi   %hi(_init), %i3
-        sethi   %hi(_fini), %i4
-	sllx	%o0, 32, %o0
-        or      %i0, %lo(main), %i0
-	sllx	%o3, 32, %o3
-        or      %i3, %lo(_init), %i3
-	sllx	%o4, 32, %o4
-        or      %i4, %lo(_fini), %i4
-	or	%o0, %i0, %o0
-	or	%o3, %i3, %o3
-	or	%o4, %i4, %o4
+        sethi   %hi(main), %o0
+        sethi   %hi(_init), %o3
+        sethi   %hi(_fini), %o4
+        or      %o0, %lo(main), %o0
+        or      %o3, %lo(_init), %o3
+        or      %o4, %lo(_fini), %o4
 
   /* When starting a binary via the dynamic linker, %g1 contains the
      address of the shared library termination function, which will be

@@ -32,8 +32,6 @@
  * Linux/SPARC has different signal numbers that Linux/i386: I'm trying
  * to make it OSF/1 binary compatible, at least for normal binaries.
  */
-#define	_NSIG		32	/* Biggest signal number + 1.  */
-
 #define SIGHUP		 1
 #define SIGINT		 2
 #define SIGQUIT		 3
@@ -69,5 +67,16 @@
 #define SIGLOST		29
 #define SIGUSR1		30
 #define SIGUSR2		31
+
+#define	_NSIG		64	/* Biggest signal number + 1
+				   (including real-time signals).  */
+
+#define SIGRTMIN        (__libc_current_sigrtmin ())
+#define SIGRTMAX        (__libc_current_sigrtmax ())
+
+/* These are the hard limits of the kernel.  These values should not be
+   used directly at user level.  */
+#define __SIGRTMIN	32
+#define __SIGRTMAX	(_NSIG - 1)
 
 #endif	/* <signal.h> included.  */

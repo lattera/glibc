@@ -53,7 +53,7 @@ DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_.file,
 
 #include <stdio.h>
 
-extern void * _IO_stdin_used;
+extern const int _IO_stdin_used;
 weak_extern (_IO_stdin_used);
 
 #undef stdin

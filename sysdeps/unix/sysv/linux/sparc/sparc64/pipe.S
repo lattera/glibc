@@ -22,7 +22,7 @@
 ENTRY (__libc_pipe)
         mov	%o0, %o2            /* Save PIPEDES. */
 	LOADSYSCALL(pipe)
-	ta	0x11
+	ta	0x6d
 	bcc,pn	%xcc, 2f
 	 nop
 	SYSCALL_ERROR_HANDLER

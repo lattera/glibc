@@ -1,3 +1,125 @@
+1998-09-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/mach/hurd/dl-cache.c (_dl_unload_cache): New dummy
+	function.  Reported by okuji@kuicr.kyoto-u.ac.jp [PR libc/789].
+
+1998-09-15  David S. Miller  <davem@pierdol.cobaltmicro.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
+	Add profiling support.
+	(TRAMPOLINE_TEMPLATE): New macro.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Define in terms of that.
+	(RTLD_START): Prettify, and set __libc_stack_end properly.
+	(elf_machine_rela) [R_SPARC_COPY]: Remove RTLD_BOOTSTRAP ifndef
+	and check for sym being NULL instead.
+	* sysdeps/sparc/sparc64/addmul_1.S: Adjust to allocate 192 bytes
+	of stack space.
+	* sysdeps/sparc/sparc64/lshift.S: Likewise.
+	* sysdeps/sparc/sparc64/mul_1.S: Likewise.
+	* sysdeps/sparc/sparc64/rshift.S: Likewise.
+	* sysdeps/sparc/sparc64/submul_1.S: Likewise.
+	* sysdeps/sparc/sparc64/elf/crtbegin.S: Likewise and remove old
+	MEDANY code model %g4 usage.
+	* sysdeps/sparc/sparc64/elf/crtend.S: Likewise and remove old
+	MEDANY code model %g4 usage.
+	* sysdeps/sparc/sparc64/elf/start.S: Rework to not use old FULLANY
+	code model address formation.
+	* sysdeps/sparc/sparc64/dl-machine.h: Don't include link.h, do
+	include elf/ldsodefs.h
+	(DT_SPARC): Remove.
+	(elf_machine_matches_host): It is now EM_SPARCV9.
+	(elf_machine_dynamic): Clean up to remove ugly cast.
+	(elf_machine_fixup_plt): Rework for new V9 ABI, add support for
+	new PLT formats.
+	(elf_machine_rela): Don't do anything at all for R_SPARC_NONE.
+	Prettify rest of function.
+	[R_SPARC_COPY]: Check for sym being NULL.
+	[R_SPARC_32]: Handle it.
+	[R_SPARC_H44, R_SPARC_M44, R_SPARC_L44]: Handle them for the
+	MEDMID code model.
+	[R_SPARC_HH22, R_SPARC_HM10, R_SPARC_LM22]: Handle them for the
+	MEDANY code model.
+	[R_SPARC_NONE]: Remove this case, as it is now checked earlier.
+	(elf_machine_runtime_setup): Rewrite for new V9 ABI plt formats.
+	Add profiling support.
+	(TRAMPOLINE_TEMPLATE): New macro.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Define in terms of that.
+	(RTLD_START): Prettify and set __libc_stack_end.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h (SA_SIGINFO):
+	Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/signum.h (_NSIG): Set to 64.
+	(SIGRTMIN, SIGRTMAX, __SIGRTMIN, __SIGRTMAX): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/brk.c (__brk): Remove
+	unused variable scratch.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c
+	(__syscall_rt_sigaction, __rt_sigreturn_stub, __sigreturn_stub):
+	Declare.
+	(__sigaction): Rewrite rt_sigaction case to pass correct sigreturn
+	stub to rt_sigaction syscalls.  Rewrite non-rt case to use correct
+	old format kernel sigaction structures.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ucontext.h: Move...
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sys/ucontext.h: to here.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Remove ucontext.h
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/setjmp.h: Fix
+	ucontext include.
+	(_JMPBUF_UNWINDS): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/statfs.h: Declare
+	statfs64 structure, which is exactly the same as the normal one.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Allocate 192 bytes
+	of stack.  Use correct syscall trap number.  Add branch prediction
+	settings to branch instructions.  Remove old MEDANY code model %g4
+	referneces for non-PIC.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/init-first.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S: Add
+	__libc_longjmp and __libc_siglongjmp strong aliases.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/readdir.c (__readdir64):
+	Also define to __no__readdir64_decl around readdir.c inclusion.
+	(__readdir64): Add strong alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/socket.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (getrlimit):
+	Set strong and weak names properly.
+
+1998-09-16 11:25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile (AWK): Default to gawk if standalone.
+
+1998-09-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (distribute): Undo last change.
+	* Make-dist (+tsrc) [not subdir]: Also include indirection headers
+	for sysdep headers.
+	(+subdir-headers): Removed, unused.
+
+1998-09-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/Makefile ($(inst_includedir)/bits/stdio_lim.h): Use
+	$(do-install).
+
+1998-09-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules ($(+sysdir_pfx)sysd-Makefile): Don't check for
+	absolute name in $(config-sysdirs), can never happen.
+	($(+sysdir_pfx)sysd-rules): Likewise.
+	* Makeconfig (full-config-sysdirs): Likewise.
+	(all-Subdirs-files): Prepend $(..).
+
+	* configure.in: Don't check for absolute name in $add_ons_pfx, can
+	not happen.  Let --enable-add-ons=yes work if no add-ons actually
+	exist.
+
+1998-09-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Rules ($(common-objpfx)bits/stdio_%.h): Remove extra
+	continuations in command.
+
+1998-09-15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libio/oldstdfiles.c (_IO_stdin_used): Update declaration.
+
 1998-09-16 00:47  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: If expansion or substitution occurs

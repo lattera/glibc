@@ -28,7 +28,7 @@
    cnt		%i3  */
 
 ENTRY(__mpn_rshift)
-	save	%sp, -128, %sp
+	save	%sp, -192, %sp
 
 	ldx	[%i1],%g2	! load first limb
 	sub	%g0,%i3,%i5	! negate shift count

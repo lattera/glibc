@@ -38,7 +38,7 @@ __curbrk: .skip 8
 
 	.text
 ENTRY(__brk)
-	save	%sp, -160, %sp
+	save	%sp, -192, %sp
 #ifdef PIC
 1:	call	2f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
@@ -49,24 +49,23 @@ ENTRY(__brk)
 	LOADSYSCALL(brk)
 	mov	%i0, %o0
 
-	ta	0x11
+	ta	0x6d
 
 	/* All the ways we can fail... */
 	bcs,pn	%xcc, .Lerr1
 	 nop
-	brz	%i0, .Lok
+	brz,pt	%i0, .Lok
 	 subcc	%i0, %o0, %g0
 	bne,pn	%xcc, .Lerr0
+	 nop
 
 	/* Update __curbrk and return cleanly.  */
 .Lok:	sethi	%hi(__curbrk), %g1
 	or	%g1, %lo(__curbrk), %g1
 #ifdef PIC
 	ldx	[%l7+%g1], %g1
-	stx	%o0, [%g1]
-#else
-	stx	%o0, [%g4+%g1]
 #endif
+	stx	%o0, [%g1]
 	mov	%g0, %i0
 
 	/* Don't use "ret" cause the preprocessor will eat it.  */
@@ -81,10 +80,8 @@ ENTRY(__brk)
 	or	%g1, %lo(errno), %g1
 #ifdef PIC
 	ldx	[%l7+%g1], %g1
-	st	%o0, [%g1]
-#else
-	st	%o0, [%g4+%g1]
 #endif
+	st	%o0, [%g1]
 #else
 	call	__errno_location
 	 mov	%o0,%l1

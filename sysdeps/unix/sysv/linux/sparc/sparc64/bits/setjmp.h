@@ -21,6 +21,11 @@
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
-#include <ucontext.h>
+#include <sys/ucontext.h>
 
 typedef ucontext_t __jmp_buf[1];
+
+/* Test if longjmp to JMPBUF would unwind the frame
+   containing a local variable at ADDRESS.  */
+#define _JMPBUF_UNWINDS(jmpbuf, address) \
+  ((unsigned long int) (address) < (jmpbuf)->uc_mcontext.mc_fp)

@@ -223,7 +223,7 @@ $(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: 		\
 	$(CC) $(+includes) -E -dM -xc - -o $(@:.d=.h)T
 	sed -e 's!MARKER!$(@:.h=.d) $(@:.d=.h)!'			\
 	    -e 's!$(common-objpfx)!$$(common-objpfx)!g'			\
-		$(@:.h=.d)T > $(@:.h=.d)t &&				\
+		$(@:.h=.d)T > $(@:.h=.d)t
 	mv -f $(@:.h=.d)t $(@:.h=.d)
 	fopen_max=`sed -n 's/^#define OPEN_MAX //p' $(@:.d=.h)T`; 	\
 	filename_max=`sed -n 's/^#define PATH_MAX //p' $(@:.d=.h)T`;	\
@@ -235,8 +235,8 @@ $(common-objpfx)bits/stdio_%.h $(common-objpfx)bits/stdio_%.d: 		\
 	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
 	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
 	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
-	    $< > $(@:.d=.h).new &&					\
-	mv -f $(@:.d=.h).new $(@:.d=.h);				\
+	    $< > $(@:.d=.h).new
+	mv -f $(@:.d=.h).new $(@:.d=.h)
 # Remove these last so that they can be examined if something went wrong.
 	rm -f $(@:.d=.h)T $(@:.h=.d)T
 # Get dependencies.

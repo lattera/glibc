@@ -4,5 +4,4 @@ kernel_stat.h
 getcontext.S
 setcontext.S
 sizes.h
-ucontext.h
 init-first.h

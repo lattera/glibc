@@ -28,7 +28,7 @@
    cnt		%i3  */
 
 ENTRY(__mpn_lshift)
-	save	%sp, -128, %sp
+	save	%sp, -192, %sp
 
 	sllx	%i2,3,%g1
 	add	%i1,%g1,%i1	! make %i1 point at end of src

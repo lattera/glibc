@@ -61,10 +61,7 @@ CFLAGS-scanf7.c = -Wno-format
 CFLAGS-tst-printfsz.c = -Wno-format
 
 $(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h
-	$(make-target-directory)
-	if test -r $@ && cmp -s $< $@; \
-	then echo 'gnu/lib-names.h unchanged'; \
-	else $(INSTALL_DATA) $< $@; fi
+	$(do-install)
 
 ifeq ($(stdio),libio)
 ifneq (,$(filter %REENTRANT, $(defines)))

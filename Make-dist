@@ -77,7 +77,6 @@ all-headers := $(sort $(headers) \
 # the source directory.
 all-headers := $(filter-out ../%,$(all-headers))
 +subdir-nodist := $(patsubst +nodist+%,%,$(filter +nodist+%,$(+distinfo)))
-+subdir-headers := $(filter-out $(headers),$(all-headers))
 endif
 foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 
@@ -182,7 +181,7 @@ foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)
 
-+tsrcs := $(+tsrcs) $(+sysdep-tsrcs)
++tsrcs := $(+tsrcs) $(+sysdep-tsrcs) $(wildcard $(+sysdep-names:%=include/%))
 
 ifeq ($(with-cvs),yes)
 define autoconf-it

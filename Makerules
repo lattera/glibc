@@ -104,17 +104,9 @@ $(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
 			     $(sysd-Makefile-force)
 	-@rm -f $@T
 	(echo 'sysd-Makefile-sysdirs := $(config-sysdirs)';		      \
-	 for dir in $(config-sysdirs); do	   			      \
-	   file=$$dir/Makefile;						      \
-	   case $$dir in						      \
-	     /*) rel= ;;						      \
-	     *)  rel=$(..) ;;						      \
-	   esac;							      \
-	   if [ -f $$rel$$file ]; then					      \
-	     case $$dir in						      \
-	       /*) echo include "$$file" ;;				      \
-	       *)  echo include "\$$(..)$$file" ;;			      \
-	     esac;							      \
+	 for file in $(config-sysdirs:=/Makefile); do  			      \
+	   if [ -f $(..)$$file ]; then					      \
+	     echo include "\$$(..)$$file";				      \
 	   else true; fi;						      \
 	 done;								      \
 	 echo 'sysd-Makefile-done=t') > $@T
@@ -244,11 +236,7 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 			  $(sysd-rules-force)
 	-@rm -f $@T
 	(echo 'sysd-rules-sysdirs := $(config-sysdirs)';		      \
-	 for sysdir in $(config-sysdirs); do				      \
-	   case $$sysdir in \
-	     /*) dir=$$sysdir ;; \
-	     *)  dir="\$$(..)$$sysdir" ;; \
-	   esac; \
+	 for dir in $(config-sysdirs:%='$$(..)%'); do			      \
 	   for o in $(all-object-suffixes); do \
 	     $(open-check-inhibit-asm) \
 	     echo "\$$(objpfx)%$$o: $$dir/%.S \$$(before-compile); \

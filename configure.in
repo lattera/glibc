@@ -96,12 +96,8 @@ AC_ARG_ENABLE(add-ons, dnl
 			  configure and build add-ons in DIR1,DIR2,...
                           search for add-ons if no parameter given],
   [case "$enableval" in
-    yes) if test "$srcdir" = "."; then
-	   add_ons=`echo */configure | sed -e 's!/configure!!g'`
-	 else
-	   add_ons=`echo $srcdir/*/configure | \
-		    sed -e 's!/configure!!g' -e "s!$srcdir/!!g"`
-	 fi;;
+    yes) add_ons=`cd $srcdir && echo */configure | sed -e 's!/configure!!g'`
+	 test "$add_ons" = "*" && add_ons= ;;
     *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
    esac],
   [add_ons=])
@@ -319,11 +315,7 @@ for d in $add_ons_pfx ''; do
 	      try="${d}sysdeps$m0$b$v$o$m"
 	      test -n "$enable_debug_configure" &&
 	      echo "$0 [DEBUG]: try $try" >&2
-	      case $try in
-		/*) dest=$try ;;
-		*)  dest=$srcdir/$try ;;
-	      esac
-	      if test -d $dest; then
+	      if test -d $srcdir/$try; then
 		sysnames="$sysnames $try"
 		{ test -n "$o" || test -n "$b"; } && os_used=t
 		{ test -n "$m" || test -n "$m0"; } && machine_used=t
@@ -355,12 +347,8 @@ fi
 if test "$elf" = yes; then
   elf_dirs=
   for d in $add_ons_pfx ''; do
-    case $d in
-      /*) xsrcdir= ;;
-      *)  xsrcdir=$srcdir/ ;;
-    esac
     for m in $mach; do
-      if test -d $xsrcdir${d}sysdeps$m/elf; then
+      if test -d $srcdir/${d}sysdeps$m/elf; then
 	elf_dirs="$elf_dirs ${d}sysdeps$m/elf"
       fi
     done

@@ -31,7 +31,7 @@
 
 ENTRY(__mpn_submul_1)
 	!#PROLOGUE#	0
-	save	%sp,-128,%sp
+	save	%sp,-192,%sp
 	!#PROLOGUE#	1
 
 	sub	%g0,%i2,%o7

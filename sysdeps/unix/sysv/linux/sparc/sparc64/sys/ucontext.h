@@ -1,5 +1,5 @@
-#ifndef _UCONTEXT_H
-#define _UCONTEXT_H
+#ifndef _SYS_UCONTEXT_H
+#define _SYS_UCONTEXT_H
 
 #include <signal.h>
 
@@ -64,4 +64,4 @@ struct ucontext {
 };
 typedef struct ucontext ucontext_t;
 
-#endif /* ucontext.h */
+#endif /* sys/ucontext.h */

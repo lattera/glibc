@@ -40,7 +40,7 @@ __DTOR_LIST__:
 	.align 4
 	.type __do_global_dtors_aux,#function
 __do_global_dtors_aux:
-	save	%sp,-160,%sp
+	save	%sp,-192,%sp
 
 #ifdef PIC
 1:	call	11f
@@ -53,7 +53,6 @@ __do_global_dtors_aux:
 #else
 	sethi	%hi(__DTOR_LIST__), %l0
 	or	%l0, %lo(__DTOR_LIST__), %l0
-	add	%l0, %g4, %l0
 #endif
 
 	ba	3f

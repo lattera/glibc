@@ -898,7 +898,6 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   int fildes[2];
   int bufsize = 128;
   int buflen;
-  int i;
   char *buffer;
   pid_t pid;
 

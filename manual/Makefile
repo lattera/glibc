@@ -34,6 +34,7 @@ include ../Makeconfig
 else
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
+AWK = gawk
 endif
 
 ifneq ($(strip $(MAKEINFO)),)
