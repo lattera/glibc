@@ -1,6 +1,11 @@
+Mon Apr 17 12:02:49 1995  Brendan Kehoe  (brendan@zen.org)
+
+	* sysdeps/alpha/strlen.c (strlen): Fix cmpbge insn, and returning
+	of the byte that was zero, so we return a valid number.
+
 Sun Apr 16 03:23:09 1995  Brendan Kehoe  (brendan@zen.org)
 
-	* /sysdeps/unix/bsd/ultrix4/mips/sysdep.h: New file defining
+	* sysdeps/unix/bsd/ultrix4/mips/sysdep.h: New file defining
 	NO_UNDERSCORES then using sysdeps/unix/mips/sysdep.h.
 
 Fri Apr 14 18:49:03 1995  Brendan Kehoe  (brendan@zen.org)
