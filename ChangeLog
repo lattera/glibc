@@ -2,6 +2,10 @@
 
 	* version.h (VERSION): Bump to 2.1.97.
 
+	* iconvdata/Makefile (distribute): Add viscii.c.
+
+	* elf/Makefile (distribute): Add tst-pathopt.sh.
+
 	* sysdeps/i386/i486/bits/string.h (strcmp): Cast arguments to
 	__strcmp_cc, __strcmp_cg, and __strcmp_gc to unsigned char *.
 	(__strcmp_cc, __strcmp_cg, __strcmp_gc): Remove casts of values here.

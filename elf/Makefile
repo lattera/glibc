@@ -53,7 +53,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
 		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
-		   nextmod1.c nextmod2.c pathoptobj.c \
+		   nextmod1.c nextmod2.c pathoptobj.c tst-pathopt.sh \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
 		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c
 

@@ -121,7 +121,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c	    \
 	      ibm856.c ibm930.c ibm933.c ibm935.c ibm937.c ibm939.c ibm1046.c \
 	      ibm856.h ibm930.h ibm933.h ibm935.h ibm937.h ibm939.h ibm1046.h \
-	      ibm1026.c ibm1047.c iec_p27-1.c inis.c inis-8.c		    \
+	      ibm1026.c ibm1047.c iec_p27-1.c inis.c inis-8.c viscii.c	    \
 	      inis-cyrillic.c iso-2022-jp.c iso-2022-kr.c iso646.c	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
