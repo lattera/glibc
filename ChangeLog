@@ -1,5 +1,7 @@
 2003-05-17  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/x86_64/syscall.S: Revert last patch.
+
 	* rt/tst-clock_nanosleep.c: Include <time.h> for clock_nanosleep.
 
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
