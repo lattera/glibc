@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -371,8 +371,7 @@ __fork (void)
 		/* Insert the chosen send right into the child.  */
 		err = __mach_port_insert_right (newtask,
 						portnames[i],
-						insert,
-						MACH_MSG_TYPE_COPY_SEND);
+						insert, insert_type);
 	      switch (err)
 		{
 		case KERN_NAME_EXISTS:
