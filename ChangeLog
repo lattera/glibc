@@ -1,3 +1,10 @@
+1999-04-30  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdinit.c (_hurd_new_proc_init): Don't do initial SIGTRAP if
+	EXEC_SIGTRAP was set in the incoming exec flags--that indicates the
+	exec server simulated a SIGTRAP before we even started up, so gdb is
+	already happy.
+
 1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/digits_dots.c: Always initialize not_ok.
