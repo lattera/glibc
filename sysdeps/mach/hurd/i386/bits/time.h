@@ -1,4 +1,4 @@
-/* System-dependent timing definitions.  Hurd version.
+/* System-dependent timing definitions.  i386/Hurd version.
    Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -50,6 +50,8 @@ typedef int __timer_t;
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
 #   define CLOCK_REALTIME	0
+/* High-resolution timer from the CPU.  */
+#   define __CLOCK_HIGHRES	1
 
 /* Flag to indicate time is absolute.  */
 #   define TIMER_ABSTIME	1

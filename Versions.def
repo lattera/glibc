@@ -72,6 +72,7 @@ libresolv {
 }
 librt {
   GLIBC_2.1
+  GLIBC_2.2
 }
 libutil {
   GLIBC_2.0

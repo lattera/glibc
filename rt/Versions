@@ -5,4 +5,12 @@ librt {
     aio_init; aio_read; aio_read64; aio_return; aio_return64; aio_suspend;
     aio_suspend64; aio_write; aio_write64; lio_listio; lio_listio64;
   }
+  GLIBC_2.2 {
+    # c*
+    clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
+
+    # t*
+    timer_create; timer_delete; timer_getoverrun; timer_gettime;
+    timer_settime;
+  }
 }

@@ -1,4 +1,4 @@
-/* System-dependent timing definitions.  Hurd version.
+/* System-dependent timing definitions.  Linux version.
    Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -35,10 +35,8 @@
 
 #  ifndef __STRICT_ANSI__
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
-   presents the real value for clock ticks per second for the system.
-   This value is determined at runtime.  */
-#   define CLK_TCK __libc_clk_tck()
-extern int __libc_clk_tck (void) __attribute__ ((__const__));
+   presents the real value for clock ticks per second for the system.  */
+#   define CLK_TCK 100
 #  endif
 
 /* Clock ID used in clock and timer functions.  */
@@ -50,6 +48,8 @@ typedef int __timer_t;
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
 #   define CLOCK_REALTIME	0
+/* High-resolution timer from the CPU.  */
+#   define __CLOCK_HIGHRES	1
 
 /* Flag to indicate time is absolute.  */
 #   define TIMER_ABSTIME	1
@@ -57,7 +57,6 @@ typedef int __timer_t;
 
 # endif	/* bits/time.h */
 #endif
-
 
 #ifdef __need_timeval
 # undef __need_timeval

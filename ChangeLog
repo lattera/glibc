@@ -1,3 +1,31 @@
+2000-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def (librt): Add GLIBC_2.2.
+	* rt/Makefile (librt-routines): Add get_clockfreq, clock_getcpuclockid,
+	clock_getres, clock_gettime, clock_settime, timer_create, timer_delete,
+	timer_getoverr, timer_gettime, and timer_settime.
+	* rt/Versions [librt] (GLIBC_2.2): Add clock_getres, clock_gettime,
+	clock_settime, timer_create, timer_delete, timer_getoverrun,
+	timer_gettime, and timer_settime.
+	* sysdeps/generic/clock_getcpuclockid.c: New file.
+	* sysdeps/generic/get_clockfreq.c: New file.
+	* sysdeps/unix/i386/clock_getcpuclockid.c: New file.
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c: New file.
+	* sysdeps/mach/hurd/i386/bits/time.h: New file.
+	* sysdeps/unix/i386/i586/clock_getres.c: New file.
+	* sysdeps/unix/i386/i586/clock_gettime.c: New file.
+	* sysdeps/unix/i386/i686/Implies: New file.
+	* sysdpes/unix/sysv/linux/i386/bits/time.h: New file.
+	* time/Makefile (routines): Move clock_getres, clock_gettime,
+	clock_settime, timer_create, timer_delete, timer_getoverr,
+	timer_gettime, and timer_settime to rt/Makefile.
+	* time/Versions [libc] (GLIBC_2.2): Remove clock_getres, clock_gettime,
+	clock_settime, timer_create, timer_delete, timer_getoverrun,
+	timer_gettime, and timer_settime.
+
+	* sysdeps/mach/hurd/bits/time.h: Drop K&R compatibility.  Use __const__
+	and not const as attribute name.
+
 2000-04-10  Thorsten Kukuk  <kukuk@suse.de>
 
 	* elf/cache.c (save_cache): Make sure /etc/ld.so.cache is mode 644.
