@@ -44,23 +44,31 @@
 static void __attribute_noinline__
 allocate_static_tls (struct link_map *map)
 {
-  size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
-  if (offset + map->l_tls_blocksize
+  size_t offset, used, check;
+
 # if TLS_TCB_AT_TP
-      + TLS_TCB_SIZE
+  offset = roundup (GL(dl_tls_static_used) + map->l_tls_blocksize,
+		    map->l_tls_align);
+  used = offset;
+  check = offset + TLS_TCB_SIZE;
 # elif TLS_DTV_AT_TP
+  offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
+  used = offset + map->l_tls_blocksize;
+  check = used;
   /* dl_tls_static_used includes the TCB at the beginning.  */
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-      > GL(dl_tls_static_size))
+
+  if (check > GL(dl_tls_static_size))
     {
       const char *errstring = N_("\
 shared object cannot be dlopen()ed: static TLS memory too small");
       INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);
     }
+
   map->l_tls_offset = offset;
-  GL(dl_tls_static_used) = offset + map->l_tls_blocksize;
+  GL(dl_tls_static_used) = used;
 }
 #endif
 

@@ -410,7 +410,9 @@ extern char *l64a (long int __n) __THROW;
 /* Read a number from a string S in base 64 as above.  */
 extern long int a64l (__const char *__s) __THROW __attribute_pure__;
 
+#endif	/* Use SVID || extended X/Open.  */
 
+#if defined __USE_SVID || defined __USE_XOPEN_EXTENDED || defined __USE_BSD
 # include <sys/types.h>	/* we need int32_t... */
 
 /* These are the functions that actually do things.  The `random', `srandom',
@@ -463,7 +465,7 @@ extern int initstate_r (unsigned int __seed, char *__restrict __statebuf,
 extern int setstate_r (char *__restrict __statebuf,
 		       struct random_data *__restrict __buf) __THROW;
 # endif	/* Use misc.  */
-#endif	/* Use SVID || extended X/Open.  */
+#endif	/* Use SVID || extended X/Open || BSD. */
 
 
 __BEGIN_NAMESPACE_STD

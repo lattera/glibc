@@ -1,4 +1,20 @@
+2003-03-01  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-reloc.c (allocate_static_tls): Fix calculations.
+	From Jakub Jelinek <jakub@redhat.com>.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Revert last change,
+	which duplicated the O_DIRECT defn.
+
+2003-03-01  GOTO Masanori  <gotom@debian.or.jp>
+
+	* stdlib/stdlib.h: Add missing __USE_BSD enclosure for BSD derived
+	random functions.
+
 2003-03-01  Andreas Schwab  <schwab@suse.de>
+
+	* resolv/Makefile (tests): Don't depend on
+	$(objpfx)mtrace-tst-leaks when cross compiling.
 
 	* sysdeps/m68k/dl-machine.h (_dl_start_user): Access
 	__libc_stack_end through GOT since it is a global symbol.
