@@ -1,3 +1,7 @@
+1998-07-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/nscd.c: Include unistd.h.
+
 1998-07-01 09:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.c: Adjust delta for indentities1_test because gcc
