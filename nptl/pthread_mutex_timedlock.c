@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -73,9 +73,36 @@ pthread_mutex_timedlock (mutex, abstime)
     default:
       /* Correct code cannot set any other type.  */
     case PTHREAD_MUTEX_TIMED_NP:
-    case PTHREAD_MUTEX_ADAPTIVE_NP:
+    simple:
       /* Normal mutex.  */
       result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+      break;
+
+    case PTHREAD_MUTEX_ADAPTIVE_NP:
+      if (! __is_smp)
+	goto simple;
+
+      if (lll_mutex_trylock (mutex->__data.__lock) != 0)
+	{
+	  int cnt = 0;
+	  int max_cnt = MIN (MAX_ADAPTIVE_COUNT,
+			     mutex->__data.__spins * 2 + 10);
+	  do
+	    {
+	      if (cnt++ >= max_cnt)
+		{
+		  result = lll_mutex_timedlock (mutex->__data.__lock, abstime);
+		  break;
+		}
+
+#ifdef BUSY_WAIT_NOP
+	      BUSY_WAIT_NOP;
+#endif
+	    }
+	  while (lll_mutex_trylock (mutex->__data.__lock) != 0);
+
+	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
+	}
       break;
     }
 

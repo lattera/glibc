@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,6 +25,11 @@
 #include <sys/time.h>
 
 
+#ifndef TYPE
+# define TYPE PTHREAD_MUTEX_NORMAL
+#endif
+
+
 static int
 do_test (void)
 {
@@ -33,10 +38,29 @@ do_test (void)
   struct timeval tv;
   struct timeval tv2;
   int err;
+  pthread_mutexattr_t a;
 
-  if (pthread_mutex_init (&m, NULL) != 0)
+  if (pthread_mutexattr_init (&a) != 0)
+    {
+      puts ("mutexattr_init failed");
+      return 1;
+    }
+
+  if (pthread_mutexattr_settype (&a, TYPE) != 0)
+    {
+      puts ("mutexattr_settype failed");
+      return 1;
+    }
+
+  if (pthread_mutex_init (&m, &a) != 0)
     {
       puts ("mutex_init failed");
+      return 1;
+    }
+
+  if (pthread_mutexattr_destroy (&a) != 0)
+    {
+      puts ("mutexattr_destroy failed");
       return 1;
     }
 

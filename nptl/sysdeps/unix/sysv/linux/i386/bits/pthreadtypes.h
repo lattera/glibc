@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,7 @@ typedef union
        binary compatibility.  */
     int __kind;
     unsigned int __nusers;
+    int __spins;
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

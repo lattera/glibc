@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -86,6 +86,14 @@ __lll_mutex_trylock (int *futex)
 }
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
 
+static inline int
+__attribute__ ((always_inline))
+__lll_mutex_cond_trylock (int *futex)
+{
+  return atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0;
+}
+#define lll_mutex_cond_trylock(futex) __lll_mutex_cond_trylock (&(futex))
+
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;
 
@@ -124,7 +132,7 @@ __lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
   int val = atomic_compare_and_exchange_val_acq (futex, 1, 0);
   int result = 0;
-  
+
   if (__builtin_expect (val != 0, 0))
     result = __lll_timedlock_wait (futex, abstime);
   return result;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -56,6 +56,7 @@ typedef union
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
+    int __spins;
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
   long int __align;

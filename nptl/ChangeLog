@@ -1,5 +1,42 @@
 2004-03-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/smp.h: New file.
+	* sysdeps/unix/sysv/linux/sh/smp.h: New file.
+	* init.c: Define __is_smp.
+	(__pthread_initialize_minimal_internal): Call is_smp_system to
+	initialize __is_smp.
+	* pthreadP.h: Declare __is_smp.
+	Define MAX_ADAPTIVE_COUNT is necessary.
+	* pthread_mutex_init.c: Add comment regarding __spins field.
+	* pthread_mutex_lock.c: Implement adaptive mutex type.
+	* pthread_mutex_timedlock.c: Likewise.
+	* sysdeps/unix/sysv/linux/pthread_mutex_cond_lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h (pthread_mutex_t):
+	Add __spins field.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h: Define
+	lll_mutex_cond_trylock.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Likewise.
+	Define BUSY_WAIT_NOP.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
+
+	* tst-mutex5.c: Add support for testing adaptive mutexes.
+	* tst-mutex7.c: Likewise.
+	* tst-mutex5a.c: New file.
+	* tst-mutex7a.c: New file.
+	* Makefile (tests): Add tst-mutex5a and tst-mutex7a.
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
 	(__lll_mutex_timedlock_wait): Preserve r8 and r9 since the
 	vgettimeofday call miht destroy the content.

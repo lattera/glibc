@@ -22,7 +22,12 @@
 #include <time.h>
 
 
-static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+#ifndef INIT
+# define INIT PTHREAD_MUTEX_INITIALIZER
+#endif
+
+
+static pthread_mutex_t lock = INIT;
 
 
 #define ROUNDS 1000

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -25,6 +25,7 @@
 
 #ifndef LLL_MUTEX_LOCK
 # define LLL_MUTEX_LOCK(mutex) lll_mutex_lock (mutex)
+# define LLL_MUTEX_TRYLOCK(mutex) lll_mutex_trylock (mutex)
 #endif
 
 
@@ -32,6 +33,8 @@ int
 __pthread_mutex_lock (mutex)
      pthread_mutex_t *mutex;
 {
+  assert (sizeof (mutex->__size) >= sizeof (mutex->__data));
+
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
@@ -68,9 +71,36 @@ __pthread_mutex_lock (mutex)
     default:
       /* Correct code cannot set any other type.  */
     case PTHREAD_MUTEX_TIMED_NP:
-    case PTHREAD_MUTEX_ADAPTIVE_NP:
+    simple:
       /* Normal mutex.  */
       LLL_MUTEX_LOCK (mutex->__data.__lock);
+      break;
+
+    case PTHREAD_MUTEX_ADAPTIVE_NP:
+      if (! __is_smp)
+	goto simple;
+
+      if (LLL_MUTEX_TRYLOCK (mutex->__data.__lock) != 0)
+	{
+	  int cnt = 0;
+	  int max_cnt = MIN (MAX_ADAPTIVE_COUNT,
+			     mutex->__data.__spins * 2 + 10);
+	  do
+	    {
+	      if (cnt++ >= max_cnt)
+		{
+		  LLL_MUTEX_LOCK (mutex->__data.__lock);
+		  break;
+		}
+
+#ifdef BUSY_WAIT_NOP
+	      BUSY_WAIT_NOP;
+#endif
+	    }
+	  while (LLL_MUTEX_TRYLOCK (mutex->__data.__lock) != 0);
+
+	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
+	}
       break;
     }
 

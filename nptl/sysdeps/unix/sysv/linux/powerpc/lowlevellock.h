@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -99,6 +99,21 @@
   })
 
 #define lll_mutex_trylock(lock)	__lll_trylock (&(lock))
+
+/* Set *futex to 2 if it is 0, atomically.  Returns the old value */
+#define lll_mutex_cond_trylock(futex) \
+  ({ int __val;								      \
+     __asm __volatile ("1:	lwarx	%0,0,%2\n"			      \
+		       "	cmpwi	0,%0,0\n"			      \
+		       "	bne	2f\n"				      \
+		       "	stwcx.	%3,0,%2\n"			      \
+		       "	bne-	1b\n"				      \
+		       "2:	" __lll_acq_instr			      \
+		       : "=&r" (__val), "=m" (*futex)			      \
+		       : "r" (futex), "r" (2), "1" (*futex)		      \
+		       : "cr0", "memory");				      \
+     __val;								      \
+  })
 
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;

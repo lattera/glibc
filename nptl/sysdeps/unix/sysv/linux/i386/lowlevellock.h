@@ -40,6 +40,7 @@
 /* Initializer for compatibility lock.  */
 #define LLL_MUTEX_LOCK_INITIALIZER		(0)
 #define LLL_MUTEX_LOCK_INITIALIZER_LOCKED	(1)
+#define LLL_MUTEX_LOCK_INITIALIZER_WAITERS	(2)
 
 
 #ifdef PIC
@@ -59,6 +60,9 @@
 #else
 # define LLL_ENTER_KERNEL	"int $0x80\n\t"
 #endif
+
+/* Delay in spinlock loop.  */
+#define BUSY_WAIT_NOP          asm ("rep; nop")
 
 
 #define lll_futex_wait(futex, val) \
@@ -113,6 +117,16 @@ extern int __lll_mutex_unlock_wake (int *__futex)
 		       : "=a" (ret), "=m" (futex)			      \
 		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_LOCKED), "m" (futex),\
 			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
+		       : "memory");					      \
+     ret; })
+
+
+#define lll_mutex_cond_trylock(futex) \
+  ({ int ret;								      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
+		       : "=a" (ret), "=m" (futex)			      \
+		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_WAITERS),	      \
+			  "m" (futex), "0" (LLL_MUTEX_LOCK_INITIALIZER)	      \
 		       : "memory");					      \
      ret; })
 

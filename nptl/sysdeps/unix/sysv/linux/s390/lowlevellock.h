@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -125,6 +125,20 @@ __lll_mutex_trylock (int *futex)
     return old != 0;
 }
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
+
+
+static inline int
+__attribute__ ((always_inline))
+__lll_mutex_cond_trylock (int *futex)
+{
+    unsigned int old;
+
+    __asm __volatile ("cs %0,%3,%1"
+		       : "=d" (old), "=Q" (*futex)
+		       : "0" (0), "d" (2), "m" (*futex) : "cc" );
+    return old != 0;
+}
+#define lll_mutex_cond_trylock(futex) __lll_mutex_cond_trylock (&(futex))
 
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;

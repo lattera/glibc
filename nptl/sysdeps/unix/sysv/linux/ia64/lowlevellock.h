@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -31,6 +31,9 @@
 #define FUTEX_WAKE		1
 #define FUTEX_REQUEUE		3
 
+/* Delay in spinlock loop.  */
+#define BUSY_WAIT_NOP          asm ("hint @pause")
+
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
 
@@ -60,6 +63,11 @@
 #define __lll_mutex_trylock(futex) \
   (atomic_compare_and_exchange_val_acq (futex, 1, 0) != 0)
 #define lll_mutex_trylock(futex) __lll_mutex_trylock (&(futex))
+
+
+#define __lll_mutex_cond_trylock(futex) \
+  (atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0)
+#define lll_mutex_cond_trylock(futex) __lll_mutex_cond_trylock (&(futex))
 
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -40,6 +40,10 @@
 /* Initializer for compatibility lock.  */
 #define LLL_MUTEX_LOCK_INITIALIZER		(0)
 #define LLL_MUTEX_LOCK_INITIALIZER_LOCKED	(1)
+#define LLL_MUTEX_LOCK_INITIALIZER_WAITERS	(2)
+
+/* Delay in spinlock loop.  */
+#define BUSY_WAIT_NOP          asm ("rep; nop")
 
 
 #define lll_futex_wait(futex, val) \
@@ -77,12 +81,27 @@ extern int __lll_mutex_timedlock_wait (int *__futex, int __val,
 extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 
 
+/* NB: in the lll_mutex_trylock macro we simply return the value in %eax
+   after the cmpxchg instruction.  In case the operation succeded this
+   value is zero.  In case the operation failed, the cmpxchg instruction
+   has loaded the current value of the memory work which is guaranteed
+   to be nonzero.  */
 #define lll_mutex_trylock(futex) \
-  ({ unsigned char ret;							      \
-     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
+  ({ int ret;								      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
 		       : "=a" (ret), "=m" (futex)			      \
 		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_LOCKED), "m" (futex),\
 			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
+		       : "memory");					      \
+     ret; })
+
+
+#define lll_mutex_cond_trylock(futex) \
+  ({ int ret;								      \
+     __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
+		       : "=a" (ret), "=m" (futex)			      \
+		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_WAITERS),	      \
+			 "m" (futex), "0" (LLL_MUTEX_LOCK_INITIALIZER)	      \
 		       : "memory");					      \
      ret; })
 
