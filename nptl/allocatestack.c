@@ -32,28 +32,39 @@
 #ifndef NEED_SEPARATE_REGISTER_STACK
 
 /* Most architectures have exactly one stack pointer.  Some have more.  */
-#define STACK_VARIABLES void *stackaddr
+# define STACK_VARIABLES void *stackaddr
 
 /* How to pass the values to the 'create_thread' function.  */
-#define STACK_VARIABLES_ARGS stackaddr
+# define STACK_VARIABLES_ARGS stackaddr
 
 /* How to declare function which gets there parameters.  */
-#define STACK_VARIABLES_PARMS void *stackaddr
+# define STACK_VARIABLES_PARMS void *stackaddr
 
 /* How to declare allocate_stack.  */
-#define ALLOCATE_STACK_PARMS void **stack
+# define ALLOCATE_STACK_PARMS void **stack
 
 /* This is how the function is called.  We do it this way to allow
    other variants of the function to have more parameters.  */
-#define ALLOCATE_STACK(attr, pd) allocate_stack (attr, pd, &stackaddr)
+# define ALLOCATE_STACK(attr, pd) allocate_stack (attr, pd, &stackaddr)
 
 #else
 
-#define STACK_VARIABLES void *stackaddr; size_t stacksize
-#define STACK_VARIABLES_ARGS stackaddr, stacksize
-#define STACK_VARIABLES_PARMS void *stackaddr, size_t stacksize
-#define ALLOCATE_STACK_PARMS void **stack, size_t *stacksize
-#define ALLOCATE_STACK(attr, pd) \
+/* We need two stacks.  The kernel will place them but we have to tell
+   the kernel about the size of the reserved address space.  */
+# define STACK_VARIABLES void *stackaddr; size_t stacksize
+
+/* How to pass the values to the 'create_thread' function.  */
+# define STACK_VARIABLES_ARGS stackaddr, stacksize
+
+/* How to declare function which gets there parameters.  */
+# define STACK_VARIABLES_PARMS void *stackaddr, size_t stacksize
+
+/* How to declare allocate_stack.  */
+# define ALLOCATE_STACK_PARMS void **stack, size_t *stacksize
+
+/* This is how the function is called.  We do it this way to allow
+   other variants of the function to have more parameters.  */
+# define ALLOCATE_STACK(attr, pd) \
   allocate_stack (attr, pd, &stackaddr, &stacksize)
 
 #endif

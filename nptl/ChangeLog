@@ -1,5 +1,7 @@
 2004-01-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* allocatestack.c: Pretty printing.
+
 	* sysdeps/pthread/createthread.c (create_thread): Don't add
 	CLONE_DETACHED bit if it is not necessary.
 
