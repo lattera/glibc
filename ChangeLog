@@ -1,3 +1,8 @@
+Sun Apr 16 03:23:09 1995  Brendan Kehoe  (brendan@zen.org)
+
+	* /sysdeps/unix/bsd/ultrix4/mips/sysdep.h: New file defining
+	NO_UNDERSCORES then using sysdeps/unix/mips/sysdep.h.
+
 Fri Apr 14 18:49:03 1995  Brendan Kehoe  (brendan@zen.org)
 
 	* sysdeps/ieee754/mpn2dbl.c (__mpn_construct_double)
