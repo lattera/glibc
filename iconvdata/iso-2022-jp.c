@@ -132,34 +132,38 @@ gconv_init (struct gconv_step *step)
     }
 
   result = GCONV_NOCONV;
-  if (dir != illegal_dir
-      && ((new_data
-	   = (struct iso2022jp_data *) malloc (sizeof (struct iso2022jp_data)))
-	  != NULL))
+  if (dir != illegal_dir)
     {
-      new_data->dir = dir;
-      new_data->var = var;
-      step->data = new_data;
+      new_data
+	= (struct iso2022jp_data *) malloc (sizeof (struct iso2022jp_data));
 
-      if (dir == from_iso2022jp)
+      result = GCONV_NOMEM;
+      if (new_data != NULL)
 	{
-	  step->min_needed_from = MIN_NEEDED_FROM;
-	  step->max_needed_from = MAX_NEEDED_FROM;
-	  step->min_needed_to = MIN_NEEDED_TO;
-	  step->max_needed_to = MIN_NEEDED_TO;
-	}
-      else
-	{
-	  step->min_needed_from = MIN_NEEDED_TO;
-	  step->max_needed_from = MAX_NEEDED_TO;
-	  step->min_needed_to = MIN_NEEDED_FROM;
-	  step->max_needed_to = MIN_NEEDED_FROM + 2;
-	}
+	  new_data->dir = dir;
+	  new_data->var = var;
+	  step->data = new_data;
 
-      /* Yes, this is a stateful encoding.  */
-      step->stateful = 1;
+	  if (dir == from_iso2022jp)
+	    {
+	      step->min_needed_from = MIN_NEEDED_FROM;
+	      step->max_needed_from = MAX_NEEDED_FROM;
+	      step->min_needed_to = MIN_NEEDED_TO;
+	      step->max_needed_to = MIN_NEEDED_TO;
+	    }
+	  else
+	    {
+	      step->min_needed_from = MIN_NEEDED_TO;
+	      step->max_needed_from = MAX_NEEDED_TO;
+	      step->min_needed_to = MIN_NEEDED_FROM;
+	      step->max_needed_to = MIN_NEEDED_FROM + 2;
+	    }
 
-      result = GCONV_OK;
+	  /* Yes, this is a stateful encoding.  */
+	  step->stateful = 1;
+
+	  result = GCONV_OK;
+	}
     }
 
   return result;

@@ -106,7 +106,7 @@ static const char *names[] =
   [HU] = "MSZ_7795.3//",
   [CU] = "NC_NC00-10//",
   [FR] = "NF_Z_62-010//",
-  [FR1] = "NF_Z_62-010_1973//",	/* Note the we don't have the parenthesis
+  [FR1] = "NF_Z_62-010_1973//",	/* Note that we don't have the parenthesis
 				   in the name.  */
   [NO] = "NS_4551-1//",
   [NO2] = "NS_4551-2//",
@@ -145,33 +145,36 @@ gconv_init (struct gconv_step *step)
       }
 
   result = GCONV_NOCONV;
-  if (dir != illegal_dir
-      && ((new_data
-	   = (struct iso646_data *) malloc (sizeof (struct iso646_data)))
-	  != NULL))
+  if (dir != illegal_dir)
     {
-      new_data->dir = dir;
-      new_data->var = var;
-      step->data = new_data;
+      new_data = (struct iso646_data *) malloc (sizeof (struct iso646_data));
 
-      if (var == from_iso646)
+      result = GCONV_NOMEM;
+      if (new_data != NULL)
 	{
-	  step->min_needed_from = MIN_NEEDED_FROM;
-	  step->max_needed_from = MIN_NEEDED_FROM;
-	  step->min_needed_to = MIN_NEEDED_TO;
-	  step->max_needed_to = MIN_NEEDED_TO;
-	}
-      else
-	{
-	  step->min_needed_from = MIN_NEEDED_TO;
-	  step->max_needed_from = MIN_NEEDED_TO;
-	  step->min_needed_to = MIN_NEEDED_FROM;
-	  step->max_needed_to = MIN_NEEDED_FROM;
-	}
+	  new_data->dir = dir;
+	  new_data->var = var;
+	  step->data = new_data;
 
-      step->stateful = 0;
+	  if (var == from_iso646)
+	    {
+	      step->min_needed_from = MIN_NEEDED_FROM;
+	      step->max_needed_from = MIN_NEEDED_FROM;
+	      step->min_needed_to = MIN_NEEDED_TO;
+	      step->max_needed_to = MIN_NEEDED_TO;
+	    }
+	  else
+	    {
+	      step->min_needed_from = MIN_NEEDED_TO;
+	      step->max_needed_from = MIN_NEEDED_TO;
+	      step->min_needed_to = MIN_NEEDED_FROM;
+	      step->max_needed_to = MIN_NEEDED_FROM;
+	    }
 
-      result = GCONV_OK;
+	  step->stateful = 0;
+
+	  result = GCONV_OK;
+	}
     }
 
   return result;

@@ -1,5 +1,9 @@
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/iso646.c (gconv_init): Return correct error value if we
+	run out of memory.
+	* iconvdata/iso-2022-jp.c: Likewise.
+
 	* iconv/gconv_db.c (gen_steps): Respect error return value from
 	init functions and abort.
 

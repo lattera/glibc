@@ -1,4 +1,4 @@
-/* Skeleton for a converison module.
+/* Skeleton for a conversion module.
    Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
