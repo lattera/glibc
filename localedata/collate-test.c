@@ -1,5 +1,5 @@
 /* Test collation function using real data.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -93,11 +93,9 @@ main (int argc, char *argv[])
       /* While we are at it a first little test.  */
       r1 = strcoll (strings[idx1].key, strings[idx2].key);
       r2 = strcoll (strings[idx2].key, strings[idx1].key);
-      r = -(r1 * r2);
-      if (r)
-	r /= abs (r1 * r2);
+      r = r1 * r2;
 
-      if (r < 0 || abs (r1) != r || abs (r2) != r)
+      if (r > 0 || (r == 0 && r1 != 0) || (r == 0 && r2 != 0))
 	printf ("`%s' and `%s' collate wrong: %d vs. %d\n",
 		strings[idx1].key, strings[idx2].key, r1, r2);
     }

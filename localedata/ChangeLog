@@ -1,5 +1,7 @@
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* collate-test.c (main): Correct logic in test.
+
 	* tst-trans.sh: Use correct name for dynamic loader.
 
 1999-12-23  Ulrich Drepper  <drepper@cygnus.com>
