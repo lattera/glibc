@@ -1,8 +1,10 @@
 1998-05-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/loadlocale.c (_nl_load_locale): Don't allow too small
+	files crash the program.
+
 	* io/Makefile: Don't run ftwtest-sh if cross-compiling.
-	* string/Makefile: Don't run test on tst/svc.out if
-	cross-compiling.
+	* string/Makefile: Don't run test on tst-svc.out if cross-compiling.
 	Reported by Deborah Wallach <kerr@pa.dec.com>.
 
 1998-05-28 00:53  Zack Weinberg  <zack@rabi.phys.columbia.edu>
