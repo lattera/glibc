@@ -1,3 +1,7 @@
+2002-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (_dl_start): Use __builtin_memset if available.
+
 2002-01-29  Ben Collins  <bcollins@debian.org>
 
 	* string/bits/string2.h (__mempcpy): Protect size arg for

@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -166,13 +166,18 @@ _dl_start (void *arg)
   if (HP_TIMING_INLINE && HP_TIMING_AVAIL)
     HP_TIMING_NOW (start_time);
 
-  /* Partly clean the `bootstrap_map' structure up.  Don't use `memset'
-     since it might not be built in or inlined and we cannot make function
-     calls at this point.  */
+  /* Partly clean the `bootstrap_map' structure up.  Don't use
+     `memset' since it might not be built in or inlined and we cannot
+     make function calls at this point.  Use '__builtin_memset' if we
+     know it is available.  */
+#if __GNUC_PREREQ (2, 96)
+  __builtin_memset (bootstrap_map.l_info, '\0', sizeof (bootstrap_map.l_info));
+#else
   for (cnt = 0;
        cnt < sizeof (bootstrap_map.l_info) / sizeof (bootstrap_map.l_info[0]);
        ++cnt)
     bootstrap_map.l_info[cnt] = 0;
+#endif
 
   /* Figure out the run-time load address of the dynamic linker itself.  */
   bootstrap_map.l_addr = elf_machine_load_address ();
