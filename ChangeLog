@@ -1,3 +1,49 @@
+2000-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/lxstat64.c: Uncomment STX_LINK and STX_64
+	definition.
+	* sysdeps/unix/sysv/aix/lxstat.c: Uncomment STX_LINK definition.
+	* sysdeps/unix/sysv/aix/kill.c: Add copyright.
+	* sysdeps/unix/sysv/aix/getuid.c: Define ID_REAL.
+	* sysdeps/unix/sysv/aix/getgid.c: Define ID_REAL.
+	* sysdeps/unix/sysv/aix/execve.c: Add copyright.
+	* sysdeps/unix/sysv/aix/euidaccess.c: Add copyright.
+	* sysdeps/unix/sysv/aix/close.c: Add copyright.
+	* sysdeps/unix/sysv/aix/brk.c: Add copyright.
+	* sysdeps/unix/sysv/aix/bits/errno.h: Add EAFNOSUPPORT.
+	* sysdeps/unix/sysv/aix/access.c: Add copyright.
+	* sysdeps/unix/sysv/aix/Makefile: Add some temporary definitions.
+	* sysdeps/unix/sysv/aix/Implies: New file.
+	* sysdeps/unix/sysv/aix/Versions: New file.
+	* sysdeps/unix/sysv/aix/bind.c: New file.
+	* sysdeps/unix/sysv/aix/bits/ioctl-types.h: New file.
+	* sysdeps/unix/sysv/aix/bits/ioctls.h: New file.
+	* sysdeps/unix/sysv/aix/bits/poll.h: New file.
+	* sysdeps/unix/sysv/aix/bits/termios.h: New file.
+	* sysdeps/unix/sysv/aix/chdir.c: New file.
+	* sysdeps/unix/sysv/aix/chmod.c: New file.
+	* sysdeps/unix/sysv/aix/chroot.c: New file.
+	* sysdeps/unix/sysv/aix/creat.c: New file.
+	* sysdeps/unix/sysv/aix/dl-close.c: New file.
+	* sysdeps/unix/sysv/aix/dl-open.c: New file.
+	* sysdeps/unix/sysv/aix/dl-sym.c: New file.
+	* sysdeps/unix/sysv/aix/fchdir.c: New file.
+	* sysdeps/unix/sysv/aix/fchmod.c: New file.
+	* sysdeps/unix/sysv/aix/getgroups.c: New file.
+	* sysdeps/unix/sysv/aix/gethostname.c: New file.
+	* sysdeps/unix/sysv/aix/getpriority.c: New file.
+	* sysdeps/unix/sysv/aix/getrlimit.c: New file.
+	* sysdeps/unix/sysv/aix/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/aix/getrusage.c: New file.
+	* sysdeps/unix/sysv/aix/link.c: New file.
+	* sysdeps/unix/sysv/aix/madvise.c: New file.
+	* sysdeps/unix/sysv/aix/mkdir.c: New file.
+	* sysdeps/unix/sysv/aix/mknod.c: New file.
+	* sysdeps/unix/sysv/aix/mprotect.c: New file.
+	* sysdeps/unix/sysv/aix/msgctl.c: New file.
+	* sysdeps/unix/sysv/aix/msgget.c: New file.
+	* sysdeps/unix/sysv/aix/msgrcv.c: New file.
+
 2000-04-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Optimize a bit
