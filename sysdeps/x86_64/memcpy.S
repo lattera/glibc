@@ -46,7 +46,7 @@ ENTRY (BP_SYM (memcpy))
 	/* Align destination.  */
 	movq	%rdi, %rax
 	negq	%rax
-	andq	$3, %rax
+	andq	$7, %rax
 	subq	%rax, %rcx
 	xchgq	%rax, %rcx
 
