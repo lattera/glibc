@@ -38,7 +38,7 @@ endif
 ifeq ($(subdir),elf)
 ifeq (yes:yes,$(build-shared):$(unwind-find-fde))
 # This is needed to support g++ v2 and v3.
-sysdep_routines += framestate
-shared-only-routines += framestate
+sysdep_routines += framestate unwind-pe
+shared-only-routines += framestate unwind-pe
 endif
 endif

@@ -1,3 +1,12 @@
+2004-03-10  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/generic/errno.c: Disable versioning for rtld.
+
+	* sysdeps/generic/Makefile (elf/shared): Add unwind-pe.
+	* sysdeps/generic/unwind-pe.c: New file.
+	* sysdeps/generic/unwind-pe.h: Only prototypes for _LIBC without
+	_LIBC_DEFINITIONS.
+
 2004-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/libc-symbols.h: Define attribute_compat_text_section and
@@ -35,6 +44,7 @@
 	* sysdeps/unix/sysv/linux/i386/semctl.c: Likewise.
 	* sysdeps/unix/sysv/linux/i386/shmctl.c: Likewise.
 	* sysdeps/unix/sysv/linux/i386/versionsort64.c: Likewise.
+	* posix/regexec.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: vm86@@GLIBC_2.3.4
 	should be the default symbol. Having none misses the point.

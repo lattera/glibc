@@ -52,23 +52,43 @@
 #define DW_EH_PE_indirect	0x80
 
 
-#if defined(_LIBC) && !defined(NO_BASE_OF_ENCODED_VALUE)
+#if defined(_LIBC)
+
 /* Prototypes.  */
-extern unsigned int size_of_encoded_value (unsigned char encoding);
+extern unsigned int size_of_encoded_value (unsigned char encoding)
+  attribute_hidden;
+
 extern const unsigned char *read_encoded_value_with_base
   (unsigned char encoding, _Unwind_Ptr base,
-   const unsigned char *p, _Unwind_Ptr *val);
+   const unsigned char *p, _Unwind_Ptr *val)
+  attribute_hidden;
 
+extern const unsigned char * read_encoded_value
+  (struct _Unwind_Context *context, unsigned char encoding,
+   const unsigned char *p, _Unwind_Ptr *val)
+  attribute_hidden;
+
+extern const unsigned char * read_uleb128 (const unsigned char *p,
+					   _Unwind_Word *val)
+  attribute_hidden;
+extern const unsigned char * read_sleb128 (const unsigned char *p,
+					   _Unwind_Sword *val)
+  attribute_hidden;
+
+#endif
+#if defined(_LIBC) && defined(_LIBC_DEFINITIONS)
+
+#ifdef _LIBC
+#define STATIC
 #else
+#define STATIC static
+#endif
 
 /* Given an encoding, return the number of bytes the format occupies.
    This is only defined for fixed-size encodings, and so does not
    include leb128.  */
 
-# ifndef _LIBC
-static
-# endif
-unsigned int
+STATIC unsigned int
 size_of_encoded_value (unsigned char encoding)
 {
   if (encoding == DW_EH_PE_omit)
@@ -87,7 +107,6 @@ size_of_encoded_value (unsigned char encoding)
     }
   __gxx_abort ();
 }
-#endif
 
 #ifndef NO_BASE_OF_ENCODED_VALUE
 
@@ -96,7 +115,7 @@ size_of_encoded_value (unsigned char encoding)
    read_encoded_value_with_base for use when the _Unwind_Context is
    not available.  */
 
-static _Unwind_Ptr
+STATIC _Unwind_Ptr
 base_of_encoded_value (unsigned char encoding, struct _Unwind_Context *context)
 {
   if (encoding == DW_EH_PE_omit)
@@ -126,7 +145,7 @@ base_of_encoded_value (unsigned char encoding, struct _Unwind_Context *context)
    hold any value so encoded; if it is smaller than a pointer on some target,
    pointers should not be leb128 encoded on that target.  */
 
-static const unsigned char *
+STATIC const unsigned char *
 read_uleb128 (const unsigned char *p, _Unwind_Word *val)
 {
   unsigned int shift = 0;
@@ -148,7 +167,7 @@ read_uleb128 (const unsigned char *p, _Unwind_Word *val)
 
 /* Similar, but read a signed leb128 value.  */
 
-static const unsigned char *
+STATIC const unsigned char *
 read_sleb128 (const unsigned char *p, _Unwind_Sword *val)
 {
   unsigned int shift = 0;
@@ -172,15 +191,11 @@ read_sleb128 (const unsigned char *p, _Unwind_Sword *val)
   return p;
 }
 
-#if !(defined(_LIBC) && !defined(NO_BASE_OF_ENCODED_VALUE))
 /* Load an encoded value from memory at P.  The value is returned in VAL;
    The function returns P incremented past the value.  BASE is as given
    by base_of_encoded_value for this encoding in the appropriate context.  */
 
-# ifndef _LIBC
-static
-# endif
-const unsigned char *
+STATIC const unsigned char *
 read_encoded_value_with_base (unsigned char encoding, _Unwind_Ptr base,
 			      const unsigned char *p, _Unwind_Ptr *val)
 {
@@ -272,14 +287,13 @@ read_encoded_value_with_base (unsigned char encoding, _Unwind_Ptr base,
   *val = result;
   return p;
 }
-#endif
 
 #ifndef NO_BASE_OF_ENCODED_VALUE
 
 /* Like read_encoded_value_with_base, but get the base from the context
    rather than providing it directly.  */
 
-static inline const unsigned char *
+STATIC const unsigned char *
 read_encoded_value (struct _Unwind_Context *context, unsigned char encoding,
 		    const unsigned char *p, _Unwind_Ptr *val)
 {
@@ -289,3 +303,4 @@ read_encoded_value (struct _Unwind_Context *context, unsigned char encoding,
 }
 
 #endif
+#endif /* _LIBC */

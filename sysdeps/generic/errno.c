@@ -32,9 +32,11 @@ extern __thread int __libc_errno __attribute__ ((alias ("errno")))
 int errno __attribute__ ((section (".bss")));
 strong_alias (errno, _errno)
 
-/* We declare these with compat_symbol so that they are not
-   visible at link time.  Programs must use the accessor functions.  */
-# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+/* We declare these with compat_symbol so that they are not visible at
+   link time.  Programs must use the accessor functions.  RTLD is special,
+   since it's not exported from there at any time.  */
+# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING \
+     && !defined IS_IN_rtld
 #  include <shlib-compat.h>
 compat_symbol (libc, errno, errno, GLIBC_2_0);
 compat_symbol (libc, _errno, _errno, GLIBC_2_0);
