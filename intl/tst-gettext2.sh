@@ -56,8 +56,6 @@ test -d ${objpfx}domaindir/lang2/LC_MESSAGES || {
      ${objpfx}domaindir/lang2/LC_MESSAGES
 }
 
-test -f
-
 # Populate them.
 msgfmt -o ${objpfx}domaindir/lang1/LC_MESSAGES/tstlang.mo \
        tstlang1.po

@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000
 #   Free Software Foundation, Inc.
 
-version='2000-09-05'
+version='2000-11-16'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -78,6 +78,10 @@ if test $# != 0; then
   exit 1
 fi
 
+
+dummy=dummy-$$
+trap 'rm -f $dummy.c $dummy.o $dummy; exit 1' 1 2 15
+
 # Use $HOST_CC if defined. $CC may point to a cross-compiler
 if test x"$CC_FOR_BUILD" = x; then
   if test x"$HOST_CC" != x; then
@@ -86,7 +90,17 @@ if test x"$CC_FOR_BUILD" = x; then
     if test x"$CC" != x; then
       CC_FOR_BUILD="$CC"
     else
-      CC_FOR_BUILD=cc
+      echo 'int dummy(){}' >$dummy.c
+      for c in cc c89 gcc; do 
+	($c $dummy.c -c) >/dev/null 2>&1
+	if test $? = 0; then
+	  CC_FOR_BUILD="$c"; break
+	fi
+      done
+      rm -f $dummy.c $dummy.o
+      if test x"$CC_FOR_BUILD" = x; then
+	CC_FOR_BUILD=no_compiler_found
+      fi
     fi
   fi
 fi
@@ -102,9 +116,6 @@ UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
 UNAME_RELEASE=`(uname -r) 2>/dev/null` || UNAME_RELEASE=unknown
 UNAME_SYSTEM=`(uname -s) 2>/dev/null` || UNAME_SYSTEM=unknown
 UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
-
-dummy=dummy-$$
-trap 'rm -f $dummy.c $dummy.o $dummy; exit 1' 1 2 15
 
 # Note: order is significant - the case branches are not exclusive.
 
@@ -495,10 +506,28 @@ EOF
 	echo m68k-hp-bsd4.4
 	exit 0 ;;
     9000/[34678]??:HP-UX:*:*)
+	HPUX_REV=`echo ${UNAME_RELEASE}|sed -e 's/[^.]*.[0B]*//'`
 	case "${UNAME_MACHINE}" in
 	    9000/31? )            HP_ARCH=m68000 ;;
 	    9000/[34]?? )         HP_ARCH=m68k ;;
 	    9000/[678][0-9][0-9])
+              case "${HPUX_REV}" in
+                11.[0-9][0-9])
+                  if [ -x /usr/bin/getconf ]; then
+                    sc_cpu_version=`/usr/bin/getconf SC_CPU_VERSION 2>/dev/null`
+                    sc_kernel_bits=`/usr/bin/getconf SC_KERNEL_BITS 2>/dev/null`
+                    case "${sc_cpu_version}" in
+                      523) HP_ARCH="hppa1.0" ;; # CPU_PA_RISC1_0
+                      528) HP_ARCH="hppa1.1" ;; # CPU_PA_RISC1_1
+                      532)                      # CPU_PA_RISC2_0
+                        case "${sc_kernel_bits}" in
+                          32) HP_ARCH="hppa2.0n" ;;
+                          64) HP_ARCH="hppa2.0w" ;;
+                        esac ;;
+                    esac
+                  fi ;;
+              esac
+              if [ "${HP_ARCH}" = "" ]; then
               sed 's/^              //' << EOF >$dummy.c
 
               #define _HPUX_SOURCE
@@ -533,9 +562,10 @@ EOF
               }
 EOF
 	(CCOPTS= $CC_FOR_BUILD $dummy.c -o $dummy 2>/dev/null ) && HP_ARCH=`./$dummy`
+	if test -z "$HP_ARCH"; then HP_ARCH=hppa; fi
 	rm -f $dummy.c $dummy
+	fi ;;
 	esac
-	HPUX_REV=`echo ${UNAME_RELEASE}|sed -e 's/[^.]*.[0B]*//'`
 	echo ${HP_ARCH}-hp-hpux${HPUX_REV}
 	exit 0 ;;
     3050*:HI-UX:*:*)
@@ -628,8 +658,11 @@ EOF
     CRAY*TS:*:*:*)
 	echo t90-cray-unicos${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
 	exit 0 ;;
-    CRAY*T3E:*:*:*)
+    CRAY*T3D:*:*:*)
 	echo alpha-cray-unicosmk${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+	exit 0 ;;
+    CRAY*T3E:*:*:*)
+	echo alphaev5-cray-unicosmk${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
 	exit 0 ;;
     CRAY*SV1:*:*:*)
 	echo sv1-cray-unicos${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
@@ -698,8 +731,7 @@ EOF
 	# The BFD linker knows what the default object file format is, so
 	# first see if it will tell us. cd to the root directory to prevent
 	# problems with other programs or directories called `ld' in the path.
-	ld_help_string=`cd /; ld --help 2>&1`
-	ld_supported_emulations=`echo $ld_help_string \
+	ld_supported_emulations=`cd /; ld --help 2>&1 \
 			 | sed -ne '/supported emulations:/!d
 				    s/[ 	][ 	]*/ /g
 				    s/.*supported emulations: *//
@@ -723,6 +755,10 @@ EOF
 		;;
 	  sparclinux)
 		echo "${UNAME_MACHINE}-unknown-linux-gnuaout"
+		exit 0
+		;;
+	  elf32_sparc)
+		echo "${UNAME_MACHINE}-unknown-linux-gnu"
 		exit 0
 		;;
 	  armlinux)
@@ -860,14 +896,28 @@ EOF
 	  echo s390-ibm-linux && exit 0
 	elif test "${UNAME_MACHINE}" = "x86_64"; then
 	  echo x86_64-unknown-linux-gnu && exit 0
+	elif test "${UNAME_MACHINE}" = "parisc" -o "${UNAME_MACHINE}" = "hppa"; then
+	  # Look for CPU level
+	  case `grep '^cpu[^a-z]*:' /proc/cpuinfo 2>/dev/null | cut -d' ' -f2` in
+	    PA7*)
+		echo hppa1.1-unknown-linux-gnu
+		;;
+	    PA8*)
+		echo hppa2.0-unknown-linux-gnu
+		;;
+	    *)
+		echo hppa-unknown-linux-gnu
+		;;
+	  esac
+	  exit 0
 	else
 	  # Either a pre-BFD a.out linker (linux-gnuoldld)
 	  # or one that does not give us useful --help.
 	  # GCC wants to distinguish between linux-gnuoldld and linux-gnuaout.
 	  # If ld does not provide *any* "supported emulations:"
 	  # that means it is gnuoldld.
-	  echo "$ld_help_string" | grep >/dev/null 2>&1 "supported emulations:"
-	  test $? != 0 && echo "${UNAME_MACHINE}-pc-linux-gnuoldld" && exit 0
+	  test -z "$ld_supported_emulations" \
+	    && echo "${UNAME_MACHINE}-pc-linux-gnuoldld" && exit 0
 
 	  case "${UNAME_MACHINE}" in
 	  i?86)
@@ -982,7 +1032,7 @@ EOF
 	exit 0 ;;
     M68*:*:R3V[567]*:*)
 	test -r /sysV68 && echo 'm68k-motorola-sysv' && exit 0 ;;
-    3[34]??:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 4850:*:4.0:3.0)
+    3[34]??:*:4.0:3.0 | 3[34]??A:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 4850:*:4.0:3.0)
 	OS_REL=''
 	test -r /etc/.relid \
 	&& OS_REL=.`sed -n 's/[^ ]* [^ ]* \([0-9][0-9]\).*/\1/p' < /etc/.relid`
@@ -1086,6 +1136,9 @@ EOF
 	exit 0 ;;
     NSR-[KW]:NONSTOP_KERNEL:*:*)
 	echo nsr-tandem-nsk${UNAME_RELEASE}
+	exit 0 ;;
+    *:NonStop-UX:*:*)
+	echo mips-compaq-nonstopux
 	exit 0 ;;
     BS2000:POSIX*:*:*)
 	echo bs2000-siemens-sysv

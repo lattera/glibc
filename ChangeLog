@@ -1,3 +1,8 @@
+2000-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/config.guess: Update from upstream maintainer.
+	* scripts/config.sub: Likewise.
+
 2000-11-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/freopen.c (freopen): Reset _mode after succesful
