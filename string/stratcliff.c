@@ -209,6 +209,48 @@ main (int argc, char *argv[])
 	      adr[inner] = 'T';
 	    }
         }
+
+      /* stpncpy test */
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+        {
+          for (middle = MAX (outer, size - 64); middle < size; ++middle)
+	    {
+	      adr[middle] = '\0';
+
+	      for (inner = 0; inner < size - outer; ++ inner)
+		{
+		  if ((stpncpy (dest, &adr[outer], inner) - dest)
+		      != MIN (inner, middle - outer))
+		    {
+		      printf ("stpncpy flunked for outer = %d, middle = %d, "
+			      "inner = %d\n", outer, middle, inner);
+		      result = 1;
+		    }
+		}
+
+	      adr[middle] = 'T';
+	    }
+        }
+
+      /* memcpy test */
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+	for (inner = 0; inner < size - outer; ++inner)
+	  if (memcpy (dest, &adr[outer], inner) !=  dest)
+	    {
+	      printf ("memcpy flunked for outer = %d, inner = %d\n",
+		      outer, inner);
+	      result = 1;
+	    }
+
+      /* mempcpy test */
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+	for (inner = 0; inner < size - outer; ++inner)
+	  if (mempcpy (dest, &adr[outer], inner) !=  dest + inner)
+	    {
+	      printf ("mempcpy flunked for outer = %d, inner = %d\n",
+		      outer, inner);
+	      result = 1;
+	    }
     }
 
   return result;

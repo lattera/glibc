@@ -1,5 +1,7 @@
 2000-12-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/stratcliff.c: Add tests for stpncpy, memcpy, and mempcpy.
+
 	* Makeconfig (default_cflags): Make -O2 the default for stable
 	releases.
 
