@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -172,7 +172,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       retval = 0;
       if (pw_name == NULL)
 	{
-	  ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
+	  ssize_t nbytes = __readall (sock, buffer, total);
 
 	  if (__builtin_expect (nbytes != total, 0))
 	    {

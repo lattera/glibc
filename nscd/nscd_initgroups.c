@@ -110,9 +110,8 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
       if (respdata == NULL)
 	{
 	  /* Read the data from the socket.  */
-	  if ((size_t) TEMP_FAILURE_RETRY (__read (sock, *groupsp,
-						   initgr_resp->ngrps
-						   * sizeof (gid_t)))
+	  if ((size_t) __readall (sock, *groupsp, initgr_resp->ngrps
+						  * sizeof (gid_t))
 	      == initgr_resp->ngrps * sizeof (gid_t))
 	    retval = initgr_resp->ngrps;
 	}

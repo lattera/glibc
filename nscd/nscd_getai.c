@@ -119,8 +119,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
       if (respdata == NULL)
 	{
 	  /* Read the data from the socket.  */
-	  if ((size_t) TEMP_FAILURE_RETRY (__read (sock, resultbuf + 1,
-						   datalen)) == datalen)
+	  if ((size_t) __readall (sock, resultbuf + 1, datalen) == datalen)
 	    {
 	      retval = 0;
 	      *result = resultbuf;

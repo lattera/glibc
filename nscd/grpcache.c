@@ -292,7 +292,7 @@ cache_addgr (struct database_dyn *db, int fd, request_header *req,
 	     unnecessarily let the receiver wait.  */
 	  assert (fd != -1);
 
-	  written = TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+	  written = writeall (fd, &dataset->resp, total);
 	}
 
       /* Add the record to the database.  But only if it has not been

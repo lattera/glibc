@@ -1,3 +1,21 @@
+2005-02-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd-client.h: Include sys/uio.h.
+	(__readall, __readvall, writeall): New prototypes.
+	* nscd/connections.c (writeall): New function.
+	(handle_request): Use it.
+	* nscd/aicache.c (addhstaiX): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/nscd_helper.c (__readall, __readvall): New functions.
+	* nscd/nscd_getai.c (__nscd_getai): Use them.
+	* nscd/nscd_getpw_r.c (__nscd_getpw_r): Likewise.
+	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (__nscd_gethst_r): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+
 2005-02-22  Roland McGrath  <roland@redhat.com>
 
 	* include/sys/socket.h: Declare __recv.

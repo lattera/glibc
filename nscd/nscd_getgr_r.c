@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004
+/* Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
@@ -202,7 +202,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	  total_len = vec[0].iov_len + vec[1].iov_len;
 
 	  /* Get this data.  */
-	  size_t n = TEMP_FAILURE_RETRY (__readv (sock, vec, 2));
+	  size_t n = __readvall (sock, vec, 2);
 	  if (__builtin_expect (n != total_len, 0))
 	    goto out_close;
 	}
@@ -232,8 +232,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       retval = 0;
       if (gr_name == NULL)
 	{
-	  size_t n = TEMP_FAILURE_RETRY (__read (sock, resultbuf->gr_mem[0],
-						 total_len));
+	  size_t n = __readall (sock, resultbuf->gr_mem[0], total_len);
 	  if (__builtin_expect (n != total_len, 0))
 	    {
 	      /* The `errno' to some value != ERANGE.  */

@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -365,7 +365,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 		     wait.  */
 		  assert (fd != -1);
 
-		  TEMP_FAILURE_RETRY (write (fd, &dataset->resp, total));
+		  writeall (fd, &dataset->resp, total);
 		}
 
 	      goto out;
