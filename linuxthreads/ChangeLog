@@ -1,5 +1,9 @@
 2003-04-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/useldt.h (DO_SET_THREAD_AREA): Make sure the
+	compiler knows we use the ldt_entry variable and that the syscall
+	modifies the memory.
+
 	* internals.h: Split pthread_functions definition into...
 	* sysdeps/pthread/pthread-functions.h: ...new file.
 
