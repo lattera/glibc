@@ -1,3 +1,9 @@
+2004-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__condvar_tw_cleanup): Little optimization.
+	Patch by Dinakar Guniguntala <dgunigun@in.ibm.com>.
+
 2004-02-16  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/pt-longjmp.c: Replace libc with

@@ -1,5 +1,5 @@
 /* Test program for returning the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@azstarnet.com>.
 
@@ -186,6 +186,17 @@ do_test (int argc, char ** argv)
 	  ++errors;
 	  continue;
 	}
+
+      char *result2 = realpath (tests[i].in, NULL);
+      if ((result2 == NULL && result != NULL)
+	  || (result2 != NULL && strcmp (result, result2) != 0))
+	{
+	  printf ("\
+%s: realpath(..., NULL) produced different result than realpath(..., buf): '%s' vs '%s'\n",
+		  argv[0], result2, result);
+	  ++errors;
+	}
+      free (result2);
     }
 
   getcwd (buf, sizeof(buf));

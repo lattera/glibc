@@ -401,7 +401,11 @@ __condvar_tw_cleanup:
 	adcl	$0, woken_seq+4(%ebx)
 
 	LOCK
+#if cond_lock == 0
+	subl	$1, (%ebx)
+#else
 	subl	$1, cond_lock(%ebx)
+#endif
 	je	2f
 
 #if cond_lock == 0
