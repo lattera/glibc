@@ -276,7 +276,13 @@ ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
-$(common-objpfx)sysd-versions: $(..)Versions.def $(..)scripts/versions.awk \
+$(common-objpfx)Versions.all: $(..)Versions.def \
+			      $(wildcard $(add-ons:%=$(..)%/Versions.def))
+	cat $^ > $@T
+	mv -f $@T $@
+common-generated += $(common-objpfx)Versions.all
+$(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
+			       $(..)scripts/versions.awk \
 			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
 			       $(wildcard $(sysdirs:%=%/Versions)) \
 			       $(sysd-versions-force)
