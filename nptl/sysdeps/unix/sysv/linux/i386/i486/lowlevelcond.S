@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -141,8 +141,8 @@ __pthread_cond_wait:
 	/* Get and store current wakeup_seq value.  */
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
-	movl	%edi, (%esp)
-	movl	%edx, 4(%esp)
+	movl	%edi, 4(%esp)
+	movl	%edx, 8(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -182,10 +182,10 @@ __pthread_cond_wait:
 	movl	wakeup_seq(%ebx), %edi
 	movl	wakeup_seq+4(%ebx), %edx
 
-	cmpl	4(%esp), %ecx
+	cmpl	8(%esp), %ecx
 	ja	7f
 	jb	8b
-	cmpl	(%esp), %eax
+	cmpl	4(%esp), %eax
 	jb	8b
 
 7:	cmpl	%ecx, %edx
@@ -503,7 +503,11 @@ __pthread_cond_signal:
 	/* Get internal lock.  */
 	movl	$1, %eax
 	LOCK
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
 	xaddl	%eax, cond_lock(%ebx)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -531,7 +535,11 @@ __pthread_cond_signal:
 
 	/* Unlock.  */
 4:	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
 	decl	cond_lock(%ebx)
+#endif
 	jne	5f
 
 6:	xorl	%eax, %eax
@@ -580,7 +588,11 @@ __pthread_cond_broadcast:
 	/* Get internal lock.  */
 	movl	$1, %eax
 	LOCK
+#if cond_lock == 0
+	xaddl	%eax, (%ebx)
+#else
 	xaddl	%eax, cond_lock(%ebx)
+#endif
 	testl	%eax, %eax
 	jne	1f
 
@@ -608,7 +620,11 @@ __pthread_cond_broadcast:
 
 	/* Unlock.  */
 4:	LOCK
+#if cond_lock == 0
+	decl	(%ebx)
+#else
 	decl	cond_lock(%ebx)
+#endif
 	jne	5f
 
 6:	xorl	%eax, %eax

@@ -1,5 +1,9 @@
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S
+	(__pthread_cond_wait): Don't save cancellation mode and seq value
+	in same location.
+
 	* herrno.c (__h_errno_location): Don't define as weak.
 
 2003-01-02  Jakub Jelinek  <jakub@redhat.com>
