@@ -472,7 +472,7 @@ _IO_file_setbuf_mmap (fp, p, len)
   return result;
 }
 
-static int new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
+static _IO_size_t new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */
@@ -489,7 +489,7 @@ _IO_new_do_write (fp, data, to_do)
 INTDEF2(_IO_new_do_write, _IO_do_write)
 
 static
-int
+_IO_size_t
 new_do_write (fp, data, to_do)
      _IO_FILE *fp;
      const char *data;
