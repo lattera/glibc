@@ -15,6 +15,7 @@ ldd-rewrite.sed
 lddlibc4.c
 linux_fsinfo.h
 llseek.c
+makedev.c
 ntp_gettime.c
 readahead.c
 s_pread64.c

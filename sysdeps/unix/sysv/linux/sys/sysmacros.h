@@ -1,5 +1,5 @@
 /* Definitions of macros to access `dev_t' values.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,30 +20,45 @@
 #ifndef _SYS_SYSMACROS_H
 #define _SYS_SYSMACROS_H	1
 
-/* For compatibility we provide alternative names.
+#include <features.h>
 
-   The problem here is that compilers other than GCC probably don't
-   have the `long long' type and so `dev_t' is actually an array.  */
-#if defined __GNUC__ && __GNUC__ >= 2
-# define major(dev) ((int)(((dev) >> 8) & 0xff))
-# define minor(dev) ((int)((dev) & 0xff))
-# define makedev(major, minor) ((((unsigned int) (major)) << 8) \
-				| ((unsigned int) (minor)))
-#else
-/* We need to know the word order here.  This assumes that the word order
-   is consistent with the byte order.  */
-# include <endian.h>
-# if __BYTE_ORDER == __BIG_ENDIAN
-#  define major(dev) (((dev).__val[1] >> 8) & 0xff)
-#  define minor(dev) ((dev).__val[1] & 0xff)
-#  define makedev(major, minor) { 0, ((((unsigned int) (major)) << 8) \
-				      | ((unsigned int) (minor))) }
-# else
-#  define major(dev) (((dev).__val[0] >> 8) & 0xff)
-#  define minor(dev) ((dev).__val[0] & 0xff)
-#  define makedev(major, minor) { ((((unsigned int) (major)) << 8) \
-				   | ((unsigned int) (minor))), 0 }
+/* If the compiler does not know long long it is out of luck.  We are
+   not going to hack weird hacks to support the dev_t representation
+   they need.  */
+#ifdef __GLIBC_HAVE_LONG_LONG
+extern unsigned int inline major (unsigned long long int __dev) __THROW;
+extern unsigned int inline minor (unsigned long long int __dev) __THROW;
+extern unsigned long long int inline makedev (unsigned int __major,
+					      unsigned int __minor) __THROW;
+
+# if defined __GNUC__ && __GNUC__ >= 2
+extern inline unsigned int
+major (unsigned long long int __dev)
+{
+  return ((__dev >> 8) & 0xfff) | ((unsigned int) (__dev >> 32) & ~0xfff);
+}
+
+extern inline unsigned int
+minor (unsigned long long int __dev)
+{
+  return (__dev & 0xff) | ((unsigned int) (__dev >> 12) & ~0xff);
+}
+
+extern inline unsigned long long int
+makedev (unsigned int __major, unsigned int __minor)
+{
+  return ((__minor & 0xff) | ((__major & 0xfff) << 8)
+	  | (((unsigned long long int) (__minor & ~0xff)) << 12)
+	  | (((unsigned long long int) (__major & ~0xfff)) << 32));
+}
 # endif
+
+
+/* Historically the three symbols were macros.  In case some programs
+   use #ifdef to check for definition provide some dummy macros.  */
+# define major(dev) major (dev)
+# define minor(dev) minor (dev)
+# define makedev(maj, min) makedev (maj, min)
 #endif
 
 #endif /* sys/sysmacros.h */
