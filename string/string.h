@@ -256,15 +256,15 @@ extern char *rindex (__const char *__s, int __c) __THROW __attribute_pure__;
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
-extern int ffs (int __i) __THROW __attribute__ ((const));
+extern int ffs (int __i) __THROW __attribute__ ((__const__));
 
 /* The following two functions are non-standard but necessary for non-32 bit
    platforms.  */
 # ifdef	__USE_GNU
-extern int ffsl (long int __l) __THROW __attribute__ ((const));
+extern int ffsl (long int __l) __THROW __attribute__ ((__const__));
 #  ifdef __GNUC__
 __extension__ extern int ffsll (long long int __ll)
-     __THROW __attribute__ ((const));
+     __THROW __attribute__ ((__const__));
 #  endif
 # endif
 
