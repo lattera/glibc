@@ -88,6 +88,7 @@ static const struct gaih_servtuple nullserv;
 struct gaih_addrtuple
   {
     struct gaih_addrtuple *next;
+    char *name;
     int family;
     uint32_t addr[4];
     uint32_t scopeid;
@@ -321,6 +322,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
 	    }								      \
 	  uint32_t *addr = (*pat)->addr;				      \
 	  (*pat)->next = NULL;						      \
+	  (*pat)->name = i == 0 ? strdupa (h->h_name) : NULL;		      \
 	  if (_family == AF_INET && req->ai_family == AF_INET6)		      \
 	    {								      \
 	      (*pat)->family = AF_INET6;				      \
@@ -658,7 +660,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      char *buf = alloca (max_fqdn_len);
 			      char *s;
 
-			      if (DL_CALL_FCT (cfct, (h->h_name ?: name, buf,
+			      if (DL_CALL_FCT (cfct, (at->name ?: name, buf,
 						      max_fqdn_len, &s, &rc,
 						      &herrno))
 				  == NSS_STATUS_SUCCESS)
