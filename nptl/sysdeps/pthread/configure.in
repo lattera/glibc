@@ -16,4 +16,19 @@ _Unwind_GetCFA (context)],
 libc_cv_forced_unwind=yes, libc_cv_forced_unwind=no)])
 if test $libc_cv_forced_unwind = yes; then
   AC_DEFINE(HAVE_FORCED_UNWIND)
+dnl Check for C cleanup handling.
+  old_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS -Werror -fexceptions"
+  AC_CACHE_CHECK([for C cleanup handling], libc_cv_c_cleanup, [dnl
+  AC_TRY_LINK([
+#include <stdio.h>
+void cl (void *a) { }
+extern c (void);], [
+  int a __attribute__ ((cleanup (cl)));
+  puts ("test")],
+libc_cv_c_cleanup=yes, libc_cv_c_cleanup=no)])
+  CFLAGS="$old_CFLAGS"
+  if test $libc_cv_c_cleanup = no; then
+    AC_MSG_ERROR([the compiler must support C cleanup handling])
+  fi
 fi
