@@ -895,7 +895,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 	    result = _dl_lookup_symbol (_dl_argv[i], _dl_loaded,
 					&ref, _dl_loaded->l_scope,
-					ELF_MACHINE_JMP_SLOT, 1);
+					ELF_RTYPE_CLASS_PLT, 1);
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
