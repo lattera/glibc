@@ -131,6 +131,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 			   int *h_errnop)
 {
   querybuf host_buffer;
+  char tmp[NS_MAXDNAME];
   int size, type, n;
   const char *cp;
   int map = 0;
@@ -161,7 +162,8 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
    * this is also done in res_query() since we are not the only
    * function that looks up host names.
    */
-  if (strchr (name, '.') == NULL && (cp = __hostalias (name)) != NULL)
+  if (strchr (name, '.') == NULL
+      && (cp = res_hostalias (&_res, name, tmp, sizeof (tmp))) != NULL)
     name = cp;
 
   n = res_nsearch (&_res, name, C_IN, type, host_buffer.buf,
