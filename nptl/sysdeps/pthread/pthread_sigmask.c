@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -31,13 +31,15 @@ pthread_sigmask (how, newmask, oldmask)
 {
   sigset_t local_newmask;
 
-  /* The only thing we have to make sure here is that SIGCANCEL is not
-     blocked.  */
+  /* The only thing we have to make sure here is that SIGCANCEL and
+     SIGSETXID is not blocked.  */
   if (newmask != NULL
-      && __builtin_expect (__sigismember (newmask, SIGCANCEL), 0))
+      && (__builtin_expect (__sigismember (newmask, SIGCANCEL), 0)
+	  || __builtin_expect (__sigismember (newmask, SIGSETXID), 0)))
     {
       local_newmask = *newmask;
       __sigdelset (&local_newmask, SIGCANCEL);
+      __sigdelset (&local_newmask, SIGSETXID);
       newmask = &local_newmask;
     }
 

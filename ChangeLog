@@ -1,5 +1,12 @@
 2004-09-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sigwait.c (do_sigwait): Make sure
+	SIGSETXID is not blocked.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (do_sigwaitinfo): Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (do_sigtimedwait): Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Likewise.
+	* sysdeps/generic/sigfillset.c (sigfillset): Don't set SIGSETXID.
+
 	* sunrpc/get_myaddr.c (get_myaddress): Fix test for failing
 	getifaddrs call.
 	* sunrpc/pmap_clnt.c (__get_myaddress): Likewise.

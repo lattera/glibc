@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,12 +32,20 @@ do_sigtimedwait (const sigset_t *set, siginfo_t *info,
 {
 #ifdef SIGCANCEL
   sigset_t tmpset;
-  if (set != NULL && __sigismember (set, SIGCANCEL))
+  if (set != NULL
+      && (__builtin_expect (__sigismember (set, SIGCANCEL), 0)
+# ifdef SIGSETXID
+	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)
+# endif
+	  ))
     {
       /* Create a temporary mask without the bit for SIGCANCEL set.  */
       // We are not copying more than we have to.
       memcpy (&tmpset, set, _NSIG / 8);
       __sigdelset (&tmpset, SIGCANCEL);
+# ifdef SIGSETXID
+      __sigdelset (&tmpset, SIGSETXID);
+# endif
       set = &tmpset;
     }
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,96,97,2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,96,97,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,10 @@ sigfillset (set)
   /* If the implementation uses a cancellation signal don't set the bit.  */
 #ifdef SIGCANCEL
   __sigdelset (set, SIGCANCEL);
+#endif
+  /* Likewise for the signal to implement setxid.  */
+#ifdef SIGSETXID
+  __sigdelset (set, SIGSETXID);
 #endif
 
   return 0;
