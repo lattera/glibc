@@ -1,3 +1,11 @@
+2002-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c: Use tabs instead of spaces.
+	* posix/regexec.c: Likewise.
+	* posix/regex_internal.h: Likewise.
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Use __wcrtomb not wctomb.
+
 2002-11-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (re_compile_pattern): Don't set regs_allocated

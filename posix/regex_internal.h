@@ -270,15 +270,15 @@ typedef struct re_string_t re_string_t;
 
 
 static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
-                                         int len, int init_len,
-                                         RE_TRANSLATE_TYPE trans, int icase);
+					 int len, int init_len,
+					 RE_TRANSLATE_TYPE trans, int icase);
 static reg_errcode_t re_string_construct (re_string_t *pstr, const char *str,
-                                          int len, RE_TRANSLATE_TYPE trans,
-                                          int icase);
+					  int len, RE_TRANSLATE_TYPE trans,
+					  int icase);
 static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
-                                            int eflags, int newline);
+					    int eflags, int newline);
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
-                                                int new_buf_len);
+						int new_buf_len);
 #ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr);
 static void build_wcs_upper_buffer (re_string_t *pstr);
@@ -305,7 +305,7 @@ static unsigned int re_string_context_at (const re_string_t *input, int idx,
   ((idx) == (pstr)->len || (pstr)->wcs[idx] != WEOF)
 #define re_string_is_single_byte_char(pstr, idx) \
   ((pstr)->wcs[idx] != WEOF && ((pstr)->len == (idx) \
-                                || (pstr)->wcs[(idx) + 1] != WEOF))
+				|| (pstr)->wcs[(idx) + 1] != WEOF))
 #define re_string_eoi(pstr) ((pstr)->stop <= (pstr)->cur_idx)
 #define re_string_cur_idx(pstr) ((pstr)->cur_idx)
 #define re_string_get_buffer(pstr) ((pstr)->mbs)
@@ -495,21 +495,21 @@ typedef struct re_dfa_t re_dfa_t;
 static reg_errcode_t re_node_set_alloc (re_node_set *set, int size);
 static reg_errcode_t re_node_set_init_1 (re_node_set *set, int elem);
 static reg_errcode_t re_node_set_init_2 (re_node_set *set, int elem1,
-                                         int elem2);
+					 int elem2);
 #define re_node_set_init_empty(set) memset (set, '\0', sizeof (re_node_set))
 static reg_errcode_t re_node_set_init_copy (re_node_set *dest,
-                                            const re_node_set *src);
+					    const re_node_set *src);
 static reg_errcode_t re_node_set_add_intersect (re_node_set *dest,
-                                                const re_node_set *src1,
-                                                const re_node_set *src2);
+						const re_node_set *src1,
+						const re_node_set *src2);
 static reg_errcode_t re_node_set_init_union (re_node_set *dest,
-                                             const re_node_set *src1,
-                                             const re_node_set *src2);
+					     const re_node_set *src1,
+					     const re_node_set *src2);
 static reg_errcode_t re_node_set_merge (re_node_set *dest,
-                                        const re_node_set *src);
+					const re_node_set *src);
 static int re_node_set_insert (re_node_set *set, int elem);
 static int re_node_set_compare (const re_node_set *set1,
-                                const re_node_set *set2);
+				const re_node_set *set2);
 static int re_node_set_contains (const re_node_set *set, int elem);
 static void re_node_set_remove_at (re_node_set *set, int idx);
 #define re_node_set_remove(set,id) \
@@ -518,11 +518,12 @@ static void re_node_set_remove_at (re_node_set *set, int idx);
 #define re_node_set_free(set) re_free ((set)->elems)
 static int re_dfa_add_node (re_dfa_t *dfa, re_token_t token, int mode);
 static re_dfastate_t *re_acquire_state (reg_errcode_t *err, re_dfa_t *dfa,
-                                        const re_node_set *nodes);
+					const re_node_set *nodes);
 static re_dfastate_t *re_acquire_state_context (reg_errcode_t *err,
-                                                re_dfa_t *dfa,
-                                                const re_node_set *nodes,
-                                                unsigned int context);
+						re_dfa_t *dfa,
+						const re_node_set *nodes,
+						unsigned int context);
+static void free_state (re_dfastate_t *state);
 
 
 typedef enum
@@ -618,7 +619,7 @@ re_string_elem_size_at (pstr, idx)
     {
       table = (const int32_t *) _NL_CURRENT (LC_COLLATE, _NL_COLLATE_TABLEMB);
       extra = (const unsigned char *)
-        _NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
+	_NL_CURRENT (LC_COLLATE, _NL_COLLATE_EXTRAMB);
       indirect = (const int32_t *) _NL_CURRENT (LC_COLLATE,
 						_NL_COLLATE_INDIRECTMB);
       p = pstr->mbs + idx;
