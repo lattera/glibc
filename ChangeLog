@@ -1,5 +1,7 @@
 2001-08-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/memusage.c (me): Allow creating the output file.
+
 	* sysdeps/unix/sysv/linux/Makefile: Remove -fkeep-inline-functions
 	flag for init-first.
 

@@ -19,6 +19,7 @@
    02111-1307 USA.  */
 
 #include <dlfcn.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
 #include <signal.h>
@@ -206,7 +207,7 @@ me (void)
 
       outname = getenv ("MEMUSAGE_OUTPUT");
       if (outname != NULL && outname[0] != '\0'
-	  && access (outname, R_OK | W_OK) == 0)
+	  && (access (outname, R_OK | W_OK) == 0 || errno == ENOENT))
 	{
 	  fd = creat (outname, 0666);
 
