@@ -141,13 +141,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   if (__pthread_initialize_minimal)
 # endif
     __pthread_initialize_minimal ();
-
-  /* Some security at this point.  Prevent starting a SUID binary where
-     the standard file descriptors are not opened.  We have to do this
-     only for statically linked applications since otherwise the dynamic
-     loader did the work already.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
-    __libc_check_standard_fds ();
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */
@@ -164,6 +157,15 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   /* Register the destructor of the program, if any.  */
   if (fini)
     __cxa_atexit ((void (*) (void *)) fini, NULL, NULL);
+
+#ifndef SHARED
+  /* Some security at this point.  Prevent starting a SUID binary where
+     the standard file descriptors are not opened.  We have to do this
+     only for statically linked applications since otherwise the dynamic
+     loader did the work already.  */
+  if (__builtin_expect (__libc_enable_secure, 0))
+    __libc_check_standard_fds ();
+#endif
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED

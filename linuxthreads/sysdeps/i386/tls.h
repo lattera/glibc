@@ -119,7 +119,7 @@ typedef struct
 #   include "useldt.h"		/* For the structure.  */
 #   define TLS_DO_MODIFY_LDT_KERNEL_CHECK(doit)				      \
   (__builtin_expect (GL(dl_osversion) < 131939, 0)			      \
-   ? "kernel too old for thread-local storage support"			      \
+   ? "kernel too old for thread-local storage support\n"			      \
    : (doit))
 #  endif
 
@@ -142,7 +142,7 @@ TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
 		"d" (sizeof (ldt_entry)));				      \
   __builtin_expect (result, 0) == 0					      \
   ? ({ asm ("movw %w0, %%gs" : : "q" ((nr) * 8 + 7)); NULL; })		      \
-  : "cannot set up LDT for thread-local storage";			      \
+  : "cannot set up LDT for thread-local storage\n";			      \
 }))
 
 #  define TLS_DO_SET_THREAD_AREA(descr, secondcall)			      \
@@ -172,7 +172,7 @@ TLS_DO_MODIFY_LDT_KERNEL_CHECK(						      \
 #  ifdef __ASSUME_SET_THREAD_AREA_SYSCALL
 #   define TLS_SETUP_GS_SEGMENT(descr, secondcall)			      \
   (TLS_DO_SET_THREAD_AREA (descr, secondcall)				      \
-   ? "set_thread_area failed when setting up thread-local storage" : NULL)
+   ? "set_thread_area failed when setting up thread-local storage\n" : NULL)
 #  elif defined __NR_set_thread_area
 #   define TLS_SETUP_GS_SEGMENT(descr, secondcall) \
   (TLS_DO_SET_THREAD_AREA (descr, secondcall)				      \
