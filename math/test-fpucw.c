@@ -29,10 +29,13 @@ main (void)
 
   _FPU_GETCW (cw);
 
-  if (cw != _FPU_DEFAULT)
-    printf ("control word is 0x%x but should be 0x%x.\n", cw, _FPU_DEFAULT);
+  cw &= ~_FPU_RESERVED;
 
-  return (cw != _FPU_DEFAULT);
+  if (cw != (_FPU_DEFAULT & ~_FPU_RESERVED))
+    printf ("control word is 0x%x but should be 0x%x.\n",
+	    cw, (_FPU_DEFAULT & ~_FPU_RESERVED));
+
+  return cw != (_FPU_DEFAULT & ~_FPU_RESERVED);
 
 #else
   return 0;

@@ -52,7 +52,7 @@ test_locale tests/test3.cm tests/test3.def test3
 test_locale tests/test4.cm tests/test4.def test4
 test_locale tests/test5.cm tests/test5.def test5 tests/test5.ds
 test_locale tests/test6.cm tests/test6.def test6 tests/test6.ds
-test_locale tests/test7.cm tests/test4.def test7
+test_locale tests/test7.cm tests/test7.def test7
 
 exit 0
 

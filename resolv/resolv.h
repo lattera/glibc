@@ -123,16 +123,6 @@ struct res_sym {
 #define	RES_DFLRETRY		2	/* Default #/tries. */
 #define	RES_MAXTIME		65535	/* Infinity, in milliseconds. */
 
-/*
- * Like "struct sockaddr_in", but without any padding (to avoid making
- * "struct __rest_state" too large).
- */
-struct __sockaddr_in {
-	__SOCKADDR_COMMON (sin_);
-	in_port_t	sin_port;
-	struct in_addr	sin_addr;
-};
-
 struct __res_state {
 	int	retrans;	 	/* retransmition time interval */
 	int	retry;			/* number of times to retransmit */
@@ -163,12 +153,8 @@ struct __res_state {
 			u_int16_t		nscount;
 			u_int16_t		nstimes[MAXNS];	/* ms. */
 			int			nssocks[MAXNS];
-#ifdef _LIBC
 			u_int16_t		nscount6;
 			struct sockaddr_in6	*nsaddrs[MAXNS];
-#else
-			struct __sockaddr_in	nsaddrs[MAXNS];
-#endif
 		} _ext;
 	} _u;
 };

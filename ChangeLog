@@ -1,3 +1,23 @@
+2000-07-28  Philip Blundell  <philb@gnu.org>
+
+	* math/test-fpucw.c: Ignore reserved bits in control word.
+
+2000-07-28  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO_RET): New macro.
+	(ret): Redefine to PSEUDO_RET.
+	(PSEUDO): Remove jump to syscall_error.
+
+2000-07-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* resolv/README: Add some information about using the resolver in
+	multi-threaded code and with C++.  Spelling fixes.
+
+2000-07-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* resolv/resolv.h (struct __sockaddr_in): Remove.
+	(struct __res_state) [!_LIBC]: Remove reference to __sockaddr_in.
+
 2000-07-29  Greg McGary  <greg@mcgary.org>
 
 	* Rules (test-bp-inputs, make-test-out): New variables.
@@ -28,7 +48,8 @@
 	pointers as __unbounded.  Wrap bounds around variable `current'.
 	* sysdeps/i386/backtrace.c (struct layout): Make pointers __unbounded.
 	(ADVANCE_STACK_FRAME): Wrap bounds around return value.
-	* sysdeps/powerpc/backtrace.c (struct layout): Make pointers __unbounded.
+	* sysdeps/powerpc/backtrace.c (struct layout): Make pointers
+	__unbounded.
 	(__backtrace): Qualify frame-pointer chain and return address
 	pointers as __unbounded.  Wrap bounds around variable `current'.
 
