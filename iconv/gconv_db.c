@@ -163,6 +163,10 @@ free_derivation (void *p)
     if (deriv->steps[cnt].end_fct)
       _CALL_DL_FCT (deriv->steps[cnt].end_fct, (&deriv->steps[cnt]));
 
+  /* Free the name strings.  */
+  free ((char *) deriv->steps[0].from_name);
+  free ((char *) deriv->steps[deriv->nsteps - 1].to_name);
+
   free ((struct gconv_step *) deriv->steps);
   free (deriv);
 }

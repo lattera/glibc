@@ -254,17 +254,15 @@ __gconv_release_shlib (struct gconv_loaded_object *handle)
 
 /* We run this if we debug the memory allocation.  */
 static void
-do_release_all (const void *nodep, VISIT value, int level)
+do_release_all (void *nodep)
 {
-  struct gconv_loaded_object *obj = *(struct gconv_loaded_object **) nodep;
-
-  if (value != preorder && value != leaf)
-    return;
+  struct gconv_loaded_object *obj = (struct gconv_loaded_object *) nodep;
 
   /* Unload the shared object.  We don't use the trick to
      catch errors since in the case an error is signalled
      something is really wrong.  */
-  _dl_close (obj->handle);
+  if (obj->handle != NULL)
+    _dl_close (obj->handle);
 
   free (obj);
 }
@@ -272,6 +270,6 @@ do_release_all (const void *nodep, VISIT value, int level)
 static void __attribute__ ((unused))
 free_mem (void)
 {
-  __twalk (loaded, do_release_all);
+  __tdestroy (loaded, do_release_all);
 }
 text_set_element (__libc_subfreeres, free_mem);

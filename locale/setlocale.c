@@ -402,9 +402,13 @@ free_mem (void)
     {
       struct locale_data *here = *_nl_current[category];
 
+      /* If this category is already "C" don't do anything.  */
+      if (here == _nl_C[category])
+	continue;
+
       /* We have to be prepared that sometime later me still might
 	 need the locale information.  */
-      *_nl_current[category] = _nl_C[category];
+      setdata (category, _nl_C[category]);
       setname (category, _nl_C_name);
 
       _nl_unload_locale (here);

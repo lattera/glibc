@@ -206,8 +206,9 @@ add_alias (char *rp, void *modules)
 				    from, wp - from);
       new_alias->toname = new_alias->fromname + (to - from);
 
-      if (__tsearch (new_alias, &__gconv_alias_db, __gconv_alias_compare)
-	  == NULL)
+      if (__tfind (new_alias, &__gconv_alias_db, __gconv_alias_compare) != NULL
+	  || (__tsearch (new_alias, &__gconv_alias_db, __gconv_alias_compare)
+	      == NULL))
 	/* Something went wrong, free this entry.  */
 	free (new_alias);
     }
