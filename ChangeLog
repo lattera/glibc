@@ -1,3 +1,14 @@
+2003-04-13  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/profil-counter: New.
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h: Port to n32/n64.
+	* sysdeps/unix/sysv/linux/mips/bits/sigcontext.h: New.
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h: Port to n32/n64.
+	(mcontext_t): Make it match the 32-bit mips kernel in o32.
+	* sysdeps/unix/sysv/linux/mips/sys/user.h: Bring in constants from
+	the mips and mips64 headers.
+	(struct user): Port to n32/n64.
+
 2003-04-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Add cast to

@@ -29,47 +29,72 @@
 #include <bits/sigcontext.h>
 
 
-/* Type for general register.  */
-#if defined _ABIN32 && _MIPS_SIM == _ABIN32
+/* Type for general register.  Even in o32 we assume 64-bit registers,
+   like the kernel.  */
 __extension__ typedef unsigned long long int greg_t;
-#else
-typedef unsigned long int greg_t;
-#endif
 
 /* Number of general registers.  */
-#define NGREG	37
-#define NFPREG	33
+#define NGREG	32
+#define NFPREG	32
 
 /* Container for all general registers.  */
-/* gregset_t must be an array.  The below declared array corresponds to:
-typedef struct gregset {
-	greg_t	g_regs[32];
-	greg_t	g_hi;
-	greg_t	g_lo;
-	greg_t	g_pad[3];
-} gregset_t;  */
 typedef greg_t gregset_t[NGREG];
 
 /* Container for all FPU registers.  */
 typedef struct fpregset {
 	union {
-		double	fp_dregs[32];
+		double	fp_dregs[NFPREG];
 		struct {
 			float		_fp_fregs;
 			unsigned int	_fp_pad;
-		} fp_fregs[32];
+		} fp_fregs[NFPREG];
 	} fp_r;
-	unsigned int	fp_csr;
-	unsigned int	fp_pad;
 } fpregset_t;
 
 
 /* Context to describe whole processor state.  */
+#if _MIPS_SIM == _MIPS_SIM_ABI32
+/* Earlier versions of glibc for mips had an entirely different
+   definition of mcontext_t, that didn't even resemble the
+   corresponding kernel data structure.  Since all legitimate uses of
+   ucontext_t in glibc mustn't have accessed anything beyond
+   uc_mcontext and, even then, taking a pointer to it, casting it to
+   sigcontext_t, and accessing it as such, which is what it has always
+   been, this can still be rectified.  Fortunately, makecontext,
+   [gs]etcontext et all have never been implemented.  */
+typedef struct
+  {
+    unsigned int regmask;
+    unsigned int status;
+    greg_t pc;
+    gregset_t gregs;
+    fpregset_t fpregs;
+    unsigned int fp_owned;
+    unsigned int fpc_csr;
+    unsigned int fpc_eir;
+    unsigned int used_math;
+    unsigned int ssflags;
+    greg_t mdhi;
+    greg_t mdlo;
+    unsigned int cause;
+    unsigned int badvaddr;
+  } mcontext_t;
+#else
 typedef struct
   {
     gregset_t gregs;
     fpregset_t fpregs;
+    greg_t mdhi;
+    greg_t mdlo;
+    greg_t pc;
+    unsigned int status;
+    unsigned int fpc_csr;
+    unsigned int fpc_eir;
+    unsigned int used_math;
+    unsigned int cause;
+    unsigned int badvaddr;
   } mcontext_t;
+#endif
 
 /* Userlevel context.  */
 typedef struct ucontext
