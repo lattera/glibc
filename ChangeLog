@@ -1,5 +1,7 @@
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/libm-i387/s_asinhf.S: Correct computing absolute value.
+
 	* Makefile: Allow calling goals for po subdir.
 
 	* sysdeps/unix/sysv/linux/alpha/bits/signum.h: Add missing RT
