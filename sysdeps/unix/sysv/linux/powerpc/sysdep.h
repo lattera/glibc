@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -143,6 +143,9 @@
 /* Local labels stripped out by the linker.  */
 #undef L
 #define L(x) .L##x
+
+/* Label in text section.  */
+#define C_TEXT(name) name
 
 #endif	/* __ASSEMBLER__ */
 

@@ -1,3 +1,15 @@
+2001-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Don't handle
+	relocations which are not in ld.so if RTLD_BOOTSTRAP is defined.
+
+	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Fix typo.
+
+	* elf/dl-misc.c (_dl_debug_vdprintf): Fix type visible on 64-bit
+	machines.
+
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h (C_TEXT): Define.
+
 2001-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/elf/libc-start.c: Use new output functions and

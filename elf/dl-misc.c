@@ -181,7 +181,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 		   different size.  */
 #if LONG_MAX != INT_MAX
 		unsigned long int num = (long_mod
-					 ? va_arg (arg, unsigned long int);
+					 ? va_arg (arg, unsigned long int)
 					 : va_arg (arg, unsigned int));
 #else
 		unsigned long int num = va_arg (arg, unsigned int);

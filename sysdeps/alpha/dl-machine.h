@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -500,8 +500,10 @@ elf_machine_rela (struct link_map *map,
 	  memcpy (reloc_addr_1, &reloc_addr_val, 8);
 	}
     }
+#ifndef RTLD_BOOTSTRAP
   else if (r_type == R_ALPHA_NONE)
     return;
+#endif
   else
     {
       Elf64_Addr loadbase, sym_value;
@@ -512,8 +514,9 @@ elf_machine_rela (struct link_map *map,
 
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
-      else if (r_type == R_ALPHA_JMP_SLOT)
+      else if (r_type  == R_ALPHA_JMP_SLOT)
 	elf_machine_fixup_plt (map, 0, reloc, reloc_addr, sym_value);
+#ifndef RTLD_BOOTSTRAP
       else if (r_type == R_ALPHA_REFQUAD)
 	{
 	  void *reloc_addr_1 = reloc_addr;
@@ -522,7 +525,6 @@ elf_machine_rela (struct link_map *map,
 	  /* Load value without causing unaligned trap.  */
 	  memcpy (&reloc_addr_val, reloc_addr_1, 8);
 	  sym_value += reloc_addr_val;
-#ifndef RTLD_BOOTSTRAP
 	  if (map == &_dl_rtld_map)
 	    {
 	      /* Undo the relocation done here during bootstrapping.
@@ -536,10 +538,10 @@ elf_machine_rela (struct link_map *map,
 	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
 	      sym_value -= reloc->r_addend;
 	    }
-#endif
 	  /* Store value without causing unaligned trap.  */
 	  memcpy (reloc_addr_1, &sym_value, 8);
 	}
+#endif
       else
 	_dl_reloc_bad_type (map, r_type, 0);
     }
