@@ -1444,6 +1444,7 @@ cannot allocate TLS data structures for initial thread");
 	_dl_printf ("\nprelink checking: %s\n", prelinked ? "ok" : "failed");
     }
 
+#if ! ELF_MACHINE_NO_RELA /* We don't REL-only prelink.  */
   if (prelinked)
     {
       struct link_map *l;
@@ -1476,6 +1477,7 @@ cannot allocate TLS data structures for initial thread");
       _dl_sysdep_start_cleanup ();
     }
   else
+#endif
     {
       /* Now we have all the objects loaded.  Relocate them all except for
 	 the dynamic linker itself.  We do this in reverse order so that copy
