@@ -28,3 +28,5 @@ extern long long int ____wcstoll_l_internal (const wchar_t *, wchar_t **,
 					     int, int, __locale_t);
 
 #include <wcstoll.c>
+
+weak_alias (__wcstoll_l, wcstoll_l)

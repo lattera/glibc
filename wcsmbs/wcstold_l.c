@@ -1,5 +1,5 @@
 /* Convert string representing a number to integer value, using given locale.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -52,3 +52,5 @@ __wcstold_l (const wchar_t *nptr, wchar_t **endptr, __locale_t loc)
   return ____wcstod_l_internal (nptr, endptr, 0, loc);
 }
 #endif
+
+weak_alias (__wcstold_l, wcstold_l)

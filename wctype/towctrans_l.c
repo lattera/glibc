@@ -1,5 +1,5 @@
 /* Map wide character using given mapping and locale.
-   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,4 @@ __towctrans_l (wint_t wc, wctrans_t desc, __locale_t locale)
 
   return wctrans_table_lookup ((const char *) desc, wc);
 }
+weak_alias (__towctrans_l, towctrans_l)

@@ -8,3 +8,4 @@
 #undef __wcstoull_l
 strong_alias (____wcstoul_l_internal, ____wcstoull_l_internal)
 weak_alias (__wcstoul_l, __wcstoull_l)
+weak_alias (__wcstoul_l, wcstoull_l)

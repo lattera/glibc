@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -19,3 +19,6 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 #include <wcscasecmp.c>
+
+libc_hidden_def (__wcscasecmp_l)
+weak_alias (__wcscasecmp_l, wcscasecmp_l)

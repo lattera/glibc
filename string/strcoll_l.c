@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Written by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,3 +19,5 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL 1
 #include <strcoll.c>
+
+weak_alias (__strcoll_l, strcoll_l)

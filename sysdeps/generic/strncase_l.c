@@ -22,3 +22,4 @@
 #include <sysdeps/generic/strncase.c>
 
 libc_hidden_def (__strncasecmp_l)
+weak_alias (__strncasecmp_l, strncasecmp_l)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995-99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -144,9 +144,13 @@ extern int wcsncasecmp (__const wchar_t *__s1, __const wchar_t *__s2,
 
 extern int __wcscasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
 			   __locale_t __loc) __THROW;
+extern int wcscasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
+			 __locale_t __loc) __THROW;
 
 extern int __wcsncasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
 			    size_t __n, __locale_t __loc) __THROW;
+extern int wcsncasecmp_l (__const wchar_t *__s1, __const wchar_t *__s2,
+			  size_t __n, __locale_t __loc) __THROW;
 #endif
 
 /* Compare S1 and S2, both interpreted as appropriate to the
@@ -166,11 +170,16 @@ extern size_t wcsxfrm (wchar_t *__restrict __s1,
    LC_COLLATE category of the given locale.  */
 extern int __wcscoll_l (__const wchar_t *__s1, __const wchar_t *__s2,
 			__locale_t __loc) __THROW;
+extern int wcscoll_l (__const wchar_t *__s1, __const wchar_t *__s2,
+		      __locale_t __loc) __THROW;
+
 /* Transform S2 into array pointed to by S1 such that if wcscmp is
    applied to two transformed strings the result is the as applying
    `wcscoll' to the original strings.  */
 extern size_t __wcsxfrm_l (wchar_t *__s1, __const wchar_t *__s2,
 			   size_t __n, __locale_t __loc) __THROW;
+extern size_t wcsxfrm_l (wchar_t *__s1, __const wchar_t *__s2,
+			 size_t __n, __locale_t __loc) __THROW;
 
 /* Duplicate S, returning an identical malloc'd string.  */
 extern wchar_t *wcsdup (__const wchar_t *__s) __THROW __attribute_malloc__;
@@ -410,33 +419,57 @@ extern unsigned long long int wcstoull (__const wchar_t *__restrict __nptr,
 extern long int __wcstol_l (__const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr, int __base,
 			    __locale_t __loc) __THROW;
+extern long int wcstol_l (__const wchar_t *__restrict __nptr,
+			  wchar_t **__restrict __endptr, int __base,
+			  __locale_t __loc) __THROW;
 
 extern unsigned long int __wcstoul_l (__const wchar_t *__restrict __nptr,
 				      wchar_t **__restrict __endptr,
 				      int __base, __locale_t __loc) __THROW;
+extern unsigned long int wcstoul_l (__const wchar_t *__restrict __nptr,
+				    wchar_t **__restrict __endptr,
+				    int __base, __locale_t __loc) __THROW;
 
 __extension__
 extern long long int __wcstoll_l (__const wchar_t *__restrict __nptr,
 				  wchar_t **__restrict __endptr,
 				  int __base, __locale_t __loc) __THROW;
+__extension__
+extern long long int wcstoll_l (__const wchar_t *__restrict __nptr,
+				wchar_t **__restrict __endptr,
+				int __base, __locale_t __loc) __THROW;
 
 __extension__
 extern unsigned long long int __wcstoull_l (__const wchar_t *__restrict __nptr,
 					    wchar_t **__restrict __endptr,
 					    int __base, __locale_t __loc)
      __THROW;
+__extension__
+extern unsigned long long int wcstoull_l (__const wchar_t *__restrict __nptr,
+					  wchar_t **__restrict __endptr,
+					  int __base, __locale_t __loc)
+     __THROW;
 
 extern double __wcstod_l (__const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr, __locale_t __loc)
+     __THROW;
+extern double wcstod_l (__const wchar_t *__restrict __nptr,
+			wchar_t **__restrict __endptr, __locale_t __loc)
      __THROW;
 
 extern float __wcstof_l (__const wchar_t *__restrict __nptr,
 			 wchar_t **__restrict __endptr, __locale_t __loc)
      __THROW;
+extern float wcstof_l (__const wchar_t *__restrict __nptr,
+		       wchar_t **__restrict __endptr, __locale_t __loc)
+     __THROW;
 
 extern long double __wcstold_l (__const wchar_t *__restrict __nptr,
 				wchar_t **__restrict __endptr,
 				__locale_t __loc) __THROW;
+extern long double wcstold_l (__const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr,
+			      __locale_t __loc) __THROW;
 #endif /* GNU */
 
 

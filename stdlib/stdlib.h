@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991-99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -215,32 +215,55 @@ extern unsigned long long int strtoull (__const char *__restrict __nptr,
 extern long int __strtol_l (__const char *__restrict __nptr,
 			    char **__restrict __endptr, int __base,
 			    __locale_t __loc) __THROW;
+extern long int strtol_l (__const char *__restrict __nptr,
+			  char **__restrict __endptr, int __base,
+			  __locale_t __loc) __THROW;
 
 extern unsigned long int __strtoul_l (__const char *__restrict __nptr,
 				      char **__restrict __endptr,
 				      int __base, __locale_t __loc) __THROW;
+extern unsigned long int strtoul_l (__const char *__restrict __nptr,
+				    char **__restrict __endptr,
+				    int __base, __locale_t __loc) __THROW;
 
 __extension__
 extern long long int __strtoll_l (__const char *__restrict __nptr,
 				  char **__restrict __endptr, int __base,
 				  __locale_t __loc) __THROW;
+__extension__
+extern long long int strtoll_l (__const char *__restrict __nptr,
+				char **__restrict __endptr, int __base,
+				__locale_t __loc) __THROW;
 
 __extension__
 extern unsigned long long int __strtoull_l (__const char *__restrict __nptr,
 					    char **__restrict __endptr,
 					    int __base, __locale_t __loc)
      __THROW;
+__extension__
+extern unsigned long long int strtoull_l (__const char *__restrict __nptr,
+					  char **__restrict __endptr,
+					  int __base, __locale_t __loc)
+     __THROW;
 
 extern double __strtod_l (__const char *__restrict __nptr,
 			  char **__restrict __endptr, __locale_t __loc)
      __THROW;
+extern double strtod_l (__const char *__restrict __nptr,
+			char **__restrict __endptr, __locale_t __loc)
+     __THROW;
 
 extern float __strtof_l (__const char *__restrict __nptr,
 			 char **__restrict __endptr, __locale_t __loc) __THROW;
+extern float strtof_l (__const char *__restrict __nptr,
+		       char **__restrict __endptr, __locale_t __loc) __THROW;
 
 extern long double __strtold_l (__const char *__restrict __nptr,
 				char **__restrict __endptr,
 				__locale_t __loc) __THROW;
+extern long double strtold_l (__const char *__restrict __nptr,
+			      char **__restrict __endptr,
+			      __locale_t __loc) __THROW;
 #endif /* GNU */
 
 

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2001,02
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -214,38 +215,44 @@ toupper (int __c) __THROW
 #  define __isctype_l(c, type, locale) \
   ((locale)->__ctype_b[(int) (c)] & (unsigned short int) type)
 
-# define __exctype_l(name)	extern int name (int, __locale_t) __THROW
+# define __exctype_l(name) 						      \
+  extern int name (int, __locale_t) __THROW;				      \
+  extern int __##name (int, __locale_t) __THROW
 
 /* The following names are all functions:
      int isCHARACTERISTIC(int c, locale_t *locale);
    which return nonzero iff C has CHARACTERISTIC.
    For the meaning of the characteristic names, see the `enum' above.  */
-__exctype_l (__isalnum_l);
-__exctype_l (__isalpha_l);
-__exctype_l (__iscntrl_l);
-__exctype_l (__isdigit_l);
-__exctype_l (__islower_l);
-__exctype_l (__isgraph_l);
-__exctype_l (__isprint_l);
-__exctype_l (__ispunct_l);
-__exctype_l (__isspace_l);
-__exctype_l (__isupper_l);
-__exctype_l (__isxdigit_l);
+__exctype_l (isalnum_l);
+__exctype_l (isalpha_l);
+__exctype_l (iscntrl_l);
+__exctype_l (isdigit_l);
+__exctype_l (islower_l);
+__exctype_l (isgraph_l);
+__exctype_l (isprint_l);
+__exctype_l (ispunct_l);
+__exctype_l (isspace_l);
+__exctype_l (isupper_l);
+__exctype_l (isxdigit_l);
 
-__exctype_l (__isblank_l);
+__exctype_l (isblank_l);
 
 
 /* Return the lowercase version of C in locale L.  */
 extern int __tolower_l (int __c, __locale_t __l) __THROW;
+extern int tolower_l (int __c, __locale_t __l) __THROW;
 
 /* Return the uppercase version of C.  */
 extern int __toupper_l (int __c, __locale_t __l) __THROW;
+extern int toupper_l (int __c, __locale_t __l) __THROW;
 
 # if __GNUC__ >= 2 && defined __OPTIMIZE__ && !defined __cplusplus
 #  define __tolower_l(c, locale) \
   __tobody (c, __tolower_l, (locale)->__ctype_tolower, (c, locale))
 #  define __toupper_l(c, locale) \
   __tobody (c, __toupper_l, (locale)->__ctype_toupper, (c, locale))
+#  define tolower_l(c, locale)	__tolower_l ((c), (locale))
+#  define toupper_l(c, locale)	__toupper_l ((c), (locale))
 # endif	/* Optimizing gcc */
 
 
@@ -265,8 +272,27 @@ extern int __toupper_l (int __c, __locale_t __l) __THROW;
 #  define __isblank_l(c,l)	__isctype_l((c), _ISblank, (l))
 
 #  if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
-#   define __isascii_l(c,l)	__isascii(c)
-#   define __toascii_l(c,l)	__toascii(c)
+#   define __isascii_l(c,l)	((l), __isascii (c))
+#   define __toascii_l(c,l)	((l), __toascii (c))
+#  endif
+
+#  define isalnum_l(c,l)	__isalnum_l ((c), (l))
+#  define isalpha_l(c,l)	__isalpha_l ((c), (l))
+#  define iscntrl_l(c,l)	__iscntrl_l ((c), (l))
+#  define isdigit_l(c,l)	__isdigit_l ((c), (l))
+#  define islower_l(c,l)	__islower_l ((c), (l))
+#  define isgraph_l(c,l)	__isgraph_l ((c), (l))
+#  define isprint_l(c,l)	__isprint_l ((c), (l))
+#  define ispunct_l(c,l)	__ispunct_l ((c), (l))
+#  define isspace_l(c,l)	__isspace_l ((c), (l))
+#  define isupper_l(c,l)	__isupper_l ((c), (l))
+#  define isxdigit_l(c,l)	__isxdigit_l ((c), (l))
+
+#  define isblank_l(c,l)	__isblank_l ((c), (l))
+
+#  if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
+#   define isascii_l(c,l)	__isascii ((c), (l))
+#   define toascii_l(c,l)	__toascii ((c), (l))
 #  endif
 
 # endif /* Not __NO_CTYPE.  */

@@ -1,5 +1,5 @@
 /* Convert string representing a number to float value, using given locale.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,3 +27,5 @@ extern unsigned long long int ____strtoull_l_internal (const char *, char **,
 						       int, int, __locale_t);
 
 #include <strtof.c>
+
+weak_alias (__strtof_l, strtof_l)

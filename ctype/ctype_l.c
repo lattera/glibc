@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,28 +22,31 @@
 /* Provide real-function versions of all the ctype macros.  */
 
 #define	func(name, type) \
-  int name (int c, __locale_t l) { return __isctype_l (c, type, l); }
+  int __##name (int c, __locale_t l) { return __isctype_l (c, type, l); } \
+  weak_alias (__##name, name)
 
-func (__isalnum_l, _ISalnum)
-func (__isalpha_l, _ISalpha)
-func (__iscntrl_l, _IScntrl)
-func (__isdigit_l, _ISdigit)
-func (__islower_l, _ISlower)
-func (__isgraph_l, _ISgraph)
-func (__isprint_l, _ISprint)
-func (__ispunct_l, _ISpunct)
-func (__isspace_l, _ISspace)
-func (__isupper_l, _ISupper)
-func (__isxdigit_l, _ISxdigit)
+func (isalnum_l, _ISalnum)
+func (isalpha_l, _ISalpha)
+func (iscntrl_l, _IScntrl)
+func (isdigit_l, _ISdigit)
+func (islower_l, _ISlower)
+func (isgraph_l, _ISgraph)
+func (isprint_l, _ISprint)
+func (ispunct_l, _ISpunct)
+func (isspace_l, _ISspace)
+func (isupper_l, _ISupper)
+func (isxdigit_l, _ISxdigit)
 
 int
 (__tolower_l) (int c, __locale_t l)
 {
   return l->__ctype_tolower[c];
 }
+weak_alias (__tolower_l, tolower_l)
 
 int
 (__toupper_l) (int c, __locale_t l)
 {
   return l->__ctype_toupper[c];
 }
+weak_alias (__toupper_l, toupper_l)

@@ -27,26 +27,27 @@
 /* Provide real-function versions of all the wctype macros.  */
 
 #define	func(name, type) \
-  int name (wint_t wc, __locale_t locale)				      \
+  int __##name (wint_t wc, __locale_t locale)				      \
   {									      \
     size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + type; \
     const char *desc = locale->__locales[LC_CTYPE]->values[i].string;	      \
     return wctype_table_lookup (desc, wc);				      \
   }									      \
-  libc_hidden_def (name)
+  libc_hidden_def (__##name)						      \
+  weak_alias (__##name, name)
 
-func (__iswalnum_l, __ISwalnum)
-func (__iswalpha_l, __ISwalpha)
-func (__iswblank_l, __ISwblank)
-func (__iswcntrl_l, __ISwcntrl)
-func (__iswdigit_l, __ISwdigit)
-func (__iswlower_l, __ISwlower)
-func (__iswgraph_l, __ISwgraph)
-func (__iswprint_l, __ISwprint)
-func (__iswpunct_l, __ISwpunct)
-func (__iswspace_l, __ISwspace)
-func (__iswupper_l, __ISwupper)
-func (__iswxdigit_l, __ISwxdigit)
+func (iswalnum_l, __ISwalnum)
+func (iswalpha_l, __ISwalpha)
+func (iswblank_l, __ISwblank)
+func (iswcntrl_l, __ISwcntrl)
+func (iswdigit_l, __ISwdigit)
+func (iswlower_l, __ISwlower)
+func (iswgraph_l, __ISwgraph)
+func (iswprint_l, __ISwprint)
+func (iswpunct_l, __ISwpunct)
+func (iswspace_l, __ISwspace)
+func (iswupper_l, __ISwupper)
+func (iswxdigit_l, __ISwxdigit)
 
 wint_t
 (__towlower_l) (wint_t wc, __locale_t locale)
@@ -56,6 +57,7 @@ wint_t
   return wctrans_table_lookup (desc, wc);
 }
 libc_hidden_def (__towlower_l)
+weak_alias (__towlower_l, towlower_l)
 
 wint_t
 (__towupper_l) (wint_t wc, __locale_t locale)
@@ -65,3 +67,4 @@ wint_t
   return wctrans_table_lookup (desc, wc);
 }
 libc_hidden_def (__towupper_l)
+weak_alias (__towupper_l, towupper_l)

@@ -1,3 +1,43 @@
+2002-08-06  Roland McGrath  <roland@redhat.com>
+
+	* locale/Versions (libc: GLIBC_2.3): Add all the *_l functions
+	with no __ prefix.
+	* locale/langinfo.h [__USE_GNU]: Declare nl_langinfo_l.
+	* ctype/ctype.h [__USE_GNU]: Add declarations and macros for
+	all *_l functions with no __ prefix.
+	* wctype/wcfuncs_l.c: Define weak aliases without __ for all fns.
+	* ctype/ctype_l.c: Likewise.
+	* locale/nl_langinfo.c: Likewise.
+	* string/string.h [__USE_GNU]: Add decls for all *_l fns with no __.
+	* stdlib/stdlib.h [__USE_GNU]: Likewise.
+	* wcsmbs/wchar.h [__USE_GNU]: Likewise.
+	* wctype/wctype.h [__USE_GNU]: Likewise.
+	* string/strcoll_l.c (strcoll_l): Define as weak alias.
+	* string/strxfrm_l.c (strxfrm_l): Define as weak alias.
+	* sysdeps/generic/strcasecmp_l.c (strcasecmp_l): Define as weak alias.
+	* sysdeps/generic/strncase_l.c (strncasecmp_l): Define as weak alias.
+	* stdlib/strtod_l.c (strtod_l): Define as weak alias.
+	* stdlib/strtof_l.c (strtof_l): Define as weak alias.
+	* stdlib/strtold_l.c (strtold_l): Define as weak alias.
+	* wcsmbs/wcscasecmp_l.c (wcscasecmp_l): Define as weak alias.
+	(__wcscasecmp_l): Add libc_hidden_def.
+	* wcsmbs/wcsncase_l.c (wcsncasecmp_l): Define as weak alias.
+	(__wcsncasecmp_l): Add libc_hidden_def.
+	* wcsmbs/wcstof_l.c (wcstof_l): Define as weak alias.
+	* wcsmbs/wcstod_l.c (wcstod_l): Define as weak alias.
+	* wcsmbs/wcstold_l.c (wcstold_l): Define as weak alias.
+	* wcsmbs/wcscoll_l.c (wcscoll_l): Define as weak alias.
+	* wcsmbs/wcsxfrm_l.c (wcsxfrm_l): Define as weak alias.
+	* sysdeps/generic/wcstol_l.c (wcstol_l): Define as weak alias.
+	* sysdeps/generic/wcstoll_l.c (wcstoll_l): Define as weak alias.
+	* sysdeps/generic/wcstoul_l.c (wcstoul_l): Define as weak alias.
+	* sysdeps/generic/wcstoull_l.c (wcstoull_l): Define as weak alias.
+	* sysdeps/wordsize-64/wcstol_l.c (wcstoll_l): Define as weak alias.
+	* sysdeps/wordsize-64/wcstoul_l.c (wcstoull_l): Define as weak alias.
+	* wctype/wctrans_l.c (wctrans_l) Define as weak alias.
+	* wctype/towctrans_l.c (towctrans_l) Define as weak alias.
+	* wctype/wctype_l.c (wctype_l) Define as weak alias.
+
 2002-08-05  Roland McGrath  <roland@redhat.com>
 
 	* include/rpc/auth.h: Use libc_hidden_proto for getnetname,

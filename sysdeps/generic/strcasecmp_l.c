@@ -20,3 +20,4 @@
 #include <sysdeps/generic/strcasecmp.c>
 
 libc_hidden_def (__strcasecmp_l)
+weak_alias (__strcasecmp_l, strcasecmp_l)

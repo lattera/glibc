@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -47,3 +47,4 @@ __wctype_l (const char *property, __locale_t locale)
   i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_OFFSET)].word + result;
   return (wctype_t) locale->__locales[LC_CTYPE]->values[i].string;
 }
+weak_alias (__wctype_l, wctype_l)
