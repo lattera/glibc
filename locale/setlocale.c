@@ -325,7 +325,8 @@ setlocale (int category, const char *locale)
 		save_errno = errno;
 
 		while (++category < LC_ALL)
-		  if (_nl_current[category] != NULL)
+		  if (_nl_current[category] != NULL
+		      && newdata[category] != _nl_C[category])
 		    _nl_free_locale (newdata[category]);
 		  else
 		    if (_nl_current[category] == NULL
