@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pjb27@cam.ac.uk>, 1997.
 
@@ -23,8 +23,3 @@ const struct in6_addr in6addr_any =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } } };
 const struct in6_addr in6addr_loopback =
 { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 } } };
-
-int inet6_isipv4mapped(const struct in6_addr *addr)
-{
-  return IN6_IS_ADDR_V4MAPPED(addr);
-}

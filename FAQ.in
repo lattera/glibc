@@ -75,7 +75,8 @@ program has the needed functionality.
 We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
 have bugs and/or are missing features.  Version 3.76 has bugs which
 appear when building big projects like GNU libc. 3.76.1 appears to work but
-some people have reported problems.
+some people have reported problems.  If you build GNU make 3.77 from source, 
+please read question ?make first.
 
 ??	Do I need a special linker or assembler?
 
@@ -1230,6 +1231,15 @@ for Sydney we have
 
 Great!  To get this bug fixed convince the authorities to change the laws
 and regulations of the country this effects.  glibc behaves correctly.
+
+??make	I've build make 3.77 against glibc 2.1 and now make gets
+	segmentation faults.
+
+{AJ} GNU make 3.77 has support for 64 bit filesystems which is slightly
+broken (and one of the new features in the GNU C library 2.1 is 64 bit
+filesystem support :-( ).  To get a working make you can use either make
+3.75 or patch 3.77.  A working patch is available via RedHat's Rawhide server
+(ftp://rawhide.redhat.com/SRPMS/SRPMS/make-3.77-*src.rpm).
 
 
 Answers were given by:

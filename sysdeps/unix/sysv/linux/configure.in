@@ -102,25 +102,30 @@ case "$machine" in
 esac
 changequote([,])
 
-# If $prefix/include/{net,scsi} are symlinks, make install will
-# clobber what they're linked to (probably a kernel tree).
-# test -L ought to work on all Linux boxes.
-echo $ac_n "checking for symlinks in ${prefix}/include...$ac_c"
-if test -L ${prefix}/include/net
-then message="   ${prefix}/include/net is a symlink"
-fi
-if test -L ${prefix}/include/scsi
-then message="$message
-   ${prefix}/include/scsi is a symlink"
-fi
-if test -n "$message"; then
-echo "
-*** error:
+if test $host = $build; then
+  # If $prefix/include/{net,scsi} are symlinks, make install will
+  # clobber what they're linked to (probably a kernel tree).
+  # test -L ought to work on all Linux boxes.
+  if test "x$prefix" != xNONE; then
+    ac_prefix=$prefix
+  else
+    ac_prefix=$ac_default_prefix
+  fi
+  AC_MSG_CHECKING([for symlinks in ${ac_prefix}/include])
+  if test -L ${ac_prefix}/include/net; then
+    message="   ${ac_prefix}/include/net is a symlink"
+  fi
+  if test -L ${ac_prefix}/include/scsi; then
+    message="$message
+   ${ac_prefix}/include/scsi is a symlink"
+  fi
+  if test -n "$message"; then
+    AC_MSG_ERROR([
 $message
 \`make install' will destroy the target of the link(s).
 Delete the links and re-run configure, or better still, move the entire
-${prefix}/include directory out of the way."
-exit 1
-else
-echo " ok"
+${ac_prefix}/include directory out of the way.])
+  else
+    AC_MSG_RESULT(ok)
+  fi
 fi

@@ -1,3 +1,25 @@
+1998-12-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add R_MIPS_JALR and adjust R_MIPS_NUM appropriately.
+
+1998-12-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* inet/Versions: Remove inet6_isipv4mapped.
+
+1998-12-02  Philip Blundell  <pb@nexus.co.uk>
+
+	* inet/in6_addr.c (inet6_isipv4mapped): Obsolete, deleted.
+
+1998-11-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/time.texi (Formatting Date and Time): Fix typo.
+
+1998-11-30  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/configure.in: Only check for symlinks
+	when configuring natively.  Use autoconf macros instead of rolling
+	our own.  Handle defaulted prefix.
+
 1998-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.105.

@@ -1196,8 +1196,9 @@ typedef struct
 #define R_MIPS_ADD_IMMEDIATE	34
 #define R_MIPS_PJUMP		35
 #define R_MIPS_RELGOT		36
+#define R_MIPS_JALR		37
 /* Keep this the last entry.  */
-#define R_MIPS_NUM		37
+#define R_MIPS_NUM		38
 
 /* Legal values for p_type field of Elf32_Phdr.  */
 
@@ -1489,11 +1490,11 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* ARM-specific values for sh_flags */
 #define SHF_ARM_ENTRYSECT  0x10000000   /* Section contains an entry point */
-#define SHF_ARM_COMDEF     0x80000000   /* Section may be multiply defined 
+#define SHF_ARM_COMDEF     0x80000000   /* Section may be multiply defined
 					   in the input to a link step */
 
 /* ARM-specific program header flags */
-#define PF_ARM_SB          0x10000000   /* Segment contains the location 
+#define PF_ARM_SB          0x10000000   /* Segment contains the location
 					   addressed by the static base */
 
 /* ARM relocs.  */

@@ -53,6 +53,5 @@ libc {
 
     # i*
     if_freenameindex; if_indextoname; if_nameindex; if_nametoindex;
-    inet6_isipv4mapped;
   }
 }
