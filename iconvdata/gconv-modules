@@ -959,6 +959,7 @@ module	INTERNAL		EUC-CN//		EUC-CN		1
 
 #	from			to			module		cost
 alias	GB13000//		GBK//
+alias	CP936//			GBK//
 module	GBK//			INTERNAL		GBK		1
 module	INTERNAL		GBK//			GBK		1
 
