@@ -20,12 +20,9 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 	.text
-	.globl _start	/* what ELF wants */
-	.globl __start	/* for backwards (ECOFF) comatibility */
 	.align 3
-	.ent __start, 0
+	.ent _start, 0
 _start:
-__start:
 	.frame fp, 0, zero
 	mov	zero, fp
 	br	gp, 1f
@@ -62,7 +59,6 @@ __start:
 	mov	a1, s1
 	mov	a2, s2
 
-#ifdef HAVE_INITFINI
   /* Call _init, the entry point to our own .init section.  */
 	jsr	ra, _init
 	ldgp	gp, 0(ra)
@@ -71,16 +67,12 @@ __start:
 	lda	a0, _fini
 	jsr	ra, atexit
 	ldgp	gp, 0(ra)
-#else
-  /* initialize constructors: */
-	jsr	ra, __main
-	ldgp	gp, 0(ra)
-#endif
+
+  /* Call the user's main and exit with its return value.  */
 	mov	s0, a0
 	mov	s1, a1
 	mov	s2, a2
 
-  /* Call the user's main and exit with its return value.  */
 	jsr	ra, main
 	ldgp	gp, 0(ra)
 
@@ -90,7 +82,10 @@ __start:
   /* Die very horribly if exit returns.  Call_pal hlt is callable from
      kernel mode only; this will result in an illegal instruction trap.  */
 	call_pal 0
-END(__start)
+	.end _start
+
+/* For ECOFF backwards compatibility. */
+weak_alias(_start, __start)
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data

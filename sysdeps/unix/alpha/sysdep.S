@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@ Cambridge, MA 02139, USA.  */
 
 	.section .bss
 	.globl errno
+	.align 2
 errno:	.space 4
 #ifdef __ELF__
 	.type errno, @object

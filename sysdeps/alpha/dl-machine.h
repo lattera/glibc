@@ -186,13 +186,17 @@ _dl_runtime_resolve:
 #define RTLD_START asm ("\
 .text
 	.globl _start
-	.globl _dl_start_user
+	.ent _start
 _start:
-	br	$gp,0f
+	br	$gp, 0f
 0:	ldgp	$gp, 0($gp)
 	/* Pass pointer to argument block to _dl_start.  */
 	mov	$sp, $16
 	bsr	$26, _dl_start..ng
+	.end _start
+	/* FALLTHRU */
+	.globl _dl_start_user
+	.ent _dl_start_user
 _dl_start_user:
 	/* Save the user entry point address in s0.  */
 	mov	$0, $9
@@ -225,7 +229,8 @@ _dl_start_user:
 	lda	$0, _dl_fini
 	/* Jump to the user's entry point.  */
 	mov	$9, $27
-	jmp	($9)");
+	jmp	($9)
+	.end _dl_start_user");
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
@@ -377,8 +382,6 @@ elf_machine_rela (struct link_map *map,
 	    sym_value += reloc->r_addend;
 	  *reloc_addr = sym_value;
 	}
-      else if (r_info == R_ALPHA_COPY)
-	memcpy (reloc_addr, (void *) sym_value, sym->st_size);
       else
 	assert (! "unexpected dynamic reloc type");
     }
