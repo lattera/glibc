@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -58,16 +58,25 @@ _hurd_sig_post (pid_t pid, int sig, mach_port_t arg_refport)
       err = __proc_getpgrppids (proc, - pid, &pids, &npids);
       if (!err)
 	{
+	  int self = 0;
 	  for (i = 0; i < npids; ++i)
-	    {
-	      kill_pid (pids[i]);
-	      if (err == ESRCH)
-		/* The process died already.  Ignore it.  */
-		err = 0;
-	    }
+	    if (pids[i] == _hurd_pid)
+	      /* We must do ourselves last so we are not suspended
+		 and fail to suspend the other processes in the pgrp.  */
+	      self = 1;
+	    else
+	      {
+		kill_pid (pids[i]);
+		if (err == ESRCH)
+		  /* The process died already.  Ignore it.  */
+		  err = 0;
+	      }
 	  if (pids != pidsbuf)
 	    __vm_deallocate (__mach_task_self (),
 			     (vm_address_t) pids, npids * sizeof (pids[0]));
+
+	  if (self)
+	    kill_pid (_hurd_pid);
 	}
     }
   else
