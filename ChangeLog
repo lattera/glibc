@@ -1,3 +1,17 @@
+2002-04-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* elf/elf.h: Define R_SH_TLS_xxx macros.
+	* elf/rtld.c: Remove an extra parenthesis.
+	* elf/tls-macros.h: Define SH version TLS_LE, TLS_IE, TLS_LD and
+	TLS_GD macros.
+	* sysdeps/generic/dl-tls.c: Add a missing semi-colon.
+	* sysdeps/sh/dl-lookupcfg.h: New file.
+	* sysdeps/sh/dl-tls.h: New file.
+	* sysdeps/sh/dl-machine.h (elf_machine_type_class): Set
+	ELF_RTYPE_CLASS_PLT also for the three TLS relocations.
+	(elf_machine_rela): Handle R_SH_TLS_DTPMOD32, R_SH_TLS_DTPOFF32 and
+	R_SH_TLS_TPOFF32 relocations.
+
 2002-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* cppflags-iterator.mk (cpp-srcs-left): Define NOT_IN_libc instead

@@ -64,7 +64,8 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 #define INIT_THREAD_SELF(descr, nr) \
 {									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
-    { nr, (unsigned long int) descr, sizeof (*descr), 1, 0, 0, 0, 0, 1, 0 };  \
+    { nr, (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
+      1, 0, 0, 0, 0, 1, 0 };						      \
   if (__modify_ldt (1, &ldt_entry, sizeof (ldt_entry)) != 0)		      \
     abort ();								      \
   __asm__ __volatile__ ("movw %w0, %%gs" : : "q" (nr * 8 + 7));		      \

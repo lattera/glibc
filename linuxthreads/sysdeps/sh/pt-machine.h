@@ -45,6 +45,11 @@ testandset (int *spinlock)
   return (ret == 0);
 }
 
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS 1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE     32*1024*1024
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
@@ -60,5 +65,11 @@ struct _pthread_descr_struct;
 /* Initialize the thread-unique value.  */
 #define INIT_THREAD_SELF(descr, nr) \
   ({ __asm__ __volatile__("ldc %0,gbr" : : "r" (descr));})
+
+/* Access to data in the thread descriptor is easy.  */
+#define THREAD_GETMEM(descr, member) THREAD_SELF->member
+#define THREAD_GETMEM_NC(descr, member) THREAD_SELF->member
+#define THREAD_SETMEM(descr, member, value) THREAD_SELF->member = (value)
+#define THREAD_SETMEM_NC(descr, member, value) THREAD_SELF->member = (value)
 
 #endif /* pt-machine.h */

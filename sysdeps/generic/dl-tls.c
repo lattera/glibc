@@ -174,7 +174,7 @@ _dl_determine_tlsoffset (void)
   slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
   if (slotinfo[1].map != NULL)
     {
-      size_t prev_size
+      size_t prev_size;
 
       offset = roundup (offset, slotinfo[1].map->l_tls_align);
       slotinfo[1].map->l_tls_offset = offset;

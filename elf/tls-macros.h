@@ -95,6 +95,84 @@
      __l; })
 # endif
 
+#elif defined __sh__
+# define TLS_LE(x) \
+  ({ int *__l; void *__tp;						      \
+     asm ("stc gbr,%1\n\t"						      \
+	  "mov.l 1f,%0\n\t"						      \
+	  "bra 2f\n\t"							      \
+	  " add %1,%0\n\t"						      \
+	  ".align 2\n\t"						      \
+	  "1: .long " #x "@tpoff\n\t"					      \
+	  "2:"								      \
+	  : "=r" (__l), "=r" (__tp));					      \
+     __l; })
+
+# define TLS_IE(x) \
+  ({ int *__l; void *__tp;						      \
+     asm ("mova 0f,r0\n\t"						      \
+	  "mov.l 0f,r12\n\t"						      \
+	  "add r0,r12\n\t"						      \
+	  "mov.l 1f,r0\n\t"						      \
+	  "stc gbr,%1\n\t"						      \
+	  "mov.l @(r0,r12),%0\n\t"					      \
+	  "bra 2f\n\t"							      \
+	  " add %1,%0\n\t"						      \
+	  ".align 2\n\t"						      \
+	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
+	  "1: .long " #x "@gottpoff\n\t"				      \
+	  "2:"								      \
+	  : "=r" (__l), "=r" (__tp) : : "r0", "r12");			      \
+     __l; })
+
+# define TLS_LD(x) \
+  ({ int *__l;								      \
+     asm ("mova 0f,r0\n\t"						      \
+	  "mov.l 0f,r12\n\t"						      \
+	  "add r0,r12\n\t"						      \
+	  "mov.l 1f,r4\n\t"						      \
+	  "add r12,r4\n\t"						      \
+	  "mova 2f,r0\n\t"						      \
+	  "mov.l 2f,r1\n\t"						      \
+	  "add r0,r1\n\t"						      \
+	  "jsr @r1\n\t"							      \
+	  " nop\n\t"							      \
+	  "mov.l 3f,%0\n\t"						      \
+	  "bra 4f\n\t"							      \
+	  " add r0,%0\n\t"						      \
+	  ".align 2\n\t"						      \
+	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
+	  "1: .long " #x "@tlsldm\n\t"					      \
+	  "2: .long __tls_get_addr@plt\n\t"				      \
+	  "3: .long " #x "@dtpoff\n\t"					      \
+	  "4:"								      \
+	  : "=r" (__l) : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",    \
+			   "r12", "pr", "t");					      \
+     __l; })
+
+# define TLS_GD(x) \
+  ({ int *__l;								      \
+     asm ("mova 0f,r0\n\t"						      \
+	  "mov.l 0f,r12\n\t"						      \
+	  "add r0,r12\n\t"						      \
+	  "mov.l 1f,r4\n\t"						      \
+	  "add r12,r4\n\t"						      \
+	  "mova 2f,r0\n\t"						      \
+	  "mov.l 2f,r1\n\t"						      \
+	  "add r0,r1\n\t"						      \
+	  "jsr @r1\n\t"							      \
+	  " nop\n\t"							      \
+	  "bra 3f\n\t"							      \
+	  " mov r0,%0\n\t"						      \
+	  ".align 2\n\t"						      \
+	  "0: .long _GLOBAL_OFFSET_TABLE_\n\t"				      \
+	  "1: .long " #x "@tlsgd\n\t"					      \
+	  "2: .long __tls_get_addr@plt\n\t"				      \
+	  "3:"								      \
+	  : "=r" (__l) : : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",    \
+			   "r12", "pr", "t");					      \
+     __l; })
+
 #else
 # error "No support for this architecture so far."
 #endif

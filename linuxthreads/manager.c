@@ -244,15 +244,16 @@ __pthread_manager(void *arg)
 
 int __pthread_manager_event(void *arg)
 {
+  pthread_descr self = arg;
   /* If we have special thread_self processing, initialize it.  */
 #ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(arg, 1);
+  INIT_THREAD_SELF(self, 1);
 #endif
 
   /* Get the lock the manager will free once all is correctly set up.  */
-  __pthread_lock (THREAD_GETMEM(((pthread_descr) arg), p_lock), NULL);
+  __pthread_lock (THREAD_GETMEM(self, p_lock), NULL);
   /* Free it immediately.  */
-  __pthread_unlock (THREAD_GETMEM(((pthread_descr) arg), p_lock));
+  __pthread_unlock (THREAD_GETMEM(self, p_lock));
 
   return __pthread_manager(arg);
 }

@@ -303,7 +303,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 # elif TLS_DTV_AT_TP
 	GL(dl_rtld_map).l_tls_offset = roundup (TLS_INIT_TCB_SIZE,
 						GL(dl_rtld_map).l_tls_align);
-	initdtv[2].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset);
+	initdtv[2].pointer = (char *) tlsblock + GL(dl_rtld_map).l_tls_offset;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif

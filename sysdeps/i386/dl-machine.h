@@ -401,7 +401,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 # ifdef RTLD_BOOTSTRAP
 	  *reloc_addr = GL(dl_rtld_map).l_tls_offset - sym->st_value;
 # else
-	  /* We know the offset of object the symbol is contained is.
+	  /* We know the offset of object the symbol is contained in.
 	     It is a positive value which will be subtracted from the
 	     thread pointer.  To get the variable position in the TLS
 	     block we subtract the offset from that of the TLS block.  */
