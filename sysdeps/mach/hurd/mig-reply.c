@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -52,8 +52,10 @@ __mig_dealloc_reply_port (mach_port_t arg)
 
   port = reply_port;
   reply_port = MACH_PORT_NULL;	/* So the mod_refs RPC won't use it.  */
-  __mach_port_mod_refs (__mach_task_self (), port,
-			MACH_PORT_RIGHT_RECEIVE, -1);
+
+  if (MACH_PORT_VALID (port))
+    __mach_port_mod_refs (__mach_task_self (), port,
+			  MACH_PORT_RIGHT_RECEIVE, -1);
 }
 weak_alias (__mig_dealloc_reply_port, mig_dealloc_reply_port)
 
