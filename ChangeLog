@@ -1,5 +1,6 @@
 2004-01-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.c: Initialize __libc_stack_end.
 	* elf/rtld.c: Initialize _dl_argv to allow aliasing.
 
 	* resolv/resolv.h: Add RES_USEBSTRING.
