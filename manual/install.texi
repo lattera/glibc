@@ -119,9 +119,10 @@ with old binutils.)
 Use this option if your computer lacks hardware floating-point support
 and your operating system does not emulate an FPU.
 
-@item --disable-static
-Don't build static libraries.  Static libraries aren't that useful these
-days, but we recommend you build them in case you need them.
+@c disable static doesn't work currently
+@c @item --disable-static
+@c Don't build static libraries.  Static libraries aren't that useful these
+@c days, but we recommend you build them in case you need them.
 
 @item --disable-shared
 Don't build shared libraries even if we could.  Not all systems support

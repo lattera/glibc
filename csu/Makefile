@@ -1,6 +1,6 @@
 # Makefile for csu code for GNU C library.
 
-# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 # This directory contains the C startup code (that which calls main).  This
 # consists of the startfile, built from start.c and installed as crt0.o
 # (traditionally) or crt1.o (for ELF).  In ELF we also install crti.o and
-# crtn.o, special "initializer" and "finalizer" files in used in the link
+# crtn.o, special "initializer" and "finalizer" files used in the link
 # to make the .init and .fini sections work right; both these files are
 # built (in an arcane manner) from initfini.c.
 

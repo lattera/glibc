@@ -1,3 +1,9 @@
+1999-04-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/install.texi (Configuring and compiling): Comment out
+	description of --disable-static since this doesn't work currently
+	(see change by Ulrich Drepper on 1998-12-07 for configure.in).
+
 1999-04-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Rewrite to
