@@ -39,7 +39,6 @@ libc_locked_map_ptr (map_handle);
    handling.  */
 libc_freeres_fn (ai_map_free)
 {
-
   if (map_handle.mapped != NO_MAPPING)
     free (map_handle.mapped);
 }

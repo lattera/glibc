@@ -1,8 +1,11 @@
 2004-09-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd.c (termination_handler): Reset timestamp so that
+	client immediately stop using the database.
+
 	* nscd/nscd-client.h (__nscd_get_map_ref): Drop volatile from last
 	parameter.
-	(__nscd_drop_map_ref): Change second parameter to be a referenc to
+	(__nscd_drop_map_ref): Change second parameter to be a reference to
 	a variable.  Update variable when cycle count changed.
 	* nscd/nscd_helper.c (__nscd_get_map_ref): Remove volatile here, too.
 	* nscd/nscd_getai.c: Correctly use __nscd_drop_map_ref.  Reinitialize
@@ -12,7 +15,7 @@
 	* nscd/nscd_getpw_r.c: Likewise.
 	* nscd/nscd_initgroups.c: Likewise.
 
-	* nscd/nscd.h: Add declaretion of addinitgroups and
+	* nscd/nscd.h: Add declaration of addinitgroups and
 	readdinitgroups.
 
 2004-09-30  Andreas Jaeger  <aj@suse.de>

@@ -430,9 +430,14 @@ termination_handler (int signum)
 
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
-    if (dbs[cnt].persistent)
-      // XXX async OK?
-      msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+    {
+      /* Make sure nobody keeps using the database.  */
+      dbs[cnt].head->timestamp = 0;
+
+      if (dbs[cnt].persistent)
+	// XXX async OK?
+	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+    }
 
   /* Shutdown the SELinux AVC.  */
   if (selinux_enabled)

@@ -66,6 +66,8 @@ include ../Rules
 CFLAGS-nscd_getpw_r.c = -fexceptions
 CFLAGS-nscd_getgr_r.c = -fexceptions
 CFLAGS-nscd_gethst_r.c = -fexceptions
+CFLAGS-nscd_getai.c = -fexceptions
+CFLAGS-nscd_initgroups.c = -fexceptions
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 CFLAGS-nscd.c = -fpie
@@ -89,7 +91,6 @@ CFLAGS-mem.c = -fpie
 CFLAGS-nscd_setup_thread.c = -fpie
 CFLAGS-aicache.c = -fpie
 CFLAGS-selinux.c = -fpie
-CFLAGS-nscd_initgroups.c = -fpie
 CFLAGS-initgrcache.c = -fpie
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
