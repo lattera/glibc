@@ -1,3 +1,15 @@
+1998-05-30  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* stdlib/gmp-impl.h: Support strange mixed-endian double format
+	used by ARM systems.
+	* sysdeps/arm/fpu/bits/fenv.h (FE_EXCEPTION_SHIFT): Rename to
+	FE_EXCEPT_SHIFT.
+	* sysdeps/arm/bits/fenv.h: Deleted.
+	* sysdeps/arm/fpu/ieee754.h: New file.
+	* sysdeps/arm/gmp-mparam.h: New file.
+	* stdlib/longlong.h (umul_ppmm): Temporarily disable broken ARM
+	implementation.
+
 1998-06-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/rpc/xdr.h (struct XDR): Don't mark xdr_ops element as const.

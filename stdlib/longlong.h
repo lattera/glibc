@@ -190,6 +190,7 @@ extern UDItype __udiv_qrnnd __P ((UDItype *, UDItype, UDItype, UDItype));
 	     "rI" ((USItype)(bh)),					\
 	     "r" ((USItype)(al)),					\
 	     "rI" ((USItype)(bl)))
+#if 0
 #define umul_ppmm(xh, xl, a, b) \
   __asm__ ("%@ Inlined umul_ppmm
 	mov	%|r0, %2, lsr #16
@@ -211,6 +212,7 @@ extern UDItype __udiv_qrnnd __P ((UDItype *, UDItype, UDItype, UDItype));
 	   : "r0", "r1", "r2")
 #define UMUL_TIME 20
 #define UDIV_TIME 100
+#endif
 #endif /* __arm__ */
 
 #if defined (__clipper__) && W_TYPE_SIZE == 32

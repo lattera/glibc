@@ -327,6 +327,23 @@ extern void impn_sqr_n _PROTO ((mp_ptr prodp, mp_srcptr up, mp_size_t size,
 #define IEEE_DOUBLE_BIG_ENDIAN 1
 #endif
 
+#ifndef IEEE_DOUBLE_MIXED_ENDIAN
+#define IEEE_DOUBLE_MIXED_ENDIAN 0
+#endif
+
+#if IEEE_DOUBLE_MIXED_ENDIAN
+union ieee_double_extract
+{
+  struct
+    {
+      unsigned int manh:20;
+      unsigned int exp:11;
+      unsigned int sig:1;
+      unsigned int manl:32;
+    } s;
+  double d;
+};
+#else
 #if IEEE_DOUBLE_BIG_ENDIAN
 union ieee_double_extract
 {
@@ -351,4 +368,5 @@ union ieee_double_extract
     } s;
   double d;
 };
+#endif
 #endif
