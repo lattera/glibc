@@ -52,11 +52,20 @@
 	ldm##cond	base,reglist
 #define RETINSTR(instr, regs...)\
 	instr	regs
+#ifdef __THUMB_INTERWORK__
+#define DO_RET(_reg)		\
+	bx _reg
+#else
+#define DO_RET(_reg)		\
+	mov pc, _reg
+#endif
 #else  /* APCS-26 */
 #define LOADREGS(cond, base, reglist...)\
 	ldm##cond	base,reglist^
 #define RETINSTR(instr, regs...)\
 	instr##s	regs
+#define DO_RET(_reg)		\
+	movs pc, _reg
 #endif
 
 /* Define an entry point visible from C.  */
