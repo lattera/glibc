@@ -45,17 +45,15 @@ __asm__ ("						\n\
 /*@_init_PROLOG_BEGINS*/				\n\
 	.section .init, \"ax\", @progbits		\n\
 	.globl	_init					\n\
-	.ent	_init					\n\
+	.type	_init,@function				\n\
+	.usepv	_init,std				\n\
 _init:							\n\
 	ldgp	$29, 0($27)				\n\
 	subq	$30, 16, $30				\n\
 	stq	$26, 0($30)				\n\
 	stq	$29, 8($30)				\n\
-	.prologue 1					\n\
 	bsr	$26, __pthread_initialize_minimal_internal !samegp \n\
 	.align 3					\n\
-	.end	_init					\n\
-	.size	_init, 0				\n\
 /*@_init_PROLOG_ENDS*/					\n\
 							\n\
 /*@_init_EPILOG_BEGINS*/				\n\
@@ -69,16 +67,14 @@ _init:							\n\
 /*@_fini_PROLOG_BEGINS*/				\n\
 	.section .fini, \"ax\", @progbits		\n\
 	.globl	_fini					\n\
-	.ent	_fini					\n\
+	.type	_fini,@function				\n\
+	.usepv	_fini,std				\n\
 _fini:							\n\
 	ldgp	$29, 0($27)				\n\
 	subq	$30, 16, $30				\n\
 	stq	$26, 0($30)				\n\
 	stq	$29, 8($30)				\n\
-	.prologue 1					\n\
 	.align 3					\n\
-	.end	_fini					\n\
-	.size	_fini, 0				\n\
 /*@_fini_PROLOG_ENDS*/					\n\
 							\n\
 /*@_fini_EPILOG_BEGINS*/				\n\
