@@ -11,6 +11,29 @@
 
 2003-03-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h (struct siginfo): Avoid
+	no-op padding element.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
+
+2003-03-26  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/i386/getgroups.c: Fix the error
+	condition check for the return value of getgroups32.
+
+2003-03-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (PSEUDO_NOERRNO):
+	Fix a typo.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h (PSEUDO_NOERRNO,
+	PSEUDO_END_NOERRNO): Define.
+	* sysdeps/unix/sysdep.h (PSEUDO_END_NOERRNO): Fix a typo.
+	Define to PSEUDO_END.
+
+2003-03-26  Ulrich Drepper  <drepper@redhat.com>
+
 	* abilist/librt.abilist: Add new timer interfaces for 64-bit archs.
 
 2003-03-25  Jiro SEKIBA  <jir@yamato.ibm.com>
