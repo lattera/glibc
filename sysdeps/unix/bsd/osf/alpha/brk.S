@@ -34,13 +34,13 @@ __curbrk:
 
 .text
 ENTRY(__brk)
-	! FIXME We do not check for asking for less than a page yet.
+	/* FIXME We do not check for asking for less than a page yet. */
 	ldiq v0, SYS_brk
 	call_pal PAL_callsys
 	bne a3, error
 
 	/* Update __curbrk and exit cleanly.  */
-!	ldgp gp, 0(t12)
+/*	ldgp gp, 0(t12) */
 	stl a0, __curbrk
 
 	mov zero, v0
