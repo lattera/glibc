@@ -146,6 +146,104 @@ RTLD_START
 # error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
 #endif
 
+#ifndef VALIDX
+# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
+#endif
+#ifndef ADDRIDX
+# define ADDRIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
+#endif
+
+/* This is the second half of _dl_start (below).  It can be inlined safely
+   under DONT_USE_BOOTSTRAP_MAP, where it is careful not to make any GOT
+   references.  When the tools don't permit us to avoid using a GOT entry
+   for _dl_rtld_global (no attribute_hidden support), we must make sure
+   this function is not inlined (see below).  */
+
+#ifdef DONT_USE_BOOTSTRAP_MAP
+static inline ElfW(Addr) __attribute__ ((always_inline))
+_dl_start_final (void *arg)
+#else
+static ElfW(Addr) __attribute__ ((noinline))
+_dl_start_final (void *arg, struct link_map *bootstrap_map_p)
+#endif
+{
+  ElfW(Addr) start_addr;
+  extern char _begin[] attribute_hidden;
+  extern char _end[] attribute_hidden;
+
+  if (HP_TIMING_AVAIL)
+    {
+      /* If it hasn't happen yet record the startup time.  */
+      if (! HP_TIMING_INLINE)
+	HP_TIMING_NOW (start_time);
+
+      /* Initialize the timing functions.  */
+      HP_TIMING_DIFF_INIT ();
+    }
+
+  /* Transfer data about ourselves to the permanent link_map structure.  */
+#ifndef DONT_USE_BOOTSTRAP_MAP
+  GL(dl_rtld_map).l_addr = bootstrap_map_p->l_addr;
+  GL(dl_rtld_map).l_ld = bootstrap_map_p->l_ld;
+  memcpy (GL(dl_rtld_map).l_info, bootstrap_map_p->l_info,
+	  sizeof GL(dl_rtld_map).l_info);
+  GL(dl_rtld_map).l_mach = bootstrap_map_p->l_mach;
+#endif
+  _dl_setup_hash (&GL(dl_rtld_map));
+  GL(dl_rtld_map).l_opencount = 1;
+  GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
+  GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
+  /* Copy the TLS related data if necessary.  */
+#if USE_TLS && !defined DONT_USE_BOOTSTRAP_MAP
+# ifdef HAVE___THREAD
+  assert (bootstrap_map_p->l_tls_modid != 0);
+# else
+  if (bootstrap_map_p->l_tls_modid != 0)
+# endif
+    {
+      GL(dl_rtld_map).l_tls_blocksize = bootstrap_map_p->l_tls_blocksize;
+      GL(dl_rtld_map).l_tls_align = bootstrap_map_p->l_tls_align;
+      GL(dl_rtld_map).l_tls_initimage_size
+	= bootstrap_map_p->l_tls_initimage_size;
+      GL(dl_rtld_map).l_tls_initimage = bootstrap_map_p->l_tls_initimage;
+      GL(dl_rtld_map).l_tls_offset = bootstrap_map_p->l_tls_offset;
+      GL(dl_rtld_map).l_tls_modid = 1;
+      GL(dl_rtld_map).l_tls_tp_initialized
+	= bootstrap_map_p->l_tls_tp_initialized;
+    }
+#endif
+
+#if HP_TIMING_AVAIL
+  HP_TIMING_NOW (GL(dl_cpuclock_offset));
+#endif
+
+  /* Call the OS-dependent function to set up life so we can do things like
+     file access.  It will call `dl_main' (below) to do all the real work
+     of the dynamic linker, and then unwind our frame and run the user
+     entry point on the same stack we entered on.  */
+  start_addr =  _dl_sysdep_start (arg, &dl_main);
+
+#ifndef HP_TIMING_NONAVAIL
+  if (HP_TIMING_AVAIL)
+    {
+      hp_timing_t end_time;
+
+      /* Get the current time.  */
+      HP_TIMING_NOW (end_time);
+
+      /* Compute the difference.  */
+      HP_TIMING_DIFF (rtld_total_time, start_time, end_time);
+    }
+#endif
+
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
+    print_statistics ();
+
+  return start_addr;
+}
+
 static ElfW(Addr) __attribute_used__ internal_function
 _dl_start (void *arg)
 {
@@ -343,101 +441,6 @@ _dl_start (void *arg)
 }
 
 
-#ifndef VALIDX
-# define VALIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		      + DT_EXTRANUM + DT_VALTAGIDX (tag))
-#endif
-#ifndef ADDRIDX
-# define ADDRIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
-		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
-#endif
-
-#ifdef DONT_USE_BOOTSTRAP_MAP
-static ElfW(Addr)
-_dl_start_final (void *arg)
-#else
-static ElfW(Addr)
-_dl_start_final (void *arg, struct link_map *bootstrap_map_p)
-#endif
-{
-  /* The use of `alloca' here looks ridiculous but it helps.  The goal
-     is to avoid the function from being inlined.  There is no official
-     way to do this so we use this trick.  gcc never inlines functions
-     which use `alloca'.  */
-  ElfW(Addr) *start_addr = alloca (sizeof (ElfW(Addr)));
-  extern char _begin[] attribute_hidden;
-  extern char _end[] attribute_hidden;
-
-  if (HP_TIMING_AVAIL)
-    {
-      /* If it hasn't happen yet record the startup time.  */
-      if (! HP_TIMING_INLINE)
-	HP_TIMING_NOW (start_time);
-
-      /* Initialize the timing functions.  */
-      HP_TIMING_DIFF_INIT ();
-    }
-
-  /* Transfer data about ourselves to the permanent link_map structure.  */
-#ifndef DONT_USE_BOOTSTRAP_MAP
-  GL(dl_rtld_map).l_addr = bootstrap_map_p->l_addr;
-  GL(dl_rtld_map).l_ld = bootstrap_map_p->l_ld;
-  memcpy (GL(dl_rtld_map).l_info, bootstrap_map_p->l_info,
-	  sizeof GL(dl_rtld_map).l_info);
-  GL(dl_rtld_map).l_mach = bootstrap_map_p->l_mach;
-#endif
-  _dl_setup_hash (&GL(dl_rtld_map));
-  GL(dl_rtld_map).l_opencount = 1;
-  GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
-  GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
-  /* Copy the TLS related data if necessary.  */
-#if USE_TLS && !defined DONT_USE_BOOTSTRAP_MAP
-# ifdef HAVE___THREAD
-  assert (bootstrap_map_p->l_tls_modid != 0);
-# else
-  if (bootstrap_map_p->l_tls_modid != 0)
-# endif
-    {
-      GL(dl_rtld_map).l_tls_blocksize = bootstrap_map_p->l_tls_blocksize;
-      GL(dl_rtld_map).l_tls_align = bootstrap_map_p->l_tls_align;
-      GL(dl_rtld_map).l_tls_initimage_size
-	= bootstrap_map_p->l_tls_initimage_size;
-      GL(dl_rtld_map).l_tls_initimage = bootstrap_map_p->l_tls_initimage;
-      GL(dl_rtld_map).l_tls_offset = bootstrap_map_p->l_tls_offset;
-      GL(dl_rtld_map).l_tls_modid = 1;
-      GL(dl_rtld_map).l_tls_tp_initialized
-	= bootstrap_map_p->l_tls_tp_initialized;
-    }
-#endif
-
-#if HP_TIMING_AVAIL
-  HP_TIMING_NOW (GL(dl_cpuclock_offset));
-#endif
-
-  /* Call the OS-dependent function to set up life so we can do things like
-     file access.  It will call `dl_main' (below) to do all the real work
-     of the dynamic linker, and then unwind our frame and run the user
-     entry point on the same stack we entered on.  */
-  *start_addr =  _dl_sysdep_start (arg, &dl_main);
-
-#ifndef HP_TIMING_NONAVAIL
-  if (HP_TIMING_AVAIL)
-    {
-      hp_timing_t end_time;
-
-      /* Get the current time.  */
-      HP_TIMING_NOW (end_time);
-
-      /* Compute the difference.  */
-      HP_TIMING_DIFF (rtld_total_time, start_time, end_time);
-    }
-#endif
-
-  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
-    print_statistics ();
-
-  return *start_addr;
-}
 
 /* Now life is peachy; we can do all normal operations.
    On to the real work.  */
