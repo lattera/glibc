@@ -316,15 +316,13 @@ build the GNU C library:
 
 @itemize @bullet
 @item
-GNU @code{make} 3.75
+GNU @code{make} 3.79 or newer
 
 You need the latest version of GNU @code{make}.  Modifying the GNU C
 Library to work with other @code{make} programs would be so difficult that we
 recommend you port GNU @code{make} instead.  @strong{Really.}  We
-recommend version GNU @code{make} version 3.75 or 3.77.  All earlier
-versions have severe bugs or lack features. Version 3.76 is known to
-have bugs which only show up in big projects like GNU @code{libc}.
-Version 3.76.1 seems OK but some people have reported problems.
+recommend version GNU @code{make} version 3.79.  All earlier
+versions have severe bugs or lack features.
 
 @item
 EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95 or newer
@@ -423,13 +421,15 @@ The GNU C Library currently supports configurations that match the
 following patterns:
 
 @smallexample
-alpha-@var{*}-linux
+alpha@var{*}-@var{*}-linux
 arm-@var{*}-linux
 arm-@var{*}-linuxaout
 arm-@var{*}-none
 i@var{x}86-@var{*}-gnu
 i@var{x}86-@var{*}-linux
+ia64-@var{*}-linux
 m68k-@var{*}-linux
+mips@var{*}-@var{*}-linux
 powerpc-@var{*}-linux
 sparc-@var{*}-linux
 sparc64-@var{*}-linux

@@ -10,9 +10,9 @@ installation.  It is updated more frequently than this manual.
 separate tarfiles which you unpack into the top level of the source
 tree.  Then you give `configure' the `--enable-add-ons' option to
 activate them, and they will be compiled into the library.  As of the
-2.1 release, two important components of glibc are distributed as
-"official" add-ons.  Unless you are doing an unusual installation, you
-should get them both.
+2.2 release, one important component of glibc is distributed as
+"official" add-ons: the linuxthreads add-on.  Unless you are doing an
+unusual installation, you should get this.
 
    Support for POSIX threads is maintained by someone else, so it's in a
 separate package.  It is only available for Linux systems, but this will
@@ -28,7 +28,7 @@ Configuring and compiling GNU Libc
 
    GNU libc can be compiled in the source directory, but we strongly
 advise to build it in a separate build directory.  For example, if you
-have unpacked the glibc sources in `/src/gnu/glibc-2.1.0', create a
+have unpacked the glibc sources in `/src/gnu/glibc-2.2.0', create a
 directory `/src/gnu/glibc-build' to put the object files in.  This
 allows removing the whole build directory in case an error occurs,
 which is the safest way to get a fresh start and should always be done.
@@ -36,7 +36,7 @@ which is the safest way to get a fresh start and should always be done.
    From your object directory, run the shell script `configure' found
 at the top level of the source tree.  In the scenario above, you'd type
 
-     $ ../glibc-2.1.0/configure ARGS...
+     $ ../glibc-2.2.0/configure ARGS...
 
    Please note that even if you're building in a separate build
 directory, the compilation needs to modify a few files in the source
@@ -247,12 +247,9 @@ paths for installation.  This is useful when setting up a chroot
 environment or preparing a binary distribution.  The directory should be
 specified with an absolute file name.
 
-   Glibc 2.1 includes two daemons, `nscd' and `utmpd', which you may or
-may not want to run.  `nscd' caches name service lookups; it can
-dramatically improve performance with NIS+, and may help with DNS as
-well.  `utmpd' allows programs that use the old format for the `utmp'
-file to coexist with new programs.  For more information see the file
-`login/README.utmpd'.
+   Glibc 2.2 includes a daemon called `nscd', which you may or may not
+want to run.  `nscd' caches name service lookups; it can dramatically
+improve performance with NIS+, and may help with DNS as well.
 
    One auxiliary program, `/usr/libexec/pt_chown', is installed setuid
 `root'.  This program is invoked by the `grantpt' function; it sets the
@@ -287,15 +284,13 @@ Recommended Tools for Compilation
    We recommend installing the following GNU tools before attempting to
 build the GNU C library:
 
-   * GNU `make' 3.75
+   * GNU `make' 3.79 or newer
 
      You need the latest version of GNU `make'.  Modifying the GNU C
      Library to work with other `make' programs would be so difficult
      that we recommend you port GNU `make' instead.  *Really.*  We
-     recommend version GNU `make' version 3.75 or 3.77.  All earlier
-     versions have severe bugs or lack features. Version 3.76 is known
-     to have bugs which only show up in big projects like GNU `libc'.
-     Version 3.76.1 seems OK but some people have reported problems.
+     recommend version GNU `make' version 3.79.  All earlier versions
+     have severe bugs or lack features.
 
    * EGCS 1.1.1, 1.1 or 1.0.3, or GCC 2.8.1, 2.95 or newer
 
@@ -379,13 +374,15 @@ Supported Configurations
    The GNU C Library currently supports configurations that match the
 following patterns:
 
-     alpha-*-linux
+     alpha*-*-linux
      arm-*-linux
      arm-*-linuxaout
      arm-*-none
      iX86-*-gnu
      iX86-*-linux
+     ia64-*-linux
      m68k-*-linux
+     mips*-*-linux
      powerpc-*-linux
      sparc-*-linux
      sparc64-*-linux

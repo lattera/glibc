@@ -28,13 +28,15 @@ in the future, are:
 	*-*-gnu			GNU Hurd
 	i[3456]86-*-linux-gnu	Linux-2.x on Intel
 	m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
-	alpha-*-linux-gnu	Linux-2.x on DEC Alpha
+	alpha*-*-linux-gnu	Linux-2.x on DEC Alpha
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 	sparc-*-linux-gnu	Linux-2.x on SPARC
 	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 	arm-*-none		ARM standalone systems
 	arm-*-linux		Linux-2.x on ARM
 	arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
+	mips*-*-linux-gnu	Linux-2.x on MIPS
+	ia64-*-linux-gnu	Linux-2.x on ia64
 
 Ports to other Linux platforms are in development, and may in fact work
 already, but no one has sent us success reports for them.  Currently no
@@ -85,11 +87,8 @@ problems in the complex float support.
 {UD} You definitely need GNU make to build GNU libc.  No other make
 program has the needed functionality.
 
-We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
-have bugs and/or are missing features.  Version 3.76 has bugs which
-appear when building big projects like GNU libc. 3.76.1 appears to work but
-some people have reported problems.  If you build GNU make 3.77 from source,
-please read ?make first.
+We recommend version GNU make version 3.79 or newer.  Older versions have
+bugs and/or are missing features.
 
 ??	Do I need a special linker or assembler?
 
@@ -370,9 +369,7 @@ model will also fail if the above  methods are not used.
 	malloc/libmemprof.so.  How can I fix this?
 
 {AJ} Older make version (<= 3.78.90) have a bug which was hidden by a bug in
-glibc (<= 2.1.2).  You need to upgrade make to a newer or fixed version.  A
-patch is available via
-<http://sourceware.cygnus.com//ml/libc-alpha/2000-02/msg00067.html>.
+glibc (<= 2.1.2).  You need to upgrade make to a newer or fixed version.
 
 After upgrading make, you should remove the file sysd-sorted in your build
 directory.  The problem is that the broken make creates a wrong order for
@@ -380,7 +377,8 @@ one list in that file.  The list has to be recreated with the new make -
 which happens if you remove the file.
 
 You might encounter this bug also in other situations where make scans
-directories.  I strongly advise to upgrade your make version.
+directories.  I strongly advise to upgrade your make version to 3.79 or
+newer.
 
 
 ? Installation and configuration issues
@@ -1481,11 +1479,7 @@ and regulations of the country this effects.  glibc behaves correctly.
 ??make	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
 
-{AJ} GNU make 3.77 has support for 64 bit filesystems which is slightly
-broken (and one of the new features in the GNU C library 2.1 is 64 bit
-filesystem support :-( ).  To get a working make you can use either make
-3.75 or patch 3.77.  A working patch is available via RedHat's Rawhide server
-(ftp://rawhide.redhat.com/SRPMS/SRPMS/make-3.77-*src.rpm).
+Removed.  Does not apply anymore, use make 3.79 or newer.
 
 ??	Why do so many programs using math functions fail on my AlphaStation?
 

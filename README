@@ -8,14 +8,15 @@ configurations:
 		*-*-gnu			GNU Hurd
 		i[3456]86-*-linux-gnu	Linux-2.x on Intel
 		m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
-		alpha-*-linux-gnu	Linux-2.x on DEC Alpha
+		alpha*-*-linux-gnu	Linux-2.x on DEC Alpha
 		powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
 		sparc-*-linux-gnu	Linux-2.x on SPARC
 		sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 		arm-*-none		ARM standalone systems
 		arm-*-linux		Linux-2.x on ARM
 		arm-*-linuxaout		Linux-2.x on ARM using a.out binaries
-
+		mips*-*-linux-gnu	Linux-2.x on MIPS
+		ia64-*-linux-gnu	Linux-2.x on ia64
 
 Former releases of this library (version 1.09.1 and perhaps earlier
 versions) used to run on the following configurations:
