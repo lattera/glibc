@@ -29,7 +29,7 @@ routines	= $(dl-routines) dl-open dl-close dl-support dl-iteratephdr \
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug misc \
-				  version profile conflict)
+				  version profile conflict tls)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure \
@@ -67,7 +67,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   reldep6mod4.c reldep6mod3.c reldep6mod2.c reldep6mod1.c \
 		   reldep6mod0.c \
 		   unwind-dw2.c unwind-dw2-fde.c unwind.h unwind-pe.h \
-		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h
+		   unwind-dw2-fde.h dwarf2.h dl-procinfo.c tls.h dl-tls.h
 
 include ../Makeconfig
 
