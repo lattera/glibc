@@ -567,6 +567,10 @@ libc_hidden_def (__res_nclose)
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 res_thread_freeres (void)
 {
+  if (_res.nscount == 0)
+    /* Never called res_ninit.  */
+    return;
+
   __res_nclose (&_res);		/* Close any VC sockets.  */
 
   for (int ns = 0; ns < MAXNS; ns++)
