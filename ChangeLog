@@ -1,3 +1,18 @@
+2000-12-19  Andreas Jaeger  <aj@suse.de>
+
+	* include/netinet/ether.h (DECLARE_NSS_PROTOTYPES): New.
+
+	* nis/nis_intern.h: Add prototype for __do_niscall3.
+
+	* nis/nss_nis/nis-rpc.c (_nss_nis_setrpcent): Fix declaration to
+	match prototype.
+
+	* include/netdb.h (DECLARE_NSS_PROTOTYPES): Reformat.
+
+	* include/rpc/netdb.h (DECLARE_NSS_PROTOTYPES): New.
+
+	* include/aliases.h (DECLARE_NSS_PROTOTYPES): New.
+
 2000-12-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/test-misc.c: Add more tests for nextafter.
