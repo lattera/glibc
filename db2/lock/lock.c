@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock.c	10.31 (Sleepycat) 8/17/97";
+static const char sccsid[] = "@(#)lock.c	10.36 (Sleepycat) 9/24/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -201,7 +201,7 @@ lock_open(path, flags, mode, dbenv, ltp)
 	 * Create the lock table structure.
 	 */
 	if ((lt = (DB_LOCKTAB *)calloc(1, sizeof(DB_LOCKTAB))) == NULL) {
-		__db_err(dbenv, "%s", strerror(errno));
+		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return (ENOMEM);
 	}
 	lt->dbenv = dbenv;
@@ -319,8 +319,10 @@ lock_vec(lt, locker, flags, list, nlist, elistp)
 		case DB_LOCK_GET:
 			ret = __lock_get_internal(lt, locker, flags,
 			    list[i].obj, list[i].mode, &lp);
-			if (ret == 0)
+			if (ret == 0) {
 				list[i].lock = LOCK_TO_OFFSET(lt, lp);
+				lt->region->nrequests++;
+			}
 			break;
 		case DB_LOCK_PUT:
 			lp = OFFSET_TO_LOCK(lt, list[i].lock);
@@ -351,7 +353,7 @@ lock_vec(lt, locker, flags, list, nlist, elistp)
 		case DB_LOCK_PUT_OBJ:
 
 			/* Look up the object in the hash table. */
-			__db_hashlookup(lt->hashtab, __db_lockobj, links,
+			HASHLOOKUP(lt->hashtab, __db_lockobj, links,
 			    list[i].obj, sh_obj, lt->region->table_size,
 			    __lock_ohash, __lock_cmp);
 			if (sh_obj == NULL) {
@@ -596,8 +598,8 @@ __lock_put_internal(lt, lockp, do_all)
 
 	/* Check if object should be reclaimed. */
 	if (SH_TAILQ_FIRST(&sh_obj->holders, __db_lock) == NULL) {
-		__db_hashremove_el(lt->hashtab, __db_lockobj, links, sh_obj,
-		    lt->region->table_size, __lock_lhash);
+		HASHREMOVE_EL(lt->hashtab, __db_lockobj,
+		    links, sh_obj, lt->region->table_size, __lock_lhash);
 		__db_shalloc_free(lt->mem, SH_DBT_PTR(&sh_obj->lockobj));
 		SH_TAILQ_INSERT_HEAD(&lt->region->free_objs, sh_obj, links,
 		    __db_lockobj);
@@ -676,8 +678,12 @@ __lock_get_internal(lt, locker, flags, obj, lock_mode, lockp)
 	 * Now we have a lock and an object and we need to see if we should
 	 * grant the lock.  We use a FIFO ordering so we can only grant a
 	 * new lock if it does not conflict with anyone on the holders list
-	 * OR anyone on the waiters list.  In case of conflict, we put the
-	 * new lock on the end of the waiters list.
+	 * OR anyone on the waiters list.  The reason that we don't grant if
+	 * there's a conflict is that this can lead to starvation (a writer
+	 * waiting on a popularly read item will never ben granted).  The
+	 * downside of this is that a waiting reader can prevent an upgrade
+	 * from reader to writer, which is not uncommon.  In case of conflict,
+	 * we put the new lock on the end of the waiters list.
 	 */
 	for (lp = SH_TAILQ_FIRST(&sh_obj->holders, __db_lock);
 	    lp != NULL;
@@ -1042,7 +1048,7 @@ __lock_dump_locker(lt, op)
 
 	ptr = SH_DBT_PTR(&op->lockobj);
 	memcpy(&locker, ptr, sizeof(u_int32_t));
-	printf("L %lu", (u_long)locker);
+	printf("L %lx", (u_long)locker);
 
 	lp = SH_LIST_FIRST(&op->heldby, __db_lock);
 	if (lp == NULL) {
@@ -1095,7 +1101,7 @@ __lock_is_locked(lt, locker, dbt, mode)
 	lrp = lt->region;
 
 	/* Look up the object in the hash table. */
-	__db_hashlookup(lt->hashtab, __db_lockobj, links,
+	HASHLOOKUP(lt->hashtab, __db_lockobj, links,
 	    dbt, sh_obj, lrp->table_size, __lock_ohash, __lock_cmp);
 	if (sh_obj == NULL)
 		return (0);
@@ -1171,7 +1177,7 @@ __lock_printlock(lt, lp, ispgno)
 		stat = "UNKNOWN";
 		break;
 	}
-	printf("\t%lu\t%s\t%lu\t%s\t",
+	printf("\t%lx\t%s\t%lu\t%s\t",
 	    (u_long)lp->holder, mode, (u_long)lp->refcount, stat);
 
 	lockobj = (DB_LOCKOBJ *)((u_int8_t *)lp + lp->obj);
@@ -1243,11 +1249,11 @@ __lock_getobj(lt, locker, dbt, type, objp)
 
 	/* Look up the object in the hash table. */
 	if (type == DB_LOCK_OBJTYPE) {
-		__db_hashlookup(lt->hashtab, __db_lockobj, links, dbt, sh_obj,
+		HASHLOOKUP(lt->hashtab, __db_lockobj, links, dbt, sh_obj,
 		    lrp->table_size, __lock_ohash, __lock_cmp);
 		obj_size = dbt->size;
 	} else {
-		__db_hashlookup(lt->hashtab, __db_lockobj, links, locker,
+		HASHLOOKUP(lt->hashtab, __db_lockobj, links, locker,
 		    sh_obj, lrp->table_size, __lock_locker_hash,
 		    __lock_locker_cmp);
 		obj_size = sizeof(locker);
@@ -1288,8 +1294,8 @@ __lock_getobj(lt, locker, dbt, type, objp)
 		sh_obj->lockobj.size = obj_size;
 		sh_obj->lockobj.off = SH_PTR_TO_OFF(&sh_obj->lockobj, p);
 
-		__db_hashinsert(lt->hashtab, __db_lockobj, links, sh_obj,
-		    lrp->table_size, __lock_lhash);
+		HASHINSERT(lt->hashtab,
+		    __db_lockobj, links, sh_obj, lrp->table_size, __lock_lhash);
 
 		if (type == DB_LOCK_LOCKER)
 			lrp->nlockers++;
@@ -1325,8 +1331,8 @@ __lock_freeobj(lt, obj)
 	DB_LOCKTAB *lt;
 	DB_LOCKOBJ *obj;
 {
-	__db_hashremove_el(lt->hashtab, __db_lockobj, links,
-	    obj, lt->region->table_size, __lock_lhash);
+	HASHREMOVE_EL(lt->hashtab,
+	    __db_lockobj, links, obj, lt->region->table_size, __lock_lhash);
 	__db_shalloc_free(lt->mem, SH_DBT_PTR(&obj->lockobj));
 	SH_TAILQ_INSERT_HEAD(&lt->region->free_objs, obj, links, __db_lockobj);
 }

@@ -41,6 +41,9 @@ non-lib.a := libmcheck.a
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
 
+# Include the cleanup handler.
+aux := set-freeres
+
 # The AWK script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
 install-bin = mtrace

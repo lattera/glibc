@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fget.c	10.22 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)mp_fget.c	10.25 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,7 +35,7 @@ int
 memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	DB_MPOOLFILE *dbmfp;
 	db_pgno_t *pgnoaddr;
-	u_long flags;
+	int flags;
 	void *addrp;
 {
 	BH *bhp, *tbhp;
@@ -293,7 +293,7 @@ found:		/* Increment the reference count. */
 			__db_err(dbmp->dbenv,
 			    "%s: too many references to page %lu",
 			    dbmfp->path, bhp->pgno);
-			ret = EAGAIN;
+			ret = EINVAL;
 			goto err;
 		}
 		++bhp->ref;
@@ -337,9 +337,9 @@ found:		/* Increment the reference count. */
 		++mfp->stat.st_cache_hit;
 	}
 
-mapret:	LOCKHANDLE(dbmp, &dbmfp->mutex);
+mapret:	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	++dbmfp->pinref;
-	UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 
 	if (0) {
 err:		/*

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.h.src	10.71 (Sleepycat) 9/4/97
+ *	@(#)db.h.src	10.77 (Sleepycat) 9/24/97
  */
 
 #ifndef _DB_H_
@@ -67,8 +67,8 @@
 
 #define	DB_VERSION_MAJOR	2
 #define	DB_VERSION_MINOR	3
-#define	DB_VERSION_PATCH	6
-#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.6: (9/4/97)"
+#define	DB_VERSION_PATCH	10
+#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.10: (9/24/97)"
 
 typedef	u_int32_t	db_pgno_t;	/* Page number type. */
 typedef	u_int16_t	db_indx_t;	/* Page offset type. */
@@ -339,7 +339,7 @@ struct __db_ilock {			/* Internal DB access method lock. */
 
 /* DB access method description structure. */
 struct __db {
-	void	*mutex;			/* Synchronization for free threading */
+	void	*mutexp;		/* Synchronization for free threading */
 	DBTYPE	 type;			/* DB access method. */
 	DB_ENV	*dbenv;			/* DB_ENV structure. */
 	DB_ENV	*mp_dbenv;		/* DB_ENV for local mpool creation. */
@@ -641,11 +641,11 @@ extern "C" {
 #endif
 int	memp_close __P((DB_MPOOL *));
 int	memp_fclose __P((DB_MPOOLFILE *));
-int	memp_fget __P((DB_MPOOLFILE *, db_pgno_t *, unsigned long, void *));
+int	memp_fget __P((DB_MPOOLFILE *, db_pgno_t *, int, void *));
 int	memp_fopen __P((DB_MPOOL *, const char *,
 	    int, int, int, size_t, int, DBT *, u_int8_t *, DB_MPOOLFILE **));
-int	memp_fput __P((DB_MPOOLFILE *, void *, unsigned long));
-int	memp_fset __P((DB_MPOOLFILE *, void *, unsigned long));
+int	memp_fput __P((DB_MPOOLFILE *, void *, int));
+int	memp_fset __P((DB_MPOOLFILE *, void *, int));
 int	memp_fsync __P((DB_MPOOLFILE *));
 int	memp_open __P((const char *, int, int, DB_ENV *, DB_MPOOL **));
 int	memp_register __P((DB_MPOOL *, int,
@@ -698,7 +698,7 @@ extern "C" {
 #endif
 int	  txn_abort __P((DB_TXN *));
 int	  txn_begin __P((DB_TXNMGR *, DB_TXN *, DB_TXN **));
-int	  txn_checkpoint __P((const DB_TXNMGR *, long, long));
+int	  txn_checkpoint __P((const DB_TXNMGR *, int, int));
 int	  txn_commit __P((DB_TXN *));
 int	  txn_close __P((DB_TXNMGR *));
 u_int32_t txn_id __P((DB_TXN *));

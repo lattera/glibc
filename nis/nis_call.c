@@ -289,7 +289,7 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
     server_len = 1;
 
   if ((dbp = __bind_create (server, server_len, flags)) == NULL)
-    return NIS_UNAVAIL;
+    return NIS_NAMEUNREACHABLE;
   while (__bind_connect (dbp) != NIS_SUCCESS)
     {
       if (__bind_next (dbp) != NIS_SUCCESS)
@@ -351,6 +351,7 @@ __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
 		    break; /* No more servers to search in */
 		  goto again;
 		}
+	      break;
 	    case NIS_FINDDIRECTORY:
 	      if ((((fd_result *)resp)->status == NIS_NOTFOUND) ||
 		  (((fd_result *)resp)->status == NIS_NOSUCHNAME) ||

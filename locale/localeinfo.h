@@ -38,7 +38,8 @@
 
 /* We use a special value for the usage counter in `locale_data' to
    signal that this data must never be removed anymore.  */
-#define MAX_USAGE_COUNT UINT_MAX
+#define MAX_USAGE_COUNT (UINT_MAX - 1)
+#define UNDELETABLE	UINT_MAX
 
 /* Structure describing locale data in core for a category.  */
 struct locale_data
@@ -134,6 +135,9 @@ extern struct locale_data *_nl_find_locale (const char *locale_path,
 
 /* Try to load the file described by FILE.  */
 extern void _nl_load_locale (struct loaded_l10nfile *file, int category);
+
+/* Free all resource.  */
+extern void _nl_unload_locale (struct locale_data *locale);
 
 /* Free the locale and give back all memory if the usage count is one.  */
 extern void _nl_remove_locale (int locale, struct locale_data *data);

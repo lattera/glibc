@@ -4,14 +4,14 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_shash.h	10.1 (Sleepycat) 4/12/97
+ *	@(#)db_shash.h	10.2 (Sleepycat) 9/16/97
  */
 
 /* Hash Headers */
 typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
 
 /*
- * __db_hashlookup --
+ * HASHLOOKUP --
  *
  * Look up something in a shared memory hash table.  The "elt" argument
  * should be a key, and cmp_func must know how to compare a key to whatever
@@ -30,7 +30,7 @@ typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
  * If the element is not in the hash table, this macro exits with result
  * set to NULL.
  */
-#define	__db_hashlookup(begin, type, field, elt, r, n, hash, cmp) do {	\
+#define	HASHLOOKUP(begin, type, field, elt, r, n, hash, cmp) do {	\
 	DB_HASHTAB *__bucket;						\
 	u_int32_t __ndx;						\
 									\
@@ -43,10 +43,10 @@ typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
 } while(0)
 
 /*
- * __db_hashinsert --
+ * HASHINSERT --
  *
  * Insert a new entry into the hash table.  This assumes that lookup has
- * failed; don't call it if you haven't already called __db_hashlookup.
+ * failed; don't call it if you haven't already called HASHLOOKUP.
  * begin: the beginning address of the hash table.
  * type: the structure type of the elements that are linked in each bucket.
  * field: the name of the field by which the "type" structures are linked.
@@ -54,7 +54,7 @@ typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
  * nelems: the number of buckets in the hash table.
  * hash_func: the hash function that operates on elements of the type of elt
  */
-#define	__db_hashinsert(begin, type, field, elt, n, hash) do {		\
+#define	HASHINSERT(begin, type, field, elt, n, hash) do {		\
 	u_int32_t __ndx;						\
 	DB_HASHTAB *__bucket;						\
 									\
@@ -64,7 +64,7 @@ typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
 } while(0)
 
 /*
- * __db_hashremove --
+ * HASHREMOVE --
  *	Remove the entry with a key == elt.
  * begin: address of the beginning of the hash table.
  * type: the structure type of the elements that are linked in each bucket.
@@ -75,19 +75,19 @@ typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
  * cmp_func: compare elements of the type of elt with those in the table (of
  *	type "type").
  */
-#define	__db_hashremove(begin, type, field, elt, n, hash, cmp) {	\
+#define	HASHREMOVE(begin, type, field, elt, n, hash, cmp) {		\
 	u_int32_t __ndx;						\
 	DB_HASHTAB *__bucket;						\
 	SH_TAILQ_ENTRY *__entp;						\
 									\
 	__ndx = hash(elt) % (n);					\
 	__bucket = &begin[__ndx];					\
-	__db_hashlookup(begin, type, field, elt, __entp, n, hash, cmp);	\
+	HASHLOOKUP(begin, type, field, elt, __entp, n, hash, cmp);	\
 	SH_TAILQ_REMOVE(__bucket, __entp, field, type);			\
 }
 
 /*
- * __db_hashremove_el --
+ * HASHREMOVE_EL --
  *	Given the object "obj" in the table, remove it.
  * begin: address of the beginning of the hash table.
  * type: the structure type of the elements that are linked in each bucket.
@@ -96,7 +96,7 @@ typedef	SH_TAILQ_HEAD(hash_head) DB_HASHTAB;
  * nelems: the number of buckets in the hash table.
  * hash_func: the hash function that operates on elements of the type of elt
  */
-#define	__db_hashremove_el(begin, type, field, obj, n, hash) {		\
+#define	HASHREMOVE_EL(begin, type, field, obj, n, hash) {		\
 	u_int32_t __ndx;						\
 	DB_HASHTAB *__bucket;						\
 									\

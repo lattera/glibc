@@ -111,6 +111,14 @@ struct r_search_path_elem
   };
 
 
+/* A data structure for a simple single linked list of strings.  */
+struct libname_list
+  {
+    const char *name;		/* Name requested (before search).  */
+    struct libname_list *next;	/* Link to next name for this object.  */
+  };
+
+
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
 
@@ -130,11 +138,7 @@ struct link_map
     /* All following members are internal to the dynamic linker.
        They may change without notice.  */
 
-    struct libname_list
-      {
-	const char *name;	/* Name requested (before search).  */
-	struct libname_list *next; /* Link to next name for this object.  */
-      } *l_libname;
+    struct libname_list  *l_libname;
     /* Indexed pointers to dynamic section.
        [0,DT_NUM) are indexed by the processor-independent tags.
        [DT_NUM,DT_NUM+DT_PROCNUM) are indexed by the tag minus DT_LOPROC.

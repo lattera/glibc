@@ -12,6 +12,8 @@
 #include <rpc/rpc.h>
 #include <rpcsvc/ypclnt.h>
 
+__BEGIN_DECLS
+
 /*
  * The following procedures are supported by the protocol:
  *
@@ -72,12 +74,12 @@
 typedef struct {
   u_int keydat_len;
   char *keydat_val;
-} keydat;
+} keydat_t;
 
 typedef struct {
   u_int valdat_len;
   char *valdat_val;
-} valdat;
+} valdat_t;
 
 struct ypmap_parms {
   char *domain;			/* Null string means not available */
@@ -93,7 +95,7 @@ struct ypmap_parms {
 struct ypreq_key {
   const char *domain;
   const char *map;
-  keydat keydat;
+  keydat_t keydat;
 };
 
 struct ypreq_nokey {
@@ -149,7 +151,7 @@ typedef enum ypstat ypstat;
 
 struct ypresp_val {
   ypstat status;
-  valdat valdat;
+  valdat_t valdat;
 };
 
 struct ypresp_key_val {
@@ -160,11 +162,11 @@ struct ypresp_key_val {
      implementation somehow must change the order internally.  We
      don't want to follow this bad example since the user should be
      able to use rpcgen on this file.  */
-  keydat keydat;
-  valdat valdat;
+  keydat_t keydat;
+  valdat_t valdat;
 #else
-  valdat valdat;
-  keydat keydat;
+  valdat_t valdat;
+  keydat_t keydat;
 #endif
 };
 
@@ -339,8 +341,6 @@ struct ypresp_all {
     struct ypresp_key_val val;
   } ypresp_all_u;
 };
-
-__BEGIN_DECLS
 
 extern bool_t xdr_ypreq_key __P ((XDR *__xdrs, struct ypreq_key * __objp));
 extern bool_t xdr_ypreq_nokey __P ((XDR *__xdrs, struct ypreq_nokey * __objp));

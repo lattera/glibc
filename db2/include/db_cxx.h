@@ -4,7 +4,7 @@
  * Copyright (c) 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_cxx.h	10.7 (Sleepycat) 8/22/97
+ *	@(#)db_cxx.h	10.8 (Sleepycat) 9/20/97
  */
 
 #ifndef _DB_CXX_H_
@@ -303,9 +303,9 @@ class _exported DbMpoolFile
 {
 public:
     int close();
-    int get(db_pgno_t *pgnoaddr, unsigned long flags, void *pagep);
-    int put(void *pgaddr, unsigned long flags);
-    int set(void *pgaddr, unsigned long flags);
+    int get(db_pgno_t *pgnoaddr, int flags, void *pagep);
+    int put(void *pgaddr, int flags);
+    int set(void *pgaddr, int flags);
     int sync();
 
     static int open(DbMpool *mp, const char *file,
@@ -391,7 +391,7 @@ class _exported DbTxnMgr
 friend DbEnv;
 public:
     int begin(DbTxn *pid, DbTxn **tid);
-    int checkpoint(long kbyte, long min) const;
+    int checkpoint(int kbyte, int min) const;
     int close();
     int stat(DB_TXN_STAT **statp, void *(*db_malloc)(size_t));
 

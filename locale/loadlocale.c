@@ -221,3 +221,14 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   __close (fd);
   file->data = newdata;
 }
+
+void
+_nl_unload_locale (struct locale_data *locale)
+{
+  if (locale->mmaped)
+    __munmap ((caddr_t) locale->filedata, locale->filesize);
+  else
+    free ((void *) locale->filedata);
+
+  free (locale);
+}

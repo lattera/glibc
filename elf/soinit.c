@@ -18,7 +18,7 @@ run_hooks (void (*const list[]) (void))
 }
 
 #ifdef HAVE_DWARF2_UNWIND_INFO
-static const char __EH_FRAME_BEGIN__[]
+static char __EH_FRAME_BEGIN__[]
      __attribute__ ((section (".eh_frame")))
      = { };
 extern void __register_frame (const void *);

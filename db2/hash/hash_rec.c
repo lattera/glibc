@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_rec.c	10.12 (Sleepycat) 8/22/97";
+static const char sccsid[] = "@(#)hash_rec.c	10.13 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -364,11 +364,11 @@ __ham_replace_recover(logp, dbtp, lsnp, redo, info)
 	DB *mdbp, *file_dbp;
 	DB_MPOOLFILE *mpf;
 	DBT dbt;
-	HKEYDATA *hk;
 	HTAB *hashp;
 	PAGE *pagep;
 	int32_t grow;
 	int change, cmp_n, cmp_p, getmeta, ret;
+	u_int8_t *hk;
 
 	getmeta = 0;
 	hashp = NULL;				/* XXX: shut the compiler up. */
@@ -421,11 +421,11 @@ __ham_replace_recover(logp, dbtp, lsnp, redo, info)
 		__ham_onpage_replace(pagep,
 		    file_dbp->pgsize, argp->ndx, argp->off, grow, &dbt);
 		if (argp->makedup) {
-			hk = GET_HKEYDATA(pagep, argp->ndx);
+			hk = P_ENTRY(pagep, argp->ndx);
 			if (redo)
-				hk->type = H_DUPLICATE;
+				HPAGE_PTYPE(hk) = H_DUPLICATE;
 			else
-				hk->type = H_KEYDATA;
+				HPAGE_PTYPE(hk) = H_KEYDATA;
 		}
 	}
 
@@ -738,7 +738,7 @@ __ham_ovfl_recover(logp, dbtp, lsnp, redo, info)
 	DBT *dbtp;
 	DB_LSN *lsnp;
 	int redo;
-	 void *info;
+	void *info;
 {
 	__ham_ovfl_args *argp;
 	DB *mdbp, *file_dbp;

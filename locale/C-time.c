@@ -26,7 +26,7 @@ const struct locale_data _nl_C_LC_TIME =
 {
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
-  MAX_USAGE_COUNT,
+  UNDELETABLE,
   54,
   {
     { string: "Sun" },

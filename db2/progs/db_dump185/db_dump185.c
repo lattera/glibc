@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_dump185.c	10.7 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_dump185.c	10.8 (Sleepycat) 9/21/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -192,7 +192,7 @@ main(argc, argv)
 
 	if ((dbp = dbopen(argv[0], O_RDONLY, 0, DB_BTREE, NULL)) == NULL) {
 		if ((dbp = dbopen(argv[0], O_RDONLY, 0, DB_HASH, NULL)) == NULL)
-			return (1);
+			err(1, "%s", argv[0]);
 		db_185_hash(dbp, pflag);
 	} else
 		db_185_btree(dbp, pflag);

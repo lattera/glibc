@@ -40,14 +40,30 @@ typedef __fsid_t fsid_t;
 #endif
 
 typedef __dev_t dev_t;
-typedef __gid_t gid_t;
 typedef __ino_t ino_t;
 typedef __mode_t mode_t;
 typedef __nlink_t nlink_t;
-typedef __off_t off_t;
 typedef __loff_t loff_t;
-typedef __pid_t pid_t;
+
+#ifndef gid_t
+typedef __gid_t gid_t;
+# define gid_t gid_t
+#endif
+
+#ifndef uid_t
 typedef __uid_t uid_t;
+# define uid_t uid_t
+#endif
+
+#ifndef off_t
+typedef __off_t off_t;
+# define off_t off_t
+#endif
+
+#ifndef pid_t
+typedef __pid_t pid_t;
+# define pid_t pid_t
+#endif
 
 #ifndef ssize_t
 typedef __ssize_t ssize_t;

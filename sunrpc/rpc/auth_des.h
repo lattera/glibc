@@ -17,9 +17,10 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _RPC_AUTH_DES_H
-
 #define _RPC_AUTH_DES_H	1
+
 #include <sys/cdefs.h>
+#include <rpc/auth.h>
 
 __BEGIN_DECLS
 
@@ -34,9 +35,9 @@ enum authdes_namekind
    a conversation key and the window */
 struct authdes_fullname
   {
-    char *name;			/* network name of client, up to MAXNETNAMELEN */
-    des_block key;		/* conversation key */
-    u_long window;		/* associated window */
+    char *name;		/* network name of client, up to MAXNETNAMELEN */
+    des_block key;	/* conversation key */
+    u_long window;	/* associated window */
   };
 
 /* A credential */
@@ -53,7 +54,7 @@ struct authdes_verf
     union
       {
 	struct timeval adv_ctime;	/* clear time */
-	des_block adv_xtime;	/* crypt time */
+	des_block adv_xtime;		/* crypt time */
       }
     adv_time_u;
     u_long adv_int_u;

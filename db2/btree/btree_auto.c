@@ -119,7 +119,7 @@ __bam_pg_alloc_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_pg_alloc_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_pg_alloc_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_pg_alloc: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -284,7 +284,7 @@ __bam_pg_free_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_pg_free_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_pg_free_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_pg_free: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -479,7 +479,7 @@ __bam_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_split_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_split_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_split: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -672,7 +672,7 @@ __bam_rsplit_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_rsplit_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_rsplit_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_rsplit: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -848,7 +848,7 @@ __bam_adj_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_adj_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_adj_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_adj: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1007,7 +1007,7 @@ __bam_cadjust_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_cadjust_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_cadjust_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_cadjust: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1157,7 +1157,7 @@ __bam_cdel_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __bam_cdel_read(dbtp->data, &argp)) != 0)
+	if ((ret = __bam_cdel_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]bam_cdel: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,

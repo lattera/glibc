@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)txn.h	10.6 (Sleepycat) 7/29/97
+ *	@(#)txn.h	10.10 (Sleepycat) 9/23/97
  */
 #ifndef	_TXN_H_
 #define	_TXN_H_
@@ -14,8 +14,9 @@
  * the region is always created group RW of the group owning the directory.
  */
 #define	DEFAULT_TXN_FILE	"__db_txn.share"
+/* TXN_MINIMUM = (DB_LOCK_MAXID + 1) but this makes compilers complain. */
+#define TXN_MINIMUM		0x80000000
 #define	TXN_INVALID           	0xffffffff /* Maximum number of txn ids. */
-#define TXN_MINIMUM		0x80000000 /* First transaction id */
 
 /*
  * Transaction type declarations.
@@ -36,6 +37,7 @@ typedef struct __txn_detail {
 #define	TXN_ABORTED	2
 #define	TXN_PREPARED	3
 	u_int32_t status;		/* status of the transaction */
+	SH_TAILQ_ENTRY	links;		/* free/active list */
 } TXN_DETAIL;
 
 /*
@@ -45,7 +47,7 @@ typedef struct __txn_detail {
  */
 struct __db_txnmgr {
 /* These fields need to be protected for multi-threaded support. */
-	db_mutex_t	mutex;		/* Synchronization. */
+	db_mutex_t	*mutexp;	/* Synchronization. */
 					/* list of active transactions */
 	TAILQ_HEAD(_chain, __db_txn)	txn_chain;
 
@@ -57,11 +59,14 @@ struct __db_txnmgr {
 	u_int		 flags;		/* DB_TXN_NOSYNC, DB_THREAD */
 	size_t		 reg_size;	/* how large we think the region is */
 	DB_TXNREGION	*region;	/* address of shared memory region */
+	void		*mem;		/* address of the shalloc space */
 };
 
 /*
  * Layout of the shared memory region.
- *
+ * The region consists of a DB_TXNREGION structure followed by a large
+ * pool of shalloc'd memory which is used to hold TXN_DETAIL structures
+ * and thread mutexes (which are dynamically allocated).
  */
 struct __db_txnregion {
 	RLAYOUT		hdr;		/* Shared memory region header. */
@@ -69,7 +74,6 @@ struct __db_txnregion {
 	u_int32_t	version;	/* version number */
 	u_int32_t	maxtxns;	/* maximum number of active txns */
 	u_int32_t	last_txnid;	/* last transaction id given out */
-	u_int32_t	free_txn;	/* head of transaction free list */
 	DB_LSN		pending_ckp;	/* last checkpoint did not finish */
 	DB_LSN		last_ckp;	/* lsn of the last checkpoint */
 	time_t		time_ckp;	/* time of last checkpoint */
@@ -78,20 +82,25 @@ struct __db_txnregion {
 	u_int32_t	naborts;	/* number of aborted transactions */
 	u_int32_t	ncommits;	/* number of committed transactions */
 	u_int32_t	nbegins;	/* number of begun transactions */
-	TXN_DETAIL	table[1];	/* array of TXN structures */
+	SH_TAILQ_HEAD(_active) active_txn;	/* active transaction list */
 };
 
+/*
+ * Make the region large enough to hold N  transaction detail structures
+ * plus some space to hold thread handles and the beginning of the shalloc
+ * region.
+ */
 #define	TXN_REGION_SIZE(N)						\
-			(sizeof(DB_TXNREGION) + N * sizeof(DB_TXN))
+	(sizeof(DB_TXNREGION) + N * sizeof(TXN_DETAIL) + 1000)
 
 /* Macros to lock/unlock the region and threads. */
 #define	LOCK_TXNTHREAD(tmgrp)						\
 	if (F_ISSET(tmgrp, DB_THREAD))					\
-		(void)__db_mutex_lock(&(tmgrp)->mutex, -1,		\
+		(void)__db_mutex_lock((tmgrp)->mutexp, -1,		\
 		    (tmgrp)->dbenv == NULL ? NULL : (tmgrp)->dbenv->db_yield)
 #define	UNLOCK_TXNTHREAD(tmgrp)						\
 	if (F_ISSET(tmgrp, DB_THREAD))					\
-		(void)__db_mutex_unlock(&(tmgrp)->mutex, -1)
+		(void)__db_mutex_unlock((tmgrp)->mutexp, -1)
 
 #define	LOCK_TXNREGION(tmgrp)						\
 	(void)__db_mutex_lock(&(tmgrp)->region->hdr.lock,(tmgrp)->fd,	\

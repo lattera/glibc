@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fset.c	10.8 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)mp_fset.c	10.9 (Sleepycat) 9/20/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -30,7 +30,7 @@ int
 memp_fset(dbmfp, pgaddr, flags)
 	DB_MPOOLFILE *dbmfp;
 	void *pgaddr;
-	u_long flags;
+	int flags;
 {
 	BH *bhp;
 	DB_MPOOL *dbmp;

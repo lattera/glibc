@@ -23,6 +23,8 @@
 #include <features.h>
 
 #include <bits/types.h>
+#define __need_size_t
+#include <stddef.h>
 
 /* Get the bit values from the kernel header file.  */
 #include <bits/mman.h>

@@ -85,6 +85,10 @@ BSD and SVID is also included.
 If the macro @code{_XOPEN_SOURCE_EXTENDED} is also defined, even more
 functionality is available.  The extra functions will make all functions
 available which are necessary for the X/Open Unix brand.
+
+If the macro @code{_XOPEN_SOURCE} has the value @math{500} this includes
+all functionality described so far plus some new definitions from the
+Single Unix specification, @w{version 2}.
 @end defvr
 
 @comment (none)

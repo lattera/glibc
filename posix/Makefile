@@ -48,7 +48,8 @@ routines :=								      \
 	getopt getopt1 getopt_init					      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
 	sched_primin sched_rr_gi					      \
-	getaddrinfo gai_strerror wordexp
+	getaddrinfo gai_strerror wordexp				      \
+	pread pwrite
 
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm runtests

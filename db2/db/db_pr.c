@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_pr.c	10.16 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)db_pr.c	10.17 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -184,7 +184,7 @@ __db_prbtree(dbp)
 	BTMETA *mp;
 	BTREE *t;
 	DB_LOCK lock;
-	EPG *sp;
+	EPG *epg;
 	FILE *fp;
 	RECNO *rp;
 	db_pgno_t i;
@@ -230,8 +230,8 @@ __db_prbtree(dbp)
 		    (u_long)rp->re_emap, (u_long)rp->re_msize);
 	}
 	(void)fprintf(fp, "stack:");
-	for (sp = t->bt_stack; sp < t->bt_sp; ++sp)
-		(void)fprintf(fp, " %lu", (u_long)sp->page->pgno);
+	for (epg = t->bt_stack; epg < t->bt_sp; ++epg)
+		(void)fprintf(fp, " %lu", (u_long)epg->page->pgno);
 	(void)fprintf(fp, "\n");
 	(void)fprintf(fp, "ovflsize: %lu\n", (u_long)t->bt_ovflsize);
 	(void)fflush(fp);
@@ -367,20 +367,15 @@ __db_prpage(h, all)
 {
 	BINTERNAL *bi;
 	BKEYDATA *bk;
-	HKEYDATA *hkd;
 	HOFFPAGE a_hkd;
 	FILE *fp;
 	RINTERNAL *ri;
 	db_indx_t dlen, len, i;
 	db_pgno_t pgno;
-	u_int8_t *p;
 	int deleted, ret;
 	const char *s;
-
-	bi = NULL;				/* XXX: Shut the compiler up. */
-	bk = NULL;
-	hkd = NULL;
-	ri = NULL;
+	u_int8_t *ep, *hk, *p;
+	void *sp;
 
 	fp = __db_prinit(NULL);
 
@@ -450,22 +445,18 @@ __db_prpage(h, all)
 		deleted = 0;
 		switch (TYPE(h)) {
 		case P_HASH:
-			hkd = GET_HKEYDATA(h, i);
-			break;
 		case P_IBTREE:
-			bi = GET_BINTERNAL(h, i);
-			break;
 		case P_IRECNO:
-			ri = GET_RINTERNAL(h, i);
+			sp = P_ENTRY(h, i);
 			break;
 		case P_LBTREE:
-			bk = GET_BKEYDATA(h, i);
+			sp = P_ENTRY(h, i);
 			deleted = i % 2 == 0 &&
 			    B_DISSET(GET_BKEYDATA(h, i + O_INDX)->type);
 			break;
 		case P_LRECNO:
 		case P_DUPLICATE:
-			bk = GET_BKEYDATA(h, i);
+			sp = P_ENTRY(h, i);
 			deleted = B_DISSET(GET_BKEYDATA(h, i)->type);
 			break;
 		default:
@@ -478,11 +469,11 @@ __db_prpage(h, all)
 		    deleted ? "D" : " ", (u_long)i, (u_long)h->inp[i]);
 		switch (TYPE(h)) {
 		case P_HASH:
-			switch (hkd->type) {
+			hk = sp;
+			switch (HPAGE_PTYPE(hk)) {
 			case H_OFFDUP:
 				memcpy(&pgno,
-				    (u_int8_t *)hkd + SSZ(HOFFDUP, pgno),
-				    sizeof(db_pgno_t));
+				    HOFFDUP_PGNO(hk), sizeof(db_pgno_t));
 				fprintf(fp,
 				    "%4lu [offpage dups]\n", (u_long)pgno);
 				break;
@@ -499,7 +490,8 @@ __db_prpage(h, all)
 					len = 1;
 
 				fprintf(fp, "Duplicates:\n");
-				for (p = hkd->data; p < hkd->data + len;) {
+				for (p = HKEYDATA_DATA(hk),
+				    ep = p + len; p < ep;) {
 					memcpy(&dlen, p, sizeof(db_indx_t));
 					p += sizeof(db_indx_t);
 					fprintf(fp, "\t\t");
@@ -509,13 +501,13 @@ __db_prpage(h, all)
 				break;
 			case H_KEYDATA:
 				if (i != 0)
-					__db_pr(hkd->data,
+					__db_pr(HKEYDATA_DATA(hk),
 					    LEN_HKEYDATA(h, 0, i));
 				else
-					fprintf(fp, "%s\n", hkd->data);
+					fprintf(fp, "%s\n", HKEYDATA_DATA(hk));
 				break;
 			case H_OFFPAGE:
-				memcpy(&a_hkd, hkd, HOFFPAGE_SIZE);
+				memcpy(&a_hkd, hk, HOFFPAGE_SIZE);
 				fprintf(fp,
 				    "overflow: total len: %4lu page: %4lu\n",
 				    (u_long)a_hkd.tlen, (u_long)a_hkd.pgno);
@@ -523,6 +515,7 @@ __db_prpage(h, all)
 			}
 			break;
 		case P_IBTREE:
+			bi = sp;
 			fprintf(fp, "count: %4lu pgno: %4lu ",
 			    (u_long)bi->nrecs, (u_long)bi->pgno);
 			switch (B_TYPE(bi->type)) {
@@ -541,12 +534,14 @@ __db_prpage(h, all)
 			}
 			break;
 		case P_IRECNO:
+			ri = sp;
 			fprintf(fp, "entries %4lu pgno %4lu\n",
 			    (u_long)ri->nrecs, (u_long)ri->pgno);
 			break;
 		case P_LBTREE:
 		case P_LRECNO:
 		case P_DUPLICATE:
+			bk = sp;
 			switch (B_TYPE(bk->type)) {
 			case B_KEYDATA:
 				__db_pr(bk->data, bk->len);
@@ -582,13 +577,9 @@ __db_isbad(h, die)
 {
 	BINTERNAL *bi;
 	BKEYDATA *bk;
-	HKEYDATA *hkd;
 	FILE *fp;
 	db_indx_t i;
-
-	bi = NULL;				/* XXX: Shut the compiler up. */
-	bk = NULL;
-	hkd = NULL;
+	int type;
 
 	fp = __db_prinit(NULL);
 
@@ -618,13 +609,13 @@ __db_isbad(h, die)
 		}
 		switch (TYPE(h)) {
 		case P_HASH:
-			hkd = GET_HKEYDATA(h, i);
-			if (hkd->type != H_OFFDUP &&
-			    hkd->type != H_DUPLICATE &&
-			    hkd->type != H_KEYDATA &&
-			    hkd->type != H_OFFPAGE) {
+			type = HPAGE_TYPE(h, i);
+			if (type != H_OFFDUP &&
+			    type != H_DUPLICATE &&
+			    type != H_KEYDATA &&
+			    type != H_OFFPAGE) {
 				fprintf(fp, "ILLEGAL HASH TYPE: %lu\n",
-				    (u_long)hkd->type);
+				    (u_long)type);
 				goto bad;
 			}
 			break;

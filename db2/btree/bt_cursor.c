@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_cursor.c	10.27 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_cursor.c	10.33 (Sleepycat) 9/24/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -81,7 +81,10 @@ __bam_cursor(dbp, txn, dbcp)
 	dbc->c_get = __bam_c_get;
 	dbc->c_put = __bam_c_put;
 
-	/* All cursor structures hang off the main DB structure. */
+	/*
+	 * All cursors are queued from the master DB structure.  Add the
+	 * cursor to that queue.
+	 */
 	DB_THREAD_LOCK(dbp);
 	TAILQ_INSERT_HEAD(&dbp->curs_queue, dbc, links);
 	DB_THREAD_UNLOCK(dbp);
@@ -99,31 +102,53 @@ __bam_c_close(dbc)
 	DBC *dbc;
 {
 	DB *dbp;
-	CURSOR *cp;
 	int ret;
 
 	DEBUG_LWRITE(dbc->dbp, dbc->txn, "bam_c_close", NULL, NULL, 0);
 
 	GETHANDLE(dbc->dbp, dbc->txn, &dbp, ret);
-	cp = dbc->internal;
 
-	/* If a cursor key was deleted do the actual deletion.  */
-	ret = F_ISSET(cp, C_DELETED) ?  __bam_c_physdel(dbp, cp, NULL) : 0;
-
-	/* Discard any lock if we're not inside a transaction. */
-	if (dbp->txn == NULL && cp->lock != LOCK_INVALID)
-		(void)__BT_TLPUT(dbp, cp->lock);
-
-	/* Remove the cursor from the queue. */
-	DB_THREAD_LOCK(dbp);
-	TAILQ_REMOVE(&dbp->curs_queue, dbc, links);
-	DB_THREAD_UNLOCK(dbp);
-
-	/* Discard the structures. */
-	FREE(cp, sizeof(CURSOR));
-	FREE(dbc, sizeof(DBC));
+	ret = __bam_c_iclose(dbp, dbc);
 
 	PUTHANDLE(dbp);
+	return (ret);
+}
+
+/*
+ * __bam_c_iclose --
+ *	Close a single cursor -- internal version.
+ *
+ * PUBLIC: int __bam_c_iclose __P((DB *, DBC *));
+ */
+int
+__bam_c_iclose(dbp, dbc)
+	DB *dbp;
+	DBC *dbc;
+{
+	CURSOR *cp;
+	int ret;
+
+	cp = dbc->internal;
+
+	/* If a cursor key was deleted, perform the actual deletion.  */
+	ret = F_ISSET(cp, C_DELETED) ? __bam_c_physdel(dbp, cp, NULL) : 0;
+
+	/* Discard any lock if we're not inside a transaction. */
+	if (cp->lock != LOCK_INVALID)
+		(void)__BT_TLPUT(dbp, cp->lock);
+
+	/*
+	 * All cursors are queued from the master DB structure.  Remove the
+	 * cursor from that queue.
+	 */
+	DB_THREAD_LOCK(dbc->dbp);
+	TAILQ_REMOVE(&dbc->dbp->curs_queue, dbc, links);
+	DB_THREAD_UNLOCK(dbc->dbp);
+
+	/* Discard the structures. */
+	FREE(dbc->internal, sizeof(CURSOR));
+	FREE(dbc, sizeof(DBC));
+
 	return (ret);
 }
 
@@ -235,27 +260,22 @@ __bam_get(argdbp, txn, key, data, flags)
 	if ((ret = __db_getchk(argdbp, key, data, flags)) != 0)
 		return (ret);
 
-	/* Build a cursor. */
+	/* Build an internal cursor. */
 	memset(&cp, 0, sizeof(cp));
 	cp.dbc = &dbc;
 	cp.pgno = cp.dpgno = PGNO_INVALID;
 	cp.lock = LOCK_INVALID;
+	cp.flags = C_INTERNAL;
 
+	/* Build an external cursor. */
 	memset(&dbc, 0, sizeof(dbc));
 	dbc.dbp = argdbp;
 	dbc.txn = txn;
 	dbc.internal = &cp;
 
 	/* Get the key. */
-	if ((ret = __bam_c_get(&dbc,
-	    key, data, LF_ISSET(DB_SET_RECNO) ? DB_SET_RECNO : DB_SET)) != 0)
-		return (ret);
-
-	/* Discard any lock, the cursor didn't really exist. */
-	if (cp.lock != LOCK_INVALID)
-		(void)__BT_TLPUT(argdbp, cp.lock);
-
-	return (0);
+	return(__bam_c_get(&dbc,
+	    key, data, LF_ISSET(DB_SET_RECNO) ? DB_SET_RECNO : DB_SET));
 }
 
 /*
@@ -275,8 +295,7 @@ __bam_c_get(dbc, key, data, flags)
 	int exact, ret;
 
 	DEBUG_LREAD(dbc->dbp, dbc->txn, "bam_c_get",
-	    flags == DB_SET || flags == DB_SET_RANGE ? key : NULL,
-	    NULL, flags);
+	    flags == DB_SET || flags == DB_SET_RANGE ? key : NULL, NULL, flags);
 
 	cp = dbc->internal;
 
@@ -398,6 +417,10 @@ __bam_c_get(dbc, key, data, flags)
 
 	/* Release the pinned page. */
 	ret = memp_fput(dbp->mpf, cp->page, 0);
+
+	/* Internal cursors don't hold locks. */
+	if (F_ISSET(cp, C_INTERNAL) && cp->lock != LOCK_INVALID)
+		(void)__BT_TLPUT(dbp, cp->lock);
 
 	++t->lstat.bt_get;
 
@@ -864,7 +887,7 @@ __bam_c_prev(dbp, cp)
 	 * If at the beginning of the page, move to any previous one.
 	 *
 	 * !!!
-         * This code handles empty pages and pages with only deleted entries.
+	 * This code handles empty pages and pages with only deleted entries.
 	 */
 	for (;;) {
 		if (indx == 0) {
@@ -1472,8 +1495,7 @@ __bam_c_physdel(dbp, cp, h)
 		 *	empty the current page of duplicates, we don't need to
 		 *	touch the parent page.
 		 */
-		if (PREV_PGNO(h) != PGNO_INVALID ||
-		    (h != NULL && pgno == h->pgno))
+		if (prev_pgno != PGNO_INVALID || (h != NULL && pgno == h->pgno))
 			goto done;
 
 		/*

@@ -61,14 +61,16 @@
 #ifndef _RESOLV_H
 #define	_RESOLV_H 1
 
+#include <features.h>
+
 #include <sys/param.h>
 #if (!defined(BSD)) || (BSD < 199306)
 # include <sys/bitypes.h>
 #else
 # include <sys/types.h>
 #endif
-#include <sys/cdefs.h>
 #include <stdio.h>
+#include <netinet/in.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.

@@ -141,7 +141,7 @@ __db_addrem_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_addrem_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_addrem_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_addrem: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -331,7 +331,7 @@ __db_split_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_split_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_split_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_split: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -526,7 +526,7 @@ __db_big_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_big_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_big_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_big: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -693,7 +693,7 @@ __db_ovref_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_ovref_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_ovref_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_ovref: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -854,7 +854,7 @@ __db_relink_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_relink_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_relink_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_relink: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1017,7 +1017,7 @@ __db_addpage_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_addpage_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_addpage_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_addpage: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1192,7 +1192,7 @@ __db_debug_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_debug_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_debug_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_debug: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1347,7 +1347,7 @@ __db_noop_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __db_noop_read(dbtp->data, &argp)) != 0)
+	if ((ret = __db_noop_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]db_noop: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_os_dir.c	10.8 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_os_dir.c	10.10 (Sleepycat) 9/17/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -60,9 +60,11 @@ __db_dir(dbenv, dir, namesp, cntp)
 	struct _finddata_t fdata;
 	long dirhandle;
 	int finished;
+	char filespec[MAX_PATH];
 
-	if ((dirhandle = _findfirst(dir, &fdata)) == -1) {
-		__db_err(dbenv, "%s: %s", dir, strerror(errno));
+	(void)snprintf(filespec, sizeof(filespec), "%s/*", dir);
+	if ((dirhandle = _findfirst(filespec, &fdata)) == -1) {
+		__db_err(dbenv, "%s: %s", filespec, strerror(errno));
 		return (errno);
 	}
 

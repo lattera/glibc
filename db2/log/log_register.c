@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_register.c	10.10 (Sleepycat) 8/20/97";
+static const char sccsid[] = "@(#)log_register.c	10.11 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -190,8 +190,13 @@ log_unregister(dblp, fid)
 	SH_TAILQ_REMOVE(&dblp->lp->fq, fnp, q, __fname);
 	__db_shalloc_free(dblp->addr, fnp);
 
-	/* Remove from the process local table. */
-	__log_rem_logid(dblp, fid);
+	/*
+	 * Remove from the process local table.  If this operation is taking
+	 * place during recovery, then the logid was never added to the table,
+	 * so do not remove it.
+	 */
+	if (!F_ISSET(dblp, DB_AM_RECOVER))
+		__log_rem_logid(dblp, fid);
 
 ret1:	UNLOCK_LOGREGION(dblp);
 

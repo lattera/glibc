@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_get.c	10.17 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)log_get.c	10.19 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -145,7 +145,7 @@ __log_get(dblp, alsn, dbt, flags, silent)
 		 * Find any log file.  Note, we may have only entered records
 		 * in the buffer, and not yet written a log file.
 		 */
-		if ((ret = __log_find(dblp->dbenv, lp, &cnt)) != 0) {
+		if ((ret = __log_find(dblp, &cnt)) != 0) {
 			__db_err(dblp->dbenv,
 	"log_get: unable to find the first record: no log files found.");
 			goto err2;
@@ -157,7 +157,7 @@ __log_get(dblp, alsn, dbt, flags, silent)
 
 		/* Now go backwards to find the smallest one. */
 		for (; cnt > 1; --cnt)
-			if (__log_valid(dblp->dbenv, NULL, cnt) != 0) {
+			if (__log_valid(dblp, NULL, cnt) != 0) {
 				++cnt;
 				break;
 			}
@@ -223,7 +223,7 @@ retry:
 	 * Acquire a file descriptor.
 	 */
 	if (dblp->c_fd == -1) {
-		if ((ret = __log_name(dblp->dbenv, nlsn.file, &np)) != 0)
+		if ((ret = __log_name(dblp, nlsn.file, &np)) != 0)
 			goto err1;
 		if ((ret = __db_fdopen(np, DB_RDONLY | DB_SEQUENTIAL,
 		    DB_RDONLY | DB_SEQUENTIAL, 0, &dblp->c_fd)) != 0) {
@@ -319,6 +319,7 @@ retry:
 	    &dblp->c_dbt.data, &dblp->c_dbt.ulen, NULL)) != 0)
 		goto err1;
 	free(tbuf);
+	tbuf = NULL;
 
 cksum:	if (hdr.cksum != __ham_func4(dbt->data, dbt->size)) {
 		if (!silent)

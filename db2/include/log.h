@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.h	10.8 (Sleepycat) 8/18/97
+ *	@(#)log.h	10.9 (Sleepycat) 9/23/97
  */
 
 #ifndef _LOG_H_
@@ -30,11 +30,11 @@ struct __log_persist;	typedef struct __log_persist LOGP;
 /* Macros to lock/unlock the region and threads. */
 #define	LOCK_LOGTHREAD(dblp)						\
 	if (F_ISSET(dblp, DB_AM_THREAD))				\
-		(void)__db_mutex_lock(&(dblp)->mutex, -1,		\
+		(void)__db_mutex_lock((dblp)->mutexp, -1,		\
 		    (dblp)->dbenv == NULL ? NULL : (dblp)->dbenv->db_yield)
 #define	UNLOCK_LOGTHREAD(dblp)						\
 	if (F_ISSET(dblp, DB_AM_THREAD))				\
-		(void)__db_mutex_unlock(&(dblp)->mutex, -1);
+		(void)__db_mutex_unlock((dblp)->mutexp, -1);
 #define	LOCK_LOGREGION(dblp)						\
 	(void)__db_mutex_lock(&((RLAYOUT *)(dblp)->lp)->lock,		\
 	    (dblp)->fd, (dblp)->dbenv == NULL ? NULL : (dblp)->dbenv->db_yield)
@@ -56,7 +56,7 @@ typedef	struct __db_entry {
  */
 struct __db_log {
 /* These fields need to be protected for multi-threaded support. */
-	db_mutex_t	mutex;		/* Mutex for thread protection. */
+	db_mutex_t	*mutexp;	/* Mutex for thread protection. */
 
 	DB_ENTRY *dbentry;		/* Recovery file-id mapping. */
 #define	DB_GROW_SIZE	64
@@ -85,6 +85,8 @@ struct __db_log {
 	void     *maddr;		/* Address of mmap'd region. */
 	void     *addr;			/* Address of shalloc() region. */
 	int	  fd;			/* Region file descriptor. */
+
+	char	 *dir;			/* Directory argument. */
 
 	u_int32_t flags;		/* Support the DB_AM_XXX flags. */
 };

@@ -147,7 +147,7 @@ const struct locale_data _nl_C_LC_COLLATE =
 {
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
-  MAX_USAGE_COUNT,
+  UNDELETABLE,
   21,
   {
     { word: 0 },

@@ -597,3 +597,28 @@ stpcpy (dest, src)
   return dest - 1;
 }
 #endif
+
+
+#ifdef _LIBC
+/* If we want to free all resources we have to do some work at
+   program's end.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  struct binding *runp;
+
+  for (runp = _nl_domain_bindings; runp != NULL; runp = runp->next)
+    {
+      free (runp->domainname);
+      if (runp->dirname != _nl_default_dirname)
+	/* Yes, this is a pointer comparison.  */
+	free (runp->dirname);
+    }
+
+  if (_nl_current_default_domain != _nl_default_default_domain)
+    /* Yes, again a pointer comparison.  */
+    free ((char *) _nl_current_default_domain);
+}
+
+text_set_element (__libc_subfreeres, free_mem);
+#endif

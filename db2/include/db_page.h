@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_page.h	10.11 (Sleepycat) 9/3/97
+ *	@(#)db_page.h	10.13 (Sleepycat) 9/24/97
  */
 
 #ifndef _DB_PAGE_H_
@@ -273,6 +273,17 @@ typedef struct _db_page {
 #define	H_OFFDUP	4	/* Overflow page of duplicates. */
 
 /*
+ * !!!
+ * Items on hash pages are (potentially) unaligned, so we can never cast the
+ * (page + offset) pointer to an HKEYDATA, HOFFPAGE or HOFFDUP structure, as
+ * we do with B+tree on-page structures.  Because we frequently want the type
+ * field, it requires no alignment, and it's in the same location in all three
+ * structures, there's a pair of macros.
+ */
+#define	HPAGE_PTYPE(p)		(*(u_int8_t *)p)
+#define	HPAGE_TYPE(pg, indx)	(*P_ENTRY(pg, indx))
+
+/*
  * The first and second types are H_KEYDATA and H_DUPLICATE, represented
  * by the HKEYDATA structure:
  *
@@ -294,10 +305,7 @@ typedef struct _hkeydata {
 	u_int8_t  type;		/*    00: Page type. */
 	u_int8_t  data[1];	/* Variable length key/data item. */
 } HKEYDATA;
-
-/* Get a HKEYDATA item for a specific index. */
-#define	GET_HKEYDATA(pg, indx)						\
-	((HKEYDATA *)P_ENTRY(pg, indx))
+#define	HKEYDATA_DATA(p)	(((u_int8_t *)p) + SSZA(HKEYDATA, data))
 
 /*
  * The length of any HKEYDATA item. Note that indx is an element index,
@@ -333,8 +341,8 @@ typedef struct _hkeydata {
 #define H_NUMPAIRS(pg)			(NUM_ENT(pg) / 2)
 #define	H_KEYINDEX(pindx)		(2 * (pindx))
 #define	H_DATAINDEX(pindx)		((2 * (pindx)) + 1)
-#define	H_PAIRKEY(pg, pindx)		GET_HKEYDATA(pg, H_KEYINDEX(pindx))
-#define	H_PAIRDATA(pg, pindx)		GET_HKEYDATA(pg, H_DATAINDEX(pindx))
+#define	H_PAIRKEY(pg, pindx)		P_ENTRY(pg, H_KEYINDEX(pindx))
+#define	H_PAIRDATA(pg, pindx)		P_ENTRY(pg, H_DATAINDEX(pindx))
 #define H_PAIRSIZE(pg, psize, pindx)					\
 	(LEN_HITEM(pg, psize, H_KEYINDEX(pindx)) +			\
 	LEN_HITEM(pg, psize, H_DATAINDEX(pindx)))
@@ -355,9 +363,8 @@ typedef struct _hoffpage {
 	u_int32_t tlen;		/* 08-11: Total length of item. */
 } HOFFPAGE;
 
-/* Get a HOFFPAGE item for a specific index. */
-#define	GET_HOFFPAGE(pg, indx)						\
-	((HOFFPAGE *)P_ENTRY(pg, indx))
+#define	HOFFPAGE_PGNO(p)	(((u_int8_t *)p) + SSZ(HOFFPAGE, pgno))
+#define	HOFFPAGE_TLEN(p)	(((u_int8_t *)p) + SSZ(HOFFPAGE, tlen))
 
 /*
  * Page space required to add a new HOFFPAGE item to the page, with and
@@ -378,10 +385,7 @@ typedef struct _hoffdup {
 	u_int8_t  unused[3];	/* 01-03: Padding, unused. */
 	db_pgno_t pgno;		/* 04-07: Offpage page number. */
 } HOFFDUP;
-
-/* Get a HOFFDUP item for a specific index. */
-#define	GET_HOFFDUP(pg, indx)						\
-	((HOFFDUP *)P_ENTRY(pg, indx))
+#define	HOFFDUP_PGNO(p)		(((u_int8_t *)p) + SSZ(HOFFDUP, pgno))
 
 /*
  * Page space required to add a new HOFFDUP item to the page, with and

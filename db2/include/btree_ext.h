@@ -8,6 +8,7 @@ int __bam_pgin __P((db_pgno_t, void *, DBT *));
 int __bam_pgout __P((db_pgno_t, void *, DBT *));
 int __bam_mswap __P((PAGE *));
 int __bam_cursor __P((DB *, DB_TXN *, DBC **));
+int __bam_c_iclose __P((DB *, DBC *));
 int __bam_get __P((DB *, DB_TXN *, DBT *, DBT *, int));
 int __bam_ovfl_chk __P((DB *, CURSOR *, u_int32_t, int));
 int __bam_ca_delete __P((DB *, db_pgno_t, u_int32_t, CURSOR *));
@@ -51,6 +52,7 @@ int __bam_cdel_recover
 int __ram_open __P((DB *, DBTYPE, DB_INFO *));
 int __ram_cursor __P((DB *, DB_TXN *, DBC **));
 int __ram_close __P((DB *));
+int __ram_c_iclose __P((DB *, DBC *));
 void __ram_ca __P((DB *, db_recno_t, ca_recno_arg));
 int __ram_getno __P((DB *, const DBT *, db_recno_t *, int));
 int __ram_snapshot __P((DB *));

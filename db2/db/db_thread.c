@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_thread.c	8.11 (Sleepycat) 8/18/97";
+static const char sccsid[] = "@(#)db_thread.c	8.12 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -42,7 +42,7 @@ __db_gethandle(dbp, am_func, dbpp)
 	DB *ret_dbp;
 	int ret, t_ret;
 
-	if ((ret = __db_mutex_lock((db_mutex_t *)dbp->mutex, -1,
+	if ((ret = __db_mutex_lock((db_mutex_t *)dbp->mutexp, -1,
 	    dbp->dbenv == NULL ? NULL : dbp->dbenv->db_yield)) != 0)
 		return (ret);
 
@@ -75,7 +75,7 @@ err:		if (ret_dbp != NULL)
 			FREE(ret_dbp, sizeof(*ret_dbp));
 	}
 	if ((t_ret =
-	    __db_mutex_unlock((db_mutex_t *)dbp->mutex, -1)) != 0 && ret == 0)
+	    __db_mutex_unlock((db_mutex_t *)dbp->mutexp, -1)) != 0 && ret == 0)
 		ret = t_ret;
 	return (ret);
 }
@@ -94,13 +94,13 @@ __db_puthandle(dbp)
 	int ret;
 
 	master = dbp->master;
-	if ((ret = __db_mutex_lock((db_mutex_t *)master->mutex, -1,
+	if ((ret = __db_mutex_lock((db_mutex_t *)master->mutexp, -1,
 	    dbp->dbenv == NULL ? NULL : dbp->dbenv->db_yield)) != 0)
 		return (ret);
 
 	LIST_INSERT_HEAD(&master->handleq, dbp, links);
 
-	return (__db_mutex_unlock((db_mutex_t *)master->mutex, -1));
+	return (__db_mutex_unlock((db_mutex_t *)master->mutexp, -1));
 }
 
 /*

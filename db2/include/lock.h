@@ -4,13 +4,19 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)lock.h	10.7 (Sleepycat) 7/29/97
+ *	@(#)lock.h	10.8 (Sleepycat) 9/23/97
  */
 
 typedef struct __db_lockobj	DB_LOCKOBJ;
 
 #define DB_DEFAULT_LOCK_FILE	"__db_lock.share"
 #define DB_LOCK_DEFAULT_N	5000
+
+/*
+ * The locker id space is divided between the transaction manager and the lock
+ * manager.  Lockid's start at 0 and go to DB_LOCK_MAXID.  Txn Id's start at
+ * DB_LOCK_MAXID + 1 and go up to TXN_INVALID.
+ */
 #define DB_LOCK_MAXID		0x7fffffff
 
 /*

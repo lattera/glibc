@@ -197,3 +197,23 @@ _nl_find_domain (dirname, locale, domainname)
 
   return retval;
 }
+
+
+#ifdef _LIBC
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  struct loaded_l10nfile *runp = _nl_loaded_domains;
+
+  while (runp != NULL)
+    {
+      struct loaded_l10nfile *here = runp;
+      if (runp->data != NULL)
+	_nl_unload_domain ((struct loaded_domain *) runp->data);
+      runp = runp->next;
+      free (here);
+    }
+}
+
+text_set_element (__libc_subfreeres, free_mem);
+#endif

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_recno.c	10.15 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_recno.c	10.19 (Sleepycat) 9/20/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -76,7 +76,7 @@ __ram_open(dbp, type, dbinfo)
 
 	/* Allocate and initialize the private RECNO structure. */
 	if ((rp = (RECNO *)calloc(1, sizeof(*rp))) == NULL)
-		return (errno);
+		return (ENOMEM);
 
 	if (dbinfo != NULL) {
 		/*
@@ -150,7 +150,7 @@ err:	/* If we mmap'd a source file, discard it. */
 
 	/* If we allocated room for key/data return, discard it. */
 	t = dbp->internal;
-	if (t->bt_rkey.data != NULL)
+	if (t != NULL && t->bt_rkey.data != NULL)
 		free(t->bt_rkey.data);
 
 	FREE(rp, sizeof(*rp));
@@ -193,7 +193,10 @@ __ram_cursor(dbp, txn, dbcp)
 	dbc->c_get = __ram_c_get;
 	dbc->c_put = __ram_c_put;
 
-	/* All cursor structures hang off the main DB structure. */
+	/*
+	 * All cursors are queued from the master DB structure.  Add the
+	 * cursor to that queue.
+	 */
 	DB_THREAD_LOCK(dbp);
 	TAILQ_INSERT_HEAD(&dbp->curs_queue, dbc, links);
 	DB_THREAD_UNLOCK(dbp);
@@ -382,16 +385,29 @@ static int
 __ram_c_close(dbc)
 	DBC *dbc;
 {
-	DB *dbp;
-
 	DEBUG_LWRITE(dbc->dbp, dbc->txn, "ram_c_close", NULL, NULL, 0);
 
-	dbp = dbc->dbp;
+	return (__ram_c_iclose(dbc->dbp, dbc));
+}
 
-	/* Remove the cursor from the queue. */
-	DB_THREAD_LOCK(dbp);
-	TAILQ_REMOVE(&dbp->curs_queue, dbc, links);
-	DB_THREAD_UNLOCK(dbp);
+/*
+ * __ram_c_iclose --
+ *	Close a single cursor -- internal version.
+ *
+ * PUBLIC: int __ram_c_iclose __P((DB *, DBC *));
+ */
+int
+__ram_c_iclose(dbp, dbc)
+	DB *dbp;
+	DBC *dbc;
+{
+	/*
+	 * All cursors are queued from the master DB structure.  Remove the
+	 * cursor from that queue.
+	 */
+	DB_THREAD_LOCK(dbc->dbp);
+	TAILQ_REMOVE(&dbc->dbp->curs_queue, dbc, links);
+	DB_THREAD_UNLOCK(dbc->dbp);
 
 	/* Discard the structures. */
 	FREE(dbc->internal, sizeof(RCURSOR));

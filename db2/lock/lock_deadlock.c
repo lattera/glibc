@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)lock_deadlock.c	10.20 (Sleepycat) 8/21/97";
+static const char sccsid[] = "@(#)lock_deadlock.c	10.21 (Sleepycat) 9/6/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -300,8 +300,8 @@ retry:	count = lt->region->nlockers;
 			for (lp = SH_TAILQ_FIRST(&op->holders, __db_lock);
 			    lp != NULL;
 			    lp = SH_TAILQ_NEXT(lp, links, __db_lock)) {
-				if ((__set_errno(__lock_getobj(lt, lp->holder,
-				    NULL, DB_LOCK_LOCKER, &lockerp))) != 0) {
+				if (__lock_getobj(lt, lp->holder,
+				    NULL, DB_LOCK_LOCKER, &lockerp) != 0) {
 					__db_err(dbenv,
 					    "warning unable to find object");
 					continue;
@@ -472,8 +472,7 @@ __dd_debug(dbenv, idmap, bitmap, nlockers)
 	 * Alloc space to print 10 bytes per item waited on.
 	 */
 	if ((msgbuf = (char *)malloc((nlockers + 1) * 10 + 64)) == NULL) {
-		__set_errno(ENOMEM);
-		__db_err(dbenv, "%s", strerror(errno));
+		__db_err(dbenv, "%s", strerror(ENOMEM));
 		return;
 	}
 

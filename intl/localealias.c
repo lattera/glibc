@@ -134,6 +134,9 @@ struct alias_map
 };
 
 
+static char *string_space = NULL;
+static size_t string_space_act = 0;
+static size_t string_space_max = 0;
 static struct alias_map *map;
 static size_t nmap = 0;
 static size_t maxmap = 0;
@@ -272,7 +275,8 @@ read_alias_file (fname, fname_len)
 	  if (cp[0] != '\0')
 	    {
 	      char *tp;
-	      size_t len;
+	      size_t alias_len;
+	      size_t value_len;
 
 	      value = cp++;
 	      while (cp[0] != '\0' && !isspace (cp[0]))
@@ -292,35 +296,32 @@ read_alias_file (fname, fname_len)
 	      if (nmap >= maxmap)
 		extend_alias_table ();
 
-#if defined _LIBC || defined HAVE_STRDUP
-	       map[nmap].alias = strdup (alias);
-	       map[nmap].value = strdup (value);
-	       if (map[nmap].alias == NULL || map[nmap].value == NULL)
-		{
-		  FREE_BLOCKS (block_list);
-		  return added;
-		}
-#else
-	      len = strlen (alias) + 1;
-	      tp = (char *) malloc (len);
-	      if (tp == NULL)
-		{
-		  FREE_BLOCKS (block_list);
-		  return added;
-		}
-	      memcpy (tp, alias, len);
-	      map[nmap].alias = tp;
+	      alias_len = strlen (alias) + 1;
+	      value_len = strlen (value) + 1;
 
-	      len = strlen (value) + 1;
-	      tp = (char *) malloc (len);
-	      if (tp == NULL)
+	      if (string_space_act + alias_len + value_len > string_space_max)
 		{
-		  FREE_BLOCKS (block_list);
-		  return added;
+		  /* Increase size of memory pool.  */
+		  size_t new_size = (string_space_max
+				     + (alias_len + value_len > 1024
+					? alias_len + value_len : 1024));
+		  char *new_pool = (char *) realloc (string_space, new_size);
+		  if (new_pool == NULL)
+		    {
+		      FREE_BLOCKS (block_list);
+		      return added;
+		    }
+		  string_space = new_pool;
+		  string_space_max = new_size;
 		}
-	      memcpy (tp, value, len);
-	      map[nmap].value = tp;
-#endif
+
+	      map[nmap].alias = memcpy (&string_space[string_space_act],
+					alias, alias_len);
+	      string_space_act += alias_len;
+
+	      map[nmap].alias = memcpy (&string_space[string_space_act],
+					value, value_len);
+	      string_space_act += value_len;
 
 	      ++nmap;
 	      ++added;
@@ -359,20 +360,28 @@ extend_alias_table ()
   struct alias_map *new_map;
 
   new_size = maxmap == 0 ? 100 : 2 * maxmap;
-  new_map = (struct alias_map *) malloc (new_size
-					 * sizeof (struct alias_map));
+  new_map = (struct alias_map *) realloc (map, (new_size
+						* sizeof (struct alias_map)));
   if (new_map == NULL)
     /* Simply don't extend: we don't have any more core.  */
     return;
 
-  memcpy (new_map, map, nmap * sizeof (struct alias_map));
-
-  if (maxmap != 0)
-    free (map);
-
   map = new_map;
   maxmap = new_size;
 }
+
+
+#ifdef _LIBC
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (string_space != NULL)
+    free (string_space);
+  if (map != NULL)
+    free (map);
+}
+text_set_element (__libc_subfreeres, free_mem);
+#endif
 
 
 static int

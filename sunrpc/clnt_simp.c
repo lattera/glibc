@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)clnt_simple.c 1.35 87/08/11 Copyr 1984 Sun Micro";
 #include <rpc/rpc.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include <strings.h>
+#include <string.h>
 
 static struct callrpc_private
   {

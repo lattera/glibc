@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_ret.c	10.6 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)db_ret.c	10.7 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -46,18 +46,19 @@ __db_ret(dbp, h, indx, dbt, memp, memsize)
 	HOFFPAGE ho;
 	BOVERFLOW *bo;
 	u_int32_t len;
-	void *data, *hk;
+	u_int8_t *hk;
+	void *data;
 
 	switch (TYPE(h)) {
 	case P_HASH:
 		hk = P_ENTRY(h, indx);
-		if (((HKEYDATA *)hk)->type == H_OFFPAGE) {
+		if (HPAGE_PTYPE(hk) == H_OFFPAGE) {
 			memcpy(&ho, hk, sizeof(HOFFPAGE));
 			return (__db_goff(dbp, dbt,
 			    ho.tlen, ho.pgno, memp, memsize));
 		}
 		len = LEN_HKEYDATA(h, dbp->pgsize, indx);
-		data = ((HKEYDATA *)hk)->data;
+		data = HKEYDATA_DATA(hk);
 		break;
 	case P_DUPLICATE:
 	case P_LBTREE:

@@ -32,7 +32,7 @@ routines	:=							      \
 									      \
 	clearerr feof ferror fgetc fileno fputc freopen fseek getc getchar    \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
-	iovdprintf vscanf vsnprintf obprintf fcloseall			      \
+	iovdprintf vscanf vsnprintf obprintf fcloseall fseeko ftello	      \
 									      \
 	libc_fatal
 

@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_conv.c	10.5 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)db_conv.c	10.7 (Sleepycat) 9/21/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -58,28 +58,34 @@ static const char sccsid[] = "@(#)db_conv.c	10.5 (Sleepycat) 9/3/97";
 #include "db_swap.h"
 #include "db_am.h"
 
-static int __db_convert __P((db_pgno_t, void *, int));
+static int __db_convert __P((db_pgno_t, void *, size_t, int));
 
 /*
- * __db_pgin, __db_pgout --
+ * __db_pgin --
  *
- * PUBLIC: int __db_pgin __P((db_pgno_t, void *));
- * PUBLIC: int __db_pgout __P((db_pgno_t, void *));
+ * PUBLIC: int __db_pgin __P((db_pgno_t, size_t, void *));
  */
 int
-__db_pgin(pg, pp)
+__db_pgin(pg, pagesize, pp)
 	db_pgno_t pg;
+	size_t pagesize;
 	void *pp;
 {
-	return (__db_convert(pg, pp, 1));
+	return (__db_convert(pg, pp, pagesize, 1));
 }
 
+/*
+ * __db_pgout --
+ *
+ * PUBLIC: int __db_pgout __P((db_pgno_t, size_t, void *));
+ */
 int
-__db_pgout(pg, pp)
+__db_pgout(pg, pagesize, pp)
 	db_pgno_t pg;
+	size_t pagesize;
 	void *pp;
 {
-	return (__db_convert(pg, pp, 0));
+	return (__db_convert(pg, pp, pagesize, 0));
 }
 
 /*
@@ -87,19 +93,19 @@ __db_pgout(pg, pp)
  *	Actually convert a page.
  */
 static int
-__db_convert(pg, pp, pgin)
+__db_convert(pg, pp, pagesize, pgin)
 	db_pgno_t pg;			/* Unused, but left for the future. */
 	void *pp;
+	size_t pagesize;
 	int pgin;
 {
 	BINTERNAL *bi;
 	BKEYDATA *bk;
 	BOVERFLOW *bo;
-	HKEYDATA *hk;
 	PAGE *h;
 	RINTERNAL *ri;
-	db_indx_t i;
-	u_int8_t *p;
+	db_indx_t i, len, tmp;
+	u_int8_t *p, *end;
 
 	h = pp;
 	if (pgin) {
@@ -118,24 +124,42 @@ __db_convert(pg, pp, pgin)
 			if (pgin)
 				M_16_SWAP(h->inp[i]);
 
-			hk = GET_HKEYDATA(h, i);
-			switch (hk->type) {
+			switch (HPAGE_TYPE(h, i)) {
 			case H_KEYDATA:
 				break;
 			case H_DUPLICATE:
-			case H_OFFPAGE:
-				p = (u_int8_t *)hk + sizeof(u_int8_t);
-				++p;
-				SWAP32(p);			/* tlen */
+				len = LEN_HKEYDATA(h, pagesize, i);
+				p = HKEYDATA_DATA(P_ENTRY(h, i));
+				for (end = p + len; p < end;) {
+					if (pgin) {
+						P_16_SWAP(p);
+						memcpy(&tmp,
+						    p, sizeof(db_indx_t));
+						p += sizeof(db_indx_t);
+					} else {
+						memcpy(&tmp,
+						    p, sizeof(db_indx_t));
+						SWAP16(p);
+					}
+					p += tmp;
+					SWAP16(p);
+				}
+				break;
+			case H_OFFDUP:
+				p = HOFFPAGE_PGNO(P_ENTRY(h, i));
 				SWAP32(p);			/* pgno */
-				SWAP16(p);			/* offset */
-				SWAP16(p);			/* len */
+				break;
+			case H_OFFPAGE:
+				p = HOFFPAGE_PGNO(P_ENTRY(h, i));
+				SWAP32(p);			/* pgno */
+				SWAP32(p);			/* tlen */
 				break;
 			}
 
-			if (!pgin)
-				M_16_SWAP(h->inp[i]);
 		}
+		if (!pgin)
+			for (i = 0; i < NUM_ENT(h); i++)
+				M_16_SWAP(h->inp[i]);
 		break;
 	case P_LBTREE:
 	case P_LRECNO:

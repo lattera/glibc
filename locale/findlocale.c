@@ -176,7 +176,7 @@ _nl_find_locale (const char *locale_path, size_t locale_path_len,
 
   /* Increment the usage count.  */
   if (((struct locale_data *) locale_file->data)->usage_count
-      != MAX_USAGE_COUNT)
+      < MAX_USAGE_COUNT)
     ++((struct locale_data *) locale_file->data)->usage_count;
 
   return (struct locale_data *) locale_file->data;
@@ -213,7 +213,7 @@ _nl_remove_locale (int locale, struct locale_data *data)
 	     permanent.  */
 	  if (__munmap ((caddr_t) data->filedata, data->filesize) != 0)
 	    {
-	      data->usage_count = MAX_USAGE_COUNT;
+	      data->usage_count = UNDELETABLE;
 	      return;
 	    }
 	}
@@ -225,3 +225,26 @@ _nl_remove_locale (int locale, struct locale_data *data)
       free (data);
     }
 }
+
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  int locale;
+
+  for (locale = 0; locale < LC_ALL; ++locale)
+    {
+      struct loaded_l10nfile *runp = locale_file_list[locale];
+
+      while (runp != NULL)
+	{
+	  struct loaded_l10nfile *here = runp;
+	  struct locale_data *data = (struct locale_data *) runp->data;
+
+	  if (data != NULL && data->usage_count != UNDELETABLE)
+	    _nl_unload_locale (data);
+	  runp = runp->next;
+	  free (here);
+	}
+    }
+}
+text_set_element (__libc_subfreeres, free_mem);

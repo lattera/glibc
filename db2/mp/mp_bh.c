@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.15 (Sleepycat) 8/29/97";
+static const char sccsid[] = "@(#)mp_bh.c	10.16 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -55,7 +55,7 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	 * If we find a descriptor on the file that's not open for writing, we
 	 * try and upgrade it to make it writeable.
 	 */
-	LOCKHANDLE(dbmp, &dbmp->mutex);
+	LOCKHANDLE(dbmp, dbmp->mutexp);
 	for (dbmfp = TAILQ_FIRST(&dbmp->dbmfq);
 	    dbmfp != NULL; dbmfp = TAILQ_NEXT(dbmfp, q))
 		if (dbmfp->mfp == mfp) {
@@ -64,7 +64,7 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 				return (0);
 			break;
 		}
-	UNLOCKHANDLE(dbmp, &dbmp->mutex);
+	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 	if (dbmfp != NULL)
 		goto found;
 
@@ -75,12 +75,12 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	 * nothing we can do.
 	 */
 	if (mfp->ftype != 0) {
-		LOCKHANDLE(dbmp, &dbmp->mutex);
+		LOCKHANDLE(dbmp, dbmp->mutexp);
 		for (mpreg = LIST_FIRST(&dbmp->dbregq);
 		    mpreg != NULL; mpreg = LIST_NEXT(mpreg, q))
 			if (mpreg->ftype == mfp->ftype)
 				break;
-		UNLOCKHANDLE(dbmp, &dbmp->mutex);
+		UNLOCKHANDLE(dbmp, dbmp->mutexp);
 		if (mpreg == NULL)
 			return (0);
 	}
@@ -135,19 +135,19 @@ __memp_pgread(dbmfp, bhp, can_create)
 	 * Seek to the page location.
 	 */
 	ret = 0;
-	LOCKHANDLE(dbmp, &dbmfp->mutex);
+	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (dbmfp->fd == -1 || (ret =
 	    __db_lseek(dbmfp->fd, pagesize, bhp->pgno, 0, SEEK_SET)) != 0) {
 		if (!can_create) {
 			if (dbmfp->fd == -1)
 				ret = EINVAL;
-			UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+			UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 			__db_err(dbmp->dbenv,
 			    "%s: page %lu doesn't exist, create flag not set",
 			    dbmfp->path, (u_long)bhp->pgno);
 			goto err;
 		}
-		UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 
 		/* Clear any uninitialized data. */
 		memset(bhp->buf, 0, pagesize);
@@ -159,7 +159,7 @@ __memp_pgread(dbmfp, bhp, can_create)
 	 * any valid data is preserved.
 	 */
 	ret = __db_read(dbmfp->fd, bhp->buf, pagesize, &nr);
-	UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (ret != 0)
 		goto err;
 
@@ -268,10 +268,10 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	}
 
 	/* Temporary files may not yet have been created. */
-	LOCKHANDLE(dbmp, &dbmfp->mutex);
+	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (dbmfp->fd == -1 && ((ret = __db_appname(dbenv, DB_APP_TMP,
 	    NULL, NULL, &dbmfp->fd, NULL)) != 0 || dbmfp->fd == -1)) {
-		UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 		__db_err(dbenv, "unable to create temporary backing file");
 		goto err;
 	}
@@ -282,7 +282,7 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 		fail = "seek";
 	else if ((ret = __db_write(dbmfp->fd, bhp->buf, pagesize, &nw)) != 0)
 		fail = "write";
-	UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (ret != 0) {
 		/*
 		 * XXX
@@ -380,7 +380,7 @@ __memp_pg(dbmfp, bhp, is_pgin)
 	dbmp = dbmfp->dbmp;
 	mfp = dbmfp->mfp;
 
-	LOCKHANDLE(dbmp, &dbmp->mutex);
+	LOCKHANDLE(dbmp, dbmp->mutexp);
 
 	ftype = mfp->ftype;
 	for (mpreg = LIST_FIRST(&dbmp->dbregq);
@@ -394,7 +394,7 @@ __memp_pg(dbmfp, bhp, is_pgin)
 			dbt.data = ADDR(dbmp, mfp->pgcookie_off);
 			dbtp = &dbt;
 		}
-		UNLOCKHANDLE(dbmp, &dbmp->mutex);
+		UNLOCKHANDLE(dbmp, dbmp->mutexp);
 
 		if (is_pgin) {
 			if (mpreg->pgin != NULL && (ret =
@@ -408,11 +408,11 @@ __memp_pg(dbmfp, bhp, is_pgin)
 	}
 
 	if (mpreg == NULL)
-		UNLOCKHANDLE(dbmp, &dbmp->mutex);
+		UNLOCKHANDLE(dbmp, dbmp->mutexp);
 
 	return (0);
 
-err:	UNLOCKHANDLE(dbmp, &dbmp->mutex);
+err:	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 	__db_err(dbmp->dbenv, "%s: %s failed for page %lu",
 	    dbmfp->path, is_pgin ? "pgin" : "pgout", (u_long)bhp->pgno);
 	return (ret);

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_func.c	10.6 (Sleepycat) 7/26/97";
+static const char sccsid[] = "@(#)hash_func.c	10.7 (Sleepycat) 9/16/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -64,7 +64,7 @@ static const char sccsid[] = "@(#)hash_func.c	10.6 (Sleepycat) 7/26/97";
  *
  * PUBLIC: u_int32_t __ham_func2 __P((const void *, u_int32_t));
  */
-#define	dcharhash(h, c)	((h) = 0x63c63cd9*(h) + 0x9c39c33d + (c))
+#define	DCHARHASH(h, c)	((h) = 0x63c63cd9*(h) + 0x9c39c33d + (c))
 
 u_int32_t
 __ham_func2(key, len)
@@ -81,7 +81,7 @@ __ham_func2(key, len)
 		c = *k++;
 		if (!c && k > e)
 			break;
-		dcharhash(h, c);
+		DCHARHASH(h, c);
 	}
 	return (h);
 }

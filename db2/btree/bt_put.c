@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_put.c	10.24 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_put.c	10.25 (Sleepycat) 9/17/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -99,7 +99,7 @@ __bam_put(argdbp, txn, key, data, flags)
 	t = dbp->internal;
 
 retry:	/*
-	 * Find the location at which to insert.  The call to bt_lookup()
+	 * Find the location at which to insert.  The call to __bam_lookup
 	 * leaves the returned page pinned.
 	 */
 	if ((ret = __bam_lookup(dbp, key, &exact)) != 0) {

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_int.h.src	10.28 (Sleepycat) 8/20/97
+ *	@(#)db_int.h.src	10.30 (Sleepycat) 9/23/97
  */
 
 #ifndef _DB_INTERNAL_H_
@@ -24,12 +24,6 @@
 #define	DB_MAX_PGSIZE	0x010000	/* Maximum page size. */
 
 #define	DB_MINCACHE	10		/* Minimum cached pages */
-
-/* Handle `errno' in the presence of multi-threading correctly.  On some
-   systems we need a special macro to do this right.  */
-#ifndef __set_errno
-# define __set_errno(val) (errno) = (val)
-#endif
 
 /*
  * Aligning items to particular sizes or in pages or memory.  ALIGNP is a
@@ -94,7 +88,7 @@
 
 /* Structure used to print flag values. */
 typedef struct __fn {
-	u_int32_t mask;			/* Flag value. */
+	u_int32_t   mask;		/* Flag value. */
 	const char *name;		/* Flag name. */
 } FN;
 
@@ -183,11 +177,11 @@ typedef struct _db_mutex_t {
 /* Lock/unlock a DB thread. */
 #define	DB_THREAD_LOCK(dbp)						\
 	(F_ISSET(dbp, DB_AM_THREAD) ?					\
-	    __db_mutex_lock((db_mutex_t *)(dbp)->mutex,  -1,		\
+	    __db_mutex_lock((db_mutex_t *)(dbp)->mutexp,  -1,		\
 	        (dbp)->dbenv == NULL ? NULL : (dbp)->dbenv->db_yield) : 0)
 #define	DB_THREAD_UNLOCK(dbp)						\
 	(F_ISSET(dbp, DB_AM_THREAD) ?					\
-	    __db_mutex_unlock((db_mutex_t *)(dbp)->mutex,  -1) : 0)
+	    __db_mutex_unlock((db_mutex_t *)(dbp)->mutexp,  -1) : 0)
 
 /* Btree/recno local statistics structure. */
 struct __db_bt_lstat;	typedef struct __db_bt_lstat DB_BTREE_LSTAT;
@@ -311,14 +305,6 @@ typedef struct __dbpginfo {
 /*******************************************************
  * Transactions and recovery.
  *******************************************************/
-/*
- * The locker id space is divided between the transaction manager and the lock
- * manager.  Lockid's start at 0 and go to MAX_LOCKER_ID.  Txn Id's start at
- * MAX_LOCKER_ID + 1 and go up to MAX_TXNID.
- */
-#define	MAX_LOCKER_ID	0x0fffffff
-#define	MAX_TXNID	0xffffffff
-
 /*
  * Out of band value for a lock.  The locks are returned to callers as offsets
  * into the lock regions.  Since the RLAYOUT structure begins all regions, an

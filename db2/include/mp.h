@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.15 (Sleepycat) 8/29/97
+ *	@(#)mp.h	10.16 (Sleepycat) 9/23/97
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -99,7 +99,7 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
  */
 struct __db_mpool {
 /* These fields need to be protected for multi-threaded support. */
-	db_mutex_t	mutex;		/* Structure lock. */
+	db_mutex_t	*mutexp;	/* Structure lock. */
 
 					/* List of pgin/pgout routines. */
 	LIST_HEAD(__db_mpregh, __db_mpreg) dbregq;
@@ -145,7 +145,7 @@ struct __db_mpreg {
  */
 struct __db_mpoolfile {
 /* These fields need to be protected for multi-threaded support. */
-	db_mutex_t	mutex;		/* Structure lock. */
+	db_mutex_t	*mutexp;	/* Structure lock. */
 
 	int	   fd;			/* Underlying file descriptor. */
 

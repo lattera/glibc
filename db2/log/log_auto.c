@@ -121,7 +121,7 @@ __log_register_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __log_register_read(dbtp->data, &argp)) != 0)
+	if ((ret = __log_register_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]log_register: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -269,7 +269,7 @@ __log_unregister_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __log_unregister_read(dbtp->data, &argp)) != 0)
+	if ((ret = __log_unregister_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]log_unregister: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,

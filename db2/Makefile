@@ -19,7 +19,7 @@
 #
 #	Sub-makefile for libdb.
 #
-#	The code is lifted straight from the db 2.3.6 distribution
+#	The code is lifted straight from the db 2.3.10 distribution
 #	with minimal changes.
 #
 

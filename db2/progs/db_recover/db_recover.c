@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_recover.c	10.14 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_recover.c	10.15 (Sleepycat) 9/21/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -24,6 +24,7 @@ static const char sccsid[] = "@(#)db_recover.c	10.14 (Sleepycat) 8/27/97";
 #endif
 
 #include "db_int.h"
+#include "shqueue.h"
 #include "txn.h"
 #include "common_ext.h"
 #include "clib_ext.h"

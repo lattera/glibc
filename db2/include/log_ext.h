@@ -1,6 +1,6 @@
 /* Do not edit: automatically built by dist/distrib. */
-int __log_find __P((DB_ENV *, LOG *, int *));
-int __log_valid __P((DB_ENV *, LOG *, int));
+int __log_find __P((DB_LOG *, int *));
+int __log_valid __P((DB_LOG *, LOG *, int));
 int __log_register_log
     __P((DB_LOG *, DB_TXN *, DB_LSN *, u_int32_t,
     DBT *, DBT *, u_int32_t, DBTYPE));
@@ -18,7 +18,7 @@ int __log_init_recover __P((DB_ENV *));
 int __log_findckp __P((DB_LOG *, DB_LSN *));
 int __log_get __P((DB_LOG *, DB_LSN *, DBT *, int, int));
 int __log_put __P((DB_LOG *, DB_LSN *, const DBT *, int));
-int __log_name __P((DB_ENV *, int, char **));
+int __log_name __P((DB_LOG *, int, char **));
 int __log_register_recover
     __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __log_unregister_recover

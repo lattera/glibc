@@ -332,6 +332,10 @@ addseverity (int severity, const char *string)
   int result;
   const char *new_string;
 
+  /* Prevent illegal SEVERITY values.  */
+  if (severity <= MM_INFO)
+    return MM_NOTOK;
+
   if (string == NULL)
     /* We want to remove the severity class.  */
     new_string = NULL;
@@ -339,7 +343,7 @@ addseverity (int severity, const char *string)
     {
       new_string = __strdup (string);
 
-      if (new_string == NULL || severity <= MM_INFO)
+      if (new_string == NULL)
 	/* Allocation failed or illegal value.  */
 	return MM_NOTOK;
     }
@@ -359,3 +363,23 @@ addseverity (int severity, const char *string)
 
   return result;
 }
+
+
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  struct severity_info *runp = severity_list;
+
+  while (runp != NULL)
+    if (runp->severity > MM_INFO)
+      {
+	/* This is data we have to release.  */
+	struct severity_info *here = runp;
+	free ((char *) runp->string);
+	runp = runp->next;
+	free (here);
+      }
+    else
+      runp = runp->next;
+}
+text_set_element (__libc_subfreeres, free_mem);

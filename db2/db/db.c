@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db.c	10.38 (Sleepycat) 9/2/97";
+static const char sccsid[] = "@(#)db.c	10.41 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -137,7 +137,13 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	}
 	dbp->dbenv = dbenv;
 
-	/* Convert the dbinfo flags. */
+	/* Convert the db_open(3) flags. */
+	if (LF_ISSET(DB_RDONLY))
+		F_SET(dbp, DB_AM_RDONLY);
+	if (LF_ISSET(DB_THREAD))
+		F_SET(dbp, DB_AM_THREAD);
+
+	/* Convert the dbinfo structure flags. */
 	if (dbinfo != NULL) {
 		/*
 		 * !!!
@@ -160,23 +166,6 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 			F_SET(dbp, DB_RE_SNAPSHOT);
 	}
 
-	/* Set based on the open(2) flags. */
-	if (LF_ISSET(DB_RDONLY))
-		F_SET(dbp, DB_AM_RDONLY);
-
-	/* Check threading fields. */
-	if (LF_ISSET(DB_THREAD)) {
-		if ((dbp->mutex =
-		    (db_mutex_t *)malloc(sizeof(db_mutex_t))) == NULL) {
-			__db_err(dbenv, "%s", strerror(ENOMEM));
-			ret = ENOMEM;
-			goto err;
-		}
-		__db_mutex_init(dbp->mutex, 0);
-
-		F_SET(dbp, DB_AM_THREAD);
-	}
-
 	/*
 	 * Always set the master and initialize the queues, so we can
 	 * use these fields without checking the thread bit.
@@ -190,7 +179,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	 * Set based on the dbenv fields, although no logging or transactions
 	 * are possible for temporary files.
 	 */
-	if (dbp->dbenv != NULL) {
+	if (dbenv != NULL) {
 		if (dbenv->lk_info != NULL)
 			F_SET(dbp, DB_AM_LOCKING);
 		if (fname != NULL && dbenv->lg_info != NULL)
@@ -274,8 +263,8 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 		 * sizes, we limit the default pagesize to 16K.
 		 */
 		if (dbp->pgsize == 0) {
-			if ((ret = __db_stat(dbp->dbenv,
-			    real_name, fd, NULL, &io)) != 0)
+			if ((ret =
+			    __db_stat(dbenv, real_name, fd, NULL, &io)) != 0)
 				goto err;
 			if (io < 512)
 				io = 512;
@@ -573,6 +562,15 @@ empty:	/*
 	    0, &pgcookie, dbp->lock.fileid, &dbp->mpf)) != 0)
 		goto err;
 
+	/*
+	 * XXX
+	 * Truly spectacular layering violation.  We need a per-thread mutex
+	 * that lives in shared memory (thanks, HP-UX!) and so we acquire a
+	 * pointer to the mpool one.
+	 */
+	if (F_ISSET(dbp, DB_AM_THREAD))
+		dbp->mutexp = dbp->mpf->mutexp;
+
 	/* Get a log file id. */
 	if (F_ISSET(dbp, DB_AM_LOGGING) &&
 	    (ret = log_register(dbenv->lg_info,
@@ -672,7 +670,9 @@ db_close(dbp, flags)
 	DB *tdbp;
 	int ret, t_ret;
 
-	ret = 0;
+	/* Validate arguments. */
+	if ((ret = __db_fchk(dbp->dbenv, "db_close", flags, DB_NOSYNC)) != 0)
+		return (ret);
 
 	/* Sync the underlying file. */
 	if (!LF_ISSET(DB_NOSYNC) &&
@@ -685,10 +685,26 @@ db_close(dbp, flags)
 	 */
 	for (tdbp = LIST_FIRST(&dbp->handleq);
 	    tdbp != NULL; tdbp = LIST_NEXT(tdbp, links)) {
-
 		while ((dbc = TAILQ_FIRST(&tdbp->curs_queue)) != NULL)
-			if ((t_ret = dbc->c_close(dbc)) != 0 && ret == 0)
-				ret = t_ret;
+			switch (tdbp->type) {
+			case DB_BTREE:
+				if ((t_ret =
+				    __bam_c_iclose(tdbp, dbc)) != 0 && ret == 0)
+					ret = t_ret;
+				break;
+			case DB_HASH:
+				if ((t_ret =
+				    __ham_c_iclose(tdbp, dbc)) != 0 && ret == 0)
+					ret = t_ret;
+				break;
+			case DB_RECNO:
+				if ((t_ret =
+				    __ram_c_iclose(tdbp, dbc)) != 0 && ret == 0)
+					ret = t_ret;
+				break;
+			default:
+				abort();
+			}
 
 		switch (tdbp->type) {
 		case DB_BTREE:
@@ -706,7 +722,6 @@ db_close(dbp, flags)
 		default:
 			abort();
 		}
-
 	}
 
 	/* Sync the memory pool. */
@@ -721,10 +736,6 @@ db_close(dbp, flags)
 	if (F_ISSET(dbp, DB_AM_MLOCAL) &&
 	    (t_ret = memp_close(dbp->mp)) != 0 && ret == 0)
 		ret = t_ret;
-
-	/* Discard the mutex. */
-	if (dbp->mutex != NULL)
-		FREE(dbp->mutex, sizeof(db_mutex_t));
 
 	/* Discard the log file id. */
 	if (F_ISSET(dbp, DB_AM_LOGGING))

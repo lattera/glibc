@@ -177,9 +177,9 @@ GLIBC_2.0 {
     fgetspent; fgetspent_r; fileno; fileno_unlocked; finite; finitef;
     finitel; flock; flockfile; fmtmsg; fnmatch; fopen; fopencookie; fork;
     fpathconf; fprintf; fputc; fputc_unlocked; fputs; fread; free;
-    freeaddrinfo; freopen; frexp; frexpf; frexpl; fscanf; fseek; fsetpos;
-    fstatfs; fsync; ftell; ftime; ftok; ftruncate; ftrylockfile;
-    fts_children; fts_close; fts_open; fts_read; fts_set; ftw;
+    freeaddrinfo; freopen; frexp; frexpf; frexpl; fscanf; fseek; fseeko;
+    fsetpos; fstatfs; fsync; ftell; ftello; ftime; ftok; ftruncate;
+    ftrylockfile; fts_children; fts_close; fts_open; fts_read; fts_set; ftw;
     funlockfile; fwrite;
 
     # g*
@@ -276,8 +276,8 @@ GLIBC_2.0 {
     parse_printf_format; passwd2des; pathconf; pause; pciconfig_read;
     pciconfig_write; pclose; perror;
     personality; pipe; pmap_getmaps; pmap_getport; pmap_rmtcall; pmap_set;
-    pmap_unset; poll; popen; printf; printf_size; printf_size_info;
-    profil; profil_counter; pselect; psignal;
+    pmap_unset; poll; popen; pread; printf; printf_size; printf_size_info;
+    profil; profil_counter; pwrite; pselect; psignal;
 
     pthread_attr_destroy;
     pthread_attr_getdetachstate; pthread_attr_getinheritsched;

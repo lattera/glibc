@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_load.c	10.12 (Sleepycat) 8/28/97";
+static const char sccsid[] = "@(#)db_load.c	10.13 (Sleepycat) 9/15/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -59,7 +59,7 @@ main(argc, argv)
 	char **clist, **clp, *home;
 
 	/* Allocate enough room for configuration arguments. */
-	if ((clp = clist = calloc(argc + 1, sizeof(char *))) == NULL)
+	if ((clp = clist = (char **)calloc(argc + 1, sizeof(char *))) == NULL)
 		err(1, NULL);
 
 	home = NULL;

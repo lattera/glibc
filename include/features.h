@@ -27,7 +27,8 @@
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993
-   _XOPEN_SOURCE	Includes POSIX and XPG things.
+   _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
+			Single Unix conformance is wanted.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.
    _BSD_SOURCE		ISO C, POSIX, and 4.3BSD things.
    _SVID_SOURCE		ISO C, POSIX, and SVID things.
@@ -50,6 +51,7 @@
    __USE_POSIX199309	Define IEEE Std 1003.1b things.
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
+   __USE_UNIX98		Define Single Unix V2 things.
    __USE_BSD		Define 4.3BSD things.
    __USE_SVID		Define SVID things.
    __USE_MISC		Define things common to BSD and System V Unix.
@@ -111,7 +113,7 @@
 # undef  _POSIX_C_SOURCE
 # define _POSIX_C_SOURCE	199309L
 # undef  _XOPEN_SOURCE
-# define _XOPEN_SOURCE	1
+# define _XOPEN_SOURCE	500
 # undef  _XOPEN_SOURCE_EXTENDED
 # define _XOPEN_SOURCE_EXTENDED	1
 # undef  _BSD_SOURCE
@@ -141,7 +143,7 @@
 #if (!defined __STRICT_ANSI__ && !defined _POSIX_SOURCE && \
      !defined _POSIX_C_SOURCE)
 # define _POSIX_SOURCE	1
-# ifdef _XOPEN_SOURCE
+# if defined _XOPEN_SOURCE && _XOPEN_SOURCE != 500
 #  define _POSIX_C_SOURCE	2
 # else
 #  define _POSIX_C_SOURCE	199309L
@@ -162,8 +164,13 @@
 
 #ifdef	_XOPEN_SOURCE
 # define __USE_XOPEN	1
-# ifdef _XOPEN_SOURCE_EXTENDED
+# if _XOPEN_SOURCE == 500
 #  define __USE_XOPEN_EXTENDED	1
+#  define __USE_UNIX98	1
+# else
+#  ifdef _XOPEN_SOURCE_EXTENDED
+#   define __USE_XOPEN_EXTENDED	1
+#  endif
 # endif
 #endif
 

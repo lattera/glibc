@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_open.c	10.12 (Sleepycat) 7/6/97";
+static const char sccsid[] = "@(#)mp_open.c	10.13 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -56,7 +56,6 @@ memp_open(path, flags, mode, dbenv, retp)
 	/* Create and initialize the DB_MPOOL structure. */
 	if ((dbmp = (DB_MPOOL *)calloc(1, sizeof(DB_MPOOL))) == NULL)
 		return (ENOMEM);
-	LOCKINIT(dbmp, &dbmp->mutex);
 	LIST_INIT(&dbmp->dbregq);
 	TAILQ_INIT(&dbmp->dbmfq);
 
@@ -66,6 +65,17 @@ memp_open(path, flags, mode, dbenv, retp)
 	if ((dbenv == NULL && path == NULL) ||
 	    (dbenv != NULL && F_ISSET(dbenv, DB_MPOOL_PRIVATE)))
 		F_SET(dbmp, MP_ISPRIVATE);
+
+	/*
+	 * XXX
+	 * HP-UX won't permit mutexes to live in anything but shared memory.
+	 * So, we have to instantiate the shared mpool region file on that
+	 * architecture, regardless.  If this turns out to be a performance
+	 * problem, we could probably use anonymous memory instead.
+	 */
+#if defined(__hppa)
+	F_CLR(dbmp, MP_ISPRIVATE);
+#endif
 
 	/*
 	 * Map in the region.  We do locking regardless, as portions of it are
@@ -79,12 +89,22 @@ memp_open(path, flags, mode, dbenv, retp)
 	/*
 	 * If there's concurrent access, then we have to lock the region.
 	 * If it's threaded, then we have to lock both the handles and the
-	 * region.
+	 * region, and we need to allocate a mutex for that purpose.
 	 */
 	if (!F_ISSET(dbmp, MP_ISPRIVATE))
 		F_SET(dbmp, MP_LOCKREGION);
-	if (LF_ISSET(DB_THREAD))
+	if (LF_ISSET(DB_THREAD)) {
 		F_SET(dbmp, MP_LOCKHANDLE | MP_LOCKREGION);
+		LOCKREGION(dbmp);
+		ret = __memp_ralloc(dbmp,
+		    sizeof(db_mutex_t), NULL, &dbmp->mutexp);
+		UNLOCKREGION(dbmp);
+		if (ret != 0) {
+			(void)memp_close(dbmp);
+			goto err;
+		}
+		LOCKINIT(dbmp, dbmp->mutexp);
+	}
 
 	*retp = dbmp;
 	return (0);
@@ -119,11 +139,18 @@ memp_close(dbmp)
 		if ((t_ret = memp_fclose(dbmfp)) != 0 && ret == 0)
 			ret = t_ret;
 
+	/* Discard thread mutex. */
+	if (F_ISSET(dbmp, MP_LOCKHANDLE)) {
+		LOCKREGION(dbmp);
+		__db_shalloc_free(dbmp->addr, dbmp->mutexp);
+		UNLOCKREGION(dbmp);
+	}
+
 	/* Close the region. */
 	if ((t_ret = __memp_rclose(dbmp)) && ret == 0)
 		ret = t_ret;
 
-	/* Free the structure. */
+	/* Discard the structure. */
 	FREE(dbmp, sizeof(DB_MPOOL));
 
 	return (ret);
@@ -168,9 +195,9 @@ memp_register(dbmp, ftype, pgin, pgout)
 	 * the most recent registry in the case of multiple entries, so
 	 * we don't have to check for multiple registries.
 	 */
-	LOCKHANDLE(dbmp, &dbmp->mutex);
+	LOCKHANDLE(dbmp, dbmp->mutexp);
 	LIST_INSERT_HEAD(&dbmp->dbregq, mpr, q);
-	UNLOCKHANDLE(dbmp, &dbmp->mutex);
+	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 
 	return (0);
 }

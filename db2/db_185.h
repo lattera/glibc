@@ -36,7 +36,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)db_185.h.src	8.3 (Sleepycat) 7/27/97
+ *	@(#)db_185.h.src	8.4 (Sleepycat) 9/16/97
  */
 
 #ifndef _DB_185_H_
@@ -70,6 +70,14 @@
 
 
 
+#endif
+
+/*
+ * XXX
+ * SGI/IRIX already has a pgno_t.
+ */
+#ifdef sgi
+#define        pgno_t  db_pgno_t
 #endif
 
 #define	MAX_PAGE_NUMBER	0xffffffff	/* >= # of pages in a file */

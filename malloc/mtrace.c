@@ -193,6 +193,23 @@ tr_reallochook (ptr, size, caller)
   return hdr;
 }
 
+
+#ifdef _LIBC
+extern void __libc_freeres (void);
+
+/* This function gets called to make sure all memory the library
+   allocates get freed and so does not irritate the user when studying
+   the mtrace output.  */
+static void
+release_libc_mem (void)
+{
+  /* Only call the free function if we still are running in mtrace mode.  */
+  if (mallstream != NULL)
+    __libc_freeres ();
+}
+#endif
+
+
 /* We enable tracing if either the environment variable MALLOC_TRACE
    is set, or if the variable mallwatch has been patched to an address
    that the debugging user wants us to stop on.  When patching mallwatch,
@@ -201,6 +218,9 @@ tr_reallochook (ptr, size, caller)
 void
 mtrace ()
 {
+#ifdef _LIBC
+  static int added_atexit_handler = 0;
+#endif
   char *mallfile;
 
   /* Don't panic if we're called more than once.  */
@@ -229,6 +249,13 @@ mtrace ()
 	  __malloc_hook = tr_mallochook;
 	  tr_old_realloc_hook = __realloc_hook;
 	  __realloc_hook = tr_reallochook;
+#ifdef _LIBC
+	  if (!added_atexit_handler)
+	    {
+	      added_atexit_handler = 1;
+	      atexit (release_libc_mem);
+	    }
+#endif
 	}
     }
 }

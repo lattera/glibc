@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_conv.c	10.4 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_conv.c	10.5 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -21,12 +21,11 @@ static const char sccsid[] = "@(#)bt_conv.c	10.4 (Sleepycat) 9/3/97";
 #include "btree.h"
 
 /*
- * __bam_pgin, __bam_pgout --
- *	Convert host-specific page layout to/from the host-independent
- *	format stored on disk.
+ * __bam_pgin --
+ *	Convert host-specific page layout from the host-independent format
+ *	stored on disk.
  *
  * PUBLIC: int __bam_pgin __P((db_pgno_t, void *, DBT *));
- * PUBLIC: int __bam_pgout __P((db_pgno_t, void *, DBT *));
  */
 int
 __bam_pgin(pg, pp, cookie)
@@ -39,9 +38,17 @@ __bam_pgin(pg, pp, cookie)
 	pginfo = (DB_PGINFO *)cookie->data;
 	if (!pginfo->needswap)
 		return (0);
-	return (pg == PGNO_METADATA ? __bam_mswap(pp) : __db_pgin(pg, pp));
+	return (pg == PGNO_METADATA ?
+	    __bam_mswap(pp) : __db_pgin(pg, pginfo->db_pagesize, pp));
 }
 
+/*
+ * __bam_pgout --
+ *	Convert host-specific page layout to the host-independent format
+ *	stored on disk.
+ *
+ * PUBLIC: int __bam_pgout __P((db_pgno_t, void *, DBT *));
+ */
 int
 __bam_pgout(pg, pp, cookie)
 	db_pgno_t pg;
@@ -53,7 +60,8 @@ __bam_pgout(pg, pp, cookie)
 	pginfo = (DB_PGINFO *)cookie->data;
 	if (!pginfo->needswap)
 		return (0);
-	return (pg == PGNO_METADATA ? __bam_mswap(pp) : __db_pgout(pg, pp));
+	return (pg == PGNO_METADATA ?
+	    __bam_mswap(pp) : __db_pgout(pg, pginfo->db_pagesize, pp));
 }
 
 /*

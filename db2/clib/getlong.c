@@ -18,7 +18,6 @@ static const char sccsid[] = "@(#)getlong.c	10.2 (Sleepycat) 5/1/97";
 #endif
 
 #include "db.h"
-#include "db_int.h"
 #include "clib_ext.h"
 
 /*

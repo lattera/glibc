@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_rec.c	10.13 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)bt_rec.c	10.14 (Sleepycat) 9/6/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -298,11 +298,10 @@ __bam_split_recover(logp, dbtp, lsnp, redo, info)
 			goto done;
 
 		/* Allocate and initialize new left/right child pages. */
-		if ((_lp = (PAGE *)malloc(file_dbp->pgsize)) == NULL)
-			goto nomem;
-		if ((_rp = (PAGE *)malloc(file_dbp->pgsize)) == NULL) {
-nomem:			__set_errno(ENOMEM);
-			__db_err(file_dbp->dbenv, "%s", strerror(errno));
+		if ((_lp = (PAGE *)malloc(file_dbp->pgsize)) == NULL ||
+		    (_rp = (PAGE *)malloc(file_dbp->pgsize)) == NULL) {
+			ret = ENOMEM;
+			__db_err(file_dbp->dbenv, "%s", strerror(ret));
 			goto out;
 		}
 		if (rootsplit) {
@@ -668,7 +667,7 @@ __bam_cadjust_recover(logp, dbtp, lsnp, redo, info)
 	REC_INTRO(__bam_cadjust_read);
 
 	if ((ret = memp_fget(mpf, &argp->pgno, 0, &pagep)) != 0) {
-		__set_errno(__db_pgerr(file_dbp, argp->pgno));
+		(void)__db_pgerr(file_dbp, argp->pgno);
 		pagep = NULL;
 		goto out;
 	}

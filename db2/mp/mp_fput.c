@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fput.c	10.10 (Sleepycat) 7/20/97";
+static const char sccsid[] = "@(#)mp_fput.c	10.12 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -31,7 +31,7 @@ int
 memp_fput(dbmfp, pgaddr, flags)
 	DB_MPOOLFILE *dbmfp;
 	void *pgaddr;
-	u_long flags;
+	int flags;
 {
 	BH *bhp;
 	DB_MPOOL *dbmp;
@@ -58,14 +58,14 @@ memp_fput(dbmfp, pgaddr, flags)
 	}
 
 	/* Decrement the pinned reference count. */
-	LOCKHANDLE(dbmp, &dbmfp->mutex);
+	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (dbmfp->pinref == 0)
 		__db_err(dbmp->dbenv,
 		    "%s: put: more blocks returned than retrieved",
 		    dbmfp->path);
 	else
 		--dbmfp->pinref;
-	UNLOCKHANDLE(dbmp, &dbmfp->mutex);
+	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 
 	/*
 	 * If we're mapping the file, there's nothing to do.  Because we can

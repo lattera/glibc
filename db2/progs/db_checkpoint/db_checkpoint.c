@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_checkpoint.c	10.11 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)db_checkpoint.c	10.12 (Sleepycat) 9/4/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -22,6 +22,7 @@ static const char sccsid[] = "@(#)db_checkpoint.c	10.11 (Sleepycat) 8/27/97";
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #endif
@@ -59,7 +60,7 @@ main(argc, argv)
 	DB_ENV *dbenv;
 	time_t now;
 	long kbytes, minutes, seconds;
-	int ch, rval, verbose;
+	int ch, eval, verbose;
 	char *home, *logfile;
 
 	home = logfile = NULL;
@@ -110,7 +111,7 @@ main(argc, argv)
 	 * to wake up when a checkpoint is necessary.  If we have a "kbytes"
 	 * field set, then we'll check every 30 seconds.
 	 */
-	rval = 0;
+	eval = 0;
 	seconds = kbytes != 0 ? 30 : minutes * 60;
 	while (!interrupted) {
 		(void)__db_sleep(seconds, 0);
@@ -119,23 +120,25 @@ main(argc, argv)
 			(void)time(&now);
 			printf("checkpoint: %s", ctime(&now));
 		}
-		rval = txn_checkpoint(dbenv->tx_info, kbytes, minutes);
-		if (rval < 0)
-			break;
+		errno = txn_checkpoint(dbenv->tx_info, kbytes, minutes);
 
-		while (rval > 0) {
+		while (errno == DB_INCOMPLETE) {
 			if (verbose)
 				__db_err(dbenv,
 				    "checkpoint did not finish, retrying");
 			(void)__db_sleep(2, 0);
-			rval = txn_checkpoint(dbenv->tx_info, 0, 0);
+			errno = txn_checkpoint(dbenv->tx_info, 0, 0);
 		}
-		if (rval < 0)
+
+		if (errno != 0) {
+			eval = 1;
+			__db_err(dbenv, "checkpoint: %s", strerror(errno));
 			break;
+		}
 	}
 
 	if (logfile != NULL && logpid(logfile, 0))
-		rval = 1;
+		eval = 1;
 
 	if (interrupted) {
 		(void)signal(interrupted, SIG_DFL);
@@ -143,7 +146,7 @@ main(argc, argv)
 		/* NOTREACHED */
 	}
 
-	return (db_appexit(dbenv) || rval ? 1 : 0);
+	return (db_appexit(dbenv) || eval ? 1 : 0);
 }
 
 /*

@@ -57,8 +57,8 @@ int __db_noop_print
 int __db_noop_read __P((void *, __db_noop_args **));
 int __db_init_print __P((DB_ENV *));
 int __db_init_recover __P((DB_ENV *));
-int __db_pgin __P((db_pgno_t, void *));
-int __db_pgout __P((db_pgno_t, void *));
+int __db_pgin __P((db_pgno_t, size_t, void *));
+int __db_pgout __P((db_pgno_t, size_t, void *));
 int __db_dispatch __P((DB_LOG *, DBT *, DB_LSN *, int, void *));
 int __db_add_recovery __P((DB_ENV *,
    int (*)(DB_LOG *, DBT *, DB_LSN *, int, void *), u_int32_t));

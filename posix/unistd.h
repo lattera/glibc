@@ -150,13 +150,36 @@ __BEGIN_DECLS
 
 #ifndef	ssize_t
 typedef __ssize_t ssize_t;
-#define	ssize_t	ssize_t
+# define ssize_t ssize_t
 #endif
 
 #define	__need_size_t
 #define __need_NULL
 #include <stddef.h>
 
+#ifdef __USE_UNIX98
+/* The Single Unix specification says that some more types are
+   available here.  */
+# ifndef gid_t
+typedef __gid_t gid_t;
+#  define gid_t gid_t
+# endif
+
+# ifndef uid_t
+typedef __uid_t uid_t;
+#  define uid_t uid_t
+# endif
+
+# ifndef off_t
+typedef __off_t off_t;
+#  define off_t off_t
+# endif
+
+# ifndef pid_t
+typedef __pid_t pid_t;
+#  define pid_t pid_t
+# endif
+#endif
 
 /* Values for the second argument to access.
    These may be OR'd together.  */
@@ -179,16 +202,16 @@ extern int euidaccess __P ((__const char *__name, int __type));
 
 /* Values for the WHENCE argument to lseek.  */
 #ifndef	_STDIO_H		/* <stdio.h> has the same definitions.  */
-#define	SEEK_SET	0	/* Seek from beginning of file.  */
-#define	SEEK_CUR	1	/* Seek from current position.  */
-#define	SEEK_END	2	/* Seek from end of file.  */
+# define SEEK_SET	0	/* Seek from beginning of file.  */
+# define SEEK_CUR	1	/* Seek from current position.  */
+# define SEEK_END	2	/* Seek from end of file.  */
 #endif
 
 #if defined __USE_BSD && !defined L_SET
 /* Old BSD names for the same constants; just for compatibility.  */
-#define	L_SET		SEEK_SET
-#define	L_INCR		SEEK_CUR
-#define	L_XTND		SEEK_END
+# define L_SET		SEEK_SET
+# define L_INCR		SEEK_CUR
+# define L_XTND		SEEK_END
 #endif
 
 
@@ -212,6 +235,19 @@ extern ssize_t read __P ((int __fd, __ptr_t __buf, size_t __nbytes));
 /* Write N bytes of BUF to FD.  Return the number written, or -1.  */
 extern ssize_t __write __P ((int __fd, __const __ptr_t __buf, size_t __n));
 extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
+
+#ifdef __USE_UNIX98
+/* Read NBYTES into BUF from FD at the given position OFFSET without
+   changing the file pointer.  Return the number read, -1 for errors
+   or 0 for EOF.  */
+extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			   __off_t __offset));
+
+/* Write N bytes of BUF to FD at the given position OFFSET without
+   changing the file pointer.  Return the number written, or -1.  */
+extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
+			    __off_t __offset));
+#endif
 
 
 /* Create a one-way communication channel (pipe).
@@ -427,7 +463,7 @@ extern __pid_t __bsd_getpgrp __P ((__pid_t __pid));
 #ifdef __FAVOR_BSD
 /* When we explicitely compile BSD sources use the BSD definition of this
    function.  Please note that we cannot use parameters for the macro.  */
-#define getpgrp __bsd_getpgrp
+# define getpgrp __bsd_getpgrp
 #endif
 
 /* Set the process group ID of the process matching PID to PGID.
@@ -777,8 +813,8 @@ extern int getdtablesize __P ((void));
 extern int __brk __P ((__ptr_t __addr));
 extern int brk __P ((__ptr_t __addr));
 
-#define __need_ptrdiff_t
-#include <stddef.h>
+# define __need_ptrdiff_t
+# include <stddef.h>
 
 /* Increase or decrease the end of accessible data space by DELTA bytes.
    If successful, returns the address the previous end of data space
@@ -814,10 +850,10 @@ extern long int syscall __P ((long int __sysno, ...));
    LEN is always relative to the current file position.
    The CMD argument is one of the following.  */
 
-#define F_ULOCK 0       /* Unlock a previously locked region.  */
-#define F_LOCK  1       /* Lock a region for exclusive use.  */
-#define F_TLOCK 2       /* Test and lock a region for exclusive use.  */
-#define F_TEST  3       /* Test a region for other processes locks.  */
+# define F_ULOCK 0	/* Unlock a previously locked region.  */
+# define F_LOCK  1	/* Lock a region for exclusive use.  */
+# define F_TLOCK 2	/* Test and lock a region for exclusive use.  */
+# define F_TEST  3	/* Test a region for other processes locks.  */
 
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 #endif /* Use misc and F_LOCK not already defined.  */
@@ -828,7 +864,7 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 /* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
    set to EINTR.  */
 
-#define TEMP_FAILURE_RETRY(expression) \
+# define TEMP_FAILURE_RETRY(expression) \
   (__extension__							      \
     ({ long int __result;						      \
        do __result = (long int) (expression);				      \
@@ -836,15 +872,16 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
        __result; }))							      \
 
 
-/* This variable is set nonzero at startup if the process's effective IDs
-   differ from its real IDs, or it is otherwise indicated that extra
-   security should be used.  When this is set the dynamic linker ignores
-   the various environment variables that normally affect it.  */
+/* This variable is set nonzero at startup if the process's effective
+   IDs differ from its real IDs, or it is otherwise indicated that
+   extra security should be used.  When this is set the dynamic linker
+   and some functions contained in the C library ignore various
+   environment variables that normally affect them.  */
 extern int __libc_enable_secure;
 
 #endif
 
-#ifdef __USE_POSIX199309
+#if defined __USE_POSIX199309 || defined __USE_UNIX98
 /* Synchronize at least the data part of a file with the underlying
    media.  */
 extern int fdatasync __P ((int __fildes));
@@ -869,7 +906,18 @@ extern void encrypt __P ((char *__block, int __edflag));
    FROM and copy the result to TO.  The value of TO must not be in the
    range [FROM - N + 1, FROM - 1].  If N is odd the first byte in FROM
    is without partner.  */
-extern void swab __P ((__const char *__from, char *__to, ssize_t __n));
+extern void swab __P ((__const __ptr_t __from, __ptr_t __to, ssize_t __n));
+#endif
+
+
+/* The Single Unix specification, version 2, demands these prototypes
+   to be here.  They are also found in <stdio.h>.  */
+#ifdef __USE_UNIX98
+/* Return the name of the controlling terminal.  */
+extern char *ctermid __P ((char *__s));
+
+/* Return the name of the current user.  */
+extern char *cuserid __P ((char *__s));
 #endif
 
 __END_DECLS

@@ -496,6 +496,17 @@ extern long int ftell __P ((FILE *__stream));
 /* Rewind to the beginning of STREAM.  */
 extern void rewind __P ((FILE *__stream));
 
+#ifdef __USE_UNIX98
+/* The Single Unix Specification, Version 2, specifies an alternative,
+   more adequate interface for the two functions above which deal with
+   file offset.  `long int' is not the right type.  */
+
+/* Seek to a certain position on STREAM.  */
+extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
+/* Return the current position of STREAM.  */
+extern __off_t ftello __P ((FILE *__stream));
+#endif
+
 /* Get STREAM's position.  */
 extern int fgetpos __P ((FILE *__restrict __stream,
 			 fpos_t *__restrict __pos));

@@ -52,7 +52,7 @@ typedef __fd_set fd_set;
 
 #ifdef __USE_MISC
 /* Number of bits per word of `fd_set' (some code assumes this is 32).  */
-#define	NFDBITS			__NFDBITS
+# define NFDBITS		__NFDBITS
 #endif
 
 
@@ -75,6 +75,7 @@ extern int select __P ((int __nfds, __fd_set *__readfds,
 			__fd_set *__writefds, __fd_set *__exceptfds,
 			struct timeval *__timeout));
 
+#ifdef __USE_POSIX
 /* Same as above only that the TIMEOUT value is given with higher
    resolution.  This version should be used.  */
 extern int __pselect __P ((int __nfds, __fd_set *__readfds,
@@ -83,6 +84,7 @@ extern int __pselect __P ((int __nfds, __fd_set *__readfds,
 extern int pselect __P ((int __nfds, __fd_set *__readfds,
 			 __fd_set *__writefds, __fd_set *__exceptfds,
 			 struct timespec *__timeout));
+#endif
 
 __END_DECLS
 

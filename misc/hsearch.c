@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    This file is part of the GNU C Library.
 
@@ -50,3 +50,7 @@ hdestroy ()
 {
   hdestroy_r (&htab);
 }
+
+/* Make sure the table is freed if we want to free everything before
+   exiting.  */
+text_set_element (__libc_subfreeres, hdestroy);

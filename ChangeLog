@@ -1,3 +1,221 @@
+1997-09-30 18:03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makerules: Undo last change.
+	* csu/Makefile: Define before-compile at the right place.
+
+	* aclocal.m4: Remove a.out file created by assembler test.
+
+	* set-init.c: Find set-hooks.h using <...>.
+
+	Update to db 2.3.10.
+	* db2/Makefile: Update.
+	* db2/db.h: Likewise.
+	* db2/db_185.h: Likewise.
+	* db2/db_int.h: Likewise.
+	* db2/btree/bt_close.c: Likewise.
+	* db2/btree/bt_conv.c: Likewise.
+	* db2/btree/bt_cursor.c: Likewise.
+	* db2/btree/bt_put.c: Likewise.
+	* db2/btree/bt_rec.c: Likewise.
+	* db2/btree/bt_recno.c: Likewise.
+	* db2/btree/btree.src: Likewise.
+	* db2/btree/btree_auto.c: Likewise.
+	* db2/clib/getlong.c: Likewise.
+	* db2/db/db.c: Likewise.
+	* db2/db/db_auto.c: Likewise.
+	* db2/db/db_conv.c: Likewise.
+	* db2/db/db_pr.c: Likewise.
+	* db2/db/db_ret.c: Likewise.
+	* db2/db/db_thread.c: Likewise.
+	* db2/hash/hash.c: Likewise.
+	* db2/hash/hash_auto.c: Likewise.
+	* db2/hash/hash_conv.c: Likewise.
+	* db2/hash/hash_dup.c: Likewise.
+	* db2/hash/hash_func.c: Likewise.
+	* db2/hash/hash_page.c: Likewise.
+	* db2/hash/hash_rec.c: Likewise.
+	* db2/include/btree.h: Likewise.
+	* db2/include/btree_ext.h: Likewise.
+	* db2/include/db.h.src: Likewise.
+	* db2/include/db_185.h.src: Likewise.
+	* db2/include/db_cxx.h: Likewise.
+	* db2/include/db_ext.h: Likewise.
+	* db2/include/db_int.h.src: Likewise.
+	* db2/include/db_page.h: Likewise.
+	* db2/include/db_shash.h: Likewise.
+	* db2/include/lock.h: Likewise.
+	* db2/include/log.h: Likewise.
+	* db2/include/log_ext.h: Likewise.
+	* db2/include/mp.h: Likewise.
+	* db2/include/shqueue.h: Likewise.
+	* db2/include/txn.h: Likewise.
+	* db2/lock/lock.c: Likewise.
+	* db2/lock/lock_deadlock.c: Likewise.
+	* db2/log/log.c: Likewise.
+	* db2/log/log_archive.c: Likewise.
+	* db2/log/log_auto.c: Likewise.
+	* db2/log/log_get.c: Likewise.
+	* db2/log/log_put.c: Likewise.
+	* db2/log/log_register.c: Likewise.
+	* db2/mp/mp_bh.c: Likewise.
+	* db2/mp/mp_fget.c: Likewise.
+	* db2/mp/mp_fopen.c: Likewise.
+	* db2/mp/mp_fput.c: Likewise.
+	* db2/mp/mp_fset.c: Likewise.
+	* db2/mp/mp_open.c: Likewise.
+	* db2/mutex/mutex.c: Likewise.
+	* db2/os/db_os_dir.c: Likewise.
+	* db2/progs/db_checkpoint/db_checkpoint.c: Likewise.
+	* db2/progs/db_deadlock/db_deadlock.c: Likewise.
+	* db2/progs/db_dump185/db_dump185.c: Likewise.
+	* db2/progs/db_load/db_load.c: Likewise.
+	* db2/progs/db_recover/db_recover.c: Likewise.
+	* db2/txn/txn.c: Likewise.
+	* db2/txn/txn_auto.c: Likewise.
+
+	* elf/link.h: Define struct libname_list outside struct link_map
+	to not confuse C++ compilers.
+
+	* include/features.h: Recognize _XOPEN_SOURCE == 500 and set
+	__USE_UNIX98.
+	* manual/creature.texi: Explain this.
+
+	* libc.map: Add new functions.
+
+	* libio/Makefile (routines): Add fseeko and ftello.
+	* libio/ftello.c: New file.
+	* libio/fseeko.c: New file.
+	* libio/stdio.h: Add prototypes for new functions.
+	* manual/stdio.texi: Document fseeko and ftello.
+
+	* posix/Makefile (routines): Add pread and pwrite.
+	* sysdeps/posix/pread.c: New file.
+	* sysdeps/posix/pwrite.c: New file.
+	* sysdeps/stub/pread.c: New file.
+	* sysdeps/stub/pwrite.c: New file.
+	* posix/unistd.h: Add prototypes for pread and pwrite.
+	Pretty print header.
+	Define gid_t, uid_t, off_t, pid_t if __USE_UNIX98.
+	Declare ctermid and cuserid if __USE_UNIX98.
+	(swab): Change to take void * arguments.
+	* string/swab.c: Change parameter to void *.
+	* posix/sys/types: Define gid_t, uid_t, off_t, pid_t only if not
+	already happened.
+	* manual/llio.texi: Document pread and pwrite.
+
+	* string/strings.h: Don't simply include string.h.  Define BSD
+	functions according to Unix98.
+	* stdlib/tst-strtol.c: Include <string.h> not <strings.h>.
+	* sunrpc/clnt_simp.c: Likewise.
+
+	* malloc/Makefile (aux): Add set-freeres.
+	* malloc/mtrace.c: Define function release_libc_mem which calls the
+	__libc_subfreeres handler.
+	(mtrace): Register release_libc_mem.
+	* malloc/set-freeres.c: New file.
+
+	* intl/dcgettext.c: Define free_mem function and add to
+	__libc_subfreeres list.
+	* intl/finddomain.c: Likewise.
+	* intl/gettextP.h (struct loaded_domain): Add new fields use_mmap
+	and mmap_size.  Add prototype for _nl_unloaded_domain.
+	* intl/loadmsgcat.c: Define new function _nl_unload_domain.
+	(_nl_load_domain): Store informaiton about mmap use and file size.
+	* intl/localealias.c (read_alias_file): Optimize locale alias file
+	reading by avoid frequen mallocs.
+	Define free_mem function and add to __libc_subfreeres list.
+
+	* locale/localeinfo.h: Make a difference between MAX_USAGE_COUNT and
+	undeletable.
+	Add prototype for _nl_unload_locale.
+	* locale/C-collate: Mark data as undeletable by using UNDELETABLE.
+	* locale/C-ctype: Likewise.
+	* locale/C-messages: Likewise.
+	* locale/C-monetary: Likewise.
+	* locale/C-numeric: Likewise.
+	* locale/C-time: Likewise.
+	* locale/findlocale.c (_nl_find_locale, _nl_remove_locale): Handle
+	MAX_USAGE_COUNT and UNDELETABLE.
+	(free_mem): New function.  Add it to __libc_subfreeres list.
+	* locale/loadlocale.c: Define _nl_unload_locale function.
+
+	* misc/hsearch.c: Register hdestroy in __libc_subfreeres list.
+
+	* stdlib/fmtmsg.c (addseverity): Handle illegal severity arguments
+	correctly
+	Define free_mem function and add to __libc_subfreeres list.
+
+	* locale/programs/localedef.c (options): short form os verbose is v.
+	Reported by Andreas Jaeger.
+
+	* misc/sys/select.h: Define pselect only is __USE_POSIX since this
+	header is used in some others as well for historical reasons.
+
+	* resolv/resolv.h: Include <netinet/in.h> to make self-contained.
+
+	* string/bits/string2.h: Add missing braces and optimize strcmp a
+	bit more.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+
+	* sunrpc/rpc/auth_des.h: Include rpc/auth.h to be self-contained.
+	Pretty print.
+
+	* sysdeps/mach/hurd/cthreads.c: Add copyright text.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Correct prctl entry.
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Get definition of size_t.
+
+	* time/time.h: Pretty print.
+
+1997-09-29  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c: Synchronize with GNU Emacs strftime.c.
+	(HAVE_MEMCPY): Define if emacs is defined and HAVE_BCOPY isn't.
+	(gmtime_r, localtime_r): Undef before defining.
+	(iso_week_days): Use __inline__, not inline.
+
+1997-09-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Rename exp2{,l,f} to
+	__ieee754_exp2{,l,f}.
+	* sysdeps/m68k/fpu/s_exp2.c: Likewise.
+	* sysdeps/m68k/fpu/s_exp2l.c: Likewise.
+	* sysdeps/m68k/fpu/s_exp2f.c: Likewise.
+
+1997-09-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/soinit.c (__EH_FRAME_BEGIN__): Don't make the .eh_frame
+	section read-only, it contains relocations.
+	* elf/sofini.c (__FRAME_END__): Likewise.
+
+1997-09-29 03:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/i486/bits/string.h [__PIC__] (__strspn_cg, __strcspn_cg,
+	__strpbrk_cg, __strstr_cg): Optimize even more.  No spill register
+	needed.  Patch by NIIBE Yutaka <gniibe@mri.co.jp>.
+
+1997-09-28 08:27  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_call.c (__do_niscall2): Fix return code, add missing
+	  break in switch case.
+
+	* nis/nis_mkdir.c: Fix return codes to match Solaris version.
+	* nis/nis_rmdir.c: Likewise.
+
+	* nis/rpcsvc/yp_prot.h: Rename struct keydat to struct keydat_t
+	for C++.
+
+1997-09-28 04:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Fix typo.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-09-25 20:14  Philip Blundell  <Philip.Blundell@pobox.com>
+
+	* sysdeps/unix/sysv/linux/scsi/sg.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile: Install <scsi/sg.h>.
+
 1997-09-27 01:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (extra-objs): Depend in before-compile.

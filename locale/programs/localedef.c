@@ -108,7 +108,7 @@ static const struct argp_option options[] =
   { "posix", OPT_POSIX, NULL, 0, N_("Be strictly POSIX conform") },
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
-  { "verbose", 'V', NULL, 0, N_("Print more messages") },
+  { "verbose", 'v', NULL, 0, N_("Print more messages") },
   { NULL, 0, NULL, 0, NULL }
 };
 

@@ -168,6 +168,8 @@ _nl_load_domain (domain_file)
 
   domain = (struct loaded_domain *) domain_file->data;
   domain->data = (char *) data;
+  domain->use_mmap = use_mmap;
+  domain->mmap_size = st.st_size;
   domain->must_swap = data->magic != _MAGIC;
 
   /* Fill in the information about the available tables.  */
@@ -201,3 +203,18 @@ _nl_load_domain (domain_file)
      translations invalid.  */
   ++_nl_msg_cat_cntr;
 }
+
+
+#ifdef _LIBC
+void
+_nl_unload_domain (domain)
+     struct loaded_domain *domain;
+{
+  if (domain->use_mmap)
+    munmap ((caddr_t) domain->data, domain->mmap_size);
+  else
+    free ((void *) domain->data);
+
+  free (domain);
+}
+#endif

@@ -37,7 +37,7 @@ AC_ARG_WITH(fp, dnl
 [  --with-fp		  if using floating-point hardware [default=yes]],
 	    with_fp=$withval, with_fp=yes)
 AC_ARG_WITH(binutils, dnl
-  --with-binutils=PATH	  specify location of binutils (as and ld)
+  --with-binutils=PATH	  specify location of binutils (as and ld),
 	    path_binutils=$withval, path_binutils='')
 AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,

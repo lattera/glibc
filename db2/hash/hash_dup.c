@@ -42,7 +42,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_dup.c	10.6 (Sleepycat) 9/3/97";
+static const char sccsid[] = "@(#)hash_dup.c	10.7 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 /*
@@ -99,9 +99,9 @@ __ham_add_dup(hashp, hcp, nval, flags)
 	int flags;
 {
 	DBT pval, tmp_val;
-	HKEYDATA *hk;
 	u_int32_t del_len, new_size;
 	int ret;
+	u_int8_t *hk;
 
 	if (flags == DB_CURRENT && hcp->dpgno == PGNO_INVALID)
 		del_len = hcp->dup_len;
@@ -128,8 +128,8 @@ __ham_add_dup(hashp, hcp, nval, flags)
 	 * the addition of the new item will make the set large, or
 	 * if there isn't enough room on this page to add the next item.
 	 */
-	if (hk->type != H_OFFDUP &&
-	    (hk->type == H_OFFPAGE || ISBIG(hashp, new_size) ||
+	if (HPAGE_PTYPE(hk) != H_OFFDUP &&
+	    (HPAGE_PTYPE(hk) == H_OFFPAGE || ISBIG(hashp, new_size) ||
 	    DUP_SIZE(nval->size) - del_len > P_FREESPACE(hcp->pagep))) {
 
 		if ((ret = __ham_dup_convert(hashp, hcp)) != 0)
@@ -139,16 +139,17 @@ __ham_add_dup(hashp, hcp, nval, flags)
 	}
 
 	/* There are two separate cases here: on page and off page. */
-	if (hk->type != H_OFFDUP) {
-		if (hk->type != H_DUPLICATE) {
-			hk->type = H_DUPLICATE;
+	if (HPAGE_PTYPE(hk) != H_OFFDUP) {
+		if (HPAGE_PTYPE(hk) != H_DUPLICATE) {
+			HPAGE_PTYPE(hk) = H_DUPLICATE;
 			pval.flags = 0;
-			pval.data = hk->data;
+			pval.data = HKEYDATA_DATA(hk);
 			pval.size = LEN_HDATA(hcp->pagep, hashp->hdr->pagesize,
 			    hcp->bndx);
-			if ((ret = __ham_make_dup(&pval, &tmp_val, &hcp->big_data,
-			    &hcp->big_datalen)) != 0 ||
-			    (ret = __ham_replpair(hashp, hcp, &tmp_val, 1)) != 0)
+			if ((ret =
+			    __ham_make_dup(&pval, &tmp_val, &hcp->big_data,
+			    &hcp->big_datalen)) != 0 || (ret =
+			    __ham_replpair(hashp, hcp, &tmp_val, 1)) != 0)
 				return (ret);
 		}
 
@@ -187,8 +188,7 @@ __ham_add_dup(hashp, hcp, nval, flags)
 
 	/* If we get here, then we're on duplicate pages. */
 	if (hcp->dpgno == PGNO_INVALID) {
-		memcpy(&hcp->dpgno,
-		    (u_int8_t *)hk + SSZ(HOFFDUP, pgno), sizeof(db_pgno_t));
+		memcpy(&hcp->dpgno, HOFFDUP_PGNO(hk), sizeof(db_pgno_t));
 		hcp->dndx = 0;
 	}
 
@@ -259,14 +259,13 @@ __ham_dup_convert(hashp, hcp)
 	 * Now put the duplicates onto the new page.
 	 */
 	dbt.flags = 0;
-	switch (((HKEYDATA *)H_PAIRDATA(hcp->pagep, hcp->bndx))->type) {
+	switch (HPAGE_PTYPE(H_PAIRDATA(hcp->pagep, hcp->bndx))) {
 	case H_KEYDATA:
 		/* Simple case, one key on page; move it to dup page. */
 		dndx = 0;
 		dbt.size =
 		    LEN_HDATA(hcp->pagep, hashp->hdr->pagesize, hcp->bndx);
-		dbt.data =
-		    ((HKEYDATA *)H_PAIRDATA(hcp->pagep, hcp->bndx))->data;
+		dbt.data = HKEYDATA_DATA(H_PAIRDATA(hcp->pagep, hcp->bndx));
 		ret = __db_pitem(hashp->dbp, hcp->dpagep,
 		    (u_int32_t)dndx, BKEYDATA_SIZE(dbt.size), NULL, &dbt);
 		if (ret == 0)
@@ -289,7 +288,7 @@ __ham_dup_convert(hashp, hcp)
 			__ham_dirty_page(hashp, hcp->dpagep);
 		break;
 	case H_DUPLICATE:
-		p = ((HKEYDATA *)H_PAIRDATA(hcp->pagep, hcp->bndx))->data;
+		p = HKEYDATA_DATA(H_PAIRDATA(hcp->pagep, hcp->bndx));
 		pend = p +
 		    LEN_HDATA(hcp->pagep, hashp->hdr->pagesize, hcp->bndx);
 
@@ -366,24 +365,23 @@ __ham_check_move(hashp, hcp, add_len)
 {
 	DBT k, d;
 	DB_LSN new_lsn;
-	HKEYDATA *hk;
 	PAGE *next_pagep;
 	db_pgno_t next_pgno;
 	int rectype, ret;
 	u_int32_t new_datalen, old_len;
+	u_int8_t *hk;
 
 	/*
 	 * Check if we can do whatever we need to on this page.  If not,
 	 * then we'll have to move the current element to a new page.
 	 */
-
 	hk = H_PAIRDATA(hcp->pagep, hcp->bndx);
 
 	/*
 	 * If the item is already off page duplicates or an offpage item,
 	 * then we know we can do whatever we need to do in-place
 	 */
-	if (hk->type == H_OFFDUP || hk->type == H_OFFPAGE)
+	if (HPAGE_PTYPE(hk) == H_OFFDUP || HPAGE_PTYPE(hk) == H_OFFPAGE)
 		return (0);
 
 	old_len =
@@ -443,22 +441,25 @@ __ham_check_move(hashp, hcp, add_len)
 		rectype = PUTPAIR;
 		k.flags = 0;
 		d.flags = 0;
-		if (H_PAIRKEY(hcp->pagep, hcp->bndx)->type == H_OFFPAGE) {
+		if (HPAGE_PTYPE(
+		    H_PAIRKEY(hcp->pagep, hcp->bndx)) == H_OFFPAGE) {
 			rectype |= PAIR_KEYMASK;
 			k.data = H_PAIRKEY(hcp->pagep, hcp->bndx);
 			k.size = HOFFPAGE_SIZE;
 		} else {
-			k.data = H_PAIRKEY(hcp->pagep, hcp->bndx)->data;
+			k.data =
+			    HKEYDATA_DATA(H_PAIRKEY(hcp->pagep, hcp->bndx));
 			k.size = LEN_HKEY(hcp->pagep,
 			    hashp->hdr->pagesize, hcp->bndx);
 		}
 
-		if (hk->type == H_OFFPAGE) {
+		if (HPAGE_PTYPE(hk) == H_OFFPAGE) {
 			rectype |= PAIR_DATAMASK;
 			d.data = H_PAIRDATA(hcp->pagep, hcp->bndx);
 			d.size = HOFFPAGE_SIZE;
 		} else {
-			d.data = H_PAIRDATA(hcp->pagep, hcp->bndx)->data;
+			d.data =
+			    HKEYDATA_DATA(H_PAIRDATA(hcp->pagep, hcp->bndx));
 			d.size = LEN_HDATA(hcp->pagep,
 			    hashp->hdr->pagesize, hcp->bndx);
 		}

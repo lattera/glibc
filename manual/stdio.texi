@@ -697,8 +697,9 @@ order that they were pushed.
 
 Pushing back characters doesn't alter the file; only the internal
 buffering for the stream is affected.  If a file positioning function
-(such as @code{fseek} or @code{rewind}; @pxref{File Positioning}) is
-called, any pending pushed-back characters are discarded.
+(such as @code{fseek}, @code{fseeko} or @code{rewind}; @pxref{File
+Positioning}) is called, any pending pushed-back characters are
+discarded.
 
 Unreading a character on a stream that is at end of file clears the
 end-of-file indicator for the stream, because it makes the character of
@@ -3033,6 +3034,28 @@ possibly for other reasons as well.  If a failure occurs, a value of
 @end deftypefun
 
 @comment stdio.h
+@comment Unix98
+@deftypefun off_t ftello (FILE *@var{stream})
+The @code{ftello} function is similar to @code{ftell} only it corrects a
+problem which the POSIX type system.  In this type system all file
+positions are described using values of type @code{off_t} which is not
+necessarily of the same size as @code{long int}.  Therefore using
+@code{ftell} can lead to problems if the implementation is written on
+top of a POSIX compliant lowlevel I/O implementation.
+
+Therefore it is a good idea to prefer @code{ftello} whenever it is
+available since its functionality is (if different at all) closer the
+underlying definition.
+
+If this function fails it return @code{(off_t) -1}.  This can happen due
+to missing support for file positioning or internal errors.  Otherwise
+the return value is the current file position.
+
+The function is an extension defined in the Unix Single Specification
+version 2.
+@end deftypefun
+
+@comment stdio.h
 @comment ISO
 @deftypefun int fseek (FILE *@var{stream}, long int @var{offset}, int @var{whence})
 The @code{fseek} function is used to change the file position of the
@@ -3051,9 +3074,28 @@ position or else remembers it so it will be written later in its proper
 place in the file.
 @end deftypefun
 
-@strong{Portability Note:} In non-POSIX systems, @code{ftell} and
-@code{fseek} might work reliably only on binary streams.  @xref{Binary
-Streams}.
+@comment stdio.h
+@comment Unix98
+@deftypefun int fseeko (FILE *@var{stream}, off_t @var{offset}, int @var{whence})
+This function is similar to @code{fseek} but it corrects a problem with
+@code{fseek} in a system with POSIX types.  Using a value of type
+@code{long int} for the offset is not compatible with POSIX.
+@code{fseeko} uses the correct type @code{off_t} for the @var{offset}
+parameter.
+
+For this reasonit is a good idea to prefer @code{ftello} whenever it is
+available since its functionality is (if different at all) closer the
+underlying definition.
+
+The functionality and return value is the same as for @code{fseek}.
+
+The function is an extension defined in the Unix Single Specification
+version 2.
+@end deftypefun
+
+@strong{Portability Note:} In non-POSIX systems, @code{ftell},
+@code{ftello}, @code{fseek} and @code{fseeko} might work reliably only
+on binary streams.  @xref{Binary Streams}.
 
 The following symbolic constants are defined for use as the @var{whence}
 argument to @code{fseek}.  They are also used with the @code{lseek}
@@ -3064,34 +3106,35 @@ function (@pxref{I/O Primitives}) and to specify offsets for file locks
 @comment ISO
 @deftypevr Macro int SEEK_SET
 This is an integer constant which, when used as the @var{whence}
-argument to the @code{fseek} function, specifies that the offset
-provided is relative to the beginning of the file.
+argument to the @code{fseek} or @code{fseeko} function, specifies that
+the offset provided is relative to the beginning of the file.
 @end deftypevr
 
 @comment stdio.h
 @comment ISO
 @deftypevr Macro int SEEK_CUR
 This is an integer constant which, when used as the @var{whence}
-argument to the @code{fseek} function, specifies that the offset
-provided is relative to the current file position.
+argument to the @code{fseek} or @code{fseeko} function, specifies that
+the offset provided is relative to the current file position.
 @end deftypevr
 
 @comment stdio.h
 @comment ISO
 @deftypevr Macro int SEEK_END
 This is an integer constant which, when used as the @var{whence}
-argument to the @code{fseek} function, specifies that the offset
-provided is relative to the end of the file.
+argument to the @code{fseek} or @code{fseeko} function, specifies that
+the offset provided is relative to the end of the file.
 @end deftypevr
 
 @comment stdio.h
 @comment ISO
 @deftypefun void rewind (FILE *@var{stream})
 The @code{rewind} function positions the stream @var{stream} at the
-begining of the file.  It is equivalent to calling @code{fseek} on the
-@var{stream} with an @var{offset} argument of @code{0L} and a
-@var{whence} argument of @code{SEEK_SET}, except that the return
-value is discarded and the error indicator for the stream is reset.
+begining of the file.  It is equivalent to calling @code{fseek} or
+@code{fseeko} on the @var{stream} with an @var{offset} argument of
+@code{0L} and a @var{whence} argument of @code{SEEK_SET}, except that
+the return value is discarded and the error indicator for the stream is
+reset.
 @end deftypefun
 
 These three aliases for the @samp{SEEK_@dots{}} constants exist for the
@@ -3122,9 +3165,10 @@ An alias for @code{SEEK_END}.
 @section Portable File-Position Functions
 
 On the GNU system, the file position is truly a character count.  You
-can specify any character count value as an argument to @code{fseek} and
-get reliable results for any random access file.  However, some @w{ISO C}
-systems do not represent file positions in this way.
+can specify any character count value as an argument to @code{fseek} or
+@code{fseeko} and get reliable results for any random access file.
+However, some @w{ISO C} systems do not represent file positions in this
+way.
 
 On some systems where text streams truly differ from binary streams, it
 is impossible to represent the file position of a text stream as a count
@@ -3140,14 +3184,14 @@ systems, you must observe certain rules:
 The value returned from @code{ftell} on a text stream has no predictable
 relationship to the number of characters you have read so far.  The only
 thing you can rely on is that you can use it subsequently as the
-@var{offset} argument to @code{fseek} to move back to the same file
-position.
+@var{offset} argument to @code{fseek} or @code{fseeko} to move back to
+the same file position.
 
 @item
-In a call to @code{fseek} on a text stream, either the @var{offset} must
-either be zero; or @var{whence} must be @code{SEEK_SET} and the
-@var{offset} must be the result of an earlier call to @code{ftell} on
-the same stream.
+In a call to @code{fseek} or @code{fseeko} on a text stream, either the
+@var{offset} must either be zero; or @var{whence} must be
+@code{SEEK_SET} and the @var{offset} must be the result of an earlier
+call to @code{ftell} on the same stream.
 
 @item
 The value of the file position indicator of a text stream is undefined
@@ -3158,7 +3202,11 @@ that haven't been read or discarded.  @xref{Unreading}.
 But even if you observe these rules, you may still have trouble for long
 files, because @code{ftell} and @code{fseek} use a @code{long int} value
 to represent the file position.  This type may not have room to encode
-all the file positions in a large file.
+all the file positions in a large file.  Using the @code{ftello} and
+@code{fseeko} functions might help here since the @code{off_t} type is
+expected to be able to hold all file position values but this still does
+not help to handle additional information which must be associated with
+a file position.
 
 So if you do want to support systems with peculiar encodings for the
 file positions, it is better to use the functions @code{fgetpos} and
@@ -3550,9 +3598,10 @@ new values before you use them again.
 A null character is written at the end of the buffer.  This null character
 is @emph{not} included in the size value stored at @var{sizeloc}.
 
-You can move the stream's file position with @code{fseek} (@pxref{File
-Positioning}).  Moving the file position past the end of the data
-already written fills the intervening space with zeroes.
+You can move the stream's file position with @code{fseek} or
+@code{fseeko} (@pxref{File Positioning}).  Moving the file position past
+the end of the data already written fills the intervening space with
+zeroes.
 @end deftypefun
 
 Here is an example of using @code{open_memstream}:
@@ -3587,9 +3636,9 @@ Calling @code{fflush} on this stream updates the current size of the
 object to match the amount of data that has been written.  After a call
 to @code{fflush}, you can examine the object temporarily.
 
-You can move the file position of an obstack stream with @code{fseek}
-(@pxref{File Positioning}).  Moving the file position past the end of
-the data written fills the intervening space with zeros.
+You can move the file position of an obstack stream with @code{fseek} or
+@code{fseeko} (@pxref{File Positioning}).  Moving the file position past
+the end of the data written fills the intervening space with zeros.
 
 To make the object permanent, update the obstack with @code{fflush}, and
 then use @code{obstack_finish} to finalize the object and get its address.
@@ -3691,9 +3740,9 @@ discarded.
 @item cookie_seek_function_t *seek
 This is the function that performs the equivalent of file positioning on
 the cookie.  If the value is a null pointer instead of a function, calls
-to @code{fseek} on this stream can only seek to locations within the
-buffer; any attempt to seek outside the buffer will return an
-@code{ESPIPE} error.
+to @code{fseek} or @code{fseeko} on this stream can only seek to
+locations within the buffer; any attempt to seek outside the buffer will
+return an @code{ESPIPE} error.
 
 @item cookie_close_function_t *close
 This function performs any appropriate cleanup on the cookie when

@@ -47,9 +47,8 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_page.c	10.18 (Sleepycat) 8/21/97";
+static const char sccsid[] = "@(#)hash_page.c	10.24 (Sleepycat) 9/17/97";
 #endif /* not lint */
-
 
 /*
  * PACKAGE:  hashing
@@ -85,7 +84,7 @@ static const char sccsid[] = "@(#)hash_page.c	10.18 (Sleepycat) 8/21/97";
 static int __ham_lock_bucket __P((DB *, HASH_CURSOR *, db_lockmode_t));
 
 #ifdef DEBUG_SLOW
-static void	 account_page(HTAB *, db_pgno_t, int);
+static void  __account_page(HTAB *, db_pgno_t, int);
 #endif
 
 /*
@@ -121,7 +120,7 @@ __ham_item(hashp, cursorp, mode)
 		 * pointer to be the beginning of the datum.
 		 */
 		memcpy(&cursorp->dup_len,
-		    H_PAIRDATA(cursorp->pagep, cursorp->bndx)->data +
+		    HKEYDATA_DATA(H_PAIRDATA(cursorp->pagep, cursorp->bndx)) +
 		    cursorp->dup_off, sizeof(db_indx_t));
 	else if (F_ISSET(cursorp, H_ISDUP)) {
 		/* Make sure we're not about to run off the page. */
@@ -326,8 +325,8 @@ __ham_item_prev(hashp, cursorp, mode)
 				else {
 					HASH_CURSOR *h;
 					h = cursorp;
-					memcpy(&h->dup_len,
-					    H_PAIRDATA(h->pagep, h->bndx)->data
+					memcpy(&h->dup_len, HKEYDATA_DATA(
+					    H_PAIRDATA(h->pagep, h->bndx))
 					    + h->dup_off - sizeof(db_indx_t),
 					    sizeof(db_indx_t));
 					cursorp->dup_off -=
@@ -481,7 +480,7 @@ __ham_putitem(p, dbt, type)
 	} else {
 		off = HOFFSET(p) - HKEYDATA_SIZE(dbt->size);
 		HOFFSET(p) = p->inp[n] = off;
-		PUT_HKEYDATA(GET_HKEYDATA(p, n), dbt->data, dbt->size, type);
+		PUT_HKEYDATA(P_ENTRY(p, n), dbt->data, dbt->size, type);
 	}
 
 	/* Adjust page info. */
@@ -524,24 +523,24 @@ __ham_del_pair(hashp, cursorp)
 	 * entry referring to the big item.
 	 */
 	ret = 0;
-	if (H_PAIRKEY(p, ndx)->type == H_OFFPAGE) {
-		memcpy(&pgno, (u_int8_t *)GET_HOFFPAGE(p, H_KEYINDEX(ndx)) +
-		    SSZ(HOFFPAGE, pgno), sizeof(db_pgno_t));
+	if (HPAGE_PTYPE(H_PAIRKEY(p, ndx)) == H_OFFPAGE) {
+		memcpy(&pgno, HOFFPAGE_PGNO(P_ENTRY(p, H_KEYINDEX(ndx))),
+		    sizeof(db_pgno_t));
 		ret = __db_doff(hashp->dbp, pgno, __ham_del_page);
 	}
 
 	if (ret == 0)
-		switch (H_PAIRDATA(p, ndx)->type) {
+		switch (HPAGE_PTYPE(H_PAIRDATA(p, ndx))) {
 		case H_OFFPAGE:
 			memcpy(&pgno,
-			    (u_int8_t *)GET_HOFFPAGE(p, H_DATAINDEX(ndx)) +
-			    SSZ(HOFFPAGE, pgno), sizeof(db_pgno_t));
+			    HOFFPAGE_PGNO(P_ENTRY(p, H_DATAINDEX(ndx))),
+			    sizeof(db_pgno_t));
 			ret = __db_doff(hashp->dbp, pgno, __ham_del_page);
 			break;
 		case H_OFFDUP:
 			memcpy(&pgno,
-			    (u_int8_t *)GET_HOFFDUP(p, H_DATAINDEX(ndx)) +
-			    SSZ(HOFFDUP, pgno), sizeof(db_pgno_t));
+			    HOFFDUP_PGNO(P_ENTRY(p, H_DATAINDEX(ndx))),
+			    sizeof(db_pgno_t));
 			ret = __db_ddup(hashp->dbp, pgno, __ham_del_page);
 			break;
 		}
@@ -706,13 +705,12 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 	DBT *dbt;
 	u_int32_t make_dup;
 {
-	DBT old_dbt, tmp;
+	DBT old_dbt, tdata, tmp;
 	DB_LSN	new_lsn;
-	HKEYDATA *hk;
 	u_int32_t len;
 	int32_t change;
 	int is_big, ret, type;
-	u_int8_t *beg, *dest, *end, *src;
+	u_int8_t *beg, *dest, *end, *hk, *src;
 
 	/*
 	 * Big item replacements are handled in generic code.
@@ -738,11 +736,10 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 	change = dbt->size - dbt->dlen;
 
 	hk = H_PAIRDATA(hcp->pagep, hcp->bndx);
-	is_big = hk->type == H_OFFPAGE;
+	is_big = HPAGE_PTYPE(hk) == H_OFFPAGE;
 
 	if (is_big)
-		memcpy(&len, (u_int8_t *)hk + SSZ(HOFFPAGE, tlen),
-		    sizeof(u_int32_t));
+		memcpy(&len, HOFFPAGE_TLEN(hk), sizeof(u_int32_t));
 	else
 		len = LEN_HKEYDATA(hcp->pagep,
 		    hashp->dbp->pgsize, H_DATAINDEX(hcp->bndx));
@@ -770,13 +767,14 @@ __ham_replpair(hashp, hcp, dbt, make_dup)
 		    &tmp, &hcp->big_key, &hcp->big_keylen)) != 0)
 			return (ret);
 
-		type = hk->type;
 		if (dbt->doff == 0 && dbt->dlen == len) {
 			ret = __ham_del_pair(hashp, hcp);
 			if (ret == 0)
-			    ret = __ham_add_el(hashp, hcp, &tmp, dbt, type);
+			    ret = __ham_add_el(hashp,
+			        hcp, &tmp, dbt, H_KEYDATA);
 		} else {					/* Case B */
-			DBT tdata;
+			type = HPAGE_PTYPE(hk) != H_OFFPAGE ?
+			    HPAGE_PTYPE(hk) : H_KEYDATA;
 			tdata.flags = 0;
 			F_SET(&tdata, DB_DBT_MALLOC | DB_DBT_INTERNAL);
 
@@ -824,7 +822,7 @@ err:		free(tmp.data);
 	 * Set up pointer into existing data. Do it before the log
 	 * message so we can use it inside of the log setup.
 	 */
-	beg = H_PAIRDATA(hcp->pagep, hcp->bndx)->data;
+	beg = HKEYDATA_DATA(H_PAIRDATA(hcp->pagep, hcp->bndx));
 	beg += dbt->doff;
 
 	/*
@@ -885,11 +883,11 @@ __ham_onpage_replace(pagep, pgsize, ndx, off, change, dbt)
 		if (off < 0)
 			len = pagep->inp[ndx] - HOFFSET(pagep);
 		else if ((u_int32_t)off >= LEN_HKEYDATA(pagep, pgsize, ndx)) {
-			len = GET_HKEYDATA(pagep, ndx)->data +
+			len = HKEYDATA_DATA(P_ENTRY(pagep, ndx)) +
 			    LEN_HKEYDATA(pagep, pgsize, ndx) - src;
 			zero_me = 1;
 		} else
-			len = (GET_HKEYDATA(pagep, ndx)->data + off) - src;
+			len = (HKEYDATA_DATA(P_ENTRY(pagep, ndx)) + off) - src;
 		dest = src - change;
 		memmove(dest, src, len);
 		if (zero_me)
@@ -901,7 +899,7 @@ __ham_onpage_replace(pagep, pgsize, ndx, off, change, dbt)
 		HOFFSET(pagep) -= change;
 	}
 	if (off >= 0)
-		memcpy(GET_HKEYDATA(pagep, ndx)->data + off,
+		memcpy(HKEYDATA_DATA(P_ENTRY(pagep, ndx)) + off,
 		    dbt->data, dbt->size);
 	else
 		memcpy(P_ENTRY(pagep, ndx), dbt->data, dbt->size);
@@ -1319,7 +1317,7 @@ __ham_new_page(hashp, addr, type, pp)
 		return (ret);
 
 #ifdef DEBUG_SLOW
-	account_page(hashp, addr, 1);
+	__account_page(hashp, addr, 1);
 #endif
 	/* This should not be necessary because page-in should do it. */
 	P_INIT(pagep,
@@ -1398,7 +1396,7 @@ __ham_put_page(dbp, pagep, is_dirty)
 	int32_t is_dirty;
 {
 #ifdef DEBUG_SLOW
-	account_page((HTAB *)dbp->cookie,
+	__account_page((HTAB *)dbp->cookie,
 	    ((BKT *)((char *)pagep - sizeof(BKT)))->pgno, -1);
 #endif
 	return (memp_fput(dbp->mpf, pagep, (is_dirty ? DB_MPOOL_DIRTY : 0)));
@@ -1432,7 +1430,7 @@ __ham_get_page(dbp, addr, pagep)
 	ret = memp_fget(dbp->mpf, &addr, DB_MPOOL_CREATE, pagep);
 #ifdef DEBUG_SLOW
 	if (*pagep != NULL)
-		account_page((HTAB *)dbp->internal, addr, 1);
+		__account_page((HTAB *)dbp->internal, addr, 1);
 #endif
 	return (ret);
 }
@@ -1523,11 +1521,11 @@ __ham_overflow_page(dbp, type, pp)
 #ifdef DEBUG
 /*
  * PUBLIC: #ifdef DEBUG
- * PUBLIC: int bucket_to_page __P((HTAB *, int));
+ * PUBLIC: int __bucket_to_page __P((HTAB *, int));
  * PUBLIC: #endif
  */
 int
-bucket_to_page(hashp, n)
+__bucket_to_page(hashp, n)
 	HTAB *hashp;
 	int n;
 {
@@ -1735,7 +1733,7 @@ __ham_dpair(dbp, p, pndx)
 
 #ifdef DEBUG_SLOW
 static void
-account_page(hashp, pgno, inout)
+__account_page(hashp, pgno, inout)
 	HTAB *hashp;
 	db_pgno_t pgno;
 	int inout;
@@ -1767,7 +1765,8 @@ account_page(hashp, pgno, inout)
 		last--;
 	}
 	for (i = 0; i < last; i++, list[i].times++)
-		if (list[i].times > 20 && !is_bitmap_pgno(hashp, list[i].pgno))
+		if (list[i].times > 20 &&
+		    !__is_bitmap_pgno(hashp, list[i].pgno))
 			(void)fprintf(stderr,
 			    "Warning: pg %lu has been out for %d times\n",
 			    (u_long)list[i].pgno, list[i].times);

@@ -1,6 +1,7 @@
 /* Do not edit: automatically built by dist/distrib. */
 int __ham_open __P((DB *, DB_INFO *));
 int  __ham_close __P((DB *));
+int __ham_c_iclose __P((DB *, DBC *));
 int __ham_expand_table __P((HTAB *));
 u_int32_t __ham_call_hash __P((HTAB *, u_int8_t *, int32_t));
 int __ham_init_dbt __P((DBT *, u_int32_t, void **, u_int32_t *));
@@ -96,7 +97,7 @@ int __ham_dirty_page __P((HTAB *, PAGE *));
 int __ham_get_page __P((DB *, db_pgno_t, PAGE **));
 int __ham_overflow_page __P((DB *, u_int32_t, PAGE **));
 #ifdef DEBUG
-int bucket_to_page __P((HTAB *, int));
+int __bucket_to_page __P((HTAB *, int));
 #endif
 void __ham_init_ovflpages __P((HTAB *));
 int __ham_get_cpage __P((HTAB *, HASH_CURSOR *, db_lockmode_t));

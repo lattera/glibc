@@ -43,7 +43,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)btree.h	10.16 (Sleepycat) 8/24/97
+ *	@(#)btree.h	10.17 (Sleepycat) 9/23/97
  */
 
 /* Forward structure declarations. */
@@ -181,6 +181,12 @@ struct __cursor {
 #define	C_DELETED	0x0001
 #define	C_REPLACE	0x0002
 #define	C_REPLACE_SETUP	0x0004
+
+	/*
+	 * Internal cursor held for DB->get; don't hold locks unless involved
+	 * in a TXN.
+	 */
+#define	C_INTERNAL	0x0008
 	u_int32_t	 flags;
 };
 

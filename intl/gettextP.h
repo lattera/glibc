@@ -50,6 +50,8 @@ SWAP (i)
 struct loaded_domain
 {
   const char *data;
+  int use_mmap;
+  size_t mmap_size;
   int must_swap;
   nls_uint32 nstrings;
   struct string_desc *orig_tab;
@@ -69,6 +71,7 @@ struct loaded_l10nfile *_nl_find_domain PARAMS ((const char *__dirname,
 						 char *__locale,
 						 const char *__domainname));
 void _nl_load_domain PARAMS ((struct loaded_l10nfile *__domain));
+void _nl_unload_domain PARAMS ((struct loaded_domain *__domain));
 
 /* @@ begin of epilog @@ */
 

@@ -24,23 +24,17 @@
 nis_error
 nis_rmdir (const_nis_name dir, const nis_server *server)
 {
-  nis_error res;
+  nis_error res, res2;
 
   if (server == NULL)
-    {
-      if (__do_niscall (dir, NIS_RMDIR, (xdrproc_t) xdr_nis_name,
+    return NIS_SYSTEMERROR;
+
+  res2 = __do_niscall2 (server, 1, NIS_RMDIR,
+			(xdrproc_t) xdr_nis_name,
 			(caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-			(caddr_t) &res, 0, NULL) != RPC_SUCCESS)
-	return NIS_RPCERROR;
-    }
-  else
-    {
-      if (__do_niscall2 (server, 1, NIS_RMDIR,
-			 (xdrproc_t) xdr_nis_name,
-			 (caddr_t) &dir, (xdrproc_t) xdr_nis_error,
-			 (caddr_t) &res, 0, NULL) != RPC_SUCCESS)
-	return NIS_RPCERROR;
-    }
+			(caddr_t) &res, 0, NULL);
+  if (res2 != NIS_SUCCESS)
+    return res2;
 
   return res;
 }

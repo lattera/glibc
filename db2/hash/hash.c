@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash.c	10.25 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)hash.c	10.27 (Sleepycat) 9/15/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -573,8 +573,6 @@ __ham_c_close(cursor)
 	DBC *cursor;
 {
 	DB  *ldbp;
-	HTAB *hashp;
-	HASH_CURSOR *hcp;
 	int ret;
 
 	DEBUG_LWRITE(cursor->dbp, cursor->txn, "ham_c_close", NULL, NULL, 0);
@@ -590,8 +588,32 @@ __ham_c_close(cursor)
 	if (F_ISSET(cursor->dbp, DB_AM_THREAD) &&
 	    (ret = __db_gethandle(cursor->dbp, __ham_hdup, &ldbp)) != 0)
 		return (ret);
-	hashp = (HTAB *)ldbp->internal;
-	hcp = (HASH_CURSOR *)cursor->internal;
+
+	ret = __ham_c_iclose(ldbp, cursor);
+
+	if (F_ISSET(ldbp, DB_AM_THREAD))
+		__db_puthandle(ldbp);
+	return (ret);
+}
+/*
+ * __ham_c_iclose --
+ *
+ * Internal cursor close routine; assumes it is being passed the correct
+ * handle, rather than getting and putting a handle.
+ *
+ * PUBLIC: int __ham_c_iclose __P((DB *, DBC *));
+ */
+int
+__ham_c_iclose(dbp, dbc)
+	DB *dbp;
+	DBC *dbc;
+{
+	HASH_CURSOR *hcp;
+	HTAB *hashp;
+	int ret;
+
+	hashp = (HTAB *)dbp->internal;
+	hcp = (HASH_CURSOR *)dbc->internal;
 	ret = __ham_item_done(hashp, hcp, 0);
 
 	if (hcp->big_key)
@@ -602,19 +624,16 @@ __ham_c_close(cursor)
 	/*
 	 * All cursors (except the default ones) are linked off the master.
 	 * Therefore, when we close the cursor, we have to remove it from
-	 * the master, not the local one.  When we are closing the file in
-	 * its entirety, then we clear the THREAD bit and the master and
-	 * local are identical, so we remove the correct one.
+	 * the master, not the local one.
+	 * XXX I am always removing from the master; what about local cursors?
 	 */
-	DB_THREAD_LOCK(cursor->dbp);
-	TAILQ_REMOVE(&cursor->dbp->curs_queue, cursor, links);
-	DB_THREAD_UNLOCK(cursor->dbp);
-
-	if (F_ISSET(cursor->dbp, DB_AM_THREAD))
-		__db_puthandle(ldbp);
+	DB_THREAD_LOCK(dbc->dbp);
+	TAILQ_REMOVE(&dbc->dbp->curs_queue, dbc, links);
+	DB_THREAD_UNLOCK(dbc->dbp);
 
 	FREE(hcp, sizeof(HASH_CURSOR));
-	FREE(cursor, sizeof(DBC));
+	FREE(dbc, sizeof(DBC));
+
 	return (ret);
 }
 
@@ -695,10 +714,9 @@ __ham_c_del(cursor, flags)
 			hcp->dndx = 0;				/* Case 2 */
 			hcp->dpgno = PGNO(hcp->dpagep);
 			if (ppgno == PGNO_INVALID)
-				memcpy(P_ENTRY(hcp->pagep,
-				    H_DATAINDEX(hcp->bndx)) +
-				    SSZ(HOFFDUP, pgno), &hcp->dpgno,
-				    sizeof(db_pgno_t));
+				memcpy(HOFFDUP_PGNO(P_ENTRY(hcp->pagep,
+				    H_DATAINDEX(hcp->bndx))),
+				    &hcp->dpgno, sizeof(db_pgno_t));
 			F_SET(hcp, H_DELETED);
 		} else					/* Case 1 */
 			F_SET(hcp, H_DELETED);
@@ -1051,18 +1069,17 @@ __ham_dup_return(hashp, hcp, val, flags)
 	DBT *val;
 	int flags;
 {
-	HKEYDATA *hk;
 	PAGE *pp;
 	DBT *myval, tmp_val;
 	db_indx_t ndx;
 	db_pgno_t pgno;
-	u_int8_t type;
+	u_int8_t *hk, type;
 	int indx, ret;
 	db_indx_t len;
 
 	/* Check for duplicate and return the first one. */
 	ndx = H_DATAINDEX(hcp->bndx);
-	type = GET_HKEYDATA(hcp->pagep, ndx)->type;
+	type = HPAGE_TYPE(hcp->pagep, ndx);
 	pp = hcp->pagep;
 	myval = val;
 
@@ -1088,7 +1105,8 @@ __ham_dup_return(hashp, hcp, val, flags)
 				hcp->dndx = 0;
 				hcp->dup_off = 0;
 				do {
-					memcpy(&len, hk->data + hcp->dup_off,
+					memcpy(&len,
+					    HKEYDATA_DATA(hk) + hcp->dup_off,
 					    sizeof(db_indx_t));
 					hcp->dup_off += DUP_SIZE(len);
 					hcp->dndx++;
@@ -1096,15 +1114,15 @@ __ham_dup_return(hashp, hcp, val, flags)
 				hcp->dup_off -= DUP_SIZE(len);
 				hcp->dndx--;
 			} else {
-				memcpy(&len, hk->data, sizeof(db_indx_t));
+				memcpy(&len,
+				    HKEYDATA_DATA(hk), sizeof(db_indx_t));
 				hcp->dup_off = 0;
 				hcp->dndx = 0;
 			}
 			hcp->dup_len = len;
 		} else if (type == H_OFFDUP) {
 			F_SET(hcp, H_ISDUP);
-			memcpy(&pgno,
-			    P_ENTRY(hcp->pagep, ndx) + SSZ(HOFFDUP, pgno),
+			memcpy(&pgno, HOFFDUP_PGNO(P_ENTRY(hcp->pagep, ndx)),
 			    sizeof(db_pgno_t));
 			if (flags == DB_LAST || flags == DB_PREV) {
 				indx = (int)hcp->dndx;
@@ -1166,7 +1184,7 @@ __ham_overwrite(hashp, hcp, nval)
 	DBT *nval;
 {
 	DBT *myval, tmp_val;
-	HKEYDATA *hk;
+	u_int8_t *hk;
 
 	if (F_ISSET(hashp->dbp, DB_AM_DUP))
 		return (__ham_add_dup(hashp, hcp, nval, DB_KEYLAST));
@@ -1176,10 +1194,9 @@ __ham_overwrite(hashp, hcp, nval)
 		F_SET(&tmp_val, DB_DBT_PARTIAL);
 		tmp_val.doff = 0;
 		hk = H_PAIRDATA(hcp->pagep, hcp->bndx);
-		if (hk->type == H_OFFPAGE)
+		if (HPAGE_PTYPE(hk) == H_OFFPAGE)
 			memcpy(&tmp_val.dlen,
-			    (u_int8_t *)hk + SSZ(HOFFPAGE, tlen),
-			    sizeof(u_int32_t));
+			    HOFFPAGE_TLEN(hk), sizeof(u_int32_t));
 		else
 			tmp_val.dlen = LEN_HDATA(hcp->pagep,
 			    hashp->hdr->pagesize,hcp->bndx);
@@ -1207,10 +1224,10 @@ __ham_lookup(hashp, hcp, key, sought, mode)
 	u_int32_t sought;
 	db_lockmode_t mode;
 {
-	HKEYDATA *hk;
 	db_pgno_t pgno;
 	u_int32_t tlen;
 	int match, ret, t_ret;
+	u_int8_t *hk;
 
 	/*
 	 * Set up cursor so that we're looking for space to add an item
@@ -1229,14 +1246,12 @@ __ham_lookup(hashp, hcp, key, sought, mode)
 			break;
 
 		hk = H_PAIRKEY(hcp->pagep, hcp->bndx);
-		switch (hk->type) {
+		switch (HPAGE_PTYPE(hk)) {
 		case H_OFFPAGE:
-			memcpy(&tlen, (u_int8_t *)hk + SSZ(HOFFPAGE, tlen),
-			    sizeof(u_int32_t));
+			memcpy(&tlen, HOFFPAGE_TLEN(hk), sizeof(u_int32_t));
 			if (tlen == key->size) {
 				memcpy(&pgno,
-				    (u_int8_t *)hk + SSZ(HOFFPAGE, pgno),
-				    sizeof(db_pgno_t));
+				    HOFFPAGE_PGNO(hk), sizeof(db_pgno_t));
 				match = __db_moff(hashp->dbp, key, pgno);
 				if (match == 0) {
 					F_SET(hcp, H_OK);
@@ -1247,7 +1262,8 @@ __ham_lookup(hashp, hcp, key, sought, mode)
 		case H_KEYDATA:
 			if (key->size == LEN_HKEY(hcp->pagep,
 			    hashp->hdr->pagesize, hcp->bndx) &&
-			    memcmp(key->data, hk->data, key->size) == 0) {
+			    memcmp(key->data,
+			    HKEYDATA_DATA(hk), key->size) == 0) {
 				F_SET(hcp, H_OK);
 				return (0);
 			}

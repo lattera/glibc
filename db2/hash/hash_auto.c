@@ -138,7 +138,7 @@ __ham_insdel_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_insdel_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_insdel_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_insdel: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -335,7 +335,7 @@ __ham_newpage_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_newpage_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_newpage_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_newpage: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -498,7 +498,7 @@ __ham_splitmeta_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_splitmeta_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_splitmeta_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_splitmeta: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -659,7 +659,7 @@ __ham_splitdata_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_splitdata_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_splitdata_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_splitdata: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -851,7 +851,7 @@ __ham_replace_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_replace_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_replace_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_replace: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1053,7 +1053,7 @@ __ham_newpgno_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_newpgno_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_newpgno_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_newpgno: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,
@@ -1218,7 +1218,7 @@ __ham_ovfl_print(notused1, dbtp, lsnp, notused3, notused4)
 	notused3 = 0;
 	notused4 = NULL;
 
-	if((ret = __ham_ovfl_read(dbtp->data, &argp)) != 0)
+	if ((ret = __ham_ovfl_read(dbtp->data, &argp)) != 0)
 		return (ret);
 	printf("[%lu][%lu]ham_ovfl: rec: %lu txnid %lx prevlsn [%lu][%lu]\n",
 	    (u_long)lsnp->file,

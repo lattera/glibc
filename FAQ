@@ -90,6 +90,9 @@ please let me know.
 
 [Q25]	``After installing glibc name resolving doesn't work properly.''
 
+
+[Q26]	``I have /usr/include/net and /usr/include/scsi as symlinks
+	  into my Linux source tree.  Is that wrong?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -652,7 +655,7 @@ results because of type conflicts.
 a point where it is stable.  There are still lots of incompatible changes
 made and the libc headers have to follow.
 
-Currently (as of 970401) according to Philip Blundell <pjb27@cam.ac.uk>
+Currently (as of 970401) according to Philip Blundell <philb@gnu.ai.mit.edu>
 the required kernel version is 2.1.30.
 
 
@@ -698,6 +701,18 @@ The NSS configuration file is usually the culprit.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q26]	``I have /usr/include/net and /usr/include/scsi as symlinks
+	  into my Linux source tree.  Is that wrong?''
+
+[A26] {PB} This was necessary for libc5, but is not correct when using
+glibc.  Including the kernel header files directly in user programs
+usually does not work (see Q21).  glibc provides its own <net/*> and
+<scsi/*> header files to replace them, and you may have to remove any
+symlink that you have in place before you install glibc.  However,
+/usr/include/asm and /usr/include/linux should remain as they were.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
@@ -706,6 +721,7 @@ Answers were given by:
 {HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
 {AJ} Andreas Jaeger, <aj@arthur.rhein-neckar.de>
 {EY} Eric Youngdale, <eric@andante.jic.com>
+{PB} Phil Blundell, <Philip.Blundell@pobox.com>
 
 Local Variables:
  mode:text

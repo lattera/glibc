@@ -369,17 +369,39 @@ __STRING2_COPY_TYPE (8);
 #ifndef _HAVE_STRING_ARCH_strcmp
 # define strcmp(s1, s2) \
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
-		  && (sizeof (s1)[0] != 1 || strlen (s1) >= 4)		      \
-		  && (sizeof (s2)[0] != 1 || strlen (s2) >= 4)		      \
+		  && (sizeof ((s1)[0]) != 1 || strlen (s1) >= 4)	      \
+		  && (sizeof ((s2)[0]) != 1 || strlen (s2) >= 4)	      \
 		  ? memcmp (s1, s2, (strlen (s1) < strlen (s2)		      \
 				     ? strlen (s1) : strlen (s2)) + 1)	      \
-		  : (__builtin_constant_p (s1) && sizeof (s1)[0] == 1	      \
-		     && sizeof (s2)[0] == 1 && strlen (s1) < 4		      \
-		     ? __strcmp_cg (s1, s2, strlen (s1))		      \
-		     : (__builtin_constant_p (s2) && sizeof (s1)[0] == 1      \
-			&& sizeof (s2)[0] == 1 && strlen (s2) < 4	      \
-			? __strcmp_gc (s1, s2, strlen (s2))		      \
+		  : (__builtin_constant_p (s1) && sizeof ((s1)[0]) == 1	      \
+		     && sizeof ((s2)[0]) == 1 && strlen (s1) < 4	      \
+		     ? (__builtin_constant_p (s2)			      \
+			? __strcmp_cc (s1, s2, strlen (s1))		      \
+			: __strcmp_cg (s1, s2, strlen (s1)))		      \
+		     : (__builtin_constant_p (s2) && sizeof ((s1)[0]) == 1    \
+			&& sizeof ((s2)[0]) == 1 && strlen (s2) < 4	      \
+			? (__builtin_constant_p (s1)			      \
+			   ? __strcmp_cc (s1, s2, strlen (s2))		      \
+			   : __strcmp_gc (s1, s2, strlen (s2)))		      \
 			: strcmp (s1, s2)))))
+
+# define __strcmp_cc(s1, s2, l) \
+  (__extension__ ({ register int __result = ((unsigned char) (s1)[0]	      \
+					     - (unsigned char) (s2)[0]);      \
+		    if (l > 0 && __result == 0)				      \
+		      {							      \
+			__result = ((unsigned char) (s1)[1]		      \
+				    - (unsigned char) (s2)[1]);		      \
+			if (l > 1 && __result == 0)			      \
+			  {						      \
+			    __result = ((unsigned char) (s1)[2]		      \
+					- (unsigned char) (s2)[2]);	      \
+			    if (l > 2 && __result == 0)			      \
+			      __result = ((unsigned char) (s1)[3]	      \
+					  - (unsigned char) (s2)[3]);	      \
+			  }						      \
+		      }							      \
+		    __result; }))
 
 # define __strcmp_cg(s1, s2, l1) \
   (__extension__ ({ __const unsigned char *__s2 = (unsigned char *) (s2);     \

@@ -32,7 +32,7 @@ nfsservctl	EXTRA	nfsservctl	3	nfsservctl
 pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
-prctl		EXTRA	prctl		5
+prctl		EXTRA	prctl		5	prctl
 query_module	EXTRA	query_module	5	query_module
 quotactl	EXTRA	quotactl	4	quotactl
 s_getdents	EXTRA	getdents	3	__getdents

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log.c	10.25 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)log.c	10.27 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -29,7 +29,7 @@ static const char sccsid[] = "@(#)log.c	10.25 (Sleepycat) 8/27/97";
 #include "txn_auto.h"
 #include "common_ext.h"
 
-static int __log_recover __P((DB_ENV *, DB_LOG *));
+static int __log_recover __P((DB_LOG *));
 
 /*
  * log_open --
@@ -70,14 +70,15 @@ log_open(path, flags, mode, dbenv, lpp)
 	if ((dblp = (DB_LOG *)calloc(1, sizeof(DB_LOG))) == NULL)
 		return (ENOMEM);
 
+	if (path != NULL && (dblp->dir = strdup(path)) == NULL) {
+		free(dblp);
+		return (ENOMEM);
+	}
+
 	dblp->dbenv = dbenv;
 	dblp->lfd = -1;
 	ZERO_LSN(dblp->c_lsn);
 	dblp->c_fd = -1;
-	if (LF_ISSET(DB_THREAD)) {
-		F_SET(dblp, DB_AM_THREAD);
-		(void)__db_mutex_init(&dblp->mutex, -1);
-	}
 
 	/*
 	 * The log region isn't fixed size because we store the registered
@@ -114,7 +115,7 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 
 			newregion = 1;
 		} else if (ret != EEXIST)
-			return (ret);
+			goto err;
 	}
 
 	/* If we didn't or couldn't create the region, try and join it. */
@@ -129,7 +130,7 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 			(void)__db_sleep(1, 0);
 			goto retry;
 		}
-		return (ret);
+		goto err;
 	}
 
 	/* Set up the common information. */
@@ -137,19 +138,49 @@ retry:	if (LF_ISSET(DB_CREATE)) {
 	dblp->addr = (u_int8_t *)dblp->maddr + sizeof(LOG);
 	dblp->fd = fd;
 
+	/* Initialize thread information. */
+	if (LF_ISSET(DB_THREAD)) {
+		F_SET(dblp, DB_AM_THREAD);
+
+		if (!newregion)
+			LOCK_LOGREGION(dblp);
+		if ((ret = __db_shalloc(dblp->addr,
+		    sizeof(db_mutex_t), MUTEX_ALIGNMENT, &dblp->mutexp)) == 0)
+			(void)__db_mutex_init(dblp->mutexp, -1);
+		if (!newregion)
+			UNLOCK_LOGREGION(dblp);
+		if (ret != 0) {
+			(void)log_close(dblp);
+			if (newregion)
+				(void)log_unlink(path, 1, dbenv);
+			return (ret);
+		}
+	}
+
 	/*
 	 * If doing recovery, try and recover any previous log files
 	 * before releasing the lock.
 	 */
 	if (newregion) {
-		if ((ret = __log_recover(dbenv, dblp)) != 0) {
-			log_unlink(path, 1, dbenv);
+		ret = __log_recover(dblp);
+		UNLOCK_LOGREGION(dblp);
+
+		if (ret != 0) {
+			(void)log_close(dblp);
+			(void)log_unlink(path, 1, dbenv);
 			return (ret);
 		}
-		UNLOCK_LOGREGION(dblp);
 	}
 	*lpp = dblp;
 	return (0);
+
+err:	/*
+	 * We never get here with an allocated thread-mutex, so we do
+	 * not have to worry about freeing it.
+	 */
+	FREE(dblp, sizeof(DB_LOG));
+	return (ret);
+
 }
 
 /*
@@ -157,8 +188,7 @@ retry:	if (LF_ISSET(DB_CREATE)) {
  *	Recover a log.
  */
 static int
-__log_recover(dbenv, dblp)
-	DB_ENV *dbenv;
+__log_recover(dblp)
 	DB_LOG *dblp;
 {
 	DBT dbt;
@@ -173,14 +203,14 @@ __log_recover(dbenv, dblp)
 	 * Find a log file.  If none exist, we simply return, leaving
 	 * everything initialized to a new log.
 	 */
-	if ((ret = __log_find(dbenv, lp, &cnt)) != 0)
+	if ((ret = __log_find(dblp, &cnt)) != 0)
 		return (ret);
 	if (cnt == 0)
 		return (0);
 
 	/* We have a log file name, find the last one. */
 	while (cnt < MAXLFNAME)
-		if (__log_valid(dbenv, lp, ++cnt) != 0) {
+		if (__log_valid(dblp, lp, ++cnt) != 0) {
 			--cnt;
 			break;
 		}
@@ -263,7 +293,7 @@ __log_recover(dbenv, dblp)
 		lp->c_lsn.offset = 0;
 	}
 
-	__db_err(dbenv,
+	__db_err(dblp->dbenv,
 	    "Recovering the log: last valid LSN: file: %lu offset %lu",
 	    (u_long)lp->lsn.file, (u_long)lp->lsn.offset);
 
@@ -277,12 +307,11 @@ __log_recover(dbenv, dblp)
  * __log_find --
  *	Try to find a log file.
  *
- * PUBLIC: int __log_find __P((DB_ENV *, LOG *, int *));
+ * PUBLIC: int __log_find __P((DB_LOG *, int *));
  */
 int
-__log_find(dbenv, lp, valp)
-	DB_ENV *dbenv;
-	LOG *lp;
+__log_find(dblp, valp)
+	DB_LOG *dblp;
 	int *valp;
 {
 	int cnt, fcnt, logval, ret;
@@ -290,7 +319,7 @@ __log_find(dbenv, lp, valp)
 	char **names, *p, *q;
 
 	/* Find the directory name. */
-	if ((ret = __log_name(dbenv, 1, &p)) != 0)
+	if ((ret = __log_name(dblp, 1, &p)) != 0)
 		return (ret);
 	if ((q = __db_rpath(p)) == NULL)
 		dir = PATH_DOT;
@@ -300,7 +329,7 @@ __log_find(dbenv, lp, valp)
 	}
 
 	/* Get the list of file names. */
-	ret = __db_dir(dbenv, dir, &names, &fcnt);
+	ret = __db_dir(dblp->dbenv, dir, &names, &fcnt);
 	FREES(p);
 	if (ret != 0)
 		return (ret);
@@ -314,14 +343,14 @@ __log_find(dbenv, lp, valp)
 		if (strncmp(names[cnt], "log.", sizeof("log.") - 1) == 0) {
 			logval = atoi(names[cnt] + 4);
 			if (logval != 0 &&
-			    __log_valid(dbenv, lp, logval) == 0) {
+			    __log_valid(dblp, dblp->lp, logval) == 0) {
 				*valp = logval;
 				break;
 			}
 		}
 
 	/* Discard the list. */
-	__db_dirf(dbenv, names, fcnt);
+	__db_dirf(dblp->dbenv, names, fcnt);
 
 	return (ret);
 }
@@ -330,11 +359,11 @@ __log_find(dbenv, lp, valp)
  * log_valid --
  *	Validate a log file.
  *
- * PUBLIC: int __log_valid __P((DB_ENV *, LOG *, int));
+ * PUBLIC: int __log_valid __P((DB_LOG *, LOG *, int));
  */
 int
-__log_valid(dbenv, lp, cnt)
-	DB_ENV *dbenv;
+__log_valid(dblp, lp, cnt)
+	DB_LOG *dblp;
 	LOG *lp;
 	int cnt;
 {
@@ -343,7 +372,7 @@ __log_valid(dbenv, lp, cnt)
 	int fd, ret;
 	char *p;
 
-	if ((ret = __log_name(dbenv, cnt, &p)) != 0)
+	if ((ret = __log_name(dblp, cnt, &p)) != 0)
 		return (ret);
 
 	fd = -1;
@@ -357,7 +386,7 @@ __log_valid(dbenv, lp, cnt)
 			ret = EIO;
 		if (fd != -1) {
 			(void)__db_close(fd);
-			__db_err(dbenv,
+			__db_err(dblp->dbenv,
 			    "Ignoring log file: %s: %s", p, strerror(ret));
 		}
 		goto err;
@@ -365,14 +394,14 @@ __log_valid(dbenv, lp, cnt)
 	(void)__db_close(fd);
 
 	if (persist.magic != DB_LOGMAGIC) {
-		__db_err(dbenv,
+		__db_err(dblp->dbenv,
 		    "Ignoring log file: %s: magic number %lx, not %lx",
 		    p, (u_long)persist.magic, (u_long)DB_LOGMAGIC);
 		ret = EINVAL;
 		goto err;
 	}
 	if (persist.version < DB_LOGOLDVER || persist.version > DB_LOGVERSION) {
-		__db_err(dbenv,
+		__db_err(dblp->dbenv,
 		    "Ignoring log file: %s: unsupported log version %lu",
 		    p, (u_long)persist.version);
 		ret = EINVAL;
@@ -401,6 +430,13 @@ log_close(dblp)
 
 	ret = 0;
 
+	/* Discard the per-thread pointer. */
+	if (dblp->mutexp != NULL) {
+		LOCK_LOGREGION(dblp);
+		__db_shalloc_free(dblp->addr, dblp->mutexp);
+		UNLOCK_LOGREGION(dblp);
+	}
+
 	/* Close the region. */
 	if ((t_ret =
 	    __db_rclose(dblp->dbenv, dblp->fd, dblp->maddr)) != 0 && ret == 0)
@@ -414,10 +450,12 @@ log_close(dblp)
 	if (dblp->c_fd != -1 &&
 	    (t_ret = __db_close(dblp->c_fd)) != 0 && ret == 0)
 		ret = t_ret;
-
-	/* Free the structure. */
 	if (dblp->dbentry != NULL)
 		FREE(dblp->dbentry, (dblp->dbentry_cnt * sizeof(DB_ENTRY)));
+	if (dblp->dir != NULL)
+		FREES(dblp->dir);
+
+	/* Free the structure. */
 	FREE(dblp, sizeof(DB_LOG));
 
 	return (ret);

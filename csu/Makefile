@@ -32,9 +32,6 @@ csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) \
 	     $(csu-dummies)
-ifeq ($(elf),yes)
-before-compile = $(objpfx)abi-tag.h
-endif
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \
@@ -45,6 +42,9 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
+ifeq ($(elf),yes)
+before-compile = $(objpfx)abi-tag.h
+endif
 
 ifeq ($(have-initfini),yes)
 

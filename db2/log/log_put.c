@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_put.c	10.12 (Sleepycat) 8/20/97";
+static const char sccsid[] = "@(#)log_put.c	10.14 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -416,7 +416,7 @@ log_file(dblp, lsn, namep, len)
 
 	LOCK_LOGREGION(dblp);
 
-	ret = __log_name(dblp->dbenv, lsn->file, &p);
+	ret = __log_name(dblp, lsn->file, &p);
 
 	UNLOCK_LOGREGION(dblp);
 
@@ -453,14 +453,14 @@ __log_newfd(dblp)
 
 	/* Get the path of the new file and open it. */
 	dblp->lfname = dblp->lp->lsn.file;
-	if ((ret = __log_name(dblp->dbenv, dblp->lfname, &p)) != 0)
+	if ((ret = __log_name(dblp, dblp->lfname, &p)) != 0)
 		return (ret);
 	if ((ret = __db_fdopen(p,
 	    DB_CREATE | DB_SEQUENTIAL,
 	    DB_CREATE | DB_SEQUENTIAL,
 	    dblp->lp->persist.mode, &dblp->lfd)) != 0)
 		__db_err(dblp->dbenv,
-		    "log_put: %s: %s", p, strerror(errno));
+		    "log_put: %s: %s", p, strerror(ret));
 	FREES(p);
 	return (ret);
 }
@@ -469,16 +469,17 @@ __log_newfd(dblp)
  * __log_name --
  *	Return the log name for a particular file.
  *
- * PUBLIC: int __log_name __P((DB_ENV *, int, char **));
+ * PUBLIC: int __log_name __P((DB_LOG *, int, char **));
  */
 int
-__log_name(dbenv, fn, np)
-	DB_ENV *dbenv;
-	int fn;
-	char **np;
+__log_name(dblp, fileno, namep)
+	DB_LOG *dblp;
+	char **namep;
+	int fileno;
 {
 	char name[sizeof(LFNAME) + 10];
 
-	(void)snprintf(name, sizeof(name), LFNAME, fn);
-	return (__db_appname(dbenv, DB_APP_LOG, NULL, name, NULL, np));
+	(void)snprintf(name, sizeof(name), LFNAME, fileno);
+	return (__db_appname(dblp->dbenv,
+	    DB_APP_LOG, dblp->dir, name, NULL, namep));
 }

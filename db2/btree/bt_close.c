@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_close.c	10.23 (Sleepycat) 9/2/97";
+static const char sccsid[] = "@(#)bt_close.c	10.24 (Sleepycat) 9/17/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -150,7 +150,7 @@ __bam_upstat(dbp)
 
 	/*
 	 * We use a no-op log call to log the update of the statistics onto the
-	 * metadata page.  The dbp->close() call isn't transaction protected to
+	 * metadata page.  The Db->close call isn't transaction protected to
 	 * start with, and I'm not sure what undoing a statistics update means,
 	 * anyway.
 	 */

@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
-#include "set-hooks.h"
+#include <set-hooks.h>
 
 DEFINE_HOOK_RUNNER (__libc_subinit, __libc_init,
 		    (int argc, char **argv, char **envp), (argc, argv, envp))

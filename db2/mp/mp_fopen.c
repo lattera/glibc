@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fopen.c	10.25 (Sleepycat) 8/27/97";
+static const char sccsid[] = "@(#)mp_fopen.c	10.27 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -28,8 +28,8 @@ static const char sccsid[] = "@(#)mp_fopen.c	10.25 (Sleepycat) 8/27/97";
 #include "common_ext.h"
 
 static int __memp_mf_close __P((DB_MPOOL *, DB_MPOOLFILE *));
-static int __memp_mf_open __P((DB_MPOOL *, DB_MPOOLFILE *,
-    int, int, size_t, int, DBT *, u_int8_t *, int, MPOOLFILE **));
+static int __memp_mf_open __P((DB_MPOOL *,
+    DB_MPOOLFILE *, int, size_t, int, DBT *, u_int8_t *, int, MPOOLFILE **));
 
 /*
  * memp_fopen --
@@ -97,7 +97,6 @@ __memp_fopen(dbmp, path,
 		    path == NULL ? TEMPORARY : path, strerror(ENOMEM));
 		return (ENOMEM);
 	}
-	LOCKINIT(dbmp, &dbmfp->mutex);
 	dbmfp->dbmp = dbmp;
 	dbmfp->fd = -1;
 	if (LF_ISSET(DB_RDONLY))
@@ -141,14 +140,21 @@ __memp_fopen(dbmp, path,
 		}
 	}
 
-	/* Find/allocate the shared file object. */
+	/*
+	 * Find/allocate the shared file objects.  This includes allocating
+	 * space for the per-process thread lock.
+	 */
 	if (needlock)
 		LOCKREGION(dbmp);
-	ret = __memp_mf_open(dbmp, dbmfp, ftype,
-	    F_ISSET(dbmfp, MP_READONLY), pagesize,
+	ret = __memp_mf_open(dbmp, dbmfp, ftype, pagesize,
 	    lsn_offset, pgcookie, fileid, F_ISSET(dbmfp, MP_PATH_TEMP), &mfp);
+	if (ret == 0 &&
+	    F_ISSET(dbmp, MP_LOCKHANDLE) && (ret =
+	    __memp_ralloc(dbmp, sizeof(db_mutex_t), NULL, &dbmfp->mutexp)) == 0)
+		LOCKINIT(dbmp, dbmfp->mutexp);
 	if (needlock)
 		UNLOCKREGION(dbmp);
+
 	if (ret != 0)
 		goto err;
 
@@ -156,11 +162,11 @@ __memp_fopen(dbmp, path,
 
 	/*
 	 * If a file:
-	 *
 	 *	+ is read-only
+	 *	+ isn't temporary
 	 *	+ doesn't require any pgin/pgout support
-	 *	+ is less than mp_mmapsize bytes in size.
-	 *	+ and the DB_NOMMAP flag wasn't set
+	 *	+ the DB_NOMMAP flag wasn't set
+	 *	+ and is less than mp_mmapsize bytes in size
 	 *
 	 * we can mmap it instead of reading/writing buffers.  Don't do error
 	 * checking based on the mmap call failure.  We want to do normal I/O
@@ -176,11 +182,20 @@ __memp_fopen(dbmp, path,
 	 * flatly impossible.  Hope that mmap fails if the file is too large.
 	 */
 #define	DB_MAXMMAPSIZE	(10 * 1024 * 1024)	/* 10 Mb. */
+	if (mfp->can_mmap) {
+		if (!F_ISSET(dbmfp, MP_READONLY))
+			mfp->can_mmap = 0;
+		if (path == NULL)
+			mfp->can_mmap = 0;
+		if (ftype != 0)
+			mfp->can_mmap = 0;
+		if (LF_ISSET(DB_NOMMAP))
+			mfp->can_mmap = 0;
+		if (size > (dbenv == NULL || dbenv->mp_mmapsize == 0 ?
+		    DB_MAXMMAPSIZE : (off_t)dbenv->mp_mmapsize))
+			mfp->can_mmap = 0;
+	}
 	dbmfp->addr = NULL;
-	mfp->can_mmap = F_ISSET(dbmfp, MP_READONLY) &&
-	    ftype == 0 && !LF_ISSET(DB_NOMMAP) && path != NULL &&
-	    size <= (dbenv == NULL || dbenv->mp_mmapsize == 0 ?
-	    DB_MAXMMAPSIZE : (off_t)dbenv->mp_mmapsize);
 	if (mfp->can_mmap) {
 		dbmfp->len = size;
 		if (__db_mmap(dbmfp->fd, dbmfp->len, 1, 1, &dbmfp->addr) != 0) {
@@ -189,14 +204,18 @@ __memp_fopen(dbmp, path,
 		}
 	}
 
-	LOCKHANDLE(dbmp, &dbmp->mutex);
+	LOCKHANDLE(dbmp, dbmp->mutexp);
 	TAILQ_INSERT_TAIL(&dbmp->dbmfq, dbmfp, q);
-	UNLOCKHANDLE(dbmp, &dbmp->mutex);
+	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 
 	*retp = dbmfp;
 	return (0);
 
-err:	if (F_ISSET(dbmfp, MP_PATH_ALLOC))
+err:	/*
+	 * Note that we do not have to free the thread mutex, because we
+	 * never get to here after we have successfully allocated it.
+	 */
+	if (F_ISSET(dbmfp, MP_PATH_ALLOC))
 		FREES(dbmfp->path);
 	if (dbmfp->fd != -1)
 		(void)__db_close(dbmfp->fd);
@@ -211,10 +230,10 @@ err:	if (F_ISSET(dbmfp, MP_PATH_ALLOC))
  */
 static int
 __memp_mf_open(dbmp, dbmfp,
-    ftype, readonly, pagesize, lsn_offset, pgcookie, fileid, istemp, retp)
+    ftype, pagesize, lsn_offset, pgcookie, fileid, istemp, retp)
 	DB_MPOOL *dbmp;
 	DB_MPOOLFILE *dbmfp;
-	int ftype, readonly, lsn_offset, istemp;
+	int ftype, lsn_offset, istemp;
 	size_t pagesize;
 	DBT *pgcookie;
 	u_int8_t *fileid;
@@ -255,13 +274,8 @@ __memp_mf_open(dbmp, dbmfp,
 				mfp = NULL;
 				goto ret1;
 			}
-			/*
-			 * Found it: increment the reference count and update
-			 * the mmap-able status.
-			 */
+			/* Found it: increment the reference count. */
 			++mfp->ref;
-			if (!readonly)
-				mfp->can_mmap = 0;
 			goto ret1;
 		}
 
@@ -273,6 +287,7 @@ alloc:	if ((ret = __memp_ralloc(dbmp, sizeof(MPOOLFILE), NULL, &mfp)) != 0)
 	memset(mfp, 0, sizeof(MPOOLFILE));
 	mfp->ref = 1;
 	mfp->ftype = ftype;
+	mfp->can_mmap = 1;
 	mfp->lsn_off = lsn_offset;
 	mfp->stat.st_pagesize = pagesize;
 
@@ -343,9 +358,9 @@ memp_fclose(dbmfp)
 		    dbmfp->path, (u_long)dbmfp->pinref);
 
 	/* Remove the DB_MPOOLFILE structure from the list. */
-	LOCKHANDLE(dbmp, &dbmp->mutex);
+	LOCKHANDLE(dbmp, dbmp->mutexp);
 	TAILQ_REMOVE(&dbmp->dbmfq, dbmfp, q);
-	UNLOCKHANDLE(dbmp, &dbmp->mutex);
+	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 
 	/* Close the underlying MPOOLFILE. */
 	(void)__memp_mf_close(dbmp, dbmfp);
@@ -362,11 +377,16 @@ memp_fclose(dbmfp)
 			t_ret = ret;
 	}
 
-	/* Potentially allocated path. */
+	/* Free memory. */
 	if (F_ISSET(dbmfp, MP_PATH_ALLOC))
 		FREES(dbmfp->path);
+	if (dbmfp->mutexp != NULL) {
+		LOCKREGION(dbmp);
+		__db_shalloc_free(dbmp->addr, dbmfp->mutexp);
+		UNLOCKREGION(dbmp);
+	}
 
-	/* Free the DB_MPOOLFILE structure. */
+	/* Discard the DB_MPOOLFILE structure. */
 	FREE(dbmfp, sizeof(DB_MPOOLFILE));
 
 	return (ret);

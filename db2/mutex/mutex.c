@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mutex.c	10.22 (Sleepycat) 8/21/97";
+static const char sccsid[] = "@(#)mutex.c	10.25 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES

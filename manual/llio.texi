@@ -301,6 +301,35 @@ The @code{read} function is the underlying primitive for all of the
 functions that read from streams, such as @code{fgetc}.
 @end deftypefun
 
+@comment unistd.h
+@comment Unix98
+@deftypefun ssize_t pread (int @var{filedes}, void *@var{buffer}, size_t @var{size}, off_t @var{offset})
+The @code{pread} function is similar to the @code{read} function.  The
+first three arguments are identical and also the return values and error
+codes correspond.
+
+The difference is the fourth argument and its handling.  The data block
+is not read from the current position of the file descriptor
+@code{filedes}.  Instead the data is read from the file starting at
+position @var{offset}.  The position of the file descriptor itself is
+not effected by the operation.  The value is the same as before the call.
+
+The return value of @code{pread} describes the number of bytes read.
+In the error case it returns @math{-1} like @code{read} does and the
+error codes are also the same.  Only there are a few more error codes:
+@table @code
+@item EINVAL
+The value given for @var{offset} is negative and therefore illegal.
+
+@item ESPIPE
+The file descriptor @var{filedes} is associate with a pipe or a FIFO and
+this device does not allow positioning of the file pointer.
+@end table
+
+The function is an extension defined in the Unix Single Specification
+version 2.
+@end deftypefun
+
 @cindex writing to a file descriptor
 @comment unistd.h
 @comment POSIX.1
@@ -320,8 +349,10 @@ storage immediately.  You can use @code{fsync} when you need to be sure
 your data has been permanently stored before continuing.  (It is more
 efficient for the system to batch up consecutive writes and do them all
 at once when convenient.  Normally they will always be written to disk
-within a minute or less.)
-@c !!! xref fsync
+within a minute or less.)  Modern systems provide another function
+@code{fdatasync} which guarantees integrity only for the file data and
+is therefore faster.
+@c !!! xref fsync, fdatasync
 You can use the @code{O_FSYNC} open mode to make @code{write} always
 store the data to disk before returning; @pxref{Operating Modes}.
 
@@ -391,6 +422,36 @@ nbytes = TEMP_FAILURE_RETRY (write (desc, buffer, count));
 The @code{write} function is the underlying primitive for all of the
 functions that write to streams, such as @code{fputc}.
 @end deftypefun
+
+@comment unistd.h
+@comment Unix98
+@deftypefun ssize_t pwrite (int @var{filedes}, const void *@var{buffer}, size_t @var{size}, off_t @var{offset})
+The @code{pwrite} function is similar to the @code{write} function.  The
+first three arguments are identical and also the return values and error
+codes correspond.
+
+The difference is the fourth argument and its handling.  The data block
+is not written to the current position of the file descriptor
+@code{filedes}.  Instead the data is written to the file starting at
+position @var{offset}.  The position of the file descriptor itself is
+not effected by the operation.  The value is the same as before the call.
+
+The return value of @code{pwrite} describes the number of written bytes.
+In the error case it returns @math{-1} like @code{write} does and the
+error codes are also the same.  Only there are a few more error codes:
+@table @code
+@item EINVAL
+The value given for @var{offset} is negative and therefore illegal.
+
+@item ESPIPE
+The file descriptor @var{filedes} is associate with a pipe or a FIFO and
+this device does not allow positioning of the file pointer.
+@end table
+
+The function is an extension defined in the Unix Single Specification
+version 2.
+@end deftypefun
+
 
 @node File Position Primitive
 @section Setting the File Position of a Descriptor

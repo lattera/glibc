@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_archive.c	10.23 (Sleepycat) 8/23/97";
+static const char sccsid[] = "@(#)log_archive.c	10.26 (Sleepycat) 9/23/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -27,18 +27,18 @@ static const char sccsid[] = "@(#)log_archive.c	10.23 (Sleepycat) 8/23/97";
 #include "clib_ext.h"
 #include "common_ext.h"
 
-static int absname __P((char *, char *, char **));
-static int build_data __P((DB_LOG *, char *, char ***, void *(*)(size_t)));
-static int cmpfunc __P((const void *, const void *));
-static int usermem __P((char ***, void *(*)(size_t)));
+static int __absname __P((char *, char *, char **));
+static int __build_data __P((DB_LOG *, char *, char ***, void *(*)(size_t)));
+static int __cmpfunc __P((const void *, const void *));
+static int __usermem __P((char ***, void *(*)(size_t)));
 
 /*
  * log_archive --
  *	Supporting function for db_archive(1).
  */
 int
-log_archive(logp, listp, flags, db_malloc)
-	DB_LOG *logp;
+log_archive(dblp, listp, flags, db_malloc)
+	DB_LOG *dblp;
 	char ***listp;
 	int flags;
 	void *(*db_malloc) __P((size_t));
@@ -54,10 +54,10 @@ log_archive(logp, listp, flags, db_malloc)
 #define	OKFLAGS	(DB_ARCH_ABS | DB_ARCH_DATA | DB_ARCH_LOG)
 	if (flags != 0) {
 		if ((ret =
-		    __db_fchk(logp->dbenv, "log_archive", flags, OKFLAGS)) != 0)
+		    __db_fchk(dblp->dbenv, "log_archive", flags, OKFLAGS)) != 0)
 			return (ret);
 		if ((ret =
-		    __db_fcchk(logp->dbenv,
+		    __db_fcchk(dblp->dbenv,
 		        "log_archive", flags, DB_ARCH_DATA, DB_ARCH_LOG)) != 0)
 			return (ret);
 	}
@@ -68,7 +68,7 @@ log_archive(logp, listp, flags, db_malloc)
 	 * but that's just not possible.
 	 */
 	if (LF_ISSET(DB_ARCH_ABS)) {
-		__set_errno(0);
+		__set_errno (0);
 		if ((pref = getcwd(buf, sizeof(buf))) == NULL)
 			return (errno == 0 ? ENOMEM : errno);
 	} else
@@ -76,19 +76,19 @@ log_archive(logp, listp, flags, db_malloc)
 
 	switch (LF_ISSET(~DB_ARCH_ABS)) {
 	case DB_ARCH_DATA:
-		return (build_data(logp, pref, listp, db_malloc));
+		return (__build_data(dblp, pref, listp, db_malloc));
 	case DB_ARCH_LOG:
 		memset(&rec, 0, sizeof(rec));
-		if (F_ISSET(logp, DB_AM_THREAD))
+		if (F_ISSET(dblp, DB_AM_THREAD))
 			F_SET(&rec, DB_DBT_MALLOC);
-		if ((ret = log_get(logp, &stable_lsn, &rec, DB_LAST)) != 0)
+		if ((ret = log_get(dblp, &stable_lsn, &rec, DB_LAST)) != 0)
 			return (ret);
-		if (F_ISSET(logp, DB_AM_THREAD))
+		if (F_ISSET(dblp, DB_AM_THREAD))
 			free(rec.data);
 		fnum = stable_lsn.file;
 		break;
 	case 0:
-		if ((ret = __log_findckp(logp, &stable_lsn)) != 0) {
+		if ((ret = __log_findckp(dblp, &stable_lsn)) != 0) {
 			if (ret != DB_NOTFOUND)
 				return (ret);
 			*listp = NULL;
@@ -108,7 +108,7 @@ log_archive(logp, listp, flags, db_malloc)
 
 	/* Build an array of the file names. */
 	for (n = 0; fnum > 0; --fnum) {
-		if ((ret = __log_name(logp->dbenv, fnum, &name)) != 0)
+		if ((ret = __log_name(dblp, fnum, &name)) != 0)
 			goto err;
 		if (__db_exists(name, NULL) != 0)
 			break;
@@ -123,7 +123,7 @@ log_archive(logp, listp, flags, db_malloc)
 		}
 
 		if (LF_ISSET(DB_ARCH_ABS)) {
-			if ((ret = absname(pref, name, &array[n])) != 0)
+			if ((ret = __absname(pref, name, &array[n])) != 0)
 				goto err;
 			FREES(name);
 		} else if ((p = __db_rpath(name)) != NULL) {
@@ -146,10 +146,10 @@ log_archive(logp, listp, flags, db_malloc)
 	}
 
 	/* Sort the list. */
-	qsort(array, (size_t)n, sizeof(char *), cmpfunc);
+	qsort(array, (size_t)n, sizeof(char *), __cmpfunc);
 
 	/* Rework the memory. */
-	if ((ret = usermem(&array, db_malloc)) != 0)
+	if ((ret = __usermem(&array, db_malloc)) != 0)
 		goto err;
 
 	*listp = array;
@@ -164,12 +164,12 @@ err:	if (array != NULL) {
 }
 
 /*
- * build_data --
+ * __build_data --
  *	Build a list of datafiles for return.
  */
 static int
-build_data(logp, pref, listp, db_malloc)
-	DB_LOG *logp;
+__build_data(dblp, pref, listp, db_malloc)
+	DB_LOG *dblp;
 	char *pref, ***listp;
 	void *(*db_malloc) __P((size_t));
 {
@@ -187,19 +187,19 @@ build_data(logp, pref, listp, db_malloc)
 	array[0] = NULL;
 
 	memset(&rec, 0, sizeof(rec));
-	if (F_ISSET(logp, DB_AM_THREAD))
+	if (F_ISSET(dblp, DB_AM_THREAD))
 		F_SET(&rec, DB_DBT_MALLOC);
-	for (n = 0, ret = log_get(logp, &lsn, &rec, DB_FIRST);
-	    ret == 0; ret = log_get(logp, &lsn, &rec, DB_NEXT)) {
+	for (n = 0, ret = log_get(dblp, &lsn, &rec, DB_FIRST);
+	    ret == 0; ret = log_get(dblp, &lsn, &rec, DB_NEXT)) {
 		if (rec.size < sizeof(rectype)) {
 			ret = EINVAL;
-			__db_err(logp->dbenv, "log_archive: bad log record");
+			__db_err(dblp->dbenv, "log_archive: bad log record");
 			goto lg_free;
 		}
 
 		memcpy(&rectype, rec.data, sizeof(rectype));
 		if (rectype != DB_log_register) {
-			if (F_ISSET(logp, DB_AM_THREAD)) {
+			if (F_ISSET(dblp, DB_AM_THREAD)) {
 				free(rec.data);
 				rec.data = NULL;
 			}
@@ -207,7 +207,7 @@ build_data(logp, pref, listp, db_malloc)
 		}
 		if ((ret = __log_register_read(rec.data, &argp)) != 0) {
 			ret = EINVAL;
-			__db_err(logp->dbenv,
+			__db_err(dblp->dbenv,
 			    "log_archive: unable to read log record");
 			goto lg_free;
 		}
@@ -231,7 +231,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 		array[++n] = NULL;
 		free(argp);
 
-		if (F_ISSET(logp, DB_AM_THREAD)) {
+		if (F_ISSET(dblp, DB_AM_THREAD)) {
 			free(rec.data);
 			rec.data = NULL;
 		}
@@ -245,7 +245,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 	}
 
 	/* Sort the list. */
-	qsort(array, (size_t)n, sizeof(char *), cmpfunc);
+	qsort(array, (size_t)n, sizeof(char *), __cmpfunc);
 
 	/*
 	 * Build the real pathnames, discarding nonexistent files and
@@ -268,7 +268,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 		}
 
 		/* Get the real name. */
-		if ((ret = __db_appname(logp->dbenv,
+		if ((ret = __db_appname(dblp->dbenv,
 		    DB_APP_DATA, NULL, array[last], NULL, &real_name)) != 0)
 			goto err2;
 
@@ -284,7 +284,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 		FREES(array[last]);
 		array[last] = NULL;
 		if (pref != NULL) {
-			ret = absname(pref, real_name, &array[last]);
+			ret = __absname(pref, real_name, &array[last]);
 			FREES(real_name);
 			if (ret != 0)
 				goto err2;
@@ -302,7 +302,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 	array[last] = NULL;
 
 	/* Rework the memory. */
-	if ((ret = usermem(&array, db_malloc)) != 0)
+	if ((ret = __usermem(&array, db_malloc)) != 0)
 		goto err1;
 
 	*listp = array;
@@ -327,11 +327,11 @@ err1:	if (array != NULL) {
 }
 
 /*
- * absname --
+ * __absname --
  *	Return an absolute path name for the file.
  */
 static int
-absname(pref, name, newnamep)
+__absname(pref, name, newnamep)
 	char *pref, *name, **newnamep;
 {
 	size_t l_pref, l_name;
@@ -355,12 +355,12 @@ absname(pref, name, newnamep)
 }
 
 /*
- * usermem --
+ * __usermem --
  *	Create a single chunk of memory that holds the returned information.
  *	If the user has their own malloc routine, use it.
  */
 static int
-usermem(listp, func)
+__usermem(listp, func)
 	char ***listp;
 	void *(*func) __P((size_t));
 {
@@ -406,7 +406,7 @@ usermem(listp, func)
 }
 
 static int
-cmpfunc(p1, p2)
+__cmpfunc(p1, p2)
 	const void *p1, *p2;
 {
 	return (strcmp(*((char **)p1), *((char **)p2)));

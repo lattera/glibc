@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1997-09-06T18:30:16+0200 drepper>
+Time-stamp: <1997-09-28T22:58:35+0200 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -55,6 +55,20 @@ Severity: [  *] to [***]
 
 [  *]  The rcmd() functions (more concrete: the handling of .rhosts) does
        not support netgroups and wildcards (+).
+
+[  *]  The first alias definition in locale.alias is ignored.
+       [PR libc/205]
+
+[  *]  When assembling a locale definition, that uses the "copy"
+       directive, with localedef, not only the copied category is
+       checked for errors, but the whole file containing the same
+       category.
+       [PR libc/207]
+
+[  *]  configuring with CFLAGS="-pipe" configure doesn't work
+       with gcc. This seems to be a bug in gcc 2.7.2.x (egcs doesn't
+       have this bug).
+       [PR libc/245]
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
