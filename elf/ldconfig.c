@@ -107,6 +107,9 @@ static char *cache_file;
 /* Configuration file.  */
 static const char *config_file;
 
+/* Mask to use for important hardware capabilities.  */
+static unsigned long int hwcap_mask = HWCAP_IMPORTANT;
+
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *)
@@ -147,7 +150,7 @@ is_hwcap_platform (const char *name)
 {
   int hwcap_idx = _dl_string_hwcap (name);
 
-  if (hwcap_idx != -1 && ((1 << hwcap_idx) & HWCAP_IMPORTANT))
+  if (hwcap_idx != -1 && ((1 << hwcap_idx) & hwcap_mask))
     return 1;
 
   hwcap_idx = _dl_string_platform (name);
@@ -934,6 +937,16 @@ parse_conf (const char *filename)
   fclose (file);
 }
 
+/* Honour LD_HWCAP_MASK.  */
+static void
+set_hwcap (void)
+{
+  char *mask = getenv ("LD_HWCAP_MASK");
+
+  if (mask)
+    hwcap_mask = strtoul (mask, NULL, 0);
+}
+
 
 int
 main (int argc, char **argv)
@@ -951,6 +964,8 @@ main (int argc, char **argv)
       for (i = remaining; i < argc; ++i)
 	add_dir (argv[i]);
     }
+
+  set_hwcap ();
 
   if (opt_chroot)
     {

@@ -1,3 +1,15 @@
+2001-07-17  Andreas Jaeger  <aj@suse.de>
+
+	* elf/ldconfig.c: Add new variable hwcap_mask to honour LD_HWCAP_MASK.
+	(is_hwcap_platform): Use it.
+	(set_hwcap): New function to set hwcap_mask.
+	(main): Call set_hwcap.
+
+2001-07-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/getdate.c (__getdate_r): Initialize tm_isdst, tm_gmtoff and
+	tm_zone before calling strptime.
+
 2001-07-17  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/getpagesize.c: Fix last change.
