@@ -52,11 +52,7 @@ typedef struct fpregset
   } fpregset_t;
 
 /* Context to describe whole processor state.  */
-typedef struct
-  {
-    gregset_t gregs;
-    fpregset_t fpregs;
-  } mcontext_t;
+typedef struct sigcontext mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext
