@@ -1,3 +1,7 @@
+2002-07-06  Bruno Haible  <bruno@clisp.org>
+
+	* malloc/hooks.c (public_gET_STATe): Access max_total_mem in mp_.
+
 2002-07-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_hconf.c (_res_hconf_init): Move code into new

@@ -352,8 +352,11 @@ realloc_check(oldmem, bytes, caller)
   if (chunk_is_mmapped(oldp)) {
 #if HAVE_MREMAP
     mchunkptr newp = mremap_chunk(oldp, nb);
-    if(!newp) {
+    if(newp)
+      newmem = chunk2mem(newp);
+    else
 #endif
+    {
       /* Note the extra SIZE_SZ overhead. */
       if(oldsize - SIZE_SZ >= nb)
 	newmem = oldmem; /* do nothing */
@@ -366,11 +369,7 @@ realloc_check(oldmem, bytes, caller)
           munmap_chunk(oldp);
         }
       }
-#if HAVE_MREMAP
-    } else {
-      newmem = chunk2mem(newp);
     }
-#endif
   } else {
 #endif /* HAVE_MMAP */
     if (top_check() >= 0)
@@ -534,7 +533,7 @@ public_gET_STATe(void)
   ms->check_action = check_action;
   ms->max_sbrked_mem = main_arena.max_system_mem;
 #ifdef NO_THREADS
-  ms->max_total_mem = max_total_mem;
+  ms->max_total_mem = mp_.max_total_mem;
 #else
   ms->max_total_mem = 0;
 #endif
