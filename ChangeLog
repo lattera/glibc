@@ -17,6 +17,8 @@
 	auto-assigned numbers and user-defined nubmers is not fatal.
 	Handle it.
 	Patch by Michael M. Lampkin <michael.lampkin@ieee.org>.
+	* catgets/Makefile: Add rules to run test2.msg test.
+	* catgets/test2.msg: New file.
 
 	* catgets/gencat.c (main): Return 1 if messages have been printed.
 

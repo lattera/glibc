@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
+# Copyright (C) 1996-2000, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 subdir	:= catgets
 
 headers		= nl_types.h
-distribute	= catgetsinfo.h config.h xopen-msg.sed test1.msg \
+distribute	= catgetsinfo.h config.h xopen-msg.sed test1.msg test2.msg \
 		  test-gencat.sh sample.SJIS
 routines	= catgets open_catalog
 others		= gencat
@@ -47,19 +47,25 @@ catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%
 
 CPPFLAGS-gencat = -DNOT_IN_libc
 
-generated = de.msg test1.cat test1.h sample.SJIS.cat test-gencat.h
+generated = de.msg test1.cat test1.h test2.cat test2.h sample.SJIS.cat \
+	    test-gencat.h
 generated-dirs = de
 
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
 
 ifneq ($(cross-compiling),yes)
-tests: $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test-gencat.out
+tests: $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
+       $(objpfx)test-gencat.out
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat
 	LC_ALL=hr_HR.ISO-8859-2 LOCPATH=$(common-objpfx)localedata \
 	GCONV_PATH=$(common-objpfx)iconvdata \
 	$(built-program-cmd) -H $(objpfx)test1.h $@ $<
+$(objpfx)test2.cat: test2.msg $(objpfx)gencat
+	LOCPATH=$(common-objpfx)localedata \
+	GCONV_PATH=$(common-objpfx)iconvdata \
+	$(built-program-cmd) -H $(objpfx)test2.h $@ $<
 $(objpfx)de/libc.cat: $(objpfx)de.msg $(objpfx)gencat
 	$(make-target-directory)
 	LC_ALL=de_DE.ISO-8859-1 LOCPATH=$(common-objpfx)localedata \

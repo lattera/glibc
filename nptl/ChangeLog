@@ -1,6 +1,6 @@
 2003-02-22  Ulrich Drepper  <drepper@redhat.com>
 
-	* Makefile (before-compile): Add $(objpfx)banner.h.
+	* Makefile: Add dependency for $(objpfx)version.d.
 
 	* eintr.c (eintr_source): Add unnecessary return but the compiler
 	insists.
