@@ -45,7 +45,7 @@
 #endif
 
 #ifdef __USE_GNU
-# define O_NOFOLLOW	0x4000	/* Do not follow links.	 */
+# define O_NOFOLLOW	0x20000	/* Do not follow links.	 */
 # define O_DIRECT	0x8000	/* Direct disk access hint.  */
 # define O_DIRECTORY	0x10000	/* Must be a directory.	 */
 #endif
