@@ -181,6 +181,13 @@ me (void)
   const char *env = getenv ("MEMUSAGE_PROG_NAME");
   size_t prog_len = strlen (__progname);
 
+  initialized = -1;
+  mallocp = (void *(*) (size_t)) dlsym (RTLD_NEXT, "malloc");
+  reallocp = (void *(*) (void *, size_t)) dlsym (RTLD_NEXT, "realloc");
+  callocp = (void *(*) (size_t, size_t)) dlsym (RTLD_NEXT, "calloc");
+  freep = (void (*) (void *)) dlsym (RTLD_NEXT, "free");
+  initialized = 1;
+
   if (env != NULL)
     {
       /* Check for program name.  */
@@ -197,13 +204,6 @@ me (void)
 
       if (!start_sp)
 	start_sp = GETSP ();
-
-      initialized = -1;
-      mallocp = (void *(*) (size_t)) dlsym (RTLD_NEXT, "malloc");
-      reallocp = (void *(*) (void *, size_t)) dlsym (RTLD_NEXT, "realloc");
-      callocp = (void *(*) (size_t, size_t)) dlsym (RTLD_NEXT, "calloc");
-      freep = (void (*) (void *)) dlsym (RTLD_NEXT, "free");
-      initialized = 1;
 
       outname = getenv ("MEMUSAGE_OUTPUT");
       if (outname != NULL && outname[0] != '\0'

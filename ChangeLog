@@ -1,5 +1,8 @@
 2001-09-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/memusage.c (me): Always use dlsym() to find the real
+	implementations.
+
 	* malloc/memusage.sh: Make -n option actually do something.
 
 2001-09-20  Andreas Jaeger  <aj@suse.de>
