@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,7 +124,13 @@ extern void *mremap (void *__addr, size_t __old_len, size_t __new_len,
    The status is returned in a vector of bytes.  The least significant
    bit of each byte is 1 if the referenced page is in memory, otherwise
    it is zero.  */
-extern int mincore (void *__start, size_t __len, unsigned char *__vec);
+extern int mincore (void *__start, size_t __len, unsigned char *__vec)
+     __THROW;
+
+/* Remap arbitrary pages of a shared backing store within an existing
+   VMA.  */
+extern int remap_file_pages (void *__start, size_t __size, int __prot,
+			     size_t __pgoff, int __flags) __THROW;
 #endif
 
 
