@@ -6,8 +6,9 @@ static int
 do_test (void)
 {
   static const char prog[] = "does-not-exist";
+  char *env [] = {"FOO=BAR", NULL};
   errno = 0;
-  execle (prog, prog, NULL, "FOO=BAR", NULL);
+  execle (prog, prog, NULL, env);
 
   if (errno != ENOENT)
     {
