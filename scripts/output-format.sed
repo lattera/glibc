@@ -7,7 +7,7 @@ t o
 : o
 s/^.*OUTPUT_FORMAT(\([^,]*\), \1, \1).*$/OUTPUT_FORMAT(\1)/
 t q
-s/^.*OUTPUT_FORMAT(\([^,]*\), \([^,]*\), \([^,]*\)).*$/\2,\3/
+s/^.*OUTPUT_FORMAT(\([^,]*\), \([^,]*\), \([^,]*\)).*$/\1,\2,\3/
 t s
 s/^.*OUTPUT_FORMAT(\([^,)]*\).*$)/OUTPUT_FORMAT(\1)/
 t q
@@ -16,8 +16,9 @@ d
 s/"//g
 G
 s/\n//
-s/^\([^,]*\),\([^,]*\),B/OUTPUT_FORMAT(\1)/p
-s/^\([^,]*\),\([^,]*\),L/OUTPUT_FORMAT(\2)/p
+s/^\([^,]*\),\([^,]*\),\([^,]*\),B/OUTPUT_FORMAT(\2)/p
+s/^\([^,]*\),\([^,]*\),\([^,]*\),L/OUTPUT_FORMAT(\3)/p
+s/^\([^,]*\),\([^,]*\),\([^,]*\)/OUTPUT_FORMAT(\1)/p
 /,/s|^|*** BUG in libc/scripts/output-format.sed *** |p
 q
 : q
