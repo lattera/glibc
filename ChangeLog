@@ -1,5 +1,10 @@
 1998-10-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/connections.c (dbs): Define defualt values for timeouts and
+	set enabled to 0 by default.
+	(CACHE_PRUNE_INTERVAL): New constant.  Use it instead of magical 15 in
+	nscd_run.
+
 	* locale/C-ctype.c (_nl_C_LC_CTYPE_class): Clear ISCNTRL bit for
 	character >= 0x80.
 	(_nl_C_LC_CTYPE_class32): Likewise.

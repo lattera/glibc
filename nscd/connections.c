@@ -67,29 +67,38 @@ static struct database dbs[lastdb] =
 {
   [pwddb] = {
     lock: PTHREAD_RWLOCK_INITIALIZER,
-    enabled: 1,
+    enabled: 0,
     check_file: 1,
     filename: "/etc/passwd",
     module: 211,
-    disabled_iov: &pwd_iov_disabled
+    disabled_iov: &pwd_iov_disabled,
+    postimeout: 3600,
+    negtimeout: 20
   },
   [grpdb] = {
     lock: PTHREAD_RWLOCK_INITIALIZER,
-    enabled: 1,
+    enabled: 0,
     check_file: 1,
     filename: "/etc/group",
     module: 211,
-    disabled_iov: &grp_iov_disabled
+    disabled_iov: &grp_iov_disabled,
+    postimeout: 3600,
+    negtimeout: 60
   },
   [hstdb] = {
     lock: PTHREAD_RWLOCK_INITIALIZER,
-    enabled: 1,
+    enabled: 0,
     check_file: 1,
     filename: "/etc/hosts",
     module: 211,
-    disabled_iov: &hst_iov_disabled
+    disabled_iov: &hst_iov_disabled,
+    postimeout: 3600,
+    negtimeout: 20
   }
 };
+
+/* Number of seconds between two cache pruning runs.  */
+#define CACHE_PRUNE_INTERVAL	15
 
 /* Number of threads to use.  */
 int nthreads = -1;
@@ -312,7 +321,7 @@ nscd_run (void *p)
   struct pollfd conn;
   int run_prune = my_number < lastdb && dbs[my_number].enabled;
   time_t now = time (NULL);
-  time_t next_prune = now + 15;
+  time_t next_prune = now + CACHE_PRUNE_INTERVAL;
   int timeout = run_prune ? 1000 * (next_prune - now) : -1;
 
   conn.fd = sock;
@@ -328,7 +337,7 @@ nscd_run (void *p)
 	  assert (my_number < lastdb);
 	  now = time (NULL);
 	  prune_cache (&dbs[my_number], now);
-	  next_prune = now + 15;
+	  next_prune = now + CACHE_PRUNE_INTERVAL;
 	  timeout = 1000 * (next_prune - now);
 	  continue;
 	}
