@@ -27,46 +27,34 @@
    D should be locked, and will not be unlocked.  */
 
 void
-_hurd_port2fd (struct hurd_fd *d, io_t port, int flags)
+_hurd_port2fd (struct hurd_fd *d, io_t dport, int flags)
 {
-  io_t ctty;
   mach_port_t cttyid;
-  int is_ctty = !(flags & O_IGNORE_CTTY) && ! __term_getctty (port, &cttyid);
+  io_t ctty = MACH_PORT_NULL;
 
-  if (is_ctty)
-    {
-      /* This port is capable of being a controlling tty.
-	 Is it ours?  */
-      struct hurd_port *const id = &_hurd_ports[INIT_PORT_CTTYID];
-      __spin_lock (&id->lock);
-      if (id->port == MACH_PORT_NULL)
-	/* We have no controlling tty, so make this one it.  */
-	_hurd_port_locked_set (id, cttyid);
-      else
-	{
-	  if (cttyid != id->port)
-	    /* We have a controlling tty and this is not it.  */
-	    is_ctty = 0;
-	  /* Either we don't want CTTYID, or ID->port already is it.
-	     So we don't need to change ID->port, and we can release
-	     the reference to CTTYID.  */
-	  __spin_unlock (&id->lock);
-	  __mach_port_deallocate (__mach_task_self (), cttyid);
-	}
-    }
-
-  if (!is_ctty || __term_open_ctty (port, _hurd_pid, _hurd_pgrp, &ctty) != 0)
-    /* XXX if IS_CTTY, then this port is our ctty, but we are
-       not doing ctty style i/o because term_become_ctty barfed.
-       What to do?  */
-    /* No ctty magic happening here.  */
-    ctty = MACH_PORT_NULL;
+  if (!(flags & O_IGNORE_CTTY))
+    __USEPORT (CTTYID,
+	       ({
+		 if (port != MACH_PORT_NULL && /* Do we have a ctty? */
+		     ! __term_getctty (dport, &cttyid))	/* Could this be it? */
+		   {
+		     __mach_port_deallocate (__mach_task_self (), cttyid);
+		     /* This port is capable of being a controlling tty.
+			Is it ours?  */
+		     if (cttyid == port)
+		       __term_open_ctty (dport, _hurd_pid, _hurd_pgrp, &ctty);
+		     /* XXX if this port is our ctty, but we are not doing
+			ctty style i/o because term_become_ctty barfed,
+			what to do?  */
+		   }
+		 0;
+	       }));
 
   /* Install PORT in the descriptor cell, leaving it locked.  */
   {
     mach_port_t old
       = _hurd_userlink_clear (&d->port.users) ? d->port.port : MACH_PORT_NULL;
-    d->port.port = port;
+    d->port.port = dport;
     d->flags = 0;
     if (old != MACH_PORT_NULL)
       __mach_port_deallocate (__mach_task_self (), old);

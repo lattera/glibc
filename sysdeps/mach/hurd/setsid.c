@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,38 +20,51 @@
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/port.h>
+#include <hurd/fd.h>
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
    are set to the process ID of the calling process, which is returned.  */
-int
-__setsid ()
+pid_t
+__setsid (void)
 {
   error_t err;
   unsigned int stamp;
 
+  HURD_CRITICAL_BEGIN;
+  __mutex_lock (&_hurd_dtable_lock);
+
   stamp = _hurd_pids_changed_stamp; /* Atomic fetch.  */
 
   /* Tell the proc server we want to start a new session.  */
-  if (err = __USEPORT (PROC, __proc_setsid (port)))
-    return __hurd_fail (err);
+  err = __USEPORT (PROC, __proc_setsid (port));
+  if (!err)
+    /* Punt our current ctty.  We hold the dtable lock from before the
+       proc_setsid call through clearing the cttyid port so that we can be
+       sure that it's been cleared by the time the signal thread attempts
+       to re-ctty the dtable in response to the pgrp change notification.  */
+    _hurd_port_set (&_hurd_ports[INIT_PORT_CTTYID], MACH_PORT_NULL);
 
-  /* Punt our current ctty.  */
-  _hurd_setcttyid (MACH_PORT_NULL);
+  __mutex_unlock (&_hurd_dtable_lock);
 
-  /* Synchronize with the signal thread to make sure we have
-     received and processed proc_newids before returning to the user.  */
-  while (_hurd_pids_changed_stamp == stamp)
-    {
+  if (!err)
+    /* Synchronize with the signal thread to make sure we have
+       received and processed proc_newids before returning to the user.
+       This both updates _hurd_pgrp, and
+    */
+    while (_hurd_pids_changed_stamp == stamp)
+      {
 #ifdef noteven
-      /* XXX we have no need for a mutex, but cthreads demands one.  */
-      __condition_wait (&_hurd_pids_changed_sync, NULL);
+	/* XXX we have no need for a mutex, but cthreads demands one.  */
+	__condition_wait (&_hurd_pids_changed_sync, NULL);
 #else
-      __swtch_pri(0);
+	__swtch_pri (0);
 #endif
-    }
+      }
 
-  return 0;
+  HURD_CRITICAL_END;
+
+  return err ? __hurd_fail (err) : _hurd_pgrp;
 }
 
 weak_alias (__setsid, setsid)
