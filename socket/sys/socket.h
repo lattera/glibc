@@ -199,6 +199,12 @@ extern int accept (int __fd, __SOCKADDR_ARG __addr,
 extern int shutdown (int __fd, int __how) __THROW;
 
 
+#ifdef __USE_XOPEN2K
+/* Determine wheter socket is at a out-of-band mark.  */
+extern int sockatmark (int __fd) __THROW;
+#endif
+
+
 #ifdef __USE_MISC
 /* FDTYPE is S_IFSOCK or another S_IF* macro defined in <sys/stat.h>;
    returns 1 if FD is open on an object of the indicated type, 0 if not,

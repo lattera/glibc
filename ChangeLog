@@ -1,3 +1,11 @@
+2001-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* socket/Makefile (routines): Add sockatmark.
+	* socket/Versions [GLIBC_2.2.4]: Add sockatmark.
+	* socket/sys/socket.h: Add prototype for sockatmark.
+	* sysdeps/generic/sockatmark.c: New file.
+	* sysdeps/unix/sockatmark.c: New file.
+
 2001-06-01  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/speed.c (cfsetispeed): Max speed is

@@ -32,4 +32,8 @@ libc {
     # s*
     send; sendmsg; sendto; setsockopt; shutdown; socket; socketpair;
   }
+  GLIBC_2.2.4 {
+    # Addition from P1003.1-200x
+    sockatmark;
+  }
 }
