@@ -72,11 +72,20 @@ alpha.*-.*-linux.*	libutil=1.1
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
 # interface.
 alpha.*-.*-linux.*	libresolv=2.1
+mips.*-.*-linux.*	libresolv=2		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libresolv=2
 
 # Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
 # in nss/nsswitch.h, which determines the library names used for service
 # names given in /etc/nsswitch.conf.
+mips.*-.*-linux.*	libnss_files=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_dns=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_db=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_compat=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_nis=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
+mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libnss_files=2
 .*-.*-.*		libnss_dns=2
 .*-.*-.*		libnss_db=2
@@ -88,6 +97,7 @@ alpha.*-.*-linux.*	libresolv=2.1
 
 # Version for libnsl with YP and NIS+ functions.
 alpha.*-.*-linux.*	libnsl=1.1
+mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		libnsl=1
 
 # We use libdb.so.3 for the interface in version 2.x of the Berkeley DB code.
@@ -106,4 +116,5 @@ alpha.*-.*-linux.*	libBrokenLocale=1.1
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.
+mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		librt=1

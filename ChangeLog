@@ -32,6 +32,9 @@
 
 2000-04-18  Andreas Jaeger  <aj@suse.de>
 
+	* shlib-versions (mips.*-.*-linux.*): Support only GLIBC 2.0 and
+	2.2 for libnsl, libresolv, librt, libnss_*.
+
 	* elf/rtld.c (process_dl_debug): Remove obsolete comment.
 
 	* sysdeps/mips/dl-machine.h (elf_machine_rel): Fix relocation.
