@@ -23,7 +23,7 @@ subdir	:= posix
 
 headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   glob.h regex.h wordexp.h fnmatch.h bits/types.h getopt.h	      \
-	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h	      \
+	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h		      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h re_comp.h wait.h bits/environments.h cpio.h	      \
@@ -32,7 +32,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
 	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
-	      spawn_int.h
+	      spawn_int.h tst-getconf.sh
 
 routines :=								      \
 	uname								      \

@@ -1,3 +1,10 @@
+2001-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/Dist: Add hp-timing.c.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Dist: Add ucontext_i.h.
+	* posix/Makefile (distribute): Add tst-getconf.sh.
+	* po/Makefile (distribute): Add $(BROKEN_LINGUAS:=.po).
+
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/Makefile [subdir=csu] (sysdep_routines): Add hp-timing.
