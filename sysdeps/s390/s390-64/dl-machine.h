@@ -262,7 +262,7 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	# Load the parameters:\n\
 	# (%r2, %r3, %r4, %r5) = (_dl_loaded, argc, argv, envp)\n\
-	lghi  %r2,_rtld_global@GOT
+	lghi  %r2,_rtld_local@GOT
 	lg    %r2,0(%r2,%r12)\n\
 	lg    %r2,0(%r2)\n\
 	lg    %r3,160(%r15)\n\

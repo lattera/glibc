@@ -1,5 +1,8 @@
 2002-02-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* tests-mbwc/dat_strfmon.c (tst_strfmon_loc): Adjust test data for
+	Euro locales.
+
 	* locales/br_FR: Eliminate old national currencies of countries
 	participating in Euro.  Make @euro files pure copies.
 	* locales/ca_ES: Likewise.

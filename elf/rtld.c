@@ -91,11 +91,7 @@ struct rtld_global _rtld_global =
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
     ._dl_load_lock = _LIBC_LOCK_RECURSIVE_INITIALIZER
   };
-/* There must only be the definition in ld.so itself.  */
-#ifdef HAVE_PROTECTED
-asm (".protected _rtld_global");
-#endif
-
+strong_alias (_rtld_global, _rtld_local);
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry);

@@ -250,7 +250,7 @@ _dl_start_user:\n\
 	# argc -> rsi\n\
 	movq %rdx, %rsi\n\
 	# _dl_loaded -> rdi\n\
-	movq _rtld_global@GOTPCREL(%rip), %rdi\n\
+	movq _rtld_local@GOTPCREL(%rip), %rdi\n\
 	movq (%rdi), %rdi\n\
 	# env -> rcx\n\
 	leaq 16(%rsp,%rdx,8), %rcx\n\

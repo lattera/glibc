@@ -199,7 +199,11 @@ typedef void (*receiver_fct) (int, const char *, const char *);
 # define GL(name) _##name
 #else
 # define EXTERN
-# define GL(name) _rtld_global._##name
+# ifdef _RTLD_LOCAL
+#  define GL(name) _rtld_local._##name
+# else
+#  define GL(name) _rtld_global._##name
+# endif
 struct rtld_global
 {
 #endif
@@ -371,6 +375,19 @@ struct rtld_global
 #ifdef SHARED
 };
 extern struct rtld_global _rtld_global;
+# ifdef _RTLD_LOCAL
+#  ifdef HAVE_VISIBILITY_ATTRIBUTE
+#   ifdef HAVE_SDATA_SECTION
+#    define __rtld_local_attribute__ \
+	    __attribute__ ((visibility ("hidden"), section (".sdata")))
+#   else
+#    define __rtld_local_attribute__ __attribute__ ((visibility ("hidden")))
+#   endif
+#  else
+#   define __rtld_local_attribute__
+#  endif
+extern struct rtld_global _rtld_local __rtld_local_attribute__;
+# endif
 #endif
 #undef EXTERN
 

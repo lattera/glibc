@@ -328,7 +328,7 @@ $fixup_stack_ret:						\n\
 " RTLD_START_SPECIAL_INIT "					\n\
 	/* Call _dl_init(_dl_loaded, argc, argv, envp) to run	\n\
 	   initializers.  */					\n\
-	ldq	$16, _rtld_global				\n\
+	ldq	$16, _rtld_local				\n\
 	ldq	$17, 0($sp)					\n\
 	lda	$18, 8($sp)					\n\
 	s8addq	$17, 8, $19					\n\

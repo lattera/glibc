@@ -745,9 +745,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	 add	%i1, 16, %i1\n"						\
 "	stx	%l5, [%l4]\n"						\
 "  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n"	\
-"2:	sethi	%hi(_rtld_global), %o0\n"				\
+"2:	sethi	%hi(_rtld_local), %o0\n"				\
 "	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"			\
-"	orcc	%o0, %lo(_rtld_global), %o0\n"				\
+"	orcc	%o0, %lo(_rtld_local), %o0\n"				\
 "	sllx	%i5, 3, %o3\n"						\
 "	ldx	[%l7 + %o0], %o0\n"					\
 "	add	%o3, 8, %o3\n"						\

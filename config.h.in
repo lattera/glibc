@@ -102,6 +102,12 @@
 /* Define if the assembler supported .protected.  */
 #undef	HAVE_PROTECTED
 
+/* Define if the compiler supports __attribute__ ((visibility (...))).  */
+#undef	HAVE_VISIBILITY_ATTRIBUTE
+
+/* Define if _rtld_local structure should be forced into .sdata section.  */
+#undef	HAVE_SDATA_SECTION
+
 /* Define if binutils support TLS handling.  */
 #undef	HAVE_TLS_SUPPORT
 

@@ -381,7 +381,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	{ .mmi\n"							      \
 "	  mov out3 = r11\n"						      \
 "	  sub r17 = r17, r3	/* Substract _dl_skip_args. */\n"	      \
-"	  addl out0 = @ltoff(_rtld_global), gp\n"			      \
+"	  addl out0 = @gprel(_rtld_local), gp\n"			      \
 "	}\n"								      \
 "1:	/* Copy env. */\n"						      \
 "	{ .mfi\n"							      \
@@ -396,11 +396,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 "	}\n"								      \
 "	{ .mmb\n"							      \
 "	  st8 [r10] = out1		/* Record the new argc. */\n"	      \
-"	  ld8 out0 = [out0]\n"						      \
-"	  ;;\n"								      \
+"	  ld8 out0 = [out0]		/* get the linkmap */\n"	      \
 "	}\n"								      \
 "	{ .mmb\n"							      \
-"	  ld8 out0 = [out0]		/* get the linkmap */\n"	      \
 "	  st8 [r2] = r17		/* Load the new _dl_argv. */\n"	      \
 "	  br.call.sptk.many b0 = _dl_init_internal#\n"			      \
 "	  ;;\n"								      \

@@ -1,3 +1,31 @@
+2002-02-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (_rtld_global): Remove .protected.
+	(_rtld_local): Strong alias to _rtld_global.
+	* elf/Makefile (CFLAGS-.os): Add -D_RTLD_LOCAL if compiling rtld
+	only .os object.
+	* sysdeps/generic/ldsodefs.h (GL): If SHARED and _RTLD_LOCAL, use
+	_rtld_local instead of _rtld_global.
+	(_rtld_local): Add hidden extern, possibly in .sdata section.
+	* configure.in: Add tests for visibility attribute and .sdata.
+	* config.h.in: Add HAVE_VISIBILITY_ATTRIBUTE and HAVE_SDATA_SECTION.
+	* sysdeps/alpha/dl-machine.h: Use _rtld_local instead of _rtld_global.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/cris/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+
 2002-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* login/login.c (login): Always initialize ut_line field

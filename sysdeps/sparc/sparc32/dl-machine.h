@@ -312,9 +312,9 @@ _dl_start_user:
 	bne	23b
 	 add	%i1, 8, %i1
   /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */
-3:	sethi	%hi(_rtld_global), %o0
+3:	sethi	%hi(_rtld_local), %o0
 	add	%sp, 23*4, %o2
-	orcc	%o0, %lo(_rtld_global), %o0
+	orcc	%o0, %lo(_rtld_local), %o0
 	sll	%i5, 2, %o3
 	ld	[%l7+%o0], %o0
 	add	%o3, 4, %o3

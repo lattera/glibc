@@ -324,7 +324,7 @@ _dl_start_user:
 .L_STACK_END:
 	.word	__libc_stack_end(GOT)
 .L_LOADED:
-	.word	_rtld_global(GOT)
+	.word	_rtld_local(GOT)
 .previous\n\
 ");
 

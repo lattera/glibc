@@ -388,7 +388,7 @@ _dl_start_user:\n\
 .L_dl_init:\n\
 	.long _dl_init_internal@PLT\n\
 .L_dl_loaded:\n\
-	.long _rtld_global@GOT\n\
+	.long _rtld_local@GOT\n\
 .L_dl_starting_up:\n\
 	.long _dl_starting_up@GOT\n\
 .L_dl_fini:\n\

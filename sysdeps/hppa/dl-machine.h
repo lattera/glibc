@@ -362,8 +362,8 @@ asm (									\
 "	stw	%r24,-44(%sp)\n"					\
 									\
 ".Lnofix:\n"								\
-"	addil	LT'_rtld_global,%r19\n"					\
-"	ldw	RT'_rtld_global(%r1),%r26\n"				\
+"	addil	LT'_rtld_local,%r19\n"					\
+"	ldw	RT'_rtld_local(%r1),%r26\n"				\
 "	bl	set_dp, %r2\n"						\
 "	ldw	0(%r26),%r26\n"						\
 									\

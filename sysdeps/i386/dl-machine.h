@@ -239,11 +239,10 @@ _dl_start_user:\n\
 " RTLD_START_SPECIAL_INIT "\n\
 	# Load the parameters again.\n\
 	# (eax, edx, ecx, *--esp) = (_dl_loaded, argc, argv, envp)\n\
-	movl _rtld_global@GOT(%ebx), %esi\n\
-	leal 8(%esp,%edx,4), %eax\n\
+	movl _rtld_local@GOTOFF(%ebx), %eax\n\
+	leal 8(%esp,%edx,4), %esi\n\
 	leal 4(%esp), %ecx\n\
-	pushl %eax\n\
-	movl (%esi), %eax\n\
+	pushl %esi\n\
 	# Call the function to run the initializers.\n\
 	call _dl_init_internal@PLT\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
