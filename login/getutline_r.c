@@ -20,6 +20,7 @@ Boston, MA 02111-1307, USA.  */
 #include <errno.h>
 #include <unistd.h>
 #include <utmp.h>
+#include <string.h>
 
 
 /* For implementing this function we don't use the getutent_r function

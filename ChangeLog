@@ -1,5 +1,7 @@
 Fri May 24 17:30:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* login/getutline_r.c: Include string.h.
+
 	* Rules (static-only-routines): Restore the rule to make these .so's
 	empty objects.
 
