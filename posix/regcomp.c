@@ -2412,6 +2412,12 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
 		goto parse_dup_op_espace;
 	    }
 	}
+      else if (BE (start > end, 0))
+	{
+	  /* First  number greater than first.  */
+	  *err = REG_BADBR;
+	  return NULL;
+	}
       else if (end - start > 0)
 	{
 	  /* Then extract "<re>{0,m}" to "<re>?<re>?...<re>?".  */
