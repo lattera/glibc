@@ -118,7 +118,7 @@ this case, it is recommended that users write their own @code{getpass}
 substitute.  For instance, a very simple substitute is as follows:
 
 @smallexample
-@include ../crypt/mygetpass.c.texi
+@include mygetpass.c.texi
 @end smallexample
 
 The substitute takes the same parameters as @code{getline}
@@ -180,7 +180,7 @@ machines, and in many applications it would not be acceptable to let an
 attacker know what time the user's password was last set.
 
 @smallexample
-@include ../crypt/genpass.c.texi
+@include genpass.c.texi
 @end smallexample
 
 The next program shows how to verify a password.  It prompts the user
@@ -188,7 +188,7 @@ for a password and prints ``Access granted.'' if the user types
 @code{GNU libc manual}.
 
 @smallexample
-@include ../crypt/testpass.c.texi
+@include testpass.c.texi
 @end smallexample
 
 @comment crypt.h
