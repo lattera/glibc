@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
   pthread_cleanup_pop (0);
 
   /* Add one to *once_control to take the bottom 2 bits from 01 to 10.  */
-  atomic_exchange_and_add (once_control, 1);
+  atomic_increment (once_control);
 
   /* Wake up all other threads.  */
   lll_futex_wake (once_control, INT_MAX);

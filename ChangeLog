@@ -1,5 +1,7 @@
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.h: Don't define __THROW if it is already defined.
+
 	* sysdeps/powerpc/bits/atomic.h (atomic_increment): Define.
 	(atomic_decrement): Define.
 

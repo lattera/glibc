@@ -1,5 +1,5 @@
 /* Prototypes and definition for malloc implementation.
-   Copyright (C) 1996,1997,1999,2000,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,10 +66,12 @@
 /* GCC can always grok prototypes.  For C++ programs we add throw()
    to help it optimize the function calls.  But this works only with
    gcc 2.8.x and egcs.  */
-# if defined __cplusplus && (__GNUC__ >= 3 || __GNUC_MINOR__ >= 8)
-#  define __THROW	throw ()
-# else
-#  define __THROW
+# ifndef __THROW
+#  if defined __cplusplus && (__GNUC__ >= 3 || __GNUC_MINOR__ >= 8)
+#   define __THROW	throw ()
+#  else
+#   define __THROW
+#  endif
 # endif
 # define __MALLOC_P(args)	args __THROW
 /* This macro will be used for functions which might take C++ callback

@@ -1,5 +1,22 @@
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/pthread_once.c (__pthread_once):
+	Use atomic_increment instead of atomic_exchange_and_add.
+	* sysdeps/unix/sysv/linux/sparc/pthread_once.c (__pthread_once):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/pthread_once.c (__pthread_once):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c (__pthread_once):
+	Likewise.
+
+	* allocatestack.c (allocate_stack): Use atomic_increment_val
+	instead of atomic_exchange_and_add.
+	* sysdeps/unix/sysv/linux/sem_post.c (__new_sem_post): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sem_post.c (__new_sem_post):
+	Likewise.
+	* sysdeps/pthread/pthread_barrier_wait.c (pthread_barrier_wait):
+	Likewise.
+
 	* sysdeps/pthread/pthread.h (pthread_once): Remove __THROW since
 	the initialization function might throw.
 
